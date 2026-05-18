@@ -1,0 +1,286 @@
+{
+  "system_name": "AU Mic",
+  "stars": [
+    {
+      "name": "AU Mic",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "6794047652729201024",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 311.2911826481039,
+        "dec_deg": -31.3425000799281,
+        "parallax_mas": 102.9431913175485,
+        "parallax_error_mas": 0.023112189,
+        "pmra_mas_yr": 281.31903452626165,
+        "pmdec_mas_yr": -360.14771869635376,
+        "radial_velocity_km_s": -6.8976626,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 8.6673,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3518,
+        "spectype": "M1VeBa1",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 9.714095582245003,
+        "distance_km": 299745669625941.7,
+        "icrs_x_km": 168933644553500.88,
+        "icrs_y_km": -192393713144796.78,
+        "icrs_z_km": -155891513679502.66,
+        "icrs_vx_km_s": 0.153640137001525,
+        "icrs_vy_km_s": 19.45658368472101,
+        "icrs_vz_km_s": -10.576607761108027,
+        "position_ulp_km": 0.042719986025296204,
+        "icrs_x_j2000_km": 168933886979200.22,
+        "icrs_y_j2000_km": -192363012990532.34,
+        "icrs_z_j2000_km": -155908202297356.75,
+        "icrs_vx_j2000_km_s": 0.153640137001525,
+        "icrs_vy_j2000_km_s": 19.45658368472101,
+        "icrs_vz_j2000_km_s": -10.576607761108027
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "AU Mic b",
+      "host_star": "AU Mic",
+      "raw": {
+        "pl_name": "AU Mic b",
+        "reference": "<a refstr=PLAVCHAN_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P/abstract target=ref>Plavchan et al. 2020</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 8.463446,
+        "period_err_days": 5e-06,
+        "semi_major_axis_au": 0.07,
+        "semi_major_axis_err_au": 0.006,
+        "eccentricity": 0.07,
+        "inclination_deg": 88.39,
+        "inclination_err_deg": 0.2,
+        "omega_deg": -52.0,
+        "tperi_bjd": 2458322.77,
+        "tperi_err_bjd": 0.83,
+        "tranmid_bjd": 2458330.350878,
+        "tranmid_err_bjd": 0.000535,
+        "mass_mearth": 8.99,
+        "mass_err_mearth": 2.61,
+        "mass_type": "Mass",
+        "radius_rearth": 4.79,
+        "radius_err_rearth": 0.29,
+        "discoverymethod": "Transit",
+        "pl_controv_flag": 0,
+        "pubdate": null,
+        "tepcat": {
+          "mass_mjup": 0.0283,
+          "mass_mearth": 8.9945,
+          "mass_err_mearth": 2.6062,
+          "radius_rjup": 0.412,
+          "radius_rearth": 4.6181,
+          "radius_err_rearth": 0.1457,
+          "period_days": 8.463,
+          "eccentricity": 0.07,
+          "semi_major_axis_au": 0.0694,
+          "teq_k": 556.0,
+          "bibcode": "2025A+A...694A.137B"
+        }
+      },
+      "derived": {
+        "semi_major_axis_m": 10382092226.58,
+        "eccentricity": 0.07,
+        "inclination_deg": 88.39,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 5.3716952900000005e+25,
+        "mass_type": "Mass",
+        "radius_m": 29421915.1
+      }
+    },
+    {
+      "name": "AU Mic c",
+      "host_star": "AU Mic",
+      "raw": {
+        "pl_name": "AU Mic c",
+        "reference": "<a refstr=MARTIOLI_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...649A.177M/abstract target=ref>Martioli et al. 2021</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 18.859023,
+        "period_err_days": 2.2e-05,
+        "semi_major_axis_au": 0.119,
+        "semi_major_axis_err_au": 0.011,
+        "eccentricity": 0.18,
+        "inclination_deg": 89.46,
+        "inclination_err_deg": 0.43,
+        "omega_deg": 72.8,
+        "tperi_bjd": 2458324.0,
+        "tperi_err_bjd": 2.9,
+        "tranmid_bjd": 2458342.223325,
+        "tranmid_err_bjd": 0.001085,
+        "mass_mearth": 14.46,
+        "mass_err_mearth": 3.24,
+        "mass_type": "Mass",
+        "radius_rearth": 2.79,
+        "radius_err_rearth": 0.18,
+        "discoverymethod": "Transit",
+        "pl_controv_flag": 0,
+        "pubdate": null,
+        "tepcat": {
+          "mass_mjup": 0.0455,
+          "mass_mearth": 14.4612,
+          "mass_err_mearth": 3.2418,
+          "radius_rjup": 0.246,
+          "radius_rearth": 2.7574,
+          "radius_err_rearth": 0.2578,
+          "period_days": 18.859,
+          "eccentricity": 0.18,
+          "semi_major_axis_au": 0.1169,
+          "teq_k": 428.0,
+          "bibcode": "2025A+A...694A.137B"
+        }
+      },
+      "derived": {
+        "semi_major_axis_m": 17487991084.83,
+        "eccentricity": 0.18,
+        "inclination_deg": 89.46,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 8.636517864e+25,
+        "mass_type": "Mass",
+        "radius_m": 17567395.400000002
+      }
+    },
+    {
+      "name": "AU Mic e",
+      "host_star": "AU Mic",
+      "raw": {
+        "pl_name": "AU Mic e",
+        "reference": "<a refstr=DONATI_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...700A.227D/abstract target=ref>Donati et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 33.11,
+        "period_err_days": 0.06,
+        "semi_major_axis_au": null,
+        "semi_major_axis_err_au": null,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": null,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2459118.5,
+        "tranmid_err_bjd": 1.4,
+        "mass_mearth": 21.1,
+        "mass_err_mearth": 5.4,
+        "mass_type": "Mass",
+        "radius_rearth": 4.87,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": null,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.2601342000000002e+26,
+        "mass_type": "Mass",
+        "radius_m": 31026770.0
+      }
+    },
+    {
+      "name": "AU Mic d",
+      "host_star": "AU Mic",
+      "raw": {
+        "pl_name": "AU Mic d",
+        "reference": "<a refstr=WITTROCK_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W/abstract target=ref>Wittrock et al. 2023</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 12.73596,
+        "period_err_days": 0.00793,
+        "semi_major_axis_au": null,
+        "semi_major_axis_err_au": null,
+        "eccentricity": 0.00305,
+        "inclination_deg": 89.31812,
+        "inclination_err_deg": 1.158,
+        "omega_deg": 160.7894,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.053,
+        "mass_err_mearth": 0.511,
+        "mass_type": "Mass",
+        "radius_rearth": 1.02,
+        "radius_err_rearth": null,
+        "discoverymethod": "Transit Timing Variations",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": null,
+        "eccentricity": 0.00305,
+        "inclination_deg": 89.31812,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.288726599999999e+24,
+        "mass_type": "Mass",
+        "radius_m": 6498420.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

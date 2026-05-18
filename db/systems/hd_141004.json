@@ -1,0 +1,156 @@
+{
+  "system_name": "HD 141004",
+  "stars": [
+    {
+      "name": "HD 141004",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4430238051199001216",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 236.60988904592512,
+        "dec_deg": 7.352758689332476,
+        "parallax_mas": 83.921443569609,
+        "parallax_error_mas": 0.15005308,
+        "pmra_mas_yr": -223.9521808368752,
+        "pmdec_mas_yr": -69.76269002453373,
+        "radial_velocity_km_s": -66.37761,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 4.3879,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5936,
+        "spectype": "G0-V",
+        "mass_measurements": [],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.0557,
+            "uncertainty_rsun": null,
+            "method": "interferometry",
+            "reference": "2009ApJ...694.1085V",
+            "doi": null,
+            "bibcode": "2009ApJ...694.1085V",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 11.915905607254548,
+        "distance_km": 367686427954682.56,
+        "icrs_x_km": -200740264266143.62,
+        "icrs_y_km": -304600832924361.4,
+        "icrs_z_km": 47081571580178.086,
+        "icrs_vx_km_s": 25.38974910162625,
+        "icrs_vy_km_s": 61.50667396535844,
+        "icrs_vz_km_s": -12.403148179060732,
+        "position_ulp_km": 0.06763497160652529,
+        "icrs_x_j2000_km": -200700202288831.16,
+        "icrs_y_j2000_km": -304503782773644.9,
+        "icrs_z_j2000_km": 47062000900729.31,
+        "icrs_vx_j2000_km_s": 25.38974910162625,
+        "icrs_vy_j2000_km_s": 61.50667396535844,
+        "icrs_vz_j2000_km_s": -12.403148179060732
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": 734450.5
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "HD 141004 b",
+      "host_star": "HD 141004",
+      "raw": {
+        "pl_name": "HD 141004 b",
+        "reference": "<a refstr=ROSENTHAL_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021ApJS..255....8R/abstract target=ref>Rosenthal et al. 2021</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 15.5083,
+        "period_err_days": 0.0016,
+        "semi_major_axis_au": 0.1238,
+        "semi_major_axis_err_au": 0.002,
+        "eccentricity": 0.16,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 19.4806,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2456704.33,
+        "tranmid_err_bjd": 0.55,
+        "mass_mearth": 13.63483866,
+        "mass_err_mearth": 1.46201067,
+        "mass_type": "Msini",
+        "radius_rearth": 3.77,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 18520216392.66,
+        "eccentricity": 0.16,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 8.1429983445252e+25,
+        "mass_type": "Msini",
+        "radius_m": 24018670.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    },
+    {
+      "title": "2009ApJ...694.1085V",
+      "doi": null,
+      "bibcode": "2009ApJ...694.1085V",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "HD 141004 radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

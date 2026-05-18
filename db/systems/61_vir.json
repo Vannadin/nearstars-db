@@ -1,0 +1,219 @@
+{
+  "system_name": "61 Vir",
+  "stars": [
+    {
+      "name": "61 Vir",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "3507879565090229888",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 199.596298132351,
+        "dec_deg": -18.31592210064546,
+        "parallax_mas": 117.1726460991387,
+        "parallax_error_mas": 0.1455929,
+        "pmra_mas_yr": -1070.2015735200084,
+        "pmdec_mas_yr": -1063.8486605375717,
+        "radial_velocity_km_s": -7.864339,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 4.7105,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5552,
+        "spectype": "G6.5V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 8.534415098502675,
+        "distance_km": 263344533405880.1,
+        "icrs_x_km": -235533570877706.4,
+        "icrs_y_km": -83948309163055.28,
+        "icrs_z_km": -82677718775093.39,
+        "icrs_vx_km_s": 5.254232095270769,
+        "icrs_vy_km_s": 47.82986610180534,
+        "icrs_vz_km_s": -38.388360559764365,
+        "position_ulp_km": 0.05229895869212218,
+        "icrs_x_j2000_km": -235525280329967.9,
+        "icrs_y_j2000_km": -83872839373930.56,
+        "icrs_z_j2000_km": -82738291001453.42,
+        "icrs_vx_j2000_km_s": 5.254232095270769,
+        "icrs_vy_j2000_km_s": 47.82986610180534,
+        "icrs_vz_j2000_km_s": -38.388360559764365
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "61 Vir b",
+      "host_star": "61 Vir",
+      "raw": {
+        "pl_name": "61 Vir b",
+        "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.215,
+        "period_err_days": 0.0006,
+        "semi_major_axis_au": 0.050201,
+        "semi_major_axis_err_au": 5e-06,
+        "eccentricity": 0.12,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 105.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2455200.597,
+        "tranmid_err_bjd": 0.05,
+        "mass_mearth": 5.1,
+        "mass_err_mearth": 0.5,
+        "mass_type": "Msini",
+        "radius_rearth": 2.11,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 7509962707.0107,
+        "eccentricity": 0.12,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.045822e+25,
+        "mass_type": "Msini",
+        "radius_m": 13442810.0
+      }
+    },
+    {
+      "name": "61 Vir c",
+      "host_star": "61 Vir",
+      "raw": {
+        "pl_name": "61 Vir c",
+        "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 38.021,
+        "period_err_days": 0.034,
+        "semi_major_axis_au": 0.2175,
+        "semi_major_axis_err_au": 0.0001,
+        "eccentricity": 0.14,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 341.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2455036.24,
+        "tranmid_err_bjd": 0.3,
+        "mass_mearth": 18.2,
+        "mass_err_mearth": 1.1,
+        "mass_type": "Msini",
+        "radius_rearth": 4.46,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 32537536877.25,
+        "eccentricity": 0.14,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.0869404e+26,
+        "mass_type": "Msini",
+        "radius_m": 28414660.0
+      }
+    },
+    {
+      "name": "61 Vir d",
+      "host_star": "61 Vir",
+      "raw": {
+        "pl_name": "61 Vir d",
+        "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 123.01,
+        "period_err_days": 0.55,
+        "semi_major_axis_au": 0.476,
+        "semi_major_axis_err_au": 0.001,
+        "eccentricity": 0.35,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 314.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2455245.8,
+        "tranmid_err_bjd": 2.9,
+        "mass_mearth": 22.9,
+        "mass_err_mearth": 2.6,
+        "mass_type": "Msini",
+        "radius_rearth": 5.11,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 71208586453.2,
+        "eccentricity": 0.35,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.3676338e+26,
+        "mass_type": "Msini",
+        "radius_m": 32555810.000000004
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

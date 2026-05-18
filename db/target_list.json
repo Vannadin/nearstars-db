@@ -1,0 +1,1498 @@
+[
+  {
+    "system": "36 Ophiuchi",
+    "components": [
+      "36 Ophiuchi A",
+      "36 Ophiuchi B",
+      "36 Ophiuchi C"
+    ],
+    "gaia_source_ids": [
+      "4109030160308320128",
+      "4109030160308317312",
+      "4109034455276324608"
+    ],
+    "hip_ids": [],
+    "binary": true
+  },
+  {
+    "system": "40 Eridani",
+    "components": [
+      "40 Eridani A",
+      "40 Eridani B",
+      "40 Eridani C"
+    ],
+    "gaia_source_ids": [
+      "3195919528989223040",
+      "3195919254111315712",
+      "3195919254111314816"
+    ],
+    "hip_ids": [],
+    "binary": true
+  },
+  {
+    "system": "61 Cygni",
+    "components": [
+      "61 Cygni A",
+      "61 Cygni B"
+    ],
+    "gaia_source_ids": [
+      "1872046609345556480",
+      "1872046574983497216"
+    ],
+    "hip_ids": [],
+    "binary": true
+  },
+  {
+    "system": "Alpha Centauri",
+    "components": [
+      "Alpha Centauri A",
+      "Alpha Centauri B"
+    ],
+    "gaia_source_ids": [
+      null,
+      null
+    ],
+    "hip_ids": [],
+    "binary": true
+  },
+  {
+    "system": "Eta Cassiopeiae",
+    "components": [
+      "Eta Cassiopeiae A",
+      "Eta Cassiopeiae B"
+    ],
+    "gaia_source_ids": [
+      "425040000962559616",
+      "425040000962497792"
+    ],
+    "hip_ids": [],
+    "binary": true
+  },
+  {
+    "system": "Sirius",
+    "components": [
+      "Sirius A",
+      "Sirius B"
+    ],
+    "gaia_source_ids": [
+      null,
+      "2947050466531873024"
+    ],
+    "hip_ids": [],
+    "binary": true
+  },
+  {
+    "system": "47 UMa",
+    "components": [
+      "47 UMa"
+    ],
+    "gaia_source_ids": [
+      "777254360337133312"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "55 Cnc",
+    "components": [
+      "55 Cnc"
+    ],
+    "gaia_source_ids": [
+      "704967037090946688"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "55 Cnc B",
+    "components": [
+      "55 Cnc B"
+    ],
+    "gaia_source_ids": [
+      "704966762213039488"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "61 Vir",
+    "components": [
+      "61 Vir"
+    ],
+    "gaia_source_ids": [
+      "3507879565090229888"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "AU Mic",
+    "components": [
+      "AU Mic"
+    ],
+    "gaia_source_ids": [
+      "6794047652729201024"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Altair",
+    "components": [
+      "Altair"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Barnard's star",
+    "components": [
+      "Barnard's star"
+    ],
+    "gaia_source_ids": [
+      "4472832130942575872"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Beta Hydri",
+    "components": [
+      "Beta Hydri"
+    ],
+    "gaia_source_ids": [
+      "4683897617110115200"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "CD Cet",
+    "components": [
+      "CD Cet"
+    ],
+    "gaia_source_ids": [
+      "3179036008830848"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "COCONUTS-2 A",
+    "components": [
+      "COCONUTS-2 A"
+    ],
+    "gaia_source_ids": [
+      "5213167330349528064"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "CWISEP J193518.59-154620.3",
+    "components": [
+      "CWISEP J193518.59-154620.3"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Chi-1 Orionis A",
+    "components": [
+      "Chi-1 Orionis A"
+    ],
+    "gaia_source_ids": [
+      "3399063235755057792"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Delta Pavonis",
+    "components": [
+      "Delta Pavonis"
+    ],
+    "gaia_source_ids": [
+      "6427464123776727168"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Fomalhaut",
+    "components": [
+      "Fomalhaut"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "G 192-15",
+    "components": [
+      "G 192-15"
+    ],
+    "gaia_source_ids": [
+      "970354749937140736"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "G 261-6",
+    "components": [
+      "G 261-6"
+    ],
+    "gaia_source_ids": [
+      "2289304297045379456"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1002",
+    "components": [
+      "GJ 1002"
+    ],
+    "gaia_source_ids": [
+      "2441630500517079808"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1061",
+    "components": [
+      "GJ 1061"
+    ],
+    "gaia_source_ids": [
+      "4848140361962951552"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1132",
+    "components": [
+      "GJ 1132"
+    ],
+    "gaia_source_ids": [
+      "5413438219396893568"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1148",
+    "components": [
+      "GJ 1148"
+    ],
+    "gaia_source_ids": [
+      "772430527947893632"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1151",
+    "components": [
+      "GJ 1151"
+    ],
+    "gaia_source_ids": [
+      "786834302080370304"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1214",
+    "components": [
+      "GJ 1214"
+    ],
+    "gaia_source_ids": [
+      "4393265392168829056"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1265",
+    "components": [
+      "GJ 1265"
+    ],
+    "gaia_source_ids": [
+      "6825822095663585536"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 1289",
+    "components": [
+      "GJ 1289"
+    ],
+    "gaia_source_ids": [
+      "2879455480942629248"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 15 A",
+    "components": [
+      "GJ 15 A"
+    ],
+    "gaia_source_ids": [
+      "385334230892516480"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 163",
+    "components": [
+      "GJ 163"
+    ],
+    "gaia_source_ids": [
+      "4780294722094459904"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 179",
+    "components": [
+      "GJ 179"
+    ],
+    "gaia_source_ids": [
+      "3288082758293022848"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 180",
+    "components": [
+      "GJ 180"
+    ],
+    "gaia_source_ids": [
+      "2979590513145784192"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 229",
+    "components": [
+      "GJ 229"
+    ],
+    "gaia_source_ids": [
+      "2940856402123426176"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 238",
+    "components": [
+      "GJ 238"
+    ],
+    "gaia_source_ids": [
+      "5482827676662168832"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 251",
+    "components": [
+      "GJ 251"
+    ],
+    "gaia_source_ids": [
+      "939072613334579328"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 273",
+    "components": [
+      "GJ 273"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 317",
+    "components": [
+      "GJ 317"
+    ],
+    "gaia_source_ids": [
+      "5701750715316821248"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 3323",
+    "components": [
+      "GJ 3323"
+    ],
+    "gaia_source_ids": [
+      "3187115498866675456"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 338 B",
+    "components": [
+      "GJ 338 B"
+    ],
+    "gaia_source_ids": [
+      "1022456104850892928"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 341",
+    "components": [
+      "GJ 341"
+    ],
+    "gaia_source_ids": [
+      "5299440441521812992"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 3512",
+    "components": [
+      "GJ 3512"
+    ],
+    "gaia_source_ids": [
+      "1040827088726734976"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 357",
+    "components": [
+      "GJ 357"
+    ],
+    "gaia_source_ids": [
+      "5664814198431308288"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 367",
+    "components": [
+      "GJ 367"
+    ],
+    "gaia_source_ids": [
+      "5412250540681250560"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 3779",
+    "components": [
+      "GJ 3779"
+    ],
+    "gaia_source_ids": [
+      "1446540213584440704"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 393",
+    "components": [
+      "GJ 393"
+    ],
+    "gaia_source_ids": [
+      "3855208897392952192"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 3988",
+    "components": [
+      "GJ 3988"
+    ],
+    "gaia_source_ids": [
+      "1412645602995521920"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 411",
+    "components": [
+      "GJ 411"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 414 A",
+    "components": [
+      "GJ 414 A"
+    ],
+    "gaia_source_ids": [
+      "732857558276385664"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 422",
+    "components": [
+      "GJ 422"
+    ],
+    "gaia_source_ids": [
+      "5339892367684811520"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 4274",
+    "components": [
+      "GJ 4274"
+    ],
+    "gaia_source_ids": [
+      "2595284016771502080"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 433",
+    "components": [
+      "GJ 433"
+    ],
+    "gaia_source_ids": [
+      "3478160727866058368"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 436",
+    "components": [
+      "GJ 436"
+    ],
+    "gaia_source_ids": [
+      "4017860992519744384"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 480",
+    "components": [
+      "GJ 480"
+    ],
+    "gaia_source_ids": [
+      "3928391218812375808"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 486",
+    "components": [
+      "GJ 486"
+    ],
+    "gaia_source_ids": [
+      "3735000631158990976"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 514",
+    "components": [
+      "GJ 514"
+    ],
+    "gaia_source_ids": [
+      "3738099879558957952"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 536",
+    "components": [
+      "GJ 536"
+    ],
+    "gaia_source_ids": [
+      "3657653114880309248"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 581",
+    "components": [
+      "GJ 581"
+    ],
+    "gaia_source_ids": [
+      "6322070093095493504"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 625",
+    "components": [
+      "GJ 625"
+    ],
+    "gaia_source_ids": [
+      "1428427236986209024"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 649",
+    "components": [
+      "GJ 649"
+    ],
+    "gaia_source_ids": [
+      "4572835535272627712"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 667 C",
+    "components": [
+      "GJ 667 C"
+    ],
+    "gaia_source_ids": [
+      "5975663354131618304"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 674",
+    "components": [
+      "GJ 674"
+    ],
+    "gaia_source_ids": [
+      "5951824121022278144"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 680",
+    "components": [
+      "GJ 680"
+    ],
+    "gaia_source_ids": [
+      "5946986063684477056"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 682",
+    "components": [
+      "GJ 682"
+    ],
+    "gaia_source_ids": [
+      "5955305209191546112"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 685",
+    "components": [
+      "GJ 685"
+    ],
+    "gaia_source_ids": [
+      "1439069444391326208"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 687",
+    "components": [
+      "GJ 687"
+    ],
+    "gaia_source_ids": [
+      "1637645127018395776"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 740",
+    "components": [
+      "GJ 740"
+    ],
+    "gaia_source_ids": [
+      "4282578724832056576"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 806",
+    "components": [
+      "GJ 806"
+    ],
+    "gaia_source_ids": [
+      "2070115588901082368"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 832",
+    "components": [
+      "GJ 832"
+    ],
+    "gaia_source_ids": [
+      "6562924609150908416"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 849",
+    "components": [
+      "GJ 849"
+    ],
+    "gaia_source_ids": [
+      "2627117287488522240"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 86",
+    "components": [
+      "GJ 86"
+    ],
+    "gaia_source_ids": [
+      "4937000898856156288"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 876",
+    "components": [
+      "GJ 876"
+    ],
+    "gaia_source_ids": [
+      "2603090003484152064"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 887",
+    "components": [
+      "GJ 887"
+    ],
+    "gaia_source_ids": [
+      "6553614253923452800"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 896 A",
+    "components": [
+      "GJ 896 A"
+    ],
+    "gaia_source_ids": [
+      "2824770686019003904"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 9066",
+    "components": [
+      "GJ 9066"
+    ],
+    "gaia_source_ids": [
+      "76868614540049408"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "GJ 96",
+    "components": [
+      "GJ 96"
+    ],
+    "gaia_source_ids": [
+      "354077348697687424"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Gl 378",
+    "components": [
+      "Gl 378"
+    ],
+    "gaia_source_ids": [
+      "823228721067307392"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Gl 410",
+    "components": [
+      "Gl 410"
+    ],
+    "gaia_source_ids": [
+      "3988689609004982912"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Gl 49",
+    "components": [
+      "Gl 49"
+    ],
+    "gaia_source_ids": [
+      "522863309964987520"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Gl 686",
+    "components": [
+      "Gl 686"
+    ],
+    "gaia_source_ids": [
+      "4550763526539955712"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Gl 725 A",
+    "components": [
+      "Gl 725 A"
+    ],
+    "gaia_source_ids": [
+      "2154880616774131840"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Gliese 12",
+    "components": [
+      "Gliese 12"
+    ],
+    "gaia_source_ids": [
+      "2768048564768256512"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 115404 A",
+    "components": [
+      "HD 115404 A"
+    ],
+    "gaia_source_ids": [
+      "3936909723803146368"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 136352",
+    "components": [
+      "HD 136352"
+    ],
+    "gaia_source_ids": [
+      "5902750168276592256"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 140901",
+    "components": [
+      "HD 140901"
+    ],
+    "gaia_source_ids": [
+      "6009538585839374336"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 141004",
+    "components": [
+      "HD 141004"
+    ],
+    "gaia_source_ids": [
+      "4430238051199001216"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 147379",
+    "components": [
+      "HD 147379"
+    ],
+    "gaia_source_ids": [
+      "1642641410934267008"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 147513",
+    "components": [
+      "HD 147513"
+    ],
+    "gaia_source_ids": [
+      "6018047019138644480"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 180617",
+    "components": [
+      "HD 180617"
+    ],
+    "gaia_source_ids": [
+      "4293318823182081408"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 190007",
+    "components": [
+      "HD 190007"
+    ],
+    "gaia_source_ids": [
+      "4247023886053586304"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 192310",
+    "components": [
+      "HD 192310"
+    ],
+    "gaia_source_ids": [
+      "6847167606385195648"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 20794",
+    "components": [
+      "HD 20794"
+    ],
+    "gaia_source_ids": [
+      "4847957293278177024"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 211970",
+    "components": [
+      "HD 211970"
+    ],
+    "gaia_source_ids": [
+      "6508401923473282432"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 219134",
+    "components": [
+      "HD 219134"
+    ],
+    "gaia_source_ids": [
+      "2009481748875806976"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 222237",
+    "components": [
+      "HD 222237"
+    ],
+    "gaia_source_ids": [
+      "6380214844952702848"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 22496",
+    "components": [
+      "HD 22496"
+    ],
+    "gaia_source_ids": [
+      "4833654227548585856"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 238090",
+    "components": [
+      "HD 238090"
+    ],
+    "gaia_source_ids": [
+      "1573086442800134272"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 260655",
+    "components": [
+      "HD 260655"
+    ],
+    "gaia_source_ids": [
+      "3359074685047632640"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 285968",
+    "components": [
+      "HD 285968"
+    ],
+    "gaia_source_ids": [
+      "3409711211681795584"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 3651",
+    "components": [
+      "HD 3651"
+    ],
+    "gaia_source_ids": [
+      "2802397960855105920"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 40307",
+    "components": [
+      "HD 40307"
+    ],
+    "gaia_source_ids": [
+      "4758877919212831104"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 62509",
+    "components": [
+      "HD 62509"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 69830",
+    "components": [
+      "HD 69830"
+    ],
+    "gaia_source_ids": [
+      "5726982995343100928"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HD 86728",
+    "components": [
+      "HD 86728"
+    ],
+    "gaia_source_ids": [
+      "746545172372256384"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HIP 48714",
+    "components": [
+      "HIP 48714"
+    ],
+    "gaia_source_ids": [
+      "1051547052218220160"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HIP 56998",
+    "components": [
+      "HIP 56998"
+    ],
+    "gaia_source_ids": [
+      "5378886891123024512"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HIP 79431",
+    "components": [
+      "HIP 79431"
+    ],
+    "gaia_source_ids": [
+      "6245870673116518784"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "HN Lib",
+    "components": [
+      "HN Lib"
+    ],
+    "gaia_source_ids": [
+      "6324325225803432320"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Kapteyn",
+    "components": [
+      "Kapteyn"
+    ],
+    "gaia_source_ids": [
+      "4810594479418041856"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "L 363-38",
+    "components": [
+      "L 363-38"
+    ],
+    "gaia_source_ids": [
+      "4999067471248893952"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "L 98-59",
+    "components": [
+      "L 98-59"
+    ],
+    "gaia_source_ids": [
+      "5271055243163629056"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "LHS 1140",
+    "components": [
+      "LHS 1140"
+    ],
+    "gaia_source_ids": [
+      "2371032916186181760"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "LHS 3844",
+    "components": [
+      "LHS 3844"
+    ],
+    "gaia_source_ids": [
+      "6385548541499112448"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "LHS 475",
+    "components": [
+      "LHS 475"
+    ],
+    "gaia_source_ids": [
+      "6347643496607835520"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "LTT 1445 A",
+    "components": [
+      "LTT 1445 A"
+    ],
+    "gaia_source_ids": [
+      "5153091836072107136"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Mu Herculis A",
+    "components": [
+      "Mu Herculis A"
+    ],
+    "gaia_source_ids": [
+      "4594497769766809216"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Proxima Cen",
+    "components": [
+      "Proxima Cen"
+    ],
+    "gaia_source_ids": [
+      "5853498713190525696"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Ross 128",
+    "components": [
+      "Ross 128"
+    ],
+    "gaia_source_ids": [
+      "3796072592206250624"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Ross 458",
+    "components": [
+      "Ross 458"
+    ],
+    "gaia_source_ids": [
+      "3737308025029348608"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Ross 508",
+    "components": [
+      "Ross 508"
+    ],
+    "gaia_source_ids": [
+      "1208695640675619584"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Sigma Draconis",
+    "components": [
+      "Sigma Draconis"
+    ],
+    "gaia_source_ids": [
+      "2261614264931057664"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "TOI-540",
+    "components": [
+      "TOI-540"
+    ],
+    "gaia_source_ids": [
+      "4785886941312921344"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "TRAPPIST-1",
+    "components": [
+      "TRAPPIST-1"
+    ],
+    "gaia_source_ids": [
+      "2635476908753563008"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Teegarden's Star",
+    "components": [
+      "Teegarden's Star"
+    ],
+    "gaia_source_ids": [
+      "35227046884571776"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Vega",
+    "components": [
+      "Vega"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "WISEP J121756.91+162640.2 A",
+    "components": [
+      "WISEP J121756.91+162640.2 A"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Wolf 1061",
+    "components": [
+      "Wolf 1061"
+    ],
+    "gaia_source_ids": [
+      "4330690742322011520"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Wolf 1069",
+    "components": [
+      "Wolf 1069"
+    ],
+    "gaia_source_ids": [
+      "2188318517720321664"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "YZ Cet",
+    "components": [
+      "YZ Cet"
+    ],
+    "gaia_source_ids": [
+      "2358524597030794112"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "Zeta Tucanae",
+    "components": [
+      "Zeta Tucanae"
+    ],
+    "gaia_source_ids": [
+      "4900108950849461248"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "eps Eri",
+    "components": [
+      "eps Eri"
+    ],
+    "gaia_source_ids": [
+      "5164707970261890560"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "eps Ind A",
+    "components": [
+      "eps Ind A"
+    ],
+    "gaia_source_ids": [
+      "6412595290592307840"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "gam Cep",
+    "components": [
+      "gam Cep"
+    ],
+    "gaia_source_ids": [
+      "2281778105594488192"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "tau Cet",
+    "components": [
+      "tau Cet"
+    ],
+    "gaia_source_ids": [
+      "2452378776434477184"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "ups And",
+    "components": [
+      "ups And"
+    ],
+    "gaia_source_ids": [
+      "348020482735930112"
+    ],
+    "hip_ids": [],
+    "binary": false
+  }
+]

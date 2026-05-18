@@ -1,0 +1,29 @@
+{
+  "skill_name": "nearstars-add-star",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Wolf 359 별을 NearStars DB에 추가해줘.",
+      "expected_output": "Single M-dwarf at 7.86 ly. Should: (1) look up Gaia DR3 source_id via SIMBAD, (2) append entry to target_list.json, (3) add mass and radius measurements to stellar_props_curated.json (Mann 2015 mass, interferometry radius if available), (4) Phase 1 curation for Wolf 359 b in planets_curated.json (Tuomi 2019 or later), (5) run pipeline, (6) report db/systems/wolf_359.json contents.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Luhman 16 AB 추가해줘. brown dwarf binary야.",
+      "expected_output": "Binary brown dwarfs at 6.5 ly. Should: (1) recognize as binary (T/L transition), (2) target_list with two components A and B, (3) two stellar_props_curated entries with evolutionary_model masses + age note, (4) binary_orbits.json entry from Bedin 2024 (or older Garcia 2017), (5) acknowledge no planets confirmed, (6) note vmag_v likely null for both, (7) pipeline run.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Vega를 데이터베이스에 추가하자. 행성은 없는 걸로 알고 있고.",
+      "expected_output": "Bright A-dwarf at 25 ly, Gaia-saturated. Should: (1) target_list with empty gaia_source_ids[] (forces SIMBAD fallback), (2) HIPPARCOS_V entry V=0.03, (3) curated mass/radius (Yoon 2010 or similar), (4) no planet entries needed, (5) pipeline run, (6) note that astrometry is at J2000 epoch due to SIMBAD fallback.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "TRAPPIST-1 시스템 Phase 2로 격상해서 정밀 큐레이션해줘.",
+      "expected_output": "Existing star, but escalating planet curation. Should: (1) recognize Phase 2 trigger, (2) expand planets_curated.json with array-form physical/orbital per planet for all 7 planets, (3) include Agol 2021 TTV (recommended) plus Gillon 2017 discovery, (4) flag that build_systems.py may need update to handle array form, (5) set recommended on highest tier (TTV/dynamical > transit > RV > prediction), (6) document choice rationale in meta.notes after build.",
+      "files": []
+    }
+  ]
+}

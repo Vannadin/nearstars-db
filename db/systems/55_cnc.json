@@ -1,0 +1,342 @@
+{
+  "system_name": "55 Cnc",
+  "stars": [
+    {
+      "name": "55 Cnc",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "704967037090946688",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 133.146760620834,
+        "dec_deg": 28.329783000362703,
+        "parallax_mas": 79.44818375718161,
+        "parallax_error_mas": 0.042877857,
+        "pmra_mas_yr": -485.6808133468651,
+        "pmdec_mas_yr": -233.51700529342878,
+        "radial_velocity_km_s": 27.187504,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 5.9501,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5249,
+        "spectype": "K0IV-V",
+        "mass_measurements": [],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.0772,
+            "uncertainty_rsun": null,
+            "method": "interferometry",
+            "reference": "2009ApJ...694.1085V",
+            "doi": null,
+            "bibcode": "2009ApJ...694.1085V",
+            "recommended": true
+          },
+          {
+            "value_rsun": 1.1286,
+            "uncertainty_rsun": null,
+            "method": "interferometry",
+            "reference": "2009ApJ...694.1085V",
+            "doi": null,
+            "bibcode": "2009ApJ...694.1085V",
+            "recommended": false
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 12.586820147535548,
+        "distance_km": 388388687515096.8,
+        "icrs_x_km": -233796133959923.6,
+        "icrs_y_km": 249343392241670.9,
+        "icrs_z_km": 184306903938335.34,
+        "icrs_vx_km_s": 0.2558218512589647,
+        "icrs_vy_km_s": 42.102606625365134,
+        "icrs_vz_km_s": 0.637140427946008,
+        "position_ulp_km": 0.05536535502096893,
+        "icrs_x_j2000_km": -233795730303740.9,
+        "icrs_y_j2000_km": 249409825102612.94,
+        "icrs_z_j2000_km": 184307909269473.78,
+        "icrs_vx_j2000_km_s": 0.2558218512589647,
+        "icrs_vy_j2000_km_s": 42.102606625365134,
+        "icrs_vz_j2000_km_s": 0.637140427946008
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": 749408.0
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "55 Cnc e",
+      "host_star": "55 Cnc",
+      "raw": {
+        "pl_name": "55 Cnc e",
+        "reference": "<a refstr=MCARTHUR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M/abstract target=ref> McArthur et al. 2004 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 0.7365474,
+        "period_err_days": 1.3e-06,
+        "semi_major_axis_au": 0.01544,
+        "semi_major_axis_err_au": 5e-05,
+        "eccentricity": 0.05,
+        "inclination_deg": 83.59,
+        "inclination_err_deg": 0.47,
+        "omega_deg": 86.0,
+        "tperi_bjd": 2447578.2159,
+        "tperi_err_bjd": 0.0001,
+        "tranmid_bjd": 2457063.2096,
+        "tranmid_err_bjd": 0.0006,
+        "mass_mearth": 7.99,
+        "mass_err_mearth": 0.32,
+        "mass_type": "Mass",
+        "radius_rearth": 1.875,
+        "radius_err_rearth": 0.029,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null,
+        "tepcat": {
+          "mass_mjup": 0.0243,
+          "mass_mearth": 7.7232,
+          "mass_err_mearth": 0.3814,
+          "radius_rjup": 0.1692,
+          "radius_rearth": 1.8965,
+          "radius_err_rearth": 0.0437,
+          "period_days": 0.737,
+          "eccentricity": 0.05,
+          "semi_major_axis_au": 0.01544,
+          "teq_k": 2349.0,
+          "bibcode": "2019ApJ...883...79D"
+        }
+      },
+      "derived": {
+        "semi_major_axis_m": 2309791123.6080003,
+        "eccentricity": 0.05,
+        "inclination_deg": 83.59,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.612449504e+25,
+        "mass_type": "Mass",
+        "radius_m": 12082601.5
+      }
+    },
+    {
+      "name": "55 Cnc b",
+      "host_star": "55 Cnc",
+      "raw": {
+        "pl_name": "55 Cnc b",
+        "reference": "<a refstr=BUTLER_ET_AL__1997 href=https://ui.adsabs.harvard.edu/abs/1997ApJ...474L.115B/abstract target=ref> Butler et al. 1997 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 14.651552,
+        "period_err_days": 3.6e-05,
+        "semi_major_axis_au": 0.118,
+        "semi_major_axis_err_au": 0.002,
+        "eccentricity": 0.0029,
+        "inclination_deg": 89.73,
+        "inclination_err_deg": 24.49,
+        "omega_deg": 23.0,
+        "tperi_bjd": 2453021.08,
+        "tperi_err_bjd": 0.01,
+        "tranmid_bjd": 2455495.595,
+        "tranmid_err_bjd": 0.012,
+        "mass_mearth": 263.9785,
+        "mass_err_mearth": 1.0488,
+        "mass_type": "Mass",
+        "radius_rearth": 13.9,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 17652548742.6,
+        "eccentricity": 0.0029,
+        "inclination_deg": 89.73,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.5765323977e+27,
+        "mass_type": "Mass",
+        "radius_m": 88556900.0
+      }
+    },
+    {
+      "name": "55 Cnc c",
+      "host_star": "55 Cnc",
+      "raw": {
+        "pl_name": "55 Cnc c",
+        "reference": "<a refstr=MCARTHUR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M/abstract target=ref> McArthur et al. 2004 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 44.3936,
+        "period_err_days": 0.0024,
+        "semi_major_axis_au": 0.247,
+        "semi_major_axis_err_au": 0.004,
+        "eccentricity": 0.088,
+        "inclination_deg": 89.73,
+        "inclination_err_deg": 24.49,
+        "omega_deg": 31.0,
+        "tperi_bjd": 2453028.63,
+        "tperi_err_bjd": 0.25,
+        "tranmid_bjd": 2455491.23,
+        "tranmid_err_bjd": 0.34,
+        "mass_mearth": 54.4738,
+        "mass_err_mearth": 1.748,
+        "mass_type": "Mass",
+        "radius_rearth": 8.51,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 36950674062.9,
+        "eccentricity": 0.088,
+        "inclination_deg": 89.73,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.2532842836e+26,
+        "mass_type": "Mass",
+        "radius_m": 54217210.0
+      }
+    },
+    {
+      "name": "55 Cnc f",
+      "host_star": "55 Cnc",
+      "raw": {
+        "pl_name": "55 Cnc f",
+        "reference": "<a refstr=FISCHER_ET_AL__2008 href=https://ui.adsabs.harvard.edu/abs/2008ApJ...675..790F/abstract target=ref> Fischer et al. 2008 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 260.58,
+        "period_err_days": 0.15,
+        "semi_major_axis_au": 0.802,
+        "semi_major_axis_err_au": 0.014,
+        "eccentricity": 0.063,
+        "inclination_deg": 89.73,
+        "inclination_err_deg": 24.49,
+        "omega_deg": 100.0,
+        "tperi_bjd": 2447488.0,
+        "tperi_err_bjd": 1.1,
+        "tranmid_bjd": 2455236.4,
+        "tranmid_err_bjd": 2.6,
+        "mass_mearth": 44.812,
+        "mass_err_mearth": 3.814,
+        "mass_type": "Mass",
+        "radius_rearth": 7.59,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 119977492301.40001,
+        "eccentricity": 0.063,
+        "inclination_deg": 89.73,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.6762622639999998e+26,
+        "mass_type": "Mass",
+        "radius_m": 48355890.0
+      }
+    },
+    {
+      "name": "55 Cnc d",
+      "host_star": "55 Cnc",
+      "raw": {
+        "pl_name": "55 Cnc d",
+        "reference": "<a refstr=MARCY_ET_AL__2002 href=https://ui.adsabs.harvard.edu/abs/2002ApJ...581.1375M/abstract target=ref> Marcy et al. 2002 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4799.0,
+        "period_err_days": 4.9,
+        "semi_major_axis_au": 5.6,
+        "semi_major_axis_err_au": 0.1,
+        "eccentricity": 0.0913,
+        "inclination_deg": 89.73,
+        "inclination_err_deg": 24.49,
+        "omega_deg": -90.0,
+        "tperi_bjd": 2452837.69,
+        "tperi_err_bjd": 68.87,
+        "tranmid_bjd": 2451517.8,
+        "tranmid_err_bjd": 20.0,
+        "mass_mearth": 1232.493,
+        "mass_err_mearth": 21.612,
+        "mass_type": "Mass",
+        "radius_rearth": 13.0,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 837748075920.0,
+        "eccentricity": 0.0913,
+        "inclination_deg": 89.73,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 7.3606946946e+27,
+        "mass_type": "Mass",
+        "radius_m": 82823000.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    },
+    {
+      "title": "2009ApJ...694.1085V",
+      "doi": null,
+      "bibcode": "2009ApJ...694.1085V",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "55 Cnc radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

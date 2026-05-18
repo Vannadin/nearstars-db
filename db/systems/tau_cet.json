@@ -1,0 +1,219 @@
+{
+  "system_name": "tau Cet",
+  "stars": [
+    {
+      "name": "tau Cet",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "2452378776434477184",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 26.009055057160104,
+        "dec_deg": -15.933680200693857,
+        "parallax_mas": 273.80974511859966,
+        "parallax_error_mas": 0.17013045,
+        "pmra_mas_yr": -1721.7277944720731,
+        "pmdec_mas_yr": 854.9631570589582,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 3.5342,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5320,
+        "spectype": "G8V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 3.6521709611425766,
+        "distance_km": 112694220585700.86,
+        "icrs_x_km": 97355045426143.92,
+        "icrs_y_km": 47571356849160.44,
+        "icrs_z_km": -30966971049848.098,
+        "icrs_vx_km_s": 16.7233022405222,
+        "icrs_vy_km_s": -25.007544719835593,
+        "icrs_vz_km_s": 14.233293728719648,
+        "position_ulp_km": 0.021617162599106603,
+        "icrs_x_j2000_km": 97381432790283.2,
+        "icrs_y_j2000_km": 47531897944497.9,
+        "icrs_z_j2000_km": -30944512620339.426,
+        "icrs_vx_j2000_km_s": 16.7233022405222,
+        "icrs_vy_j2000_km_s": -25.007544719835593,
+        "icrs_vz_j2000_km_s": 14.233293728719648
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "tau Cet g",
+      "host_star": "tau Cet",
+      "raw": {
+        "pl_name": "tau Cet g",
+        "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 20.0,
+        "period_err_days": 0.02,
+        "semi_major_axis_au": 0.133,
+        "semi_major_axis_err_au": 0.001,
+        "eccentricity": 0.06,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 395.341,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.75,
+        "mass_err_mearth": 0.25,
+        "mass_type": "Msini",
+        "radius_rearth": 1.18,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 19896516803.100002,
+        "eccentricity": 0.06,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.045135e+25,
+        "mass_type": "Msini",
+        "radius_m": 7517780.0
+      }
+    },
+    {
+      "name": "tau Cet h",
+      "host_star": "tau Cet",
+      "raw": {
+        "pl_name": "tau Cet h",
+        "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 49.41,
+        "period_err_days": 0.08,
+        "semi_major_axis_au": 0.243,
+        "semi_major_axis_err_au": 0.003,
+        "eccentricity": 0.23,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 7.45,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.83,
+        "mass_err_mearth": 0.68,
+        "mass_type": "Msini",
+        "radius_rearth": 1.19,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 36352282580.1,
+        "eccentricity": 0.23,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.0929126000000002e+25,
+        "mass_type": "Msini",
+        "radius_m": 7581490.0
+      }
+    },
+    {
+      "name": "tau Cet f",
+      "host_star": "tau Cet",
+      "raw": {
+        "pl_name": "tau Cet f",
+        "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 636.13,
+        "period_err_days": 11.7,
+        "semi_major_axis_au": 1.334,
+        "semi_major_axis_err_au": 0.017,
+        "eccentricity": 0.16,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 119.75,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 3.93,
+        "mass_err_mearth": 1.05,
+        "mass_type": "Msini",
+        "radius_rearth": 1.81,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 199563559513.80002,
+        "eccentricity": 0.16,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.3470746e+25,
+        "mass_type": "Msini",
+        "radius_m": 11531510.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

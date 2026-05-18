@@ -1,0 +1,219 @@
+{
+  "system_name": "Wolf 1061",
+  "stars": [
+    {
+      "name": "Wolf 1061",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4330690742322011520",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 247.57481416249274,
+        "dec_deg": -12.66785108081103,
+        "parallax_mas": 232.13898083974135,
+        "parallax_error_mas": 0.026823945,
+        "pmra_mas_yr": -94.20959499441267,
+        "pmdec_mas_yr": -1183.917157588457,
+        "radial_velocity_km_s": -21.797655,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 10.1081,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3353,
+        "spectype": "M3V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 4.307764238399739,
+        "distance_km": 132923715367787.25,
+        "icrs_x_km": -49490382669709.86,
+        "icrs_y_km": -119933520831677.12,
+        "icrs_z_km": -29110837298403.73,
+        "icrs_vx_km_s": 8.357079786316733,
+        "icrs_vy_km_s": 25.29365796902548,
+        "icrs_vz_km_s": -18.807858373702175,
+        "position_ulp_km": 0.02663059125033776,
+        "icrs_x_j2000_km": -49477196200656.625,
+        "icrs_y_j2000_km": -119893610474640.97,
+        "icrs_z_j2000_km": -29140513841974.426,
+        "icrs_vx_j2000_km_s": 8.357079786316733,
+        "icrs_vy_j2000_km_s": 25.29365796902548,
+        "icrs_vz_j2000_km_s": -18.807858373702175
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "Wolf 1061 b",
+      "host_star": "Wolf 1061",
+      "raw": {
+        "pl_name": "Wolf 1061 b",
+        "reference": "<a refstr=WRIGHT_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...817L..20W/abstract target=ref>Wright et al. 2016</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.8869,
+        "period_err_days": 0.0005,
+        "semi_major_axis_au": 0.0375,
+        "semi_major_axis_err_au": 0.0012,
+        "eccentricity": 0.15,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": null,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.91,
+        "mass_err_mearth": 0.26,
+        "mass_type": "Msini",
+        "radius_rearth": 1.21,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 5609920151.25,
+        "eccentricity": 0.15,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.1406902e+25,
+        "mass_type": "Msini",
+        "radius_m": 7708910.0
+      }
+    },
+    {
+      "name": "Wolf 1061 c",
+      "host_star": "Wolf 1061",
+      "raw": {
+        "pl_name": "Wolf 1061 c",
+        "reference": "<a refstr=WRIGHT_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...817L..20W/abstract target=ref>Wright et al. 2016</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 17.8719,
+        "period_err_days": 0.0059,
+        "semi_major_axis_au": 0.089,
+        "semi_major_axis_err_au": 0.0029,
+        "eccentricity": 0.11,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 37.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 3.41,
+        "mass_err_mearth": 0.43,
+        "mass_type": "Msini",
+        "radius_rearth": 1.66,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 13314210492.3,
+        "eccentricity": 0.11,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.0365202e+25,
+        "mass_type": "Msini",
+        "radius_m": 10575860.0
+      }
+    },
+    {
+      "name": "Wolf 1061 d",
+      "host_star": "Wolf 1061",
+      "raw": {
+        "pl_name": "Wolf 1061 d",
+        "reference": "<a refstr=WRIGHT_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...817L..20W/abstract target=ref>Wright et al. 2016</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 217.21,
+        "period_err_days": 0.55,
+        "semi_major_axis_au": 0.47,
+        "semi_major_axis_err_au": 0.015,
+        "eccentricity": 0.55,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 102.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 7.7,
+        "mass_err_mearth": 1.12,
+        "mass_type": "Msini",
+        "radius_rearth": 2.69,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 70310999229.0,
+        "eccentricity": 0.55,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.598594e+25,
+        "mass_type": "Msini",
+        "radius_m": 17137990.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

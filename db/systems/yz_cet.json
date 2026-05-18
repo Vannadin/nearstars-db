@@ -1,0 +1,219 @@
+{
+  "system_name": "YZ Cet",
+  "stars": [
+    {
+      "name": "YZ Cet",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "2358524597030794112",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 18.13325425370941,
+        "dec_deg": -16.996154872479234,
+        "parallax_mas": 269.05730465038937,
+        "parallax_error_mas": 0.03366602,
+        "pmra_mas_yr": 1205.074450317742,
+        "pmdec_mas_yr": 637.5466339679103,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 12.1558,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3225,
+        "spectype": "M4.0Ve",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 3.71668036033956,
+        "distance_km": 114684772654676.72,
+        "icrs_x_km": 104236084869419.11,
+        "icrs_y_km": 34090045099892.484,
+        "icrs_z_km": -33545596104156.836,
+        "icrs_vx_km_s": -3.487623004420228,
+        "icrs_vy_km_s": 21.199398539960285,
+        "icrs_vz_km_s": 10.742214996354571,
+        "position_ulp_km": 0.0231450602837622,
+        "icrs_x_j2000_km": 104230581818832.9,
+        "icrs_y_j2000_km": 34123495206860.715,
+        "icrs_z_j2000_km": -33528646177958.387,
+        "icrs_vx_j2000_km_s": -3.487623004420228,
+        "icrs_vy_j2000_km_s": 21.199398539960285,
+        "icrs_vz_j2000_km_s": 10.742214996354571
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "YZ Cet b",
+      "host_star": "YZ Cet",
+      "raw": {
+        "pl_name": "YZ Cet b",
+        "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605L..11A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 2.02087,
+        "period_err_days": 7e-05,
+        "semi_major_axis_au": 0.01634,
+        "semi_major_axis_err_au": 0.00035,
+        "eccentricity": 0.06,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 197.0,
+        "tperi_bjd": 2452996.25,
+        "tperi_err_bjd": 0.21,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 0.7,
+        "mass_err_mearth": 0.09,
+        "mass_type": "Msini",
+        "radius_rearth": 0.913,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 2444429207.238,
+        "eccentricity": 0.06,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.18054e+24,
+        "mass_type": "Msini",
+        "radius_m": 5816723.0
+      }
+    },
+    {
+      "name": "YZ Cet c",
+      "host_star": "YZ Cet",
+      "raw": {
+        "pl_name": "YZ Cet c",
+        "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605L..11A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 3.05989,
+        "period_err_days": 0.0001,
+        "semi_major_axis_au": 0.02156,
+        "semi_major_axis_err_au": 0.00046,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 30.0,
+        "tperi_bjd": 2452997.62,
+        "tperi_err_bjd": 0.15,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.14,
+        "mass_err_mearth": 0.11,
+        "mass_type": "Msini",
+        "radius_rearth": 1.05,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 3225330092.292,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.808308e+24,
+        "mass_type": "Msini",
+        "radius_m": 6689550.0
+      }
+    },
+    {
+      "name": "YZ Cet d",
+      "host_star": "YZ Cet",
+      "raw": {
+        "pl_name": "YZ Cet d",
+        "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605L..11A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.65626,
+        "period_err_days": 0.00028,
+        "semi_major_axis_au": 0.02851,
+        "semi_major_axis_err_au": 0.00061,
+        "eccentricity": 0.07,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 200.0,
+        "tperi_bjd": 2452996.83,
+        "tperi_err_bjd": 0.3,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.09,
+        "mass_err_mearth": 0.12,
+        "mass_type": "Msini",
+        "radius_rearth": 1.03,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 4265035293.657,
+        "eccentricity": 0.07,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.509698000000001e+24,
+        "mass_type": "Msini",
+        "radius_m": 6562130.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

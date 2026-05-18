@@ -1,0 +1,178 @@
+{
+  "system_name": "HD 192310",
+  "stars": [
+    {
+      "name": "HD 192310",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "6847167606385195648",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 303.82866493156223,
+        "dec_deg": -27.033780809464673,
+        "parallax_mas": 113.48717988476642,
+        "parallax_error_mas": 0.051574934,
+        "pmra_mas_yr": 1242.7627067001158,
+        "pmdec_mas_yr": -181.1749780311303,
+        "radial_velocity_km_s": -54.411087,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 5.7266,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 4893,
+        "spectype": "K2+V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 8.811567976359871,
+        "distance_km": 271896577624376.72,
+        "icrs_x_km": 134799609635767.47,
+        "icrs_y_km": -201337705335448.38,
+        "icrs_z_km": -123618744841559.22,
+        "icrs_vx_km_s": 14.226596885854864,
+        "icrs_vy_km_s": 72.0181075417275,
+        "icrs_vz_km_s": 17.989713591753848,
+        "position_ulp_km": 0.044705951237722,
+        "icrs_x_j2000_km": 134822057498461.72,
+        "icrs_y_j2000_km": -201224069403920.44,
+        "icrs_z_j2000_km": -123590359232277.06,
+        "icrs_vx_j2000_km_s": 14.226596885854864,
+        "icrs_vy_j2000_km_s": 72.0181075417275,
+        "icrs_vz_j2000_km_s": 17.989713591753848
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "HD 192310 b",
+      "host_star": "HD 192310",
+      "raw": {
+        "pl_name": "HD 192310 b",
+        "reference": "<a refstr=PEPE_ET_AL__2011 href=https://ui.adsabs.harvard.edu/abs/2011A%26A...534A..58P/abstract target=ref> Pepe et al. 2011 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 74.72,
+        "period_err_days": 0.1,
+        "semi_major_axis_au": 0.32,
+        "semi_major_axis_err_au": 0.005,
+        "eccentricity": 0.13,
+        "inclination_deg": 90.0,
+        "inclination_err_deg": null,
+        "omega_deg": 173.0,
+        "tperi_bjd": 2455164.3,
+        "tperi_err_bjd": 3.6,
+        "tranmid_bjd": 2455767.85,
+        "tranmid_err_bjd": 0.68,
+        "mass_mearth": 16.9,
+        "mass_err_mearth": 0.9,
+        "mass_type": "Msin(i)/sin(i)",
+        "radius_rearth": 4.27,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 47871318624.0,
+        "eccentricity": 0.13,
+        "inclination_deg": 90.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.0093018e+26,
+        "mass_type": "Msin(i)/sin(i)",
+        "radius_m": 27204169.999999996
+      }
+    },
+    {
+      "name": "HD 192310 c",
+      "host_star": "HD 192310",
+      "raw": {
+        "pl_name": "HD 192310 c",
+        "reference": "<a refstr=PEPE_ET_AL__2011 href=https://ui.adsabs.harvard.edu/abs/2011A%26A...534A..58P/abstract target=ref> Pepe et al. 2011 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 525.8,
+        "period_err_days": 9.2,
+        "semi_major_axis_au": 1.18,
+        "semi_major_axis_err_au": 0.025,
+        "eccentricity": 0.32,
+        "inclination_deg": 90.0,
+        "inclination_err_deg": null,
+        "omega_deg": 110.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2455256.0,
+        "tranmid_err_bjd": 12.0,
+        "mass_mearth": 24.0,
+        "mass_err_mearth": 5.0,
+        "mass_type": "Msin(i)/sin(i)",
+        "radius_rearth": 5.25,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 176525487426.0,
+        "eccentricity": 0.32,
+        "inclination_deg": 90.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.4333280000000001e+26,
+        "mass_type": "Msin(i)/sin(i)",
+        "radius_m": 33447750.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "system_name": "Mu Herculis A",
+  "stars": [
+    {
+      "name": "Mu Herculis A",
+      "component": "A",
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4594497769766809216",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 266.6132135058437,
+        "dec_deg": 27.717275040505413,
+        "parallax_mas": 119.92480848370072,
+        "parallax_error_mas": 0.1542597,
+        "pmra_mas_yr": -312.0873775804219,
+        "pmdec_mas_yr": -773.1790550724331,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 3.4609,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5496,
+        "spectype": "G5IV",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 8.338558240315328,
+        "distance_km": 257301022240980.5,
+        "icrs_x_km": -13428768879894.967,
+        "icrs_y_km": -227350759016876.03,
+        "icrs_z_km": 119729366904600.39,
+        "icrs_vx_km_s": -13.154627380330629,
+        "icrs_vy_km_s": -13.461397198776057,
+        "icrs_vz_km_s": -27.055783285240146,
+        "position_ulp_km": 0.05048200946530824,
+        "icrs_x_j2000_km": -13449525303345.842,
+        "icrs_y_j2000_km": -227371999486288.03,
+        "icrs_z_j2000_km": 119686676125270.28,
+        "icrs_vx_j2000_km_s": -13.154627380330629,
+        "icrs_vy_j2000_km_s": -13.461397198776057,
+        "icrs_vz_j2000_km_s": -27.055783285240146
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

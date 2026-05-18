@@ -1,0 +1,174 @@
+{
+  "system_name": "Sirius A",
+  "stars": [
+    {
+      "name": "Sirius A",
+      "component": "A",
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 101.28715533333335,
+        "dec_deg": -16.71611586111111,
+        "parallax_mas": 379.21,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": -546.01,
+        "pmdec_mas_yr": -1223.07,
+        "radial_velocity_km_s": -5.5,
+        "radial_velocity_source": "simbad",
+        "vmag_v": -1.46,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 9333,
+        "spectype": "A0mA1Va",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 2.6370612589330453,
+        "distance_km": 81371208077081.31,
+        "icrs_x_km": -15267005093077.963,
+        "icrs_y_km": 76438112693790.6,
+        "icrs_z_km": -23384184710272.953,
+        "icrs_vx_km_s": 8.585357236235225,
+        "icrs_vy_km_s": -8.142398998466666,
+        "icrs_vz_km_s": -13.06141577014414,
+        "position_ulp_km": 0.016972670534307753,
+        "icrs_x_j2000_km": -15253458429602.053,
+        "icrs_y_j2000_km": 76425264965258.89,
+        "icrs_z_j2000_km": -23404794056988.348,
+        "icrs_vx_j2000_km_s": 8.585357236235225,
+        "icrs_vy_j2000_km_s": -8.142398998466666,
+        "icrs_vz_j2000_km_s": -13.06141577014414
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit": {
+    "components": [
+      "Sirius A",
+      "Sirius B"
+    ],
+    "hierarchy": "binary",
+    "wds_id": "06451-1643",
+    "raw": {
+      "source": "Bond et al. (2017)",
+      "doi": "10.3847/1538-3881/aa6d54",
+      "note": "AJ 153, 51 (2017). Best modern orbit.",
+      "orb_grade": 10,
+      "period_yr": 50.09,
+      "period_yr_err": 0.09,
+      "semi_major_axis_arcsec": 7.5,
+      "semi_major_axis_arcsec_err": 0.014,
+      "eccentricity": 0.592,
+      "eccentricity_err": 0.0014,
+      "inclination_deg": 136.336,
+      "inclination_err_deg": 0.04,
+      "longitude_of_ascending_node_deg": 45.4,
+      "longitude_of_ascending_node_err_deg": 0.12,
+      "argument_of_periapsis_deg": 149.23,
+      "argument_of_periapsis_err_deg": 0.04,
+      "t_peri_yr": 1994.344,
+      "t_peri_jd": 2449479.1,
+      "t_peri_note": "Bond et al. 2017 Table 6"
+    },
+    "derived": {
+      "semi_major_axis_au": 19.778,
+      "semi_major_axis_m": 2958740619313.837,
+      "mean_anomaly_at_b1950_deg": 41.2969,
+      "mean_anomaly_at_j2000_deg": 40.65,
+      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+    },
+    "barycenter_state_b1950": {
+      "mass_A_msun": 2.063,
+      "mass_B_msun": 1.018,
+      "epoch_jd": 2433282.5,
+      "epoch_label": "B1950.0",
+      "icrs_x_km": -15330792920689.477,
+      "icrs_y_km": 76756582291560.02,
+      "icrs_z_km": -23484122132477.207,
+      "icrs_vx_km_s": 8.197858376918768,
+      "icrs_vy_km_s": -7.860190540331654,
+      "icrs_vz_km_s": -11.886181763557635,
+      "distance_pc": 2.6370612589330453,
+      "distance_km": 81371208077081.31,
+      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+    },
+    "individual_states": {
+      "b1950": {
+        "Sirius A": {
+          "icrs_x_km": -15330609523377.885,
+          "icrs_y_km": 76757310789599.44,
+          "icrs_z_km": -23483801113860.3,
+          "icrs_vx_km_s": 11.716665344820786,
+          "icrs_vy_km_s": -5.213722270795663,
+          "icrs_vz_km_s": -13.17198209638249
+        },
+        "Sirius B": {
+          "icrs_x_km": -15331164579484.97,
+          "icrs_y_km": 76755105973823.94,
+          "icrs_z_km": -23484772683957.242,
+          "icrs_vx_km_s": 1.0669165549326562,
+          "icrs_vy_km_s": -13.223318281051448,
+          "icrs_vz_km_s": -9.28047833858939
+        }
+      },
+      "j2000": {
+        "Sirius A": {
+          "icrs_x_km": -15317684223283.254,
+          "icrs_y_km": 76744900819370.55,
+          "icrs_z_km": -23502552648691.85,
+          "icrs_vx_km_s": 11.730994536212696,
+          "icrs_vy_km_s": -5.158014669895451,
+          "icrs_vz_km_s": -13.147341159735065
+        },
+        "Sirius B": {
+          "icrs_x_km": -15318209205800.361,
+          "icrs_y_km": 76742718801721.22,
+          "icrs_z_km": -23503534610806.676,
+          "icrs_vx_km_s": 1.0378781248329396,
+          "icrs_vy_km_s": -13.336210992895396,
+          "icrs_vz_km_s": -9.330413753425969
+        }
+      }
+    }
+  }
+}

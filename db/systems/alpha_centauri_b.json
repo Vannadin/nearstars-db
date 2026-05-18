@@ -1,0 +1,124 @@
+{
+  "system_name": "Alpha Centauri B",
+  "stars": [
+    {
+      "name": "Alpha Centauri B",
+      "component": "B",
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 219.89609628987276,
+        "dec_deg": -60.83752756558407,
+        "parallax_mas": 742.12,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": -3614.39,
+        "pmdec_mas_yr": 802.98,
+        "radial_velocity_km_s": -22.586,
+        "radial_velocity_source": "simbad",
+        "vmag_v": 1.33,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 5260,
+        "spectype": "K1 V",
+        "mass_measurements": [
+          {
+            "value_msun": 0.9373,
+            "uncertainty_msun": 0.0033,
+            "method": "binary_orbit",
+            "reference": "Pourbaix & Boffin 2016",
+            "bibcode": "2016A&A...586A..90P",
+            "doi": "10.1051/0004-6361/201527859",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.8632,
+            "uncertainty_rsun": 0.0037,
+            "method": "interferometry",
+            "reference": "Kervella et al. 2017",
+            "bibcode": "2017A&A...597A.137K",
+            "doi": "10.1051/0004-6361/201629505",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 1.3474909718104888,
+        "distance_km": 41579226829771.46,
+        "icrs_x_km": -15528992376009.479,
+        "icrs_y_km": -13029938903531.502,
+        "icrs_z_km": -36343767762741.04,
+        "icrs_vx_km_s": -9.801006121581745,
+        "icrs_vy_km_s": 21.899445240324027,
+        "icrs_vz_km_s": 22.222441356482296,
+        "position_ulp_km": 0.008069937554364923,
+        "icrs_x_j2000_km": -15544457187548.6,
+        "icrs_y_j2000_km": -12995384206875.7,
+        "icrs_z_j2000_km": -36308703416973.48,
+        "icrs_vx_j2000_km_s": -9.801006121581745,
+        "icrs_vy_j2000_km_s": 21.899445240324027,
+        "icrs_vz_j2000_km_s": 22.222441356482296
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 124391370028.871,
+        "mean_radius_km": 600528.2
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Pourbaix & Boffin 2016",
+      "doi": "10.1051/0004-6361/201527859",
+      "bibcode": "2016A&A...586A..90P",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "Alpha Centauri B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Kervella et al. 2017",
+      "doi": "10.1051/0004-6361/201629505",
+      "bibcode": "2017A&A...597A.137K",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "Alpha Centauri B radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit_ref": "alpha_centauri_a.json"
+}

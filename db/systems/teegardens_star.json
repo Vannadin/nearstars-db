@@ -1,0 +1,219 @@
+{
+  "system_name": "Teegarden's Star",
+  "stars": [
+    {
+      "name": "Teegarden's Star",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "35227046884571776",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 43.26964247679057,
+        "dec_deg": 16.86437381897744,
+        "parallax_mas": 260.98844068047276,
+        "parallax_error_mas": 0.09342672,
+        "pmra_mas_yr": 3429.0828268077694,
+        "pmdec_mas_yr": -3805.54112273733,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 15.3227,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3034,
+        "spectype": "dM6",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 3.831587320084787,
+        "distance_km": 118230430951108.08,
+        "icrs_x_km": 82444063289045.56,
+        "icrs_y_km": 77430761867263.7,
+        "icrs_z_km": 34437274911570.31,
+        "icrs_vx_km_s": -28.090481254110603,
+        "icrs_vy_km_s": 59.096243062962095,
+        "icrs_vz_km_s": -66.14939512892471,
+        "position_ulp_km": 0.0183062594614304,
+        "icrs_x_j2000_km": 82399739880484.33,
+        "icrs_y_j2000_km": 77524008647267.89,
+        "icrs_z_j2000_km": 34332899103984.28,
+        "icrs_vx_j2000_km_s": -28.090481254110603,
+        "icrs_vy_j2000_km_s": 59.096243062962095,
+        "icrs_vz_j2000_km_s": -66.14939512892471
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "Teegarden's Star b",
+      "host_star": "Teegarden's Star",
+      "raw": {
+        "pl_name": "Teegarden's Star b",
+        "reference": "<a refstr=ZECHMEISTER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...627A..49Z/abstract target=ref>Zechmeister et al. 2019</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.90634,
+        "period_err_days": 0.00041,
+        "semi_major_axis_au": 0.0259,
+        "semi_major_axis_err_au": 0.0008,
+        "eccentricity": 0.03,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 338.0,
+        "tperi_bjd": 2458052.3,
+        "tperi_err_bjd": 0.7,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.16,
+        "mass_err_mearth": 0.12,
+        "mass_type": "Msini",
+        "radius_rearth": 1.05,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 3874584851.13,
+        "eccentricity": 0.03,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.927751999999999e+24,
+        "mass_type": "Msini",
+        "radius_m": 6689550.0
+      }
+    },
+    {
+      "name": "Teegarden's Star c",
+      "host_star": "Teegarden's Star",
+      "raw": {
+        "pl_name": "Teegarden's Star c",
+        "reference": "<a refstr=ZECHMEISTER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...627A..49Z/abstract target=ref>Zechmeister et al. 2019</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 11.416,
+        "period_err_days": 0.003,
+        "semi_major_axis_au": 0.0455,
+        "semi_major_axis_err_au": 0.0015,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 301.0,
+        "tperi_bjd": 2458053.2,
+        "tperi_err_bjd": 3.2,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1.05,
+        "mass_err_mearth": 0.14,
+        "mass_type": "Msini",
+        "radius_rearth": 1.02,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 6806703116.849999,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.27081e+24,
+        "mass_type": "Msini",
+        "radius_m": 6498420.0
+      }
+    },
+    {
+      "name": "Teegarden's Star d",
+      "host_star": "Teegarden's Star",
+      "raw": {
+        "pl_name": "Teegarden's Star d",
+        "reference": "<a refstr=DREIZLER_ET_AL_2024 href=https://ui.adsabs.harvard.edu/abs/2024A&A...684A.117D/abstract target=ref>Dreizler et al. 2024</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 26.13,
+        "period_err_days": 0.03,
+        "semi_major_axis_au": 0.0791,
+        "semi_major_axis_err_au": 0.0025,
+        "eccentricity": 0.07,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 345.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 0.82,
+        "mass_err_mearth": 0.17,
+        "mass_type": "Msini",
+        "radius_rearth": 0.954,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 11833191572.37,
+        "eccentricity": 0.07,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.897204e+24,
+        "mass_type": "Msini",
+        "radius_m": 6077934.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

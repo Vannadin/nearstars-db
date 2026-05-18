@@ -1,0 +1,80 @@
+{
+  "Alpha Centauri A": {
+    "teff_k": 5790,
+    "spectype": "G2 V",
+    "mass_measurements": [
+      {
+        "value_msun": 1.1055,
+        "uncertainty_msun": 0.0039,
+        "method": "binary_orbit",
+        "reference": "Pourbaix & Boffin 2016",
+        "bibcode": "2016A&A...586A..90P",
+        "doi": "10.1051/0004-6361/201527859",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.2234,
+        "uncertainty_rsun": 0.0053,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2017",
+        "bibcode": "2017A&A...597A.137K",
+        "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      }
+    ]
+  },
+  "Alpha Centauri B": {
+    "teff_k": 5260,
+    "spectype": "K1 V",
+    "mass_measurements": [
+      {
+        "value_msun": 0.9373,
+        "uncertainty_msun": 0.0033,
+        "method": "binary_orbit",
+        "reference": "Pourbaix & Boffin 2016",
+        "bibcode": "2016A&A...586A..90P",
+        "doi": "10.1051/0004-6361/201527859",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.8632,
+        "uncertainty_rsun": 0.0037,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2017",
+        "bibcode": "2017A&A...597A.137K",
+        "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      }
+    ]
+  },
+  "Barnard's star": {
+    "teff_k": 3278,
+    "spectype": "M4.0 Ve",
+    "mass_measurements": [
+      {
+        "value_msun": 0.1610,
+        "uncertainty_msun": 0.0060,
+        "method": "spectroscopic_calibration",
+        "reference": "Mann et al. 2015",
+        "bibcode": "2015ApJ...804...64M",
+        "doi": "10.1088/0004-637X/804/1/64",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1868,
+        "uncertainty_rsun": 0.0011,
+        "method": "interferometry",
+        "reference": "Rains et al. 2021",
+        "bibcode": "2021MNRAS.504.5788R",
+        "doi": "10.1093/mnras/stab1167",
+        "recommended": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "system_name": "Delta Pavonis",
+  "stars": [
+    {
+      "name": "Delta Pavonis",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "6427464123776727168",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 302.19503988923026,
+        "dec_deg": -66.18709128441725,
+        "parallax_mas": 163.9544145383167,
+        "parallax_error_mas": 0.12218077,
+        "pmra_mas_yr": 1211.7606270999615,
+        "pmdec_mas_yr": -1130.2369049548956,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 3.5856,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5604,
+        "spectype": "G8IV",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 6.099256325704463,
+        "distance_km": 188203385079934.3,
+        "icrs_x_km": 40457732763782.31,
+        "icrs_y_km": -64395086265023.15,
+        "icrs_z_km": -172153910318155.16,
+        "icrs_vx_km_s": 13.719709653526445,
+        "icrs_vy_km_s": 43.96727152648562,
+        "icrs_vz_km_s": -13.194164170938494,
+        "position_ulp_km": 0.03822584700289403,
+        "icrs_x_j2000_km": 40479380819250.414,
+        "icrs_y_j2000_km": -64325711186626.94,
+        "icrs_z_j2000_km": -172174729125917.22,
+        "icrs_vx_j2000_km_s": 13.719709653526445,
+        "icrs_vy_j2000_km_s": 43.96727152648562,
+        "icrs_vz_j2000_km_s": -13.194164170938494
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

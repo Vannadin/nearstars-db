@@ -1,0 +1,340 @@
+{
+  "system_name": "L 98-59",
+  "stars": [
+    {
+      "name": "L 98-59",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "5271055243163629056",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 124.53289609935437,
+        "dec_deg": -68.31451297878304,
+        "parallax_mas": 94.26635965165642,
+        "parallax_error_mas": 0.015486798,
+        "pmra_mas_yr": 94.79378412168865,
+        "pmdec_mas_yr": -340.08431073762046,
+        "radial_velocity_km_s": -6.095192,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 11.7246,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3400,
+        "spectype": "M3V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 10.608238227245772,
+        "distance_km": 327336028769281.06,
+        "icrs_x_km": -68579786504113.49,
+        "icrs_y_km": 99679092504127.98,
+        "icrs_z_km": -304167848022934.56,
+        "icrs_vx_km_s": 6.358422118258522,
+        "icrs_vy_km_s": -17.649377861118296,
+        "icrs_vz_km_s": -0.6556358978690806,
+        "position_ulp_km": 0.06753882964514947,
+        "icrs_x_j2000_km": -68569753677021.54,
+        "icrs_y_j2000_km": 99651243903788.48,
+        "icrs_z_j2000_km": -304168882537705.1,
+        "icrs_vx_j2000_km_s": 6.358422118258522,
+        "icrs_vy_j2000_km_s": -17.649377861118296,
+        "icrs_vz_j2000_km_s": -0.6556358978690806
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "L 98-59 b",
+      "host_star": "L 98-59",
+      "raw": {
+        "pl_name": "L 98-59 b",
+        "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 2.253114,
+        "period_err_days": 4e-07,
+        "semi_major_axis_au": 0.0223,
+        "semi_major_axis_err_au": 0.0007,
+        "eccentricity": 0.031,
+        "inclination_deg": 88.08,
+        "inclination_err_deg": 0.23,
+        "omega_deg": 192.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2458366.17056,
+        "tranmid_err_bjd": 0.00024,
+        "mass_mearth": 0.46,
+        "mass_err_mearth": 0.11,
+        "mass_type": "Mass",
+        "radius_rearth": 0.837,
+        "radius_err_rearth": 0.019,
+        "discoverymethod": "Transit",
+        "pl_controv_flag": 0,
+        "pubdate": null,
+        "tepcat": {
+          "mass_mjup": 0.0014,
+          "mass_mearth": 0.445,
+          "mass_err_mearth": 0.0953,
+          "radius_rjup": 0.0747,
+          "radius_rearth": 0.8373,
+          "radius_err_rearth": 0.0191,
+          "period_days": 2.253,
+          "eccentricity": 0.031,
+          "semi_major_axis_au": 0.0223,
+          "teq_k": 620.0,
+          "bibcode": "2025AJ....170..154C"
+        }
+      },
+      "derived": {
+        "semi_major_axis_m": 3336032516.61,
+        "eccentricity": 0.031,
+        "inclination_deg": 88.08,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.657629e+24,
+        "mass_type": "Mass",
+        "radius_m": 5334438.300000001
+      }
+    },
+    {
+      "name": "L 98-59 c",
+      "host_star": "L 98-59",
+      "raw": {
+        "pl_name": "L 98-59 c",
+        "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 3.6906764,
+        "period_err_days": 4e-07,
+        "semi_major_axis_au": 0.0309,
+        "semi_major_axis_err_au": 0.001,
+        "eccentricity": 0.002,
+        "inclination_deg": 88.88,
+        "inclination_err_deg": 0.21,
+        "omega_deg": 261.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2458367.27303,
+        "tranmid_err_bjd": 0.00015,
+        "mass_mearth": 2.0,
+        "mass_err_mearth": 0.13,
+        "mass_type": "Mass",
+        "radius_rearth": 1.329,
+        "radius_err_rearth": 0.029,
+        "discoverymethod": "Transit",
+        "pl_controv_flag": 0,
+        "pubdate": null,
+        "tepcat": {
+          "mass_mjup": 0.0063,
+          "mass_mearth": 2.0023,
+          "mass_err_mearth": 0.1271,
+          "radius_rjup": 0.1186,
+          "radius_rearth": 1.3294,
+          "radius_err_rearth": 0.0291,
+          "period_days": 3.691,
+          "eccentricity": 0.002,
+          "semi_major_axis_au": 0.0309,
+          "teq_k": 526.0,
+          "bibcode": "2025AJ....170..154C"
+        }
+      },
+      "derived": {
+        "semi_major_axis_m": 4622574204.63,
+        "eccentricity": 0.002,
+        "inclination_deg": 88.88,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.195813606e+25,
+        "mass_type": "Mass",
+        "radius_m": 8469607.4
+      }
+    },
+    {
+      "name": "L 98-59 d",
+      "host_star": "L 98-59",
+      "raw": {
+        "pl_name": "L 98-59 d",
+        "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 7.450729,
+        "period_err_days": 2e-06,
+        "semi_major_axis_au": 0.0494,
+        "semi_major_axis_err_au": 0.0016,
+        "eccentricity": 0.006,
+        "inclination_deg": 88.44,
+        "inclination_err_deg": 0.05,
+        "omega_deg": 180.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2458362.74002,
+        "tranmid_err_bjd": 0.00025,
+        "mass_mearth": 1.64,
+        "mass_err_mearth": 0.07,
+        "mass_type": "Mass",
+        "radius_rearth": 1.627,
+        "radius_err_rearth": 0.041,
+        "discoverymethod": "Transit",
+        "pl_controv_flag": 0,
+        "pubdate": null,
+        "tepcat": {
+          "mass_mjup": 0.0052,
+          "mass_mearth": 1.6527,
+          "mass_err_mearth": 0.0636,
+          "radius_rjup": 0.1452,
+          "radius_rearth": 1.6275,
+          "radius_err_rearth": 0.0415,
+          "period_days": 7.451,
+          "eccentricity": 0.006,
+          "semi_major_axis_au": 0.0494,
+          "teq_k": 416.0,
+          "bibcode": "2025AJ....170..154C"
+        }
+      },
+      "derived": {
+        "semi_major_axis_m": 7390134812.58,
+        "eccentricity": 0.006,
+        "inclination_deg": 88.44,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 9.87025494e+24,
+        "mass_type": "Mass",
+        "radius_m": 10368802.5
+      }
+    },
+    {
+      "name": "L 98-59 e",
+      "host_star": "L 98-59",
+      "raw": {
+        "pl_name": "L 98-59 e",
+        "reference": "<a refstr=DEMANGEON_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...653A..41D/abstract target=ref>Demangeon et al. 2021</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 12.8278,
+        "period_err_days": 0.0018,
+        "semi_major_axis_au": 0.0712,
+        "semi_major_axis_err_au": 0.0022,
+        "eccentricity": 0.012,
+        "inclination_deg": 80.0,
+        "inclination_err_deg": null,
+        "omega_deg": 165.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2458438.48,
+        "tranmid_err_bjd": 0.15,
+        "mass_mearth": 2.82,
+        "mass_err_mearth": 0.19,
+        "mass_type": "Msini",
+        "radius_rearth": 1.49,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 10651368393.84,
+        "eccentricity": 0.012,
+        "inclination_deg": 80.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.6841604e+25,
+        "mass_type": "Msini",
+        "radius_m": 9492790.0
+      }
+    },
+    {
+      "name": "L 98-59 f",
+      "host_star": "L 98-59",
+      "raw": {
+        "pl_name": "L 98-59 f",
+        "reference": "<a refstr=CADIEUX_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....170..154C/abstract target=ref>Cadieux et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 23.064,
+        "period_err_days": 0.055,
+        "semi_major_axis_au": 0.1052,
+        "semi_major_axis_err_au": 0.0033,
+        "eccentricity": 0.044,
+        "inclination_deg": 74.0,
+        "inclination_err_deg": null,
+        "omega_deg": 4.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2458437.84,
+        "tranmid_err_bjd": 0.75,
+        "mass_mearth": 2.8,
+        "mass_err_mearth": 0.3,
+        "mass_type": "Msini",
+        "radius_rearth": 1.48,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 15737695997.64,
+        "eccentricity": 0.044,
+        "inclination_deg": 74.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.672216e+25,
+        "mass_type": "Msini",
+        "radius_m": 9429080.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

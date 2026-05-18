@@ -1,0 +1,1128 @@
+{
+  "36 Ophiuchi A": {
+    "teff_k": 5091,
+    "teff_bibcode": "1975A&A....44....9P",
+    "spectype": "K2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "36 Ophiuchi B": {
+    "teff_k": 5091,
+    "teff_bibcode": "1975A&A....44....9P",
+    "spectype": "K1V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "36 Ophiuchi C": {
+    "teff_k": 4308,
+    "teff_bibcode": "1975A&A....39...97P",
+    "spectype": "K5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "40 Eridani A": {
+    "teff_k": 5091,
+    "teff_bibcode": "1964RGOB...87..227P",
+    "spectype": "K0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "40 Eridani B": {
+    "teff_k": 17099,
+    "teff_bibcode": "2017ApJ...848...11B",
+    "spectype": "DA2.9",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "40 Eridani C": {
+    "teff_k": 3331,
+    "teff_bibcode": "2020A&A...644A..68M",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "61 Cygni A": {
+    "teff_k": 4450,
+    "teff_bibcode": "1998MNRAS.299..753Z",
+    "spectype": "K5V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.5977,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "61 Cygni B": {
+    "teff_k": 3652,
+    "teff_bibcode": "1974ApJS...27..405O",
+    "spectype": "K7V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.6128,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "Alpha Centauri A": {
+    "teff_k": 5727,
+    "teff_bibcode": "1990ApJ...350..827F",
+    "spectype": "G2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Alpha Centauri B": {
+    "teff_k": 5362,
+    "teff_bibcode": "1971RGOB..173...63F",
+    "spectype": "K1V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Eta Cassiopeiae A": {
+    "teff_k": 5801,
+    "teff_bibcode": "2004A&A...420..183A",
+    "spectype": "F9V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Eta Cassiopeiae B": {
+    "teff_k": 6034,
+    "teff_bibcode": "2020AJ....160..120J",
+    "spectype": "K7Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Sirius A": {
+    "teff_k": 9333,
+    "teff_bibcode": "1962ApJ...135..459W",
+    "spectype": "A0mA1Va",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Sirius B": {
+    "teff_k": 25970,
+    "teff_bibcode": "2011ApJ...743..138G",
+    "spectype": "DA1.9",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "47 UMa": {
+    "teff_k": 5860,
+    "teff_bibcode": "1974A&A....36..191H",
+    "spectype": "G1-VFe-0.5",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.1348,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "55 Cnc": {
+    "teff_k": 5249,
+    "teff_bibcode": "2013ApJ...764...78R",
+    "spectype": "K0IV-V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.0772,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      },
+      {
+        "value_rsun": 1.1286,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": false
+      }
+    ]
+  },
+  "55 Cnc B": {
+    "teff_k": 3231,
+    "teff_bibcode": "2020ApJ...892...31B",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "61 Vir": {
+    "teff_k": 5552,
+    "teff_bibcode": "1996A&A...314..191G",
+    "spectype": "G6.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "AU Mic": {
+    "teff_k": 3518,
+    "teff_bibcode": "2018MNRAS.475.1960F",
+    "spectype": "M1VeBa1",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Altair": {
+    "teff_k": 7485,
+    "teff_bibcode": "2023ApJS..266...11B",
+    "spectype": "A7Vn",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Barnard's star": {
+    "teff_k": 3332,
+    "teff_bibcode": "2008A&A...480...91S",
+    "spectype": "M4V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Beta Hydri": {
+    "teff_k": 5917,
+    "teff_bibcode": "2024A&A...682A.145S",
+    "spectype": "G0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "CD Cet": {
+    "teff_k": 3130,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "COCONUTS-2 A": {
+    "teff_k": 3200,
+    "teff_bibcode": "2013AJ....146..134K",
+    "spectype": "M3Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "CWISEP J193518.59-154620.3": {
+    "teff_k": 482,
+    "teff_bibcode": "2024Natur.628..511F",
+    "spectype": "Y",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Chi-1 Orionis A": {
+    "teff_k": 5793,
+    "teff_bibcode": "1965ApJ...141..588H",
+    "spectype": "G0V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.0289,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "Delta Pavonis": {
+    "teff_k": 5604,
+    "teff_bibcode": "2014A&A...562A..92D",
+    "spectype": "G8IV",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Fomalhaut": {
+    "teff_k": 8689,
+    "teff_bibcode": "2003A&A...398.1121E",
+    "spectype": "A4V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "G 192-15": {
+    "teff_k": 3000,
+    "teff_bibcode": "2015ApJ...804...64M",
+    "spectype": "M5.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "G 261-6": {
+    "teff_k": 5501,
+    "teff_bibcode": "2022AJ....163..152S",
+    "spectype": "M6V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1002": {
+    "teff_k": 2951,
+    "teff_bibcode": "2022A&A...658A.194P",
+    "spectype": "M5.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1061": {
+    "teff_k": 2905,
+    "teff_bibcode": "2024A&A...683A.125P",
+    "spectype": "M5.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1132": {
+    "teff_k": 3200,
+    "teff_bibcode": "2013AJ....146..134K",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1148": {
+    "teff_k": 3070,
+    "teff_bibcode": "2013A&A...556A.150S",
+    "spectype": "M4.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1151": {
+    "teff_k": 3185,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1214": {
+    "teff_k": 3043,
+    "teff_bibcode": "2019ApJ...878..134K",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1265": {
+    "teff_k": 3256,
+    "teff_bibcode": "2021A&A...656A.162M",
+    "spectype": "dM4.5",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 1289": {
+    "teff_k": 3250,
+    "teff_bibcode": "2022ApJ...927..122H",
+    "spectype": "M4.5Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 15 A": {
+    "teff_k": 3603,
+    "teff_bibcode": "2022A&A...658A.194P",
+    "spectype": "M2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 163": {
+    "teff_k": 3223,
+    "teff_bibcode": "2013A&A...556A.150S",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 179": {
+    "teff_k": 3099,
+    "teff_bibcode": "2019A&A...629A..80H",
+    "spectype": "M2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 180": {
+    "teff_k": 3506,
+    "teff_bibcode": "2015ApJ...804...64M",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 229": {
+    "teff_k": 3700,
+    "teff_bibcode": "2013A&A...556A..15R",
+    "spectype": "M1V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 238": {
+    "teff_k": 3395,
+    "teff_bibcode": "2019ApJ...878..134K",
+    "spectype": "M2.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 251": {
+    "teff_k": 3397,
+    "teff_bibcode": "2024A&A...690A..58A",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 273": {
+    "teff_k": 3250,
+    "teff_bibcode": "2021MNRAS.508.5148C",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 317": {
+    "teff_k": 3453,
+    "teff_bibcode": "2023MNRAS.526.5648C",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 3323": {
+    "teff_k": 3054,
+    "teff_bibcode": "2012ApJ...748...93R",
+    "spectype": "M4.0Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 338 B": {
+    "teff_k": 3867,
+    "teff_bibcode": "2012ApJ...757..112B",
+    "spectype": "M0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 341": {
+    "teff_k": 3631,
+    "teff_bibcode": "2019ApJ...878..134K",
+    "spectype": "M0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 3512": {
+    "teff_k": 3279,
+    "teff_bibcode": "2015ApJS..220...16T",
+    "spectype": "dM5.5",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 357": {
+    "teff_k": 3477,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M2.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 367": {
+    "teff_k": 3453,
+    "teff_bibcode": "2019ApJ...878..134K",
+    "spectype": "M1V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 3779": {
+    "teff_k": 3259,
+    "teff_bibcode": "2014MNRAS.443.2561G",
+    "spectype": "M4V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 393": {
+    "teff_k": 3645,
+    "teff_bibcode": "2019A&A...629A..80H",
+    "spectype": "dM2",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 3988": {
+    "teff_k": 3175,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M5.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 411": {
+    "teff_k": 3429,
+    "teff_bibcode": "1978ApJ...226..923M",
+    "spectype": "M2+V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.3887,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 414 A": {
+    "teff_k": 4211,
+    "teff_bibcode": "2021A&A...656A.162M",
+    "spectype": "K7V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 422": {
+    "teff_k": 3667,
+    "teff_bibcode": "2019ApJ...878..134K",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 4274": {
+    "teff_k": 2975,
+    "teff_bibcode": "2019ApJ...878..134K",
+    "spectype": "M4.5Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 433": {
+    "teff_k": 3461,
+    "teff_bibcode": "2013A&A...556A.150S",
+    "spectype": "M2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 436": {
+    "teff_k": 3400,
+    "teff_bibcode": "2013AJ....145..102L",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 480": {
+    "teff_k": 3517,
+    "teff_bibcode": "2023MNRAS.526.5648C",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 486": {
+    "teff_k": 3345,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 514": {
+    "teff_k": 3798,
+    "teff_bibcode": "2014ApJ...791...54G",
+    "spectype": "M1.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 536": {
+    "teff_k": 3799,
+    "teff_bibcode": "2014ApJ...791...54G",
+    "spectype": "M0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 581": {
+    "teff_k": 3534,
+    "teff_bibcode": "2012ApJ...748...93R",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 625": {
+    "teff_k": 3557,
+    "teff_bibcode": "2018MNRAS.475.1960F",
+    "spectype": "M1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 649": {
+    "teff_k": 3765,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 667 C": {
+    "teff_k": 3351,
+    "teff_bibcode": "2013A&A...556A.150S",
+    "spectype": "M1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 674": {
+    "teff_k": 3257,
+    "teff_bibcode": "2013A&A...556A.150S",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 680": {
+    "teff_k": 3578,
+    "teff_bibcode": "2020A&A...644A..68M",
+    "spectype": "M1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 682": {
+    "teff_k": 2992,
+    "teff_bibcode": "2019A&A...629A..80H",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 685": {
+    "teff_k": 3875,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M1V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 687": {
+    "teff_k": 3561,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "M3.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 740": {
+    "teff_k": 3912,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M1.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 806": {
+    "teff_k": 3552,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 832": {
+    "teff_k": 3522,
+    "teff_bibcode": "2014MNRAS.443.2561G",
+    "spectype": "M1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 849": {
+    "teff_k": 3584,
+    "teff_bibcode": "2015ApJS..220...16T",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 86": {
+    "teff_k": 5207,
+    "teff_bibcode": "2004A&A...415.1153S",
+    "spectype": "K1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 876": {
+    "teff_k": 3049,
+    "teff_bibcode": "2019A&A...629A..80H",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 887": {
+    "teff_k": 4927,
+    "teff_bibcode": "2020ApJ...898..119R",
+    "spectype": "M2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 896 A": {
+    "teff_k": 3334,
+    "teff_bibcode": "2012ApJ...748...93R",
+    "spectype": "M3.5Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 9066": {
+    "teff_k": 3193,
+    "teff_bibcode": "2019A&A...625A..68S",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "GJ 96": {
+    "teff_k": 3785,
+    "teff_bibcode": "2015ApJ...804...64M",
+    "spectype": "M0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Gl 378": {
+    "teff_k": 3768,
+    "teff_bibcode": "2018A&A...615A...6P",
+    "spectype": "M1V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Gl 410": {
+    "teff_k": 3921,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "M1.0Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Gl 49": {
+    "teff_k": 3808,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "M1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Gl 686": {
+    "teff_k": 3770,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "M1.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Gl 725 A": {
+    "teff_k": 3470,
+    "teff_bibcode": "2022MNRAS.516.3802C",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Gliese 12": {
+    "teff_k": 3421,
+    "teff_bibcode": "2014MNRAS.443.2561G",
+    "spectype": "M4V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 115404 A": {
+    "teff_k": 4976,
+    "teff_bibcode": "2016ApJS..225...32B",
+    "spectype": "K2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 136352": {
+    "teff_k": 5695,
+    "teff_bibcode": "1996A&A...314..191G",
+    "spectype": "G2-V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 140901": {
+    "teff_k": 5610,
+    "teff_bibcode": "2008A&A...487..373S",
+    "spectype": "G7IV",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 141004": {
+    "teff_k": 5936,
+    "teff_bibcode": "2005ApJS..159..141V",
+    "spectype": "G0-V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.0557,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 147379": {
+    "teff_k": 4156,
+    "teff_bibcode": "2014ApJ...791...54G",
+    "spectype": "M1-Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 147513": {
+    "teff_k": 5855,
+    "teff_bibcode": "2013ApJ...764...78R",
+    "spectype": "G5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 180617": {
+    "teff_k": 3500,
+    "teff_bibcode": "2013AJ....145..102L",
+    "spectype": "M3-V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 190007": {
+    "teff_k": 4650,
+    "teff_bibcode": "2008A&A...480...91S",
+    "spectype": "K5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 192310": {
+    "teff_k": 4893,
+    "teff_bibcode": "1970A&A.....6..385S",
+    "spectype": "K2+V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 20794": {
+    "teff_k": 5362,
+    "teff_bibcode": "1973A&A....29..165H",
+    "spectype": "G6V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 211970": {
+    "teff_k": 4077,
+    "teff_bibcode": "2024A&A...683A.125P",
+    "spectype": "K7Vk:",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 219134": {
+    "teff_k": 5100,
+    "teff_bibcode": "2003AJ....126.2015H",
+    "spectype": "K3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 222237": {
+    "teff_k": 4790,
+    "teff_bibcode": "2010ApJ...720.1290G",
+    "spectype": "K3+V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 22496": {
+    "teff_k": 4260,
+    "teff_bibcode": "2016ApJ...822...97H",
+    "spectype": "K5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 238090": {
+    "teff_k": 3889,
+    "teff_bibcode": "2021A&A...656A.162M",
+    "spectype": "K5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 260655": {
+    "teff_k": 3732,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M0.0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 285968": {
+    "teff_k": 3581,
+    "teff_bibcode": "2012ApJ...748...93R",
+    "spectype": "M2.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 3651": {
+    "teff_k": 5182,
+    "teff_bibcode": "2013A&A...556A.150S",
+    "spectype": "K0.5V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.9232,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      },
+      {
+        "value_rsun": 0.8002,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": false
+      }
+    ]
+  },
+  "HD 40307": {
+    "teff_k": 4870,
+    "teff_bibcode": "2006A&A...450..735M",
+    "spectype": "K2.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 62509": {
+    "teff_k": 4666,
+    "teff_bibcode": "2004A&A...420..183A",
+    "spectype": "K0IIIb",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 69830": {
+    "teff_k": 5387,
+    "teff_bibcode": "2016ApJS..225...32B",
+    "spectype": "G8:V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HD 86728": {
+    "teff_k": 6000,
+    "teff_bibcode": "1961ApJS....6..407W",
+    "spectype": "G3VaHdel1",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HIP 48714": {
+    "teff_k": 3946,
+    "teff_bibcode": "2014ApJ...791...54G",
+    "spectype": "M0.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HIP 56998": {
+    "teff_k": 4738,
+    "teff_bibcode": "2012A&A...545A..32A",
+    "spectype": "K4.5Vk:",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HIP 79431": {
+    "teff_k": 3689,
+    "teff_bibcode": "2012ApJ...748...93R",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "HN Lib": {
+    "teff_k": 3364,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Kapteyn": {
+    "teff_k": 3671,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "M1VIp",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "L 363-38": {
+    "teff_k": 4500,
+    "teff_bibcode": "2013AJ....146..134K",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "L 98-59": {
+    "teff_k": 3400,
+    "teff_bibcode": "2013AJ....146..134K",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "LHS 1140": {
+    "teff_k": 3150,
+    "teff_bibcode": "2021MNRAS.504.5788R",
+    "spectype": "M4.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "LHS 3844": {
+    "teff_k": 2988,
+    "teff_bibcode": "2021MNRAS.504.5788R",
+    "spectype": null,
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "LHS 475": {
+    "teff_k": 3282,
+    "teff_bibcode": "2021MNRAS.504.5788R",
+    "spectype": "M3.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "LTT 1445 A": {
+    "teff_k": 3400,
+    "teff_bibcode": "2014MNRAS.443.2561G",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Mu Herculis A": {
+    "teff_k": 5496,
+    "teff_bibcode": "1998A&AS..129..505B",
+    "spectype": "G5IV",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Proxima Cen": {
+    "teff_k": 3498,
+    "teff_bibcode": "2021MNRAS.508.5148C",
+    "spectype": "M5.5Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Ross 128": {
+    "teff_k": 3232,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "dM4",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Ross 458": {
+    "teff_k": 3900,
+    "teff_bibcode": "2023MNRAS.524.6085K",
+    "spectype": "M0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Ross 508": {
+    "teff_k": 2966,
+    "teff_bibcode": "2009ApJ...704..975J",
+    "spectype": "dM5.0",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Sigma Draconis": {
+    "teff_k": 5143,
+    "teff_bibcode": "1974ApJS...27..405O",
+    "spectype": "K0V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.6631,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  },
+  "TOI-540": {
+    "teff_k": 3104,
+    "teff_bibcode": "2021MNRAS.504.5788R",
+    "spectype": null,
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "TRAPPIST-1": {
+    "teff_k": 2400,
+    "teff_bibcode": "2018A&A...620A.180R",
+    "spectype": "M7.5e",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Teegarden's Star": {
+    "teff_k": 3034,
+    "teff_bibcode": "2021A&A...656A.162M",
+    "spectype": "dM6",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Vega": {
+    "teff_k": 9692,
+    "teff_bibcode": "1981PASJ...33..189S",
+    "spectype": "A0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "WISEP J121756.91+162640.2 A": {
+    "teff_k": null,
+    "teff_bibcode": null,
+    "spectype": "T9+Y0",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Wolf 1061": {
+    "teff_k": 3353,
+    "teff_bibcode": "2019A&A...627A.161P",
+    "spectype": "M3V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Wolf 1069": {
+    "teff_k": 3189,
+    "teff_bibcode": "2019A&A...625A..68S",
+    "spectype": "dM5.0",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "YZ Cet": {
+    "teff_k": 3225,
+    "teff_bibcode": "2021A&A...656A.162M",
+    "spectype": "M4.0Ve",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Zeta Tucanae": {
+    "teff_k": 6000,
+    "teff_bibcode": "1981A&A...100...97G",
+    "spectype": "F9.5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "eps Eri": {
+    "teff_k": 5180,
+    "teff_bibcode": "1993ApJ...412..797D",
+    "spectype": "K2V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "eps Ind A": {
+    "teff_k": 4754,
+    "teff_bibcode": "2024A&A...682A.145S",
+    "spectype": "K5V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "gam Cep": {
+    "teff_k": 4625,
+    "teff_bibcode": "2004A&A...420..183A",
+    "spectype": "K1III-IVCN1",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "tau Cet": {
+    "teff_k": 5320,
+    "teff_bibcode": "1999MNRAS.305..693C",
+    "spectype": "G8V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "ups And": {
+    "teff_k": 6194,
+    "teff_bibcode": "2015A&A...580A..24D",
+    "spectype": "F9V",
+    "mass_measurements": [],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.4491,
+        "uncertainty_rsun": null,
+        "method": "interferometry",
+        "reference": "2009ApJ...694.1085V",
+        "doi": null,
+        "bibcode": "2009ApJ...694.1085V",
+        "recommended": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,238 @@
+{
+  "system_name": "ups And",
+  "stars": [
+    {
+      "name": "ups And",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "348020482735930112",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 24.198321215249642,
+        "dec_deg": 41.4037617615712,
+        "parallax_mas": 74.19396780666189,
+        "parallax_error_mas": 0.2082973,
+        "pmra_mas_yr": -171.89184082707104,
+        "pmdec_mas_yr": -381.8151588992299,
+        "radial_velocity_km_s": -28.74587,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 4.0902,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 6194,
+        "spectype": "F9V",
+        "mass_measurements": [],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.4491,
+            "uncertainty_rsun": null,
+            "method": "interferometry",
+            "reference": "2009ApJ...694.1085V",
+            "doi": null,
+            "bibcode": "2009ApJ...694.1085V",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 13.478184676763032,
+        "distance_km": 415893322962832.06,
+        "icrs_x_km": 284538843035944.94,
+        "icrs_y_km": 127891883903330.34,
+        "icrs_z_km": 275133379097509.78,
+        "icrs_vx_km_s": -0.4486112987092383,
+        "icrs_vy_km_s": -12.242259905102427,
+        "icrs_vz_km_s": -37.309519630528754,
+        "position_ulp_km": 0.06318031498774189,
+        "icrs_x_j2000_km": 284538135181148.94,
+        "icrs_y_j2000_km": 127872567086271.28,
+        "icrs_z_j2000_km": 275074509152675.16,
+        "icrs_vx_j2000_km_s": -0.4486112987092383,
+        "icrs_vy_j2000_km_s": -12.242259905102427,
+        "icrs_vz_j2000_km_s": -37.309519630528754
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": 1008138.9
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "ups And b",
+      "host_star": "ups And",
+      "raw": {
+        "pl_name": "ups And b",
+        "reference": "<a refstr=BUTLER_ET_AL__1997 href=https://ui.adsabs.harvard.edu/abs/1997ApJ...474L.115B/abstract target=ref> Butler et al. 1997 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.617033,
+        "period_err_days": 2.3e-05,
+        "semi_major_axis_au": 0.05922166,
+        "semi_major_axis_err_au": 2e-07,
+        "eccentricity": 0.0215,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 324.9,
+        "tperi_bjd": 2450005.368,
+        "tperi_err_bjd": 0.049,
+        "tranmid_bjd": 2453335.89,
+        "tranmid_err_bjd": 0.01,
+        "mass_mearth": 218.531,
+        "mass_err_mearth": 1.39839,
+        "mass_type": "Msini",
+        "radius_rearth": 14.0,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 8859434235.319363,
+        "eccentricity": 0.0215,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.3051108382e+27,
+        "mass_type": "Msini",
+        "radius_m": 89194000.0
+      }
+    },
+    {
+      "name": "ups And c",
+      "host_star": "ups And",
+      "raw": {
+        "pl_name": "ups And c",
+        "reference": "<a refstr=BUTLER_ET_AL__1999 href=https://ui.adsabs.harvard.edu/abs/1999ApJ...526..916B/abstract target=ref> Butler et al. 1999 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 241.258,
+        "period_err_days": 0.064,
+        "semi_major_axis_au": 0.827774,
+        "semi_major_axis_err_au": 1.5e-05,
+        "eccentricity": 0.2596,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 241.7,
+        "tperi_bjd": 2450157.78,
+        "tperi_err_bjd": 0.84,
+        "tranmid_bjd": 2454652.2,
+        "tranmid_err_bjd": 1.2,
+        "mass_mearth": 4443.24112986,
+        "mass_err_mearth": 731.0053361,
+        "mass_type": "Mass",
+        "radius_rearth": 12.3,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 123833227820.82181,
+        "eccentricity": 0.2596,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.6535924675749893e+28,
+        "mass_type": "Mass",
+        "radius_m": 78363300.0
+      }
+    },
+    {
+      "name": "ups And d",
+      "host_star": "ups And",
+      "raw": {
+        "pl_name": "ups And d",
+        "reference": "<a refstr=BUTLER_ET_AL__1999 href=https://ui.adsabs.harvard.edu/abs/1999ApJ...526..916B/abstract target=ref> Butler et al. 1999 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 1276.46,
+        "period_err_days": 0.57,
+        "semi_major_axis_au": 2.51329,
+        "semi_major_axis_err_au": 0.00075,
+        "eccentricity": 0.2987,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 258.82,
+        "tperi_bjd": 2451347.48,
+        "tperi_err_bjd": 0.48,
+        "tranmid_bjd": 2455937.3,
+        "tranmid_err_bjd": 7.2,
+        "mass_mearth": 3257.74117175,
+        "mass_err_mearth": 222.4798849,
+        "mass_type": "Mass",
+        "radius_rearth": 12.5,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 375982832451.603,
+        "eccentricity": 0.2987,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.945588182592535e+28,
+        "mass_type": "Mass",
+        "radius_m": 79637500.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    },
+    {
+      "title": "2009ApJ...694.1085V",
+      "doi": null,
+      "bibcode": "2009ApJ...694.1085V",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "ups And radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

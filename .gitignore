@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.DS_Store
+
+# Local backups of DB (kept on disk only, not in version control)
+db/backups/
+
+# Per-user Claude Code settings (permissions allowlist is user-specific)
+.claude/settings.local.json

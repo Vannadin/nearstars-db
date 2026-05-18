@@ -1,0 +1,301 @@
+{
+  "system_name": "GJ 667 C",
+  "stars": [
+    {
+      "name": "GJ 667 C",
+      "component": "C",
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "5975663354131618304",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 259.75125274377365,
+        "dec_deg": -34.997795092684065,
+        "parallax_mas": 138.0662741149332,
+        "parallax_error_mas": 0.028331729,
+        "pmra_mas_yr": 1131.5170733698837,
+        "pmdec_mas_yr": -215.5688956960665,
+        "radial_velocity_km_s": 6.128468,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 10.3428,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3351,
+        "spectype": "M1.5V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 7.242898429833418,
+        "distance_km": 223492493099533.44,
+        "icrs_x_km": -32653173796054.832,
+        "icrs_y_km": -180142174672284.38,
+        "icrs_z_km": -128163033195701.58,
+        "icrs_vx_km_s": 38.09255504861411,
+        "icrs_vy_km_s": -7.675152739835669,
+        "icrs_vz_km_s": -9.578071566939585,
+        "position_ulp_km": 0.039999598005443365,
+        "icrs_x_j2000_km": -32593068315294.727,
+        "icrs_y_j2000_km": -180154285142289.5,
+        "icrs_z_j2000_km": -128178146243265.61,
+        "icrs_vx_j2000_km_s": 38.09255504861411,
+        "icrs_vy_j2000_km_s": -7.675152739835669,
+        "icrs_vz_j2000_km_s": -9.578071566939585
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "GJ 667 C b",
+      "host_star": "GJ 667 C",
+      "raw": {
+        "pl_name": "GJ 667 C b",
+        "reference": "<a refstr=BONFILS_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A.109B/abstract target=ref> Bonfils et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 7.203,
+        "period_err_days": 0.0019,
+        "semi_major_axis_au": 0.050431,
+        "semi_major_axis_err_au": 4e-06,
+        "eccentricity": 0.2,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": -2.7,
+        "tperi_bjd": 2454272.9711,
+        "tperi_err_bjd": 0.4525,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 5.68,
+        "mass_err_mearth": 0.23,
+        "mass_type": "Msini",
+        "radius_rearth": 2.25,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 7544370217.2717,
+        "eccentricity": 0.2,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.3922096e+25,
+        "mass_type": "Msini",
+        "radius_m": 14334750.0
+      }
+    },
+    {
+      "name": "GJ 667 C c",
+      "host_star": "GJ 667 C",
+      "raw": {
+        "pl_name": "GJ 667 C c",
+        "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 28.14,
+        "period_err_days": 0.053,
+        "semi_major_axis_au": 0.125,
+        "semi_major_axis_err_au": 0.012,
+        "eccentricity": 0.02,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 292.2,
+        "tperi_bjd": 2454462.0,
+        "tperi_err_bjd": 2.0,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 3.8,
+        "mass_err_mearth": 1.5,
+        "mass_type": "Msini",
+        "radius_rearth": 1.77,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 18699733837.5,
+        "eccentricity": 0.02,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.269436e+25,
+        "mass_type": "Msini",
+        "radius_m": 11276670.0
+      }
+    },
+    {
+      "name": "GJ 667 C f",
+      "host_star": "GJ 667 C",
+      "raw": {
+        "pl_name": "GJ 667 C f",
+        "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 39.026,
+        "period_err_days": 0.194,
+        "semi_major_axis_au": 0.156,
+        "semi_major_axis_err_au": 0.014,
+        "eccentricity": 0.03,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 103.1,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 2.7,
+        "mass_err_mearth": 1.4,
+        "mass_type": "Msini",
+        "radius_rearth": 1.45,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 23337267829.2,
+        "eccentricity": 0.03,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.6124940000000002e+25,
+        "mass_type": "Msini",
+        "radius_m": 9237950.0
+      }
+    },
+    {
+      "name": "GJ 667 C e",
+      "host_star": "GJ 667 C",
+      "raw": {
+        "pl_name": "GJ 667 C e",
+        "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 62.24,
+        "period_err_days": 0.55,
+        "semi_major_axis_au": 0.213,
+        "semi_major_axis_err_au": 0.019,
+        "eccentricity": 0.02,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 28.6,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 2.7,
+        "mass_err_mearth": 1.6,
+        "mass_type": "Msini",
+        "radius_rearth": 1.45,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 31864346459.1,
+        "eccentricity": 0.02,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.6124940000000002e+25,
+        "mass_type": "Msini",
+        "radius_m": 9237950.0
+      }
+    },
+    {
+      "name": "GJ 667 C g",
+      "host_star": "GJ 667 C",
+      "raw": {
+        "pl_name": "GJ 667 C g",
+        "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 256.2,
+        "period_err_days": 13.8,
+        "semi_major_axis_au": 0.549,
+        "semi_major_axis_err_au": 0.052,
+        "eccentricity": 0.08,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 51.6,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 4.6,
+        "mass_err_mearth": 2.6,
+        "mass_type": "Msini",
+        "radius_rearth": 1.99,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 82129231014.3,
+        "eccentricity": 0.08,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.747212e+25,
+        "mass_type": "Msini",
+        "radius_m": 12678290.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

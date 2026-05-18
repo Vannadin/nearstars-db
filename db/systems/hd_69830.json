@@ -1,0 +1,219 @@
+{
+  "system_name": "HD 69830",
+  "stars": [
+    {
+      "name": "HD 69830",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "5726982995343100928",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 124.60104883936589,
+        "dec_deg": -12.63656179358332,
+        "parallax_mas": 79.49527095617434,
+        "parallax_error_mas": 0.040039483,
+        "pmra_mas_yr": 278.7903645043099,
+        "pmdec_mas_yr": -987.8286619313131,
+        "radial_velocity_km_s": 30.085953,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 5.9462,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5387,
+        "spectype": "G8:V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 12.579364633542781,
+        "distance_km": 388158634391237.06,
+        "icrs_x_km": -215032182146134.16,
+        "icrs_y_km": 311755662674582.7,
+        "icrs_z_km": -84782466575447.2,
+        "icrs_vx_km_s": -23.03726887525653,
+        "icrs_vy_km_s": 4.116723405143283,
+        "icrs_vz_km_s": -64.06121999064013,
+        "position_ulp_km": 0.06922366295171904,
+        "icrs_x_j2000_km": -215068532191947.03,
+        "icrs_y_j2000_km": 311762158370109.2,
+        "icrs_z_j2000_km": -84883547493246.03,
+        "icrs_vx_j2000_km_s": -23.03726887525653,
+        "icrs_vy_j2000_km_s": 4.116723405143283,
+        "icrs_vz_j2000_km_s": -64.06121999064013
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "HD 69830 b",
+      "host_star": "HD 69830",
+      "raw": {
+        "pl_name": "HD 69830 b",
+        "reference": "<a refstr=LOVIS_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006Natur.441..305L/abstract target=ref> Lovis et al. 2006 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 8.667,
+        "period_err_days": 0.003,
+        "semi_major_axis_au": 0.0785,
+        "semi_major_axis_err_au": null,
+        "eccentricity": 0.1,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 340.0,
+        "tperi_bjd": 2453496.8,
+        "tperi_err_bjd": 0.6,
+        "tranmid_bjd": 2455995.87,
+        "tranmid_err_bjd": 0.13,
+        "mass_mearth": 10.2,
+        "mass_err_mearth": null,
+        "mass_type": "Msini",
+        "radius_rearth": 3.17,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 11743432849.95,
+        "eccentricity": 0.1,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.091644e+25,
+        "mass_type": "Msini",
+        "radius_m": 20196070.0
+      }
+    },
+    {
+      "name": "HD 69830 c",
+      "host_star": "HD 69830",
+      "raw": {
+        "pl_name": "HD 69830 c",
+        "reference": "<a refstr=LOVIS_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006Natur.441..305L/abstract target=ref> Lovis et al. 2006 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 31.56,
+        "period_err_days": 0.04,
+        "semi_major_axis_au": 0.186,
+        "semi_major_axis_err_au": null,
+        "eccentricity": 0.13,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 221.0,
+        "tperi_bjd": 2453469.6,
+        "tperi_err_bjd": 2.8,
+        "tranmid_bjd": 2455197.28,
+        "tranmid_err_bjd": 0.65,
+        "mass_mearth": 11.8,
+        "mass_err_mearth": null,
+        "mass_type": "Msini",
+        "radius_rearth": 3.46,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 27825203950.2,
+        "eccentricity": 0.13,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 7.047196000000001e+25,
+        "mass_type": "Msini",
+        "radius_m": 22043660.0
+      }
+    },
+    {
+      "name": "HD 69830 d",
+      "host_star": "HD 69830",
+      "raw": {
+        "pl_name": "HD 69830 d",
+        "reference": "<a refstr=LOVIS_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006Natur.441..305L/abstract target=ref> Lovis et al. 2006 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 197.0,
+        "period_err_days": 3.0,
+        "semi_major_axis_au": 0.63,
+        "semi_major_axis_err_au": null,
+        "eccentricity": 0.07,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 224.0,
+        "tperi_bjd": 2453358.0,
+        "tperi_err_bjd": 34.0,
+        "tranmid_bjd": 2455304.1,
+        "tranmid_err_bjd": 10.0,
+        "mass_mearth": 18.1,
+        "mass_err_mearth": null,
+        "mass_type": "Msini",
+        "radius_rearth": 4.45,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 94246658541.0,
+        "eccentricity": 0.07,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.0809682000000002e+26,
+        "mass_type": "Msini",
+        "radius_m": 28350950.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "system_name": "Eta Cassiopeiae A",
+  "stars": [
+    {
+      "name": "Eta Cassiopeiae A",
+      "component": "A",
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "425040000962559616",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 12.285227381524425,
+        "dec_deg": 57.81272812559009,
+        "parallax_mas": 168.83216034019418,
+        "parallax_error_mas": 0.1663396,
+        "pmra_mas_yr": 1078.6091666696218,
+        "pmdec_mas_yr": -551.1334202185512,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 3.4941,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 5801,
+        "spectype": "F9V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 5.923042138328477,
+        "distance_km": 182765983404666.97,
+        "icrs_x_km": 95114630320945.36,
+        "icrs_y_km": 20648098957901.773,
+        "icrs_z_km": 154694126636643.8,
+        "icrs_vx_km_s": 6.352500606995937,
+        "icrs_vy_km_s": 32.37831868034794,
+        "icrs_vz_km_s": -8.243206103268012,
+        "position_ulp_km": 0.03434899623325634,
+        "icrs_x_j2000_km": 95124653804603.12,
+        "icrs_y_j2000_km": 20699188059381.12,
+        "icrs_z_j2000_km": 154681119846597.56,
+        "icrs_vx_j2000_km_s": 6.352500606995937,
+        "icrs_vy_j2000_km_s": 32.37831868034794,
+        "icrs_vz_j2000_km_s": -8.243206103268012
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit": {
+    "components": [
+      "Eta Cassiopeiae A",
+      "Eta Cassiopeiae B"
+    ],
+    "hierarchy": "binary",
+    "wds_id": "00491+5749",
+    "raw": {
+      "source": "Tokovinin (2021) / ORB6 recent",
+      "doi": null,
+      "note": "WDS 2023 sep=13.5\". ORB6 grade ~7. Verify from ORB6 entry for WDS 00491+5749 comp AB.",
+      "orb_grade": 7,
+      "period_yr": 480.0,
+      "period_yr_err": 10.0,
+      "semi_major_axis_arcsec": 11.985,
+      "semi_major_axis_arcsec_err": 0.3,
+      "eccentricity": 0.497,
+      "eccentricity_err": 0.01,
+      "inclination_deg": 34.76,
+      "inclination_err_deg": 1.0,
+      "longitude_of_ascending_node_deg": 98.94,
+      "longitude_of_ascending_node_err_deg": 2.0,
+      "argument_of_periapsis_deg": 85.16,
+      "argument_of_periapsis_err_deg": 3.0,
+      "t_peri_yr": 1889.6,
+      "t_peri_jd": 2411221.4,
+      "t_peri_note": "Approximate; verify from ORB6 entry.",
+      "omega_correction_note": "ω corrected +180°: source published ω_primary; converted to ω_secondary for Thiele-Innes. WDS 2023 predicts sep=13.72\" PA=324° vs observed 13.5\"/328°."
+    },
+    "derived": {
+      "semi_major_axis_au": 70.9877,
+      "semi_major_axis_m": 10619602786144.375,
+      "mean_anomaly_at_b1950_deg": 45.3,
+      "mean_anomaly_at_j2000_deg": 82.8,
+      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+    },
+    "barycenter_state_b1950": {
+      "mass_A_msun": 0.972,
+      "mass_B_msun": 0.576,
+      "epoch_jd": 2433282.5,
+      "epoch_label": "B1950.0",
+      "icrs_x_km": 95127928912157.06,
+      "icrs_y_km": 20646889539068.445,
+      "icrs_z_km": 154717763079100.38,
+      "icrs_vx_km_s": 10.251424575220328,
+      "icrs_vy_km_s": 33.941766084959106,
+      "icrs_vz_km_s": -0.07146358445929298,
+      "distance_pc": 5.923042138328477,
+      "distance_km": 182765983404666.97,
+      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+    },
+    "individual_states": {
+      "b1950": {
+        "Eta Cassiopeiae A": {
+          "icrs_x_km": 95128151180601.55,
+          "icrs_y_km": 20650232150204.53,
+          "icrs_z_km": 154717512980110.72,
+          "icrs_vx_km_s": 11.978479972997011,
+          "icrs_vy_km_s": 34.74777383484331,
+          "icrs_vz_km_s": -0.03574511428775668
+        },
+        "Eta Cassiopeiae B": {
+          "icrs_x_km": 95127553834157.0,
+          "icrs_y_km": 20641248882776.3,
+          "icrs_z_km": 154718185121145.4,
+          "icrs_vx_km_s": 7.337018591472175,
+          "icrs_vy_km_s": 32.581628007029515,
+          "icrs_vz_km_s": -0.1317385028737605
+        }
+      },
+      "j2000": {
+        "Eta Cassiopeiae A": {
+          "icrs_x_km": 95146811232844.64,
+          "icrs_y_km": 20704175898202.52,
+          "icrs_z_km": 154717512077408.53,
+          "icrs_vx_km_s": 11.621728050369255,
+          "icrs_vy_km_s": 33.76366866695941,
+          "icrs_vz_km_s": 0.0210554961810165
+        },
+        "Eta Cassiopeiae B": {
+          "icrs_x_km": 95139536700107.8,
+          "icrs_y_km": 20694150649055.69,
+          "icrs_z_km": 154717883599373.6,
+          "icrs_vx_km_s": 7.9390374609065155,
+          "icrs_vy_km_s": 34.2423054778336,
+          "icrs_vz_km_s": -0.22758953303981522
+        }
+      }
+    }
+  }
+}

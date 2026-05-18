@@ -1,0 +1,137 @@
+{
+  "system_name": "GJ 341",
+  "stars": [
+    {
+      "name": "GJ 341",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "5299440441521812992",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 140.39914047697528,
+        "dec_deg": -60.2811438583444,
+        "parallax_mas": 95.69817587266935,
+        "parallax_error_mas": 0.014502031,
+        "pmra_mas_yr": -840.1851372088925,
+        "pmdec_mas_yr": 182.05551140020685,
+        "radial_velocity_km_s": 39.588486,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 9.4431,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3631,
+        "spectype": "M0V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 10.44951997131632,
+        "distance_km": 322438495128332.44,
+        "icrs_x_km": -123173980585692.0,
+        "icrs_y_km": 101788987556056.95,
+        "icrs_z_km": -279965349673316.7,
+        "icrs_vx_km_s": 5.373142113638261,
+        "icrs_vy_km_s": 49.570272446205266,
+        "icrs_vz_km_s": -29.910608343164775,
+        "position_ulp_km": 0.06216479546090985,
+        "icrs_x_j2000_km": -123165502412213.73,
+        "icrs_y_j2000_km": 101867203497544.38,
+        "icrs_z_j2000_km": -280012545024009.22,
+        "icrs_vx_j2000_km_s": 5.373142113638261,
+        "icrs_vy_j2000_km_s": 49.570272446205266,
+        "icrs_vz_j2000_km_s": -29.910608343164775
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "GJ 341 b",
+      "host_star": "GJ 341",
+      "raw": {
+        "pl_name": "GJ 341 b",
+        "reference": "<a refstr=DITOMASSO_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...979..214D/abstract target=ref>DiTomasso et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 7.57686,
+        "period_err_days": 3.4e-05,
+        "semi_major_axis_au": null,
+        "semi_major_axis_err_au": null,
+        "eccentricity": 0.0,
+        "inclination_deg": 89.24,
+        "inclination_err_deg": 0.53,
+        "omega_deg": null,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2459301.771,
+        "tranmid_err_bjd": 0.002,
+        "mass_mearth": 4.0,
+        "mass_err_mearth": null,
+        "mass_type": "Mass",
+        "radius_rearth": 0.88,
+        "radius_err_rearth": 0.05,
+        "discoverymethod": "Transit",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": null,
+        "eccentricity": 0.0,
+        "inclination_deg": 89.24,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.38888e+25,
+        "mass_type": "Mass",
+        "radius_m": 5606480.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

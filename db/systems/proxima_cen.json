@@ -1,0 +1,178 @@
+{
+  "system_name": "Proxima Cen",
+  "stars": [
+    {
+      "name": "Proxima Cen",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "5853498713190525696",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 217.39232147200883,
+        "dec_deg": -62.67607511676666,
+        "parallax_mas": 768.0665391873573,
+        "parallax_error_mas": 0.049872905,
+        "pmra_mas_yr": -3781.741008265163,
+        "pmdec_mas_yr": 769.4650146478623,
+        "radial_velocity_km_s": -21.942726,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 11.2931,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3498,
+        "spectype": "M5.5Ve",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 1.3019705311704333,
+        "distance_km": 40174612797945.35,
+        "icrs_x_km": -14631443559462.676,
+        "icrs_y_km": -11244665164864.973,
+        "icrs_z_km": -35737299506977.39,
+        "icrs_vx_km_s": -9.523972115583097,
+        "icrs_vy_km_s": 22.098425147795368,
+        "icrs_vz_km_s": 21.674415764140438,
+        "position_ulp_km": 0.00793527455011431,
+        "icrs_x_j2000_km": -14646471244584.412,
+        "icrs_y_j2000_km": -11209796501792.77,
+        "icrs_z_j2000_km": -35703099879831.47,
+        "icrs_vx_j2000_km_s": -9.523972115583097,
+        "icrs_vy_j2000_km_s": 22.098425147795368,
+        "icrs_vz_j2000_km_s": 21.674415764140438
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "Proxima Cen d",
+      "host_star": "Proxima Cen",
+      "raw": {
+        "pl_name": "Proxima Cen d",
+        "reference": "<a refstr=SU_AMP_AACUTE_REZ_MASCARE_AMP_NTILDE_O_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...700A..11M/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 5.12338,
+        "period_err_days": 0.00035,
+        "semi_major_axis_au": 0.02881,
+        "semi_major_axis_err_au": 0.00017,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 4.0,
+        "tperi_bjd": 2460557.55,
+        "tperi_err_bjd": 0.16,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 0.26,
+        "mass_err_mearth": 0.038,
+        "mass_type": "Msini",
+        "radius_rearth": 0.692,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 4309914654.867,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.5527720000000002e+24,
+        "mass_type": "Msini",
+        "radius_m": 4408732.0
+      }
+    },
+    {
+      "name": "Proxima Cen b",
+      "host_star": "Proxima Cen",
+      "raw": {
+        "pl_name": "Proxima Cen b",
+        "reference": "<a refstr=ANGLADA_ESCUD_EACUTE__ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016Natur.536..437A/abstract target=ref>Anglada-Escud&eacute; et al. 2016</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 11.18465,
+        "period_err_days": 0.00053,
+        "semi_major_axis_au": 0.04848,
+        "semi_major_axis_err_au": 0.00029,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 3.3,
+        "tperi_bjd": 2460548.59,
+        "tperi_err_bjd": 0.12,
+        "tranmid_bjd": 2457897.9,
+        "tranmid_err_bjd": 0.3,
+        "mass_mearth": 1.055,
+        "mass_err_mearth": 0.055,
+        "mass_type": "Msini",
+        "radius_rearth": 1.02,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 7252504771.536,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 6.300671e+24,
+        "mass_type": "Msini",
+        "radius_m": 6498420.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

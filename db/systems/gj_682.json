@@ -1,0 +1,178 @@
+{
+  "system_name": "GJ 682",
+  "stars": [
+    {
+      "name": "GJ 682",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "5955305209191546112",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 264.26088738973226,
+        "dec_deg": -44.323382243038424,
+        "parallax_mas": 199.6944012807481,
+        "parallax_error_mas": 0.031152742,
+        "pmra_mas_yr": -705.9450540795624,
+        "pmdec_mas_yr": -938.0799698989338,
+        "radial_velocity_km_s": -34.901894,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 11.0576,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 2992,
+        "spectype": "M3.5V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 5.007651659668271,
+        "distance_km": 154519984621545.84,
+        "icrs_x_km": -11028079064447.682,
+        "icrs_y_km": -110078157890409.31,
+        "icrs_z_km": -107981851225724.73,
+        "icrs_vx_km_s": -12.621365305697605,
+        "icrs_vy_km_s": 42.001057712887004,
+        "icrs_vz_km_s": 8.454989368179357,
+        "position_ulp_km": 0.024442261079651154,
+        "icrs_x_j2000_km": -11047994064336.234,
+        "icrs_y_j2000_km": -110011885261465.3,
+        "icrs_z_j2000_km": -107968510267100.47,
+        "icrs_vx_j2000_km_s": -12.621365305697605,
+        "icrs_vy_j2000_km_s": 42.001057712887004,
+        "icrs_vz_j2000_km_s": 8.454989368179357
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "GJ 682 b",
+      "host_star": "GJ 682",
+      "raw": {
+        "pl_name": "GJ 682 b",
+        "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 17.478,
+        "period_err_days": 0.062,
+        "semi_major_axis_au": 0.08,
+        "semi_major_axis_err_au": 0.014,
+        "eccentricity": 0.08,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 86.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 4.4,
+        "mass_err_mearth": 3.7,
+        "mass_type": "Msini",
+        "radius_rearth": 1.93,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 11967829656.0,
+        "eccentricity": 0.08,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.6277680000000005e+25,
+        "mass_type": "Msini",
+        "radius_m": 12296030.0
+      }
+    },
+    {
+      "name": "GJ 682 c",
+      "host_star": "GJ 682",
+      "raw": {
+        "pl_name": "GJ 682 c",
+        "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 57.32,
+        "period_err_days": 0.45,
+        "semi_major_axis_au": 0.176,
+        "semi_major_axis_err_au": 0.03,
+        "eccentricity": 0.1,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 320.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 8.7,
+        "mass_err_mearth": 5.8,
+        "mass_type": "Msini",
+        "radius_rearth": 2.89,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 26329225243.199997,
+        "eccentricity": 0.1,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 5.195814e+25,
+        "mass_type": "Msini",
+        "radius_m": 18412190.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

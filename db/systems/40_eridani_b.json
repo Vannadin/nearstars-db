@@ -1,0 +1,86 @@
+{
+  "system_name": "40 Eridani B",
+  "stars": [
+    {
+      "name": "40 Eridani B",
+      "component": "B",
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "3195919254111315712",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 63.830787524383176,
+        "dec_deg": -7.672952135407352,
+        "parallax_mas": 199.6910732720413,
+        "parallax_error_mas": 0.05120331,
+        "pmra_mas_yr": -2236.168749069785,
+        "pmdec_mas_yr": -3338.9552892508973,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 9.58,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 17099,
+        "spectype": "DA2.9",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 5.007735116119533,
+        "distance_km": 154522559818552.72,
+        "icrs_x_km": 67448419151997.984,
+        "icrs_y_km": 137510120684838.11,
+        "icrs_z_km": -20467985618396.71,
+        "icrs_vx_km_s": 42.975645807048714,
+        "icrs_vy_km_s": -32.9098169379424,
+        "icrs_vz_km_s": -78.55382912962418,
+        "position_ulp_km": 0.030533380420658254,
+        "icrs_x_j2000_km": 67516229564004.01,
+        "icrs_y_j2000_km": 137458192942888.08,
+        "icrs_z_j2000_km": -20591934134303.76,
+        "icrs_vx_j2000_km_s": 42.975645807048714,
+        "icrs_vy_j2000_km_s": -32.9098169379424,
+        "icrs_vz_j2000_km_s": -78.55382912962418
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit_ref": "40_eridani_a.json"
+}

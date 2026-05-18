@@ -1,0 +1,260 @@
+{
+  "system_name": "GJ 887",
+  "stars": [
+    {
+      "name": "GJ 887",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "6553614253923452800",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 346.5039166796005,
+        "dec_deg": -35.8471642082214,
+        "parallax_mas": 304.1353692001036,
+        "parallax_error_mas": 0.01999573,
+        "pmra_mas_yr": 6765.995136250774,
+        "pmdec_mas_yr": 1330.2852747179845,
+        "radial_velocity_km_s": 8.306988,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 7.3367,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 4927,
+        "spectype": "M2V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 3.2880095551861235,
+        "distance_km": 101457373721660.16,
+        "icrs_x_km": 79879059047859.8,
+        "icrs_y_km": -19397379485125.33,
+        "icrs_z_km": -59440860495452.51,
+        "icrs_vx_km_s": 42.96709612962193,
+        "icrs_vy_km_s": 98.14211394985635,
+        "icrs_vz_km_s": 11.942453982778678,
+        "position_ulp_km": 0.017736714108065276,
+        "icrs_x_j2000_km": 79946855969500.8,
+        "icrs_y_j2000_km": -19242523006366.13,
+        "icrs_z_j2000_km": -59422016736162.164,
+        "icrs_vx_j2000_km_s": 42.96709612962193,
+        "icrs_vy_j2000_km_s": 98.14211394985635,
+        "icrs_vz_j2000_km_s": 11.942453982778678
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "GJ 887 e",
+      "host_star": "GJ 887",
+      "raw": {
+        "pl_name": "GJ 887 e",
+        "reference": "<a refstr=HARTOGH_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...707A..93H/abstract target=ref>Hartogh et al. 2026</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.4249,
+        "period_err_days": 0.00014,
+        "semi_major_axis_au": 0.0417,
+        "semi_major_axis_err_au": 0.0014,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": null,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2453488.05,
+        "tranmid_err_bjd": 0.13,
+        "mass_mearth": 1.46,
+        "mass_err_mearth": 0.19,
+        "mass_type": "Msini",
+        "radius_rearth": 1.12,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 6238231208.190001,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 8.719412e+24,
+        "mass_type": "Msini",
+        "radius_m": 7135520.000000001
+      }
+    },
+    {
+      "name": "GJ 887 b",
+      "host_star": "GJ 887",
+      "raw": {
+        "pl_name": "GJ 887 b",
+        "reference": "<a refstr=JEFFERS_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020Sci...368.1477J/abstract target=ref>Jeffers et al. 2020</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 9.2619,
+        "period_err_days": 0.0005,
+        "semi_major_axis_au": 0.0683,
+        "semi_major_axis_err_au": 0.0022,
+        "eccentricity": 0.14,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 180.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2453492.75,
+        "tranmid_err_bjd": 0.27,
+        "mass_mearth": 3.9,
+        "mass_err_mearth": 0.5,
+        "mass_type": "Msini",
+        "radius_rearth": 1.8,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 10217534568.81,
+        "eccentricity": 0.14,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.329158e+25,
+        "mass_type": "Msini",
+        "radius_m": 11467800.0
+      }
+    },
+    {
+      "name": "GJ 887 c",
+      "host_star": "GJ 887",
+      "raw": {
+        "pl_name": "GJ 887 c",
+        "reference": "<a refstr=JEFFERS_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020Sci...368.1477J/abstract target=ref>Jeffers et al. 2020</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 21.784,
+        "period_err_days": 0.004,
+        "semi_major_axis_au": 0.121,
+        "semi_major_axis_err_au": 0.004,
+        "eccentricity": 0.17,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 200.0,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2453498.2,
+        "tranmid_err_bjd": 0.9,
+        "mass_mearth": 6.5,
+        "mass_err_mearth": 1.0,
+        "mass_type": "Msini",
+        "radius_rearth": 2.43,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 18101342354.7,
+        "eccentricity": 0.17,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.88193e+25,
+        "mass_type": "Msini",
+        "radius_m": 15481530.000000002
+      }
+    },
+    {
+      "name": "GJ 887 d",
+      "host_star": "GJ 887",
+      "raw": {
+        "pl_name": "GJ 887 d",
+        "reference": "<a refstr=HARTOGH_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...707A..93H/abstract target=ref>Hartogh et al. 2026</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 50.77,
+        "period_err_days": 0.05,
+        "semi_major_axis_au": 0.212,
+        "semi_major_axis_err_au": 0.007,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": null,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": 2453496.0,
+        "tranmid_err_bjd": 4.0,
+        "mass_mearth": 6.1,
+        "mass_err_mearth": 1.4,
+        "mass_type": "Msini",
+        "radius_rearth": 2.34,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 31714748588.399998,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.643042e+25,
+        "mass_type": "Msini",
+        "radius_m": 14908140.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

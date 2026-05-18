@@ -1,0 +1,85 @@
+{
+  "system_name": "Altair",
+  "stars": [
+    {
+      "name": "Altair",
+      "component": null,
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 297.69582729638694,
+        "dec_deg": 8.868321196436963,
+        "parallax_mas": 194.95,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": 536.23,
+        "pmdec_mas_yr": 385.29,
+        "radial_velocity_km_s": -26.6,
+        "radial_velocity_source": "simbad",
+        "vmag_v": 0.77,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 7485,
+        "spectype": "A7Vn",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 5.12952038984355,
+        "distance_km": 158280460707412.16,
+        "icrs_x_km": 72687870031772.4,
+        "icrs_y_km": -138518759527891.8,
+        "icrs_z_km": 24393032308412.734,
+        "icrs_vx_km_s": -1.3413596899433635,
+        "icrs_vy_km_s": 30.60997084538409,
+        "icrs_vz_km_s": 5.1560748685721824,
+        "position_ulp_km": 0.03075734323407615,
+        "icrs_x_j2000_km": 72685753527144.84,
+        "icrs_y_j2000_km": -138470460667094.28,
+        "icrs_z_j2000_km": 24401167975826.355,
+        "icrs_vx_j2000_km_s": -1.3413596899433635,
+        "icrs_vy_j2000_km_s": 30.60997084538409,
+        "icrs_vz_j2000_km_s": 5.1560748685721824
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

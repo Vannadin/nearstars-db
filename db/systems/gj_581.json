@@ -1,0 +1,219 @@
+{
+  "system_name": "GJ 581",
+  "stars": [
+    {
+      "name": "GJ 581",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "6322070093095493504",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 229.85630133329227,
+        "dec_deg": -7.722707024157902,
+        "parallax_mas": 158.71827296463243,
+        "parallax_error_mas": 0.030101538,
+        "pmra_mas_yr": -1221.2776289653712,
+        "pmdec_mas_yr": -97.22923861858034,
+        "radial_velocity_km_s": -9.745852,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 10.5874,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3534,
+        "spectype": "M3V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 6.300471781360879,
+        "distance_km": 194412245285619.3,
+        "icrs_x_km": -124157498850477.47,
+        "icrs_y_km": -147331582951585.28,
+        "icrs_z_km": -26121640530971.258,
+        "icrs_vx_km_s": -21.405641590810994,
+        "icrs_vy_km_s": 31.19717326520304,
+        "icrs_vz_km_s": -1.5679892463809018,
+        "position_ulp_km": 0.03271418312946423,
+        "icrs_x_j2000_km": -124191274384230.78,
+        "icrs_y_j2000_km": -147282357555833.56,
+        "icrs_z_j2000_km": -26124114629843.336,
+        "icrs_vx_j2000_km_s": -21.405641590810994,
+        "icrs_vy_j2000_km_s": 31.19717326520304,
+        "icrs_vz_j2000_km_s": -1.5679892463809018
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "GJ 581 e",
+      "host_star": "GJ 581",
+      "raw": {
+        "pl_name": "GJ 581 e",
+        "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...507..487M/abstract target=ref> Mayor et al. 2009 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 3.1481,
+        "period_err_days": 0.0004,
+        "semi_major_axis_au": 0.02799,
+        "semi_major_axis_err_au": 0.0003,
+        "eccentricity": 0.012,
+        "inclination_deg": 47.0,
+        "inclination_err_deg": 15.0,
+        "omega_deg": 226.0,
+        "tperi_bjd": 2454716.8,
+        "tperi_err_bjd": 0.01,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 2.48,
+        "mass_err_mearth": 0.7,
+        "mass_type": "Mass",
+        "radius_rearth": 1.38,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 4187244400.893,
+        "eccentricity": 0.012,
+        "inclination_deg": 47.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.4811056000000001e+25,
+        "mass_type": "Mass",
+        "radius_m": 8791980.0
+      }
+    },
+    {
+      "name": "GJ 581 b",
+      "host_star": "GJ 581",
+      "raw": {
+        "pl_name": "GJ 581 b",
+        "reference": "<a refstr=BONFILS_ET_AL__2005 href=https://ui.adsabs.harvard.edu/abs/2005A&A...443L..15B/abstract target=ref> Bonfils et al. 2005 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 5.3686,
+        "period_err_days": 0.0001,
+        "semi_major_axis_au": 0.0399,
+        "semi_major_axis_err_au": 0.0005,
+        "eccentricity": 0.0342,
+        "inclination_deg": 47.0,
+        "inclination_err_deg": 15.0,
+        "omega_deg": 54.0,
+        "tperi_bjd": 2454751.76,
+        "tperi_err_bjd": 0.01,
+        "tranmid_bjd": 2454724.631,
+        "tranmid_err_bjd": 0.043,
+        "mass_mearth": 20.5,
+        "mass_err_mearth": 6.2,
+        "mass_type": "Mass",
+        "radius_rearth": 4.79,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 5968955040.929999,
+        "eccentricity": 0.0342,
+        "inclination_deg": 47.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.224301e+26,
+        "mass_type": "Mass",
+        "radius_m": 30517090.0
+      }
+    },
+    {
+      "name": "GJ 581 c",
+      "host_star": "GJ 581",
+      "raw": {
+        "pl_name": "GJ 581 c",
+        "reference": "<a refstr=UDRY_ET_AL__2007 href=https://ui.adsabs.harvard.edu/abs/2007A&A...469L..43U/abstract target=ref> Udry et al. 2007 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 12.9211,
+        "period_err_days": 0.0008,
+        "semi_major_axis_au": 0.0718,
+        "semi_major_axis_err_au": 0.0008,
+        "eccentricity": 0.032,
+        "inclination_deg": 47.0,
+        "inclination_err_deg": 15.0,
+        "omega_deg": 16.0,
+        "tperi_bjd": 2454759.2,
+        "tperi_err_bjd": 0.1,
+        "tranmid_bjd": 2455183.69,
+        "tranmid_err_bjd": 0.46,
+        "mass_mearth": 6.81,
+        "mass_err_mearth": 0.21,
+        "mass_type": "Mass",
+        "radius_rearth": 2.5,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 10741127116.26,
+        "eccentricity": 0.032,
+        "inclination_deg": 47.0,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.0670682e+25,
+        "mass_type": "Mass",
+        "radius_m": 15927500.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

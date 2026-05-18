@@ -1,0 +1,86 @@
+{
+  "system_name": "36 Ophiuchi C",
+  "stars": [
+    {
+      "name": "36 Ophiuchi C",
+      "component": "C",
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4109034455276324608",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 259.05329410009625,
+        "dec_deg": -26.551146094884785,
+        "parallax_mas": 167.9616795430231,
+        "parallax_error_mas": 0.031054644,
+        "pmra_mas_yr": -479.57323273959537,
+        "pmdec_mas_yr": -1124.3316833654421,
+        "radial_velocity_km_s": -0.067876756,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 6.2879,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 4308,
+        "spectype": "K5V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 5.953738988087766,
+        "distance_km": 183713189215913.3,
+        "icrs_x_km": -31185060414807.73,
+        "icrs_y_km": -161382234565091.7,
+        "icrs_z_km": -82060096106854.48,
+        "icrs_vx_km_s": -10.583880841500358,
+        "icrs_vy_km_s": 16.556167716435315,
+        "icrs_vz_km_s": -28.35560467062448,
+        "position_ulp_km": 0.035834054515924516,
+        "icrs_x_j2000_km": -31201760508709.918,
+        "icrs_y_j2000_km": -161356110919175.28,
+        "icrs_z_j2000_km": -82104837848352.16,
+        "icrs_vx_j2000_km_s": -10.583880841500358,
+        "icrs_vy_j2000_km_s": 16.556167716435315,
+        "icrs_vz_j2000_km_s": -28.35560467062448
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit_ref": "36_ophiuchi_a.json"
+}

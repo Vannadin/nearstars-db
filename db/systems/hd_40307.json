@@ -1,0 +1,301 @@
+{
+  "system_name": "HD 40307",
+  "stars": [
+    {
+      "name": "HD 40307",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4758877919212831104",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 88.51720463376759,
+        "dec_deg": -60.023737219948,
+        "parallax_mas": 77.3261340611626,
+        "parallax_error_mas": 0.016985562,
+        "pmra_mas_yr": -52.17397380816619,
+        "pmdec_mas_yr": -60.05894993288453,
+        "radial_velocity_km_s": 31.079071,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 7.139,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 4870,
+        "spectype": "K2.5V",
+        "mass_measurements": [],
+        "radius_measurements": []
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 12.932238397034444,
+        "distance_km": 399047181002262.94,
+        "icrs_x_km": 5151996581699.96,
+        "icrs_y_km": 199288116905410.78,
+        "icrs_z_km": -345607723401210.1,
+        "icrs_vx_km_s": 3.5167422647925966,
+        "icrs_vy_km_s": 12.252096256158316,
+        "icrs_vz_km_s": -28.761333219347833,
+        "position_ulp_km": 0.0767403304016612,
+        "icrs_x_j2000_km": 5157545578984.73,
+        "icrs_y_j2000_km": 199307449243051.47,
+        "icrs_z_j2000_km": -345653105333670.25,
+        "icrs_vx_j2000_km_s": 3.5167422647925966,
+        "icrs_vy_j2000_km_s": 12.252096256158316,
+        "icrs_vz_j2000_km_s": -28.761333219347833
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "HD 40307 b",
+      "host_star": "HD 40307",
+      "raw": {
+        "pl_name": "HD 40307 b",
+        "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..639M/abstract target=ref> Mayor et al. 2009 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.3123,
+        "period_err_days": 0.0011,
+        "semi_major_axis_au": 0.0468,
+        "semi_major_axis_err_au": 0.0024,
+        "eccentricity": 0.2,
+        "inclination_deg": 0.2022,
+        "inclination_err_deg": null,
+        "omega_deg": 194.8,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1188.99607059,
+        "mass_err_mearth": null,
+        "mass_type": "Mass",
+        "radius_rearth": null,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 7001180348.76,
+        "eccentricity": 0.2,
+        "inclination_deg": 0.2022,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 7.100922332777599e+27,
+        "mass_type": "Mass",
+        "radius_m": null
+      }
+    },
+    {
+      "name": "HD 40307 c",
+      "host_star": "HD 40307",
+      "raw": {
+        "pl_name": "HD 40307 c",
+        "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..639M/abstract target=ref> Mayor et al. 2009 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 9.6184,
+        "period_err_days": 0.005,
+        "semi_major_axis_au": 0.0799,
+        "semi_major_axis_err_au": 0.004,
+        "eccentricity": 0.06,
+        "inclination_deg": 0.2109,
+        "inclination_err_deg": null,
+        "omega_deg": 234.9,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1868.51320475,
+        "mass_err_mearth": null,
+        "mass_type": "Mass",
+        "radius_rearth": null,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 11952869868.93,
+        "eccentricity": 0.06,
+        "inclination_deg": 0.2109,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.115913456140795e+28,
+        "mass_type": "Mass",
+        "radius_m": null
+      }
+    },
+    {
+      "name": "HD 40307 d",
+      "host_star": "HD 40307",
+      "raw": {
+        "pl_name": "HD 40307 d",
+        "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..639M/abstract target=ref> Mayor et al. 2009 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 20.432,
+        "period_err_days": 0.022,
+        "semi_major_axis_au": 0.1321,
+        "semi_major_axis_err_au": 0.0066,
+        "eccentricity": 0.07,
+        "inclination_deg": 0.2855,
+        "inclination_err_deg": null,
+        "omega_deg": 17.2,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 1775.3894815,
+        "mass_err_mearth": null,
+        "mass_type": "Mass",
+        "radius_rearth": null,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 19761878719.469997,
+        "eccentricity": 0.07,
+        "inclination_deg": 0.2855,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.0602981061414301e+28,
+        "mass_type": "Mass",
+        "radius_m": null
+      }
+    },
+    {
+      "name": "HD 40307 f",
+      "host_star": "HD 40307",
+      "raw": {
+        "pl_name": "HD 40307 f",
+        "reference": "<a refstr=TUOMI_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A..48T/abstract target=ref> Tuomi et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 51.76,
+        "period_err_days": 0.5,
+        "semi_major_axis_au": 0.247,
+        "semi_major_axis_err_au": 0.011,
+        "eccentricity": 0.02,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 355.2,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 5.2,
+        "mass_err_mearth": 1.5,
+        "mass_type": "Msini",
+        "radius_rearth": 2.13,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 36950674062.9,
+        "eccentricity": 0.02,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.1055440000000004e+25,
+        "mass_type": "Msini",
+        "radius_m": 13570230.0
+      }
+    },
+    {
+      "name": "HD 40307 g",
+      "host_star": "HD 40307",
+      "raw": {
+        "pl_name": "HD 40307 g",
+        "reference": "<a refstr=TUOMI_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A..48T/abstract target=ref> Tuomi et al. 2013 </a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 197.8,
+        "period_err_days": 5.7,
+        "semi_major_axis_au": 0.6,
+        "semi_major_axis_err_au": 0.034,
+        "eccentricity": 0.29,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 91.7,
+        "tperi_bjd": null,
+        "tperi_err_bjd": null,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 7.1,
+        "mass_err_mearth": 2.6,
+        "mass_type": "Msini",
+        "radius_rearth": 2.56,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 1,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 89758722420.0,
+        "eccentricity": 0.29,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.240262e+25,
+        "mass_type": "Msini",
+        "radius_m": 16309760.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

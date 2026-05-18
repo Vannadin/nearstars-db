@@ -1,0 +1,866 @@
+{
+  "36 Ophiuchi A": {
+    "g_mag": 4.8313,
+    "bp_rp": 1.0583,
+    "vmag_v": 5.0679,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "36 Ophiuchi B": {
+    "g_mag": 4.8286,
+    "bp_rp": 1.0597,
+    "vmag_v": 5.0657,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "36 Ophiuchi C": {
+    "g_mag": 5.8899,
+    "bp_rp": 1.4148,
+    "vmag_v": 6.2879,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "40 Eridani A": {
+    "g_mag": 4.1799,
+    "bp_rp": 1.0412,
+    "vmag_v": 4.4098,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "40 Eridani B": {
+    "g_mag": 9.5422,
+    "bp_rp": -0.191,
+    "vmag_v": 9.58,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "40 Eridani C": {
+    "g_mag": 9.7753,
+    "bp_rp": 2.9897,
+    "vmag_v": 11.3058,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "61 Cygni A": {
+    "g_mag": 4.7667,
+    "bp_rp": 1.4626,
+    "vmag_v": 5.1895,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "61 Cygni B": {
+    "g_mag": 5.4506,
+    "bp_rp": 1.7153,
+    "vmag_v": 6.0157,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Alpha Centauri A": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": -0.01,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Alpha Centauri B": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 1.33,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Eta Cassiopeiae A": {
+    "g_mag": 3.3201,
+    "bp_rp": 0.8869,
+    "vmag_v": 3.4941,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Eta Cassiopeiae B": {
+    "g_mag": 6.762,
+    "bp_rp": 1.754,
+    "vmag_v": 7.3505,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Sirius A": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": -1.46,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Sirius B": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 8.44,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "47 UMa": {
+    "g_mag": 4.8666,
+    "bp_rp": 0.7959,
+    "vmag_v": 5.0117,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "55 Cnc": {
+    "g_mag": 5.7327,
+    "bp_rp": 1.0087,
+    "vmag_v": 5.9501,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "55 Cnc B": {
+    "g_mag": 11.683,
+    "bp_rp": 2.9855,
+    "vmag_v": 13.2097,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "61 Vir": {
+    "g_mag": 4.5325,
+    "bp_rp": 0.8984,
+    "vmag_v": 4.7105,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "AU Mic": {
+    "g_mag": 7.8434,
+    "bp_rp": 2.1113,
+    "vmag_v": 8.6673,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Altair": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 0.77,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Barnard's star": {
+    "g_mag": 8.194,
+    "bp_rp": 2.8337,
+    "vmag_v": 9.5874,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Beta Hydri": {
+    "g_mag": 2.6807,
+    "bp_rp": 0.9241,
+    "vmag_v": 2.8675,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "CD Cet": {
+    "g_mag": 12.1014,
+    "bp_rp": 3.3437,
+    "vmag_v": 13.9582,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "COCONUTS-2 A": {
+    "g_mag": 10.1621,
+    "bp_rp": 2.5644,
+    "vmag_v": 11.33,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "CWISEP J193518.59-154620.3": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": null,
+    "vmag_source": "no_gaia_id"
+  },
+  "Chi-1 Orionis A": {
+    "g_mag": 4.2417,
+    "bp_rp": 0.7962,
+    "vmag_v": 4.3869,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Delta Pavonis": {
+    "g_mag": 3.3641,
+    "bp_rp": 1.0193,
+    "vmag_v": 3.5856,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Fomalhaut": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 1.16,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "G 192-15": {
+    "g_mag": 12.6815,
+    "bp_rp": 3.4047,
+    "vmag_v": 14.5965,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "G 261-6": {
+    "g_mag": 13.3804,
+    "bp_rp": 3.6624,
+    "vmag_v": 15.5467,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1002": {
+    "g_mag": 11.7738,
+    "bp_rp": 3.6749,
+    "vmag_v": 13.9525,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1061": {
+    "g_mag": 10.9955,
+    "bp_rp": 3.6654,
+    "vmag_v": 13.1647,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1132": {
+    "g_mag": 12.1291,
+    "bp_rp": 2.8381,
+    "vmag_v": 13.5263,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1148": {
+    "g_mag": 10.5821,
+    "bp_rp": 2.7784,
+    "vmag_v": 11.928,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1151": {
+    "g_mag": 11.6847,
+    "bp_rp": 3.142,
+    "vmag_v": 13.3532,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1214": {
+    "g_mag": 12.9968,
+    "bp_rp": 3.2295,
+    "vmag_v": 14.7462,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1265": {
+    "g_mag": 12.0671,
+    "bp_rp": 3.0963,
+    "vmag_v": 13.6937,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 1289": {
+    "g_mag": 11.168,
+    "bp_rp": 3.0106,
+    "vmag_v": 12.7172,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 15 A": {
+    "g_mag": 7.2186,
+    "bp_rp": 2.1644,
+    "vmag_v": 8.0802,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 163": {
+    "g_mag": 10.6839,
+    "bp_rp": 2.5614,
+    "vmag_v": 11.8494,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 179": {
+    "g_mag": 10.714,
+    "bp_rp": 2.7233,
+    "vmag_v": 12.0132,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 180": {
+    "g_mag": 9.9382,
+    "bp_rp": 2.2848,
+    "vmag_v": 10.8881,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 229": {
+    "g_mag": 7.3135,
+    "bp_rp": 2.0743,
+    "vmag_v": 8.1114,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 238": {
+    "g_mag": 10.5328,
+    "bp_rp": 2.4278,
+    "vmag_v": 11.592,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 251": {
+    "g_mag": 8.8636,
+    "bp_rp": 2.5612,
+    "vmag_v": 10.0288,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 273": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 9.87,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "GJ 317": {
+    "g_mag": 10.7651,
+    "bp_rp": 2.6638,
+    "vmag_v": 12.0146,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 3323": {
+    "g_mag": 10.6493,
+    "bp_rp": 3.0327,
+    "vmag_v": 12.2184,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 338 B": {
+    "g_mag": 7.0545,
+    "bp_rp": 1.8464,
+    "vmag_v": 7.7005,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 341": {
+    "g_mag": 8.6806,
+    "bp_rp": 2.0229,
+    "vmag_v": 9.4431,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 3512": {
+    "g_mag": 13.0823,
+    "bp_rp": 3.6712,
+    "vmag_v": 15.2572,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 357": {
+    "g_mag": 9.8917,
+    "bp_rp": 2.3962,
+    "vmag_v": 10.9263,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 367": {
+    "g_mag": 9.1588,
+    "bp_rp": 2.3153,
+    "vmag_v": 10.1316,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 3779": {
+    "g_mag": 11.6289,
+    "bp_rp": 2.7941,
+    "vmag_v": 12.9883,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 393": {
+    "g_mag": 8.676,
+    "bp_rp": 2.2956,
+    "vmag_v": 9.6339,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 3988": {
+    "g_mag": 11.981,
+    "bp_rp": 3.1607,
+    "vmag_v": 13.6666,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 411": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 7.47,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "GJ 414 A": {
+    "g_mag": 7.7352,
+    "bp_rp": 1.6767,
+    "vmag_v": 8.2773,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 422": {
+    "g_mag": 10.4865,
+    "bp_rp": 2.5008,
+    "vmag_v": 11.6033,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 4274": {
+    "g_mag": 11.5507,
+    "bp_rp": 3.3035,
+    "vmag_v": 13.3695,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 433": {
+    "g_mag": 8.8967,
+    "bp_rp": 2.2076,
+    "vmag_v": 9.7897,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 436": {
+    "g_mag": 9.582,
+    "bp_rp": 2.4493,
+    "vmag_v": 10.658,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 480": {
+    "g_mag": 10.3357,
+    "bp_rp": 2.5907,
+    "vmag_v": 11.5249,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 486": {
+    "g_mag": 10.1051,
+    "bp_rp": 2.7543,
+    "vmag_v": 11.4306,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 514": {
+    "g_mag": 8.2053,
+    "bp_rp": 2.0879,
+    "vmag_v": 9.0127,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 536": {
+    "g_mag": 8.8634,
+    "bp_rp": 2.1136,
+    "vmag_v": 9.6888,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 581": {
+    "g_mag": 9.4218,
+    "bp_rp": 2.5616,
+    "vmag_v": 10.5874,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 625": {
+    "g_mag": 9.1398,
+    "bp_rp": 2.2955,
+    "vmag_v": 10.0977,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 649": {
+    "g_mag": 8.8236,
+    "bp_rp": 2.1124,
+    "vmag_v": 9.6483,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 667 C": {
+    "g_mag": 9.3862,
+    "bp_rp": 2.2938,
+    "vmag_v": 10.3428,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 674": {
+    "g_mag": 8.3364,
+    "bp_rp": 2.4649,
+    "vmag_v": 9.4247,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 680": {
+    "g_mag": 9.2936,
+    "bp_rp": 2.2718,
+    "vmag_v": 10.2339,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 682": {
+    "g_mag": 9.6022,
+    "bp_rp": 2.9049,
+    "vmag_v": 11.0576,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 685": {
+    "g_mag": 9.1746,
+    "bp_rp": 2.0159,
+    "vmag_v": 9.9323,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 687": {
+    "g_mag": 8.0286,
+    "bp_rp": 2.5181,
+    "vmag_v": 9.1592,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 740": {
+    "g_mag": 8.4605,
+    "bp_rp": 1.9783,
+    "vmag_v": 9.1928,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 806": {
+    "g_mag": 9.8287,
+    "bp_rp": 2.2551,
+    "vmag_v": 10.7565,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 832": {
+    "g_mag": 7.7399,
+    "bp_rp": 2.2399,
+    "vmag_v": 8.6565,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 849": {
+    "g_mag": 9.2372,
+    "bp_rp": 2.5417,
+    "vmag_v": 10.3867,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 86": {
+    "g_mag": 5.8936,
+    "bp_rp": 1.0134,
+    "vmag_v": 6.1128,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 876": {
+    "g_mag": 8.8751,
+    "bp_rp": 2.8093,
+    "vmag_v": 10.2475,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 887": {
+    "g_mag": 6.522,
+    "bp_rp": 2.0983,
+    "vmag_v": 7.3367,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 896 A": {
+    "g_mag": 9.044,
+    "bp_rp": 2.6609,
+    "vmag_v": 10.2911,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 9066": {
+    "g_mag": 10.6811,
+    "bp_rp": 3.1882,
+    "vmag_v": 12.3921,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "GJ 96": {
+    "g_mag": 8.6361,
+    "bp_rp": 1.9813,
+    "vmag_v": 9.3704,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Gl 378": {
+    "g_mag": 9.2732,
+    "bp_rp": 2.0252,
+    "vmag_v": 10.0373,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Gl 410": {
+    "g_mag": 8.8111,
+    "bp_rp": 2.0057,
+    "vmag_v": 9.5618,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Gl 49": {
+    "g_mag": 8.6713,
+    "bp_rp": 2.1754,
+    "vmag_v": 9.5409,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Gl 686": {
+    "g_mag": 8.7429,
+    "bp_rp": 2.1103,
+    "vmag_v": 9.566,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Gl 725 A": {
+    "g_mag": 7.8544,
+    "bp_rp": 2.4611,
+    "vmag_v": 8.9397,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Gliese 12": {
+    "g_mag": 11.3994,
+    "bp_rp": 2.6033,
+    "vmag_v": 12.5989,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 115404 A": {
+    "g_mag": 6.2977,
+    "bp_rp": 1.1009,
+    "vmag_v": 6.5513,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 136352": {
+    "g_mag": 5.4822,
+    "bp_rp": 0.8367,
+    "vmag_v": 5.6399,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 140901": {
+    "g_mag": 5.8338,
+    "bp_rp": 0.879,
+    "vmag_v": 6.0053,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 141004": {
+    "g_mag": 4.2469,
+    "bp_rp": 0.7825,
+    "vmag_v": 4.3879,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 147379": {
+    "g_mag": 7.9018,
+    "bp_rp": 1.8327,
+    "vmag_v": 8.5391,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 147513": {
+    "g_mag": 5.2151,
+    "bp_rp": 0.8077,
+    "vmag_v": 5.3638,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 180617": {
+    "g_mag": 8.0999,
+    "bp_rp": 2.3785,
+    "vmag_v": 9.1209,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 190007": {
+    "g_mag": 7.0766,
+    "bp_rp": 1.3456,
+    "vmag_v": 7.4401,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 192310": {
+    "g_mag": 5.4813,
+    "bp_rp": 1.0801,
+    "vmag_v": 5.7266,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 20794": {
+    "g_mag": 4.0639,
+    "bp_rp": 0.9326,
+    "vmag_v": 4.2536,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 211970": {
+    "g_mag": 8.41,
+    "bp_rp": 1.6635,
+    "vmag_v": 8.9443,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 219134": {
+    "g_mag": 5.2319,
+    "bp_rp": 1.2163,
+    "vmag_v": 5.5349,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 222237": {
+    "g_mag": 6.754,
+    "bp_rp": 1.234,
+    "vmag_v": 7.065,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 22496": {
+    "g_mag": 8.021,
+    "bp_rp": 1.6427,
+    "vmag_v": 8.5432,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 238090": {
+    "g_mag": 9.0431,
+    "bp_rp": 1.8885,
+    "vmag_v": 9.7161,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 260655": {
+    "g_mag": 8.8783,
+    "bp_rp": 1.9536,
+    "vmag_v": 9.594,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 285968": {
+    "g_mag": 9.0044,
+    "bp_rp": 2.301,
+    "vmag_v": 9.9665,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 3651": {
+    "g_mag": 5.6543,
+    "bp_rp": 1.0181,
+    "vmag_v": 5.8753,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 40307": {
+    "g_mag": 6.8579,
+    "bp_rp": 1.1664,
+    "vmag_v": 7.139,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 62509": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 1.14,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "HD 69830": {
+    "g_mag": 5.7552,
+    "bp_rp": 0.9362,
+    "vmag_v": 5.9462,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HD 86728": {
+    "g_mag": 5.205,
+    "bp_rp": 0.8405,
+    "vmag_v": 5.3639,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HIP 48714": {
+    "g_mag": 8.2312,
+    "bp_rp": 1.9278,
+    "vmag_v": 8.9299,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HIP 56998": {
+    "g_mag": 7.3942,
+    "bp_rp": 1.3138,
+    "vmag_v": 7.7424,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HIP 79431": {
+    "g_mag": 10.2506,
+    "bp_rp": 2.5178,
+    "vmag_v": 11.3809,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "HN Lib": {
+    "g_mag": 9.895,
+    "bp_rp": 2.9233,
+    "vmag_v": 11.3666,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Kapteyn": {
+    "g_mag": 8.0636,
+    "bp_rp": 2.0266,
+    "vmag_v": 8.8286,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "L 363-38": {
+    "g_mag": 11.5579,
+    "bp_rp": 2.9445,
+    "vmag_v": 13.0483,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "L 98-59": {
+    "g_mag": 10.6055,
+    "bp_rp": 2.5037,
+    "vmag_v": 11.7246,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "LHS 1140": {
+    "g_mag": 12.6539,
+    "bp_rp": 3.031,
+    "vmag_v": 14.2214,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "LHS 3844": {
+    "g_mag": 13.365,
+    "bp_rp": 3.3893,
+    "vmag_v": 15.2652,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "LHS 475": {
+    "g_mag": 11.4125,
+    "bp_rp": 2.7264,
+    "vmag_v": 12.7144,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "LTT 1445 A": {
+    "g_mag": 10.0584,
+    "bp_rp": 2.5904,
+    "vmag_v": 11.2474,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Mu Herculis A": {
+    "g_mag": 3.2384,
+    "bp_rp": 1.022,
+    "vmag_v": 3.4609,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Proxima Cen": {
+    "g_mag": 8.9847,
+    "bp_rp": 3.8046,
+    "vmag_v": 11.2931,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Ross 128": {
+    "g_mag": 9.601,
+    "bp_rp": 3.0333,
+    "vmag_v": 11.1705,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Ross 458": {
+    "g_mag": 8.8991,
+    "bp_rp": 2.1467,
+    "vmag_v": 9.7481,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Ross 508": {
+    "g_mag": 12.1952,
+    "bp_rp": 3.0678,
+    "vmag_v": 13.7959,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Sigma Draconis": {
+    "g_mag": 4.449,
+    "bp_rp": 0.9943,
+    "vmag_v": 4.6611,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "TOI-540": {
+    "g_mag": 12.8737,
+    "bp_rp": 3.108,
+    "vmag_v": 14.511,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "TRAPPIST-1": {
+    "g_mag": 15.6226,
+    "bp_rp": 4.9019,
+    "vmag_v": 19.0807,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Teegarden's Star": {
+    "g_mag": 12.2631,
+    "bp_rp": 4.5285,
+    "vmag_v": 15.3227,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Vega": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 0.03,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "WISEP J121756.91+162640.2 A": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": null,
+    "vmag_source": "no_gaia_id"
+  },
+  "Wolf 1061": {
+    "g_mag": 8.8019,
+    "bp_rp": 2.7316,
+    "vmag_v": 10.1081,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Wolf 1069": {
+    "g_mag": 12.3523,
+    "bp_rp": 3.3413,
+    "vmag_v": 14.2068,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "YZ Cet": {
+    "g_mag": 10.4365,
+    "bp_rp": 3.1971,
+    "vmag_v": 12.1558,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "Zeta Tucanae": {
+    "g_mag": 4.0735,
+    "bp_rp": 0.7693,
+    "vmag_v": 4.2107,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "eps Eri": {
+    "g_mag": 3.4658,
+    "bp_rp": 1.1403,
+    "vmag_v": 3.7358,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "eps Ind A": {
+    "g_mag": 4.3229,
+    "bp_rp": 1.2974,
+    "vmag_v": 4.6632,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "gam Cep": {
+    "g_mag": 2.943,
+    "bp_rp": 1.2569,
+    "vmag_v": 3.2644,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "tau Cet": {
+    "g_mag": 3.3004,
+    "bp_rp": 1.0512,
+    "vmag_v": 3.5342,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "ups And": {
+    "g_mag": 3.9661,
+    "bp_rp": 0.7229,
+    "vmag_v": 4.0902,
+    "vmag_source": "gaia_dr3_converted"
+  }
+}

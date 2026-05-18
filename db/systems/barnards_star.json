@@ -1,0 +1,298 @@
+{
+  "system_name": "Barnard's star",
+  "stars": [
+    {
+      "name": "Barnard's star",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4472832130942575872",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 269.44850252543836,
+        "dec_deg": 4.739420051112412,
+        "parallax_mas": 546.975939730948,
+        "parallax_error_mas": 0.040116355,
+        "pmra_mas_yr": -801.5509783684709,
+        "pmdec_mas_yr": 10362.394206546573,
+        "radial_velocity_km_s": -110.46822,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 9.5874,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3278,
+        "spectype": "M4.0 Ve",
+        "mass_measurements": [
+          {
+            "value_msun": 0.161,
+            "uncertainty_msun": 0.006,
+            "method": "spectroscopic_calibration",
+            "reference": "Mann et al. 2015",
+            "bibcode": "2015ApJ...804...64M",
+            "doi": "10.1088/0004-637X/804/1/64",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.1868,
+            "uncertainty_rsun": 0.0011,
+            "method": "interferometry",
+            "reference": "Rains et al. 2021",
+            "bibcode": "2021MNRAS.504.5788R",
+            "doi": "10.1093/mnras/stab1167",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 1.828233981355542,
+        "distance_km": 56413406099888.305,
+        "icrs_x_km": -529026913218.3253,
+        "icrs_y_km": -56462791266359.49,
+        "icrs_z_km": 4493710228586.179,
+        "icrs_vx_km_s": -5.815395023725568,
+        "icrs_vy_km_s": 117.57220972362427,
+        "icrs_vz_km_s": 80.37323072618808,
+        "position_ulp_km": 0.012537258179703302,
+        "icrs_x_j2000_km": -538202908718.36145,
+        "icrs_y_j2000_km": -56277276428080.78,
+        "icrs_z_j2000_km": 4620529541884.416,
+        "icrs_vx_j2000_km_s": -5.815395023725568,
+        "icrs_vy_j2000_km_s": 117.57220972362427,
+        "icrs_vz_j2000_km_s": 80.37323072618808
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 21366702842.898,
+        "mean_radius_km": 129956.8
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "Barnard d",
+      "host_star": "Barnard's star",
+      "raw": {
+        "pl_name": "Barnard d",
+        "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 2.3402,
+        "period_err_days": 0.0003,
+        "semi_major_axis_au": 0.0188,
+        "semi_major_axis_err_au": 0.0003,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": -51.8,
+        "tperi_bjd": 2460243.7,
+        "tperi_err_bjd": 0.08,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 0.263,
+        "mass_err_mearth": 0.024,
+        "mass_type": "Msini",
+        "radius_rearth": 0.694,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 2812439969.1600003,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.5706886e+24,
+        "mass_type": "Msini",
+        "radius_m": 4421474.0
+      }
+    },
+    {
+      "name": "Barnard b",
+      "host_star": "Barnard's star",
+      "raw": {
+        "pl_name": "Barnard b",
+        "reference": "<a refstr=GONZALEZ_HERNANDEZ_ET_AL_2024 href=https://ui.adsabs.harvard.edu/abs/2024A&A...690A..79G/abstract target=ref>Gonz&aacute;lez Hern&aacute;ndez et al. 2024</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 3.1542,
+        "period_err_days": 0.0004,
+        "semi_major_axis_au": 0.0229,
+        "semi_major_axis_err_au": 0.0003,
+        "eccentricity": 0.03,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 3.8,
+        "tperi_bjd": 2460243.38,
+        "tperi_err_bjd": 0.09,
+        "tranmid_bjd": 2460139.204,
+        "tranmid_err_bjd": 0.149,
+        "mass_mearth": 0.299,
+        "mass_err_mearth": 0.026,
+        "mass_type": "Msini",
+        "radius_rearth": 0.72,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 3425791239.03,
+        "eccentricity": 0.03,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.7856878e+24,
+        "mass_type": "Msini",
+        "radius_m": 4587120.0
+      }
+    },
+    {
+      "name": "Barnard c",
+      "host_star": "Barnard's star",
+      "raw": {
+        "pl_name": "Barnard c",
+        "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 4.1244,
+        "period_err_days": 0.0006,
+        "semi_major_axis_au": 0.0274,
+        "semi_major_axis_err_au": 0.0004,
+        "eccentricity": 0.08,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": 90.8,
+        "tperi_bjd": 2460242.92,
+        "tperi_err_bjd": 0.1,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 0.335,
+        "mass_err_mearth": 0.03,
+        "mass_type": "Msini",
+        "radius_rearth": 0.743,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 4098981657.1800003,
+        "eccentricity": 0.08,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 2.0006870000000001e+24,
+        "mass_type": "Msini",
+        "radius_m": 4733653.0
+      }
+    },
+    {
+      "name": "Barnard e",
+      "host_star": "Barnard's star",
+      "raw": {
+        "pl_name": "Barnard e",
+        "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
+        "retrieval_date": "2026-05-18",
+        "period_days": 6.7392,
+        "period_err_days": 0.003,
+        "semi_major_axis_au": 0.0381,
+        "semi_major_axis_err_au": 0.0005,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "inclination_err_deg": null,
+        "omega_deg": -27.5,
+        "tperi_bjd": 2460245.3,
+        "tperi_err_bjd": 0.37,
+        "tranmid_bjd": null,
+        "tranmid_err_bjd": null,
+        "mass_mearth": 0.193,
+        "mass_err_mearth": 0.033,
+        "mass_type": "Msini",
+        "radius_rearth": 0.637,
+        "radius_err_rearth": null,
+        "discoverymethod": "Radial Velocity",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "derived": {
+        "semi_major_axis_m": 5699678873.67,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 1.1526346e+24,
+        "mass_type": "Msini",
+        "radius_m": 4058327.0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "planet parameters"
+      ]
+    },
+    {
+      "title": "Mann et al. 2015",
+      "doi": "10.1088/0004-637X/804/1/64",
+      "bibcode": "2015ApJ...804...64M",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "Barnard's star mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Rains et al. 2021",
+      "doi": "10.1093/mnras/stab1167",
+      "bibcode": "2021MNRAS.504.5788R",
+      "accessed": "2026-05-18",
+      "used_for": [
+        "Barnard's star radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-18",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": "Linear propagation accumulates ~0.5 AU position error over 66 years from perspective acceleration (μ≈10,300 mas/yr, ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for KSP. For sub-AU accuracy, override with JPL Horizons state vector at JD2433282.5."
+  }
+}

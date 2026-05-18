@@ -1,0 +1,618 @@
+{
+  "Alpha Centauri": {
+    "components": [
+      "Alpha Centauri A",
+      "Alpha Centauri B"
+    ],
+    "hierarchy": "binary",
+    "wds_id": "14396-6050",
+    "raw": {
+      "source": "Pourbaix & Correia (2017) via Kervella et al. (2016)",
+      "doi": "10.1051/0004-6361:20021249",
+      "note": "Pourbaix et al. 2002 solution; verify T_peri against paper",
+      "orb_grade": 10,
+      "period_yr": 79.91,
+      "period_yr_err": 0.01,
+      "semi_major_axis_arcsec": 17.57,
+      "semi_major_axis_arcsec_err": 0.022,
+      "eccentricity": 0.5179,
+      "eccentricity_err": 0.0003,
+      "inclination_deg": 79.205,
+      "inclination_err_deg": 0.05,
+      "longitude_of_ascending_node_deg": 204.85,
+      "longitude_of_ascending_node_err_deg": 0.08,
+      "argument_of_periapsis_deg": 231.65,
+      "argument_of_periapsis_err_deg": 0.08,
+      "t_peri_yr": 1954.8,
+      "t_peri_jd": 2435035.7,
+      "t_peri_note": "WDS 2023 sep/PA calibration: predicts sep=8.00\" PA=5.0° vs observed 8.1\"/5°"
+    },
+    "derived": {
+      "semi_major_axis_au": 23.6754,
+      "semi_major_axis_m": 3541791877592.572,
+      "mean_anomaly_at_b1950_deg": 338.3757,
+      "mean_anomaly_at_j2000_deg": 203.6291,
+      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+    },
+    "barycenter_state_b1950": {
+      "mass_A_msun": 1.1055,
+      "mass_B_msun": 0.9092,
+      "epoch_jd": 2433282.5,
+      "epoch_label": "B1950.0",
+      "icrs_x_km": -15527808152883.658,
+      "icrs_y_km": -13030925048883.236,
+      "icrs_z_km": -36336649134719.59,
+      "icrs_vx_km_s": -10.67882706248958,
+      "icrs_vy_km_s": 21.46224974800752,
+      "icrs_vz_km_s": 18.145649599660533,
+      "distance_pc": 1.3474909718104888,
+      "distance_km": 41579226829771.46,
+      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+    },
+    "individual_states": {
+      "b1950": {
+        "Alpha Centauri A": {
+          "icrs_x_km": -15527352619519.38,
+          "icrs_y_km": -13030086238644.053,
+          "icrs_z_km": -36336848124526.26,
+          "icrs_vx_km_s": -14.05115341806497,
+          "icrs_vy_km_s": 19.611641464268693,
+          "icrs_vz_km_s": 13.526210148574318
+        },
+        "Alpha Centauri B": {
+          "icrs_x_km": -15528362037765.102,
+          "icrs_y_km": -13031944961685.06,
+          "icrs_z_km": -36336407182199.5,
+          "icrs_vx_km_s": -6.578401648841764,
+          "icrs_vy_km_s": 23.71241193198604,
+          "icrs_vz_km_s": 23.762444928714437
+        }
+      },
+      "j2000": {
+        "Alpha Centauri A": {
+          "icrs_x_km": -15543954299385.086,
+          "icrs_y_km": -12997579863089.29,
+          "icrs_z_km": -36305787419451.805,
+          "icrs_vx_km_s": -9.526316512113453,
+          "icrs_vy_km_s": 23.433123266499315,
+          "icrs_vz_km_s": 17.842863132801526
+        },
+        "Alpha Centauri B": {
+          "icrs_x_km": -15545513766583.373,
+          "icrs_y_km": -12996428326783.963,
+          "icrs_z_km": -36310729013383.625,
+          "icrs_vx_km_s": -12.080169356199223,
+          "icrs_vy_km_s": 19.065856573026565,
+          "icrs_vz_km_s": 18.513808903567963
+        }
+      }
+    }
+  },
+  "Sirius": {
+    "components": [
+      "Sirius A",
+      "Sirius B"
+    ],
+    "hierarchy": "binary",
+    "wds_id": "06451-1643",
+    "raw": {
+      "source": "Bond et al. (2017)",
+      "doi": "10.3847/1538-3881/aa6d54",
+      "note": "AJ 153, 51 (2017). Best modern orbit.",
+      "orb_grade": 10,
+      "period_yr": 50.09,
+      "period_yr_err": 0.09,
+      "semi_major_axis_arcsec": 7.5,
+      "semi_major_axis_arcsec_err": 0.014,
+      "eccentricity": 0.592,
+      "eccentricity_err": 0.0014,
+      "inclination_deg": 136.336,
+      "inclination_err_deg": 0.04,
+      "longitude_of_ascending_node_deg": 45.4,
+      "longitude_of_ascending_node_err_deg": 0.12,
+      "argument_of_periapsis_deg": 149.23,
+      "argument_of_periapsis_err_deg": 0.04,
+      "t_peri_yr": 1994.344,
+      "t_peri_jd": 2449479.1,
+      "t_peri_note": "Bond et al. 2017 Table 6"
+    },
+    "derived": {
+      "semi_major_axis_au": 19.778,
+      "semi_major_axis_m": 2958740619313.837,
+      "mean_anomaly_at_b1950_deg": 41.2969,
+      "mean_anomaly_at_j2000_deg": 40.65,
+      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+    },
+    "barycenter_state_b1950": {
+      "mass_A_msun": 2.063,
+      "mass_B_msun": 1.018,
+      "epoch_jd": 2433282.5,
+      "epoch_label": "B1950.0",
+      "icrs_x_km": -15330792920689.477,
+      "icrs_y_km": 76756582291560.02,
+      "icrs_z_km": -23484122132477.207,
+      "icrs_vx_km_s": 8.197858376918768,
+      "icrs_vy_km_s": -7.860190540331654,
+      "icrs_vz_km_s": -11.886181763557635,
+      "distance_pc": 2.6370612589330453,
+      "distance_km": 81371208077081.31,
+      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+    },
+    "individual_states": {
+      "b1950": {
+        "Sirius A": {
+          "icrs_x_km": -15330609523377.885,
+          "icrs_y_km": 76757310789599.44,
+          "icrs_z_km": -23483801113860.3,
+          "icrs_vx_km_s": 11.716665344820786,
+          "icrs_vy_km_s": -5.213722270795663,
+          "icrs_vz_km_s": -13.17198209638249
+        },
+        "Sirius B": {
+          "icrs_x_km": -15331164579484.97,
+          "icrs_y_km": 76755105973823.94,
+          "icrs_z_km": -23484772683957.242,
+          "icrs_vx_km_s": 1.0669165549326562,
+          "icrs_vy_km_s": -13.223318281051448,
+          "icrs_vz_km_s": -9.28047833858939
+        }
+      },
+      "j2000": {
+        "Sirius A": {
+          "icrs_x_km": -15317684223283.254,
+          "icrs_y_km": 76744900819370.55,
+          "icrs_z_km": -23502552648691.85,
+          "icrs_vx_km_s": 11.730994536212696,
+          "icrs_vy_km_s": -5.158014669895451,
+          "icrs_vz_km_s": -13.147341159735065
+        },
+        "Sirius B": {
+          "icrs_x_km": -15318209205800.361,
+          "icrs_y_km": 76742718801721.22,
+          "icrs_z_km": -23503534610806.676,
+          "icrs_vx_km_s": 1.0378781248329396,
+          "icrs_vy_km_s": -13.336210992895396,
+          "icrs_vz_km_s": -9.330413753425969
+        }
+      }
+    }
+  },
+  "61 Cygni": {
+    "components": [
+      "61 Cygni A",
+      "61 Cygni B"
+    ],
+    "hierarchy": "binary",
+    "wds_id": "21069+3845",
+    "raw": {
+      "source": "Strand (1952) / Walker (1995) via ORB6",
+      "doi": null,
+      "note": "Long period (~659 yr). Orbital solution uncertain; ORB6 grade ~3-4. Verify from ORB6 or recent speckle solution. Mean anomaly changes slowly (~0.55 deg/yr) so epoch error of a few years is acceptable.",
+      "orb_grade": 3,
+      "period_yr": 659.0,
+      "period_yr_err": 50.0,
+      "semi_major_axis_arcsec": 24.3,
+      "semi_major_axis_arcsec_err": 2.0,
+      "eccentricity": 0.49,
+      "eccentricity_err": 0.05,
+      "inclination_deg": 52.0,
+      "inclination_err_deg": 5.0,
+      "longitude_of_ascending_node_deg": 178.0,
+      "longitude_of_ascending_node_err_deg": 10.0,
+      "argument_of_periapsis_deg": 149.0,
+      "argument_of_periapsis_err_deg": 15.0,
+      "t_peri_yr": 1767.0,
+      "t_peri_jd": 2366441.8,
+      "t_peri_note": "UNCERTAIN. Needs verification from current ORB6 entry."
+    },
+    "derived": {
+      "semi_major_axis_au": 84.9665,
+      "semi_major_axis_m": 12710812829639.148,
+      "mean_anomaly_at_b1950_deg": 99.9697,
+      "mean_anomaly_at_j2000_deg": 127.2838,
+      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+    },
+    "barycenter_state_b1950": {
+      "mass_A_msun": 0.708,
+      "mass_B_msun": 0.696,
+      "epoch_jd": 2433282.5,
+      "epoch_label": "B1950.0",
+      "icrs_x_km": 61309159612067.3,
+      "icrs_y_km": -57867782128463.63,
+      "icrs_z_km": 67544967105356.11,
+      "icrs_vx_km_s": -14.330163287094935,
+      "icrs_vy_km_s": 107.5837128606606,
+      "icrs_vz_km_s": 0.5249332802793286,
+      "distance_pc": 3.4965652573897277,
+      "distance_km": 107892730269477.9,
+      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+    },
+    "individual_states": {
+      "b1950": {
+        "61 Cygni A": {
+          "icrs_x_km": 61307854032643.56,
+          "icrs_y_km": -57872888803306.234,
+          "icrs_z_km": 67550986512529.74,
+          "icrs_vx_km_s": -15.019696661395626,
+          "icrs_vy_km_s": 108.1417375376791,
+          "icrs_vz_km_s": 1.6639417002768466
+        },
+        "61 Cygni B": {
+          "icrs_x_km": 61310487701481.1,
+          "icrs_y_km": -57862587407503.055,
+          "icrs_z_km": 67538843915300.17,
+          "icrs_vx_km_s": -13.628741406340783,
+          "icrs_vy_km_s": 107.01606706852107,
+          "icrs_vz_km_s": -0.633713215925043
+        }
+      },
+      "j2000": {
+        "61 Cygni A": {
+          "icrs_x_km": 61284237535645.36,
+          "icrs_y_km": -57702013763573.33,
+          "icrs_z_km": 67553286003228.445,
+          "icrs_vx_km_s": -14.912340693943227,
+          "icrs_vy_km_s": 108.42025022474826,
+          "icrs_vz_km_s": 1.2533945518270668
+        },
+        "61 Cygni B": {
+          "icrs_x_km": 61288898973745.64,
+          "icrs_y_km": -57693973394554.055,
+          "icrs_z_km": 67538175622378.07,
+          "icrs_vx_km_s": -13.73794833874926,
+          "icrs_vy_km_s": 106.73275243857142,
+          "icrs_vz_km_s": -0.21608766836406024
+        }
+      }
+    }
+  },
+  "40 Eridani": {
+    "components": [
+      "40 Eridani A",
+      "40 Eridani B",
+      "40 Eridani C"
+    ],
+    "hierarchy": "triple",
+    "wds_id": "04153-0739",
+    "pairs": {
+      "A-BC": {
+        "primary": "40 Eridani A",
+        "secondary": "40 Eridani B",
+        "wds_comp": "A,BC",
+        "raw": {
+          "source": "Heintz (1974) / Gatewood & Gatewood (1978) via ORB6",
+          "doi": null,
+          "note": "Outer pair (A orbits BC barycenter). ORB6 grade ~3. Verify from ORB6 entry for WDS 04153-0739 comp A,BC.",
+          "reliability": "UNRELIABLE",
+          "reliability_note": "Kepler prediction (sep=489\") does not match WDS 2024 (sep=83.2\"). Orbit essentially undetermined (a_arcsec=418\" vs current sep=83.2\"). Do not use for CFG generation.",
+          "orb_grade": 3,
+          "period_yr": 8005.0,
+          "period_yr_err": 500.0,
+          "semi_major_axis_arcsec": 418.0,
+          "semi_major_axis_arcsec_err": 30.0,
+          "eccentricity": 0.339,
+          "eccentricity_err": 0.02,
+          "inclination_deg": 107.0,
+          "inclination_err_deg": 10.0,
+          "longitude_of_ascending_node_deg": 103.0,
+          "longitude_of_ascending_node_err_deg": 10.0,
+          "argument_of_periapsis_deg": 327.0,
+          "argument_of_periapsis_err_deg": 20.0,
+          "t_peri_yr": 4390.0,
+          "t_peri_jd": 3324492.5,
+          "t_peri_note": "HIGHLY UNCERTAIN. Very long period, poorly constrained."
+        },
+        "derived": {
+          "semi_major_axis_au": 2094.1043,
+          "semi_major_axis_m": 313273546462702.8,
+          "mean_anomaly_at_b1950_deg": 250.2686,
+          "mean_anomaly_at_j2000_deg": 252.5172,
+          "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+        }
+      },
+      "B-C": {
+        "primary": "40 Eridani B",
+        "secondary": "40 Eridani C",
+        "wds_comp": "BC",
+        "raw": {
+          "source": "Heintz (1974) / recent ORB6",
+          "doi": null,
+          "note": "Inner pair B-C. WDS 2024 sep=7.7\". ORB6 grade ~5. Verify from ORB6 entry for WDS 04153-0739 comp BC.",
+          "orb_grade": 5,
+          "period_yr": 247.9,
+          "period_yr_err": 5.0,
+          "semi_major_axis_arcsec": 6.93,
+          "semi_major_axis_arcsec_err": 0.2,
+          "eccentricity": 0.41,
+          "eccentricity_err": 0.02,
+          "inclination_deg": 107.6,
+          "inclination_err_deg": 2.0,
+          "longitude_of_ascending_node_deg": 151.3,
+          "longitude_of_ascending_node_err_deg": 5.0,
+          "argument_of_periapsis_deg": 329.0,
+          "argument_of_periapsis_err_deg": 10.0,
+          "t_peri_yr": 1849.0,
+          "t_peri_jd": 2396392.2,
+          "t_peri_note": "Approximate; verify from ORB6."
+        },
+        "derived": {
+          "semi_major_axis_au": 34.718,
+          "semi_major_axis_m": 5193745638723.757,
+          "mean_anomaly_at_b1950_deg": 146.672,
+          "mean_anomaly_at_j2000_deg": 219.282,
+          "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+        },
+        "barycenter_state_b1950": {
+          "mass_A_msun": 0.573,
+          "mass_B_msun": 0.2,
+          "epoch_jd": 2433282.5,
+          "epoch_label": "B1950.0",
+          "icrs_x_km": 67494633843553.01,
+          "icrs_y_km": 137602788944590.95,
+          "icrs_z_km": -20479523712170.297,
+          "icrs_vx_km_s": 31.237442034058297,
+          "icrs_vy_km_s": -56.987724441230505,
+          "icrs_vz_km_s": -75.4100380237174,
+          "distance_pc": 5.007735116119533,
+          "distance_km": 154522559818552.72,
+          "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+        },
+        "individual_states": {
+          "b1950": {
+            "40 Eridani B": {
+              "icrs_x_km": 67493771234880.43,
+              "icrs_y_km": 137601607979049.55,
+              "icrs_z_km": -20480651799249.996,
+              "icrs_vx_km_s": 31.017918584238082,
+              "icrs_vy_km_s": -56.531716230482736,
+              "icrs_vz_km_s": -75.93239070023526
+            },
+            "40 Eridani C": {
+              "icrs_x_km": 67497105217399.945,
+              "icrs_y_km": 137606172410867.08,
+              "icrs_z_km": -20476291742686.965,
+              "icrs_vx_km_s": 31.86637671779321,
+              "icrs_vy_km_s": -58.294187965022864,
+              "icrs_vz_km_s": -73.91349760549377
+            }
+          },
+          "j2000": {
+            "40 Eridani B": {
+              "icrs_x_km": 67542987130880.72,
+              "icrs_y_km": 137512669469341.98,
+              "icrs_z_km": -20600070114036.76,
+              "icrs_vx_km_s": 31.372068282959,
+              "icrs_vy_km_s": -56.26122674766028,
+              "icrs_vz_km_s": -75.403878755947
+            },
+            "40 Eridani C": {
+              "icrs_x_km": 67546603409275.97,
+              "icrs_y_km": 137513441250350.5,
+              "icrs_z_km": -20594046855252.75,
+              "icrs_vx_km_s": 30.851737830957788,
+              "icrs_vy_km_s": -59.0691403333092,
+              "icrs_vz_km_s": -75.4276843258796
+            }
+          }
+        }
+      }
+    }
+  },
+  "Eta Cassiopeiae": {
+    "components": [
+      "Eta Cassiopeiae A",
+      "Eta Cassiopeiae B"
+    ],
+    "hierarchy": "binary",
+    "wds_id": "00491+5749",
+    "raw": {
+      "source": "Tokovinin (2021) / ORB6 recent",
+      "doi": null,
+      "note": "WDS 2023 sep=13.5\". ORB6 grade ~7. Verify from ORB6 entry for WDS 00491+5749 comp AB.",
+      "orb_grade": 7,
+      "period_yr": 480.0,
+      "period_yr_err": 10.0,
+      "semi_major_axis_arcsec": 11.985,
+      "semi_major_axis_arcsec_err": 0.3,
+      "eccentricity": 0.497,
+      "eccentricity_err": 0.01,
+      "inclination_deg": 34.76,
+      "inclination_err_deg": 1.0,
+      "longitude_of_ascending_node_deg": 98.94,
+      "longitude_of_ascending_node_err_deg": 2.0,
+      "argument_of_periapsis_deg": 85.16,
+      "argument_of_periapsis_err_deg": 3.0,
+      "t_peri_yr": 1889.6,
+      "t_peri_jd": 2411221.4,
+      "t_peri_note": "Approximate; verify from ORB6 entry.",
+      "omega_correction_note": "ω corrected +180°: source published ω_primary; converted to ω_secondary for Thiele-Innes. WDS 2023 predicts sep=13.72\" PA=324° vs observed 13.5\"/328°."
+    },
+    "derived": {
+      "semi_major_axis_au": 70.9877,
+      "semi_major_axis_m": 10619602786144.375,
+      "mean_anomaly_at_b1950_deg": 45.3,
+      "mean_anomaly_at_j2000_deg": 82.8,
+      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+    },
+    "barycenter_state_b1950": {
+      "mass_A_msun": 0.972,
+      "mass_B_msun": 0.576,
+      "epoch_jd": 2433282.5,
+      "epoch_label": "B1950.0",
+      "icrs_x_km": 95127928912157.06,
+      "icrs_y_km": 20646889539068.445,
+      "icrs_z_km": 154717763079100.38,
+      "icrs_vx_km_s": 10.251424575220328,
+      "icrs_vy_km_s": 33.941766084959106,
+      "icrs_vz_km_s": -0.07146358445929298,
+      "distance_pc": 5.923042138328477,
+      "distance_km": 182765983404666.97,
+      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+    },
+    "individual_states": {
+      "b1950": {
+        "Eta Cassiopeiae A": {
+          "icrs_x_km": 95128151180601.55,
+          "icrs_y_km": 20650232150204.53,
+          "icrs_z_km": 154717512980110.72,
+          "icrs_vx_km_s": 11.978479972997011,
+          "icrs_vy_km_s": 34.74777383484331,
+          "icrs_vz_km_s": -0.03574511428775668
+        },
+        "Eta Cassiopeiae B": {
+          "icrs_x_km": 95127553834157.0,
+          "icrs_y_km": 20641248882776.3,
+          "icrs_z_km": 154718185121145.4,
+          "icrs_vx_km_s": 7.337018591472175,
+          "icrs_vy_km_s": 32.581628007029515,
+          "icrs_vz_km_s": -0.1317385028737605
+        }
+      },
+      "j2000": {
+        "Eta Cassiopeiae A": {
+          "icrs_x_km": 95146811232844.64,
+          "icrs_y_km": 20704175898202.52,
+          "icrs_z_km": 154717512077408.53,
+          "icrs_vx_km_s": 11.621728050369255,
+          "icrs_vy_km_s": 33.76366866695941,
+          "icrs_vz_km_s": 0.0210554961810165
+        },
+        "Eta Cassiopeiae B": {
+          "icrs_x_km": 95139536700107.8,
+          "icrs_y_km": 20694150649055.69,
+          "icrs_z_km": 154717883599373.6,
+          "icrs_vx_km_s": 7.9390374609065155,
+          "icrs_vy_km_s": 34.2423054778336,
+          "icrs_vz_km_s": -0.22758953303981522
+        }
+      }
+    }
+  },
+  "36 Ophiuchi": {
+    "components": [
+      "36 Ophiuchi A",
+      "36 Ophiuchi B",
+      "36 Ophiuchi C"
+    ],
+    "hierarchy": "triple",
+    "wds_id": "17153-2636",
+    "pairs": {
+      "A-B": {
+        "primary": "36 Ophiuchi A",
+        "secondary": "36 Ophiuchi B",
+        "wds_comp": "AB",
+        "raw": {
+          "source": "Heintz (1990) via ORB6",
+          "doi": null,
+          "note": "WDS 2024 sep=5.1\". Inner pair. ORB6 grade ~4. Verify from ORB6 entry for WDS 17153-2636 comp AB.",
+          "reliability": "UNRELIABLE",
+          "reliability_note": "Kepler prediction (sep=6.62\", PA=8°) does not match WDS 2021 (sep=5.1\", PA=138°). High eccentricity (e=0.921) makes orbit highly sensitive to T_peri. Do not use for CFG generation; approximate position from WDS observed sep/PA instead.",
+          "orb_grade": 4,
+          "period_yr": 570.0,
+          "period_yr_err": 30.0,
+          "semi_major_axis_arcsec": 4.74,
+          "semi_major_axis_arcsec_err": 0.3,
+          "eccentricity": 0.921,
+          "eccentricity_err": 0.01,
+          "inclination_deg": 81.0,
+          "inclination_err_deg": 3.0,
+          "longitude_of_ascending_node_deg": 16.0,
+          "longitude_of_ascending_node_err_deg": 5.0,
+          "argument_of_periapsis_deg": 143.0,
+          "argument_of_periapsis_err_deg": 5.0,
+          "t_peri_yr": 1804.0,
+          "t_peri_jd": 2379956.0,
+          "t_peri_note": "Approximate; verify from ORB6."
+        },
+        "derived": {
+          "semi_major_axis_au": 28.2138,
+          "semi_major_axis_m": 4220719715050.784,
+          "mean_anomaly_at_b1950_deg": 92.2105,
+          "mean_anomaly_at_j2000_deg": 123.7895,
+          "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+        },
+        "barycenter_state_b1950": {
+          "mass_A_msun": 0.77,
+          "mass_B_msun": 0.76,
+          "epoch_jd": 2433282.5,
+          "epoch_label": "B1950.0",
+          "icrs_x_km": -31765253767121.11,
+          "icrs_y_km": -161082824387872.6,
+          "icrs_z_km": -82168806152213.81,
+          "icrs_vx_km_s": -10.577639784746376,
+          "icrs_vy_km_s": 16.667586660777737,
+          "icrs_vz_km_s": -28.962068262705518,
+          "distance_pc": 5.952271867918357,
+          "distance_km": 183667918617752.34,
+          "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
+        },
+        "individual_states": {
+          "b1950": {
+            "note": "Approximate positions from WDS 2021 sep=5.1\" PA=138°. Radial offset=0 (unknown), orbital velocity not included. Reliable for Kopernicus initial placement; Principia will simulate correctly once gravity takes over.",
+            "36 Ophiuchi A": {
+              "icrs_x_km": -31766879555779.68,
+              "icrs_y_km": -161083268141878.97,
+              "icrs_z_km": -82167306798862.86,
+              "icrs_vx_km_s": -10.577639784746376,
+              "icrs_vy_km_s": 16.667586660777737,
+              "icrs_vz_km_s": -28.962068262705518
+            },
+            "36 Ophiuchi B": {
+              "icrs_x_km": -31763606586506.504,
+              "icrs_y_km": -161082374794997.72,
+              "icrs_z_km": -82170325233898.33,
+              "icrs_vx_km_s": -10.577639784746376,
+              "icrs_vy_km_s": 16.667586660777737,
+              "icrs_vz_km_s": -28.962068262705518
+            }
+          }
+        }
+      },
+      "AB-C": {
+        "primary": "36 Ophiuchi A",
+        "secondary": "36 Ophiuchi C",
+        "wds_comp": "AC",
+        "raw": {
+          "source": "Heintz (1990) / wide pair estimate",
+          "doi": null,
+          "note": "WDS sep C=732.5\" — very wide, poorly constrained orbit. May be treated as an unbound or nearly unbound companion.",
+          "orb_grade": 1,
+          "period_yr": null,
+          "semi_major_axis_arcsec": 732.5,
+          "eccentricity": null,
+          "inclination_deg": null,
+          "t_peri_yr": null,
+          "t_peri_jd": null,
+          "t_peri_note": "Orbit not well determined. Treat C as distant companion."
+        },
+        "derived": {
+          "semi_major_axis_au": 4360.0391,
+          "semi_major_axis_m": 652252571998881.6,
+          "mean_anomaly_at_b1950_deg": null,
+          "mean_anomaly_at_j2000_deg": null,
+          "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
+        }
+      }
+    }
+  },
+  "_principia_notes": {
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0 (1950-Jan-01)",
+    "game_epoch_sol_jd": 2433647.5,
+    "game_epoch_sol_label": "1951-Jan-01 (KSP UT=0, +365 days from solar_system_epoch)",
+    "state_vectors_to_use": "individual_states.b1950",
+    "mean_anomaly_to_use": "mean_anomaly_at_b1950_deg",
+    "note": "Principia integrates forward from solar_system_epoch (JD 2433282.5). Use individual_states.b1950 for all bodies. individual_states.j2000 is stored for reference only.",
+    "reliable_systems": [
+      "Alpha Centauri",
+      "Sirius",
+      "61 Cygni",
+      "Eta Cassiopeiae",
+      "40 Eridani B-C"
+    ],
+    "approximate_systems": {
+      "36 Ophiuchi A-B": "WDS-based position only, no orbital velocity. Principia N-body corrects dynamically.",
+      "40 Eridani A-BC": "Use 40 Eridani A state vector directly; outer orbit undetermined."
+    }
+  }
+}
