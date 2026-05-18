@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2400,
         "spectype": "M7.5e",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.0898,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_msun": 0.0023
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.1192,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_rsun": 0.0013
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -28.20104303628457
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 11917577113.616,
+        "mean_radius_km": 82927.4
       }
     }
   ],
@@ -94,15 +114,38 @@
       },
       "derived": {
         "semi_major_axis_m": 1726359427.878,
-        "eccentricity": 0.0,
+        "eccentricity": 0.00622,
         "inclination_deg": 89.728,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 336.86,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 8.16220574e+24,
+        "mass_kg": 8.2058028e+24,
         "mass_type": "Mass",
-        "radius_m": 7112584.4
+        "radius_m": 7110036.000000001
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 b",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.01154,
+          "eccentricity": 0.00622,
+          "inclination_deg": 89.728,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 336.86,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 1.374,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.069,
+          "radius_rearth": 1.116,
+          "uncertainty_rearth": 0.014,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -148,15 +191,38 @@
       },
       "derived": {
         "semi_major_axis_m": 2363646357.0600004,
-        "eccentricity": 0.0,
+        "eccentricity": 0.00654,
         "inclination_deg": 89.778,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 282.45,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 7.782373819999999e+24,
+        "mass_kg": 7.8116376e+24,
         "mass_type": "Mass",
-        "radius_m": 6991535.399999999
+        "radius_m": 6988987.0
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 c",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.0158,
+          "eccentricity": 0.00654,
+          "inclination_deg": 89.778,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 282.45,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 1.308,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.056,
+          "radius_rearth": 1.097,
+          "uncertainty_rearth": 0.014,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -202,15 +268,38 @@
       },
       "derived": {
         "semi_major_axis_m": 3331544580.4890003,
-        "eccentricity": 0.0,
+        "eccentricity": 0.00837,
         "inclination_deg": 89.896,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": -8.73,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 2.31572055e+25,
+        "mass_kg": 2.3172136000000002e+24,
         "mass_type": "Mass",
         "radius_m": 5020348.0
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 d",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.02227,
+          "eccentricity": 0.00837,
+          "inclination_deg": 89.896,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -8.73,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 0.388,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.012,
+          "radius_rearth": 0.788,
+          "uncertainty_rearth": 0.011,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -256,15 +345,38 @@
       },
       "derived": {
         "semi_major_axis_m": 4375737717.975,
-        "eccentricity": 0.0,
+        "eccentricity": 0.0051,
         "inclination_deg": 89.793,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 108.37,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 4.1757622400000003e+24,
+        "mass_kg": 4.1327624e+24,
         "mass_type": "Mass",
-        "radius_m": 5863231.3
+        "radius_m": 5861320.0
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 e",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.02925,
+          "eccentricity": 0.0051,
+          "inclination_deg": 89.793,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 108.37,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 0.692,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.022,
+          "radius_rearth": 0.92,
+          "uncertainty_rearth": 0.013,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -310,15 +422,38 @@
       },
       "derived": {
         "semi_major_axis_m": 5758022043.243,
-        "eccentricity": 0.0,
+        "eccentricity": 0.01007,
         "inclination_deg": 89.74,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 368.81,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 6.26364336e+24,
+        "mass_kg": 6.205115799999999e+24,
         "mass_type": "Mass",
-        "radius_m": 6655783.7
+        "radius_m": 6657695.0
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 f",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.03849,
+          "eccentricity": 0.01007,
+          "inclination_deg": 89.74,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 368.81,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 1.039,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.031,
+          "radius_rearth": 1.045,
+          "uncertainty_rearth": 0.013,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -364,15 +499,38 @@
       },
       "derived": {
         "semi_major_axis_m": 7005668284.881,
-        "eccentricity": 0.0,
+        "eccentricity": 0.00208,
         "inclination_deg": 89.742,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 191.34,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 7.97228978e+24,
+        "mass_kg": 7.8892762e+24,
         "mass_type": "Mass",
-        "radius_m": 7190947.7
+        "radius_m": 7192859.0
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 g",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.04683,
+          "eccentricity": 0.00208,
+          "inclination_deg": 89.742,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 191.34,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 1.321,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.038,
+          "radius_rearth": 1.129,
+          "uncertainty_rearth": 0.015,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -418,15 +576,38 @@
       },
       "derived": {
         "semi_major_axis_m": 9258612217.623,
-        "eccentricity": 0.0,
+        "eccentricity": 0.00567,
         "inclination_deg": 89.805,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 338.92,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.8979651600000001e+24,
+        "mass_kg": 1.9469372000000002e+24,
         "mass_type": "Mass",
-        "radius_m": 4813290.5
+        "radius_m": 4810105.0
+      },
+      "curated": {
+        "pl_name": "TRAPPIST-1 h",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.06189,
+          "eccentricity": 0.00567,
+          "inclination_deg": 89.805,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 338.92,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 0.326,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 0.02,
+          "radius_rearth": 0.755,
+          "uncertainty_rearth": 0.014,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     }
   ],
@@ -435,7 +616,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "epoch propagation method"
       ]
@@ -444,7 +625,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -454,14 +635,14 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-18",
+    "retrieval_date": "2026-05-19",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

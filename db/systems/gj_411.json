@@ -21,16 +21,26 @@
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 3429,
         "spectype": "M2+V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.3899,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_msun": 0.00835
+          }
+        ],
         "radius_measurements": [
           {
-            "value_rsun": 0.3887,
-            "uncertainty_rsun": null,
-            "method": "interferometry",
-            "reference": "2009ApJ...694.1085V",
+            "value_rsun": 0.3685,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
             "doi": null,
-            "bibcode": "2009ApJ...694.1085V",
-            "recommended": true
+            "recommended": true,
+            "uncertainty_rsun": 0.00675
           }
         ]
       },
@@ -55,8 +65,8 @@
         "icrs_vz_j2000_km_s": -96.37399206798088
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": 270418.6
+        "gravitational_parameter_km3_s2": 51744580363.018,
+        "mean_radius_km": 256365.4
       }
     }
   ],
@@ -94,12 +104,34 @@
         "eccentricity": 0.063,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": -30.0,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2456307.8,
         "mass_kg": 1.6065218e+25,
         "mass_type": "Msini",
         "radius_m": 9237950.0
+      },
+      "curated": {
+        "pl_name": "GJ 411 b",
+        "orbital": {
+          "epoch_jd": 2456307.8,
+          "semi_major_axis_au": 0.07879,
+          "eccentricity": 0.063,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -30.0,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 2.69,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 0.185,
+          "radius_rearth": 1.45,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -135,12 +167,34 @@
         "eccentricity": 0.132,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 63.0,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2457250.0,
         "mass_kg": 8.122192e+25,
         "mass_type": "Msini",
         "radius_m": 23954960.0
+      },
+      "curated": {
+        "pl_name": "HD 95735 c",
+        "orbital": {
+          "epoch_jd": 2457250.0,
+          "semi_major_axis_au": 2.94,
+          "eccentricity": 0.132,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 63.0,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 13.6,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 2.3499999999999996,
+          "radius_rearth": 3.76,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     }
   ],
@@ -149,7 +203,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "epoch propagation method"
       ]
@@ -158,7 +212,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -168,23 +222,14 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
-      ]
-    },
-    {
-      "title": "2009ApJ...694.1085V",
-      "doi": null,
-      "bibcode": "2009ApJ...694.1085V",
-      "accessed": "2026-05-18",
-      "used_for": [
-        "GJ 411 radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-18",
+    "retrieval_date": "2026-05-19",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4976,
         "spectype": "K2V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.83,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_msun": 0.102
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.727007,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_rsun": 0.054552500000000004
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -10.9505994222673
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 110151325214.94,
+        "mean_radius_km": 505778.8
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.232,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 259.222,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2452305.407,
         "mass_kg": 1.8411907679765602e+26,
         "mass_type": "Msini",
         "radius_m": 38799390.0
+      },
+      "curated": {
+        "pl_name": "HD 115404 A b",
+        "orbital": {
+          "epoch_jd": 2452305.407,
+          "semi_major_axis_au": 0.088,
+          "eccentricity": 0.232,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 259.222,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 30.82935548,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 6.6743965450000005,
+          "radius_rearth": 6.09,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -125,12 +167,34 @@
         "eccentricity": 0.211,
         "inclination_deg": 25.791,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 312.056,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2441172.404,
         "mass_kg": 1.9586853127955126e+28,
         "mass_type": "Mass",
         "radius_m": 79637500.0
+      },
+      "curated": {
+        "pl_name": "HD 115404 A c",
+        "orbital": {
+          "epoch_jd": 2441172.404,
+          "semi_major_axis_au": 11.364,
+          "eccentricity": 0.211,
+          "inclination_deg": 25.791,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 312.056,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 3279.67133183,
+          "mass_type": "Mass",
+          "uncertainty_mearth": 426.207893785,
+          "radius_rearth": 12.5,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     }
   ],
@@ -139,7 +203,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "epoch propagation method"
       ]
@@ -148,7 +212,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -158,14 +222,14 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-18",
+    "retrieval_date": "2026-05-19",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

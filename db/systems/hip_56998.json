@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4738,
         "spectype": "K4.5Vk:",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.653,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_msun": 0.028
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.63,
+            "method": "evolutionary_model",
+            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
+            "bibcode": null,
+            "doi": null,
+            "recommended": true,
+            "uncertainty_rsun": 0.027
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 1.0003839940403445
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 86661223331.754,
+        "mean_radius_km": 438291.0
       }
     }
   ],
@@ -102,7 +122,29 @@
         "orbital_epoch_jd": null,
         "mass_kg": 4.9390094e+24,
         "mass_type": "M-R relationship",
-        "radius_m": 6091313.1
+        "radius_m": 6090676.0
+      },
+      "curated": {
+        "pl_name": "HD 101581 b",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.046,
+          "eccentricity": null,
+          "inclination_deg": 87.78,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.827,
+          "mass_type": "M-R relationship",
+          "radius_rearth": 0.956,
+          "uncertainty_rearth": 0.061,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -156,7 +198,29 @@
         "orbital_epoch_jd": null,
         "mass_kg": 5.595951400000001e+24,
         "mass_type": "M-R relationship",
-        "radius_m": 6305378.7
+        "radius_m": 6307290.0
+      },
+      "curated": {
+        "pl_name": "HD 101581 c",
+        "orbital": {
+          "epoch_jd": null,
+          "semi_major_axis_au": 0.0573,
+          "eccentricity": null,
+          "inclination_deg": 87.93,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.937,
+          "mass_type": "M-R relationship",
+          "radius_rearth": 0.99,
+          "uncertainty_rearth": 0.07,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     }
   ],
@@ -165,7 +229,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "epoch propagation method"
       ]
@@ -174,7 +238,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -184,14 +248,14 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-18",
+    "retrieval_date": "2026-05-19",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

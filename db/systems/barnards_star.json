@@ -104,12 +104,34 @@
         "eccentricity": 0.04,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": -51.8,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2460243.7,
         "mass_kg": 1.5706886e+24,
         "mass_type": "Msini",
         "radius_m": 4421474.0
+      },
+      "curated": {
+        "pl_name": "Barnard d",
+        "orbital": {
+          "epoch_jd": 2460243.7,
+          "semi_major_axis_au": 0.0188,
+          "eccentricity": 0.04,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -51.8,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.263,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 0.024,
+          "radius_rearth": 0.694,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -145,12 +167,34 @@
         "eccentricity": 0.03,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 3.8,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2460243.38,
         "mass_kg": 1.7856878e+24,
         "mass_type": "Msini",
         "radius_m": 4587120.0
+      },
+      "curated": {
+        "pl_name": "Barnard b",
+        "orbital": {
+          "epoch_jd": 2460243.38,
+          "semi_major_axis_au": 0.0229,
+          "eccentricity": 0.03,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 3.8,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.299,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 0.026,
+          "radius_rearth": 0.72,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -186,12 +230,34 @@
         "eccentricity": 0.08,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 90.8,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2460242.92,
         "mass_kg": 2.0006870000000001e+24,
         "mass_type": "Msini",
         "radius_m": 4733653.0
+      },
+      "curated": {
+        "pl_name": "Barnard c",
+        "orbital": {
+          "epoch_jd": 2460242.92,
+          "semi_major_axis_au": 0.0274,
+          "eccentricity": 0.08,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 90.8,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.335,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 0.03,
+          "radius_rearth": 0.743,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     },
     {
@@ -227,12 +293,34 @@
         "eccentricity": 0.04,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": -27.5,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "orbital_epoch_jd": 2460245.3,
         "mass_kg": 1.1526346e+24,
         "mass_type": "Msini",
         "radius_m": 4058327.0
+      },
+      "curated": {
+        "pl_name": "Barnard e",
+        "orbital": {
+          "epoch_jd": 2460245.3,
+          "semi_major_axis_au": 0.0381,
+          "eccentricity": 0.04,
+          "inclination_deg": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -27.5,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.193,
+          "mass_type": "Msini",
+          "uncertainty_mearth": 0.033,
+          "radius_rearth": 0.637,
+          "source": "NASA Exoplanet Archive pscomppars",
+          "doi": null
+        }
       }
     }
   ],
@@ -241,7 +329,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "epoch propagation method"
       ]
@@ -250,7 +338,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -260,7 +348,7 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
       ]
@@ -269,7 +357,7 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "Barnard's star mass (spectroscopic_calibration)"
       ]
@@ -278,14 +366,14 @@
       "title": "Rains et al. 2021",
       "doi": "10.1093/mnras/stab1167",
       "bibcode": "2021MNRAS.504.5788R",
-      "accessed": "2026-05-18",
+      "accessed": "2026-05-19",
       "used_for": [
         "Barnard's star radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-18",
+    "retrieval_date": "2026-05-19",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
