@@ -442,6 +442,188 @@ star available in Horizons should be evaluated for the same treatment.
 
 ---
 
+## Multiple-System Epoch
+
+> Full mathematical pipeline + worked examples (α Cen, Sirius):
+> [`docs/reference/binary-epoch-pipeline.md`](binary-epoch-pipeline.md).
+> This section captures only the decisions and schema that affect the DB.
+
+### Why linear back-propagation fails for multi-star systems
+
+For single stars, linear extrapolation of Gaia/SIMBAD astrometry to JD2433282.5
+is sufficient (see "Linear propagation" above). For multi-star systems it is
+**wrong**, because the components are in mutual orbit — their relative position
+rotates, not translates.
+
+Example: Alpha Centauri AB has orbital period 79.762 yr. JD2433282.5 is ~66 yr
+before Gaia's J2016 epoch — almost a full orbit. Linear propagation rotates
+the A–B vector by 0°, while the real geometry has rotated by ~300°. The
+resulting cfg has wrong gravitational geometry, which causes Principia's
+N-body integrator to start with spurious eccentricity and energy.
+
+The fix: each multi-star system stores a fitted Kepler solution; at build time
+we propagate the components' shared **barycenter** linearly, then apply the
+Kepler-derived (B−A) offset evaluated at JD2433282.5 to place individual
+components.
+
+### Pipeline outline
+
+```
+barycenter_astrometry  → linear propagation (J2016 / J2000 → JD2433282.5)
+                          → R_bary, V_bary at target epoch
+                                  +
+orbits[].(P,T,e,a,i,ω,Ω)  → Kepler solver (M → E → ν)
+                          → Thiele-Innes rotation → (B−A) in ICRS (N,E,W)
+                                  +
+mass ratio q             → r_A = R_bary − q_B · r_AB
+                          → r_B = R_bary + q_A · r_AB
+```
+
+For triples, the same pipeline runs in nested form (inner orbit on AB, outer
+orbit on (AB)–C). See binary-epoch-pipeline.md §6.
+
+### `binary_orbits.json` schema (new)
+
+The legacy schema embedded a single `raw` block with Kepler elements per
+system. The new schema separates **per-component** facts (mass, astrometry
+source) from **per-orbit** facts (which two bodies it relates, the Kepler
+elements, the source paper, grade, phase reliability) by exposing both as
+arrays. Multiple orbits per system (triples) become natural.
+
+```json
+{
+  "Alpha Centauri": {
+    "system_id": "alpha_centauri",
+    "hierarchy": "binary",
+    "components": [
+      {
+        "name": "Alpha Centauri A",
+        "mass_msun": 1.0788,
+        "mass_source": "akeson_2021",
+        "astrometry_source": "gaia_dr3_nss_barycenter",
+        "astrometry_quality": "barycentric",
+        "ra_deg": 219.9020833,
+        "dec_deg": -60.8339722,
+        "parallax_mas": 750.81,
+        "pm_ra_masyr": -3679.25,
+        "pm_dec_masyr":  473.67,
+        "radial_velocity_km_s": -22.4,
+        "epoch_jd": 2457389.0
+      },
+      { "name": "Alpha Centauri B", "mass_msun": 0.9092, ... }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": ["Alpha Centauri A", "Alpha Centauri B"],
+        "primary":   "Alpha Centauri A",
+        "secondary": "Alpha Centauri B",
+        "source":    "akeson_2021",
+        "doi":       "10.3847/1538-3881/abfaff",
+        "equinox":   "J2000",
+        "P_yr":      79.762,
+        "T_jd_tt":   2435291.6,
+        "e":         0.51947,
+        "a_arcsec":  17.4930,
+        "i_deg":     79.2430,
+        "omega_deg": 231.519,
+        "Omega_deg": 205.073,
+        "grade":           1,
+        "node_resolved":   true,
+        "phase_reliable":  true
+      }
+    ]
+  }
+}
+```
+
+Triple systems list two orbits and use `primary_is_barycenter_of` on the
+outer one — see binary-epoch-pipeline.md §6 for the full triple example.
+
+### Schema field reference
+
+| Field | Required | Notes |
+|---|---|---|
+| `system_id` | yes | Slug used as filename stem. Lowercase, underscores. |
+| `hierarchy` | yes | `"binary"`, `"triple"`, `"binary+cpm"` (CPM = common proper motion companion). |
+| `components[].name` | yes | Must match `target_list.json` component names exactly. |
+| `components[].mass_msun` | yes | With `mass_source` (paper bibcode or `gaia_dr3_nss`). |
+| `components[].astrometry_source` | yes | One of: `gaia_dr3` / `gaia_dr3_nss_barycenter` / `hipparcos_barycenter` / `simbad` / `mass_weighted_average`. Drives the build's interpretation of `ra_deg`/`pm_*` fields. |
+| `components[].astrometry_quality` | yes | `barycentric` / `photocenter_contaminated` / `single_component`. Build flags warning when photocenter-contaminated and orbit phase matters. |
+| `components[].ra_deg`/`dec_deg`/`parallax_mas`/`pm_*`/`radial_velocity_km_s`/`epoch_jd` | yes | Astrometry at the source epoch. Same units/conventions as `astrometry_raw.json`. |
+| `orbits[].orbit_id` | yes | `"AB"`, `"inner"`, `"outer"`. Unique within entry. |
+| `orbits[].relates` | yes | Components or barycenters this orbit governs. |
+| `orbits[].primary` / `secondary` | yes | One must be a component or `primary_is_barycenter_of`. |
+| `orbits[].primary_is_barycenter_of` | conditional | For triples' outer orbit; list of component names forming the inner system. |
+| `orbits[].source` | yes | `"akeson_2021"` (paper key) or `"orb6:grade=1"` or `"gaia_dr3_nss:OrbitalAlternative"`. |
+| `orbits[].P_yr` / `T_jd_tt` / `e` | yes | Kepler core. `T` is time of periastron in JD (TT). |
+| `orbits[].a_arcsec` or `a_au` | yes | Relative semi-major axis. Catalog convention is `arcsec`; convert via parallax. |
+| `orbits[].i_deg`/`omega_deg`/`Omega_deg` | yes | Inclination, arg of periastron, longitude of ascending node. |
+| `orbits[].A`/`B`/`F`/`G` (`C`/`H` optional) | optional | Thiele-Innes constants (in arcsec) if directly published (Gaia NSS). Substitutes for `a`/`i`/`omega`/`Omega`. |
+| `orbits[].grade` | yes | Orb6 quality grade 1–9. ≤3 means publication-quality. |
+| `orbits[].node_resolved` | yes | `true` if (i,ω,Ω) reflects the physically correct line of nodes (RV data available); `false` if catalog presents the mirror-degenerate solution. |
+| `orbits[].phase_reliable` | yes | `false` if `grade ≥ 4` OR extrapolation > 0.5×P from observed coverage. When false, build still runs but `meta.notes` records the warning. |
+
+### Barycenter astrometry decision tree (summary)
+
+For each multi-star system, the `components[].astrometry_source` field is
+selected by the following decision tree. The build refuses to run if any
+component has `astrometry_source: "unset"`.
+
+```
+Gaia DR3 NSS row exists for this system?
+├── YES → astrometry_source = gaia_dr3_nss_barycenter
+│         astrometry_quality = barycentric
+│
+└── NO  → resolved pair (separation > ~1″, both have Gaia 5-param)?
+          ├── YES → astrometry_source = mass_weighted_average
+          │         astrometry_quality = barycentric
+          │         (PM averaging cancels orbital tangent velocity)
+          │
+          └── NO  → Hipparcos multi-star annex (DMSA flag C/O/V/X)?
+                    ├── YES → astrometry_source = hipparcos_barycenter
+                    │         astrometry_quality = barycentric
+                    │
+                    └── NO  → astrometry_source = gaia_dr3 (or simbad if saturated)
+                              astrometry_quality = photocenter_contaminated
+                              (flag, allow but warn)
+```
+
+See binary-epoch-pipeline.md §8 for the photocenter-wobble error model.
+
+### Per-system option assessment (best estimate; verify in implementation)
+
+| System | Hierarchy | Recommended option | Source paper override |
+|---|---|---|---|
+| Alpha Centauri AB | binary | gaia_dr3_nss_barycenter | Akeson et al. 2021 |
+| Sirius AB | binary | hipparcos_barycenter (A saturated; B is WD) | Bond et al. 2017 |
+| 61 Cygni AB | binary | mass_weighted_average (wide, both in Gaia) | Malkov et al. 2012 — `phase_reliable: false` (P~679 yr, grade ≥3) |
+| 40 Eridani ABC | triple | A: gaia_dr3 / B+C close pair: NSS or mass-weighted | needs research |
+| Eta Cassiopeiae AB | binary | mass_weighted_average | Tokovinin 2021 — P=480 yr, `phase_reliable: false` likely |
+| 36 Ophiuchi ABC | triple | A,B: mass-weighted on close pair / C: static CPM at fixed offset | needs research |
+
+The actual `astrometry_source` value is locked in by the implementation
+session — the table above is a starting point, not a commitment.
+
+### Phase reliability semantics
+
+Set `phase_reliable: false` when:
+- Orb6 grade ≥ 4, OR
+- Observed coverage is less than half the period (extrapolation > 0.5 P), OR
+- Time of periastron error exceeds 5% of the period
+
+When `phase_reliable: false`, the build still runs (output is the best estimate
+from the available solution) but writes a warning to `meta.notes` of the affected
+component files. Downstream Kopernicus cfg can still use the values; users
+running long Principia simulations should not trust the relative geometry past
+~0.5 P.
+
+For phase-unreliable wide CPM companions (P > 1000 yr, no fitted orbit), use
+`orbit_type: "static_cpm"` — see binary-epoch-pipeline.md §6 — which freezes
+the relative position at the catalog reference epoch.
+
+---
+
 ## Source Recording Protocol
 
 Log every paper and catalogue consulted, even if its values were not used

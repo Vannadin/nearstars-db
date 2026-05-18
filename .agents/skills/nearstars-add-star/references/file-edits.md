@@ -184,54 +184,86 @@ To find the right SIMBAD name, query the helper script's output or browse
 
 ## 5. `db/binary_orbits.json` — only for multi-star systems
 
-Add a top-level key matching `target_list.system`. The pipeline
-embeds this block into the representative component's file as
-`binary_orbit` (and stores `binary_orbit_ref` on the others).
+**⚠ Schema is in transition (2026-05-18).** The new schema is specified
+in `docs/reference/methodology.md` §"Multiple-System Epoch" and the math
+pipeline is in `docs/reference/binary-epoch-pipeline.md`. Implementation
+(migrating existing 6 entries to the new schema and updating
+`build_systems.py` to consume it) is **scheduled for a follow-up session**
+— see memory `project-binary-epoch-pending`. Until that lands:
 
-### Schema
+- **Do not add new multi-star systems via this skill** — the existing
+  `build_systems.py` does not correctly handle binary orbital motion yet
+  (it linearly propagates each component independently, which is wrong
+  for any period less than ~few hundred years). New additions would have
+  the same bug.
+- **If a new multi-star system is genuinely needed before implementation
+  is done**, you can add the system as separate single-star entries in
+  `target_list.json` (without `binary: true`), accept the wrong relative
+  geometry as a known issue, and document in `meta.notes` of the affected
+  component files. Then re-process when the binary pipeline ships.
+
+### New schema (target state)
+
+Top-level key matches `target_list.system`. Two arrays — `components` and
+`orbits` — replace the legacy single `raw` block.
 
 ```json
-"Luhman 16": {
-  "components": ["Luhman 16 A", "Luhman 16 B"],
+"Alpha Centauri": {
+  "system_id": "alpha_centauri",
   "hierarchy": "binary",
-  "wds_id": "10493-5319",
-  "raw": {
-    "source": "Bedin et al. 2024",
-    "doi": "10.1051/0004-6361/202348309",
-    "bibcode": "2024A&A...684A.135B",
-    "orb_grade": 4,
-    "period_yr": 27.54,
-    "period_yr_err": 0.05,
-    "semi_major_axis_arcsec": 1.5295,
-    "semi_major_axis_arcsec_err": 0.0019,
-    "eccentricity": 0.347,
-    "eccentricity_err": 0.005,
-    "inclination_deg": 100.26,
-    "longitude_of_node_deg": 130.51,
-    "argument_of_periastron_deg": 175.96,
-    "time_of_periastron_jd": 2459756.0,
-    "mass_ratio": 1.039
-  },
-  "derived": {
-    "semi_major_axis_au": null,
-    "total_mass_msun": null,
-    "_note": "computed by build_systems.py from raw + parallax"
-  },
-  "barycenter_state_b1950": null,
-  "individual_states": null
+  "components": [
+    {
+      "name": "Alpha Centauri A",
+      "mass_msun": 1.0788,
+      "mass_source": "akeson_2021",
+      "astrometry_source": "gaia_dr3_nss_barycenter",
+      "astrometry_quality": "barycentric",
+      "ra_deg":  219.9020833,
+      "dec_deg": -60.8339722,
+      "parallax_mas": 750.81,
+      "pm_ra_masyr":  -3679.25,
+      "pm_dec_masyr":   473.67,
+      "radial_velocity_km_s": -22.4,
+      "epoch_jd": 2457389.0
+    },
+    { "name": "Alpha Centauri B", ... }
+  ],
+  "orbits": [
+    {
+      "orbit_id": "AB",
+      "relates":  ["Alpha Centauri A", "Alpha Centauri B"],
+      "primary":  "Alpha Centauri A",
+      "secondary":"Alpha Centauri B",
+      "source":   "akeson_2021",
+      "doi":      "10.3847/1538-3881/abfaff",
+      "equinox":  "J2000",
+      "P_yr":     79.762,
+      "T_jd_tt":  2435291.6,
+      "e":        0.51947,
+      "a_arcsec": 17.4930,
+      "i_deg":    79.2430,
+      "omega_deg":     231.519,
+      "Omega_deg":     205.073,
+      "grade":           1,
+      "node_resolved":   true,
+      "phase_reliable":  true
+    }
+  ]
 }
 ```
 
-**`barycenter_state_b1950` and `individual_states` are leftover fields**
-from a planned Principia-direct-state-vector path. The current pipeline
-does not consume them, and `build_systems.py` does not populate them.
-Leave them as `null` for new entries. Existing entries (Alpha Centauri,
-Sirius) have populated values from earlier manual work — keep but don't
-rely on them. They may be repurposed in a future iteration.
+For triples (40 Eridani, 36 Ophiuchi), `orbits[]` carries two entries —
+the inner pair, and an outer orbit that uses `primary_is_barycenter_of`
+to refer to the inner pair's center of mass. See methodology §"Multiple-
+System Epoch" for the full schema field reference and per-system option
+table, and `binary-epoch-pipeline.md` §6 for the triple example.
 
-Use existing entries (Alpha Centauri, Sirius, 61 Cygni, 40 Eridani, Eta
-Cassiopeiae, 36 Ophiuchi) as concrete templates — copy one and edit the
-`raw` block. Do not invent values for the unused fields.
+### Legacy entries (current state)
+
+The 6 systems already in `binary_orbits.json` (Alpha Centauri, Sirius,
+61 Cygni, 40 Eridani, Eta Cassiopeiae, 36 Ophiuchi) still use the
+**legacy** single-`raw` schema. They will be migrated in the
+implementation session, not edited piecemeal here. Leave them alone.
 
 ### Where to find orbital elements
 
