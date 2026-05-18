@@ -47,22 +47,27 @@
       "derived": {
         "epoch_jd": 2433282.5,
         "epoch_label": "B1950.0",
-        "propagation_method": "linear",
+        "propagation_method": "kepler_thiele_innes",
         "distance_pc": 1.3474909718104888,
         "distance_km": 41579226829771.46,
-        "icrs_x_km": -15526834208364.441,
-        "icrs_y_km": -13031736087647.412,
-        "icrs_z_km": -36330794538069.12,
-        "icrs_vx_km_s": -11.400776225287771,
-        "icrs_vy_km_s": 21.102685621716997,
-        "icrs_vz_km_s": 14.792760350178538,
-        "position_ulp_km": 0.008067056919818042,
-        "icrs_x_j2000_km": -15544823265154.799,
-        "icrs_y_j2000_km": -12998438582058.617,
-        "icrs_z_j2000_km": -36307453337367.78,
-        "icrs_vx_j2000_km_s": -11.400776225287771,
-        "icrs_vy_j2000_km_s": 21.102685621716997,
-        "icrs_vz_j2000_km_s": 14.792760350178538
+        "icrs_x_km": -15527351120891.346,
+        "icrs_y_km": -13030087085895.514,
+        "icrs_z_km": -36336848257786.305,
+        "icrs_vx_km_s": -13.086466445996077,
+        "icrs_vy_km_s": 20.146595841415063,
+        "icrs_vz_km_s": 14.851844455108127,
+        "position_ulp_km": 0.008068401115620972,
+        "icrs_x_j2000_km": -15543954299385.59,
+        "icrs_y_j2000_km": -12997579863090.477,
+        "icrs_z_j2000_km": -36305787419451.92,
+        "icrs_vx_j2000_km_s": -8.659616525666632,
+        "icrs_vy_j2000_km_s": 24.915240740761266,
+        "icrs_vz_j2000_km_s": 17.6151645436614,
+        "orbit_id": "AB",
+        "orbit_role": "primary",
+        "mass_ratio_q": 0.4512830694396188,
+        "barycenter_method": "mass_weighted_average(Alpha Centauri A,Alpha Centauri B)",
+        "phase_reliable": true
       },
       "principia": {
         "gravitational_parameter_km3_s2": 146713602439.899,
@@ -121,92 +126,56 @@
     "notes": ""
   },
   "binary_orbit": {
-    "components": [
-      "Alpha Centauri A",
-      "Alpha Centauri B"
-    ],
+    "system_id": "alpha_centauri",
     "hierarchy": "binary",
     "wds_id": "14396-6050",
-    "raw": {
-      "source": "Pourbaix & Correia (2017) via Kervella et al. (2016)",
-      "doi": "10.1051/0004-6361:20021249",
-      "note": "Pourbaix et al. 2002 solution; verify T_peri against paper",
-      "orb_grade": 10,
-      "period_yr": 79.91,
-      "period_yr_err": 0.01,
-      "semi_major_axis_arcsec": 17.57,
-      "semi_major_axis_arcsec_err": 0.022,
-      "eccentricity": 0.5179,
-      "eccentricity_err": 0.0003,
-      "inclination_deg": 79.205,
-      "inclination_err_deg": 0.05,
-      "longitude_of_ascending_node_deg": 204.85,
-      "longitude_of_ascending_node_err_deg": 0.08,
-      "argument_of_periapsis_deg": 231.65,
-      "argument_of_periapsis_err_deg": 0.08,
-      "t_peri_yr": 1954.8,
-      "t_peri_jd": 2435035.7,
-      "t_peri_note": "WDS 2023 sep/PA calibration: predicts sep=8.00\" PA=5.0° vs observed 8.1\"/5°"
-    },
-    "derived": {
-      "semi_major_axis_au": 23.6754,
-      "semi_major_axis_m": 3541791877592.572,
-      "mean_anomaly_at_b1950_deg": 338.3757,
-      "mean_anomaly_at_j2000_deg": 203.6291,
-      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
-    },
-    "barycenter_state_b1950": {
-      "mass_A_msun": 1.1055,
-      "mass_B_msun": 0.9092,
-      "epoch_jd": 2433282.5,
-      "epoch_label": "B1950.0",
-      "icrs_x_km": -15527808152883.658,
-      "icrs_y_km": -13030925048883.236,
-      "icrs_z_km": -36336649134719.59,
-      "icrs_vx_km_s": -10.67882706248958,
-      "icrs_vy_km_s": 21.46224974800752,
-      "icrs_vz_km_s": 18.145649599660533,
-      "distance_pc": 1.3474909718104888,
-      "distance_km": 41579226829771.46,
-      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
-    },
-    "individual_states": {
-      "b1950": {
-        "Alpha Centauri A": {
-          "icrs_x_km": -15527352619519.38,
-          "icrs_y_km": -13030086238644.053,
-          "icrs_z_km": -36336848124526.26,
-          "icrs_vx_km_s": -14.05115341806497,
-          "icrs_vy_km_s": 19.611641464268693,
-          "icrs_vz_km_s": 13.526210148574318
-        },
-        "Alpha Centauri B": {
-          "icrs_x_km": -15528362037765.102,
-          "icrs_y_km": -13031944961685.06,
-          "icrs_z_km": -36336407182199.5,
-          "icrs_vx_km_s": -6.578401648841764,
-          "icrs_vy_km_s": 23.71241193198604,
-          "icrs_vz_km_s": 23.762444928714437
-        }
+    "components": [
+      {
+        "name": "Alpha Centauri A",
+        "mass_msun": 1.1055,
+        "mass_source": "pourbaix_correia_2017",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
       },
-      "j2000": {
-        "Alpha Centauri A": {
-          "icrs_x_km": -15543954299385.086,
-          "icrs_y_km": -12997579863089.29,
-          "icrs_z_km": -36305787419451.805,
-          "icrs_vx_km_s": -9.526316512113453,
-          "icrs_vy_km_s": 23.433123266499315,
-          "icrs_vz_km_s": 17.842863132801526
-        },
-        "Alpha Centauri B": {
-          "icrs_x_km": -15545513766583.373,
-          "icrs_y_km": -12996428326783.963,
-          "icrs_z_km": -36310729013383.625,
-          "icrs_vx_km_s": -12.080169356199223,
-          "icrs_vy_km_s": 19.065856573026565,
-          "icrs_vz_km_s": 18.513808903567963
-        }
+      {
+        "name": "Alpha Centauri B",
+        "mass_msun": 0.9092,
+        "mass_source": "pourbaix_correia_2017",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
       }
-    }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": [
+          "Alpha Centauri A",
+          "Alpha Centauri B"
+        ],
+        "primary": "Alpha Centauri A",
+        "secondary": "Alpha Centauri B",
+        "source": "Pourbaix & Correia (2017) / Kervella et al. (2016)",
+        "doi": "10.1051/0004-6361:20021249",
+        "equinox": "J2000",
+        "P_yr": 79.91,
+        "P_yr_err": 0.01,
+        "T_jd_tt": 2435035.7,
+        "T_yr": 1954.8,
+        "e": 0.5179,
+        "e_err": 0.0003,
+        "a_arcsec": 17.57,
+        "a_arcsec_err": 0.022,
+        "i_deg": 79.205,
+        "i_err_deg": 0.05,
+        "omega_deg": 231.65,
+        "omega_err_deg": 0.08,
+        "Omega_deg": 204.85,
+        "Omega_err_deg": 0.08,
+        "grade": 1,
+        "node_resolved": true,
+        "phase_reliable": true,
+        "note": "Pourbaix 2002 solution; legacy orb_grade=10 → normalized to ORB6 grade 1 (definitive). WDS 2023 sep/PA calibration: predicts sep=8.00 arcsec PA=5.0 deg vs observed 8.1 arcsec/5 deg."
+      }
+    ]
   }
 }

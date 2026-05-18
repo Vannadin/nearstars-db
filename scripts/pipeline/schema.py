@@ -98,6 +98,113 @@ def validate(records, required, optional, name="records", measurement_keys=None)
     return errors
 
 
+# ── binary_orbits.json 스키마 ────────────────────────────────────────────────
+# 신규 components[]+orbits[] 스키마 (2026-05-18). legacy raw 형식은 더 이상 허용 안 함.
+
+BINARY_COMPONENT_REQUIRED = {
+    "name", "mass_msun", "astrometry_source", "astrometry_quality",
+}
+BINARY_COMPONENT_OPTIONAL = {
+    "mass_source", "astrometry_note",
+}
+BINARY_ASTROMETRY_SOURCES = {
+    "gaia_dr3", "simbad",
+    "mass_weighted_average",
+    "gaia_dr3_nss_barycenter", "hipparcos_barycenter",
+}
+# single_component:<name> 패턴은 별도 검증
+
+BINARY_ORBIT_REQUIRED = {
+    "orbit_id", "relates", "primary", "secondary",
+    "P_yr", "T_jd_tt", "e", "a_arcsec",
+    "i_deg", "omega_deg", "Omega_deg",
+    "grade", "phase_reliable",
+}
+BINARY_ORBIT_OPTIONAL = {
+    "source", "doi", "equinox", "node_resolved",
+    "P_yr_err", "T_yr", "e_err", "a_arcsec_err",
+    "i_err_deg", "omega_err_deg", "Omega_err_deg",
+    "primary_is_barycenter_of", "orbit_type", "note",
+}
+
+BINARY_SYSTEM_REQUIRED = {"system_id", "hierarchy", "components", "orbits"}
+BINARY_SYSTEM_OPTIONAL = {"wds_id", "barycenter_astrometry"}
+
+
+def validate_binary_orbits(binary_orbits):
+    """db/binary_orbits.json 전체 검증.
+
+    Returns:
+        에러 메시지 리스트. 빈 리스트면 통과.
+    """
+    errors = []
+    for sys_name, entry in binary_orbits.items():
+        if sys_name.startswith("_"):
+            continue   # _principia_notes 등 메타 키 스킵
+        if not isinstance(entry, dict):
+            errors.append(f"binary_orbits[{sys_name}]: dict 아님")
+            continue
+
+        keys = set(entry.keys())
+        missing = BINARY_SYSTEM_REQUIRED - keys
+        if missing:
+            errors.append(f"binary_orbits[{sys_name}]: 필수 키 누락 {sorted(missing)}")
+            continue
+        unknown = keys - (BINARY_SYSTEM_REQUIRED | BINARY_SYSTEM_OPTIONAL)
+        if unknown:
+            errors.append(f"binary_orbits[{sys_name}]: 알 수 없는 키 {sorted(unknown)}")
+
+        # components
+        comp_names = []
+        needs_bary_block = False
+        for i, comp in enumerate(entry["components"]):
+            if not isinstance(comp, dict):
+                errors.append(f"binary_orbits[{sys_name}].components[{i}]: dict 아님")
+                continue
+            ck = set(comp.keys())
+            cmiss = BINARY_COMPONENT_REQUIRED - ck
+            if cmiss:
+                errors.append(f"binary_orbits[{sys_name}].components[{i}]: 필수 키 누락 {sorted(cmiss)}")
+            cunknown = ck - (BINARY_COMPONENT_REQUIRED | BINARY_COMPONENT_OPTIONAL)
+            if cunknown:
+                errors.append(f"binary_orbits[{sys_name}].components[{i}]: 알 수 없는 키 {sorted(cunknown)}")
+            src = comp.get("astrometry_source")
+            if src:
+                if src.startswith("single_component:"):
+                    pass   # 자유 형식 (단일 컴포넌트 이름 참조)
+                elif src not in BINARY_ASTROMETRY_SOURCES:
+                    errors.append(f"binary_orbits[{sys_name}].components[{i}]: "
+                                  f"astrometry_source '{src}' 미지원 "
+                                  f"(허용: {sorted(BINARY_ASTROMETRY_SOURCES)} 또는 'single_component:<name>')")
+                if src in ("gaia_dr3_nss_barycenter", "hipparcos_barycenter"):
+                    needs_bary_block = True
+            comp_names.append(comp.get("name"))
+
+        if needs_bary_block and "barycenter_astrometry" not in entry:
+            errors.append(f"binary_orbits[{sys_name}]: astrometry_source가 "
+                          f"NSS/Hipparcos barycenter인데 'barycenter_astrometry' 블록 없음")
+
+        # orbits
+        for j, orbit in enumerate(entry["orbits"]):
+            if not isinstance(orbit, dict):
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: dict 아님")
+                continue
+            ok = set(orbit.keys())
+            omiss = BINARY_ORBIT_REQUIRED - ok
+            if omiss:
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: 필수 키 누락 {sorted(omiss)}")
+            ounknown = ok - (BINARY_ORBIT_REQUIRED | BINARY_ORBIT_OPTIONAL)
+            if ounknown:
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: 알 수 없는 키 {sorted(ounknown)}")
+            # relates 의 모든 항목이 components[]에 있는지
+            for rname in orbit.get("relates", []) or []:
+                if rname not in comp_names:
+                    errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: "
+                                  f"relates '{rname}' 가 components[] 에 없음")
+
+    return errors
+
+
 def report_and_exit(errors, label):
     """에러가 있으면 stderr로 출력하고 비0 종료."""
     if not errors:

@@ -548,9 +548,9 @@ outer one — see binary-epoch-pipeline.md §6 for the full triple example.
 | `hierarchy` | yes | `"binary"`, `"triple"`, `"binary+cpm"` (CPM = common proper motion companion). |
 | `components[].name` | yes | Must match `target_list.json` component names exactly. |
 | `components[].mass_msun` | yes | With `mass_source` (paper bibcode or `gaia_dr3_nss`). |
-| `components[].astrometry_source` | yes | One of: `gaia_dr3` / `gaia_dr3_nss_barycenter` / `hipparcos_barycenter` / `simbad` / `mass_weighted_average`. Drives the build's interpretation of `ra_deg`/`pm_*` fields. |
-| `components[].astrometry_quality` | yes | `barycentric` / `photocenter_contaminated` / `single_component`. Build flags warning when photocenter-contaminated and orbit phase matters. |
-| `components[].ra_deg`/`dec_deg`/`parallax_mas`/`pm_*`/`radial_velocity_km_s`/`epoch_jd` | yes | Astrometry at the source epoch. Same units/conventions as `astrometry_raw.json`. |
+| `components[].astrometry_source` | yes | One of `gaia_dr3` / `simbad` / `mass_weighted_average` / `gaia_dr3_nss_barycenter` / `hipparcos_barycenter` / `single_component:<Name>`. Drives where the build pulls the barycenter astrometry from — see "Hybrid storage" note below. |
+| `components[].astrometry_quality` | yes | `barycentric` / `photocenter_contaminated` / `single_component`. Informational; validate.py uses it for warnings. |
+| `barycenter_astrometry` (system-level) | conditional | Block with `ra_deg`/`dec_deg`/`parallax_mas`/`pm_ra_masyr`/`pm_dec_masyr`/`radial_velocity_km_s`/`epoch_jd`. **Required** when any `astrometry_source` is `gaia_dr3_nss_barycenter` or `hipparcos_barycenter` (the published catalog barycenter values that aren't derivable from component astrometry). Omitted otherwise — the build computes the barycenter on the fly from `astrometry_raw.json`. |
 | `orbits[].orbit_id` | yes | `"AB"`, `"inner"`, `"outer"`. Unique within entry. |
 | `orbits[].relates` | yes | Components or barycenters this orbit governs. |
 | `orbits[].primary` / `secondary` | yes | One must be a component or `primary_is_barycenter_of`. |
@@ -563,6 +563,30 @@ outer one — see binary-epoch-pipeline.md §6 for the full triple example.
 | `orbits[].grade` | yes | Orb6 quality grade 1–9. ≤3 means publication-quality. |
 | `orbits[].node_resolved` | yes | `true` if (i,ω,Ω) reflects the physically correct line of nodes (RV data available); `false` if catalog presents the mirror-degenerate solution. |
 | `orbits[].phase_reliable` | yes | `false` if `grade ≥ 4` OR extrapolation > 0.5×P from observed coverage. When false, build still runs but `meta.notes` records the warning. |
+
+#### Hybrid astrometry storage
+
+The DB does not store derived/computed astrometry values per component.
+Only published barycentric solutions (Gaia DR3 NSS, Hipparcos multi-star
+annex) live in a system-level `barycenter_astrometry` block; the build
+computes mass-weighted averages on the fly from `astrometry_raw.json`
+when `astrometry_source = "mass_weighted_average"`. See
+[[project-nearstars-db-principle]].
+
+#### Thiele-Innes convention (Hilditch / Pourbaix)
+
+`build_systems.py` applies the standard textbook convention:
+
+```
+ΔN = A · x_p + F · y_p     (North)
+ΔE = B · x_p + G · y_p     (East)
+ΔW = C · x_p + H · y_p     (away from observer)
+```
+
+The prose in `binary-epoch-pipeline.md` §2 step 5 transposes A↔B and H↔C;
+the worked examples in §9/§10 also use mixed conventions. The Hilditch
+form above is what reproduces the legacy `individual_states.b1950`
+values for α Cen and Sirius within < 0.05 %.
 
 ### Barycenter astrometry decision tree (summary)
 

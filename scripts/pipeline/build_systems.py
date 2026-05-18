@@ -1,11 +1,13 @@
 # raw 파일들을 조합해 db/systems/*.json 재생성. B1950+J2000 전파, vmag_v 포함.
 import json, math, re, os
+from PyAstronomy.pyasl import MarkleyKESolver
 
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB   = os.path.join(BASE, "db")
 
 # ── 상수 ──────────────────────────────────────────────────────────────────────
 PC_TO_KM      = 3.085677581491e13
+AU_TO_KM      = 1.495978707e8
 AU_TO_M       = 1.495978707e11
 GM_SUN        = 1.32712440018e11   # km³/s²
 R_SUN_KM      = 695700.0
@@ -13,12 +15,15 @@ M_EARTH_KG    = 5.9722e24
 R_EARTH_M     = 6.371e6
 DEG_TO_RAD    = math.pi / 180.0
 YR_TO_S       = 365.25 * 86400.0
+AU_PER_YR_TO_KM_PER_S = AU_TO_KM / YR_TO_S      # ≈ 4.7404705 km/s per AU/yr
 ULP           = 2.0 ** -52
 
 JD_GAIA       = 2457389.0   # J2016.0
 JD_J2000      = 2451545.0   # J2000.0
 JD_B1950      = 2433282.5   # B1950.0 (Sol/RSS 에포크)
 RETRIEVAL_DATE = __import__("datetime").date.today().isoformat()
+
+_KEPLER_SOLVER = MarkleyKESolver()
 
 # 고정 소스 항목
 SRC_BUTKEVICH = {
@@ -108,6 +113,247 @@ def coalesce(*candidates):
     return None
 
 
+# ── 다성계 Kepler/Thiele-Innes 파이프라인 ─────────────────────────────────────
+
+def _icrs_basis(ra_deg, dec_deg):
+    """무게중심 (α, δ)에서의 (r̂_los, N̂, Ê) 단위벡터 (ICRS Cartesian)."""
+    ra  = ra_deg  * DEG_TO_RAD
+    dec = dec_deg * DEG_TO_RAD
+    cr, sr = math.cos(ra), math.sin(ra)
+    cd, sd = math.cos(dec), math.sin(dec)
+    r_hat = (cd*cr,  cd*sr,  sd)
+    N_hat = (-sd*cr, -sd*sr, cd)
+    E_hat = (-sr,    cr,     0.0)
+    return r_hat, N_hat, E_hat
+
+
+def _thiele_innes_per_unit_a(omega_deg, Omega_deg, i_deg):
+    """ω,Ω,i (deg) → 차원 없는 A,B,F,G,C,H/a. 부호 규약은 pipeline doc §2 step 5."""
+    co, so = math.cos(omega_deg*DEG_TO_RAD), math.sin(omega_deg*DEG_TO_RAD)
+    cO, sO = math.cos(Omega_deg*DEG_TO_RAD), math.sin(Omega_deg*DEG_TO_RAD)
+    ci, si = math.cos(i_deg*DEG_TO_RAD),     math.sin(i_deg*DEG_TO_RAD)
+    A =  co*cO - so*sO*ci
+    B =  co*sO + so*cO*ci
+    F = -so*cO - co*sO*ci
+    G = -so*sO + co*cO*ci
+    C =  so*si
+    H =  co*si
+    return A, B, F, G, C, H
+
+
+def solve_orbit_relative(orbit, dist_pc, t_jd):
+    """주어진 orbit 요소로 t_jd 시점의 상대(B−A) 위치/속도를 ICRS Cartesian으로 반환.
+    Returns ((rx, ry, rz) km, (vx, vy, vz) km/s).
+    """
+    P_yr     = orbit["P_yr"]
+    T_jd     = orbit["T_jd_tt"]
+    e        = orbit["e"]
+    a_au     = orbit["a_arcsec"] * dist_pc    # parsec 정의: 1″×1pc = 1AU
+    i_deg    = orbit["i_deg"]
+    om_deg   = orbit["omega_deg"]
+    Om_deg   = orbit["Omega_deg"]
+
+    # Mean anomaly
+    n_rad_yr = 2.0 * math.pi / P_yr
+    dt_yr    = (t_jd - T_jd) / 365.25
+    M        = (n_rad_yr * dt_yr) % (2.0 * math.pi)
+
+    # Kepler → eccentric anomaly
+    E = _KEPLER_SOLVER.getE(M, e)
+
+    # Perifocal state (AU, AU/yr)
+    sqrt1me2 = math.sqrt(1.0 - e*e)
+    nu = 2.0 * math.atan2(math.sqrt(1+e)*math.sin(E/2),
+                          math.sqrt(1-e)*math.cos(E/2))
+    r  = a_au * (1.0 - e*math.cos(E))
+    x_p = r * math.cos(nu)
+    y_p = r * math.sin(nu)
+    n_a_factor = n_rad_yr * a_au / sqrt1me2     # AU/yr
+    vx_p = -n_a_factor * math.sin(E)
+    vy_p =  n_a_factor * sqrt1me2 * math.cos(E)
+
+    # Thiele-Innes (per unit a, dimensionless) → sky-frame (N, E, W) AU.
+    # Hilditch / Pourbaix convention: A·x_p + F·y_p → North; B·x_p + G·y_p → East;
+    # C·x_p + H·y_p → away from observer (radial). Pipeline doc §2 step 5 prose
+    # transposes A↔B (and H↔C) — the worked-example numerics in §10 confirm
+    # Hilditch is the intended formula. See docs/work/binary-epoch-context-notes.md.
+    tA, tB, tF, tG, tC, tH = _thiele_innes_per_unit_a(om_deg, Om_deg, i_deg)
+    dN_au = tA*x_p + tF*y_p
+    dE_au = tB*x_p + tG*y_p
+    dW_au = tC*x_p + tH*y_p
+    vN_auyr = tA*vx_p + tF*vy_p
+    vE_auyr = tB*vx_p + tG*vy_p
+    vW_auyr = tC*vx_p + tH*vy_p
+
+    return ((dN_au, dE_au, dW_au), (vN_auyr, vE_auyr, vW_auyr))
+
+
+def sky_offset_to_icrs(deltas_au, ra_deg, dec_deg):
+    """(ΔN, ΔE, ΔW) AU at sky direction (α, δ) → ICRS Cartesian (km)."""
+    dN, dE, dW = deltas_au
+    r_hat, N_hat, E_hat = _icrs_basis(ra_deg, dec_deg)
+    x_au = dN*N_hat[0] + dE*E_hat[0] + dW*r_hat[0]
+    y_au = dN*N_hat[1] + dE*E_hat[1] + dW*r_hat[1]
+    z_au = dN*N_hat[2] + dE*E_hat[2] + dW*r_hat[2]
+    return (x_au*AU_TO_KM, y_au*AU_TO_KM, z_au*AU_TO_KM)
+
+
+def _mass_weighted_average(records, masses):
+    """ICRF Cartesian (km, km/s) mass-weighted average of component astrometries.
+    Assumes all records share the same epoch_jd. Caller checks epoch consistency.
+    """
+    positions, velocities = [], []
+    for rec in records:
+        rv = rec.get("radial_velocity_km_s") or 0.0
+        pos, vel = to_icrf(rec["ra_deg"], rec["dec_deg"], rec["parallax_mas"],
+                           rec["pmra_mas_yr"], rec["pmdec_mas_yr"], rv)
+        positions.append(pos)
+        velocities.append(vel)
+    total = float(sum(masses))
+    pos_avg = tuple(sum(m*p[i] for m,p in zip(masses, positions))/total for i in range(3))
+    vel_avg = tuple(sum(m*v[i] for m,v in zip(masses, velocities))/total for i in range(3))
+    return pos_avg, vel_avg
+
+
+def resolve_barycenter_state(system_name, binary_data, astrometry_raw):
+    """astrometry_source 규칙으로 무게중심 (pos, vel, ra_at_epoch, dec_at_epoch, dist_pc, epoch_jd)
+    를 source 에포크에서 계산. 반환 dist_pc는 source 에포크의 parallax 기반.
+    """
+    comps_by_name = {c["name"]: c for c in binary_data["components"]}
+    orbit = binary_data["orbits"][0]   # 첫 궤도의 primary 규칙 사용 (단순화: 다중 궤도는 비계층 처리)
+    primary_name = orbit.get("primary") or orbit["relates"][0]
+    src = comps_by_name[primary_name]["astrometry_source"]
+
+    if src.startswith("single_component:"):
+        ref_name = src.split(":", 1)[1].strip()
+        rec = astrometry_raw[ref_name]
+        rv = rec.get("radial_velocity_km_s") or 0.0
+        pos, vel = to_icrf(rec["ra_deg"], rec["dec_deg"], rec["parallax_mas"],
+                           rec["pmra_mas_yr"], rec["pmdec_mas_yr"], rv)
+        return {
+            "pos_km":      pos,
+            "vel_km_s":    vel,
+            "ra_deg":      rec["ra_deg"],
+            "dec_deg":     rec["dec_deg"],
+            "dist_pc":     1000.0 / rec["parallax_mas"],
+            "epoch_jd":    rec.get("epoch_jd", JD_GAIA),
+            "method":      f"single_component({ref_name})",
+        }
+
+    if src == "mass_weighted_average":
+        related = list(orbit["relates"])
+        recs    = [astrometry_raw[c] for c in related]
+        masses  = [comps_by_name[c]["mass_msun"] for c in related]
+        epochs  = {r.get("epoch_jd", JD_GAIA) for r in recs}
+        if len(epochs) > 1:
+            raise ValueError(f"{system_name}: mass_weighted_average requires "
+                             f"matched epoch_jd across components; got {sorted(epochs)}")
+        pos_avg, vel_avg = _mass_weighted_average(recs, masses)
+        total = float(sum(masses))
+        ra_avg  = sum(m*r["ra_deg"]       for m,r in zip(masses,recs)) / total
+        dec_avg = sum(m*r["dec_deg"]      for m,r in zip(masses,recs)) / total
+        plx_avg = sum(m*r["parallax_mas"] for m,r in zip(masses,recs)) / total
+        return {
+            "pos_km":      pos_avg,
+            "vel_km_s":    vel_avg,
+            "ra_deg":      ra_avg,
+            "dec_deg":     dec_avg,
+            "dist_pc":     1000.0 / plx_avg,
+            "epoch_jd":    recs[0].get("epoch_jd", JD_GAIA),
+            "method":      f"mass_weighted_average({','.join(related)})",
+        }
+
+    if src in ("gaia_dr3_nss_barycenter", "hipparcos_barycenter"):
+        bary = binary_data.get("barycenter_astrometry")
+        if bary is None:
+            raise ValueError(f"{system_name}: astrometry_source={src} "
+                             "requires top-level 'barycenter_astrometry' block")
+        rv = bary.get("radial_velocity_km_s") or 0.0
+        pos, vel = to_icrf(bary["ra_deg"], bary["dec_deg"], bary["parallax_mas"],
+                           bary["pmra_mas_yr"], bary["pmdec_mas_yr"], rv)
+        return {
+            "pos_km":      pos,
+            "vel_km_s":    vel,
+            "ra_deg":      bary["ra_deg"],
+            "dec_deg":     bary["dec_deg"],
+            "dist_pc":     1000.0 / bary["parallax_mas"],
+            "epoch_jd":    bary.get("epoch_jd", JD_GAIA),
+            "method":      src,
+        }
+
+    raise ValueError(f"{system_name}: unsupported astrometry_source '{src}'")
+
+
+def resolve_binary_component_states(system_name, binary_data, astrometry_raw):
+    """주어진 binary entry의 모든 궤도-귀속 컴포넌트에 대해 B1950, J2000 ICRS Cartesian 상태 반환.
+    Returns dict component_name → {b1950: {pos, vel}, j2000: {pos, vel}, meta: {...}}.
+    Components not in any orbits[].relates 는 dict에 없음 (호출자가 단일 항성 경로로 처리).
+    """
+    out = {}
+    bary = resolve_barycenter_state(system_name, binary_data, astrometry_raw)
+    comps_by_name = {c["name"]: c for c in binary_data["components"]}
+
+    # 각 궤도별 처리 (현재 스키마: 한 시스템에 하나의 fitted orbit, 나머지는 standalone)
+    for orbit in binary_data["orbits"]:
+        if "primary_is_barycenter_of" in orbit:
+            # 계층적 삼중성 (현재 마이그레이션에선 사용되지 않음 — 안전을 위해 명시적 차단)
+            raise NotImplementedError(
+                f"{system_name}: hierarchical 'primary_is_barycenter_of' orbits "
+                "are not implemented in this build. Drop the outer orbit or "
+                "extend resolve_binary_component_states."
+            )
+        primary, secondary = orbit["primary"], orbit["secondary"]
+        m_p = comps_by_name[primary  ]["mass_msun"]
+        m_s = comps_by_name[secondary]["mass_msun"]
+        if m_p is None or m_s is None:
+            raise ValueError(f"{system_name} orbit {orbit['orbit_id']}: "
+                             f"mass_msun required for both components")
+        m_total = m_p + m_s
+        q_p = m_s / m_total   # primary는 무게중심 반대쪽: r_P = R_bary - q_p · r_rel
+        q_s = m_p / m_total
+
+        for epoch_label, t_jd in (("b1950", JD_B1950), ("j2000", JD_J2000)):
+            # 무게중심: source 에포크 Cartesian → 선형 전파
+            dt_s = (t_jd - bary["epoch_jd"]) * 86400.0
+            R_bary = propagate(bary["pos_km"], bary["vel_km_s"], dt_s)
+            V_bary = bary["vel_km_s"]    # 선형 → 속도 시간불변
+
+            # 무게중심 (ra, dec)는 source 에포크 값 사용 (작은 시스템 영향 — context-notes 참조)
+            ra_bary, dec_bary = bary["ra_deg"], bary["dec_deg"]
+
+            # 상대 (B − A) 궤도 오프셋
+            (deltas_au, vels_auyr) = solve_orbit_relative(orbit, bary["dist_pc"], t_jd)
+            r_rel_km   = sky_offset_to_icrs(deltas_au, ra_bary, dec_bary)
+            # 속도: sky basis는 동일 → AU/yr 입력으로 sky_offset_to_icrs 호출하면 km/yr 출력. /YR_TO_S.
+            v_rel_km_yr = sky_offset_to_icrs(vels_auyr, ra_bary, dec_bary)
+            v_rel_km_s  = tuple(v / YR_TO_S for v in v_rel_km_yr)
+
+            r_p = tuple(R_bary[i] - q_p*r_rel_km[i]   for i in range(3))
+            v_p = tuple(V_bary[i] - q_p*v_rel_km_s[i] for i in range(3))
+            r_s = tuple(R_bary[i] + q_s*r_rel_km[i]   for i in range(3))
+            v_s = tuple(V_bary[i] + q_s*v_rel_km_s[i] for i in range(3))
+
+            out.setdefault(primary,   {})[epoch_label]   = {"pos_km": r_p, "vel_km_s": v_p}
+            out.setdefault(secondary, {})[epoch_label]   = {"pos_km": r_s, "vel_km_s": v_s}
+
+        out[primary  ].setdefault("meta", {}).update({
+            "orbit_id": orbit["orbit_id"],
+            "role": "primary",
+            "mass_ratio_q": q_p,
+            "barycenter_method": bary["method"],
+            "phase_reliable": orbit.get("phase_reliable", True),
+        })
+        out[secondary].setdefault("meta", {}).update({
+            "orbit_id": orbit["orbit_id"],
+            "role": "secondary",
+            "mass_ratio_q": q_s,
+            "barycenter_method": bary["method"],
+            "phase_reliable": orbit.get("phase_reliable", True),
+        })
+
+    return out
+
+
 def build_planet_derived(pl, curated=None):
     """행성 raw + curated → 단위 변환된 derived 블록.
     우선순위: curated > tepcat > nasa_archive (raw).
@@ -185,6 +431,16 @@ for target in target_list:
         print(f"  [WARN] {sys_name}: binary_orbits.json 항목 없음")
     primary_comp  = comps[0] if is_binary else None
     primary_fname = to_filename(primary_comp) if primary_comp else None
+
+    # 다성계: orbits[]에 fitted 궤도가 있는 컴포넌트는 Kepler+T-I로 ICRS 상태 산출.
+    # 궤도 없는 컴포넌트(예: 40 Eri A, 36 Oph C)는 dict에 없음 → 단일 항성 경로로 폴백.
+    binary_states = {}
+    if binary_data and binary_data.get("orbits"):
+        try:
+            binary_states = resolve_binary_component_states(sys_name, binary_data, astrometry)
+        except (ValueError, NotImplementedError, KeyError) as e:
+            errors.append(f"{sys_name}: binary resolve 실패 — {e}")
+            print(f"  [WARN] {sys_name}: binary 무시, 선형 전파 폴백 — {e}")
 
     # 단일 항성 시스템: 항성 1개씩 개별 파일
     # 다성계도 현재 구조 유지 (컴포넌트별 개별 파일)
@@ -265,28 +521,58 @@ for target in target_list:
         }
 
         # ── derived 블록 (B1950, J2000 모두 포함) ──
-        derived_block = {
-            "epoch_jd":           JD_B1950,
-            "epoch_label":        "B1950.0",
-            "propagation_method": "linear",
-            "distance_pc":        dist_pc,
-            "distance_km":        dist_pc * PC_TO_KM,
-            # B1950 좌표 (Kopernicus/Principia용)
-            "icrs_x_km":          pos_b1950[0],
-            "icrs_y_km":          pos_b1950[1],
-            "icrs_z_km":          pos_b1950[2],
-            "icrs_vx_km_s":       vel[0],
-            "icrs_vy_km_s":       vel[1],
-            "icrs_vz_km_s":       vel[2],
-            "position_ulp_km":    ulp_km(pos_b1950),
-            # J2000 좌표 (참조용)
-            "icrs_x_j2000_km":    pos_j2000[0],
-            "icrs_y_j2000_km":    pos_j2000[1],
-            "icrs_z_j2000_km":    pos_j2000[2],
-            "icrs_vx_j2000_km_s": vel[0],
-            "icrs_vy_j2000_km_s": vel[1],
-            "icrs_vz_j2000_km_s": vel[2],
-        }
+        # 다성계 컴포넌트가 fitted orbit에 포함되면 Kepler+T-I로 산출된 상태를 사용.
+        bs = binary_states.get(star_name)
+        if bs:
+            b1950 = bs["b1950"]
+            j2000 = bs["j2000"]
+            bs_meta = bs.get("meta", {})
+            derived_block = {
+                "epoch_jd":           JD_B1950,
+                "epoch_label":        "B1950.0",
+                "propagation_method": "kepler_thiele_innes",
+                "distance_pc":        dist_pc,
+                "distance_km":        dist_pc * PC_TO_KM,
+                "icrs_x_km":          b1950["pos_km"][0],
+                "icrs_y_km":          b1950["pos_km"][1],
+                "icrs_z_km":          b1950["pos_km"][2],
+                "icrs_vx_km_s":       b1950["vel_km_s"][0],
+                "icrs_vy_km_s":       b1950["vel_km_s"][1],
+                "icrs_vz_km_s":       b1950["vel_km_s"][2],
+                "position_ulp_km":    ulp_km(b1950["pos_km"]),
+                "icrs_x_j2000_km":    j2000["pos_km"][0],
+                "icrs_y_j2000_km":    j2000["pos_km"][1],
+                "icrs_z_j2000_km":    j2000["pos_km"][2],
+                "icrs_vx_j2000_km_s": j2000["vel_km_s"][0],
+                "icrs_vy_j2000_km_s": j2000["vel_km_s"][1],
+                "icrs_vz_j2000_km_s": j2000["vel_km_s"][2],
+                "orbit_id":           bs_meta.get("orbit_id"),
+                "orbit_role":         bs_meta.get("role"),
+                "mass_ratio_q":       bs_meta.get("mass_ratio_q"),
+                "barycenter_method":  bs_meta.get("barycenter_method"),
+                "phase_reliable":     bs_meta.get("phase_reliable"),
+            }
+        else:
+            derived_block = {
+                "epoch_jd":           JD_B1950,
+                "epoch_label":        "B1950.0",
+                "propagation_method": "linear",
+                "distance_pc":        dist_pc,
+                "distance_km":        dist_pc * PC_TO_KM,
+                "icrs_x_km":          pos_b1950[0],
+                "icrs_y_km":          pos_b1950[1],
+                "icrs_z_km":          pos_b1950[2],
+                "icrs_vx_km_s":       vel[0],
+                "icrs_vy_km_s":       vel[1],
+                "icrs_vz_km_s":       vel[2],
+                "position_ulp_km":    ulp_km(pos_b1950),
+                "icrs_x_j2000_km":    pos_j2000[0],
+                "icrs_y_j2000_km":    pos_j2000[1],
+                "icrs_z_j2000_km":    pos_j2000[2],
+                "icrs_vx_j2000_km_s": vel[0],
+                "icrs_vy_j2000_km_s": vel[1],
+                "icrs_vz_j2000_km_s": vel[2],
+            }
 
         # ── principia 블록 ──
         rec_mass = next(
@@ -368,6 +654,14 @@ for target in target_list:
         cm = COMPONENT_RE.match(star_name)
         component = cm.group(1) if cm else None
 
+        notes = PROPAGATION_NOTES.get(star_name, "")
+        if bs and bs.get("meta", {}).get("phase_reliable") is False:
+            warn = (f"Binary orbit {bs['meta'].get('orbit_id')} flagged "
+                    f"phase_reliable=false — relative geometry of components "
+                    f"may differ from real configuration at JD2433282.5. "
+                    f"Principia N-body simulation will correct dynamically.")
+            notes = (notes + " " + warn).strip()
+
         doc = {
             "system_name": star_name,
             "stars": [{
@@ -388,7 +682,7 @@ for target in target_list:
                 "coordinate_origin":        "SSB",
                 "coordinate_frame":         "ICRF",
                 "coordinate_units":         "km, km/s",
-                "notes":                    PROPAGATION_NOTES.get(star_name, ""),
+                "notes":                    notes,
             },
         }
 

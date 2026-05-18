@@ -37,22 +37,27 @@
       "derived": {
         "epoch_jd": 2433282.5,
         "epoch_label": "B1950.0",
-        "propagation_method": "linear",
+        "propagation_method": "kepler_thiele_innes",
         "distance_pc": 3.4965652573897277,
         "distance_km": 107892730269477.9,
-        "icrs_x_km": 61305211035748.04,
-        "icrs_y_km": -57870630375519.79,
-        "icrs_z_km": 67551508421236.47,
-        "icrs_vx_km_s": -14.737047332703689,
-        "icrs_vy_km_s": 108.63023661131413,
-        "icrs_vz_km_s": 0.6914587761334445,
-        "position_ulp_km": 0.014999447999483377,
-        "icrs_x_j2000_km": 61281957743502.72,
-        "icrs_y_j2000_km": -57699224897775.53,
-        "icrs_z_j2000_km": 67552599460210.16,
-        "icrs_vx_j2000_km_s": -14.737047332703689,
-        "icrs_vy_j2000_km_s": 108.63023661131413,
-        "icrs_vz_j2000_km_s": 0.6914587761334445
+        "icrs_x_km": 61307858216373.71,
+        "icrs_y_km": -57872886691535.04,
+        "icrs_z_km": 67550989013881.02,
+        "icrs_vx_km_s": -15.337155109447224,
+        "icrs_vy_km_s": 108.39599604317391,
+        "icrs_vz_km_s": 2.18270195280266,
+        "position_ulp_km": 0.014999332667882342,
+        "icrs_x_j2000_km": 61284237863360.73,
+        "icrs_y_j2000_km": -57702013370026.73,
+        "icrs_z_j2000_km": 67553286125544.02,
+        "icrs_vx_j2000_km_s": -15.262986469450691,
+        "icrs_vy_j2000_km_s": 108.92281624479762,
+        "icrs_vz_j2000_km_s": 1.6907985812305073,
+        "orbit_id": "AB",
+        "orbit_role": "primary",
+        "mass_ratio_q": 0.49572649572649574,
+        "barycenter_method": "mass_weighted_average(61 Cygni A,61 Cygni B)",
+        "phase_reliable": false
       },
       "principia": {
         "gravitational_parameter_km3_s2": null,
@@ -99,95 +104,59 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Binary orbit AB flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
   },
   "binary_orbit": {
-    "components": [
-      "61 Cygni A",
-      "61 Cygni B"
-    ],
+    "system_id": "61_cygni",
     "hierarchy": "binary",
     "wds_id": "21069+3845",
-    "raw": {
-      "source": "Strand (1952) / Walker (1995) via ORB6",
-      "doi": null,
-      "note": "Long period (~659 yr). Orbital solution uncertain; ORB6 grade ~3-4. Verify from ORB6 or recent speckle solution. Mean anomaly changes slowly (~0.55 deg/yr) so epoch error of a few years is acceptable.",
-      "orb_grade": 3,
-      "period_yr": 659.0,
-      "period_yr_err": 50.0,
-      "semi_major_axis_arcsec": 24.3,
-      "semi_major_axis_arcsec_err": 2.0,
-      "eccentricity": 0.49,
-      "eccentricity_err": 0.05,
-      "inclination_deg": 52.0,
-      "inclination_err_deg": 5.0,
-      "longitude_of_ascending_node_deg": 178.0,
-      "longitude_of_ascending_node_err_deg": 10.0,
-      "argument_of_periapsis_deg": 149.0,
-      "argument_of_periapsis_err_deg": 15.0,
-      "t_peri_yr": 1767.0,
-      "t_peri_jd": 2366441.8,
-      "t_peri_note": "UNCERTAIN. Needs verification from current ORB6 entry."
-    },
-    "derived": {
-      "semi_major_axis_au": 84.9665,
-      "semi_major_axis_m": 12710812829639.148,
-      "mean_anomaly_at_b1950_deg": 99.9697,
-      "mean_anomaly_at_j2000_deg": 127.2838,
-      "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
-    },
-    "barycenter_state_b1950": {
-      "mass_A_msun": 0.708,
-      "mass_B_msun": 0.696,
-      "epoch_jd": 2433282.5,
-      "epoch_label": "B1950.0",
-      "icrs_x_km": 61309159612067.3,
-      "icrs_y_km": -57867782128463.63,
-      "icrs_z_km": 67544967105356.11,
-      "icrs_vx_km_s": -14.330163287094935,
-      "icrs_vy_km_s": 107.5837128606606,
-      "icrs_vz_km_s": 0.5249332802793286,
-      "distance_pc": 3.4965652573897277,
-      "distance_km": 107892730269477.9,
-      "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
-    },
-    "individual_states": {
-      "b1950": {
-        "61 Cygni A": {
-          "icrs_x_km": 61307854032643.56,
-          "icrs_y_km": -57872888803306.234,
-          "icrs_z_km": 67550986512529.74,
-          "icrs_vx_km_s": -15.019696661395626,
-          "icrs_vy_km_s": 108.1417375376791,
-          "icrs_vz_km_s": 1.6639417002768466
-        },
-        "61 Cygni B": {
-          "icrs_x_km": 61310487701481.1,
-          "icrs_y_km": -57862587407503.055,
-          "icrs_z_km": 67538843915300.17,
-          "icrs_vx_km_s": -13.628741406340783,
-          "icrs_vy_km_s": 107.01606706852107,
-          "icrs_vz_km_s": -0.633713215925043
-        }
+    "components": [
+      {
+        "name": "61 Cygni A",
+        "mass_msun": 0.708,
+        "mass_source": "kervella_2008",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
       },
-      "j2000": {
-        "61 Cygni A": {
-          "icrs_x_km": 61284237535645.36,
-          "icrs_y_km": -57702013763573.33,
-          "icrs_z_km": 67553286003228.445,
-          "icrs_vx_km_s": -14.912340693943227,
-          "icrs_vy_km_s": 108.42025022474826,
-          "icrs_vz_km_s": 1.2533945518270668
-        },
-        "61 Cygni B": {
-          "icrs_x_km": 61288898973745.64,
-          "icrs_y_km": -57693973394554.055,
-          "icrs_z_km": 67538175622378.07,
-          "icrs_vx_km_s": -13.73794833874926,
-          "icrs_vy_km_s": 106.73275243857142,
-          "icrs_vz_km_s": -0.21608766836406024
-        }
+      {
+        "name": "61 Cygni B",
+        "mass_msun": 0.696,
+        "mass_source": "kervella_2008",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
       }
-    }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": [
+          "61 Cygni A",
+          "61 Cygni B"
+        ],
+        "primary": "61 Cygni A",
+        "secondary": "61 Cygni B",
+        "source": "Strand (1952) / Walker (1995) via ORB6",
+        "doi": null,
+        "equinox": "B1950",
+        "P_yr": 659.0,
+        "P_yr_err": 50.0,
+        "T_jd_tt": 2366441.8,
+        "T_yr": 1767.0,
+        "e": 0.49,
+        "e_err": 0.05,
+        "a_arcsec": 24.3,
+        "a_arcsec_err": 2.0,
+        "i_deg": 52.0,
+        "i_err_deg": 5.0,
+        "omega_deg": 149.0,
+        "omega_err_deg": 15.0,
+        "Omega_deg": 178.0,
+        "Omega_err_deg": 10.0,
+        "grade": 3,
+        "node_resolved": false,
+        "phase_reliable": false,
+        "note": "Long P (659 yr) with < half orbit observed → phase_reliable=false per methodology. T_peri uncertain. Equinox B1950 (Strand 1952); Omega/omega not precessed to J2000 (~0.6 deg systematic, acceptable for this grade)."
+      }
+    ]
   }
 }

@@ -184,49 +184,32 @@ To find the right SIMBAD name, query the helper script's output or browse
 
 ## 5. `db/binary_orbits.json` — only for multi-star systems
 
-**⚠ Schema is in transition (2026-05-18).** The new schema is specified
-in `docs/reference/methodology.md` §"Multiple-System Epoch" and the math
-pipeline is in `docs/reference/binary-epoch-pipeline.md`. Implementation
-(migrating existing 6 entries to the new schema and updating
-`build_systems.py` to consume it) is **scheduled for a follow-up session**
-— see memory `project-binary-epoch-pending`. Until that lands:
+`build_systems.py` solves Kepler + Thiele-Innes per orbit at JD 2433282.5
+and distributes components by mass ratio (Hilditch / Pourbaix convention).
+See `docs/reference/methodology.md` §"Multiple-System Epoch" for schema
+field reference and `docs/reference/binary-epoch-pipeline.md` for the
+math pipeline. The 6 existing systems (Alpha Centauri, Sirius, 61 Cygni,
+40 Eridani, Eta Cassiopeiae, 36 Ophiuchi) are already in the live schema.
 
-- **Do not add new multi-star systems via this skill** — the existing
-  `build_systems.py` does not correctly handle binary orbital motion yet
-  (it linearly propagates each component independently, which is wrong
-  for any period less than ~few hundred years). New additions would have
-  the same bug.
-- **If a new multi-star system is genuinely needed before implementation
-  is done**, you can add the system as separate single-star entries in
-  `target_list.json` (without `binary: true`), accept the wrong relative
-  geometry as a known issue, and document in `meta.notes` of the affected
-  component files. Then re-process when the binary pipeline ships.
+### Schema (live)
 
-### New schema (target state)
-
-Top-level key matches `target_list.system`. Two arrays — `components` and
-`orbits` — replace the legacy single `raw` block.
+Top-level key matches `target_list.system`. Two arrays — `components`
+and `orbits` — describe the system.
 
 ```json
 "Alpha Centauri": {
   "system_id": "alpha_centauri",
   "hierarchy": "binary",
+  "wds_id": "14396-6050",
   "components": [
     {
       "name": "Alpha Centauri A",
-      "mass_msun": 1.0788,
-      "mass_source": "akeson_2021",
-      "astrometry_source": "gaia_dr3_nss_barycenter",
-      "astrometry_quality": "barycentric",
-      "ra_deg":  219.9020833,
-      "dec_deg": -60.8339722,
-      "parallax_mas": 750.81,
-      "pm_ra_masyr":  -3679.25,
-      "pm_dec_masyr":   473.67,
-      "radial_velocity_km_s": -22.4,
-      "epoch_jd": 2457389.0
+      "mass_msun": 1.1055,
+      "mass_source": "pourbaix_correia_2017",
+      "astrometry_source": "mass_weighted_average",
+      "astrometry_quality": "barycentric"
     },
-    { "name": "Alpha Centauri B", ... }
+    { "name": "Alpha Centauri B", "...": "..." }
   ],
   "orbits": [
     {
@@ -234,16 +217,16 @@ Top-level key matches `target_list.system`. Two arrays — `components` and
       "relates":  ["Alpha Centauri A", "Alpha Centauri B"],
       "primary":  "Alpha Centauri A",
       "secondary":"Alpha Centauri B",
-      "source":   "akeson_2021",
-      "doi":      "10.3847/1538-3881/abfaff",
+      "source":   "Pourbaix & Correia (2017) / Kervella et al. (2016)",
+      "doi":      "10.1051/0004-6361:20021249",
       "equinox":  "J2000",
-      "P_yr":     79.762,
-      "T_jd_tt":  2435291.6,
-      "e":        0.51947,
-      "a_arcsec": 17.4930,
-      "i_deg":    79.2430,
-      "omega_deg":     231.519,
-      "Omega_deg":     205.073,
+      "P_yr":     79.91,
+      "T_jd_tt":  2435035.7,
+      "e":        0.5179,
+      "a_arcsec": 17.57,
+      "i_deg":    79.205,
+      "omega_deg":     231.65,
+      "Omega_deg":     204.85,
       "grade":           1,
       "node_resolved":   true,
       "phase_reliable":  true
@@ -252,18 +235,45 @@ Top-level key matches `target_list.system`. Two arrays — `components` and
 }
 ```
 
-For triples (40 Eridani, 36 Ophiuchi), `orbits[]` carries two entries —
-the inner pair, and an outer orbit that uses `primary_is_barycenter_of`
-to refer to the inner pair's center of mass. See methodology §"Multiple-
-System Epoch" for the full schema field reference and per-system option
-table, and `binary-epoch-pipeline.md` §6 for the triple example.
+### `components[].astrometry_source` values
 
-### Legacy entries (current state)
+| Value | Build behavior | Required side-data |
+|---|---|---|
+| `mass_weighted_average` | Build computes barycenter as mass-weighted Cartesian average of all related components' `astrometry_raw.json` entries. All related components must share `epoch_jd`. | none |
+| `single_component:<Name>` | Build uses one named component's `astrometry_raw.json` as the barycenter. Use when a published barycentric solution is unavailable but one component is bright/well-measured (e.g. Sirius A as proxy for the AB barycenter). | none |
+| `gaia_dr3_nss_barycenter` | Build reads top-level `barycenter_astrometry` block (RA/Dec/parallax/PM/RV at the published epoch) directly. | top-level `"barycenter_astrometry": {...}` |
+| `hipparcos_barycenter` | Same as above. | top-level `"barycenter_astrometry": {...}` |
+| `gaia_dr3` / `simbad` | Component handled as if it were a single star (linear propagation of its own `astrometry_raw`). Use for components that are not in any fitted `orbits[].relates` (e.g. 40 Eridani A, 36 Ophiuchi C). | none |
 
-The 6 systems already in `binary_orbits.json` (Alpha Centauri, Sirius,
-61 Cygni, 40 Eridani, Eta Cassiopeiae, 36 Ophiuchi) still use the
-**legacy** single-`raw` schema. They will be migrated in the
-implementation session, not edited piecemeal here. Leave them alone.
+`astrometry_quality` is informational: `barycentric` / `photocenter_contaminated`
+/ `single_component`. Build does not change behavior on this field, but
+validate.py uses it for warnings.
+
+### Triple systems
+
+For 40 Eridani and 36 Ophiuchi, the current entries model only the inner
+pair. The outer A-BC (40 Eri) and AB-C (36 Oph) orbits are dropped — both
+are observationally underdetermined and Principia's N-body integrator
+will correct the relative geometry forward from the per-component initial
+state. The outer-component (`40 Eridani A`, `36 Ophiuchi C`) uses
+`astrometry_source: "gaia_dr3"` so it falls into the single-star path.
+
+If you need to add a fully resolved hierarchical triple, the schema
+reserves `orbits[].primary_is_barycenter_of: ["A", "B"]` for the outer
+orbit. `build_systems.py` raises `NotImplementedError` for that field
+today — extend `resolve_binary_component_states` before relying on it.
+
+### `phase_reliable: false`
+
+Set when:
+- ORB6 grade ≥ 4, OR
+- Observed coverage is less than half the period, OR
+- Time of periastron error exceeds 5 % of the period
+
+`build_systems.py` still emits per-component Kepler-derived states, but
+writes a warning into `meta.notes` so downstream consumers know the
+relative geometry at JD 2433282.5 may differ from reality. Principia's
+N-body simulation corrects dynamically once gravity takes over.
 
 ### Where to find orbital elements
 

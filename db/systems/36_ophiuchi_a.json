@@ -27,22 +27,27 @@
       "derived": {
         "epoch_jd": 2433282.5,
         "epoch_label": "B1950.0",
-        "propagation_method": "linear",
+        "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.952271867918357,
         "distance_km": 183667918617752.34,
-        "icrs_x_km": -31777791924777.094,
-        "icrs_y_km": -161144009783795.7,
-        "icrs_z_km": -82197859564050.38,
-        "icrs_vx_km_s": -11.035896060686952,
-        "icrs_vy_km_s": 16.74046333505261,
-        "icrs_vz_km_s": -29.109555487216202,
-        "position_ulp_km": 0.03578115798847829,
-        "icrs_x_j2000_km": -31795205244453.332,
-        "icrs_y_j2000_km": -161117595341508.56,
-        "icrs_z_j2000_km": -82243790949462.55,
-        "icrs_vx_j2000_km_s": -11.035896060686952,
-        "icrs_vy_j2000_km_s": 16.74046333505261,
-        "icrs_vz_j2000_km_s": -29.109555487216202
+        "icrs_x_km": -31765748471791.305,
+        "icrs_y_km": -161084007273719.3,
+        "icrs_z_km": -82172013752375.48,
+        "icrs_vx_km_s": -10.842594363331092,
+        "icrs_vy_km_s": 16.983749708142973,
+        "icrs_vz_km_s": -30.37492264021746,
+        "position_ulp_km": 0.035767834754833874,
+        "icrs_x_j2000_km": -31782513203842.203,
+        "icrs_y_j2000_km": -161057501339312.34,
+        "icrs_z_j2000_km": -82218118216680.66,
+        "icrs_vx_j2000_km_s": -10.781554007260977,
+        "icrs_vy_j2000_km_s": 17.19885187757721,
+        "icrs_vz_j2000_km_s": -29.93850831460955,
+        "orbit_id": "AB",
+        "orbit_role": "primary",
+        "mass_ratio_q": 0.49673202614379086,
+        "barycenter_method": "mass_weighted_average(36 Ophiuchi A,36 Ophiuchi B)",
+        "phase_reliable": false
       },
       "principia": {
         "gravitational_parameter_km3_s2": null,
@@ -80,113 +85,67 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Binary orbit AB flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
   },
   "binary_orbit": {
-    "components": [
-      "36 Ophiuchi A",
-      "36 Ophiuchi B",
-      "36 Ophiuchi C"
-    ],
+    "system_id": "36_ophiuchi",
     "hierarchy": "triple",
     "wds_id": "17153-2636",
-    "pairs": {
-      "A-B": {
+    "components": [
+      {
+        "name": "36 Ophiuchi A",
+        "mass_msun": 0.77,
+        "mass_source": "heintz_1990",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
+      },
+      {
+        "name": "36 Ophiuchi B",
+        "mass_msun": 0.76,
+        "mass_source": "heintz_1990",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
+      },
+      {
+        "name": "36 Ophiuchi C",
+        "mass_msun": null,
+        "mass_source": null,
+        "astrometry_source": "gaia_dr3",
+        "astrometry_quality": "single_component",
+        "astrometry_note": "Wide CPM companion (sep ~733 arcsec). Treated as independent single star; outer AB-C orbit is undetermined (very long P) and not modeled. Principia N-body will integrate forward from initial Gaia-based placement."
+      }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": [
+          "36 Ophiuchi A",
+          "36 Ophiuchi B"
+        ],
         "primary": "36 Ophiuchi A",
         "secondary": "36 Ophiuchi B",
-        "wds_comp": "AB",
-        "raw": {
-          "source": "Heintz (1990) via ORB6",
-          "doi": null,
-          "note": "WDS 2024 sep=5.1\". Inner pair. ORB6 grade ~4. Verify from ORB6 entry for WDS 17153-2636 comp AB.",
-          "reliability": "UNRELIABLE",
-          "reliability_note": "Kepler prediction (sep=6.62\", PA=8°) does not match WDS 2021 (sep=5.1\", PA=138°). High eccentricity (e=0.921) makes orbit highly sensitive to T_peri. Do not use for CFG generation; approximate position from WDS observed sep/PA instead.",
-          "orb_grade": 4,
-          "period_yr": 570.0,
-          "period_yr_err": 30.0,
-          "semi_major_axis_arcsec": 4.74,
-          "semi_major_axis_arcsec_err": 0.3,
-          "eccentricity": 0.921,
-          "eccentricity_err": 0.01,
-          "inclination_deg": 81.0,
-          "inclination_err_deg": 3.0,
-          "longitude_of_ascending_node_deg": 16.0,
-          "longitude_of_ascending_node_err_deg": 5.0,
-          "argument_of_periapsis_deg": 143.0,
-          "argument_of_periapsis_err_deg": 5.0,
-          "t_peri_yr": 1804.0,
-          "t_peri_jd": 2379956.0,
-          "t_peri_note": "Approximate; verify from ORB6."
-        },
-        "derived": {
-          "semi_major_axis_au": 28.2138,
-          "semi_major_axis_m": 4220719715050.784,
-          "mean_anomaly_at_b1950_deg": 92.2105,
-          "mean_anomaly_at_j2000_deg": 123.7895,
-          "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
-        },
-        "barycenter_state_b1950": {
-          "mass_A_msun": 0.77,
-          "mass_B_msun": 0.76,
-          "epoch_jd": 2433282.5,
-          "epoch_label": "B1950.0",
-          "icrs_x_km": -31765253767121.11,
-          "icrs_y_km": -161082824387872.6,
-          "icrs_z_km": -82168806152213.81,
-          "icrs_vx_km_s": -10.577639784746376,
-          "icrs_vy_km_s": 16.667586660777737,
-          "icrs_vz_km_s": -28.962068262705518,
-          "distance_pc": 5.952271867918357,
-          "distance_km": 183667918617752.34,
-          "note": "mass-weighted mean of component state vectors at B1950.0. Individual component positions are incorrect for short-period binaries due to orbital velocity in proper motion. Use this barycenter + Keplerian orbital elements for CFG placement."
-        },
-        "individual_states": {
-          "b1950": {
-            "note": "Approximate positions from WDS 2021 sep=5.1\" PA=138°. Radial offset=0 (unknown), orbital velocity not included. Reliable for Kopernicus initial placement; Principia will simulate correctly once gravity takes over.",
-            "36 Ophiuchi A": {
-              "icrs_x_km": -31766879555779.68,
-              "icrs_y_km": -161083268141878.97,
-              "icrs_z_km": -82167306798862.86,
-              "icrs_vx_km_s": -10.577639784746376,
-              "icrs_vy_km_s": 16.667586660777737,
-              "icrs_vz_km_s": -28.962068262705518
-            },
-            "36 Ophiuchi B": {
-              "icrs_x_km": -31763606586506.504,
-              "icrs_y_km": -161082374794997.72,
-              "icrs_z_km": -82170325233898.33,
-              "icrs_vx_km_s": -10.577639784746376,
-              "icrs_vy_km_s": 16.667586660777737,
-              "icrs_vz_km_s": -28.962068262705518
-            }
-          }
-        }
-      },
-      "AB-C": {
-        "primary": "36 Ophiuchi A",
-        "secondary": "36 Ophiuchi C",
-        "wds_comp": "AC",
-        "raw": {
-          "source": "Heintz (1990) / wide pair estimate",
-          "doi": null,
-          "note": "WDS sep C=732.5\" — very wide, poorly constrained orbit. May be treated as an unbound or nearly unbound companion.",
-          "orb_grade": 1,
-          "period_yr": null,
-          "semi_major_axis_arcsec": 732.5,
-          "eccentricity": null,
-          "inclination_deg": null,
-          "t_peri_yr": null,
-          "t_peri_jd": null,
-          "t_peri_note": "Orbit not well determined. Treat C as distant companion."
-        },
-        "derived": {
-          "semi_major_axis_au": 4360.0391,
-          "semi_major_axis_m": 652252571998881.6,
-          "mean_anomaly_at_b1950_deg": null,
-          "mean_anomaly_at_j2000_deg": null,
-          "note": "a_au = a_arcsec × dist_pc (small-angle); M from published T_peri"
-        }
+        "source": "Heintz (1990) via ORB6",
+        "doi": null,
+        "equinox": "B1950",
+        "P_yr": 570.0,
+        "P_yr_err": 30.0,
+        "T_jd_tt": 2379956.0,
+        "T_yr": 1804.0,
+        "e": 0.921,
+        "e_err": 0.01,
+        "a_arcsec": 4.74,
+        "a_arcsec_err": 0.3,
+        "i_deg": 81.0,
+        "i_err_deg": 3.0,
+        "omega_deg": 143.0,
+        "omega_err_deg": 5.0,
+        "Omega_deg": 16.0,
+        "Omega_err_deg": 5.0,
+        "grade": 4,
+        "node_resolved": false,
+        "phase_reliable": false,
+        "note": "Inner A-B pair. Legacy reported UNRELIABLE: Kepler prediction (sep=6.62 arcsec, PA=8 deg) does not match WDS 2021 (sep=5.1 arcsec, PA=138 deg). High e (0.921) makes orbit highly sensitive to T_peri. Outer AB-C orbit (sep 733 arcsec, P unknown) dropped — 36 Oph C handled as single."
       }
-    }
+    ]
   }
 }

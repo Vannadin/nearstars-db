@@ -27,22 +27,27 @@
       "derived": {
         "epoch_jd": 2433282.5,
         "epoch_label": "B1950.0",
-        "propagation_method": "linear",
+        "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.013747228688032,
         "distance_km": 154708074228252.88,
-        "icrs_x_km": 67572268313471.95,
-        "icrs_y_km": 137756823760927.47,
-        "icrs_z_km": -20495848931280.12,
-        "icrs_vx_km_s": 23.904098226177826,
-        "icrs_vy_km_s": -72.45659189618502,
-        "icrs_vz_km_s": -74.436208202278,
-        "position_ulp_km": 0.030588159507722305,
-        "icrs_x_j2000_km": 67609986111981.07,
-        "icrs_y_j2000_km": 137642495953706.31,
-        "icrs_z_j2000_km": -20613300335478.332,
-        "icrs_vx_j2000_km_s": 23.904098226177826,
-        "icrs_vy_j2000_km_s": -72.45659189618502,
-        "icrs_vz_j2000_km_s": -74.436208202278
+        "icrs_x_km": 67482939038027.65,
+        "icrs_y_km": 137577336554966.06,
+        "icrs_z_km": -20471966210260.664,
+        "icrs_vx_km_s": 38.98932082382574,
+        "icrs_vy_km_s": -45.11055216836994,
+        "icrs_vz_km_s": -75.23018396170619,
+        "position_ulp_km": 0.030548305341985507,
+        "icrs_x_j2000_km": 67543169477172.43,
+        "icrs_y_j2000_km": 137506450907474.97,
+        "icrs_z_j2000_km": -20592996467271.03,
+        "icrs_vx_j2000_km_s": 37.464788620935266,
+        "icrs_vy_j2000_km_s": -46.249437378844014,
+        "icrs_vz_j2000_km_s": -77.5140298904258,
+        "orbit_id": "BC",
+        "orbit_role": "secondary",
+        "mass_ratio_q": 0.741267787839586,
+        "barycenter_method": "mass_weighted_average(40 Eridani B,40 Eridani C)",
+        "phase_reliable": false
       },
       "principia": {
         "gravitational_parameter_km3_s2": null,
@@ -80,7 +85,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Binary orbit BC flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
   },
   "binary_orbit_ref": "40_eridani_a.json"
 }

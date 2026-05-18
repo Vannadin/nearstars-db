@@ -1,8 +1,11 @@
 # build_systems.py 출력 검증 — 필수 필드, 에포크 일관성, vmag_v 존재 여부 확인
-import json, math, glob, os
+import json, math, glob, os, sys
 
 BASE    = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SYSTEMS = os.path.join(BASE, "db", "systems")
+DB      = os.path.join(BASE, "db")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from schema import validate_binary_orbits
 
 JD_B1950 = 2433282.5
 JD_J2000 = 2451545.0
@@ -94,7 +97,10 @@ for fname, doc in docs.items():
         if der.get("epoch_jd") != JD_B1950:
             bad_epoch.append(fname)
 
-        # B1950과 J2000 차이가 속도 × 시간과 대략 일치하는지 확인
+        # B1950과 J2000 차이가 속도 × 시간과 대략 일치하는지 확인.
+        # 단, Kepler+T-I 컴포넌트는 비선형 — 이 체크 스킵.
+        if der.get("propagation_method") == "kepler_thiele_innes":
+            continue
         x_b = der.get("icrs_x_km")
         x_j = der.get("icrs_x_j2000_km")
         vx  = der.get("icrs_vx_km_s")
@@ -131,6 +137,65 @@ if missing_principia:
     warn("(전체)", f"principia 누락 파일 {len(set(missing_principia))}개")
 else:
     ok("모든 파일 principia 블록 완전")
+
+
+# ── 4b. binary_orbits.json 스키마 ────────────────────────────────────────────
+print("\n── 4b. binary_orbits 스키마 ────────────────────────────────────────────")
+try:
+    with open(f"{DB}/binary_orbits.json") as f:
+        binary_data = json.load(f)
+    bin_errs = validate_binary_orbits(binary_data)
+    for e in bin_errs:
+        fail("(binary_orbits.json)", e)
+    if not bin_errs:
+        ok("binary_orbits.json 스키마 통과")
+except FileNotFoundError:
+    warn("(binary_orbits.json)", "파일 없음 — 다성계 데이터 미보유로 간주")
+    binary_data = {}
+
+
+# ── 4c. 다성계 컴포넌트 derived 일관성 ───────────────────────────────────────
+print("\n── 4c. 다성계 컴포넌트 ────────────────────────────────────────────────")
+multi_component_count = 0
+for sys_name, entry in (binary_data or {}).items():
+    if sys_name.startswith("_"):
+        continue
+    if not isinstance(entry, dict) or "components" not in entry:
+        continue
+    in_orbit_names = set()
+    for orbit in entry.get("orbits", []):
+        in_orbit_names.update(orbit.get("relates", []))
+    for comp in entry.get("components", []):
+        cname = comp.get("name")
+        if cname not in in_orbit_names:
+            continue   # 궤도 없는 컴포넌트 (예: 40 Eri A) 는 선형 전파 — 별도 체크 없음
+        if comp.get("mass_msun") is None:
+            fail("(binary)", f"{cname}: orbit-bound 컴포넌트인데 mass_msun=null")
+        if not comp.get("astrometry_source"):
+            fail("(binary)", f"{cname}: astrometry_source unset (FAIL)")
+
+        # db/systems 파일에서 propagation_method=kepler_thiele_innes 확인
+        from_path = None
+        for fname, doc in docs.items():
+            if doc.get("system_name") == cname:
+                from_path = fname; break
+        if from_path is None:
+            warn("(binary)", f"{cname}: db/systems 파일 없음")
+            continue
+        der = docs[from_path]["stars"][0].get("derived", {})
+        if der.get("propagation_method") != "kepler_thiele_innes":
+            fail(from_path, f"{cname}: orbit-bound 컴포넌트인데 "
+                            f"propagation_method='{der.get('propagation_method')}' "
+                            f"(kepler_thiele_innes 이어야 함)")
+        # phase_reliable=false 면 meta.notes 에 경고가 박혀 있어야 함
+        if der.get("phase_reliable") is False:
+            notes = docs[from_path].get("meta", {}).get("notes", "") or ""
+            if "phase_reliable=false" not in notes:
+                warn(from_path, f"{cname}: phase_reliable=false 인데 meta.notes 에 경고 없음")
+        multi_component_count += 1
+
+if multi_component_count:
+    ok(f"다성계 orbit-bound 컴포넌트 {multi_component_count}개 확인")
 
 
 # ── 5. 행성 호스트 확인 ───────────────────────────────────────────────────────

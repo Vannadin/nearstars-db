@@ -37,22 +37,27 @@
       "derived": {
         "epoch_jd": 2433282.5,
         "epoch_label": "B1950.0",
-        "propagation_method": "linear",
+        "propagation_method": "kepler_thiele_innes",
         "distance_pc": 3.4964380683468383,
         "distance_km": 107888805625695.36,
-        "icrs_x_km": 61313176267288.62,
-        "icrs_y_km": -57864884773699.62,
-        "icrs_z_km": 67538313008167.48,
-        "icrs_vx_km_s": -13.916263999320513,
-        "icrs_vy_km_s": 106.51914559706478,
-        "icrs_vz_km_s": 0.3555366551863486,
-        "position_ulp_km": 0.01499651802920165,
-        "icrs_x_j2000_km": 61291218072649.375,
-        "icrs_y_j2000_km": -57696810344244.914,
-        "icrs_z_j2000_km": 67538874002344.96,
-        "icrs_vx_j2000_km_s": -13.916263999320513,
-        "icrs_vy_j2000_km_s": 106.51914559706478,
-        "icrs_vz_j2000_km_s": 0.3555366551863486
+        "icrs_x_km": 61310483445617.67,
+        "icrs_y_km": -57862589555684.12,
+        "icrs_z_km": 67538841370822.15,
+        "icrs_vx_km_s": -13.305809536771056,
+        "icrs_vy_km_s": 106.75742479569016,
+        "icrs_vz_km_s": -1.1614176107357848,
+        "position_ulp_km": 0.014996635349278564,
+        "icrs_x_j2000_km": 61288898640380.0,
+        "icrs_y_j2000_km": -57693973794885.95,
+        "icrs_z_j2000_km": 67538175497953.61,
+        "icrs_vx_j2000_km_s": -13.381256946422699,
+        "icrs_vy_j2000_km_s": 106.22152148714191,
+        "icrs_vz_j2000_km_s": -0.6610331465503184,
+        "orbit_id": "AB",
+        "orbit_role": "secondary",
+        "mass_ratio_q": 0.5042735042735043,
+        "barycenter_method": "mass_weighted_average(61 Cygni A,61 Cygni B)",
+        "phase_reliable": false
       },
       "principia": {
         "gravitational_parameter_km3_s2": null,
@@ -99,7 +104,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Binary orbit AB flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
   },
   "binary_orbit_ref": "61_cygni_a.json"
 }
