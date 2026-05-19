@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3400,
         "spectype": "M3V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.257,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.014
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.271,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.014499999999999999
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -6.714244048485266
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 34107097084.626,
-        "mean_radius_km": 188534.7
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -113,39 +93,16 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 3980799339.327,
-        "eccentricity": 0.223,
+        "semi_major_axis_m": 3976311403.206,
+        "eccentricity": 0.0,
         "inclination_deg": 87.43,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 163.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 9.197188e+24,
+        "mass_kg": 8.16220574e+24,
         "mass_type": "Mass",
-        "radius_m": 7307537.0
-      },
-      "curated": {
-        "pl_name": "LTT 1445 A c",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.02661,
-          "eccentricity": 0.223,
-          "inclination_deg": 87.43,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 163.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 1.54,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.195,
-          "radius_rearth": 1.147,
-          "uncertainty_rearth": 0.055,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
+        "radius_m": 7005551.6
       }
     },
     {
@@ -190,39 +147,16 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 5699678873.67,
-        "eccentricity": 0.18,
+        "semi_major_axis_m": 5696686916.2560005,
+        "eccentricity": 0.0,
         "inclination_deg": 89.53,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 244.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.6304106000000001e+25,
+        "mass_kg": 1.632381426e+25,
         "mass_type": "Mass",
-        "radius_m": 8537140.0
-      },
-      "curated": {
-        "pl_name": "LTT 1445 A b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.0381,
-          "eccentricity": 0.18,
-          "inclination_deg": 89.53,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 244.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 2.73,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.24,
-          "radius_rearth": 1.34,
-          "uncertainty_rearth": 0.11,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
+        "radius_m": 8533954.5
       }
     }
   ],

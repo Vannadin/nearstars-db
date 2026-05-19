@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3400,
         "spectype": "M3V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.2923,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.0067
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.3155,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.0062
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -0.6556358978690806
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 38791846217.261,
-        "mean_radius_km": 219493.4
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -117,35 +97,12 @@
         "eccentricity": 0.031,
         "inclination_deg": 88.08,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 192.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 2.747212e+24,
+        "mass_kg": 2.657629e+24,
         "mass_type": "Mass",
-        "radius_m": 5332527.0
-      },
-      "curated": {
-        "pl_name": "L 98-59 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.0223,
-          "eccentricity": 0.031,
-          "inclination_deg": 88.08,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 192.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 0.46,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.11,
-          "radius_rearth": 0.837,
-          "uncertainty_rearth": 0.019,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
+        "radius_m": 5334438.300000001
       }
     },
     {
@@ -194,35 +151,12 @@
         "eccentricity": 0.002,
         "inclination_deg": 88.88,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 261.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.19444e+25,
+        "mass_kg": 1.195813606e+25,
         "mass_type": "Mass",
-        "radius_m": 8467059.0
-      },
-      "curated": {
-        "pl_name": "L 98-59 c",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.0309,
-          "eccentricity": 0.002,
-          "inclination_deg": 88.88,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 261.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 2.0,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.13,
-          "radius_rearth": 1.329,
-          "uncertainty_rearth": 0.029,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
+        "radius_m": 8469607.4
       }
     },
     {
@@ -271,35 +205,12 @@
         "eccentricity": 0.006,
         "inclination_deg": 88.44,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 180.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 9.794408e+24,
+        "mass_kg": 9.87025494e+24,
         "mass_type": "Mass",
-        "radius_m": 10365617.0
-      },
-      "curated": {
-        "pl_name": "L 98-59 d",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.0494,
-          "eccentricity": 0.006,
-          "inclination_deg": 88.44,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 180.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 1.64,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.07,
-          "radius_rearth": 1.627,
-          "uncertainty_rearth": 0.041,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
+        "radius_m": 10368802.5
       }
     },
     {
@@ -335,34 +246,12 @@
         "eccentricity": 0.012,
         "inclination_deg": 80.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 165.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.6841604e+25,
         "mass_type": "Msini",
         "radius_m": 9492790.0
-      },
-      "curated": {
-        "pl_name": "L 98-59 e",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.0712,
-          "eccentricity": 0.012,
-          "inclination_deg": 80.0,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 165.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 2.82,
-          "mass_type": "Msini",
-          "uncertainty_mearth": 0.19,
-          "radius_rearth": 1.49,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     },
     {
@@ -398,34 +287,12 @@
         "eccentricity": 0.044,
         "inclination_deg": 74.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 4.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.672216e+25,
         "mass_type": "Msini",
         "radius_m": 9429080.0
-      },
-      "curated": {
-        "pl_name": "L 98-59 f",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.1052,
-          "eccentricity": 0.044,
-          "inclination_deg": 74.0,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 4.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 2.8,
-          "mass_type": "Msini",
-          "uncertainty_mearth": 0.3,
-          "radius_rearth": 1.48,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

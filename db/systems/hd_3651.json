@@ -21,25 +21,25 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5182,
         "spectype": "K0.5V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.799,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true
-          }
-        ],
+        "mass_measurements": [],
         "radius_measurements": [
           {
-            "value_rsun": 0.871954,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
+            "value_rsun": 0.9232,
+            "uncertainty_rsun": null,
+            "method": "interferometry",
+            "reference": "2009ApJ...694.1085V",
             "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.0171
+            "bibcode": "2009ApJ...694.1085V",
+            "recommended": true
+          },
+          {
+            "value_rsun": 0.8002,
+            "uncertainty_rsun": null,
+            "method": "interferometry",
+            "reference": "2009ApJ...694.1085V",
+            "doi": null,
+            "bibcode": "2009ApJ...694.1085V",
+            "recommended": false
           }
         ]
       },
@@ -64,8 +64,8 @@
         "icrs_vz_j2000_km_s": -30.123699203967774
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 106037239574.382,
-        "mean_radius_km": 606618.4
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": 642270.2
       }
     }
   ],
@@ -103,34 +103,12 @@
         "eccentricity": 0.645,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 243.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": 2453932.2,
+        "orbital_epoch_jd": null,
         "mass_kg": 4.3277690632799995e+26,
         "mass_type": "Msini",
         "radius_m": 64347100.0
-      },
-      "curated": {
-        "pl_name": "HD 3651 b",
-        "orbital": {
-          "epoch_jd": 2453932.2,
-          "semi_major_axis_au": 0.295,
-          "eccentricity": 0.645,
-          "inclination_deg": null,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 243.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 72.46524,
-          "mass_type": "Msini",
-          "uncertainty_mearth": 3.49613,
-          "radius_rearth": 10.1,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],
@@ -161,6 +139,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "2009ApJ...694.1085V",
+      "doi": null,
+      "bibcode": "2009ApJ...694.1085V",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 3651 radius (interferometry)"
       ]
     }
   ],

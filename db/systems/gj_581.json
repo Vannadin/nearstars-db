@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3534,
         "spectype": "M3V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.295,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.01
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.302,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.005
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -1.5679892463809018
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 39150169805.31,
-        "mean_radius_km": 210101.4
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -104,34 +84,12 @@
         "eccentricity": 0.012,
         "inclination_deg": 47.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 226.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": 2454716.8,
+        "orbital_epoch_jd": null,
         "mass_kg": 1.4811056000000001e+25,
         "mass_type": "Mass",
         "radius_m": 8791980.0
-      },
-      "curated": {
-        "pl_name": "GJ 581 e",
-        "orbital": {
-          "epoch_jd": 2454716.8,
-          "semi_major_axis_au": 0.02799,
-          "eccentricity": 0.012,
-          "inclination_deg": 47.0,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 226.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 2.48,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.5599999999999999,
-          "radius_rearth": 1.38,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     },
     {
@@ -167,34 +125,12 @@
         "eccentricity": 0.0342,
         "inclination_deg": 47.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 54.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": 2454751.76,
+        "orbital_epoch_jd": null,
         "mass_kg": 1.224301e+26,
         "mass_type": "Mass",
         "radius_m": 30517090.0
-      },
-      "curated": {
-        "pl_name": "GJ 581 b",
-        "orbital": {
-          "epoch_jd": 2454751.76,
-          "semi_major_axis_au": 0.0399,
-          "eccentricity": 0.0342,
-          "inclination_deg": 47.0,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 54.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 20.5,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 4.85,
-          "radius_rearth": 4.79,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     },
     {
@@ -230,34 +166,12 @@
         "eccentricity": 0.032,
         "inclination_deg": 47.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 16.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": 2454759.2,
+        "orbital_epoch_jd": null,
         "mass_kg": 4.0670682e+25,
         "mass_type": "Mass",
         "radius_m": 15927500.0
-      },
-      "curated": {
-        "pl_name": "GJ 581 c",
-        "orbital": {
-          "epoch_jd": 2454759.2,
-          "semi_major_axis_au": 0.0718,
-          "eccentricity": 0.032,
-          "inclination_deg": 47.0,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 16.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 6.81,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 0.6849999999999999,
-          "radius_rearth": 2.5,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

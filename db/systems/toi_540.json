@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3104,
         "spectype": null,
-        "mass_measurements": [
-          {
-            "value_msun": 0.159,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.014
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.1895,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.0079
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -11.757720367256713
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 21101277962.862,
-        "mean_radius_km": 131835.1
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -110,28 +90,6 @@
         "mass_kg": 4.0252628000000006e+24,
         "mass_type": "M-R relationship",
         "radius_m": 5753013.0
-      },
-      "curated": {
-        "pl_name": "TOI-540 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.01223,
-          "eccentricity": 0.0,
-          "inclination_deg": 86.8,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 0.674,
-          "mass_type": "M-R relationship",
-          "radius_rearth": 0.903,
-          "uncertainty_rearth": 0.052,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

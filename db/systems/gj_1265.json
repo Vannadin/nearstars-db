@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3256,
         "spectype": "dM4.5",
-        "mass_measurements": [
-          {
-            "value_msun": 0.178,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.018
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.192,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.007
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -7.232602868094373
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 23622814323.204,
-        "mean_radius_km": 133574.4
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -104,34 +84,12 @@
         "eccentricity": 0.04,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 282.0,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 4.419428e+25,
         "mass_type": "Msini",
         "radius_m": 16755730.0
-      },
-      "curated": {
-        "pl_name": "GJ 1265 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.026,
-          "eccentricity": 0.04,
-          "inclination_deg": null,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 282.0,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 7.4,
-          "mass_type": "Msini",
-          "uncertainty_mearth": 0.5,
-          "radius_rearth": 2.63,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

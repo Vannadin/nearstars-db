@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2975,
         "spectype": "M4.5Ve",
-        "mass_measurements": [
-          {
-            "value_msun": 0.18,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.03
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.19,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.01
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -22.48196152330705
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 23888239203.24,
-        "mean_radius_km": 132183.0
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -110,28 +90,6 @@
         "mass_kg": 1.7737434000000003e+25,
         "mass_type": "Msini",
         "radius_m": 9747630.0
-      },
-      "curated": {
-        "pl_name": "GJ 4274 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.0153,
-          "eccentricity": null,
-          "inclination_deg": null,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 2.97,
-          "mass_type": "Msini",
-          "uncertainty_mearth": 0.52,
-          "radius_rearth": 1.53,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     },
     {
@@ -173,28 +131,6 @@
         "mass_kg": 5.0106758e+25,
         "mass_type": "Msini",
         "radius_m": 18029930.0
-      },
-      "curated": {
-        "pl_name": "GJ 4274 c",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.186,
-          "eccentricity": null,
-          "inclination_deg": null,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 8.39,
-          "mass_type": "Msini",
-          "uncertainty_mearth": 1.625,
-          "radius_rearth": 2.83,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

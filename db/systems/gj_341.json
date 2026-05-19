@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3631,
         "spectype": "M0V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.48,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.03
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.5066,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.01705
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -29.910608343164775
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 63701971208.64,
-        "mean_radius_km": 352441.6
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -110,28 +90,6 @@
         "mass_kg": 2.38888e+25,
         "mass_type": "Mass",
         "radius_m": 5606480.0
-      },
-      "curated": {
-        "pl_name": "GJ 341 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": null,
-          "eccentricity": 0.0,
-          "inclination_deg": 89.24,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 4.0,
-          "mass_type": "Mass",
-          "radius_rearth": 0.88,
-          "uncertainty_rearth": 0.05,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5180,
         "spectype": "K2V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.82,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.02
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.759106,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.011816
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": 0.3143050372590638
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 108824200814.76,
-        "mean_radius_km": 528110.0
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -104,34 +84,12 @@
         "eccentricity": 0.07,
         "inclination_deg": 78.81,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": -19.15,
+        "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": 2460054.0,
+        "orbital_epoch_jd": null,
         "mass_kg": 1.252768976108364e+27,
         "mass_type": "Mass",
         "radius_m": 89831100.0
-      },
-      "curated": {
-        "pl_name": "eps Eri b",
-        "orbital": {
-          "epoch_jd": 2460054.0,
-          "semi_major_axis_au": 3.53,
-          "eccentricity": 0.07,
-          "inclination_deg": 78.81,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": -19.15,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 209.76674862,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 33.371982735,
-          "radius_rearth": 14.1,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

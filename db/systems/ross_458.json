@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3900,
         "spectype": "M0V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.556419,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.020159
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.562566,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.016511
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": -4.425132957549619
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 73843723162.376,
-        "mean_radius_km": 391377.2
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -110,27 +90,6 @@
         "mass_kg": 1.1388865956e+28,
         "mass_type": "Mass",
         "radius_m": 89265673.75
-      },
-      "curated": {
-        "pl_name": "Ross 458 c",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 1100.0,
-          "eccentricity": null,
-          "inclination_deg": null,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 1906.98,
-          "mass_type": "Mass",
-          "radius_rearth": 14.01125,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

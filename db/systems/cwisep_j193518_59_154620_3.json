@@ -21,17 +21,7 @@
         "vmag_source": "no_gaia_id",
         "teff_k": 482,
         "spectype": "Y",
-        "mass_measurements": [
-          {
-            "value_msun": 0.024,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.013
-          }
-        ],
+        "mass_measurements": [],
         "radius_measurements": []
       },
       "derived": {
@@ -55,7 +45,7 @@
         "icrs_vz_j2000_km_s": 12.867394245361485
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 3185098560.432,
+        "gravitational_parameter_km3_s2": null,
         "mean_radius_km": null
       }
     }
@@ -100,28 +90,6 @@
         "mass_kg": 2.94210895904237e+28,
         "mass_type": "Mass",
         "radius_m": 77726200.0
-      },
-      "curated": {
-        "pl_name": "CWISEP J193518.59-154620.3 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 2.48,
-          "eccentricity": null,
-          "inclination_deg": null,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 4926.3403085,
-          "mass_type": "Mass",
-          "uncertainty_mearth": 2701.5414595,
-          "radius_rearth": 12.2,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],

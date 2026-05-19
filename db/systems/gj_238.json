@@ -21,28 +21,8 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3395,
         "spectype": "M2.5V",
-        "mass_measurements": [
-          {
-            "value_msun": 0.4193,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_msun": 0.009649999999999999
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 0.4314,
-            "method": "evolutionary_model",
-            "reference": "NASA Exoplanet Archive pscomppars (combined parameters)",
-            "bibcode": null,
-            "doi": null,
-            "recommended": true,
-            "uncertainty_rsun": 0.0073
-          }
-        ]
+        "mass_measurements": [],
+        "radius_measurements": []
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -65,8 +45,8 @@
         "icrs_vz_j2000_km_s": 7.5961020908352985
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 55646326099.547,
-        "mean_radius_km": 300125.0
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -110,28 +90,6 @@
         "mass_kg": 7.524972000000001e+23,
         "mass_type": "M-R relationship",
         "radius_m": 3605985.9999999995
-      },
-      "curated": {
-        "pl_name": "GJ 238 b",
-        "orbital": {
-          "epoch_jd": null,
-          "semi_major_axis_au": 0.02123,
-          "eccentricity": null,
-          "inclination_deg": 89.99,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 0.126,
-          "mass_type": "M-R relationship",
-          "radius_rearth": 0.566,
-          "uncertainty_rearth": 0.014,
-          "source": "NASA Exoplanet Archive pscomppars",
-          "doi": null
-        }
       }
     }
   ],
