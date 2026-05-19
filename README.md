@@ -196,6 +196,6 @@ No other external dependencies. All catalog queries use standard `urllib` over T
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+CC-BY-NC-SA-4.0 — see [LICENSE](LICENSE).
 
 Third-party data attributions: see [NOTICE](NOTICE).

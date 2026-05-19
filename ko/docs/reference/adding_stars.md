@@ -59,6 +59,7 @@ db/target_list.json
 | `gaia_source_ids` | Gaia DR3 `source_id` — [Gaia Archive](https://gea.esac.esa.int/archive/) 또는 SIMBAD에서 조회. 구성 요소 순서와 동일하게 ID를 하나씩 입력. 없으면 `null` 사용. |
 | `hip_ids` | 알고 있는 경우 Hipparcos ID — 선택 사항, 파이프라인에서 사용하지 않음 |
 | `binary` | `db/binary_orbits.json`에 상호 궤도가 있는 시스템이면 `true` |
+| `stellarium_ids` | `fetch_stellarium_ids.py`가 _자동으로 채움_. `{컴포넌트 이름 → Stellarium Web skysource_id}` 형태. 수동 편집 불필요. |
 
 쌍성계의 경우 구성 요소를 모두 나열합니다.
 
@@ -156,6 +157,7 @@ python3 scripts/pipeline/fetch_astrometry.py
 python3 scripts/pipeline/fetch_photometry.py
 python3 scripts/pipeline/fetch_stellar_props.py
 python3 scripts/pipeline/fetch_planets.py
+python3 scripts/pipeline/fetch_stellarium_ids.py
 python3 scripts/pipeline/build_systems.py
 python3 scripts/pipeline/validate.py
 python3 scripts/pipeline/build_site.py
@@ -167,7 +169,7 @@ python3 scripts/pipeline/build_site.py
 ./run_pipeline.sh
 ```
 
-1~4단계(네 개의 fetch 스크립트)는 독립적으로 실행되며 어떤 순서로도 실행할 수 있습니다.
+위 블록의 다섯 개 fetch 스크립트(1~5단계)는 독립적으로 실행되며 어떤 순서로도, 또는 병렬로 실행할 수 있습니다.
 
 ---
 
@@ -203,11 +205,10 @@ python3 scripts/pipeline/build_site.py
 | `fetch_photometry.py` | Gaia G+BP-RP → V 등급 변환. 밝은 별은 하드코딩된 Hipparcos V 사용 |
 | `fetch_stellar_props.py` | SIMBAD. spectype, Teff, mesDiameter → R☉. 질량은 `stellar_props_curated.json`에서 가져옴 |
 | `fetch_planets.py` | NASA Exoplanet Archive TAP → 행성 궤도 및 물리적 특성 |
+| `fetch_stellarium_ids.py` | Stellarium Web API → 컴포넌트별 skysource ID 조회 (idempotent. 이미 채워진 항목은 건너뜀) |
 | `build_systems.py` | 모든 raw + curated 파일 병합 → B1950 + J2000 에포크 전파 → systems/*.json |
 | `validate.py` | 필수 필드, 에포크 일관성, vmag_v 존재 여부 확인 |
 | `build_site.py` | systems/*.json → docs/data.json |
-
-2~5단계(네 개의 fetch 스크립트)는 독립적으로 실행되며 어떤 순서로도 또는 병렬로 실행할 수 있습니다.
 
 ## 외부 API
 

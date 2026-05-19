@@ -8,7 +8,7 @@
 
 | Item | Detail |
 |------|--------|
-| Mod name | TBD (candidates: `NearStars`, `LocalBubble`) |
+| Mod name | NearStars |
 | KSP version | 1.12.x |
 | License | CC-BY-NC-SA-4.0 (matching Sol) |
 | Type | Dual-compatible addon — works with Sol **or** RSS; primary conventions follow Sol |
@@ -300,7 +300,7 @@ All orbital parameters and physical constants must come from real observational 
 
 ## 10. Open Decisions
 
-- [ ] Final mod name
+- [x] Final mod name — settled as `NearStars`
 - [ ] Pilot system selection (Proxima Centauri recommended)
 - [ ] Inter-stellar distance scaling strategy — real distances are physically impossible in KSP; symbolic compression required. Must be consistent across Sol stock, Sol quarter, and RSS 1:1 scales. Kopernicus hard limit: ~50 ly (see §3.1).
 - [x] macOS texture format compatibility strategy — Windows-only mod; BC5/BC7/BC4 DDS usable without restriction

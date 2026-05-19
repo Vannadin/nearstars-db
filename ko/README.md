@@ -196,6 +196,6 @@ pip install PyAstronomy
 
 ## 라이선스
 
-MIT — [LICENSE](LICENSE) 참조.
+CC-BY-NC-SA-4.0 — [LICENSE](LICENSE) 참조.
 
 서드파티 데이터 저작권 표시: [NOTICE](NOTICE) 참조.

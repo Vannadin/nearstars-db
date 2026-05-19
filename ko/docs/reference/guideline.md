@@ -8,7 +8,7 @@
 
 | 항목 | 내용 |
 |------|------|
-| 모드명 | 미정 (후보: `NearStars`, `LocalBubble`) |
+| 모드명 | NearStars |
 | KSP 버전 | 1.12.x |
 | 라이선스 | CC-BY-NC-SA-4.0 (Sol과 동일) |
 | 유형 | 이중 호환 애드온 — Sol **또는** RSS와 작동; 기본 컨벤션은 Sol을 따름 |
@@ -298,7 +298,7 @@ Sol-Configs **및** RSS-Origin과 충돌하지 않아야 합니다. NearStars는
 
 ## 10. 미결 결정 사항
 
-- [ ] 최종 모드명
+- [x] 최종 모드명 — `NearStars`로 확정
 - [ ] 파일럿 시스템 선택 (Proxima Centauri 권장)
 - [ ] 항성 간 거리 스케일링 전략 — 실제 거리는 KSP에서 물리적으로 불가능하므로 상징적 압축이 필요합니다. Sol 기본, Sol 1/4, RSS 1:1 스케일 전반에 걸쳐 일관성을 유지해야 합니다. Kopernicus 하드 제한: ~50 ly (§3.1 참고).
 - [x] macOS 텍스처 포맷 호환성 전략 — Windows 전용 모드이므로 BC5/BC7/BC4 DDS를 제한 없이 사용 가능

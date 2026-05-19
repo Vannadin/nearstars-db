@@ -59,6 +59,7 @@ Fields:
 | `gaia_source_ids` | Gaia DR3 `source_id` — look up at [Gaia Archive](https://gea.esac.esa.int/archive/) or SIMBAD. One ID per component, same order as `components`. Use `null` if unavailable. |
 | `hip_ids` | Hipparcos ID if known — optional, not used by pipeline |
 | `binary` | `true` if this system has a mutual orbit in `db/binary_orbits.json` |
+| `stellarium_ids` | _Auto-populated_ by `fetch_stellarium_ids.py`. `{component_name → Stellarium Web skysource_id}`. Don't edit manually. |
 
 For binary systems, list both (or all) components:
 
@@ -159,6 +160,7 @@ python3 scripts/pipeline/fetch_astrometry.py
 python3 scripts/pipeline/fetch_photometry.py
 python3 scripts/pipeline/fetch_stellar_props.py
 python3 scripts/pipeline/fetch_planets.py
+python3 scripts/pipeline/fetch_stellarium_ids.py
 python3 scripts/pipeline/build_systems.py
 python3 scripts/pipeline/validate.py
 python3 scripts/pipeline/build_site.py
@@ -170,7 +172,7 @@ Or use the convenience script:
 ./run_pipeline.sh
 ```
 
-Steps 1–4 (the four fetch scripts) are independent and can run in any order.
+The five fetch scripts (steps 1–5 in the block above) are independent and can run in any order or in parallel.
 
 ---
 
@@ -206,11 +208,10 @@ After `build_site.py`:
 | `fetch_photometry.py` | Gaia G+BP-RP → V mag conversion; bright stars use hardcoded Hipparcos V |
 | `fetch_stellar_props.py` | SIMBAD: spectype, Teff, mesDiameter → R☉; mass from `stellar_props_curated.json` |
 | `fetch_planets.py` | NASA Exoplanet Archive TAP → planet orbits and physical properties |
+| `fetch_stellarium_ids.py` | Stellarium Web API → per-component skysource ID lookup (idempotent; skips populated entries) |
 | `build_systems.py` | Merges all raw + curated files → B1950 + J2000 epoch propagation → systems/*.json |
 | `validate.py` | Checks required fields, epoch consistency, vmag_v presence |
 | `build_site.py` | systems/*.json → docs/data.json |
-
-Steps 2–5 (the four fetch scripts) are independent and can run in any order or in parallel.
 
 ## External APIs
 
