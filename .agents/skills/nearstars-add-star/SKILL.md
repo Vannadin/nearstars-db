@@ -132,14 +132,33 @@ NASA Archive 에 등재된 모든 행성에 대해 per-paper bibcode 출처가
   DACE 확인 (`https://dace.unige.ch/exoplanets/?planet=<name>`)
 - 트랜짓 행성은 TEPCat 자동 매칭에 의존 (별도 작업 불필요)
 
-Escalate to **Phase 2** only if the user explicitly says so ("정밀 큐레이션",
-"Phase 2", "이 시스템 인게임 구현하자"). Phase 2 walks all five priority
-sources from the methodology and accumulates every published measurement
-— but requires a `build_planet_derived` schema extension first (현재
-single-dict 만 지원).
+### Phase 2 트리거
+
+Phase 2 격상은 **시스템 단위** 의 명시적 사용자 요청에만 진입.
+
+| 입력 신호 | 판단 |
+|---|---|
+| "Phase 2 로 격상해줘", "정밀 큐레이션 부탁해" | 진입 |
+| "이 시스템 인게임에 구현하자", "X 풀 큐레이션" | 진입 |
+| "이 별 더 깊이 봐줘", "자료 더 모아줘" | 진입 전 확인 — "Phase 2 (인게임 구현 수준) 격상으로 이해해도 될까요?" |
+| 사용자가 specific paper 1개를 언급 | Phase 1 범위 — 해당 paper 만 curated 에 반영 |
+| 기본 별 추가 요청 | Phase 1. Phase 2 옵션을 사용자에게 묻지 말 것 |
+
+### Phase 2 진입 시 필수 산출물 (CLAUDE.md §7)
+
+Phase 2 는 시스템당 1-2시간 작업이라 작업 자체가 non-trivial. 코드 작성
+전에 다음 두 파일을 작업 디렉토리에 생성.
+
+- `checklist.md` — 행성별 작업 항목을 체크박스로. 완료 시 tick.
+- `context-notes.md` — paper 선택, tiebreaker, method tier 충돌 해소 등
+  결정 사유. 작업 중 계속 append.
+
+`build_planet_derived` 의 array 형식 지원도 Phase 2 진입 시 함께 처리
+(현재 single-dict 만 읽음). 자세한 절차와 schema 확장:
+[references/planet-curation.md §Phase 2](references/planet-curation.md).
 
 Details, manual ADS workarounds, and the curated.json schema:
-[references/planet-curation.md](references/planet-curation.md)
+[references/planet-curation.md](references/planet-curation.md).
 
 ---
 
@@ -168,7 +187,7 @@ If Step 3 의 batch 경로를 사용했다면 `fetch_planets_ps.py` +
 `build_systems.py` 가 그 결과를 흡수합니다 (curated > tepcat > nasa_archive
 우선순위).
 
-`validate.py` 는 다음을 검증합니다:
+`validate.py` 검증 항목.
 - raw 파일 스키마 (astrometry/photometry/stellar_props)
 - `binary_orbits.json` 스키마 (§4b/4c)
 - `stellar_props_curated.json` 스키마 — method 화이트리스트, recommended:true 최대 1개 (§4d)
@@ -252,6 +271,34 @@ from the user's memory store, not by file path.
 If a policy conflict arises (e.g. two binary_orbit measurements 30%+
 apart, or a new method tier not in the hierarchy), surface it to the
 user rather than silently picking.
+
+---
+
+## Autonomy guards (자율 ≠ 부주의)
+
+자율 진행이 기본 정책이지만 (`[[feedback-autonomy]]`), 다음 동작은
+실행 전에 명시적 확인 또는 Read-first 가 필요합니다.
+
+- **기존 entry 덮어쓰기 전 Read 필수**. `stellar_props_curated.json`,
+  `planets_curated.json`, `binary_orbits.json` 모두 이전 세션에서
+  수동 큐레이션된 결과가 있을 수 있음. 새 paper 가 더 정밀해 보여도
+  먼저 기존 entry 의 method/bibcode 확인 후 교체 가치 판단.
+
+- **PRESERVED_HOSTS 의 명시적 보호**. α Cen A/B (Pourbaix 2016
+  binary_orbit), Barnard's star (Mann 2015 spectroscopic_calibration)
+  는 수동 검증된 reference. `build_curated_from_ps.py` 가 하드코딩으로
+  스킵하지만 수동 편집 시에도 별도 확인 없이 덮어쓰지 말 것.
+
+- **기존 mass/radius_measurements 존재 시 추가만**. `build_curated_from_ps.py`
+  는 "이미 measurement 가 있으면 스킵" 정책 — 동일 정책을 수동 편집에도
+  적용. 기존 entry 제거 의도면 사용자에게 확인.
+
+- **삭제는 항상 확인**. dead alias 정리, 폐기 paper 제거, 별 retract
+  처리 등은 한 줄 질문으로 사용자 의도 확정 후 진행.
+
+- **스킬 scope 밖 행동**. cfg 생성, GitHub push, 외부 시스템 호출 등은
+  명시 요청 없으면 멈춤. NearStars DB 채우기 외 작업은 별도 스킬 또는
+  사용자 직접 요청.
 
 ---
 
