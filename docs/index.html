@@ -308,10 +308,40 @@ function sMassLabel() { return sMassUnit === 'ton' ? 't' : 'M☉'; }
 function pRadLabel()  { return pRadUnit  === 'km' ? 'km' : 'R⊕'; }
 function pMassLabel() { return pMassUnit === 'ton' ? 't' : 'M⊕'; }
 
-// ── DSS image helpers ────────────────────────────────────────────────────────
+// ── Star survey image helpers ────────────────────────────────────────────────
+// Fallback chain: Legacy DR10 → Pan-STARRS PS1 → DSS (POSS2 blue/red/POSS1)
+// Each survey: native epoch, declination coverage, URL builder accepting (ra, dec, fovArcmin)
 
-const DSS_EPOCH    = 1993;   // POSS II blue approximate midpoint
-const DSS_SURVEYS  = ['poss2ukstu_blue', 'poss2ukstu_red', 'poss1_blue'];
+const STAR_SURVEYS = [
+  {
+    name: 'legacy',
+    label: 'Legacy DR10',
+    epoch: 2018,
+    decRange: [-30, 84],
+    url: (ra, dec, fovArcmin) => {
+      const sizePix  = 512;
+      const pixscale = (fovArcmin * 60) / sizePix;
+      return `https://www.legacysurvey.org/viewer/jpeg-cutout?ra=${ra.toFixed(6)}&dec=${dec.toFixed(6)}&size=${sizePix}&layer=ls-dr10&pixscale=${pixscale.toFixed(4)}`;
+    }
+  },
+  {
+    // Served via CDS Aladin hips2fits (PS1 fitscut.cgi requires 2-step file lookup, unusable in <img src>)
+    name: 'ps1',
+    label: 'Pan-STARRS PS1',
+    epoch: 2012,
+    decRange: [-30, 90],
+    url: (ra, dec, fovArcmin) => {
+      const fovDeg = fovArcmin / 60;
+      return `https://alasky.cds.unistra.fr/hips-image-services/hips2fits?hips=CDS%2FP%2FPanSTARRS%2FDR1%2Fcolor-i-r-g&ra=${ra.toFixed(6)}&dec=${dec.toFixed(6)}&fov=${fovDeg.toFixed(5)}&width=512&height=512&projection=TAN&format=jpg`;
+    }
+  },
+  { name: 'dss_b',  label: 'DSS POSS2 blue', epoch: 1993, decRange: [-90, 90],
+    url: (ra, dec, fov) => `https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_blue&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none` },
+  { name: 'dss_r',  label: 'DSS POSS2 red',  epoch: 1993, decRange: [-90, 90],
+    url: (ra, dec, fov) => `https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none` },
+  { name: 'dss_p1', label: 'DSS POSS1',      epoch: 1955, decRange: [-90, 90],
+    url: (ra, dec, fov) => `https://archive.stsci.edu/cgi-bin/dss_search?v=poss1_blue&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none` }
+];
 
 function safeId(name) { return name.replace(/[^a-z0-9]/gi, '_'); }
 
@@ -323,26 +353,37 @@ function propagateCoords(ra, dec, pmra, pmdec, fromYear, toYear) {
   };
 }
 
-function dssUrl(ra, dec, fov, survey) {
-  return `https://archive.stsci.edu/cgi-bin/dss_search?v=${survey}&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none`;
+function pickSurveys(dec) {
+  return STAR_SURVEYS.filter(s => dec >= s.decRange[0] && dec <= s.decRange[1]);
 }
 
-function dssNextSurvey(img) {
-  const cur = img.dataset.survey || DSS_SURVEYS[0];
-  const idx = DSS_SURVEYS.indexOf(cur);
-  if (idx < DSS_SURVEYS.length - 1) {
-    const next = DSS_SURVEYS[idx + 1];
-    img.dataset.survey = next;
-    img.src = dssUrl(parseFloat(img.dataset.ra), parseFloat(img.dataset.dec),
-                     img.dataset.fov || '5', next);
+function applySurveyUrl(img) {
+  const survey = STAR_SURVEYS.find(s => s.name === img.dataset.survey);
+  if (!survey) return;
+  const ra    = parseFloat(img.dataset.raOrig);
+  const dec   = parseFloat(img.dataset.decOrig);
+  const pmra  = parseFloat(img.dataset.pmra  || '0');
+  const pmdec = parseFloat(img.dataset.pmdec || '0');
+  const fov   = parseFloat(img.dataset.fov   || '5');
+  const c     = propagateCoords(ra, dec, pmra, pmdec, 2016, survey.epoch);
+  img.src     = survey.url(c.ra, c.dec, fov);
+  const cap = img.closest('.star-img-box')?.querySelector('.img-cap');
+  if (cap) cap.textContent = `${survey.label} · star at crosshair · epoch ${survey.epoch}`;
+}
+
+function nextSurvey(img) {
+  const list = (img.dataset.surveyList || '').split(',').filter(Boolean);
+  const idx  = list.indexOf(img.dataset.survey);
+  if (idx >= 0 && idx < list.length - 1) {
+    img.dataset.survey = list[idx + 1];
+    applySurveyUrl(img);
   } else {
-    // all surveys exhausted
     img.style.display = 'none';
-    const fb = img.parentElement.querySelector('.img-no') || document.createElement('div');
-    fb.className = 'img-no';
+    let fb = img.parentElement.querySelector('.img-no');
+    if (!fb) { fb = document.createElement('div'); fb.className = 'img-no'; img.parentElement.appendChild(fb); }
     fb.textContent = lang === 'ko' ? '이미지 없음' : 'No image';
-    img.parentElement.appendChild(fb);
-    img.parentElement.querySelector('.reticle').style.display = 'none';
+    const ret = img.parentElement.querySelector('.reticle');
+    if (ret) ret.style.display = 'none';
   }
 }
 
@@ -352,10 +393,8 @@ document.addEventListener('click', e => {
   if (!btn) return;
   const img = document.getElementById(btn.dataset.target);
   if (!img) return;
-  const fov = btn.dataset.fov;
-  img.dataset.fov = fov;
-  img.src = dssUrl(parseFloat(img.dataset.ra), parseFloat(img.dataset.dec),
-                   fov, img.dataset.survey || DSS_SURVEYS[0]);
+  img.dataset.fov = btn.dataset.fov;
+  applySurveyUrl(img);
   btn.closest('.img-fov').querySelectorAll('.fov-btn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 });
@@ -526,22 +565,25 @@ function buildDetail(sys) {
     // Left: DSS image + color + astrometry
     h += '<div>';
 
-    // DSS telescope image — coords propagated to DSS epoch (~1993) to correct for proper motion
+    // Telescope image — fallback chain Legacy → PS1 → DSS, coords propagated per-survey epoch
     if (st.raw.ra_deg != null && st.raw.dec_deg != null) {
-      const dssC   = propagateCoords(st.raw.ra_deg, st.raw.dec_deg, st.raw.pmra_mas_yr, st.raw.pmdec_mas_yr, 2016, DSS_EPOCH);
-      const imgId  = `dss-${safeId(st.name)}`;
-      const simbad = `https://simbad.u-strasbg.fr/simbad/sim-id?Ident=${encodeURIComponent(st.name)}`;
+      const surveys = pickSurveys(st.raw.dec_deg);
+      const initial = surveys[0];
+      const c       = propagateCoords(st.raw.ra_deg, st.raw.dec_deg, st.raw.pmra_mas_yr, st.raw.pmdec_mas_yr, 2016, initial.epoch);
+      const imgId   = `dss-${safeId(st.name)}`;
+      const simbad  = `https://simbad.u-strasbg.fr/simbad/sim-id?Ident=${encodeURIComponent(st.name)}`;
       h += `<div class="star-img-box">
         <div class="dss-wrap">
           <img class="star-img" id="${imgId}"
-            data-ra="${dssC.ra.toFixed(6)}" data-dec="${dssC.dec.toFixed(6)}"
-            data-fov="5" data-survey="${DSS_SURVEYS[0]}"
-            src="${dssUrl(dssC.ra, dssC.dec, 5, DSS_SURVEYS[0])}"
-            alt="${st.name} DSS" loading="lazy"
-            onerror="dssNextSurvey(this)">
+            data-ra-orig="${st.raw.ra_deg.toFixed(6)}" data-dec-orig="${st.raw.dec_deg.toFixed(6)}"
+            data-pmra="${(st.raw.pmra_mas_yr || 0).toFixed(3)}" data-pmdec="${(st.raw.pmdec_mas_yr || 0).toFixed(3)}"
+            data-fov="5" data-survey="${initial.name}" data-survey-list="${surveys.map(s => s.name).join(',')}"
+            src="${initial.url(c.ra, c.dec, 5)}"
+            alt="${st.name} ${initial.label}" loading="lazy"
+            onerror="nextSurvey(this)">
           <div class="reticle"><div class="reticle-ring"></div></div>
         </div>
-        <div class="img-cap">DSS · star at crosshair · epoch-corrected</div>
+        <div class="img-cap">${initial.label} · star at crosshair · epoch ${initial.epoch}</div>
         <div class="img-links">
           <div class="img-fov">
             <button class="fov-btn on" data-target="${imgId}" data-fov="5">5′</button>
