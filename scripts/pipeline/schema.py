@@ -205,6 +205,150 @@ def validate_binary_orbits(binary_orbits):
     return errors
 
 
+# ── stellar_props_curated.json 스키마 ────────────────────────────────────────
+# raw 와 달리 curated 는 부분 오버라이드를 허용하므로 top-level 필수 키 없음.
+# 각 measurement 의 method 라벨은 화이트리스트로 제한 (오타 방지).
+
+STELLAR_CURATED_TOPLEVEL_ALLOWED = {
+    "teff_k", "teff_bibcode", "spectype",
+    "spectype_bibcode", "spectype_reference",
+    "mass_measurements", "radius_measurements",
+}
+STELLAR_MEASUREMENT_BASE_REQUIRED = {"method", "recommended"}
+STELLAR_MEASUREMENT_OPTIONAL = {
+    "uncertainty_msun", "uncertainty_rsun",
+    "reference", "bibcode", "doi",
+    "value_msun", "value_rsun",  # value_* 는 별도 검증
+}
+# fetch_stellar_props.py 의 METHOD_PRIORITY 와 동기화 필요.
+STELLAR_ALLOWED_METHODS = {
+    "interferometry", "eclipsing_binary", "binary_orbit",
+    "sed_fitting", "spectroscopic", "evolutionary_model",
+    "spectroscopic_calibration", "asteroseismology",
+    "unverified",
+}
+
+
+def validate_stellar_props_curated(records):
+    """db/stellar_props_curated.json 검증."""
+    errors = []
+    for star, rec in records.items():
+        if not isinstance(rec, dict):
+            errors.append(f"stellar_props_curated[{star}]: dict 아님")
+            continue
+        unknown = set(rec.keys()) - STELLAR_CURATED_TOPLEVEL_ALLOWED
+        if unknown:
+            errors.append(f"stellar_props_curated[{star}]: 알 수 없는 키 {sorted(unknown)}")
+
+        for mk in ("mass_measurements", "radius_measurements"):
+            arr = rec.get(mk) or []
+            if not isinstance(arr, list):
+                errors.append(f"stellar_props_curated[{star}].{mk}: list 아님")
+                continue
+            n_recommended = 0
+            for i, m in enumerate(arr):
+                if not isinstance(m, dict):
+                    errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: dict 아님")
+                    continue
+                mkeys = set(m.keys())
+                has_value = any(k.startswith(MEASUREMENT_VALUE_PREFIXES) for k in mkeys)
+                if not has_value:
+                    errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: value_* 키 없음")
+                forbidden = [k for k in mkeys if k.startswith(MEASUREMENT_FORBIDDEN_PREFIX)]
+                if forbidden:
+                    errors.append(
+                        f"stellar_props_curated[{star}].{mk}[{i}]: 금지 prefix {forbidden} "
+                        f"(uncertainty_* 사용)"
+                    )
+                miss = STELLAR_MEASUREMENT_BASE_REQUIRED - mkeys
+                if miss:
+                    errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: 필수 키 누락 {sorted(miss)}")
+                method = m.get("method")
+                if method and method not in STELLAR_ALLOWED_METHODS:
+                    errors.append(
+                        f"stellar_props_curated[{star}].{mk}[{i}]: method '{method}' 미지원 "
+                        f"(허용: {sorted(STELLAR_ALLOWED_METHODS)})"
+                    )
+                if m.get("recommended") is True:
+                    n_recommended += 1
+                unk = mkeys - (STELLAR_MEASUREMENT_BASE_REQUIRED | STELLAR_MEASUREMENT_OPTIONAL)
+                if unk:
+                    errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: 알 수 없는 키 {sorted(unk)}")
+            if n_recommended > 1:
+                errors.append(
+                    f"stellar_props_curated[{star}].{mk}: recommended:true 가 {n_recommended}개 "
+                    f"(정확히 0 또는 1개)"
+                )
+    return errors
+
+
+# ── planets_curated.json 스키마 ──────────────────────────────────────────────
+# host_name → list of {pl_name, orbital{}, physical{}}. orbital/physical 은
+# 단일 dict (Phase 1). Phase 2 의 array 형식은 빌드 코드 확장 후 별도 처리.
+
+PLANET_CURATED_REQUIRED = {"pl_name"}
+PLANET_CURATED_OPTIONAL = {"orbital", "physical"}
+PLANET_ORBITAL_ALLOWED = {
+    "semi_major_axis_au", "eccentricity", "inclination_deg",
+    "argument_of_periapsis_deg", "longitude_of_ascending_node_deg",
+    "mean_anomaly_at_epoch_deg", "epoch_jd",
+    "source", "bibcode", "doi",
+}
+PLANET_PHYSICAL_ALLOWED = {
+    "mass_mearth", "true_mass_mearth", "uncertainty_mearth", "mass_type",
+    "radius_rearth", "uncertainty_rearth",
+    "source", "bibcode", "doi",
+}
+PLANET_PROVENANCE_KEYS = {"source", "bibcode", "doi"}
+
+
+def validate_planets_curated(records):
+    """db/planets_curated.json 검증.
+
+    각 행성의 orbital / physical 블록이 존재하면 최소 하나의 provenance
+    필드(source/bibcode/doi)를 요구. curated 엔트리의 출처 추적성 강제.
+    """
+    errors = []
+    for host, planets in records.items():
+        if not isinstance(planets, list):
+            errors.append(f"planets_curated[{host}]: list 아님 ({type(planets).__name__})")
+            continue
+        for i, pl in enumerate(planets):
+            if not isinstance(pl, dict):
+                errors.append(f"planets_curated[{host}][{i}]: dict 아님")
+                continue
+            pkeys = set(pl.keys())
+            miss = PLANET_CURATED_REQUIRED - pkeys
+            if miss:
+                errors.append(f"planets_curated[{host}][{i}]: 필수 키 누락 {sorted(miss)}")
+            unk = pkeys - (PLANET_CURATED_REQUIRED | PLANET_CURATED_OPTIONAL)
+            if unk:
+                errors.append(f"planets_curated[{host}][{i}]: 알 수 없는 키 {sorted(unk)}")
+
+            for block_name, allowed in (
+                ("orbital", PLANET_ORBITAL_ALLOWED),
+                ("physical", PLANET_PHYSICAL_ALLOWED),
+            ):
+                block = pl.get(block_name)
+                if block is None:
+                    continue
+                if not isinstance(block, dict):
+                    errors.append(
+                        f"planets_curated[{host}][{i}].{block_name}: dict 아님 "
+                        f"(Phase 2 array 형식은 build_systems.py 확장 후 지원)"
+                    )
+                    continue
+                bunk = set(block.keys()) - allowed
+                if bunk:
+                    errors.append(f"planets_curated[{host}][{i}].{block_name}: 알 수 없는 키 {sorted(bunk)}")
+                if not (PLANET_PROVENANCE_KEYS & set(block.keys())):
+                    errors.append(
+                        f"planets_curated[{host}][{i}].{block_name}: source/bibcode/doi 중 하나 필요 "
+                        f"(출처 추적성)"
+                    )
+    return errors
+
+
 def report_and_exit(errors, label):
     """에러가 있으면 stderr로 출력하고 비0 종료."""
     if not errors:

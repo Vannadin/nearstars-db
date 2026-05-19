@@ -5,7 +5,11 @@ BASE    = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file
 SYSTEMS = os.path.join(BASE, "db", "systems")
 DB      = os.path.join(BASE, "db")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from schema import validate_binary_orbits
+from schema import (
+    validate_binary_orbits,
+    validate_stellar_props_curated,
+    validate_planets_curated,
+)
 
 JD_B1950 = 2433282.5
 JD_J2000 = 2451545.0
@@ -196,6 +200,35 @@ for sys_name, entry in (binary_data or {}).items():
 
 if multi_component_count:
     ok(f"다성계 orbit-bound 컴포넌트 {multi_component_count}개 확인")
+
+
+# ── 4d. stellar_props_curated.json 스키마 ────────────────────────────────────
+print("\n── 4d. stellar_props_curated 스키마 ────────────────────────────────────")
+try:
+    with open(f"{DB}/stellar_props_curated.json") as f:
+        stellar_curated = json.load(f)
+    sc_errs = validate_stellar_props_curated(stellar_curated)
+    for e in sc_errs:
+        fail("(stellar_props_curated.json)", e)
+    if not sc_errs:
+        ok(f"stellar_props_curated.json 스키마 통과 ({len(stellar_curated)}개 호스트)")
+except FileNotFoundError:
+    warn("(stellar_props_curated.json)", "파일 없음")
+
+
+# ── 4e. planets_curated.json 스키마 ──────────────────────────────────────────
+print("\n── 4e. planets_curated 스키마 ───────────────────────────────────────────")
+try:
+    with open(f"{DB}/planets_curated.json") as f:
+        planets_curated = json.load(f)
+    pc_errs = validate_planets_curated(planets_curated)
+    for e in pc_errs:
+        fail("(planets_curated.json)", e)
+    if not pc_errs:
+        n_planets = sum(len(v) for v in planets_curated.values())
+        ok(f"planets_curated.json 스키마 통과 ({len(planets_curated)}호스트 / {n_planets}행성)")
+except FileNotFoundError:
+    warn("(planets_curated.json)", "파일 없음")
 
 
 # ── 5. 행성 호스트 확인 ───────────────────────────────────────────────────────
