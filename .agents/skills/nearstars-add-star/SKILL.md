@@ -81,29 +81,31 @@ It returns Gaia DR3 source_id (if any), SIMBAD canonical name, distance, V
 magnitude, and component flags. If SIMBAD returns nothing, the name is
 ambiguous — try alternate names or escalate to user.
 
-### Stellarium Web skysource ID 조회
+### Stellarium Web skysource ID 조회 — 자동
 
 `docs/index.html` 의 Stellarium 버튼은 데스크탑이 꺼져 있을 때 noctuasky API
 를 통해 별 이름을 `stellarium-web.org/skysource/<ID>` 의 ID 로 변환한다. 별
 추가 시점에 미리 조회해 두면 (a) 클릭이 즉시 동작하고 (b) noctuasky 가 다운돼도
 폴백이 가능하다.
 
-```bash
-# 새로 추가한 시스템만 처리 (이미 매핑된 별은 자동 스킵)
-python3 scripts/pipeline/fetch_stellarium_ids.py --new-only
+**`run_pipeline.sh` 가 매번 자동 실행한다** (step 5). 새 컴포넌트는 자동
+큐잉되고, 이미 매핑된 컴포넌트는 즉시 스킵되므로 추가 행동 불필요.
 
-# 특정 시스템만 (콤마 구분)
-python3 scripts/pipeline/fetch_stellarium_ids.py --only "GJ 412 A,Procyon"
+수동 실행이 필요한 경우 (디버깅, 특정 시스템만, 실패 재시도).
+```bash
+python3 scripts/pipeline/fetch_stellarium_ids.py                # 신규 컴포넌트만
+python3 scripts/pipeline/fetch_stellarium_ids.py --retry-failed # null 항목 재시도
+python3 scripts/pipeline/fetch_stellarium_ids.py --only "Procyon,GJ 412 A"
+python3 scripts/pipeline/fetch_stellarium_ids.py --dry-run      # 출력만, 미저장
 ```
 
-조회 절차.
+조회 절차 (헬퍼 내부).
 1. 컴포넌트 이름 직접 → noctuasky API
 2. 실패 시 SIMBAD ident 목록 (GJ, HIP, HD, Bayer designation 등) 을 차례로 시도
 3. 둘 다 실패면 `null` 로 저장 (런타임에 HTML 이 다시 노쿠아를 시도하므로 무해)
 
 결과는 `db/target_list.json` 의 해당 시스템에 `stellarium_ids: {comp: id}`
-필드로 in-place 저장된다. Step 2 의 target_list 편집과 묶어 진행해도 되고,
-add-star 작업 끝나고 `--new-only` 로 한 번에 처리해도 동일.
+필드로 in-place 저장된다.
 
 ---
 
