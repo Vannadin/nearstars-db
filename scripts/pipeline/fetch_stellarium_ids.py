@@ -30,6 +30,10 @@ SIMBAD = "https://simbad.u-strasbg.fr/simbad/sim-tap/sync"
 
 PREFIX_RE = re.compile(r"^(?:NAME|\*)\s+")
 WS_RE     = re.compile(r"\s+")
+# Numeric/coordinate-based catalogs: noctuasky가 names[0]로 주더라도 사람이
+# 인식하기 어렵고, short_name 이 더 직관적인 이름을 가리키는 경우가 많음.
+# (Gaia DR — Teegarden 사례, TYC — L 98-59 사례 등.)
+GENERIC_CATALOG_RE = re.compile(r"^(?:Gaia DR|TYC|2MASS|UCAC|SAO|NLTT|LSPM)\b")
 
 
 def noctuasky_lookup(name, timeout=5):
@@ -43,8 +47,16 @@ def noctuasky_lookup(name, timeout=5):
     names = d.get("names") or []
     if not names or names[0] in ("?", ""):
         return None
-    raw = names[0]
-    raw = PREFIX_RE.sub("", raw)
+    primary = names[0]
+    # names[0]이 generic numeric-catalog 형태 (Gaia DR, TYC, 2MASS 등) 면
+    # short_name 이 같은 카테고리에 속하지 않는 한 short_name 으로 교체.
+    # 이유:
+    #  (a) Gaia DR ID — Stellarium Web에서 다른 별을 가리키는 사례 (Teegarden)
+    #  (b) TYC/2MASS 등 — 동일 객체를 가리키긴 하지만 short_name 이 더 일관/직관적
+    short = d.get("short_name") or ""
+    if GENERIC_CATALOG_RE.match(primary) and short and not GENERIC_CATALOG_RE.match(short):
+        primary = short
+    raw = PREFIX_RE.sub("", primary)
     raw = WS_RE.sub("", raw)
     return raw or None
 

@@ -147,6 +147,7 @@ a.sl:hover{text-decoration:underline}
 .stl-btn{font-size:11px;color:#4a88b8;background:none;border:1px solid #1e3448;padding:2px 8px;border-radius:4px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
 .stl-btn:hover{background:#152030}
 .stl-btn.ok{color:#40c080;border-color:#1a4030}
+.stl-btn.web{color:#5a9fd4;border-color:#1e3c58;background:#0e1e2a}
 .stl-btn.err{color:#c07040;border-color:#402010}
 .img-no{width:180px;height:90px;display:flex;align-items:center;justify-content:center;color:#2a4050;font-size:12px;border:1px dashed #1e3048;border-radius:6px}
 </style>
@@ -1105,17 +1106,29 @@ async function openStellarium(btn, name, raDeg, decDeg, skyPrecomputed) {
         if (r.ok) {
           const d = await r.json();
           if (d.names?.length && d.names[0] !== '?') {
-            // Stellarium Web과 동일한 변환: "NAME Barnard's Star" → "Barnard'sStar"
-            skyId = d.names[0].replace(/^NAME\s+/, '').replace(/\s+/g, '');
+            // names[0]이 generic catalog ID (Gaia DR, TYC, 2MASS 등) 이면 short_name 우선.
+            // Gaia DR은 다른 별을 가리킬 수 있고, 나머지는 short_name이 더 직관적.
+            const genericRe = /^(?:Gaia DR|TYC|2MASS|UCAC|SAO|NLTT|LSPM)\b/;
+            let primary = d.names[0];
+            if (genericRe.test(primary) && d.short_name && !genericRe.test(d.short_name)) {
+              primary = d.short_name;
+            }
+            skyId = primary.replace(/^NAME\s+/, '').replace(/^[*]\s+/, '').replace(/\s+/g, '');
           }
         }
       } catch {}
       skyId = skyId || name.replace(/\s+/g, '');
     }
     webWin.location.href = 'https://stellarium-web.org/skysource/' + skyId;
-    btn.textContent = '☄ Web (' + name + ')';
-    btn.classList.add('err');
-    setTimeout(() => { btn.textContent = label; btn.classList.remove('err'); btn.disabled = false; }, 4000);
+    if (skyPrecomputed) {
+      btn.textContent = '☄ Stellarium Web ✓';
+      btn.classList.add('web');
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('web'); btn.disabled = false; }, 2500);
+    } else {
+      btn.textContent = '☄ Web (' + name + ')';
+      btn.classList.add('err');
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('err'); btn.disabled = false; }, 4000);
+    }
   }
 }
 
