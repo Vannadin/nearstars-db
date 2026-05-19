@@ -25,7 +25,7 @@
           {
             "value_msun": 0.81,
             "uncertainty_msun": 0.03,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Gillon et al. 2017",
             "bibcode": "2017NatAs...1E..56G",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.778,
             "uncertainty_rsun": 0.005,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Gillon et al. 2017",
             "bibcode": "2017NatAs...1E..56G",
             "doi": null,
@@ -506,22 +506,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Gillon et al. 2017",
       "doi": null,
       "bibcode": "2017NatAs...1E..56G",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 219134 mass (spectroscopic_calibration)"
+        "HD 219134 mass (unverified)"
       ]
     },
     {

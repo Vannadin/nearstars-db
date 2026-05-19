@@ -25,7 +25,7 @@
           {
             "value_msun": 0.51,
             "uncertainty_msun": 0.028,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Wittrock et al. 2023",
             "bibcode": "2023AJ....166..232W",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.82,
             "uncertainty_rsun": 0.02,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Donati et al. 2023",
             "bibcode": "2023MNRAS.525..455D",
             "doi": null,
@@ -373,22 +373,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Wittrock et al. 2023",
       "doi": null,
       "bibcode": "2023AJ....166..232W",
       "accessed": "2026-05-19",
       "used_for": [
-        "AU Mic mass (spectroscopic_calibration)"
+        "AU Mic mass (unverified)"
       ]
     },
     {
@@ -397,7 +387,7 @@
       "bibcode": "2023MNRAS.525..455D",
       "accessed": "2026-05-19",
       "used_for": [
-        "AU Mic radius (evolutionary_model)"
+        "AU Mic radius (unverified)"
       ]
     },
     {

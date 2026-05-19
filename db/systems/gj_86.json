@@ -25,7 +25,7 @@
           {
             "value_msun": 0.93,
             "uncertainty_msun": 0.06,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Stassun et al. 2017",
             "bibcode": "2017AJ....153..136S",
             "doi": "10.3847/1538-3881/aa5df3",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.77,
             "uncertainty_rsun": 0.01,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Stassun et al. 2017",
             "bibcode": "2017AJ....153..136S",
             "doi": "10.3847/1538-3881/aa5df3",
@@ -154,22 +154,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Stassun et al. 2017",
       "doi": "10.3847/1538-3881/aa5df3",
       "bibcode": "2017AJ....153..136S",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 86 mass (spectroscopic_calibration)"
+        "GJ 86 mass (unverified)"
       ]
     }
   ],

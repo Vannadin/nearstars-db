@@ -25,7 +25,7 @@
           {
             "value_msun": 2.0,
             "uncertainty_msun": 0.1,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Kunitomo et al. 2011",
             "bibcode": "2011ApJ...737...66K",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 8.9,
             "uncertainty_rsun": 0.4,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Reffert et al. 2006",
             "bibcode": "2006ApJ...652..661R",
             "doi": null,
@@ -155,22 +155,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Kunitomo et al. 2011",
       "doi": null,
       "bibcode": "2011ApJ...737...66K",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 62509 mass (spectroscopic_calibration)"
+        "HD 62509 mass (unverified)"
       ]
     },
     {
@@ -179,7 +169,7 @@
       "bibcode": "2006ApJ...652..661R",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 62509 radius (evolutionary_model)"
+        "HD 62509 radius (unverified)"
       ]
     },
     {

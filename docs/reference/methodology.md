@@ -227,11 +227,14 @@ Notes on `mass_measurements` and `radius_measurements`:
   1. `binary_orbit` -- direct dynamical measurement, most reliable
   2. `asteroseismology` -- model-dependent but well-constrained
   3. `evolutionary_model` -- indirect; use only when nothing better exists
+  4. `spectroscopic` / `spectroscopic_calibration` -- spectral fitting based
+  99. `unverified` -- Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.
 
   Radius:
   1. `interferometry` -- direct angular diameter measurement
   2. `eclipsing_binary` -- direct geometric measurement
   3. `evolutionary_model` -- indirect; use only when nothing better exists
+  99. `unverified` -- Phase 1 batch 동일 의미.
 
 - If two entries share the same method tier, prefer the one with smaller
   fractional uncertainty. Document the choice in `meta.notes`.

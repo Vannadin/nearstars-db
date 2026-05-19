@@ -25,7 +25,7 @@
           {
             "value_msun": 0.77,
             "uncertainty_msun": 0.05,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Tuomi et al. 2013",
             "bibcode": "2013A&A...549A..48T",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.716684,
             "uncertainty_rsun": 0.059818,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Stassun et al. 2019",
             "bibcode": "2019AJ....158..138S",
             "doi": null,
@@ -407,22 +407,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Tuomi et al. 2013",
       "doi": null,
       "bibcode": "2013A&A...549A..48T",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 40307 mass (spectroscopic_calibration)"
+        "HD 40307 mass (unverified)"
       ]
     },
     {
@@ -431,7 +421,7 @@
       "bibcode": "2019AJ....158..138S",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 40307 radius (evolutionary_model)"
+        "HD 40307 radius (unverified)"
       ]
     }
   ],

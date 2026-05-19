@@ -25,7 +25,7 @@
           {
             "value_msun": 0.26,
             "uncertainty_msun": 0.02,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Moutou et al. 2026",
             "bibcode": "2026A&A...705A.190M",
             "doi": "10.1051/0004-6361/202556146",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.274,
             "uncertainty_rsun": 0.066,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Moutou et al. 2026",
             "bibcode": "2026A&A...705A.190M",
             "doi": "10.1051/0004-6361/202556146",
@@ -216,22 +216,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Moutou et al. 2026",
       "doi": "10.1051/0004-6361/202556146",
       "bibcode": "2026A&A...705A.190M",
       "accessed": "2026-05-19",
       "used_for": [
-        "55 Cnc B mass (spectroscopic_calibration)"
+        "55 Cnc B mass (unverified)"
       ]
     }
   ],

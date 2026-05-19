@@ -25,7 +25,7 @@
           {
             "value_msun": 0.47,
             "uncertainty_msun": 0.07,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Maciejewski et al. 2014",
             "bibcode": "2014AcA....64..323M",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.455,
             "uncertainty_rsun": 0.018,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Maciejewski et al. 2014",
             "bibcode": "2014AcA....64..323M",
             "doi": null,
@@ -158,22 +158,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Maciejewski et al. 2014",
       "doi": null,
       "bibcode": "2014AcA....64..323M",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 436 mass (spectroscopic_calibration)"
+        "GJ 436 mass (unverified)"
       ]
     }
   ],

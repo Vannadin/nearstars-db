@@ -17,8 +17,9 @@ where the published paper is more precise or recent.
      follow-up reanalyses).
    - Most recent re-analysis if mass/radius/orbital parameters were
      refined after discovery.
-   - Quick check: search NASA ADS for `<planet name>` AND `RV` (or
-     `transit`/`TTV`), sort by date, scan abstracts of top 3-5 results.
+   - Quick check: NASA Archive의 `ps` 테이블 `default_flag=1` 행을 우선
+     채택 (NASA 큐레이터의 권위 paper 선택). `fetch_planets_ps.py` 사용.
+     ADS abstract 직접 조회는 JS 렌더링 때문에 어시스턴트 도구로 불가.
 
 2. **Cross-check NASA Archive `pl_refname`.** If Archive cites the same
    paper you found, the auto-fetch is already using the best source —
@@ -51,27 +52,50 @@ where the published paper is more precise or recent.
 | `radius_rearth` | Only if transiting | Null otherwise |
 | `mass_type` | Always | `"Msini"`, `"true mass"`, `"transit"`, etc. |
 
-### ADS access
+### ADS access — NOT via WebFetch
 
-Use the `WebFetch` tool against `https://ui.adsabs.harvard.edu/search/q=<query>`.
-ADS does not require an API key for browse-style queries. Example:
+**Important (2026-05-19 발견)**: `ui.adsabs.harvard.edu`는 JS-rendered SPA라
+`WebFetch` 도구로 접근 불가. 모든 abstract / search 페이지가 빈 응답 반환.
+ADS API 토큰을 발급받지 않는 한 직접 abstract 읽기 불가능.
 
+**채택된 우회 경로:**
+- **bibcode 자체가 ADS 정식 ID**이므로 출처 진실로 사용. paper의 abstract을
+  읽지 않아도 bibcode 명시만으로 출처 attribution이 정확함.
+- DOI는 Crossref API로 보조 해석 (인증 불필요).
+- batch curation 시 NASA Archive의 `ps` 테이블 + `default_flag=1`이 paper별
+  출처를 이미 제공 — `pl_refname` / `st_refname`에서 bibcode 추출 가능.
+
+### 권장 인프라 (batch curation)
+
+신규 스크립트 2개로 자동화됨.
+
+```bash
+# 1) ps 테이블에서 default 행 fetch
+python3 scripts/pipeline/fetch_planets_ps.py
+#    → db/planets_ps_default.json (per-paper rows for each planet)
+
+# 2) curated JSON 생성 (Crossref로 DOI 해석)
+python3 scripts/pipeline/build_curated_from_ps.py
+#    → db/planets_curated.json + stellar_props_curated.json
+#    Auto-added entries get method="unverified" (Phase 2 격상 시 교체 대상).
+
+# 3) 기존 파이프라인 실행
+python3 scripts/pipeline/build_systems.py
+python3 scripts/pipeline/validate.py
 ```
-WebFetch URL: https://ui.adsabs.harvard.edu/search/q=object:%22Wolf+359%22+AND+(RV+OR+%22radial+velocity%22)&sort=date+desc
-Prompt: "Return the top 5 papers' bibcode, title, year, and first author. Highlight which has the most recent mass or orbital parameter measurement."
-```
 
-For direct paper text/abstract, fetch `https://ui.adsabs.harvard.edu/abs/<bibcode>`.
+이 흐름은 별 1개 추가에도 동일하게 작동 — `target_list.json`에 entry
+추가 후 위 3단계 실행.
 
-### ADS query patterns that work well
+### 수동 ADS 조회 필요 시
 
-| Want | Query |
-|---|---|
-| Latest paper on planet X | `bibcode:(2023* OR 2024* OR 2025* OR 2026*) AND object:"<star>" AND ("planet" OR "companion")` |
-| Mass measurement specifically | `<star name> AND (RV OR "radial velocity" OR TTV OR astrometric)` |
-| Orbital reanalysis | `<star name> AND (orbital OR eccentricity OR "Keplerian fit")` |
+다음 케이스만 수동:
+- Phase 2 격상 (method 라벨을 paper의 실제 method로 교체)
+- NASA Archive에 없는 신규 발견 행성
+- ADS bibcode가 NASA의 `pl_refname` URL parsing에 실패한 케이스
 
-ADS web UI for manual browsing: [ui.adsabs.harvard.edu](https://ui.adsabs.harvard.edu)
+수동 조회는 사용자가 browser로 [ui.adsabs.harvard.edu](https://ui.adsabs.harvard.edu)에서 직접
+확인 후 결과를 세션에 paste. 어시스턴트가 ADS web을 직접 접근 시도하지 말 것.
 
 ### When to skip Phase 1
 

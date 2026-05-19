@@ -25,7 +25,7 @@
           {
             "value_msun": 0.168,
             "uncertainty_msun": 0.017,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Bonfils et al. 2018",
             "bibcode": "2018A&A...613A..25B",
             "doi": "10.1051/0004-6361/201731973",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.1967,
             "uncertainty_rsun": 0.0077,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Bonfils et al. 2018",
             "bibcode": "2018A&A...613A..25B",
             "doi": "10.1051/0004-6361/201731973",
@@ -154,22 +154,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Bonfils et al. 2018",
       "doi": "10.1051/0004-6361/201731973",
       "bibcode": "2018A&A...613A..25B",
       "accessed": "2026-05-19",
       "used_for": [
-        "Ross 128 mass (spectroscopic_calibration)"
+        "Ross 128 mass (unverified)"
       ]
     }
   ],

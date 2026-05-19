@@ -25,7 +25,7 @@
           {
             "value_msun": 0.942,
             "uncertainty_msun": 0.034,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Vogt et al. 2010",
             "bibcode": "2010ApJ...708.1366V",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.963,
             "uncertainty_rsun": 0.011,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Vogt et al. 2010",
             "bibcode": "2010ApJ...708.1366V",
             "doi": null,
@@ -281,22 +281,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Vogt et al. 2010",
       "doi": null,
       "bibcode": "2010ApJ...708.1366V",
       "accessed": "2026-05-19",
       "used_for": [
-        "61 Vir mass (spectroscopic_calibration)"
+        "61 Vir mass (unverified)"
       ]
     }
   ],

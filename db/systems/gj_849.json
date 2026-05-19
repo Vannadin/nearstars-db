@@ -25,7 +25,7 @@
           {
             "value_msun": 0.45,
             "uncertainty_msun": 0.07,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Pinamonti et al. 2023",
             "bibcode": "2023A&A...677A.122P",
             "doi": "10.1051/0004-6361/202346476",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.45,
             "uncertainty_rsun": 0.07,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Pinamonti et al. 2023",
             "bibcode": "2023A&A...677A.122P",
             "doi": "10.1051/0004-6361/202346476",
@@ -218,22 +218,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Pinamonti et al. 2023",
       "doi": "10.1051/0004-6361/202346476",
       "bibcode": "2023A&A...677A.122P",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 849 mass (spectroscopic_calibration)"
+        "GJ 849 mass (unverified)"
       ]
     }
   ],

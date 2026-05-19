@@ -25,7 +25,7 @@
           {
             "value_msun": 0.653,
             "uncertainty_msun": 0.028,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Kunimoto et al. 2025",
             "bibcode": "2025AJ....169...47K",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.63,
             "uncertainty_rsun": 0.027,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Kunimoto et al. 2025",
             "bibcode": "2025AJ....169...47K",
             "doi": null,
@@ -240,22 +240,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Kunimoto et al. 2025",
       "doi": null,
       "bibcode": "2025AJ....169...47K",
       "accessed": "2026-05-19",
       "used_for": [
-        "HIP 56998 mass (spectroscopic_calibration)"
+        "HIP 56998 mass (unverified)"
       ]
     }
   ],

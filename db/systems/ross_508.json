@@ -25,7 +25,7 @@
           {
             "value_msun": 0.1774,
             "uncertainty_msun": 0.0045,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Harakawa et al. 2022",
             "bibcode": "2022PASJ...74..904H",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.2113,
             "uncertainty_rsun": 0.0063,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Harakawa et al. 2022",
             "bibcode": "2022PASJ...74..904H",
             "doi": null,
@@ -155,22 +155,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Harakawa et al. 2022",
       "doi": null,
       "bibcode": "2022PASJ...74..904H",
       "accessed": "2026-05-19",
       "used_for": [
-        "Ross 508 mass (spectroscopic_calibration)"
+        "Ross 508 mass (unverified)"
       ]
     }
   ],

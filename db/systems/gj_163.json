@@ -261,16 +261,6 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Bonfils et al. 2013",
       "doi": "10.1051/0004-6361/201220237",
       "bibcode": "2013A&A...556A.110B",

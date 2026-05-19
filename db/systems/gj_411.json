@@ -25,7 +25,7 @@
           {
             "value_msun": 0.3899,
             "uncertainty_msun": 0.0106,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Hurt et al. 2022",
             "bibcode": "2022AJ....163..218H",
             "doi": "10.3847/1538-3881/ac5c47",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.3685,
             "uncertainty_rsun": 0.0081,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Hurt et al. 2022",
             "bibcode": "2022AJ....163..218H",
             "doi": "10.3847/1538-3881/ac5c47",
@@ -218,22 +218,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Hurt et al. 2022",
       "doi": "10.3847/1538-3881/ac5c47",
       "bibcode": "2022AJ....163..218H",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 411 mass (spectroscopic_calibration)"
+        "GJ 411 mass (unverified)"
       ]
     }
   ],

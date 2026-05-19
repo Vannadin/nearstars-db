@@ -25,7 +25,7 @@
           {
             "value_msun": 0.1221,
             "uncertainty_msun": 0.0022,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
             "bibcode": "2025A&A...700A..11M",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.141,
             "uncertainty_rsun": 0.021,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
             "bibcode": "2025A&A...700A..11M",
             "doi": null,
@@ -216,22 +216,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
       "doi": null,
       "bibcode": "2025A&A...700A..11M",
       "accessed": "2026-05-19",
       "used_for": [
-        "Proxima Cen mass (spectroscopic_calibration)"
+        "Proxima Cen mass (unverified)"
       ]
     }
   ],

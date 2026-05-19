@@ -25,7 +25,7 @@
           {
             "value_msun": 0.142,
             "uncertainty_msun": 0.01,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Stock et al. 2020",
             "bibcode": "2020A&A...636A.119S",
             "doi": "10.1051/0004-6361/201936732",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.157,
             "uncertainty_rsun": 0.005,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Stock et al. 2020",
             "bibcode": "2020A&A...636A.119S",
             "doi": "10.1051/0004-6361/201936732",
@@ -280,22 +280,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Stock et al. 2020",
       "doi": "10.1051/0004-6361/201936732",
       "bibcode": "2020A&A...636A.119S",
       "accessed": "2026-05-19",
       "used_for": [
-        "YZ Cet mass (spectroscopic_calibration)"
+        "YZ Cet mass (unverified)"
       ]
     }
   ],

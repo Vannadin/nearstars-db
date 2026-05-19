@@ -25,7 +25,7 @@
           {
             "value_msun": 0.32,
             "uncertainty_msun": 0.03,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Rivera et al. 2010",
             "bibcode": "2010ApJ...719..890R",
             "doi": "10.1088/0004-637x/719/1/890",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.3,
             "uncertainty_rsun": null,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Rivera et al. 2010",
             "bibcode": "2010ApJ...719..890R",
             "doi": "10.1088/0004-637x/719/1/890",
@@ -348,22 +348,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Rivera et al. 2010",
       "doi": "10.1088/0004-637x/719/1/890",
       "bibcode": "2010ApJ...719..890R",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 876 mass (spectroscopic_calibration)"
+        "GJ 876 mass (unverified)"
       ]
     }
   ],

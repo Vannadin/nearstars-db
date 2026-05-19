@@ -608,7 +608,16 @@ for target in target_list:
         # ── 소스 목록 ──
         astro_src = SRC_GAIA if astro.get("source") == "gaia_dr3" else SRC_SIMBAD
         sources = [SRC_BUTKEVICH, astro_src]
-        if planets_block:
+        # 행성 entry에 per-paper bibcode가 하나라도 있으면 SRC_ARCHIVE 생략
+        # (generic NASA Archive 출처는 paper-sourced attribution 있을 때 중복 잡음)
+        has_paper_source = any(
+            (pe.get("curated") or {}).get("orbital", {}).get("bibcode")
+            or (pe.get("curated") or {}).get("physical", {}).get("bibcode")
+            or (pe.get("curated") or {}).get("orbital", {}).get("doi")
+            or (pe.get("curated") or {}).get("physical", {}).get("doi")
+            for pe in planets_block
+        )
+        if planets_block and not has_paper_source:
             sources.append(SRC_ARCHIVE)
         existing_dois    = {s.get("doi")     for s in sources if s.get("doi")}
         existing_bibcodes = {s.get("bibcode") for s in sources if s.get("bibcode")}

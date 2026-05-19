@@ -25,7 +25,7 @@
           {
             "value_msun": 0.27,
             "uncertainty_msun": 0.02,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Luque et al. 2018",
             "bibcode": "2018A&A...620A.171L",
             "doi": "10.1051/0004-6361/201833423",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.281,
             "uncertainty_rsun": 0.01,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Luque et al. 2018",
             "bibcode": "2018A&A...620A.171L",
             "doi": "10.1051/0004-6361/201833423",
@@ -155,22 +155,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Luque et al. 2018",
       "doi": "10.1051/0004-6361/201833423",
       "bibcode": "2018A&A...620A.171L",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 3779 mass (spectroscopic_calibration)"
+        "GJ 3779 mass (unverified)"
       ]
     }
   ],

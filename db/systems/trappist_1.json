@@ -25,7 +25,7 @@
           {
             "value_msun": 0.0898,
             "uncertainty_msun": 0.0023,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Agol et al. 2021",
             "bibcode": "2021PSJ.....2....1A",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.1192,
             "uncertainty_rsun": 0.0013,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Agol et al. 2021",
             "bibcode": "2021PSJ.....2....1A",
             "doi": null,
@@ -631,22 +631,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Agol et al. 2021",
       "doi": null,
       "bibcode": "2021PSJ.....2....1A",
       "accessed": "2026-05-19",
       "used_for": [
-        "TRAPPIST-1 mass (spectroscopic_calibration)"
+        "TRAPPIST-1 mass (unverified)"
       ]
     }
   ],

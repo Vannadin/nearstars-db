@@ -25,7 +25,7 @@
           {
             "value_msun": 0.402,
             "uncertainty_msun": 0.014,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Morales et al. 2025",
             "bibcode": "2025A&A...700A.242M",
             "doi": "10.1051/0004-6361/202554992",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.403,
             "uncertainty_rsun": 0.009,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Morales et al. 2025",
             "bibcode": "2025A&A...700A.242M",
             "doi": "10.1051/0004-6361/202554992",
@@ -218,22 +218,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Morales et al. 2025",
       "doi": "10.1051/0004-6361/202554992",
       "bibcode": "2025A&A...700A.242M",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 317 mass (spectroscopic_calibration)"
+        "GJ 317 mass (unverified)"
       ]
     }
   ],

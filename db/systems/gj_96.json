@@ -25,7 +25,7 @@
           {
             "value_msun": 0.6,
             "uncertainty_msun": 0.07,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Hobson et al. 2018",
             "bibcode": "2018A&A...618A.103H",
             "doi": "10.1051/0004-6361/201832732",
@@ -145,22 +145,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Hobson et al. 2018",
       "doi": "10.1051/0004-6361/201832732",
       "bibcode": "2018A&A...618A.103H",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 96 mass (spectroscopic_calibration)"
+        "GJ 96 mass (unverified)"
       ]
     }
   ],

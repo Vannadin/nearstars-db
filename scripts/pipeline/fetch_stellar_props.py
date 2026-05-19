@@ -12,6 +12,7 @@ METHOD_PRIORITY = {
     "interferometry": 1, "eclipsing_binary": 2, "binary_orbit": 2,
     "sed_fitting": 3, "spectroscopic": 4, "evolutionary_model": 5,
     "spectroscopic_calibration": 6,
+    "unverified": 99,  # Phase 1 batch에서 method 검증 안 함 — 항상 최하위
 }
 
 

@@ -25,7 +25,7 @@
           {
             "value_msun": 0.61,
             "uncertainty_msun": 0.04,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Feng et al. 2019",
             "bibcode": "2019ApJS..242...25F",
             "doi": "10.3847/1538-4365/ab1b16",
@@ -145,22 +145,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Feng et al. 2019",
       "doi": "10.3847/1538-4365/ab1b16",
       "bibcode": "2019ApJS..242...25F",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 211970 mass (spectroscopic_calibration)"
+        "HD 211970 mass (unverified)"
       ]
     }
   ],

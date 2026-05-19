@@ -25,7 +25,7 @@
           {
             "value_msun": 0.33,
             "uncertainty_msun": 0.008,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Cortes Zuleta et al. 2025",
             "bibcode": "2025A&A...693A.164C",
             "doi": "10.1051/0004-6361/202451646",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.351,
             "uncertainty_rsun": 0.003,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Cortes Zuleta et al. 2025",
             "bibcode": "2025A&A...693A.164C",
             "doi": "10.1051/0004-6361/202451646",
@@ -155,22 +155,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Cortes Zuleta et al. 2025",
       "doi": "10.1051/0004-6361/202451646",
       "bibcode": "2025A&A...693A.164C",
       "accessed": "2026-05-19",
       "used_for": [
-        "Gl 725 A mass (spectroscopic_calibration)"
+        "Gl 725 A mass (unverified)"
       ]
     }
   ],

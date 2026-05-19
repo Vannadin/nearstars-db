@@ -25,7 +25,7 @@
           {
             "value_msun": 0.342,
             "uncertainty_msun": 0.011,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Oddo et al. 2023",
             "bibcode": "2023AJ....165..134O",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.337,
             "uncertainty_rsun": 0.015,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Oddo et al. 2023",
             "bibcode": "2023AJ....165..134O",
             "doi": null,
@@ -275,22 +275,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Oddo et al. 2023",
       "doi": null,
       "bibcode": "2023AJ....165..134O",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 357 mass (spectroscopic_calibration)"
+        "GJ 357 mass (unverified)"
       ]
     },
     {

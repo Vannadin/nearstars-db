@@ -25,7 +25,7 @@
           {
             "value_msun": 0.262,
             "uncertainty_msun": null,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Lustig Yaeger et al. 2023",
             "bibcode": "2023NatAs...7.1317L",
             "doi": "10.1038/s41550-023-02064-z",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.2789,
             "uncertainty_rsun": 0.0014,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Lustig Yaeger et al. 2023",
             "bibcode": "2023NatAs...7.1317L",
             "doi": "10.1038/s41550-023-02064-z",
@@ -152,22 +152,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Lustig Yaeger et al. 2023",
       "doi": "10.1038/s41550-023-02064-z",
       "bibcode": "2023NatAs...7.1317L",
       "accessed": "2026-05-19",
       "used_for": [
-        "LHS 475 mass (spectroscopic_calibration)"
+        "LHS 475 mass (unverified)"
       ]
     }
   ],

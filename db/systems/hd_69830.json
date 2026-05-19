@@ -25,7 +25,7 @@
           {
             "value_msun": 0.86,
             "uncertainty_msun": 0.03,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Lovis et al. 2006",
             "bibcode": "2006Natur.441..305L",
             "doi": "10.1038/nature04828",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.886947,
             "uncertainty_rsun": 0.019437,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Rosenthal et al. 2021",
             "bibcode": "2021ApJS..255....8R",
             "doi": null,
@@ -278,22 +278,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Lovis et al. 2006",
       "doi": "10.1038/nature04828",
       "bibcode": "2006Natur.441..305L",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 69830 mass (spectroscopic_calibration)"
+        "HD 69830 mass (unverified)"
       ]
     },
     {
@@ -302,7 +292,7 @@
       "bibcode": "2021ApJS..255....8R",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 69830 radius (evolutionary_model)"
+        "HD 69830 radius (unverified)"
       ]
     }
   ],

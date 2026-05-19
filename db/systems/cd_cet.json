@@ -25,7 +25,7 @@
           {
             "value_msun": 0.161,
             "uncertainty_msun": 0.01,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Bauer et al. 2020",
             "bibcode": "2020A&A...640A..50B",
             "doi": "10.1051/0004-6361/202038031",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.175,
             "uncertainty_rsun": 0.006,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Bauer et al. 2020",
             "bibcode": "2020A&A...640A..50B",
             "doi": "10.1051/0004-6361/202038031",
@@ -154,22 +154,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Bauer et al. 2020",
       "doi": "10.1051/0004-6361/202038031",
       "bibcode": "2020A&A...640A..50B",
       "accessed": "2026-05-19",
       "used_for": [
-        "CD Cet mass (spectroscopic_calibration)"
+        "CD Cet mass (unverified)"
       ]
     }
   ],

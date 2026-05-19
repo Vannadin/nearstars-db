@@ -25,7 +25,7 @@
           {
             "value_msun": 0.76,
             "uncertainty_msun": 0.09,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Xiao et al. 2024",
             "bibcode": "2024MNRAS.534.2858X",
             "doi": "10.1093/mnras/stae2151",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.71,
             "uncertainty_rsun": 0.06,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Xiao et al. 2024",
             "bibcode": "2024MNRAS.534.2858X",
             "doi": "10.1093/mnras/stae2151",
@@ -156,22 +156,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Xiao et al. 2024",
       "doi": "10.1093/mnras/stae2151",
       "bibcode": "2024MNRAS.534.2858X",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 222237 mass (spectroscopic_calibration)"
+        "HD 222237 mass (unverified)"
       ]
     }
   ],

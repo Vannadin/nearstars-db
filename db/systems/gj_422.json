@@ -25,7 +25,7 @@
           {
             "value_msun": 0.35,
             "uncertainty_msun": null,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Feng et al. 2020",
             "bibcode": "2020ApJS..246...11F",
             "doi": "10.3847/1538-4365/ab5e7c",
@@ -145,22 +145,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Feng et al. 2020",
       "doi": "10.3847/1538-4365/ab5e7c",
       "bibcode": "2020ApJS..246...11F",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 422 mass (spectroscopic_calibration)"
+        "GJ 422 mass (unverified)"
       ]
     }
   ],

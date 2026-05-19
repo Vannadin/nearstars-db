@@ -25,7 +25,7 @@
           {
             "value_msun": 0.344045,
             "uncertainty_msun": 0.020144,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Stassun et al. 2019",
             "bibcode": "2019AJ....158..138S",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.358519,
             "uncertainty_rsun": 0.010569,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Stassun et al. 2019",
             "bibcode": "2019AJ....158..138S",
             "doi": null,
@@ -218,22 +218,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Stassun et al. 2019",
       "doi": null,
       "bibcode": "2019AJ....158..138S",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 1148 mass (spectroscopic_calibration)"
+        "GJ 1148 mass (unverified)"
       ]
     },
     {

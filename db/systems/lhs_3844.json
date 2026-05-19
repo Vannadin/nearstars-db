@@ -25,7 +25,7 @@
           {
             "value_msun": 0.151,
             "uncertainty_msun": 0.014,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Nagel et al. 2026",
             "bibcode": "2026arXiv260328238N",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.189,
             "uncertainty_rsun": 0.006,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Nagel et al. 2026",
             "bibcode": "2026arXiv260328238N",
             "doi": null,
@@ -158,22 +158,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Nagel et al. 2026",
       "doi": null,
       "bibcode": "2026arXiv260328238N",
       "accessed": "2026-05-19",
       "used_for": [
-        "LHS 3844 mass (spectroscopic_calibration)"
+        "LHS 3844 mass (unverified)"
       ]
     }
   ],

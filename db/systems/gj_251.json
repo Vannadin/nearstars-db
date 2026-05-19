@@ -25,7 +25,7 @@
           {
             "value_msun": 0.35,
             "uncertainty_msun": 0.05,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Beard et al. 2025",
             "bibcode": "2025AJ....170..279B",
             "doi": "10.3847/1538-3881/ae0e20",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.36,
             "uncertainty_rsun": 0.01,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Beard et al. 2025",
             "bibcode": "2025AJ....170..279B",
             "doi": "10.3847/1538-3881/ae0e20",
@@ -218,22 +218,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Beard et al. 2025",
       "doi": "10.3847/1538-3881/ae0e20",
       "bibcode": "2025AJ....170..279B",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 251 mass (spectroscopic_calibration)"
+        "GJ 251 mass (unverified)"
       ]
     }
   ],

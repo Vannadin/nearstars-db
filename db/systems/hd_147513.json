@@ -25,7 +25,7 @@
           {
             "value_msun": 1.11,
             "uncertainty_msun": null,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Mayor et al. 2004",
             "bibcode": "2004A&A...415..391M",
             "doi": "10.1051/0004-6361:20034250",
@@ -144,22 +144,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Mayor et al. 2004",
       "doi": "10.1051/0004-6361:20034250",
       "bibcode": "2004A&A...415..391M",
       "accessed": "2026-05-19",
       "used_for": [
-        "HD 147513 mass (spectroscopic_calibration)"
+        "HD 147513 mass (unverified)"
       ]
     }
   ],

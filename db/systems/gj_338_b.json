@@ -25,7 +25,7 @@
           {
             "value_msun": 0.64,
             "uncertainty_msun": 0.07,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Ditomasso et al. 2023",
             "bibcode": "2023AJ....165...38D",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.58,
             "uncertainty_rsun": 0.03,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Ditomasso et al. 2023",
             "bibcode": "2023AJ....165...38D",
             "doi": null,
@@ -154,22 +154,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Ditomasso et al. 2023",
       "doi": null,
       "bibcode": "2023AJ....165...38D",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 338 B mass (spectroscopic_calibration)"
+        "GJ 338 B mass (unverified)"
       ]
     }
   ],

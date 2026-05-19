@@ -25,7 +25,7 @@
           {
             "value_msun": 0.281,
             "uncertainty_msun": 0.014,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Anglada Escud Eacute et al. 2014",
             "bibcode": "2014MNRAS.443L..89A",
             "doi": "10.1093/mnrasl/slu076",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.291,
             "uncertainty_rsun": 0.025,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Anglada Escud Eacute et al. 2014",
             "bibcode": "2014MNRAS.443L..89A",
             "doi": "10.1093/mnrasl/slu076",
@@ -155,22 +155,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Anglada Escud Eacute et al. 2014",
       "doi": "10.1093/mnrasl/slu076",
       "bibcode": "2014MNRAS.443L..89A",
       "accessed": "2026-05-19",
       "used_for": [
-        "Kapteyn mass (spectroscopic_calibration)"
+        "Kapteyn mass (unverified)"
       ]
     }
   ],

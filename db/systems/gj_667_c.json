@@ -25,7 +25,7 @@
           {
             "value_msun": 0.33,
             "uncertainty_msun": 0.02,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Anglada Escude et al. 2013",
             "bibcode": "2013A&A...556A.126A",
             "doi": "10.1051/0004-6361/201321331",
@@ -393,22 +393,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Anglada Escude et al. 2013",
       "doi": "10.1051/0004-6361/201321331",
       "bibcode": "2013A&A...556A.126A",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 667 C mass (spectroscopic_calibration)"
+        "GJ 667 C mass (unverified)"
       ]
     },
     {

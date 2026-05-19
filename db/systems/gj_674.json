@@ -25,7 +25,7 @@
           {
             "value_msun": 0.35,
             "uncertainty_msun": null,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Bonfils et al. 2007",
             "bibcode": "2007A&A...474..293B",
             "doi": "10.1051/0004-6361:20077068",
@@ -144,22 +144,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Bonfils et al. 2007",
       "doi": "10.1051/0004-6361:20077068",
       "bibcode": "2007A&A...474..293B",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 674 mass (spectroscopic_calibration)"
+        "GJ 674 mass (unverified)"
       ]
     }
   ],

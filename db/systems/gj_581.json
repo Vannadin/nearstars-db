@@ -25,7 +25,7 @@
           {
             "value_msun": 0.295,
             "uncertainty_msun": 0.01,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Von Stauffenberg et al. 2024",
             "bibcode": "2024A&A...688A.112V",
             "doi": "10.1051/0004-6361/202449375",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.302,
             "uncertainty_rsun": 0.005,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Von Stauffenberg et al. 2024",
             "bibcode": "2024A&A...688A.112V",
             "doi": "10.1051/0004-6361/202449375",
@@ -284,22 +284,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Von Stauffenberg et al. 2024",
       "doi": "10.1051/0004-6361/202449375",
       "bibcode": "2024A&A...688A.112V",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 581 mass (spectroscopic_calibration)"
+        "GJ 581 mass (unverified)"
       ]
     }
   ],

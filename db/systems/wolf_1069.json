@@ -25,7 +25,7 @@
           {
             "value_msun": 0.167,
             "uncertainty_msun": 0.011,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Kossakowski et al. 2023",
             "bibcode": "2023A&A...670A..84K",
             "doi": null,
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.1813,
             "uncertainty_rsun": 0.0063,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Kossakowski et al. 2023",
             "bibcode": "2023A&A...670A..84K",
             "doi": null,
@@ -153,22 +153,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Kossakowski et al. 2023",
       "doi": null,
       "bibcode": "2023A&A...670A..84K",
       "accessed": "2026-05-19",
       "used_for": [
-        "Wolf 1069 mass (spectroscopic_calibration)"
+        "Wolf 1069 mass (unverified)"
       ]
     }
   ],

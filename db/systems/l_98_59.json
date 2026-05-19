@@ -25,7 +25,7 @@
           {
             "value_msun": 0.2923,
             "uncertainty_msun": 0.0067,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Cadieux et al. 2025",
             "bibcode": "2025AJ....170..154C",
             "doi": "10.3847/1538-3881/adef59",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.3155,
             "uncertainty_rsun": 0.0062,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Cadieux et al. 2025",
             "bibcode": "2025AJ....170..154C",
             "doi": "10.3847/1538-3881/adef59",
@@ -452,22 +452,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Cadieux et al. 2025",
       "doi": "10.3847/1538-3881/adef59",
       "bibcode": "2025AJ....170..154C",
       "accessed": "2026-05-19",
       "used_for": [
-        "L 98-59 mass (spectroscopic_calibration)"
+        "L 98-59 mass (unverified)"
       ]
     }
   ],

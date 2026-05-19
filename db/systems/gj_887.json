@@ -25,7 +25,7 @@
           {
             "value_msun": 0.495,
             "uncertainty_msun": 0.049,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Hartogh et al. 2026",
             "bibcode": "2026A&A...707A..93H",
             "doi": "10.1051/0004-6361/202554984",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.468,
             "uncertainty_rsun": 0.022,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Hartogh et al. 2026",
             "bibcode": "2026A&A...707A..93H",
             "doi": "10.1051/0004-6361/202554984",
@@ -340,22 +340,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Hartogh et al. 2026",
       "doi": "10.1051/0004-6361/202554984",
       "bibcode": "2026A&A...707A..93H",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 887 mass (spectroscopic_calibration)"
+        "GJ 887 mass (unverified)"
       ]
     }
   ],

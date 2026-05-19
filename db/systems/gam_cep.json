@@ -25,7 +25,7 @@
           {
             "value_msun": 1.27,
             "uncertainty_msun": 0.05,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Knudstrup et al. 2023",
             "bibcode": "2023A&A...675A.197K",
             "doi": "10.1051/0004-6361/202346707",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 4.74,
             "uncertainty_rsun": 0.07,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Knudstrup et al. 2023",
             "bibcode": "2023A&A...675A.197K",
             "doi": "10.1051/0004-6361/202346707",
@@ -154,22 +154,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Knudstrup et al. 2023",
       "doi": "10.1051/0004-6361/202346707",
       "bibcode": "2023A&A...675A.197K",
       "accessed": "2026-05-19",
       "used_for": [
-        "gam Cep mass (spectroscopic_calibration)"
+        "gam Cep mass (unverified)"
       ]
     }
   ],

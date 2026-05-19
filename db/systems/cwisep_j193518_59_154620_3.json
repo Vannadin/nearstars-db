@@ -25,7 +25,7 @@
           {
             "value_msun": 0.024,
             "uncertainty_msun": 0.013,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "De Furio et al. 2025",
             "bibcode": "2025ApJ...990L..63D",
             "doi": "10.3847/2041-8213/adfee1",
@@ -143,22 +143,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "De Furio et al. 2025",
       "doi": "10.3847/2041-8213/adfee1",
       "bibcode": "2025ApJ...990L..63D",
       "accessed": "2026-05-19",
       "used_for": [
-        "CWISEP J193518.59-154620.3 mass (spectroscopic_calibration)"
+        "CWISEP J193518.59-154620.3 mass (unverified)"
       ]
     }
   ],

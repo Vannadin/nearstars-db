@@ -133,16 +133,6 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Burgasser et al. 2010",
       "doi": "10.1088/0004-637x/725/2/1405",
       "bibcode": "2010ApJ...725.1405B",

@@ -25,7 +25,7 @@
           {
             "value_msun": 0.1945,
             "uncertainty_msun": 0.0048,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Xue et al. 2024",
             "bibcode": "2024ApJ...973L...8X",
             "doi": "10.3847/2041-8213/ad72e9",
@@ -36,7 +36,7 @@
           {
             "value_rsun": 0.226,
             "uncertainty_rsun": 0.007,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Weisserman et al. 2026",
             "bibcode": "2026arXiv260407447W",
             "doi": null,
@@ -219,22 +219,12 @@
       ]
     },
     {
-      "title": "NASA Exoplanet Archive",
-      "doi": null,
-      "bibcode": null,
-      "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-05-19",
-      "used_for": [
-        "planet parameters"
-      ]
-    },
-    {
       "title": "Xue et al. 2024",
       "doi": "10.3847/2041-8213/ad72e9",
       "bibcode": "2024ApJ...973L...8X",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 1132 mass (spectroscopic_calibration)"
+        "GJ 1132 mass (unverified)"
       ]
     },
     {
@@ -243,7 +233,7 @@
       "bibcode": "2026arXiv260407447W",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 1132 radius (evolutionary_model)"
+        "GJ 1132 radius (unverified)"
       ]
     }
   ],
