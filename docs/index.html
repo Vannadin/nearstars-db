@@ -118,6 +118,7 @@ a.sl:hover{text-decoration:underline}
 
 /* spectral type tooltip */
 #tip{display:none;position:fixed;z-index:9999;background:#0d1828;border:1px solid #2a4468;border-radius:8px;padding:12px 15px;max-width:290px;pointer-events:none;box-shadow:0 6px 24px rgba(0,0,0,.6)}
+#tip.tip-plain{padding:8px 12px;max-width:320px;font-size:12px;color:#a8c0d4;line-height:1.5}
 .tip-head{font-size:18px;font-weight:700;color:#d0e8ff;font-family:monospace;margin-bottom:7px;letter-spacing:.5px}
 .tip-cls{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .tip-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.15)}
@@ -837,7 +838,7 @@ const escAttr = s => String(s).replace(/"/g, '&quot;');
 function kv(k, v) {
   const help = buildHelpMap();
   const kHelp = help[k];
-  const kSpan = kHelp ? `<span class="kk help" title="${escAttr(kHelp)}">${k}</span>` : `<span class="kk">${k}</span>`;
+  const kSpan = kHelp ? `<span class="kk help" data-help="${escAttr(kHelp)}">${k}</span>` : `<span class="kk">${k}</span>`;
   let vStr = (v == null) ? '—' : String(v);
   // Wrap known unit tokens (longest first so 'mas/yr' wins over 'mas')
   const units = Object.keys(help).filter(u => /^[^A-Za-z]|^(mas|pc|ly|AU|K|mag|km)/.test(u)).sort((a, b) => b.length - a.length);
@@ -845,7 +846,7 @@ function kv(k, v) {
     if (!help[u]) continue;
     const esc = u.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     vStr = vStr.replace(new RegExp(`(^|\\s)${esc}(?=\\s|$)`, 'g'),
-      `$1<span class="help" title="${escAttr(help[u])}">${u}</span>`);
+      `$1<span class="help" data-help="${escAttr(help[u])}">${u}</span>`);
   }
   return `${kSpan}<span class="kv-val">${vStr}</span>`;
 }
@@ -958,13 +959,24 @@ function buildSpecTip(spec) {
   return h;
 }
 
-// Tooltip events
+// Tooltip events — spectral-type badges + .help terms (units, labels)
 const tipEl = document.getElementById('tip');
 document.addEventListener('mouseover', e => {
   const badge = e.target.closest('.sb');
-  if (!badge) { tipEl.style.display = 'none'; return; }
-  tipEl.innerHTML = buildSpecTip(badge.textContent.trim());
-  tipEl.style.display = 'block';
+  if (badge) {
+    tipEl.innerHTML = buildSpecTip(badge.textContent.trim());
+    tipEl.classList.remove('tip-plain');
+    tipEl.style.display = 'block';
+    return;
+  }
+  const hp = e.target.closest('.help');
+  if (hp && hp.dataset.help) {
+    tipEl.textContent = hp.dataset.help;
+    tipEl.classList.add('tip-plain');
+    tipEl.style.display = 'block';
+    return;
+  }
+  tipEl.style.display = 'none';
 });
 document.addEventListener('mousemove', e => {
   if (tipEl.style.display !== 'block') return;
@@ -973,7 +985,7 @@ document.addEventListener('mousemove', e => {
   tipEl.style.top  = Math.min(y, window.innerHeight - tipEl.offsetHeight - 8) + 'px';
 });
 document.addEventListener('mouseout', e => {
-  if (e.target.closest('.sb')) tipEl.style.display = 'none';
+  if (e.target.closest('.sb') || e.target.closest('.help')) tipEl.style.display = 'none';
 });
 
 // ── Glossary ─────────────────────────────────────────────────────────────────
