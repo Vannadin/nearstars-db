@@ -1,0 +1,67 @@
+NearStars — Third-Party Notices
+
+This file lists third-party software and data sources whose content
+appears in or is referenced by this repository, together with the
+required attribution.
+
+================================================================
+Principia (https://github.com/mockingbirdnest/Principia)
+================================================================
+
+Portions of this repository — specifically
+`docs/reference/principia-cfg-reference.md` and related
+Principia-format documentation — describe the cfg format of
+Principia, which is licensed under the MIT License.
+
+    Copyright (c) 2014 Robin Leroy
+
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation
+    files (the "Software"), to deal in the Software without
+    restriction, including without limitation the rights to use,
+    copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following
+    conditions:
+
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+    OTHER DEALINGS IN THE SOFTWARE.
+
+================================================================
+Sol-Configs (https://github.com/RSS-Reborn/Sol-Configs)
+================================================================
+
+Excerpts of Sol-Configs appear in
+`.agents/skills/kopernicus-cfg/references/planet-body.md`,
+`star-body.md`, and `ocean.md` for documentation purposes.
+Sol-Configs has no published license as of 2026-05-19. Explicit
+permission from the maintainer is pending; if not granted, the
+excerpts will be replaced with raw-link redirects to the upstream
+repository. See `docs/reference/data-sources.md` §2.
+
+================================================================
+Kopernicus (https://github.com/ballisticfox/Kopernicus)
+================================================================
+
+Referenced descriptively only. No Kopernicus source code is
+reproduced in this repository. Kopernicus is licensed under
+LGPL-3.0.
+
+================================================================
+Astronomical data
+================================================================
+
+Stellar and exoplanet measurement values aggregated in `db/` are
+derived from public astronomical catalogs (NASA Exoplanet Archive,
+Gaia DR3, SIMBAD, TEPCat). These values are factual data and are
+not subject to the repository's MIT license. Citation policies for
+each catalog are documented in `docs/reference/data-sources.md`.
