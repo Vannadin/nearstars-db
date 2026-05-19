@@ -83,6 +83,8 @@ tr.detail-row td{padding:0;background:#090d16}
 .ds h3{font-size:11px;font-weight:700;color:#3a6080;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #141e28}
 .kv{display:grid;grid-template-columns:auto 1fr;gap:3px 14px;align-items:baseline}
 .kk{color:#3a5870;font-size:12px}
+.help{text-decoration:underline dotted rgba(120,150,180,.35);text-underline-offset:2px;cursor:help}
+.help:hover{text-decoration-color:rgba(150,200,240,.7)}
 .kv-val{color:#a8bcd0;font-size:12px;font-family:monospace}
 
 /* star color */
@@ -822,8 +824,30 @@ function buildDetail(sys) {
   return h;
 }
 
+// Build help map from existing glossary entries (units + params) on each call so it follows the active language.
+function buildHelpMap() {
+  const t = T[lang] || T.en;
+  const m = {};
+  for (const [k, v] of (t.units?.rows  || [])) m[k] = v;
+  for (const [k, v] of (t.params?.rows || [])) m[k] = v;
+  return m;
+}
+const escAttr = s => String(s).replace(/"/g, '&quot;');
+
 function kv(k, v) {
-  return `<span class="kk">${k}</span><span class="kv-val">${v??'—'}</span>`;
+  const help = buildHelpMap();
+  const kHelp = help[k];
+  const kSpan = kHelp ? `<span class="kk help" title="${escAttr(kHelp)}">${k}</span>` : `<span class="kk">${k}</span>`;
+  let vStr = (v == null) ? '—' : String(v);
+  // Wrap known unit tokens (longest first so 'mas/yr' wins over 'mas')
+  const units = Object.keys(help).filter(u => /^[^A-Za-z]|^(mas|pc|ly|AU|K|mag|km)/.test(u)).sort((a, b) => b.length - a.length);
+  for (const u of units) {
+    if (!help[u]) continue;
+    const esc = u.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    vStr = vStr.replace(new RegExp(`(^|\\s)${esc}(?=\\s|$)`, 'g'),
+      `$1<span class="help" title="${escAttr(help[u])}">${u}</span>`);
+  }
+  return `${kSpan}<span class="kv-val">${vStr}</span>`;
 }
 
 // ── Spectral type tooltip ─────────────────────────────────────────────────────
@@ -982,6 +1006,10 @@ const T = {
         ['AU', '천문단위 = 149,597,870 km (지구–태양 거리)'],
         ['K', '켈빈 — 절대온도 (0 K = −273.15°C)'],
         ['mas', '밀리초각 = 1/3,600,000°'],
+        ['mas/yr', '밀리초각/년 — 고유운동 단위. 매년 별이 하늘에서 이동하는 각거리'],
+        ['km/s', '킬로미터/초 — 속도 단위'],
+        ['°', '도 — 각도 단위 (1° = 60′ = 3600″)'],
+        ['mag', '등급 — 별의 밝기 척도 (값이 작을수록 밝음, 1등급 차이 = 약 2.512배)'],
         ['km³/s²', '중력 파라미터(GM) 단위'],
       ],
       note: '행성 질량이 Msini로 표시된 경우, 궤도 경사각 미관측으로 하한값(실제 질량 × sin i)만 알려진 것.'
@@ -989,8 +1017,12 @@ const T = {
     params: {
       title: '파라미터 설명',
       rows: [
+        ['RA', '적경 — 천구상 동서 방향 좌표. ICRS 기준 J2000.'],
+        ['Dec', '적위 — 천구상 남북 방향 좌표. ICRS 기준 J2000.'],
         ['Teff', '유효 온도 — 항성 표면 평균 온도. 별 색깔을 결정.'],
         ['Parallax', '시차 — 지구 공전에 따른 별의 겉보기 위치 변화. 값이 클수록 가까운 별.'],
+        ['PM RA', '고유운동 적경 성분 — 별이 RA 방향으로 매년 이동하는 각거리 (cos δ 보정값).'],
+        ['PM Dec', '고유운동 적위 성분 — 별이 Dec 방향으로 매년 이동하는 각거리.'],
         ['PM RA/Dec', '고유운동 — 별이 하늘에서 실제로 이동하는 각속도 (mas/yr).'],
         ['RV', '시선속도 — 별이 관측자 방향으로 가까워지거나 멀어지는 속도.'],
         ['SMA', '궤도 장반경 — 타원 궤도의 긴 반지름.'],
@@ -1030,6 +1062,10 @@ const T = {
         ['AU', 'Astronomical Unit = 149,597,870 km (Earth–Sun distance)'],
         ['K', 'Kelvin — absolute temperature (0 K = −273.15°C)'],
         ['mas', 'Milliarcsecond = 1/3,600,000°'],
+        ['mas/yr', 'Milliarcseconds per year — proper motion unit (annual angular displacement)'],
+        ['km/s', 'Kilometers per second — velocity unit'],
+        ['°', 'Degree — angle unit (1° = 60′ = 3600″)'],
+        ['mag', 'Magnitude — stellar brightness scale (lower = brighter; 1 mag ≈ 2.512×)'],
         ['km³/s²', 'Unit of gravitational parameter (GM)'],
       ],
       note: 'Planet mass shown as Msini when orbital inclination is unknown — a lower bound on actual mass (actual × sin i).'
@@ -1037,8 +1073,12 @@ const T = {
     params: {
       title: 'Parameters',
       rows: [
+        ['RA', 'Right Ascension — east-west sky coordinate. ICRS, J2000 frame.'],
+        ['Dec', 'Declination — north-south sky coordinate. ICRS, J2000 frame.'],
         ['Teff', 'Effective temperature — stellar surface temperature; determines star color.'],
         ['Parallax', 'Apparent shift in star position due to Earth\'s orbit. Larger = closer star.'],
+        ['PM RA', 'Proper motion RA component — annual angular displacement in RA (cos δ corrected).'],
+        ['PM Dec', 'Proper motion Dec component — annual angular displacement in Dec.'],
         ['PM RA/Dec', 'Proper motion — angular velocity of star across the sky (mas/yr).'],
         ['RV', 'Radial velocity — speed along the line of sight (toward/away from observer).'],
         ['SMA', 'Semi-Major Axis — half the long axis of an elliptical orbit.'],
