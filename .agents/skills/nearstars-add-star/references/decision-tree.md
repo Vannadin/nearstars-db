@@ -17,17 +17,20 @@ User mentions a star or system name
 │   │       └── No → Confirm with user (might be a typo / want different system)
 │   └── No → Go to Step 1
 └── Distance > 50 ly?
-    ├── Yes →
-    │   ├── 50–80 ly → could be Principia-only perturber (no Kopernicus
-    │   │   body, gravity effect only) per guideline §3.1. Pipeline does
-    │   │   not implement this mode yet. Stop, report option to user.
-    │   └── > 80 ly → out of Principia range too. Stop, report distance.
-    └── No → Proceed
+    ├── Yes → Proceed anyway. Note distance in `meta.notes`. DB
+    │         collection is distance-agnostic; Kopernicus cfg writer
+    │         skips >50 ly stars, Principia cfg writer can include up
+    │         to ~80 ly as perturbers. Stars beyond 80 ly become
+    │         reference catalog entries (no in-game effect) but are
+    │         still legitimate DB inputs.
+    └── No → Proceed normally
 ```
 
 How to confirm distance without bothering the user: SIMBAD parallax. The
-helper script (`scripts/lookup_gaia.py`) prints distance. If parallax
-gives distance > 50 ly, report back and stop.
+helper script (`scripts/lookup_gaia.py`) prints distance. >50 ly stars
+are added the same way — the DB layer is distance-agnostic. Note the
+distance in `meta.notes` so downstream cfg writers (Kopernicus stops at
+50 ly, Principia ~80 ly) know how to treat the entry.
 
 ---
 

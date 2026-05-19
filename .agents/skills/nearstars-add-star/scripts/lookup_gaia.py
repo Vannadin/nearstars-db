@@ -12,7 +12,8 @@ to the NearStars target_list.json:
 - Spectral type
 - Component flag (for binary identification)
 
-Exits non-zero if the star can't be found or is beyond 50 ly.
+Exits non-zero if the star can't be found in SIMBAD. Distance is reported
+but never causes exit — DB collection is distance-agnostic.
 """
 import sys
 import json
@@ -130,9 +131,9 @@ def main():
         dist_ly = dist_pc * PC_TO_LY
         print(f"  Distance:        {dist_pc:.2f} pc  ({dist_ly:.2f} ly)")
         if dist_ly > 50:
-            print(f"\n  WARNING: > 50 ly — outside Kopernicus rendering range.")
-            print(f"  Current pipeline does not support Principia-only entries.")
-            sys.exit(1)
+            print(f"  NOTE: > 50 ly — Kopernicus cfg writer will skip (out of range).")
+            print(f"        Principia cfg writer may include as perturber if ≤ 80 ly.")
+            print(f"        DB collection proceeds regardless — note distance in meta.notes.")
     else:
         print(f"  Distance:        unknown (no parallax)")
 

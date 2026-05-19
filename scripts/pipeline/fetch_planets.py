@@ -29,6 +29,8 @@ target_systems = {e["system"] for e in target_list}
 
 
 # ── 1. NASA Exoplanet Archive ─────────────────────────────────────────────────
+# 거리 사전 필터 없음 — target_list에 들어있는 모든 호스트의 행성을 가져옴.
+# 50 ly 너머 별도 DB에 포함 가능 (downstream cfg writer가 거리 limit 결정).
 q = """
 SELECT
   hostname, pl_name, disc_refname,
@@ -43,7 +45,6 @@ SELECT
   pl_rade, pl_radeerr1, pl_radeerr2,
   discoverymethod, pl_controv_flag, pl_pubdate
 FROM pscomppars
-WHERE sy_dist <= 15.34
 """.strip()
 
 print("NASA Exoplanet Archive 쿼리 중...")

@@ -2,15 +2,17 @@
 name: nearstars-add-star
 description: >
   Add a star (or binary/multiple system) to the NearStars KSP mod database
-  pipeline. Trigger this skill whenever the user wants to add a stellar
-  system within 50 ly to the project — phrases like "X 별 추가해줘", "add
-  Y star", "GJ XXX 추가", "(별 이름) 데이터 만들어줘", "이 시스템도
-  데이터베이스에 넣자", or any time the conversation involves expanding the
-  target_list to include a new star. Also use it when the user says "이거
-  Phase 2로 격상" or "정밀 큐레이션 해줘" for an existing star — the same
-  procedure applies to the curation upgrade. Do NOT use this skill for
-  writing Kopernicus or Principia cfg files (those are downstream of the
-  DB); use kopernicus-cfg for that.
+  pipeline. Trigger this skill whenever the user wants to add any stellar
+  system to the project — phrases like "X 별 추가해줘", "add Y star", "GJ
+  XXX 추가", "(별 이름) 데이터 만들어줘", "이 시스템도 데이터베이스에
+  넣자", or any time the conversation involves expanding the target_list to
+  include a new star. The DB layer is distance-agnostic; downstream cfg
+  writers (Kopernicus ~50 ly, Principia ~80 ly) handle their own range
+  limits. Also use this skill when the user says "이거 Phase 2로 격상" or
+  "정밀 큐레이션 해줘" for an existing star — the same procedure applies to
+  the curation upgrade. Do NOT use this skill for writing Kopernicus or
+  Principia cfg files (those are downstream of the DB); use kopernicus-cfg
+  for that.
 ---
 
 # NearStars — Add Star to DB
@@ -61,7 +63,7 @@ For each component of the system, you need:
 | Required | How to find |
 |---|---|
 | Common name (e.g. "GJ 412 A") | User-provided |
-| Distance ≤ 50 ly | SIMBAD or RECONS — if >50 ly, stop and report to user |
+| Distance | SIMBAD or RECONS — record it. No hard limit at the DB layer; note >50 ly in `meta.notes` since downstream Kopernicus cfg ignores it |
 | Gaia DR3 `source_id` | SIMBAD `ident` table — see `scripts/lookup_gaia.py` |
 | Component structure (single/binary/triple) | SIMBAD or discovery paper |
 | V magnitude (only if Gaia-saturated, V<~6) | Hipparcos / SIMBAD |
@@ -233,7 +235,7 @@ Quick handling reference. Full details in
 | `vmag_v: null` | No Gaia photometry and not in `HIPPARCOS_V` | Add to `HIPPARCOS_V` if V mag exists; leave null for Y dwarfs |
 | Star is V<6 (Vega, Sirius, etc.) | Gaia saturation — astrometry from SIMBAD, photometry needs Hipparcos | Hardcode V in `HIPPARCOS_V`; epoch becomes J2000.0 instead of J2016.0 |
 | Brown/sub-stellar dwarf with `value_msun < 0.08` | Sub-stellar mass measurement | Use SED/evolutionary model paper; record method correctly |
-| Distance > 50 ly | Outside Kopernicus rendering range | Stop. Report distance + note: "The 50-80 ly band could in principle be added as a Principia-only perturber (no Kopernicus body, gravity effect only) per guideline §3.1, but the current pipeline does not implement that mode. Adding it would require a new fetch path and a Principia-only output variant." |
+| Distance > 50 ly | Outside Kopernicus rendering range | Proceed with DB collection — distance is a downstream concern, not a DB-layer one. Note the distance in `meta.notes`. Whoever writes the Kopernicus cfg will skip this star (out of their range); Principia cfg writer may include it as a perturber if within their ~80 ly range. The DB itself stores any distance. |
 
 ---
 

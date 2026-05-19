@@ -132,11 +132,12 @@ Document the hierarchy in `binary_orbits.json` field `hierarchy`:
 
 ### Planet missing from `planets_raw.json` after fetch
 
-NASA Archive `pscomppars` filter is `sy_dist <= 15.34` (parsecs). If
-the star is right at the boundary or beyond:
-- Check `sy_dist` in the Archive for this star
-- If it's actually within 50 ly (15.34 pc), the Archive may have an
-  outdated parallax — manually patch by adding to `planets_curated.json`
+`fetch_planets.py` queries the full `pscomppars` table and filters
+results by `hostname IN target_list`. Possible causes for missing:
+- Hostname in `target_list.json` doesn't match NASA Archive `hostname`
+  (typos, alternate names) — check exact spelling
+- Planet not yet in NASA Archive (very recent discovery)
+- Planet retracted — verify on NASA Archive directly
 
 ### Phase 1 curated values not flowing through to `derived` block
 
@@ -225,9 +226,12 @@ overrides won't apply. Re-run the script later when TEPCat is reachable.
 
 ### NASA Archive returns 0 planets after query
 
-The hardcoded distance filter `sy_dist <= 15.34` (parsecs) might exclude
-your new star if its Archive parallax is outdated. Workaround: temporarily
-widen the filter in `fetch_planets.py`, fetch, then restore.
+The query targets the full `pscomppars` table without a distance filter.
+If the result is empty:
+- NASA Archive TAP service down — try again later
+- Network issue — verify `exoplanetarchive.ipac.caltech.edu` reachable
+- Target hostnames don't match Archive's `hostname` column — verify
+  spelling against the Archive's web interface
 
 ### Gaia TAP returns null radial_velocity
 
