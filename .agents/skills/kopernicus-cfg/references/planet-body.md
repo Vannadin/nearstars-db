@@ -131,175 +131,67 @@ ScaledVersion
 
 ---
 
-## Sol Source — Mercury (vacuum)
+## Sol reference (vacuum body — Mercury)
 
-Source: `Sol-Configs/Configs/01_Mercury/Mercury-Kopernicus.cfg`
+For the complete Sol-Configs Mercury cfg, see the upstream file:
+[`Sol-Configs/Configs/01_Mercury/Mercury-Kopernicus.cfg`](https://github.com/RSS-Reborn/Sol-Configs/blob/main/Sol-Configs/Configs/01_Mercury/Mercury-Kopernicus.cfg)
+(raw: https://raw.githubusercontent.com/RSS-Reborn/Sol-Configs/main/Sol-Configs/Configs/01_Mercury/Mercury-Kopernicus.cfg).
+
+The standard KSP-Kopernicus pattern for a vacuum rocky body looks like:
 
 ```cfg
-@Kopernicus:FOR[SolSystem]
+@Kopernicus:FOR[YourPack]
 {
     Body
     {
-        name = Mercury
-        identifier = Sol/Mercury
-        flightGlobalsIndex = 100
-        cacheFile = ParallaxContinued/Models/ScaledMesh.bin
+        name                = <BodyName>
+        identifier          = YourPack/<BodyName>
+        flightGlobalsIndex  = <unique integer>
+        Template            { name = Mun; removeAllPQSMods = True }
 
-        Template
-        {
-            name = Mun
-            removeAllPQSMods = True
-        }
-
-        Orbit
-        {
-            referenceBody            = Sun
-            semiMajorAxis            = 57909081859.97428
-            eccentricity             = 0.2056264110797241
-            inclination              = 7.0064631630008085
-            meanAnomalyAtEpochD      = 12.23374264650345
-            longitudeOfAscendingNode = 48.39193279902154
-            argumentOfPeriapsis      = 28.98861975116913
-            epoch                    = 0
-            color       = 0.429,0.412,0.375,1
-            icon        = ALL
-            iconTexture = Sol-Textures/PluginData/01_Mercury/Kopernicus/Mercury_Icon.png
-        }
-
-        Properties
-        {
-            displayName = #Sol_Mercury_name
-            radius = 2439400
-            gravParameter = 2.203186855E+13
-            rotationPeriod = 5067027.00596      // 58.65 days
-            tidallyLocked = false
-            initialRotation = 285
-            albedo = 0.106
-            emissivity = 0.77
-            timewarpAltitudeLimits = 0 5000 30000 30000 100000 300000 600000 1000000
-            biomeMap = Sol-Textures/PluginData/01_Mercury/Kopernicus/Mercury_Biomes.dds
-            Biomes
-            {
-                Biome { name = Lowlands;      value = 1; color = RGBA(0,255,255,255)   }
-                Biome { name = Highlands;     value = 1; color = RGBA(73,255,255,255)  }
-                Biome { name = Young Craters; value = 1; color = RGBA(255,255,255,255) }
-            }
-            ScienceValues
-            {
-                landedDataValue      = 7
-                inSpaceLowDataValue  = 6
-                inSpaceHighDataValue = 5.5
-                recoveryValue        = 6
-                flyingAltitudeThreshold = 27000
-                spaceAltitudeThreshold  = 2000000
-            }
-        }
-
-        ScaledVersion
-        {
-            type = Vacuum
-            fadeStart = 100000
-            fadeEnd   = 102000
-            Material
-            {
-                texture  = Sol-Textures/PluginData/01_Mercury/Kopernicus/Mercury_Dummy.dds
-                normals  = Sol-Textures/PluginData/_Misc/Kopernicus/Blank_Normal.dds
-                shininess = 0.0
-                specular  = 0,0,0,1
-            }
-        }
-
-        PQS
-        {
-            maxQuadLengthsPerFrame = 0.03
-            minLevel = 2
-            maxLevel = 13
-            minDetailDistance = 12
-            deactivateAltitude = 167000
-            fadeStart = 102000
-            fadeEnd   = 127000
-            materialType = AtmosphericTriplanarZoomRotation
-            Mods
-            {
-                Parallax { subdivisionLevel = 8; subdivisionRadius = 500; order = 999999 }
-                VertexColorMap
-                {
-                    map     = Sol-Textures/PluginData/01_Mercury/Kopernicus/Mercury_Color.dds
-                    order   = 10
-                    enabled = true
-                }
-                VertexHeightMapBicubic
-                {
-                    map                    = Sol-Textures/PluginData/01_Mercury/Kopernicus/Mercury_VertexHeight.dds
-                    offset                 = 0
-                    deformity              = 20578.0
-                    scaleDeformityByRadius = false
-                    order   = 20
-                    enabled = true
-                }
-            }
-        }
+        Orbit         { referenceBody = Sun; semiMajorAxis = ...; eccentricity = ...; ... }
+        Properties    { radius = ...; gravParameter = ...; rotationPeriod = ...; ... }
+        ScaledVersion { type = Vacuum; Material { texture = ...; normals = ... } }
+        PQS           { Mods { Parallax {...}; VertexHeightMapBicubic {...}; ... } }
     }
 }
 ```
+
+Mercury's real physical values (radius, gravParameter, rotation period,
+albedo) are public-domain facts available from the
+[NASA Mercury Fact Sheet](https://nssdc.gsfc.nasa.gov/planetary/factsheet/mercuryfact.html).
+Sol-Configs wires those values into the Kopernicus template above, plus
+texture paths and biome definitions specific to the Sol-Configs mod.
 
 ---
 
-## Sol Source — Earth (atmospheric, key excerpts)
+## Sol reference (atmospheric body — Earth)
 
-Source: `Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg`
+For the complete Sol-Configs Earth cfg, see:
+[`Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg`](https://github.com/RSS-Reborn/Sol-Configs/blob/main/Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg)
+(raw: https://raw.githubusercontent.com/RSS-Reborn/Sol-Configs/main/Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg).
 
-ScaledVersion and Atmosphere only. PQS structure is identical to Mercury.
+Differences vs the vacuum pattern above:
+
+- `ScaledVersion.type = Atmospheric`
+- `ScaledVersion.Material` adds a `Gradient` block for atmospheric rim glow
+- A top-level `Atmosphere` node is required with at minimum:
 
 ```cfg
-ScaledVersion
-{
-    type = Atmospheric
-    Material
-    {
-        texture   = Sol-Textures/PluginData/03_Earth/Kopernicus/Earth_Dummy.dds
-        normals   = Sol-Textures/PluginData/_Misc/Kopernicus/Blank_Normal.dds
-        shininess = 0.2
-        specular  = 0.5,0.5,0.5,1
-        rimPower  = 2.4
-        rimBlend  = 1.1
-        Gradient
-        {
-            0.0 = 0.45,0.55,0.7,1.0
-            0.3 = 0.2,0.15,0.05,1.0
-            0.6 = 0.0,0.0,0.0,1.0
-            1.0 = 0.0,0.0,0.0,1.0
-        }
-    }
-}
-
 Atmosphere
 {
-    enabled  = True
-    oxygen   = True
-    adiabaticIndex      = 1.4
-    atmosphereDepth     = 140000
-    atmosphereMolarMass = 0.0289644
-    ambientColor = 0.243,0.251,0.255,1
-    lightColor   = 0.65,0.57,0.475,0.5
-    addAFG       = True
-    temperatureSeaLevel = 288
-    temperatureCurve
-    {
-        key = 0      282.5  0       -0.0025
-        key = 8000   240.5  -0.006  -0.006
-        key = 15000  212    -0.0025 -0.0025
-        key = 30000  228    0.002   0.002
-        key = 80000  256    0.009   0
-        key = 140000 560    0.007   0
-    }
-    pressureCurve
-    {
-        key = 0      101.325  0        -0.0119729
-        key = 10000  27.4635  -0.004   -0.004
-        key = 30000  1.208    -0.00018 -0.00018
-        key = 80000  0.00107  -1.8E-7  -1.8E-7
-        key = 140000 0        0        0
-    }
+    enabled             = True
+    oxygen              = True | False
+    atmosphereDepth     = <m>
+    atmosphereMolarMass = <kg/mol>
+    adiabaticIndex      = <unitless>
+    temperatureSeaLevel = <K>
+    temperatureCurve    { ... }
+    pressureCurve       { ... }
 }
 ```
+
+Real-world Earth atmospheric profiles (US Standard Atmosphere 1976) used
+as input to `temperatureCurve` / `pressureCurve` are public-domain
+references — see https://ntrs.nasa.gov/citations/19770009539. Sol-Configs'
+specific curve keypoints are at the raw URL above.

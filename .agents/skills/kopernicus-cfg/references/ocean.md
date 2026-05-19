@@ -81,130 +81,29 @@ Ocean
 }
 ```
 
-## Full Ocean block (Sol/Earth — realistic water)
+## Sol reference (realistic water — Earth)
 
-```cfg
-Ocean
-{
-    ocean       = True
-    oceanColor  = 0.071,0.102,0.157,1
-    oceanHeight = 0                       // sea level offset in meters
-    density     = 1
-    minLevel    = 2
-    maxLevel    = 8
-    minDetailDistance    = 8
-    maxQuadLengthsPerFrame = 0.03
+For the complete Sol-Configs Earth Ocean block (Material, FallbackMaterial,
+Fog, Mods/OceanFX with full tuning curves), see the upstream file:
+[`Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg`](https://github.com/RSS-Reborn/Sol-Configs/blob/main/Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg)
+(raw: https://raw.githubusercontent.com/RSS-Reborn/Sol-Configs/main/Sol-Configs/Configs/03_Earth-System/03_Earth/Earth-Kopernicus.cfg).
 
-    Material
-    {
-        color          = 0.451,0.525,0.525,1
-        colorFromSpace = 0.141,0.231,0.278,1
-        specColor      = 1,1,1,1
-        shininess      = 0.698
-        gloss          = 0.2
-        tiling         = 1000
-        waterTex       = BUILTIN/sea-water1
-        waterTex1      = BUILTIN/sea-water2
-        bTiling        = 800
-        bumpMap        = BUILTIN/quiet
-        displacement   = 0.05
-        texDisplacement = -0.31
-        dispFreq       = 0.15
-        mix            = 0.368
-        oceanOpacity   = 0.5
-        falloffPower   = 1.1
-        falloffExp     = 2
-        fogColor       = 0.918,0.918,1,1
-        heightFallOff  = 0.2
-        globalDensity  = -8E-06
-        atmosphereDepth = 70000
-        fogColorRamp   = BUILTIN/AerialRampKerbin2
-        fadeStart      = 20000
-        fadeEnd        = 60000
-        planetOpacity  = 1
-        normalXYFudge  = 1.4
-        normalZFudge   = 1.18
-    }
+The Sol-Configs Ocean block extends the minimal Oceanus pattern above with:
 
-    FallbackMaterial
-    {
-        color          = 0.494,0.553,0.627,1
-        colorFromSpace = 0.051,0.165,0.216,1
-        specColor      = 1,1,1,1
-        shininess      = 1
-        gloss          = 0.433
-        tiling         = 1000
-        waterTex       = BUILTIN/sea-water2
-        waterTex1      = BUILTIN/sea-water3
-        fadeStart      = 20000
-        fadeEnd        = 60000
-        planetOpacity  = 0
-    }
+- Detailed `Material` block (specColor, shininess, gloss, multi-texture
+  tiling, bump map, fog/aerial perspective parameters)
+- Separate `FallbackMaterial` block for the low-quality fallback render
+- A standalone top-level `Fog` block (different from Material fog) tuned
+  for Earth-like sky-blue scattering — afgBase, fogColorStart/End,
+  fogDensityAltScalar, skyColorOpacityAltMult, sun parameters
+- An `OceanFX` mod with framesPerSecond=10 and the full 8-frame water
+  animation sequence in `Watermain`
 
-    Fog
-    {
-        afgAltMult          = 0.05
-        afgBase             = 0.6
-        afgLerp             = False
-        afgMin              = 0.05
-        fogColorEnd         = 0,0.085,0.123,1
-        fogColorStart       = 0,0.340,0.490,1
-        fogDensityAltScalar = -0.0008
-        fogDensityEnd       = 0.025
-        fogDensityExponent  = 1
-        fogDensityPQSMult   = 0.02
-        fogDensityStart     = 0.005
-        skyColorMult        = 1.1
-        skyColorOpacityAltMult = 15
-        skyColorOpacityBase = 0.25
-        sunAltMult          = 0.01
-        sunBase             = 0.5
-        sunMin              = 0.05
-        useFog              = True
-    }
-
-    Mods
-    {
-        AerialPerspectiveMaterial
-        {
-            atmosphereDepth     = 5000
-            DEBUG_SetEveryFrame = False
-            globalDensity       = -7.5E-06
-            heightFalloff       = 0.2
-            oceanDepth          = 0
-            order   = 100
-            enabled = True
-        }
-        OceanFX
-        {
-            angle            = 0
-            blendA           = 0
-            blendB           = 0
-            framesPerSecond  = 10
-            oceanOpacity     = 0
-            spaceAltitude    = 0
-            spaceSurfaceBlend = 0
-            specColor        = 0,0,0,0
-            texBlend         = 0.469
-            txIndex          = -2147483648
-            order   = 100
-            enabled = True
-            Watermain
-            {
-                value = BUILTIN/sea-water1
-                value = BUILTIN/sea-water2
-                value = BUILTIN/sea-water3
-                value = BUILTIN/sea-water4
-                value = BUILTIN/sea-water5
-                value = BUILTIN/sea-water6
-                value = BUILTIN/sea-water7
-                value = BUILTIN/sea-water8
-                value = BUILTIN/sea-water1
-            }
-        }
-    }
-}
-```
+These additional nodes are not strictly required for Kopernicus to render
+an ocean — they fine-tune visual realism. Start from the minimal Oceanus
+pattern above when prototyping a new ocean world, then inspect the
+Sol-Configs raw URL above when you need a reference for fully-tuned
+aesthetic values.
 
 ## HazardousOcean (heat damage inside the ocean)
 

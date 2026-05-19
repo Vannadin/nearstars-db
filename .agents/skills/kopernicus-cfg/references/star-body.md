@@ -136,110 +136,56 @@ ScaledVersion
 
 ---
 
-## Sol Source — Sun
+## Sol reference (star — Sun)
 
-Source: `Sol-Configs/Configs/00_Sol-Kopernicus.cfg`
+For the complete Sol-Configs Sun cfg, see:
+[`Sol-Configs/Configs/00_Sol-Kopernicus.cfg`](https://github.com/RSS-Reborn/Sol-Configs/blob/main/Sol-Configs/Configs/00_Sol-Kopernicus.cfg)
+(raw: https://raw.githubusercontent.com/RSS-Reborn/Sol-Configs/main/Sol-Configs/Configs/00_Sol-Kopernicus.cfg).
+
+The standard KSP-Kopernicus pattern for a star body is:
 
 ```cfg
-@Kopernicus:FOR[SolSystem]
+@Kopernicus:FOR[YourPack]
 {
     Body
     {
-        name = Sun
-        identifier = Sol/Sun
-        flightGlobalsIndex = 10
-        cacheFile = ParallaxContinued/Models/ScaledMesh.bin
-
-        Template
-        {
-            name = Sun
-            removeAllPQSMods = True
-        }
+        name                = <StarName>
+        identifier          = YourPack/<StarName>
+        flightGlobalsIndex  = <unique integer>
+        Template            { name = Sun; removeAllPQSMods = True }
 
         Properties
         {
-            displayName = #Sol_Sun_name
-            radius = 695700000
-            gravParameter = 1.3271244004193938E+20
-            rotationPeriod = 2192831.56143     // 25.38 days (sidereal)
-            albedo = 0
-            emissivity = 0.99
+            radius            = <m>
+            gravParameter     = <m^3/s^2>
+            rotationPeriod    = <s>
             sphereOfInfluence = Infinity
-            timewarpAltitudeLimits = 0 3270000 3270000 6540000 1.308E+07 2.616E+07 5.232E+07 6.54E+07
-
-            ScienceValues
-            {
-                inSpaceLowDataValue  = 11
-                inSpaceHighDataValue = 2
-                recoveryValue        = 4
-                spaceAltitudeThreshold = 1E+09
-            }
         }
 
         ScaledVersion
         {
-            type = Star
+            type      = Star
             fadeStart = 0
-            fadeEnd = 0
+            fadeEnd   = 0
             Light
             {
-                sunlightColor          = 1,1,1,1
-                sunlightShadowStrength = 0.752
-                scaledSunlightColor    = 1,1,1,1
-                givesOffLight          = True
-                sunAU                  = 13599840256
-                luminosity             = 1360
-                brightnessCurve
-                {
-                    key = -0.01573471 0.217353 1.706627 1.706627
-                    key = 5.084181 3.997075 -0.001802375 -0.001802375
-                    key = 38.56295 1.82142 0.0001713 0.0001713
-                }
-                IntensityCurve
-                {
-                    key = 0 0.9 0 0
-                    key = 1.49597871e11 0.9 0 0
-                    key = 1.49597871e13 0 0 0
-                }
-                ScaledIntensityCurve
-                {
-                    key = 1159500.0 1 0 0
-                    key = 24932978500.0 0 0 0
-                }
-                IVAIntensityCurve
-                {
-                    key = 0 0.81 0 0
-                    key = 1 0.81 0 0
-                }
+                sunAU       = <m, distance to '1 AU' reference>
+                luminosity  = <W/m^2 at sunAU, used for stock light falloff>
+                brightnessCurve     { ... }
+                IntensityCurve      { ... }
+                ScaledIntensityCurve{ ... }
+                IVAIntensityCurve   { ... }
             }
-            Material
-            {
-                noiseMap   = Sol-Textures/PluginData/00_Sol/Kopernicus/Sol_Sunspots.dds
-                emitColor0 = 0.742,0.781,0.820,1
-                emitColor1 = 0.685,0.685,0.685,1
-                rimColor   = 0.816,0.816,0.816,1
-                rimPower   = 0.85
-                rimBlend   = 4.5
-            }
-            Coronas
-            {
-                Value
-                {
-                    scaleSpeed     = 0.007
-                    scaleLimitY    = 5
-                    scaleLimitX    = 5
-                    updateInterval = 5
-                    speed          = -1
-                    Material
-                    {
-                        texture      = Sol-Textures/PluginData/00_Sol/Kopernicus/Sol_Corona.dds
-                        mainTexScale = 1,0.9
-                    }
-                }
-            }
+            Material { noiseMap = ...; emitColor0 = ...; rimColor = ...; ... }
+            Coronas  { Value { Material { texture = ... } } }
         }
-
-        Debug { exportMesh = True; update = False }
     }
 }
 ```
+
+Sun physical constants (R ≈ 6.957e8 m, GM ≈ 1.3271244e20 m³/s²,
+sidereal period ≈ 25.38 d) are public-domain values from IAU 2015 and
+the NASA Sun Fact Sheet
+(https://nssdc.gsfc.nasa.gov/planetary/factsheet/sunfact.html).
+Sol-Configs' specific brightness/intensity curves are tuned for KSP
+visual presentation and are at the raw URL above.

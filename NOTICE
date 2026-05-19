@@ -40,13 +40,14 @@ Principia, which is licensed under the MIT License.
 Sol-Configs (https://github.com/RSS-Reborn/Sol-Configs)
 ================================================================
 
-Excerpts of Sol-Configs appear in
+Sol-Configs has no published license as of 2026-05-19. To avoid any
+ambiguity, this repository does not redistribute Sol-Configs cfg
+content verbatim. The skill files
 `.agents/skills/kopernicus-cfg/references/planet-body.md`,
-`star-body.md`, and `ocean.md` for documentation purposes.
-Sol-Configs has no published license as of 2026-05-19. Explicit
-permission from the maintainer is pending; if not granted, the
-excerpts will be replaced with raw-link redirects to the upstream
-repository. See `docs/reference/data-sources.md` §2.
+`star-body.md`, and `ocean.md` instead provide a raw-link redirect
+to the upstream file plus a generic KSP-Kopernicus pattern that does
+not encode Sol-Configs' specific structural choices. See
+`docs/reference/data-sources.md` §2.
 
 ================================================================
 Kopernicus (https://github.com/ballisticfox/Kopernicus)
