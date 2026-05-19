@@ -147,7 +147,7 @@
     "g_mag": null,
     "bp_rp": null,
     "vmag_v": null,
-    "vmag_source": "no_gaia_id"
+    "vmag_source": "unavailable_brown_dwarf"
   },
   "Chi-1 Orionis A": {
     "g_mag": 4.2417,
@@ -807,7 +807,7 @@
     "g_mag": null,
     "bp_rp": null,
     "vmag_v": null,
-    "vmag_source": "no_gaia_id"
+    "vmag_source": "unavailable_brown_dwarf"
   },
   "Wolf 1061": {
     "g_mag": 8.8019,

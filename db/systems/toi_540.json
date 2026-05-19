@@ -20,7 +20,7 @@
         "vmag_v": 14.511,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3104,
-        "spectype": null,
+        "spectype": "M V",
         "mass_measurements": [
           {
             "value_msun": 0.159,

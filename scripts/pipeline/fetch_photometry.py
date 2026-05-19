@@ -17,10 +17,17 @@ HIPPARCOS_V = {
     "Fomalhaut":      1.16,
     "Sirius B":       8.44,
     "Procyon A":      0.34,
-    # Gaia DR3 미포함 적색왜성 — Hipparcos / 측광 카탈로그 문헌값
     "GJ 411":         7.47,   # Lalande 21185, HIP 54035
     "GJ 273":         9.87,   # Luyten's Star, HIP 36208
     "HD 62509":       1.14,   # Pollux, HIP 37826
+}
+
+# Y dwarf / 차가운 갈색왜성: 광학 V 등급 자체가 존재하지 않음 (Teff ≲ 500 K → V ≫ 30).
+# Gaia, Hipparcos, 어떤 catalog에도 V 측정이 없음. vmag_source 를 'no_gaia_id' 가
+# 아니라 'unavailable_brown_dwarf' 로 정확히 표기하기 위한 명시적 셋.
+BROWN_DWARF_NO_V = {
+    "WISEP J121756.91+162640.2 A",   # T9+Y0 binary
+    "CWISEP J193518.59-154620.3",    # Y dwarf, Teff~482 K (Faherty et al. 2024)
 }
 
 
@@ -87,6 +94,13 @@ WHERE source_id IN ({id_list})
 results = {}
 
 for name, gid in star_to_gaia.items():
+    # Y dwarf 등 광학 V 미존재 케이스 명시 처리
+    if name in BROWN_DWARF_NO_V:
+        results[name] = {
+            "g_mag": None, "bp_rp": None,
+            "vmag_v": None, "vmag_source": "unavailable_brown_dwarf",
+        }
+        continue
     # Hipparcos 하드코딩 우선 (Gaia 포화 별)
     if name in HIPPARCOS_V:
         results[name] = {

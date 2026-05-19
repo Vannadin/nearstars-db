@@ -1179,6 +1179,9 @@
     ]
   },
   "LHS 3844": {
+    "spectype": "M5",
+    "spectype_bibcode": "2019ApJ...871L..24V",
+    "spectype_reference": "Vanderspek et al. 2019",
     "mass_measurements": [
       {
         "value_msun": 0.151,
@@ -1796,6 +1799,9 @@
     ]
   },
   "TOI-540": {
+    "spectype": "M V",
+    "spectype_bibcode": "2021AJ....161...23M",
+    "spectype_reference": "Ment et al. 2021",
     "mass_measurements": [
       {
         "value_msun": 0.159,

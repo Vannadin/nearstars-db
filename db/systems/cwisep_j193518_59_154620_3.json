@@ -18,7 +18,7 @@
         "radial_velocity_km_s": -36.9,
         "radial_velocity_source": "simbad",
         "vmag_v": null,
-        "vmag_source": "no_gaia_id",
+        "vmag_source": "unavailable_brown_dwarf",
         "teff_k": 482,
         "spectype": "Y",
         "mass_measurements": [
