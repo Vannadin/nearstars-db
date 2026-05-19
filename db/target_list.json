@@ -60,17 +60,20 @@
     "system": "Alpha Centauri",
     "components": [
       "Alpha Centauri A",
-      "Alpha Centauri B"
+      "Alpha Centauri B",
+      "Proxima Cen"
     ],
     "gaia_source_ids": [
       null,
-      null
+      null,
+      "5853498713190525696"
     ],
     "hip_ids": [],
     "binary": true,
     "stellarium_ids": {
       "Alpha Centauri A": "RigilKent",
-      "Alpha Centauri B": "HIP71681"
+      "Alpha Centauri B": "HIP71681",
+      "Proxima Cen": "Proxima"
     }
   },
   {
@@ -1647,20 +1650,6 @@
     "binary": false,
     "stellarium_ids": {
       "Mu Herculis A": null
-    }
-  },
-  {
-    "system": "Proxima Cen",
-    "components": [
-      "Proxima Cen"
-    ],
-    "gaia_source_ids": [
-      "5853498713190525696"
-    ],
-    "hip_ids": [],
-    "binary": false,
-    "stellarium_ids": {
-      "Proxima Cen": "Proxima"
     }
   },
   {

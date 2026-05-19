@@ -144,11 +144,18 @@ def _thiele_innes_per_unit_a(omega_deg, Omega_deg, i_deg):
 def solve_orbit_relative(orbit, dist_pc, t_jd):
     """주어진 orbit 요소로 t_jd 시점의 상대(B−A) 위치/속도를 ICRS Cartesian으로 반환.
     Returns ((rx, ry, rz) km, (vx, vy, vz) km/s).
+    a 입력은 a_arcsec (각도) 또는 a_au (직접 AU) 중 하나. 외곽(hierarchical) 궤도는
+    분리각이 너무 커서 a_au가 더 자연스러움.
     """
     P_yr     = orbit["P_yr"]
     T_jd     = orbit["T_jd_tt"]
     e        = orbit["e"]
-    a_au     = orbit["a_arcsec"] * dist_pc    # parsec 정의: 1″×1pc = 1AU
+    if "a_au" in orbit:
+        a_au = orbit["a_au"]
+    elif "a_arcsec" in orbit:
+        a_au = orbit["a_arcsec"] * dist_pc    # parsec 정의: 1″×1pc = 1AU
+    else:
+        raise ValueError(f"orbit {orbit.get('orbit_id')}: a_arcsec 또는 a_au 필요")
     i_deg    = orbit["i_deg"]
     om_deg   = orbit["omega_deg"]
     Om_deg   = orbit["Omega_deg"]
@@ -293,15 +300,52 @@ def resolve_binary_component_states(system_name, binary_data, astrometry_raw):
     bary = resolve_barycenter_state(system_name, binary_data, astrometry_raw)
     comps_by_name = {c["name"]: c for c in binary_data["components"]}
 
-    # 각 궤도별 처리 (현재 스키마: 한 시스템에 하나의 fitted orbit, 나머지는 standalone)
+    # 각 궤도별 처리. 평탄 궤도(primary/secondary 둘 다 실제 컴포넌트)는 기존 로직.
+    # 계층 궤도(primary_is_barycenter_of: 내부 쌍을 한 점으로 묶고 외곽 동반자와 짝지움)는
+    # 별도 분기. phase_reliable=false 외곽 궤도는 단일 항성 폴백에 맡겨 회귀를 방지.
     for orbit in binary_data["orbits"]:
         if "primary_is_barycenter_of" in orbit:
-            # 계층적 삼중성 (현재 마이그레이션에선 사용되지 않음 — 안전을 위해 명시적 차단)
-            raise NotImplementedError(
-                f"{system_name}: hierarchical 'primary_is_barycenter_of' orbits "
-                "are not implemented in this build. Drop the outer orbit or "
-                "extend resolve_binary_component_states."
-            )
+            if not orbit.get("phase_reliable", True):
+                # 외곽 궤도의 위상(T_periastron)이 불확실 → 요소만으로 위치 예측 불가.
+                # out에 secondary를 추가하지 않으면 caller(main loop)가 binary_states에
+                # 없는 컴포넌트를 단일 항성 경로(astrometry_raw 직접 + 선형 전파)로 처리함.
+                # 결과: 외곽 동반자의 수치 출력은 기존 standalone 처리와 동일.
+                continue
+            # phase_reliable=true: Jacobi 합성.
+            # 현재 데이터에서는 사용되지 않으나, 향후 신뢰성 있는 외곽 궤도(예: Gaia DR4 NSS
+            # hierarchical)가 들어오면 자동으로 활성화됨.
+            outer_secondary = orbit["secondary"]
+            inner_members   = orbit["primary_is_barycenter_of"]
+            m_inner_total = sum(comps_by_name[n]["mass_msun"] for n in inner_members)
+            m_outer       = comps_by_name[outer_secondary]["mass_msun"]
+            if m_outer is None or any(comps_by_name[n]["mass_msun"] is None for n in inner_members):
+                raise ValueError(
+                    f"{system_name} orbit {orbit['orbit_id']}: "
+                    f"primary_is_barycenter_of requires mass_msun on inner members and secondary"
+                )
+            for epoch_label, t_jd in (("b1950", JD_B1950), ("j2000", JD_J2000)):
+                dt_s = (t_jd - bary["epoch_jd"]) * 86400.0
+                R_g = propagate(bary["pos_km"], bary["vel_km_s"], dt_s)
+                V_g = bary["vel_km_s"]
+                # 외곽 상대 오프셋 r_outer(t) = (outer_secondary − g) at t_jd
+                (deltas_au, vels_auyr) = solve_orbit_relative(orbit, bary["dist_pc"], t_jd)
+                r_outer_km   = sky_offset_to_icrs(deltas_au, bary["ra_deg"], bary["dec_deg"])
+                v_outer_km_yr = sky_offset_to_icrs(vels_auyr, bary["ra_deg"], bary["dec_deg"])
+                v_outer_km_s  = tuple(v / YR_TO_S for v in v_outer_km_yr)
+                r_C = tuple(R_g[i] + r_outer_km[i]  for i in range(3))
+                v_C = tuple(V_g[i] + v_outer_km_s[i] for i in range(3))
+                out.setdefault(outer_secondary, {})[epoch_label] = {
+                    "pos_km": r_C, "vel_km_s": v_C
+                }
+            out[outer_secondary].setdefault("meta", {}).update({
+                "orbit_id":          orbit["orbit_id"],
+                "role":              "outer_companion",
+                "mass_ratio_q":      m_inner_total / (m_inner_total + m_outer),
+                "barycenter_method": bary["method"],
+                "phase_reliable":    orbit.get("phase_reliable", True),
+            })
+            continue
+
         primary, secondary = orbit["primary"], orbit["secondary"]
         m_p = comps_by_name[primary  ]["mass_msun"]
         m_s = comps_by_name[secondary]["mass_msun"]

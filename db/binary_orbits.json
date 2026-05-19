@@ -1,7 +1,7 @@
 {
   "Alpha Centauri": {
     "system_id": "alpha_centauri",
-    "hierarchy": "binary",
+    "hierarchy": "triple",
     "wds_id": "14396-6050",
     "components": [
       {
@@ -17,6 +17,14 @@
         "mass_source": "pourbaix_correia_2017",
         "astrometry_source": "mass_weighted_average",
         "astrometry_quality": "barycentric"
+      },
+      {
+        "name": "Proxima Cen",
+        "mass_msun": 0.1221,
+        "mass_source": "suarez_mascareno_2025",
+        "astrometry_source": "gaia_dr3",
+        "astrometry_quality": "single_component",
+        "astrometry_note": "Hierarchically bound to AB pair (Kervella et al. 2017). Outer orbit phase_reliable=false → numerical position falls back to direct Gaia DR3 astrometry (linear propagation). Schema-level grouping enables future Gaia DR4 NSS hierarchical solutions to slot in without restructuring."
       }
     ],
     "orbits": [
@@ -46,6 +54,26 @@
         "node_resolved": true,
         "phase_reliable": true,
         "note": "Pourbaix 2002 solution; legacy orb_grade=10 → normalized to ORB6 grade 1 (definitive). WDS 2023 sep/PA calibration: predicts sep=8.00 arcsec PA=5.0 deg vs observed 8.1 arcsec/5 deg."
+      },
+      {
+        "orbit_id": "AB-Proxima",
+        "relates": ["Alpha Centauri AB (barycenter)", "Proxima Cen"],
+        "primary_is_barycenter_of": ["Alpha Centauri A", "Alpha Centauri B"],
+        "secondary": "Proxima Cen",
+        "source": "Kervella, Thévenin & Lovis (2017)",
+        "doi": "10.1051/0004-6361/201629930",
+        "bibcode": "2017A&A...598L...7K",
+        "equinox": "J2000",
+        "P_yr": 547000,
+        "e": 0.50,
+        "a_au": 8700,
+        "i_deg": 107.6,
+        "omega_deg": 72.3,
+        "Omega_deg": 126.0,
+        "grade": 4,
+        "node_resolved": false,
+        "phase_reliable": false,
+        "note": "Outer hierarchical orbit confirming Proxima as gravitationally bound to AB (radial velocity + astrometric coincidence). Periastron epoch T not constrained — phase_reliable=false. Resolver skips Kepler composition and uses direct Gaia DR3 astrometry for Proxima's position. Schema-level grouping only; no numerical effect at JD 2433282.5 (50 yr × 547 kyr orbit → orbital displacement ≪ Gaia precision)."
       }
     ]
   },
