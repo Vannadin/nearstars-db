@@ -20,9 +20,29 @@
         "vmag_v": -1.46,
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 9333,
-        "spectype": "A0mA1Va",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "A1 V",
+        "mass_measurements": [
+          {
+            "value_msun": 2.063,
+            "uncertainty_msun": 0.023,
+            "method": "binary_orbit",
+            "reference": "Bond et al. 2017 (HST astrometric orbit)",
+            "bibcode": "2017ApJ...840...70B",
+            "doi": "10.3847/1538-4357/aa6af8",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.7117,
+            "uncertainty_rsun": 0.0093,
+            "method": "interferometry",
+            "reference": "Kervella et al. 2003",
+            "bibcode": "2003A&A...408..681K",
+            "doi": "10.1051/0004-6361:20030994",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -50,8 +70,8 @@
         "phase_reliable": true
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 273785763757.134,
+        "mean_radius_km": 1190829.7
       }
     }
   ],
@@ -73,6 +93,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Bond et al. 2017 (HST astrometric orbit)",
+      "doi": "10.3847/1538-4357/aa6af8",
+      "bibcode": "2017ApJ...840...70B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Sirius A mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Kervella et al. 2003",
+      "doi": "10.1051/0004-6361:20030994",
+      "bibcode": "2003A&A...408..681K",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Sirius A radius (interferometry)"
       ]
     }
   ],

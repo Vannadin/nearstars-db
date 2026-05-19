@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "Barnard d",
         "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 2.3402,
         "period_err_days": 0.0003,
         "semi_major_axis_au": 0.0188,
@@ -140,7 +140,7 @@
       "raw": {
         "pl_name": "Barnard b",
         "reference": "<a refstr=GONZALEZ_HERNANDEZ_ET_AL_2024 href=https://ui.adsabs.harvard.edu/abs/2024A&A...690A..79G/abstract target=ref>Gonz&aacute;lez Hern&aacute;ndez et al. 2024</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 3.1542,
         "period_err_days": 0.0004,
         "semi_major_axis_au": 0.0229,
@@ -203,7 +203,7 @@
       "raw": {
         "pl_name": "Barnard c",
         "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 4.1244,
         "period_err_days": 0.0006,
         "semi_major_axis_au": 0.0274,
@@ -266,7 +266,7 @@
       "raw": {
         "pl_name": "Barnard e",
         "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 6.7392,
         "period_err_days": 0.003,
         "semi_major_axis_au": 0.0381,

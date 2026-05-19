@@ -1124,5 +1124,61 @@
         "recommended": true
       }
     ]
+  },
+  "Arcturus": {
+    "teff_k": 4271,
+    "teff_bibcode": "1970A&A.....7..408C",
+    "spectype": "K1.5IIIFe-0.5",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Capella": {
+    "teff_k": 5270,
+    "teff_bibcode": "1990ApJS...74.1075M",
+    "spectype": "G3III:",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Procyon A": {
+    "teff_k": 6615,
+    "teff_bibcode": "2016MNRAS.456.1221R",
+    "spectype": "F5IV-V+DQZ",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Procyon B": {
+    "teff_k": 7585,
+    "teff_bibcode": "2022ApJ...935L..12B",
+    "spectype": "DQZ",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Wolf 359": {
+    "teff_k": 3027,
+    "teff_bibcode": "2021ApJS..255....8R",
+    "spectype": "dM6",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "70 Ophiuchi A": {
+    "teff_k": 5298,
+    "teff_bibcode": "2022A&A...663A...4S",
+    "spectype": "K0V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "70 Ophiuchi B": {
+    "teff_k": 4393,
+    "teff_bibcode": "2012ApJ...757..112B",
+    "spectype": "K4V",
+    "mass_measurements": [],
+    "radius_measurements": []
+  },
+  "Van Maanen's Star": {
+    "teff_k": 6168,
+    "teff_bibcode": "2024A&A...682A...5V",
+    "spectype": "DZ7.5",
+    "mass_measurements": [],
+    "radius_measurements": []
   }
 }

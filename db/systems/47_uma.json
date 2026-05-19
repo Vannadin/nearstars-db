@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "47 UMa b",
         "reference": "<a refstr=BUTLER___MARCY_1996 href=https://ui.adsabs.harvard.edu/abs/1996ApJ...464L.153B/abstract target=ref> Butler & Marcy 1996 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 1078.0,
         "period_err_days": 2.0,
         "semi_major_axis_au": 2.1,
@@ -140,7 +140,7 @@
       "raw": {
         "pl_name": "47 UMa c",
         "reference": "<a refstr=FISCHER_ET_AL__2002 href=https://ui.adsabs.harvard.edu/abs/2002ApJ...564.1028F/abstract target=ref> Fischer et al. 2002 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 2391.0,
         "period_err_days": 100.0,
         "semi_major_axis_au": 3.6,
@@ -203,7 +203,7 @@
       "raw": {
         "pl_name": "47 UMa d",
         "reference": "<a refstr=GREGORY___FISCHER_2010 href=https://ui.adsabs.harvard.edu/abs/2010MNRAS.403..731G/abstract target=ref> Gregory &amp; Fischer 2010 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 14002.0,
         "period_err_days": 4018.0,
         "semi_major_axis_au": 11.6,

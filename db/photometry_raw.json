@@ -862,5 +862,53 @@
     "bp_rp": 0.7229,
     "vmag_v": 4.0902,
     "vmag_source": "gaia_dr3_converted"
+  },
+  "Arcturus": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": -0.05,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Capella": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 0.08,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Procyon A": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 0.34,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Procyon B": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 10.92,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Wolf 359": {
+    "g_mag": 11.0384,
+    "bp_rp": 4.1848,
+    "vmag_v": 13.7365,
+    "vmag_source": "gaia_dr3_converted"
+  },
+  "70 Ophiuchi A": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 4.22,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "70 Ophiuchi B": {
+    "g_mag": null,
+    "bp_rp": null,
+    "vmag_v": 6.07,
+    "vmag_source": "hipparcos_hardcoded"
+  },
+  "Van Maanen's Star": {
+    "g_mag": 12.2992,
+    "bp_rp": 0.5976,
+    "vmag_v": 12.3916,
+    "vmag_source": "gaia_dr3_converted"
   }
 }

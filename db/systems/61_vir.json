@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "61 Vir b",
         "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 4.215,
         "period_err_days": 0.0006,
         "semi_major_axis_au": 0.050201,
@@ -140,7 +140,7 @@
       "raw": {
         "pl_name": "61 Vir c",
         "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 38.021,
         "period_err_days": 0.034,
         "semi_major_axis_au": 0.2175,
@@ -203,7 +203,7 @@
       "raw": {
         "pl_name": "61 Vir d",
         "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 123.01,
         "period_err_days": 0.55,
         "semi_major_axis_au": 0.476,

@@ -20,6 +20,12 @@ HIPPARCOS_V = {
     "GJ 411":         7.47,   # Lalande 21185, HIP 54035
     "GJ 273":         9.87,   # Luyten's Star, HIP 36208
     "HD 62509":       1.14,   # Pollux, HIP 37826
+    # 50ly 이내 유명 비-호스트 (Gaia saturated)
+    "Arcturus":      -0.05,   # α Boo, HIP 69673
+    "Capella":        0.08,   # α Aur, HIP 24608 (close binary Aa+Ab combined V)
+    "Procyon B":     10.92,   # α CMi B, faint WD (Gaia 결손 케이스, SIMBAD V)
+    "70 Ophiuchi A":  4.22,   # K0V (SIMBAD null이라 Hipparcos 폴백)
+    "70 Ophiuchi B":  6.07,   # K4V
 }
 
 # Y dwarf / 차가운 갈색왜성: 광학 V 등급 자체가 존재하지 않음 (Teff ≲ 500 K → V ≫ 30).

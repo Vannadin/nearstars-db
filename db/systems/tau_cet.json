@@ -67,7 +67,7 @@
       "raw": {
         "pl_name": "tau Cet g",
         "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 20.0,
         "period_err_days": 0.02,
         "semi_major_axis_au": 0.133,
@@ -130,7 +130,7 @@
       "raw": {
         "pl_name": "tau Cet h",
         "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 49.41,
         "period_err_days": 0.08,
         "semi_major_axis_au": 0.243,
@@ -193,7 +193,7 @@
       "raw": {
         "pl_name": "tau Cet f",
         "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 636.13,
         "period_err_days": 11.7,
         "semi_major_axis_au": 1.334,

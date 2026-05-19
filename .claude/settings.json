@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./run_pipeline.sh)",
+      "Bash(python3 scripts/pipeline/build_systems.py)",
+      "Bash(python3 scripts/pipeline/validate.py)",
+      "Bash(python3 scripts/pipeline/build_site.py)",
+      "Bash(python3 scripts/pipeline/fetch_astrometry.py)",
+      "Bash(python3 scripts/pipeline/fetch_photometry.py)",
+      "Bash(python3 scripts/pipeline/fetch_planets.py)",
+      "Bash(python3 scripts/pipeline/fetch_stellar_props.py)",
+      "Bash(python3 scripts/pipeline/fetch_planets_ps.py)",
+      "Bash(python3 scripts/pipeline/build_curated_from_ps.py)"
+    ]
+  }
+}

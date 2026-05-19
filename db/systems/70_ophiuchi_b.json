@@ -1,0 +1,129 @@
+{
+  "system_name": "70 Ophiuchi B",
+  "stars": [
+    {
+      "name": "70 Ophiuchi B",
+      "component": "B",
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "4468557611977674496",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 271.36591160903725,
+        "dec_deg": 2.4941987580927343,
+        "parallax_mas": 195.85633153170514,
+        "parallax_error_mas": 0.25345382,
+        "pmra_mas_yr": 333.2920983081072,
+        "pmdec_mas_yr": -1068.353909555673,
+        "radial_velocity_km_s": -9.467006,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 6.07,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 4393,
+        "spectype": "K5 V",
+        "mass_measurements": [
+          {
+            "value_msun": 0.71,
+            "uncertainty_msun": 0.02,
+            "method": "binary_orbit",
+            "reference": "Eggenberger et al. 2008",
+            "bibcode": "2008A&A...482..631E",
+            "doi": "10.1051/0004-6361:20078624",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.66,
+            "uncertainty_rsun": 0.04,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2008",
+            "bibcode": "2008ApJ...683..424B",
+            "doi": "10.1086/589554",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "kepler_thiele_innes",
+        "distance_pc": 5.105783367734121,
+        "distance_km": 157548012737667.97,
+        "icrs_x_km": 3739983139010.814,
+        "icrs_y_km": -157497949092647.06,
+        "icrs_z_km": 6918082378755.931,
+        "icrs_vx_km_s": 10.234890999283603,
+        "icrs_vy_km_s": 5.831347506532832,
+        "icrs_vz_km_s": -29.587129111849613,
+        "position_ulp_km": 0.03497156988277951,
+        "icrs_x_j2000_km": 3751847623808.5894,
+        "icrs_y_j2000_km": -157485203450753.97,
+        "icrs_z_j2000_km": 6876489304582.906,
+        "icrs_vx_j2000_km_s": 3.317746920880384,
+        "icrs_vy_j2000_km_s": 8.3935253038849,
+        "icrs_vz_j2000_km_s": -23.52430264157136,
+        "orbit_id": "AB",
+        "orbit_role": "secondary",
+        "mass_ratio_q": 0.55625,
+        "barycenter_method": "mass_weighted_average(70 Ophiuchi A,70 Ophiuchi B)",
+        "phase_reliable": true
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 94225832412.78,
+        "mean_radius_km": 459162.0
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Eggenberger et al. 2008",
+      "doi": "10.1051/0004-6361:20078624",
+      "bibcode": "2008A&A...482..631E",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "70 Ophiuchi B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Boyajian et al. 2008",
+      "doi": "10.1086/589554",
+      "bibcode": "2008ApJ...683..424B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "70 Ophiuchi B radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-19",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit_ref": "70_ophiuchi_a.json"
+}

@@ -1,0 +1,114 @@
+{
+  "system_name": "Wolf 359",
+  "stars": [
+    {
+      "name": "Wolf 359",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "3864972938605115520",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 164.10319030755974,
+        "dec_deg": 7.002726940984864,
+        "parallax_mas": 415.17941567802137,
+        "parallax_error_mas": 0.06837086,
+        "pmra_mas_yr": -3866.3382751436793,
+        "pmdec_mas_yr": -2699.214987679166,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "vmag_v": 13.7365,
+        "vmag_source": "gaia_dr3_converted",
+        "teff_k": 3027,
+        "spectype": "M6 V",
+        "mass_measurements": [
+          {
+            "value_msun": 0.11,
+            "uncertainty_msun": 0.011,
+            "method": "spectroscopic_calibration",
+            "reference": "Pineda et al. 2021 (M dwarf mass-luminosity)",
+            "bibcode": "2021ApJ...918...40P",
+            "doi": "10.3847/1538-4357/ac0aea",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.144,
+            "uncertainty_rsun": 0.005,
+            "method": "spectroscopic_calibration",
+            "reference": "Pineda et al. 2021 (Stefan-Boltzmann from L+Teff)",
+            "bibcode": "2021ApJ...918...40P",
+            "doi": "10.3847/1538-4357/ac0aea",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 2.408597252748958,
+        "distance_km": 74321545456482.72,
+        "icrs_x_km": -70963681986422.05,
+        "icrs_y_km": 20114662380004.36,
+        "icrs_z_km": 9124740534477.75,
+        "icrs_vx_km_s": 8.47798463578461,
+        "icrs_vy_km_s": 43.486300012330446,
+        "icrs_vz_km_s": -30.589422623033748,
+        "position_ulp_km": 0.015757102730700644,
+        "icrs_x_j2000_km": -70950304744024.94,
+        "icrs_y_j2000_km": 20183278543067.816,
+        "icrs_z_j2000_km": 9076474096309.318,
+        "icrs_vx_j2000_km_s": 8.47798463578461,
+        "icrs_vy_j2000_km_s": 43.486300012330446,
+        "icrs_vz_j2000_km_s": -30.589422623033748
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 14598368401.98,
+        "mean_radius_km": 100180.8
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Pineda et al. 2021 (M dwarf mass-luminosity)",
+      "doi": "10.3847/1538-4357/ac0aea",
+      "bibcode": "2021ApJ...918...40P",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Wolf 359 mass (spectroscopic_calibration)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-19",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

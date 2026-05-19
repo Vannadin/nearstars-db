@@ -1,0 +1,183 @@
+{
+  "system_name": "Procyon A",
+  "stars": [
+    {
+      "name": "Procyon A",
+      "component": "A",
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 114.82549790798149,
+        "dec_deg": 5.224987557059477,
+        "parallax_mas": 284.56,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": -714.59,
+        "pmdec_mas_yr": -1036.8,
+        "radial_velocity_km_s": -4.50528,
+        "radial_velocity_source": "simbad",
+        "vmag_v": 0.34,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 6615,
+        "spectype": "F5 IV-V",
+        "mass_measurements": [
+          {
+            "value_msun": 1.499,
+            "uncertainty_msun": 0.031,
+            "method": "binary_orbit",
+            "reference": "Bond et al. 2015 (HST astrometry)",
+            "bibcode": "2015ApJ...813..106B",
+            "doi": "10.1088/0004-637X/813/2/106",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 2.048,
+            "uncertainty_rsun": 0.025,
+            "method": "interferometry",
+            "reference": "Aufdenberg et al. 2005",
+            "bibcode": "2005ApJ...633..424A",
+            "doi": "10.1086/452622",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "kepler_thiele_innes",
+        "distance_pc": 3.5141973573235874,
+        "distance_km": 108436800024283.11,
+        "icrs_x_km": -45357632081171.586,
+        "icrs_y_km": 98003004201605.78,
+        "icrs_z_km": 9903485316681.473,
+        "icrs_vx_km_s": 9.123601833927971,
+        "icrs_vy_km_s": 1.5904083895917354,
+        "icrs_vz_km_s": -18.646343847893736,
+        "position_ulp_km": 0.02176103834941174,
+        "icrs_x_j2000_km": -45339124770949.29,
+        "icrs_y_j2000_km": 98006825488783.12,
+        "icrs_z_j2000_km": 9875253145034.78,
+        "icrs_vx_j2000_km_s": 10.89409591458771,
+        "icrs_vy_j2000_km_s": 4.0384484376306125,
+        "icrs_vz_j2000_km_s": -20.390460836110204,
+        "orbit_id": "AB",
+        "orbit_role": "primary",
+        "mass_ratio_q": 0.2865302237029986,
+        "barycenter_method": "single_component(Procyon A)",
+        "phase_reliable": true
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 198935947586.982,
+        "mean_radius_km": 1424793.6
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Bond et al. 2015 (HST astrometry)",
+      "doi": "10.1088/0004-637X/813/2/106",
+      "bibcode": "2015ApJ...813..106B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Procyon A mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Aufdenberg et al. 2005",
+      "doi": "10.1086/452622",
+      "bibcode": "2005ApJ...633..424A",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Procyon A radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-19",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit": {
+    "system_id": "procyon",
+    "hierarchy": "binary",
+    "wds_id": "07393+0514",
+    "components": [
+      {
+        "name": "Procyon A",
+        "mass_msun": 1.499,
+        "mass_source": "bond_2015",
+        "astrometry_source": "single_component:Procyon A",
+        "astrometry_quality": "single_component",
+        "astrometry_note": "SIMBAD lacks independent parallax for Procyon B (DQZ WD). Procyon A SIMBAD astrometry used as system barycenter proxy. Mass-ratio offset (M_B/M_total ≈ 0.287) shifts barycenter from A by ~1.4 AU peak — negligible for KSP scale."
+      },
+      {
+        "name": "Procyon B",
+        "mass_msun": 0.602,
+        "mass_source": "bond_2015",
+        "astrometry_source": "single_component:Procyon A",
+        "astrometry_quality": "single_component"
+      }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": [
+          "Procyon A",
+          "Procyon B"
+        ],
+        "primary": "Procyon A",
+        "secondary": "Procyon B",
+        "source": "Bond et al. (2015) HST astrometry",
+        "doi": "10.1088/0004-637X/813/2/106",
+        "bibcode": "2015ApJ...813..106B",
+        "equinox": "J2000",
+        "P_yr": 40.84,
+        "P_yr_err": 0.1,
+        "T_jd_tt": 2439904.5,
+        "T_yr": 1968.13,
+        "e": 0.406,
+        "e_err": 0.0031,
+        "a_arcsec": 4.299,
+        "a_arcsec_err": 0.012,
+        "i_deg": 31.1,
+        "i_err_deg": 0.5,
+        "omega_deg": 269.5,
+        "omega_err_deg": 0.8,
+        "Omega_deg": 96.97,
+        "Omega_err_deg": 0.3,
+        "grade": 1,
+        "node_resolved": true,
+        "phase_reliable": true,
+        "note": "Definitive HST-based orbit (Bond 2015). P ~ 41 yr, semi-major axis ~ 15 AU."
+      }
+    ]
+  }
+}

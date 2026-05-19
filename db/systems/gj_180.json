@@ -67,7 +67,7 @@
       "raw": {
         "pl_name": "GJ 180 b",
         "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 17.133,
         "period_err_days": 0.003,
         "semi_major_axis_au": 0.092,
@@ -130,7 +130,7 @@
       "raw": {
         "pl_name": "GJ 180 c",
         "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 24.329,
         "period_err_days": 0.052,
         "semi_major_axis_au": 0.129,
@@ -193,7 +193,7 @@
       "raw": {
         "pl_name": "GJ 180 d",
         "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..246...11F/abstract target=ref>Feng et al. 2020</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 106.3,
         "period_err_days": 0.129,
         "semi_major_axis_au": 0.309,

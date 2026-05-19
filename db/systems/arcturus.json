@@ -1,0 +1,123 @@
+{
+  "system_name": "Arcturus",
+  "stars": [
+    {
+      "name": "Arcturus",
+      "component": null,
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 213.915300294925,
+        "dec_deg": 19.1824091615312,
+        "parallax_mas": 88.83,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": -1093.39,
+        "pmdec_mas_yr": -2000.06,
+        "radial_velocity_km_s": -5.229,
+        "radial_velocity_source": "simbad",
+        "vmag_v": -0.05,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 4271,
+        "spectype": "K1.5 III Fe-0.5",
+        "mass_measurements": [
+          {
+            "value_msun": 1.08,
+            "uncertainty_msun": 0.06,
+            "method": "asteroseismology",
+            "reference": "Ramirez & Allende Prieto 2011",
+            "bibcode": "2011ApJ...743..135R",
+            "doi": "10.1088/0004-637X/743/2/135",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 25.4,
+            "uncertainty_rsun": 0.2,
+            "method": "interferometry",
+            "reference": "Lacour et al. 2008",
+            "bibcode": "2008A&A...485..561L",
+            "doi": "10.1051/0004-6361:200809611",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 11.257458065968704,
+        "distance_km": 347368859787346.6,
+        "icrs_x_km": -272172390155225.97,
+        "icrs_y_km": -183108719087955.2,
+        "icrs_z_km": 114299084797881.67,
+        "icrs_vx_km_s": -57.56233278721247,
+        "icrs_vy_km_s": 31.60954082100361,
+        "icrs_vz_km_s": -102.52643624842986,
+        "position_ulp_km": 0.06043441084351863,
+        "icrs_x_j2000_km": -272263216608884.25,
+        "icrs_y_j2000_km": -183058843025684.53,
+        "icrs_z_j2000_km": 114137310384654.0,
+        "icrs_vx_j2000_km_s": -57.56233278721247,
+        "icrs_vy_j2000_km_s": 31.60954082100361,
+        "icrs_vz_j2000_km_s": -102.52643624842986
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 143329435219.44,
+        "mean_radius_km": 17670780.0
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Ramirez & Allende Prieto 2011",
+      "doi": "10.1088/0004-637X/743/2/135",
+      "bibcode": "2011ApJ...743..135R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Arcturus mass (asteroseismology)"
+      ]
+    },
+    {
+      "title": "Lacour et al. 2008",
+      "doi": "10.1051/0004-6361:200809611",
+      "bibcode": "2008A&A...485..561L",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Arcturus radius (interferometry)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-19",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

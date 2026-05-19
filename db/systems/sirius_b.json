@@ -20,9 +20,29 @@
         "vmag_v": 8.44,
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 25970,
-        "spectype": "DA1.9",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "DA2",
+        "mass_measurements": [
+          {
+            "value_msun": 1.018,
+            "uncertainty_msun": 0.011,
+            "method": "binary_orbit",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...840...70B",
+            "doi": "10.3847/1538-4357/aa6af8",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.00864,
+            "uncertainty_rsun": 0.00012,
+            "method": "evolutionary_model",
+            "reference": "Bond et al. 2017 (WD mass-radius relation)",
+            "bibcode": "2017ApJ...840...70B",
+            "doi": "10.3847/1538-4357/aa6af8",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -50,8 +70,8 @@
         "phase_reliable": true
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 135101263938.324,
+        "mean_radius_km": 6010.8
       }
     }
   ],
@@ -73,6 +93,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Bond et al. 2017",
+      "doi": "10.3847/1538-4357/aa6af8",
+      "bibcode": "2017ApJ...840...70B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Sirius B mass (binary_orbit)"
       ]
     }
   ],

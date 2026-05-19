@@ -20,9 +20,29 @@
         "vmag_v": 0.03,
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 9692,
-        "spectype": "A0V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "A0 Va",
+        "mass_measurements": [
+          {
+            "value_msun": 2.135,
+            "uncertainty_msun": 0.075,
+            "method": "evolutionary_model",
+            "reference": "Yoon et al. 2010 (rotating model from interferometry)",
+            "bibcode": "2010ApJ...708...71Y",
+            "doi": "10.1088/0004-637X/708/1/71",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 2.726,
+            "uncertainty_rsun": 0.006,
+            "method": "interferometry",
+            "reference": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
+            "bibcode": "2012ApJ...761L...3M",
+            "doi": "10.1088/2041-8205/761/1/L3",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -0.334384498993197
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 283341059438.43,
+        "mean_radius_km": 1896478.2
       }
     }
   ],
@@ -68,6 +88,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Yoon et al. 2010 (rotating model from interferometry)",
+      "doi": "10.1088/0004-637X/708/1/71",
+      "bibcode": "2010ApJ...708...71Y",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Vega mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
+      "doi": "10.1088/2041-8205/761/1/L3",
+      "bibcode": "2012ApJ...761L...3M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Vega radius (interferometry)"
       ]
     }
   ],

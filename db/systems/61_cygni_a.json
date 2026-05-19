@@ -20,16 +20,26 @@
         "vmag_v": 5.1895,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4450,
-        "spectype": "K5V",
-        "mass_measurements": [],
+        "spectype": "K5 V",
+        "mass_measurements": [
+          {
+            "value_msun": 0.7,
+            "uncertainty_msun": 0.02,
+            "method": "evolutionary_model",
+            "reference": "Kervella et al. 2008 (interferometry + evolution)",
+            "bibcode": "2008A&A...488..667K",
+            "doi": "10.1051/0004-6361:200810080",
+            "recommended": true
+          }
+        ],
         "radius_measurements": [
           {
-            "value_rsun": 0.5977,
-            "uncertainty_rsun": null,
+            "value_rsun": 0.665,
+            "uncertainty_rsun": 0.005,
             "method": "interferometry",
-            "reference": "2009ApJ...694.1085V",
-            "doi": null,
-            "bibcode": "2009ApJ...694.1085V",
+            "reference": "Kervella et al. 2008",
+            "bibcode": "2008A&A...488..667K",
+            "doi": "10.1051/0004-6361:200810080",
             "recommended": true
           }
         ]
@@ -60,8 +70,8 @@
         "phase_reliable": false
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": 415819.9
+        "gravitational_parameter_km3_s2": 92898708012.6,
+        "mean_radius_km": 462640.5
       }
     }
   ],
@@ -86,12 +96,12 @@
       ]
     },
     {
-      "title": "2009ApJ...694.1085V",
-      "doi": null,
-      "bibcode": "2009ApJ...694.1085V",
+      "title": "Kervella et al. 2008 (interferometry + evolution)",
+      "doi": "10.1051/0004-6361:200810080",
+      "bibcode": "2008A&A...488..667K",
       "accessed": "2026-05-19",
       "used_for": [
-        "61 Cygni A radius (interferometry)"
+        "61 Cygni A mass (evolutionary_model)"
       ]
     }
   ],

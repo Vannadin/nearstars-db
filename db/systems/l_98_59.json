@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "L 98-59 b",
         "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 2.253114,
         "period_err_days": 4e-07,
         "semi_major_axis_au": 0.0223,
@@ -155,7 +155,7 @@
       "raw": {
         "pl_name": "L 98-59 c",
         "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 3.6906764,
         "period_err_days": 4e-07,
         "semi_major_axis_au": 0.0309,
@@ -233,7 +233,7 @@
       "raw": {
         "pl_name": "L 98-59 d",
         "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 7.450729,
         "period_err_days": 2e-06,
         "semi_major_axis_au": 0.0494,
@@ -311,7 +311,7 @@
       "raw": {
         "pl_name": "L 98-59 e",
         "reference": "<a refstr=DEMANGEON_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...653A..41D/abstract target=ref>Demangeon et al. 2021</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 12.8278,
         "period_err_days": 0.0018,
         "semi_major_axis_au": 0.0712,
@@ -374,7 +374,7 @@
       "raw": {
         "pl_name": "L 98-59 f",
         "reference": "<a refstr=CADIEUX_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....170..154C/abstract target=ref>Cadieux et al. 2025</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 23.064,
         "period_err_days": 0.055,
         "semi_major_axis_au": 0.1052,

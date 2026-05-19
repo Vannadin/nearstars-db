@@ -20,9 +20,29 @@
         "vmag_v": 7.3505,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 6034,
-        "spectype": "K7Ve",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "K7 V",
+        "mass_measurements": [
+          {
+            "value_msun": 0.57,
+            "uncertainty_msun": 0.03,
+            "method": "binary_orbit",
+            "reference": "Halbwachs et al. 2018 (Hipparcos-Gaia astrometric)",
+            "bibcode": "2018A&A...619A..81H",
+            "doi": "10.1051/0004-6361/201833377",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.66,
+            "uncertainty_rsun": 0.05,
+            "method": "spectroscopic_calibration",
+            "reference": "Stassun et al. 2019 (TICv8)",
+            "bibcode": "2019AJ....158..138S",
+            "doi": "10.3847/1538-3881/ab3467",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -50,8 +70,8 @@
         "phase_reliable": true
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 75646090810.26,
+        "mean_radius_km": 459162.0
       }
     }
   ],
@@ -73,6 +93,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Halbwachs et al. 2018 (Hipparcos-Gaia astrometric)",
+      "doi": "10.1051/0004-6361/201833377",
+      "bibcode": "2018A&A...619A..81H",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Eta Cassiopeiae B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Stassun et al. 2019 (TICv8)",
+      "doi": "10.3847/1538-3881/ab3467",
+      "bibcode": "2019AJ....158..138S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Eta Cassiopeiae B radius (spectroscopic_calibration)"
       ]
     }
   ],

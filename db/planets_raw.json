@@ -3,7 +3,7 @@
     {
       "pl_name": "GJ 179 b",
       "reference": "<a refstr=HOWARD_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...721.1467H/abstract target=ref> Howard et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2288.0,
       "period_err_days": 59.0,
       "semi_major_axis_au": 2.41,
@@ -30,7 +30,7 @@
     {
       "pl_name": "HIP 79431 b",
       "reference": "<a refstr=APPS_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010PASP..122..156A/abstract target=ref> Apps et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 111.7,
       "period_err_days": 0.7,
       "semi_major_axis_au": 0.36,
@@ -57,7 +57,7 @@
     {
       "pl_name": "GJ 876 d",
       "reference": "<a refstr=RIVERA_ET_AL__2005 href=https://ui.adsabs.harvard.edu/abs/2005ApJ...634..625R/abstract target=ref> Rivera et al. 2005 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.93778,
       "period_err_days": 2e-05,
       "semi_major_axis_au": 0.02080665,
@@ -82,7 +82,7 @@
     {
       "pl_name": "GJ 876 c",
       "reference": "<a refstr=MARCY_ET_AL__2001 href=https://ui.adsabs.harvard.edu/abs/2001ApJ...556..296M/abstract target=ref> Marcy et al. 2001 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 30.0881,
       "period_err_days": 0.0082,
       "semi_major_axis_au": 0.12959,
@@ -107,7 +107,7 @@
     {
       "pl_name": "GJ 876 b",
       "reference": "<a refstr=MARCY_ET_AL__1998 href=https://ui.adsabs.harvard.edu/abs/1998ApJ...505L.147M/abstract target=ref> Marcy et al. 1998 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 61.1166,
       "period_err_days": 0.0086,
       "semi_major_axis_au": 0.208317,
@@ -132,7 +132,7 @@
     {
       "pl_name": "GJ 876 e",
       "reference": "<a refstr=RIVERA_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...719..890R/abstract target=ref> Rivera et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 124.26,
       "period_err_days": 0.7,
       "semi_major_axis_au": 0.3343,
@@ -159,7 +159,7 @@
     {
       "pl_name": "GJ 674 b",
       "reference": "<a refstr=BONFILS_ET_AL__2007 href=https://ui.adsabs.harvard.edu/abs/2007A&A...474..293B/abstract target=ref> Bonfils et al. 2007 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.6938,
       "period_err_days": 0.007,
       "semi_major_axis_au": 0.039,
@@ -186,7 +186,7 @@
     {
       "pl_name": "LTT 1445 A c",
       "reference": "<a refstr=WINTERS_ET_AL_2022 href=https://ui.adsabs.harvard.edu/abs/2022AJ....163..168W/abstract target=ref>Winters et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.1239035,
       "period_err_days": 3.4e-06,
       "semi_major_axis_au": 0.02661,
@@ -224,7 +224,7 @@
     {
       "pl_name": "LTT 1445 A b",
       "reference": "<a refstr=WINTERS_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158..152W/abstract target=ref>Winters et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.3587635,
       "period_err_days": 4.4e-06,
       "semi_major_axis_au": 0.0381,
@@ -264,7 +264,7 @@
     {
       "pl_name": "GJ 667 C b",
       "reference": "<a refstr=BONFILS_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A.109B/abstract target=ref> Bonfils et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 7.203,
       "period_err_days": 0.0019,
       "semi_major_axis_au": 0.050431,
@@ -289,7 +289,7 @@
     {
       "pl_name": "GJ 667 C c",
       "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 28.14,
       "period_err_days": 0.053,
       "semi_major_axis_au": 0.125,
@@ -314,7 +314,7 @@
     {
       "pl_name": "GJ 667 C f",
       "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 39.026,
       "period_err_days": 0.194,
       "semi_major_axis_au": 0.156,
@@ -339,7 +339,7 @@
     {
       "pl_name": "GJ 667 C e",
       "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 62.24,
       "period_err_days": 0.55,
       "semi_major_axis_au": 0.213,
@@ -364,7 +364,7 @@
     {
       "pl_name": "GJ 667 C g",
       "reference": "<a refstr=ANGLADA_ESCUDE_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.126A/abstract target=ref> Anglada-Escude et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 256.2,
       "period_err_days": 13.8,
       "semi_major_axis_au": 0.549,
@@ -391,7 +391,7 @@
     {
       "pl_name": "GJ 536 b",
       "reference": "<a refstr=SU_AACUTE_REZ_MASCARE_NTILDE_O_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...597A.108S/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.70874,
       "period_err_days": 0.00056,
       "semi_major_axis_au": 0.0668,
@@ -416,7 +416,7 @@
     {
       "pl_name": "GJ 536 c",
       "reference": "<a refstr=SUAREZ_MASCARENO_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...702A.121S/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 32.761,
       "period_err_days": 0.015,
       "semi_major_axis_au": 0.1617,
@@ -443,7 +443,7 @@
     {
       "pl_name": "Ross 458 c",
       "reference": "<a refstr=BURGASSER_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...725.1405B/abstract target=ref> Burgasser et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": null,
       "period_err_days": null,
       "semi_major_axis_au": 1100.0,
@@ -470,7 +470,7 @@
     {
       "pl_name": "GJ 163 b",
       "reference": "<a refstr=BONFILS_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.110B/abstract target=ref> Bonfils et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.63182,
       "period_err_days": 0.00155,
       "semi_major_axis_au": 0.0607,
@@ -495,7 +495,7 @@
     {
       "pl_name": "GJ 163 c",
       "reference": "<a refstr=BONFILS_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.110B/abstract target=ref> Bonfils et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 25.63058,
       "period_err_days": 0.0255,
       "semi_major_axis_au": 0.1254,
@@ -520,7 +520,7 @@
     {
       "pl_name": "GJ 163 d",
       "reference": "<a refstr=BONFILS_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...556A.110B/abstract target=ref> Bonfils et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 603.95116,
       "period_err_days": 7.55862,
       "semi_major_axis_au": 1.0304,
@@ -547,7 +547,7 @@
     {
       "pl_name": "HD 20794 b",
       "reference": "<a refstr=PEPE_ET_AL__2011 href=https://ui.adsabs.harvard.edu/abs/2011A%26A...534A..58P/abstract target=ref> Pepe et al. 2011 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 18.314,
       "period_err_days": 0.0022,
       "semi_major_axis_au": 0.1257,
@@ -572,7 +572,7 @@
     {
       "pl_name": "HD 20794 d",
       "reference": "<a refstr=PEPE_ET_AL__2011 href=https://ui.adsabs.harvard.edu/abs/2011A%26A...534A..58P/abstract target=ref> Pepe et al. 2011 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 89.68,
       "period_err_days": 0.1,
       "semi_major_axis_au": 0.3625,
@@ -597,7 +597,7 @@
     {
       "pl_name": "HD 20794 e",
       "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605A.103F/abstract target=ref>Feng et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 147.02,
       "period_err_days": 1.43,
       "semi_major_axis_au": 0.509,
@@ -622,7 +622,7 @@
     {
       "pl_name": "HD 20794 f",
       "reference": "<a refstr=NARI_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...693A.297N/abstract target=ref>Nari et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 647.6,
       "period_err_days": 2.5,
       "semi_major_axis_au": 1.3541,
@@ -649,7 +649,7 @@
     {
       "pl_name": "HD 147379 b",
       "reference": "<a refstr=REINERS_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...609L...5R/abstract target=ref>Reiners et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 86.58,
       "period_err_days": 0.14,
       "semi_major_axis_au": 0.3193,
@@ -676,7 +676,7 @@
     {
       "pl_name": "HD 222237 b",
       "reference": "<a refstr=XIAO_ET_AL_2024 href=https://ui.adsabs.harvard.edu/abs/2024MNRAS.534.2858X/abstract target=ref>Xiao et al. 2024</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 14892.0,
       "period_err_days": 2112.0,
       "semi_major_axis_au": 10.8,
@@ -703,7 +703,7 @@
     {
       "pl_name": "L 98-59 b",
       "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.253114,
       "period_err_days": 4e-07,
       "semi_major_axis_au": 0.0223,
@@ -741,7 +741,7 @@
     {
       "pl_name": "L 98-59 c",
       "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.6906764,
       "period_err_days": 4e-07,
       "semi_major_axis_au": 0.0309,
@@ -779,7 +779,7 @@
     {
       "pl_name": "L 98-59 d",
       "reference": "<a refstr=KOSTOV_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....158...32K/abstract target=ref>Kostov et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 7.450729,
       "period_err_days": 2e-06,
       "semi_major_axis_au": 0.0494,
@@ -817,7 +817,7 @@
     {
       "pl_name": "L 98-59 e",
       "reference": "<a refstr=DEMANGEON_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...653A..41D/abstract target=ref>Demangeon et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 12.8278,
       "period_err_days": 0.0018,
       "semi_major_axis_au": 0.0712,
@@ -842,7 +842,7 @@
     {
       "pl_name": "L 98-59 f",
       "reference": "<a refstr=CADIEUX_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....170..154C/abstract target=ref>Cadieux et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 23.064,
       "period_err_days": 0.055,
       "semi_major_axis_au": 0.1052,
@@ -869,7 +869,7 @@
     {
       "pl_name": "55 Cnc e",
       "reference": "<a refstr=MCARTHUR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M/abstract target=ref> McArthur et al. 2004 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 0.7365474,
       "period_err_days": 1.3e-06,
       "semi_major_axis_au": 0.01544,
@@ -907,7 +907,7 @@
     {
       "pl_name": "55 Cnc b",
       "reference": "<a refstr=BUTLER_ET_AL__1997 href=https://ui.adsabs.harvard.edu/abs/1997ApJ...474L.115B/abstract target=ref> Butler et al. 1997 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 14.651552,
       "period_err_days": 3.6e-05,
       "semi_major_axis_au": 0.118,
@@ -932,7 +932,7 @@
     {
       "pl_name": "55 Cnc c",
       "reference": "<a refstr=MCARTHUR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M/abstract target=ref> McArthur et al. 2004 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 44.3936,
       "period_err_days": 0.0024,
       "semi_major_axis_au": 0.247,
@@ -957,7 +957,7 @@
     {
       "pl_name": "55 Cnc f",
       "reference": "<a refstr=FISCHER_ET_AL__2008 href=https://ui.adsabs.harvard.edu/abs/2008ApJ...675..790F/abstract target=ref> Fischer et al. 2008 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 260.58,
       "period_err_days": 0.15,
       "semi_major_axis_au": 0.802,
@@ -982,7 +982,7 @@
     {
       "pl_name": "55 Cnc d",
       "reference": "<a refstr=MARCY_ET_AL__2002 href=https://ui.adsabs.harvard.edu/abs/2002ApJ...581.1375M/abstract target=ref> Marcy et al. 2002 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4799.0,
       "period_err_days": 4.9,
       "semi_major_axis_au": 5.6,
@@ -1009,7 +1009,7 @@
     {
       "pl_name": "GJ 3512 b",
       "reference": "<a refstr=MORALES_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019Sci...365.1441M/abstract target=ref>Morales et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 203.109,
       "period_err_days": 0.035,
       "semi_major_axis_au": 0.3376,
@@ -1034,7 +1034,7 @@
     {
       "pl_name": "GJ 3512 c",
       "reference": "<a refstr=LOPEZ_SANTIAGO_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020AJ....160..273L/abstract target=ref>Lopez-Santiago et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2354.0,
       "period_err_days": 36.0,
       "semi_major_axis_au": 1.731,
@@ -1061,7 +1061,7 @@
     {
       "pl_name": "GJ 480 b",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..250...29F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.5536,
       "period_err_days": 0.0006,
       "semi_major_axis_au": 0.068,
@@ -1088,7 +1088,7 @@
     {
       "pl_name": "GJ 341 b",
       "reference": "<a refstr=DITOMASSO_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...979..214D/abstract target=ref>DiTomasso et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 7.57686,
       "period_err_days": 3.4e-05,
       "semi_major_axis_au": null,
@@ -1115,7 +1115,7 @@
     {
       "pl_name": "HD 40307 b",
       "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..639M/abstract target=ref> Mayor et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.3123,
       "period_err_days": 0.0011,
       "semi_major_axis_au": 0.0468,
@@ -1140,7 +1140,7 @@
     {
       "pl_name": "HD 40307 c",
       "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..639M/abstract target=ref> Mayor et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.6184,
       "period_err_days": 0.005,
       "semi_major_axis_au": 0.0799,
@@ -1165,7 +1165,7 @@
     {
       "pl_name": "HD 40307 d",
       "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..639M/abstract target=ref> Mayor et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 20.432,
       "period_err_days": 0.022,
       "semi_major_axis_au": 0.1321,
@@ -1190,7 +1190,7 @@
     {
       "pl_name": "HD 40307 f",
       "reference": "<a refstr=TUOMI_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A..48T/abstract target=ref> Tuomi et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 51.76,
       "period_err_days": 0.5,
       "semi_major_axis_au": 0.247,
@@ -1215,7 +1215,7 @@
     {
       "pl_name": "HD 40307 g",
       "reference": "<a refstr=TUOMI_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A..48T/abstract target=ref> Tuomi et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 197.8,
       "period_err_days": 5.7,
       "semi_major_axis_au": 0.6,
@@ -1242,7 +1242,7 @@
     {
       "pl_name": "Barnard d",
       "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.3402,
       "period_err_days": 0.0003,
       "semi_major_axis_au": 0.0188,
@@ -1267,7 +1267,7 @@
     {
       "pl_name": "Barnard b",
       "reference": "<a refstr=GONZALEZ_HERNANDEZ_ET_AL_2024 href=https://ui.adsabs.harvard.edu/abs/2024A&A...690A..79G/abstract target=ref>Gonz&aacute;lez Hern&aacute;ndez et al. 2024</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.1542,
       "period_err_days": 0.0004,
       "semi_major_axis_au": 0.0229,
@@ -1292,7 +1292,7 @@
     {
       "pl_name": "Barnard c",
       "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.1244,
       "period_err_days": 0.0006,
       "semi_major_axis_au": 0.0274,
@@ -1317,7 +1317,7 @@
     {
       "pl_name": "Barnard e",
       "reference": "<a refstr=BASANT_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B/abstract target=ref>Basant et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.7392,
       "period_err_days": 0.003,
       "semi_major_axis_au": 0.0381,
@@ -1344,7 +1344,7 @@
     {
       "pl_name": "Gliese 12 b",
       "reference": "<a refstr=KUZUHARA_ET_AL__2024 href=https://ui.adsabs.harvard.edu/abs/2024ApJ...967L..21K/abstract target=ref>Kuzuhara et al. 2024</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 12.761418,
       "period_err_days": 6e-05,
       "semi_major_axis_au": 0.067,
@@ -1371,7 +1371,7 @@
     {
       "pl_name": "AU Mic b",
       "reference": "<a refstr=PLAVCHAN_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020Natur.582..497P/abstract target=ref>Plavchan et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.463446,
       "period_err_days": 5e-06,
       "semi_major_axis_au": 0.07,
@@ -1409,7 +1409,7 @@
     {
       "pl_name": "AU Mic c",
       "reference": "<a refstr=MARTIOLI_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...649A.177M/abstract target=ref>Martioli et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 18.859023,
       "period_err_days": 2.2e-05,
       "semi_major_axis_au": 0.119,
@@ -1447,7 +1447,7 @@
     {
       "pl_name": "AU Mic e",
       "reference": "<a refstr=DONATI_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...700A.227D/abstract target=ref>Donati et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 33.11,
       "period_err_days": 0.06,
       "semi_major_axis_au": null,
@@ -1472,7 +1472,7 @@
     {
       "pl_name": "AU Mic d",
       "reference": "<a refstr=WITTROCK_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023AJ....166..232W/abstract target=ref>Wittrock et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 12.73596,
       "period_err_days": 0.00793,
       "semi_major_axis_au": null,
@@ -1499,7 +1499,7 @@
     {
       "pl_name": "HD 136352 b",
       "reference": "<a refstr=UDRY_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...622A..37U/abstract target=ref>Udry et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.57797,
       "period_err_days": 8e-05,
       "semi_major_axis_au": 0.0964,
@@ -1537,7 +1537,7 @@
     {
       "pl_name": "HD 136352 c",
       "reference": "<a refstr=UDRY_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...622A..37U/abstract target=ref>Udry et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 27.59221,
       "period_err_days": 0.00011,
       "semi_major_axis_au": 0.1721,
@@ -1575,7 +1575,7 @@
     {
       "pl_name": "HD 136352 d",
       "reference": "<a refstr=UDRY_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...622A..37U/abstract target=ref>Udry et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 107.245,
       "period_err_days": 0.05,
       "semi_major_axis_au": 0.425,
@@ -1615,7 +1615,7 @@
     {
       "pl_name": "HD 101581 b",
       "reference": "<a refstr=KUNIMOTO_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....169...47K/abstract target=ref>Kunimoto et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.46569,
       "period_err_days": 0.00029,
       "semi_major_axis_au": 0.046,
@@ -1653,7 +1653,7 @@
     {
       "pl_name": "HD 101581 c",
       "reference": "<a refstr=KUNIMOTO_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....169...47K/abstract target=ref>Kunimoto et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.20401,
       "period_err_days": 0.00054,
       "semi_major_axis_au": 0.0573,
@@ -1693,7 +1693,7 @@
     {
       "pl_name": "CWISEP J193518.59-154620.3 b",
       "reference": "<a refstr=DE_FURIO_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025ApJ...990L..63D/abstract target=ref>De Furio et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": null,
       "period_err_days": null,
       "semi_major_axis_au": 2.48,
@@ -1720,7 +1720,7 @@
     {
       "pl_name": "TRAPPIST-1 b",
       "reference": "<a refstr=GILLON_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016Natur.533..221G/abstract target=ref>Gillon et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.510826,
       "period_err_days": 6e-06,
       "semi_major_axis_au": 0.01154,
@@ -1758,7 +1758,7 @@
     {
       "pl_name": "TRAPPIST-1 c",
       "reference": "<a refstr=GILLON_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016Natur.533..221G/abstract target=ref>Gillon et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.421937,
       "period_err_days": 1.8e-05,
       "semi_major_axis_au": 0.0158,
@@ -1796,7 +1796,7 @@
     {
       "pl_name": "TRAPPIST-1 d",
       "reference": "<a refstr=GILLON_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016Natur.533..221G/abstract target=ref>Gillon et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.049219,
       "period_err_days": 2.6e-05,
       "semi_major_axis_au": 0.02227,
@@ -1834,7 +1834,7 @@
     {
       "pl_name": "TRAPPIST-1 e",
       "reference": "<a refstr=GILLON_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G/abstract target=ref>Gillon et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.101013,
       "period_err_days": 3.5e-05,
       "semi_major_axis_au": 0.02925,
@@ -1872,7 +1872,7 @@
     {
       "pl_name": "TRAPPIST-1 f",
       "reference": "<a refstr=GILLON_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G/abstract target=ref>Gillon et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.20754,
       "period_err_days": 3.2e-05,
       "semi_major_axis_au": 0.03849,
@@ -1910,7 +1910,7 @@
     {
       "pl_name": "TRAPPIST-1 g",
       "reference": "<a refstr=GILLON_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G/abstract target=ref>Gillon et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 12.352446,
       "period_err_days": 5.4e-05,
       "semi_major_axis_au": 0.04683,
@@ -1948,7 +1948,7 @@
     {
       "pl_name": "TRAPPIST-1 h",
       "reference": "<a refstr=GILLON_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017Natur.542..456G/abstract target=ref>Gillon et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 18.772866,
       "period_err_days": 0.000214,
       "semi_major_axis_au": 0.06189,
@@ -1988,7 +1988,7 @@
     {
       "pl_name": "GJ 9066 c",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..250...29F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 771.36,
       "period_err_days": 1.34,
       "semi_major_axis_au": 0.88,
@@ -2015,7 +2015,7 @@
     {
       "pl_name": "GJ 806 b",
       "reference": "<a refstr=PALLE_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...678A..80P/abstract target=ref>Palle et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 0.9263237,
       "period_err_days": 9e-07,
       "semi_major_axis_au": 0.01406,
@@ -2040,7 +2040,7 @@
     {
       "pl_name": "GJ 806 c",
       "reference": "<a refstr=PALLE_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...678A..80P/abstract target=ref>Palle et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.64064,
       "period_err_days": 0.00025,
       "semi_major_axis_au": 0.0523,
@@ -2067,7 +2067,7 @@
     {
       "pl_name": "GJ 849 b",
       "reference": "<a refstr=BUTLER_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006PASP..118.1685B/abstract target=ref> Butler et al. 2006 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1925.31,
       "period_err_days": 6.5,
       "semi_major_axis_au": 2.32,
@@ -2092,7 +2092,7 @@
     {
       "pl_name": "GJ 849 c",
       "reference": "<a refstr=MONTET_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014ApJ...781...28M/abstract target=ref>Montet et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5990.0,
       "period_err_days": 110.0,
       "semi_major_axis_au": 4.95,
@@ -2119,7 +2119,7 @@
     {
       "pl_name": "GJ 514 b",
       "reference": "<a refstr=DAMASSO_ET_AL_2022 href=https://ui.adsabs.harvard.edu/abs/2022A&A...666A.187D/abstract target=ref>Damasso et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 140.43,
       "period_err_days": 0.41,
       "semi_major_axis_au": 0.422,
@@ -2146,7 +2146,7 @@
     {
       "pl_name": "HD 140901 b",
       "reference": "<a refstr=FENG_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022ApJS..262...21F/abstract target=ref>Feng et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.02378,
       "period_err_days": 0.00013,
       "semi_major_axis_au": 0.085,
@@ -2171,7 +2171,7 @@
     {
       "pl_name": "HD 140901 c",
       "reference": "<a refstr=FENG_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022ApJS..262...21F/abstract target=ref>Feng et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 14386.0,
       "period_err_days": 8099.0,
       "semi_major_axis_au": 11.8,
@@ -2198,7 +2198,7 @@
     {
       "pl_name": "GJ 317 b",
       "reference": "<a refstr=JOHNSON_ET_AL__2007 href=https://ui.adsabs.harvard.edu/abs/2007ApJ...670..833J/abstract target=ref> Johnson et al. 2007 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 695.69,
       "period_err_days": 0.26,
       "semi_major_axis_au": 1.138,
@@ -2223,7 +2223,7 @@
     {
       "pl_name": "GJ 317 c",
       "reference": "<a refstr=BRYAN_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...821...89B/abstract target=ref>Bryan et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6500.0,
       "period_err_days": 169.0,
       "semi_major_axis_au": 5.04,
@@ -2250,7 +2250,7 @@
     {
       "pl_name": "GJ 1132 b",
       "reference": "<a refstr=BERTA_THOMPSON_ET_AL__2015 href=http://www.nature.com/nature/journal/v527/n7577/full/nature15762.html target=ref>Berta-Thompson et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.62892911,
       "period_err_days": 2.9e-07,
       "semi_major_axis_au": 0.0157,
@@ -2275,7 +2275,7 @@
     {
       "pl_name": "GJ 1132 c",
       "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017MNRAS.470.4794F/abstract target=ref>Feng et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.929,
       "period_err_days": 0.0008,
       "semi_major_axis_au": 0.0476,
@@ -2302,7 +2302,7 @@
     {
       "pl_name": "eps Ind A b",
       "reference": "<a refstr=FENG_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019MNRAS.490.5002F/abstract target=ref>Feng et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 39400.0,
       "period_err_days": 18000.0,
       "semi_major_axis_au": 20.9,
@@ -2329,7 +2329,7 @@
     {
       "pl_name": "COCONUTS-2 b",
       "reference": "<a refstr=ZHANG_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021ApJ...916L..11Z/abstract target=ref>Zhang et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 402000000.0,
       "period_err_days": 470000000.0,
       "semi_major_axis_au": 7506.0,
@@ -2356,7 +2356,7 @@
     {
       "pl_name": "YZ Cet b",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605L..11A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.02087,
       "period_err_days": 7e-05,
       "semi_major_axis_au": 0.01634,
@@ -2381,7 +2381,7 @@
     {
       "pl_name": "YZ Cet c",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605L..11A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.05989,
       "period_err_days": 0.0001,
       "semi_major_axis_au": 0.02156,
@@ -2406,7 +2406,7 @@
     {
       "pl_name": "YZ Cet d",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605L..11A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.65626,
       "period_err_days": 0.00028,
       "semi_major_axis_au": 0.02851,
@@ -2433,7 +2433,7 @@
     {
       "pl_name": "47 UMa b",
       "reference": "<a refstr=BUTLER___MARCY_1996 href=https://ui.adsabs.harvard.edu/abs/1996ApJ...464L.153B/abstract target=ref> Butler & Marcy 1996 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1078.0,
       "period_err_days": 2.0,
       "semi_major_axis_au": 2.1,
@@ -2458,7 +2458,7 @@
     {
       "pl_name": "47 UMa c",
       "reference": "<a refstr=FISCHER_ET_AL__2002 href=https://ui.adsabs.harvard.edu/abs/2002ApJ...564.1028F/abstract target=ref> Fischer et al. 2002 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2391.0,
       "period_err_days": 100.0,
       "semi_major_axis_au": 3.6,
@@ -2483,7 +2483,7 @@
     {
       "pl_name": "47 UMa d",
       "reference": "<a refstr=GREGORY___FISCHER_2010 href=https://ui.adsabs.harvard.edu/abs/2010MNRAS.403..731G/abstract target=ref> Gregory &amp; Fischer 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 14002.0,
       "period_err_days": 4018.0,
       "semi_major_axis_au": 11.6,
@@ -2510,7 +2510,7 @@
     {
       "pl_name": "61 Vir b",
       "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.215,
       "period_err_days": 0.0006,
       "semi_major_axis_au": 0.050201,
@@ -2535,7 +2535,7 @@
     {
       "pl_name": "61 Vir c",
       "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 38.021,
       "period_err_days": 0.034,
       "semi_major_axis_au": 0.2175,
@@ -2560,7 +2560,7 @@
     {
       "pl_name": "61 Vir d",
       "reference": "<a refstr=VOGT_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...708.1366V/abstract target=ref> Vogt et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 123.01,
       "period_err_days": 0.55,
       "semi_major_axis_au": 0.476,
@@ -2587,7 +2587,7 @@
     {
       "pl_name": "HD 147513 b",
       "reference": "<a refstr=MAYOR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004A&A...415..391M/abstract target=ref> Mayor et al. 2004 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 528.4,
       "period_err_days": 6.3,
       "semi_major_axis_au": 1.32,
@@ -2614,7 +2614,7 @@
     {
       "pl_name": "GJ 1002 b",
       "reference": "<a refstr=SUAREZ_MASCARENO_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...670A...5S/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 10.3465,
       "period_err_days": 0.027,
       "semi_major_axis_au": 0.0457,
@@ -2639,7 +2639,7 @@
     {
       "pl_name": "GJ 1002 c",
       "reference": "<a refstr=SUAREZ_MASCARENO_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...670A...5S/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 21.202,
       "period_err_days": 0.013,
       "semi_major_axis_au": 0.0738,
@@ -2666,7 +2666,7 @@
     {
       "pl_name": "GJ 393 b",
       "reference": "<a refstr=AMADO_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...650A.188A/abstract target=ref>Amado et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 7.02679,
       "period_err_days": 0.00082,
       "semi_major_axis_au": 0.05402,
@@ -2693,7 +2693,7 @@
     {
       "pl_name": "GJ 687 b",
       "reference": "<a refstr=BURT_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014ApJ...789..114B/abstract target=ref> Burt et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 38.142,
       "period_err_days": 0.007,
       "semi_major_axis_au": 0.163,
@@ -2718,7 +2718,7 @@
     {
       "pl_name": "GJ 687 c",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..250...29F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 727.562,
       "period_err_days": 12.198,
       "semi_major_axis_au": 1.165,
@@ -2745,7 +2745,7 @@
     {
       "pl_name": "GJ 1151 c",
       "reference": "<a refstr=BLANCO_POZO_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...671A..50B/abstract target=ref>Blanco-Pozo et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 389.7,
       "period_err_days": 5.4,
       "semi_major_axis_au": 0.5714,
@@ -2772,7 +2772,7 @@
     {
       "pl_name": "HD 3651 b",
       "reference": "<a refstr=FISCHER_ET_AL__2003 href=https://ui.adsabs.harvard.edu/abs/2003ApJ...590.1081F/abstract target=ref> Fischer et al. 2003 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 62.25,
       "period_err_days": 0.004,
       "semi_major_axis_au": 0.295,
@@ -2799,7 +2799,7 @@
     {
       "pl_name": "ups And b",
       "reference": "<a refstr=BUTLER_ET_AL__1997 href=https://ui.adsabs.harvard.edu/abs/1997ApJ...474L.115B/abstract target=ref> Butler et al. 1997 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.617033,
       "period_err_days": 2.3e-05,
       "semi_major_axis_au": 0.05922166,
@@ -2824,7 +2824,7 @@
     {
       "pl_name": "ups And c",
       "reference": "<a refstr=BUTLER_ET_AL__1999 href=https://ui.adsabs.harvard.edu/abs/1999ApJ...526..916B/abstract target=ref> Butler et al. 1999 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 241.258,
       "period_err_days": 0.064,
       "semi_major_axis_au": 0.827774,
@@ -2849,7 +2849,7 @@
     {
       "pl_name": "ups And d",
       "reference": "<a refstr=BUTLER_ET_AL__1999 href=https://ui.adsabs.harvard.edu/abs/1999ApJ...526..916B/abstract target=ref> Butler et al. 1999 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1276.46,
       "period_err_days": 0.57,
       "semi_major_axis_au": 2.51329,
@@ -2876,7 +2876,7 @@
     {
       "pl_name": "Proxima Cen d",
       "reference": "<a refstr=SU_AMP_AACUTE_REZ_MASCARE_AMP_NTILDE_O_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...700A..11M/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.12338,
       "period_err_days": 0.00035,
       "semi_major_axis_au": 0.02881,
@@ -2901,7 +2901,7 @@
     {
       "pl_name": "Proxima Cen b",
       "reference": "<a refstr=ANGLADA_ESCUD_EACUTE__ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016Natur.536..437A/abstract target=ref>Anglada-Escud&eacute; et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.18465,
       "period_err_days": 0.00053,
       "semi_major_axis_au": 0.04848,
@@ -2928,7 +2928,7 @@
     {
       "pl_name": "GJ 422 b",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 20.129,
       "period_err_days": 0.005,
       "semi_major_axis_au": 0.111,
@@ -2955,7 +2955,7 @@
     {
       "pl_name": "GJ 180 b",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 17.133,
       "period_err_days": 0.003,
       "semi_major_axis_au": 0.092,
@@ -2980,7 +2980,7 @@
     {
       "pl_name": "GJ 180 c",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 24.329,
       "period_err_days": 0.052,
       "semi_major_axis_au": 0.129,
@@ -3005,7 +3005,7 @@
     {
       "pl_name": "GJ 180 d",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..246...11F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 106.3,
       "period_err_days": 0.129,
       "semi_major_axis_au": 0.309,
@@ -3032,7 +3032,7 @@
     {
       "pl_name": "GJ 1061 b",
       "reference": "<a refstr=DREIZLER_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020MNRAS.493..536D/abstract target=ref>Dreizler et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.2073,
       "period_err_days": 0.0002,
       "semi_major_axis_au": 0.021,
@@ -3057,7 +3057,7 @@
     {
       "pl_name": "GJ 1061 c",
       "reference": "<a refstr=DREIZLER_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020MNRAS.493..536D/abstract target=ref>Dreizler et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.6821,
       "period_err_days": 0.0008,
       "semi_major_axis_au": 0.0342,
@@ -3082,7 +3082,7 @@
     {
       "pl_name": "GJ 1061 d",
       "reference": "<a refstr=DREIZLER_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020MNRAS.493..536D/abstract target=ref>Dreizler et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 13.066,
       "period_err_days": 0.002,
       "semi_major_axis_au": 0.054,
@@ -3109,7 +3109,7 @@
     {
       "pl_name": "HD 219134 b",
       "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.092926,
       "period_err_days": 1e-05,
       "semi_major_axis_au": 0.03876,
@@ -3147,7 +3147,7 @@
     {
       "pl_name": "HD 219134 c",
       "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.76458,
       "period_err_days": 0.00033,
       "semi_major_axis_au": 0.0653,
@@ -3185,7 +3185,7 @@
     {
       "pl_name": "HD 219134 f",
       "reference": "<a refstr=VOGT_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015ApJ...814...12V/abstract target=ref>Vogt et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 22.717,
       "period_err_days": 0.015,
       "semi_major_axis_au": 0.1463,
@@ -3210,7 +3210,7 @@
     {
       "pl_name": "HD 219134 d",
       "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 46.859,
       "period_err_days": 0.028,
       "semi_major_axis_au": 0.237,
@@ -3235,7 +3235,7 @@
     {
       "pl_name": "HD 219134 g",
       "reference": "<a refstr=VOGT_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015ApJ...814...12V/abstract target=ref>Vogt et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 94.2,
       "period_err_days": 0.2,
       "semi_major_axis_au": 0.3753,
@@ -3260,7 +3260,7 @@
     {
       "pl_name": "HD 219134 h",
       "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2247.0,
       "period_err_days": 43.0,
       "semi_major_axis_au": 3.11,
@@ -3287,7 +3287,7 @@
     {
       "pl_name": "GJ 1265 b",
       "reference": "<a refstr=LUQUE_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...620A.171L/abstract target=ref>Luque et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.6511,
       "period_err_days": 0.0012,
       "semi_major_axis_au": 0.026,
@@ -3314,7 +3314,7 @@
     {
       "pl_name": "LHS 475 b",
       "reference": "<a refstr=LUSTIG_YAEGER_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023NatAs...7.1317L/abstract target=ref>Lustig-Yaeger et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.029088,
       "period_err_days": 6e-06,
       "semi_major_axis_au": 0.02037,
@@ -3341,7 +3341,7 @@
     {
       "pl_name": "GJ 367 b",
       "reference": "<a refstr=LAM_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021Sci...374.1271L/abstract target=ref>Lam et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 0.3219225,
       "period_err_days": 2e-07,
       "semi_major_axis_au": 0.00709,
@@ -3366,7 +3366,7 @@
     {
       "pl_name": "GJ 367 c",
       "reference": "<a refstr=GOFFO_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023ApJ...955L...3G/abstract target=ref>Goffo et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.5301,
       "period_err_days": 0.0078,
       "semi_major_axis_au": null,
@@ -3391,7 +3391,7 @@
     {
       "pl_name": "GJ 367 d",
       "reference": "<a refstr=GOFFO_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023ApJ...955L...3G/abstract target=ref>Goffo et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 34.369,
       "period_err_days": 0.073,
       "semi_major_axis_au": null,
@@ -3418,7 +3418,7 @@
     {
       "pl_name": "GJ 832 b",
       "reference": "<a refstr=BAILEY_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009ApJ...690..743B/abstract target=ref> Bailey et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3853.0,
       "period_err_days": 51.0,
       "semi_major_axis_au": 3.7,
@@ -3445,7 +3445,7 @@
     {
       "pl_name": "HD 190007 b",
       "reference": "<a refstr=BURT_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021AJ....161...10B/abstract target=ref>Burt et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.724128,
       "period_err_days": 9.9e-05,
       "semi_major_axis_au": 0.092,
@@ -3472,7 +3472,7 @@
     {
       "pl_name": "GJ 433 b",
       "reference": "<a refstr=BONFILS_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2013A%26A...549A.109B/abstract target=ref> Bonfils et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 7.3705,
       "period_err_days": 0.0005,
       "semi_major_axis_au": 0.062,
@@ -3497,7 +3497,7 @@
     {
       "pl_name": "GJ 433 d",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..246...11F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 36.059,
       "period_err_days": 0.016,
       "semi_major_axis_au": 0.178,
@@ -3522,7 +3522,7 @@
     {
       "pl_name": "GJ 433 c",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5094.105,
       "period_err_days": 608.617,
       "semi_major_axis_au": 4.819,
@@ -3549,7 +3549,7 @@
     {
       "pl_name": "TOI-540 b",
       "reference": "<a refstr=MENT_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021AJ....161...23M/abstract target=ref>Ment et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.2391491,
       "period_err_days": 1.7e-06,
       "semi_major_axis_au": 0.01223,
@@ -3576,7 +3576,7 @@
     {
       "pl_name": "HD 141004 b",
       "reference": "<a refstr=ROSENTHAL_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021ApJS..255....8R/abstract target=ref>Rosenthal et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 15.5083,
       "period_err_days": 0.0016,
       "semi_major_axis_au": 0.1238,
@@ -3603,7 +3603,7 @@
     {
       "pl_name": "GJ 251 b",
       "reference": "<a refstr=STOCK_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020A&A...643A.112S/abstract target=ref>Stock et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 14.237,
       "period_err_days": 0.0015,
       "semi_major_axis_au": 0.0808,
@@ -3628,7 +3628,7 @@
     {
       "pl_name": "GJ 251 c",
       "reference": "<a refstr=BEARD_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....170..279B/abstract target=ref>Beard et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 53.647,
       "period_err_days": 0.044,
       "semi_major_axis_au": 0.196,
@@ -3655,7 +3655,7 @@
     {
       "pl_name": "GJ 15 A b",
       "reference": "<a refstr=HOWARD_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014ApJ...794...51H/abstract target=ref>Howard et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.4407,
       "period_err_days": 0.0017,
       "semi_major_axis_au": 0.072,
@@ -3680,7 +3680,7 @@
     {
       "pl_name": "GJ 15 A c",
       "reference": "<a refstr=PINAMONTI_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...617A.104P/abstract target=ref>Pinamonti et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 7600.0,
       "period_err_days": 2200.0,
       "semi_major_axis_au": 5.4,
@@ -3707,7 +3707,7 @@
     {
       "pl_name": "GJ 4274 b",
       "reference": "<a refstr=CHARPENTIER_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...705A.243C/abstract target=ref>Charpentier et al. 2026</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.6339,
       "period_err_days": 0.0001,
       "semi_major_axis_au": 0.0153,
@@ -3732,7 +3732,7 @@
     {
       "pl_name": "GJ 4274 c",
       "reference": "<a refstr=CHARPENTIER_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...705A.243C/abstract target=ref>Charpentier et al. 2026</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 69.57,
       "period_err_days": 0.32,
       "semi_major_axis_au": 0.186,
@@ -3759,7 +3759,7 @@
     {
       "pl_name": "GJ 3988 b",
       "reference": "<a refstr=GORRINI_ET_AL_2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...680A..28G/abstract target=ref>Gorrini et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.9442,
       "period_err_days": 0.001,
       "semi_major_axis_au": 0.0405,
@@ -3786,7 +3786,7 @@
     {
       "pl_name": "HD 192310 b",
       "reference": "<a refstr=PEPE_ET_AL__2011 href=https://ui.adsabs.harvard.edu/abs/2011A%26A...534A..58P/abstract target=ref> Pepe et al. 2011 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 74.72,
       "period_err_days": 0.1,
       "semi_major_axis_au": 0.32,
@@ -3811,7 +3811,7 @@
     {
       "pl_name": "HD 192310 c",
       "reference": "<a refstr=PEPE_ET_AL__2011 href=https://ui.adsabs.harvard.edu/abs/2011A%26A...534A..58P/abstract target=ref> Pepe et al. 2011 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 525.8,
       "period_err_days": 9.2,
       "semi_major_axis_au": 1.18,
@@ -3838,7 +3838,7 @@
     {
       "pl_name": "HD 69830 b",
       "reference": "<a refstr=LOVIS_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006Natur.441..305L/abstract target=ref> Lovis et al. 2006 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.667,
       "period_err_days": 0.003,
       "semi_major_axis_au": 0.0785,
@@ -3863,7 +3863,7 @@
     {
       "pl_name": "HD 69830 c",
       "reference": "<a refstr=LOVIS_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006Natur.441..305L/abstract target=ref> Lovis et al. 2006 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 31.56,
       "period_err_days": 0.04,
       "semi_major_axis_au": 0.186,
@@ -3888,7 +3888,7 @@
     {
       "pl_name": "HD 69830 d",
       "reference": "<a refstr=LOVIS_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006Natur.441..305L/abstract target=ref> Lovis et al. 2006 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 197.0,
       "period_err_days": 3.0,
       "semi_major_axis_au": 0.63,
@@ -3915,7 +3915,7 @@
     {
       "pl_name": "Teegarden's Star b",
       "reference": "<a refstr=ZECHMEISTER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...627A..49Z/abstract target=ref>Zechmeister et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.90634,
       "period_err_days": 0.00041,
       "semi_major_axis_au": 0.0259,
@@ -3940,7 +3940,7 @@
     {
       "pl_name": "Teegarden's Star c",
       "reference": "<a refstr=ZECHMEISTER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...627A..49Z/abstract target=ref>Zechmeister et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.416,
       "period_err_days": 0.003,
       "semi_major_axis_au": 0.0455,
@@ -3965,7 +3965,7 @@
     {
       "pl_name": "Teegarden's Star d",
       "reference": "<a refstr=DREIZLER_ET_AL_2024 href=https://ui.adsabs.harvard.edu/abs/2024A&A...684A.117D/abstract target=ref>Dreizler et al. 2024</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 26.13,
       "period_err_days": 0.03,
       "semi_major_axis_au": 0.0791,
@@ -3992,7 +3992,7 @@
     {
       "pl_name": "GJ 1214 b",
       "reference": "<a refstr=CHARBONNEAU_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009Natur.462..891C/abstract target=ref> Charbonneau et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.580404531,
       "period_err_days": 1.8e-08,
       "semi_major_axis_au": 0.01505,
@@ -4019,7 +4019,7 @@
     {
       "pl_name": "Gl 725 A b",
       "reference": "<a refstr=CORTES_ZULETA_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...693A.164C/abstract target=ref>Cort&eacute;s-Zuleta et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 11.2201,
       "period_err_days": 0.0051,
       "semi_major_axis_au": 0.068,
@@ -4046,7 +4046,7 @@
     {
       "pl_name": "G 192-15 b",
       "reference": "<a refstr=KAMINSKI_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...696A.101K/abstract target=ref>Kaminski et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.27476,
       "period_err_days": 0.00026,
       "semi_major_axis_au": 0.01723,
@@ -4071,7 +4071,7 @@
     {
       "pl_name": "G 192-15 c",
       "reference": "<a refstr=KAMINSKI_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...696A.101K/abstract target=ref>Kaminski et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1219.0,
       "period_err_days": 13.0,
       "semi_major_axis_au": 1.137,
@@ -4098,7 +4098,7 @@
     {
       "pl_name": "G 261-6 b",
       "reference": "<a refstr=KAMINSKI_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...696A.101K/abstract target=ref>Kaminski et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.4536,
       "period_err_days": 0.0031,
       "semi_major_axis_au": 0.02971,
@@ -4125,7 +4125,7 @@
     {
       "pl_name": "Gl 410 b",
       "reference": "<a refstr=CARMONA_ET_AL_2025 href=https://ui.adsabs.harvard.edu/abs/2025A&A...700A.222C/abstract target=ref>Carmona et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.02,
       "period_err_days": 0.004,
       "semi_major_axis_au": 0.0531,
@@ -4152,7 +4152,7 @@
     {
       "pl_name": "GJ 649 b",
       "reference": "<a refstr=JOHNSON_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010PASP..122..149J/abstract target=ref> Johnson et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 600.1,
       "period_err_days": 1.7,
       "semi_major_axis_au": 1.112,
@@ -4179,7 +4179,7 @@
     {
       "pl_name": "tau Cet g",
       "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 20.0,
       "period_err_days": 0.02,
       "semi_major_axis_au": 0.133,
@@ -4204,7 +4204,7 @@
     {
       "pl_name": "tau Cet h",
       "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 49.41,
       "period_err_days": 0.08,
       "semi_major_axis_au": 0.243,
@@ -4229,7 +4229,7 @@
     {
       "pl_name": "tau Cet f",
       "reference": "<a refstr=FENG_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017AJ....154..135F/abstract target=ref>Feng et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 636.13,
       "period_err_days": 11.7,
       "semi_major_axis_au": 1.334,
@@ -4256,7 +4256,7 @@
     {
       "pl_name": "HIP 48714 b",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..250...29F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 17.818,
       "period_err_days": 0.002,
       "semi_major_axis_au": 0.112,
@@ -4283,7 +4283,7 @@
     {
       "pl_name": "GJ 338 B b",
       "reference": "<a refstr=GONZ_AACUTE_LEZ__AACUTE_LVAREZ_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020A&A...637A..93G/abstract target=ref>Gonz&aacute;lez-&Aacute;lvarez et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 24.422,
       "period_err_days": 0.014,
       "semi_major_axis_au": 0.142,
@@ -4310,7 +4310,7 @@
     {
       "pl_name": "LHS 3844 b",
       "reference": "<a refstr=VANDERSPEK_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019ApJ...871L..24V/abstract target=ref>Vanderspek et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 0.462929709,
       "period_err_days": 4.4e-08,
       "semi_major_axis_au": 0.00624,
@@ -4337,7 +4337,7 @@
     {
       "pl_name": "GJ 685 b",
       "reference": "<a refstr=PINAMONTI_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...625A.126P/abstract target=ref>Pinamonti et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 24.16,
       "period_err_days": 0.061,
       "semi_major_axis_au": 0.1344,
@@ -4364,7 +4364,7 @@
     {
       "pl_name": "LHS 1140 c",
       "reference": "<a refstr=MENT_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019AJ....157...32M/abstract target=ref>Ment et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.77794,
       "period_err_days": 2e-06,
       "semi_major_axis_au": 0.027,
@@ -4402,7 +4402,7 @@
     {
       "pl_name": "LHS 1140 b",
       "reference": "<a refstr=DITTMANN_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017Natur.544..333D/abstract target=ref>Dittmann et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 24.73723,
       "period_err_days": 2e-05,
       "semi_major_axis_au": 0.0946,
@@ -4442,7 +4442,7 @@
     {
       "pl_name": "GJ 357 b",
       "reference": "<a refstr=LUQUE_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...628A..39L/abstract target=ref>Luque et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.9306,
       "period_err_days": 2e-06,
       "semi_major_axis_au": 0.036,
@@ -4467,7 +4467,7 @@
     {
       "pl_name": "GJ 357 c",
       "reference": "<a refstr=LUQUE_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...628A..39L/abstract target=ref>Luque et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.1247,
       "period_err_days": 0.0011,
       "semi_major_axis_au": 0.061,
@@ -4492,7 +4492,7 @@
     {
       "pl_name": "GJ 357 d",
       "reference": "<a refstr=LUQUE_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...628A..39L/abstract target=ref>Luque et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 55.661,
       "period_err_days": 0.055,
       "semi_major_axis_au": 0.204,
@@ -4519,7 +4519,7 @@
     {
       "pl_name": "HD 260655 b",
       "reference": "<a refstr=LUQUE_ET_AL_2022 href=https://ui.adsabs.harvard.edu/abs/2022A&A...664A.199L/abstract target=ref>Luque et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.76953,
       "period_err_days": 3e-05,
       "semi_major_axis_au": 0.02933,
@@ -4557,7 +4557,7 @@
     {
       "pl_name": "HD 260655 c",
       "reference": "<a refstr=LUQUE_ET_AL_2022 href=https://ui.adsabs.harvard.edu/abs/2022A&A...664A.199L/abstract target=ref>Luque et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.70588,
       "period_err_days": 7e-05,
       "semi_major_axis_au": 0.04749,
@@ -4597,7 +4597,7 @@
     {
       "pl_name": "GJ 887 e",
       "reference": "<a refstr=HARTOGH_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...707A..93H/abstract target=ref>Hartogh et al. 2026</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.4249,
       "period_err_days": 0.00014,
       "semi_major_axis_au": 0.0417,
@@ -4622,7 +4622,7 @@
     {
       "pl_name": "GJ 887 b",
       "reference": "<a refstr=JEFFERS_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020Sci...368.1477J/abstract target=ref>Jeffers et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.2619,
       "period_err_days": 0.0005,
       "semi_major_axis_au": 0.0683,
@@ -4647,7 +4647,7 @@
     {
       "pl_name": "GJ 887 c",
       "reference": "<a refstr=JEFFERS_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020Sci...368.1477J/abstract target=ref>Jeffers et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 21.784,
       "period_err_days": 0.004,
       "semi_major_axis_au": 0.121,
@@ -4672,7 +4672,7 @@
     {
       "pl_name": "GJ 887 d",
       "reference": "<a refstr=HARTOGH_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...707A..93H/abstract target=ref>Hartogh et al. 2026</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 50.77,
       "period_err_days": 0.05,
       "semi_major_axis_au": 0.212,
@@ -4699,7 +4699,7 @@
     {
       "pl_name": "GJ 896 A b",
       "reference": "<a refstr=CURIEL_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022AJ....164...93C/abstract target=ref>Curiel et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 284.39,
       "period_err_days": 1.47,
       "semi_major_axis_au": 0.63965,
@@ -4726,7 +4726,7 @@
     {
       "pl_name": "GJ 273 c",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...602A..88A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.7234,
       "period_err_days": 0.0004,
       "semi_major_axis_au": 0.036467,
@@ -4751,7 +4751,7 @@
     {
       "pl_name": "GJ 273 b",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...602A..88A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 18.6498,
       "period_err_days": 0.0059,
       "semi_major_axis_au": 0.091101,
@@ -4778,7 +4778,7 @@
     {
       "pl_name": "GJ 1148 b",
       "reference": "<a refstr=HAGHIGHIPOUR_ET_AL__2010 href=https://ui.adsabs.harvard.edu/abs/2010ApJ...715..271H/abstract target=ref> Haghighipour et al. 2010 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 41.38,
       "period_err_days": 0.002,
       "semi_major_axis_au": 0.166,
@@ -4803,7 +4803,7 @@
     {
       "pl_name": "GJ 1148 c",
       "reference": "<a refstr=TRIFONOV_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...609A.117T/abstract target=ref>Trifonov et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 532.58,
       "period_err_days": 4.14,
       "semi_major_axis_au": 0.912,
@@ -4830,7 +4830,7 @@
     {
       "pl_name": "Wolf 1061 b",
       "reference": "<a refstr=WRIGHT_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...817L..20W/abstract target=ref>Wright et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 4.8869,
       "period_err_days": 0.0005,
       "semi_major_axis_au": 0.0375,
@@ -4855,7 +4855,7 @@
     {
       "pl_name": "Wolf 1061 c",
       "reference": "<a refstr=WRIGHT_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...817L..20W/abstract target=ref>Wright et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 17.8719,
       "period_err_days": 0.0059,
       "semi_major_axis_au": 0.089,
@@ -4880,7 +4880,7 @@
     {
       "pl_name": "Wolf 1061 d",
       "reference": "<a refstr=WRIGHT_ET_AL__2016 href=https://ui.adsabs.harvard.edu/abs/2016ApJ...817L..20W/abstract target=ref>Wright et al. 2016</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 217.21,
       "period_err_days": 0.55,
       "semi_major_axis_au": 0.47,
@@ -4907,7 +4907,7 @@
     {
       "pl_name": "Ross 128 b",
       "reference": "<a refstr=BONFILS_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...613A..25B/abstract target=ref>Bonfils et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 9.8658,
       "period_err_days": 0.007,
       "semi_major_axis_au": 0.0496,
@@ -4934,7 +4934,7 @@
     {
       "pl_name": "GJ 486 b",
       "reference": "<a refstr=TRIFONOV_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021Sci...371.1038T/abstract target=ref>Trifonov et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.46712127,
       "period_err_days": 3.1e-07,
       "semi_major_axis_au": 0.01714,
@@ -4961,7 +4961,7 @@
     {
       "pl_name": "GJ 86 b",
       "reference": "<a refstr=QUELOZ_ET_AL__2000 href=https://ui.adsabs.harvard.edu/abs/2000A&A...354...99Q/abstract target=ref> Queloz et al. 2000 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 15.76491,
       "period_err_days": 0.00039,
       "semi_major_axis_au": 0.11,
@@ -4988,7 +4988,7 @@
     {
       "pl_name": "GJ 3323 b",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...602A..88A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.3636,
       "period_err_days": 0.0007,
       "semi_major_axis_au": 0.03282,
@@ -5013,7 +5013,7 @@
     {
       "pl_name": "GJ 3323 c",
       "reference": "<a refstr=ASTUDILLO_DEFRU_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...602A..88A/abstract target=ref>Astudillo-Defru et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 40.54,
       "period_err_days": 0.21,
       "semi_major_axis_au": 0.1264,
@@ -5040,7 +5040,7 @@
     {
       "pl_name": "GJ 3779 b",
       "reference": "<a refstr=LUQUE_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...620A.171L/abstract target=ref>Luque et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.0232,
       "period_err_days": 0.0013,
       "semi_major_axis_au": 0.026,
@@ -5067,7 +5067,7 @@
     {
       "pl_name": "GJ 96 b",
       "reference": "<a refstr=HOBSON_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...618A.103H/abstract target=ref>Hobson et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 73.94,
       "period_err_days": 0.33,
       "semi_major_axis_au": 0.291,
@@ -5094,7 +5094,7 @@
     {
       "pl_name": "GJ 682 b",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 17.478,
       "period_err_days": 0.062,
       "semi_major_axis_au": 0.08,
@@ -5119,7 +5119,7 @@
     {
       "pl_name": "GJ 682 c",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 57.32,
       "period_err_days": 0.45,
       "semi_major_axis_au": 0.176,
@@ -5146,7 +5146,7 @@
     {
       "pl_name": "HD 211970 b",
       "reference": "<a refstr=FENG_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019ApJS..242...25F/abstract target=ref>Feng et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 25.201,
       "period_err_days": 0.025,
       "semi_major_axis_au": 0.143,
@@ -5173,7 +5173,7 @@
     {
       "pl_name": "eps Eri b",
       "reference": "<a refstr=HATZES_ET_AL__2000 href=https://ui.adsabs.harvard.edu/abs/2000ApJ...544L.145H/abstract target=ref> Hatzes et al. 2000 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2671.0,
       "period_err_days": 17.0,
       "semi_major_axis_au": 3.53,
@@ -5200,7 +5200,7 @@
     {
       "pl_name": "Gl 686 b",
       "reference": "<a refstr=AFFER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...622A.193A/abstract target=ref>Affer et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 15.53,
       "period_err_days": 0.0011,
       "semi_major_axis_au": 0.091,
@@ -5227,7 +5227,7 @@
     {
       "pl_name": "HD 180617 b",
       "reference": "<a refstr=KAMINSKI_ET_AL__2018 href=https://ui.adsabs.harvard.edu/abs/2018A&A...618A.115K/abstract target=ref>Kaminski et al. 2018</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 105.911,
       "period_err_days": 0.109,
       "semi_major_axis_au": 0.343,
@@ -5254,7 +5254,7 @@
     {
       "pl_name": "HD 238090 b",
       "reference": "<a refstr=STOCK_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020A&A...643A.112S/abstract target=ref>Stock et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 13.671,
       "period_err_days": 0.011,
       "semi_major_axis_au": 0.0932,
@@ -5281,7 +5281,7 @@
     {
       "pl_name": "GJ 414 A b",
       "reference": "<a refstr=DEDRICK_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021AJ....161...86D/abstract target=ref>Dedrick et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 50.8,
       "period_err_days": 0.1,
       "semi_major_axis_au": 0.2324,
@@ -5306,7 +5306,7 @@
     {
       "pl_name": "GJ 414 A c",
       "reference": "<a refstr=DEDRICK_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021AJ....161...86D/abstract target=ref>Dedrick et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 749.83,
       "period_err_days": 4.35,
       "semi_major_axis_au": 1.4,
@@ -5333,7 +5333,7 @@
     {
       "pl_name": "CD Cet b",
       "reference": "<a refstr=BAUER_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020A&A...640A..50B/abstract target=ref>Bauer et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.2907,
       "period_err_days": 0.00012,
       "semi_major_axis_au": 0.0185,
@@ -5360,7 +5360,7 @@
     {
       "pl_name": "HD 22496 b",
       "reference": "<a refstr=LILLO_BOX_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...654A..60L/abstract target=ref>Lillo-Box et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.09071,
       "period_err_days": 0.00026,
       "semi_major_axis_au": 0.051,
@@ -5387,7 +5387,7 @@
     {
       "pl_name": "HD 115404 A b",
       "reference": "<a refstr=FENG_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022ApJS..262...21F/abstract target=ref>Feng et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 10.49488,
       "period_err_days": 0.00141,
       "semi_major_axis_au": 0.088,
@@ -5412,7 +5412,7 @@
     {
       "pl_name": "HD 115404 A c",
       "reference": "<a refstr=FENG_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022ApJS..262...21F/abstract target=ref>Feng et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 15319.22517,
       "period_err_days": 7240.32595,
       "semi_major_axis_au": 11.364,
@@ -5439,7 +5439,7 @@
     {
       "pl_name": "GJ 229 A c",
       "reference": "<a refstr=FENG_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020ApJS..246...11F/abstract target=ref>Feng et al. 2020</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 121.93268,
       "period_err_days": 0.06708,
       "semi_major_axis_au": 0.384,
@@ -5464,7 +5464,7 @@
     {
       "pl_name": "GJ 229 b",
       "reference": "<a refstr=TUOMI_ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.441.1545T/abstract target=ref>Tuomi et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 579.47495,
       "period_err_days": 1.67942,
       "semi_major_axis_au": 1.086,
@@ -5491,7 +5491,7 @@
     {
       "pl_name": "Wolf 1069 b",
       "reference": "<a refstr=KOSSAKOWSKI_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...670A..84K/abstract target=ref>Kossakowski et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 15.564,
       "period_err_days": 0.015,
       "semi_major_axis_au": 0.0672,
@@ -5518,7 +5518,7 @@
     {
       "pl_name": "GJ 436 b",
       "reference": "<a refstr=BUTLER_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...617..580B/abstract target=ref> Butler et al. 2004 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.64388312,
       "period_err_days": 5.7e-07,
       "semi_major_axis_au": 0.0291,
@@ -5545,7 +5545,7 @@
     {
       "pl_name": "GJ 411 b",
       "reference": "<a refstr=D_IACUTE_AZ_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...625A..17D/abstract target=ref>D&iacute;az et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 12.9394,
       "period_err_days": 0.0014,
       "semi_major_axis_au": 0.07879,
@@ -5570,7 +5570,7 @@
     {
       "pl_name": "HD 95735 c",
       "reference": "<a refstr=ROSENTHAL_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021ApJS..255....8R/abstract target=ref>Rosenthal et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2946.0,
       "period_err_days": 210.0,
       "semi_major_axis_au": 2.94,
@@ -5597,7 +5597,7 @@
     {
       "pl_name": "L 363-38 b",
       "reference": "<a refstr=SARTORI_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...670A..42S/abstract target=ref>Sartori et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.781,
       "period_err_days": 0.007,
       "semi_major_axis_au": 0.048,
@@ -5624,7 +5624,7 @@
     {
       "pl_name": "HN Lib b",
       "reference": "<a refstr=GONZ_AACUTE_LEZ__AACUTE_LVAREZ_ET_AL__2023 href=https://ui.adsabs.harvard.edu/abs/2023A&A...675A.141G/abstract target=ref>Gonz&aacute;lez-&Aacute;lvarez et al. 2023</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 36.116,
       "period_err_days": 0.027,
       "semi_major_axis_au": 0.1417,
@@ -5651,7 +5651,7 @@
     {
       "pl_name": "GJ 680 b",
       "reference": "<a refstr=FENG_ET_AL__2022 href=https://ui.adsabs.harvard.edu/abs/2022ApJS..262...21F/abstract target=ref>Feng et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 17281.66514,
       "period_err_days": 4832.84502,
       "semi_major_axis_au": 10.138,
@@ -5678,7 +5678,7 @@
     {
       "pl_name": "HD 86728 b",
       "reference": "<a refstr=GUPTA_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....169....1G/abstract target=ref>Gupta et al. 2025</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 31.1515,
       "period_err_days": 0.0059,
       "semi_major_axis_au": 0.1916,
@@ -5705,7 +5705,7 @@
     {
       "pl_name": "GJ 1289 b",
       "reference": "<a refstr=MOUTOU_ET_AL__2024 href=https://ui.adsabs.harvard.edu/abs/2024A&A...688A.196M/abstract target=ref>Moutou et al. 2024</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 111.74,
       "period_err_days": 0.73,
       "semi_major_axis_au": 0.27,
@@ -5732,7 +5732,7 @@
     {
       "pl_name": "GJ 581 e",
       "reference": "<a refstr=MAYOR_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...507..487M/abstract target=ref> Mayor et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.1481,
       "period_err_days": 0.0004,
       "semi_major_axis_au": 0.02799,
@@ -5757,7 +5757,7 @@
     {
       "pl_name": "GJ 581 b",
       "reference": "<a refstr=BONFILS_ET_AL__2005 href=https://ui.adsabs.harvard.edu/abs/2005A&A...443L..15B/abstract target=ref> Bonfils et al. 2005 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 5.3686,
       "period_err_days": 0.0001,
       "semi_major_axis_au": 0.0399,
@@ -5782,7 +5782,7 @@
     {
       "pl_name": "GJ 581 c",
       "reference": "<a refstr=UDRY_ET_AL__2007 href=https://ui.adsabs.harvard.edu/abs/2007A&A...469L..43U/abstract target=ref> Udry et al. 2007 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 12.9211,
       "period_err_days": 0.0008,
       "semi_major_axis_au": 0.0718,
@@ -5809,7 +5809,7 @@
     {
       "pl_name": "gam Cep b",
       "reference": "<a refstr=HATZES_ET_AL__2003 href=https://ui.adsabs.harvard.edu/abs/2003ApJ...599.1383H/abstract target=ref> Hatzes et al. 2003 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 913.0,
       "period_err_days": 3.0,
       "semi_major_axis_au": 2.13,
@@ -5836,7 +5836,7 @@
     {
       "pl_name": "HD 62509 b",
       "reference": "<a refstr=HATZES_ET_AL__2006 href=https://ui.adsabs.harvard.edu/abs/2006A&A...457..335H/abstract target=ref> Hatzes et al. 2006 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 589.64,
       "period_err_days": 0.81,
       "semi_major_axis_au": 1.64,
@@ -5863,7 +5863,7 @@
     {
       "pl_name": "HD 285968 b",
       "reference": "<a refstr=FORVEILLE_ET_AL__2009 href=https://ui.adsabs.harvard.edu/abs/2009A&A...493..645F/abstract target=ref> Forveille et al. 2009 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 8.7836,
       "period_err_days": 0.0054,
       "semi_major_axis_au": 0.066,
@@ -5890,7 +5890,7 @@
     {
       "pl_name": "Kapteyn c",
       "reference": "<a refstr=ANGLADA_ESCUD_EACUTE__ET_AL__2014 href=https://ui.adsabs.harvard.edu/abs/2014MNRAS.443L..89A/abstract target=ref> Anglada-Escud&eacute; et al. 2014</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 121.54,
       "period_err_days": 0.25,
       "semi_major_axis_au": 0.311,
@@ -5917,7 +5917,7 @@
     {
       "pl_name": "Gl 378 b",
       "reference": "<a refstr=HOBSON_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...625A..18H/abstract target=ref>Hobson et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 3.822,
       "period_err_days": 0.001,
       "semi_major_axis_au": 0.039435,
@@ -5944,7 +5944,7 @@
     {
       "pl_name": "GJ 625 b",
       "reference": "<a refstr=SU_AACUTE_REZ_MASCARE_NTILDE_O_ET_AL__2017 href=https://ui.adsabs.harvard.edu/abs/2017A&A...605A..92S/abstract target=ref>Su&aacute;rez Mascare&ntilde;o et al. 2017</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 14.628,
       "period_err_days": 0.012,
       "semi_major_axis_au": 0.078361,
@@ -5971,7 +5971,7 @@
     {
       "pl_name": "55 Cnc B b",
       "reference": "<a refstr=MOUTOU_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...705A.190M/abstract target=ref>Moutou et al. 2026</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 6.7994,
       "period_err_days": 0.0013,
       "semi_major_axis_au": 0.044,
@@ -5996,7 +5996,7 @@
     {
       "pl_name": "55 Cnc B c",
       "reference": "<a refstr=MOUTOU_ET_AL_2026 href=https://ui.adsabs.harvard.edu/abs/2026A&A...705A.190M/abstract target=ref>Moutou et al. 2026</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 33.747,
       "period_err_days": 0.035,
       "semi_major_axis_au": 0.13,
@@ -6023,7 +6023,7 @@
     {
       "pl_name": "Gl 49 b",
       "reference": "<a refstr=PERGER_ET_AL__2019 href=https://ui.adsabs.harvard.edu/abs/2019A&A...624A.123P/abstract target=ref>Perger et al. 2019</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 13.8508,
       "period_err_days": 0.0053,
       "semi_major_axis_au": 0.0905,
@@ -6050,7 +6050,7 @@
     {
       "pl_name": "GJ 740 b",
       "reference": "<a refstr=TOLEDO_PADR_OACUTE_N_ET_AL__2021 href=https://ui.adsabs.harvard.edu/abs/2021A&A...648A..20T/abstract target=ref>Toledo-Padr&oacute;n et al. 2021</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 2.37756,
       "period_err_days": 0.00013,
       "semi_major_axis_au": 0.029,
@@ -6077,7 +6077,7 @@
     {
       "pl_name": "Ross 508 b",
       "reference": "<a refstr=HARAKAWA_ET_AL_2022 href=https://ui.adsabs.harvard.edu/abs/2022PASJ...74..904H/abstract target=ref>Harakawa et al. 2022</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 10.77,
       "period_err_days": 0.01,
       "semi_major_axis_au": 0.05366,
@@ -6104,7 +6104,7 @@
     {
       "pl_name": "WISEP J121756.91+162640.2 A b",
       "reference": "<a refstr=LIU_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2012ApJ...758...57L/abstract target=ref> Liu et al. 2013 </a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": null,
       "period_err_days": null,
       "semi_major_axis_au": 8.0,
@@ -6131,7 +6131,7 @@
     {
       "pl_name": "GJ 238 b",
       "reference": "<a refstr=TEY_ET_AL__2024 href=https://ui.adsabs.harvard.edu/abs/2024AJ....167..283T/abstract target=ref>Tey et al. 2024</a>",
-      "retrieval_date": "2026-05-18",
+      "retrieval_date": "2026-05-19",
       "period_days": 1.7446999,
       "period_err_days": 1.9e-06,
       "semi_major_axis_au": 0.02123,

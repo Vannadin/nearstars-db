@@ -1,4 +1,463 @@
 {
+  "Arcturus": {
+    "spectype": "K1.5 III Fe-0.5",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 1.08,
+        "uncertainty_msun": 0.06,
+        "method": "asteroseismology",
+        "reference": "Ramirez & Allende Prieto 2011",
+        "bibcode": "2011ApJ...743..135R",
+        "doi": "10.1088/0004-637X/743/2/135",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 25.4,
+        "uncertainty_rsun": 0.2,
+        "method": "interferometry",
+        "reference": "Lacour et al. 2008",
+        "bibcode": "2008A&A...485..561L",
+        "doi": "10.1051/0004-6361:200809611",
+        "recommended": true
+      }
+    ]
+  },
+  "Capella": {
+    "spectype": "G3 III + G0 III",
+    "spectype_bibcode": "2015ApJ...807...26T",
+    "spectype_reference": "Torres et al. 2015 (close binary Aa+Ab)",
+    "mass_measurements": [
+      {
+        "value_msun": 5.0515,
+        "uncertainty_msun": 0.024,
+        "method": "binary_orbit",
+        "reference": "Torres et al. 2015 (total system mass Aa+Ab)",
+        "bibcode": "2015ApJ...807...26T",
+        "doi": "10.1088/0004-637X/807/1/26",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 11.98,
+        "uncertainty_rsun": 0.57,
+        "method": "interferometry",
+        "reference": "Torres et al. 2015 (Aa primary; Ab=8.83 R_sun)",
+        "bibcode": "2015ApJ...807...26T",
+        "doi": "10.1088/0004-637X/807/1/26",
+        "recommended": true
+      }
+    ]
+  },
+  "Procyon A": {
+    "spectype": "F5 IV-V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 1.499,
+        "uncertainty_msun": 0.031,
+        "method": "binary_orbit",
+        "reference": "Bond et al. 2015 (HST astrometry)",
+        "bibcode": "2015ApJ...813..106B",
+        "doi": "10.1088/0004-637X/813/2/106",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 2.048,
+        "uncertainty_rsun": 0.025,
+        "method": "interferometry",
+        "reference": "Aufdenberg et al. 2005",
+        "bibcode": "2005ApJ...633..424A",
+        "doi": "10.1086/452622",
+        "recommended": true
+      }
+    ]
+  },
+  "Procyon B": {
+    "spectype": "DQZ",
+    "spectype_bibcode": "2002ApJ...568..324P",
+    "spectype_reference": "Provencal et al. 2002",
+    "mass_measurements": [
+      {
+        "value_msun": 0.602,
+        "uncertainty_msun": 0.015,
+        "method": "binary_orbit",
+        "reference": "Bond et al. 2015",
+        "bibcode": "2015ApJ...813..106B",
+        "doi": "10.1088/0004-637X/813/2/106",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.0123,
+        "uncertainty_rsun": 0.0003,
+        "method": "evolutionary_model",
+        "reference": "Provencal et al. 2002 (mass-radius for DQZ WD)",
+        "bibcode": "2002ApJ...568..324P",
+        "doi": "10.1086/338769",
+        "recommended": true
+      }
+    ]
+  },
+  "Wolf 359": {
+    "spectype": "M6 V",
+    "spectype_bibcode": "1991ApJS...77..417K",
+    "spectype_reference": "Kirkpatrick et al. 1991",
+    "mass_measurements": [
+      {
+        "value_msun": 0.11,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Pineda et al. 2021 (M dwarf mass-luminosity)",
+        "bibcode": "2021ApJ...918...40P",
+        "doi": "10.3847/1538-4357/ac0aea",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.144,
+        "uncertainty_rsun": 0.005,
+        "method": "spectroscopic_calibration",
+        "reference": "Pineda et al. 2021 (Stefan-Boltzmann from L+Teff)",
+        "bibcode": "2021ApJ...918...40P",
+        "doi": "10.3847/1538-4357/ac0aea",
+        "recommended": true
+      }
+    ]
+  },
+  "70 Ophiuchi A": {
+    "spectype": "K0 V",
+    "spectype_bibcode": "2003AJ....126.2048G",
+    "spectype_reference": "Gray et al. 2003",
+    "mass_measurements": [
+      {
+        "value_msun": 0.89,
+        "uncertainty_msun": 0.02,
+        "method": "binary_orbit",
+        "reference": "Eggenberger et al. 2008",
+        "bibcode": "2008A&A...482..631E",
+        "doi": "10.1051/0004-6361:20078624",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.86,
+        "uncertainty_rsun": 0.04,
+        "method": "interferometry",
+        "reference": "Boyajian et al. 2008",
+        "bibcode": "2008ApJ...683..424B",
+        "doi": "10.1086/589554",
+        "recommended": true
+      }
+    ]
+  },
+  "70 Ophiuchi B": {
+    "spectype": "K5 V",
+    "spectype_bibcode": "2003AJ....126.2048G",
+    "spectype_reference": "Gray et al. 2003",
+    "mass_measurements": [
+      {
+        "value_msun": 0.71,
+        "uncertainty_msun": 0.02,
+        "method": "binary_orbit",
+        "reference": "Eggenberger et al. 2008",
+        "bibcode": "2008A&A...482..631E",
+        "doi": "10.1051/0004-6361:20078624",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.66,
+        "uncertainty_rsun": 0.04,
+        "method": "interferometry",
+        "reference": "Boyajian et al. 2008",
+        "bibcode": "2008ApJ...683..424B",
+        "doi": "10.1086/589554",
+        "recommended": true
+      }
+    ]
+  },
+  "Sirius A": {
+    "spectype": "A1 V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 2.063,
+        "uncertainty_msun": 0.023,
+        "method": "binary_orbit",
+        "reference": "Bond et al. 2017 (HST astrometric orbit)",
+        "bibcode": "2017ApJ...840...70B",
+        "doi": "10.3847/1538-4357/aa6af8",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.7117,
+        "uncertainty_rsun": 0.0093,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2003",
+        "bibcode": "2003A&A...408..681K",
+        "doi": "10.1051/0004-6361:20030994",
+        "recommended": true
+      }
+    ]
+  },
+  "Sirius B": {
+    "spectype": "DA2",
+    "spectype_bibcode": "2005ApJ...630L..69L",
+    "spectype_reference": "Liebert et al. 2005",
+    "mass_measurements": [
+      {
+        "value_msun": 1.018,
+        "uncertainty_msun": 0.011,
+        "method": "binary_orbit",
+        "reference": "Bond et al. 2017",
+        "bibcode": "2017ApJ...840...70B",
+        "doi": "10.3847/1538-4357/aa6af8",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.00864,
+        "uncertainty_rsun": 0.00012,
+        "method": "evolutionary_model",
+        "reference": "Bond et al. 2017 (WD mass-radius relation)",
+        "bibcode": "2017ApJ...840...70B",
+        "doi": "10.3847/1538-4357/aa6af8",
+        "recommended": true
+      }
+    ]
+  },
+  "Vega": {
+    "spectype": "A0 Va",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 2.135,
+        "uncertainty_msun": 0.075,
+        "method": "evolutionary_model",
+        "reference": "Yoon et al. 2010 (rotating model from interferometry)",
+        "bibcode": "2010ApJ...708...71Y",
+        "doi": "10.1088/0004-637X/708/1/71",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 2.726,
+        "uncertainty_rsun": 0.006,
+        "method": "interferometry",
+        "reference": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
+        "bibcode": "2012ApJ...761L...3M",
+        "doi": "10.1088/2041-8205/761/1/L3",
+        "recommended": true
+      }
+    ]
+  },
+  "Altair": {
+    "spectype": "A7 V",
+    "spectype_bibcode": "2007Sci...317..342M",
+    "spectype_reference": "Monnier et al. 2007",
+    "mass_measurements": [
+      {
+        "value_msun": 1.791,
+        "uncertainty_msun": 0.018,
+        "method": "evolutionary_model",
+        "reference": "Bouchaud et al. 2020 (rotating evolutionary fit to interferometry)",
+        "bibcode": "2020A&A...633A..78B",
+        "doi": "10.1051/0004-6361/201936830",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.99,
+        "uncertainty_rsun": 0.02,
+        "method": "interferometry",
+        "reference": "Monnier et al. 2007 (mean radius; equatorial 2.03 polar 1.63 Rsun)",
+        "bibcode": "2007Sci...317..342M",
+        "doi": "10.1126/science.1143205",
+        "recommended": true
+      }
+    ]
+  },
+  "Fomalhaut": {
+    "spectype": "A4 V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 1.92,
+        "uncertainty_msun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Mamajek 2012",
+        "bibcode": "2012ApJ...754L..20M",
+        "doi": "10.1088/2041-8205/754/2/L20",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.842,
+        "uncertainty_rsun": 0.019,
+        "method": "interferometry",
+        "reference": "Di Folco et al. 2004",
+        "bibcode": "2004A&A...426..601D",
+        "doi": "10.1051/0004-6361:20047189",
+        "recommended": true
+      }
+    ]
+  },
+  "61 Cygni A": {
+    "spectype": "K5 V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 0.7,
+        "uncertainty_msun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Kervella et al. 2008 (interferometry + evolution)",
+        "bibcode": "2008A&A...488..667K",
+        "doi": "10.1051/0004-6361:200810080",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.665,
+        "uncertainty_rsun": 0.005,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2008",
+        "bibcode": "2008A&A...488..667K",
+        "doi": "10.1051/0004-6361:200810080",
+        "recommended": true
+      }
+    ]
+  },
+  "61 Cygni B": {
+    "spectype": "K7 V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 0.63,
+        "uncertainty_msun": 0.03,
+        "method": "evolutionary_model",
+        "reference": "Kervella et al. 2008",
+        "bibcode": "2008A&A...488..667K",
+        "doi": "10.1051/0004-6361:200810080",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.595,
+        "uncertainty_rsun": 0.008,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2008",
+        "bibcode": "2008A&A...488..667K",
+        "doi": "10.1051/0004-6361:200810080",
+        "recommended": true
+      }
+    ]
+  },
+  "Eta Cassiopeiae A": {
+    "spectype": "G3 V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 0.972,
+        "uncertainty_msun": 0.012,
+        "method": "binary_orbit",
+        "reference": "Boyajian et al. 2013 (interferometry + binary orbit)",
+        "bibcode": "2013ApJ...771...40B",
+        "doi": "10.1088/0004-637X/771/1/40",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.04,
+        "uncertainty_rsun": 0.04,
+        "method": "interferometry",
+        "reference": "Boyajian et al. 2013",
+        "bibcode": "2013ApJ...771...40B",
+        "doi": "10.1088/0004-637X/771/1/40",
+        "recommended": true
+      }
+    ]
+  },
+  "Eta Cassiopeiae B": {
+    "spectype": "K7 V",
+    "spectype_bibcode": "1989ApJS...71..245K",
+    "spectype_reference": "Keenan & McNeil 1989",
+    "mass_measurements": [
+      {
+        "value_msun": 0.57,
+        "uncertainty_msun": 0.03,
+        "method": "binary_orbit",
+        "reference": "Halbwachs et al. 2018 (Hipparcos-Gaia astrometric)",
+        "bibcode": "2018A&A...619A..81H",
+        "doi": "10.1051/0004-6361/201833377",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.66,
+        "uncertainty_rsun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Stassun et al. 2019 (TICv8)",
+        "bibcode": "2019AJ....158..138S",
+        "doi": "10.3847/1538-3881/ab3467",
+        "recommended": true
+      }
+    ]
+  },
+  "Van Maanen's Star": {
+    "spectype": "DZ7",
+    "spectype_bibcode": "2008AJ....135.1225H",
+    "spectype_reference": "Holberg et al. 2008",
+    "mass_measurements": [
+      {
+        "value_msun": 0.633,
+        "uncertainty_msun": 0.013,
+        "method": "evolutionary_model",
+        "reference": "Holberg et al. 2008 (WD mass-radius)",
+        "bibcode": "2008AJ....135.1225H",
+        "doi": "10.1088/0004-6256/135/4/1225",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.0087,
+        "uncertainty_rsun": 0.0002,
+        "method": "evolutionary_model",
+        "reference": "Holberg et al. 2008",
+        "bibcode": "2008AJ....135.1225H",
+        "doi": "10.1088/0004-6256/135/4/1225",
+        "recommended": true
+      }
+    ]
+  },
   "Alpha Centauri A": {
     "teff_k": 5790,
     "spectype": "G2 V",
@@ -2556,8 +3015,8 @@
       {
         "value_msun": 0.281,
         "uncertainty_msun": 0.014,
-        "method": "unverified",
-        "reference": "Anglada Escud Eacute et al. 2014",
+        "method": "spectroscopic_calibration",
+        "reference": "Anglada-Escude et al. 2014",
         "bibcode": "2014MNRAS.443L..89A",
         "doi": "10.1093/mnrasl/slu076",
         "recommended": true
@@ -2567,8 +3026,8 @@
       {
         "value_rsun": 0.291,
         "uncertainty_rsun": 0.025,
-        "method": "unverified",
-        "reference": "Anglada Escud Eacute et al. 2014",
+        "method": "spectroscopic_calibration",
+        "reference": "Anglada-Escude et al. 2014",
         "bibcode": "2014MNRAS.443L..89A",
         "doi": "10.1093/mnrasl/slu076",
         "recommended": true

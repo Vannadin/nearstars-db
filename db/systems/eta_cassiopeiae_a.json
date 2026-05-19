@@ -20,9 +20,29 @@
         "vmag_v": 3.4941,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5801,
-        "spectype": "F9V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "G3 V",
+        "mass_measurements": [
+          {
+            "value_msun": 0.972,
+            "uncertainty_msun": 0.012,
+            "method": "binary_orbit",
+            "reference": "Boyajian et al. 2013 (interferometry + binary orbit)",
+            "bibcode": "2013ApJ...771...40B",
+            "doi": "10.1088/0004-637X/771/1/40",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.04,
+            "uncertainty_rsun": 0.04,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2013",
+            "bibcode": "2013ApJ...771...40B",
+            "doi": "10.1088/0004-637X/771/1/40",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -50,8 +70,8 @@
         "phase_reliable": true
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 128996491697.496,
+        "mean_radius_km": 723528.0
       }
     }
   ],
@@ -73,6 +93,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Boyajian et al. 2013 (interferometry + binary orbit)",
+      "doi": "10.1088/0004-637X/771/1/40",
+      "bibcode": "2013ApJ...771...40B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Eta Cassiopeiae A mass (binary_orbit)"
       ]
     }
   ],

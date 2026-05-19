@@ -75,6 +75,14 @@ SIMBAD_ALIASES = {
     "COCONUTS-2 A":               "COCONUTS-2A",
     "eps Ind A":                  "GJ 845 A",
     "WISEP J121756.91+162640.2 A":"WISE J121756.90+162640.8",
+    # 50ly 이내 유명 비-호스트
+    "Arcturus":                   "alf Boo",
+    "Capella":                    "alf Aur",
+    "Procyon A":                  "alf CMi",
+    "Procyon B":                  "alf CMi B",
+    "70 Ophiuchi A":              "70 Oph A",
+    "70 Ophiuchi B":              "70 Oph B",
+    "Van Maanen's Star":          "Wolf 28",
 }
 
 name_to_oid = {}   # our_name → oid

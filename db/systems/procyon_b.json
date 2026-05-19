@@ -1,0 +1,129 @@
+{
+  "system_name": "Procyon B",
+  "stars": [
+    {
+      "name": "Procyon B",
+      "component": "B",
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 114.8245,
+        "dec_deg": 5.2241111,
+        "parallax_mas": 284.56,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": -709,
+        "pmdec_mas_yr": -1024,
+        "radial_velocity_km_s": -4.50528,
+        "radial_velocity_source": "simbad",
+        "vmag_v": 10.92,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 7585,
+        "spectype": "DQZ",
+        "mass_measurements": [
+          {
+            "value_msun": 0.602,
+            "uncertainty_msun": 0.015,
+            "method": "binary_orbit",
+            "reference": "Bond et al. 2015",
+            "bibcode": "2015ApJ...813..106B",
+            "doi": "10.1088/0004-637X/813/2/106",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.0123,
+            "uncertainty_rsun": 0.0003,
+            "method": "evolutionary_model",
+            "reference": "Provencal et al. 2002 (mass-radius for DQZ WD)",
+            "bibcode": "2002ApJ...568..324P",
+            "doi": "10.1086/338769",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "kepler_thiele_innes",
+        "distance_pc": 3.5141973573235874,
+        "distance_km": 108436800024283.11,
+        "icrs_x_km": -45357671107572.71,
+        "icrs_y_km": 98005008725681.66,
+        "icrs_z_km": 9901057282104.248,
+        "icrs_vx_km_s": 19.258523706422412,
+        "icrs_vy_km_s": 4.254306882726214,
+        "icrs_vz_km_s": -15.031252602453847,
+        "position_ulp_km": 0.02176148344316823,
+        "icrs_x_j2000_km": -45337520894564.734,
+        "icrs_y_j2000_km": 98008455052010.84,
+        "icrs_z_j2000_km": 9874377821482.691,
+        "icrs_vx_j2000_km_s": 14.84993462517831,
+        "icrs_vy_j2000_km_s": -1.8413941671247445,
+        "icrs_vz_j2000_km_s": -10.688343357708845,
+        "orbit_id": "AB",
+        "orbit_role": "secondary",
+        "mass_ratio_q": 0.7134697762970015,
+        "barycenter_method": "single_component(Procyon A)",
+        "phase_reliable": true
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 79892888890.836,
+        "mean_radius_km": 8557.1
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Bond et al. 2015",
+      "doi": "10.1088/0004-637X/813/2/106",
+      "bibcode": "2015ApJ...813..106B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Procyon B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Provencal et al. 2002 (mass-radius for DQZ WD)",
+      "doi": "10.1086/338769",
+      "bibcode": "2002ApJ...568..324P",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Procyon B radius (evolutionary_model)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-19",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit_ref": "procyon_a.json"
+}

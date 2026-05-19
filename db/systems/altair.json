@@ -20,9 +20,29 @@
         "vmag_v": 0.77,
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 7485,
-        "spectype": "A7Vn",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "A7 V",
+        "mass_measurements": [
+          {
+            "value_msun": 1.791,
+            "uncertainty_msun": 0.018,
+            "method": "evolutionary_model",
+            "reference": "Bouchaud et al. 2020 (rotating evolutionary fit to interferometry)",
+            "bibcode": "2020A&A...633A..78B",
+            "doi": "10.1051/0004-6361/201936830",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.99,
+            "uncertainty_rsun": 0.02,
+            "method": "interferometry",
+            "reference": "Monnier et al. 2007 (mean radius; equatorial 2.03 polar 1.63 Rsun)",
+            "bibcode": "2007Sci...317..342M",
+            "doi": "10.1126/science.1143205",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 5.1560748685721824
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 237687980072.238,
+        "mean_radius_km": 1384443.0
       }
     }
   ],
@@ -68,6 +88,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Bouchaud et al. 2020 (rotating evolutionary fit to interferometry)",
+      "doi": "10.1051/0004-6361/201936830",
+      "bibcode": "2020A&A...633A..78B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Altair mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Monnier et al. 2007 (mean radius; equatorial 2.03 polar 1.63 Rsun)",
+      "doi": "10.1126/science.1143205",
+      "bibcode": "2007Sci...317..342M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Altair radius (interferometry)"
       ]
     }
   ],

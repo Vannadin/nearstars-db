@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "HD 219134 b",
         "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 3.092926,
         "period_err_days": 1e-05,
         "semi_major_axis_au": 0.03876,
@@ -156,7 +156,7 @@
       "raw": {
         "pl_name": "HD 219134 c",
         "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 6.76458,
         "period_err_days": 0.00033,
         "semi_major_axis_au": 0.0653,
@@ -235,7 +235,7 @@
       "raw": {
         "pl_name": "HD 219134 f",
         "reference": "<a refstr=VOGT_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015ApJ...814...12V/abstract target=ref>Vogt et al. 2015</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 22.717,
         "period_err_days": 0.015,
         "semi_major_axis_au": 0.1463,
@@ -300,7 +300,7 @@
       "raw": {
         "pl_name": "HD 219134 d",
         "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 46.859,
         "period_err_days": 0.028,
         "semi_major_axis_au": 0.237,
@@ -365,7 +365,7 @@
       "raw": {
         "pl_name": "HD 219134 g",
         "reference": "<a refstr=VOGT_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015ApJ...814...12V/abstract target=ref>Vogt et al. 2015</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 94.2,
         "period_err_days": 0.2,
         "semi_major_axis_au": 0.3753,
@@ -428,7 +428,7 @@
       "raw": {
         "pl_name": "HD 219134 h",
         "reference": "<a refstr=MOTALEBI_ET_AL__2015 href=https://ui.adsabs.harvard.edu/abs/2015A&A...584A..72M/abstract target=ref>Motalebi et al. 2015</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 2247.0,
         "period_err_days": 43.0,
         "semi_major_axis_au": 3.11,

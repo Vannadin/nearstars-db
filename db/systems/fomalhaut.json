@@ -20,9 +20,29 @@
         "vmag_v": 1.16,
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 8689,
-        "spectype": "A4V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "spectype": "A4 V",
+        "mass_measurements": [
+          {
+            "value_msun": 1.92,
+            "uncertainty_msun": 0.02,
+            "method": "evolutionary_model",
+            "reference": "Mamajek 2012",
+            "bibcode": "2012ApJ...754L..20M",
+            "doi": "10.1088/2041-8205/754/2/L20",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.842,
+            "uncertainty_rsun": 0.019,
+            "method": "interferometry",
+            "reference": "Di Folco et al. 2004",
+            "bibcode": "2004A&A...426..601D",
+            "doi": "10.1051/0004-6361:20047189",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -8.440375531511924
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 254807884834.56,
+        "mean_radius_km": 1281479.4
       }
     }
   ],
@@ -68,6 +88,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Mamajek 2012",
+      "doi": "10.1088/2041-8205/754/2/L20",
+      "bibcode": "2012ApJ...754L..20M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Fomalhaut mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Di Folco et al. 2004",
+      "doi": "10.1051/0004-6361:20047189",
+      "bibcode": "2004A&A...426..601D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Fomalhaut radius (interferometry)"
       ]
     }
   ],

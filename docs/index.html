@@ -53,7 +53,7 @@ input[type=checkbox]{accent-color:#4a88b8}
 .spec-dot-row{display:grid;grid-template-columns:12px 1fr;gap:4px 8px;align-items:center;margin-bottom:3px}
 .sdot{width:10px;height:10px;border-radius:50%}
 
-.table-wrap{overflow-x:auto}
+.table-wrap{overflow:auto}
 table{width:100%;border-collapse:collapse}
 thead{position:sticky;top:0;z-index:10;background:#0b1020}
 th{padding:9px 14px;text-align:left;font-size:11px;font-weight:700;color:#4a6888;text-transform:uppercase;letter-spacing:.6px;cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid #1a2535}
@@ -144,6 +144,10 @@ a.sl:hover{text-decoration:underline}
 .fov-btn:hover:not(.on){color:#8aaac8}
 .img-link{font-size:11px;color:#4a88b8;text-decoration:none;border:1px solid #1e3448;padding:2px 8px;border-radius:4px}
 .img-link:hover{background:#152030}
+.stl-btn{font-size:11px;color:#4a88b8;background:none;border:1px solid #1e3448;padding:2px 8px;border-radius:4px;cursor:pointer;transition:color .15s,border-color .15s,background .15s}
+.stl-btn:hover{background:#152030}
+.stl-btn.ok{color:#40c080;border-color:#1a4030}
+.stl-btn.err{color:#c07040;border-color:#402010}
 .img-no{width:180px;height:90px;display:flex;align-items:center;justify-content:center;color:#2a4050;font-size:12px;border:1px dashed #1e3048;border-radius:6px}
 </style>
 </head>
@@ -544,6 +548,7 @@ function buildDetail(sys) {
             <button class="fov-btn"    data-target="${imgId}" data-fov="30">30′</button>
           </div>
           <a class="img-link" href="${simbad}" target="_blank">SIMBAD ↗</a>
+          <button class="stl-btn" onclick="openStellarium(this,${JSON.stringify(st.name).replace(/"/g,'&quot;')},${st.raw.ra_deg},${st.raw.dec_deg})">☄ Stellarium</button>
         </div>
       </div>`;
     }
@@ -1047,10 +1052,61 @@ fetch('./data.json')
     document.getElementById('tbl').style.display = '';
     document.querySelector('th[data-col="dist"]').classList.add('asc');
     render();
+    fitTableWrap();
   })
   .catch(err => {
     document.getElementById('loading').textContent = 'Error: ' + err.message;
   });
+
+async function openStellarium(btn, name, raDeg, decDeg) {
+  const API = 'http://localhost:8090';
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '…';
+
+  // 팝업 차단 우회: 사용자 제스처 컨텍스트(클릭 시점)에서 미리 탭 열기
+  const webWin = window.open('', '_blank');
+
+  try {
+    const status = await fetch(`${API}/api/main/status`, {
+      signal: AbortSignal.timeout(1500)
+    });
+    if (!status.ok) throw new Error('offline');
+
+    const raH  = (raDeg / 15).toFixed(6);
+    const decD = decDeg.toFixed(6);
+    const script =
+      `var found = core.selectObjectByName(${JSON.stringify(name)}, true);\n` +
+      `if (!found) { core.moveToRaDec(${raH}, ${decD}, 1.0); }`;
+
+    await fetch(`${API}/api/scripts/run`, {
+      method: 'POST',
+      body: new URLSearchParams({ script }),
+      signal: AbortSignal.timeout(3000)
+    });
+
+    // 데스크탑 성공 → 미리 열어둔 탭 닫기
+    webWin.close();
+    btn.textContent = '☄ Stellarium ✓';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = label; btn.classList.remove('ok'); btn.disabled = false; }, 2500);
+  } catch {
+    // 데스크탑 실패 → 미리 열어둔 탭을 Stellarium Web으로 전환
+    webWin.location.href = 'https://stellarium-web.org/skysource/' + name.replace(/\s+/g, '');
+    btn.textContent = '☄ Web (검색: ' + name + ')';
+    btn.classList.add('err');
+    setTimeout(() => { btn.textContent = label; btn.classList.remove('err'); btn.disabled = false; }, 4000);
+  }
+}
+
+function fitTableWrap() {
+  const wrap = document.querySelector('.table-wrap');
+  const top = wrap.getBoundingClientRect().top;
+  wrap.style.height = (window.innerHeight - top) + 'px';
+}
+fitTableWrap();
+window.addEventListener('resize', fitTableWrap);
+document.getElementById('help-btn').addEventListener('click', () => setTimeout(fitTableWrap, 360));
 </script>
 </body>
 </html>

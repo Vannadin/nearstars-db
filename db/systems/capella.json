@@ -1,0 +1,114 @@
+{
+  "system_name": "Capella",
+  "stars": [
+    {
+      "name": "Capella",
+      "component": null,
+      "raw": {
+        "source": "simbad",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 79.17232794433404,
+        "dec_deg": 45.99799146983673,
+        "parallax_mas": 76.2,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": 75.25,
+        "pmdec_mas_yr": -426.89,
+        "radial_velocity_km_s": 29.19,
+        "radial_velocity_source": "simbad",
+        "vmag_v": 0.08,
+        "vmag_source": "hipparcos_hardcoded",
+        "teff_k": 5270,
+        "spectype": "G3 III + G0 III",
+        "mass_measurements": [
+          {
+            "value_msun": 5.0515,
+            "uncertainty_msun": 0.024,
+            "method": "binary_orbit",
+            "reference": "Torres et al. 2015 (total system mass Aa+Ab)",
+            "bibcode": "2015ApJ...807...26T",
+            "doi": "10.1088/0004-637X/807/1/26",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 11.98,
+            "uncertainty_rsun": 0.57,
+            "method": "interferometry",
+            "reference": "Torres et al. 2015 (Aa primary; Ab=8.83 R_sun)",
+            "bibcode": "2015ApJ...807...26T",
+            "doi": "10.1088/0004-637X/807/1/26",
+            "recommended": true
+          }
+        ]
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 13.123359580052494,
+        "distance_km": 404944564500131.25,
+        "icrs_x_km": 52840959543911.36,
+        "icrs_y_km": 276237688395736.88,
+        "icrs_z_km": 291278860585424.25,
+        "icrs_vx_km_s": 2.799886844762524,
+        "icrs_vy_km_s": 39.55913659072936,
+        "icrs_vz_km_s": 2.547959726208731,
+        "position_ulp_km": 0.0646768995217038,
+        "icrs_x_j2000_km": 52845377429365.98,
+        "icrs_y_j2000_km": 276300107966180.66,
+        "icrs_z_j2000_km": 291282880960117.06,
+        "icrs_vx_j2000_km_s": 2.799886844762524,
+        "icrs_vy_j2000_km_s": 39.55913659072936,
+        "icrs_vz_j2000_km_s": 2.547959726208731
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 670396890750.927,
+        "mean_radius_km": 8334486.0
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Torres et al. 2015 (total system mass Aa+Ab)",
+      "doi": "10.1088/0004-637X/807/1/26",
+      "bibcode": "2015ApJ...807...26T",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Capella mass (binary_orbit)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-19",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433282.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  }
+}

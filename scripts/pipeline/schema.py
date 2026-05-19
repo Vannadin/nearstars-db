@@ -21,6 +21,7 @@ ASTROMETRY_REQUIRED = {
 ASTROMETRY_OPTIONAL = {
     "ra_error_mas", "dec_error_mas", "parallax_error_mas",
     "pmra_error_mas_yr", "pmdec_error_mas_yr", "rv_error_km_s",
+    "radial_velocity_source", "sibling_backfill",
 }
 
 PHOTOMETRY_REQUIRED = {"vmag_v", "vmag_source"}
@@ -121,7 +122,7 @@ BINARY_ORBIT_REQUIRED = {
     "grade", "phase_reliable",
 }
 BINARY_ORBIT_OPTIONAL = {
-    "source", "doi", "equinox", "node_resolved",
+    "source", "doi", "bibcode", "equinox", "node_resolved",
     "P_yr_err", "T_yr", "e_err", "a_arcsec_err",
     "i_err_deg", "omega_err_deg", "Omega_err_deg",
     "primary_is_barycenter_of", "orbit_type", "note",

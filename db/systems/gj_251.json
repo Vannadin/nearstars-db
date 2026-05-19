@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "GJ 251 b",
         "reference": "<a refstr=STOCK_ET_AL__2020 href=https://ui.adsabs.harvard.edu/abs/2020A&A...643A.112S/abstract target=ref>Stock et al. 2020</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 14.237,
         "period_err_days": 0.0015,
         "semi_major_axis_au": 0.0808,
@@ -140,7 +140,7 @@
       "raw": {
         "pl_name": "GJ 251 c",
         "reference": "<a refstr=BEARD_ET_AL__2025 href=https://ui.adsabs.harvard.edu/abs/2025AJ....170..279B/abstract target=ref>Beard et al. 2025</a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 53.647,
         "period_err_days": 0.044,
         "semi_major_axis_au": 0.196,

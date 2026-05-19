@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "ups And b",
         "reference": "<a refstr=BUTLER_ET_AL__1997 href=https://ui.adsabs.harvard.edu/abs/1997ApJ...474L.115B/abstract target=ref> Butler et al. 1997 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 4.617033,
         "period_err_days": 2.3e-05,
         "semi_major_axis_au": 0.05922166,
@@ -140,7 +140,7 @@
       "raw": {
         "pl_name": "ups And c",
         "reference": "<a refstr=BUTLER_ET_AL__1999 href=https://ui.adsabs.harvard.edu/abs/1999ApJ...526..916B/abstract target=ref> Butler et al. 1999 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 241.258,
         "period_err_days": 0.064,
         "semi_major_axis_au": 0.827774,
@@ -203,7 +203,7 @@
       "raw": {
         "pl_name": "ups And d",
         "reference": "<a refstr=BUTLER_ET_AL__1999 href=https://ui.adsabs.harvard.edu/abs/1999ApJ...526..916B/abstract target=ref> Butler et al. 1999 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 1276.46,
         "period_err_days": 0.57,
         "semi_major_axis_au": 2.51329,

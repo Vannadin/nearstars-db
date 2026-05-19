@@ -1494,5 +1494,71 @@
     ],
     "hip_ids": [],
     "binary": false
+  },
+  {
+    "system": "Arcturus",
+    "components": [
+      "Arcturus"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [69673],
+    "binary": false
+  },
+  {
+    "system": "Capella",
+    "components": [
+      "Capella"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [24608],
+    "binary": false
+  },
+  {
+    "system": "Procyon",
+    "components": [
+      "Procyon A",
+      "Procyon B"
+    ],
+    "gaia_source_ids": [
+      null,
+      null
+    ],
+    "hip_ids": [37279],
+    "binary": true
+  },
+  {
+    "system": "Wolf 359",
+    "components": [
+      "Wolf 359"
+    ],
+    "gaia_source_ids": [
+      "3864972938605115520"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "70 Ophiuchi",
+    "components": [
+      "70 Ophiuchi A",
+      "70 Ophiuchi B"
+    ],
+    "gaia_source_ids": [
+      "4468557611984384512",
+      "4468557611977674496"
+    ],
+    "hip_ids": [88601],
+    "binary": true
+  },
+  {
+    "system": "Van Maanen's Star",
+    "components": [
+      "Van Maanen's Star"
+    ],
+    "gaia_source_ids": [
+      "2552928187080872832"
+    ],
+    "hip_ids": [3829],
+    "binary": false
   }
 ]

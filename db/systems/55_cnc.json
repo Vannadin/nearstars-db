@@ -77,7 +77,7 @@
       "raw": {
         "pl_name": "55 Cnc e",
         "reference": "<a refstr=MCARTHUR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M/abstract target=ref> McArthur et al. 2004 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 0.7365474,
         "period_err_days": 1.3e-06,
         "semi_major_axis_au": 0.01544,
@@ -156,7 +156,7 @@
       "raw": {
         "pl_name": "55 Cnc b",
         "reference": "<a refstr=BUTLER_ET_AL__1997 href=https://ui.adsabs.harvard.edu/abs/1997ApJ...474L.115B/abstract target=ref> Butler et al. 1997 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 14.651552,
         "period_err_days": 3.6e-05,
         "semi_major_axis_au": 0.118,
@@ -219,7 +219,7 @@
       "raw": {
         "pl_name": "55 Cnc c",
         "reference": "<a refstr=MCARTHUR_ET_AL__2004 href=https://ui.adsabs.harvard.edu/abs/2004ApJ...614L..81M/abstract target=ref> McArthur et al. 2004 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 44.3936,
         "period_err_days": 0.0024,
         "semi_major_axis_au": 0.247,
@@ -282,7 +282,7 @@
       "raw": {
         "pl_name": "55 Cnc f",
         "reference": "<a refstr=FISCHER_ET_AL__2008 href=https://ui.adsabs.harvard.edu/abs/2008ApJ...675..790F/abstract target=ref> Fischer et al. 2008 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 260.58,
         "period_err_days": 0.15,
         "semi_major_axis_au": 0.802,
@@ -345,7 +345,7 @@
       "raw": {
         "pl_name": "55 Cnc d",
         "reference": "<a refstr=MARCY_ET_AL__2002 href=https://ui.adsabs.harvard.edu/abs/2002ApJ...581.1375M/abstract target=ref> Marcy et al. 2002 </a>",
-        "retrieval_date": "2026-05-18",
+        "retrieval_date": "2026-05-19",
         "period_days": 4799.0,
         "period_err_days": 4.9,
         "semi_major_axis_au": 5.6,

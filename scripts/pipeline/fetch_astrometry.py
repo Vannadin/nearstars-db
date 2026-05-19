@@ -155,6 +155,38 @@ for name in simbad_stars:
     else:
         print("FAILED")
 
+# ── 이진성 sibling backfill ────────────────────────────────────────────────────
+# 일부 SIMBAD 항목 (예: Procyon B) 은 primary 만 parallax 보유. 같은 시스템 사이의
+# 형제 컴포넌트는 같은 거리에 있으므로 missing parallax 를 primary 값으로 보완.
+for entry in target_list:
+    comps = entry["components"]
+    if len(comps) < 2:
+        continue
+    # primary (가장 정보 많은 컴포넌트) 식별
+    best = None
+    for c in comps:
+        r = results.get(c, {})
+        if r.get("parallax_mas") is not None:
+            if best is None or r.get("parallax_mas") > best[1]:
+                best = (c, r.get("parallax_mas"))
+    if not best:
+        continue
+    primary, plx = best
+    for c in comps:
+        r = results.get(c, {})
+        if not r or r.get("parallax_mas") is not None:
+            continue
+        # backfill from primary
+        pr = results[primary]
+        r["parallax_mas"] = pr["parallax_mas"]
+        r["parallax_error_mas"] = pr.get("parallax_error_mas")
+        if r.get("radial_velocity_km_s") is None:
+            r["radial_velocity_km_s"] = pr.get("radial_velocity_km_s")
+            r["radial_velocity_source"] = pr.get("radial_velocity_source")
+        # source 표기 명시
+        r["sibling_backfill"] = f"parallax/rv from {primary}"
+        print(f"  sibling backfill: {c} ← {primary} (plx={plx})")
+
 # ── 저장 ──────────────────────────────────────────────────────────────────────
 missing_total = [n for n in star_to_gaia if n not in results]
 out_path = f"{BASE}/db/astrometry_raw.json"
