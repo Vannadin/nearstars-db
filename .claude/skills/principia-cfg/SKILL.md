@@ -7,7 +7,8 @@ description: >
   만들어줘", "이 별 principia에 등록", "gravity_model 작성", "initial_state
   생성", "n-body cfg 빌드", "write a principia cfg", or "generate principia
   patches from the DB". Reads `db/systems/*.json` (no Keplerian-fallback
-  guessing), emits combined per-variant patch files under `dist/Principia/`.
+  guessing), emits combined per-variant patch files under
+  `dist/NearStars-Configs/Patches/Principia/`.
   NearStars-specific decisions (epoch, NEEDS tags, body-name convention,
   Sol-real-scale-only MVP) are pre-set — do not ask the user about them.
 ---
@@ -44,7 +45,7 @@ Source references:
 |---|---|
 | Variants covered | **Sol real scale only** (`:NEEDS[NearStarsSystem,SolSystem,!SolQuarterScale]`) |
 | Bodies covered | **Stars only** — planets blocked with a clear message |
-| Files emitted | `dist/Principia/Real_NearStars-GravityModel.cfg`, `dist/Principia/Real_NearStars-InitialState.cfg` |
+| Files emitted | `dist/NearStars-Configs/Patches/Principia/Real_NearStars-GravityModel.cfg` and `…-InitialState.cfg` |
 | `solar_system_epoch` | `JD 2433282.5` (1950-Jan-01) — must equal `stars[].derived.epoch_jd` |
 | `game_epoch` | `JD 2433647.5` (1951-Jan-01) |
 | Body-name convention | CamelCase, alphanumerics only — matches Kopernicus (see [`references/db-mapping.md`](references/db-mapping.md)) |
@@ -133,8 +134,9 @@ Required preconditions (script aborts if any fail):
 }
 ```
 
-- No `@` author tag (`:FOR[NearStarsSystem]`) — Sol-Configs is the author of
-  the root node; we only patch.
+- No `:FOR[NearStarsSystem]` — Principia roots are edited via `@`, not created.
+  Rationale and contrast with the project's general guideline pattern: see
+  [`references/file-layout.md`](references/file-layout.md) §"Why no `:FOR[NearStarsSystem]` here".
 - No `solar_system_epoch` / `game_epoch` in the patch — those live on the
   root node Sol-Configs ships. Patching them would create a duplicate.
 - Body ordering: alphabetical by Kopernicus body name. Stable diffs.

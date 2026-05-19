@@ -4,20 +4,22 @@
 
 ```
 dist/
-└── Principia/
-    ├── Real_NearStars-GravityModel.cfg
-    └── Real_NearStars-InitialState.cfg
+└── NearStars-Configs/
+    └── Patches/
+        └── Principia/
+            ├── Real_NearStars-GravityModel.cfg
+            └── Real_NearStars-InitialState.cfg
 ```
 
-`dist/` is a build artifact directory at the project root. It is regenerated from `db/` on every run; do not hand-edit. End users (or a future packaging step) copy these into their KSP install at:
+`dist/` is a build artifact directory at the project root. It is regenerated from `db/` on every run; do not hand-edit. End users (or a future packaging step) copy `dist/NearStars-Configs/` into their KSP install:
 
 ```
-GameData/NearStars/Patches/Principia/
+GameData/NearStars/NearStars-Configs/Patches/Principia/
 ├── Real_NearStars-GravityModel.cfg
 └── Real_NearStars-InitialState.cfg
 ```
 
-The `Patches/Principia/` subpath mirrors RSS-Reborn/Sol-Configs convention. Sol-Configs ships `Real_Sol-GravityModel.cfg` / `Real_Sol-InitialState.cfg` at the same depth; the names are chosen so they sort alongside Sol's files in mod-loader debug logs.
+The `NearStars-Configs/Patches/` prefix mirrors the project's repository layout (`docs/reference/guideline.md` §4). The `Principia/` subfolder under `Patches/` is a deliberate choice over the guideline's `Patches/Sol/` slot — see `context-notes.md` for the rationale. Sol-Configs ships `Real_Sol-GravityModel.cfg` / `Real_Sol-InitialState.cfg` under the equivalent `Patches/Principia/` depth; our names sort alongside in mod-loader debug logs.
 
 ---
 
@@ -53,9 +55,14 @@ The Sol-real-scale MVP emits exactly two files. Quarter-scale and RSS variants a
 - Same first two gates.
 - `!SolQuarterScale` — the Cartesian state we emit is anchored at `solar_system_epoch = JD 2433282.5`. Sol-quarter uses `JD 2433465.0`. Different epoch ⇒ different coordinates ⇒ separate file (deferred).
 
-### Why no `:FOR[NearStarsSystem]`
+### Why no `:FOR[NearStarsSystem]` here
 
-`@principia_gravity_model { ... }` is a Module Manager **edit** of an existing node. The node was created by Sol-Configs's `:FOR[SolSystem]` block. We do not claim authorship. Adding `:FOR[NearStarsSystem]` would either be ignored or, in older MM versions, cause patch-ordering bugs.
+The project's general convention for NearStars patches IS `:NEEDS[...]:FOR[NearStarsSystem]` — see `docs/reference/guideline.md` §5.1, where `@EVE_CLOUDS:NEEDS[SolSystem]:FOR[NearStarsSystem]` is the canonical example. Principia patches diverge from that convention deliberately:
+
+- For nodes NearStars **creates** (EVE_CLOUDS, Scatterer_atmosphere, Firefly), `:FOR[NearStarsSystem]` claims authorship and is correct.
+- For nodes NearStars **edits** via `@` (Principia's `principia_gravity_model` / `principia_initial_state`, which Sol-Configs already authored), `:FOR[NearStarsSystem]` adds no value — the patch already runs in MM's general patching pass after all `:FOR[SolSystem]` blocks have created the root.
+
+Either form would functionally work; the `:NEEDS[NearStarsSystem,SolSystem]` form is one character shorter and avoids implying authorship of someone else's node. Don't read this as "the guideline is wrong" — it's a node-class-specific judgment within the guideline's spirit.
 
 ---
 

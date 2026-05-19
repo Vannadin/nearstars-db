@@ -25,7 +25,7 @@ SOLAR_SYSTEM_EPOCH_JD = 2433282.5  # Sol real scale, B1950-Jan-01
 
 REPO_ROOT = Path(__file__).resolve().parents[4]
 DB_SYSTEMS_DIR = REPO_ROOT / "db" / "systems"
-DIST_DIR = REPO_ROOT / "dist" / "Principia"
+DIST_DIR = REPO_ROOT / "dist" / "NearStars-Configs" / "Patches" / "Principia"
 OUT_GRAVITY = DIST_DIR / "Real_NearStars-GravityModel.cfg"
 OUT_INITIAL = DIST_DIR / "Real_NearStars-InitialState.cfg"
 
