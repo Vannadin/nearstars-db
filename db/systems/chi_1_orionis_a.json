@@ -32,7 +32,8 @@
             "bibcode": "2009ApJ...694.1085V",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": null
       },
       "derived": {
         "epoch_jd": 2433282.5,

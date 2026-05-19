@@ -42,7 +42,8 @@
             "doi": "10.1051/0004-6361/202243522",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "HIP65859"
       },
       "derived": {
         "epoch_jd": 2433282.5,

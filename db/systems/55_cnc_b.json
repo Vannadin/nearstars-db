@@ -42,7 +42,8 @@
             "doi": "10.1051/0004-6361/202556146",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "rho01Cncb"
       },
       "derived": {
         "epoch_jd": 2433282.5,

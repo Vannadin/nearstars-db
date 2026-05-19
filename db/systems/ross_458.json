@@ -22,7 +22,8 @@
         "teff_k": 3900,
         "spectype": "M0V",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "V*DTVir"
       },
       "derived": {
         "epoch_jd": 2433282.5,

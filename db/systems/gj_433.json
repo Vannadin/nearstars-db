@@ -42,7 +42,8 @@
             "doi": null,
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "SAO202602"
       },
       "derived": {
         "epoch_jd": 2433282.5,

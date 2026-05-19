@@ -32,7 +32,8 @@
             "recommended": true
           }
         ],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "TYC1723-23-1"
       },
       "derived": {
         "epoch_jd": 2433282.5,

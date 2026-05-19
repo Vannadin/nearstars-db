@@ -22,7 +22,8 @@
         "teff_k": 5604,
         "spectype": "G8IV",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "delPav"
       },
       "derived": {
         "epoch_jd": 2433282.5,

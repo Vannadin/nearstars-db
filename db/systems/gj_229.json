@@ -32,7 +32,8 @@
             "recommended": true
           }
         ],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "HD42581"
       },
       "derived": {
         "epoch_jd": 2433282.5,

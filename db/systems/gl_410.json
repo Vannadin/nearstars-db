@@ -42,7 +42,8 @@
             "doi": "10.1051/0004-6361/202452513",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "V*DSLeo"
       },
       "derived": {
         "epoch_jd": 2433282.5,

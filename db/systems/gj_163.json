@@ -22,7 +22,8 @@
         "teff_k": 3223,
         "spectype": "M3.5V",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "HIP19394"
       },
       "derived": {
         "epoch_jd": 2433282.5,

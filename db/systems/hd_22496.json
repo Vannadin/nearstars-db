@@ -42,7 +42,8 @@
             "doi": "10.1051/0004-6361/202141714",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "HD22496"
       },
       "derived": {
         "epoch_jd": 2433282.5,

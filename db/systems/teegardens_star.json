@@ -42,7 +42,8 @@
             "doi": "10.1051/0004-6361/202348033",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "GaiaDR235227046884571776"
       },
       "derived": {
         "epoch_jd": 2433282.5,

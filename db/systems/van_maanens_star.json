@@ -42,7 +42,8 @@
             "doi": "10.1088/0004-6256/135/4/1225",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": null
       },
       "derived": {
         "epoch_jd": 2433282.5,

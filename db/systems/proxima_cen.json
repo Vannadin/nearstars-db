@@ -42,7 +42,8 @@
             "doi": null,
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "Proxima"
       },
       "derived": {
         "epoch_jd": 2433282.5,

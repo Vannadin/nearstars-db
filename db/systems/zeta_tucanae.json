@@ -22,7 +22,8 @@
         "teff_k": 6000,
         "spectype": "F9.5V",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "zetTuc"
       },
       "derived": {
         "epoch_jd": 2433282.5,

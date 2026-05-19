@@ -422,6 +422,7 @@ for target in target_list:
     sys_name  = target["system"]
     comps     = target["components"]
     is_binary = target["binary"]
+    stellarium_ids_map = target.get("stellarium_ids") or {}
 
     # 다성계: 대표 컴포넌트(첫 번째)에 binary_orbit 전체 임베드,
     # 다른 컴포넌트는 ref만 저장
@@ -518,6 +519,7 @@ for target in target_list:
             "spectype":                spectype,
             "mass_measurements":       mass_meas,
             "radius_measurements":     radius_meas,
+            "stellarium_id":           stellarium_ids_map.get(star_name),
         }
 
         # ── derived 블록 (B1950, J2000 모두 포함) ──

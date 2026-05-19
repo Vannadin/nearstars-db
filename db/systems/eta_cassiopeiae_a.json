@@ -42,7 +42,8 @@
             "doi": "10.1088/0004-637X/771/1/40",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "Achird"
       },
       "derived": {
         "epoch_jd": 2433282.5,

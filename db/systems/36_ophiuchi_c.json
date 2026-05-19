@@ -22,7 +22,8 @@
         "teff_k": 4308,
         "spectype": "K5V",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "36OphC"
       },
       "derived": {
         "epoch_jd": 2433282.5,

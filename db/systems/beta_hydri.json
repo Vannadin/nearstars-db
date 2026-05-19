@@ -22,7 +22,8 @@
         "teff_k": 5917,
         "spectype": "G0V",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "betHyi"
       },
       "derived": {
         "epoch_jd": 2433282.5,

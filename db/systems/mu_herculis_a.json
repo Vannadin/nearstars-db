@@ -22,7 +22,8 @@
         "teff_k": 5496,
         "spectype": "G5IV",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": null
       },
       "derived": {
         "epoch_jd": 2433282.5,

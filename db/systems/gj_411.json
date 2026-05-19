@@ -42,7 +42,8 @@
             "doi": "10.3847/1538-3881/ac5c47",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "HD95735"
       },
       "derived": {
         "epoch_jd": 2433282.5,

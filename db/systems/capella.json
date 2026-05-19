@@ -42,7 +42,8 @@
             "doi": "10.1088/0004-637X/807/1/26",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "Capella"
       },
       "derived": {
         "epoch_jd": 2433282.5,

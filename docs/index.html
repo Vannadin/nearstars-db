@@ -548,7 +548,7 @@ function buildDetail(sys) {
             <button class="fov-btn"    data-target="${imgId}" data-fov="30">30′</button>
           </div>
           <a class="img-link" href="${simbad}" target="_blank">SIMBAD ↗</a>
-          <button class="stl-btn" onclick="openStellarium(this,${JSON.stringify(st.name).replace(/"/g,'&quot;')},${st.raw.ra_deg},${st.raw.dec_deg})">☄ Stellarium</button>
+          <button class="stl-btn" onclick="openStellarium(this,${JSON.stringify(st.name).replace(/"/g,'&quot;')},${st.raw.ra_deg},${st.raw.dec_deg},${JSON.stringify(st.raw.stellarium_id || null).replace(/"/g,'&quot;')})">☄ Stellarium</button>
         </div>
       </div>`;
     }
@@ -1058,7 +1058,7 @@ fetch('./data.json')
     document.getElementById('loading').textContent = 'Error: ' + err.message;
   });
 
-async function openStellarium(btn, name, raDeg, decDeg) {
+async function openStellarium(btn, name, raDeg, decDeg, skyPrecomputed) {
   const API = 'http://localhost:8090';
   const label = btn.textContent;
   btn.disabled = true;
@@ -1091,9 +1091,29 @@ async function openStellarium(btn, name, raDeg, decDeg) {
     btn.classList.add('ok');
     setTimeout(() => { btn.textContent = label; btn.classList.remove('ok'); btn.disabled = false; }, 2500);
   } catch {
-    // 데스크탑 실패 → 미리 열어둔 탭을 Stellarium Web으로 전환
-    webWin.location.href = 'https://stellarium-web.org/skysource/' + name.replace(/\s+/g, '');
-    btn.textContent = '☄ Web (검색: ' + name + ')';
+    // 데스크탑 실패 → Stellarium Web 폴백
+    // 1) 사전계산된 ID 가 있으면 즉시 사용 (target_list.json 의 stellarium_ids)
+    // 2) 없으면 런타임 noctuasky 조회
+    // 3) 둘 다 실패면 공백제거 휴리스틱
+    let skyId = skyPrecomputed;
+    if (!skyId) {
+      try {
+        const r = await fetch(
+          'https://api.noctuasky.com/api/v1/skysources/name/' + encodeURIComponent(name),
+          { signal: AbortSignal.timeout(3000) }
+        );
+        if (r.ok) {
+          const d = await r.json();
+          if (d.names?.length && d.names[0] !== '?') {
+            // Stellarium Web과 동일한 변환: "NAME Barnard's Star" → "Barnard'sStar"
+            skyId = d.names[0].replace(/^NAME\s+/, '').replace(/\s+/g, '');
+          }
+        }
+      } catch {}
+      skyId = skyId || name.replace(/\s+/g, '');
+    }
+    webWin.location.href = 'https://stellarium-web.org/skysource/' + skyId;
+    btn.textContent = '☄ Web (' + name + ')';
     btn.classList.add('err');
     setTimeout(() => { btn.textContent = label; btn.classList.remove('err'); btn.disabled = false; }, 4000);
   }

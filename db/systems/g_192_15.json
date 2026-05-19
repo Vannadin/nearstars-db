@@ -32,7 +32,8 @@
             "recommended": true
           }
         ],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": null
       },
       "derived": {
         "epoch_jd": 2433282.5,

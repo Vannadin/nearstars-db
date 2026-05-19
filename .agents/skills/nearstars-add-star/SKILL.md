@@ -81,6 +81,30 @@ It returns Gaia DR3 source_id (if any), SIMBAD canonical name, distance, V
 magnitude, and component flags. If SIMBAD returns nothing, the name is
 ambiguous — try alternate names or escalate to user.
 
+### Stellarium Web skysource ID 조회
+
+`docs/index.html` 의 Stellarium 버튼은 데스크탑이 꺼져 있을 때 noctuasky API
+를 통해 별 이름을 `stellarium-web.org/skysource/<ID>` 의 ID 로 변환한다. 별
+추가 시점에 미리 조회해 두면 (a) 클릭이 즉시 동작하고 (b) noctuasky 가 다운돼도
+폴백이 가능하다.
+
+```bash
+# 새로 추가한 시스템만 처리 (이미 매핑된 별은 자동 스킵)
+python3 scripts/pipeline/fetch_stellarium_ids.py --new-only
+
+# 특정 시스템만 (콤마 구분)
+python3 scripts/pipeline/fetch_stellarium_ids.py --only "GJ 412 A,Procyon"
+```
+
+조회 절차.
+1. 컴포넌트 이름 직접 → noctuasky API
+2. 실패 시 SIMBAD ident 목록 (GJ, HIP, HD, Bayer designation 등) 을 차례로 시도
+3. 둘 다 실패면 `null` 로 저장 (런타임에 HTML 이 다시 노쿠아를 시도하므로 무해)
+
+결과는 `db/target_list.json` 의 해당 시스템에 `stellarium_ids: {comp: id}`
+필드로 in-place 저장된다. Step 2 의 target_list 편집과 묶어 진행해도 되고,
+add-star 작업 끝나고 `--new-only` 로 한 번에 처리해도 동일.
+
 ---
 
 ## Step 2 — File edits

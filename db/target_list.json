@@ -12,7 +12,12 @@
       "4109034455276324608"
     ],
     "hip_ids": [],
-    "binary": true
+    "binary": true,
+    "stellarium_ids": {
+      "36 Ophiuchi A": "36OphA",
+      "36 Ophiuchi B": "36OphB",
+      "36 Ophiuchi C": "36OphC"
+    }
   },
   {
     "system": "40 Eridani",
@@ -27,7 +32,12 @@
       "3195919254111314816"
     ],
     "hip_ids": [],
-    "binary": true
+    "binary": true,
+    "stellarium_ids": {
+      "40 Eridani A": null,
+      "40 Eridani B": "omi02EriB",
+      "40 Eridani C": "omi02EriC"
+    }
   },
   {
     "system": "61 Cygni",
@@ -40,7 +50,11 @@
       "1872046574983497216"
     ],
     "hip_ids": [],
-    "binary": true
+    "binary": true,
+    "stellarium_ids": {
+      "61 Cygni A": "Bessel'sStar",
+      "61 Cygni B": "61CygB"
+    }
   },
   {
     "system": "Alpha Centauri",
@@ -53,7 +67,11 @@
       null
     ],
     "hip_ids": [],
-    "binary": true
+    "binary": true,
+    "stellarium_ids": {
+      "Alpha Centauri A": "RigilKent",
+      "Alpha Centauri B": "alfCenB"
+    }
   },
   {
     "system": "Eta Cassiopeiae",
@@ -66,7 +84,11 @@
       "425040000962497792"
     ],
     "hip_ids": [],
-    "binary": true
+    "binary": true,
+    "stellarium_ids": {
+      "Eta Cassiopeiae A": "Achird",
+      "Eta Cassiopeiae B": "etaCasB"
+    }
   },
   {
     "system": "Sirius",
@@ -79,7 +101,11 @@
       "2947050466531873024"
     ],
     "hip_ids": [],
-    "binary": true
+    "binary": true,
+    "stellarium_ids": {
+      "Sirius A": "Sirius",
+      "Sirius B": "alfCMaB"
+    }
   },
   {
     "system": "47 UMa",
@@ -90,7 +116,10 @@
       "777254360337133312"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "47 UMa": "47UMa"
+    }
   },
   {
     "system": "55 Cnc",
@@ -101,7 +130,10 @@
       "704967037090946688"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "55 Cnc": "rho01Cnc"
+    }
   },
   {
     "system": "55 Cnc B",
@@ -112,7 +144,10 @@
       "704966762213039488"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "55 Cnc B": "rho01Cncb"
+    }
   },
   {
     "system": "61 Vir",
@@ -123,7 +158,10 @@
       "3507879565090229888"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "61 Vir": "61Vir"
+    }
   },
   {
     "system": "AU Mic",
@@ -134,7 +172,10 @@
       "6794047652729201024"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "AU Mic": "V*AUMic"
+    }
   },
   {
     "system": "Altair",
@@ -143,7 +184,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Altair": "Altair"
+    }
   },
   {
     "system": "Barnard's star",
@@ -154,7 +198,10 @@
       "4472832130942575872"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Barnard's star": "Barnard'sStar"
+    }
   },
   {
     "system": "Beta Hydri",
@@ -165,7 +212,10 @@
       "4683897617110115200"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Beta Hydri": "betHyi"
+    }
   },
   {
     "system": "CD Cet",
@@ -176,7 +226,10 @@
       "3179036008830848"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "CD Cet": null
+    }
   },
   {
     "system": "COCONUTS-2 A",
@@ -187,7 +240,10 @@
       "5213167330349528064"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "COCONUTS-2 A": null
+    }
   },
   {
     "system": "CWISEP J193518.59-154620.3",
@@ -196,7 +252,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "CWISEP J193518.59-154620.3": null
+    }
   },
   {
     "system": "Chi-1 Orionis A",
@@ -207,7 +266,10 @@
       "3399063235755057792"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Chi-1 Orionis A": null
+    }
   },
   {
     "system": "Delta Pavonis",
@@ -218,7 +280,10 @@
       "6427464123776727168"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Delta Pavonis": "delPav"
+    }
   },
   {
     "system": "Fomalhaut",
@@ -227,7 +292,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Fomalhaut": "Fomalhaut"
+    }
   },
   {
     "system": "G 192-15",
@@ -238,7 +306,10 @@
       "970354749937140736"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "G 192-15": null
+    }
   },
   {
     "system": "G 261-6",
@@ -249,7 +320,10 @@
       "2289304297045379456"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "G 261-6": null
+    }
   },
   {
     "system": "GJ 1002",
@@ -260,7 +334,10 @@
       "2441630500517079808"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1002": null
+    }
   },
   {
     "system": "GJ 1061",
@@ -271,7 +348,10 @@
       "4848140361962951552"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1061": null
+    }
   },
   {
     "system": "GJ 1132",
@@ -282,7 +362,10 @@
       "5413438219396893568"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1132": null
+    }
   },
   {
     "system": "GJ 1148",
@@ -293,7 +376,10 @@
       "772430527947893632"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1148": null
+    }
   },
   {
     "system": "GJ 1151",
@@ -304,7 +390,10 @@
       "786834302080370304"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1151": null
+    }
   },
   {
     "system": "GJ 1214",
@@ -315,7 +404,10 @@
       "4393265392168829056"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1214": null
+    }
   },
   {
     "system": "GJ 1265",
@@ -326,7 +418,10 @@
       "6825822095663585536"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1265": null
+    }
   },
   {
     "system": "GJ 1289",
@@ -337,7 +432,10 @@
       "2879455480942629248"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 1289": null
+    }
   },
   {
     "system": "GJ 15 A",
@@ -348,7 +446,10 @@
       "385334230892516480"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 15 A": "V*GXAnd"
+    }
   },
   {
     "system": "GJ 163",
@@ -359,7 +460,10 @@
       "4780294722094459904"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 163": "HIP19394"
+    }
   },
   {
     "system": "GJ 179",
@@ -370,7 +474,10 @@
       "3288082758293022848"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 179": null
+    }
   },
   {
     "system": "GJ 180",
@@ -381,7 +488,10 @@
       "2979590513145784192"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 180": "HIP22762"
+    }
   },
   {
     "system": "GJ 229",
@@ -392,7 +502,10 @@
       "2940856402123426176"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 229": "HD42581"
+    }
   },
   {
     "system": "GJ 238",
@@ -403,7 +516,10 @@
       "5482827676662168832"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 238": "HIP31300"
+    }
   },
   {
     "system": "GJ 251",
@@ -414,7 +530,10 @@
       "939072613334579328"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 251": "HD265866"
+    }
   },
   {
     "system": "GJ 273",
@@ -423,7 +542,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 273": "Luyten'sStar"
+    }
   },
   {
     "system": "GJ 317",
@@ -434,7 +556,10 @@
       "5701750715316821248"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 317": "GJ317"
+    }
   },
   {
     "system": "GJ 3323",
@@ -445,7 +570,10 @@
       "3187115498866675456"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 3323": null
+    }
   },
   {
     "system": "GJ 338 B",
@@ -456,7 +584,10 @@
       "1022456104850892928"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 338 B": "HD79211"
+    }
   },
   {
     "system": "GJ 341",
@@ -467,7 +598,10 @@
       "5299440441521812992"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 341": "HD304636"
+    }
   },
   {
     "system": "GJ 3512",
@@ -478,7 +612,10 @@
       "1040827088726734976"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 3512": null
+    }
   },
   {
     "system": "GJ 357",
@@ -489,7 +626,10 @@
       "5664814198431308288"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 357": "HIP47103"
+    }
   },
   {
     "system": "GJ 367",
@@ -500,7 +640,10 @@
       "5412250540681250560"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 367": "HIP47780"
+    }
   },
   {
     "system": "GJ 3779",
@@ -511,7 +654,10 @@
       "1446540213584440704"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 3779": null
+    }
   },
   {
     "system": "GJ 393",
@@ -522,7 +668,10 @@
       "3855208897392952192"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 393": "HIP51317"
+    }
   },
   {
     "system": "GJ 3988",
@@ -533,7 +682,10 @@
       "1412645602995521920"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 3988": null
+    }
   },
   {
     "system": "GJ 411",
@@ -542,7 +694,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 411": "HD95735"
+    }
   },
   {
     "system": "GJ 414 A",
@@ -553,7 +708,10 @@
       "732857558276385664"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 414 A": "HD97101"
+    }
   },
   {
     "system": "GJ 422",
@@ -564,7 +722,10 @@
       "5339892367684811520"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 422": "Innes'Star"
+    }
   },
   {
     "system": "GJ 4274",
@@ -575,7 +736,10 @@
       "2595284016771502080"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 4274": null
+    }
   },
   {
     "system": "GJ 433",
@@ -586,7 +750,10 @@
       "3478160727866058368"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 433": "SAO202602"
+    }
   },
   {
     "system": "GJ 436",
@@ -597,7 +764,10 @@
       "4017860992519744384"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 436": "HIP57087"
+    }
   },
   {
     "system": "GJ 480",
@@ -608,7 +778,10 @@
       "3928391218812375808"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 480": "HIP61706"
+    }
   },
   {
     "system": "GJ 486",
@@ -619,7 +792,10 @@
       "3735000631158990976"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 486": "HIP62452"
+    }
   },
   {
     "system": "GJ 514",
@@ -630,7 +806,10 @@
       "3738099879558957952"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 514": "HIP65859"
+    }
   },
   {
     "system": "GJ 536",
@@ -641,7 +820,10 @@
       "3657653114880309248"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 536": "HD122303"
+    }
   },
   {
     "system": "GJ 581",
@@ -652,7 +834,10 @@
       "6322070093095493504"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 581": "V*HOLib"
+    }
   },
   {
     "system": "GJ 625",
@@ -663,7 +848,10 @@
       "1428427236986209024"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 625": "HIP80459"
+    }
   },
   {
     "system": "GJ 649",
@@ -674,7 +862,10 @@
       "4572835535272627712"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 649": "HIP83043"
+    }
   },
   {
     "system": "GJ 667 C",
@@ -685,7 +876,10 @@
       "5975663354131618304"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 667 C": "HD156384C"
+    }
   },
   {
     "system": "GJ 674",
@@ -696,7 +890,10 @@
       "5951824121022278144"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 674": "HIP85523"
+    }
   },
   {
     "system": "GJ 680",
@@ -707,7 +904,10 @@
       "5946986063684477056"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 680": "HIP86057"
+    }
   },
   {
     "system": "GJ 682",
@@ -718,7 +918,10 @@
       "5955305209191546112"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 682": "HIP86214"
+    }
   },
   {
     "system": "GJ 685",
@@ -729,7 +932,10 @@
       "1439069444391326208"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 685": "HIP86087"
+    }
   },
   {
     "system": "GJ 687",
@@ -740,7 +946,10 @@
       "1637645127018395776"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 687": "SAO17568"
+    }
   },
   {
     "system": "GJ 740",
@@ -751,7 +960,10 @@
       "4282578724832056576"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 740": "HD176029"
+    }
   },
   {
     "system": "GJ 806",
@@ -762,7 +974,10 @@
       "2070115588901082368"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 806": "HIP102401"
+    }
   },
   {
     "system": "GJ 832",
@@ -773,7 +988,10 @@
       "6562924609150908416"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 832": "HD204961"
+    }
   },
   {
     "system": "GJ 849",
@@ -784,7 +1002,10 @@
       "2627117287488522240"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 849": "HIP109388"
+    }
   },
   {
     "system": "GJ 86",
@@ -795,7 +1016,10 @@
       "4937000898856156288"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 86": "HD13445"
+    }
   },
   {
     "system": "GJ 876",
@@ -806,7 +1030,10 @@
       "2603090003484152064"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 876": "V*ILAqr"
+    }
   },
   {
     "system": "GJ 887",
@@ -817,7 +1044,10 @@
       "6553614253923452800"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 887": "HD217987"
+    }
   },
   {
     "system": "GJ 896 A",
@@ -828,7 +1058,10 @@
       "2824770686019003904"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 896 A": "TYC1723-23-1"
+    }
   },
   {
     "system": "GJ 9066",
@@ -839,7 +1072,10 @@
       "76868614540049408"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 9066": null
+    }
   },
   {
     "system": "GJ 96",
@@ -850,7 +1086,10 @@
       "354077348697687424"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "GJ 96": "HIP11048"
+    }
   },
   {
     "system": "Gl 378",
@@ -861,7 +1100,10 @@
       "823228721067307392"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Gl 378": "HIP49189"
+    }
   },
   {
     "system": "Gl 410",
@@ -872,7 +1114,10 @@
       "3988689609004982912"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Gl 410": "V*DSLeo"
+    }
   },
   {
     "system": "Gl 49",
@@ -883,7 +1128,10 @@
       "522863309964987520"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Gl 49": "HIP4872"
+    }
   },
   {
     "system": "Gl 686",
@@ -894,7 +1142,10 @@
       "4550763526539955712"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Gl 686": "HIP86287"
+    }
   },
   {
     "system": "Gl 725 A",
@@ -905,7 +1156,10 @@
       "2154880616774131840"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Gl 725 A": "HD173739"
+    }
   },
   {
     "system": "Gliese 12",
@@ -916,7 +1170,10 @@
       "2768048564768256512"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Gliese 12": null
+    }
   },
   {
     "system": "HD 115404 A",
@@ -927,7 +1184,10 @@
       "3936909723803146368"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 115404 A": "HD115404A"
+    }
   },
   {
     "system": "HD 136352",
@@ -938,7 +1198,10 @@
       "5902750168276592256"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 136352": "nu.02Lup"
+    }
   },
   {
     "system": "HD 140901",
@@ -949,7 +1212,10 @@
       "6009538585839374336"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 140901": "HD140901"
+    }
   },
   {
     "system": "HD 141004",
@@ -960,7 +1226,10 @@
       "4430238051199001216"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 141004": "lamSer"
+    }
   },
   {
     "system": "HD 147379",
@@ -971,7 +1240,10 @@
       "1642641410934267008"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 147379": "HD147379"
+    }
   },
   {
     "system": "HD 147513",
@@ -982,7 +1254,10 @@
       "6018047019138644480"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 147513": "HD147513"
+    }
   },
   {
     "system": "HD 180617",
@@ -993,7 +1268,10 @@
       "4293318823182081408"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 180617": "V*V1428Aql"
+    }
   },
   {
     "system": "HD 190007",
@@ -1004,7 +1282,10 @@
       "4247023886053586304"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 190007": "V*V1654Aql"
+    }
   },
   {
     "system": "HD 192310",
@@ -1015,7 +1296,10 @@
       "6847167606385195648"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 192310": "HD192310"
+    }
   },
   {
     "system": "HD 20794",
@@ -1026,7 +1310,10 @@
       "4847957293278177024"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 20794": "eEri"
+    }
   },
   {
     "system": "HD 211970",
@@ -1037,7 +1324,10 @@
       "6508401923473282432"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 211970": "HD211970"
+    }
   },
   {
     "system": "HD 219134",
@@ -1048,7 +1338,10 @@
       "2009481748875806976"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 219134": "HD219134"
+    }
   },
   {
     "system": "HD 222237",
@@ -1059,7 +1352,10 @@
       "6380214844952702848"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 222237": "HD222237"
+    }
   },
   {
     "system": "HD 22496",
@@ -1070,7 +1366,10 @@
       "4833654227548585856"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 22496": "HD22496"
+    }
   },
   {
     "system": "HD 238090",
@@ -1081,7 +1380,10 @@
       "1573086442800134272"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 238090": "HD238090"
+    }
   },
   {
     "system": "HD 260655",
@@ -1092,7 +1394,10 @@
       "3359074685047632640"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 260655": "HD260655"
+    }
   },
   {
     "system": "HD 285968",
@@ -1103,7 +1408,10 @@
       "3409711211681795584"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 285968": "HD285968"
+    }
   },
   {
     "system": "HD 3651",
@@ -1114,7 +1422,10 @@
       "2802397960855105920"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 3651": "54Psc"
+    }
   },
   {
     "system": "HD 40307",
@@ -1125,7 +1436,10 @@
       "4758877919212831104"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 40307": "HD40307"
+    }
   },
   {
     "system": "HD 62509",
@@ -1134,7 +1448,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 62509": "Pollux"
+    }
   },
   {
     "system": "HD 69830",
@@ -1145,7 +1462,10 @@
       "5726982995343100928"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 69830": "HD69830"
+    }
   },
   {
     "system": "HD 86728",
@@ -1156,7 +1476,10 @@
       "746545172372256384"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HD 86728": "20LMi"
+    }
   },
   {
     "system": "HIP 48714",
@@ -1167,7 +1490,10 @@
       "1051547052218220160"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HIP 48714": "HIP48714"
+    }
   },
   {
     "system": "HIP 56998",
@@ -1178,7 +1504,10 @@
       "5378886891123024512"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HIP 56998": "HD101581"
+    }
   },
   {
     "system": "HIP 79431",
@@ -1189,7 +1518,10 @@
       "6245870673116518784"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HIP 79431": "HIP79431"
+    }
   },
   {
     "system": "HN Lib",
@@ -1200,7 +1532,10 @@
       "6324325225803432320"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "HN Lib": "V*HNLib"
+    }
   },
   {
     "system": "Kapteyn",
@@ -1211,7 +1546,10 @@
       "4810594479418041856"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Kapteyn": null
+    }
   },
   {
     "system": "L 363-38",
@@ -1222,7 +1560,10 @@
       "4999067471248893952"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "L 363-38": "GJ3049"
+    }
   },
   {
     "system": "L 98-59",
@@ -1233,7 +1574,10 @@
       "5271055243163629056"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "L 98-59": "TYC9193-2365-1"
+    }
   },
   {
     "system": "LHS 1140",
@@ -1244,7 +1588,10 @@
       "2371032916186181760"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "LHS 1140": null
+    }
   },
   {
     "system": "LHS 3844",
@@ -1255,7 +1602,10 @@
       "6385548541499112448"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "LHS 3844": null
+    }
   },
   {
     "system": "LHS 475",
@@ -1266,7 +1616,10 @@
       "6347643496607835520"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "LHS 475": null
+    }
   },
   {
     "system": "LTT 1445 A",
@@ -1277,7 +1630,10 @@
       "5153091836072107136"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "LTT 1445 A": "TYC5865-694-1"
+    }
   },
   {
     "system": "Mu Herculis A",
@@ -1288,7 +1644,10 @@
       "4594497769766809216"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Mu Herculis A": null
+    }
   },
   {
     "system": "Proxima Cen",
@@ -1299,7 +1658,10 @@
       "5853498713190525696"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Proxima Cen": "Proxima"
+    }
   },
   {
     "system": "Ross 128",
@@ -1310,7 +1672,10 @@
       "3796072592206250624"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Ross 128": "V*FIVir"
+    }
   },
   {
     "system": "Ross 458",
@@ -1321,7 +1686,10 @@
       "3737308025029348608"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Ross 458": "V*DTVir"
+    }
   },
   {
     "system": "Ross 508",
@@ -1332,7 +1700,10 @@
       "1208695640675619584"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Ross 508": null
+    }
   },
   {
     "system": "Sigma Draconis",
@@ -1343,7 +1714,10 @@
       "2261614264931057664"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Sigma Draconis": "Alsafi"
+    }
   },
   {
     "system": "TOI-540",
@@ -1354,7 +1728,10 @@
       "4785886941312921344"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "TOI-540": null
+    }
   },
   {
     "system": "TRAPPIST-1",
@@ -1365,7 +1742,10 @@
       "2635476908753563008"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "TRAPPIST-1": null
+    }
   },
   {
     "system": "Teegarden's Star",
@@ -1376,7 +1756,10 @@
       "35227046884571776"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Teegarden's Star": "GaiaDR235227046884571776"
+    }
   },
   {
     "system": "Vega",
@@ -1385,7 +1768,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Vega": "Vega"
+    }
   },
   {
     "system": "WISEP J121756.91+162640.2 A",
@@ -1394,7 +1780,10 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "WISEP J121756.91+162640.2 A": null
+    }
   },
   {
     "system": "Wolf 1061",
@@ -1405,7 +1794,10 @@
       "4330690742322011520"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Wolf 1061": "V*V2306Oph"
+    }
   },
   {
     "system": "Wolf 1069",
@@ -1416,7 +1808,10 @@
       "2188318517720321664"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Wolf 1069": null
+    }
   },
   {
     "system": "YZ Cet",
@@ -1427,7 +1822,10 @@
       "2358524597030794112"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "YZ Cet": null
+    }
   },
   {
     "system": "Zeta Tucanae",
@@ -1438,7 +1836,10 @@
       "4900108950849461248"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Zeta Tucanae": "zetTuc"
+    }
   },
   {
     "system": "eps Eri",
@@ -1449,7 +1850,10 @@
       "5164707970261890560"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "eps Eri": "epsEri"
+    }
   },
   {
     "system": "eps Ind A",
@@ -1460,7 +1864,10 @@
       "6412595290592307840"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "eps Ind A": null
+    }
   },
   {
     "system": "gam Cep",
@@ -1471,7 +1878,10 @@
       "2281778105594488192"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "gam Cep": "Errai"
+    }
   },
   {
     "system": "tau Cet",
@@ -1482,7 +1892,10 @@
       "2452378776434477184"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "tau Cet": "tauCet"
+    }
   },
   {
     "system": "ups And",
@@ -1493,7 +1906,10 @@
       "348020482735930112"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "ups And": "upsAnd"
+    }
   },
   {
     "system": "Arcturus",
@@ -1501,8 +1917,13 @@
       "Arcturus"
     ],
     "gaia_source_ids": [],
-    "hip_ids": [69673],
-    "binary": false
+    "hip_ids": [
+      69673
+    ],
+    "binary": false,
+    "stellarium_ids": {
+      "Arcturus": "Arcturus"
+    }
   },
   {
     "system": "Capella",
@@ -1510,8 +1931,13 @@
       "Capella"
     ],
     "gaia_source_ids": [],
-    "hip_ids": [24608],
-    "binary": false
+    "hip_ids": [
+      24608
+    ],
+    "binary": false,
+    "stellarium_ids": {
+      "Capella": "Capella"
+    }
   },
   {
     "system": "Procyon",
@@ -1523,8 +1949,14 @@
       null,
       null
     ],
-    "hip_ids": [37279],
-    "binary": true
+    "hip_ids": [
+      37279
+    ],
+    "binary": true,
+    "stellarium_ids": {
+      "Procyon A": "Procyon",
+      "Procyon B": "alfCMiB"
+    }
   },
   {
     "system": "Wolf 359",
@@ -1535,7 +1967,10 @@
       "3864972938605115520"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "Wolf 359": null
+    }
   },
   {
     "system": "70 Ophiuchi",
@@ -1547,8 +1982,14 @@
       "4468557611984384512",
       "4468557611977674496"
     ],
-    "hip_ids": [88601],
-    "binary": true
+    "hip_ids": [
+      88601
+    ],
+    "binary": true,
+    "stellarium_ids": {
+      "70 Ophiuchi A": "70OphA",
+      "70 Ophiuchi B": "70OphB"
+    }
   },
   {
     "system": "Van Maanen's Star",
@@ -1558,7 +1999,12 @@
     "gaia_source_ids": [
       "2552928187080872832"
     ],
-    "hip_ids": [3829],
-    "binary": false
+    "hip_ids": [
+      3829
+    ],
+    "binary": false,
+    "stellarium_ids": {
+      "Van Maanen's Star": null
+    }
   }
 ]

@@ -42,7 +42,8 @@
             "doi": "10.3847/1538-3881/ab3467",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "etaCasB"
       },
       "derived": {
         "epoch_jd": 2433282.5,

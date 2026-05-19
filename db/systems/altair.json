@@ -42,7 +42,8 @@
             "doi": "10.1126/science.1143205",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "Altair"
       },
       "derived": {
         "epoch_jd": 2433282.5,

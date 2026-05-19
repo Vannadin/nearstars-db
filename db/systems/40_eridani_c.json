@@ -22,7 +22,8 @@
         "teff_k": 3331,
         "spectype": "M4.5V",
         "mass_measurements": [],
-        "radius_measurements": []
+        "radius_measurements": [],
+        "stellarium_id": "omi02EriC"
       },
       "derived": {
         "epoch_jd": 2433282.5,

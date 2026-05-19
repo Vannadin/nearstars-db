@@ -42,7 +42,8 @@
             "doi": "10.3847/1538-4357/aa6af8",
             "recommended": true
           }
-        ]
+        ],
+        "stellarium_id": "alfCMaB"
       },
       "derived": {
         "epoch_jd": 2433282.5,
