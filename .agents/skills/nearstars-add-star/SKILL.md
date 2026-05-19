@@ -95,7 +95,8 @@ on next run.
 | `scripts/pipeline/fetch_photometry.py` `HIPPARCOS_V` | If Gaia-saturated bright star (V<~6) | Hardcoded V magnitude with comment |
 | `scripts/pipeline/fetch_stellar_props.py` `SIMBAD_ALIASES` | If SIMBAD canonical name differs from `target_list` name | `"our name": "SIMBAD name"` |
 | `db/binary_orbits.json` | If multiple star system | Mutual orbit block |
-| `db/planets_curated.json` | If host star has confirmed planets (Phase 1) | Per-planet orbital + physical literature values |
+| `db/planets_curated.json` | If host star has confirmed planets (Phase 1) | Per-planet orbital + physical literature values. NASA Archive 등재된 행성은 Step 3 의 `build_curated_from_ps.py` 가 자동으로 채움 — 수동 편집은 Archive 에 없거나 보완이 필요한 경우만 |
+| `db/stellar_props_curated.json` (auto) | Step 3 batch 실행 시 자동 갱신 | NASA `pscomppars` 의 `st_mass`/`st_rad` 값을 `method: "unverified"` 로 추가. PRESERVED_HOSTS 와 기존 mass/radius_measurements 가 있는 별은 보호 |
 
 **Exact schemas and examples are in [references/file-edits.md](references/file-edits.md). Read it before editing any file.**
 
@@ -103,21 +104,41 @@ on next run.
 
 ## Step 3 — Planet curation depth
 
-Default = **Phase 1** (memory: `feedback-planet-curation`):
+Default = **Phase 1** (memory: `feedback-planet-curation`).
 
-- For each confirmed planet, find one published source — usually the
-  discovery paper or most recent reanalysis — and add an entry to
-  `db/planets_curated.json`.
-- For RV-detected planets, check if NASA Archive has `omega_deg` and
-  `tperi_bjd`. If missing, consult DACE for the orbital solution.
-- Transiting planets fall back to TEPCat automatically — no extra work.
-- exoplanet.eu only as cross-check if NASA Archive is sparse or stale.
+**Batch path (preferred — works for 1 host or many)**:
+
+```bash
+# 1) NASA Archive ps 테이블에서 default_flag=1 paper rows 수집
+python3 scripts/pipeline/fetch_planets_ps.py
+#    → db/planets_ps_default.json
+
+# 2) curated JSON 생성 (Crossref 로 DOI 해석)
+python3 scripts/pipeline/build_curated_from_ps.py
+#    → db/planets_curated.json + stellar_props_curated.json 갱신
+#    auto-added entries 의 method 는 "unverified" (Phase 2 격상 시 교체 대상).
+#    PRESERVED_HOSTS (α Cen A/B, Barnard 등 수동 큐레이션된 별) 는 보호됨.
+```
+
+이 두 스크립트는 `target_list.json` 에 신규 호스트가 추가된 후 실행하면
+NASA Archive 에 등재된 모든 행성에 대해 per-paper bibcode 출처가
+자동으로 부여됩니다. ADS web 직접 접근(WebFetch)은 JS-rendered SPA 라
+불가능하므로 이 batch 경로가 사실상 유일한 자동화 수단입니다.
+
+**Manual path** (NASA Archive 에 없는 신규 발견 행성 등):
+- 발견 논문 bibcode 를 식별 (NASA `ps.pl_refname` 또는 SIMBAD ref)
+- `db/planets_curated.json` 에 entry 직접 추가
+- RV-detected 행성이고 NASA Archive 에 `omega_deg`/`tperi_bjd` 가 없으면
+  DACE 확인 (`https://dace.unige.ch/exoplanets/?planet=<name>`)
+- 트랜짓 행성은 TEPCat 자동 매칭에 의존 (별도 작업 불필요)
 
 Escalate to **Phase 2** only if the user explicitly says so ("정밀 큐레이션",
 "Phase 2", "이 시스템 인게임 구현하자"). Phase 2 walks all five priority
-sources from the methodology and accumulates every published measurement.
+sources from the methodology and accumulates every published measurement
+— but requires a `build_planet_derived` schema extension first (현재
+single-dict 만 지원).
 
-Details, ADS search patterns, and the curated.json schema:
+Details, manual ADS workarounds, and the curated.json schema:
 [references/planet-curation.md](references/planet-curation.md)
 
 ---
@@ -141,6 +162,18 @@ Otherwise (new star — no raw data yet):
 This runs all four fetches (Gaia, SIMBAD, NASA Archive, photometry) plus
 build + validate + site build. ~5 minutes for full run, dominated by
 SIMBAD OID lookups (~2s/star).
+
+If Step 3 의 batch 경로를 사용했다면 `fetch_planets_ps.py` +
+`build_curated_from_ps.py` 는 `run_pipeline.sh` 와 별도로 1회 실행 후
+`build_systems.py` 가 그 결과를 흡수합니다 (curated > tepcat > nasa_archive
+우선순위).
+
+`validate.py` 는 다음을 검증합니다:
+- raw 파일 스키마 (astrometry/photometry/stellar_props)
+- `binary_orbits.json` 스키마 (§4b/4c)
+- `stellar_props_curated.json` 스키마 — method 화이트리스트, recommended:true 최대 1개 (§4d)
+- `planets_curated.json` 스키마 — orbital/physical 블록 키 + 출처 추적성 (§4e)
+- `db/systems/*.json` 의 derived 일관성
 
 ---
 
