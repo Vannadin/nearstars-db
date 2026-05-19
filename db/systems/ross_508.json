@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2966,
         "spectype": "dM5.0",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.1774,
+            "uncertainty_msun": 0.0045,
+            "method": "spectroscopic_calibration",
+            "reference": "Harakawa et al. 2022",
+            "bibcode": "2022PASJ...74..904H",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.2113,
+            "uncertainty_rsun": 0.0063,
+            "method": "evolutionary_model",
+            "reference": "Harakawa et al. 2022",
+            "bibcode": "2022PASJ...74..904H",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -51.24960994147299
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 23543186859.193,
+        "mean_radius_km": 147001.4
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.33,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -37.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2459370.24,
         "mass_kg": 2.38888e+25,
         "mass_type": "Msini",
         "radius_m": 11658930.0
+      },
+      "curated": {
+        "pl_name": "Ross 508 b",
+        "orbital": {
+          "semi_major_axis_au": 0.05366,
+          "eccentricity": 0.33,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -37.0,
+          "epoch_jd": 2459370.24,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Harakawa et al. 2022",
+          "bibcode": "2022PASJ...74..904H",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 4.0,
+          "uncertainty_mearth": 0.53,
+          "mass_type": "Msini",
+          "source": "Harakawa et al. 2022",
+          "bibcode": "2022PASJ...74..904H",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Harakawa et al. 2022",
+      "doi": null,
+      "bibcode": "2022PASJ...74..904H",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Ross 508 mass (spectroscopic_calibration)"
       ]
     }
   ],

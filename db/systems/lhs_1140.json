@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3150,
         "spectype": "M4.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.1844,
+            "uncertainty_msun": 0.0045,
+            "method": "spectroscopic_calibration",
+            "reference": "Cadieux et al. 2024",
+            "bibcode": "2024ApJ...960L...3C",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.2159,
+            "uncertainty_rsun": 0.003,
+            "method": "evolutionary_model",
+            "reference": "Cadieux et al. 2024",
+            "bibcode": "2024ApJ...960L...3C",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -37.206136539750474
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 24472173939.319,
+        "mean_radius_km": 150201.6
       }
     }
   ],
@@ -94,15 +114,39 @@
       },
       "derived": {
         "semi_major_axis_m": 4039142508.9,
-        "eccentricity": 0.0,
+        "eccentricity": 0.05,
         "inclination_deg": 89.8,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.13889854e+25,
-        "mass_type": "Mass",
-        "radius_m": 8105186.2
+        "mass_kg": 1.1406902e+25,
+        "mass_type": "true mass",
+        "radius_m": 8103912.0
+      },
+      "curated": {
+        "pl_name": "LHS 1140 c",
+        "orbital": {
+          "semi_major_axis_au": 0.027,
+          "eccentricity": 0.05,
+          "inclination_deg": 89.8,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Cadieux et al. 2024",
+          "bibcode": "2024ApJ...960L...3C",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 1.91,
+          "uncertainty_mearth": 0.06,
+          "mass_type": "true mass",
+          "radius_rearth": 1.272,
+          "uncertainty_rearth": 0.026,
+          "source": "Cadieux et al. 2024",
+          "bibcode": "2024ApJ...960L...3C",
+          "doi": null
+        }
       }
     },
     {
@@ -148,15 +192,39 @@
       },
       "derived": {
         "semi_major_axis_m": 14151958568.220001,
-        "eccentricity": 0.0,
+        "eccentricity": 0.043,
         "inclination_deg": 89.86,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 3.340729236e+25,
-        "mass_type": "Mass",
-        "radius_m": 11018644.5
+        "mass_kg": 3.344432e+25,
+        "mass_type": "true mass",
+        "radius_m": 11021830.0
+      },
+      "curated": {
+        "pl_name": "LHS 1140 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0946,
+          "eccentricity": 0.043,
+          "inclination_deg": 89.86,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Cadieux et al. 2024",
+          "bibcode": "2024ApJ...960L...3C",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 5.6,
+          "uncertainty_mearth": 0.19,
+          "mass_type": "true mass",
+          "radius_rearth": 1.73,
+          "uncertainty_rearth": 0.025,
+          "source": "Cadieux et al. 2024",
+          "bibcode": "2024ApJ...960L...3C",
+          "doi": null
+        }
       }
     }
   ],
@@ -187,6 +255,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Cadieux et al. 2024",
+      "doi": null,
+      "bibcode": "2024ApJ...960L...3C",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "LHS 1140 mass (spectroscopic_calibration)"
       ]
     }
   ],

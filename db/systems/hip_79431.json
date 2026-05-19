@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3689,
         "spectype": "M3V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.49,
+            "uncertainty_msun": 0.05,
+            "method": "spectroscopic_calibration",
+            "reference": "Apps et al. 2010",
+            "bibcode": "2010PASP..122..156A",
+            "doi": "10.1086/651058",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -12.397792403703246
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 65029095608.82,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,33 @@
         "eccentricity": 0.29,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 287.4,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2454980.3,
         "mass_kg": 3.985935863e+27,
         "mass_type": "Msini",
         "radius_m": 85371400.0
+      },
+      "curated": {
+        "pl_name": "HIP 79431 b",
+        "orbital": {
+          "semi_major_axis_au": 0.36,
+          "eccentricity": 0.29,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 287.4,
+          "epoch_jd": 2454980.3,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Apps et al. 2010",
+          "bibcode": "2010PASP..122..156A",
+          "doi": "10.1086/651058"
+        },
+        "physical": {
+          "mass_mearth": 667.415,
+          "mass_type": "Msini",
+          "source": "Apps et al. 2010",
+          "bibcode": "2010PASP..122..156A",
+          "doi": "10.1086/651058"
+        }
       }
     }
   ],
@@ -120,6 +151,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Apps et al. 2010",
+      "doi": "10.1086/651058",
+      "bibcode": "2010PASP..122..156A",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HIP 79431 mass (spectroscopic_calibration)"
       ]
     }
   ],

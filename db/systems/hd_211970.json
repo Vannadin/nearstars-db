@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4077,
         "spectype": "K7Vk:",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.61,
+            "uncertainty_msun": 0.04,
+            "method": "spectroscopic_calibration",
+            "reference": "Feng et al. 2019",
+            "bibcode": "2019ApJS..242...25F",
+            "doi": "10.3847/1538-4365/ab1b16",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": 12.953267556737238
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 80954588410.98,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,34 @@
         "eccentricity": 0.15,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 97.83,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 7.76386e+25,
         "mass_type": "Msini",
         "radius_m": 23317860.0
+      },
+      "curated": {
+        "pl_name": "HD 211970 b",
+        "orbital": {
+          "semi_major_axis_au": 0.143,
+          "eccentricity": 0.15,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 97.83,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2019",
+          "bibcode": "2019ApJS..242...25F",
+          "doi": "10.3847/1538-4365/ab1b16"
+        },
+        "physical": {
+          "mass_mearth": 13.0,
+          "uncertainty_mearth": 2.5,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2019",
+          "bibcode": "2019ApJS..242...25F",
+          "doi": "10.3847/1538-4365/ab1b16"
+        }
       }
     }
   ],
@@ -120,6 +152,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Feng et al. 2019",
+      "doi": "10.3847/1538-4365/ab1b16",
+      "bibcode": "2019ApJS..242...25F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 211970 mass (spectroscopic_calibration)"
       ]
     }
   ],

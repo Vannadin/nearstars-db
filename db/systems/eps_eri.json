@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5180,
         "spectype": "K2V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.82,
+            "uncertainty_msun": 0.02,
+            "method": "spectroscopic_calibration",
+            "reference": "Llop Sayson et al. 2021",
+            "bibcode": "2021AJ....162..181L",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.759106,
+            "uncertainty_rsun": 0.011816,
+            "method": "evolutionary_model",
+            "reference": "Rosenthal et al. 2021",
+            "bibcode": "2021ApJS..255....8R",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 0.3143050372590638
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 108824200814.76,
+        "mean_radius_km": 528110.0
       }
     }
   ],
@@ -84,12 +104,35 @@
         "eccentricity": 0.07,
         "inclination_deg": 78.81,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -19.15,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460054.0,
         "mass_kg": 1.252768976108364e+27,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 89831100.0
+      },
+      "curated": {
+        "pl_name": "eps Eri b",
+        "orbital": {
+          "semi_major_axis_au": 3.53,
+          "eccentricity": 0.07,
+          "inclination_deg": 78.81,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -19.15,
+          "epoch_jd": 2460054.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Llop Sayson et al. 2021",
+          "bibcode": "2021AJ....162..181L",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 209.76674862,
+          "uncertainty_mearth": 38.13940884,
+          "mass_type": "true mass",
+          "source": "Llop Sayson et al. 2021",
+          "bibcode": "2021AJ....162..181L",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +163,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Llop Sayson et al. 2021",
+      "doi": null,
+      "bibcode": "2021AJ....162..181L",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "eps Eri mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Rosenthal et al. 2021",
+      "doi": null,
+      "bibcode": "2021ApJS..255....8R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "eps Eri radius (evolutionary_model)"
       ]
     }
   ],

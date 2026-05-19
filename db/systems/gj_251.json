@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3397,
         "spectype": "M3V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.35,
+            "uncertainty_msun": 0.05,
+            "method": "spectroscopic_calibration",
+            "reference": "Beard et al. 2025",
+            "bibcode": "2025AJ....170..279B",
+            "doi": "10.3847/1538-3881/ae0e20",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.36,
+            "uncertainty_rsun": 0.01,
+            "method": "evolutionary_model",
+            "reference": "Beard et al. 2025",
+            "bibcode": "2025AJ....170..279B",
+            "doi": "10.3847/1538-3881/ae0e20",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 3.4181559678851876
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 46449354006.3,
+        "mean_radius_km": 250452.0
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.0,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 0.0,
+        "mean_anomaly_at_epoch_deg": 90.0,
+        "orbital_epoch_jd": 2458626.81,
         "mass_kg": 2.299297e+25,
         "mass_type": "Msini",
         "radius_m": 11404090.0
+      },
+      "curated": {
+        "pl_name": "GJ 251 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0808,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 0.0,
+          "epoch_jd": 2458626.81,
+          "mean_anomaly_at_epoch_deg": 90.0,
+          "source": "Beard et al. 2025",
+          "bibcode": "2025AJ....170..279B",
+          "doi": "10.3847/1538-3881/ae0e20"
+        },
+        "physical": {
+          "mass_mearth": 3.85,
+          "uncertainty_mearth": 0.35,
+          "mass_type": "Msini",
+          "source": "Beard et al. 2025",
+          "bibcode": "2025AJ....170..279B",
+          "doi": "10.3847/1538-3881/ae0e20"
+        }
       }
     },
     {
@@ -125,12 +167,34 @@
         "eccentricity": 0.0,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 0.0,
+        "mean_anomaly_at_epoch_deg": 90.0,
+        "orbital_epoch_jd": 2458922.0,
         "mass_kg": 2.3172136e+25,
         "mass_type": "Msini",
         "radius_m": 11467800.0
+      },
+      "curated": {
+        "pl_name": "GJ 251 c",
+        "orbital": {
+          "semi_major_axis_au": 0.196,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 0.0,
+          "epoch_jd": 2458922.0,
+          "mean_anomaly_at_epoch_deg": 90.0,
+          "source": "Beard et al. 2025",
+          "bibcode": "2025AJ....170..279B",
+          "doi": "10.3847/1538-3881/ae0e20"
+        },
+        "physical": {
+          "mass_mearth": 3.88,
+          "uncertainty_mearth": 0.79,
+          "mass_type": "Msini",
+          "source": "Beard et al. 2025",
+          "bibcode": "2025AJ....170..279B",
+          "doi": "10.3847/1538-3881/ae0e20"
+        }
       }
     }
   ],
@@ -161,6 +225,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Beard et al. 2025",
+      "doi": "10.3847/1538-3881/ae0e20",
+      "bibcode": "2025AJ....170..279B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 251 mass (spectroscopic_calibration)"
       ]
     }
   ],

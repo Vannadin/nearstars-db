@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3232,
         "spectype": "dM4",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.168,
+            "uncertainty_msun": 0.017,
+            "method": "spectroscopic_calibration",
+            "reference": "Bonfils et al. 2018",
+            "bibcode": "2018A&A...613A..25B",
+            "doi": "10.1051/0004-6361/201731973",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.1967,
+            "uncertainty_rsun": 0.0077,
+            "method": "evolutionary_model",
+            "reference": "Bonfils et al. 2018",
+            "bibcode": "2018A&A...613A..25B",
+            "doi": "10.1051/0004-6361/201731973",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -19.564839848508385
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 22295689923.024,
+        "mean_radius_km": 136844.2
       }
     }
   ],
@@ -90,6 +110,27 @@
         "mass_kg": 8.36108e+24,
         "mass_type": "Msini",
         "radius_m": 7071810.000000001
+      },
+      "curated": {
+        "pl_name": "Ross 128 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0496,
+          "eccentricity": 0.116,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Bonfils et al. 2018",
+          "bibcode": "2018A&A...613A..25B",
+          "doi": "10.1051/0004-6361/201731973"
+        },
+        "physical": {
+          "mass_mearth": 1.4,
+          "uncertainty_mearth": 0.21,
+          "mass_type": "Msini",
+          "source": "Bonfils et al. 2018",
+          "bibcode": "2018A&A...613A..25B",
+          "doi": "10.1051/0004-6361/201731973"
+        }
       }
     }
   ],
@@ -120,6 +161,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Bonfils et al. 2018",
+      "doi": "10.1051/0004-6361/201731973",
+      "bibcode": "2018A&A...613A..25B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Ross 128 mass (spectroscopic_calibration)"
       ]
     }
   ],

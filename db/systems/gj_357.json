@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3477,
         "spectype": "M2.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.342,
+            "uncertainty_msun": 0.011,
+            "method": "spectroscopic_calibration",
+            "reference": "Oddo et al. 2023",
+            "bibcode": "2023AJ....165..134O",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.337,
+            "uncertainty_rsun": 0.015,
+            "method": "evolutionary_model",
+            "reference": "Oddo et al. 2023",
+            "bibcode": "2023AJ....165..134O",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -28.23707703684912
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 45387654486.156,
+        "mean_radius_km": 234450.9
       }
     }
   ],
@@ -90,6 +110,26 @@
         "mass_kg": 1.0929126000000002e+25,
         "mass_type": "Mass",
         "radius_m": 7645200.0
+      },
+      "curated": {
+        "pl_name": "GJ 357 b",
+        "orbital": {
+          "semi_major_axis_au": 0.036,
+          "inclination_deg": 89.228,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Oddo et al. 2023",
+          "bibcode": "2023AJ....165..134O",
+          "doi": null
+        },
+        "physical": {
+          "radius_rearth": 1.2,
+          "uncertainty_rearth": 0.06,
+          "source": "Oddo et al. 2023",
+          "bibcode": "2023AJ....165..134O",
+          "doi": null
+        }
       }
     },
     {
@@ -131,6 +171,26 @@
         "mass_kg": 2.030548e+25,
         "mass_type": "Msini",
         "radius_m": 10575860.0
+      },
+      "curated": {
+        "pl_name": "GJ 357 c",
+        "orbital": {
+          "semi_major_axis_au": 0.061,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Luque et al. 2019",
+          "bibcode": "2019A&A...628A..39L",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 3.4,
+          "uncertainty_mearth": 0.46,
+          "mass_type": "Msini",
+          "source": "Luque et al. 2019",
+          "bibcode": "2019A&A...628A..39L",
+          "doi": null
+        }
       }
     },
     {
@@ -172,6 +232,26 @@
         "mass_kg": 3.643042e+25,
         "mass_type": "Msini",
         "radius_m": 14908140.0
+      },
+      "curated": {
+        "pl_name": "GJ 357 d",
+        "orbital": {
+          "semi_major_axis_au": 0.204,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Luque et al. 2019",
+          "bibcode": "2019A&A...628A..39L",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 6.1,
+          "uncertainty_mearth": 1.0,
+          "mass_type": "Msini",
+          "source": "Luque et al. 2019",
+          "bibcode": "2019A&A...628A..39L",
+          "doi": null
+        }
       }
     }
   ],
@@ -202,6 +282,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Oddo et al. 2023",
+      "doi": null,
+      "bibcode": "2023AJ....165..134O",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 357 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Luque et al. 2019",
+      "doi": null,
+      "bibcode": "2019A&A...628A..39L",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet GJ 357 c orbital"
       ]
     }
   ],

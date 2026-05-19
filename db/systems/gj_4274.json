@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2975,
         "spectype": "M4.5Ve",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.18,
+            "uncertainty_msun": 0.03,
+            "method": "spectroscopic_calibration",
+            "reference": "Charpentier et al. 2026",
+            "bibcode": "2026A&A...705A.243C",
+            "doi": "10.1051/0004-6361/202557666",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.19,
+            "uncertainty_rsun": 0.01,
+            "method": "evolutionary_model",
+            "reference": "Charpentier et al. 2026",
+            "bibcode": "2026A&A...705A.243C",
+            "doi": "10.1051/0004-6361/202557666",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -22.48196152330705
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 23888239203.24,
+        "mean_radius_km": 132183.0
       }
     }
   ],
@@ -90,6 +110,26 @@
         "mass_kg": 1.7737434000000003e+25,
         "mass_type": "Msini",
         "radius_m": 9747630.0
+      },
+      "curated": {
+        "pl_name": "GJ 4274 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0153,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Charpentier et al. 2026",
+          "bibcode": "2026A&A...705A.243C",
+          "doi": "10.1051/0004-6361/202557666"
+        },
+        "physical": {
+          "mass_mearth": 2.97,
+          "uncertainty_mearth": 0.54,
+          "mass_type": "Msini",
+          "source": "Charpentier et al. 2026",
+          "bibcode": "2026A&A...705A.243C",
+          "doi": "10.1051/0004-6361/202557666"
+        }
       }
     },
     {
@@ -131,6 +171,26 @@
         "mass_kg": 5.0106758e+25,
         "mass_type": "Msini",
         "radius_m": 18029930.0
+      },
+      "curated": {
+        "pl_name": "GJ 4274 c",
+        "orbital": {
+          "semi_major_axis_au": 0.186,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Charpentier et al. 2026",
+          "bibcode": "2026A&A...705A.243C",
+          "doi": "10.1051/0004-6361/202557666"
+        },
+        "physical": {
+          "mass_mearth": 8.39,
+          "uncertainty_mearth": 1.68,
+          "mass_type": "Msini",
+          "source": "Charpentier et al. 2026",
+          "bibcode": "2026A&A...705A.243C",
+          "doi": "10.1051/0004-6361/202557666"
+        }
       }
     }
   ],
@@ -161,6 +221,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Charpentier et al. 2026",
+      "doi": "10.1051/0004-6361/202557666",
+      "bibcode": "2026A&A...705A.243C",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 4274 mass (spectroscopic_calibration)"
       ]
     }
   ],

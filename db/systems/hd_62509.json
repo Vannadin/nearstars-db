@@ -21,8 +21,28 @@
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 4666,
         "spectype": "K0IIIb",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 2.0,
+            "uncertainty_msun": 0.1,
+            "method": "spectroscopic_calibration",
+            "reference": "Kunitomo et al. 2011",
+            "bibcode": "2011ApJ...737...66K",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 8.9,
+            "uncertainty_rsun": 0.4,
+            "method": "evolutionary_model",
+            "reference": "Reffert et al. 2006",
+            "bibcode": "2006ApJ...652..661R",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -0.3918742525476202
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 265424880036.0,
+        "mean_radius_km": 6191730.0
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.02,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 354.58,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2447739.02,
         "mass_kg": 4.3656782000000004e+27,
         "mass_type": "Msini",
         "radius_m": 84734300.0
+      },
+      "curated": {
+        "pl_name": "HD 62509 b",
+        "orbital": {
+          "semi_major_axis_au": 1.64,
+          "eccentricity": 0.02,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 354.58,
+          "epoch_jd": 2447739.02,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Hatzes et al. 2006",
+          "bibcode": "2006A&A...457..335H",
+          "doi": "10.1051/0004-6361:20065445"
+        },
+        "physical": {
+          "mass_mearth": 731.0,
+          "uncertainty_mearth": 140.0,
+          "mass_type": "Msini",
+          "source": "Hatzes et al. 2006",
+          "bibcode": "2006A&A...457..335H",
+          "doi": "10.1051/0004-6361:20065445"
+        }
       }
     }
   ],
@@ -120,6 +162,33 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Kunitomo et al. 2011",
+      "doi": null,
+      "bibcode": "2011ApJ...737...66K",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 62509 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Reffert et al. 2006",
+      "doi": null,
+      "bibcode": "2006ApJ...652..661R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 62509 radius (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Hatzes et al. 2006",
+      "doi": "10.1051/0004-6361:20065445",
+      "bibcode": "2006A&A...457..335H",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet HD 62509 b orbital"
       ]
     }
   ],

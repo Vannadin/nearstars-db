@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4738,
         "spectype": "K4.5Vk:",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.653,
+            "uncertainty_msun": 0.028,
+            "method": "spectroscopic_calibration",
+            "reference": "Kunimoto et al. 2025",
+            "bibcode": "2025AJ....169...47K",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.63,
+            "uncertainty_rsun": 0.027,
+            "method": "evolutionary_model",
+            "reference": "Kunimoto et al. 2025",
+            "bibcode": "2025AJ....169...47K",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 1.0003839940403445
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 86661223331.754,
+        "mean_radius_km": 438291.0
       }
     }
   ],
@@ -102,7 +122,27 @@
         "orbital_epoch_jd": null,
         "mass_kg": 4.9390094e+24,
         "mass_type": "M-R relationship",
-        "radius_m": 6091313.1
+        "radius_m": 6090676.0
+      },
+      "curated": {
+        "pl_name": "HD 101581 b",
+        "orbital": {
+          "semi_major_axis_au": 0.046,
+          "inclination_deg": 87.78,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Kunimoto et al. 2025",
+          "bibcode": "2025AJ....169...47K",
+          "doi": null
+        },
+        "physical": {
+          "radius_rearth": 0.956,
+          "uncertainty_rearth": 0.061,
+          "source": "Kunimoto et al. 2025",
+          "bibcode": "2025AJ....169...47K",
+          "doi": null
+        }
       }
     },
     {
@@ -156,7 +196,27 @@
         "orbital_epoch_jd": null,
         "mass_kg": 5.595951400000001e+24,
         "mass_type": "M-R relationship",
-        "radius_m": 6305378.7
+        "radius_m": 6307290.0
+      },
+      "curated": {
+        "pl_name": "HD 101581 c",
+        "orbital": {
+          "semi_major_axis_au": 0.0573,
+          "inclination_deg": 87.93,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Kunimoto et al. 2025",
+          "bibcode": "2025AJ....169...47K",
+          "doi": null
+        },
+        "physical": {
+          "radius_rearth": 0.99,
+          "uncertainty_rearth": 0.07,
+          "source": "Kunimoto et al. 2025",
+          "bibcode": "2025AJ....169...47K",
+          "doi": null
+        }
       }
     }
   ],
@@ -187,6 +247,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Kunimoto et al. 2025",
+      "doi": null,
+      "bibcode": "2025AJ....169...47K",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HIP 56998 mass (spectroscopic_calibration)"
       ]
     }
   ],

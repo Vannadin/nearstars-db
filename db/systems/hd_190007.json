@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4650,
         "spectype": "K5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.77,
+            "uncertainty_msun": 0.02,
+            "method": "spectroscopic_calibration",
+            "reference": "Stalport et al. 2023",
+            "bibcode": "2023A&A...678A..90S",
+            "doi": "10.1051/0004-6361/202346887",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.79,
+            "uncertainty_rsun": 0.039,
+            "method": "evolutionary_model",
+            "reference": "Burt et al. 2021",
+            "bibcode": "2021AJ....161...10B",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 5.417000351549785
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 102188578813.86,
+        "mean_radius_km": 549603.0
       }
     }
   ],
@@ -84,12 +104,33 @@
         "eccentricity": 0.136,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 2.3,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 9.25691e+25,
         "mass_type": "Msini",
         "radius_m": 25866259.999999996
+      },
+      "curated": {
+        "pl_name": "HD 190007 b",
+        "orbital": {
+          "eccentricity": 0.136,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 2.3,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Stalport et al. 2023",
+          "bibcode": "2023A&A...678A..90S",
+          "doi": "10.1051/0004-6361/202346887"
+        },
+        "physical": {
+          "mass_mearth": 15.5,
+          "uncertainty_mearth": 1.2,
+          "mass_type": "Msini",
+          "source": "Stalport et al. 2023",
+          "bibcode": "2023A&A...678A..90S",
+          "doi": "10.1051/0004-6361/202346887"
+        }
       }
     }
   ],
@@ -120,6 +161,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Stalport et al. 2023",
+      "doi": "10.1051/0004-6361/202346887",
+      "bibcode": "2023A&A...678A..90S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 190007 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Burt et al. 2021",
+      "doi": null,
+      "bibcode": "2021AJ....161...10B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 190007 radius (evolutionary_model)"
       ]
     }
   ],

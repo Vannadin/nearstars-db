@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3256,
         "spectype": "dM4.5",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.178,
+            "uncertainty_msun": 0.018,
+            "method": "spectroscopic_calibration",
+            "reference": "Luque et al. 2018",
+            "bibcode": "2018A&A...620A.171L",
+            "doi": "10.1051/0004-6361/201833423",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.192,
+            "uncertainty_rsun": 0.007,
+            "method": "evolutionary_model",
+            "reference": "Luque et al. 2018",
+            "bibcode": "2018A&A...620A.171L",
+            "doi": "10.1051/0004-6361/201833423",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -7.232602868094373
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 23622814323.204,
+        "mean_radius_km": 133574.4
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.04,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 282.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 4.419428e+25,
         "mass_type": "Msini",
         "radius_m": 16755730.0
+      },
+      "curated": {
+        "pl_name": "GJ 1265 b",
+        "orbital": {
+          "semi_major_axis_au": 0.026,
+          "eccentricity": 0.04,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 282.0,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Luque et al. 2018",
+          "bibcode": "2018A&A...620A.171L",
+          "doi": "10.1051/0004-6361/201833423"
+        },
+        "physical": {
+          "mass_mearth": 7.4,
+          "uncertainty_mearth": 0.5,
+          "mass_type": "Msini",
+          "source": "Luque et al. 2018",
+          "bibcode": "2018A&A...620A.171L",
+          "doi": "10.1051/0004-6361/201833423"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Luque et al. 2018",
+      "doi": "10.1051/0004-6361/201833423",
+      "bibcode": "2018A&A...620A.171L",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 1265 mass (spectroscopic_calibration)"
       ]
     }
   ],

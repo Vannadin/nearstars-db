@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5610,
         "spectype": "G7IV",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 1.06,
+            "uncertainty_msun": 0.05,
+            "method": "spectroscopic_calibration",
+            "reference": "Philipot et al. 2023",
+            "bibcode": "2023A&A...678A.107P",
+            "doi": "10.1051/0004-6361/202346612",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -7.949546433242989
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 140675186419.08,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,34 @@
         "eccentricity": 0.472,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 107.605,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450907.038,
         "mass_kg": 9.3008605784068e+25,
         "mass_type": "Msini",
         "radius_m": 25929970.0
+      },
+      "curated": {
+        "pl_name": "HD 140901 b",
+        "orbital": {
+          "semi_major_axis_au": 0.085,
+          "eccentricity": 0.472,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 107.605,
+          "epoch_jd": 2450907.038,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Feng et al. 2022",
+          "bibcode": "2022ApJS..262...21F",
+          "doi": "10.3847/1538-4365/ac7e57"
+        },
+        "physical": {
+          "mass_mearth": 15.57359194,
+          "uncertainty_mearth": 0.63565681,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2022",
+          "bibcode": "2022ApJS..262...21F",
+          "doi": "10.3847/1538-4365/ac7e57"
+        }
       }
     },
     {
@@ -125,12 +157,35 @@
         "eccentricity": 0.77,
         "inclination_deg": 40.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 299.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2455182.0,
         "mass_kg": 3.41664266211372e+27,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 85371400.0
+      },
+      "curated": {
+        "pl_name": "HD 140901 c",
+        "orbital": {
+          "semi_major_axis_au": 11.8,
+          "eccentricity": 0.77,
+          "inclination_deg": 40.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 299.0,
+          "epoch_jd": 2455182.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Philipot et al. 2023",
+          "bibcode": "2023A&A...678A.107P",
+          "doi": "10.1051/0004-6361/202346612"
+        },
+        "physical": {
+          "true_mass_mearth": 572.0911326,
+          "uncertainty_mearth": 158.9142035,
+          "mass_type": "true mass",
+          "source": "Philipot et al. 2023",
+          "bibcode": "2023A&A...678A.107P",
+          "doi": "10.1051/0004-6361/202346612"
+        }
       }
     }
   ],
@@ -161,6 +216,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Philipot et al. 2023",
+      "doi": "10.1051/0004-6361/202346612",
+      "bibcode": "2023A&A...678A.107P",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 140901 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Feng et al. 2022",
+      "doi": "10.3847/1538-4365/ac7e57",
+      "bibcode": "2022ApJS..262...21F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet HD 140901 b orbital"
       ]
     }
   ],

@@ -21,15 +21,25 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5860,
         "spectype": "G1-VFe-0.5",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 1.06,
+            "uncertainty_msun": 0.128402,
+            "method": "spectroscopic_calibration",
+            "reference": "Stassun et al. 2019",
+            "bibcode": "2019AJ....158..138S",
+            "doi": null,
+            "recommended": true
+          }
+        ],
         "radius_measurements": [
           {
-            "value_rsun": 1.1348,
-            "uncertainty_rsun": null,
-            "method": "interferometry",
-            "reference": "2009ApJ...694.1085V",
+            "value_rsun": 1.21334,
+            "uncertainty_rsun": 0.038883,
+            "method": "evolutionary_model",
+            "reference": "Stassun et al. 2019",
+            "bibcode": "2019AJ....158..138S",
             "doi": null,
-            "bibcode": "2009ApJ...694.1085V",
             "recommended": true
           }
         ]
@@ -55,8 +65,8 @@
         "icrs_vz_j2000_km_s": 10.05340635758319
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": 789480.4
+        "gravitational_parameter_km3_s2": 140675186419.08,
+        "mean_radius_km": 844120.6
       }
     }
   ],
@@ -94,12 +104,34 @@
         "eccentricity": 0.032,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 334.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2451917.0,
         "mass_kg": 4.8021265760000005e+27,
         "mass_type": "Msini",
         "radius_m": 84097200.0
+      },
+      "curated": {
+        "pl_name": "47 UMa b",
+        "orbital": {
+          "semi_major_axis_au": 2.1,
+          "eccentricity": 0.032,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 334.0,
+          "epoch_jd": 2451917.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Gregory Fischer 2010",
+          "bibcode": "2010MNRAS.403..731G",
+          "doi": "10.1111/j.1365-2966.2009.16233.x"
+        },
+        "physical": {
+          "mass_mearth": 804.08,
+          "uncertainty_mearth": 22.25,
+          "mass_type": "Msini",
+          "source": "Gregory Fischer 2010",
+          "bibcode": "2010MNRAS.403..731G",
+          "doi": "10.1111/j.1365-2966.2009.16233.x"
+        }
       }
     },
     {
@@ -135,12 +167,34 @@
         "eccentricity": 0.098,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 295.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2452441.0,
         "mass_kg": 1.0249549362e+27,
         "mass_type": "Msini",
         "radius_m": 90468200.0
+      },
+      "curated": {
+        "pl_name": "47 UMa c",
+        "orbital": {
+          "semi_major_axis_au": 3.6,
+          "eccentricity": 0.098,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 295.0,
+          "epoch_jd": 2452441.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Gregory Fischer 2010",
+          "bibcode": "2010MNRAS.403..731G",
+          "doi": "10.1111/j.1365-2966.2009.16233.x"
+        },
+        "physical": {
+          "mass_mearth": 171.621,
+          "uncertainty_mearth": 20.976,
+          "mass_type": "Msini",
+          "source": "Gregory Fischer 2010",
+          "bibcode": "2010MNRAS.403..731G",
+          "doi": "10.1111/j.1365-2966.2009.16233.x"
+        }
       }
     },
     {
@@ -176,12 +230,34 @@
         "eccentricity": 0.16,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 110.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2451736.0,
         "mass_kg": 3.1128300840000004e+27,
         "mass_type": "Msini",
         "radius_m": 86008500.0
+      },
+      "curated": {
+        "pl_name": "47 UMa d",
+        "orbital": {
+          "semi_major_axis_au": 11.6,
+          "eccentricity": 0.16,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 110.0,
+          "epoch_jd": 2451736.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Gregory Fischer 2010",
+          "bibcode": "2010MNRAS.403..731G",
+          "doi": "10.1111/j.1365-2966.2009.16233.x"
+        },
+        "physical": {
+          "mass_mearth": 521.22,
+          "uncertainty_mearth": 92.17,
+          "mass_type": "Msini",
+          "source": "Gregory Fischer 2010",
+          "bibcode": "2010MNRAS.403..731G",
+          "doi": "10.1111/j.1365-2966.2009.16233.x"
+        }
       }
     }
   ],
@@ -215,12 +291,21 @@
       ]
     },
     {
-      "title": "2009ApJ...694.1085V",
+      "title": "Stassun et al. 2019",
       "doi": null,
-      "bibcode": "2009ApJ...694.1085V",
+      "bibcode": "2019AJ....158..138S",
       "accessed": "2026-05-19",
       "used_for": [
-        "47 UMa radius (interferometry)"
+        "47 UMa mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Gregory Fischer 2010",
+      "doi": "10.1111/j.1365-2966.2009.16233.x",
+      "bibcode": "2010MNRAS.403..731G",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet 47 UMa b orbital"
       ]
     }
   ],

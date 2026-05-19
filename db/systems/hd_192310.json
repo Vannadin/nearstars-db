@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4893,
         "spectype": "K2+V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.8,
+            "uncertainty_msun": null,
+            "method": "spectroscopic_calibration",
+            "reference": "Pepe et al. 2011",
+            "bibcode": "2011A&A...534A..58P",
+            "doi": "10.1051/0004-6361/201117055",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.857922,
+            "uncertainty_rsun": 0.015566,
+            "method": "evolutionary_model",
+            "reference": "Rosenthal et al. 2021",
+            "bibcode": "2021ApJS..255....8R",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 17.989713591753848
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 106169952014.4,
+        "mean_radius_km": 596856.3
       }
     }
   ],
@@ -84,12 +104,35 @@
         "eccentricity": 0.13,
         "inclination_deg": 90.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 173.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.0093018e+26,
-        "mass_type": "Msin(i)/sin(i)",
+        "mass_type": "Msini",
         "radius_m": 27204169.999999996
+      },
+      "curated": {
+        "pl_name": "HD 192310 b",
+        "orbital": {
+          "semi_major_axis_au": 0.32,
+          "eccentricity": 0.13,
+          "inclination_deg": 90.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 173.0,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Pepe et al. 2011",
+          "bibcode": "2011A&A...534A..58P",
+          "doi": "10.1051/0004-6361/201117055"
+        },
+        "physical": {
+          "mass_mearth": 16.9,
+          "uncertainty_mearth": 0.9,
+          "mass_type": "Msini",
+          "source": "Pepe et al. 2011",
+          "bibcode": "2011A&A...534A..58P",
+          "doi": "10.1051/0004-6361/201117055"
+        }
       }
     },
     {
@@ -125,12 +168,35 @@
         "eccentricity": 0.32,
         "inclination_deg": 90.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 110.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.4333280000000001e+26,
-        "mass_type": "Msin(i)/sin(i)",
+        "mass_type": "Msini",
         "radius_m": 33447750.0
+      },
+      "curated": {
+        "pl_name": "HD 192310 c",
+        "orbital": {
+          "semi_major_axis_au": 1.18,
+          "eccentricity": 0.32,
+          "inclination_deg": 90.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 110.0,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Pepe et al. 2011",
+          "bibcode": "2011A&A...534A..58P",
+          "doi": "10.1051/0004-6361/201117055"
+        },
+        "physical": {
+          "mass_mearth": 24.0,
+          "uncertainty_mearth": 5.0,
+          "mass_type": "Msini",
+          "source": "Pepe et al. 2011",
+          "bibcode": "2011A&A...534A..58P",
+          "doi": "10.1051/0004-6361/201117055"
+        }
       }
     }
   ],
@@ -161,6 +227,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Pepe et al. 2011",
+      "doi": "10.1051/0004-6361/201117055",
+      "bibcode": "2011A&A...534A..58P",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 192310 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Rosenthal et al. 2021",
+      "doi": null,
+      "bibcode": "2021ApJS..255....8R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 192310 radius (evolutionary_model)"
       ]
     }
   ],

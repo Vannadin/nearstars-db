@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3889,
         "spectype": "K5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.578,
+            "uncertainty_msun": 0.021,
+            "method": "spectroscopic_calibration",
+            "reference": "Stock et al. 2020",
+            "bibcode": "2020A&A...643A.112S",
+            "doi": "10.1051/0004-6361/202038820",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.57,
+            "uncertainty_rsun": 0.016,
+            "method": "evolutionary_model",
+            "reference": "Stock et al. 2020",
+            "bibcode": "2020A&A...643A.112S",
+            "doi": "10.1051/0004-6361/202038820",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -10.342753594273669
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 76707790330.404,
+        "mean_radius_km": 396549.0
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.3,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 119.3,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 4.1148458e+25,
         "mass_type": "Msini",
         "radius_m": 16054920.0
+      },
+      "curated": {
+        "pl_name": "HD 238090 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0932,
+          "eccentricity": 0.3,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 119.3,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...643A.112S",
+          "doi": "10.1051/0004-6361/202038820"
+        },
+        "physical": {
+          "mass_mearth": 6.89,
+          "uncertainty_mearth": 0.92,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...643A.112S",
+          "doi": "10.1051/0004-6361/202038820"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Stock et al. 2020",
+      "doi": "10.1051/0004-6361/202038820",
+      "bibcode": "2020A&A...643A.112S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 238090 mass (spectroscopic_calibration)"
       ]
     }
   ],

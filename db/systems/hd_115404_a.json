@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4976,
         "spectype": "K2V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.83,
+            "uncertainty_msun": 0.102,
+            "method": "spectroscopic_calibration",
+            "reference": "Feng et al. 2022",
+            "bibcode": "2022ApJS..262...21F",
+            "doi": "10.3847/1538-4365/ac7e57",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -10.9505994222673
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 110151325214.94,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,34 @@
         "eccentricity": 0.232,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 259.222,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2452305.407,
         "mass_kg": 1.8411907679765602e+26,
         "mass_type": "Msini",
         "radius_m": 38799390.0
+      },
+      "curated": {
+        "pl_name": "HD 115404 A b",
+        "orbital": {
+          "semi_major_axis_au": 0.088,
+          "eccentricity": 0.232,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 259.222,
+          "epoch_jd": 2452305.407,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Feng et al. 2022",
+          "bibcode": "2022ApJS..262...21F",
+          "doi": "10.3847/1538-4365/ac7e57"
+        },
+        "physical": {
+          "mass_mearth": 30.82935548,
+          "uncertainty_mearth": 6.35656814,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2022",
+          "bibcode": "2022ApJS..262...21F",
+          "doi": "10.3847/1538-4365/ac7e57"
+        }
       }
     },
     {
@@ -125,12 +157,35 @@
         "eccentricity": 0.211,
         "inclination_deg": 25.791,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 312.056,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2441172.404,
         "mass_kg": 1.9586853127955126e+28,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 79637500.0
+      },
+      "curated": {
+        "pl_name": "HD 115404 A c",
+        "orbital": {
+          "semi_major_axis_au": 11.364,
+          "eccentricity": 0.211,
+          "inclination_deg": 25.791,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 312.056,
+          "epoch_jd": 2441172.404,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Feng et al. 2022",
+          "bibcode": "2022ApJS..262...21F",
+          "doi": "10.3847/1538-4365/ac7e57"
+        },
+        "physical": {
+          "true_mass_mearth": 3279.67133183,
+          "uncertainty_mearth": 468.16124351,
+          "mass_type": "true mass",
+          "source": "Feng et al. 2022",
+          "bibcode": "2022ApJS..262...21F",
+          "doi": "10.3847/1538-4365/ac7e57"
+        }
       }
     }
   ],
@@ -161,6 +216,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Feng et al. 2022",
+      "doi": "10.3847/1538-4365/ac7e57",
+      "bibcode": "2022ApJS..262...21F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 115404 A mass (spectroscopic_calibration)"
       ]
     }
   ],

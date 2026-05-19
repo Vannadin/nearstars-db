@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3921,
         "spectype": "M1.0Ve",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.55,
+            "uncertainty_msun": 0.02,
+            "method": "spectroscopic_calibration",
+            "reference": "Carmona et al. 2025",
+            "bibcode": "2025A&A...700A.222C",
+            "doi": "10.1051/0004-6361/202452513",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.543,
+            "uncertainty_rsun": 0.009,
+            "method": "evolutionary_model",
+            "reference": "Carmona et al. 2025",
+            "bibcode": "2025A&A...700A.222C",
+            "doi": "10.1051/0004-6361/202452513",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -8.103483643265315
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 72991842009.9,
+        "mean_radius_km": 377765.1
       }
     }
   ],
@@ -85,11 +105,31 @@
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2459646.59,
         "mass_kg": 5.016648e+25,
         "mass_type": "Msini",
         "radius_m": 18029930.0
+      },
+      "curated": {
+        "pl_name": "Gl 410 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0531,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2459646.59,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Carmona et al. 2025",
+          "bibcode": "2025A&A...700A.222C",
+          "doi": "10.1051/0004-6361/202452513"
+        },
+        "physical": {
+          "mass_mearth": 8.4,
+          "uncertainty_mearth": 1.3,
+          "mass_type": "Msini",
+          "source": "Carmona et al. 2025",
+          "bibcode": "2025A&A...700A.222C",
+          "doi": "10.1051/0004-6361/202452513"
+        }
       }
     }
   ],
@@ -120,6 +160,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Carmona et al. 2025",
+      "doi": "10.1051/0004-6361/202452513",
+      "bibcode": "2025A&A...700A.222C",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Gl 410 mass (spectroscopic_calibration)"
       ]
     }
   ],

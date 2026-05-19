@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2905,
         "spectype": "M5.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.12,
+            "uncertainty_msun": 0.01,
+            "method": "spectroscopic_calibration",
+            "reference": "Dreizler et al. 2025",
+            "bibcode": "2025A&A...698A.114D",
+            "doi": "10.1051/0004-6361/202452490",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.156,
+            "uncertainty_rsun": 0.005,
+            "method": "evolutionary_model",
+            "reference": "Dreizler et al. 2025",
+            "bibcode": "2025A&A...698A.114D",
+            "doi": "10.1051/0004-6361/202452490",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -5.682650232943557
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 15925492802.16,
+        "mean_radius_km": 108529.2
       }
     }
   ],
@@ -88,8 +108,30 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 6.629142000000001e+24,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 6625840.0
+      },
+      "curated": {
+        "pl_name": "GJ 1061 b",
+        "orbital": {
+          "semi_major_axis_au": 0.021,
+          "eccentricity": 0.05,
+          "inclination_deg": 77.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Dreizler et al. 2025",
+          "bibcode": "2025A&A...698A.114D",
+          "doi": "10.1051/0004-6361/202452490"
+        },
+        "physical": {
+          "true_mass_mearth": 1.11,
+          "uncertainty_mearth": 0.11,
+          "mass_type": "true mass",
+          "source": "Dreizler et al. 2025",
+          "bibcode": "2025A&A...698A.114D",
+          "doi": "10.1051/0004-6361/202452490"
+        }
       }
     },
     {
@@ -129,8 +171,29 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.0809682e+25,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 7581490.0
+      },
+      "curated": {
+        "pl_name": "GJ 1061 c",
+        "orbital": {
+          "semi_major_axis_au": 0.0342,
+          "eccentricity": 0.02,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Dreizler et al. 2025",
+          "bibcode": "2025A&A...698A.114D",
+          "doi": "10.1051/0004-6361/202452490"
+        },
+        "physical": {
+          "true_mass_mearth": 1.81,
+          "uncertainty_mearth": 0.13,
+          "mass_type": "true mass",
+          "source": "Dreizler et al. 2025",
+          "bibcode": "2025A&A...698A.114D",
+          "doi": "10.1051/0004-6361/202452490"
+        }
       }
     },
     {
@@ -170,8 +233,29 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 9.973574e+24,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 7390359.999999999
+      },
+      "curated": {
+        "pl_name": "GJ 1061 d",
+        "orbital": {
+          "semi_major_axis_au": 0.054,
+          "eccentricity": 0.04,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Dreizler et al. 2025",
+          "bibcode": "2025A&A...698A.114D",
+          "doi": "10.1051/0004-6361/202452490"
+        },
+        "physical": {
+          "true_mass_mearth": 1.67,
+          "uncertainty_mearth": 0.17,
+          "mass_type": "true mass",
+          "source": "Dreizler et al. 2025",
+          "bibcode": "2025A&A...698A.114D",
+          "doi": "10.1051/0004-6361/202452490"
+        }
       }
     }
   ],
@@ -202,6 +286,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Dreizler et al. 2025",
+      "doi": "10.1051/0004-6361/202452490",
+      "bibcode": "2025A&A...698A.114D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 1061 mass (spectroscopic_calibration)"
       ]
     }
   ],

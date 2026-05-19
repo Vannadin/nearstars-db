@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3421,
         "spectype": "M4V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.255,
+            "uncertainty_msun": 0.013,
+            "method": "spectroscopic_calibration",
+            "reference": "Turner et al. 2026",
+            "bibcode": "2026MNRAS.545f1703T",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.265,
+            "uncertainty_rsun": 0.012,
+            "method": "evolutionary_model",
+            "reference": "Turner et al. 2026",
+            "bibcode": "2026MNRAS.545f1703T",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 30.436362658119712
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 33841672204.59,
+        "mean_radius_km": 184360.5
       }
     }
   ],
@@ -84,12 +104,36 @@
         "eccentricity": 0.24,
         "inclination_deg": 89.25,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -16.0,
+        "mean_anomaly_at_epoch_deg": 106.0,
+        "orbital_epoch_jd": 2460033.16351,
         "mass_kg": 5.67359e+24,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 5925030.0
+      },
+      "curated": {
+        "pl_name": "Gliese 12 b",
+        "orbital": {
+          "eccentricity": 0.24,
+          "inclination_deg": 89.25,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -16.0,
+          "epoch_jd": 2460033.16351,
+          "mean_anomaly_at_epoch_deg": 106.0,
+          "source": "Turner et al. 2026",
+          "bibcode": "2026MNRAS.545f1703T",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 0.95,
+          "uncertainty_mearth": 0.29,
+          "mass_type": "true mass",
+          "radius_rearth": 0.93,
+          "uncertainty_rearth": 0.06,
+          "source": "Turner et al. 2026",
+          "bibcode": "2026MNRAS.545f1703T",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +164,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Turner et al. 2026",
+      "doi": null,
+      "bibcode": "2026MNRAS.545f1703T",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Gliese 12 mass (spectroscopic_calibration)"
       ]
     }
   ],

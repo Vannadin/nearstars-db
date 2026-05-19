@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3798,
         "spectype": "M1.0V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.51,
+            "uncertainty_msun": 0.051,
+            "method": "spectroscopic_calibration",
+            "reference": "Damasso et al. 2022",
+            "bibcode": "2022A&A...666A.187D",
+            "doi": "10.1051/0004-6361/202243522",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.5,
+            "uncertainty_rsun": 0.047,
+            "method": "evolutionary_model",
+            "reference": "Damasso et al. 2022",
+            "bibcode": "2022A&A...666A.187D",
+            "doi": "10.1051/0004-6361/202243522",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -35.654192352087975
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 67683344409.18,
+        "mean_radius_km": 347850.0
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.45,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -143.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2458696.21,
         "mass_kg": 3.1055440000000004e+25,
         "mass_type": "Msini",
         "radius_m": 13570230.0
+      },
+      "curated": {
+        "pl_name": "GJ 514 b",
+        "orbital": {
+          "semi_major_axis_au": 0.422,
+          "eccentricity": 0.45,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -143.0,
+          "epoch_jd": 2458696.21,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Damasso et al. 2022",
+          "bibcode": "2022A&A...666A.187D",
+          "doi": "10.1051/0004-6361/202243522"
+        },
+        "physical": {
+          "mass_mearth": 5.2,
+          "uncertainty_mearth": 0.9,
+          "mass_type": "Msini",
+          "source": "Damasso et al. 2022",
+          "bibcode": "2022A&A...666A.187D",
+          "doi": "10.1051/0004-6361/202243522"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Damasso et al. 2022",
+      "doi": "10.1051/0004-6361/202243522",
+      "bibcode": "2022A&A...666A.187D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 514 mass (spectroscopic_calibration)"
       ]
     }
   ],

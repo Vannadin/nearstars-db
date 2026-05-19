@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3498,
         "spectype": "M5.5Ve",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.1221,
+            "uncertainty_msun": 0.0022,
+            "method": "spectroscopic_calibration",
+            "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+            "bibcode": "2025A&A...700A..11M",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.141,
+            "uncertainty_rsun": 0.021,
+            "method": "evolutionary_model",
+            "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+            "bibcode": "2025A&A...700A..11M",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 21.674415764140438
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 16204188926.198,
+        "mean_radius_km": 98093.7
       }
     }
   ],
@@ -85,11 +105,32 @@
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460557.55,
         "mass_kg": 1.5527720000000002e+24,
         "mass_type": "Msini",
         "radius_m": 4408732.0
+      },
+      "curated": {
+        "pl_name": "Proxima Cen d",
+        "orbital": {
+          "semi_major_axis_au": 0.02881,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2460557.55,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 0.26,
+          "uncertainty_mearth": 0.038,
+          "mass_type": "Msini",
+          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": null
+        }
       }
     },
     {
@@ -126,11 +167,32 @@
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460548.59,
         "mass_kg": 6.300671e+24,
         "mass_type": "Msini",
         "radius_m": 6498420.0
+      },
+      "curated": {
+        "pl_name": "Proxima Cen b",
+        "orbital": {
+          "semi_major_axis_au": 0.04848,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2460548.59,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 1.055,
+          "uncertainty_mearth": 0.055,
+          "mass_type": "Msini",
+          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": null
+        }
       }
     }
   ],
@@ -161,6 +223,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+      "doi": null,
+      "bibcode": "2025A&A...700A..11M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Proxima Cen mass (spectroscopic_calibration)"
       ]
     }
   ],

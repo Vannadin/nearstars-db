@@ -21,15 +21,25 @@
         "vmag_source": "hipparcos_hardcoded",
         "teff_k": 3429,
         "spectype": "M2+V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.3899,
+            "uncertainty_msun": 0.0106,
+            "method": "spectroscopic_calibration",
+            "reference": "Hurt et al. 2022",
+            "bibcode": "2022AJ....163..218H",
+            "doi": "10.3847/1538-3881/ac5c47",
+            "recommended": true
+          }
+        ],
         "radius_measurements": [
           {
-            "value_rsun": 0.3887,
-            "uncertainty_rsun": null,
-            "method": "interferometry",
-            "reference": "2009ApJ...694.1085V",
-            "doi": null,
-            "bibcode": "2009ApJ...694.1085V",
+            "value_rsun": 0.3685,
+            "uncertainty_rsun": 0.0081,
+            "method": "evolutionary_model",
+            "reference": "Hurt et al. 2022",
+            "bibcode": "2022AJ....163..218H",
+            "doi": "10.3847/1538-3881/ac5c47",
             "recommended": true
           }
         ]
@@ -55,8 +65,8 @@
         "icrs_vz_j2000_km_s": -96.37399206798088
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": 270418.6
+        "gravitational_parameter_km3_s2": 51744580363.018,
+        "mean_radius_km": 256365.4
       }
     }
   ],
@@ -94,12 +104,34 @@
         "eccentricity": 0.063,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -30.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2456307.8,
         "mass_kg": 1.6065218e+25,
         "mass_type": "Msini",
         "radius_m": 9237950.0
+      },
+      "curated": {
+        "pl_name": "GJ 411 b",
+        "orbital": {
+          "semi_major_axis_au": 0.07879,
+          "eccentricity": 0.063,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -30.0,
+          "epoch_jd": 2456307.8,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Hurt et al. 2022",
+          "bibcode": "2022AJ....163..218H",
+          "doi": "10.3847/1538-3881/ac5c47"
+        },
+        "physical": {
+          "mass_mearth": 2.69,
+          "uncertainty_mearth": 0.19,
+          "mass_type": "Msini",
+          "source": "Hurt et al. 2022",
+          "bibcode": "2022AJ....163..218H",
+          "doi": "10.3847/1538-3881/ac5c47"
+        }
       }
     },
     {
@@ -135,12 +167,34 @@
         "eccentricity": 0.132,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 63.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2457250.0,
         "mass_kg": 8.122192e+25,
         "mass_type": "Msini",
         "radius_m": 23954960.0
+      },
+      "curated": {
+        "pl_name": "HD 95735 c",
+        "orbital": {
+          "semi_major_axis_au": 2.94,
+          "eccentricity": 0.132,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 63.0,
+          "epoch_jd": 2457250.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Hurt et al. 2022",
+          "bibcode": "2022AJ....163..218H",
+          "doi": "10.3847/1538-3881/ac5c47"
+        },
+        "physical": {
+          "mass_mearth": 13.6,
+          "uncertainty_mearth": 2.4,
+          "mass_type": "Msini",
+          "source": "Hurt et al. 2022",
+          "bibcode": "2022AJ....163..218H",
+          "doi": "10.3847/1538-3881/ac5c47"
+        }
       }
     }
   ],
@@ -174,12 +228,12 @@
       ]
     },
     {
-      "title": "2009ApJ...694.1085V",
-      "doi": null,
-      "bibcode": "2009ApJ...694.1085V",
+      "title": "Hurt et al. 2022",
+      "doi": "10.3847/1538-3881/ac5c47",
+      "bibcode": "2022AJ....163..218H",
       "accessed": "2026-05-19",
       "used_for": [
-        "GJ 411 radius (interferometry)"
+        "GJ 411 mass (spectroscopic_calibration)"
       ]
     }
   ],

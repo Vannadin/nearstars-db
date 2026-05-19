@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5695,
         "spectype": "G2-V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.87,
+            "uncertainty_msun": 0.04,
+            "method": "spectroscopic_calibration",
+            "reference": "Delrez et al. 2021",
+            "bibcode": "2021NatAs...5..775D",
+            "doi": "10.1038/s41550-021-01381-5",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.058,
+            "uncertainty_rsun": 0.019,
+            "method": "evolutionary_model",
+            "reference": "Delrez et al. 2021",
+            "bibcode": "2021NatAs...5..775D",
+            "doi": "10.1038/s41550-021-01381-5",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 38.563382491059684
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 115459822815.66,
+        "mean_radius_km": 736050.6
       }
     }
   ],
@@ -93,16 +113,40 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 14406274948.41,
+        "semi_major_axis_m": 14421234735.48,
         "eccentricity": 0.0,
         "inclination_deg": 88.49,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 2.7902715620000004e+25,
-        "mass_type": "Mass",
-        "radius_m": 10468827.2
+        "mass_kg": 2.8188784e+25,
+        "mass_type": "true mass",
+        "radius_m": 10601344.0
+      },
+      "curated": {
+        "pl_name": "HD 136352 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0964,
+          "eccentricity": 0.0,
+          "inclination_deg": 88.49,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Delrez et al. 2021",
+          "bibcode": "2021NatAs...5..775D",
+          "doi": "10.1038/s41550-021-01381-5"
+        },
+        "physical": {
+          "true_mass_mearth": 4.72,
+          "uncertainty_mearth": 0.42,
+          "mass_type": "true mass",
+          "radius_rearth": 1.664,
+          "uncertainty_rearth": 0.043,
+          "source": "Delrez et al. 2021",
+          "bibcode": "2021NatAs...5..775D",
+          "doi": "10.1038/s41550-021-01381-5"
+        }
       }
     },
     {
@@ -147,16 +191,40 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 25685954399.19,
+        "semi_major_axis_m": 25745793547.47,
         "eccentricity": 0.0,
         "inclination_deg": 88.571,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 6.700390346000001e+25,
-        "mass_type": "Mass",
-        "radius_m": 18174551.7
+        "mass_kg": 6.7127528e+25,
+        "mass_type": "true mass",
+        "radius_m": 18577836.0
+      },
+      "curated": {
+        "pl_name": "HD 136352 c",
+        "orbital": {
+          "semi_major_axis_au": 0.1721,
+          "eccentricity": 0.0,
+          "inclination_deg": 88.571,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Delrez et al. 2021",
+          "bibcode": "2021NatAs...5..775D",
+          "doi": "10.1038/s41550-021-01381-5"
+        },
+        "physical": {
+          "true_mass_mearth": 11.24,
+          "uncertainty_mearth": 0.65,
+          "mass_type": "true mass",
+          "radius_rearth": 2.916,
+          "uncertainty_rearth": 0.075,
+          "source": "Delrez et al. 2021",
+          "bibcode": "2021NatAs...5..775D",
+          "doi": "10.1038/s41550-021-01381-5"
+        }
       }
     },
     {
@@ -201,16 +269,40 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 63474376538.01,
+        "semi_major_axis_m": 63579095047.5,
         "eccentricity": 0.0,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 5.162907178e+25,
-        "mass_type": "Mass",
-        "radius_m": 15974645.4
+        "mass_kg": 5.267480400000001e+25,
+        "mass_type": "true mass",
+        "radius_m": 16322501.999999998
+      },
+      "curated": {
+        "pl_name": "HD 136352 d",
+        "orbital": {
+          "semi_major_axis_au": 0.425,
+          "eccentricity": 0.0,
+          "inclination_deg": 89.73,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Delrez et al. 2021",
+          "bibcode": "2021NatAs...5..775D",
+          "doi": "10.1038/s41550-021-01381-5"
+        },
+        "physical": {
+          "true_mass_mearth": 8.82,
+          "uncertainty_mearth": 0.93,
+          "mass_type": "true mass",
+          "radius_rearth": 2.562,
+          "uncertainty_rearth": 0.088,
+          "source": "Delrez et al. 2021",
+          "bibcode": "2021NatAs...5..775D",
+          "doi": "10.1038/s41550-021-01381-5"
+        }
       }
     }
   ],
@@ -241,6 +333,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Delrez et al. 2021",
+      "doi": "10.1038/s41550-021-01381-5",
+      "bibcode": "2021NatAs...5..775D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 136352 mass (spectroscopic_calibration)"
       ]
     }
   ],

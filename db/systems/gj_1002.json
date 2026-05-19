@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2951,
         "spectype": "M5.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.12,
+            "uncertainty_msun": 0.01,
+            "method": "spectroscopic_calibration",
+            "reference": "Suarez Mascareno et al. 2023",
+            "bibcode": "2023A&A...670A...5S",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.137,
+            "uncertainty_rsun": 0.005,
+            "method": "evolutionary_model",
+            "reference": "Suarez Mascareno et al. 2023",
+            "bibcode": "2023A&A...670A...5S",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -37.80354464211414
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 15925492802.16,
+        "mean_radius_km": 95310.9
       }
     }
   ],
@@ -90,6 +110,26 @@
         "mass_kg": 6.449976e+24,
         "mass_type": "Msini",
         "radius_m": 6562130.0
+      },
+      "curated": {
+        "pl_name": "GJ 1002 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0457,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Suarez Mascareno et al. 2023",
+          "bibcode": "2023A&A...670A...5S",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 1.08,
+          "uncertainty_mearth": 0.13,
+          "mass_type": "Msini",
+          "source": "Suarez Mascareno et al. 2023",
+          "bibcode": "2023A&A...670A...5S",
+          "doi": null
+        }
       }
     },
     {
@@ -131,6 +171,26 @@
         "mass_kg": 8.122192000000001e+24,
         "mass_type": "Msini",
         "radius_m": 7008100.000000001
+      },
+      "curated": {
+        "pl_name": "GJ 1002 c",
+        "orbital": {
+          "semi_major_axis_au": 0.0738,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Suarez Mascareno et al. 2023",
+          "bibcode": "2023A&A...670A...5S",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 1.36,
+          "uncertainty_mearth": 0.17,
+          "mass_type": "Msini",
+          "source": "Suarez Mascareno et al. 2023",
+          "bibcode": "2023A&A...670A...5S",
+          "doi": null
+        }
       }
     }
   ],
@@ -161,6 +221,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Suarez Mascareno et al. 2023",
+      "doi": null,
+      "bibcode": "2023A&A...670A...5S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 1002 mass (spectroscopic_calibration)"
       ]
     }
   ],

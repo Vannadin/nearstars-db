@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3282,
         "spectype": "M3.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.262,
+            "uncertainty_msun": null,
+            "method": "spectroscopic_calibration",
+            "reference": "Lustig Yaeger et al. 2023",
+            "bibcode": "2023NatAs...7.1317L",
+            "doi": "10.1038/s41550-023-02064-z",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.2789,
+            "uncertainty_rsun": 0.0014,
+            "method": "evolutionary_model",
+            "reference": "Lustig Yaeger et al. 2023",
+            "bibcode": "2023NatAs...7.1317L",
+            "doi": "10.1038/s41550-023-02064-z",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 1.0701362508237153
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 34770659284.716,
+        "mean_radius_km": 194030.7
       }
     }
   ],
@@ -90,6 +110,25 @@
         "mass_kg": 5.6198402e+24,
         "mass_type": "M-R relationship",
         "radius_m": 6313661.0
+      },
+      "curated": {
+        "pl_name": "LHS 475 b",
+        "orbital": {
+          "inclination_deg": 87.194,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Lustig Yaeger et al. 2023",
+          "bibcode": "2023NatAs...7.1317L",
+          "doi": "10.1038/s41550-023-02064-z"
+        },
+        "physical": {
+          "radius_rearth": 0.991,
+          "uncertainty_rearth": 0.05,
+          "source": "Lustig Yaeger et al. 2023",
+          "bibcode": "2023NatAs...7.1317L",
+          "doi": "10.1038/s41550-023-02064-z"
+        }
       }
     }
   ],
@@ -120,6 +159,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Lustig Yaeger et al. 2023",
+      "doi": "10.1038/s41550-023-02064-z",
+      "bibcode": "2023NatAs...7.1317L",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "LHS 475 mass (spectroscopic_calibration)"
       ]
     }
   ],

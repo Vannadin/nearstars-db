@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4500,
         "spectype": "M3V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.21,
+            "uncertainty_msun": 0.014,
+            "method": "spectroscopic_calibration",
+            "reference": "Sartori et al. 2023",
+            "bibcode": "2023A&A...670A..42S",
+            "doi": "10.1051/0004-6361/202244347",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.274,
+            "uncertainty_rsun": null,
+            "method": "evolutionary_model",
+            "reference": "Sartori et al. 2023",
+            "bibcode": "2023A&A...670A..42S",
+            "doi": "10.1051/0004-6361/202244347",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -2.556098827917271
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 27869612403.78,
+        "mean_radius_km": 190621.8
       }
     }
   ],
@@ -90,6 +110,26 @@
         "mass_kg": 2.7890174e+25,
         "mass_type": "Msini",
         "radius_m": 12742000.0
+      },
+      "curated": {
+        "pl_name": "L 363-38 b",
+        "orbital": {
+          "semi_major_axis_au": 0.048,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Sartori et al. 2023",
+          "bibcode": "2023A&A...670A..42S",
+          "doi": "10.1051/0004-6361/202244347"
+        },
+        "physical": {
+          "mass_mearth": 4.67,
+          "uncertainty_mearth": 0.43,
+          "mass_type": "Msini",
+          "source": "Sartori et al. 2023",
+          "bibcode": "2023A&A...670A..42S",
+          "doi": "10.1051/0004-6361/202244347"
+        }
       }
     }
   ],
@@ -120,6 +160,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Sartori et al. 2023",
+      "doi": "10.1051/0004-6361/202244347",
+      "bibcode": "2023A&A...670A..42S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "L 363-38 mass (spectroscopic_calibration)"
       ]
     }
   ],

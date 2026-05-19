@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3000,
         "spectype": "M5.0V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.132,
+            "uncertainty_msun": 0.009,
+            "method": "spectroscopic_calibration",
+            "reference": "Kaminski et al. 2025",
+            "bibcode": "2025A&A...696A.101K",
+            "doi": "10.1051/0004-6361/202453381",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -8.718465950197459
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 17518042082.376,
         "mean_radius_km": null
       }
     }
@@ -90,6 +100,27 @@
         "mass_kg": 6.151366e+24,
         "mass_type": "Msini",
         "radius_m": 6498420.0
+      },
+      "curated": {
+        "pl_name": "G 192-15 b",
+        "orbital": {
+          "semi_major_axis_au": 0.01723,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Kaminski et al. 2025",
+          "bibcode": "2025A&A...696A.101K",
+          "doi": "10.1051/0004-6361/202453381"
+        },
+        "physical": {
+          "mass_mearth": 1.03,
+          "uncertainty_mearth": 0.18,
+          "mass_type": "Msini",
+          "source": "Kaminski et al. 2025",
+          "bibcode": "2025A&A...696A.101K",
+          "doi": "10.1051/0004-6361/202453381"
+        }
       }
     },
     {
@@ -125,12 +156,34 @@
         "eccentricity": 0.676,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 73.4,
+        "mean_anomaly_at_epoch_deg": 16.599999999999994,
+        "orbital_epoch_jd": 2458813.0,
         "mass_kg": 8.540246e+25,
         "mass_type": "Msini",
         "radius_m": 24655770.0
+      },
+      "curated": {
+        "pl_name": "G 192-15 c",
+        "orbital": {
+          "semi_major_axis_au": 1.137,
+          "eccentricity": 0.676,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 73.4,
+          "epoch_jd": 2458813.0,
+          "mean_anomaly_at_epoch_deg": 16.599999999999994,
+          "source": "Kaminski et al. 2025",
+          "bibcode": "2025A&A...696A.101K",
+          "doi": "10.1051/0004-6361/202453381"
+        },
+        "physical": {
+          "mass_mearth": 14.3,
+          "uncertainty_mearth": 1.6,
+          "mass_type": "Msini",
+          "source": "Kaminski et al. 2025",
+          "bibcode": "2025A&A...696A.101K",
+          "doi": "10.1051/0004-6361/202453381"
+        }
       }
     }
   ],
@@ -161,6 +214,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Kaminski et al. 2025",
+      "doi": "10.1051/0004-6361/202453381",
+      "bibcode": "2025A&A...696A.101K",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "G 192-15 mass (spectroscopic_calibration)"
       ]
     }
   ],

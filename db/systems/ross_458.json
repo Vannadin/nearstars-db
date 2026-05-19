@@ -88,8 +88,28 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.1388865956e+28,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 89265673.75
+      },
+      "curated": {
+        "pl_name": "Ross 458 c",
+        "orbital": {
+          "semi_major_axis_au": 1100.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Burgasser et al. 2010",
+          "bibcode": "2010ApJ...725.1405B",
+          "doi": "10.1088/0004-637x/725/2/1405"
+        },
+        "physical": {
+          "true_mass_mearth": 1906.98,
+          "mass_type": "true mass",
+          "radius_rearth": 14.01125,
+          "source": "Burgasser et al. 2010",
+          "bibcode": "2010ApJ...725.1405B",
+          "doi": "10.1088/0004-637x/725/2/1405"
+        }
       }
     }
   ],
@@ -120,6 +140,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Burgasser et al. 2010",
+      "doi": "10.1088/0004-637x/725/2/1405",
+      "bibcode": "2010ApJ...725.1405B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet Ross 458 c orbital"
       ]
     }
   ],

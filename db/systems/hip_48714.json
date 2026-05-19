@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3946,
         "spectype": "M0.5V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.58,
+            "uncertainty_msun": 0.02,
+            "method": "spectroscopic_calibration",
+            "reference": "Feng et al. 2020",
+            "bibcode": "2020ApJS..250...29F",
+            "doi": "10.3847/1538-4365/abb139",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -0.09644266187590134
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 76973215210.44,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,34 @@
         "eccentricity": 0.5,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 202.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2451539.8,
         "mass_kg": 1.3676338e+26,
         "mass_type": "Msini",
         "radius_m": 32555810.000000004
+      },
+      "curated": {
+        "pl_name": "HIP 48714 b",
+        "orbital": {
+          "semi_major_axis_au": 0.112,
+          "eccentricity": 0.5,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 202.0,
+          "epoch_jd": 2451539.8,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..250...29F",
+          "doi": "10.3847/1538-4365/abb139"
+        },
+        "physical": {
+          "mass_mearth": 22.9,
+          "uncertainty_mearth": 2.8,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..250...29F",
+          "doi": "10.3847/1538-4365/abb139"
+        }
       }
     }
   ],
@@ -120,6 +152,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Feng et al. 2020",
+      "doi": "10.3847/1538-4365/abb139",
+      "bibcode": "2020ApJS..250...29F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HIP 48714 mass (spectroscopic_calibration)"
       ]
     }
   ],

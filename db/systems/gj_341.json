@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3631,
         "spectype": "M0V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.48,
+            "uncertainty_msun": 0.03,
+            "method": "spectroscopic_calibration",
+            "reference": "Ditomasso et al. 2025",
+            "bibcode": "2025ApJ...979..214D",
+            "doi": "10.3847/1538-4357/ad9dd3",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.5066,
+            "uncertainty_rsun": 0.0169,
+            "method": "evolutionary_model",
+            "reference": "Ditomasso et al. 2025",
+            "bibcode": "2025ApJ...979..214D",
+            "doi": "10.3847/1538-4357/ad9dd3",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -29.910608343164775
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 63701971208.64,
+        "mean_radius_km": 352441.6
       }
     }
   ],
@@ -88,8 +108,30 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 2.38888e+25,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 5606480.0
+      },
+      "curated": {
+        "pl_name": "GJ 341 b",
+        "orbital": {
+          "eccentricity": 0.0,
+          "inclination_deg": 89.24,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Ditomasso et al. 2025",
+          "bibcode": "2025ApJ...979..214D",
+          "doi": "10.3847/1538-4357/ad9dd3"
+        },
+        "physical": {
+          "true_mass_mearth": 4.0,
+          "mass_type": "true mass",
+          "radius_rearth": 0.88,
+          "uncertainty_rearth": 0.05,
+          "source": "Ditomasso et al. 2025",
+          "bibcode": "2025ApJ...979..214D",
+          "doi": "10.3847/1538-4357/ad9dd3"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Ditomasso et al. 2025",
+      "doi": "10.3847/1538-4357/ad9dd3",
+      "bibcode": "2025ApJ...979..214D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 341 mass (spectroscopic_calibration)"
       ]
     }
   ],

@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3231,
         "spectype": "M4.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.26,
+            "uncertainty_msun": 0.02,
+            "method": "spectroscopic_calibration",
+            "reference": "Moutou et al. 2026",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.274,
+            "uncertainty_rsun": 0.066,
+            "method": "evolutionary_model",
+            "reference": "Moutou et al. 2026",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 0.3597526324744216
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 34505234404.68,
+        "mean_radius_km": 190621.8
       }
     }
   ],
@@ -90,6 +110,27 @@
         "mass_kg": 2.09027e+25,
         "mass_type": "Msini",
         "radius_m": 10766990.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc B b",
+        "orbital": {
+          "semi_major_axis_au": 0.044,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        },
+        "physical": {
+          "mass_mearth": 3.5,
+          "uncertainty_mearth": 0.8,
+          "mass_type": "Msini",
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        }
       }
     },
     {
@@ -131,6 +172,27 @@
         "mass_kg": 3.165266e+25,
         "mass_type": "Msini",
         "radius_m": 13761360.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc B c",
+        "orbital": {
+          "semi_major_axis_au": 0.13,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        },
+        "physical": {
+          "mass_mearth": 5.3,
+          "uncertainty_mearth": 1.4,
+          "mass_type": "Msini",
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        }
       }
     }
   ],
@@ -161,6 +223,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Moutou et al. 2026",
+      "doi": "10.1051/0004-6361/202556146",
+      "bibcode": "2026A&A...705A.190M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "55 Cnc B mass (spectroscopic_calibration)"
       ]
     }
   ],

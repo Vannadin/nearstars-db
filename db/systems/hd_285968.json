@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3581,
         "spectype": "M2.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.5,
+            "uncertainty_msun": null,
+            "method": "spectroscopic_calibration",
+            "reference": "Forveille et al. 2009",
+            "bibcode": "2009A&A...493..645F",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.478214,
+            "uncertainty_rsun": 0.007882,
+            "method": "evolutionary_model",
+            "reference": "Rosenthal et al. 2021",
+            "bibcode": "2021ApJS..255....8R",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -39.09802006296464
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 66356220009.0,
+        "mean_radius_km": 332693.5
       }
     }
   ],
@@ -84,12 +104,33 @@
         "eccentricity": 0.0,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 0.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2454399.79,
         "mass_kg": 5.016648e+25,
         "mass_type": "Msini",
         "radius_m": 18029930.0
+      },
+      "curated": {
+        "pl_name": "HD 285968 b",
+        "orbital": {
+          "semi_major_axis_au": 0.066,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 0.0,
+          "epoch_jd": 2454399.79,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Forveille et al. 2009",
+          "bibcode": "2009A&A...493..645F",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 8.4,
+          "mass_type": "Msini",
+          "source": "Forveille et al. 2009",
+          "bibcode": "2009A&A...493..645F",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +161,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Forveille et al. 2009",
+      "doi": null,
+      "bibcode": "2009A&A...493..645F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 285968 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Rosenthal et al. 2021",
+      "doi": null,
+      "bibcode": "2021ApJS..255....8R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 285968 radius (evolutionary_model)"
       ]
     }
   ],

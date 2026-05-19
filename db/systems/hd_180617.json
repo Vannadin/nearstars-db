@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3500,
         "spectype": "M3-V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.484,
+            "uncertainty_msun": 0.019,
+            "method": "spectroscopic_calibration",
+            "reference": "Burt et al. 2021",
+            "bibcode": "2021AJ....161...10B",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.481,
+            "uncertainty_rsun": 0.014,
+            "method": "evolutionary_model",
+            "reference": "Burt et al. 2021",
+            "bibcode": "2021AJ....161...10B",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -34.04258049980445
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 64232820968.712,
+        "mean_radius_km": 334631.7
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.101,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 257.433,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 7.29444508e+25,
         "mass_type": "Msini",
         "radius_m": 22489630.0
+      },
+      "curated": {
+        "pl_name": "HD 180617 b",
+        "orbital": {
+          "semi_major_axis_au": 0.343,
+          "eccentricity": 0.101,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 257.433,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Burt et al. 2021",
+          "bibcode": "2021AJ....161...10B",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 12.214,
+          "uncertainty_mearth": 1.05,
+          "mass_type": "Msini",
+          "source": "Burt et al. 2021",
+          "bibcode": "2021AJ....161...10B",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Burt et al. 2021",
+      "doi": null,
+      "bibcode": "2021AJ....161...10B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 180617 mass (spectroscopic_calibration)"
       ]
     }
   ],

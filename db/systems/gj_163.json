@@ -84,12 +84,34 @@
         "eccentricity": 0.073,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 70.7,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2455042.553,
         "mass_kg": 6.330532e+25,
         "mass_type": "Msini",
         "radius_m": 20705750.0
+      },
+      "curated": {
+        "pl_name": "GJ 163 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0607,
+          "eccentricity": 0.073,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 70.7,
+          "epoch_jd": 2455042.553,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Bonfils et al. 2013",
+          "bibcode": "2013A&A...556A.110B",
+          "doi": "10.1051/0004-6361/201220237"
+        },
+        "physical": {
+          "mass_mearth": 10.6,
+          "uncertainty_mearth": 0.6,
+          "mass_type": "Msini",
+          "source": "Bonfils et al. 2013",
+          "bibcode": "2013A&A...556A.110B",
+          "doi": "10.1051/0004-6361/201220237"
+        }
       }
     },
     {
@@ -125,12 +147,34 @@
         "eccentricity": 0.099,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 227.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2455057.7,
         "mass_kg": 4.061096e+25,
         "mass_type": "Msini",
         "radius_m": 15927500.0
+      },
+      "curated": {
+        "pl_name": "GJ 163 c",
+        "orbital": {
+          "semi_major_axis_au": 0.1254,
+          "eccentricity": 0.099,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 227.0,
+          "epoch_jd": 2455057.7,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Bonfils et al. 2013",
+          "bibcode": "2013A&A...556A.110B",
+          "doi": "10.1051/0004-6361/201220237"
+        },
+        "physical": {
+          "mass_mearth": 6.8,
+          "uncertainty_mearth": 0.9,
+          "mass_type": "Msini",
+          "source": "Bonfils et al. 2013",
+          "bibcode": "2013A&A...556A.110B",
+          "doi": "10.1051/0004-6361/201220237"
+        }
       }
     },
     {
@@ -166,12 +210,34 @@
         "eccentricity": 0.373,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 118.3,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2455275.0,
         "mass_kg": 1.7558268e+26,
         "mass_type": "Msini",
         "radius_m": 37716320.0
+      },
+      "curated": {
+        "pl_name": "GJ 163 d",
+        "orbital": {
+          "semi_major_axis_au": 1.0304,
+          "eccentricity": 0.373,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 118.3,
+          "epoch_jd": 2455275.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Bonfils et al. 2013",
+          "bibcode": "2013A&A...556A.110B",
+          "doi": "10.1051/0004-6361/201220237"
+        },
+        "physical": {
+          "mass_mearth": 29.4,
+          "uncertainty_mearth": 2.9,
+          "mass_type": "Msini",
+          "source": "Bonfils et al. 2013",
+          "bibcode": "2013A&A...556A.110B",
+          "doi": "10.1051/0004-6361/201220237"
+        }
       }
     }
   ],
@@ -202,6 +268,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Bonfils et al. 2013",
+      "doi": "10.1051/0004-6361/201220237",
+      "bibcode": "2013A&A...556A.110B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet GJ 163 b orbital"
       ]
     }
   ],

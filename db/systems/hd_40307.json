@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4870,
         "spectype": "K2.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.77,
+            "uncertainty_msun": 0.05,
+            "method": "spectroscopic_calibration",
+            "reference": "Tuomi et al. 2013",
+            "bibcode": "2013A&A...549A..48T",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.716684,
+            "uncertainty_rsun": 0.059818,
+            "method": "evolutionary_model",
+            "reference": "Stassun et al. 2019",
+            "bibcode": "2019AJ....158..138S",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -28.761333219347833
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 102188578813.86,
+        "mean_radius_km": 498597.1
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.2,
         "inclination_deg": 0.2022,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 194.8,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 7.100922332777599e+27,
-        "mass_type": "Mass",
+        "mass_kg": 2.38888e+25,
+        "mass_type": "Msini",
         "radius_m": null
+      },
+      "curated": {
+        "pl_name": "HD 40307 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0468,
+          "eccentricity": 0.2,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 194.8,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 4.0,
+          "uncertainty_mearth": 0.8,
+          "mass_type": "Msini",
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        }
       }
     },
     {
@@ -125,12 +167,34 @@
         "eccentricity": 0.06,
         "inclination_deg": 0.2109,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 234.9,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.115913456140795e+28,
-        "mass_type": "Mass",
+        "mass_kg": 3.941652e+25,
+        "mass_type": "Msini",
         "radius_m": null
+      },
+      "curated": {
+        "pl_name": "HD 40307 c",
+        "orbital": {
+          "semi_major_axis_au": 0.0799,
+          "eccentricity": 0.06,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 234.9,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 6.6,
+          "uncertainty_mearth": 1.1,
+          "mass_type": "Msini",
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        }
       }
     },
     {
@@ -166,12 +230,34 @@
         "eccentricity": 0.07,
         "inclination_deg": 0.2855,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 17.2,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.0602981061414301e+28,
-        "mass_type": "Mass",
+        "mass_kg": 5.67359e+25,
+        "mass_type": "Msini",
         "radius_m": null
+      },
+      "curated": {
+        "pl_name": "HD 40307 d",
+        "orbital": {
+          "semi_major_axis_au": 0.1321,
+          "eccentricity": 0.07,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 17.2,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 9.5,
+          "uncertainty_mearth": 1.7,
+          "mass_type": "Msini",
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        }
       }
     },
     {
@@ -207,12 +293,34 @@
         "eccentricity": 0.02,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 355.2,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 3.1055440000000004e+25,
         "mass_type": "Msini",
         "radius_m": 13570230.0
+      },
+      "curated": {
+        "pl_name": "HD 40307 f",
+        "orbital": {
+          "semi_major_axis_au": 0.247,
+          "eccentricity": 0.02,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 355.2,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 5.2,
+          "uncertainty_mearth": 1.5,
+          "mass_type": "Msini",
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        }
       }
     },
     {
@@ -248,12 +356,34 @@
         "eccentricity": 0.29,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 91.7,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 4.240262e+25,
         "mass_type": "Msini",
         "radius_m": 16309760.0
+      },
+      "curated": {
+        "pl_name": "HD 40307 g",
+        "orbital": {
+          "semi_major_axis_au": 0.6,
+          "eccentricity": 0.29,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 91.7,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 7.1,
+          "uncertainty_mearth": 2.6,
+          "mass_type": "Msini",
+          "source": "Tuomi et al. 2013",
+          "bibcode": "2013A&A...549A..48T",
+          "doi": null
+        }
       }
     }
   ],
@@ -284,6 +414,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Tuomi et al. 2013",
+      "doi": null,
+      "bibcode": "2013A&A...549A..48T",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 40307 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Stassun et al. 2019",
+      "doi": null,
+      "bibcode": "2019AJ....158..138S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 40307 radius (evolutionary_model)"
       ]
     }
   ],

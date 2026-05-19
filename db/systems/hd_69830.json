@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5387,
         "spectype": "G8:V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.86,
+            "uncertainty_msun": 0.03,
+            "method": "spectroscopic_calibration",
+            "reference": "Lovis et al. 2006",
+            "bibcode": "2006Natur.441..305L",
+            "doi": "10.1038/nature04828",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.886947,
+            "uncertainty_rsun": 0.019437,
+            "method": "evolutionary_model",
+            "reference": "Rosenthal et al. 2021",
+            "bibcode": "2021ApJS..255....8R",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -64.06121999064013
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 114132698415.48,
+        "mean_radius_km": 617049.0
       }
     }
   ],
@@ -84,12 +104,33 @@
         "eccentricity": 0.1,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 340.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2453496.8,
         "mass_kg": 6.091644e+25,
         "mass_type": "Msini",
         "radius_m": 20196070.0
+      },
+      "curated": {
+        "pl_name": "HD 69830 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0785,
+          "eccentricity": 0.1,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 340.0,
+          "epoch_jd": 2453496.8,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Lovis et al. 2006",
+          "bibcode": "2006Natur.441..305L",
+          "doi": "10.1038/nature04828"
+        },
+        "physical": {
+          "mass_mearth": 10.2,
+          "mass_type": "Msini",
+          "source": "Lovis et al. 2006",
+          "bibcode": "2006Natur.441..305L",
+          "doi": "10.1038/nature04828"
+        }
       }
     },
     {
@@ -125,12 +166,33 @@
         "eccentricity": 0.13,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 221.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2453469.6,
         "mass_kg": 7.047196000000001e+25,
         "mass_type": "Msini",
         "radius_m": 22043660.0
+      },
+      "curated": {
+        "pl_name": "HD 69830 c",
+        "orbital": {
+          "semi_major_axis_au": 0.186,
+          "eccentricity": 0.13,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 221.0,
+          "epoch_jd": 2453469.6,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Lovis et al. 2006",
+          "bibcode": "2006Natur.441..305L",
+          "doi": "10.1038/nature04828"
+        },
+        "physical": {
+          "mass_mearth": 11.8,
+          "mass_type": "Msini",
+          "source": "Lovis et al. 2006",
+          "bibcode": "2006Natur.441..305L",
+          "doi": "10.1038/nature04828"
+        }
       }
     },
     {
@@ -166,12 +228,33 @@
         "eccentricity": 0.07,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 224.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2453358.0,
         "mass_kg": 1.0809682000000002e+26,
         "mass_type": "Msini",
         "radius_m": 28350950.0
+      },
+      "curated": {
+        "pl_name": "HD 69830 d",
+        "orbital": {
+          "semi_major_axis_au": 0.63,
+          "eccentricity": 0.07,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 224.0,
+          "epoch_jd": 2453358.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Lovis et al. 2006",
+          "bibcode": "2006Natur.441..305L",
+          "doi": "10.1038/nature04828"
+        },
+        "physical": {
+          "mass_mearth": 18.1,
+          "mass_type": "Msini",
+          "source": "Lovis et al. 2006",
+          "bibcode": "2006Natur.441..305L",
+          "doi": "10.1038/nature04828"
+        }
       }
     }
   ],
@@ -202,6 +285,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Lovis et al. 2006",
+      "doi": "10.1038/nature04828",
+      "bibcode": "2006Natur.441..305L",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 69830 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Rosenthal et al. 2021",
+      "doi": null,
+      "bibcode": "2021ApJS..255....8R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 69830 radius (evolutionary_model)"
       ]
     }
   ],

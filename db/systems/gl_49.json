@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3808,
         "spectype": "M1.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.515,
+            "uncertainty_msun": 0.019,
+            "method": "spectroscopic_calibration",
+            "reference": "Perger et al. 2019",
+            "bibcode": "2019A&A...624A.123P",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.511,
+            "uncertainty_rsun": 0.018,
+            "method": "evolutionary_model",
+            "reference": "Perger et al. 2019",
+            "bibcode": "2019A&A...624A.123P",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -3.6022574499184277
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 68346906609.27,
+        "mean_radius_km": 355502.7
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.363,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 43.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2455995.88,
         "mass_kg": 3.3623486e+25,
         "mass_type": "Msini",
         "radius_m": 14271040.000000002
+      },
+      "curated": {
+        "pl_name": "Gl 49 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0905,
+          "eccentricity": 0.363,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 43.0,
+          "epoch_jd": 2455995.88,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Perger et al. 2019",
+          "bibcode": "2019A&A...624A.123P",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 5.63,
+          "uncertainty_mearth": 0.67,
+          "mass_type": "Msini",
+          "source": "Perger et al. 2019",
+          "bibcode": "2019A&A...624A.123P",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Perger et al. 2019",
+      "doi": null,
+      "bibcode": "2019A&A...624A.123P",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Gl 49 mass (spectroscopic_calibration)"
       ]
     }
   ],

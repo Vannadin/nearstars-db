@@ -21,25 +21,26 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5249,
         "spectype": "K0IV-V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.905,
+            "uncertainty_msun": 0.015,
+            "method": "spectroscopic_calibration",
+            "reference": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "recommended": true
+          }
+        ],
         "radius_measurements": [
           {
-            "value_rsun": 1.0772,
-            "uncertainty_rsun": null,
-            "method": "interferometry",
-            "reference": "2009ApJ...694.1085V",
-            "doi": null,
-            "bibcode": "2009ApJ...694.1085V",
+            "value_rsun": 0.943,
+            "uncertainty_rsun": 0.01,
+            "method": "evolutionary_model",
+            "reference": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
             "recommended": true
-          },
-          {
-            "value_rsun": 1.1286,
-            "uncertainty_rsun": null,
-            "method": "interferometry",
-            "reference": "2009ApJ...694.1085V",
-            "doi": null,
-            "bibcode": "2009ApJ...694.1085V",
-            "recommended": false
           }
         ]
       },
@@ -64,8 +65,8 @@
         "icrs_vz_j2000_km_s": 0.637140427946008
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": 749408.0
+        "gravitational_parameter_km3_s2": 120104758216.29,
+        "mean_radius_km": 656045.1
       }
     }
   ],
@@ -116,12 +117,37 @@
         "eccentricity": 0.05,
         "inclination_deg": 83.59,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 4.612449504e+25,
-        "mass_type": "Mass",
-        "radius_m": 12082601.5
+        "argument_of_periapsis_deg": 86.0,
+        "mean_anomaly_at_epoch_deg": 4.0,
+        "orbital_epoch_jd": 2457063.2096,
+        "mass_kg": 4.7717878e+25,
+        "mass_type": "true mass",
+        "radius_m": 11945625.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc e",
+        "orbital": {
+          "semi_major_axis_au": 0.01544,
+          "eccentricity": 0.05,
+          "inclination_deg": 83.59,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 86.0,
+          "epoch_jd": 2457063.2096,
+          "mean_anomaly_at_epoch_deg": 4.0,
+          "source": "Bourrier et al. 2018",
+          "bibcode": "2018A&A...619A...1B",
+          "doi": "10.1051/0004-6361/201833154"
+        },
+        "physical": {
+          "true_mass_mearth": 7.99,
+          "uncertainty_mearth": 0.32,
+          "mass_type": "true mass",
+          "radius_rearth": 1.875,
+          "uncertainty_rearth": 0.029,
+          "source": "Bourrier et al. 2018",
+          "bibcode": "2018A&A...619A...1B",
+          "doi": "10.1051/0004-6361/201833154"
+        }
       }
     },
     {
@@ -157,12 +183,34 @@
         "eccentricity": 0.0029,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 1.5765323977e+27,
-        "mass_type": "Mass",
+        "argument_of_periapsis_deg": 23.0,
+        "mean_anomaly_at_epoch_deg": 67.0,
+        "orbital_epoch_jd": 2455495.595,
+        "mass_kg": 1.6483272000000002e+27,
+        "mass_type": "Msini",
         "radius_m": 88556900.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc b",
+        "orbital": {
+          "semi_major_axis_au": 0.118,
+          "eccentricity": 0.0029,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 23.0,
+          "epoch_jd": 2455495.595,
+          "mean_anomaly_at_epoch_deg": 67.0,
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        },
+        "physical": {
+          "mass_mearth": 276.0,
+          "uncertainty_mearth": 9.0,
+          "mass_type": "Msini",
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        }
       }
     },
     {
@@ -198,12 +246,34 @@
         "eccentricity": 0.088,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 3.2532842836e+26,
-        "mass_type": "Mass",
+        "argument_of_periapsis_deg": 31.0,
+        "mean_anomaly_at_epoch_deg": 59.0,
+        "orbital_epoch_jd": 2455491.23,
+        "mass_kg": 3.3802652000000006e+26,
+        "mass_type": "Msini",
         "radius_m": 54217210.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc c",
+        "orbital": {
+          "semi_major_axis_au": 0.247,
+          "eccentricity": 0.088,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 31.0,
+          "epoch_jd": 2455491.23,
+          "mean_anomaly_at_epoch_deg": 59.0,
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        },
+        "physical": {
+          "mass_mearth": 56.6,
+          "uncertainty_mearth": 2.2,
+          "mass_type": "Msini",
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        }
       }
     },
     {
@@ -239,12 +309,34 @@
         "eccentricity": 0.063,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 2.6762622639999998e+26,
-        "mass_type": "Mass",
+        "argument_of_periapsis_deg": 100.0,
+        "mean_anomaly_at_epoch_deg": 350.0,
+        "orbital_epoch_jd": 2455236.4,
+        "mass_kg": 2.896517e+26,
+        "mass_type": "Msini",
         "radius_m": 48355890.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc f",
+        "orbital": {
+          "semi_major_axis_au": 0.802,
+          "eccentricity": 0.063,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 100.0,
+          "epoch_jd": 2455236.4,
+          "mean_anomaly_at_epoch_deg": 350.0,
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        },
+        "physical": {
+          "mass_mearth": 48.5,
+          "uncertainty_mearth": 2.8,
+          "mass_type": "Msini",
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        }
       }
     },
     {
@@ -280,12 +372,34 @@
         "eccentricity": 0.0913,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 7.3606946946e+27,
-        "mass_type": "Mass",
+        "argument_of_periapsis_deg": -90.0,
+        "mean_anomaly_at_epoch_deg": 180.0,
+        "orbital_epoch_jd": 2451517.8,
+        "mass_kg": 7.250874982930228e+27,
+        "mass_type": "Msini",
         "radius_m": 82823000.0
+      },
+      "curated": {
+        "pl_name": "55 Cnc d",
+        "orbital": {
+          "semi_major_axis_au": 5.6,
+          "eccentricity": 0.0913,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -90.0,
+          "epoch_jd": 2451517.8,
+          "mean_anomaly_at_epoch_deg": 180.0,
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        },
+        "physical": {
+          "mass_mearth": 1214.10451474,
+          "uncertainty_mearth": 41.31769291,
+          "mass_type": "Msini",
+          "source": "Moutou et al. 2026",
+          "bibcode": "2026A&A...705A.190M",
+          "doi": "10.1051/0004-6361/202556146"
+        }
       }
     }
   ],
@@ -319,12 +433,21 @@
       ]
     },
     {
-      "title": "2009ApJ...694.1085V",
-      "doi": null,
-      "bibcode": "2009ApJ...694.1085V",
+      "title": "Bourrier et al. 2018",
+      "doi": "10.1051/0004-6361/201833154",
+      "bibcode": "2018A&A...619A...1B",
       "accessed": "2026-05-19",
       "used_for": [
-        "55 Cnc radius (interferometry)"
+        "55 Cnc mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Moutou et al. 2026",
+      "doi": "10.1051/0004-6361/202556146",
+      "bibcode": "2026A&A...705A.190M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet 55 Cnc b orbital"
       ]
     }
   ],

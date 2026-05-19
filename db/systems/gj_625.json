@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3557,
         "spectype": "M1.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.3,
+            "uncertainty_msun": 0.07,
+            "method": "spectroscopic_calibration",
+            "reference": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+            "bibcode": "2017A&A...605A..92S",
+            "doi": "10.1051/0004-6361/201730957",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.31,
+            "uncertainty_rsun": 0.06,
+            "method": "evolutionary_model",
+            "reference": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+            "bibcode": "2017A&A...605A..92S",
+            "doi": "10.1051/0004-6361/201730957",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -13.931989949862622
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 39813732005.4,
+        "mean_radius_km": 215667.0
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.13,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 343.1,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.6841604e+25,
         "mass_type": "Msini",
         "radius_m": 9492790.0
+      },
+      "curated": {
+        "pl_name": "GJ 625 b",
+        "orbital": {
+          "semi_major_axis_au": 0.078361,
+          "eccentricity": 0.13,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 343.1,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+          "bibcode": "2017A&A...605A..92S",
+          "doi": "10.1051/0004-6361/201730957"
+        },
+        "physical": {
+          "mass_mearth": 2.82,
+          "uncertainty_mearth": 0.51,
+          "mass_type": "Msini",
+          "source": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+          "bibcode": "2017A&A...605A..92S",
+          "doi": "10.1051/0004-6361/201730957"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+      "doi": "10.1051/0004-6361/201730957",
+      "bibcode": "2017A&A...605A..92S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 625 mass (spectroscopic_calibration)"
       ]
     }
   ],

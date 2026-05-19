@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3470,
         "spectype": "M3V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.33,
+            "uncertainty_msun": 0.008,
+            "method": "spectroscopic_calibration",
+            "reference": "Cortes Zuleta et al. 2025",
+            "bibcode": "2025A&A...693A.164C",
+            "doi": "10.1051/0004-6361/202451646",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.351,
+            "uncertainty_rsun": 0.003,
+            "method": "evolutionary_model",
+            "reference": "Cortes Zuleta et al. 2025",
+            "bibcode": "2025A&A...693A.164C",
+            "doi": "10.1051/0004-6361/202451646",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 14.005750947454683
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 43795105205.94,
+        "mean_radius_km": 244190.7
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.0,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 0.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2458597.7,
         "mass_kg": 1.6602716e+25,
         "mass_type": "Msini",
         "radius_m": 9429080.0
+      },
+      "curated": {
+        "pl_name": "Gl 725 A b",
+        "orbital": {
+          "semi_major_axis_au": 0.068,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 0.0,
+          "epoch_jd": 2458597.7,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Cortes Zuleta et al. 2025",
+          "bibcode": "2025A&A...693A.164C",
+          "doi": "10.1051/0004-6361/202451646"
+        },
+        "physical": {
+          "mass_mearth": 2.78,
+          "uncertainty_mearth": 0.35,
+          "mass_type": "Msini",
+          "source": "Cortes Zuleta et al. 2025",
+          "bibcode": "2025A&A...693A.164C",
+          "doi": "10.1051/0004-6361/202451646"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Cortes Zuleta et al. 2025",
+      "doi": "10.1051/0004-6361/202451646",
+      "bibcode": "2025A&A...693A.164C",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Gl 725 A mass (spectroscopic_calibration)"
       ]
     }
   ],

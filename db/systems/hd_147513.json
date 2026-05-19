@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5855,
         "spectype": "G5V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 1.11,
+            "uncertainty_msun": null,
+            "method": "spectroscopic_calibration",
+            "reference": "Mayor et al. 2004",
+            "bibcode": "2004A&A...415..391M",
+            "doi": "10.1051/0004-6361:20034250",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -7.9582622654668524
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 147310808419.98,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,33 @@
         "eccentricity": 0.26,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 282.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2451123.0,
         "mass_kg": 2.2992970000000002e+27,
         "mass_type": "Msini",
         "radius_m": 87282700.0
+      },
+      "curated": {
+        "pl_name": "HD 147513 b",
+        "orbital": {
+          "semi_major_axis_au": 1.32,
+          "eccentricity": 0.26,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 282.0,
+          "epoch_jd": 2451123.0,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Mayor et al. 2004",
+          "bibcode": "2004A&A...415..391M",
+          "doi": "10.1051/0004-6361:20034250"
+        },
+        "physical": {
+          "mass_mearth": 385.0,
+          "mass_type": "Msini",
+          "source": "Mayor et al. 2004",
+          "bibcode": "2004A&A...415..391M",
+          "doi": "10.1051/0004-6361:20034250"
+        }
       }
     }
   ],
@@ -120,6 +151,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Mayor et al. 2004",
+      "doi": "10.1051/0004-6361:20034250",
+      "bibcode": "2004A&A...415..391M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "HD 147513 mass (spectroscopic_calibration)"
       ]
     }
   ],

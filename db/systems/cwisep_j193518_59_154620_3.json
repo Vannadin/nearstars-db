@@ -21,7 +21,17 @@
         "vmag_source": "no_gaia_id",
         "teff_k": 482,
         "spectype": "Y",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.024,
+            "uncertainty_msun": 0.013,
+            "method": "spectroscopic_calibration",
+            "reference": "De Furio et al. 2025",
+            "bibcode": "2025ApJ...990L..63D",
+            "doi": "10.3847/2041-8213/adfee1",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": 12.867394245361485
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 3185098560.432,
         "mean_radius_km": null
       }
     }
@@ -88,8 +98,28 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 2.94210895904237e+28,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 77726200.0
+      },
+      "curated": {
+        "pl_name": "CWISEP J193518.59-154620.3 b",
+        "orbital": {
+          "semi_major_axis_au": 2.48,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "De Furio et al. 2025",
+          "bibcode": "2025ApJ...990L..63D",
+          "doi": "10.3847/2041-8213/adfee1"
+        },
+        "physical": {
+          "true_mass_mearth": 4926.3403085,
+          "uncertainty_mearth": 2701.5414595,
+          "mass_type": "true mass",
+          "source": "De Furio et al. 2025",
+          "bibcode": "2025ApJ...990L..63D",
+          "doi": "10.3847/2041-8213/adfee1"
+        }
       }
     }
   ],
@@ -120,6 +150,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "De Furio et al. 2025",
+      "doi": "10.3847/2041-8213/adfee1",
+      "bibcode": "2025ApJ...990L..63D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "CWISEP J193518.59-154620.3 mass (spectroscopic_calibration)"
       ]
     }
   ],

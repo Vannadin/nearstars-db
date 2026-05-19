@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 4211,
         "spectype": "K7V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.65,
+            "uncertainty_msun": 0.08,
+            "method": "spectroscopic_calibration",
+            "reference": "Dedrick et al. 2021",
+            "bibcode": "2021AJ....161...86D",
+            "doi": "10.3847/1538-3881/abd0ef",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.68,
+            "uncertainty_rsun": 0.14,
+            "method": "evolutionary_model",
+            "reference": "Dedrick et al. 2021",
+            "bibcode": "2021AJ....161...86D",
+            "doi": "10.3847/1538-3881/abd0ef",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -17.973252198546856
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 86263086011.7,
+        "mean_radius_km": 473076.0
       }
     }
   ],
@@ -84,12 +104,36 @@
         "eccentricity": 0.45,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 111.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2454203.07,
         "mass_kg": 4.538872e+25,
         "mass_type": "Msini",
         "radius_m": 16755730.0
+      },
+      "curated": {
+        "pl_name": "GJ 414 A b",
+        "orbital": {
+          "semi_major_axis_au": 0.2324,
+          "eccentricity": 0.45,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 111.0,
+          "epoch_jd": 2454203.07,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Dedrick et al. 2021",
+          "bibcode": "2021AJ....161...86D",
+          "doi": "10.3847/1538-3881/abd0ef"
+        },
+        "physical": {
+          "mass_mearth": 7.6,
+          "uncertainty_mearth": 2.44,
+          "mass_type": "Msini",
+          "radius_rearth": 2.63,
+          "uncertainty_rearth": 1.22,
+          "source": "Dedrick et al. 2021",
+          "bibcode": "2021AJ....161...86D",
+          "doi": "10.3847/1538-3881/abd0ef"
+        }
       }
     },
     {
@@ -125,12 +169,36 @@
         "eccentricity": 0.105,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 74.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2454210.36,
         "mass_kg": 3.21483526e+26,
         "mass_type": "Msini",
         "radius_m": 53516400.0
+      },
+      "curated": {
+        "pl_name": "GJ 414 A c",
+        "orbital": {
+          "semi_major_axis_au": 1.4,
+          "eccentricity": 0.105,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 74.0,
+          "epoch_jd": 2454210.36,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Dedrick et al. 2021",
+          "bibcode": "2021AJ....161...86D",
+          "doi": "10.3847/1538-3881/abd0ef"
+        },
+        "physical": {
+          "mass_mearth": 53.83,
+          "uncertainty_mearth": 9.18,
+          "mass_type": "Msini",
+          "radius_rearth": 8.4,
+          "uncertainty_rearth": 3.6,
+          "source": "Dedrick et al. 2021",
+          "bibcode": "2021AJ....161...86D",
+          "doi": "10.3847/1538-3881/abd0ef"
+        }
       }
     }
   ],
@@ -161,6 +229,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Dedrick et al. 2021",
+      "doi": "10.3847/1538-3881/abd0ef",
+      "bibcode": "2021AJ....161...86D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 414 A mass (spectroscopic_calibration)"
       ]
     }
   ],

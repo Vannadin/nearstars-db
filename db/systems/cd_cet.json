@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3130,
         "spectype": "M4.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.161,
+            "uncertainty_msun": 0.01,
+            "method": "spectroscopic_calibration",
+            "reference": "Bauer et al. 2020",
+            "bibcode": "2020A&A...640A..50B",
+            "doi": "10.1051/0004-6361/202038031",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.175,
+            "uncertainty_rsun": 0.006,
+            "method": "evolutionary_model",
+            "reference": "Bauer et al. 2020",
+            "bibcode": "2020A&A...640A..50B",
+            "doi": "10.1051/0004-6361/202038031",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 5.858908321593628
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 21366702842.898,
+        "mean_radius_km": 121747.5
       }
     }
   ],
@@ -85,11 +105,32 @@
         "inclination_deg": 87.48,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2458804.489,
         "mass_kg": 2.359019e+25,
         "mass_type": "Msini",
         "radius_m": 11595220.0
+      },
+      "curated": {
+        "pl_name": "CD Cet b",
+        "orbital": {
+          "semi_major_axis_au": 0.0185,
+          "inclination_deg": 87.48,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2458804.489,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Bauer et al. 2020",
+          "bibcode": "2020A&A...640A..50B",
+          "doi": "10.1051/0004-6361/202038031"
+        },
+        "physical": {
+          "mass_mearth": 3.95,
+          "uncertainty_mearth": 0.42,
+          "mass_type": "Msini",
+          "source": "Bauer et al. 2020",
+          "bibcode": "2020A&A...640A..50B",
+          "doi": "10.1051/0004-6361/202038031"
+        }
       }
     }
   ],
@@ -120,6 +161,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Bauer et al. 2020",
+      "doi": "10.1051/0004-6361/202038031",
+      "bibcode": "2020A&A...640A..50B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "CD Cet mass (spectroscopic_calibration)"
       ]
     }
   ],

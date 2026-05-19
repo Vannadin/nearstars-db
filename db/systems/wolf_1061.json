@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3353,
         "spectype": "M3V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.294,
+            "uncertainty_msun": null,
+            "method": "spectroscopic_calibration",
+            "reference": "Astudillo Defru et al. 2017",
+            "bibcode": "2017A&A...602A..88A",
+            "doi": "10.1051/0004-6361/201630153",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.307,
+            "uncertainty_rsun": 0.027,
+            "method": "evolutionary_model",
+            "reference": "Astudillo Defru et al. 2017",
+            "bibcode": "2017A&A...602A..88A",
+            "doi": "10.1051/0004-6361/201630153",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -18.807858373702175
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 39017457365.292,
+        "mean_radius_km": 213579.9
       }
     }
   ],
@@ -90,6 +110,27 @@
         "mass_kg": 1.1406902e+25,
         "mass_type": "Msini",
         "radius_m": 7708910.0
+      },
+      "curated": {
+        "pl_name": "Wolf 1061 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0375,
+          "eccentricity": 0.15,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Astudillo Defru et al. 2017",
+          "bibcode": "2017A&A...602A..88A",
+          "doi": "10.1051/0004-6361/201630153"
+        },
+        "physical": {
+          "mass_mearth": 1.91,
+          "uncertainty_mearth": 0.26,
+          "mass_type": "Msini",
+          "source": "Astudillo Defru et al. 2017",
+          "bibcode": "2017A&A...602A..88A",
+          "doi": "10.1051/0004-6361/201630153"
+        }
       }
     },
     {
@@ -131,6 +172,27 @@
         "mass_kg": 2.0365202e+25,
         "mass_type": "Msini",
         "radius_m": 10575860.0
+      },
+      "curated": {
+        "pl_name": "Wolf 1061 c",
+        "orbital": {
+          "semi_major_axis_au": 0.089,
+          "eccentricity": 0.11,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Astudillo Defru et al. 2017",
+          "bibcode": "2017A&A...602A..88A",
+          "doi": "10.1051/0004-6361/201630153"
+        },
+        "physical": {
+          "mass_mearth": 3.41,
+          "uncertainty_mearth": 0.43,
+          "mass_type": "Msini",
+          "source": "Astudillo Defru et al. 2017",
+          "bibcode": "2017A&A...602A..88A",
+          "doi": "10.1051/0004-6361/201630153"
+        }
       }
     },
     {
@@ -172,6 +234,27 @@
         "mass_kg": 4.598594e+25,
         "mass_type": "Msini",
         "radius_m": 17137990.0
+      },
+      "curated": {
+        "pl_name": "Wolf 1061 d",
+        "orbital": {
+          "semi_major_axis_au": 0.47,
+          "eccentricity": 0.55,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Astudillo Defru et al. 2017",
+          "bibcode": "2017A&A...602A..88A",
+          "doi": "10.1051/0004-6361/201630153"
+        },
+        "physical": {
+          "mass_mearth": 7.7,
+          "uncertainty_mearth": 1.12,
+          "mass_type": "Msini",
+          "source": "Astudillo Defru et al. 2017",
+          "bibcode": "2017A&A...602A..88A",
+          "doi": "10.1051/0004-6361/201630153"
+        }
       }
     }
   ],
@@ -202,6 +285,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Astudillo Defru et al. 2017",
+      "doi": "10.1051/0004-6361/201630153",
+      "bibcode": "2017A&A...602A..88A",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Wolf 1061 mass (spectroscopic_calibration)"
       ]
     }
   ],

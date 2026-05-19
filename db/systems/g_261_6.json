@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5501,
         "spectype": "M6V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.118,
+            "uncertainty_msun": 0.011,
+            "method": "spectroscopic_calibration",
+            "reference": "Kaminski et al. 2025",
+            "bibcode": "2025A&A...696A.101K",
+            "doi": "10.1051/0004-6361/202453381",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": -11.275566023435214
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 15660067922.124,
         "mean_radius_km": null
       }
     }
@@ -90,6 +100,27 @@
         "mass_kg": 8.181914000000001e+24,
         "mass_type": "Msini",
         "radius_m": 7008100.000000001
+      },
+      "curated": {
+        "pl_name": "G 261-6 b",
+        "orbital": {
+          "semi_major_axis_au": 0.02971,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Kaminski et al. 2025",
+          "bibcode": "2025A&A...696A.101K",
+          "doi": "10.1051/0004-6361/202453381"
+        },
+        "physical": {
+          "mass_mearth": 1.37,
+          "uncertainty_mearth": 0.23,
+          "mass_type": "Msini",
+          "source": "Kaminski et al. 2025",
+          "bibcode": "2025A&A...696A.101K",
+          "doi": "10.1051/0004-6361/202453381"
+        }
       }
     }
   ],
@@ -120,6 +151,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Kaminski et al. 2025",
+      "doi": "10.1051/0004-6361/202453381",
+      "bibcode": "2025A&A...696A.101K",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "G 261-6 mass (spectroscopic_calibration)"
       ]
     }
   ],

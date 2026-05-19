@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3518,
         "spectype": "M1VeBa1",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.51,
+            "uncertainty_msun": 0.028,
+            "method": "spectroscopic_calibration",
+            "reference": "Wittrock et al. 2023",
+            "bibcode": "2023AJ....166..232W",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.82,
+            "uncertainty_rsun": 0.02,
+            "method": "evolutionary_model",
+            "reference": "Donati et al. 2023",
+            "bibcode": "2023MNRAS.525..455D",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -10.576607761108027
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 67683344409.18,
+        "mean_radius_km": 570474.0
       }
     }
   ],
@@ -93,16 +113,41 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 10382092226.58,
+        "semi_major_axis_m": 10471850949.000002,
         "eccentricity": 0.07,
         "inclination_deg": 88.39,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 5.3716952900000005e+25,
-        "mass_type": "Mass",
-        "radius_m": 29421915.1
+        "argument_of_periapsis_deg": -52.0,
+        "mean_anomaly_at_epoch_deg": 142.0,
+        "orbital_epoch_jd": 2458330.350878,
+        "mass_kg": 5.3690078e+25,
+        "mass_type": "true mass",
+        "radius_m": 30517090.0
+      },
+      "curated": {
+        "pl_name": "AU Mic b",
+        "orbital": {
+          "semi_major_axis_au": 0.07,
+          "eccentricity": 0.07,
+          "inclination_deg": 88.39,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -52.0,
+          "epoch_jd": 2458330.350878,
+          "mean_anomaly_at_epoch_deg": 142.0,
+          "source": "Mallorquin et al. 2024",
+          "bibcode": "2024A&A...689A.132M",
+          "doi": "10.1051/0004-6361/202450047"
+        },
+        "physical": {
+          "true_mass_mearth": 8.99,
+          "uncertainty_mearth": 2.61,
+          "mass_type": "true mass",
+          "radius_rearth": 4.79,
+          "uncertainty_rearth": 0.29,
+          "source": "Mallorquin et al. 2024",
+          "bibcode": "2024A&A...689A.132M",
+          "doi": "10.1051/0004-6361/202450047"
+        }
       }
     },
     {
@@ -147,16 +192,41 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 17487991084.83,
+        "semi_major_axis_m": 17802146613.3,
         "eccentricity": 0.18,
         "inclination_deg": 89.46,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
-        "mass_kg": 8.636517864e+25,
-        "mass_type": "Mass",
-        "radius_m": 17567395.400000002
+        "argument_of_periapsis_deg": 72.8,
+        "mean_anomaly_at_epoch_deg": 17.200000000000003,
+        "orbital_epoch_jd": 2458342.223325,
+        "mass_kg": 8.635801200000001e+25,
+        "mass_type": "true mass",
+        "radius_m": 17775090.0
+      },
+      "curated": {
+        "pl_name": "AU Mic c",
+        "orbital": {
+          "semi_major_axis_au": 0.119,
+          "eccentricity": 0.18,
+          "inclination_deg": 89.46,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 72.8,
+          "epoch_jd": 2458342.223325,
+          "mean_anomaly_at_epoch_deg": 17.200000000000003,
+          "source": "Mallorquin et al. 2024",
+          "bibcode": "2024A&A...689A.132M",
+          "doi": "10.1051/0004-6361/202450047"
+        },
+        "physical": {
+          "true_mass_mearth": 14.46,
+          "uncertainty_mearth": 3.24,
+          "mass_type": "true mass",
+          "radius_rearth": 2.79,
+          "uncertainty_rearth": 0.18,
+          "source": "Mallorquin et al. 2024",
+          "bibcode": "2024A&A...689A.132M",
+          "doi": "10.1051/0004-6361/202450047"
+        }
       }
     },
     {
@@ -196,8 +266,27 @@
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.2601342000000002e+26,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 31026770.0
+      },
+      "curated": {
+        "pl_name": "AU Mic e",
+        "orbital": {
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Donati et al. 2025",
+          "bibcode": "2025A&A...700A.227D",
+          "doi": "10.1051/0004-6361/202555371"
+        },
+        "physical": {
+          "true_mass_mearth": 21.1,
+          "uncertainty_mearth": 5.4,
+          "mass_type": "true mass",
+          "source": "Donati et al. 2025",
+          "bibcode": "2025A&A...700A.227D",
+          "doi": "10.1051/0004-6361/202555371"
+        }
       }
     },
     {
@@ -233,12 +322,34 @@
         "eccentricity": 0.00305,
         "inclination_deg": 89.31812,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 160.7894,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 6.288726599999999e+24,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 6498420.0
+      },
+      "curated": {
+        "pl_name": "AU Mic d",
+        "orbital": {
+          "eccentricity": 0.00305,
+          "inclination_deg": 89.31812,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 160.7894,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Wittrock et al. 2023",
+          "bibcode": "2023AJ....166..232W",
+          "doi": null
+        },
+        "physical": {
+          "true_mass_mearth": 1.053,
+          "uncertainty_mearth": 0.511,
+          "mass_type": "true mass",
+          "source": "Wittrock et al. 2023",
+          "bibcode": "2023AJ....166..232W",
+          "doi": null
+        }
       }
     }
   ],
@@ -269,6 +380,42 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Wittrock et al. 2023",
+      "doi": null,
+      "bibcode": "2023AJ....166..232W",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "AU Mic mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Donati et al. 2023",
+      "doi": null,
+      "bibcode": "2023MNRAS.525..455D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "AU Mic radius (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Mallorquin et al. 2024",
+      "doi": "10.1051/0004-6361/202450047",
+      "bibcode": "2024A&A...689A.132M",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet AU Mic b orbital"
+      ]
+    },
+    {
+      "title": "Donati et al. 2025",
+      "doi": "10.1051/0004-6361/202555371",
+      "bibcode": "2025A&A...700A.227D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet AU Mic e orbital"
       ]
     }
   ],

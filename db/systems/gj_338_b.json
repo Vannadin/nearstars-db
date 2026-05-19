@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3867,
         "spectype": "M0V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.64,
+            "uncertainty_msun": 0.07,
+            "method": "spectroscopic_calibration",
+            "reference": "Ditomasso et al. 2023",
+            "bibcode": "2023AJ....165...38D",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.58,
+            "uncertainty_rsun": 0.03,
+            "method": "evolutionary_model",
+            "reference": "Ditomasso et al. 2023",
+            "bibcode": "2023AJ....165...38D",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -2.492164219397381
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 84935961611.52,
+        "mean_radius_km": 403506.0
       }
     }
   ],
@@ -90,6 +110,27 @@
         "mass_kg": 6.330532e+25,
         "mass_type": "Msini",
         "radius_m": 20705750.0
+      },
+      "curated": {
+        "pl_name": "GJ 338 B b",
+        "orbital": {
+          "semi_major_axis_au": 0.142,
+          "eccentricity": 0.109,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Ditomasso et al. 2023",
+          "bibcode": "2023AJ....165...38D",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 10.6,
+          "uncertainty_mearth": 1.2,
+          "mass_type": "Msini",
+          "source": "Ditomasso et al. 2023",
+          "bibcode": "2023AJ....165...38D",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +161,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Ditomasso et al. 2023",
+      "doi": null,
+      "bibcode": "2023AJ....165...38D",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 338 B mass (spectroscopic_calibration)"
       ]
     }
   ],

@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3345,
         "spectype": "M3.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.312,
+            "uncertainty_msun": 0.007,
+            "method": "spectroscopic_calibration",
+            "reference": "Weiner Mansfield et al. 2024",
+            "bibcode": "2024ApJ...975L..22W",
+            "doi": "10.3847/2041-8213/ad8161",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.3243,
+            "uncertainty_rsun": 0.0044,
+            "method": "evolutionary_model",
+            "reference": "Weiner Mansfield et al. 2024",
+            "bibcode": "2024ApJ...975L..22W",
+            "doi": "10.3847/2041-8213/ad8161",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -14.113888027743307
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 41406281285.616,
+        "mean_radius_km": 225615.5
       }
     }
   ],
@@ -84,12 +104,37 @@
         "eccentricity": 0.00086,
         "inclination_deg": 89.39,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 14.0,
+        "mean_anomaly_at_epoch_deg": 76.0,
+        "orbital_epoch_jd": 2459939.071602,
         "mass_kg": 1.6542994e+25,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 8212218.999999999
+      },
+      "curated": {
+        "pl_name": "GJ 486 b",
+        "orbital": {
+          "semi_major_axis_au": 0.01714,
+          "eccentricity": 0.00086,
+          "inclination_deg": 89.39,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 14.0,
+          "epoch_jd": 2459939.071602,
+          "mean_anomaly_at_epoch_deg": 76.0,
+          "source": "Weiner Mansfield et al. 2024",
+          "bibcode": "2024ApJ...975L..22W",
+          "doi": "10.3847/2041-8213/ad8161"
+        },
+        "physical": {
+          "true_mass_mearth": 2.77,
+          "uncertainty_mearth": 0.076,
+          "mass_type": "true mass",
+          "radius_rearth": 1.289,
+          "uncertainty_rearth": 0.019,
+          "source": "Weiner Mansfield et al. 2024",
+          "bibcode": "2024ApJ...975L..22W",
+          "doi": "10.3847/2041-8213/ad8161"
+        }
       }
     }
   ],
@@ -120,6 +165,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Weiner Mansfield et al. 2024",
+      "doi": "10.3847/2041-8213/ad8161",
+      "bibcode": "2024ApJ...975L..22W",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 486 mass (spectroscopic_calibration)"
       ]
     }
   ],

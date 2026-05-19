@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3765,
         "spectype": "M2V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.51,
+            "uncertainty_msun": 0.05,
+            "method": "spectroscopic_calibration",
+            "reference": "Pinamonti et al. 2023",
+            "bibcode": "2023A&A...677A.122P",
+            "doi": "10.1051/0004-6361/202346476",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.5,
+            "uncertainty_rsun": 0.05,
+            "method": "evolutionary_model",
+            "reference": "Pinamonti et al. 2023",
+            "bibcode": "2023A&A...677A.122P",
+            "doi": "10.1051/0004-6361/202346476",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -20.909725318981373
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 67683344409.18,
+        "mean_radius_km": 347850.0
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.083,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 3.0,
+        "mean_anomaly_at_epoch_deg": 87.0,
+        "orbital_epoch_jd": 2459045.4,
         "mass_kg": 4.89718781593522e+26,
         "mass_type": "Msini",
         "radius_m": 68806800.0
+      },
+      "curated": {
+        "pl_name": "GJ 649 b",
+        "orbital": {
+          "semi_major_axis_au": 1.112,
+          "eccentricity": 0.083,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 3.0,
+          "epoch_jd": 2459045.4,
+          "mean_anomaly_at_epoch_deg": 87.0,
+          "source": "Pinamonti et al. 2023",
+          "bibcode": "2023A&A...677A.122P",
+          "doi": "10.1051/0004-6361/202346476"
+        },
+        "physical": {
+          "mass_mearth": 81.99972901,
+          "uncertainty_mearth": 7.31005336,
+          "mass_type": "Msini",
+          "source": "Pinamonti et al. 2023",
+          "bibcode": "2023A&A...677A.122P",
+          "doi": "10.1051/0004-6361/202346476"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Pinamonti et al. 2023",
+      "doi": "10.1051/0004-6361/202346476",
+      "bibcode": "2023A&A...677A.122P",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 649 mass (spectroscopic_calibration)"
       ]
     }
   ],

@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3561,
         "spectype": "M3.0V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.4,
+            "uncertainty_msun": 0.02,
+            "method": "spectroscopic_calibration",
+            "reference": "Feng et al. 2020",
+            "bibcode": "2020ApJS..250...29F",
+            "doi": "10.3847/1538-4365/abb139",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.4183,
+            "uncertainty_rsun": 0.007,
+            "method": "evolutionary_model",
+            "reference": "Burt et al. 2014",
+            "bibcode": "2014ApJ...789..114B",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -36.9749309794958
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 53084976007.2,
+        "mean_radius_km": 291011.3
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.17,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 117.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450592.7,
         "mass_kg": 1.0272184e+26,
         "mass_type": "Msini",
         "radius_m": 27522720.0
+      },
+      "curated": {
+        "pl_name": "GJ 687 b",
+        "orbital": {
+          "semi_major_axis_au": 0.163,
+          "eccentricity": 0.17,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 117.0,
+          "epoch_jd": 2450592.7,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..250...29F",
+          "doi": "10.3847/1538-4365/abb139"
+        },
+        "physical": {
+          "mass_mearth": 17.2,
+          "uncertainty_mearth": 1.0,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..250...29F",
+          "doi": "10.3847/1538-4365/abb139"
+        }
       }
     },
     {
@@ -125,12 +167,34 @@
         "eccentricity": 0.4,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 176.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450304.1,
         "mass_kg": 9.55552e+25,
         "mass_type": "Msini",
         "radius_m": 26375939.999999996
+      },
+      "curated": {
+        "pl_name": "GJ 687 c",
+        "orbital": {
+          "semi_major_axis_au": 1.165,
+          "eccentricity": 0.4,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 176.0,
+          "epoch_jd": 2450304.1,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..250...29F",
+          "doi": "10.3847/1538-4365/abb139"
+        },
+        "physical": {
+          "mass_mearth": 16.0,
+          "uncertainty_mearth": 4.1,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..250...29F",
+          "doi": "10.3847/1538-4365/abb139"
+        }
       }
     }
   ],
@@ -161,6 +225,24 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Feng et al. 2020",
+      "doi": "10.3847/1538-4365/abb139",
+      "bibcode": "2020ApJS..250...29F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 687 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Burt et al. 2014",
+      "doi": null,
+      "bibcode": "2014ApJ...789..114B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 687 radius (evolutionary_model)"
       ]
     }
   ],

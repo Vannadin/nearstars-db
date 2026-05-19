@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3667,
         "spectype": "M3.5V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.35,
+            "uncertainty_msun": null,
+            "method": "spectroscopic_calibration",
+            "reference": "Feng et al. 2020",
+            "bibcode": "2020ApJS..246...11F",
+            "doi": "10.3847/1538-4365/ab5e7c",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": 80.96856568978319
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 46449354006.3,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,34 @@
         "eccentricity": 0.11,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 265.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 6.6112254000000004e+25,
         "mass_type": "Msini",
         "radius_m": 21215430.0
+      },
+      "curated": {
+        "pl_name": "GJ 422 b",
+        "orbital": {
+          "semi_major_axis_au": 0.111,
+          "eccentricity": 0.11,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 265.0,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..246...11F",
+          "doi": "10.3847/1538-4365/ab5e7c"
+        },
+        "physical": {
+          "mass_mearth": 11.07,
+          "uncertainty_mearth": 1.12,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2020",
+          "bibcode": "2020ApJS..246...11F",
+          "doi": "10.3847/1538-4365/ab5e7c"
+        }
       }
     }
   ],
@@ -120,6 +152,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Feng et al. 2020",
+      "doi": "10.3847/1538-4365/ab5e7c",
+      "bibcode": "2020ApJS..246...11F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 422 mass (spectroscopic_calibration)"
       ]
     }
   ],

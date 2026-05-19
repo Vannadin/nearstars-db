@@ -634,21 +634,30 @@ for target in target_list:
                 if bc:
                     existing_bibcodes.add(bc)
 
-        # curated 행성 출처 추가
+        # curated 행성 출처 추가 (bibcode-or-doi dedup; bibcode propagation)
         for planet_entry in planets_block:
             c = planet_entry.get("curated") or {}
             for section in ("orbital", "physical", "environment", "atmosphere"):
                 sec = c.get(section) or {}
                 doi = sec.get("doi")
-                if doi and doi not in existing_dois:
-                    sources.append({
-                        "title":    sec.get("source") or doi,
-                        "doi":      doi,
-                        "bibcode":  None,
-                        "accessed": RETRIEVAL_DATE,
-                        "used_for": [f"planet {planet_entry['name']} {section}"],
-                    })
+                bc  = sec.get("bibcode")
+                if not doi and not bc:
+                    continue
+                if doi and doi in existing_dois:
+                    continue
+                if bc and not doi and bc in existing_bibcodes:
+                    continue
+                sources.append({
+                    "title":    sec.get("source") or sec.get("reference") or doi or bc,
+                    "doi":      doi,
+                    "bibcode":  bc,
+                    "accessed": RETRIEVAL_DATE,
+                    "used_for": [f"planet {planet_entry['name']} {section}"],
+                })
+                if doi:
                     existing_dois.add(doi)
+                if bc:
+                    existing_bibcodes.add(bc)
 
         # ── 컴포넌트 추출 ──
         cm = COMPONENT_RE.match(star_name)

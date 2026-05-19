@@ -104,12 +104,34 @@
         "eccentricity": 0.04,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -51.8,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460243.7,
         "mass_kg": 1.5706886e+24,
         "mass_type": "Msini",
         "radius_m": 4421474.0
+      },
+      "curated": {
+        "pl_name": "Barnard d",
+        "orbital": {
+          "semi_major_axis_au": 0.0188,
+          "eccentricity": 0.04,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -51.8,
+          "epoch_jd": 2460243.7,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        },
+        "physical": {
+          "mass_mearth": 0.263,
+          "uncertainty_mearth": 0.024,
+          "mass_type": "Msini",
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        }
       }
     },
     {
@@ -145,12 +167,34 @@
         "eccentricity": 0.03,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 3.8,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460243.38,
         "mass_kg": 1.7856878e+24,
         "mass_type": "Msini",
         "radius_m": 4587120.0
+      },
+      "curated": {
+        "pl_name": "Barnard b",
+        "orbital": {
+          "semi_major_axis_au": 0.0229,
+          "eccentricity": 0.03,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 3.8,
+          "epoch_jd": 2460243.38,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        },
+        "physical": {
+          "mass_mearth": 0.299,
+          "uncertainty_mearth": 0.026,
+          "mass_type": "Msini",
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        }
       }
     },
     {
@@ -186,12 +230,34 @@
         "eccentricity": 0.08,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 90.8,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460242.92,
         "mass_kg": 2.0006870000000001e+24,
         "mass_type": "Msini",
         "radius_m": 4733653.0
+      },
+      "curated": {
+        "pl_name": "Barnard c",
+        "orbital": {
+          "semi_major_axis_au": 0.0274,
+          "eccentricity": 0.08,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 90.8,
+          "epoch_jd": 2460242.92,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        },
+        "physical": {
+          "mass_mearth": 0.335,
+          "uncertainty_mearth": 0.03,
+          "mass_type": "Msini",
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        }
       }
     },
     {
@@ -227,12 +293,34 @@
         "eccentricity": 0.04,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": -27.5,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2460245.3,
         "mass_kg": 1.1526346e+24,
         "mass_type": "Msini",
         "radius_m": 4058327.0
+      },
+      "curated": {
+        "pl_name": "Barnard e",
+        "orbital": {
+          "semi_major_axis_au": 0.0381,
+          "eccentricity": 0.04,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": -27.5,
+          "epoch_jd": 2460245.3,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        },
+        "physical": {
+          "mass_mearth": 0.193,
+          "uncertainty_mearth": 0.033,
+          "mass_type": "Msini",
+          "source": "Basant et al. 2025",
+          "bibcode": "2025ApJ...982L...1B",
+          "doi": "10.3847/2041-8213/adb8d5"
+        }
       }
     }
   ],
@@ -281,6 +369,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "Barnard's star radius (interferometry)"
+      ]
+    },
+    {
+      "title": "Basant et al. 2025",
+      "doi": "10.3847/2041-8213/adb8d5",
+      "bibcode": "2025ApJ...982L...1B",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "planet Barnard d orbital"
       ]
     }
   ],

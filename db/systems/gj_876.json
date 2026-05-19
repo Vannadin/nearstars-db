@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3049,
         "spectype": "M3.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.32,
+            "uncertainty_msun": 0.03,
+            "method": "spectroscopic_calibration",
+            "reference": "Rivera et al. 2010",
+            "bibcode": "2010ApJ...719..890R",
+            "doi": "10.1088/0004-637x/719/1/890",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.3,
+            "uncertainty_rsun": null,
+            "method": "evolutionary_model",
+            "reference": "Rivera et al. 2010",
+            "bibcode": "2010ApJ...719..890R",
+            "doi": "10.1088/0004-637x/719/1/890",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -13.94468861275783
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 42467980805.76,
+        "mean_radius_km": 208710.0
       }
     }
   ],
@@ -84,12 +104,35 @@
         "eccentricity": 0.207,
         "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 234.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450602.093,
         "mass_kg": 4.079012600000001e+25,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 15991209.999999998
+      },
+      "curated": {
+        "pl_name": "GJ 876 d",
+        "orbital": {
+          "semi_major_axis_au": 0.02080665,
+          "eccentricity": 0.207,
+          "inclination_deg": 59.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 234.0,
+          "epoch_jd": 2450602.093,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        },
+        "physical": {
+          "true_mass_mearth": 6.83,
+          "uncertainty_mearth": 0.4,
+          "mass_type": "true mass",
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        }
       }
     },
     {
@@ -125,12 +168,35 @@
         "eccentricity": 0.25591,
         "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 48.76,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450602.093,
         "mass_kg": 1.35559742812e+27,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 89194000.0
+      },
+      "curated": {
+        "pl_name": "GJ 876 c",
+        "orbital": {
+          "semi_major_axis_au": 0.12959,
+          "eccentricity": 0.25591,
+          "inclination_deg": 59.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 48.76,
+          "epoch_jd": 2450602.093,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        },
+        "physical": {
+          "true_mass_mearth": 226.9846,
+          "uncertainty_mearth": 1.2395,
+          "mass_type": "true mass",
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        }
       }
     },
     {
@@ -166,12 +232,35 @@
         "eccentricity": 0.0324,
         "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 50.3,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450602.093,
         "mass_kg": 4.3192353866999996e+27,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 84734300.0
+      },
+      "curated": {
+        "pl_name": "GJ 876 b",
+        "orbital": {
+          "semi_major_axis_au": 0.208317,
+          "eccentricity": 0.0324,
+          "inclination_deg": 59.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 50.3,
+          "epoch_jd": 2450602.093,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        },
+        "physical": {
+          "true_mass_mearth": 723.2235,
+          "uncertainty_mearth": 1.4302,
+          "mass_type": "true mass",
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        }
       }
     },
     {
@@ -207,12 +296,35 @@
         "eccentricity": 0.055,
         "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 239.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2450602.093,
         "mass_kg": 8.719412e+25,
-        "mass_type": "Mass",
+        "mass_type": "true mass",
         "radius_m": 24974320.0
+      },
+      "curated": {
+        "pl_name": "GJ 876 e",
+        "orbital": {
+          "semi_major_axis_au": 0.3343,
+          "eccentricity": 0.055,
+          "inclination_deg": 59.0,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 239.0,
+          "epoch_jd": 2450602.093,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        },
+        "physical": {
+          "true_mass_mearth": 14.6,
+          "uncertainty_mearth": 1.7,
+          "mass_type": "true mass",
+          "source": "Rivera et al. 2010",
+          "bibcode": "2010ApJ...719..890R",
+          "doi": "10.1088/0004-637x/719/1/890"
+        }
       }
     }
   ],
@@ -243,6 +355,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Rivera et al. 2010",
+      "doi": "10.1088/0004-637x/719/1/890",
+      "bibcode": "2010ApJ...719..890R",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 876 mass (spectroscopic_calibration)"
       ]
     }
   ],

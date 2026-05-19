@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3189,
         "spectype": "dM5.0",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.167,
+            "uncertainty_msun": 0.011,
+            "method": "spectroscopic_calibration",
+            "reference": "Kossakowski et al. 2023",
+            "bibcode": "2023A&A...670A..84K",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.1813,
+            "uncertainty_rsun": 0.0063,
+            "method": "evolutionary_model",
+            "reference": "Kossakowski et al. 2023",
+            "bibcode": "2023A&A...670A..84K",
+            "doi": null,
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -38.57121549394962
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 22162977483.006,
+        "mean_radius_km": 126130.4
       }
     }
   ],
@@ -85,11 +105,31 @@
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2458511.63,
         "mass_kg": 7.524972e+24,
         "mass_type": "Msini",
         "radius_m": 6880680.0
+      },
+      "curated": {
+        "pl_name": "Wolf 1069 b",
+        "orbital": {
+          "semi_major_axis_au": 0.0672,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2458511.63,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Kossakowski et al. 2023",
+          "bibcode": "2023A&A...670A..84K",
+          "doi": null
+        },
+        "physical": {
+          "mass_mearth": 1.26,
+          "uncertainty_mearth": 0.21,
+          "mass_type": "Msini",
+          "source": "Kossakowski et al. 2023",
+          "bibcode": "2023A&A...670A..84K",
+          "doi": null
+        }
       }
     }
   ],
@@ -120,6 +160,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Kossakowski et al. 2023",
+      "doi": null,
+      "bibcode": "2023A&A...670A..84K",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Wolf 1069 mass (spectroscopic_calibration)"
       ]
     }
   ],

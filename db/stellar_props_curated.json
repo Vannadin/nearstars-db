@@ -56,8 +56,8 @@
     "spectype": "M4.0 Ve",
     "mass_measurements": [
       {
-        "value_msun": 0.1610,
-        "uncertainty_msun": 0.0060,
+        "value_msun": 0.161,
+        "uncertainty_msun": 0.006,
         "method": "spectroscopic_calibration",
         "reference": "Mann et al. 2015",
         "bibcode": "2015ApJ...804...64M",
@@ -73,6 +73,2618 @@
         "reference": "Rains et al. 2021",
         "bibcode": "2021MNRAS.504.5788R",
         "doi": "10.1093/mnras/stab1167",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 667 C": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.33,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Anglada Escude et al. 2013",
+        "bibcode": "2013A&A...556A.126A",
+        "doi": "10.1051/0004-6361/201321331",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 896 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.43599,
+        "uncertainty_msun": 0.00092,
+        "method": "spectroscopic_calibration",
+        "reference": "Curiel et al. 2022",
+        "bibcode": "2022AJ....164...93C",
+        "doi": "10.3847/1538-3881/ac7c66",
+        "recommended": true
+      }
+    ]
+  },
+  "G 192-15": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.132,
+        "uncertainty_msun": 0.009,
+        "method": "spectroscopic_calibration",
+        "reference": "Kaminski et al. 2025",
+        "bibcode": "2025A&A...696A.101K",
+        "doi": "10.1051/0004-6361/202453381",
+        "recommended": true
+      }
+    ]
+  },
+  "G 261-6": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.118,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Kaminski et al. 2025",
+        "bibcode": "2025A&A...696A.101K",
+        "doi": "10.1051/0004-6361/202453381",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 887": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.495,
+        "uncertainty_msun": 0.049,
+        "method": "spectroscopic_calibration",
+        "reference": "Hartogh et al. 2026",
+        "bibcode": "2026A&A...707A..93H",
+        "doi": "10.1051/0004-6361/202554984",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.468,
+        "uncertainty_rsun": 0.022,
+        "method": "evolutionary_model",
+        "reference": "Hartogh et al. 2026",
+        "bibcode": "2026A&A...707A..93H",
+        "doi": "10.1051/0004-6361/202554984",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1002": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.12,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Suarez Mascareno et al. 2023",
+        "bibcode": "2023A&A...670A...5S",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.137,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Suarez Mascareno et al. 2023",
+        "bibcode": "2023A&A...670A...5S",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 190007": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.77,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Stalport et al. 2023",
+        "bibcode": "2023A&A...678A..90S",
+        "doi": "10.1051/0004-6361/202346887",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.79,
+        "uncertainty_rsun": 0.039,
+        "method": "evolutionary_model",
+        "reference": "Burt et al. 2021",
+        "bibcode": "2021AJ....161...10B",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 20794": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.79,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Nari et al. 2025",
+        "bibcode": "2025A&A...693A.297N",
+        "doi": "10.1051/0004-6361/202451769",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.93,
+        "uncertainty_rsun": 0.03,
+        "method": "evolutionary_model",
+        "reference": "Nari et al. 2025",
+        "bibcode": "2025A&A...693A.297N",
+        "doi": "10.1051/0004-6361/202451769",
+        "recommended": true
+      }
+    ]
+  },
+  "55 Cnc": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.905,
+        "uncertainty_msun": 0.015,
+        "method": "spectroscopic_calibration",
+        "reference": "Bourrier et al. 2018",
+        "bibcode": "2018A&A...619A...1B",
+        "doi": "10.1051/0004-6361/201833154",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.943,
+        "uncertainty_rsun": 0.01,
+        "method": "evolutionary_model",
+        "reference": "Bourrier et al. 2018",
+        "bibcode": "2018A&A...619A...1B",
+        "doi": "10.1051/0004-6361/201833154",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 436": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.47,
+        "uncertainty_msun": 0.07,
+        "method": "spectroscopic_calibration",
+        "reference": "Maciejewski et al. 2014",
+        "bibcode": "2014AcA....64..323M",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.455,
+        "uncertainty_rsun": 0.018,
+        "method": "evolutionary_model",
+        "reference": "Maciejewski et al. 2014",
+        "bibcode": "2014AcA....64..323M",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "Gl 410": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.55,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Carmona et al. 2025",
+        "bibcode": "2025A&A...700A.222C",
+        "doi": "10.1051/0004-6361/202452513",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.543,
+        "uncertainty_rsun": 0.009,
+        "method": "evolutionary_model",
+        "reference": "Carmona et al. 2025",
+        "bibcode": "2025A&A...700A.222C",
+        "doi": "10.1051/0004-6361/202452513",
+        "recommended": true
+      }
+    ]
+  },
+  "55 Cnc B": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.26,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Moutou et al. 2026",
+        "bibcode": "2026A&A...705A.190M",
+        "doi": "10.1051/0004-6361/202556146",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.274,
+        "uncertainty_rsun": 0.066,
+        "method": "evolutionary_model",
+        "reference": "Moutou et al. 2026",
+        "bibcode": "2026A&A...705A.190M",
+        "doi": "10.1051/0004-6361/202556146",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 3512": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.123,
+        "uncertainty_msun": 0.009,
+        "method": "spectroscopic_calibration",
+        "reference": "Morales et al. 2025",
+        "bibcode": "2025A&A...700A.242M",
+        "doi": "10.1051/0004-6361/202554992",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.139,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Morales et al. 2025",
+        "bibcode": "2025A&A...700A.242M",
+        "doi": "10.1051/0004-6361/202554992",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 140901": {
+    "mass_measurements": [
+      {
+        "value_msun": 1.06,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Philipot et al. 2023",
+        "bibcode": "2023A&A...678A.107P",
+        "doi": "10.1051/0004-6361/202346612",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 136352": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.87,
+        "uncertainty_msun": 0.04,
+        "method": "spectroscopic_calibration",
+        "reference": "Delrez et al. 2021",
+        "bibcode": "2021NatAs...5..775D",
+        "doi": "10.1038/s41550-021-01381-5",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.058,
+        "uncertainty_rsun": 0.019,
+        "method": "evolutionary_model",
+        "reference": "Delrez et al. 2021",
+        "bibcode": "2021NatAs...5..775D",
+        "doi": "10.1038/s41550-021-01381-5",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1151": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.1639,
+        "uncertainty_msun": 0.0093,
+        "method": "spectroscopic_calibration",
+        "reference": "Blanco Pozo et al. 2023",
+        "bibcode": "2023A&A...671A..50B",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1781,
+        "uncertainty_rsun": 0.0042,
+        "method": "evolutionary_model",
+        "reference": "Blanco Pozo et al. 2023",
+        "bibcode": "2023A&A...671A..50B",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 367": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.455,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Goffo et al. 2023",
+        "bibcode": "2023ApJ...955L...3G",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.458,
+        "uncertainty_rsun": 0.013,
+        "method": "evolutionary_model",
+        "reference": "Goffo et al. 2023",
+        "bibcode": "2023ApJ...955L...3G",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "Gl 725 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.33,
+        "uncertainty_msun": 0.008,
+        "method": "spectroscopic_calibration",
+        "reference": "Cortes Zuleta et al. 2025",
+        "bibcode": "2025A&A...693A.164C",
+        "doi": "10.1051/0004-6361/202451646",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.351,
+        "uncertainty_rsun": 0.003,
+        "method": "evolutionary_model",
+        "reference": "Cortes Zuleta et al. 2025",
+        "bibcode": "2025A&A...693A.164C",
+        "doi": "10.1051/0004-6361/202451646",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 680": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.456,
+        "uncertainty_msun": 0.046,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2022",
+        "bibcode": "2022ApJS..262...21F",
+        "doi": "10.3847/1538-4365/ac7e57",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1132": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.1945,
+        "uncertainty_msun": 0.0048,
+        "method": "spectroscopic_calibration",
+        "reference": "Xue et al. 2024",
+        "bibcode": "2024ApJ...973L...8X",
+        "doi": "10.3847/2041-8213/ad72e9",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.226,
+        "uncertainty_rsun": 0.007,
+        "method": "evolutionary_model",
+        "reference": "Weisserman et al. 2026",
+        "bibcode": "2026arXiv260407447W",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 317": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.402,
+        "uncertainty_msun": 0.014,
+        "method": "spectroscopic_calibration",
+        "reference": "Morales et al. 2025",
+        "bibcode": "2025A&A...700A.242M",
+        "doi": "10.1051/0004-6361/202554992",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.403,
+        "uncertainty_rsun": 0.009,
+        "method": "evolutionary_model",
+        "reference": "Morales et al. 2025",
+        "bibcode": "2025A&A...700A.242M",
+        "doi": "10.1051/0004-6361/202554992",
+        "recommended": true
+      }
+    ]
+  },
+  "eps Ind A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.781,
+        "uncertainty_msun": 0.036,
+        "method": "spectroscopic_calibration",
+        "reference": "Matthews et al. 2026",
+        "bibcode": "2026arXiv260308780M",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.679,
+        "uncertainty_rsun": 0.004,
+        "method": "evolutionary_model",
+        "reference": "Matthews et al. 2024",
+        "bibcode": "2024Natur.633..789M",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "COCONUTS-2 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.4,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Kiman et al. 2026",
+        "bibcode": "2026AJ....171...60K",
+        "doi": "10.3847/1538-3881/ae230f",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.366,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Kiman et al. 2026",
+        "bibcode": "2026AJ....171...60K",
+        "doi": "10.3847/1538-3881/ae230f",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 260655": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.439,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Luque et al. 2022",
+        "bibcode": "2022A&A...664A.199L",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.439,
+        "uncertainty_rsun": 0.003,
+        "method": "evolutionary_model",
+        "reference": "Luque et al. 2022",
+        "bibcode": "2022A&A...664A.199L",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "tau Cet": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.783,
+        "uncertainty_msun": 0.012,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2017",
+        "bibcode": "2017AJ....154..135F",
+        "doi": "10.3847/1538-3881/aa83b4",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 357": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.342,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Oddo et al. 2023",
+        "bibcode": "2023AJ....165..134O",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.337,
+        "uncertainty_rsun": 0.015,
+        "method": "evolutionary_model",
+        "reference": "Oddo et al. 2023",
+        "bibcode": "2023AJ....165..134O",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "LHS 1140": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.1844,
+        "uncertainty_msun": 0.0045,
+        "method": "spectroscopic_calibration",
+        "reference": "Cadieux et al. 2024",
+        "bibcode": "2024ApJ...960L...3C",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.2159,
+        "uncertainty_rsun": 0.003,
+        "method": "evolutionary_model",
+        "reference": "Cadieux et al. 2024",
+        "bibcode": "2024ApJ...960L...3C",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "CWISEP J193518.59-154620.3": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.024,
+        "uncertainty_msun": 0.013,
+        "method": "spectroscopic_calibration",
+        "reference": "De Furio et al. 2025",
+        "bibcode": "2025ApJ...990L..63D",
+        "doi": "10.3847/2041-8213/adfee1",
+        "recommended": true
+      }
+    ]
+  },
+  "Proxima Cen": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.1221,
+        "uncertainty_msun": 0.0022,
+        "method": "spectroscopic_calibration",
+        "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+        "bibcode": "2025A&A...700A..11M",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.141,
+        "uncertainty_rsun": 0.021,
+        "method": "evolutionary_model",
+        "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+        "bibcode": "2025A&A...700A..11M",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "ups And": {
+    "mass_measurements": [
+      {
+        "value_msun": 1.3,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Curiel et al. 2011",
+        "bibcode": "2011A&A...525A..78C",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.56,
+        "uncertainty_rsun": null,
+        "method": "evolutionary_model",
+        "reference": "Curiel et al. 2011",
+        "bibcode": "2011A&A...525A..78C",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 806": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.413,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Palle et al. 2023",
+        "bibcode": "2023A&A...678A..80P",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.4144,
+        "uncertainty_rsun": 0.0038,
+        "method": "evolutionary_model",
+        "reference": "Palle et al. 2023",
+        "bibcode": "2023A&A...678A..80P",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "TRAPPIST-1": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.0898,
+        "uncertainty_msun": 0.0023,
+        "method": "spectroscopic_calibration",
+        "reference": "Agol et al. 2021",
+        "bibcode": "2021PSJ.....2....1A",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1192,
+        "uncertainty_rsun": 0.0013,
+        "method": "evolutionary_model",
+        "reference": "Agol et al. 2021",
+        "bibcode": "2021PSJ.....2....1A",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "AU Mic": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.51,
+        "uncertainty_msun": 0.028,
+        "method": "spectroscopic_calibration",
+        "reference": "Wittrock et al. 2023",
+        "bibcode": "2023AJ....166..232W",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.82,
+        "uncertainty_rsun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Donati et al. 2023",
+        "bibcode": "2023MNRAS.525..455D",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "Gliese 12": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.255,
+        "uncertainty_msun": 0.013,
+        "method": "spectroscopic_calibration",
+        "reference": "Turner et al. 2026",
+        "bibcode": "2026MNRAS.545f1703T",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.265,
+        "uncertainty_rsun": 0.012,
+        "method": "evolutionary_model",
+        "reference": "Turner et al. 2026",
+        "bibcode": "2026MNRAS.545f1703T",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "47 UMa": {
+    "mass_measurements": [
+      {
+        "value_msun": 1.06,
+        "uncertainty_msun": 0.128402,
+        "method": "spectroscopic_calibration",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.21334,
+        "uncertainty_rsun": 0.038883,
+        "method": "evolutionary_model",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "61 Vir": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.942,
+        "uncertainty_msun": 0.034,
+        "method": "spectroscopic_calibration",
+        "reference": "Vogt et al. 2010",
+        "bibcode": "2010ApJ...708.1366V",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.963,
+        "uncertainty_rsun": 0.011,
+        "method": "evolutionary_model",
+        "reference": "Vogt et al. 2010",
+        "bibcode": "2010ApJ...708.1366V",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 147513": {
+    "mass_measurements": [
+      {
+        "value_msun": 1.11,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Mayor et al. 2004",
+        "bibcode": "2004A&A...415..391M",
+        "doi": "10.1051/0004-6361:20034250",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 219134": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.81,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Gillon et al. 2017",
+        "bibcode": "2017NatAs...1E..56G",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.778,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Gillon et al. 2017",
+        "bibcode": "2017NatAs...1E..56G",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "L 98-59": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.2923,
+        "uncertainty_msun": 0.0067,
+        "method": "spectroscopic_calibration",
+        "reference": "Cadieux et al. 2025",
+        "bibcode": "2025AJ....170..154C",
+        "doi": "10.3847/1538-3881/adef59",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.3155,
+        "uncertainty_rsun": 0.0062,
+        "method": "evolutionary_model",
+        "reference": "Cadieux et al. 2025",
+        "bibcode": "2025AJ....170..154C",
+        "doi": "10.3847/1538-3881/adef59",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 238": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.4193,
+        "uncertainty_msun": 0.0095,
+        "method": "spectroscopic_calibration",
+        "reference": "Tey et al. 2024",
+        "bibcode": "2024AJ....167..283T",
+        "doi": "10.3847/1538-3881/ad3df1",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.4314,
+        "uncertainty_rsun": 0.0075,
+        "method": "evolutionary_model",
+        "reference": "Tey et al. 2024",
+        "bibcode": "2024AJ....167..283T",
+        "doi": "10.3847/1538-3881/ad3df1",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 3651": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.799,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Wittenmyer et al. 2019",
+        "bibcode": "2019MNRAS.484.5859W",
+        "doi": "10.1093/mnras/stz290",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.871954,
+        "uncertainty_rsun": 0.0171,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 141004": {
+    "mass_measurements": [
+      {
+        "value_msun": 1.051904,
+        "uncertainty_msun": 0.051084,
+        "method": "spectroscopic_calibration",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.389372,
+        "uncertainty_rsun": 0.032635,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "LTT 1445 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.257,
+        "uncertainty_msun": 0.014,
+        "method": "spectroscopic_calibration",
+        "reference": "Pass et al. 2023",
+        "bibcode": "2023AJ....166..171P",
+        "doi": "10.3847/1538-3881/acf561",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.265,
+        "uncertainty_rsun": 0.011,
+        "method": "evolutionary_model",
+        "reference": "Winters et al. 2022",
+        "bibcode": "2022AJ....163..168W",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HIP 56998": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.653,
+        "uncertainty_msun": 0.028,
+        "method": "spectroscopic_calibration",
+        "reference": "Kunimoto et al. 2025",
+        "bibcode": "2025AJ....169...47K",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.63,
+        "uncertainty_rsun": 0.027,
+        "method": "evolutionary_model",
+        "reference": "Kunimoto et al. 2025",
+        "bibcode": "2025AJ....169...47K",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 411": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.3899,
+        "uncertainty_msun": 0.0106,
+        "method": "spectroscopic_calibration",
+        "reference": "Hurt et al. 2022",
+        "bibcode": "2022AJ....163..218H",
+        "doi": "10.3847/1538-3881/ac5c47",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.3685,
+        "uncertainty_rsun": 0.0081,
+        "method": "evolutionary_model",
+        "reference": "Hurt et al. 2022",
+        "bibcode": "2022AJ....163..218H",
+        "doi": "10.3847/1538-3881/ac5c47",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1061": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.12,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Dreizler et al. 2025",
+        "bibcode": "2025A&A...698A.114D",
+        "doi": "10.1051/0004-6361/202452490",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.156,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Dreizler et al. 2025",
+        "bibcode": "2025A&A...698A.114D",
+        "doi": "10.1051/0004-6361/202452490",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 3988": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.1842,
+        "uncertainty_msun": 0.0153,
+        "method": "spectroscopic_calibration",
+        "reference": "Gorrini et al. 2023",
+        "bibcode": "2023A&A...680A..28G",
+        "doi": "10.1051/0004-6361/202347108",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.19734,
+        "uncertainty_rsun": 0.01219,
+        "method": "evolutionary_model",
+        "reference": "Gorrini et al. 2023",
+        "bibcode": "2023A&A...680A..28G",
+        "doi": "10.1051/0004-6361/202347108",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 480": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.45,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Ould Elhkim et al. 2025",
+        "bibcode": "2025A&A...696A.152O",
+        "doi": "10.1051/0004-6361/202347814",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.449,
+        "uncertainty_rsun": 0.008,
+        "method": "evolutionary_model",
+        "reference": "Ould Elhkim et al. 2025",
+        "bibcode": "2025A&A...696A.152O",
+        "doi": "10.1051/0004-6361/202347814",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 536": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.528,
+        "uncertainty_msun": 0.027,
+        "method": "spectroscopic_calibration",
+        "reference": "Suarez Mascareno et al. 2025",
+        "bibcode": "2025A&A...702A.121S",
+        "doi": "10.1051/0004-6361/202555731",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.529,
+        "uncertainty_rsun": 0.022,
+        "method": "evolutionary_model",
+        "reference": "Suarez Mascareno et al. 2025",
+        "bibcode": "2025A&A...702A.121S",
+        "doi": "10.1051/0004-6361/202555731",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 338 B": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.64,
+        "uncertainty_msun": 0.07,
+        "method": "spectroscopic_calibration",
+        "reference": "Ditomasso et al. 2023",
+        "bibcode": "2023AJ....165...38D",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.58,
+        "uncertainty_rsun": 0.03,
+        "method": "evolutionary_model",
+        "reference": "Ditomasso et al. 2023",
+        "bibcode": "2023AJ....165...38D",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "LHS 3844": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.151,
+        "uncertainty_msun": 0.014,
+        "method": "spectroscopic_calibration",
+        "reference": "Nagel et al. 2026",
+        "bibcode": "2026arXiv260328238N",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.189,
+        "uncertainty_rsun": 0.006,
+        "method": "evolutionary_model",
+        "reference": "Nagel et al. 2026",
+        "bibcode": "2026arXiv260328238N",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 682": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.27,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Tuomi et al. 2014",
+        "bibcode": "2014MNRAS.441.1545T",
+        "doi": "10.1093/mnras/stu358",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1265": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.178,
+        "uncertainty_msun": 0.018,
+        "method": "spectroscopic_calibration",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.192,
+        "uncertainty_rsun": 0.007,
+        "method": "evolutionary_model",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 285968": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.5,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Forveille et al. 2009",
+        "bibcode": "2009A&A...493..645F",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.478214,
+        "uncertainty_rsun": 0.007882,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 40307": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.77,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Tuomi et al. 2013",
+        "bibcode": "2013A&A...549A..48T",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.716684,
+        "uncertainty_rsun": 0.059818,
+        "method": "evolutionary_model",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 687": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.4,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2020",
+        "bibcode": "2020ApJS..250...29F",
+        "doi": "10.3847/1538-4365/abb139",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.4183,
+        "uncertainty_rsun": 0.007,
+        "method": "evolutionary_model",
+        "reference": "Burt et al. 2014",
+        "bibcode": "2014ApJ...789..114B",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 3323": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.164,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Astudillo Defru et al. 2017",
+        "bibcode": "2017A&A...602A..88A",
+        "doi": "10.1051/0004-6361/201630153",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.119,
+        "uncertainty_rsun": 0.027,
+        "method": "evolutionary_model",
+        "reference": "Astudillo Defru et al. 2017",
+        "bibcode": "2017A&A...602A..88A",
+        "doi": "10.1051/0004-6361/201630153",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 740": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.58,
+        "uncertainty_msun": 0.06,
+        "method": "spectroscopic_calibration",
+        "reference": "Toledo Padr Oacute N et al. 2021",
+        "bibcode": "2021A&A...648A..20T",
+        "doi": "10.1051/0004-6361/202040099",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.56,
+        "uncertainty_rsun": 0.06,
+        "method": "evolutionary_model",
+        "reference": "Toledo Padr Oacute N et al. 2021",
+        "bibcode": "2021A&A...648A..20T",
+        "doi": "10.1051/0004-6361/202040099",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 876": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.32,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Rivera et al. 2010",
+        "bibcode": "2010ApJ...719..890R",
+        "doi": "10.1088/0004-637x/719/1/890",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.3,
+        "uncertainty_rsun": null,
+        "method": "evolutionary_model",
+        "reference": "Rivera et al. 2010",
+        "bibcode": "2010ApJ...719..890R",
+        "doi": "10.1088/0004-637x/719/1/890",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1214": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.182,
+        "uncertainty_msun": 0.0042,
+        "method": "spectroscopic_calibration",
+        "reference": "Mahajan et al. 2024",
+        "bibcode": "2024ApJ...963L..37M",
+        "doi": "10.3847/2041-8213/ad29f3",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.2162,
+        "uncertainty_rsun": 0.0025,
+        "method": "evolutionary_model",
+        "reference": "Mahajan et al. 2024",
+        "bibcode": "2024ApJ...963L..37M",
+        "doi": "10.3847/2041-8213/ad29f3",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 9066": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.15,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Quirrenbach et al. 2022",
+        "bibcode": "2022A&A...663A..48Q",
+        "doi": "10.1051/0004-6361/202142915",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.164,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Quirrenbach et al. 2022",
+        "bibcode": "2022A&A...663A..48Q",
+        "doi": "10.1051/0004-6361/202142915",
+        "recommended": true
+      }
+    ]
+  },
+  "Teegarden's Star": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.097,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Dreizler et al. 2024",
+        "bibcode": "2024A&A...684A.117D",
+        "doi": "10.1051/0004-6361/202348033",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.12,
+        "uncertainty_rsun": 0.012,
+        "method": "evolutionary_model",
+        "reference": "Dreizler et al. 2024",
+        "bibcode": "2024A&A...684A.117D",
+        "doi": "10.1051/0004-6361/202348033",
+        "recommended": true
+      }
+    ]
+  },
+  "Ross 508": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.1774,
+        "uncertainty_msun": 0.0045,
+        "method": "spectroscopic_calibration",
+        "reference": "Harakawa et al. 2022",
+        "bibcode": "2022PASJ...74..904H",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.2113,
+        "uncertainty_rsun": 0.0063,
+        "method": "evolutionary_model",
+        "reference": "Harakawa et al. 2022",
+        "bibcode": "2022PASJ...74..904H",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 222237": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.76,
+        "uncertainty_msun": 0.09,
+        "method": "spectroscopic_calibration",
+        "reference": "Xiao et al. 2024",
+        "bibcode": "2024MNRAS.534.2858X",
+        "doi": "10.1093/mnras/stae2151",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.71,
+        "uncertainty_rsun": 0.06,
+        "method": "evolutionary_model",
+        "reference": "Xiao et al. 2024",
+        "bibcode": "2024MNRAS.534.2858X",
+        "doi": "10.1093/mnras/stae2151",
+        "recommended": true
+      }
+    ]
+  },
+  "LHS 475": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.262,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Lustig Yaeger et al. 2023",
+        "bibcode": "2023NatAs...7.1317L",
+        "doi": "10.1038/s41550-023-02064-z",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.2789,
+        "uncertainty_rsun": 0.0014,
+        "method": "evolutionary_model",
+        "reference": "Lustig Yaeger et al. 2023",
+        "bibcode": "2023NatAs...7.1317L",
+        "doi": "10.1038/s41550-023-02064-z",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 147379": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.58,
+        "uncertainty_msun": 0.08,
+        "method": "spectroscopic_calibration",
+        "reference": "Stalport et al. 2023",
+        "bibcode": "2023A&A...678A..90S",
+        "doi": "10.1051/0004-6361/202346887",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.628304,
+        "uncertainty_rsun": 0.007488,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 832": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.45,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Philipot et al. 2023",
+        "bibcode": "2023A&A...678A.107P",
+        "doi": "10.1051/0004-6361/202346612",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.441557,
+        "uncertainty_rsun": 0.013069,
+        "method": "evolutionary_model",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 96": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.6,
+        "uncertainty_msun": 0.07,
+        "method": "spectroscopic_calibration",
+        "reference": "Hobson et al. 2018",
+        "bibcode": "2018A&A...618A.103H",
+        "doi": "10.1051/0004-6361/201832732",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 414 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.65,
+        "uncertainty_msun": 0.08,
+        "method": "spectroscopic_calibration",
+        "reference": "Dedrick et al. 2021",
+        "bibcode": "2021AJ....161...86D",
+        "doi": "10.3847/1538-3881/abd0ef",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.68,
+        "uncertainty_rsun": 0.14,
+        "method": "evolutionary_model",
+        "reference": "Dedrick et al. 2021",
+        "bibcode": "2021AJ....161...86D",
+        "doi": "10.3847/1538-3881/abd0ef",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 422": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.35,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2020",
+        "bibcode": "2020ApJS..246...11F",
+        "doi": "10.3847/1538-4365/ab5e7c",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 514": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.51,
+        "uncertainty_msun": 0.051,
+        "method": "spectroscopic_calibration",
+        "reference": "Damasso et al. 2022",
+        "bibcode": "2022A&A...666A.187D",
+        "doi": "10.1051/0004-6361/202243522",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.5,
+        "uncertainty_rsun": 0.047,
+        "method": "evolutionary_model",
+        "reference": "Damasso et al. 2022",
+        "bibcode": "2022A&A...666A.187D",
+        "doi": "10.1051/0004-6361/202243522",
+        "recommended": true
+      }
+    ]
+  },
+  "WISEP J121756.91+162640.2 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.029,
+        "uncertainty_msun": 0.005,
+        "method": "spectroscopic_calibration",
+        "reference": "Leggett et al. 2014",
+        "bibcode": "2014ApJ...780...62L",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.091,
+        "uncertainty_rsun": 0.004,
+        "method": "evolutionary_model",
+        "reference": "Leggett et al. 2014",
+        "bibcode": "2014ApJ...780...62L",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 433": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.48,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2020",
+        "bibcode": "2020ApJS..246...11F",
+        "doi": "10.3847/1538-4365/ab5e7c",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.5,
+        "uncertainty_rsun": 0.04,
+        "method": "evolutionary_model",
+        "reference": "Stassun et al. 2017",
+        "bibcode": "2017AJ....153..136S",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HIP 48714": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.58,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2020",
+        "bibcode": "2020ApJS..250...29F",
+        "doi": "10.3847/1538-4365/abb139",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 229": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.509,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2022",
+        "bibcode": "2022ApJS..262...21F",
+        "doi": "10.3847/1538-4365/ac7e57",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 4274": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.18,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Charpentier et al. 2026",
+        "bibcode": "2026A&A...705A.243C",
+        "doi": "10.1051/0004-6361/202557666",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.19,
+        "uncertainty_rsun": 0.01,
+        "method": "evolutionary_model",
+        "reference": "Charpentier et al. 2026",
+        "bibcode": "2026A&A...705A.243C",
+        "doi": "10.1051/0004-6361/202557666",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 192310": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.8,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Pepe et al. 2011",
+        "bibcode": "2011A&A...534A..58P",
+        "doi": "10.1051/0004-6361/201117055",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.857922,
+        "uncertainty_rsun": 0.015566,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 69830": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.86,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Lovis et al. 2006",
+        "bibcode": "2006Natur.441..305L",
+        "doi": "10.1038/nature04828",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.886947,
+        "uncertainty_rsun": 0.019437,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "TOI-540": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.159,
+        "uncertainty_msun": 0.014,
+        "method": "spectroscopic_calibration",
+        "reference": "Ment et al. 2021",
+        "bibcode": "2021AJ....161...23M",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1895,
+        "uncertainty_rsun": 0.0079,
+        "method": "evolutionary_model",
+        "reference": "Ment et al. 2021",
+        "bibcode": "2021AJ....161...23M",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 341": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.48,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Ditomasso et al. 2025",
+        "bibcode": "2025ApJ...979..214D",
+        "doi": "10.3847/1538-4357/ad9dd3",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.5066,
+        "uncertainty_rsun": 0.0169,
+        "method": "evolutionary_model",
+        "reference": "Ditomasso et al. 2025",
+        "bibcode": "2025ApJ...979..214D",
+        "doi": "10.3847/1538-4357/ad9dd3",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 251": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.35,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Beard et al. 2025",
+        "bibcode": "2025AJ....170..279B",
+        "doi": "10.3847/1538-3881/ae0e20",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.36,
+        "uncertainty_rsun": 0.01,
+        "method": "evolutionary_model",
+        "reference": "Beard et al. 2025",
+        "bibcode": "2025AJ....170..279B",
+        "doi": "10.3847/1538-3881/ae0e20",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 273": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.29,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Astudillo Defru et al. 2017",
+        "bibcode": "2017A&A...602A..88A",
+        "doi": "10.1051/0004-6361/201630153",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.293,
+        "uncertainty_rsun": 0.027,
+        "method": "evolutionary_model",
+        "reference": "Astudillo Defru et al. 2017",
+        "bibcode": "2017A&A...602A..88A",
+        "doi": "10.1051/0004-6361/201630153",
+        "recommended": true
+      }
+    ]
+  },
+  "L 363-38": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.21,
+        "uncertainty_msun": 0.014,
+        "method": "spectroscopic_calibration",
+        "reference": "Sartori et al. 2023",
+        "bibcode": "2023A&A...670A..42S",
+        "doi": "10.1051/0004-6361/202244347",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.274,
+        "uncertainty_rsun": null,
+        "method": "evolutionary_model",
+        "reference": "Sartori et al. 2023",
+        "bibcode": "2023A&A...670A..42S",
+        "doi": "10.1051/0004-6361/202244347",
+        "recommended": true
+      }
+    ]
+  },
+  "CD Cet": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.161,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Bauer et al. 2020",
+        "bibcode": "2020A&A...640A..50B",
+        "doi": "10.1051/0004-6361/202038031",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.175,
+        "uncertainty_rsun": 0.006,
+        "method": "evolutionary_model",
+        "reference": "Bauer et al. 2020",
+        "bibcode": "2020A&A...640A..50B",
+        "doi": "10.1051/0004-6361/202038031",
+        "recommended": true
+      }
+    ]
+  },
+  "eps Eri": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.82,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Llop Sayson et al. 2021",
+        "bibcode": "2021AJ....162..181L",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.759106,
+        "uncertainty_rsun": 0.011816,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 179": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.357,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Howard et al. 2010",
+        "bibcode": "2010ApJ...721.1467H",
+        "doi": "10.1088/0004-637x/721/2/1467",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.38,
+        "uncertainty_rsun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Howard et al. 2010",
+        "bibcode": "2010ApJ...721.1467H",
+        "doi": "10.1088/0004-637x/721/2/1467",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 649": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.51,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Pinamonti et al. 2023",
+        "bibcode": "2023A&A...677A.122P",
+        "doi": "10.1051/0004-6361/202346476",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.5,
+        "uncertainty_rsun": 0.05,
+        "method": "evolutionary_model",
+        "reference": "Pinamonti et al. 2023",
+        "bibcode": "2023A&A...677A.122P",
+        "doi": "10.1051/0004-6361/202346476",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 581": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.295,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Von Stauffenberg et al. 2024",
+        "bibcode": "2024A&A...688A.112V",
+        "doi": "10.1051/0004-6361/202449375",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.302,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Von Stauffenberg et al. 2024",
+        "bibcode": "2024A&A...688A.112V",
+        "doi": "10.1051/0004-6361/202449375",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 486": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.312,
+        "uncertainty_msun": 0.007,
+        "method": "spectroscopic_calibration",
+        "reference": "Weiner Mansfield et al. 2024",
+        "bibcode": "2024ApJ...975L..22W",
+        "doi": "10.3847/2041-8213/ad8161",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.3243,
+        "uncertainty_rsun": 0.0044,
+        "method": "evolutionary_model",
+        "reference": "Weiner Mansfield et al. 2024",
+        "bibcode": "2024ApJ...975L..22W",
+        "doi": "10.3847/2041-8213/ad8161",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 115404 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.83,
+        "uncertainty_msun": 0.102,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2022",
+        "bibcode": "2022ApJS..262...21F",
+        "doi": "10.3847/1538-4365/ac7e57",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1289": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.21,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Moutou et al. 2024",
+        "bibcode": "2024A&A...688A.196M",
+        "doi": "10.1051/0004-6361/202450466",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 674": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.35,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Bonfils et al. 2007",
+        "bibcode": "2007A&A...474..293B",
+        "doi": "10.1051/0004-6361:20077068",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 180": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.43,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2020",
+        "bibcode": "2020ApJS..246...11F",
+        "doi": "10.3847/1538-4365/ab5e7c",
+        "recommended": true
+      }
+    ]
+  },
+  "YZ Cet": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.142,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Stock et al. 2020",
+        "bibcode": "2020A&A...636A.119S",
+        "doi": "10.1051/0004-6361/201936732",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.157,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Stock et al. 2020",
+        "bibcode": "2020A&A...636A.119S",
+        "doi": "10.1051/0004-6361/201936732",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 22496": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.684,
+        "uncertainty_msun": 0.013,
+        "method": "spectroscopic_calibration",
+        "reference": "Lillo Box et al. 2021",
+        "bibcode": "2021A&A...654A..60L",
+        "doi": "10.1051/0004-6361/202141714",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.674,
+        "uncertainty_rsun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Lillo Box et al. 2021",
+        "bibcode": "2021A&A...654A..60L",
+        "doi": "10.1051/0004-6361/202141714",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 86": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.93,
+        "uncertainty_msun": 0.06,
+        "method": "spectroscopic_calibration",
+        "reference": "Stassun et al. 2017",
+        "bibcode": "2017AJ....153..136S",
+        "doi": "10.3847/1538-3881/aa5df3",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.77,
+        "uncertainty_rsun": 0.01,
+        "method": "evolutionary_model",
+        "reference": "Stassun et al. 2017",
+        "bibcode": "2017AJ....153..136S",
+        "doi": "10.3847/1538-3881/aa5df3",
+        "recommended": true
+      }
+    ]
+  },
+  "Ross 128": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.168,
+        "uncertainty_msun": 0.017,
+        "method": "spectroscopic_calibration",
+        "reference": "Bonfils et al. 2018",
+        "bibcode": "2018A&A...613A..25B",
+        "doi": "10.1051/0004-6361/201731973",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1967,
+        "uncertainty_rsun": 0.0077,
+        "method": "evolutionary_model",
+        "reference": "Bonfils et al. 2018",
+        "bibcode": "2018A&A...613A..25B",
+        "doi": "10.1051/0004-6361/201731973",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 15 A": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.38,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Pinamonti et al. 2018",
+        "bibcode": "2018A&A...617A.104P",
+        "doi": "10.1051/0004-6361/201732535",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.38,
+        "uncertainty_rsun": 0.05,
+        "method": "evolutionary_model",
+        "reference": "Pinamonti et al. 2018",
+        "bibcode": "2018A&A...617A.104P",
+        "doi": "10.1051/0004-6361/201732535",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 1148": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.344045,
+        "uncertainty_msun": 0.020144,
+        "method": "spectroscopic_calibration",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.358519,
+        "uncertainty_rsun": 0.010569,
+        "method": "evolutionary_model",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "Wolf 1061": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.294,
+        "uncertainty_msun": null,
+        "method": "spectroscopic_calibration",
+        "reference": "Astudillo Defru et al. 2017",
+        "bibcode": "2017A&A...602A..88A",
+        "doi": "10.1051/0004-6361/201630153",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.307,
+        "uncertainty_rsun": 0.027,
+        "method": "evolutionary_model",
+        "reference": "Astudillo Defru et al. 2017",
+        "bibcode": "2017A&A...602A..88A",
+        "doi": "10.1051/0004-6361/201630153",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 180617": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.484,
+        "uncertainty_msun": 0.019,
+        "method": "spectroscopic_calibration",
+        "reference": "Burt et al. 2021",
+        "bibcode": "2021AJ....161...10B",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.481,
+        "uncertainty_rsun": 0.014,
+        "method": "evolutionary_model",
+        "reference": "Burt et al. 2021",
+        "bibcode": "2021AJ....161...10B",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 211970": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.61,
+        "uncertainty_msun": 0.04,
+        "method": "spectroscopic_calibration",
+        "reference": "Feng et al. 2019",
+        "bibcode": "2019ApJS..242...25F",
+        "doi": "10.3847/1538-4365/ab1b16",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 238090": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.578,
+        "uncertainty_msun": 0.021,
+        "method": "spectroscopic_calibration",
+        "reference": "Stock et al. 2020",
+        "bibcode": "2020A&A...643A.112S",
+        "doi": "10.1051/0004-6361/202038820",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.57,
+        "uncertainty_rsun": 0.016,
+        "method": "evolutionary_model",
+        "reference": "Stock et al. 2020",
+        "bibcode": "2020A&A...643A.112S",
+        "doi": "10.1051/0004-6361/202038820",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 849": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.45,
+        "uncertainty_msun": 0.07,
+        "method": "spectroscopic_calibration",
+        "reference": "Pinamonti et al. 2023",
+        "bibcode": "2023A&A...677A.122P",
+        "doi": "10.1051/0004-6361/202346476",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.45,
+        "uncertainty_rsun": 0.07,
+        "method": "evolutionary_model",
+        "reference": "Pinamonti et al. 2023",
+        "bibcode": "2023A&A...677A.122P",
+        "doi": "10.1051/0004-6361/202346476",
+        "recommended": true
+      }
+    ]
+  },
+  "Wolf 1069": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.167,
+        "uncertainty_msun": 0.011,
+        "method": "spectroscopic_calibration",
+        "reference": "Kossakowski et al. 2023",
+        "bibcode": "2023A&A...670A..84K",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1813,
+        "uncertainty_rsun": 0.0063,
+        "method": "evolutionary_model",
+        "reference": "Kossakowski et al. 2023",
+        "bibcode": "2023A&A...670A..84K",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 393": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.426,
+        "uncertainty_msun": 0.017,
+        "method": "spectroscopic_calibration",
+        "reference": "Amado et al. 2021",
+        "bibcode": "2021A&A...650A.188A",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.426,
+        "uncertainty_rsun": 0.013,
+        "method": "evolutionary_model",
+        "reference": "Amado et al. 2021",
+        "bibcode": "2021A&A...650A.188A",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "Gl 49": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.515,
+        "uncertainty_msun": 0.019,
+        "method": "spectroscopic_calibration",
+        "reference": "Perger et al. 2019",
+        "bibcode": "2019A&A...624A.123P",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.511,
+        "uncertainty_rsun": 0.018,
+        "method": "evolutionary_model",
+        "reference": "Perger et al. 2019",
+        "bibcode": "2019A&A...624A.123P",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "HD 62509": {
+    "mass_measurements": [
+      {
+        "value_msun": 2.0,
+        "uncertainty_msun": 0.1,
+        "method": "spectroscopic_calibration",
+        "reference": "Kunitomo et al. 2011",
+        "bibcode": "2011ApJ...737...66K",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 8.9,
+        "uncertainty_rsun": 0.4,
+        "method": "evolutionary_model",
+        "reference": "Reffert et al. 2006",
+        "bibcode": "2006ApJ...652..661R",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 685": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.55,
+        "uncertainty_msun": 0.06,
+        "method": "spectroscopic_calibration",
+        "reference": "Pinamonti et al. 2019",
+        "bibcode": "2019A&A...625A.126P",
+        "doi": "10.1051/0004-6361/201834969",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.54,
+        "uncertainty_rsun": 0.05,
+        "method": "evolutionary_model",
+        "reference": "Pinamonti et al. 2019",
+        "bibcode": "2019A&A...625A.126P",
+        "doi": "10.1051/0004-6361/201834969",
+        "recommended": true
+      }
+    ]
+  },
+  "HIP 79431": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.49,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Apps et al. 2010",
+        "bibcode": "2010PASP..122..156A",
+        "doi": "10.1086/651058",
+        "recommended": true
+      }
+    ]
+  },
+  "Gl 686": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.426,
+        "uncertainty_msun": 0.017,
+        "method": "spectroscopic_calibration",
+        "reference": "Burt et al. 2021",
+        "bibcode": "2021AJ....161...10B",
+        "doi": null,
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.427,
+        "uncertainty_rsun": 0.013,
+        "method": "evolutionary_model",
+        "reference": "Burt et al. 2021",
+        "bibcode": "2021AJ....161...10B",
+        "doi": null,
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 3779": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.27,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.281,
+        "uncertainty_rsun": 0.01,
+        "method": "evolutionary_model",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423",
+        "recommended": true
+      }
+    ]
+  },
+  "Kapteyn": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.281,
+        "uncertainty_msun": 0.014,
+        "method": "spectroscopic_calibration",
+        "reference": "Anglada Escud Eacute et al. 2014",
+        "bibcode": "2014MNRAS.443L..89A",
+        "doi": "10.1093/mnrasl/slu076",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.291,
+        "uncertainty_rsun": 0.025,
+        "method": "evolutionary_model",
+        "reference": "Anglada Escud Eacute et al. 2014",
+        "bibcode": "2014MNRAS.443L..89A",
+        "doi": "10.1093/mnrasl/slu076",
+        "recommended": true
+      }
+    ]
+  },
+  "HD 86728": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.967,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Gupta et al. 2025",
+        "bibcode": "2025AJ....169....1G",
+        "doi": "10.3847/1538-3881/ada950",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.237,
+        "uncertainty_rsun": 0.019,
+        "method": "evolutionary_model",
+        "reference": "Gupta et al. 2025",
+        "bibcode": "2025AJ....169....1G",
+        "doi": "10.3847/1538-3881/ada950",
+        "recommended": true
+      }
+    ]
+  },
+  "HN Lib": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.291,
+        "uncertainty_msun": 0.013,
+        "method": "spectroscopic_calibration",
+        "reference": "Gonz Aacute Lez Aacute Lvarez et al. 2023",
+        "bibcode": "2023A&A...675A.141G",
+        "doi": "10.1051/0004-6361/202346276",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.299,
+        "uncertainty_rsun": 0.009,
+        "method": "evolutionary_model",
+        "reference": "Gonz Aacute Lez Aacute Lvarez et al. 2023",
+        "bibcode": "2023A&A...675A.141G",
+        "doi": "10.1051/0004-6361/202346276",
+        "recommended": true
+      }
+    ]
+  },
+  "GJ 625": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.3,
+        "uncertainty_msun": 0.07,
+        "method": "spectroscopic_calibration",
+        "reference": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+        "bibcode": "2017A&A...605A..92S",
+        "doi": "10.1051/0004-6361/201730957",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.31,
+        "uncertainty_rsun": 0.06,
+        "method": "evolutionary_model",
+        "reference": "Su Aacute Rez Mascare Ntilde O et al. 2017",
+        "bibcode": "2017A&A...605A..92S",
+        "doi": "10.1051/0004-6361/201730957",
+        "recommended": true
+      }
+    ]
+  },
+  "gam Cep": {
+    "mass_measurements": [
+      {
+        "value_msun": 1.27,
+        "uncertainty_msun": 0.05,
+        "method": "spectroscopic_calibration",
+        "reference": "Knudstrup et al. 2023",
+        "bibcode": "2023A&A...675A.197K",
+        "doi": "10.1051/0004-6361/202346707",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 4.74,
+        "uncertainty_rsun": 0.07,
+        "method": "evolutionary_model",
+        "reference": "Knudstrup et al. 2023",
+        "bibcode": "2023A&A...675A.197K",
+        "doi": "10.1051/0004-6361/202346707",
+        "recommended": true
+      }
+    ]
+  },
+  "Gl 378": {
+    "mass_measurements": [
+      {
+        "value_msun": 0.56,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Hobson et al. 2019",
+        "bibcode": "2019A&A...625A..18H",
+        "doi": "10.1051/0004-6361/201834890",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.56,
+        "uncertainty_rsun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Hobson et al. 2019",
+        "bibcode": "2019A&A...625A..18H",
+        "doi": "10.1051/0004-6361/201834890",
         "recommended": true
       }
     ]

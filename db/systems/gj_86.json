@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5207,
         "spectype": "K1.5V",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.93,
+            "uncertainty_msun": 0.06,
+            "method": "spectroscopic_calibration",
+            "reference": "Stassun et al. 2017",
+            "bibcode": "2017AJ....153..136S",
+            "doi": "10.3847/1538-3881/aa5df3",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.77,
+            "uncertainty_rsun": 0.01,
+            "method": "evolutionary_model",
+            "reference": "Stassun et al. 2017",
+            "bibcode": "2017AJ....153..136S",
+            "doi": "10.3847/1538-3881/aa5df3",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -22.242521980794283
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 123422569216.74,
+        "mean_radius_km": 535689.0
       }
     }
   ],
@@ -90,6 +110,27 @@
         "mass_kg": 8.38979792092e+27,
         "mass_type": "Msini",
         "radius_m": 82185900.0
+      },
+      "curated": {
+        "pl_name": "GJ 86 b",
+        "orbital": {
+          "semi_major_axis_au": 0.11,
+          "eccentricity": 0.04,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Stassun et al. 2017",
+          "bibcode": "2017AJ....153..136S",
+          "doi": "10.3847/1538-3881/aa5df3"
+        },
+        "physical": {
+          "mass_mearth": 1404.8086,
+          "uncertainty_mearth": 63.566,
+          "mass_type": "Msini",
+          "source": "Stassun et al. 2017",
+          "bibcode": "2017AJ....153..136S",
+          "doi": "10.3847/1538-3881/aa5df3"
+        }
       }
     }
   ],
@@ -120,6 +161,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Stassun et al. 2017",
+      "doi": "10.3847/1538-3881/aa5df3",
+      "bibcode": "2017AJ....153..136S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "GJ 86 mass (spectroscopic_calibration)"
       ]
     }
   ],

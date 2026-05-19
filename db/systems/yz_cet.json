@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3225,
         "spectype": "M4.0Ve",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.142,
+            "uncertainty_msun": 0.01,
+            "method": "spectroscopic_calibration",
+            "reference": "Stock et al. 2020",
+            "bibcode": "2020A&A...636A.119S",
+            "doi": "10.1051/0004-6361/201936732",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.157,
+            "uncertainty_rsun": 0.005,
+            "method": "evolutionary_model",
+            "reference": "Stock et al. 2020",
+            "bibcode": "2020A&A...636A.119S",
+            "doi": "10.1051/0004-6361/201936732",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": 10.742214996354571
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 18845166482.556,
+        "mean_radius_km": 109224.9
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.06,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 197.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2452996.25,
         "mass_kg": 4.18054e+24,
         "mass_type": "Msini",
         "radius_m": 5816723.0
+      },
+      "curated": {
+        "pl_name": "YZ Cet b",
+        "orbital": {
+          "semi_major_axis_au": 0.01634,
+          "eccentricity": 0.06,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 197.0,
+          "epoch_jd": 2452996.25,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732"
+        },
+        "physical": {
+          "mass_mearth": 0.7,
+          "uncertainty_mearth": 0.09,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732"
+        }
       }
     },
     {
@@ -126,11 +168,32 @@
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2452997.62,
         "mass_kg": 6.808308e+24,
         "mass_type": "Msini",
         "radius_m": 6689550.0
+      },
+      "curated": {
+        "pl_name": "YZ Cet c",
+        "orbital": {
+          "semi_major_axis_au": 0.02156,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2452997.62,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732"
+        },
+        "physical": {
+          "mass_mearth": 1.14,
+          "uncertainty_mearth": 0.11,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732"
+        }
       }
     },
     {
@@ -166,12 +229,34 @@
         "eccentricity": 0.07,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "orbital_epoch_jd": null,
+        "argument_of_periapsis_deg": 200.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "orbital_epoch_jd": 2452996.83,
         "mass_kg": 6.509698000000001e+24,
         "mass_type": "Msini",
         "radius_m": 6562130.0
+      },
+      "curated": {
+        "pl_name": "YZ Cet d",
+        "orbital": {
+          "semi_major_axis_au": 0.02851,
+          "eccentricity": 0.07,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 200.0,
+          "epoch_jd": 2452996.83,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732"
+        },
+        "physical": {
+          "mass_mearth": 1.09,
+          "uncertainty_mearth": 0.12,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732"
+        }
       }
     }
   ],
@@ -202,6 +287,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Stock et al. 2020",
+      "doi": "10.1051/0004-6361/201936732",
+      "bibcode": "2020A&A...636A.119S",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "YZ Cet mass (spectroscopic_calibration)"
       ]
     }
   ],

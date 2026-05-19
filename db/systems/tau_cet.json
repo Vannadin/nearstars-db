@@ -21,7 +21,17 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5320,
         "spectype": "G8V",
-        "mass_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.783,
+            "uncertainty_msun": 0.012,
+            "method": "spectroscopic_calibration",
+            "reference": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "recommended": true
+          }
+        ],
         "radius_measurements": []
       },
       "derived": {
@@ -45,7 +55,7 @@
         "icrs_vz_j2000_km_s": 14.233293728719648
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
+        "gravitational_parameter_km3_s2": 103913840534.094,
         "mean_radius_km": null
       }
     }
@@ -84,12 +94,34 @@
         "eccentricity": 0.06,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 395.341,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.045135e+25,
         "mass_type": "Msini",
         "radius_m": 7517780.0
+      },
+      "curated": {
+        "pl_name": "tau Cet g",
+        "orbital": {
+          "semi_major_axis_au": 0.133,
+          "eccentricity": 0.06,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 395.341,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4"
+        },
+        "physical": {
+          "mass_mearth": 1.75,
+          "uncertainty_mearth": 0.25,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4"
+        }
       }
     },
     {
@@ -125,12 +157,34 @@
         "eccentricity": 0.23,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 7.45,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 1.0929126000000002e+25,
         "mass_type": "Msini",
         "radius_m": 7581490.0
+      },
+      "curated": {
+        "pl_name": "tau Cet h",
+        "orbital": {
+          "semi_major_axis_au": 0.243,
+          "eccentricity": 0.23,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 7.45,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4"
+        },
+        "physical": {
+          "mass_mearth": 1.83,
+          "uncertainty_mearth": 0.68,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4"
+        }
       }
     },
     {
@@ -166,12 +220,34 @@
         "eccentricity": 0.16,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 119.75,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 2.3470746e+25,
         "mass_type": "Msini",
         "radius_m": 11531510.0
+      },
+      "curated": {
+        "pl_name": "tau Cet f",
+        "orbital": {
+          "semi_major_axis_au": 1.334,
+          "eccentricity": 0.16,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 119.75,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4"
+        },
+        "physical": {
+          "mass_mearth": 3.93,
+          "uncertainty_mearth": 1.05,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4"
+        }
       }
     }
   ],
@@ -202,6 +278,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Feng et al. 2017",
+      "doi": "10.3847/1538-3881/aa83b4",
+      "bibcode": "2017AJ....154..135F",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "tau Cet mass (spectroscopic_calibration)"
       ]
     }
   ],

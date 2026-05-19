@@ -21,8 +21,28 @@
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3671,
         "spectype": "M1VIp",
-        "mass_measurements": [],
-        "radius_measurements": []
+        "mass_measurements": [
+          {
+            "value_msun": 0.281,
+            "uncertainty_msun": 0.014,
+            "method": "spectroscopic_calibration",
+            "reference": "Anglada Escud Eacute et al. 2014",
+            "bibcode": "2014MNRAS.443L..89A",
+            "doi": "10.1093/mnrasl/slu076",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.291,
+            "uncertainty_rsun": 0.025,
+            "method": "evolutionary_model",
+            "reference": "Anglada Escud Eacute et al. 2014",
+            "bibcode": "2014MNRAS.443L..89A",
+            "doi": "10.1093/mnrasl/slu076",
+            "recommended": true
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -45,8 +65,8 @@
         "icrs_vz_j2000_km_s": -248.63088974507684
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 37292195645.058,
+        "mean_radius_km": 202448.7
       }
     }
   ],
@@ -84,12 +104,34 @@
         "eccentricity": 0.23,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": null,
+        "argument_of_periapsis_deg": 3.9,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
         "mass_kg": 4.18054e+25,
         "mass_type": "Msini",
         "radius_m": 16182340.0
+      },
+      "curated": {
+        "pl_name": "Kapteyn c",
+        "orbital": {
+          "semi_major_axis_au": 0.311,
+          "eccentricity": 0.23,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 3.9,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Anglada Escud Eacute et al. 2014",
+          "bibcode": "2014MNRAS.443L..89A",
+          "doi": "10.1093/mnrasl/slu076"
+        },
+        "physical": {
+          "mass_mearth": 7.0,
+          "uncertainty_mearth": 1.2,
+          "mass_type": "Msini",
+          "source": "Anglada Escud Eacute et al. 2014",
+          "bibcode": "2014MNRAS.443L..89A",
+          "doi": "10.1093/mnrasl/slu076"
+        }
       }
     }
   ],
@@ -120,6 +162,15 @@
       "accessed": "2026-05-19",
       "used_for": [
         "planet parameters"
+      ]
+    },
+    {
+      "title": "Anglada Escud Eacute et al. 2014",
+      "doi": "10.1093/mnrasl/slu076",
+      "bibcode": "2014MNRAS.443L..89A",
+      "accessed": "2026-05-19",
+      "used_for": [
+        "Kapteyn mass (spectroscopic_calibration)"
       ]
     }
   ],
