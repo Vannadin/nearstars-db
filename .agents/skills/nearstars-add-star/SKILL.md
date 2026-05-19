@@ -241,6 +241,11 @@ If any value was assumed or estimated (e.g. inclination unknown → null in
 DB), note it explicitly so the user knows what the Kopernicus writer will
 have to fill in later.
 
+If you filed a new entry in `docs/reference/archive_issues.md` during this
+work, surface it as a separate line in the report (`- Archive issue
+filed: Issue N — <one-line summary>`) so the user can choose whether to
+escalate to the catalog maintainer.
+
 ---
 
 ## Key Policies (from user memory)
@@ -306,6 +311,51 @@ following actions require explicit confirmation or a Read-first step.
   calls etc. are out of scope; stop unless explicitly asked. NearStars DB
   population is this skill's only scope — anything else routes to a
   different skill or a direct user request.
+
+---
+
+## External data issues
+
+External catalogs (NASA Exoplanet Archive, TEPCat, SIMBAD, Gaia DR3) are
+authoritative inputs but not infallible. When cross-validation surfaces a
+clear defect — stale pre-Gaia distance, missing DR3 crossmatch, off-by-10×
+value, internal table disagreement — record it in
+[`docs/reference/archive_issues.md`](../../../docs/reference/archive_issues.md).
+
+### When to file
+
+- A catalog value disagrees with a more authoritative source beyond
+  measurement uncertainty (e.g. SIMBAD parallax × 1/d ≠ Archive `sy_dist`).
+- A crossmatch field is NULL but the object is clearly present in the
+  target catalog (e.g. nearby Gaia-bright star with empty `gaia_dr3_id`).
+- Two columns of the same row encode the same quantity but disagree.
+- A value is implausible (negative parallax, mass 10× expected, etc.) and
+  isn't flagged by the catalog's own quality bits.
+
+Not every WARN is an upstream defect — measurement-uncertainty overlap,
+known catalog conventions, or NearStars-side parsing bugs are not
+external issues. File only when the defect is reproducibly in the source.
+
+### Format
+
+Append a new section `## Issue N: <object> — <one-line summary>` at the
+end of the file, following the existing pattern. Required parts:
+
+- `**Table:**` / `**Field:**` lines naming exactly where the defect lives
+- Comparison table (Archive value | Correct value | Source) with the
+  authoritative cross-reference cited
+- One paragraph on how it was found (the query / cross-check that
+  surfaced it) so the issue is reproducible
+- Catalog contact info if a known address exists (NASA Archive:
+  `exoplanetarchive@ipac.caltech.edu`; TEPCat:
+  `https://www.astro.keele.ac.uk/jkt/tepcat/`)
+
+### What the skill does in the meantime
+
+Recording the issue does not block the star-addition work. Proceed with
+the value you believe is correct (cite the cross-source in `meta.notes`),
+finish the pipeline run, then mention the new issue in the Step 6 report
+so the user can decide whether to email the catalog maintainer.
 
 ---
 
