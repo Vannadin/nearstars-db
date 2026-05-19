@@ -117,20 +117,21 @@ Triggered by user phrases like:
 - "정밀 큐레이션 부탁해"
 - "X 시스템 풀 큐레이션"
 
-모호한 신호("더 깊이 봐줘", "자료 더 모아줘") 는 Phase 2 의도인지 먼저
-확인. 단일 paper 추가 요청은 Phase 1 범위.
+Ambiguous signals ("더 깊이 봐줘", "자료 더 모아줘") need explicit
+confirmation that Phase 2 is what the user means. A single-paper add
+request stays in Phase 1.
 
-### 진입 전 필수 산출물 (CLAUDE.md §7)
+### Prerequisites before entering Phase 2 (CLAUDE.md §7)
 
-Phase 2 는 시스템당 1-2시간 작업이라 코드 작성 전에 다음 두 파일을
-작업 디렉토리에 생성한다.
+Phase 2 is 1-2 hours per system, so before writing any code create these
+two files in the working directory.
 
-- `checklist.md` — 행성별 priority 1-5 소스 확인을 체크박스로
-- `context-notes.md` — paper 선택, tier 충돌 해소, recommended 결정
-  사유를 작업 중 계속 append
+- `checklist.md` — per-planet priority 1-5 source checks as checkboxes
+- `context-notes.md` — append paper selections, tier conflict
+  resolutions, and `recommended` decisions continuously during the work
 
-이후 세션(또는 같은 세션 재개 시) 산출물 없이 Phase 2 재개 불가 — 작업
-중 결정 맥락이 손실됨.
+Without these artifacts, a later session (or the same session after a
+break) cannot resume Phase 2 — the in-progress decision context is lost.
 
 Goal: comprehensive measurement collection per the methodology's
 five-priority order, with one explicitly chosen `recommended: true`
