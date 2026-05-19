@@ -1250,30 +1250,36 @@ async function openStellarium(btn, name, raDeg, decDeg, skyPrecomputed) {
   // 팝업 차단 우회: 사용자 제스처 컨텍스트(클릭 시점)에서 미리 탭 열기
   const webWin = window.open('', '_blank');
 
+  let desktopOk = false;
   try {
     const status = await fetch(`${API}/api/main/status`, {
       signal: AbortSignal.timeout(1500)
     });
-    if (!status.ok) throw new Error('offline');
+    if (status.ok) {
+      // Build target candidates: friendly name first, then catalog ID with space restored
+      // (skyPrecomputed has spaces stripped for Web URL; desktop name resolver needs them back)
+      const targets = [name];
+      if (skyPrecomputed) {
+        const expanded = skyPrecomputed.replace(/^(HIP|HD|HR|TYC|GJ|SAO|2MASS|UCAC|NLTT|LSPM)(\d)/, '$1 $2');
+        if (!targets.includes(expanded)) targets.push(expanded);
+      }
+      for (const t of targets) {
+        const r = await fetch(`${API}/api/main/focus`, {
+          method: 'POST',
+          body: new URLSearchParams({ target: t }),
+          signal: AbortSignal.timeout(2000)
+        });
+        if (r.ok && (await r.text()).trim() === 'true') { desktopOk = true; break; }
+      }
+    }
+  } catch {}
 
-    const raH  = (raDeg / 15).toFixed(6);
-    const decD = decDeg.toFixed(6);
-    const script =
-      `var found = core.selectObjectByName(${JSON.stringify(name)}, true);\n` +
-      `if (!found) { core.moveToRaDec(${raH}, ${decD}, 1.0); }`;
-
-    await fetch(`${API}/api/scripts/run`, {
-      method: 'POST',
-      body: new URLSearchParams({ script }),
-      signal: AbortSignal.timeout(3000)
-    });
-
-    // 데스크탑 성공 → 미리 열어둔 탭 닫기
+  if (desktopOk) {
     webWin.close();
     btn.textContent = '☄ Stellarium ✓';
     btn.classList.add('ok');
     setTimeout(() => { btn.textContent = label; btn.classList.remove('ok'); btn.disabled = false; }, 2500);
-  } catch {
+  } else {
     // 데스크탑 실패 → Stellarium Web 폴백
     // 1) 사전계산된 ID 가 있으면 즉시 사용 (target_list.json 의 stellarium_ids)
     // 2) 없으면 런타임 noctuasky 조회
