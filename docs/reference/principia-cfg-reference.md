@@ -373,31 +373,31 @@ Sol quarter-scale has a different `solar_system_epoch` → needs separate coords
 
 ```cfg
 // gravity model — Sol (all scales)
-@principia_gravity_model:NEEDS[NearStars,SolSystem] {
+@principia_gravity_model:NEEDS[NearStarsSystem,SolSystem] {
   body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
   // ... all NearStars bodies
 }
 
 // gravity model — RSS
-@principia_gravity_model:NEEDS[NearStars,RSSConfig] {
+@principia_gravity_model:NEEDS[NearStarsSystem,RSSConfig] {
   body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
   // ... all NearStars bodies (same values — duplication unavoidable with MM)
 }
 
 // initial state — Sol real scale (solar_system_epoch = JD2433282.5)
-@principia_initial_state:NEEDS[NearStars,SolSystem,!SolQuarterScale] {
+@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,!SolQuarterScale] {
   body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
   // ... all NearStars bodies
 }
 
 // initial state — RSS (solar_system_epoch = JD2433282.5, same coords as Sol real)
-@principia_initial_state:NEEDS[NearStars,RSSConfig] {
+@principia_initial_state:NEEDS[NearStarsSystem,RSSConfig] {
   body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
   // ... all NearStars bodies
 }
 
 // initial state — Sol quarter scale (solar_system_epoch = JD2433465.0, different coords)
-@principia_initial_state:NEEDS[NearStars,SolSystem,SolQuarterScale] {
+@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,SolQuarterScale] {
   body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
   // ... all NearStars bodies
 }

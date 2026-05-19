@@ -13,14 +13,14 @@ Reference: `RSS-Reborn/Sol-Configs` → `Sol-Configs/Configs/05_Jupiter-System/0
 ## Full cfg (NearStars placeholder — Sol Jupiter values as reference)
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     Body
     {
         name = GasGiantName
         identifier = NearStars/GasGiantName
         finalizeOrbit = false
-        flightGlobalsIndex = 2XXX             // globally unique — see file-structure.md
+        flightGlobalsIndex = 1XXX             // NearStars range, 1000+ — see file-structure.md
         cacheFile = ParallaxContinued/Models/ScaledMesh.bin
 
         Template

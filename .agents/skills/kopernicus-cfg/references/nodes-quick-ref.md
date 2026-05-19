@@ -11,7 +11,7 @@ Source: kopernicuswiki.github.io
 | name | String | Internal name (no spaces). Used in referenceBody, Template, etc. |
 | identifier | String | Unique Body Identifier: `StarName/BodyName` |
 | finalizeOrbit | Boolean | Whether orbit should be finalized |
-| flightGlobalsIndex | Integer | Unique integer ID. Stock: Sun=0, Kerbin=1, Mun=2, etc. Use 100+ for custom |
+| flightGlobalsIndex | Integer | Unique integer ID. Stock: Sun=0, Kerbin=1, Mun=2, etc. NearStars uses 1000+ — see file-structure.md |
 | barycenter | Boolean | Makes body unselectable (for barycenters) |
 | randomMainMenuBody | Boolean | Can appear on main menu |
 | contractWeight | Integer | Weight for contract generation (default 30) |

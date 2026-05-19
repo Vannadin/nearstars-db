@@ -5,32 +5,32 @@ Reference: `sarbian/ModuleManager` wiki
 ## NearStars patch header
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     Body { ... }
 }
 ```
 
-- `FOR[NearStars]` — runs after all `:AFTER[]` patches, ensures NearStars bodies exist before other mods patch them
+- `FOR[NearStarsSystem]` — runs after all `:AFTER[]` patches, ensures NearStars bodies exist before other mods patch them
 - One `@Kopernicus` block per cfg file is conventional; multiple bodies can share one block
 
 ## Conditional patches (NEEDS)
 
 ```cfg
 // Runs only if Scatterer is installed
-@Kopernicus:FOR[NearStars]:NEEDS[Scatterer]
+@Kopernicus:FOR[NearStarsSystem]:NEEDS[Scatterer]
 {
     ...
 }
 
 // Runs only if both Parallax and NearStars are installed
-@Kopernicus:FOR[NearStars]:NEEDS[Parallax]
+@Kopernicus:FOR[NearStarsSystem]:NEEDS[Parallax]
 {
     ...
 }
 
 // Runs if EVE-Redux OR EVE Volumetrics is installed
-@Kopernicus:FOR[NearStars]:NEEDS[EnvironmentalVisualEnhancements]
+@Kopernicus:FOR[NearStarsSystem]:NEEDS[EnvironmentalVisualEnhancements]
 {
     ...
 }
@@ -40,7 +40,7 @@ Reference: `sarbian/ModuleManager` wiki
 
 ```cfg
 // Add NearStars data to an existing Sol body
-@Kopernicus:FOR[NearStars]:NEEDS[SolSystem]
+@Kopernicus:FOR[NearStarsSystem]:NEEDS[SolSystem]
 {
     @Body[Earth]
     {
@@ -67,7 +67,7 @@ Reference: `sarbian/ModuleManager` wiki
 
 ```cfg
 // Quarter scale
-@Body[ProximaB]:NEEDS[NearStars,Rescale125]:FOR[NearStars_Rescale]
+@Body[ProximaB]:NEEDS[NearStarsSystem,Rescale125]:FOR[NearStars_Rescale]
 {
     @Properties
     {

@@ -24,7 +24,7 @@ All curve multipliers stack multiplicatively with each other and with `heat`.
 Heat is extreme at low altitude and near the equator, survivable in polar highlands.
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     Body
     {

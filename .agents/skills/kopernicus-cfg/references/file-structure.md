@@ -48,19 +48,28 @@ GameData/NearStars-Textures/PluginData/
 
 ## flightGlobalsIndex reservation
 
+NearStars uses **1000+, with 100 indices per system** to stay clear of
+both Sol-Configs and RSS-Origin.
+
 | Range | Owner |
 |-------|-------|
-| 0–99 | Stock KSP |
-| 100–199 | Sol (RSS-Reborn) |
-| 2000–2999 | NearStars (Proxima Centauri system) |
-| 3000–3999 | NearStars (Alpha Centauri system) |
+| 0–99 | Stock KSP / RealSolarSystem (KSP-RO/RealSolarSystem occupies 1–25, 50, 60, 91–95) |
+| 100–199 | Sol-Configs (RSS-Reborn) |
+| 1000–1099 | NearStars (Proxima Centauri system) |
+| 1100–1199 | NearStars (Alpha Centauri system) |
+| 1200–1299 | NearStars (Barnard's Star) |
+| 1300+ | NearStars (additional systems — +100 per system) |
 
-Increment by 1 per body. Stars and planets share the same range.
+Within a system's 100-index block, increment by 1 per body. Stars,
+planets, moons, and barycenters share the same block. 100 slots are
+enough for the most complex multi-star + multi-planet + moon hierarchies
+in the catalog (e.g. α Centauri AB + Proxima + their planets fits well
+under 100).
 
 ## NearStars-KopernicusSettings.cfg
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     useOnDemand             = true
     onDemandLoadOnMissing   = true

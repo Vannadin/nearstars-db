@@ -14,14 +14,14 @@ Reference: Real Exoplanets (REX) → `AlphaCentauriSystem/Alpha Centauri Barycen
 ## Barycenter body
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     Body
     {
         name = AlphaCenBary               // used as referenceBody by member stars
         barycenter = true
         finalizeOrbit = false
-        flightGlobalsIndex = 3000         // see file-structure.md for NearStars ranges
+        flightGlobalsIndex = 1100         // Alpha Centauri AB barycenter — see file-structure.md
         cacheFile = ParallaxContinued/Models/ScaledMesh.bin
 
         Template
@@ -68,7 +68,7 @@ Reference: Real Exoplanets (REX) → `AlphaCentauriSystem/Alpha Centauri Barycen
 ## Member stars — orbiting the barycenter
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     Body
     {
@@ -91,7 +91,7 @@ Reference: Real Exoplanets (REX) → `AlphaCentauriSystem/Alpha Centauri Barycen
 ```
 
 ```cfg
-@Kopernicus:FOR[NearStars]
+@Kopernicus:FOR[NearStarsSystem]
 {
     Body
     {

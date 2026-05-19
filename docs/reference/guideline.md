@@ -241,14 +241,20 @@ Note: BC5/BC7 are not formally supported on macOS — same limitation as Sol.
 
 ## 7. flightGlobalsIndex Allocation
 
-Must not collide with Sol-Configs. Use 1000+ range.
+Must not collide with Sol-Configs **or** RSS-Origin. NearStars uses
+1000+ with 100 indices per system.
 
-| Range | Assignment |
-|-------|------------|
-| 1000–1099 | First star system (TBD) |
-| 1100–1199 | Second star system (TBD) |
-| 1200–1299 | Third star system (TBD) |
-| 1300+ | Further systems (TBD) |
+| Range | Owner |
+|-------|-------|
+| 0–99 | Stock KSP / RealSolarSystem (KSP-RO/RealSolarSystem occupies 1–25, 50, 60, 91–95) |
+| 100–199 | Sol-Configs (RSS-Reborn) |
+| 1000–1099 | NearStars — first star system (TBD) |
+| 1100–1199 | NearStars — second star system (TBD) |
+| 1200–1299 | NearStars — third star system (TBD) |
+| 1300+ | NearStars — further systems (+100 per system) |
+
+Within each 100-index block, increment by 1 per body. Stars, planets,
+moons, and barycenters share the block.
 
 ---
 

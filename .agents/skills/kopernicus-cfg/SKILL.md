@@ -43,13 +43,13 @@ These values are fixed for this mod. Do not ask the user about them.
 
 | Setting | Value |
 |---------|-------|
-| MM patch header | `@Kopernicus:FOR[NearStars]` |
+| MM patch header | `@Kopernicus:FOR[NearStarsSystem]` |
 | Scale | Real scale (no reduction) |
 | Parallax Continued | Always enabled |
 | cacheFile | `ParallaxContinued/Models/ScaledMesh.bin` |
 | Texture path prefix | `NearStars-Textures/PluginData/<BodyName>/Kopernicus/` |
 | Blank normal map | `NearStars-Textures/PluginData/_Misc/Kopernicus/Blank_Normal.dds` |
-| flightGlobalsIndex | 2000+ — see file-structure.md for per-system ranges |
+| flightGlobalsIndex | 1000+, 100 indices per system — see file-structure.md |
 | Orbit epoch | `epoch = 0` (KSP start ≈ JD2433647.5) |
 
 ### DB → cfg value mapping

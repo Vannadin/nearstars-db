@@ -11,7 +11,7 @@ Body
     identifier = NearStars/Proxima
     barycenter = False
     finalizeOrbit = False
-    flightGlobalsIndex = 2000             // must be globally unique
+    flightGlobalsIndex = 1000             // Proxima Centauri — see file-structure.md (1000-1099 = Proxima system)
     cacheFile = ParallaxContinued/Models/ScaledMesh.bin
     Template
     {
