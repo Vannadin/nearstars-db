@@ -126,13 +126,14 @@ KSP Principia에 바로 사용 가능한 값.
 
 | 시스템 | 유형 | 출처 |
 |--------|------|------|
-| Alpha Centauri AB | 이중성 | Pourbaix & Correia 2017 |
+| Alpha Centauri (A + B + Proxima Cen) | 계층적 삼중성 | Pourbaix & Correia 2017 (내곽) / Kervella 2017 (외곽) |
 | Sirius AB | 이중성 | ORB6 |
 | 61 Cygni AB | 이중성 | ORB6 |
 | 40 Eridani ABC | 계층적 삼중성 | ORB6 |
 | Eta Cassiopeiae AB | 이중성 | ORB6 |
 | 36 Ophiuchi ABC | 계층적 삼중성 | ORB6 |
-| + 2개 추가 | 이중성 | ORB6 |
+| Procyon AB | 이중성 | ORB6 |
+| 70 Ophiuchi AB | 이중성 | ORB6 |
 
 ---
 

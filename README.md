@@ -126,13 +126,14 @@ Currently tracked binary/multiple systems:
 
 | System | Type | Source |
 |--------|------|--------|
-| Alpha Centauri AB | Binary | Pourbaix & Correia 2017 |
+| Alpha Centauri (A + B + Proxima Cen) | Hierarchical triple | Pourbaix & Correia 2017 (inner) / Kervella 2017 (outer) |
 | Sirius AB | Binary | ORB6 |
 | 61 Cygni AB | Binary | ORB6 |
 | 40 Eridani ABC | Hierarchical triple | ORB6 |
 | Eta Cassiopeiae AB | Binary | ORB6 |
 | 36 Ophiuchi ABC | Hierarchical triple | ORB6 |
-| + 2 more | Binary | ORB6 |
+| Procyon AB | Binary | ORB6 |
+| 70 Ophiuchi AB | Binary | ORB6 |
 
 ---
 

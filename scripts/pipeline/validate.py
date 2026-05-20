@@ -166,9 +166,30 @@ for sys_name, entry in (binary_data or {}).items():
         continue
     if not isinstance(entry, dict) or "components" not in entry:
         continue
+    # 각 컴포넌트별로 어느 궤도에 secondary 로 묶여있는지 + 그 궤도의 phase_reliable 추적.
+    # phase_reliable=false 인 외곽(primary_is_barycenter_of) 궤도의 secondary 는
+    # build_systems.py 가 의도적으로 단일 항성 경로(linear)로 폴백한다.
+    # (build_systems.py:307-313 의 설계 참고).
     in_orbit_names = set()
+    component_orbit_info = {}   # cname → {'phase_reliable': bool, 'is_outer_companion': bool}
     for orbit in entry.get("orbits", []):
         in_orbit_names.update(orbit.get("relates", []))
+        phase_ok = orbit.get("phase_reliable", True)
+        is_hier = "primary_is_barycenter_of" in orbit
+        sec = orbit.get("secondary")
+        if sec:
+            # secondary 가 외곽 동반자(hierarchical) 인지, 내곽 일반 쌍성인지 구분.
+            info = component_orbit_info.setdefault(sec, {
+                "phase_reliable": True, "is_outer_companion": False,
+            })
+            info["phase_reliable"] = info["phase_reliable"] and phase_ok
+            if is_hier:
+                info["is_outer_companion"] = True
+        if "primary" in orbit:
+            info = component_orbit_info.setdefault(orbit["primary"], {
+                "phase_reliable": True, "is_outer_companion": False,
+            })
+            info["phase_reliable"] = info["phase_reliable"] and phase_ok
     for comp in entry.get("components", []):
         cname = comp.get("name")
         if cname not in in_orbit_names:
@@ -178,7 +199,7 @@ for sys_name, entry in (binary_data or {}).items():
         if not comp.get("astrometry_source"):
             fail("(binary)", f"{cname}: astrometry_source unset (FAIL)")
 
-        # db/systems 파일에서 propagation_method=kepler_thiele_innes 확인
+        # db/systems 파일에서 propagation_method 확인.
         from_path = None
         for fname, doc in docs.items():
             if doc.get("system_name") == cname:
@@ -187,9 +208,21 @@ for sys_name, entry in (binary_data or {}).items():
             warn("(binary)", f"{cname}: db/systems 파일 없음")
             continue
         der = docs[from_path]["stars"][0].get("derived", {})
-        if der.get("propagation_method") != "kepler_thiele_innes":
+        # 의도된 폴백: phase_reliable=false + 외곽 동반자 → linear 허용.
+        # 그 외에는 kepler_thiele_innes 강제.
+        info = component_orbit_info.get(cname, {})
+        allows_linear_fallback = (
+            info.get("is_outer_companion") and not info.get("phase_reliable", True)
+        )
+        method = der.get("propagation_method")
+        if allows_linear_fallback:
+            if method not in ("linear", "kepler_thiele_innes"):
+                fail(from_path, f"{cname}: 외곽 동반자(phase_reliable=false) 인데 "
+                                f"propagation_method='{method}' "
+                                f"('linear' 또는 'kepler_thiele_innes' 이어야 함)")
+        elif method != "kepler_thiele_innes":
             fail(from_path, f"{cname}: orbit-bound 컴포넌트인데 "
-                            f"propagation_method='{der.get('propagation_method')}' "
+                            f"propagation_method='{method}' "
                             f"(kepler_thiele_innes 이어야 함)")
         # phase_reliable=false 면 meta.notes 에 경고가 박혀 있어야 함
         if der.get("phase_reliable") is False:

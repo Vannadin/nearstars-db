@@ -116,16 +116,25 @@ BINARY_ASTROMETRY_SOURCES = {
 # single_component:<name> 패턴은 별도 검증
 
 BINARY_ORBIT_REQUIRED = {
-    "orbit_id", "relates", "primary", "secondary",
-    "P_yr", "T_jd_tt", "e", "a_arcsec",
+    "orbit_id", "relates", "secondary",
+    "P_yr", "e",
     "i_deg", "omega_deg", "Omega_deg",
     "grade", "phase_reliable",
 }
+# 다음 키들은 궤도 종류에 따라 조건부 필수.
+# 자세한 규칙은 validate_binary_orbits 의 per-orbit 조건 분기 참조.
 BINARY_ORBIT_OPTIONAL = {
+    # 조건부 필수: primary 또는 primary_is_barycenter_of 중 정확히 하나
+    "primary", "primary_is_barycenter_of",
+    # 조건부 필수: a_arcsec 또는 a_au 중 정확히 하나
+    "a_arcsec", "a_au",
+    # 조건부 필수: phase_reliable=true 면 T_jd_tt 필수, false 면 옵션 (위상 미사용)
+    "T_jd_tt",
+    # 그 외 옵션
     "source", "doi", "bibcode", "equinox", "node_resolved",
     "P_yr_err", "T_yr", "e_err", "a_arcsec_err",
     "i_err_deg", "omega_err_deg", "Omega_err_deg",
-    "primary_is_barycenter_of", "orbit_type", "note",
+    "orbit_type", "note",
 }
 
 BINARY_SYSTEM_REQUIRED = {"system_id", "hierarchy", "components", "orbits"}
@@ -197,11 +206,45 @@ def validate_binary_orbits(binary_orbits):
             ounknown = ok - (BINARY_ORBIT_REQUIRED | BINARY_ORBIT_OPTIONAL)
             if ounknown:
                 errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: 알 수 없는 키 {sorted(ounknown)}")
-            # relates 의 모든 항목이 components[]에 있는지
+
+            # 조건부 필수 1: primary 또는 primary_is_barycenter_of 중 정확히 하나
+            has_primary  = "primary" in ok
+            has_pri_bary = "primary_is_barycenter_of" in ok
+            if has_primary == has_pri_bary:   # 둘 다 있거나 둘 다 없음
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: "
+                              f"'primary' 또는 'primary_is_barycenter_of' 중 정확히 하나 필요")
+
+            # 조건부 필수 2: a_arcsec 또는 a_au 중 정확히 하나
+            has_a_arcsec = "a_arcsec" in ok
+            has_a_au     = "a_au" in ok
+            if has_a_arcsec == has_a_au:
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: "
+                              f"'a_arcsec' 또는 'a_au' 중 정확히 하나 필요")
+
+            # 조건부 필수 3: phase_reliable=true 면 T_jd_tt 필수 (위상 계산에 필요)
+            #                phase_reliable=false 면 T_jd_tt 옵션 (위상 미사용 폴백)
+            if orbit.get("phase_reliable", True) and "T_jd_tt" not in ok:
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: "
+                              f"phase_reliable=true 인 궤도는 'T_jd_tt' 필수")
+
+            # relates 의 모든 항목이 components[] 에 있는지.
+            # 단 primary_is_barycenter_of 가 있으면 barycenter pseudo-name (예: "X AB (barycenter)") 허용.
+            allowed_rel_names = set(comp_names)
+            if has_pri_bary:
+                allowed_rel_names.add("(barycenter)")   # 마커: substring 매치
             for rname in orbit.get("relates", []) or []:
-                if rname not in comp_names:
+                if rname in comp_names:
+                    continue
+                if has_pri_bary and "(barycenter)" in rname:
+                    continue   # 외곽 궤도의 barycenter pseudo-name
+                errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: "
+                              f"relates '{rname}' 가 components[] 에 없음")
+
+            # primary_is_barycenter_of 의 멤버들이 components[]에 있는지
+            for bname in orbit.get("primary_is_barycenter_of", []) or []:
+                if bname not in comp_names:
                     errors.append(f"binary_orbits[{sys_name}].orbits[{j}]: "
-                                  f"relates '{rname}' 가 components[] 에 없음")
+                                  f"primary_is_barycenter_of '{bname}' 가 components[] 에 없음")
 
     return errors
 
