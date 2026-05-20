@@ -72,7 +72,7 @@ NearStars DB는 공개된 천문 측정 데이터와 KSP 모드 설정 패턴을
 
 ### DACE (Geneva Observatory)
 
-- **사용처.** Phase 1 / Phase 2 큐레이션 중 `omega_deg` / `tperi_bjd`가 없는
+- **사용처.** Curation Phase 1 / Curation Phase 2 중 `omega_deg` / `tperi_bjd`가 없는
   RV 검출 행성의 수동 조회
 - **URL.** `https://dace.unige.ch/exoplanets/`
 - **라이선스.** 학술 목적 무료 사용. 인용 권장

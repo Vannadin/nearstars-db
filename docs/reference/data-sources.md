@@ -84,7 +84,7 @@ of that source, and the attribution NearStars commits to provide.
 
 ### DACE (Geneva Observatory)
 
-- **Used by:** Manual lookup during Phase 1 / Phase 2 curation for
+- **Used by:** Manual lookup during Curation Phase 1 / Curation Phase 2 for
   RV-detected planets missing `omega_deg` / `tperi_bjd`
 - **URL:** `https://dace.unige.ch/exoplanets/`
 - **License:** Free for academic use; citation requested
