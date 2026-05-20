@@ -497,23 +497,17 @@ arrays. Multiple orbits per system (triples) become natural.
 {
   "Alpha Centauri": {
     "system_id": "alpha_centauri",
-    "hierarchy": "binary",
+    "hierarchy": "triple",
     "components": [
       {
         "name": "Alpha Centauri A",
         "mass_msun": 1.0788,
-        "mass_source": "akeson_2021",
-        "astrometry_source": "gaia_dr3_nss_barycenter",
-        "astrometry_quality": "barycentric",
-        "ra_deg": 219.9020833,
-        "dec_deg": -60.8339722,
-        "parallax_mas": 750.81,
-        "pm_ra_masyr": -3679.25,
-        "pm_dec_masyr":  473.67,
-        "radial_velocity_km_s": -22.4,
-        "epoch_jd": 2457389.0
+        "mass_source": "pourbaix_correia_2017",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
       },
-      { "name": "Alpha Centauri B", "mass_msun": 0.9092, ... }
+      { "name": "Alpha Centauri B", "mass_msun": 0.9092, ... },
+      { "name": "Proxima Cen",     "mass_msun": 0.1221, ... }
     ],
     "orbits": [
       {

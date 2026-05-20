@@ -434,89 +434,16 @@ delta_E =  sep_au * sin(radians(theta_deg))
 delta_W =  0.0   # unknown
 ```
 
-### Recommended schema
+### Schema reference
 
-Extend the existing single-orbit-per-system schema by replacing the embedded
-`binary_orbit` with a list `orbits[]`. Each block self-describes which
-components it governs:
-
-```json
-{
-  "system_id": "alpha_centauri",
-  "components": [
-    {
-      "name": "Alpha Cen A",
-      "designation_hd": "HD 128620",
-      "gaia_dr3_source_id": "5853498713190525696",
-      "mass_msun": 1.0788,
-      "luminosity_lsun": 1.519,
-      "astrometry_source": "gaia_dr3_nss_barycenter",
-      "ra_deg": 219.9020833,
-      "dec_deg": -60.8339722,
-      "parallax_mas": 750.81,
-      "pm_ra_masyr": -3679.25,
-      "pm_dec_masyr": 473.67,
-      "rv_kms": -22.39,
-      "epoch": "J2016.0"
-    },
-    { "name": "Alpha Cen B", "...": "..." },
-    { "name": "Proxima",     "...": "..." }
-  ],
-  "orbits": [
-    {
-      "orbit_id": "inner",
-      "relates": ["Alpha Cen A", "Alpha Cen B"],
-      "primary": "Alpha Cen A",
-      "secondary": "Alpha Cen B",
-      "source": "akeson_2021",
-      "P_yr": 79.762,
-      "T_jd_tt": 2435291.6,
-      "e": 0.51947,
-      "a_arcsec": 17.4930,
-      "i_deg": 79.2430,
-      "omega_deg": 231.519,
-      "Omega_deg": 205.073,
-      "equinox": "J2000",
-      "node_resolved": true,
-      "grade": 1,
-      "phase_reliable": true
-    },
-    {
-      "orbit_id": "outer",
-      "relates": ["Alpha Cen AB (barycenter)", "Proxima"],
-      "primary_is_barycenter_of": ["Alpha Cen A", "Alpha Cen B"],
-      "secondary": "Proxima",
-      "source": "kervella_2017",
-      "P_yr": 547000,
-      "e": 0.50,
-      "a_au": 8700,
-      "i_deg": 107.6,
-      "omega_deg": 72.3,
-      "Omega_deg": 126.0,
-      "node_resolved": false,
-      "grade": 4,
-      "phase_reliable": false
-    }
-  ]
-}
-```
-
-Design points:
-- `orbits` is a **list**; multiple orbits per system.
-- `primary_is_barycenter_of` lets the resolver recognize hierarchy.
-- Astrometry always on components, never on orbits.
-- Each orbit carries its own `grade` and `phase_reliable`.
-
-Resolver pseudocode:
-```
-for orbit in entry.orbits:
-    if "primary_is_barycenter_of" in orbit:
-        primary_state = compose(states_of(orbit.primary_is_barycenter_of))
-    else:
-        primary_state = state_of(orbit.primary)
-    relative = kepler_to_icrs(orbit, t = JD_2433282_5)
-    # distribute to components by mass ratio
-```
+The full `binary_orbits.json` schema — component / orbit field tables,
+conditional-required logic (`primary` vs `primary_is_barycenter_of`,
+`a_arcsec` vs `a_au`, `T_jd_tt` when `phase_reliable=true`), hybrid
+astrometry storage (component-level `astrometry_source` rules +
+system-level `barycenter_astrometry` block, no per-component coords
+in the file) — is defined in
+[`methodology.md §Multiple-System Epoch`](methodology.md#multiple-system-epoch).
+The math in this document produces the values that schema requires.
 
 ---
 

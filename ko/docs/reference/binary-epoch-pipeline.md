@@ -418,88 +418,15 @@ delta_E =  sep_au * sin(radians(theta_deg))
 delta_W =  0.0   # unknown
 ```
 
-### 권장 스키마
+### 스키마 참조
 
-기존 단일 궤도 스키마의 임베디드 `binary_orbit`을 `orbits[]` 리스트로 대체함.
-각 블록은 어떤 구성 요소에 해당하는지 자기 서술적으로 명시함.
-
-```json
-{
-  "system_id": "alpha_centauri",
-  "components": [
-    {
-      "name": "Alpha Cen A",
-      "designation_hd": "HD 128620",
-      "gaia_dr3_source_id": "5853498713190525696",
-      "mass_msun": 1.0788,
-      "luminosity_lsun": 1.519,
-      "astrometry_source": "gaia_dr3_nss_barycenter",
-      "ra_deg": 219.9020833,
-      "dec_deg": -60.8339722,
-      "parallax_mas": 750.81,
-      "pm_ra_masyr": -3679.25,
-      "pm_dec_masyr": 473.67,
-      "rv_kms": -22.39,
-      "epoch": "J2016.0"
-    },
-    { "name": "Alpha Cen B", "...": "..." },
-    { "name": "Proxima",     "...": "..." }
-  ],
-  "orbits": [
-    {
-      "orbit_id": "inner",
-      "relates": ["Alpha Cen A", "Alpha Cen B"],
-      "primary": "Alpha Cen A",
-      "secondary": "Alpha Cen B",
-      "source": "akeson_2021",
-      "P_yr": 79.762,
-      "T_jd_tt": 2435291.6,
-      "e": 0.51947,
-      "a_arcsec": 17.4930,
-      "i_deg": 79.2430,
-      "omega_deg": 231.519,
-      "Omega_deg": 205.073,
-      "equinox": "J2000",
-      "node_resolved": true,
-      "grade": 1,
-      "phase_reliable": true
-    },
-    {
-      "orbit_id": "outer",
-      "relates": ["Alpha Cen AB (barycenter)", "Proxima"],
-      "primary_is_barycenter_of": ["Alpha Cen A", "Alpha Cen B"],
-      "secondary": "Proxima",
-      "source": "kervella_2017",
-      "P_yr": 547000,
-      "e": 0.50,
-      "a_au": 8700,
-      "i_deg": 107.6,
-      "omega_deg": 72.3,
-      "Omega_deg": 126.0,
-      "node_resolved": false,
-      "grade": 4,
-      "phase_reliable": false
-    }
-  ]
-}
-```
-
-설계 포인트.
-- `orbits`는 **리스트**이며 시스템당 여러 궤도를 가질 수 있음.
-- `primary_is_barycenter_of`를 통해 리졸버가 계층 구조를 인식함.
-- 천문 측정값은 항상 구성 요소에 기재하며, 궤도에는 기재하지 않음.
-- 각 궤도는 자체 `grade`와 `phase_reliable`을 보유함.
-
-리졸버 의사코드.
-```
-for orbit in entry.orbits:
-    if "primary_is_barycenter_of" in orbit:
-        primary_state = compose(states_of(orbit.primary_is_barycenter_of))
-    else:
-        primary_state = state_of(orbit.primary)
-    relative = kepler_to_icrs(orbit, t = JD_2433282_5)
-    # 질량비로 구성 요소에 분배
-```
+`binary_orbits.json` 의 전체 스키마 — 컴포넌트 / 궤도 필드 표, 조건부 필수
+규칙 (`primary` vs `primary_is_barycenter_of`, `a_arcsec` vs `a_au`,
+`phase_reliable=true` 일 때만 `T_jd_tt`), 하이브리드 천체측정 저장
+(컴포넌트 수준의 `astrometry_source` 규칙 + 시스템 수준
+`barycenter_astrometry` 블록, 컴포넌트당 좌표값은 저장하지 않음) — 은
+[`methodology.md §다중성계 에포크`](methodology.md#다중성계-에포크) 에서
+정의됩니다. 본 문서의 수학은 그 스키마가 요구하는 값을 산출합니다.
 
 ---
 
