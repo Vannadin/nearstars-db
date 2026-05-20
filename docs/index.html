@@ -54,6 +54,7 @@ input[type=checkbox]{accent-color:#4a88b8}
 .sdot{width:10px;height:10px;border-radius:50%}
 
 .table-wrap{overflow:auto}
+.cards-wrap{display:none}   /* 모바일 전용; @media에서 enable */
 table{width:100%;border-collapse:collapse}
 thead{position:sticky;top:0;z-index:10;background:#0b1020}
 th{padding:9px 14px;text-align:left;font-size:11px;font-weight:700;color:#4a6888;text-transform:uppercase;letter-spacing:.6px;cursor:pointer;user-select:none;white-space:nowrap;border-bottom:1px solid #1a2535}
@@ -159,6 +160,24 @@ a.sl:hover{text-decoration:underline}
 .stl-btn.err{color:#c07040;border-color:#402010}
 .img-no{width:180px;height:90px;display:flex;align-items:center;justify-content:center;color:#2a4050;font-size:12px;border:1px dashed #1e3048;border-radius:6px}
 
+/* ── mobile card layout (only used at ≤600px) ─────────────────────────────── */
+.cards-wrap{padding:0 12px 24px}
+.cards-list{display:flex;flex-direction:column;gap:8px}
+.mc{background:#0d1422;border:1px solid #1a2333;border-radius:8px;padding:11px 13px;cursor:pointer;transition:background .15s,border-color .15s}
+.mc:active{background:#11192a}
+.mc.open{border-color:#2a4868;background:#101a2a}
+.mc-head{display:flex;align-items:baseline;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.mc-name{font-size:14px;color:#d8e4f0;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mc-sys{font-size:11px;color:#5a7898}
+.mc-meta{display:flex;align-items:center;gap:8px;font-size:11px;color:#90a8c0;flex-wrap:wrap}
+.mc-meta b{color:#bcd0e4;font-family:monospace;font-weight:400}
+.mc-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 10px;margin-top:7px;font-size:11px}
+.mc-stat{display:flex;flex-direction:column;gap:1px}
+.mc-stat-k{color:#506880;font-size:10px;letter-spacing:.3px;text-transform:uppercase}
+.mc-stat-v{color:#bcd0e4;font-family:monospace}
+.mc-detail{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed #1a2535}
+.mc.open .mc-detail{display:block}
+
 /* ── mobile (≤600px) overrides ─────────────────────────────────────────────── */
 @media(max-width:600px){
   header{padding:10px 12px;gap:8px}
@@ -173,11 +192,11 @@ a.sl:hover{text-decoration:underline}
   .stats-bar{padding:5px 12px;gap:8px;flex-wrap:wrap;font-size:11px}
   .help-btn{padding:3px 8px;font-size:11px}
 
-  /* table — keep horizontal scroll but tighten padding so more rows fit */
-  th{padding:7px 10px;font-size:10px}
-  td{padding:6px 10px}
+  /* swap table for cards on mobile */
+  .table-wrap{display:none}
+  .cards-wrap{display:block}
 
-  /* detail panel — reduce gutters and image scale */
+  /* detail panel inside cards — reduce gutters and image scale */
   .dp{padding:12px}
   .dp-grid{gap:14px}
   .ds h3{font-size:10px}
@@ -276,6 +295,10 @@ a.sl:hover{text-decoration:underline}
     </thead>
     <tbody id="tbody"></tbody>
   </table>
+</div>
+
+<div class="cards-wrap">
+  <div class="cards-list" id="cards"></div>
 </div>
 
 <script>
@@ -699,8 +722,11 @@ function render() {
 
   const tbody = document.getElementById('tbody');
   tbody.innerHTML = '';
+  const cardsEl = document.getElementById('cards');
+  cardsEl.innerHTML = '';
 
   rows.forEach(row => {
+    // ── desktop: table row + detail row ────────────────────────────────────
     const tr = document.createElement('tr');
     tr.className = 'dr';
     tr.innerHTML = `
@@ -720,32 +746,71 @@ function render() {
     dtd.colSpan = 8;
     dtr.appendChild(dtd);
 
-    let built = false;
-    tr.addEventListener('click', () => {
-      const open = dtr.style.display !== 'none';
+    // ── mobile: card ───────────────────────────────────────────────────────
+    const mc = document.createElement('article');
+    mc.className = 'mc';
+    mc.innerHTML = `
+      <div class="mc-head">
+        <div class="mc-name">${row.star_name}</div>
+        <span class="sb ${specClass(row.spectype)}">${row.spectype}</span>
+        ${row.np > 0 ? `<span class="pc">${row.np}p</span>` : ''}
+      </div>
+      <div class="mc-meta"><span class="mc-sys">${row.system_name}</span></div>
+      <div class="mc-stats">
+        <div class="mc-stat"><span class="mc-stat-k">Dist</span><span class="mc-stat-v">${fDistVal(row.dist)}</span></div>
+        <div class="mc-stat"><span class="mc-stat-k">Teff</span><span class="mc-stat-v">${row.teff ? row.teff.toFixed(0)+' K' : '—'}</span></div>
+        <div class="mc-stat"><span class="mc-stat-k">Mass</span><span class="mc-stat-v">${fSMass(row.mass)}</span></div>
+        <div class="mc-stat"><span class="mc-stat-k">Radius</span><span class="mc-stat-v">${fSRad(row.radius)}</span></div>
+      </div>
+      <div class="mc-detail"></div>`;
+    const mcDetail = mc.querySelector('.mc-detail');
+
+    // buildDetail이 ID를 쓰므로 viewport별로 한 곳에만 빌드 (ID 중복 회피).
+    // 사용자가 viewport를 바꾸면 새 위치에 lazy build.
+    let builtIn = null;   // 'desktop' | 'mobile' | null
+    function buildInto(target, kind) {
+      if (builtIn === kind) return;
+      // 이전 빌드 위치 비워서 ID 충돌 방지
+      if (builtIn === 'desktop') dtd.innerHTML = '';
+      if (builtIn === 'mobile')  mcDetail.innerHTML = '';
+      target.innerHTML = buildDetail(row._sys);
+      target.querySelectorAll('.star-img').forEach(applySurveyUrl);
+      builtIn = kind;
+    }
+    function openDetail() {
+      // 다른 카드/row 닫기
       tbody.querySelectorAll('.detail-row').forEach(r => r.style.display = 'none');
       tbody.querySelectorAll('.dr').forEach(r => r.classList.remove('open'));
-      if (!open) {
-        if (!built) {
-          dtd.innerHTML = buildDetail(row._sys);
-          built = true;
-          // Initial src is set in HTML; call applySurveyUrl so the DATE-OBS refinement
-          // (for DSS) and the unified PM/caption update fires from mount, not only on picker clicks.
-          dtd.querySelectorAll('.star-img').forEach(applySurveyUrl);
-        }
-        dtr.style.display = '';
-        tr.classList.add('open');
-        tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        // fetch apparent magnitude from SIMBAD for each star
-        row._sys.stars.forEach(st => {
-          fetchMag(st.raw.ra_deg, st.raw.dec_deg, st.raw.pmra_mas_yr, st.raw.pmdec_mas_yr,
-                   `mag-${safeId(st.name)}`);
-        });
-      }
+      cardsEl.querySelectorAll('.mc').forEach(c => c.classList.remove('open'));
+
+      const useMobile = window.matchMedia('(max-width:600px)').matches;
+      buildInto(useMobile ? mcDetail : dtd, useMobile ? 'mobile' : 'desktop');
+
+      dtr.style.display = '';
+      tr.classList.add('open');
+      mc.classList.add('open');
+      (useMobile ? mc : tr).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      row._sys.stars.forEach(st => {
+        fetchMag(st.raw.ra_deg, st.raw.dec_deg, st.raw.pmra_mas_yr, st.raw.pmdec_mas_yr,
+                 `mag-${safeId(st.name)}`);
+      });
+    }
+
+    tr.addEventListener('click', () => {
+      const open = dtr.style.display !== 'none';
+      if (open) {
+        dtr.style.display = 'none'; tr.classList.remove('open'); mc.classList.remove('open');
+      } else openDetail();
+    });
+    mc.addEventListener('click', () => {
+      if (mc.classList.contains('open')) {
+        mc.classList.remove('open'); dtr.style.display = 'none'; tr.classList.remove('open');
+      } else openDetail();
     });
 
     tbody.appendChild(tr);
     tbody.appendChild(dtr);
+    cardsEl.appendChild(mc);
   });
 }
 
