@@ -10,6 +10,16 @@ Browse the current database at the [live viewer](https://vannadin.github.io/near
 
 ---
 
+## Project background
+
+NearStars is the spiritual successor to **REX** (KSP 1.8.0 era), bringing back the concept of flying from a realistic Sol system out to nearby real star systems — Alpha Centauri, Barnard's Star, Sirius, and others. The key differentiator vs prior attempts is full **Principia (N-body gravity) compatibility**.
+
+**Final mod scope:** ~10 stellar systems, selected from the wider research database in this repo. The full system list and selection order are still being decided.
+
+**Current stage:** data research has reached the curated-database milestone. The project is transitioning from data-engine work into actual mod cfg generation (Kopernicus and Principia patches).
+
+---
+
 ## What it does
 
 - Pulls astrometry, photometry, stellar properties, and exoplanet data from live catalogs (Gaia DR3, SIMBAD, NASA Exoplanet Archive, ORB6)

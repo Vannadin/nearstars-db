@@ -61,7 +61,7 @@ The current data pipeline covers all confirmed planetary systems and noteworthy 
 
 **Build one complete system first, then expand.** The first system serves as the template and reference implementation for all subsequent systems. Do not start a second system until the first is fully playable (Phase 1 + Phase 2 complete for that system).
 
-Final system list and selection order are TBD — candidates include Proxima Centauri (nearest, single-star, 2 planets), Barnard's Star (5.96 ly), Alpha Centauri (famous, but triple system complexity), and others.
+The final mod ships **~10 stellar systems** selected from the research database in this repo. Selection list and order are still being decided — candidates include Proxima Centauri (nearest, single-star, 2 planets), Barnard's Star (5.96 ly), Alpha Centauri (hierarchical triple, 3 components), and others.
 
 ---
 
@@ -144,3 +144,4 @@ All orbital parameters and physical constants must come from real observational 
 - [x] macOS texture format compatibility strategy — Windows-only mod; BC5/BC7/BC4 DDS usable without restriction
 - [ ] RSS EVE version: V3 (free) vs V5 (Patreon) — whether to support both or V5 only like Sol
 - [ ] Principia compatibility: requires separate gravity model cfgs per scale variant; Principia-only entries for 50–80 ly stars are possible (no Kopernicus body needed)
+- [ ] Sol Quarter scale support — planned, lower priority. `principia-cfg` skill MVP ships Sol Real scale only; Quarter coords are deferred (different `solar_system_epoch` ⇒ separate cfg files).

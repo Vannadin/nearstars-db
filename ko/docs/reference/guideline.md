@@ -61,7 +61,7 @@ Principia는 KSP의 렌더링 제한을 받지 않는 별도의 메커니즘을 
 
 **하나의 완전한 시스템을 먼저 빌드하고, 그 다음 확장합니다.** 첫 번째 시스템은 이후 모든 시스템의 템플릿이자 참조 구현이 됩니다. 첫 번째 시스템이 완전히 플레이 가능해지기 전에 (해당 시스템의 Phase 1 + Phase 2 완료) 두 번째 시스템을 시작하지 않습니다.
 
-최종 시스템 목록과 선택 순서는 미정이며, 후보로는 Proxima Centauri (가장 가깝고, 단일 별, 행성 2개), Barnard's Star (5.96 ly), Alpha Centauri (유명하지만 삼중성계 복잡도), 그 외 여러 시스템이 있습니다.
+최종 모드 수록은 **~10개 항성계** 로, 본 저장소의 연구 데이터베이스 안에서 선별됩니다. 선택 목록과 순서는 아직 결정 중이며, 후보로는 Proxima Centauri (가장 가깝고, 단일 별, 행성 2개), Barnard's Star (5.96 ly), Alpha Centauri (계층적 삼중성, 컴포넌트 3개), 그 외 여러 시스템이 있습니다.
 
 ---
 
@@ -142,3 +142,4 @@ Sol-Configs **및** RSS-Origin과 충돌하지 않아야 합니다. NearStars는
 - [x] macOS 텍스처 포맷 호환성 전략 — Windows 전용 모드이므로 BC5/BC7/BC4 DDS를 제한 없이 사용 가능
 - [ ] RSS EVE 버전: V3 (무료) vs V5 (Patreon) — 둘 다 지원할지, Sol처럼 V5만 지원할지
 - [ ] Principia 호환성: 스케일 변형별 별도 중력 모델 cfg가 필요하며, 50–80 ly 별에 대한 Principia 전용 항목 가능 (Kopernicus 천체 불필요)
+- [ ] Sol Quarter 스케일 지원 — 지원 예정, 우선순위 낮음. `principia-cfg` skill MVP 는 Sol Real 스케일만 출력. Quarter 좌표는 별도 `solar_system_epoch` 라서 별개 cfg 파일이 필요하며 후속 작업.
