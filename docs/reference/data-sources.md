@@ -108,13 +108,13 @@ citing example fragments from upstream repositories.
 ### Sol-Configs (RSS-Reborn / ballisticfox)
 
 - **Repo:** `RSS-Reborn/Sol-Configs`
-- **License:** Not specified (no LICENSE file as of 2026-05-19)
+- **License:** CC-BY-NC-SA 4.0 (same as NearStars; per upstream NOTICE)
 - **NearStars use:** Skill `kopernicus-cfg` reference files
   (`planet-body.md`, `star-body.md`, `ocean.md`) link to upstream
   Sol-Configs files via raw URLs and pair each link with a generic
-  KSP-Kopernicus pattern. No Sol-Configs cfg content is reproduced
-  verbatim in this repository, because Sol-Configs has no published
-  license.
+  KSP-Kopernicus pattern. Verbatim reproduction would also be
+  license-compatible (both CC-BY-NC-SA 4.0), but the raw-link approach
+  is preferred so upstream edits propagate automatically.
 
 ### Module Manager, Parallax Continued, EVE, Scatterer, Firefly, etc.
 

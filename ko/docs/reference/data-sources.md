@@ -104,12 +104,11 @@ NearStars는 여러 KSP 모드의 하위 프로젝트입니다. `.agents/skills/
 ### Sol-Configs (RSS-Reborn / ballisticfox)
 
 - **저장소.** `RSS-Reborn/Sol-Configs`
-- **라이선스.** 미지정 (2026-05-19 기준 LICENSE 파일 없음)
+- **라이선스.** CC-BY-NC-SA 4.0 (NearStars 와 동일. 상위 NOTICE 기준).
 - **NearStars 사용.** 스킬 `kopernicus-cfg` 참조 파일
   (`planet-body.md`, `star-body.md`, `ocean.md`)은 raw URL을 통해 상위 Sol-Configs
   파일에 링크하고 각 링크에 일반적인 KSP-Kopernicus 패턴을 함께 제공합니다.
-  Sol-Configs에 공개된 라이선스가 없기 때문에 이 저장소에는 Sol-Configs cfg 내용이
-  그대로 복사되지 않습니다.
+  라이선스가 동일(CC-BY-NC-SA 4.0)하므로 verbatim 재현도 가능하지만, 상위 변경이 자동으로 반영되도록 raw-link 방식을 사용합니다.
 
 ### Module Manager, Parallax Continued, EVE, Scatterer, Firefly 등
 
