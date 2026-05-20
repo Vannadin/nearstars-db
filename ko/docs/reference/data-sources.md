@@ -3,6 +3,11 @@
 > **관점.** 이 문서는 **저작권/라이선스** 레퍼런스입니다. NearStars 가 reproduce 하는 외부 콘텐츠 (천문 데이터 값, 모드 cfg 패턴), 각각의 라이선스 의무, NearStars 가 그것을 어떻게 이행하는지를 정리합니다.
 >
 > **KSP 모드 설치 목록** (Required / Graphics / Compat 분류) 은 [`mod-reference.md`](mod-reference.md) 참고. 이 문서는 NearStars 가 descriptive 하게 reproduce 하고 그에 따라 attribution 의무를 가지는 모드 (Kopernicus, Principia, Sol-Configs) 만 언급합니다.
+>
+> 이 저장소의 라이선스/attribution 파일 삼각형.
+> - [`LICENSE`](../../LICENSE) — NearStars 자체 라이선스 (CC-BY-NC-SA 4.0).
+> - [`NOTICE`](../../NOTICE) — 이 저장소가 reproduce 하거나 묘사하는 외부 콘텐츠의 원문 라이선스 텍스트.
+> - 이 문서 — *정책*. 어떤 출처를 쓰는지, 어떤 인용 의무가 있는지, NearStars 가 실제로 어떻게 이행하는지.
 
 NearStars DB는 공개된 천문 측정 데이터와 KSP 모드 설정 패턴을 통합하여
 시스템별 단일 JSON 레코드로 구성합니다. 이 파일은 파이프라인이 사용하는

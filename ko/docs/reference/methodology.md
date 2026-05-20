@@ -228,8 +228,11 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
   반지름:
   1. `interferometry` — 직접 각지름 측정
   2. `eclipsing_binary` — 직접 기하학적 측정
-  3. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
+  3. `sed_fitting` — 볼로메트릭 플럭스 + Teff + 거리 (준직접적)
+  4. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
   99. `unverified` — Curation Phase 1 batch 동일 의미.
+
+  허용되는 method 라벨의 전체 화이트리스트는 `scripts/pipeline/schema.py STELLAR_ALLOWED_METHODS` 에 정의되어 있습니다. 위 계층은 실제 사용 라벨의 우선순위만 정렬하며, 신규 method 추가 시 두 곳을 모두 갱신해야 합니다.
 
 - 두 항목이 동일한 방법 계층을 공유한다면 분수 불확도가 더 작은 것을 선택합니다.
   선택 근거는 `meta.notes`에 기록합니다.
@@ -406,6 +409,8 @@ def propagate_icrs(x0, y0, z0, vx, vy, vz, jd_from, jd_to):
 |---|---|---|
 | `"linear"` (Gaia) | Gaia DR3 → 일정 공간 속도 → 대상 에포크 | J2016.0 (JD2457389.0) |
 | `"linear"` (SIMBAD) | Gaia 포화 밝은 별에 대한 SIMBAD 폴백 → 선형 전파 | J2000.0 (JD2451545.0) |
+| `"kepler_thiele_innes"` | 궤도 결합된 다성계 컴포넌트 → Markley Kepler + Thiele-Innes 회전 (Hilditch 컨벤션) → ICRS 직교 | 궤도 fit 의 카탈로그 에포크. `build_systems.py:solve_orbit_relative` 가 대상 에포크로 전파 |
+| `"horizons_direct"` | JPL Horizons 상태 벡터를 JD2433282.5 에서 직접 import — 전파 안 함 | JD2433282.5 (대상 에포크) |
 
 SIMBAD 폴백 경로는 Gaia DR3 ID가 없는 별, 즉 Gaia에서 포화된 밝은 별(V < ~6)인
 Alpha Centauri A와 B, Sirius, Procyon, Pollux 등에 적용됩니다. `fetch_astrometry.py`는

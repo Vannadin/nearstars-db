@@ -175,11 +175,14 @@ SIMBAD_ALIASES = {
     "Chi-1 Orionis A":            "chi01 Ori",
     "Kapteyn":                    "Kapteyn's Star",
     "Mu Herculis A":              "mu Her A",
+    # ... (truncated — see scripts/pipeline/fetch_stellar_props.py for the full list)
 }
 ```
 
-To find the right SIMBAD name, query the helper script's output or browse
-[simbad.u-strasbg.fr](https://simbad.u-strasbg.fr/simbad/sim-fid).
+The canonical list of aliases is the `SIMBAD_ALIASES` constant inside
+`scripts/pipeline/fetch_stellar_props.py`; the snippet above shows the
+shape only. To find the right SIMBAD name for a new star, query the
+helper script's output or browse [simbad.u-strasbg.fr](https://simbad.u-strasbg.fr/simbad/sim-fid).
 
 ---
 

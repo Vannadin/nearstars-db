@@ -233,8 +233,14 @@ Notes on `mass_measurements` and `radius_measurements`:
   Radius:
   1. `interferometry` -- direct angular diameter measurement
   2. `eclipsing_binary` -- direct geometric measurement
-  3. `evolutionary_model` -- indirect; use only when nothing better exists
+  3. `sed_fitting` -- bolometric flux + Teff + distance (semi-direct)
+  4. `evolutionary_model` -- indirect; use only when nothing better exists
   99. `unverified` -- Curation Phase 1 batch 동일 의미.
+
+  The full whitelist of permitted method labels lives in
+  `scripts/pipeline/schema.py STELLAR_ALLOWED_METHODS`; the hierarchy
+  above only ranks the ones used in practice. Any new method must be
+  added to both places.
 
 - If two entries share the same method tier, prefer the one with smaller
   fractional uncertainty. Document the choice in `meta.notes`.
@@ -420,6 +426,8 @@ def propagate_icrs(x0, y0, z0, vx, vy, vz, jd_from, jd_to):
 |---|---|---|
 | `"linear"` (Gaia) | Gaia DR3 → constant space velocity → target epoch | J2016.0 (JD2457389.0) |
 | `"linear"` (SIMBAD) | SIMBAD fallback for Gaia-saturated bright stars → linear propagation | J2000.0 (JD2451545.0) |
+| `"kepler_thiele_innes"` | Orbit-bound binary/multiple component → Markley Kepler + Thiele-Innes rotation (Hilditch convention) → ICRS Cartesian | Catalog epoch of the orbit fit, propagated to target epoch via `build_systems.py:solve_orbit_relative` |
+| `"horizons_direct"` | JPL Horizons state vectors imported directly at JD2433282.5 — bypasses any propagation | JD2433282.5 (target epoch) |
 
 The SIMBAD fallback path applies to stars without a Gaia DR3 ID — typically
 bright stars saturated in Gaia (V < ~6) such as Alpha Centauri A and B,

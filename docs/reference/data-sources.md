@@ -11,6 +11,13 @@
 > file mentions only the mods whose content NearStars descriptively
 > reproduces and therefore has attribution duties for (Kopernicus,
 > Principia, Sol-Configs).
+>
+> Triangle of license/attribution files in this repo:
+> - [`LICENSE`](../../LICENSE) — NearStars' own license (CC-BY-NC-SA 4.0).
+> - [`NOTICE`](../../NOTICE) — verbatim upstream license texts for any
+>   third-party content this repo reproduces or describes.
+> - this file — *policy*: which sources, which citation requirements,
+>   how NearStars discharges them in practice.
 
 NearStars DB synthesizes published astronomical measurements and KSP mod
 configuration patterns into a single per-system JSON record. This file
