@@ -68,6 +68,10 @@ docs/
   index.html                # 정적 DB 뷰어 (다크 테마, 필터 가능)
   data.json                 # 뷰어 데이터 소스
 
+dist/                       # 빌드 산출물 (gitignored). principia-cfg
+                            # 스킬이 NearStars-Configs/Patches/Principia/
+                            # 아래 .cfg 패치를 emit.
+
 run_pipeline.sh             # 전체 파이프라인 일괄 실행 스크립트
 ```
 

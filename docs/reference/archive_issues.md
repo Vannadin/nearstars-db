@@ -72,6 +72,37 @@ Contact for TEPCat corrections: https://www.astro.keele.ac.uk/jkt/tepcat/
 
 ---
 
+## Issue 5 (internal data gap): 14 stars lack `principia.gravitational_parameter_km3_s2`
+
+**As of 2026-05-20.** These components have no mass measurement in
+`stellar_props_curated.json` (and none auto-fetched from SIMBAD `mesMass`,
+because `fetch_stellar_props.py` doesn't query that table — see
+`docs/reference/methodology.md` "Known limits"). Their JSON files build
+with `principia.gravitational_parameter_km3_s2 = null`, which blocks
+Principia patch emission via the `principia-cfg` skill (the skill aborts
+with an explicit error listing these).
+
+```
+36 Ophiuchi A / B / C
+40 Eridani A / B / C
+Beta Hydri
+Chi-1 Orionis A
+Delta Pavonis
+GJ 163
+Mu Herculis A
+Ross 458
+Sigma Draconis
+Zeta Tucanae
+```
+
+**Resolution path.** Either (a) curate per-star literature mass values
+into `stellar_props_curated.json` with method + bibcode, or
+(b) accept `scripts/pipeline/dev_backfill_spt_mass.py` (one-off helper
+in the principia-cfg skill) output as a Curation Phase 1 fallback.
+Tracked in `.claude/skills/principia-cfg/checklist.md` "Open / deferred".
+
+---
+
 ## How these were found
 
 Query: `SELECT hostname, sy_dist, gaia_dr3_id FROM pscomppars WHERE sy_dist <= 15.307`

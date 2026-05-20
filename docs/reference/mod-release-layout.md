@@ -59,6 +59,13 @@ NearStars/
 ### 2.1 Patch tags and dual-compatibility strategy
 
 > Status: Sol-only is the current MVP. The RSS-side patches below are documented as the future target structure — they are not currently shipped.
+>
+> Exception: Principia patches (`@principia_gravity_model`,
+> `@principia_initial_state`) deliberately diverge from the
+> `:NEEDS:FOR[NearStarsSystem]` form below — see the
+> [`principia-cfg` skill](../../.claude/skills/principia-cfg/SKILL.md)
+> for the rationale (they edit nodes Sol-Configs already authored, so
+> `:FOR[NearStarsSystem]` claims authorship spuriously).
 
 Both RSS and Sol define their central star as `name = Sun`, so `referenceBody = Sun` works in both without modification. The compatibility split happens in two places only:
 

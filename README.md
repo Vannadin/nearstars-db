@@ -68,6 +68,10 @@ docs/
   index.html                # static DB viewer (dark theme, filterable)
   data.json                 # viewer data source
 
+dist/                       # build artifacts (gitignored). principia-cfg
+                            # skill emits .cfg patches here under
+                            # NearStars-Configs/Patches/Principia/.
+
 run_pipeline.sh             # one-shot full pipeline runner
 ```
 

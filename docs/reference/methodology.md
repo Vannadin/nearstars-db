@@ -569,6 +569,17 @@ outer one — see binary-epoch-pipeline.md §6 for the full triple example.
 | `orbits[].node_resolved` | yes | `true` if (i,ω,Ω) reflects the physically correct line of nodes (RV data available); `false` if catalog presents the mirror-degenerate solution. |
 | `orbits[].phase_reliable` | yes | `false` if `grade ≥ 4` OR extrapolation > 0.5×P from observed coverage. When false, build still runs but `meta.notes` records the warning. |
 
+#### `_principia_notes` meta block
+
+`binary_orbits.json` has a top-level `_principia_notes` key (underscore
+prefix, skipped by validators). It records the epoch constants used by
+the build (`solar_system_epoch_jd`, `game_epoch_sol_jd`) plus a
+`schema_version` string ("YYYY-MM-DD-components-orbits") that's bumped
+whenever the component/orbit shape changes. Downstream tools (e.g.
+`scripts/pipeline/build_systems.py`) can read it for sanity checks but
+the values are not authoritative — they duplicate constants that live
+in code.
+
 #### Hybrid astrometry storage
 
 The DB does not store derived/computed astrometry values per component.

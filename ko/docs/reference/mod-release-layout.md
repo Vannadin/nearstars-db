@@ -54,6 +54,8 @@ NearStars/
 ### 2.1 패치 태그와 이중 호환 전략
 
 > 상태. Sol 전용이 현재 MVP. 아래 RSS 측 패치는 향후 목표 구조로서 문서화한 것이며, 현재 릴리스에는 포함되지 않습니다.
+>
+> 예외. Principia 패치 (`@principia_gravity_model`, `@principia_initial_state`) 는 아래 `:NEEDS:FOR[NearStarsSystem]` 형식에서 의도적으로 벗어납니다 — 그 이유는 [`principia-cfg` 스킬](../../../.claude/skills/principia-cfg/SKILL.md) 참고 (Sol-Configs 가 이미 만든 노드를 편집하기 때문에 `:FOR[NearStarsSystem]` 이 작성자임을 잘못 주장하게 됨).
 
 RSS와 Sol 모두 중심별을 `name = Sun`으로 정의하므로, `referenceBody = Sun`은 수정 없이 양쪽에서 동작합니다. 호환성 분기는 두 곳에서만 발생합니다.
 

@@ -12,6 +12,22 @@ description: >
 
 # Kopernicus CFG Writing Guide
 
+> **Scope.** This skill is the **NearStars-specific Kopernicus cfg
+> implementation** — which body templates to use, NearStars-fixed
+> values (MM tag, texture paths, etc.), and skill-internal references
+> for syntax (`references/nodes-quick-ref.md`, etc.).
+>
+> Project-level conventions that NearStars commits to (and that this
+> skill must follow) live in the docs tree:
+> - `docs/reference/mod-release-layout.md` §2 — cfg patterns
+>   (`@Kopernicus:FOR[NearStarsSystem]`, identifier convention, file
+>   separation per body)
+> - `docs/reference/guideline.md` §7 — `flightGlobalsIndex` allocation
+>   (1000+ for NearStars, 100 indices per system)
+>
+> When the docs and this skill drift, the docs are canonical. Open an
+> issue and update the skill side.
+
 Source repos:
 - **Sol examples**: `RSS-Reborn/Sol-Configs` — `Sol-Configs/Configs/`
 - **Kopernicus source**: `ballisticfox/Kopernicus` — `src/Kopernicus/Configuration/`

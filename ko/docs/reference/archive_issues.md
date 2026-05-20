@@ -70,6 +70,27 @@ TEPCat 수정 문의. https://www.astro.keele.ac.uk/jkt/tepcat/
 
 ---
 
+## 이슈 5 (내부 데이터 갭): mass 값이 없는 14개 별
+
+**2026-05-20 기준.** 다음 컴포넌트들은 `stellar_props_curated.json` 에 mass 측정값이 없습니다 (SIMBAD `mesMass` 테이블도 자동 fetch 되지 않음 — `fetch_stellar_props.py` 가 해당 테이블을 쿼리하지 않기 때문. `docs/reference/methodology.md` "Known limits" 참조). JSON 파일은 `principia.gravitational_parameter_km3_s2 = null` 로 빌드되며, 이 때문에 `principia-cfg` 스킬이 Principia 패치 emit 을 중단합니다 (스킬이 해당 별 목록과 함께 명시적 에러로 abort).
+
+```
+36 Ophiuchi A / B / C
+40 Eridani A / B / C
+Beta Hydri
+Chi-1 Orionis A
+Delta Pavonis
+GJ 163
+Mu Herculis A
+Ross 458
+Sigma Draconis
+Zeta Tucanae
+```
+
+**해결 경로.** (a) 별 단위 문헌 mass 값을 `stellar_props_curated.json` 에 method + bibcode 와 함께 큐레이션, 또는 (b) `scripts/pipeline/dev_backfill_spt_mass.py` (principia-cfg 스킬의 일회성 헬퍼) 출력을 Curation Phase 1 폴백으로 수용. `.claude/skills/principia-cfg/checklist.md` "Open / deferred" 에서 추적 중.
+
+---
+
 ## 발견 경위
 
 쿼리. `SELECT hostname, sy_dist, gaia_dr3_id FROM pscomppars WHERE sy_dist <= 15.307`

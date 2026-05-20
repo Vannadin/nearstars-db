@@ -30,8 +30,7 @@
 ## Verification
 - [ ] `validate.py` FAIL 0
 - [ ] target_list.json: 136 → 141 systems
-- [ ] db/systems/: 144 → 149 files (4 new system files + 1 binary becomes 2 = 5 actually)
-
-(Counting: 5 systems × 1 file per component → Arcturus 1, Capella 1, Procyon 2, Wolf 359 1, 70 Oph 2, Van Maanen 1 = 8 new files)
+- [ ] db/systems/: 144 → 152 files (8 new component files across 5 systems —
+      Arcturus 1, Capella 1, Procyon A+B, Wolf 359 1, 70 Oph A+B, Van Maanen 1)
 
 - [ ] commit + report

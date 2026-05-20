@@ -3,7 +3,7 @@
 > Source: research across mockingbirdnest/Principia, RSS-Reborn/Sol-Configs,
 > CharonSSS/RSS-Origin, USNO/GSU orb6 catalog, Gaia DR3 NSS docs, Bond+ 2017,
 > Akeson+ 2021, Kervella+ 2017.
-> Purpose: Compute ICRF Cartesian state vectors at `solar_system_epoch = JD 2433282.5`
+> Purpose: Compute ICRF Cartesian state vectors at `solar_system_epoch = JD2433282.5`
 > (1950-01-01 TDB) for binary/triple/multiple star systems that have no JPL HORIZONS
 > data. These vectors feed Principia's `principia_initial_state` for NearStars.
 
@@ -71,7 +71,7 @@ the circular orbital speed at that separation.
 RSS-Origin binary asteroids (Patroclus-Menoetius, Logos-Zoe, Lempo triple,
 Ceto-Phorcys, Eurybates-Queta) all follow the same pattern: each component
 gets its own `body { }` block with absolute ICRF Cartesian state at
-`JD 2433282.5`. There is no per-binary `epoch` override.
+`JD2433282.5`. There is no per-binary `epoch` override.
 
 ---
 
@@ -82,7 +82,7 @@ themselves as propagator** — evaluate the Keplerian orbit analytically at
 `solar_system_epoch`.
 
 Inputs per binary: `P, T, e, a [AU], i, ω, Ω`, parallax `π [mas]`, masses
-`M_A, M_B`, target epoch `t = JD 2433282.5`.
+`M_A, M_B`, target epoch `t = JD2433282.5`.
 
 ### Frame conventions
 
@@ -164,7 +164,7 @@ convention and document it.
 
 7. **Barycenter propagation.** Catalog astrometry is usually at J2016.0 (Gaia
    DR3) or J1991.25 (Hipparcos). Use `astropy.coordinates.SkyCoord.apply_space_motion`
-   to propagate barycenter ICRS state to `JD 2433282.5`.
+   to propagate barycenter ICRS state to `JD2433282.5`.
 
 8. **Final assembly:**
    ```
@@ -425,7 +425,7 @@ Velocities compose identically.
 For wide common-proper-motion companions (typical ρ > 5″, P > 1000 yr) with
 no fitted orbit:
 
-- Skip orbital motion at the JD 2433282.5 epoch.
+- Skip orbital motion at the JD2433282.5 epoch.
 - Place at fixed offset from inner system, derived from observed `(ρ, θ)` at
   the catalog reference epoch.
 - Share systemic proper motion and radial velocity with the primary.
@@ -604,7 +604,7 @@ Notes:
 
 ---
 
-## 9. Worked Example 1 — α Centauri AB at JD 2433282.5
+## 9. Worked Example 1 — α Centauri AB at JD2433282.5
 
 Elements (Akeson et al. 2021, ICRS J2000.0):
 
@@ -626,7 +626,7 @@ Elements (Akeson et al. 2021, ICRS J2000.0):
 Barycenter at J2019.5 (ICRS): α = 14h 39m 36.494s, δ = −60° 50′ 02.37″,
 μ_α* = −3639.95 mas/yr, μ_δ = +700.40 mas/yr, v_r = −22.3796 km/s.
 
-### Steps at `t = JD 2433282.5`
+### Steps at `t = JD2433282.5`
 
 ```
 1. Δt_yr = (2433282.5 − 2435291.6) / 365.25 = −5.500 yr
@@ -650,14 +650,14 @@ Barycenter at J2019.5 (ICRS): α = 14h 39m 36.494s, δ = −60° 50′ 02.37″,
 ```
 
 Embed in ICRS by:
-- propagating barycenter astrometry from J2019.5 to JD 2433282.5 via
+- propagating barycenter astrometry from J2019.5 to JD2433282.5 via
   `SkyCoord.apply_space_motion` (radial motion shifts d by ~328 AU);
 - building `N̂, Ê, r̂_los` at the 1950 RA/Dec;
 - splitting by `q_A, q_B` and adding `R_bary, V_bary`.
 
 ---
 
-## 10. Worked Example 2 — Sirius AB at JD 2433282.5
+## 10. Worked Example 2 — Sirius AB at JD2433282.5
 
 Elements (Bond et al. 2017, Table 5; ICRS J2000.0):
 
@@ -674,7 +674,7 @@ Elements (Bond et al. 2017, Table 5; ICRS J2000.0):
 | M_A | 2.063 M☉ |
 | M_B | 1.018 M☉ |
 
-### Steps at `t = JD 2433282.5` (using T = 1894.13 as the user-supplied reference; same phase as T = 1994.5715)
+### Steps at `t = JD2433282.5` (using T = 1894.13 as the user-supplied reference; same phase as T = 1994.5715)
 
 ```
 1. Δt = 55.871 yr     N_periods = 55.871 / 50.1284 = 1.1146
@@ -808,7 +808,7 @@ original equinox as metadata; never mix.
     T→JD_TDB. Validate grade (≥3 for use-as-is, 4 flagged, 5 → static).
 3.  Decide ascending-node convention (orb6 '*' marker / paper / RV).
 4.  Compute Thiele-Innes (A,B,F,G,C,H) per unit a — STORE PER SYSTEM.
-5.  At t=JD 2433282.5: solve Kepler → (x_p, y_p, vx_p, vy_p).
+5.  At t=JD2433282.5: solve Kepler → (x_p, y_p, vx_p, vy_p).
 6.  Rotate via Thiele-Innes → (ΔN, ΔE, ΔW) position, (vN, vE, vW) velocity.
 7.  Build (N̂, Ê, r̂_los) at the barycenter (α, δ) at epoch t.
 8.  Split by mass ratio → (r_A_rel, r_B_rel, v_A_rel, v_B_rel) in ICRS.
@@ -816,7 +816,7 @@ original equinox as metadata; never mix.
     SkyCoord.apply_space_motion → R_bary(t), V_bary(t).
 10. r_X(t) = R_bary(t) + r_X_rel(t);   v_X(t) = V_bary(t) + v_X_rel(t).
 11. Write to binary_orbits.json (or equivalent) as ICRS Cartesian at
-    solar_system_epoch = JD 2433282.5.
+    solar_system_epoch = JD2433282.5.
 12. CFG build step emits `body { name = X; x = ...; vx = ... }` blocks
     in principia_initial_state.
 ```

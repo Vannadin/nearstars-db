@@ -213,6 +213,8 @@ After `build_site.py`:
 
 ## Pipeline scripts
 
+These 8 scripts are run by `run_pipeline.sh` in order:
+
 | Script | Role |
 |---|---|
 | `fetch_astrometry.py` | Gaia DR3 TAP batch query + SIMBAD fallback for bright saturated stars |
@@ -223,6 +225,19 @@ After `build_site.py`:
 | `build_systems.py` | Merges all raw + curated files → B1950 + J2000 epoch propagation → systems/*.json |
 | `validate.py` | Checks required fields, epoch consistency, vmag_v presence |
 | `build_site.py` | systems/*.json → docs/data.json |
+
+### Auxiliary scripts (not run by `run_pipeline.sh`)
+
+Used in Curation Phase 1 batches and one-off maintenance, run manually
+when needed:
+
+| Script | Role |
+|---|---|
+| `fetch_planets_ps.py` | Fetches NASA `ps` table (per-paper rows with `default_flag=1`). Feeds `build_curated_from_ps.py`. |
+| `build_curated_from_ps.py` | Seeds `db/planets_curated.json` from `planets_ps_default.json` with per-paper bibcode/DOI attribution. |
+| `generate_target_list.py` | Utility: rebuild `target_list.json` from `db/systems/`. |
+| `schema.py` | Schared validator module imported by `validate.py`. Not directly executable. |
+| `test_hierarchical.py` | Synthetic-fixture unit test for the hierarchical (triple-system) orbit resolver in `build_systems.py`. |
 
 ## External APIs
 

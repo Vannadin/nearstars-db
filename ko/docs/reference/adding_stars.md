@@ -203,6 +203,8 @@ python3 scripts/pipeline/build_site.py
 
 ## 파이프라인 스크립트
 
+`run_pipeline.sh` 가 순서대로 실행하는 8개 스크립트.
+
 | 스크립트 | 역할 |
 |---|---|
 | `fetch_astrometry.py` | Gaia DR3 TAP 배치 쿼리 + 밝은 포화 별에 대한 SIMBAD 폴백 |
@@ -213,6 +215,18 @@ python3 scripts/pipeline/build_site.py
 | `build_systems.py` | 모든 raw + curated 파일 병합 → B1950 + J2000 에포크 전파 → systems/*.json |
 | `validate.py` | 필수 필드, 에포크 일관성, vmag_v 존재 여부 확인 |
 | `build_site.py` | systems/*.json → docs/data.json |
+
+### 보조 스크립트 (`run_pipeline.sh` 미포함)
+
+Curation Phase 1 배치와 일회성 유지보수에 수동으로 실행.
+
+| 스크립트 | 역할 |
+|---|---|
+| `fetch_planets_ps.py` | NASA `ps` 테이블 (`default_flag=1` per-paper 행) fetch. `build_curated_from_ps.py` 의 입력. |
+| `build_curated_from_ps.py` | `planets_ps_default.json` 으로부터 per-paper bibcode/DOI attribution 가진 `db/planets_curated.json` 생성. |
+| `generate_target_list.py` | 유틸리티. `db/systems/` 에서 `target_list.json` 재생성. |
+| `schema.py` | `validate.py` 가 import 하는 공용 validator 모듈. 직접 실행 불가. |
+| `test_hierarchical.py` | `build_systems.py` 의 계층적 (3중성계) 궤도 리졸버에 대한 합성 fixture 단위 테스트. |
 
 ## 외부 API
 
