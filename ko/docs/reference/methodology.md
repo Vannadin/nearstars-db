@@ -553,17 +553,15 @@ DB는 컴포넌트별 파생/계산 천체측정값을 저장하지 않습니다
 
 #### Thiele-Innes 관례 (Hilditch / Pourbaix)
 
-`build_systems.py`는 표준 교과서 관례를 적용합니다.
+`build_systems.py`는 Hilditch / Pourbaix 관례를 적용합니다.
 
 ```
-ΔN = A · x_p + F · y_p     (North)
-ΔE = B · x_p + G · y_p     (East)
-ΔW = C · x_p + H · y_p     (away from observer)
+ΔN = A · x_p + F · y_p     (북)
+ΔE = B · x_p + G · y_p     (동)
+ΔW = C · x_p + H · y_p     (관측자 반대 방향)
 ```
 
-`binary-epoch-pipeline.md` §2 5단계의 산문은 A↔B와 H↔C를 전치하며,
-§9/§10의 워크드 예시도 혼합 관례를 사용합니다. 위의 Hilditch 형식이
-α Cen과 Sirius의 레거시 `individual_states.b1950` 값을 < 0.05 % 이내로 재현합니다.
+이 관례는 NearStars 모든 문서와 코드에서 통일된 표준입니다. `binary-epoch-pipeline.md` §2 step 5 와 §10 워크드 예시도 동일한 공식을 사용합니다. 위 형식이 α Cen 과 Sirius 의 레거시 `individual_states.b1950` 값을 < 0.05 % 이내로 재현합니다.
 
 ### 무게중심 천체측정 결정 트리 (요약)
 

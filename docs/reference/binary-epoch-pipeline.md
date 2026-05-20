@@ -134,13 +134,17 @@ convention and document it.
    C = a · sin ω · sin i
    H = a · cos ω · sin i
    ```
-   Then (position):
+   Then (position, Hilditch / Pourbaix convention — matches
+   `build_systems.py:_thiele_innes_per_unit_a` + `solve_orbit_relative`):
    ```
-   ΔN = (B/a)·x_p + (G/a)·y_p     (North, +Dec)
-   ΔE = (A/a)·x_p + (F/a)·y_p     (East, +RA)
-   ΔW = (H/a)·x_p + (C/a)·y_p     (away from observer)
+   ΔN = (A/a)·x_p + (F/a)·y_p     (North, +Dec)
+   ΔE = (B/a)·x_p + (G/a)·y_p     (East, +RA)
+   ΔW = (C/a)·x_p + (H/a)·y_p     (away from observer)
    ```
    Velocities use the **same matrix** applied to `(vx_p, vy_p)`.
+
+   The Thiele-Innes matrix is length-preserving, so
+   `√(ΔN² + ΔE² + ΔW²) = r` (the orbital radius from step 3).
 
 6. **ICRS embed via barycenter direction.** Compute unit vectors at the
    barycenter RA/Dec `(α, δ)`:
@@ -701,19 +705,19 @@ Elements (Bond et al. 2017, Table 5; ICRS J2000.0):
      G/a = −sω·sΩ + cω·cΩ·ci = +0.0714
      C/a = sω·si = +0.3538
      H/a = cω·si = −0.5928
-7. Sky-frame relative (B − A):
-     ΔN = (B/a)·x_p + (G/a)·y_p
-        = (−0.8718)(−6.155) + (0.0714)(15.321) = +5.366 + 1.094 = +6.46 AU
-     ΔE = (A/a)·x_p + (F/a)·y_p
+7. Sky-frame relative (B − A), Hilditch convention:
+     ΔN = (A/a)·x_p + (F/a)·y_p
         = (−0.3390)(−6.155) + (−0.8023)(15.321) = +2.087 − 12.292 = −10.20 AU
-     ΔW = (H/a)·x_p + (C/a)·y_p
-        = (−0.5928)(−6.155) + (0.3538)(15.321) = +3.649 + 5.421 = +9.07 AU
+     ΔE = (B/a)·x_p + (G/a)·y_p
+        = (−0.8718)(−6.155) + (0.0714)(15.321) = +5.366 + 1.094 = +6.46 AU
+     ΔW = (C/a)·x_p + (H/a)·y_p
+        = (0.3538)(−6.155) + (−0.5928)(15.321) = −2.178 − 9.082 = −11.26 AU
 
-     vN = (−0.8718)(−2.953) + (0.0714)(0.6872)  = +2.624 AU/yr
-     vE = (−0.3390)(−2.953) + (−0.8023)(0.6872) = +0.450 AU/yr
-     vW = (−0.5928)(−2.953) + (0.3538)(0.6872)  = +1.994 AU/yr
+     vN = (−0.3390)(−2.953) + (−0.8023)(0.6872) = +1.001 − 0.551 = +0.450 AU/yr
+     vE = (−0.8718)(−2.953) + (0.0714)(0.6872)  = +2.574 + 0.049 = +2.624 AU/yr
+     vW = (0.3538)(−2.953) + (−0.5928)(0.6872)  = −1.045 − 0.407 = −1.452 AU/yr
 
-   |Δr| = √(6.46² + 10.20² + 9.07²) ≈ 15.10 AU
+   |Δr| = √(10.20² + 6.46² + 11.26²) ≈ 16.51 AU  (matches r = 16.510 from step 4)
 8. Sanity check:
    T = 1894.13 puts periastron passages at 1894.13 + n·50.13. Nearest
    passages: 1944.26 and 1994.39. So 1950-01-01 is ~5.74 yr PAST the

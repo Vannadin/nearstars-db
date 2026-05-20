@@ -572,7 +572,7 @@ when `astrometry_source = "mass_weighted_average"`. See
 
 #### Thiele-Innes convention (Hilditch / Pourbaix)
 
-`build_systems.py` applies the standard textbook convention:
+`build_systems.py` applies the Hilditch / Pourbaix convention:
 
 ```
 ΔN = A · x_p + F · y_p     (North)
@@ -580,10 +580,10 @@ when `astrometry_source = "mass_weighted_average"`. See
 ΔW = C · x_p + H · y_p     (away from observer)
 ```
 
-The prose in `binary-epoch-pipeline.md` §2 step 5 transposes A↔B and H↔C;
-the worked examples in §9/§10 also use mixed conventions. The Hilditch
-form above is what reproduces the legacy `individual_states.b1950`
-values for α Cen and Sirius within < 0.05 %.
+This convention is the canonical one across all NearStars docs and
+code; `binary-epoch-pipeline.md` §2 step 5 and §10 worked example use
+the same formulas. The form above reproduces the legacy
+`individual_states.b1950` values for α Cen and Sirius within < 0.05 %.
 
 ### Barycenter astrometry decision tree (summary)
 
