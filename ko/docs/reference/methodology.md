@@ -23,7 +23,7 @@ Principia proto 파일과 Kopernicus cfg 파일입니다.
 
 ```
 db/
-  target_list.json            # 파이프라인 입력 (136 systems, 144 stars)
+  target_list.json            # 파이프라인 입력
   astrometry_raw.json         # 자동 fetch — Gaia DR3 + SIMBAD
   photometry_raw.json         # 자동 fetch — Gaia DR3
   stellar_props_raw.json      # 자동 fetch — SIMBAD (Teff, 스펙형, mesDiameter)
@@ -35,7 +35,7 @@ db/
     alpha_centauri_a.json
     barnards_star.json
     tau_cet.json
-    ...                       # 항성 컴포넌트별 1파일 (144개)
+    ...                       # 항성 컴포넌트별 1파일
   backups/                    # 이전 스냅샷 보관 (수동 백업 시점)
 ```
 

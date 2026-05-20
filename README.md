@@ -6,6 +6,8 @@ This repository is the **data engine** of the mod. It fetches observational data
 
 The mod is built on top of [Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) (ballisticfox), the real-solar-system base for KSP 1.12.x. RSS compatibility is a planned future target.
 
+Browse the current database at the [live viewer](https://vannadin.github.io/nearstars-db/).
+
 ---
 
 ## What it does
@@ -23,7 +25,7 @@ The mod is built on top of [Sol-Configs](https://github.com/RSS-Reborn/Sol-Confi
 
 ```
 db/
-  target_list.json          # master list of 142 target systems
+  target_list.json          # master list of target systems
   astrometry_raw.json       # fetched: RA, Dec, parallax, proper motion, RV
   photometry_raw.json       # fetched: V-mag, Gaia G, BP-RP
   stellar_props_raw.json    # fetched: Teff, spectral type, mass, radius measurements
@@ -32,7 +34,7 @@ db/
   binary_orbits.json        # hand-curated Keplerian orbital elements (ORB6-based)
   stellar_props_curated.json # manual overrides for mass/radius/spectype
   planets_curated.json      # manual overrides for planet data
-  systems/                  # assembled per-component output (152 files)
+  systems/                  # assembled per-component output (one file per stellar component)
     alpha_centauri_a.json
     alpha_centauri_b.json
     sirius_a.json
@@ -120,7 +122,7 @@ For each system in `db/binary_orbits.json`:
 - Each component's position is separated from the barycenter using the mass ratio q = M_B / (M_A + M_B)
 - The barycenter position itself is computed as a mass-weighted average of component catalog positions
 
-Currently tracked binary/multiple systems (8 systems, 16 components):
+Currently tracked binary/multiple systems:
 
 | System | Type | Source |
 |--------|------|--------|

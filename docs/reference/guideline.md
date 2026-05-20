@@ -55,7 +55,7 @@ Principia registers stars as gravitational perturbers through a separate mechani
 
 ### 3.2 Scope
 
-The current data pipeline covers all confirmed planetary systems and noteworthy stellar systems within 50 ly — 136 systems / 144 stellar components as of 2026-05-18. This fully covers the Kopernicus range. A separate Principia-only pass for the 50–80 ly band can be added later if desired.
+The current data pipeline covers all confirmed planetary systems and noteworthy stellar systems within 50 ly. This fully covers the Kopernicus range. See the [live DB viewer](https://vannadin.github.io/nearstars-db/) for the current system list and count. A separate Principia-only pass for the 50–80 ly band can be added later if desired.
 
 ### 3.3 Development order
 

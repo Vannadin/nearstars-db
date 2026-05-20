@@ -6,6 +6,8 @@
 
 이 모드는 KSP 1.12.x 의 실제 태양계 기반인 [Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) (ballisticfox) 위에서 동작합니다. RSS 호환은 향후 목표입니다.
 
+현재 데이터베이스는 [라이브 뷰어](https://vannadin.github.io/nearstars-db/) 에서 확인할 수 있습니다.
+
 ---
 
 ## 주요 기능
@@ -23,7 +25,7 @@
 
 ```
 db/
-  target_list.json          # 142개 목표 항성계 마스터 목록
+  target_list.json          # 목표 항성계 마스터 목록
   astrometry_raw.json       # 수집: RA, Dec, 시차, 고유운동, RV
   photometry_raw.json       # 수집: V등급, Gaia G, BP-RP
   stellar_props_raw.json    # 수집: Teff, 분광형, 질량, 반지름 측정값
@@ -32,7 +34,7 @@ db/
   binary_orbits.json        # 수작업 큐레이션된 케플러 궤도 요소 (ORB6 기반)
   stellar_props_curated.json # 질량/반지름/분광형 수동 오버라이드
   planets_curated.json      # 행성 데이터 수동 오버라이드
-  systems/                  # 컴포넌트별 조립 출력 (152개 파일)
+  systems/                  # 컴포넌트별 조립 출력 (항성 컴포넌트당 1개 파일)
     alpha_centauri_a.json
     alpha_centauri_b.json
     sirius_a.json
@@ -120,7 +122,7 @@ KSP Principia에 바로 사용 가능한 값.
 - 각 컴포넌트의 위치는 질량비 q = M_B / (M_A + M_B)를 이용해 질량 중심에서 분리됩니다.
 - 질량 중심 위치 자체는 컴포넌트 카탈로그 위치의 질량 가중 평균으로 계산됩니다.
 
-현재 추적 중인 이중성 및 다중성계 (8개 시스템, 16개 컴포넌트).
+현재 추적 중인 이중성 및 다중성계.
 
 | 시스템 | 유형 | 출처 |
 |--------|------|------|
