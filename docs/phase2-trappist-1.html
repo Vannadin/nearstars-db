@@ -67,6 +67,22 @@ h3{font-size:13px;font-weight:600;color:#a0bcd8;margin:14px 0 6px;letter-spacing
 .summary{font-size:12px;color:#7a92ac;margin:4px 0 10px;font-family:monospace}
 
 footer{padding:20px 24px;border-top:1px solid #1a2030;color:#3a5068;font-size:11px;text-align:center}
+
+/* mobile (≤600px) */
+@media(max-width:600px){
+  header{padding:12px 16px;gap:8px}
+  h1{font-size:15px}
+  main{padding:16px 12px 48px}
+  .card{padding:10px 12px;margin-bottom:10px}
+  h2{font-size:11px}
+  h3{font-size:12px}
+  .intro{font-size:12px}
+  .mt th{padding:5px 7px;font-size:10px}
+  .mt td{padding:5px 7px;font-size:11px}
+  /* row label SVG 가독성 보존 — 폰트는 viewBox로 스케일되므로 자동 */
+  .plot .row-label{font-size:10.5px}
+  .summary{font-size:11px}
+}
 </style>
 </head>
 
