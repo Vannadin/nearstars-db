@@ -136,9 +136,11 @@ KSP Principia에 바로 사용 가능한 값.
 
 행성 데이터는 두 단계를 거칩니다.
 
-**Phase 1 (기본)** — NASA Exoplanet Archive 최선 가용값 사용. 궤도 요소는 기본 Kopernicus 배치에 그대로 사용됩니다. 대부분의 별이 이 수준입니다.
+**Curation Phase 1 (기본)** — NASA Exoplanet Archive 최선 가용값 사용. 궤도 요소는 기본 Kopernicus 배치에 그대로 사용됩니다. 대부분의 별이 이 수준입니다.
 
-**Phase 2 (정밀 큐레이션)** — `planets_curated.json`을 통한 수동 오버라이드. 완전한 출처 정보(DOI, bibcode)를 포함한 정밀 궤도 요소를 추가합니다. Principia n-body 물리로 인게임 구현될 시스템에 사용됩니다. curated 데이터의 각 `orbital` 및 `physical` 블록에는 출처 필드(`source`, `bibcode`, 또는 `doi`) 중 적어도 하나가 필요합니다.
+**Curation Phase 2 (정밀 큐레이션)** — `planets_curated.json`을 통한 수동 오버라이드. 완전한 출처 정보(DOI, bibcode)를 포함한 정밀 궤도 요소를 추가합니다. Principia n-body 물리로 인게임 구현될 시스템에 사용됩니다. curated 데이터의 각 `orbital` 및 `physical` 블록에는 출처 필드(`source`, `bibcode`, 또는 `doi`) 중 적어도 하나가 필요합니다.
+
+> 참고. "Curation Phase" 는 데이터 큐레이션 깊이를 의미하며, `docs/reference/guideline.md §9` 에 나오는 모드 개발 Phase 와는 별개입니다.
 
 ---
 

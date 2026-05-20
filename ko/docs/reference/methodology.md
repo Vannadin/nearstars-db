@@ -223,13 +223,13 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
   2. `asteroseismology` — 모델 의존적이나 잘 제약됨
   3. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
   4. `spectroscopic` / `spectroscopic_calibration` — 스펙트럼 피팅 기반
-  99. `unverified` — Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.
+  99. `unverified` — Curation Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.
 
   반지름:
   1. `interferometry` — 직접 각지름 측정
   2. `eclipsing_binary` — 직접 기하학적 측정
   3. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
-  99. `unverified` — Phase 1 batch 동일 의미.
+  99. `unverified` — Curation Phase 1 batch 동일 의미.
 
 - 두 항목이 동일한 방법 계층을 공유한다면 분수 불확도가 더 작은 것을 선택합니다.
   선택 근거는 `meta.notes`에 기록합니다.

@@ -136,9 +136,11 @@ Currently tracked binary/multiple systems (8 systems, 16 components):
 
 Planet data goes through two phases:
 
-**Phase 1 (default)** — NASA Exoplanet Archive best-available values. Orbital elements are used as-is for basic Kopernicus placement. Most stars are at this level.
+**Curation Phase 1 (default)** — NASA Exoplanet Archive best-available values. Orbital elements are used as-is for basic Kopernicus placement. Most stars are at this level.
 
-**Phase 2 (precision curated)** — Manual override via `planets_curated.json`, adding precise orbital elements with full provenance (DOI, bibcode). Used when the system will be implemented in-game with Principia n-body physics. Each `orbital` and `physical` block in curated data requires at least one provenance field (`source`, `bibcode`, or `doi`).
+**Curation Phase 2 (precision curated)** — Manual override via `planets_curated.json`, adding precise orbital elements with full provenance (DOI, bibcode). Used when the system will be implemented in-game with Principia n-body physics. Each `orbital` and `physical` block in curated data requires at least one provenance field (`source`, `bibcode`, or `doi`).
+
+> Note: "Curation Phase" refers to data curation depth, distinct from the mod development phases listed in `docs/reference/guideline.md §9`.
 
 ---
 
