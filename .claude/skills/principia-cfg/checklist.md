@@ -14,8 +14,8 @@
 - [x] Strict-abort validation, all errors collected before exit
 - [x] `--system` flag accepts multiple stems
 - [x] End-to-end verification: 152 bodies emit, GM/distance/velocity sanity-checked
-- [x] Aligned output path to `dist/NearStars-Configs/Patches/Principia/` per `docs/reference/guideline.md` §4
-- [x] Softened `:FOR[NearStarsSystem]` discussion in file-layout.md + SKILL.md (acknowledges guideline §5.1 convention for other patches)
+- [x] Aligned output path to `dist/NearStars-Configs/Patches/Principia/` per `docs/reference/mod-release-layout.md` §1
+- [x] Softened `:FOR[NearStarsSystem]` discussion in file-layout.md + SKILL.md (acknowledges `mod-release-layout.md` §2.1 convention for other patches)
 - [x] checklist.md + context-notes.md (this artifact)
 
 ## Out of scope for MVP (intentional)

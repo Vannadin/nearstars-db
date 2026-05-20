@@ -19,7 +19,7 @@ GameData/NearStars/NearStars-Configs/Patches/Principia/
 └── Real_NearStars-InitialState.cfg
 ```
 
-The `NearStars-Configs/Patches/` prefix mirrors the project's repository layout (`docs/reference/guideline.md` §4). The `Principia/` subfolder under `Patches/` is a deliberate choice over the guideline's `Patches/Sol/` slot — see `context-notes.md` for the rationale. Sol-Configs ships `Real_Sol-GravityModel.cfg` / `Real_Sol-InitialState.cfg` under the equivalent `Patches/Principia/` depth; our names sort alongside in mod-loader debug logs.
+The `NearStars-Configs/Patches/` prefix mirrors the project's mod-release repo layout (`docs/reference/mod-release-layout.md` §1). The `Principia/` subfolder under `Patches/` is a deliberate choice over the layout's `Patches/Sol/` slot — see `context-notes.md` for the rationale. Sol-Configs ships `Real_Sol-GravityModel.cfg` / `Real_Sol-InitialState.cfg` under the equivalent `Patches/Principia/` depth; our names sort alongside in mod-loader debug logs.
 
 ---
 
@@ -57,7 +57,7 @@ The Sol-real-scale MVP emits exactly two files. Quarter-scale and RSS variants a
 
 ### Why no `:FOR[NearStarsSystem]` here
 
-The project's general convention for NearStars patches IS `:NEEDS[...]:FOR[NearStarsSystem]` — see `docs/reference/guideline.md` §5.1, where `@EVE_CLOUDS:NEEDS[SolSystem]:FOR[NearStarsSystem]` is the canonical example. Principia patches diverge from that convention deliberately:
+The project's general convention for NearStars patches IS `:NEEDS[...]:FOR[NearStarsSystem]` — see `docs/reference/mod-release-layout.md` §2.1, where `@EVE_CLOUDS:NEEDS[SolSystem]:FOR[NearStarsSystem]` is the canonical example. Principia patches diverge from that convention deliberately:
 
 - For nodes NearStars **creates** (EVE_CLOUDS, Scatterer_atmosphere, Firefly), `:FOR[NearStarsSystem]` claims authorship and is correct.
 - For nodes NearStars **edits** via `@` (Principia's `principia_gravity_model` / `principia_initial_state`, which Sol-Configs already authored), `:FOR[NearStarsSystem]` adds no value — the patch already runs in MM's general patching pass after all `:FOR[SolSystem]` blocks have created the root.

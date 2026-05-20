@@ -61,7 +61,7 @@ Decisions made during skill construction and the reasoning behind them. Append c
 
 **Decision**: Principia patches use `@principia_gravity_model:NEEDS[NearStarsSystem,SolSystem]`, omitting `:FOR[NearStarsSystem]`.
 
-**Project context**: `docs/reference/guideline.md` §5.1 example for `@EVE_CLOUDS` uses the `:NEEDS[SolSystem]:FOR[NearStarsSystem]` form. This is the project's general convention.
+**Project context**: `docs/reference/mod-release-layout.md` §2.1 example for `@EVE_CLOUDS` uses the `:NEEDS[SolSystem]:FOR[NearStarsSystem]` form. This is the project's general convention.
 
 **Reasoning for divergence**:
 - The guideline example is for nodes NearStars **creates** (EVE_CLOUDS). `:FOR[NearStarsSystem]` claims authorship of that new block — correct.
@@ -73,7 +73,7 @@ Decisions made during skill construction and the reasoning behind them. Append c
 
 **Decision**: Cfg files land in `dist/NearStars-Configs/Patches/Principia/`.
 
-**Project context**: `docs/reference/guideline.md` §4 directory tree puts solar-system-specific patches in `Patches/Sol/` and `Patches/RSS/`.
+**Project context**: `docs/reference/mod-release-layout.md` §1 directory tree puts solar-system-specific patches in `Patches/Sol/` and `Patches/RSS/`.
 
 **Reasoning for divergence**:
 - The Principia patches are single-file-per-variant (one GravityModel.cfg + one InitialState.cfg covering all 152 bodies), unlike per-body cfgs that fit cleanly in `Patches/Sol/`.
