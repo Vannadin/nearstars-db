@@ -141,7 +141,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -150,7 +150,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -159,7 +159,7 @@
       "title": "Kunitomo et al. 2011",
       "doi": null,
       "bibcode": "2011ApJ...737...66K",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "HD 62509 mass (unverified)"
       ]
@@ -168,7 +168,7 @@
       "title": "Reffert et al. 2006",
       "doi": null,
       "bibcode": "2006ApJ...652..661R",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "HD 62509 radius (unverified)"
       ]
@@ -177,18 +177,18 @@
       "title": "Hatzes et al. 2006",
       "doi": "10.1051/0004-6361:20065445",
       "bibcode": "2006A&A...457..335H",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "planet HD 62509 b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-19",
+    "retrieval_date": "2026-05-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
-    "game_epoch_jd_rss": 2433282.5,
+    "game_epoch_jd_rss": 2433647.5,
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",

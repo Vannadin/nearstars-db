@@ -78,7 +78,7 @@ indexing during cfg generation.
   "solar_system_epoch_jd": 2433282.5,
   "solar_system_epoch_label": "B1950.0",
   "game_epoch_jd_sol": 2433647.5,
-  "game_epoch_jd_rss": 2433282.5,
+  "game_epoch_jd_rss": 2433647.5,
   "coordinate_origin": "SSB",
   "coordinate_frame": "ICRF",
   "coordinate_units": "km, km/s",
@@ -96,9 +96,9 @@ Note: strictly, Besselian epoch B1950.0 = JD2433282.423. JD2433282.5 is
 The difference is negligible for KSP purposes but worth knowing if
 cross-checking against software that computes B1950.0 precisely.
 
-`game_epoch_jd` differs between mods and does not affect the state vectors:
+`game_epoch_jd` does not affect the state vectors. Sol and RSS share the same value:
 - Sol: `JD2433647.5`
-- RSS: `JD2433282.5`
+- RSS: `JD2433647.5`
 
 The coordinate origin is the **Solar System Barycentre (SSB)**, not the Sun.
 The Sun itself has a non-zero position in these files (on the order of 10⁵ km
@@ -354,12 +354,12 @@ Both Sol and RSS use **JD2433282.5** (B1950.0, 1950-01-01 TDB) as the
 `solar_system_epoch`. All state vectors in `derived` must be expressed at
 this epoch in SSB-ICRF coordinates.
 
-The `game_epoch` is separate and does not affect state vectors:
+The `game_epoch` is separate and does not affect state vectors. Sol and RSS share the same value:
 - Sol: `JD2433647.5`
-- RSS: `JD2433282.5`
+- RSS: `JD2433647.5`
 
-When writing MM patches, Sol and RSS variants must be handled separately due
-to this difference.
+When writing MM patches, Sol and RSS variants only differ by NEEDS tag
+(`SolSystem` vs `RSSConfig`), not by epoch values.
 
 ### Why propagation is needed
 
@@ -439,7 +439,7 @@ star available in Horizons should be evaluated for the same treatment.
 | `derived.epoch_jd` | star | Target epoch (JD2433282.5) |
 | `meta.solar_system_epoch_jd` | system | JD2433282.5 (same for Sol and RSS) |
 | `meta.game_epoch_jd_sol` | system | JD2433647.5 |
-| `meta.game_epoch_jd_rss` | system | JD2433282.5 |
+| `meta.game_epoch_jd_rss` | system | JD2433647.5 |
 | `raw.tperi_bjd` / `raw.tranmid_bjd` | planet | Archive reference epoch (periastron or transit midpoint) |
 | `derived.orbital_epoch_jd` | planet | Epoch from curated source if available; else null |
 

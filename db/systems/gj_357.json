@@ -261,7 +261,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -270,7 +270,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -279,7 +279,7 @@
       "title": "Oddo et al. 2023",
       "doi": null,
       "bibcode": "2023AJ....165..134O",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "GJ 357 mass (unverified)"
       ]
@@ -288,18 +288,18 @@
       "title": "Luque et al. 2019",
       "doi": null,
       "bibcode": "2019A&A...628A..39L",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "planet GJ 357 c orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-19",
+    "retrieval_date": "2026-05-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
-    "game_epoch_jd_rss": 2433282.5,
+    "game_epoch_jd_rss": 2433647.5,
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",

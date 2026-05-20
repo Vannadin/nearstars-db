@@ -409,7 +409,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -418,7 +418,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -427,7 +427,7 @@
       "title": "Bourrier et al. 2018",
       "doi": "10.1051/0004-6361/201833154",
       "bibcode": "2018A&A...619A...1B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "55 Cnc mass (unverified)"
       ]
@@ -436,18 +436,18 @@
       "title": "Moutou et al. 2026",
       "doi": "10.1051/0004-6361/202556146",
       "bibcode": "2026A&A...705A.190M",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "planet 55 Cnc b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-19",
+    "retrieval_date": "2026-05-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
-    "game_epoch_jd_rss": 2433282.5,
+    "game_epoch_jd_rss": 2433647.5,
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",

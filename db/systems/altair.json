@@ -77,7 +77,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -86,7 +86,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -95,7 +95,7 @@
       "title": "Bouchaud et al. 2020 (rotating evolutionary fit to interferometry)",
       "doi": "10.1051/0004-6361/201936830",
       "bibcode": "2020A&A...633A..78B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "Altair mass (evolutionary_model)"
       ]
@@ -104,18 +104,18 @@
       "title": "Monnier et al. 2007 (mean radius; equatorial 2.03 polar 1.63 Rsun)",
       "doi": "10.1126/science.1143205",
       "bibcode": "2007Sci...317..342M",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "Altair radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-19",
+    "retrieval_date": "2026-05-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
-    "game_epoch_jd_rss": 2433282.5,
+    "game_epoch_jd_rss": 2433647.5,
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",

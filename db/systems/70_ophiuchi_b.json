@@ -82,7 +82,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -91,7 +91,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -100,7 +100,7 @@
       "title": "Eggenberger et al. 2008",
       "doi": "10.1051/0004-6361:20078624",
       "bibcode": "2008A&A...482..631E",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "70 Ophiuchi B mass (binary_orbit)"
       ]
@@ -109,18 +109,18 @@
       "title": "Boyajian et al. 2008",
       "doi": "10.1086/589554",
       "bibcode": "2008ApJ...683..424B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "70 Ophiuchi B radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-19",
+    "retrieval_date": "2026-05-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
-    "game_epoch_jd_rss": 2433282.5,
+    "game_epoch_jd_rss": 2433647.5,
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",

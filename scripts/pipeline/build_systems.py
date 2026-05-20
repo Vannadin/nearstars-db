@@ -742,7 +742,7 @@ for target in target_list:
                 "solar_system_epoch_jd":    JD_B1950,
                 "solar_system_epoch_label": "B1950.0",
                 "game_epoch_jd_sol":        2433647.5,
-                "game_epoch_jd_rss":        JD_B1950,
+                "game_epoch_jd_rss":        2433647.5,
                 "coordinate_origin":        "SSB",
                 "coordinate_frame":         "ICRF",
                 "coordinate_units":         "km, km/s",
