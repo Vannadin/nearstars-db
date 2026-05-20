@@ -3,6 +3,18 @@
 > Source: mockingbirdnest/Principia GitHub repo, wiki, and astronomy/*.cfg files  
 > Purpose: Reference for generating Principia-compatible CFG files for KSP planet packs
 
+> **Perspective.** This document is the **external Principia CFG API
+> reference** — the full set of nodes/keys Principia accepts and their
+> meanings, sourced from upstream code and docs. Independent of any
+> particular planet pack.
+>
+> For **NearStars-specific implementation** — which subset of nodes the
+> project actually emits, how `db/systems/*.json` fields map to CFG
+> values, what variants (Sol Real / Sol Quarter / RSS) are MVP-supported,
+> and the rationale for diverging from `:NEEDS:FOR[NearStarsSystem]` on
+> Principia patches — see the
+> [`principia-cfg` skill](../../.claude/skills/principia-cfg/SKILL.md).
+
 ---
 
 ## Overview

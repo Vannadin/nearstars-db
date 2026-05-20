@@ -3,6 +3,10 @@
 > 출처: mockingbirdnest/Principia GitHub 저장소, 위키, `astronomy/*.cfg` 파일  
 > 목적: KSP 행성 팩용 Principia 호환 CFG 파일 생성을 위한 참조 문서
 
+> **관점.** 이 문서는 **외부 Principia CFG API 레퍼런스** 입니다 — Principia 가 받아들이는 노드/키의 전체 집합과 그 의미를 상위 코드와 문서로부터 정리한 것. 특정 행성 팩과 독립적입니다.
+>
+> **NearStars 고유 구현** — 실제로 emit 하는 노드 부분집합, `db/systems/*.json` 필드 → CFG 값 매핑, 지원 변형 (Sol Real / Sol Quarter / RSS), Principia 패치에서 `:NEEDS:FOR[NearStarsSystem]` 컨벤션을 벗어난 이유 — 는 [`principia-cfg` 스킬](../../../.claude/skills/principia-cfg/SKILL.md) 참고.
+
 ---
 
 ## 개요

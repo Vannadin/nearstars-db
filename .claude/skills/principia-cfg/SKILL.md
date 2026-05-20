@@ -15,6 +15,20 @@ description: >
 
 # Principia CFG Writing Guide
 
+> **Scope.** This skill is the **NearStars-specific implementation** of
+> Principia CFG emission: which subset of Principia's nodes the project
+> actually uses, how DB fields map to CFG values, output file layout
+> under `dist/NearStars-Configs/Patches/Principia/`, MVP boundaries
+> (Sol Real only; Sol Quarter + RSS deferred), and the rationale for
+> diverging from the project's general `:NEEDS:FOR[NearStarsSystem]`
+> convention on Principia patches.
+>
+> For the **general Principia CFG API** — the full set of nodes/keys
+> Principia accepts, what each does, regardless of NearStars — see
+> [`docs/reference/principia-cfg-reference.md`](../../../docs/reference/principia-cfg-reference.md).
+> This skill assumes that API is the contract and focuses on *which
+> parts* of it NearStars uses and *how*.
+
 NearStars rides on top of **Sol-Configs (ballisticfox)** or **RSS**. Both
 ship their own `principia_gravity_model` and `principia_initial_state`,
 so NearStars only **patches** in its own bodies.
