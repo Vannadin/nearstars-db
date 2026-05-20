@@ -247,7 +247,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -256,7 +256,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -265,14 +265,14 @@
       "title": "Bonfils et al. 2013",
       "doi": "10.1051/0004-6361/201220237",
       "bibcode": "2013A&A...556A.110B",
-      "accessed": "2026-05-19",
+      "accessed": "2026-05-20",
       "used_for": [
         "planet GJ 163 b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-19",
+    "retrieval_date": "2026-05-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

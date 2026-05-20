@@ -398,12 +398,29 @@ def resolve_binary_component_states(system_name, binary_data, astrometry_raw):
     return out
 
 
+def _pick_recommended(block):
+    """Phase 2 array 형식에서 recommended:true 항목 선택.
+    dict이면 그대로, list이면 recommended:true 첫 항목.
+    list인데 recommended가 없으면 [0]번 fallback."""
+    if block is None:
+        return {}
+    if isinstance(block, dict):
+        return block
+    if isinstance(block, list):
+        for m in block:
+            if isinstance(m, dict) and m.get("recommended") is True:
+                return m
+        return block[0] if block and isinstance(block[0], dict) else {}
+    return {}
+
+
 def build_planet_derived(pl, curated=None):
     """행성 raw + curated → 단위 변환된 derived 블록.
     우선순위: curated > tepcat > nasa_archive (raw).
+    curated.orbital/physical은 dict (Phase 1) 또는 list (Phase 2) 둘 다 허용.
     측정 없는 값은 null 유지 (기본값 가정은 Kopernicus 작성 단계의 책임)."""
-    c_orb = (curated or {}).get("orbital") or {}
-    c_phy = (curated or {}).get("physical") or {}
+    c_orb = _pick_recommended((curated or {}).get("orbital"))
+    c_phy = _pick_recommended((curated or {}).get("physical"))
     tep   = pl.get("tepcat") or {}
 
     sma_au  = coalesce(c_orb.get("semi_major_axis_au"),
@@ -656,11 +673,20 @@ for target in target_list:
         sources = [SRC_BUTKEVICH, astro_src]
         # 행성 entry에 per-paper bibcode가 하나라도 있으면 SRC_ARCHIVE 생략
         # (generic NASA Archive 출처는 paper-sourced attribution 있을 때 중복 잡음)
+        # Phase 2 array form (list-of-dict) 도 검사.
+        def _section_has_paper(sec):
+            if isinstance(sec, dict):
+                return bool(sec.get("bibcode") or sec.get("doi"))
+            if isinstance(sec, list):
+                return any(
+                    isinstance(e, dict) and (e.get("bibcode") or e.get("doi"))
+                    for e in sec
+                )
+            return False
+
         has_paper_source = any(
-            (pe.get("curated") or {}).get("orbital", {}).get("bibcode")
-            or (pe.get("curated") or {}).get("physical", {}).get("bibcode")
-            or (pe.get("curated") or {}).get("orbital", {}).get("doi")
-            or (pe.get("curated") or {}).get("physical", {}).get("doi")
+            _section_has_paper((pe.get("curated") or {}).get("orbital"))
+            or _section_has_paper((pe.get("curated") or {}).get("physical"))
             for pe in planets_block
         )
         if planets_block and not has_paper_source:
@@ -690,29 +716,37 @@ for target in target_list:
                     existing_bibcodes.add(bc)
 
         # curated 행성 출처 추가 (bibcode-or-doi dedup; bibcode propagation)
+        # Phase 2 array form은 각 element를 별도 source로 추가.
         for planet_entry in planets_block:
             c = planet_entry.get("curated") or {}
             for section in ("orbital", "physical", "environment", "atmosphere"):
-                sec = c.get(section) or {}
-                doi = sec.get("doi")
-                bc  = sec.get("bibcode")
-                if not doi and not bc:
+                sec = c.get(section)
+                if sec is None:
                     continue
-                if doi and doi in existing_dois:
-                    continue
-                if bc and not doi and bc in existing_bibcodes:
-                    continue
-                sources.append({
-                    "title":    sec.get("source") or sec.get("reference") or doi or bc,
-                    "doi":      doi,
-                    "bibcode":  bc,
-                    "accessed": RETRIEVAL_DATE,
-                    "used_for": [f"planet {planet_entry['name']} {section}"],
-                })
-                if doi:
-                    existing_dois.add(doi)
-                if bc:
-                    existing_bibcodes.add(bc)
+                # dict (Phase 1) → 단일 entry, list (Phase 2) → 모든 entry
+                entries = sec if isinstance(sec, list) else [sec]
+                for e in entries:
+                    if not isinstance(e, dict):
+                        continue
+                    doi = e.get("doi")
+                    bc  = e.get("bibcode")
+                    if not doi and not bc:
+                        continue
+                    if doi and doi in existing_dois:
+                        continue
+                    if bc and not doi and bc in existing_bibcodes:
+                        continue
+                    sources.append({
+                        "title":    e.get("source") or e.get("reference") or doi or bc,
+                        "doi":      doi,
+                        "bibcode":  bc,
+                        "accessed": RETRIEVAL_DATE,
+                        "used_for": [f"planet {planet_entry['name']} {section}"],
+                    })
+                    if doi:
+                        existing_dois.add(doi)
+                    if bc:
+                        existing_bibcodes.add(bc)
 
         # ── 컴포넌트 추출 ──
         cm = COMPONENT_RE.match(star_name)

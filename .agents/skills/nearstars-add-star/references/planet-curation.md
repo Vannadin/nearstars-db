@@ -153,23 +153,10 @@ based on method tier.
    - Priority 5 — NASA Archive: already auto-fetched; no action.
 
 3. **Accumulate measurements in arrays.** For Phase 2, expand the
-   single-entry physical and orbital sections into arrays.
-   
-   **⚠ Prerequisite — code change first:** As of 2026-05-18,
-   `build_planet_derived` in `scripts/pipeline/build_systems.py` reads
-   `curated["physical"]` and `curated["orbital"]` as single dicts (via
-   `(curated or {}).get("orbital") or {}`). Array-form curated entries
-   will be silently ignored. Before any Phase 2 work:
-   
-   - Extend `build_planet_derived` to accept either dict or list-of-dict
-     for `physical`/`orbital`. When list, pick the entry with
-     `recommended: true` (parallel to `mass_measurements` logic).
-   - Add a schema check in `schema.py` to enforce exactly-one
-     `recommended: true` per array.
-   - Update this skill's `references/planet-curation.md` to remove this
-     warning.
-   
-   After the code change, the array form looks like this:
+   single-entry physical and orbital sections into arrays. `build_systems.py`
+   accepts both single-dict (Phase 1) and list-of-dict (Phase 2) forms,
+   selecting the `recommended: true` element from list form (as of
+   2026-05-20). The array form looks like this:
 
 ```json
 "physical": [
@@ -195,9 +182,9 @@ based on method tier.
 ```
 
 Note: this is an *extension* of the schema in
-[file-edits.md](file-edits.md). `build_systems.py` needs an update to
-handle array-form physical/orbital — verify before committing Phase 2
-work. (As of 2026-05-18 the build script reads single-object form only.)
+[file-edits.md](file-edits.md). `schema.py:validate_planets_curated`
+enforces method whitelist (`PLANET_ALLOWED_METHODS`) and exactly-one
+`recommended: true` per array.
 
 4. **Apply method hierarchy to set `recommended`:**
 

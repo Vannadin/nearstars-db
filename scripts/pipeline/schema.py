@@ -337,13 +337,30 @@ PLANET_ORBITAL_ALLOWED = {
     "argument_of_periapsis_deg", "longitude_of_ascending_node_deg",
     "mean_anomaly_at_epoch_deg", "epoch_jd",
     "source", "bibcode", "doi",
+    # Phase 2 array element fields:
+    "method", "recommended",
 }
 PLANET_PHYSICAL_ALLOWED = {
     "mass_mearth", "true_mass_mearth", "uncertainty_mearth", "mass_type",
     "radius_rearth", "uncertainty_rearth",
     "source", "bibcode", "doi",
+    # Phase 2 array element fields:
+    "method", "recommended",
 }
 PLANET_PROVENANCE_KEYS = {"source", "bibcode", "doi"}
+
+# Phase 2 method 화이트리스트 (planet measurements).
+# discovery method tier 순:
+#   astrometric/direct > ttv/dynamical > rv > transit > predicted
+PLANET_ALLOWED_METHODS = {
+    "astrometric", "direct_imaging",
+    "ttv", "dynamical",
+    "rv",
+    "transit", "transit_timing",
+    "predicted", "theoretical",
+    "discovery",          # 발견 paper의 종합값 (method 미세분류 곤란할 때)
+    "unverified",         # Phase 1 batch auto-fill
+}
 
 
 def validate_planets_curated(records):
@@ -376,19 +393,57 @@ def validate_planets_curated(records):
                 block = pl.get(block_name)
                 if block is None:
                     continue
-                if not isinstance(block, dict):
+                # Phase 1 dict 또는 Phase 2 list-of-dict 둘 다 허용.
+                if isinstance(block, dict):
+                    elems = [block]
+                    is_array = False
+                elif isinstance(block, list):
+                    elems = block
+                    is_array = True
+                else:
                     errors.append(
-                        f"planets_curated[{host}][{i}].{block_name}: dict 아님 "
-                        f"(Phase 2 array 형식은 build_systems.py 확장 후 지원)"
+                        f"planets_curated[{host}][{i}].{block_name}: dict 또는 list 아님"
                     )
                     continue
-                bunk = set(block.keys()) - allowed
-                if bunk:
-                    errors.append(f"planets_curated[{host}][{i}].{block_name}: 알 수 없는 키 {sorted(bunk)}")
-                if not (PLANET_PROVENANCE_KEYS & set(block.keys())):
+
+                n_recommended = 0
+                for j, elem in enumerate(elems):
+                    if not isinstance(elem, dict):
+                        errors.append(
+                            f"planets_curated[{host}][{i}].{block_name}"
+                            f"{f'[{j}]' if is_array else ''}: dict 아님"
+                        )
+                        continue
+                    bunk = set(elem.keys()) - allowed
+                    if bunk:
+                        errors.append(
+                            f"planets_curated[{host}][{i}].{block_name}"
+                            f"{f'[{j}]' if is_array else ''}: 알 수 없는 키 {sorted(bunk)}"
+                        )
+                    if not (PLANET_PROVENANCE_KEYS & set(elem.keys())):
+                        errors.append(
+                            f"planets_curated[{host}][{i}].{block_name}"
+                            f"{f'[{j}]' if is_array else ''}: source/bibcode/doi 중 하나 필요"
+                        )
+                    if is_array:
+                        method = elem.get("method")
+                        if not method:
+                            errors.append(
+                                f"planets_curated[{host}][{i}].{block_name}[{j}]: "
+                                f"array 형식은 'method' 필수"
+                            )
+                        elif method not in PLANET_ALLOWED_METHODS:
+                            errors.append(
+                                f"planets_curated[{host}][{i}].{block_name}[{j}]: "
+                                f"method '{method}' 미지원 "
+                                f"(허용: {sorted(PLANET_ALLOWED_METHODS)})"
+                            )
+                        if elem.get("recommended") is True:
+                            n_recommended += 1
+                if is_array and n_recommended > 1:
                     errors.append(
-                        f"planets_curated[{host}][{i}].{block_name}: source/bibcode/doi 중 하나 필요 "
-                        f"(출처 추적성)"
+                        f"planets_curated[{host}][{i}].{block_name}: "
+                        f"recommended:true 가 {n_recommended}개 (정확히 0 또는 1개)"
                     )
     return errors
 
