@@ -1195,23 +1195,104 @@
   "TRAPPIST-1": {
     "mass_measurements": [
       {
+        "value_msun": 0.08,
+        "uncertainty_msun": 0.009,
+        "method": "evolutionary_model",
+        "reference": "Gillon et al. 2016",
+        "bibcode": "2016Natur.533..221G",
+        "doi": "10.1038/nature17448",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.0802,
+        "uncertainty_msun": 0.0073,
+        "method": "evolutionary_model",
+        "reference": "Gillon et al. 2017",
+        "bibcode": "2017Natur.542..456G",
+        "doi": "10.1038/nature21360",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.089,
+        "uncertainty_msun": 0.006,
+        "method": "evolutionary_model",
+        "reference": "Van Grootel et al. 2018",
+        "bibcode": "2018ApJ...853...30V",
+        "doi": "10.3847/1538-4357/aaa023",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.089,
+        "uncertainty_msun": 0.007,
+        "method": "evolutionary_model",
+        "reference": "Grimm et al. 2018",
+        "bibcode": "2018A&A...613A..68G",
+        "doi": "10.1051/0004-6361/201732233",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.0908,
+        "uncertainty_msun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": "10.3847/1538-3881/ab3467",
+        "recommended": false
+      },
+      {
         "value_msun": 0.0898,
         "uncertainty_msun": 0.0023,
-        "method": "unverified",
+        "method": "evolutionary_model",
         "reference": "Agol et al. 2021",
         "bibcode": "2021PSJ.....2....1A",
-        "doi": null,
+        "doi": "10.3847/PSJ/abd022",
         "recommended": true
       }
     ],
     "radius_measurements": [
       {
+        "value_rsun": 0.117,
+        "uncertainty_rsun": 0.004,
+        "method": "sed_fitting",
+        "reference": "Gillon et al. 2016",
+        "bibcode": "2016Natur.533..221G",
+        "doi": "10.1038/nature17448",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.117,
+        "uncertainty_rsun": 0.0036,
+        "method": "sed_fitting",
+        "reference": "Gillon et al. 2017",
+        "bibcode": "2017Natur.542..456G",
+        "doi": "10.1038/nature21360",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.1148,
+        "uncertainty_rsun": 0.0034,
+        "method": "sed_fitting",
+        "reference": "Stassun et al. 2019",
+        "bibcode": "2019AJ....158..138S",
+        "doi": "10.3847/1538-3881/ab3467",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.1234,
+        "uncertainty_rsun": 0.0033,
+        "method": "sed_fitting",
+        "reference": "Ducrot et al. 2020",
+        "bibcode": "2020A&A...640A.112D",
+        "doi": "10.1051/0004-6361/201937392",
+        "recommended": false
+      },
+      {
         "value_rsun": 0.1192,
         "uncertainty_rsun": 0.0013,
-        "method": "unverified",
+        "method": "sed_fitting",
         "reference": "Agol et al. 2021",
         "bibcode": "2021PSJ.....2....1A",
-        "doi": null,
+        "doi": "10.3847/PSJ/abd022",
         "recommended": true
       }
     ]
