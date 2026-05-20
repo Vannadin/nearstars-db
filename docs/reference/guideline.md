@@ -1,6 +1,6 @@
 # Nearby Star Systems KSP Mod — Project Guideline
 
-**Goal:** Add nearby star systems to KSP 1.12.x following Sol ecosystem conventions, with compatibility for both Sol and RSS.
+**Goal:** Add nearby star systems to KSP 1.12.x on top of Sol-Configs (real solar system). RSS compatibility is a planned future target.
 
 ---
 
@@ -11,32 +11,32 @@
 | Mod name | NearStars |
 | KSP version | 1.12.x |
 | License | CC-BY-NC-SA-4.0 (matching Sol) |
-| Type | Dual-compatible addon — works with Sol **or** RSS; primary conventions follow Sol |
+| Type | Sol-based addon. RSS compatibility deferred. |
 
-The mod adds new star systems; it does not touch or replace existing bodies in either Sol or RSS. Either Sol-Configs or RealSolarSystem satisfies the dependency — not both at once.
+The mod adds new star systems; it does not touch or replace existing Sol bodies. RSS compatibility is planned but not currently shipped.
 
 ---
 
 ## 2. Dependencies
 
-**One of the following (mutually exclusive):**
-
-| Solar system mod | Tag used |
-|-----------------|----------|
-| Sol-Configs | `FOR[SolSystem]` |
-| RealSolarSystem | `FOR[RSSConfig]` |
-
-**Always required:**
+**Required:**
 
 | Mod | Role |
 |-----|------|
+| Sol-Configs (ballisticfox) | Real solar system base (`FOR[SolSystem]`) |
 | Kopernicus (ballisticfox fork) | Body definition framework |
 | Module Manager | Conditional patching (`NEEDS[]`) |
 | Parallax Continued | Terrain shaders and scatters |
 | EVE Volumetrics V5 | Cloud layers (atmospheric bodies only) |
 | BurstPQS | Terrain generation optimization |
 
-Note: RSS-Origin v1.x does not support Sol. v2 with Sol support is in development but unreleased. This mod must solve the dual-compatibility problem independently.
+**Future target (not currently supported):**
+
+| Mod | Tag |
+|-----|-----|
+| RealSolarSystem | `FOR[RSSConfig]` |
+
+Note: RSS-Origin v1.x does not support Sol. v2 with Sol support is in development but unreleased. The patch templates in §5.1 are designed to extend cleanly to RSS once RSS support is implemented.
 
 ---
 
@@ -113,6 +113,8 @@ NearStars/
 ## 5. Config Conventions
 
 ### 5.1 Patch tags and dual-compatibility strategy
+
+> Status: Sol-only is the current MVP. The RSS-side patches below are documented as the future target structure — they are not currently shipped.
 
 Both RSS and Sol define their central star as `name = Sun`, so `referenceBody = Sun` works in both without modification. The compatibility split happens in two places only:
 

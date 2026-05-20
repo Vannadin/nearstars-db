@@ -4,6 +4,8 @@ A data pipeline and database for adding real nearby star systems to **Kerbal Spa
 
 This repository is the **data engine** of the mod. It fetches observational data from public astronomical catalogs, assembles it into structured per-system JSON files, and validates them for downstream consumption by Kopernicus and Principia config writers.
 
+The mod is built on top of [Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) (ballisticfox), the real-solar-system base for KSP 1.12.x. RSS compatibility is a planned future target.
+
 ---
 
 ## What it does

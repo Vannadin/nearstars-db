@@ -4,6 +4,8 @@
 
 이 저장소는 모드의 **데이터 엔진**입니다. 공개 천문 카탈로그에서 관측 데이터를 가져와 시스템별 구조화된 JSON 파일로 조립하고, Kopernicus 및 Principia 설정 파일 생성기가 다운스트림에서 소비할 수 있도록 검증합니다.
 
+이 모드는 KSP 1.12.x 의 실제 태양계 기반인 [Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) (ballisticfox) 위에서 동작합니다. RSS 호환은 향후 목표입니다.
+
 ---
 
 ## 주요 기능

@@ -355,7 +355,7 @@ principia_gravity_model:NEEDS[MyPack] {
 
 ### 패턴 3: NearStars — Sol-Configs + RSS 이중 지원
 
-NearStars는 Sol-Configs(ballisticfox) 또는 RealSolarSystem 위에서 실행됩니다. 두 모드 모두 자체 `principia_gravity_model`과 `principia_initial_state`를 포함하므로, NearStars는 자체 천체만 패치합니다.
+NearStars는 Sol-Configs(ballisticfox) 위에서 실행됩니다. RSS 호환은 향후 목표이며, Sol Real 과 RSS 가 동일한 `solar_system_epoch` 및 `game_epoch` 을 공유하므로 동일한 직교 좌표 상태 벡터가 양쪽에 그대로 사용 가능합니다. Sol-Configs (및 향후 RSS) 가 자체 `principia_gravity_model` 과 `principia_initial_state` 를 포함하므로 NearStars 는 자체 천체만 패치합니다.
 
 **에포크 참조.**
 

@@ -355,7 +355,7 @@ principia_gravity_model:NEEDS[MyPack] {
 
 ### Pattern 3: NearStars — Sol-Configs + RSS dual support
 
-NearStars runs on top of Sol-Configs (ballisticfox) or RealSolarSystem. Both ship their own `principia_gravity_model` and `principia_initial_state`, so NearStars only patches in its own bodies.
+NearStars runs on top of Sol-Configs (ballisticfox). RSS compatibility is a future target — the Cartesian state vectors below are valid for both variants since they share the same `solar_system_epoch` and `game_epoch`. Sol-Configs (and eventually RSS) ships its own `principia_gravity_model` and `principia_initial_state`, so NearStars only patches in its own bodies.
 
 **Epoch reference:**
 
