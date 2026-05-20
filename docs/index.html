@@ -811,7 +811,9 @@ function render() {
         dtr.style.display = 'none'; tr.classList.remove('open'); mc.classList.remove('open');
       } else openDetail();
     });
-    mc.addEventListener('click', () => {
+    mc.addEventListener('click', (e) => {
+      // 펼쳐진 detail 안의 요소(링크, 버튼, 이미지) 터치 시 카드 토글 막음
+      if (e.target.closest('.mc-detail')) return;
       if (mc.classList.contains('open')) {
         mc.classList.remove('open'); dtr.style.display = 'none'; tr.classList.remove('open');
       } else openDetail();
