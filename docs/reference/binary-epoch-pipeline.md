@@ -475,11 +475,11 @@ import numpy as np
 def perifocal_to_sky(x_p, y_p, vx_p, vy_p, A, B, F, G, C, H):
     """Perifocal (AU, AU/yr) -> sky-frame (N, E, W) relative offset and velocity.
        A..H here are dimensionless per-unit-a Thiele-Innes constants.
-       Row convention: B,G -> N ; A,F -> E ; H,C -> W (line of sight).
+       Row convention: A,F -> N ; B,G -> E ; C,H -> W (line of sight).
     """
-    M = np.array([[B, G],   # North
-                  [A, F],   # East
-                  [H, C]])  # away from observer
+    M = np.array([[A, F],   # North
+                  [B, G],   # East
+                  [C, H]])  # away from observer
     pos = M @ np.array([x_p,  y_p])
     vel = M @ np.array([vx_p, vy_p])
     return pos, vel
