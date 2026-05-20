@@ -1,7 +1,14 @@
 # File Edits Reference
 
-Exact schemas and edit patterns for each file touched during star addition.
-Edit only the files relevant to your case (see SKILL.md Step 2 table).
+Edit patterns (case-by-case JSON snippets, judgment notes, gotchas) for
+each file touched during star addition. Edit only the files relevant
+to your case (see SKILL.md Step 2 table).
+
+> **Field reference** — what each key means and how to obtain its value
+> — lives in
+> [`docs/reference/adding_stars.md`](../../../../docs/reference/adding_stars.md).
+> This document focuses on *which case* applies and the editing pattern
+> for it, not on re-defining the schema.
 
 ---
 
@@ -49,15 +56,9 @@ the pipeline doesn't care about order.
 Empty `gaia_source_ids` → pipeline falls back to SIMBAD astrometry path.
 `hip_ids` is informational only; the pipeline doesn't use it.
 
-### Field reference
-
-| Field | Type | Notes |
-|---|---|---|
-| `system` | string | Canonical system name. Same as component name for single stars. |
-| `components` | string array | Hostname per component, in catalogue order (A, B, C, ...). |
-| `gaia_source_ids` | string array | Gaia DR3 source_id per component, same order. Use `null` or empty for components without Gaia entry. |
-| `hip_ids` | int array | Optional Hipparcos IDs. Pipeline doesn't use. |
-| `binary` | bool | True if this system has an entry in `binary_orbits.json`. |
+> For per-field semantics, see
+> [`docs/reference/adding_stars.md`](../../../../docs/reference/adding_stars.md)
+> "Add to db/target_list.json".
 
 ---
 

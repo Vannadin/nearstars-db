@@ -25,6 +25,18 @@ asking each time.
 
 ---
 
+> **Scope.** This skill drives the **workflow and judgment** of adding a
+> star — pre-research, when to escalate Curation Phase, Korean trigger
+> phrases, edge-case decisions. The **field-level schema** for every
+> file the skill edits (`target_list.json`, `stellar_props_curated.json`,
+> `binary_orbits.json`) is defined in
+> [`docs/reference/adding_stars.md`](../../../docs/reference/adding_stars.md);
+> consult that file for what each key means and how to obtain its value.
+> This skill assumes the schema is known and focuses on the *when* and
+> *why*.
+
+---
+
 ## Trigger Recap
 
 You are running this skill if any of these hold:

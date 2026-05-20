@@ -2,6 +2,17 @@
 
 How to add a new star (or star component) to the pipeline.
 
+> **Scope.** This document is the **field/schema reference** for the
+> files involved in adding a star — what each key means, how to obtain
+> its value, what the pipeline scripts do, and known per-star
+> exceptions. It is the canonical source for those facts.
+>
+> For agent-driven add-star workflows — Phase 1 / Curation Phase 2
+> escalation, Korean trigger phrases, judgment calls (binary vs single,
+> SIMBAD alias selection, etc.) — invoke the **`nearstars-add-star`
+> skill**. The skill drives the workflow; this document defines the
+> data shapes the skill (and any manual operator) edits.
+
 ---
 
 ## Overview
