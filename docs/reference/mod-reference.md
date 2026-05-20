@@ -1,13 +1,23 @@
 # NearStars — Mod Reference
 
+> **Perspective.** This document is the **KSP mod install reference**:
+> which mods to install, what they do, and where to download them, split
+> by dependency tier (Required / Graphics / Compatibility / Optional).
+>
+> For the **attribution / license** side — which external mods NearStars
+> reproduces content from, under what license, and how — see
+> [`data-sources.md`](data-sources.md). Only Kopernicus, Principia, and
+> Sol-Configs are referenced from that file; everything else here is
+> install-only and has no attribution obligation.
+
 ## Required Dependencies (mod won't load without these)
 
 | Mod | Description | GitHub |
 |-----|-------------|--------|
-| **Kopernicus** (ballisticfox fork) | Custom planetary system framework. Without it, NearStars bodies don't exist | [ballisticfox/Kopernicus](https://github.com/ballisticfox/Kopernicus) |
+| **Kopernicus** (ballisticfox fork) | Custom planetary system framework. Without it, NearStars bodies don't exist. License: LGPL-3.0 — see [data-sources.md §2](data-sources.md#kopernicus-ballisticfox-fork) | [ballisticfox/Kopernicus](https://github.com/ballisticfox/Kopernicus) |
 | **Module Manager** | cfg patch language runtime. Provides `NEEDS[]`, `FOR[]`, `@` patch syntax. Without it, all patches are void | [sarbian/ModuleManager](https://github.com/sarbian/ModuleManager) |
 | **BurstPQS** | Burst-compiled terrain generation. ~15× faster than stock, eliminates scene-switch stutter | [Phantomical/BurstPQS](https://github.com/Phantomical/BurstPQS) |
-| **Sol** (ballisticfox) | Modern recreation of the real solar system at real, quarter, and stock scale. NearStars attaches new star systems to this base system | [RSS-Reborn/Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) |
+| **Sol** (ballisticfox) | Modern recreation of the real solar system at real, quarter, and stock scale. NearStars attaches new star systems to this base system. License: CC-BY-NC-SA 4.0 — see [data-sources.md §2](data-sources.md#sol-configs-rss-reborn--ballisticfox) | [RSS-Reborn/Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) |
 
 ---
 
@@ -49,7 +59,7 @@
 
 | Mod | Description | GitHub |
 |-----|-------------|--------|
-| **Principia** | N-body gravity simulation. Requires gravitational parameter registration per star, with separate configs for Sol, Sol-Quarter, and RSS scales | [mockingbirdnest/Principia](https://github.com/mockingbirdnest/Principia) |
+| **Principia** | N-body gravity simulation. Requires gravitational parameter registration per star, with separate configs for Sol, Sol-Quarter, and RSS scales. License: MIT — see [data-sources.md §2](data-sources.md#principia-mockingbirdnest) | [mockingbirdnest/Principia](https://github.com/mockingbirdnest/Principia) |
 | **Kerbalism** | Radiation, life support, and science overhaul. Requires radiation environment config per star system. Support TBD | [Kerbalism/Kerbalism](https://github.com/Kerbalism/Kerbalism) |
 | **ResearchBodies** | Telescope-based body discovery mechanic. Requires registering new bodies in the discovery list | [JPLRepo/ResearchBodies](https://github.com/JPLRepo/ResearchBodies) |
 

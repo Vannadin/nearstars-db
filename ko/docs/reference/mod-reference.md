@@ -1,13 +1,17 @@
 # NearStars — Mod Reference
 
+> **관점.** 이 문서는 **KSP 모드 설치 레퍼런스** 입니다. 어떤 모드를 설치해야 하는지, 무엇을 하는지, 어디서 받는지를 의존성 등급별 (Required / Graphics / Compatibility / Optional) 로 정리합니다.
+>
+> **저작권/라이선스** 관점 — NearStars 가 어떤 외부 모드의 콘텐츠를 reproduce 하고 그 라이선스 의무를 어떻게 이행하는지 — 은 [`data-sources.md`](data-sources.md) 를 참고하십시오. 그 문서는 Kopernicus, Principia, Sol-Configs 만 다룹니다. 나머지는 모두 설치 전용이며 attribution 의무가 없습니다.
+
 ## 필수 의존성 (없으면 모드가 로드되지 않음)
 
 | 모드 | 설명 | GitHub |
 |------|------|--------|
-| **Kopernicus** (ballisticfox fork) | 커스텀 행성계 프레임워크. 없으면 NearStars 천체가 존재하지 않음 | [ballisticfox/Kopernicus](https://github.com/ballisticfox/Kopernicus) |
+| **Kopernicus** (ballisticfox fork) | 커스텀 행성계 프레임워크. 없으면 NearStars 천체가 존재하지 않음. 라이선스: LGPL-3.0 — [data-sources.md §2](data-sources.md#kopernicus-ballisticfox-fork) 참조. | [ballisticfox/Kopernicus](https://github.com/ballisticfox/Kopernicus) |
 | **Module Manager** | cfg 패치 언어 런타임. `NEEDS[]`, `FOR[]`, `@` 패치 문법을 제공. 없으면 모든 패치가 무효화됨 | [sarbian/ModuleManager](https://github.com/sarbian/ModuleManager) |
 | **BurstPQS** | Burst 컴파일 지형 생성. 기본 대비 약 15배 빠르며, 씬 전환 시 버벅임 제거 | [Phantomical/BurstPQS](https://github.com/Phantomical/BurstPQS) |
-| **Sol** (ballisticfox) | 실제 스케일, 1/4 스케일, 스톡 스케일로 구현된 현대적인 실제 태양계 재현. NearStars는 이 기반 시스템에 새로운 항성계를 부착함 | [RSS-Reborn/Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) |
+| **Sol** (ballisticfox) | 실제 스케일, 1/4 스케일, 스톡 스케일로 구현된 현대적인 실제 태양계 재현. NearStars는 이 기반 시스템에 새로운 항성계를 부착함. 라이선스: CC-BY-NC-SA 4.0 — [data-sources.md §2](data-sources.md#sol-configs-rss-reborn--ballisticfox) 참조. | [RSS-Reborn/Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) |
 
 ---
 
@@ -49,7 +53,7 @@
 
 | 모드 | 설명 | GitHub |
 |------|------|--------|
-| **Principia** | N-body 중력 시뮬레이션. 별마다 중력 파라미터 등록 필요. Sol, Sol-Quarter, RSS 스케일별 별도 cfg | [mockingbirdnest/Principia](https://github.com/mockingbirdnest/Principia) |
+| **Principia** | N-body 중력 시뮬레이션. 별마다 중력 파라미터 등록 필요. Sol, Sol-Quarter, RSS 스케일별 별도 cfg. 라이선스: MIT — [data-sources.md §2](data-sources.md#principia-mockingbirdnest) 참조. | [mockingbirdnest/Principia](https://github.com/mockingbirdnest/Principia) |
 | **Kerbalism** | 방사선, 생명유지, 과학 오버홀. 항성계마다 방사선 환경 cfg 필요. 지원 미정 | [Kerbalism/Kerbalism](https://github.com/Kerbalism/Kerbalism) |
 | **ResearchBodies** | 망원경 기반 천체 발견 메커닉. 새 천체를 발견 목록에 등록 필요 | [JPLRepo/ResearchBodies](https://github.com/JPLRepo/ResearchBodies) |
 

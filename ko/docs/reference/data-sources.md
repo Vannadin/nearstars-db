@@ -1,5 +1,9 @@
 # 데이터 출처 및 저작권 표기
 
+> **관점.** 이 문서는 **저작권/라이선스** 레퍼런스입니다. NearStars 가 reproduce 하는 외부 콘텐츠 (천문 데이터 값, 모드 cfg 패턴), 각각의 라이선스 의무, NearStars 가 그것을 어떻게 이행하는지를 정리합니다.
+>
+> **KSP 모드 설치 목록** (Required / Graphics / Compat 분류) 은 [`mod-reference.md`](mod-reference.md) 참고. 이 문서는 NearStars 가 descriptive 하게 reproduce 하고 그에 따라 attribution 의무를 가지는 모드 (Kopernicus, Principia, Sol-Configs) 만 언급합니다.
+
 NearStars DB는 공개된 천문 측정 데이터와 KSP 모드 설정 패턴을 통합하여
 시스템별 단일 JSON 레코드로 구성합니다. 이 파일은 파이프라인이 사용하는
 모든 외부 출처, 해당 출처의 인용 정책, NearStars가 제공하는 저작권 표기를 정리합니다.
@@ -110,11 +114,9 @@ NearStars는 여러 KSP 모드의 하위 프로젝트입니다. `.agents/skills/
   파일에 링크하고 각 링크에 일반적인 KSP-Kopernicus 패턴을 함께 제공합니다.
   라이선스가 동일(CC-BY-NC-SA 4.0)하므로 verbatim 재현도 가능하지만, 상위 변경이 자동으로 반영되도록 raw-link 방식을 사용합니다.
 
-### Module Manager, Parallax Continued, EVE, Scatterer, Firefly 등
+### 기타 KSP 모드 (Module Manager, Parallax Continued, EVE, Scatterer, Firefly 등)
 
-- **사용.** cfg 호환 맥락을 위한 스킬 참조 파일에 이름으로 언급됩니다.
-  소스나 cfg 내용은 복사되지 않습니다. 전체 의존성 목록 및 상위 링크는
-  [`docs/reference/mod-reference.md`](mod-reference.md)를 참조하세요.
+이들은 설치 의존성일 뿐이며, NearStars 가 스킬 파일에서 이름으로 언급하고 그 패치 문법을 타겟으로 하는 cfg 블록을 작성하지만 소스나 cfg 내용을 reproduce 하지 않습니다. attribution 의무가 없습니다. 전체 설치 목록과 분류는 [`mod-reference.md`](mod-reference.md) 참고.
 
 ---
 

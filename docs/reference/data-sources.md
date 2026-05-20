@@ -1,6 +1,17 @@
 <!-- NearStars 외부 데이터 출처와 KSP 모드 attribution 정책 -->
 # Data Sources and Attribution
 
+> **Perspective.** This document is the **attribution / license**
+> reference: external content NearStars reproduces (astronomical data
+> values, mod cfg patterns), what license obligation each carries, and
+> how NearStars discharges it.
+>
+> For the **install-side KSP mod list** (Required / Graphics / Compat
+> classification), see [`mod-reference.md`](mod-reference.md). This
+> file mentions only the mods whose content NearStars descriptively
+> reproduces and therefore has attribution duties for (Kopernicus,
+> Principia, Sol-Configs).
+
 NearStars DB synthesizes published astronomical measurements and KSP mod
 configuration patterns into a single per-system JSON record. This file
 lists every external source the pipeline draws from, the citation policy
@@ -116,12 +127,12 @@ citing example fragments from upstream repositories.
   license-compatible (both CC-BY-NC-SA 4.0), but the raw-link approach
   is preferred so upstream edits propagate automatically.
 
-### Module Manager, Parallax Continued, EVE, Scatterer, Firefly, etc.
+### Other KSP mods (Module Manager, Parallax Continued, EVE, Scatterer, Firefly, etc.)
 
-- **Use:** Mentioned by name in skill reference files for cfg-compat
-  contexts; no source or cfg content is copied. See
-  [`docs/reference/mod-reference.md`](mod-reference.md) for the full
-  dependency list and upstream links.
+These are install-time dependencies only; NearStars references them by name
+in skill files and writes cfg blocks that target their patch syntax, but
+never reproduces their source or cfg content. No attribution obligation
+arises. Full install list with classification: [`mod-reference.md`](mod-reference.md).
 
 ---
 
