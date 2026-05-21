@@ -230,9 +230,10 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
   2. `eclipsing_binary` — 직접 기하학적 측정
   3. `sed_fitting` — 볼로메트릭 플럭스 + Teff + 거리 (준직접적)
   4. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
+  5. `spectroscopic_calibration` — 경험적 반지름-색/분광형 관계 (예. M 왜성의 Mann et al. 2015)
   99. `unverified` — Curation Phase 1 batch 동일 의미.
 
-  허용되는 method 라벨의 전체 화이트리스트는 `scripts/pipeline/schema.py STELLAR_ALLOWED_METHODS` 에 정의되어 있습니다. 위 계층은 실제 사용 라벨의 우선순위만 정렬하며, 신규 method 추가 시 두 곳을 모두 갱신해야 합니다.
+  카테고리별 method 화이트리스트는 `scripts/pipeline/schema.py STELLAR_MEASUREMENT_KINDS[*]["methods"]` 에 정의 (2026-05-21 Phase 2 확장으로 mass/radius 외 6개 카테고리 추가됨. teff/luminosity/age/metallicity/rotation/activity). 합집합은 backward compat 용으로 `STELLAR_ALLOWED_METHODS` 에 노출. 신규 method 추가 시 canonical KINDS dict 와 본 hierarchy 문서 양쪽 갱신 필요.
 
 - 두 항목이 동일한 방법 계층을 공유한다면 분수 불확도가 더 작은 것을 선택합니다.
   선택 근거는 `meta.notes`에 기록합니다.
