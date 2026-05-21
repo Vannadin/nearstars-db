@@ -350,3 +350,139 @@ Example: TRAPPIST-1b a = 0.01155 AU (REX) vs 0.01154 AU (NS).
 - **REX upstream status.** Last commit 2020-04-11; appears
   abandoned. If we ever wanted to push retraction fixes back, we'd
   need to fork.
+
+---
+
+## 10. Phase 3 TRAPPIST-1: synthesis depth vs REX
+
+Phase 3 synthesized cfg-ready decisions for all seven TRAPPIST-1
+planets from ~100 papers (2016–2026), including three years of JWST
+results that did not exist when REX was written. This section
+quantifies the gap.
+
+### 10.1 Mass and radius precision
+
+REX used Gillon 2017-era TTV values; NearStars Phase 3 uses Agol 2021
+(comprehensive TTV re-analysis with 284+ transits). Radii agree at
+the ~3% level but precision improved 2–3×. Masses diverge
+significantly for b (+62%) and f (+53%) — both well outside REX's own
+1σ uncertainties.
+
+| Planet | REX mass (M⊕) | Phase 3 mass (M⊕) | Δ | REX radius (R⊕) | Phase 3 radius (R⊕) | Δ |
+|---|---|---|---|---|---|---|
+| b | 0.85 ± 0.72 | **1.374 ± 0.069** | **+62%** ⚠ | 1.086 ± 0.035 | **1.116 ± 0.014** | +2.8% |
+| c | 1.38 ± 0.61 | **1.308 ± 0.056** | −5% | 1.056 ± 0.035 | **1.097 ± 0.014** | +3.9% |
+| d | 0.41 ± 0.27 | **0.388 ± 0.012** | −5% | 0.772 ± 0.030 | **0.788 ± 0.011** | +2.1% |
+| e | 0.62 ± 0.58 | **0.692 ± 0.022** | +12% | 0.918 ± 0.039 | **0.920 ± 0.013** | +0.2% |
+| f | 0.68 ± 0.18 | **1.039 ± 0.031** | **+53%** ⚠ | 1.045 ± 0.038 | **1.045 ± 0.013** | 0% |
+| g | 1.34 ± 0.88 | **1.321 ± 0.038** | −1% | 1.127 ± 0.041 | **1.129 ± 0.015** | +0.2% |
+| h | n/a | **0.326 ± 0.020** | new | 0.752 ± 0.032 | **0.755 ± 0.014** | +0.4% |
+
+> **b and f mass changes exceed REX's 1σ.** For b, the Gillon 2017
+> central value (0.85 M⊕) lies ~7σ below Agol 2021 (1.374 ± 0.069
+> M⊕). For f, the jump from 0.68 to 1.039 M⊕ shifts it from
+> Mars-like to Earth-like territory. Precision improved 2–10× across
+> all seven. REX's large uncertainties reflected genuine 2017-era TTV
+> degeneracy; Agol 2021 broke it by adding four more years of
+> photometry.
+
+### 10.2 Atmosphere decisions
+
+REX encodes no atmosphere data for TRAPPIST-1 planets. Phase 3
+synthesized one cfg-ready scenario per planet from the 2022–2026 JWST
+literature. Confidence is planet-dependent: JWST has directly
+characterized b and c; the outer planets remain model-dependent.
+
+| Planet | REX | Phase 3 scenario | Confidence | Key constraint |
+|---|---|---|---|---|
+| b | — | **airless** | high | MIRI phase curve Ducrot 2025; >0.3 bar ruled out |
+| c | — | **O₂-thin** (~0.01 bar) | low | Zieba 2023 no CO₂; airless also defensible |
+| d | — | **very thin** (~0.01 bar outgassed) | low | Piaulet 2025; airless also defensible |
+| e | — | **1 bar N₂+CO₂** (aqua-planet) | high | Glidden 2025; Hapi 2024 GCM |
+| f | — | **thin CO₂-rich** (~0.1 bar) | medium | Lim 2024; Wolf 2017 snowball-HZ |
+| g | — | **very thin CO₂** (~0.05 bar) | medium | Moran 2018 rejects H₂-rich; outgassing |
+| h | — | **very tenuous** (~0.005 bar) | low | Gressier 2022 rejects H₂-rich |
+
+> **The inner–outer gradient.** b is JWST-confirmed airless; e is
+> favored habitable at high confidence. Intermediate planets (c–d,
+> f–h) sit in ambiguous territory where scenario selection is
+> informed but not tightly constrained. Phase 3 preserves the
+> alternate "airless" interpretation for c and d as a named
+> footnote — the curation layer REX never had.
+
+### 10.3 Tidal heating
+
+REX contains no tidal-heating estimates. Phase 3 computed per-planet
+values from Bolmont 2026 (inner planets), Bolmont 2020 (outer), and
+Hay & Matsuyama 2019 (g).
+
+| Planet | REX | Phase 3 estimate (W/m²) | Key note |
+|---|---|---|---|
+| b | — | 0.5–1 nominal; capped at ~407 (2σ) | JWST nightside non-detection caps upper bound |
+| c | — | 0.005–0.05 | scaled from Bolmont 2026 |
+| d | — | ~0.1–0.5 (estimated) | Piaulet 2025 magma-ocean interior |
+| e | — | 0.001–0.01 | Bolmont 2020 |
+| f | — | 0.0005–0.005 | Bolmont 2020 |
+| g | — | 2×10⁻⁷–0.001; +2–20% planet-planet | Hay & Matsuyama 2019 |
+| h | — | 0.00001–0.0001 | negligible |
+
+> **b is effectively an exo-Io.** Even at the conservative 0.5–1
+> W/m² nominal estimate, TRAPPIST-1 b's tidal flux is comparable to
+> Io's ~2 W/m² and an order of magnitude above Mars's radiogenic
+> ~0.04 W/m². This drove the "ongoing volcanism + fresh lava flows"
+> surface decision — a dimension REX could not have modeled.
+
+### 10.4 Bond albedo and surface models
+
+REX does not encode surface albedo or morphology. Phase 3 assigned
+cfg-ready albedo and surface scenarios from JWST thermal emission
+(inner planets) and GCM literature (outer planets).
+
+| Planet | REX albedo | Phase 3 Bond albedo | Surface scenario |
+|---|---|---|---|
+| b | — | 0.00 | dark ultramafic basalt + cooling lava patches |
+| c | — | 0.05 | bare dark rock; thin O₂-weathered layer |
+| d | — | 0.10 | bare-rock analog to b/c; partial oxidation |
+| e | — | 0.30 | open ocean + partial cloud (aqua-planet) |
+| f | — | 0.45 | global snowball ice + thin atmospheric cloud |
+| g | — | 0.55 | global snowball ice + thin CO₂ cloud |
+| h | — | 0.40 | mixed bedrock + CO₂/N₂ frost |
+
+### 10.5 JWST era: data REX couldn't have
+
+REX was frozen 2020-04-11, three years before JWST first light.
+Phase 3 draws directly on seven landmark JWST papers.
+
+| Paper | Result | NearStars impact |
+|---|---|---|
+| Greene 2023 (2303.14849) | b: T_day ≈ 503 K; no thick atmo | b airless; Bond albedo = 0 |
+| Zieba 2023 (2306.10150) | c: no thick CO₂ | c airless-or-thin constraint |
+| Ducrot 2024 (2412.11627) | b: ultramafic preferred vs CO₂+haze | b surface: fresh ultramafic |
+| Ducrot 2025 (2509.02128) | b+c phase curves: no nightside emission | Closes airless for b definitively |
+| Piaulet 2025 | d: mass reconfirm; magma-ocean interior | d surface scenario |
+| Glidden 2025 | e: 1 bar N₂+CO₂ compatible | e aqua-planet scenario |
+| Lim 2024 | f: H₂-rich rejected; thin CO₂ permitted | f snowball scenario |
+
+---
+
+### 10.6 TL;DR
+
+> **Orbital agreement holds.** Semi-major axes agree to <1% across
+> all seven — unchanged from the Phase 2 comparison.
+
+> **Mass precision improved 2–10×; b and f central values shifted
+> significantly.** b +62%, f +53%, both outside REX's 1σ. Gillon
+> 2017-era masses are stale for interior/density modeling.
+
+> **Atmosphere: REX had nothing; Phase 3 has one defensible scenario
+> per planet.** b is JWST-confirmed airless; e is JWST-favored
+> habitable. c–d and f–h are model-constrained with explicit
+> alternate scenarios documented.
+
+> **Surface: REX had nothing; Phase 3 has cfg-ready colors, albedos,
+> morphologies.** From bare lava on b (A=0) to global snowball on
+> f/g (A=0.45–0.55) to aqua on e (A=0.30).
+
+> **Tidal heating: REX had nothing; Phase 3 quantifies b as an
+> exo-Io analog.** Direct consequence of the Bolmont 2026 upward
+> revision using JWST nightside constraints.
