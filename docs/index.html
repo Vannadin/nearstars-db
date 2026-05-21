@@ -205,6 +205,18 @@ a.sl:hover{text-decoration:underline}
   /* detail panel 안의 star image / FOV picker가 옆으로 펼쳐지지 않도록 */
   .img-pkr, .img-links{flex-wrap:wrap}
 
+  /* detail 안 .mt 표(별 측정값, 행성, sources)가 카드 폭을 넘기지 않도록:
+     셀의 nowrap을 풀고, 그래도 긴 표는 컨테이너에서 가로 스크롤 */
+  .mc-detail{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .mc-detail .mt{table-layout:auto;max-width:100%}
+  .mc-detail .mt th,
+  .mc-detail .mt td{white-space:normal;word-break:break-word;overflow-wrap:anywhere}
+  /* sticky thead가 가로 스크롤과 충돌 가능 — 모바일에선 비활성 */
+  .mc-detail thead{position:static}
+  /* detail wrapper .dp 안의 영역들도 안전망 */
+  .dp{max-width:100%}
+  .dp-star,.dp-grid,.ds{max-width:100%}
+
   /* detail panel inside cards — reduce gutters and image scale */
   .dp{padding:12px}
   .dp-grid{gap:14px}
