@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<!-- TRAPPIST-1 d Phase 3 합성 보고서 — 인게임 표현용 큐레이션 -->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRAPPIST-1 d · Phase 3 합성</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{overflow-x:hidden;max-width:100vw}
+body{background:#080c14;color:#c0cce0;font-family:'Segoe UI',system-ui,-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;font-size:14px;min-height:100vh;line-height:1.65}
+img,svg{max-width:100%;height:auto}
+a{color:#4a88b8;text-decoration:none}
+a:hover{text-decoration:underline}
+
+header{padding:18px 28px;border-bottom:1px solid #1a2030;background:#0a0f1a;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-size:18px;font-weight:700;color:#d8e4f0;letter-spacing:.3px}
+h1 span{color:#4a88b8;font-weight:400}
+.crumb{font-size:12px;color:#3a5870}
+.crumb a{color:#4a6888}
+
+main{max-width:1080px;margin:0 auto;padding:24px 24px 64px}
+section{margin-bottom:36px}
+h2{font-size:13px;font-weight:700;color:#5a88b8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #1a2535}
+h3{font-size:14px;font-weight:600;color:#a0bcd8;margin:18px 0 8px;letter-spacing:.2px}
+
+.intro{color:#8aa2bc;font-size:13.5px;max-width:820px;line-height:1.7}
+.intro b{color:#c0d4e8}
+.intro p{margin-bottom:10px}
+.intro p:last-child{margin-bottom:0}
+
+.scenario{background:#0e1c1a;border:1px solid #1e4030;border-left:3px solid #4aaa60;border-radius:6px;padding:14px 18px;margin:14px 0}
+.scenario b{color:#a8d8b8}
+
+.card{background:#0c121e;border:1px solid #182030;border-radius:8px;padding:16px 18px;margin-bottom:14px}
+
+/* Decisions table */
+.dt{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.dt th{padding:8px 10px;background:#0d1520;color:#5a7898;font-size:10.5px;text-transform:uppercase;text-align:left;font-weight:700;letter-spacing:.5px;border-bottom:1px solid #1a2535}
+.dt td{padding:7px 10px;border-top:1px solid #131c28;color:#b0c4d8;font-family:monospace;font-size:12px;vertical-align:top;line-height:1.55}
+.dt td.field{color:#a8c0e0;font-weight:600}
+.dt td.basis{font-family:'Segoe UI','Noto Sans KR',sans-serif;color:#8aa2bc;font-size:12px}
+.dt td.val{font-family:monospace;color:#d0e0f0}
+
+.conf-pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;font-family:'Segoe UI','Noto Sans KR',sans-serif}
+.conf-high{background:#1a3022;color:#7ad88e}
+.conf-med{background:#2a2418;color:#d8b870}
+.conf-low{background:#2a1a30;color:#c890d0}
+
+.cat-head{background:#0a1018;padding:8px 12px;border-top:1px solid #1a2535;border-bottom:1px solid #1a2535}
+.cat-head td{font-family:'Segoe UI','Noto Sans KR',sans-serif;color:#5a88b8;text-transform:uppercase;font-size:11px;letter-spacing:.6px;font-weight:700;padding:6px 10px}
+
+/* swatch row */
+.sw-row{display:flex;gap:18px;flex-wrap:wrap;margin:10px 0}
+.sw{display:flex;align-items:center;gap:10px;font-size:12px;color:#a0b8d0}
+.sw-box{width:36px;height:36px;border-radius:6px;border:1px solid rgba(255,255,255,.12);flex-shrink:0}
+.sw-label{font-family:'Segoe UI','Noto Sans KR',sans-serif;color:#90a8c0;font-size:12px}
+.sw-hex{font-family:monospace;font-size:11px;color:#6a8aa8;display:block;margin-top:1px}
+
+/* temperature scale */
+.temp-bar{position:relative;margin:14px 0 22px;height:36px;background:linear-gradient(to right,#1a2840 0%,#1e2e58 18%,#3a3868 32%,#6e4848 50%,#a85c30 70%,#d07c18 88%,#f4a020 100%);border-radius:4px;border:1px solid #1a2535}
+.temp-mark{position:absolute;top:-4px;bottom:-4px;width:2px;background:#fff}
+.temp-lab{position:absolute;top:-22px;font-size:10.5px;color:#a0b8d0;font-family:monospace;white-space:nowrap;transform:translateX(-50%)}
+.temp-val{position:absolute;bottom:-18px;font-size:10px;color:#7a92ac;font-family:monospace;transform:translateX(-50%)}
+
+/* paper bibliography */
+.bib-cat{margin-top:18px}
+.bib-cat h3{color:#90b8c8;font-size:13px;margin-bottom:6px}
+.bib-item{padding:8px 0;border-bottom:1px dashed #14202c;font-size:12.5px;color:#a0b8d0}
+.bib-item:last-child{border-bottom:none}
+.bib-item .arxiv{display:inline-block;background:#1a2840;color:#7aa8d8;padding:1px 7px;border-radius:3px;font-family:monospace;font-size:11px;margin-right:8px}
+.bib-item .nopre{display:inline-block;background:#2a1a20;color:#c890a0;padding:1px 7px;border-radius:3px;font-family:monospace;font-size:11px;margin-right:8px}
+.bib-item .pri{display:inline-block;background:#1a3022;color:#7ad88e;padding:1px 7px;border-radius:3px;font-size:10px;font-weight:700;margin-right:6px;text-transform:uppercase;letter-spacing:.4px}
+.bib-title{color:#c0d4e8;font-weight:600}
+.bib-note{color:#6a8aa8;font-size:11.5px;margin-top:2px}
+
+/* exclusion list */
+.excl-list{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin:8px 0;font-size:12.5px}
+@media(max-width:600px){.excl-list{grid-template-columns:1fr}}
+.excl-list .x{color:#d08080}
+.excl-list .q{color:#d0c080}
+.excl-list .o{color:#80c8a0}
+.excl-list b{font-family:monospace;color:#c0d4e8;display:inline-block;width:140px}
+
+/* user-action box */
+.action{background:#2a1f12;border:1px solid #4a3818;border-left:3px solid #d8a040;border-radius:6px;padding:12px 16px;margin:14px 0;font-size:13px;color:#d8c0a0}
+.action b{color:#f0d8a0}
+
+footer{padding:20px 24px;border-top:1px solid #1a2030;color:#3a5068;font-size:11px;text-align:center}
+footer a{color:#4a6888}
+
+/* mobile */
+@media(max-width:600px){
+  header{padding:12px 16px;gap:8px}
+  h1{font-size:15px}
+  main{padding:16px 12px 48px}
+  .card{padding:12px 13px;margin-bottom:12px;border-radius:7px}
+  h2{font-size:11px}
+  h3{font-size:12.5px}
+  .intro{font-size:12.5px}
+
+  .card,.card *,.dt td,.dt td *{min-width:0;word-break:break-word;overflow-wrap:anywhere}
+  code{word-break:break-all}
+
+  /* responsive table — stacked cards on mobile */
+  .dt thead{display:none}
+  .dt,.dt tbody,.dt tr,.dt td{display:block;width:100%}
+  .dt tr.cat-head td{display:block;background:#0a1018;margin-top:10px;border-radius:5px}
+  .dt tr:not(.cat-head){border:1px solid #1a2333;border-radius:6px;padding:8px 11px;margin-bottom:6px;background:#0a1018}
+  .dt td{display:flex;justify-content:space-between;align-items:baseline;border:none;padding:3px 0;gap:10px;font-size:12px}
+  .dt td::before{
+    content:attr(data-label);
+    color:#5a7090;font-size:10px;text-transform:uppercase;letter-spacing:.4px;
+    font-family:'Segoe UI','Noto Sans KR',sans-serif;font-weight:600;flex-shrink:0
+  }
+  .dt td.basis{flex-direction:column;align-items:flex-start;gap:2px}
+  .dt td.basis::before{margin-bottom:1px}
+  .sw-row{gap:10px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>TRAPPIST-1 d <span>· Phase 3 합성 보고서</span></h1>
+  <div class="crumb"><a href="./index.html">← 데이터베이스로 돌아가기</a> · <a href="./phase2-trappist-1.html">Phase 2 측정값</a></div>
+</header>
+
+<main>
+
+<section>
+  <h2>개요</h2>
+  <div class="intro">
+    <p>TRAPPIST-1 d 는 0.79 R⊕ 의 암석 행성으로, M8V 초저온 왜성 주위를 4.05일 주기로 공전합니다. 고전적 거주 가능 영역 안쪽 가장자리에 위치하며, 최근 <b>JWST/NIRSpec PRISM</b> 의 투과 분광 관측 (Piaulet-Ghorayeb 외 2025) 으로 대기에 강한 제약이 걸렸습니다. 태양계 유사 조성 대부분이 95% 이상 신뢰도로 배제되어, 남은 시나리오는 (A) 완전 진공 표면, (B) 극히 얇은 대기 + 종단선 부근 고고도 물얼음 구름 두 가지입니다.</p>
+  </div>
+  <div class="scenario">
+    <b>NearStars 채택 시나리오</b> — (B) 극히 얇은 대기 + 종단선 물얼음 구름. JWST 3σ 상한 압력 (~0.01 bar) 으로 설정하고, Turbet 2023 GCM 이 예측한 종단선 고고도 수증기 응결 특징을 보존합니다. (A) 완전 진공 보다 시각적으로 구별되는 요소를 남기되, 관측 데이터와 일관성을 유지하는 절충안.
+  </div>
+</section>
+
+<section>
+  <h2>결정 사항 (Kopernicus cfg-ready)</h2>
+  <div class="card">
+    <p class="intro" style="margin-bottom:10px">각 값의 <b>확신도</b>는 직접 관측 (HIGH), 이론 + 강한 근거 (MED), 미적 선택 (LOW) 으로 구분. <b>근거</b>는 인용 paper 또는 도출 방식.</p>
+
+    <table class="dt">
+      <thead><tr>
+        <th>필드</th><th>값</th><th>확신도</th><th>근거</th>
+      </tr></thead>
+      <tbody>
+
+        <tr class="cat-head"><td colspan="4">궤도 · 자전</td></tr>
+        <tr>
+          <td class="field" data-label="필드">tidally_locked</td>
+          <td class="val" data-label="값">true</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">4.05일 주기 + 조석 댐핑; Agol 2021</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">obliquity_deg</td>
+          <td class="val" data-label="값">0</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">조석 댐핑; Agol 2021 §6.2</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">eccentricity</td>
+          <td class="val" data-label="값">0.00638</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021 TTV</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">sidereal_period_days</td>
+          <td class="val" data-label="값">4.0508</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">semi_major_axis_au</td>
+          <td class="val" data-label="값">0.02227</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021</td>
+        </tr>
+
+        <tr class="cat-head"><td colspan="4">물리 (질량 · 반경)</td></tr>
+        <tr>
+          <td class="field" data-label="필드">mass_mearth</td>
+          <td class="val" data-label="값">0.388</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021 TTV (Piaulet 2025 재확인)</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">radius_rearth</td>
+          <td class="val" data-label="값">0.788</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021; Piaulet 2025 통과 측정</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">surface_gravity_g_earth</td>
+          <td class="val" data-label="값">0.624</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">파생 = 0.388 / 0.788²</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">density_g_cc</td>
+          <td class="val" data-label="값">5.43</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021</td>
+        </tr>
+
+        <tr class="cat-head"><td colspan="4">표면 온도 · 알베도</td></tr>
+        <tr>
+          <td class="field" data-label="필드">equilibrium_temp_k (A=0.3)</td>
+          <td class="val" data-label="값">262</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Piaulet 2025</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">equilibrium_temp_k (A=0)</td>
+          <td class="val" data-label="값">287</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">파생: a/R★, T★ = 2566 K 로부터</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">bond_albedo</td>
+          <td class="val" data-label="값">0.10</td>
+          <td data-label="확신도"><span class="conf-pill conf-med">MED</span></td>
+          <td class="basis" data-label="근거">T-1 b/c JWST 방출 데이터의 저반사율 basalt 유추 (범위 0.05–0.20)</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">dayside_surface_temp_k</td>
+          <td class="val" data-label="값">390</td>
+          <td data-label="확신도"><span class="conf-pill conf-med">MED</span></td>
+          <td class="basis" data-label="근거">bare-rock subsolar 계산 (A=0.1); Way 2025 Sim 01 일면 최댓값 364 K (더 강한 재분배 가정) 와 비교</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">nightside_surface_temp_k</td>
+          <td class="val" data-label="값">150</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">얇은 대기 → 미약한 재분배; T-1 b/c 야간면 추정과 유사</td>
+        </tr>
+
+        <tr class="cat-head"><td colspan="4">대기</td></tr>
+        <tr>
+          <td class="field" data-label="필드">atmosphere_present</td>
+          <td class="val" data-label="값">true (very thin)</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">채택 시나리오 (B); (A) 진공도 관측과 동등 호환</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">atmosphere_surface_pressure_pa</td>
+          <td class="val" data-label="값">1,000 (0.01 bar)</td>
+          <td data-label="확신도"><span class="conf-pill conf-med">MED</span></td>
+          <td class="basis" data-label="근거">H₂-rich 의 3σ 상한; 얇은 CO₂ 도 2σ 이내; Piaulet 2025 §7.1–7.2</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">atmosphere_composition</td>
+          <td class="val" data-label="값">trace CO₂ + H₂O on N₂</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">CH₄ · NH₃ · H₂-rich 제외; CO₂ 미량 2σ 허용; H₂O 는 종단선 구름용</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">atmosphere_scale_height_km</td>
+          <td class="val" data-label="값">12</td>
+          <td data-label="확신도"><span class="conf-pill conf-med">MED</span></td>
+          <td class="basis" data-label="근거">파생: kT/μg (T≈280 K, μ≈30 g/mol, g=6.1 m/s²)</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">terminator_water_ice_clouds</td>
+          <td class="val" data-label="값">scattered, ~mbar level</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">Turbet 2023 GCM 예측, Piaulet 2025 §7.3</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">ocean_present</td>
+          <td class="val" data-label="값">false</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">물 응결 한계 (0.772 S⊕) 안쪽; 폭주 온실; Turbet 2023</td>
+        </tr>
+
+        <tr class="cat-head"><td colspan="4">시각 (PQS · 렌더링)</td></tr>
+        <tr>
+          <td class="field" data-label="필드">surface_tint_primary</td>
+          <td class="val" data-label="값">#2a2018 (dark basalt)</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">저알베도 basalt + M-dwarf 적색 조명; Mercury / Moon 마레 유추</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">surface_tint_accent</td>
+          <td class="val" data-label="값">#5a3220 (iron oxide)</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">광분해 산화; Turbet 2018 기작 (일면 편향)</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">atmosphere_tint</td>
+          <td class="val" data-label="값">#a8b0c0 (pale silver-blue)</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">종단선 H₂O 얼음 + Rayleigh 잔여 (2566 K 조명 하)</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">surface_morphology</td>
+          <td class="val" data-label="값">cratered basalt + 마그마 잔재 (일면 종단선)</td>
+          <td data-label="확신도"><span class="conf-pill conf-low">LOW</span></td>
+          <td class="basis" data-label="근거">≲500 Myr 마그마 바다 (Piaulet 2025 §8) + 8 Gyr 충돌 누적</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">star_apparent_angular_diameter_deg</td>
+          <td class="val" data-label="값">2.85</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">파생: 2 × R★ / a (지구에서 본 태양의 약 5.7배)</td>
+        </tr>
+        <tr>
+          <td class="field" data-label="필드">stellar_illumination_color_temp_k</td>
+          <td class="val" data-label="값">2566</td>
+          <td data-label="확신도"><span class="conf-pill conf-high">HIGH</span></td>
+          <td class="basis" data-label="근거">Agol 2021 SED</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>색상 팔레트</h2>
+  <div class="card">
+    <p class="intro" style="margin-bottom:8px">제안 색상 (M8V 적색 조명을 가정한 인지 색상). 실제 렌더러에서 미세 조정 필요.</p>
+    <div class="sw-row">
+      <div class="sw"><div class="sw-box" style="background:#2a2018"></div>
+        <div><span class="sw-label">표면 기본</span><span class="sw-hex">#2a2018</span></div>
+      </div>
+      <div class="sw"><div class="sw-box" style="background:#5a3220"></div>
+        <div><span class="sw-label">산화철 반점</span><span class="sw-hex">#5a3220</span></div>
+      </div>
+      <div class="sw"><div class="sw-box" style="background:#a8b0c0"></div>
+        <div><span class="sw-label">대기 (종단선 limb)</span><span class="sw-hex">#a8b0c0</span></div>
+      </div>
+      <div class="sw"><div class="sw-box" style="background:#ff7a1a"></div>
+        <div><span class="sw-label">항성 조명 (2566 K)</span><span class="sw-hex">#ff7a1a</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>온도 분포</h2>
+  <div class="card">
+    <p class="intro" style="margin-bottom:6px">조석 잠금 + 약한 대기 재분배 가정. 일면–야간면 차이가 ~240 K 로 극단적.</p>
+    <div class="temp-bar">
+      <div class="temp-mark" style="left:18%"><span class="temp-lab" style="top:-24px">야간면</span><span class="temp-val">150 K</span></div>
+      <div class="temp-mark" style="left:48%"><span class="temp-lab">평형 (A=0)</span><span class="temp-val">287 K</span></div>
+      <div class="temp-mark" style="left:78%"><span class="temp-lab">일면 (subsolar)</span><span class="temp-val">390 K</span></div>
+    </div>
+    <p class="intro" style="font-size:11.5px;color:#6a8aa8;margin-top:24px">참고: 지구 표면 평균 288 K, 화성 평형 온도 210 K, 금성 표면 737 K.</p>
+  </div>
+</section>
+
+<section>
+  <h2>표면 합성</h2>
+  <div class="card">
+    <div class="intro">
+      <p>T-1 b · c 의 JWST 방출/투과 데이터 (Greene 2023, Zieba 2023) 가 어둡고 저알베도인 bare-rock 표면과 일관됨이 확립됐습니다. d 의 경우 직접 방출 데이터는 아직 없지만, Piaulet 2025 의 투과 분광 해석은 bare-rock 시나리오를 완전히 허용합니다. 따라서 d 도 같은 해석을 확장하되, b/c 보다 평형 온도가 낮아 야간면 휘발성 응결물이 가능성으로 남습니다.</p>
+
+      <h3>색상 선택</h3>
+      <p>호스트 별은 2566 K M8V 왜성으로 SED 가 1.1 μm 부근에서 정점, 가시광은 적색–주황색이 압도적입니다. 인간 관측자에게 표면 반사는 광물 본연의 색과 무관하게 적갈색으로 편향됩니다. 신선한 basalt 광물의 광대역 가시광 알베도 (≈0.05–0.12, Hapke 보정) 는 Mercury / Moon mare 가 가장 가까운 태양계 참조. <b>#2a2018</b> (어두운 회갈색) + <b>#5a3220</b> 산화철 반점.</p>
+
+      <h3>산화철 반점</h3>
+      <p>장기간 조석 잠금된 암석형 표면에선 별빛 UV 가 도달하는 영역에 표면 산화가 진행됩니다 (Turbet 2018 의 일면 표면 광화학 논의 일반화). 일면 substellar 영역 중심 ±30° 안쪽에 강하게 편향된 산화 반점 분포를 가정. 낮은 확신도 — 직접 반사 분광은 아직 없습니다.</p>
+
+      <h3>지형</h3>
+      <p>세 가지 요인이 표면 텍스처에 기여합니다. (1) ≲500 Myr 의 마그마 바다 단계 (Piaulet 2025 §8) 가 남긴 흐름 · 균열 구조, (2) ~8 Gyr 의 충돌 누적 (조석 잠금된 표면이라 leading hemisphere 에 충돌 편향), (3) 별-행성 자기 결합으로 인한 유도 가열 (Grayver 2022, Way 2025 인용) 가 제한적 화산 활동 지속 가능성. d 에 대해 (3) 의 직접 증거는 없으므로 기본은 (1)+(2) — Lunar highlands 정도의 충돌 분화구 밀도 + 일면 종단선 부근 마그마 잔재 구조.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>대기 합성</h2>
+  <div class="card">
+    <div class="intro">
+      <p>JWST NIRSpec/PRISM 이 두 번의 통과에서 얻은 투과 스펙트럼은 항성 오염 보정 후 ±100–150 ppm 이내로 평탄합니다 (Piaulet-Ghorayeb 2025). 이로 인해 다음 시나리오들이 배제됩니다.</p>
+    </div>
+    <h3>배제된 시나리오</h3>
+    <div class="excl-list">
+      <div class="x"><b>≳0.01 bar H₂-rich</b>cloud-free, ≲100× 태양 metallicity (>3σ)</div>
+      <div class="x"><b>cloud-free Titan</b>1.6% CH₄ in N₂ (>3σ)</div>
+      <div class="x"><b>Archean Earth</b>1 bar 의 CH₄ 부분압 (>3σ)</div>
+      <div class="x"><b>cloud-free Venus</b>~92 bar CO₂ (>95%)</div>
+      <div class="x"><b>Early Mars</b>1 bar CO₂ (>95%)</div>
+      <div class="x"><b>cloud-free 현대 지구</b>1 bar N₂/O₂ (>95%)</div>
+    </div>
+
+    <h3>2σ 이내로 살아남는 시나리오 (~marginal)</h3>
+    <div class="excl-list">
+      <div class="q"><b>thin Mars-like CO₂</b><0.01 bar</div>
+      <div class="q"><b>cloudy Venus</b>고고도 황산 구름</div>
+      <div class="q"><b>modern Earth + clouds</b>물구름이 CO₂ 가림</div>
+      <div class="o"><b>water-rich + 종단선 H₂O 얼음 구름</b>Turbet 2023 GCM 이 d 에 대해 예측</div>
+      <div class="o"><b>완전 진공 (airless)</b>관측과 완전 일치</div>
+    </div>
+
+    <h3>NearStars 선택 근거</h3>
+    <div class="intro">
+      <p>"극히 얇은 대기 + 종단선 H₂O 얼음 구름" 합성을 채택합니다.</p>
+      <ul style="margin:8px 0 0 22px;padding:0">
+        <li style="margin-bottom:6px"><b style="color:#c0d4e8">압력</b> 은 JWST 3σ 상한 (~0.01 bar = 1000 Pa) 으로 — 관측과 호환되는 가장 두꺼운 대기.</li>
+        <li style="margin-bottom:6px"><b style="color:#c0d4e8">조성</b> 은 N₂ 우세 + 미량 CO₂ + H₂O. CH₄ · NH₃ 는 광분해 (Turbet 2018), H₂ 는 형성 + 탈출 (Hori & Ogihara 2020) 로 배제. CO₂ 미량은 외기 배출 모델 (Liggins 2021, Salman 2024) 이 지지.</li>
+        <li><b style="color:#c0d4e8">종단선 구름</b> 은 전면 overcast 가 아닌 산발적 고고도 패치 — Turbet 2023 GCM 예측 일치, 진공 표면과 시각적 구별 제공.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>자전 · 자전축</h2>
+  <div class="card">
+    <div class="intro">
+      <p>TRAPPIST-1 d 의 매개변수는 강한 동기 구성을 강제합니다. 이심률 0.00638 (Agol 2021), 자전축 기울기는 ≳7 Gyr 시스템 나이 동안 조석으로 0 으로 댐핑 (Agol 2021 §6.2), 자전-공전 공명은 1:1 이 가장 그럴듯합니다. Way 2025 는 3:2 가능성도 공식 배제되지 않음을 언급 (Correia 2014, Makarov 2018, Revol 2024) 하고 GCM 시뮬레이션 두 개를 3:2 가정 하에 수행. NearStars 는 기본을 1:1 로 채택; 3:2 대안은 후속 cfg variant 후보.</p>
+
+      <h3>KSP 구현</h3>
+      <p>완전한 1:1 조석 잠금 → 자전 주기 = 공전 주기 = 4.0508일. Kopernicus 의 <code>rotationPeriod</code> 를 궤도 <code>period</code> 와 동일 (349,989 초) 로 설정.</p>
+
+      <h3>계절 없음</h3>
+      <p>자전축 기울기 0 + 이심률에 의한 일조 변동 0.4% 미만 → 표면 좌표계에서 substellar point 고정. 표면 어느 지점이든 주야 사이클 없음, 계절 극지 이동 없음, 종단선 표류 없음.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>시각 스타일링</h2>
+  <div class="card">
+    <div class="intro">
+      <p>표면과 대기 결정 사항을 종합한 렌더링 가이드.</p>
+
+      <h3>전역 팔레트</h3>
+      <p>어두운 basalt 본체 (<code>#2a2018</code> 기본, <code>#5a3220</code> 강조) 가 강렬한 적-주황 별빛 아래에서 깊은 황토색–숯색 행성으로 보입니다. 녹색 · 청색 채널 거의 없음. 가장 큰 시각적 콘트라스트는 종단선에서의 그레이징 조명이 표면 기복을 드러낼 때 발생.</p>
+
+      <h3>일면 (dayside)</h3>
+      <p>밝은 substellar 영역 (~390 K, ~118 °C), 천정에 가까운 조명이 그림자를 평탄화해 특징이 다소 약함. 산화철 반점은 substellar 점 ±30° 안쪽에서 강함.</p>
+
+      <h3>종단선 띠</h3>
+      <p><b>가장 사진찍기 좋은 구역.</b> 고고도 물얼음 구름이 그레이징 별빛을 잡아 적색 표면 위에 희미한 청백 잔물결로 나타납니다. 상당한 지형 그림자 콘트라스트.</p>
+
+      <h3>야간면 (nightside)</h3>
+      <p>차갑고 (~150 K) 어둡습니다 — 가시광 특징 없이 열적외선 방출만. KSP 야간면 조명은 매우 낮은 ambient 로 설정 — 유일한 광원은 TRAPPIST-1 b · c (드문 가까운 합) 또는 외행성들의 반사광.</p>
+
+      <h3>대기 헤이즈</h3>
+      <p>0.01 bar 대기는 거의 보이지 않습니다. 행성 limb 의 우주 배경 대비로만 보이는 얇은 (3–5 km) 옅은 은청색 limb 헤이즈 (<code>#a8b0c0</code>).</p>
+
+      <h3>하늘에서의 별</h3>
+      <p>TRAPPIST-1 은 d 의 하늘에서 약 <b>2.85°</b> (지구에서 본 태양의 약 5.7배 각크기). 깊은 적-주황색 (≈2566 K 흑체 → <code>#ff7a1a</code> 부근). 표면 밝기는 화성에서 본 태양과 비슷 (~1.12 S⊕). 1 μm 이상 파장에선 별의 항성 플레어가 가시적 (Howard 2023, Piaulet 2025 §1 인용) — KSP 에서는 가끔의 플레어 광량 깜빡임으로 표현 가능 (옵셔널).</p>
+
+      <h3>하늘의 형제 행성들</h3>
+      <p>내합 시 TRAPPIST-1 c 는 ~0.5° 각크기 (지구의 달 정도), e 는 ~0.3°. 거의 동일 평면 공전 → 며칠마다 합 발생.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>참고문헌</h2>
+
+  <div class="bib-cat">
+    <h3>읽음 — 시각/물리 결정에 직접 사용 (3편)</h3>
+    <div class="card">
+      <div class="bib-item">
+        <span class="pri">PRIMARY</span><span class="arxiv">2502.00132</span>
+        <span class="bib-title">Way 2025 — "TRAPPIST-1 d: Exo-Venus, Exo-Earth or Exo-Dead?"</span>
+        <div class="bib-note">ROCKE-3D 3D GCM 17 경계조건 변종. 기후 시나리오 envelope (Arid-Venus ~ Aquaplanet), 표면 온도 범위, Wolf 2017 / Turbet 2018 / Rushby 2020 비교.</div>
+      </div>
+      <div class="bib-item">
+        <span class="pri">PRIMARY</span><span class="arxiv">2508.08416</span>
+        <span class="bib-title">Piaulet-Ghorayeb 2025 — JWST NIRSpec/PRISM 투과 분광</span>
+        <div class="bib-note">결정적 관측 제약. 대기 시나리오 선택 + bare-rock 표면 해석의 근거.</div>
+      </div>
+      <div class="bib-item">
+        <span class="pri">PRIMARY</span><span class="arxiv">2511.10801</span>
+        <span class="bib-title">Salman 2024 — 외기 배출 + 탄소 순환 모델</span>
+        <div class="bib-note">맨틀 산소 fugacity · 초기 물 질량 함수로서의 외기 조성. H₂-rich 대신 미량 CO₂ + H₂O 채택 근거.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bib-cat">
+    <h3>읽음 — 맥락 / 방법론 (6편)</h3>
+    <div class="card">
+      <div class="bib-item"><span class="arxiv">1802.02250</span>
+        <span class="bib-title">de Wit 2018 — HST WFC3 대기 정찰</span>
+        <div class="bib-note">d 의 H₂-rich 대기 8σ 제외. JWST 에 의해 대체됐으나 역사적 최초 비검출.</div>
+      </div>
+      <div class="bib-item"><span class="arxiv">1810.05210</span>
+        <span class="bib-title">Moran 2018 — HST 헤이즈/구름 한계</span>
+        <div class="bib-note">갱신된 질량 + 헤이즈 산란 cross-section. JWST 에 의해 대체.</div>
+      </div>
+      <div class="bib-item"><span class="arxiv">2103.08600</span>
+        <span class="bib-title">Welbanks 2021 — Aurora retrieval framework</span>
+        <div class="bib-note">10-transit JWST NIRSpec 감도 예측. Piaulet 2025 가 실제 실현 (2 transits 로 예측 감도 달성).</div>
+      </div>
+      <div class="bib-item"><span class="arxiv">2206.00028</span>
+        <span class="bib-title">Meadows 2022 — 대기 교환 biosignature false-positive</span>
+        <div class="bib-note">d → e 의 O₂ 전송으로 위양성. 시각적 직접 정보는 아니나 휘발물질 전송 메커니즘 제약.</div>
+      </div>
+      <div class="bib-item"><span class="arxiv">2210.02484</span>
+        <span class="bib-title">Hill 2022 — HZ exoplanet 카탈로그</span>
+        <div class="bib-note">d 를 가장 favorable 한 통과 ≤2 R⊕ HZ 행성 중 하나로 나열. 맥락만.</div>
+      </div>
+      <div class="bib-item"><span class="arxiv">2304.12490</span>
+        <span class="bib-title">Hardegree-Ullman 2023 — ELT O₂ 검출 가능성</span>
+        <div class="bib-note">d–g 의 지구형 O₂ 검출에 16–55년 적분 필요. 장기 관측 맥락.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bib-cat">
+    <h3>읽음 — 기기/방법론 (1편)</h3>
+    <div class="card">
+      <div class="bib-item"><span class="arxiv">2203.04173</span>
+        <span class="bib-title">Rustamkulov 2022 — JWST NIRSpec lab 시계열 특성화</span>
+        <div class="bib-note">Piaulet 2025 의 방법론 참조. d 스펙트럼은 inject-recovery 테스트 케이스로만 등장.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bib-cat">
+    <h3>안 읽음 — arXiv preprint 없음 (22편)</h3>
+    <div class="card">
+      <p class="intro" style="font-size:12.5px;margin-bottom:10px">ADS 검색은 통과했으나 arXiv preprint 가 없는 paper. 기관 라이브러리 접근 또는 PDF paste 필요. 핵심 paper 만 표시.</p>
+
+      <div class="bib-item">
+        <span class="nopre">no arxiv</span>
+        <span class="bib-title">2025epsc.conf..178P — Piaulet-Ghorayeb 2025 EPSC 초록</span>
+        <div class="bib-note">읽은 JWST paper 의 학회 요약본 가능성 높음. <b style="color:#90a8c0">Skip.</b></div>
+      </div>
+      <div class="bib-item">
+        <span class="nopre">no arxiv</span>
+        <span class="bib-title">2023PSJ / 2024absc / 2024ESS — Mullens 외, biosignature 검출 가능성</span>
+        <div class="bib-note">같은 연구의 세 가지 발표 형태. 시각적 정보 가능성 낮음. <b style="color:#90a8c0">Skip.</b></div>
+      </div>
+      <div class="bib-item">
+        <span class="nopre">no arxiv</span>
+        <span class="bib-title" style="color:#f0d8a0">⚠ Confirmation of a Dynamical Model for the TRAPPIST-1 Exoplanetary System</span>
+        <div class="bib-note"><b style="color:#f0d8a0">사용자 paste 요청 후보</b> — Agol 2021 의 dynamics 갱신일 가능성. 접근 가능하면 궤도 매개변수 표 정밀화 가능.</div>
+      </div>
+      <div class="bib-item">
+        <span class="nopre">no arxiv</span>
+        <span class="bib-title">ExoCAM — 기후 모델링 도구 paper</span>
+        <div class="bib-note">도구 paper, 과학 내용 없음. <b style="color:#90a8c0">Skip.</b></div>
+      </div>
+      <div class="bib-item">
+        <span class="nopre">no arxiv</span>
+        <span class="bib-title">VizieR data catalog (Zhang 2018 NIR transmission)</span>
+        <div class="bib-note">데이터 카탈로그, 이미 Zhang 2018 본문에 내용 있음. <b style="color:#90a8c0">Skip.</b></div>
+      </div>
+      <div class="bib-item">
+        <span class="nopre">no arxiv</span>
+        <span class="bib-title">Limits on Clouds and Hazes: insights from the laboratory</span>
+        <div class="bib-note">Moran 2020 lab 후속. JWST 데이터로 결정에 영향 없음. <b style="color:#90a8c0">Skip.</b></div>
+      </div>
+      <div class="bib-item" style="color:#6a8aa8">
+        <span class="bib-note" style="margin-top:0">+ 16편: NEAT GTO 프로그램 설명 / 기기 노이즈 특성화 / Biosignature Detection 예측 (JWST 데이터 이전) / Photochemical 모델 방법론 등. 모두 시각/물리 결정과 무관.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="action">
+    <b>사용자 작업 요청</b> — 위 ⚠ 표시 "Confirmation of a Dynamical Model" paper 에 접근 가능하시면 PDF 텍스트를 paste 해 주세요. Agol 2021 의 궤도 dynamics 가 갱신됐을 경우 본 보고서의 궤도 매개변수 (eccentricity / period 등) 가 정밀화될 수 있습니다.
+  </div>
+
+</section>
+
+<section>
+  <h2>후속 작업</h2>
+  <div class="card">
+    <ul class="intro" style="padding-left:22px">
+      <li style="margin-bottom:6px">Bond albedo 0.10 선택을 향후 d 방출 분광이 나오면 재검증. T-1 b 는 0.0 ± 0.1 (Greene 2023), c 는 유사. d 는 휘발성/구름 성분 보유 시 다를 수 있음.</li>
+      <li style="margin-bottom:6px">M8V 조명 하 렌더러가 준비되면 표면 색상 hex 미세 조정.</li>
+      <li style="margin-bottom:6px">Way 2025 의 3:2 자전-공전 대안 variant — KSP/Principia 게임플레이 구분이 의미 있을 때.</li>
+      <li>Kopernicus PQS + 대기 상호작용 모델 대조 — 이 압력 (0.01 bar) 에선 대기가 실질적으로 장식적.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  NearStars · Phase 3 합성 보고서 · 2026-05-21 작성 · 원본: <a href="https://github.com/anthropics/claude-code">docs/phase3/trappist-1-d.md</a>
+</footer>
+
+</body>
+</html>
