@@ -52,9 +52,9 @@ strong support, low = aesthetic choice within the allowed window.
 | `atmosphere_composition` | N₂ 78%, O₂ ~5% (low; abiotic), CO₂ ~1%, H₂O 0.1–1%, Ar 0.5% | medium | Wolf 2017, Lincowski 2018 aquaplanet equilibrium; CO₂ elevated vs. Earth for outer-HZ warming |
 | `atmosphere_scale_height_km` | 9.5 | medium | derived: kT/μg with T≈270 K, μ=29, g=8.0 m/s² |
 | `atmosphere_tint_rgb_hex` | `#5a7090` (muted blue with M-dwarf red shift) | medium | Rayleigh-blue under 2566 K illumination — heavily red-shifted toward dim cyan-gray |
-| `cloud_cover_fraction` | 0.55 | medium | Wolf 2017 GCM Aquaplanet stratocumulus + cirrus; Cohen 2022 UM finds 60% (consistent) |
+| `cloud_cover_fraction` | 0.55 | medium | Wolf 2017 GCM Aquaplanet stratocumulus + cirrus (60% in Cohen 2022 UM); THAI II 4-GCM intercomparison (Sergeev 2022) gives 10–77% spread across LMD-G / ExoCAM / UM / ROCKE-3D — 0.55 sits in mid-range; confidence dropped from high |
 | `subsurface_ocean_probability` | 0.876 | medium | Boldog 2023 (2312.01893) — top-target ranking for HZ |
-| `cloud_morphology` | double mid-latitude bands + quasi-stationary substellar cluster | medium | Cohen 2022 Met Office UM — double-jet regime, not single equatorial |
+| `cloud_morphology` | double mid-latitude bands + quasi-stationary substellar cluster | medium | Cohen 2022 UM and Wolf 2017 ROCKE-3D find double mid-latitude jet regime; THAI II shows e sits at the tipping point between equatorial-superrotation (3 of 4 GCMs in Hab 1) and mid-latitude (ROCKE-3D and UM with certain settings). The double-band cfg pick is one of two equally-supported outcomes. |
 | `cloud_tint_rgb_hex` | `#c0a890` (warm cream — red-shifted water clouds) | medium | water cloud + 2566 K illumination → warm cream-orange |
 | `ocean_present` | true (substellar open-water disk; ice elsewhere) | medium | Turbet 2018 aquaplanet; Pierrehumbert 2011 "eyeball Earth" morphology |
 | `ocean_extent_substellar_radius_deg` | 35 | medium | Wolf 2017 Aquaplanet — open ocean within ~35° of substellar point |
@@ -146,18 +146,9 @@ secondary atmosphere expected from Wolf 2017 / Lincowski 2018 / Way
 
 For NearStars we adopt the **1 bar N₂-rich aquaplanet atmosphere**:
 
-- **Pressure** 1 bar (100 kPa) — Earth-analog, comfortably within
-  the Glidden 2025 N₂-rich consistency window.
-- **Composition** N₂ 78% (Earth-like background), Ar 0.5%, CO₂ 1%
-  (elevated vs. Earth's 0.04% to provide outer-HZ greenhouse
-  warming; Wolf 2017 finds 1–10× CO₂ enhancement needed for habitable
-  surface), H₂O 0.1–1% (saturated near substellar surface, much
-  less elsewhere), O₂ ~5% (abiotic photolysis-driven O₂; below
-  current Earth's 21% because no oxygenic biosphere is assumed in
-  the cfg).
-- **Clouds.** Wolf 2017 GCM produces ~55% global cloud cover, mostly
-  stratocumulus over the open-water disk and high cirrus elsewhere.
-  Cirrus contributes 5–10% greenhouse warming.
+- **Pressure** 1 bar (100 kPa) — Earth-analog, comfortably within the Glidden 2025 N₂-rich consistency window.
+- **Composition** N₂ 78%, Ar 0.5%, CO₂ 1% (elevated vs. Earth's 0.04% for outer-HZ greenhouse warming — Wolf 2017 finds 1–10× CO₂ enhancement needed for habitable surface; THAI II Hab 1 with only 400 ppm CO₂ gives global mean 232–246 K, ~25 K cooler than the warmer Hab 2 1-bar-CO₂ scenario; cfg's 1% CO₂ choice sits between Hab 1 and Hab 2), H₂O 0.1–1% (saturated near substellar surface), O₂ ~5% (abiotic photolysis).
+- **Clouds.** THAI II 4-GCM intercomparison gives 10–77% cloud cover for Hab 1; the cfg's 0.55 fraction is the mid-range. ROCKE-3D high-cloud end may better match the warm temperate scenario; LMD-G low-cloud end is consistent with a colder, drier variant.
 
 **Sky appearance.** The 1 bar N₂ atmosphere has Earth-like Rayleigh
 scattering at short wavelengths, but the 2566 K stellar SED has
@@ -194,18 +185,7 @@ for 3:2 spin-orbit (Vinson 2017).
 6.1010 days (527 127 s). Kopernicus `rotationPeriod` should match the
 orbital `period` in seconds.
 
-**Slow rotation effects.** With a 6.1-day rotation period, Coriolis
-effects are weaker than on Earth (Rossby number elevated). Wolf 2017
-and Cohen 2022 (2211.11887, Met Office UM GCM) agree that e sits in
-the **double mid-latitude jet regime** (mean zonal wind ~18 m/s) —
-not Earth's single equatorial jet. Two stationary Rossby gyres form
-at 60–70°N/S, with the eastern gyre's center oscillating between
-30–60°E and 120–150°E on a ~20-day cycle. The substellar cloud disk
-reaches only ±30° in latitude (vs. ±60° on Proxima b in the same
-study). The visual implication for KSP: cloud patterns dominated by
-two mid-latitude bands of stratocumulus and a quasi-stationary
-substellar cloud cluster, with subtle 20-day variability that won't
-be visible at typical KSP gameplay speeds.
+**Slow rotation effects.** With a 6.1-day rotation period, Coriolis effects are weaker than on Earth. The THAI II 4-GCM intercomparison (Sergeev 2022, 2109.11459) shows e sits at the **tipping point** between two atmospheric circulation regimes: equatorial-jet ("Gill–Matsuno" superrotation, found in ExoCAM / LMD-G / UM Hab 1) and mid-latitude jet ("fast rotator", found in ROCKE-3D and in UM under Cohen 2022 setup). Both regimes produce different cloud morphologies — for NearStars we adopt the double-band mid-latitude jet visual (mean zonal wind ~18 m/s, Rossby gyres at 60–70°N/S, substellar cloud disk reaching ±30° in latitude), but the alternative equatorial-jet morphology (zonal cloud belt at low latitudes with mid-latitude clearer zones) is equally physically valid. The 20-day quasi-stationary cycle in cloud variability (Cohen 2022) is too slow to matter at KSP gameplay speeds.
 
 **No seasons.** Obliquity = 0; libration-induced insolation variation
 < 0.4%. The substellar point and its open-water disk are fixed in
@@ -279,6 +259,10 @@ Combining surface and atmosphere decisions:
 - **2008.09599** Bourgeois 2024 — Magma ocean evolution of e/f/g.
   Gives water mass fraction range 0–0.23 for e; sets the bedrock
   water budget. Used in surface synthesis.
+- **2109.11457** Sergeev 2022 (THAI I) — Dry-case 4-GCM intercomparison for TRAPPIST-1 e. Baseline reference for the wet/dry comparison.
+- **2109.11459** Sergeev 2022 (THAI II) — Moist-case 4-GCM intercomparison. Provides the 10–77% cloud cover spread and the equatorial-vs-mid-latitude jet regime tipping-point analysis. **Major refinement to the cfg's cloud morphology confidence.**
+- **2109.11460** Fauchez 2022 (THAI III) — Simulated transmission spectra for e from the THAI suite. Constrains JWST detectability needs (Hab 1: 23–38 transits, Hab 2: 7–12 transits).
+- **1902.03732** Fraschetti 2019 — Stellar Energetic Particle flux in TRAPPIST-1 HZ. Predicts proton flux ~10⁶× Earth's at e, but with two mitigating mechanisms (containment by stellar B-field, CME suppression). Supports keeping a magnetic field in the cfg without forcing a specific value.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -368,3 +352,4 @@ Notable items skipped:
 - Cross-check the 5% abiotic O₂ choice — could be 10–20% in some
   Lincowski 2018 scenarios. Lower bound matches "minimum
   photolytic" expectation; upper bound is more "post-runaway".
+- The cloud morphology between double-mid-latitude-jet and equatorial-superrotation is essentially a GCM-dependent prediction. If a future intercomparison resolves the tipping point, the cfg's `cloud_morphology` value (and possibly the visual rendering of cloud bands) may need updating.

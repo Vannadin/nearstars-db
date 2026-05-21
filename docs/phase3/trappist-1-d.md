@@ -76,6 +76,8 @@ Mercury / Moon mare analog (broadband visible albedo ≈ 0.05–0.12,
 Hapke-corrected) is the closest Solar System reference. We pick
 `#2a2018` (dark gray-brown) with `#5a3220` iron-oxide patch tint.
 
+**Tidal heating refinement.** Dobos 2019 (1902.03867) gives F_int(d) = 0.26 +0.14/-0.21 W/m² with mantle T_eq ≈ 1645 K (above rock solidus, supporting up to 35% melt by volume). The flux is just below the runaway-greenhouse critical value (273 W/m², per the same paper); with Bond albedo ≥ 0.3, d sits in the safe (non-runaway) regime. The cfg's current A_B = 0.10 would technically put d into runaway if a substantial volatile reservoir existed — but the JWST-constrained near-airless interpretation (Piaulet 2025) resolves this tension by leaving essentially no water to run away.
+
 **Iron oxide patches.** Photochemistry on long-tidally-locked terrestrial
 worlds tends to produce surface oxidation in regions accessible to
 stellar UV, even with extremely thin atmospheres (Turbet 2018 photolysis
@@ -137,6 +139,8 @@ terminator water-ice clouds" scenario:
   not a full overcast. This matches the GCM prediction (Turbet 2023,
   Piaulet 2025 §7.3) and provides visual interest distinct from a fully
   bare planet.
+
+**Interior-atmosphere coupling.** Acuña 2021 (2101.08172) characterizes d's hydrosphere as not in global radiative balance (absorbed flux ≈ 33 W/m² below OLR), implying d is gradually cooling. With WMF in the 0.036–0.084 range and Earth-analog radiogenic flux, d's volatile inventory could plausibly exist in condensed phases (liquid water or ice Ih) at the surface or in a subsurface layer. This is an alternative scenario to the chosen "thin atmosphere + terminator water-ice clouds" cfg — for the canonical NearStars output, we keep the JWST-constrained interpretation, but the cooling-and-condensing scenario is preserved as a cfg variant.
 
 **Sky appearance.** With 0.01 bar surface pressure, Rayleigh scattering
 is essentially absent on the dayside — the sky is near-black at the
@@ -221,6 +225,13 @@ Combining the surface and atmosphere decisions:
   cycle. Constrains outgassing composition as a function of mantle
   oxygen fugacity and initial water mass fraction. Supports trace-CO₂
   + H₂O composition over H₂-rich.
+- **1902.03867** Dobos 2019 — Maxwell viscoelastic tidal heating model.
+  F_int(d) = 0.26 W/m², mantle T 1645 K (up to 35% melt by volume).
+  Identifies the runaway-greenhouse threshold for d's albedo (A_B ≥ 0.3
+  needed if volatile reservoir present).
+- **2101.08172** Acuña 2021 — Hydrosphere characterization for the 7
+  planets. d's WMF 3.6–8.4%, atmosphere not in radiative balance
+  (cooling phase). Supports an alternative condensed-volatile scenario.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -311,3 +322,8 @@ it could refine the orbital parameters table above.
 - Cross-check 0.01 bar atmosphere choice against the Kopernicus
   PQS+atmosphere interaction model — at this pressure the atmosphere
   is essentially decorative.
+- The Dobos 2019 albedo tension (A_B ≥ 0.3 needed to avoid runaway if
+  any liquid water present) deserves explicit cfg attention if a future
+  renderer wants to support a "wet d" variant. The canonical cfg sits
+  at A_B = 0.10 under the airless / near-airless interpretation; the
+  wet variant would need A_B ≥ 0.3.

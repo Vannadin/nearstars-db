@@ -57,7 +57,10 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_morphology` | weathered basaltic plains; aged impact craters; subdued relief | medium | no fresh resurfacing inferred (unlike b); cumulative ~8 Gyr impacts |
 | `surface_ice_caps` | nightside CO₂ / H₂O frost in a narrow band ≳60° from substellar | medium | thin atmo can transport trace H₂O; nightside T < CO₂ frost point |
 | `induction_heating_w_m2` | 0.05–0.5 | medium | Grayver 2022 — lower than b due to greater distance; not enough for active volcanism |
-| `tidal_heating_w_m2` | 0.005–0.05 | medium | scaled down from Bolmont 2026 b-flux by ~10× (no direct c-specific W/m² in the cited papers); Brasser 2019 gives k₂/Q = (0.4–2)×10⁻⁴ for c |
+| `tidal_heating_w_m2` | 0.62 (+0.42/-0.53) (Dobos 2019) or 1.32 (+0.30/-0.47) (Barr 2018) | medium | Barr 2018 (1712.05641) and Dobos 2019 (1902.03867) — Maxwell viscoelastic models with Grimm 2018 + Agol 2021 masses. Io-class flux; T_eq mantle 1659–1666 K (above rock solidus → partial melt). |
+| `core_mass_fraction` | 0.24 ± 0.08 | medium | Acuña 2021 (2101.08172) — Fe/Si stellar-constrained scenario |
+| `iron_mass_fraction_pct` | ~50 | medium | Barr 2018 — highest density of 7 planets (7642 kg/m³ mean), iron-richest |
+| `water_mass_fraction` | ≤4 × 10⁻⁶ | medium | Acuña 2021 — scenario 1 best estimate near zero |
 | `tidal_k2_over_Q` | (0.4–2) × 10⁻⁴ | medium | Brasser 2019 (1905.00512) interior models; dynamical lower bound k₂/Q ≳ 1×10⁻³ |
 | `moment_of_inertia_C` | 0.286 (range 0.235–0.4) | low | Brasser 2019 representative case |
 | `star_apparent_angular_diameter_deg` | 4.02 | high | derived: 2 × R★ / a × (180/π) |
@@ -75,13 +78,25 @@ significantly older than b's because c has less tidal + induction
 heating (Bolmont 2020 estimates tidal heating ~10× lower at c, and
 Grayver 2022 induction heating ~10× lower for the same reason).
 
-Without significant resurfacing, c's surface accumulates ~8 Gyr of
-impact bombardment and photochemical weathering. The result is a
-mature, dark, low-albedo surface analogous to the lunar highlands or
-Mercury's intercrater plains (broadband visible albedo ≈ 0.06–0.10),
-but with iron-oxide patches concentrated near the substellar
-hemisphere due to UV photolysis of any surface volatiles delivered by
-late impacts.
+The latest tidal heating estimates (Barr 2018 / 1712.05641 and Dobos
+2019 / 1902.03867) revise c's interior heat flux upward to **Io-class
+values** of 0.6–1.3 W/m² — an order of magnitude higher than the
+original "scaled from b" estimate. This implies c may host **active
+or recent volcanism**, possibly with surface eruptions of silicate
+magma. The cfg therefore widens its surface interpretation: weathered
+basalt remains the most common surface (over ~8 Gyr of impact
+accumulation), but **fresh basaltic resurfacing in localized "hot
+spots"** is now equally plausible. Visual rendering should show a
+mixed character — mature regolith dominant globally with brighter,
+less-weathered patches near regions of recent volcanism.
+
+Interior composition is distinctive among the seven planets. Acuña
+2021 (2101.08172) finds c's water mass fraction is essentially zero
+(≤4×10⁻⁶), with a core-mass fraction of 0.24 ± 0.08. Barr 2018 reports
+c has the **highest mean density of any TRAPPIST-1 planet** (7642
+kg/m³ — about 50% iron by mass). This iron-richness is independent
+of any specific composition model: c sits cleanly outside the
+water-rich range of the outer planets.
 
 The interior composition is consistent with — but does not require —
 substantial water. Unterborn 2018 (1806.10084) finds c can be fit by
@@ -150,6 +165,15 @@ For NearStars we adopt **0.1 bar O₂-dominated thin atmosphere**:
   insufficient water for cloud formation in steady state, and CO₂
   is too low for CO₂-ice clouds.
 
+**Population-statistics support.** Gialluca 2024 (2405.02401) ran
+MCMC simulations of the post-runaway escape epoch for the inner
+TRAPPIST-1 planets under the joint constraint "b airless + c thin O₂".
+Their result: with initial water ≥1 TO, **>98% of c simulations
+retain an O₂-dominated atmosphere**; b/c-joint inversion gives
+initial water 8.2 +1.5/-1.0 Earth oceans. The 0.1 bar O₂ choice is
+therefore not only observation-consistent but is the dominant
+outcome of the post-runaway-greenhouse evolution.
+
 **Sky appearance.** The 0.1 bar O₂ atmosphere has weak Rayleigh
 scattering (about 5% at 0.5 μm vs. Earth's 1 bar of N₂+O₂). The sky
 near the substellar point is faintly dark-violet at the zenith,
@@ -166,6 +190,13 @@ Tidal damping for c at 2.42-day period over 7.6 Gyr establishes the
 synchronous (1:1) configuration unambiguously. Obliquity damped to
 zero. Eccentricity is 0.00654 (Agol 2021) — too low to support a 3:2
 resonance (Vinson 2017 finds 3:2 stable only for e ≳ 0.01).
+
+**Possible magma ocean signature.** Bolmont 2020 (2002.02015) shows
+that TRAPPIST-1 b/c TTVs could hint at a high planetary Love number
+(k₂ ≳ 1.5), which would dynamically signal a liquid magma layer.
+Combined with the Io-class tidal flux (Barr 2018), this raises the
+prior on c hosting partial melt. The current TTV fits are
+noise-floor-limited, so the inference is tentative.
 
 **KSP implementation note.** Rotation period = orbital period =
 2.4219 days (209 254 s). Kopernicus `rotationPeriod` should match the
@@ -244,6 +275,22 @@ Combining surface and atmosphere decisions:
   can persist under non-convective atmospheres. Informs the
   "weathered surface" vs. "fresh ultramafic" choice (c lands on
   weathered side).
+- **1712.05641** Barr 2018 — Interior structures and tidal heating
+  in TRAPPIST-1 planets. Drives the upward revision of c's tidal
+  heat flux to Io-class (1.32 W/m²). Identifies c as the iron-richest
+  planet (highest density, ~50% Fe).
+- **1902.03867** Dobos 2019 — Tidal heating and habitability of
+  TRAPPIST-1 exoplanets. Refined Maxwell viscoelastic model with
+  Grimm 2018 masses. F_int(c) = 0.62 W/m². Confirms partial-melt
+  interior.
+- **2101.08172** Acuña 2021 — Hydrosphere characterization. c WMF
+  ≤ 4×10⁻⁶, CMF 0.24 ± 0.08. Drives the "dry rocky" interior
+  choice.
+- **2405.02401** Gialluca 2024 — MCMC escape simulation. >98% of
+  c outcomes retain O₂ atmosphere. Strongly supports the 0.1 bar
+  O₂ scenario.
+- **2002.02015** Bolmont 2020 — TTV Love-number constraint hinting
+  at possible magma layer.
 
 ### Read (context / methodology, not decision-driving)
 

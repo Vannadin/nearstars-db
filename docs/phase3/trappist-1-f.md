@@ -36,7 +36,7 @@ substellar open water — is preserved as a cfg variant.
 | `radius_rearth` | 1.045 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 0.952 | high | derived = 1.039 / 1.045² |
 | `density_g_cc` | 4.92 | high | Agol 2021 |
-| `water_mass_fraction` | 0.07–0.16 | high | Acuña 2025 — MAGRATHEA interior fit; mantle-to-core dependent |
+| `water_mass_fraction` | 0.04–0.16 | high | Acuña 2025 (2504.16201) reports 7-16% via MAGRATHEA; Acuña 2021 (2101.08172) Fe/Si-constrained scenario 2 gives 3.7 ± 2.6% — union of recent estimates broadens lower bound |
 | `insolation_s_earth` | 0.38 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 215 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.5, snowball) | 188 | high | derived; high-albedo snowball case |
@@ -52,15 +52,15 @@ substellar open water — is preserved as a cfg variant.
 | `cloud_cover_fraction` | 0.25 | medium | Wolf 2017 — limited cloud formation in cold thin atmo |
 | `cloud_tint_rgb_hex` | `#d8c8b8` (CO₂ ice + water ice mix, M-dwarf shifted) | medium | terminator + substellar cirrus |
 | `ocean_present` | true (sub-glacial; small substellar open-water lens) | medium | Acuña 2025 wmf 16%; basal melting + greenhouse → marginal open water |
-| `ocean_extent_substellar_radius_deg` | 8 | medium | Wolf 2017 — tight open-water disk under 0.1 bar CO₂ |
+| `ocean_extent_substellar_radius_deg` | 0 (default snowball) / 40 (1 bar CO₂ variant) | medium | Turbet 2018 (1707.06927) — at 0.1 bar CO₂ (current cfg pressure), f is a complete snowball; the previously assumed 8° substellar lens is NOT supported. Open-water lens emerges only at ≥1 bar CO₂ (alternative cfg variant) |
 | `ocean_tint_rgb_hex` | `#1a1c30` (deep dark navy, mostly hidden under ice) | low | sub-glacial / small lens; minimally visible from orbit |
 | `surface_ice_caps` | global coverage outside ~8° substellar disk; ~95% of surface | medium | snowball / "lobster-pot" eyeball; Pierrehumbert 2011 |
 | `surface_tint_rgb_hex_primary` | `#e0d8d0` (clean snow / glacial ice) | medium | snow albedo + M-dwarf illumination |
 | `surface_tint_rgb_hex_accent` | `#888070` (CO₂ frost stained with dust + exposed bedrock at ridge tops) | low | nightside CO₂ frost over ice; thin sublimation lag |
 | `surface_morphology` | global glacial ice over frozen ocean; pressure-ridge terrain; visible bedrock at terminator ridges | medium | tidally-locked snowball; Wolf 2017 |
 | `magnetic_field_present` | true (weak, ~0.05× Earth) | low | small mass + cold interior + slow rotation |
-| `induction_heating_w_m2` | 0.005–0.05 | medium | Grayver 2022 — minimal at f's distance |
-| `tidal_heating_w_m2` | 0.0005–0.005 | medium | Bolmont 2020 — minimal at f |
+| `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 (1710.08761) — total induction heating 1.1×10¹⁸ W ≈ 0.0012 W/m² normalized to f's surface; below molten-mantle threshold |
+| `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. Lower bound is 0 (uncertainty spans to zero). Current value is 30× higher than the previous Bolmont 2020-scaled estimate |
 | `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics × 1 |
 | `star_apparent_angular_diameter_deg` | 1.65 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
@@ -111,6 +111,32 @@ perceived hue is warm cream (`#e0d8d0`) rather than blue-white.
 CO₂ frost on the nightside contributes a slightly tan tint to dark
 patches (`#888070`).
 
+**Snowball default, lens variant.** Critically, Turbet 2018 explicitly
+shows that f at 0.1 bar CO₂ (the current cfg pressure) is a **complete
+snowball** — no open water at all. The substellar open-water lens
+emerges only at ≥1 bar CO₂. The cfg's default is therefore revised
+to a global snowball; the "8° substellar lens" is preserved only as
+the 1 bar CO₂ variant for a more habitable scenario. Visually this
+means: f looks like a clean white sphere from orbit, with no dark
+"pupil" — the eyeball-Earth appearance is reserved for e and (in the
+warm variant) for f at higher CO₂.
+
+**Sub-glacial ocean architecture.** Acuña 2021 (2101.08172) details
+the hydrosphere layering: surface ice Ih, then high-pressure ice
+phases (II/III/V/VI) at increasing depth, transitioning to ice VII
+at the base (~100 GPa). A thin liquid-water lens can exist between
+ice Ih and the high-pressure ices, depending on geothermal flux —
+this is the sub-glacial ocean that the cfg already adopts. Europa-like
+layered hydrosphere is the closest Solar System analog.
+
+**Photochemical haze / tholin layer.** Turbet 2018 §6 finds that f
+sustains photochemical haze formation at its altitude. Over geological
+timescales these settle as a faint tan/brown surface overlay biased
+toward UV-exposed regions. The cfg's iron-oxide accent already captures
+something similar, but the mechanism (UV photochemistry → tholin
+deposition) is distinct from oxide formation — both can contribute
+to the surface color.
+
 **Iron oxide / bedrock.** Limited exposure — only at ridge tops near
 the terminator where glacial flow has thinned ice. Iron oxide tint
 is faint compared to the inner planets (b, c) due to limited stellar
@@ -153,6 +179,13 @@ open-water lens**:
   frozen and no liquid-water weathering occurs to scrub CO₂).
 - **Clouds.** Limited (~25% global): water-ice cirrus near the
   substellar disk and faint CO₂ ice clouds at the terminator.
+
+**CO₂ cold-trap geometry.** Turbet 2018 finds that f's CO₂ ice deposits
+form preferentially in two symmetric cold traps at longitude -120°,
+latitude ±80°, at 30–50 km altitude. This is a visual annotation for
+the cfg: nightside CO₂ ice clouds (the small fraction predicted at
+0.1 bar pressure) are concentrated in these polar cold-trap regions,
+not uniformly distributed.
 
 **Sky appearance.** The 0.1 bar CO₂ atmosphere has Rayleigh
 scattering ~5% of Earth's, with the M-dwarf SED further depressing
@@ -221,6 +254,23 @@ substellar point is essentially fixed.
   worlds. f is one of the planets where Lincowski's modeling shows
   cold, CO₂-rich atmospheres are the equilibrium. Already read for
   d Phase 3 / e Phase 3.
+- **1712.05641** Barr 2018 — Interior structures and tidal heating
+  in TRAPPIST-1 planets. Drives the upward revision of f's tidal
+  heat flux to 0.14 W/m² (30× higher than previous estimate).
+  Maxwell viscoelastic; mantle T_eq 1621 K.
+- **2101.08172** Acuña 2021 — Hydrosphere characterization. Details
+  f's sub-glacial ocean architecture (ice Ih / high-pressure ices /
+  ice VII). WMF 3.7 ± 2.6% scenario 2, broadening the lower bound
+  on water content.
+- **1707.06927** Turbet 2018 — Modeling climate diversity for
+  TRAPPIST-1. **Drives the snowball default**: at 0.1 bar CO₂, f is
+  fully ice-covered (no substellar lens). Open ocean emerges only at
+  ≥1 bar CO₂. Also identifies the polar CO₂ cold-trap geometry.
+- **1710.08761** Kislyakova 2017 — Induction heating estimates. f
+  total ~1.1×10¹⁸ W; revises the cfg's induction heating downward.
+- **1911.08596** Fauchez 2019 — Cloud and haze modeling for HZ
+  TRAPPIST-1 planets. Confirms f's snowball state at all plausible
+  CO₂ pressures ≤10 bar.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -274,3 +324,8 @@ The f bibliography is very small (15 papers, 6 with arXiv).
   Europa's — possibly with hydrothermal activity if any tidal /
   radiogenic heating reaches the seafloor. Not directly visual
   but worth a Principia annotation.
+- The choice between snowball default (0.1 bar CO₂) and 1 bar CO₂ +
+  substellar open-water lens variant is a cfg gameplay-vs-fidelity
+  trade. Default snowball matches Turbet 2018 most directly; the
+  warmer variant preserves the more visually distinctive "eyeball"
+  rendering.

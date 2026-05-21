@@ -49,15 +49,15 @@ rocky surface).
 | `surface_temp_global_mean_k` | 140 | medium | weak redistribution from thin atmo |
 | `atmosphere_present` | true (very tenuous) | low | Gressier 2022 rejects H₂-rich; trace outgassed CO₂ + N₂ plausible |
 | `atmosphere_surface_pressure_pa` | 500 | low | 0.005 bar — minimal residual; Mars-thin |
-| `atmosphere_composition` | N₂ ~90%, trace CO₂ ≲1000 ppm, Ar / H₂O trace | low | Bolmont 2018 review caps p_CO₂ partial pressure at 100–1000 ppm regardless of background; surface CO₂ cold-trap dominates |
+| `atmosphere_composition` | N₂ ~90%, trace CO₂ 10–100 ppm, Ar / H₂O trace | low | Bolmont 2018 review caps p_CO₂ partial pressure at 100–1000 ppm regardless of background; Turbet 2017 tightens to "a few tens of ppm" at 1 bar N₂ for h's surface temperature regime (pure-CO₂ equilibrium = 4 mbar at 145 K, but with N₂ background the effective trace CO₂ is much lower). |
 | `atmosphere_scale_height_km` | 6.0 | medium | derived: kT/μg with T≈140 K, μ=40, g=5.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#302820` (essentially imperceptible Rayleigh) | low | very thin atmo, M-dwarf SED → negligible scattering |
 | `cloud_cover_fraction` | 0.02 | low | minimal — sporadic CO₂ ice cirrus only |
 | `cloud_tint_rgb_hex` | n/a | high | clouds too sparse for cfg-relevant tint |
 | `ocean_present` | uncertain (sub-glacial possible if wmf at upper bound) | low | low mass + low temp → less basal melt than g; ocean if any is thin and Europa-like |
-| `surface_ice_caps` | global CO₂/N₂ frost in cold zones, bedrock outcrop near substellar | medium | Mars-Pluto hybrid analog at lower insolation |
-| `surface_tint_rgb_hex_primary` | `#3a2c20` (weathered iron-rich bedrock, dust + Mars analog) | medium | low-density rocky surface + photolytic oxidation over 7.6 Gyr |
-| `surface_tint_rgb_hex_accent` | `#c8b8a0` (CO₂/N₂ frost patches + bright ice) | low | volatile-frost deposition in cold regions; Mars polar analog |
+| `surface_ice_caps` | H₂O ice cover globally, with buried CO₂ ice underneath; minor bedrock outcrop near substellar | medium | Turbet 2017 (1707.06927) shows surface CO₂ ice is gravitationally unstable on h and gets buried beneath the H₂O ice shell over geological timescales. Surface frost is therefore predominantly H₂O ice with CO₂ ice as a deeper layer. |
+| `surface_tint_rgb_hex_primary` | `#d8d0c4` (H₂O ice / snow under M-dwarf light) | medium | Surface is predominantly H₂O ice (Turbet 2017 burial argument); the iron-rich bedrock is exposed only in localized substellar regions. Color palette inverts relative to the Mars-Pluto hybrid framing — cream-white dominant, dark bedrock as minor accent. |
+| `surface_tint_rgb_hex_accent` | `#3a2c20` (weathered iron-rich bedrock — minor, only at substellar) | low | Surface is predominantly H₂O ice (Turbet 2017 burial argument); the iron-rich bedrock is exposed only in localized substellar regions. Color palette inverts relative to the Mars-Pluto hybrid framing — cream-white dominant, dark bedrock as minor accent. |
 | `surface_morphology` | cratered ancient bedrock near substellar, patchy CO₂/N₂ ice frost toward terminator and nightside | medium | Mars/Mercury analog; very low resurfacing rate |
 | `magnetic_field_present` | false (low mass + cold + slow rotation) | low | likely no active dynamo; small fossil field possible |
 | `induction_heating_w_m2` | 0.001–0.01 | medium | Grayver 2022 — lowest in system due to distance + small mass |
@@ -104,10 +104,9 @@ For the surface morphology, we adopt a Mars-Pluto hybrid analog:
 - **Nightside** (>120°): predominantly CO₂ + N₂ frost cover at
   ~60 K, with occasional dark bedrock patches at ridge tops.
 
-**Color choice.** Weathered iron-rich bedrock under M-dwarf
-illumination: dark red-brown primary `#3a2c20` (Mars rust + lower
-albedo from M-dwarf shift). Frost accents are cream-white
-`#c8b8a0`.
+**Color choice — H₂O ice dominant.** Turbet 2017 shows that even though h's atmosphere is dominated by trace CO₂ at low pressures, the surface frost composition is **predominantly H₂O ice** (not CO₂/N₂ frost as in earlier framings). CO₂ ice deposits form transiently but are gravitationally unstable — they get buried beneath the H₂O ice shell over geological timescales. The visible surface is therefore cream-white (`#d8d0c4`) from clean H₂O ice under M-dwarf illumination, with minor weathered iron-rich bedrock patches (`#3a2c20`) exposed only in localized substellar regions where ice has sublimated. The Mars-Pluto hybrid framing inverts: cream-white dominant globally, with dark bedrock as the minor accent rather than the primary surface tone.
+
+**Interior structure.** Barr 2018 (1712.05641) finds h has a 1030 km rock core (mean-density case), with a maximum-density configuration allowing only ~100 km H₂O shell over the rock. The current cfg WMF 0.03–0.10 sits between these extremes. h's CMF is at the lower end of the system (~0.23), consistent with a relatively iron-poor rocky body.
 
 **Bedrock / iron oxide.** Prominent on h compared to g/f — the
 exposed substellar bedrock has had 7.6 Gyr of photolytic oxidation
@@ -142,23 +141,13 @@ Theoretical modeling:
   near or below the retention threshold for typical secondary
   atmospheres.
 
-For NearStars we adopt **0.005 bar (Mars-thin) N₂-dominated
-atmosphere with trace CO₂**:
+For NearStars we adopt **0.005 bar (Mars-thin) N₂-dominated atmosphere with trace CO₂**:
 
-- **Pressure** 0.005 bar (500 Pa) — comparable to Mars (~600 Pa,
-  variable). Above zero because some outgassing should accumulate
-  on a 0.3 M⊕ planet; below 0.01 bar because cosmic-shoreline /
-  Jeans-escape constraints suggest h cannot retain much more.
-- **Composition** N₂-dominated (~90%), trace CO₂ (~0.1% = 1000 ppm).
-  This is a revision from an earlier draft that had 70% CO₂. The
-  driver is **Bolmont 2018 (1810.11255)** review, which finds that
-  GCMs of h cannot accumulate more than 100–1000 ppm CO₂ regardless
-  of N₂ background — surface cold-trapping removes CO₂ to nightside
-  ice deposits faster than outgassing can replenish it. The
-  remaining 10% is split among Ar, frost-cycle H₂O vapor, and
-  fossil O₂.
-- **Clouds.** Minimal (~2% global): rare CO₂ ice cirrus only,
-  similar to Mars's mesospheric clouds.
+- **Pressure** 0.005 bar (500 Pa) — comparable to Mars. Above zero because some outgassing should accumulate on a 0.3 M⊕ planet; below 0.01 bar because cosmic-shoreline / Jeans-escape constraints suggest h cannot retain much more.
+- **Composition** N₂-dominated (~90%), trace CO₂ (10–100 ppm, NOT 1000). The driver is Bolmont 2018 review's cold-trap argument plus Turbet 2017 specific calculation showing pure-CO₂ equilibrium is just 4 mbar at 145 K for h, and N₂-background scenarios give only "a few tens of ppm" CO₂ in the gas phase. The remaining ~10% is split among Ar, frost-cycle H₂O vapor, and fossil O₂.
+- **Clouds.** Minimal (~2% global): rare CO₂ ice cirrus only.
+
+**Atmospheric retention favored by ion-escape arguments.** Despite the cosmic-shoreline-threshold framing, Dong 2018 (1705.05535) finds h has the LOWEST ion escape rate in the system (1.29×10²⁶ s⁻¹) and the highest atmospheric retention timescale (~10¹⁰ yr) — "h ought to be the most stable planet from the perspective of atmospheric ion loss." Stellar wind dynamic pressure at h is "only" 100–300× Earth's vs. 10³–10⁴× at b. Krissansen-Totton 2022 (2207.04164) similarly concludes that outer planets "retain significant surface volatiles in virtually all model simulations" with "CO₂-dominated or CO₂-O₂ atmospheres for all planets that retain substantial atmospheres." The cfg's thin N₂+trace-CO₂ choice is conservative compared to this; a thicker (~0.1 bar) atmosphere is also defensible.
 
 **Sky appearance.** The 0.005 bar atmosphere is essentially
 invisible from orbit. From the surface, the sky is black except for
@@ -182,6 +171,8 @@ h's place in the 7-planet Laplace-resonance chain (8:5 mean-motion
 resonance with g). The chain provides ongoing small-amplitude
 perturbations of the orbital elements, but for visual / cfg
 purposes the configuration is stable.
+
+**Spin-orbit capture probability.** Makarov 2018 (1803.07453) computes the capture probability for h into 3:2 spin-orbit resonance: 0.017 (effectively zero). h should "almost certainly be synchronized" into the 1:1 resonance. This confirms the cfg's `tidally_locked = true` decision. h's tidal dissipation peak is at Maxwell time ~0.20 d (close to its orbital period), giving 5.3×10¹³ W total — about 7×10⁻³ W/m² normalized, a few orders of magnitude higher than the previous Bolmont 2020 estimate. The cfg's `tidal_heating_w_m2: 0.00001–0.0001` may understate the actual value by 1–2 orders of magnitude.
 
 ## Visual styling
 
@@ -232,6 +223,11 @@ purposes the configuration is stable.
 - **2504.19872** Castan-Lopez 2025 — Cosmic Shoreline Revisited.
   Places h close to the retention threshold; supports thin-atmo
   cfg choice.
+- **1707.06927** Turbet 2017 — Climate diversity, tidal dynamics, volatile fate for TRAPPIST-1 planets. Specifies CO₂ equilibrium pressure (4 mbar at 145 K for h pure-CO₂) and demonstrates surface CO₂ ice burial under H₂O ice. **Drives the major surface composition revision (H₂O ice dominant, not CO₂ frost).**
+- **1712.05641** Barr 2018 — Interior structures and tidal heating. h rock core 1030 km, maximum 100 km H₂O shell. Lowest density / CMF in the system after the inner trio.
+- **1705.05535** Dong 2018 — Atmospheric escape from TRAPPIST-1 planets. h has lowest ion escape rate, atmospheric retention ~10¹⁰ yr. **Argues against the cosmic-shoreline-threshold framing**: ion-escape physics favors h retaining an atmosphere.
+- **2207.04164** Krissansen-Totton 2022 — Coupled atmosphere-interior model. Predicts CO₂-dominated or CO₂-O₂ atmospheres for outer planets in virtually all simulations. Supports keeping a non-trivial atmosphere on h.
+- **1803.07453** Makarov 2018 — Spin-orbital tidal dynamics. h capture probability into 3:2 = 0.017 → 1:1 lock confirmed.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -314,3 +310,5 @@ h only in passing.
 - The water mass fraction (0.05–0.15) is poorly constrained;
   could be 0 (rocky-dry analogue) or up to 0.25 (Europa analog).
   Phase 2 should add more interior-structure measurements.
+- The "desiccated habitable h" alternative scenario (Lincowski 2018) still stands as a cfg variant; the Dong 2018 / Krissansen-Totton 2022 retention-favoring arguments raise its prior somewhat. A 0.1 bar variant might be more realistic than the canonical 0.005 bar.
+- Tidal heating `tidal_heating_w_m2` may be underestimated by 1–2 orders of magnitude per Makarov 2018 (~7×10⁻³ W/m² peak vs cfg's 0.00001–0.0001). Re-check against more recent Bolmont successors.

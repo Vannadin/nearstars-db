@@ -55,7 +55,7 @@ high = 직접 측정되었거나 강하게 제약됨, medium = 강한 근거를 
 | `surface_tint_rgb_hex_primary` | `#1a1612` (어두운 ultramafic basalt) | medium | Ducrot 2024 의 "fresh ultramafic" + 달 mare 유사체 |
 | `surface_tint_rgb_hex_accent` | `#7a2a10` (substellar 부근의 식어가는 용암 + 산화철) | low | induction heating 과 신선한 용융 patch. Grayver 2022 |
 | `surface_morphology` | substellar 점 부근에 신선한 용암류와 어두운 마그마 pond 가 있는 basalt 평원 | medium | Ducrot 2024 미풍화 표면 추론, Grayver 2022 induction heating |
-| `induction_heating_w_m2` | 0.4–4 | medium | Grayver 2022 — 항성풍에 의한 자기 induction heating, 행성별 값 |
+| `induction_heating_w_m2` | 0.4–4 | medium | Grayver 2022 (2211.06140) — 비자화 층상 전도도 가정의 결과값입니다. 자화된 지구형 다이나모 분기에서는 최대 ~200 W/m² (표면적 환산 139 TW) 까지 올라가지만, b 가 다이나모를 가졌다는 관측적 증거는 없습니다 |
 | `surface_ice_caps` | 없음 (nightside 에서 승화 / 광분해) | high | dayside 500 K, volatile 을 가둘 대기 없음 |
 | `star_apparent_angular_diameter_deg` | 5.51 | high | 유도값. 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
@@ -154,6 +154,8 @@ XUV flux(지구 XUV 의 ~10³ 배, pre-main-sequence 초광도 시기에는
 ≤ 2% 임을 보여, b 가 "오늘날 거의 완전히 건조"라는 추론을 뒷받침합니다 —
 airless 표면과 일관됩니다.
 
+**초기 수분 역산.** Gialluca 2024 (2405.02401) 는 "b 는 airless, c 는 얇은 O₂ 대기 보유"라는 결합 제약 아래 MCMC fit 을 수행하여 초기 표면 수분량을 8.2 +1.5/-1.0 지구 해양(1σ)으로 산출합니다. 메커니즘별로 풀어보면, ~3 TO 는 마그마 바다에 격리되고, ~4 TO 분량의 산소는 유체역학적 drag 로 손실되며, 건조화 이후 ~385 bar 가량이 건조 지각 산화로 소비되는 그림입니다. 역사적 baseline 인 Bolmont 2017 (1605.00616) 은 시스템 수명 동안 b 한 행성에서만 최대 13.5 EO 의 수소가 손실되었고, 산소 sink 가 비효율적이었다면 그 결과로 ~422 bar 까지 무기 기원 O₂ 가 축적될 수도 있었다고 봤습니다. Gialluca 의 정밀화는 그 상한과 하한을 동시에 좁혀 줍니다.
+
 방법론적 단서가 하나 있습니다. **2601.12556** (Wirth, Powell & Wordsworth
 2026) 은 b 가 Λ ≤ 1 (Weak Temperature Gradient 가정이 깨지는 영역)
 이라는 점을 짚어, 열 재분배만으로 b 의 대기에 부과하는 상한은 흔히
@@ -207,6 +209,8 @@ n-body 세차로 인해 substellar 점에 작은 secular drift 가 생긴다고
 2601.03408 에 인용)는 사슬 전체의 동역학을 고려할 때 b 에 대해 무려 69 년
 짜리 "sidereal day" 가 나온다고 봅니다 — 마찬가지로 게임플레이상
 무관하지만, 충실한 주석거리는 됩니다.
+
+**조석 Love number 신호.** Bolmont 2020 (2002.02015) 은 TRAPPIST-1 b 의 TTV 가 비정상적으로 큰 행성 Love number (k₂ ≳ 1.5, 지구의 0.299 를 한참 웃돔) 를 시사한다고 봅니다. 이 값이 사실이라면, 이는 액체층 — 표면 합성에서 이미 채택한 substellar 마그마 저장소일 가능성이 높음 — 에 대한 **직접적인 동역학적 증거**가 됩니다. 신호 자체는 현재 TTV fit 의 noise floor 부근에 머물러 추론의 강도는 잠정적이지만, 재포장 해석을 독립적으로 뒷받침한다는 점이 중요합니다.
 
 ## 비주얼 스타일
 
@@ -278,6 +282,9 @@ n-body 세차로 인해 substellar 점에 작은 secular drift 가 생긴다고
 - **1911.08878** Turbet 2020 — 강한 일사를 받는 암석 행성의 질량-반지름-
   수분 관계. 지구형 핵에서 b 의 보유 가능 수분이 ≤ 2% 임을 캡 처리하여,
   "오늘날 거의 건조" 추론을 뒷받침.
+- **2405.02401** Gialluca 2024 — b/c JWST 제약을 입력으로 한 MCMC 초기 수분 역산. 초기 수분량 8.2 +1.5/-1.0 TO. b 의 airless 해석을 강화하면서 c 의 얇은 O₂ 대기와도 자연스럽게 연결.
+- **2002.02015** Bolmont 2020 — b 의 TTV 에서 유도되는 조석 Love number. k₂ ≳ 1.5 라는 큰 값은 액체 마그마층의 동역학적 신호가 될 수 있음. 다만 현재 TTV fit 은 noise floor 부근에 있음.
+- **1605.00616** Bolmont 2017 — 초저온 왜성 주위 지구형 행성의 수분 손실에 대한 역사적 baseline. 시스템 나이 동안 b 한 행성에서만 최대 13.5 EO 의 수소가 손실되고, 최대 ~422 bar 의 무기 O₂ 가 축적될 수 있음. airless 해석의 토대 인용.
 
 ### 읽음 (맥락 / 방법론, 결정을 견인하지 않음)
 

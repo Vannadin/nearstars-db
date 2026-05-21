@@ -56,7 +56,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_tint_rgb_hex_primary` | `#1a1612` (dark ultramafic basalt) | medium | Ducrot 2024 "fresh ultramafic" + Moon mare analog |
 | `surface_tint_rgb_hex_accent` | `#7a2a10` (cooling lava + iron oxide near substellar) | low | induction heating + fresh-melt patches; Grayver 2022 |
 | `surface_morphology` | basaltic plains with fresh lava flows and dark magma ponds near substellar point | medium | Ducrot 2024 unweathered-surface inference; Grayver 2022 induction heating |
-| `induction_heating_w_m2` | 0.4–4 | medium | Grayver 2022 — magnetic induction heating from stellar wind, planet-specific |
+| `induction_heating_w_m2` | 0.4–4 | medium | Grayver 2022 (2211.06140) — non-magnetized layered-conductivity case; magnetized Earth-dynamo branch gives up to ~200 W/m² (139 TW over surface area) but no observational confirmation of b having a dynamo |
 | `surface_ice_caps` | none (sublimation/photolysis on nightside) | high | dayside 500 K, no atmosphere to trap volatiles |
 | `star_apparent_angular_diameter_deg` | 5.51 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
@@ -163,6 +163,8 @@ mass fraction is ≤ 2% for a terrestrial-core composition with the
 measured loss rate of 0.19%/Gyr, implying b is "likely completely
 dry today" — consistent with the airless surface.
 
+**Initial-water inversion.** Gialluca 2024 (2405.02401) performs an MCMC fit using the joint constraint "b airless + c retains thin O₂" and finds initial surface water 8.2 +1.5/-1.0 Earth oceans (1σ). Mechanistically, ~3 TO sequestered in magma ocean, ~4 TO oxygen lost to hydrodynamic drag, ~385 bars dry crustal oxidation post-desiccation. The historical baseline of Bolmont 2017 (1605.00616) gave up to 13.5 EO H lost from b alone over the system's lifetime, producing up to ~422 bars of abiotic O₂ that could have built up if oxygen sinks were ineffective. The Gialluca refinement constrains both upper and lower bounds.
+
 One methodological caveat: **2601.12556** (Wirth, Powell & Wordsworth
 2026) finds that b has Λ ≤ 1 (Weak Temperature Gradient assumption
 fails), so heat-redistribution-only bounds on b's atmosphere are
@@ -218,6 +220,8 @@ that the "substellar point" is a long-term mean. Revol 2024 (cited
 in Bolmont 2026 / 2601.03408) finds an even longer "sidereal day"
 of 69 yr for b under the full chain dynamics — again, irrelevant
 to gameplay but a faithful annotation.
+
+**Tidal Love number signature.** Bolmont 2020 (2002.02015) shows that the TRAPPIST-1 b TTVs hint at an anomalously high planetary Love number (k₂ ≳ 1.5, well above Earth's 0.299). If real, this is **direct dynamical evidence** for a liquid layer — likely the substellar magma reservoir already adopted in the surface synthesis. The signal is at the noise floor of current TTV fits, so the inference is tentative, but it independently supports the resurfacing interpretation.
 
 ## Visual styling
 
@@ -297,6 +301,9 @@ Combining the surface and atmosphere decisions:
 - **1911.08878** Turbet 2020 — Water mass-radius relationships for
   irradiated rocky planets. Caps b's retained water at ≤2% for an
   Earth-like core, supporting the "dry today" inference.
+- **2405.02401** Gialluca 2024 — MCMC initial-water inversion from b/c JWST constraints. Initial water 8.2 +1.5/-1.0 TO. Strengthens b's airless interpretation and ties it to c's thin O₂ atmosphere.
+- **2002.02015** Bolmont 2020 — TTV-derived tidal Love number for b. High k₂ ≳ 1.5 would dynamically signal a liquid magma layer; current TTV fits are at noise floor.
+- **1605.00616** Bolmont 2017 — Historical baseline for water loss from terrestrial planets orbiting ultracool dwarfs. Up to 13.5 EO H lost from b over system age; up to ~422 bars abiotic O₂ possible. Foundational citation for the airless interpretation.
 
 ### Read (context / methodology, not decision-driving)
 

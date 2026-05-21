@@ -43,7 +43,7 @@ liquid-water layer maintained by basal melting from radiogenic heat.
 | `surface_temp_nightside_k` | 130 | medium | Wolf 2017 GCM; cold-trap nightside |
 | `surface_temp_global_mean_k` | 175 | medium | Wolf 2017 cold-snowball mean |
 | `atmosphere_present` | true (very thin CO₂) | medium | Moran 2018 rejects H₂-rich; outgassing-driven thin CO₂ |
-| `atmosphere_surface_pressure_pa` | 5 000 | medium | 0.05 bar CO₂ — accumulated outgassing without weathering sink |
+| `atmosphere_surface_pressure_pa` | 5 000 | medium | 0.05 bar — below Turbet 2018 (1707.06927) stable equilibrium of 150 mbar for pure CO₂ at 174 K; non-equilibrium escape-balanced state assuming ongoing volcanic outgassing. At ≥150 mbar the atmosphere becomes self-sustaining; at <0.01 bar the planet is essentially airless. |
 | `atmosphere_composition` | CO₂ 90%, N₂ 8%, trace H₂O, Ar | medium | volcanic outgassing without liquid-water carbonate-silicate cycle |
 | `atmosphere_scale_height_km` | 4.5 | medium | derived: kT/μg with T≈180 K, μ=43, g=10.2 m/s² |
 | `atmosphere_tint_rgb_hex` | `#403028` (negligible Rayleigh + CO₂ ice haze tint) | low | very thin atmo, minimal scattering |
@@ -100,6 +100,18 @@ illumination: warm cream-white `#e8e0d4` primary, with tan-shaded
 patches `#a09080` near the terminator from accumulated dust and
 CO₂ frost cycling.
 
+**Habitability caveat at upper water mass fraction.** Acuña 2021
+(2101.08172) finds that at WMF ≥ 0.14, high-pressure ice phases
+(HPPs) seal off the rock-water interface in the hydrosphere,
+preventing nutrient exchange that's typically considered necessary
+for subsurface ocean habitability. At WMF ≥ 0.10, less than 50% of
+interior configurations enable a habitable sub-surface ocean. g's
+wmf range (0.11–0.50) straddles this threshold — the sub-glacial
+ocean exists but its habitability potential degrades at the upper
+bound. For visual cfg this is not a rendering concern, but it's
+worth noting in the Open items as a Principia / astrobiology-relevant
+flag.
+
 **Bedrock / iron oxide.** Essentially none visible — the global ice
 cover is too thick for any bedrock exposure. Possible exception at
 extreme terminator ridge tops where pressure-driven thinning could
@@ -155,10 +167,29 @@ stellar microflare cadence (~10²⁹ erg every 45 min, per Berardo 2025
 HST Ly-α multi-year monitoring) further stresses retention but does
 not directly drive the cfg pressure.
 
+**Turbet equilibrium reference.** Turbet 2018 (1707.06927) explicitly
+solves the CO₂ atmosphere equilibrium for g: at 150 ± 1 mbar surface
+pressure and 174 ± 0.1 K, the atmosphere is in stable
+sublimation-condensation balance. Below this, CO₂ ice covers the
+surface "potentially as much as the entire surface" and the
+atmosphere is unstable to collapse. The cfg's 0.05 bar choice is
+below this equilibrium and assumes a non-equilibrium state maintained
+by continuous volcanic outgassing — physically reasonable but not the
+natural attractor. An alternative cfg variant could adopt the Turbet
+equilibrium pressure (0.15 bar) for a more thermodynamically
+self-consistent atmosphere.
+
 **Sky appearance.** The 0.05 bar atmosphere is barely visible from
 orbit. From the surface, the sky is near-black with the host star
 appearing as a deep red-orange disk against the void. CO₂ ice
 clouds catch grazing light at the terminator as faint cream wisps.
+
+**GCM cross-check.** Fauchez 2019 (1911.08596) confirms the snowball
+state for g at all plausible CO₂ pressures ≤10 bar: even at 10 bar
+CO₂, the planet is "almost fully ice-covered except at a few spots
+near the substellar region where some water can evaporate from the
+ocean and form relatively thin clouds (~0.1 kg/m²)." The cfg's
+full-snowball default is well-supported.
 
 ## Rotation & spin synthesis
 
@@ -201,7 +232,14 @@ to g — a faithful annotation for the Principia cfg.
 - **Star in sky.** TRAPPIST-1 subtends 1.36° in g's sky (2.7× the
   Sun from Earth). Surface illumination is 0.26 S⊕ — comparable to
   outer Mars's solar flux. The red-orange star against the cream
-  snowscape gives a permanent dim-dawn quality.
+  snowscape gives a permanent dim-dawn quality. Stellar surface
+  heterogeneity matters for the realistic sky tint. Wakeford 2019
+  (1811.04877) finds a 3-temperature spot model best fits TRAPPIST-1:
+  64% photosphere at 2400 K, 35% spot coverage at 3000 K, 1% facula
+  at 5825 K. The dominant disk color is set by the 2400 K cool
+  photosphere (already cfg's `stellar_illumination_color_temp_k`
+  value of 2566 K from Agol 2021); the 35% 3000 K coverage adds a
+  subtle yellow-orange overtone to the disk at high resolution.
 - **Sister planets in sky.** f (next inward) at angular size ~0.3°
   in conjunction; h (next outward) at ~0.2° at outer conjunction.
   Resonant chain ensures frequent multi-planet alignments.
@@ -246,6 +284,20 @@ to g — a faithful annotation for the Principia cfg.
 - **1912.05749** Hori & Ogihara 2020 — Hydrogen-rich atmosphere
   origin. g's maximum primordial H atmosphere ≤ 2 wt%, lost within
   several 100 Myr. Confirms the present-day atmosphere is secondary.
+- **1707.06927** Turbet 2018 — Climate diversity modeling for
+  TRAPPIST-1 planets. Drives the atmosphere equilibrium reference
+  (150 mbar at 174 K for pure CO₂ on g) and confirms the snowball
+  state at all plausible pressures.
+- **2101.08172** Acuña 2021 — Hydrosphere characterization. Validates
+  g's sub-glacial ocean architecture (ice Ih over high-pressure ices
+  over rocky mantle). Identifies the WMF ≥ 0.14 habitability
+  threshold (HPPs seal off rock-water interface).
+- **1911.08596** Fauchez 2019 — Clouds and hazes modeling. Confirms
+  g's snowball state even at 10 bar CO₂; only minimal substellar
+  cloud formation.
+- **1811.04877** Wakeford 2019 — HST transmission of g + 3-temperature
+  stellar model. Provides the canonical spot-coverage values
+  (64:35:1 at 2400/3000/5825 K). Refines stellar sky color predictions.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -295,3 +347,14 @@ or works that mention g only in passing.
   host an habitable sub-glacial layer with hydrothermal activity at
   the seafloor (Europa-Enceladus astrobiology analog). Worth a
   Principia note even if not visually relevant.
+- The 0.05 bar atmosphere is below the Turbet equilibrium 150 mbar.
+  A cfg variant at 0.15 bar would be more thermodynamically natural.
+  Choice depends on whether NearStars prefers "active outgassing
+  equilibrium" (Turbet) or "atmosphere just hanging on against
+  escape" (current).
+- WMF upper-bound habitability constraint: at 0.14+, HPPs seal off
+  mantle-ocean exchange. If the Principia-side astrobiology pass
+  cares about habitability, flag g as marginal at the upper bound.
+- JWST GO 2589 observed g for flare characterization (per Burdanov
+  2025 / 2512.04265) but no atmosphere retrieval has been published.
+  Worth re-checking arXiv periodically for follow-up papers.
