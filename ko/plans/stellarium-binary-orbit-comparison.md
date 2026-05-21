@@ -250,3 +250,88 @@ non-iterative 하고 1 회에 ~1e-15 까지 수렴하지만 호출당 더 많은
   분리된 Kepler 시스템이지만 동시에 wide visual pair) 를 처리하는지 확인
   못 함. 15-row 파일은 ε¹ 과 ε² 를 따로 나열하고 둘 사이 link 없음 —
   아마 α Cen + Proxima 와 같은 "no hierarchy" 한계.
+
+---
+
+## 8. Sky-offset 교차 검증 (2026-05-21 실행)
+
+§6 의 "minor 제안" 이었던 두 파이프라인 수치 검증 실행. 재실행 가능한
+테스트는
+[`scripts/verification/stellarium_crosscheck.py`](../../scripts/verification/stellarium_crosscheck.py)
+참조.
+
+### 8.1 설정
+
+두 독립 알고리즘이 secondary 의 sky offset (Δα·cosδ, Δδ) 를 JD 2460310.5
+(J2024.0) 에서 계산.
+
+- **Stellarium-style** — [`Star.hpp` L364-L373](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373)
+  의 직접 `r · rotation` 형태.
+- **Thiele-Innes** — 고전적 Hilditch (2001) A/B/F/G 상수에 이심 anomaly
+  좌표 `x = cosE − e`, `y = √(1−e²)·sinE` 사용.
+
+각 알고리즘을 **두 element 세트** 에 독립적으로 적용.
+
+- **Stellarium 데이터** —
+  [`stars/hip_gaia3/binary_orbitparam.dat`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat)
+  에서 추출 (해당 파일은 각도가 이미 radian).
+- **NearStars 데이터** — `db/binary_orbits.json` 의 α Cen, Sirius, 61
+  Cyg AB orbit 블록.
+
+결과 표 (mas).
+
+| 시스템 | Stellarium-style (Stellarium 데이터) | Stellarium-style (NS 데이터) | Drift |
+|---|---|---|---|
+| α Cen AB | Δα·cosδ=+887, Δδ=+8071 (sep 8.12″, PA 6.3°) | Δα·cosδ=+1234, Δδ=+8537 (sep 8.63″, PA 8.2°) | **581 mas** |
+| Sirius AB | Δα·cosδ=+9865, Δδ=+5536 (sep 11.31″, PA 60.7°) | Δα·cosδ=+9818, Δδ=+5624 (sep 11.31″, PA 60.2°) | **99 mas** |
+| 61 Cyg AB | Δα·cosδ=+14065, Δδ=−28777 (sep 32.03″, PA 154.0°) | Δα·cosδ=+16528, Δδ=−23282 (sep 28.55″, PA 144.6°) | **6022 mas** |
+
+### 8.2 Test 1 — 알고리즘 등가성
+
+같은 element 세트에 두 알고리즘을 통과시킨 결과가 **0.000000 mas** (수치
+정밀도, ~1e-15) 까지 일치 — 세 시스템 모두, Stellarium 데이터와 NS
+데이터 양쪽 모두. Hilditch 회전 컨벤션, 이심 anomaly 변환, Kepler 솔버가
+end-to-end 일관. **sign-convention 버그 없음 확인.**
+
+### 8.3 Test 2 — 데이터 drift
+
+Cross-pipeline 차이(같은 알고리즘, 다른 element 출처) 는 알고리즘 오류가
+아닌 **데이터 revision drift** 측정.
+
+- **Sirius 99 mas.** Element 세트가 거의 동일 (둘 다 Bond 2017 era).
+  Drift 는 출판된 `T` 와 `ω` 의 불확실성 범위 안. ✓
+- **α Cen 581 mas.** 두 파이프라인 모두 Pourbaix 계열 해를 사용하지만
+  다른 revision (NS. Pourbaix & Correia 2017; Stellarium. `T =
+  2435314.751 = 1955.555` 시그니처로 보아 Pourbaix 2002 era). 0.2° Ω,
+  0.13° ω, 280일 T 차이가 sub-arcsecond drift 로 전파 — periastron 근처
+  빠르게 움직이는 궤도에서 예상되는 수준. ~
+- **61 Cyg 6022 mas.** NS 는 Strand (1952) / Walker (1995) elements with
+  B1950 equinox; Stellarium 은 무관한 더 최근 elements (P=705 yr vs NS
+  659 yr) with J2000 equinox. B1950→J2000 frame shift 가 Ω 차이의 ~3.4°
+  를 설명; 나머지는 element revision 차이. 이 쌍은 **NS 의 61 Cyg 궤도
+  elements 갱신** 의 가장 명확한 근거 — Strand 1952 는 70 년 stale.
+
+### 8.4 결론
+
+§6 에서 명시한 "~10 mas 일치" 타깃은 카탈로그 revision 노이즈(잘 측정된
+시스템에서도 sub-arcsec, 부실하게 측정된 것은 수 arcsec) 를 고려할 때
+비현실적. 실제로 달성 가능했던 테스트는 알고리즘 등가성이었고, 그것은
+**수치 정밀도까지 통과**. NearStars 파이프라인의 Hilditch 컨벤션,
+Thiele-Innes 표현, Newton/Markley Kepler 솔버가 Stellarium 의 독립 구현과
+일관.
+
+남은 drift 는 데이터지 수학이 아님. 구체적 action 항목. `db/binary_orbits.json`
+의 61 Cyg 궤도를 post-2000 해로 갱신. 아래 §9 에서 신규 open question 으로
+추적.
+
+---
+
+## 9. 미해결 질문 (갱신)
+
+이전 §7 항목 유지. §8 에서 추가된 신규 open question.
+
+- **61 Cyg 궤도 element refresh.** NS 의 Strand (1952) / Walker (1995)
+  elements 는 B1950 equinox, 70+ 년 stale, 그리고 우리 파이프라인의
+  나머지 J2000 정렬과 frame 불일치. 후보 대체. Hartkopf et al. ORB6
+  grade-4 solution 또는 Malkov+ 2012. 본 연구 노트에서 구현하지 않고
+  `phase2/` 데이터 refresh 작업으로 deferred — 여기서 flag 만.

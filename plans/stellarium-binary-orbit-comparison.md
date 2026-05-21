@@ -266,3 +266,92 @@ pipeline rather than revealing a missing feature. Specifically:
   also a wide visual pair). The 15-row file lists ε¹ and ε² separately
   with no link between them — probably the same "no hierarchy"
   limitation as for α Cen + Proxima.
+
+---
+
+## 8. Sky-offset cross-check (executed 2026-05-21)
+
+The §6 "minor suggestion" to numerically validate the two pipelines was
+executed. See [`scripts/verification/stellarium_crosscheck.py`](../scripts/verification/stellarium_crosscheck.py)
+for the reproducible test.
+
+### 8.1 Setup
+
+Two independent algorithms compute the secondary's sky offset
+(Δα·cosδ, Δδ) at JD 2460310.5 (J2024.0).
+
+- **Stellarium-style** — direct `r · rotation` form from
+  [`Star.hpp` L364-L373](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373).
+- **Thiele-Innes** — classical Hilditch (2001) A/B/F/G constants with
+  eccentric anomaly coordinates `x = cosE − e`, `y = √(1−e²)·sinE`.
+
+Each algorithm is applied to **two element sets** independently:
+
+- **Stellarium data** — extracted from
+  [`stars/hip_gaia3/binary_orbitparam.dat`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat)
+  (angles already in radians in that file).
+- **NearStars data** — `db/binary_orbits.json`, AB orbit blocks for α
+  Cen, Sirius, and 61 Cyg.
+
+Result table (mas).
+
+| System | Stellarium-style (Stellarium data) | Stellarium-style (NS data) | Drift |
+|---|---|---|---|
+| α Cen AB | Δα·cosδ=+887, Δδ=+8071 (sep 8.12″, PA 6.3°) | Δα·cosδ=+1234, Δδ=+8537 (sep 8.63″, PA 8.2°) | **581 mas** |
+| Sirius AB | Δα·cosδ=+9865, Δδ=+5536 (sep 11.31″, PA 60.7°) | Δα·cosδ=+9818, Δδ=+5624 (sep 11.31″, PA 60.2°) | **99 mas** |
+| 61 Cyg AB | Δα·cosδ=+14065, Δδ=−28777 (sep 32.03″, PA 154.0°) | Δα·cosδ=+16528, Δδ=−23282 (sep 28.55″, PA 144.6°) | **6022 mas** |
+
+### 8.2 Test 1 — Algorithm equivalence
+
+Both algorithm forms applied to identical element sets produce results
+agreeing to **0.000000 mas** (i.e. to numerical precision, ~1e-15) for
+all three systems with both Stellarium data and NS data. The Hilditch
+rotation convention, eccentric-anomaly transformation, and Kepler
+solver are end-to-end consistent. **No sign-convention bug detected.**
+
+### 8.3 Test 2 — Data drift
+
+The cross-pipeline difference (same algorithm, different element
+source) characterises **data revision drift**, not algorithm error.
+
+- **Sirius 99 mas.** Element sets are nearly identical (both Bond 2017
+  era). Drift is within published uncertainties on `T` and `ω`. ✓
+- **α Cen 581 mas.** Both pipelines use Pourbaix-family solutions but
+  different revisions (NS: Pourbaix & Correia 2017; Stellarium:
+  Pourbaix 2002 era based on the `T = 2435314.751 = 1955.555`
+  signature). The 0.2° Ω, 0.13° ω, and 280-day T differences propagate
+  into a sub-arcsecond drift — expected for an orbit moving rapidly
+  near periastron. ~
+- **61 Cyg 6022 mas.** NS uses Strand (1952) / Walker (1995) elements
+  with B1950 equinox; Stellarium uses unrelated more-recent elements
+  (P=705 yr vs NS 659 yr) with J2000 equinox. The B1950→J2000 frame
+  shift accounts for ~3.4° of the Ω disagreement; the remaining drift
+  is element-revision. This pair is the clearest argument for **NS
+  updating 61 Cyg orbital elements** — Strand 1952 is 70 years stale.
+
+### 8.4 Conclusion
+
+The "~10 mas agreement" target stated in §6 was unrealistic given
+catalog revision noise (sub-arcsec on well-measured systems, multiple
+arcsec on poorly-measured ones). The achievable test was algorithm
+equivalence, which **passes to numerical precision**. The
+NearStars pipeline's Hilditch convention, Thiele-Innes formulation,
+and Newton/Markley Kepler solvers are consistent with Stellarium's
+independent implementation.
+
+The remaining drift is data, not math. Concrete actionable: update 61
+Cyg orbit in `db/binary_orbits.json` to a post-2000 solution. Tracked
+in §9 below as a new open question.
+
+---
+
+## 9. Open questions (updated)
+
+Previous §7 entries remain. New open question from §8:
+
+- **61 Cyg orbit element refresh.** NS's Strand (1952) / Walker (1995)
+  elements with B1950 equinox are 70+ years old and frame-mismatched
+  against our otherwise J2000-aligned pipeline. Candidate replacement:
+  Hartkopf et al. ORB6 grade-4 solution or Malkov+ 2012. Defer to a
+  `phase2/` data-refresh task; flagged here rather than implementing
+  in this research note.
