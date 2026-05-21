@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": null
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -67526004580988.61,
         "icrs_vx_j2000_km_s": -5.328222405468944,
         "icrs_vy_j2000_km_s": 14.005711991391214,
-        "icrs_vz_j2000_km_s": -22.48196152330705
+        "icrs_vz_j2000_km_s": -22.48196152330705,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 23888239203.24,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.7737434000000003e+25,
         "mass_type": "Msini",
-        "radius_m": 9747630.0
+        "radius_m": 9747630.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 4274 b",
@@ -171,7 +185,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 5.0106758e+25,
         "mass_type": "Msini",
-        "radius_m": 18029930.0
+        "radius_m": 18029930.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 4274 c",
@@ -200,7 +216,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -209,7 +225,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -218,14 +234,14 @@
       "title": "Charpentier et al. 2026",
       "doi": "10.1051/0004-6361/202557666",
       "bibcode": "2026A&A...705A.243C",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 4274 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

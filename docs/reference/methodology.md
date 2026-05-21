@@ -235,12 +235,17 @@ Notes on `mass_measurements` and `radius_measurements`:
   2. `eclipsing_binary` -- direct geometric measurement
   3. `sed_fitting` -- bolometric flux + Teff + distance (semi-direct)
   4. `evolutionary_model` -- indirect; use only when nothing better exists
+  5. `spectroscopic_calibration` -- empirical radius-color/spectral-type
+     relations (e.g. Mann et al. 2015 for M dwarfs)
   99. `unverified` -- Curation Phase 1 batch 동일 의미.
 
-  The full whitelist of permitted method labels lives in
-  `scripts/pipeline/schema.py STELLAR_ALLOWED_METHODS`; the hierarchy
-  above only ranks the ones used in practice. Any new method must be
-  added to both places.
+  Per-category method whitelists live in
+  `scripts/pipeline/schema.py STELLAR_MEASUREMENT_KINDS[*]["methods"]`
+  (Phase 2 expansion 2026-05-21 added 6 categories beyond mass/radius:
+  teff/luminosity/age/metallicity/rotation/activity). The union is
+  exposed as `STELLAR_ALLOWED_METHODS` for backward compat. Any new
+  method must be added to both the canonical KINDS dict and this
+  hierarchy doc.
 
 - If two entries share the same method tier, prefer the one with smaller
   fractional uncertainty. Document the choice in `meta.notes`.

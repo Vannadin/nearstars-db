@@ -33,6 +33,12 @@
           }
         ],
         "radius_measurements": [],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HD115404A"
       },
       "derived": {
@@ -53,7 +59,13 @@
         "icrs_z_j2000_km": 99215866220092.84,
         "icrs_vx_j2000_km_s": 0.21339139540936714,
         "icrs_vy_j2000_km_s": -35.02050173054189,
-        "icrs_vz_j2000_km_s": -10.9505994222673
+        "icrs_vz_j2000_km_s": -10.9505994222673,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 110151325214.94,
@@ -100,7 +112,9 @@
         "orbital_epoch_jd": 2452305.407,
         "mass_kg": 1.8411907679765602e+26,
         "mass_type": "Msini",
-        "radius_m": 38799390.0
+        "radius_m": 38799390.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 115404 A b",
@@ -163,7 +177,9 @@
         "orbital_epoch_jd": 2441172.404,
         "mass_kg": 1.9586853127955126e+28,
         "mass_type": "true mass",
-        "radius_m": 79637500.0
+        "radius_m": 79637500.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 115404 A c",
@@ -195,7 +211,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -204,7 +220,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -213,14 +229,14 @@
       "title": "Feng et al. 2022",
       "doi": "10.3847/1538-4365/ac7e57",
       "bibcode": "2022ApJS..262...21F",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "HD 115404 A mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

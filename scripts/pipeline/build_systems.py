@@ -417,10 +417,11 @@ def _pick_recommended(block):
 def build_planet_derived(pl, curated=None):
     """행성 raw + curated → 단위 변환된 derived 블록.
     우선순위: curated > tepcat > nasa_archive (raw).
-    curated.orbital/physical은 dict (Phase 1) 또는 list (Phase 2) 둘 다 허용.
+    curated.orbital/physical/environment 은 dict (Phase 1) 또는 list (Phase 2) 둘 다 허용.
     측정 없는 값은 null 유지 (기본값 가정은 Kopernicus 작성 단계의 책임)."""
     c_orb = _pick_recommended((curated or {}).get("orbital"))
     c_phy = _pick_recommended((curated or {}).get("physical"))
+    c_env = _pick_recommended((curated or {}).get("environment"))
     tep   = pl.get("tepcat") or {}
 
     sma_au  = coalesce(c_orb.get("semi_major_axis_au"),
@@ -450,6 +451,9 @@ def build_planet_derived(pl, curated=None):
         "mass_kg":                         mass_me * M_EARTH_KG if mass_me is not None else None,
         "mass_type":                       c_phy.get("mass_type") or pl.get("mass_type"),
         "radius_m":                        rad_re * R_EARTH_M if rad_re is not None else None,
+        # Phase 2 expansion (2026-05-21): environment 블록에서 Teq/density 추출
+        "equilibrium_temperature_k":       c_env.get("equilibrium_temperature_k"),
+        "density_g_cc":                    c_env.get("density_g_cc"),
     }
 
 
@@ -513,10 +517,27 @@ for target in target_list:
         props   = stellar_props.get(star_name, {})
         curated = stellar_curated.get(star_name, {})
         # curated 값이 있으면 raw보다 우선 적용
-        teff_k      = curated.get("teff_k")      or props.get("teff_k")
-        spectype    = curated.get("spectype")    or props.get("spectype")
-        mass_meas   = curated.get("mass_measurements")   or props.get("mass_measurements", [])
-        radius_meas = curated.get("radius_measurements") or props.get("radius_measurements", [])
+        mass_meas        = curated.get("mass_measurements")   or props.get("mass_measurements", [])
+        radius_meas      = curated.get("radius_measurements") or props.get("radius_measurements", [])
+        # Phase 2 expansion (2026-05-21): 6 추가 카테고리
+        teff_meas        = curated.get("teff_measurements", [])
+        luminosity_meas  = curated.get("luminosity_measurements", [])
+        age_meas         = curated.get("age_measurements", [])
+        metallicity_meas = curated.get("metallicity_measurements", [])
+        rotation_meas    = curated.get("rotation_measurements", [])
+        activity_meas    = curated.get("activity_measurements", [])
+
+        # Recommended resolved single values (array → recommended:true → value_*)
+        rec_teff_arr = _pick_recommended(teff_meas)
+        rec_lum_arr  = _pick_recommended(luminosity_meas)
+        rec_age_arr  = _pick_recommended(age_meas)
+        rec_met_arr  = _pick_recommended(metallicity_meas)
+        rec_rot_arr  = _pick_recommended(rotation_meas)
+        rec_act_arr  = _pick_recommended(activity_meas)
+
+        # teff_k: 우선순위 — Phase 2 array → curated 단일값 → raw stellar_props
+        teff_k      = rec_teff_arr.get("value_k") or curated.get("teff_k") or props.get("teff_k")
+        spectype    = curated.get("spectype") or props.get("spectype")
         planet_list = planets_raw.get(star_name, []) or planets_raw.get(sys_name, [])
 
         if not astro:
@@ -580,7 +601,23 @@ for target in target_list:
             "spectype":                spectype,
             "mass_measurements":       mass_meas,
             "radius_measurements":     radius_meas,
+            "teff_measurements":       teff_meas,
+            "luminosity_measurements": luminosity_meas,
+            "age_measurements":        age_meas,
+            "metallicity_measurements": metallicity_meas,
+            "rotation_measurements":   rotation_meas,
+            "activity_measurements":   activity_meas,
             "stellarium_id":           stellarium_ids_map.get(star_name),
+        }
+
+        # Phase 2 expansion: curated array → recommended → 단일값 (derived 에 병합)
+        stellar_props_resolved = {
+            "luminosity_lsun":              rec_lum_arr.get("value_lsun"),
+            "age_gyr":                      rec_age_arr.get("value_gyr"),
+            "metallicity_fe_h_dex":         rec_met_arr.get("value_dex"),
+            "rotation_period_days":         rec_rot_arr.get("value_days"),
+            "activity_log_rhk":             rec_act_arr.get("value_log_rhk"),
+            "activity_h_alpha_ew_angstrom": rec_act_arr.get("value_h_alpha_ew_angstrom"),
         }
 
         # ── derived 블록 (B1950, J2000 모두 포함) ──
@@ -614,6 +651,7 @@ for target in target_list:
                 "mass_ratio_q":       bs_meta.get("mass_ratio_q"),
                 "barycenter_method":  bs_meta.get("barycenter_method"),
                 "phase_reliable":     bs_meta.get("phase_reliable"),
+                **stellar_props_resolved,
             }
         else:
             derived_block = {
@@ -635,6 +673,7 @@ for target in target_list:
                 "icrs_vx_j2000_km_s": vel[0],
                 "icrs_vy_j2000_km_s": vel[1],
                 "icrs_vz_j2000_km_s": vel[2],
+                **stellar_props_resolved,
             }
 
         # ── principia 블록 ──

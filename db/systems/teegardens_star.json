@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "GAT1370"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 34332899103984.28,
         "icrs_vx_j2000_km_s": -28.090481254110603,
         "icrs_vy_j2000_km_s": 59.096243062962095,
-        "icrs_vz_j2000_km_s": -66.14939512892471
+        "icrs_vz_j2000_km_s": -66.14939512892471,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 12873106681.746,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 6.927751999999999e+24,
         "mass_type": "Msini",
-        "radius_m": 6689550.0
+        "radius_m": 6689550.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Teegarden's Star b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 6.27081e+24,
         "mass_type": "Msini",
-        "radius_m": 6498420.0
+        "radius_m": 6498420.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Teegarden's Star c",
@@ -236,7 +252,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 4.897204e+24,
         "mass_type": "Msini",
-        "radius_m": 6077934.0
+        "radius_m": 6077934.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Teegarden's Star d",
@@ -267,7 +285,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -276,7 +294,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -285,14 +303,14 @@
       "title": "Dreizler et al. 2024",
       "doi": "10.1051/0004-6361/202348033",
       "bibcode": "2024A&A...684A.117D",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "Teegarden's Star mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

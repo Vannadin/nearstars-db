@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "L98-59"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -304168882537705.1,
         "icrs_vx_j2000_km_s": 6.358422118258522,
         "icrs_vy_j2000_km_s": -17.649377861118296,
-        "icrs_vz_j2000_km_s": -0.6556358978690806
+        "icrs_vz_j2000_km_s": -0.6556358978690806,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 38791846217.261,
@@ -123,7 +135,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 2.747212e+24,
         "mass_type": "true mass",
-        "radius_m": 5332527.0
+        "radius_m": 5332527.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "L 98-59 b",
@@ -201,7 +215,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.19444e+25,
         "mass_type": "true mass",
-        "radius_m": 8467059.0
+        "radius_m": 8467059.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "L 98-59 c",
@@ -279,7 +295,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 9.794408e+24,
         "mass_type": "true mass",
-        "radius_m": 10365617.0
+        "radius_m": 10365617.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "L 98-59 d",
@@ -344,7 +362,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.6841604e+25,
         "mass_type": "Msini",
-        "radius_m": 9492790.0
+        "radius_m": 9492790.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "L 98-59 e",
@@ -407,7 +427,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.672216e+25,
         "mass_type": "Msini",
-        "radius_m": 9429080.0
+        "radius_m": 9429080.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "L 98-59 f",
@@ -438,7 +460,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -447,7 +469,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -456,14 +478,14 @@
       "title": "Cadieux et al. 2025",
       "doi": "10.3847/1538-3881/adef59",
       "bibcode": "2025AJ....170..154C",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "L 98-59 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

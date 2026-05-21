@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "eEri"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -127272816475378.92,
         "icrs_vx_j2000_km_s": -16.23654310206684,
         "icrs_vy_j2000_km_s": 115.87471629260051,
-        "icrs_vz_j2000_km_s": -44.71516572250896
+        "icrs_vz_j2000_km_s": -44.71516572250896,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 104842827614.22,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.284023e+25,
         "mass_type": "Msini",
-        "radius_m": 9237950.0
+        "radius_m": 9237950.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 20794 b",
@@ -172,7 +186,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.7797156e+25,
         "mass_type": "Msini",
-        "radius_m": 12996840.0
+        "radius_m": 12996840.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 20794 d",
@@ -234,7 +250,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 2.8487393999999997e+25,
         "mass_type": "Msini",
-        "radius_m": 12933129.999999998
+        "radius_m": 12933129.999999998,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 20794 e",
@@ -297,7 +315,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 3.4758204000000005e+25,
         "mass_type": "Msini",
-        "radius_m": 14525879.999999998
+        "radius_m": 14525879.999999998,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 20794 f",
@@ -327,7 +347,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -336,7 +356,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -345,7 +365,7 @@
       "title": "Nari et al. 2025",
       "doi": "10.1051/0004-6361/202451769",
       "bibcode": "2025A&A...693A.297N",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "HD 20794 mass (unverified)"
       ]
@@ -354,14 +374,14 @@
       "title": "Feng et al. 2017",
       "doi": "10.1051/0004-6361/201730406",
       "bibcode": "2017A&A...605A.103F",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "planet HD 20794 e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

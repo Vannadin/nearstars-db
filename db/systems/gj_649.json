@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HIP83043"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 139272595294211.2,
         "icrs_vx_j2000_km_s": -9.277130421499566,
         "icrs_vy_j2000_km_s": -12.230220494985744,
-        "icrs_vz_j2000_km_s": -20.909725318981373
+        "icrs_vz_j2000_km_s": -20.909725318981373,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 67683344409.18,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2459045.4,
         "mass_kg": 4.89718781593522e+26,
         "mass_type": "Msini",
-        "radius_m": 68806800.0
+        "radius_m": 68806800.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 649 b",
@@ -141,7 +155,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -150,7 +164,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -159,14 +173,14 @@
       "title": "Pinamonti et al. 2023",
       "doi": "10.1051/0004-6361/202346476",
       "bibcode": "2023A&A...677A.122P",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 649 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

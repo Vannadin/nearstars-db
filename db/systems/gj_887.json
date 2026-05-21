@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HD217987"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -59422016736162.164,
         "icrs_vx_j2000_km_s": 42.96709612962193,
         "icrs_vy_j2000_km_s": 98.14211394985635,
-        "icrs_vz_j2000_km_s": 11.942453982778678
+        "icrs_vz_j2000_km_s": 11.942453982778678,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 65692657808.91,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 8.719412e+24,
         "mass_type": "Msini",
-        "radius_m": 7135520.000000001
+        "radius_m": 7135520.000000001,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 887 e",
@@ -171,7 +185,9 @@
         "orbital_epoch_jd": 2453492.75,
         "mass_kg": 2.329158e+25,
         "mass_type": "Msini",
-        "radius_m": 11467800.0
+        "radius_m": 11467800.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 887 b",
@@ -234,7 +250,9 @@
         "orbital_epoch_jd": 2453498.2,
         "mass_kg": 3.88193e+25,
         "mass_type": "Msini",
-        "radius_m": 15481530.000000002
+        "radius_m": 15481530.000000002,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 887 c",
@@ -297,7 +315,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 3.643042e+25,
         "mass_type": "Msini",
-        "radius_m": 14908140.0
+        "radius_m": 14908140.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 887 d",
@@ -326,7 +346,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -335,7 +355,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -344,14 +364,14 @@
       "title": "Hartogh et al. 2026",
       "doi": "10.1051/0004-6361/202554984",
       "bibcode": "2026A&A...707A..93H",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 887 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

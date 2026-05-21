@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "nu.02Lup"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -339691156945817.4,
         "icrs_vx_j2000_km_s": -49.15478652203079,
         "icrs_vy_j2000_km_s": 118.58045384192374,
-        "icrs_vz_j2000_km_s": 38.563382491059684
+        "icrs_vz_j2000_km_s": 38.563382491059684,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 115459822815.66,
@@ -123,7 +135,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 2.8188784e+25,
         "mass_type": "true mass",
-        "radius_m": 10601344.0
+        "radius_m": 10601344.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 136352 b",
@@ -201,7 +215,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 6.7127528e+25,
         "mass_type": "true mass",
-        "radius_m": 18577836.0
+        "radius_m": 18577836.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 136352 c",
@@ -279,7 +295,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 5.267480400000001e+25,
         "mass_type": "true mass",
-        "radius_m": 16322501.999999998
+        "radius_m": 16322501.999999998,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 136352 d",
@@ -312,7 +330,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -321,7 +339,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -330,14 +348,14 @@
       "title": "Delrez et al. 2021",
       "doi": "10.1038/s41550-021-01381-5",
       "bibcode": "2021NatAs...5..775D",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "HD 136352 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

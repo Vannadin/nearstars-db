@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HD265866"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 94523422394854.44,
         "icrs_vx_j2000_km_s": 12.905849544069058,
         "icrs_vy_j2000_km_s": 28.285247623087905,
-        "icrs_vz_j2000_km_s": 3.4181559678851876
+        "icrs_vz_j2000_km_s": 3.4181559678851876,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 46449354006.3,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2458626.81,
         "mass_kg": 2.299297e+25,
         "mass_type": "Msini",
-        "radius_m": 11404090.0
+        "radius_m": 11404090.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 251 b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": 2458922.0,
         "mass_kg": 2.3172136e+25,
         "mass_type": "Msini",
-        "radius_m": 11467800.0
+        "radius_m": 11467800.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 251 c",
@@ -204,7 +220,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -213,7 +229,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -222,14 +238,14 @@
       "title": "Beard et al. 2025",
       "doi": "10.3847/1538-3881/ae0e20",
       "bibcode": "2025AJ....170..279B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 251 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

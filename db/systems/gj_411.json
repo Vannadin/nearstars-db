@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HD95735"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 46146146900285.19,
         "icrs_vx_j2000_km_s": 35.29852921533312,
         "icrs_vy_j2000_km_s": -1.6887438292893489,
-        "icrs_vz_j2000_km_s": -96.37399206798088
+        "icrs_vz_j2000_km_s": -96.37399206798088,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 51744580363.018,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2456307.8,
         "mass_kg": 1.6065218e+25,
         "mass_type": "Msini",
-        "radius_m": 9237950.0
+        "radius_m": 9237950.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 411 b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": 2457250.0,
         "mass_kg": 8.122192e+25,
         "mass_type": "Msini",
-        "radius_m": 23954960.0
+        "radius_m": 23954960.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 95735 c",
@@ -204,7 +220,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -213,7 +229,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -222,14 +238,14 @@
       "title": "Hurt et al. 2022",
       "doi": "10.3847/1538-3881/ac5c47",
       "bibcode": "2022AJ....163..218H",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 411 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

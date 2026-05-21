@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "V*HNLib"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -41826098377915.664,
         "icrs_vx_j2000_km_s": -8.504451134422474,
         "icrs_vy_j2000_km_s": 6.6827676400055385,
-        "icrs_vz_j2000_km_s": 17.45583037218092
+        "icrs_vz_j2000_km_s": 17.45583037218092,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 38619320045.238,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 3.2608212000000002e+25,
         "mass_type": "Msini",
-        "radius_m": 14016200.000000002
+        "radius_m": 14016200.000000002,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HN Lib b",
@@ -140,7 +154,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -149,7 +163,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -158,14 +172,14 @@
       "title": "Gonz Aacute Lez Aacute Lvarez et al. 2023",
       "doi": "10.1051/0004-6361/202346276",
       "bibcode": "2023A&A...675A.141G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "HN Lib mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

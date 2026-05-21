@@ -251,26 +251,107 @@ def validate_binary_orbits(binary_orbits):
 
 # ── stellar_props_curated.json 스키마 ────────────────────────────────────────
 # raw 와 달리 curated 는 부분 오버라이드를 허용하므로 top-level 필수 키 없음.
-# 각 measurement 의 method 라벨은 화이트리스트로 제한 (오타 방지).
+# 각 measurement category 의 value_* 키와 method 라벨을 화이트리스트로 제한.
+#
+# Phase 2 expansion (2026-05-21): mass/radius 외에 teff/luminosity/age/
+# metallicity/rotation/activity 6개 카테고리 추가. tier 우선순위는 코드 외부
+# (phase2/schema-expansion/context-notes.md) 에 문서화됨 — 코드는 whitelist
+# 만 강제하고 recommended:true 선택은 사용자가 manual 로 함.
+
+STELLAR_MEASUREMENT_KINDS = {
+    "mass_measurements": {
+        # methodology.md tier: binary_orbit > asteroseismology > evolutionary_model
+        #                      > spectroscopic / spectroscopic_calibration
+        "value_keys": {"value_msun"},
+        "methods": {
+            "binary_orbit", "asteroseismology", "evolutionary_model",
+            "spectroscopic", "spectroscopic_calibration",
+            "unverified",
+        },
+    },
+    "radius_measurements": {
+        # methodology.md tier: interferometry > eclipsing_binary > sed_fitting > evolutionary_model
+        # spectroscopic_calibration 은 methodology 에 미문서화이나 실 사용 중 (M dwarf
+        # radius-color calibration: Wolf 359, Eta Cas B, Kapteyn). 추가.
+        "value_keys": {"value_rsun"},
+        "methods": {
+            "interferometry", "eclipsing_binary", "sed_fitting",
+            "evolutionary_model", "spectroscopic_calibration",
+            "unverified",
+        },
+    },
+    "teff_measurements": {
+        "value_keys": {"value_k"},
+        "methods": {
+            "high_res_spectroscopy", "low_res_spectroscopy",
+            "sed_fitting", "photometric_color", "interferometry",
+            "unverified",
+        },
+    },
+    "luminosity_measurements": {
+        "value_keys": {"value_lsun"},
+        "methods": {
+            "bolometric_flux", "sed_fitting", "photometric",
+            "unverified",
+        },
+    },
+    "age_measurements": {
+        "value_keys": {"value_gyr"},
+        "methods": {
+            "asteroseismology", "isochrone", "gyrochronology",
+            "activity_age", "kinematic",
+            "unverified",
+        },
+    },
+    "metallicity_measurements": {
+        "value_keys": {"value_dex"},   # [Fe/H] in dex
+        "methods": {
+            "high_res_spectroscopy", "low_res_spectroscopy",
+            "photometric_calibration",
+            "unverified",
+        },
+    },
+    "rotation_measurements": {
+        "value_keys": {"value_days"},   # P_rot
+        "methods": {
+            "photometric_variability", "v_sin_i",
+            "zeeman_doppler", "asteroseismology",
+            "unverified",
+        },
+    },
+    "activity_measurements": {
+        # 여러 지표 중 하나만 있으면 됨 (paper 마다 다름)
+        "value_keys": {
+            "value_log_rhk",
+            "value_h_alpha_ew_angstrom",
+            "value_x_ray_log_lx_lbol",
+            "value_ca_ii_log_lhk",
+        },
+        "methods": {
+            "log_rhk", "h_alpha", "x_ray", "ca_ii_h_k",
+            "unverified",
+        },
+    },
+}
 
 STELLAR_CURATED_TOPLEVEL_ALLOWED = {
     "teff_k", "teff_bibcode", "spectype",
     "spectype_bibcode", "spectype_reference",
-    "mass_measurements", "radius_measurements",
-}
+} | set(STELLAR_MEASUREMENT_KINDS.keys())
+
 STELLAR_MEASUREMENT_BASE_REQUIRED = {"method", "recommended"}
-STELLAR_MEASUREMENT_OPTIONAL = {
-    "uncertainty_msun", "uncertainty_rsun",
-    "reference", "bibcode", "doi",
-    "value_msun", "value_rsun",  # value_* 는 별도 검증
-}
-# fetch_stellar_props.py 의 METHOD_PRIORITY 와 동기화 필요.
-STELLAR_ALLOWED_METHODS = {
-    "interferometry", "eclipsing_binary", "binary_orbit",
-    "sed_fitting", "spectroscopic", "evolutionary_model",
-    "spectroscopic_calibration", "asteroseismology",
-    "unverified",
-}
+STELLAR_MEASUREMENT_COMMON_OPTIONAL = {"reference", "bibcode", "doi"}
+
+# Backward-compat union (methodology.md 등 외부 문서 참조용).
+# 캐노니컬 소스는 STELLAR_MEASUREMENT_KINDS[*]["methods"].
+STELLAR_ALLOWED_METHODS = set().union(
+    *(kind["methods"] for kind in STELLAR_MEASUREMENT_KINDS.values())
+)
+
+
+def _uncertainty_keys_for(value_keys):
+    """value_msun → uncertainty_msun 패턴으로 변환."""
+    return {k.replace("value_", "uncertainty_", 1) for k in value_keys}
 
 
 def validate_stellar_props_curated(records):
@@ -284,20 +365,33 @@ def validate_stellar_props_curated(records):
         if unknown:
             errors.append(f"stellar_props_curated[{star}]: 알 수 없는 키 {sorted(unknown)}")
 
-        for mk in ("mass_measurements", "radius_measurements"):
+        for mk, kind in STELLAR_MEASUREMENT_KINDS.items():
             arr = rec.get(mk) or []
             if not isinstance(arr, list):
                 errors.append(f"stellar_props_curated[{star}].{mk}: list 아님")
                 continue
+
+            allowed_value_keys = kind["value_keys"]
+            allowed_uncertainty_keys = _uncertainty_keys_for(allowed_value_keys)
+            allowed_methods = kind["methods"]
+            allowed_all = (
+                STELLAR_MEASUREMENT_BASE_REQUIRED
+                | STELLAR_MEASUREMENT_COMMON_OPTIONAL
+                | allowed_value_keys
+                | allowed_uncertainty_keys
+            )
+
             n_recommended = 0
             for i, m in enumerate(arr):
                 if not isinstance(m, dict):
                     errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: dict 아님")
                     continue
                 mkeys = set(m.keys())
-                has_value = any(k.startswith(MEASUREMENT_VALUE_PREFIXES) for k in mkeys)
-                if not has_value:
-                    errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: value_* 키 없음")
+                if not (mkeys & allowed_value_keys):
+                    errors.append(
+                        f"stellar_props_curated[{star}].{mk}[{i}]: "
+                        f"value 키 누락 (허용: {sorted(allowed_value_keys)})"
+                    )
                 forbidden = [k for k in mkeys if k.startswith(MEASUREMENT_FORBIDDEN_PREFIX)]
                 if forbidden:
                     errors.append(
@@ -308,14 +402,14 @@ def validate_stellar_props_curated(records):
                 if miss:
                     errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: 필수 키 누락 {sorted(miss)}")
                 method = m.get("method")
-                if method and method not in STELLAR_ALLOWED_METHODS:
+                if method and method not in allowed_methods:
                     errors.append(
                         f"stellar_props_curated[{star}].{mk}[{i}]: method '{method}' 미지원 "
-                        f"(허용: {sorted(STELLAR_ALLOWED_METHODS)})"
+                        f"(허용: {sorted(allowed_methods)})"
                     )
                 if m.get("recommended") is True:
                     n_recommended += 1
-                unk = mkeys - (STELLAR_MEASUREMENT_BASE_REQUIRED | STELLAR_MEASUREMENT_OPTIONAL)
+                unk = mkeys - allowed_all
                 if unk:
                     errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: 알 수 없는 키 {sorted(unk)}")
             if n_recommended > 1:
@@ -327,30 +421,60 @@ def validate_stellar_props_curated(records):
 
 
 # ── planets_curated.json 스키마 ──────────────────────────────────────────────
-# host_name → list of {pl_name, orbital{}, physical{}}. orbital/physical 은
-# 단일 dict (Phase 1). Phase 2 의 array 형식은 빌드 코드 확장 후 별도 처리.
+# host_name → list of {pl_name, orbital, physical, environment, atmosphere}.
+# 각 블록은 단일 dict (Phase 1) 또는 list-of-dict (Phase 2 다중 paper) 허용.
+#
+# Phase 2 expansion (2026-05-21): orbital 에 period_days/tperi_bjd/tranmid_bjd
+# 추가, environment (Teq/density/brightness temp 등 모든 행성에 적용) 와
+# atmosphere (분광 검출/retrieval — 일부 행성에만) 블록 신설.
 
 PLANET_CURATED_REQUIRED = {"pl_name"}
-PLANET_CURATED_OPTIONAL = {"orbital", "physical"}
-PLANET_ORBITAL_ALLOWED = {
-    "semi_major_axis_au", "eccentricity", "inclination_deg",
-    "argument_of_periapsis_deg", "longitude_of_ascending_node_deg",
-    "mean_anomaly_at_epoch_deg", "epoch_jd",
-    "source", "bibcode", "doi",
-    # Phase 2 array element fields:
-    "method", "recommended",
+PLANET_PROVENANCE_KEYS = {"source", "reference", "bibcode", "doi"}
+
+# 공통 provenance/메타 키 — 모든 planet 블록이 받음.
+PLANET_BLOCK_COMMON = {
+    "source", "reference", "bibcode", "doi",   # provenance (source/reference 동의어)
+    "method", "recommended",                    # Phase 2 array element fields
 }
-PLANET_PHYSICAL_ALLOWED = {
+
+PLANET_ORBITAL_ALLOWED = PLANET_BLOCK_COMMON | {
+    "period_days", "uncertainty_period_days",
+    "semi_major_axis_au", "uncertainty_semi_major_axis_au",
+    "eccentricity", "uncertainty_eccentricity",
+    "inclination_deg", "uncertainty_inclination_deg",
+    "argument_of_periapsis_deg", "uncertainty_argument_of_periapsis_deg",
+    "longitude_of_ascending_node_deg", "uncertainty_longitude_of_ascending_node_deg",
+    "mean_anomaly_at_epoch_deg", "uncertainty_mean_anomaly_at_epoch_deg",
+    "epoch_jd",
+    "tperi_bjd", "uncertainty_tperi_bjd",
+    "tranmid_bjd", "uncertainty_tranmid_bjd",
+}
+PLANET_PHYSICAL_ALLOWED = PLANET_BLOCK_COMMON | {
     "mass_mearth", "true_mass_mearth", "uncertainty_mearth", "mass_type",
     "radius_rearth", "uncertainty_rearth",
-    "source", "bibcode", "doi",
-    # Phase 2 array element fields:
-    "method", "recommended",
 }
-PLANET_PROVENANCE_KEYS = {"source", "bibcode", "doi"}
+PLANET_ENVIRONMENT_ALLOWED = PLANET_BLOCK_COMMON | {
+    "equilibrium_temperature_k", "uncertainty_equilibrium_temperature_k",
+    "bond_albedo", "uncertainty_bond_albedo",
+    "irradiation_flux_sun", "uncertainty_irradiation_flux_sun",
+    "density_g_cc", "uncertainty_density_g_cc",
+    "dayside_brightness_temperature_k", "uncertainty_dayside_brightness_temperature_k",
+    "nightside_brightness_temperature_k", "uncertainty_nightside_brightness_temperature_k",
+}
+PLANET_ATMOSPHERE_ALLOWED = PLANET_BLOCK_COMMON | {
+    "detection",                   # bool
+    "species_detected",            # list[str]
+    "species_excluded",            # list[str]
+    "significance_sigma",
+    "pressure_pa", "uncertainty_pressure_pa",
+    "scale_height_km", "uncertainty_scale_height_km",
+    "temperature_isothermal_k", "uncertainty_temperature_isothermal_k",
+    "mean_molecular_weight_amu", "uncertainty_mean_molecular_weight_amu",
+}
 
-# Phase 2 method 화이트리스트 (planet measurements).
-# discovery method tier 순:
+# Phase 2 method 화이트리스트 — 블록별로 다른 검출/관측 방식.
+
+# orbital / physical: 발견 method tier 순:
 #   astrometric/direct > ttv/dynamical > rv > transit > predicted
 PLANET_ALLOWED_METHODS = {
     "astrometric", "direct_imaging",
@@ -362,12 +486,42 @@ PLANET_ALLOWED_METHODS = {
     "unverified",         # Phase 1 batch auto-fill
 }
 
+PLANET_ENVIRONMENT_METHODS = {
+    "derived_from_a_l_albedo",     # Teq = T_star * sqrt(R_star/2a) * (1-A)^0.25 등 표준 공식
+    "phase_curve",                  # full-orbit photometry → Tday/Tnight
+    "emission_spectrum",            # secondary eclipse / direct emission detection
+    "transit_radiometry",
+    "secondary_eclipse",
+    "discovery",
+    "unverified",
+}
+
+PLANET_ATMOSPHERE_METHODS = {
+    "transmission_spectrum",        # 1차 transit 분광
+    "emission_spectrum",            # 2차 식 분광
+    "phase_curve",
+    "high_res_cross_correlation",   # HARPS/ESPRESSO 분자선 검출
+    "secondary_eclipse",
+    "non_detection",                # 상한선만 보고
+    "unverified",
+}
+
+# 블록 검증 메타데이터 — validate_planets_curated 가 iterate.
+PLANET_BLOCKS = {
+    "orbital":     {"allowed": PLANET_ORBITAL_ALLOWED,     "methods": PLANET_ALLOWED_METHODS},
+    "physical":    {"allowed": PLANET_PHYSICAL_ALLOWED,    "methods": PLANET_ALLOWED_METHODS},
+    "environment": {"allowed": PLANET_ENVIRONMENT_ALLOWED, "methods": PLANET_ENVIRONMENT_METHODS},
+    "atmosphere":  {"allowed": PLANET_ATMOSPHERE_ALLOWED,  "methods": PLANET_ATMOSPHERE_METHODS},
+}
+PLANET_CURATED_OPTIONAL = set(PLANET_BLOCKS.keys())
+
 
 def validate_planets_curated(records):
     """db/planets_curated.json 검증.
 
-    각 행성의 orbital / physical 블록이 존재하면 최소 하나의 provenance
-    필드(source/bibcode/doi)를 요구. curated 엔트리의 출처 추적성 강제.
+    각 행성의 orbital / physical / environment / atmosphere 블록이 존재하면
+    최소 하나의 provenance 필드(source/bibcode/doi)를 요구.
+    array 형식은 method 필수 + 카테고리별 whitelist + 최대 1개 recommended:true.
     """
     errors = []
     for host, planets in records.items():
@@ -386,13 +540,13 @@ def validate_planets_curated(records):
             if unk:
                 errors.append(f"planets_curated[{host}][{i}]: 알 수 없는 키 {sorted(unk)}")
 
-            for block_name, allowed in (
-                ("orbital", PLANET_ORBITAL_ALLOWED),
-                ("physical", PLANET_PHYSICAL_ALLOWED),
-            ):
+            for block_name, spec in PLANET_BLOCKS.items():
                 block = pl.get(block_name)
                 if block is None:
                     continue
+                allowed = spec["allowed"]
+                allowed_methods = spec["methods"]
+
                 # Phase 1 dict 또는 Phase 2 list-of-dict 둘 다 허용.
                 if isinstance(block, dict):
                     elems = [block]
@@ -408,35 +562,23 @@ def validate_planets_curated(records):
 
                 n_recommended = 0
                 for j, elem in enumerate(elems):
+                    loc = f"planets_curated[{host}][{i}].{block_name}" + (f"[{j}]" if is_array else "")
                     if not isinstance(elem, dict):
-                        errors.append(
-                            f"planets_curated[{host}][{i}].{block_name}"
-                            f"{f'[{j}]' if is_array else ''}: dict 아님"
-                        )
+                        errors.append(f"{loc}: dict 아님")
                         continue
                     bunk = set(elem.keys()) - allowed
                     if bunk:
-                        errors.append(
-                            f"planets_curated[{host}][{i}].{block_name}"
-                            f"{f'[{j}]' if is_array else ''}: 알 수 없는 키 {sorted(bunk)}"
-                        )
+                        errors.append(f"{loc}: 알 수 없는 키 {sorted(bunk)}")
                     if not (PLANET_PROVENANCE_KEYS & set(elem.keys())):
-                        errors.append(
-                            f"planets_curated[{host}][{i}].{block_name}"
-                            f"{f'[{j}]' if is_array else ''}: source/bibcode/doi 중 하나 필요"
-                        )
+                        errors.append(f"{loc}: source/bibcode/doi 중 하나 필요")
                     if is_array:
                         method = elem.get("method")
                         if not method:
+                            errors.append(f"{loc}: array 형식은 'method' 필수")
+                        elif method not in allowed_methods:
                             errors.append(
-                                f"planets_curated[{host}][{i}].{block_name}[{j}]: "
-                                f"array 형식은 'method' 필수"
-                            )
-                        elif method not in PLANET_ALLOWED_METHODS:
-                            errors.append(
-                                f"planets_curated[{host}][{i}].{block_name}[{j}]: "
-                                f"method '{method}' 미지원 "
-                                f"(허용: {sorted(PLANET_ALLOWED_METHODS)})"
+                                f"{loc}: method '{method}' 미지원 "
+                                f"(허용: {sorted(allowed_methods)})"
                             )
                         if elem.get("recommended") is True:
                             n_recommended += 1

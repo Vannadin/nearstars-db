@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "upsAnd"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 275074509152675.16,
         "icrs_vx_j2000_km_s": -0.4486112987092383,
         "icrs_vy_j2000_km_s": -12.242259905102427,
-        "icrs_vz_j2000_km_s": -37.309519630528754
+        "icrs_vz_j2000_km_s": -37.309519630528754,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 172526172023.4,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2450005.368,
         "mass_kg": 1.3051108382e+27,
         "mass_type": "Msini",
-        "radius_m": 89194000.0
+        "radius_m": 89194000.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "ups And b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": 2450157.78,
         "mass_kg": 3.7600672590000003e+27,
         "mass_type": "Msini",
-        "radius_m": 78363300.0
+        "radius_m": 78363300.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "ups And c",
@@ -236,7 +252,9 @@
         "orbital_epoch_jd": 2451347.48,
         "mass_kg": 7.842812484e+27,
         "mass_type": "Msini",
-        "radius_m": 79637500.0
+        "radius_m": 79637500.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "ups And d",
@@ -267,7 +285,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -276,7 +294,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -285,14 +303,14 @@
       "title": "Curiel et al. 2011",
       "doi": null,
       "bibcode": "2011A&A...525A..78C",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "ups And mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

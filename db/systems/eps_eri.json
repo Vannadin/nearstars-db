@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "epsEri"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -16326580805809.184,
         "icrs_vx_j2000_km_s": 11.949137009619637,
         "icrs_vy_j2000_km_s": -8.86453002813413,
-        "icrs_vz_j2000_km_s": 0.3143050372590638
+        "icrs_vz_j2000_km_s": 0.3143050372590638,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 108824200814.76,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2460054.0,
         "mass_kg": 1.252768976108364e+27,
         "mass_type": "true mass",
-        "radius_m": 89831100.0
+        "radius_m": 89831100.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "eps Eri b",
@@ -142,7 +156,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -151,7 +165,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -160,7 +174,7 @@
       "title": "Llop Sayson et al. 2021",
       "doi": null,
       "bibcode": "2021AJ....162..181L",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "eps Eri mass (unverified)"
       ]
@@ -169,14 +183,14 @@
       "title": "Rosenthal et al. 2021",
       "doi": null,
       "bibcode": "2021ApJS..255....8R",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "eps Eri radius (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

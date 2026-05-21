@@ -1295,6 +1295,70 @@
         "doi": "10.3847/PSJ/abd022",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 2559,
+        "uncertainty_k": 50,
+        "method": "sed_fitting",
+        "reference": "Gillon et al. 2016",
+        "bibcode": "2016Natur.533..221G",
+        "doi": "10.1038/nature17448",
+        "recommended": false
+      },
+      {
+        "value_k": 2566,
+        "uncertainty_k": 26,
+        "method": "sed_fitting",
+        "reference": "Agol et al. 2021",
+        "bibcode": "2021PSJ.....2....1A",
+        "doi": "10.3847/PSJ/abd022",
+        "recommended": true
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.000522,
+        "uncertainty_lsun": 1.9e-05,
+        "method": "bolometric_flux",
+        "reference": "Van Grootel et al. 2018",
+        "bibcode": "2018ApJ...853...30V",
+        "doi": "10.3847/1538-4357/aaa023",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7.6,
+        "uncertainty_gyr": 2.2,
+        "method": "kinematic",
+        "reference": "Burgasser & Mamajek 2017",
+        "bibcode": "2017ApJ...845..110B",
+        "doi": "10.3847/1538-4357/aa7fea",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.04,
+        "uncertainty_dex": 0.08,
+        "method": "low_res_spectroscopy",
+        "reference": "Gillon et al. 2017",
+        "bibcode": "2017Natur.542..456G",
+        "doi": "10.1038/nature21360",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 3.295,
+        "uncertainty_days": 0.003,
+        "method": "photometric_variability",
+        "reference": "Vida et al. 2017",
+        "bibcode": "2017ApJ...841..124V",
+        "doi": "10.3847/1538-4357/aa6f05",
+        "recommended": true
+      }
     ]
   },
   "AU Mic": {

@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": null
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 252494638503381.1,
         "icrs_vx_j2000_km_s": -25.533288022808932,
         "icrs_vy_j2000_km_s": 48.17962397476693,
-        "icrs_vz_j2000_km_s": -23.100219417328223
+        "icrs_vz_j2000_km_s": -23.100219417328223,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 16323630122.214,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2457739.51,
         "mass_kg": 8.75040148481486e+26,
         "mass_type": "Msini",
-        "radius_m": 91105300.0
+        "radius_m": 91105300.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 3512 b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": 2457339.0,
         "mass_kg": 8.598550699593141e+26,
         "mass_type": "Msini",
-        "radius_m": 91105300.0
+        "radius_m": 91105300.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 3512 c",
@@ -204,7 +220,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -213,7 +229,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -222,14 +238,14 @@
       "title": "Morales et al. 2025",
       "doi": "10.1051/0004-6361/202554992",
       "bibcode": "2025A&A...700A.242M",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 3512 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

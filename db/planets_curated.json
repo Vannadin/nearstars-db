@@ -1713,6 +1713,34 @@
           "radius_rearth": 1.116,
           "uncertainty_rearth": 0.014
         }
+      ],
+      "environment": [
+        {
+          "equilibrium_temperature_k": 391,
+          "uncertainty_equilibrium_temperature_k": 8,
+          "bond_albedo": 0.0,
+          "density_g_cc": 5.43,
+          "uncertainty_density_g_cc": 0.18,
+          "method": "derived_from_a_l_albedo",
+          "reference": "Agol et al. 2021",
+          "bibcode": "2021PSJ.....2....1A",
+          "doi": "10.3847/PSJ/abd022",
+          "recommended": true
+        }
+      ],
+      "atmosphere": [
+        {
+          "detection": false,
+          "species_excluded": [
+            "CO2"
+          ],
+          "significance_sigma": 5,
+          "method": "emission_spectrum",
+          "reference": "Greene et al. 2023",
+          "bibcode": "2023Natur.618...39G",
+          "doi": "10.1038/s41586-023-05951-7",
+          "recommended": true
+        }
       ]
     },
     {
@@ -1763,6 +1791,19 @@
           "mass_type": "true mass",
           "radius_rearth": 1.097,
           "uncertainty_rearth": 0.014
+        }
+      ],
+      "atmosphere": [
+        {
+          "detection": false,
+          "species_excluded": [
+            "CO2"
+          ],
+          "method": "emission_spectrum",
+          "reference": "Zieba et al. 2023",
+          "bibcode": "2023Natur.620..746Z",
+          "doi": "10.1038/s41586-023-06232-z",
+          "recommended": true
         }
       ]
     },

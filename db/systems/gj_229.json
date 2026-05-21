@@ -33,6 +33,12 @@
           }
         ],
         "radius_measurements": [],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HD42581"
       },
       "derived": {
@@ -53,7 +59,13 @@
         "icrs_z_j2000_km": -66204532874749.664,
         "icrs_vx_j2000_km_s": 3.8584338670805005,
         "icrs_vy_j2000_km_s": -3.2188187858269055,
-        "icrs_vz_j2000_km_s": -19.80239659620529
+        "icrs_vz_j2000_km_s": -19.80239659620529,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 67550631969.162,
@@ -100,7 +112,9 @@
         "orbital_epoch_jd": 2450370.18,
         "mass_kg": 5.1249639937678e+25,
         "mass_type": "Msini",
-        "radius_m": 18284770.0
+        "radius_m": 18284770.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 229 A c",
@@ -163,7 +177,9 @@
         "orbital_epoch_jd": 2449954.33,
         "mass_kg": 8.9212336183386e+25,
         "mass_type": "Msini",
-        "radius_m": 25292870.0
+        "radius_m": 25292870.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 229 b",
@@ -194,7 +210,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -203,7 +219,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -212,14 +228,14 @@
       "title": "Feng et al. 2022",
       "doi": "10.3847/1538-4365/ac7e57",
       "bibcode": "2022ApJS..262...21F",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 229 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

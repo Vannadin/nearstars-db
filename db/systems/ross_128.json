@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "V*FIVir"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 1462279194408.6912,
         "icrs_vx_j2000_km_s": -0.7915487718042951,
         "icrs_vy_j2000_km_s": -9.68748312053143,
-        "icrs_vz_j2000_km_s": -19.564839848508385
+        "icrs_vz_j2000_km_s": -19.564839848508385,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 22295689923.024,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 8.36108e+24,
         "mass_type": "Msini",
-        "radius_m": 7071810.000000001
+        "radius_m": 7071810.000000001,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Ross 128 b",
@@ -140,7 +154,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -149,7 +163,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -158,14 +172,14 @@
       "title": "Bonfils et al. 2018",
       "doi": "10.1051/0004-6361/201731973",
       "bibcode": "2018A&A...613A..25B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "Ross 128 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

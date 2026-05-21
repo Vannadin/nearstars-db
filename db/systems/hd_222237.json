@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HD222237"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -337194216237398.75,
         "icrs_vx_j2000_km_s": -16.742378232001187,
         "icrs_vy_j2000_km_s": 9.32129181637691,
-        "icrs_vz_j2000_km_s": -78.35470097260068
+        "icrs_vz_j2000_km_s": -78.35470097260068,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 100861454413.68,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2443747.0,
         "mass_kg": 9.851319675761226e+27,
         "mass_type": "true mass",
-        "radius_m": 81548800.0
+        "radius_m": 81548800.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "HD 222237 b",
@@ -142,7 +156,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -151,7 +165,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -160,14 +174,14 @@
       "title": "Xiao et al. 2024",
       "doi": "10.1093/mnras/stae2151",
       "bibcode": "2024MNRAS.534.2858X",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "HD 222237 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

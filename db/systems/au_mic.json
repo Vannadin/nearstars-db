@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "V*AUMic"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -155908202297356.75,
         "icrs_vx_j2000_km_s": 0.153640137001525,
         "icrs_vy_j2000_km_s": 19.45658368472101,
-        "icrs_vz_j2000_km_s": -10.576607761108027
+        "icrs_vz_j2000_km_s": -10.576607761108027,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 67683344409.18,
@@ -123,7 +135,9 @@
         "orbital_epoch_jd": 2458330.350878,
         "mass_kg": 5.3690078e+25,
         "mass_type": "true mass",
-        "radius_m": 30517090.0
+        "radius_m": 30517090.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "AU Mic b",
@@ -202,7 +216,9 @@
         "orbital_epoch_jd": 2458342.223325,
         "mass_kg": 8.635801200000001e+25,
         "mass_type": "true mass",
-        "radius_m": 17775090.0
+        "radius_m": 17775090.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "AU Mic c",
@@ -268,7 +284,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.2601342000000002e+26,
         "mass_type": "true mass",
-        "radius_m": 31026770.0
+        "radius_m": 31026770.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "AU Mic e",
@@ -328,7 +346,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 6.288726599999999e+24,
         "mass_type": "true mass",
-        "radius_m": 6498420.0
+        "radius_m": 6498420.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "AU Mic d",
@@ -359,7 +379,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -368,7 +388,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -377,7 +397,7 @@
       "title": "Wittrock et al. 2023",
       "doi": null,
       "bibcode": "2023AJ....166..232W",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "AU Mic mass (unverified)"
       ]
@@ -386,7 +406,7 @@
       "title": "Donati et al. 2023",
       "doi": null,
       "bibcode": "2023MNRAS.525..455D",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "AU Mic radius (unverified)"
       ]
@@ -395,7 +415,7 @@
       "title": "Mallorquin et al. 2024",
       "doi": "10.1051/0004-6361/202450047",
       "bibcode": "2024A&A...689A.132M",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "planet AU Mic b orbital"
       ]
@@ -404,14 +424,14 @@
       "title": "Donati et al. 2025",
       "doi": "10.1051/0004-6361/202555371",
       "bibcode": "2025A&A...700A.227D",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "planet AU Mic e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

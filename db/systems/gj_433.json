@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "SAO202602"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -150647116465292.53,
         "icrs_vx_j2000_km_s": 5.077889148270415,
         "icrs_vy_j2000_km_s": 2.5291389933742936,
-        "icrs_vz_j2000_km_s": -40.367493331824214
+        "icrs_vz_j2000_km_s": -40.367493331824214,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 63701971208.64,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 3.60900046e+25,
         "mass_type": "Msini",
-        "radius_m": 14844430.0
+        "radius_m": 14844430.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 433 b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 3.11928006e+25,
         "mass_type": "Msini",
-        "radius_m": 13633940.0
+        "radius_m": 13633940.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 433 d",
@@ -236,7 +252,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.936306684e+26,
         "mass_type": "Msini",
-        "radius_m": 39946170.0
+        "radius_m": 39946170.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 433 c",
@@ -267,7 +285,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -276,7 +294,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -285,7 +303,7 @@
       "title": "Feng et al. 2020",
       "doi": "10.3847/1538-4365/ab5e7c",
       "bibcode": "2020ApJS..246...11F",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 433 mass (unverified)"
       ]
@@ -294,14 +312,14 @@
       "title": "Stassun et al. 2017",
       "doi": null,
       "bibcode": "2017AJ....153..136S",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 433 radius (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

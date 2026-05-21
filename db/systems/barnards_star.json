@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "Barnard'sStar"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 4620529541884.416,
         "icrs_vx_j2000_km_s": -5.815395023725568,
         "icrs_vy_j2000_km_s": 117.57220972362427,
-        "icrs_vz_j2000_km_s": 80.37323072618808
+        "icrs_vz_j2000_km_s": 80.37323072618808,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 21366702842.898,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2460243.7,
         "mass_kg": 1.5706886e+24,
         "mass_type": "Msini",
-        "radius_m": 4421474.0
+        "radius_m": 4421474.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Barnard d",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": 2460243.38,
         "mass_kg": 1.7856878e+24,
         "mass_type": "Msini",
-        "radius_m": 4587120.0
+        "radius_m": 4587120.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Barnard b",
@@ -236,7 +252,9 @@
         "orbital_epoch_jd": 2460242.92,
         "mass_kg": 2.0006870000000001e+24,
         "mass_type": "Msini",
-        "radius_m": 4733653.0
+        "radius_m": 4733653.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Barnard c",
@@ -299,7 +317,9 @@
         "orbital_epoch_jd": 2460245.3,
         "mass_kg": 1.1526346e+24,
         "mass_type": "Msini",
-        "radius_m": 4058327.0
+        "radius_m": 4058327.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "Barnard e",
@@ -330,7 +350,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -339,7 +359,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -348,7 +368,7 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "Barnard's star mass (spectroscopic_calibration)"
       ]
@@ -357,7 +377,7 @@
       "title": "Rains et al. 2021",
       "doi": "10.1093/mnras/stab1167",
       "bibcode": "2021MNRAS.504.5788R",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "Barnard's star radius (interferometry)"
       ]
@@ -366,14 +386,14 @@
       "title": "Basant et al. 2025",
       "doi": "10.3847/2041-8213/adb8d5",
       "bibcode": "2025ApJ...982L...1B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "planet Barnard d orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

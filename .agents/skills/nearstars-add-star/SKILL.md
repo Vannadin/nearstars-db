@@ -197,10 +197,13 @@ Before writing any code, create two files in the working directory.
 - `context-notes.md` — rationale for paper selection, tiebreakers,
   method-tier conflict resolution. Append continuously during the work.
 
-Phase 2 also requires extending `build_planet_derived` to accept
-array-form `physical`/`orbital` (currently single-dict only). See
-[references/planet-curation.md §Phase 2](references/planet-curation.md)
-for the schema extension and full procedure.
+`build_systems.py` accepts array-form `physical`/`orbital`/`environment`/
+`atmosphere` since 2026-05-21 (Phase 2 schema expansion). `schema.py`
+enforces method whitelist + exactly-one `recommended: true` per array.
+See [references/planet-curation.md §Phase 2](references/planet-curation.md)
+for the full procedure and the eight stellar measurement categories
+now supported (mass / radius / teff / luminosity / age / metallicity /
+rotation / activity).
 
 Details, manual ADS workarounds, and the curated.json schema:
 [references/planet-curation.md](references/planet-curation.md).

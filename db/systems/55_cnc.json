@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "rho01Cnc"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": 184307909269473.78,
         "icrs_vx_j2000_km_s": 0.2558218512589647,
         "icrs_vy_j2000_km_s": 42.102606625365134,
-        "icrs_vz_j2000_km_s": 0.637140427946008
+        "icrs_vz_j2000_km_s": 0.637140427946008,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 120104758216.29,
@@ -123,7 +135,9 @@
         "orbital_epoch_jd": 2457063.2096,
         "mass_kg": 4.7717878e+25,
         "mass_type": "true mass",
-        "radius_m": 11945625.0
+        "radius_m": 11945625.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "55 Cnc e",
@@ -189,7 +203,9 @@
         "orbital_epoch_jd": 2455495.595,
         "mass_kg": 1.6483272000000002e+27,
         "mass_type": "Msini",
-        "radius_m": 88556900.0
+        "radius_m": 88556900.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "55 Cnc b",
@@ -252,7 +268,9 @@
         "orbital_epoch_jd": 2455491.23,
         "mass_kg": 3.3802652000000006e+26,
         "mass_type": "Msini",
-        "radius_m": 54217210.0
+        "radius_m": 54217210.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "55 Cnc c",
@@ -315,7 +333,9 @@
         "orbital_epoch_jd": 2455236.4,
         "mass_kg": 2.896517e+26,
         "mass_type": "Msini",
-        "radius_m": 48355890.0
+        "radius_m": 48355890.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "55 Cnc f",
@@ -378,7 +398,9 @@
         "orbital_epoch_jd": 2451517.8,
         "mass_kg": 7.250874982930228e+27,
         "mass_type": "Msini",
-        "radius_m": 82823000.0
+        "radius_m": 82823000.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "55 Cnc d",
@@ -409,7 +431,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -418,7 +440,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -427,7 +449,7 @@
       "title": "Bourrier et al. 2018",
       "doi": "10.1051/0004-6361/201833154",
       "bibcode": "2018A&A...619A...1B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "55 Cnc mass (unverified)"
       ]
@@ -436,14 +458,14 @@
       "title": "Moutou et al. 2026",
       "doi": "10.1051/0004-6361/202556146",
       "bibcode": "2026A&A...705A.190M",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "planet 55 Cnc b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

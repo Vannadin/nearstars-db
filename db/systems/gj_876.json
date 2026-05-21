@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "V*ILAqr"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -35520335509264.21,
         "icrs_vx_j2000_km_s": 0.6284793411311875,
         "icrs_vy_j2000_km_s": 21.954249529512964,
-        "icrs_vz_j2000_km_s": -13.94468861275783
+        "icrs_vz_j2000_km_s": -13.94468861275783,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 42467980805.76,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": 2450602.093,
         "mass_kg": 4.079012600000001e+25,
         "mass_type": "true mass",
-        "radius_m": 15991209.999999998
+        "radius_m": 15991209.999999998,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 876 d",
@@ -174,7 +188,9 @@
         "orbital_epoch_jd": 2450602.093,
         "mass_kg": 1.35559742812e+27,
         "mass_type": "true mass",
-        "radius_m": 89194000.0
+        "radius_m": 89194000.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 876 c",
@@ -238,7 +254,9 @@
         "orbital_epoch_jd": 2450602.093,
         "mass_kg": 4.3192353866999996e+27,
         "mass_type": "true mass",
-        "radius_m": 84734300.0
+        "radius_m": 84734300.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 876 b",
@@ -302,7 +320,9 @@
         "orbital_epoch_jd": 2450602.093,
         "mass_kg": 8.719412e+25,
         "mass_type": "true mass",
-        "radius_m": 24974320.0
+        "radius_m": 24974320.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 876 e",
@@ -334,7 +354,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -343,7 +363,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -352,14 +372,14 @@
       "title": "Rivera et al. 2010",
       "doi": "10.1088/0004-637x/719/1/890",
       "bibcode": "2010ApJ...719..890R",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 876 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

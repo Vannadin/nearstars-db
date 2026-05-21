@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "V*HOLib"
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -26124114629843.336,
         "icrs_vx_j2000_km_s": -21.405641590810994,
         "icrs_vy_j2000_km_s": 31.19717326520304,
-        "icrs_vz_j2000_km_s": -1.5679892463809018
+        "icrs_vz_j2000_km_s": -1.5679892463809018,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 39150169805.31,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.4811056000000001e+25,
         "mass_type": "true mass",
-        "radius_m": 8791980.0
+        "radius_m": 8791980.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 581 e",
@@ -174,7 +188,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.224301e+26,
         "mass_type": "true mass",
-        "radius_m": 30517090.0
+        "radius_m": 30517090.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 581 b",
@@ -238,7 +254,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 4.0670682e+25,
         "mass_type": "true mass",
-        "radius_m": 15927500.0
+        "radius_m": 15927500.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 581 c",
@@ -270,7 +288,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -279,7 +297,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -288,14 +306,14 @@
       "title": "Von Stauffenberg et al. 2024",
       "doi": "10.1051/0004-6361/202449375",
       "bibcode": "2024A&A...688A.112V",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 581 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

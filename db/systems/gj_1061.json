@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": null
       },
       "derived": {
@@ -63,7 +69,13 @@
         "icrs_z_j2000_km": -79484174251089.45,
         "icrs_vx_j2000_km_s": -12.561892547536086,
         "icrs_vy_j2000_km_s": 4.805680532271705,
-        "icrs_vz_j2000_km_s": -5.682650232943557
+        "icrs_vz_j2000_km_s": -5.682650232943557,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 15925492802.16,
@@ -110,7 +122,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 6.629142000000001e+24,
         "mass_type": "true mass",
-        "radius_m": 6625840.0
+        "radius_m": 6625840.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 1061 b",
@@ -173,7 +187,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 1.0809682e+25,
         "mass_type": "true mass",
-        "radius_m": 7581490.0
+        "radius_m": 7581490.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 1061 c",
@@ -235,7 +251,9 @@
         "orbital_epoch_jd": null,
         "mass_kg": 9.973574e+24,
         "mass_type": "true mass",
-        "radius_m": 7390359.999999999
+        "radius_m": 7390359.999999999,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 1061 d",
@@ -265,7 +283,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -274,7 +292,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -283,14 +301,14 @@
       "title": "Dreizler et al. 2025",
       "doi": "10.1051/0004-6361/202452490",
       "bibcode": "2025A&A...698A.114D",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 1061 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

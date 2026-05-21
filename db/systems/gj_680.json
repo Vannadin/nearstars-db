@@ -33,6 +33,12 @@
           }
         ],
         "radius_measurements": [],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "HIP86057"
       },
       "derived": {
@@ -53,7 +59,13 @@
         "icrs_z_j2000_km": -224335903473156.3,
         "icrs_vx_j2000_km_s": 3.3010906622222764,
         "icrs_vy_j2000_km_s": -1.0842776874739215,
-        "icrs_vz_j2000_km_s": 31.85354701251633
+        "icrs_vz_j2000_km_s": 31.85354701251633,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 60516872648.208,
@@ -100,7 +112,9 @@
         "orbital_epoch_jd": 2445218.751,
         "mass_kg": 4.7643183788363545e+28,
         "mass_type": "true mass",
-        "radius_m": 76452000.0
+        "radius_m": 76452000.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
       },
       "curated": {
         "pl_name": "GJ 680 b",
@@ -132,7 +146,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -141,7 +155,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -150,14 +164,14 @@
       "title": "Feng et al. 2022",
       "doi": "10.3847/1538-4365/ac7e57",
       "bibcode": "2022ApJS..262...21F",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "GJ 680 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -43,6 +43,12 @@
             "recommended": true
           }
         ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "stellarium_id": "Sirius"
       },
       "derived": {
@@ -68,7 +74,13 @@
         "orbit_role": "primary",
         "mass_ratio_q": 0.3304122038299253,
         "barycenter_method": "single_component(Sirius A)",
-        "phase_reliable": true
+        "phase_reliable": true,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 273785763757.134,
@@ -82,7 +94,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "epoch propagation method"
       ]
@@ -91,7 +103,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -100,7 +112,7 @@
       "title": "Bond et al. 2017 (HST astrometric orbit)",
       "doi": "10.3847/1538-4357/aa6af8",
       "bibcode": "2017ApJ...840...70B",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "Sirius A mass (binary_orbit)"
       ]
@@ -109,14 +121,14 @@
       "title": "Kervella et al. 2003",
       "doi": "10.1051/0004-6361:20030994",
       "bibcode": "2003A&A...408..681K",
-      "accessed": "2026-05-20",
+      "accessed": "2026-05-21",
       "used_for": [
         "Sirius A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-20",
+    "retrieval_date": "2026-05-21",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
