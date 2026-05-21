@@ -29,6 +29,12 @@ Required for every PR (see [AGENTS.md §3](../AGENTS.md#3-hard-rules-for-any-pr)
       not global).
 - [ ] Commits are semantic — one logical change per commit, describable
       in one sentence.
+- [ ] **Bilingual mirror** — if this PR adds or substantively edits a
+      `.md` under `docs/`, `plans/`, or root `README.md`, the matching
+      `ko/<same-path>` file is created or updated. If you do not write
+      Korean, leave the mirror to the repo owner and note that in the
+      description above. See
+      [AGENTS.md §2.1](../AGENTS.md#21-bilingual-mirror--ko-tree).
 
 For **DB / pipeline changes**, additionally:
 

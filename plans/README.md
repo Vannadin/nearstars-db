@@ -48,6 +48,12 @@ decision rule.
 
 5. **Start from the template.** See [`_template.md`](_template.md).
 
+6. **English source, Korean mirror in `ko/plans/`.** See
+   [AGENTS.md §2.1](../AGENTS.md#21-bilingual-mirror--ko-tree). Write
+   the research note in English; mirror to `ko/plans/<same-name>.md`.
+   `ko/plans/` does not exist yet — create it on the first plan that
+   needs it.
+
 ---
 
 ## Lifecycle
