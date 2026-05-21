@@ -55,10 +55,11 @@ decision rule.
 A `plans/` document can be:
 
 - **Active** — being read or extended in the current cycle.
-- **Promoted** — its findings have been moved into `phase2/<topic>/`
-  for actual implementation. The original `plans/` file stays for
-  historical context, with a top-of-file note pointing to the promoted
-  work.
+- **Promoted** — its findings have moved to a permanent home, either
+  `phase2/<topic>/` for active implementation or `docs/reference/`
+  for long-lived reference documentation (with `ko/docs/reference/`
+  mirror). The original `plans/` file stays as a stub with a
+  top-of-file note pointing to the promoted location.
 - **Archived** — superseded or abandoned. Either delete, or move to
   `plans/_archive/` (create if needed).
 
