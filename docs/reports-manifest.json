@@ -2,7 +2,13 @@
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
     "phase3": {
-      "d": "phase3/trappist-1-d.html"
+      "b": "phase3/trappist-1-b.html",
+      "c": "phase3/trappist-1-c.html",
+      "d": "phase3/trappist-1-d.html",
+      "e": "phase3/trappist-1-e.html",
+      "f": "phase3/trappist-1-f.html",
+      "g": "phase3/trappist-1-g.html",
+      "h": "phase3/trappist-1-h.html"
     }
   }
 }

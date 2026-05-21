@@ -1,0 +1,488 @@
+planet: TRAPPIST-1 f
+slug: trappist-1-f
+generated_at: '2026-05-21T12:57:18.876346Z'
+sources:
+  ads: queried (15 hits)
+  arxiv: queried (5 hits)
+papers:
+- arxiv_id: '2605.06964'
+  ads_bibcode: 2026arXiv260506964H
+  title: Exploring TRAPPIST-1 Climate States with an Energy Balance Model
+  authors:
+  - Haqq-Misra, Jacob
+  year: '2026'
+  pubdate: '2026-05-00'
+  doi: null
+  abstract: This paper presents a version of the HEXTOR energy balance model that has been configured for the study of habitable
+    terrestrial planets orbiting low-mass stars. The model is validated for rapidly-rotating Earth-like planets using latitudinal
+    coordinates, which shows expected patterns of bistability. A tidally-locked coordinate transformation is then applied
+    to the model, which is calibrated to match mean values of the minimum, average, and maximum surface temperatures from
+    a general circulation model ensemble of TRAPPIST-1 e. This calibrated energy balance model is used to characterize the
+    possible climate states of such a synchronously rotating planet across a parameter space of instellation and carbon dioxide
+    partial pressure. These calculations suggest a state of partial ice cover for TRAPPIST-1 e and complete ice cover for
+    TRAPPIST-1 f, unless carbon dioxide partial pressure is ~1 bar or greater. This approach demonstrates the capability of
+    a simplified one-dimensional model to study the climates of terrestrial planets in synchronous rotation, which can help
+    guide more complex models and observations toward the most promising targets of interest.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2506.21351'
+  ads_bibcode: 2025ApJ...987...85R
+  title: Characterizing Exoplanets for Assessing Their Potential Habitability
+  authors:
+  - Rodríguez-Mozos, J. M.
+  - Moya, A.
+  year: '2025'
+  pubdate: '2025-07-00'
+  doi: 10.3847/1538-4357/adddbf
+  abstract: 'The Statistical-likelihood Exoplanetary Habitability Index (SEPHI) serves as a valuable tool for prioritizing
+    targets for further study and identifying potentially habitable environments. In this paper, we present SEPHI 2.0, which
+    incorporates several key improvements: (1) updated methods for estimating exoplanet internal structures and magnetic fields;
+    (2) the inclusion of orbital eccentricity in assessing the potential for liquid water on an exoplanet''s surface; and
+    (3) a new exoplanet mass─radius relationship. SEPHI 2.0 retains its probabilistic framework and combines the different
+    subindexes by selecting the most restrictive one. In SEPHI 2.0, atmospheric retention is consolidated into a single index
+    that incorporates both thermal (Jeans escape) and nonthermal (stellar wind and magnetic effect) processes. Recent advancements
+    in estimating exoplanet internal structures and magnetic fields have been integrated. Additionally, a new empirical exoplanet
+    mass─radius relationship is introduced. All this is incorporated into the SADE code, which uses key data on exoplanets
+    and their host stars to assess habitability and prioritize targets for further study, providing a comprehensive output
+    of an exoplanetary system''s physical characteristics. SADE is available as a free online tool. Notably, this is the first
+    approach to including estimated exoplanet magnetic fields in a habitability index. The SADE software facilitates the identification
+    of potentially habitable exoplanets. Among the 5500+ confirmed exoplanets, only a few—such as Kepler-62f and GJ 514b—achieve
+    SEPHI 2.0 scores close to 1. It is also noticeable that, according to our studies, TRAPPIST-1 f and g are ranked higher
+    than TRAPPIST-1 e in terms of habitability potential.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2504.16201'
+  ads_bibcode: 2025ApJ...986....2R
+  title: 'Uncertainties in the Inference of Internal Structure: The Case of TRAPPIST-1 f'
+  authors:
+  - Rice, David R.
+  - Huang, Chenliang
+  - Steffen, Jason H.
+  - Vazan, Allona
+  year: '2025'
+  pubdate: '2025-06-00'
+  doi: 10.3847/1538-4357/add34b
+  abstract: We use the TRAPPIST-1 system as a model observation of Earth-like planets. The densities of these planets being
+    1%─10% less than the Earth suggest that the outer planets may host significant hydrospheres. We explore the uncertainty
+    in water mass fraction (wmf) from observed mass and radius. We investigate the interior structure of TRAPPIST-1 f (T1-f)
+    using the open-source solver MAGRATHEA and varying assumptions in the interior model. We find that T1-f likely has a wmf
+    of 16.2% ± 9.9% when considering all possible core mass fractions, and requires 6.9% ± 2.0% water at an Earth-like mantle-to-core
+    ratio. We quantify uncertainties from observational precision, model assumptions, and experimental and theoretical data
+    on the bulk modulus of planet-building materials. We show that observational uncertainties are smaller than model assumptions
+    of mantle mineralogy and core composition but larger than hydrosphere, temperature, and equation-of-state assumptions/uncertainties.
+    Our findings show that while precise mass and radius measurements are crucial, uncertainties in planetary models can often
+    outweigh those from observations, emphasizing the importance of refining both theoretical models and experimental data
+    to better understand exoplanet interiors.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2025AAS...24514807A
+  title: Do TRAPPIST1 Outer Exoplanets Retain Atmospheres?
+  authors:
+  - Airapetian, Vladimir
+  - Lin, Mei-Yun
+  - Bell, Jared
+  - Glocer, Alex
+  year: '2025'
+  pubdate: '2025-01-00'
+  doi: null
+  abstract: Close-in rocky exoplanets around active M planet hosts are exposed to high ionizing radiation fluxes from stellar
+    coronae, flares, magnetized winds and coronal mass ejections. This raises the question of how exoplanetary atmospheric
+    plasma responds to these fluxes in terms of escape driven by the energy deposited via X-ray and Extreme UV driven (XUV)
+    photoionization. The atmospheric escape is one of the central issues to exoplanetary habitability, because the presence
+    of thick high molecular weight secondary atmosphere over sufficiently long timescales is a crucial factor associated with
+    planetary surface pressure due to the exposure to stellar UV and particle irradiation. Here, we extend our previous results
+    of Airapetian et al. (2017) and focus on ion escape rates from Earth-like atmospheres by applying 7-ion Polar Wind Outflow
+    Model (7iPOWM) of thermodynamics and atmospheric dynamics of an Earth-like exoplanet controlled by the coronal XUV emission
+    from TRAPPIST-1 f, g and h planets
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2405.11149'
+  ads_bibcode: 2024ApJ...969...20S
+  title: Artificial Greenhouse Gases as Exoplanet Technosignatures
+  authors:
+  - Schwieterman, Edward W.
+  - Fauchez, Thomas J.
+  - Haqq-Misra, Jacob
+  - Kopparapu, Ravi K.
+  - Angerhausen, Daniel
+  - Pidhorodetska, Daria
+  - Leung, Michaela
+  - Sneed, Evan L.
+  - Ducrot, Elsa
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: 10.3847/1538-4357/ad4ce8
+  abstract: Atmospheric pollutants such as chlorofluorocarbons and NO<SUB>2</SUB> have been proposed as potential remotely
+    detectable atmospheric technosignature gases. Here we investigate the potential for artificial greenhouse gases including
+    CF<SUB>4</SUB>, C<SUB>2</SUB>F<SUB>6</SUB>, C<SUB>3</SUB>F<SUB>8</SUB>, SF<SUB>6</SUB>, and NF<SUB>3</SUB> to generate
+    detectable atmospheric signatures. In contrast to passive incidental by-products of industrial processes, artificial greenhouse
+    gases would represent an intentional effort to change the climate of a planet with long-lived, low-toxicity gases and
+    would possess low false positive potential. An extraterrestrial civilization may be motivated to undertake such an effort
+    to arrest a predicted snowball state on their home world or to terraform an otherwise uninhabitable terrestrial planet
+    within their system. Because artificial greenhouse gases strongly absorb in the thermal mid-infrared window of temperate
+    atmospheres, a terraformed planet will logically possess strong absorption features from these gases at mid-infrared wavelengths
+    (∼8─12 μm), possibly accompanied by diagnostic features in the near-infrared. As a proof of concept, we calculate the
+    needed observation time to detect 1 [10](100) ppm of C<SUB>2</SUB>F<SUB>6</SUB>/C<SUB>3</SUB>F<SUB>8</SUB>/SF<SUB>6</SUB>
+    on TRAPPIST-1 f with JWST MIRI's Low Resolution Spectrometer (LRS) and NIRSpec. We find that a combination of 1[10](100)
+    ppm each of C<SUB>2</SUB>F<SUB>6</SUB>, C<SUB>3</SUB>F<SUB>8</SUB>, and SF<SUB>6</SUB> can be detected with a signal-to-noise
+    ratio ≧ 5 in as few as 25[10](5) transits with MIRI/LRS. We further explore mid-infrared direct-imaging scenarios with
+    the Large Interferometer for Exoplanets mission concept and find these gases are more detectable than standard biosignatures
+    at these concentrations. Consequently, artificial greenhouse gases can be readily detected (or excluded) during normal
+    planetary characterization observations with no additional overhead.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2024ESS.....510106L
+  title: 'TRAPPIST-1 Atmospheric Reconnaissance with JWST: First Look at the Habitable-Zone Exoplanet TRAPPIST-1 f with NIRISS'
+  authors:
+  - Lim, Olivia
+  - MacDonald, Ryan
+  - Doyon, Rene
+  - Lafreniere, David
+  - Benneke, Björn
+  - Piaulet-Ghorayeb, Caroline
+  - Howard, Ward
+  - Radica, Michael
+  - Coulombe, Louis-Philippe
+  - Artigau, Etienne
+  - L'Heureux, Alexandrine
+  - Albert, Loic
+  - Flagg, Laura
+  - Rackham, Benjamin
+  - De Wit, Julien
+  - Salhi, Salma
+  - Roy, Pierre-Alexis
+  - Fournier-Tondreau, Marylou
+  - Taylor, Jake
+  - Cook, Neil
+  - Cowan, Nicolas
+  - Kaltenegger, Lisa
+  - Rowe, Jason
+  - Espinoza, Néstor
+  - Darveau-Bernier, Antoine
+  - Dang, Lisa
+  year: '2024'
+  pubdate: '2024-04-00'
+  doi: null
+  abstract: One of the most intriguing unanswered questions in the field of exoplanets is whether Earth-like planets outside
+    our solar system have atmospheres suitable for the emergence of life. Located in the solar neighborhood with seven Earth-sized,
+    rocky, transiting planets, three which being in the habitable zone, TRAPPIST-1 may be our best shot at detecting and potentially
+    characterizing atmospheres on small temperate exoplanets. So far, the search for atmospheres on TRAPPIST-1 planets has
+    been an exciting adventure full of challenges. Transit observations with HST rejected cloud-free, hydrogen-rich atmospheres
+    on all seven planets. Secondary eclipse observations of TRAPPIST-1 b with JWST/MIRI initially ruled out any thick atmospheres
+    based on the inferred lack of heat redistribution, but additional observations at 12.8 um suggest that a thick, hazy,
+    CO2-rich atmosphere is also consistent with the data. For TRAPPIST-1 c, secondary eclipse observations with MIRI rejected
+    any thick CO2 atmospheres, but thinner atmospheres remain possible. In transmission, JWST/NIRISS revealed strong evidence
+    for stellar contamination from unocculted spots and faculae. Is there still hope to find atmospheres on the outer, cooler
+    planets? In this talk, we will present, for the first time, the first JWST transmission spectra of the habitable-zone
+    planet TRAPPIST-1 f obtained with NIRISS, and discuss lessons learned from JWST observations of this unique system and
+    possible strategies for future observations.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2008.09599'
+  ads_bibcode: 2021AsBio..21.1325B
+  title: Magma Ocean Evolution of the TRAPPIST-1 Planets
+  authors:
+  - Barth, Patrick
+  - Carone, Ludmila
+  - Barnes, Rory
+  - Noack, Lena
+  - Mollière, Paul
+  - Henning, Thomas
+  year: '2021'
+  pubdate: '2021-11-00'
+  doi: 10.1089/ast.2020.2277
+  abstract: Recent observations of the potentially habitable planets TRAPPIST-1 e, f, and g suggest that they possess large
+    water mass fractions of possibly several tens of weight percent of water, even though the host star's activity should
+    drive rapid atmospheric escape. These processes can photolyze water, generating free oxygen and possibly desiccating the
+    planet. After the planets formed, their mantles were likely completely molten with volatiles dissolving and exsolving
+    from the melt. To understand these planets and prepare for future observations, the magma ocean phase of these worlds
+    must be understood. To simulate these planets, we have combined existing models of stellar evolution, atmospheric escape,
+    tidal heating, radiogenic heating, magma-ocean cooling, planetary radiation, and water-oxygen-iron geochemistry. We present
+    M a g m O c , a versatile magma-ocean evolution model, validated against the rocky super-Earth GJ 1132b and early Earth.
+    We simulate the coupled magma-ocean atmospheric evolution of TRAPPIST-1 e, f, and g for a range of tidal and radiogenic
+    heating rates, as well as initial water contents between 1 and 100 Earth oceans. We also reanalyze the structures of these
+    planets and find they have water mass fractions of 0-0.23, 0.01-0.21, and 0.11-0.24 for planets e, f, and g, respectively.
+    Our model does not make a strong prediction about the water and oxygen content of the atmosphere of TRAPPIST-1 e at the
+    time of mantle solidification. In contrast, the model predicts that TRAPPIST-1 f and g would have a thick steam atmosphere
+    with a small amount of oxygen at that stage. For all planets that we investigated, we find that only 3-5% of the initial
+    water will be locked in the mantle after the magma ocean solidified.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2021cosp...43E1950K
+  title: 'Similarity Indexing: Application to potential habitability of rocky and water extremophiles on exoplanets'
+  authors:
+  - Kashyap Jagadeesh, Madhu
+  - Kaczmarek, Łukasz
+  year: '2021'
+  pubdate: '2021-01-00'
+  doi: null
+  abstract: 'Searching life outside our solar system is a fascinating area of current research for astrobiologists. More than
+    4000 exoplanets were discovered and confirmed according to NASA exoplanet archive. Techniques like Earth Similarity Index
+    and Mars Similarity Index were recently established to find Earth like and Mars like exoplanets (Kashyap et al. 2017).
+    In present study we focused on water extremophiles and rocky extremophiles, which could potential survive on exoplanets.
+    Part 1:For water extremophiles, we have established a metric tool for distinguishing the potential survivability of active
+    and cryptobiotic tardigrades (known as water bears) on rocky-water and water-gas planets in our solar system as well as
+    some exoplanets, taking into consideration the geometrical means of six physical parameters such as radius, density, escape
+    velocity, revolution period, surface temperature, and surface pressure of the considered planets. From Planetary Habitable
+    Laboratory - Exoplanet Catalog (PHL-EC), we have selected 57 exoplanets in our study including Earth and Mars, with rocky-water
+    composition. The Active Tardigrade Index (ATI) and Cryptobiotic Tardigrade Index (CTI) are two metric indices with minimum
+    value 0 (= tardigrades cannot survive) and maximum 1 (= tardigrades will survive in their respective state). Values between
+    0 and 1 indicate a percentage chance of the active or cryptobiotic tardigrades surviving on a given exoplanet. Among known
+    planets some of the exoplanets are tabulated as ATI and CTI indices for sample representation like: Kepler-100d, Kepler-48d,
+    Kepler-289b, TRAPPIST-1 f and Kepler-106e. The results with Mars as the threshold indicates that Mars could be the only
+    rock-water composition planet that could be more suitable for tardigrades than other considered exoplanets (Kashyap et
+    al. 2018). Part 2: For rocky extremophiles, we examined rocky exoplanets whose physical conditions are potentially suitable
+    for the survival of rock-dependent extremophiles, such as the cyanobacteria Chroococcidiopsis and the lichen Acarospora.
+    The Rock Similarity Index (RSI) is first introduced and then applied to 1659 rocky exoplanets. The RSI represents a measure
+    for Earth-like planets on which physical conditions are potentially suitable for rocky extremophiles that can survive
+    in Earth-like extreme habitats (i.e., hot deserts and cold, frozen lands) (Kashyap et al. 2020).'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2019absc.conf12400F
+  title: 'Constraining the Water Loss Histories of the TRAPPIST-1 Exoplanets: Comparative Habitability Using the Exoplanet
+    Habitability Index'
+  authors:
+  - Fleming, David
+  - Barnes, Rory
+  - Luger, Rodrigo
+  year: '2019'
+  pubdate: '2019-03-00'
+  doi: null
+  abstract: Exoplanets orbiting in the habitable zone (HZ) of M dwarfs can lose significant amounts of water during the stellar
+    pre-main sequence, a major obstacle to habitability (Luger &amp; Barnes, 2015). TRAPPIST-1, a late M dwarf located 12
+    pc away, harbors 7 transiting terrestrial exoplanets that span the HZ, offering an unprecedented laboratory to examine
+    how water loss impacts potentially-habitable exoplanets (Gillon et al., 2017). We perform a Markov Chain Monte Carlo (MCMC)
+    analysis to constrain the XUV luminosity evolution of TRAPPIST-1, the key driver of water loss, while accounting for observational
+    uncertainties. We use these constraints to derive plausible distributions for the amount of water the TRAPPIST-1 exoplanets
+    could have lost and define a metric, the Exoplanet Habitability Index (EHI), to quantify which planet is most likely to
+    retain water. We find that TRAPPIST-1e likely resided interior to the HZ for ~370 Myr, potentially losing 8-12 Earth oceans
+    and releasing ~1000 bars of O2, a false biosignature. TRAPPIST-1 f and g likely entered the HZ 200-250 Myr earlier than
+    e, losing 4-5 Earth oceans each. TRAPPIST-1 b, c, and d probably are still in a runaway phase and could have each lost
+    over 100 Earth oceans.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2019AAS...23310304M
+  title: 'Limits on Clouds and Hazes in the TRAPPIST-1 Planets: insights from the laboratory and models'
+  authors:
+  - Moran, Sarah E.
+  - Horst, Sarah M.
+  - Batalha, Natasha E.
+  - Lewis, Nikole K.
+  - Wakeford, Hannah R.
+  year: '2019'
+  pubdate: '2019-01-00'
+  doi: null
+  abstract: 'As the first known multi-planet system of Earth-sized worlds, the TRAPPIST-1 system has been the subject of intense
+    study since its discovery. With at least three of its planets in the traditional habitable zone, the TRAPPIST-1 system
+    offers an exceptional opportunity to study the evolution, potential habitability, and possible aerosol formation of planetary
+    atmospheres around M-dwarf stars. Using a combination of laboratory results for temperate exoplanet atmospheres and a
+    1-D atmospheric model, we explored the feasibility of aerosols in hydrogen-rich atmospheres to explain the featureless
+    Hubble Space Telescope (HST) transmission spectra of TRAPPIST-1 d, e, f, and g. From the laboratory, we have constraints
+    on haze particle size and production rate. Using these constraints as a guideline, we found that based on physically realistic
+    haze formation scenarios, TRAPPIST-1 d and e likely do not have hydrogen-rich atmospheres with hazes muting spectroscopic
+    features. We also investigated the effect of an opaque cloud layer in hydrogen-rich atmospheres: high altitude clouds
+    are needed in these models to explain the HST transmission spectra for TRAPPIST-1 d and e. At the required altitudes,
+    it is unlikely that an optically thick cloud could form due to the lack of material available. Finally, I will present
+    lower limits for the mean molecular weights of the TRAPPIST-1 atmospheres, both with and without an opaque cloud deck.
+    Current observational precision is not yet strong enough to rule out extended hydrogen-rich atmospheres for TRAPPIST-1
+    f and g, and these worlds will require follow-up with more powerful observatories, such as the James Webb Space Telescope.
+    Our findings support secondary rather than primordial atmospheres for the TRAPPIST-1 planets and allow for substantial
+    evolution of these atmospheres over their lifetimes, as found in previous studies. Beyond the TRAPPIST-1 system, this
+    study has broader implications for other M-dwarf hosted terrestrial planets, which should also be expected to have secondary
+    rather than primordial, hydrogen-rich atmospheres.'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2018AGUFM.P44B..06M
+  title: Insights into the atmospheres of the TRAPPIST-1 planets from the laboratory and models
+  authors:
+  - Moran, S. E.
+  - Horst, S. M.
+  - Batalha, N. E.
+  - Lewis, N. K.
+  - Wakeford, H. R.
+  year: '2018'
+  pubdate: '2018-12-00'
+  doi: null
+  abstract: 'As the first known multi-planet system of Earth-sized worlds, the TRAPPIST-1 system has been the subject of intense
+    study since its discovery. With at least three of its planets in the traditional habitable zone, the TRAPPIST-1 system
+    offers an exceptional opportunity to study the evolution, potential habitability, and possible aerosol formation of planetary
+    atmospheres around M-dwarf stars. <P />Using a combination of laboratory results for temperate exoplanet atmospheres and
+    a 1-D atmospheric model, we explored the feasibility of aerosols in hydrogen-rich atmospheres to explain the featureless
+    Hubble Space Telescope (HST) transmission spectra of TRAPPIST-1 d, e, f, and g. From the laboratory, we have constraints
+    on haze particle size and production rate. Using these constraints as a guideline, we found that based on physically realistic
+    haze formation scenarios, TRAPPIST-1 d and e likely do not have hydrogen-rich atmospheres with hazes muting spectroscopic
+    features. We also investigated the effect of an opaque cloud layer in hydrogen-rich atmospheres: high altitude clouds
+    are needed in these models to explain the HST transmission spectra for TRAPPIST-1 d and e. At the required altitudes,
+    it is unlikely that an optically thick cloud could form due to the lack of material available. Finally, I will present
+    lower limits for the mean molecular weights of the TRAPPIST-1 atmospheres, both with and without an opaque cloud deck.
+    Current observational precision is not yet strong enough to rule out extended hydrogen-rich atmospheres for TRAPPIST-1
+    f and g, and therefore our results do not offer substantial improvement over the original HST results. <P />Our findings
+    support secondary rather than primordial atmospheres for the TRAPPIST-1 planets and allow for substantial evolution of
+    these atmospheres over their lifetimes, as found in previous studies. Beyond the TRAPPIST-1 system, this study has broader
+    implications for other M-dwarf hosted terrestrial planets.'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '1810.05210'
+  ads_bibcode: 2018AJ....156..252M
+  title: Limits on Clouds and Hazes for the TRAPPIST-1 Planets
+  authors:
+  - Moran, Sarah E.
+  - Hörst, Sarah M.
+  - Batalha, Natasha E.
+  - Lewis, Nikole K.
+  - Wakeford, Hannah R.
+  year: '2018'
+  pubdate: '2018-12-00'
+  doi: 10.3847/1538-3881/aae83a
+  abstract: The TRAPPIST-1 planetary system is an excellent candidate for study of the evolution and habitability of M-dwarf-hosted
+    planets. Transmission spectroscopy observations performed on the system with the Hubble Space Telescope (HST) suggest
+    that the innermost five planets do not possess clear hydrogen atmospheres. Here we reassess these conclusions with recently
+    updated mass constraints. Additionally, we expand the analysis to include limits on metallicity, cloud top pressure, and
+    the strength of haze scattering. We connect recent laboratory results of particle size and production rate for exoplanet
+    hazes to a one-dimensional atmospheric model for TRAPPIST-1 transmission spectra. In this way, we obtain a physically
+    based estimate of haze scattering cross sections. We find haze scattering cross sections on the order of 10<SUP>-26</SUP>-10<SUP>-19</SUP>
+    cm<SUP>2</SUP> are needed in modeled hydrogen-rich atmospheres for TRAPPIST-1 d, e, and f to match the HST data. For TRAPPIST-1
+    g, we cannot rule out a clear hydrogen-rich atmosphere. We model the effects an opaque cloud deck and substantial heavy
+    element content have on the transmission spectra using the updated mass estimates. We determine that hydrogen-rich atmospheres
+    with high-altitude clouds, at pressures of 12 mbar and lower, are consistent with the HST observations for TRAPPIST-1
+    d and e. For TRAPPIST-1 f and g, we cannot rule out clear hydrogen-rich cases to high confidence. We demonstrate that
+    metallicities of at least 60× solar with tropospheric (0.1 bar) clouds are in agreement with observations. Additionally,
+    we provide estimates of the precision necessary for future observations to disentangle degeneracies in cloud top pressure
+    and metallicity. For TRAPPIST-1 e and f, for example, 20 ppm precision is needed to distinguish between a clear atmosphere
+    and one with a thick cloud layer at 0.1 bar across a wide range (1× to 1000× solar) of metallicity. Our results suggest
+    secondary, volatile-rich atmospheres for the outer TRAPPIST-1 planets d, e, and f.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2018LSSR...19...13J
+  title: Tardigrade indexing approach on exoplanets
+  authors:
+  - Jagadeesh, Madhu Kashyap
+  - Roszkowska, Milena
+  - Kaczmarek, Łukasz
+  year: '2018'
+  pubdate: '2018-11-00'
+  doi: 10.1016/j.lssr.2018.08.001
+  abstract: 'Finding life on other worlds is a fascinating area of astrobiology and planetary sciences. Presently, over 3800
+    exoplanets, representing a very wide range of physical and chemical environments, are known. Scientists are not only looking
+    for traces of life outside Earth, but they are also trying to find out which of Earth''s known organisms (ex: tardigrades
+    (water bears)) would be able to survive on other planets. In our study, we have established a metric tool for distinguishing
+    the potential survivability of active and cryptobiotic tardigrades on rocky-water and water-gas planets in our solar system
+    and exoplanets, taking into consideration the geometrical means of six physical parameters such as radius, density, escape
+    velocity, revolution period, surface temperature, and surface pressure of the considered planets. More than 3800 exoplanets
+    are available as the main sample from Planetary Habitable Laboratory - Exoplanet Catalog (PHL-EC), from which we have
+    chosen 57 exoplanets in our study including Earth and Mars, with water composition as reference. The Active Tardigrade
+    Index (ATI) and Cryptobiotic Tardigrade Index (CTI) are two metric indices with minimum value 0 (= tardigrades cannot
+    survive) and maximum 1 (= tardigrades will survive in their respective state). Values between 0 and 1 indicate a percentage
+    chance of the active or cryptobiotic tardigrades surviving on a given exoplanet. Among known planets some of the exoplanets
+    are tabulated as ATI and CTI indices for sample representation like: Kepler-100d, Kepler-48d, Kepler-289b, TRAPPIST-1
+    f and Kepler-106e. The results with Mars as the threshold indicates that Mars could be the only rock-water composition
+    planet that could be more suitable for tardigrades than other considered exoplanets.'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2018hw...prop..113R
+  title: 'Hot and Steamy, Cold and Icy, or Temperate and Habitable: Modeling the Early Evolution of Water World Exoplanets'
+  authors:
+  - Rogers, Leslie
+  year: '2018'
+  pubdate: '2018-00-00'
+  doi: null
+  abstract: We propose to model the post-accretion cooling of water-rich exoplanets (with at least 1% water by mass) to assess
+    the conditions under which the planets will cool sufficiently to condense liquid water oceans. <P />Planets with global
+    water oceans have been the subject of intrigue both in Hollywood and in the exoplanet scientific community. Kuchner (2003)
+    and Leger et al. (2004) first proposed the possibility of water worlds - water-rich (&gt;1% water by mass) exoplanets
+    that formed from a comet-like mixture rock and ice from the outer reaches of the protoplanetary disk (beyond the water
+    snow line) but that never attained masses sufficient to accrete or retain large amounts of H/He nebular gas. This pathway
+    for producing low-mass water-rich planets has since played out as a robust prediction of planet formation simulations.
+    Habitable zone water worlds are especially timely given the discovery and characterization of the TRAPPIST-1 planetary
+    system, hosting seven Earth-sized, temperate transiting exoplanets orbiting a nearby ultracool dwarf star. Transit timing
+    variation mass measurements indicate that the TRAPPIST-1 planets may contain several percent to several tens of percent
+    water by mass. <P />Studies of the habitability of water worlds have so far taken it for granted that the planets can
+    cool sufficiently for a liquid ocean to condense. Models have not yet demonstrated the evolution of water worlds from
+    an initial post-accretion hot state to habitable conditions (with surface or subsurface water oceans). Indeed, studies
+    of the interior structure of water-world exoplanets have either assumed that the planets are relatively cold (with most
+    of their water condensed in high-pressure ices, like scaled-up versions of Jupiter's moon Ganymede) or that the planets
+    are relatively hot (with most of their water in extended envelopes of vapor and supercritical steam). The question of
+    whether a water-world will be icy or steamy has important implications for both the habitability of the planet (whether
+    or not it can host a liquid water ocean) and its observable characteristics (e.g., apparent transit radius, mean planet
+    density, and atmospheric spectra). Detailed models of the thermal evolution of water worlds are needed to assess the scenarios
+    that will lead to cold and icy, hot and steamy, or temperate and habitable water world outcomes. <P />We propose to combine
+    models of planet interior structure, phase equilibria, atmospheric radiative transfer, and ab initio simulations of H2O-CO2
+    mixtures to simulate the post-accretion evolution of water world exoplanets. We will apply these models to delineate the
+    regions of planet parameter space (i.e., orbital separation, planet mass, and volatile mass fraction) within which planets
+    are likely to remain hot and steamy or cool sufficiently to form high pressure ice mantles and/or liquid water oceans.
+    This study is necessary to establish whether habitable zone water worlds (such as TRAPPIST-1 f and g) can develop liquid
+    water oceans and conditions potentially favorable to life. <P />This proposal is directly relevant to the NASA Habitable
+    Worlds Program because it addresses the habitability of water-rich exoplanets. This work involves modeling water body
+    physics and chemistry as they pertain to habitability and habitability over time". By delineating the range of planet
+    parameter space (masses, radii, and orbits) over which water world exoplanets may plausibly condense liquid oceans, this
+    project will inform target and operational choices for current NASA missions" (i.e., HST, Spitzer, JWST, TESS) and will
+    be essential for the planning of a future space-based exoplanet direct imaging mission (e.g., LUVOIR, HabEx).
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2017nova.pres.3056K
+  title: 'Selections from 2017: Hostile Environment Around TRAPPIST-1'
+  authors:
+  - Kohler, Susanna
+  year: '2017'
+  pubdate: '2017-12-00'
+  doi: null
+  abstract: Editors note:In these last two weeks of 2017, well be looking at a few selections that we havent yet discussed
+    on AAS Nova from among the most-downloaded paperspublished in AAS journals this year. The usual posting schedule will
+    resume in January.The Threatening Magnetic and Plasma Environment of the TRAPPIST-1 PlanetsPublished July2017Main takeaway:Modelsof
+    the magnetic environment surrounding the seven planets of the TRAPPIST-1 system suggest that this isnot a pleasant place
+    to be for life. In particular, the simulations run byCecilia Garraffo (Harvard-Smithsonian Center for Astrophysics) and
+    collaborators indicate that all planets in the system are bombarded by a stellar wind with a pressure thats 1,000 to 100,000
+    times the pressureof what we experience on Earth.Why its interesting:Simulations of the magnetic environment around the
+    planet TRAPPIST-1 f, for a variety of different assumed planetary magnetic fields. Red field lines are those that have
+    connected between the star and the planet. [Garraffo et al. 2017]The discovery of seven Earth-sized planets in the nearby
+    TRAPPIST-1 system particularly given many of the planets apparent location in the stars habitable zone gave us hope that
+    these planets might be an interesting place to look for life. But the issue of habitability is more complicated than whether
+    or not the planets can support liquid water. Garraffo and collaborators models suggest that these planets likely have
+    their atmospheres eroded or completely stripped by the stellar wind, renderingprospects for life on these planets low.Why
+    the TRAPPIST-1 systemis still awesome:We may be bummed that the magnetically active host star impedes chances for life
+    on the TRAPPIST-1 planets, but theenvironment it produces isstill pretty awesome. According to the authors models, the
+    planets pass through wildly changing wind pressure changes as they orbit. In the process, their magnetospheres are compressed,
+    and their magnetic field lines connect with the stellar field lines over much of the planets surfaces, causing thestellar
+    wind particles tofunnel directly onto the planets atmospheres. The result isan exciting and dynamic environment definitely
+    worth studying further.CitationCecilia Garraffo et al 2017 ApJL 843 L33. doi:10.3847/2041-8213/aa79ed
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id

@@ -1,0 +1,2343 @@
+planet: TRAPPIST-1 g
+slug: trappist-1-g
+generated_at: '2026-05-21T12:57:27.580172Z'
+sources:
+  ads: queried (66 hits)
+  arxiv: queried (2 hits)
+papers:
+- arxiv_id: '2603.29743'
+  ads_bibcode: 2026arXiv260329743R
+  title: New Constraints on the M Dwarf Cosmic Shoreline from a Galaxy Far, Far Away
+  authors:
+  - Radica, Michael
+  year: '2026'
+  pubdate: '2026-03-00'
+  doi: 10.48550/arXiv.2603.29743
+  abstract: Whether there is a cosmic shoreline that divides terrestrial planets which have atmospheres from those that don't
+    is one of the biggest open questions in exoplanet science. Most atmosphere searches have focused on terrestrial planets
+    around M dwarf stars, since their smaller radii compared to sun-like stars boost planet atmosphere signals. However, the
+    higher activity levels of M dwarfs might also entirely preclude atmosphere retention for their planets. In this work we
+    present a new hope for defining an M dwarf cosmic shoreline, leveraging not only data from exoplanets in our own galaxy,
+    but a comprehensive survey conducted by a commission of the Galactic Republic a long, long time ago in a galaxy far, far
+    away. In this survey, we find definitive proof that M dwarf planets can retain atmospheres, and define an M dwarf cosmic
+    shoreline whose slope agrees well with empirical predictions for Sun-like stars. We then define atmosphere retention metrics
+    for the planets on the JWST Rocky Worlds DDT Targets Under Consideration list. Our analysis highlights the benefits of
+    looking beyond the Milky Way for answers to some of the field's most pressing questions.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2026NatAs..10..371R
+  title: Diversity in the haziness and chemistry of temperate sub-Neptunes
+  authors:
+  - Roy, Pierre-Alexis
+  - Benneke, Björn
+  - Fournier-Tondreau, Marylou
+  - Coulombe, Louis-Philippe
+  - Piaulet-Ghorayeb, Caroline
+  - Lafrenière, David
+  - Allart, Romain
+  - Cowan, Nicolas B.
+  - Dang, Lisa
+  - Johnstone, Doug
+  - Langeveld, Adam B.
+  - Pelletier, Stefan
+  - Radica, Michael
+  - Taylor, Jake
+  - Albert, Loïc
+  - Doyon, René
+  - Flagg, Laura
+  - Jayawardhana, Ray
+  - MacDonald, Ryan J.
+  - Turner, Jake D.
+  year: '2026'
+  pubdate: '2026-03-00'
+  doi: 10.1038/s41550-025-02723-3
+  abstract: Recent transit observations of K2-18 b and TOI-270 d revealed strong molecular absorption signatures, lending
+    credence to the idea that temperate sub-Neptunes (equilibrium temperature T<SUB>eq</SUB> = 250-400 K) have upper atmospheres
+    mostly free of aerosols. These observations also indicated higher-than-expected CO<SUB>2</SUB> abundances on both planets,
+    implying bulk compositions with high water mass fractions. However, it remains unclear whether these findings hold true
+    for all temperate sub-Neptunes. Here we present the JWST NIRSpec/PRISM 0.7-5.4-μm transmission spectrum of a third temperate
+    sub-Neptune, the 2.4 R<SUB>⊕</SUB> planet LP 791-18 c (T<SUB>eq</SUB> = 355 K), which is even more favourable for atmospheric
+    characterization thanks to its small M6 host star. Intriguingly, despite the radius, mass and equilibrium temperature
+    of LP 791-18 c being between those of K2-18 b and TOI-270 d, we find a drastically different transmission spectrum. Although
+    we also detect methane on LP 791-18 c, its transit spectrum is dominated by strong haze scattering and there is no discernible
+    CO<SUB>2</SUB> absorption. Overall, we infer a deep metal-enriched atmosphere (246-415 times solar) for LP 791-18 c, with
+    a CO<SUB>2</SUB>-to-CH<SUB>4</SUB> ratio smaller than 0.07 (at 2σ), indicating less H<SUB>2</SUB>O in the deep envelope
+    of LP 791-18 c and implying a relatively dry formation inside the water-ice line. These results show that sub-Neptunes
+    that are near analogues in density and temperature can show drastically different aerosols and envelope chemistry and
+    are intrinsically diverse beyond a simple temperature dependence.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2506.12140'
+  ads_bibcode: 2026ApJ...998L..31B
+  title: Hubble's Multiyear Search for Exospheres in the TRAPPIST-1 System Reveals Frequent Microflares
+  authors:
+  - Berardo, David
+  - de Wit, Julien
+  - Gillon, Michael
+  - Howard, Ward S.
+  - Bourrier, Vincent
+  - Bolmont, Emeline
+  - Cotton, Matthew W.
+  - Quatresooz, Florian
+  - Hoerner, Léonie
+  - Burdanov, Artem
+  - Burgasser, Adam J.
+  - Demory, Brice-Olivier
+  - Ehrenreich, David
+  - Lederer, Susan M.
+  - Rackham, Benjamin V.
+  - Seager, Sara
+  - Triaud, Amaury
+  year: '2026'
+  pubdate: '2026-02-00'
+  doi: 10.3847/2041-8213/ae3f2b
+  abstract: Lyα observations provide a powerful probe of stellar activity and atmospheric escape in exoplanetary systems.
+    We present here an analysis of 109 Hubble Space Telescope (HST)/Space Telescope Imaging Spectrograph (STIS) orbits monitoring
+    the TRAPPIST-1 system between 2017 and 2022, covering three to five transits for each of its seven planets. We rule out
+    transit depths ≳30%, prompting a revision of atmospheric escape rates, with upper limits <inline-formula> <mml:math><mml:mi>O</mml:mi><mml:mo>(</mml:mo><mml:mn>10</mml:mn><mml:mo>)</mml:mo><mml:mo>×</mml:mo></mml:math>
+    </inline-formula> larger than previously reported (e.g., <inline-formula> <mml:math><mml:mi>O</mml:mi><mml:mo>(</mml:mo><mml:mn>70</mml:mn><mml:mo>)</mml:mo></mml:math>
+    </inline-formula> Earth-ocean-equivalent hydrogen content per Gyr for planet b, consistent with claims that it is airless).
+    The transit depth upper limits are ∼3 times larger than expected from the photon noise owing to a large baseline scatter,
+    which we link to TRAPPIST-1's intrinsic Lyα variability from frequent "microflares." While JWST's near-infrared observations
+    have shown that ∼10<SUP>30 </SUP>erg flares occur every ∼6 hr, we identify ∼10<SUP>29 </SUP>erg flares on subhour timescales
+    in both HST/STIS and Very Large Telescope <inline-formula> <mml:math><mml:msup><mml:mrow><mml:mi>g</mml:mi></mml:mrow><mml:mrow><mml:mo>'</mml:mo></mml:mrow></mml:msup></mml:math>
+    </inline-formula>observations. The far-UV and optical amplitudes (∼400% vs. ∼3%, respectively) for flares with similar
+    waiting times indicate flare temperatures of 9700<inline-formula> <mml:math><mml:msubsup><mml:mrow></mml:mrow><mml:mrow><mml:mo>−</mml:mo><mml:mn>2400</mml:mn></mml:mrow><mml:mrow><mml:mo>+</mml:mo><mml:mn>1500</mml:mn></mml:mrow></mml:msubsup></mml:math>
+    </inline-formula> K over 0.017<inline-formula> <mml:math><mml:msubsup><mml:mrow></mml:mrow><mml:mrow><mml:mo>−</mml:mo><mml:mn>0.007</mml:mn></mml:mrow><mml:mrow><mml:mo>+</mml:mo><mml:mn>0.03</mml:mn></mml:mrow></mml:msubsup></mml:math>
+    </inline-formula>% of the stellar disk. Finally, our multiyear baseline reveals a variability with P = 3.27 ± 0.04 days—the
+    first independent validation of TRAPPIST-1's 3.3-day rotation period.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2512.19226'
+  ads_bibcode: 2025arXiv251219226D
+  title: Orbital Stability of Moons Around the TRAPPIST-1 Planets
+  authors:
+  - Dey, Shubham
+  - Raymond, Sean N.
+  year: '2025'
+  pubdate: '2025-12-00'
+  doi: 10.48550/arXiv.2512.19226
+  abstract: We investigate the dynamical stability of potential satellites orbiting the seven planets of the \texttt{TRAPPIST-1}
+    system using a suite of $N$-body simulations. For each planet, we show that moons can remain stable from the Roche limit
+    out to near the theoretical prograde stability boundary at roughly $0.5$ Hill Radii. We quantify how perturbations from
+    neighbouring planets modify these stability limits. Although the overall effect of individual perturbers is generally
+    weak, the combined gravitational influence of the full multi-planet configuration produces a modest contraction of the
+    outer stable radius, notably for \texttt{TRAPPIST-1 b} and \texttt{TRAPPIST-1 e}. For each of the seven planets, the outer
+    stability limit for satellites is at 40-45\% of the Hill radius, consistent with previous work. Using simple long-term
+    tidal decay calculations, we show that the most massive satellites that could survive over Gyr timescales are $10^{-(7-9)}
+    M_\oplus$ (with higher possible masses for the outer planets).
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2512.10876'
+  ads_bibcode: 2025NatAs.tmp..256R
+  title: Diversity in the haziness and chemistry of temperate sub-Neptunes
+  authors:
+  - Roy, Pierre-Alexis
+  - Benneke, Björn
+  - Fournier-Tondreau, Marylou
+  - Coulombe, Louis-Philippe
+  - Piaulet-Ghorayeb, Caroline
+  - Lafrenière, David
+  - Allart, Romain
+  - Cowan, Nicolas B.
+  - Dang, Lisa
+  - Johnstone, Doug
+  - Langeveld, Adam B.
+  - Pelletier, Stefan
+  - Radica, Michael
+  - Taylor, Jake
+  - Albert, Loïc
+  - Doyon, René
+  - Flagg, Laura
+  - Jayawardhana, Ray
+  - MacDonald, Ryan J.
+  - Turner, Jake D.
+  year: '2025'
+  pubdate: '2025-12-00'
+  doi: 10.1038/s41550-025-02723-3
+  abstract: Recent transit observations of K2-18 b and TOI-270 d revealed strong molecular absorption signatures, lending
+    credence to the idea that temperate sub-Neptunes (equilibrium temperature T<SUB>eq</SUB> = 250-400 K) have upper atmospheres
+    mostly free of aerosols. These observations also indicated higher-than-expected CO<SUB>2</SUB> abundances on both planets,
+    implying bulk compositions with high water mass fractions. However, it remains unclear whether these findings hold true
+    for all temperate sub-Neptunes. Here we present the JWST NIRSpec/PRISM 0.7-5.4-μm transmission spectrum of a third temperate
+    sub-Neptune, the 2.4 R<SUB>⊕</SUB> planet LP 791-18 c (T<SUB>eq</SUB> = 355 K), which is even more favourable for atmospheric
+    characterization thanks to its small M6 host star. Intriguingly, despite the radius, mass and equilibrium temperature
+    of LP 791-18 c being between those of K2-18 b and TOI-270 d, we find a drastically different transmission spectrum. Although
+    we also detect methane on LP 791-18 c, its transit spectrum is dominated by strong haze scattering and there is no discernible
+    CO<SUB>2</SUB> absorption. Overall, we infer a deep metal-enriched atmosphere (246-415 times solar) for LP 791-18 c, with
+    a CO<SUB>2</SUB>-to-CH<SUB>4</SUB> ratio smaller than 0.07 (at 2σ), indicating less H<SUB>2</SUB>O in the deep envelope
+    of LP 791-18 c and implying a relatively dry formation inside the water-ice line. These results show that sub-Neptunes
+    that are near analogues in density and temperature can show drastically different aerosols and envelope chemistry and
+    are intrinsically diverse beyond a simple temperature dependence.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2504.19872'
+  ads_bibcode: 2025ApJ...992..198J
+  title: 'The Cosmic Shoreline Revisited: A Metric for Atmospheric Retention Informed by Hydrodynamic Escape'
+  authors:
+  - Ji, Xuan
+  - Chatterjee, Richard D.
+  - Coy, Brandon Park
+  - Kite, Edwin
+  year: '2025'
+  pubdate: '2025-10-00'
+  doi: 10.3847/1538-4357/adfe69
+  abstract: The "cosmic shoreline," a semi-empirical relation that separates airless worlds from worlds with atmospheres as
+    proposed by K. J. Zahnle &amp; D. C. Catling, is now guiding large-scale JWST surveys aimed at detecting rocky exoplanet
+    atmospheres. We expand upon this framework by revisiting the shoreline using existing hydrodynamic escape models applied
+    to Earth-like, Venus-like, and steam atmospheres for rocky exoplanets, and we estimate energy-limited escape rates for
+    CH<SUB>4</SUB> atmospheres. We determine the critical instellation required for atmospheric retention by calculating time-integrated
+    atmospheric mass loss. Our analysis introduces a new metric for target selection in the Rocky Worlds Director's Discretionary
+    Time and refines expectations for rocky planet atmosphere searches. Exploring initial volatile inventory ranging from
+    0.01% to 1% of planetary mass, we find that its variation prevents the definition of a unique clear-cut shoreline, though
+    nonlinear escape physics can reduce this sensitivity to initial conditions. Additionally, uncertain distributions of high-energy
+    stellar evolution and planet age further blur the critical instellations for atmospheric retention, yielding broad shorelines.
+    Hydrodynamic escape models find atmospheric retention is markedly more favorable for higher-mass planets orbiting higher-mass
+    stars, with carbon-rich atmospheres remaining plausible for 55 Cancri e despite its extreme instellation. We caution that
+    our estimates are sensitive to processes with poorly understood dynamics, such as atomic line cooling. Finally, we illustrate
+    how density measurements can be used to statistically test the existence of the cosmic shorelines, emphasizing the need
+    for more precise mass and radius measurements.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2510.08844'
+  ads_bibcode: 2025Sci...390S3660L
+  title: Constraining exoplanet interiors using observations of their atmospheres
+  authors:
+  - Lichtenberg, Tim
+  - Shorttle, Oliver
+  - Teske, Johanna
+  - Kempton, Eliza M.-R.
+  year: '2025'
+  pubdate: '2025-10-00'
+  doi: 10.1126/science.ads3360
+  abstract: Astronomical surveys have identified numerous exoplanets with bulk compositions that are unlike the planets of
+    the Solar System, including rocky super-Earths and gas-enveloped sub-Neptunes. Observing the atmospheres of these objects
+    provides information on the geological processes that influence their climates and surfaces. In this Review, we summarize
+    the current understanding of these planets, including insights into the interaction between the atmosphere and interior
+    based on observations made with the JWST. We describe the expected climatic and interior planetary regimes for planets
+    with different density and stellar flux and how those regimes might be observationally distinguished. We also identify
+    the observational, experimental, and theoretical innovations that will be required to characterize Earth-like exoplanets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2509.06310'
+  ads_bibcode: 2025arXiv250906310S
+  title: A Deep SETI Search for Technosignatures in the TRAPPIST-1 System with FAST
+  authors:
+  - Song, Guang-Yuan
+  - Tao, Zhen-Zhao
+  - Huang, Bo-Lun
+  - Cui, Yan
+  - Yu, Bo
+  - Zhang, Tong-Jie
+  year: '2025'
+  pubdate: '2025-09-00'
+  doi: 10.48550/arXiv.2509.06310
+  abstract: The Five-hundred-meter Aperture Spherical Telescope (FAST) is the world's largest single-dish radio telescope,
+    and the search for extraterrestrial intelligence (SETI) is one of its five key science objectives. We conducted a targeted
+    narrowband search toward the TRAPPIST-1 system using FAST. The observations consisted of five independent L-band pointings,
+    each with a 20-minute integration, for a total on-source time of 1.67h. The frequency coverage spanned 1.05--1.45GHz with
+    a spectral resolution of ~7.5Hz. We searched for narrowband drifting signals with Doppler drift rates within +_4Hz/s and
+    a signal-to-noise ratio threshold of S/N&gt;10 in two orthogonal linear polarizations separately.Based on the system parameters
+    adopted in this work, we estimate a minimum detectable equivalent isotropic radiated power of 2.04x10^10W, placing one
+    of the most stringent constraints to date on persistent or high-duty-cycle narrowband transmitters in this system. No
+    credible technosignature candidates were identified within the searched parameter space. Nevertheless,TRAPPIST-1 remains
+    a compelling target for future SETI efforts. We plan to extend our search to other signal types, such as periodic or transient
+    transmitters, and to carry out broader surveys of nearby exoplanetary systems with FAST.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2509.02128'
+  ads_bibcode: 2025arXiv250902128G
+  title: First JWST thermal phase curves of temperate terrestrial exoplanets reveal no thick atmosphere around TRAPPIST-1
+    b and c
+  authors:
+  - Gillon, Michaël
+  - Ducrot, Elsa
+  - Bell, Taylor J.
+  - Huang, Ziyu
+  - Lincowski, Andrew
+  - Lyu, Xintong
+  - Maurel, Alice
+  - Revol, Alexandre
+  - Agol, Eric
+  - Bolmont, Emeline
+  - Dong, Chuanfei
+  - Fauchez, Thomas J.
+  - Koll, Daniel D. B.
+  - Leconte, Jérémy
+  - Meadows, Victoria S.
+  - Selsis, Franck
+  - Turbet, Martin
+  - Charnay, Benjamin
+  - Delre, Laetita
+  - Demory, Brice-Olivier
+  - Householder, Aaron
+  - Zieba, Sebastian
+  - Berardo, David
+  - Dyrek, Achrène
+  - Edwards, Billy
+  - de Wit, Julien
+  - Greene, Thomas P.
+  - Hu, Renyu
+  - Iro, Nicolas
+  - Kreidberg, Laura
+  - Lagage, Pierre-Olivier
+  - Lustig-Yaeger, Jacob
+  - Iyer, Aishwarya
+  year: '2025'
+  pubdate: '2025-09-00'
+  doi: 10.48550/arXiv.2509.02128
+  abstract: We report JWST/MIRI 15 $μ$m phase curves of TRAPPIST-1 b and c, revealing thermal emission consistent with their
+    irradiation levels, assuming no efficient heat redistribution. We find that TRAPPIST-1 b shows a high dayside brightness
+    temperature (490 $\pm$ 17 K), no significantly detectable nightside emission ($F_{\rm b, Night, max}$ = $39_{-27}^{+55}$
+    ppm), and no phase offset -- features consistent with a low-albedo, airless ultramafic rocky surface. TRAPPIST-1 c exhibits
+    a lower dayside brightness temperature (369 $\pm$ 23 K), and a nightside flux statistically indistinguishable from that
+    of TRAPPIST-1 b ($F_{\rm c, Night, max}$ = $62_{-43}^{+60}$ ppm). Atmosphere models with surface pressures $\geq$1 bar
+    and efficient greenhouse effects are strongly disfavoured for both planets. TRAPPIST-1 b is unlikely to possess any substantial
+    atmosphere, while TRAPPIST-1 c may retain a tenuous, greenhouse-poor O$_2$-dominated atmosphere or be similarly airless
+    with a more reflective surface. These results suggest divergent evolutionary pathways or atmospheric loss processes, despite
+    similar compositions. These measurements tightly constrain atmosphere retention in the inner TRAPPIST-1 system.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2508.12865'
+  ads_bibcode: 2025arXiv250812865M
+  title: An empirical determination of the Cosmic Shoreline
+  authors:
+  - Meni-Gallardo, Pedro
+  - Pallé, Enric
+  year: '2025'
+  pubdate: '2025-08-00'
+  doi: 10.48550/arXiv.2508.12865
+  abstract: 'The Cosmic Shoreline concept was introduced as a way to separate planets with and without atmosphere, based on
+    the relationship between the cumulative instellation and the escape velocity observed in the Solar System. The exoplanet
+    community has tried to refine the way we understand the cosmic shoreline in order to provide a consistent tool for establishing
+    the hierarchy for exoplanet observations. This is particularly relevant when trying to unveil small exoplanet atmospheres
+    with the JWST or the upcoming ELTs. Here, our goal is to use an empirical approach to refine the Cosmic Shoreline concept.
+    In particular, we used the data provided by the ExoAtmospheres database, using the largest available sample of exoplanets
+    with confirmed atmospheric detections. We reconcile limitations in the classical shoreline definition by anchoring our
+    Empirical Cosmic Shoreline (ECS) to both Mars and the irradiated super-Earth 55 Cnc e. The resulting relation exhibits
+    a significantly steeper slope than previously theorized. Applied to planets orbiting M dwarfs, prime targets for habitable-zone
+    studies, the ECS suggests that a larger fraction retain atmospheres than predicted by classical models when using standard
+    Ixuv estimates. However, incorporating revised XUV fluence histories for low-mass M dwarfs (M&lt; 0.35 Ms) reveals severe
+    atmospheric vulnerability: only seven small planets (R&lt;1.7 Re) orbit securely within the retention zone of these stars.
+    We finally identify high-priority targets for the JWST Rocky Worlds survey and future ELT observations based on their
+    ECS positioning and Transmission Spectroscopy Metrics. Future efforts must focus on expanding the empirical validations
+    of the ECS, particularly through high-precision observations of borderline candidates and systems with well-constrained
+    XUV histories. [Abridged]'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2508.08416'
+  ads_bibcode: 2025ApJ...989..181P
+  title: Strict Limits on Potential Secondary Atmospheres on the Temperate Rocky Exo-Earth TRAPPIST-1 d
+  authors:
+  - Piaulet-Ghorayeb, Caroline
+  - Benneke, Björn
+  - Turbet, Martin
+  - Moore, Keavin
+  - Roy, Pierre-Alexis
+  - Lim, Olivia
+  - Doyon, René
+  - Fauchez, Thomas J.
+  - Albert, Loïc
+  - Radica, Michael
+  - Coulombe, Louis-Philippe
+  - Lafrenière, David
+  - Cowan, Nicolas B.
+  - Belzile, Danika
+  - Musfirat, Kamrul
+  - Kaur, Mehramat
+  - L'Heureux, Alexandrine
+  - Johnstone, Doug
+  - MacDonald, Ryan J.
+  - Allart, Romain
+  - Dang, Lisa
+  - Kaltenegger, Lisa
+  - Pelletier, Stefan
+  - Rowe, Jason F.
+  - Taylor, Jake
+  - Turner, Jake D.
+  year: '2025'
+  pubdate: '2025-08-00'
+  doi: 10.3847/1538-4357/adf207
+  abstract: The nearby TRAPPIST-1 system, with its seven small rocky planets orbiting a late-type M8 star, offers an unprecedented
+    opportunity to search for secondary atmospheres on temperate terrestrial worlds. In particular, the 0.8 R<SUB>⊕</SUB>TRAPPIST-1
+    d lies at the edge of the habitable zone (T<SUB>eq,A=0.3</SUB> = 262 K). Here we present the first 0.6─5.2 μm NIRSpec/PRISM
+    transmission spectrum of TRAPPIST-1 d from two transits with JWST. We find that stellar contamination from unocculted
+    bright heterogeneities introduces 500─1000 ppm visit-dependent slopes, consistent with constraints from the out-of-transit
+    stellar spectrum. Once corrected, the transmission spectrum is flat within ±100─150 ppm, showing no evidence for a haze-like
+    slope or molecular absorption despite NIRSpec/PRISM's sensitivity to CH<SUB>4</SUB>, H<SUB>2</SUB>O, CO, SO<SUB>2</SUB>,
+    and CO<SUB>2</SUB>. Our observations exclude clear, hydrogen-dominated atmospheres with high confidence (&gt;3σ). We leverage
+    our constraints on even trace amounts of CH<SUB>4</SUB>, H<SUB>2</SUB>O, and CO<SUB>2</SUB> to further reject high mean
+    molecular weight compositions analogous to a haze-free Titan, a cloud-free Venus, early Mars, and both Archean Earth and
+    a cloud-free modern Earth scenario (&gt;95% confidence). If TRAPPIST-1 d retains an atmosphere, it is likely extremely
+    thin or contains high-altitude aerosols, with water cloud formation at the terminator predicted by 3D global climate models.
+    Alternatively, if TRAPPIST-1 d is airless, our evolutionary models indicate that TRAPPIST-1 b, c, and d must have formed
+    with ≲4 Earth oceans of water, though this would not preclude atmospheres on the cooler habitable-zone planets TRAPPIST-1
+    e, f, and g.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2025ARep...69..574M
+  title: Characteristics of Super-Earths and Mini-Neptunes
+  authors:
+  - Morozov, G. A.
+  - Belenkaya, E. S.
+  year: '2025'
+  pubdate: '2025-07-00'
+  doi: 10.1134/S1063772925701926
+  abstract: 'More than half of currently known stars have nearby exoplanets with size between Earth and Neptune, called super-Earths
+    and mini-Neptunes. The California─Kepler Survey (CKS) studied data from NASA''s Kepler mission and revealed a bimodal
+    distribution of planets with <inline-formula><tex-math>$$R &lt; 3.5{\kern 1pt} {{R}_{{\text{E}}}}$$</tex-math></inline-formula>
+    by radius (<inline-formula><tex-math>$${{R}_{{\text{E}}}}$$</tex-math></inline-formula> is the radius of the Earth). It
+    occurred that there was a lack of planets with radii <inline-formula><tex-math>$$1.5{\kern 1pt} {{R}_{{\text{E}}}} &lt;
+    R &lt; 2{{R}_{{\text{E}}}}$$</tex-math></inline-formula>. The CKS did not take into account data from other missions and
+    exoplanets discovered by non-transit methods. All data from this mission were limited to 2022. This article examines the
+    distribution of super-Earths and mini-Neptunes, taking into account all data on exoplanets known by 2024 from the NASA
+    catalog. Mini-Neptunes and super-Earths with known radii were selected. There were 937 such planets, including 366 planets
+    with known mass. Since the radius of a planet can only be determined by the transit method, the distribution by radii
+    is built using the data of transit planets, but, unlike CKS, not only the data of the Kepler mission are taken. The data
+    for the remaining distributions are selected regardless of the method of their detection and the telescope used. We show
+    that the current data are best fitted by a double-peaked Gaussian distribution, which describes two populations of planets:
+    rocky (hereinafter super-Earths) and exoplanets with gas envelopes (exoplanets surrounded by hydrogen─helium atmospheres,
+    but consisting mainly of heavy elements—ice and rock, hereinafter mini-Neptunes). The magnitude of the gap between populations
+    at present is analyzed. It is shown that the gap is filled evenly on both sides; in CKS, the first peak is significantly
+    smaller than the second, that is, there were fewer super-Earths than mini-Neptunes. Perhaps more super-Earths have been
+    discovered recently, which is why there was a shortage of them in the CKS. The composition of some exoplanets was determined
+    using theoretical models of the dependence of mass on radius.'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2504.01182'
+  ads_bibcode: 2025ApJ...986L...3P
+  title: 'The Receding Cosmic Shoreline of Mid-to-late M Dwarfs: Measurements of Active Lifetimes Worsen Challenges for Atmosphere
+    Retention by Rocky Exoplanets'
+  authors:
+  - Pass, Emily K.
+  - Charbonneau, David
+  - Vanderburg, Andrew
+  year: '2025'
+  pubdate: '2025-06-00'
+  doi: 10.3847/2041-8213/adda39
+  abstract: Detecting and characterizing the atmospheres of terrestrial exoplanets is a key goal of exoplanetary astronomy,
+    one that may now be within reach given the upcoming campaign to conduct a large-scale survey of rocky M-dwarf worlds with
+    the James Webb Space Telescope. It is imperative that we understand where known planets sit relative to the cosmic shoreline—the
+    boundary between planets that have retained atmospheres and those that have not. Previous works modeled the historic X-ray
+    and ultraviolet (XUV) radiation received by mid-to-late M-dwarf planets using a scaling relation calibrated using more
+    massive stars, but fully convective M dwarfs display unique rotation/activity histories that differ from Sun-like stars
+    and early M dwarfs. We synthesize observations of the active lifetimes of mid-to-late M dwarfs to present an updated estimate
+    of their historic XUV fluence. For known planets of inactive, mid-to-late M dwarfs, we calculate a historic XUV fluence
+    that is 2.1─3.1 times the canonical XUV scaling relation on average, with the larger value including corrections for the
+    pre-main-sequence phase and energetic flares. We find that only the largest terrestrial planets known to orbit mid-to-late
+    M dwarfs are likely to have retained atmospheres within the cosmic shoreline paradigm. Our calculations may help to guide
+    the selection of targets for JWST and may prove useful in interpreting the results; to this end, we define a novel atmosphere
+    retention metric (ARM) that indicates the distance between a planet and the cosmic shoreline, and tabulate the ARM for
+    known mid-to-late M-dwarf planets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2506.16063'
+  ads_bibcode: 2025arXiv250616063K
+  title: Classification and Nomenclature of Planets in the Mass-Radius Plane
+  authors:
+  - Kashyap Jagadeesh, Madhu
+  - Parikh, Arkil
+  - Safonova, Margarita
+  - Foing, Bernard
+  - Kotsyurbenko, Oleg
+  year: '2025'
+  pubdate: '2025-06-00'
+  doi: 10.48550/arXiv.2506.16063
+  abstract: '6500+ exoplanets have been detected using various techniques. This prompted the emergence of many recent works
+    on the taxonomy, or classification, of exoplanets. However, there is still no basic, fundamental definition of ''What
+    is a planet?''. IAU has forwarded a definition in 2006, which however, raised more questions than it solved. The first
+    task here is to establish if there are limits on the size/mass of planets. The lower mass limit may be assumed as of Mimas
+    (0.03 EU) - approximately minimum mass required to attain a nearly spherical hydrostatic equilibrium shape. The upper
+    mass limit may be easier - there is a natural lower limit to what constitutes a star: 0.08 SU. But then there are brown
+    dwarfs: IAU has defined brown dwarfs as objects exceeding the deuterium burning limit (~13 JU), and giant exoplanets generally
+    have masses of 0.3 to 60 JU. The resolution requires assembling the basic physical parameters that define planets quantitatively.
+    Mass and radius are the two fundamental properties, and we propose to use a third correlated parameter: the moment of
+    inertia. Based on this, we create the parametric Fundamental Planetary Plane where the two parameters are correlated with
+    the third. The fundamental planetary plane (FPP) with turn-off point diagrams is constructed for visual representation.
+    We propose an alternate potential description of a planet definition as ''A celestial spherical object, bound to a star
+    or unbound, that lies on the fundamental planetary plane, within a mass range between 0.02 EU to 13 JU''. This definition
+    is intended to complement existing taxonomies by providing a quantitative, structure-based criterion applicable to both
+    Solar System planets, exoplanets and free-floating planets. These turn-off point diagrams serve as an alternative to the
+    Hertzsprung-Russell (HR) diagram, but for planets.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2501.17997'
+  ads_bibcode: 2025AJ....169..122T
+  title: 'COSMIC''s Large-scale Search for Technosignatures during the VLA Sky Survey: Survey Description and First Results'
+  authors:
+  - Tremblay, C. D.
+  - Sofair, J.
+  - Steffes, L.
+  - Myburgh, T.
+  - Czech, D.
+  - Demorest, P. B.
+  - Donnachie, R. A.
+  - Pollak, A. W.
+  - Ruzindana, M.
+  - Siemion, A. P. V.
+  - Varghese, S. S.
+  - Sheikh, S. Z.
+  year: '2025'
+  pubdate: '2025-03-00'
+  doi: 10.3847/1538-3881/ad9ea5
+  abstract: Developing algorithms to search through data efficiently is a challenging part of searching for signs of technology
+    beyond our solar system. We have built a digital signal processing system and computer cluster on the backend of the Karl
+    G. Jansky Very Large Array (VLA) in New Mexico in order to search for signals throughout the Galaxy consistent with our
+    understanding of artificial radio emissions. In our first paper, we described the system design and software pipelines.
+    In this paper, we describe a postprocessing pipeline to identify persistent sources of interference, filter out false
+    positives, and search for signals not immediately identifiable as anthropogenic radio frequency interference during the
+    VLA Sky Survey. As of 2024 September 1, the Commensal Open-source Multi-mode Interferometric Cluster had observed more
+    than 950,000 unique pointings. This paper presents the strategy we employ when commensally observing during the VLA Sky
+    Survey and a postprocessing strategy for the data collected during the survey. To test this postprocessing pipeline, we
+    searched toward 511 stars from the Gaia catalog with coherent beams. This represents about 30 minutes of observation during
+    the VLA Sky Survey, where we typically observe about 2000 sources hr<SUP>─1</SUP> in the coherent beamforming mode. We
+    did not detect any unidentifiable signals, setting isotropic power limits ranging from 10<SUP>11</SUP> to 10<SUP>16</SUP>
+    W.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2412.10192'
+  ads_bibcode: 2025A&A...693A.303C
+  title: 'From CO<SUB>2</SUB>- to H<SUB>2</SUB>O-dominated atmospheres and back: How mixed outgassing changes the volatile
+    distribution in magma oceans around M dwarf stars'
+  authors:
+  - Carone, L.
+  - Barnes, R.
+  - Noack, L.
+  - Chubb, K.
+  - Barth, P.
+  - Bitsch, B.
+  - Thamm, A.
+  - Balduin, A.
+  - Garcia, R.
+  - Helling, Ch.
+  year: '2025'
+  pubdate: '2025-01-00'
+  doi: 10.1051/0004-6361/202450307
+  abstract: Aims. We investigate the impact of CO<SUB>2</SUB> on the distribution of water on TRAPPIST-1 e, f, and g during
+    the magma ocean stage. These potentially habitable rocky planets are currently the most accessible for astronomical observations.
+    A constraint on the volatile budget during the magma ocean stage is a key link to planet formation and also to judging
+    their habitability. Methods. We expanded the MagmOc module of the VPLanet environment to perform simulations with 1-100
+    terrestrial oceans (TOs) of H<SUB>2</SUB>O with and without CO<SUB>2</SUB> and for albedos 0 and 0.75. The CO<SUB>2</SUB>
+    mass was scaled with initial H<SUB>2</SUB>O by a constant factor between 0.1 and 1. Results. The magma ocean state of
+    rocky planets begins with a CO<SUB>2</SUB>-dominated atmosphere but can evolve into a H<SUB>2</SUB>O dominated state,
+    depending on initial conditions. For less than 10 TO initial H<SUB>2</SUB>O, the atmosphere tends to desiccate and the
+    evolution can end with a CO<SUB>2</SUB> dominated atmosphere. Otherwise, the final state is a thick (&gt;1000 bar) H<SUB>2</SUB>O-CO<SUB>2</SUB>
+    atmosphere. Complete atmosphere desiccation with less than 10 TO initial H<SUB>2</SUB>O can be significantly delayed for
+    TRAPPIST-1 e and f, when H<SUB>2</SUB>O has to diffuse through a CO<SUB>2</SUB> atmosphere to reach the upper atmosphere,
+    where photolysis due to extreme ultra violet irradiation occurs. As a consequence of CO<SUB>2</SUB> diffusion-limited
+    water loss, the time of mantle solidification for TRAPPIST-1 e, f, and g can be significantly extended compared to a pure
+    H<SUB>2</SUB>O evolution by up to 40 Myrs for an albedo of 0.75 and by up to 200 Mys for an albedo of 0. The addition
+    of CO<SUB>2</SUB> further results in a higher water content in the melt during the magma ocean stage. Thus, more water
+    can be sequestered in the solid mantle. However, only up to 6% of the initial water mass can be stored in the mantle at
+    the end of the magma ocean stage. Our compositional model adjusted for the measured metallicity of TRAPPIST-1 yields for
+    the dry inner planets (b, c, d) an iron fraction of 27 wt%. For TRAPPIST-1 e, this iron fraction would be compatible with
+    a (partially) desiccated evolution scenario and a CO<SUB>2</SUB> atmosphere with surface pressures of a few 100 bar. Conclusions.
+    A comparative study between TRAPPIST-1 e and the inner planets may yield the most insights about formation and evolution
+    scenarios by confronting, respectively, a scenario with a desiccated evolution due to volatile-poor formation and a volatile-rich
+    scenario with extended atmospheric erosion.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2410.03527'
+  ads_bibcode: 2024ApJ...974L..10P
+  title: JWST/NIRISS Reveals the Water-rich "Steam World" Atmosphere of GJ 9827 d
+  authors:
+  - Piaulet-Ghorayeb, Caroline
+  - Benneke, Björn
+  - Radica, Michael
+  - Raul, Eshan
+  - Coulombe, Louis-Philippe
+  - Ahrer, Eva-Maria
+  - Kubyshkina, Daria
+  - Howard, Ward S.
+  - Krissansen-Totton, Joshua
+  - MacDonald, Ryan J.
+  - Roy, Pierre-Alexis
+  - Louca, Amy
+  - Christie, Duncan
+  - Fournier-Tondreau, Marylou
+  - Allart, Romain
+  - Miguel, Yamila
+  - Schlichting, Hilke E.
+  - Welbanks, Luis
+  - Cadieux, Charles
+  - Dorn, Caroline
+  - Evans-Soma, Thomas M.
+  - Fortney, Jonathan J.
+  - Pierrehumbert, Raymond
+  - Lafrenière, David
+  - Acuña, Lorena
+  - Komacek, Thaddeus
+  - Innes, Hamish
+  - Beatty, Thomas G.
+  - Cloutier, Ryan
+  - Doyon, René
+  - Gagnebin, Anna
+  - Gapp, Cyril
+  - Knutson, Heather A.
+  year: '2024'
+  pubdate: '2024-10-00'
+  doi: 10.3847/2041-8213/ad6f00
+  abstract: With sizable volatile envelopes but smaller radii than the solar system ice giants, sub-Neptunes have been revealed
+    as one of the most common types of planet in the galaxy. While the spectroscopic characterization of larger sub-Neptunes
+    (2.5─4 R <SUB>⊕</SUB>) has revealed hydrogen-dominated atmospheres, smaller sub-Neptunes (1.6─2.5 R <SUB>⊕</SUB>) could
+    either host thin, rapidly evaporating, hydrogen-rich atmospheres or be stable, metal-rich "water worlds" with high mean
+    molecular weight atmospheres and a fundamentally different formation and evolutionary history. Here, we present the 0.6─2.8
+    μm JWST/NIRISS/SOSS transmission spectrum of GJ 9827 d, the smallest (1.98 R <SUB>⊕</SUB>) warm (T <SUB>eq,A=0.3</SUB>
+    ∼ 620 K) sub-Neptune where atmospheric absorbers have been detected to date. Our two transit observations with NIRISS/SOSS,
+    combined with the existing HST/WFC3 spectrum, enable us to break the clouds─metallicity degeneracy. We detect water in
+    a highly metal-enriched "steam world" atmosphere (O/H of ∼4 by mass and H<SUB>2</SUB>O found to be the background gas
+    with a volume mixing ratio of &gt;31%). We further show that these results are robust to stellar contamination through
+    the transit light source effect. We do not detect escaping metastable He, which, combined with previous nondetections
+    of escaping He and H, supports the steam atmosphere scenario. In water-rich atmospheres, hydrogen loss driven by water
+    photolysis happens predominantly in the ionized form, which eludes observational constraints. We also detect several flares
+    in the NIRISS/SOSS light curves with far-UV energies of the order of 10<SUP>30</SUP> erg, highlighting the active nature
+    of the star. Further atmospheric characterization of GJ 9827 d probing carbon or sulfur species could reveal the origin
+    of its high metal enrichment.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2409.09666'
+  ads_bibcode: 2024arXiv240909666P
+  title: Classifications for Exoplanet and Exoplanetary Systems -- Could it be developed? I. Exoplanet classification
+  authors:
+  - Plávalová, E.
+  - Rosaev, A.
+  year: '2024'
+  pubdate: '2024-09-00'
+  doi: 10.48550/arXiv.2409.09666
+  abstract: 'When a star is described as a spectral class G2V, we know its approximate mass, temperature, age, and size. At
+    more than 5,700 exoplanets discovered, it is a natural developmental step to establish a classification for them, such
+    as for example, the Harvard classification for stars. This exoplanet classification has to be easily interpreted and present
+    the most relevant information about them and divides them into groups based on certain characteristics. We propose an
+    exoplanet classification, which using an easily readable code, may inform you about a exoplanet''s main characteristics.
+    The suggested classification code contains four parameters by which we can quickly determine the range of temperature,
+    mass, density and their eccentricity. The first parameter concerns the mass of an exoplanet in the form of the units of
+    the mass of other known planets, where e.g. M represents the mass of Mercury, E that of Earth, N Neptune, or J Jupiter.
+    The second parameter is the mean Dyson temperature of the extoplanet''s orbit, for which we established four main classes:
+    F represents the Frozen class, W the Water class, G the Gaseous class, and R the Roaster class. The third parameter is
+    eccentricity and the fourth parameter is surface attribute which is defined as the bulk density of the exoplanet, where
+    g represents a gaseous planet, w - water planet, t - terrestrial planet, i - iron planet and s - super dense planet. The
+    classification code for Venus, could be EG0t (E - mass in the range of the mass of the Earth, G - Gaseous class, temperature
+    in the range from 450 to 1000 K, 0 - circular or nearly circular orbit, t - terrestrial surface), for Earth it could be
+    EW0t (W - Water class - a possible Habitable zone). This classification is very helpful in, for example, quickly delimiting
+    if a planet can be found in the Habitable zone; if it is terrestrial or not.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2024zndo..13153252P
+  title: First release of stellar contamination modeling and retrieval code
+  authors:
+  - Piaulet-Ghorayeb, Caroline
+  year: '2024'
+  pubdate: '2024-08-01'
+  doi: 10.5281/zenodo.13153252
+  abstract: 'Full Changelog: https://github.com/cpiaulet/stctm/commits/v1.0.0  Readme.md information from the repository (live
+    version hosted at https://github.com/cpiaulet/stctm/blob/main/README.md):  STCTM  stctm (STellar ConTamination Modeling)
+    performs spectral retrievals on exoplanet transmission spectra assuming that the spectrum can be explained by stellar
+    contamination alone.  If you use this code, please cite the associated Zenodo repository, with the following DOI: 10.5281/zenodo.13153251
+    (see Citation section below). If you use it, please make sure to also cite MSG (https://doi.org/10.21105/joss.04) and
+    the source of the stellar models grid you use.First public release associated to: Piaulet-Ghorayeb et al., accepted for
+    publication, ApJL.  Previous uses of the code:* Lim et al., 2023 (https://ui.adsabs.harvard.edu/abs/2023ApJ...955L..22L/abstract),
+    on TRAPPIST-1 b* Roy et al., 2023 (https://ui.adsabs.harvard.edu/abs/2023ApJ...954L..52R/abstract), on GJ 9827 d* Benneke
+    et al., submitted, on TRAPPIST-1 g  Bare-bones skeleton of the code released for now - full user instructions and user-friendly
+    setup to come soon!  I provide as an example for the application of stctm to Visit 1 of TRAPPIST-1 b (Lim et al., 2023,
+    https://ui.adsabs.harvard.edu/abs/2023ApJ...955L..22L/abstract), fitting for two populations of heterogeneities: spots,
+    faculae, and allowing the log g of the heterogeneities to vary relative to that of the star.   Installation  You can install
+    *stctm* from GitHub:      git clone https://github.com/cpiaulet/stctm.git    cd stctm    pip install -e .      Dependencies  The
+    dependencies of stctm are * NumPy* scipy* emcee* corner* astropy* h5py* matplotlib* pandas* tqdm  Stellar models  You
+    may also need * pysynphot (if you want to use their version of the stellar models interpolator), and/or* pymsg (my personal
+    favorite - needed to run ```create_fixedR_grid_pymsg_template.py```)  To install pymsg you can find instructions at https://msg.readthedocs.io/en/stable/
+    and then download the grid(s) of your choice from http://user.astro.wisc.edu/~townsend/static.php?ref=msg-grids.  Create
+    your own grid of stellar models using MSG  If you choose to use the MSG module for stellar models, the code requires a
+    pre-computed grid of stellar models for the planet of interest.I provide a template code snippet for how to go about computing
+    this stellar models grid in ```create_fixedR_grid_pymsg_template.py```. Here are a few things to pay attention to.  1.
+    Make sure that your paths are set up properly.Specifically, you need to have the ```MESASDK_ROOT``` and ```MSG_DIR```
+    environment variables defined.You can do this via the command-line:      export MESASDK_ROOT=~/mesasdk   or in the code
+    itself:      import os    os.environ[''MESASDK_ROOT''] = "/home/caroline/mesasdk"  2. Choose your stellar parameters.You
+    will need to edit the star effective temperature, Fe/H, and log g. The cleanest way to do this is to add another code
+    block corresponding to the name of your star  3. Choose the stellar grid you already downloaded.In my case, I downloaded
+    the ```''sg-Goettingen-HiRes.h5''```, but you can edit this to match the grid of your choice from the sample available
+    at http://user.astro.wisc.edu/~townsend/static.php?ref=msg-grids.  4. Edit the grid model parameters to match your needsThe
+    template I provide sets a range of log g values (```logg_range```), stellar effective temperature values (```Teff_range```),
+    and a grid spacing (defined by ```loggstep``` and ```Teffstep```) that matches the default settings of the main code.
+    You can however change these depending on your needs for the specific star-planet case. If you edit these, make sure to
+    pay attention to the section "Setting up the stellar parameters and reading in the grid of stellar models" in the retrieval
+    run instructions!  I also compute the grid at a resolving power of 10,000 (```resPower_target```), and over a wavelength
+    range from 0.2 to 5.4 microns (```wv_min_um``` and ```wv_max_um```), which you can also change to fit your needs.  To
+    calculate a grid of models, navigate to the folder where the run script resides, and simply run:    python create_fixedR_grid_pymsg_template.py  Setting
+    up a retrieval  Copy the contents of ```stctm/example/``` wherever in your installation you want to run the code.  In
+    the way it is currently released, ```stctm``` requires you to enter the planet and star information directly in the run
+    script. I am working on a more user-friendly way of doing this using a setup file which should be added to the main branch
+    soon.  File Paths  The path to which files are saved does not depend on the name of the folder in which the main run file
+    (in the example, ```stellar_retrieval_v10_generic_runfile.py``), resides. However, relative paths matter as the results
+    folder will reside in ```../../stellar_contamination_results/``` (it is automatically created by the code).   Setting
+    up labels and path to spectrum file  Under ```User inputs: Spectrum and labels``` you can set up:* ```label``` (used for
+    plotting)* ```path_to_spec``` (path to your spectrum file) as well as ```spec_format``` (your spectrum is read in using
+    the ```spec_format``` setting you choose - if you are not sure or need to add another option to read in your specific
+    format, you can do so in ```pytransspec.py```!)* ```res_suffix```: a suffix used for all the files that will be saved
+    as a result of this run, in the results folder. This is the identifier you can use to record information on the spectrum,
+    the setup of the fit, etc.  Choosing the setup of your retrieval  Under ```User inputs: MCMC fitting params``` you can
+    choose:* ```nsteps```: the number of steps for each of the MCMC chains. I recommend at least 5000, but I chose 3000 to
+    make the test run a bit quicker :)* ```frac_burnin```: the fraction of steps discarded as burn-in to obtain the posterior.
+    By default, set to 60%.* ```fitspot```: ```True``` if you want to fit for the fraction of unocculted spots, ```False```
+    otherwise.* ```fitfac```: ```True``` if you want to fit for the fraction of unocculted faculae, ```False``` otherwise.*
+    ```fitThet```: ```True``` if you want to fit for the temperature of unocculted spots and/or faculae, ```False``` otherwise.*
+    ```fitTphot```: ```True``` if you want to fit for the temperature of the photosphere, ```False``` otherwise.* ```fitDscale```:
+    ```True``` if you want to fit for the bare-rock transit depth (recommended), ```False``` otherwise.* ```fitlogg_het```:
+    ```True``` if you want to fit a different log g for the spectrum of the heterogeneity component compared to that of the
+    photosphere, ```False``` otherwise.* ```save_fit```: ```True``` to save files to the results directory during the post-processing
+    steps  Priors on the stellar parameters:* ```Teffstar_prior_std```: in Kelvin, standard deviation of the Gaussian prior
+    adopted on the stellar effective temperature;* ```logg_phot_source```: ```value``` to use the value of ```logg_phot_value```
+    as the stellar photosphere log g, otherwise ```loggstar``` to use the value provided in the code block below containing
+    the stellar parameters;* ```logg_het_default_source```: ```value``` to use the value of ```logg_het_value``` as the heterogeneities
+    (default, if fitted) log g, otherwise ```logg_phot``` to set it to the same value as the stellar photosphere log g.  Setting
+    up the stellar parameters and reading in the grid of stellar models  Under ```User inputs: Stellar parameters```, enter
+    the parameters of the star to set the defaults for the fit. Make sure that you have an option ("if" statement) matching
+    the ```which_star``` setting you entered above.  Under ```User inputs: Read in stellar models grid```, modify the range
+    and spacing of the grid in the log g and Teff dimensions to match those of the grid you generated. You also need to match
+    the resolving power, and wavelength edges you picked when setting up the grid.  Post-processing  By default, the code
+    will produce (and save to the results folder):* a copy of the run file that was used* a copy of the version of ```stellar_retrieval_utilities.py```
+    that was used* chain plots, with and without the burn-in steps* a csv file containing the fitted parameters from the chain,
+    with the associated log likelihood and log probability values* a csv file containing, for each parameter, the best-fit
+    value (maximum likelihood), the max-probability values, as well as percentiles which can be used for quoting in tables*
+    a set of models at the grid resolution (```target_resP```) also corresponding to the max-likelihood, max-probability samples,
+    and percentiles* figures showing the spectrum with the results of the fit (max-likelihood, max-probability samples, and
+    +/- 1, 2, 3 sigma), with stellar models at higher resolution (resolving power of 100 in the plot) or integrated within
+    the same bins as the data points), and a plot of the stellar contamination contribution as a function of wavelength* a
+    corner plot of post-burnin samples* a plot of the best-fit model, integrated to match the bins in the observed spectrum  Please
+    let me know if other things would be useful for you to have as default outputs, or feel free to create pull requests with
+    your nice additions!  Changing the prior setup  If you wish to change the way the prior is set up on any of the fitted
+    parameters, you can do it by changing the dictionary created by the function ```get_param_priors()``` in ```stellar_retrieval_utilities.py```.  Citation  The
+    following entry to a bib file can be used to cite this code:      @misc{piaulet_stctm_2024,        author       = {Caroline
+    Piaulet-Ghorayeb},        title        = {{stctm: Stellar contamination retrievals and modeling for small planet transmission
+    spectra}},        month        = aug,        year         = 2024,        doi          = {10.5281/zenodo.13153251},   
+        version      = {1.0.0},        publisher    = {Zenodo},        url          = {https://doi.org/10.5281/zenodo.13153251} 
+          }'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2024eas..conf..697C
+  title: Impact of CO2 on water outgassing on rocky planets around TRAPPIST-1 - VPLANET/MagmOcV2.0
+  authors:
+  - Carone, Ludmila
+  - Barth, Patrick
+  - Barnes, Rory
+  - Chubb, Katy
+  - Bitsch, Bertram
+  - Helling, Christiane
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: null
+  abstract: VPLANET MagmOc is a versatile magma ocean model with erosion of water vapour in the open source VPLANET framework.
+    We present here a major improvement of this model that includes now a) thermal emission calculated with a full radiative
+    transfer code and b) simultaneous outgasing of H2O and CO2 with full feedback on outgassing informed by planet formation
+    models. <P />We derived evolution tracks of an outgassed mixed H2O/CO2 atmosphere on TRAPPIST-1e, f and g. We find that
+    all planets, in particular TRAPPIST-1 g, run the risk to evolve into Exo-Venuses with thick CO2 atmospheres after the
+    magma ocean stage for an intial water budget of more than 10 terrestrial ocean (TO) of water within tens of million years.
+    <P />At the inner edge of the habitable zone, on TRAPPIST-1 e, we find that the combination of H2O atmosphere loss and
+    CO2 outgassing reduces the thermal emission on the planet such that the magma ocean stage can be almost doubled from tens
+    of million years to 80 million years for 10 TO intial water. We thus conclude that careful consideration has to be given
+    to the various geophysical feedback effects as these can have a profound impact on the magma ocean evolution stage and
+    thus on the overall water budget and the secondary atmosphere.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2405.06350'
+  ads_bibcode: 2024A&A...687A.264B
+  title: 'Three short-period Earth-sized planets around M dwarfs discovered by TESS: TOI-5720 b, TOI-6008 b, and TOI-6086
+    b'
+  authors:
+  - Barkaoui, K.
+  - Schwarz, R. P.
+  - Narita, N.
+  - Mistry, P.
+  - Magliano, C.
+  - Hirano, T.
+  - Maity, M.
+  - Burgasser, A. J.
+  - Rackham, B. V.
+  - Murgas, F.
+  - Pozuelos, F. J.
+  - Stassun, K. G.
+  - Everett, M. E.
+  - Ciardi, D. R.
+  - Lamman, C.
+  - Pass, E. K.
+  - Bieryla, A.
+  - Aganze, C.
+  - Esparza-Borges, E.
+  - Collins, K. A.
+  - Covone, G.
+  - de Leon, J.
+  - Dévora-Pajares, M.
+  - de Wit, J.
+  - Fukuda, Izuru
+  - Fukui, A.
+  - Gerasimov, R.
+  - Gillon, M.
+  - Hayashi, Y.
+  - Howell, S. B.
+  - Ikoma, M.
+  - Ikuta, K.
+  - Jenkins, J. M.
+  - Karpoor, P. R.
+  - Kawai, Y.
+  - Kimura, T.
+  - Kotani, T.
+  - Latham, D. W.
+  - Mori, M.
+  - Pallé, E.
+  - Parviainen, H.
+  - Patel, Y. G.
+  - Ricker, G.
+  - Relles, H. M.
+  - Shporer, A.
+  - Seager, S.
+  - Softich, E.
+  - Srdoc, G.
+  - Tamura, M.
+  - Theissen, C. A.
+  - Twicken, J. D.
+  - Vanderspek, R.
+  - Watanabe, N.
+  - Watkins, C. N.
+  - Winn, J. N.
+  - Wohler, B.
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: 10.1051/0004-6361/202349127
+  abstract: 'One of the main goals of the NASA Transiting Exoplanet Survey Satellite (TESS) mission is the discovery of Earth-like
+    planets around nearby M-dwarf stars. We present the discovery and validation of three new short-period Earth-sized planets
+    orbiting nearby M dwarfs: TOI-5720 b, TOI-6008 b, and TOI-6086 b. We combined TESS data, ground-based multicolor light
+    curves, ground-based optical and near-infrared spectroscopy, and Subaru/IRD radial velocity data to validate the planetary
+    candidates and constrain the physical parameters of the systems. In addition, we used archival images, high-resolution
+    imaging, and statistical validation techniques to support the planetary validation. TOI-5720 b is an Earth-sized planet
+    with a radius of R<SUB>p</SUB> = 1.09 ± 0.07 R<SUB>⊕</SUB>. It orbits a nearby (36 pc) M 2.5 host with an orbital period
+    of P = 1.4344555 ± 0.0000036 days. It has an equilibrium temperature of T<SUB>eq</SUB> = 708 ± 19 K (assuming a null albedo)
+    and an incident flux of S<SUB>p</SUB> = 41.7 ± 4.5 S<SUB>⊕</SUB>. TOI-6008 b is a short-period planet of P = 0.8574347
+    ± 0.0000424 day. It has a radius of R<SUB>p</SUB> = 1.03 ± 0.05 R<SUB>⊕</SUB>, an equilibrium temperature of T<SUB>eq</SUB>
+    = 707 ± 19 K, and an incident flux of S<SUB>p</SUB> = 41.5 ± 4.5 S<SUB>⊕</SUB>. The host star (TOI-6008) is a nearby (23
+    pc) M 5 with an effective temperature of T<SUB>eff</SUB> = 3075 ± 75 K. Based on the radial velocity measurements collected
+    with Subaru/IRD, we set a 3σ upper limit of M<SUB>p</SUB> &lt; 4 M<SUB>⊕</SUB>, thus ruling out a star or brown dwarf
+    as the transiting companion. TOI-6086 b orbits its nearby (32 pc) M 3 host star (T<SUB>eff</SUB> = 3200 ± 75 K) every
+    1.3888725 ± 0.0000827 days and has a radius of R<SUB>p</SUB> = 1.18 ± 0.07 R<SUB>⊕</SUB>, an equilibrium temperature of
+    T<SUB>eq</SUB> = 634 ± 16 K, and an incident flux of S<SUB>p</SUB> = 26.8 ± 2.7 S<SUB>⊕</SUB>. Additional high-precision
+    radial velocity measurements are needed to derive the planetary masses and bulk densities and to search for additional
+    planets in the systems. Moreover, short-period Earth-sized planets orbiting around nearby M dwarfs are suitable targets
+    for an atmospheric characterization with the James Webb Space Telescope through transmission and emission spectroscopy
+    and phase-curve photometry.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2406.15136'
+  ads_bibcode: 2024ApJ...970L...2C
+  title: Transmission Spectroscopy of the Habitable Zone Exoplanet LHS 1140 b with JWST/NIRISS
+  authors:
+  - Cadieux, Charles
+  - Doyon, René
+  - MacDonald, Ryan J.
+  - Turbet, Martin
+  - Artigau, Étienne
+  - Lim, Olivia
+  - Radica, Michael
+  - Fauchez, Thomas J.
+  - Salhi, Salma
+  - Dang, Lisa
+  - Albert, Loïc
+  - Coulombe, Louis-Philippe
+  - Cowan, Nicolas B.
+  - Lafrenière, David
+  - L'Heureux, Alexandrine
+  - Piaulet-Ghorayeb, Caroline
+  - Benneke, Björn
+  - Cloutier, Ryan
+  - Charnay, Benjamin
+  - Cook, Neil J.
+  - Fournier-Tondreau, Marylou
+  - Plotnykov, Mykhaylo
+  - Valencia, Diana
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: 10.3847/2041-8213/ad5afa
+  abstract: LHS 1140 b is the second-closest temperate transiting planet to Earth with an equilibrium temperature low enough
+    to support surface liquid water. At 1.730 ± 0.025 R <SUB>⊕</SUB>, LHS 1140 b falls within the radius valley separating
+    H<SUB>2</SUB>-rich mini-Neptunes from rocky super-Earths. Recent mass and radius revisions indicate a bulk density significantly
+    lower than expected for an Earth-like rocky interior, suggesting that LHS 1140 b could be either a mini-Neptune with a
+    small envelope of hydrogen (∼0.1% by mass) or a water world (9%─19% water by mass). Atmospheric characterization through
+    transmission spectroscopy can readily discern between these two scenarios. Here we present two JWST/NIRISS transit observations
+    of LHS 1140 b, one of which captures a serendipitous transit of LHS 1140 c. The combined transmission spectrum of LHS
+    1140 b shows a telltale spectral signature of unocculted faculae (5.8σ), covering ∼20% of the visible stellar surface.
+    Besides faculae, our spectral retrieval analysis reveals tentative evidence of residual spectral features, best fit by
+    Rayleigh scattering from a N<SUB>2</SUB>-dominated atmosphere (2.3σ), irrespective of the consideration of atmospheric
+    hazes. We also show through Global Climate Models (GCMs) that H<SUB>2</SUB>-rich atmospheres of various compositions (100×,
+    300×, 1000× solar metallicity) are ruled out to &gt;10σ. The GCM calculations predict that water clouds form below the
+    transit photosphere, limiting their impact on transmission data. Our observations suggest that LHS 1140 b is either airless
+    or, more likely, surrounded by an atmosphere with a high mean molecular weight. Our tentative evidence of a N<SUB>2</SUB>-rich
+    atmosphere provides strong motivation for future transmission spectroscopy observations of LHS 1140 b.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2310.15895'
+  ads_bibcode: 2024NatAs...8..810T
+  title: A roadmap for the atmospheric characterization of terrestrial exoplanets with JWST
+  authors:
+  - TRAPPIST-1 JWST Community Initiative
+  - de Wit, Julien
+  - Doyon, René
+  - Rackham, Benjamin V.
+  - Lim, Olivia
+  - Ducrot, Elsa
+  - Kreidberg, Laura
+  - Benneke, Björn
+  - Ribas, Ignasi
+  - Berardo, David
+  - Niraula, Prajwal
+  - Iyer, Aishwarya
+  - Shapiro, Alexander
+  - Kostogryz, Nadiia
+  - Witzke, Veronika
+  - Gillon, Michaël
+  - Agol, Eric
+  - Meadows, Victoria
+  - Burgasser, Adam J.
+  - Owen, James E.
+  - Fortney, Jonathan J.
+  - Selsis, Franck
+  - Bello-Arufe, Aaron
+  - de Beurs, Zoë
+  - Bolmont, Emeline
+  - Cowan, Nicolas
+  - Dong, Chuanfei
+  - Drake, Jeremy J.
+  - Garcia, Lionel
+  - Greene, Thomas
+  - Haworth, Thomas
+  - Hu, Renyu
+  - Kane, Stephen R.
+  - Kervella, Pierre
+  - Koll, Daniel
+  - Krissansen-Totton, Joshua
+  - Lagage, Pierre-Olivier
+  - Lichtenberg, Tim
+  - Lustig-Yaeger, Jacob
+  - Lingam, Manasvi
+  - Turbet, Martin
+  - Seager, Sara
+  - Barkaoui, Khalid
+  - Bell, Taylor J.
+  - Burdanov, Artem
+  - Cadieux, Charles
+  - Charnay, Benjamin
+  - Cloutier, Ryan
+  - Cook, Neil J.
+  - Correia, Alexandre C. M.
+  - Dang, Lisa
+  - Daylan, Tansu
+  - Delrez, Laetitia
+  - Edwards, Billy
+  - Fauchez, Thomas J.
+  - Flagg, Laura
+  - Fraschetti, Federico
+  - Haqq-Misra, Jacob
+  - Huang, Ziyu
+  - Iro, Nicolas
+  - Jayawardhana, Ray
+  - Jehin, Emmanuel
+  - Jin, Meng
+  - Kite, Edwin
+  - Kitzmann, Daniel
+  - Kral, Quentin
+  - Lafrenière, David
+  - Libert, Anne-Sophie
+  - Liu, Beibei
+  - Mohanty, Subhanjoy
+  - Morris, Brett M.
+  - Murray, Catriona A.
+  - Piaulet, Caroline
+  - Pozuelos, Francisco J.
+  - Radica, Michael
+  - Ranjan, Sukrit
+  - Rathcke, Alexander
+  - Roy, Pierre-Alexis
+  - Schwieterman, Edward W.
+  - Turner, Jake D.
+  - Triaud, Amaury
+  - Way, Michael J.
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: 10.1038/s41550-024-02298-5
+  abstract: Ultracool dwarf stars are abundant, long-lived and uniquely suited to enable the atmospheric study of transiting
+    terrestrial companions with the JWST. Among them, the most prominent is the M8.5V star TRAPPIST-1 and its seven planets.
+    While JWST Cycle 1 observations have started to yield preliminary insights into the planets, they have also revealed that
+    their atmospheric exploration requires a better understanding of their host star. Here we propose a roadmap to characterize
+    the TRAPPIST-1 system — and others like it — in an efficient and robust manner with JWST. We notably recommend that —
+    although more challenging to schedule — multi-transit windows be prioritized to mitigate the effects of stellar activity
+    and gather up to twice more transits per JWST hour spent. We conclude that, for such systems, planets cannot be studied
+    in isolation by small programmes but rather need large-scale, joint space- and ground-based initiatives to fully exploit
+    the capabilities of JWST for the exploration of terrestrial planets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2024MNRAS.530L..13P
+  title: Fundamentals for habitable scenarios for Earth-like planets in the TRAPPIST-1 system
+  authors:
+  - Payne, R. C.
+  - Kaltenegger, L.
+  year: '2024'
+  pubdate: '2024-05-00'
+  doi: 10.1093/mnrasl/slae013
+  abstract: The characterization of rocky exoplanets in the Habitable Zone (HZ) of their stars has entered a new era with
+    the launch of the JWST. The TRAPPIST-1 star system is a particularly interesting target for observations, with its seven
+    Earth-sized planets. An insightful body of work for a wide range of atmospheres has shown them to be intriguing candidates
+    for analysis to learn more about terrestrial planets and their evolution. However, unknowns remain in analyses of changing
+    conditions for planets with Earth-analogue atmospheres (N<SUB>2</SUB>-CO<SUB>2</SUB>-H<SUB>2</SUB>O) for the whole system,
+    as well as what spectral features JWST could search for in such environments. Here, we explore the specific question of
+    how rocky Earth-analogue planets could evolve at the position of the TRAPPIST-1 planets and assess the conditions that
+    could lead to surface temperatures above freezing for the planets in the HZ. We found that three of the seven planets
+    could provide warm surface conditions for Earth-analogue atmospheres. Our models show marked differences in the resulting
+    transmission spectra. The first JWST observation of the atmosphere for TRAPPIST-1 planets have recently been published
+    to exclude widely extended atmospheres without clouds, but more observations are needed to put constrains on models for
+    terrestrial atmospheres.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2024EGUGA..2611513C
+  title: Impact of CO2 on water outgassing on rocky planets around TRAPPIST-1 - VPLANET/MagmOcV2.0
+  authors:
+  - Carone, Ludmila
+  - Barth, Patrick
+  - Barnes, Rory
+  - Helling, Christiane
+  - Chubb, Katy
+  - Bitsch, Bertram
+  year: '2024'
+  pubdate: '2024-04-00'
+  doi: 10.5194/egusphere-egu24-11513
+  abstract: VPLANET MagmOc is a versatile magma ocean model with erosion of water vapour in the open source VPLANET framework.
+    Wepresent here a major improvement of this model that includes now a) thermal emission calculated with a full radiative
+    transfer code and b) simultaneous outgasing of H2O and CO2 with full feedback on outgassing informed by planet formation
+    models.We derived evolution tracks of an outgassed mixed H2O/CO2 atmosphere on TRAPPIST-1e, f and g. We find that all
+    planets, in particular TRAPPIST-1 g, run the risk to evolve into Exo-Venuses with thick CO2 atmospheres after the magma
+    ocean stage for an intial water budget of more than 10 terrestrial ocean (TO) of water within tens of million years.At
+    the inner edge of the habitable zone, on TRAPPIST-1 e, we find that the combination of H2O atmosphere loss and CO2 outgassing
+    reduces the thermal emission on the planet such that the magma ocean stage can be almost doubled from tens of million
+    years to 80 million years for 10 TO intial water.We thus conclude that careful consideration has to be given to the various
+    geophysical feedback effects as these can have a profound impact on the magma ocean evolution stage and thus on the overall
+    water budget and the secondary atmosphere.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2403.01028'
+  ads_bibcode: 2024arXiv240301028Z
+  title: On the equilibrium limit of liquid stability in pressurized aqueous systems
+  authors:
+  - Zarriz, Arian
+  - Journaux, Baptiste
+  - Powell-Palm, Matthew J.
+  year: '2024'
+  pubdate: '2024-03-00'
+  doi: 10.48550/arXiv.2403.01028
+  abstract: Phase stability, and the limits thereof, are a central concern of materials thermodynamics. However, the temperature
+    limits of equilibrium liquid stability in chemical systems have only been widely characterized under constant (typically
+    atmospheric) pressure conditions, whereunder the limit is represented by the eutectic. At higher pressures, this limit
+    will shift in both temperature and chemical composition, opening a wide thermodynamic parameter space over which the absolute
+    limit, i.e., the limit under arbitrary values of the thermodynamic forces at play (here pressure and concentration), might
+    exist. In this work, we use isochoric freezing to measure this absolute limit for the first time in several binary aqueous
+    brines, and, nodding to the etymology of "eutectic", we name this limit the "cenotectic" (from Greek " ", "universal-melt").
+    We observe that when no solute-bearing high-pressure phases exist, the cenotectic occurs consistently 22 +/- 2K below
+    the 1 bar eutectic and at approximately 213 +/- 3 MPa, suggesting domination by the liquidus behaviors of the icy phases
+    present. In charting the T-P evolution of each eutectic configuration, we also encounter several unreported high-pressure
+    hydrates of NaHCO2, MgCl2, and NaCl, and we find that these high-pressure phases can produce complex multi-phase configurations
+    involving the liquid that may remain metastable to significantly lower temperatures. We discuss the implications of these
+    findings for ocean worlds of our solar system and cold ocean exoplanets; estimate thermodynamic limits on ice crust thickness
+    and final ocean depth ("endgame") using the cenotectic pressure; and finally provide a generalized thermodynamic perspective
+    on (and definition for) this fundamental thermodynamic invariant point.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2401.16490'
+  ads_bibcode: 2024A&A...683A.153V
+  title: Airy worlds or barren rocks? On the survivability of secondary atmospheres around the TRAPPIST-1 planets
+  authors:
+  - Van Looveren, Gwenaël
+  - Güdel, Manuel
+  - Boro Saikia, Sudeshna
+  - Kislyakova, Kristina
+  year: '2024'
+  pubdate: '2024-03-00'
+  doi: 10.1051/0004-6361/202348079
+  abstract: 'Context. The James Webb Space Telescope is currently at the forefront of the search for atmospheres of exoplanets.
+    However, the observation of atmospheres of Earth-like planets pushes the limits of the instruments, and often, multiple
+    observations must be combined. As with most instruments, telescope time is unfortunately extremely limited. Over the course
+    of cycle 1, approximately 100 hours have been dedicated to the TRAPPIST-1 planets. This system is therefore studied in
+    unusually great detail. However, the first two sets of observations of the innermost two planets show that these planets
+    most likely lack a thick atmosphere. The question therefore arises whether terrestrial planets around M stars have atmospheres
+    or do not have atmospheres at all. <BR /> Aims: We aim to determine the atmospheric survivability of the TRAPPIST-1 planets
+    by modelling the response of the upper atmosphere to incoming stellar high-energy radiation. Through this case study,
+    we also aim to learn more about rocky planet atmospheres in the habitable zone around low-mass M dwarfs. <BR /> Methods:
+    We simulated the upper atmospheres of the TRAPPIST-1 planets using the Kompot code, which is a self-consistent thermo-chemical
+    code. Specifically, we studied the atmospheric mass loss due to Jeans escape induced by stellar high-energy radiation.
+    This was achieved through a grid of models that account for the differences in planetary properties and irradiances of
+    the TRAPPIST-1 planets, as well as different atmospheric properties. This grid allows for the explorations of the different
+    factors influencing atmospheric loss. <BR /> Results: The present-day irradiance of the TRAPPIST-1 planets would lead
+    to the loss of an Earth''s atmosphere within just some hundreds of million years. When we take into account the much more
+    active early stages of a low-mass M dwarf, the planets undergo a period of even more extreme mass loss, regardless of
+    planetary mass or atmospheric composition. <BR /> Conclusions: The losses calculated in this work indicate that it is
+    unlikely that any significant atmosphere could survive for any extended amount of time around any of the TRAPPIST-1 planets
+    based on present-day irradiance levels. The assumptions used here allow us to generalise the results, and we conclude
+    that the results tentatively indicate that this conclusion applies to all Earth-like planets in the habitable zones of
+    low-mass M dwarfs.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2309.10942'
+  ads_bibcode: 2023MNRAS.525.5168M
+  title: Impact of M-dwarf stellar wind and photoevaporation on the atmospheric evolution of small planets
+  authors:
+  - Modi, Ashini
+  - Estrela, Raissa
+  - Valio, Adriana
+  year: '2023'
+  pubdate: '2023-11-00'
+  doi: 10.1093/mnras/stad2557
+  abstract: The evolution of a planet's atmosphere depends strongly on its host star's properties. When their host stars are
+    younger, planets can experience stronger winds and extreme ultraviolet radiation (EUV) emissions. This is particularly
+    true for planets orbiting M dwarfs due to their close proximity to the host star. To determine if these planets retain
+    an atmosphere, we consider the impacts from stellar wind and EUV fluxes in driving atmospheric escape throughout the planet's
+    lifetime. For this, we determined the atmospheric mass-loss due to stellar wind and photoevaporation on four planets in
+    close orbit and 34 in their star's habitable zone (HZ). The M-dwarf host stars' wind velocity, density, and EUV flux were
+    calculated through rotation period and X-ray flux scaling over time. The mass-loss rate due to stellar wind and photoevaporation
+    was then computed as a function of time and accumulated throughout the planet's age to determine the total atmospheric
+    mass-loss of the planet's initial H/He envelope. We find that for HZ planets at orbits &lt;0.1 au, stellar wind can only
+    remove ${\le} 1~{{ \rm per\ cent}}$ of the H/He envelope, while photoevaporation is essential for completely removing
+    the H/He envelope of most targets. Moreover, due to either mechanism, most planets orbiting at &gt;0.1 au do not have
+    their primordial envelope stripped. Overall, out of the 38 planets studied, 13 were predicted to have lost the primordial
+    envelope due to photoevaporation, while two planets lost the envelope due to both stellar wind and photoevaporation.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2023PSJ.....4..192M
+  title: The Feasibility of Detecting Biosignatures in the TRAPPIST-1 Planetary System with JWST
+  authors:
+  - Meadows, Victoria S.
+  - Lincowski, Andrew P.
+  - Lustig-Yaeger, Jacob
+  year: '2023'
+  pubdate: '2023-10-00'
+  doi: 10.3847/PSJ/acf488
+  abstract: The James Webb Space Telescope (JWST) provides the first opportunity to detect gases in the atmospheres of M-dwarf
+    terrestrial planets and search for signs of life. Here we determine the detectability of a comprehensive suite of biosignature
+    gases that may have been episodically prevalent across Earth's history. We used coupled 1D climate-photochemical models
+    to generate synthetic inhabited terrestrial planetary environments for TRAPPIST-1 d and e. These encompass cloudy and/or
+    hazy Archean-Earth-like environments with either a dominant sulfur- or methane-producing biosphere, as well as clear and
+    cloudy modern-Earth-like environments with photosynthetic oxygen-producing biospheres. We generate transmission spectra
+    and assess the likely detectability of different biosignatures with JWST. Our simulations suggest that biogenically generated
+    O<SUB>2</SUB> and its photosynthetic by-product O<SUB>3</SUB> will likely be extremely difficult to detect. We explored
+    the detectability of methyl chloride (CH<SUB>3</SUB>Cl) as an alternative indicator for a photosynthetic biosphere but
+    find that it will likely require significantly higher global surface fluxes than Earth's. We find that the CH<SUB>4</SUB>
+    and CO<SUB>2</SUB> disequilibrium pair is potentially detectable in ~10 transits for both the methanogen-dominated Archean-like
+    environment and the modern photosynthetic-dominated biosphere-even in cloudy atmospheres. Organic haze and methyl mercaptan
+    are other potential biosignatures for the Archean. Given the likely difficulties in observing an oxygenic-photosynthetic
+    biosphere with JWST, we conclude that the methanogenic biosphere revealed by the combination of outgassed CO<SUB>2</SUB>
+    in the presence of methanogenically generated CH<SUB>4</SUB> may be the most persistent detectable biosignature for an
+    Earth-like planet.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2309.07047'
+  ads_bibcode: 2023ApJ...955L..22L
+  title: 'Atmospheric Reconnaissance of TRAPPIST-1 b with JWST/NIRISS: Evidence for Strong Stellar Contamination in the Transmission
+    Spectra'
+  authors:
+  - Lim, Olivia
+  - Benneke, Björn
+  - Doyon, René
+  - MacDonald, Ryan J.
+  - Piaulet, Caroline
+  - Artigau, Étienne
+  - Coulombe, Louis-Philippe
+  - Radica, Michael
+  - L'Heureux, Alexandrine
+  - Albert, Loïc
+  - Rackham, Benjamin V.
+  - de Wit, Julien
+  - Salhi, Salma
+  - Roy, Pierre-Alexis
+  - Flagg, Laura
+  - Fournier-Tondreau, Marylou
+  - Taylor, Jake
+  - Cook, Neil J.
+  - Lafrenière, David
+  - Cowan, Nicolas B.
+  - Kaltenegger, Lisa
+  - Rowe, Jason F.
+  - Espinoza, Néstor
+  - Dang, Lisa
+  - Darveau-Bernier, Antoine
+  year: '2023'
+  pubdate: '2023-09-00'
+  doi: 10.3847/2041-8213/acf7c4
+  abstract: TRAPPIST-1 is a nearby system of seven Earth-sized, temperate, rocky exoplanets transiting a Jupiter-sized M8.5V
+    star, ideally suited for in-depth atmospheric studies. Each TRAPPIST-1 planet has been observed in transmission both from
+    space and from the ground, confidently rejecting cloud-free, hydrogen-rich atmospheres. Secondary eclipse observations
+    of TRAPPIST-1 b with JWST/MIRI are consistent with little to no atmosphere given the lack of heat redistribution. Here
+    we present the first transmission spectra of TRAPPIST-1 b obtained with JWST/NIRISS over two visits. The two transmission
+    spectra show moderate to strong evidence of contamination from unocculted stellar heterogeneities, which dominates the
+    signal in both visits. The transmission spectrum of the first visit is consistent with unocculted starspots and the second
+    visit exhibits signatures of unocculted faculae. Fitting the stellar contamination and planetary atmosphere either sequentially
+    or simultaneously, we confirm the absence of cloud-free, hydrogen-rich atmospheres, but cannot assess the presence of
+    secondary atmospheres. We find that the uncertainties associated with the lack of stellar model fidelity are one order
+    of magnitude above the observation precision of 89 ppm (combining the two visits). Without affecting the conclusion regarding
+    the atmosphere of TRAPPIST-1 b, this highlights an important caveat for future explorations, which calls for additional
+    observations to characterize stellar heterogeneities empirically and/or theoretical works to improve model fidelity for
+    such cool stars. This need is all the more justified as stellar contamination can affect the search for atmospheres around
+    the outer, cooler TRAPPIST-1 planets for which transmission spectroscopy is currently the most efficient technique.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2305.19677'
+  ads_bibcode: 2023A&A...675A.141G
+  title: The CARMENES search for exoplanets around M dwarfs. A sub-Neptunian mass planet in the habitable zone of HN Lib
+  authors:
+  - González-Álvarez, E.
+  - Kemmer, J.
+  - Chaturvedi, P.
+  - Caballero, J. A.
+  - Quirrenbach, A.
+  - Amado, P. J.
+  - Béjar, V. J. S.
+  - Cifuentes, C.
+  - Herrero, E.
+  - Kossakowski, D.
+  - Reiners, A.
+  - Ribas, I.
+  - Rodríguez, E.
+  - Rodríguez-López, C.
+  - Sanz-Forcada, J.
+  - Shan, Y.
+  - Stock, S.
+  - Tabernero, H. M.
+  - Tal-Or, L.
+  - Osorio, M. R. Zapatero
+  - Hatzes, A. P.
+  - Henning, Th.
+  - López-González, M. J.
+  - Montes, D.
+  - Morales, J. C.
+  - Pallé, E.
+  - Pedraz, S.
+  - Perger, M.
+  - Reffert, S.
+  - Sabotta, S.
+  - Schweitzer, A.
+  - Zechmeister, M.
+  year: '2023'
+  pubdate: '2023-07-00'
+  doi: 10.1051/0004-6361/202346276
+  abstract: We report the discovery of HN Lib b, a sub-Neptunian mass planet orbiting the nearby (d ≈ = 6.25 pc) M4.0 V star
+    HN Lib detected by our CARMENES radial-velocity (RV) survey. We determined a planetary minimum mass of M<SUB>b</SUB> sin
+    i = 5.46 ± 0.75 M<SUB>⊕</SUB> and an orbital period of P<SUB>b</SUB> = 36.116 ± 0.029 d, using ~5 yr of CARMENES data,
+    as well as archival RVs from HARPS and HIRES spanning more than 13 yr. The flux received by the planet equals half the
+    instellation on Earth, which places it in the middle of the conservative habitable zone (HZ) of its host star. The RV
+    data show evidence for another planet candidate with M<SUB>[c]</SUB> sin i = 9.7 ± 1.9 M<SUB>⊕</SUB> and P<SUB>[c]</SUB>
+    = 113.46 ± 0.20 d. The long-term stability of the signal and the fact that the best model for our data is a two-planet
+    model with an independent activity component stand as strong arguments for establishing a planetary origin. However, we
+    cannot rule out stellar activity due to its proximity to the rotation period of HN Lib, which we measured using CARMENES
+    activity indicators and photometric data from a ground-based multi-site campaign as well as archival data. The discovery
+    adds HN Lib b to the shortlist of super-Earth planets in the habitable zone of M dwarfs, but HN Lib [c] probably cannot
+    be inhabited because, if confirmed, it would most likely be an icy giant.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2303.06214'
+  ads_bibcode: 2023arXiv230306214R
+  title: A Catalog of Exoplanets with Equilibrium Temperature less than 600 K
+  authors:
+  - Russell, David G.
+  year: '2023'
+  pubdate: '2023-03-00'
+  doi: 10.48550/arXiv.2303.06214
+  abstract: 'The NASA Exoplanet Archive was searched for planets with an equilibrium temperature below 600 K, mass uncertainty
+    less than 27 percent, and radius uncertainty less than 8 percent. This search produced 93 planets with mass from 0.3 to
+    1680 ME; and 101 planets if the Solar System planets are included. The characteristics of the sample in this catalog are:
+    (1) 94 percent of the Terrestrial planets have mass less than 2.9 ME and radius less than 1.4 RE, (3) The sample has a
+    small drop in population consistent with the previously identified radius gap from 1.5 to 2.0 RE, (4) Planets in the radius
+    range 1.50 to 2.25 RE are consistent with either a gas-rich Terrestrial composition or a rock-ice Terrestrial composition
+    with a supercritical hydrosphere and water mass fraction less than 20 percent, (5) A super-Neptune radius desert is observed
+    for the radius range 4.5 to 7.5 RE, (6) Saturn composition planets have masses from 15 to 170 ME and radii from 7.9 to
+    10.1 RE, (7) A nearly barren sub-Saturn mass-radius desert is found in the sample as indicated by a lack of planets with
+    mass exceeding 20 ME and radii in the range 4.0 to 7.5 RE, (8) Most Jupiter composition planets have radii between 10.9
+    and 12.4 RE and mass exceeding 200 ME, (9) With few exceptions, planet radius can be used as a proxy for planet composition
+    classification into Terrestrial, gas-rich Terrestrial or supercritical hydrosphere Terrestrial, Rock-Ice Giant, and Gas
+    Giant composition classes for this sample of Teq less than 600 K planets. The characteristics of this sample are consistent
+    with several predictions of the core accretion model including the predicted values for the critical core mass for gas
+    accretion and runaway accretion, the pebble isolation mass, and the Saturn mass desert.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2301.03348'
+  ads_bibcode: 2023MNRAS.519.6210M
+  title: A rocky exoplanet classification method and its application to calculating surface pressure and surface temperature
+  authors:
+  - McIntyre, Sarah R. N.
+  - King, Penelope L.
+  - Mills, Franklin P.
+  year: '2023'
+  pubdate: '2023-03-00'
+  doi: 10.1093/mnras/stad095
+  abstract: With over 5000 exoplanets currently detected, there is a need for a primary classification method to prioritize
+    candidates for biosignature observations. Here, we develop a classification method to categorize rocky exoplanets based
+    on their closest Solar system analogue using available data of observed stellar and planetary features, masses, and radii,
+    to model non-thermal atmospheric escape, thermal atmospheric escape, and stellar irradiation boundaries. Applying this
+    classification method to the 720 rocky exoplanets in our sample with uncertainties in planetary masses, radii, stellar
+    temperatures, and fluxes propagated via a Monte Carlo model indicates that 22 per cent ± 8 per cent are Mercury analogues,
+    39 per cent ± 4 per cent are Mars analogues, 11 per cent ± 1 per cent are Venus analogues, 2 per cent ± 1 per cent are
+    Earth analogues, and 26 per cent ± 12 per cent are without a known planetary counterpart in our Solar system. Extrapolating
+    to conditions on LHS 3844b and GJ 1252b, our classification method gives results reasonably consistent with current observations.
+    Subsequently, to demonstrate the functionality of this classification method, we plot our catalogued sample of exoplanets
+    on an adjusted surface pressure versus temperature phase diagram, presenting more realistic estimates of the potential
+    surface phases (gas, liquid, or ice). Our new classification method could help target selection for future exoplanet characterization
+    missions.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2212.03702'
+  ads_bibcode: 2022NatCo..13.7521O
+  title: Liquid water on cold exo-Earths via basal melting of ice sheets
+  authors:
+  - Ojha, Lujendra
+  - Troncone, Bryce
+  - Buffo, Jacob
+  - Journaux, Baptiste
+  - McDonald, George
+  year: '2022'
+  pubdate: '2022-12-00'
+  doi: 10.1038/s41467-022-35187-4
+  abstract: Liquid water is a critical component of habitability. However, the production and stability of surficial liquid
+    water can be challenging on planets outside the Habitable Zone and devoid of adequate greenhouse warming. On such cold,
+    icy exo-Earths, basal melting of regional/global ice sheets by geothermal heat provides an alternative means of forming
+    liquid water. Here, we model the thermophysical evolution of ice sheets to ascertain the geophysical conditions that allow
+    liquid water to be produced and maintained at temperatures above the pressure-controlled freezing point of water ice on
+    exo-Earths. We show that even with a modest, Moon-like geothermal heat flow, subglacial oceans of liquid water can form
+    at the base of and within the ice sheets on exo-Earths. Furthermore, subglacial oceans may persist on exo-Earths for a
+    prolonged period due to the billion-year half-lives of heat-producing elements responsible for geothermal heat. These
+    subglacial oceans, often in contact with the planet's crust and shielded from the high energy radiation of their parent
+    star by thick ice layers, may provide habitable conditions for an extended period.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2210.02484'
+  ads_bibcode: 2022LPICo2687.3046H
+  title: A Catalog of Habitable Zone Exoplanets
+  authors:
+  - Hill, M. L.
+  - Bott, K.
+  - Dalba, P. A.
+  - Fetherolf, T.
+  - Kane, S. R.
+  - Li, Z.
+  - Kopparapu, R.
+  - Ostberg, C.
+  year: '2022'
+  pubdate: '2022-11-00'
+  doi: 10.48550/arXiv.2210.02484
+  abstract: This work catalogs all planets found to reside in the Habitable Zone (HZ), provides HZ boundaries, orbit characterization,
+    and the potential for follow-up observations. Demographics of the HZ planets are compared with the full catalog of exoplanets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2208.02511'
+  ads_bibcode: 2022ApJ...938....1L
+  title: Drift Rates of Narrowband Signals in Long-term SETI Observations for Exoplanets
+  authors:
+  - Li, Jian-Kang
+  - Zhao, Hai-Chen
+  - Tao, Zhen-Zhao
+  - Zhang, Tong-Jie
+  - Xiao-Hui, Sun
+  year: '2022'
+  pubdate: '2022-10-00'
+  doi: 10.3847/1538-4357/ac90bd
+  abstract: The Doppler shift of a radio signal is caused by the relative motion between the transmitter and receiver. The
+    change in frequency of the signal over time is called the drift rate. In the studies of radio search for extraterrestrial
+    intelligence (SETI), extraterrestrial narrowband signals are expected to appear "chirped" since both the exoplanet and
+    Earth are moving. Such planet rotation and orbital revolution around the central star can cause a nonzero drift rate.
+    Other relative motions between the transmitter and receiver, such as the gravitational redshift and galactic potential,
+    are negligible. In this paper, we mainly consider the common cases in which the drift rate is contributed by the rotations
+    and orbits of Earth and the exoplanet in the celestial mechanics perspective, and we briefly discuss other cases different
+    from the Earth-exoplanet one. We can obtain the expected pseudosinusoidal drifting result with long-term observations
+    and shorter orbital periods of exoplanets. Exoplanets with higher orbital eccentricities can cause asymmetric drifting.
+    The expected result should be intermittent pseudosinusoidal curves in long-term observations. The characteristics of pseudosinusoidal
+    curves, as another new criterion for extraterrestrial signals, can be applied to long-term SETI reobservations in future
+    research.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2112.04663'
+  ads_bibcode: 2022ARA&A..60..159W
+  title: Atmospheres of Rocky Exoplanets
+  authors:
+  - Wordsworth, Robin
+  - Kreidberg, Laura
+  year: '2022'
+  pubdate: '2022-08-00'
+  doi: 10.1146/annurev-astro-052920-125632
+  abstract: 'Rocky planets are common around other stars, but their atmospheric properties remain largely unconstrained. Thanks
+    to a wealth of recent planet discoveries and upcoming advances in observing capability, we are poised to characterize
+    the atmospheres of dozens of rocky exoplanets in this decade. The theoretical understanding of rocky exoplanet atmospheres
+    has advanced considerably in the last few years, yielding testable predictions of their evolution, chemistry, dynamics,
+    and even possible biosignatures. We review key progress in this field to date and discuss future objectives. Our major
+    conclusions are as follows: Many rocky planets may form with initial H<SUB>2</SUB>-He envelopes that are later lost to
+    space, likely due to a combination of stellar UV/X-ray irradiation and internal heating. After the early stages of evolution,
+    a wide diversity of atmospheric compositions is expected as a result of variations in host star flux, atmospheric escape
+    rates, interior exchange, and other factors. Observations have ruled out both the presence of H<SUB>2</SUB>-dominated
+    atmospheres on several nearby rocky exoplanets and the presence of any thick atmosphere on one target. A more detailed
+    atmospheric characterization of these planets and others will become possible in the near future. Exoplanet biosphere
+    searches are an exciting future goal. However, reliable detections for a representative sample of planets will require
+    further advances in observing capability and improvements in our understanding of abiotic planetary processes.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2022ApJ...930...97L
+  title: 'Erratum: "Evolved Climates and Observational Discriminants for the TRAPPIST-1 Planetary System" (2018, ApJ, 867,
+    76)'
+  authors:
+  - Lincowski, Andrew P.
+  - Meadows, Victoria S.
+  - Crisp, David
+  - Robinson, Tyler D.
+  - Luger, Rodrigo
+  - Lustig-Yaeger, Jacob
+  - Arney, Giada N.
+  year: '2022'
+  pubdate: '2022-05-00'
+  doi: 10.3847/1538-4357/ac679c
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '2109.02273'
+  ads_bibcode: 2022MNRAS.510.6022S
+  title: Postulating exoplanetary habitability via a novel anomaly detection method
+  authors:
+  - Sarkar, Jyotirmoy
+  - Bhatia, Kartik
+  - Saha, Snehanshu
+  - Safonova, Margarita
+  - Sarkar, Santonu
+  year: '2022'
+  pubdate: '2022-03-00'
+  doi: 10.1093/mnras/stab3556
+  abstract: A profound shift in the study of cosmology came with the discovery of thousands of exoplanets and the possibility
+    of the existence of billions of them in our Galaxy. The biggest goal in these searches is whether there are other life-harbouring
+    planets. However, the question which of these detected planets are habitable, potentially-habitable, or maybe even inhabited,
+    is still not answered. Some potentially habitable exoplanets have been hypothesised, but since Earth is the only known
+    habitable planet, measures of habitability are necessarily determined with Earth as the reference. Several recent works
+    introduced new habitability metrics based on optimisation methods. Classification of potentially habitable exoplanets
+    using supervised learning is another emerging area of study. However, both modelling and supervised learning approaches
+    suffer from drawbacks. We propose an anomaly detection method, the multi-stage memetic algorithm (MSMA), to detect anomalies
+    and extend it to an unsupervised clustering algorithm multi-stage multi-version memetic clustering algorithm to use it
+    to detect potentially habitable exoplanets as anomalies. The algorithm is based on the postulate that Earth is an anomaly,
+    with the possibility of existence of few other anomalies among thousands of data points. We describe an MSMA-based clustering
+    approach with a novel distance function to detect habitable candidates as anomalies (including Earth). The results are
+    cross-matched with the Planetary Habitability Laboratory-habitable exoplanet catalogue (PHL-HEC) of the PHL with both
+    optimistic and conservative lists of potentially habitable exoplanets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2008.09599'
+  ads_bibcode: 2021AsBio..21.1325B
+  title: Magma Ocean Evolution of the TRAPPIST-1 Planets
+  authors:
+  - Barth, Patrick
+  - Carone, Ludmila
+  - Barnes, Rory
+  - Noack, Lena
+  - Mollière, Paul
+  - Henning, Thomas
+  year: '2021'
+  pubdate: '2021-11-00'
+  doi: 10.1089/ast.2020.2277
+  abstract: Recent observations of the potentially habitable planets TRAPPIST-1 e, f, and g suggest that they possess large
+    water mass fractions of possibly several tens of weight percent of water, even though the host star's activity should
+    drive rapid atmospheric escape. These processes can photolyze water, generating free oxygen and possibly desiccating the
+    planet. After the planets formed, their mantles were likely completely molten with volatiles dissolving and exsolving
+    from the melt. To understand these planets and prepare for future observations, the magma ocean phase of these worlds
+    must be understood. To simulate these planets, we have combined existing models of stellar evolution, atmospheric escape,
+    tidal heating, radiogenic heating, magma-ocean cooling, planetary radiation, and water-oxygen-iron geochemistry. We present
+    M a g m O c , a versatile magma-ocean evolution model, validated against the rocky super-Earth GJ 1132b and early Earth.
+    We simulate the coupled magma-ocean atmospheric evolution of TRAPPIST-1 e, f, and g for a range of tidal and radiogenic
+    heating rates, as well as initial water contents between 1 and 100 Earth oceans. We also reanalyze the structures of these
+    planets and find they have water mass fractions of 0-0.23, 0.01-0.21, and 0.11-0.24 for planets e, f, and g, respectively.
+    Our model does not make a strong prediction about the water and oxygen content of the atmosphere of TRAPPIST-1 e at the
+    time of mantle solidification. In contrast, the model predicts that TRAPPIST-1 f and g would have a thick steam atmosphere
+    with a small amount of oxygen at that stage. For all planets that we investigated, we find that only 3-5% of the initial
+    water will be locked in the mantle after the magma ocean solidified.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2012.03469'
+  ads_bibcode: 2021ApJ...907...81L
+  title: Formation of Multiple-planet Systems in Resonant Chains around M Dwarfs
+  authors:
+  - Lin, Yu-Chia
+  - Matsumoto, Yuji
+  - Gu, Pin-Gao
+  year: '2021'
+  pubdate: '2021-02-00'
+  doi: 10.3847/1538-4357/abd0f3
+  abstract: 'Recent observations have revealed the existence of multiple-planet systems composed of Earth-mass planets around
+    late M dwarfs. Most of their orbits are close to commensurabilities, which suggests that planets were commonly trapped
+    in resonant chains in their formation around low-mass stars. We investigate the formation of multiple-planet systems in
+    resonant chains around low-mass stars. A time-evolution model of the multiple-planet formation via pebble accretion in
+    the early phase of the disk evolution is constructed based on the formation model for the TRAPPIST-1 system by Ormel et
+    al. Our simulations show that knowing the protoplanet appearance timescale is important for determining the number of
+    planets and their trapped resonances: as the protoplanet appearance timescale increases, fewer planets are formed, which
+    are trapped in more widely separated resonances. We find that there is a range of the protoplanet appearance timescale
+    for forming stable multiple-planet systems in resonant chains. This range depends on the stellar mass and disk size. We
+    suggest that the protoplanet appearance timescale is a key parameter for studying the formation of multiple-planet systems
+    with planets in resonant chains around low-mass stars. The composition of the planets in our model is also discussed.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2011.08815'
+  ads_bibcode: 2021AJ....161...44E
+  title: Hubble WFC3 Spectroscopy of the Habitable-zone Super-Earth LHS 1140 b
+  authors:
+  - Edwards, Billy
+  - Changeat, Quentin
+  - Mori, Mayuko
+  - Anisman, Lara O.
+  - Morvan, Mario
+  - Yip, Kai Hou
+  - Tsiaras, Angelos
+  - Al-Refaie, Ahmed
+  - Waldmann, Ingo
+  - Tinetti, Giovanna
+  year: '2021'
+  pubdate: '2021-01-00'
+  doi: 10.3847/1538-3881/abc6a5
+  abstract: Atmospheric characterization of temperate, rocky planets is the holy grail of exoplanet studies. These worlds
+    are at the limits of our capabilities with current instrumentation in transmission spectroscopy and challenge our state-of-the-art
+    statistical techniques. Here we present the transmission spectrum of the temperate super-Earth LHS 1140b using the Hubble
+    Space Telescope (HST). The Wide Field Camera 3 (WFC3) G141 grism data of this habitable-zone (T<SUB>eq</SUB> = 235 K)
+    super-Earth (R = 1.7 R<SUB>⊕</SUB>) shows tentative evidence of water. However, the signal-to-noise ratio, and thus the
+    significance of the detection, is low and stellar contamination models can cause modulation over the spectral band probed.
+    We attempt to correct for contamination using these models and find that, while many still lead to evidence for water,
+    some could provide reasonable fits to the data without the need for molecular absorption although most of these cause
+    features in the visible ground-based data which are nonphysical. Future observations with the James Webb Space Telescope
+    would be capable of confirming, or refuting, this atmospheric detection.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2006.11349'
+  ads_bibcode: 2020ApJ...901..126W
+  title: Distinguishing between Wet and Dry Atmospheres of TRAPPIST-1 e and f
+  authors:
+  - Wunderlich, Fabian
+  - Scheucher, Markus
+  - Godolt, M.
+  - Grenfell, J. L.
+  - Schreier, F.
+  - Schneider, P. C.
+  - Wilson, D. J.
+  - Sánchez-López, A.
+  - López-Puertas, M.
+  - Rauer, H.
+  year: '2020'
+  pubdate: '2020-10-00'
+  doi: 10.3847/1538-4357/aba59c
+  abstract: The nearby TRAPPIST-1 planetary system is an exciting target for characterizing the atmospheres of terrestrial
+    planets. The planets e, f, and g lie in the circumstellar habitable zone and could sustain liquid water on their surfaces.
+    During the extended pre-main-sequence phase of TRAPPIST-1, however, the planets may have experienced extreme water loss,
+    leading to a desiccated mantle. The presence or absence of an ocean is challenging to determine with current and next-generation
+    telescopes. Therefore, we investigate whether indirect evidence of an ocean and/or a biosphere can be inferred from observations
+    of the planetary atmosphere. We introduce a newly developed photochemical model for planetary atmospheres, coupled to
+    a radiative-convective model, and validate it against modern Earth, Venus, and Mars. The coupled model is applied to the
+    TRAPPIST-1 planets e and f, assuming different surface conditions and varying amounts of CO<SUB>2</SUB> in the atmosphere.
+    As input for the model we use a constructed spectrum of TRAPPIST-1, based on near-simultaneous data from X-ray to optical
+    wavelengths. We compute cloud-free transmission spectra of the planetary atmospheres and determine the detectability of
+    molecular features using the Extremely Large Telescope (ELT) and the James Webb Space Telescope (JWST). We find that under
+    certain conditions the existence or nonexistence of a biosphere and/or an ocean can be inferred by combining 30 transit
+    observations with ELT and JWST within the K band. A nondetection of CO could suggest the existence of an ocean, whereas
+    significant CH<SUB>4</SUB> hints at the presence of a biosphere.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2020EPSC...14..355A
+  title: Assessing the habitability of observed Super Earths
+  authors:
+  - Alei, Eleonora
+  - Claudi, Riccardo
+  - Quanz, Sascha P.
+  year: '2020'
+  pubdate: '2020-09-00'
+  doi: 10.5194/epsc2020-355
+  abstract: 'One of the most interesting aims for the study of exoplanets to understand under which conditions life could
+    appear and survive in other environments. To be able to bear any form of life, "environments must provide extended regions
+    of liquid water, conditions favorable for the assembly of complex organic molecules, and energy resources to sustain metabolism"
+    (NASA Astrobiology Roadmap, Goal 1). To satisfy this requirement, specific physical and atmospheric conditions must be
+    met. Those are extremely entwined with one another, so a quantitative assessment of the actual habitability of a planet
+    is still hard to infer.In this contribution, we discuss some self-consistent models of potential atmospheres of currently
+    known terrestrial exoplanets, to understand which thermodynamic conditions would potentially allow the appearance of life
+    on their surfaces. We also motivate how such theoretical projects should be linked with the reality of nature and future
+    observations of exoplanetary spectra. We then specify the reasons why the theoretical determination of the spectral features
+    that could be used to trace habitability (and life) is, therefore, essential now more than ever. ContextExoplanetology
+    is one of the most flourishing fields of astrophysics. At the time of writing, more than 4000 confirmed exoplanets have
+    been discovered, and many are to be revealed with current and future facilities.One of the most interesting revelations
+    was the detection of an ever-growing population of terrestrial planets, up to ten times more massive than the Earth: the
+    so-called Super Earths. Surprisingly, the Solar System is lacking planets belonging to this class, but they appear to
+    be common around other main-sequence stars.The only way for an astronomer to characterize an exoplanet is through remote
+    techniques, such as the spectroscopic analysis of its atmosphere. Spectroscopic studies of the atmospheres of Super Earths
+    are of paramount importance to probe their composition, which could provide hints about the formation of such planets,
+    their evolution and the conditions under which life could form on their surfaces (see e.g. [1]).This is not a simple task
+    with the currently available facilities since the emitted or reflected radiation coming from a planetary atmosphere is
+    orders of magnitude smaller than the one emitted by the host star. A new generation of ground- and space-based instruments
+    (e.g. METIS at ELT [2,3], ARIEL [4], PLATO [5], and the LIFE Mission Initiative [6,7, see also the submitted contribution
+    by Angerhausen et al.] is currently being developed and will be able to characterize hot and temperate Earth analogues
+    in the next years/decades. Now more than ever, a theoretical approach to the study of atmospheres of terrestrial exoplanets
+    is necessary, to provide cross-reference tools and to set the ground for the upcoming observations. MethodsFrom the exoplanet
+    catalogue Exo-MerCat [8], a sample of all currently known Super Earths was collected.Choosing combinations of various
+    chemical compositions and atmospheric pressures, a grid of nearly 2400 models was computed using the 1D radiative-convective
+    code MAGRATHEA [9]. The output produced by MAGRATHEA is the radiative-convective equilibrium pressure-temperature profile
+    of the modelled atmosphere, provided that the input physical and chemical parameters allow for the stability of the atmosphere
+    itself.The code treats the absorption of each atmospheric layer through the k-correlated distribution, which is much faster
+    than the usual line-by-line approach. It, however, requires to calculate beforehand the k-correlated table, thus limiting
+    the space of physical and chemical input parameters and, therefore, the atmospheres that can be modelled. The chemical
+    database currently included in MAGRATHEA is composed of CO2, O2, H2O, and N2. From a physical point of view, MAGRATHEA
+    can treat temperatures up to 500 K and pressures up to 100 atm. It is thus possible to produce self-consistent temperate
+    and warm Mars- and Earth-like pressure-temperature profiles by solving the radiative transfer equation directly, with
+    no need for prescriptions or parameterizations. ResultsFrom the currently known terrestrial planets sample, eleven targets
+    were selected to perform specific atmospheric simulations. Those were: LHS 1140 b, K2-18 b, K2-3 b, Kepler-48 b, GJ 1132
+    b, TRAPPIST-1 b, TRAPPIST-1 c, TRAPPIST-1 g, K2-266 e, K2-155 d, and Kepler-138 d.Most of these planets are within the
+    inner boundary of the habitable zones of their host stars [10]: these targets are, in principle, unsuitable for the appearance
+    and survival of life on their surfaces. The presence of an atmosphere could, however, mitigate the effect caused by the
+    higher irradiation these planets receive from their host stars -- compared to the one the Earth receives from the Sun.
+    Hence, simulating a wide range of atmospheres for each of the selected targets is useful and informative to obtain a better
+    understanding of the actual habitability of these terrestrial exoplanets.We show the success rate of the models for the
+    chosen targets in a stellar temperature vs irradiation plot (Fig. 1) and the normalized frequency of habitable, cool,
+    or warm atmospheres for the successful models (Fig. 2).As visible from Fig. 1, many models did not converge, due to the
+    high temperatures that caused either too much water vapour to be produced, or that exceeded the 500 K threshold imposed
+    by the look-up table. However, despite the irradiances being much higher than what prescribed by the standard definition
+    of the habitable zone, some combinations of atmospheric parameters would result in surface temperatures for the selected
+    targets that would, in principle, allow liquid water to exist on their surface (Fig. 2).Albeit in this extremely simple
+    form, this study has proven useful to assess quantitatively the effect that the atmosphere has on the habitability of
+    an exoplanet, paving the way for future simulations and observations.[1] Seager, S., et al., ApJ, 777, 2 (2013)[2] Brandl
+    B.R., et al., SPIE, 10702 (2018)[3] Quanz S. P., et al., IJAsB, 14, 279 (2015)[4] Tinetti, G., et al., SPIE, 99041X (2016)[5]
+    Rauer, H., et al., Astronomische Nachrichten, 337, 961 (2016)[6] Quanz, S. P., et al., arXiv e-prints arXiv:1908.01316
+    (2019)[7] Quanz, S.P., et al., Optical and Infrared Interferometry and Imaging VI, 10701, 107011I (2018)[8] Alei, E.,
+    et al., Astronomy and Computing, 31, 100370 (2020)[9] Petralia, A. et al., MNRAS, accept. (2020)[10] Kopparapu, R. K.,
+    et al., ApJ, 765 (1993)'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2020RSPSA.47600148K
+  title: Atmospheric composition of exoplanets based on the thermal escape of gases and implications for habitability
+  authors:
+  - Konatham, Samuel
+  - Martin-Torres, Javier
+  - Zorzano, Maria-Paz
+  year: '2020'
+  pubdate: '2020-09-00'
+  doi: 10.1098/rspa.2020.0148
+  abstract: The detection of habitable exoplanets is an exciting scientific and technical challenge. Owing to the current
+    and most likely long-lasting impossibility of performing in situ exploration of exoplanets, their study and hypotheses
+    regarding their capability to host life will be based on the restricted low-resolution spatial and spectral information
+    of their atmospheres. On the other hand, with the advent of the upcoming exoplanet survey missions and technological improvements,
+    there is a need for preliminary discrimination that can prioritize potential candidates within the fast-growing list of
+    exoplanets. Here we estimate, for the first time and using the kinetic theory of gases, a list of the possible atmospheric
+    species that can be retained in the atmospheres of the known exoplanets. We conclude that, based on our current knowledge
+    of the detected exoplanets, 45 of them are good candidates for habitability studies. These exoplanets could have Earth-like
+    atmospheres and should be able to maintain stable liquid water. Our results suggest that the current definition of a habitable
+    zone around a star should be revisited and that the capacity of the planet to host an Earth-like atmosphere to support
+    the stability of liquid water should be added.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '1912.05749'
+  ads_bibcode: 2020ApJ...889...77H
+  title: Do the TRAPPIST-1 Planets Have Hydrogen-rich Atmospheres?
+  authors:
+  - Hori, Yasunori
+  - Ogihara, Masahiro
+  year: '2020'
+  pubdate: '2020-02-00'
+  doi: 10.3847/1538-4357/ab6168
+  abstract: Recently, transmission spectroscopy in the atmospheres of the TRAPPIST-1 planets revealed flat and featureless
+    absorption spectra, which rule out cloud-free, hydrogen-dominated atmospheres. Earth-sized planets orbiting TRAPPIST-1
+    likely have either a clear or a cloudy/hazy, hydrogen-poor atmosphere. In this paper, we investigate whether a proposed
+    formation scenario is consistent with expected atmospheric compositions of the TRAPPIST-1 planets. We examine the amount
+    of hydrogen-rich gas that TRAPPIST-1-like planets accreted from the ambient disk until disk dispersal. Since TRAPPIST-1
+    planets are trapped into a resonant chain, we simulate disk gas accretion onto a migrating TRAPPIST-1-like planet. We
+    find that the amount of accreted hydrogen-rich gas is as small as 10<SUP>-2</SUP> wt% and 0.1 wt% for TRAPPIST-1 b and
+    1 c, 10<SUP>-2</SUP> wt% for 1 d, 1 wt% for 1 e, a few wt% for 1 f and 1 g and 1 wt% for 1 h, respectively. We also calculate
+    the long-term thermal evolution of TRAPPIST-1-like planets after disk dissipation and estimate the mass loss of their
+    hydrogen-rich atmospheres driven by stellar X-ray and UV irradiation. We find that all the accreted hydrogen-rich atmospheres
+    can be lost via hydrodynamic escape. Therefore, we conclude that TRAPPIST-1 planets should have no primordial hydrogen-rich
+    gases but secondary atmospheres such as a Venus-like one and water vapor, if they currently retain atmospheres.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1910.09871'
+  ads_bibcode: 2020MNRAS.492L..28A
+  title: Stellar Proton Event-induced surface radiation dose as a constraint on the habitability of terrestrial exoplanets
+  authors:
+  - Atri, Dimitra
+  year: '2020'
+  pubdate: '2020-02-00'
+  doi: 10.1093/mnrasl/slz166
+  abstract: The discovery of terrestrial exoplanets orbiting in habitable zones around nearby stars has been one of the significant
+    developments in modern astronomy. More than a dozen such planets, like Proxima Centauri b and TRAPPIST-1 e, are in close-in
+    configurations and their proximity to the host star makes them highly sensitive to stellar activity. Episodic events such
+    as flares have the potential to cause severe damage to close-in planets, adversely impacting their habitability. Flares
+    on fast rotating young M stars occur up to 100 times more frequently than on G-type stars which makes their planets even
+    more susceptible to stellar activity. Stellar Energetic Particles (SEPs) emanating from Stellar Proton Events (SPEs) cause
+    atmospheric damage (erosion and photochemical changes), and produce secondary particles, which in turn results in enhanced
+    radiation dosage on planetary surfaces. We explore the role of SPEs and planetary factors in determining planetary surface
+    radiation doses. These factors include SPE fluence and spectra, and planetary column density and magnetic field strength.
+    Taking particle spectra from 70 major solar events (observed between 1956 and 2012) as proxy, we use the GEANT4 Monte
+    Carlo model to simulate SPE interactions with exoplanetary atmospheres, and we compute surface radiation dose. We demonstrate
+    that in addition to fluence, SPE spectrum is also a crucial factor in determining the surface radiation dose. We discuss
+    the implications of these findings in constraining the habitability of terrestrial exoplanets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2019NatAs...3...14M
+  title: Clouds over TRAPPISTs
+  authors:
+  - Maltagliati, Luca
+  year: '2019'
+  pubdate: '2019-12-00'
+  doi: 10.1038/s41550-018-0679-6
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '1608.06930'
+  ads_bibcode: 2019MNRAS.488.4530O
+  title: Biofluorescent Worlds - II. Biological fluorescence induced by stellar UV flares, a new temporal biosignature
+  authors:
+  - O'Malley-James, Jack T.
+  - Kaltenegger, Lisa
+  year: '2019'
+  pubdate: '2019-10-00'
+  doi: 10.1093/mnras/stz1842
+  abstract: Our first targets in the search for signs of life are orbiting nearby M stars, such as the planets in the Proxima
+    Centauri, Ross-128, LHS-1140, and TRAPPIST-1 systems. Future ground-based discoveries, and those from the TESS mission,
+    will provide additional close-by targets. However, young M stars tend to be very active, flaring frequently and causing
+    UV fluxes on the surfaces of HZ planets to become biologically harmful. Common UV-protection methods used by life (e.g.
+    living underground, or underwater) would make a biosphere harder to detect. However, photoprotective biofluorescence,
+    `up-shifting' UV to longer, safer wavelengths, could increase a biosphere's detectability. Here we model intermittent
+    emission at specific wavelengths in the visible spectrum caused by biofluorescence as a new temporal biosignature for
+    planets around active M stars. We use the absorption and emission characteristics of common coral fluorescent pigments
+    and proteins to create model spectra and colours for an Earth-like planet in such a system, accounting for different surface
+    features, atmospheric absorption, and cloud cover. We find that for a cloud-free planet biofluorescence could induce a
+    temporary change in brightness that is significantly higher than the reflected flux alone, causing up to two orders-of-magnitude
+    change in planet-star contrast, compared to a non-fluorescent state, if the surface is fully covered by a highly efficient
+    fluorescent biosphere. Hence, UV-flare induced biofluorescence presents previously unexplored possibilities for a new
+    temporal biosignature that could be detectable by instruments like those planned for the extremely large telescope and
+    could reveal hidden biospheres.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1907.12580'
+  ads_bibcode: 2019ApJ...884..160V
+  title: 'Flaring Activity of Proxima Centauri from TESS Observations: Quasiperiodic Oscillations during Flare Decay and Inferences
+    on the Habitability of Proxima b'
+  authors:
+  - Vida, Krisztián
+  - Oláh, Katalin
+  - Kővári, Zsolt
+  - van Driel-Gesztelyi, Lidia
+  - Moór, Attila
+  - Pál, András
+  year: '2019'
+  pubdate: '2019-10-00'
+  doi: 10.3847/1538-4357/ab41f5
+  abstract: We analyze the light curve of the M5.5 dwarf Proxima Centauri obtained by the Transiting Exoplanet Survey Satellite
+    (TESS) in Sectors 11 and 12. In the ≈50 day long light curve we identified and analyzed 72 flare events. The flare rate
+    was 1.49 events per day; in total, 7.2% of the observing time was classified as flaring. The estimated flare energies
+    were on the order of 10<SUP>30</SUP>-10<SUP>32</SUP> erg in the TESS passband (≈4.8× higher in bolometric energies, but
+    on the same order of magnitude). Most of the eruptions appeared in groups. Two events showed quasiperiodic oscillations
+    during their decay phase with a timescale of a few hours, which could be caused by quasiperiodic motions of the emitting
+    plasma or oscillatory reconnection. From the cumulative flare frequency distribution we estimate that superflares with
+    energy output of 10<SUP>33</SUP> erg are expected to occur three times per year, while magnitude larger events (with 10<SUP>34</SUP>
+    erg) can occur every second year. This reduces the chances of habitability of Proxima Cen b, although earlier numerical
+    models did not rule out the existence of liquid water on the planetary surface. We did not find any obvious signs of planetary
+    transit in the light curve.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1905.06035'
+  ads_bibcode: 2019MNRAS.487.1634B
+  title: Ground-based follow-up observations of TRAPPIST-1 transits in the near-infrared
+  authors:
+  - Burdanov, A. Y.
+  - Lederer, S. M.
+  - Gillon, M.
+  - Delrez, L.
+  - Ducrot, E.
+  - de Wit, J.
+  - Jehin, E.
+  - Triaud, A. H. M. J.
+  - Lidman, C.
+  - Spitler, L.
+  - Demory, B.-O.
+  - Queloz, D.
+  - Van Grootel, V.
+  year: '2019'
+  pubdate: '2019-08-00'
+  doi: 10.1093/mnras/stz1375
+  abstract: The TRAPPIST-1 planetary system is a favourable target for the atmospheric characterization of temperate earth-sized
+    exoplanets by means of transmission spectroscopy with the forthcoming James Webb Space Telescope (JWST). A possible obstacle
+    to this technique could come from the photospheric heterogeneity of the host star that could affect planetary signatures
+    in the transit transmission spectra. To constrain further this possibility, we gathered an extensive photometric data
+    set of 25 TRAPPIST-1 transits observed in the near-IR J band (1.2 μm) with the UKIRT and the AAT, and in the NB2090 band
+    (2.1 μm) with the VLT during the period 2015-18. In our analysis of these data, we used a special strategy aiming to ensure
+    uniformity in our measurements and robustness in our conclusions. We reach a photometric precision of 0.003 (RMS of the
+    residuals), and we detect no significant temporal variations of transit depths of TRAPPIST-1 b, c, e, and g over the period
+    of 3 yr. The few transit depths measured for planets d and f hint towards some level of variability, but more measurements
+    will be required for confirmation. Our depth measurements for planets b and c disagree with the stellar contamination
+    spectra originating from the possible existence of bright spots of temperature 4500 K. We report updated transmission
+    spectra for the six inner planets of the system which are globally flat for planets b and g and some structures are seen
+    for planets c, d, e, and f.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1906.11990'
+  ads_bibcode: 2019arXiv190611990G
+  title: Bond strengthening in dense H2O and implications to planetary composition
+  authors:
+  - Grande, Zachary M.
+  - Huang, Chenliang
+  - Smith, Dean
+  - Smith, Jesse S.
+  - Boisvert, John H.
+  - Tschauner, Oliver
+  - Steffen, Jason H.
+  - Salamat, Ashkan
+  year: '2019'
+  pubdate: '2019-06-00'
+  doi: 10.48550/arXiv.1906.11990
+  abstract: H2O is an important constituent in planetary bodies, controlling habitability and, in geologically-active bodies,
+    plate tectonics. At pressures within the interior of many planets, the H-bonds in H2O collapse into stronger, ionic bonds.
+    Here we present agreement between X-ray diffraction and Raman spectroscopy for the transition from ice-VII to ice-X occurring
+    at a pressure of approximately 30.9 GPa by means of combining grain normalizing heat treatment via direct laser heating
+    with static compression. This is evidenced by the emergence of the characteristic Raman mode of cuprite-like ice-X and
+    an abrupt 2.5-fold increase in bulk modulus, implying a significant increase in bond strength. This is preceded by a transition
+    from cubic ice-VII to a structure of tetragonal symmetry, ice-VIIt at 5.1 GPa. Our results significantly shift the mass/radius
+    relationship of water-rich planets and define a high-pressure limit for release of chemically-bound water within the Earth,
+    making the deep mantle a potential long-term reservoir of ancient water.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1906.04253'
+  ads_bibcode: 2019PNAS..116.9723Z
+  title: Growth model interpretation of planet size distribution
+  authors:
+  - Zeng, Li
+  - Jacobsen, Stein B.
+  - Sasselov, Dimitar D.
+  - Petaev, Michail I.
+  - Vanderburg, Andrew
+  - Lopez-Morales, Mercedes
+  - Perez-Mercader, Juan
+  - Mattsson, Thomas R.
+  - Li, Gongjie
+  - Heising, Matthew Z.
+  - Bonomo, Aldo S.
+  - Damasso, Mario
+  - Berger, Travis A.
+  - Cao, Hao
+  - Levi, Amit
+  - Wordsworth, Robin D.
+  year: '2019'
+  pubdate: '2019-05-00'
+  doi: 10.1073/pnas.1812905116
+  abstract: The radii and orbital periods of 4,000+ confirmed/candidate exoplanets have been precisely measured by the Kepler
+    mission. The radii show a bimodal distribution, with two peaks corresponding to smaller planets (likely rocky) and larger
+    intermediate-size planets, respectively. While only the masses of the planets orbiting the brightest stars can be determined
+    by ground-based spectroscopic observations, these observations allow calculation of their average densities placing constraints
+    on the bulk compositions and internal structures. However, an important question about the composition of planets ranging
+    from 2 to 4 Earth radii (R⊕) still remains. They may either have a rocky core enveloped in a H2-He gaseous envelope (gas
+    dwarfs) or contain a significant amount of multicomponent, H2O-dominated ices/fluids (water worlds). Planets in the mass
+    range of 10-15 M⊕, if half-ice and half-rock by mass, have radii of 2.5 R⊕, which exactly match the second peak of the
+    exoplanet radius bimodal distribution. Any planet in the 2- to 4-R⊕ range requires a gas envelope of at most a few mass
+    percentage points, regardless of the core composition. To resolve the ambiguity of internal compositions, we use a growth
+    model and conduct Monte Carlo simulations to demonstrate that many intermediate-size planets are “water worlds.”
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1903.04501'
+  ads_bibcode: 2019ApJ...875...22H
+  title: Tides Between the TRAPPIST-1 Planets
+  authors:
+  - Hay, Hamish C. F. C.
+  - Matsuyama, Isamu
+  year: '2019'
+  pubdate: '2019-04-00'
+  doi: 10.3847/1538-4357/ab0c21
+  abstract: The TRAPPIST-1 system is sufficiently closely packed that tides raised by one planet on another are significant.
+    We investigate whether this source of tidal heating is comparable to eccentricity tides raised by the star. Assuming a
+    homogeneous body with a Maxwell rheology, we find that energy dissipation from stellar tides always dominates over that
+    from planet-planet tides across a range of viscosities. TRAPPIST-1 g may experience the greatest proportion of planet-planet
+    tidal heating, where it can account for between 2% and 20% of the total amount of tidal heating, for high-viscosity (10<SUP>21</SUP>
+    Pa s) and low-viscosity (10<SUP>14</SUP> Pa s) regimes, respectively. If planet-planet tidal heating is to exceed that
+    from stellar eccentricity tides, orbital eccentricities must be no more than e = 10<SUP>-3</SUP>-10<SUP>-4</SUP> for most
+    of the TRAPPIST-1 planets.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2019nova.pres.4835K
+  title: A Hazy Day Around TRAPPIST-1?
+  authors:
+  - Kohler, Susanna
+  year: '2019'
+  pubdate: '2019-03-00'
+  doi: null
+  abstract: 'The multi-planet system around the star TRAPPIST-1 is an excellent target for probing exoplanet atmospheres.
+    A new study explores whether the skies of these exoplanets are likely cloudy or clear.Its All UnclearArtists illustration
+    of a cloudy exoplanet. [Mark Garlick/University of Warwick]Much like a spherical cow, a clear hydrogen atmosphere is a
+    simple, clean, easy-to-work-with model. And much like real-life, lumpy, leggy cows, most exoplanet atmospheres are probably
+    more complicated than the simple model. In particular, atmospheric aerosols muddy things up. These particles come in two
+    forms: clouds, condensations of solid or liquid particles, and hazes, solid suspended particles that result from photochemical
+    reactions in the atmosphere.Atmospheric aerosols have pesky side effects for observations like washing out spectral features,
+    preventing us from easily learning about an exoplanets composition. But they also have intriguing benefits like protecting
+    hypothetical life on those planets surfaces from the high-energy radiation of their host stars. For this reason, understanding
+    aerosol content in exoplanetary atmospheres is an important component of learning about distant worlds.Artists illustration
+    of the TRAPPIST-1 planetary system. [NASA/JPL-Caltech]Observing the TRAPPIST-1 FamilyUnfortunately, this is also a challenging
+    process! We learn about atmospheres through transmission spectroscopy, in which we examine spectral lines in the light
+    that filters through a planets atmosphere as it transits its host. The James Webb Space Telescope (JWST) will do a better
+    job of making observations like these once it launches but in the meantime, were learning as much as we can with Hubble.Recent
+    Hubble observations of the TRAPPIST-1 family of exoplanets a system of seven planets, many of which lie in their hosts
+    habitable zone revealed some muted spectral features from a few of their atmospheres; from these, weve tried to build
+    an understanding of their properties. Now, a new study led by Sarah Moran (Johns Hopkins University) has used the latest
+    TRAPPIST-1 mass constraints and some recent laboratory astrophysics results to update this picture.Setting LimitsBy comparing
+    new models to the Hubble spectra for TRAPPIST-1 planets d, e, f, and g, Moran and collaborators explore the possible clouds
+    and hazes these four planets could host. The authors vary different components of their models independently, placing
+    limits on the planet atmospheres haze scattering cross sections, their metallicities, and the heights of their possible
+    cloud decks.Different models (colored lines) for four TRAPPIST-1 planet atmospheres, with varying metallicities and cloud-deck
+    heights. The black data points show the Hubble observations. Click to enlarge. [Moran et al. 2018]The authors then take
+    a unique step: they compare their results to recent laboratory astrophysics experiments studying haze formation under
+    a range of planetary temperatures and atmospheric compositions. By comparing their model limits to the laboratory experiment
+    results, Moran and collaborators are able to make sure that their limits are physically realistic.Future AnswersSo what
+    do Moran and collaborators find? We still dont know exactly what the atmospheres of the TRAPPIST planets look like, but
+    the authors limits suggest that planets d, e, and f could have volatile-rich atmospheres that didnt form at the same time
+    as the planet. For TRAPPIST-1 g, we cant yet rule out the spherical-cow picture of a clear hydrogen-rich atmosphere.This
+    isnt the end of the story though: the authors show that increased-precision observations will help break many degeneracies
+    in their models. As soon as JWST is on the job, we can hope for more answers!CitationLimits on Clouds and Hazes for the
+    TRAPPIST-1 Planets, Sarah E. Moran et al 2018 AJ 156 252. doi:10.3847/1538-3881/aae83a'
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: null
+  ads_bibcode: 2019abss.book......
+  title: An Astrobiology Strategy for the Search for Life in the Universe
+  authors: []
+  year: '2019'
+  pubdate: '2019-00-00'
+  doi: 10.17226/25252
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '1810.05210'
+  ads_bibcode: 2018AJ....156..252M
+  title: Limits on Clouds and Hazes for the TRAPPIST-1 Planets
+  authors:
+  - Moran, Sarah E.
+  - Hörst, Sarah M.
+  - Batalha, Natasha E.
+  - Lewis, Nikole K.
+  - Wakeford, Hannah R.
+  year: '2018'
+  pubdate: '2018-12-00'
+  doi: 10.3847/1538-3881/aae83a
+  abstract: The TRAPPIST-1 planetary system is an excellent candidate for study of the evolution and habitability of M-dwarf-hosted
+    planets. Transmission spectroscopy observations performed on the system with the Hubble Space Telescope (HST) suggest
+    that the innermost five planets do not possess clear hydrogen atmospheres. Here we reassess these conclusions with recently
+    updated mass constraints. Additionally, we expand the analysis to include limits on metallicity, cloud top pressure, and
+    the strength of haze scattering. We connect recent laboratory results of particle size and production rate for exoplanet
+    hazes to a one-dimensional atmospheric model for TRAPPIST-1 transmission spectra. In this way, we obtain a physically
+    based estimate of haze scattering cross sections. We find haze scattering cross sections on the order of 10<SUP>-26</SUP>-10<SUP>-19</SUP>
+    cm<SUP>2</SUP> are needed in modeled hydrogen-rich atmospheres for TRAPPIST-1 d, e, and f to match the HST data. For TRAPPIST-1
+    g, we cannot rule out a clear hydrogen-rich atmosphere. We model the effects an opaque cloud deck and substantial heavy
+    element content have on the transmission spectra using the updated mass estimates. We determine that hydrogen-rich atmospheres
+    with high-altitude clouds, at pressures of 12 mbar and lower, are consistent with the HST observations for TRAPPIST-1
+    d and e. For TRAPPIST-1 f and g, we cannot rule out clear hydrogen-rich cases to high confidence. We demonstrate that
+    metallicities of at least 60× solar with tropospheric (0.1 bar) clouds are in agreement with observations. Additionally,
+    we provide estimates of the precision necessary for future observations to disentangle degeneracies in cloud top pressure
+    and metallicity. For TRAPPIST-1 e and f, for example, 20 ppm precision is needed to distinguish between a clear atmosphere
+    and one with a thick cloud layer at 0.1 bar across a wide range (1× to 1000× solar) of metallicity. Our results suggest
+    secondary, volatile-rich atmospheres for the outer TRAPPIST-1 planets d, e, and f.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1802.02086'
+  ads_bibcode: 2018AJ....156..178Z
+  title: The Near-infrared Transmission Spectra of TRAPPIST-1 Planets b, c, d, e, f, and g and Stellar Contamination in Multi-epoch
+    Transit Spectra
+  authors:
+  - Zhang, Zhanbo
+  - Zhou, Yifan
+  - Rackham, Benjamin V.
+  - Apai, Dániel
+  year: '2018'
+  pubdate: '2018-10-00'
+  doi: 10.3847/1538-3881/aade4f
+  abstract: The seven approximately Earth-sized transiting planets in the TRAPPIST-1 system provide a unique opportunity to
+    explore habitable- and nonhabitable-zone small planets within the same system. Its habitable-zone exoplanets—due to their
+    favorable transit depths—are also worlds for which atmospheric transmission spectroscopy is within reach with the Hubble
+    Space Telescope (HST) and James Webb Space Telescope (JWST). We present here an independent reduction and analysis of
+    two HST Wide Field Camera 3 (WFC3) near-infrared transit spectroscopy data sets for six planets (b through g). Utilizing
+    our physically motivated detector charge-trap correction and a custom cosmic-ray correction routine, we confirm the general
+    shape of the transmission spectra presented by de Wit et al. Our data reduction approach leads to a 25% increase in the
+    usable data and reduces the risk of confusing astrophysical brightness variations (e.g., flares) with instrumental systematics.
+    No prominent absorption features are detected in any individual planet’s transmission spectra; by contrast, the combined
+    spectrum of the planets shows a suggestive decrease around 1.4 μm similar to an inverted water absorption feature. Including
+    transit depths from K2, the SPECULOOS-South Observatory, and Spitzer, we find that the complete transmission spectrum
+    is fully consistent with stellar contamination owing to the transit light source effect. These spectra demonstrate how
+    stellar contamination can overwhelm planetary absorption features in low-resolution exoplanet transit spectra obtained
+    by HST and JWST and also highlight the challenges in combining multi-epoch observations for planets around rapidly rotating
+    spotted stars.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1807.04886'
+  ads_bibcode: 2018AJ....156...91M
+  title: Robust Transiting Exoplanet Radii in the Presence of Starspots from Ingress and Egress Durations
+  authors:
+  - Morris, Brett M.
+  - Agol, Eric
+  - Hebb, Leslie
+  - Hawley, Suzanne L.
+  year: '2018'
+  pubdate: '2018-09-00'
+  doi: 10.3847/1538-3881/aad3b7
+  abstract: 'We typically measure the radii of transiting exoplanets from the transit depth, which are given by the ratio
+    of cross-sectional areas of the planet and star. However, if a star has dark starspots (or bright regions) distributed
+    throughout the transit chord, the transit depth will be biased toward smaller (larger) values, and thus the inferred planet
+    radius will be smaller (larger) if these are unaccounted for. We reparameterize the transit light curve to account for
+    “self-contamination” by photospheric inhomogeneities by splitting the parameter R <SUB> p </SUB>/R <SUB>⋆</SUB> into two
+    parameters: one for the radius ratio, which controls the duration of ingress and egress, and another which measures the
+    possibly contaminated transit depth. We show that this is equivalent to the formulation for contamination by a second
+    star (with positive or negative flux), and that it is sensitive to time-steady inhomogeneity of the stellar photosphere.
+    We use synthetic light curves of spotted stars at high signal-to-noise to show that the radius recovered from measurement
+    of the ingress/egress duration can recover the true radii of planets transiting spotted stars with axisymmetric spot distributions
+    if the limb-darkening parameters are precisely known. We fit time-averaged high signal-to-noise transit light curves from
+    Kepler and Spitzer of 10 planets to measure the planet radii and search for evidence of spot distributions. We find that
+    this sample has a range of measured depths and ingress durations that are self-consistent, providing no strong evidence
+    for contamination by spots. However, there is suggestive evidence for occultation of starspots on Kepler-17, and that
+    relatively bright regions are occulted by the planets of Kepler-412 and HD 80606. Future observations with the James Webb
+    Space Telescope may enable this technique to yield accurate planetary radii in the presence of stellar inhomogeneities.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1808.02808'
+  ads_bibcode: 2018ApJ...863L..32M
+  title: Non-detection of Contamination by Stellar Activity in the Spitzer Transit Light Curves of TRAPPIST-1
+  authors:
+  - Morris, Brett M.
+  - Agol, Eric
+  - Hebb, Leslie
+  - Hawley, Suzanne L.
+  - Gillon, Michaël
+  - Ducrot, Elsa
+  - Delrez, Laetitia
+  - Ingalls, James
+  - Demory, Brice-Olivier
+  year: '2018'
+  pubdate: '2018-08-00'
+  doi: 10.3847/2041-8213/aad8aa
+  abstract: We apply the transit light curve self-contamination technique of Morris et al. to search for the effect of stellar
+    activity on the transits of the ultracool dwarf TRAPPIST-1 with 2018 Spitzer photometry. The self-contamination method
+    fits the transit light curves of planets orbiting spotted stars, allowing the host star to be a source of contaminating
+    positive or negative flux that influences the transit depths but not the ingress/egress durations. We find that none of
+    the planets show statistically significant evidence for self-contamination by bright or dark regions of the stellar photosphere.
+    However, we show that small-scale magnetic activity, analogous in size to the smallest sunspots, could still be lurking
+    undetected in the transit photometry.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2018AJ....155..239J
+  title: Dynamical Constraints on Nontransiting Planets Orbiting TRAPPIST-1
+  authors:
+  - Jontof-Hutter, Daniel
+  - Truong, Vinh H.
+  - Ford, Eric B.
+  - Robertson, Paul
+  - Terrien, Ryan C.
+  year: '2018'
+  pubdate: '2018-06-00'
+  doi: 10.3847/1538-3881/aabee8
+  abstract: We derive lower bounds on the orbital distance and inclination of a putative planet beyond the transiting seven
+    planets of TRAPPIST-1, for a range of masses ranging from 0.08 M <SUB>Jup</SUB> to 3.5 M <SUB>Jup</SUB>. While the outer
+    architecture of this system will ultimately be constrained by radial velocity measurements over time, we present dynamical
+    constraints from the remarkably coplanar configuration of the seven transiting planets, which is sensitive to modestly
+    inclined perturbers. We find that the observed configuration is unlikely if a Jovian-mass planet inclined by ≥3° to the
+    transiting planet exists within 0.53 au, exceeding any constraints from transit timing variations (TTV) induced in the
+    known planets from an undetected perturber. Our results will inform RV programs targeting TRAPPIST-1, and for near coplanar
+    outer planets, tighter constraints are anticipated for radial velocity (RV) precisions of ≲140 m s<SUP>-1</SUP>. At higher
+    inclinations, putative planets are ruled out to greater orbital distances with orbital periods up to a few years.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+- arxiv_id: '1805.08810'
+  ads_bibcode: 2018arXiv180508810B
+  title: 'Habitability Classification of Exoplanets: A Machine Learning Insight'
+  authors:
+  - Basak, Suryoday
+  - Agrawal, Surbhi
+  - Saha, Snehanshu
+  - Jeremiel Theophilus, Abhijit
+  - Bora, Kakoli
+  - Deshpande, Gouri
+  - Murthy, Jayant
+  year: '2018'
+  pubdate: '2018-05-00'
+  doi: 10.48550/arXiv.1805.08810
+  abstract: We explore the efficacy of machine learning (ML) in characterizing exoplanets into different classes. The source
+    of the data used in this work is University of Puerto Rico's Planetary Habitability Laboratory's Exoplanets Catalog (PHL-EC).
+    We perform a detailed analysis of the structure of the data and propose methods that can be used to effectively categorize
+    new exoplanet samples. Our contributions are two fold. We elaborate on the results obtained by using ML algorithms by
+    stating the accuracy of each method used and propose the best paradigm to automate the task of exoplanet classification.
+    The exploration led to the development of new methods fundamental and relevant to the context of the problem and beyond.
+    Data exploration and experimentation methods also result in the development of a general data methodology and a set of
+    best practices which can be used for exploratory data analysis experiments.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1804.05094'
+  ads_bibcode: 2018arXiv180405094H
+  title: Exoplanet Science Priorities from the Perspective of Internal and Surface Processes for Silicate and Ice Dominated
+    Worlds
+  authors:
+  - Henning, Wade G.
+  - Renaud, Joseph P.
+  - Mandell, Avi M.
+  - Saxena, Prabal
+  - Hurford, Terry A.
+  - Matsumura, Soko
+  - Glaze, Lori S.
+  - Livengood, Timothy A.
+  - Airapetian, Vladimir
+  - Asphaug, Erik
+  - Teske, Johanna K.
+  - Schwieterman, Edward
+  - Efroimsky, Michael
+  - Makarov, Valeri V.
+  - Berghea, Ciprian T.
+  - Bleacher, Jacob
+  - Rushby, Andrew
+  - Lee, Yuni
+  - Kuang, Weijia
+  - Barnes, Rory
+  - Dong, Chuanfei
+  - Driscoll, Peter
+  - Domagal-Goldman, Shawn D.
+  - Schmerr, Nicholas C.
+  - Del Genio, Anthony D.
+  - Jensen, Adam G.
+  - Kaltenegger, Lisa
+  - Elkins-Tanton, Linda
+  - Shock, Everett L.
+  - Sohl, Linda E.
+  - Quintana, Elisa
+  - Schaefer, Laura
+  - Barclay, Thomas S.
+  - Fujii, Yuka
+  - Hamano, Keiko
+  - Petro, Noah E.
+  - Lopez, Eric D.
+  - Sasselov, Dimitar D.
+  year: '2018'
+  pubdate: '2018-04-00'
+  doi: 10.48550/arXiv.1804.05094
+  abstract: 'The geophysics of extrasolar planets is a scientific topic often regarded as standing largely beyond the reach
+    of near-term observations. This reality in no way diminishes the central role of geophysical phenomena in shaping planetary
+    outcomes, from formation, to thermal and chemical evolution, to numerous issues of surface and near-surface habitability.
+    We emphasize that for a balanced understanding of extrasolar planets, it is important to look beyond the natural biases
+    of current observing tools, and actively seek unique pathways to understand exoplanet interiors as best as possible during
+    the long interim prior to a time when internal components are more directly accessible. Such pathways include but are
+    not limited to: (a) enhanced theoretical and numerical modeling, (b) laboratory research on critical material properties,
+    (c) measurement of geophysical properties by indirect inference from imprints left on atmospheric and orbital properties,
+    and (d) the purpose-driven use of Solar System object exploration expressly for its value in comparative planetology toward
+    exoplanet-analogs. Breaking down barriers that envision local Solar System exploration, including the study of Earth''s
+    own deep interior, as separate from and in financial competition with extrasolar planet research, may greatly improve
+    the rate of needed scientific progress for exoplanet geophysics. As the number of known rocky and icy exoplanets grows
+    in the years ahead, we expect demand for expertise in ''exogeoscience'' will expand at a commensurately intense pace.
+    We highlight key topics, including: how water oceans below ice shells may dominate the total habitability of our galaxy
+    by volume, how free-floating nomad planets may often attain habitable subsurface oceans supported by radionuclide decay,
+    and how deep interiors may critically interact with atmospheric mass loss via dynamo-driven magnetic fields.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1707.02996'
+  ads_bibcode: 2018IJAsB..17..116L
+  title: Physical constraints on the likelihood of life on exoplanets
+  authors:
+  - Lingam, Manasvi
+  - Loeb, Abraham
+  year: '2018'
+  pubdate: '2018-04-00'
+  doi: 10.1017/S1473550417000179
+  abstract: One of the most fundamental questions in exoplanetology is to determine whether a given planet is habitable. We
+    estimate the relative likelihood of a planet's propensity towards habitability by considering key physical characteristics
+    such as the role of temperature on ecological and evolutionary processes, and atmospheric losses via hydrodynamic escape
+    and stellar wind erosion. From our analysis, we demonstrate that Earth-sized exoplanets in the habitable zone around M-dwarfs
+    seemingly display much lower prospects of being habitable relative to Earth, owing to the higher incident ultraviolet
+    fluxes and closer distances to the host star. We illustrate our results by specifically computing the likelihood (of supporting
+    life) for the recently discovered exoplanets, Proxima b and TRAPPIST-1e, which we find to be several orders of magnitude
+    smaller than that of Earth.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1706.02689'
+  ads_bibcode: 2018NatAs...2..297U
+  title: Inward migration of the TRAPPIST-1 planets as inferred from their water-rich compositions
+  authors:
+  - Unterborn, Cayman T.
+  - Desch, Steven J.
+  - Hinkel, Natalie R.
+  - Lorenzo, Alejandro
+  year: '2018'
+  pubdate: '2018-03-00'
+  doi: 10.1038/s41550-018-0411-6
+  abstract: Multiple planet systems provide an ideal laboratory for probing exoplanet composition, formation history and potential
+    habitability. For the TRAPPIST-1 planets, the planetary radii are well established from transits<SUP>1,2</SUP>, with reasonable
+    mass estimates coming from transit timing variations<SUP>2,3</SUP> and dynamical modelling<SUP>4</SUP>. The low bulk densities
+    of the TRAPPIST-1 planets demand substantial volatile content. Here we show, using mass-radius-composition models, that
+    TRAPPIST-1f and g probably contain substantial (≥50 wt%) water/ice, with TRAPPIST-1 b and c being significantly drier
+    (≤15 wt%). We propose that this gradient of water mass fractions implies that planets f and g formed outside the primordial
+    snow line whereas b and c formed within it. We find that, compared with planets in our Solar System that also formed within
+    the snow line, TRAPPIST-1b and c contain hundreds more oceans of water. We demonstrate that the extent and timescale of
+    migration in the TRAPPIST-1 system depends on how rapidly the planets formed and the relative location of the primordial
+    snow line. This work provides a framework for understanding the differences between the protoplanetary disks of our Solar
+    System versus M dwarfs. Our results provide key insights into the volatile budgets, timescales of planet formation and
+    migration history of M dwarf systems, probably the most common type of planetary host in the Galaxy.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1708.02200'
+  ads_bibcode: 2017AJ....154..103B
+  title: Astrometric Constraints on the Masses of Long-period Gas Giant Planets in the TRAPPIST-1 Planetary System
+  authors:
+  - Boss, Alan P.
+  - Weinberger, Alycia J.
+  - Keiser, Sandra A.
+  - Astraatmadja, Tri L.
+  - Anglada-Escude, Guillem
+  - Thompson, Ian B.
+  year: '2017'
+  pubdate: '2017-09-00'
+  doi: 10.3847/1538-3881/aa84b5
+  abstract: 'Transit photometry of the M8V dwarf star TRAPPIST-1 (2MASS J23062928-0502285) has revealed the presence of at
+    least seven planets with masses and radii similar to that of Earth, orbiting at distances that might allow liquid water
+    to be present on their surfaces. We have been following TRAPPIST-1 since 2011 with the CAPSCam astrometric camera on the
+    2.5 m du Pont telescope at the Las Campanas Observatory in Chile. In 2016, we noted that TRAPPIST-1 lies slightly farther
+    away than previously thought, at 12.49 pc, rather than 12.1 pc. Here, we examine 15 epochs of CAPSCam observations of
+    TRAPPIST-1, spanning the five years from 2011 to 2016, and obtain a revised trigonometric distance of 12.56 ± 0.12 pc.
+    The astrometric data analysis pipeline shows no evidence for a long-period astrometric wobble of TRAPPIST-1. After proper
+    motion and parallax are removed, residuals at the level of ±1.3 mas remain. The amplitude of these residuals constrains
+    the masses of any long-period gas giant planets in the TRAPPIST-1 system: no planet more massive than ∼4.6 M <SUB>Jup</SUB>
+    orbits with a 1 year period, and no planet more massive than ∼1.6 M <SUB>Jup</SUB> orbits with a 5 year period. Further
+    refinement of the CAPSCam data analysis pipeline, combined with continued CAPSCam observations, should either detect any
+    long-period planets, or put an even tighter constraint on these mass upper limits.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
