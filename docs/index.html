@@ -166,8 +166,13 @@ a.sl:hover{text-decoration:underline}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;-webkit-overflow-scrolling:touch}
 .modal-overlay.open{display:flex}
 .modal{background:#0c121e;border:1px solid #2a4868;border-radius:10px;max-width:560px;width:100%;padding:22px 26px;color:#c0cce0;box-shadow:0 12px 48px rgba(0,0,0,.6)}
-.modal-head{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #1a2535}
-.modal-head h2{font-size:16px;color:#d8e4f0;font-weight:700}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #1a2535}
+.modal-head h2{font-size:16px;color:#d8e4f0;font-weight:700;flex:1;min-width:0}
+.howto-head-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
+#howto-lang{border:1px solid #243040;border-radius:6px;overflow:hidden}
+#howto-lang button{background:none;border:none;border-right:1px solid #243040;color:#4a6888;font-size:12px;padding:3px 9px;cursor:pointer}
+#howto-lang button:last-child{border-right:none}
+#howto-lang button.on{background:#1a2e42;color:#8aaad0;font-weight:600}
 .modal-close{background:none;border:1px solid #2a4868;color:#8aaad0;padding:4px 12px;border-radius:5px;cursor:pointer;font-size:12px;flex-shrink:0}
 .modal-close:hover{background:#152030;color:#aac8e8}
 .modal h3{font-size:11px;color:#5a88b8;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #131c28;font-weight:700}
@@ -236,14 +241,46 @@ a.sl:hover{text-decoration:underline}
   .fov-btn{padding:2px 7px;font-size:10.5px}
   .img-link,.stl-btn{padding:2px 7px;font-size:10.5px}
 
-  /* detail 안 .mt 표(별 측정값, 행성, sources)가 카드 폭을 넘기지 않도록:
-     셀의 nowrap을 풀고, 그래도 긴 표는 컨테이너에서 가로 스크롤 */
-  .mc-detail{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .mc-detail .mt{table-layout:auto;max-width:100%}
-  .mc-detail .mt th,
-  .mc-detail .mt td{white-space:normal;word-break:break-word;overflow-wrap:anywhere}
-  /* sticky thead가 가로 스크롤과 충돌 가능 — 모바일에선 비활성 */
-  .mc-detail thead{position:static}
+  /* 글로서리 / 모달 본문 텍스트는 카드 폭 안에서 줄바꿈 */
+  .gl-val,.gl-key,.gl-note,
+  .modal,.modal li,.modal p,.modal h3,
+  .src-title,.src-meta{word-break:break-word;overflow-wrap:anywhere}
+  .modal kbd{white-space:nowrap}
+  /* 모달 ul들여쓰기 줄임 */
+  .modal ul{padding-left:18px}
+
+  /* detail 안 .mt 표(별 측정값, 행성)를 카드 폭에 가두지 않고 **stacked card**로 변환.
+     한 행을 한 카드처럼, 셀마다 라벨/값 한 줄. data-label 속성으로 컬럼 명시. */
+  .mc-detail{max-width:100%}
+  .mc-detail .mt,
+  .mc-detail .mt tbody,
+  .mc-detail .mt tr,
+  .mc-detail .mt td{display:block;width:100%}
+  .mc-detail .mt thead{display:none}
+  .mc-detail .mt tr{
+    border:1px solid #1a2333;border-radius:6px;
+    padding:8px 11px;margin-bottom:6px;background:#0a1018
+  }
+  .mc-detail .mt tr.rec-row{
+    border-left:2px solid #4aaa60;background:#0e1f1a;padding-left:9px
+  }
+  .mc-detail .mt td{
+    display:flex;justify-content:space-between;align-items:baseline;
+    border:none;padding:3px 0;gap:10px;font-size:12px;
+    white-space:normal;word-break:break-word;overflow-wrap:anywhere
+  }
+  .mc-detail .mt td::before{
+    content:attr(data-label);
+    color:#5a7090;font-size:10px;text-transform:uppercase;letter-spacing:.4px;
+    font-family:'Segoe UI',sans-serif;font-weight:600;flex-shrink:0
+  }
+  /* 빈 라벨(rec 체크 컬럼)이나 빈 값은 한 줄 차지 안 함 */
+  .mc-detail .mt td[data-label=""]:empty,
+  .mc-detail .mt td[data-label=""]{display:flex;justify-content:flex-end;padding-top:0}
+  .mc-detail .mt td[data-label=""]:empty{display:none}
+  /* 긴 텍스트(Reference 등)는 라벨 위, 값 아래 두 줄로 */
+  .mc-detail .mt td.nm{flex-direction:column;align-items:flex-start;gap:1px}
+  .mc-detail .mt td.nm::before{margin-bottom:1px}
   /* detail wrapper .dp 안의 영역들도 안전망 */
   .dp{max-width:100%}
   .dp-star,.dp-grid,.ds{max-width:100%}
@@ -327,61 +364,24 @@ a.sl:hover{text-decoration:underline}
   <button class="help-btn" id="help-btn">? 용어 설명</button>
 </div>
 
-<!-- ── 사용법 모달 ─────────────────────────────────────────────────── -->
+<!-- ── 사용법 모달 (본문은 lang에 따라 JS가 채움) ────────────────────── -->
 <div class="modal-overlay" id="howto-overlay" role="dialog" aria-modal="true" aria-labelledby="howto-title">
   <div class="modal" id="howto">
     <div class="modal-head">
-      <h2 id="howto-title">NearStars DB 사용법</h2>
-      <button class="modal-close" id="howto-close" aria-label="닫기">닫기</button>
+      <h2 id="howto-title"></h2>
+      <div class="howto-head-r">
+        <div class="seg" id="howto-lang">
+          <button class="on" data-lang="ko">한</button>
+          <button data-lang="en">EN</button>
+        </div>
+        <button class="modal-close" id="howto-close" aria-label="close"></button>
+      </div>
     </div>
-
-    <p style="font-size:12px;color:#7a92ac;margin-bottom:4px">
-      KSP 모드 NearStars의 데이터베이스 뷰어입니다. 152개 인근 항성계의
-      Gaia/SIMBAD/NASA Archive 기반 큐레이션 결과를 확인할 수 있어요.
-    </p>
-
-    <h3>1. 검색 & 필터</h3>
-    <ul>
-      <li>상단 <b>검색창</b>에 별 이름이나 시스템 이름을 입력해서 좁힙니다.</li>
-      <li><b>Spec</b> 드롭다운으로 분광형(O/B/A/F/G/K/M)을 한정합니다.</li>
-      <li><b>Dist ≤</b> 슬라이더로 거리 상한선을 정합니다 (단위는 pc/ly/AU 토글).</li>
-      <li><b>Has planets</b> 체크박스로 행성을 가진 시스템만 봅니다.</li>
-    </ul>
-
-    <h3>2. 단위 토글</h3>
-    <ul>
-      <li>거리 단위는 <kbd>pc</kbd> / <kbd>ly</kbd> / <kbd>AU</kbd> 중 선택.</li>
-      <li>★ 그룹의 단위는 별의 질량/반경(M☉↔t, R☉↔km).</li>
-      <li>⊕ 그룹은 행성 단위(M⊕↔t, R⊕↔km).</li>
-    </ul>
-
-    <h3>3. 상세 패널</h3>
-    <ul>
-      <li>표의 행(데스크탑) 또는 카드(모바일)를 <b>탭/클릭</b>해서 상세를 펼칩니다.</li>
-      <li>별의 위치/색/측정값, 행성 목록, 출처 paper(DOI 링크)를 모두 볼 수 있어요.</li>
-      <li>다시 같은 행/카드를 누르면 접힙니다.</li>
-    </ul>
-
-    <h3>4. 별 이미지 (서베이 / 시야각)</h3>
-    <ul>
-      <li>상세 패널 안의 작은 사진은 STScI DSS, ESA HiPS 등에서 가져온 천체 이미지입니다.</li>
-      <li>그림 아래의 <b>서베이 버튼</b>(DSS-B/R, 2MASS, WISE 등)으로 파장대를 바꿉니다.</li>
-      <li><b>FOV</b>로 시야각을 조정합니다 (1/5/30 arcmin).</li>
-      <li>한 번 본 조합은 메모리에 캐시되어 다시 토글해도 즉시 표시됩니다.</li>
-    </ul>
-
-    <h3>5. 그 외</h3>
-    <ul>
-      <li>좌측 하단 <kbd>한 / EN</kbd>으로 언어 전환.</li>
-      <li><kbd>? 용어 설명</kbd>으로 컬럼/단위 용어집 토글.</li>
-      <li>샘플 Phase 2 큐레이션 보고서:
-        <a href="phase2-trappist-1.html" style="color:#5a9fd4">TRAPPIST-1</a>.
-      </li>
-    </ul>
-
+    <p class="howto-intro" id="howto-intro" style="font-size:12px;color:#7a92ac;margin-bottom:4px"></p>
+    <div id="howto-body"></div>
     <div class="modal-footer">
-      <label><input type="checkbox" id="howto-dontshow"> 다시 보지 않기</label>
-      <button class="primary" id="howto-ok">시작하기</button>
+      <label><input type="checkbox" id="howto-dontshow"> <span id="howto-dontshow-label"></span></label>
+      <button class="primary" id="howto-ok"></button>
     </div>
   </div>
 </div>
@@ -1071,9 +1071,12 @@ function buildDetail(sys) {
       <table class="mt"><thead><tr><th>M☉</th><th>±</th><th>Method</th><th>Reference</th><th></th></tr></thead><tbody>`;
       st.raw.mass_measurements.forEach(m => {
         const ref = m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference}</a>` : (m.reference??'—');
-        h += `<tr><td>${f2(m.value_msun,4)}</td><td>${f2(m.error_msun,4)}</td>
-              <td class="nm">${m.method??'—'}</td><td class="nm">${ref}</td>
-              <td>${m.recommended?'<span class="rec">✓</span>':''}</td></tr>`;
+        h += `<tr${m.recommended?' class="rec-row"':''}>
+              <td data-label="M☉">${f2(m.value_msun,4)}</td>
+              <td data-label="±">${f2(m.uncertainty_msun,4)}</td>
+              <td class="nm" data-label="Method">${m.method??'—'}</td>
+              <td class="nm" data-label="Reference">${ref}</td>
+              <td data-label="">${m.recommended?'<span class="rec">✓</span>':''}</td></tr>`;
       });
       h += '</tbody></table></div>';
     }
@@ -1082,9 +1085,12 @@ function buildDetail(sys) {
       <table class="mt"><thead><tr><th>R☉</th><th>±</th><th>Method</th><th>Reference</th><th></th></tr></thead><tbody>`;
       st.raw.radius_measurements.forEach(m => {
         const ref = m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference}</a>` : (m.reference??'—');
-        h += `<tr><td>${f2(m.value_rsun,5)}</td><td>${f2(m.error_rsun,5)}</td>
-              <td class="nm">${m.method??'—'}</td><td class="nm">${ref}</td>
-              <td>${m.recommended?'<span class="rec">✓</span>':''}</td></tr>`;
+        h += `<tr${m.recommended?' class="rec-row"':''}>
+              <td data-label="R☉">${f2(m.value_rsun,5)}</td>
+              <td data-label="±">${f2(m.uncertainty_rsun,5)}</td>
+              <td class="nm" data-label="Method">${m.method??'—'}</td>
+              <td class="nm" data-label="Reference">${ref}</td>
+              <td data-label="">${m.recommended?'<span class="rec">✓</span>':''}</td></tr>`;
       });
       h += '</tbody></table></div>';
     }
@@ -1102,12 +1108,16 @@ function buildDetail(sys) {
       const r = p.raw;
       const inc = r.inclination_deg!=null ? f2(r.inclination_deg,2) : (r.inclination_note??'—');
       h += `<tr>
-        <td class="nm">${p.name}</td><td class="nm">${p.host_star}</td>
-        <td>${f2(r.period_days,2)}</td><td>${f2(r.semi_major_axis_au,4)}</td>
-        <td>${f2(r.eccentricity,5)}</td><td>${inc}</td>
-        <td>${fPMass(r.mass_mearth)}${r.mass_type?` <span style="color:#3a5870;font-size:11px">(${r.mass_type})</span>`:''}
-        </td><td>${fPRad(r.radius_rearth)}</td>
-        <td class="nm">${r.discoverymethod??'—'}</td><td class="nm">${r.reference??'—'}</td>
+        <td class="nm" data-label="Name">${p.name}</td>
+        <td class="nm" data-label="Host">${p.host_star}</td>
+        <td data-label="Period (d)">${f2(r.period_days,2)}</td>
+        <td data-label="SMA (AU)">${f2(r.semi_major_axis_au,4)}</td>
+        <td data-label="Ecc">${f2(r.eccentricity,5)}</td>
+        <td data-label="Inc (°)">${inc}</td>
+        <td data-label="Mass (${pMassLabel()})">${fPMass(r.mass_mearth)}${r.mass_type?` <span style="color:#3a5870;font-size:11px">(${r.mass_type})</span>`:''}</td>
+        <td data-label="Radius (${pRadLabel()})">${fPRad(r.radius_rearth)}</td>
+        <td class="nm" data-label="Method">${r.discoverymethod??'—'}</td>
+        <td class="nm" data-label="Reference">${r.reference??'—'}</td>
       </tr>`;
     });
     h += '</tbody></table></div>';
@@ -1411,6 +1421,112 @@ const T = {
   }
 };
 
+// 사용법 모달 컨텐츠 (i18n)
+T.ko.howto = {
+  howtoBtn: '사용법',
+  title: 'NearStars DB 사용법',
+  close: '닫기',
+  startBtn: '시작하기',
+  dontShow: '다시 보지 않기',
+  intro: 'KSP 모드 NearStars의 데이터베이스 뷰어입니다. 152개 인근 항성계의 Gaia/SIMBAD/NASA Archive 기반 큐레이션 결과를 확인할 수 있어요.',
+  sections: [
+    {
+      h: '1. 검색 & 필터',
+      items: [
+        '상단 <b>검색창</b>에 별 이름이나 시스템 이름을 입력해서 좁힙니다.',
+        '<b>Spec</b> 드롭다운으로 분광형(O/B/A/F/G/K/M)을 한정합니다.',
+        '<b>Dist ≤</b> 슬라이더로 거리 상한선을 정합니다 (단위는 pc/ly/AU 토글).',
+        '<b>Has planets</b> 체크박스로 행성을 가진 시스템만 봅니다.',
+      ]
+    },
+    {
+      h: '2. 단위 토글',
+      items: [
+        '거리 단위는 <kbd>pc</kbd> / <kbd>ly</kbd> / <kbd>AU</kbd> 중 선택.',
+        '★ 그룹의 단위는 별의 질량/반경(M☉↔t, R☉↔km).',
+        '⊕ 그룹은 행성 단위(M⊕↔t, R⊕↔km).',
+      ]
+    },
+    {
+      h: '3. 상세 패널',
+      items: [
+        '표의 행(데스크탑) 또는 카드(모바일)를 <b>탭/클릭</b>해서 상세를 펼칩니다.',
+        '별의 위치/색/측정값, 행성 목록, 출처 paper(DOI 링크)를 모두 볼 수 있어요.',
+        '다시 같은 행/카드를 누르면 접힙니다.',
+      ]
+    },
+    {
+      h: '4. 별 이미지 (서베이 / 시야각)',
+      items: [
+        '상세 패널 안의 작은 사진은 STScI DSS, ESA HiPS 등에서 가져온 천체 이미지입니다.',
+        '그림 아래의 <b>서베이 버튼</b>(DSS-B/R, 2MASS, WISE 등)으로 파장대를 바꿉니다.',
+        '<b>FOV</b>로 시야각을 조정합니다 (1/5/30 arcmin).',
+        '한 번 본 조합은 메모리에 캐시되어 다시 토글해도 즉시 표시됩니다.',
+      ]
+    },
+    {
+      h: '5. 그 외',
+      items: [
+        '좌측 상단 <kbd>한 / EN</kbd>으로 언어 전환.',
+        '<kbd>? 용어 설명</kbd>으로 컬럼/단위 용어집 토글.',
+        '샘플 Phase 2 큐레이션 보고서: <a href="phase2-trappist-1.html" style="color:#5a9fd4">TRAPPIST-1</a>.',
+      ]
+    },
+  ]
+};
+T.en.howto = {
+  howtoBtn: 'How to use',
+  title: 'NearStars DB · How to use',
+  close: 'Close',
+  startBtn: 'Get started',
+  dontShow: "Don't show again",
+  intro: 'A database viewer for the NearStars KSP mod — 152 nearby stellar systems curated from Gaia / SIMBAD / NASA Exoplanet Archive.',
+  sections: [
+    {
+      h: '1. Search & filter',
+      items: [
+        'Type a star or system name in the <b>search box</b> at the top.',
+        'Pin spectral types via the <b>Spec</b> dropdown (O/B/A/F/G/K/M).',
+        'Set a distance cap with the <b>Dist ≤</b> slider (unit follows the pc/ly/AU toggle).',
+        'Tick <b>Has planets</b> to keep only systems with confirmed planets.',
+      ]
+    },
+    {
+      h: '2. Unit toggles',
+      items: [
+        'Distance unit: <kbd>pc</kbd> / <kbd>ly</kbd> / <kbd>AU</kbd>.',
+        '★ group switches stellar mass/radius (M☉↔t, R☉↔km).',
+        '⊕ group switches planetary mass/radius (M⊕↔t, R⊕↔km).',
+      ]
+    },
+    {
+      h: '3. Detail panel',
+      items: [
+        'Tap/click a table row (desktop) or card (mobile) to expand its detail panel.',
+        'You get the star\'s position, color, measurements, planet list, and per-paper sources with DOI links.',
+        'Tap/click the same row/card again to collapse it.',
+      ]
+    },
+    {
+      h: '4. Sky images (survey / FOV)',
+      items: [
+        'The thumbnail inside the detail panel is a real-sky cutout from STScI DSS, ESA HiPS, etc.',
+        'Use the <b>survey buttons</b> (DSS-B/R, 2MASS, WISE…) below the image to switch bands.',
+        'Adjust the <b>FOV</b> (1/5/30 arcmin).',
+        'Every survey × FOV combination you visit stays cached in memory, so re-toggling is instant.',
+      ]
+    },
+    {
+      h: '5. Other',
+      items: [
+        'Switch language with <kbd>한 / EN</kbd> at the top right.',
+        'Toggle the <kbd>? Glossary</kbd> for column / unit reference.',
+        'Sample Phase 2 curation report: <a href="phase2-trappist-1.html" style="color:#5a9fd4">TRAPPIST-1</a>.',
+      ]
+    },
+  ]
+};
+
 function renderGlossary() {
   const t = T[lang];
   const s = t.spec, u = t.units, p = t.params;
@@ -1471,7 +1587,23 @@ document.getElementById('help-btn').addEventListener('click', () => {
 // ── howto modal ───────────────────────────────────────────────────────────
 const HOWTO_KEY = 'nearstars_howto_seen';
 const howtoOverlay = document.getElementById('howto-overlay');
-function openHowto() { howtoOverlay.classList.add('open'); }
+
+function renderHowto() {
+  const t = T[lang].howto;
+  document.getElementById('howto-btn').textContent = t.howtoBtn;
+  document.getElementById('howto-title').textContent = t.title;
+  document.getElementById('howto-close').textContent = t.close;
+  document.getElementById('howto-intro').textContent = t.intro;
+  document.getElementById('howto-dontshow-label').textContent = t.dontShow;
+  document.getElementById('howto-ok').textContent = t.startBtn;
+  document.getElementById('howto-body').innerHTML = t.sections.map(s =>
+    `<h3>${s.h}</h3><ul>${s.items.map(it => `<li>${it}</li>`).join('')}</ul>`
+  ).join('');
+}
+function openHowto() {
+  renderHowto();
+  howtoOverlay.classList.add('open');
+}
 function closeHowto(persistDontShow) {
   howtoOverlay.classList.remove('open');
   const dontShow = document.getElementById('howto-dontshow').checked;
@@ -1486,21 +1618,33 @@ document.getElementById('howto-ok').addEventListener('click', () => closeHowto(t
 howtoOverlay.addEventListener('click', e => {
   if (e.target === howtoOverlay) closeHowto(false);
 });
+// 헤더 라벨 초기화 (lang 토글로도 갱신됨, renderHowto 호출 시 함께 처리)
+renderHowto();
 // 첫 방문 시 자동 표시
 try {
   if (!localStorage.getItem(HOWTO_KEY)) openHowto();
 } catch (e) { /* private mode 등 — 그냥 무시 */ }
 
-// Language toggle
-document.getElementById('lang-seg').addEventListener('click', e => {
-  const btn = e.target.closest('button[data-lang]');
-  if (!btn) return;
-  lang = btn.dataset.lang;
-  document.querySelectorAll('#lang-seg button').forEach(b => b.classList.toggle('on', b === btn));
+// Language change — called from either the header toggle or the howto modal toggle.
+function setLang(newLang) {
+  if (newLang !== 'ko' && newLang !== 'en') return;
+  lang = newLang;
+  document.querySelectorAll('#lang-seg button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
+  document.querySelectorAll('#howto-lang button').forEach(b => b.classList.toggle('on', b.dataset.lang === lang));
   const helpBtn = document.getElementById('help-btn');
   const glossaryOpen = document.getElementById('glossary').classList.contains('open');
   helpBtn.textContent = T[lang].helpBtn[glossaryOpen ? 1 : 0];
   if (glossaryOpen) renderGlossary();
+  renderHowto();
+}
+document.getElementById('lang-seg').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-lang]'); if (!btn) return;
+  setLang(btn.dataset.lang);
+});
+document.getElementById('howto-lang').addEventListener('click', e => {
+  const btn = e.target.closest('button[data-lang]'); if (!btn) return;
+  e.stopPropagation();   // overlay 배경 클릭으로 모달이 닫히는 것 방지
+  setLang(btn.dataset.lang);
 });
 
 // Unit toggle (distance)
