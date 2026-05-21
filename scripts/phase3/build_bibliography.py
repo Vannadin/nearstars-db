@@ -221,17 +221,22 @@ def save_bibliography(path: str, data: dict):
 # ── CLI ─────────────────────────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="Build Phase 3 bibliography for a planet.")
-    parser.add_argument("planet", help='Planet name, e.g. "TRAPPIST-1 d"')
+    parser = argparse.ArgumentParser(description="Build Phase 3 bibliography for a planet (or whole system).")
+    parser.add_argument("planet", help='Planet name e.g. "TRAPPIST-1 d", or system name e.g. "TRAPPIST-1" with --system')
     parser.add_argument("--max", type=int, default=150,
                         help="Max papers per source (default 150)")
     parser.add_argument("--no-arxiv", action="store_true", help="Skip arXiv API")
     parser.add_argument("--no-ads", action="store_true",
                         help="Skip ADS API (always skipped if ADS_API_TOKEN not set)")
+    parser.add_argument("--system", action="store_true",
+                        help='System-level mode — outputs to "_system-<slug>.yaml". '
+                             'Use with a bare system name like "TRAPPIST-1" (no planet letter) '
+                             'to capture papers that discuss the whole system but no specific planet.')
     args = parser.parse_args()
 
     slug = slugify(args.planet)
-    out_path = os.path.join(BIB_DIR, f"{slug}.yaml")
+    prefix = "_system-" if args.system else ""
+    out_path = os.path.join(BIB_DIR, f"{prefix}{slug}.yaml")
     existing = load_existing(out_path)
 
     print(f"[Phase 3] Building bibliography for: {args.planet}  → {out_path}")
