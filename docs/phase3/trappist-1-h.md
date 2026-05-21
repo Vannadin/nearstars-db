@@ -39,8 +39,8 @@ rocky surface).
 | `radius_rearth` | 0.755 | high | Agol 2021; Gressier 2022 transit fit |
 | `surface_gravity_g_earth` | 0.572 | high | derived = 0.326 / 0.755² |
 | `density_g_cc` | 4.20 | high | Agol 2021 (water-rich) |
-| `water_mass_fraction` | 0.05–0.15 | medium | low density consistent with substantial water; less well-constrained than e/f/g |
-| `insolation_s_earth` | 0.16 | high | Agol 2021 |
+| `water_mass_fraction` | 0.03–0.10 | medium | tightened from earlier 0.05–0.15 — Lichtenberg 2019 ²⁶Al desiccation argues for low end; Bourrier 2017 brief runaway phase (33–67 Myr) preserves most accreted water |
+| `insolation_s_earth` | 0.144 | high | Agol 2021 / Gillon 2024 (2401.11815) — corrected from previous round 0.16 |
 | `equilibrium_temp_k` (A=0)   | 169 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.5, frosted) | 142 | high | derived; frosted-surface case |
 | `bond_albedo` | 0.40 | medium | mixed bedrock + CO₂/N₂ frost; less reflective than full snowball |
@@ -49,7 +49,7 @@ rocky surface).
 | `surface_temp_global_mean_k` | 140 | medium | weak redistribution from thin atmo |
 | `atmosphere_present` | true (very tenuous) | low | Gressier 2022 rejects H₂-rich; trace outgassed CO₂ + N₂ plausible |
 | `atmosphere_surface_pressure_pa` | 500 | low | 0.005 bar — minimal residual; Mars-thin |
-| `atmosphere_composition` | CO₂ 70%, N₂ 25%, trace H₂O / Ar | low | post-magma-ocean outgassed mix; mostly frozen to surface |
+| `atmosphere_composition` | N₂ ~90%, trace CO₂ ≲1000 ppm, Ar / H₂O trace | low | Bolmont 2018 review caps p_CO₂ partial pressure at 100–1000 ppm regardless of background; surface CO₂ cold-trap dominates |
 | `atmosphere_scale_height_km` | 6.0 | medium | derived: kT/μg with T≈140 K, μ=40, g=5.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#302820` (essentially imperceptible Rayleigh) | low | very thin atmo, M-dwarf SED → negligible scattering |
 | `cloud_cover_fraction` | 0.02 | low | minimal — sporadic CO₂ ice cirrus only |
@@ -142,17 +142,21 @@ Theoretical modeling:
   near or below the retention threshold for typical secondary
   atmospheres.
 
-For NearStars we adopt **0.005 bar (Mars-thin) CO₂/N₂ atmosphere**:
+For NearStars we adopt **0.005 bar (Mars-thin) N₂-dominated
+atmosphere with trace CO₂**:
 
 - **Pressure** 0.005 bar (500 Pa) — comparable to Mars (~600 Pa,
   variable). Above zero because some outgassing should accumulate
   on a 0.3 M⊕ planet; below 0.01 bar because cosmic-shoreline /
   Jeans-escape constraints suggest h cannot retain much more.
-- **Composition** CO₂-dominated (70%), N₂ (25%), trace H₂O and Ar.
-  H₂O is trace because of severe cold-trap; N₂ fraction is higher
-  than g because at h's temperatures CO₂ frosts out onto the
-  surface, depleting the gas-phase atmosphere of CO₂ relative to
-  N₂.
+- **Composition** N₂-dominated (~90%), trace CO₂ (~0.1% = 1000 ppm).
+  This is a revision from an earlier draft that had 70% CO₂. The
+  driver is **Bolmont 2018 (1810.11255)** review, which finds that
+  GCMs of h cannot accumulate more than 100–1000 ppm CO₂ regardless
+  of N₂ background — surface cold-trapping removes CO₂ to nightside
+  ice deposits faster than outgassing can replenish it. The
+  remaining 10% is split among Ar, frost-cycle H₂O vapor, and
+  fossil O₂.
 - **Clouds.** Minimal (~2% global): rare CO₂ ice cirrus only,
   similar to Mars's mesospheric clouds.
 
@@ -200,7 +204,7 @@ purposes the configuration is stable.
 - **Atmosphere haze.** Imperceptible — the 0.005 bar atmosphere
   does not produce visible Rayleigh scattering. Limb is sharp.
 - **Star in sky.** TRAPPIST-1 subtends 1.03° in h's sky (2× the
-  Sun from Earth). Surface illumination 0.16 S⊕ — comparable to
+  Sun from Earth). Surface illumination 0.144 S⊕ — comparable to
   early-morning twilight on Earth. The red-orange star against the
   ochre-and-cream surface gives h a particularly atmospheric look
   despite the lack of actual atmosphere.
@@ -239,6 +243,36 @@ purposes the configuration is stable.
 - **2603.29743** New M Dwarf Cosmic Shoreline Constraints. Context.
 - **1810.05210** Moran 2018 — HST haze limits, includes h.
   Already read.
+- **1810.11255** Bolmont 2018 review — Constraining the environment
+  and habitability of TRAPPIST-1. Direct quote: "TRAPPIST-1 h is
+  unable to maintain surface liquid water. It cannot build up more
+  than 10²–10³ ppm of CO₂, whatever the amount of background gas."
+  Drives the revised N₂-dominated atmosphere composition with
+  trace CO₂.
+- **1708.09484** Bourrier 2017 — Temporal evolution of XUV and water
+  content. h has the **smallest mass-loss** in the system: only
+  0.37–0.43 EO_H over 8 Gyr with realistic photolysis-limited escape
+  (ε_α = 0.2). The brief HZ-runaway phase (33–67 Myr) preserves
+  most accreted water — but the 26Al desiccation argument
+  (Lichtenberg 2019) puts the initial accretion budget low.
+- **1902.04026** Lichtenberg 2019 — ²⁶Al desiccation of TRAPPIST-1
+  precursor planetesimals. Argues the whole system formed with
+  f_H₂O ≪ 15 wt%, possibly ≲ 1 wt%. Tightens h's water mass
+  fraction toward the low end.
+- **1909.13859** Gonzales 2019 — Reanalysis of TRAPPIST-1 fundamental
+  parameters. Confirms field age (0.5–10 Gyr), consistent with
+  Burgasser & Mamajek 2017's 7.6 ± 2.2 Gyr. No cfg change required.
+- **2401.11815** Gillon 2024 — Comprehensive TRAPPIST-1 system review.
+  Confirms h parameters; **corrects insolation from 0.16 to 0.144 ±
+  0.006 S⊕**. Cites Childs 2023 formation modeling: outer five
+  planets "required significant volatile content" while inner two
+  are "nearly totally desiccated" — supports keeping non-trivial
+  water content for h.
+- **1702.07004** Bourrier 2017a — Lyman-α reconnaissance of
+  TRAPPIST-1. XUV fluxes at h: F_X ≈ 34 erg/s/cm², F_EUV ≈ 12
+  erg/s/cm², F_Lyα ≈ 13 erg/s/cm². Photoionization lifetime of
+  neutral H at h's orbit: ~25 days (longer than h's orbital period
+  — relevant to exosphere modeling, not visual).
 
 ### Read (instrument-only, not visual-informative)
 

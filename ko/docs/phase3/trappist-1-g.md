@@ -1,232 +1,281 @@
-<!-- TRAPPIST-1 g Phase 3 synthesis: cfg-ready 결정과 근거 -->
+<!-- TRAPPIST-1 g Phase 3 합성: cfg-ready 결정과 그 근거 -->
 # TRAPPIST-1 g — Phase 3 Synthesis
 
 TRAPPIST-1 g 는 M8V ultra-cool dwarf 를 12.35 일 주기로 도는 1.13 R⊕,
-1.32 M⊕ 암석 행성. 안쪽에서 여섯 번째 행성으로 지구의 0.26배 일사량을
-받음 — 보수적 거주 가능 영역의 한참 바깥. TRAPPIST-1 행성 중 가장 큰
-편이며 가장 물이 풍부한 축에 속함. Bourgeois 2024 (2008.09599) 의
-magma-ocean 진화 결과는 water mass fraction 0.11–0.24 로 시스템 내
-최고치. 2026-05-21 기준 g 에 대한 JWST 관측은 출판된 바 없음. 관측적
-그림은 HST haze 한계(Moran 2018) 와 이론적 기후 모델링(Lincowski 2018,
-Wolf 2017) 이 지배.
+1.32 M⊕ 의 암석 행성입니다. 안쪽에서 여섯 번째 행성으로 지구 일사량의
+0.26 배를 받으며, 보수적 거주 가능 영역에서는 한참 바깥쪽에 놓여 있습니다.
+TRAPPIST-1 행성 중 크기가 가장 크고, 물 함량도 가장 높은 축에 듭니다.
+Bourgeois 2024 (2008.09599) 의 magma-ocean 진화 결과는 water mass fraction
+을 0.11–0.24 로 산출했는데, 이는 시스템 내 최고치입니다. 2026-05-21 기준
+g 에 대한 JWST 관측은 아직 출판된 바 없으며, 관측적 그림은 HST haze
+한계 (Moran 2018) 와 이론적 기후 모델링 (Lincowski 2018, Wolf 2017) 이
+주도하고 있습니다.
 
-**NearStars 시나리오 선택. 매우 얇은 CO₂ 대기(~0.05 bar) 를 가진 전역
-얼음 피복 ocean world, substellar 개방 수역 없음, 빙하 아래 액체 물
-바다.** 차가운 outer-HZ 행성에 대한 canonical snowball / "ocean world"
-시나리오. CO₂ 온실효과가 강화되어도 g 의 일사량에서는 표면 액체 물
-유지 불가(Wolf 2017 §5 에서 ~0.3 S⊕ 이하 완전 snowball 발견). 두꺼운
-전역 얼음 피복은 radiogenic heat 로부터의 basal melting 으로 유지되는
-상당한 빙하 아래 액체 물 층을 숨김.
+**NearStars 시나리오 선택은 매우 얇은 CO₂ 대기 (~0.05 bar) 를 가진 전역
+빙결 ocean world 입니다. substellar 개방 수역은 없고, 빙하 아래에 액체
+물 바다가 존재합니다.** 차가운 outer-HZ 행성에 대한 정석적인 snowball
+혹은 "ocean world" 시나리오에 해당합니다. CO₂ 온실효과를 강하게 올려도
+g 의 일사량으로는 표면 액체 물을 유지할 수 없으며, Wolf 2017 §5 가
+~0.3 S⊕ 이하에서 완전 snowball 이 된다는 것을 보였습니다. 두꺼운 전역
+얼음 피복 아래에는 radiogenic heat 에 의한 basal melting 으로 유지되는
+상당한 규모의 빙하 아래 액체 물 층이 숨어 있습니다.
 
 ## 결정
 
 | 항목 | 값 | 신뢰도 | 근거 |
 |---|---|---|---|
-| `tidally_locked` | true | high | 12.35 d 궤도, 조석 damping; Agol 2021 |
-| `obliquity_deg` | 0 | high | 조석 damping; Agol 2021 |
-| `eccentricity` | 0.00208 | high | Agol 2021 TTV (시스템 최저) |
-| `argument_of_periastron_deg` | 191 | medium | Agol 2021 (매우 낮은 ecc → 약한 제약) |
+| `tidally_locked` | true | high | 12.35 d 궤도와 조석 damping. Agol 2021 |
+| `obliquity_deg` | 0 | high | 조석 damping. Agol 2021 |
+| `eccentricity` | 0.00208 | high | Agol 2021 TTV. 시스템 내 최저값 |
+| `argument_of_periastron_deg` | 191 | medium | Agol 2021. 매우 낮은 ecc 라 제약이 약함 |
 | `sidereal_period_days` | 12.3524 | high | Agol 2021 |
 | `semi_major_axis_au` | 0.04683 | high | Agol 2021 |
 | `mass_mearth` | 1.321 | high | Agol 2021 TTV |
 | `radius_rearth` | 1.129 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 1.036 | high | derived = 1.321 / 1.129² |
 | `density_g_cc` | 5.06 | high | Agol 2021 |
-| `water_mass_fraction` | 0.11–0.24 | medium | Bourgeois 2024 — 시스템 최고 |
+| `water_mass_fraction` | 0.11–0.50 | medium | Bourgeois 2024 (0.11–0.24). Unterborn 2018 의 inward-migration 모델이 상한을 ≥50 wt% 로 올림 — 어느 쪽이든 시스템 최고치 |
 | `insolation_s_earth` | 0.26 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 194 | high | Agol 2021 |
-| `equilibrium_temp_k` (A=0.6, snowball) | 154 | high | derived; 고-알베도 snowball |
-| `bond_albedo` | 0.55 | medium | snowball 얼음 + 얇은 대기; Wolf 2017 cold-snowball |
-| `surface_temp_substellar_k` | 200 | medium | Wolf 2017 cold-snowball; basal-melt 가 표면과 격리 |
-| `surface_temp_nightside_k` | 130 | medium | Wolf 2017 GCM; cold-trap nightside |
+| `equilibrium_temp_k` (A=0.6, snowball) | 154 | high | derived. 고-알베도 snowball |
+| `bond_albedo` | 0.55 | medium | snowball 얼음 + 얇은 대기. Wolf 2017 cold-snowball |
+| `surface_temp_substellar_k` | 200 | medium | Wolf 2017 cold-snowball. basal-melt 는 표면과 격리 |
+| `surface_temp_nightside_k` | 130 | medium | Wolf 2017 GCM 의 cold-trap nightside |
 | `surface_temp_global_mean_k` | 175 | medium | Wolf 2017 cold-snowball 평균 |
-| `atmosphere_present` | true (매우 얇은 CO₂) | medium | Moran 2018 이 H₂-rich 배제; outgassing-driven 얇은 CO₂ |
-| `atmosphere_surface_pressure_pa` | 5 000 | medium | 0.05 bar CO₂ — weathering sink 없이 누적된 outgassing |
-| `atmosphere_composition` | CO₂ 90%, N₂ 8%, 미량 H₂O, Ar | medium | 액체 물 carbonate-silicate cycle 없는 화산 outgassing |
-| `atmosphere_scale_height_km` | 4.5 | medium | derived. kT/μg with T≈180 K, μ=43, g=10.2 m/s² |
-| `atmosphere_tint_rgb_hex` | `#403028` (무시할 만한 Rayleigh + CO₂ 얼음 haze tint) | low | 매우 얇은 대기, 최소한의 산란 |
-| `cloud_cover_fraction` | 0.10 | medium | 매우 제한적 — terminator 의 CO₂ 얼음 cirrus 만 |
-| `cloud_tint_rgb_hex` | `#d0c0b0` (CO₂ 얼음 + 먼지, M-dwarf shifted) | medium | 차갑고 얇은 대기에서 최소 구름 생성 |
+| `atmosphere_present` | true (매우 얇은 CO₂) | medium | Moran 2018 이 H₂-rich 를 배제. outgassing 으로 누적된 얇은 CO₂ |
+| `atmosphere_surface_pressure_pa` | 5 000 | medium | 0.05 bar CO₂. weathering sink 없이 누적된 outgassing |
+| `atmosphere_composition` | CO₂ 90%, N₂ 8%, 미량 H₂O 와 Ar | medium | 액체 물 carbonate-silicate cycle 이 없는 상태에서의 화산 outgassing |
+| `atmosphere_scale_height_km` | 4.5 | medium | derived. kT/μg, T≈180 K, μ=43, g=10.2 m/s² |
+| `atmosphere_tint_rgb_hex` | `#403028` (무시할 만한 Rayleigh + CO₂ 얼음 haze tint) | low | 매우 얇은 대기, 산란 거의 없음 |
+| `cloud_cover_fraction` | 0.10 | medium | 매우 제한적. terminator 의 CO₂ 얼음 cirrus 정도 |
+| `cloud_tint_rgb_hex` | `#d0c0b0` (CO₂ 얼음 + 먼지, M-dwarf shifted) | medium | 차갑고 얇은 대기에서 구름 생성이 최소 |
 | `ocean_present` | true (빙하 아래만, 표면 표현 없음) | medium | Bourgeois 2024 wmf 0.11–0.24 + 지구-analog radiogenic heat → basal melt 가능성 높음 |
-| `ocean_extent_substellar_radius_deg` | 0 | high | 완전 snowball; Wolf 2017 §5 |
+| `ocean_extent_substellar_radius_deg` | 0 | high | 완전 snowball. Wolf 2017 §5 |
 | `ocean_tint_rgb_hex` | n/a (얼음 아래 숨겨짐) | high | 표면에서 보이지 않음 |
-| `surface_ice_caps` | 100% 전역 피복 | high | 완전 snowball; Pierrehumbert 2011 outer-HZ branch |
+| `surface_ice_caps` | 100% 전역 피복 | high | 완전 snowball. Pierrehumbert 2011 outer-HZ branch |
 | `surface_tint_rgb_hex_primary` | `#e8e0d4` (M-dwarf 빛 아래 깨끗한 눈) | medium | 고-알베도 눈 + 2566 K 조명 |
-| `surface_tint_rgb_hex_accent` | `#a09080` (terminator 의 CO₂ 서리 / 먼지 patch) | low | terminator 근처 승화-퇴적 사이클 |
-| `surface_morphology` | 전역 빙하 얼음; 차등 자전으로부터의 tectonic 응력 → pressure ridge; 따뜻한 spot 에서 cryovolcanism 가능 | medium | Wolf 2017 + Europa-Ganymede analog 추론 |
-| `magnetic_field_present` | 불확실 (내부 hydrosphere convection 으로 활성화 가능) | low | 사소하지 않은 wmf 가 내부 mantle convection 으로부터 dynamo 유지 가능 |
-| `induction_heating_w_m2` | 0.002–0.02 | medium | Grayver 2022 — 거리에 따라 감소 |
-| `tidal_heating_w_m2` | 0.0001–0.001 | medium | Bolmont 2020 — g 에서 매우 낮음 |
+| `surface_tint_rgb_hex_accent` | `#a09080` (terminator 의 CO₂ 서리와 먼지 patch) | low | terminator 근처의 승화-퇴적 사이클 |
+| `surface_morphology` | 전역 빙하 얼음. 차등 자전에서 비롯된 tectonic 응력이 pressure ridge 를 만들고, 따뜻한 spot 에서는 cryovolcanism 가능 | medium | Wolf 2017 + Europa-Ganymede analog 추론 |
+| `magnetic_field_present` | 불확실 (내부 hydrosphere convection 으로 활성화 가능) | low | 무시할 수 없는 wmf 가 내부 mantle convection 으로 dynamo 를 유지할 수 있음 |
+| `induction_heating_w_m2` | 0.002–0.02 | medium | Grayver 2022. 거리에 따라 감소 |
+| `tidal_heating_w_m2` | 2×10⁻⁷–0.001 | medium | Hay & Matsuyama 2019. 이심률 강제의 Maxwell rheology 표면 flux 는 ~2×10⁻⁷ W/m², Andrade rheology 는 다소 큼. g 만 유일하게 planet-planet tides (대부분 f) 에서 2–20% 를 받음 |
+| `xuv_flux_at_planet_F_earth` | ~120 (현재) | high | Berardo 2025 (2506.12140). 개정된 L_XUV = 1.83×10²⁸ erg/s 로 2017 추정치보다 30배 높음 |
+| `stellar_microflare_cadence_min` | 45 | high | Berardo 2025. 10²⁹ erg microflare 가 ~45 분마다, 10³⁰ erg flare 가 6 시간마다 (JWST) |
 | `radiogenic_heat_w_m2` | 0.04 | medium | 지구-analog mantle radiogenics |
 | `star_apparent_angular_diameter_deg` | 1.36 | high | derived. 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
 ## 표면 합성
 
-TRAPPIST-1 g 는 0.26 S⊕ 에서 보수적 거주 가능 영역 한참 바깥에 위치.
-Wolf 2017 §5 는 현실적 대기 탈출 제약 아래에서 10 bar CO₂ 도 g 의
-일사량에서 지속적 개방 수역을 만들지 못함을 발견 — cold trap 이 너무
-효율적. Lincowski 2018 도 모든 고려된 대기 조성에서 g 를 snowball 로
-분류.
+TRAPPIST-1 g 는 0.26 S⊕ 에서 보수적 거주 가능 영역을 한참 벗어난 자리에
+있습니다. Wolf 2017 §5 는 현실적인 대기 탈출 제약 아래에서는 10 bar CO₂
+조차도 g 의 일사량에서 지속적인 개방 수역을 만들지 못한다고 봅니다.
+cold trap 이 너무 효율적이기 때문입니다. Lincowski 2018 도 고려한 모든
+대기 조성에서 g 를 snowball 로 분류합니다.
 
-g 의 구원하는 지질학적 특징은 매우 높은 water mass fraction. Bourgeois
-2024 (2008.09599) 가 g 에 대해 wmf 0.11–0.24 산출 — TRAPPIST-1 시스템에서
-최고, 지구 바다 20–50 배에 해당. 대부분은 빙하 아래 액체 물 바다로
-존재(얼음-암석 경계에서 지구-analog radiogenic heat ~0.04 W/m² 에 의해
-basal-melted) 하며 두꺼운(~50–100 km) 전역 얼음 피복으로 덮임.
-Cryovolcanism (Europa / Ganymede analog) 은 플로지블하나 제약되지 않음.
+g 를 구해 주는 지질학적 특징은 매우 높은 water mass fraction 입니다.
+Bourgeois 2024 (2008.09599) 가 g 에 대해 wmf 0.11–0.24 를 산출했고, 이는
+TRAPPIST-1 시스템에서 최고치로 지구 바다의 20–50 배에 해당합니다. 이 물의
+대부분은 빙하 아래 액체 물 바다로 존재하는데, 얼음-암석 경계에서 지구와
+유사한 radiogenic heat (~0.04 W/m²) 가 basal-melt 를 일으키고 그 위를
+두꺼운 (~50–100 km) 전역 얼음 피복이 덮고 있습니다. Cryovolcanism (Europa
+와 Ganymede analog) 도 그럴듯하지만 아직 제약은 없습니다.
 
-표면 모양에 대해 snowball template 이 다음을 제공.
+표면 모양에 대해 snowball template 이 다음을 줍니다.
 
-- **Substellar 부터 substellar 에서 ~30° 까지.** 약간 상승한 일사량으로
-  가장 얇은 얼음(~30 km); 더 차가운 terminator 와 nightside 쪽 ice-flow
-  에서 tectonic 활동 가능.
-- **중간 구역 (substellar 에서 30–120°).** 두꺼운 얼음(~60 km), 큰
-  스케일에서 평활.
-- **Terminator (~90°).** 가장 높은 pressure-ridge 밀도, 가장 긴 지형
-  그림자.
-- **Nightside (>120°).** 가장 두꺼운 얼음(~100 km), 가장 차가운 영역에
-  CO₂ 서리 퇴적 가능.
+- **Substellar 에서 substellar 기준 ~30° 까지.** 일사량이 약간 더 높아
+  얼음이 가장 얇고 (~30 km), 더 차가운 terminator 와 nightside 쪽으로
+  흐르는 얼음 흐름에서 tectonic 활동이 가능합니다.
+- **중간 구역 (substellar 에서 30–120°).** 두꺼운 얼음 (~60 km), 큰
+  스케일에서는 평활합니다.
+- **Terminator (~90°).** pressure-ridge 밀도가 가장 높고, 지형 그림자도
+  가장 깁니다.
+- **Nightside (>120°).** 얼음이 가장 두껍고 (~100 km), 가장 차가운
+  영역에는 CO₂ 서리 퇴적이 있을 수 있습니다.
 
-**색 선택.** M-dwarf 조명 아래 깨끗한 눈 / 빙하 얼음 알베도. 따뜻한
-cream-white `#e8e0d4` primary, terminator 근처 누적된 먼지와 CO₂ 서리
-사이클로부터 tan-shaded patch `#a09080`.
+**색 선택.** M-dwarf 조명 아래에서 깨끗한 눈과 빙하 얼음의 알베도를
+반영합니다. primary 는 따뜻한 cream-white `#e8e0d4`, terminator 근처에는
+누적된 먼지와 CO₂ 서리 사이클로 tan-shaded patch `#a09080` 가 들어갑니다.
 
-**Bedrock / 산화철.** 본질적으로 보이지 않음 — 전역 얼음 피복이 어떤
-bedrock 노출에도 너무 두꺼움. pressure 로 인한 얇아짐이 어두운 patch
-를 노출할 수 있는 극단적 terminator ridge 꼭대기에서 예외 가능. 매우
-낮은 확률이며 궤도에서 보이지 않음.
+**Bedrock 과 산화철.** 사실상 보이지 않습니다. 전역 얼음 피복이 너무
+두꺼워 bedrock 노출이 일어날 수 없습니다. 압력으로 얇아져 어두운 patch
+가 드러날 수 있는 극단적 terminator ridge 꼭대기 정도가 예외일 수 있는데,
+확률이 매우 낮고 궤도에서는 보이지 않습니다.
 
-**조석 lock 아래 모양.** 최소한의 일사량 기울기(substellar-에서-
-antistellar 차이 ~70 K) 때문에 얼음 순환이 부드러움. tectonic 활동은
-표면 승화/퇴적이 아닌 얼음 껍데기의 basal-melt-driven convection(cf.
-Europa) 에 의해 지배. 결과는 따뜻한 spot 에서 cryovolcanic feature 를
-갖는 지질학적으로 활성인 얼음 표면 — 시각적으로 미묘하지만 g 를 "죽은
-snowball" 과 구분.
+**조석 lock 아래의 모양.** 일사량 기울기가 최소 (substellar 와
+antistellar 의 차이 ~70 K) 이라 얼음 순환이 부드럽습니다. tectonic 활동은
+표면 승화 / 퇴적이 아니라 얼음 껍데기의 basal-melt-driven convection (cf.
+Europa) 이 주도합니다. 결과적으로 따뜻한 spot 에서 cryovolcanic feature
+가 생기는 지질학적으로 활성인 얼음 표면이 됩니다. 시각적으로는 미묘하지만,
+"죽은 snowball" 과는 구분되는 인상을 줍니다.
 
 ## 대기 합성
 
-g 에 대해 출판된 JWST 관측은 없음. HST haze 한계 분석(Moran 2018,
-1810.05210) 이 cloud-free 수소-rich 대기를 배제. secondary 대기는 HST 로
-제약되지 않음.
+g 에 대해 출판된 JWST 관측은 없습니다. HST haze 한계 분석 (Moran 2018,
+1810.05210) 이 cloud-free 수소-rich 대기를 배제하지만, secondary 대기는
+HST 로 제약되지 않습니다.
 
-이론 모델이 수렴.
+이론 모델들은 다음으로 수렴합니다.
 
-- **Wolf 2017.** g 의 일사량에서 완전 snowball; ~10 bar CO₂ 도 액체 물
-  에 불충분.
-- **Lincowski 2018.** g 는 초기 water inventory 에 따라 "snowball" 또는
-  "post-runaway O₂-rich" 로 분류.
-- **Bourgeois 2024.** magma-ocean 페이즈가 초기에 ~10 bar O₂ + CO₂ 대기
-  생성; 대부분은 hydrodynamic escape 와 표면 산화로 시스템 수명에 걸쳐
-  손실.
+- **Wolf 2017.** g 의 일사량에서 완전 snowball. ~10 bar CO₂ 도 액체 물에
+  불충분합니다.
+- **Lincowski 2018.** g 는 초기 water inventory 에 따라 "snowball" 혹은
+  "post-runaway O₂-rich" 로 분류됩니다.
+- **Bourgeois 2024.** magma-ocean 페이즈에서 초기 ~10 bar O₂ + CO₂ 대기를
+  생성하지만, 대부분은 시스템 수명 동안 hydrodynamic escape 와 표면
+  산화로 손실됩니다.
 
-NearStars 는 **0.05 bar CO₂-rich 얇은 대기**를 채택.
+NearStars 는 **0.05 bar CO₂-rich 얇은 대기**를 채택합니다.
 
 - **압력** 0.05 bar (5 kPa). g 의 온도에서 구름 형성에 필요한 임계값
-  아래; 표면이 대부분의 파장에서 우주와 복사적으로 소통할 정도로 얇음.
-  CO₂ sink 없는 화산 outgassing(얼어붙은 표면 → carbonate-silicate
-  weathering 없음) 이 적당한 CO₂ 를 누적해야 하므로 0 보다 큼.
-- **조성** CO₂ 지배 (90%), N₂ (8%), 미량 H₂O / Ar. CO₂ 풍부는 outgassing
-  누적 반영; H₂O 는 cold-trap 때문에 미량.
-- **구름.** 최소 (~10% 전역). terminator + nightside cold-trap 의 CO₂
-  얼음 cirrus 만.
+  아래이며, 표면이 대부분 파장에서 우주와 복사적으로 직접 소통할 정도로
+  얇습니다. 그래도 0 보다 큰 이유는, 얼어붙은 표면 탓에 carbonate-silicate
+  weathering 이 작동하지 않아 화산 outgassing 으로 CO₂ 가 어느 정도
+  누적되어야 하기 때문입니다.
+- **조성** CO₂ 지배 (90%), N₂ (8%), 미량 H₂O 와 Ar. CO₂ 가 풍부한 것은
+  outgassing 누적을 반영하고, H₂O 는 cold-trap 때문에 미량입니다.
+- **구름.** 최소 (~10% 전역). terminator 와 nightside cold-trap 의 CO₂
+  얼음 cirrus 정도입니다.
 
-**하늘 외관.** 0.05 bar 대기는 궤도에서 거의 보이지 않음. 표면에서
-하늘은 거의 검고 호스트 별이 공허에 대비되는 깊은 적-오렌지 디스크로
-나타남. CO₂ 얼음 구름이 terminator 에서 비스듬한 빛을 받아 옅은 cream
-wisp 로 나타남.
+**Caveat — 대기 retention.** Van Looveren 2024 (2401.16490) 에 따르면
+g 의 ~120 F_EUV,⊕ (Berardo 2025 / 2506.12140 이 L_XUV = 1.83×10²⁸ erg/s
+로 2017 값보다 30배 높게 개정) 아래에서는 Jeans escape 만으로도 CO₂ 대기가
+**1 bar 당 5 Myr** 수준으로 손실됩니다. 100 × 지구 대기조차도 수십 Myr
+안에 잃게 됩니다. 따라서 0.05 bar 선택은 **낙관적인** 값이며, 화산 보충이
+계속된다는 가정을 깔고 있습니다. 0.01 bar 또는 완전 무대기 변형은 cfg
+백업으로 보존해 둡니다. 별의 microflare cadence (~10²⁹ erg 가 45 분마다,
+Berardo 2025 의 HST Ly-α 다년 모니터링) 도 retention 을 더 압박하지만,
+cfg 압력을 직접 결정하지는 않습니다.
 
-## 자전 & spin 합성
+**하늘 외관.** 0.05 bar 대기는 궤도에서 거의 보이지 않습니다. 표면에서
+하늘은 거의 검고, 호스트 별이 공허를 배경으로 깊은 적-오렌지 디스크로
+떠 있습니다. CO₂ 얼음 구름은 terminator 에서 비스듬한 빛을 받아 옅은
+cream wisp 로 보입니다.
 
-12.35 일에서 7.6 Gyr 동안의 조석 damping → 동기(1:1) 구성. 황도 경사각
-0 으로 damping. 이심률은 0.00208 — 시스템 최저, 3:2 안정성 경계 한참
-안쪽(1:1 만 플로지블).
+## 자전과 spin 합성
+
+12.35 일 주기에서 7.6 Gyr 의 조석 damping 을 거쳐 동기 (1:1) 구성에
+도달했습니다. 황도 경사각은 0 으로 damping 되었습니다. 이심률은 0.00208
+으로 시스템 최저이며, 3:2 안정 경계의 한참 안쪽이라 1:1 만 그럴듯합니다.
 
 **KSP 구현 노트.** 자전 주기 = 궤도 주기 = 12.3524 일 (1 067 251 s).
 
-**계절 없음.** 황도 경사각 = 0; libration 으로 인한 일사량 변동 <
-0.2%(시스템 최저). Substellar 점이 고정.
+**계절 없음.** 황도 경사각 = 0. libration 으로 인한 일사량 변동은 0.2%
+미만으로 시스템 최저이며, substellar 점은 고정됩니다.
+
+**Planet-planet tides.** Hay & Matsuyama 2019 (1903.04501) 는 g 가 이심률
+강제 조석 대비 **planet-planet 조석 가열의 비중이 가장 큰** 행성이라고
+지적합니다 (전체의 2–20%, 대부분이 이웃 f 의 기여). 시스템의 다른 행성은
+모두 planet-planet 기여가 1% 미만입니다. 절대값 자체는 여전히 작지만
+(Maxwell rheology 기준 표면 flux ~2×10⁻⁷ W/m²), f 중력 영향의 상대적
+지배는 g 만의 특징이며, Principia cfg 에 충실히 표기해 둘 만한 사실입니다.
 
 ## 비주얼 스타일
 
-- **전역 외관.** terminator 근처 미묘한 tan tinting(`#a09080`) 을 가진
-  거의 균일한 따뜻한 cream-white snowball (`#e8e0d4`). 명백한 "eyeball"
-  feature 없음 — 개방 수역 디스크 없음. 시스템에서 시각적으로 가장
-  차분한 행성.
-- **Substellar 영역.** 더 차가운 영역 쪽 tectonic ice-flow 로 약간 더
-  텍스처화 / 균열된 얼음. 밝은 신선-얼음 patch 로 cryovolcanic feature
-  가능.
+- **전역 외관.** terminator 근처에 미묘한 tan tinting (`#a09080`) 이
+  도는, 거의 균일한 따뜻한 cream-white snowball (`#e8e0d4`). 뚜렷한
+  "eyeball" feature 는 없습니다. 개방 수역 디스크도 없고, 시스템에서
+  시각적으로 가장 차분한 행성입니다.
+- **Substellar 영역.** 더 차가운 영역으로 흐르는 tectonic ice-flow 때문에
+  얼음이 약간 더 텍스처화되고 균열이 보입니다. 밝은 신선-얼음 patch 로
+  나타나는 cryovolcanic feature 도 가능합니다.
 - **중간 구역과 terminator.** 비스듬한 2566 K 조명 아래의 pressure
-  ridge, crevasse, 긴 지형 그림자. Terminator 가 가장 사진발 좋은 영역.
-- **Nightside.** CO₂ 서리로부터 약간 더 어두운 cream-tan. KSP nightside
-  ambient ≈ dayside 의 1–3%.
-- **Atmosphere haze.** 궤도에서 인지 불가; limb 에 hairline 따뜻-회색
-  glow (`#403028`) 정도.
-- **하늘의 별.** TRAPPIST-1 이 g 의 하늘에서 1.36° 차지(지구에서 본
-  태양의 2.7배). 표면 조명은 0.26 S⊕ — 외곽 화성의 태양 flux 와 유사.
-  cream 설경에 대비되는 적-오렌지 별이 영구적 어슴푸레-여명 분위기 제공.
-- **하늘의 자매 행성.** f (안쪽 다음) 가 conjunction 시 각 크기 ~0.3°;
-  h (바깥쪽 다음) 가 outer conjunction 시 ~0.2°. 공명 체인이 빈번한
-  다중 행성 정렬 보장.
+  ridge, crevasse, 긴 지형 그림자. terminator 가 가장 사진발이 좋은
+  구역입니다.
+- **Nightside.** CO₂ 서리 때문에 약간 더 어두운 cream-tan. KSP nightside
+  ambient 는 dayside 의 1–3% 수준입니다.
+- **Atmosphere haze.** 궤도에서는 거의 인지 불가. limb 에 hairline 굵기의
+  따뜻한-회색 glow (`#403028`) 정도만 보입니다.
+- **하늘의 별.** TRAPPIST-1 이 g 의 하늘에서 1.36° 를 차지합니다 (지구에서
+  본 태양의 2.7 배). 표면 조명은 0.26 S⊕ 로 외곽 화성의 태양 flux 와
+  비슷합니다. cream 빛 설경 위로 떠 있는 적-오렌지 별이 영구적인
+  어슴푸레-여명 분위기를 만듭니다.
+- **하늘의 자매 행성.** f (안쪽 다음) 가 conjunction 시 각 크기 ~0.3°,
+  h (바깥쪽 다음) 가 outer conjunction 시 ~0.2°. 공명 체인 덕에 다중
+  행성 정렬이 자주 일어납니다.
 
 ## 참고 문헌
 
-### 읽음 (시각-정보 제공, 위 결정 견인)
+### 읽음 (시각 정보 제공, 위 결정 견인)
 
-- **2008.09599** Bourgeois 2024 — e/f/g 의 Magma ocean 진화. g 를
-  시스템에서 가장 물이 풍부한 행성으로 확립(wmf 0.11–0.24). 빙하 아래
-  바다 cfg 견인.
-- **2412.10192** Cherubim 2024 — magma ocean 페이즈에서 CO₂- 에서 H₂O-
-  지배 대기로. g 의 진화된 대기에 대한 조성 프레임워크 제공.
-- **1809.07498** Lincowski 2018 — TRAPPIST-1 세계의 진화된 기후. g 는
-  모든 고려된 시나리오에서 snowball 로 분류. d/e/f phase 3 에 이미
-  읽음.
-- **2504.19872** Castan-Lopez 2025 — Cosmic Shoreline Revisited. 경험적
-  M-dwarf 대기 retention 선에 대한 g 의 위치. 얇은 대기는 유지하나
-  두꺼운 대기는 아닐 가능성.
-- **1810.05210** Moran 2018 — HST haze 한계. 안쪽 5 행성(간접적으로 g
-  포함) 에 대해 cloud-free H₂-rich 배제. d Phase 3 에 이미 읽음.
+- **2008.09599** Bourgeois 2024 — Magma ocean evolution for e/f/g.
+  g 를 시스템에서 가장 물이 풍부한 행성으로 확립 (wmf 0.11–0.24).
+  빙하 아래 바다 cfg 의 근거입니다.
+- **2412.10192** Cherubim 2024 — From CO₂- to H₂O-dominated atmospheres
+  in magma ocean phase. g 의 진화된 대기에 대한 조성 프레임워크를
+  제공합니다.
+- **1809.07498** Lincowski 2018 — Evolved climates of TRAPPIST-1 worlds.
+  고려된 모든 시나리오에서 g 를 snowball 로 분류합니다. d/e/f phase 3
+  에서 이미 읽었습니다.
+- **2504.19872** Castan-Lopez 2025 — Cosmic Shoreline Revisited.
+  경험적 M-dwarf 대기 retention 선에 대한 g 의 위치를 다룹니다. 얇은
+  대기는 유지하지만 두꺼운 대기는 어렵다는 결론입니다.
+- **1810.05210** Moran 2018 — HST haze limits. 안쪽 5 개 행성 (간접적으로
+  g 포함) 에 대해 cloud-free H₂-rich 를 배제합니다. d Phase 3 에서 이미
+  읽었습니다.
+- **1706.02689** Unterborn 2018 — Inward-migration interpretation of
+  TRAPPIST-1 densities. g 와 f 가 ≥50 wt% 물 / 얼음을 가진다고 주장하며,
+  Bourgeois 2024 의 0.24 보다 훨씬 높은 상한을 제시합니다.
+  `water_mass_fraction` 상한을 0.11–0.50 으로 끌어올린 근거입니다.
+- **1903.04501** Hay & Matsuyama 2019 — Tides between TRAPPIST-1 planets.
+  g 만 유일하게 조석 가열의 2–20% 를 행성 간 상호작용 (대부분 f) 에서
+  받고, 다른 행성은 모두 1% 미만입니다. 자전 섹션의 새 문단을 견인합니다.
+- **2401.16490** Van Looveren 2024 — Airy worlds or barren rocks?
+  Jeans escape 기반의 정량적 대기 탈출. g 의 ~120 F_EUV,⊕ 에서 CO₂
+  대기가 1 bar 당 5 Myr 로 손실됩니다. 새로 추가된 "대기 retention
+  caveat" 문단과 대안 cfg 변형의 근거입니다.
+- **2506.12140** Berardo 2025 — HST multi-year Ly-α monitoring of
+  TRAPPIST-1. L_XUV = 1.83×10²⁸ erg/s 로 개정 (2017 추정치보다 30배 높음).
+  microflare cadence 가 ~10²⁹ erg 당 45 분. 결정 표의 새 XUV / microflare
+  항목을 견인합니다.
+- **1912.05749** Hori & Ogihara 2020 — Hydrogen-rich atmosphere origin.
+  g 의 최대 원시 H 대기는 2 wt% 이하이며 수백 Myr 내에 손실됩니다.
+  현재 대기가 secondary 임을 뒷받침합니다.
 
 ### 읽음 (맥락 / 방법론, 결정 견인 안 함)
 
-- **2508.12865** Cosmic Shoreline 의 경험적 결정. g 의 retention 상태
-  맥락.
-- **2504.01182** 중후기 M dwarf 의 Receding Cosmic Shoreline. TRAPPIST-1
-  시스템 수준 맥락.
-- **2210.02484** HZ 카탈로그. g 를 더 넓은 HZ 후보 중 하나로 등재.
-  d 에 이미 읽음.
-- **2006.11349** Wunderlich 2020 — Wet/dry e 와 f. g 맥락만. f 에 이미
-  읽음.
-- **2506.16063** Mass-radius 평면 분류. 카탈로그 맥락만.
+- **2508.12865** Empirical determination of the Cosmic Shoreline.
+  g 의 retention 상태에 대한 맥락입니다.
+- **2504.01182** Receding Cosmic Shoreline for mid-to-late M dwarfs.
+  TRAPPIST-1 시스템 수준 맥락입니다.
+- **2210.02484** HZ catalog. g 를 더 넓은 HZ 후보 중 하나로 등재합니다.
+  d 에서 이미 읽었습니다.
+- **2006.11349** Wunderlich 2020 — Wet/dry e and f. g 는 맥락만. f 에서
+  이미 읽었습니다.
+- **2506.16063** Mass-radius plane classification. 카탈로그 맥락만
+  제공합니다.
 
 ### 읽음 (instrument-only, 시각 정보 아님)
 
 (g 에 특화된 것 없음.)
 
-### 읽지 않음 — arXiv preprint 없거나 낮은 우선순위 (~14편)
+### 읽지 않음 — arXiv preprint 없음 또는 낮은 우선순위 (~14 편)
 
-g 참고문헌은 큼(66편, 52편 arXiv) 이지만 대부분이 SETI / technosignature
-서베이, mass-radius 카탈로그, 또는 g 를 지나가듯 언급하는 작품.
+g 의 참고 문헌은 큰 편입니다 (66 편, 그중 52 편이 arXiv). 다만 대부분이
+SETI / technosignature 서베이, mass-radius 카탈로그, 또는 g 를 지나가듯
+언급하는 논문입니다.
 
-- **2509.06310** FAST 와의 Deep SETI search. 시각 아님.
-- **2208.02511** SETI drift rate 맥락. 시각 아님.
+- **2509.06310** Deep SETI search with FAST. 시각 정보 아님.
+- **2208.02511** SETI drift rate context. 시각 정보 아님.
 - **여러 cosmic-shoreline 논문** — retention 질문에 대해 집합적으로
-  읽음; 개별 항목은 시각-정보 제공 아님.
-- **TESS / non-TRAPPIST-1 카탈로그 논문** — 무관.
+  읽었으며, 개별 항목은 시각 정보 제공이 아닙니다.
+- **TESS / non-TRAPPIST-1 카탈로그 논문** — 무관합니다.
 
 ---
 
 ## 후속 follow-up 항목
 
-- g 에 대한 직접 JWST 관측은 아직 없음; 향후 transmission 또는 emission
-  스펙트럼이 출판되면 대기 압력 / 조성 표 재검토 필요. 특히 g 가
-  transmission 에서 CO₂ feature 를 보이면 0.05 bar 선택 정교화 가능.
-- Cryovolcanism 은 g 에 대해 플로지블하나 제약되지 않음. 향후 cfg
-  변형이 Europa-analog 측면(보이는 resurfaced 얼음 patch, 따뜻한 spot
-  에서 plume feature 가능) 을 강조하고 싶다면 Phase 3.5 로 구현 가능.
-- 0.05 bar CO₂ 선택은 "대기 존재" 의 하한 가장자리 — ~0.01 bar 로
-  감소시키거나 완전 무대기 cold-snowball 변형을 위해 0 으로 설정 가능.
-- wmf 범위(0.11–0.24) 는 g 가 해저에서 hydrothermal 활동이 있는 거주
-  가능 빙하 아래 층을 호스트할 수 있을 만큼 충분히 높음(Europa-
-  Enceladus astrobiology analog). 시각적으로 관련 없어도 Principia
-  노트 가치 있음.
+- g 에 대한 직접 JWST 관측은 아직 없습니다. 향후 transmission 또는
+  emission 스펙트럼이 출판되면 대기 압력 / 조성 표를 재검토할 필요가
+  있습니다. 특히 g 가 transmission 에서 CO₂ feature 를 보이면 0.05 bar
+  선택을 더 정교화할 수 있습니다.
+- Cryovolcanism 은 g 에 대해 그럴듯하지만 제약되지 않습니다. 향후 cfg
+  변형이 Europa-analog 측면 (resurfaced 얼음 patch 가 보이거나, 따뜻한
+  spot 에서 plume feature 가능) 을 강조하고 싶다면 Phase 3.5 로 구현할
+  수 있습니다.
+- 0.05 bar CO₂ 선택은 "대기 존재" 의 하한 경계입니다. ~0.01 bar 로
+  내리거나, 완전 무대기 cold-snowball 변형을 위해 0 으로 둘 수도 있습니다.
+- wmf 범위 (0.11–0.24) 는 g 가 해저 hydrothermal 활동을 갖춘 거주 가능
+  빙하 아래 층을 호스트할 수 있을 만큼 충분히 높습니다 (Europa-Enceladus
+  astrobiology analog). 시각적으로는 관련이 없더라도 Principia 노트에
+  남길 가치가 있습니다.

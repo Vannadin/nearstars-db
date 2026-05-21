@@ -2,249 +2,286 @@
 # TRAPPIST-1 c — Phase 3 Synthesis
 
 TRAPPIST-1 c 는 M8V ultra-cool dwarf 를 2.42 일 주기로 도는 1.10 R⊕,
-1.31 M⊕ 암석 행성. 바깥쪽에서 두 번째 행성으로 지구의 2.27× insolation
-을 받음. JWST MIRI 15 μm secondary-eclipse (Zieba 2023) 과 phase-curve
-(Ducrot 2025) 측정이 dayside brightness 온도 369–380 K 를 제시 — 맨
-암석 또는 얇은 O₂ 지배 대기 어느 쪽과도 일관. 10 bar (10 ppm CO₂) 부터
-0.1 bar (순수 CO₂) 까지 cloud-free O₂/CO₂ 혼합은 배제; 황산 구름의
-Venus-analog 은 2.6σ 에서 disfavor.
+1.31 M⊕ 의 암석 행성. 바깥쪽으로 두 번째 행성이며 지구의 2.27 배에
+달하는 insolation 을 받음. JWST MIRI 15 μm 의 secondary-eclipse
+(Zieba 2023) 와 phase-curve (Ducrot 2025) 측정에서 도출된 dayside
+brightness 온도는 369–380 K — 맨 암석이든 얇은 O₂ 지배 대기든 어느
+쪽 시나리오와도 양립함. 10 bar (CO₂ 10 ppm) 부터 0.1 bar (순수
+CO₂) 까지의 cloud-free O₂/CO₂ 혼합 대기는 배제되며, 황산 구름을 가진
+Venus-analog 도 2.6σ 수준에서 disfavored.
 
-**NearStars 시나리오 선택. 미량 H₂O vapor 를 가진 얇은 O₂ 지배 대기
-(~0.1 bar), 유의미한 CO₂ 없음, 어두운 basaltic 표면 위.** Luger & Barnes
-2015 / Lincowski 2018 / Lincowski 2023 의 "fossil oxygen" 시나리오 채택.
-초기 H₂O-rich 증기 대기가 어린 M-dwarf 의 high-luminosity pre-main-
-sequence 페이즈 동안 hydrodynamic H escape 를 겪어 수소를 stripping
-하고 광분해 O₂ 를 뒤에 남김. 남은 표면은 풍화됨 (b 의 신선한 ultramafic
-과 달리), 성숙한 regolith. b (대기 없음, 신선함) 및 d (terminator H₂O
-얼음 구름이 있는 얇은 대기) 와 구별되면서도 관측 일관성 유지.
+**NearStars 시나리오 선택. 어두운 basalt 표면 위에 미량의 H₂O 수증기를
+포함하고 유의한 CO₂ 가 없는 얇은 O₂ 지배 대기 (~0.1 bar).** 이는
+Luger & Barnes 2015 / Lincowski 2018 / Lincowski 2023 의 "fossil
+oxygen" 시나리오를 채택한 것. 초기에는 H₂O 가 풍부한 증기 대기였으나
+어린 M-dwarf 의 pre-main-sequence 고광도 시기에 hydrodynamic H escape
+가 일어나 수소는 우주로 빠져나가고 광분해로 만들어진 O₂ 만 남게 됨.
+남은 표면은 풍화된 상태 (b 의 신선한 ultramafic 과 대비) 로, 성숙한
+regolith 가 깔려 있음. b (대기 없음, 신선함), d (terminator 부근에
+H₂O 얼음 구름이 있는 얇은 대기) 와 구분되면서도 관측과는 모순되지 않는
+설정.
 
-## 결정
+## Decisions
 
 Kopernicus / atmosphere cfg-ready 값. `Confidence`. high = 직접 측정
-또는 강하게 제약, medium = 강한 지지를 가진 이론, low = 허용 윈도우 내
-미적 선택.
+되었거나 강하게 제약된 값, medium = 강한 근거를 가진 이론값, low =
+허용 윈도우 안에서의 미적 선택.
 
 | 항목 | 값 | 신뢰도 | 근거 |
 |---|---|---|---|
 | `tidally_locked` | true | high | 2.42 d 궤도, 조석 damping; Agol 2021 |
 | `obliquity_deg` | 0 | high | 조석 damping; Agol 2021 |
 | `eccentricity` | 0.00654 | high | Agol 2021 TTV |
-| `argument_of_periastron_deg` | 282 | medium | Agol 2021 (low ecc → 약한 제약) |
+| `argument_of_periastron_deg` | 282 | medium | Agol 2021 (낮은 eccentricity → 제약 약함) |
 | `sidereal_period_days` | 2.4219 | high | Agol 2021 |
 | `semi_major_axis_au` | 0.01580 | high | Agol 2021 |
 | `mass_mearth` | 1.308 | high | Agol 2021 TTV |
 | `radius_rearth` | 1.097 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 1.087 | high | derived = 1.308 / 1.097² |
-| `density_g_cc` | 6.36 | high | derived; Agol 2021 은 ~5.7 보고 (불확실성 bar 겹침) |
+| `density_g_cc` | 6.36 | high | derived; Agol 2021 은 ~5.7 보고 (불확실성 bar 가 겹침) |
 | `insolation_s_earth` | 2.27 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 339 | high | Agol 2021 |
 | `dayside_brightness_temp_k_15um` | 380 | high | Zieba 2023 MIRI F1500W eclipse |
 | `dayside_brightness_temp_k_phase_curve` | 369 | high | Ducrot 2025 MIRI 15 μm phase curve |
-| `bond_albedo` | 0.05 | medium | Ducrot 2025 에 의해 0 (맨 암석) 과 ~0.3 (반사적) 사이로 제약 |
-| `atmosphere_present` | true (thin) | low | 채택된 O₂ 지배; (A) 대기 없음도 방어 가능 |
-| `atmosphere_surface_pressure_pa` | 10 000 | medium | Lincowski 2023 의 1σ-consistent envelope 의 상단 가장자리에 0.1 bar O₂ |
-| `atmosphere_composition` | O₂ 98%, 미량 H₂O / O₃ / CO₂ ≲100 ppm | medium | Lincowski 2018 광분해 산소 예측; Lincowski 2023 fit |
-| `atmosphere_scale_height_km` | 10 | medium | derived. kT/μg with T≈370 K, μ=32 (O₂), g=10.7 m/s² |
-| `atmosphere_tint_rgb_hex` | `#3a3a40` (매우 옅은 O₂ Rayleigh + 얇은 O₃ Chappuis 흡수) | low | 0.1 bar 에서 scattering 최소; O₃ 가 M-dwarf 조명 아래 약한 gray-blue tint 추가 |
-| `dayside_surface_temp_k` | 369 | high | phase-curve 측정 brightness 와 일치 |
+| `bond_albedo` | 0.05 | medium | Ducrot 2025 가 0 (맨 암석) 과 ~0.3 (반사적) 사이로 제약 |
+| `atmosphere_present` | true (thin) | low | O₂ 지배 시나리오를 채택; 대기 없는 (A) 안도 방어 가능 |
+| `atmosphere_surface_pressure_pa` | 10 000 | medium | Lincowski 2023 의 1σ-consistent envelope 의 상단인 0.1 bar O₂ |
+| `atmosphere_composition` | O₂ 98%, 미량 H₂O / O₃ / CO₂ ≲100 ppm | medium | Lincowski 2018 의 광분해 산소 예측; Lincowski 2023 fit |
+| `atmosphere_scale_height_km` | 10 | medium | derived. kT/μg, T≈370 K, μ=32 (O₂), g=10.7 m/s² |
+| `atmosphere_tint_rgb_hex` | `#3a3a40` (매우 옅은 O₂ Rayleigh + 얇은 O₃ Chappuis 흡수) | low | 0.1 bar 에서는 scattering 이 미미; O₃ 가 M-dwarf 조명 아래 살짝 gray-blue tint 부여 |
+| `dayside_surface_temp_k` | 369 | high | phase-curve 로 측정된 brightness 와 일치 |
 | `substellar_peak_temp_k` | 430 | medium | derived bare-surface subsolar (A=0.05, ε=1, 약한 advection) |
-| `nightside_surface_temp_k` | 140 | medium | 얇은 O₂ 대기에서의 약한 advection; Ducrot 2025 nightside < ~150 K |
+| `nightside_surface_temp_k` | 140 | medium | 얇은 O₂ 대기에서의 약한 advection; Ducrot 2025 의 nightside < ~150 K |
 | `surface_tint_rgb_hex_primary` | `#2c2218` (풍화된 basalt) | medium | 노화된 basaltic 표면, 최근 화산 활동 없음; Mercury-mature regolith analog |
-| `surface_tint_rgb_hex_accent` | `#604030` (산화철 patch, 광분해) | low | 장기 tidally-locked 표면의 UV 광분해; Turbet 2018 mechanism |
-| `surface_morphology` | 풍화된 basaltic 평원; 노화된 충돌 분화구; 잔잔한 기복 | medium | 새로운 resurfacing 추론 안 됨 (b 와 달리); 누적 ~8 Gyr 충돌 |
-| `surface_ice_caps` | substellar 에서 ≳60° 떨어진 좁은 띠의 nightside CO₂ / H₂O frost | medium | 얇은 대기가 미량 H₂O 운반 가능; nightside T < CO₂ frost point |
-| `induction_heating_w_m2` | 0.05–0.5 | medium | Grayver 2022 — 더 먼 거리로 b 보다 낮음; 활발한 화산 활동에 부족 |
-| `tidal_heating_w_m2` | 0.005–0.05 | medium | Bolmont 2020 — b 보다 ~10× 낮음 |
+| `surface_tint_rgb_hex_accent` | `#604030` (광분해 기원의 산화철 patch) | low | 장기간 조석 고정된 표면 위의 UV 광분해; Turbet 2018 메커니즘 |
+| `surface_morphology` | 풍화된 basalt 평원; 노화된 충돌 분화구; 잔잔한 기복 | medium | 최근 resurfacing 의 증거 없음 (b 와 대비); 누적 ~8 Gyr 충돌 |
+| `surface_ice_caps` | substellar 점에서 ≳60° 떨어진 좁은 띠의 nightside CO₂ / H₂O frost | medium | 얇은 대기로도 미량 H₂O 운반 가능; nightside T 가 CO₂ frost point 보다 낮음 |
+| `induction_heating_w_m2` | 0.05–0.5 | medium | Grayver 2022 — 거리 차이로 b 보다 낮음; 활발한 화산을 일으키기에는 부족 |
+| `tidal_heating_w_m2` | 0.005–0.05 | medium | 인용 논문에 c 전용 W/m² 값이 없어 Bolmont 2026 의 b flux 를 ~10× 축소; Brasser 2019 는 c 에 대해 k₂/Q = (0.4–2)×10⁻⁴ 제시 |
+| `tidal_k2_over_Q` | (0.4–2) × 10⁻⁴ | medium | Brasser 2019 (1905.00512) 내부 모델; 동역학적 하한은 k₂/Q ≳ 1×10⁻³ |
+| `moment_of_inertia_C` | 0.286 (범위 0.235–0.4) | low | Brasser 2019 의 대표 케이스 |
 | `star_apparent_angular_diameter_deg` | 4.02 | high | derived. 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
-## 표면 합성
+## Surface synthesis
 
-c 의 eclipse + phase-curve 데이터는 맨 어두운 low-albedo 표면 또는
-최소 CO₂ 의 얇은 O₂ 지배 대기 어느 쪽과도 일관 (Zieba 2023, Lincowski
-2023, Ducrot 2025). b 의 경우 Ducrot 2024 가 신선한 ultramafic 표면의
-model-consistency 논거를 발견했지만 — c 의 eclipse 데이터는 unweathered
-표면을 요구하지 않음. 역 해석도 가능. c 의 표면은 c 가 tidal + induction
-heating 이 더 적기 때문에 b 의 표면보다 상당히 노화됐을 수 있음
-(Bolmont 2020 은 c 에서 tidal heating 이 ~10× 낮다고 추정하고, Grayver
-2022 induction heating 도 같은 이유로 ~10× 낮음).
+c 의 eclipse + phase-curve 데이터는 어둡고 albedo 가 낮은 맨 표면이든,
+CO₂ 가 거의 없는 얇은 O₂ 지배 대기든 모두와 양립함 (Zieba 2023,
+Lincowski 2023, Ducrot 2025). b 의 경우에는 Ducrot 2024 가 신선한
+ultramafic 표면을 뒷받침하는 모델 일관성 논거를 제시했지만, c 의 eclipse
+데이터는 풍화되지 않은 표면을 요구하지 않음. 오히려 반대 해석도 가능함.
+c 는 tidal heating 과 induction heating 이 모두 b 보다 작기 때문에
+표면이 b 보다 훨씬 더 오래되었을 가능성이 있음 (Bolmont 2020 의 추정상
+c 의 tidal heating 은 ~10× 낮고, Grayver 2022 의 induction heating 도
+같은 이유로 ~10× 낮음).
 
-유의미한 resurfacing 없이 c 의 표면은 ~8 Gyr 의 충돌 폭격과 광화학적
-풍화를 누적. 결과는 lunar highlands 또는 Mercury 의 intercrater 평원
-(broadband visible albedo ≈ 0.06–0.10) 과 유사한 성숙한 어두운 low-
-albedo 표면, 그러나 후기 충돌로 전달된 표면 휘발성 물질의 UV 광분해로
-substellar 반구 근처에 농축된 산화철 patch 포함.
+유의한 resurfacing 이 없다면 c 의 표면은 ~8 Gyr 동안의 충돌 폭격과
+광화학적 풍화를 그대로 누적함. 결과적으로 lunar highlands 나 Mercury
+의 intercrater 평원에 견줄 만한, 성숙하고 어둡고 albedo 가 낮은 표면
+(broadband visible albedo ≈ 0.06–0.10) 이 만들어짐. 다만 후기 충돌이
+가져온 표면 휘발성 물질이 UV 광분해를 거치면서 substellar 반구 부근에
+산화철 patch 가 집중되어 나타날 것으로 예상.
+
+내부 조성은 상당량의 물과 양립 가능하지만 반드시 필요한 것은 아님.
+Unterborn 2018 (1806.10084) 은 c 를 휘발성 외피가 없는 작은 핵 (Fe
+≤23 wt%) 의 암석 내부로도, 8–34 wt% 의 물이 필요한 더 큰 핵 조성
+으로도 맞출 수 있다고 보고함. 질량과 반지름만으로는 이 이체 축퇴를
+해소할 수 없음. Grimm 2018 (1802.01377) 은 Agol 2021 (1.308 ± 0.056
+M⊕) 보다 약간 낮은 질량 (1.156 +0.142/−0.131 M⊕) 을 제시하며, 휘발성
+확률 ≥0.24 — 즉 c 가 확장된 휘발성 외피를 갖지 않는 시나리오와도 일관.
+이 제약 조건 아래에서는 "풍화된 basalt" 표면이 가장 단순한 해석.
 
 **색 선택.** M8V 조명 아래의 풍화된 basalt. 어두운 basaltic primary
-`#2c2218` 는 풍화된 regolith 성숙도를 반영하기 위해 b 의 `#1a1612`
-신선한 ultramafic 보다 약간 밝음. 산화철 accent `#604030` 은 b 보다
-더 두드러짐. 이유는. (1) 표면이 더 노화되어 산화 시간이 더 있었고,
-(2) 얇은 O₂ 대기가 연속적인 저수준 산화제 공급을 제공.
+`#2c2218` 는 풍화된 regolith 의 성숙도를 반영하기 위해 b 의 신선한
+ultramafic `#1a1612` 보다 살짝 밝게 잡음. 산화철 accent `#604030` 은
+b 보다 더 두드러지게 두는데, 이유는 두 가지. (1) 표면이 더 오래되어
+산화가 진행될 시간이 충분했고, (2) 얇은 O₂ 대기가 지속적으로 저수준의
+산화제를 공급하기 때문.
 
-**모양.** 활발한 resurfacing 없음은 보존된 충돌 기록 의미. 모든 크기
-범위의 명확한 분화구, lunar highlands 에 접근하는 saturation 밀도.
-초기 100–500 Myr 페이즈의 마그마 바다 잔존 feature (Krissansen-Totton
-2022, TRAPPIST-1 시스템 마그마 바다 진화 논문) 는 후기 충돌 분지와
-구별되는 넓은 highland 영역으로 여전히 부분적으로 보일 것.
+**Morphology.** 활발한 resurfacing 이 없다는 것은 충돌 기록이 그대로
+보존된다는 뜻. 전 크기 영역에서 윤곽이 뚜렷한 분화구가 분포하며, 그
+포화 밀도는 lunar highlands 에 근접함. 초기 100–500 Myr 의 마그마
+바다 잔존 feature (Krissansen-Totton 2022, TRAPPIST-1 시스템에 대한
+Magma Ocean Evolution 논문) 는 후기 충돌 분지와는 구분되는 넓은
+highland 영역으로 일부 보일 것으로 예상.
 
-## 대기 합성
+## Atmosphere synthesis
 
-Zieba 2023 (MIRI F1500W secondary eclipse, 4회 방문) 이 15 μm 에서
-Fp/F★ = 421 ± 94 ppm 측정. 이는 380 ± 31 K 의 dayside brightness 온도에
-해당, low albedo 의 맨 암석 또는 얇은 low-greenhouse 대기와 일관. 데이터
-배제.
+Zieba 2023 (MIRI F1500W secondary eclipse, 4 visits) 은 15 μm 에서
+Fp/F★ = 421 ± 94 ppm 을 측정. 이는 dayside brightness 온도 380 ± 31 K
+에 해당하며, low albedo 의 맨 암석 또는 greenhouse 효과가 약한 얇은
+대기와 일관됨. 데이터가 배제하는 시나리오.
 
-- ≥10 ppm CO₂ 의 10 bar cloud-free 대기
-- 유의미한 CO₂ 의 1 bar cloud-free 대기
-- 0.1 bar 순수 CO₂ 대기
-- 황산 구름의 Venus-analog 대기 (2.6σ)
+- ≥10 ppm CO₂ 를 포함한 10 bar cloud-free 대기
+- 유의한 CO₂ 를 포함한 1 bar cloud-free 대기
+- 0.1 bar 의 순수 CO₂ 대기
+- 황산 구름을 가진 Venus-analog 대기 (2.6σ)
 
-Lincowski 2023 는 two-column climate-photochemistry coupled 모델을
-사용해 더 넓은 대기 유형을 포함하도록 모델 공간 확장. 2σ 내에서.
+Lincowski 2023 은 two-column climate-photochemistry coupled 모델을
+사용해 더 폭넓은 대기 유형까지 탐색. 2σ 안에서 다음과 같은 결과.
 
-- 0.1 bar 에서 낮은 CO₂ (≲100 ppm) 의 **얇은 O₂ 대기** 가 데이터와
-  일관
-- 1–10 bar O₂ + 100 ppm CO₂ at 2.0–2.2σ
-- 1–10 bar O₂ + 최대 0.5% CO₂ at 2.9σ
-- 최대 10% H₂O vapor 의 얇은 O₂ (1σ 내)
+- 낮은 CO₂ (≲100 ppm) 의 0.1 bar **얇은 O₂ 대기** 가 데이터와
+  일관됨
+- 1–10 bar O₂ + 100 ppm CO₂ 는 2.0–2.2σ
+- 1–10 bar O₂ + 0.5% 이하 CO₂ 는 2.9σ
+- 최대 10% 의 H₂O 수증기를 포함한 얇은 O₂ (1σ 이내)
 
-Ducrot 2025 phase-curve 가 케이스를 더 닫음. c 의 dayside 는 369 ± 23 K,
-nightside 비검출 (15 μm 에서 ≲ 110 ppm), 유의미한 phase offset 없음.
-맨 암석 또는 얇은 O₂ 둘 다 일관 유지.
+Ducrot 2025 의 phase curve 가 결정타. c 의 dayside 는 369 ± 23 K, nightside
+는 검출되지 않으며 (15 μm 에서 ≲ 110 ppm), 유의한 phase offset 도 없음.
+결국 맨 암석 또는 얇은 O₂ 시나리오 둘 다 살아남음.
 
-NearStars 에서는 **0.1 bar O₂ 지배 얇은 대기** 채택.
+NearStars 에서는 **0.1 bar O₂ 지배 얇은 대기** 를 채택.
 
-- **압력** 0.1 bar (10 kPa). 낮은 CO₂ 의 O₂ 지배 조성에 대한 Lincowski
-  2023 의 1σ 일관성 envelope 내.
-- **조성** 은 O₂ 지배 (~98%), 미량 H₂O vapor (~1%) 와 광분해의 미량
-  O₃ (~100 ppm). CO₂ 는 Zieba 2023 / Lincowski 2023 제약을 존중하기
-  위해 매우 낮게 유지 (~100 ppm). O₂ 기원은 hydrodynamic-escape
-  fossil. Luger & Barnes 2015 는 초기 TRAPPIST-1 세계의 H₂O 증기
-  대기가 H 를 우주로 잃고 ~10 bar O₂ 를 남길 것이라 보임; 이후 광분해
-  + 표면 산화가 이를 관측된 얇은 O₂ 잔재로 감소시킴.
-- **구름 없음** canonical 상태에서. 얇은 O₂ 대기는 steady state 에서
-  구름 형성에 충분한 물이 없고, CO₂ 는 CO₂-얼음 구름에 너무 낮음.
+- **압력** 은 0.1 bar (10 kPa). 낮은 CO₂ 의 O₂ 지배 조성에 대한
+  Lincowski 2023 의 1σ 일관성 envelope 안에 위치.
+- **조성** 은 O₂ 가 지배적 (~98%) 이고, 미량의 H₂O 수증기 (~1%) 와
+  광분해로 만들어진 O₃ (~100 ppm) 가 포함. CO₂ 는 Zieba 2023 /
+  Lincowski 2023 제약을 충족하도록 매우 낮게 (~100 ppm) 유지. O₂
+  의 기원은 hydrodynamic-escape 후의 fossil 산소. Luger & Barnes
+  2015 에 따르면 초기 TRAPPIST-1 행성들의 H₂O 증기 대기는 H 를
+  우주로 잃고 ~10 bar 정도의 O₂ 를 남겼을 것으로 예상되며, 이후
+  광분해와 표면 산화가 진행되어 현재의 얇은 O₂ 잔재 수준까지 줄어듦.
+- **구름 없음** 을 canonical 상태로 둠. 얇은 O₂ 대기는 정상 상태
+  에서 구름이 형성될 만큼 물이 충분하지 않으며, CO₂ 도 CO₂-얼음
+  구름을 만들기에는 너무 부족함.
 
-**하늘 외관.** 0.1 bar O₂ 대기는 약한 Rayleigh scattering 가짐 (지구의
-1 bar N₂+O₂ 대비 0.5 μm 에서 약 5%). substellar 점 근처 하늘은 천정에서
-옅게 dark-violet, stellar disk 가 밝은 limb 근처에서는 옅은 gray-orange
-로 전환. nightside 쪽으로는 하늘이 본질적으로 검음. O₃ Chappuis 흡수
-(0.6 μm 근처 피크) 가 dayside 산란광에 미묘한 회색 overtone 추가.
-호스트 별이 4.02° 각 크기로 dayside 하늘 지배 (지구에서 본 태양 각
-크기의 약 8배).
+**Sky appearance.** 0.1 bar O₂ 대기의 Rayleigh scattering 은 약함
+(지구의 1 bar N₂+O₂ 대비 0.5 μm 에서 약 5%). substellar 점 근처의
+하늘은 천정에서는 옅은 dark-violet 으로 보이다가 stellar disk 가
+밝은 limb 쪽으로 갈수록 옅은 gray-orange 톤으로 바뀜. nightside
+방향의 하늘은 사실상 검음. O₃ Chappuis 흡수 (0.6 μm 부근에서 peak)
+가 dayside 산란광에 미묘한 회색 overtone 을 더함. 호스트 별은
+각지름 4.02° (지구에서 본 태양의 약 8 배) 로 dayside 하늘을 압도.
 
-## 자전 & spin 합성
+## Rotation & spin synthesis
 
-7.6 Gyr 에 걸친 2.42 일 주기의 c 에 대한 조석 damping 은 모호하지 않게
-동기 (1:1) 구성을 확립. 황도 경사각은 0 으로 damping. eccentricity 는
-0.00654 (Agol 2021) — 3:2 공명을 지지하기에는 너무 낮음 (Vinson 2017 은
-3:2 가 e ≳ 0.01 에서만 안정적임을 발견).
+7.6 Gyr 동안 2.42 일 주기에 작용한 조석 damping 은 c 를 명확하게 동기
+(1:1) 회전 상태로 고정시킴. 황도 경사각도 0 으로 damping. eccentricity
+는 0.00654 (Agol 2021) 로, 3:2 공명을 유지하기엔 너무 낮음 (Vinson
+2017 의 결론. 3:2 는 e ≳ 0.01 에서만 안정).
 
 **KSP 구현 노트.** 자전 주기 = 궤도 주기 = 2.4219 일 (209 254 s).
-Kopernicus `rotationPeriod` 는 초 단위 궤도 `period` 와 일치해야 함.
+Kopernicus 의 `rotationPeriod` 는 초 단위 궤도 `period` 와 일치시켜야 함.
 
-**계절 없음.** 황도 경사각 = 0; libration 유도 insolation 변동 < 0.5%.
-substellar 점은 표면 frame 에서 지질학적 시간 척도에 고정 (b 에서 지적된
-느린 세차운동 modulo).
+**계절 없음.** 황도 경사각이 0 이며, libration 으로 인한 insolation
+변동도 < 0.5% 에 불과. substellar 점은 지질학적 시간 척도에서 표면
+좌표계상 고정된 위치를 유지 (b 에서 언급한 느린 세차 운동은 별개).
 
-**Eccentricity 유도 조석 굴곡.** e = 0.00654 와 ultra-cool dwarf 호스트
-로, 강제 libration 으로부터의 조석 가열 비율은 적당함 (Bolmont 2020.
-c 에 대해 ~0.005–0.05 W/m²). 활발한 화산 활동을 구동하기에 불충분;
-"풍화된 표면" 추론과 일관.
+**Eccentricity 가 유도하는 조석 굴곡.** e = 0.00654 와 ultra-cool
+dwarf 호스트라는 조건에서 강제 libration 으로 인한 조석 가열률은 비교적
+적당함. Brasser 2019 (1905.00512) 는 내부 모델로부터 k₂/Q 를 (0.4–2)
+× 10⁻⁴ 로 제시하며, 동역학적 하한은 k₂/Q ≳ 1×10⁻³, 대표 관성 모멘트
+는 C ≈ 0.286 (범위 0.235–0.4). 이로부터 도출되는 표면 tidal flux 는
+b 보다 ~10× 낮음 (c 의 더 큰 궤도 반장축과 일관) — 활발한 화산을
+일으키기에는 부족한 영역에 머묾. "풍화된 표면" 추론과도 부합함.
 
-## 비주얼 스타일
+## Visual styling
 
-표면과 대기 결정 결합.
+표면과 대기 결정을 종합.
 
-- **전역 색 팔레트.** 어두운 풍화된 basalt body (`#2c2218` primary,
-  `#604030` accent) 가 강렬한 적-오렌지 별빛 아래 → substellar 반구
-  쪽으로 편향된 미묘한 산화철 banding 의 깊은 brown-charcoal 세계로
-  나타남. 얇은 O₂ 대기는 옅은 limb haze 외에는 궤도에서 본질적으로
-  보이지 않음.
-- **Dayside.** Substellar 영역 (~430 K subsolar 피크, ~370 K 일반
-  dayside) 의 산화철 patch 가 substellar 점 30° 이내에서 가장 강함.
-  잔잔한 지형 기복 — 성숙한 충돌 cratering, 활발한 화산 활동 없음.
-  nightside 로의 열 재분배는 약하지만 0 이 아님 (얇은 O₂ 대기로 인해
-  ~140 K nightside floor).
-- **Terminator band.** 2566 K 비스듬한 빛 아래의 적당한 지형 그림자
-  대비. 낮은 태양 천정각에서 옅은 limb glow 로 보이는 high-altitude
-  옅은 gray Rayleigh-산란 haze 가능.
-- **Nightside.** 차가움 (~140 K) 하고 어두움. substellar 에서 ≳60°
-  떨어진 좁은 띠에 CO₂/H₂O frost 가능; 자매 행성에서 반사된 빛 아래
-  옅은 더 밝은 patch 로 나타남. visible 대역에서 열적외 emission 만.
-  KSP nightside ambient ≈ dayside 의 5–10%.
-- **Atmosphere haze.** 얇은 옅은 gray-violet limb haze (`#3a3a40`),
-  3–8 km 두께, 행성 limb 의 우주 배경에서만 보임.
-- **하늘의 별.** TRAPPIST-1 이 c 의 하늘에서 4.02° 차지 (지구에서 본
-  태양의 8배). 색 `#ff7a1a` (2566 K). 표면 밝기 ~2.27 S⊕ (지구 궤도
-  에서의 Venus insolation 과 유사). flare 활동은 b 와 동일 — 가끔
-  두드러진 IR flare.
-- **하늘의 자매 행성.** b (다음 안쪽) 가 inferior conjunction 시 ~0.6°
-  로 나타남; d (다음 바깥쪽) 가 4–6 일마다 conjunction 시 ~0.5°.
-  Agol 2021 에서 거의 동일 평면 geometry.
+- **전역 색 팔레트.** 어두운 풍화 basalt 본체 (`#2c2218` primary,
+  `#604030` accent) 가 강렬한 적색-주황 별빛을 받으면, substellar
+  반구 쪽으로 치우친 미묘한 산화철 banding 을 가진 깊은 갈색-차콜
+  세계로 보임. 얇은 O₂ 대기는 옅은 limb haze 외에는 궤도에서
+  사실상 보이지 않음.
+- **Dayside.** substellar 영역 (subsolar peak ~430 K, 일반 dayside
+  ~370 K) 의 산화철 patch 는 substellar 점에서 30° 이내가 가장 강함.
+  지형 기복은 잔잔함 — 성숙한 충돌 cratering 만 있고 활발한 화산
+  활동은 없음. nightside 로의 열 재분배는 약하지만 0 이 아니며 (얇은
+  O₂ 대기의 효과), nightside floor 가 ~140 K 로 유지됨.
+- **Terminator band.** 2566 K 비스듬한 광선 아래에서 적당한 수준의
+  지형 그림자 대비. 낮은 태양 천정각에서는 high-altitude 의 옅은
+  gray Rayleigh-산란 haze 가 얇은 limb glow 로 보일 가능성.
+- **Nightside.** 차갑고 (~140 K) 어두움. substellar 점에서 ≳60°
+  떨어진 좁은 띠에 CO₂/H₂O frost 가 형성될 수 있으며, 자매 행성
+  에서 반사된 빛 아래에서는 살짝 밝은 patch 로 비침. 가시광에서는
+  열적외 emission 외에는 보이는 게 없음. KSP 의 nightside ambient
+  는 dayside 의 약 5–10% 수준.
+- **Atmosphere haze.** 두께 3–8 km 의 옅은 gray-violet limb haze
+  (`#3a3a40`). 우주를 배경으로 행성 limb 에서만 식별 가능.
+- **Star in sky.** c 의 하늘에서 TRAPPIST-1 의 각지름은 4.02° (지구
+  에서 본 태양의 8 배). 색은 `#ff7a1a` (2566 K). 표면 밝기는
+  ~2.27 S⊕ (지구 궤도에서의 금성 insolation 수준). flare 활동은
+  b 와 동일 — 가끔씩 두드러진 IR flare 가 나타남.
+- **Sister planets in sky.** b (안쪽 이웃) 가 inferior conjunction
+  때 ~0.6°, d (바깥쪽 이웃) 가 4–6 일마다 일어나는 conjunction 때
+  ~0.5° 로 보임. Agol 2021 에 따르면 거의 동일 평면 geometry.
 
-## 참고 문헌
+## Bibliography
 
-### 읽음 (시각-정보 제공, 위 결정 견인)
+### Read (visual-informative, drove decisions above)
 
 - **2306.10150** Zieba 2023 — c 의 JWST/MIRI F1500W secondary eclipse.
   Fp/F★ = 421 ± 94 ppm, dayside T ≈ 380 K. Venus-analog 와 대부분의
-  CO₂-rich 대기 배제. c 의 대기 상한에 대한 발견 논문.
+  CO₂-rich 대기 시나리오를 배제함. c 의 대기 상한에 대한 발견 논문.
 - **2308.05899** Lincowski 2023 — two-column climate+photochemistry
-  사용한 c 의 더 넓은 대기 탐색. 얇은 O₂ 낮은 CO₂ 대기가 1σ 내에서
-  일관 발견. 채택된 O₂ 지배 시나리오 견인.
+  로 진행한 c 의 보다 넓은 대기 탐색. 낮은 CO₂ 의 얇은 O₂ 대기가
+  1σ 안에서 데이터와 일관함을 발견. 채택된 O₂ 지배 시나리오의 근거.
 - **2509.02128** Ducrot 2025 — b 와 c 의 MIRI 15 μm phase curve.
-  c dayside 369 ± 23 K, nightside 비검출. 대기 시나리오 공간을 맨
-  암석 / 얇은 O₂ 쪽으로 닫음.
-- **2305.01250** Acuña 2023 — 내부-대기 모델링. c 가 맨 표면일
-  가능성이 가장 높지만 얇은 대기를 배제할 수 없음 발견. Lincowski
-  2023 가 해결한 표면-대기 degeneracy 지지.
-- **2412.11987** Nicholls 2024 — lava-world 대기의 convective shutdown.
-  c 를 케이스 스터디로 사용; non-convective 대기 아래에서 마그마
-  바다가 지속될 수 있을 때 탐색. "풍화된 표면" vs. "신선한 ultramafic"
-  선택 알림 (c 는 풍화 쪽에 위치).
+  c 의 dayside 369 ± 23 K, nightside 미검출. 대기 시나리오 공간을
+  맨 암석 / 얇은 O₂ 쪽으로 좁힘.
+- **2305.01250** Acuña 2023 — 내부-대기 결합 모델링. c 가 맨 표면
+  일 가능성이 가장 높지만 얇은 대기도 배제할 수 없음을 보임.
+  Lincowski 2023 가 해소한 표면-대기 축퇴를 뒷받침.
+- **2412.11987** Nicholls 2024 — 용암 행성 대기에서의 대류 정지
+  현상. c 를 사례 연구로 다루며, 비대류 대기 아래에서 마그마 바다가
+  얼마나 지속될 수 있는지 탐색. "풍화된 표면" vs. "신선한
+  ultramafic" 선택의 판단 자료가 됨 (c 는 풍화 쪽).
 
-### 읽음 (맥락 / 방법론, 결정 견인 안 함)
+### Read (context / methodology, not decision-driving)
 
-- **2412.16541** back-to-back b/c transit 사용한 stellar contamination
-  보정. 모든 TRAPPIST-1 transmission 에 관련된 방법론; 직접 시각
-  정보는 아님.
-- **2412.11627** Ducrot 2024 — b 의 결합 12.8+15 μm eclipse 분석. 맨
-  암석 vs. CO₂-haze 해석이 c 의 옵션과 평행하기 때문에 여기 언급.
-- **2507.02052** JWST MIRI 15 μm eclipse 의 균일 재분석 (frame-
-  normalized PCA). cross-check; 일관된 결과.
-- **2505.03672** TRAPPIST-1 행성의 secondary-atmosphere 소스로서 water
-  outgassing 에 대한 통계적 지구화학적 제약. "fossil O₂" 추론의 배경
-  맥락.
+- **2412.16541** 연속된 b/c transit 을 이용한 stellar contamination
+  보정. 모든 TRAPPIST-1 transmission 관측에 적용되는 방법론으로,
+  시각 정보에 직결되진 않음.
+- **2412.11627** Ducrot 2024 — b 의 12.8 + 15 μm 결합 eclipse 분석.
+  맨 암석 vs. CO₂-haze 해석 구도가 c 의 옵션과 평행하기에 함께 언급.
+- **2507.02052** JWST MIRI 15 μm eclipse 데이터의 균일 재분석
+  (frame-normalized PCA). cross-check 용이며, 결과는 일관됨.
+- **2505.03672** TRAPPIST-1 행성의 secondary-atmosphere 공급원으로
+  서의 water outgassing 에 대한 통계 지구화학 제약. "fossil O₂"
+  추론의 배경 맥락 제공.
+- **1802.01377** Grimm 2018 — TTV 기반 질량 + Bayesian 내부 fit.
+  c 의 휘발성 확률 ≥0.24 (확장된 물 외피가 필수가 아님). 질량은
+  Agol 2021 보다 약간 낮지만 불확실성 범위 안.
+- **1806.10084** Unterborn 2018 — 갱신된 조성 모델. c 의 내부는
+  작은 핵의 무수(無水) 암석 조성과 더 큰 핵의 습윤 (8–34 wt%
+  water) 조성 사이에서 축퇴됨. 두 선택지 모두 현재 cfg 와 일관.
+- **1905.00512** Brasser, Barr & Dobos 2019 — b 와 c 의 조석 파라
+  미터. decisions 표의 새 항목인 `tidal_k2_over_Q` 와
+  `moment_of_inertia_C` 의 근거. 참고. 이전 synthesis 에서 이 논문
+  을 "Bolmont 2020" 으로 잘못 인용했던 것을 수정함.
 
-### 읽음 (instrument-only, 시각 정보 아님)
+### Read (instrument-only, not visual-informative)
 
-- **2409.19333** Stellar contamination 보정 방법론 논문. 완전성을
-  위해 인용; c 에 대한 직접 시각 콘텐츠 없음.
+- **2409.19333** stellar contamination 보정 방법론 논문. 완전성을
+  위해 인용했으나 c 의 시각 콘텐츠에는 직접 기여하지 않음.
 
-### 읽지 않음 — arXiv preprint 없음 또는 낮은 우선순위 (~20 편)
+### Not read — no arXiv preprint or low-priority (~20 papers)
 
-c 참고문헌은 b 의 것보다 작음 (32 vs 66). 비-arXiv 논문 대부분은
-conference 요약 또는 자매 행성 biosignature 연구. 건너뛴 주목할 항목.
+c 의 참고문헌은 b 의 것보다 작음 (32 vs 66). arXiv 가 없는 논문은
+대부분 학회 요약이거나 자매 행성의 biosignature 연구. 건너뛴 주목할
+만한 항목.
 
 - **2026NatAs.tmp...65G** "No thick atmosphere around TRAPPIST-1 b
   and c from JWST thermal phase curves" — Ducrot 2025 의 Nature
-  Astronomy 출판일 가능성 높음 (arXiv 2509.02128 통해 다룸). Skip.
-- **2025arXiv...** 다양한 retraction / re-fit conference 요약. c
-  eclipse depth 를 업데이트하는 경우가 아니라면 skip.
+  Astronomy 정식 출판본일 가능성이 높음 (arXiv 2509.02128 으로 이미
+  다룸). Skip.
+- **2025arXiv...** 다양한 retraction / re-fit 학회 요약. c 의
+  eclipse depth 를 갱신하는 경우가 아니면 skip.
 
 ---
 
-## 후속 follow-up 항목
+## Open items for follow-up
 
-- 더 짧은 파장의 MIRI 필터 (예. c 의 F1280W) 에서의 향후 c emission
-  분광에 대해 0.1 bar O₂ 대기 선택 검증 — 대기 없음 대안은 통계적
-  으로 동등하게 일관되며 향후 renderer 가 "맨 암석 형제" b+c 페어링
-  이 필요하다면 선호될 수 있음.
-- Way 2024 / Cohen 2024 (TRAPPIST-1 표면 산화 모델링) 의 c-특화 예측에
-  대해 산화철 accent 두드러짐 cross-check, 이들이 사용 가능해질 때.
-- "대기 없는 맨 암석" 해석을 위한 cfg 변형, b 의 대기 없는 cfg 와
-  조율된 팔레트로 페어링.
-- `density_g_cc` 항목 정교화. derived 값 (6.36) 은 Agol 2021 의 보고
-  5.7 보다 약간 높으며, 다른 불확실성 전파 반영. Phase 2 가 조정해야
-  함.
+- 더 짧은 파장의 MIRI 필터 (예. c 의 F1280W) 로 진행될 향후 c
+  emission 분광 결과에 대해 0.1 bar O₂ 대기 선택을 재검증할 것.
+  대기 없음 시나리오도 통계적으로 동등하게 양립하며, 추후 렌더러가
+  "맨 암석 형제" b+c 페어링이 필요하다면 그쪽이 선호될 수도 있음.
+- 산화철 accent 의 두드러짐을 Way 2024 / Cohen 2024 (TRAPPIST-1
+  표면 산화 모델링) 의 c 전용 예측과 대조 확인. 공개되는 시점에
+  진행.
+- "대기 없는 맨 암석" 해석에 대응하는 cfg 변형도 준비. b 의 대기
+  없는 cfg 와 팔레트를 맞춰 페어링하는 방식.
+- `density_g_cc` 항목 보정. derived 값 (6.36) 이 Agol 2021 의
+  5.7 보다 약간 높은데, 이는 불확실성 전파 방식의 차이를 반영.
+  Phase 2 에서 조정 필요.

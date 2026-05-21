@@ -57,7 +57,9 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_morphology` | weathered basaltic plains; aged impact craters; subdued relief | medium | no fresh resurfacing inferred (unlike b); cumulative ~8 Gyr impacts |
 | `surface_ice_caps` | nightside CO₂ / H₂O frost in a narrow band ≳60° from substellar | medium | thin atmo can transport trace H₂O; nightside T < CO₂ frost point |
 | `induction_heating_w_m2` | 0.05–0.5 | medium | Grayver 2022 — lower than b due to greater distance; not enough for active volcanism |
-| `tidal_heating_w_m2` | 0.005–0.05 | medium | Bolmont 2020 — lower than b by ~10× |
+| `tidal_heating_w_m2` | 0.005–0.05 | medium | scaled down from Bolmont 2026 b-flux by ~10× (no direct c-specific W/m² in the cited papers); Brasser 2019 gives k₂/Q = (0.4–2)×10⁻⁴ for c |
+| `tidal_k2_over_Q` | (0.4–2) × 10⁻⁴ | medium | Brasser 2019 (1905.00512) interior models; dynamical lower bound k₂/Q ≳ 1×10⁻³ |
+| `moment_of_inertia_C` | 0.286 (range 0.235–0.4) | low | Brasser 2019 representative case |
 | `star_apparent_angular_diameter_deg` | 4.02 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -80,6 +82,17 @@ Mercury's intercrater plains (broadband visible albedo ≈ 0.06–0.10),
 but with iron-oxide patches concentrated near the substellar
 hemisphere due to UV photolysis of any surface volatiles delivered by
 late impacts.
+
+The interior composition is consistent with — but does not require —
+substantial water. Unterborn 2018 (1806.10084) finds c can be fit by
+either a small-core (≤23 wt% Fe) rocky interior with no volatile
+envelope, or a larger-core composition needing 8–34 wt% water; the
+two-body degeneracy is not resolvable from mass+radius alone. Grimm
+2018 (1802.01377) gives a slightly lower mass (1.156 +0.142/−0.131 M⊕)
+than Agol 2021 (1.308 ± 0.056 M⊕), with a volatile probability ≥0.24
+— i.e., c is consistent with no extended volatile envelope. The
+adopted "weathered basalt" surface is the simplest interpretation
+under these constraints.
 
 **Color choice.** Weathered basalt under M8V illumination. The dark
 basaltic primary `#2c2218` is slightly lighter than b's `#1a1612`
@@ -164,9 +177,13 @@ geological timescales (modulo the slow precession noted for b).
 
 **Eccentricity-driven tidal flexure.** With e = 0.00654 and an
 ultra-cool dwarf host, the tidal heating rate from forced libration
-is modest (Bolmont 2020: ~0.005–0.05 W/m² for c). Insufficient to
-drive active volcanism; consistent with the "weathered surface"
-inference.
+is modest. Brasser 2019 (1905.00512) gives k₂/Q in the range (0.4–2)
+× 10⁻⁴ from interior models, with a dynamical lower bound k₂/Q ≳
+1×10⁻³; representative moment-of-inertia C ≈ 0.286 (range 0.235–0.4).
+The implied surface tidal flux is ~10× lower than b's (consistent
+with c's larger orbital semi-major axis), keeping c in the
+"insufficient to drive active volcanism" regime — consistent with
+the "weathered surface" inference.
 
 ## Visual styling
 
@@ -241,6 +258,18 @@ Combining surface and atmosphere decisions:
 - **2505.03672** Statistical geochemical constraints on water
   outgassing as secondary-atmosphere source for TRAPPIST-1 planets.
   Background context for the "fossil O₂" inference.
+- **1802.01377** Grimm 2018 — TTV-derived masses and Bayesian
+  interior fit. c's volatile probability ≥0.24 (no extended water
+  envelope required). Mass slightly lower than Agol 2021 but within
+  uncertainty.
+- **1806.10084** Unterborn 2018 — Updated compositional models;
+  c's interior is degenerate between small-core rocky (no water)
+  and larger-core wet (8–34 wt% water). Both options consistent
+  with current cfg.
+- **1905.00512** Brasser, Barr & Dobos 2019 — Tidal parameters for
+  b and c. Drives the new `tidal_k2_over_Q` and `moment_of_inertia_C`
+  entries in the decisions table. Note: the synthesis previously
+  cited this paper as "Bolmont 2020" by mistake; corrected.
 
 ### Read (instrument-only, not visual-informative)
 

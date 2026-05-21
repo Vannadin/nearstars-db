@@ -34,7 +34,7 @@ liquid-water layer maintained by basal melting from radiogenic heat.
 | `radius_rearth` | 1.129 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 1.036 | high | derived = 1.321 / 1.129² |
 | `density_g_cc` | 5.06 | high | Agol 2021 |
-| `water_mass_fraction` | 0.11–0.24 | medium | Bourgeois 2024 — highest in system |
+| `water_mass_fraction` | 0.11–0.50 | medium | Bourgeois 2024 (0.11–0.24); Unterborn 2018 inward-migration model gives upper bound ≥50 wt% — highest in system either way |
 | `insolation_s_earth` | 0.26 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 194 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.6, snowball) | 154 | high | derived; high-albedo snowball |
@@ -58,7 +58,9 @@ liquid-water layer maintained by basal melting from radiogenic heat.
 | `surface_morphology` | global glacial ice; tectonic stresses from differential rotation → pressure ridges; possible cryovolcanism at warm spots | medium | Wolf 2017 + Europa-Ganymede analog reasoning |
 | `magnetic_field_present` | uncertain (possibly active from interior hydrosphere convection) | low | non-trivial wmf could sustain dynamo from internal mantle convection |
 | `induction_heating_w_m2` | 0.002–0.02 | medium | Grayver 2022 — drops with distance |
-| `tidal_heating_w_m2` | 0.0001–0.001 | medium | Bolmont 2020 — very low at g |
+| `tidal_heating_w_m2` | 2×10⁻⁷–0.001 | medium | Hay & Matsuyama 2019 — eccentricity-forced Maxwell-body surface flux ~2×10⁻⁷ W/m², Andrade rheology somewhat higher; g uniquely receives 2–20% from planet-planet tides (mostly f) |
+| `xuv_flux_at_planet_F_earth` | ~120 (current) | high | Berardo 2025 (2506.12140) — revised L_XUV = 1.83×10²⁸ erg/s, 30× higher than 2017 estimates |
+| `stellar_microflare_cadence_min` | 45 | high | Berardo 2025 — 10²⁹ erg microflares every ~45 min; 10³⁰ erg flares every 6 hours (JWST) |
 | `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics |
 | `star_apparent_angular_diameter_deg` | 1.36 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
@@ -141,6 +143,18 @@ For NearStars we adopt **0.05 bar CO₂-rich thin atmosphere**:
 - **Clouds.** Minimal (~10% global): only CO₂ ice cirrus at the
   terminator + nightside cold-trap.
 
+**Caveat — atmosphere retention.** Van Looveren 2024 (2401.16490)
+finds that at g's ~120 F_EUV,⊕ (revised upward from earlier estimates
+by Berardo 2025 / 2506.12140, who measured L_XUV = 1.83×10²⁸ erg/s,
+30× higher than 2017 values), CO₂ atmospheres are lost at roughly
+**1 bar per 5 Myr** under Jeans escape alone. Even a 100 × Earth
+atmosphere would be lost in tens of Myr. The 0.05 bar choice is
+therefore **optimistic** and assumes ongoing volcanic replenishment.
+A 0.01 bar / fully airless variant is preserved as a cfg backup. The
+stellar microflare cadence (~10²⁹ erg every 45 min, per Berardo 2025
+HST Ly-α multi-year monitoring) further stresses retention but does
+not directly drive the cfg pressure.
+
 **Sky appearance.** The 0.05 bar atmosphere is barely visible from
 orbit. From the surface, the sky is near-black with the host star
 appearing as a deep red-orange disk against the void. CO₂ ice
@@ -158,6 +172,15 @@ the lowest in the system, deep inside the 3:2 stability boundary
 
 **No seasons.** Obliquity = 0; libration-induced insolation
 variation < 0.2% (lowest in system). Substellar point is fixed.
+
+**Planet-planet tides.** Hay & Matsuyama 2019 (1903.04501) identifies
+g as the planet that experiences the most significant **planet-planet
+tidal heating relative to its eccentricity-forced tides** (2–20% of
+total, mostly from neighbor f). For all other planets in the system
+the planet-planet contribution is <1%. The absolute magnitude is
+still small (~2×10⁻⁷ W/m² surface flux for a Maxwell-body rheology),
+but the relative dominance of f's gravitational influence is unique
+to g — a faithful annotation for the Principia cfg.
 
 ## Visual styling
 
@@ -203,6 +226,26 @@ variation < 0.2% (lowest in system). Substellar point is fixed.
 - **1810.05210** Moran 2018 — HST haze limits. Rejects cloud-free
   H₂-rich for inner 5 planets (including g indirectly). Already
   read for d Phase 3.
+- **1706.02689** Unterborn 2018 — Inward-migration interpretation of
+  TRAPPIST-1 densities. Argues g and f have ≥50 wt% water/ice — a
+  much higher water-content upper bound than Bourgeois 2024's 0.24.
+  Drives the upward revision of `water_mass_fraction` to 0.11–0.50.
+- **1903.04501** Hay & Matsuyama 2019 — Tides between TRAPPIST-1
+  planets. g uniquely receives 2–20% of its tidal heating from
+  planet-planet interactions (mostly f); all other planets <1%.
+  Drives the new Rotation section paragraph.
+- **2401.16490** Van Looveren 2024 — Airy worlds or barren rocks?
+  Quantitative atmospheric escape under Jeans escape. At g's ~120
+  F_EUV,⊕, CO₂ atmospheres are lost at ~1 bar per 5 Myr. Drives the
+  new "atmosphere retention caveat" paragraph and the alternative
+  cfg variants.
+- **2506.12140** Berardo 2025 — HST multi-year Ly-α monitoring of
+  TRAPPIST-1. Revised L_XUV = 1.83×10²⁸ erg/s (30× higher than 2017
+  estimates). Microflare cadence ~10²⁹ erg every 45 min. Drives
+  the new XUV and microflare entries in the decisions table.
+- **1912.05749** Hori & Ogihara 2020 — Hydrogen-rich atmosphere
+  origin. g's maximum primordial H atmosphere ≤ 2 wt%, lost within
+  several 100 Myr. Confirms the present-day atmosphere is secondary.
 
 ### Read (context / methodology, not decision-driving)
 

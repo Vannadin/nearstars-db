@@ -60,7 +60,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_ice_caps` | none (sublimation/photolysis on nightside) | high | dayside 500 K, no atmosphere to trap volatiles |
 | `star_apparent_angular_diameter_deg` | 5.51 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
-| `tidal_heating_w_m2` | 0.04–0.2 | medium | Bolmont 2020 — internal-structure dependent |
+| `tidal_heating_w_m2` | 0.5–1 (low-e) up to ~400 (max-e, JWST-capped) | medium | Bolmont 2026 (2601.03408) — internal-structure dependent; JWST nightside non-detection caps Φ at ~407 W/m² (Φ_2σ) |
 
 ## Surface synthesis
 
@@ -81,18 +81,21 @@ redistribution. The conclusion across the b literature is consistent:
 **b is a bare, fresh, dark, hot rock.**
 
 **Resurfacing mechanism.** Two physically plausible drivers:
-(1) Tidal heating from the resonant chain (Bolmont 2020 estimates 0.04–
-0.2 W/m² for b depending on interior dissipation parameters Q). The
-Moon-Earth tidal flux is ~1 mW/m² for comparison; even the lower end
-of Bolmont's range exceeds Io's ~2 W/m² is not reached, but the upper
-end approaches Mars's radiogenic flux of ~0.04 W/m². (2) Magnetic
-induction heating (Grayver 2022, Cohen 2024) from the planet's motion
-through the stellar wind, with estimates of 0.4–4 W/m² for b — easily
-enough to sustain partial-melt volcanism. The cumulative effect, given
-the system's 7.6 Gyr age, is a surface continuously refreshed by lava
-flows in regions of crustal weakness, biased toward the substellar
-hemisphere where insolation pushes the upper crust closest to
-solidus.
+(1) Tidal heating from the resonant chain. Bolmont 2026 (2601.03408)
+revises older estimates substantially upward: for b's measured
+core-mass-fraction range (Agol 2021: ~21 wt%) and the smallest plausible
+eccentricity, surface flux is **~0.5–1 W/m² (nominal)**, comparable to
+Io's ~2 W/m². Higher-eccentricity solutions reach 10²–10³ W/m² but are
+ruled out by the JWST nightside constraint (Gillon 2025; T_2σ ≤ 291 K
+→ Φ_2σ ≤ 407 W/m²). Even at the conservative ~0.5 W/m² value, tidal
+heating dominates Mars's radiogenic ~0.04 W/m² by an order of magnitude.
+(2) Magnetic induction heating (Grayver 2022, Cohen 2024) adds another
+0.4–4 W/m² from the planet's motion through the stellar wind. The
+combined heat budget easily sustains partial-melt volcanism. Given
+the system's 7.6 Gyr age, the surface is continuously refreshed by
+lava flows in regions of crustal weakness, biased toward the
+substellar hemisphere where insolation pushes the upper crust closest
+to solidus.
 
 **Color choice.** The host star is a 2566 K M8V dwarf with SED peak
 near 1.1 μm — surface reflectance perceived by a human observer is
@@ -149,6 +152,25 @@ offset. Atmosphere models with surface pressure ≥1 bar and any
 significant greenhouse effect are excluded; b is "unlikely to possess
 any substantial atmosphere."
 
+Two theoretical papers reinforce the airless interpretation on
+independent grounds. **2412.05188** (Chatterjee & Pierrehumbert 2024)
+places b firmly inside the "catastrophic escape" regime of the
+revised cosmic shoreline — even continuous volcanic outgassing cannot
+rebuild a secondary atmosphere against b's current XUV flux (~10³ ×
+F⊕,XUV; ~10⁴–10⁵ during the superluminous pre-main-sequence phase).
+**1911.08878** (Turbet 2020) shows that b's maximum retained water
+mass fraction is ≤ 2% for a terrestrial-core composition with the
+measured loss rate of 0.19%/Gyr, implying b is "likely completely
+dry today" — consistent with the airless surface.
+
+One methodological caveat: **2601.12556** (Wirth, Powell & Wordsworth
+2026) finds that b has Λ ≤ 1 (Weak Temperature Gradient assumption
+fails), so heat-redistribution-only bounds on b's atmosphere are
+weaker than usually assumed. However, Ih 2023's 0.3-bar bound uses
+direct 15 μm CO₂ molecular absorption (not redistribution) and still
+holds. Ducrot 2025's phase curve also measures redistribution
+directly, so this caveat does not change the airless decision.
+
 For NearStars we adopt the **fully airless** interpretation:
 
 - **Pressure.** 0 Pa exactly. The 12.8/15 μm-consistent "CO₂ + haze"
@@ -192,7 +214,10 @@ surface frame.
 small secular drift of the substellar point due to the chain's
 n-body precession — at b's distance, the drift is ~0.6° per Myr,
 negligible on KSP gameplay timescales but worth noting in the cfg
-that the "substellar point" is a long-term mean.
+that the "substellar point" is a long-term mean. Revol 2024 (cited
+in Bolmont 2026 / 2601.03408) finds an even longer "sidereal day"
+of 69 yr for b under the full chain dynamics — again, irrelevant
+to gameplay but a faithful annotation.
 
 ## Visual styling
 
@@ -259,6 +284,19 @@ Combining the surface and atmosphere decisions:
   authors). Explores the family of atmospheres compatible with
   eclipses but ruled out by the phase curve. Reinforces the airless
   conclusion.
+- **2412.05188** Chatterjee & Pierrehumbert 2024 — Cosmic shoreline
+  with hydrodynamic escape physics. Places b firmly in the
+  "catastrophic escape" regime; even outgassing cannot rebuild a
+  secondary atmosphere. Theoretical justification for airlessness
+  independent of JWST data.
+- **2601.03408** Bolmont 2026 — Tidal-heating refinement using full
+  interior structure + JWST nightside cap. Drives the upward revision
+  of `tidal_heating_w_m2` from 0.04–0.2 to ~0.5–1 W/m² (nominal),
+  with the JWST hard cap at 407 W/m² (Φ_2σ). Confirms that high-e,
+  low-viscosity interior models for b are observationally excluded.
+- **1911.08878** Turbet 2020 — Water mass-radius relationships for
+  irradiated rocky planets. Caps b's retained water at ≤2% for an
+  Earth-like core, supporting the "dry today" inference.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -279,6 +317,20 @@ Combining the surface and atmosphere decisions:
 - **2502.00132** Way 2025 — TRAPPIST-1 d focus, but reviews b's
   status as an exo-Venus / exo-Dead candidate in its introduction.
   Already read for d Phase 3.
+- **2601.12556** Wirth, Powell & Wordsworth 2026 — Analytic modeling
+  of tidally-locked rocky planet atmospheres. Notes b has Λ ≤ 1
+  (WTG assumption fails) so heat-redistribution-only bounds are weak;
+  cited as a methodological caveat in the atmosphere synthesis. Does
+  not change the airless decision because the molecular-absorption
+  bounds (Ih 2023) and phase-curve heat-redistribution measurement
+  (Ducrot 2025) are independent of WTG.
+- **2512.07695** Allen 2025 — JWST TRAPPIST-1 e/b Program: First
+  Observations. Uses b as airless stellar-contamination proxy for e.
+  Reaffirms airless interpretation; no new b-specific constraints.
+- **1806.10084** Unterborn 2018 — Updated compositional models for
+  b/c. Interior degeneracy: small core consistent with no water,
+  larger core would require volatile envelope. Superseded by Agol
+  2021 + Turbet 2020 for the water-content question.
 
 ### Read (instrument-only, not visual-informative)
 

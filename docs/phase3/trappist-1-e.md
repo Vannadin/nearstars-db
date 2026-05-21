@@ -52,7 +52,9 @@ strong support, low = aesthetic choice within the allowed window.
 | `atmosphere_composition` | N₂ 78%, O₂ ~5% (low; abiotic), CO₂ ~1%, H₂O 0.1–1%, Ar 0.5% | medium | Wolf 2017, Lincowski 2018 aquaplanet equilibrium; CO₂ elevated vs. Earth for outer-HZ warming |
 | `atmosphere_scale_height_km` | 9.5 | medium | derived: kT/μg with T≈270 K, μ=29, g=8.0 m/s² |
 | `atmosphere_tint_rgb_hex` | `#5a7090` (muted blue with M-dwarf red shift) | medium | Rayleigh-blue under 2566 K illumination — heavily red-shifted toward dim cyan-gray |
-| `cloud_cover_fraction` | 0.55 | medium | Wolf 2017 GCM Aquaplanet stratocumulus + cirrus |
+| `cloud_cover_fraction` | 0.55 | medium | Wolf 2017 GCM Aquaplanet stratocumulus + cirrus; Cohen 2022 UM finds 60% (consistent) |
+| `subsurface_ocean_probability` | 0.876 | medium | Boldog 2023 (2312.01893) — top-target ranking for HZ |
+| `cloud_morphology` | double mid-latitude bands + quasi-stationary substellar cluster | medium | Cohen 2022 Met Office UM — double-jet regime, not single equatorial |
 | `cloud_tint_rgb_hex` | `#c0a890` (warm cream — red-shifted water clouds) | medium | water cloud + 2566 K illumination → warm cream-orange |
 | `ocean_present` | true (substellar open-water disk; ice elsewhere) | medium | Turbet 2018 aquaplanet; Pierrehumbert 2011 "eyeball Earth" morphology |
 | `ocean_extent_substellar_radius_deg` | 35 | medium | Wolf 2017 Aquaplanet — open ocean within ~35° of substellar point |
@@ -194,10 +196,16 @@ orbital `period` in seconds.
 
 **Slow rotation effects.** With a 6.1-day rotation period, Coriolis
 effects are weaker than on Earth (Rossby number elevated). Wolf 2017
-GCM shows this produces a slow, broad east-to-west zonal circulation
-in the substellar disk rather than Earth's narrow jet streams. The
-visual implication for cloud patterns: smoother, larger-scale cloud
-bands; less cyclonic activity.
+and Cohen 2022 (2211.11887, Met Office UM GCM) agree that e sits in
+the **double mid-latitude jet regime** (mean zonal wind ~18 m/s) —
+not Earth's single equatorial jet. Two stationary Rossby gyres form
+at 60–70°N/S, with the eastern gyre's center oscillating between
+30–60°E and 120–150°E on a ~20-day cycle. The substellar cloud disk
+reaches only ±30° in latitude (vs. ±60° on Proxima b in the same
+study). The visual implication for KSP: cloud patterns dominated by
+two mid-latitude bands of stratocumulus and a quasi-stationary
+substellar cloud cluster, with subtle 20-day variability that won't
+be visible at typical KSP gameplay speeds.
 
 **No seasons.** Obliquity = 0; libration-induced insolation variation
 < 0.4%. The substellar point and its open-water disk are fixed in
@@ -287,8 +295,36 @@ Combining surface and atmosphere decisions:
   tidally-locked planets. Methodology context for the substellar
   disk modeling.
 - **2211.11887** Cohen 2022 — Traveling planetary-scale waves on
-  tidally-locked aquaplanets. Predicts cloud variability that could
-  add visual interest but is gameplay-irrelevant for KSP.
+  tidally-locked aquaplanets, Met Office UM GCM. Drives the
+  **cloud morphology** decision: e sits in the double mid-latitude
+  jet regime (~18 m/s mean zonal wind), with substellar cloud disk
+  reaching only ±30° in latitude. Two stationary Rossby gyres at
+  60–70°N/S; eastern gyre oscillates on a ~20-day cycle. Mean
+  cloud fraction 60%, confirming Wolf 2017.
+- **2312.01893** Boldog 2023 — Water content of HZ rocky planets.
+  e has subsurface ocean probability 87.56% (highest tier in their
+  catalog). Rock-ice-boundary tidal heat 0.21 W/m² (range 0.18–0.24,
+  much larger than surface flux). Supports the water-rich aquaplanet
+  cfg choice.
+- **1906.06797** Yamashiki 2019 — Stellar superflare habitability
+  impact. TRAPPIST-1's Spot Maximum Flare = 9.09×10³² erg. With a
+  1 bar N₂/O₂ atmosphere + Earth-level magnetic field, ground-level
+  dose stays non-lethal even under Spot Maximum (≤1.18×10⁴ Sv at
+  top-of-atmosphere → manageable at surface). Critical atmospheric
+  column for complex life: ~2.04×10² g/cm² (20% Earth). Supports
+  keeping the 1 bar atmosphere cfg.
+- **2309.15239** + **2405.20167** Cooke 2023 / 2024 — WACCM6
+  Earth-like-continents simulations for e. Global mean surface T
+  219–231 K (cooler than Wolf 2017 aquaplanet's 270 K) because of
+  realistic land-ocean partitioning. O₃ column 50–1310 DU
+  depending on stellar UV scenario. The aquaplanet cfg chooses the
+  warmer Wolf 2017 baseline; WACCM6 is a colder alternative for
+  the "less habitable" cfg variant.
+- **2601.18324** Bourgeois 2026 — Early Great Oxidation Event on
+  TRAPPIST-1 e (~700 Myr earlier than Earth, K_oxy ~0.83 vs 1.0).
+  M-dwarf UV distribution favors O₃ over O₂ photolysis, producing
+  a thick O₃ layer at lower atmospheric O₂. Reinforces the cfg's
+  inclusion of trace O₃ in atmospheric composition.
 - **2305.08813** *(in d bibliography, not e)* Various contamination /
   characterization works — context only.
 
