@@ -113,4 +113,41 @@ remain inline (the JS-driven detail panel in `index.html`, the SVG
 plot styling in `phase2-<host>.html`, etc.) so we don't fight
 specificity across files.
 
-## (Append further entries below as work progresses)
+## 2026-05-21 — Policy collision: bilingual markdown superseded by `ko/` mirror tree
+
+While Stage 1 (CSS extraction) was being committed, two upstream
+commits landed (17b758a, 0396545) that codify a different policy:
+English markdown source lives at its canonical path, Korean mirror
+lives at `ko/<same-path>`. Documented in AGENTS.md §2.1 and §3.7,
+with `scripts/check-mirrors.sh` to detect missing or stale mirrors.
+
+This supersedes the bilingual-in-one-file syntax I had planned (the
+`[en]/[ko]` block grammar and `(한국어)` column suffix). Reasons the
+mirror approach wins:
+
+- Reuses an already-agreed project convention rather than inventing
+  new markdown grammar.
+- Each language file reads naturally on its own (no `[en]`/`[ko]`
+  noise interleaved with prose).
+- `check-mirrors.sh` provides validation for free.
+- Translation can be done as a separate concern (e.g. by a different
+  agent or a translator) without touching the source.
+- PR template already has a mirror checkbox so reviewers catch drift.
+
+Adapted plan:
+
+- Stage 2 (revised) — Create `ko/docs/phase3/trappist-1-d.md` as the
+  natural-Korean mirror of the existing English synthesis. No new
+  syntax retrofit needed in the English source.
+- Stage 3 (revised) — Generator reads the English `<path>.md` and
+  the corresponding `ko/<path>.md`, splits both by H2 headings (which
+  must match between locales), and builds the JS `T = {en, ko}`
+  table from paired sections.
+- Stage 4+ — Phase 2 generator and reports index follow the same
+  English + ko/-mirror pattern.
+
+Headings paired by order: the generator assumes the English and
+Korean files have the same H2/H3 structure. If they diverge,
+check-mirrors.sh catches the staleness but the generator should also
+fail loudly rather than silently dropping content.
+

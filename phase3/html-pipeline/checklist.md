@@ -14,27 +14,27 @@ markdown, with shared styling and a bilingual ko/en toggle.
 - [x] Refactor each HTML page to `<link rel="stylesheet" href="style.css">` + keep page-specific rules inline
 - [x] Verify localhost serves all 4 files with 200; visual eyeball check pending in browser
 
-## Stage 2 — bilingual markdown retrofit
+## Stage 2 — Korean mirror for synthesis ✓ (already exists upstream)
 
-- [ ] Define grammar reference at `docs/reference/bilingual-markdown.md`
-  (or in this checklist's context-notes)
-- [ ] Retrofit `docs/phase3/trappist-1-d.md` to bilingual using the
-  agreed syntax: heading `|`, paragraph `[en]/[ko]` blocks,
-  table `(한국어)` columns, list `{{ko: ...}}` inline
-- [ ] Verify the file still validates as markdown (renders in any standard viewer)
+Policy: AGENTS.md §2.1 — English at canonical path, Korean at
+`ko/<same-path>`. Supersedes earlier bilingual-in-one-file plan.
 
-## Stage 3 — Phase 3 HTML generator
+- [x] `ko/docs/phase3/trappist-1-d.md` exists upstream (created by
+  user / parallel session). H2/H3 structure (12 headings) matches
+  English source by position.
+- [x] `scripts/check-mirrors.sh` reports all 17 mirrors OK.
 
-- [ ] `scripts/phase3/build_html.py <planet_slug>` skeleton
-- [ ] Bilingual markdown parser — heading splitter, [en]/[ko] block splitter,
-  table column pairing, list inline parser
-- [ ] Generate `T = {ko: {...}, en: {...}}` JS table, embed in HTML
-- [ ] Lang-toggle JS: `data-i18n="..."` swap on button click
-- [ ] Emit `docs/phase3/<slug>.html` matching existing visual style
-- [ ] Test: regenerate `phase3-trappist-1-d.html` and diff against current Korean page —
-  output should preserve or improve coverage
-- [ ] Replace current `docs/phase3-trappist-1-d.html` with the generated version
-  (note: filename moves to `docs/phase3/trappist-1-d.html` per new layout)
+## Stage 3 — Phase 3 HTML generator ✓
+
+- [x] `scripts/phase3/build_html.py <planet_slug>` skeleton
+- [x] Markdown parser — H2/H3 sections, paragraph blocks, tables, lists (incl. indented continuations), code fences
+- [x] Pair English source with `ko/` mirror by block order; fail loudly on count/kind mismatch
+- [x] Generate `T = {en: {...}, ko: {...}}` JS table from paired sections (198 keys for trappist-1-d)
+- [x] Lang-toggle JS: `data-i18n` swap + localStorage persistence, mirror `index.html` UX
+- [x] Emit `docs/phase3/<slug>.html` matching existing visual style (44.6 KB output)
+- [x] Run on trappist-1-d — 41 paired blocks, no errors
+- [x] Remove old `docs/phase3-trappist-1-d.html` flat-path file
+- [x] Update `docs/index.html` howto link to new subdirectory path
 
 ## Stage 4 — Phase 2 generator
 
