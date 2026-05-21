@@ -8,7 +8,9 @@
 
 현재 데이터베이스는 [라이브 뷰어](https://vannadin.github.io/nearstars-db/) 에서 확인할 수 있습니다.
 Phase 2 큐레이션 리포트 샘플 (논문별 측정값).
-[TRAPPIST-1](https://vannadin.github.io/nearstars-db/phase2-trappist-1.html).
+[TRAPPIST-1](https://vannadin.github.io/nearstars-db/phase2/trappist-1.html).
+Phase 3 인게임 표현 합성 샘플.
+[TRAPPIST-1 d](https://vannadin.github.io/nearstars-db/phase3/trappist-1-d.html).
 
 ---
 

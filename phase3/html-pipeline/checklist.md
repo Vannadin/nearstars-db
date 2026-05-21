@@ -36,16 +36,19 @@ Policy: AGENTS.md §2.1 — English at canonical path, Korean at
 - [x] Remove old `docs/phase3-trappist-1-d.html` flat-path file
 - [x] Update `docs/index.html` howto link to new subdirectory path
 
-## Stage 4 — Phase 2 generator
+## Stage 4 — Phase 2 generator ✓
 
-- [ ] `scripts/pipeline/build_phase2_html.py` scans
-  `db/stellar_props_curated.json` + `db/planets_curated.json` for hosts
-  with array-form measurements (= Phase 2 hosts)
-- [ ] For each such host, emit `docs/phase2/<host_slug>.html`
-- [ ] Reuse the same DB-fetching JS from the existing
-  `phase2-trappist-1.html` but parameterize the host name
-- [ ] Migrate existing `docs/phase2-trappist-1.html` to the new path
-- [ ] Test: regenerate, verify no regression vs existing page
+- [x] `scripts/pipeline/build_phase2_html.py` scans
+  `db/stellar_props_curated.json` for hosts with any of the 6 new
+  measurement categories (= true Phase 2 curation, vs Phase 1 auto-fill)
+- [x] For each such host, emit `docs/phase2/<host_slug>.html`
+- [x] Reused the existing DB-fetching JS but generalized for all 8
+  measurement categories + parameterized host name + json filename
+- [x] Removed legacy `docs/phase2-trappist-1.html`
+- [x] Run: emits `docs/phase2/trappist-1.html` for TRAPPIST-1 (only
+  current Phase 2 host). Page loads with 200 OK, 15.2 KB.
+- [x] Updated README.md, ko/README.md, and docs/index.html links to
+  the new subdirectory path
 
 ## Stage 5 — reports.html index
 

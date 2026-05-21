@@ -8,7 +8,9 @@ The mod is built on top of [Sol-Configs](https://github.com/RSS-Reborn/Sol-Confi
 
 Browse the current database at the [live viewer](https://vannadin.github.io/nearstars-db/).
 Sample Phase 2 curation report (paper-by-paper measurements):
-[TRAPPIST-1](https://vannadin.github.io/nearstars-db/phase2-trappist-1.html).
+[TRAPPIST-1](https://vannadin.github.io/nearstars-db/phase2/trappist-1.html).
+Sample Phase 3 in-game representation synthesis:
+[TRAPPIST-1 d](https://vannadin.github.io/nearstars-db/phase3/trappist-1-d.html).
 
 ---
 
