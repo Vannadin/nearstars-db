@@ -520,6 +520,19 @@ async function getHipsCatalogPos(surveyName, ra, dec) {
   return pos;
 }
 
+// In-memory image cache. 같은 URL을 두 번째부터는 브라우저 HTTP 캐시 hit으로
+// 즉시 보이게 하기 위해, 한 번 본 URL의 Image 객체를 세션 동안 GC 안 되도록 보관.
+const IMG_CACHE = new Map();
+function setImgSrc(img, url) {
+  if (img.src === url) return;          // 이미 같은 URL이면 노옵
+  if (!IMG_CACHE.has(url)) {            // 처음 보는 URL → prefetch 보관
+    const pre = new Image();
+    pre.src = url;
+    IMG_CACHE.set(url, pre);
+  }
+  img.src = url;
+}
+
 function applySurveyUrl(img) {
   const survey = STAR_SURVEYS.find(s => s.name === img.dataset.survey);
   if (!survey) return;
@@ -529,7 +542,7 @@ function applySurveyUrl(img) {
   const pmdec = parseFloat(img.dataset.pmdec || '0');
   const fov   = parseFloat(img.dataset.fov   || '5');
   const c     = propagateCoords(ra, dec, pmra, pmdec, 2016, survey.epoch);
-  img.src     = survey.url(c.ra, c.dec, fov);
+  setImgSrc(img, survey.url(c.ra, c.dec, fov));
   // Restore visibility if previously marked "no image"
   img.style.display = '';
   const box = img.closest('.star-img-box');
@@ -552,7 +565,7 @@ function applySurveyUrl(img) {
       if (img.dataset.survey !== targetName) return; // user switched while we waited
       const fov2  = parseFloat(img.dataset.fov || '5');
       const c2    = propagateCoords(ra, dec, pmra, pmdec, 2016, realEpoch);
-      img.src     = survey.url(c2.ra, c2.dec, fov2);
+      setImgSrc(img, survey.url(c2.ra, c2.dec, fov2));
       const drift = Math.abs(realEpoch - survey.epoch);
       const note  = drift > 10 ? ' · STScI served older plate' : '';
       if (cap) cap.textContent = `${survey.label} · star at crosshair · plate epoch ${realEpoch.toFixed(2)}${note}`;
@@ -565,7 +578,7 @@ function applySurveyUrl(img) {
       if (!pos) return;
       if (img.dataset.survey !== targetName) return;
       const fov2 = parseFloat(img.dataset.fov || '5');
-      img.src    = survey.url(pos.ra, pos.dec, fov2);
+      setImgSrc(img, survey.url(pos.ra, pos.dec, fov2));
       if (cap) cap.textContent = `${survey.label} · star at crosshair · catalog-anchored`;
     });
   }
