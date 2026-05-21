@@ -4,15 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NearStars DB</title>
+<link rel="stylesheet" href="style.css">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{overflow-x:hidden;max-width:100vw}
-body{background:#080c14;color:#c0cce0;font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;min-height:100vh}
-img,svg{max-width:100%;height:auto}
-
-header{padding:14px 20px;border-bottom:1px solid #1a2030;display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:#0a0f1a}
-h1{font-size:17px;font-weight:700;color:#d8e4f0;letter-spacing:.3px;white-space:nowrap}
-h1 span{color:#4a88b8;font-weight:400}
+/* index page-specific styles — common base lives in style.css */
+/* header overrides: index page uses tighter padding + centered alignment for filter bar */
+header{padding:14px 20px;align-items:center;gap:20px}
+h1{font-size:17px;white-space:nowrap}
 
 .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex:1}
 input[type=text]{background:#101826;border:1px solid #243040;color:#c0cce0;padding:6px 12px;border-radius:6px;font-size:13px;width:210px;outline:none}

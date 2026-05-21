@@ -1,0 +1,192 @@
+/* NearStars 공통 스타일 — index.html / phase2/<host>.html / phase3/<planet>.html / reports.html 공유 */
+
+/* ── design tokens ─────────────────────────────────────────────────────────── */
+:root {
+  --bg-body:        #080c14;
+  --bg-header:      #0a0f1a;
+  --bg-card:        #0c121e;
+  --bg-card-alt:    #0d1520;
+  --bg-stats:       #090d16;
+  --bg-input:       #101826;
+  --bg-input-on:    #1a2e42;
+
+  --bd-soft:        #131c28;
+  --bd-mid:         #1a2030;
+  --bd-strong:      #1a2535;
+  --bd-input:       #243040;
+  --bd-input-on:    #2a4868;
+
+  --fg-primary:     #c0cce0;
+  --fg-emph:        #d8e4f0;
+  --fg-muted:       #8aa2bc;
+  --fg-dim:         #5a7898;
+  --fg-faint:       #3a5068;
+
+  --accent:         #4a88b8;
+  --accent-soft:    #5a88b8;
+  --accent-hover:   #8aaad0;
+
+  --ok:             #4aaa60;
+  --ok-soft:        #7ad88e;
+  --warn:           #d8a040;
+  --warn-soft:      #d8b870;
+  --danger:         #c890d0;
+
+  --mono: 'SF Mono', 'Cascadia Mono', Menlo, Consolas, monospace;
+  --sans: 'Segoe UI', system-ui, -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+}
+
+/* ── reset ──────────────────────────────────────────────────────────────────── */
+* { box-sizing: border-box; margin: 0; padding: 0 }
+html, body { overflow-x: hidden; max-width: 100vw }
+img, svg { max-width: 100%; height: auto }
+
+/* ── typography ─────────────────────────────────────────────────────────────── */
+body {
+  background: var(--bg-body);
+  color: var(--fg-primary);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none }
+a:hover { text-decoration: underline }
+
+/* ── header ────────────────────────────────────────────────────────────────── */
+header {
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--bd-mid);
+  background: var(--bg-header);
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--fg-emph);
+  letter-spacing: .3px;
+}
+h1 span {
+  color: var(--accent);
+  font-weight: 400;
+}
+.crumb {
+  font-size: 12px;
+  color: var(--fg-dim);
+}
+.crumb a {
+  color: var(--fg-dim);
+}
+
+/* ── main layout ───────────────────────────────────────────────────────────── */
+main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 24px 24px 64px;
+}
+section { margin-bottom: 32px }
+section:last-of-type { margin-bottom: 0 }
+
+h2 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-soft);
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--bd-strong);
+}
+h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #a0bcd8;
+  margin: 16px 0 8px;
+  letter-spacing: .2px;
+}
+
+.intro {
+  color: var(--fg-muted);
+  font-size: 13px;
+  max-width: 820px;
+  line-height: 1.65;
+}
+.intro b { color: #c0d4e8 }
+.intro p { margin-bottom: 10px }
+.intro p:last-child { margin-bottom: 0 }
+
+/* ── card ──────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid #182030;
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+
+/* ── language toggle (한/EN segmented) ─────────────────────────────────────── */
+.seg {
+  display: flex;
+  border: 1px solid var(--bd-input);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.seg button {
+  background: none;
+  border: none;
+  border-right: 1px solid var(--bd-input);
+  color: var(--fg-dim);
+  font-size: 12px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: background .12s, color .12s;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.seg button:last-child { border-right: none }
+.seg button:hover { color: var(--accent-hover) }
+.seg button.on {
+  background: var(--bg-input-on);
+  color: var(--accent-hover);
+  font-weight: 600;
+}
+
+/* ── utility ───────────────────────────────────────────────────────────────── */
+.dim { color: var(--fg-faint) }
+code {
+  font-family: var(--mono);
+  font-size: 12px;
+  background: var(--bg-input);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #b0c4d8;
+}
+
+/* ── footer ────────────────────────────────────────────────────────────────── */
+footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--bd-mid);
+  color: var(--fg-faint);
+  font-size: 11px;
+  text-align: center;
+}
+footer a { color: var(--fg-dim) }
+
+/* ── mobile (≤600px) common overrides ──────────────────────────────────────── */
+@media (max-width: 600px) {
+  header { padding: 12px 16px; gap: 8px }
+  h1 { font-size: 15px }
+  main { padding: 16px 12px 48px }
+  .card { padding: 11px 13px; margin-bottom: 12px; border-radius: 7px }
+  h2 { font-size: 11px }
+  h3 { font-size: 12px }
+  .intro { font-size: 12px }
+
+  /* prevent overflow of long monospace tokens in cards */
+  .card, .card *, code { min-width: 0; word-break: break-word; overflow-wrap: anywhere }
+}
