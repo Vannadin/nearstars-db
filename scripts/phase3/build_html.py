@@ -29,6 +29,15 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+# Korean tooltips for standard cfg field names — appears on hover over
+# `<code>field_name</code>` blocks in Decisions tables and prose.
+try:
+    from field_tooltips import FIELD_TOOLTIPS_KO
+except ImportError:
+    # When run from repo root: scripts/phase3/build_html.py
+    sys.path.insert(0, str(Path(__file__).parent))
+    from field_tooltips import FIELD_TOOLTIPS_KO
+
 
 # ── markdown → block tree ───────────────────────────────────────────────────
 
@@ -426,6 +435,31 @@ def augment_hex_chips(html_text: str) -> str:
     )
 
 
+# Matches `<code>snake_case_field</code>` — used to wrap known cfg fields
+# with a hover-only Korean tooltip. Hex codes (start with #) are excluded
+# because the pattern requires a lowercase letter at position 0.
+_FIELD_CODE_RE = re.compile(r'<code>([a-z][a-z0-9_]+)</code>')
+
+
+def augment_field_tooltips(html_text: str) -> str:
+    """Wrap <code>field_name</code> blocks whose content matches a known cfg
+    field with a `.field-tt` span carrying the Korean explanation. Other
+    code blocks (hex codes, ad-hoc snippets) pass through unchanged."""
+    def _wrap(m):
+        name = m.group(1)
+        ko = FIELD_TOOLTIPS_KO.get(name)
+        if not ko:
+            return m.group(0)
+        return (f'<span class="field-tt" data-ko-tip="{html.escape(ko, quote=True)}">'
+                f'<code>{name}</code></span>')
+    return _FIELD_CODE_RE.sub(_wrap, html_text)
+
+
+def augment_decorations(html_text: str) -> str:
+    """Apply all per-rendered-text decorations: hex chips + field tooltips."""
+    return augment_field_tooltips(augment_hex_chips(html_text))
+
+
 def _render_spectrum_marker(start: float, end: float, marker) -> str:
     """White vertical marker line at exact wavelength inside a spectrum bar."""
     if not marker:
@@ -476,7 +510,7 @@ def render_aurora_value(value_md: str, basis_md: str) -> str:
     """
     wave = parse_aurora_wavelength(value_md + ' ' + basis_md)
     if not wave:
-        return augment_hex_chips(inline_md(value_md))
+        return augment_decorations(inline_md(value_md))
     start, end, marker = wave
     widget = render_spectrum_widget(start, end, marker)
     hex_code = _extract_hex(value_md)
@@ -541,16 +575,16 @@ def render_html(slug: str, title_en: str, title_ko: str, pairs: list[tuple[Block
 
         elif en.kind == 'paragraph':
             key = new_key('p')
-            i18n_en[key] = augment_hex_chips(inline_md(en.text))
-            i18n_ko[key] = augment_hex_chips(inline_md(ko.text))
+            i18n_en[key] = augment_decorations(inline_md(en.text))
+            i18n_ko[key] = augment_decorations(inline_md(ko.text))
             body_html_parts.append(f'<p class="intro" data-i18n="{key}"></p>')
 
         elif en.kind == 'list':
             body_html_parts.append('<ul class="intro">')
             for idx, (e_item, k_item) in enumerate(zip(en.items, ko.items)):
                 key = new_key('li')
-                i18n_en[key] = augment_hex_chips(inline_md(e_item))
-                i18n_ko[key] = augment_hex_chips(inline_md(k_item))
+                i18n_en[key] = augment_decorations(inline_md(e_item))
+                i18n_ko[key] = augment_decorations(inline_md(k_item))
                 body_html_parts.append(f'<li data-i18n="{key}"></li>')
             body_html_parts.append('</ul>')
 
@@ -587,8 +621,8 @@ def render_html(slug: str, title_en: str, title_ko: str, pairs: list[tuple[Block
                         i18n_en[key] = render_aurora_value(c_en, basis_en)
                         i18n_ko[key] = render_aurora_value(c_ko, basis_ko)
                     else:
-                        i18n_en[key] = augment_hex_chips(inline_md(c_en))
-                        i18n_ko[key] = augment_hex_chips(inline_md(c_ko))
+                        i18n_en[key] = augment_decorations(inline_md(c_en))
+                        i18n_ko[key] = augment_decorations(inline_md(c_ko))
                     body_html_parts.append(f'<td data-i18n="{key}"></td>')
                 body_html_parts.append('</tr>')
             body_html_parts.append('</tbody></table></div>')
@@ -641,6 +675,27 @@ pre code {{ background: none; padding: 0; font-size: 12px }}
 
 /* color visualization: inline chip beside every <code>#xxxxxx</code> */
 .hex-chip {{ display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }}
+
+/* hover-only Korean tooltip on cfg field names — no on-page legend, only on hover.
+   Hidden in EN mode since field names are already English. */
+.field-tt {{ position: relative; border-bottom: 1px dotted var(--fg-faint); cursor: help }}
+.field-tt:hover::after {{
+  content: attr(data-ko-tip);
+  position: absolute; left: 0; bottom: calc(100% + 7px);
+  background: var(--bg-input); color: var(--fg-emph);
+  border: 1px solid var(--bd-input-on); border-radius: 4px;
+  padding: 7px 10px; font-family: var(--sans); font-size: 11.5px; font-weight: 400;
+  line-height: 1.5; white-space: normal; width: max-content; max-width: 320px;
+  z-index: 200; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+}}
+.field-tt:hover::before {{
+  content: ''; position: absolute; left: 10px; bottom: calc(100% + 2px);
+  border: 5px solid transparent; border-top-color: var(--bd-input-on);
+  z-index: 200; pointer-events: none;
+}}
+html[lang="en"] .field-tt {{ border-bottom: none; cursor: text }}
+html[lang="en"] .field-tt:hover::after,
+html[lang="en"] .field-tt:hover::before {{ display: none }}
 
 /* color visualization: aurora rows render a wavelength gradient bar */
 .spectrum-bar {{ display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }}
