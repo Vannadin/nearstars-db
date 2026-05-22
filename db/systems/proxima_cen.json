@@ -19,36 +19,194 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 11.2931,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3498,
-        "spectype": "M5.5Ve",
+        "teff_k": 2904,
+        "spectype": "M5.5 Ve",
         "mass_measurements": [
           {
             "value_msun": 0.1221,
             "uncertainty_msun": 0.0022,
-            "method": "unverified",
-            "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+            "method": "evolutionary_model",
+            "reference": "Suárez Mascareño et al. 2025",
             "bibcode": "2025A&A...700A..11M",
-            "doi": null,
+            "doi": "10.1051/0004-6361/202554723",
             "recommended": true
+          },
+          {
+            "value_msun": 0.1221,
+            "uncertainty_msun": 0.0035,
+            "method": "spectroscopic_calibration",
+            "reference": "Mann et al. 2019",
+            "bibcode": "2019ApJ...871...63M",
+            "doi": "10.3847/1538-4357/aaf3bc",
+            "recommended": false
+          },
+          {
+            "value_msun": 0.12,
+            "uncertainty_msun": 0.015,
+            "method": "spectroscopic_calibration",
+            "reference": "Anglada-Escudé et al. 2016",
+            "bibcode": "2016Natur.536..437A",
+            "doi": "10.1038/nature19106",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
             "value_rsun": 0.141,
+            "uncertainty_rsun": 0.007,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": true
+          },
+          {
+            "value_rsun": 0.141,
+            "uncertainty_rsun": 0.011,
+            "method": "interferometry",
+            "reference": "Demory et al. 2009",
+            "bibcode": "2009A&A...505..205D",
+            "doi": "10.1051/0004-6361/200911976",
+            "recommended": false
+          },
+          {
+            "value_rsun": 0.141,
             "uncertainty_rsun": 0.021,
-            "method": "unverified",
-            "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+            "method": "evolutionary_model",
+            "reference": "Suárez Mascareño et al. 2025",
             "bibcode": "2025A&A...700A..11M",
-            "doi": null,
+            "doi": "10.1051/0004-6361/202554723",
+            "recommended": false
+          },
+          {
+            "value_rsun": 0.146,
+            "uncertainty_rsun": 0.007,
+            "method": "sed_fitting",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": false
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 2904,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "reference": "Passegger et al. 2019",
+            "bibcode": "2019A&A...627A.161P",
+            "doi": "10.1051/0004-6361/201935679",
+            "recommended": true
+          },
+          {
+            "value_k": 3000,
+            "uncertainty_k": 70,
+            "method": "sed_fitting",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295",
+            "recommended": false
+          },
+          {
+            "value_k": 2900,
+            "uncertainty_k": 100,
+            "method": "high_res_spectroscopy",
+            "reference": "Pineda et al. 2021",
+            "bibcode": "2021ApJ...918...40P",
+            "doi": "10.3847/1538-4357/ac0aea",
+            "recommended": false
+          },
+          {
+            "value_k": 3050,
+            "uncertainty_k": 100,
+            "method": "sed_fitting",
+            "reference": "Anglada-Escudé et al. 2016",
+            "bibcode": "2016Natur.536..437A",
+            "doi": "10.1038/nature19106",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00155,
+            "uncertainty_lsun": 6e-05,
+            "method": "bolometric_flux",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": true
+          },
+          {
+            "value_lsun": 0.0015,
+            "uncertainty_lsun": 0.00012,
+            "method": "bolometric_flux",
+            "reference": "Demory et al. 2009",
+            "bibcode": "2009A&A...505..205D",
+            "doi": "10.1051/0004-6361/200911976",
+            "recommended": false
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 4.85,
+            "uncertainty_gyr": 0.5,
+            "method": "kinematic",
+            "reference": "Kervella et al. 2017",
+            "bibcode": "2017A&A...598L...7K",
+            "doi": "10.1051/0004-6361/201629930",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "metallicity_measurements": [
+          {
+            "value_dex": 0.05,
+            "uncertainty_dex": 0.16,
+            "method": "high_res_spectroscopy",
+            "reference": "Passegger et al. 2019",
+            "bibcode": "2019A&A...627A.161P",
+            "doi": "10.1051/0004-6361/201935679",
+            "recommended": true
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 83.0,
+            "uncertainty_days": 0.8,
+            "method": "photometric_variability",
+            "reference": "Suárez Mascareño et al. 2016",
+            "bibcode": "2016MNRAS.459.3565S",
+            "doi": "10.1093/mnras/stw1059",
+            "recommended": true
+          },
+          {
+            "value_days": 89.8,
+            "uncertainty_days": 4.0,
+            "method": "zeeman_doppler",
+            "reference": "Klein et al. 2021",
+            "bibcode": "2021MNRAS.500.1844K",
+            "doi": "10.1093/mnras/staa3396",
+            "recommended": false
+          },
+          {
+            "value_days": 83.5,
+            "uncertainty_days": 0.5,
+            "method": "photometric_variability",
+            "reference": "Benedict et al. 1998",
+            "bibcode": "1998AJ....116..429B",
+            "doi": "10.1086/300420",
+            "recommended": false
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.55,
+            "method": "log_rhk",
+            "reference": "Suárez Mascareño et al. 2016",
+            "bibcode": "2016MNRAS.459.3565S",
+            "doi": "10.1093/mnras/stw1059",
+            "recommended": true
+          }
+        ],
         "stellarium_id": "Proxima"
       },
       "derived": {
@@ -70,11 +228,11 @@
         "icrs_vx_j2000_km_s": -9.523972115583097,
         "icrs_vy_j2000_km_s": 22.098425147795368,
         "icrs_vz_j2000_km_s": 21.674415764140438,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 0.00155,
+        "age_gyr": 4.85,
+        "metallicity_fe_h_dex": 0.05,
+        "rotation_period_days": 83.0,
+        "activity_log_rhk": -5.55,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -128,24 +286,58 @@
       },
       "curated": {
         "pl_name": "Proxima Cen d",
-        "orbital": {
-          "semi_major_axis_au": 0.02881,
-          "eccentricity": 0.0,
-          "longitude_of_ascending_node_deg": null,
-          "epoch_jd": 2460557.55,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 0.26,
-          "uncertainty_mearth": 0.038,
-          "mass_type": "Msini",
-          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
-          "doi": null
-        }
+        "orbital": [
+          {
+            "period_days": 5.122,
+            "uncertainty_period_days": 0.001,
+            "semi_major_axis_au": 0.02885,
+            "eccentricity": 0.04,
+            "uncertainty_eccentricity": 0.11,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Faria et al. 2022",
+            "bibcode": "2022A&A...658A.115F",
+            "doi": "10.1051/0004-6361/202142337",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "period_days": 5.12338,
+            "uncertainty_period_days": 0.00035,
+            "semi_major_axis_au": 0.02881,
+            "uncertainty_semi_major_axis_au": 0.00017,
+            "eccentricity": 0.0,
+            "longitude_of_ascending_node_deg": null,
+            "epoch_jd": 2460557.55,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Suárez Mascareño et al. 2025",
+            "bibcode": "2025A&A...700A..11M",
+            "doi": "10.1051/0004-6361/202554723",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.26,
+            "uncertainty_mearth": 0.05,
+            "mass_type": "Msini",
+            "source": "Faria et al. 2022",
+            "bibcode": "2022A&A...658A.115F",
+            "doi": "10.1051/0004-6361/202142337",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "mass_mearth": 0.26,
+            "uncertainty_mearth": 0.038,
+            "mass_type": "Msini",
+            "source": "Suárez Mascareño et al. 2025",
+            "bibcode": "2025A&A...700A..11M",
+            "doi": "10.1051/0004-6361/202554723",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     },
     {
@@ -192,24 +384,82 @@
       },
       "curated": {
         "pl_name": "Proxima Cen b",
-        "orbital": {
-          "semi_major_axis_au": 0.04848,
-          "eccentricity": 0.0,
-          "longitude_of_ascending_node_deg": null,
-          "epoch_jd": 2460548.59,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
-          "doi": null
-        },
-        "physical": {
-          "mass_mearth": 1.055,
-          "uncertainty_mearth": 0.055,
-          "mass_type": "Msini",
-          "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
-          "doi": null
-        }
+        "orbital": [
+          {
+            "period_days": 11.186,
+            "uncertainty_period_days": 0.002,
+            "semi_major_axis_au": 0.0485,
+            "eccentricity": 0.35,
+            "uncertainty_eccentricity": 0.25,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Anglada-Escudé et al. 2016",
+            "bibcode": "2016Natur.536..437A",
+            "doi": "10.1038/nature19106",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "period_days": 11.18427,
+            "uncertainty_period_days": 0.00041,
+            "semi_major_axis_au": 0.04857,
+            "uncertainty_semi_major_axis_au": 0.00029,
+            "eccentricity": 0.02,
+            "uncertainty_eccentricity": 0.1,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Faria et al. 2022",
+            "bibcode": "2022A&A...658A.115F",
+            "doi": "10.1051/0004-6361/202142337",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "period_days": 11.18465,
+            "uncertainty_period_days": 0.00053,
+            "semi_major_axis_au": 0.04848,
+            "uncertainty_semi_major_axis_au": 0.00029,
+            "eccentricity": 0.0,
+            "longitude_of_ascending_node_deg": null,
+            "epoch_jd": 2460548.59,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Suárez Mascareño et al. 2025",
+            "bibcode": "2025A&A...700A..11M",
+            "doi": "10.1051/0004-6361/202554723",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 1.27,
+            "uncertainty_mearth": 0.18,
+            "mass_type": "Msini",
+            "source": "Anglada-Escudé et al. 2016",
+            "bibcode": "2016Natur.536..437A",
+            "doi": "10.1038/nature19106",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "mass_mearth": 1.07,
+            "uncertainty_mearth": 0.06,
+            "mass_type": "Msini",
+            "source": "Faria et al. 2022",
+            "bibcode": "2022A&A...658A.115F",
+            "doi": "10.1051/0004-6361/202142337",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "mass_mearth": 1.055,
+            "uncertainty_mearth": 0.055,
+            "mass_type": "Msini",
+            "source": "Suárez Mascareño et al. 2025",
+            "bibcode": "2025A&A...700A..11M",
+            "doi": "10.1051/0004-6361/202554723",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     }
   ],
@@ -218,7 +468,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "epoch propagation method"
       ]
@@ -227,23 +477,77 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     },
     {
-      "title": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-      "doi": null,
+      "title": "Suárez Mascareño et al. 2025",
+      "doi": "10.1051/0004-6361/202554723",
       "bibcode": "2025A&A...700A..11M",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
-        "Proxima Cen mass (unverified)"
+        "Proxima Cen mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Mann et al. 2019",
+      "doi": "10.3847/1538-4357/aaf3bc",
+      "bibcode": "2019ApJ...871...63M",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Proxima Cen mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Anglada-Escudé et al. 2016",
+      "doi": "10.1038/nature19106",
+      "bibcode": "2016Natur.536..437A",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Proxima Cen mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Boyajian et al. 2012",
+      "doi": "10.1088/0004-637X/757/2/112",
+      "bibcode": "2012ApJ...757..112B",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Proxima Cen radius (interferometry)"
+      ]
+    },
+    {
+      "title": "Demory et al. 2009",
+      "doi": "10.1051/0004-6361/200911976",
+      "bibcode": "2009A&A...505..205D",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Proxima Cen radius (interferometry)"
+      ]
+    },
+    {
+      "title": "Schweitzer et al. 2019",
+      "doi": "10.1051/0004-6361/201834965",
+      "bibcode": "2019A&A...625A..68S",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Proxima Cen radius (sed_fitting)"
+      ]
+    },
+    {
+      "title": "Faria et al. 2022",
+      "doi": "10.1051/0004-6361/202142337",
+      "bibcode": "2022A&A...658A.115F",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "planet Proxima Cen d orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-21",
+    "retrieval_date": "2026-05-22",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

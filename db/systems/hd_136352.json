@@ -330,7 +330,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "epoch propagation method"
       ]
@@ -339,7 +339,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -348,14 +348,14 @@
       "title": "Delrez et al. 2021",
       "doi": "10.1038/s41550-021-01381-5",
       "bibcode": "2021NatAs...5..775D",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "HD 136352 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-21",
+    "retrieval_date": "2026-05-22",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

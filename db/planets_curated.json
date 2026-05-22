@@ -1509,45 +1509,137 @@
   "Proxima Cen": [
     {
       "pl_name": "Proxima Cen b",
-      "orbital": {
-        "semi_major_axis_au": 0.04848,
-        "eccentricity": 0.0,
-        "longitude_of_ascending_node_deg": null,
-        "epoch_jd": 2460548.59,
-        "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-        "bibcode": "2025A&A...700A..11M",
-        "doi": null
-      },
-      "physical": {
-        "mass_mearth": 1.055,
-        "uncertainty_mearth": 0.055,
-        "mass_type": "Msini",
-        "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-        "bibcode": "2025A&A...700A..11M",
-        "doi": null
-      }
+      "orbital": [
+        {
+          "period_days": 11.186,
+          "uncertainty_period_days": 0.002,
+          "semi_major_axis_au": 0.0485,
+          "eccentricity": 0.35,
+          "uncertainty_eccentricity": 0.25,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Anglada-Escudé et al. 2016",
+          "bibcode": "2016Natur.536..437A",
+          "doi": "10.1038/nature19106",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "period_days": 11.18427,
+          "uncertainty_period_days": 0.00041,
+          "semi_major_axis_au": 0.04857,
+          "uncertainty_semi_major_axis_au": 0.00029,
+          "eccentricity": 0.02,
+          "uncertainty_eccentricity": 0.1,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Faria et al. 2022",
+          "bibcode": "2022A&A...658A.115F",
+          "doi": "10.1051/0004-6361/202142337",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "period_days": 11.18465,
+          "uncertainty_period_days": 0.00053,
+          "semi_major_axis_au": 0.04848,
+          "uncertainty_semi_major_axis_au": 0.00029,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2460548.59,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Suárez Mascareño et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": "10.1051/0004-6361/202554723",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.27,
+          "uncertainty_mearth": 0.18,
+          "mass_type": "Msini",
+          "source": "Anglada-Escudé et al. 2016",
+          "bibcode": "2016Natur.536..437A",
+          "doi": "10.1038/nature19106",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "mass_mearth": 1.07,
+          "uncertainty_mearth": 0.06,
+          "mass_type": "Msini",
+          "source": "Faria et al. 2022",
+          "bibcode": "2022A&A...658A.115F",
+          "doi": "10.1051/0004-6361/202142337",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "mass_mearth": 1.055,
+          "uncertainty_mearth": 0.055,
+          "mass_type": "Msini",
+          "source": "Suárez Mascareño et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": "10.1051/0004-6361/202554723",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     },
     {
       "pl_name": "Proxima Cen d",
-      "orbital": {
-        "semi_major_axis_au": 0.02881,
-        "eccentricity": 0.0,
-        "longitude_of_ascending_node_deg": null,
-        "epoch_jd": 2460557.55,
-        "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-        "bibcode": "2025A&A...700A..11M",
-        "doi": null
-      },
-      "physical": {
-        "mass_mearth": 0.26,
-        "uncertainty_mearth": 0.038,
-        "mass_type": "Msini",
-        "source": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
-        "bibcode": "2025A&A...700A..11M",
-        "doi": null
-      }
+      "orbital": [
+        {
+          "period_days": 5.122,
+          "uncertainty_period_days": 0.001,
+          "semi_major_axis_au": 0.02885,
+          "eccentricity": 0.04,
+          "uncertainty_eccentricity": 0.11,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Faria et al. 2022",
+          "bibcode": "2022A&A...658A.115F",
+          "doi": "10.1051/0004-6361/202142337",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "period_days": 5.12338,
+          "uncertainty_period_days": 0.00035,
+          "semi_major_axis_au": 0.02881,
+          "uncertainty_semi_major_axis_au": 0.00017,
+          "eccentricity": 0.0,
+          "longitude_of_ascending_node_deg": null,
+          "epoch_jd": 2460557.55,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Suárez Mascareño et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": "10.1051/0004-6361/202554723",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 0.26,
+          "uncertainty_mearth": 0.05,
+          "mass_type": "Msini",
+          "source": "Faria et al. 2022",
+          "bibcode": "2022A&A...658A.115F",
+          "doi": "10.1051/0004-6361/202142337",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "mass_mearth": 0.26,
+          "uncertainty_mearth": 0.038,
+          "mass_type": "Msini",
+          "source": "Suárez Mascareño et al. 2025",
+          "bibcode": "2025A&A...700A..11M",
+          "doi": "10.1051/0004-6361/202554723",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     }
   ],
   "ups And": [

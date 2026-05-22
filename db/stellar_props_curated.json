@@ -470,6 +470,33 @@
         "bibcode": "2016A&A...586A..90P",
         "doi": "10.1051/0004-6361/201527859",
         "recommended": true
+      },
+      {
+        "value_msun": 1.133,
+        "uncertainty_msun": 0.005,
+        "method": "binary_orbit",
+        "reference": "Kervella et al. 2016",
+        "bibcode": "2016A&A...594A.107K",
+        "doi": "10.1051/0004-6361/201629201",
+        "recommended": false
+      },
+      {
+        "value_msun": 1.105,
+        "uncertainty_msun": 0.007,
+        "method": "evolutionary_model",
+        "reference": "Joyce & Chaboyer 2018",
+        "bibcode": "2018ApJ...864...99J",
+        "doi": "10.3847/1538-4357/aad464",
+        "recommended": false
+      },
+      {
+        "value_msun": 1.105,
+        "uncertainty_msun": 0.007,
+        "method": "asteroseismology",
+        "reference": "Bazot et al. 2007",
+        "bibcode": "2007A&A...470..295B",
+        "doi": "10.1051/0004-6361:20065694",
+        "recommended": false
       }
     ],
     "radius_measurements": [
@@ -481,6 +508,151 @@
         "bibcode": "2017A&A...597A.137K",
         "doi": "10.1051/0004-6361/201629505",
         "recommended": true
+      },
+      {
+        "value_rsun": 1.224,
+        "uncertainty_rsun": 0.003,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2003",
+        "bibcode": "2003A&A...404.1087K",
+        "doi": "10.1051/0004-6361:20030570",
+        "recommended": false
+      },
+      {
+        "value_rsun": 1.224,
+        "uncertainty_rsun": 0.003,
+        "method": "evolutionary_model",
+        "reference": "Bazot et al. 2007",
+        "bibcode": "2007A&A...470..295B",
+        "doi": "10.1051/0004-6361:20065694",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5847,
+        "uncertainty_k": 27,
+        "method": "high_res_spectroscopy",
+        "reference": "Porto de Mello et al. 2008",
+        "bibcode": "2008A&A...488..653P",
+        "doi": "10.1051/0004-6361:200810031",
+        "recommended": true
+      },
+      {
+        "value_k": 5792,
+        "uncertainty_k": 16,
+        "method": "sed_fitting",
+        "reference": "Heiter et al. 2015",
+        "bibcode": "2015A&A...582A..49H",
+        "doi": "10.1051/0004-6361/201526319",
+        "recommended": false
+      },
+      {
+        "value_k": 5810,
+        "uncertainty_k": 50,
+        "method": "high_res_spectroscopy",
+        "reference": "Bazot et al. 2007",
+        "bibcode": "2007A&A...470..295B",
+        "doi": "10.1051/0004-6361:20065694",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 1.521,
+        "uncertainty_lsun": 0.013,
+        "method": "bolometric_flux",
+        "reference": "Kervella et al. 2017",
+        "bibcode": "2017A&A...597A.137K",
+        "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.81,
+        "uncertainty_gyr": 0.5,
+        "method": "isochrone",
+        "reference": "Joyce & Chaboyer 2018",
+        "bibcode": "2018ApJ...864...99J",
+        "doi": "10.3847/1538-4357/aad464",
+        "recommended": true
+      },
+      {
+        "value_gyr": 6.52,
+        "uncertainty_gyr": 0.3,
+        "method": "asteroseismology",
+        "reference": "Bazot et al. 2007",
+        "bibcode": "2007A&A...470..295B",
+        "doi": "10.1051/0004-6361:20065694",
+        "recommended": false
+      },
+      {
+        "value_gyr": 4.4,
+        "uncertainty_gyr": 1.1,
+        "method": "asteroseismology",
+        "reference": "Bazot et al. 2016",
+        "bibcode": "2016A&A...588A..77B",
+        "doi": "10.1051/0004-6361/201527967",
+        "recommended": false
+      },
+      {
+        "value_gyr": 6.41,
+        "uncertainty_gyr": 0.3,
+        "method": "asteroseismology",
+        "reference": "Thévenin et al. 2002",
+        "bibcode": "2002A&A...392L...9T",
+        "doi": "10.1051/0004-6361:20021094",
+        "recommended": false
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.24,
+        "uncertainty_dex": 0.03,
+        "method": "high_res_spectroscopy",
+        "reference": "Porto de Mello et al. 2008",
+        "bibcode": "2008A&A...488..653P",
+        "doi": "10.1051/0004-6361:200810031",
+        "recommended": true
+      },
+      {
+        "value_dex": 0.26,
+        "uncertainty_dex": 0.08,
+        "method": "high_res_spectroscopy",
+        "reference": "Heiter et al. 2015",
+        "bibcode": "2015A&A...582A..49H",
+        "doi": "10.1051/0004-6361/201526319",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 22.0,
+        "uncertainty_days": 3.0,
+        "method": "photometric_variability",
+        "reference": "DeWarf et al. 2010",
+        "bibcode": "2010ApJ...722..343D",
+        "doi": "10.1088/0004-637X/722/1/343",
+        "recommended": true
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.95,
+        "method": "log_rhk",
+        "reference": "DeWarf et al. 2010",
+        "bibcode": "2010ApJ...722..343D",
+        "doi": "10.1088/0004-637X/722/1/343",
+        "recommended": true
+      },
+      {
+        "value_log_rhk": -5.0,
+        "method": "log_rhk",
+        "reference": "Henry et al. 1996",
+        "bibcode": "1996AJ....111..439H",
+        "doi": "10.1086/117796",
+        "recommended": false
       }
     ]
   },
@@ -496,6 +668,24 @@
         "bibcode": "2016A&A...586A..90P",
         "doi": "10.1051/0004-6361/201527859",
         "recommended": true
+      },
+      {
+        "value_msun": 0.972,
+        "uncertainty_msun": 0.0045,
+        "method": "binary_orbit",
+        "reference": "Kervella et al. 2016",
+        "bibcode": "2016A&A...594A.107K",
+        "doi": "10.1051/0004-6361/201629201",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.934,
+        "uncertainty_msun": 0.0061,
+        "method": "evolutionary_model",
+        "reference": "Joyce & Chaboyer 2018",
+        "bibcode": "2018ApJ...864...99J",
+        "doi": "10.3847/1538-4357/aad464",
+        "recommended": false
       }
     ],
     "radius_measurements": [
@@ -506,6 +696,125 @@
         "reference": "Kervella et al. 2017",
         "bibcode": "2017A&A...597A.137K",
         "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      },
+      {
+        "value_rsun": 0.863,
+        "uncertainty_rsun": 0.005,
+        "method": "interferometry",
+        "reference": "Bigot et al. 2006",
+        "bibcode": "2006A&A...446..635B",
+        "doi": "10.1051/0004-6361:20053187",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.863,
+        "uncertainty_rsun": 0.005,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2003",
+        "bibcode": "2003A&A...404.1087K",
+        "doi": "10.1051/0004-6361:20030570",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5316,
+        "uncertainty_k": 28,
+        "method": "high_res_spectroscopy",
+        "reference": "Porto de Mello et al. 2008",
+        "bibcode": "2008A&A...488..653P",
+        "doi": "10.1051/0004-6361:200810031",
+        "recommended": true
+      },
+      {
+        "value_k": 5231,
+        "uncertainty_k": 20,
+        "method": "sed_fitting",
+        "reference": "Heiter et al. 2015",
+        "bibcode": "2015A&A...582A..49H",
+        "doi": "10.1051/0004-6361/201526319",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.503,
+        "uncertainty_lsun": 0.007,
+        "method": "bolometric_flux",
+        "reference": "Kervella et al. 2017",
+        "bibcode": "2017A&A...597A.137K",
+        "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.81,
+        "uncertainty_gyr": 0.5,
+        "method": "isochrone",
+        "reference": "Joyce & Chaboyer 2018",
+        "bibcode": "2018ApJ...864...99J",
+        "doi": "10.3847/1538-4357/aad464",
+        "recommended": true
+      },
+      {
+        "value_gyr": 6.41,
+        "uncertainty_gyr": 0.3,
+        "method": "asteroseismology",
+        "reference": "Eggenberger et al. 2004",
+        "bibcode": "2004A&A...417..235E",
+        "doi": "10.1051/0004-6361:20034203",
+        "recommended": false
+      },
+      {
+        "value_gyr": 6.41,
+        "uncertainty_gyr": 0.3,
+        "method": "asteroseismology",
+        "reference": "Thévenin et al. 2002",
+        "bibcode": "2002A&A...392L...9T",
+        "doi": "10.1051/0004-6361:20021094",
+        "recommended": false
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.25,
+        "uncertainty_dex": 0.04,
+        "method": "high_res_spectroscopy",
+        "reference": "Porto de Mello et al. 2008",
+        "bibcode": "2008A&A...488..653P",
+        "doi": "10.1051/0004-6361:200810031",
+        "recommended": true
+      },
+      {
+        "value_dex": 0.22,
+        "uncertainty_dex": 0.1,
+        "method": "high_res_spectroscopy",
+        "reference": "Heiter et al. 2015",
+        "bibcode": "2015A&A...582A..49H",
+        "doi": "10.1051/0004-6361/201526319",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 41.0,
+        "uncertainty_days": 3.0,
+        "method": "photometric_variability",
+        "reference": "DeWarf et al. 2010",
+        "bibcode": "2010ApJ...722..343D",
+        "doi": "10.1088/0004-637X/722/1/343",
+        "recommended": true
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.85,
+        "method": "log_rhk",
+        "reference": "DeWarf et al. 2010",
+        "bibcode": "2010ApJ...722..343D",
+        "doi": "10.1088/0004-637X/722/1/343",
         "recommended": true
       }
     ]
@@ -1121,25 +1430,191 @@
     ]
   },
   "Proxima Cen": {
+    "teff_k": 2904,
+    "spectype": "M5.5 Ve",
     "mass_measurements": [
       {
         "value_msun": 0.1221,
         "uncertainty_msun": 0.0022,
-        "method": "unverified",
-        "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+        "method": "evolutionary_model",
+        "reference": "Suárez Mascareño et al. 2025",
         "bibcode": "2025A&A...700A..11M",
-        "doi": null,
+        "doi": "10.1051/0004-6361/202554723",
         "recommended": true
+      },
+      {
+        "value_msun": 0.1221,
+        "uncertainty_msun": 0.0035,
+        "method": "spectroscopic_calibration",
+        "reference": "Mann et al. 2019",
+        "bibcode": "2019ApJ...871...63M",
+        "doi": "10.3847/1538-4357/aaf3bc",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.12,
+        "uncertainty_msun": 0.015,
+        "method": "spectroscopic_calibration",
+        "reference": "Anglada-Escudé et al. 2016",
+        "bibcode": "2016Natur.536..437A",
+        "doi": "10.1038/nature19106",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
         "value_rsun": 0.141,
+        "uncertainty_rsun": 0.007,
+        "method": "interferometry",
+        "reference": "Boyajian et al. 2012",
+        "bibcode": "2012ApJ...757..112B",
+        "doi": "10.1088/0004-637X/757/2/112",
+        "recommended": true
+      },
+      {
+        "value_rsun": 0.141,
+        "uncertainty_rsun": 0.011,
+        "method": "interferometry",
+        "reference": "Demory et al. 2009",
+        "bibcode": "2009A&A...505..205D",
+        "doi": "10.1051/0004-6361/200911976",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.141,
         "uncertainty_rsun": 0.021,
-        "method": "unverified",
-        "reference": "Su Amp Aacute Rez Mascare Amp Ntilde O et al. 2025",
+        "method": "evolutionary_model",
+        "reference": "Suárez Mascareño et al. 2025",
         "bibcode": "2025A&A...700A..11M",
-        "doi": null,
+        "doi": "10.1051/0004-6361/202554723",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.146,
+        "uncertainty_rsun": 0.007,
+        "method": "sed_fitting",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 2904,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "reference": "Passegger et al. 2019",
+        "bibcode": "2019A&A...627A.161P",
+        "doi": "10.1051/0004-6361/201935679",
+        "recommended": true
+      },
+      {
+        "value_k": 3000,
+        "uncertainty_k": 70,
+        "method": "sed_fitting",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": false
+      },
+      {
+        "value_k": 2900,
+        "uncertainty_k": 100,
+        "method": "high_res_spectroscopy",
+        "reference": "Pineda et al. 2021",
+        "bibcode": "2021ApJ...918...40P",
+        "doi": "10.3847/1538-4357/ac0aea",
+        "recommended": false
+      },
+      {
+        "value_k": 3050,
+        "uncertainty_k": 100,
+        "method": "sed_fitting",
+        "reference": "Anglada-Escudé et al. 2016",
+        "bibcode": "2016Natur.536..437A",
+        "doi": "10.1038/nature19106",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00155,
+        "uncertainty_lsun": 6e-05,
+        "method": "bolometric_flux",
+        "reference": "Boyajian et al. 2012",
+        "bibcode": "2012ApJ...757..112B",
+        "doi": "10.1088/0004-637X/757/2/112",
+        "recommended": true
+      },
+      {
+        "value_lsun": 0.0015,
+        "uncertainty_lsun": 0.00012,
+        "method": "bolometric_flux",
+        "reference": "Demory et al. 2009",
+        "bibcode": "2009A&A...505..205D",
+        "doi": "10.1051/0004-6361/200911976",
+        "recommended": false
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.85,
+        "uncertainty_gyr": 0.5,
+        "method": "kinematic",
+        "reference": "Kervella et al. 2017",
+        "bibcode": "2017A&A...598L...7K",
+        "doi": "10.1051/0004-6361/201629930",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.05,
+        "uncertainty_dex": 0.16,
+        "method": "high_res_spectroscopy",
+        "reference": "Passegger et al. 2019",
+        "bibcode": "2019A&A...627A.161P",
+        "doi": "10.1051/0004-6361/201935679",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 83.0,
+        "uncertainty_days": 0.8,
+        "method": "photometric_variability",
+        "reference": "Suárez Mascareño et al. 2016",
+        "bibcode": "2016MNRAS.459.3565S",
+        "doi": "10.1093/mnras/stw1059",
+        "recommended": true
+      },
+      {
+        "value_days": 89.8,
+        "uncertainty_days": 4.0,
+        "method": "zeeman_doppler",
+        "reference": "Klein et al. 2021",
+        "bibcode": "2021MNRAS.500.1844K",
+        "doi": "10.1093/mnras/staa3396",
+        "recommended": false
+      },
+      {
+        "value_days": 83.5,
+        "uncertainty_days": 0.5,
+        "method": "photometric_variability",
+        "reference": "Benedict et al. 1998",
+        "bibcode": "1998AJ....116..429B",
+        "doi": "10.1086/300420",
+        "recommended": false
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.55,
+        "method": "log_rhk",
+        "reference": "Suárez Mascareño et al. 2016",
+        "bibcode": "2016MNRAS.459.3565S",
+        "doi": "10.1093/mnras/stw1059",
         "recommended": true
       }
     ]

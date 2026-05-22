@@ -19,7 +19,7 @@
         "radial_velocity_source": "simbad",
         "vmag_v": -0.01,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 5790,
+        "teff_k": 5847,
         "spectype": "G2 V",
         "mass_measurements": [
           {
@@ -30,6 +30,33 @@
             "bibcode": "2016A&A...586A..90P",
             "doi": "10.1051/0004-6361/201527859",
             "recommended": true
+          },
+          {
+            "value_msun": 1.133,
+            "uncertainty_msun": 0.005,
+            "method": "binary_orbit",
+            "reference": "Kervella et al. 2016",
+            "bibcode": "2016A&A...594A.107K",
+            "doi": "10.1051/0004-6361/201629201",
+            "recommended": false
+          },
+          {
+            "value_msun": 1.105,
+            "uncertainty_msun": 0.007,
+            "method": "evolutionary_model",
+            "reference": "Joyce & Chaboyer 2018",
+            "bibcode": "2018ApJ...864...99J",
+            "doi": "10.3847/1538-4357/aad464",
+            "recommended": false
+          },
+          {
+            "value_msun": 1.105,
+            "uncertainty_msun": 0.007,
+            "method": "asteroseismology",
+            "reference": "Bazot et al. 2007",
+            "bibcode": "2007A&A...470..295B",
+            "doi": "10.1051/0004-6361:20065694",
+            "recommended": false
           }
         ],
         "radius_measurements": [
@@ -41,14 +68,153 @@
             "bibcode": "2017A&A...597A.137K",
             "doi": "10.1051/0004-6361/201629505",
             "recommended": true
+          },
+          {
+            "value_rsun": 1.224,
+            "uncertainty_rsun": 0.003,
+            "method": "interferometry",
+            "reference": "Kervella et al. 2003",
+            "bibcode": "2003A&A...404.1087K",
+            "doi": "10.1051/0004-6361:20030570",
+            "recommended": false
+          },
+          {
+            "value_rsun": 1.224,
+            "uncertainty_rsun": 0.003,
+            "method": "evolutionary_model",
+            "reference": "Bazot et al. 2007",
+            "bibcode": "2007A&A...470..295B",
+            "doi": "10.1051/0004-6361:20065694",
+            "recommended": false
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5847,
+            "uncertainty_k": 27,
+            "method": "high_res_spectroscopy",
+            "reference": "Porto de Mello et al. 2008",
+            "bibcode": "2008A&A...488..653P",
+            "doi": "10.1051/0004-6361:200810031",
+            "recommended": true
+          },
+          {
+            "value_k": 5792,
+            "uncertainty_k": 16,
+            "method": "sed_fitting",
+            "reference": "Heiter et al. 2015",
+            "bibcode": "2015A&A...582A..49H",
+            "doi": "10.1051/0004-6361/201526319",
+            "recommended": false
+          },
+          {
+            "value_k": 5810,
+            "uncertainty_k": 50,
+            "method": "high_res_spectroscopy",
+            "reference": "Bazot et al. 2007",
+            "bibcode": "2007A&A...470..295B",
+            "doi": "10.1051/0004-6361:20065694",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 1.521,
+            "uncertainty_lsun": 0.013,
+            "method": "bolometric_flux",
+            "reference": "Kervella et al. 2017",
+            "bibcode": "2017A&A...597A.137K",
+            "doi": "10.1051/0004-6361/201629505",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 4.81,
+            "uncertainty_gyr": 0.5,
+            "method": "isochrone",
+            "reference": "Joyce & Chaboyer 2018",
+            "bibcode": "2018ApJ...864...99J",
+            "doi": "10.3847/1538-4357/aad464",
+            "recommended": true
+          },
+          {
+            "value_gyr": 6.52,
+            "uncertainty_gyr": 0.3,
+            "method": "asteroseismology",
+            "reference": "Bazot et al. 2007",
+            "bibcode": "2007A&A...470..295B",
+            "doi": "10.1051/0004-6361:20065694",
+            "recommended": false
+          },
+          {
+            "value_gyr": 4.4,
+            "uncertainty_gyr": 1.1,
+            "method": "asteroseismology",
+            "reference": "Bazot et al. 2016",
+            "bibcode": "2016A&A...588A..77B",
+            "doi": "10.1051/0004-6361/201527967",
+            "recommended": false
+          },
+          {
+            "value_gyr": 6.41,
+            "uncertainty_gyr": 0.3,
+            "method": "asteroseismology",
+            "reference": "Thévenin et al. 2002",
+            "bibcode": "2002A&A...392L...9T",
+            "doi": "10.1051/0004-6361:20021094",
+            "recommended": false
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": 0.24,
+            "uncertainty_dex": 0.03,
+            "method": "high_res_spectroscopy",
+            "reference": "Porto de Mello et al. 2008",
+            "bibcode": "2008A&A...488..653P",
+            "doi": "10.1051/0004-6361:200810031",
+            "recommended": true
+          },
+          {
+            "value_dex": 0.26,
+            "uncertainty_dex": 0.08,
+            "method": "high_res_spectroscopy",
+            "reference": "Heiter et al. 2015",
+            "bibcode": "2015A&A...582A..49H",
+            "doi": "10.1051/0004-6361/201526319",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 22.0,
+            "uncertainty_days": 3.0,
+            "method": "photometric_variability",
+            "reference": "DeWarf et al. 2010",
+            "bibcode": "2010ApJ...722..343D",
+            "doi": "10.1088/0004-637X/722/1/343",
+            "recommended": true
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.95,
+            "method": "log_rhk",
+            "reference": "DeWarf et al. 2010",
+            "bibcode": "2010ApJ...722..343D",
+            "doi": "10.1088/0004-637X/722/1/343",
+            "recommended": true
+          },
+          {
+            "value_log_rhk": -5.0,
+            "method": "log_rhk",
+            "reference": "Henry et al. 1996",
+            "bibcode": "1996AJ....111..439H",
+            "doi": "10.1086/117796",
+            "recommended": false
+          }
+        ],
         "stellarium_id": "RigilKent"
       },
       "derived": {
@@ -75,11 +241,11 @@
         "mass_ratio_q": 0.4512830694396188,
         "barycenter_method": "mass_weighted_average(Alpha Centauri A,Alpha Centauri B)",
         "phase_reliable": true,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 1.521,
+        "age_gyr": 4.81,
+        "metallicity_fe_h_dex": 0.24,
+        "rotation_period_days": 22.0,
+        "activity_log_rhk": -4.95,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -94,7 +260,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +269,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -112,23 +278,59 @@
       "title": "Pourbaix & Boffin 2016",
       "doi": "10.1051/0004-6361/201527859",
       "bibcode": "2016A&A...586A..90P",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Kervella et al. 2016",
+      "doi": "10.1051/0004-6361/201629201",
+      "bibcode": "2016A&A...594A.107K",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Alpha Centauri A mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Joyce & Chaboyer 2018",
+      "doi": "10.3847/1538-4357/aad464",
+      "bibcode": "2018ApJ...864...99J",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Alpha Centauri A mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Bazot et al. 2007",
+      "doi": "10.1051/0004-6361:20065694",
+      "bibcode": "2007A&A...470..295B",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Alpha Centauri A mass (asteroseismology)"
       ]
     },
     {
       "title": "Kervella et al. 2017",
       "doi": "10.1051/0004-6361/201629505",
       "bibcode": "2017A&A...597A.137K",
-      "accessed": "2026-05-21",
+      "accessed": "2026-05-22",
+      "used_for": [
+        "Alpha Centauri A radius (interferometry)"
+      ]
+    },
+    {
+      "title": "Kervella et al. 2003",
+      "doi": "10.1051/0004-6361:20030570",
+      "bibcode": "2003A&A...404.1087K",
+      "accessed": "2026-05-22",
       "used_for": [
         "Alpha Centauri A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-21",
+    "retrieval_date": "2026-05-22",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
