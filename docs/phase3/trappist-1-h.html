@@ -22,6 +22,23 @@ pre code { background: none; padding: 0; font-size: 12px }
 
 .lang-toggle { margin-left: auto }
 
+/* color visualization: palette band above Decisions tables */
+.palette-band { display: flex; gap: 2px; margin: 10px 0 8px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--bd-strong) }
+.palette-swatch { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 7px; font-family: var(--mono); font-size: 9.5px; line-height: 1.2; transition: flex-grow 0.15s ease; position: relative; overflow: hidden }
+.palette-swatch:hover { flex-grow: 2.2 }
+.palette-swatch .role { opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }
+.palette-swatch .hex { opacity: 0.72; font-size: 10px }
+.palette-swatch-emissive { color: rgba(0,0,0,0.88) }
+.palette-marker { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+
+/* color visualization: inline chip beside every <code>#xxxxxx</code> */
+.hex-chip { display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }
+
+/* color visualization: aurora rows render a wavelength gradient bar */
+.spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
+.spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+.spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
+
 @media (max-width: 600px) {
   section { margin-bottom: 24px }
   .dt thead { display: none }
@@ -48,6 +65,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <p class="intro" data-i18n="p_2"></p>
 <section>
 <h2 data-i18n="h2_3"></h2>
+<div class="palette-band"><div class="palette-swatch" style="background:#302820;color:#fff"><span class="role">Atmos</span><span class="hex">#302820</span></div><div class="palette-swatch" style="background:#d8d0c4;color:#000"><span class="role">Surf · 1</span><span class="hex">#d8d0c4</span></div><div class="palette-swatch" style="background:#3a2c20;color:#fff"><span class="role">Surf · 2</span><span class="hex">#3a2c20</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #00ff92, #00ff6a, #00ff3d, #00ff00, #16ff00, #27ff00, #36ff00, #44ff00, #51ff00, #5eff00, #6aff00, #76ff00, #81ff00)"><div class="palette-marker" style="left:50.0%"></div><span class="role">Aurora · 1</span><span class="hex">500–540 nm</span></div><div class="palette-swatch palette-swatch-emissive" style="background:#b19cd9;color:#000"><span class="role">Aurora · 2</span><span class="hex">#b19cd9</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_4"></th>
 <th data-i18n="th_5"></th>
@@ -574,7 +592,7 @@ const T = {
   "td_94":"medium",
   "td_95":"derived: kT/μg with T≈140 K, μ=40, g=5.6 m/s²",
   "td_96":"<code>atmosphere_tint_rgb_hex</code>",
-  "td_97":"<code>#302820</code> (essentially imperceptible Rayleigh)",
+  "td_97":"<span class=\"hex-chip\" style=\"background:#302820\"></span><code>#302820</code> (essentially imperceptible Rayleigh)",
   "td_98":"low",
   "td_99":"very thin atmo, M-dwarf SED → negligible scattering",
   "td_100":"<code>cloud_cover_fraction</code>",
@@ -594,11 +612,11 @@ const T = {
   "td_114":"medium",
   "td_115":"Turbet 2017 (1707.06927) shows surface CO₂ ice is gravitationally unstable on h and gets buried beneath the H₂O ice shell over geological timescales. Surface frost is therefore predominantly H₂O ice with CO₂ ice as a deeper layer.",
   "td_116":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_117":"<code>#d8d0c4</code> (H₂O ice / snow under M-dwarf light)",
+  "td_117":"<span class=\"hex-chip\" style=\"background:#d8d0c4\"></span><code>#d8d0c4</code> (H₂O ice / snow under M-dwarf light)",
   "td_118":"medium",
   "td_119":"Surface is predominantly H₂O ice (Turbet 2017 burial argument); the iron-rich bedrock is exposed only in localized substellar regions. Color palette inverts relative to the Mars-Pluto hybrid framing — cream-white dominant, dark bedrock as minor accent.",
   "td_120":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_121":"<code>#3a2c20</code> (weathered iron-rich bedrock — minor, only at substellar)",
+  "td_121":"<span class=\"hex-chip\" style=\"background:#3a2c20\"></span><code>#3a2c20</code> (weathered iron-rich bedrock — minor, only at substellar)",
   "td_122":"low",
   "td_123":"Surface is predominantly H₂O ice (Turbet 2017 burial argument); the iron-rich bedrock is exposed only in localized substellar regions. Color palette inverts relative to the Mars-Pluto hybrid framing — cream-white dominant, dark bedrock as minor accent.",
   "td_124":"<code>surface_morphology</code>",
@@ -654,11 +672,11 @@ const T = {
   "td_174":"medium",
   "td_175":"Atm + crustal/induced magnetic field → patchy Mars-like discrete aurora",
   "td_176":"<code>aurora_color_primary_hex</code>",
-  "td_177":"<code>#4DFF4D</code>",
+  "td_177":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #00ff92, #00ff6a, #00ff3d, #00ff00, #16ff00, #27ff00, #36ff00, #44ff00, #51ff00, #5eff00, #6aff00, #76ff00, #81ff00)\"><div class=\"marker\" style=\"left:50.0%\"></div></span><span class=\"spectrum-range\">500–540 nm · peak 520.0 nm</span> <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4dff4d</code>",
   "td_178":"low",
   "td_179":"N₂ Vegard-Kaplan bands + [NI] 520 nm green if trace O; tie-break: visible green over UV-only",
   "td_180":"<code>aurora_color_secondary_hex</code>",
-  "td_181":"<code>#B19CD9</code>",
+  "td_181":"<span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code>",
   "td_182":"low",
   "td_183":"N₂ Lyman-Birge-Hopfield bands UV-perceived violet",
   "td_184":"<code>aurora_emission_species_primary</code>",
@@ -690,9 +708,9 @@ const T = {
   "li_210":"<b>Mid-zone</b> (60–120°): increasing frost cover with distance from substellar.",
   "li_211":"<b>Terminator</b> (~90°): high frost-vs-bedrock contrast; long topographic shadows under grazing 2566 K light.",
   "li_212":"<b>Nightside</b> (&gt;120°): predominantly CO₂ + N₂ frost cover at ~60 K, with occasional dark bedrock patches at ridge tops.",
-  "p_213":"<b>Color choice — H₂O ice dominant.</b> Turbet 2017 shows that even though h&#x27;s atmosphere is dominated by trace CO₂ at low pressures, the surface frost composition is <b>predominantly H₂O ice</b> (not CO₂/N₂ frost as in earlier framings). CO₂ ice deposits form transiently but are gravitationally unstable — they get buried beneath the H₂O ice shell over geological timescales. The visible surface is therefore cream-white (<code>#d8d0c4</code>) from clean H₂O ice under M-dwarf illumination, with minor weathered iron-rich bedrock patches (<code>#3a2c20</code>) exposed only in localized substellar regions where ice has sublimated. The Mars-Pluto hybrid framing inverts: cream-white dominant globally, with dark bedrock as the minor accent rather than the primary surface tone.",
+  "p_213":"<b>Color choice — H₂O ice dominant.</b> Turbet 2017 shows that even though h&#x27;s atmosphere is dominated by trace CO₂ at low pressures, the surface frost composition is <b>predominantly H₂O ice</b> (not CO₂/N₂ frost as in earlier framings). CO₂ ice deposits form transiently but are gravitationally unstable — they get buried beneath the H₂O ice shell over geological timescales. The visible surface is therefore cream-white (<span class=\"hex-chip\" style=\"background:#d8d0c4\"></span><code>#d8d0c4</code>) from clean H₂O ice under M-dwarf illumination, with minor weathered iron-rich bedrock patches (<span class=\"hex-chip\" style=\"background:#3a2c20\"></span><code>#3a2c20</code>) exposed only in localized substellar regions where ice has sublimated. The Mars-Pluto hybrid framing inverts: cream-white dominant globally, with dark bedrock as the minor accent rather than the primary surface tone.",
   "p_214":"<b>Interior structure.</b> Barr 2018 (1712.05641) finds h has a 1030 km rock core (mean-density case), with a maximum-density configuration allowing only ~100 km H₂O shell over the rock. The current cfg WMF 0.03–0.10 sits between these extremes. h&#x27;s CMF is at the lower end of the system (~0.23), consistent with a relatively iron-poor rocky body.",
-  "p_215":"<b>Mars-analog patchy aurora geometry.</b> With no organized global dynamo (sub-Mars mass, frozen core after 7.6 Gyr), h&#x27;s magnetic field is dominated by <b>crustal remnants</b> in localized patches — directly analogous to Mars (Acuña 1999 MAG/ER discovery). Combined with the thin N₂ atmosphere, this produces a <i>patchy</i> aurora geometry rather than the regular auroral oval seen on Earth or g. Each crustal magnetic anomaly funnels stellar-wind particles into a localized aurora spot above its location, producing scattered green N₂ Vegard-Kaplan + N₂⁺ violet emissions. The aurora geometry is essentially random — wherever crustal magnetization survived — and the result is dramatically different from the inner planets&#x27; organized auroral bands. Cfg renders this as scattered <code>#4DFF4D</code> green patches with <code>#B19CD9</code> violet accent, distributed at low-to-mid magnetic latitudes rather than concentrated at the poles. Interesting-first tie-break chose this Mars-analog rendering over the alternative &quot;uniform faint global glow&quot; approach.",
+  "p_215":"<b>Mars-analog patchy aurora geometry.</b> With no organized global dynamo (sub-Mars mass, frozen core after 7.6 Gyr), h&#x27;s magnetic field is dominated by <b>crustal remnants</b> in localized patches — directly analogous to Mars (Acuña 1999 MAG/ER discovery). Combined with the thin N₂ atmosphere, this produces a <i>patchy</i> aurora geometry rather than the regular auroral oval seen on Earth or g. Each crustal magnetic anomaly funnels stellar-wind particles into a localized aurora spot above its location, producing scattered green N₂ Vegard-Kaplan + N₂⁺ violet emissions. The aurora geometry is essentially random — wherever crustal magnetization survived — and the result is dramatically different from the inner planets&#x27; organized auroral bands. Cfg renders this as scattered <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4DFF4D</code> green patches with <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code> violet accent, distributed at low-to-mid magnetic latitudes rather than concentrated at the poles. Interesting-first tie-break chose this Mars-analog rendering over the alternative &quot;uniform faint global glow&quot; approach.",
   "p_216":"<b>Bedrock / iron oxide.</b> Prominent on h compared to g/f — the exposed substellar bedrock has had 7.6 Gyr of photolytic oxidation under direct stellar UV. The primary tint already incorporates this; specific bright iron-oxide patches near impact crater rims would be a fine-grained PQS detail.",
   "p_217":"<b>Morphology under tidal lock.</b> Almost no resurfacing — h&#x27;s tidal heating is negligible (Bolmont 2020), induction heating minimal (Grayver 2022 distance scaling), and radiogenic heat too low (small mass) to drive volcanism. The surface preserves a maximal impact record across the system&#x27;s 7.6 Gyr age, biased toward the leading hemisphere in the locked frame.",
   "h2_218":"Atmosphere synthesis",
@@ -716,13 +734,13 @@ const T = {
   "p_236":"<b>Magnetic dynamo expectation.</b> h&#x27;s small mass (0.33 M⊕, sub-Mars), advanced age (7.6 Gyr), and very slow tidally-locked rotation (18.8 d) make a sustained global dynamo essentially impossible. 2208.06523 (Thermal Evolution and Magnetic History of Rocky Planets) finds that bodies below ~0.5 M⊕ typically shut down their dynamos within 1–2 Gyr; h is well past that timescale. The remaining magnetic structure is crustal — fossilized magnetization from when h had a younger dynamo, now patchy after billions of years of impact gardening and thermal alteration. This is exactly the Mars situation today: ~1 μT crustal patches with no global dipole. Auroras therefore form not in organized polar ovals but in localized spots above magnetized terrain. RM22 (2203.01065) scaling returns a dipole moment of ~0.005 × Earth, effectively a residual signature rather than an active dynamo.",
   "p_237":"<b>Tidal heating note.</b> Makarov 2018 finds h capture probability into 3:2 spin-orbit = 0.017 (effectively zero); 1:1 lock is confirmed. The tidal dissipation peak is at Maxwell time ~0.20 d (close to the orbital period), giving 5.3×10¹³ W total — about 7×10⁻³ W/m² normalized. This is 1–2 orders of magnitude higher than the cfg&#x27;s current 0.00001–0.0001 W/m², which may understate the actual flux.",
   "h2_238":"Visual styling",
-  "li_239":"<b>Global appearance.</b> Dark red-brown rocky world (<code>#3a2c20</code>) with patchy cream-white frost (<code>#c8b8a0</code>) increasing toward the terminator and nightside. Visual character somewhere between Mars (red-brown rocky) and a smaller Pluto (frost-dominated).",
+  "li_239":"<b>Global appearance.</b> Dark red-brown rocky world (<span class=\"hex-chip\" style=\"background:#3a2c20\"></span><code>#3a2c20</code>) with patchy cream-white frost (<span class=\"hex-chip\" style=\"background:#c8b8a0\"></span><code>#c8b8a0</code>) increasing toward the terminator and nightside. Visual character somewhere between Mars (red-brown rocky) and a smaller Pluto (frost-dominated).",
   "li_240":"<b>Substellar region.</b> Mostly bedrock; weathered iron-oxide brown. Impact craters visible at the cfg PQS resolution. Some frost in shadowed crater interiors.",
   "li_241":"<b>Mid-zone.</b> Mixed bedrock and frost — fractal pattern of exposed dark brown over cream frost. Photogenic for KSP flyovers.",
   "li_242":"<b>Terminator.</b> High contrast under grazing 2566 K light; topographic shadows reveal cratering and possible tectonic features. The frost-bedrock boundary is sharpest here.",
-  "li_243":"<b>Nightside.</b> Cream-white frost cover (<code>#c8b8a0</code>) with dark bedrock patches at ridge tops. KSP nightside ambient ≈ 1% dayside.",
+  "li_243":"<b>Nightside.</b> Cream-white frost cover (<span class=\"hex-chip\" style=\"background:#c8b8a0\"></span><code>#c8b8a0</code>) with dark bedrock patches at ridge tops. KSP nightside ambient ≈ 1% dayside.",
   "li_244":"<b>Atmosphere haze.</b> Imperceptible — the 0.005 bar atmosphere does not produce visible Rayleigh scattering. Limb is sharp.",
-  "li_245":"<b>Patchy Mars-style aurora.</b> Scattered <code>#4DFF4D</code> green and <code>#B19CD9</code> violet spots at low-to-mid magnetic latitudes — concentrated above magnetized crustal terrain rather than at the poles. Intensity ~30 kR, visible only against the dark nightside. The spotty pattern is the visual signature of h&#x27;s frozen-core, crustal-anomaly-only magnetic environment.",
+  "li_245":"<b>Patchy Mars-style aurora.</b> Scattered <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4DFF4D</code> green and <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code> violet spots at low-to-mid magnetic latitudes — concentrated above magnetized crustal terrain rather than at the poles. Intensity ~30 kR, visible only against the dark nightside. The spotty pattern is the visual signature of h&#x27;s frozen-core, crustal-anomaly-only magnetic environment.",
   "li_246":"<b>Star in sky.</b> TRAPPIST-1 subtends 1.03° in h&#x27;s sky (2× the Sun from Earth). Surface illumination 0.144 S⊕ — comparable to early-morning twilight on Earth. The red-orange star against the ochre-and-cream surface gives h a particularly atmospheric look despite the lack of actual atmosphere.",
   "li_247":"<b>Sister planets in sky.</b> g (next inward) at angular size ~0.3° in inner conjunction. Conjunctions less frequent than for inner planets due to h&#x27;s long period.",
   "h2_248":"Bibliography",
@@ -874,7 +892,7 @@ const T = {
   "td_94":"medium",
   "td_95":"derived. kT/μg 로 T≈140 K, μ=40, g=5.6 m/s²",
   "td_96":"<code>atmosphere_tint_rgb_hex</code>",
-  "td_97":"<code>#302820</code> (Rayleigh 산란 사실상 인지 불가)",
+  "td_97":"<span class=\"hex-chip\" style=\"background:#302820\"></span><code>#302820</code> (Rayleigh 산란 사실상 인지 불가)",
   "td_98":"low",
   "td_99":"매우 얇은 대기 + M-dwarf SED 이므로 산란 무시 가능",
   "td_100":"<code>cloud_cover_fraction</code>",
@@ -894,11 +912,11 @@ const T = {
   "td_114":"medium",
   "td_115":"Turbet 2017 (1707.06927) 은 h 표면의 CO₂ 얼음이 중력적으로 불안정하여 지질학적 시간 척도에서 H₂O 얼음 껍질 아래로 매장된다고 보입니다. 표면 서리는 H₂O 얼음이 지배적이고 CO₂ 얼음은 더 깊은 층으로 존재합니다",
   "td_116":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_117":"<code>#d8d0c4</code> (M-dwarf 조명 아래 H₂O 얼음 / 눈)",
+  "td_117":"<span class=\"hex-chip\" style=\"background:#d8d0c4\"></span><code>#d8d0c4</code> (M-dwarf 조명 아래 H₂O 얼음 / 눈)",
   "td_118":"medium",
   "td_119":"표면은 H₂O 얼음이 지배적(Turbet 2017 매장 논거) 이며, 철-풍부 기반암은 국소적인 substellar 영역에서만 노출됩니다. Mars-Pluto 하이브리드 프레이밍과 색 팔레트가 반전되어 크림-화이트가 지배적, 어두운 기반암이 보조 accent 가 됩니다",
   "td_120":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_121":"<code>#3a2c20</code> (풍화된 철-풍부 기반암 — 보조, substellar 한정)",
+  "td_121":"<span class=\"hex-chip\" style=\"background:#3a2c20\"></span><code>#3a2c20</code> (풍화된 철-풍부 기반암 — 보조, substellar 한정)",
   "td_122":"low",
   "td_123":"표면은 H₂O 얼음이 지배적(Turbet 2017 매장 논거) 이며, 철-풍부 기반암은 국소적인 substellar 영역에서만 노출됩니다. Mars-Pluto 하이브리드 프레이밍과 색 팔레트가 반전되어 크림-화이트가 지배적, 어두운 기반암이 보조 accent 가 됩니다",
   "td_124":"<code>surface_morphology</code>",
@@ -954,11 +972,11 @@ const T = {
   "td_174":"medium",
   "td_175":"대기 + 지각/induced 자기장 → patchy 한 Mars 형 discrete aurora",
   "td_176":"<code>aurora_color_primary_hex</code>",
-  "td_177":"<code>#4DFF4D</code>",
+  "td_177":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #00ff92, #00ff6a, #00ff3d, #00ff00, #16ff00, #27ff00, #36ff00, #44ff00, #51ff00, #5eff00, #6aff00, #76ff00, #81ff00)\"><div class=\"marker\" style=\"left:50.0%\"></div></span><span class=\"spectrum-range\">500–540 nm · peak 520.0 nm</span> <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4dff4d</code>",
   "td_178":"low",
   "td_179":"N₂ Vegard-Kaplan bands + 미량 O 가 있으면 [NI] 520 nm green. tie-break 으로 UV-only 가 아닌 visible green 채택",
   "td_180":"<code>aurora_color_secondary_hex</code>",
-  "td_181":"<code>#B19CD9</code>",
+  "td_181":"<span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code>",
   "td_182":"low",
   "td_183":"N₂ Lyman-Birge-Hopfield bands 가 UV 로 인지되는 violet",
   "td_184":"<code>aurora_emission_species_primary</code>",
@@ -990,9 +1008,9 @@ const T = {
   "li_210":"<b>Mid-zone</b> (60–120°). substellar 로부터 멀어질수록 서리 덮개가 증가.",
   "li_211":"<b>Terminator</b> (~90°). 서리-기반암 대비가 크고, 비스듬히 들어오는 2566 K 빛 아래로 긴 지형 그림자가 깔림.",
   "li_212":"<b>Nightside</b> (&gt;120°). 주로 ~60 K 의 CO₂ + N₂ 서리 덮개, 능선 꼭대기에 가끔 어두운 기반암 patch.",
-  "p_213":"<b>색 선택 — H₂O 얼음 지배.</b> Turbet 2017 은 h 의 대기가 저압에서 미량 CO₂ 에 의해 지배된다 해도 표면 서리 조성은 <b>주로 H₂O 얼음</b> 이라는 점을 보입니다(이전에 가정한 CO₂/N₂ 서리가 아닙니다). CO₂ 얼음 퇴적은 일시적으로 형성되지만 중력적으로 불안정해서 지질학적 시간 척도에서 H₂O 얼음 껍질 아래로 매장됩니다. 가시 표면은 따라서 M-dwarf 조명 아래의 깨끗한 H₂O 얼음에서 오는 크림-화이트(<code>#d8d0c4</code>) 가 되고, 풍화된 철-풍부 기반암 패치(<code>#3a2c20</code>) 는 얼음이 승화된 국소 substellar 영역에서만 노출됩니다. Mars-Pluto 하이브리드 프레임 은 반전됩니다. 전역적으로는 크림-화이트가 지배적이고, 어두운 기반암 이 표면의 주된 색조가 아니라 보조 accent 가 됩니다.",
+  "p_213":"<b>색 선택 — H₂O 얼음 지배.</b> Turbet 2017 은 h 의 대기가 저압에서 미량 CO₂ 에 의해 지배된다 해도 표면 서리 조성은 <b>주로 H₂O 얼음</b> 이라는 점을 보입니다(이전에 가정한 CO₂/N₂ 서리가 아닙니다). CO₂ 얼음 퇴적은 일시적으로 형성되지만 중력적으로 불안정해서 지질학적 시간 척도에서 H₂O 얼음 껍질 아래로 매장됩니다. 가시 표면은 따라서 M-dwarf 조명 아래의 깨끗한 H₂O 얼음에서 오는 크림-화이트(<span class=\"hex-chip\" style=\"background:#d8d0c4\"></span><code>#d8d0c4</code>) 가 되고, 풍화된 철-풍부 기반암 패치(<span class=\"hex-chip\" style=\"background:#3a2c20\"></span><code>#3a2c20</code>) 는 얼음이 승화된 국소 substellar 영역에서만 노출됩니다. Mars-Pluto 하이브리드 프레임 은 반전됩니다. 전역적으로는 크림-화이트가 지배적이고, 어두운 기반암 이 표면의 주된 색조가 아니라 보조 accent 가 됩니다.",
   "p_214":"<b>내부 구조.</b> Barr 2018 (1712.05641) 은 h 가 1030 km 의 암석 코어 (평균 밀도 케이스) 를 갖는다고 봅니다. 최대 밀도 구성이면 암석 위로 H₂O 껍질이 ~100 km 만 허용됩니다. 현재 cfg 의 WMF 0.03–0.10 은 이 두 극단 사이에 위치합니다. h 의 CMF 는 시스템에서 낮은 쪽(~0.23) 으로, 상대적으로 철이 적은 암석체와 일관됩니다.",
-  "p_215":"<b>Mars 형 patchy 오로라 지오메트리.</b> 조직된 전역 다이나모가 없는 상태(7.6 Gyr 동안 얼어붙은 sub-Mars 코어) 에서 h 의 자기장은 국소적 패치 형태의 <b>지각 잔류 자기장</b> 이 지배합니다. Mars 의 상황과 그대로 대응됩니다(Acuña 1999 의 MAG/ER 발견). 얇은 N₂ 대기와 합쳐지면 지구 나 g 에서 보이는 규칙적인 auroral oval 대신 <i>patchy</i> 한 오로라 지오메트리가 만들어집니다. 각각의 지각 자기 이상이 stellar-wind 입자 를 자기장이 강한 지역 위로 깔때기처럼 끌어들여 그 위에 국소 오로라 스폿을 만들고, 결과적으로 N₂ Vegard-Kaplan green + N₂⁺ violet 가 산발적으로 흩어져 빛납니다. 어디서 어떻게 켜질지는 사실상 무작위로, 지각 자화가 살아남은 자리마다 한 점씩 떠오릅니다. 내행성들의 조직된 auroral band 와는 시각적 인상이 완전히 다릅니다. cfg 에서는 이걸 <code>#4DFF4D</code> green 과 <code>#B19CD9</code> violet 가 저-중위도 자기 위도대에 흩어진 점들로 렌더링합니다. 극지방에 몰린 균일한 띠가 아닙니다. interesting-first tie-break 에서 대안인 &quot;균일하고 흐릿한 전역 glow&quot; 대신 이 Mars 형 렌더링을 선택했습니다.",
+  "p_215":"<b>Mars 형 patchy 오로라 지오메트리.</b> 조직된 전역 다이나모가 없는 상태(7.6 Gyr 동안 얼어붙은 sub-Mars 코어) 에서 h 의 자기장은 국소적 패치 형태의 <b>지각 잔류 자기장</b> 이 지배합니다. Mars 의 상황과 그대로 대응됩니다(Acuña 1999 의 MAG/ER 발견). 얇은 N₂ 대기와 합쳐지면 지구 나 g 에서 보이는 규칙적인 auroral oval 대신 <i>patchy</i> 한 오로라 지오메트리가 만들어집니다. 각각의 지각 자기 이상이 stellar-wind 입자 를 자기장이 강한 지역 위로 깔때기처럼 끌어들여 그 위에 국소 오로라 스폿을 만들고, 결과적으로 N₂ Vegard-Kaplan green + N₂⁺ violet 가 산발적으로 흩어져 빛납니다. 어디서 어떻게 켜질지는 사실상 무작위로, 지각 자화가 살아남은 자리마다 한 점씩 떠오릅니다. 내행성들의 조직된 auroral band 와는 시각적 인상이 완전히 다릅니다. cfg 에서는 이걸 <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4DFF4D</code> green 과 <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code> violet 가 저-중위도 자기 위도대에 흩어진 점들로 렌더링합니다. 극지방에 몰린 균일한 띠가 아닙니다. interesting-first tie-break 에서 대안인 &quot;균일하고 흐릿한 전역 glow&quot; 대신 이 Mars 형 렌더링을 선택했습니다.",
   "p_216":"<b>기반암 / 산화철.</b> g, f 와 비교해 h 에서 더 두드러집니다. 노출된 substellar 기반암이 7.6 Gyr 동안 직접 stellar UV 아래에서 광분해 산화를 받아온 결과입니다. primary tint 가 이미 이를 반영하고 있으며, 충돌 분화구 가장자리 부근의 밝은 산화철 패치는 fine-grained PQS 디테일로 좋습니다.",
   "p_217":"<b>조석 lock 아래의 모폴로지.</b> resurfacing 이 거의 없습니다. h 의 조석 가열은 무시할 만하고(Bolmont 2020), induction heating 도 최소이며(Grayver 2022 거리 스케일링), 방사성 열은 화산 활동을 일으키기에 너무 낮습니다(작은 질량). 표면은 시스템 나이 7.6 Gyr 의 충돌 기록을 거의 그대로 보존하며, locked frame 의 leading 반구 쪽 으로 편향됩니다.",
   "h2_218":"대기 합성",
@@ -1016,13 +1034,13 @@ const T = {
   "p_236":"<b>자기 다이나모 예상.</b> h 의 작은 질량(0.33 M⊕, sub-Mars), 진전된 나이(7.6 Gyr), 그리고 매우 느린 조석 고정 자전(18.8 d) 이 합쳐지면 지속 가능한 전역 다이나모는 사실상 불가능합니다. 2208.06523 (Thermal Evolution and Magnetic History of Rocky Planets) 은 ~0.5 M⊕ 이하의 천체가 보통 1–2 Gyr 안에 다이나모를 꺼버린다고 보는데, h 는 이 시간 척도를 한참 지나 있습니다. 남은 자기 구조는 지각 잔류 — h 가 더 젊고 다이나모가 있었을 때 화석화된 자화 — 이며, 수십억 년의 충돌 가드닝과 열적 변형 끝에 패치들로 흩어진 상태 입니다. 이는 오늘의 Mars 그대로입니다. ~1 μT 의 지각 패치만 있고 전역 dipole 은 없는 상황. 따라서 오로라는 조직된 극지 oval 이 아닌 자화된 지형 위의 국소 스폿에서 발생합니다. RM22 (2203.01065) 의 스케일링이 돌려주는 dipole moment 는 지구의 ~0.005 배로, 활동성 다이나모라기보다 잔류 시그니처에 가깝습니다.",
   "p_237":"<b>조석 가열 노트.</b> Makarov 2018 은 h 의 3:2 spin-orbit 포획 확률을 0.017(사실상 0) 로 계산했고 1:1 lock 이 확인되었습니다. 조석 소산 peak 는 Maxwell time ~0.20 d (궤도 주기에 가까움) 에 있어 총 5.3×10¹³ W, 정규화하면 ~7×10⁻³ W/m² 입니다. 이는 현재 cfg 값 0.00001–0.0001 W/m² 보다 1–2 자릿수 더 크므로 실제 flux 를 과소평가하고 있을 수 있습니다.",
   "h2_238":"비주얼 스타일",
-  "li_239":"<b>전역 외관.</b> 어두운 적갈색의 암석 세계(<code>#3a2c20</code>) 에 patchy 한 크림-화이트 서리(<code>#c8b8a0</code>) 가 깔리고, terminator 와 nightside 쪽으로 갈수록 서리 비중이 커집니다. 시각적으로는 Mars(적갈색 암석) 와 좀 더 작은 Pluto(서리 지배) 사이 어딘가입니다.",
+  "li_239":"<b>전역 외관.</b> 어두운 적갈색의 암석 세계(<span class=\"hex-chip\" style=\"background:#3a2c20\"></span><code>#3a2c20</code>) 에 patchy 한 크림-화이트 서리(<span class=\"hex-chip\" style=\"background:#c8b8a0\"></span><code>#c8b8a0</code>) 가 깔리고, terminator 와 nightside 쪽으로 갈수록 서리 비중이 커집니다. 시각적으로는 Mars(적갈색 암석) 와 좀 더 작은 Pluto(서리 지배) 사이 어딘가입니다.",
   "li_240":"<b>Substellar 영역.</b> 대부분 기반암이고 풍화된 산화철 갈색입니다. cfg PQS 해상도에서 충돌 분화구가 보이며, 그늘진 분화구 내부에는 일부 서리가 남아 있습니다.",
   "li_241":"<b>Mid-zone.</b> 기반암과 서리가 섞입니다. 크림 서리 위에 어두운 갈색이 노출되는 fractal 패턴으로, KSP 저공 비행에 사진발이 좋은 영역입니다.",
   "li_242":"<b>Terminator.</b> 비스듬한 2566 K 빛 아래로 대비가 크고, 지형 그림자 가 cratering 과 가능한 tectonic feature 를 드러냅니다. 서리-기반암 경계가 가장 선명한 곳입니다.",
-  "li_243":"<b>Nightside.</b> 크림-화이트 서리 덮개(<code>#c8b8a0</code>) 위로 능선 꼭대기에 어두운 기반암 patch 가 노출됩니다. KSP nightside ambient ≈ dayside 의 1%.",
+  "li_243":"<b>Nightside.</b> 크림-화이트 서리 덮개(<span class=\"hex-chip\" style=\"background:#c8b8a0\"></span><code>#c8b8a0</code>) 위로 능선 꼭대기에 어두운 기반암 patch 가 노출됩니다. KSP nightside ambient ≈ dayside 의 1%.",
   "li_244":"<b>Atmosphere haze.</b> 인지 불가. 0.005 bar 대기는 보일 만한 Rayleigh scattering 을 만들지 않고 limb 가 선명합니다.",
-  "li_245":"<b>Mars 형 patchy 오로라.</b> <code>#4DFF4D</code> green 과 <code>#B19CD9</code> violet 의 스폿들이 저-중위도 자기 위도대에 흩어집니다. 극지방이 아니라 자화 된 지각 위에 집중됩니다. 강도 ~30 kR 로 어두운 nightside 에서만 보이고, 이 점박이 패턴이 h 의 얼어붙은 코어 + 지각-이상-전용 자기 환경을 그대로 비춰주는 시각 시그니처입니다.",
+  "li_245":"<b>Mars 형 patchy 오로라.</b> <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4DFF4D</code> green 과 <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code> violet 의 스폿들이 저-중위도 자기 위도대에 흩어집니다. 극지방이 아니라 자화 된 지각 위에 집중됩니다. 강도 ~30 kR 로 어두운 nightside 에서만 보이고, 이 점박이 패턴이 h 의 얼어붙은 코어 + 지각-이상-전용 자기 환경을 그대로 비춰주는 시각 시그니처입니다.",
   "li_246":"<b>하늘의 별.</b> TRAPPIST-1 이 h 의 하늘에서 1.03° 를 차지하므로 지구에서 본 태양의 2 배 크기입니다. 표면 조명은 0.144 S⊕ 로 지구 의 이른 아침 황혼 수준입니다. 적-오렌지 별이 ochre-and-cream 표면 과 대비를 이루어, 실제로는 대기가 거의 없음에도 h 는 특히 분위기 있는 외관을 갖습니다.",
   "li_247":"<b>하늘의 자매 행성.</b> 안쪽으로 한 단계 가까운 g 가 inner conjunction 에서 각 크기 ~0.3°. h 의 긴 주기 때문에 conjunction 자체는 내행성보다 드물게 일어납니다.",
   "h2_248":"참고 문헌",

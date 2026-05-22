@@ -22,6 +22,23 @@ pre code { background: none; padding: 0; font-size: 12px }
 
 .lang-toggle { margin-left: auto }
 
+/* color visualization: palette band above Decisions tables */
+.palette-band { display: flex; gap: 2px; margin: 10px 0 8px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--bd-strong) }
+.palette-swatch { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 7px; font-family: var(--mono); font-size: 9.5px; line-height: 1.2; transition: flex-grow 0.15s ease; position: relative; overflow: hidden }
+.palette-swatch:hover { flex-grow: 2.2 }
+.palette-swatch .role { opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }
+.palette-swatch .hex { opacity: 0.72; font-size: 10px }
+.palette-swatch-emissive { color: rgba(0,0,0,0.88) }
+.palette-marker { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+
+/* color visualization: inline chip beside every <code>#xxxxxx</code> */
+.hex-chip { display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }
+
+/* color visualization: aurora rows render a wavelength gradient bar */
+.spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
+.spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+.spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
+
 @media (max-width: 600px) {
   section { margin-bottom: 24px }
   .dt thead { display: none }
@@ -48,6 +65,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <p class="intro" data-i18n="p_2"></p>
 <section>
 <h2 data-i18n="h2_3"></h2>
+<div class="palette-band"><div class="palette-swatch" style="background:#403028;color:#fff"><span class="role">Atmos</span><span class="hex">#403028</span></div><div class="palette-swatch" style="background:#d0c0b0;color:#000"><span class="role">Cloud</span><span class="hex">#d0c0b0</span></div><div class="palette-swatch" style="background:#e8e0d4;color:#000"><span class="role">Surf · 1</span><span class="hex">#e8e0d4</span></div><div class="palette-swatch" style="background:#a09080;color:#000"><span class="role">Surf · 2</span><span class="hex">#a09080</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)"><div class="palette-marker" style="left:50.0%"></div><span class="role">Aurora · 1</span><span class="hex">580–620 nm</span></div><div class="palette-swatch palette-swatch-emissive" style="background:#87ceeb;color:#000"><span class="role">Aurora · 2</span><span class="hex">#87ceeb</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_4"></th>
 <th data-i18n="th_5"></th>
@@ -595,7 +613,7 @@ const T = {
   "td_94":"medium",
   "td_95":"derived: kT/μg with T≈180 K, μ=43, g=10.2 m/s²",
   "td_96":"<code>atmosphere_tint_rgb_hex</code>",
-  "td_97":"<code>#403028</code> (negligible Rayleigh + CO₂ ice haze tint)",
+  "td_97":"<span class=\"hex-chip\" style=\"background:#403028\"></span><code>#403028</code> (negligible Rayleigh + CO₂ ice haze tint)",
   "td_98":"low",
   "td_99":"very thin atmo, minimal scattering",
   "td_100":"<code>cloud_cover_fraction</code>",
@@ -603,7 +621,7 @@ const T = {
   "td_102":"medium",
   "td_103":"very limited — only CO₂ ice cirrus at terminator",
   "td_104":"<code>cloud_tint_rgb_hex</code>",
-  "td_105":"<code>#d0c0b0</code> (CO₂ ice + dust, M-dwarf shifted)",
+  "td_105":"<span class=\"hex-chip\" style=\"background:#d0c0b0\"></span><code>#d0c0b0</code> (CO₂ ice + dust, M-dwarf shifted)",
   "td_106":"medium",
   "td_107":"minimal cloud production in cold thin atmo",
   "td_108":"<code>ocean_present</code>",
@@ -623,11 +641,11 @@ const T = {
   "td_122":"high",
   "td_123":"full snowball; Pierrehumbert 2011 outer-HZ branch",
   "td_124":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_125":"<code>#e8e0d4</code> (clean snow under M-dwarf light)",
+  "td_125":"<span class=\"hex-chip\" style=\"background:#e8e0d4\"></span><code>#e8e0d4</code> (clean snow under M-dwarf light)",
   "td_126":"medium",
   "td_127":"high-albedo snow + 2566 K illumination",
   "td_128":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_129":"<code>#a09080</code> (CO₂ frost / dust patches at terminator)",
+  "td_129":"<span class=\"hex-chip\" style=\"background:#a09080\"></span><code>#a09080</code> (CO₂ frost / dust patches at terminator)",
   "td_130":"low",
   "td_131":"sublimation-deposition cycle near terminator",
   "td_132":"<code>surface_morphology</code>",
@@ -691,11 +709,11 @@ const T = {
   "td_190":"high",
   "td_191":"Atm + B-field both supportive; CO₂-dominated emission",
   "td_192":"<code>aurora_color_primary_hex</code>",
-  "td_193":"<code>#FF6B6B</code>",
+  "td_193":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)\"><div class=\"marker\" style=\"left:50.0%\"></div></span><span class=\"spectrum-range\">580–620 nm · peak 600.0 nm</span> <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#ff6b6b</code>",
   "td_194":"medium",
   "td_195":"CO₂⁺ Fox–Duffendack 600 nm red (Mars-analog snowball atmosphere); tie-break: red visible over UV-only",
   "td_196":"<code>aurora_color_secondary_hex</code>",
-  "td_197":"<code>#87CEEB</code>",
+  "td_197":"<span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87CEEB</code>",
   "td_198":"low",
   "td_199":"Trace N₂⁺ emission if present; otherwise scattered-UV perception as pale blue",
   "td_200":"<code>aurora_emission_species_primary</code>",
@@ -726,7 +744,7 @@ const T = {
   "li_225":"<b>Mid-zone (30–120° from substellar):</b> thick ice (~60 km), smooth at large scale.",
   "li_226":"<b>Terminator (~90°):</b> highest pressure-ridge density, longest topographic shadows.",
   "li_227":"<b>Nightside (&gt;120°):</b> thickest ice (~100 km), with possible CO₂ frost deposits in the coldest regions.",
-  "p_228":"<b>Color choice.</b> Clean snow / glacial ice albedo under M-dwarf illumination: warm cream-white <code>#e8e0d4</code> primary, with tan-shaded patches <code>#a09080</code> near the terminator from accumulated dust and CO₂ frost cycling.",
+  "p_228":"<b>Color choice.</b> Clean snow / glacial ice albedo under M-dwarf illumination: warm cream-white <span class=\"hex-chip\" style=\"background:#e8e0d4\"></span><code>#e8e0d4</code> primary, with tan-shaded patches <span class=\"hex-chip\" style=\"background:#a09080\"></span><code>#a09080</code> near the terminator from accumulated dust and CO₂ frost cycling.",
   "p_229":"<b>Habitability caveat at upper water mass fraction.</b> Acuña 2021 (2101.08172) finds that at WMF ≥ 0.14, high-pressure ice phases (HPPs) seal off the rock-water interface in the hydrosphere, preventing nutrient exchange that&#x27;s typically considered necessary for subsurface ocean habitability. At WMF ≥ 0.10, less than 50% of interior configurations enable a habitable sub-surface ocean. g&#x27;s wmf range (0.11–0.50) straddles this threshold — the sub-glacial ocean exists but its habitability potential degrades at the upper bound. For visual cfg this is not a rendering concern, but it&#x27;s worth noting in the Open items as a Principia / astrobiology-relevant flag.",
   "p_230":"<b>Cryovolcanic warm spots as a canonical visual feature.</b> g&#x27;s high water mass fraction (0.11–0.50) combined with radiogenic + tidal heating gives a substantial sub-glacial ocean (basal melt at ~0.04 W/m²) under a thick (50–100 km) ice shell. Europa-Ganymede analog reasoning supports the possibility of cryovolcanism at locations where the ice shell is thinnest — typically over warm-mantle anomalies that allow basal water to reach the surface. Per [[feedback-phase3-interesting-first]], the cfg promotes cryovolcanic plumes from &quot;possible&quot; to <b>canonical</b>: visible plumes near 2–4 substellar warm spots, each ~50–100 km across, producing fresh-water-ice halos around their venting sites. This is observation-consistent (no direct evidence either way) and dramatically more interesting than a uniform ice surface. The cfg-variant alternative is preserved: a featureless smooth snowball.",
   "p_231":"<b>Bedrock / iron oxide.</b> Essentially none visible — the global ice cover is too thick for any bedrock exposure. Possible exception at extreme terminator ridge tops where pressure-driven thinning could expose dark patches; very low probability and not visible from orbit.",
@@ -745,7 +763,7 @@ const T = {
   "p_244":"<b>Turbet equilibrium reference.</b> Turbet 2018 (1707.06927) explicitly solves the CO₂ atmosphere equilibrium for g: at 150 ± 1 mbar surface pressure and 174 ± 0.1 K, the atmosphere is in stable sublimation-condensation balance. Below this, CO₂ ice covers the surface &quot;potentially as much as the entire surface&quot; and the atmosphere is unstable to collapse. The cfg&#x27;s 0.05 bar choice is below this equilibrium and assumes a non-equilibrium state maintained by continuous volcanic outgassing — physically reasonable but not the natural attractor. An alternative cfg variant could adopt the Turbet equilibrium pressure (0.15 bar) for a more thermodynamically self-consistent atmosphere.",
   "p_245":"<b>Sky appearance.</b> The 0.05 bar atmosphere is barely visible from orbit. From the surface, the sky is near-black with the host star appearing as a deep red-orange disk against the void. CO₂ ice clouds catch grazing light at the terminator as faint cream wisps.",
   "p_246":"<b>GCM cross-check.</b> Fauchez 2019 (1911.08596) confirms the snowball state for g at all plausible CO₂ pressures ≤10 bar: even at 10 bar CO₂, the planet is &quot;almost fully ice-covered except at a few spots near the substellar region where some water can evaporate from the ocean and form relatively thin clouds (~0.1 kg/m²).&quot; The cfg&#x27;s full-snowball default is well-supported.",
-  "p_247":"<b>Aurora geometry over the ice.</b> With a moderate B-field (~0.35 × Earth) and a thin CO₂-rich atmosphere, g hosts Mars-analog auroras at magnetic latitude ~58°. The dominant emission is CO₂⁺ red bands (Fox–Duffendack at ~600 nm), giving a distinctive red auroral band crossing the high-latitude ice. Intensity ~60 kR (~6× Earth) is moderate but visible against the dark snowball surface; cfg renders this as a <code>#FF6B6B</code> primary band with optional <code>#87CEEB</code> secondary tint where trace nitrogen contributes. The auroral oval is wider than Earth&#x27;s, expanding equatorward toward ~50° during sub-Alfvénic transits; players in equatorial regions can see the aurora as a glow on the northern/southern horizon.",
+  "p_247":"<b>Aurora geometry over the ice.</b> With a moderate B-field (~0.35 × Earth) and a thin CO₂-rich atmosphere, g hosts Mars-analog auroras at magnetic latitude ~58°. The dominant emission is CO₂⁺ red bands (Fox–Duffendack at ~600 nm), giving a distinctive red auroral band crossing the high-latitude ice. Intensity ~60 kR (~6× Earth) is moderate but visible against the dark snowball surface; cfg renders this as a <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> primary band with optional <span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87CEEB</code> secondary tint where trace nitrogen contributes. The auroral oval is wider than Earth&#x27;s, expanding equatorward toward ~50° during sub-Alfvénic transits; players in equatorial regions can see the aurora as a glow on the northern/southern horizon.",
   "h2_248":"Rotation &amp; spin synthesis",
   "p_249":"Tidal damping at 12.35 days over 7.6 Gyr → synchronous (1:1) configuration. Obliquity damped to zero. Eccentricity is 0.00208 — the lowest in the system, deep inside the 3:2 stability boundary (only 1:1 plausible).",
   "p_250":"<b>KSP implementation note.</b> Rotation period = orbital period = 12.3524 days (1 067 251 s).",
@@ -753,13 +771,13 @@ const T = {
   "p_252":"<b>Planet-planet tides.</b> Hay &amp; Matsuyama 2019 (1903.04501) identifies g as the planet that experiences the most significant <b>planet-planet tidal heating relative to its eccentricity-forced tides</b> (2–20% of total, mostly from neighbor f). For all other planets in the system the planet-planet contribution is &lt;1%. The absolute magnitude is still small (~2×10⁻⁷ W/m² surface flux for a Maxwell-body rheology), but the relative dominance of f&#x27;s gravitational influence is unique to g — a faithful annotation for the Principia cfg.",
   "p_253":"<b>Magnetic dynamo expectation.</b> g is the most massive TRAPPIST-1 planet (1.32 M⊕) and has the highest water mass fraction (Bourgeois 2024 + Unterborn 2018), supporting both a metallic core dynamo and possibly a separate hydrosphere convection contribution. RM22 (2203.01065) scaling places g at ~0.35 × Earth dipole moment despite the 12.4-day slow rotation. Garraffo 2017 finds outer planets less compressed by stellar wind, giving g a relatively well-organized magnetosphere with standoff at ~4 R_p. The Kerbalism cfg assumes closed-magnetosphere radiation belts at 1.5–4 R_p.",
   "h2_254":"Visual styling",
-  "li_255":"<b>Global appearance.</b> Near-uniform warm cream-white snowball (<code>#e8e0d4</code>) with subtle tan tinting near the terminator (<code>#a09080</code>). No obvious &quot;eyeball&quot; feature — no open-water disk. The most visually subdued planet in the system.",
+  "li_255":"<b>Global appearance.</b> Near-uniform warm cream-white snowball (<span class=\"hex-chip\" style=\"background:#e8e0d4\"></span><code>#e8e0d4</code>) with subtle tan tinting near the terminator (<span class=\"hex-chip\" style=\"background:#a09080\"></span><code>#a09080</code>). No obvious &quot;eyeball&quot; feature — no open-water disk. The most visually subdued planet in the system.",
   "li_256":"<b>Substellar region.</b> Slightly more textured / fractured ice due to tectonic ice-flow toward colder zones. Possible cryovolcanic features as bright fresh-ice patches.",
   "li_257":"<b>Mid-zone and terminator.</b> Pressure ridges, crevasses, and long topographic shadows under grazing 2566 K illumination. Terminator is the most photogenic zone.",
   "li_258":"<b>Nightside.</b> Slightly darker cream-tan from CO₂ frost. KSP nightside ambient ≈ 1–3% dayside.",
-  "li_259":"<b>Atmosphere haze.</b> Imperceptible from orbit; barely a hairline warm-gray glow (<code>#403028</code>) at the limb.",
+  "li_259":"<b>Atmosphere haze.</b> Imperceptible from orbit; barely a hairline warm-gray glow (<span class=\"hex-chip\" style=\"background:#403028\"></span><code>#403028</code>) at the limb.",
   "li_260":"<b>Cryovolcanic plumes.</b> 2–4 substellar warm spots produce ~50–100 km-wide plumes of fresh water ice ejected into the thin atmosphere. Each plume forms a bright halo around its vent, visible from orbit as small bright patches against the snowball. Plumes are intermittent (timescales hours-days) so KSP rendering should treat them as static features for fidelity.",
-  "li_261":"<b>High-latitude aurora band.</b> A <code>#FF6B6B</code> red CO₂⁺ aurora at ~58° magnetic latitude, visible against the dark nightside ice. The aurora intensity peaks during stellar-wind sub-Alfvénic transits (50–80% of each orbit per Garraffo 2017).",
+  "li_261":"<b>High-latitude aurora band.</b> A <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> red CO₂⁺ aurora at ~58° magnetic latitude, visible against the dark nightside ice. The aurora intensity peaks during stellar-wind sub-Alfvénic transits (50–80% of each orbit per Garraffo 2017).",
   "li_262":"<b>Star in sky.</b> TRAPPIST-1 subtends 1.36° in g&#x27;s sky (2.7× the Sun from Earth). Surface illumination is 0.26 S⊕ — comparable to outer Mars&#x27;s solar flux. The red-orange star against the cream snowscape gives a permanent dim-dawn quality. Stellar surface heterogeneity matters for the realistic sky tint. Wakeford 2019 (1811.04877) finds a 3-temperature spot model best fits TRAPPIST-1: 64% photosphere at 2400 K, 35% spot coverage at 3000 K, 1% facula at 5825 K. The dominant disk color is set by the 2400 K cool photosphere (already cfg&#x27;s <code>stellar_illumination_color_temp_k</code> value of 2566 K from Agol 2021); the 35% 3000 K coverage adds a subtle yellow-orange overtone to the disk at high resolution.",
   "li_263":"<b>Sister planets in sky.</b> f (next inward) at angular size ~0.3° in conjunction; h (next outward) at ~0.2° at outer conjunction. Resonant chain ensures frequent multi-planet alignments.",
   "h2_264":"Bibliography",
@@ -908,7 +926,7 @@ const T = {
   "td_94":"medium",
   "td_95":"derived. kT/μg, T≈180 K, μ=43, g=10.2 m/s²",
   "td_96":"<code>atmosphere_tint_rgb_hex</code>",
-  "td_97":"<code>#403028</code> (무시할 만한 Rayleigh + CO₂ 얼음 haze tint)",
+  "td_97":"<span class=\"hex-chip\" style=\"background:#403028\"></span><code>#403028</code> (무시할 만한 Rayleigh + CO₂ 얼음 haze tint)",
   "td_98":"low",
   "td_99":"매우 얇은 대기, 산란 거의 없음",
   "td_100":"<code>cloud_cover_fraction</code>",
@@ -916,7 +934,7 @@ const T = {
   "td_102":"medium",
   "td_103":"매우 제한적. terminator 의 CO₂ 얼음 cirrus 정도",
   "td_104":"<code>cloud_tint_rgb_hex</code>",
-  "td_105":"<code>#d0c0b0</code> (CO₂ 얼음 + 먼지, M-dwarf shifted)",
+  "td_105":"<span class=\"hex-chip\" style=\"background:#d0c0b0\"></span><code>#d0c0b0</code> (CO₂ 얼음 + 먼지, M-dwarf shifted)",
   "td_106":"medium",
   "td_107":"차갑고 얇은 대기에서 구름 생성이 최소",
   "td_108":"<code>ocean_present</code>",
@@ -936,11 +954,11 @@ const T = {
   "td_122":"high",
   "td_123":"완전 snowball. Pierrehumbert 2011 outer-HZ branch",
   "td_124":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_125":"<code>#e8e0d4</code> (M-dwarf 빛 아래 깨끗한 눈)",
+  "td_125":"<span class=\"hex-chip\" style=\"background:#e8e0d4\"></span><code>#e8e0d4</code> (M-dwarf 빛 아래 깨끗한 눈)",
   "td_126":"medium",
   "td_127":"고-알베도 눈 + 2566 K 조명",
   "td_128":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_129":"<code>#a09080</code> (terminator 의 CO₂ 서리와 먼지 patch)",
+  "td_129":"<span class=\"hex-chip\" style=\"background:#a09080\"></span><code>#a09080</code> (terminator 의 CO₂ 서리와 먼지 patch)",
   "td_130":"low",
   "td_131":"terminator 근처의 승화-퇴적 사이클",
   "td_132":"<code>surface_morphology</code>",
@@ -1004,11 +1022,11 @@ const T = {
   "td_190":"high",
   "td_191":"대기 + 자기장 모두 우호적. CO₂ 지배 발광",
   "td_192":"<code>aurora_color_primary_hex</code>",
-  "td_193":"<code>#FF6B6B</code>",
+  "td_193":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)\"><div class=\"marker\" style=\"left:50.0%\"></div></span><span class=\"spectrum-range\">580–620 nm · peak 600.0 nm</span> <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#ff6b6b</code>",
   "td_194":"medium",
   "td_195":"CO₂⁺ Fox–Duffendack 600 nm 적색 (Mars-analog snowball 대기). tie-break. UV-only 보다 가시 적색 우선",
   "td_196":"<code>aurora_color_secondary_hex</code>",
-  "td_197":"<code>#87CEEB</code>",
+  "td_197":"<span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87CEEB</code>",
   "td_198":"low",
   "td_199":"미량 N₂⁺ 발광이 있다면. 없으면 산란 UV 가 옅은 청색으로 지각됨",
   "td_200":"<code>aurora_emission_species_primary</code>",
@@ -1039,7 +1057,7 @@ const T = {
   "li_225":"<b>중간 구역 (substellar 에서 30–120°).</b> 두꺼운 얼음 (~60 km), 큰 스케일에서는 평활합니다.",
   "li_226":"<b>Terminator (~90°).</b> pressure-ridge 밀도가 가장 높고, 지형 그림자도 가장 깁니다.",
   "li_227":"<b>Nightside (&gt;120°).</b> 얼음이 가장 두껍고 (~100 km), 가장 차가운 영역에는 CO₂ 서리 퇴적이 있을 수 있습니다.",
-  "p_228":"<b>색 선택.</b> M-dwarf 조명 아래에서 깨끗한 눈과 빙하 얼음의 알베도를 반영합니다. primary 는 따뜻한 cream-white <code>#e8e0d4</code>, terminator 근처에는 누적된 먼지와 CO₂ 서리 사이클로 tan-shaded patch <code>#a09080</code> 가 들어갑니다.",
+  "p_228":"<b>색 선택.</b> M-dwarf 조명 아래에서 깨끗한 눈과 빙하 얼음의 알베도를 반영합니다. primary 는 따뜻한 cream-white <span class=\"hex-chip\" style=\"background:#e8e0d4\"></span><code>#e8e0d4</code>, terminator 근처에는 누적된 먼지와 CO₂ 서리 사이클로 tan-shaded patch <span class=\"hex-chip\" style=\"background:#a09080\"></span><code>#a09080</code> 가 들어갑니다.",
   "p_229":"<b>상한 water mass fraction 에서의 거주 가능성 caveat.</b> Acuña 2021 (2101.08172) 는 WMF ≥ 0.14 에서 high-pressure ice phase (HPP) 가 hydrosphere 의 암석-물 경계를 봉인해 버려, 빙하 아래 바다의 거주 가능성에 일반적으로 필수로 여겨지는 영양분 교환이 차단된다는 사실을 보였습니다. WMF ≥ 0.10 에서는 내부 구성의 50% 미만만이 거주 가능한 sub-surface ocean 을 허용합니다. g 의 wmf 범위 (0.11–0.50) 가 정확히 이 임계를 가로지르고 있어, 빙하 아래 바다는 존재하지만 상한에서는 거주 가능 잠재력이 떨어집니다. 시각 cfg 입장에서는 렌더링상의 문제가 아니지만, Principia / astrobiology 관점의 플래그로서 Open items 에 적어 둘 가치가 있습니다.",
   "p_230":"<b>Cryovolcanism 따뜻한 spot 을 캐노니컬 시각 feature 로.</b> g 의 높은 water mass fraction (0.11–0.50) 과 radiogenic + 조석 가열이 결합되어, 두꺼운 (50–100 km) 얼음 껍데기 아래에 상당한 빙하 아래 바다가 존재합니다 (~0.04 W/m² 의 basal melt). Europa-Ganymede analog 추론은 얼음 껍데기가 가장 얇은 위치 — 일반적으로 warm-mantle anomaly 위 — 에서 cryovolcanism 가능성을 뒷받침합니다. 그런 자리에서는 basal water 가 표면까지 도달할 수 있습니다. [[feedback-phase3-interesting-first]] 원칙에 따라, cfg 는 cryovolcanic 분출을 &quot;가능&quot;에서 <b>canonical</b> 로 격상시킵니다. 2–4 개의 substellar 따뜻한 spot 근처에 가시 분출이 자리하고, 각각 폭 ~50–100 km 규모로 분출구 주변에 신선한 물-얼음 halo 를 만듭니다. 관측에 모순되지 않고 (어느 쪽도 직접 증거는 없음), 균일한 얼음 표면보다 극적으로 더 흥미롭습니다. cfg-variant 대안은 보존됩니다. 특징 없는 매끈한 snowball 입니다.",
   "p_231":"<b>Bedrock 과 산화철.</b> 사실상 보이지 않습니다. 전역 얼음 피복이 너무 두꺼워 bedrock 노출이 일어날 수 없습니다. 압력으로 얇아져 어두운 patch 가 드러날 수 있는 극단적 terminator ridge 꼭대기 정도가 예외일 수 있는데, 확률이 매우 낮고 궤도에서는 보이지 않습니다.",
@@ -1058,7 +1076,7 @@ const T = {
   "p_244":"<b>Turbet 평형 기준.</b> Turbet 2018 (1707.06927) 은 g 에 대해 CO₂ 대기 equilibrium 을 명시적으로 풀어, 150 ± 1 mbar 표면 압력 및 174 ± 0.1 K 에서 대기가 안정한 승화-응결 평형 상태에 있음을 보였습니다. 이보다 낮으면 CO₂ 얼음이 표면을 &quot;전체 표면 수준까지 덮을 수 있고&quot;, 대기는 붕괴를 향해 불안정해집니다. cfg 의 0.05 bar 선택은 이 평형 아래에 있으며, 지속적인 화산 outgassing 으로 유지되는 비평형 상태를 가정합니다. 물리적으로는 타당하지만 자연스러운 끌개는 아닙니다. 다른 cfg 변형으로 Turbet 평형 압력 (0.15 bar) 을 채택하면, 열역학적으로 더 자기일관적인 대기가 됩니다.",
   "p_245":"<b>하늘 외관.</b> 0.05 bar 대기는 궤도에서 거의 보이지 않습니다. 표면에서 하늘은 거의 검고, 호스트 별이 공허를 배경으로 깊은 적-오렌지 디스크로 떠 있습니다. CO₂ 얼음 구름은 terminator 에서 비스듬한 빛을 받아 옅은 cream wisp 로 보입니다.",
   "p_246":"<b>GCM 교차 검증.</b> Fauchez 2019 (1911.08596) 는 g 에 대해 ≤10 bar 의 모든 그럴듯한 CO₂ 압력에서 snowball 상태를 확인했습니다. 10 bar CO₂ 에서도 행성은 &quot;substellar 영역 근처 몇몇 spot 을 빼면 거의 완전히 얼음 으로 덮여 있고, 그 spot 에서만 약간의 물이 바다에서 증발해 비교적 얇은 구름 (~0.1 kg/m²) 을 만든다&quot; 고 합니다. cfg 의 완전 snowball 기본값은 잘 뒷받침됩니다.",
-  "p_247":"<b>얼음 위 오로라 기하.</b> 적당한 자기장 (~지구의 0.35 배) 과 얇은 CO₂-rich 대기 조합으로, g 는 자기 위도 ~58° 에 Mars-analog 오로라를 띄웁니다. 지배 발광은 CO₂⁺ 적색 밴드 (Fox–Duffendack ~600 nm) 로, 고위도 얼음을 가로지르는 독특한 적색 오로라 띠를 만듭니다. 강도는 ~60 kR (지구의 약 6배) 로 적당한 수준이지만, 어두운 snowball 표면 위에서는 충분히 보입니다. cfg 는 이를 <code>#FF6B6B</code> primary 띠로 렌더링하고, 미량의 질소가 기여하는 자리에는 <code>#87CEEB</code> secondary tint 를 선택적으로 얹습니다. 오로라 oval 은 지구보다 넓고, sub-Alfvénic 통과 동안 적도 쪽으로 ~50° 까지 확장됩니다. 적도 부근 플레이어는 북쪽/남쪽 지평선 위로 글로우처럼 번지는 오로라를 볼 수 있습니다.",
+  "p_247":"<b>얼음 위 오로라 기하.</b> 적당한 자기장 (~지구의 0.35 배) 과 얇은 CO₂-rich 대기 조합으로, g 는 자기 위도 ~58° 에 Mars-analog 오로라를 띄웁니다. 지배 발광은 CO₂⁺ 적색 밴드 (Fox–Duffendack ~600 nm) 로, 고위도 얼음을 가로지르는 독특한 적색 오로라 띠를 만듭니다. 강도는 ~60 kR (지구의 약 6배) 로 적당한 수준이지만, 어두운 snowball 표면 위에서는 충분히 보입니다. cfg 는 이를 <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> primary 띠로 렌더링하고, 미량의 질소가 기여하는 자리에는 <span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87CEEB</code> secondary tint 를 선택적으로 얹습니다. 오로라 oval 은 지구보다 넓고, sub-Alfvénic 통과 동안 적도 쪽으로 ~50° 까지 확장됩니다. 적도 부근 플레이어는 북쪽/남쪽 지평선 위로 글로우처럼 번지는 오로라를 볼 수 있습니다.",
   "h2_248":"자전과 spin 합성",
   "p_249":"12.35 일 주기에서 7.6 Gyr 의 조석 damping 을 거쳐 동기 (1:1) 구성에 도달했습니다. 황도 경사각은 0 으로 damping 되었습니다. 이심률은 0.00208 으로 시스템 최저이며, 3:2 안정 경계의 한참 안쪽이라 1:1 만 그럴듯합니다.",
   "p_250":"<b>KSP 구현 노트.</b> 자전 주기 = 궤도 주기 = 12.3524 일 (1 067 251 s).",
@@ -1066,13 +1084,13 @@ const T = {
   "p_252":"<b>Planet-planet tides.</b> Hay &amp; Matsuyama 2019 (1903.04501) 는 g 가 이심률 강제 조석 대비 <b>planet-planet 조석 가열의 비중이 가장 큰</b> 행성이라고 지적합니다 (전체의 2–20%, 대부분이 이웃 f 의 기여). 시스템의 다른 행성은 모두 planet-planet 기여가 1% 미만입니다. 절대값 자체는 여전히 작지만 (Maxwell rheology 기준 표면 flux ~2×10⁻⁷ W/m²), f 중력 영향의 상대적 지배는 g 만의 특징이며, Principia cfg 에 충실히 표기해 둘 만한 사실입니다.",
   "p_253":"<b>자기 dynamo 기대값.</b> g 는 TRAPPIST-1 행성 중 질량이 가장 크고 (1.32 M⊕), water mass fraction 도 가장 높아서 (Bourgeois 2024 + Unterborn 2018), 금속 core dynamo 와 별도의 hydrosphere convection 기여 둘 다 뒷받침합니다. RM22 (2203.01065) 스케일링은 g 를 ~지구의 0.35 배 dipole moment 에 놓는데, 12.4 일의 느린 자전에도 불구하고 그렇습니다. Garraffo 2017 은 외곽 행성이 항성풍에 덜 압축됨을 보였고, 이에 따라 g 는 standoff 가 ~4 R_p 인 비교적 잘 정돈된 magnetosphere 를 갖습니다. Kerbalism cfg 는 1.5–4 R_p 의 닫힌 magnetosphere radiation belt 를 가정합니다.",
   "h2_254":"비주얼 스타일",
-  "li_255":"<b>전역 외관.</b> terminator 근처에 미묘한 tan tinting (<code>#a09080</code>) 이 도는, 거의 균일한 따뜻한 cream-white snowball (<code>#e8e0d4</code>). 뚜렷한 &quot;eyeball&quot; feature 는 없습니다. 개방 수역 디스크도 없고, 시스템에서 시각적으로 가장 차분한 행성입니다.",
+  "li_255":"<b>전역 외관.</b> terminator 근처에 미묘한 tan tinting (<span class=\"hex-chip\" style=\"background:#a09080\"></span><code>#a09080</code>) 이 도는, 거의 균일한 따뜻한 cream-white snowball (<span class=\"hex-chip\" style=\"background:#e8e0d4\"></span><code>#e8e0d4</code>). 뚜렷한 &quot;eyeball&quot; feature 는 없습니다. 개방 수역 디스크도 없고, 시스템에서 시각적으로 가장 차분한 행성입니다.",
   "li_256":"<b>Substellar 영역.</b> 더 차가운 영역으로 흐르는 tectonic ice-flow 때문에 얼음이 약간 더 텍스처화되고 균열이 보입니다. 밝은 신선-얼음 patch 로 나타나는 cryovolcanic feature 도 가능합니다.",
   "li_257":"<b>중간 구역과 terminator.</b> 비스듬한 2566 K 조명 아래의 pressure ridge, crevasse, 긴 지형 그림자. terminator 가 가장 사진발이 좋은 구역입니다.",
   "li_258":"<b>Nightside.</b> CO₂ 서리 때문에 약간 더 어두운 cream-tan. KSP nightside ambient 는 dayside 의 1–3% 수준입니다.",
-  "li_259":"<b>Atmosphere haze.</b> 궤도에서는 거의 인지 불가. limb 에 hairline 굵기의 따뜻한-회색 glow (<code>#403028</code>) 정도만 보입니다.",
+  "li_259":"<b>Atmosphere haze.</b> 궤도에서는 거의 인지 불가. limb 에 hairline 굵기의 따뜻한-회색 glow (<span class=\"hex-chip\" style=\"background:#403028\"></span><code>#403028</code>) 정도만 보입니다.",
   "li_260":"<b>Cryovolcanic 분출.</b> 2–4 개의 substellar 따뜻한 spot 이 얇은 대기로 폭 ~50–100 km 규모의 신선한 물-얼음 분출을 쏘아 올립니다. 각 분출은 vent 주위로 밝은 halo 를 만들며, 궤도에서는 snowball 을 배경으로 작은 밝은 patch 처럼 보입니다. 분출은 간헐적이지만 (시간-일 단위 변동) KSP 렌더링은 충실성을 위해 정적 feature 로 다루는 편이 낫습니다.",
-  "li_261":"<b>고위도 오로라 띠.</b> 자기 위도 ~58° 의 <code>#FF6B6B</code> 적색 CO₂⁺ 오로라가 어두운 nightside 얼음 위에 떠 있습니다. 오로라 강도는 항성풍 sub-Alfvénic 통과 동안 정점에 달합니다 (Garraffo 2017 기준, 매 궤도의 50–80%).",
+  "li_261":"<b>고위도 오로라 띠.</b> 자기 위도 ~58° 의 <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> 적색 CO₂⁺ 오로라가 어두운 nightside 얼음 위에 떠 있습니다. 오로라 강도는 항성풍 sub-Alfvénic 통과 동안 정점에 달합니다 (Garraffo 2017 기준, 매 궤도의 50–80%).",
   "li_262":"<b>하늘의 별.</b> TRAPPIST-1 이 g 의 하늘에서 1.36° 를 차지합니다 (지구에서 본 태양의 2.7 배). 표면 조명은 0.26 S⊕ 로 외곽 화성의 태양 flux 와 비슷합니다. cream 빛 설경 위로 떠 있는 적-오렌지 별이 영구적인 어슴푸레-여명 분위기를 만듭니다. 사실적인 하늘 색조를 위해서는 항성 표면의 비균질성도 중요합니다. Wakeford 2019 (1811.04877) 는 TRAPPIST-1 에 가장 잘 맞는 모델로 3-온도 spot 모델을 제시했는데, photosphere 64% 가 2400 K, spot coverage 35% 가 3000 K, facula 1% 가 5825 K 입니다. 지배적인 디스크 색은 2400 K 의 차가운 photosphere 가 결정하며 (cfg 의 <code>stellar_illumination_color_temp_k</code> 값 2566 K 가 Agol 2021 기반으로 이미 반영), 35% 의 3000 K 영역이 고해상도에서 디스크에 옅은 노랑-오렌지 overtone 을 더합니다.",
   "li_263":"<b>하늘의 자매 행성.</b> f (안쪽 다음) 가 conjunction 시 각 크기 ~0.3°, h (바깥쪽 다음) 가 outer conjunction 시 ~0.2°. 공명 체인 덕에 다중 행성 정렬이 자주 일어납니다.",
   "h2_264":"참고 문헌",

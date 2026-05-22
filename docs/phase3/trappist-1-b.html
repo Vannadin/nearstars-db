@@ -22,6 +22,23 @@ pre code { background: none; padding: 0; font-size: 12px }
 
 .lang-toggle { margin-left: auto }
 
+/* color visualization: palette band above Decisions tables */
+.palette-band { display: flex; gap: 2px; margin: 10px 0 8px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--bd-strong) }
+.palette-swatch { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 7px; font-family: var(--mono); font-size: 9.5px; line-height: 1.2; transition: flex-grow 0.15s ease; position: relative; overflow: hidden }
+.palette-swatch:hover { flex-grow: 2.2 }
+.palette-swatch .role { opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }
+.palette-swatch .hex { opacity: 0.72; font-size: 10px }
+.palette-swatch-emissive { color: rgba(0,0,0,0.88) }
+.palette-marker { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+
+/* color visualization: inline chip beside every <code>#xxxxxx</code> */
+.hex-chip { display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }
+
+/* color visualization: aurora rows render a wavelength gradient bar */
+.spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
+.spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+.spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
+
 @media (max-width: 600px) {
   section { margin-bottom: 24px }
   .dt thead { display: none }
@@ -49,6 +66,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <section>
 <h2 data-i18n="h2_3"></h2>
 <p class="intro" data-i18n="p_4"></p>
+<div class="palette-band"><div class="palette-swatch" style="background:#1a1612;color:#fff"><span class="role">Surf · 1</span><span class="hex">#1a1612</span></div><div class="palette-swatch" style="background:#7a2a10;color:#fff"><span class="role">Surf · 2</span><span class="hex">#7a2a10</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_5"></th>
 <th data-i18n="th_6"></th>
@@ -511,11 +529,11 @@ const T = {
   "td_99":"medium",
   "td_100":"airless + no redistribution; passive radiative limit",
   "td_101":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_102":"<code>#1a1612</code> (dark ultramafic basalt)",
+  "td_102":"<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code> (dark ultramafic basalt)",
   "td_103":"medium",
   "td_104":"Ducrot 2024 &quot;fresh ultramafic&quot; + Moon mare analog",
   "td_105":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_106":"<code>#7a2a10</code> (cooling lava + iron oxide near substellar)",
+  "td_106":"<span class=\"hex-chip\" style=\"background:#7a2a10\"></span><code>#7a2a10</code> (cooling lava + iron oxide near substellar)",
   "td_107":"low",
   "td_108":"induction heating + fresh-melt patches; Grayver 2022",
   "td_109":"<code>surface_morphology</code>",
@@ -582,7 +600,7 @@ const T = {
   "p_170":"Ducrot 2024 finds two atmosphere-or-surface models that pass the combined 12.8 / 15 μm eclipse fit: a thick pure-CO₂ atmosphere with photochemical haze (creating a stratospheric inversion and the CO₂ feature in emission), and — preferred — an airless planet with an <b>unweathered ultramafic surface</b>. The ultramafic interpretation matters: weathered basalts on the Moon (regolith-aged) have low broadband albedo but specific 15 μm emissivity that does not match the data, whereas a fresh (geologically young) ultramafic surface does. This implies ongoing or recent geological resurfacing.",
   "p_171":"The Ducrot 2025 phase curve consolidates this: no detected nightside emission (≲39 ppm at 15 μm), no phase offset, and the dayside flux matches a bare-rock model with low Bond albedo and inefficient heat redistribution. The conclusion across the b literature is consistent: <b>b is a bare, fresh, dark, hot rock.</b>",
   "p_172":"<b>Resurfacing mechanism.</b> Two physically plausible drivers: (1) Tidal heating from the resonant chain. Bolmont 2026 (2601.03408) revises older estimates substantially upward: for b&#x27;s measured core-mass-fraction range (Agol 2021: ~21 wt%) and the smallest plausible eccentricity, surface flux is <b>~0.5–1 W/m² (nominal)</b>, comparable to Io&#x27;s ~2 W/m². Higher-eccentricity solutions reach 10²–10³ W/m² but are ruled out by the JWST nightside constraint (Gillon 2025; T_2σ ≤ 291 K → Φ_2σ ≤ 407 W/m²). Even at the conservative ~0.5 W/m² value, tidal heating dominates Mars&#x27;s radiogenic ~0.04 W/m² by an order of magnitude. (2) Magnetic induction heating (Grayver 2022, Cohen 2024) adds another 0.4–4 W/m² from the planet&#x27;s motion through the stellar wind. The combined heat budget easily sustains partial-melt volcanism. Given the system&#x27;s 7.6 Gyr age, the surface is continuously refreshed by lava flows in regions of crustal weakness, biased toward the substellar hemisphere where insolation pushes the upper crust closest to solidus.",
-  "p_173":"<b>Color choice.</b> The host star is a 2566 K M8V dwarf with SED peak near 1.1 μm — surface reflectance perceived by a human observer is strongly red-shifted regardless of intrinsic mineral color (Domagal-Goldman 2010 for the general M-dwarf surface illumination treatment). For a fresh ultramafic surface (komatiite / olivine-pyroxene analogue, broadband visible albedo ≈ 0.03–0.08), the closest Solar System reference is the dark dorsa of Mercury or the unweathered floor of a young lunar crater. We pick <code>#1a1612</code> (very dark ultramafic) primary, <code>#7a2a10</code> (cooling-lava red) accent biased toward the substellar quadrant.",
+  "p_173":"<b>Color choice.</b> The host star is a 2566 K M8V dwarf with SED peak near 1.1 μm — surface reflectance perceived by a human observer is strongly red-shifted regardless of intrinsic mineral color (Domagal-Goldman 2010 for the general M-dwarf surface illumination treatment). For a fresh ultramafic surface (komatiite / olivine-pyroxene analogue, broadband visible albedo ≈ 0.03–0.08), the closest Solar System reference is the dark dorsa of Mercury or the unweathered floor of a young lunar crater. We pick <span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code> (very dark ultramafic) primary, <span class=\"hex-chip\" style=\"background:#7a2a10\"></span><code>#7a2a10</code> (cooling-lava red) accent biased toward the substellar quadrant.",
   "p_174":"<b>Iron oxide.</b> Less prominent than on d. The &quot;fresh&quot; ultramafic inference of Ducrot 2024 actively argues against significant weathering, so we minimize iron-oxide patches relative to d. What oxide there is should be biased to the terminator and antistellar hemisphere, where surface material is exposed to stellar UV but not recently resurfaced.",
   "p_175":"<b>Morphology.</b> Three contributing processes: (1) Continuous resurfacing by partial-melt volcanism driven by tidal + induction heating (Bolmont 2020, Grayver 2022), producing fresh lava flows and shield-volcano features predominantly in the substellar hemisphere. (2) ~8 Gyr of accumulated impacts, biased toward the leading hemisphere in the locked frame, but partially erased by ongoing volcanism. (3) Magma ocean relict features from the initial ~500 Myr post-accretion phase (extensible to b from Piaulet 2025 §8&#x27;s argument for d, since b experienced an even more intense initial energy flux and would have retained a magma ocean longer). Default texture: dark, glassy basaltic plains with visible lava-flow channels radiating from the substellar point and impact craters concentrating toward the trailing-hemisphere highlands.",
   "h2_176":"Atmosphere synthesis",
@@ -595,7 +613,7 @@ const T = {
   "p_183":"For NearStars we adopt the <b>fully airless</b> interpretation:",
   "li_184":"<b>Pressure.</b> 0 Pa exactly. The 12.8/15 μm-consistent &quot;CO₂ + haze&quot; scenario is dropped because it conflicts with the absence of CO₂ on the neighboring planet c (Zieba 2023). If c — at lower insolation, closer to the cosmic shoreline — does not retain CO₂, b cannot plausibly hold a thicker one.",
   "li_185":"<b>No surface volatiles.</b> Dayside temperatures of ~500 K immediately photolyse and thermally desorb any surface H₂O, CO₂, or SO₂. The nightside, while cold (~80 K), has no atmospheric transport so volatiles cannot cold-trap there.",
-  "p_186":"<b>Sky appearance.</b> No atmosphere means no Rayleigh scattering and no sky-color. The sky is uniformly black at every elevation. TRAPPIST-1 dominates the sky at angular size 5.51° (over ten times the Sun&#x27;s angular size from Earth) — by far the largest single object in the sky. Its color is deeply red-orange (≈2566 K blackbody → CIE chromaticity near <code>#ff7a1a</code>). The other six TRAPPIST-1 planets appear as bright stars in conjunction, with c (next planet out) reaching ~0.7° at inferior conjunction.",
+  "p_186":"<b>Sky appearance.</b> No atmosphere means no Rayleigh scattering and no sky-color. The sky is uniformly black at every elevation. TRAPPIST-1 dominates the sky at angular size 5.51° (over ten times the Sun&#x27;s angular size from Earth) — by far the largest single object in the sky. Its color is deeply red-orange (≈2566 K blackbody → CIE chromaticity near <span class=\"hex-chip\" style=\"background:#ff7a1a\"></span><code>#ff7a1a</code>). The other six TRAPPIST-1 planets appear as bright stars in conjunction, with c (next planet out) reaching ~0.7° at inferior conjunction.",
   "p_187":"<b>Radiation environment without an atmosphere.</b> With no atmospheric column to absorb energetic particles, b&#x27;s surface receives the full M-dwarf wind and flare flux directly. Garraffo 2017 (1706.04617) and Cohen 2014 (1405.7707) simulations show the planetary magnetic field — even at Earth-like strength — is compressed to ~1.5 R_p by the stellar wind, and frequently opens directly to the surface during the planet&#x27;s sub-Alfvénic crossings (≈50% of each orbit). Atri 2019 (1910.09871) gives a surface dose of ~80 Sv/yr under these conditions during typical flare activity, with single-flare spikes reaching 1–10 Gy. For Kerbalism cfg purposes this places b in the &quot;lethal without active shielding&quot; radiation bracket — crews on the surface accumulate lethal dose in minutes to hours, not days.",
   "h2_188":"Rotation &amp; spin synthesis",
   "p_189":"The TRAPPIST-1 b system parameters force a strongly synchronous configuration. Orbital eccentricity is small (0.00622; Agol 2021), obliquity is damped to zero by tidal forces over the ≳7.6 Gyr system age (Agol 2021 §6.2), and the spin-orbit resonance is most plausibly 1:1. Vinson 2017 and Makarov 2018 explored 3:2 alternatives for the inner TRAPPIST-1 planets and concluded 1:1 is overwhelmingly favored at b&#x27;s eccentricity (3:2 is stable only for e ≳ 0.01).",
@@ -606,12 +624,12 @@ const T = {
   "p_194":"<b>Magnetic dynamo expectation.</b> With 7.6 Gyr of system age and a tidally-locked 1.51-day rotation (slow compared to Earth&#x27;s 1 day), b&#x27;s internal dynamo is expected to be either weak-multipolar (RM22 / 2203.01065 scaling gives ~0.08 × Earth dipole moment) or absent. The induction heating from the stellar wind (Kislyakova 2018 / 1710.08761: 17% of radiogenic flux) keeps the deep interior warm enough that a frozen core is unlikely, so some residual dynamo activity is plausible. The cfg adopts ~3 μT surface field at the equator as a low-confidence estimate. This is enough field to produce a small magnetospheric &quot;bubble&quot; but not enough to deflect stellar wind from the surface during the system&#x27;s frequent sub-Alfvénic phases.",
   "h2_195":"Visual styling",
   "p_196":"Combining the surface and atmosphere decisions:",
-  "li_197":"<b>Global color palette.</b> Dark ultramafic body (<code>#1a1612</code> primary, <code>#7a2a10</code> lava-red accent) seen under intense red-orange stellar light appears as a glowing-charcoal world. The substellar hemisphere has visible cooling-lava patches catching the stellar light; the antistellar hemisphere is near-black.",
-  "li_198":"<b>Dayside.</b> Bright substellar region (~503 K, ~230 °C) with textured low-relief lava plains. Substellar peak brightness in the cfg&#x27;s PQS should reach <code>#a04020</code> (lava red-orange) within ~15° of substellar point.",
+  "li_197":"<b>Global color palette.</b> Dark ultramafic body (<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code> primary, <span class=\"hex-chip\" style=\"background:#7a2a10\"></span><code>#7a2a10</code> lava-red accent) seen under intense red-orange stellar light appears as a glowing-charcoal world. The substellar hemisphere has visible cooling-lava patches catching the stellar light; the antistellar hemisphere is near-black.",
+  "li_198":"<b>Dayside.</b> Bright substellar region (~503 K, ~230 °C) with textured low-relief lava plains. Substellar peak brightness in the cfg&#x27;s PQS should reach <span class=\"hex-chip\" style=\"background:#a04020\"></span><code>#a04020</code> (lava red-orange) within ~15° of substellar point.",
   "li_199":"<b>Terminator band.</b> Narrow due to direct, low-redistribution illumination. High topographic contrast — basaltic ridges and impact crater rims throw long shadows in the grazing 2566 K light.",
   "li_200":"<b>Nightside.</b> Cold (~80 K) and entirely dark; only thermal IR emission, no visible-band features. KSP nightside lighting should be near-zero ambient. The only visible sources are reflected light from neighboring planets (c reaches mv ≈ −13 at conjunction, like Earth&#x27;s Moon).",
   "li_201":"<b>No atmosphere haze.</b> Limb is sharp — no scattering, no refraction, no glow. The transition from disk to space is a clean edge.",
-  "li_202":"<b>Star in sky.</b> TRAPPIST-1 subtends 5.51° in b&#x27;s sky (about 11× the Sun&#x27;s angular size from Earth). Its color is deeply red-orange (≈2566 K → <code>#ff7a1a</code>), and the surface brightness is comparable to Mercury-from-Mercury solar brightness (~4.25 S⊕). At wavelengths beyond 1 μm the star is bright enough to show prominent solar flares (Howard 2023 in the d bibliography; Glazier 2020 for direct TRAPPIST-1 flare statistics) — for KSP, occasional flare lighting flickers would be a faithful but optional touch.",
+  "li_202":"<b>Star in sky.</b> TRAPPIST-1 subtends 5.51° in b&#x27;s sky (about 11× the Sun&#x27;s angular size from Earth). Its color is deeply red-orange (≈2566 K → <span class=\"hex-chip\" style=\"background:#ff7a1a\"></span><code>#ff7a1a</code>), and the surface brightness is comparable to Mercury-from-Mercury solar brightness (~4.25 S⊕). At wavelengths beyond 1 μm the star is bright enough to show prominent solar flares (Howard 2023 in the d bibliography; Glazier 2020 for direct TRAPPIST-1 flare statistics) — for KSP, occasional flare lighting flickers would be a faithful but optional touch.",
   "li_203":"<b>Sister planets in sky.</b> When in inferior conjunction with b, TRAPPIST-1 c (next out) appears at angular size ~0.7° (1.5× Earth&#x27;s Moon). Near-coplanar geometry; these conjunctions occur every ~4 days (b-c synodic period).",
   "li_204":"<b>Magma ocean glow (optional).</b> If the substellar surface is truly close to solidus, very faint thermal red-orange emission at λ ≳ 2 μm might be visible at the substellar point during deep nightside flyovers in KSP — a low-priority visual easter egg.",
   "h2_205":"Bibliography",
@@ -763,11 +781,11 @@ const T = {
   "td_99":"medium",
   "td_100":"airless 이고 재분배 없음, passive radiative 한계",
   "td_101":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_102":"<code>#1a1612</code> (어두운 ultramafic basalt)",
+  "td_102":"<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code> (어두운 ultramafic basalt)",
   "td_103":"medium",
   "td_104":"Ducrot 2024 의 &quot;fresh ultramafic&quot; + 달 mare 유사체",
   "td_105":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_106":"<code>#7a2a10</code> (substellar 부근의 식어가는 용암 + 산화철)",
+  "td_106":"<span class=\"hex-chip\" style=\"background:#7a2a10\"></span><code>#7a2a10</code> (substellar 부근의 식어가는 용암 + 산화철)",
   "td_107":"low",
   "td_108":"induction heating 과 신선한 용융 patch. Grayver 2022",
   "td_109":"<code>surface_morphology</code>",
@@ -834,7 +852,7 @@ const T = {
   "p_170":"Ducrot 2024 는 결합 12.8 / 15 μm eclipse fit 을 통과하는 대기-또는-표면 모델을 두 개 찾아냈습니다. 하나는 광화학 haze 를 가진 두꺼운 순수 CO₂ 대기(성층권 inversion 을 만들고 emission 으로 나타나는 CO₂ feature 를 생성)이고, 다른 하나는 — 그리고 더 선호되는 — <b>미풍화 ultramafic 표면</b>을 가진 대기 없는 행성입니다. ultramafic 해석은 중요한 의미를 갖습니다. 달의 풍화된 basalt(regolith 노화)는 broadband albedo 는 낮지만 15 μm 영역의 emissivity 가 데이터와 맞지 않는 반면, 신선한(지질학적으로 어린) ultramafic 표면은 데이터에 부합합니다. 이는 진행 중이거나 최근에 일어난 지질학적 재포장을 함의합니다.",
   "p_171":"Ducrot 2025 phase curve 는 이 결론을 굳혔습니다. nightside emission 은 검출되지 않고(15 μm 에서 ≲39 ppm), phase offset 도 없으며, dayside flux 는 낮은 Bond albedo 와 비효율적인 열 재분배를 갖는 맨 암석 모델과 일치합니다. b 관련 문헌 전반의 결론은 한결같습니다. <b>b 는 맨, 신선하고 어두우며 뜨거운 암석입니다.</b>",
   "p_172":"<b>재포장 메커니즘.</b> 물리적으로 그럴듯한 두 가지 동인이 있습니다. (1) 공명 사슬에서 비롯되는 조석 가열입니다. Bolmont 2026 (2601.03408) 은 과거 추정치를 상당히 상향 조정했는데, b 의 측정된 핵 질량비 범위(Agol 2021. 약 21 wt%)와 가장 작은 그럴듯한 이심률 조합에서 표면 flux 는 <b>명목상 약 0.5–1 W/m²</b>로, Io 의 ~2 W/m² 에 견줄 만합니다. 더 높은 이심률 해는 10²–10³ W/m² 까지 올라가지만, JWST nightside 제약 (Gillon 2025. T_2σ ≤ 291 K → Φ_2σ ≤ 407 W/m²)에 의해 배제됩니다. 보수적인 ~0.5 W/m² 값만 잡아도 화성의 방사성 ~0.04 W/m² 를 한 자릿수 차이로 압도합니다. (2) 자기 induction heating (Grayver 2022, Cohen 2024) 은 행성이 항성풍 속을 가르면서 추가로 0.4–4 W/m² 를 보탭니다. 이 둘을 합친 열 예산은 부분 용융 화산활동을 충분히 유지할 수 있습니다. 시스템 나이가 7.6 Gyr 임을 감안하면, 표면은 지각 약점부에서 용암류로 끊임없이 새로워지고, 일사가 상부 지각을 solidus 쪽으로 가장 가깝게 미는 substellar 반구로 그 활동이 편향됩니다.",
-  "p_173":"<b>색 선택.</b> 호스트별은 SED 피크가 1.1 μm 근처인 2566 K M8V dwarf 라, 인간 관찰자가 인지하는 표면 reflectance 는 본래 광물색과 무관하게 강하게 적색쪽으로 치우칩니다 (일반적인 M-dwarf 표면 조명 처리는 Domagal-Goldman 2010 참조). 신선한 ultramafic 표면(komatiite / olivine-pyroxene 유사체, broadband visible albedo ≈ 0.03–0.08) 에 가장 가까운 태양계 reference 는 수성의 어두운 dorsa 또는 어린 달 크레이터의 미풍화 floor 입니다. primary 는 <code>#1a1612</code> (매우 어두운 ultramafic), accent 는 <code>#7a2a10</code> (식어가는 용암의 적색)으로 substellar 사분면 쪽으로 치우치게 잡았습니다.",
+  "p_173":"<b>색 선택.</b> 호스트별은 SED 피크가 1.1 μm 근처인 2566 K M8V dwarf 라, 인간 관찰자가 인지하는 표면 reflectance 는 본래 광물색과 무관하게 강하게 적색쪽으로 치우칩니다 (일반적인 M-dwarf 표면 조명 처리는 Domagal-Goldman 2010 참조). 신선한 ultramafic 표면(komatiite / olivine-pyroxene 유사체, broadband visible albedo ≈ 0.03–0.08) 에 가장 가까운 태양계 reference 는 수성의 어두운 dorsa 또는 어린 달 크레이터의 미풍화 floor 입니다. primary 는 <span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code> (매우 어두운 ultramafic), accent 는 <span class=\"hex-chip\" style=\"background:#7a2a10\"></span><code>#7a2a10</code> (식어가는 용암의 적색)으로 substellar 사분면 쪽으로 치우치게 잡았습니다.",
   "p_174":"<b>산화철.</b> d 보다는 덜 두드러집니다. Ducrot 2024 의 &quot;fresh&quot; ultramafic 추론은 의미 있는 풍화를 적극적으로 배제하기 때문에, d 에 비해 산화철 patch 는 최소화합니다. 산화물이 존재한다면 표면 물질이 항성 UV 에 노출은 되지만 최근에 재포장되지 않은 terminator 와 antistellar 반구로 치우치도록 배치하는 것이 맞습니다.",
   "p_175":"<b>지형.</b> 기여하는 과정은 세 가지입니다. (1) 조석과 induction heating 이 구동하는 부분 용융 화산활동에 의한 지속적 재포장(Bolmont 2020, Grayver 2022)으로, 주로 substellar 반구에 신선한 용암류와 shield-volcano 지형이 형성됩니다. (2) ~8 Gyr 에 걸친 누적 충돌은 조석 고정된 frame 에서 leading 반구 쪽으로 편향되지만, 진행 중인 화산활동에 의해 부분적으로 지워집니다. (3) 강착 직후 ~500 Myr 단계의 마그마 바다 잔존 지형도 있습니다 (Piaulet 2025 §8 가 d 에 대해 제시한 논거를 b 로 확장한 것 — b 는 초기 에너지 flux 가 더 강했고, 그래서 마그마 바다를 더 오래 유지했을 것임). 기본 텍스처는 substellar 점에서 방사상으로 뻗어 나가는 용암류 채널이 보이고 trailing 반구 고지대 쪽으로 충돌 크레이터가 집중되는, 어둡고 유리질의 basalt 평원입니다.",
   "h2_176":"대기 합성",
@@ -847,7 +865,7 @@ const T = {
   "p_183":"NearStars 에서는 <b>완전 airless</b> 해석을 채택합니다.",
   "li_184":"<b>압력.</b> 정확히 0 Pa 입니다. 12.8/15 μm 데이터와 호환되는 &quot;CO₂ + haze&quot; 시나리오는 이웃 행성 c 에서 CO₂ 가 부재한다는 사실(Zieba 2023) 과 충돌하므로 폐기합니다. 일사가 더 낮고 cosmic shoreline 에 더 가까운 c 가 CO₂ 를 유지하지 못한다면, b 가 그보다 두꺼운 대기를 보유한다는 것은 그럴듯하지 않습니다.",
   "li_185":"<b>표면 volatile 없음.</b> ~500 K 의 dayside 온도는 표면의 H₂O, CO₂, SO₂ 를 곧장 광분해하고 열적으로 desorb 시켜 버립니다. nightside 는 ~80 K 로 차갑지만 대기 수송이 없어 volatile 이 거기로 cold-trap 될 수도 없습니다.",
-  "p_186":"<b>하늘 외관.</b> 대기가 없으니 Rayleigh scattering 도 없고 하늘색도 없습니다. 하늘은 모든 고도에서 균일하게 검습니다. TRAPPIST-1 이 각 크기 5.51° 로 하늘을 지배하고(지구에서 본 태양 각 크기의 10 배가 넘음), 하늘에서 단연 가장 큰 단일 천체입니다. 별빛은 짙은 적-오렌지(≈2566 K blackbody → CIE chromaticity 가 <code>#ff7a1a</code> 근처)이고, 나머지 여섯 개의 TRAPPIST-1 행성은 합 시에 밝은 별처럼 보입니다. 그중 다음 외측 행성인 c 는 inferior conjunction 에서 ~0.7° 까지 커집니다.",
+  "p_186":"<b>하늘 외관.</b> 대기가 없으니 Rayleigh scattering 도 없고 하늘색도 없습니다. 하늘은 모든 고도에서 균일하게 검습니다. TRAPPIST-1 이 각 크기 5.51° 로 하늘을 지배하고(지구에서 본 태양 각 크기의 10 배가 넘음), 하늘에서 단연 가장 큰 단일 천체입니다. 별빛은 짙은 적-오렌지(≈2566 K blackbody → CIE chromaticity 가 <span class=\"hex-chip\" style=\"background:#ff7a1a\"></span><code>#ff7a1a</code> 근처)이고, 나머지 여섯 개의 TRAPPIST-1 행성은 합 시에 밝은 별처럼 보입니다. 그중 다음 외측 행성인 c 는 inferior conjunction 에서 ~0.7° 까지 커집니다.",
   "p_187":"<b>대기 없는 환경에서의 방사선.</b> 에너지 입자를 흡수해 줄 대기 컬럼이 없으니, b 의 표면은 M-dwarf 항성풍과 플레어 flux 를 고스란히 직격으로 받습니다. Garraffo 2017 (1706.04617) 과 Cohen 2014 (1405.7707) 의 시뮬레이션을 보면, 행성 자기장이 지구 수준의 세기를 가졌다고 해도 항성풍에 눌려 ~1.5 R_p 까지 압축되고, 행성이 sub-Alfvénic 영역을 가로지르는 동안(매 궤도의 약 50%) 자기력선이 표면까지 그대로 열려 버리는 경우가 잦습니다. 평균적인 플레어 활동 수준에서 Atri 2019 (1910.09871) 가 산출한 표면 선량은 ~80 Sv/yr 이고, 단일 플레어 스파이크에서는 1–10 Gy 까지 치솟습니다. Kerbalism cfg 관점에서 보면 b 는 &quot;능동 차폐 없이는 치명적&quot;인 방사선 등급으로, 표면에 머무는 승무원은 며칠이 아니라 수 분에서 수 시간 단위로 치사 선량을 누적하게 됩니다.",
   "h2_188":"자전 &amp; spin 합성",
   "p_189":"TRAPPIST-1 b 시스템 파라미터는 강한 동기 자전 구성을 강제합니다. 궤도 이심률은 작고(0.00622, Agol 2021), 황도경사각은 ≳7.6 Gyr 의 시스템 나이에 걸쳐 조석력으로 0 까지 damping 되었으며(Agol 2021 §6.2), 회전-궤도 공명은 가장 그럴듯하게 1:1 입니다. Vinson 2017 과 Makarov 2018 은 내측 TRAPPIST-1 행성들에 대해 3:2 대안도 탐색했지만, b 의 이심률에서는 1:1 이 압도적으로 선호된다고 결론지었습니다 (3:2 는 e ≳ 0.01 에서만 안정).",
@@ -858,12 +876,12 @@ const T = {
   "p_194":"<b>자기 다이나모 기대치.</b> 7.6 Gyr 의 시스템 나이와 조석 고정된 1.51 일 자전(지구의 하루보다 한참 느림) 을 감안하면, b 의 내부 다이나모는 약한 multipolar 형태이거나 아예 없을 것으로 예상됩니다 (RM22 / 2203.01065 의 스케일링에 따르면 지구 쌍극자 모멘트의 ~0.08 배). 항성풍에서 비롯되는 induction 가열(Kislyakova 2018 / 1710.08761. 방사성 flux 의 17%) 이 심부 내부를 충분히 따뜻하게 유지해 핵이 동결되었을 가능성은 낮으므로, 약하게나마 다이나모가 잔존할 여지는 있습니다. cfg 에서는 적도 표면 자기장을 ~3 μT 로 낮은 신뢰도로 잡았습니다. 이 정도면 작은 자기권 &quot;버블&quot;을 만들어 내기는 하지만, 잦은 sub-Alfvénic 국면에서 항성풍을 표면에서 떼어 놓기에는 부족합니다.",
   "h2_195":"비주얼 스타일",
   "p_196":"표면과 대기 결정을 종합하면 다음과 같습니다.",
-  "li_197":"<b>전역 색 팔레트.</b> 어두운 ultramafic body(<code>#1a1612</code> primary, <code>#7a2a10</code> 용암-적색 accent)가 강렬한 적-오렌지 별빛 아래에서는 벌겋게 달궈진 charcoal 같은 행성으로 보입니다. substellar 반구에는 별빛을 받는 식어가는 용암 patch 가 보이고, antistellar 반구는 거의 새까맣습니다.",
-  "li_198":"<b>Dayside.</b> 밝은 substellar 영역(~503 K, ~230 °C)과 텍스처가 살아 있는 저-기복 용암 평원입니다. cfg 의 PQS 에서 substellar 정점 밝기는 substellar 점 반경 ~15° 안에서 <code>#a04020</code> (용암 적-오렌지)에 도달하도록 맞춥니다.",
+  "li_197":"<b>전역 색 팔레트.</b> 어두운 ultramafic body(<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code> primary, <span class=\"hex-chip\" style=\"background:#7a2a10\"></span><code>#7a2a10</code> 용암-적색 accent)가 강렬한 적-오렌지 별빛 아래에서는 벌겋게 달궈진 charcoal 같은 행성으로 보입니다. substellar 반구에는 별빛을 받는 식어가는 용암 patch 가 보이고, antistellar 반구는 거의 새까맣습니다.",
+  "li_198":"<b>Dayside.</b> 밝은 substellar 영역(~503 K, ~230 °C)과 텍스처가 살아 있는 저-기복 용암 평원입니다. cfg 의 PQS 에서 substellar 정점 밝기는 substellar 점 반경 ~15° 안에서 <span class=\"hex-chip\" style=\"background:#a04020\"></span><code>#a04020</code> (용암 적-오렌지)에 도달하도록 맞춥니다.",
   "li_199":"<b>Terminator band.</b> 조명이 직접적이고 재분배가 적어 폭이 좁습니다. 지형 대비는 큽니다 — basalt 능선과 충돌 크레이터 림이 스치는 2566 K 빛 아래로 긴 그림자를 드리웁니다.",
   "li_200":"<b>Nightside.</b> 차갑고(~80 K) 완전히 어두우며, 열적외 emission 만 있고 가시광 대역의 feature 는 없습니다. KSP nightside 조명은 ambient 값을 거의 0 으로 두는 것이 맞습니다. 유일한 가시광원은 이웃 행성에서 반사된 빛으로, c 는 합 시 mv ≈ −13 까지 도달해 지구의 달과 비슷합니다.",
   "li_201":"<b>대기 haze 없음.</b> Limb 가 또렷합니다 — scattering, 굴절, glow 모두 없고, 행성 디스크에서 우주로의 전환은 깔끔한 가장자리로 끝납니다.",
-  "li_202":"<b>하늘의 별.</b> TRAPPIST-1 이 b 의 하늘에서 5.51° 를 차지합니다 (지구에서 본 태양 각 크기의 약 11 배). 색은 짙은 적-오렌지(≈2566 K → <code>#ff7a1a</code>)이고, 표면 밝기는 수성에서 본 태양 정도(~4.25 S⊕)입니다. 1 μm 이상의 파장에서는 별이 두드러진 항성 플레어를 보일 만큼 밝기 때문에 (d 의 bibliography 에 있는 Howard 2023, TRAPPIST-1 플레어 통계는 Glazier 2020) KSP 에서 가끔 플레어 조명의 깜빡임을 넣으면 충실하지만 선택적인 디테일이 됩니다.",
+  "li_202":"<b>하늘의 별.</b> TRAPPIST-1 이 b 의 하늘에서 5.51° 를 차지합니다 (지구에서 본 태양 각 크기의 약 11 배). 색은 짙은 적-오렌지(≈2566 K → <span class=\"hex-chip\" style=\"background:#ff7a1a\"></span><code>#ff7a1a</code>)이고, 표면 밝기는 수성에서 본 태양 정도(~4.25 S⊕)입니다. 1 μm 이상의 파장에서는 별이 두드러진 항성 플레어를 보일 만큼 밝기 때문에 (d 의 bibliography 에 있는 Howard 2023, TRAPPIST-1 플레어 통계는 Glazier 2020) KSP 에서 가끔 플레어 조명의 깜빡임을 넣으면 충실하지만 선택적인 디테일이 됩니다.",
   "li_203":"<b>하늘의 자매 행성.</b> b 와 내합인 시점에 TRAPPIST-1 c (다음 외측 행성) 가 각 크기 ~0.7° 로 보입니다 (지구 달의 1.5 배). 기하학적으로 거의 동일 평면이고, 이 conjunction 은 약 4 일 주기(b-c 회합 주기)로 돌아옵니다.",
   "li_204":"<b>마그마 바다 glow (선택).</b> substellar 표면이 정말 solidus 에 가깝다면, λ ≳ 2 μm 에서 매우 희미한 적-오렌지 thermal emission 이 KSP 의 깊은 nightside 비행 중 substellar 점에서 잠시 보일 수도 있습니다 — 우선순위 낮은 시각 이스터에그입니다.",
   "h2_205":"참고 문헌",
