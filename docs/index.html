@@ -886,8 +886,17 @@ function render() {
     let repChips = '';
     if (reps) {
       if (reps.phase2) repChips += `<span class="row-pill row-p2" title="Phase 2 curated">P2</span>`;
-      const p3n = Object.keys(reps.phase3 || {}).length;
-      if (p3n > 0) repChips += `<span class="row-pill row-p3" title="Phase 3 syntheses (${p3n} planet${p3n>1?'s':''})">P3·${p3n}</span>`;
+      const p3keys = Object.keys(reps.phase3 || {});
+      const p3star = p3keys.includes('★');
+      const p3pn = p3keys.filter(k => k !== '★').length;
+      if (p3star || p3pn > 0) {
+        const parts = [];
+        if (p3star) parts.push('star');
+        if (p3pn > 0) parts.push(`${p3pn} planet${p3pn > 1 ? 's' : ''}`);
+        const tip = `Phase 3 syntheses (${parts.join(' + ')})`;
+        const label = p3pn > 0 ? `P3·${p3pn}${p3star ? '★' : ''}` : 'P3·★';
+        repChips += `<span class="row-pill row-p3" title="${tip}">${label}</span>`;
+      }
     }
     tr.innerHTML = `
       <td>${row.system_name}${repChips}</td>
