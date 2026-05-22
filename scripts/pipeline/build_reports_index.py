@@ -253,7 +253,8 @@ def render_html(manifest: dict, has_manual_fetch: bool) -> str:
             p3_letters = info.get('phase3', {})
             if p3_letters:
                 links = []
-                for letter, path in sorted(p3_letters.items()):
+                # 별 합성 (★) 이 행성 letter 보다 항상 먼저 오도록 정렬.
+                for letter, path in sorted(p3_letters.items(), key=lambda kv: (kv[0] != '★', kv[0])):
                     links.append(f'<a href="{path}"><span class="pill pill-p3">P3</span> {letter}</a>')
                 p3_cell = ' &nbsp; '.join(links)
             else:
