@@ -25,15 +25,16 @@
       dry-run on `docs/phase3/_bib/trappist-1-b.yaml` shows
       "marked-skipped-below 14: 0 papers" (idempotent on already-
       processed yaml)
-- [ ] Commit with VaNnadin identity, single commit
+- [x] Commit with VaNnadin identity, single commit (9a12ade)
 
-## 🟡 Medium (next session — separate commits)
+## 🟡 Medium (this session — single commit)
 
-- [ ] [I5] AGENTS.md §2 — add `phase3/<system>/` to the work-dir
-      hierarchy (user chose: keep phase3/, document it)
-- [ ] [I6] Step 1.2 — embed a 3-line checklist.md format example
-- [ ] [I7] Frontmatter description — compress "Do NOT trigger for…"
-      block
+- [x] [I5] AGENTS.md §2 — add `phase3/<system>/` block + decision-rule
+      bullet (user chose: keep phase3/, document it)
+- [x] [I6] Step 1.2 — embed canonical checklist.md stages from
+      `phase3/trappist-1-system/checklist.md`
+- [x] [I7] Frontmatter description — compress 3 sentences into one
+      ("Do NOT use for X / Y / Z / W")
 
 ## 🟢 Minor (later session)
 

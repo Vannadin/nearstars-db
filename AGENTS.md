@@ -43,11 +43,19 @@ you start writing.
 docs/reference/        Permanent reference. Schemas, methodology, format specs.
                        Append-mostly, rarely deleted. Source of truth.
 
-phase2/<topic>/        Active implementation work. Carries a checklist.
+phase2/<topic>/        Active implementation work (Phase 2: paper-cited
+                       measurement curation). Carries a checklist.
                        Trio: plan.md + checklist.md + context-notes.md.
                        Lives outside docs/ because it has code/data deltas.
                        (Historical: some older work lives in docs/<topic>/.
                        New implementation work goes under phase2/.)
+
+phase3/<system>/       Active Phase 3 synthesis work (cfg-ready value
+                       drafting from Phase 2 measurements). Same trio
+                       structure as phase2/. Driven by the
+                       nearstars-phase3 skill. Per-system rather than
+                       per-topic because synthesis is gated on the host
+                       star (e.g. phase3/trappist-1-system/).
 
 plans/<topic>.md       Research notes and external-system analyses.
                        Single file. No checklist. No implementation in this repo.
@@ -59,8 +67,10 @@ plans/<topic>.md       Research notes and external-system analyses.
 **The decision rule:** *"Will this work touch the DB pipeline, schema, or
 generated configs?"*
 
-- **Yes** → `phase2/<topic>/` with the plan/checklist/context-notes trio
-  (CLAUDE.md §7).
+- **Yes, Phase 2 curation (paper-cited measurements)** → `phase2/<topic>/`
+  trio (CLAUDE.md §7).
+- **Yes, Phase 3 synthesis (cfg-ready values per planet)** → `phase3/<system>/`
+  trio, driven by the `nearstars-phase3` skill.
 - **No** → `plans/<topic>.md` single file.
 
 When a `plans/` document graduates into actual work, promote it: move

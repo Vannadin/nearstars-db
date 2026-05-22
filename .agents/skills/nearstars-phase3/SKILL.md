@@ -9,15 +9,11 @@ description: >
   데이터", "cfg-ready 값 만들어줘", "이 행성 Phase 3 까지 올려줘",
   "synthesize <planet>", or any time the conversation involves drafting
   the per-planet Decisions table + Surface / Atmosphere / Rotation /
-  Visual narrative sections. The output is a bilingual web report
-  (`docs/phase3/<slug>.html`) that feeds downstream cfg writers
-  (`kopernicus-cfg`, `principia-cfg`). Do NOT trigger this skill for
-  Kopernicus cfg writing (use `kopernicus-cfg`) or Principia cfg writing
-  (use `principia-cfg`) — Phase 3 is the synthesis layer that *feeds*
-  those cfg writers, not the cfg writers themselves. Also do NOT trigger
-  for adding a new star to the DB (use `nearstars-add-star`) or for
-  Phase 2 (paper-cited measurement curation, handled inside
-  `nearstars-add-star`).
+  Visual narrative sections. Output is a bilingual web report
+  (`docs/phase3/<slug>.html`) that feeds the cfg writers downstream.
+  Do NOT use for Kopernicus cfg (`kopernicus-cfg`), Principia cfg
+  (`principia-cfg`), new-star DB entry, or Phase 2 measurement
+  curation (both handled by `nearstars-add-star`).
 ---
 
 # NearStars — Phase 3 Synthesis
@@ -117,13 +113,23 @@ Goal: cheap upfront work that prevents painful surprises later.
    incomplete, **stop and ask the user** whether to:
    - Escalate Phase 2 first (use `nearstars-add-star` with "Phase 2 격상")
    - Proceed with Phase 1 inputs (degrades synthesis confidence)
-2. **Create the working dir** per CLAUDE.md §7:
+2. **Create the working dir** per CLAUDE.md §7 (registered in AGENTS.md
+   §2 as `phase3/<system>/`):
    ```bash
    mkdir -p phase3/<system_slug>
    ```
-   Inside, create:
-   - `checklist.md` — per-planet items as checkboxes
-   - `context-notes.md` — append-only log of decisions during the work
+   Inside, create `checklist.md` with stage-based checkboxes — the
+   canonical pattern from `phase3/trappist-1-system/checklist.md`:
+   ```markdown
+   ## Stage 1 — bibliography builds (parallel)
+   - [ ] build_bibliography.py "<System> b" — N papers, M arxiv
+   - [ ] build_bibliography.py "<System> c" — N papers, M arxiv
+   ## Stage 2 — arXiv fetches (sequential)
+   ## Stage 3 — English synthesis
+   ## Stage 4 — Korean mirrors
+   ## Stage 5 — verification + HTML
+   ```
+   And `context-notes.md` as an append-only decision log.
 3. **Set the per-system Phase 3 directory** as the working state — not
    `docs/phase3/` (which is the output area).
 
