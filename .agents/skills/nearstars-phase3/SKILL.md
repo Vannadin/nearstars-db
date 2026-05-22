@@ -475,6 +475,13 @@ These are user-confirmed defaults. Do NOT ask the user about them.
   requires it.
 - **Workflow encoded in [[feedback-phase3-process]]** — the canonical
   per-pass order documented when the TRAPPIST-1 set was finalized.
+- **Interesting-first when uncertain** ([[feedback-phase3-interesting-first]]).
+  This project's output is a *game* — when two scenarios are equally
+  supported by observations, default to the more visually distinctive
+  one. Boring-but-conservative is the wrong default; interesting-but-
+  observation-consistent is right. Specific rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md)
+  under "Tie-breaking by visual interest".
 
 ---
 

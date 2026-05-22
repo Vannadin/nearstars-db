@@ -83,6 +83,92 @@ self-consistency between interior + atmosphere + climate modules),
 mark Confidence as "low" or "medium" in the table, and document both
 options in "Open items for follow-up" as a cfg-variant decision.
 
+## Tie-breaking by visual interest
+
+This project's output is a *game* (KSP planet pack). When two
+scenarios are observationally indistinguishable or genuinely
+uncertain, the tie-breaker is **player engagement** — default to the
+more visually distinctive option. The alternative is preserved as a
+cfg variant.
+
+The hierarchy is strict and one-way:
+
+1. **Observation always wins.** If a paper rules out a scenario at
+   ≥3σ, that scenario is dead regardless of how interesting it would
+   be. Don't bend data for visuals.
+2. **Theory with strong support wins next.** If a GCM ensemble or
+   coupled atmosphere-interior model converges on a specific
+   outcome, prefer that over a more dramatic but theoretically
+   unsupported alternative.
+3. **At genuine ties — pick interesting.** When two scenarios are
+   both observation-consistent and both have plausible theoretical
+   support, the more visually distinctive one becomes the default.
+
+### What counts as "interesting" for KSP visuals
+
+- **Specific over generic.** A cryovolcanic plume on g over an
+  ice-covered ocean is more interesting than a featureless ice
+  ball. Iron oxide patches biased to the substellar quadrant on b
+  is more interesting than uniform basalt.
+- **Distinctive over uniform.** "Eyeball Earth" geometry on e (dark
+  open-water disk surrounded by ice) beats a uniformly ice-covered
+  e. A 35% spot-coverage stellar disk (Wakeford 2019) beats a
+  smooth M-dwarf disk.
+- **Active over passive.** Io-class volcanism on c (Barr 2018,
+  Dobos 2019) beats a weathered-dead-rock c, all else equal.
+  Visible magma at substellar on b beats uniform fresh basalt.
+- **Strong color over muted.** When albedo / illumination physics
+  permits a range of perceived hues, pick within the more
+  saturated end. Red-orange basaltic accent under M-dwarf light
+  beats neutral gray.
+
+### What counts as "scenario alternative" (cfg variant)
+
+The non-default option from a genuine tie should be preserved in
+the synthesis "Open items" as a cfg variant. This gives the
+downstream cfg writer (`kopernicus-cfg` / `principia-cfg`) the
+option to render either version. Examples:
+
+- TRAPPIST-1 f canonical: 1 bar CO₂ + substellar open-water lens
+  (more interesting). Variant: 0.1 bar CO₂ snowball (more
+  observation-conservative).
+- TRAPPIST-1 c canonical: Io-class active volcanism with localized
+  fresh basalt (Barr 2018 / Dobos 2019). Variant: weathered global
+  basalt (less geologically active).
+- TRAPPIST-1 h canonical: thin atmosphere with H₂O-ice surface +
+  Dong 2018 retention argument (more interesting → atmosphere
+  visible). Variant: airless rocky surface (cosmic-shoreline
+  conservative).
+
+### Documenting the choice
+
+Every "Confidence: low" row in a Decisions table that involved a
+tie-break should explicitly say so in the Basis column:
+
+```markdown
+| `surface_tint_rgb_hex_accent` | `#7a2a10` (cooling lava red) | low |
+  Tie-break: interesting-first (per [[feedback-phase3-interesting-first]]).
+  Photolytic oxidation (less interesting) or cooling-lava red
+  (more interesting) both fit the airless ultramafic surface;
+  cfg picks lava for visual distinctiveness. |
+```
+
+This makes the policy visible to the next session reading the
+synthesis, and to the downstream cfg writer.
+
+### What this is NOT
+
+- Not an excuse to invent features the literature doesn't support.
+  "Pulsar-illuminated aurorae on TRAPPIST-1 b" would be interesting
+  but isn't theoretically supported by any paper, so it doesn't
+  qualify.
+- Not a reason to override Confidence labels. A Confidence=high
+  measurement stays high; tie-breaking is a tool for Confidence=low
+  aesthetic choices only.
+- Not retroactive without checking. If applying this rule to an
+  existing synthesis row would change the cfg value, log it as an
+  Open item rather than silently editing.
+
 ## When the user's prior synthesis was wrong
 
 Treat your own past work as you would any other source. If the

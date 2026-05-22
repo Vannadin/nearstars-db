@@ -66,6 +66,19 @@ strong support, low = aesthetic choice within the allowed window.
 | `magnetic_field_present` | true (modest, ~0.1× Earth) | low | small mass + slow rotation → weak intrinsic field; not directly constrained |
 | `induction_heating_w_m2` | 0.01–0.1 | medium | Grayver 2022 — much lower at e than at b/c |
 | `tidal_heating_w_m2` | 0.001–0.01 | medium | Bolmont 2020 — minimal at e |
+| `magnetic_field_strength_microtesla_equator` | 30 | medium | Wang 2025 (2504.16662) MHD simulations of e adopt 0.32 G ≈ Earth-strength; Garraffo 2017 test case 0.3 G — interesting-first tie-break picks the Earth-analog over weaker-field alternatives (more interesting magnetosphere) |
+| `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Wang 2025 Earth-analog assumption; conservative for habitable-scenario rendering |
+| `magnetic_dipole_tilt_deg` | 11 | medium | Earth-analog 11° (Wang 2025 uses 23.5° but reports tilt sensitivity); tie-break: Earth-like 11° gives recognizable auroral geometry for player |
+| `magnetosphere_standoff_planet_radii` | 5 | high | Wang 2025 Fig. 5 for 0.32 G field — calm regime 5–9 R_e; CME-disrupted ~3 R_e |
+| `radiation_belt_present` | true | medium | B-field ≥ 0.1 Earth + closed magnetosphere in calm regimes — Van-Allen-like belts possible, though heavily disturbed during sub-Alfvénic transits |
+| `surface_radiation_dose_msv_yr` | 12000 | high | Atri 2019 (1910.09871) Table 6 for e at 0.028 AU + 1 bar column + Earth-like B-field; 5000× Earth's 2.4; spikes 10⁶ during hard-spectrum flares |
+| `atmospheric_shielding_g_cm2` | 1000 | high | Phase 3 cfg pressure 1 bar Earth-like → ~1000 g/cm² column |
+| `aurora_present` | true | high | Atm + magnetic field both substantial; Fraschetti 2019 (1902.03732) proton flux 10⁶× Earth → intense precipitation |
+| `aurora_color_primary_hex` | `#4DFF4D` | medium | [OI] 557.7 nm green dominant in N₂/CO₂/O₂ atm — Earth-analog auroral color; interesting-first tie-break: green over UV-only alternative |
+| `aurora_color_secondary_hex` | `#FF4D4D` | medium | CO₂⁺ Fox–Duffendack–Barker bands (580–700 nm red/orange) + N₂⁺ Meinel bands; tie-break: enhances visible palette diversity |
+| `aurora_emission_species_primary` | `[OI] 557.7 nm + N₂⁺ 391.4 nm First Negative + CO₂⁺ doublet` | medium | Atm composition + standard aurora chemistry |
+| `aurora_oval_magnetic_latitude_deg` | 50 | medium | Wang 2025 standoff 5 R_p; Vidotto 2013 Eq. 7 → α ≈ 27°, oval lat ~63°; allow expansion to ~50° during sub-Alfvénic transits |
+| `aurora_intensity_kR_typical` | 150 | medium | Fraschetti 2019 proton flux up to 6 orders over Earth → aurora 15× Earth's typical 10 kR (conservative midrange) |
 | `star_apparent_angular_diameter_deg` | 2.17 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -174,6 +187,8 @@ is no atmospheric scattering from the absent sun). Nightside sky
 is dramatically dark — KSP nightside ambient should be ~1% of
 dayside.
 
+**Auroras as a defining visual feature.** With both a 1 bar atmosphere and the Earth-analog magnetic field adopted here (Wang 2025), e is the strongest aurora candidate in the system. The proton flux at e's orbit is ~10⁶× Earth's (Fraschetti 2019, 1902.03732), driving auroral intensities ~150 kR (15× Earth's typical 10 kR). The dominant emission is [OI] 557.7 nm green (Earth-aurora-analog), with secondary CO₂⁺ Fox–Duffendack–Barker bands giving a red-orange accent. Crucially, during the sub-Alfvénic transits that occupy 50–80% of each orbit (Garraffo 2017), the auroral oval expands from its calm-state magnetic latitude of ~60° down toward ~50° — visible from much of the nightside hemisphere, not just polar regions. For cfg rendering: a primary `#4DFF4D` green auroral band with a secondary `#FF4D4D` red-orange overlay, intensifying during flare events. Interesting-first tie-break: chose Earth-analog magnetic field strength (Wang 2025) over weaker-field alternatives, giving a recognizable auroral structure rather than disorganized polar precipitation.
+
 ## Rotation & spin synthesis
 
 Tidal damping for e at 6.10-day period over 7.6 Gyr establishes the
@@ -190,6 +205,8 @@ orbital `period` in seconds.
 **No seasons.** Obliquity = 0; libration-induced insolation variation
 < 0.4%. The substellar point and its open-water disk are fixed in
 the surface frame.
+
+**Magnetic dynamo expectation.** e's mass (0.69 M⊕) and active interior (Bourgeois 2024 magma-ocean evolution; substantial water mass fraction) support a sustained dynamo despite the 6.1-day tidally-locked rotation. Wang 2025 (2504.16662) MHD simulations explicitly adopt 0.32 G Earth-analog surface field for habitability scenarios on e and find magnetopause standoff of 5–9 R_p in calm regimes (compressed to ~3 R_p during CMEs). The interesting-first tie-break favors this Earth-analog field over the alternative weak-field scenario (which would leave e effectively without magnetospheric protection during the system's frequent sub-Alfvénic episodes). For Kerbalism radiation modeling, a closed magnetosphere is assumed; the cfg places trapped-particle belts at 1.5–4 R_p in calm regimes, with significant variability tied to stellar wind state.
 
 ## Visual styling
 
@@ -262,7 +279,10 @@ Combining surface and atmosphere decisions:
 - **2109.11457** Sergeev 2022 (THAI I) — Dry-case 4-GCM intercomparison for TRAPPIST-1 e. Baseline reference for the wet/dry comparison.
 - **2109.11459** Sergeev 2022 (THAI II) — Moist-case 4-GCM intercomparison. Provides the 10–77% cloud cover spread and the equatorial-vs-mid-latitude jet regime tipping-point analysis. **Major refinement to the cfg's cloud morphology confidence.**
 - **2109.11460** Fauchez 2022 (THAI III) — Simulated transmission spectra for e from the THAI suite. Constrains JWST detectability needs (Hab 1: 23–38 transits, Hab 2: 7–12 transits).
-- **1902.03732** Fraschetti 2019 — Stellar Energetic Particle flux in TRAPPIST-1 HZ. Predicts proton flux ~10⁶× Earth's at e, but with two mitigating mechanisms (containment by stellar B-field, CME suppression). Supports keeping a magnetic field in the cfg without forcing a specific value.
+- **1902.03732** Fraschetti 2019 — Stellar Energetic Particle flux in TRAPPIST-1 HZ. Predicts proton flux ~10⁶× Earth's at e, but with two mitigating mechanisms (containment by stellar B-field, CME suppression). Supports keeping a magnetic field in the cfg without forcing a specific value. Also supports the auroral intensity estimate (10⁶× Earth proton flux → ~150 kR).
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. Sub-Alfvénic transits 50–80% of orbit; auroral oval geometry implications.
+- **2504.16662** Wang 2025 — MHD simulations of TRAPPIST-1 e habitability with Earth-analog magnetic field. Drives the cfg's `magnetic_field_strength` value.
+- **1910.09871** Atri 2019 — Stellar proton event surface dose; gives e's 12 Sv/yr baseline + 10⁶× Earth spike during flares.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -353,3 +373,5 @@ Notable items skipped:
   Lincowski 2018 scenarios. Lower bound matches "minimum
   photolytic" expectation; upper bound is more "post-runaway".
 - The cloud morphology between double-mid-latitude-jet and equatorial-superrotation is essentially a GCM-dependent prediction. If a future intercomparison resolves the tipping point, the cfg's `cloud_morphology` value (and possibly the visual rendering of cloud bands) may need updating.
+- Interesting-first tie-break: chose Wang 2025's Earth-analog magnetic field (0.32 G) over the RM22 scaling estimate (~0.08 M_Earth, much weaker). The Earth-analog case produces a more visually distinctive magnetosphere + auroral oval; the weaker-field alternative is preserved as a cfg variant for users who prefer the conservative reading.
+- The radiation dose figure (12 Sv/yr) places e in Kerbalism's "high-radiation" bracket. Aurora rendering at 150 kR will be dramatic; the user may want a brightness slider for gameplay.

@@ -5542,7 +5542,7 @@ papers:
     and atmospheric loss, and also for studying the different dynamo and outer atmospheric heating mechanisms at work in M
     dwarfs.
   source: citation_of=2025ApJ...986L...3P
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -6084,7 +6084,7 @@ papers:
     core is limited by the lifetime of the liquid core for 1 M <SUB>⊕</SUB> planets and by the lack of thermal convection
     for 3 M <SUB>⊕</SUB> planets.
   source: citation_of=2025ApJ...992..198J
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -6750,7 +6750,7 @@ papers:
     results, we find that flare-driven transmission features of bio-indicating chemical species, such as nitrogen dioxide,
     nitrous oxide and nitric acid, show particular promise for detection by future instruments.
   source: citation_of=2025ApJ...991L..11C
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -8799,7 +8799,7 @@ papers:
     could be greater due to the intense EUV radiation leading to smaller heating rates. We plan to quantify the ionospheric
     conductance in future study.
   source: citation_of=2019MNRAS.488.4530O
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -9026,7 +9026,7 @@ papers:
     are fast rotators, conditions for terrestrial planets to harbour Earth-sized magnetospheres are more easily achieved for
     planets orbiting slowly rotating early- and mid-dM stars.
   source: citation_of=2019MNRAS.488.4530O
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -12560,7 +12560,7 @@ papers:
     Where possible we have fit power laws for the variation of fundamental parameters (escape rate, escape power, polar cap
     opening angle, and effective interaction area) with magnetic field, and assessed upper and lower limits for the relationships.
   source: citation_of=2023MNRAS.519.6210M
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -12765,7 +12765,7 @@ papers:
     Earth-like planets to long-term radiation that can damage complex organic structures. However, this does not preclude
     habitability, as a safe haven for life could still exist below an ocean surface.
   source: citation_of=2018ApJ...867...76L
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -14364,7 +14364,7 @@ papers:
     active M dwarfs known, this conclusion should apply to planets around other M dwarfs with lower levels of chromospheric
     activity.'
   source: citation_of=2018MNRAS.473.4672C
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null

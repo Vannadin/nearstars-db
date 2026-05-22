@@ -7300,7 +7300,7 @@ papers:
     with theoretical predictions. Further observations with LOFAR-LBA and other low-frequency telescopes, such as NenuFAR
     or UTR-2, are required to confirm this possible first detection of an exoplanetary radio signal.'
   source: citation_of=2022A&A...668A..10F
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -7336,7 +7336,7 @@ papers:
     results, we find that flare-driven transmission features of bio-indicating chemical species, such as nitrogen dioxide,
     nitrous oxide and nitric acid, show particular promise for detection by future instruments.
   source: citation_of=2025A&C....5300982F
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -8002,7 +8002,7 @@ papers:
     regime, the likelihood of keeping the atmosphere is almost zero for exoplanets orbiting very close to their star, regardless
     of whether they are saturated or not.'
   source: citation_of=2022A&A...668A..10F
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -9004,7 +9004,7 @@ papers:
     are fast rotators, conditions for terrestrial planets to harbour Earth-sized magnetospheres are more easily achieved for
     planets orbiting slowly rotating early- and mid-dM stars.
   source: citation_of=2022A&A...668A..10F
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -10206,7 +10206,7 @@ papers:
     and could significantly affect the planetary atmosphere escape rate. Thus, the process should be accounted for when studying
     the long-term evolution of exoplanetary atmospheres.
   source: citation_of=2026ApJ...998..236C
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -10627,10 +10627,10 @@ papers:
     from 3D modeling. This has far-reaching consequences for exoplanet characterization using transmission spectroscopy, where
     accurate knowledge of the host star is essential for unbiased inferences of the planetary atmospheric properties.
   source: citation_of=2023ApJ...955L..22L
-  status: skipped
+  status: failed
   category: null
   skip_reason: below_score_threshold (12 < 14)
-  fetch_error: null
+  fetch_error: ar5iv_processing_unavailable
   authority_score: 10
   relevance_score: 2
   combined_score: 12
@@ -12100,7 +12100,7 @@ papers:
     Earth-like planets to long-term radiation that can damage complex organic structures. However, this does not preclude
     habitability, as a safe haven for life could still exist below an ocean surface.
   source: citation_of=2018ApJ...867...76L
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -12400,7 +12400,7 @@ papers:
     Telescope, and perhaps the Square Kilometre Array in the future. Finally, we present a survey of 85 exoplanets orbiting
     M dwarfs, identifying 11 such objects capable of generating radio emission above 10 μJy.
   source: citation_of=2022A&A...668A..10F
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -13289,7 +13289,7 @@ papers:
     which have significant non-axisymmetric field components, should be the more efficiently shielded from galactic cosmic
     rays, even if the planets lack a protective thick atmosphere/large magnetosphere of their own.
   source: citation_of=2022A&A...668A..10F
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -13505,7 +13505,7 @@ papers:
     subsolar water:rock ratios. Dry, water-enriched, and pure water envelope models differ to an observationally significant
     level in their tidal Love numbers k <SUB>2</SUB> of, respectively, ~0.018, ~0.15, and ~0.7.
   source: citation_of=2020A&A...638A..41T
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null

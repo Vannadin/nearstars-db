@@ -63,6 +63,19 @@ rocky surface).
 | `induction_heating_w_m2` | 0.001–0.01 | medium | Grayver 2022 — lowest in system due to distance + small mass |
 | `tidal_heating_w_m2` | 0.00001–0.0001 | medium | Bolmont 2020 — negligible at h |
 | `radiogenic_heat_w_m2` | 0.025 | medium | scaled by mass; slightly less than Earth-analog |
+| `magnetic_field_strength_microtesla_equator` | 0.5 | low | Sub-Mars mass (0.33 M⊕) → dynamo likely shut off; Mars-analog crustal remnant field |
+| `magnetic_dipole_moment_normalized_earth` | 0.005 | medium | 2208.06523 thermal evolution + RM22 — low-mass planets reach dynamo shutoff early (<1 Gyr) |
+| `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: 10° offset; potentially crustal anomaly-dominated like Mars (no clear dipole axis) |
+| `magnetosphere_standoff_planet_radii` | 1.2 | medium | Essentially no global magnetosphere; induced magnetosphere only (Venus/Mars-analog); standoff at ionopause ≈ R_planet |
+| `radiation_belt_present` | false | high | B-field <0.1 Earth → no Van-Allen-like trapped regions |
+| `surface_radiation_dose_msv_yr` | 4000 | medium | Atri 2019 (1910.09871) scaling for h at 0.062 AU; GCR background dominates with weak shielding |
+| `atmospheric_shielding_g_cm2` | 5 | medium | Phase 3 cfg pressure 0.005 bar → ~5 g/cm² column |
+| `aurora_present` | true | medium | Atm + crustal/induced magnetic field → patchy Mars-like discrete aurora |
+| `aurora_color_primary_hex` | `#4DFF4D` | low | N₂ Vegard-Kaplan bands + [NI] 520 nm green if trace O; tie-break: visible green over UV-only |
+| `aurora_color_secondary_hex` | `#B19CD9` | low | N₂ Lyman-Birge-Hopfield bands UV-perceived violet |
+| `aurora_emission_species_primary` | `N₂ Vegard-Kaplan bands 200–300 nm + N₂⁺ 391.4 nm + N₂ Lyman-Birge-Hopfield` | low | Thin N₂-dominated atm |
+| `aurora_oval_magnetic_latitude_deg` | 15 | low | No organized dipole → patchy crustal aurora at random latitudes; representative value |
+| `aurora_intensity_kR_typical` | 30 | low | Thinnest atm + weakest field; bright per particle but few collisional targets |
 | `star_apparent_angular_diameter_deg` | 1.03 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -108,6 +121,8 @@ For the surface morphology, we adopt a Mars-Pluto hybrid analog:
 
 **Interior structure.** Barr 2018 (1712.05641) finds h has a 1030 km rock core (mean-density case), with a maximum-density configuration allowing only ~100 km H₂O shell over the rock. The current cfg WMF 0.03–0.10 sits between these extremes. h's CMF is at the lower end of the system (~0.23), consistent with a relatively iron-poor rocky body.
 
+**Mars-analog patchy aurora geometry.** With no organized global dynamo (sub-Mars mass, frozen core after 7.6 Gyr), h's magnetic field is dominated by **crustal remnants** in localized patches — directly analogous to Mars (Acuña 1999 MAG/ER discovery). Combined with the thin N₂ atmosphere, this produces a *patchy* aurora geometry rather than the regular auroral oval seen on Earth or g. Each crustal magnetic anomaly funnels stellar-wind particles into a localized aurora spot above its location, producing scattered green N₂ Vegard-Kaplan + N₂⁺ violet emissions. The aurora geometry is essentially random — wherever crustal magnetization survived — and the result is dramatically different from the inner planets' organized auroral bands. Cfg renders this as scattered `#4DFF4D` green patches with `#B19CD9` violet accent, distributed at low-to-mid magnetic latitudes rather than concentrated at the poles. Interesting-first tie-break chose this Mars-analog rendering over the alternative "uniform faint global glow" approach.
+
 **Bedrock / iron oxide.** Prominent on h compared to g/f — the
 exposed substellar bedrock has had 7.6 Gyr of photolytic oxidation
 under direct stellar UV. The primary tint already incorporates
@@ -149,6 +164,8 @@ For NearStars we adopt **0.005 bar (Mars-thin) N₂-dominated atmosphere with tr
 
 **Atmospheric retention favored by ion-escape arguments.** Despite the cosmic-shoreline-threshold framing, Dong 2018 (1705.05535) finds h has the LOWEST ion escape rate in the system (1.29×10²⁶ s⁻¹) and the highest atmospheric retention timescale (~10¹⁰ yr) — "h ought to be the most stable planet from the perspective of atmospheric ion loss." Stellar wind dynamic pressure at h is "only" 100–300× Earth's vs. 10³–10⁴× at b. Krissansen-Totton 2022 (2207.04164) similarly concludes that outer planets "retain significant surface volatiles in virtually all model simulations" with "CO₂-dominated or CO₂-O₂ atmospheres for all planets that retain substantial atmospheres." The cfg's thin N₂+trace-CO₂ choice is conservative compared to this; a thicker (~0.1 bar) atmosphere is also defensible.
 
+**Auroral chemistry.** The thin N₂-dominated atmosphere (≲100 ppm CO₂) produces a clean nitrogen-aurora chemistry: N₂ Vegard-Kaplan bands at 200–300 nm (UV, with some scattered to visible cyan-violet), N₂⁺ 391.4 nm First Negative blue, and Lyman-Birge-Hopfield bands. Trace O₂ (if present from photolysis) contributes [OI] 557.7 nm green. Per the crustal-anomaly geometry above, these emissions are concentrated in small spots rather than continuous bands. Intensity ~30 kR is the lowest in the system due to the very thin atmosphere — but each individual aurora spot is bright per unit area because precipitating particles deposit deeply into the thin air. For cfg rendering: faint green/violet patches with no organized polar geometry.
+
 **Sky appearance.** The 0.005 bar atmosphere is essentially
 invisible from orbit. From the surface, the sky is black except for
 the host star (1.03° angular diameter, red-orange disk). Surface
@@ -172,7 +189,9 @@ resonance with g). The chain provides ongoing small-amplitude
 perturbations of the orbital elements, but for visual / cfg
 purposes the configuration is stable.
 
-**Spin-orbit capture probability.** Makarov 2018 (1803.07453) computes the capture probability for h into 3:2 spin-orbit resonance: 0.017 (effectively zero). h should "almost certainly be synchronized" into the 1:1 resonance. This confirms the cfg's `tidally_locked = true` decision. h's tidal dissipation peak is at Maxwell time ~0.20 d (close to its orbital period), giving 5.3×10¹³ W total — about 7×10⁻³ W/m² normalized, a few orders of magnitude higher than the previous Bolmont 2020 estimate. The cfg's `tidal_heating_w_m2: 0.00001–0.0001` may understate the actual value by 1–2 orders of magnitude.
+**Magnetic dynamo expectation.** h's small mass (0.33 M⊕, sub-Mars), advanced age (7.6 Gyr), and very slow tidally-locked rotation (18.8 d) make a sustained global dynamo essentially impossible. 2208.06523 (Thermal Evolution and Magnetic History of Rocky Planets) finds that bodies below ~0.5 M⊕ typically shut down their dynamos within 1–2 Gyr; h is well past that timescale. The remaining magnetic structure is crustal — fossilized magnetization from when h had a younger dynamo, now patchy after billions of years of impact gardening and thermal alteration. This is exactly the Mars situation today: ~1 μT crustal patches with no global dipole. Auroras therefore form not in organized polar ovals but in localized spots above magnetized terrain. RM22 (2203.01065) scaling returns a dipole moment of ~0.005 × Earth, effectively a residual signature rather than an active dynamo.
+
+**Tidal heating note.** Makarov 2018 finds h capture probability into 3:2 spin-orbit = 0.017 (effectively zero); 1:1 lock is confirmed. The tidal dissipation peak is at Maxwell time ~0.20 d (close to the orbital period), giving 5.3×10¹³ W total — about 7×10⁻³ W/m² normalized. This is 1–2 orders of magnitude higher than the cfg's current 0.00001–0.0001 W/m², which may understate the actual flux.
 
 ## Visual styling
 
@@ -194,6 +213,7 @@ purposes the configuration is stable.
   dayside.
 - **Atmosphere haze.** Imperceptible — the 0.005 bar atmosphere
   does not produce visible Rayleigh scattering. Limb is sharp.
+- **Patchy Mars-style aurora.** Scattered `#4DFF4D` green and `#B19CD9` violet spots at low-to-mid magnetic latitudes — concentrated above magnetized crustal terrain rather than at the poles. Intensity ~30 kR, visible only against the dark nightside. The spotty pattern is the visual signature of h's frozen-core, crustal-anomaly-only magnetic environment.
 - **Star in sky.** TRAPPIST-1 subtends 1.03° in h's sky (2× the
   Sun from Earth). Surface illumination 0.144 S⊕ — comparable to
   early-morning twilight on Earth. The red-orange star against the
@@ -228,6 +248,10 @@ purposes the configuration is stable.
 - **1705.05535** Dong 2018 — Atmospheric escape from TRAPPIST-1 planets. h has lowest ion escape rate, atmospheric retention ~10¹⁰ yr. **Argues against the cosmic-shoreline-threshold framing**: ion-escape physics favors h retaining an atmosphere.
 - **2207.04164** Krissansen-Totton 2022 — Coupled atmosphere-interior model. Predicts CO₂-dominated or CO₂-O₂ atmospheres for outer planets in virtually all simulations. Supports keeping a non-trivial atmosphere on h.
 - **1803.07453** Makarov 2018 — Spin-orbital tidal dynamics. h capture probability into 3:2 = 0.017 → 1:1 lock confirmed.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. Outer-planet magnetosphere context.
+- **2203.01065** RM22 — Rocky-planet dynamo scaling; supports h's near-zero dipole moment.
+- **2208.06523** Thermal Evolution and Magnetic History of Rocky Planets — confirms sub-Mars-mass planets shut down their dynamos within 1–2 Gyr.
+- **1910.09871** Atri 2019 — Surface-dose tables for h.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -312,3 +336,5 @@ h only in passing.
   Phase 2 should add more interior-structure measurements.
 - The "desiccated habitable h" alternative scenario (Lincowski 2018) still stands as a cfg variant; the Dong 2018 / Krissansen-Totton 2022 retention-favoring arguments raise its prior somewhat. A 0.1 bar variant might be more realistic than the canonical 0.005 bar.
 - Tidal heating `tidal_heating_w_m2` may be underestimated by 1–2 orders of magnitude per Makarov 2018 (~7×10⁻³ W/m² peak vs cfg's 0.00001–0.0001). Re-check against more recent Bolmont successors.
+- The Mars-style patchy aurora geometry is a deliberate interesting-first choice. The alternative "uniform faint global glow" is preserved as cfg variant.
+- Surface radiation dose ~4 Sv/yr places h in Kerbalism's "moderate" radiation bracket — better than e or f despite the thinner atmosphere, because h's distance reduces the stellar particle flux.

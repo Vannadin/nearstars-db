@@ -46,6 +46,25 @@ Confidence values:
 - **low** — aesthetic choice within an allowed observational window;
   could be different and still match data
 
+**Confidence=low rows and the interesting-first rule.** Every
+Confidence=low row is by definition a choice within an
+observation-allowed window. Per [[feedback-phase3-interesting-first]],
+the cfg defaults to the more visually distinctive option when two
+choices are equally observation-consistent. Document the tie-break
+explicitly in the Basis column so the next session can see why a
+particular hex code or pattern was picked:
+
+```
+| `surface_tint_rgb_hex_accent` | `#7a2a10` (cooling lava red) | low |
+  Tie-break: interesting-first. Photolytic oxidation patches OR
+  cooling-lava red both fit the airless ultramafic surface; cfg
+  picks lava for visual distinctiveness. |
+```
+
+See [`conflict-resolution.md`](conflict-resolution.md) §
+"Tie-breaking by visual interest" for the full hierarchy
+(observation > theory > interesting-first).
+
 Standard field list (use these field names so the cfg writers can
 match by exact key):
 
@@ -111,6 +130,12 @@ Prose section, 3–6 paragraphs:
 4. Morphology under tidal lock (cratering, magma relics, ice flow,
    etc.)
 
+When surface tints / mineralogy / morphology are aesthetic choices
+within an allowed window, default to interesting per
+[[feedback-phase3-interesting-first]]. Specific over generic;
+distinctive over uniform; active over passive. Document the
+tie-break in the prose so the reasoning is visible.
+
 ## ## Atmosphere synthesis
 
 Prose section. Three required points to cover:
@@ -146,6 +171,12 @@ Prose section. Bulleted list covering:
 - Sister planets in sky (angular diameters at conjunction)
 - Optional: special features (cryovolcanism, magma glow, etc.)
 
+Visual styling is where interesting-first matters most. The
+observational data rarely constrains "is there a faint cyan tint at
+the limb" or "do cryovolcanic plumes occur near warm spots" — these
+are within-the-window choices. Default to the option that gives the
+KSP player something to look at.
+
 ## ## Bibliography
 
 Four required sub-sections:
@@ -180,6 +211,11 @@ Bulleted list. Examples:
 
 This section is where the synthesis admits uncertainty. Include
 specific numbers / paper IDs that would trigger a revisit.
+
+**Always preserve the loser of a tie-break here.** If the canonical
+cfg picked an interesting option from two equal scenarios, list the
+conservative alternative as a cfg variant. This lets the cfg writer
+ship both versions if desired.
 
 ---
 

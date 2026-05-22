@@ -62,6 +62,19 @@ insolation 환경에 놓였을 때 휘발성 물질이 대부분 손실되거나
 | `induction_heating_w_m2` | 0.001–0.01 | medium | Grayver 2022 — 거리와 작은 질량 때문에 시스템에서 가장 낮음 |
 | `tidal_heating_w_m2` | 0.00001–0.0001 | medium | Bolmont 2020 — h 에서는 무시할 만함 |
 | `radiogenic_heat_w_m2` | 0.025 | medium | 질량으로 스케일링, Earth-analog 보다 약간 낮음 |
+| `magnetic_field_strength_microtesla_equator` | 0.5 | low | sub-Mars 질량(0.33 M⊕) 이라 다이나모가 거의 꺼졌을 가능성. Mars 와 유사한 지각 잔류 자기장만 남음 |
+| `magnetic_dipole_moment_normalized_earth` | 0.005 | medium | 2208.06523 의 thermal evolution + RM22. 저질량 행성은 1 Gyr 이내에 다이나모 셧다운에 도달 |
+| `magnetic_dipole_tilt_deg` | 10 | low | tie-break 으로 10° offset. Mars 처럼 명확한 dipole 축 없이 지각 이상(crustal anomaly) 지배 가능성 |
+| `magnetosphere_standoff_planet_radii` | 1.2 | medium | 전역 자기권 사실상 없음. Venus/Mars 와 같은 induced magnetosphere 만 존재하고 ionopause 의 standoff 는 R_planet 근방 |
+| `radiation_belt_present` | false | high | 자기장이 지구의 0.1 배 미만이라 Van-Allen 형 trapped 영역 자체가 없음 |
+| `surface_radiation_dose_msv_yr` | 4000 | medium | Atri 2019 (1910.09871) 의 스케일링을 0.062 AU 의 h 에 적용. shielding 이 약해 GCR 배경이 지배 |
+| `atmospheric_shielding_g_cm2` | 5 | medium | Phase 3 cfg 의 0.005 bar 압력 → 약 5 g/cm² column |
+| `aurora_present` | true | medium | 대기 + 지각/induced 자기장 → patchy 한 Mars 형 discrete aurora |
+| `aurora_color_primary_hex` | `#4DFF4D` | low | N₂ Vegard-Kaplan bands + 미량 O 가 있으면 [NI] 520 nm green. tie-break 으로 UV-only 가 아닌 visible green 채택 |
+| `aurora_color_secondary_hex` | `#B19CD9` | low | N₂ Lyman-Birge-Hopfield bands 가 UV 로 인지되는 violet |
+| `aurora_emission_species_primary` | `N₂ Vegard-Kaplan bands 200–300 nm + N₂⁺ 391.4 nm + N₂ Lyman-Birge-Hopfield` | low | 얇은 N₂ 지배 대기 |
+| `aurora_oval_magnetic_latitude_deg` | 15 | low | 조직된 dipole 이 없으니 patchy 한 지각 aurora 가 무작위 위도에 발생. 대표값 |
+| `aurora_intensity_kR_typical` | 30 | low | 가장 얇은 대기 + 가장 약한 자기장. 입자 한 개당은 밝지만 충돌 대상이 적음 |
 | `star_apparent_angular_diameter_deg` | 1.03 | high | derived. 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -117,6 +130,22 @@ M-dwarf 조명 아래의 깨끗한 H₂O 얼음에서 오는 크림-화이트(`#
 H₂O 껍질이 ~100 km 만 허용됩니다. 현재 cfg 의 WMF 0.03–0.10 은 이
 두 극단 사이에 위치합니다. h 의 CMF 는 시스템에서 낮은 쪽(~0.23)
 으로, 상대적으로 철이 적은 암석체와 일관됩니다.
+
+**Mars 형 patchy 오로라 지오메트리.** 조직된 전역 다이나모가 없는
+상태(7.6 Gyr 동안 얼어붙은 sub-Mars 코어) 에서 h 의 자기장은 국소적
+패치 형태의 **지각 잔류 자기장** 이 지배합니다. Mars 의 상황과 그대로
+대응됩니다(Acuña 1999 의 MAG/ER 발견). 얇은 N₂ 대기와 합쳐지면 지구
+나 g 에서 보이는 규칙적인 auroral oval 대신 *patchy* 한 오로라
+지오메트리가 만들어집니다. 각각의 지각 자기 이상이 stellar-wind 입자
+를 자기장이 강한 지역 위로 깔때기처럼 끌어들여 그 위에 국소 오로라
+스폿을 만들고, 결과적으로 N₂ Vegard-Kaplan green + N₂⁺ violet 가
+산발적으로 흩어져 빛납니다. 어디서 어떻게 켜질지는 사실상 무작위로,
+지각 자화가 살아남은 자리마다 한 점씩 떠오릅니다. 내행성들의 조직된
+auroral band 와는 시각적 인상이 완전히 다릅니다. cfg 에서는 이걸
+`#4DFF4D` green 과 `#B19CD9` violet 가 저-중위도 자기 위도대에
+흩어진 점들로 렌더링합니다. 극지방에 몰린 균일한 띠가 아닙니다.
+interesting-first tie-break 에서 대안인 "균일하고 흐릿한 전역
+glow" 대신 이 Mars 형 렌더링을 선택했습니다.
 
 **기반암 / 산화철.** g, f 와 비교해 h 에서 더 두드러집니다. 노출된
 substellar 기반암이 7.6 Gyr 동안 직접 stellar UV 아래에서 광분해
@@ -177,6 +206,18 @@ stellar wind dynamic pressure 는 지구의 "단지" 100–300 배인데, b 에
 선택은 이에 비해 보수적이며, 더 두꺼운(~0.1 bar) 대기도 충분히
 방어 가능합니다.
 
+**오로라 화학.** N₂ 가 지배하는 얇은 대기(CO₂ ≲ 100 ppm) 는 깨끗한
+질소 오로라 화학을 만듭니다. N₂ Vegard-Kaplan bands 가 200–300 nm
+UV 에서 빛나고 일부는 가시광 cyan-violet 쪽으로 산란되며, N₂⁺ 의
+391.4 nm First Negative 가 blue, 그리고 Lyman-Birge-Hopfield bands
+가 따라옵니다. photolysis 로 미량 O₂ 가 있다면 [OI] 557.7 nm green
+도 더해집니다. 위에서 본 지각 이상 지오메트리 때문에 이 방출들은
+연속된 띠가 아니라 작은 스폿에 집중됩니다. 강도 ~30 kR 은 매우 얇은
+대기 탓에 시스템에서 가장 낮지만, 침투 입자가 얇은 대기 깊숙이까지
+들어가기 때문에 개별 스폿의 단위 면적당 밝기는 오히려 높습니다.
+cfg 렌더링용으로 정리하면, 조직된 극지 지오메트리 없이 흐릿한
+green/violet 패치가 흩뿌려진 모습입니다.
+
 **하늘 외관.** 0.005 bar 대기는 궤도에서는 사실상 보이지 않습니다.
 표면에서는 호스트 별(1.03° 각 크기의 적-오렌지 디스크) 을 빼면 하늘
 이 검습니다. 0.16 S⊕ 의 표면 조명은 근일점 외곽의 Mars 와 비슷한
@@ -198,14 +239,26 @@ stellar wind dynamic pressure 는 지구의 "단지" 100–300 배인데, b 에
 은 궤도 요소에 지속적인 small-amplitude 섭동을 주지만, 시각적/cfg
 목적상 구성은 안정적입니다.
 
-**spin-orbit 포획 확률.** Makarov 2018 (1803.07453) 이 h 의 3:2
-spin-orbit 공명 포획 확률을 계산했습니다. 0.017 로 사실상 0 입니다.
-h 는 "거의 확실히 1:1 공명으로 동기화" 되어야 합니다. 이는 cfg 의
-`tidally_locked = true` 결정을 확인해줍니다. h 의 조석 소산 peak
-은 Maxwell time ~0.20 d (궤도 주기에 가까움) 에 있어 총 5.3×10¹³ W,
-정규화하면 ~7×10⁻³ W/m² 입니다. 이는 이전 Bolmont 2020 추정보다
-몇 자릿수 더 큽니다. cfg 의 `tidal_heating_w_m2: 0.00001–0.0001` 은
-실제 값을 1–2 자릿수 정도 과소평가하고 있을 수 있습니다.
+**자기 다이나모 예상.** h 의 작은 질량(0.33 M⊕, sub-Mars), 진전된
+나이(7.6 Gyr), 그리고 매우 느린 조석 고정 자전(18.8 d) 이 합쳐지면
+지속 가능한 전역 다이나모는 사실상 불가능합니다. 2208.06523
+(Thermal Evolution and Magnetic History of Rocky Planets) 은 ~0.5
+M⊕ 이하의 천체가 보통 1–2 Gyr 안에 다이나모를 꺼버린다고 보는데,
+h 는 이 시간 척도를 한참 지나 있습니다. 남은 자기 구조는 지각
+잔류 — h 가 더 젊고 다이나모가 있었을 때 화석화된 자화 — 이며,
+수십억 년의 충돌 가드닝과 열적 변형 끝에 패치들로 흩어진 상태
+입니다. 이는 오늘의 Mars 그대로입니다. ~1 μT 의 지각 패치만 있고
+전역 dipole 은 없는 상황. 따라서 오로라는 조직된 극지 oval 이 아닌
+자화된 지형 위의 국소 스폿에서 발생합니다. RM22 (2203.01065) 의
+스케일링이 돌려주는 dipole moment 는 지구의 ~0.005 배로, 활동성
+다이나모라기보다 잔류 시그니처에 가깝습니다.
+
+**조석 가열 노트.** Makarov 2018 은 h 의 3:2 spin-orbit 포획 확률을
+0.017(사실상 0) 로 계산했고 1:1 lock 이 확인되었습니다. 조석 소산
+peak 는 Maxwell time ~0.20 d (궤도 주기에 가까움) 에 있어 총
+5.3×10¹³ W, 정규화하면 ~7×10⁻³ W/m² 입니다. 이는 현재 cfg 값
+0.00001–0.0001 W/m² 보다 1–2 자릿수 더 크므로 실제 flux 를
+과소평가하고 있을 수 있습니다.
 
 ## 비주얼 스타일
 
@@ -227,6 +280,11 @@ h 는 "거의 확실히 1:1 공명으로 동기화" 되어야 합니다. 이는 
   의 1%.
 - **Atmosphere haze.** 인지 불가. 0.005 bar 대기는 보일 만한 Rayleigh
   scattering 을 만들지 않고 limb 가 선명합니다.
+- **Mars 형 patchy 오로라.** `#4DFF4D` green 과 `#B19CD9` violet 의
+  스폿들이 저-중위도 자기 위도대에 흩어집니다. 극지방이 아니라 자화
+  된 지각 위에 집중됩니다. 강도 ~30 kR 로 어두운 nightside 에서만
+  보이고, 이 점박이 패턴이 h 의 얼어붙은 코어 + 지각-이상-전용
+  자기 환경을 그대로 비춰주는 시각 시그니처입니다.
 - **하늘의 별.** TRAPPIST-1 이 h 의 하늘에서 1.03° 를 차지하므로
   지구에서 본 태양의 2 배 크기입니다. 표면 조명은 0.144 S⊕ 로 지구
   의 이른 아침 황혼 수준입니다. 적-오렌지 별이 ochre-and-cream 표면
@@ -269,6 +327,14 @@ h 는 "거의 확실히 1:1 공명으로 동기화" 되어야 합니다. 이는 
   를 가짐을 예측. h 에 비자명한 대기를 유지하는 선택을 지지.
 - **1803.07453** Makarov 2018 — spin-orbit 조석 동역학. h 의 3:2
   포획 확률 0.017 → 1:1 lock 확인.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+  Environment of TRAPPIST-1. 외행성 자기권 맥락 제공.
+- **2203.01065** RM22 — 암석 행성 다이나모 스케일링. h 의 거의 0 에
+  가까운 dipole moment 를 지지.
+- **2208.06523** Thermal Evolution and Magnetic History of Rocky
+  Planets. sub-Mars 질량 행성이 1–2 Gyr 이내에 다이나모를 끄는 점을
+  확인.
+- **1910.09871** Atri 2019 — h 의 표면 dose 테이블.
 
 ### 읽음 (맥락 / 방법론, 결정 견인 안 함)
 
@@ -355,3 +421,8 @@ h 의 참고 문헌은 중간 규모입니다(53 편 중 arXiv 43 편). 비-arXi
   되었을 가능성이 있습니다(peak ~7×10⁻³ W/m² 대 cfg 의
   0.00001–0.0001). 더 최근의 Bolmont 후속 논문들과 다시 대조해야
   합니다.
+- Mars 형 patchy 오로라 지오메트리는 interesting-first 선택입니다.
+  대안인 "균일하고 흐릿한 전역 glow" 는 cfg 변형으로 보존합니다.
+- 표면 방사 dose ~4 Sv/yr 은 Kerbalism 의 "moderate" 방사 등급에
+  해당합니다. 더 얇은 대기에도 불구하고 e 나 f 보다 양호한데, h
+  의 먼 거리가 stellar 입자 flux 를 줄여주기 때문입니다.

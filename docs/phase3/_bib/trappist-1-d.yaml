@@ -6263,7 +6263,7 @@ papers:
     Earth-like planets to long-term radiation that can damage complex organic structures. However, this does not preclude
     habitability, as a safe haven for life could still exist below an ocean surface.
   source: citation_of=2025ApJ...980L...7W
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null

@@ -57,6 +57,15 @@ high = 직접 측정되었거나 강하게 제약됨, medium = 강한 근거를 
 | `surface_morphology` | substellar 점 부근에 신선한 용암류와 어두운 마그마 pond 가 있는 basalt 평원 | medium | Ducrot 2024 미풍화 표면 추론, Grayver 2022 induction heating |
 | `induction_heating_w_m2` | 0.4–4 | medium | Grayver 2022 (2211.06140) — 비자화 층상 전도도 가정의 결과값입니다. 자화된 지구형 다이나모 분기에서는 최대 ~200 W/m² (표면적 환산 139 TW) 까지 올라가지만, b 가 다이나모를 가졌다는 관측적 증거는 없습니다 |
 | `surface_ice_caps` | 없음 (nightside 에서 승화 / 광분해) | high | dayside 500 K, volatile 을 가둘 대기 없음 |
+| `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 (2203.01065) 스케일링에 조석 고정 페널티를 더한 값. Garraffo 2017 의 0.1–0.5 G 시험 범위 안에 듦 |
+| `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 가 다룬 TESS 조석 고정 암석 행성 분포에서 0.01–0.1 M_Earth 범위 |
+| `magnetic_dipole_tilt_deg` | 10 | low | 동률 처리 기준이 "흥미로움 우선"이라([[feedback-phase3-interesting-first]]), 10° 로 잡으면 균일한 극관이 아니라 한쪽으로 비낀 오로라 캡이 나타남 |
+| `magnetosphere_standoff_planet_radii` | 1.5 | medium | Garraffo 2017 (1706.04617) Fig. 4 — 최내측 행성은 강하게 압축되고, 자기력선이 표면까지 열려 버리는 경우가 잦음 |
+| `radiation_belt_present` | false | medium | Garraffo 2017 — 자기력선이 열려 있어 안정적인 포획 영역이 형성되지 않음 |
+| `surface_radiation_dose_msv_yr` | 80000 | low | Atri 2019 (1910.09871) 의 e 값에서 스케일. 진공 표면(컬럼 차폐 0). 비교용으로 지구는 2.4 mSv/yr |
+| `atmospheric_shielding_g_cm2` | 0 | high | Greene 2023 / Ducrot 2025 의 airless 결론에 따른 값 |
+| `aurora_present` | false | high | 대기가 없으니 오로라 발광 매질도 없음 |
+| `induction_heating_magma_ocean_fraction` | 0.17 | medium | Kislyakova 2018 (1710.08761) — induction 가열이 방사성 flux 의 17% 에 이름. 마그마 바다가 그럴듯하게 유지됨 |
 | `star_apparent_angular_diameter_deg` | 5.51 | high | 유도값. 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 | `tidal_heating_w_m2` | 0.5–1 (낮은 e) 에서 최대 ~400 (max-e, JWST 캡) | medium | Bolmont 2026 (2601.03408) — 내부 구조 의존. JWST nightside 비검출이 Φ 를 ~407 W/m² (Φ_2σ) 로 캡 |
@@ -184,6 +193,8 @@ blackbody → CIE chromaticity 가 `#ff7a1a` 근처)이고, 나머지 여섯 개
 TRAPPIST-1 행성은 합 시에 밝은 별처럼 보입니다. 그중 다음 외측 행성인
 c 는 inferior conjunction 에서 ~0.7° 까지 커집니다.
 
+**대기 없는 환경에서의 방사선.** 에너지 입자를 흡수해 줄 대기 컬럼이 없으니, b 의 표면은 M-dwarf 항성풍과 플레어 flux 를 고스란히 직격으로 받습니다. Garraffo 2017 (1706.04617) 과 Cohen 2014 (1405.7707) 의 시뮬레이션을 보면, 행성 자기장이 지구 수준의 세기를 가졌다고 해도 항성풍에 눌려 ~1.5 R_p 까지 압축되고, 행성이 sub-Alfvénic 영역을 가로지르는 동안(매 궤도의 약 50%) 자기력선이 표면까지 그대로 열려 버리는 경우가 잦습니다. 평균적인 플레어 활동 수준에서 Atri 2019 (1910.09871) 가 산출한 표면 선량은 ~80 Sv/yr 이고, 단일 플레어 스파이크에서는 1–10 Gy 까지 치솟습니다. Kerbalism cfg 관점에서 보면 b 는 "능동 차폐 없이는 치명적"인 방사선 등급으로, 표면에 머무는 승무원은 며칠이 아니라 수 분에서 수 시간 단위로 치사 선량을 누적하게 됩니다.
+
 ## 자전 & spin 합성
 
 TRAPPIST-1 b 시스템 파라미터는 강한 동기 자전 구성을 강제합니다.
@@ -211,6 +222,8 @@ n-body 세차로 인해 substellar 점에 작은 secular drift 가 생긴다고
 무관하지만, 충실한 주석거리는 됩니다.
 
 **조석 Love number 신호.** Bolmont 2020 (2002.02015) 은 TRAPPIST-1 b 의 TTV 가 비정상적으로 큰 행성 Love number (k₂ ≳ 1.5, 지구의 0.299 를 한참 웃돔) 를 시사한다고 봅니다. 이 값이 사실이라면, 이는 액체층 — 표면 합성에서 이미 채택한 substellar 마그마 저장소일 가능성이 높음 — 에 대한 **직접적인 동역학적 증거**가 됩니다. 신호 자체는 현재 TTV fit 의 noise floor 부근에 머물러 추론의 강도는 잠정적이지만, 재포장 해석을 독립적으로 뒷받침한다는 점이 중요합니다.
+
+**자기 다이나모 기대치.** 7.6 Gyr 의 시스템 나이와 조석 고정된 1.51 일 자전(지구의 하루보다 한참 느림) 을 감안하면, b 의 내부 다이나모는 약한 multipolar 형태이거나 아예 없을 것으로 예상됩니다 (RM22 / 2203.01065 의 스케일링에 따르면 지구 쌍극자 모멘트의 ~0.08 배). 항성풍에서 비롯되는 induction 가열(Kislyakova 2018 / 1710.08761. 방사성 flux 의 17%) 이 심부 내부를 충분히 따뜻하게 유지해 핵이 동결되었을 가능성은 낮으므로, 약하게나마 다이나모가 잔존할 여지는 있습니다. cfg 에서는 적도 표면 자기장을 ~3 μT 로 낮은 신뢰도로 잡았습니다. 이 정도면 작은 자기권 "버블"을 만들어 내기는 하지만, 잦은 sub-Alfvénic 국면에서 항성풍을 표면에서 떼어 놓기에는 부족합니다.
 
 ## 비주얼 스타일
 
@@ -285,6 +298,11 @@ n-body 세차로 인해 substellar 점에 작은 secular drift 가 생긴다고
 - **2405.02401** Gialluca 2024 — b/c JWST 제약을 입력으로 한 MCMC 초기 수분 역산. 초기 수분량 8.2 +1.5/-1.0 TO. b 의 airless 해석을 강화하면서 c 의 얇은 O₂ 대기와도 자연스럽게 연결.
 - **2002.02015** Bolmont 2020 — b 의 TTV 에서 유도되는 조석 Love number. k₂ ≳ 1.5 라는 큰 값은 액체 마그마층의 동역학적 신호가 될 수 있음. 다만 현재 TTV fit 은 noise floor 부근에 있음.
 - **1605.00616** Bolmont 2017 — 초저온 왜성 주위 지구형 행성의 수분 손실에 대한 역사적 baseline. 시스템 나이 동안 b 한 행성에서만 최대 13.5 EO 의 수소가 손실되고, 최대 ~422 bar 의 무기 O₂ 가 축적될 수 있음. airless 해석의 토대 인용.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. 항성풍 속 행성 자기권의 MHD 시뮬레이션. sub-Alfvénic 영역에서는 행성 자기력선이 매 궤도의 ~50% 동안 표면까지 열림.
+- **2203.01065** RM22 (Internal Structures and Magnetic Moments) — 조석 고정 암석 행성에 대한 다이나모 스케일링이 지구 쌍극자 모멘트의 0.01–0.1 배를 내놓음.
+- **1910.09871** Atri 2019 — Stellar Proton Event 표면 선량 계산. 방사선 cfg 에 쓰는 이벤트별 선량 표를 제공.
+- **1710.08761** Kislyakova 2018 — 항성풍 유도 전자기 dissipation 을 통해 b/c/d 의 마그마 바다 가능성을 induction 가열이 견인함.
+- **1405.7707** Cohen 2014 — 거주가능대 행성의 자기권 구조와 대기 Joule 가열.
 
 ### 읽음 (맥락 / 방법론, 결정을 견인하지 않음)
 
@@ -355,3 +373,5 @@ b bibliography 에는 arXiv preprint 가 없는 ~30 편의 논문이 있고, arX
 - cfg 변형으로 "마그마 바다 잔존" 해석(visible substellar 용암 호수)
   도 고려 가능. 확률은 더 낮지만 시각적으로 독특해서, Phase 3.5 대안
   구현 후보로 적합.
+- 자기장 추정치는 신뢰도가 낮은 스케일링 관계값입니다. b 에 대한 직접 측정(전파 비검출 상한) 이 나온다면 cfg 자기장 세기는 조정이 필요할 수 있습니다.
+- 흥미로움 우선 동률 처리. 자기 쌍극자 기울기를 10° 로 잡은 것은 균일한 극관이 아니라 시각적으로 두드러지는 비낀 오로라 캡을 만들기 위한 선택이고, 두 방향 모두 물리적으로는 그럴듯합니다.
