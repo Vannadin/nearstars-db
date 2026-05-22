@@ -36,10 +36,18 @@
 - [x] [I7] Frontmatter description — compress 3 sentences into one
       ("Do NOT use for X / Y / Z / W")
 
-## 🟢 Minor (later session)
+## 🟢 Minor (this session — single commit)
 
-- [ ] [I8] Move Step 14 (manual-paper-followup) into Step 7 (triage)
-- [ ] [I9] Remove dead `references/troubleshooting.md` link
-- [ ] [I10] Add "verify: …" line to Steps 5, 7, 8, 10, 12
-- [ ] [I11] Promote "Time and scope warning" to Step 0 with explicit
-      "share estimate with user" instruction
+- [x] [I8] Absorb manual-paper-followup into Step 7 (Triage) as a
+      new `manual_followup` classification; renumber Steps 15→14
+      (Commit) and update Workflow Overview accordingly
+- [x] [I9] Remove dead `references/troubleshooting.md` link from
+      Common pitfalls section
+- [x] [I10] Add "verify:" line to Steps 5, 7, 8, 10, 12 — each one
+      names a concrete check before proceeding (CLAUDE.md §4)
+- [x] [I11] Promote "Time and scope warning" to Step 0 with explicit
+      "quote the matching row to the user upfront and confirm" prose
+- [x] Final SKILL.md line count: 515 → 527 (+12 net; the verify
+      lines and Step 7 manual_followup body add prose intentionally)
+      Total vs original 543: **-16 lines** across three commits.
+- [ ] Commit with VaNnadin identity

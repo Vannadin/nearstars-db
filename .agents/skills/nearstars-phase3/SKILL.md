@@ -58,9 +58,10 @@ use `principia-cfg`. If it's **adding a new star to the DB**, use
 
 ---
 
-## Time and scope warning
+## Step 0 — Share the time estimate with the user
 
-Phase 3 is the most expensive curation tier. Realistic budget:
+**Do this before any other step.** Phase 3 is the most expensive
+curation tier and the user needs to budget the session.
 
 | System size | Approx model time |
 |---|---|
@@ -69,32 +70,34 @@ Phase 3 is the most expensive curation tier. Realistic budget:
 | Full 7-planet system (TRAPPIST-1 scale) | 6–15 h |
 
 The cost is dominated by deep-reading the must-read paper set (~15–30
-papers per planet after filtering). Tell the user up front so they can
-budget the session.
+papers per planet after filtering). Quote the matching row to the user
+upfront and confirm they want to proceed before running Step 1.
 
 Phase 3 outputs need Phase 2 measurements as inputs (per
 [[project-nearstars-phase-distinction]]). If the target system has
-only Phase 1 curation, escalate per
-[[feedback-planet-curation]] first.
+only Phase 1 curation, mention this in the same upfront message so
+the user can choose to escalate Phase 2 first (via `nearstars-add-star`)
+or proceed with degraded confidence.
 
 ---
 
 ## Workflow Overview
 
 ```
-1. Pre-flight    ← confirm Phase 2 done, create checklist + context-notes
-2. Bibliography  ← per-planet + system-level ADS+arXiv queries
-3. Expand        ← 1-hop citation graph walk to catch references
-4. Score+filter  ← authority + relevance scoring, mark low-tier as skipped
-5. Fetch         ← arXiv full text for must-read papers
-6. Triage        ← classify must-read / skim / skip explicitly
-7. Deep-read     ← extract concrete cfg-relevant numbers
-8. Draft English ← per-planet 6-section markdown
-9. Verify        ← re-read every Decisions row against the cited paper
-10. Korean mirror← natural-prose translation, block-parity
-11. Build HTML   ← + reports index + visual browser check
-12. Followup doc ← non-arXiv papers tiered as A/B/C
-13. Commit       ← per-planet (default) or per-system
+ 1. Pre-flight        ← confirm Phase 2 done, create checklist + context-notes
+ 2. Bibliography      ← per-planet ADS+arXiv queries
+ 3. System bib        ← system-level supplementary bibliography
+ 4. Expand            ← 1-hop citation graph walk to catch references
+ 5. Score+filter      ← authority + relevance, mark low-tier as skipped
+ 6. Fetch             ← arXiv full text for must-read papers
+ 7. Triage            ← classify deep_read / skim / skip / manual_followup
+ 8. Deep-read         ← extract concrete cfg-relevant numbers
+ 9. Draft English     ← per-planet 6-section markdown
+10. Verify decisions  ← re-read every Decisions row against the cited paper
+11. Korean mirror     ← natural-prose translation, block-parity
+12. Build HTML        ← build_html.py + reports index + check-mirrors
+13. Browser check     ← visual confirmation of lang toggle + rendered table
+14. Commit            ← per-planet (default) or per-system
 ```
 
 Steps 2–5 are mostly mechanical and parallelize well. Steps 7–10 are
@@ -211,6 +214,11 @@ Score interpretation (full schema in `references/scoring-reference.md`):
 The flag is idempotent — running it again on a yaml whose papers are
 already `fetched` or `skipped` is a no-op.
 
+**verify:** score distribution within ±50% of the sanity-check counts
+in `references/scoring-reference.md`. If 14+ count is <5 for a major
+system or >50, the keyword set or thresholds need adjustment before
+proceeding.
+
 ---
 
 ## Step 6 — Fetch arXiv texts
@@ -241,11 +249,29 @@ For each high-score paper, classify into:
 - **skim**: methodology only, or sister-planet comparison only
 - **skip**: turns out to be irrelevant on closer look (other system,
   proposal, biosignature without atmosphere)
+- **manual_followup**: high-score (`combined_score >= 14`) but no
+  `arxiv_id` — recent Nature / Nature Astronomy, JWST conference
+  proceedings, PSJ early access etc. The skill cannot fetch these;
+  log them in `phase3/<system>/manual-paper-followup.md` with tiered
+  priority:
+  - **Tier A** — likely to change cfg decisions; flag for user paste
+  - **Tier B** — useful context; can wait
+  - **Tier C** — conference summaries / catalogs; safe to skip
+
+  See `phase3/trappist-1-system/manual-paper-followup.md` for the
+  established format. When the user later pastes back an abstract or
+  full text, save it as `docs/phase3/_papers/<bibcode>.md` and
+  integrate via Step 8 / Step 10 (verify pass).
 
 This is the gate before Step 8. Don't draft synthesis prose without
 having explicitly read the deep_read set in full — abstract-only
 drafting introduces sloppy citations (see
 [[feedback-phase3-validation]]).
+
+**verify:** every `combined_score >= 14` paper has an explicit
+deep_read / skim / skip / manual_followup classification recorded
+in `phase3/<system>/context-notes.md`. No high-score paper left as
+`pending`.
 
 ---
 
@@ -262,6 +288,11 @@ the paper's arxiv_id beside each number. This is the audit trail.
 
 If a paper conflicts with current cfg decisions, see
 [`references/conflict-resolution.md`](references/conflict-resolution.md).
+
+**verify:** every deep_read paper has at least one extracted number
+or qualitative finding logged in context-notes.md alongside its
+arxiv_id. A deep_read paper with zero notes means it was actually
+"skim" — re-classify in Step 7.
 
 ---
 
@@ -325,6 +356,11 @@ first pass):
 
 See [[feedback-phase3-validation]] for the full failure-mode list.
 
+**verify:** every Decisions-table row's author/year/number traces back
+to a specific page or section in `docs/phase3/_papers/<arxiv_id>.md`.
+If any row can't be sourced, fix the row or mark Confidence=low with
+an Open-items entry — never commit an unverified Decisions row.
+
 ---
 
 ## Step 11 — Korean mirror (natural prose, block-parity)
@@ -372,6 +408,10 @@ counts diverge.
 `check-mirrors.sh` verifies all `docs/` ↔ `ko/docs/` pairs are in
 sync per AGENTS.md §2.1.
 
+**verify:** `build_html.py` exits 0 **and** `check-mirrors.sh` reports
+no stale or missing mirrors. A build pass alone is not sufficient —
+the mirror check catches the case where en was edited after ko.
+
 ---
 
 ## Step 13 — Browser visual check (don't trust build success alone)
@@ -393,31 +433,7 @@ the HTML.
 
 ---
 
-## Step 14 — Non-arXiv paper followup
-
-Some high-authority papers have no arXiv preprint (especially recent
-Nature / Nature Astronomy, JWST conference proceedings, PSJ early
-access). They show up in the scored bibliography with
-`combined_score >= 14` but no `arxiv_id`. The skill cannot fetch
-them automatically.
-
-Document them in `phase3/<system>/manual-paper-followup.md` with
-tiered priority:
-
-- **Tier A** — likely to change cfg decisions; flag for user paste
-- **Tier B** — useful context; can wait
-- **Tier C** — conference summaries / catalogs; safe to skip
-
-See `phase3/trappist-1-system/manual-paper-followup.md` for the
-established format.
-
-When the user pastes back the abstract or full text from such a
-paper, save it as `docs/phase3/_papers/<bibcode>.md` and integrate
-findings via Step 8 / Step 10 (verify pass).
-
----
-
-## Step 15 — Commit
+## Step 14 — Commit
 
 Default granularity: per-planet (one commit per planet's synthesis).
 
@@ -478,10 +494,6 @@ these actions require explicit confirmation or a Read-first step.
 ---
 
 ## Common pitfalls
-
-Quick handling reference. Full details in
-[`references/troubleshooting.md`](references/troubleshooting.md) (if
-issues recur often enough to need a written ref).
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
