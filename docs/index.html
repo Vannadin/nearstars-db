@@ -1239,6 +1239,25 @@ const SPEC_INFO = {
     },
     subNote: '세부 등급 {sub} — 0: 해당 형 최고온, 9: 최저온',
     prefix: {sd:'준왜성 (subdwarf)', D:'백색왜성 (white dwarf)'},
+    wd: {
+      header: '태양형 항성의 잔해. 핵융합 정지, 축퇴된 전자 압력으로 유지. 지구 크기에 태양 수준 질량.',
+      letters: {
+        A: '수소 우세 대기 (H I 발머선)',
+        B: '헬륨 우세 대기 (He I 흡수선)',
+        C: '연속 스펙트럼 (식별 가능한 흡수선 없음)',
+        O: '고온 헬륨 (He II 흡수선, > 80,000 K)',
+        Z: '금속 오염 (Ca·Fe·Mg 등) — 행성 잔해 누적의 증거',
+        Q: '탄소 특성 (대기에 탄소)',
+        H: '자기장 (~1 MG 이상)',
+        X: '식별 불명 / 특이',
+        V: '변광 (ZZ Ceti 류 맥동)',
+        P: '편광 (자기장 동반)',
+        E: '방출선',
+      },
+      tempLabel: '온도 지수',
+      tempNote: 'Teff ≈ 50,400 / 지수 K',
+      compNote: '여러 글자가 붙으면 첫 글자가 주 특징, 나머지는 부 특징입니다 (예: DAZ = 수소 + 금속 오염).',
+    },
   },
   en: {
     class: {
@@ -1275,20 +1294,82 @@ const SPEC_INFO = {
     },
     subNote: 'Sub-type {sub} — 0: hottest in class, 9: coolest',
     prefix: {sd:'Subdwarf', D:'White dwarf'},
+    wd: {
+      header: 'Stellar remnant after fuel exhaustion. Earth-sized, sustained by electron degeneracy pressure; up to ~1.4 M☉.',
+      letters: {
+        A: 'Hydrogen-dominated atmosphere (H I Balmer lines)',
+        B: 'Helium-dominated (He I lines)',
+        C: 'Continuous spectrum (no identifiable lines)',
+        O: 'Hot helium (He II lines, > 80,000 K)',
+        Z: 'Metal-polluted (Ca, Fe, Mg) — planetary debris accretion signature',
+        Q: 'Carbon features (DQ — carbon in atmosphere)',
+        H: 'Magnetic field (~1 MG or more)',
+        X: 'Unclassified / peculiar',
+        V: 'Variable (ZZ Ceti pulsator etc.)',
+        P: 'Polarized (magnetic)',
+        E: 'Emission lines',
+      },
+      tempLabel: 'Temperature index',
+      tempNote: 'Teff ≈ 50,400 / index K',
+      compNote: 'When multiple letters appear, the first marks the primary feature and the rest are secondary (e.g. DAZ = hydrogen-dominated + metal-polluted).',
+    },
   }
 };
 
+function parseSpecWD(spec) {
+  // White dwarf format: D + composition letters (1-3 of A/B/C/O/Z/Q/H/X/V/P/E)
+  //   + optional temperature index (digit + optional decimal)
+  //   + optional trailing peculiar/variable suffix.
+  // The leading D classifies it as a degenerate; subsequent letters describe
+  // *atmospheric composition*, not main-sequence class. The numeric index is
+  // a temperature proxy: Teff ≈ 50,400 / index K.
+  const m = spec.trim().match(/^D([ABCOZQHXVPE]+)(\d+\.?\d*)?(.*)$/);
+  if (!m) return null;
+  return {
+    kind: 'WD',
+    composition: m[1].split(''),
+    tempIndex: m[2] ? parseFloat(m[2]) : null,
+    extras: (m[3] || '').trim(),
+  };
+}
+
 function parseSpec(spec) {
   if (!spec || spec === '—') return null;
-  // prefix: sd, D, esd, etc.
+  // White dwarfs use an entirely different classification scheme — route them
+  // to parseSpecWD so we don't mis-render "DA2" as an A-type main-sequence star.
+  if (/^D[ABCOZQHXVPE]/.test(spec.trim())) return parseSpecWD(spec);
+  // prefix: sd, D (fallback for non-letter-matched D... cases), esd, etc.
   const m = spec.match(/^(sd|esd|D)?([OBAFGKMLTYSWCD])(\d+\.?\d*)?\s*(Ia|Ib|II|III|IV|VI|VII|V)?\s*([a-z]*)/i);
   if (!m) return null;
   return { prefix: (m[1]||'').toLowerCase(), cls: m[2].toUpperCase(), sub: m[3]||'', lum: m[4]||'', suffix: m[5]||'' };
 }
 
+function buildWDTip(spec, p) {
+  const wd = SPEC_INFO[lang].wd;
+  const dot = SPEC_DOT.D;
+  const title = lang === 'ko' ? '백색왜성 (white dwarf)' : 'White dwarf';
+  let h = `<div class="tip-head">${spec}</div>`;
+  h += `<div class="tip-cls"><span class="tip-dot" style="background:${dot}"></span><span class="tip-cls-name">${title}</span></div>`;
+  h += `<div class="tip-desc">${wd.header}</div>`;
+  p.composition.forEach(letter => {
+    if (wd.letters[letter]) {
+      h += `<div class="tip-row"><b>D${letter}</b> — ${wd.letters[letter]}</div>`;
+    }
+  });
+  if (p.tempIndex != null) {
+    const teff = Math.round(50400 / p.tempIndex).toLocaleString();
+    h += `<div class="tip-row"><b>${wd.tempLabel} ${p.tempIndex}</b> — Teff ≈ ${teff} K <span style="opacity:0.7">(${wd.tempNote})</span></div>`;
+  }
+  if (p.composition.length > 1) {
+    h += `<div class="tip-sfx">${wd.compNote}</div>`;
+  }
+  return h;
+}
+
 function buildSpecTip(spec) {
   const p = parseSpec(spec);
   if (!p) return `<div class="tip-head">${spec}</div><div class="tip-desc">Unknown spectral type</div>`;
+  if (p.kind === 'WD') return buildWDTip(spec, p);
   const d = SPEC_INFO[lang];
   const cls = d.class[p.cls];
   const dot = SPEC_DOT[p.cls] || '#888';
