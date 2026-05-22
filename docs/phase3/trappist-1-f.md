@@ -48,14 +48,14 @@ atmospheres) and is preserved as the conservative cfg variant.
 | `surface_temp_nightside_k` | 165 | medium | Wolf 2017 GCM; ice-covered cold nightside |
 | `surface_temp_global_mean_k` | 220 | medium | Wolf 2017 GCM cold-snowball range |
 | `atmosphere_present` | true (thin CO₂-rich) | medium | Lim 2024 rejects H₂-rich, permits thin CO₂; Wolf 2017 outer-HZ snowball case |
-| `atmosphere_surface_pressure_pa` | 100 000 | medium | Tie-break (interesting-first): 1 bar CO₂ enables a substellar open-water lens (Wolf 2017); 0.1 bar conservative-snowball reading preserved as cfg variant |
+| `atmosphere_surface_pressure_pa` | 100 000 | medium | Documented divergence: see Canonical alternatives. 1 bar CO₂ enables substellar open-water lens (Wolf 2017); Turbet 2018 GCM consensus is 0.1 bar snowball; Lim 2024 JWST only rules out H₂-rich, both pressures are observation-consistent. |
 | `atmosphere_composition` | CO₂ 95%, N₂ 4%, trace H₂O | medium | outgassing-driven; Wolf 2017 1 bar branch with saturated H₂O near substellar surface |
 | `atmosphere_scale_height_km` | 5 | medium | derived: kT/μg with T≈230 K, μ=43 (CO₂-rich), g=9.3 m/s² |
 | `atmosphere_tint_rgb_hex` | `#604040` (very thin CO₂ Rayleigh + dust haze) | low | minimal scattering at 0.1 bar; some CO₂ ice haze possible |
 | `cloud_cover_fraction` | 0.25 | medium | Wolf 2017 — limited cloud formation in cold thin atmo |
 | `cloud_tint_rgb_hex` | `#d8c8b8` (CO₂ ice + water ice mix, M-dwarf shifted) | medium | terminator + substellar cirrus |
 | `ocean_present` | true (sub-glacial; small substellar open-water lens) | medium | Acuña 2025 wmf 16%; basal melting + greenhouse → marginal open water |
-| `ocean_extent_substellar_radius_deg` | 40 | medium | Tie-break (interesting-first): 1 bar CO₂ variant chosen as canonical; Wolf 2017 / Turbet 2018 substellar eye-ball morphology with open-water disk to ~40° |
+| `ocean_extent_substellar_radius_deg` | 40 | medium | Documented divergence: downstream of 1 bar atm pick (see Canonical alternatives). Wolf 2017 / Turbet 2018 eye-ball morphology with open-water disk to ~40°. Snowball variant has ocean_extent = 0. |
 | `ocean_tint_rgb_hex` | `#1a1c30` (deep dark navy, mostly hidden under ice) | low | sub-glacial / small lens; minimally visible from orbit |
 | `surface_ice_caps` | full coverage outside ~40° substellar open-water disk; ~60% of surface, with sea-ice transition ring at the disk boundary | medium | Wolf 2017 1 bar CO₂ branch; ice line at ~40° from substellar |
 | `surface_tint_rgb_hex_primary` | `#e0d8d0` (clean snow / glacial ice) | medium | snow albedo + M-dwarf illumination |
@@ -281,6 +281,15 @@ the cfg matches this assumption.
 - **Sister planets in sky.** e (next inward) at angular size ~0.3°
   in inferior conjunction; g (next outward) at ~0.3° during outer
   conjunctions. Conjunctions every ~25 days (f-g synodic period).
+
+## Canonical alternatives
+
+### Diverged cfg picks
+
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+|---|---|---|---|
+| `atmosphere_surface_pressure_pa` | 100 000 (1 bar CO₂, Wolf 2017 eye-ball aquaplanet) | 10 000 (0.1 bar CO₂ snowball, Turbet 2018 GCM convergence) | Both are observation-consistent within current JWST limits (Lim 2024 only rules out H₂-rich). Turbet 2018's GCM ensemble converges on 0.1 bar snowball as the more theoretically supported steady state; Wolf 2017 demonstrates that 1 bar gives a substellar open-water lens of ~40° radius. The cfg picks 1 bar because the open-ocean disk is the visually defining feature for a habitable-zone planet — a uniform snowball f would be indistinguishable from g and h in orbit-view. Conservative 0.1 bar snowball reading preserved as cfg variant in Open items. |
+| `ocean_extent_substellar_radius_deg` | 40° (downstream of 1 bar atm choice) | 0° (full snowball, downstream of 0.1 bar) | Follows from the atmosphere-pressure choice. 1 bar branch produces the substellar open-water lens; 0.1 bar branch gives full snowball with no surface ocean visible. |
 
 ## Bibliography
 

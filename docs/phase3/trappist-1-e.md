@@ -66,7 +66,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `magnetic_field_present` | true (modest, ~0.1× Earth) | low | small mass + slow rotation → weak intrinsic field; not directly constrained |
 | `induction_heating_w_m2` | 0.01–0.1 | medium | Grayver 2022 — much lower at e than at b/c |
 | `tidal_heating_w_m2` | 0.001–0.01 | medium | Bolmont 2020 — minimal at e |
-| `magnetic_field_strength_microtesla_equator` | 30 | medium | Wang 2025 (2504.16662) MHD simulations of e adopt 0.32 G ≈ Earth-strength; Garraffo 2017 test case 0.3 G — interesting-first tie-break picks the Earth-analog over weaker-field alternatives (more interesting magnetosphere) |
+| `magnetic_field_strength_microtesla_equator` | 30 | medium | Wang 2025 (2504.16662) MHD simulations of e adopt 0.32 G ≈ Earth-strength; Garraffo 2017 test case 0.3 G. Documented divergence: see Canonical alternatives. RM22 dynamo scaling for tidally-locked low-mass planets gives ~2 μT; cfg picks Wang's Earth-analog assumption for visually distinctive magnetosphere. |
 | `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Wang 2025 Earth-analog assumption; conservative for habitable-scenario rendering |
 | `magnetic_dipole_tilt_deg` | 11 | medium | Earth-analog 11° (Wang 2025 uses 23.5° but reports tilt sensitivity); tie-break: Earth-like 11° gives recognizable auroral geometry for player |
 | `magnetosphere_standoff_planet_radii` | 5 | high | Wang 2025 Fig. 5 for 0.32 G field — calm regime 5–9 R_e; CME-disrupted ~3 R_e |
@@ -245,6 +245,15 @@ Combining surface and atmosphere decisions:
 - **Sister planets in sky.** d (next inward) at angular size ~0.3°
   in conjunction; f (next outward) at ~0.4°. Conjunctions every few
   days due to the resonant chain. The full system is near-coplanar.
+
+## Canonical alternatives
+
+### Diverged cfg picks
+
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+|---|---|---|---|
+| `magnetic_field_strength_microtesla_equator` | 30 μT (Earth-analog; Wang 2025 0.32 G MHD scenario) | ~2 μT (RM22 dynamo scaling for tidally-locked low-mass planets; Reiners & Christensen 2010) | Wang 2025 *assumes* Earth-analog 0.32 G for habitability-scenario MHD; RM22 *derives* a weaker field from rotation-period dependence and core size. The cfg picks Wang's assumption because a strong magnetosphere + Earth-style auroral oval is recognizable to the player; a weak-field e would have disorganized polar precipitation with no clear visual hook. Weak-field reading preserved as cfg variant in Open items. |
+| `magnetic_dipole_moment_normalized_earth` | 0.3 × Earth (downstream of field-strength choice) | <0.1 × Earth (downstream of RM22) | Follows from the field-strength choice; not an independent decision. |
 
 ## Bibliography
 

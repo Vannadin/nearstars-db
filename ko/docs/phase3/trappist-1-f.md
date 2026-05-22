@@ -46,14 +46,14 @@ variant 로 보존합니다.
 | `surface_temp_nightside_k` | 165 | medium | Wolf 2017 GCM. 얼음으로 덮인 차가운 nightside |
 | `surface_temp_global_mean_k` | 220 | medium | Wolf 2017 GCM cold-snowball 범위 |
 | `atmosphere_present` | true (얇은 CO₂-rich) | medium | Lim 2024 가 H₂-rich 배제, 얇은 CO₂ 는 허용. Wolf 2017 outer-HZ snowball 케이스 |
-| `atmosphere_surface_pressure_pa` | 100 000 | medium | 동률 처리 (interesting-first). 1 bar CO₂ 가 substellar open-water lens 를 가능케 함 (Wolf 2017). 0.1 bar 의 보수적 snowball 해석은 cfg variant 로 보존 |
+| `atmosphere_surface_pressure_pa` | 100 000 | medium | Documented divergence — 아래 고증 대안 참조. 1 bar CO₂ 가 substellar open-water lens 를 가능케 합니다 (Wolf 2017). Turbet 2018 GCM 컨센서스는 0.1 bar snowball. Lim 2024 JWST 는 H₂ 풍부만 배제하므로 두 압력 다 관측-적합. |
 | `atmosphere_composition` | CO₂ 95%, N₂ 4%, 미량 H₂O | medium | outgassing 주도. Wolf 2017 1 bar branch, substellar 표면 근처에서 H₂O 포화 |
 | `atmosphere_scale_height_km` | 5 | medium | derived. kT/μg, T≈230 K, μ=43 (CO₂-rich), g=9.3 m/s² |
 | `atmosphere_tint_rgb_hex` | `#604040` (매우 얇은 CO₂ Rayleigh + 먼지 haze) | low | 0.1 bar 에서 산란이 미미. CO₂ ice haze 약간 가능 |
 | `cloud_cover_fraction` | 0.25 | medium | Wolf 2017 — 차갑고 얇은 대기에서는 구름 형성이 제한됨 |
 | `cloud_tint_rgb_hex` | `#d8c8b8` (CO₂ 얼음 + 물 얼음 혼합, M-dwarf 적색 이동) | medium | terminator + substellar cirrus |
 | `ocean_present` | true (sub-glacial. 작은 substellar open-water lens) | medium | Acuña 2025 wmf 16%. basal melting + 온실효과로 marginal 한 open water |
-| `ocean_extent_substellar_radius_deg` | 40 | medium | 동률 처리 (interesting-first). 1 bar CO₂ variant 를 canonical 로 채택. Wolf 2017 / Turbet 2018 substellar eye-ball morphology 의 ~40° open-water disk |
+| `ocean_extent_substellar_radius_deg` | 40 | medium | Documented divergence — 1 bar 대기 픽에서 파생 (고증 대안 참조). Wolf 2017 / Turbet 2018 substellar eye-ball morphology 의 ~40° open-water disk. Snowball variant 는 ocean_extent = 0. |
 | `ocean_tint_rgb_hex` | `#1a1c30` (깊고 어두운 navy, 대부분 얼음 아래) | low | sub-glacial / 작은 lens. 궤도에서 거의 보이지 않음 |
 | `surface_ice_caps` | substellar ~40° open-water disk 바깥은 전역 cover. 표면의 ~60%, 디스크 경계에 sea-ice 전이 고리 | medium | Wolf 2017 1 bar CO₂ branch. ice line 이 substellar 에서 ~40° |
 | `surface_tint_rgb_hex_primary` | `#e0d8d0` (깨끗한 눈 / 빙하 얼음) | medium | 눈 albedo + M-dwarf 조명 |
@@ -258,6 +258,15 @@ cfg 도 이 가정에 맞춥니다.
 - **하늘의 자매 행성.** e (다음 안쪽) 가 inferior conjunction 시 각 크기
   ~0.3°; g (다음 바깥쪽) 가 outer conjunction 시 ~0.3°. 합은 약 25 일
   마다 일어납니다 (f-g synodic 주기).
+
+## 고증 대안
+
+### 고증과 어긋난 cfg 픽
+
+| 항목 | 게임 (cfg) | 고증 대안 | 어긋난 이유 |
+|---|---|---|---|
+| `atmosphere_surface_pressure_pa` | 100 000 (1 bar CO₂, Wolf 2017 의 eyeball 수권 행성) | 10 000 (0.1 bar CO₂ snowball, Turbet 2018 GCM 수렴값) | 두 시나리오 다 현재 JWST 관측 한계 안에 들어옵니다 — Lim 2024 가 배제하는 것은 H₂ 풍부 시나리오뿐입니다. Turbet 2018 의 GCM 앙상블은 0.1 bar snowball 을 이론적으로 더 안정된 정상 상태로 수렴시키고, Wolf 2017 은 1 bar 에서 substellar 부근에 반경 약 40° 의 열대 호수가 형성됨을 보입니다. cfg 는 1 bar 를 채택했습니다 — 거주 가능 영역 행성이라는 f 의 정체성을 시각적으로 결정짓는 것이 바로 그 열대 호수이기 때문입니다. 균일한 snowball f 는 궤도 시점에서 g 나 h 와 거의 구분되지 않습니다. 보수적인 0.1 bar snowball 시나리오는 Open items 에 cfg variant 로 보존합니다. |
+| `ocean_extent_substellar_radius_deg` | 40° (1 bar 대기 선택에서 파생) | 0° (전구 snowball, 0.1 bar 에서 파생) | 대기압 선택에서 파생되는 값입니다. 1 bar 분기는 반경 40° 의 열대 호수를, 0.1 bar 분기는 표면 액체수가 보이지 않는 전구 snowball 을 만듭니다. |
 
 ## 참고 문헌
 
