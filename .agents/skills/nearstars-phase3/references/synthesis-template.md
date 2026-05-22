@@ -119,6 +119,26 @@ match by exact key):
 - `star_apparent_angular_diameter_deg`
 - `stellar_illumination_color_temp_k`
 
+### Decision-table field map
+
+When deep-reading a paper (SKILL.md Step 8), scan for these specific
+quantities and write each one into the matching Decisions-table field:
+
+| Look for in the paper | Decisions-table field(s) |
+|---|---|
+| Surface temperatures (substellar, nightside, global mean) | `dayside_surface_temp_k`, `nightside_surface_temp_k` |
+| Atmospheric pressure / composition with σ bounds | `atmosphere_surface_pressure_pa`, `atmosphere_composition` |
+| GCM cloud morphology (latitude/longitude patterns) | `cloud_morphology`, `cloud_cover_fraction` |
+| Surface albedo, dayside brightness temperature | `bond_albedo`, `dayside_brightness_temp_k_*` |
+| Tidal / induction / radiogenic heating flux (W/m²) | `tidal_heating_w_m2`, `induction_heating_w_m2`, `radiogenic_heat_w_m2` |
+| Water mass fraction, ocean depth, basal-melt physics | `water_mass_fraction`, `ocean_present`, `ocean_extent_substellar_radius_deg` |
+| Spin-orbit state (1:1 vs 3:2), obliquity damping | `tidally_locked`, `obliquity_deg` |
+| Mineralogy / surface composition predictions | `surface_tint_rgb_hex_*`, `surface_morphology` |
+| Stellar XUV flux, microflare statistics | (atmosphere retention caveats — used in Atmosphere prose, not a single field) |
+
+For mod-grounded fields (Kerbalism / EVE / Scatterer), the analogous
+look-for table is in [`mod-grounded-fields.md`](mod-grounded-fields.md).
+
 ## ## Surface synthesis
 
 Prose section, 3–6 paragraphs:

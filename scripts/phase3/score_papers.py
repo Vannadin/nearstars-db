@@ -283,6 +283,10 @@ def main():
                         help='System name (default TRAPPIST-1; auto-detected if --planet given)')
     parser.add_argument("--keep-threshold", type=int, default=8,
                         help="Combined-score threshold for 'keep' (default 8)")
+    parser.add_argument("--mark-skipped-below", type=int, default=None, metavar="N",
+                        help="After scoring, set status=skipped on pending papers "
+                             "whose combined_score<N. Prevents fetch_arxiv_texts.py "
+                             "from wasting API calls on low-tier papers. Typical N=14.")
     parser.add_argument("--dry-run", action="store_true",
                         help="Print summary, don't modify the YAML")
     args = parser.parse_args()
@@ -331,6 +335,18 @@ def main():
 
     # Cache the kept set (preserves the audit trail of skipped)
     bib["filtered_papers"] = [p for p in papers if p["filter_decision"] in ("keep", "borderline")]
+
+    # Optional: mark pending papers below a score threshold as skipped so
+    # fetch_arxiv_texts.py doesn't waste arXiv API calls on them. Idempotent.
+    marked = 0
+    if args.mark_skipped_below is not None:
+        thr = args.mark_skipped_below
+        for p in papers:
+            if p.get("status") == "pending" and p["combined_score"] < thr:
+                p["status"] = "skipped"
+                p["skip_reason"] = f"below_score_threshold ({p['combined_score']} < {thr})"
+                marked += 1
+        print(f"  marked-skipped-below {thr}: {marked} papers")
 
     total = len(papers)
     print(f"\n  Total: {total}")

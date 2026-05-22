@@ -183,36 +183,27 @@ Expect 10–25× growth in bib size. Most of the new entries are noise
 
 ## Step 5 — Score + filter
 
-Apply authority + relevance scoring to weed out the noise:
+Two thresholds matter here and they answer different questions.
+`--keep-threshold N` decides what stays in the bibliography at all
+(audit-trail retention). `--mark-skipped-below M` decides what gets
+fetched in Step 6 (arXiv API budget). They are independent — typical
+settings are `--keep-threshold 8 --mark-skipped-below 14`.
 
 ```bash
 python3 scripts/phase3/score_papers.py docs/phase3/_bib/<slug>.yaml \
-    --keep-threshold 8
+    --keep-threshold 8 --mark-skipped-below 14
 ```
 
 Score interpretation (full schema in `references/scoring-reference.md`):
 
 | Combined score | Decision | Action |
 |---|---|---|
-| ≥ 14 | must-read | deep-read in Step 7 |
-| 8–13 | borderline / cite-only | OK as bibliography entry, skim only |
-| < 8 | skip | mark `status: skipped` to prevent arXiv fetch |
+| ≥ 14 | must-read | stays `pending` → Step 6 fetches arXiv text |
+| 8–13 | borderline / cite-only | kept in bib, marked `status: skipped` so Step 6 skips it; OK to cite |
+| < 8 | skip | dropped from `filtered_papers` view by `--keep-threshold` |
 
-After scoring, mark low-tier papers as `status: skipped` so
-fetch_arxiv_texts.py won't waste arXiv API calls on them:
-
-```python
-import yaml
-for slug in ['<planet-slugs>...']:
-    with open(f'docs/phase3/_bib/{slug}.yaml') as f:
-        bib = yaml.safe_load(f)
-    for p in bib['papers']:
-        if p.get('combined_score', 0) < 14 and p.get('status') == 'pending':
-            p['status'] = 'skipped'
-            p['skip_reason'] = f"below_score_threshold ({p['combined_score']} < 14)"
-    with open(f'docs/phase3/_bib/{slug}.yaml', 'w') as f:
-        yaml.safe_dump(bib, f, sort_keys=False, allow_unicode=True, width=140)
-```
+The flag is idempotent — running it again on a yaml whose papers are
+already `fetched` or `skipped` is a no-op.
 
 ---
 
@@ -255,19 +246,10 @@ drafting introduces sloppy citations (see
 ## Step 8 — Deep-read with cfg-decision focus
 
 For each deep_read paper, open `docs/phase3/_papers/<arxiv_id>.md`
-and extract:
-
-| Looking for | Why |
-|---|---|
-| Specific surface temperature numbers (substellar, nightside, global mean) | `dayside_surface_temp_k`, `nightside_surface_temp_k` |
-| Atmospheric pressure / composition with σ bounds | `atmosphere_surface_pressure_pa`, `atmosphere_composition` |
-| GCM cloud morphology predictions (latitude/longitude patterns) | `cloud_morphology`, `cloud_cover_fraction` |
-| Surface albedo, dayside brightness temperature | `bond_albedo`, `dayside_brightness_temp_k_*` |
-| Tidal / induction / radiogenic heating flux (W/m²) | `tidal_heating_w_m2`, `induction_heating_w_m2` |
-| Water mass fraction, ocean depth, basal-melt physics | `water_mass_fraction`, `ocean_present`, `ocean_extent_substellar_radius_deg` |
-| Spin-orbit state (1:1 vs 3:2), obliquity damping | `tidally_locked`, `obliquity_deg` |
-| Mineralogy / surface composition predictions | `surface_tint_rgb_hex_*`, `surface_morphology` |
-| Stellar XUV flux, microflare statistics | (atmosphere retention caveats) |
+and extract the cfg-relevant numbers. The per-field "what to look for
+in the paper" map is in
+[`references/synthesis-template.md`](references/synthesis-template.md)
+under "Decision-table field map" — use it as the extraction checklist.
 
 Record findings in `phase3/<system>/context-notes.md` as you go, with
 the paper's arxiv_id beside each number. This is the audit trail.
@@ -449,39 +431,23 @@ After commit, push to `origin/main` only if the user explicitly asks.
 
 ---
 
-## Key Policies (from user memory)
+## Phase 3-specific policies
 
-These are user-confirmed defaults. Do NOT ask the user about them.
+User memory (MEMORY.md) auto-loads each session, so general policies
+like md-language, speech-level, and ko-mirror-style are already in
+context. These three are repeated here because they gate
+decisions inside this workflow specifically:
 
 - **Phase 3 inputs are Phase 2 measurements** ([[project-nearstars-phase-distinction]]).
-  Phase 3 cannot bypass Phase 2; if Phase 2 doesn't exist, escalate
-  via `nearstars-add-star` first.
-- **Deep-read before draft** ([[feedback-phase3-depth]]). Abstract-only
-  synthesis introduces fact errors. Always read the deep_read set in
-  full first.
+  Step 1 enforces this; if Phase 2 is missing, escalate via
+  `nearstars-add-star` before continuing.
 - **Verify decisions against source** ([[feedback-phase3-validation]]).
-  Every Decisions-table number gets re-checked against the cited
-  paper before commit.
-- **Natural Korean from the start** ([[feedback-ko-mirror-style]]).
-  Don't draft a literal translation then rewrite — the user will
-  notice and ask for a redo.
-- **English by default** ([[feedback-md-language]]). English is the
-  source of truth; Korean is the mirror at `ko/docs/...`.
-- **존댓말 always** ([[feedback-speech-level]]). User-facing prose
-  in Korean uses 존댓말 informal.
-- **Phase 2 first, Phase 3 escalates only when needed** ([[feedback-planet-curation]]).
-  Default cfg target is Phase 1 + Phase 2; Phase 3 only when user
-  explicitly asks for synthesis or when an implementation decision
-  requires it.
-- **Workflow encoded in [[feedback-phase3-process]]** — the canonical
-  per-pass order documented when the TRAPPIST-1 set was finalized.
-- **Interesting-first when uncertain** ([[feedback-phase3-interesting-first]]).
-  This project's output is a *game* — when two scenarios are equally
-  supported by observations, default to the more visually distinctive
-  one. Boring-but-conservative is the wrong default; interesting-but-
-  observation-consistent is right. Specific rules in
-  [`references/conflict-resolution.md`](references/conflict-resolution.md)
-  under "Tie-breaking by visual interest".
+  Step 10 is non-negotiable — every Decisions-table number gets
+  re-checked against the cited paper before commit.
+- **Interesting-first when observation-tied** ([[feedback-phase3-interesting-first]]).
+  Step 8 onward — at genuine ties, default to the more visually
+  distinctive option. Hierarchy and tie-break documentation rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md).
 
 ---
 
