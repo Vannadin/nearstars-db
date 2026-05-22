@@ -299,8 +299,8 @@ arxiv_id. A deep_read paper with zero notes means it was actually
 
 ## Step 9 — Draft English synthesis
 
-Standard 6-section structure at `docs/phase3/<slug>.md` (use
-TRAPPIST-1 d as the canonical example — `docs/phase3/trappist-1-d.md`):
+Standard structure at `docs/phase3/<slug>.md` (use TRAPPIST-1 d as
+the canonical example — `docs/phase3/trappist-1-d.md`):
 
 ```
 <!-- one-line Korean header comment (CLAUDE.md §6) -->
@@ -316,6 +316,10 @@ TRAPPIST-1 d as the canonical example — `docs/phase3/trappist-1-d.md`):
 ## Rotation & spin synthesis
 ## Visual styling
 
+## Canonical alternatives        ← optional: include only if cfg diverges
+### Diverged cfg picks               from a canonical reading
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+
 ## Bibliography
 ### Read (visual-informative, drove decisions above)
 ### Read (context / methodology, not decision-driving)
@@ -327,6 +331,29 @@ TRAPPIST-1 d as the canonical example — `docs/phase3/trappist-1-d.md`):
 
 Full annotated template + decision-table field reference:
 [`references/synthesis-template.md`](references/synthesis-template.md).
+
+### Dual-track: when to add Canonical alternatives
+
+For each row you write in the Decisions table, ask the diagnostic
+question from [`references/conflict-resolution.md`](references/conflict-resolution.md):
+*does the canonical reading have a clear weight advantage from the
+literature?*
+
+- **No** (data silent within the allowed window): tie-break. Note
+  `Tie-break: interesting-first` in the Basis column per
+  [[feedback-phase3-interesting-first]]. No `## Canonical
+  alternatives` row needed.
+- **Yes** (specific papers, modeling consensus favor canonical, but
+  cfg picks differently): documented divergence. Note
+  `Documented divergence: see Canonical alternatives` in the Basis
+  column, and add a row to the optional `## Canonical alternatives`
+  section per [[feedback-phase3-documented-divergence]]. Also list
+  the canonical variant in `## Open items for follow-up` so the cfg
+  writer can ship it.
+
+Don't pad the Canonical alternatives section with tie-breaks; don't
+hide divergences inside Basis notes. The two have different audit
+trails for a reason.
 
 ---
 
@@ -471,6 +498,14 @@ decisions inside this workflow specifically:
   Step 8 onward — at genuine ties, default to the more visually
   distinctive option. Hierarchy and tie-break documentation rules in
   [`references/conflict-resolution.md`](references/conflict-resolution.md).
+- **Documented divergence for canonical outranks** ([[feedback-phase3-documented-divergence]]).
+  When the gameplay pick differs from a canonical reading that has
+  clear weight advantage, record it in the optional `## Canonical
+  alternatives` section — not as a tie-break. Three preconditions
+  must hold: gameplay pick stays observation-consistent, divergence
+  is explicit, canonical preserved as cfg variant. Rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md)
+  § "Documented divergence".
 
 ---
 

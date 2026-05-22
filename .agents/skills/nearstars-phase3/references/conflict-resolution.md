@@ -91,18 +91,27 @@ uncertain, the tie-breaker is **player engagement** — default to the
 more visually distinctive option. The alternative is preserved as a
 cfg variant.
 
-The hierarchy is strict and one-way:
+The default hierarchy:
 
 1. **Observation always wins.** If a paper rules out a scenario at
    ≥3σ, that scenario is dead regardless of how interesting it would
-   be. Don't bend data for visuals.
-2. **Theory with strong support wins next.** If a GCM ensemble or
-   coupled atmosphere-interior model converges on a specific
-   outcome, prefer that over a more dramatic but theoretically
-   unsupported alternative.
+   be. Don't bend data for visuals — *this rule is never overridden*.
+2. **Theory with strong support wins next** — but with an explicit
+   exception. If a GCM ensemble or coupled atmosphere-interior model
+   converges on outcome X, X is the default. To pick Y instead (still
+   observation-consistent but visually better), use the *documented
+   divergence* mechanism below — the cfg can outrank the canonical
+   reading **if and only if** the divergence is recorded in the
+   synthesis's "Canonical alternatives" section.
 3. **At genuine ties — pick interesting.** When two scenarios are
    both observation-consistent and both have plausible theoretical
    support, the more visually distinctive one becomes the default.
+   No "Canonical alternatives" row needed — the tie-break note in
+   the Basis column suffices.
+
+The split between (2) "documented divergence" and (3) "tie-break" is
+the dividing question of this entire conflict-resolution policy. See
+the next section for how to tell them apart.
 
 ### What counts as "interesting" for KSP visuals
 
@@ -168,6 +177,86 @@ synthesis, and to the downstream cfg writer.
 - Not retroactive without checking. If applying this rule to an
   existing synthesis row would change the cfg value, log it as an
   Open item rather than silently editing.
+
+## Documented divergence
+
+Sometimes observation+theory clearly favors interpretation X (better
+modeling support, more papers converging, more conservative reading),
+but interpretation Y is also observation-consistent and visually
+better for the game. The cfg may pick Y as the **documented
+divergence**, *not* as a tie-break — because canonical X has a real
+weight advantage that tie-break would gloss over.
+
+Per [[feedback-phase3-documented-divergence]], gameplay may outrank
+canonical in this case, provided all three preconditions hold:
+
+1. **The gameplay pick (Y) is still observation-consistent.** Within
+   3σ of all relevant measurements. Anything observation-ruled-out
+   is dead regardless of documentation.
+2. **The divergence is explicit in the synthesis.** A row in the
+   `## ## Canonical alternatives` section names the field, the
+   gameplay value, the canonical value, and the reason for
+   diverging. Hidden divergences erode the audit trail.
+3. **The canonical reading is preserved.** Same row carries the
+   canonical value forward so the downstream cfg writer can ship
+   either variant.
+
+### Tie-break vs. divergence
+
+These are *not* the same rule. They sit at different points in the
+weight-of-evidence hierarchy:
+
+| Situation | Mechanism | Where documented |
+|---|---|---|
+| Observation rules out scenario | nothing — dead | n/a |
+| Observation+theory clearly favor X, Y also obs-consistent + visually better | **Documented divergence** (this section) | `## ## Canonical alternatives` table |
+| Observation+theory tied between X and Y | **Tie-break** (preceding section) | Basis column `Tie-break: interesting-first` note |
+| Cfg picks contradict cited paper's measurement | not a divergence — error | fix per [[feedback-phase3-validation]] |
+
+**Diagnostic question.** Does the canonical reading have a clear
+weight advantage from the literature?
+- *Yes* (specific papers, established theory, modeling consensus):
+  divergence — Canonical alternatives row required.
+- *No* (data genuinely silent within the allowed window): tie-break —
+  Basis note sufficient.
+
+### Worked example — TRAPPIST-1 f atmosphere pressure
+
+The pilot synthesis adopted **1 bar CO₂ with substellar
+open-water lens** for f. Turbet 2018 explicitly favors **0.1 bar
+snowball** as the GCM-converged canonical reading; Wolf 2017's
+1 bar eyeball variant is observation-consistent but theoretically
+disfavored.
+
+This is a **divergence**, not a tie-break — Turbet 2018 has clear
+weight advantage. The cfg pick is recorded in Decisions normally
+(Basis: `Documented divergence: see Canonical alternatives`), and
+the alternative is logged in the optional section:
+
+```markdown
+| `atmosphere_surface_pressure_pa` | 100000 (1 bar)         | 10000 (0.1 bar)     | Turbet 2018 GCM converges on 0.1 bar snowball; cfg picks 1 bar Wolf-2017 variant because the open-water lens is visually defining for an HZ planet. |
+```
+
+The canonical 0.1 bar version is preserved as a cfg variant in
+`## ## Open items for follow-up`, so the cfg writer can build both.
+
+### Anti-patterns
+
+- **Calling tie-break "divergence" to inflate the section.** If
+  there's no real weight advantage to one reading, this is a
+  tie-break — keep it in the Basis column and don't pad the
+  Canonical alternatives table.
+- **Calling divergence "tie-break" to skip the documentation.**
+  When the canonical has a real weight advantage and the cfg picks
+  away from it, the audit trail needs the divergence visible.
+  Skipping the Canonical alternatives row to save effort hides the
+  decision from future sessions.
+- **Documented divergence as a license to ignore observation.** The
+  observation-consistent precondition is hard. JWST nightside
+  temperature limits, transmission-spectrum atmospheric upper
+  bounds, mass/radius from TTV — these are non-negotiable. The
+  divergence policy is for cases where literature *interpretation*
+  differs, not where literature *measurement* would have to bend.
 
 ## When the user's prior synthesis was wrong
 

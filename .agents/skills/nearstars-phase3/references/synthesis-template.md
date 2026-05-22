@@ -197,6 +197,60 @@ the limb" or "do cryovolcanic plumes occur near warm spots" — these
 are within-the-window choices. Default to the option that gives the
 KSP player something to look at.
 
+## ## Canonical alternatives (optional)
+
+Include this section **only** when the cfg makes one or more
+documented divergences from a canonical reading (per
+[[feedback-phase3-documented-divergence]] and
+[`conflict-resolution.md`](conflict-resolution.md) § "Documented
+divergence"). If every Decisions row is either canonical-aligned or a
+within-window tie-break, omit this section entirely — don't write an
+empty placeholder.
+
+**Distinction.** A *tie-break* (observation/theory genuinely
+silent → cfg picks interesting) stays as a Basis-column note. A
+*documented divergence* (canonical has clear weight advantage, cfg
+picks differently for gameplay) belongs here.
+
+When present, use this exact table:
+
+```markdown
+### Diverged cfg picks
+
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+|---|---|---|---|
+| `atmosphere_surface_pressure_pa` | 100000 (1 bar Wolf 2017 open-water variant) | 10000 (0.1 bar Turbet 2018 snowball) | Turbet GCM converges on snowball; cfg picks Wolf's eyeball-aquaplanet because the substellar open-water lens is visually defining for an HZ planet. Open ocean preserved; conservative snowball kept as cfg variant. |
+```
+
+Each row must:
+
+1. Name the exact Decisions-table field that diverges.
+2. Give both the Gameplay and Canonical values with the
+   primary citation for each (paper + year).
+3. State the reason — typically "more visually distinctive",
+   "preserves recognizable feature for player", "matches the
+   in-game scenario archetype". The reason is part of the audit
+   trail; "because I felt like it" is not acceptable.
+
+**Block-parity note (critical for the ko mirror).** Because
+`build_html.py` pairs blocks by position, this section's
+presence/absence must match between English and Korean files.
+
+- If a planet's English file has `## Canonical alternatives`, the
+  Korean file must have the corresponding `## 고증 대안` heading at
+  the same block index with the same table column count and row
+  count.
+- If a planet has no divergences, omit the section in both files.
+  No empty placeholder.
+
+The retrofit pass (when adding this section to an existing planet
+synthesis) must update both files in the same commit.
+
+**Cross-references.** The Canonical alternatives row implies a cfg
+variant — list the conservative scenario in `## ## Open items for
+follow-up` as an explicit variant the cfg writer can produce, so
+the audit trail is complete.
+
 ## ## Bibliography
 
 Four required sub-sections:
