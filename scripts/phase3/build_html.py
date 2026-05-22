@@ -29,14 +29,15 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
-# Korean tooltips for standard cfg field names — appears on hover over
-# `<code>field_name</code>` blocks in Decisions tables and prose.
+# Bilingual tooltips for standard cfg field names — appears on hover over
+# `<code>field_name</code>` blocks in Decisions tables and prose. Lang
+# toggle picks ko vs en text.
 try:
-    from field_tooltips import FIELD_TOOLTIPS_KO
+    from field_tooltips import FIELD_TOOLTIPS
 except ImportError:
     # When run from repo root: scripts/phase3/build_html.py
     sys.path.insert(0, str(Path(__file__).parent))
-    from field_tooltips import FIELD_TOOLTIPS_KO
+    from field_tooltips import FIELD_TOOLTIPS
 
 
 # ── markdown → block tree ───────────────────────────────────────────────────
@@ -443,14 +444,18 @@ _FIELD_CODE_RE = re.compile(r'<code>([a-z][a-z0-9_]+)</code>')
 
 def augment_field_tooltips(html_text: str) -> str:
     """Wrap <code>field_name</code> blocks whose content matches a known cfg
-    field with a `.field-tt` span carrying the Korean explanation. Other
-    code blocks (hex codes, ad-hoc snippets) pass through unchanged."""
+    field with a `.field-tt` span carrying both Korean and English
+    explanations (one per data attribute, swapped by the lang toggle via
+    CSS). Other code blocks (hex codes, ad-hoc snippets) pass through
+    unchanged."""
     def _wrap(m):
         name = m.group(1)
-        ko = FIELD_TOOLTIPS_KO.get(name)
-        if not ko:
+        entry = FIELD_TOOLTIPS.get(name)
+        if not entry:
             return m.group(0)
-        return (f'<span class="field-tt" data-ko-tip="{html.escape(ko, quote=True)}">'
+        ko = html.escape(entry.get('ko', ''), quote=True)
+        en = html.escape(entry.get('en', ''), quote=True)
+        return (f'<span class="field-tt" data-ko-tip="{ko}" data-en-tip="{en}">'
                 f'<code>{name}</code></span>')
     return _FIELD_CODE_RE.sub(_wrap, html_text)
 
@@ -676,11 +681,10 @@ pre code {{ background: none; padding: 0; font-size: 12px }}
 /* color visualization: inline chip beside every <code>#xxxxxx</code> */
 .hex-chip {{ display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }}
 
-/* hover-only Korean tooltip on cfg field names — no on-page legend, only on hover.
-   Hidden in EN mode since field names are already English. */
+/* hover-only tooltip on cfg field names — no on-page legend, only on hover.
+   Bilingual: html[lang] selects ko vs en attribute. */
 .field-tt {{ position: relative; border-bottom: 1px dotted var(--fg-faint); cursor: help }}
 .field-tt:hover::after {{
-  content: attr(data-ko-tip);
   position: absolute; left: 0; bottom: calc(100% + 7px);
   background: var(--bg-input); color: var(--fg-emph);
   border: 1px solid var(--bd-input-on); border-radius: 4px;
@@ -688,14 +692,13 @@ pre code {{ background: none; padding: 0; font-size: 12px }}
   line-height: 1.5; white-space: normal; width: max-content; max-width: 320px;
   z-index: 200; pointer-events: none; box-shadow: 0 4px 14px rgba(0,0,0,0.5);
 }}
+html[lang="ko"] .field-tt:hover::after {{ content: attr(data-ko-tip) }}
+html[lang="en"] .field-tt:hover::after {{ content: attr(data-en-tip) }}
 .field-tt:hover::before {{
   content: ''; position: absolute; left: 10px; bottom: calc(100% + 2px);
   border: 5px solid transparent; border-top-color: var(--bd-input-on);
   z-index: 200; pointer-events: none;
 }}
-html[lang="en"] .field-tt {{ border-bottom: none; cursor: text }}
-html[lang="en"] .field-tt:hover::after,
-html[lang="en"] .field-tt:hover::before {{ display: none }}
 
 /* color visualization: aurora rows render a wavelength gradient bar */
 .spectrum-bar {{ display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }}
