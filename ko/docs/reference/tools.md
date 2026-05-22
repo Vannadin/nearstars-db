@@ -13,8 +13,9 @@
 | 5 | 외부 교차검증 | DB 위치를 Stellarium 과 비교 | `scripts/verification/stellarium_crosscheck.py` |
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` 패치 | `kopernicus-cfg` 스킬 |
 | 7 | Principia cfg | DB → Principia n-body 패치 | `principia-cfg` 스킬 |
-| 8 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
-| 9 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh` |
+| 8 | Firefly cfg | Phase 3 대기 합성 → Firefly 재진입 효과 cfg | `firefly-cfg` 스킬 |
+| 9 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
+| 10 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh` |
 
 ## 검증 & QA — 인덱스
 
@@ -26,7 +27,7 @@
 | 위계적 다성계 구조 | `scripts/pipeline/test_hierarchical.py` | [1](#1-데이터-엔진) | 다성계 궤도 편집 후 smoke test |
 | Stellarium 과 비교한 DB 위치 | `scripts/verification/stellarium_crosscheck.py` | [5](#5-외부-교차검증) | 퍼블리시 전 spot-check |
 | 큐레이션된 + 가상 바디의 동역학적 안정성 | `phase3/stability-sim/scripts/run.py` | [4](#4-안정성-샌드박스) | 위성·추가 바디 cfg 출시 전, 혹은 기준 DB sanity 확인 |
-| `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [9](#9-개발-헬퍼) | 커밋 / 릴리스 전 |
+| `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [10](#10-개발-헬퍼) | 커밋 / 릴리스 전 |
 | Phase 3 합성 정책 적합성 | `nearstars-phase3` 의 audit-pass 절차 | [3](#3-phase-3-합성-파이프라인) | 합성 배치 후 — 수동, 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
 
 ## 1. 데이터 엔진
@@ -130,7 +131,19 @@
 
 **출력.** `dist/NearStars-Configs/Patches/Principia/`.
 
-## 8. 별 추가 / Phase 2 큐레이션
+## 8. Firefly cfg 생성
+
+**목적.** Phase 3 대기 합성을 Firefly 의 `ATMOFX_BODY` cfg (재진입 플라즈마 색, 강도 multiplier, 입자 임계값) 로 변환하고, NearStars 의 대기 보유 천체 전체를 묶는 `ATMOFX_PLANET_PACK` 까지 함께 emit 합니다.
+
+**언제.** "Firefly cfg 만들어줘", "이 행성 재진입 색", "ATMOFX_BODY", 재진입 플라즈마·shockwave·streak 화학 관련 질문.
+
+**드라이버.** `firefly-cfg` 스킬. Firefly `mod_version: 1.0.6` (M1rageDev/Firefly, GPL-3.0) 에 핀. 모든 스키마 주장은 `ConfigManager.cs:line` 형태로 출처 인용.
+
+**스킬 내 references.** 다섯 개 노드 타입 (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (대기 조성 → 재진입 팔레트, thunderchild 차트 + bulk-gas 플라즈마 표 기반), `phase3-mapping` (Phase 3 행 → Firefly 필드 매핑), `pitfalls`.
+
+**출력.** `dist/NearStars-Configs/Patches/Firefly/`.
+
+## 9. 별 추가 / Phase 2 큐레이션
 
 **목적.** 새 별을 추가하는 절차 (target list → fetch → 큐레이션 → 검증) 와 기존 별의 Phase 2 큐레이션 깊이를 올리는 절차.
 
@@ -141,7 +154,7 @@
 
 **워크플로.** `target_list.json` 편집 → `./run_pipeline.sh` → `stellar_props_curated.json`·`planets_curated.json`·`binary_orbits.json` 수동 큐레이션 (또는 논문 배치 스크립트가 있는 시스템은 `apply_phase2.py` 실행) → 재검증.
 
-## 9. 개발 헬퍼
+## 10. 개발 헬퍼
 
 **목적.** 일상 작업에서 쓰는 보조 유틸리티.
 
@@ -157,11 +170,12 @@
 |-----|:----:|:----:|
 | `kopernicus-cfg` | ✓ | ✓ |
 | `principia-cfg` | ✓ | — |
+| `firefly-cfg` | — | ✓ |
 | `nearstars-add-star` | ✓ | ✓ |
 | `nearstars-phase3` | — | ✓ |
 | `find-skills` (범용) | ✓ | ✓ |
 
-`.agents/skills/` 의 `firefly-cfg-workspace/` 와 `nearstars-phase3-workspace/` 는 실제 스킬이 아니라 작업 디렉터리입니다.
+`.agents/skills/` 의 `firefly-cfg-workspace/` 와 `nearstars-phase3-workspace/` 는 해당 라이브 스킬의 빌드 환경 — 별개의 스킬이 아니라 작업 디렉터리입니다.
 
 ## 의존 그래프
 
@@ -180,8 +194,10 @@ target_list.json
                           │
                           ├──→ [6] kopernicus-cfg ──→ dist/.../Kopernicus/
                           │
-                          └──→ [7] principia-cfg ──→ dist/.../Principia/
+                          ├──→ [7] principia-cfg ──→ dist/.../Principia/
+                          │
+                          └──→ [8] firefly-cfg (대기 보유 천체만) ──→ dist/.../Firefly/
 
-[8] nearstars-add-star — 새 별에 대해 위 체인 전체를 구동하는 절차
-[9] 개발 헬퍼 — 체인과 직교
+[9] nearstars-add-star — 새 별에 대해 위 체인 전체를 구동하는 절차
+[10] 개발 헬퍼 — 체인과 직교
 ```

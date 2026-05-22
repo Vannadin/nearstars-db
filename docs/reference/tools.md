@@ -13,8 +13,9 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 5 | External cross-check | Compare DB positions against Stellarium | `scripts/verification/stellarium_crosscheck.py` |
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` patches | `kopernicus-cfg` skill |
 | 7 | Principia cfg | DB → Principia n-body patches | `principia-cfg` skill |
-| 8 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
-| 9 | Dev helpers | Markdown preview, ko/ mirror parity | `scripts/preview-md.sh`, `scripts/check-mirrors.sh` |
+| 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
+| 9 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
+| 10 | Dev helpers | Markdown preview, ko/ mirror parity | `scripts/preview-md.sh`, `scripts/check-mirrors.sh` |
 
 ## Verification & QA — index
 
@@ -26,7 +27,7 @@ Correctness checks live across several functional groups. This index gathers the
 | Hierarchical binary structure | `scripts/pipeline/test_hierarchical.py` | [1](#1-data-engine) | Smoke test after binary-orbit edits |
 | DB positions vs Stellarium | `scripts/verification/stellarium_crosscheck.py` | [5](#5-external-cross-check) | Spot-check before publishing |
 | Dynamical stability of curated + hypothetical bodies | `phase3/stability-sim/scripts/run.py` | [4](#4-stability-sandbox) | Before shipping a moon / extra-body cfg, or as a baseline-DB sanity check |
-| `ko/` mirror file parity | `scripts/check-mirrors.sh` | [9](#9-dev-helpers) | Before commit / release |
+| `ko/` mirror file parity | `scripts/check-mirrors.sh` | [10](#10-dev-helpers) | Before commit / release |
 | Phase 3 synthesis policy fit | `nearstars-phase3` audit-pass procedure | [3](#3-phase-3-synthesis-pipeline) | After a synthesis batch — manual, output at `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
 
 ## 1. Data engine
@@ -130,7 +131,19 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Output.** `dist/NearStars-Configs/Patches/Principia/`.
 
-## 8. Add star / Phase 2 curation
+## 8. Firefly cfg generation
+
+**Purpose.** Convert each Phase 3 atmosphere synthesis into a Firefly `ATMOFX_BODY` cfg — reentry plasma colors, multipliers, particle thresholds — plus a pack-level `ATMOFX_PLANET_PACK` covering every NearStars body with atmosphere.
+
+**Trigger.** "Firefly cfg 만들어줘", "이 행성 재진입 색", "ATMOFX_BODY", reentry plasma / shockwave / streak chemistry questions.
+
+**Driver.** `firefly-cfg` skill. Pinned to Firefly `mod_version: 1.0.6` (M1rageDev/Firefly, GPL-3.0). Schema claims cite `ConfigManager.cs:line`.
+
+**References (in skill).** Five node-type files (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (atmosphere → reentry palette via thunderchild's chart + bulk-gas plasma table), `phase3-mapping` (Phase 3 row → Firefly field), `pitfalls`.
+
+**Output.** `dist/NearStars-Configs/Patches/Firefly/`.
+
+## 9. Add star / Phase 2 curation
 
 **Purpose.** Procedure for adding a new star (target list → fetch → curate → validate) and for upgrading an existing star's Phase 2 curation depth.
 
@@ -141,7 +154,7 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Workflow.** Edit `target_list.json` → `./run_pipeline.sh` → manual curation of `stellar_props_curated.json`, `planets_curated.json`, `binary_orbits.json` (or run `apply_phase2.py` for systems with a paper-batch script) → re-validate.
 
-## 9. Dev helpers
+## 10. Dev helpers
 
 **Purpose.** Day-to-day workflow utilities.
 
@@ -157,11 +170,12 @@ Project-specific skills currently live in two parallel trees — pending consoli
 |-------|:----:|:----:|
 | `kopernicus-cfg` | ✓ | ✓ |
 | `principia-cfg` | ✓ | — |
+| `firefly-cfg` | — | ✓ |
 | `nearstars-add-star` | ✓ | ✓ |
 | `nearstars-phase3` | — | ✓ |
 | `find-skills` (generic) | ✓ | ✓ |
 
-`firefly-cfg-workspace/` and `nearstars-phase3-workspace/` in `.agents/skills/` are working directories, not actual skills.
+`firefly-cfg-workspace/` and `nearstars-phase3-workspace/` in `.agents/skills/` are working directories (build environments for the corresponding live skills), not separate skills.
 
 ## Dependency graph
 
@@ -180,8 +194,10 @@ target_list.json
                           │
                           ├──→ [6] kopernicus-cfg ──→ dist/.../Kopernicus/
                           │
-                          └──→ [7] principia-cfg ──→ dist/.../Principia/
+                          ├──→ [7] principia-cfg ──→ dist/.../Principia/
+                          │
+                          └──→ [8] firefly-cfg (atmo bodies only) ──→ dist/.../Firefly/
 
-[8] nearstars-add-star — procedure that drives the whole chain for a new star
-[9] Dev helpers — orthogonal to the chain
+[9] nearstars-add-star — procedure that drives the whole chain for a new star
+[10] Dev helpers — orthogonal to the chain
 ```
