@@ -37,6 +37,12 @@ pre code { background: none; padding: 0; font-size: 12px }
 /* color visualization: aurora rows render a wavelength gradient bar */
 .spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
 .spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+/* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
+   stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
+.spectrum-bar-wide { mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }
+/* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
+.spectrum-bar-invisible { background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }
+.palette-swatch-invisible { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }
 .spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
 
 @media (max-width: 600px) {
@@ -65,7 +71,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <p class="intro" data-i18n="p_2"></p>
 <section>
 <h2 data-i18n="h2_3"></h2>
-<div class="palette-band"><div class="palette-swatch" style="background:#302820;color:#fff"><span class="role">Atmos</span><span class="hex">#302820</span></div><div class="palette-swatch" style="background:#d8d0c4;color:#000"><span class="role">Surf · 1</span><span class="hex">#d8d0c4</span></div><div class="palette-swatch" style="background:#3a2c20;color:#fff"><span class="role">Surf · 2</span><span class="hex">#3a2c20</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #00ff92, #00ff6a, #00ff3d, #00ff00, #16ff00, #27ff00, #36ff00, #44ff00, #51ff00, #5eff00, #6aff00, #76ff00, #81ff00)"><div class="palette-marker" style="left:50.0%"></div><span class="role">Aurora · 1</span><span class="hex">500–540 nm</span></div><div class="palette-swatch palette-swatch-emissive" style="background:#b19cd9;color:#000"><span class="role">Aurora · 2</span><span class="hex">#b19cd9</span></div></div>
+<div class="palette-band"><div class="palette-swatch" style="background:#302820;color:#fff"><span class="role">Atmos</span><span class="hex">#302820</span></div><div class="palette-swatch" style="background:#d8d0c4;color:#000"><span class="role">Surf · 1</span><span class="hex">#d8d0c4</span></div><div class="palette-swatch" style="background:#3a2c20;color:#fff"><span class="role">Surf · 2</span><span class="hex">#3a2c20</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #00ff92, #00ff6a, #00ff3d, #00ff00, #16ff00, #27ff00, #36ff00, #44ff00, #51ff00, #5eff00, #6aff00, #76ff00, #81ff00)"><div class="palette-marker" style="left:50.0%"></div><span class="role">Aurora · 1</span><span class="hex">500–540 nm</span></div><div class="palette-swatch palette-swatch-emissive palette-swatch-invisible" style="background:#b19cd9;color:#000"><span class="role">Aurora · 2</span><span class="hex">UV · 130–200 nm</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_4"></th>
 <th data-i18n="th_5"></th>
@@ -676,7 +682,7 @@ const T = {
   "td_178":"low",
   "td_179":"N₂ Vegard-Kaplan bands + [NI] 520 nm green if trace O; tie-break: visible green over UV-only",
   "td_180":"<code>aurora_color_secondary_hex</code>",
-  "td_181":"<span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code>",
+  "td_181":"<span class=\"spectrum-bar spectrum-bar-invisible\" title=\"130–200 nm (outside visible spectrum)\">UV</span><span class=\"spectrum-range\">130–200 nm · UV</span> <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#b19cd9</code>",
   "td_182":"low",
   "td_183":"N₂ Lyman-Birge-Hopfield bands UV-perceived violet",
   "td_184":"<code>aurora_emission_species_primary</code>",
@@ -976,7 +982,7 @@ const T = {
   "td_178":"low",
   "td_179":"N₂ Vegard-Kaplan bands + 미량 O 가 있으면 [NI] 520 nm green. tie-break 으로 UV-only 가 아닌 visible green 채택",
   "td_180":"<code>aurora_color_secondary_hex</code>",
-  "td_181":"<span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code>",
+  "td_181":"<span class=\"spectrum-bar spectrum-bar-invisible\" title=\"130–200 nm (outside visible spectrum)\">UV</span><span class=\"spectrum-range\">130–200 nm · UV</span> <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#b19cd9</code>",
   "td_182":"low",
   "td_183":"N₂ Lyman-Birge-Hopfield bands 가 UV 로 인지되는 violet",
   "td_184":"<code>aurora_emission_species_primary</code>",

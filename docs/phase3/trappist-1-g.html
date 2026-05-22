@@ -37,6 +37,12 @@ pre code { background: none; padding: 0; font-size: 12px }
 /* color visualization: aurora rows render a wavelength gradient bar */
 .spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
 .spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+/* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
+   stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
+.spectrum-bar-wide { mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }
+/* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
+.spectrum-bar-invisible { background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }
+.palette-swatch-invisible { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }
 .spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
 
 @media (max-width: 600px) {
@@ -65,7 +71,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <p class="intro" data-i18n="p_2"></p>
 <section>
 <h2 data-i18n="h2_3"></h2>
-<div class="palette-band"><div class="palette-swatch" style="background:#403028;color:#fff"><span class="role">Atmos</span><span class="hex">#403028</span></div><div class="palette-swatch" style="background:#d0c0b0;color:#000"><span class="role">Cloud</span><span class="hex">#d0c0b0</span></div><div class="palette-swatch" style="background:#e8e0d4;color:#000"><span class="role">Surf · 1</span><span class="hex">#e8e0d4</span></div><div class="palette-swatch" style="background:#a09080;color:#000"><span class="role">Surf · 2</span><span class="hex">#a09080</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)"><div class="palette-marker" style="left:50.0%"></div><span class="role">Aurora · 1</span><span class="hex">580–620 nm</span></div><div class="palette-swatch palette-swatch-emissive" style="background:#87ceeb;color:#000"><span class="role">Aurora · 2</span><span class="hex">#87ceeb</span></div></div>
+<div class="palette-band"><div class="palette-swatch" style="background:#403028;color:#fff"><span class="role">Atmos</span><span class="hex">#403028</span></div><div class="palette-swatch" style="background:#d0c0b0;color:#000"><span class="role">Cloud</span><span class="hex">#d0c0b0</span></div><div class="palette-swatch" style="background:#e8e0d4;color:#000"><span class="role">Surf · 1</span><span class="hex">#e8e0d4</span></div><div class="palette-swatch" style="background:#a09080;color:#000"><span class="role">Surf · 2</span><span class="hex">#a09080</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)"><div class="palette-marker" style="left:50.0%"></div><span class="role">Aurora · 1</span><span class="hex">580–620 nm</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #000036, #000047, #000057, #640066, #6e0075, #750083, #7b0091, #7f009e, #8200ac, #8300b9, #8200c5, #8000d2, #7c00de)"><div class="palette-marker" style="left:51.0%"></div><span class="role">Aurora · 2</span><span class="hex">371–411 nm</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_4"></th>
 <th data-i18n="th_5"></th>
@@ -713,7 +719,7 @@ const T = {
   "td_194":"medium",
   "td_195":"CO₂⁺ Fox–Duffendack 600 nm red (Mars-analog snowball atmosphere); tie-break: red visible over UV-only",
   "td_196":"<code>aurora_color_secondary_hex</code>",
-  "td_197":"<span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87CEEB</code>",
+  "td_197":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #000036, #000047, #000057, #640066, #6e0075, #750083, #7b0091, #7f009e, #8200ac, #8300b9, #8200c5, #8000d2, #7c00de)\"><div class=\"marker\" style=\"left:51.0%\"></div></span><span class=\"spectrum-range\">371–411 nm · peak 391.4 nm</span> <span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87ceeb</code>",
   "td_198":"low",
   "td_199":"Trace N₂⁺ emission if present; otherwise scattered-UV perception as pale blue",
   "td_200":"<code>aurora_emission_species_primary</code>",
@@ -1026,7 +1032,7 @@ const T = {
   "td_194":"medium",
   "td_195":"CO₂⁺ Fox–Duffendack 600 nm 적색 (Mars-analog snowball 대기). tie-break. UV-only 보다 가시 적색 우선",
   "td_196":"<code>aurora_color_secondary_hex</code>",
-  "td_197":"<span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87CEEB</code>",
+  "td_197":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #000036, #000047, #000057, #640066, #6e0075, #750083, #7b0091, #7f009e, #8200ac, #8300b9, #8200c5, #8000d2, #7c00de)\"><div class=\"marker\" style=\"left:51.0%\"></div></span><span class=\"spectrum-range\">371–411 nm · peak 391.4 nm</span> <span class=\"hex-chip\" style=\"background:#87ceeb\"></span><code>#87ceeb</code>",
   "td_198":"low",
   "td_199":"미량 N₂⁺ 발광이 있다면. 없으면 산란 UV 가 옅은 청색으로 지각됨",
   "td_200":"<code>aurora_emission_species_primary</code>",

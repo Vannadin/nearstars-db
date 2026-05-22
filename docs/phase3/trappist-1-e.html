@@ -37,6 +37,12 @@ pre code { background: none; padding: 0; font-size: 12px }
 /* color visualization: aurora rows render a wavelength gradient bar */
 .spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
 .spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+/* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
+   stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
+.spectrum-bar-wide { mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }
+/* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
+.spectrum-bar-invisible { background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }
+.palette-swatch-invisible { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }
 .spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
 
 @media (max-width: 600px) {
@@ -729,7 +735,7 @@ const T = {
   "td_191":"medium",
   "td_192":"[OI] 557.7 nm green dominant in N₂/CO₂/O₂ atm — Earth-analog auroral color; interesting-first tie-break: green over UV-only alternative",
   "td_193":"<code>aurora_color_secondary_hex</code>",
-  "td_194":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #ffff00, #ffdf00, #ffbe00, #ff9b00, #ff7700, #ff4f00, #ff2100, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000)\"></span><span class=\"spectrum-range\">580–700 nm</span> <span class=\"hex-chip\" style=\"background:#ff4d4d\"></span><code>#ff4d4d</code>",
+  "td_194":"<span class=\"spectrum-bar spectrum-bar-wide\" style=\"background:linear-gradient(to right, #ffff00, #ffdf00, #ffbe00, #ff9b00, #ff7700, #ff4f00, #ff2100, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000)\"></span><span class=\"spectrum-range\">580–700 nm</span> <span class=\"hex-chip\" style=\"background:#ff4d4d\"></span><code>#ff4d4d</code>",
   "td_195":"medium",
   "td_196":"CO₂⁺ Fox–Duffendack–Barker bands (580–700 nm red/orange) + N₂⁺ Meinel bands; tie-break: enhances visible palette diversity",
   "td_197":"<code>aurora_emission_species_primary</code>",
@@ -1052,7 +1058,7 @@ const T = {
   "td_191":"medium",
   "td_192":"N₂/CO₂/O₂ 대기에서 [OI] 557.7 nm 녹색이 지배 — 지구형 오로라 색. interesting-first 타이브레이크에서 UV-only 대안 대신 녹색 선택",
   "td_193":"<code>aurora_color_secondary_hex</code>",
-  "td_194":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #ffff00, #ffdf00, #ffbe00, #ff9b00, #ff7700, #ff4f00, #ff2100, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000)\"></span><span class=\"spectrum-range\">580–700 nm</span> <span class=\"hex-chip\" style=\"background:#ff4d4d\"></span><code>#ff4d4d</code>",
+  "td_194":"<span class=\"spectrum-bar spectrum-bar-wide\" style=\"background:linear-gradient(to right, #ffff00, #ffdf00, #ffbe00, #ff9b00, #ff7700, #ff4f00, #ff2100, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000, #ff0000)\"></span><span class=\"spectrum-range\">580–700 nm</span> <span class=\"hex-chip\" style=\"background:#ff4d4d\"></span><code>#ff4d4d</code>",
   "td_195":"medium",
   "td_196":"CO₂⁺ Fox–Duffendack–Barker 밴드 (580–700 nm 적-오렌지) + N₂⁺ Meinel 밴드. 타이브레이크. 가시 팔레트 다양성을 강화",
   "td_197":"<code>aurora_emission_species_primary</code>",

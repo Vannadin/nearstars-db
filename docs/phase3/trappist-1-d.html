@@ -37,6 +37,12 @@ pre code { background: none; padding: 0; font-size: 12px }
 /* color visualization: aurora rows render a wavelength gradient bar */
 .spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
 .spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+/* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
+   stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
+.spectrum-bar-wide { mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }
+/* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
+.spectrum-bar-invisible { background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }
+.palette-swatch-invisible { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }
 .spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
 
 @media (max-width: 600px) {
@@ -67,7 +73,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <section>
 <h2 data-i18n="h2_4"></h2>
 <p class="intro" data-i18n="p_5"></p>
-<div class="palette-band"><div class="palette-swatch" style="background:#a8b0c0;color:#000"><span class="role">Atmos</span><span class="hex">#a8b0c0</span></div><div class="palette-swatch" style="background:#2a2018;color:#fff"><span class="role">Surf · 1</span><span class="hex">#2a2018</span></div><div class="palette-swatch" style="background:#5a3220;color:#fff"><span class="role">Surf · 2</span><span class="hex">#5a3220</span></div><div class="palette-swatch palette-swatch-emissive" style="background:#b0e0e6;color:#000"><span class="role">Aurora · 1</span><span class="hex">#b0e0e6</span></div><div class="palette-swatch palette-swatch-emissive" style="background:#4dff4d;color:#000"><span class="role">Aurora · 2</span><span class="hex">#4dff4d</span></div></div>
+<div class="palette-band"><div class="palette-swatch" style="background:#a8b0c0;color:#000"><span class="role">Atmos</span><span class="hex">#a8b0c0</span></div><div class="palette-swatch" style="background:#2a2018;color:#fff"><span class="role">Surf · 1</span><span class="hex">#2a2018</span></div><div class="palette-swatch" style="background:#5a3220;color:#fff"><span class="role">Surf · 2</span><span class="hex">#5a3220</span></div><div class="palette-swatch palette-swatch-emissive palette-swatch-invisible" style="background:#b0e0e6;color:#000"><span class="role">Aurora · 1</span><span class="hex">UV · 288–328 nm</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #7bff00, #86ff00, #91ff00, #9cff00, #a7ff00, #b2ff00, #bdff00, #c7ff00, #d1ff00, #dbff00, #e5ff00, #efff00, #f9ff00)"><div class="palette-marker" style="left:49.3%"></div><span class="role">Aurora · 2</span><span class="hex">538–578 nm</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_6"></th>
 <th data-i18n="th_7"></th>
@@ -598,11 +604,11 @@ const T = {
   "td_144":"low",
   "td_145":"Thin atm + weak B-field → visible auroral activity, novel chemistry from H₂O-rich tail",
   "td_146":"<code>aurora_color_primary_hex</code>",
-  "td_147":"<span class=\"hex-chip\" style=\"background:#b0e0e6\"></span><code>#B0E0E6</code>",
+  "td_147":"<span class=\"spectrum-bar spectrum-bar-invisible\" title=\"288–328 nm (outside visible spectrum)\">UV</span><span class=\"spectrum-range\">288–328 nm · UV · peak 308.0 nm</span> <span class=\"hex-chip\" style=\"background:#b0e0e6\"></span><code>#b0e0e6</code>",
   "td_148":"low",
   "td_149":"Tie-break (interesting-first): pale cyan-white from H₂O cloud aerosol excitation + OH band emission boosted to visible by Mie scattering",
   "td_150":"<code>aurora_color_secondary_hex</code>",
-  "td_151":"<span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4DFF4D</code>",
+  "td_151":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #7bff00, #86ff00, #91ff00, #9cff00, #a7ff00, #b2ff00, #bdff00, #c7ff00, #d1ff00, #dbff00, #e5ff00, #efff00, #f9ff00)\"><div class=\"marker\" style=\"left:49.3%\"></div></span><span class=\"spectrum-range\">538–578 nm · peak 557.7 nm</span> <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4dff4d</code>",
   "td_152":"low",
   "td_153":"Trace [OI] green if oxygen present; tie-break: interesting-first picks visible secondary over UV-only",
   "td_154":"<code>aurora_emission_species_primary</code>",
@@ -870,7 +876,7 @@ const T = {
   "td_148":"low",
   "td_149":"tie-break (interesting-first). H₂O 구름 aerosol 여기 + OH 밴드 발광이 Mie scattering 으로 가시광까지 끌어올려진 옅은 cyan-white",
   "td_150":"<code>aurora_color_secondary_hex</code>",
-  "td_151":"<span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4DFF4D</code>",
+  "td_151":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #7bff00, #86ff00, #91ff00, #9cff00, #a7ff00, #b2ff00, #bdff00, #c7ff00, #d1ff00, #dbff00, #e5ff00, #efff00, #f9ff00)\"><div class=\"marker\" style=\"left:49.3%\"></div></span><span class=\"spectrum-range\">538–578 nm · peak 557.7 nm</span> <span class=\"hex-chip\" style=\"background:#4dff4d\"></span><code>#4dff4d</code>",
   "td_152":"low",
   "td_153":"산소가 있을 경우 미량 [OI] 녹색; tie-break. interesting-first 가 UV-only 보다 가시 secondary 선택",
   "td_154":"<code>aurora_emission_species_primary</code>",
