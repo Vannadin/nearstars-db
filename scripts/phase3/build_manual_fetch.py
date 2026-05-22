@@ -19,12 +19,32 @@ Usage:
 from __future__ import annotations
 
 import html
+import json
 import re
 import sys
 from pathlib import Path
 
 
 ADS_BASE = 'https://ui.adsabs.harvard.edu/abs/'
+
+# Per-row Korean text for "Why it matters" goes into the i18n dict and gets
+# swapped on language toggle. Per-cell keys are generated as why_<n> so each
+# row is independently translatable. Module-level state because rendering is
+# spread across several helpers.
+_ROW_I18N_EN: dict[str, str] = {}
+_ROW_I18N_KO: dict[str, str] = {}
+_ROW_KEY_COUNTER = {'n': 0}
+
+
+def _reset_row_i18n():
+    _ROW_I18N_EN.clear()
+    _ROW_I18N_KO.clear()
+    _ROW_KEY_COUNTER['n'] = 0
+
+
+def _new_row_key() -> str:
+    _ROW_KEY_COUNTER['n'] += 1
+    return f'why_{_ROW_KEY_COUNTER["n"]}'
 
 
 def parse_table(section: str) -> list[list[str]]:
@@ -107,30 +127,45 @@ def inline_md(text: str) -> str:
     return out
 
 
-def render_paper_row(row: list[str]) -> str:
-    """Render one paper row → <tr>. Handles Bibcode column variations (with trailing /)."""
+def render_paper_row(row: list[str], ko_lookup: dict | None = None) -> str:
+    """Render one paper row → <tr>.
+
+    Bibcode column may carry alternates separated by " / "; the first one is
+    used for the ADS link and for ko_lookup.
+
+    If ko_lookup contains a matching bibcode, the "Why it matters" cell gets
+    a generated i18n key so the Korean version can be swapped in by the
+    lang toggle. Without a ko entry, the cell is plain English with no key.
+    """
     cells = (row + [''] * 5)[:5]
     bibcode_raw = cells[0].strip().strip('`')
-    # Strip nothing — ADS bibcodes are 19 chars; some have trailing dots which are part of the bibcode
-    # but some entries split alternates with " / ", take first
     bibcode_first = bibcode_raw.split(' / ')[0].strip()
     ads_url = ADS_BASE + bibcode_first + '/abstract'
+
+    why_en_html = inline_md(cells[4])
+    why_cell_attr = ''
+    if ko_lookup and bibcode_first in ko_lookup:
+        key = _new_row_key()
+        _ROW_I18N_EN[key] = why_en_html
+        _ROW_I18N_KO[key] = inline_md(ko_lookup[bibcode_first])
+        why_cell_attr = f' data-i18n="{key}"'
+
     return (
         f'        <tr>\n'
         f'          <td class="bib" data-label="Bibcode"><a href="{html.escape(ads_url)}" target="_blank" rel="noopener">{html.escape(bibcode_raw)}</a></td>\n'
         f'          <td class="year" data-label="Year">{html.escape(cells[1])}</td>\n'
         f'          <td class="planet" data-label="Planet">{html.escape(cells[2])}</td>\n'
         f'          <td class="title" data-label="Title">{inline_md(cells[3])}</td>\n'
-        f'          <td class="why" data-label="Why">{inline_md(cells[4])}</td>\n'
+        f'          <td class="why" data-label="Why"{why_cell_attr}>{why_en_html}</td>\n'
         f'        </tr>'
     )
 
 
-def render_table(rows: list[list[str]]) -> str:
+def render_table(rows: list[list[str]], ko_lookup: dict | None = None) -> str:
     """Render a parsed Tier table (incl. header row)."""
     if not rows:
         return '<p class="empty">(none)</p>'
-    body_rows = '\n'.join(render_paper_row(r) for r in rows[1:])
+    body_rows = '\n'.join(render_paper_row(r, ko_lookup) for r in rows[1:])
     return (
         '<div class="card"><table class="mft">\n'
         '      <thead><tr>\n'
@@ -279,10 +314,13 @@ def display_system_name(slug: str) -> str:
 
 
 def render_systems(systems: list) -> str:
-    """systems = [{'slug', 'name', 'data'}]"""
+    """systems = [{'slug', 'name', 'data', 'ko'}] — ko is sidecar dict or {}."""
     out = []
     for s in systems:
         data = s['data']
+        ko = s.get('ko') or {}
+        ko_a = ko.get('tier_a', {})
+        ko_b = ko.get('tier_b', {})
         a_count = max(0, len(data['A']) - 1)
         b_count = max(0, len(data['B']) - 1)
         out.append(
@@ -295,9 +333,9 @@ def render_systems(systems: list) -> str:
                'C · skip-list</span>' if data['C_prose'] else '')
             + '</p>\n'
             f'  <h3 data-i18n="tier_A_h3"></h3>\n'
-            f'  {render_table(data["A"])}\n'
+            f'  {render_table(data["A"], ko_a)}\n'
             f'  <h3 data-i18n="tier_B_h3"></h3>\n'
-            f'  {render_table(data["B"])}\n'
+            f'  {render_table(data["B"], ko_b)}\n'
             + (f'  <h3 data-i18n="tier_C_h3"></h3>\n'
                f'  <p class="note">{inline_md(data["C_prose"])}</p>\n'
                if data['C_prose'] else '')
@@ -317,46 +355,47 @@ def render_tips(systems: list) -> str:
 
 
 def build_i18n(systems: list) -> str:
-    """Return JS-literal i18n dictionary."""
-    import json as _json
-    return _json.dumps({
-        'en': {
-            'title': 'NearStars · Phase 3 manual paper fetch',
-            'back_db': '← Back to database',
-            'reports_index': 'Reports index',
-            'intro_p1': 'Papers surfaced by ADS but without an arXiv preprint at retrieval time. Claude cannot fetch these automatically, so the Phase 3 synthesis was built without their full text.',
-            'intro_p2': 'Bibcodes link to the ADS abstract page. If you can access any of these (institutional library, Nature subscription, etc.), paste the abstract or full text back into a Phase 3 session and the affected synthesis files can be revised.',
-            'stat_label': 'Pending fetches:',
-            'tier_A_h3': 'Tier A — likely to change cfg decisions',
-            'tier_B_h3': 'Tier B — useful context',
-            'tier_C_h3': 'Tier C — conference proceedings / catalogs',
-            'th_bibcode': 'Bibcode',
-            'th_year': 'Year',
-            'th_planet': 'Planet',
-            'th_title': 'Title',
-            'th_why': 'Why it matters',
-            'tips_h2': 'How to fetch',
-            'footer_note': 'NearStars · Manual fetch index · autogenerated from phase3/<system>/manual-paper-followup.md'
-        },
-        'ko': {
-            'title': 'NearStars · Phase 3 수동 fetch 논문 목록',
-            'back_db': '← 데이터베이스로',
-            'reports_index': '보고서 인덱스',
-            'intro_p1': 'ADS 에는 등록되어 있으나 fetch 시점에 arXiv preprint 가 없었던 논문들입니다. Claude 가 자동으로 가져올 수 없어서, Phase 3 합성은 이 논문들의 본문을 보지 못한 채 작성되었습니다.',
-            'intro_p2': 'Bibcode 를 클릭하면 ADS abstract 페이지로 이동합니다. 어떤 경로로든 접근 가능하시면 (소속 도서관, Nature 구독 등) abstract 나 본문을 Phase 3 세션에 붙여 주시면 해당 합성 파일이 갱신됩니다.',
-            'stat_label': '수동 fetch 대기:',
-            'tier_A_h3': 'Tier A — cfg 결정을 바꿀 가능성 높음',
-            'tier_B_h3': 'Tier B — 맥락에 유용',
-            'tier_C_h3': 'Tier C — 학회 proceedings · catalog',
-            'th_bibcode': 'Bibcode',
-            'th_year': '연도',
-            'th_planet': '행성',
-            'th_title': '제목',
-            'th_why': '왜 중요한가',
-            'tips_h2': 'Fetch 방법',
-            'footer_note': 'NearStars · 수동 fetch 인덱스 · phase3/<system>/manual-paper-followup.md 에서 자동 생성'
-        }
-    }, ensure_ascii=False, indent=2)
+    """Return JS-literal i18n dictionary, including per-row translations
+    collected during table rendering (see render_paper_row)."""
+    en_dict = {
+        **_ROW_I18N_EN,
+        'title': 'NearStars · Phase 3 manual paper fetch',
+        'back_db': '← Back to database',
+        'reports_index': 'Reports index',
+        'intro_p1': 'Papers surfaced by ADS but without an arXiv preprint at retrieval time. Claude cannot fetch these automatically, so the Phase 3 synthesis was built without their full text.',
+        'intro_p2': 'Bibcodes link to the ADS abstract page. If you can access any of these (institutional library, Nature subscription, etc.), paste the abstract or full text back into a Phase 3 session and the affected synthesis files can be revised.',
+        'stat_label': 'Pending fetches:',
+        'tier_A_h3': 'Tier A — likely to change cfg decisions',
+        'tier_B_h3': 'Tier B — useful context',
+        'tier_C_h3': 'Tier C — conference proceedings / catalogs',
+        'th_bibcode': 'Bibcode',
+        'th_year': 'Year',
+        'th_planet': 'Planet',
+        'th_title': 'Title',
+        'th_why': 'Why it matters',
+        'tips_h2': 'How to fetch',
+        'footer_note': 'NearStars · Manual fetch index · autogenerated from phase3/<system>/manual-paper-followup.md',
+    }
+    ko_dict = {
+        **_ROW_I18N_KO,
+        'title': 'NearStars · Phase 3 수동 fetch 논문 목록',
+        'back_db': '← 데이터베이스로',
+        'reports_index': '보고서 인덱스',
+        'intro_p1': 'ADS 에는 등록되어 있으나 fetch 시점에 arXiv preprint 가 없었던 논문들입니다. Claude 가 자동으로 가져올 수 없어서, Phase 3 합성은 이 논문들의 본문을 보지 못한 채 작성되었습니다.',
+        'intro_p2': 'Bibcode 를 클릭하면 ADS abstract 페이지로 이동합니다. 어떤 경로로든 접근 가능하시면 (소속 도서관, Nature 구독 등) abstract 나 본문을 Phase 3 세션에 붙여 주시면 해당 합성 파일이 갱신됩니다.',
+        'stat_label': '수동 fetch 대기:',
+        'tier_A_h3': 'Tier A — cfg 결정을 바꿀 가능성 높음',
+        'tier_B_h3': 'Tier B — 맥락에 유용',
+        'tier_C_h3': 'Tier C — 학회 proceedings · catalog',
+        'th_bibcode': 'Bibcode',
+        'th_year': '연도',
+        'th_planet': '행성',
+        'th_title': '제목',
+        'th_why': '왜 중요한가',
+        'tips_h2': 'Fetch 방법',
+        'footer_note': 'NearStars · 수동 fetch 인덱스 · phase3/<system>/manual-paper-followup.md 에서 자동 생성',
+    }
+    return json.dumps({'en': en_dict, 'ko': ko_dict}, ensure_ascii=False, indent=2)
 
 
 def main() -> int:
@@ -370,18 +409,28 @@ def main() -> int:
         print('No phase3/<system>/manual-paper-followup.md found — nothing to build.')
         return 0
 
+    _reset_row_i18n()
     systems = []
     for md in md_files:
         slug = md.parent.name
+        ko_sidecar = md.with_suffix('.ko.json')
+        ko_data = {}
+        if ko_sidecar.exists():
+            ko_data = json.loads(ko_sidecar.read_text(encoding='utf-8'))
         systems.append({
             'slug': slug,
             'name': display_system_name(slug),
             'data': parse_md(md),
+            'ko': ko_data,
         })
 
+    # Render in this order — render_systems populates _ROW_I18N_* dicts
+    # which build_i18n then reads.
+    systems_html = render_systems(systems)
+    tips_html = render_tips(systems)
     page = (PAGE_TEMPLATE
-        .replace('__SYSTEMS__', render_systems(systems))
-        .replace('__TIPS__', render_tips(systems))
+        .replace('__SYSTEMS__', systems_html)
+        .replace('__TIPS__', tips_html)
         .replace('__I18N_DICT__', build_i18n(systems)))
 
     out = repo / 'docs' / 'phase3' / 'manual-fetch.html'
