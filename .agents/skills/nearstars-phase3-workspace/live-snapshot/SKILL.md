@@ -18,27 +18,43 @@ description: >
 
 # NearStars — Phase 3 Synthesis
 
-Phase 3 turns paper-cited Phase 2 measurements into cfg-ready decisions
-for values that **no single paper provides**: surface tints under
-M-dwarf illumination, atmosphere composition under escape constraints,
-cloud morphology under tidally-locked GCM predictions, rotation state
-under chain-resonance dynamics. The automation gathers data; **you**
-synthesize the decision.
-
-This file drives workflow + judgment. Detail lives in references/:
-
-- [`synthesis-template.md`](references/synthesis-template.md) — the 6-section markdown template
-- [`scoring-reference.md`](references/scoring-reference.md) — authority + relevance schema
-- [`conflict-resolution.md`](references/conflict-resolution.md) — tie-break, divergence, failure modes
-- [`mod-grounded-fields.md`](references/mod-grounded-fields.md) — which cfg fields each Phase 3 row feeds
+This skill drives the per-planet "cfg-ready synthesis" pass that sits
+between Phase 2 (paper-cited measurements) and the downstream cfg
+writers. Phase 3 decides values that **no single paper provides**:
+surface tints under M-dwarf illumination, atmosphere composition under
+escape constraints, cloud morphology under tidally-locked GCM
+predictions, rotation state under chain-resonance dynamics. It is
+intentionally a human-judgment-driven step — the automation handles
+data gathering, but **you** synthesize the decision.
 
 ---
 
-## Out of scope
+> **Scope.** This skill drives the **workflow and judgment** of
+> producing Phase 3 outputs. The standard 6-section markdown template
+> (intro / Decisions / Surface / Atmosphere / Rotation / Visual /
+> Bibliography / Open items) is documented in
+> [`references/synthesis-template.md`](references/synthesis-template.md).
+> The authority + relevance scoring schema is in
+> [`references/scoring-reference.md`](references/scoring-reference.md).
+> Conflict resolution rules are in
+> [`references/conflict-resolution.md`](references/conflict-resolution.md).
 
-If the request is Kopernicus cfg generation → `kopernicus-cfg`.
-Principia cfg → `principia-cfg`. Adding a new star to the DB or Phase
-1/2 curation → `nearstars-add-star`. Phase 3 sits between those.
+---
+
+## Trigger Recap
+
+You are running this skill if any of these hold:
+- The user named a planet (or star with planets) and asked for Phase 3,
+  cfg-ready synthesis, "행성 합성", or "<planet> 합성 격상".
+- The user wants to extend the existing 7-planet TRAPPIST-1 Phase 3
+  template to a new system.
+- The user explicitly references the Decisions table, surface tint,
+  atmosphere composition, or cloud morphology cfg values.
+
+If the request is about **writing the Kopernicus cfg**, stop — that's
+`kopernicus-cfg` and reads Phase 3 outputs. If it's **Principia cfg**,
+use `principia-cfg`. If it's **adding a new star to the DB**, use
+`nearstars-add-star`. Phase 3 sits between those.
 
 ---
 
@@ -71,10 +87,7 @@ down and verify.
 ## Step 0 — Share the time estimate with the user
 
 **Do this before any other step.** Phase 3 is the most expensive
-curation tier — quote the matching row and confirm before Step 1.
-If only Phase 1 inputs exist (per [[project-nearstars-phase-distinction]]),
-mention this upfront so the user can escalate Phase 2 via
-`nearstars-add-star` or accept degraded confidence.
+curation tier and the user needs to budget the session.
 
 | System size | Approx model time |
 |---|---|
@@ -82,8 +95,15 @@ mention this upfront so the user can escalate Phase 2 via
 | 2–3 planet system | 3–6 h |
 | Full 7-planet system (TRAPPIST-1 scale) | 6–15 h |
 
-Cost is dominated by deep-reading the must-read set (~15–30 papers per
-planet after filtering).
+The cost is dominated by deep-reading the must-read paper set (~15–30
+papers per planet after filtering). Quote the matching row to the user
+upfront and confirm they want to proceed before running Step 1.
+
+Phase 3 outputs need Phase 2 measurements as inputs (per
+[[project-nearstars-phase-distinction]]). If the target system has
+only Phase 1 curation, mention this in the same upfront message so
+the user can choose to escalate Phase 2 first (via `nearstars-add-star`)
+or proceed with degraded confidence.
 
 ---
 
@@ -184,10 +204,16 @@ python3 scripts/phase3/score_papers.py docs/phase3/_bib/<slug>.yaml \
     --keep-threshold 8 --mark-skipped-below 14
 ```
 
-Score buckets: **≥ 14** must-read (Step 6 fetches), **8–13** cite-only
-(`status: skipped`, kept in bib), **< 8** dropped. Full schema +
-sanity-check counts in [`references/scoring-reference.md`](references/scoring-reference.md).
-Idempotent — re-running on `fetched` / `skipped` papers is a no-op.
+Score interpretation (full schema in `references/scoring-reference.md`):
+
+| Combined score | Decision | Action |
+|---|---|---|
+| ≥ 14 | must-read | stays `pending` → Step 6 fetches arXiv text |
+| 8–13 | borderline / cite-only | kept in bib, marked `status: skipped` so Step 6 skips it; OK to cite |
+| < 8 | skip | dropped from `filtered_papers` view by `--keep-threshold` |
+
+The flag is idempotent — running it again on a yaml whose papers are
+already `fetched` or `skipped` is a no-op.
 
 **verify:** score distribution within ±50% of the sanity-check counts
 in `references/scoring-reference.md`. If 14+ count is <5 for a major
@@ -316,31 +342,64 @@ Use `docs/phase3/trappist-1-e.md` or `trappist-1-f.md` as the
 structural template — both apply the documented-divergence policy
 in full (`## Canonical alternatives` section + Basis notes).
 
-**Do not** copy from `trappist-1-d.md` as a structural base. d predates
-the documented-divergence policy and has no `## Canonical alternatives`
-section, so its shape silently omits the section even when the new
-planet has a divergence (this is how the Alpha Cen first pass failed).
+**Do not** copy from `trappist-1-d.md` as a structural base — d is
+the pilot file written before the documented-divergence policy
+existed, so it has no `## Canonical alternatives` section. Copying
+d's shape will silently omit the section even when the new planet
+has a divergence (this is how the Alpha Cen first pass failed):
 
-Section order (full annotated template in
-[`references/synthesis-template.md`](references/synthesis-template.md)):
-intro → Decisions → Surface → Atmosphere → Rotation & spin → Visual →
-`## Canonical alternatives` (optional, only if cfg diverges) →
-Bibliography (Read / context / instrument-only / not-read) → Open items.
+```
+<!-- one-line Korean header comment (CLAUDE.md §6) -->
+# <Planet> — Phase 3 Synthesis
+
+(intro paragraphs — observational state, adopted scenario, alternatives)
+
+## Decisions
+| Field | Value | Confidence | Basis |
+
+## Surface synthesis
+## Atmosphere synthesis
+## Rotation & spin synthesis
+## Visual styling
+
+## Canonical alternatives        ← optional: include only if cfg diverges
+### Diverged cfg picks               from a canonical reading
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+
+## Bibliography
+### Read (visual-informative, drove decisions above)
+### Read (context / methodology, not decision-driving)
+### Read (instrument-only, not visual-informative)
+### Not read — no arXiv preprint or low-priority (~N papers)
+
+## Open items for follow-up
+```
+
+Full annotated template + decision-table field reference:
+[`references/synthesis-template.md`](references/synthesis-template.md).
 
 ### Dual-track: when to add Canonical alternatives
 
-The Step 9.0 classification log already labeled each row. Apply the
-labels in the prose:
+For each row you write in the Decisions table, ask the diagnostic
+question from [`references/conflict-resolution.md`](references/conflict-resolution.md):
+*does the canonical reading have a clear weight advantage from the
+literature?*
 
-- **tie-break** → Basis: `Tie-break: interesting-first`. No section row.
-- **documented-divergence** → Basis: `Documented divergence: see
-  Canonical alternatives` + add a row in `## Canonical alternatives` +
-  list canonical variant in `## Open items for follow-up`.
+- **No** (data silent within the allowed window): tie-break. Note
+  `Tie-break: interesting-first` in the Basis column per
+  [[feedback-phase3-interesting-first]]. No `## Canonical
+  alternatives` row needed.
+- **Yes** (specific papers, modeling consensus favor canonical, but
+  cfg picks differently): documented divergence. Note
+  `Documented divergence: see Canonical alternatives` in the Basis
+  column, and add a row to the optional `## Canonical alternatives`
+  section per [[feedback-phase3-documented-divergence]]. Also list
+  the canonical variant in `## Open items for follow-up` so the cfg
+  writer can ship it.
 
-Full rules + diagnostic question + worked example in
-[`references/conflict-resolution.md`](references/conflict-resolution.md)
-§ "Tie-break vs. divergence" and § "Documented divergence". Don't
-pad the section with tie-breaks; don't hide divergences inside Basis.
+Don't pad the Canonical alternatives section with tie-breaks; don't
+hide divergences inside Basis notes. The two have different audit
+trails for a reason.
 
 ---
 
@@ -354,11 +413,22 @@ Single most important step. For every row in the Decisions table:
    from memory — the markdown file has the header).
 4. **Confirm method** matches the paper's actual methodology.
 
-Common failure modes (wrong author, 5–10× off number, rounding error,
-composition contradicting a cited constraint) are catalogued in
-[`references/conflict-resolution.md`](references/conflict-resolution.md)
-§ "Common failure modes" with the actual TRAPPIST-1 first-pass
-examples. Also see [[feedback-phase3-validation]].
+Common errors caught at this step (from the TRAPPIST-1 b/c/e/g/h
+first pass):
+
+- Citing "Bolmont 2020" when the paper is actually Brasser 2019
+  (1905.00512). Always confirm author from arxiv ID, not reconstructed
+  memory.
+- Citing a number that's 5–10× off the actual paper (b's
+  `tidal_heating_w_m2` was 0.04–0.2 in first pass, actual paper says
+  0.5–1 W/m²). Re-read the paper's number; don't trust prior cfg.
+- Number rounding error (h's `insolation_s_earth` was 0.16, actual
+  Agol 2021 is 0.144). Use the paper's value, not the rounded one.
+- Composition row contradicts a constraint in the cited paper (h had
+  CO₂ 70%, but Bolmont 2018 review caps CO₂ partial pressure at
+  100–1000 ppm regardless of background).
+
+See [[feedback-phase3-validation]] for the full failure-mode list.
 
 **verify:** every Decisions-table row's author/year/number traces back
 to a specific page or section in `docs/phase3/_papers/<arxiv_id>.md`.
@@ -459,13 +529,29 @@ After commit, push to `origin/main` only if the user explicitly asks.
 
 ## Phase 3-specific policies
 
-User memory auto-loads. These four gate workflow decisions; details
-are at the linked steps and references:
+User memory (MEMORY.md) auto-loads each session, so general policies
+like md-language, speech-level, and ko-mirror-style are already in
+context. These three are repeated here because they gate
+decisions inside this workflow specifically:
 
-- [[project-nearstars-phase-distinction]] — Phase 3 needs Phase 2 inputs (Step 1)
-- [[feedback-phase3-validation]] — every Decisions row re-checked against source (Step 10)
-- [[feedback-phase3-interesting-first]] — tie-break default to visually distinctive (Step 8+)
-- [[feedback-phase3-documented-divergence]] — `## Canonical alternatives` section when cfg outranks canonical (Step 9 + conflict-resolution.md § "Documented divergence")
+- **Phase 3 inputs are Phase 2 measurements** ([[project-nearstars-phase-distinction]]).
+  Step 1 enforces this; if Phase 2 is missing, escalate via
+  `nearstars-add-star` before continuing.
+- **Verify decisions against source** ([[feedback-phase3-validation]]).
+  Step 10 is non-negotiable — every Decisions-table number gets
+  re-checked against the cited paper before commit.
+- **Interesting-first when observation-tied** ([[feedback-phase3-interesting-first]]).
+  Step 8 onward — at genuine ties, default to the more visually
+  distinctive option. Hierarchy and tie-break documentation rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md).
+- **Documented divergence for canonical outranks** ([[feedback-phase3-documented-divergence]]).
+  When the gameplay pick differs from a canonical reading that has
+  clear weight advantage, record it in the optional `## Canonical
+  alternatives` section — not as a tie-break. Three preconditions
+  must hold: gameplay pick stays observation-consistent, divergence
+  is explicit, canonical preserved as cfg variant. Rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md)
+  § "Documented divergence".
 
 ---
 
@@ -504,8 +590,20 @@ these actions require explicit confirmation or a Read-first step.
 
 ## Related documents
 
-- `docs/phase3/trappist-1-{e,f}.md` — canonical structural examples (with divergence section)
-- `docs/phase3/trappist-1-d.md` — pilot, predates divergence policy (don't use as template)
-- `phase3/trappist-1-system/{checklist,context-notes,manual-paper-followup}.md` — working artifacts as templates
-- `docs/reference/{guideline,methodology}.md` — project scope + curation philosophy
-- Upstream: `nearstars-add-star` (Phase 1/2). Downstream: `kopernicus-cfg`, `principia-cfg`
+Reference material consulted by the skill but not part of its
+operating loop:
+
+- `docs/reference/guideline.md` — project-level scope, dependencies,
+  distance limits (Phase 3 is distance-agnostic; only cfg layers
+  enforce 50 ly / 80 ly limits)
+- `docs/phase3/trappist-1-d.md` — canonical example synthesis (pilot)
+- `docs/phase3/trappist-1-{b,c,e,f,g,h}.md` — additional examples
+  (extended from the pilot through the 2026-05-22 session)
+- `phase3/trappist-1-system/{checklist,context-notes,manual-paper-followup,paper-count-summary}.md`
+  — working artifacts from the TRAPPIST-1 build, useful as templates
+- `docs/reference/methodology.md` — overall DB and curation philosophy
+- `docs/reference/principia-cfg-reference.md` and the
+  `principia-cfg` skill — downstream consumer of Phase 3 dynamics
+  outputs
+- `docs/reference/adding_stars.md` and the `nearstars-add-star` skill
+  — upstream Phase 1/Phase 2 producer

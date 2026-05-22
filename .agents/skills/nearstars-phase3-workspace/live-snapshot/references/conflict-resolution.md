@@ -287,20 +287,6 @@ This happened in the TRAPPIST-1 b/c/e/g/h first pass (see
 [[feedback-phase3-validation]]). The validation pass exists
 specifically to catch this.
 
-### Common failure modes (from the TRAPPIST-1 first pass)
-
-- **Wrong author attribution.** Citing "Bolmont 2020" when the paper
-  is actually Brasser 2019 (1905.00512). Always confirm author from
-  the arxiv-ID file header, not reconstructed memory.
-- **Number 5–10× off.** b's `tidal_heating_w_m2` was 0.04–0.2 in
-  first pass; actual Brasser 2019 says 0.5–1 W/m². Re-read the
-  paper's number; don't trust prior cfg.
-- **Rounding error.** h's `insolation_s_earth` was 0.16; actual Agol
-  2021 is 0.144. Use the paper's value, not the rounded one.
-- **Composition row contradicts a cited constraint.** h had CO₂ 70%,
-  but Bolmont 2018 review caps CO₂ partial pressure at 100–1000 ppm
-  regardless of background.
-
 ## When a paper cites a number you can't verify
 
 Some papers cite figures from earlier work without giving the
