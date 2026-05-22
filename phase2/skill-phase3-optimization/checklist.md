@@ -64,4 +64,4 @@
 - [x] [N3] AGENTS.md §2 — replaced "three kinds" with "four
       documentation homes" + explicit phase2/phase3 sibling note,
       since the post-[I5] block lists four trees
-- [ ] Commit cleanup with VaNnadin identity
+- [x] Commit cleanup with VaNnadin identity (f0e462e)
