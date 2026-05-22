@@ -87,6 +87,10 @@ def build_manifest(host_names, planet_map, phase2_slugs, phase3_slugs):
     for slug in phase3_slugs:
         if slug in planet_map:
             host_slug, letter = planet_map[slug]
+        elif slug in host_names:
+            # star-level synthesis (slug matches a host name exactly).
+            # 별 자체에 대한 합성 문서. 시스템 그룹 안에서 ★ letter 로 정렬.
+            host_slug, letter = slug, '★'
         else:
             # fall back to last-token split
             parts = slug.rsplit('-', 1)

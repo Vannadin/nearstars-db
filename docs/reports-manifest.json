@@ -10,5 +10,25 @@
       "g": "phase3/trappist-1-g.html",
       "h": "phase3/trappist-1-h.html"
     }
+  },
+  "Alpha Centauri A": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/alpha-centauri-a.html"
+    }
+  },
+  "Alpha Centauri B": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/alpha-centauri-b.html"
+    }
+  },
+  "Proxima Cen": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/proxima-cen.html",
+      "b": "phase3/proxima-cen-b.html",
+      "d": "phase3/proxima-cen-d.html"
+    }
   }
 }
