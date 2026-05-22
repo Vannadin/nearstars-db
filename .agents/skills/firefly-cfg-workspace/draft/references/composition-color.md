@@ -1,0 +1,197 @@
+# Atmosphere composition → reentry color
+
+How to translate atmospheric composition into a Firefly `Color { … }`
+block. Combines the Firefly community canon (thunderchild's chart +
+the wiki composition tables) with real plasma spectroscopy.
+
+## TL;DR
+
+- **Trace species** (Na, K, Li, Ca, Sr, Ba, Cu — single atoms emitting
+  through atomic transitions): use thunderchild's "Plasma Colors of the
+  Periodic Table" chart directly. These are the streak/glint colors.
+- **Bulk gases** (N2, O2, CO2, H2, He, CH4, H2O — the dominant species
+  by mass): use the spectroscopy table below, NOT the chart. The chart
+  labels itself "+ AND FLAME TEST" — flame test color is not the same
+  thing as reentry plasma color at 10,000+ K.
+
+## Firefly canon — atmosphere composition table
+
+From the Firefly wiki, "Useful information" page (last edited
+2025-02-07 by MirageDev). Verified against Wikipedia and standard
+planetary references; bulk-gas percentages match to within rounding.
+
+**KSP stock bodies** (in-universe composition, KSP wiki + author
+inference):
+
+| Body | Composition |
+|---|---|
+| Eve | Carbon Dioxide, small amount of Iodine |
+| Kerbin | Oxygen, Nitrogen, small amount of Argon |
+| Duna | Carbon Dioxide, small amount of Nitrogen |
+| Jool | Hydrogen, Helium, Chlorine |
+| Laythe | Same as Kerbin |
+
+**Real Solar System** (cross-checked, all match Wikipedia):
+
+| Body | Composition |
+|---|---|
+| Venus | 96.5% CO2, 3.5% N2 |
+| Earth | Same as Kerbin (78% N2, 21% O2, 1% Ar) |
+| Mars | 95% CO2, 2.7% N2, 1.6% Ar |
+| Jupiter | 89% H2, 10% He |
+| Saturn | 96% H2, 3% He |
+| Uranus | 83% H2, 15% He, 2% CH4 |
+| Neptune | 80% H2, 19% He, 1% CH4 |
+
+For NearStars exoplanets, use the Phase 3-synthesized atmosphere
+composition (see [[phase3-mapping]]).
+
+## Firefly canon — thunderchild's plasma color chart
+
+`firefly-repo/.github/media/PeriodicTable.jpg`. Used by Firefly cfg
+makers as the suggested color reference per element. **The chart's own
+footer reads "+ AND FLAME TEST"** — meaning its colors are flame-test
+emission, not high-temperature plasma emission.
+
+### Where the chart is trustworthy
+
+Alkali and alkaline-earth atomic emission lines dominate both flame
+test AND plasma (they're easily excited). For these, the chart is a
+good guide for streak / trace-species accents:
+
+| Element | Chart color | Spectroscopy line | Verdict |
+|---|---|---|---|
+| Li | red | 670 nm crimson | ✓ |
+| Na | yellow | 589 nm D-line | ✓ |
+| K | violet/pink | 404 nm | ✓ |
+| Ca | orange-red | 622 nm | ✓ |
+| Sr | crimson red | 606 nm | ✓ |
+| Ba | green | 515 nm | ✓ |
+| Cu | green | 510 nm (CuCl bands) | ✓ |
+| Fe | gold | 372/382 nm + neutral lines | ✓ |
+| H | pink | 656 nm Balmer Hα | ✓ |
+| He | orange-peach | 587 nm D3 | ✓ |
+
+For these, set them as `trail_streak` / `wrap_streak` accents when the
+atmosphere contains them as trace species.
+
+### Where the chart misleads for reentry
+
+Molecular gases at reentry temperatures (8,000–15,000 K) dissociate and
+ionize, emitting from band systems (N2+, N2 First Positive, CN violet,
+C2 Swan, OH, CO) rather than atomic lines. The chart's atomic-flame
+colors don't capture this:
+
+| Species | Chart says | Reentry plasma reality | Source |
+|---|---|---|---|
+| N (atomic) | pale yellow | N2 plasma in air is **blue-purple** (391 nm N2+ + 1NG red) | air-plasma optical spectra (ResearchGate); Earth reentry visual record |
+| O (atomic) | blue | Atomic O has auroral 558 nm green + 630 nm red; mixed with N gives the blue-purple Earth reentry signature | NASA reentry spectroscopy |
+| C (atomic) | bright magenta | CO2 reentry plasma is **green/blue/violet** from CN violet (388 nm) + C2 Swan (516/473 nm) + CO 4th positive (VUV) | arXiv 2007.04869 (CO2 radiation survey) |
+
+Use the table in §3 (next) for bulk-gas colors, not the chart.
+
+## Bulk-gas reentry plasma — recommended trail palette
+
+For the **dominant atmospheric species** (>50% by volume) — sets the
+main trail / wrap / shockwave colors. Cross-referenced from optical
+spectra of plasmas (ResearchGate, arXiv:2007.04869, atmospheric-entry
+literature). RGB values are 0–255; Firefly intensity (the 4th token)
+goes 1.4 for dim glow up to 3 for hot trails.
+
+| Dominant gas | Plasma signature | RGB hint | Notes |
+|---|---|---|---|
+| N2 + O2 (Earth-like) | N2+ 391 nm violet + N2 1NG 670 nm red + O 630 nm red | `191 99 72` (warm) for trail; `74 90 191` (cool blue-violet) for shockwave | Matches Firefly stock `Kerbin.cfg`. Real Earth reentry photos show this orange-pink-violet mix. |
+| CO2 (Mars/Venus) | CN violet (388 nm) + C2 Swan green (516 nm) + CO 4th positive UV | `83 92 191` trail (blue), `96 191 159` shockwave (green) | Matches Firefly stock `Eve.cfg`. Mars EDL camera footage confirms green-blue plasma. |
+| H2 + He (gas giant) | Balmer Hα 656 nm (pink-red) + He D3 587 nm (yellow) | `191 99 110` trail (rose), `255 180 90` shockwave (gold) | Physics-correct option. Firefly stock `Jool.cfg` uses deep blue instead — that's a stylized choice. |
+| CH4 (Titan, ice giants minor) | CH band 431 nm + Swan green | `100 191 130` (green-cyan) | Sparse data; extrapolated from CH4 combustion spectra. |
+| H2O (steam atmospheres) | H Balmer + OH 308 nm UV | `191 130 130` (pink-rose) | Almost pure Hα emission visible-band. |
+| Pure H2 (cold sub-Neptune) | Pure Balmer red-pink | `230 80 100` (deep pink) | Brown-dwarf-style auroras are this color. |
+
+## Secondary-species streak palette
+
+For **secondary species** (0.5–10% by volume) and trace emitters — sets
+`trail_streak` and `wrap_streak`. The streak color reflects the
+secondary chemistry that's *also* shock-heated during reentry but
+doesn't dominate the bulk emission. Pick the most spectroscopically
+active secondary; if no significant secondary, streak follows the
+bulk-gas trail palette unchanged.
+
+| Secondary species | Spectral signature in reentry plasma | RGB hint | Notes |
+|---|---|---|---|
+| CO2 (in N2/O2 atmosphere) | CN violet 388 nm + C2 Swan 516 nm + CO bands | `96 191 159` (green) or `116 96 191` (violet) | Earth-class atmosphere with 1–10% CO2 → green-violet streaks |
+| CH4 (in N2 atmosphere) | CN violet + C2 Swan green + Hα red | `100 191 130` (green-cyan) | Titan-class chemistry |
+| H2O (steam secondary) | Hα 656 nm + OH UV | `191 130 130` (pink-rose) | Water-rich N2 or CO2 atmosphere |
+| He (in H2-rich gas giant) | D3 587 nm | `255 200 100` (yellow-peach) | Standard gas-giant secondary |
+| SO2 / H2S (Venus-class) | Atomic S + SO2 bands | `150 200 180` (pale blue-green) | Trace sulfur compounds |
+| **Na (atmospheric vapor)** | D-line 589 nm | `255 200 60` (bright yellow) | Lava worlds / sub-Neptune atmospheric alkali. Strongest streak emitter in the visible. |
+| **K (alkali)** | 404 nm + 770 nm | `180 100 191` (violet) | Alkali vapor on hot rocky worlds |
+| Fe (rock ablation / vapor) | Multi-line blue-violet + visible Fe I | `191 191 100` (gold) | High-T worlds where rock vaporizes |
+| Mg (rock ablation) | Mg I 285 nm UV + green band | `100 191 100` (bright green) | Meteor-class green is Mg |
+| Organic CN (haze chemistry) | CN violet 388 nm dominant | `130 80 191` (violet) | Titan tholin haze; sub-Neptune photochemistry |
+
+Selection rule when multiple secondaries qualify:
+1. Prefer the species with the **strongest visible emission** (Na > K > CO2 > CH4 > others in typical conditions).
+2. If two are comparable, pick the one Phase 3's atmosphere synthesis emphasizes (the "interesting" one).
+3. Default if no qualifying secondary: streak = `trail_primary` value (no separate streak chemistry).
+
+## Firefly stock cfg as ground-truth case study
+
+The shipped configs validate where the mod author chose physics vs.
+style:
+
+| Stock body | Composition | Color choice | Read as |
+|---|---|---|---|
+| Kerbin | N2 + O2 | warm trail + blue shockwave | Physics-faithful (matches air-plasma) |
+| Eve | CO2 + I | blue trail + green shockwave | Physics-faithful (matches CO2 plasma) |
+| Duna | CO2 + N2 (thin) | warm trail + deep blue shockwave | Hybrid — leans Earth-like for warmer streaks |
+| Jool | H2 + He + Cl | deep blue trail + pale green shockwave | **Stylized**, real H2/He plasma is pink-yellow |
+
+For NearStars Phase 3, prefer physics-faithful for compositions where
+real reentry data exists (N2/O2/CO2 dominant). For gas giants and
+exotic compositions, the documented-divergence rule
+(`feedback_phase3_documented_divergence`) applies: pick the
+interesting option, log it in Canonical alternatives, and preserve
+the physics-correct variant.
+
+## Practical workflow
+
+1. Read the Phase 3 atmosphere composition for the target body.
+2. Identify the dominant species (>50% by volume).
+3. Pick the bulk-gas row from §3 → fills `trail_primary`,
+   `trail_secondary`, `trail_tertiary`, `wrap_layer`, `shockwave`.
+4. Identify the **secondary species** at 0.5–10% volume from Phase 3
+   (CO2, CH4, H2O, He, SO2, etc.) — these are real co-emitters in the
+   shock layer at reentry temperature, not separate phenomena.
+5. Pick the streak color from the secondary-species table in §4 →
+   fills `trail_streak`, `wrap_streak`. If no significant secondary,
+   streak falls back to the bulk-gas trail color.
+6. `glow` and `glow_hot` typically stay near the Default warm tones
+   (`191 80 50 1.4` / `191 90 65 2.5`) — these are hull-surface heating,
+   not atmospheric emission, so they're material-driven not gas-driven.
+7. Cross-reference your choice against the Firefly stock case study in
+   §5 to confirm the physics-vs-style call is intentional.
+
+**Do NOT** use aurora colors for the streak. Aurora occurs at ~100 km
+in low-density gas via metastable forbidden lines (e.g., [OI] 557 nm
+green requires ~0.7 s undisturbed lifetime). Reentry plasma is
+high-density shock-heated gas at 8,000–15,000 K, where those metastable
+states are collision-quenched before they emit. Aurora and reentry
+share atomic species but produce different visible signatures and
+belong to different mod systems (aurora → EVE; reentry → Firefly).
+
+## Open questions / known gaps
+
+- No published spectra for sub-Neptune water-cloud reentry plasmas. The
+  H2O row in §3 is extrapolated.
+- The thunderchild chart's intensity values are not specified — only
+  hue. Intensity (the 4th HDR token) is empirical; start at 2.0 for
+  body color, 1.4 for glow, scale up for high-strength bodies.
+- Trace chemistry (clouds, hazes) is not captured by either chart.
+  Phase 3 may flag this in cfg variant notes but it doesn't change the
+  Firefly cfg.
+
+## See also
+
+- [[color-format]] — HDR color value syntax.
+- [[atmofx-body]] — where these colors live.
+- [[phase3-mapping]] — full Phase 3 row → Firefly field mapping.

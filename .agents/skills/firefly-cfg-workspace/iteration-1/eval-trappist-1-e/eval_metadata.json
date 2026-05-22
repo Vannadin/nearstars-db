@@ -1,0 +1,21 @@
+{
+  "eval_id": "trappist-1-e",
+  "eval_name": "earth-analog-aquaplanet",
+  "prompt": "Read Phase 3 synthesis for TRAPPIST-1 e and produce a Firefly ATMOFX_BODY cfg.",
+  "expected_decision": "emit_cfg",
+  "expected_composition_palette": "earth_n2_o2",
+  "assertions": [
+    {"id": "file_exists", "text": "Output Trappist1e.cfg exists in outputs/"},
+    {"id": "atmofx_body", "text": "File contains 'ATMOFX_BODY' top-level node"},
+    {"id": "name_match", "text": "File contains 'name = Trappist1e' (exact case)"},
+    {"id": "config_version_5", "text": "File contains 'config_version = 5'"},
+    {"id": "all_9_colors", "text": "Color block has all 9 keys: glow, glow_hot, trail_primary, trail_secondary, trail_tertiary, trail_streak, wrap_layer, wrap_streak, shockwave"},
+    {"id": "color_format_valid", "text": "Every color value is exactly 4 space-separated tokens (R G B intensity)"},
+    {"id": "trail_warm", "text": "trail_primary R > B (warm tone, consistent with N2+O2 Earth-like reentry palette)"},
+    {"id": "shockwave_cool", "text": "shockwave B > R (cool blue-violet tone, consistent with air plasma physics)"},
+    {"id": "strength_earth_like", "text": "strength_multiplier in range [0.8, 1.2] (1 bar atmosphere)"},
+    {"id": "no_f_suffix", "text": "No '1.0f' / '0.5f' style float literals (KSP cfg uses bare floats)"},
+    {"id": "no_commas", "text": "No commas in color values (space-separated only)"},
+    {"id": "name_no_spaces", "text": "Body name has no spaces, dashes, or special chars"}
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "run_id": "eval-proxima-cen-b-without_skill",
+  "results": [
+    {
+      "id": "file_exists",
+      "text": "Output ProximaCenB.cfg exists",
+      "passed": true,
+      "evidence": "ProximaCenB.cfg"
+    },
+    {
+      "id": "atmofx_body",
+      "text": "Contains ATMOFX_BODY node",
+      "passed": true,
+      "evidence": "found"
+    },
+    {
+      "id": "name_match",
+      "text": "name = ProximaCenB",
+      "passed": true,
+      "evidence": "name = ProximaCenB"
+    },
+    {
+      "id": "config_version_5",
+      "text": "config_version = 5",
+      "passed": true,
+      "evidence": "v5"
+    },
+    {
+      "id": "all_9_colors",
+      "text": "All 9 Color keys present",
+      "passed": true,
+      "evidence": "all present"
+    },
+    {
+      "id": "color_format_valid",
+      "text": "Every color is 4 space-separated floats",
+      "passed": true,
+      "evidence": "all valid"
+    },
+    {
+      "id": "trail_warm",
+      "text": "trail_primary R > B (warm tone)",
+      "passed": true,
+      "evidence": "R=191 B=68"
+    },
+    {
+      "id": "shockwave_cool",
+      "text": "shockwave B > R (cool blue-violet)",
+      "passed": true,
+      "evidence": "R=80 B=191"
+    },
+    {
+      "id": "strength_earth_like",
+      "text": "strength_multiplier in [0.8, 1.2]",
+      "passed": true,
+      "evidence": "=1.0"
+    },
+    {
+      "id": "no_f_suffix",
+      "text": "No '1.0f'-style float literals",
+      "passed": true,
+      "evidence": "clean"
+    },
+    {
+      "id": "no_commas",
+      "text": "No commas in color values",
+      "passed": true,
+      "evidence": "clean"
+    },
+    {
+      "id": "name_no_special",
+      "text": "Body name has no spaces/dashes/special chars",
+      "passed": true,
+      "evidence": "ok"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "eval_id": "trappist-1-b",
+  "eval_name": "airless-or-thin-co2-edge",
+  "prompt": "Read Phase 3 synthesis for TRAPPIST-1 b and produce either a Firefly cfg OR an airless-skip decision.",
+  "expected_decision": "skip_airless",
+  "expected_composition_palette": "n/a",
+  "assertions": [
+    {"id": "decision_or_cfg", "text": "Either _decision.md or Trappist1b.cfg exists in outputs/ (not both, not neither)"},
+    {"id": "decision_correctly_airless", "text": "If _decision.md: text explicitly states the body is airless / no atmosphere / matches Phase 3 conclusion (Ducrot 2025)"},
+    {"id": "decision_cites_phase3", "text": "If _decision.md: references the Phase 3 doc's airless conclusion or threshold rule (atmosphere_pressure_pa < 100 Pa)"},
+    {"id": "if_cfg_then_thin", "text": "If Trappist1b.cfg exists: strength_multiplier <= 0.5 AND palette favors CO2 (blue trail, green shockwave) — Phase 3 only allows airless or very thin CO2"},
+    {"id": "if_cfg_valid_schema", "text": "If Trappist1b.cfg exists: all standard ATMOFX_BODY schema rules apply (config_version=5, 9 colors, etc.)"}
+  ]
+}

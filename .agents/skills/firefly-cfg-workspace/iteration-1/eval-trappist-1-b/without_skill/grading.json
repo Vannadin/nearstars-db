@@ -1,0 +1,23 @@
+{
+  "run_id": "eval-trappist-1-b-without_skill",
+  "results": [
+    {
+      "id": "decision_or_cfg",
+      "text": "Either _decision.md or .cfg present",
+      "passed": true,
+      "evidence": "_decision.md present"
+    },
+    {
+      "id": "decision_correctly_airless",
+      "text": "Mentions airless / no atmosphere",
+      "passed": true,
+      "evidence": "found 'airless'"
+    },
+    {
+      "id": "decision_cites_phase3",
+      "text": "Cites Phase 3 / Ducrot / Greene / Ih",
+      "passed": true,
+      "evidence": "found citation"
+    }
+  ]
+}

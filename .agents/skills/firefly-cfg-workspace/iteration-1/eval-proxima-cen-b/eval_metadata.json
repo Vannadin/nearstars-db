@@ -1,0 +1,20 @@
+{
+  "eval_id": "proxima-cen-b",
+  "eval_name": "earth-analog-different-star",
+  "prompt": "Read Phase 3 synthesis for Proxima Cen b and produce a Firefly ATMOFX_BODY cfg.",
+  "expected_decision": "emit_cfg",
+  "expected_composition_palette": "earth_n2_o2",
+  "assertions": [
+    {"id": "file_exists", "text": "Output ProximaCenB.cfg exists in outputs/"},
+    {"id": "atmofx_body", "text": "File contains 'ATMOFX_BODY' top-level node"},
+    {"id": "name_match", "text": "File contains 'name = ProximaCenB' (exact case)"},
+    {"id": "config_version_5", "text": "File contains 'config_version = 5'"},
+    {"id": "all_9_colors", "text": "Color block has all 9 keys"},
+    {"id": "color_format_valid", "text": "Every color value is exactly 4 space-separated tokens"},
+    {"id": "trail_warm", "text": "trail_primary R > B (warm tone, consistent with N2 atmosphere)"},
+    {"id": "shockwave_cool", "text": "shockwave B > R (cool blue-violet tone)"},
+    {"id": "strength_earth_like", "text": "strength_multiplier in range [0.8, 1.2] (1 bar atmosphere)"},
+    {"id": "no_f_suffix", "text": "No '1.0f' style float literals"},
+    {"id": "no_commas", "text": "No commas in color values"}
+  ]
+}

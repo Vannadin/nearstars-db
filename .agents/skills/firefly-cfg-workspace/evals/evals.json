@@ -1,0 +1,26 @@
+{
+  "skill_name": "firefly-cfg",
+  "evals": [
+    {
+      "id": "trappist-1-e",
+      "name": "earth-analog-aquaplanet",
+      "prompt": "Read the Phase 3 synthesis at /Users/vana/Desktop/claude/docs/phase3/trappist-1-e.md and produce a complete Firefly atmospheric-effects .cfg file for this body. The Kopernicus body name is `Trappist1e`. Save the output as `Trappist1e.cfg` in the designated output directory. If the body is airless and no Firefly cfg should be written, save a brief note to `_decision.md` explaining that.",
+      "expected": "ATMOFX_BODY node with name=Trappist1e, config_version=5, Earth-like N2+O2 palette (warm trail, blue-violet shockwave), wrap_fresnel_modifier=0 (1 bar clear), all 9 Color keys present.",
+      "files": ["/Users/vana/Desktop/claude/docs/phase3/trappist-1-e.md"]
+    },
+    {
+      "id": "trappist-1-b",
+      "name": "airless-or-thin-co2-edge",
+      "prompt": "Read the Phase 3 synthesis at /Users/vana/Desktop/claude/docs/phase3/trappist-1-b.md and produce a complete Firefly atmospheric-effects .cfg file for this body. The Kopernicus body name is `Trappist1b`. Save the output as `Trappist1b.cfg` in the designated output directory. If the body is airless and no Firefly cfg should be written, save a brief note to `_decision.md` explaining that.",
+      "expected": "Either (a) explicit _decision.md explaining airless skip, or (b) ATMOFX_BODY with strength_multiplier <= 0.5 and CO2 palette (blue trail, green shockwave).",
+      "files": ["/Users/vana/Desktop/claude/docs/phase3/trappist-1-b.md"]
+    },
+    {
+      "id": "proxima-cen-b",
+      "name": "earth-analog-different-star",
+      "prompt": "Read the Phase 3 synthesis at /Users/vana/Desktop/claude/docs/phase3/proxima-cen-b.md and produce a complete Firefly atmospheric-effects .cfg file for this body. The Kopernicus body name is `ProximaCenB`. Save the output as `ProximaCenB.cfg` in the designated output directory. If the body is airless and no Firefly cfg should be written, save a brief note to `_decision.md` explaining that.",
+      "expected": "ATMOFX_BODY following Phase 3's atmosphere decision; if Earth-analog N2 atmosphere, expect Earth-like palette.",
+      "files": ["/Users/vana/Desktop/claude/docs/phase3/proxima-cen-b.md"]
+    }
+  ]
+}
