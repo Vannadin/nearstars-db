@@ -58,6 +58,32 @@ use `principia-cfg`. If it's **adding a new star to the DB**, use
 
 ---
 
+## Workflow Overview
+
+```
+ 0. Time estimate     ← quote budget table to user, confirm before starting
+ 1. Pre-flight        ← confirm Phase 2 done, create checklist + context-notes
+ 2. Bibliography      ← per-planet ADS+arXiv queries
+ 3. System bib        ← system-level supplementary bibliography
+ 4. Expand            ← 1-hop citation graph walk to catch references
+ 5. Score+filter      ← authority + relevance, mark low-tier as skipped
+ 6. Fetch             ← arXiv full text for must-read papers
+ 7. Triage            ← classify deep_read / skim / skip / manual_followup
+ 8. Deep-read         ← extract concrete cfg-relevant numbers
+ 9. Draft English     ← per-planet 6-section markdown
+10. Verify decisions  ← re-read every Decisions row against the cited paper
+11. Korean mirror     ← natural-prose translation, block-parity
+12. Build HTML        ← build_html.py + reports index + check-mirrors
+13. Browser check     ← visual confirmation of lang toggle + rendered table
+14. Commit            ← per-planet (default) or per-system
+```
+
+Steps 2–5 are mostly mechanical and parallelize well. Steps 7–10 are
+where the synthesis judgment lives — these are where you should slow
+down and verify.
+
+---
+
 ## Step 0 — Share the time estimate with the user
 
 **Do this before any other step.** Phase 3 is the most expensive
@@ -78,31 +104,6 @@ Phase 3 outputs need Phase 2 measurements as inputs (per
 only Phase 1 curation, mention this in the same upfront message so
 the user can choose to escalate Phase 2 first (via `nearstars-add-star`)
 or proceed with degraded confidence.
-
----
-
-## Workflow Overview
-
-```
- 1. Pre-flight        ← confirm Phase 2 done, create checklist + context-notes
- 2. Bibliography      ← per-planet ADS+arXiv queries
- 3. System bib        ← system-level supplementary bibliography
- 4. Expand            ← 1-hop citation graph walk to catch references
- 5. Score+filter      ← authority + relevance, mark low-tier as skipped
- 6. Fetch             ← arXiv full text for must-read papers
- 7. Triage            ← classify deep_read / skim / skip / manual_followup
- 8. Deep-read         ← extract concrete cfg-relevant numbers
- 9. Draft English     ← per-planet 6-section markdown
-10. Verify decisions  ← re-read every Decisions row against the cited paper
-11. Korean mirror     ← natural-prose translation, block-parity
-12. Build HTML        ← build_html.py + reports index + check-mirrors
-13. Browser check     ← visual confirmation of lang toggle + rendered table
-14. Commit            ← per-planet (default) or per-system
-```
-
-Steps 2–5 are mostly mechanical and parallelize well. Steps 7–10 are
-where the synthesis judgment lives — these are where you should slow
-down and verify.
 
 ---
 
@@ -499,7 +500,7 @@ these actions require explicit confirmation or a Read-first step.
 |---|---|---|
 | `build_html.py` block count mismatch | Korean file edited without keeping block structure | Rewrite the affected ko paragraph/table/list block to match en exactly |
 | `check-mirrors.sh` reports a stale mirror | en source edited after ko mirror was finalized | Rewrite ko block-for-block; re-run check |
-| Bibliography ballooned to 1000+ entries after expansion | Citation expansion added noise | Score-filter aggressively (`--keep-threshold 8`), then mark `< 14` as skipped |
+| Bibliography ballooned to 1000+ entries after expansion | Citation expansion added noise | Re-run `score_papers.py --keep-threshold 8 --mark-skipped-below 14` to filter the bib and exclude low-tier rows from the next fetch |
 | Synthesis prose cites "Bolmont 2020" but paper is Brasser 2019 | Author reconstruction from memory | Always confirm author from `docs/phase3/_papers/<arxiv_id>.md` header before drafting |
 | Number in Decisions table doesn't match the cited paper | First-pass draft from prior cfg or abstract | Re-read the paper's specific number; update both the table and the prose |
 | Phase 2 missing for one planet in the system | Phase 1 auto-fill only | Stop, escalate Phase 2 via `nearstars-add-star`, then resume Phase 3 |

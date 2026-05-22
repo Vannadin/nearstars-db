@@ -51,3 +51,17 @@
       lines and Step 7 manual_followup body add prose intentionally)
       Total vs original 543: **-16 lines** across three commits.
 - [x] Commit with VaNnadin identity (ef6a504)
+
+## Post-pass cleanup (re-review found 3 leftovers)
+
+- [x] [N1] Common pitfalls table: "then mark `< 14` as skipped" was
+      stale wording from the pre-flag pass; replaced with the
+      `--mark-skipped-below 14` invocation so the table matches the
+      Step 5 prose
+- [x] [N2] Workflow Overview reordered before Step 0 body, with a
+      row 0 added to the overview table so the 14-line view now
+      shows all 15 actual stages (0+1..14)
+- [x] [N3] AGENTS.md §2 — replaced "three kinds" with "four
+      documentation homes" + explicit phase2/phase3 sibling note,
+      since the post-[I5] block lists four trees
+- [ ] Commit cleanup with VaNnadin identity

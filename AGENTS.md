@@ -36,8 +36,12 @@ Primary references — read these before touching the area they cover:
 
 ## 2. Document hierarchy
 
-The repo has **three** kinds of documentation. Pick the right home before
-you start writing.
+The repo has **four** documentation homes — `docs/reference/`,
+`phase2/<topic>/`, `phase3/<system>/`, and `plans/<topic>.md`. The
+phase2/ and phase3/ trees are both "active implementation work" with
+the CLAUDE.md §7 trio structure; they differ in scope (Phase 2 =
+paper-cited measurement curation, Phase 3 = cfg-ready synthesis).
+Pick the right home before you start writing.
 
 ```
 docs/reference/        Permanent reference. Schemas, methodology, format specs.
