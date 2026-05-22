@@ -62,6 +62,19 @@ liquid-water layer maintained by basal melting from radiogenic heat.
 | `xuv_flux_at_planet_F_earth` | ~120 (current) | high | Berardo 2025 (2506.12140) — revised L_XUV = 1.83×10²⁸ erg/s, 30× higher than 2017 estimates |
 | `stellar_microflare_cadence_min` | 45 | high | Berardo 2025 — 10²⁹ erg microflares every ~45 min; 10³⁰ erg flares every 6 hours (JWST) |
 | `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics |
+| `magnetic_field_strength_microtesla_equator` | 10 | low | RM22 (2203.01065) scaling; 1.32 M⊕ (largest in system) supports active dynamo |
+| `magnetic_dipole_moment_normalized_earth` | 0.35 | medium | RM22 + 2208.06523 (Earth-class core extends dynamo lifetime) — interior hydrosphere convection may also contribute |
+| `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset for distinctive auroral cap |
+| `magnetosphere_standoff_planet_radii` | 4 | medium | Garraffo 2017 Fig. 4 — outer planets less compressed than b/c; 4–5 R_p plausible at g's orbit |
+| `radiation_belt_present` | true | medium | B-field sufficient + outer-planet wind less crushing |
+| `surface_radiation_dose_msv_yr` | 5000 | high | Atri 2019 (1910.09871) Table 6 for g at 0.045 AU + 50 g/cm² shielding + B-field |
+| `atmospheric_shielding_g_cm2` | 50 | medium | Phase 3 cfg pressure 0.05 bar → ~50 g/cm² column |
+| `aurora_present` | true | high | Atm + B-field both supportive; CO₂-dominated emission |
+| `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack 600 nm red (Mars-analog snowball atmosphere); tie-break: red visible over UV-only |
+| `aurora_color_secondary_hex` | `#87CEEB` | low | Trace N₂⁺ emission if present; otherwise scattered-UV perception as pale blue |
+| `aurora_emission_species_primary` | `CO₂⁺ UV doublet 289 nm + CO Cameron bands` | medium | Mars-analog with snowball-thin CO₂ atm |
+| `aurora_oval_magnetic_latitude_deg` | 58 | medium | Vidotto 2013 with R_mp ~4 R_p → α ≈ 30°, oval lat ~60° |
+| `aurora_intensity_kR_typical` | 60 | low | Fraschetti 2019 proton flux at g's distance — moderate enhancement over Earth |
 | `star_apparent_angular_diameter_deg` | 1.36 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -111,6 +124,21 @@ ocean exists but its habitability potential degrades at the upper
 bound. For visual cfg this is not a rendering concern, but it's
 worth noting in the Open items as a Principia / astrobiology-relevant
 flag.
+
+**Cryovolcanic warm spots as a canonical visual feature.** g's high
+water mass fraction (0.11–0.50) combined with radiogenic + tidal
+heating gives a substantial sub-glacial ocean (basal melt at
+~0.04 W/m²) under a thick (50–100 km) ice shell. Europa-Ganymede
+analog reasoning supports the possibility of cryovolcanism at
+locations where the ice shell is thinnest — typically over
+warm-mantle anomalies that allow basal water to reach the surface.
+Per [[feedback-phase3-interesting-first]], the cfg promotes
+cryovolcanic plumes from "possible" to **canonical**: visible plumes
+near 2–4 substellar warm spots, each ~50–100 km across, producing
+fresh-water-ice halos around their venting sites. This is
+observation-consistent (no direct evidence either way) and
+dramatically more interesting than a uniform ice surface. The
+cfg-variant alternative is preserved: a featureless smooth snowball.
 
 **Bedrock / iron oxide.** Essentially none visible — the global ice
 cover is too thick for any bedrock exposure. Possible exception at
@@ -191,6 +219,18 @@ near the substellar region where some water can evaporate from the
 ocean and form relatively thin clouds (~0.1 kg/m²)." The cfg's
 full-snowball default is well-supported.
 
+**Aurora geometry over the ice.** With a moderate B-field (~0.35 ×
+Earth) and a thin CO₂-rich atmosphere, g hosts Mars-analog auroras at
+magnetic latitude ~58°. The dominant emission is CO₂⁺ red bands
+(Fox–Duffendack at ~600 nm), giving a distinctive red auroral band
+crossing the high-latitude ice. Intensity ~60 kR (~6× Earth) is
+moderate but visible against the dark snowball surface; cfg renders
+this as a `#FF6B6B` primary band with optional `#87CEEB` secondary
+tint where trace nitrogen contributes. The auroral oval is wider than
+Earth's, expanding equatorward toward ~50° during sub-Alfvénic
+transits; players in equatorial regions can see the aurora as a glow
+on the northern/southern horizon.
+
 ## Rotation & spin synthesis
 
 Tidal damping at 12.35 days over 7.6 Gyr → synchronous (1:1)
@@ -213,6 +253,16 @@ still small (~2×10⁻⁷ W/m² surface flux for a Maxwell-body rheology),
 but the relative dominance of f's gravitational influence is unique
 to g — a faithful annotation for the Principia cfg.
 
+**Magnetic dynamo expectation.** g is the most massive TRAPPIST-1
+planet (1.32 M⊕) and has the highest water mass fraction (Bourgeois
+2024 + Unterborn 2018), supporting both a metallic core dynamo and
+possibly a separate hydrosphere convection contribution. RM22
+(2203.01065) scaling places g at ~0.35 × Earth dipole moment despite
+the 12.4-day slow rotation. Garraffo 2017 finds outer planets less
+compressed by stellar wind, giving g a relatively well-organized
+magnetosphere with standoff at ~4 R_p. The Kerbalism cfg assumes
+closed-magnetosphere radiation belts at 1.5–4 R_p.
+
 ## Visual styling
 
 - **Global appearance.** Near-uniform warm cream-white snowball
@@ -229,6 +279,16 @@ to g — a faithful annotation for the Principia cfg.
   nightside ambient ≈ 1–3% dayside.
 - **Atmosphere haze.** Imperceptible from orbit; barely a hairline
   warm-gray glow (`#403028`) at the limb.
+- **Cryovolcanic plumes.** 2–4 substellar warm spots produce
+  ~50–100 km-wide plumes of fresh water ice ejected into the thin
+  atmosphere. Each plume forms a bright halo around its vent,
+  visible from orbit as small bright patches against the snowball.
+  Plumes are intermittent (timescales hours-days) so KSP rendering
+  should treat them as static features for fidelity.
+- **High-latitude aurora band.** A `#FF6B6B` red CO₂⁺ aurora at
+  ~58° magnetic latitude, visible against the dark nightside ice.
+  The aurora intensity peaks during stellar-wind sub-Alfvénic
+  transits (50–80% of each orbit per Garraffo 2017).
 - **Star in sky.** TRAPPIST-1 subtends 1.36° in g's sky (2.7× the
   Sun from Earth). Surface illumination is 0.26 S⊕ — comparable to
   outer Mars's solar flux. The red-orange star against the cream
@@ -298,6 +358,10 @@ to g — a faithful annotation for the Principia cfg.
 - **1811.04877** Wakeford 2019 — HST transmission of g + 3-temperature
   stellar model. Provides the canonical spot-coverage values
   (64:35:1 at 2400/3000/5825 K). Refines stellar sky color predictions.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+  Environment of TRAPPIST-1. Outer-planet magnetopause geometry.
+- **2203.01065** RM22 — Rocky-planet dynamo scaling for tidally-locked.
+- **1910.09871** Atri 2019 — Surface-dose tables for g.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -358,3 +422,12 @@ or works that mention g only in passing.
 - JWST GO 2589 observed g for flare characterization (per Burdanov
   2025 / 2512.04265) but no atmosphere retrieval has been published.
   Worth re-checking arXiv periodically for follow-up papers.
+- **Cfg variant: uniform smooth snowball.** Preserved as alternative
+  — for users who prefer the no-active-features reading. The
+  cryovolcanic-plumes canonical version was chosen per
+  interesting-first rule.
+- Surface radiation dose ~5 Sv/yr places g in Kerbalism's
+  "moderate-to-high" radiation bracket. With substantial ice
+  shielding (50 g/cm² atmospheric + ~30 m of ice), interior
+  habitats (under the ice) would actually be among the safest in
+  the system.

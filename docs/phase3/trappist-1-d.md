@@ -52,6 +52,20 @@ support, low = aesthetic choice within the allowed window.
 | `surface_tint_rgb_hex_primary` | `#2a2018` (dark gray-brown basalt) | low | bare-rock low albedo + M-dwarf red illumination shifts perceived hue; Mercury/Moon analog |
 | `surface_tint_rgb_hex_accent` | `#5a3220` (iron oxide patches) | low | photolytic oxide formation on long-tidally-locked dayside (Turbet 2018 mechanism) |
 | `surface_morphology` | cratered basaltic plains; relict magma-flow features near dayside-terminator | low | bare-rock interpretation; magma ocean retained ≲500 Myr (Piaulet 2025 §8); subsequent impacts |
+| `magnetic_field_strength_microtesla_equator` | 1 | low | Sub-Earth mass (0.39 M⊕) shrinks core; RM22 scaling + tidal-locking penalty |
+| `magnetic_dipole_moment_normalized_earth` | 0.02 | low | RM22 (2203.01065) for sub-Earth-mass tidally-locked; Driscoll & Olson dynamo shutoff favored |
+| `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: 10° gives offset auroral cap; aesthetic window 5–15° |
+| `magnetosphere_standoff_planet_radii` | 1.5 | medium | Weaker dipole → smaller magnetopause; Garraffo 2017 interpolated |
+| `radiation_belt_present` | false | medium | Field <0.1 Earth, no trapped-particle regime |
+| `surface_radiation_dose_msv_yr` | 25000 | low | Atri 2019 (1910.09871) interpolated for d at 0.022 AU + thin atm (~10 g/cm²) |
+| `atmospheric_shielding_g_cm2` | 10 | medium | Phase 3 cfg pressure 0.01 bar → ~10 g/cm² column |
+| `aurora_present` | true | low | Thin atm + weak B-field → visible auroral activity, novel chemistry from H₂O-rich tail |
+| `aurora_color_primary_hex` | `#B0E0E6` | low | Tie-break (interesting-first): pale cyan-white from H₂O cloud aerosol excitation + OH band emission boosted to visible by Mie scattering |
+| `aurora_color_secondary_hex` | `#4DFF4D` | low | Trace [OI] green if oxygen present; tie-break: interesting-first picks visible secondary over UV-only |
+| `aurora_emission_species_primary` | `OH(A-X) 308 nm + H Lyman-α + scattering on terminator H₂O ice` | low | Derived from atm composition (water-rich tail per Turbet 2023 → unique cloud-resonant emission) |
+| `aurora_oval_magnetic_latitude_deg` | 30 | medium | Weaker B-field → larger oval aperture (Vidotto 2013) |
+| `aurora_intensity_kR_typical` | 200 | low | Thin atm means deeper precipitation, brighter per particle; flare-driven |
+| `induction_heating_magma_ocean_fraction` | 0.56 | medium | Kislyakova 2018 (1710.08761) — 56% of radiogenic; magma-ocean plausibility supports d's existing magma-relict morphology notes |
 | `star_apparent_angular_diameter_deg` | 2.85 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -142,6 +156,8 @@ terminator water-ice clouds" scenario:
 
 **Interior-atmosphere coupling.** Acuña 2021 (2101.08172) characterizes d's hydrosphere as not in global radiative balance (absorbed flux ≈ 33 W/m² below OLR), implying d is gradually cooling. With WMF in the 0.036–0.084 range and Earth-analog radiogenic flux, d's volatile inventory could plausibly exist in condensed phases (liquid water or ice Ih) at the surface or in a subsurface layer. This is an alternative scenario to the chosen "thin atmosphere + terminator water-ice clouds" cfg — for the canonical NearStars output, we keep the JWST-constrained interpretation, but the cooling-and-condensing scenario is preserved as a cfg variant.
 
+**Cloud-resonant aurora.** d's adopted scenario — terminator H₂O ice clouds at mbar altitudes (Turbet 2023) — gives a unique auroral signature. Stellar-wind precipitation into the thin water-rich atmosphere dissociates H₂O into H and OH radicals, producing OH(A-X) UV emission at 308 nm. Crucially, the high-altitude ice clouds scatter this UV light back to visible wavelengths through Mie scattering, producing a pale cyan-white auroral glow concentrated at the terminator — distinct from Earth's polar-cap aurora geometry. The intensity reaches ~200 kR (20× Earth), driven by the M-dwarf's high stellar wind flux. For cfg rendering: primary `#B0E0E6` (pale cyan-white) along the terminator, secondary `#4DFF4D` (green) if local [OI] enhancement; interesting-first tie-break preferred the cloud-resonant visible rendering over the pure-UV alternative, which would be invisible.
+
 **Sky appearance.** With 0.01 bar surface pressure, Rayleigh scattering
 is essentially absent on the dayside — the sky is near-black at the
 zenith even at midday, with the M8 star providing intense localized
@@ -173,6 +189,8 @@ eccentricity-driven libration (insolation variation < 0.4% over an
 orbit), the substellar point is fixed in the surface frame. Visual
 ramifications: no day-night cycle for any surface location, no
 seasonal cap migration, no terminator drift.
+
+**Magnetic dynamo expectation.** d's small mass (0.39 M⊕) and slow tidally-locked rotation (4.05 d) make a strong dynamo difficult. RM22 (2203.01065) places sub-Earth-mass tidally-locked planets at ~0.02 × Earth dipole moment, giving ~1 μT surface field at the equator. The 56% induction-heating fraction (Kislyakova 2018) suggests an active liquid layer in d's interior, so a weak residual dynamo is plausible. The cfg adopts a low-but-nonzero field — enough to support a faint cloud-resonant aurora at the terminator but not to deflect stellar wind from the bulk of the dayside.
 
 ## Visual styling
 
@@ -232,6 +250,16 @@ Combining the surface and atmosphere decisions:
 - **2101.08172** Acuña 2021 — Hydrosphere characterization for the 7
   planets. d's WMF 3.6–8.4%, atmosphere not in radiative balance
   (cooling phase). Supports an alternative condensed-volatile scenario.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+  Environment of TRAPPIST-1. MHD simulations placing the inner-planet
+  magnetopauses near surface.
+- **2203.01065** RM22 — Magnetic moments of rocky planets. Sub-Earth-mass
+  tidally-locked dynamo scaling.
+- **1910.09871** Atri 2019 — Surface-dose tables for stellar proton
+  events.
+- **1710.08761** Kislyakova 2018 — Induction heating: d receives 56% of
+  radiogenic flux from stellar-wind electromagnetic coupling; supports
+  magma-ocean alternative scenario in d's interior.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -327,3 +355,10 @@ it could refine the orbital parameters table above.
   renderer wants to support a "wet d" variant. The canonical cfg sits
   at A_B = 0.10 under the airless / near-airless interpretation; the
   wet variant would need A_B ≥ 0.3.
+- The cloud-resonant aurora at the terminator is a unique cfg signature
+  for d. It depends on the H₂O ice cloud altitude being above the
+  auroral precipitation deposition layer — if future observations push
+  the cloud altitude down, the cyan-white glow may need revision.
+- The 25 Sv/yr surface dose places d in Kerbalism's "high-radiation"
+  bracket; crew habitation would need shielding equivalent to ~2 m of
+  regolith.

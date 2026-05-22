@@ -204,6 +204,293 @@ def inline_md(text: str) -> str:
     return out
 
 
+# ── color visualization ────────────────────────────────────────────────────
+# Decisions tables curate per-planet color palettes. We render:
+#   1. a palette band above each Decisions table (one swatch per color field)
+#   2. an inline chip beside every `#xxxxxx` hex code in any text
+#   3. a wavelength-spectrum gradient bar for aurora rows (emissive light,
+#      not reflected, so it doesn't share the reflective-surface logic)
+
+PALETTE_FIELDS = {
+    'atmosphere_tint_rgb_hex':       'Atmos',
+    'cloud_tint_rgb_hex':            'Cloud',
+    'ocean_tint_rgb_hex':            'Ocean',
+    'surface_tint_rgb_hex_primary':  'Surf · 1',
+    'surface_tint_rgb_hex_accent':   'Surf · 2',
+    'sunset_color_hex':              'Sunset',
+    'aurora_color_primary_hex':      'Aurora · 1',
+    'aurora_color_secondary_hex':    'Aurora · 2',
+}
+EMISSIVE_FIELDS = {'aurora_color_primary_hex', 'aurora_color_secondary_hex'}
+
+_HEX_RE = re.compile(r'#([0-9A-Fa-f]{6})\b')
+_HEX_IN_CODE_RE = re.compile(r'<code>#([0-9A-Fa-f]{6})</code>')
+# Wavelength range: "580–700 nm", "580-700 nm", "~330–400 nm"
+_NM_RANGE_RE = re.compile(r'(?:~)?(\d{2,4})\s*[–\-]\s*(\d{2,4})\s*nm')
+# Single line: "557.7 nm", "289 nm" — 3+ digits to avoid catching things like "8 nm"
+_NM_SINGLE_RE = re.compile(r'(?:~)?(\d{3,4}(?:\.\d+)?)\s*nm')
+
+# Auroral emission species → wavelength fallback for descriptions without explicit nm.
+# (substring, value) where value is either a single nm or a (start, end) tuple.
+# Order matters — more specific substrings should come first.
+_SPECIES_FALLBACK = [
+    ('Lyman-Birge-Hopfield', (130, 200)),   # N₂ LBH — far UV
+    ('Vegard-Kaplan',        (200, 280)),   # N₂ VK — UV
+    ('Fox–Duffendack',       (580, 700)),   # CO₂⁺ FDB band
+    ('Fox-Duffendack',       (580, 700)),
+    ('Cameron',              (180, 260)),   # CO Cameron — UV
+    ('Meinel',               (670, 720)),   # N₂⁺ Meinel — red/NIR
+    ('OH(A-X)',              308.0),        # OH band — UV
+    ('OH band',              308.0),
+    ('[OI]',                 557.7),
+    ('[NI]',                 520.0),
+    ('N₂⁺',                  391.4),        # default to First Negative if no band specified
+]
+# Bruton's wavelength→RGB is defined for 380–780 nm. Outside that we render a UV/IR badge
+# rather than a partial gradient — partial-UV bands look mostly black, which is misleading.
+_VISIBLE_MIN = 380.0
+_VISIBLE_MAX = 780.0
+
+
+def _wavelength_to_rgb(wl: float) -> tuple:
+    """Bruton's approximation for visible wavelength → linear RGB (380–780 nm)."""
+    R = G = B = 0.0
+    if 380 <= wl < 440:    R, B = -(wl - 440) / 60, 1.0
+    elif wl < 490:          G, B = (wl - 440) / 50, 1.0
+    elif wl < 510:          G, B = 1.0, -(wl - 510) / 20
+    elif wl < 580:          R, G = (wl - 510) / 70, 1.0
+    elif wl < 645:          R, G = 1.0, -(wl - 645) / 65
+    elif wl <= 780:         R = 1.0
+    # intensity falloff at the spectrum edges
+    f = 1.0
+    if wl < 420:    f = 0.3 + 0.7 * (wl - 380) / 40
+    elif wl > 700:  f = 0.3 + 0.7 * (780 - wl) / 80
+    gamma = 0.8
+    return tuple(0.0 if c == 0 else max(0.0, min(1.0, c * f)) ** gamma for c in (R, G, B))
+
+
+def _rgb_to_hex(rgb: tuple) -> str:
+    return '#' + ''.join(f'{int(round(max(0, min(1, c)) * 255)):02x}' for c in rgb)
+
+
+def spectrum_gradient(start: int, end: int, steps: int = 12) -> str:
+    """CSS linear-gradient string sampling Bruton's curve across [start, end] nm."""
+    stops = [_rgb_to_hex(_wavelength_to_rgb(start + (end - start) * i / steps))
+             for i in range(steps + 1)]
+    return f'linear-gradient(to right, {", ".join(stops)})'
+
+
+def parse_aurora_wavelength(text: str):
+    """Return (start_nm, end_nm, marker_or_None) or None if no wavelength is found.
+
+    Search order:
+    1. Explicit nm range (highest priority — paper-specific values)
+    2. Explicit single nm line (±20 nm window with a marker at the exact line)
+    3. Known emission-species substring (e.g. "[OI]" → 557.7 nm, "Fox–Duffendack" → 580–700)
+
+    Species fallback handles auroras described by chemistry rather than nm,
+    e.g. d's "Trace [OI] green if oxygen present" → 557.7 nm.
+    """
+    m = _NM_RANGE_RE.search(text)
+    if m:
+        return (int(m.group(1)), int(m.group(2)), None)
+    m = _NM_SINGLE_RE.search(text)
+    if m:
+        wl = float(m.group(1))
+        return (int(round(wl)) - 20, int(round(wl)) + 20, wl)
+    for substr, val in _SPECIES_FALLBACK:
+        if substr in text:
+            if isinstance(val, tuple):
+                return (val[0], val[1], None)
+            return (int(round(val)) - 20, int(round(val)) + 20, val)
+    return None
+
+
+def is_uv_or_ir(start: float, end: float) -> bool:
+    """True if the band is essentially outside Bruton's visible range."""
+    return end < _VISIBLE_MIN or start > _VISIBLE_MAX
+
+
+def is_wide_band(start: float, end: float) -> bool:
+    """True if the band is wider than 60 nm — wide bands get edge-fade via CSS mask."""
+    return (end - start) > 60
+
+
+def _contrast_text(hex_code: str) -> str:
+    """Pick black or white text per simple luma threshold."""
+    r = int(hex_code[1:3], 16) / 255
+    g = int(hex_code[3:5], 16) / 255
+    b = int(hex_code[5:7], 16) / 255
+    luma = 0.299 * r + 0.587 * g + 0.114 * b
+    return '#000' if luma > 0.55 else '#fff'
+
+
+def _extract_hex(text: str):
+    m = _HEX_RE.search(text)
+    return '#' + m.group(1).lower() if m else None
+
+
+def is_decisions_table(rows) -> bool:
+    """Decisions tables have a header containing 'Field' and 'Confidence'."""
+    if not rows or len(rows[0]) < 3:
+        return False
+    headers = [h.strip().lower() for h in rows[0]]
+    return any('field' in h for h in headers[:1]) and any('confidence' in h for h in headers)
+
+
+def parse_palette_swatches(rows) -> list:
+    """Walk a Decisions table and extract per-field data for the palette band."""
+    out = []
+    for row in rows[1:]:
+        if len(row) < 2:
+            continue
+        field = row[0].strip().strip('`').strip()
+        if field not in PALETTE_FIELDS:
+            continue
+        value = row[1]
+        basis = row[3] if len(row) >= 4 else ''
+        if field in EMISSIVE_FIELDS:
+            wave = parse_aurora_wavelength(value + ' ' + basis)
+            hex_code = _extract_hex(value)
+            if not wave and not hex_code:
+                continue
+            out.append({'field': field, 'label': PALETTE_FIELDS[field],
+                        'kind': 'emissive', 'wave': wave, 'hex': hex_code})
+        else:
+            hex_code = _extract_hex(value)
+            if not hex_code:
+                continue  # 'n/a' etc.
+            out.append({'field': field, 'label': PALETTE_FIELDS[field],
+                        'kind': 'reflective', 'hex': hex_code})
+    return out
+
+
+def render_palette_band(swatches: list) -> str:
+    if not swatches:
+        return ''
+    parts = ['<div class="palette-band">']
+    for s in swatches:
+        if s['kind'] == 'reflective':
+            hex_code = s['hex']
+            parts.append(
+                f'<div class="palette-swatch" style="background:{hex_code};color:{_contrast_text(hex_code)}">'
+                f'<span class="role">{html.escape(s["label"])}</span>'
+                f'<span class="hex">{hex_code}</span></div>'
+            )
+        else:
+            if s['wave']:
+                start, end, marker = s['wave']
+                if is_uv_or_ir(start, end):
+                    # Outside Bruton visible — palette swatch uses the curated hex
+                    # (since UV/IR has no perceived gradient color) but keeps the
+                    # emissive label and shows the band edge.
+                    band = 'UV' if end < _VISIBLE_MIN else 'IR'
+                    fallback_hex = s.get('hex') or '#2a2a2a'
+                    parts.append(
+                        f'<div class="palette-swatch palette-swatch-emissive palette-swatch-invisible" '
+                        f'style="background:{fallback_hex};color:{_contrast_text(fallback_hex)}">'
+                        f'<span class="role">{html.escape(s["label"])}</span>'
+                        f'<span class="hex">{band} · {int(start)}–{int(end)} nm</span></div>'
+                    )
+                else:
+                    marker_html = ''
+                    if marker:
+                        pos = (marker - start) / (end - start) * 100
+                        marker_html = f'<div class="palette-marker" style="left:{pos:.1f}%"></div>'
+                    parts.append(
+                        f'<div class="palette-swatch palette-swatch-emissive" '
+                        f'style="background:{spectrum_gradient(start, end)}">'
+                        f'{marker_html}'
+                        f'<span class="role">{html.escape(s["label"])}</span>'
+                        f'<span class="hex">{int(start)}–{int(end)} nm</span></div>'
+                    )
+            elif s['hex']:
+                # No parseable wavelength even via species lookup — flat hex chip.
+                hex_code = s['hex']
+                parts.append(
+                    f'<div class="palette-swatch palette-swatch-emissive" '
+                    f'style="background:{hex_code};color:{_contrast_text(hex_code)}">'
+                    f'<span class="role">{html.escape(s["label"])}</span>'
+                    f'<span class="hex">{hex_code}</span></div>'
+                )
+    parts.append('</div>')
+    return ''.join(parts)
+
+
+def augment_hex_chips(html_text: str) -> str:
+    """Insert a small color chip before every <code>#xxxxxx</code>."""
+    return _HEX_IN_CODE_RE.sub(
+        lambda m: (f'<span class="hex-chip" style="background:#{m.group(1).lower()}"></span>'
+                   f'<code>#{m.group(1)}</code>'),
+        html_text,
+    )
+
+
+def _render_spectrum_marker(start: float, end: float, marker) -> str:
+    """White vertical marker line at exact wavelength inside a spectrum bar."""
+    if not marker:
+        return ''
+    pos = (marker - start) / (end - start) * 100
+    return f'<div class="marker" style="left:{pos:.1f}%"></div>'
+
+
+def render_spectrum_widget(start: float, end: float, marker, hex_code: str = '') -> str:
+    """Render the wavelength widget (bar or UV badge) + range caption.
+
+    Three visual modes:
+    - **visible narrow** (≤60 nm): full-intensity gradient
+    - **visible wide** (>60 nm): gradient with CSS mask fading edges so the
+      visual weight sits at the center, not across the full yellow-to-red span
+    - **UV / IR**: muted "non-visible" badge instead of a mostly-black gradient
+    """
+    if is_uv_or_ir(start, end):
+        # Outside Bruton visible — render a muted "UV" or "IR" badge.
+        band = 'UV' if end < _VISIBLE_MIN else 'IR'
+        bar = (f'<span class="spectrum-bar spectrum-bar-invisible" '
+               f'title="{int(start)}–{int(end)} nm (outside visible spectrum)">'
+               f'{band}</span>')
+        caption = (f'<span class="spectrum-range">{int(start)}–{int(end)} nm · {band}'
+                   + (f' · peak {marker} nm' if marker else '')
+                   + '</span>')
+        return bar + caption
+
+    # Visible-range gradient. Wide bands get edge-fade via CSS mask.
+    cls = 'spectrum-bar'
+    if is_wide_band(start, end):
+        cls += ' spectrum-bar-wide'
+    bar = (f'<span class="{cls}" style="background:{spectrum_gradient(start, end)}">'
+           f'{_render_spectrum_marker(start, end, marker)}</span>')
+    caption = (f'<span class="spectrum-range">{int(start)}–{int(end)} nm'
+               + (f' · peak {marker} nm' if marker else '')
+               + '</span>')
+    return bar + caption
+
+
+def render_aurora_value(value_md: str, basis_md: str) -> str:
+    """Render a Decisions-table Value cell for an aurora row.
+
+    Combines the wavelength widget (spectrum bar or UV badge, picked by
+    `render_spectrum_widget`) with the curated hex (chip + code) and any
+    remaining inline description. Falls back to chip-only rendering if no
+    wavelength can be parsed even via species substring lookup.
+    """
+    wave = parse_aurora_wavelength(value_md + ' ' + basis_md)
+    if not wave:
+        return augment_hex_chips(inline_md(value_md))
+    start, end, marker = wave
+    widget = render_spectrum_widget(start, end, marker)
+    hex_code = _extract_hex(value_md)
+    hex_html = ''
+    if hex_code:
+        hex_html = (f' <span class="hex-chip" style="background:{hex_code}"></span>'
+                    f'<code>{hex_code}</code>')
+    desc = _HEX_RE.sub('', value_md)
+    desc = re.sub(r'`+', '', desc).strip()
+    if desc.startswith('(') and desc.endswith(')'):
+        desc = desc[1:-1].strip()
+    return widget + hex_html + (' ' + inline_md(desc) if desc else '')
+
+
 # ── HTML rendering with i18n ───────────────────────────────────────────────
 
 # JS-safe representation of an HTML snippet for use as a JS string value.
@@ -254,16 +541,16 @@ def render_html(slug: str, title_en: str, title_ko: str, pairs: list[tuple[Block
 
         elif en.kind == 'paragraph':
             key = new_key('p')
-            i18n_en[key] = inline_md(en.text)
-            i18n_ko[key] = inline_md(ko.text)
+            i18n_en[key] = augment_hex_chips(inline_md(en.text))
+            i18n_ko[key] = augment_hex_chips(inline_md(ko.text))
             body_html_parts.append(f'<p class="intro" data-i18n="{key}"></p>')
 
         elif en.kind == 'list':
             body_html_parts.append('<ul class="intro">')
             for idx, (e_item, k_item) in enumerate(zip(en.items, ko.items)):
                 key = new_key('li')
-                i18n_en[key] = inline_md(e_item)
-                i18n_ko[key] = inline_md(k_item)
+                i18n_en[key] = augment_hex_chips(inline_md(e_item))
+                i18n_ko[key] = augment_hex_chips(inline_md(k_item))
                 body_html_parts.append(f'<li data-i18n="{key}"></li>')
             body_html_parts.append('</ul>')
 
@@ -274,6 +561,12 @@ def render_html(slug: str, title_en: str, title_ko: str, pairs: list[tuple[Block
             body_html_parts.append(f'<pre><code{cls}>{esc}</code></pre>')
 
         elif en.kind == 'table':
+            decisions = is_decisions_table(en.rows)
+            if decisions:
+                # Palette band: locale-independent visual summary; emit before the table.
+                band = render_palette_band(parse_palette_swatches(en.rows))
+                if band:
+                    body_html_parts.append(band)
             body_html_parts.append('<div class="card"><table class="dt"><thead><tr>')
             for c_en, c_ko in zip(en.rows[0], ko.rows[0]):
                 key = new_key('th')
@@ -282,11 +575,20 @@ def render_html(slug: str, title_en: str, title_ko: str, pairs: list[tuple[Block
                 body_html_parts.append(f'<th data-i18n="{key}"></th>')
             body_html_parts.append('</tr></thead><tbody>')
             for r_en, r_ko in zip(en.rows[1:], ko.rows[1:]):
+                field_name = r_en[0].strip().strip('`').strip() if r_en else ''
+                aurora_row = decisions and field_name in EMISSIVE_FIELDS
                 body_html_parts.append('<tr>')
-                for c_en, c_ko in zip(r_en, r_ko):
+                for col_idx, (c_en, c_ko) in enumerate(zip(r_en, r_ko)):
                     key = new_key('td')
-                    i18n_en[key] = inline_md(c_en)
-                    i18n_ko[key] = inline_md(c_ko)
+                    if aurora_row and col_idx == 1:
+                        # Value cell of an aurora row → spectrum bar instead of plain hex chip
+                        basis_en = r_en[3] if len(r_en) >= 4 else ''
+                        basis_ko = r_ko[3] if len(r_ko) >= 4 else ''
+                        i18n_en[key] = render_aurora_value(c_en, basis_en)
+                        i18n_ko[key] = render_aurora_value(c_ko, basis_ko)
+                    else:
+                        i18n_en[key] = augment_hex_chips(inline_md(c_en))
+                        i18n_ko[key] = augment_hex_chips(inline_md(c_ko))
                     body_html_parts.append(f'<td data-i18n="{key}"></td>')
                 body_html_parts.append('</tr>')
             body_html_parts.append('</tbody></table></div>')
@@ -327,6 +629,29 @@ pre {{ background: var(--bg-card-alt); border: 1px solid var(--bd-soft); border-
 pre code {{ background: none; padding: 0; font-size: 12px }}
 
 .lang-toggle {{ margin-left: auto }}
+
+/* color visualization: palette band above Decisions tables */
+.palette-band {{ display: flex; gap: 2px; margin: 10px 0 8px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--bd-strong) }}
+.palette-swatch {{ flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 7px; font-family: var(--mono); font-size: 9.5px; line-height: 1.2; transition: flex-grow 0.15s ease; position: relative; overflow: hidden }}
+.palette-swatch:hover {{ flex-grow: 2.2 }}
+.palette-swatch .role {{ opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }}
+.palette-swatch .hex {{ opacity: 0.72; font-size: 10px }}
+.palette-swatch-emissive {{ color: rgba(0,0,0,0.88) }}
+.palette-marker {{ position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }}
+
+/* color visualization: inline chip beside every <code>#xxxxxx</code> */
+.hex-chip {{ display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }}
+
+/* color visualization: aurora rows render a wavelength gradient bar */
+.spectrum-bar {{ display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }}
+.spectrum-bar .marker {{ position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }}
+/* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
+   stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
+.spectrum-bar-wide {{ mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }}
+/* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
+.spectrum-bar-invisible {{ background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }}
+.palette-swatch-invisible {{ background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }}
+.spectrum-range {{ font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }}
 
 @media (max-width: 600px) {{
   section {{ margin-bottom: 24px }}

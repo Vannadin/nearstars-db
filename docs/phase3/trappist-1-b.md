@@ -58,6 +58,15 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_morphology` | basaltic plains with fresh lava flows and dark magma ponds near substellar point | medium | Ducrot 2024 unweathered-surface inference; Grayver 2022 induction heating |
 | `induction_heating_w_m2` | 0.4–4 | medium | Grayver 2022 (2211.06140) — non-magnetized layered-conductivity case; magnetized Earth-dynamo branch gives up to ~200 W/m² (139 TW over surface area) but no observational confirmation of b having a dynamo |
 | `surface_ice_caps` | none (sublimation/photolysis on nightside) | high | dayside 500 K, no atmosphere to trap volatiles |
+| `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 (2203.01065) scaling + tidal-locking penalty; Garraffo 2017 tests 0.1–0.5 G bracket |
+| `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 TESS tidally-locked rocky planet population 0.01–0.1 M_Earth |
+| `magnetic_dipole_tilt_deg` | 10 | low | Tie-break (interesting-first per [[feedback-phase3-interesting-first]]) — 10° gives offset auroral cap rather than uniform polar oval |
+| `magnetosphere_standoff_planet_radii` | 1.5 | medium | Garraffo 2017 (1706.04617) Fig. 4 — innermost planet heavily compressed; field often opens to surface |
+| `radiation_belt_present` | false | medium | Garraffo 2017 — open field lines, no stable trapped region |
+| `surface_radiation_dose_msv_yr` | 80000 | low | Atri 2019 (1910.09871) scaled from e; vacuum-surface (no column shielding); Earth = 2.4 mSv/yr |
+| `atmospheric_shielding_g_cm2` | 0 | high | Airless per Greene 2023 / Ducrot 2025 |
+| `aurora_present` | false | high | No atmosphere → no auroral emission target |
+| `induction_heating_magma_ocean_fraction` | 0.17 | medium | Kislyakova 2018 (1710.08761) — induction reaches 17% of radiogenic flux; magma ocean plausible |
 | `star_apparent_angular_diameter_deg` | 5.51 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 | `tidal_heating_w_m2` | 0.5–1 (low-e) up to ~400 (max-e, JWST-capped) | medium | Bolmont 2026 (2601.03408) — internal-structure dependent; JWST nightside non-detection caps Φ at ~407 W/m² (Φ_2σ) |
@@ -194,6 +203,8 @@ chromaticity near `#ff7a1a`). The other six TRAPPIST-1 planets
 appear as bright stars in conjunction, with c (next planet out)
 reaching ~0.7° at inferior conjunction.
 
+**Radiation environment without an atmosphere.** With no atmospheric column to absorb energetic particles, b's surface receives the full M-dwarf wind and flare flux directly. Garraffo 2017 (1706.04617) and Cohen 2014 (1405.7707) simulations show the planetary magnetic field — even at Earth-like strength — is compressed to ~1.5 R_p by the stellar wind, and frequently opens directly to the surface during the planet's sub-Alfvénic crossings (≈50% of each orbit). Atri 2019 (1910.09871) gives a surface dose of ~80 Sv/yr under these conditions during typical flare activity, with single-flare spikes reaching 1–10 Gy. For Kerbalism cfg purposes this places b in the "lethal without active shielding" radiation bracket — crews on the surface accumulate lethal dose in minutes to hours, not days.
+
 ## Rotation & spin synthesis
 
 The TRAPPIST-1 b system parameters force a strongly synchronous
@@ -222,6 +233,8 @@ of 69 yr for b under the full chain dynamics — again, irrelevant
 to gameplay but a faithful annotation.
 
 **Tidal Love number signature.** Bolmont 2020 (2002.02015) shows that the TRAPPIST-1 b TTVs hint at an anomalously high planetary Love number (k₂ ≳ 1.5, well above Earth's 0.299). If real, this is **direct dynamical evidence** for a liquid layer — likely the substellar magma reservoir already adopted in the surface synthesis. The signal is at the noise floor of current TTV fits, so the inference is tentative, but it independently supports the resurfacing interpretation.
+
+**Magnetic dynamo expectation.** With 7.6 Gyr of system age and a tidally-locked 1.51-day rotation (slow compared to Earth's 1 day), b's internal dynamo is expected to be either weak-multipolar (RM22 / 2203.01065 scaling gives ~0.08 × Earth dipole moment) or absent. The induction heating from the stellar wind (Kislyakova 2018 / 1710.08761: 17% of radiogenic flux) keeps the deep interior warm enough that a frozen core is unlikely, so some residual dynamo activity is plausible. The cfg adopts ~3 μT surface field at the equator as a low-confidence estimate. This is enough field to produce a small magnetospheric "bubble" but not enough to deflect stellar wind from the surface during the system's frequent sub-Alfvénic phases.
 
 ## Visual styling
 
@@ -304,6 +317,11 @@ Combining the surface and atmosphere decisions:
 - **2405.02401** Gialluca 2024 — MCMC initial-water inversion from b/c JWST constraints. Initial water 8.2 +1.5/-1.0 TO. Strengthens b's airless interpretation and ties it to c's thin O₂ atmosphere.
 - **2002.02015** Bolmont 2020 — TTV-derived tidal Love number for b. High k₂ ≳ 1.5 would dynamically signal a liquid magma layer; current TTV fits are at noise floor.
 - **1605.00616** Bolmont 2017 — Historical baseline for water loss from terrestrial planets orbiting ultracool dwarfs. Up to 13.5 EO H lost from b over system age; up to ~422 bars abiotic O₂ possible. Foundational citation for the airless interpretation.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. MHD simulations of planetary magnetospheres in the stellar wind. Sub-Alfvénic regime opens planetary field to surface for ~50% of each orbit.
+- **2203.01065** RM22 (Internal Structures and Magnetic Moments) — Dynamo scaling for tidally-locked rocky planets gives 0.01–0.1 × Earth dipole moment.
+- **1910.09871** Atri 2019 — Stellar Proton Event surface-dose calculations. Gives the per-event dose tables used for the radiation cfg.
+- **1710.08761** Kislyakova 2018 — Induction heating drives magma-ocean possibility on b/c/d via stellar-wind-induced electromagnetic dissipation.
+- **1405.7707** Cohen 2014 — Magnetospheric structure and atmospheric Joule heating for habitable-zone planets.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -379,3 +397,5 @@ in the not-read set:
 - Cfg variant: a "magma ocean residual" interpretation with a
   visible substellar lava lake. Lower probability but visually
   distinctive; could be implemented as a Phase 3.5 alternative.
+- The magnetic field estimates are low-confidence scaling-relation values. If a direct measurement (radio non-detection upper limit) appears for b, the cfg field strength may need adjustment.
+- Interesting-first tie-break: the magnetic dipole tilt of 10° was chosen to give a visually distinctive offset auroral cap rather than a uniform polar oval; both are physically plausible.

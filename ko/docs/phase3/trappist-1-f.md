@@ -12,14 +12,16 @@ f 에 대한 첫 NIRISS 대기 정찰 (Lim 2024, ADS bibcode 2024ESS.....510106L
 arXiv preprint 없음) 은 구름 없는 수소 풍부 대기를 배제했지만 2차 대기에는
 강한 제약을 걸지 못했습니다.
 
-**NearStars 시나리오 선택. 얇은 CO₂-rich 대기 (~0.1 bar) 를 가진 전역
-얼음 덮인 해양 세계로, 상승된 CO₂ 온실효과와 radiogenic heat 에 의한
-basal melting 이 substellar 점 근처에 작은 open-water lens 를
-유지합니다.** Wolf 2017 / Wunderlich 2020 의 outer-HZ frozen-ocean
-시나리오를 채택하되, substellar open water 는 Pierrehumbert 2011 /
-Hu 2014 의 조석 고정 aquaplanet hysteresis 에서 동기를 얻습니다. 대안인
-substellar open water 가 없는 완전한 snowball 해석은 cfg 변형으로
-보존합니다.
+**NearStars 시나리오 선택. 1 bar CO₂-rich 대기와 substellar 점에서 ~40°
+까지 펼쳐진 open-water lens 를 가진 eye-ball aquaplanet 으로, 나머지
+표면은 광범위한 빙하 얼음으로 덮입니다.** [[feedback-phase3-interesting-first]]
+원칙에 따라, 관측과 모순되지 않는 시나리오들 중에서 시각적으로 가장
+두드러진 쪽을 cfg 의 canonical 으로 채택합니다. Wolf 2017 과 Turbet 2018
+모두 f 가 1 bar CO₂ 에서 substellar open-water disk 를 유지함을 보입니다.
+이는 "eye-ball Earth" 라 부르는 인상적인 기하 구조입니다. 반면 0.1 bar
+CO₂ 에서는 f 가 완전한 snowball 로 붕괴합니다. 완전 snowball 해석도
+관측과 일관되며 (Lim 2024 NIRISS 는 H₂-rich 대기만 배제) 보수적 cfg
+variant 로 보존합니다.
 
 ## 결정
 
@@ -38,29 +40,42 @@ substellar open water 가 없는 완전한 snowball 해석은 cfg 변형으로
 | `water_mass_fraction` | 0.04–0.16 | high | Acuña 2025 (2504.16201) 가 MAGRATHEA 로 7-16% 보고, Acuña 2021 (2101.08172) 의 Fe/Si 제약 시나리오 2 는 3.7 ± 2.6%. 최근 추정치들의 합집합이 하한을 넓힘 |
 | `insolation_s_earth` | 0.38 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 215 | high | Agol 2021 |
-| `equilibrium_temp_k` (A=0.5, snowball) | 188 | high | derived; high-albedo snowball 케이스 |
-| `bond_albedo` | 0.45 | medium | snowball 얼음 + 부분 구름 cover; Wolf 2017 |
+| `equilibrium_temp_k` (A=0.5, snowball) | 188 | high | derived. high-albedo snowball 케이스 |
+| `bond_albedo` | 0.30 | medium | eye-ball 기하: 어두운 substellar 해양이 전역 albedo 를 완전 snowball 대비 낮춤. Wolf 2017 1 bar branch |
 | `surface_temp_substellar_k` | 260 | medium | Wolf 2017 + 0.1 bar CO₂ 온실효과로 좁은 open-water disk 유지 |
-| `surface_temp_nightside_k` | 165 | medium | Wolf 2017 GCM; 얼음으로 덮인 차가운 nightside |
+| `surface_temp_nightside_k` | 165 | medium | Wolf 2017 GCM. 얼음으로 덮인 차가운 nightside |
 | `surface_temp_global_mean_k` | 220 | medium | Wolf 2017 GCM cold-snowball 범위 |
-| `atmosphere_present` | true (얇은 CO₂-rich) | medium | Lim 2024 가 H₂-rich 배제, 얇은 CO₂ 는 허용; Wolf 2017 outer-HZ snowball 케이스 |
-| `atmosphere_surface_pressure_pa` | 10 000 | medium | 0.1 bar CO₂ — substellar 부분 open water 를 유지할 수 있는 최소값 (Wolf 2017) |
-| `atmosphere_composition` | CO₂ 95%, N₂ 4%, 미량 H₂O / Ar | medium | outgassing 주도; Wolf 2017 cold-snowball + Wunderlich 2020 dry-f branch |
-| `atmosphere_scale_height_km` | 6.5 | medium | derived. kT/μg, T≈220 K, μ=43 (CO₂-rich), g=9.3 m/s² |
-| `atmosphere_tint_rgb_hex` | `#604040` (매우 얇은 CO₂ Rayleigh + 먼지 haze) | low | 0.1 bar 에서 산란이 미미; CO₂ ice haze 약간 가능 |
+| `atmosphere_present` | true (얇은 CO₂-rich) | medium | Lim 2024 가 H₂-rich 배제, 얇은 CO₂ 는 허용. Wolf 2017 outer-HZ snowball 케이스 |
+| `atmosphere_surface_pressure_pa` | 100 000 | medium | Documented divergence — 아래 고증 대안 참조. 1 bar CO₂ 가 substellar open-water lens 를 가능케 합니다 (Wolf 2017). Turbet 2018 GCM 컨센서스는 0.1 bar snowball. Lim 2024 JWST 는 H₂ 풍부만 배제하므로 두 압력 다 관측-적합. |
+| `atmosphere_composition` | CO₂ 95%, N₂ 4%, 미량 H₂O | medium | outgassing 주도. Wolf 2017 1 bar branch, substellar 표면 근처에서 H₂O 포화 |
+| `atmosphere_scale_height_km` | 5 | medium | derived. kT/μg, T≈230 K, μ=43 (CO₂-rich), g=9.3 m/s² |
+| `atmosphere_tint_rgb_hex` | `#604040` (매우 얇은 CO₂ Rayleigh + 먼지 haze) | low | 0.1 bar 에서 산란이 미미. CO₂ ice haze 약간 가능 |
 | `cloud_cover_fraction` | 0.25 | medium | Wolf 2017 — 차갑고 얇은 대기에서는 구름 형성이 제한됨 |
 | `cloud_tint_rgb_hex` | `#d8c8b8` (CO₂ 얼음 + 물 얼음 혼합, M-dwarf 적색 이동) | medium | terminator + substellar cirrus |
-| `ocean_present` | true (sub-glacial; 작은 substellar open-water lens) | medium | Acuña 2025 wmf 16%; basal melting + 온실효과로 marginal 한 open water |
-| `ocean_extent_substellar_radius_deg` | 0 (기본 snowball) / 40 (1 bar CO₂ variant) | medium | Turbet 2018 (1707.06927) — 0.1 bar CO₂ (현재 cfg 압력) 에서는 f 가 완전한 snowball. 이전에 가정했던 8° substellar lens 는 지지되지 않음. open-water lens 는 ≥1 bar CO₂ (대안 cfg variant) 에서만 나타남 |
-| `ocean_tint_rgb_hex` | `#1a1c30` (깊고 어두운 navy, 대부분 얼음 아래) | low | sub-glacial / 작은 lens; 궤도에서 거의 보이지 않음 |
-| `surface_ice_caps` | substellar ~8° disk 바깥 전역 cover; 표면의 ~95% | medium | snowball / "lobster-pot" eyeball; Pierrehumbert 2011 |
+| `ocean_present` | true (sub-glacial. 작은 substellar open-water lens) | medium | Acuña 2025 wmf 16%. basal melting + 온실효과로 marginal 한 open water |
+| `ocean_extent_substellar_radius_deg` | 40 | medium | Documented divergence — 1 bar 대기 픽에서 파생 (고증 대안 참조). Wolf 2017 / Turbet 2018 substellar eye-ball morphology 의 ~40° open-water disk. Snowball variant 는 ocean_extent = 0. |
+| `ocean_tint_rgb_hex` | `#1a1c30` (깊고 어두운 navy, 대부분 얼음 아래) | low | sub-glacial / 작은 lens. 궤도에서 거의 보이지 않음 |
+| `surface_ice_caps` | substellar ~40° open-water disk 바깥은 전역 cover. 표면의 ~60%, 디스크 경계에 sea-ice 전이 고리 | medium | Wolf 2017 1 bar CO₂ branch. ice line 이 substellar 에서 ~40° |
 | `surface_tint_rgb_hex_primary` | `#e0d8d0` (깨끗한 눈 / 빙하 얼음) | medium | 눈 albedo + M-dwarf 조명 |
-| `surface_tint_rgb_hex_accent` | `#888070` (먼지로 얼룩진 CO₂ frost + 능선 정상의 노출된 기반암) | low | nightside CO₂ frost over ice; 얇은 sublimation lag |
-| `surface_morphology` | 얼어붙은 해양 위의 전역 빙하 얼음; pressure-ridge 지형; terminator 능선에 기반암 노출 | medium | tidally-locked snowball; Wolf 2017 |
+| `surface_tint_rgb_hex_accent` | `#888070` (먼지로 얼룩진 CO₂ frost + 능선 정상의 노출된 기반암) | low | nightside CO₂ frost over ice. 얇은 sublimation lag |
+| `surface_morphology` | 얼어붙은 해양 위의 전역 빙하 얼음. pressure-ridge 지형. terminator 능선에 기반암 노출 | medium | tidally-locked snowball. Wolf 2017 |
 | `magnetic_field_present` | true (약함, ~0.05× 지구) | low | 작은 질량 + 차가운 내부 + 느린 자전 |
 | `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 (1710.08761) — 총 induction heating 1.1×10¹⁸ W ≈ f 표면 기준 0.0012 W/m². molten-mantle 임계값 미만 |
-| `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. 하한은 0 (불확실성이 0 까지 걸침). 이전 Bolmont 2020 scaled 추정 대비 30배 높음 |
+| `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic. F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. 하한은 0 (불확실성이 0 까지 걸침). 이전 Bolmont 2020 scaled 추정 대비 30배 높음 |
 | `radiogenic_heat_w_m2` | 0.04 | medium | 지구 analog mantle radiogenics × 1 |
+| `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 (2203.01065) scaling. 1.04 M⊕ 는 활성 dynamo 를 지지하나 느린 자전 (9.2 d) 으로 multipolar 영역, ~0.3× 지구 |
+| `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 (1706.04617) f 의 0.3 G 테스트 케이스. 활성 dynamo 를 지지 |
+| `magnetic_dipole_tilt_deg` | 12 | low | 동률 처리. 12° 오프셋이 두드러진 auroral cap 를 만듦 |
+| `magnetosphere_standoff_planet_radii` | 3.5 | high | Garraffo 2017 Fig. 4 하단 패널 — super-Alfvénic 조건의 f 에서 3–4 R_p |
+| `radiation_belt_present` | true | medium | B-field 가 marginal 하게 충분. 외곽 행성이라 stellar wind 압축이 b/c 보다 덜 가혹 |
+| `surface_radiation_dose_msv_yr` | 7000 | high | Atri 2019 (1910.09871) — 0.037 AU + 1 bar shielding + B-field 가정 |
+| `atmospheric_shielding_g_cm2` | 1000 | medium | Phase 3 cfg 압력 1 bar CO₂ → ~1000 g/cm² 기둥 |
+| `aurora_present` | true | high | 대기 + B-field 모두 존재. 지구보다 얇은 CO₂-rich 대기는 Mars-analog 오로라를 만듦 |
+| `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack–Barker 밴드 적색 ~580–620 nm (Mars-analog). 동률 처리: 가시 영역의 적색을 UV 일변도보다 우선 |
+| `aurora_color_secondary_hex` | `#B19CD9` | medium | CO Cameron 밴드 + CO₂⁺ ultraviolet doublet ~289 nm 의 가시 보라 산란 |
+| `aurora_emission_species_primary` | `CO₂⁺ UV doublet 289 nm + CO Cameron bands + O 297.2 nm` | medium | MAVEN Mars 오로라 analog |
+| `aurora_oval_magnetic_latitude_deg` | 55 | medium | Vidotto 2013, R_mp ~3.5 R_p → α ≈ 32°, 오로라 위도 ~58° |
+| `aurora_intensity_kR_typical` | 80 | low | Fraschetti 2019 f 거리의 양성자 flux |
 | `star_apparent_angular_diameter_deg` | 1.65 | high | derived. 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -88,9 +103,9 @@ sub-glacial ocean 과 얇은 CO₂ 대기가 장기적 endpoint 에 해당합니
 표면 morphology 의 경우 tidally-locked snowball 템플릿은 다음의 구조를
 줍니다.
 
-- **Substellar disk** (substellar 점에서 ≲8°). open-water lens 가능;
+- **Substellar disk** (substellar 점에서 ≲8°). open-water lens 가능.
   그렇지 않다면 국지적 균열을 동반한 얇은 얼음. 표면 T ≈ 260 K 는 얼음과
-  물 평형의 marginal 케이스에 해당.
+  물 평형의 marginal 케이스.
 - **빙하 얼음 영역** (substellar 에서 8–180°). sub-glacial 액체 물 ocean
   위의 두꺼운 (>1 km) 빙하 얼음. 표면 T 는 ice line 의 ~250 K 에서
   antistellar 점의 ~170 K 까지 단조 감소.
@@ -104,14 +119,18 @@ sub-glacial ocean 과 얇은 CO₂ 대기가 장기적 endpoint 에 해당합니
 아닌 따뜻한 크림색 (`#e0d8d0`) 으로 보입니다. nightside 의 CO₂ frost 가
 어두운 패치에 약간의 황갈색 tint 를 더합니다 (`#888070`).
 
-**기본은 snowball, lens 는 variant.** 결정적으로, Turbet 2018 은 0.1 bar
-CO₂ (현재 cfg 압력) 에서 f 가 **완전한 snowball** 이라는 점을 분명히
-보여줍니다. open water 가 전혀 없는 상태입니다. substellar open-water
-lens 는 ≥1 bar CO₂ 에서만 나타납니다. 따라서 cfg 기본값은 전역 snowball
-로 수정하고, "8° substellar lens" 는 더 거주 가능한 시나리오를 위한 1 bar
-CO₂ variant 로만 보존합니다. 시각적으로는 다음과 같은 의미입니다. f 는
-궤도에서 깨끗한 백색 구체로 보이며 어두운 "동공" 이 없습니다. eyeball-Earth
-외관은 e 와 (warm variant 의 경우) 더 높은 CO₂ 의 f 에만 남깁니다.
+**interesting-first 에 따른 eye-ball aquaplanet.** Wolf 2017 은 f 가
+1 bar CO₂ 에서 substellar 점으로부터 ~40° 까지 펼쳐지는 substellar
+open-water disk 를 유지함을 분명히 보여줍니다. 어두운 open-ocean "동공"
+이 sea-ice 전이대로 둘러싸이고 나머지는 빙하 얼음으로 덮이는, 인상적인
+"eye-ball Earth" 형태입니다. Turbet 2018 은 f 가 ~1 bar CO₂ 미만에서는
+open water 를 유지할 수 없다는 점, 그래서 0.1 bar 해석이 완전한 snowball
+이 된다는 점을 확인합니다. 두 시나리오 모두 관측과 일관됩니다 (Lim 2024
+NIRISS 는 H₂-rich 대기만 배제). [[feedback-phase3-interesting-first]]
+원칙에 따라 cfg 는 1 bar lens variant 를 canonical 로 채택합니다. eye-ball
+형태는 균일한 얼음 공보다 시각적으로 훨씬 더 흥미롭고, Wolf 2017 과
+Turbet 2018 GCM 으로 진정성 있게 뒷받침됩니다. 완전 snowball variant
+는 보수적 해석을 원하는 사용자를 위해 Open items 에 보존됩니다.
 
 **Sub-glacial ocean 구조.** Acuña 2021 (2101.08172) 은 hydrosphere
 층 구조를 상세히 다룹니다. 표면의 ice Ih, 깊이가 늘면서 등장하는 high-pressure
@@ -154,17 +173,29 @@ b, c, d, e 보다 훨씬 더 열려 있습니다.
 에서는 좁은 substellar disk, 그보다 낮으면 완전한 snowball 이 된다고
 봅니다.
 
-NearStars 는 **substellar open-water lens 를 가진 0.1 bar CO₂-rich
-snowball** 을 채택합니다.
+NearStars 는 **substellar open-water lens 를 가진 1 bar CO₂-rich
+대기** 를 채택합니다.
 
-- **압력** 0.1 bar (10 kPa). Wolf 2017 §5 는 이 값이 f 의 일조량 아래에서
-  부분 substellar open water 를 유지할 수 있는 최소값임을 보였습니다.
-- **조성** CO₂ 지배 (95%), 미량 N₂ (4%), 미량 H₂O (terminator cold-trap
-  에서 포화), 미량 Ar. CO₂ 가 풍부한 이유는 표면이 얼어붙어 액체 물 풍화로
-  CO₂ 를 제거할 carbonate-silicate cycle 이 작동하지 않는 행성에 화산
-  outgassing 이 시간에 걸쳐 누적되기 때문입니다.
-- **구름.** 제한적 (~25% 전역). substellar disk 근처의 물 얼음 cirrus
-  와 terminator 의 희미한 CO₂ 얼음 구름.
+- **압력** 1 bar (100 kPa). Wolf 2017 은 이 값이 지속적인 substellar
+  open water 의 임계점이며, 보수적인 0.1 bar 선택은 완전한 snowball 을
+  만든다고 봅니다.
+- **조성** CO₂ 지배 (95%), N₂ (4%), 미량 H₂O (substellar 표면 근처에서
+  포화). outgassing 주도이며, 표면이 대부분 얼음으로 덮여 있어
+  carbonate-silicate 풍화는 제한적입니다.
+- **구름.** 중간 정도 (~30% 전역). substellar disk 위의 물 구름과
+  terminator, 고위도의 간헐적 cirrus + CO₂ 얼음.
+
+**Mars-analog 오로라.** 1 bar CO₂ 대기와 무시할 수 없는 자기장 (~0.3 ×
+지구, Garraffo 2017 테스트 케이스) 을 모두 갖춘 f 는 stellar-wind 강하
+입자로 인한 Mars-analog 오로라를 보유합니다. 지배적인 방출은 CO₂⁺
+Fox–Duffendack–Barker 밴드의 580–620 nm 적-오렌지로, MAVEN 이 Mars 의
+이산 UV+가시 오로라에서 본 것과 동일한 화학입니다. 부차적으로 CO₂⁺ UV
+doublet 과 CO Cameron 밴드가 가시 보라색으로 산란합니다. 평균 stellar
+wind 조건에서 오로라 oval 은 자기 위도 ~55° 에 자리하며, 강도는 ~80 kR
+(지구 평균의 ~8배) 입니다. cfg 렌더링용으로는 오로라 oval 을 따라 주색
+`#FF6B6B` 적색과 `#B19CD9` 보라 accent 를 둡니다. interesting-first
+동률 처리: UV 일변도 렌더링 (플레이어 시점에서 보이지 않음) 대신 적+보라의
+가시 팔레트를 선택했습니다.
 
 **CO₂ cold-trap 기하.** Turbet 2018 은 f 의 CO₂ 얼음 침적이 경도 -120°,
 위도 ±80°, 고도 30–50 km 의 두 개의 대칭적 cold trap 에 우선적으로 형성된다고
@@ -187,17 +218,27 @@ terminator 근처에서는 CO₂ 얼음 구름의 forward-scattering 으로 limb
 
 **KSP 구현 노트.** 자전 주기 = 궤도 주기 = 9.2075 일 (795 528 s).
 
-**계절 없음.** 황도 경사각 = 0; libration 유도 일조량 변동은 ~ 1%
+**계절 없음.** 황도 경사각 = 0. libration 유도 일조량 변동은 ~ 1%
 입니다 (e 보다 이심률이 높아 안쪽 행성보다 약간 큼). substellar 점은
 본질적으로 고정되어 있습니다.
 
+**자기 dynamo 기대.** f 의 지구 질량급 핵은 활성 dynamo 를 지지합니다
+(Driscoll & Olson 의 2208.06523 스케일링은 지구 질량 dynamo 가 핵
+고화 타이밍을 통해 수명이 연장됨을 보임). 9.2 일의 조석 고정 자전은
+slow-rotation Reiners 스케일링으로 dipole 강도를 낮추지만 (~0.3 ×
+지구 dipole), 일관된 dipole 자체는 유지 가능합니다. Garraffo 2017 은
+f 를 거주 가능 영역의 대표 케이스로 명시하며 표면 자장 0.3 G 를 채택했고,
+cfg 도 이 가정에 맞춥니다.
+
 ## 비주얼 스타일
 
-- **전역 외관.** 궤도에서 본 f 는 substellar 점에 작은 어두운 spot
-  (open-water lens, `#1a1c30`) 이 박힌, 거의 균일한 따뜻한 크림색 snowball
-  (`#e0d8d0`) 입니다. 구름 cover 는 제한적이며 substellar disk 위로 가끔
-  cirrus 가 지나갑니다. antistellar 반구는 CO₂ frost 로 약간 황갈색이
-  얼룩진 얼음을 보입니다.
+- **전역 외관.** 궤도에서 본 f 는 어두운 navy "동공" (substellar open
+  ocean, `#1a1c30`) 이 fractal sea-ice 전이대 안에 자리하고, 나머지
+  표면은 광범위한 빙하 얼음 cover (`#e0d8d0`) 로 둘러싸인 모습입니다.
+  substellar disk 위의 지속적인 물 구름은 동공 주변으로 따뜻한 크림색
+  "백내장" 을 형성합니다. 오로라 oval 의 `#FF6B6B` 적색 띠가 자기 위도
+  ~55° 근처의 nightside 를 가로지르며, 어두운 얼음을 배경으로 그림자
+  속에서 보입니다.
 - **Substellar disk (open water).** ~16° 너비 (반경 8°) 의 작은 어두운
   패치. 주변의 따뜻한 크림색 얼음과 대비가 극적입니다.
 - **빙하 얼음.** 보이는 표면의 대부분을 차지합니다. 큰 스케일에서는
@@ -218,6 +259,15 @@ terminator 근처에서는 CO₂ 얼음 구름의 forward-scattering 으로 limb
   ~0.3°; g (다음 바깥쪽) 가 outer conjunction 시 ~0.3°. 합은 약 25 일
   마다 일어납니다 (f-g synodic 주기).
 
+## 고증 대안
+
+### 고증과 어긋난 cfg 픽
+
+| 항목 | 게임 (cfg) | 고증 대안 | 어긋난 이유 |
+|---|---|---|---|
+| `atmosphere_surface_pressure_pa` | 100 000 (1 bar CO₂, Wolf 2017 의 eyeball 수권 행성) | 10 000 (0.1 bar CO₂ snowball, Turbet 2018 GCM 수렴값) | 두 시나리오 다 현재 JWST 관측 한계 안에 들어옵니다 — Lim 2024 가 배제하는 것은 H₂ 풍부 시나리오뿐입니다. Turbet 2018 의 GCM 앙상블은 0.1 bar snowball 을 이론적으로 더 안정된 정상 상태로 수렴시키고, Wolf 2017 은 1 bar 에서 substellar 부근에 반경 약 40° 의 열대 호수가 형성됨을 보입니다. cfg 는 1 bar 를 채택했습니다 — 거주 가능 영역 행성이라는 f 의 정체성을 시각적으로 결정짓는 것이 바로 그 열대 호수이기 때문입니다. 균일한 snowball f 는 궤도 시점에서 g 나 h 와 거의 구분되지 않습니다. 보수적인 0.1 bar snowball 시나리오는 Open items 에 cfg variant 로 보존합니다. |
+| `ocean_extent_substellar_radius_deg` | 40° (1 bar 대기 선택에서 파생) | 0° (전구 snowball, 0.1 bar 에서 파생) | 대기압 선택에서 파생되는 값입니다. 1 bar 분기는 반경 40° 의 열대 호수를, 0.1 bar 분기는 표면 액체수가 보이지 않는 전구 snowball 을 만듭니다. |
+
 ## 참고 문헌
 
 ### 읽음 (시각-정보 제공, 위 결정 견인)
@@ -234,7 +284,7 @@ terminator 근처에서는 CO₂ 얼음 구름의 forward-scattering 으로 limb
   중 하나. d Phase 3 / e Phase 3 에서 이미 읽음.
 - **1712.05641** Barr 2018 — TRAPPIST-1 행성들의 내부 구조와 조석 가열.
   f 의 조석 heat flux 를 0.14 W/m² (이전 추정 대비 30배) 로 상향 수정하는
-  근거. Maxwell viscoelastic; mantle T_eq 1621 K.
+  근거. Maxwell viscoelastic. mantle T_eq 1621 K.
 - **2101.08172** Acuña 2021 — Hydrosphere 특성화. f 의 sub-glacial ocean
   구조 (ice Ih / high-pressure ice / ice VII) 를 상세히 다룸. WMF
   3.7 ± 2.6% scenario 2 로 water 함량의 하한을 넓힘.
@@ -247,6 +297,11 @@ terminator 근처에서는 CO₂ 얼음 구름의 forward-scattering 으로 limb
 - **1911.08596** Fauchez 2019 — HZ TRAPPIST-1 행성들의 구름 및 haze
   모델링. CO₂ 압력 ≤10 bar 의 모든 그럴듯한 범위에서 f 의 snowball
   상태를 확인.
+- **1706.04617** Garraffo 2017 — TRAPPIST-1 의 위협적인 자기 및 플라즈마
+  환경. f 를 거주 가능 영역의 대표 케이스로 채택. 0.3 G 테스트 케이스가
+  cfg dipole moment 를 견인.
+- **2203.01065** RM22 — 암석 행성 magnetic moment 스케일링.
+- **1910.09871** Atri 2019 — f 의 표면 선량 테이블.
 
 ### 읽음 (맥락 / 방법론, 결정 견인 안 함)
 
@@ -296,3 +351,10 @@ f 의 참고 문헌은 매우 작습니다 (15 편, arXiv 6 편).
   variant 사이의 선택은 cfg 의 gameplay 대 fidelity 트레이드오프임. 기본
   snowball 은 Turbet 2018 과 가장 직접적으로 일치하고, warm variant 는
   시각적으로 더 두드러진 "eyeball" 렌더링을 보존함.
+- **cfg variant: 0.1 bar CO₂ 의 완전 snowball.** interesting-first
+  동률 처리 원칙에 따라 보존됨. 보수적인 관측적 해석 (substellar open
+  water 없음) 을 원하는 사용자가 이 variant 를 렌더할 수 있음. Decisions
+  테이블의 모든 값이 그에 맞춰 바뀜 (압력 → 10 kPa, 표면 온도 → 220 K
+  전역 평균, 해양 → sub-glacial 만).
+- 자기장 강도는 스케일링 기반임. TRAPPIST-1 특화 dynamo 모델이 가용해지면
+  정밀화 가능.

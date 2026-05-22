@@ -9,15 +9,11 @@ description: >
   데이터", "cfg-ready 값 만들어줘", "이 행성 Phase 3 까지 올려줘",
   "synthesize <planet>", or any time the conversation involves drafting
   the per-planet Decisions table + Surface / Atmosphere / Rotation /
-  Visual narrative sections. The output is a bilingual web report
-  (`docs/phase3/<slug>.html`) that feeds downstream cfg writers
-  (`kopernicus-cfg`, `principia-cfg`). Do NOT trigger this skill for
-  Kopernicus cfg writing (use `kopernicus-cfg`) or Principia cfg writing
-  (use `principia-cfg`) — Phase 3 is the synthesis layer that *feeds*
-  those cfg writers, not the cfg writers themselves. Also do NOT trigger
-  for adding a new star to the DB (use `nearstars-add-star`) or for
-  Phase 2 (paper-cited measurement curation, handled inside
-  `nearstars-add-star`).
+  Visual narrative sections. Output is a bilingual web report
+  (`docs/phase3/<slug>.html`) that feeds the cfg writers downstream.
+  Do NOT use for Kopernicus cfg (`kopernicus-cfg`), Principia cfg
+  (`principia-cfg`), new-star DB entry, or Phase 2 measurement
+  curation (both handled by `nearstars-add-star`).
 ---
 
 # NearStars — Phase 3 Synthesis
@@ -62,9 +58,36 @@ use `principia-cfg`. If it's **adding a new star to the DB**, use
 
 ---
 
-## Time and scope warning
+## Workflow Overview
 
-Phase 3 is the most expensive curation tier. Realistic budget:
+```
+ 0. Time estimate     ← quote budget table to user, confirm before starting
+ 1. Pre-flight        ← confirm Phase 2 done, create checklist + context-notes
+ 2. Bibliography      ← per-planet ADS+arXiv queries
+ 3. System bib        ← system-level supplementary bibliography
+ 4. Expand            ← 1-hop citation graph walk to catch references
+ 5. Score+filter      ← authority + relevance, mark low-tier as skipped
+ 6. Fetch             ← arXiv full text for must-read papers
+ 7. Triage            ← classify deep_read / skim / skip / manual_followup
+ 8. Deep-read         ← extract concrete cfg-relevant numbers
+ 9. Draft English     ← per-planet 6-section markdown
+10. Verify decisions  ← re-read every Decisions row against the cited paper
+11. Korean mirror     ← natural-prose translation, block-parity
+12. Build HTML        ← build_html.py + reports index + check-mirrors
+13. Browser check     ← visual confirmation of lang toggle + rendered table
+14. Commit            ← per-planet (default) or per-system
+```
+
+Steps 2–5 are mostly mechanical and parallelize well. Steps 7–10 are
+where the synthesis judgment lives — these are where you should slow
+down and verify.
+
+---
+
+## Step 0 — Share the time estimate with the user
+
+**Do this before any other step.** Phase 3 is the most expensive
+curation tier and the user needs to budget the session.
 
 | System size | Approx model time |
 |---|---|
@@ -73,37 +96,14 @@ Phase 3 is the most expensive curation tier. Realistic budget:
 | Full 7-planet system (TRAPPIST-1 scale) | 6–15 h |
 
 The cost is dominated by deep-reading the must-read paper set (~15–30
-papers per planet after filtering). Tell the user up front so they can
-budget the session.
+papers per planet after filtering). Quote the matching row to the user
+upfront and confirm they want to proceed before running Step 1.
 
 Phase 3 outputs need Phase 2 measurements as inputs (per
 [[project-nearstars-phase-distinction]]). If the target system has
-only Phase 1 curation, escalate per
-[[feedback-planet-curation]] first.
-
----
-
-## Workflow Overview
-
-```
-1. Pre-flight    ← confirm Phase 2 done, create checklist + context-notes
-2. Bibliography  ← per-planet + system-level ADS+arXiv queries
-3. Expand        ← 1-hop citation graph walk to catch references
-4. Score+filter  ← authority + relevance scoring, mark low-tier as skipped
-5. Fetch         ← arXiv full text for must-read papers
-6. Triage        ← classify must-read / skim / skip explicitly
-7. Deep-read     ← extract concrete cfg-relevant numbers
-8. Draft English ← per-planet 6-section markdown
-9. Verify        ← re-read every Decisions row against the cited paper
-10. Korean mirror← natural-prose translation, block-parity
-11. Build HTML   ← + reports index + visual browser check
-12. Followup doc ← non-arXiv papers tiered as A/B/C
-13. Commit       ← per-planet (default) or per-system
-```
-
-Steps 2–5 are mostly mechanical and parallelize well. Steps 7–10 are
-where the synthesis judgment lives — these are where you should slow
-down and verify.
+only Phase 1 curation, mention this in the same upfront message so
+the user can choose to escalate Phase 2 first (via `nearstars-add-star`)
+or proceed with degraded confidence.
 
 ---
 
@@ -117,13 +117,23 @@ Goal: cheap upfront work that prevents painful surprises later.
    incomplete, **stop and ask the user** whether to:
    - Escalate Phase 2 first (use `nearstars-add-star` with "Phase 2 격상")
    - Proceed with Phase 1 inputs (degrades synthesis confidence)
-2. **Create the working dir** per CLAUDE.md §7:
+2. **Create the working dir** per CLAUDE.md §7 (registered in AGENTS.md
+   §2 as `phase3/<system>/`):
    ```bash
    mkdir -p phase3/<system_slug>
    ```
-   Inside, create:
-   - `checklist.md` — per-planet items as checkboxes
-   - `context-notes.md` — append-only log of decisions during the work
+   Inside, create `checklist.md` with stage-based checkboxes — the
+   canonical pattern from `phase3/trappist-1-system/checklist.md`:
+   ```markdown
+   ## Stage 1 — bibliography builds (parallel)
+   - [ ] build_bibliography.py "<System> b" — N papers, M arxiv
+   - [ ] build_bibliography.py "<System> c" — N papers, M arxiv
+   ## Stage 2 — arXiv fetches (sequential)
+   ## Stage 3 — English synthesis
+   ## Stage 4 — Korean mirrors
+   ## Stage 5 — verification + HTML
+   ```
+   And `context-notes.md` as an append-only decision log.
 3. **Set the per-system Phase 3 directory** as the working state — not
    `docs/phase3/` (which is the output area).
 
@@ -183,36 +193,32 @@ Expect 10–25× growth in bib size. Most of the new entries are noise
 
 ## Step 5 — Score + filter
 
-Apply authority + relevance scoring to weed out the noise:
+Two thresholds matter here and they answer different questions.
+`--keep-threshold N` decides what stays in the bibliography at all
+(audit-trail retention). `--mark-skipped-below M` decides what gets
+fetched in Step 6 (arXiv API budget). They are independent — typical
+settings are `--keep-threshold 8 --mark-skipped-below 14`.
 
 ```bash
 python3 scripts/phase3/score_papers.py docs/phase3/_bib/<slug>.yaml \
-    --keep-threshold 8
+    --keep-threshold 8 --mark-skipped-below 14
 ```
 
 Score interpretation (full schema in `references/scoring-reference.md`):
 
 | Combined score | Decision | Action |
 |---|---|---|
-| ≥ 14 | must-read | deep-read in Step 7 |
-| 8–13 | borderline / cite-only | OK as bibliography entry, skim only |
-| < 8 | skip | mark `status: skipped` to prevent arXiv fetch |
+| ≥ 14 | must-read | stays `pending` → Step 6 fetches arXiv text |
+| 8–13 | borderline / cite-only | kept in bib, marked `status: skipped` so Step 6 skips it; OK to cite |
+| < 8 | skip | dropped from `filtered_papers` view by `--keep-threshold` |
 
-After scoring, mark low-tier papers as `status: skipped` so
-fetch_arxiv_texts.py won't waste arXiv API calls on them:
+The flag is idempotent — running it again on a yaml whose papers are
+already `fetched` or `skipped` is a no-op.
 
-```python
-import yaml
-for slug in ['<planet-slugs>...']:
-    with open(f'docs/phase3/_bib/{slug}.yaml') as f:
-        bib = yaml.safe_load(f)
-    for p in bib['papers']:
-        if p.get('combined_score', 0) < 14 and p.get('status') == 'pending':
-            p['status'] = 'skipped'
-            p['skip_reason'] = f"below_score_threshold ({p['combined_score']} < 14)"
-    with open(f'docs/phase3/_bib/{slug}.yaml', 'w') as f:
-        yaml.safe_dump(bib, f, sort_keys=False, allow_unicode=True, width=140)
-```
+**verify:** score distribution within ±50% of the sanity-check counts
+in `references/scoring-reference.md`. If 14+ count is <5 for a major
+system or >50, the keyword set or thresholds need adjustment before
+proceeding.
 
 ---
 
@@ -244,30 +250,39 @@ For each high-score paper, classify into:
 - **skim**: methodology only, or sister-planet comparison only
 - **skip**: turns out to be irrelevant on closer look (other system,
   proposal, biosignature without atmosphere)
+- **manual_followup**: high-score (`combined_score >= 14`) but no
+  `arxiv_id` — recent Nature / Nature Astronomy, JWST conference
+  proceedings, PSJ early access etc. The skill cannot fetch these;
+  log them in `phase3/<system>/manual-paper-followup.md` with tiered
+  priority:
+  - **Tier A** — likely to change cfg decisions; flag for user paste
+  - **Tier B** — useful context; can wait
+  - **Tier C** — conference summaries / catalogs; safe to skip
+
+  See `phase3/trappist-1-system/manual-paper-followup.md` for the
+  established format. When the user later pastes back an abstract or
+  full text, save it as `docs/phase3/_papers/<bibcode>.md` and
+  integrate via Step 8 / Step 10 (verify pass).
 
 This is the gate before Step 8. Don't draft synthesis prose without
 having explicitly read the deep_read set in full — abstract-only
 drafting introduces sloppy citations (see
 [[feedback-phase3-validation]]).
 
+**verify:** every `combined_score >= 14` paper has an explicit
+deep_read / skim / skip / manual_followup classification recorded
+in `phase3/<system>/context-notes.md`. No high-score paper left as
+`pending`.
+
 ---
 
 ## Step 8 — Deep-read with cfg-decision focus
 
 For each deep_read paper, open `docs/phase3/_papers/<arxiv_id>.md`
-and extract:
-
-| Looking for | Why |
-|---|---|
-| Specific surface temperature numbers (substellar, nightside, global mean) | `dayside_surface_temp_k`, `nightside_surface_temp_k` |
-| Atmospheric pressure / composition with σ bounds | `atmosphere_surface_pressure_pa`, `atmosphere_composition` |
-| GCM cloud morphology predictions (latitude/longitude patterns) | `cloud_morphology`, `cloud_cover_fraction` |
-| Surface albedo, dayside brightness temperature | `bond_albedo`, `dayside_brightness_temp_k_*` |
-| Tidal / induction / radiogenic heating flux (W/m²) | `tidal_heating_w_m2`, `induction_heating_w_m2` |
-| Water mass fraction, ocean depth, basal-melt physics | `water_mass_fraction`, `ocean_present`, `ocean_extent_substellar_radius_deg` |
-| Spin-orbit state (1:1 vs 3:2), obliquity damping | `tidally_locked`, `obliquity_deg` |
-| Mineralogy / surface composition predictions | `surface_tint_rgb_hex_*`, `surface_morphology` |
-| Stellar XUV flux, microflare statistics | (atmosphere retention caveats) |
+and extract the cfg-relevant numbers. The per-field "what to look for
+in the paper" map is in
+[`references/synthesis-template.md`](references/synthesis-template.md)
+under "Decision-table field map" — use it as the extraction checklist.
 
 Record findings in `phase3/<system>/context-notes.md` as you go, with
 the paper's arxiv_id beside each number. This is the audit trail.
@@ -275,12 +290,17 @@ the paper's arxiv_id beside each number. This is the audit trail.
 If a paper conflicts with current cfg decisions, see
 [`references/conflict-resolution.md`](references/conflict-resolution.md).
 
+**verify:** every deep_read paper has at least one extracted number
+or qualitative finding logged in context-notes.md alongside its
+arxiv_id. A deep_read paper with zero notes means it was actually
+"skim" — re-classify in Step 7.
+
 ---
 
 ## Step 9 — Draft English synthesis
 
-Standard 6-section structure at `docs/phase3/<slug>.md` (use
-TRAPPIST-1 d as the canonical example — `docs/phase3/trappist-1-d.md`):
+Standard structure at `docs/phase3/<slug>.md` (use TRAPPIST-1 d as
+the canonical example — `docs/phase3/trappist-1-d.md`):
 
 ```
 <!-- one-line Korean header comment (CLAUDE.md §6) -->
@@ -296,6 +316,10 @@ TRAPPIST-1 d as the canonical example — `docs/phase3/trappist-1-d.md`):
 ## Rotation & spin synthesis
 ## Visual styling
 
+## Canonical alternatives        ← optional: include only if cfg diverges
+### Diverged cfg picks               from a canonical reading
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+
 ## Bibliography
 ### Read (visual-informative, drove decisions above)
 ### Read (context / methodology, not decision-driving)
@@ -307,6 +331,29 @@ TRAPPIST-1 d as the canonical example — `docs/phase3/trappist-1-d.md`):
 
 Full annotated template + decision-table field reference:
 [`references/synthesis-template.md`](references/synthesis-template.md).
+
+### Dual-track: when to add Canonical alternatives
+
+For each row you write in the Decisions table, ask the diagnostic
+question from [`references/conflict-resolution.md`](references/conflict-resolution.md):
+*does the canonical reading have a clear weight advantage from the
+literature?*
+
+- **No** (data silent within the allowed window): tie-break. Note
+  `Tie-break: interesting-first` in the Basis column per
+  [[feedback-phase3-interesting-first]]. No `## Canonical
+  alternatives` row needed.
+- **Yes** (specific papers, modeling consensus favor canonical, but
+  cfg picks differently): documented divergence. Note
+  `Documented divergence: see Canonical alternatives` in the Basis
+  column, and add a row to the optional `## Canonical alternatives`
+  section per [[feedback-phase3-documented-divergence]]. Also list
+  the canonical variant in `## Open items for follow-up` so the cfg
+  writer can ship it.
+
+Don't pad the Canonical alternatives section with tie-breaks; don't
+hide divergences inside Basis notes. The two have different audit
+trails for a reason.
 
 ---
 
@@ -336,6 +383,11 @@ first pass):
   100–1000 ppm regardless of background).
 
 See [[feedback-phase3-validation]] for the full failure-mode list.
+
+**verify:** every Decisions-table row's author/year/number traces back
+to a specific page or section in `docs/phase3/_papers/<arxiv_id>.md`.
+If any row can't be sourced, fix the row or mark Confidence=low with
+an Open-items entry — never commit an unverified Decisions row.
 
 ---
 
@@ -384,6 +436,10 @@ counts diverge.
 `check-mirrors.sh` verifies all `docs/` ↔ `ko/docs/` pairs are in
 sync per AGENTS.md §2.1.
 
+**verify:** `build_html.py` exits 0 **and** `check-mirrors.sh` reports
+no stale or missing mirrors. A build pass alone is not sufficient —
+the mirror check catches the case where en was edited after ko.
+
 ---
 
 ## Step 13 — Browser visual check (don't trust build success alone)
@@ -405,31 +461,7 @@ the HTML.
 
 ---
 
-## Step 14 — Non-arXiv paper followup
-
-Some high-authority papers have no arXiv preprint (especially recent
-Nature / Nature Astronomy, JWST conference proceedings, PSJ early
-access). They show up in the scored bibliography with
-`combined_score >= 14` but no `arxiv_id`. The skill cannot fetch
-them automatically.
-
-Document them in `phase3/<system>/manual-paper-followup.md` with
-tiered priority:
-
-- **Tier A** — likely to change cfg decisions; flag for user paste
-- **Tier B** — useful context; can wait
-- **Tier C** — conference summaries / catalogs; safe to skip
-
-See `phase3/trappist-1-system/manual-paper-followup.md` for the
-established format.
-
-When the user pastes back the abstract or full text from such a
-paper, save it as `docs/phase3/_papers/<bibcode>.md` and integrate
-findings via Step 8 / Step 10 (verify pass).
-
----
-
-## Step 15 — Commit
+## Step 14 — Commit
 
 Default granularity: per-planet (one commit per planet's synthesis).
 
@@ -449,32 +481,31 @@ After commit, push to `origin/main` only if the user explicitly asks.
 
 ---
 
-## Key Policies (from user memory)
+## Phase 3-specific policies
 
-These are user-confirmed defaults. Do NOT ask the user about them.
+User memory (MEMORY.md) auto-loads each session, so general policies
+like md-language, speech-level, and ko-mirror-style are already in
+context. These three are repeated here because they gate
+decisions inside this workflow specifically:
 
 - **Phase 3 inputs are Phase 2 measurements** ([[project-nearstars-phase-distinction]]).
-  Phase 3 cannot bypass Phase 2; if Phase 2 doesn't exist, escalate
-  via `nearstars-add-star` first.
-- **Deep-read before draft** ([[feedback-phase3-depth]]). Abstract-only
-  synthesis introduces fact errors. Always read the deep_read set in
-  full first.
+  Step 1 enforces this; if Phase 2 is missing, escalate via
+  `nearstars-add-star` before continuing.
 - **Verify decisions against source** ([[feedback-phase3-validation]]).
-  Every Decisions-table number gets re-checked against the cited
-  paper before commit.
-- **Natural Korean from the start** ([[feedback-ko-mirror-style]]).
-  Don't draft a literal translation then rewrite — the user will
-  notice and ask for a redo.
-- **English by default** ([[feedback-md-language]]). English is the
-  source of truth; Korean is the mirror at `ko/docs/...`.
-- **존댓말 always** ([[feedback-speech-level]]). User-facing prose
-  in Korean uses 존댓말 informal.
-- **Phase 2 first, Phase 3 escalates only when needed** ([[feedback-planet-curation]]).
-  Default cfg target is Phase 1 + Phase 2; Phase 3 only when user
-  explicitly asks for synthesis or when an implementation decision
-  requires it.
-- **Workflow encoded in [[feedback-phase3-process]]** — the canonical
-  per-pass order documented when the TRAPPIST-1 set was finalized.
+  Step 10 is non-negotiable — every Decisions-table number gets
+  re-checked against the cited paper before commit.
+- **Interesting-first when observation-tied** ([[feedback-phase3-interesting-first]]).
+  Step 8 onward — at genuine ties, default to the more visually
+  distinctive option. Hierarchy and tie-break documentation rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md).
+- **Documented divergence for canonical outranks** ([[feedback-phase3-documented-divergence]]).
+  When the gameplay pick differs from a canonical reading that has
+  clear weight advantage, record it in the optional `## Canonical
+  alternatives` section — not as a tie-break. Three preconditions
+  must hold: gameplay pick stays observation-consistent, divergence
+  is explicit, canonical preserved as cfg variant. Rules in
+  [`references/conflict-resolution.md`](references/conflict-resolution.md)
+  § "Documented divergence".
 
 ---
 
@@ -500,15 +531,11 @@ these actions require explicit confirmation or a Read-first step.
 
 ## Common pitfalls
 
-Quick handling reference. Full details in
-[`references/troubleshooting.md`](references/troubleshooting.md) (if
-issues recur often enough to need a written ref).
-
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | `build_html.py` block count mismatch | Korean file edited without keeping block structure | Rewrite the affected ko paragraph/table/list block to match en exactly |
 | `check-mirrors.sh` reports a stale mirror | en source edited after ko mirror was finalized | Rewrite ko block-for-block; re-run check |
-| Bibliography ballooned to 1000+ entries after expansion | Citation expansion added noise | Score-filter aggressively (`--keep-threshold 8`), then mark `< 14` as skipped |
+| Bibliography ballooned to 1000+ entries after expansion | Citation expansion added noise | Re-run `score_papers.py --keep-threshold 8 --mark-skipped-below 14` to filter the bib and exclude low-tier rows from the next fetch |
 | Synthesis prose cites "Bolmont 2020" but paper is Brasser 2019 | Author reconstruction from memory | Always confirm author from `docs/phase3/_papers/<arxiv_id>.md` header before drafting |
 | Number in Decisions table doesn't match the cited paper | First-pass draft from prior cfg or abstract | Re-read the paper's specific number; update both the table and the prose |
 | Phase 2 missing for one planet in the system | Phase 1 auto-fill only | Stop, escalate Phase 2 via `nearstars-add-star`, then resume Phase 3 |

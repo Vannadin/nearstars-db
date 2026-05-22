@@ -6847,7 +6847,7 @@ papers:
     that TOI-700 d and TOI-2257 b are the most interesting examples, as they are located in the habitable zone. However, we
     note that their magnetic moments are only about 0.01 of the Earth''s magnetic moment.'
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -7171,7 +7171,7 @@ papers:
     results, we find that flare-driven transmission features of bio-indicating chemical species, such as nitrogen dioxide,
     nitrous oxide and nitric acid, show particular promise for detection by future instruments.
   source: citation_of=2023ApJ...946L..32C
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -7810,7 +7810,7 @@ papers:
     regime, the likelihood of keeping the atmosphere is almost zero for exoplanets orbiting very close to their star, regardless
     of whether they are saturated or not.'
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -9144,7 +9144,7 @@ papers:
     G. These values exceed the magnitude required to shield a planet from the stellar wind, suggesting that CMEs may be the
     key driver of atmospheric losses.'
   source: citation_of=2019ApJ...881..114Y
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -9534,7 +9534,7 @@ papers:
     could be greater due to the intense EUV radiation leading to smaller heating rates. We plan to quantify the ionospheric
     conductance in future study.
   source: citation_of=2019ApJ...881..114Y
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -9617,7 +9617,7 @@ papers:
     are fast rotators, conditions for terrestrial planets to harbour Earth-sized magnetospheres are more easily achieved for
     planets orbiting slowly rotating early- and mid-dM stars.
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -11327,10 +11327,10 @@ papers:
     from 3D modeling. This has far-reaching consequences for exoplanet characterization using transmission spectroscopy, where
     accurate knowledge of the host star is essential for unbiased inferences of the planetary atmospheric properties.
   source: citation_of=2026AJ....171..105A
-  status: skipped
+  status: failed
   category: null
   skip_reason: below_score_threshold (12 < 14)
-  fetch_error: null
+  fetch_error: ar5iv_processing_unavailable
   authority_score: 10
   relevance_score: 2
   combined_score: 12
@@ -12887,7 +12887,7 @@ papers:
     Earth-like planets to long-term radiation that can damage complex organic structures. However, this does not preclude
     habitability, as a safe haven for life could still exist below an ocean surface.
   source: citation_of=2018ApJ...867...76L
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -13149,7 +13149,7 @@ papers:
     relations to other stars, such CME kinetic energies could be typically achieved during erupting flaring events with total
     energies larger than 6 × 10<SUP>32</SUP> erg (GOES class ∼X70).
   source: citation_of=2020MNRAS.492L..28A
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -13476,7 +13476,7 @@ papers:
     the physics used in this study. Any change in the physics used implies only an updating of the likelihood functions. We
     have developed a web application allowing the online estimation of SEPHI (http://sephi.azurewebsites.net/).'
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null
@@ -14659,7 +14659,7 @@ papers:
     active M dwarfs known, this conclusion should apply to planets around other M dwarfs with lower levels of chromospheric
     activity.'
   source: citation_of=2019ApJ...881..114Y
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null

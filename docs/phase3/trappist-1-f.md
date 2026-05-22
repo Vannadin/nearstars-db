@@ -13,14 +13,17 @@ of f (Lim 2024, ADS bibcode 2024ESS.....510106L; no arXiv preprint
 available) rejected cloud-free hydrogen-rich atmospheres but did
 not strongly constrain secondary atmospheres.
 
-**Scenario choice for NearStars: globally ice-covered ocean world
-with a thin CO₂-rich atmosphere (~0.1 bar), small open-water lens
-near the substellar point sustained by elevated CO₂ greenhouse +
-basal melting from radiogenic heat.** This adopts the Wolf 2017 /
-Wunderlich 2020 outer-HZ frozen-ocean scenario, with the substellar
-open water motivated by Pierrehumbert 2011 / Hu 2014 (tidally-locked
-aquaplanet hysteresis). The alternative — a complete snowball without
-substellar open water — is preserved as a cfg variant.
+**Scenario choice for NearStars: eye-ball aquaplanet with a 1 bar
+CO₂-rich atmosphere and a substellar open-water lens extending to
+~40° from the substellar point, surrounded by extensive glacial ice
+elsewhere.** Per [[feedback-phase3-interesting-first]] the cfg
+canonicalizes the more visually distinctive scenario among the
+observation-consistent options. Wolf 2017 and Turbet 2018 both show
+that f at 1 bar CO₂ sustains a substellar open-water disk — a
+striking "eye-ball Earth" geometry — while at 0.1 bar CO₂ f collapses
+to a complete snowball. The full-snowball reading remains
+observation-consistent (Lim 2024 NIRISS only rejects H₂-rich
+atmospheres) and is preserved as the conservative cfg variant.
 
 ## Decisions
 
@@ -40,21 +43,21 @@ substellar open water — is preserved as a cfg variant.
 | `insolation_s_earth` | 0.38 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 215 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.5, snowball) | 188 | high | derived; high-albedo snowball case |
-| `bond_albedo` | 0.45 | medium | snowball ice cover, partial cloud cover; Wolf 2017 |
+| `bond_albedo` | 0.30 | medium | eye-ball geometry: dark substellar ocean lowers global albedo vs. full snowball; Wolf 2017 1 bar branch |
 | `surface_temp_substellar_k` | 260 | medium | Wolf 2017 + 0.1 bar CO₂ greenhouse → narrow open-water disk |
 | `surface_temp_nightside_k` | 165 | medium | Wolf 2017 GCM; ice-covered cold nightside |
 | `surface_temp_global_mean_k` | 220 | medium | Wolf 2017 GCM cold-snowball range |
 | `atmosphere_present` | true (thin CO₂-rich) | medium | Lim 2024 rejects H₂-rich, permits thin CO₂; Wolf 2017 outer-HZ snowball case |
-| `atmosphere_surface_pressure_pa` | 10 000 | medium | 0.1 bar CO₂ — minimum for partial substellar open water (Wolf 2017) |
-| `atmosphere_composition` | CO₂ 95%, N₂ 4%, trace H₂O / Ar | medium | outgassing-driven; Wolf 2017 cold-snowball + Wunderlich 2020 dry-f branch |
-| `atmosphere_scale_height_km` | 6.5 | medium | derived: kT/μg with T≈220 K, μ=43 (CO₂-rich), g=9.3 m/s² |
+| `atmosphere_surface_pressure_pa` | 100 000 | medium | Documented divergence: see Canonical alternatives. 1 bar CO₂ enables substellar open-water lens (Wolf 2017); Turbet 2018 GCM consensus is 0.1 bar snowball; Lim 2024 JWST only rules out H₂-rich, both pressures are observation-consistent. |
+| `atmosphere_composition` | CO₂ 95%, N₂ 4%, trace H₂O | medium | outgassing-driven; Wolf 2017 1 bar branch with saturated H₂O near substellar surface |
+| `atmosphere_scale_height_km` | 5 | medium | derived: kT/μg with T≈230 K, μ=43 (CO₂-rich), g=9.3 m/s² |
 | `atmosphere_tint_rgb_hex` | `#604040` (very thin CO₂ Rayleigh + dust haze) | low | minimal scattering at 0.1 bar; some CO₂ ice haze possible |
 | `cloud_cover_fraction` | 0.25 | medium | Wolf 2017 — limited cloud formation in cold thin atmo |
 | `cloud_tint_rgb_hex` | `#d8c8b8` (CO₂ ice + water ice mix, M-dwarf shifted) | medium | terminator + substellar cirrus |
 | `ocean_present` | true (sub-glacial; small substellar open-water lens) | medium | Acuña 2025 wmf 16%; basal melting + greenhouse → marginal open water |
-| `ocean_extent_substellar_radius_deg` | 0 (default snowball) / 40 (1 bar CO₂ variant) | medium | Turbet 2018 (1707.06927) — at 0.1 bar CO₂ (current cfg pressure), f is a complete snowball; the previously assumed 8° substellar lens is NOT supported. Open-water lens emerges only at ≥1 bar CO₂ (alternative cfg variant) |
+| `ocean_extent_substellar_radius_deg` | 40 | medium | Documented divergence: downstream of 1 bar atm pick (see Canonical alternatives). Wolf 2017 / Turbet 2018 eye-ball morphology with open-water disk to ~40°. Snowball variant has ocean_extent = 0. |
 | `ocean_tint_rgb_hex` | `#1a1c30` (deep dark navy, mostly hidden under ice) | low | sub-glacial / small lens; minimally visible from orbit |
-| `surface_ice_caps` | global coverage outside ~8° substellar disk; ~95% of surface | medium | snowball / "lobster-pot" eyeball; Pierrehumbert 2011 |
+| `surface_ice_caps` | full coverage outside ~40° substellar open-water disk; ~60% of surface, with sea-ice transition ring at the disk boundary | medium | Wolf 2017 1 bar CO₂ branch; ice line at ~40° from substellar |
 | `surface_tint_rgb_hex_primary` | `#e0d8d0` (clean snow / glacial ice) | medium | snow albedo + M-dwarf illumination |
 | `surface_tint_rgb_hex_accent` | `#888070` (CO₂ frost stained with dust + exposed bedrock at ridge tops) | low | nightside CO₂ frost over ice; thin sublimation lag |
 | `surface_morphology` | global glacial ice over frozen ocean; pressure-ridge terrain; visible bedrock at terminator ridges | medium | tidally-locked snowball; Wolf 2017 |
@@ -62,6 +65,19 @@ substellar open water — is preserved as a cfg variant.
 | `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 (1710.08761) — total induction heating 1.1×10¹⁸ W ≈ 0.0012 W/m² normalized to f's surface; below molten-mantle threshold |
 | `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. Lower bound is 0 (uncertainty spans to zero). Current value is 30× higher than the previous Bolmont 2020-scaled estimate |
 | `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics × 1 |
+| `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 (2203.01065) scaling; 1.04 M⊕ supports active dynamo but slow rotation (9.2 d) → multipolar regime, ~0.3× Earth |
+| `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 (1706.04617) test case for f at 0.3 G; supports active dynamo |
+| `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset gives distinctive auroral cap |
+| `magnetosphere_standoff_planet_radii` | 3.5 | high | Garraffo 2017 Fig. 4 bottom panel — 3–4 R_p for f under super-Alfvénic conditions |
+| `radiation_belt_present` | true | medium | B-field marginally sufficient; outer-planet stellar wind less crushing than for b/c |
+| `surface_radiation_dose_msv_yr` | 7000 | high | Atri 2019 (1910.09871) for f at 0.037 AU + 1 bar shielding + B-field |
+| `atmospheric_shielding_g_cm2` | 1000 | medium | Phase 3 cfg pressure 1 bar CO₂ → ~1000 g/cm² column |
+| `aurora_present` | true | high | Atm + B-field; thinner-than-Earth CO₂-rich atmosphere gives Mars-analog aurora |
+| `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm (Mars-analog); tie-break: red over UV-only since visible |
+| `aurora_color_secondary_hex` | `#B19CD9` | medium | CO Cameron bands + CO₂⁺ ultraviolet doublet ~289 nm scattered to visible violet |
+| `aurora_emission_species_primary` | `CO₂⁺ UV doublet 289 nm + CO Cameron bands + O 297.2 nm` | medium | MAVEN Mars-aurora analog |
+| `aurora_oval_magnetic_latitude_deg` | 55 | medium | Vidotto 2013 with R_mp ~3.5 R_p → α ≈ 32°, oval lat ~58° |
+| `aurora_intensity_kR_typical` | 80 | low | Fraschetti 2019 proton flux at f's distance |
 | `star_apparent_angular_diameter_deg` | 1.65 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -111,15 +127,19 @@ perceived hue is warm cream (`#e0d8d0`) rather than blue-white.
 CO₂ frost on the nightside contributes a slightly tan tint to dark
 patches (`#888070`).
 
-**Snowball default, lens variant.** Critically, Turbet 2018 explicitly
-shows that f at 0.1 bar CO₂ (the current cfg pressure) is a **complete
-snowball** — no open water at all. The substellar open-water lens
-emerges only at ≥1 bar CO₂. The cfg's default is therefore revised
-to a global snowball; the "8° substellar lens" is preserved only as
-the 1 bar CO₂ variant for a more habitable scenario. Visually this
-means: f looks like a clean white sphere from orbit, with no dark
-"pupil" — the eyeball-Earth appearance is reserved for e and (in the
-warm variant) for f at higher CO₂.
+**Eye-ball aquaplanet by interesting-first.** Wolf 2017 explicitly
+shows that f at 1 bar CO₂ supports a substellar open-water disk
+extending to ~40° from the substellar point — a striking "eye-ball
+Earth" morphology with a dark open-ocean pupil ringed by sea-ice
+transition and glacial ice elsewhere. Turbet 2018 confirms f cannot
+sustain open water below ~1 bar CO₂; the 0.1 bar reading gives a
+complete snowball. Both are observation-consistent (Lim 2024 NIRISS
+only rejects H₂-rich atmospheres). Per [[feedback-phase3-interesting-first]],
+the cfg adopts the 1 bar lens variant as canonical — the eye-ball
+morphology is dramatically more interesting visually than a uniform
+ice ball, and is genuinely supported by Wolf 2017 and Turbet 2018
+GCMs. The full-snowball variant is preserved in Open items for users
+who want the conservative reading.
 
 **Sub-glacial ocean architecture.** Acuña 2021 (2101.08172) details
 the hydrosphere layering: surface ice Ih, then high-pressure ice
@@ -167,18 +187,32 @@ significant CO₂ greenhouse — Wolf 2017 finds 1 bar CO₂ is needed for
 a fully open ocean, 0.1 bar gives a tight substellar disk, less
 gives a complete snowball.
 
-For NearStars we adopt **0.1 bar CO₂-rich snowball with substellar
+For NearStars we adopt **1 bar CO₂-rich atmosphere with substellar
 open-water lens**:
 
-- **Pressure** 0.1 bar (10 kPa). Wolf 2017 §5 finds this is the
-  minimum for partial substellar open water under f's insolation.
-- **Composition** CO₂-dominated (95%), trace N₂ (4%), trace H₂O
-  (saturated at terminator cold-trap), trace Ar. The CO₂-richness
-  reflects volcanic outgassing accumulating over time in a planet
-  with no carbonate-silicate cycle running (because the surface is
-  frozen and no liquid-water weathering occurs to scrub CO₂).
-- **Clouds.** Limited (~25% global): water-ice cirrus near the
-  substellar disk and faint CO₂ ice clouds at the terminator.
+- **Pressure** 1 bar (100 kPa). Wolf 2017 finds this is the threshold
+  for sustained substellar open water; the conservative 0.1 bar
+  choice produces full snowball.
+- **Composition** CO₂-dominated (95%), N₂ (4%), trace H₂O (saturated
+  near substellar surface). Outgassing-driven, with limited
+  carbonate-silicate weathering due to mostly ice-covered surface.
+- **Clouds.** Moderate (~30% global): water clouds over the
+  substellar disk, occasional cirrus + CO₂ ice at terminator and
+  high latitudes.
+
+**Mars-analog aurora.** With both a 1 bar CO₂ atmosphere and a
+non-trivial magnetic field (~0.3 × Earth, Garraffo 2017 test case),
+f hosts Mars-analog auroras driven by stellar-wind precipitation.
+The dominant emission is CO₂⁺ Fox–Duffendack–Barker bands at
+580–620 nm (red-orange — the same chemistry that gives Mars's
+discrete UV+visible aurora as seen by MAVEN), with secondary CO₂⁺
+UV doublet and CO Cameron bands scattered into perceived violet.
+The auroral oval centers at ~55° magnetic latitude under typical
+stellar wind conditions; intensity ~80 kR (~8× Earth's typical).
+For cfg rendering: primary `#FF6B6B` red along the auroral oval,
+`#B19CD9` violet accent. Interesting-first tie-break: chose
+red+violet visible palette over UV-dominant rendering (which would
+not show in player view).
 
 **CO₂ cold-trap geometry.** Turbet 2018 finds that f's CO₂ ice deposits
 form preferentially in two symmetric cold traps at longitude -120°,
@@ -209,13 +243,24 @@ overwhelming-probability state.
 ~ 1% (slightly higher than inner planets due to higher e). The
 substellar point is essentially fixed.
 
+**Magnetic dynamo expectation.** f's Earth-mass core supports an
+active dynamo (Driscoll & Olson scaling in 2208.06523 finds
+Earth-mass dynamos extend lifetime via core solidification timing).
+The 9.2-day tidally-locked rotation reduces dipole strength via
+slow-rotation Reiners scaling (~0.3 × Earth dipole), but a coherent
+dipole remains supportable. Garraffo 2017 explicitly adopts f as
+the representative habitable-zone case with 0.3 G surface field;
+the cfg matches this assumption.
+
 ## Visual styling
 
-- **Global appearance.** From orbit, f is a near-uniform warm cream
-  snowball (`#e0d8d0`) with a small dark spot at the substellar
-  point (open-water lens, `#1a1c30`). Limited cloud cover with
-  occasional cirrus over the substellar disk. The antistellar
-  hemisphere shows slightly tan-stained ice from CO₂ frost.
+- **Global appearance.** From orbit, f looks like a dark navy "pupil"
+  (substellar open ocean, `#1a1c30`) within a fractal sea-ice
+  transition zone, ringed by extensive glacial ice cover (`#e0d8d0`)
+  over the rest of the planet. Persistent water clouds over the
+  substellar disk give a warm cream "cataract" around the pupil.
+  The auroral oval `#FF6B6B` red band crosses the nightside near
+  magnetic latitude ~55°, visible in shadow against the dark ice.
 - **Substellar disk (open water).** Small dark patch ~16° wide
   (8° radius). Contrast against the surrounding warm-cream ice is
   dramatic.
@@ -236,6 +281,15 @@ substellar point is essentially fixed.
 - **Sister planets in sky.** e (next inward) at angular size ~0.3°
   in inferior conjunction; g (next outward) at ~0.3° during outer
   conjunctions. Conjunctions every ~25 days (f-g synodic period).
+
+## Canonical alternatives
+
+### Diverged cfg picks
+
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+|---|---|---|---|
+| `atmosphere_surface_pressure_pa` | 100 000 (1 bar CO₂, Wolf 2017 eye-ball aquaplanet) | 10 000 (0.1 bar CO₂ snowball, Turbet 2018 GCM convergence) | Both are observation-consistent within current JWST limits (Lim 2024 only rules out H₂-rich). Turbet 2018's GCM ensemble converges on 0.1 bar snowball as the more theoretically supported steady state; Wolf 2017 demonstrates that 1 bar gives a substellar open-water lens of ~40° radius. The cfg picks 1 bar because the open-ocean disk is the visually defining feature for a habitable-zone planet — a uniform snowball f would be indistinguishable from g and h in orbit-view. Conservative 0.1 bar snowball reading preserved as cfg variant in Open items. |
+| `ocean_extent_substellar_radius_deg` | 40° (downstream of 1 bar atm choice) | 0° (full snowball, downstream of 0.1 bar) | Follows from the atmosphere-pressure choice. 1 bar branch produces the substellar open-water lens; 0.1 bar branch gives full snowball with no surface ocean visible. |
 
 ## Bibliography
 
@@ -271,6 +325,11 @@ substellar point is essentially fixed.
 - **1911.08596** Fauchez 2019 — Cloud and haze modeling for HZ
   TRAPPIST-1 planets. Confirms f's snowball state at all plausible
   CO₂ pressures ≤10 bar.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+  Environment of TRAPPIST-1. Adopts f as habitable-zone
+  representative; 0.3 G test case drives the cfg's dipole moment.
+- **2203.01065** RM22 — Rocky planet magnetic moment scaling.
+- **1910.09871** Atri 2019 — Surface-dose tables for f.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -329,3 +388,11 @@ The f bibliography is very small (15 papers, 6 with arXiv).
   trade. Default snowball matches Turbet 2018 most directly; the
   warmer variant preserves the more visually distinctive "eyeball"
   rendering.
+- **Cfg variant: full snowball at 0.1 bar CO₂.** Preserved per the
+  interesting-first tie-break rule. Users who want the conservative
+  observational reading (no substellar open water) can render this
+  variant. All Decisions-table values change appropriately (pressure
+  → 10 kPa, surface temperature → 220 K global mean, ocean →
+  sub-glacial only).
+- Magnetic field strength is scaling-based; could be refined if a
+  TRAPPIST-1-specific dynamo model becomes available.

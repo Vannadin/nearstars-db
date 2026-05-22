@@ -2075,7 +2075,7 @@ papers:
     that TOI-700 d and TOI-2257 b are the most interesting examples, as they are located in the habitable zone. However, we
     note that their magnetic moments are only about 0.01 of the Earth''s magnetic moment.'
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -2303,7 +2303,7 @@ papers:
     regime, the likelihood of keeping the atmosphere is almost zero for exoplanets orbiting very close to their star, regardless
     of whether they are saturated or not.'
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -2860,7 +2860,7 @@ papers:
     are fast rotators, conditions for terrestrial planets to harbour Earth-sized magnetospheres are more easily achieved for
     planets orbiting slowly rotating early- and mid-dM stars.
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (13 < 14)
   fetch_error: null
@@ -3904,7 +3904,7 @@ papers:
     the physics used in this study. Any change in the physics used implies only an updating of the likelihood functions. We
     have developed a web application allowing the online estimation of SEPHI (http://sephi.azurewebsites.net/).'
   source: citation_of=2025ApJ...987...85R
-  status: skipped
+  status: fetched
   category: null
   skip_reason: below_score_threshold (12 < 14)
   fetch_error: null

@@ -46,6 +46,25 @@ Confidence values:
 - **low** — aesthetic choice within an allowed observational window;
   could be different and still match data
 
+**Confidence=low rows and the interesting-first rule.** Every
+Confidence=low row is by definition a choice within an
+observation-allowed window. Per [[feedback-phase3-interesting-first]],
+the cfg defaults to the more visually distinctive option when two
+choices are equally observation-consistent. Document the tie-break
+explicitly in the Basis column so the next session can see why a
+particular hex code or pattern was picked:
+
+```
+| `surface_tint_rgb_hex_accent` | `#7a2a10` (cooling lava red) | low |
+  Tie-break: interesting-first. Photolytic oxidation patches OR
+  cooling-lava red both fit the airless ultramafic surface; cfg
+  picks lava for visual distinctiveness. |
+```
+
+See [`conflict-resolution.md`](conflict-resolution.md) §
+"Tie-breaking by visual interest" for the full hierarchy
+(observation > theory > interesting-first).
+
 Standard field list (use these field names so the cfg writers can
 match by exact key):
 
@@ -100,6 +119,26 @@ match by exact key):
 - `star_apparent_angular_diameter_deg`
 - `stellar_illumination_color_temp_k`
 
+### Decision-table field map
+
+When deep-reading a paper (SKILL.md Step 8), scan for these specific
+quantities and write each one into the matching Decisions-table field:
+
+| Look for in the paper | Decisions-table field(s) |
+|---|---|
+| Surface temperatures (substellar, nightside, global mean) | `dayside_surface_temp_k`, `nightside_surface_temp_k` |
+| Atmospheric pressure / composition with σ bounds | `atmosphere_surface_pressure_pa`, `atmosphere_composition` |
+| GCM cloud morphology (latitude/longitude patterns) | `cloud_morphology`, `cloud_cover_fraction` |
+| Surface albedo, dayside brightness temperature | `bond_albedo`, `dayside_brightness_temp_k_*` |
+| Tidal / induction / radiogenic heating flux (W/m²) | `tidal_heating_w_m2`, `induction_heating_w_m2`, `radiogenic_heat_w_m2` |
+| Water mass fraction, ocean depth, basal-melt physics | `water_mass_fraction`, `ocean_present`, `ocean_extent_substellar_radius_deg` |
+| Spin-orbit state (1:1 vs 3:2), obliquity damping | `tidally_locked`, `obliquity_deg` |
+| Mineralogy / surface composition predictions | `surface_tint_rgb_hex_*`, `surface_morphology` |
+| Stellar XUV flux, microflare statistics | (atmosphere retention caveats — used in Atmosphere prose, not a single field) |
+
+For mod-grounded fields (Kerbalism / EVE / Scatterer), the analogous
+look-for table is in [`mod-grounded-fields.md`](mod-grounded-fields.md).
+
 ## ## Surface synthesis
 
 Prose section, 3–6 paragraphs:
@@ -110,6 +149,12 @@ Prose section, 3–6 paragraphs:
 3. Iron oxide / mineralogy notes
 4. Morphology under tidal lock (cratering, magma relics, ice flow,
    etc.)
+
+When surface tints / mineralogy / morphology are aesthetic choices
+within an allowed window, default to interesting per
+[[feedback-phase3-interesting-first]]. Specific over generic;
+distinctive over uniform; active over passive. Document the
+tie-break in the prose so the reasoning is visible.
 
 ## ## Atmosphere synthesis
 
@@ -146,6 +191,66 @@ Prose section. Bulleted list covering:
 - Sister planets in sky (angular diameters at conjunction)
 - Optional: special features (cryovolcanism, magma glow, etc.)
 
+Visual styling is where interesting-first matters most. The
+observational data rarely constrains "is there a faint cyan tint at
+the limb" or "do cryovolcanic plumes occur near warm spots" — these
+are within-the-window choices. Default to the option that gives the
+KSP player something to look at.
+
+## ## Canonical alternatives (optional)
+
+Include this section **only** when the cfg makes one or more
+documented divergences from a canonical reading (per
+[[feedback-phase3-documented-divergence]] and
+[`conflict-resolution.md`](conflict-resolution.md) § "Documented
+divergence"). If every Decisions row is either canonical-aligned or a
+within-window tie-break, omit this section entirely — don't write an
+empty placeholder.
+
+**Distinction.** A *tie-break* (observation/theory genuinely
+silent → cfg picks interesting) stays as a Basis-column note. A
+*documented divergence* (canonical has clear weight advantage, cfg
+picks differently for gameplay) belongs here.
+
+When present, use this exact table:
+
+```markdown
+### Diverged cfg picks
+
+| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
+|---|---|---|---|
+| `atmosphere_surface_pressure_pa` | 100000 (1 bar Wolf 2017 open-water variant) | 10000 (0.1 bar Turbet 2018 snowball) | Turbet GCM converges on snowball; cfg picks Wolf's eyeball-aquaplanet because the substellar open-water lens is visually defining for an HZ planet. Open ocean preserved; conservative snowball kept as cfg variant. |
+```
+
+Each row must:
+
+1. Name the exact Decisions-table field that diverges.
+2. Give both the Gameplay and Canonical values with the
+   primary citation for each (paper + year).
+3. State the reason — typically "more visually distinctive",
+   "preserves recognizable feature for player", "matches the
+   in-game scenario archetype". The reason is part of the audit
+   trail; "because I felt like it" is not acceptable.
+
+**Block-parity note (critical for the ko mirror).** Because
+`build_html.py` pairs blocks by position, this section's
+presence/absence must match between English and Korean files.
+
+- If a planet's English file has `## Canonical alternatives`, the
+  Korean file must have the corresponding `## 고증 대안` heading at
+  the same block index with the same table column count and row
+  count.
+- If a planet has no divergences, omit the section in both files.
+  No empty placeholder.
+
+The retrofit pass (when adding this section to an existing planet
+synthesis) must update both files in the same commit.
+
+**Cross-references.** The Canonical alternatives row implies a cfg
+variant — list the conservative scenario in `## ## Open items for
+follow-up` as an explicit variant the cfg writer can produce, so
+the audit trail is complete.
+
 ## ## Bibliography
 
 Four required sub-sections:
@@ -180,6 +285,11 @@ Bulleted list. Examples:
 
 This section is where the synthesis admits uncertainty. Include
 specific numbers / paper IDs that would trigger a revisit.
+
+**Always preserve the loser of a tie-break here.** If the canonical
+cfg picked an interesting option from two equal scenarios, list the
+conservative alternative as a cfg variant. This lets the cfg writer
+ship both versions if desired.
 
 ---
 

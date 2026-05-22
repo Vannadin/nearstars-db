@@ -63,6 +63,20 @@ strong support, low = aesthetic choice within the allowed window.
 | `water_mass_fraction` | ≤4 × 10⁻⁶ | medium | Acuña 2021 — scenario 1 best estimate near zero |
 | `tidal_k2_over_Q` | (0.4–2) × 10⁻⁴ | medium | Brasser 2019 (1905.00512) interior models; dynamical lower bound k₂/Q ≳ 1×10⁻³ |
 | `moment_of_inertia_C` | 0.286 (range 0.235–0.4) | low | Brasser 2019 representative case |
+| `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 scaling; iron-richest planet but slow rotation (2.4 d) → multipolar regime, weak dipole |
+| `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 (2203.01065) — TESS tidally-locked rocky planets cluster 0.01–0.1 M_Earth |
+| `magnetic_dipole_tilt_deg` | 12 | low | Tie-break (interesting-first per [[feedback-phase3-interesting-first]]) — offset polar cap; 5–15° aesthetic window |
+| `magnetosphere_standoff_planet_radii` | 1.8 | medium | Garraffo 2017 (1706.04617) Fig. 4 — slightly larger than b due to distance |
+| `radiation_belt_present` | false | medium | Field too weak (<0.1 Earth) to sustain stable trapped-particle population |
+| `surface_radiation_dose_msv_yr` | 50000 | low | Atri 2019 (1910.09871) Table 6 scaling for c at 0.0158 AU + 100 g/cm² atm shielding; 1 bar O₂ + B-field reduces lethal-flare spikes |
+| `atmospheric_shielding_g_cm2` | 100 | medium | Phase 3 cfg pressure 0.1 bar O₂ → ~100 g/cm² column |
+| `aurora_present` | true | medium | Thin O₂ atm + weak B-field together produce visible auroral emission |
+| `aurora_color_primary_hex` | `#4DFF4D` | medium | [OI] 557.7 nm green from O atomic recombination (Earth-aurora-analog in O-rich thin atm); tie-break: interesting-first chose green over UV-dominant alternative |
+| `aurora_color_secondary_hex` | `#A050B0` | low | O₂⁺ Second Negative bands ~330–400 nm violet; tie-break: interesting-first picks visible-wavelength side of UV-blue continuum |
+| `aurora_emission_species_primary` | `[OI] 557.7 nm + O₂⁺ Second Negative` | medium | Atm composition + standard aurora chemistry (O-rich thin atm) |
+| `aurora_oval_magnetic_latitude_deg` | 35 | medium | Vidotto 2013 Eq. 7 with magnetopause ~2 R_p → α ≈ 45°; weak field expands oval toward equator |
+| `aurora_intensity_kR_typical` | 100 | medium | Kislyakova 2018 stellar field 1100 nT at c (vs Earth's 5 nT) → 10–500× Earth auroral driver |
+| `induction_heating_magma_ocean_fraction` | 0.68 | medium | Kislyakova 2018 (1710.08761) — c receives **highest induction heating** in system (68% of radiogenic); supports the Io-class tidal heating values already in cfg |
 | `star_apparent_angular_diameter_deg` | 4.02 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -97,6 +111,8 @@ c has the **highest mean density of any TRAPPIST-1 planet** (7642
 kg/m³ — about 50% iron by mass). This iron-richness is independent
 of any specific composition model: c sits cleanly outside the
 water-rich range of the outer planets.
+
+**Magnetic-induction heating reinforces the Io interpretation.** Kislyakova 2018 (1710.08761) computes induction heating from the stellar magnetic field for all 7 TRAPPIST-1 planets and finds c receives the **highest fraction** — 68% of radiogenic flux (vs. ~17% for b, ~56% for d, less for outer planets). Combined with Barr 2018's Io-class tidal flux (1.32 W/m²), this gives c a total interior heat budget well above the partial-melt threshold. A near-surface magma reservoir, possibly with active surface volcanism, becomes a strong default (rather than a marginal alternative) — consistent with the already-revised Surface tint accent toward fresh-basalt and active resurfacing.
 
 The interior composition is consistent with — but does not require —
 substantial water. Unterborn 2018 (1806.10084) finds c can be fit by
@@ -174,6 +190,8 @@ initial water 8.2 +1.5/-1.0 Earth oceans. The 0.1 bar O₂ choice is
 therefore not only observation-consistent but is the dominant
 outcome of the post-runaway-greenhouse evolution.
 
+**Auroral signature.** In a thin O₂-dominated atmosphere, the dominant precipitation-driven emission is [OI] 557.7 nm green (the same line that gives Earth its classic green aurora). Stellar wind compression brings the magnetopause to ~2 R_p (Garraffo 2017), which means the auroral oval — normally a high-latitude band on Earth — expands toward magnetic latitude ~35°. The result is a wide aurora band visible from substantial fractions of c's nightside, not just the polar regions. Intensity reaches ~100 kR (≈10× Earth's typical 10 kR) due to the constantly elevated stellar wind. Secondary O₂⁺ Second Negative emission near 330–400 nm contributes a violet edge; for cfg rendering, primary `#4DFF4D` green with `#A050B0` violet accent. The interesting-first tie-break favors this visible-wavelength rendering over the alternative UV-dominant emission palette, which would be invisible to the player.
+
 **Sky appearance.** The 0.1 bar O₂ atmosphere has weak Rayleigh
 scattering (about 5% at 0.5 μm vs. Earth's 1 bar of N₂+O₂). The sky
 near the substellar point is faintly dark-violet at the zenith,
@@ -197,6 +215,8 @@ that TRAPPIST-1 b/c TTVs could hint at a high planetary Love number
 Combined with the Io-class tidal flux (Barr 2018), this raises the
 prior on c hosting partial melt. The current TTV fits are
 noise-floor-limited, so the inference is tentative.
+
+**Magnetic dynamo expectation.** c's iron-rich interior (Barr 2018: 50% Fe by mass, highest density in the system) is the strongest pro-dynamo case among the inner planets, but the 2.4-day tidally-locked rotation severely limits dipolar field strength via the Rossby-number regime transition (Reiners & Christensen 2010). RM22 (2203.01065) scaling predicts a multipolar/weak field at ~0.08 × Earth dipole moment, giving ~3 μT surface field at the equator. This is enough to deflect part of the stellar wind plasma and channel it into the auroral oval, but not enough to sustain Van-Allen-like radiation belts.
 
 **KSP implementation note.** Rotation period = orbital period =
 2.4219 days (209 254 s). Kopernicus `rotationPeriod` should match the
@@ -291,6 +311,13 @@ Combining surface and atmosphere decisions:
   O₂ scenario.
 - **2002.02015** Bolmont 2020 — TTV Love-number constraint hinting
   at possible magma layer.
+- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+  Environment of TRAPPIST-1. MHD simulations placing the magnetopause
+  at 1.5–2 R_p for inner planets.
+- **2203.01065** RM22 — Internal Structures and Magnetic Moments.
+  Tidally-locked rocky planet dynamo scaling.
+- **1910.09871** Atri 2019 — Stellar Proton Event surface-dose
+  tables; the radiation cfg reference.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -352,3 +379,10 @@ Notable items skipped:
 - Refine the `density_g_cc` entry: the derived value (6.36) is
   slightly higher than Agol 2021's reported 5.7, reflecting different
   uncertainty propagation. Phase 2 should reconcile.
+- Magnetic field strength is low-confidence scaling-based. Direct
+  radio-emission upper limits (e.g., Vedantham 2020) could tighten the
+  dipole moment range.
+- Interesting-first tie-break: aurora color was set to visible-green
+  /violet rather than UV-dominant; cfg variant could render the
+  UV-dominant emission as a faint glow if a wider rendering palette
+  is supported.

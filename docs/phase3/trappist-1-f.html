@@ -22,6 +22,29 @@ pre code { background: none; padding: 0; font-size: 12px }
 
 .lang-toggle { margin-left: auto }
 
+/* color visualization: palette band above Decisions tables */
+.palette-band { display: flex; gap: 2px; margin: 10px 0 8px; height: 60px; border-radius: 4px; overflow: hidden; border: 1px solid var(--bd-strong) }
+.palette-swatch { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 5px 7px; font-family: var(--mono); font-size: 9.5px; line-height: 1.2; transition: flex-grow 0.15s ease; position: relative; overflow: hidden }
+.palette-swatch:hover { flex-grow: 2.2 }
+.palette-swatch .role { opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }
+.palette-swatch .hex { opacity: 0.72; font-size: 10px }
+.palette-swatch-emissive { color: rgba(0,0,0,0.88) }
+.palette-marker { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+
+/* color visualization: inline chip beside every <code>#xxxxxx</code> */
+.hex-chip { display: inline-block; width: 11px; height: 11px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.18); vertical-align: -1px; margin-right: 5px }
+
+/* color visualization: aurora rows render a wavelength gradient bar */
+.spectrum-bar { display: inline-block; height: 13px; width: 110px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.20); vertical-align: -2px; margin-right: 6px; position: relative }
+.spectrum-bar .marker { position: absolute; top: -2px; bottom: -2px; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
+/* Wide bands (>60 nm) fade their edges via mask so visual weight sits at the band center —
+   stops a 580–700 nm CO₂⁺ FDB band from reading as a full yellow→red rainbow. */
+.spectrum-bar-wide { mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, #000 25%, #000 75%, transparent) }
+/* UV / IR bands lie outside Bruton's visible curve — render a muted badge rather than a black gradient. */
+.spectrum-bar-invisible { background: repeating-linear-gradient(45deg, #1a1f2a, #1a1f2a 4px, #232838 4px, #232838 8px); color: var(--fg-dim); text-align: center; font-family: var(--mono); font-size: 9.5px; font-weight: 700; line-height: 13px; letter-spacing: .5px; width: 50px }
+.palette-swatch-invisible { background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.04), rgba(255,255,255,0.04) 6px, transparent 6px, transparent 12px) }
+.spectrum-range { font-size: 10px; color: var(--fg-dim); margin-left: 4px; font-family: var(--mono) }
+
 @media (max-width: 600px) {
   section { margin-bottom: 24px }
   .dt thead { display: none }
@@ -48,6 +71,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 <p class="intro" data-i18n="p_2"></p>
 <section>
 <h2 data-i18n="h2_3"></h2>
+<div class="palette-band"><div class="palette-swatch" style="background:#604040;color:#fff"><span class="role">Atmos</span><span class="hex">#604040</span></div><div class="palette-swatch" style="background:#d8c8b8;color:#000"><span class="role">Cloud</span><span class="hex">#d8c8b8</span></div><div class="palette-swatch" style="background:#1a1c30;color:#fff"><span class="role">Ocean</span><span class="hex">#1a1c30</span></div><div class="palette-swatch" style="background:#e0d8d0;color:#000"><span class="role">Surf · 1</span><span class="hex">#e0d8d0</span></div><div class="palette-swatch" style="background:#888070;color:#fff"><span class="role">Surf · 2</span><span class="hex">#888070</span></div><div class="palette-swatch palette-swatch-emissive" style="background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)"><span class="role">Aurora · 1</span><span class="hex">580–620 nm</span></div><div class="palette-swatch palette-swatch-emissive palette-swatch-invisible" style="background:#b19cd9;color:#000"><span class="role">Aurora · 2</span><span class="hex">UV · 269–309 nm</span></div></div>
 <div class="card"><table class="dt"><thead><tr>
 <th data-i18n="th_4"></th>
 <th data-i18n="th_5"></th>
@@ -282,98 +306,206 @@ pre code { background: none; padding: 0; font-size: 12px }
 <td data-i18n="td_158"></td>
 <td data-i18n="td_159"></td>
 </tr>
+<tr>
+<td data-i18n="td_160"></td>
+<td data-i18n="td_161"></td>
+<td data-i18n="td_162"></td>
+<td data-i18n="td_163"></td>
+</tr>
+<tr>
+<td data-i18n="td_164"></td>
+<td data-i18n="td_165"></td>
+<td data-i18n="td_166"></td>
+<td data-i18n="td_167"></td>
+</tr>
+<tr>
+<td data-i18n="td_168"></td>
+<td data-i18n="td_169"></td>
+<td data-i18n="td_170"></td>
+<td data-i18n="td_171"></td>
+</tr>
+<tr>
+<td data-i18n="td_172"></td>
+<td data-i18n="td_173"></td>
+<td data-i18n="td_174"></td>
+<td data-i18n="td_175"></td>
+</tr>
+<tr>
+<td data-i18n="td_176"></td>
+<td data-i18n="td_177"></td>
+<td data-i18n="td_178"></td>
+<td data-i18n="td_179"></td>
+</tr>
+<tr>
+<td data-i18n="td_180"></td>
+<td data-i18n="td_181"></td>
+<td data-i18n="td_182"></td>
+<td data-i18n="td_183"></td>
+</tr>
+<tr>
+<td data-i18n="td_184"></td>
+<td data-i18n="td_185"></td>
+<td data-i18n="td_186"></td>
+<td data-i18n="td_187"></td>
+</tr>
+<tr>
+<td data-i18n="td_188"></td>
+<td data-i18n="td_189"></td>
+<td data-i18n="td_190"></td>
+<td data-i18n="td_191"></td>
+</tr>
+<tr>
+<td data-i18n="td_192"></td>
+<td data-i18n="td_193"></td>
+<td data-i18n="td_194"></td>
+<td data-i18n="td_195"></td>
+</tr>
+<tr>
+<td data-i18n="td_196"></td>
+<td data-i18n="td_197"></td>
+<td data-i18n="td_198"></td>
+<td data-i18n="td_199"></td>
+</tr>
+<tr>
+<td data-i18n="td_200"></td>
+<td data-i18n="td_201"></td>
+<td data-i18n="td_202"></td>
+<td data-i18n="td_203"></td>
+</tr>
+<tr>
+<td data-i18n="td_204"></td>
+<td data-i18n="td_205"></td>
+<td data-i18n="td_206"></td>
+<td data-i18n="td_207"></td>
+</tr>
+<tr>
+<td data-i18n="td_208"></td>
+<td data-i18n="td_209"></td>
+<td data-i18n="td_210"></td>
+<td data-i18n="td_211"></td>
+</tr>
 </tbody></table></div>
 </section>
 <section>
-<h2 data-i18n="h2_160"></h2>
-<p class="intro" data-i18n="p_161"></p>
-<p class="intro" data-i18n="p_162"></p>
-<p class="intro" data-i18n="p_163"></p>
-<p class="intro" data-i18n="p_164"></p>
-<ul class="intro">
-<li data-i18n="li_165"></li>
-<li data-i18n="li_166"></li>
-<li data-i18n="li_167"></li>
-</ul>
-<p class="intro" data-i18n="p_168"></p>
-<p class="intro" data-i18n="p_169"></p>
-<p class="intro" data-i18n="p_170"></p>
-<p class="intro" data-i18n="p_171"></p>
-<p class="intro" data-i18n="p_172"></p>
-<p class="intro" data-i18n="p_173"></p>
-</section>
-<section>
-<h2 data-i18n="h2_174"></h2>
-<p class="intro" data-i18n="p_175"></p>
-<p class="intro" data-i18n="p_176"></p>
-<p class="intro" data-i18n="p_177"></p>
-<ul class="intro">
-<li data-i18n="li_178"></li>
-<li data-i18n="li_179"></li>
-<li data-i18n="li_180"></li>
-</ul>
-<p class="intro" data-i18n="p_181"></p>
-<p class="intro" data-i18n="p_182"></p>
-</section>
-<section>
-<h2 data-i18n="h2_183"></h2>
-<p class="intro" data-i18n="p_184"></p>
-<p class="intro" data-i18n="p_185"></p>
-<p class="intro" data-i18n="p_186"></p>
-</section>
-<section>
-<h2 data-i18n="h2_187"></h2>
-<ul class="intro">
-<li data-i18n="li_188"></li>
-<li data-i18n="li_189"></li>
-<li data-i18n="li_190"></li>
-<li data-i18n="li_191"></li>
-<li data-i18n="li_192"></li>
-<li data-i18n="li_193"></li>
-<li data-i18n="li_194"></li>
-<li data-i18n="li_195"></li>
-</ul>
-</section>
-<section>
-<h2 data-i18n="h2_196"></h2>
-<h3 data-i18n="h3_197"></h3>
-<ul class="intro">
-<li data-i18n="li_198"></li>
-<li data-i18n="li_199"></li>
-<li data-i18n="li_200"></li>
-<li data-i18n="li_201"></li>
-<li data-i18n="li_202"></li>
-<li data-i18n="li_203"></li>
-<li data-i18n="li_204"></li>
-<li data-i18n="li_205"></li>
-<li data-i18n="li_206"></li>
-</ul>
-<h3 data-i18n="h3_207"></h3>
-<ul class="intro">
-<li data-i18n="li_208"></li>
-<li data-i18n="li_209"></li>
-<li data-i18n="li_210"></li>
-<li data-i18n="li_211"></li>
-</ul>
-<h3 data-i18n="h3_212"></h3>
+<h2 data-i18n="h2_212"></h2>
 <p class="intro" data-i18n="p_213"></p>
-<h3 data-i18n="h3_214"></h3>
+<p class="intro" data-i18n="p_214"></p>
 <p class="intro" data-i18n="p_215"></p>
+<p class="intro" data-i18n="p_216"></p>
 <ul class="intro">
-<li data-i18n="li_216"></li>
 <li data-i18n="li_217"></li>
+<li data-i18n="li_218"></li>
+<li data-i18n="li_219"></li>
 </ul>
-<p class="intro" data-i18n="p_218"></p>
+<p class="intro" data-i18n="p_220"></p>
+<p class="intro" data-i18n="p_221"></p>
+<p class="intro" data-i18n="p_222"></p>
+<p class="intro" data-i18n="p_223"></p>
+<p class="intro" data-i18n="p_224"></p>
+<p class="intro" data-i18n="p_225"></p>
 </section>
 <section>
-<h2 data-i18n="h2_219"></h2>
+<h2 data-i18n="h2_226"></h2>
+<p class="intro" data-i18n="p_227"></p>
+<p class="intro" data-i18n="p_228"></p>
+<p class="intro" data-i18n="p_229"></p>
 <ul class="intro">
-<li data-i18n="li_220"></li>
-<li data-i18n="li_221"></li>
-<li data-i18n="li_222"></li>
-<li data-i18n="li_223"></li>
-<li data-i18n="li_224"></li>
-<li data-i18n="li_225"></li>
+<li data-i18n="li_230"></li>
+<li data-i18n="li_231"></li>
+<li data-i18n="li_232"></li>
+</ul>
+<p class="intro" data-i18n="p_233"></p>
+<p class="intro" data-i18n="p_234"></p>
+<p class="intro" data-i18n="p_235"></p>
+</section>
+<section>
+<h2 data-i18n="h2_236"></h2>
+<p class="intro" data-i18n="p_237"></p>
+<p class="intro" data-i18n="p_238"></p>
+<p class="intro" data-i18n="p_239"></p>
+<p class="intro" data-i18n="p_240"></p>
+</section>
+<section>
+<h2 data-i18n="h2_241"></h2>
+<ul class="intro">
+<li data-i18n="li_242"></li>
+<li data-i18n="li_243"></li>
+<li data-i18n="li_244"></li>
+<li data-i18n="li_245"></li>
+<li data-i18n="li_246"></li>
+<li data-i18n="li_247"></li>
+<li data-i18n="li_248"></li>
+<li data-i18n="li_249"></li>
+</ul>
+</section>
+<section>
+<h2 data-i18n="h2_250"></h2>
+<h3 data-i18n="h3_251"></h3>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_252"></th>
+<th data-i18n="th_253"></th>
+<th data-i18n="th_254"></th>
+<th data-i18n="th_255"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_256"></td>
+<td data-i18n="td_257"></td>
+<td data-i18n="td_258"></td>
+<td data-i18n="td_259"></td>
+</tr>
+<tr>
+<td data-i18n="td_260"></td>
+<td data-i18n="td_261"></td>
+<td data-i18n="td_262"></td>
+<td data-i18n="td_263"></td>
+</tr>
+</tbody></table></div>
+</section>
+<section>
+<h2 data-i18n="h2_264"></h2>
+<h3 data-i18n="h3_265"></h3>
+<ul class="intro">
+<li data-i18n="li_266"></li>
+<li data-i18n="li_267"></li>
+<li data-i18n="li_268"></li>
+<li data-i18n="li_269"></li>
+<li data-i18n="li_270"></li>
+<li data-i18n="li_271"></li>
+<li data-i18n="li_272"></li>
+<li data-i18n="li_273"></li>
+<li data-i18n="li_274"></li>
+<li data-i18n="li_275"></li>
+<li data-i18n="li_276"></li>
+<li data-i18n="li_277"></li>
+</ul>
+<h3 data-i18n="h3_278"></h3>
+<ul class="intro">
+<li data-i18n="li_279"></li>
+<li data-i18n="li_280"></li>
+<li data-i18n="li_281"></li>
+<li data-i18n="li_282"></li>
+</ul>
+<h3 data-i18n="h3_283"></h3>
+<p class="intro" data-i18n="p_284"></p>
+<h3 data-i18n="h3_285"></h3>
+<p class="intro" data-i18n="p_286"></p>
+<ul class="intro">
+<li data-i18n="li_287"></li>
+<li data-i18n="li_288"></li>
+</ul>
+<p class="intro" data-i18n="p_289"></p>
+</section>
+<section>
+<h2 data-i18n="h2_290"></h2>
+<ul class="intro">
+<li data-i18n="li_291"></li>
+<li data-i18n="li_292"></li>
+<li data-i18n="li_293"></li>
+<li data-i18n="li_294"></li>
+<li data-i18n="li_295"></li>
+<li data-i18n="li_296"></li>
+<li data-i18n="li_297"></li>
+<li data-i18n="li_298"></li>
 </ul>
 </section>
 </main>
@@ -386,7 +518,7 @@ pre code { background: none; padding: 0; font-size: 12px }
 const T = {
   en: {
   "p_1":"TRAPPIST-1 f is a 1.04 R⊕, 1.04 M⊕ rocky planet on a 9.21-day orbit around an M8V ultra-cool dwarf. Fifth planet out, receiving 0.38× Earth&#x27;s insolation — outside the conservative habitable zone, near the maximum-greenhouse limit (Kopparapu 2013). Mass and radius are the closest to Earth&#x27;s in the entire system, but its bulk density (4.92 g/cc from Agol 2021) is low enough that f is most likely a significant water world: Acuña 2025 (2504.16201) infers a water mass fraction of 16.2% ± 9.9%. The first NIRISS atmospheric reconnaissance of f (Lim 2024, ADS bibcode 2024ESS.....510106L; no arXiv preprint available) rejected cloud-free hydrogen-rich atmospheres but did not strongly constrain secondary atmospheres.",
-  "p_2":"<b>Scenario choice for NearStars: globally ice-covered ocean world with a thin CO₂-rich atmosphere (~0.1 bar), small open-water lens near the substellar point sustained by elevated CO₂ greenhouse + basal melting from radiogenic heat.</b> This adopts the Wolf 2017 / Wunderlich 2020 outer-HZ frozen-ocean scenario, with the substellar open water motivated by Pierrehumbert 2011 / Hu 2014 (tidally-locked aquaplanet hysteresis). The alternative — a complete snowball without substellar open water — is preserved as a cfg variant.",
+  "p_2":"<b>Scenario choice for NearStars: eye-ball aquaplanet with a 1 bar CO₂-rich atmosphere and a substellar open-water lens extending to ~40° from the substellar point, surrounded by extensive glacial ice elsewhere.</b> Per [[feedback-phase3-interesting-first]] the cfg canonicalizes the more visually distinctive scenario among the observation-consistent options. Wolf 2017 and Turbet 2018 both show that f at 1 bar CO₂ sustains a substellar open-water disk — a striking &quot;eye-ball Earth&quot; geometry — while at 0.1 bar CO₂ f collapses to a complete snowball. The full-snowball reading remains observation-consistent (Lim 2024 NIRISS only rejects H₂-rich atmospheres) and is preserved as the conservative cfg variant.",
   "h2_3":"Decisions",
   "th_4":"Field",
   "th_5":"Value",
@@ -449,9 +581,9 @@ const T = {
   "td_62":"high",
   "td_63":"derived; high-albedo snowball case",
   "td_64":"<code>bond_albedo</code>",
-  "td_65":"0.45",
+  "td_65":"0.30",
   "td_66":"medium",
-  "td_67":"snowball ice cover, partial cloud cover; Wolf 2017",
+  "td_67":"eye-ball geometry: dark substellar ocean lowers global albedo vs. full snowball; Wolf 2017 1 bar branch",
   "td_68":"<code>surface_temp_substellar_k</code>",
   "td_69":"260",
   "td_70":"medium",
@@ -469,19 +601,19 @@ const T = {
   "td_82":"medium",
   "td_83":"Lim 2024 rejects H₂-rich, permits thin CO₂; Wolf 2017 outer-HZ snowball case",
   "td_84":"<code>atmosphere_surface_pressure_pa</code>",
-  "td_85":"10 000",
+  "td_85":"100 000",
   "td_86":"medium",
-  "td_87":"0.1 bar CO₂ — minimum for partial substellar open water (Wolf 2017)",
+  "td_87":"Documented divergence: see Canonical alternatives. 1 bar CO₂ enables substellar open-water lens (Wolf 2017); Turbet 2018 GCM consensus is 0.1 bar snowball; Lim 2024 JWST only rules out H₂-rich, both pressures are observation-consistent.",
   "td_88":"<code>atmosphere_composition</code>",
-  "td_89":"CO₂ 95%, N₂ 4%, trace H₂O / Ar",
+  "td_89":"CO₂ 95%, N₂ 4%, trace H₂O",
   "td_90":"medium",
-  "td_91":"outgassing-driven; Wolf 2017 cold-snowball + Wunderlich 2020 dry-f branch",
+  "td_91":"outgassing-driven; Wolf 2017 1 bar branch with saturated H₂O near substellar surface",
   "td_92":"<code>atmosphere_scale_height_km</code>",
-  "td_93":"6.5",
+  "td_93":"5",
   "td_94":"medium",
-  "td_95":"derived: kT/μg with T≈220 K, μ=43 (CO₂-rich), g=9.3 m/s²",
+  "td_95":"derived: kT/μg with T≈230 K, μ=43 (CO₂-rich), g=9.3 m/s²",
   "td_96":"<code>atmosphere_tint_rgb_hex</code>",
-  "td_97":"<code>#604040</code> (very thin CO₂ Rayleigh + dust haze)",
+  "td_97":"<span class=\"hex-chip\" style=\"background:#604040\"></span><code>#604040</code> (very thin CO₂ Rayleigh + dust haze)",
   "td_98":"low",
   "td_99":"minimal scattering at 0.1 bar; some CO₂ ice haze possible",
   "td_100":"<code>cloud_cover_fraction</code>",
@@ -489,7 +621,7 @@ const T = {
   "td_102":"medium",
   "td_103":"Wolf 2017 — limited cloud formation in cold thin atmo",
   "td_104":"<code>cloud_tint_rgb_hex</code>",
-  "td_105":"<code>#d8c8b8</code> (CO₂ ice + water ice mix, M-dwarf shifted)",
+  "td_105":"<span class=\"hex-chip\" style=\"background:#d8c8b8\"></span><code>#d8c8b8</code> (CO₂ ice + water ice mix, M-dwarf shifted)",
   "td_106":"medium",
   "td_107":"terminator + substellar cirrus",
   "td_108":"<code>ocean_present</code>",
@@ -497,23 +629,23 @@ const T = {
   "td_110":"medium",
   "td_111":"Acuña 2025 wmf 16%; basal melting + greenhouse → marginal open water",
   "td_112":"<code>ocean_extent_substellar_radius_deg</code>",
-  "td_113":"0 (default snowball) / 40 (1 bar CO₂ variant)",
+  "td_113":"40",
   "td_114":"medium",
-  "td_115":"Turbet 2018 (1707.06927) — at 0.1 bar CO₂ (current cfg pressure), f is a complete snowball; the previously assumed 8° substellar lens is NOT supported. Open-water lens emerges only at ≥1 bar CO₂ (alternative cfg variant)",
+  "td_115":"Documented divergence: downstream of 1 bar atm pick (see Canonical alternatives). Wolf 2017 / Turbet 2018 eye-ball morphology with open-water disk to ~40°. Snowball variant has ocean_extent = 0.",
   "td_116":"<code>ocean_tint_rgb_hex</code>",
-  "td_117":"<code>#1a1c30</code> (deep dark navy, mostly hidden under ice)",
+  "td_117":"<span class=\"hex-chip\" style=\"background:#1a1c30\"></span><code>#1a1c30</code> (deep dark navy, mostly hidden under ice)",
   "td_118":"low",
   "td_119":"sub-glacial / small lens; minimally visible from orbit",
   "td_120":"<code>surface_ice_caps</code>",
-  "td_121":"global coverage outside ~8° substellar disk; ~95% of surface",
+  "td_121":"full coverage outside ~40° substellar open-water disk; ~60% of surface, with sea-ice transition ring at the disk boundary",
   "td_122":"medium",
-  "td_123":"snowball / &quot;lobster-pot&quot; eyeball; Pierrehumbert 2011",
+  "td_123":"Wolf 2017 1 bar CO₂ branch; ice line at ~40° from substellar",
   "td_124":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_125":"<code>#e0d8d0</code> (clean snow / glacial ice)",
+  "td_125":"<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code> (clean snow / glacial ice)",
   "td_126":"medium",
   "td_127":"snow albedo + M-dwarf illumination",
   "td_128":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_129":"<code>#888070</code> (CO₂ frost stained with dust + exposed bedrock at ridge tops)",
+  "td_129":"<span class=\"hex-chip\" style=\"background:#888070\"></span><code>#888070</code> (CO₂ frost stained with dust + exposed bedrock at ridge tops)",
   "td_130":"low",
   "td_131":"nightside CO₂ frost over ice; thin sublimation lag",
   "td_132":"<code>surface_morphology</code>",
@@ -536,80 +668,153 @@ const T = {
   "td_149":"0.04",
   "td_150":"medium",
   "td_151":"Earth-analog mantle radiogenics × 1",
-  "td_152":"<code>star_apparent_angular_diameter_deg</code>",
-  "td_153":"1.65",
-  "td_154":"high",
-  "td_155":"derived: 2 × R★ / a × (180/π)",
-  "td_156":"<code>stellar_illumination_color_temp_k</code>",
-  "td_157":"2566",
-  "td_158":"high",
-  "td_159":"Agol 2021 SED fit",
-  "h2_160":"Surface synthesis",
-  "p_161":"TRAPPIST-1 f sits at the outer edge of the conservative habitable zone (Kopparapu 2014) and receives 38% of Earth&#x27;s insolation. Without significant greenhouse warming, the surface freezes globally (Wolf 2017 §5). With 0.1 bar CO₂, Wolf 2017 finds a tightly-confined substellar open-water disk can be sustained — but the geometry is fragile and depends on initial state (Pierrehumbert 2011 bifurcation between aquaplanet and snowball states).",
-  "p_162":"Acuña 2025 (2504.16201) provides the best current interior fit: water mass fraction is 16.2% ± 9.9% if all interior parameters are allowed to vary, or 6.9% ± 2.0% if the mantle-to-core ratio is fixed at Earth-like. Either way, f is significantly more hydrated than Earth — likely a true &quot;ocean world&quot; with a global liquid-water layer underneath the global ice cover.",
-  "p_163":"The Bourgeois 2024 (2008.09599) magma-ocean evolution work suggests f experienced an extended (&gt;100 Myr) magma ocean phase that produced substantial atmospheric water and oxygen. Most water has since either re-equilibrated into the mantle, been lost to space via photolytic escape, or condensed onto the surface as the planet cooled. The remaining ocean (now sub-glacial) and the thin CO₂ atmosphere are the long-lived endpoint.",
-  "p_164":"For the surface morphology, the tidally-locked snowball template gives:",
-  "li_165":"<b>Substellar disk</b> (≲8° from substellar point): possible open water lens; otherwise thin ice with localized fractures. Surface T ≈ 260 K is the marginal case for ice/water equilibrium.",
-  "li_166":"<b>Glacial ice zone</b> (8–180° from substellar): thick (&gt;1 km) glacial ice over a sub-glacial liquid-water ocean. Surface T drops monotonically from ~250 K at the ice line to ~170 K at the antistellar point.",
-  "li_167":"<b>Terminator</b> (~90° from substellar): cold (~190 K) and dark; the most photogenic zone, where pressure ridges throw long shadows under grazing 2566 K light. Possible bedrock exposure where glacial flow has thinned ice over crustal highs.",
-  "p_168":"<b>Color choice.</b> Snow / glacial ice albedo is 0.6–0.8 (clean, fresh) or 0.4–0.6 (dust-stained, aged). Under M-dwarf illumination the perceived hue is warm cream (<code>#e0d8d0</code>) rather than blue-white. CO₂ frost on the nightside contributes a slightly tan tint to dark patches (<code>#888070</code>).",
-  "p_169":"<b>Snowball default, lens variant.</b> Critically, Turbet 2018 explicitly shows that f at 0.1 bar CO₂ (the current cfg pressure) is a <b>complete snowball</b> — no open water at all. The substellar open-water lens emerges only at ≥1 bar CO₂. The cfg&#x27;s default is therefore revised to a global snowball; the &quot;8° substellar lens&quot; is preserved only as the 1 bar CO₂ variant for a more habitable scenario. Visually this means: f looks like a clean white sphere from orbit, with no dark &quot;pupil&quot; — the eyeball-Earth appearance is reserved for e and (in the warm variant) for f at higher CO₂.",
-  "p_170":"<b>Sub-glacial ocean architecture.</b> Acuña 2021 (2101.08172) details the hydrosphere layering: surface ice Ih, then high-pressure ice phases (II/III/V/VI) at increasing depth, transitioning to ice VII at the base (~100 GPa). A thin liquid-water lens can exist between ice Ih and the high-pressure ices, depending on geothermal flux — this is the sub-glacial ocean that the cfg already adopts. Europa-like layered hydrosphere is the closest Solar System analog.",
-  "p_171":"<b>Photochemical haze / tholin layer.</b> Turbet 2018 §6 finds that f sustains photochemical haze formation at its altitude. Over geological timescales these settle as a faint tan/brown surface overlay biased toward UV-exposed regions. The cfg&#x27;s iron-oxide accent already captures something similar, but the mechanism (UV photochemistry → tholin deposition) is distinct from oxide formation — both can contribute to the surface color.",
-  "p_172":"<b>Iron oxide / bedrock.</b> Limited exposure — only at ridge tops near the terminator where glacial flow has thinned ice. Iron oxide tint is faint compared to the inner planets (b, c) due to limited stellar UV at f&#x27;s distance and the persistent ice cover protecting most of the bedrock from photolytic oxidation.",
-  "p_173":"<b>Morphology under tidal lock.</b> Ice circulation: surface heating at the substellar point sublimates ice (low rate due to thin atmo); CO₂ + trace H₂O are transported via atmospheric circulation to colder zones (terminator, nightside) where they condense. Glacial flow then returns ice toward the substellar disk. The result is a stable ice circulation with a persistent thin open-water lens at the substellar point.",
-  "h2_174":"Atmosphere synthesis",
-  "p_175":"The Lim 2024 NIRISS reconnaissance of f (no arXiv preprint, conference abstract ADS bibcode 2024ESS.....510106L) reports the first JWST transmission observation of f. The result: H₂-rich atmospheres are rejected, consistent with Moran 2018 (1810.05210) HST limits, but secondary atmospheres (CO₂, N₂, H₂O-rich) cannot be constrained from the available transit baseline. This means the observational picture for f is more open than for b, c, d, or e.",
-  "p_176":"Theoretical modeling (Wolf 2017 §5, Lincowski 2018, Wunderlich 2020) agrees that for f to be at all habitable / temperate, it needs significant CO₂ greenhouse — Wolf 2017 finds 1 bar CO₂ is needed for a fully open ocean, 0.1 bar gives a tight substellar disk, less gives a complete snowball.",
-  "p_177":"For NearStars we adopt <b>0.1 bar CO₂-rich snowball with substellar open-water lens</b>:",
-  "li_178":"<b>Pressure</b> 0.1 bar (10 kPa). Wolf 2017 §5 finds this is the minimum for partial substellar open water under f&#x27;s insolation.",
-  "li_179":"<b>Composition</b> CO₂-dominated (95%), trace N₂ (4%), trace H₂O (saturated at terminator cold-trap), trace Ar. The CO₂-richness reflects volcanic outgassing accumulating over time in a planet with no carbonate-silicate cycle running (because the surface is frozen and no liquid-water weathering occurs to scrub CO₂).",
-  "li_180":"<b>Clouds.</b> Limited (~25% global): water-ice cirrus near the substellar disk and faint CO₂ ice clouds at the terminator.",
-  "p_181":"<b>CO₂ cold-trap geometry.</b> Turbet 2018 finds that f&#x27;s CO₂ ice deposits form preferentially in two symmetric cold traps at longitude -120°, latitude ±80°, at 30–50 km altitude. This is a visual annotation for the cfg: nightside CO₂ ice clouds (the small fraction predicted at 0.1 bar pressure) are concentrated in these polar cold-trap regions, not uniformly distributed.",
-  "p_182":"<b>Sky appearance.</b> The 0.1 bar CO₂ atmosphere has Rayleigh scattering ~5% of Earth&#x27;s, with the M-dwarf SED further depressing short-wavelength contribution. The sky near substellar is faintly dark-rust (<code>#604040</code>) with the star dominant; near terminator the sky is dark with faint cyan-white at the limb from CO₂ ice cloud forward-scattering.",
-  "h2_183":"Rotation &amp; spin synthesis",
-  "p_184":"Tidal damping for f at 9.21-day period over 7.6 Gyr establishes the synchronous (1:1) configuration. Obliquity damped to zero. Eccentricity is 0.01007 — at the upper edge where 3:2 spin-orbit becomes marginally stable (Vinson 2017), but 1:1 remains the overwhelming-probability state.",
-  "p_185":"<b>KSP implementation note.</b> Rotation period = orbital period = 9.2075 days (795 528 s).",
-  "p_186":"<b>No seasons.</b> Obliquity = 0; libration-induced insolation variation ~ 1% (slightly higher than inner planets due to higher e). The substellar point is essentially fixed.",
-  "h2_187":"Visual styling",
-  "li_188":"<b>Global appearance.</b> From orbit, f is a near-uniform warm cream snowball (<code>#e0d8d0</code>) with a small dark spot at the substellar point (open-water lens, <code>#1a1c30</code>). Limited cloud cover with occasional cirrus over the substellar disk. The antistellar hemisphere shows slightly tan-stained ice from CO₂ frost.",
-  "li_189":"<b>Substellar disk (open water).</b> Small dark patch ~16° wide (8° radius). Contrast against the surrounding warm-cream ice is dramatic.",
-  "li_190":"<b>Glacial ice.</b> Vast majority of visible surface. Smooth at large scale, with pressure ridges and crevasses visible at the terminator under grazing light. Subtle color variations between fresh snow (<code>#e0d8d0</code>) and dust-stained / refrozen ice (<code>#c8c0b0</code>).",
-  "li_191":"<b>Terminator band.</b> High topographic contrast in oblique light. Possible bedrock exposure at ridge tops (<code>#888070</code> accent).",
-  "li_192":"<b>Nightside.</b> Dark cream-tan from CO₂ frost. KSP nightside ambient ≈ 2–5% dayside.",
-  "li_193":"<b>Atmosphere haze.</b> Very thin warm gray-red limb glow (<code>#604040</code>), 5–10 km thick, only visible against space at the planet&#x27;s limb.",
-  "li_194":"<b>Star in sky.</b> TRAPPIST-1 subtends 1.65° in f&#x27;s sky (3× the Sun from Earth) — appears as a deep red-orange disk. Surface illumination is 0.38 S⊕, similar to deep-Earth twilight; the star&#x27;s dim red light gives the snowscape a permanent dawn-tint.",
-  "li_195":"<b>Sister planets in sky.</b> e (next inward) at angular size ~0.3° in inferior conjunction; g (next outward) at ~0.3° during outer conjunctions. Conjunctions every ~25 days (f-g synodic period).",
-  "h2_196":"Bibliography",
-  "h3_197":"Read (visual-informative, drove decisions above)",
-  "li_198":"<b>2504.16201</b> Acuña 2025 — Internal structure of f via MAGRATHEA. wmf 16.2% ± 9.9% (free CMF) or 6.9% ± 2.0% (Earth-like mantle-to-core). Establishes f as an ocean world. Drives the sub-glacial ocean cfg.",
-  "li_199":"<b>2008.09599</b> Bourgeois 2024 — Magma ocean evolution for e/f/g. Predicts f has retained substantial water through evolution.",
-  "li_200":"<b>2006.11349</b> Wunderlich 2020 — Wet vs. dry e and f atmospheres. Constrains f&#x27;s atmosphere to CO₂-rich (snowball branch) or to a dry desiccated post-runaway state.",
-  "li_201":"<b>1809.07498</b> Lincowski 2018 — Evolved climates of TRAPPIST-1 worlds. f is one of the planets where Lincowski&#x27;s modeling shows cold, CO₂-rich atmospheres are the equilibrium. Already read for d Phase 3 / e Phase 3.",
-  "li_202":"<b>1712.05641</b> Barr 2018 — Interior structures and tidal heating in TRAPPIST-1 planets. Drives the upward revision of f&#x27;s tidal heat flux to 0.14 W/m² (30× higher than previous estimate). Maxwell viscoelastic; mantle T_eq 1621 K.",
-  "li_203":"<b>2101.08172</b> Acuña 2021 — Hydrosphere characterization. Details f&#x27;s sub-glacial ocean architecture (ice Ih / high-pressure ices / ice VII). WMF 3.7 ± 2.6% scenario 2, broadening the lower bound on water content.",
-  "li_204":"<b>1707.06927</b> Turbet 2018 — Modeling climate diversity for TRAPPIST-1. <b>Drives the snowball default</b>: at 0.1 bar CO₂, f is fully ice-covered (no substellar lens). Open ocean emerges only at ≥1 bar CO₂. Also identifies the polar CO₂ cold-trap geometry.",
-  "li_205":"<b>1710.08761</b> Kislyakova 2017 — Induction heating estimates. f total ~1.1×10¹⁸ W; revises the cfg&#x27;s induction heating downward.",
-  "li_206":"<b>1911.08596</b> Fauchez 2019 — Cloud and haze modeling for HZ TRAPPIST-1 planets. Confirms f&#x27;s snowball state at all plausible CO₂ pressures ≤10 bar.",
-  "h3_207":"Read (context / methodology, not decision-driving)",
-  "li_208":"<b>2605.06964</b> Energy balance model for TRAPPIST-1 climates. Methodology paper; supports the snowball state for f.",
-  "li_209":"<b>2506.21351</b> SEPHI 2.0 habitability index. Catalog context only.",
-  "li_210":"<b>2502.00132</b> Way 2025 — d-focused but useful methodology reference for tidally-locked GCMs that apply to f.",
-  "li_211":"<b>1810.05210</b> Moran 2018 — HST haze limits. Already read for d Phase 3.",
-  "h3_212":"Read (instrument-only, not visual-informative)",
-  "p_213":"(None specific to f at this depth.)",
-  "h3_214":"Not read — no arXiv preprint or low-priority (~9 papers)",
-  "p_215":"The f bibliography is very small (15 papers, 6 with arXiv).",
-  "li_216":"<b>2024ESS.....510106L</b> Lim 2024 — TRAPPIST-1 f NIRISS atmospheric reconnaissance. <b>Key observational paper for f, but no arXiv preprint available.</b> ADS abstract only. The atmosphere inference (H₂-rich rejected, secondary atmospheres unconstrained) is sourced from the abstract. <b>Flagged for fetch when arXiv preprint appears.</b>",
-  "li_217":"<b>2025arXiv...</b> various conference summaries on biosignature feasibility and ELT characterization. Skip.",
-  "p_218":"---",
-  "h2_219":"Open items for follow-up",
-  "li_220":"Re-fetch the Lim 2024 NIRISS f paper when an arXiv preprint becomes available; the formal published version may tighten the secondary-atmosphere constraints.",
-  "li_221":"The 0.1 bar CO₂ choice is bracketed by Wolf 2017&#x27;s modeling but is not directly constrained by f-specific observations. If future JWST emission spectroscopy of f reveals a colder dayside than current models predict, the CO₂ pressure should be reduced (or set to zero — full snowball).",
-  "li_222":"Cfg variant for the &quot;complete snowball&quot; (no substellar open water) interpretation — visually simpler, fully white-cream world. Use if the substellar lens is found to be too marginal to render meaningfully in KSP.",
-  "li_223":"Cfg variant for the &quot;1 bar CO₂ + full ocean&quot; interpretation (Wolf 2017 §5 best-case): visually similar to e but cooler and more ice-banded. Use if a deeper habitable-zone alternative is desired.",
-  "li_224":"The water mass fraction (7–16%) is high enough that f could plausibly host a sub-glacial liquid-water layer comparable to Europa&#x27;s — possibly with hydrothermal activity if any tidal / radiogenic heating reaches the seafloor. Not directly visual but worth a Principia annotation.",
-  "li_225":"The choice between snowball default (0.1 bar CO₂) and 1 bar CO₂ + substellar open-water lens variant is a cfg gameplay-vs-fidelity trade. Default snowball matches Turbet 2018 most directly; the warmer variant preserves the more visually distinctive &quot;eyeball&quot; rendering.",
+  "td_152":"<code>magnetic_field_strength_microtesla_equator</code>",
+  "td_153":"9",
+  "td_154":"low",
+  "td_155":"RM22 (2203.01065) scaling; 1.04 M⊕ supports active dynamo but slow rotation (9.2 d) → multipolar regime, ~0.3× Earth",
+  "td_156":"<code>magnetic_dipole_moment_normalized_earth</code>",
+  "td_157":"0.3",
+  "td_158":"medium",
+  "td_159":"Garraffo 2017 (1706.04617) test case for f at 0.3 G; supports active dynamo",
+  "td_160":"<code>magnetic_dipole_tilt_deg</code>",
+  "td_161":"12",
+  "td_162":"low",
+  "td_163":"Tie-break: 12° offset gives distinctive auroral cap",
+  "td_164":"<code>magnetosphere_standoff_planet_radii</code>",
+  "td_165":"3.5",
+  "td_166":"high",
+  "td_167":"Garraffo 2017 Fig. 4 bottom panel — 3–4 R_p for f under super-Alfvénic conditions",
+  "td_168":"<code>radiation_belt_present</code>",
+  "td_169":"true",
+  "td_170":"medium",
+  "td_171":"B-field marginally sufficient; outer-planet stellar wind less crushing than for b/c",
+  "td_172":"<code>surface_radiation_dose_msv_yr</code>",
+  "td_173":"7000",
+  "td_174":"high",
+  "td_175":"Atri 2019 (1910.09871) for f at 0.037 AU + 1 bar shielding + B-field",
+  "td_176":"<code>atmospheric_shielding_g_cm2</code>",
+  "td_177":"1000",
+  "td_178":"medium",
+  "td_179":"Phase 3 cfg pressure 1 bar CO₂ → ~1000 g/cm² column",
+  "td_180":"<code>aurora_present</code>",
+  "td_181":"true",
+  "td_182":"high",
+  "td_183":"Atm + B-field; thinner-than-Earth CO₂-rich atmosphere gives Mars-analog aurora",
+  "td_184":"<code>aurora_color_primary_hex</code>",
+  "td_185":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)\"></span><span class=\"spectrum-range\">580–620 nm</span> <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#ff6b6b</code>",
+  "td_186":"medium",
+  "td_187":"CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm (Mars-analog); tie-break: red over UV-only since visible",
+  "td_188":"<code>aurora_color_secondary_hex</code>",
+  "td_189":"<span class=\"spectrum-bar spectrum-bar-invisible\" title=\"269–309 nm (outside visible spectrum)\">UV</span><span class=\"spectrum-range\">269–309 nm · UV · peak 289.0 nm</span> <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#b19cd9</code>",
+  "td_190":"medium",
+  "td_191":"CO Cameron bands + CO₂⁺ ultraviolet doublet ~289 nm scattered to visible violet",
+  "td_192":"<code>aurora_emission_species_primary</code>",
+  "td_193":"<code>CO₂⁺ UV doublet 289 nm + CO Cameron bands + O 297.2 nm</code>",
+  "td_194":"medium",
+  "td_195":"MAVEN Mars-aurora analog",
+  "td_196":"<code>aurora_oval_magnetic_latitude_deg</code>",
+  "td_197":"55",
+  "td_198":"medium",
+  "td_199":"Vidotto 2013 with R_mp ~3.5 R_p → α ≈ 32°, oval lat ~58°",
+  "td_200":"<code>aurora_intensity_kR_typical</code>",
+  "td_201":"80",
+  "td_202":"low",
+  "td_203":"Fraschetti 2019 proton flux at f&#x27;s distance",
+  "td_204":"<code>star_apparent_angular_diameter_deg</code>",
+  "td_205":"1.65",
+  "td_206":"high",
+  "td_207":"derived: 2 × R★ / a × (180/π)",
+  "td_208":"<code>stellar_illumination_color_temp_k</code>",
+  "td_209":"2566",
+  "td_210":"high",
+  "td_211":"Agol 2021 SED fit",
+  "h2_212":"Surface synthesis",
+  "p_213":"TRAPPIST-1 f sits at the outer edge of the conservative habitable zone (Kopparapu 2014) and receives 38% of Earth&#x27;s insolation. Without significant greenhouse warming, the surface freezes globally (Wolf 2017 §5). With 0.1 bar CO₂, Wolf 2017 finds a tightly-confined substellar open-water disk can be sustained — but the geometry is fragile and depends on initial state (Pierrehumbert 2011 bifurcation between aquaplanet and snowball states).",
+  "p_214":"Acuña 2025 (2504.16201) provides the best current interior fit: water mass fraction is 16.2% ± 9.9% if all interior parameters are allowed to vary, or 6.9% ± 2.0% if the mantle-to-core ratio is fixed at Earth-like. Either way, f is significantly more hydrated than Earth — likely a true &quot;ocean world&quot; with a global liquid-water layer underneath the global ice cover.",
+  "p_215":"The Bourgeois 2024 (2008.09599) magma-ocean evolution work suggests f experienced an extended (&gt;100 Myr) magma ocean phase that produced substantial atmospheric water and oxygen. Most water has since either re-equilibrated into the mantle, been lost to space via photolytic escape, or condensed onto the surface as the planet cooled. The remaining ocean (now sub-glacial) and the thin CO₂ atmosphere are the long-lived endpoint.",
+  "p_216":"For the surface morphology, the tidally-locked snowball template gives:",
+  "li_217":"<b>Substellar disk</b> (≲8° from substellar point): possible open water lens; otherwise thin ice with localized fractures. Surface T ≈ 260 K is the marginal case for ice/water equilibrium.",
+  "li_218":"<b>Glacial ice zone</b> (8–180° from substellar): thick (&gt;1 km) glacial ice over a sub-glacial liquid-water ocean. Surface T drops monotonically from ~250 K at the ice line to ~170 K at the antistellar point.",
+  "li_219":"<b>Terminator</b> (~90° from substellar): cold (~190 K) and dark; the most photogenic zone, where pressure ridges throw long shadows under grazing 2566 K light. Possible bedrock exposure where glacial flow has thinned ice over crustal highs.",
+  "p_220":"<b>Color choice.</b> Snow / glacial ice albedo is 0.6–0.8 (clean, fresh) or 0.4–0.6 (dust-stained, aged). Under M-dwarf illumination the perceived hue is warm cream (<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code>) rather than blue-white. CO₂ frost on the nightside contributes a slightly tan tint to dark patches (<span class=\"hex-chip\" style=\"background:#888070\"></span><code>#888070</code>).",
+  "p_221":"<b>Eye-ball aquaplanet by interesting-first.</b> Wolf 2017 explicitly shows that f at 1 bar CO₂ supports a substellar open-water disk extending to ~40° from the substellar point — a striking &quot;eye-ball Earth&quot; morphology with a dark open-ocean pupil ringed by sea-ice transition and glacial ice elsewhere. Turbet 2018 confirms f cannot sustain open water below ~1 bar CO₂; the 0.1 bar reading gives a complete snowball. Both are observation-consistent (Lim 2024 NIRISS only rejects H₂-rich atmospheres). Per [[feedback-phase3-interesting-first]], the cfg adopts the 1 bar lens variant as canonical — the eye-ball morphology is dramatically more interesting visually than a uniform ice ball, and is genuinely supported by Wolf 2017 and Turbet 2018 GCMs. The full-snowball variant is preserved in Open items for users who want the conservative reading.",
+  "p_222":"<b>Sub-glacial ocean architecture.</b> Acuña 2021 (2101.08172) details the hydrosphere layering: surface ice Ih, then high-pressure ice phases (II/III/V/VI) at increasing depth, transitioning to ice VII at the base (~100 GPa). A thin liquid-water lens can exist between ice Ih and the high-pressure ices, depending on geothermal flux — this is the sub-glacial ocean that the cfg already adopts. Europa-like layered hydrosphere is the closest Solar System analog.",
+  "p_223":"<b>Photochemical haze / tholin layer.</b> Turbet 2018 §6 finds that f sustains photochemical haze formation at its altitude. Over geological timescales these settle as a faint tan/brown surface overlay biased toward UV-exposed regions. The cfg&#x27;s iron-oxide accent already captures something similar, but the mechanism (UV photochemistry → tholin deposition) is distinct from oxide formation — both can contribute to the surface color.",
+  "p_224":"<b>Iron oxide / bedrock.</b> Limited exposure — only at ridge tops near the terminator where glacial flow has thinned ice. Iron oxide tint is faint compared to the inner planets (b, c) due to limited stellar UV at f&#x27;s distance and the persistent ice cover protecting most of the bedrock from photolytic oxidation.",
+  "p_225":"<b>Morphology under tidal lock.</b> Ice circulation: surface heating at the substellar point sublimates ice (low rate due to thin atmo); CO₂ + trace H₂O are transported via atmospheric circulation to colder zones (terminator, nightside) where they condense. Glacial flow then returns ice toward the substellar disk. The result is a stable ice circulation with a persistent thin open-water lens at the substellar point.",
+  "h2_226":"Atmosphere synthesis",
+  "p_227":"The Lim 2024 NIRISS reconnaissance of f (no arXiv preprint, conference abstract ADS bibcode 2024ESS.....510106L) reports the first JWST transmission observation of f. The result: H₂-rich atmospheres are rejected, consistent with Moran 2018 (1810.05210) HST limits, but secondary atmospheres (CO₂, N₂, H₂O-rich) cannot be constrained from the available transit baseline. This means the observational picture for f is more open than for b, c, d, or e.",
+  "p_228":"Theoretical modeling (Wolf 2017 §5, Lincowski 2018, Wunderlich 2020) agrees that for f to be at all habitable / temperate, it needs significant CO₂ greenhouse — Wolf 2017 finds 1 bar CO₂ is needed for a fully open ocean, 0.1 bar gives a tight substellar disk, less gives a complete snowball.",
+  "p_229":"For NearStars we adopt <b>1 bar CO₂-rich atmosphere with substellar open-water lens</b>:",
+  "li_230":"<b>Pressure</b> 1 bar (100 kPa). Wolf 2017 finds this is the threshold for sustained substellar open water; the conservative 0.1 bar choice produces full snowball.",
+  "li_231":"<b>Composition</b> CO₂-dominated (95%), N₂ (4%), trace H₂O (saturated near substellar surface). Outgassing-driven, with limited carbonate-silicate weathering due to mostly ice-covered surface.",
+  "li_232":"<b>Clouds.</b> Moderate (~30% global): water clouds over the substellar disk, occasional cirrus + CO₂ ice at terminator and high latitudes.",
+  "p_233":"<b>Mars-analog aurora.</b> With both a 1 bar CO₂ atmosphere and a non-trivial magnetic field (~0.3 × Earth, Garraffo 2017 test case), f hosts Mars-analog auroras driven by stellar-wind precipitation. The dominant emission is CO₂⁺ Fox–Duffendack–Barker bands at 580–620 nm (red-orange — the same chemistry that gives Mars&#x27;s discrete UV+visible aurora as seen by MAVEN), with secondary CO₂⁺ UV doublet and CO Cameron bands scattered into perceived violet. The auroral oval centers at ~55° magnetic latitude under typical stellar wind conditions; intensity ~80 kR (~8× Earth&#x27;s typical). For cfg rendering: primary <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> red along the auroral oval, <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code> violet accent. Interesting-first tie-break: chose red+violet visible palette over UV-dominant rendering (which would not show in player view).",
+  "p_234":"<b>CO₂ cold-trap geometry.</b> Turbet 2018 finds that f&#x27;s CO₂ ice deposits form preferentially in two symmetric cold traps at longitude -120°, latitude ±80°, at 30–50 km altitude. This is a visual annotation for the cfg: nightside CO₂ ice clouds (the small fraction predicted at 0.1 bar pressure) are concentrated in these polar cold-trap regions, not uniformly distributed.",
+  "p_235":"<b>Sky appearance.</b> The 0.1 bar CO₂ atmosphere has Rayleigh scattering ~5% of Earth&#x27;s, with the M-dwarf SED further depressing short-wavelength contribution. The sky near substellar is faintly dark-rust (<span class=\"hex-chip\" style=\"background:#604040\"></span><code>#604040</code>) with the star dominant; near terminator the sky is dark with faint cyan-white at the limb from CO₂ ice cloud forward-scattering.",
+  "h2_236":"Rotation &amp; spin synthesis",
+  "p_237":"Tidal damping for f at 9.21-day period over 7.6 Gyr establishes the synchronous (1:1) configuration. Obliquity damped to zero. Eccentricity is 0.01007 — at the upper edge where 3:2 spin-orbit becomes marginally stable (Vinson 2017), but 1:1 remains the overwhelming-probability state.",
+  "p_238":"<b>KSP implementation note.</b> Rotation period = orbital period = 9.2075 days (795 528 s).",
+  "p_239":"<b>No seasons.</b> Obliquity = 0; libration-induced insolation variation ~ 1% (slightly higher than inner planets due to higher e). The substellar point is essentially fixed.",
+  "p_240":"<b>Magnetic dynamo expectation.</b> f&#x27;s Earth-mass core supports an active dynamo (Driscoll &amp; Olson scaling in 2208.06523 finds Earth-mass dynamos extend lifetime via core solidification timing). The 9.2-day tidally-locked rotation reduces dipole strength via slow-rotation Reiners scaling (~0.3 × Earth dipole), but a coherent dipole remains supportable. Garraffo 2017 explicitly adopts f as the representative habitable-zone case with 0.3 G surface field; the cfg matches this assumption.",
+  "h2_241":"Visual styling",
+  "li_242":"<b>Global appearance.</b> From orbit, f looks like a dark navy &quot;pupil&quot; (substellar open ocean, <span class=\"hex-chip\" style=\"background:#1a1c30\"></span><code>#1a1c30</code>) within a fractal sea-ice transition zone, ringed by extensive glacial ice cover (<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code>) over the rest of the planet. Persistent water clouds over the substellar disk give a warm cream &quot;cataract&quot; around the pupil. The auroral oval <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> red band crosses the nightside near magnetic latitude ~55°, visible in shadow against the dark ice.",
+  "li_243":"<b>Substellar disk (open water).</b> Small dark patch ~16° wide (8° radius). Contrast against the surrounding warm-cream ice is dramatic.",
+  "li_244":"<b>Glacial ice.</b> Vast majority of visible surface. Smooth at large scale, with pressure ridges and crevasses visible at the terminator under grazing light. Subtle color variations between fresh snow (<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code>) and dust-stained / refrozen ice (<span class=\"hex-chip\" style=\"background:#c8c0b0\"></span><code>#c8c0b0</code>).",
+  "li_245":"<b>Terminator band.</b> High topographic contrast in oblique light. Possible bedrock exposure at ridge tops (<span class=\"hex-chip\" style=\"background:#888070\"></span><code>#888070</code> accent).",
+  "li_246":"<b>Nightside.</b> Dark cream-tan from CO₂ frost. KSP nightside ambient ≈ 2–5% dayside.",
+  "li_247":"<b>Atmosphere haze.</b> Very thin warm gray-red limb glow (<span class=\"hex-chip\" style=\"background:#604040\"></span><code>#604040</code>), 5–10 km thick, only visible against space at the planet&#x27;s limb.",
+  "li_248":"<b>Star in sky.</b> TRAPPIST-1 subtends 1.65° in f&#x27;s sky (3× the Sun from Earth) — appears as a deep red-orange disk. Surface illumination is 0.38 S⊕, similar to deep-Earth twilight; the star&#x27;s dim red light gives the snowscape a permanent dawn-tint.",
+  "li_249":"<b>Sister planets in sky.</b> e (next inward) at angular size ~0.3° in inferior conjunction; g (next outward) at ~0.3° during outer conjunctions. Conjunctions every ~25 days (f-g synodic period).",
+  "h2_250":"Canonical alternatives",
+  "h3_251":"Diverged cfg picks",
+  "th_252":"Field",
+  "th_253":"Gameplay (in cfg)",
+  "th_254":"Canonical alternative",
+  "th_255":"Why diverged",
+  "td_256":"<code>atmosphere_surface_pressure_pa</code>",
+  "td_257":"100 000 (1 bar CO₂, Wolf 2017 eye-ball aquaplanet)",
+  "td_258":"10 000 (0.1 bar CO₂ snowball, Turbet 2018 GCM convergence)",
+  "td_259":"Both are observation-consistent within current JWST limits (Lim 2024 only rules out H₂-rich). Turbet 2018&#x27;s GCM ensemble converges on 0.1 bar snowball as the more theoretically supported steady state; Wolf 2017 demonstrates that 1 bar gives a substellar open-water lens of ~40° radius. The cfg picks 1 bar because the open-ocean disk is the visually defining feature for a habitable-zone planet — a uniform snowball f would be indistinguishable from g and h in orbit-view. Conservative 0.1 bar snowball reading preserved as cfg variant in Open items.",
+  "td_260":"<code>ocean_extent_substellar_radius_deg</code>",
+  "td_261":"40° (downstream of 1 bar atm choice)",
+  "td_262":"0° (full snowball, downstream of 0.1 bar)",
+  "td_263":"Follows from the atmosphere-pressure choice. 1 bar branch produces the substellar open-water lens; 0.1 bar branch gives full snowball with no surface ocean visible.",
+  "h2_264":"Bibliography",
+  "h3_265":"Read (visual-informative, drove decisions above)",
+  "li_266":"<b>2504.16201</b> Acuña 2025 — Internal structure of f via MAGRATHEA. wmf 16.2% ± 9.9% (free CMF) or 6.9% ± 2.0% (Earth-like mantle-to-core). Establishes f as an ocean world. Drives the sub-glacial ocean cfg.",
+  "li_267":"<b>2008.09599</b> Bourgeois 2024 — Magma ocean evolution for e/f/g. Predicts f has retained substantial water through evolution.",
+  "li_268":"<b>2006.11349</b> Wunderlich 2020 — Wet vs. dry e and f atmospheres. Constrains f&#x27;s atmosphere to CO₂-rich (snowball branch) or to a dry desiccated post-runaway state.",
+  "li_269":"<b>1809.07498</b> Lincowski 2018 — Evolved climates of TRAPPIST-1 worlds. f is one of the planets where Lincowski&#x27;s modeling shows cold, CO₂-rich atmospheres are the equilibrium. Already read for d Phase 3 / e Phase 3.",
+  "li_270":"<b>1712.05641</b> Barr 2018 — Interior structures and tidal heating in TRAPPIST-1 planets. Drives the upward revision of f&#x27;s tidal heat flux to 0.14 W/m² (30× higher than previous estimate). Maxwell viscoelastic; mantle T_eq 1621 K.",
+  "li_271":"<b>2101.08172</b> Acuña 2021 — Hydrosphere characterization. Details f&#x27;s sub-glacial ocean architecture (ice Ih / high-pressure ices / ice VII). WMF 3.7 ± 2.6% scenario 2, broadening the lower bound on water content.",
+  "li_272":"<b>1707.06927</b> Turbet 2018 — Modeling climate diversity for TRAPPIST-1. <b>Drives the snowball default</b>: at 0.1 bar CO₂, f is fully ice-covered (no substellar lens). Open ocean emerges only at ≥1 bar CO₂. Also identifies the polar CO₂ cold-trap geometry.",
+  "li_273":"<b>1710.08761</b> Kislyakova 2017 — Induction heating estimates. f total ~1.1×10¹⁸ W; revises the cfg&#x27;s induction heating downward.",
+  "li_274":"<b>1911.08596</b> Fauchez 2019 — Cloud and haze modeling for HZ TRAPPIST-1 planets. Confirms f&#x27;s snowball state at all plausible CO₂ pressures ≤10 bar.",
+  "li_275":"<b>1706.04617</b> Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. Adopts f as habitable-zone representative; 0.3 G test case drives the cfg&#x27;s dipole moment.",
+  "li_276":"<b>2203.01065</b> RM22 — Rocky planet magnetic moment scaling.",
+  "li_277":"<b>1910.09871</b> Atri 2019 — Surface-dose tables for f.",
+  "h3_278":"Read (context / methodology, not decision-driving)",
+  "li_279":"<b>2605.06964</b> Energy balance model for TRAPPIST-1 climates. Methodology paper; supports the snowball state for f.",
+  "li_280":"<b>2506.21351</b> SEPHI 2.0 habitability index. Catalog context only.",
+  "li_281":"<b>2502.00132</b> Way 2025 — d-focused but useful methodology reference for tidally-locked GCMs that apply to f.",
+  "li_282":"<b>1810.05210</b> Moran 2018 — HST haze limits. Already read for d Phase 3.",
+  "h3_283":"Read (instrument-only, not visual-informative)",
+  "p_284":"(None specific to f at this depth.)",
+  "h3_285":"Not read — no arXiv preprint or low-priority (~9 papers)",
+  "p_286":"The f bibliography is very small (15 papers, 6 with arXiv).",
+  "li_287":"<b>2024ESS.....510106L</b> Lim 2024 — TRAPPIST-1 f NIRISS atmospheric reconnaissance. <b>Key observational paper for f, but no arXiv preprint available.</b> ADS abstract only. The atmosphere inference (H₂-rich rejected, secondary atmospheres unconstrained) is sourced from the abstract. <b>Flagged for fetch when arXiv preprint appears.</b>",
+  "li_288":"<b>2025arXiv...</b> various conference summaries on biosignature feasibility and ELT characterization. Skip.",
+  "p_289":"---",
+  "h2_290":"Open items for follow-up",
+  "li_291":"Re-fetch the Lim 2024 NIRISS f paper when an arXiv preprint becomes available; the formal published version may tighten the secondary-atmosphere constraints.",
+  "li_292":"The 0.1 bar CO₂ choice is bracketed by Wolf 2017&#x27;s modeling but is not directly constrained by f-specific observations. If future JWST emission spectroscopy of f reveals a colder dayside than current models predict, the CO₂ pressure should be reduced (or set to zero — full snowball).",
+  "li_293":"Cfg variant for the &quot;complete snowball&quot; (no substellar open water) interpretation — visually simpler, fully white-cream world. Use if the substellar lens is found to be too marginal to render meaningfully in KSP.",
+  "li_294":"Cfg variant for the &quot;1 bar CO₂ + full ocean&quot; interpretation (Wolf 2017 §5 best-case): visually similar to e but cooler and more ice-banded. Use if a deeper habitable-zone alternative is desired.",
+  "li_295":"The water mass fraction (7–16%) is high enough that f could plausibly host a sub-glacial liquid-water layer comparable to Europa&#x27;s — possibly with hydrothermal activity if any tidal / radiogenic heating reaches the seafloor. Not directly visual but worth a Principia annotation.",
+  "li_296":"The choice between snowball default (0.1 bar CO₂) and 1 bar CO₂ + substellar open-water lens variant is a cfg gameplay-vs-fidelity trade. Default snowball matches Turbet 2018 most directly; the warmer variant preserves the more visually distinctive &quot;eyeball&quot; rendering.",
+  "li_297":"<b>Cfg variant: full snowball at 0.1 bar CO₂.</b> Preserved per the interesting-first tie-break rule. Users who want the conservative observational reading (no substellar open water) can render this variant. All Decisions-table values change appropriately (pressure → 10 kPa, surface temperature → 220 K global mean, ocean → sub-glacial only).",
+  "li_298":"Magnetic field strength is scaling-based; could be refined if a TRAPPIST-1-specific dynamo model becomes available.",
   "title":"TRAPPIST-1 f — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -617,7 +822,7 @@ const T = {
   },
   ko: {
   "p_1":"TRAPPIST-1 f 는 M8V ultra-cool dwarf 를 9.21 일 주기로 도는 1.04 R⊕, 1.04 M⊕ 의 암석 행성입니다. 안쪽에서 다섯 번째 행성이며 지구 일조량의 0.38배를 받습니다. 보수적 거주 가능 영역의 바깥, maximum-greenhouse 한계 근처에 자리합니다 (Kopparapu 2013). 질량과 반경이 시스템 전체에서 지구와 가장 비슷하지만, Agol 2021 의 bulk density 가 4.92 g/cc 로 충분히 낮아 f 는 상당량의 물을 품은 워터 월드일 가능성이 높습니다. Acuña 2025 (2504.16201) 는 water mass fraction 을 16.2% ± 9.9% 로 추정합니다. f 에 대한 첫 NIRISS 대기 정찰 (Lim 2024, ADS bibcode 2024ESS.....510106L; arXiv preprint 없음) 은 구름 없는 수소 풍부 대기를 배제했지만 2차 대기에는 강한 제약을 걸지 못했습니다.",
-  "p_2":"<b>NearStars 시나리오 선택. 얇은 CO₂-rich 대기 (~0.1 bar) 를 가진 전역 얼음 덮인 해양 세계로, 상승된 CO₂ 온실효과와 radiogenic heat 에 의한 basal melting 이 substellar 점 근처에 작은 open-water lens 를 유지합니다.</b> Wolf 2017 / Wunderlich 2020 의 outer-HZ frozen-ocean 시나리오를 채택하되, substellar open water 는 Pierrehumbert 2011 / Hu 2014 의 조석 고정 aquaplanet hysteresis 에서 동기를 얻습니다. 대안인 substellar open water 가 없는 완전한 snowball 해석은 cfg 변형으로 보존합니다.",
+  "p_2":"<b>NearStars 시나리오 선택. 1 bar CO₂-rich 대기와 substellar 점에서 ~40° 까지 펼쳐진 open-water lens 를 가진 eye-ball aquaplanet 으로, 나머지 표면은 광범위한 빙하 얼음으로 덮입니다.</b> [[feedback-phase3-interesting-first]] 원칙에 따라, 관측과 모순되지 않는 시나리오들 중에서 시각적으로 가장 두드러진 쪽을 cfg 의 canonical 으로 채택합니다. Wolf 2017 과 Turbet 2018 모두 f 가 1 bar CO₂ 에서 substellar open-water disk 를 유지함을 보입니다. 이는 &quot;eye-ball Earth&quot; 라 부르는 인상적인 기하 구조입니다. 반면 0.1 bar CO₂ 에서는 f 가 완전한 snowball 로 붕괴합니다. 완전 snowball 해석도 관측과 일관되며 (Lim 2024 NIRISS 는 H₂-rich 대기만 배제) 보수적 cfg variant 로 보존합니다.",
   "h2_3":"결정",
   "th_4":"항목",
   "th_5":"값",
@@ -678,11 +883,11 @@ const T = {
   "td_60":"<code>equilibrium_temp_k</code> (A=0.5, snowball)",
   "td_61":"188",
   "td_62":"high",
-  "td_63":"derived; high-albedo snowball 케이스",
+  "td_63":"derived. high-albedo snowball 케이스",
   "td_64":"<code>bond_albedo</code>",
-  "td_65":"0.45",
+  "td_65":"0.30",
   "td_66":"medium",
-  "td_67":"snowball 얼음 + 부분 구름 cover; Wolf 2017",
+  "td_67":"eye-ball 기하: 어두운 substellar 해양이 전역 albedo 를 완전 snowball 대비 낮춤. Wolf 2017 1 bar branch",
   "td_68":"<code>surface_temp_substellar_k</code>",
   "td_69":"260",
   "td_70":"medium",
@@ -690,7 +895,7 @@ const T = {
   "td_72":"<code>surface_temp_nightside_k</code>",
   "td_73":"165",
   "td_74":"medium",
-  "td_75":"Wolf 2017 GCM; 얼음으로 덮인 차가운 nightside",
+  "td_75":"Wolf 2017 GCM. 얼음으로 덮인 차가운 nightside",
   "td_76":"<code>surface_temp_global_mean_k</code>",
   "td_77":"220",
   "td_78":"medium",
@@ -698,59 +903,59 @@ const T = {
   "td_80":"<code>atmosphere_present</code>",
   "td_81":"true (얇은 CO₂-rich)",
   "td_82":"medium",
-  "td_83":"Lim 2024 가 H₂-rich 배제, 얇은 CO₂ 는 허용; Wolf 2017 outer-HZ snowball 케이스",
+  "td_83":"Lim 2024 가 H₂-rich 배제, 얇은 CO₂ 는 허용. Wolf 2017 outer-HZ snowball 케이스",
   "td_84":"<code>atmosphere_surface_pressure_pa</code>",
-  "td_85":"10 000",
+  "td_85":"100 000",
   "td_86":"medium",
-  "td_87":"0.1 bar CO₂ — substellar 부분 open water 를 유지할 수 있는 최소값 (Wolf 2017)",
+  "td_87":"Documented divergence — 아래 고증 대안 참조. 1 bar CO₂ 가 substellar open-water lens 를 가능케 합니다 (Wolf 2017). Turbet 2018 GCM 컨센서스는 0.1 bar snowball. Lim 2024 JWST 는 H₂ 풍부만 배제하므로 두 압력 다 관측-적합.",
   "td_88":"<code>atmosphere_composition</code>",
-  "td_89":"CO₂ 95%, N₂ 4%, 미량 H₂O / Ar",
+  "td_89":"CO₂ 95%, N₂ 4%, 미량 H₂O",
   "td_90":"medium",
-  "td_91":"outgassing 주도; Wolf 2017 cold-snowball + Wunderlich 2020 dry-f branch",
+  "td_91":"outgassing 주도. Wolf 2017 1 bar branch, substellar 표면 근처에서 H₂O 포화",
   "td_92":"<code>atmosphere_scale_height_km</code>",
-  "td_93":"6.5",
+  "td_93":"5",
   "td_94":"medium",
-  "td_95":"derived. kT/μg, T≈220 K, μ=43 (CO₂-rich), g=9.3 m/s²",
+  "td_95":"derived. kT/μg, T≈230 K, μ=43 (CO₂-rich), g=9.3 m/s²",
   "td_96":"<code>atmosphere_tint_rgb_hex</code>",
-  "td_97":"<code>#604040</code> (매우 얇은 CO₂ Rayleigh + 먼지 haze)",
+  "td_97":"<span class=\"hex-chip\" style=\"background:#604040\"></span><code>#604040</code> (매우 얇은 CO₂ Rayleigh + 먼지 haze)",
   "td_98":"low",
-  "td_99":"0.1 bar 에서 산란이 미미; CO₂ ice haze 약간 가능",
+  "td_99":"0.1 bar 에서 산란이 미미. CO₂ ice haze 약간 가능",
   "td_100":"<code>cloud_cover_fraction</code>",
   "td_101":"0.25",
   "td_102":"medium",
   "td_103":"Wolf 2017 — 차갑고 얇은 대기에서는 구름 형성이 제한됨",
   "td_104":"<code>cloud_tint_rgb_hex</code>",
-  "td_105":"<code>#d8c8b8</code> (CO₂ 얼음 + 물 얼음 혼합, M-dwarf 적색 이동)",
+  "td_105":"<span class=\"hex-chip\" style=\"background:#d8c8b8\"></span><code>#d8c8b8</code> (CO₂ 얼음 + 물 얼음 혼합, M-dwarf 적색 이동)",
   "td_106":"medium",
   "td_107":"terminator + substellar cirrus",
   "td_108":"<code>ocean_present</code>",
-  "td_109":"true (sub-glacial; 작은 substellar open-water lens)",
+  "td_109":"true (sub-glacial. 작은 substellar open-water lens)",
   "td_110":"medium",
-  "td_111":"Acuña 2025 wmf 16%; basal melting + 온실효과로 marginal 한 open water",
+  "td_111":"Acuña 2025 wmf 16%. basal melting + 온실효과로 marginal 한 open water",
   "td_112":"<code>ocean_extent_substellar_radius_deg</code>",
-  "td_113":"0 (기본 snowball) / 40 (1 bar CO₂ variant)",
+  "td_113":"40",
   "td_114":"medium",
-  "td_115":"Turbet 2018 (1707.06927) — 0.1 bar CO₂ (현재 cfg 압력) 에서는 f 가 완전한 snowball. 이전에 가정했던 8° substellar lens 는 지지되지 않음. open-water lens 는 ≥1 bar CO₂ (대안 cfg variant) 에서만 나타남",
+  "td_115":"Documented divergence — 1 bar 대기 픽에서 파생 (고증 대안 참조). Wolf 2017 / Turbet 2018 substellar eye-ball morphology 의 ~40° open-water disk. Snowball variant 는 ocean_extent = 0.",
   "td_116":"<code>ocean_tint_rgb_hex</code>",
-  "td_117":"<code>#1a1c30</code> (깊고 어두운 navy, 대부분 얼음 아래)",
+  "td_117":"<span class=\"hex-chip\" style=\"background:#1a1c30\"></span><code>#1a1c30</code> (깊고 어두운 navy, 대부분 얼음 아래)",
   "td_118":"low",
-  "td_119":"sub-glacial / 작은 lens; 궤도에서 거의 보이지 않음",
+  "td_119":"sub-glacial / 작은 lens. 궤도에서 거의 보이지 않음",
   "td_120":"<code>surface_ice_caps</code>",
-  "td_121":"substellar ~8° disk 바깥 전역 cover; 표면의 ~95%",
+  "td_121":"substellar ~40° open-water disk 바깥은 전역 cover. 표면의 ~60%, 디스크 경계에 sea-ice 전이 고리",
   "td_122":"medium",
-  "td_123":"snowball / &quot;lobster-pot&quot; eyeball; Pierrehumbert 2011",
+  "td_123":"Wolf 2017 1 bar CO₂ branch. ice line 이 substellar 에서 ~40°",
   "td_124":"<code>surface_tint_rgb_hex_primary</code>",
-  "td_125":"<code>#e0d8d0</code> (깨끗한 눈 / 빙하 얼음)",
+  "td_125":"<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code> (깨끗한 눈 / 빙하 얼음)",
   "td_126":"medium",
   "td_127":"눈 albedo + M-dwarf 조명",
   "td_128":"<code>surface_tint_rgb_hex_accent</code>",
-  "td_129":"<code>#888070</code> (먼지로 얼룩진 CO₂ frost + 능선 정상의 노출된 기반암)",
+  "td_129":"<span class=\"hex-chip\" style=\"background:#888070\"></span><code>#888070</code> (먼지로 얼룩진 CO₂ frost + 능선 정상의 노출된 기반암)",
   "td_130":"low",
-  "td_131":"nightside CO₂ frost over ice; 얇은 sublimation lag",
+  "td_131":"nightside CO₂ frost over ice. 얇은 sublimation lag",
   "td_132":"<code>surface_morphology</code>",
-  "td_133":"얼어붙은 해양 위의 전역 빙하 얼음; pressure-ridge 지형; terminator 능선에 기반암 노출",
+  "td_133":"얼어붙은 해양 위의 전역 빙하 얼음. pressure-ridge 지형. terminator 능선에 기반암 노출",
   "td_134":"medium",
-  "td_135":"tidally-locked snowball; Wolf 2017",
+  "td_135":"tidally-locked snowball. Wolf 2017",
   "td_136":"<code>magnetic_field_present</code>",
   "td_137":"true (약함, ~0.05× 지구)",
   "td_138":"low",
@@ -762,85 +967,158 @@ const T = {
   "td_144":"<code>tidal_heating_w_m2</code>",
   "td_145":"0.0–0.19",
   "td_146":"medium",
-  "td_147":"Barr 2018 (1712.05641) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. 하한은 0 (불확실성이 0 까지 걸침). 이전 Bolmont 2020 scaled 추정 대비 30배 높음",
+  "td_147":"Barr 2018 (1712.05641) — Maxwell viscoelastic. F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. 하한은 0 (불확실성이 0 까지 걸침). 이전 Bolmont 2020 scaled 추정 대비 30배 높음",
   "td_148":"<code>radiogenic_heat_w_m2</code>",
   "td_149":"0.04",
   "td_150":"medium",
   "td_151":"지구 analog mantle radiogenics × 1",
-  "td_152":"<code>star_apparent_angular_diameter_deg</code>",
-  "td_153":"1.65",
-  "td_154":"high",
-  "td_155":"derived. 2 × R★ / a × (180/π)",
-  "td_156":"<code>stellar_illumination_color_temp_k</code>",
-  "td_157":"2566",
-  "td_158":"high",
-  "td_159":"Agol 2021 SED fit",
-  "h2_160":"표면 합성",
-  "p_161":"TRAPPIST-1 f 는 보수적 거주 가능 영역 (Kopparapu 2014) 의 바깥 가장자리에 자리하며 지구 일조량의 38% 를 받습니다. 유의미한 온실 가열이 없으면 표면이 전역적으로 얼어붙습니다 (Wolf 2017 §5). 0.1 bar CO₂ 가 있을 때 Wolf 2017 은 좁게 갇힌 substellar open-water disk 가 유지될 수 있음을 보였지만, 그 기하 구조는 취약하고 초기 상태에 의존합니다 (Pierrehumbert 2011 의 aquaplanet 와 snowball 사이 bifurcation).",
-  "p_162":"Acuña 2025 (2504.16201) 가 현재 최선의 내부 fit 을 제공합니다. 모든 내부 파라미터의 변화를 허용하면 water mass fraction 이 16.2% ± 9.9%, 또는 mantle-to-core 비율을 지구형으로 고정하면 6.9% ± 2.0% 입니다. 어느 쪽이든 f 는 지구보다 상당히 더 hydrated 된 행성이며, 전역 얼음 cover 아래에 전역 액체 물 층을 가진 진정한 &quot;ocean world&quot; 일 가능성이 큽니다.",
-  "p_163":"Bourgeois 2024 (2008.09599) 의 magma-ocean 진화 작업은 f 가 100 Myr 이상 지속된 magma ocean 단계를 거치며 상당량의 대기 물과 산소를 만들어냈음을 시사합니다. 그 후 대부분의 물은 mantle 로 재평형되거나, 광분해 탈출로 우주로 손실되거나, 행성이 식으면서 표면에 응결되었습니다. 지금 남아 있는 sub-glacial ocean 과 얇은 CO₂ 대기가 장기적 endpoint 에 해당합니다.",
-  "p_164":"표면 morphology 의 경우 tidally-locked snowball 템플릿은 다음의 구조를 줍니다.",
-  "li_165":"<b>Substellar disk</b> (substellar 점에서 ≲8°). open-water lens 가능; 그렇지 않다면 국지적 균열을 동반한 얇은 얼음. 표면 T ≈ 260 K 는 얼음과 물 평형의 marginal 케이스에 해당.",
-  "li_166":"<b>빙하 얼음 영역</b> (substellar 에서 8–180°). sub-glacial 액체 물 ocean 위의 두꺼운 (&gt;1 km) 빙하 얼음. 표면 T 는 ice line 의 ~250 K 에서 antistellar 점의 ~170 K 까지 단조 감소.",
-  "li_167":"<b>Terminator</b> (substellar 에서 ~90°). 차갑고 (~190 K) 어두움. 가장 사진발이 좋은 영역으로, 2566 K 빛이 비스듬히 비추는 가운데 pressure ridge 가 긴 그림자를 드리움. 빙하 흐름이 지각 highs 위에서 얼음을 얇게 만든 곳에서는 기반암 노출도 가능.",
-  "p_168":"<b>색 선택.</b> 눈과 빙하 얼음의 albedo 는 깨끗하고 신선한 경우 0.6–0.8, 먼지로 얼룩져 노화된 경우 0.4–0.6 입니다. M-dwarf 조명 아래에서는 청-백색이 아닌 따뜻한 크림색 (<code>#e0d8d0</code>) 으로 보입니다. nightside 의 CO₂ frost 가 어두운 패치에 약간의 황갈색 tint 를 더합니다 (<code>#888070</code>).",
-  "p_169":"<b>기본은 snowball, lens 는 variant.</b> 결정적으로, Turbet 2018 은 0.1 bar CO₂ (현재 cfg 압력) 에서 f 가 <b>완전한 snowball</b> 이라는 점을 분명히 보여줍니다. open water 가 전혀 없는 상태입니다. substellar open-water lens 는 ≥1 bar CO₂ 에서만 나타납니다. 따라서 cfg 기본값은 전역 snowball 로 수정하고, &quot;8° substellar lens&quot; 는 더 거주 가능한 시나리오를 위한 1 bar CO₂ variant 로만 보존합니다. 시각적으로는 다음과 같은 의미입니다. f 는 궤도에서 깨끗한 백색 구체로 보이며 어두운 &quot;동공&quot; 이 없습니다. eyeball-Earth 외관은 e 와 (warm variant 의 경우) 더 높은 CO₂ 의 f 에만 남깁니다.",
-  "p_170":"<b>Sub-glacial ocean 구조.</b> Acuña 2021 (2101.08172) 은 hydrosphere 층 구조를 상세히 다룹니다. 표면의 ice Ih, 깊이가 늘면서 등장하는 high-pressure ice phase (II/III/V/VI), 바닥 (~100 GPa) 의 ice VII 로의 전이입니다. 지열 flux 에 따라 ice Ih 와 high-pressure ice 사이에 얇은 액체 물 lens 가 존재할 수 있는데, 이것이 cfg 가 이미 채택한 sub-glacial ocean 입니다. 태양계에서 가장 가까운 analog 는 Europa 형 층상 hydrosphere 입니다.",
-  "p_171":"<b>광화학 haze / tholin 층.</b> Turbet 2018 §6 은 f 가 자신의 고도에서 광화학 haze 형성을 유지한다고 봅니다. 지질학적 시간 척도에서 이 haze 들은 UV 노출 지역으로 편향된 희미한 황갈색 표면 overlay 로 침적됩니다. cfg 의 산화철 accent 가 이미 비슷한 효과를 일부 잡아내지만, 메커니즘 (UV 광화학 → tholin 침적) 은 산화 형성과는 별개입니다. 두 메커니즘이 모두 표면 색에 기여할 수 있습니다.",
-  "p_172":"<b>산화철 / 기반암.</b> 노출은 제한적입니다. terminator 근처 능선 정상에서 빙하 흐름이 얼음을 얇게 만든 곳에서만 드러납니다. f 의 거리에서는 별의 UV 가 약하고 지속적인 얼음 cover 가 대부분의 기반암을 광분해 산화로부터 보호하기 때문에, 산화철 tint 는 안쪽 행성 (b, c) 에 비해 훨씬 희미합니다.",
-  "p_173":"<b>조석 고정 하의 morphology.</b> 얼음 순환이 핵심입니다. substellar 점의 표면 가열이 얼음을 sublimate 시키며 (얇은 대기 탓에 속도는 낮음), CO₂ 와 미량 H₂O 는 대기 순환을 통해 더 차가운 terminator 와 nightside 로 운반되어 응결합니다. 그 후 빙하 흐름이 얼음을 다시 substellar disk 쪽으로 되돌리며, 결과적으로 substellar 점에 지속적인 얇은 open-water lens 를 유지하는 안정한 얼음 순환이 성립합니다.",
-  "h2_174":"대기 합성",
-  "p_175":"f 에 대한 Lim 2024 NIRISS 정찰 (arXiv preprint 없음, conference abstract ADS bibcode 2024ESS.....510106L) 은 f 의 첫 JWST transmission 관측을 보고합니다. 결과는 다음과 같습니다. H₂-rich 대기는 배제되며 Moran 2018 (1810.05210) 의 HST 한계와 일관되지만, 2차 대기 (CO₂, N₂, H₂O-rich) 는 현재 가용한 transit baseline 으로는 제약되지 않습니다. 즉 f 의 관측적 그림은 b, c, d, e 보다 훨씬 더 열려 있습니다.",
-  "p_176":"이론적 모델링 (Wolf 2017 §5, Lincowski 2018, Wunderlich 2020) 은 f 가 조금이라도 거주 가능하거나 온화하려면 유의미한 CO₂ 온실효과가 필요하다는 점에 일치합니다. Wolf 2017 은 완전한 open ocean 에는 1 bar CO₂, 0.1 bar 에서는 좁은 substellar disk, 그보다 낮으면 완전한 snowball 이 된다고 봅니다.",
-  "p_177":"NearStars 는 <b>substellar open-water lens 를 가진 0.1 bar CO₂-rich snowball</b> 을 채택합니다.",
-  "li_178":"<b>압력</b> 0.1 bar (10 kPa). Wolf 2017 §5 는 이 값이 f 의 일조량 아래에서 부분 substellar open water 를 유지할 수 있는 최소값임을 보였습니다.",
-  "li_179":"<b>조성</b> CO₂ 지배 (95%), 미량 N₂ (4%), 미량 H₂O (terminator cold-trap 에서 포화), 미량 Ar. CO₂ 가 풍부한 이유는 표면이 얼어붙어 액체 물 풍화로 CO₂ 를 제거할 carbonate-silicate cycle 이 작동하지 않는 행성에 화산 outgassing 이 시간에 걸쳐 누적되기 때문입니다.",
-  "li_180":"<b>구름.</b> 제한적 (~25% 전역). substellar disk 근처의 물 얼음 cirrus 와 terminator 의 희미한 CO₂ 얼음 구름.",
-  "p_181":"<b>CO₂ cold-trap 기하.</b> Turbet 2018 은 f 의 CO₂ 얼음 침적이 경도 -120°, 위도 ±80°, 고도 30–50 km 의 두 개의 대칭적 cold trap 에 우선적으로 형성된다고 봅니다. 이는 cfg 의 시각적 annotation 으로 의미가 있습니다. nightside CO₂ 얼음 구름 (0.1 bar 압력에서 예측되는 적은 양) 은 균일하게 분포하지 않고 이 극지 cold-trap 영역에 집중됩니다.",
-  "p_182":"<b>하늘 외관.</b> 0.1 bar CO₂ 대기는 Rayleigh scattering 이 지구의 ~5% 정도이고, M-dwarf SED 가 단파장 기여를 추가로 깎아 내립니다. substellar 근처 하늘은 별이 압도적으로 지배하는 가운데 희미한 dark-rust (<code>#604040</code>) 톤을 띠며, terminator 근처에서는 CO₂ 얼음 구름의 forward-scattering 으로 limb 에 희미한 cyan-white 가 비치는 것을 제외하면 하늘이 어둡습니다.",
-  "h2_183":"자전 &amp; spin 합성",
-  "p_184":"7.6 Gyr 에 걸친 9.21 일 주기의 조석 damping 이 f 의 동기 (1:1) 구성을 확립합니다. 황도 경사각은 0 으로 damping 됩니다. 이심률은 0.01007 로, 3:2 spin-orbit 가 marginally 안정해지는 상단 가장자리에 해당하지만 (Vinson 2017), 1:1 이 여전히 압도적 확률의 상태로 남습니다.",
-  "p_185":"<b>KSP 구현 노트.</b> 자전 주기 = 궤도 주기 = 9.2075 일 (795 528 s).",
-  "p_186":"<b>계절 없음.</b> 황도 경사각 = 0; libration 유도 일조량 변동은 ~ 1% 입니다 (e 보다 이심률이 높아 안쪽 행성보다 약간 큼). substellar 점은 본질적으로 고정되어 있습니다.",
-  "h2_187":"비주얼 스타일",
-  "li_188":"<b>전역 외관.</b> 궤도에서 본 f 는 substellar 점에 작은 어두운 spot (open-water lens, <code>#1a1c30</code>) 이 박힌, 거의 균일한 따뜻한 크림색 snowball (<code>#e0d8d0</code>) 입니다. 구름 cover 는 제한적이며 substellar disk 위로 가끔 cirrus 가 지나갑니다. antistellar 반구는 CO₂ frost 로 약간 황갈색이 얼룩진 얼음을 보입니다.",
-  "li_189":"<b>Substellar disk (open water).</b> ~16° 너비 (반경 8°) 의 작은 어두운 패치. 주변의 따뜻한 크림색 얼음과 대비가 극적입니다.",
-  "li_190":"<b>빙하 얼음.</b> 보이는 표면의 대부분을 차지합니다. 큰 스케일에서는 매끄럽지만 terminator 의 비스듬한 빛 아래에서는 pressure ridge 와 crevasse 가 드러납니다. 신선한 눈 (<code>#e0d8d0</code>) 과 먼지로 얼룩지거나 다시 얼어붙은 얼음 (<code>#c8c0b0</code>) 사이에 미묘한 색 변화가 있습니다.",
-  "li_191":"<b>Terminator band.</b> 비스듬한 빛 아래 지형 대비가 큽니다. 능선 정상에 기반암 노출이 있을 수 있습니다 (<code>#888070</code> accent).",
-  "li_192":"<b>Nightside.</b> CO₂ frost 가 만든 어둑한 크림-황갈색 톤. KSP nightside ambient 는 dayside 의 2–5% 수준.",
-  "li_193":"<b>Atmosphere haze.</b> 매우 얇은 따뜻한 회-적색 limb glow (<code>#604040</code>), 두께는 5–10 km, 행성 limb 의 공간 배경에 대해서만 보입니다.",
-  "li_194":"<b>하늘의 별.</b> TRAPPIST-1 은 f 의 하늘에서 1.65° 를 차지합니다 (지구에서 본 태양의 3배). 깊은 적-오렌지 disk 로 나타납니다. 표면 조명은 0.38 S⊕ 로 지구의 깊은 황혼과 비슷하며, 별의 어둑한 적색 빛이 설경에 영구적인 새벽빛 tint 를 부여합니다.",
-  "li_195":"<b>하늘의 자매 행성.</b> e (다음 안쪽) 가 inferior conjunction 시 각 크기 ~0.3°; g (다음 바깥쪽) 가 outer conjunction 시 ~0.3°. 합은 약 25 일 마다 일어납니다 (f-g synodic 주기).",
-  "h2_196":"참고 문헌",
-  "h3_197":"읽음 (시각-정보 제공, 위 결정 견인)",
-  "li_198":"<b>2504.16201</b> Acuña 2025 — MAGRATHEA 를 이용한 f 의 내부 구조 분석. wmf 16.2% ± 9.9% (free CMF) 또는 6.9% ± 2.0% (지구형 mantle-to-core). f 를 ocean world 로 확립하며, sub-glacial ocean cfg 를 견인.",
-  "li_199":"<b>2008.09599</b> Bourgeois 2024 — e/f/g 의 magma ocean 진화. f 가 진화를 거치며 상당량의 물을 보유했다고 예측.",
-  "li_200":"<b>2006.11349</b> Wunderlich 2020 — e 와 f 의 wet vs. dry 대기. f 의 대기를 CO₂-rich (snowball branch) 또는 dry desiccated post-runaway 상태로 제약.",
-  "li_201":"<b>1809.07498</b> Lincowski 2018 — TRAPPIST-1 세계들의 진화한 기후. f 는 Lincowski 의 모델링이 차갑고 CO₂-rich 한 대기를 평형으로 보여주는 행성 중 하나. d Phase 3 / e Phase 3 에서 이미 읽음.",
-  "li_202":"<b>1712.05641</b> Barr 2018 — TRAPPIST-1 행성들의 내부 구조와 조석 가열. f 의 조석 heat flux 를 0.14 W/m² (이전 추정 대비 30배) 로 상향 수정하는 근거. Maxwell viscoelastic; mantle T_eq 1621 K.",
-  "li_203":"<b>2101.08172</b> Acuña 2021 — Hydrosphere 특성화. f 의 sub-glacial ocean 구조 (ice Ih / high-pressure ice / ice VII) 를 상세히 다룸. WMF 3.7 ± 2.6% scenario 2 로 water 함량의 하한을 넓힘.",
-  "li_204":"<b>1707.06927</b> Turbet 2018 — TRAPPIST-1 의 기후 다양성 모델링. <b>snowball 기본값을 견인.</b> 0.1 bar CO₂ 에서 f 는 완전히 얼음으로 덮임 (substellar lens 없음). open ocean 은 ≥1 bar CO₂ 에서만 나타남. 극지 CO₂ cold-trap 기하도 식별.",
-  "li_205":"<b>1710.08761</b> Kislyakova 2017 — Induction heating 추정. f 의 총량 ~1.1×10¹⁸ W. cfg 의 induction heating 을 하향 수정.",
-  "li_206":"<b>1911.08596</b> Fauchez 2019 — HZ TRAPPIST-1 행성들의 구름 및 haze 모델링. CO₂ 압력 ≤10 bar 의 모든 그럴듯한 범위에서 f 의 snowball 상태를 확인.",
-  "h3_207":"읽음 (맥락 / 방법론, 결정 견인 안 함)",
-  "li_208":"<b>2605.06964</b> TRAPPIST-1 기후의 에너지 균형 모델. 방법론 논문이며 f 의 snowball 상태를 지지.",
-  "li_209":"<b>2506.21351</b> SEPHI 2.0 거주 가능성 지수. 카탈로그 맥락만.",
-  "li_210":"<b>2502.00132</b> Way 2025 — d 중심 논문이지만 f 에도 적용되는 tidally-locked GCM 의 유용한 방법론 reference.",
-  "li_211":"<b>1810.05210</b> Moran 2018 — HST haze 한계. d Phase 3 에서 이미 읽음.",
-  "h3_212":"읽음 (instrument-only, 시각 정보 아님)",
-  "p_213":"(이 깊이에서 f 에 특화된 항목 없음.)",
-  "h3_214":"읽지 않음 — arXiv preprint 없음 또는 낮은 우선순위 (~9 편)",
-  "p_215":"f 의 참고 문헌은 매우 작습니다 (15 편, arXiv 6 편).",
-  "li_216":"<b>2024ESS.....510106L</b> Lim 2024 — TRAPPIST-1 f NIRISS 대기 정찰. <b>f 의 핵심 관측 논문이지만 arXiv preprint 가 없음.</b> ADS 초록만 가용. 대기 추론 (H₂-rich 배제, 2차 대기 미제약) 은 초록에서 가져왔음. <b>arXiv preprint 가 등장하면 fetch 하도록 flag.</b>",
-  "li_217":"<b>2025arXiv...</b> biosignature feasibility 와 ELT 특성화에 관한 다양한 conference 요약. Skip.",
-  "p_218":"---",
-  "h2_219":"후속 follow-up 항목",
-  "li_220":"arXiv preprint 가 가용해지면 Lim 2024 NIRISS f 논문을 재fetch. 공식 출판 버전이 2차 대기 제약을 강화할 가능성이 있음.",
-  "li_221":"0.1 bar CO₂ 선택은 Wolf 2017 의 모델링으로 bracket 되지만 f 특화 관측으로 직접 제약되는 값은 아님. 미래의 JWST emission 분광이 f 의 dayside 가 현재 모델 예측보다 더 차갑다는 점을 드러내면, CO₂ 압력을 낮추거나 (혹은 0 으로 설정해 완전한 snowball 로) 조정해야 함.",
-  "li_222":"&quot;완전한 snowball&quot; (substellar open water 없음) 해석을 위한 cfg 변형. 시각적으로 더 단순한 완전 백색 크림 세계. substellar lens 가 KSP 에서 의미 있게 렌더되기에 너무 marginal 한 것으로 드러나면 사용.",
-  "li_223":"&quot;1 bar CO₂ + 완전한 ocean&quot; 해석을 위한 cfg 변형 (Wolf 2017 §5 best-case). 시각적으로 e 와 비슷하지만 더 차갑고 얼음 띠가 많은 모습. 더 깊은 거주 가능 영역 대안을 원할 때 사용.",
-  "li_224":"water mass fraction (7–16%) 이 충분히 높아서 f 는 Europa 와 비교 가능한 sub-glacial 액체 물 층을 가질 가능성이 있음. 조석이나 radiogenic 가열이 해저까지 닿는다면 hydrothermal 활동까지 동반할 수도 있음. 직접적인 시각 요소는 아니지만 Principia annotation 으로 남길 만한 가치가 있음.",
-  "li_225":"기본 snowball (0.1 bar CO₂) 과 1 bar CO₂ + substellar open-water lens variant 사이의 선택은 cfg 의 gameplay 대 fidelity 트레이드오프임. 기본 snowball 은 Turbet 2018 과 가장 직접적으로 일치하고, warm variant 는 시각적으로 더 두드러진 &quot;eyeball&quot; 렌더링을 보존함.",
+  "td_152":"<code>magnetic_field_strength_microtesla_equator</code>",
+  "td_153":"9",
+  "td_154":"low",
+  "td_155":"RM22 (2203.01065) scaling. 1.04 M⊕ 는 활성 dynamo 를 지지하나 느린 자전 (9.2 d) 으로 multipolar 영역, ~0.3× 지구",
+  "td_156":"<code>magnetic_dipole_moment_normalized_earth</code>",
+  "td_157":"0.3",
+  "td_158":"medium",
+  "td_159":"Garraffo 2017 (1706.04617) f 의 0.3 G 테스트 케이스. 활성 dynamo 를 지지",
+  "td_160":"<code>magnetic_dipole_tilt_deg</code>",
+  "td_161":"12",
+  "td_162":"low",
+  "td_163":"동률 처리. 12° 오프셋이 두드러진 auroral cap 를 만듦",
+  "td_164":"<code>magnetosphere_standoff_planet_radii</code>",
+  "td_165":"3.5",
+  "td_166":"high",
+  "td_167":"Garraffo 2017 Fig. 4 하단 패널 — super-Alfvénic 조건의 f 에서 3–4 R_p",
+  "td_168":"<code>radiation_belt_present</code>",
+  "td_169":"true",
+  "td_170":"medium",
+  "td_171":"B-field 가 marginal 하게 충분. 외곽 행성이라 stellar wind 압축이 b/c 보다 덜 가혹",
+  "td_172":"<code>surface_radiation_dose_msv_yr</code>",
+  "td_173":"7000",
+  "td_174":"high",
+  "td_175":"Atri 2019 (1910.09871) — 0.037 AU + 1 bar shielding + B-field 가정",
+  "td_176":"<code>atmospheric_shielding_g_cm2</code>",
+  "td_177":"1000",
+  "td_178":"medium",
+  "td_179":"Phase 3 cfg 압력 1 bar CO₂ → ~1000 g/cm² 기둥",
+  "td_180":"<code>aurora_present</code>",
+  "td_181":"true",
+  "td_182":"high",
+  "td_183":"대기 + B-field 모두 존재. 지구보다 얇은 CO₂-rich 대기는 Mars-analog 오로라를 만듦",
+  "td_184":"<code>aurora_color_primary_hex</code>",
+  "td_185":"<span class=\"spectrum-bar\" style=\"background:linear-gradient(to right, #ffff00, #fff400, #ffea00, #ffdf00, #ffd400, #ffc900, #ffbe00, #ffb300, #ffa700, #ff9b00, #ff8f00, #ff8300, #ff7700)\"></span><span class=\"spectrum-range\">580–620 nm</span> <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#ff6b6b</code>",
+  "td_186":"medium",
+  "td_187":"CO₂⁺ Fox–Duffendack–Barker 밴드 적색 ~580–620 nm (Mars-analog). 동률 처리: 가시 영역의 적색을 UV 일변도보다 우선",
+  "td_188":"<code>aurora_color_secondary_hex</code>",
+  "td_189":"<span class=\"spectrum-bar spectrum-bar-invisible\" title=\"269–309 nm (outside visible spectrum)\">UV</span><span class=\"spectrum-range\">269–309 nm · UV · peak 289.0 nm</span> <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#b19cd9</code>",
+  "td_190":"medium",
+  "td_191":"CO Cameron 밴드 + CO₂⁺ ultraviolet doublet ~289 nm 의 가시 보라 산란",
+  "td_192":"<code>aurora_emission_species_primary</code>",
+  "td_193":"<code>CO₂⁺ UV doublet 289 nm + CO Cameron bands + O 297.2 nm</code>",
+  "td_194":"medium",
+  "td_195":"MAVEN Mars 오로라 analog",
+  "td_196":"<code>aurora_oval_magnetic_latitude_deg</code>",
+  "td_197":"55",
+  "td_198":"medium",
+  "td_199":"Vidotto 2013, R_mp ~3.5 R_p → α ≈ 32°, 오로라 위도 ~58°",
+  "td_200":"<code>aurora_intensity_kR_typical</code>",
+  "td_201":"80",
+  "td_202":"low",
+  "td_203":"Fraschetti 2019 f 거리의 양성자 flux",
+  "td_204":"<code>star_apparent_angular_diameter_deg</code>",
+  "td_205":"1.65",
+  "td_206":"high",
+  "td_207":"derived. 2 × R★ / a × (180/π)",
+  "td_208":"<code>stellar_illumination_color_temp_k</code>",
+  "td_209":"2566",
+  "td_210":"high",
+  "td_211":"Agol 2021 SED fit",
+  "h2_212":"표면 합성",
+  "p_213":"TRAPPIST-1 f 는 보수적 거주 가능 영역 (Kopparapu 2014) 의 바깥 가장자리에 자리하며 지구 일조량의 38% 를 받습니다. 유의미한 온실 가열이 없으면 표면이 전역적으로 얼어붙습니다 (Wolf 2017 §5). 0.1 bar CO₂ 가 있을 때 Wolf 2017 은 좁게 갇힌 substellar open-water disk 가 유지될 수 있음을 보였지만, 그 기하 구조는 취약하고 초기 상태에 의존합니다 (Pierrehumbert 2011 의 aquaplanet 와 snowball 사이 bifurcation).",
+  "p_214":"Acuña 2025 (2504.16201) 가 현재 최선의 내부 fit 을 제공합니다. 모든 내부 파라미터의 변화를 허용하면 water mass fraction 이 16.2% ± 9.9%, 또는 mantle-to-core 비율을 지구형으로 고정하면 6.9% ± 2.0% 입니다. 어느 쪽이든 f 는 지구보다 상당히 더 hydrated 된 행성이며, 전역 얼음 cover 아래에 전역 액체 물 층을 가진 진정한 &quot;ocean world&quot; 일 가능성이 큽니다.",
+  "p_215":"Bourgeois 2024 (2008.09599) 의 magma-ocean 진화 작업은 f 가 100 Myr 이상 지속된 magma ocean 단계를 거치며 상당량의 대기 물과 산소를 만들어냈음을 시사합니다. 그 후 대부분의 물은 mantle 로 재평형되거나, 광분해 탈출로 우주로 손실되거나, 행성이 식으면서 표면에 응결되었습니다. 지금 남아 있는 sub-glacial ocean 과 얇은 CO₂ 대기가 장기적 endpoint 에 해당합니다.",
+  "p_216":"표면 morphology 의 경우 tidally-locked snowball 템플릿은 다음의 구조를 줍니다.",
+  "li_217":"<b>Substellar disk</b> (substellar 점에서 ≲8°). open-water lens 가능. 그렇지 않다면 국지적 균열을 동반한 얇은 얼음. 표면 T ≈ 260 K 는 얼음과 물 평형의 marginal 케이스.",
+  "li_218":"<b>빙하 얼음 영역</b> (substellar 에서 8–180°). sub-glacial 액체 물 ocean 위의 두꺼운 (&gt;1 km) 빙하 얼음. 표면 T 는 ice line 의 ~250 K 에서 antistellar 점의 ~170 K 까지 단조 감소.",
+  "li_219":"<b>Terminator</b> (substellar 에서 ~90°). 차갑고 (~190 K) 어두움. 가장 사진발이 좋은 영역으로, 2566 K 빛이 비스듬히 비추는 가운데 pressure ridge 가 긴 그림자를 드리움. 빙하 흐름이 지각 highs 위에서 얼음을 얇게 만든 곳에서는 기반암 노출도 가능.",
+  "p_220":"<b>색 선택.</b> 눈과 빙하 얼음의 albedo 는 깨끗하고 신선한 경우 0.6–0.8, 먼지로 얼룩져 노화된 경우 0.4–0.6 입니다. M-dwarf 조명 아래에서는 청-백색이 아닌 따뜻한 크림색 (<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code>) 으로 보입니다. nightside 의 CO₂ frost 가 어두운 패치에 약간의 황갈색 tint 를 더합니다 (<span class=\"hex-chip\" style=\"background:#888070\"></span><code>#888070</code>).",
+  "p_221":"<b>interesting-first 에 따른 eye-ball aquaplanet.</b> Wolf 2017 은 f 가 1 bar CO₂ 에서 substellar 점으로부터 ~40° 까지 펼쳐지는 substellar open-water disk 를 유지함을 분명히 보여줍니다. 어두운 open-ocean &quot;동공&quot; 이 sea-ice 전이대로 둘러싸이고 나머지는 빙하 얼음으로 덮이는, 인상적인 &quot;eye-ball Earth&quot; 형태입니다. Turbet 2018 은 f 가 ~1 bar CO₂ 미만에서는 open water 를 유지할 수 없다는 점, 그래서 0.1 bar 해석이 완전한 snowball 이 된다는 점을 확인합니다. 두 시나리오 모두 관측과 일관됩니다 (Lim 2024 NIRISS 는 H₂-rich 대기만 배제). [[feedback-phase3-interesting-first]] 원칙에 따라 cfg 는 1 bar lens variant 를 canonical 로 채택합니다. eye-ball 형태는 균일한 얼음 공보다 시각적으로 훨씬 더 흥미롭고, Wolf 2017 과 Turbet 2018 GCM 으로 진정성 있게 뒷받침됩니다. 완전 snowball variant 는 보수적 해석을 원하는 사용자를 위해 Open items 에 보존됩니다.",
+  "p_222":"<b>Sub-glacial ocean 구조.</b> Acuña 2021 (2101.08172) 은 hydrosphere 층 구조를 상세히 다룹니다. 표면의 ice Ih, 깊이가 늘면서 등장하는 high-pressure ice phase (II/III/V/VI), 바닥 (~100 GPa) 의 ice VII 로의 전이입니다. 지열 flux 에 따라 ice Ih 와 high-pressure ice 사이에 얇은 액체 물 lens 가 존재할 수 있는데, 이것이 cfg 가 이미 채택한 sub-glacial ocean 입니다. 태양계에서 가장 가까운 analog 는 Europa 형 층상 hydrosphere 입니다.",
+  "p_223":"<b>광화학 haze / tholin 층.</b> Turbet 2018 §6 은 f 가 자신의 고도에서 광화학 haze 형성을 유지한다고 봅니다. 지질학적 시간 척도에서 이 haze 들은 UV 노출 지역으로 편향된 희미한 황갈색 표면 overlay 로 침적됩니다. cfg 의 산화철 accent 가 이미 비슷한 효과를 일부 잡아내지만, 메커니즘 (UV 광화학 → tholin 침적) 은 산화 형성과는 별개입니다. 두 메커니즘이 모두 표면 색에 기여할 수 있습니다.",
+  "p_224":"<b>산화철 / 기반암.</b> 노출은 제한적입니다. terminator 근처 능선 정상에서 빙하 흐름이 얼음을 얇게 만든 곳에서만 드러납니다. f 의 거리에서는 별의 UV 가 약하고 지속적인 얼음 cover 가 대부분의 기반암을 광분해 산화로부터 보호하기 때문에, 산화철 tint 는 안쪽 행성 (b, c) 에 비해 훨씬 희미합니다.",
+  "p_225":"<b>조석 고정 하의 morphology.</b> 얼음 순환이 핵심입니다. substellar 점의 표면 가열이 얼음을 sublimate 시키며 (얇은 대기 탓에 속도는 낮음), CO₂ 와 미량 H₂O 는 대기 순환을 통해 더 차가운 terminator 와 nightside 로 운반되어 응결합니다. 그 후 빙하 흐름이 얼음을 다시 substellar disk 쪽으로 되돌리며, 결과적으로 substellar 점에 지속적인 얇은 open-water lens 를 유지하는 안정한 얼음 순환이 성립합니다.",
+  "h2_226":"대기 합성",
+  "p_227":"f 에 대한 Lim 2024 NIRISS 정찰 (arXiv preprint 없음, conference abstract ADS bibcode 2024ESS.....510106L) 은 f 의 첫 JWST transmission 관측을 보고합니다. 결과는 다음과 같습니다. H₂-rich 대기는 배제되며 Moran 2018 (1810.05210) 의 HST 한계와 일관되지만, 2차 대기 (CO₂, N₂, H₂O-rich) 는 현재 가용한 transit baseline 으로는 제약되지 않습니다. 즉 f 의 관측적 그림은 b, c, d, e 보다 훨씬 더 열려 있습니다.",
+  "p_228":"이론적 모델링 (Wolf 2017 §5, Lincowski 2018, Wunderlich 2020) 은 f 가 조금이라도 거주 가능하거나 온화하려면 유의미한 CO₂ 온실효과가 필요하다는 점에 일치합니다. Wolf 2017 은 완전한 open ocean 에는 1 bar CO₂, 0.1 bar 에서는 좁은 substellar disk, 그보다 낮으면 완전한 snowball 이 된다고 봅니다.",
+  "p_229":"NearStars 는 <b>substellar open-water lens 를 가진 1 bar CO₂-rich 대기</b> 를 채택합니다.",
+  "li_230":"<b>압력</b> 1 bar (100 kPa). Wolf 2017 은 이 값이 지속적인 substellar open water 의 임계점이며, 보수적인 0.1 bar 선택은 완전한 snowball 을 만든다고 봅니다.",
+  "li_231":"<b>조성</b> CO₂ 지배 (95%), N₂ (4%), 미량 H₂O (substellar 표면 근처에서 포화). outgassing 주도이며, 표면이 대부분 얼음으로 덮여 있어 carbonate-silicate 풍화는 제한적입니다.",
+  "li_232":"<b>구름.</b> 중간 정도 (~30% 전역). substellar disk 위의 물 구름과 terminator, 고위도의 간헐적 cirrus + CO₂ 얼음.",
+  "p_233":"<b>Mars-analog 오로라.</b> 1 bar CO₂ 대기와 무시할 수 없는 자기장 (~0.3 × 지구, Garraffo 2017 테스트 케이스) 을 모두 갖춘 f 는 stellar-wind 강하 입자로 인한 Mars-analog 오로라를 보유합니다. 지배적인 방출은 CO₂⁺ Fox–Duffendack–Barker 밴드의 580–620 nm 적-오렌지로, MAVEN 이 Mars 의 이산 UV+가시 오로라에서 본 것과 동일한 화학입니다. 부차적으로 CO₂⁺ UV doublet 과 CO Cameron 밴드가 가시 보라색으로 산란합니다. 평균 stellar wind 조건에서 오로라 oval 은 자기 위도 ~55° 에 자리하며, 강도는 ~80 kR (지구 평균의 ~8배) 입니다. cfg 렌더링용으로는 오로라 oval 을 따라 주색 <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> 적색과 <span class=\"hex-chip\" style=\"background:#b19cd9\"></span><code>#B19CD9</code> 보라 accent 를 둡니다. interesting-first 동률 처리: UV 일변도 렌더링 (플레이어 시점에서 보이지 않음) 대신 적+보라의 가시 팔레트를 선택했습니다.",
+  "p_234":"<b>CO₂ cold-trap 기하.</b> Turbet 2018 은 f 의 CO₂ 얼음 침적이 경도 -120°, 위도 ±80°, 고도 30–50 km 의 두 개의 대칭적 cold trap 에 우선적으로 형성된다고 봅니다. 이는 cfg 의 시각적 annotation 으로 의미가 있습니다. nightside CO₂ 얼음 구름 (0.1 bar 압력에서 예측되는 적은 양) 은 균일하게 분포하지 않고 이 극지 cold-trap 영역에 집중됩니다.",
+  "p_235":"<b>하늘 외관.</b> 0.1 bar CO₂ 대기는 Rayleigh scattering 이 지구의 ~5% 정도이고, M-dwarf SED 가 단파장 기여를 추가로 깎아 내립니다. substellar 근처 하늘은 별이 압도적으로 지배하는 가운데 희미한 dark-rust (<span class=\"hex-chip\" style=\"background:#604040\"></span><code>#604040</code>) 톤을 띠며, terminator 근처에서는 CO₂ 얼음 구름의 forward-scattering 으로 limb 에 희미한 cyan-white 가 비치는 것을 제외하면 하늘이 어둡습니다.",
+  "h2_236":"자전 &amp; spin 합성",
+  "p_237":"7.6 Gyr 에 걸친 9.21 일 주기의 조석 damping 이 f 의 동기 (1:1) 구성을 확립합니다. 황도 경사각은 0 으로 damping 됩니다. 이심률은 0.01007 로, 3:2 spin-orbit 가 marginally 안정해지는 상단 가장자리에 해당하지만 (Vinson 2017), 1:1 이 여전히 압도적 확률의 상태로 남습니다.",
+  "p_238":"<b>KSP 구현 노트.</b> 자전 주기 = 궤도 주기 = 9.2075 일 (795 528 s).",
+  "p_239":"<b>계절 없음.</b> 황도 경사각 = 0. libration 유도 일조량 변동은 ~ 1% 입니다 (e 보다 이심률이 높아 안쪽 행성보다 약간 큼). substellar 점은 본질적으로 고정되어 있습니다.",
+  "p_240":"<b>자기 dynamo 기대.</b> f 의 지구 질량급 핵은 활성 dynamo 를 지지합니다 (Driscoll &amp; Olson 의 2208.06523 스케일링은 지구 질량 dynamo 가 핵 고화 타이밍을 통해 수명이 연장됨을 보임). 9.2 일의 조석 고정 자전은 slow-rotation Reiners 스케일링으로 dipole 강도를 낮추지만 (~0.3 × 지구 dipole), 일관된 dipole 자체는 유지 가능합니다. Garraffo 2017 은 f 를 거주 가능 영역의 대표 케이스로 명시하며 표면 자장 0.3 G 를 채택했고, cfg 도 이 가정에 맞춥니다.",
+  "h2_241":"비주얼 스타일",
+  "li_242":"<b>전역 외관.</b> 궤도에서 본 f 는 어두운 navy &quot;동공&quot; (substellar open ocean, <span class=\"hex-chip\" style=\"background:#1a1c30\"></span><code>#1a1c30</code>) 이 fractal sea-ice 전이대 안에 자리하고, 나머지 표면은 광범위한 빙하 얼음 cover (<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code>) 로 둘러싸인 모습입니다. substellar disk 위의 지속적인 물 구름은 동공 주변으로 따뜻한 크림색 &quot;백내장&quot; 을 형성합니다. 오로라 oval 의 <span class=\"hex-chip\" style=\"background:#ff6b6b\"></span><code>#FF6B6B</code> 적색 띠가 자기 위도 ~55° 근처의 nightside 를 가로지르며, 어두운 얼음을 배경으로 그림자 속에서 보입니다.",
+  "li_243":"<b>Substellar disk (open water).</b> ~16° 너비 (반경 8°) 의 작은 어두운 패치. 주변의 따뜻한 크림색 얼음과 대비가 극적입니다.",
+  "li_244":"<b>빙하 얼음.</b> 보이는 표면의 대부분을 차지합니다. 큰 스케일에서는 매끄럽지만 terminator 의 비스듬한 빛 아래에서는 pressure ridge 와 crevasse 가 드러납니다. 신선한 눈 (<span class=\"hex-chip\" style=\"background:#e0d8d0\"></span><code>#e0d8d0</code>) 과 먼지로 얼룩지거나 다시 얼어붙은 얼음 (<span class=\"hex-chip\" style=\"background:#c8c0b0\"></span><code>#c8c0b0</code>) 사이에 미묘한 색 변화가 있습니다.",
+  "li_245":"<b>Terminator band.</b> 비스듬한 빛 아래 지형 대비가 큽니다. 능선 정상에 기반암 노출이 있을 수 있습니다 (<span class=\"hex-chip\" style=\"background:#888070\"></span><code>#888070</code> accent).",
+  "li_246":"<b>Nightside.</b> CO₂ frost 가 만든 어둑한 크림-황갈색 톤. KSP nightside ambient 는 dayside 의 2–5% 수준.",
+  "li_247":"<b>Atmosphere haze.</b> 매우 얇은 따뜻한 회-적색 limb glow (<span class=\"hex-chip\" style=\"background:#604040\"></span><code>#604040</code>), 두께는 5–10 km, 행성 limb 의 공간 배경에 대해서만 보입니다.",
+  "li_248":"<b>하늘의 별.</b> TRAPPIST-1 은 f 의 하늘에서 1.65° 를 차지합니다 (지구에서 본 태양의 3배). 깊은 적-오렌지 disk 로 나타납니다. 표면 조명은 0.38 S⊕ 로 지구의 깊은 황혼과 비슷하며, 별의 어둑한 적색 빛이 설경에 영구적인 새벽빛 tint 를 부여합니다.",
+  "li_249":"<b>하늘의 자매 행성.</b> e (다음 안쪽) 가 inferior conjunction 시 각 크기 ~0.3°; g (다음 바깥쪽) 가 outer conjunction 시 ~0.3°. 합은 약 25 일 마다 일어납니다 (f-g synodic 주기).",
+  "h2_250":"고증 대안",
+  "h3_251":"고증과 어긋난 cfg 픽",
+  "th_252":"항목",
+  "th_253":"게임 (cfg)",
+  "th_254":"고증 대안",
+  "th_255":"어긋난 이유",
+  "td_256":"<code>atmosphere_surface_pressure_pa</code>",
+  "td_257":"100 000 (1 bar CO₂, Wolf 2017 의 eyeball 수권 행성)",
+  "td_258":"10 000 (0.1 bar CO₂ snowball, Turbet 2018 GCM 수렴값)",
+  "td_259":"두 시나리오 다 현재 JWST 관측 한계 안에 들어옵니다 — Lim 2024 가 배제하는 것은 H₂ 풍부 시나리오뿐입니다. Turbet 2018 의 GCM 앙상블은 0.1 bar snowball 을 이론적으로 더 안정된 정상 상태로 수렴시키고, Wolf 2017 은 1 bar 에서 substellar 부근에 반경 약 40° 의 열대 호수가 형성됨을 보입니다. cfg 는 1 bar 를 채택했습니다 — 거주 가능 영역 행성이라는 f 의 정체성을 시각적으로 결정짓는 것이 바로 그 열대 호수이기 때문입니다. 균일한 snowball f 는 궤도 시점에서 g 나 h 와 거의 구분되지 않습니다. 보수적인 0.1 bar snowball 시나리오는 Open items 에 cfg variant 로 보존합니다.",
+  "td_260":"<code>ocean_extent_substellar_radius_deg</code>",
+  "td_261":"40° (1 bar 대기 선택에서 파생)",
+  "td_262":"0° (전구 snowball, 0.1 bar 에서 파생)",
+  "td_263":"대기압 선택에서 파생되는 값입니다. 1 bar 분기는 반경 40° 의 열대 호수를, 0.1 bar 분기는 표면 액체수가 보이지 않는 전구 snowball 을 만듭니다.",
+  "h2_264":"참고 문헌",
+  "h3_265":"읽음 (시각-정보 제공, 위 결정 견인)",
+  "li_266":"<b>2504.16201</b> Acuña 2025 — MAGRATHEA 를 이용한 f 의 내부 구조 분석. wmf 16.2% ± 9.9% (free CMF) 또는 6.9% ± 2.0% (지구형 mantle-to-core). f 를 ocean world 로 확립하며, sub-glacial ocean cfg 를 견인.",
+  "li_267":"<b>2008.09599</b> Bourgeois 2024 — e/f/g 의 magma ocean 진화. f 가 진화를 거치며 상당량의 물을 보유했다고 예측.",
+  "li_268":"<b>2006.11349</b> Wunderlich 2020 — e 와 f 의 wet vs. dry 대기. f 의 대기를 CO₂-rich (snowball branch) 또는 dry desiccated post-runaway 상태로 제약.",
+  "li_269":"<b>1809.07498</b> Lincowski 2018 — TRAPPIST-1 세계들의 진화한 기후. f 는 Lincowski 의 모델링이 차갑고 CO₂-rich 한 대기를 평형으로 보여주는 행성 중 하나. d Phase 3 / e Phase 3 에서 이미 읽음.",
+  "li_270":"<b>1712.05641</b> Barr 2018 — TRAPPIST-1 행성들의 내부 구조와 조석 가열. f 의 조석 heat flux 를 0.14 W/m² (이전 추정 대비 30배) 로 상향 수정하는 근거. Maxwell viscoelastic. mantle T_eq 1621 K.",
+  "li_271":"<b>2101.08172</b> Acuña 2021 — Hydrosphere 특성화. f 의 sub-glacial ocean 구조 (ice Ih / high-pressure ice / ice VII) 를 상세히 다룸. WMF 3.7 ± 2.6% scenario 2 로 water 함량의 하한을 넓힘.",
+  "li_272":"<b>1707.06927</b> Turbet 2018 — TRAPPIST-1 의 기후 다양성 모델링. <b>snowball 기본값을 견인.</b> 0.1 bar CO₂ 에서 f 는 완전히 얼음으로 덮임 (substellar lens 없음). open ocean 은 ≥1 bar CO₂ 에서만 나타남. 극지 CO₂ cold-trap 기하도 식별.",
+  "li_273":"<b>1710.08761</b> Kislyakova 2017 — Induction heating 추정. f 의 총량 ~1.1×10¹⁸ W. cfg 의 induction heating 을 하향 수정.",
+  "li_274":"<b>1911.08596</b> Fauchez 2019 — HZ TRAPPIST-1 행성들의 구름 및 haze 모델링. CO₂ 압력 ≤10 bar 의 모든 그럴듯한 범위에서 f 의 snowball 상태를 확인.",
+  "li_275":"<b>1706.04617</b> Garraffo 2017 — TRAPPIST-1 의 위협적인 자기 및 플라즈마 환경. f 를 거주 가능 영역의 대표 케이스로 채택. 0.3 G 테스트 케이스가 cfg dipole moment 를 견인.",
+  "li_276":"<b>2203.01065</b> RM22 — 암석 행성 magnetic moment 스케일링.",
+  "li_277":"<b>1910.09871</b> Atri 2019 — f 의 표면 선량 테이블.",
+  "h3_278":"읽음 (맥락 / 방법론, 결정 견인 안 함)",
+  "li_279":"<b>2605.06964</b> TRAPPIST-1 기후의 에너지 균형 모델. 방법론 논문이며 f 의 snowball 상태를 지지.",
+  "li_280":"<b>2506.21351</b> SEPHI 2.0 거주 가능성 지수. 카탈로그 맥락만.",
+  "li_281":"<b>2502.00132</b> Way 2025 — d 중심 논문이지만 f 에도 적용되는 tidally-locked GCM 의 유용한 방법론 reference.",
+  "li_282":"<b>1810.05210</b> Moran 2018 — HST haze 한계. d Phase 3 에서 이미 읽음.",
+  "h3_283":"읽음 (instrument-only, 시각 정보 아님)",
+  "p_284":"(이 깊이에서 f 에 특화된 항목 없음.)",
+  "h3_285":"읽지 않음 — arXiv preprint 없음 또는 낮은 우선순위 (~9 편)",
+  "p_286":"f 의 참고 문헌은 매우 작습니다 (15 편, arXiv 6 편).",
+  "li_287":"<b>2024ESS.....510106L</b> Lim 2024 — TRAPPIST-1 f NIRISS 대기 정찰. <b>f 의 핵심 관측 논문이지만 arXiv preprint 가 없음.</b> ADS 초록만 가용. 대기 추론 (H₂-rich 배제, 2차 대기 미제약) 은 초록에서 가져왔음. <b>arXiv preprint 가 등장하면 fetch 하도록 flag.</b>",
+  "li_288":"<b>2025arXiv...</b> biosignature feasibility 와 ELT 특성화에 관한 다양한 conference 요약. Skip.",
+  "p_289":"---",
+  "h2_290":"후속 follow-up 항목",
+  "li_291":"arXiv preprint 가 가용해지면 Lim 2024 NIRISS f 논문을 재fetch. 공식 출판 버전이 2차 대기 제약을 강화할 가능성이 있음.",
+  "li_292":"0.1 bar CO₂ 선택은 Wolf 2017 의 모델링으로 bracket 되지만 f 특화 관측으로 직접 제약되는 값은 아님. 미래의 JWST emission 분광이 f 의 dayside 가 현재 모델 예측보다 더 차갑다는 점을 드러내면, CO₂ 압력을 낮추거나 (혹은 0 으로 설정해 완전한 snowball 로) 조정해야 함.",
+  "li_293":"&quot;완전한 snowball&quot; (substellar open water 없음) 해석을 위한 cfg 변형. 시각적으로 더 단순한 완전 백색 크림 세계. substellar lens 가 KSP 에서 의미 있게 렌더되기에 너무 marginal 한 것으로 드러나면 사용.",
+  "li_294":"&quot;1 bar CO₂ + 완전한 ocean&quot; 해석을 위한 cfg 변형 (Wolf 2017 §5 best-case). 시각적으로 e 와 비슷하지만 더 차갑고 얼음 띠가 많은 모습. 더 깊은 거주 가능 영역 대안을 원할 때 사용.",
+  "li_295":"water mass fraction (7–16%) 이 충분히 높아서 f 는 Europa 와 비교 가능한 sub-glacial 액체 물 층을 가질 가능성이 있음. 조석이나 radiogenic 가열이 해저까지 닿는다면 hydrothermal 활동까지 동반할 수도 있음. 직접적인 시각 요소는 아니지만 Principia annotation 으로 남길 만한 가치가 있음.",
+  "li_296":"기본 snowball (0.1 bar CO₂) 과 1 bar CO₂ + substellar open-water lens variant 사이의 선택은 cfg 의 gameplay 대 fidelity 트레이드오프임. 기본 snowball 은 Turbet 2018 과 가장 직접적으로 일치하고, warm variant 는 시각적으로 더 두드러진 &quot;eyeball&quot; 렌더링을 보존함.",
+  "li_297":"<b>cfg variant: 0.1 bar CO₂ 의 완전 snowball.</b> interesting-first 동률 처리 원칙에 따라 보존됨. 보수적인 관측적 해석 (substellar open water 없음) 을 원하는 사용자가 이 variant 를 렌더할 수 있음. Decisions 테이블의 모든 값이 그에 맞춰 바뀜 (압력 → 10 kPa, 표면 온도 → 220 K 전역 평균, 해양 → sub-glacial 만).",
+  "li_298":"자기장 강도는 스케일링 기반임. TRAPPIST-1 특화 dynamo 모델이 가용해지면 정밀화 가능.",
   "title":"TRAPPIST-1 f — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",
