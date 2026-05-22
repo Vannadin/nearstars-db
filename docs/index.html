@@ -76,6 +76,11 @@ tr.dr.open td{background:#111e2e}
 /* detail panel */
 tr.detail-row td{padding:0;background:#090d16}
 .dp{padding:20px;border-bottom:2px solid #1e3448}
+/* inline curation indicators on table rows / mobile cards (clickable filter via "Curated 2+" checkbox) */
+.row-pill{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:8px;font-size:9.5px;font-weight:700;letter-spacing:.3px;vertical-align:1px;text-transform:uppercase}
+.row-p2{background:rgba(122,170,224,0.13);color:#7aaae0;border:1px solid rgba(122,170,224,0.32)}
+.row-p3{background:rgba(200,144,208,0.13);color:#c890d0;border:1px solid rgba(200,144,208,0.32)}
+
 /* curation reports row at top of detail panel */
 .rep-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid #1a2535}
 .rep-label{font-size:11px;color:#5a7898;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-right:4px}
@@ -341,6 +346,7 @@ a.sl:hover{text-decoration:underline}
       <button data-unit="au">AU</button>
     </div>
     <label><input type="checkbox" id="hpx"> Has planets</label>
+    <label title="Phase 2 이상 큐레이션 보고서 있는 시스템만"><input type="checkbox" id="curated"> Curated 2+</label>
     <div class="fg">
       <span title="Star units">★</span>
       <div class="seg" id="srad-seg">
@@ -829,8 +835,16 @@ function getFilters() {
     q: document.getElementById('q').value.toLowerCase().trim(),
     spec: document.getElementById('spec').value,
     maxD: parseFloat(document.getElementById('dist').value),
-    hp: document.getElementById('hpx').checked
+    hp: document.getElementById('hpx').checked,
+    curated: document.getElementById('curated').checked,
   };
+}
+
+function isCurated(sys_name) {
+  const r = REPORTS[sys_name];
+  if (!r) return false;
+  // "Curated" means at least Phase 2 (per host) OR any Phase 3 (per planet).
+  return !!(r.phase2) || Object.keys(r.phase3 || {}).length > 0;
 }
 
 function render() {
@@ -840,6 +854,7 @@ function render() {
     if (f.spec && !r.spectype.startsWith(f.spec)) return false;
     if (r.dist != null && r.dist > f.maxD) return false;
     if (f.hp && r.np === 0) return false;
+    if (f.curated && !isCurated(r.system_name)) return false;
     return true;
   });
   rows.sort((a, b) => {
@@ -867,8 +882,15 @@ function render() {
     // ── desktop: table row + detail row ────────────────────────────────────
     const tr = document.createElement('tr');
     tr.className = 'dr';
+    const reps = REPORTS[row.system_name];
+    let repChips = '';
+    if (reps) {
+      if (reps.phase2) repChips += `<span class="row-pill row-p2" title="Phase 2 curated">P2</span>`;
+      const p3n = Object.keys(reps.phase3 || {}).length;
+      if (p3n > 0) repChips += `<span class="row-pill row-p3" title="Phase 3 syntheses (${p3n} planet${p3n>1?'s':''})">P3·${p3n}</span>`;
+    }
     tr.innerHTML = `
-      <td>${row.system_name}</td>
+      <td>${row.system_name}${repChips}</td>
       <td>${row.star_name}</td>
       <td><span class="sb ${specClass(row.spectype)}">${row.spectype}</span></td>
       <td>${fDistVal(row.dist)}</td>
@@ -893,7 +915,7 @@ function render() {
         <span class="sb ${specClass(row.spectype)}">${row.spectype}</span>
         ${row.np > 0 ? `<span class="pc">${row.np}p</span>` : ''}
       </div>
-      <div class="mc-meta"><span class="mc-sys">${row.system_name}</span></div>
+      <div class="mc-meta"><span class="mc-sys">${row.system_name}${repChips}</span></div>
       <div class="mc-stats">
         <div class="mc-stat"><span class="mc-stat-k">Dist</span><span class="mc-stat-v">${fDistVal(row.dist)}</span></div>
         <div class="mc-stat"><span class="mc-stat-k">Teff</span><span class="mc-stat-v">${row.teff ? row.teff.toFixed(0)+' K' : '—'}</span></div>
@@ -1831,7 +1853,7 @@ document.querySelectorAll('th[data-col]').forEach(th => {
 });
 
 // Filters
-['q','spec','hpx'].forEach(id => document.getElementById(id).addEventListener('input', render));
+['q','spec','hpx','curated'].forEach(id => document.getElementById(id).addEventListener('input', render));
 document.getElementById('dist').addEventListener('input', () => {
   const v = parseFloat(document.getElementById('dist').value);
   document.getElementById('dist-lbl').textContent = sliderLabelFor(v);
@@ -1841,7 +1863,9 @@ document.getElementById('dist').addEventListener('input', () => {
 // ── Load ──────────────────────────────────────────────────────────────────────
 
 // Reports manifest is optional — missing it just means no Phase 2/3 buttons are shown.
-fetch('./reports-manifest.json').then(r => r.ok ? r.json() : {}).then(m => { REPORTS = m; }).catch(() => {});
+// Load curation manifest then re-render so the row-level P2/P3 chips show up
+// and the "Curated 2+" filter has data to filter against.
+fetch('./reports-manifest.json').then(r => r.ok ? r.json() : {}).then(m => { REPORTS = m; if (DB.length) render(); }).catch(() => {});
 
 fetch('./data.json')
   .then(r => r.json())
