@@ -1,7 +1,17 @@
 <!-- Phase 3 합성 마크다운 표준 템플릿 — 6개 섹션 + 각 필드 설명 -->
 # Phase 3 synthesis — markdown template
 
-Canonical example: `docs/phase3/trappist-1-d.md` (the pilot file).
+Canonical examples:
+- `docs/phase3/trappist-1-e.md` — full structure including the
+  `## Canonical alternatives` section (documented-divergence policy).
+  **Use this as the structural template for new syntheses.**
+- `docs/phase3/trappist-1-f.md` — same policy structure, second example.
+- `docs/phase3/trappist-1-d.md` — original pilot file. **Pre-dates the
+  documented-divergence policy** and therefore has no `## Canonical
+  alternatives` section. Don't use d as a structural template — copying
+  d's shape will silently omit the section even when the new synthesis
+  has a divergence (this happened in the Alpha Cen first pass, 2026-05-22,
+  and required a revert).
 
 Every Phase 3 markdown must have this exact section structure to keep
 the Korean mirror and HTML build deterministic. Don't add or skip

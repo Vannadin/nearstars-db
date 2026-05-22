@@ -299,9 +299,54 @@ arxiv_id. A deep_read paper with zero notes means it was actually
 
 ## Step 9 — Draft English synthesis
 
-Standard structure at `docs/phase3/<slug>.md` (use TRAPPIST-1 d as
-the canonical example — `docs/phase3/trappist-1-d.md`; see TRAPPIST-1
-e or f for the optional Canonical alternatives section in action):
+### Step 9.0 — Pre-draft classification (mandatory)
+
+Before writing the synthesis prose, build a per-row classification
+table in `phase3/<system>/context-notes.md`. For every Decisions row
+you plan to write, apply the diagnostic question from
+[`references/conflict-resolution.md`](references/conflict-resolution.md)
+§ "Tie-break vs. divergence" and label the row as one of:
+
+- **canonical-aligned** — cfg pick matches the canonical reading.
+- **tie-break** — observation/theory silent within the allowed window;
+  cfg picks the more interesting option. Basis note suffices.
+- **documented-divergence** — canonical has clear weight advantage but
+  cfg picks differently. Requires `## Canonical alternatives` row.
+
+Example log entry in `context-notes.md`:
+
+```markdown
+## Decisions-row classification — Proxima b
+
+- atmosphere_surface_pressure_pa = 50000     → divergence (Boutle 2017 GCM
+  1 bar consensus vs cfg 0.5 bar for clearer ocean-edge visibility)
+- ocean_extent_substellar_radius_deg = 60    → divergence (downstream of pressure)
+- surface_tint_rgb_hex_primary = #2a4060     → tie-break (within obs window)
+- bond_albedo = 0.30                         → canonical-aligned (Boutle 2017)
+- ...
+```
+
+This step exists because the Alpha Cen first pass (2026-05-22) named
+"documented divergence" in prose without creating the section — the
+classification log forces every row to have an explicit policy label
+*before* the prose is written, so the `## Canonical alternatives`
+section can't be silently dropped.
+
+Once the log is complete, report the row counts to the user
+(`N canonical-aligned, M tie-break, K divergence`) before moving on
+to drafting the markdown.
+
+### Step 9.1 — Standard structure
+
+Use `docs/phase3/trappist-1-e.md` or `trappist-1-f.md` as the
+structural template — both apply the documented-divergence policy
+in full (`## Canonical alternatives` section + Basis notes).
+
+**Do not** copy from `trappist-1-d.md` as a structural base — d is
+the pilot file written before the documented-divergence policy
+existed, so it has no `## Canonical alternatives` section. Copying
+d's shape will silently omit the section even when the new planet
+has a divergence (this is how the Alpha Cen first pass failed):
 
 ```
 <!-- one-line Korean header comment (CLAUDE.md §6) -->

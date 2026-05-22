@@ -257,6 +257,20 @@ The canonical 0.1 bar version is preserved as a cfg variant in
   bounds, mass/radius from TTV — these are non-negotiable. The
   divergence policy is for cases where literature *interpretation*
   differs, not where literature *measurement* would have to bend.
+- **Naming the divergence in prose without creating the section.**
+  The policy is structural — writing "this is a documented divergence"
+  in an intro paragraph does *not* substitute for the
+  `## Canonical alternatives` H2 section with its table row. Observed
+  in the Alpha Cen first pass (2026-05-22): `proxima-cen-d.md` intro
+  used the phrase "documented divergence" but had no section, no table
+  row, no Open-items variant entry. The structure is what makes the
+  decision recoverable; the phrase alone doesn't.
+- **Inlining canonical/variant values in a single Decisions cell.**
+  Writing `0 (canonical) / 50 (variant)` in one Value cell breaks the
+  schema (each cell holds one cfg value). The divergence appendix
+  exists precisely so the Decisions table stays a clean one-pick
+  inventory. Put the cfg value in Decisions; put both values + reason
+  in the `## Canonical alternatives` row.
 
 ## When the user's prior synthesis was wrong
 
