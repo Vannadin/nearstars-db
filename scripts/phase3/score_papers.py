@@ -202,6 +202,25 @@ OTHER_SYSTEM_PRIMARY = [
 ]
 
 
+def _system_alias_core(system_name: str) -> str:
+    """Return the alternation core (no anchors) matching the system under
+    common aliases. Caller wraps with anchors (\\b ... \\b) or a letter suffix.
+    """
+    n = system_name.lower()
+    if "trappist" in n:
+        return r"TRAPPIST[- ]?1"
+    if "proxima" in n:
+        return r"Proxima(?:\s+Cen(?:tauri)?)?"
+    if "alpha cen" in n or "α cen" in n:
+        return r"(?:(?:Alpha|alf)\s+Cen(?:tauri)?|α\s*Cen(?:tauri)?|HD\s?12862[01])"
+    return re.escape(system_name)
+
+
+def _system_alias_regex(system_name: str) -> re.Pattern:
+    """Return a regex that matches the target system (anchored by \\b)."""
+    return re.compile(rf"\b{_system_alias_core(system_name)}\b", re.IGNORECASE)
+
+
 def score_relevance(p: dict, planet_letter: str | None, system_name: str = "TRAPPIST-1") -> tuple[int, str]:
     """Return (score 0-10, reason). Planet-letter-specific match is rewarded most."""
     title = p.get("title") or ""
@@ -210,21 +229,24 @@ def score_relevance(p: dict, planet_letter: str | None, system_name: str = "TRAP
     reasons = []
     score = 0
 
+    sys_re = _system_alias_regex(system_name)
+
     # System name match in title (+4), in abstract (+2)
-    if re.search(rf"\b{re.escape(system_name)}\b", title, re.IGNORECASE):
+    if sys_re.search(title):
         score += 4
         reasons.append("sys_in_title")
-    elif re.search(rf"\b{re.escape(system_name)}\b", abstract, re.IGNORECASE):
+    elif sys_re.search(abstract):
         score += 2
         reasons.append("sys_in_abstract")
 
-    # Planet letter match in title (+5), in abstract (+3)
+    # Planet letter match in title (+5), in abstract (+3).
     if planet_letter:
-        pat = rf"\b{re.escape(system_name)}[- ]?{planet_letter}\b"
-        if re.search(pat, title, re.IGNORECASE):
+        core = _system_alias_core(system_name)
+        letter_re = re.compile(rf"\b{core}[- ]?{re.escape(planet_letter)}\b", re.IGNORECASE)
+        if letter_re.search(title):
             score += 5
             reasons.append(f"planet_{planet_letter}_in_title")
-        elif re.search(pat, abstract, re.IGNORECASE):
+        elif letter_re.search(abstract):
             score += 3
             reasons.append(f"planet_{planet_letter}_in_abstract")
 
@@ -242,12 +264,15 @@ def score_relevance(p: dict, planet_letter: str | None, system_name: str = "TRAP
             reasons.append(f"skip_pattern={spat.pattern[:30]}")
             break
 
-    # Other system as primary subject (TRAPPIST not in title) — moderate negative
-    for opat in OTHER_SYSTEM_PRIMARY:
-        if opat.search(title):
-            score -= 3
-            reasons.append("other_system_primary")
-            break
+    # Other system as primary subject — moderate negative.
+    # Skip the penalty entirely when the title also matches the target system
+    # alias (the paper IS about our target, not an "other" system).
+    if not sys_re.search(title):
+        for opat in OTHER_SYSTEM_PRIMARY:
+            if opat.search(title):
+                score -= 3
+                reasons.append("other_system_primary")
+                break
 
     score = max(0, min(10, score))
     return score, ", ".join(reasons) or "no_signal"

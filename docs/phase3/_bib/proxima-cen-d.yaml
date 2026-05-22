@@ -1,0 +1,1022 @@
+planet: Proxima Cen d
+slug: proxima-cen-d
+generated_at: '2026-05-22T08:40:03.191758Z'
+sources:
+  ads: queried (21 hits)
+  arxiv: queried (0 hits)
+papers:
+- &id001
+  arxiv_id: '2507.21751'
+  ads_bibcode: 2025A&A...700A..11S
+  title: 'Diving into the planetary system of Proxima with NIRPS: Breaking the metre per second barrier in the infrared'
+  authors:
+  - Suárez Mascareño, Alejandro
+  - Artigau, Étienne
+  - Mignon, Lucile
+  - Delfosse, Xavier
+  - Cook, Neil J.
+  - Bouchy, François
+  - Doyon, René
+  - González Hernández, Jonay I.
+  - Vandal, Thomas
+  - de Castro Leão, Izan
+  - Stefanov, Atanas K.
+  - Faria, João
+  - Cadieux, Charles
+  - Lamontagne, Pierrot
+  - Baron, Frédérique
+  - Barros, Susana C. C.
+  - Benneke, Björn
+  - Bonfils, Xavier
+  - Bryan, Marta
+  - Canto Martins, Bruno L.
+  - Cloutier, Ryan
+  - Cowan, Nicolas B.
+  - de Freitas, Daniel Brito
+  - De Medeiros, Jose Renan
+  - Delgado-Mena, Elisa
+  - Figueira, Pedro
+  - Dumusque, Xavier
+  - Ehrenreich, David
+  - Lafrenière, David
+  - Lovis, Christophe
+  - Malo, Lison
+  - Melo, Claudio
+  - Mordasini, Christoph
+  - Pepe, Francesco
+  - Rebolo, Rafael
+  - Rowe, Jason
+  - Santos, Nuno C.
+  - Ségransan, Damien
+  - Udry, Stéphane
+  - Valencia, Diana
+  - Wade, Gregg
+  - Abreu, Manuel
+  - Aguiar, José L. A.
+  - Al Moulla, Khaled
+  - Allain, Guillaume
+  - Allart, Romain
+  - Arial, Tomy
+  - Auger, Hugues
+  - Bazinet, Luc
+  - Blind, Nicolas
+  - Bohlender, David
+  - Boisse, Isabelle
+  - Boucher, Anne
+  - Bourrier, Vincent
+  - Bovay, Sébastien
+  - Broeg, Christopher
+  - Brousseau, Denis
+  - Cabral, Alexandre
+  - Carmona, Andres
+  - Carteret, Yann
+  - Challita, Zalpha
+  - Chazelas, Bruno
+  - Coelho, João
+  - Cointepas, Marion
+  - Conod, Uriel
+  - Cristo, Eduardo
+  - Costa Silva, Ana Rita
+  - Darveau-Bernier, Antoine
+  - Dauplaise, Laurie
+  - Delisle, Jean-Baptiste
+  - de Lima Gomes, Roseane
+  - Forveille, Thierry
+  - Frensch, Yolanda G. C.
+  - Gracia Témich, Félix
+  - Fontinele, Dasaev O.
+  - Gagné, Jonathan
+  - Genest, Frédéric
+  - Genolet, Ludovic
+  - Gomes da Silva, João
+  - Grieves, Nolan
+  - Hernandez, Olivier
+  - Hobson, Melissa J.
+  - Hoeijmakers, H. Jens
+  - Hubin, Norbert
+  - Jahandar, Farbod
+  - Jayawardhana, Ray
+  - Käufl, Hans-Ulrich
+  - Kerley, Dan
+  - Kolb, Johann
+  - Krishnamurthy, Vigneshwaran
+  - Kung, Benjamin
+  - L'Heureux, Alexandrine
+  - Larue, Pierre
+  - Leath, Henry
+  - Lim, Olivia
+  - Lo Curto, Gaspare
+  - Martins, Allan M.
+  - Matthews, Jaymie
+  - Mayer, Jean-Sébastien
+  - Messias, Yuri S.
+  - Metchev, Stan
+  - Moranta, Leslie
+  - Mounzer, Dany
+  - Nari, Nicola
+  - Nielsen, Louise D.
+  - Osborn, Ares
+  - Ouellet, Mathieu
+  - Otegi, Jon
+  - Parc, Léna
+  - Pasquini, Luca
+  - Passegger, Vera M.
+  - Pelletier, Stefan
+  - Peroux, Céline
+  - Piaulet-Ghorayeb, Caroline
+  - Plotnykov, Mykhaylo
+  - Pompei, Emanuela
+  - Poulin-Girard, Anne-Sophie
+  - Rasilla, José Luis
+  - Reshetov, Vladimir
+  - Saint-Antoine, Jonathan
+  - Sarajlic, Mirsad
+  - Saviane, Ivo
+  - Schnell, Robin
+  - Segovia, Alex
+  - Seidel, Julia
+  - Silber, Armin
+  - Sinclair, Peter
+  - Sordet, Michael
+  - Sosnowska, Danuta
+  - Srivastava, Avidaan
+  - Teixeira, Márcio A.
+  - Thibault, Simon
+  - Vallée, Philippe
+  - Vaulato, Valentina
+  - Wardenier, Joost P.
+  - Wehbe, Bachar
+  - Weisserman, Drew
+  - Wevers, Ivan
+  - Wildi, François
+  - Yariv, Vincent
+  - Zins, Gérard
+  year: '2025'
+  pubdate: '2025-07-00'
+  doi: 10.1051/0004-6361/202553728
+  abstract: We obtained 420 high-resolution spectra of Proxima, over 159 nights, using the Near Infra Red Planet Searcher
+    (NIRPS). We derived 149 nightly binned radial velocity measurements with a standard deviation of 1.69 ms<SUP>−1</SUP>
+    and a median uncertainty of 55 cms<SUP>−1</SUP>, and performed a joint analysis combining radial velocities, spectroscopic
+    activity indicators, and ground-based photometry, to model the planetary and stellar signals present in the data, applying
+    multi-dimensional Gaussian process regression to model the activity signals. We detect the radial velocity signal of Proxima
+    b in the NIRPS data. All planetary characteristics are consistent with those previously derived using visible light spectrographs.
+    In addition, we find evidence of the presence of the sub-Earth Proxima d in the NIRPS data. When combining the data with
+    the HARPS observations taken simultaneous to NIRPS, we obtain a tentative detection of Proxima d and parameters consistent
+    with those measured with ESPRESSO. By combining the NIRPS data with simultaneously obtained HARPS observations and archival
+    data, we confirm the existence of Proxima d, and demonstrate that its parameters are stable over time and against change
+    of instrument. We refine the planetary parameters of Proxima b and d, and find inconclusive evidence of the signal attributed
+    to Proxima c (P = 1900 d) being present in the data. We measure Proxima b and d to have minimum masses of 1.055 ± 0.055
+    M<SUB>⊕</SUB>, and 0.260 ± 0.038 M<SUB>⊕</SUB>, respectively. Our results show that, in the case of Proxima, NIRPS provides
+    more precise radial velocity data than HARPS, and a more significant detection of the planetary signals. The standard
+    deviation of the residuals of NIRPS after the fit is ~80 cm s<SUP>−1</SUP>, showcasing the potential of NIRPS to measure
+    precise radial velocities in the near-infrared.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 7
+  combined_score: 17
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(sys_in_title, planet_d_in_abstract) → combined=17>=10
+- &id002
+  arxiv_id: '2202.05188'
+  ads_bibcode: 2022A&A...658A.115F
+  title: A candidate short-period sub-Earth orbiting Proxima Centauri
+  authors:
+  - Faria, J. P.
+  - Suárez Mascareño, A.
+  - Figueira, P.
+  - Silva, A. M.
+  - Damasso, M.
+  - Demangeon, O.
+  - Pepe, F.
+  - Santos, N. C.
+  - Rebolo, R.
+  - Cristiani, S.
+  - Adibekyan, V.
+  - Alibert, Y.
+  - Allart, R.
+  - Barros, S. C. C.
+  - Cabral, A.
+  - D'Odorico, V.
+  - Di Marcantonio, P.
+  - Dumusque, X.
+  - Ehrenreich, D.
+  - González Hernández, J. I.
+  - Hara, N.
+  - Lillo-Box, J.
+  - Lo Curto, G.
+  - Lovis, C.
+  - Martins, C. J. A. P.
+  - Mégevand, D.
+  - Mehner, A.
+  - Micela, G.
+  - Molaro, P.
+  - Nunes, N. J.
+  - Pallé, E.
+  - Poretti, E.
+  - Sousa, S. G.
+  - Sozzetti, A.
+  - Tabernero, H.
+  - Udry, S.
+  - Zapatero Osorio, M. R.
+  year: '2022'
+  pubdate: '2022-02-00'
+  doi: 10.1051/0004-6361/202142337
+  abstract: 'Context. Proxima Centauri is the closest star to the Sun. This small, low-mass, mid M dwarf is known to host
+    an Earth-mass exoplanet with an orbital period of 11.2 days within the habitable zone, as well as a long-period planet
+    candidate with an orbital period of close to 5 yr. <BR /> Aims: We report on the analysis of a large set of observations
+    taken with the ESPRESSO spectrograph at the VLT aimed at a thorough evaluation of the presence of a third low-mass planetary
+    companion, which started emerging during a previous campaign. <BR /> Methods: Radial velocities (RVs) were calculated
+    using both a cross-correlation function (CCF) and a template matching approach. The RV analysis includes a component to
+    model Proxima''s activity using a Gaussian process (GP). We use the CCF''s full width at half maximum to help constrain
+    the GP, and we study other simultaneous observables as activity indicators in order to assess the nature of any potential
+    RV signals. <BR /> Results: We detect a signal at 5.12 ± 0.04 days with a semi-amplitude of 39 ± 7 cm s<SUP>‒1</SUP>.
+    The analysis of subsets of the ESPRESSO data, the activity indicators, and chromatic RVs suggest that this signal is not
+    caused by stellar variability but instead by a planetary companion with a minimum mass of 0.26 ± 0.05 M<SUB>⊕</SUB> (about
+    twice the mass of Mars) orbiting at 0.029 au from the star. The orbital eccentricity is well constrained and compatible
+    with a circular orbit. <P />Based on Guaranteed Time Observations collected at the European Southern Observatory (ESO)
+    by the ESPRESSO Consortium under ESO programmes 1102.C-0744, 1102.C-0958, 1104.C-0350, and 106.21M2.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 6
+  combined_score: 16
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(sys_in_title, topics=4) → combined=16>=10
+- &id003
+  arxiv_id: '1608.06672'
+  ads_bibcode: 2016ApJ...829L..31D
+  title: 'MOST Observations of Our Nearest Neighbor: Flares on Proxima Centauri'
+  authors:
+  - Davenport, James R. A.
+  - Kipping, David M.
+  - Sasselov, Dimitar
+  - Matthews, Jaymie M.
+  - Cameron, Chris
+  year: '2016'
+  pubdate: '2016-10-00'
+  doi: 10.3847/2041-8205/829/2/L31
+  abstract: We present a study of white-light flares from the active M5.5 dwarf Proxima Centauri using the Canadian microsatellite
+    Microvariability and Oscillations of STars. Using 37.6 days of monitoring data from 2014 to 2015, we have detected 66
+    individual flare events, the largest number of white-light flares observed to date on Proxima Cen. Flare energies in our
+    sample range from 10<SUP>29</SUP> to 10<SUP>31.5</SUP> erg. The flare rate is lower than that of other classic flare stars
+    of a similar spectral type, such as UV Ceti, which may indicate Proxima Cen had a higher flare rate in its youth. Proxima
+    Cen does have an unusually high flare rate given its slow rotation period, however. Extending the observed power-law occurrence
+    distribution down to 10<SUP>28</SUP> erg, we show that flares with flux amplitudes of 0.5% occur 63 times per day, while
+    superflares with energies of 10<SUP>33</SUP> erg occur ∼8 times per year. Small flares may therefore pose a great difficulty
+    in searches for transits from the recently announced 1.27 M <SUB>⊕</SUB> Proxima b, while frequent large flares could
+    have significant impact on the planetary atmosphere.
+  status: fetched
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 5
+  combined_score: 15
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(sys_in_title, topics=3) → combined=15>=10
+- &id004
+  arxiv_id: '2102.01910'
+  ads_bibcode: 2021MNRAS.505.3537M
+  title: A search for optical laser emission from Proxima Centauri
+  authors:
+  - Marcy, G. W.
+  year: '2021'
+  pubdate: '2021-08-00'
+  doi: 10.1093/mnras/stab1440
+  abstract: A search for laser light from Proxima Centauri was performed, including 107 high-resolution, optical spectra obtained
+    between 2004 and 2019 with the HARPS spectrometer. The search for laser light involved rejecting sharp peaks in the spectrum
+    from stellar flares, fluorescent city lights, and elementary particles that directly hit the CCD detector. The search
+    revealed unexpected spectral 'combs' found at equally spaced frequencies, which were not known to the observer nor to
+    the builder of the spectrometer. But they came from stray, optical ghosts of light originating with an interferometric
+    etalon filter and its light source at the telescope. Future observers must be aware of this contamination. The 107 spectra
+    of Proxima Centauri show no evidence of any laser emission nor technological signatures of any type. Of special interest
+    are 29 spectra obtained between March and July 2019 when the candidate technological radio signal, BLC1, was captured
+    by Breakthrough Listen. This search would have revealed laser light from Proxima Centauri pointed toward Earth if the
+    laser had a power at least 20 to 120 kilowatts (depending on wavelength) and was positioned within the 1.3 au field of
+    view, assuming a benchmark laser launcher having a 10-m aperture. Smaller lasers would also have been detected, but would
+    require more power.
+  status: fetched
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 4
+  combined_score: 14
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS, has_arxiv, has_doi) + rel(sys_in_title) → combined=14>=10
+- &id005
+  arxiv_id: '2301.02477'
+  ads_bibcode: 2023A&A...670A..84K
+  title: 'The CARMENES search for exoplanets around M dwarfs. Wolf 1069 b: Earth-mass planet in the habitable zone of a nearby,
+    very low-mass star'
+  authors:
+  - Kossakowski, D.
+  - Kürster, M.
+  - Trifonov, T.
+  - Henning, Th.
+  - Kemmer, J.
+  - Caballero, J. A.
+  - Burn, R.
+  - Sabotta, S.
+  - Crouse, J. S.
+  - Fauchez, T. J.
+  - Nagel, E.
+  - Kaminski, A.
+  - Herrero, E.
+  - Rodríguez, E.
+  - González-Álvarez, E.
+  - Quirrenbach, A.
+  - Amado, P. J.
+  - Ribas, I.
+  - Reiners, A.
+  - Aceituno, J.
+  - Béjar, V. J. S.
+  - Baroch, D.
+  - Bastelberger, S. T.
+  - Chaturvedi, P.
+  - Cifuentes, C.
+  - Dreizler, S.
+  - Jeffers, S. V.
+  - Kopparapu, R.
+  - Lafarga, M.
+  - López-González, M. J.
+  - Martín-Ruiz, S.
+  - Montes, D.
+  - Morales, J. C.
+  - Pallé, E.
+  - Pavlov, A.
+  - Pedraz, S.
+  - Perdelwitz, V.
+  - Pérez-Torres, M.
+  - Perger, M.
+  - Reffert, S.
+  - Rodríguez López, C.
+  - Schlecker, M.
+  - Schöfer, P.
+  - Schweitzer, A.
+  - Shan, Y.
+  - Shields, A.
+  - Stock, S.
+  - Wolf, E.
+  - Zapatero Osorio, M. R.
+  - Zechmeister, M.
+  year: '2023'
+  pubdate: '2023-02-00'
+  doi: 10.1051/0004-6361/202245322
+  abstract: We present the discovery of an Earth-mass planet (M<SUB>b</SUB> sin i = 1.26 ± 0.21 M<SUB>⊕</SUB>) on a 15.6 d
+    orbit of a relatively nearby (d ~ 9.6 pc) and low-mass (0.167 ± 0.011 M<SUB>☉</SUB>) M5.0 V star, Wolf 1069. Sitting at
+    a separation of 0.0672 ± 0.0014 au away from the host star puts Wolf 1069 b in the habitable zone (HZ), receiving an incident
+    flux of S = 0.652 ± 0.029 S<SUB>⊕</SUB>. The planetary signal was detected using telluric-corrected radial-velocity (RV)
+    data from the CARMENES spectrograph, amounting to a total of 262 spectroscopic observations covering almost four years.
+    There are additional long-period signals in the RVs, one of which we attribute to the stellar rotation period. This is
+    possible thanks to our photometric analysis including new, well-sampled monitoring campaigns undergone with the OSN and
+    TJO facilities that supplement archival photometry (i.e., from MEarth and SuperWASP), and this yielded an updated rotational
+    period range of P<SUB>rot</SUB> = 150-170 d, with a likely value at 169.3<SUB>‒3.6</SUB><SUP>+3.7</SUP>. The stellar activity
+    indicators provided by the CARMENES spectra likewise demonstrate evidence for the slow rotation period, though not as
+    accurately due to possible factors such as signal aliasing or spot evolution. Our detectability limits indicate that additional
+    planets more massive than one Earth mass with orbital periods of less than 10 days can be ruled out, suggesting that perhaps
+    Wolf 1069 b had a violent formation history. This planet is also the sixth closest Earth-mass planet situated in the conservative
+    HZ, after Proxima Centauri b, GJ 1061 d, Teegarden's Star c, and GJ 1002 b and c. Despite not transiting, Wolf 1069 b
+    is nonetheless a very promising target for future three-dimensional climate models to investigate various habitability
+    cases as well as for sub-m s<SUP>‒1</SUP> RV campaigns to search for potential inner sub-Earth-mass planets in order to
+    test planet formation theories. <P />Full Table D.2 and additional data (i.e., stellar activity indicators as shown in
+    Fig. 4 and long-term photometry as in Fig. 2) are only available at the CDS via anonymous ftp to <A href="https://cdsarc.cds.unistra.fr/">cdsarc.cds.unistra.fr</A>
+    (ftp://130.79.128.5) or via <A href="https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/670/A84">https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/670/A84</A>
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (11 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 3
+  combined_score: 13
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(sys_in_abstract, topics=3) → combined=13>=10
+- &id006
+  arxiv_id: '2402.00115'
+  ads_bibcode: 2025AJ....169..153Y
+  title: Quantifying the Effect of Short-timescale Stellar Activity Upon Transit Detection in M Dwarfs
+  authors:
+  - Yaptangco, Dana Clarice
+  - Ballard, Sarah
+  - Dittmann, Jason
+  - Albornoz, Mariangel
+  year: '2025'
+  pubdate: '2025-03-00'
+  doi: 10.3847/1538-3881/ada898
+  abstract: 'M dwarf stars comprise 70%─80% of the galaxy''s stars and host most of its rocky planets. They also differ from
+    Sunlike stars in that they are "active" for billions of years or more: rotating quickly, flaring often, and emitting large
+    amounts of UV and X-ray light. The effects of stellar activity upon both photometry and spectroscopy make their exoplanets
+    more difficult to detect. While activity signals such as flaring and stellar rotation can be more readily modeled or removed
+    from photometry, the contribution of unresolved stellar activity to transit sensitivity is harder to quantify. We investigate
+    the difference in the detectability of planetary transits around a sample of M dwarfs observed by NASA''s Transiting Exoplanet
+    Survey Satellite (TESS) Mission, characterized by a common stellar radius, effective temperature, and TESS magnitude.
+    Our sample is classified as either "active" or "inactive" based upon the presence of Hα in emission. After removing more
+    readily identifiable signatures of activity: stellar rotation and large flares, we perform an injection-and-recovery analysis
+    of transits for each star. We extract detection sensitivity as a function of planetary radius and orbital period for each
+    star. Then, we produce averaged sensitivity maps for the "active" stars and the "inactive" stars, for the sake of comparison.
+    We quantify the extent to which signal-to-noise ratio is degraded for transit detection, when comparing an active star
+    to an inactive star of the same temperature and apparent brightness. We aim for these sensitivity maps to be useful to
+    the exoplanet community in future M dwarf occurrence-rate studies.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 2
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(journal=AJ, has_arxiv, has_doi) + rel(topics=4) → combined=12>=10
+- &id007
+  arxiv_id: '2409.06637'
+  ads_bibcode: 2024ApJ...975..109W
+  title: Magnetic Fields in a Sample of Planet-hosting M Dwarf Stars from Kepler, K2, and TESS Observed by APOGEE
+  authors:
+  - Wanderley, Fábio
+  - Cunha, Katia
+  - Smith, Verne V.
+  - Kochukhov, Oleg
+  - Souto, Diogo
+  - Allende Prieto, C.
+  - Mahadevan, Suvrath
+  - Majewski, Steven R.
+  - Muirhead, Philip S.
+  - Pinsonneault, Marc
+  - Terrien, Ryan
+  year: '2024'
+  pubdate: '2024-11-00'
+  doi: 10.3847/1538-4357/ad7959
+  abstract: Stellar magnetic fields have a major impact on space weather around exoplanets orbiting low-mass stars. From an
+    analysis of Zeeman-broadened Fe I lines measured in near-infrared SDSS/APOGEE spectra, mean magnetic fields are determined
+    for a sample of 29 M dwarf stars that host closely orbiting small exoplanets. The calculations employed the radiative
+    transfer code Synmast and MARCS stellar model atmospheres. The sample M dwarfs are found to have measurable mean magnetic
+    fields ranging between ∼0.2 and ∼1.5 kG, falling in the unsaturated regime on the versus P <SUB>rot</SUB> plane. The sample
+    systems contain 43 exoplanets, which include 23 from Kepler, nine from K2, and nine from Transiting Exoplanet Survey Satellite.
+    We evaluated their equilibrium temperatures, insolation, and stellar habitable zones and found that only Kepler-186f and
+    TOI-700d are inside the habitable zones of their stars. Using the derived values of for the stars Kepler-186 and TOI-700
+    we evaluated the minimum planetary magnetic field that would be necessary to shield the exoplanets Kepler-186f and TOI-700d
+    from their host star's winds, considering reference magnetospheres with sizes equal to those of the present-day and young
+    Earth, respectively. Assuming a ratio of 5% between large- to small-scale B-fields, and a young-Earth magnetosphere, Kepler-186f
+    and TOI-700d would need minimum planetary magnetic fields of, respectively, 0.05 and 0.24 G. These values are considerably
+    smaller than Earth's magnetic field of 0.25 G ≲ B ≲ 0.65 G, which suggests that these two exoplanets might have magnetic
+    fields sufficiently strong to protect their atmospheres and surfaces from stellar magnetic fields.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 2
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(topics=5) → combined=12>=10
+- &id008
+  arxiv_id: '2405.05013'
+  ads_bibcode: 2024MNRAS.531..251O
+  title: Potential surface ice distribution on close-in terrestrial exoplanets around M dwarfs
+  authors:
+  - Ouyang, Yueyun
+  - Ding, Feng
+  year: '2024'
+  pubdate: '2024-06-00'
+  doi: 10.1093/mnras/stae1200
+  abstract: Previous studies suggested that surface ice could be distributed on close-in terrestrial exoplanets around M-dwarfs
+    if heat redistribution on the planets is very inefficient. In general, orbital and atmospheric parameters play an important
+    role in the climate on terrestrial planets, including the cold-trap region where the permanent surface water reservoir
+    can potentially be distributed. Here, we develop a simple coupled land-atmosphere model to explore the potential surface
+    ice distribution on close-in terrestrial planets with various orbital and atmospheric parameters, assuming that the planets
+    are airless or have a thin N<SUB>2</SUB> atmosphere. We find that the most significant factors in deciding the surface
+    cold trap region are the spin-orbit ratio and obliquity. The incident stellar flux and the surface pressure play a limited
+    role in the thin N<SUB>2</SUB> simulations for incident flux smaller than Mercury's and surface pressure lower than 10<SUP>4</SUP>
+    Pa. Our result illustrates the possible distribution of surface ice on arid terrestrial planets and can help to understand
+    the climate of these exoplanets.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 2
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS, has_arxiv, has_doi) + rel(topics=5) → combined=12>=10
+- &id009
+  arxiv_id: '2309.00492'
+  ads_bibcode: 2023SoSyR..57..236I
+  title: Stable Orbits in the Feeding Zone of the Planet Proxima Centauri c
+  authors:
+  - Ipatov, S. I.
+  year: '2023'
+  pubdate: '2023-06-00'
+  doi: 10.1134/S0038094623030036
+  abstract: 'Estimates of the size of the feeding zone of the planet Proxima Centauri c have been made at initial orbital
+    eccentricities of planetesimals equal to 0.02 or 0.15. The research is based on the results of modeling of the evolution
+    of planetesimals'' orbits under the influence of the star and planets Proxima Centauri c and b. The considered time interval
+    reached a billion years. It was found that after the accumulation of the planet Proxima Centauri c some planetesimals
+    may have continued to move in stable elliptical orbits within its feeding zone, largely cleared of planetesimals. Usually
+    such planetesimals can move in some resonances with the planet (Proxima Centauri c), for example, in the resonances 1
+    : 1 (as Jupiter Trojans), 5 : 4 and 3 : 4 and usually have small eccentricities. Some planetesimals that moved for a long
+    time (1-2 million years) along chaotic orbits fell into the resonances 5 : 2 and 3 : 10 with the planet Proxima Centauri
+    c and moved in them for at least tens of millions of years.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 5
+  combined_score: 11
+  filter_decision: keep
+  filter_reason: auth(has_arxiv, has_doi) + rel(sys_in_title, topics=2) → combined=11>=10
+- &id010
+  arxiv_id: '2504.18485'
+  ads_bibcode: 2025MNRAS.539.3301S
+  title: Validation of the ESPRESSO wavelength calibration using iodine absorption cell spectra
+  authors:
+  - Schmidt, Tobias M.
+  - Reiners, Ansgar
+  - Murphy, Michael T.
+  - Lo Curto, Gaspare
+  - Martins, Carlos J. A. P.
+  - Huke, Philipp
+  year: '2025'
+  pubdate: '2025-06-00'
+  doi: 10.1093/mnras/staf588
+  abstract: High-quality wavelength calibration is crucial for science cases like radial-velocity studies of exoplanets, the
+    search for a possible variation of fundamental constants, and the redshift drift experiment. However, for state-of-the-art
+    spectrographs, it has become difficult to verify the wavelength calibration on sky because no astrophysical source provides
+    spectra with sufficiently stable or accurate wavelength information. We therefore propose to use iodine absorption cells
+    to validate the wavelength calibration. Observing a bright and featureless star through the iodine cell emulates an astrophysical
+    target with exactly known spectral features that can be analysed like any other science target, allowing to verify the
+    wavelength calibration derived from the internal calibration sources and to identify systematics in the data processing.
+    As demonstration, we temporarily installed an <inline-formula><tex-math>$\mathrm{I_2}$</tex-math></inline-formula> absorption
+    cell at ESPRESSO. Employing a full forward modelling approach of the <inline-formula><tex-math>$\mathrm{I_2}$</tex-math></inline-formula>
+    spectrum, including the instrumental line-spread function, we demonstrate wavelength calibration accuracy at the level
+    of a few <inline-formula><tex-math>$\mathrm{m\,s^{-1}}$</tex-math></inline-formula>. We also show that wavelength measurements
+    do depend on the geometry of the light-injection into the spectrograph fibers. This highlights the importance of probing
+    exactly the same light path as science targets, something not possible with internal calibration sources alone. We also
+    demonstrate excellent radial-velocity stability at the <inline-formula><tex-math>${{&lt; 20\, \mathrm{cm\,s^{-1}}}}$</tex-math></inline-formula>
+    level in a full end-to-end fashion, from sky to data product. Our study therefore showcases the great potential of absorption
+    cells for the verification and long-term monitoring of the wavelength calibration as well as the unique insights they
+    can provide.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS, has_arxiv, has_doi) + rel(no_signal) → combined=10>=10
+- &id011
+  arxiv_id: '2311.04316'
+  ads_bibcode: 2024MNRAS.527.3395I
+  title: 'Planetary perturbers: flaring star-planet interactions in Kepler and TESS'
+  authors:
+  - Ilin, Ekaterina
+  - Poppenhäger, Katja
+  - Chebly, Judy
+  - Ilić, Nikoleta
+  - Alvarado-Gómez, Julián D.
+  year: '2024'
+  pubdate: '2024-01-00'
+  doi: 10.1093/mnras/stad3398
+  abstract: In many star-planet systems discovered so far, the innermost planet orbits within only a few stellar radii. In
+    these systems, planets could become in situ probes of the extended stellar magnetic field. Because they disturb the field
+    as they move, they are expected to trigger flares in the corona. Potential differences to the energies and morphologies
+    of intrinsic flares are poorly constrained. However, as we expect planet-induced flares to correlate with the planet's
+    orbital period, we can identify them from a clustering of flares in phase with the planet's orbit. We used the excellent
+    phase coverage from Kepler and the Transiting Exoplanet Survey Satellite to find flaring star-planet systems, compile
+    a catalogue of all their flares, and measure how much they cluster in orbital phase. In the 1811 searched systems, we
+    found 25 single stars with three or more flares each. We quantified the significance of the clustering in each system,
+    and compared it against the theoretically expected power of magnetic interaction that leads to planet-induced flaring.
+    Most systems do not show any clustering, consistent with low expected power. Those we expect to show clustering fall on
+    two branches. An inactive one, without any signs of clustering, and a tentative active one, where the clustering becomes
+    more pronounced as the expected power of interaction increases. The flares in HIP 67522 are prominently clustered (p &lt;
+    0.006). This young hot Jupiter system is the most promising candidate for magnetic star-planet interaction in our sample.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS, has_arxiv, has_doi) + rel(topics=2, skip_pattern=\bhot Jupiter\b) → combined=10>=10
+- &id012
+  arxiv_id: '2304.09220'
+  ads_bibcode: 2023A&A...677A.182M
+  title: Two super-Earths at the edge of the habitable zone of the nearby M dwarf TOI-2095
+  authors:
+  - Murgas, F.
+  - Castro-González, A.
+  - Pallé, E.
+  - Pozuelos, F. J.
+  - Millholland, S.
+  - Foo, O.
+  - Korth, J.
+  - Marfil, E.
+  - Amado, P. J.
+  - Caballero, J. A.
+  - Christiansen, J. L.
+  - Ciardi, D. R.
+  - Collins, K. A.
+  - Di Sora, M.
+  - Fukui, A.
+  - Gan, T.
+  - Gonzales, E. J.
+  - Henning, Th.
+  - Herrero, E.
+  - Isopi, G.
+  - Jenkins, J. M.
+  - Lillo-Box, J.
+  - Lodieu, N.
+  - Luque, R.
+  - Mallia, F.
+  - Morales, J. C.
+  - Morello, G.
+  - Narita, N.
+  - Orell-Miquel, J.
+  - Parviainen, H.
+  - Pérez-Torres, M.
+  - Quirrenbach, A.
+  - Reiners, A.
+  - Ribas, I.
+  - Safonov, B. S.
+  - Seager, S.
+  - Schwarz, R. P.
+  - Schweitzer, A.
+  - Schlecker, M.
+  - Strakhov, I. A.
+  - Vanaverbeke, S.
+  - Watanabe, N.
+  - Winn, J. N.
+  - Zechmeister, M.
+  year: '2023'
+  pubdate: '2023-09-00'
+  doi: 10.1051/0004-6361/202346692
+  abstract: 'The main scientific goal of TESS is to find planets smaller than Neptune around stars that are bright enough
+    to allow for further characterization studies. Given our current instrumentation and detection biases, M dwarfs are prime
+    targets in the search for small planets that are in (or near) the habitable zone of their host star. In this work, we
+    use photometric observations and CARMENES radial velocity (RV) measurements to validate a pair of transiting planet candidates
+    found by TESS. The data were fitted simultaneously, using a Bayesian Markov chain Monte Carlo (MCMC) procedure and taking
+    into account the stellar variability present in the photometric and spectroscopic time series. We confirm the planetary
+    origin of the two transiting candidates orbiting around TOI-2095 (LSPM J1902+7525). The star is a nearby M dwarf (d =
+    41.90 ± 0.03 pc, T<SUB>eff</SUB> = 3759 ± 87 K, V = 12.6 mag), with a stellar mass and radius of M<SUB>*</SUB> = 0.44
+    ± 0.02 M<SUB>☉</SUB> and R<SUB>*</SUB> = 0.44 ± 0.02 R<SUB>☉</SUB>, respectively. The planetary system is composed of
+    two transiting planets: TOI-2095b, with an orbital period of P<SUB>b</SUB> = 17.66484 ± (7 × 10<SUP>-5</SUP>) days, and
+    TOI-2095c, with P<SUB>c</SUB> = 28.17232 ± (14 × 10<SUP>-5</SUP>) days. Both planets have similar sizes with R<SUB>b</SUB>
+    = 1.25 ± 0.07 R<SUB>⊕</SUB> and R<SUB>c</SUB> = 1.33 ± 0.08 R<SUB>⊕</SUB> for planet b and planet c, respectively. Although
+    we did not detect the induced RV variations of any planet with significance, our CARMENES data allow us to set stringent
+    upper limits on the masses of these objects. We find M<SUB>b</SUB> &lt; 4.1 M<SUB>⊕</SUB> for the inner and M<SUB>c</SUB>
+    &lt; 7.4 M<SUB>⊕</SUB> for the outer planet (95% confidence level). These two planets present equilibrium temperatures
+    in the range of 300-350 K and are close to the inner edge of the habitable zone of their star. <P />Radial velocity measurement
+    table is available at the CDS via anonymous ftp to <A href="https://cdsarc.cds.unistra.fr/">cdsarc.cds.unistra.fr</A>
+    (ftp://130.79.128.5) or via <A href="https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/677/A182">https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/677/A182</A>'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(topics=3, other_system_primary) → combined=10>=10
+- &id013
+  arxiv_id: '2209.11346'
+  ads_bibcode: 2022ApJS..263...33C
+  title: An Early Catalog of Planet-hosting Multiple-star Systems of Order Three and Higher
+  authors:
+  - Cuntz, M.
+  - Luke, G. E.
+  - Millard, M. J.
+  - Boyle, L.
+  - Patel, S. D.
+  year: '2022'
+  pubdate: '2022-12-00'
+  doi: 10.3847/1538-4365/ac9302
+  abstract: We present a catalog (status 2022 July 1) of triple and higher-order systems identified containing exoplanets
+    based on data from the literature, including various analyses. We explore statistical properties of the systems with a
+    focus on both the stars and the planets. So far, about 30 triple systems and one to three quadruple systems, including
+    (mildly) controversial cases, have been found. The total number of planets is close to 40. All planet-hosting triple-star
+    systems are highly hierarchic, consisting of a quasi-binary complemented by a distant stellar component, which is in orbit
+    about the common center of mass. Furthermore, the quadruple systems are in fact pairs of close binaries ("double-doubles"),
+    with one binary harboring a planet. For the different types of star-planet systems, we introduce a template for the classifications
+    of planetary orbital configurations in correspondence to the hierarchy of the system and the planetary host. The data
+    show that almost all stars are main-sequence stars, as expected. However, the stellar primaries tend to be more massive
+    (i.e., corresponding to spectral types A, F, and G) than expected from single-star statistics, a finding also valid for
+    stellar secondaries but less pronounced. Tertiary stellar components are almost exclusively low-mass stars of spectral
+    type M. Almost all planets have been discovered based on either the Radial Velocity method or the Transit method. Both
+    gas giants (the dominant type) and terrestrial planets (including super-Earths) have been identified. We anticipate the
+    expansion of this database in the light of future planetary search missions.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(no_signal) → combined=10>=10
+- &id014
+  arxiv_id: '2207.13727'
+  ads_bibcode: 2022AJ....164..176M
+  title: 'MIRECLE: Science Yield for a Mid-infrared Explorer-class Mission to Study Nontransiting Rocky Planets Orbiting the
+    Nearest M Stars Using Planetary Infrared Excess'
+  authors:
+  - Mandell, Avi M.
+  - Lustig-Yaeger, Jacob
+  - Stevenson, Kevin B.
+  - Staguhn, Johannes
+  year: '2022'
+  pubdate: '2022-11-00'
+  doi: 10.3847/1538-3881/ac83a5
+  abstract: Recent investigations have demonstrated the potential for utilizing a new observational and data-analysis technique
+    for studying the atmospheres of nontransiting exoplanets with combined light that relies on acquiring simultaneous, broad-wavelength
+    spectra and resolving planetary infrared emission from the stellar spectrum through simultaneous fitting of the stellar
+    and planetary spectral signatures. This new data-analysis technique, called planetary infrared excess (PIE), holds the
+    potential to open up the opportunity for measuring mid-infrared (MIR) phase curves of nontransiting rocky planets around
+    the nearest stars with a relatively modest telescope aperture. We present simulations of the performance and science yield
+    for a mission and instrument concept that we call the MIR Exoplanet CLimate Explorer, a concept for a moderately sized
+    cryogenic telescope with broad wavelength coverage (1-18 μm) and a low-resolution (R ~ 50) spectrograph designed for the
+    simultaneous wavelength coverage and extreme flux measurement precision necessary to detect the emission from cool rocky
+    planets with PIE. We present exploratory simulations of the potential science yield for PIE measurements of the nearby
+    planet Proxima Centauri b, showing the potential to measure the composition and structure of an Earth-like atmosphere
+    with a relatively modest observing time. We also present overall science yields for several mission architecture and performance
+    metrics, and discuss the technical performance requirements and potential telescope and instrument technologies that could
+    meet these requirements.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=AJ, has_arxiv, has_doi) + rel(sys_in_abstract, topics=2, skip_pattern=\binstrument\b.*\bperformance\)
+    → combined=10>=10
+- &id015
+  arxiv_id: '2309.00695'
+  ads_bibcode: 2023M&PS...58..752I
+  title: Delivery of icy planetesimals to inner planets in the Proxima Centauri planetary system
+  authors:
+  - Ipatov, Sergei I.
+  year: '2023'
+  pubdate: '2023-06-00'
+  doi: 10.1111/maps.13985
+  abstract: The estimates of the delivery of icy planetesimals from the feeding zone of Proxima Centauri c (with mass equal
+    to 7m<SUB>E</SUB>, m<SUB>E</SUB> is the mass of the Earth) to inner planets b and d were made. They included the studies
+    of the total mass of planetesimals in the feeding zone of planet c and the probabilities of collisions of such planetesimals
+    with inner planets. This total mass could be about 10-15m<SUB>E</SUB>. It was estimated based on studies of the ratio
+    of the mass of planetesimals ejected into hyperbolic orbits to the mass of planetesimals collided with forming planet
+    c. At integration of the motion of planetesimals, the gravitational influence of planets c and b and the star was taken
+    into account. In most series of calculations, planetesimals collided with planets were excluded from integrations. Based
+    on estimates of the mass of planetesimals ejected into hyperbolic orbits, it was concluded that during the growth of the
+    mass of planet c the semi-major axis of its orbit could decrease by at least a factor of 1.5. Depending on possible gravitational
+    scattering due to mutual encounters of planetesimals, the total mass of material delivered by planetesimals from the feeding
+    zone of planet c to planet b was estimated to be between 0.002m<SUB>E</SUB> and 0.015m<SUB>E</SUB>. Probably, the amount
+    of water delivered to Proxima Centauri b exceeded the mass of water in Earth's oceans. The amount of material delivered
+    to planet d could be a little less than that delivered to planet b.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 4
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(has_arxiv, has_doi) + rel(sys_in_title) → combined=10>=10
+- arxiv_id: '2604.09020'
+  ads_bibcode: 2026arXiv260409020B
+  title: Recent development in high-precision high-fidelity spectrographs for exoplanet research and characterization
+  authors:
+  - Bouchy, François
+  - Pepe, Francesco
+  - Dumusque, Xavier
+  - Schmidt, Tobias
+  - Lovis, Christophe
+  - Udry, Stéphane
+  year: '2026'
+  pubdate: '2026-04-00'
+  doi: 10.48550/arXiv.2604.09020
+  abstract: High-precision high-fidelity spectrographs are the most powerful instruments for exoplanets detection and characterization.
+    The sub-m/s radial-velocity precision, required to detect Earth-mass exoplanets, necessitates tackling all the sources
+    of instrumental and stellar instabilities. We present the new high-precision high-fidelity spectrographs ESPRESSO, NIRPS,
+    ANDES and RISTRETTO designed, developed, and operated with support of PlanetS.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2404.15422'
+  ads_bibcode: 2024RvMG...90....1H
+  title: Host Stars and How Their Compositions Influence Exoplanets
+  authors:
+  - Hinkel, Natalie R.
+  - Youngblood, Allison
+  - Soares-Furtado, Melinda
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: 10.2138/rmg.2024.90.01
+  abstract: It has become a common practice within the exoplanet field to say that "to know the star is to know the planet."
+    The properties of the host star have a strong, direct influence on the interior and surface conditions of the orbiting
+    planet and oftentimes measurements of planetary properties are made relative to the star's properties. Not only are observational
+    measurements of the star necessary to determine even the most basic aspects of the planet (such as mass and radius), but
+    the stellar environment influences how the planet evolves. Therefore, in this chapter, we begin by discussing the basics
+    of stars, providing an overview of stellar formation, structure, photon and particle emissions, and evolution. Next, we
+    go over the possible ways to determine the age of a star. We then outline how different kinds of stars are distributed
+    within the Milky Way galaxy. Afterwards, we explain how to measure the composition of stars and the underlying math inherent
+    to those observations, including caveats that are important when using the data for research applications. Finally, we
+    explain the underlying physics and observations that enable stellar composition to be used as a proxy for planetary composition.
+    In addition, given that this chapter focuses more on astronomy/astrophysics and uses a variety of important terms that
+    may not be familiar to all readers, we have defined many terms either within the text or as a footnote for better interdisciplinary
+    comprehension.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2302.02810'
+  ads_bibcode: 2022csss.confE.218R
+  title: 'The 10 parsec sample in the Gaia era: first update'
+  authors:
+  - Reylé, C.
+  - Jardine, K.
+  - Fouqué, P.
+  - Caballero, J. A.
+  - Smart, R. L.
+  - Sozzetti, A.
+  year: '2022'
+  pubdate: '2022-12-00'
+  doi: 10.5281/zenodo.7669746
+  abstract: The nearest stars provide a fundamental constraint for our understanding of stellar physics and the Galaxy. The
+    nearby sample serves as an anchor where all objects can be studied and understood with precise data. This work is an update
+    of the 10 pc sample published by Reylé et al. (2021) that used the unprecedented high precision parallax measurements
+    from the early third data release of the astrometric space mission Gaia. We review this census, all updates being related
+    to close binaries, brown dwarfs and exoplanets. We provide a new catalogue of 541 stars, brown dwarfs, and exoplanets
+    in 336 systems within 10 pc from the Sun. This list is as volume-complete as possible from current knowledge and it provides
+    a list of benchmark stars. We also explore the new products made available in the most recent third Gaia data release.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1711.05250'
+  ads_bibcode: 2018haex.bookE.157G
+  title: 'ESPRESSO on VLT: An Instrument for Exoplanet Research'
+  authors:
+  - González Hernández, Jonay I.
+  - Pepe, Francesco
+  - Molaro, Paolo
+  - Santos, Nuno C.
+  year: '2018'
+  pubdate: '2018-00-00'
+  doi: 10.1007/978-3-319-55333-7_157
+  abstract: ESPRESSO (Echelle SPectrograph for Rocky Exoplanets and Stable Spectroscopic Observations) is a VLT ultra-stable
+    high-resolution spectrograph that will be installed in Paranal Observatory in Chile at the end of 2017 and offered to
+    the community by 2018. The spectrograph will be located at the Combined Coudé Laboratory of the VLT and will be able to
+    operate with one or (simultaneously) several of the four 8.2 m Unit Telescopes (UT) through four optical Coudé trains.
+    Combining efficiency and extreme spectroscopic precision, ESPRESSO is expected to gaining about two magnitudes with respect
+    to its predecessor HARPS. We aim at improving the instrumental radial velocity precision to reach the 10 cm s<SUP>-1</SUP>
+    level, thus opening the possibility to explore new frontiers in the search for Earth-mass exoplanets in the habitable
+    zone of quiet, nearby G to M dwarfs. ESPRESSO will be certainly an important development step toward high-precision ultra-stable
+    spectrographs on the next generation of giant telescopes such as the E-ELT.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1712.06639'
+  ads_bibcode: 2017arXiv171206639H
+  title: Interstellar communication. VI. Searching X-ray spectra for narrowband communication
+  authors:
+  - Hippke, Michael
+  - Forgan, Duncan H.
+  year: '2017'
+  pubdate: '2017-12-00'
+  doi: 10.48550/arXiv.1712.06639
+  abstract: We have previously argued that targeted interstellar communication has a physical optimum at narrowband X-ray
+    wavelengths $\lambda\approx1\,$nm, limited by the surface roughness of focusing devices at the atomic level (arXiv:1711.05761).
+    We search 24,247 archival X-ray spectra (of 6,454 unique objects) for such features and present 19 sources with monochromatic
+    signals. Close examination reveals that these are most likely of natural origin. The ratio of artificial to natural sources
+    must be &lt;0.01%. This first limit can be improved in future X-ray surveys.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: astro-ph/0107033
+  ads_bibcode: 2001astro.ph..7033W
+  title: The 3D-structure of the LISM
+  authors:
+  - Wood, Brian E.
+  - Redfield, Seth
+  - Linsky, Jeffrey L.
+  year: '2001'
+  pubdate: '2001-07-00'
+  doi: 10.48550/arXiv.astro-ph/0107033
+  abstract: We review what is currently known about the structure of interstellar material in the solar neighborhood, emphasizing
+    how observations from the Hubble Space Telescope (HST) have improved our understanding of how interstellar gas is distributed
+    near the Sun. The nearby ISM is not uniform but shows variations in both temperature and metal abundances on distance
+    scales of just a few parsecs. The observations also show that nearby gas does not have a single uniform velocity vector.
+    Instead, different components are often seen in different directions for even very short lines of sight. However, interpretation
+    of these components remains difficult. It is uncertain whether the components represent physically distinct clouds or
+    perhaps are just symptomatic of velocity gradients within the cloud. Finally, since it is the local interstellar medium's
+    interaction with the solar wind that is the primary application of ISM studies considered in these proceedings, we also
+    review how the same HST data used to study the local ISM structure has also been used to study both the heliospheric interaction
+    with the solar wind and also "astrospheric" interactions with the winds of other stars.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2022BAAS...54e1701D
+  title: ESPRESSO scratches the surface of the small-mass planet population
+  authors:
+  - Demangeon, Olivier
+  year: '2022'
+  pubdate: '2022-06-00'
+  doi: null
+  abstract: 'The detection and characterization of the small exoplanets population (R &lt; 2 R<SUB>⊕</SUB> and M &lt; 10 M<SUB>⊕</SUB>)
+    is one of the main focuses of the exoplanet community. This population indeed does not miss scientific and philosophical
+    appeals: understanding the formation, evolution and composition of rocky planets, the detection and study of secondary
+    atmospheres, the search for an Earth-like planet and life outside of the solar system. Not completely foreign to its appeal
+    is the challenge that represents the detection and characterization of this population. Space-based transit surveys like
+    CoRoT, Kepler/K2, TESS and CHEOPS have been successful at detecting them, but precise measurements of the mass of small
+    planets are one of the current challenges of exoplanetary sciences. It requires high-resolution spectrographs with extreme
+    stability over several months mounted on the largest telescope on Earth to measure the minute reflex motion that these
+    planets impose on their parent stars. In this talk, I will present the results obtained with one of these instruments,
+    ESPRESSO, by the ESPRESSO consortium. Since its first light in 2018, ESPRESSO has pushed the boundaries of the radial
+    velocity techniques. Over the past months, it has broken two times consecutively the record of the smallest planet measured
+    with this techniques L 98-58 b (Demangeon+2021,A&amp;A,653,A41) and Proxima Centauri d (Faria+2022,A&amp;A,658,A115).
+    I will give an overview of the results that we obtained for the characterisation of the small planet population of the
+    challenges that we faced (in particular in terms of stellar activity mitigation) and of the lessons learned regarding
+    the measurement of the mass of this tantalizing population.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (0 < 14)
+  fetch_error: null
+  authority_score: 0
+  relevance_score: 5
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(conf=BAAS) + rel(sys_in_abstract, planet_d_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 2022Natur.602..553.
+  title: Earth-like planet, neutrino's mysterious mass and disease eradication
+  authors: []
+  year: '2022'
+  pubdate: '2022-02-00'
+  doi: 10.1038/d41586-022-00494-9
+  abstract: The latest science news, in brief.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+filtered_papers:
+- *id001
+- *id002
+- *id003
+- *id004
+- *id005
+- *id006
+- *id007
+- *id008
+- *id009
+- *id010
+- *id011
+- *id012
+- *id013
+- *id014
+- *id015
