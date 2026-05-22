@@ -50,4 +50,4 @@
 - [x] Final SKILL.md line count: 515 → 527 (+12 net; the verify
       lines and Step 7 manual_followup body add prose intentionally)
       Total vs original 543: **-16 lines** across three commits.
-- [ ] Commit with VaNnadin identity
+- [x] Commit with VaNnadin identity (ef6a504)
