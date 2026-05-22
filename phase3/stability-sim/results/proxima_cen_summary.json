@@ -1,0 +1,69 @@
+{
+  "system": "Proxima Cen",
+  "star": {
+    "name": "Proxima Cen",
+    "mass_msun": 0.12206868312710632
+  },
+  "planets": [
+    {
+      "name": "Proxima Cen d",
+      "mass_msun": 7.807111397140158e-07,
+      "mass_kind": "msini",
+      "a_au": 0.02881,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 0.06981317007977318,
+      "Omega_rad": 5.305658970563565,
+      "M_rad": 0.0
+    },
+    {
+      "name": "Proxima Cen b",
+      "mass_msun": 3.167885586147256e-06,
+      "mass_kind": "msini",
+      "a_au": 0.04848,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 0.05759586531581287,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 0.0
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 12.39041781425476,
+    "dt_yr": 0.00027993097424427077,
+    "innermost_period_yr": 0.013996548712213537,
+    "energy_relative_error": 3.3890356697039447e-09,
+    "megno_final": 2.000041809419925
+  },
+  "per_body": {
+    "Proxima Cen d": {
+      "a_min": 0.02880937652898002,
+      "a_max": 0.028811096486106417,
+      "e_min": 3.501663054304805e-06,
+      "e_max": 0.00039239289981952107
+    },
+    "Proxima Cen b": {
+      "a_min": 0.04847782138719515,
+      "a_max": 0.04848000302929585,
+      "e_min": 5.100968984811268e-06,
+      "e_max": 7.920235705430772e-05
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Proxima Cen d": {
+        "flags": [],
+        "status": "stable"
+      },
+      "Proxima Cen b": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "stable",
+    "lyapunov_time_yr": 478361097.4742715,
+    "is_chaotic": false
+  }
+}

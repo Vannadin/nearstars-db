@@ -1,0 +1,45 @@
+{
+  "system": "Alpha Centauri AB",
+  "star": {
+    "name": "Alpha Centauri A",
+    "mass_msun": 1.1055
+  },
+  "planets": [
+    {
+      "name": "Alpha Centauri B",
+      "mass_msun": 0.9092,
+      "mass_kind": "true",
+      "a_au": 23.675416374710288,
+      "e": 0.5179,
+      "inc_rad": 1.3823880340421086
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 0.0021860599517822266,
+    "dt_yr": 2.1913172770189884,
+    "innermost_period_yr": 109.56586385094941,
+    "energy_relative_error": 3.814484081498828e-12,
+    "megno_final": 2.000601944928591
+  },
+  "per_body": {
+    "Alpha Centauri B": {
+      "a_min": 23.67541637470878,
+      "a_max": 23.675416374938543,
+      "e_min": 0.5178999999998255,
+      "e_max": 0.5179000000018187
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Alpha Centauri B": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "stable",
+    "lyapunov_time_yr": 33225630.867619105,
+    "is_chaotic": false
+  }
+}

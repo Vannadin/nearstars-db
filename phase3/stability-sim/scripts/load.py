@@ -1,0 +1,262 @@
+# DB JSON → REBOUND Simulation 로더. 단위: AU / yr / Msun (G = 4π²).
+from __future__ import annotations
+
+import json
+import math
+from pathlib import Path
+from typing import Any
+
+import rebound
+
+KM_PER_AU = 149_597_870.7
+SEC_PER_YR = 365.25 * 86400.0
+MSUN_KG = 1.98892e30
+MEARTH_KG = 5.9722e24
+G_SI = 6.67430e-11
+MU_SUN_KM3_S2 = G_SI * MSUN_KG / 1e9  # km^3 / s^2
+
+
+def mu_km3s2_to_msun(mu: float) -> float:
+    return mu / MU_SUN_KM3_S2
+
+
+def mearth_to_msun(m_earth: float) -> float:
+    return m_earth * MEARTH_KG / MSUN_KG
+
+
+def hill_radius(a: float, m: float, M: float) -> float:
+    """Hill radius in same length units as `a`. m, M same mass units."""
+    return a * (m / (3.0 * M)) ** (1.0 / 3.0)
+
+
+def _load_json(path: Path) -> dict[str, Any]:
+    with path.open() as f:
+        return json.load(f)
+
+
+def _planet_mass_msun(planet: dict) -> tuple[float, str]:
+    """Return (mass_msun, mass_kind). mass_kind ∈ {true, msini}."""
+    phys = planet.get("curated", {}).get("physical", [])
+    rec = next((p for p in phys if p.get("recommended")), None)
+    if rec is None and phys:
+        rec = phys[-1]
+    if rec is None:
+        raise ValueError(f"No physical entry for {planet['name']}")
+    if "true_mass_mearth" in rec:
+        return mearth_to_msun(rec["true_mass_mearth"]), "true"
+    if "mass_mearth" in rec:
+        return mearth_to_msun(rec["mass_mearth"]), rec.get("mass_type", "msini").lower()
+    raise ValueError(f"No mass on recommended physical for {planet['name']}")
+
+
+def _planet_orbital(planet: dict, rng: "random.Random | None" = None) -> dict[str, float]:
+    """Return semi-major axis (AU), eccentricity, inclination (rad), omega, Omega, M (rad).
+
+    Phases that are null in the DB get a deterministic random fill — required because
+    REBOUND's default-0 would line every planet up at the same heliocentric longitude,
+    creating an unphysical initial conjunction that spawns spurious chaos.
+    """
+    import random
+    rng = rng or random.Random(0)
+
+    curated = planet.get("curated", {}).get("orbital")
+    raw = planet.get("raw", {})
+
+    if isinstance(curated, list):
+        rec = next((o for o in curated if o.get("recommended")), curated[-1])
+    elif isinstance(curated, dict):
+        rec = curated
+    else:
+        rec = {}
+
+    a_au = rec.get("semi_major_axis_au") or raw.get("semi_major_axis_au")
+    if a_au is None:
+        raise ValueError(f"No semi-major axis for {planet['name']}")
+
+    e = rec.get("eccentricity")
+    if e is None:
+        e = raw.get("eccentricity", 0.0) or 0.0
+
+    inc = rec.get("inclination_deg") or raw.get("inclination_deg")
+    inc_rad = 0.0 if inc is None else math.radians(inc - 90.0)
+    # Most transit-fit inclinations are ~89.7°. For stability we only care
+    # about MUTUAL inclinations; subtract 90° so transiting coplanar set ≈ 0.
+
+    omega_deg = raw.get("omega_deg")
+    omega_rad = math.radians(omega_deg) if omega_deg is not None else rng.uniform(0, 2 * math.pi)
+
+    M_deg = rec.get("mean_anomaly_at_epoch_deg")
+    M_rad = math.radians(M_deg) if M_deg is not None else rng.uniform(0, 2 * math.pi)
+
+    Omega_rad = rng.uniform(0, 2 * math.pi)  # node not constrained for transiting set
+
+    return {
+        "a": float(a_au),
+        "e": float(e),
+        "inc": inc_rad,
+        "omega": omega_rad,
+        "Omega": Omega_rad,
+        "M": M_rad,
+    }
+
+
+def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.Simulation, dict]:
+    """Build a single-star + N-planet REBOUND simulation."""
+    import random
+    rng = random.Random(phase_seed)
+
+    d = _load_json(db_path)
+    star = d["stars"][0]
+    star_name = star["name"]
+    star_mu = star["principia"]["gravitational_parameter_km3_s2"]
+    star_m_msun = mu_km3s2_to_msun(star_mu)
+
+    sim = rebound.Simulation()
+    sim.units = ("AU", "yr", "Msun")
+    sim.add(m=star_m_msun, name=star_name)
+
+    meta = {
+        "system": d["system_name"],
+        "star": {"name": star_name, "mass_msun": star_m_msun},
+        "planets": [],
+        "phase_seed": phase_seed,
+    }
+
+    primary = sim.particles[star_name]
+    for p in d.get("planets", []):
+        m_msun, kind = _planet_mass_msun(p)
+        orb = _planet_orbital(p, rng=rng)
+        sim.add(
+            primary=primary,
+            m=m_msun,
+            a=orb["a"],
+            e=orb["e"],
+            inc=orb["inc"],
+            omega=orb["omega"],
+            Omega=orb["Omega"],
+            M=orb["M"],
+            name=p["name"],
+        )
+        meta["planets"].append(
+            {
+                "name": p["name"],
+                "mass_msun": m_msun,
+                "mass_kind": kind,
+                "a_au": orb["a"],
+                "e": orb["e"],
+                "inc_rad": orb["inc"],
+                "omega_rad": orb["omega"],
+                "Omega_rad": orb["Omega"],
+                "M_rad": orb["M"],
+            }
+        )
+
+    return sim, meta
+
+
+def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
+    """α Cen AB inner binary only (Proxima outer orbit ignored — irrelevant on 10⁴ yr)."""
+    a_path = db_root / "alpha_centauri_a.json"
+    d_a = _load_json(a_path)
+    binary = d_a["binary_orbit"]
+    orbit_ab = next(o for o in binary["orbits"] if o["orbit_id"] == "AB")
+
+    m_a = next(c["mass_msun"] for c in binary["components"] if c["name"] == "Alpha Centauri A")
+    m_b = next(c["mass_msun"] for c in binary["components"] if c["name"] == "Alpha Centauri B")
+
+    plx_mas = d_a["stars"][0]["raw"]["parallax_mas"]
+    dist_pc = 1000.0 / plx_mas
+    a_au = orbit_ab["a_arcsec"] * dist_pc
+
+    sim = rebound.Simulation()
+    sim.units = ("AU", "yr", "Msun")
+    sim.add(m=m_a, name="Alpha Centauri A")
+    sim.add(
+        primary=sim.particles[0],
+        m=m_b,
+        a=a_au,
+        e=orbit_ab["e"],
+        inc=math.radians(orbit_ab["i_deg"]),
+        Omega=math.radians(orbit_ab["Omega_deg"]),
+        omega=math.radians(orbit_ab["omega_deg"]),
+        M=0.0,
+        name="Alpha Centauri B",
+    )
+
+    meta = {
+        "system": "Alpha Centauri AB",
+        "star": {"name": "Alpha Centauri A", "mass_msun": m_a},
+        "planets": [
+            {
+                "name": "Alpha Centauri B",
+                "mass_msun": m_b,
+                "mass_kind": "true",
+                "a_au": a_au,
+                "e": orbit_ab["e"],
+                "inc_rad": math.radians(orbit_ab["i_deg"]),
+            }
+        ],
+    }
+    return sim, meta
+
+
+def add_hypotheticals(sim: rebound.Simulation, meta: dict, hyp_path: Path) -> list[dict]:
+    """Add moons / extra planets from a hypotheticals JSON. Returns list of body metadata."""
+    if not hyp_path.exists():
+        return []
+    spec = _load_json(hyp_path)
+    added = []
+    star_mass = meta["star"]["mass_msun"]
+
+    for body in spec.get("bodies", []):
+        parent_name = body["parent"]
+        try:
+            parent = sim.particles[parent_name]
+        except rebound.ParticleNotFound as exc:
+            raise ValueError(f"Hypothetical parent '{parent_name}' not found in sim") from exc
+
+        a_km = body["semi_major_axis_km"]
+        a_au = a_km / KM_PER_AU
+        m_kg = body["mass_kg"]
+        m_msun = m_kg / MSUN_KG
+
+        # Hill sphere preflight check for moons
+        if body.get("type") == "moon":
+            parent_meta = next((p for p in meta["planets"] if p["name"] == parent_name), None)
+            if parent_meta is None:
+                raise ValueError(f"Moon's parent planet '{parent_name}' not in meta")
+            r_hill_au = hill_radius(parent_meta["a_au"], parent_meta["mass_msun"], star_mass)
+            hill_frac = a_au / r_hill_au
+            if hill_frac > 1.0:
+                raise ValueError(
+                    f"{body['name']}: a = {hill_frac:.2f} R_Hill — definitely unbound. "
+                    f"R_Hill = {r_hill_au * KM_PER_AU:,.0f} km."
+                )
+            body["_hill_fraction_initial"] = hill_frac
+            body["_r_hill_km"] = r_hill_au * KM_PER_AU
+        else:
+            body["_hill_fraction_initial"] = None
+            body["_r_hill_km"] = None
+
+        sim.add(
+            primary=parent,
+            m=m_msun,
+            a=a_au,
+            e=body.get("eccentricity", 0.0),
+            inc=math.radians(body.get("inclination_deg", 0.0)),
+            name=body["name"],
+        )
+        added.append(
+            {
+                "name": body["name"],
+                "parent": parent_name,
+                "type": body.get("type", "planet"),
+                "mass_msun": m_msun,
+                "a_au": a_au,
+                "a_km": a_km,
+                "e": body.get("eccentricity", 0.0),
+                "hill_fraction_initial": body["_hill_fraction_initial"],
+                "r_hill_km": body["_r_hill_km"],
+            }
+        )
+    return added

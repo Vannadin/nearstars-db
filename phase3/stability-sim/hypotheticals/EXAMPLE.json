@@ -1,0 +1,16 @@
+{
+  "_comment": "Example hypotheticals file. Place at phase3/stability-sim/hypotheticals/<system>.json and pass --hypotheticals.",
+  "system": "trappist_1",
+  "bodies": [
+    {
+      "name": "TRAPPIST-1 e moon (Luna-mass)",
+      "parent": "TRAPPIST-1 e",
+      "type": "moon",
+      "semi_major_axis_km": 3000,
+      "eccentricity": 0.05,
+      "inclination_deg": 0.0,
+      "mass_kg": 7.342e22,
+      "radius_km": 1737
+    }
+  ]
+}

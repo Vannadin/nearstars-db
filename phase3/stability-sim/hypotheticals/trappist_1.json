@@ -1,0 +1,28 @@
+{
+  "_comment": "TRAPPIST-1 with two hypothetical moons. Demonstrates the star–planets–moons full hierarchy check.",
+  "system": "trappist_1",
+  "bodies": [
+    {
+      "name": "TRAPPIST-1 e moon (safe)",
+      "parent": "TRAPPIST-1 e",
+      "type": "moon",
+      "semi_major_axis_km": 20000,
+      "eccentricity": 0.02,
+      "inclination_deg": 0.0,
+      "mass_kg": 7.342e22,
+      "radius_km": 1737,
+      "_design_note": "≈0.23 R_Hill of TRAPPIST-1 e → expected stable (Domingos+2006 limit is ~0.5)"
+    },
+    {
+      "name": "TRAPPIST-1 g moon (risky)",
+      "parent": "TRAPPIST-1 g",
+      "type": "moon",
+      "semi_major_axis_km": 110000,
+      "eccentricity": 0.05,
+      "inclination_deg": 0.0,
+      "mass_kg": 1.5e23,
+      "radius_km": 2000,
+      "_design_note": "≈0.64 R_Hill of TRAPPIST-1 g → expected flagged (>0.5)"
+    }
+  ]
+}
