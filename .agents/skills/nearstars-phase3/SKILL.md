@@ -300,7 +300,8 @@ arxiv_id. A deep_read paper with zero notes means it was actually
 ## Step 9 — Draft English synthesis
 
 Standard structure at `docs/phase3/<slug>.md` (use TRAPPIST-1 d as
-the canonical example — `docs/phase3/trappist-1-d.md`):
+the canonical example — `docs/phase3/trappist-1-d.md`; see TRAPPIST-1
+e or f for the optional Canonical alternatives section in action):
 
 ```
 <!-- one-line Korean header comment (CLAUDE.md §6) -->
