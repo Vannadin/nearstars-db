@@ -60,7 +60,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_ice_caps` | none (sublimation/photolysis on nightside) | high | dayside 500 K, no atmosphere to trap volatiles |
 | `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 (2203.01065) scaling + tidal-locking penalty; Garraffo 2017 tests 0.1–0.5 G bracket |
 | `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 TESS tidally-locked rocky planet population 0.01–0.1 M_Earth |
-| `magnetic_dipole_tilt_deg` | 10 | low | Tie-break (interesting-first per [[feedback-phase3-interesting-first]]) — 10° gives offset auroral cap rather than uniform polar oval |
+| `magnetic_dipole_tilt_deg` | 10 | low | Tie-break (interesting-first per the interesting-first rule) — 10° gives offset auroral cap rather than uniform polar oval |
 | `magnetosphere_standoff_planet_radii` | 1.5 | medium | Garraffo 2017 (1706.04617) Fig. 4 — innermost planet heavily compressed; field often opens to surface |
 | `radiation_belt_present` | false | medium | Garraffo 2017 — open field lines, no stable trapped region |
 | `surface_radiation_dose_msv_yr` | 80000 | low | Atri 2019 (1910.09871) scaled from e; vacuum-surface (no column shielding); Earth = 2.4 mSv/yr |

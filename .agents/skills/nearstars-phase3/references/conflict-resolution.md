@@ -156,7 +156,7 @@ tie-break should explicitly say so in the Basis column:
 
 ```markdown
 | `surface_tint_rgb_hex_accent` | `#7a2a10` (cooling lava red) | low |
-  Tie-break: interesting-first (per [[feedback-phase3-interesting-first]]).
+  Tie-break: interesting-first.
   Photolytic oxidation (less interesting) or cooling-lava red
   (more interesting) both fit the airless ultramafic surface;
   cfg picks lava for visual distinctiveness. |
@@ -187,7 +187,7 @@ better for the game. The cfg may pick Y as the **documented
 divergence**, *not* as a tie-break — because canonical X has a real
 weight advantage that tie-break would gloss over.
 
-Per [[feedback-phase3-documented-divergence]], gameplay may outrank
+Under the documented-divergence policy, gameplay may outrank
 canonical in this case, provided all three preconditions hold:
 
 1. **The gameplay pick (Y) is still observation-consistent.** Within
@@ -211,7 +211,7 @@ weight-of-evidence hierarchy:
 | Observation rules out scenario | nothing — dead | n/a |
 | Observation+theory clearly favor X, Y also obs-consistent + visually better | **Documented divergence** (this section) | `## ## Canonical alternatives` table |
 | Observation+theory tied between X and Y | **Tie-break** (preceding section) | Basis column `Tie-break: interesting-first` note |
-| Cfg picks contradict cited paper's measurement | not a divergence — error | fix per [[feedback-phase3-validation]] |
+| Cfg picks contradict cited paper's measurement | not a divergence — error | fix at Step 10 VERIFY |
 
 **Diagnostic question.** Does the canonical reading have a clear
 weight advantage from the literature?
@@ -283,9 +283,8 @@ value contradicts the cited paper:
 3. Add a one-line "errata" note in `context-notes.md` explaining
    what changed and why.
 
-This happened in the TRAPPIST-1 b/c/e/g/h first pass (see
-[[feedback-phase3-validation]]). The validation pass exists
-specifically to catch this.
+This happened in the TRAPPIST-1 b/c/e/g/h first pass. Step 10 VERIFY
+exists specifically to catch this.
 
 ### Common failure modes (from the TRAPPIST-1 first pass)
 

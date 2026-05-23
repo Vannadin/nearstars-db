@@ -126,7 +126,7 @@ water mass fraction (0.11–0.50) 과 radiogenic + 조석 가열이 결합되어
 (~0.04 W/m² 의 basal melt). Europa-Ganymede analog 추론은 얼음 껍데기가
 가장 얇은 위치 — 일반적으로 warm-mantle anomaly 위 — 에서 cryovolcanism
 가능성을 뒷받침합니다. 그런 자리에서는 basal water 가 표면까지 도달할 수
-있습니다. [[feedback-phase3-interesting-first]] 원칙에 따라, cfg 는
+있습니다. interesting-first 룰 원칙에 따라, cfg 는
 cryovolcanic 분출을 "가능"에서 **canonical** 로 격상시킵니다. 2–4 개의
 substellar 따뜻한 spot 근처에 가시 분출이 자리하고, 각각 폭 ~50–100 km
 규모로 분출구 주변에 신선한 물-얼음 halo 를 만듭니다. 관측에 모순되지

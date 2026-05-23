@@ -46,7 +46,7 @@ files (and Korean mirrors) await user confirmation per the audit brief.
 ### TRAPPIST-1 b
 
 **Tie-break rows identified:**
-- `magnetic_dipole_tilt_deg = 10` — Basis cites `[[feedback-phase3-interesting-first]]`.
+- `magnetic_dipole_tilt_deg = 10` — Basis cites `the interesting-first rule`.
 
 **Diagnostic re-check:** observation silent, theory silent within
 5–15° window. Tie-break confirmed. No action.
@@ -282,7 +282,7 @@ divergence. **The user's challenge does not promote it to divergence.**
 
 **But the prose terminology is off.** The current synthesis says:
 
-> "Per [[feedback-phase3-interesting-first]], the cfg promotes
+> "Per the interesting-first rule, the cfg promotes
 > cryovolcanic plumes from 'possible' to **canonical**: visible
 > plumes near 2–4 substellar warm spots..."
 
@@ -297,7 +297,7 @@ where the Canonical alternatives row is).
 **Recommended terminology fix:** rewrite the sentence to use
 tie-break vocabulary:
 
-> "Per [[feedback-phase3-interesting-first]], the cfg adopts visible
+> "Per the interesting-first rule, the cfg adopts visible
 > cryovolcanic plumes near 2–4 substellar warm spots as the default
 > visual feature (tie-break: literature silent on surface morphology
 > at this resolution)."
@@ -413,7 +413,7 @@ it lifts h's audit trail to the same standard as e and f.
 orders of magnitude per Makarov 2018":** this is a flagged errata,
 not a tie-break or divergence. Action: fix the
 `tidal_heating_w_m2` row value, don't leave it as a Confidence note.
-(Per CLAUDE.md §10 — read errors; per [[feedback-phase3-validation]]
+(Per CLAUDE.md §10 — read errors; per Step 10 VERIFY
 fix don't note.)
 
 ---
@@ -426,7 +426,7 @@ The `Tie-break (interesting-first)` label appears in many forms:
 
 | Phrasing observed | Planet/row |
 |---|---|
-| `Tie-break (interesting-first per [[feedback-phase3-interesting-first]])` | b (mag tilt), c (mag tilt) |
+| `Tie-break (interesting-first per the interesting-first rule)` | b (mag tilt), c (mag tilt) |
 | `Tie-break: 10° gives offset auroral cap` (no interesting-first) | d (mag tilt) |
 | `tie-break: interesting-first chose green over...` | c (aurora primary) |
 | `interesting-first tie-break: green over UV-only alternative` | e (aurora primary) |
@@ -441,7 +441,7 @@ Tie-break (interesting-first): <one-clause reason>
 ```
 
 Capitalization, parenthesization, and word order should be uniform
-across all 7 planets. The reference to `[[feedback-phase3-interesting-first]]`
+across all 7 planets. The reference to `the interesting-first rule`
 can appear once in the file or be implicit if the synthesis includes
 the canonical link section.
 

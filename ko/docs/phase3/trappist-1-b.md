@@ -59,7 +59,7 @@ high = 직접 측정되었거나 강하게 제약됨, medium = 강한 근거를 
 | `surface_ice_caps` | 없음 (nightside 에서 승화 / 광분해) | high | dayside 500 K, volatile 을 가둘 대기 없음 |
 | `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 (2203.01065) 스케일링에 조석 고정 페널티를 더한 값. Garraffo 2017 의 0.1–0.5 G 시험 범위 안에 듦 |
 | `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 가 다룬 TESS 조석 고정 암석 행성 분포에서 0.01–0.1 M_Earth 범위 |
-| `magnetic_dipole_tilt_deg` | 10 | low | 동률 처리 기준이 "흥미로움 우선"이라([[feedback-phase3-interesting-first]]), 10° 로 잡으면 균일한 극관이 아니라 한쪽으로 비낀 오로라 캡이 나타남 |
+| `magnetic_dipole_tilt_deg` | 10 | low | 동률 처리 기준이 "흥미로움 우선"이라(interesting-first 룰), 10° 로 잡으면 균일한 극관이 아니라 한쪽으로 비낀 오로라 캡이 나타남 |
 | `magnetosphere_standoff_planet_radii` | 1.5 | medium | Garraffo 2017 (1706.04617) Fig. 4 — 최내측 행성은 강하게 압축되고, 자기력선이 표면까지 열려 버리는 경우가 잦음 |
 | `radiation_belt_present` | false | medium | Garraffo 2017 — 자기력선이 열려 있어 안정적인 포획 영역이 형성되지 않음 |
 | `surface_radiation_dose_msv_yr` | 80000 | low | Atri 2019 (1910.09871) 의 e 값에서 스케일. 진공 표면(컬럼 차폐 0). 비교용으로 지구는 2.4 mSv/yr |

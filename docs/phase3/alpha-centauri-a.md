@@ -58,7 +58,7 @@ literature is silent.
 | `x_ray_log_lx_cgs_min` | 27.0 | medium | Robrade 2016 cycle minimum |
 | `x_ray_log_lx_cgs_max` | 27.6 | medium | Robrade 2016 cycle maximum |
 | `limb_darkening_alpha_h` | 0.1404 ± 0.0050 | high | Kervella 2017 — H band power-law fit, marginally weaker than 1D model predictions |
-| `visual_surface_tint_hex_primary` | `#fff4e8` (warm white, slightly more yellow-cream than Sun) | medium | Tie-break: G2V blackbody at 5847 K + visual distinction from solar reference; interesting-first per [[feedback-phase3-interesting-first]] |
+| `visual_surface_tint_hex_primary` | `#fff4e8` (warm white, slightly more yellow-cream than Sun) | medium | Tie-break: G2V blackbody at 5847 K + visual distinction from solar reference; interesting-first per the interesting-first rule |
 | `stellar_color_temp_k` | 5847 | high | derived from Teff |
 | `visual_in_planet_sky_apparent_diameter_arcmin` (from α Cen B at 23 AU mean) | 0.5 | high | derived: 2 R★ / a × (180·60/π) |
 | `visual_companion_event_corona_visible_during_b_eclipse` | true | medium | Tie-break: at α Cen AB orbit conjunctions seen from a hypothetical α Cen B planet, A occulted by B reveals corona; rare and dramatic in-game event |

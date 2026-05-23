@@ -58,11 +58,11 @@ Confidence values:
 
 **Confidence=low rows and the interesting-first rule.** Every
 Confidence=low row is by definition a choice within an
-observation-allowed window. Per [[feedback-phase3-interesting-first]],
-the cfg defaults to the more visually distinctive option when two
-choices are equally observation-consistent. Document the tie-break
-explicitly in the Basis column so the next session can see why a
-particular hex code or pattern was picked:
+observation-allowed window. When two choices are equally
+observation-consistent, the cfg defaults to the more visually
+distinctive option. Document the tie-break explicitly in the Basis
+column so the next session can see why a particular hex code or
+pattern was picked:
 
 ```
 | `surface_tint_rgb_hex_accent` | `#7a2a10` (cooling lava red) | low |
@@ -161,10 +161,10 @@ Prose section, 3–6 paragraphs:
    etc.)
 
 When surface tints / mineralogy / morphology are aesthetic choices
-within an allowed window, default to interesting per
-[[feedback-phase3-interesting-first]]. Specific over generic;
-distinctive over uniform; active over passive. Document the
-tie-break in the prose so the reasoning is visible.
+within an allowed window, default to the more interesting reading
+(interesting-first rule). Specific over generic; distinctive over
+uniform; active over passive. Document the tie-break in the prose so
+the reasoning is visible.
 
 ## ## Atmosphere synthesis
 
@@ -210,8 +210,7 @@ KSP player something to look at.
 ## ## Canonical alternatives (optional)
 
 Include this section **only** when the cfg makes one or more
-documented divergences from a canonical reading (per
-[[feedback-phase3-documented-divergence]] and
+documented divergences from a canonical reading (see
 [`conflict-resolution.md`](conflict-resolution.md) § "Documented
 divergence"). If every Decisions row is either canonical-aligned or a
 within-window tie-break, omit this section entirely — don't write an

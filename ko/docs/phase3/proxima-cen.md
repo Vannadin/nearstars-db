@@ -58,7 +58,7 @@ flare hex 색상).
 | `flare_rate_per_day_total` | 1.49 | high | Vida 2019 TESS — ≈ 50 d 에 72 events (에너지 범위 10²⁹–10³² erg) |
 | `flare_rate_superflare_per_year` | 3 (≥ 10³³ erg); 0.5 (≥ 10³⁴ erg) | high | Vida 2019 TESS — §4 의 누적 flare 빈도 분포로부터 명시 |
 | `orbital_role_around_acen_ab` | ~13 000 AU 에 묶임. P ≈ 547 000 yr | medium | Kervella 2017 astrometric 추적. Feng & Jones 2018 capture 분석 |
-| `limb_darkening_alpha_h` | ~0.4 | low | Tie-break. Proxima 에 직접 측정값 없음. M 왜성 모델 grid (Claret 2018) 에서 보간. [[feedback-phase3-interesting-first]] 에 따른 interesting-first 로 미세한 시각 변동 |
+| `limb_darkening_alpha_h` | ~0.4 | low | Tie-break. Proxima 에 직접 측정값 없음. M 왜성 모델 grid (Claret 2018) 에서 보간. interesting-first 룰 에 따른 interesting-first 로 미세한 시각 변동 |
 | `visual_surface_tint_hex_primary` | `#c54c2a` (깊은 빨강 M5.5V) | high | Teff 2980 K 흑체 + 6500 Å 이하 분자 밴드 흡수 |
 | `visual_flare_color_hex` | `#ff5e2a` (Hα 우위 광학 flare 와 광대역 연속체 brightening) | medium | Tie-break. Vida 2019 + Anglada-Escudé 2016 보충 flare 스펙트라. 게임 내 어두운 빨강 quiescent 연속체 대비 가시성을 위해 특정 hex 선택 |
 | `stellar_color_temp_k` | 2980 | high | 유도 |

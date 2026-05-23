@@ -53,7 +53,7 @@ K1V 동반자 B 와 시각적으로 가까이 보이며 Proxima 와는 엄청난
 | `x_ray_log_lx_cgs_min` | 27.0 | medium | Robrade 2016 사이클 최소 |
 | `x_ray_log_lx_cgs_max` | 27.6 | medium | Robrade 2016 사이클 최대 |
 | `limb_darkening_alpha_h` | 0.1404 ± 0.0050 | high | Kervella 2017. H 밴드 power-law fit, 1D 모델 예측보다 살짝 약함 |
-| `visual_surface_tint_hex_primary` | `#fff4e8` (태양보다 약간 더 노란빛이 도는 따뜻한 흰색) | medium | Tie-break. G2V 흑체 5847 K + 태양 기준과의 시각적 구분, [[feedback-phase3-interesting-first]] 에 따른 interesting-first |
+| `visual_surface_tint_hex_primary` | `#fff4e8` (태양보다 약간 더 노란빛이 도는 따뜻한 흰색) | medium | Tie-break. G2V 흑체 5847 K + 태양 기준과의 시각적 구분, interesting-first 룰 에 따른 interesting-first |
 | `stellar_color_temp_k` | 5847 | high | Teff 유도 |
 | `visual_in_planet_sky_apparent_diameter_arcmin` (평균 23 AU 에 있는 α Cen B 에서 본 값) | 0.5 | high | 유도. 2 R★ / a × (180·60/π) |
 | `visual_companion_event_corona_visible_during_b_eclipse` | true | medium | Tie-break. 가상의 α Cen B 행성에서 본 conjunction 시 B 가 A 를 가리면 corona 가 드러남, 게임 내 드물고 극적인 이벤트 |

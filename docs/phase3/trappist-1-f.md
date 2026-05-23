@@ -16,7 +16,7 @@ not strongly constrain secondary atmospheres.
 **Scenario choice for NearStars: eye-ball aquaplanet with a 1 bar
 CO₂-rich atmosphere and a substellar open-water lens extending to
 ~40° from the substellar point, surrounded by extensive glacial ice
-elsewhere.** Per [[feedback-phase3-interesting-first]] the cfg
+elsewhere.** Per the interesting-first rule the cfg
 canonicalizes the more visually distinctive scenario among the
 observation-consistent options. Wolf 2017 and Turbet 2018 both show
 that f at 1 bar CO₂ sustains a substellar open-water disk — a
@@ -134,7 +134,7 @@ Earth" morphology with a dark open-ocean pupil ringed by sea-ice
 transition and glacial ice elsewhere. Turbet 2018 confirms f cannot
 sustain open water below ~1 bar CO₂; the 0.1 bar reading gives a
 complete snowball. Both are observation-consistent (Lim 2024 NIRISS
-only rejects H₂-rich atmospheres). Per [[feedback-phase3-interesting-first]],
+only rejects H₂-rich atmospheres). Per the interesting-first rule,
 the cfg adopts the 1 bar lens variant as canonical — the eye-ball
 morphology is dramatically more interesting visually than a uniform
 ice ball, and is genuinely supported by Wolf 2017 and Turbet 2018

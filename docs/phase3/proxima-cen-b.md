@@ -47,7 +47,7 @@ factor-of-10 level. The cfg treats the atmosphere-present decision
 as a **tie-break** rather than a divergence: literature gives both
 "retained" and "stripped" scenarios with comparable plausibility, and
 NearStars selects the visually distinctive atmosphere-present case
-per [[feedback-phase3-interesting-first]].
+per the interesting-first rule.
 
 **Scenario choice for NearStars: a 1.055 M⊕ tidally-locked terrestrial
 planet with a 1-bar N₂ + CO₂ atmosphere, a substellar open-water
@@ -85,7 +85,7 @@ preserved in Open items.
 | `surface_temp_substellar_k` | 290 | medium | Boutle 2017 §3 — peak dayside in tidally-locked simplified-N₂ scenario; Del Genio 2019 dynamic ocean compatible |
 | `surface_temp_nightside_cold_trap_k` | 150 | medium | Boutle 2017 §3 — minimum nightside cold-trap (Earth-like atmosphere slightly warmer) |
 | `surface_temp_global_mean_k` | 250 | medium | Boutle 2017 — mean below freezing at e=0; Del Genio 2019 dynamic ocean adds ~10–20 K nightside redistribution |
-| `atmosphere_present` | true | medium | Tie-break: Boutle 2017 + Meadows 2018 + Zuluaga 2018 keep retention viable; Atri 2020 + Garraffo 2022 favor escape; both obs-consistent. Interesting-first picks atmosphere visible per [[feedback-phase3-interesting-first]] |
+| `atmosphere_present` | true | medium | Tie-break: Boutle 2017 + Meadows 2018 + Zuluaga 2018 keep retention viable; Atri 2020 + Garraffo 2022 favor escape; both obs-consistent. Interesting-first picks atmosphere visible per the interesting-first rule |
 | `atmosphere_surface_pressure_pa` | 100000 (1 bar) | medium | Boutle 2017 nominal Earth-like / simplified-N₂ scenarios both run at 1 bar |
 | `atmosphere_composition` | N₂ 95%, CO₂ 5%, H₂O 0.1–1% (saturated near substellar), trace O₂ | medium | Boutle 2017 simplified N₂+CO₂; Braam 2024 photochemistry for trace species |
 | `atmosphere_scale_height_km` | 11 | medium | derived: kT/μg with T = 260 K, μ = 30, g = 9.0 m/s² |

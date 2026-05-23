@@ -66,7 +66,7 @@ specific flare hex tint).
 | `flare_rate_per_day_total` | 1.49 | high | Vida 2019 TESS — 72 events in ≈ 50 d (energy range 10²⁹–10³² erg) |
 | `flare_rate_superflare_per_year` | 3 (≥ 10³³ erg); 0.5 (≥ 10³⁴ erg) | high | Vida 2019 TESS — explicit numbers in §4 from cumulative flare frequency distribution |
 | `orbital_role_around_acen_ab` | bound at ~13 000 AU; P ≈ 547 000 yr | medium | Kervella 2017 astrometric tracking; Feng & Jones 2018 capture analysis |
-| `limb_darkening_alpha_h` | ~0.4 | low | Tie-break: not directly measured for Proxima; interpolated from M-dwarf model grid (Claret 2018); interesting-first per [[feedback-phase3-interesting-first]] for slight visual variation |
+| `limb_darkening_alpha_h` | ~0.4 | low | Tie-break: not directly measured for Proxima; interpolated from M-dwarf model grid (Claret 2018); interesting-first per the interesting-first rule for slight visual variation |
 | `visual_surface_tint_hex_primary` | `#c54c2a` (deep red M5.5V) | high | Teff 2980 K blackbody + molecular band suppression below 6500 Å |
 | `visual_flare_color_hex` | `#ff5e2a` (Hα-dominated optical flare with broadband continuum brightening) | medium | Tie-break: Vida 2019 + Anglada-Escudé 2016 supplement flare spectra; specific hex chosen for in-game visibility against the dim red quiescent continuum |
 | `stellar_color_temp_k` | 2980 | high | derived |

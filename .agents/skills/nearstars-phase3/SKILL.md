@@ -240,8 +240,7 @@ For each high-score paper, classify into:
 
 This is the gate before Step 8. Don't draft synthesis prose without
 having explicitly read the deep_read set in full — abstract-only
-drafting introduces sloppy citations (see
-[[feedback-phase3-validation]]).
+drafting introduces sloppy citations (caught at Step 10 VERIFY).
 
 **verify:** every `combined_score >= 14` paper has an explicit
 deep_read / skim / skip / manual_followup classification recorded
@@ -358,7 +357,7 @@ Common failure modes (wrong author, 5–10× off number, rounding error,
 composition contradicting a cited constraint) are catalogued in
 [`references/conflict-resolution.md`](references/conflict-resolution.md)
 § "Common failure modes" with the actual TRAPPIST-1 first-pass
-examples. Also see [[feedback-phase3-validation]].
+examples.
 
 **verify:** every Decisions-table row's author/year/number traces back
 to a specific page or section in `docs/phase3/_papers/<arxiv_id>.md`.
@@ -459,13 +458,18 @@ After commit, push to `origin/main` only if the user explicitly asks.
 
 ## Phase 3-specific policies
 
-User memory auto-loads. These four gate workflow decisions; details
-are at the linked steps and references:
+Four gates that govern workflow decisions; each is enforced by a
+specific step or reference in this skill:
 
-- [[project-nearstars-phase-distinction]] — Phase 3 needs Phase 2 inputs (Step 1)
-- [[feedback-phase3-validation]] — every Decisions row re-checked against source (Step 10)
-- [[feedback-phase3-interesting-first]] — tie-break default to visually distinctive (Step 8+)
-- [[feedback-phase3-documented-divergence]] — `## Canonical alternatives` section when cfg outranks canonical (Step 9 + conflict-resolution.md § "Documented divergence")
+- **Phase 3 needs Phase 2 inputs.** Step 1 pre-flight.
+  See [[project-nearstars-phase-distinction]].
+- **Every Decisions row re-checked against source.** Step 10 VERIFY.
+- **Tie-break defaults to visually distinctive** when observation
+  allows multiple readings. Step 8+ plus `references/synthesis-template.md` §
+  "Confidence=low rows and the interesting-first rule".
+- **Canonical-vs-cfg divergence requires a `## Canonical alternatives`
+  section.** Step 9 plus `references/conflict-resolution.md` §
+  "Documented divergence".
 
 ---
 

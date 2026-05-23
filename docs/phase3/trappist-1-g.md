@@ -132,7 +132,7 @@ heating gives a substantial sub-glacial ocean (basal melt at
 analog reasoning supports the possibility of cryovolcanism at
 locations where the ice shell is thinnest — typically over
 warm-mantle anomalies that allow basal water to reach the surface.
-Per [[feedback-phase3-interesting-first]], the cfg promotes
+Per the interesting-first rule, the cfg promotes
 cryovolcanic plumes from "possible" to **canonical**: visible plumes
 near 2–4 substellar warm spots, each ~50–100 km across, producing
 fresh-water-ice halos around their venting sites. This is

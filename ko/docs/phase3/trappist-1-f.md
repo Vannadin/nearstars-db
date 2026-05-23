@@ -14,7 +14,7 @@ arXiv preprint 없음) 은 구름 없는 수소 풍부 대기를 배제했지만
 
 **NearStars 시나리오 선택. 1 bar CO₂-rich 대기와 substellar 점에서 ~40°
 까지 펼쳐진 open-water lens 를 가진 eye-ball aquaplanet 으로, 나머지
-표면은 광범위한 빙하 얼음으로 덮입니다.** [[feedback-phase3-interesting-first]]
+표면은 광범위한 빙하 얼음으로 덮입니다.** interesting-first 룰
 원칙에 따라, 관측과 모순되지 않는 시나리오들 중에서 시각적으로 가장
 두드러진 쪽을 cfg 의 canonical 으로 채택합니다. Wolf 2017 과 Turbet 2018
 모두 f 가 1 bar CO₂ 에서 substellar open-water disk 를 유지함을 보입니다.
@@ -126,7 +126,7 @@ open-water disk 를 유지함을 분명히 보여줍니다. 어두운 open-ocean
 "eye-ball Earth" 형태입니다. Turbet 2018 은 f 가 ~1 bar CO₂ 미만에서는
 open water 를 유지할 수 없다는 점, 그래서 0.1 bar 해석이 완전한 snowball
 이 된다는 점을 확인합니다. 두 시나리오 모두 관측과 일관됩니다 (Lim 2024
-NIRISS 는 H₂-rich 대기만 배제). [[feedback-phase3-interesting-first]]
+NIRISS 는 H₂-rich 대기만 배제). interesting-first 룰
 원칙에 따라 cfg 는 1 bar lens variant 를 canonical 로 채택합니다. eye-ball
 형태는 균일한 얼음 공보다 시각적으로 훨씬 더 흥미롭고, Wolf 2017 과
 Turbet 2018 GCM 으로 진정성 있게 뒷받침됩니다. 완전 snowball variant

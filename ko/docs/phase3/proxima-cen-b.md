@@ -40,7 +40,7 @@ super-Alfvénic transit 동안 항성풍 ram pressure 가 태양값의 10⁴–1
 대한 가정에 의존하며 이 가정 자체가 10 배 수준에서 불확실하다고 지적
 합니다. cfg 는 atmosphere-present 결정을 divergence 가 아니라 **tie-break**
 으로 다룹니다. 문헌이 "보유" 와 "박탈" 시나리오 모두를 비슷한 plausibility
-로 주며, NearStars 는 [[feedback-phase3-interesting-first]] 에 따라
+로 주며, NearStars 는 interesting-first 룰에 따라
 시각적으로 구별되는 atmosphere-present 케이스를 선택합니다.
 
 **NearStars 시나리오 선택. 1 bar N₂ + CO₂ 대기, substellar 점에서 ~60°
@@ -77,7 +77,7 @@ Proxima superflare 동안 잦은 aurora.** 42 cfg 픽. 31 canonical-aligned,
 | `surface_temp_substellar_k` | 290 | medium | Boutle 2017 §3 — 조석 고정 simplified-N₂ 시나리오의 peak dayside. Del Genio 2019 동적 ocean 과 호환 |
 | `surface_temp_nightside_cold_trap_k` | 150 | medium | Boutle 2017 §3 — 야측 cold-trap 최소 (Earth-like 대기는 살짝 더 따뜻) |
 | `surface_temp_global_mean_k` | 250 | medium | Boutle 2017 — e=0 에서 mean 이 빙점 아래. Del Genio 2019 동적 ocean 이 ~10–20 K 야측 redistribution 추가 |
-| `atmosphere_present` | true | medium | Tie-break. Boutle 2017 + Meadows 2018 + Zuluaga 2018 가 보유를 viable 하게 유지. Atri 2020 + Garraffo 2022 가 escape 선호. 둘 다 관측과 일관. interesting-first 가 [[feedback-phase3-interesting-first]] 에 따라 가시 대기 선택 |
+| `atmosphere_present` | true | medium | Tie-break. Boutle 2017 + Meadows 2018 + Zuluaga 2018 가 보유를 viable 하게 유지. Atri 2020 + Garraffo 2022 가 escape 선호. 둘 다 관측과 일관. interesting-first 가 interesting-first 룰에 따라 가시 대기 선택 |
 | `atmosphere_surface_pressure_pa` | 100000 (1 bar) | medium | Boutle 2017 의 nominal Earth-like / simplified-N₂ 시나리오 모두 1 bar 에서 돌림 |
 | `atmosphere_composition` | N₂ 95%, CO₂ 5%, H₂O 0.1–1% (substellar 근처 포화), trace O₂ | medium | Boutle 2017 simplified N₂+CO₂. Braam 2024 의 trace species photochemistry |
 | `atmosphere_scale_height_km` | 11 | medium | 유도. T = 260 K, μ = 30, g = 9.0 m/s² 의 kT/μg |

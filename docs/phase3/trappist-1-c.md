@@ -65,7 +65,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `moment_of_inertia_C` | 0.286 (range 0.235–0.4) | low | Brasser 2019 representative case |
 | `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 scaling; iron-richest planet but slow rotation (2.4 d) → multipolar regime, weak dipole |
 | `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 (2203.01065) — TESS tidally-locked rocky planets cluster 0.01–0.1 M_Earth |
-| `magnetic_dipole_tilt_deg` | 12 | low | Tie-break (interesting-first per [[feedback-phase3-interesting-first]]) — offset polar cap; 5–15° aesthetic window |
+| `magnetic_dipole_tilt_deg` | 12 | low | Tie-break (interesting-first per the interesting-first rule) — offset polar cap; 5–15° aesthetic window |
 | `magnetosphere_standoff_planet_radii` | 1.8 | medium | Garraffo 2017 (1706.04617) Fig. 4 — slightly larger than b due to distance |
 | `radiation_belt_present` | false | medium | Field too weak (<0.1 Earth) to sustain stable trapped-particle population |
 | `surface_radiation_dose_msv_yr` | 50000 | low | Atri 2019 (1910.09871) Table 6 scaling for c at 0.0158 AU + 100 g/cm² atm shielding; 1 bar O₂ + B-field reduces lethal-flare spikes |

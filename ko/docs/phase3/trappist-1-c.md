@@ -65,7 +65,7 @@ Kopernicus / atmosphere cfg-ready 값. `Confidence`. high = 직접 측정
 | `moment_of_inertia_C` | 0.286 (범위 0.235–0.4) | low | Brasser 2019 의 대표 케이스 |
 | `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 스케일링. iron 함량이 가장 높지만 자전이 느려서 (2.4 d) → multipolar regime, 약한 dipole |
 | `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 (2203.01065) — TESS 의 조석 고정 암석 행성은 0.01–0.1 M_Earth 영역에 몰림 |
-| `magnetic_dipole_tilt_deg` | 12 | low | tie-break (interesting-first, [[feedback-phase3-interesting-first]] 적용) — 비대칭 polar cap. 5–15° 의 미적 윈도우 |
+| `magnetic_dipole_tilt_deg` | 12 | low | tie-break (interesting-first, interesting-first 룰 적용) — 비대칭 polar cap. 5–15° 의 미적 윈도우 |
 | `magnetosphere_standoff_planet_radii` | 1.8 | medium | Garraffo 2017 (1706.04617) Fig. 4 — 거리 차이로 b 보다 약간 큼 |
 | `radiation_belt_present` | false | medium | 자기장이 너무 약함 (지구의 <0.1 배) 이라 안정적인 입자 포획대를 유지할 수 없음 |
 | `surface_radiation_dose_msv_yr` | 50000 | low | Atri 2019 (1910.09871) Table 6 을 c 의 0.0158 AU + 100 g/cm² 대기 차폐 조건으로 스케일링. 1 bar O₂ + 자기장이 치명적 flare spike 를 완화 |
