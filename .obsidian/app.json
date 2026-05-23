@@ -1,0 +1,16 @@
+{
+  "useMarkdownLinks": true,
+  "newLinkFormat": "relative",
+  "alwaysUpdateLinks": true,
+  "showUnsupportedFiles": false,
+  "userIgnoreFilters": [
+    "ko/",
+    ".venv/",
+    ".agents/",
+    "phase3/html-pipeline/dist/",
+    "db/backups/",
+    "dist/",
+    "docs/phase3/_papers/"
+  ],
+  "attachmentFolderPath": "./_attachments"
+}

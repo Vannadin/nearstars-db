@@ -17,3 +17,17 @@ dist/
 docs/phase3/_papers/
 
 .venv/
+
+# Obsidian vault overlay: commit only the shared config files
+# (app.json, graph.json, appearance.json). Everything else under
+# .obsidian/ is per-user state (workspace layout, plugins, cache, hotkeys).
+.obsidian/*
+!.obsidian/app.json
+!.obsidian/graph.json
+!.obsidian/appearance.json
+
+
+
+
+# Ignore Smart Environment folder
+.smart-env

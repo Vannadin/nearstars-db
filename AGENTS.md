@@ -119,6 +119,22 @@ Korean mirror under `ko/<same-path>`.
   scripts/check-mirrors.sh
   ```
 
+### 2.2 Reading the repo as an Obsidian vault
+
+This repo ships an `.obsidian/` overlay so the four documentation
+homes can be navigated as a single graph. Open the repo folder in
+[Obsidian](https://obsidian.md) and the graph view shows every `.md`
+file as a node with edges from existing markdown links
+(`[text](path)`) — no wikilink rewrite was done, so the same files
+keep rendering normally in GitHub, `preview-md.sh`, and IDE
+previews. Folders excluded from the vault (see
+`.obsidian/app.json` → `userIgnoreFilters`): `ko/` (basename
+collision with English originals), `.agents/`, `.venv/`,
+`docs/phase3/_papers/`, `db/backups/`, `dist/`,
+`phase3/html-pipeline/dist/`. Only `app.json`, `graph.json`, and
+`appearance.json` are version-controlled; per-user workspace state
+is gitignored.
+
 ---
 
 ## 3. Hard rules for any PR
