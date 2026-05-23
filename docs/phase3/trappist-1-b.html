@@ -29,6 +29,10 @@ pre code { background: none; padding: 0; font-size: 12px }
 .palette-swatch .role { opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }
 .palette-swatch .hex { opacity: 0.72; font-size: 10px }
 .palette-swatch-emissive { color: rgba(0,0,0,0.88) }
+/* wide-band fade: 좌우 25% 가 페이지 배경색이라 검정 텍스트가 안 보임 → 흰색 + outline 으로 전환 */
+.palette-swatch-emissive-wide { color: rgba(255,255,255,0.92) }
+.palette-swatch-emissive-wide .role,
+.palette-swatch-emissive-wide .hex { text-shadow: 0 0 3px rgba(0,0,0,0.85), 0 0 1px rgba(0,0,0,0.85) }
 .palette-marker { position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }
 
 /* color visualization: inline chip beside every <code>#xxxxxx</code> */

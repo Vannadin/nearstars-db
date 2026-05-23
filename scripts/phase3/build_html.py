@@ -407,9 +407,18 @@ def render_palette_band(swatches: list) -> str:
                     if marker:
                         pos = (marker - start) / (end - start) * 100
                         marker_html = f'<div class="palette-marker" style="left:{pos:.1f}%"></div>'
+                    grad = spectrum_gradient(start, end)
+                    cls = 'palette-swatch palette-swatch-emissive'
+                    if is_wide_band(start, end):
+                        # wide band 양 끝 25% 를 페이지 배경색으로 페이드 — Decisions 표의 spectrum-bar-wide 와 동일 의도
+                        cls += ' palette-swatch-emissive-wide'
+                        bg = (f'linear-gradient(to right, var(--bg-body) 0%, transparent 25%, '
+                              f'transparent 75%, var(--bg-body) 100%), {grad}')
+                    else:
+                        bg = grad
                     parts.append(
-                        f'<div class="palette-swatch palette-swatch-emissive" '
-                        f'style="background:{spectrum_gradient(start, end)}">'
+                        f'<div class="{cls}" '
+                        f'style="background:{bg}">'
                         f'{marker_html}'
                         f'<span class="role">{html.escape(s["label"])}</span>'
                         f'<span class="hex">{int(start)}–{int(end)} nm</span></div>'
@@ -676,6 +685,10 @@ pre code {{ background: none; padding: 0; font-size: 12px }}
 .palette-swatch .role {{ opacity: 0.88; font-weight: 600; text-transform: uppercase; letter-spacing: .3px; font-size: 9px }}
 .palette-swatch .hex {{ opacity: 0.72; font-size: 10px }}
 .palette-swatch-emissive {{ color: rgba(0,0,0,0.88) }}
+/* wide-band fade: 좌우 25% 가 페이지 배경색이라 검정 텍스트가 안 보임 → 흰색 + outline 으로 전환 */
+.palette-swatch-emissive-wide {{ color: rgba(255,255,255,0.92) }}
+.palette-swatch-emissive-wide .role,
+.palette-swatch-emissive-wide .hex {{ text-shadow: 0 0 3px rgba(0,0,0,0.85), 0 0 1px rgba(0,0,0,0.85) }}
 .palette-marker {{ position: absolute; top: 0; bottom: 0; width: 2px; background: rgba(255,255,255,0.85); box-shadow: 0 0 3px rgba(0,0,0,0.6); pointer-events: none }}
 
 /* color visualization: inline chip beside every <code>#xxxxxx</code> */
