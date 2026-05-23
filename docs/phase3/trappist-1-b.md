@@ -1,4 +1,21 @@
-<!-- TRAPPIST-1 b Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "TRAPPIST-1 b"
+slug: trappist-1-b
+kopernicus_name: Trappist1b
+host_star: Trappist1
+cluster: system-trappist-1
+cluster_role: member
+sources: ["Agol 2021", "Greene 2023", "Ducrot 2024", "Ducrot 2025", "Ih 2023", "Grayver 2022", "Bolmont 2020"]
+related: [[trappist-1-c]], [[trappist-1-d]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: high
+scenario: airless ultramafic rocky surface
+tier: public
+---
+
 # TRAPPIST-1 b — Phase 3 Synthesis
 
 TRAPPIST-1 b is a 1.12 R⊕, 1.37 M⊕ rocky planet on a 1.51-day orbit
@@ -399,3 +416,12 @@ in the not-read set:
   distinctive; could be implemented as a Phase 3.5 alternative.
 - The magnetic field estimates are low-confidence scaling-relation values. If a direct measurement (radio non-detection upper limit) appears for b, the cfg field strength may need adjustment.
 - Interesting-first tie-break: the magnetic dipole tilt of 10° was chosen to give a visually distinctive offset auroral cap rather than a uniform polar oval; both are physically plausible.
+
+## Related
+
+- [trappist-1-c](trappist-1-c.md) — adjacent sibling, also a JWST-tested bare-rock candidate (different surface weathering interpretation)
+- [trappist-1-d](trappist-1-d.md) — next-but-one sibling; thin-atmo scenario contrasts with b's airless
+- [trappist-1-e](trappist-1-e.md) — system's habitable-zone reference point; uses the same M8V host illumination
+- [methodology](../reference/methodology.md) — schema for the Decisions table and confidence tags
+- [mod-reference](../reference/mod-reference.md) — downstream KSP mods that consume these Phase 3 values
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 quantifies the Phase 3 → REX delta for the whole TRAPPIST-1 system; b's mass changed +62% post-Agol 2021

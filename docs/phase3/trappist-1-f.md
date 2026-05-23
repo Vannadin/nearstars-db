@@ -1,4 +1,21 @@
-<!-- TRAPPIST-1 f Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "TRAPPIST-1 f"
+slug: trappist-1-f
+kopernicus_name: Trappist1f
+host_star: Trappist1
+cluster: system-trappist-1
+cluster_role: member
+sources: ["Agol 2021", "Lim 2024", "Acuña 2025", "Acuña 2021", "Wolf 2017", "Turbet 2018", "Kopparapu 2013", "Barr 2018", "Garraffo 2017", "Atri 2019", "Fraschetti 2019"]
+related: [[trappist-1-e]], [[trappist-1-g]], [[trappist-1-h]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: medium
+scenario: eye-ball aquaplanet (1 bar CO₂-rich) with substellar open-water lens
+tier: public
+---
+
 # TRAPPIST-1 f — Phase 3 Synthesis
 
 TRAPPIST-1 f is a 1.04 R⊕, 1.04 M⊕ rocky planet on a 9.21-day orbit
@@ -396,3 +413,12 @@ The f bibliography is very small (15 papers, 6 with arXiv).
   sub-glacial only).
 - Magnetic field strength is scaling-based; could be refined if a
   TRAPPIST-1-specific dynamo model becomes available.
+
+## Related
+
+- [trappist-1-e](trappist-1-e.md) — inner sibling, the system's habitable-zone reference
+- [trappist-1-g](trappist-1-g.md) — outer sibling; g is the canonical full snowball while f sits at the eyeball/snowball tipping point
+- [trappist-1-h](trappist-1-h.md) — outermost sibling; both at low insolation but different volatile budgets
+- [methodology](../reference/methodology.md) — Decisions schema
+- [mod-reference](../reference/mod-reference.md) — downstream mods
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10; f's mass shifted +53% post-Agol 2021 (largest change in system)

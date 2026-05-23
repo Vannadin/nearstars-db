@@ -1,4 +1,21 @@
-<!-- TRAPPIST-1 h Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "TRAPPIST-1 h"
+slug: trappist-1-h
+kopernicus_name: Trappist1h
+host_star: Trappist1
+cluster: system-trappist-1
+cluster_role: member
+sources: ["Agol 2021", "Luger 2017", "Gressier 2022", "Lincowski 2018", "Bolmont 2018", "Turbet 2017", "Lichtenberg 2019", "Bourrier 2017", "Castan-Lopez 2025", "Zahnle 2017", "Gillon 2024", "Atri 2019"]
+related: [[trappist-1-g]], [[trappist-1-f]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: low
+scenario: frozen sub-Mars rocky world with patchy CO₂/N₂ ice frost
+tier: public
+---
+
 # TRAPPIST-1 h — Phase 3 Synthesis
 
 TRAPPIST-1 h is a 0.76 R⊕, 0.33 M⊕ sub-Mars-mass rocky planet on a
@@ -338,3 +355,11 @@ h only in passing.
 - Tidal heating `tidal_heating_w_m2` may be underestimated by 1–2 orders of magnitude per Makarov 2018 (~7×10⁻³ W/m² peak vs cfg's 0.00001–0.0001). Re-check against more recent Bolmont successors.
 - The Mars-style patchy aurora geometry is a deliberate interesting-first choice. The alternative "uniform faint global glow" is preserved as cfg variant.
 - Surface radiation dose ~4 Sv/yr places h in Kerbalism's "moderate" radiation bracket — better than e or f despite the thinner atmosphere, because h's distance reduces the stellar particle flux.
+
+## Related
+
+- [trappist-1-g](trappist-1-g.md) — adjacent inner sibling; both ice-covered, but g has substantially more mass and water
+- [trappist-1-f](trappist-1-f.md) — also volatile-rich outer-HZ comparison
+- [methodology](../reference/methodology.md) — Decisions schema and confidence rubric
+- [mod-reference](../reference/mod-reference.md) — downstream mods
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10; h was completely absent from REX (b–g only) — Phase 3 is the system's first cfg-ready treatment of h

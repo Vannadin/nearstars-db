@@ -1,4 +1,21 @@
-<!-- TRAPPIST-1 e Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "TRAPPIST-1 e"
+slug: trappist-1-e
+kopernicus_name: Trappist1e
+host_star: Trappist1
+cluster: system-trappist-1
+cluster_role: member
+sources: ["Agol 2021", "Glidden 2025", "Wolf 2017", "Turbet 2018", "Lincowski 2018", "Way 2025", "Hapi 2024", "Sergeev 2022", "Cohen 2022", "Wang 2025", "Garraffo 2017", "Fraschetti 2019", "Atri 2019", "Berardo 2025", "Acuña 2021", "Boldog 2023"]
+related: [[trappist-1-d]], [[trappist-1-f]], [[trappist-1-g]], [[methodology]], [[mod-reference]], [[rex-data-comparison]], [[binary-epoch-pipeline]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: high
+scenario: temperate aqua-planet (1 bar N₂/CO₂/H₂O) with eyeball-Earth geometry
+tier: public
+---
+
 # TRAPPIST-1 e — Phase 3 Synthesis
 
 TRAPPIST-1 e is a 0.92 R⊕, 0.69 M⊕ rocky planet on a 6.10-day orbit
@@ -384,3 +401,13 @@ Notable items skipped:
 - The cloud morphology between double-mid-latitude-jet and equatorial-superrotation is essentially a GCM-dependent prediction. If a future intercomparison resolves the tipping point, the cfg's `cloud_morphology` value (and possibly the visual rendering of cloud bands) may need updating.
 - Interesting-first tie-break: chose Wang 2025's Earth-analog magnetic field (0.32 G) over the RM22 scaling estimate (~0.08 M_Earth, much weaker). The Earth-analog case produces a more visually distinctive magnetosphere + auroral oval; the weaker-field alternative is preserved as a cfg variant for users who prefer the conservative reading.
 - The radiation dose figure (12 Sv/yr) places e in Kerbalism's "high-radiation" bracket. Aurora rendering at 150 kR will be dramatic; the user may want a brightness slider for gameplay.
+
+## Related
+
+- [trappist-1-d](trappist-1-d.md) — inner sibling at HZ edge
+- [trappist-1-f](trappist-1-f.md) — outer sibling, snowball/eyeball boundary
+- [trappist-1-g](trappist-1-g.md) — outer HZ comparison world (full snowball)
+- [methodology](../reference/methodology.md) — Decisions schema
+- [mod-reference](../reference/mod-reference.md) — downstream mods consuming this body's atmosphere + ocean cfg
+- [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — orbital epoch handling for the system
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 covers the Phase 3 → REX TRAPPIST-1 delta in detail

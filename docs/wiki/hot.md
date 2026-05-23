@@ -16,16 +16,19 @@ and any large ingest batch.
 
 ### Current focus
 
-LLM Wiki bootstrap (Phase 1 of 3). Skill defined; `docs/wiki/` scaffold
-created; Phase 2 bootstrap (frontmatter + `## Related` sections) and
-Phase 3 trigger automation pending.
+LLM Wiki bootstrap Phase 2 (incremental cluster ingest). system-trappist-1
+done (7 entity pages, 2026-05-24). Next cluster candidates:
+system-alpha-cen (5 entities), docs/reference concept hubs (10+
+pages), then docs/phase3/* outside trappist-1.
 
 ### Open questions
 
-- Trigger channel for `/wiki lint` schedule: on-demand only, weekly cron,
-  or weekly + pre-commit hook? User confirmation pending.
-- First Phase 2 dry-run cluster: TRAPPIST-1 system (8 entity pages) is
-  the proposed start.
+- Next cluster to ingest: system-alpha-cen, methodology concept
+  cluster, or scan-all-and-batch? User direction pending.
+- Trigger channel for `/wiki lint` schedule (A/B/C from skill §8) —
+  user confirmation pending.
+- Host star entity page for TRAPPIST-1 (M8V) does not exist yet —
+  flagged in log as ingest follow-up.
 
 ### Recent decisions
 
@@ -37,16 +40,20 @@ Phase 3 trigger automation pending.
 - Lint enforces public-tier EA-identifier blocklist (see skill §9).
 - `_papers/`, `db/`, `phase2/`, `phase3/` are raw tier — wiki never
   writes there.
+- Entity frontmatter uses paper-name strings for `sources:` in this
+  pass; conversion to wikilinks deferred until `_papers/*.md` get
+  their own frontmatter (`type: source`).
 
 ### Last 3 log entries
 
-1. **2026-05-24** initialize | wiki scaffold created — skill +
-   `docs/wiki/{index,log,hot,overview}.md`. Bootstrap pending.
+1. **2026-05-24** ingest | system-trappist-1 cluster — 7 entity pages
+   (frontmatter + `## Related`), confidence range high→low.
+2. **2026-05-24** initialize | wiki scaffold created — skill +
+   `docs/wiki/{index,log,hot,overview}.md`.
 
 ### Active pages
 
-- `.agents/skills/llm-wiki/SKILL.md` (created)
-- `docs/wiki/index.md` (created, bootstrap partial)
-- `docs/wiki/log.md` (created, 1 entry)
-- `docs/wiki/hot.md` (this file)
-- `docs/wiki/overview.md` (created, sketch)
+- `.agents/skills/llm-wiki/SKILL.md`
+- `docs/wiki/{index,log,hot,overview}.md`
+- `docs/phase3/trappist-1-{b,c,d,e,f,g,h}.md` (7 entity pages,
+  frontmatter + Related added 2026-05-24)

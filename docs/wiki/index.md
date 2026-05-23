@@ -116,21 +116,22 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 ---
 
-## Cluster: system-trappist-1
+## Cluster: system-trappist-1 ✓ (Phase 2 ingested 2026-05-24)
 
-> The 7 confirmed TRAPPIST-1 planets + host star.
+> The 7 confirmed TRAPPIST-1 planets. Host star entity page not yet
+> created (M8V dwarf — see open follow-up in [log](log.md)).
 
 **Hub:** `phase3/trappist-1-system/` workspace
 
-| Page | Summary |
-|---|---|
-| [trappist-1-b](../phase3/trappist-1-b.md) | airless (Ducrot 2025 confirmed) |
-| [trappist-1-c](../phase3/trappist-1-c.md) | airless / O₂-thin |
-| [trappist-1-d](../phase3/trappist-1-d.md) | thin atmosphere or airless |
-| [trappist-1-e](../phase3/trappist-1-e.md) | best habitable candidate (N₂/O₂ aquaplanet) |
-| [trappist-1-f](../phase3/trappist-1-f.md) | snowball |
-| [trappist-1-g](../phase3/trappist-1-g.md) | snowball |
-| [trappist-1-h](../phase3/trappist-1-h.md) | very tenuous |
+| Page | Scenario | Confidence |
+|---|---|---|
+| [trappist-1-b](../phase3/trappist-1-b.md) | airless ultramafic (JWST-confirmed) | high |
+| [trappist-1-c](../phase3/trappist-1-c.md) | thin O₂ over basalt | medium |
+| [trappist-1-d](../phase3/trappist-1-d.md) | thin atm + terminator H₂O ice | low |
+| [trappist-1-e](../phase3/trappist-1-e.md) | aquaplanet eyeball (best habitable) | high |
+| [trappist-1-f](../phase3/trappist-1-f.md) | eyeball aquaplanet (1 bar CO₂) | medium |
+| [trappist-1-g](../phase3/trappist-1-g.md) | full snowball | medium |
+| [trappist-1-h](../phase3/trappist-1-h.md) | frozen sub-Mars + patchy frost | low |
 
 ---
 
@@ -175,4 +176,5 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 *Auto-pulled from [log.md](log.md) — top 5 entries.*
 
-(Bootstrap not complete; log is empty.)
+1. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
+2. **2026-05-24 initialize** — wiki scaffold created

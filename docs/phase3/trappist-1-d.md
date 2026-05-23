@@ -1,4 +1,21 @@
-<!-- TRAPPIST-1 d Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "TRAPPIST-1 d"
+slug: trappist-1-d
+kopernicus_name: Trappist1d
+host_star: Trappist1
+cluster: system-trappist-1
+cluster_role: member
+sources: ["Agol 2021", "Piaulet 2025", "Turbet 2023", "Way 2025", "Turbet 2018", "Atri 2019"]
+related: [[trappist-1-c]], [[trappist-1-e]], [[trappist-1-f]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: low
+scenario: thin atmosphere (~0.01 bar) with terminator water-ice clouds
+tier: public
+---
+
 # TRAPPIST-1 d — Phase 3 Synthesis
 
 Pilot Phase 3 document for the NearStars KSP mod (drafted 2026-05-21).
@@ -362,3 +379,12 @@ it could refine the orbital parameters table above.
 - The 25 Sv/yr surface dose places d in Kerbalism's "high-radiation"
   bracket; crew habitation would need shielding equivalent to ~2 m of
   regolith.
+
+## Related
+
+- [trappist-1-c](trappist-1-c.md) — adjacent inner sibling; both have low-confidence atmosphere scenarios
+- [trappist-1-e](trappist-1-e.md) — habitable-zone reference; d sits at the inner HZ edge
+- [trappist-1-f](trappist-1-f.md) — outer sibling; both rely on Wolf 2017 / Turbet GCMs
+- [methodology](../reference/methodology.md) — Decisions schema and confidence rubric
+- [mod-reference](../reference/mod-reference.md) — downstream mods
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 shows d's mass −5% vs REX (close agreement)

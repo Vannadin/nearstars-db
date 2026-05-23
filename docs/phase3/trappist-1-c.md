@@ -1,4 +1,21 @@
-<!-- TRAPPIST-1 c Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "TRAPPIST-1 c"
+slug: trappist-1-c
+kopernicus_name: Trappist1c
+host_star: Trappist1
+cluster: system-trappist-1
+cluster_role: member
+sources: ["Agol 2021", "Zieba 2023", "Ducrot 2025", "Lincowski 2018", "Lincowski 2023", "Luger and Barnes 2015", "Acuña 2021", "Barr 2018", "Dobos 2019"]
+related: [[trappist-1-b]], [[trappist-1-d]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: medium
+scenario: thin O₂-dominated atmosphere (~0.1 bar) over dark basaltic surface
+tier: public
+---
+
 # TRAPPIST-1 c — Phase 3 Synthesis
 
 TRAPPIST-1 c is a 1.10 R⊕, 1.31 M⊕ rocky planet on a 2.42-day orbit
@@ -386,3 +403,12 @@ Notable items skipped:
   /violet rather than UV-dominant; cfg variant could render the
   UV-dominant emission as a faint glow if a wider rendering palette
   is supported.
+
+## Related
+
+- [trappist-1-b](trappist-1-b.md) — inner sibling, both candidates for the "no significant atmosphere" JWST cohort
+- [trappist-1-d](trappist-1-d.md) — adjacent outer sibling; thin-atmosphere scenario shares the cosmic-shoreline reasoning
+- [trappist-1-e](trappist-1-e.md) — full habitable-zone reference for the system
+- [methodology](../reference/methodology.md) — schema for Decisions table conventions and confidence labels
+- [mod-reference](../reference/mod-reference.md) — downstream KSP mods
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 covers TRAPPIST-1 mass/radius re-fits relative to REX
