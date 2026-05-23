@@ -26,6 +26,22 @@ docs/phase3/_papers/
 !.obsidian/graph.json
 !.obsidian/appearance.json
 
+# ============================================================
+# Mod archives — NEVER commit, NEVER push.
+# ============================================================
+# blackrack's EVE / Scatterer Early Access bundles are paid Patreon
+# content. Re-hosting them (or even tracking them in this public repo)
+# would violate his distribution terms and constitute copyright
+# infringement. Any EVE/Scatterer cfg/DLL/shader/asset sourced from
+# an EA bundle must live OUTSIDE this repo entirely — convention:
+# ~/Desktop/ksp-mod-refs/ . Field-level schema documentation derived
+# from those assets is OK to commit (factual reference), but raw
+# bundle contents are not.
+*.zip
+*.7z
+*.tar.gz
+*.rar
+
 
 
 
