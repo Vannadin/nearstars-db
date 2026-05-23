@@ -36,7 +36,7 @@
 |------|------|
 | RealSolarSystem | `FOR[RSSConfig]` |
 
-참고. RSS-Origin v1.x는 Sol을 지원하지 않습니다. Sol 지원이 포함된 v2는 개발 중이지만 아직 릴리스되지 않았습니다. §5.1 의 패치 템플릿은 추후 RSS 지원 시 자연스럽게 확장될 수 있도록 설계되어 있습니다.
+참고. [RSS-Origin 2](https://github.com/CharonSSS/RSS-Origin-2) (CharonSSS, v1.0.0 2026-05-21 릴리스) 는 Sol 지원이 추가된 RSS-Origin v1.x 의 후속작이며, Sol 기반 환경에서 사용하는 정식 소행성/혜성/왜소행성 애드온입니다. v1.x 가 위치한 `CharonSSS/RSS-Origin` 과는 별도 저장소입니다. §5.1 의 패치 템플릿은 추후 RSS 지원 시 자연스럽게 확장될 수 있도록 설계되어 있습니다.
 
 ---
 
@@ -47,7 +47,7 @@
 | 엔진 | 최대 범위 | 출처 |
 |------|----------|------|
 | Kopernicus (렌더링 + SOI) | ~50 ly | REX 개발자 |
-| Principia (중력 섭동체) | ~80 ly | RSS-Origin 개발자 |
+| Principia (중력 섭동체) | ~80 ly | RSS-Origin 2 개발자 |
 
 ~50 ly를 초과하는 Kopernicus 천체는 맵 뷰 오류, 렌더러의 부동소수점 결함, 또는 엔진 충돌이 발생할 수 있습니다. 이는 엄격한 제약 조건으로, 모든 Kopernicus 천체는 반드시 50 ly 이내에 있어야 합니다.
 
@@ -79,16 +79,20 @@ Principia는 KSP의 렌더링 제한을 받지 않는 별도의 메커니즘을 
 
 ## 7. flightGlobalsIndex 할당
 
-Sol-Configs **및** RSS-Origin과 충돌하지 않아야 합니다. NearStars는 1000+ 구간을 사용하며 시스템당 100개 인덱스를 배정합니다.
+Sol-Configs (아래 표의 NAIF SPK-style ID 체계) 및 RSS-Origin v1.x 와 충돌하지 않아야 합니다. NearStars 는 1000+ 구간을 시스템당 100개 인덱스로 사용하며, 이는 Sol-Configs 의 행성 계열 (≤916) 과 소행성 계열 (≥9000) 사이의 빈 구간에 위치합니다.
 
 | 범위 | 소유자 |
 |------|--------|
 | 0–99 | 기본 KSP / RealSolarSystem (KSP-RO/RealSolarSystem은 1–25, 50, 60, 91–95 사용) |
-| 100–199 | Sol-Configs (RSS-Reborn) |
-| 1000–1099 | NearStars — 첫 번째 항성계 (미정) |
+| `10`, `100`–`916` | Sol-Configs 의 행성 및 위성 — NAIF SPK-style ID 체계 (Sol=`10`; Mercury=`100`; Venus=`200`; Earth=`300`, Luna=`301`; Mars=`400`, Phobos=`401`, Deimos=`402`; Jupiter=`500`, Galilean 위성=`501–504`, Amalthea=`505`, Himalia=`514`; Saturn=`600`, 주요 위성=`601–609`, Phoebe=`615`; Uranus=`700`, 주요 위성=`701–705`, Sycorax=`715`; Neptune=`800`, Triton=`801`, Nereid=`802`, Proteus=`808`; 명왕성계=`901–916`) |
+| `9xxx`–`9xxxxxx` | Sol-Configs 의 소행성 — `9` + 소행성 번호 (Ida=`9243`, Dactyl=`92431`, Pallas=`902`, Ryugu=`9162173`) |
+| `10xxxxxx`+ | Sol-Configs 의 TNO / 왜소행성 (Eris=`10134340`, Arrokoth=`10486958`) |
+| 1000–1099 | NearStars — 첫 번째 항성계 (미정). Sol-Configs 의 행성계 ID (`≤916`) 와 소행성 ID (`≥9000`) 사이의 빈 `1000–8999` 구간에 위치 |
 | 1100–1199 | NearStars — 두 번째 항성계 (미정) |
 | 1200–1299 | NearStars — 세 번째 항성계 (미정) |
 | 1300+ | NearStars — 이후 시스템 (시스템당 +100) |
+
+참고. RSS-Origin 2 자체는 `flightGlobalsIndex` 값을 명시 부여하지 않고 Kopernicus 자동 할당에 맡깁니다. NearStars 의 1000+ 구간은 향후 다른 애드온이 명시 부여를 도입할 경우를 대비한 마진이며, 현 시점 v2 와의 충돌과는 별개입니다.
 
 각 100-인덱스 블록 내에서는 천체당 1씩 증가합니다. 별, 행성, 위성, 질량 중심은 같은 블록을 공유합니다.
 

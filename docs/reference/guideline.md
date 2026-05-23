@@ -36,7 +36,7 @@ The mod adds new star systems; it does not touch or replace existing Sol bodies.
 |-----|-----|
 | RealSolarSystem | `FOR[RSSConfig]` |
 
-Note: RSS-Origin v1.x does not support Sol. v2 with Sol support is in development but unreleased. The patch templates in §5.1 are designed to extend cleanly to RSS once RSS support is implemented.
+Note: [RSS-Origin 2](https://github.com/CharonSSS/RSS-Origin-2) (CharonSSS, v1.0.0 released 2026-05-21) is the Sol-compatible successor of RSS-Origin v1.x and is now the canonical asteroid/comet/dwarf-planet add-on for Sol-based installs. It is a separate repository from `CharonSSS/RSS-Origin` (v1.x, no Sol support). The patch templates in §5.1 are designed to extend cleanly to RSS once RSS support is implemented.
 
 ---
 
@@ -47,7 +47,7 @@ Note: RSS-Origin v1.x does not support Sol. v2 with Sol support is in developmen
 | Engine | Max range | Source |
 |--------|-----------|--------|
 | Kopernicus (rendering + SOI) | ~50 ly | REX developer |
-| Principia (gravitational perturber) | ~80 ly | RSS-Origin developer |
+| Principia (gravitational perturber) | ~80 ly | RSS-Origin 2 developer |
 
 Kopernicus bodies beyond ~50 ly risk map-view failures, floating-point glitches in the renderer, or engine crashes. This is a hard constraint — all Kopernicus bodies must be within 50 ly.
 
@@ -79,17 +79,26 @@ This document keeps project-level scope (targets, data sources, phases, index al
 
 ## 7. flightGlobalsIndex Allocation
 
-Must not collide with Sol-Configs **or** RSS-Origin. NearStars uses
-1000+ with 100 indices per system.
+Must not collide with Sol-Configs (NAIF SPK-style IDs, see table below)
+or RSS-Origin v1.x. NearStars uses 1000+ with 100 indices per system,
+which sits in the empty band between Sol-Configs' planetary IDs (≤916)
+and its asteroid IDs (≥9000).
 
 | Range | Owner |
 |-------|-------|
 | 0–99 | Stock KSP / RealSolarSystem (KSP-RO/RealSolarSystem occupies 1–25, 50, 60, 91–95) |
-| 100–199 | Sol-Configs (RSS-Reborn) |
-| 1000–1099 | NearStars — first star system (TBD) |
+| `10`, `100`–`916` | Sol-Configs planets and moons — NAIF SPK-style IDs (Sol=`10`; Mercury=`100`; Venus=`200`; Earth=`300`, Luna=`301`; Mars=`400`, Phobos=`401`, Deimos=`402`; Jupiter=`500`, Galileans=`501–504`, Amalthea=`505`, Himalia=`514`; Saturn=`600`, major moons=`601–609`, Phoebe=`615`; Uranus=`700`, major moons=`701–705`, Sycorax=`715`; Neptune=`800`, Triton=`801`, Nereid=`802`, Proteus=`808`; Pluto system=`901–916`) |
+| `9xxx`–`9xxxxxx` | Sol-Configs asteroids — `9` + asteroid number (Ida=`9243`, Dactyl=`92431`, Pallas=`902`, Ryugu=`9162173`) |
+| `10xxxxxx`+ | Sol-Configs TNOs / dwarf planets (Eris=`10134340`, Arrokoth=`10486958`) |
+| 1000–1099 | NearStars — first star system (TBD). Sits in the empty `1000–8999` band between Sol-Configs planet IDs (`≤916`) and asteroid IDs (`≥9000`). |
 | 1100–1199 | NearStars — second star system (TBD) |
 | 1200–1299 | NearStars — third star system (TBD) |
 | 1300+ | NearStars — further systems (+100 per system) |
+
+Note: RSS-Origin 2 itself does not assign explicit `flightGlobalsIndex`
+values — it relies on Kopernicus auto-assignment. The NearStars 1000+
+block is therefore a buffer against future explicit assignments by any
+add-on, not a collision with v2 as shipped today.
 
 Within each 100-index block, increment by 1 per body. Stars, planets,
 moons, and barycenters share the block.

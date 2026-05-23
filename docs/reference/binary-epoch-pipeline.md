@@ -1,8 +1,8 @@
 # Binary / Multiple Star Epoch Pipeline Reference
 
 > Source: research across mockingbirdnest/Principia, RSS-Reborn/Sol-Configs,
-> CharonSSS/RSS-Origin, USNO/GSU orb6 catalog, Gaia DR3 NSS docs, Bond+ 2017,
-> Akeson+ 2021, Kervella+ 2017.
+> CharonSSS/RSS-Origin-2 (v1.0.0, 2026-05-21), USNO/GSU orb6 catalog,
+> Gaia DR3 NSS docs, Bond+ 2017, Akeson+ 2021, Kervella+ 2017.
 > Purpose: Compute ICRF Cartesian state vectors at `solar_system_epoch = JD2433282.5`
 > (1950-01-01 TDB) for binary/triple/multiple star systems that have no JPL HORIZONS
 > data. These vectors feed Principia's `principia_initial_state` for NearStars.
@@ -19,7 +19,7 @@ treats motion as a straight line. The bodies have completed dozens to thousands
 of mutual orbits in that gap, so the linear estimate puts them at random
 positions on the ellipse.
 
-### Sol/RSS/RSS-Origin pattern (the correct way)
+### Sol/RSS/RSS-Origin 2 pattern (the correct way)
 
 | Epoch | JD | Calendar | Role |
 |---|---|---|---|
@@ -68,10 +68,11 @@ Position-vector difference = **19,595 km** (matches the known Pluto-Charon
 semi-major axis ~19,591 km). Relative velocity 0.223 km/s — consistent with
 the circular orbital speed at that separation.
 
-RSS-Origin binary asteroids (Patroclus-Menoetius, Logos-Zoe, Lempo triple,
-Ceto-Phorcys, Eurybates-Queta) all follow the same pattern: each component
-gets its own `body { }` block with absolute ICRF Cartesian state at
-`JD2433282.5`. There is no per-binary `epoch` override.
+RSS-Origin 2 binary asteroids (617-Patroclus + Menoetius, 47171-Lempo +
+Paha + Hiisi triple, 58534-Logos + Zoe, 65489-Ceto + Phorcys,
+3548-Eurybates + Queta, 243-Ida + Dactyl) all follow the same pattern:
+each component gets its own `body { }` block with absolute ICRF Cartesian
+state at `JD2433282.5`. There is no per-binary `epoch` override.
 
 ---
 
@@ -831,7 +832,7 @@ system bodies. No interpolation, no n-body back-propagation: the orbital fit
 
 - mockingbirdnest/Principia repo, `astronomy/sol_initial_state_jd_2433282_500000000.cfg`
 - RSS-Reborn/Sol-Configs: `Patches/Principia/Real_Sol-InitialState.cfg`
-- CharonSSS/RSS-Origin: `principia@*.cfg` (Patroclus, Lempo, Logos, Ceto, Eurybates, Ida)
+- CharonSSS/RSS-Origin-2 (v1.0.0): per-body `<Body>_Principia.cfg` files (Patroclus, Lempo + Paha + Hiisi, Logos + Zoe, Ceto + Phorcys, Eurybates + Queta, Ida + Dactyl) under `GameData/RSSOrigin2/MinorPlanets/.../`
 - USNO Sixth Catalog of Orbits of Visual Binary Stars: `http://www.astro.gsu.edu/wds/orb6.html`
   - Format: `orb6format.txt`. Data: `orb6orbits.txt`. VizieR: `B/orb6`.
 - Gaia DR3 NSS datamodel:

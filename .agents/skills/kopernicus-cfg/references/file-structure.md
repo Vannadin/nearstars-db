@@ -48,13 +48,18 @@ GameData/NearStars-Textures/PluginData/
 
 ## flightGlobalsIndex reservation
 
-NearStars uses **1000+, with 100 indices per system** to stay clear of
-both Sol-Configs and RSS-Origin.
+NearStars uses **1000+, with 100 indices per system**, which sits in
+the empty band between Sol-Configs' planetary IDs (≤916) and its
+asteroid IDs (≥9000). RSS-Origin 2 (CharonSSS, v1.0.0 2026-05-21)
+does not assign explicit `flightGlobalsIndex` values at all — it
+relies on Kopernicus auto-assignment.
 
 | Range | Owner |
 |-------|-------|
 | 0–99 | Stock KSP / RealSolarSystem (KSP-RO/RealSolarSystem occupies 1–25, 50, 60, 91–95) |
-| 100–199 | Sol-Configs (RSS-Reborn) |
+| `10`, `100`–`916` | Sol-Configs planets and moons (NAIF SPK-style IDs: Sol=`10`, Mercury=`100`, …, Neptune=`800`, Pluto system=`901–916`) |
+| `9xxx`–`9xxxxxx` | Sol-Configs asteroids (`9` + asteroid number, e.g. Ida=`9243`) |
+| `10xxxxxx`+ | Sol-Configs TNOs / dwarf planets (Eris=`10134340`) |
 | 1000–1099 | NearStars (Proxima Centauri system) |
 | 1100–1199 | NearStars (Alpha Centauri system) |
 | 1200–1299 | NearStars (Barnard's Star) |
