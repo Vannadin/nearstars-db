@@ -34,13 +34,30 @@ docs/phase3/_papers/
 # would violate his distribution terms and constitute copyright
 # infringement. Any EVE/Scatterer cfg/DLL/shader/asset sourced from
 # an EA bundle must live OUTSIDE this repo entirely — convention:
-# ~/Desktop/ksp-mod-refs/ . Field-level schema documentation derived
-# from those assets is OK to commit (factual reference), but raw
-# bundle contents are not.
+# ~/Desktop/ksp-mod-refs/ .
 *.zip
 *.7z
 *.tar.gz
 *.rar
+
+# ============================================================
+# Scatterer / EVE / Volumetric-Clouds skills — local-only.
+# ============================================================
+# Decided 2026-05-23: any skill whose schema or behavior is derived
+# from blackrack's Patreon Early Access bundle (Scatterer-EA Scatterer.dll,
+# EVE V5 Raymarched Volumetrics, etc.) stays entirely local. Even
+# "factual" field-schema documentation can leak EA-only knowledge
+# that subscribers paid for, so we don't try to slice the line —
+# the whole workspace and the eventual live skill never enter git.
+# Future eve-cfg / volumetrics-cfg / parallax-cfg-if-EA workspaces
+# fall under the same rule.
+.agents/skills/scatterer-cfg-workspace/
+.agents/skills/scatterer-cfg/
+.agents/skills/eve-cfg-workspace/
+.agents/skills/eve-cfg/
+.agents/skills/volumetrics-cfg-workspace/
+.agents/skills/volumetrics-cfg/
+.agents/skills/raymarched-*/
 
 
 
