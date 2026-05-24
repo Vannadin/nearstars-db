@@ -1,3 +1,19 @@
+---
+type: concept
+title: "Binary / Multiple Star Epoch Pipeline Reference"
+slug: binary-epoch-pipeline
+cluster: methodology
+cluster_role: member
+secondary_cluster: physics-epoch
+secondary_cluster_role: hub
+sources: ["Pourbaix and Boffin 2016", "Akeson 2021", "Bond 2017", "Kervella 2017", "Gaia DR3 NSS docs", "USNO orb6 catalog", "RSS-Origin-2 v1.0.0"]
+related: [[methodology]], [[adding_stars]], [[principia-cfg-reference]], [[alpha-centauri-a]], [[alpha-centauri-b]], [[proxima-cen]], [[stellarium-binary-orbit-comparison]]
+created: 2026-05-19
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Binary / Multiple Star Epoch Pipeline Reference
 
 > Source: research across mockingbirdnest/Principia, RSS-Reborn/Sol-Configs,
@@ -846,3 +862,12 @@ system bodies. No interpolation, no n-body back-propagation: the orbital fit
 - orbitize reference implementation: `http://orbitize.info/en/latest/_modules/orbitize/kepler.html`
 - PyAstronomy MarkleyKESolver:
   `https://pyastronomy.readthedocs.io/en/latest/pyaslDoc/aslDoc/keplerOrbitAPI.html`
+
+## Related
+
+- [methodology](methodology.md) — schema source; this doc fills in the multi-star section's mathematical detail
+- [principia-cfg-reference](principia-cfg-reference.md) — the Cartesian state vectors this doc produces feed `principia_initial_state` body blocks
+- [adding_stars](adding_stars.md) — operational entry-point for adding a binary system
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — §9 worked example
+- [proxima-cen](../phase3/proxima-cen.md) — §6 static-CPM treatment (the AB↔Proxima outer orbit)
+- [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) — independent implementation cross-check; Hilditch/Pourbaix convention match confirmed

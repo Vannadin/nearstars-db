@@ -1,3 +1,18 @@
+---
+type: synthesis
+title: "REX vs NearStars Data Comparison"
+slug: rex-data-comparison
+cluster: comparisons
+cluster_role: member
+status: promoted
+sources: ["Real-Exoplanets v0.9.6 (andikisare)", "Agol 2021", "Greene 2023", "Ducrot 2024", "Ducrot 2025"]
+related: [[methodology]], [[guideline]], [[trappist-1-b]], [[trappist-1-c]], [[trappist-1-d]], [[trappist-1-e]], [[trappist-1-f]], [[trappist-1-g]], [[trappist-1-h]], [[proxima-cen-b]], [[alpha-centauri-a]], [[alpha-centauri-b]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # REX vs NearStars Data Comparison
 
 > Source: Real Exoplanets mod v0.9.6 (commit
@@ -486,3 +501,11 @@ Phase 3 draws directly on seven landmark JWST papers.
 > **Tidal heating: REX had nothing; Phase 3 quantifies b as an
 > exo-Io analog.** Direct consequence of the Bolmont 2026 upward
 > revision using JWST nightside constraints.
+
+## Related
+
+- [methodology](methodology.md) — schema source NearStars uses (REX's prose attribution is the contrast)
+- [guideline](guideline.md) — NearStars's project guideline cites REX as predecessor (§1)
+- [trappist-1-b](../phase3/trappist-1-b.md), [trappist-1-c](../phase3/trappist-1-c.md), [trappist-1-d](../phase3/trappist-1-d.md), [trappist-1-e](../phase3/trappist-1-e.md), [trappist-1-f](../phase3/trappist-1-f.md), [trappist-1-g](../phase3/trappist-1-g.md), [trappist-1-h](../phase3/trappist-1-h.md) — §10 quantifies the TRAPPIST-1 Phase 3 gap vs REX
+- [proxima-cen-b](../phase3/proxima-cen-b.md) — §6 covers Proxima planet roster changes
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — §3–5 covers α Cen stellar parameters + topology gap

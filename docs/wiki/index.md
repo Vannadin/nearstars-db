@@ -24,24 +24,24 @@ pages. Recent activity in [log](log.md). Session context in [hot](hot.md).
 
 ---
 
-## Cluster: methodology
+## Cluster: methodology ✓ (Phase 2 ingested 2026-05-24)
 
 > The DB-side schema, fetch pipeline, multi-star epoch resolution,
 > and curation workflow.
 
 **Hub:** [methodology](../reference/methodology.md) — schema + epoch rules
 
-| Page | Summary |
-|---|---|
-| [adding_stars](../reference/adding_stars.md) | Add a new component to the pipeline |
-| [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) | Kepler → ICRS for multi-star systems |
-| [data-sources](../reference/data-sources.md) | External catalog attribution policy |
-| [archive_issues](../reference/archive_issues.md) | Upstream catalog defects (NASA Archive, TEPCat) |
-| [tools](../reference/tools.md) | Project-wide tool index by purpose |
-| [mod-reference](../reference/mod-reference.md) | KSP mod install reference |
-| [mod-release-layout](../reference/mod-release-layout.md) | Mod-release repo conventions |
-| [guideline](../reference/guideline.md) | Project-level scope + phases |
-| [rex-data-comparison](../reference/rex-data-comparison.md) | REX v0.9.6 vs NearStars |
+| Page | Role | Summary |
+|---|---|---|
+| [methodology](../reference/methodology.md) | hub | DB schema, epoch handling, source recording, data-sources index |
+| [adding_stars](../reference/adding_stars.md) | member | Add a new component to the pipeline |
+| [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) | member + physics-epoch hub | Kepler → ICRS for multi-star systems |
+| [data-sources](../reference/data-sources.md) | member | External catalog attribution policy |
+| [archive_issues](../reference/archive_issues.md) | member | Upstream catalog defects (NASA Archive, TEPCat) |
+| [tools](../reference/tools.md) | member | Project-wide tool index by purpose |
+| [mod-reference](../reference/mod-reference.md) | member | KSP mod install reference |
+| [mod-release-layout](../reference/mod-release-layout.md) | member | Mod-release repo conventions |
+| [guideline](../reference/guideline.md) | member | Project-level scope + phases |
 
 ---
 
@@ -153,14 +153,14 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 ---
 
-## Cluster: comparisons
+## Cluster: comparisons ✓ (Phase 2 ingested 2026-05-24)
 
-> External cross-validation and historical analyses.
+> External cross-validation and historical analyses (type=synthesis).
 
-| Page | Summary |
-|---|---|
-| [rex-data-comparison](../reference/rex-data-comparison.md) | REX v0.9.6 baseline comparison |
-| [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) | Stellarium multi-star convention check |
+| Page | Status | Summary |
+|---|---|---|
+| [rex-data-comparison](../reference/rex-data-comparison.md) | promoted | REX v0.9.6 baseline comparison; §10 quantifies Phase 3 → REX delta on TRAPPIST-1 |
+| [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) | active | Stellarium multi-star convention check (Hilditch/Pourbaix match confirmed) |
 
 ---
 
@@ -178,6 +178,7 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 *Auto-pulled from [log.md](log.md) — top 5 entries.*
 
-1. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages: 3 stars + 2 planets)
-2. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
-3. **2026-05-24 initialize** — wiki scaffold created
+1. **2026-05-24 ingest** — methodology concept cluster + comparisons cluster (11 pages: 9 concept + 2 synthesis)
+2. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages: 3 stars + 2 planets)
+3. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
+4. **2026-05-24 initialize** — wiki scaffold created

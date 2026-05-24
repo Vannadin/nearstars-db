@@ -1,3 +1,17 @@
+---
+type: concept
+title: "Tools — NearStars"
+slug: tools
+cluster: methodology
+cluster_role: member
+sources: []
+related: [[methodology]], [[adding_stars]], [[mod-reference]], [[guideline]]
+created: 2026-05-22
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Tools — NearStars
 
 The project has grown to roughly thirty scripts plus several agent skills spread across multiple directories. This document indexes them **by purpose**, not by location. Each section is one logical unit of work — fetch data, build a viewer, generate mod cfg — and lists every file that participates.
@@ -201,3 +215,10 @@ target_list.json
 [9] nearstars-add-star — procedure that drives the whole chain for a new star
 [10] Dev helpers — orthogonal to the chain
 ```
+
+## Related
+
+- [methodology](methodology.md) — cluster hub; the data engine and validation tools document this methodology
+- [adding_stars](adding_stars.md) — operational sequence using the script index here
+- [mod-reference](mod-reference.md) — downstream mod-side tools
+- [guideline](guideline.md) — project-level context (phases, distance limits) for the tools

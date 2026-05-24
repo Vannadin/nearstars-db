@@ -1,3 +1,17 @@
+---
+type: concept
+title: "NASA Exoplanet Archive Data Issues"
+slug: archive_issues
+cluster: methodology
+cluster_role: member
+sources: ["NASA Exoplanet Archive pscomppars", "Gaia DR3 TAP", "SIMBAD TAP", "TEPCat allplanets-csv"]
+related: [[methodology]], [[data-sources]], [[adding_stars]]
+created: 2026-05-16
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # NASA Exoplanet Archive Data Issues
 
 Found during cross-validation against SIMBAD/Gaia DR3 (2026-05-16).
@@ -113,3 +127,9 @@ Cross-validated each returned system against:
 
 Systems where gaia_dr3_id was NULL fell back to SIMBAD astrometry,
 which revealed the distance discrepancies for GJ 411 and GJ 273.
+
+## Related
+
+- [methodology](methodology.md) — cluster hub; cross-validation procedure that surfaced these issues
+- [data-sources](data-sources.md) — the catalogs where these issues live (NASA Archive, TEPCat)
+- [adding_stars](adding_stars.md) — adding-star workflow encounters these issues at fetch time

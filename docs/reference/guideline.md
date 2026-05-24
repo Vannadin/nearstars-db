@@ -1,3 +1,17 @@
+---
+type: concept
+title: "NearStars Project Guideline"
+slug: guideline
+cluster: methodology
+cluster_role: member
+sources: ["RSS-Origin 2 v1.0.0", "REX v0.9.6 (historical reference)", "Sol-Configs"]
+related: [[methodology]], [[mod-reference]], [[mod-release-layout]], [[data-sources]], [[rex-data-comparison]]
+created: 2026-05-16
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Nearby Star Systems KSP Mod — Project Guideline
 
 **Goal:** Add nearby star systems to KSP 1.12.x on top of Sol-Configs (real solar system). RSS compatibility is a planned future target.
@@ -154,3 +168,11 @@ All orbital parameters and physical constants must come from real observational 
 - [ ] RSS EVE version: V3 (free) vs V5 (Patreon) — whether to support both or V5 only like Sol
 - [ ] Principia compatibility: requires separate gravity model cfgs per scale variant; Principia-only entries for 50–80 ly stars are possible (no Kopernicus body needed)
 - [ ] Sol Quarter scale support — planned, lower priority. `principia-cfg` skill MVP ships Sol Real scale only; Quarter coords are deferred (different `solar_system_epoch` ⇒ separate cfg files).
+
+## Related
+
+- [methodology](methodology.md) — cluster hub; DB-side workflow
+- [mod-reference](mod-reference.md) — downstream mods and dependency tiers
+- [mod-release-layout](mod-release-layout.md) — repo layout for the mod-release side
+- [data-sources](data-sources.md) — citation requirements for external data
+- [rex-data-comparison](rex-data-comparison.md) — REX is cited as the spiritual predecessor in §1

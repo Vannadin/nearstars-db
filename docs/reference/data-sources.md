@@ -1,4 +1,17 @@
-<!-- NearStars 외부 데이터 출처와 KSP 모드 attribution 정책 -->
+---
+type: concept
+title: "Data Sources and Attribution"
+slug: data-sources
+cluster: methodology
+cluster_role: member
+sources: ["NASA Exoplanet Archive Akeson 2013", "Gaia Collaboration 2016", "Gaia Collaboration 2023", "Wenger 2000 SIMBAD", "Southworth 2011 TEPCat", "Buchschacher and Alesina 2019 DACE"]
+related: [[methodology]], [[mod-reference]], [[archive_issues]], [[guideline]], [[rex-data-comparison]]
+created: 2026-05-19
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Data Sources and Attribution
 
 > **Perspective.** This document is the **attribution / license**
@@ -168,3 +181,11 @@ When NearStars cross-validation discovers a defect in any of the data
 sources above, the issue is recorded in
 [`archive_issues.md`](archive_issues.md) and, when appropriate, reported
 to the catalog maintainer using the contact in that file.
+
+## Related
+
+- [methodology](methodology.md) — cluster hub; data-sources documents the citations this methodology requires
+- [archive_issues](archive_issues.md) — defects discovered in the sources cited here
+- [mod-reference](mod-reference.md) — downstream mods (some shared attribution path: Kopernicus, Principia, Sol-Configs)
+- [guideline](guideline.md) — project-level scope referencing these sources
+- [rex-data-comparison](rex-data-comparison.md) — REX's license-declaration discrepancy noted in §1

@@ -1,3 +1,17 @@
+---
+type: concept
+title: "Adding Stars to the NearStars Database"
+slug: adding_stars
+cluster: methodology
+cluster_role: member
+sources: ["Gaia DR3 docs", "SIMBAD docs", "NASA Exoplanet Archive docs", "Stellarium Web API"]
+related: [[methodology]], [[binary-epoch-pipeline]], [[data-sources]], [[archive_issues]], [[tools]]
+created: 2026-05-16
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Adding Stars to the NearStars Database
 
 How to add a new star (or star component) to the pipeline.
@@ -247,3 +261,11 @@ when needed:
 | SIMBAD TAP | simbad.u-strasbg.fr/simbad/sim-tap | Bright-star fallback, mesDiameter, spectype, Teff |
 | NASA Exoplanet Archive | exoplanetarchive.ipac.caltech.edu/TAP | Planet data |
 | VizieR WDS TAP | tapvizier.cds.unistra.fr | Binary cross-validation (binary_orbits only) |
+
+## Related
+
+- [methodology](methodology.md) — cluster hub; schema definition that this workflow operates on
+- [binary-epoch-pipeline](binary-epoch-pipeline.md) — the binary_orbits.json side of "add a binary system"
+- [data-sources](data-sources.md) — external catalogs the fetch scripts hit
+- [archive_issues](archive_issues.md) — known defects in the upstream sources this workflow relies on
+- [tools](tools.md) — script index (the fetch scripts in Step 5 are documented there)

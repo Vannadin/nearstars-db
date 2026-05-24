@@ -1,7 +1,16 @@
 ---
-title: Stellarium vs NearStars binary-orbit pipeline comparison
+type: synthesis
+title: "Stellarium vs NearStars binary-orbit pipeline comparison"
+slug: stellarium-binary-orbit-comparison
+cluster: comparisons
+cluster_role: member
 status: active
+sources: ["Stellarium master 3efa1406", "USNO orb6 catalog", "Hilditch 2001", "Pourbaix 1995"]
+related: [[binary-epoch-pipeline]], [[methodology]], [[alpha-centauri-a]], [[alpha-centauri-b]]
 created: 2026-05-21
+updated: 2026-05-24
+confidence: high
+tier: public
 ---
 
 # Stellarium vs NearStars binary-orbit pipeline comparison
@@ -355,3 +364,9 @@ Previous §7 entries remain. New open question from §8:
   Hartkopf et al. ORB6 grade-4 solution or Malkov+ 2012. Defer to a
   `phase2/` data-refresh task; flagged here rather than implementing
   in this research note.
+
+## Related
+
+- [binary-epoch-pipeline](../docs/reference/binary-epoch-pipeline.md) — the NearStars pipeline being compared (this is the validation cross-check)
+- [methodology](../docs/reference/methodology.md) — the schema layer this comparison validates
+- [alpha-centauri-a](../docs/phase3/alpha-centauri-a.md), [alpha-centauri-b](../docs/phase3/alpha-centauri-b.md) — the canonical worked example whose orbit Stellarium and NearStars both encode

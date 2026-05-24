@@ -17,6 +17,32 @@ followed by structured body.
 
 ---
 
+## [2026-05-24] ingest | methodology concept cluster + comparisons cluster (11 pages)
+
+Source: `docs/reference/*.md` (9 concept pages) + `docs/reference/rex-data-comparison.md` + `plans/stellarium-binary-orbit-comparison.md` (2 synthesis pages)
+Pages updated:
+  - `docs/reference/methodology.md` (HUB; cluster_role: hub; type=concept)
+  - `docs/reference/adding_stars.md` (member)
+  - `docs/reference/binary-epoch-pipeline.md` (member of methodology; secondary_cluster: physics-epoch hub)
+  - `docs/reference/data-sources.md` (member; replaces existing Korean HTML header)
+  - `docs/reference/archive_issues.md` (member)
+  - `docs/reference/tools.md` (member)
+  - `docs/reference/mod-reference.md` (member)
+  - `docs/reference/mod-release-layout.md` (member)
+  - `docs/reference/guideline.md` (member)
+  - `docs/reference/rex-data-comparison.md` (type=synthesis; cluster=comparisons; status: promoted)
+  - `plans/stellarium-binary-orbit-comparison.md` (type=synthesis; cluster=comparisons; existing frontmatter extended)
+Contradictions flagged: none
+Tier: public
+
+Notes:
+- methodology.md gets `cluster_role: hub` and its `## Related` lists all 8 cluster members + cross-cluster pointers (principia-cfg-reference, rex-data-comparison).
+- binary-epoch-pipeline.md declares dual cluster membership: `methodology` (member) + `physics-epoch` (hub for the multi-star Kepler→ICRS math). First test of secondary_cluster fields.
+- Cross-cluster links materialized:
+  - methodology cluster ↔ system-trappist-1, system-alpha-cen (entity clusters cite methodology/binary-epoch-pipeline)
+  - comparisons cluster ↔ entity clusters (rex-data-comparison.related includes all 7 TRAPPIST + 2 α Cen + Proxima)
+- Skipped: principia-cfg-reference (defer to mod-principia cluster batch), kopernicus-cfg/firefly-cfg SKILL.md (defer to skill-cluster batch), plans/_template.md (template, not content), plans/README.md (meta-doc), plans/rex-data-comparison.md (already a stub redirect to docs/reference/).
+
 ## [2026-05-24] ingest | system-alpha-cen cluster (5 entity pages)
 
 Source: existing `docs/phase3/{alpha-centauri-a,alpha-centauri-b,proxima-cen,proxima-cen-b,proxima-cen-d}.md`

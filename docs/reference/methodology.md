@@ -1,3 +1,18 @@
+---
+type: concept
+title: "Stellar System Data Research Methodology"
+slug: methodology
+aliases: [methodology, db-schema, db-methodology]
+cluster: methodology
+cluster_role: hub
+sources: ["Butkevich and Lindegren 2014", "ESA SP-1200 1997 Hipparcos", "Pourbaix 2002", "Hilditch 2001"]
+related: [[adding_stars]], [[binary-epoch-pipeline]], [[data-sources]], [[archive_issues]], [[tools]], [[mod-reference]], [[mod-release-layout]], [[guideline]], [[principia-cfg-reference]], [[rex-data-comparison]]
+created: 2026-05-16
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Stellar System Data Research Methodology
 
 This document defines the workflow for building a structured JSON database of
@@ -958,3 +973,16 @@ The following are handled in separate sessions or agents, not here:
 - Visual and art parameters (atmosphere, terrain, Scatterer, EVE)
 - Community vote on which systems to include
 - Decision on interstellar distance scaling (see Known Issues above)
+
+## Related
+
+- [adding_stars](adding_stars.md) — operational workflow for adding a new component to the pipeline
+- [binary-epoch-pipeline](binary-epoch-pipeline.md) — full math + worked examples for multi-star Kepler→ICRS (α Cen AB worked example in §9)
+- [data-sources](data-sources.md) — external catalog citations + attribution policy
+- [archive_issues](archive_issues.md) — upstream catalog defects discovered during cross-validation
+- [tools](tools.md) — project-wide tool index by purpose
+- [mod-reference](mod-reference.md) — KSP mod install reference (downstream consumers)
+- [mod-release-layout](mod-release-layout.md) — mod-release repo conventions
+- [guideline](guideline.md) — project-level scope, phases, distance limits
+- [principia-cfg-reference](principia-cfg-reference.md) — Principia cfg API (downstream of the methodology epoch handling)
+- [rex-data-comparison](rex-data-comparison.md) — REX v0.9.6 vs NearStars (validates methodology choices)

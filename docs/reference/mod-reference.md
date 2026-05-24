@@ -1,3 +1,17 @@
+---
+type: concept
+title: "NearStars Mod Reference"
+slug: mod-reference
+cluster: methodology
+cluster_role: member
+sources: ["Kopernicus", "Sol-Configs", "Principia", "Parallax Continued", "EVE Volumetrics", "Scatterer", "Firefly"]
+related: [[methodology]], [[mod-release-layout]], [[data-sources]], [[guideline]], [[principia-cfg-reference]]
+created: 2026-05-20
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # NearStars — Mod Reference
 
 > **Perspective.** This document is the **KSP mod install reference**:
@@ -71,3 +85,11 @@
 |------|---------|
 | [SPACEMAN9813/Firefly-Planet-Pack-Configs](https://github.com/SPACEMAN9813/Firefly-Planet-Pack-Configs) | Firefly cfg examples from various planet packs |
 | [OneSaltyPringle/OPM-Parallax](https://github.com/OneSaltyPringle/OPM-Parallax) | Parallax Continued cfg examples from OPM |
+
+## Related
+
+- [methodology](methodology.md) — cluster hub
+- [mod-release-layout](mod-release-layout.md) — repo layout that consumes these mods
+- [data-sources](data-sources.md) — license/attribution side of the mods referenced here (Kopernicus, Principia, Sol-Configs)
+- [guideline](guideline.md) — project-level scope (which mods are required vs optional)
+- [principia-cfg-reference](principia-cfg-reference.md) — Principia mod's cfg API
