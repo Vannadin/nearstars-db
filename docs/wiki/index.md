@@ -135,19 +135,21 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 ---
 
-## Cluster: system-alpha-cen
+## Cluster: system-alpha-cen ✓ (Phase 2 ingested 2026-05-24)
 
 > Alpha Centauri triple system: A, B, Proxima + Proxima's planets.
+> α Cen AB is the canonical worked example of the multi-star
+> Kepler→ICRS pipeline ([binary-epoch-pipeline §9](../reference/binary-epoch-pipeline.md)).
 
 **Hub:** `phase3/alpha-cen-proxima-system/` workspace
 
-| Page | Summary |
-|---|---|
-| [alpha-centauri-a](../phase3/alpha-centauri-a.md) | G2V primary |
-| [alpha-centauri-b](../phase3/alpha-centauri-b.md) | K1V companion |
-| [proxima-cen](../phase3/proxima-cen.md) | M5.5V third component |
-| [proxima-cen-b](../phase3/proxima-cen-b.md) | HZ rocky planet |
-| [proxima-cen-d](../phase3/proxima-cen-d.md) | sub-Earth inner planet |
+| Page | Type | Scenario | Confidence |
+|---|---|---|---|
+| [alpha-centauri-a](../phase3/alpha-centauri-a.md) | star | quiet G2V solar twin, visual binary with B | high |
+| [alpha-centauri-b](../phase3/alpha-centauri-b.md) | star | quiet K1V metal-rich, no confirmed planets, warm-orange contrast to A | high |
+| [proxima-cen](../phase3/proxima-cen.md) | star | M5.5Ve flare star, kG dipole, 7-yr cycle, frequent superflares | high |
+| [proxima-cen-b](../phase3/proxima-cen-b.md) | planet | tidally-locked 1.055 M⊕ terrestrial, 1-bar N₂/CO₂ + substellar lens | medium |
+| [proxima-cen-d](../phase3/proxima-cen-d.md) | planet | hot tidally-locked Mercury-like sub-Earth, vestigial Na exosphere | medium |
 
 ---
 
@@ -176,5 +178,6 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 *Auto-pulled from [log.md](log.md) — top 5 entries.*
 
-1. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
-2. **2026-05-24 initialize** — wiki scaffold created
+1. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages: 3 stars + 2 planets)
+2. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
+3. **2026-05-24 initialize** — wiki scaffold created

@@ -1,4 +1,21 @@
-<!-- Proxima Centauri d Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "Proxima Centauri d"
+slug: proxima-cen-d
+kopernicus_name: ProximaCenD
+host_star: ProximaCen
+cluster: system-alpha-cen
+cluster_role: member
+sources: ["Faria 2022", "Suarez Mascareno 2025", "Walterova 2020", "Killen 2007"]
+related: [[proxima-cen]], [[proxima-cen-b]], [[methodology]], [[mod-reference]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: medium
+scenario: hot tidally-locked Mercury-like sub-Earth with vestigial Na exosphere
+tier: public
+---
+
 # Proxima Centauri d — Phase 3 Synthesis
 
 Proxima Centauri d is a sub-Earth-mass ultra-short-period (USP)
@@ -258,3 +275,10 @@ purely a hot-rocky visual destination for player exploration.
 - **Superflare albedo modulation**: the cfg currently encodes only
   the time-averaged Bond albedo. The ~3-superflare-per-year cadence
   (Vida 2019) produces transient albedo enhancements during XUV-bright phases.
+
+## Related
+
+- [proxima-cen](proxima-cen.md) — host star; flare environment drives the atmosphere-stripped scenario
+- [proxima-cen-b](proxima-cen-b.md) — outer sibling at HZ; contrast — d sits inside the inner edge of any HZ interpretation at 17× Earth's insolation
+- [methodology](../reference/methodology.md) — Decisions schema
+- [mod-reference](../reference/mod-reference.md) — downstream mods

@@ -1,4 +1,22 @@
-<!-- Proxima Centauri Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: star
+title: "Proxima Centauri"
+slug: proxima-cen
+kopernicus_name: ProximaCen
+wide_companions: [AlphaCentauriA, AlphaCentauriB]
+hosted_planets: [ProximaCenB, ProximaCenD]
+cluster: system-alpha-cen
+cluster_role: member
+sources: ["Boyajian 2012", "Anglada-Escude 2016", "Faria 2022", "Suarez Mascareno 2025", "Mann 2015", "Passegger 2019", "Reiners 2018", "Wargelin 2024", "Vida 2019", "Fuhrmeister 2022", "Kervella 2017", "Feng and Jones 2018", "Suarez Mascareno 2020", "Hawley 1996"]
+related: [[alpha-centauri-a]], [[alpha-centauri-b]], [[proxima-cen-b]], [[proxima-cen-d]], [[methodology]], [[binary-epoch-pipeline]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: high
+scenario: M5.5Ve flare star, kG dipole, 7-yr activity cycle, frequent superflares
+tier: public
+---
+
 # Proxima Centauri — Phase 3 Synthesis
 
 Proxima Centauri (α Cen C, GJ 551) is the closest star to the Sun at
@@ -261,3 +279,11 @@ planetary atmosphere.
   `bibcode = 2025A&A...700A..11M` but ADS resolves the paper at
   `2025A&A...700A..11S` (last initial S, not M). The DB attribution
   for Proxima b/d orbit + mass should be corrected.
+
+## Related
+
+- [alpha-centauri-a](alpha-centauri-a.md), [alpha-centauri-b](alpha-centauri-b.md) — wide CPM companions at ~13,000 AU (P ≈ 547 kyr; Kervella 2017). Capture-vs-coeval origin remains unresolved (Feng & Jones 2018).
+- [proxima-cen-b](proxima-cen-b.md), [proxima-cen-d](proxima-cen-d.md) — confirmed planetary system; b is the HZ rocky world, d the USP sub-Earth
+- [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — Proxima's outer orbit around AB barycenter is the canonical hierarchical/static-CPM example (§6)
+- [methodology](../reference/methodology.md) — DB schema source
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §3 Proxima T_eff is the notable Phase 3 → REX disagreement (3498 K vs 3042 K, NS uses Suárez Mascareño 2025)

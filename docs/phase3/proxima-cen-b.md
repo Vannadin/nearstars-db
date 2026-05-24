@@ -1,4 +1,21 @@
-<!-- Proxima Centauri b Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: planet
+title: "Proxima Centauri b"
+slug: proxima-cen-b
+kopernicus_name: ProximaCenB
+host_star: ProximaCen
+cluster: system-alpha-cen
+cluster_role: member
+sources: ["Anglada-Escude 2016", "Faria 2022", "Suarez Mascareno 2025", "Turbet 2016", "Boutle 2017", "Del Genio 2019", "Sergeev 2020", "Salazar 2020", "Lewis 2018", "Galuzzo 2021", "Braam 2022", "Braam 2023", "Braam 2024", "Braam 2026", "Meadows 2018", "Atri 2020", "Lee 2021", "Garraffo 2022", "Zuluaga 2018", "Jenkins 2019", "Gilbert 2021"]
+related: [[proxima-cen]], [[proxima-cen-d]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: medium
+scenario: tidally-locked 1.055 M⊕ terrestrial with 1-bar N₂/CO₂ atm + substellar open-water lens
+tier: public
+---
+
 # Proxima Centauri b — Phase 3 Synthesis
 
 Proxima Centauri b is a 1.055-Earth-mass terrestrial planet on an
@@ -434,3 +451,12 @@ outgassing), **Herath 2021** (interior structure).
 - **Magnetic field measurement**: Zuluaga 2018 provides only a
   plausibility range. A future direct measurement via radio emission
   during a Proxima-wind transit could constrain the dipole moment.
+
+## Related
+
+- [proxima-cen](proxima-cen.md) — host star (M5.5Ve flare environment; the atmosphere-retention question is downstream of the host's XUV history)
+- [proxima-cen-d](proxima-cen-d.md) — inner sibling; USP Mercury-analog (no atmosphere expected) contrasts with b's atmosphere-retained scenario
+- [trappist-1-e](trappist-1-e.md) — other temperate M-dwarf HZ aquaplanet analog; the eyeball-Earth substellar-ocean geometry is shared
+- [methodology](../reference/methodology.md) — Decisions schema
+- [mod-reference](../reference/mod-reference.md) — downstream mods consuming this body's atmosphere + ocean cfg
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §6 Proxima roster (REX had b + c retracted; NS has b + d after Faria 2022)

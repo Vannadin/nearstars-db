@@ -1,4 +1,21 @@
-<!-- α Centauri A Phase 3 synthesis: cfg-ready decisions and reasoning -->
+---
+type: entity
+entity_kind: star
+title: "α Centauri A"
+slug: alpha-centauri-a
+kopernicus_name: AlphaCentauriA
+binary_partner: AlphaCentauriB
+cluster: system-alpha-cen
+cluster_role: member
+sources: ["Pourbaix and Boffin 2016", "Kervella 2017", "Porto de Mello 2008", "Joyce and Chaboyer 2018", "DeWarf 2010", "Robrade 2016", "Bigot 2008", "Bouchy and Carrier 2001", "de Meulenaer 2010", "Beichman and Sanghi 2025"]
+related: [[alpha-centauri-b]], [[proxima-cen]], [[methodology]], [[binary-epoch-pipeline]], [[rex-data-comparison]], [[stellarium-binary-orbit-comparison]]
+created: 2026-05-21
+updated: 2026-05-24
+confidence: high
+scenario: quiet G2V solar twin, visual binary with α Cen B
+tier: public
+---
+
 # α Centauri A — Phase 3 Synthesis
 
 α Centauri A (HD 128620, HIP 71683, GJ 559 A) is the brighter of the
@@ -277,3 +294,12 @@ preserved in `docs/phase3/_bib/alpha-centauri-a.yaml` with
   current cfg. A phase synchronization based on Robrade 2016 cycle
   start epochs would let activity-driven CME flux track real-time
   in-game progression.
+
+## Related
+
+- [alpha-centauri-b](alpha-centauri-b.md) — binary partner; 79.91-yr visual orbit, K1V companion
+- [proxima-cen](proxima-cen.md) — wide CPM companion at ~13,000 AU, M5.5Ve flare star (capture vs coeval origin uncertain — Feng & Jones 2018)
+- [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — α Cen AB is the **canonical worked example** for the Kepler→ICRS pipeline (§9 of that doc)
+- [methodology](../reference/methodology.md) — schema source for the Decisions table
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §3–4 covers α Cen stellar parameters + §5 the AB↔Proxima topology gap REX couldn't model
+- [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) — α Cen orbit convention cross-check vs Stellarium (Hilditch/Pourbaix match confirmed)

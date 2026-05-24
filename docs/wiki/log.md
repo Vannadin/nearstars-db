@@ -17,6 +17,28 @@ followed by structured body.
 
 ---
 
+## [2026-05-24] ingest | system-alpha-cen cluster (5 entity pages)
+
+Source: existing `docs/phase3/{alpha-centauri-a,alpha-centauri-b,proxima-cen,proxima-cen-b,proxima-cen-d}.md`
+Pages created: none (frontmatter + `## Related` added to existing pages)
+Pages updated:
+  - `docs/phase3/alpha-centauri-a.md` (frontmatter + `## Related`, type=star, confidence: high, scenario: quiet G2V solar twin)
+  - `docs/phase3/alpha-centauri-b.md` (frontmatter + `## Related`, type=star, confidence: high, scenario: K1V metal-rich, no confirmed planets)
+  - `docs/phase3/proxima-cen.md` (frontmatter + `## Related`, type=star, confidence: high, scenario: M5.5Ve flare star with kG dipole + 7-yr cycle)
+  - `docs/phase3/proxima-cen-b.md` (frontmatter + `## Related`, type=planet, confidence: medium, scenario: 1-bar N₂/CO₂ aquaplanet eyeball)
+  - `docs/phase3/proxima-cen-d.md` (frontmatter + `## Related`, type=planet, confidence: medium, scenario: Mercury-like USP with Na exosphere)
+Contradictions flagged: none
+Tier: public
+
+Notes:
+- 3 stars + 2 planets in this cluster. star entities use new frontmatter fields: `binary_partner` (a↔b), `wide_companions` (proxima→AB), `hosted_planets` (proxima→[b,d]).
+- Cross-cluster link: `proxima-cen-b.related` includes `trappist-1-e` (both are M-dwarf HZ aquaplanet analogs with eyeball geometry).
+- α Cen AB is referenced as the canonical worked example in `binary-epoch-pipeline.md §9` and the cross-check target of `plans/stellarium-binary-orbit-comparison.md` — links added on both alpha-centauri-a and -b.
+- Open follow-ups (logged for future ingest):
+  - Host-star entity page for TRAPPIST-1 (still pending from earlier ingest)
+  - Proxima c candidate (sub-Neptune at 5.2 AU, unconfirmed) — no entity page yet; may be created if discovery confirmed
+  - `_papers/*.md` source frontmatter (would let us convert string `sources:` to wikilinks)
+
 ## [2026-05-24] ingest | system-trappist-1 cluster (Phase 2 dry-run, 7 entity pages)
 
 Source: existing `docs/phase3/trappist-1-{b,c,d,e,f,g,h}.md`
