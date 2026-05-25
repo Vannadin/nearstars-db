@@ -1,5 +1,9 @@
 # nearstars-phase3 skill — optimization plan
 
+> **STATUS: COMPLETE (2026-05-22)** — superseded by
+> `.agents/skills/nearstars-phase3-workspace/` (Anthropic skill-creator
+> convention). Kept for historical context only; do not extend.
+
 ## Goal
 
 Reduce `.claude/skills/nearstars-phase3/SKILL.md` from 543 → ~350 lines

@@ -135,6 +135,21 @@ collision with English originals), `.agents/`, `.venv/`,
 `appearance.json` are version-controlled; per-user workspace state
 is gitignored.
 
+### 2.3 Skill homes
+
+- **`.claude/skills/<name>/`** — live skills discoverable by Claude
+  Code. All committed live skills go here.
+- **`.agents/skills/<name>-workspace/`** — development workspace
+  (CLAUDE.md §7 trio + Anthropic skill-creator `draft/` / `evals/` /
+  `iteration-N/`). One workspace per active skill rework.
+- **`.agents/skills/<name>/`** (gitignored only) — EA-derived local
+  skills (`scatterer-cfg`, `eve-cfg`, `volumetrics-cfg`, etc.). Never
+  committed.
+
+A skill must not live in both `.claude/skills/` and `.agents/skills/`
+simultaneously (excluding the `-workspace/` suffix). `scripts/check.sh`
+§4 enforces this.
+
 ---
 
 ## 3. Hard rules for any PR
@@ -185,6 +200,12 @@ These are non-negotiable. CI does not catch all of them; reviewers will.
    counterpart under `ko/<same-path>`. Non-mirrored trees (`AGENTS.md`,
    `CLAUDE.md`, `db/`, `scripts/`, `phase2/<topic>/{checklist,
    context-notes}.md`, PR/issue templates) are English-only.
+
+8. **Phase 2/3 system dirs use snake_case** matching the
+   `db/systems/<name>.json` filename. Topic dirs (non-system, e.g.
+   `phase2/skill-phase3-optimization/`, `phase3/html-pipeline/`,
+   `phase3/stability-sim/`) may use kebab-case. The `-system` suffix is
+   forbidden. `scripts/check.sh` §4 enforces this.
 
 ---
 
