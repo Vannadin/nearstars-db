@@ -1,15 +1,3 @@
----
-type: synthesis
-title: "Art-redundancy audit — 2026-05-22"
-slug: -audit-art-redundancy-2026-05-22
-cluster: comparisons
-cluster_role: member
-status: active
-related: 
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Art-redundancy audit — 2026-05-22
 
 목적은 현재 큐레이션된 12개 Phase 3 entry 의 in-game 시각 identity 를

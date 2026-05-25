@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Alpha Cen + Proxima Cen system Phase 3 — checklist"
-slug: alpha-cen-proxima-system-checklist
-cluster: system-alpha-cen
-cluster_role: member
-status: active
-related: [[alpha-cen-proxima-system-context-notes]], [[alpha-cen-proxima-system-manual-paper-followup]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Alpha Cen + Proxima Cen system Phase 3 — checklist
 
 Started 2026-05-22. Re-do after revert of commit 0cd8b2f. This pass
@@ -142,6 +130,4 @@ no `:` per CLAUDE.md §5. Speech level: 존댓말.
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `alpha-cen-proxima-system/`
-- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `alpha-cen-proxima-system/`
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to

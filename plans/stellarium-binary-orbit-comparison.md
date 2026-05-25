@@ -1,18 +1,8 @@
 ---
-type: synthesis
-title: "Stellarium vs NearStars binary-orbit pipeline comparison"
-slug: stellarium-binary-orbit-comparison
-cluster: comparisons
-cluster_role: member
+title: Stellarium vs NearStars binary-orbit pipeline comparison
 status: active
-sources: ["Stellarium master 3efa1406", "USNO orb6 catalog", "Hilditch 2001", "Pourbaix 1995"]
-related: [[binary-epoch-pipeline]], [[methodology]], [[alpha-centauri-a]], [[alpha-centauri-b]]
 created: 2026-05-21
-updated: 2026-05-24
-confidence: high
-tier: public
 ---
-
 # Stellarium vs NearStars binary-orbit pipeline comparison
 
 **NearStars connection.** Our pipeline ([`docs/reference/binary-epoch-pipeline.md`](../docs/reference/binary-epoch-pipeline.md))

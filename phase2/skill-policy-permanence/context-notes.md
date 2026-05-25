@@ -1,15 +1,3 @@
----
-type: workspace
-title: "스킬 정책 형식 강제 — 작업 중 의사결정 로그"
-slug: skill-policy-permanence-context-notes
-cluster: methodology
-cluster_role: member
-status: active
-related: [[skill-policy-permanence-checklist]], [[skill-policy-permanence-plan]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # 스킬 정책 형식 강제 — 작업 중 의사결정 로그
 # Skill policy permanence — context notes
 
@@ -102,6 +90,4 @@ those same guidelines (it is).
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `skill-policy-permanence/`
-- [plan](plan.md) — sibling workspace doc in `skill-policy-permanence/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

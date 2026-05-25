@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Phase 1 Curation Checklist — 50 ly Hosts"
-slug: phase1-50ly-checklist
-cluster: methodology
-cluster_role: member
-status: active
-related: [[phase1-50ly-context-notes]], [[phase1-50ly-plan]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Phase 1 Curation Checklist — 50 ly Hosts
 
 ## Setup
@@ -67,6 +55,4 @@ tier: public
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `phase1-50ly/`
-- [plan](plan.md) — sibling workspace doc in `phase1-50ly/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

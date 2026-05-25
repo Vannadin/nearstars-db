@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Checklist — Famous 20 Non-Host Stars"
-slug: famous-20-non-hosts-checklist
-cluster: methodology
-cluster_role: member
-status: active
-related: [[famous-20-non-hosts-plan]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Checklist — Famous 20 Non-Host Stars
 
 ## Setup
@@ -49,5 +37,4 @@ tier: public
 
 ## Related
 
-- [plan](plan.md) — sibling workspace doc in `famous-20-non-hosts/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

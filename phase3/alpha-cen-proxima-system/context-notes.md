@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Alpha Cen + Proxima Cen Phase 3 — context notes"
-slug: alpha-cen-proxima-system-context-notes
-cluster: system-alpha-cen
-cluster_role: member
-status: active
-related: [[alpha-cen-proxima-system-checklist]], [[alpha-cen-proxima-system-manual-paper-followup]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Alpha Cen + Proxima Cen Phase 3 — context notes
 
 Append-only. New decisions go at the bottom under dated headings.
@@ -223,7 +211,6 @@ Skim: Kossakowski 2023 (Wolf 1069 b — sister system context).
 Skip: 다른 시스템 페이퍼들.
 
 manual_followup: 없음 (SM25 가 모든 latest 정보).
-
 
 ---
 
@@ -592,6 +579,4 @@ strength 범위 (Zuluaga 2018 의 광범위한 plausibility window 내 선택).
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `alpha-cen-proxima-system/`
-- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `alpha-cen-proxima-system/`
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to

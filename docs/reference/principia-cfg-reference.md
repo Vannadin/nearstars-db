@@ -1,19 +1,3 @@
----
-type: concept
-title: "Principia CFG Technical Reference"
-slug: principia-cfg-reference
-cluster: mod-principia
-cluster_role: hub
-secondary_cluster: physics-epoch
-secondary_cluster_role: member
-sources: ["mockingbirdnest/Principia repo", "Principia astronomy/*.cfg", "Principia wiki", "IAU 2009 WG Cartographic Coordinates"]
-related: [[methodology]], [[binary-epoch-pipeline]], [[mod-reference]], [[mod-release-layout]], [[alpha-centauri-a]], [[alpha-centauri-b]]
-created: 2026-05-19
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # Principia CFG Technical Reference
 
 > Source: mockingbirdnest/Principia GitHub repo, wiki, and astronomy/*.cfg files  

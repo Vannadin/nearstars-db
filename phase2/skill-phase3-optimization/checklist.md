@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Checklist — nearstars-phase3 optimization"
-slug: skill-phase3-optimization-checklist
-cluster: phase3-procedure
-cluster_role: member
-status: active
-related: [[skill-phase3-optimization-context-notes]], [[skill-phase3-optimization-plan]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Checklist — nearstars-phase3 optimization
 
 ## 🔴 Critical (this session — single commit)
@@ -79,6 +67,4 @@ tier: public
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `skill-phase3-optimization/`
-- [plan](plan.md) — sibling workspace doc in `skill-phase3-optimization/`
 - [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

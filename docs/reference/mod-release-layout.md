@@ -1,17 +1,3 @@
----
-type: concept
-title: "NearStars Mod-Release Repo Layout"
-slug: mod-release-layout
-cluster: methodology
-cluster_role: member
-sources: ["Sol-Configs layout conventions", "Kopernicus body conventions"]
-related: [[methodology]], [[mod-reference]], [[guideline]], [[principia-cfg-reference]]
-created: 2026-05-20
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # NearStars Mod-Release Repo Layout
 
 > Moved from `guideline.md §4–6` on 2026-05-20. This file documents the

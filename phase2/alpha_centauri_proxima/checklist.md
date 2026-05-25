@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Alpha Centauri (A, B) + Proxima Cen — Phase 2 Curation Checklist"
-slug: alpha-centauri-proxima-checklist
-cluster: system-alpha-cen
-cluster_role: member
-status: active
-related: [[alpha-centauri-proxima-context-notes]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Alpha Centauri (A, B) + Proxima Cen — Phase 2 Curation Checklist
 
 Started 2026-05-22. Adds paper-attributed measurement arrays for the
@@ -188,5 +176,4 @@ three nearest-star components and the two Proxima planets.
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `alpha_centauri_proxima/`
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to

@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "TRAPPIST-1 c"
-slug: trappist-1-c
-kopernicus_name: Trappist1c
-host_star: Trappist1
-cluster: system-trappist-1
-cluster_role: member
-sources: ["Agol 2021", "Zieba 2023", "Ducrot 2025", "Lincowski 2018", "Lincowski 2023", "Luger and Barnes 2015", "Acuña 2021", "Barr 2018", "Dobos 2019"]
-related: [[trappist-1-b]], [[trappist-1-d]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: medium
-scenario: thin O₂-dominated atmosphere (~0.1 bar) over dark basaltic surface
-tier: public
----
-
 # TRAPPIST-1 c — Phase 3 Synthesis
 
 TRAPPIST-1 c is a 1.10 R⊕, 1.31 M⊕ rocky planet on a 2.42-day orbit

@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "TRAPPIST-1 d"
-slug: trappist-1-d
-kopernicus_name: Trappist1d
-host_star: Trappist1
-cluster: system-trappist-1
-cluster_role: member
-sources: ["Agol 2021", "Piaulet 2025", "Turbet 2023", "Way 2025", "Turbet 2018", "Atri 2019"]
-related: [[trappist-1-c]], [[trappist-1-e]], [[trappist-1-f]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: low
-scenario: thin atmosphere (~0.01 bar) with terminator water-ice clouds
-tier: public
----
-
 # TRAPPIST-1 d — Phase 3 Synthesis
 
 Pilot Phase 3 document for the NearStars KSP mod (drafted 2026-05-21).

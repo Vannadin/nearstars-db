@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Phase 3 Stability Simulation — Context Notes"
-slug: stability-sim-context-notes
-cluster: phase3-procedure
-cluster_role: member
-status: active
-related: [[stability-sim-STABILITY_REPORT]], [[stability-sim-checklist]], [[stability-sim-plan]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Phase 3 Stability Simulation — Context Notes
 
 Append-only log of decisions and reasoning as work proceeds.
@@ -97,7 +85,4 @@ Append-only log of decisions and reasoning as work proceeds.
 
 ## Related
 
-- [STABILITY_REPORT](STABILITY_REPORT.md) — sibling workspace doc in `stability-sim/`
-- [checklist](checklist.md) — sibling workspace doc in `stability-sim/`
-- [plan](plan.md) — sibling workspace doc in `stability-sim/`
 - [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

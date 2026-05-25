@@ -1,17 +1,3 @@
----
-type: concept
-title: "Adding Stars to the NearStars Database"
-slug: adding_stars
-cluster: methodology
-cluster_role: member
-sources: ["Gaia DR3 docs", "SIMBAD docs", "NASA Exoplanet Archive docs", "Stellarium Web API"]
-related: [[methodology]], [[binary-epoch-pipeline]], [[data-sources]], [[archive_issues]], [[tools]]
-created: 2026-05-16
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # Adding Stars to the NearStars Database
 
 How to add a new star (or star component) to the pipeline.

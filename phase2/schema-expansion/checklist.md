@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Phase 2 — Schema Expansion Checklist"
-slug: schema-expansion-checklist
-cluster: methodology
-cluster_role: member
-status: active
-related: [[schema-expansion-context-notes]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Phase 2 — Schema Expansion Checklist
 
 Started 2026-05-21. Expand Phase 2 coverage from mass + radius only to
@@ -74,5 +62,4 @@ planet Teq/density, atmospheric retrievals). Prerequisite for Phase 3.
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `schema-expansion/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

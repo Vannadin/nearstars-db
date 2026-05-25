@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Phase 2 Schema Expansion — Context Notes"
-slug: schema-expansion-context-notes
-cluster: methodology
-cluster_role: member
-status: active
-related: [[schema-expansion-checklist]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Phase 2 Schema Expansion — Context Notes
 
 Append-only log of decisions made during the work. Subsequent sessions
@@ -167,5 +155,4 @@ M₀ at epoch). Allowing them avoids forcing a conversion at curation time.
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `schema-expansion/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

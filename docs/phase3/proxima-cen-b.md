@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "Proxima Centauri b"
-slug: proxima-cen-b
-kopernicus_name: ProximaCenB
-host_star: ProximaCen
-cluster: system-alpha-cen
-cluster_role: member
-sources: ["Anglada-Escude 2016", "Faria 2022", "Suarez Mascareno 2025", "Turbet 2016", "Boutle 2017", "Del Genio 2019", "Sergeev 2020", "Salazar 2020", "Lewis 2018", "Galuzzo 2021", "Braam 2022", "Braam 2023", "Braam 2024", "Braam 2026", "Meadows 2018", "Atri 2020", "Lee 2021", "Garraffo 2022", "Zuluaga 2018", "Jenkins 2019", "Gilbert 2021"]
-related: [[proxima-cen]], [[proxima-cen-d]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: medium
-scenario: tidally-locked 1.055 M⊕ terrestrial with 1-bar N₂/CO₂ atm + substellar open-water lens
-tier: public
----
-
 # Proxima Centauri b — Phase 3 Synthesis
 
 Proxima Centauri b is a 1.055-Earth-mass terrestrial planet on an

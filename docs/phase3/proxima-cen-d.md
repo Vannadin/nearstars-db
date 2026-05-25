@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "Proxima Centauri d"
-slug: proxima-cen-d
-kopernicus_name: ProximaCenD
-host_star: ProximaCen
-cluster: system-alpha-cen
-cluster_role: member
-sources: ["Faria 2022", "Suarez Mascareno 2025", "Walterova 2020", "Killen 2007"]
-related: [[proxima-cen]], [[proxima-cen-b]], [[methodology]], [[mod-reference]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: medium
-scenario: hot tidally-locked Mercury-like sub-Earth with vestigial Na exosphere
-tier: public
----
-
 # Proxima Centauri d — Phase 3 Synthesis
 
 Proxima Centauri d is a sub-Earth-mass ultra-short-period (USP)

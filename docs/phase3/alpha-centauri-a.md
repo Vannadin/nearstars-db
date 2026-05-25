@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: star
-title: "α Centauri A"
-slug: alpha-centauri-a
-kopernicus_name: AlphaCentauriA
-binary_partner: AlphaCentauriB
-cluster: system-alpha-cen
-cluster_role: member
-sources: ["Pourbaix and Boffin 2016", "Kervella 2017", "Porto de Mello 2008", "Joyce and Chaboyer 2018", "DeWarf 2010", "Robrade 2016", "Bigot 2008", "Bouchy and Carrier 2001", "de Meulenaer 2010", "Beichman and Sanghi 2025"]
-related: [[alpha-centauri-b]], [[proxima-cen]], [[methodology]], [[binary-epoch-pipeline]], [[rex-data-comparison]], [[stellarium-binary-orbit-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: high
-scenario: quiet G2V solar twin, visual binary with α Cen B
-tier: public
----
-
 # α Centauri A — Phase 3 Synthesis
 
 α Centauri A (HD 128620, HIP 71683, GJ 559 A) is the brighter of the

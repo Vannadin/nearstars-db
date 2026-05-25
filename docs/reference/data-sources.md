@@ -1,17 +1,4 @@
----
-type: concept
-title: "Data Sources and Attribution"
-slug: data-sources
-cluster: methodology
-cluster_role: member
-sources: ["NASA Exoplanet Archive Akeson 2013", "Gaia Collaboration 2016", "Gaia Collaboration 2023", "Wenger 2000 SIMBAD", "Southworth 2011 TEPCat", "Buchschacher and Alesina 2019 DACE"]
-related: [[methodology]], [[mod-reference]], [[archive_issues]], [[guideline]], [[rex-data-comparison]]
-created: 2026-05-19
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
+<!-- NearStars 외부 데이터 출처와 KSP 모드 attribution 정책 -->
 # Data Sources and Attribution
 
 > **Perspective.** This document is the **attribution / license**

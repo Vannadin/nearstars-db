@@ -1,17 +1,3 @@
----
-type: concept
-title: "NearStars Mod Reference"
-slug: mod-reference
-cluster: methodology
-cluster_role: member
-sources: ["Kopernicus", "Sol-Configs", "Principia", "Parallax Continued", "EVE Volumetrics", "Scatterer", "Firefly"]
-related: [[methodology]], [[mod-release-layout]], [[data-sources]], [[guideline]], [[principia-cfg-reference]]
-created: 2026-05-20
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # NearStars — Mod Reference
 
 > **Perspective.** This document is the **KSP mod install reference**:

@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "TRAPPIST-1 b"
-slug: trappist-1-b
-kopernicus_name: Trappist1b
-host_star: Trappist1
-cluster: system-trappist-1
-cluster_role: member
-sources: ["Agol 2021", "Greene 2023", "Ducrot 2024", "Ducrot 2025", "Ih 2023", "Grayver 2022", "Bolmont 2020"]
-related: [[trappist-1-c]], [[trappist-1-d]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: high
-scenario: airless ultramafic rocky surface
-tier: public
----
-
 # TRAPPIST-1 b — Phase 3 Synthesis
 
 TRAPPIST-1 b is a 1.12 R⊕, 1.37 M⊕ rocky planet on a 1.51-day orbit

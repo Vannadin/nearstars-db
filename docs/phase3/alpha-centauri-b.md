@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: star
-title: "α Centauri B"
-slug: alpha-centauri-b
-kopernicus_name: AlphaCentauriB
-binary_partner: AlphaCentauriA
-cluster: system-alpha-cen
-cluster_role: member
-sources: ["Pourbaix and Boffin 2016", "Kervella 2017", "Porto de Mello 2008", "Joyce and Chaboyer 2018", "DeWarf 2010", "Henry 1996", "Robrade 2016", "Dumusque 2012", "Plavchan 2015", "Rajpaul 2016", "Demory 2015", "Krishnamurthy 2021", "Wang 2022", "Heller 2014"]
-related: [[alpha-centauri-a]], [[proxima-cen]], [[methodology]], [[binary-epoch-pipeline]], [[rex-data-comparison]], [[stellarium-binary-orbit-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: high
-scenario: quiet K1V slightly metal-rich, no confirmed planets, warm-orange visual contrast to A
-tier: public
----
-
 # α Centauri B — Phase 3 Synthesis
 
 α Centauri B (HD 128621, HIP 71681, GJ 559 B) is the K1V secondary of

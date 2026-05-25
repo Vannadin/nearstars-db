@@ -1,15 +1,3 @@
----
-type: workspace
-title: "스킬에 정책 형식 강제 — 체크리스트"
-slug: skill-policy-permanence-checklist
-cluster: methodology
-cluster_role: member
-status: active
-related: [[skill-policy-permanence-context-notes]], [[skill-policy-permanence-plan]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # 스킬에 정책 형식 강제 — 체크리스트
 # Skill policy permanence — checklist
 
@@ -52,6 +40,4 @@ tier: public
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `skill-policy-permanence/`
-- [plan](plan.md) — sibling workspace doc in `skill-policy-permanence/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Alpha Centauri (A, B) + Proxima Cen — Phase 2 Curation Context Notes"
-slug: alpha-centauri-proxima-context-notes
-cluster: system-alpha-cen
-cluster_role: member
-status: active
-related: [[alpha-centauri-proxima-checklist]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Alpha Centauri (A, B) + Proxima Cen — Phase 2 Curation Context Notes
 
 Append-only log. 2026-05-22.
@@ -175,5 +163,4 @@ temperature, not 3498 K.
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `alpha_centauri_proxima/`
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to

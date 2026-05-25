@@ -1,17 +1,3 @@
----
-type: concept
-title: "NearStars Project Guideline"
-slug: guideline
-cluster: methodology
-cluster_role: member
-sources: ["RSS-Origin 2 v1.0.0", "REX v0.9.6 (historical reference)", "Sol-Configs"]
-related: [[methodology]], [[mod-reference]], [[mod-release-layout]], [[data-sources]], [[rex-data-comparison]]
-created: 2026-05-16
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # Nearby Star Systems KSP Mod — Project Guideline
 
 **Goal:** Add nearby star systems to KSP 1.12.x on top of Sol-Configs (real solar system). RSS compatibility is a planned future target.

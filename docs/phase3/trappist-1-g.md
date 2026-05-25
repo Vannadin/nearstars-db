@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "TRAPPIST-1 g"
-slug: trappist-1-g
-kopernicus_name: Trappist1g
-host_star: Trappist1
-cluster: system-trappist-1
-cluster_role: member
-sources: ["Agol 2021", "Moran 2018", "Bourgeois 2024", "Unterborn 2018", "Wolf 2017", "Turbet 2018", "Hay and Matsuyama 2019", "Berardo 2025", "Pierrehumbert 2011", "Garraffo 2017", "Atri 2019", "Kislyakova 2017"]
-related: [[trappist-1-f]], [[trappist-1-h]], [[trappist-1-e]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: medium
-scenario: globally ice-covered ocean world with very thin CO₂ atmosphere
-tier: public
----
-
 # TRAPPIST-1 g — Phase 3 Synthesis
 
 TRAPPIST-1 g is a 1.13 R⊕, 1.32 M⊕ rocky planet on a 12.35-day orbit

@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "TRAPPIST-1 e"
-slug: trappist-1-e
-kopernicus_name: Trappist1e
-host_star: Trappist1
-cluster: system-trappist-1
-cluster_role: member
-sources: ["Agol 2021", "Glidden 2025", "Wolf 2017", "Turbet 2018", "Lincowski 2018", "Way 2025", "Hapi 2024", "Sergeev 2022", "Cohen 2022", "Wang 2025", "Garraffo 2017", "Fraschetti 2019", "Atri 2019", "Berardo 2025", "Acuña 2021", "Boldog 2023"]
-related: [[trappist-1-d]], [[trappist-1-f]], [[trappist-1-g]], [[methodology]], [[mod-reference]], [[rex-data-comparison]], [[binary-epoch-pipeline]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: high
-scenario: temperate aqua-planet (1 bar N₂/CO₂/H₂O) with eyeball-Earth geometry
-tier: public
----
-
 # TRAPPIST-1 e — Phase 3 Synthesis
 
 TRAPPIST-1 e is a 0.92 R⊕, 0.69 M⊕ rocky planet on a 6.10-day orbit

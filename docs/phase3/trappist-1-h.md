@@ -1,21 +1,3 @@
----
-type: entity
-entity_kind: planet
-title: "TRAPPIST-1 h"
-slug: trappist-1-h
-kopernicus_name: Trappist1h
-host_star: Trappist1
-cluster: system-trappist-1
-cluster_role: member
-sources: ["Agol 2021", "Luger 2017", "Gressier 2022", "Lincowski 2018", "Bolmont 2018", "Turbet 2017", "Lichtenberg 2019", "Bourrier 2017", "Castan-Lopez 2025", "Zahnle 2017", "Gillon 2024", "Atri 2019"]
-related: [[trappist-1-g]], [[trappist-1-f]], [[methodology]], [[mod-reference]], [[rex-data-comparison]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: low
-scenario: frozen sub-Mars rocky world with patchy CO₂/N₂ ice frost
-tier: public
----
-
 # TRAPPIST-1 h — Phase 3 Synthesis
 
 TRAPPIST-1 h is a 0.76 R⊕, 0.33 M⊕ sub-Mars-mass rocky planet on a

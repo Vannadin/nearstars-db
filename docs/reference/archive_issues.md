@@ -1,17 +1,3 @@
----
-type: concept
-title: "NASA Exoplanet Archive Data Issues"
-slug: archive_issues
-cluster: methodology
-cluster_role: member
-sources: ["NASA Exoplanet Archive pscomppars", "Gaia DR3 TAP", "SIMBAD TAP", "TEPCat allplanets-csv"]
-related: [[methodology]], [[data-sources]], [[adding_stars]]
-created: 2026-05-16
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # NASA Exoplanet Archive Data Issues
 
 Found during cross-validation against SIMBAD/Gaia DR3 (2026-05-16).

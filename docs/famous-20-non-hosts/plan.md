@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Famous 20 Non-Host Stars within 50 ly — Plan"
-slug: famous-20-non-hosts-plan
-cluster: methodology
-cluster_role: member
-status: active
-related: [[famous-20-non-hosts-checklist]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Famous 20 Non-Host Stars within 50 ly — Plan
 
 ## Scope
@@ -79,5 +67,4 @@ Lighter pass since pipeline already has data:
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `famous-20-non-hosts/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

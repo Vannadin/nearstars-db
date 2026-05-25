@@ -1,18 +1,3 @@
----
-type: concept
-title: "Stellar System Data Research Methodology"
-slug: methodology
-aliases: [methodology, db-schema, db-methodology]
-cluster: methodology
-cluster_role: hub
-sources: ["Butkevich and Lindegren 2014", "ESA SP-1200 1997 Hipparcos", "Pourbaix 2002", "Hilditch 2001"]
-related: [[adding_stars]], [[binary-epoch-pipeline]], [[data-sources]], [[archive_issues]], [[tools]], [[mod-reference]], [[mod-release-layout]], [[guideline]], [[principia-cfg-reference]], [[rex-data-comparison]]
-created: 2026-05-16
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # Stellar System Data Research Methodology
 
 This document defines the workflow for building a structured JSON database of

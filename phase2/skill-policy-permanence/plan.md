@@ -1,15 +1,3 @@
----
-type: workspace
-title: "스킬에 문서화된 정책의 *형식* 까지 영구 반영하는 작업"
-slug: skill-policy-permanence-plan
-cluster: methodology
-cluster_role: member
-status: active
-related: [[skill-policy-permanence-checklist]], [[skill-policy-permanence-context-notes]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # 스킬에 문서화된 정책의 *형식* 까지 영구 반영하는 작업
 # Skill policy permanence — plan
 
@@ -88,6 +76,4 @@ commit message alone.
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `skill-policy-permanence/`
-- [context-notes](context-notes.md) — sibling workspace doc in `skill-policy-permanence/`
 - [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

@@ -1,19 +1,3 @@
----
-type: concept
-title: "Binary / Multiple Star Epoch Pipeline Reference"
-slug: binary-epoch-pipeline
-cluster: methodology
-cluster_role: member
-secondary_cluster: physics-epoch
-secondary_cluster_role: hub
-sources: ["Pourbaix and Boffin 2016", "Akeson 2021", "Bond 2017", "Kervella 2017", "Gaia DR3 NSS docs", "USNO orb6 catalog", "RSS-Origin-2 v1.0.0"]
-related: [[methodology]], [[adding_stars]], [[principia-cfg-reference]], [[alpha-centauri-a]], [[alpha-centauri-b]], [[proxima-cen]], [[stellarium-binary-orbit-comparison]]
-created: 2026-05-19
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # Binary / Multiple Star Epoch Pipeline Reference
 
 > Source: research across mockingbirdnest/Principia, RSS-Reborn/Sol-Configs,

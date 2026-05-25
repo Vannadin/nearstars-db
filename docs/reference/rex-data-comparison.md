@@ -1,18 +1,3 @@
----
-type: synthesis
-title: "REX vs NearStars Data Comparison"
-slug: rex-data-comparison
-cluster: comparisons
-cluster_role: member
-status: promoted
-sources: ["Real-Exoplanets v0.9.6 (andikisare)", "Agol 2021", "Greene 2023", "Ducrot 2024", "Ducrot 2025"]
-related: [[methodology]], [[guideline]], [[trappist-1-b]], [[trappist-1-c]], [[trappist-1-d]], [[trappist-1-e]], [[trappist-1-f]], [[trappist-1-g]], [[trappist-1-h]], [[proxima-cen-b]], [[alpha-centauri-a]], [[alpha-centauri-b]]
-created: 2026-05-21
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # REX vs NearStars Data Comparison
 
 > Source: Real Exoplanets mod v0.9.6 (commit

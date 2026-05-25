@@ -1,15 +1,3 @@
----
-type: workspace
-title: "Manual paper follow-up — α Cen + Proxima Cen system"
-slug: alpha-cen-proxima-system-manual-paper-followup
-cluster: system-alpha-cen
-cluster_role: member
-status: active
-related: [[alpha-cen-proxima-system-checklist]], [[alpha-cen-proxima-system-context-notes]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # Manual paper follow-up — α Cen + Proxima Cen system
 
 ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 자동 fetch
@@ -100,6 +88,4 @@ ADS 키워드 점수 ≥ 14 인데 arXiv 프리프린트가 없어서 본문을 
 
 ## Related
 
-- [checklist](checklist.md) — sibling workspace doc in `alpha-cen-proxima-system/`
-- [context-notes](context-notes.md) — sibling workspace doc in `alpha-cen-proxima-system/`
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to

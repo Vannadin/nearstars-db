@@ -1,17 +1,3 @@
----
-type: concept
-title: "Tools — NearStars"
-slug: tools
-cluster: methodology
-cluster_role: member
-sources: []
-related: [[methodology]], [[adding_stars]], [[mod-reference]], [[guideline]]
-created: 2026-05-22
-updated: 2026-05-24
-confidence: high
-tier: public
----
-
 # Tools — NearStars
 
 The project has grown to roughly thirty scripts plus several agent skills spread across multiple directories. This document indexes them **by purpose**, not by location. Each section is one logical unit of work — fetch data, build a viewer, generate mod cfg — and lists every file that participates.

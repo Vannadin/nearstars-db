@@ -1,15 +1,3 @@
----
-type: workspace
-title: "TRAPPIST-1 — Phase 2 Curation Checklist"
-slug: trappist-1-checklist
-cluster: system-trappist-1
-cluster_role: member
-status: active
-related: [[trappist-1-context-notes]]
-created: 2026-05-21
-updated: 2026-05-25
-tier: public
----
 # TRAPPIST-1 — Phase 2 Curation Checklist
 
 Sample run for the 33-system Phase 2 escalation (started 2026-05-20).
@@ -106,5 +94,4 @@ Method labels:
 
 ## Related
 
-- [context-notes](context-notes.md) — sibling workspace doc in `trappist_1/`
 - [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to
