@@ -59,10 +59,12 @@
 - **Active** — 현재 사이클에서 읽히거나 확장되는 중.
 - **Promoted** — 영구 위치로 이동됨. `phase2/<topic>/` (active
   implementation) 또는 `docs/reference/` (장기 reference 문서, `ko/docs/reference/`
-  미러 동반). 원본 `plans/` 파일은 새 위치를 가리키는 top-of-file 주석을
-  단 stub 로 남음.
-- **Archived** — 대체되거나 폐기됨. 삭제하거나 `plans/_archive/` 로 이동
-  (필요 시 생성).
+  미러 동반). **원본 `plans/` 파일은 같은 commit 에서 삭제한다.**
+  archive 폴더 없음, stub redirect 없음. commit 메시지에
+  `promoted from plans/<name>.md` 한 줄을 포함시키면 `git log` 가
+  archive 역할.
+- **Archived** — 대체되거나 폐기됨. 삭제. `git log` 가 히스토리를 보존하므로
+  필요 시 `git log --all --full-history -- plans/<name>.md` 로 복원 가능.
 
 연구 노트에는 "완료" 상태가 없다. reference 로 여전히 유용하거나 아니거나
 둘 중 하나.

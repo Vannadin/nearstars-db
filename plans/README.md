@@ -64,10 +64,13 @@ A `plans/` document can be:
 - **Promoted** — its findings have moved to a permanent home, either
   `phase2/<topic>/` for active implementation or `docs/reference/`
   for long-lived reference documentation (with `ko/docs/reference/`
-  mirror). The original `plans/` file stays as a stub with a
-  top-of-file note pointing to the promoted location.
-- **Archived** — superseded or abandoned. Either delete, or move to
-  `plans/_archive/` (create if needed).
+  mirror). **Delete the original `plans/` file in the same commit.**
+  No archive folder, no stub redirect. Include
+  `promoted from plans/<name>.md` in the commit message — `git log`
+  is the archive.
+- **Archived** — superseded or abandoned. Delete it. `git log` keeps
+  the history; recover with `git log --all --full-history -- plans/<name>.md`
+  if you ever need it.
 
 There is no "complete" state for a research note. It is either still
 useful as reference, or it is not.
