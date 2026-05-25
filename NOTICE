@@ -42,7 +42,7 @@ Sol-Configs (https://github.com/RSS-Reborn/Sol-Configs)
 
 Sol-Configs is licensed under CC-BY-NC-SA 4.0, the same license as
 this repository. The skill files
-`.agents/skills/kopernicus-cfg/references/planet-body.md`,
+`.claude/skills/kopernicus-cfg/references/planet-body.md`,
 `star-body.md`, and `ocean.md` currently use raw-link redirects to
 upstream files rather than verbatim reproduction. See
 `docs/reference/data-sources.md` §2.

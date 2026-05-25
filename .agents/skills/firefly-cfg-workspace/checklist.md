@@ -63,7 +63,7 @@
 ## Apply
 
 - [ ] User review of draft skill
-- [ ] Swap to live (`.agents/skills/firefly-cfg/`)
+- [ ] Swap to live (`.claude/skills/firefly-cfg/`)
 - [ ] Update `project_nearstars_mod_refs_pending` memory (Firefly →
       covered)
 - [ ] Single commit

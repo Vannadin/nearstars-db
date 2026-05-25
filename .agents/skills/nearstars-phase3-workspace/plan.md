@@ -3,7 +3,7 @@
 
 Date: 2026-05-22
 Workspace: `.agents/skills/nearstars-phase3-workspace/`
-Live skill: `.agents/skills/nearstars-phase3/` (가동 중인 다른 세션 보호 — 작업 종료 후 스왑)
+Live skill: `.claude/skills/nearstars-phase3/` (가동 중인 다른 세션 보호 — 작업 종료 후 스왑)
 
 ## Problem
 

@@ -107,4 +107,4 @@ Pre-flight Hill-sphere check refuses moons placed outside R_Hill and warns above
 
 ## Related
 
-- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
+- [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

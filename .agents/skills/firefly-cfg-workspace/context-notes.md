@@ -29,7 +29,7 @@ mod with no formal cfg documentation; community knowledge is sparse.
 - **Workspace before live**: same pattern as
   `nearstars-phase3-workspace/`. Skill lives at
   `.agents/skills/firefly-cfg-workspace/draft/` during build, swaps
-  to `.agents/skills/firefly-cfg/` on completion.
+  to `.claude/skills/firefly-cfg/` on completion.
 - **References per node group, not per concept**: matches
   `kopernicus-cfg` (one file per cfg node). Easier to find the right
   file when writing a cfg by hand.

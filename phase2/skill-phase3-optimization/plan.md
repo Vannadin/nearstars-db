@@ -2,7 +2,7 @@
 
 ## Goal
 
-Reduce `.agents/skills/nearstars-phase3/SKILL.md` from 543 → ~350 lines
+Reduce `.claude/skills/nearstars-phase3/SKILL.md` from 543 → ~350 lines
 without losing functionality, by removing duplication with user memory,
 the synthesis-template reference, and the score_papers.py script.
 Improve consistency with CLAUDE.md (§2 simplicity, §4 verifiable goals,
@@ -46,4 +46,4 @@ items are deferred to follow-up sessions per the user's chosen split.
 
 ## Related
 
-- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
+- [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

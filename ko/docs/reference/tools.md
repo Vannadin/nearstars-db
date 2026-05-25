@@ -164,18 +164,18 @@
 
 ## 스킬 디렉터리 배치
 
-프로젝트 전용 스킬은 현재 두 트리에 병행 배치되어 있습니다 — 추후 통합 예정.
+라이브 스킬은 모두 `.claude/skills/<name>/` 아래에 둡니다. `.agents/skills/` 는 `<name>-workspace/` 빌드 환경과 gitignored Patreon-EA 스킬 (scatterer, eve, volumetrics) 전용입니다.
 
-| 스킬 | `.claude/skills/` | `.agents/skills/` |
-|-----|:----:|:----:|
-| `kopernicus-cfg` | ✓ | ✓ |
-| `principia-cfg` | ✓ | — |
-| `firefly-cfg` | — | ✓ |
-| `nearstars-add-star` | ✓ | ✓ |
-| `nearstars-phase3` | — | ✓ |
-| `find-skills` (범용) | ✓ | ✓ |
+| 스킬 | 위치 |
+|------|------|
+| `kopernicus-cfg` | `.claude/skills/kopernicus-cfg/` |
+| `principia-cfg` | `.claude/skills/principia-cfg/` |
+| `firefly-cfg` | `.claude/skills/firefly-cfg/` |
+| `nearstars-add-star` | `.claude/skills/nearstars-add-star/` |
+| `nearstars-phase3` | `.claude/skills/nearstars-phase3/` |
+| `find-skills` (범용) | `.claude/skills/find-skills/` |
 
-`.agents/skills/` 의 `firefly-cfg-workspace/` 와 `nearstars-phase3-workspace/` 는 해당 라이브 스킬의 빌드 환경 — 별개의 스킬이 아니라 작업 디렉터리입니다.
+`.agents/skills/firefly-cfg-workspace/` 와 `nearstars-phase3-workspace/` 는 해당 라이브 스킬의 빌드 환경 — 별개의 스킬이 아니라 작업 디렉터리입니다.
 
 ## 의존 그래프
 

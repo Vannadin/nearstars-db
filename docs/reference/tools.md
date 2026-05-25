@@ -164,18 +164,18 @@ Correctness checks live across several functional groups. This index gathers the
 
 ## Skills directory layout
 
-Project-specific skills currently live in two parallel trees — pending consolidation.
+Live skills live under `.claude/skills/<name>/`. `.agents/skills/` is reserved for `<name>-workspace/` build environments and for gitignored Patreon-EA skills (scatterer, eve, volumetrics).
 
-| Skill | `.claude/skills/` | `.agents/skills/` |
-|-------|:----:|:----:|
-| `kopernicus-cfg` | ✓ | ✓ |
-| `principia-cfg` | ✓ | — |
-| `firefly-cfg` | — | ✓ |
-| `nearstars-add-star` | ✓ | ✓ |
-| `nearstars-phase3` | — | ✓ |
-| `find-skills` (generic) | ✓ | ✓ |
+| Skill | Location |
+|-------|----------|
+| `kopernicus-cfg` | `.claude/skills/kopernicus-cfg/` |
+| `principia-cfg` | `.claude/skills/principia-cfg/` |
+| `firefly-cfg` | `.claude/skills/firefly-cfg/` |
+| `nearstars-add-star` | `.claude/skills/nearstars-add-star/` |
+| `nearstars-phase3` | `.claude/skills/nearstars-phase3/` |
+| `find-skills` (generic) | `.claude/skills/find-skills/` |
 
-`firefly-cfg-workspace/` and `nearstars-phase3-workspace/` in `.agents/skills/` are working directories (build environments for the corresponding live skills), not separate skills.
+`.agents/skills/firefly-cfg-workspace/` and `nearstars-phase3-workspace/` are build environments for the corresponding live skills, not separate skills.
 
 ## Dependency graph
 

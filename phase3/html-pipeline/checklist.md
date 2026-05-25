@@ -90,4 +90,4 @@ Policy: AGENTS.md §2.1 — English at canonical path, Korean at
 
 ## Related
 
-- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
+- [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
