@@ -64,3 +64,7 @@
 - `validate.py` FAIL 0
 - `db/systems/`에 8개의 새 시스템 파일 존재
 - target_list.json이 136 → 141 시스템으로 증가
+
+## Related
+
+- [methodology hub](../../docs/reference/methodology.md) — 이 워크스페이스가 기여하는 상위 토픽.
