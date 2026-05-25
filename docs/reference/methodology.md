@@ -5,6 +5,19 @@ stellar and planetary data, sourced from public astronomical catalogues.
 The database feeds two downstream consumers: Principia proto files and
 Kopernicus cfg files, written in separate sessions or agents.
 
+## Table of Contents
+
+- [Goal](#goal)
+- [Output Structure](#output-structure)
+- [JSON Schema](#json-schema)
+- [Epoch Handling](#epoch-handling)
+- [Multiple-System Epoch](#multiple-system-epoch)
+- [Source Recording Protocol](#source-recording-protocol)
+- [Data Sources](#data-sources)
+- [Known Issues and Open Decisions](#known-issues-and-open-decisions)
+- [Out of Scope](#out-of-scope)
+- [Related](#related)
+
 ---
 
 ## Goal

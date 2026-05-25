@@ -7,6 +7,23 @@
 > (1950-01-01 TDB) for binary/triple/multiple star systems that have no JPL HORIZONS
 > data. These vectors feed Principia's `principia_initial_state` for NearStars.
 
+## Table of Contents
+
+1. [Why Linear Back-Propagation Fails, and How Sol/RSS Avoids It](#1-why-linear-back-propagation-fails-and-how-solrss-avoids-it)
+2. [Generalizing to Nearby Stars: The Math](#2-generalizing-to-nearby-stars-the-math)
+3. [Catalog Access — USNO/GSU orb6](#3-catalog-access--usnogsu-orb6)
+4. [Catalog Access — Gaia DR3 NSS](#4-catalog-access--gaia-dr3-nss)
+5. [Per-System Canonical Papers (Override orb6)](#5-per-system-canonical-papers-override-orb6)
+6. [Triple-System Handling](#6-triple-system-handling)
+7. [Code Snippets](#7-code-snippets)
+8. [Barycenter Astrometry — Decision Tree](#8-barycenter-astrometry--decision-tree)
+9. [Worked Example 1 — α Centauri AB at JD2433282.5](#9-worked-example-1--α-centauri-ab-at-jd24332825)
+10. [Worked Example 2 — Sirius AB at JD2433282.5](#10-worked-example-2--sirius-ab-at-jd24332825)
+11. [Known Pitfalls](#11-known-pitfalls)
+12. [Pipeline Summary](#12-pipeline-summary)
+13. [Sources](#13-sources)
+14. [Related](#related)
+
 ---
 
 ## 1. Why Linear Back-Propagation Fails, and How Sol/RSS Avoids It
