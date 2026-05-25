@@ -1,39 +1,39 @@
-# SKILL.md 슬림화 체크리스트
+# SKILL.md slim-down
 # Checklist
 
 ## Setup
 
-- [x] 워크스페이스 디렉터리 생성
-- [x] live-snapshot 복사 (기준점 보존)
-- [x] draft 복사
-- [x] plan.md / checklist.md / context-notes.md 작성
+- [x] Create workspace directory.
+- [x] Copy live → `live-snapshot/` (frozen baseline).
+- [x] Copy live → `draft/` (edit target).
+- [x] Write plan.md / checklist.md / context-notes.md.
 
-## 본문 슬림화 (draft/SKILL.md)
+## Body slim-down (draft/SKILL.md)
 
-- [x] 후보 1 — Trigger Recap 축약 (15 → 3줄)
-- [x] 후보 2 — Step 5 스코어 테이블 압축 (7 → 1줄)
-- [x] 후보 3 — Step 9.1 인라인 템플릿 축약 (26 → 8줄)
-- [x] 후보 4 — Step 9 Dual-track 단락 압축 (23 → 8줄)
-- [x] 후보 5 — Step 10 오류 사례 이동 (10줄 제거)
-- [x] 후보 6 — Phase 3-specific policies 압축 (25 → 5줄)
-- [x] 후보 7 — Related documents 축약 (19 → 5줄)
-- [x] 후보 8 — Step 0 본문 정리 (-5줄)
-- [x] 후보 9 — 인트로 + Scope 중복 제거 (-8줄)
+- [x] Candidate 1 — Trigger Recap compressed (15 → 3 lines).
+- [x] Candidate 2 — Step 5 scoring table compressed (7 → 1 line).
+- [x] Candidate 3 — Step 9.1 inline template compressed (26 → 8 lines).
+- [x] Candidate 4 — Step 9 Dual-track paragraph compressed (23 → 8 lines).
+- [x] Candidate 5 — Step 10 failure-mode list moved out (-10 lines).
+- [x] Candidate 6 — Phase 3-specific policies compressed (25 → 5 lines).
+- [x] Candidate 7 — Related documents trimmed (19 → 5 lines).
+- [x] Candidate 8 — Step 0 body tightened (-5 lines).
+- [x] Candidate 9 — Intro + Scope duplication removed (-8 lines).
 
-## references/ 업데이트 (한 곳만)
+## references/ updates (one file only)
 
-- [x] conflict-resolution.md — 후보 5 에서 옮긴 failure-mode 4개 추가 (319 → 333줄)
+- [x] `conflict-resolution.md` — receive the 4 failure modes from candidate 5 (319 → 333 lines).
 
 ## Verify
 
-- [~] draft/SKILL.md 줄 수: 609 → **511** (목표 500 ± 11줄 마진)
-- [x] Step 0–14 모두 보존 확인 (15 헤딩, 9.0 + 9.1 포함)
-- [x] Step 9.0 mandatory 게이트 보존 (line 276)
-- [x] references/ 포인터 5곳 + 인트로 박스 4곳 모두 살아있음
-- [ ] diff 사용자 검토
+- [~] `draft/SKILL.md` line count: 609 → **511** (target 500, +11-line margin).
+- [x] All 14 Steps (0–14) preserved (15 headings including 9.0 + 9.1).
+- [x] Step 9.0 mandatory gate preserved (line 276).
+- [x] `references/` pointers (5 spots) + intro box (4 spots) all survive.
+- [ ] User reviews the diff.
 
-## Apply (사용자 승인 후 별도 단계)
+## Apply (separate step, after user approval)
 
-- [ ] 다른 세션 종료 확인
-- [ ] draft → live 스왑
-- [ ] 커밋 (commit message: 한 문장)
+- [ ] Confirm other sessions are shut down.
+- [ ] Swap `draft/` → live skill dir.
+- [ ] Commit (one-sentence message).

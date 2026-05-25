@@ -1,52 +1,41 @@
-# SKILL.md 슬림화 — 의사결정 로그
+# SKILL.md slim-down — decision log
 # Context notes
 
 ## Why now (2026-05-22)
 
-직전 정책 강화 작업 (Step 9.0 추가, anti-patterns 2개, e/f canonical
-example) 으로 SKILL.md 가 609줄까지 늘었음. skill-creator 가이드의
-"본문 < 500줄" 권장을 넘어서면서, Step 9.0 같은 mandatory 게이트가
-주변 설명에 묻힐 위험. progressive disclosure 원칙대로 깊이 있는
-정의는 references/ 에 이미 있으므로 본문 중복분을 정리할 시점.
+The recent policy-tightening pass (added Step 9.0, two anti-patterns, the e/f canonical example) pushed SKILL.md to 609 lines. That clears the skill-creator "body < 500 lines" guideline, and the side effect is that mandatory gates like Step 9.0 risk getting buried in the surrounding prose. The progressive-disclosure principle says deep definitions belong in `references/` — they're already there, so the right move is to strip the duplication out of the body.
 
 ## Why a workspace (not in-place)
 
-다른 세션이 현재 라이브 스킬을 사용 중. 편집 중인 SKILL.md 를
-세션이 다시 읽으면 절단된 상태를 보게 됨. 따라서:
+Other sessions may be reading the live skill mid-edit. If a session re-reads a half-edited SKILL.md it sees a torn state. So:
 
-- `live-snapshot/` — 변경 전 기준점 (git stash 대신 명시적 보관)
-- `draft/` — 편집 대상
-- 작업 완료 + 다른 세션 종료 후에 swap
+- `live-snapshot/` — frozen baseline (explicit copy beats `git stash` for this).
+- `draft/` — edit target.
+- Swap to live only after edits are done AND the other sessions have finished.
 
-## 보존 원칙
+## Invariant
 
-이번 작업은 *형태만* 바꾸고 동작은 동등하게 유지:
+This pass changes shape only — behavior must stay equivalent:
 
-- 새 step 추가/삭제 금지
-- 새 policy 분기 추가 금지
-- 14개 Step 헤딩 모두 그대로
-- Step 9.0 + 9.1 분리 유지 (어제 정책 강화의 핵심)
-- references/ 포인터 모두 보존
+- No new Steps, no deletions.
+- No new policy branches.
+- All 14 Step headings preserved.
+- Step 9.0 + 9.1 split preserved (the point of yesterday's policy tightening).
+- All `references/` pointers preserved.
 
-CLAUDE.md §3 (Surgical Changes) — 슬림화 작업이지만 "튀어나오는
-이슈 옆에 있는 것 까지 손대지 말것" 은 동일하게 적용.
+CLAUDE.md §3 (Surgical Changes) still applies: "don't touch nearby code that isn't broken" holds even for cleanup work.
 
-## 압축 우선순위의 근거
+## Priority order for the 9 candidates
 
-후보 1–9 중 영향도 큰 것부터:
+Roughly by impact:
 
-- 후보 3 (Step 9.1 템플릿) + 후보 6 (Phase 3-specific policies) +
-  후보 4 (Dual-track) — 합쳐서 ~60줄. references 중복 가장 큼.
-- 후보 1 (Trigger Recap) + 후보 7 (Related documents) — 합쳐서
-  ~22줄. frontmatter / 외부 reference 와 중복.
-- 후보 2 / 후보 5 / 후보 8 / 후보 9 — 합쳐서 ~30줄. 작은 정리.
+- Candidates 3 (Step 9.1 template) + 6 (Phase 3-specific policies) + 4 (Dual-track) — ~60 lines combined. Largest `references/` duplication.
+- Candidates 1 (Trigger Recap) + 7 (Related documents) — ~22 lines combined. Duplicate frontmatter / external references.
+- Candidates 2 / 5 / 8 / 9 — ~30 lines combined. Small cleanups.
 
-## Out of bounds (이번엔 안 건드림)
+## Out of bounds (not touched this pass)
 
-- Step 11 한글 미러 스타일 테이블 — 자주 직접 참조하는 즉시표
-- Step 10 verify 절차 본체 — 가장 사고 많은 step, 두께 유지
-- Autonomy guards / Common pitfalls — 이미 콤팩트
-- 다른 references/*.md (mod-grounded-fields.md, scoring-reference.md,
-  synthesis-template.md) — 본문에서 *덜어내기만* 하고 references 는
-  추가 작업 없음
-- 예외: conflict-resolution.md 는 후보 5 에서 failure-mode 4개 받음
+- Step 11 Korean-mirror style table — a frequently-consulted quick-reference table; keep it inline.
+- Step 10 verify body — the highest-stakes Step; keep it thick.
+- Autonomy guards / Common pitfalls — already compact.
+- Other `references/*.md` (`mod-grounded-fields.md`, `scoring-reference.md`, `synthesis-template.md`) — only *receive* content from the body, never *modified* beyond that. The exception is `conflict-resolution.md`, which gets the 4 failure modes from candidate 5.
