@@ -15,7 +15,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 7 | Principia cfg | DB → Principia n-body patches | `principia-cfg` skill |
 | 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
 | 9 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
-| 10 | Dev helpers | Markdown preview, ko/ mirror parity | `scripts/preview-md.sh`, `scripts/check-mirrors.sh` |
+| 10 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 
 ## Verification & QA — index
 
@@ -161,6 +161,8 @@ Correctness checks live across several functional groups. This index gathers the
 **Files.**
 - `scripts/preview-md.sh <md-file>` — render markdown to HTML and open in the browser
 - `scripts/check-mirrors.sh` — verify `ko/` mirror parity (missing or stale files)
+- `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
+- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan. Manual invocation only.
 
 ## Skills directory layout
 

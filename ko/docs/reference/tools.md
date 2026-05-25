@@ -15,7 +15,7 @@
 | 7 | Principia cfg | DB → Principia n-body 패치 | `principia-cfg` 스킬 |
 | 8 | Firefly cfg | Phase 3 대기 합성 → Firefly 재진입 효과 cfg | `firefly-cfg` 스킬 |
 | 9 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
-| 10 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh` |
+| 10 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 
 ## 검증 & QA — 인덱스
 
@@ -161,6 +161,8 @@
 **파일.**
 - `scripts/preview-md.sh <md-file>` — 마크다운을 HTML 로 렌더해 브라우저에서 열기
 - `scripts/check-mirrors.sh` — `ko/` 미러의 누락·구버전 상태 확인
+- `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
+- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검. 수동 실행 전용.
 
 ## 스킬 디렉터리 배치
 

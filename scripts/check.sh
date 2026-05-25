@@ -41,9 +41,10 @@ if [ $fail -eq 0 ]; then echo "  [PASS] 컨벤션 점검 통과"; fi
 
 echo ""
 echo "── 5. 경로 마이그레이션 잔여물 점검 ──"
+# 이 스크립트 자체는 패턴을 정의하는 파일이므로 self-match 제외.
 patterns="alpha-cen-proxima-system|trappist-1-system|docs/wiki|llm-wiki|skills-lock"
-hits=$(git grep -lE "$patterns" 2>/dev/null || true)
-dup_skill=$(git grep -lE "\.agents/skills/(firefly-cfg|nearstars-phase3|find-skills|kopernicus-cfg|nearstars-add-star)/" 2>/dev/null || true)
+hits=$(git grep -lE "$patterns" -- ':!scripts/check.sh' 2>/dev/null || true)
+dup_skill=$(git grep -lE "\.agents/skills/(firefly-cfg|nearstars-phase3|find-skills|kopernicus-cfg|nearstars-add-star)/" -- ':!scripts/check.sh' 2>/dev/null || true)
 if [ -n "$hits" ] || [ -n "$dup_skill" ]; then
   [ -n "$hits" ] && { echo "  옛 경로 잔존:"; echo "$hits" | sed 's/^/    /'; }
   [ -n "$dup_skill" ] && { echo "  옛 스킬 경로 잔존:"; echo "$dup_skill" | sed 's/^/    /'; }
