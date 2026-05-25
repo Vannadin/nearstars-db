@@ -444,3 +444,11 @@ Principia의 TRAPPIST 설정에서 단위 약어로 사용됩니다.
 | `astronomy/sol_numerics_blueprint.cfg` | `:NEEDS[RealSolarSystem]` |
 
 Sol-Configs는 `:FOR[SolSystem]`으로 자체 `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cfg`, `Quarter_Sol-GravityModel.cfg`, `Quarter_Sol-InitialState.cfg`를 제공합니다.
+
+## Related
+
+- [methodology](methodology.md) — Principia 의 gravitational_parameter, mass, radius 에 공급되는 DB 측 스키마.
+- [binary-epoch-pipeline](binary-epoch-pipeline.md) — 해당 문서 §9–11 이 만들어 내는 Cartesian 상태 벡터가 여기 `principia_initial_state` 의 body 블록에 공급됩니다.
+- [mod-reference](mod-reference.md) — Principia 설치와 의존성 티어.
+- [mod-release-layout](mod-release-layout.md) — §2.1 이 Principia 패치를 `Patches/Principia/` 에 어떻게 배치하는지 다룹니다.
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — Principia 의 body 별 gravity 모델 다운스트림의 정전 워크드 예시.

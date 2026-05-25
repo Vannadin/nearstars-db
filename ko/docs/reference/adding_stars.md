@@ -236,3 +236,11 @@ Curation Phase 1 배치와 일회성 유지보수에 수동으로 실행.
 | SIMBAD TAP | simbad.u-strasbg.fr/simbad/sim-tap | 밝은 별 폴백, mesDiameter, spectype, Teff |
 | NASA Exoplanet Archive | exoplanetarchive.ipac.caltech.edu/TAP | 행성 데이터 |
 | VizieR WDS TAP | tapvizier.cds.unistra.fr | 쌍성 교차 검증 (binary_orbits 전용) |
+
+## Related
+
+- [methodology](methodology.md) — 클러스터 허브. 이 워크플로우가 다루는 스키마 정의.
+- [binary-epoch-pipeline](binary-epoch-pipeline.md) — "쌍성계 추가" 작업의 binary_orbits.json 측.
+- [data-sources](data-sources.md) — fetch 스크립트가 부딪는 외부 카탈로그.
+- [archive_issues](archive_issues.md) — 이 워크플로우가 의존하는 업스트림 소스의 알려진 결함.
+- [tools](tools.md) — 스크립트 인덱스 (Step 5 의 fetch 스크립트가 거기에 문서화되어 있습니다).

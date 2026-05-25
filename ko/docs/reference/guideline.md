@@ -147,3 +147,11 @@ Sol-Configs (아래 표의 NAIF SPK-style ID 체계) 및 RSS-Origin v1.x 와 충
 - [ ] RSS EVE 버전: V3 (무료) vs V5 (Patreon) — 둘 다 지원할지, Sol처럼 V5만 지원할지
 - [ ] Principia 호환성: 스케일 변형별 별도 중력 모델 cfg가 필요하며, 50–80 ly 별에 대한 Principia 전용 항목 가능 (Kopernicus 천체 불필요)
 - [ ] Sol Quarter 스케일 지원 — 지원 예정, 우선순위 낮음. `principia-cfg` skill MVP 는 Sol Real 스케일만 출력. Quarter 좌표는 별도 `solar_system_epoch` 라서 별개 cfg 파일이 필요하며 후속 작업.
+
+## Related
+
+- [methodology](methodology.md) — 클러스터 허브. DB 측 워크플로우.
+- [mod-reference](mod-reference.md) — 다운스트림 모드와 의존성 티어.
+- [mod-release-layout](mod-release-layout.md) — 모드 릴리스 측의 repo 레이아웃.
+- [data-sources](data-sources.md) — 외부 데이터의 인용 요구사항.
+- [rex-data-comparison](rex-data-comparison.md) — REX 는 §1 에서 정신적 선조로 인용됩니다.

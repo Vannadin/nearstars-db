@@ -101,3 +101,9 @@ Zeta Tucanae
 
 gaia_dr3_id가 NULL인 시스템은 SIMBAD 측성으로 폴백했으며,
 이를 통해 GJ 411과 GJ 273의 거리 불일치가 드러났습니다.
+
+## Related
+
+- [methodology](methodology.md) — 클러스터 허브. 이 이슈들이 드러나게 한 교차 검증 절차.
+- [data-sources](data-sources.md) — 이 이슈들이 살고 있는 카탈로그 (NASA Archive, TEPCat).
+- [adding_stars](adding_stars.md) — 별 추가 워크플로우는 fetch 시점에 이 이슈들과 마주칩니다.

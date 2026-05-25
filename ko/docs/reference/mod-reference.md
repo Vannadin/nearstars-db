@@ -65,3 +65,11 @@
 |--------|------|
 | [SPACEMAN9813/Firefly-Planet-Pack-Configs](https://github.com/SPACEMAN9813/Firefly-Planet-Pack-Configs) | 여러 행성 팩의 Firefly cfg 예시 |
 | [OneSaltyPringle/OPM-Parallax](https://github.com/OneSaltyPringle/OPM-Parallax) | OPM의 Parallax Continued cfg 예시 |
+
+## Related
+
+- [methodology](methodology.md) — 클러스터 허브.
+- [mod-release-layout](mod-release-layout.md) — 이 모드들을 소비하는 repo 레이아웃.
+- [data-sources](data-sources.md) — 여기 인용된 모드의 라이선스/어트리뷰션 측면 (Kopernicus, Principia, Sol-Configs).
+- [guideline](guideline.md) — 프로젝트 차원의 범위 (어떤 모드가 필수인지 vs 선택인지).
+- [principia-cfg-reference](principia-cfg-reference.md) — Principia 모드의 cfg API.

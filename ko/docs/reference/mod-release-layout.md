@@ -179,3 +179,10 @@ NearStars-Textures/PluginData/[##_SystemFolder]/[##_BodyFolder]/Kopernicus/[Body
 ```
 
 참고. BC5/BC7은 macOS에서 공식적으로 지원되지 않으며, Sol과 동일한 제한입니다.
+
+## Related
+
+- [methodology](methodology.md) — 클러스터 허브.
+- [mod-reference](mod-reference.md) — 이 레이아웃이 패치하는 모드.
+- [guideline](guideline.md) — `flightGlobalsIndex` 할당, phase-of-work 정의.
+- [principia-cfg-reference](principia-cfg-reference.md) — Principia 패치 레이아웃 (§2.1 에서 참조).

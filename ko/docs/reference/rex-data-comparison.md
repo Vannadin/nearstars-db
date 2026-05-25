@@ -458,3 +458,11 @@ Phase 3는 핵심 JWST 논문 7편을 직접 반영한다.
 
 > **조석 가열: REX에는 없었고 Phase 3는 b를 exo-Io 유사체로 정량화했다.**
 > Bolmont 2026이 JWST 야간면 제약을 이용해 상향 수정한 직접적 결과.
+
+## Related
+
+- [methodology](methodology.md) — NearStars 가 사용하는 스키마 원본 (REX 의 산문식 어트리뷰션이 그 대비).
+- [guideline](guideline.md) — NearStars 의 프로젝트 가이드라인이 §1 에서 REX 를 선조로 인용합니다.
+- [trappist-1-b](../phase3/trappist-1-b.md), [trappist-1-c](../phase3/trappist-1-c.md), [trappist-1-d](../phase3/trappist-1-d.md), [trappist-1-e](../phase3/trappist-1-e.md), [trappist-1-f](../phase3/trappist-1-f.md), [trappist-1-g](../phase3/trappist-1-g.md), [trappist-1-h](../phase3/trappist-1-h.md) — §10 이 REX 대비 TRAPPIST-1 Phase 3 갭을 정량화합니다.
+- [proxima-cen-b](../phase3/proxima-cen-b.md) — §6 이 Proxima 행성 로스터 변경을 다룹니다.
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — §3–5 가 α Cen 항성 파라미터와 토폴로지 갭을 다룹니다.
