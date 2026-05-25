@@ -55,6 +55,10 @@ else
 fi
 
 echo ""
+echo "── 6. 영문 source-of-truth 영역 한글 dominant 검사 ──"
+python3 scripts/check_language.py || fail=1
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else

@@ -162,7 +162,8 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/preview-md.sh <md-file>` — render markdown to HTML and open in the browser
 - `scripts/check-mirrors.sh` — verify `ko/` mirror parity (missing or stale files)
 - `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
-- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan. Manual invocation only.
+- `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
+- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check. Manual invocation only.
 
 ## Skills directory layout
 
