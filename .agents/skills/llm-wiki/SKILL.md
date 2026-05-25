@@ -442,15 +442,70 @@ This skill is invoked by:
 
 | Trigger | Form | Purpose |
 |---|---|---|
-| Manual ingest | `/wiki ingest <path>` | User adds/edits a file, runs this to integrate |
-| Manual refresh | `/wiki refresh` | Scan repo for unindexed files, ingest each |
-| Manual lint | `/wiki lint` | Run §5 health check |
-| Manual query | `/wiki query <topic>` | Run §7 |
-| Weekly cron | (TBD — Phase 3) | Automatic `/wiki lint` once per week |
-| Pre-commit hook | (TBD — Phase 3, opt-in) | Auto-ingest any `.md` staged for commit |
+| Manual ingest | `/wiki-ingest <path>` | User adds/edits a file, runs this to integrate |
+| Manual refresh | `/wiki-refresh` | Scan repo for unindexed files, ingest each |
+| Manual lint | `/wiki-lint` | Run §5 health check |
+| Manual query | `/wiki-query <topic>` | Run §7 |
+| **Pre-commit hook** | `scripts/wiki/precommit-ingest.sh` (installed at `.git/hooks/pre-commit`) | Auto-ingest any `.md` staged for commit |
+| **Weekly cron** | `scripts/wiki/cron-weekly-lint.sh` (manual crontab entry) | Automatic `/wiki-lint` once per week |
 
-The actual trigger setup (cron entry, slash command registration) is
-defined separately under `scripts/wiki/` (TBD when bootstrap completes).
+Setup decision: **C full** (pre-commit hook + weekly cron + on-demand
+slash commands). Confirmed by user 2026-05-25.
+
+### 8.1 Slash command registration
+
+The four slash commands live in `.claude/commands/wiki-{ingest,lint,refresh,query}.md`.
+They're auto-discovered by Claude Code at session start. Type `/wiki-ingest <path>`
+in any session to invoke.
+
+### 8.2 Pre-commit hook install
+
+```bash
+./scripts/wiki/install.sh
+```
+
+This symlinks `scripts/wiki/precommit-ingest.sh` to
+`.git/hooks/pre-commit`. The hook:
+- Detects staged `.md` files (excluding raw tier, wiki state pages, ko/).
+- Invokes `claude -p "/wiki-ingest <files>"` headlessly.
+- Re-stages modified files (frontmatter + Related + wiki state).
+- **Non-blocking**: if Claude CLI unavailable, network down, or ingest
+  fails, the hook logs to `.wiki-hook.log` and lets the commit proceed.
+
+### 8.3 Weekly cron install (manual)
+
+```bash
+crontab -e
+# add this line (every Sunday 03:00 local):
+0 3 * * 0 /Users/vana/Desktop/claude/scripts/wiki/cron-weekly-lint.sh
+```
+
+For macOS, `launchd` is the more idiomatic option but cron works fine
+for weekly tasks. If using launchd, create a `~/Library/LaunchAgents/`
+plist; the cron script's shell body can be reused.
+
+### 8.4 Troubleshooting hook failures
+
+- **"claude CLI not in PATH"** in `.wiki-hook.log` — the hook runs in a
+  reduced environment that doesn't include the user's shell PATH. Fix
+  by either (a) adding `export PATH="$HOME/.local/bin:$PATH"` (or
+  wherever Claude Code installed it) to the hook script, or (b)
+  ensuring `claude` is in `/usr/local/bin/` or another globally-visible
+  location.
+- **Auth failures** — Claude Code needs an active session/auth in the
+  hook environment. macOS `launchd` contexts often lack the same
+  keychain access as interactive shells; you may need to use `claude
+  setup-token` or invoke from an interactive shell wrapper.
+- **Commit too slow** — if hook always runs (any commit with .md),
+  consider narrowing the trigger via `--diff-filter=A` (added files
+  only, not modified).
+- **Want to skip hook for a specific commit** — `git commit --no-verify`.
+
+The actual trigger setup files live in `scripts/wiki/`:
+- `precommit-ingest.sh` — pre-commit hook (symlinked into `.git/hooks/`)
+- `cron-weekly-lint.sh` — weekly lint cron script
+- `install.sh` — one-shot installer for the above
+
 This skill defines the *procedure*; the triggers invoke the procedure.
 
 ---
