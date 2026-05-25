@@ -21,7 +21,7 @@ the Alpha Cen first pass failed.
 ## Stage 0 — pre-flight (done)
 
 - [x] Phase 2 inputs spot-checked — `db/systems/{alpha_centauri_a,alpha_centauri_b,proxima_cen}.json` contain multi-paper `*_measurements` arrays with `recommended` flags. SM25, Pourbaix&Boffin 2016, Kervella 2017, Joyce&Chaboyer 2018, Faria 2022 all attributed.
-- [x] Working dir `phase3/alpha-cen-proxima-system/` created
+- [x] Working dir `phase3/alpha_centauri_proxima/` created
 - [x] User confirmed 6–9h budget, Step 9.0 mandatory gate, e/f as base
 
 ## Stage 1 — bibliography builds (sequential, arXiv 3 s rate limit)

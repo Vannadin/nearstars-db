@@ -83,7 +83,7 @@
 
 **드라이버.** `nearstars-phase3` 스킬이 절차를 정의합니다 (triage → 정독 → 합성 → 검증 → ko 미러 → 시각 확인).
 
-**Audit pass.** 합성 배치가 끝나면 스킬은 외부 감사를 지시합니다 — 결정표의 각 행을 post-retrofit 정책 (mod-grounded fields, documented divergence) 에 대조합니다. 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` 에 수동으로 작성됩니다. 표준 예시는 `phase3/trappist-1-system/audit-pass-2026-05-22.md`.
+**Audit pass.** 합성 배치가 끝나면 스킬은 외부 감사를 지시합니다 — 결정표의 각 행을 post-retrofit 정책 (mod-grounded fields, documented divergence) 에 대조합니다. 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` 에 수동으로 작성됩니다. 표준 예시는 `phase3/trappist_1/audit-pass-2026-05-22.md`.
 
 **출력.** `docs/phase3/*.html`, `phase3/<system>/manual-paper-followup.md`, `phase3/<system>/audit-pass-*.md`.
 

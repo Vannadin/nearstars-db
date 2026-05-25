@@ -103,7 +103,7 @@ Goal: cheap upfront work that prevents painful surprises later.
    mkdir -p phase3/<system_slug>
    ```
    Inside, create `checklist.md` with stage-based checkboxes — the
-   canonical pattern from `phase3/trappist-1-system/checklist.md`:
+   canonical pattern from `phase3/trappist_1/checklist.md`:
    ```markdown
    ## Stage 1 — bibliography builds (parallel)
    - [ ] build_bibliography.py "<System> b" — N papers, M arxiv
@@ -233,7 +233,7 @@ For each high-score paper, classify into:
   - **Tier B** — useful context; can wait
   - **Tier C** — conference summaries / catalogs; safe to skip
 
-  See `phase3/trappist-1-system/manual-paper-followup.md` for the
+  See `phase3/trappist_1/manual-paper-followup.md` for the
   established format. When the user later pastes back an abstract or
   full text, save it as `docs/phase3/_papers/<bibcode>.md` and
   integrate via Step 8 / Step 10 (verify pass).
@@ -506,6 +506,6 @@ these actions require explicit confirmation or a Read-first step.
 
 - `docs/phase3/trappist-1-{e,f}.md` — canonical structural examples (with divergence section)
 - `docs/phase3/trappist-1-d.md` — pilot, predates divergence policy (don't use as template)
-- `phase3/trappist-1-system/{checklist,context-notes,manual-paper-followup}.md` — working artifacts as templates
+- `phase3/trappist_1/{checklist,context-notes,manual-paper-followup}.md` — working artifacts as templates
 - `docs/reference/{guideline,methodology}.md` — project scope + curation philosophy
 - Upstream: `nearstars-add-star` (Phase 1/2). Downstream: `kopernicus-cfg`, `principia-cfg`

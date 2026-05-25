@@ -48,7 +48,7 @@ known gaps. **Highest priority for manual fetch.**
 These are mostly conference proceedings (BAAS, AAS, AGU, EAS, EGU,
 EPSC) that summarize already-published work, plus VizieR data catalogs.
 43 such papers exist across the 6 planets' bibliographies. Listed
-exhaustively in `phase3/trappist-1-system/_manual-followup-source.json`.
+exhaustively in `phase3/trappist_1/_manual-followup-source.json`.
 Generally safe to skip; they cite the same primary references already
 read.
 

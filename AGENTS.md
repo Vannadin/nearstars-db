@@ -59,7 +59,7 @@ phase3/<system>/       Active Phase 3 synthesis work (cfg-ready value
                        structure as phase2/. Driven by the
                        nearstars-phase3 skill. Per-system rather than
                        per-topic because synthesis is gated on the host
-                       star (e.g. phase3/trappist-1-system/).
+                       star (e.g. phase3/trappist_1/).
 
 plans/<topic>.md       Research notes and external-system analyses.
                        Single file. No checklist. No implementation in this repo.

@@ -400,7 +400,7 @@ Conference proceedings, biosignature speculations, technosignature
 searches, and gravitational-lens propulsion proposals; preserved in
 `docs/phase3/_bib/proxima-cen-b.yaml` with `status: skipped`. Three
 notable Tier A no-arXiv items captured in
-`phase3/alpha-cen-proxima-system/manual-paper-followup.md`:
+`phase3/alpha_centauri_proxima/manual-paper-followup.md`:
 **Del Genio 2019** (dynamic ocean), **Noack 2021** (interior
 outgassing), **Herath 2021** (interior structure).
 

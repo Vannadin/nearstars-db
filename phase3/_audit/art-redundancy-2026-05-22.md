@@ -175,7 +175,7 @@ flare).
 위 권장 1~4 가운데 어느 것을 언제 실행할지는 사용자 결정. 이 audit 은
 "준비 문서" 로서, 실제 cfg 변경을 트리거하지 않습니다. 변경할 entry 가
 결정되면 해당 시스템 working dir 에 새 phase3 작업을 시작합니다 (예:
-Proxima b Venus-analog 격상은 `phase3/alpha-cen-proxima-system/`
+Proxima b Venus-analog 격상은 `phase3/alpha_centauri_proxima/`
 재방문).
 
 ## Related

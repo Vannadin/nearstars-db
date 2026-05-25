@@ -21,7 +21,7 @@ This script:
 Usage:
   python3 scripts/phase3/expand_citations.py docs/phase3/_bib/trappist-1-b.yaml
   python3 scripts/phase3/expand_citations.py docs/phase3/_bib/trappist-1-b.yaml \
-      --triage phase3/trappist-1-system/_triage-result.json \
+      --triage phase3/trappist_1/_triage-result.json \
       --max-per-seed 80
 
 Filtering:

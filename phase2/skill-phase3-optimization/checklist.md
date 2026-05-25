@@ -31,7 +31,7 @@
 - [x] [I5] AGENTS.md §2 — add `phase3/<system>/` block + decision-rule
       bullet (user chose: keep phase3/, document it)
 - [x] [I6] Step 1.2 — embed canonical checklist.md stages from
-      `phase3/trappist-1-system/checklist.md`
+      `phase3/trappist_1/checklist.md`
 - [x] [I7] Frontmatter description — compress 3 sentences into one
       ("Do NOT use for X / Y / Z / W")
 

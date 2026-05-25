@@ -304,13 +304,13 @@ applyLang();
 
 
 def display_system_name(slug: str) -> str:
-    """trappist-1-system → TRAPPIST-1."""
-    s = slug.replace('-system', '')
-    parts = s.split('-')
-    # TRAPPIST-1 → uppercase first token if it looks like an acronym
-    if parts and parts[0].islower() and len(parts[0]) >= 4:
-        parts[0] = parts[0].upper()
-    return '-'.join(parts)
+    """trappist_1 → TRAPPIST-1, alpha_centauri_proxima → Alpha Centauri Proxima."""
+    parts = slug.split('_')
+    # 토큰 2개 + 마지막이 숫자 → acronym + 번호 패턴 (trappist_1, gj_667)
+    if len(parts) == 2 and parts[-1].isdigit():
+        return f"{parts[0].upper()}-{parts[-1]}"
+    # 일반 시스템 → Title Case + 공백 join
+    return ' '.join(p.capitalize() for p in parts)
 
 
 def render_systems(systems: list) -> str:
