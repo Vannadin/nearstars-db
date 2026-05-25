@@ -43,7 +43,7 @@
 4. **첫 문단에 NearStars 와의 연관성 명시.** 이 연구가 NearStars 에
    왜 중요한가. 없으면 이 레포에 있을 정당성 없음.
 
-5. **템플릿에서 시작.** [`_template.md`](_template.md) 참조.
+5. **템플릿에서 시작.** [`_template.md`](../../plans/_template.md) 참조.
 
 6. **영어가 source, 한글 미러는 `ko/plans/` 에.**
    [AGENTS.md §2.1](../../AGENTS.md#21-bilingual-mirror--ko-tree) 참조.
