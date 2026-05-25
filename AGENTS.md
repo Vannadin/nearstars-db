@@ -119,33 +119,6 @@ Korean mirror under `ko/<same-path>`.
   scripts/check-mirrors.sh
   ```
 
-### 2.3 LLM Wiki layer
-
-This repo ships an **LLM-maintained wiki overlay** at `docs/wiki/`,
-following Karpathy's LLM Wiki pattern (2026-04-04) adapted for
-NearStars' 3-tier structure. The wiki is curated by the
-[`llm-wiki`](.agents/skills/llm-wiki/SKILL.md) skill — invoked via
-`/wiki refresh`, `/wiki ingest <path>`, `/wiki lint`, or `/wiki query
-<topic>`.
-
-**Tiers** (the wiki agent respects gitignore boundaries):
-- **Raw** (`db/`, `docs/phase3/_papers/`, `phase2/`, `phase3/`) —
-  read-only; never modified by the wiki agent.
-- **Public wiki** (`docs/reference/`, `docs/phase3/` entities, `plans/`,
-  `docs/wiki/`, `AGENTS.md`, `README.md`) — full read+write; output is
-  publishable.
-- **Local-only wiki** (`.agents/skills/{scatterer,eve,volumetrics,
-  raymarched}-*/`) — full read+write but output stays gitignored
-  (Patreon EA content; commits forbidden).
-
-**Cross-tier rule**: public-tier files may *reference* local-only paths
-by link (will broken-render on GitHub, resolve locally), but must NOT
-inline EA-derived field names or behaviors. The lint workflow scans for
-known EA identifiers and flags violations.
-
-See `docs/wiki/{index,overview,log,hot}.md` for the wiki's catalog,
-cluster map, activity log, and session cache respectively.
-
 ### 2.2 Reading the repo as an Obsidian vault
 
 This repo ships an `.obsidian/` overlay so the four documentation
