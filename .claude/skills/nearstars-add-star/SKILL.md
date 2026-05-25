@@ -86,7 +86,7 @@ For each component of the system, you need:
 Run the helper script when you have a candidate name:
 
 ```bash
-python3 .agents/skills/nearstars-add-star/scripts/lookup_gaia.py "GJ 412 A"
+python3 .claude/skills/nearstars-add-star/scripts/lookup_gaia.py "GJ 412 A"
 ```
 
 It returns Gaia DR3 source_id (if any), SIMBAD canonical name, distance, V
