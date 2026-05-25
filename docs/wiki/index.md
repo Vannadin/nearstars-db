@@ -60,30 +60,34 @@ member of methodology and a hub of physics-epoch.)
 
 ---
 
-## Cluster: mod-kopernicus
+## Cluster: mod-kopernicus ✓ (Phase 2 ingested 2026-05-25 — Related only)
 
 > Kopernicus cfg generation for new bodies.
 
 **Hub:** `.agents/skills/kopernicus-cfg/SKILL.md`
+(Skill-system frontmatter retained; wiki added Related section only.)
 
 (Member listing: see the skill's `references/` directory.)
 
 ---
 
-## Cluster: mod-principia
+## Cluster: mod-principia ✓ (Phase 2 ingested 2026-05-25)
 
 > Principia n-body patches per scale variant.
 
 **Hub:** [principia-cfg-reference](../reference/principia-cfg-reference.md)
+(also a member of [physics-epoch](../reference/binary-epoch-pipeline.md)
+secondary cluster)
 + `.agents/skills/principia-cfg/SKILL.md`
 
 ---
 
-## Cluster: mod-firefly
+## Cluster: mod-firefly ✓ (Phase 2 ingested 2026-05-25 — Related only)
 
 > Firefly reentry-effect cfg.
 
 **Hub:** `.agents/skills/firefly-cfg/SKILL.md`
+(Skill-system frontmatter retained; wiki added Related section only.)
 
 (Member listing: see the skill's `references/` directory.)
 
@@ -107,12 +111,13 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 ---
 
-## Cluster: phase3-procedure
+## Cluster: phase3-procedure ✓ (Phase 2 ingested 2026-05-25 — Related only)
 
 > Phase 3 synthesis methodology (paper triage → cfg-ready decisions
 > with bilingual viewer).
 
 **Hub:** `.agents/skills/nearstars-phase3/SKILL.md`
+(Skill-system frontmatter retained; wiki added Related section only.)
 
 ---
 
@@ -178,7 +183,8 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 *Auto-pulled from [log.md](log.md) — top 5 entries.*
 
-1. **2026-05-24 ingest** — methodology concept cluster + comparisons cluster (11 pages: 9 concept + 2 synthesis)
-2. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages: 3 stars + 2 planets)
-3. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
-4. **2026-05-24 initialize** — wiki scaffold created
+1. **2026-05-25 lint** — Phase 2 bootstrap health check (0 orphans, 0 EA leaks, 26/27 frontmatter coverage)
+2. **2026-05-25 ingest** — mod-principia cluster + skill cross-refs (4 pages)
+3. **2026-05-24 ingest** — methodology concept cluster + comparisons cluster (11 pages: 9 concept + 2 synthesis)
+4. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages: 3 stars + 2 planets)
+5. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)

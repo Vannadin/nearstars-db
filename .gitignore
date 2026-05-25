@@ -18,6 +18,10 @@ docs/phase3/_papers/
 
 .venv/
 
+# Obsidian auto-generated canvas files (created when user accidentally
+# clicks "new canvas"; not part of the wiki layer)
+*.canvas
+
 # Obsidian vault overlay: commit only the shared config files
 # (app.json, graph.json, appearance.json). Everything else under
 # .obsidian/ is per-user state (workspace layout, plugins, cache, hotkeys).

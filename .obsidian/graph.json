@@ -8,46 +8,44 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
+      "query": "path:docs/wiki",
+      "color": { "a": 1, "rgb": 9079434 }
+    },
+    {
+      "query": "path:.agents/skills/llm-wiki",
+      "color": { "a": 1, "rgb": 11815884 }
+    },
+    {
+      "query": "path:.agents/skills",
+      "color": { "a": 1, "rgb": 3700119 }
+    },
+    {
       "query": "path:docs/reference",
-      "color": {
-        "a": 1,
-        "rgb": 4677356
-      }
+      "color": { "a": 1, "rgb": 4677356 }
+    },
+    {
+      "query": "path:docs/phase3/_papers",
+      "color": { "a": 1, "rgb": 13408512 }
     },
     {
       "query": "path:docs/phase3",
-      "color": {
-        "a": 1,
-        "rgb": 10498302
-      }
+      "color": { "a": 1, "rgb": 10498302 }
     },
     {
       "query": "path:phase2",
-      "color": {
-        "a": 1,
-        "rgb": 5025616
-      }
+      "color": { "a": 1, "rgb": 5025616 }
     },
     {
       "query": "path:phase3",
-      "color": {
-        "a": 1,
-        "rgb": 14701064
-      }
+      "color": { "a": 1, "rgb": 14701064 }
     },
     {
       "query": "path:plans",
-      "color": {
-        "a": 1,
-        "rgb": 14724935
-      }
+      "color": { "a": 1, "rgb": 14724935 }
     },
     {
       "query": "AGENTS OR CLAUDE OR README",
-      "color": {
-        "a": 1,
-        "rgb": 16777215
-      }
+      "color": { "a": 1, "rgb": 16777215 }
     }
   ],
   "collapse-display": false,
@@ -56,10 +54,10 @@
   "nodeSizeMultiplier": 1,
   "lineSizeMultiplier": 1,
   "collapse-forces": false,
-  "centerStrength": 0.5,
-  "repelStrength": 12,
+  "centerStrength": 0.3,
+  "repelStrength": 14,
   "linkStrength": 1,
-  "linkDistance": 250,
-  "scale": 1.0288728368152553,
+  "linkDistance": 220,
+  "scale": 0.969752439169959,
   "close": true
 }

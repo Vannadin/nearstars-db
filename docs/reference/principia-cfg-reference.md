@@ -1,3 +1,19 @@
+---
+type: concept
+title: "Principia CFG Technical Reference"
+slug: principia-cfg-reference
+cluster: mod-principia
+cluster_role: hub
+secondary_cluster: physics-epoch
+secondary_cluster_role: member
+sources: ["mockingbirdnest/Principia repo", "Principia astronomy/*.cfg", "Principia wiki", "IAU 2009 WG Cartographic Coordinates"]
+related: [[methodology]], [[binary-epoch-pipeline]], [[mod-reference]], [[mod-release-layout]], [[alpha-centauri-a]], [[alpha-centauri-b]]
+created: 2026-05-19
+updated: 2026-05-24
+confidence: high
+tier: public
+---
+
 # Principia CFG Technical Reference
 
 > Source: mockingbirdnest/Principia GitHub repo, wiki, and astronomy/*.cfg files  
@@ -452,3 +468,11 @@ Used in Principia's TRAPPIST configs as unit shorthand:
 | `astronomy/sol_numerics_blueprint.cfg` | `:NEEDS[RealSolarSystem]` |
 
 Sol-Configs ships its own `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cfg`, `Quarter_Sol-GravityModel.cfg`, `Quarter_Sol-InitialState.cfg` with `:FOR[SolSystem]`.
+
+## Related
+
+- [methodology](methodology.md) — DB-side schema that feeds gravitational_parameter, mass, radius into Principia
+- [binary-epoch-pipeline](binary-epoch-pipeline.md) — the Cartesian state vectors produced by §9–11 of that doc feed `principia_initial_state` body blocks here
+- [mod-reference](mod-reference.md) — Principia install and dependency tier
+- [mod-release-layout](mod-release-layout.md) — §2.1 covers how Principia patches are placed in `Patches/Principia/`
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — the canonical worked example downstream of Principia's per-body gravity model

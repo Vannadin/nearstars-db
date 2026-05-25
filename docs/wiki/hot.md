@@ -16,32 +16,36 @@ and any large ingest batch.
 
 ### Current focus
 
-LLM Wiki bootstrap Phase 2 substantially complete. 23 wiki pages
-across 4 clusters now have frontmatter + `## Related`:
+**Phase 2 bootstrap complete (2026-05-25).** 27 wiki pages across
+7 clusters now have frontmatter + `## Related`:
 - system-trappist-1: 7 entity pages
 - system-alpha-cen: 5 entity pages (3 stars + 2 planets)
 - methodology: 9 concept pages (1 hub + 8 members)
 - comparisons: 2 synthesis pages
+- mod-principia: 1 reference + 1 skill cross-ref
+- mod-kopernicus: 1 skill cross-ref
+- mod-firefly: 1 skill cross-ref
+- phase3-procedure: 1 skill cross-ref
 
-Outstanding clusters not yet ingested:
-- mod-principia (principia-cfg-reference.md + skill)
-- mod-kopernicus, mod-firefly (SKILL.md files for live skills)
-- attribution (overlaps with methodology via data-sources; minimal new work)
-- phase3-procedure (nearstars-phase3 skill — internal, may not need ingest)
+First lint pass (2026-05-25): 0 orphans, 0 EA leaks, 26/27
+frontmatter coverage (`plans/README.md` intentionally excluded).
 
-Remaining bootstrap is small. Phase 3 (trigger automation) is the next
-real decision.
+**Phase 3 (trigger automation) is the next decision point** — see Open
+questions. The bootstrap pattern is now stable; new docs added to the
+repo can use `/wiki ingest <path>` to receive the same treatment.
 
 ### Open questions
 
-- Trigger channel for `/wiki lint` schedule (A/B/C from skill §8) —
-  user confirmation still pending.
-- Should principia-cfg-reference + skill SKILL.md files be ingested
-  next, or is bootstrap considered done?
-- Host star entity page for TRAPPIST-1 (M8V dwarf) does not exist —
-  flagged as ingest follow-up.
+- **Trigger channel for `/wiki lint` schedule** — user decision pending:
+  A (on-demand only) / B (on-demand + weekly cron) / C (on-demand +
+  weekly cron + git pre-commit hook). Skill §8 has the comparison.
+- Host star entity page for TRAPPIST-1 (M8V dwarf) — needs creation
+  to complete the system-trappist-1 cluster.
 - Proxima c candidate (unconfirmed sub-Neptune at 5.2 AU) — entity
-  page may be created if discovery confirmed.
+  page may be created if discovery confirmed (currently <3σ).
+- `_papers/*.md` source frontmatter — would let `sources:` lists in
+  entity pages become wikilinks. Currently they're paper-name strings.
+- `plans/README.md` ingest — meta-doc, may not need wiki frontmatter.
 
 ### Recent decisions
 
@@ -61,11 +65,13 @@ real decision.
 
 ### Last 3 log entries
 
-1. **2026-05-24** ingest | methodology + comparisons clusters — 11 pages
-   (9 concept + 2 synthesis); first test of `cluster_role: hub`,
-   `secondary_cluster`, `type: synthesis`.
-2. **2026-05-24** ingest | system-alpha-cen cluster — 5 entity pages.
-3. **2026-05-24** ingest | system-trappist-1 cluster — 7 entity pages.
+1. **2026-05-25** lint | Phase 2 bootstrap health check — 0 orphans,
+   0 EA leaks, 26/27 frontmatter coverage. Conclusion: bootstrap
+   complete.
+2. **2026-05-25** ingest | mod-principia + skill cross-refs — 4 pages
+   (principia-cfg-reference frontmatter + Related; 3 skill SKILL.md
+   files Related-only).
+3. **2026-05-24** ingest | methodology + comparisons clusters — 11 pages.
 
 ### Active pages
 

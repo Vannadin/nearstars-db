@@ -214,3 +214,13 @@ against the `mod_version` in this skill's frontmatter):
 
 The schema reference files cite specific `ConfigManager.cs:line`
 locations — these are the canary for drift detection.
+
+---
+
+## Related
+
+- [methodology](../../../docs/reference/methodology.md) — DB schema source (atmosphere composition, pressure feed into reentry palette)
+- [mod-reference](../../../docs/reference/mod-reference.md) — Firefly dependency tier
+- [mod-release-layout](../../../docs/reference/mod-release-layout.md) — Firefly patch placement
+- entity pages: [trappist-1-e](../../../docs/phase3/trappist-1-e.md), [proxima-cen-b](../../../docs/phase3/proxima-cen-b.md) — atmosphere-bearing bodies whose Phase 3 outputs feed `ATMOFX_BODY` here
+- [nearstars-phase3](../nearstars-phase3/SKILL.md) — upstream procedure that produces the atmosphere fields this skill consumes

@@ -115,3 +115,14 @@ Read the relevant file for the body type being created. Each file contains a com
 | Binary / multi-star system | [references/barycenter.md](references/barycenter.md) | Barycenter body, mass/SOI calculation, triple-system hierarchy |
 | Ocean world | [references/ocean.md](references/ocean.md) | Ocean node, FallbackMaterial, HazardousOcean |
 | Hazardous surface | [references/hazardous-body.md](references/hazardous-body.md) | AltitudeCurve, HeatMap, radiation belt |
+
+---
+
+## Related
+
+- [methodology](../../../docs/reference/methodology.md) — DB schema that feeds Kopernicus values (radius, mass → gravParameter, etc.)
+- [mod-release-layout](../../../docs/reference/mod-release-layout.md) — §2 cfg conventions this skill follows (`@Kopernicus:FOR[NearStarsSystem]`, file separation, identifier convention)
+- [guideline](../../../docs/reference/guideline.md) — §7 flightGlobalsIndex allocation policy
+- [mod-reference](../../../docs/reference/mod-reference.md) — Kopernicus dependency tier
+- [principia-cfg-reference](../../../docs/reference/principia-cfg-reference.md) — paired downstream consumer (Principia + Kopernicus together)
+- entity pages in `docs/phase3/*` — input data this skill consumes

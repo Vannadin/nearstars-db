@@ -17,6 +17,54 @@ followed by structured body.
 
 ---
 
+## [2026-05-25] lint | Phase 2 bootstrap health check
+
+Frontmatter coverage: 26 / 27 wiki pages (plans/README.md intentionally
+excluded as a folder meta-doc).
+Orphans: 0
+EA-identifier leaks (public tier): 0
+Stale claims: not assessed (would require LLM read-through)
+Cross-tier link integrity: all `[name](.agents/skills/...)` paths verified
+to exist on disk (broken-on-public, working locally — by design).
+
+Conclusion: Phase 2 bootstrap effectively complete. Wiki layer is
+healthy across 4 clusters (system-trappist-1, system-alpha-cen,
+methodology, comparisons) + 1 partial cluster (mod-principia).
+
+Outstanding follow-ups (not blocking):
+- Host star entity page for TRAPPIST-1 (M8V dwarf, host_star: Trappist1)
+- Proxima c entity page if/when discovery is confirmed at 3σ
+- _papers/*.md source frontmatter (would let sources: lists become wikilinks)
+- plans/README.md ingest if the wiki should formally cover it
+- Trigger setup (cron / pre-commit hook / loop) — user decision pending
+
+## [2026-05-25] ingest | mod-principia cluster + skill cross-refs (4 pages)
+
+Source: `docs/reference/principia-cfg-reference.md` (concept ingest) +
+`.agents/skills/{kopernicus-cfg,firefly-cfg,nearstars-phase3}/SKILL.md`
+(Related-only ingest; skill frontmatter left untouched to avoid
+disturbing the skill-system fields like `name`, `description`,
+`mod_version`).
+
+Pages updated:
+  - `docs/reference/principia-cfg-reference.md` (full frontmatter +
+    `## Related`; cluster_role: hub, secondary_cluster: physics-epoch)
+  - `.agents/skills/kopernicus-cfg/SKILL.md` (Related section only)
+  - `.agents/skills/firefly-cfg/SKILL.md` (Related section only)
+  - `.agents/skills/nearstars-phase3/SKILL.md` (Related section only)
+Contradictions flagged: none
+Tier: public (none of these are local-only)
+
+Notes:
+- mod-principia is the first cluster spanning a reference doc + a skill
+  (principia-cfg-reference + .agents/skills/principia-cfg/). The
+  reference doc is the hub; skill is a member listed via Related.
+- principia-cfg-reference declares dual cluster: mod-principia hub +
+  physics-epoch member (mirroring binary-epoch-pipeline's pattern).
+- Skill SKILL.md files use existing skill frontmatter
+  (name, description, mod_version) — wiki added only the Related
+  section near the end of each.
+
 ## [2026-05-24] ingest | methodology concept cluster + comparisons cluster (11 pages)
 
 Source: `docs/reference/*.md` (9 concept pages) + `docs/reference/rex-data-comparison.md` + `plans/stellarium-binary-orbit-comparison.md` (2 synthesis pages)

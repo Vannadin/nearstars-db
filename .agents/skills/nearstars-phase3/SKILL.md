@@ -513,3 +513,15 @@ these actions require explicit confirmation or a Read-first step.
 - `phase3/trappist-1-system/{checklist,context-notes,manual-paper-followup}.md` — working artifacts as templates
 - `docs/reference/{guideline,methodology}.md` — project scope + curation philosophy
 - Upstream: `nearstars-add-star` (Phase 1/2). Downstream: `kopernicus-cfg`, `principia-cfg`
+
+---
+
+## Related
+
+- [methodology](../../../docs/reference/methodology.md) — DB-side schema (Phase 1/2 → Phase 3 boundary)
+- [data-sources](../../../docs/reference/data-sources.md) — paper citation policy that Phase 3 inherits
+- [tools](../../../docs/reference/tools.md) — Phase 3 script index (§3)
+- [mod-reference](../../../docs/reference/mod-reference.md) — downstream cfg writers consuming Phase 3 output
+- [kopernicus-cfg](../kopernicus-cfg/SKILL.md), [firefly-cfg](../firefly-cfg/SKILL.md) — direct downstream consumers
+- [principia-cfg-reference](../../../docs/reference/principia-cfg-reference.md) — Principia-side consumer
+- entity pages in `docs/phase3/*.md` — the synthesis output this skill produces
