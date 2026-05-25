@@ -1,4 +1,15 @@
-<!-- Paper-count summary for promotional use -->
+---
+type: synthesis
+title: "NearStars-DB — Paper reference count"
+slug: trappist-1-system-paper-count-summary
+cluster: system-trappist-1
+cluster_role: member
+status: active
+related: [[trappist-1-system-audit-pass-2026-05-22]], [[trappist-1-system-checklist]], [[trappist-1-system-context-notes]], [[trappist-1-system-manual-paper-followup]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # NearStars-DB — Paper reference count
 
 Calculated 2026-05-22 by deduplicated scan of ADS bibcode / DOI /
@@ -71,3 +82,11 @@ title-only fields across the project tree.
 Or shorter:
 
 > 149 systems. 557 paper references. 7 fully synthesized Phase 3 worlds.
+
+## Related
+
+- [audit-pass-2026-05-22](audit-pass-2026-05-22.md) — sibling workspace doc in `trappist-1-system/`
+- [checklist](checklist.md) — sibling workspace doc in `trappist-1-system/`
+- [context-notes](context-notes.md) — sibling workspace doc in `trappist-1-system/`
+- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `trappist-1-system/`
+- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

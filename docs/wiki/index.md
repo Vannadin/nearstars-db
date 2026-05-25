@@ -158,14 +158,15 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 ---
 
-## Cluster: comparisons ✓ (Phase 2 ingested 2026-05-24)
+## Cluster: comparisons ✓ (Phase 2 ingested 2026-05-24; workspace backfill 2026-05-25)
 
 > External cross-validation and historical analyses (type=synthesis).
 
 | Page | Status | Summary |
 |---|---|---|
 | [rex-data-comparison](../reference/rex-data-comparison.md) | promoted | REX v0.9.6 baseline comparison; §10 quantifies Phase 3 → REX delta on TRAPPIST-1 |
-| [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) | active | Stellarium multi-star convention check (Hilditch/Pourbaix match confirmed) |
+| [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) | active | Stellarium multi-star convention check |
+| [art-redundancy-2026-05-22](../../phase3/_audit/art-redundancy-2026-05-22.md) | active | art-asset redundancy audit |
 
 ---
 
@@ -179,12 +180,27 @@ content is local-only — see [feedback-patreon-assets memory])*
 
 ---
 
+## Workspaces appendix
+
+Workspace files (plan / checklist / context-notes trios + reports)
+are grouped by their parent cluster. Each workspace folder backs a
+specific topic; the entity/concept pages above are the *output*
+surface, these are the *work-in-progress* surface.
+
+| Cluster | Workspace dirs |
+|---|---|
+| system-trappist-1 | `phase3/trappist-1-system/` (5 files: trio + audit + manual-followup + paper-count-summary), `phase2/trappist_1/` (2 files: checklist + context-notes) |
+| system-alpha-cen | `phase3/alpha-cen-proxima-system/` (3 files: trio + manual-followup), `phase2/alpha_centauri_proxima/` (2 files) |
+| phase3-procedure | `phase3/html-pipeline/` (2), `phase3/stability-sim/` (4 incl. STABILITY_REPORT), `phase2/skill-phase3-optimization/` (3) |
+| methodology | `phase2/schema-expansion/` (2), `phase2/skill-policy-permanence/` (3), `docs/phase1-50ly/` (3), `docs/famous-20-non-hosts/` (2) |
+| comparisons | `phase3/_audit/art-redundancy-2026-05-22.md` (1) |
+
 ## Recent activity
 
 *Auto-pulled from [log.md](log.md) — top 5 entries.*
 
-1. **2026-05-25 lint** — Phase 2 bootstrap health check (0 orphans, 0 EA leaks, 26/27 frontmatter coverage)
-2. **2026-05-25 ingest** — mod-principia cluster + skill cross-refs (4 pages)
-3. **2026-05-24 ingest** — methodology concept cluster + comparisons cluster (11 pages: 9 concept + 2 synthesis)
-4. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages: 3 stars + 2 planets)
-5. **2026-05-24 ingest** — system-trappist-1 cluster (7 entity pages)
+1. **2026-05-25 ingest** — workspace cluster backfill (32 files via bulk script)
+2. **2026-05-25 lint** — Phase 2 bootstrap health check (0 orphans, 0 EA leaks)
+3. **2026-05-25 ingest** — mod-principia cluster + skill cross-refs (4 pages)
+4. **2026-05-24 ingest** — methodology concept cluster + comparisons cluster (11 pages)
+5. **2026-05-24 ingest** — system-alpha-cen cluster (5 entity pages)

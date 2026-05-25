@@ -1,3 +1,15 @@
+---
+type: workspace
+title: "Phase 3 Stability Simulation — Plan"
+slug: stability-sim-plan
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[stability-sim-STABILITY_REPORT]], [[stability-sim-checklist]], [[stability-sim-context-notes]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 3 Stability Simulation — Plan
 
 ## Goal
@@ -70,3 +82,10 @@ The tool doubles as a "what if I add a moon" sandbox for KSP planet-pack design.
 - α Cen AB → planet stability windows (no planets in DB).
 - TRAPPIST-1 TTV reconstruction from transit times (overkill for game-play horizon).
 - Hypothetical retrograde moons (different Hill limit — skip until requested).
+
+## Related
+
+- [STABILITY_REPORT](STABILITY_REPORT.md) — sibling workspace doc in `stability-sim/`
+- [checklist](checklist.md) — sibling workspace doc in `stability-sim/`
+- [context-notes](context-notes.md) — sibling workspace doc in `stability-sim/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

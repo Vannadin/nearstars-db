@@ -1,4 +1,15 @@
-<!-- nearstars-phase3 스킬 최적화 작업 컨텍스트 노트 - 결정 근거 append-only 로그 -->
+---
+type: workspace
+title: "Context notes — nearstars-phase3 optimization"
+slug: skill-phase3-optimization-context-notes
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[skill-phase3-optimization-checklist]], [[skill-phase3-optimization-plan]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Context notes — nearstars-phase3 optimization
 
 Append-only. Newest decisions at the top.
@@ -45,3 +56,9 @@ The inline Python in Step 5 is ~12 lines, does one job (set
 no other script needs it. A flag on score_papers.py is the lowest-
 friction option: same yaml, idempotent (already-skipped rows are
 no-ops), zero new files.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `skill-phase3-optimization/`
+- [plan](plan.md) — sibling workspace doc in `skill-phase3-optimization/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

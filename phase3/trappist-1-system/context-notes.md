@@ -1,4 +1,15 @@
-<!-- TRAPPIST-1 system Phase 3 — decisions and rationale -->
+---
+type: workspace
+title: "TRAPPIST-1 system Phase 3 — context notes"
+slug: trappist-1-system-context-notes
+cluster: system-trappist-1
+cluster_role: member
+status: active
+related: [[trappist-1-system-audit-pass-2026-05-22]], [[trappist-1-system-checklist]], [[trappist-1-system-manual-paper-followup]], [[trappist-1-system-paper-count-summary]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # TRAPPIST-1 system Phase 3 — context notes
 
 Append-only log of decisions made while extending Phase 3 synthesis to
@@ -93,3 +104,11 @@ All six syntheses use the same H2 structure as d:
 If a category is empty for a given planet, the H3 heading is still
 kept (with a brief "none for this planet" note) so the ko mirror
 parses cleanly.
+
+## Related
+
+- [audit-pass-2026-05-22](audit-pass-2026-05-22.md) — sibling workspace doc in `trappist-1-system/`
+- [checklist](checklist.md) — sibling workspace doc in `trappist-1-system/`
+- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `trappist-1-system/`
+- [paper-count-summary](paper-count-summary.md) — sibling workspace doc in `trappist-1-system/`
+- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

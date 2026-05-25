@@ -17,6 +17,37 @@ followed by structured body.
 
 ---
 
+## [2026-05-25] ingest | workspace cluster backfill (32 files, bulk script)
+
+Source: `phase2/<topic>/`, `phase3/<system>/`, `docs/phase1-50ly/`,
+`docs/famous-20-non-hosts/` workspace dirs
+Pages updated: 32 (plan / checklist / context-notes / audit / report /
+manual-followup / paper-count-summary across 12 workspace dirs)
+Method: `scripts/wiki/bulk-add-frontmatter.py` — newly-written
+permanent utility for workspace ingestion. YAML frontmatter
+(type=workspace, cluster, status, related to trio companions) +
+`## Related` section linking to trio companions + parent cluster hub.
+Contradictions flagged: none
+Tier: public
+
+Notes:
+- First version of the bulk script had a slug-stem bug producing broken
+  link labels (`[22](22.md)` etc.). Reverted, fixed (use file stem
+  instead of slug-derived stem), re-ran. Final output verified on
+  random sample.
+- Cluster assignments (CLUSTER_MAP in script):
+  - `phase3/trappist-1-system/*` + `phase2/trappist_1/*` → system-trappist-1
+  - `phase3/alpha-cen-proxima-system/*` + `phase2/alpha_centauri_proxima/*` → system-alpha-cen
+  - `phase3/html-pipeline/*` + `phase3/stability-sim/*` + `phase2/skill-phase3-optimization/*` → phase3-procedure
+  - `phase2/schema-expansion/*` + `phase2/skill-policy-permanence/*` + `docs/phase1-50ly/*` + `docs/famous-20-non-hosts/*` → methodology
+  - `phase3/_audit/*` → comparisons
+- Report-type files (STABILITY_REPORT, audit-pass-*, paper-count-summary,
+  art-redundancy-*) → `type: synthesis`. Others → `type: workspace`.
+- The bulk script is now reusable for future workspace dirs — add the
+  path to WORKSPACE_FILES list and re-run.
+
+This closes the workspace-docs disconnect the user surfaced 2026-05-25.
+
 ## [2026-05-25] lint | Phase 2 bootstrap health check
 
 Frontmatter coverage: 26 / 27 wiki pages (plans/README.md intentionally

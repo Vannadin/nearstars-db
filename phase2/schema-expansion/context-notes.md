@@ -1,4 +1,15 @@
-<!-- Phase 2 schema expansion — design decisions and rationale -->
+---
+type: workspace
+title: "Phase 2 Schema Expansion — Context Notes"
+slug: schema-expansion-context-notes
+cluster: methodology
+cluster_role: member
+status: active
+related: [[schema-expansion-checklist]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 2 Schema Expansion — Context Notes
 
 Append-only log of decisions made during the work. Subsequent sessions
@@ -153,3 +164,8 @@ M₀ at epoch). Allowing them avoids forcing a conversion at curation time.
   tuple to `PLANET_BLOCKS` dict with 4 entries — each block carries its
   own `allowed` field set and `methods` whitelist.
 - `validate.py` FAIL: 0 confirmed across 152 systems after refactor.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `schema-expansion/`
+- [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

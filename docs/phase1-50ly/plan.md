@@ -1,3 +1,15 @@
+---
+type: workspace
+title: "Phase 1 Curation — All 50 ly Planet Hosts (Plan)"
+slug: phase1-50ly-plan
+cluster: methodology
+cluster_role: member
+status: active
+related: [[phase1-50ly-checklist]], [[phase1-50ly-context-notes]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 1 Curation — All 50 ly Planet Hosts (Plan)
 
 Skill-validation test triggered 2026-05-19. Reset commit `1f023d0` cleared the prior `pscomppars` bulk-fill because it violated the per-paper attribution policy ([[feedback-planet-curation]]).
@@ -42,3 +54,9 @@ PoC first (2-3 representative hosts), then full bulk.
 - `validate.py`: FAIL 0; WARN count comparable to or better than the previous bulk-fill baseline (52).
 - Per planet: `derived.semi_major_axis_m`, `mass_kg` populated where source has them.
 - Source attribution: no entry pointing to `pscomppars` as the source.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `phase1-50ly/`
+- [context-notes](context-notes.md) — sibling workspace doc in `phase1-50ly/`
+- [methodology hub](../../docs/reference/methodology.md) — parent topic this workspace contributes to

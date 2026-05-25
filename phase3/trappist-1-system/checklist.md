@@ -1,4 +1,15 @@
-<!-- TRAPPIST-1 b/c/e/f/g/h Phase 3 synthesis — task tracker -->
+---
+type: workspace
+title: "TRAPPIST-1 system Phase 3 — checklist"
+slug: trappist-1-system-checklist
+cluster: system-trappist-1
+cluster_role: member
+status: active
+related: [[trappist-1-system-audit-pass-2026-05-22]], [[trappist-1-system-context-notes]], [[trappist-1-system-manual-paper-followup]], [[trappist-1-system-paper-count-summary]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # TRAPPIST-1 system Phase 3 — checklist
 
 Started 2026-05-21. d is already done as the pilot
@@ -55,3 +66,11 @@ will fail loudly otherwise).
 
 - [ ] `git add` the 6 .md, 6 ko/.md, 6 _bib/.yaml, 6 .html, docs/reports*.html docs/reports*.json
 - [ ] Commit: "Phase 3 synthesis for TRAPPIST-1 b/c/e/f/g/h"
+
+## Related
+
+- [audit-pass-2026-05-22](audit-pass-2026-05-22.md) — sibling workspace doc in `trappist-1-system/`
+- [context-notes](context-notes.md) — sibling workspace doc in `trappist-1-system/`
+- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `trappist-1-system/`
+- [paper-count-summary](paper-count-summary.md) — sibling workspace doc in `trappist-1-system/`
+- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

@@ -1,4 +1,15 @@
-<!-- α Cen + Proxima Phase 3 — append-only decision log -->
+---
+type: workspace
+title: "Alpha Cen + Proxima Cen Phase 3 — context notes"
+slug: alpha-cen-proxima-system-context-notes
+cluster: system-alpha-cen
+cluster_role: member
+status: active
+related: [[alpha-cen-proxima-system-checklist]], [[alpha-cen-proxima-system-manual-paper-followup]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Alpha Cen + Proxima Cen Phase 3 — context notes
 
 Append-only. New decisions go at the bottom under dated headings.
@@ -578,3 +589,9 @@ tie-break 은 주로 정확한 hex 색상, cloud morphology 디테일, magnetic 
 strength 범위 (Zuluaga 2018 의 광범위한 plausibility window 내 선택).
 
 다음 단계 (Step 9.1) 로 진입하기 전에 사용자 컨펌 필요.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `alpha-cen-proxima-system/`
+- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `alpha-cen-proxima-system/`
+- [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to

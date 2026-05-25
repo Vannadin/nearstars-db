@@ -1,3 +1,15 @@
+---
+type: workspace
+title: "Phase 3 Stability Simulation — Checklist"
+slug: stability-sim-checklist
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[stability-sim-STABILITY_REPORT]], [[stability-sim-context-notes]], [[stability-sim-plan]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 3 Stability Simulation — Checklist
 
 ## Setup
@@ -45,3 +57,10 @@
 - [ ] Sanity check: energy conservation < 1e-6 for WHFast
 - [ ] Sanity check: MEGNO ≈ 2 for known-stable systems
 - [ ] Compare TRAPPIST-1 result to Agol+2021's reported stability claim
+
+## Related
+
+- [STABILITY_REPORT](STABILITY_REPORT.md) — sibling workspace doc in `stability-sim/`
+- [context-notes](context-notes.md) — sibling workspace doc in `stability-sim/`
+- [plan](plan.md) — sibling workspace doc in `stability-sim/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

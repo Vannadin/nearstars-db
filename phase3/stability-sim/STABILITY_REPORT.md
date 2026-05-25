@@ -1,3 +1,15 @@
+---
+type: synthesis
+title: "Phase 3 Stability Report — 10,000 yr N-body Integration"
+slug: stability-sim-STABILITY_REPORT
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[stability-sim-checklist]], [[stability-sim-context-notes]], [[stability-sim-plan]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 3 Stability Report — 10,000 yr N-body Integration
 
 **Generated:** 2026-05-22
@@ -104,3 +116,10 @@ Pre-flight Hill-sphere check refuses moons placed outside R_Hill and warns above
 - `hypotheticals/*.json` — Per-system extra-body specs.
 - `results/*_summary.json` — Per-system numerical summary + verdict.
 - `results/*_timeseries.csv` — Sampled (t, body, a, e) for plotting.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `stability-sim/`
+- [context-notes](context-notes.md) — sibling workspace doc in `stability-sim/`
+- [plan](plan.md) — sibling workspace doc in `stability-sim/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

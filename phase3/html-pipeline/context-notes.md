@@ -1,4 +1,15 @@
-<!-- Phase 3 web report pipeline — design decisions and rationale -->
+---
+type: workspace
+title: "Phase 3 web report pipeline — context notes"
+slug: html-pipeline-context-notes
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[html-pipeline-checklist]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 3 web report pipeline — context notes
 
 Append-only log of decisions during this work.
@@ -151,3 +162,8 @@ Korean files have the same H2/H3 structure. If they diverge,
 check-mirrors.sh catches the staleness but the generator should also
 fail loudly rather than silently dropping content.
 
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `html-pipeline/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

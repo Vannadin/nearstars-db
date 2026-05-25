@@ -1,4 +1,15 @@
-<!-- TRAPPIST-1 Phase 3 — papers I (Claude) could not fetch -->
+---
+type: workspace
+title: "Manual paper follow-up — TRAPPIST-1 system Phase 3"
+slug: trappist-1-system-manual-paper-followup
+cluster: system-trappist-1
+cluster_role: member
+status: active
+related: [[trappist-1-system-audit-pass-2026-05-22]], [[trappist-1-system-checklist]], [[trappist-1-system-context-notes]], [[trappist-1-system-paper-count-summary]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Manual paper follow-up — TRAPPIST-1 system Phase 3
 
 These papers were surfaced by ADS but have **no arXiv preprint
@@ -70,3 +81,11 @@ read.
 5. After paste, the workflow is: add the text to a new file under
    `docs/phase3/_papers/<bibcode>.md`, then re-read the synthesis and
    integrate any cfg-relevant numbers.
+
+## Related
+
+- [audit-pass-2026-05-22](audit-pass-2026-05-22.md) — sibling workspace doc in `trappist-1-system/`
+- [checklist](checklist.md) — sibling workspace doc in `trappist-1-system/`
+- [context-notes](context-notes.md) — sibling workspace doc in `trappist-1-system/`
+- [paper-count-summary](paper-count-summary.md) — sibling workspace doc in `trappist-1-system/`
+- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

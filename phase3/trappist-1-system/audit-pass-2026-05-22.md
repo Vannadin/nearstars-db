@@ -1,4 +1,15 @@
-<!-- TRAPPIST-1 7-planet Phase 3 audit pass — policy-fit review against the post-retrofit skill -->
+---
+type: synthesis
+title: "TRAPPIST-1 Phase 3 — Audit pass 2026-05-22"
+slug: trappist-1-system-audit-pass-2026-05-22
+cluster: system-trappist-1
+cluster_role: member
+status: active
+related: [[trappist-1-system-checklist]], [[trappist-1-system-context-notes]], [[trappist-1-system-manual-paper-followup]], [[trappist-1-system-paper-count-summary]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # TRAPPIST-1 Phase 3 — Audit pass 2026-05-22
 
 External audit of all seven TRAPPIST-1 Phase 3 syntheses against the
@@ -563,3 +574,11 @@ If the user approves edits:
 5. **Commit 5** — field-name rename if approved; both en + ko.
 
 Per-stage commits make each policy change reversible individually.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `trappist-1-system/`
+- [context-notes](context-notes.md) — sibling workspace doc in `trappist-1-system/`
+- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `trappist-1-system/`
+- [paper-count-summary](paper-count-summary.md) — sibling workspace doc in `trappist-1-system/`
+- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

@@ -1,4 +1,15 @@
-<!-- TRAPPIST-1 Phase 2 curation context notes -->
+---
+type: workspace
+title: "TRAPPIST-1 — Phase 2 Curation Context Notes"
+slug: trappist-1-context-notes
+cluster: system-trappist-1
+cluster_role: member
+status: active
+related: [[trappist-1-checklist]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # TRAPPIST-1 — Phase 2 Curation Context Notes
 
 Append-only log of decisions made while curating TRAPPIST-1 to Phase 2 depth.
@@ -115,3 +126,8 @@ Before running the pipeline, check that:
 - `_pick_recommended` in build_systems.py handles list `orbital`
   fallback to first entry — yes, returns `block[0]` when no
   `recommended: true`.
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `trappist_1/`
+- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

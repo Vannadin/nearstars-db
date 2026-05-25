@@ -1,4 +1,15 @@
-<!-- nearstars-phase3 스킬 최적화 작업 계획 - CLAUDE.md/AGENTS.md 정합성 향상 -->
+---
+type: workspace
+title: "nearstars-phase3 skill — optimization plan"
+slug: skill-phase3-optimization-plan
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[skill-phase3-optimization-checklist]], [[skill-phase3-optimization-context-notes]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # nearstars-phase3 skill — optimization plan
 
 ## Goal
@@ -44,3 +55,9 @@ items are deferred to follow-up sessions per the user's chosen split.
    per-planet field list
 5. Step 5 prose makes the two threshold roles explicit
 6. Existing TRAPPIST-1 Phase 3 outputs are not regenerated or changed
+
+## Related
+
+- [checklist](checklist.md) — sibling workspace doc in `skill-phase3-optimization/`
+- [context-notes](context-notes.md) — sibling workspace doc in `skill-phase3-optimization/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

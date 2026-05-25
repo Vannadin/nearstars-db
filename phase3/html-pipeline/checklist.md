@@ -1,4 +1,15 @@
-<!-- Phase 3 web report pipeline — turning DB / synthesis markdown into a unified docs/ website -->
+---
+type: workspace
+title: "Phase 3 web report pipeline — checklist"
+slug: html-pipeline-checklist
+cluster: phase3-procedure
+cluster_role: member
+status: active
+related: [[html-pipeline-context-notes]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Phase 3 web report pipeline — checklist
 
 Started 2026-05-21. Goal: make `docs/` a coherent website where Phase 2
@@ -88,3 +99,8 @@ Policy: AGENTS.md §2.1 — English at canonical path, Korean at
 - Search across all Phase 2/3 reports
 - Renderer for `_papers/*.md` (raw paper texts) — those stay as cache
 - PR/changelog of Phase 3 syntheses (manual review still required)
+
+## Related
+
+- [context-notes](context-notes.md) — sibling workspace doc in `html-pipeline/`
+- [phase3 procedure (skill)](../../.agents/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to

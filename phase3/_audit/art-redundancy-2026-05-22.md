@@ -1,4 +1,15 @@
-<!-- 큐레이션된 P3 entry 들 사이의 시각 / 아트 중복 audit + 차별화 후보 정리 -->
+---
+type: synthesis
+title: "Art-redundancy audit — 2026-05-22"
+slug: -audit-art-redundancy-2026-05-22
+cluster: comparisons
+cluster_role: member
+status: active
+related: 
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Art-redundancy audit — 2026-05-22
 
 목적은 현재 큐레이션된 12개 Phase 3 entry 의 in-game 시각 identity 를
@@ -178,3 +189,7 @@ flare).
 결정되면 해당 시스템 working dir 에 새 phase3 작업을 시작합니다 (예:
 Proxima b Venus-analog 격상은 `phase3/alpha-cen-proxima-system/`
 재방문).
+
+## Related
+
+- [comparisons cluster (REX, Stellarium)](../../docs/reference/rex-data-comparison.md) — parent topic this workspace contributes to

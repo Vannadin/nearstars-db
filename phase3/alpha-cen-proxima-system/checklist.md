@@ -1,4 +1,15 @@
-<!-- α Cen A/B + Proxima Cen + Proxima b/d Phase 3 synthesis — task tracker -->
+---
+type: workspace
+title: "Alpha Cen + Proxima Cen system Phase 3 — checklist"
+slug: alpha-cen-proxima-system-checklist
+cluster: system-alpha-cen
+cluster_role: member
+status: active
+related: [[alpha-cen-proxima-system-context-notes]], [[alpha-cen-proxima-system-manual-paper-followup]]
+created: 2026-05-21
+updated: 2026-05-25
+tier: public
+---
 # Alpha Cen + Proxima Cen system Phase 3 — checklist
 
 Started 2026-05-22. Re-do after revert of commit 0cd8b2f. This pass
@@ -128,3 +139,9 @@ no `:` per CLAUDE.md §5. Speech level: 존댓말.
 
 - [ ] Single per-system commit "Alpha Cen + Proxima Cen Phase 3 synthesis (documented-divergence policy from start)"
 - [ ] VaNnadin git identity inline
+
+## Related
+
+- [context-notes](context-notes.md) — sibling workspace doc in `alpha-cen-proxima-system/`
+- [manual-paper-followup](manual-paper-followup.md) — sibling workspace doc in `alpha-cen-proxima-system/`
+- [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to
