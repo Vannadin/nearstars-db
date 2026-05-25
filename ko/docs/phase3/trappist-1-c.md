@@ -389,3 +389,12 @@ c 의 참고문헌은 b 의 것보다 작음 (32 vs 66). arXiv 가 없는 논문
 - interesting-first tie-break 결과. 오로라 색은 UV 지배 대신 가시광
   녹색/보라색으로 설정. 더 넓은 렌더링 팔레트를 지원하는 경우라면,
   cfg variant 로 UV 지배 emission 을 옅은 glow 로 표현하는 것도 가능.
+
+## Related
+
+- [trappist-1-b](trappist-1-b.md) — 내측 형제. "유의한 대기 없음" JWST 코호트의 두 후보 중 하나.
+- [trappist-1-d](trappist-1-d.md) — 인접한 외측 형제. 얇은 대기 시나리오가 cosmic shoreline 논리를 공유합니다.
+- [trappist-1-e](trappist-1-e.md) — 계 전체의 거주가능역 기준점.
+- [methodology](../reference/methodology.md) — Decisions 표 컨벤션과 신뢰도 라벨의 스키마.
+- [mod-reference](../reference/mod-reference.md) — 다운스트림 KSP 모드.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 이 REX 기준 TRAPPIST-1 질량/반지름 재 fit 을 다룹니다.

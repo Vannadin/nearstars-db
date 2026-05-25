@@ -426,3 +426,11 @@ h 의 참고 문헌은 중간 규모입니다(53 편 중 arXiv 43 편). 비-arXi
 - 표면 방사 dose ~4 Sv/yr 은 Kerbalism 의 "moderate" 방사 등급에
   해당합니다. 더 얇은 대기에도 불구하고 e 나 f 보다 양호한데, h
   의 먼 거리가 stellar 입자 flux 를 줄여주기 때문입니다.
+
+## Related
+
+- [trappist-1-g](trappist-1-g.md) — 인접한 내측 형제. 둘 다 얼음으로 덮여 있지만 g 가 질량과 물이 훨씬 많습니다.
+- [trappist-1-f](trappist-1-f.md) — 휘발성 풍부한 외측 HZ 비교 천체.
+- [methodology](../reference/methodology.md) — Decisions 스키마와 신뢰도 룰.
+- [mod-reference](../reference/mod-reference.md) — 다운스트림 모드.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10. h 는 REX 에서 완전히 부재 (b–g 만 다룸) — Phase 3 가 h 의 첫 cfg-ready 처리입니다.

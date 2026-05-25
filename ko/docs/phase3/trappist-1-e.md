@@ -364,3 +364,13 @@ abstract 로, 비주얼-정보 제공은 아닙니다. 주목할 만한 skip 항
 - 이중 중위도 jet 과 적도 superrotation 사이의 구름 morphology 는 본질적으로 GCM 의존적인 예측입니다. 향후 intercomparison 이 이 tipping point 를 해소한다면 cfg 의 `cloud_morphology` 값 (그리고 가능하면 구름 밴드의 비주얼 렌더링) 을 업데이트해야 할 수 있습니다.
 - interesting-first 타이브레이크에서 RM22 스케일링 추정값 (~0.08 M_Earth, 훨씬 약함) 대신 Wang 2025 의 지구형 자기장 (0.32 G) 을 채택했습니다. 지구형 케이스가 시각적으로 더 두드러진 자기권 + 오로라 oval 을 만들어내고, 약한 자기장 대안은 보수적 해석을 선호하는 유저를 위해 cfg 변형으로 남겨둡니다.
 - 방사선 dose 수치 (12 Sv/yr) 는 e 를 Kerbalism 의 "high-radiation" 구간에 위치시킵니다. 150 kR 오로라 렌더링은 상당히 극적일 수 있으니, 게임플레이용으로 밝기 슬라이더를 두고 싶을 수 있습니다.
+
+## Related
+
+- [trappist-1-d](trappist-1-d.md) — HZ 가장자리에 위치한 내측 형제.
+- [trappist-1-f](trappist-1-f.md) — 외측 형제. snowball/eyeball 경계.
+- [trappist-1-g](trappist-1-g.md) — 외측 HZ 비교 천체 (완전 snowball).
+- [methodology](../reference/methodology.md) — Decisions 스키마.
+- [mod-reference](../reference/mod-reference.md) — 이 천체의 대기 + 해양 cfg 를 소비하는 다운스트림 모드.
+- [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — 계의 궤도 epoch 처리.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 이 Phase 3 → REX TRAPPIST-1 델타를 상세히 다룹니다.

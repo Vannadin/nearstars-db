@@ -226,3 +226,12 @@ AU 분리의 동반자 A 는 원일점에서 V = −5.0, 근일점에서 V = −
   은 cfg 스칼라 `limb_darkening_alpha_h` 에 들어 있지 않습니다. 3D
   granulation 을 잡는 cfg 변형이 극단적인 close-up fly-by 를 지원할 수
   있습니다.
+
+## Related
+
+- [alpha-centauri-a](alpha-centauri-a.md) — 이중성 짝. G2V 주성, 모든 역학 해 (Pourbaix & Boffin 2016) 를 공유합니다.
+- [proxima-cen](proxima-cen.md) — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성.
+- [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — α Cen AB 워크드 예시 (§9).
+- [methodology](../reference/methodology.md) — Decisions 스키마.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — α Cen B 파라미터 비교.
+- [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) — 시각이중성 궤도 교차 검증.

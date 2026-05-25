@@ -375,3 +375,12 @@ b bibliography 에는 arXiv preprint 가 없는 ~30 편의 논문이 있고, arX
   구현 후보로 적합.
 - 자기장 추정치는 신뢰도가 낮은 스케일링 관계값입니다. b 에 대한 직접 측정(전파 비검출 상한) 이 나온다면 cfg 자기장 세기는 조정이 필요할 수 있습니다.
 - 흥미로움 우선 동률 처리. 자기 쌍극자 기울기를 10° 로 잡은 것은 균일한 극관이 아니라 시각적으로 두드러지는 비낀 오로라 캡을 만들기 위한 선택이고, 두 방향 모두 물리적으로는 그럴듯합니다.
+
+## Related
+
+- [trappist-1-c](trappist-1-c.md) — 인접 형제. 동일한 JWST 검증 bare-rock 후보 (표면 풍화 해석은 다름).
+- [trappist-1-d](trappist-1-d.md) — 한 칸 건넌 형제. 얇은 대기 시나리오가 b 의 무대기와 대비됩니다.
+- [trappist-1-e](trappist-1-e.md) — 계의 거주가능역 기준점. 같은 M8V 호스트 조사 (照射) 를 사용합니다.
+- [methodology](../reference/methodology.md) — Decisions 표 및 신뢰도 태그의 스키마.
+- [mod-reference](../reference/mod-reference.md) — 이 Phase 3 값을 소비하는 다운스트림 KSP 모드.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10 이 TRAPPIST-1 계 전체의 Phase 3 → REX 델타를 정량화합니다. b 의 질량은 Agol 2021 이후 +62% 변화했습니다.

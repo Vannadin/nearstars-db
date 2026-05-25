@@ -249,3 +249,12 @@ bib 는 `docs/phase3/_bib/alpha-centauri-a.yaml` 에 `status: skipped`
   활동 사이클은 현재 cfg 에서 위상 동기화돼 있지 않습니다. Robrade 2016
   사이클 시작 epoch 를 기준으로 위상을 맞추면, 활동 driven CME 플럭스가
   실시간 게임 진행과 함께 추적될 수 있습니다.
+
+## Related
+
+- [alpha-centauri-b](alpha-centauri-b.md) — 79.91 년 주기 시각이중성 짝, K1V 동반성.
+- [proxima-cen](proxima-cen.md) — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성 (M5.5Ve 플레어성). capture 대 coeval 기원 미해결 (Feng & Jones 2018).
+- [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — α Cen AB 는 Kepler→ICRS 파이프라인의 **정전 워크드 예시**입니다 (§9).
+- [methodology](../reference/methodology.md) — Decisions 표 스키마의 원본.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §3–4 가 α Cen 항성 파라미터, §5 가 REX 가 모델하지 못한 AB↔Proxima 토폴로지 갭을 다룹니다.
+- [stellarium-binary-orbit-comparison](../../plans/stellarium-binary-orbit-comparison.md) — Stellarium 과의 α Cen 궤도 컨벤션 교차 검증 (Hilditch/Pourbaix 일치 확인).

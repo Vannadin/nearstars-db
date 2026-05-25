@@ -358,3 +358,12 @@ f 의 참고 문헌은 매우 작습니다 (15 편, arXiv 6 편).
   전역 평균, 해양 → sub-glacial 만).
 - 자기장 강도는 스케일링 기반임. TRAPPIST-1 특화 dynamo 모델이 가용해지면
   정밀화 가능.
+
+## Related
+
+- [trappist-1-e](trappist-1-e.md) — 내측 형제. 계의 거주가능역 기준점.
+- [trappist-1-g](trappist-1-g.md) — 외측 형제. g 는 전형적인 완전 snowball, f 는 eyeball/snowball tipping point.
+- [trappist-1-h](trappist-1-h.md) — 가장 바깥 형제. 둘 다 저일사 환경이지만 휘발성 예산이 다릅니다.
+- [methodology](../reference/methodology.md) — Decisions 스키마.
+- [mod-reference](../reference/mod-reference.md) — 다운스트림 모드.
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §10. Agol 2021 이후 f 의 질량이 +53% 이동 (계 내 최대 변화).
