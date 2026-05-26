@@ -198,6 +198,10 @@ input[type=checkbox]{accent-color:#4a88b8}
 
 /* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
 [data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
+[data-ns="v2"] .v2-sb { max-width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+[data-ns="v2"] .a2-dp-grid > div { min-width: 0; }
+[data-ns="v2"] .a2-mt-scroll { max-width: 100%; }
 
 /* ── Star Color chart (swatch + Hex/0-1/0-255 copy rows) ── */
 [data-ns="v2"] .a2-cc-wrap {
@@ -337,8 +341,8 @@ input[type=checkbox]{accent-color:#4a88b8}
 }
 
 [data-ns="v2"] .a2-card-expand {
-  margin: 14px -14px -13px -20px;
-  padding: 16px 14px 4px 20px;
+  margin: 14px -14px -13px -14px;
+  padding: 16px 14px 4px 14px;
   border-top: 1px solid var(--v2-bd-1);
   animation: a2-springdown 380ms var(--v2-spring);
 }

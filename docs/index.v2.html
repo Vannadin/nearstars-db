@@ -198,6 +198,13 @@ input[type=checkbox]{accent-color:#4a88b8}
 
 /* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
 [data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
+/* 긴 분광형 (sdM7.5, M5.5Ve+T5 등) 이 옆 컬럼 침범하지 않도록 폭 제한 + ellipsis */
+[data-ns="v2"] .v2-sb { max-width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* grid item 의 default min-width: auto 가 자식 (760px planet table) 따라 부모를 늘리는 걸 막음.
+   이게 없으면 행성 많은 시스템에서 detail content 가 row/card 폭을 뚫고 우측으로 overflow. */
+[data-ns="v2"] .a2-dp-grid > div { min-width: 0; }
+[data-ns="v2"] .a2-mt-scroll { max-width: 100%; }
 
 /* ── Star Color chart (swatch + Hex/0-1/0-255 copy rows) ── */
 [data-ns="v2"] .a2-cc-wrap {
@@ -337,8 +344,10 @@ input[type=checkbox]{accent-color:#4a88b8}
 }
 
 [data-ns="v2"] .a2-card-expand {
-  margin: 14px -14px -13px -20px;
-  padding: 16px 14px 4px 20px;
+  /* 카드 padding 좌측 20 (spec bar 자리) / 우측 14 비대칭 → expand 는 좌우 동일 14 로 대칭화.
+     덕분에 detail 안의 별 이미지가 시각적 중앙에 자리잡고, 가운데 정렬도 정확. */
+  margin: 14px -14px -13px -14px;
+  padding: 16px 14px 4px 14px;
   border-top: 1px solid var(--v2-bd-1);
   animation: a2-springdown 380ms var(--v2-spring);
 }
