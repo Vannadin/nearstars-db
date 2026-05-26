@@ -364,6 +364,53 @@ input[type=checkbox]{accent-color:#4a88b8}
   [data-ns="v2"] .a2-cc-wrap { padding: 10px 12px; gap: 14px; }
   [data-ns="v2"] .a2-cc-swatch { width: 48px; height: 48px; }
   [data-ns="v2"] .a2-cc-row { grid-template-columns: 48px 1fr auto; gap: 10px; }
+  [data-ns="v2"] .a2-star-img-wrap { max-width: 100%; }
+
+  /* v1 stack-카드 패턴 */
+  [data-ns="v2"] .a2-mt-scroll { overflow-x: visible; margin: 0; }
+  [data-ns="v2"] .a2-mt-scroll table { min-width: 0; }
+  [data-ns="v2"] .a2-mt thead { display: none; }
+  [data-ns="v2"] .a2-mt, [data-ns="v2"] .a2-mt tbody, [data-ns="v2"] .a2-mt tr, [data-ns="v2"] .a2-mt td {
+    display: block; width: 100%;
+  }
+  [data-ns="v2"] .a2-mt tr {
+    background: var(--v2-surface-1);
+    border: 1px solid var(--v2-bd-2);
+    border-radius: var(--v2-r-row);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  [data-ns="v2"] .a2-mt tr.rec {
+    background: var(--v2-ok-bg);
+    border-color: rgba(78,201,176,0.32);
+  }
+  [data-ns="v2"] .a2-mt tr.rec td { background: none; box-shadow: none; }
+  [data-ns="v2"] .a2-mt td {
+    border-bottom: none;
+    padding: 4px 0;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 12px;
+    align-items: center;
+    font-size: 12px;
+  }
+  [data-ns="v2"] .a2-mt td::before {
+    content: attr(data-label);
+    color: var(--v2-fg-4);
+    font: 600 9.5px/1.4 var(--v2-font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  [data-ns="v2"] .a2-mt td.nm {
+    display: block;
+    color: var(--v2-fg-1); font-weight: 600;
+    padding-bottom: 6px; margin-bottom: 4px;
+    border-bottom: 1px dashed var(--v2-bd-1);
+    font-family: var(--v2-font-sans);
+  }
+  [data-ns="v2"] .a2-mt td.nm::before { display: none; }
+  [data-ns="v2"] .a2-mt td[data-label=""] { display: none; }
+  [data-ns="v2"] .a2-mt td[data-label=""]:has(.a2-rec-tick) { display: block; padding-top: 6px; text-align: right; }
 }
 </style>
 </head>
@@ -589,36 +636,36 @@ function detailContentHTML(s) {
 
   const measRows = V2_MEASUREMENTS.map(m => `
     <tr class="${m.rec ? 'rec' : ''}">
-      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.ref}</a>` : m.ref}</td>
-      <td><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
-      <td>${m.val.toFixed(4)}</td>
-      <td>${m.err.toFixed(4)}</td>
-      <td>${m.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+      <td class="nm" data-label="Paper">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.ref}</a>` : m.ref}</td>
+      <td data-label="Method"><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
+      <td data-label="M☉">${m.val.toFixed(4)}</td>
+      <td data-label="±">${m.err.toFixed(4)}</td>
+      <td data-label="">${m.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
     </tr>
   `).join('');
 
   const radRows = V2_RADIUS_MEAS.map(m => `
     <tr class="${m.rec ? 'rec' : ''}">
-      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.ref}</a>` : m.ref}</td>
-      <td><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
-      <td>${m.val.toFixed(5)}</td>
-      <td>${m.err.toFixed(5)}</td>
-      <td>${m.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+      <td class="nm" data-label="Paper">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.ref}</a>` : m.ref}</td>
+      <td data-label="Method"><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
+      <td data-label="R☉">${m.val.toFixed(5)}</td>
+      <td data-label="±">${m.err.toFixed(5)}</td>
+      <td data-label="">${m.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
     </tr>
   `).join('');
 
   const plList = planetsFor(s);
   const planetRows = plList.map(p => `
     <tr class="${p.rec ? 'rec' : ''}">
-      <td class="nm">${p.name}</td>
-      <td><span class="a2-method default">${p.method}</span></td>
-      <td>${p.p.toFixed(3)}</td>
-      <td>${p.sma != null ? p.sma.toFixed(4) : '—'}</td>
-      <td>${p.ecc != null ? p.ecc.toFixed(3) : '—'}</td>
-      <td>${p.inc != null ? p.inc.toFixed(2) : (p.incNote || '—')}</td>
-      <td>${p.m.toFixed(3)}</td>
-      <td>${p.r != null ? p.r.toFixed(3) : '—'}</td>
-      <td class="nm">${p.ref}</td>
+      <td class="nm" data-label="Planet">${p.name}</td>
+      <td data-label="Method"><span class="a2-method default">${p.method}</span></td>
+      <td data-label="Period (d)">${p.p.toFixed(3)}</td>
+      <td data-label="SMA (AU)">${p.sma != null ? p.sma.toFixed(4) : '—'}</td>
+      <td data-label="Ecc">${p.ecc != null ? p.ecc.toFixed(3) : '—'}</td>
+      <td data-label="Inc (°)">${p.inc != null ? p.inc.toFixed(2) : (p.incNote || '—')}</td>
+      <td data-label="M⊕">${p.m.toFixed(3)}</td>
+      <td data-label="R⊕">${p.r != null ? p.r.toFixed(3) : '—'}</td>
+      <td class="nm" data-label="Reference">${p.ref}</td>
     </tr>
   `).join('');
 

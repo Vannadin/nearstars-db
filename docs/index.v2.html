@@ -369,6 +369,55 @@ input[type=checkbox]{accent-color:#4a88b8}
   [data-ns="v2"] .a2-cc-wrap { padding: 10px 12px; gap: 14px; }
   [data-ns="v2"] .a2-cc-swatch { width: 48px; height: 48px; }
   [data-ns="v2"] .a2-cc-row { grid-template-columns: 48px 1fr auto; gap: 10px; }
+  /* 별 이미지 — 모바일은 카드 폭의 거의 전체를 채워서 보기 좋게 */
+  [data-ns="v2"] .a2-star-img-wrap { max-width: 100%; }
+
+  /* v1 의 stack-카드 패턴 — thead 숨기고 tr 가 카드, td 가 라벨/값 grid row */
+  [data-ns="v2"] .a2-mt-scroll { overflow-x: visible; margin: 0; }
+  [data-ns="v2"] .a2-mt-scroll table { min-width: 0; }
+  [data-ns="v2"] .a2-mt thead { display: none; }
+  [data-ns="v2"] .a2-mt, [data-ns="v2"] .a2-mt tbody, [data-ns="v2"] .a2-mt tr, [data-ns="v2"] .a2-mt td {
+    display: block; width: 100%;
+  }
+  [data-ns="v2"] .a2-mt tr {
+    background: var(--v2-surface-1);
+    border: 1px solid var(--v2-bd-2);
+    border-radius: var(--v2-r-row);
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  [data-ns="v2"] .a2-mt tr.rec {
+    background: var(--v2-ok-bg);
+    border-color: rgba(78,201,176,0.32);
+  }
+  [data-ns="v2"] .a2-mt tr.rec td { background: none; box-shadow: none; }
+  [data-ns="v2"] .a2-mt td {
+    border-bottom: none;
+    padding: 4px 0;
+    display: grid;
+    grid-template-columns: 84px 1fr;
+    gap: 12px;
+    align-items: center;
+    font-size: 12px;
+  }
+  [data-ns="v2"] .a2-mt td::before {
+    content: attr(data-label);
+    color: var(--v2-fg-4);
+    font: 600 9.5px/1.4 var(--v2-font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  [data-ns="v2"] .a2-mt td.nm {
+    display: block;
+    color: var(--v2-fg-1); font-weight: 600;
+    padding-bottom: 6px; margin-bottom: 4px;
+    border-bottom: 1px dashed var(--v2-bd-1);
+    font-family: var(--v2-font-sans);
+  }
+  [data-ns="v2"] .a2-mt td.nm::before { display: none; }
+  /* 빈 셀 (REC ✓ 만 있을 자리, 또는 empty) 은 모바일에서 숨김 — REC tick 은 별도 보존 */
+  [data-ns="v2"] .a2-mt td[data-label=""] { display: none; }
+  [data-ns="v2"] .a2-mt td[data-label=""]:has(.a2-rec-tick) { display: block; padding-top: 6px; text-align: right; }
 }
 </style>
 </head>
@@ -640,21 +689,21 @@ function detailContentHTML(r) {
   const rArr = measArray(raw, 'radius');
   const measRows = mArr.map(m => `
     <tr class="${m.recommended ? 'rec' : ''}">
-      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
-      <td><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
-      <td>${fmt(m.value_msun, 4)}</td>
-      <td>${fmt(m.uncertainty_msun, 4)}</td>
-      <td>${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+      <td class="nm" data-label="Paper">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
+      <td data-label="Method"><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
+      <td data-label="M☉">${fmt(m.value_msun, 4)}</td>
+      <td data-label="±">${fmt(m.uncertainty_msun, 4)}</td>
+      <td data-label="">${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
     </tr>
   `).join('');
 
   const radRows = rArr.map(m => `
     <tr class="${m.recommended ? 'rec' : ''}">
-      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
-      <td><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
-      <td>${fmt(m.value_rsun, 5)}</td>
-      <td>${fmt(m.uncertainty_rsun, 5)}</td>
-      <td>${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+      <td class="nm" data-label="Paper">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
+      <td data-label="Method"><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
+      <td data-label="R☉">${fmt(m.value_rsun, 5)}</td>
+      <td data-label="±">${fmt(m.uncertainty_rsun, 5)}</td>
+      <td data-label="">${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
     </tr>
   `).join('');
 
@@ -662,15 +711,15 @@ function detailContentHTML(r) {
     const pr = p.raw;
     return `
     <tr>
-      <td class="nm">${p.name}</td>
-      <td><span class="a2-method default">${pr.discoverymethod || '—'}</span></td>
-      <td>${fmt(pr.period_days, 3)}</td>
-      <td>${fmt(pr.semi_major_axis_au, 4)}</td>
-      <td>${fmt(pr.eccentricity, 3)}</td>
-      <td>${pr.inclination_deg != null ? (+pr.inclination_deg).toFixed(2) : '—'}</td>
-      <td>${fmt(pr.mass_mearth, 3)}</td>
-      <td>${fmt(pr.radius_rearth, 3)}</td>
-      <td class="nm">${pr.reference || '—'}</td>
+      <td class="nm" data-label="Planet">${p.name}</td>
+      <td data-label="Method"><span class="a2-method default">${pr.discoverymethod || '—'}</span></td>
+      <td data-label="Period (d)">${fmt(pr.period_days, 3)}</td>
+      <td data-label="SMA (AU)">${fmt(pr.semi_major_axis_au, 4)}</td>
+      <td data-label="Ecc">${fmt(pr.eccentricity, 3)}</td>
+      <td data-label="Inc (°)">${pr.inclination_deg != null ? (+pr.inclination_deg).toFixed(2) : '—'}</td>
+      <td data-label="M⊕">${fmt(pr.mass_mearth, 3)}</td>
+      <td data-label="R⊕">${fmt(pr.radius_rearth, 3)}</td>
+      <td class="nm" data-label="Reference">${pr.reference || '—'}</td>
     </tr>`;
   }).join('');
 
