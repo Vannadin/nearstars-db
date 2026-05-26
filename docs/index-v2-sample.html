@@ -195,18 +195,99 @@ input[type=checkbox]{accent-color:#4a88b8}
 /* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
 [data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
 
-/* ── 모바일 (≤600px) ── detail panel grid 를 single column 으로, padding 압축 ── */
+/* ── 모바일 카드 — v1 .mc 패턴 골격 + v2 컬러링(좌측 spec bar / hover·open wash) ── */
+[data-ns="v2"] .a2-cards-wrap { display: none; padding: 12px 12px 80px; }
+[data-ns="v2"] .a2-cards-list { display: flex; flex-direction: column; gap: 10px; }
+
+[data-ns="v2"] .a2-card {
+  position: relative; overflow: hidden;
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  border-radius: var(--v2-r-card);
+  padding: 13px 14px 13px 20px;
+  cursor: pointer;
+  transition: background 200ms var(--v2-ease), border-color 200ms var(--v2-ease);
+}
+[data-ns="v2"] .a2-card::before {
+  /* 좌측 4px spec bar — desktop row 의 td.bar::before 와 같은 컨셉 */
+  content: ''; position: absolute;
+  left: 0; top: 13px; bottom: 13px; width: 4px;
+  border-radius: 0 2px 2px 0;
+  background: var(--spec-color, var(--v2-fg-5));
+  box-shadow: 0 0 10px var(--spec-glow, transparent),
+              inset 0 0 0 1px rgba(255,255,255,0.12);
+  transition: top 200ms var(--v2-ease), bottom 200ms var(--v2-ease),
+              box-shadow 200ms var(--v2-ease);
+}
+[data-ns="v2"] .a2-card::after {
+  /* 카드 wash — desktop row 의 linear-gradient 와 같은 패턴 */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--spec-tint, transparent) 0%, transparent 55%);
+  opacity: 0; transition: opacity 200ms var(--v2-ease);
+}
+[data-ns="v2"] .a2-card:hover::after { opacity: 1; }
+[data-ns="v2"] .a2-card.open {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--spec-tint-strong, var(--v2-surface-2)) 100%, transparent) 0%,
+    var(--v2-surface-1) 80%);
+  border-color: var(--v2-bd-3);
+}
+[data-ns="v2"] .a2-card.open::before { top: 18px; bottom: 18px;
+  box-shadow: 0 0 16px var(--spec-color), 0 0 6px var(--spec-color),
+              inset 0 0 0 1px rgba(255,255,255,0.18); }
+
+[data-ns="v2"] .a2-card-head { display: flex; align-items: center; gap: 10px; }
+[data-ns="v2"] .a2-card-name {
+  flex: 1; min-width: 0;
+  font-size: 16px; font-weight: 600; color: var(--v2-fg-1);
+  letter-spacing: -0.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-ns="v2"] .a2-card-pills { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+[data-ns="v2"] .a2-card-sub {
+  margin-top: 5px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  font-size: 12px; color: var(--v2-fg-3);
+}
+[data-ns="v2"] .a2-card-sub .name { color: var(--v2-fg-3); }
+
+[data-ns="v2"] .a2-card-stats {
+  margin-top: 12px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px 12px;
+}
+@media (max-width: 380px) {
+  [data-ns="v2"] .a2-card-stats { grid-template-columns: repeat(2, 1fr); }
+}
+[data-ns="v2"] .a2-card-stat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+[data-ns="v2"] .a2-card-stat-k {
+  font-size: 9.5px; color: var(--v2-fg-4);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+[data-ns="v2"] .a2-card-stat-v {
+  font: 500 13px/1.2 var(--v2-font-mono);
+  color: var(--v2-fg-2);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-ns="v2"] .a2-card-expand {
+  margin: 14px -14px -13px -20px;
+  padding: 16px 14px 4px 20px;
+  border-top: 1px solid var(--v2-bd-1);
+  animation: a2-springdown 380ms var(--v2-spring);
+}
+
+/* ── ≤600px: 데스크탑 테이블 숨기고 카드 모드로 전환 ── */
 @media (max-width: 600px) {
-  [data-ns="v2"] .a2-detail { margin: 6px 8px 10px; border-radius: 12px; }
-  [data-ns="v2"] .a2-detail-inner { padding: 16px 14px; }
+  [data-ns="v2"] .a2-table { display: none; }
+  [data-ns="v2"] .a2-cards-wrap { display: block; }
+
+  /* detail content 자체의 모바일 압축 (카드 내부에 들어가는 경우 + 데스크탑 detail 양쪽 모두) */
   [data-ns="v2"] .a2-dp-grid { grid-template-columns: 1fr; gap: 20px; }
   [data-ns="v2"] .a2-star-img-wrap { width: 100%; max-width: 280px; margin: 0 auto; }
-  [data-ns="v2"] .a2-rep-row { gap: 6px; padding-bottom: 10px; margin-bottom: 14px; }
+  [data-ns="v2"] .a2-rep-row { gap: 6px; padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   [data-ns="v2"] .a2-rep-index { width: 100%; text-align: right; margin-left: 0; margin-top: 2px; }
-  [data-ns="v2"] .a2-row td { padding: 10px 10px; font-size: 12px; }
-  [data-ns="v2"] .a2-th { padding: 10px 10px; font-size: 9.5px; }
   [data-ns="v2"] .a2-mt th, [data-ns="v2"] .a2-mt td { padding: 7px 9px; font-size: 11px; }
-  [data-ns="v2"] .a2-pill { font-size: 8.5px; margin-left: 4px; padding: 1px 5px; }
   [data-ns="v2"] .a2-section-h { font-size: 9.5px; margin-bottom: 10px; }
   [data-ns="v2"] .a2-kv { grid-template-columns: 56px 1fr; gap: 4px 10px; }
 }
@@ -266,6 +347,9 @@ input[type=checkbox]{accent-color:#4a88b8}
     </thead>
     <tbody id="a2-tbody"></tbody>
   </table>
+  <div class="a2-cards-wrap">
+    <div class="a2-cards-list" id="a2-cards"></div>
+  </div>
 </div>
 
 <script>
@@ -373,53 +457,19 @@ const OPEN_KEYS = new Set([
   'Luhman 16|Luhman 16 A',
 ]);
 
-function renderRows() {
-  const tbody = document.getElementById('a2-tbody');
-  const html = [];
-  for (const s of V2_SYSTEMS) {
-    const key = `${s.sys}|${s.name}`;
-    const isOpen = OPEN_KEYS.has(key);
-    const cls = v2Spec(s.spec);
-    const specBg = `var(--v2-spec-${cls}-bg)`;
-    const strongBg = specStrongBg(cls);
-    const rowStyle = [
-      `--spec-color: var(--v2-spec-${cls})`,
-      `--spec-tint: ${specBg}`,
-      `--spec-tint-strong: ${strongBg}`,
-      `--spec-glow: ${specBg}`,
-    ].join('; ');
-
-    const pills = [
-      s.p2 ? `<span class="a2-pill p2">P2</span>` : '',
-      s.p3.length > 0 ? `<span class="a2-pill p3">P3·${s.p3.length}${s.p3.includes('★') ? '★' : ''}</span>` : '',
-    ].join('');
-
-    const planetCell = s.np > 0
-      ? `<span class="a2-pc">${s.np}</span>`
-      : `<span class="a2-pc zero">—</span>`;
-
-    html.push(`
-      <tr class="a2-row ${isOpen ? 'open' : ''}" style="${rowStyle}" data-key="${key}">
-        <td class="bar"></td>
-        <td><span class="a2-sysname">${s.sys}${s.comp ? ' ' + s.comp : ''}</span>${pills}</td>
-        <td>${s.name}</td>
-        <td><span class="v2-sb ${cls}">${s.spec}</span></td>
-        <td><span class="a2-mono">${s.dist.toFixed(3)} pc</span></td>
-        <td><span class="a2-mono">${s.teff.toLocaleString()} K</span></td>
-        <td><span class="a2-mono">${s.mass.toFixed(3)} M☉</span></td>
-        <td><span class="a2-mono">${s.rad.toFixed(3)} R☉</span></td>
-        <td>${planetCell}</td>
-      </tr>
-    `);
-    if (isOpen) {
-      html.push(`<tr><td colspan="9" style="padding:0">${renderDetail(s, rowStyle)}</td></tr>`);
-    }
-  }
-  tbody.innerHTML = html.join('');
-  attachRowClicks();
+function specStyleVars(cls) {
+  const specBg = `var(--v2-spec-${cls}-bg)`;
+  const strongBg = specStrongBg(cls);
+  return [
+    `--spec-color: var(--v2-spec-${cls})`,
+    `--spec-tint: ${specBg}`,
+    `--spec-tint-strong: ${strongBg}`,
+    `--spec-glow: ${specBg}`,
+  ].join('; ');
 }
 
-function renderDetail(s, rowStyle) {
+// detail panel content (rep-row + dp-grid) — desktop row 의 wrapper 와 mobile card 의 expand 양쪽에서 재사용.
+function detailContentHTML(s) {
   const teffColor = teffRGBv2(s.teff);
   const meas = V2_MEASUREMENTS.map(m => `
     <tr class="${m.rec ? 'rec' : ''}">
@@ -444,68 +494,158 @@ function renderDetail(s, rowStyle) {
   const p3chips = s.p3.map(l => `<a class="a2-rep-chip p3"><b>P3</b> ${l}</a>`).join('');
 
   return `
-    <div class="a2-detail" style="${rowStyle}">
-      <div class="a2-detail-inner">
-        <div class="a2-rep-row">
-          <span class="a2-rep-label">Reports</span>
-          <a class="a2-rep-chip p2"><b>P2</b> view</a>
-          ${p3chips}
-          <a class="a2-rep-index">all reports →</a>
+    <div class="a2-rep-row">
+      <span class="a2-rep-label">Reports</span>
+      <a class="a2-rep-chip p2"><b>P2</b> view</a>
+      ${p3chips}
+      <a class="a2-rep-index">all reports →</a>
+    </div>
+    <div class="a2-dp-grid">
+      <div>
+        <div class="a2-star-img-wrap"
+             style="background: radial-gradient(circle at 50% 50%, ${teffColor} 0%, ${teffColor}77 8%, #1a0e08 35%, #050a0e 75%)">
+          <div class="a2-reticle"></div>
         </div>
-        <div class="a2-dp-grid">
-          <div>
-            <div class="a2-star-img-wrap"
-                 style="background: radial-gradient(circle at 50% 50%, ${teffColor} 0%, ${teffColor}77 8%, #1a0e08 35%, #050a0e 75%)">
-              <div class="a2-reticle"></div>
-            </div>
-            <div style="font-size:10px; font-family: var(--v2-font-mono); color: var(--v2-fg-4); margin-top:8px">
-              Pan-STARRS PS1 · star at crosshair · epoch 2012
-            </div>
-            <div style="margin-top:22px">
-              <div class="a2-section-h">Astrometry</div>
-              <div class="a2-kv">
-                <span class="k">Dist</span><span class="v">${s.dist.toFixed(3)} pc · ${(s.dist*3.262).toFixed(2)} ly</span>
-                <span class="k">V mag</span><span class="v">11.13</span>
-                <span class="k">Teff</span><span class="v">${s.teff.toLocaleString()} K</span>
-                <span class="k">Mass</span><span class="v">${s.mass.toFixed(4)} M☉</span>
-                <span class="k">Radius</span><span class="v">${s.rad.toFixed(4)} R☉</span>
-              </div>
-            </div>
+        <div style="font-size:10px; font-family: var(--v2-font-mono); color: var(--v2-fg-4); margin-top:8px">
+          Pan-STARRS PS1 · star at crosshair · epoch 2012
+        </div>
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Astrometry</div>
+          <div class="a2-kv">
+            <span class="k">Dist</span><span class="v">${s.dist.toFixed(3)} pc · ${(s.dist*3.262).toFixed(2)} ly</span>
+            <span class="k">V mag</span><span class="v">11.13</span>
+            <span class="k">Teff</span><span class="v">${s.teff.toLocaleString()} K</span>
+            <span class="k">Mass</span><span class="v">${s.mass.toFixed(4)} M☉</span>
+            <span class="k">Radius</span><span class="v">${s.rad.toFixed(4)} R☉</span>
           </div>
-          <div>
-            <div class="a2-section-h">
-              Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${V2_MEASUREMENTS.length} papers</span>
-            </div>
-            <table class="a2-mt">
-              <thead><tr><th>Paper</th><th>Method</th><th>M☉</th><th>±</th><th></th></tr></thead>
-              <tbody>${meas}</tbody>
-            </table>
-            <div style="margin-top:22px">
-              <div class="a2-section-h">Planets · ${V2_PLANETS.length}</div>
-              <table class="a2-mt">
-                <thead><tr><th>Planet</th><th>M⊕</th><th>R⊕</th><th>Period (d)</th><th></th></tr></thead>
-                <tbody>${planets}</tbody>
-              </table>
-            </div>
-          </div>
+        </div>
+      </div>
+      <div>
+        <div class="a2-section-h">
+          Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${V2_MEASUREMENTS.length} papers</span>
+        </div>
+        <table class="a2-mt">
+          <thead><tr><th>Paper</th><th>Method</th><th>M☉</th><th>±</th><th></th></tr></thead>
+          <tbody>${meas}</tbody>
+        </table>
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Planets · ${V2_PLANETS.length}</div>
+          <table class="a2-mt">
+            <thead><tr><th>Planet</th><th>M⊕</th><th>R⊕</th><th>Period (d)</th><th></th></tr></thead>
+            <tbody>${planets}</tbody>
+          </table>
         </div>
       </div>
     </div>
   `;
 }
 
-function attachRowClicks() {
-  document.querySelectorAll('.a2-row').forEach(tr => {
-    tr.addEventListener('click', () => {
-      const key = tr.dataset.key;
-      if (OPEN_KEYS.has(key)) OPEN_KEYS.delete(key);
-      else OPEN_KEYS.add(key);
-      renderRows();
-    });
+function renderRows() {
+  const tbody = document.getElementById('a2-tbody');
+  const html = [];
+  for (const s of V2_SYSTEMS) {
+    const key = `${s.sys}|${s.name}`;
+    const isOpen = OPEN_KEYS.has(key);
+    const cls = v2Spec(s.spec);
+    const rowStyle = specStyleVars(cls);
+
+    const pills = [
+      s.p2 ? `<span class="a2-pill p2">P2</span>` : '',
+      s.p3.length > 0 ? `<span class="a2-pill p3">P3·${s.p3.length}${s.p3.includes('★') ? '★' : ''}</span>` : '',
+    ].join('');
+
+    const planetCell = s.np > 0
+      ? `<span class="a2-pc">${s.np}</span>`
+      : `<span class="a2-pc zero">—</span>`;
+
+    html.push(`
+      <tr class="a2-row ${isOpen ? 'open' : ''}" style="${rowStyle}" data-key="${key}">
+        <td class="bar"></td>
+        <td><span class="a2-sysname">${s.sys}${s.comp ? ' ' + s.comp : ''}</span>${pills}</td>
+        <td>${s.name}</td>
+        <td><span class="v2-sb ${cls}">${s.spec}</span></td>
+        <td><span class="a2-mono">${s.dist.toFixed(3)} pc</span></td>
+        <td><span class="a2-mono">${s.teff.toLocaleString()} K</span></td>
+        <td><span class="a2-mono">${s.mass.toFixed(3)} M☉</span></td>
+        <td><span class="a2-mono">${s.rad.toFixed(3)} R☉</span></td>
+        <td>${planetCell}</td>
+      </tr>
+    `);
+    if (isOpen) {
+      html.push(`<tr><td colspan="9" style="padding:0">
+        <div class="a2-detail" style="${rowStyle}">
+          <div class="a2-detail-inner">${detailContentHTML(s)}</div>
+        </div>
+      </td></tr>`);
+    }
+  }
+  tbody.innerHTML = html.join('');
+}
+
+function renderCards() {
+  const wrap = document.getElementById('a2-cards');
+  const html = [];
+  for (const s of V2_SYSTEMS) {
+    const key = `${s.sys}|${s.name}`;
+    const isOpen = OPEN_KEYS.has(key);
+    const cls = v2Spec(s.spec);
+    const cardStyle = specStyleVars(cls);
+
+    const p2pill = s.p2 ? `<span class="a2-pill p2">P2</span>` : '';
+    const p3pill = s.p3.length > 0
+      ? `<span class="a2-pill p3">P3·${s.p3.length}${s.p3.includes('★') ? '★' : ''}</span>`
+      : '';
+
+    const planetPill = s.np > 0
+      ? `<span class="a2-pc">${s.np}p</span>`
+      : `<span class="a2-pc zero">—</span>`;
+
+    html.push(`
+      <div class="a2-card ${isOpen ? 'open' : ''}" data-key="${key}" style="${cardStyle}">
+        <div class="a2-card-head">
+          <div class="a2-card-name">${s.sys}${s.comp ? ' ' + s.comp : ''}</div>
+          <div class="a2-card-pills">
+            <span class="v2-sb ${cls}">${s.spec}</span>
+            ${planetPill}
+          </div>
+        </div>
+        <div class="a2-card-sub">
+          <span class="name">${s.name}</span>
+          ${p2pill}
+          ${p3pill}
+        </div>
+        <div class="a2-card-stats">
+          <div class="a2-card-stat"><span class="a2-card-stat-k">DIST</span><span class="a2-card-stat-v">${s.dist.toFixed(3)} pc</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">TEFF</span><span class="a2-card-stat-v">${s.teff.toLocaleString()} K</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">MASS</span><span class="a2-card-stat-v">${s.mass.toFixed(3)} M☉</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">RADIUS</span><span class="a2-card-stat-v">${s.rad.toFixed(3)} R☉</span></div>
+        </div>
+        ${isOpen ? `<div class="a2-card-expand">${detailContentHTML(s)}</div>` : ''}
+      </div>
+    `);
+  }
+  wrap.innerHTML = html.join('');
+}
+
+function toggleKey(key) {
+  if (OPEN_KEYS.has(key)) OPEN_KEYS.delete(key);
+  else OPEN_KEYS.add(key);
+  renderAll();
+}
+
+function attachClicks() {
+  document.querySelectorAll('.a2-row, .a2-card').forEach(el => {
+    el.addEventListener('click', () => toggleKey(el.dataset.key));
   });
 }
 
-renderRows();
+function renderAll() {
+  renderRows();
+  renderCards();
+  attachClicks();
+}
+
+renderAll();
 </script>
 
 </body>
