@@ -81,17 +81,19 @@ def swatch_cell(hex_val: str | None) -> str:
 
 
 def render_table(entries, status_chip):
-    lines = ["| Z | Sym | Name | Color | Status | Basis |",
-             "|---|-----|------|-------|--------|-------|"]
+    lines = ["| Z | Sym | Name | Color | Status | hex_basis | Basis |",
+             "|---|-----|------|-------|--------|-----------|-------|"]
     entries.sort(key=lambda x: x[1]["atomic_number"])
     for sym, e in entries:
+        af = e["regimes"]["atomic_flame"]
         lines.append(
             f"| {e['atomic_number']} "
             f"| **{sym}** "
             f"| {e['name']} "
-            f"| {swatch_cell(e.get('hex'))} "
-            f"| {status_chip(e['status'])} "
-            f"| {e['basis']} |"
+            f"| {swatch_cell(af.get('hex'))} "
+            f"| {status_chip(af['status'])} "
+            f"| {af.get('hex_basis', '—')} "
+            f"| {af['basis']} |"
         )
     return "\n".join(lines)
 

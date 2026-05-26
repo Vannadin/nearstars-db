@@ -423,11 +423,15 @@ def process_slug(slug: str, element_db: dict, outcome: EmitOutcome,
             if sp in STREAK_PALETTE:
                 streak_rgb = STREAK_PALETTE[sp]
                 break
-            elif sp in element_db and element_db[sp]["status"] == "visible":
-                # Convert hex → RGB
-                hx = element_db[sp]["hex"].lstrip("#")
-                streak_rgb = (int(hx[0:2], 16), int(hx[2:4], 16), int(hx[4:6], 16), 2.0)
-                break
+            elif sp in element_db:
+                # v2 schema: prefer reentry_plasma regime (matches Firefly physics);
+                # fall back to atomic_flame if no reentry data
+                regimes = element_db[sp].get("regimes", {})
+                pick = regimes.get("reentry_plasma") or regimes.get("atomic_flame")
+                if pick and pick.get("status") == "visible" and pick.get("hex"):
+                    hx = pick["hex"].lstrip("#")
+                    streak_rgb = (int(hx[0:2], 16), int(hx[2:4], 16), int(hx[4:6], 16), 2.0)
+                    break
 
     # Temperature for particle_threshold
     temp_k = None

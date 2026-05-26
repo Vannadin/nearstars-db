@@ -1,979 +1,1736 @@
-# Per-element flame test / low-temperature plasma colors.
+# Per-element plasma colors — multi-regime schema (v2).
 #
-# Replaces pixel-sampling of the Helmenstine 2017 chart
-# (sciencenotes.org "Plasma Colors of the Periodic Table") whose
-# decorative gradient renders exact hex unreadable.
+# Each element has a `regimes:` block. The atomic_flame regime is
+# populated for every element (preserves v1 data). reentry_plasma
+# and aurora regimes are added in subsequent passes for the species
+# where they're meaningfully different from atomic_flame.
 #
-# Schema per entry:
-#   <symbol>:
-#     atomic_number: int           # 1..118
-#     name:          string        # English name
-#     status:        enum          # visible | no_flame_color | not_visible_to_humans
-#                                  # | too_radioactive | too_short | no_data
-#     hex:           "#rrggbb"|nil # required when status == visible, else null
-#     basis:         string        # spectroscopic justification (line λ, band)
-#     source:        string        # canonical reference for the descriptor
-#
-# Conventions:
-# - Hex is lowercase 6-digit (#rrggbb), no alpha. Firefly intensity is
-#   applied at emit time, not encoded here.
-# - For multi-line emitters (e.g. H Hα + Hβ), hex is a perceptual mix
-#   weighted by published line intensities, not naïve RGB average.
-# - basis line cites dominant visible λ in nm where the chemistry
-#   literature gives a numeric line. Where only a descriptor exists
-#   ("crimson", "lilac"), basis names the species and reference.
+# Schema per regime:
+#   status:    visible | no_flame_color | not_visible_to_humans
+#              | too_radioactive | too_short | no_data | not_emitter
+#   hex:       #rrggbb (lowercase 6-digit), or null if status != visible
+#   hex_basis: cie_computed | canonical_descriptor | chart_approx
+#              - cie_computed: derived from emission_lines via CIE
+#                (scripts/refs/wavelength_to_rgb.py)
+#              - canonical_descriptor: matches a standard color name
+#                (crimson, lilac, etc.) — not naively recomputed
+#              - chart_approx: visual estimate from Helmenstine 2017
+#                — lowest confidence
+#   emission_lines (when cie_computed): NIST lines + relative intensities
+#   basis:     spectroscopic justification (free text)
+#   source:    canonical reference
 
 H:
   atomic_number: 1
   name: Hydrogen
-  status: visible
-  hex: "#ff5fa8"
-  basis: Balmer Hα 656nm (red) dominant + Hβ 486nm (cyan); perceptual mix → hot pink
-  source: NIST Atomic Spectra; Wikipedia Balmer series
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ffaab9'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 656.3
+        intensity: 500.0
+        label: Hα
+      - nm: 486.1
+        intensity: 100.0
+        label: Hβ
+      - nm: 434.0
+        intensity: 50.0
+        label: Hγ
+      basis: Balmer Hα 656nm (red) dominant + Hβ 486nm (cyan); perceptual mix → hot pink
+      source: NIST Atomic Spectra; Wikipedia Balmer series
+    reentry_plasma:
+      status: visible
+      hex: '#caeaff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 656.3
+        intensity: 500.0
+        label: Hα
+      - nm: 486.1
+        intensity: 200.0
+        label: Hβ
+      - nm: 434.0
+        intensity: 100.0
+        label: Hγ
+      - nm: 410.2
+        intensity: 50.0
+        label: Hδ
+      basis: Balmer series fully populated at 10000K. Hα still dominant red, but Hβ contribution grows relative to flame T. Slightly bluer pink.
+      source: NIST H I; reentry spectroscopy lit
+    aurora:
+      status: visible
+      hex: '#ffaab9'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 656.3
+        intensity: 1000.0
+        label: Hα Balmer
+      - nm: 486.1
+        intensity: 200.0
+        label: Hβ Balmer
+      - nm: 434.0
+        intensity: 100.0
+        label: Hγ Balmer
+      basis: H Balmer α dominant. Proton aurora — incoming protons charge-exchange to neutral H, then emit Balmer. Diffuse, less intense than electron aurora.
+      source: NIST H I; proton aurora literature
 He:
   atomic_number: 2
   name: Helium
-  status: visible
-  hex: "#ffa07a"
-  basis: He I D3 587.6nm + multiple visible lines; discharge tube appears peach-orange
-  source: NIST; Wikipedia Helium emission
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ffa07a'
+      hex_basis: canonical_descriptor
+      basis: He I D3 587.6nm + multiple visible lines; discharge tube appears peach-orange
+      source: NIST; Wikipedia Helium emission
+    reentry_plasma:
+      status: visible
+      hex: '#f9ff24'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 587.6
+        intensity: 500.0
+        label: D3
+      - nm: 667.8
+        intensity: 200.0
+      - nm: 706.5
+        intensity: 200.0
+      - nm: 501.6
+        intensity: 150.0
+      - nm: 471.3
+        intensity: 100.0
+      - nm: 388.9
+        intensity: 200.0
+        label: UV-blue
+      basis: He I lines + more visible blue at high T. Slightly cooler than discharge tube peach.
+      source: NIST He I; reentry spectra
+    aurora:
+      status: visible
+      hex: '#ffe700'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 587.6
+        intensity: 500.0
+        label: D3
+      - nm: 388.9
+        intensity: 300.0
+        label: He I UV-blue
+      basis: Rare; observed in proton aurorae and very high-energy events.
+      source: Aurora spectroscopy lit
 Li:
   atomic_number: 3
   name: Lithium
-  status: visible
-  hex: "#dc143c"
-  basis: Li I doublet 670.8nm (resonance); classical crimson flame
-  source: Wikipedia Flame test (crimson red); NIST 670.776/670.791nm
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#dc143c'
+      hex_basis: canonical_descriptor
+      basis: Li I doublet 670.8nm (resonance); classical crimson flame
+      source: Wikipedia Flame test (crimson red); NIST 670.776/670.791nm
 Be:
   atomic_number: 4
   name: Beryllium
-  status: no_flame_color
-  hex: null
-  basis: BeO/BeF salts produce no visible flame coloration; toxicity prevents standard flame-test
-  source: Wikipedia Flame test (no characteristic color)
-
+  regimes:
+    atomic_flame:
+      status: no_flame_color
+      hex: null
+      basis: BeO/BeF salts produce no visible flame coloration; toxicity prevents standard flame-test
+      source: Wikipedia Flame test (no characteristic color)
 B:
   atomic_number: 5
   name: Boron
-  status: visible
-  hex: "#3fcfa8"
-  basis: BO2 green bands 518/546nm dominant; classical bright green flame
-  source: Wikipedia Flame test (bright green); NIST B I lines
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fcfa8'
+      hex_basis: canonical_descriptor
+      basis: BO2 green bands 518/546nm dominant; classical bright green flame
+      source: Wikipedia Flame test (bright green); NIST B I lines
 C:
   atomic_number: 6
   name: Carbon
-  status: visible
-  hex: "#ff8c42"
-  basis: Hot graphite continuum (incandescence) + C2 Swan bands 516/473nm in cool plasma; chart renders amber/orange for soot luminescence
-  source: Helmenstine chart; NIST C I + Swan band literature
-  reentry_note: At reentry temps (8000+K) C2 Swan green dominates over orange blackbody — see composition-color.md §3
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#79ff2b'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 516.5
+        intensity: 500.0
+        label: C2 Swan d→a
+      - nm: 473.7
+        intensity: 400.0
+        label: C2 Swan high-v
+      - nm: 588.9
+        intensity: 200.0
+        label: C2 Swan low-v
+      - nm: 388.3
+        intensity: 300.0
+        label: CN violet
+      basis: Hot graphite continuum (incandescence) + C2 Swan bands 516/473nm in cool plasma; chart renders amber/orange for soot luminescence
+      source: Helmenstine chart; NIST C I + Swan band literature
+      reentry_note: At reentry temps (8000+K) C2 Swan green dominates over orange blackbody — see composition-color.md §3
+    reentry_plasma:
+      status: visible
+      hex: '#22ff52'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 516.5
+        intensity: 500.0
+        label: C2 Swan d→a
+      - nm: 473.7
+        intensity: 400.0
+        label: C2 Swan high-v
+      - nm: 469.8
+        intensity: 300.0
+        label: C2 Swan
+      - nm: 438.3
+        intensity: 200.0
+        label: CH band
+      - nm: 388.3
+        intensity: 400.0
+        label: CN violet
+      basis: At reentry temps C2 Swan green + CN violet dominate. Earth blackbody continuum from soot is absent in shock plasma.
+      source: arXiv 2007.04869; Mars EDL camera footage
 N:
   atomic_number: 7
   name: Nitrogen
-  status: visible
-  hex: "#3b2f7a"
-  basis: Atomic N is faint blue-violet in low-temp plasma; flame chemistry typically dark
-  source: Helmenstine chart (deep blue-purple)
-  reentry_note: At reentry temps N2+ 391nm + N2 1NG 670nm dominate — composition-color.md §3 "Earth-like"
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ff0071'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 391.4
+        intensity: 500.0
+        label: N2+ 1NG
+      - nm: 427.8
+        intensity: 300.0
+        label: N2+ 1NG
+      - nm: 670.0
+        intensity: 200.0
+        label: N2 1P band peak
+      - nm: 337.1
+        intensity: 200.0
+        label: N2 2P UV
+      basis: Atomic N is faint blue-violet in low-temp plasma; flame chemistry typically dark
+      source: Helmenstine chart (deep blue-purple)
+      reentry_note: At reentry temps N2+ 391nm + N2 1NG 670nm dominate — composition-color.md §3 "Earth-like"
+    reentry_plasma:
+      status: visible
+      hex: '#ff0060'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 391.4
+        intensity: 500.0
+        label: N2+ 1NG
+      - nm: 427.8
+        intensity: 300.0
+        label: N2+ 1NG
+      - nm: 670.0
+        intensity: 250.0
+        label: N2 1P
+      - nm: 744.2
+        intensity: 100.0
+        label: NI
+      - nm: 821.6
+        intensity: 150.0
+        label: NI IR
+      basis: N2+ 391nm First Negative + N2 1NG red — classic Earth reentry signature. Blue-violet hue is canonical.
+      source: Air plasma optical spectra (ResearchGate); Earth reentry video
+    aurora:
+      status: visible
+      hex: '#35ff00'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 346.6
+        intensity: 100.0
+        label: NI forbidden UV
+      - nm: 519.8
+        intensity: 200.0
+        label: NI ²D→⁴S
+      - nm: 520.0
+        intensity: 200.0
+        label: NI
+      - nm: 746.8
+        intensity: 300.0
+        label: NI IR
+      basis: Atomic N contributes weak green-yellow forbidden lines. Most visible 'aurora green' is actually OI 558nm, not N.
+      source: NIST N I auroral
 O:
   atomic_number: 8
   name: Oxygen
-  status: visible
-  hex: "#5fb8f7"
-  basis: OI 777nm + 615nm + auroral 558/630nm lines; cool plasma appears pale blue
-  source: NIST O I; Helmenstine chart
-  reentry_note: At reentry temps mixed with N2 → blue-violet plasma; see composition-color.md §3
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ffda00'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 777.4
+        intensity: 500.0
+        label: OI triplet
+      - nm: 615.7
+        intensity: 200.0
+        label: OI
+      - nm: 557.7
+        intensity: 100.0
+        label: OI green forbidden (low-T plasma weak)
+      - nm: 630.0
+        intensity: 100.0
+        label: OI red forbidden (low-T plasma weak)
+      basis: OI 777nm + 615nm + auroral 558/630nm lines; cool plasma appears pale blue
+      source: NIST O I; Helmenstine chart
+      reentry_note: At reentry temps mixed with N2 → blue-violet plasma; see composition-color.md §3
+    reentry_plasma:
+      status: visible
+      hex: '#ffe503'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 777.4
+        intensity: 400.0
+        label: OI triplet
+      - nm: 615.7
+        intensity: 300.0
+        label: OI
+      - nm: 557.7
+        intensity: 200.0
+        label: OI green
+      - nm: 630.0
+        intensity: 200.0
+        label: OI red
+      - nm: 844.6
+        intensity: 200.0
+        label: OI IR
+      - nm: 436.8
+        intensity: 100.0
+        label: OI II
+      basis: Atomic O lines stronger at reentry T than flame T. Combined with N2 in mixed atmospheres gives blue-violet (see N entry).
+      source: NASA reentry spectroscopy
+    aurora:
+      status: visible
+      hex: '#d3ff00'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 557.7
+        intensity: 1000.0
+        label: OI green forbidden ¹S→¹D
+      - nm: 630.0
+        intensity: 400.0
+        label: OI red forbidden ¹D→³P
+      - nm: 636.4
+        intensity: 200.0
+        label: OI red
+      basis: OI 557.7nm green is the iconic auroral emission (1S→1D forbidden, τ≈0.7s, needs >100km altitude). 630.0nm red dominates at higher altitudes (>200km, 1D→3P forbidden, τ≈110s).
+      source: NIST O I; Earth auroral physics literature
 F:
   atomic_number: 9
   name: Fluorine
-  status: not_visible_to_humans
-  hex: null
-  basis: F I strongest lines are 685.6/690.2nm (deep red) and many in IR; perceptually faint, often categorized as no visible color
-  source: NIST F I; Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ff0000'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 685.6
+        intensity: 200.0
+        label: F I
+      - nm: 690.2
+        intensity: 200.0
+        label: F I
+      - nm: 775.5
+        intensity: 150.0
+        label: ''
+      basis: F I strongest lines are 685.6/690.2nm (deep red) and many in IR; perceptually faint, often categorized as no visible color
+      source: NIST F I; Helmenstine chart (checkered)
 Ne:
   atomic_number: 10
   name: Neon
-  status: visible
-  hex: "#ff5722"
-  basis: Ne I 640.2nm + cluster of red-orange lines; discharge tube orange-red signature
-  source: Wikipedia Neon; NIST Ne I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ff9300'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 640.2
+        intensity: 500.0
+        label: ''
+      - nm: 614.3
+        intensity: 200.0
+        label: ''
+      - nm: 588.2
+        intensity: 150.0
+        label: ''
+      - nm: 650.7
+        intensity: 200.0
+        label: ''
+      basis: Ne I 640.2nm + cluster of red-orange lines; discharge tube orange-red signature
+      source: Wikipedia Neon; NIST Ne I
+    reentry_plasma:
+      status: visible
+      hex: '#ffc200'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 640.2
+        intensity: 500.0
+      - nm: 614.3
+        intensity: 200.0
+      - nm: 588.2
+        intensity: 150.0
+      - nm: 650.7
+        intensity: 200.0
+      - nm: 540.1
+        intensity: 100.0
+      basis: Reentry color similar to discharge tube — red-orange dominant.
+      source: NIST Ne I
 Na:
   atomic_number: 11
   name: Sodium
-  status: visible
-  hex: "#ffdf00"
-  basis: Na D-line doublet 589.0/589.6nm; classical bright yellow flame
-  source: Wikipedia Flame test (yellow); NIST 589nm
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ffdf00'
+      hex_basis: canonical_descriptor
+      basis: Na D-line doublet 589.0/589.6nm; classical bright yellow flame
+      source: Wikipedia Flame test (yellow); NIST 589nm
+    reentry_plasma:
+      status: visible
+      hex: '#ffe200'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 589.0
+        intensity: 500.0
+        label: D2
+      - nm: 589.6
+        intensity: 300.0
+        label: D1
+      - nm: 818.3
+        intensity: 100.0
+      - nm: 819.5
+        intensity: 100.0
+      basis: Na D-line still strongest at reentry T. Sub-Neptune alkali trace species give bright yellow streak.
+      source: NIST Na I; lava world atmospheric models
 Mg:
   atomic_number: 12
   name: Magnesium
-  status: visible
-  hex: "#f5f5f5"
-  basis: Mg I 285.2nm (UV) + green bands; pyrotechnic flame is brilliant white from continuum
-  source: Wikipedia Flame test (brilliant white); NIST
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#f5f5f5'
+      hex_basis: canonical_descriptor
+      basis: Mg I 285.2nm (UV) + green bands; pyrotechnic flame is brilliant white from continuum
+      source: Wikipedia Flame test (brilliant white); NIST
+    reentry_plasma:
+      status: visible
+      hex: '#2bff03'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 285.2
+        intensity: 100.0
+        label: Mg I UV (V≈0)
+      - nm: 517.3
+        intensity: 500.0
+        label: Mg b1
+      - nm: 518.4
+        intensity: 400.0
+        label: Mg b2
+      - nm: 516.7
+        intensity: 400.0
+        label: Mg b3
+      - nm: 448.1
+        intensity: 100.0
+        label: Mg II 4481
+      basis: Mg b triplet 516-518nm strong at reentry T (meteor green). MgII 448 contributes mild blue.
+      source: Meteor spectroscopy; NIST Mg I+II
+    aurora:
+      status: visible
+      hex: '#2bff00'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 285.2
+        intensity: 100.0
+        label: Mg I UV
+      - nm: 518.4
+        intensity: 300.0
+        label: Mg b2
+      - nm: 516.7
+        intensity: 300.0
+        label: Mg b3
+      - nm: 517.3
+        intensity: 300.0
+        label: Mg b1
+      basis: Meteor-class aurora — Mg b triplet from incoming dust ablation in the upper atmosphere. Distinctive bright green meteor color.
+      source: Meteor spectroscopy; Mg I NIST
 Al:
   atomic_number: 13
   name: Aluminum
-  status: visible
-  hex: "#e8e8e8"
-  basis: Al I 396.2/394.4nm UV-violet; combustion appears bright white from Al2O3 incandescence
-  source: Wikipedia Aluminum spectrum; pyrotechnic literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8e8e8'
+      hex_basis: chart_approx
+      basis: Al I 396.2/394.4nm UV-violet; combustion appears bright white from Al2O3 incandescence
+      source: Wikipedia Aluminum spectrum; pyrotechnic literature
+    reentry_plasma:
+      status: visible
+      hex: '#ff00a4'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 396.2
+        intensity: 500.0
+        label: Al I
+      - nm: 394.4
+        intensity: 400.0
+        label: Al I
+      - nm: 705.7
+        intensity: 200.0
+        label: Al II
+      basis: Al I doublet UV-violet + Al II red. Hot rocky meteoroid green-violet.
+      source: NIST Al I+II; meteor spectroscopy
 Si:
   atomic_number: 14
   name: Silicon
-  status: no_data
-  hex: null
-  basis: No standard flame test; SiO2 vaporization color not characterized in normal flame conditions
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No standard flame test; SiO2 vaporization color not characterized in normal flame conditions
+      source: Helmenstine chart (checkered)
+    reentry_plasma:
+      status: visible
+      hex: '#ff3501'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 390.6
+        intensity: 300.0
+        label: Si I
+      - nm: 288.2
+        intensity: 100.0
+        label: Si I UV
+      - nm: 634.7
+        intensity: 200.0
+        label: Si II
+      - nm: 637.1
+        intensity: 200.0
+        label: Si II
+      basis: Si I UV-violet weak + Si II red enhances. Hot rocky vaporization.
+      source: NIST Si I+II
 P:
   atomic_number: 15
   name: Phosphorus
-  status: visible
-  hex: "#9fffae"
-  basis: P2 + HPO bands 525/540nm; pale green-white chemiluminescence
-  source: Wikipedia Phosphorus; pyrotechnic literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#9fffae'
+      hex_basis: canonical_descriptor
+      basis: P2 + HPO bands 525/540nm; pale green-white chemiluminescence
+      source: Wikipedia Phosphorus; pyrotechnic literature
 S:
   atomic_number: 16
   name: Sulfur
-  status: visible
-  hex: "#4fb0ff"
-  basis: SO2 + S2 bands 280–320nm UV; visible flame is pale blue
-  source: Wikipedia Sulfur (blue flame)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#4fb0ff'
+      hex_basis: canonical_descriptor
+      basis: SO2 + S2 bands 280–320nm UV; visible flame is pale blue
+      source: Wikipedia Sulfur (blue flame)
+    reentry_plasma:
+      status: visible
+      hex: '#bfff19'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 469.4
+        intensity: 200.0
+        label: SI
+      - nm: 545.4
+        intensity: 300.0
+        label: S2 bands
+      - nm: 605.3
+        intensity: 200.0
+        label: S2
+      - nm: 392.4
+        intensity: 100.0
+      basis: S2 + SO bands give pale blue-green. Venus-class outgassing trace.
+      source: NIST S I; Venus airglow
 Cl:
   atomic_number: 17
   name: Chlorine
-  status: visible
-  hex: "#a8e88f"
-  basis: Cl2 discharge has bands in green-yellow + Cl I 754nm; flame chemistry adds CuCl2 → green
-  source: Helmenstine chart; Wikipedia Chlorine discharge
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ff0000'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 754.7
+        intensity: 150.0
+        label: ''
+      - nm: 792.5
+        intensity: 150.0
+        label: ''
+      - nm: 837.6
+        intensity: 100.0
+        label: ''
+      basis: Cl2 discharge has bands in green-yellow + Cl I 754nm; flame chemistry adds CuCl2 → green
+      source: Helmenstine chart; Wikipedia Chlorine discharge
 Ar:
   atomic_number: 18
   name: Argon
-  status: visible
-  hex: "#a06bff"
-  basis: Ar I multi-line in red + 696.5nm + UV; discharge tube classic violet-lilac
-  source: Wikipedia Argon (violet); NIST Ar I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#a06bff'
+      hex_basis: canonical_descriptor
+      basis: Ar I multi-line in red + 696.5nm + UV; discharge tube classic violet-lilac
+      source: Wikipedia Argon (violet); NIST Ar I
+    reentry_plasma:
+      status: visible
+      hex: '#ff006b'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 696.5
+        intensity: 300.0
+        label: Ar I
+      - nm: 706.7
+        intensity: 200.0
+        label: Ar I
+      - nm: 738.4
+        intensity: 150.0
+        label: Ar I
+      - nm: 763.5
+        intensity: 250.0
+        label: Ar I
+      - nm: 415.9
+        intensity: 100.0
+        label: Ar I violet
+      - nm: 419.8
+        intensity: 100.0
+        label: Ar I violet
+      basis: Ar I visible spectrum similar to discharge tube. Trace noble gas signature.
+      source: NIST Ar I
 K:
   atomic_number: 19
   name: Potassium
-  status: visible
-  hex: "#c8a2c8"
-  basis: K I 766.5/769.9nm IR doublet + 404nm violet; flame appears lilac (pink-violet)
-  source: Wikipedia Flame test (lilac); NIST
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#c8a2c8'
+      hex_basis: canonical_descriptor
+      basis: K I 766.5/769.9nm IR doublet + 404nm violet; flame appears lilac (pink-violet)
+      source: Wikipedia Flame test (lilac); NIST
+    reentry_plasma:
+      status: visible
+      hex: '#aa00ff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 766.5
+        intensity: 500.0
+        label: K I
+      - nm: 769.9
+        intensity: 400.0
+        label: K I
+      - nm: 404.4
+        intensity: 200.0
+        label: K I
+      - nm: 404.7
+        intensity: 100.0
+      basis: K resonance still dominant at reentry T. Alkali violet-pink with stronger IR contribution.
+      source: NIST K I
 Ca:
   atomic_number: 20
   name: Calcium
-  status: visible
-  hex: "#ff6347"
-  basis: CaO bands 622/553nm + Ca I 422.7nm; classical orange-red ("brick red") flame
-  source: Wikipedia Flame test (orange-red); NIST
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ff6347'
+      hex_basis: canonical_descriptor
+      basis: CaO bands 622/553nm + Ca I 422.7nm; classical orange-red ("brick red") flame
+      source: Wikipedia Flame test (orange-red); NIST
+    reentry_plasma:
+      status: visible
+      hex: '#7a00ff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 393.4
+        intensity: 500.0
+        label: Ca II H
+      - nm: 396.8
+        intensity: 500.0
+        label: Ca II K
+      - nm: 422.7
+        intensity: 300.0
+        label: Ca I
+      - nm: 854.2
+        intensity: 200.0
+        label: Ca II IR
+      - nm: 866.2
+        intensity: 200.0
+        label: Ca II IR
+      basis: Ca II H&K UV-violet very strong at reentry T (these are the famous Fraunhofer H&K lines in stellar spectra). Mixed with Ca I → red-violet.
+      source: NIST Ca I+II
 Sc:
   atomic_number: 21
   name: Scandium
-  status: no_data
-  hex: null
-  basis: No documented flame test color in standard references
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No documented flame test color in standard references
+      source: Helmenstine chart (checkered)
 Ti:
   atomic_number: 22
   name: Titanium
-  status: visible
-  hex: "#a3d8e8"
-  basis: Ti I emission predominantly UV-blue; visible discharge pale blue-cyan
-  source: Helmenstine chart; NIST Ti I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#a3d8e8'
+      hex_basis: chart_approx
+      basis: Ti I emission predominantly UV-blue; visible discharge pale blue-cyan
+      source: Helmenstine chart; NIST Ti I
 V:
   atomic_number: 23
   name: Vanadium
-  status: visible
-  hex: "#e8e83b"
-  basis: V I + V II yellow-green band system; characteristic yellow-green flame from vanadium salts
-  source: Helmenstine chart; pyrotechnic literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8e83b'
+      hex_basis: chart_approx
+      basis: V I + V II yellow-green band system; characteristic yellow-green flame from vanadium salts
+      source: Helmenstine chart; pyrotechnic literature
 Cr:
   atomic_number: 24
   name: Chromium
-  status: visible
-  hex: "#ffb74d"
-  basis: Cr I multi-line red-orange dominant; Cr metal vaporization yields orange-yellow
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#ffb74d'
+      hex_basis: chart_approx
+      basis: Cr I multi-line red-orange dominant; Cr metal vaporization yields orange-yellow
+      source: Helmenstine chart
 Mn:
   atomic_number: 25
   name: Manganese
-  status: visible
-  hex: "#9be88f"
-  basis: Mn I lines in green-yellow; characteristic yellow-green flame
-  source: Wikipedia Flame test (yellow-green); NIST Mn I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#9be88f'
+      hex_basis: canonical_descriptor
+      basis: Mn I lines in green-yellow; characteristic yellow-green flame
+      source: Wikipedia Flame test (yellow-green); NIST Mn I
 Fe:
   atomic_number: 26
   name: Iron
-  status: visible
-  hex: "#f0a830"
-  basis: Fe I multi-line cluster 372/382nm UV + visible neutral Fe lines; flame and arc give gold-orange
-  source: Wikipedia Flame test (gold); NIST Fe I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#f0a830'
+      hex_basis: canonical_descriptor
+      basis: Fe I multi-line cluster 372/382nm UV + visible neutral Fe lines; flame and arc give gold-orange
+      source: Wikipedia Flame test (gold); NIST Fe I
+    reentry_plasma:
+      status: visible
+      hex: '#32ff3b'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 404.6
+        intensity: 300.0
+        label: Fe I
+      - nm: 438.4
+        intensity: 300.0
+        label: Fe I
+      - nm: 495.8
+        intensity: 200.0
+        label: Fe I
+      - nm: 526.9
+        intensity: 300.0
+        label: Fe I
+      - nm: 516.7
+        intensity: 300.0
+        label: Fe I
+      - nm: 438.3
+        intensity: 200.0
+        label: Fe I
+      - nm: 501.2
+        intensity: 200.0
+        label: Fe I
+      basis: Fe at reentry T shows complex visible spectrum. Meteor-class ablation gives a characteristic gold-orange perceived hue from the visible-line continuum.
+      source: Meteor spectroscopy; NIST Fe I
 Co:
   atomic_number: 27
   name: Cobalt
-  status: no_data
-  hex: null
-  basis: No characteristic visible flame color; Co salts mostly black/blue solids
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No characteristic visible flame color; Co salts mostly black/blue solids
+      source: Helmenstine chart (checkered)
 Ni:
   atomic_number: 28
   name: Nickel
-  status: no_data
-  hex: null
-  basis: No characteristic visible flame color in standard chemistry references
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No characteristic visible flame color in standard chemistry references
+      source: Helmenstine chart (checkered)
 Cu:
   atomic_number: 29
   name: Copper
-  status: visible
-  hex: "#3fe88f"
-  basis: CuCl/CuBr bands 510/515nm; classical emerald-green flame (CuCl gives bluest, pure Cu greenest)
-  source: Wikipedia Flame test (blue-green); NIST Cu I 521.8nm
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fe88f'
+      hex_basis: canonical_descriptor
+      basis: CuCl/CuBr bands 510/515nm; classical emerald-green flame (CuCl gives bluest, pure Cu greenest)
+      source: Wikipedia Flame test (blue-green); NIST Cu I 521.8nm
 Zn:
   atomic_number: 30
   name: Zinc
-  status: visible
-  hex: "#5fe8e8"
-  basis: Zn I 481.0nm + 472.2nm blue-green; flame appears cyan-bluish
-  source: Helmenstine chart; NIST Zn I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#00cdff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 481.0
+        intensity: 500.0
+        label: ''
+      - nm: 472.2
+        intensity: 400.0
+        label: ''
+      basis: Zn I 481.0nm + 472.2nm blue-green; flame appears cyan-bluish
+      source: Helmenstine chart; NIST Zn I
 Ga:
   atomic_number: 31
   name: Gallium
-  status: visible
-  hex: "#7a3bd6"
-  basis: Ga I 403/417nm violet doublet; flame appears violet-blue
-  source: NIST Ga I; Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#8500ff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 403.3
+        intensity: 500.0
+        label: ''
+      - nm: 417.2
+        intensity: 400.0
+        label: ''
+      basis: Ga I 403/417nm violet doublet; flame appears violet-blue
+      source: NIST Ga I; Helmenstine chart
 Ge:
   atomic_number: 32
   name: Germanium
-  status: visible
-  hex: "#c0c0c0"
-  basis: Ge I lines mostly in UV; visible emission pale gray-blue
-  source: NIST Ge I; Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#c0c0c0'
+      hex_basis: chart_approx
+      basis: Ge I lines mostly in UV; visible emission pale gray-blue
+      source: NIST Ge I; Helmenstine chart
 As:
   atomic_number: 33
   name: Arsenic
-  status: visible
-  hex: "#8fd8e8"
-  basis: As I 286nm UV + visible 235nm; flame appears pale blue from arsenic oxide
-  source: Wikipedia Arsenic; Helmenstine chart (pale blue)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#8fd8e8'
+      hex_basis: chart_approx
+      basis: As I 286nm UV + visible 235nm; flame appears pale blue from arsenic oxide
+      source: Wikipedia Arsenic; Helmenstine chart (pale blue)
 Se:
   atomic_number: 34
   name: Selenium
-  status: visible
-  hex: "#5b9fe8"
-  basis: Se I 473.1nm + 479.9nm blue; flame appears blue
-  source: Wikipedia Selenium; NIST Se I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5b9fe8'
+      hex_basis: chart_approx
+      basis: Se I 473.1nm + 479.9nm blue; flame appears blue
+      source: Wikipedia Selenium; NIST Se I
 Br:
   atomic_number: 35
   name: Bromine
-  status: visible
-  hex: "#e84a3b"
-  basis: Br I red lines 470–600nm + Br2 vapor red-brown; flame red-orange
-  source: Helmenstine chart; NIST Br I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#54ff3f'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 478.5
+        intensity: 150.0
+        label: ''
+      - nm: 530.2
+        intensity: 150.0
+        label: ''
+      - nm: 827.2
+        intensity: 200.0
+        label: ''
+      basis: Br I red lines 470–600nm + Br2 vapor red-brown; flame red-orange
+      source: Helmenstine chart; NIST Br I
 Kr:
   atomic_number: 36
   name: Krypton
-  status: visible
-  hex: "#e8c3a8"
-  basis: Kr I 587.1/758.7nm + UV cluster; discharge appears whitish with pinkish tint
-  source: Wikipedia Krypton (whitish); NIST Kr I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e9ff00'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 557.0
+        intensity: 150.0
+        label: ''
+      - nm: 587.1
+        intensity: 200.0
+        label: ''
+      - nm: 758.7
+        intensity: 300.0
+        label: ''
+      - nm: 810.4
+        intensity: 250.0
+        label: ''
+      basis: Kr I 587.1/758.7nm + UV cluster; discharge appears whitish with pinkish tint
+      source: Wikipedia Krypton (whitish); NIST Kr I
 Rb:
   atomic_number: 37
   name: Rubidium
-  status: visible
-  hex: "#c30b4e"
-  basis: Rb I 780/795nm IR + 420.2nm violet; flame is red-violet
-  source: Wikipedia Flame test (red-violet); NIST
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#c30b4e'
+      hex_basis: canonical_descriptor
+      basis: Rb I 780/795nm IR + 420.2nm violet; flame is red-violet
+      source: Wikipedia Flame test (red-violet); NIST
 Sr:
   atomic_number: 38
   name: Strontium
-  status: visible
-  hex: "#dc143c"
-  basis: SrCl band 605/640nm + Sr I 460.7nm; classical crimson red flame, brightest emitter
-  source: Wikipedia Flame test (crimson red); NIST
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#dc143c'
+      hex_basis: canonical_descriptor
+      basis: SrCl band 605/640nm + Sr I 460.7nm; classical crimson red flame, brightest emitter
+      source: Wikipedia Flame test (crimson red); NIST
 Y:
   atomic_number: 39
   name: Yttrium
-  status: visible
-  hex: "#e8d83b"
-  basis: Y I red-orange lines + YO bands; flame yields carmine-red transitioning to yellow
-  source: Helmenstine chart (yellow)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8d83b'
+      hex_basis: chart_approx
+      basis: Y I red-orange lines + YO bands; flame yields carmine-red transitioning to yellow
+      source: Helmenstine chart (yellow)
 Zr:
   atomic_number: 40
   name: Zirconium
-  status: visible
-  hex: "#5fa3e8"
-  basis: ZrO bands in blue; metal combustion produces brilliant white-blue
-  source: Helmenstine chart (blue); pyrotechnic literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5fa3e8'
+      hex_basis: chart_approx
+      basis: ZrO bands in blue; metal combustion produces brilliant white-blue
+      source: Helmenstine chart (blue); pyrotechnic literature
 Nb:
   atomic_number: 41
   name: Niobium
-  status: visible
-  hex: "#5fa3e8"
-  basis: Nb I + NbO band system in blue; spectroscopically blue-violet
-  source: Helmenstine chart (blue); NIST Nb I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5fa3e8'
+      hex_basis: chart_approx
+      basis: Nb I + NbO band system in blue; spectroscopically blue-violet
+      source: Helmenstine chart (blue); NIST Nb I
 Mo:
   atomic_number: 42
   name: Molybdenum
-  status: visible
-  hex: "#cfe83b"
-  basis: Mo I + MoO bands in yellow-green
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#cfe83b'
+      hex_basis: chart_approx
+      basis: Mo I + MoO bands in yellow-green
+      source: Helmenstine chart
 Tc:
   atomic_number: 43
   name: Technetium
-  status: too_radioactive
-  hex: null
-  basis: All Tc isotopes radioactive; standard flame test unsafe
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: All Tc isotopes radioactive; standard flame test unsafe
+      source: Helmenstine chart (radioactive)
 Ru:
   atomic_number: 44
   name: Ruthenium
-  status: no_data
-  hex: null
-  basis: No characteristic visible flame color documented
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No characteristic visible flame color documented
+      source: Helmenstine chart (checkered)
 Rh:
   atomic_number: 45
   name: Rhodium
-  status: no_data
-  hex: null
-  basis: No documented flame color
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No documented flame color
+      source: Helmenstine chart (checkered)
 Pd:
   atomic_number: 46
   name: Palladium
-  status: no_data
-  hex: null
-  basis: No documented flame color
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No documented flame color
+      source: Helmenstine chart (checkered)
 Ag:
   atomic_number: 47
   name: Silver
-  status: no_data
-  hex: null
-  basis: No characteristic visible flame color
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No characteristic visible flame color
+      source: Helmenstine chart (checkered)
 Cd:
   atomic_number: 48
   name: Cadmium
-  status: visible
-  hex: "#dc143c"
-  basis: Cd I 467.8/479.99nm green-blue but salts give brick-red flame
-  source: Wikipedia Flame test (brick red); NIST Cd I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#dc143c'
+      hex_basis: canonical_descriptor
+      basis: Cd I 467.8/479.99nm green-blue but salts give brick-red flame
+      source: Wikipedia Flame test (brick red); NIST Cd I
 In:
   atomic_number: 49
   name: Indium
-  status: visible
-  hex: "#5b8fe8"
-  basis: In I 410.2nm + 451.1nm blue-violet; flame indigo-blue (name origin)
-  source: Wikipedia Indium (indigo); NIST In I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#094bff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 410.2
+        intensity: 300.0
+        label: ''
+      - nm: 451.1
+        intensity: 500.0
+        label: ''
+      basis: In I 410.2nm + 451.1nm blue-violet; flame indigo-blue (name origin)
+      source: Wikipedia Indium (indigo); NIST In I
 Sn:
   atomic_number: 50
   name: Tin
-  status: visible
-  hex: "#5b8fe8"
-  basis: Sn I 326nm UV + 452/563nm; flame pale blue-white
-  source: Wikipedia Tin; Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5b8fe8'
+      hex_basis: chart_approx
+      basis: Sn I 326nm UV + 452/563nm; flame pale blue-white
+      source: Wikipedia Tin; Helmenstine chart
 Sb:
   atomic_number: 51
   name: Antimony
-  status: visible
-  hex: "#a3d8e8"
-  basis: Sb I 252.8/259.8nm UV + visible bands; flame pale blue-green
-  source: Wikipedia Antimony; Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#a3d8e8'
+      hex_basis: chart_approx
+      basis: Sb I 252.8/259.8nm UV + visible bands; flame pale blue-green
+      source: Wikipedia Antimony; Helmenstine chart
 Te:
   atomic_number: 52
   name: Tellurium
-  status: visible
-  hex: "#9be88f"
-  basis: Te I bands in green; flame pale green from tellurium oxide
-  source: Wikipedia Tellurium; Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#9be88f'
+      hex_basis: chart_approx
+      basis: Te I bands in green; flame pale green from tellurium oxide
+      source: Wikipedia Tellurium; Helmenstine chart
 I:
   atomic_number: 53
   name: Iodine
-  status: visible
-  hex: "#4169e1"
-  basis: I I 511.0nm + 533.8nm + 546.5nm green-blue; I2 sublimation violet vapor
-  source: Wikipedia Iodine; NIST I I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#95ff00'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 511.0
+        intensity: 200.0
+        label: ''
+      - nm: 533.8
+        intensity: 150.0
+        label: ''
+      - nm: 546.5
+        intensity: 150.0
+        label: ''
+      - nm: 608.0
+        intensity: 200.0
+        label: ''
+      basis: I I 511.0nm + 533.8nm + 546.5nm green-blue; I2 sublimation violet vapor
+      source: Wikipedia Iodine; NIST I I
 Xe:
   atomic_number: 54
   name: Xenon
-  status: visible
-  hex: "#5b8fff"
-  basis: Xe I multi-line; discharge tube blue-violet, xenon arc resembles sunlight
-  source: Wikipedia Xenon (blue); NIST Xe I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#0094ff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 467.1
+        intensity: 200.0
+        label: ''
+      - nm: 462.4
+        intensity: 150.0
+        label: ''
+      - nm: 823.2
+        intensity: 300.0
+        label: ''
+      - nm: 881.9
+        intensity: 250.0
+        label: ''
+      basis: Xe I multi-line; discharge tube blue-violet, xenon arc resembles sunlight
+      source: Wikipedia Xenon (blue); NIST Xe I
 Cs:
   atomic_number: 55
   name: Cesium
-  status: visible
-  hex: "#3a4cd6"
-  basis: Cs I 852.1/894.3nm IR + 455.5nm blue; flame blue-violet
-  source: Wikipedia Flame test (blue-violet); NIST
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3a4cd6'
+      hex_basis: canonical_descriptor
+      basis: Cs I 852.1/894.3nm IR + 455.5nm blue; flame blue-violet
+      source: Wikipedia Flame test (blue-violet); NIST
 Ba:
   atomic_number: 56
   name: Barium
-  status: visible
-  hex: "#7fe83b"
-  basis: BaO + BaCl bands 524nm + Ba I 553.5nm; classical pale apple-green flame
-  source: Wikipedia Flame test (apple green); NIST
-
-# ── Lanthanides (57-71) ────────────────────────────────────────────
-# Most lanthanides have no characteristic flame color. A few (Eu, Tb,
-# Dy, Sm) have documented complex multi-line emission.
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#7fe83b'
+      hex_basis: canonical_descriptor
+      basis: BaO + BaCl bands 524nm + Ba I 553.5nm; classical pale apple-green flame
+      source: Wikipedia Flame test (apple green); NIST
 La:
   atomic_number: 57
   name: Lanthanum
-  status: no_data
-  hex: null
-  basis: No documented visible flame color
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No documented visible flame color
+      source: Helmenstine chart
 Ce:
   atomic_number: 58
   name: Cerium
-  status: visible
-  hex: "#5fa3e8"
-  basis: Ce-glass discharge yields blue; CeO2 incandesces pale yellow-white
-  source: Helmenstine chart (blue)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5fa3e8'
+      hex_basis: chart_approx
+      basis: Ce-glass discharge yields blue; CeO2 incandesces pale yellow-white
+      source: Helmenstine chart (blue)
 Pr:
   atomic_number: 59
   name: Praseodymium
-  status: visible
-  hex: "#e83fc8"
-  basis: Pr3+ in solid yields green; in flame emission complex multi-line; chart renders magenta
-  source: Helmenstine chart (magenta)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e83fc8'
+      hex_basis: chart_approx
+      basis: Pr3+ in solid yields green; in flame emission complex multi-line; chart renders magenta
+      source: Helmenstine chart (magenta)
 Nd:
   atomic_number: 60
   name: Neodymium
-  status: visible
-  hex: "#c83be8"
-  basis: Nd3+ multi-line absorption + emission across visible; chart renders violet
-  source: Helmenstine chart (violet)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#c83be8'
+      hex_basis: chart_approx
+      basis: Nd3+ multi-line absorption + emission across visible; chart renders violet
+      source: Helmenstine chart (violet)
 Pm:
   atomic_number: 61
   name: Promethium
-  status: too_radioactive
-  hex: null
-  basis: All Pm isotopes radioactive (longest t½ 17.7 yr); standard flame test not performed
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: All Pm isotopes radioactive (longest t½ 17.7 yr); standard flame test not performed
+      source: Helmenstine chart (radioactive)
 Sm:
   atomic_number: 62
   name: Samarium
-  status: visible
-  hex: "#e8c5a8"
-  basis: Sm I multi-line + Sm3+ band emission; chart renders pale peach
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8c5a8'
+      hex_basis: chart_approx
+      basis: Sm I multi-line + Sm3+ band emission; chart renders pale peach
+      source: Helmenstine chart
 Eu:
   atomic_number: 63
   name: Europium
-  status: visible
-  hex: "#b87fd6"
-  basis: Eu I + Eu3+ red phosphor 612nm; chart renders pale violet
-  source: Helmenstine chart; phosphor literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#b87fd6'
+      hex_basis: chart_approx
+      basis: Eu I + Eu3+ red phosphor 612nm; chart renders pale violet
+      source: Helmenstine chart; phosphor literature
 Gd:
   atomic_number: 64
   name: Gadolinium
-  status: visible
-  hex: "#e8a83b"
-  basis: Gd I multi-line; chart renders orange
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8a83b'
+      hex_basis: chart_approx
+      basis: Gd I multi-line; chart renders orange
+      source: Helmenstine chart
 Tb:
   atomic_number: 65
   name: Terbium
-  status: visible
-  hex: "#e8d83b"
-  basis: Tb3+ green phosphor 545nm; chart renders yellow-green
-  source: Helmenstine chart; phosphor literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8d83b'
+      hex_basis: chart_approx
+      basis: Tb3+ green phosphor 545nm; chart renders yellow-green
+      source: Helmenstine chart; phosphor literature
 Dy:
   atomic_number: 66
   name: Dysprosium
-  status: visible
-  hex: "#7fe8c8"
-  basis: Dy I multi-line; chart renders pale cyan-green
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#7fe8c8'
+      hex_basis: chart_approx
+      basis: Dy I multi-line; chart renders pale cyan-green
+      source: Helmenstine chart
 Ho:
   atomic_number: 67
   name: Holmium
-  status: visible
-  hex: "#3fe83b"
-  basis: Ho3+ visible band emission; chart renders bright green
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fe83b'
+      hex_basis: chart_approx
+      basis: Ho3+ visible band emission; chart renders bright green
+      source: Helmenstine chart
 Er:
   atomic_number: 68
   name: Erbium
-  status: visible
-  hex: "#3fe85f"
-  basis: Er3+ multi-line + green band; chart renders pale green
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fe85f'
+      hex_basis: chart_approx
+      basis: Er3+ multi-line + green band; chart renders pale green
+      source: Helmenstine chart
 Tm:
   atomic_number: 69
   name: Thulium
-  status: visible
-  hex: "#7fe8af"
-  basis: Tm3+ blue band emission; chart renders pale cyan
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#7fe8af'
+      hex_basis: chart_approx
+      basis: Tm3+ blue band emission; chart renders pale cyan
+      source: Helmenstine chart
 Yb:
   atomic_number: 70
   name: Ytterbium
-  status: visible
-  hex: "#5fe8c8"
-  basis: Yb3+ visible band emission; chart renders pale teal
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5fe8c8'
+      hex_basis: chart_approx
+      basis: Yb3+ visible band emission; chart renders pale teal
+      source: Helmenstine chart
 Lu:
   atomic_number: 71
   name: Lutetium
-  status: visible
-  hex: "#5fe8e8"
-  basis: Lu I multi-line; chart renders pale cyan
-  source: Helmenstine chart
-
-# ── Period 6 main + transition (Hf through Rn) ──────────────────────
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#5fe8e8'
+      hex_basis: chart_approx
+      basis: Lu I multi-line; chart renders pale cyan
+      source: Helmenstine chart
 Hf:
   atomic_number: 72
   name: Hafnium
-  status: visible
-  hex: "#c8e8e8"
-  basis: Hf I lines spread across visible; appearance pale gray-cyan
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#c8e8e8'
+      hex_basis: chart_approx
+      basis: Hf I lines spread across visible; appearance pale gray-cyan
+      source: Helmenstine chart
 Ta:
   atomic_number: 73
   name: Tantalum
-  status: visible
-  hex: "#3b9be8"
-  basis: Ta I + TaO bands in blue; chart renders blue
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3b9be8'
+      hex_basis: chart_approx
+      basis: Ta I + TaO bands in blue; chart renders blue
+      source: Helmenstine chart
 W:
   atomic_number: 74
   name: Tungsten
-  status: visible
-  hex: "#3fe85f"
-  basis: W I lines in green-yellow; chart renders bright green
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fe85f'
+      hex_basis: chart_approx
+      basis: W I lines in green-yellow; chart renders bright green
+      source: Helmenstine chart
 Re:
   atomic_number: 75
   name: Rhenium
-  status: visible
-  hex: "#3fe87f"
-  basis: Re I multi-line; chart renders green
-  source: Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fe87f'
+      hex_basis: chart_approx
+      basis: Re I multi-line; chart renders green
+      source: Helmenstine chart
 Os:
   atomic_number: 76
   name: Osmium
-  status: no_data
-  hex: null
-  basis: No characteristic visible flame color documented
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No characteristic visible flame color documented
+      source: Helmenstine chart (checkered)
 Ir:
   atomic_number: 77
   name: Iridium
-  status: no_data
-  hex: null
-  basis: No documented flame color
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No documented flame color
+      source: Helmenstine chart (checkered)
 Pt:
   atomic_number: 78
   name: Platinum
-  status: no_data
-  hex: null
-  basis: No characteristic visible flame color (Pt is the standard reference wire for flame tests precisely because it's inert)
-  source: Wikipedia Flame test (Pt wire is the substrate)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No characteristic visible flame color (Pt is the standard reference wire for flame tests precisely because it's inert)
+      source: Wikipedia Flame test (Pt wire is the substrate)
 Au:
   atomic_number: 79
   name: Gold
-  status: no_data
-  hex: null
-  basis: No documented flame color
-  source: Helmenstine chart (checkered)
-
+  regimes:
+    atomic_flame:
+      status: no_data
+      hex: null
+      basis: No documented flame color
+      source: Helmenstine chart (checkered)
 Hg:
   atomic_number: 80
   name: Mercury
-  status: visible
-  hex: "#3fe83f"
-  basis: Hg I 546.1nm green + 435.8nm blue + 404.7nm violet; discharge tube green-tinted
-  source: Wikipedia Mercury-vapor lamp; NIST Hg I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#c8ff04'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 404.7
+        intensity: 300.0
+        label: ''
+      - nm: 435.8
+        intensity: 800.0
+        label: ''
+      - nm: 546.1
+        intensity: 1000.0
+        label: ''
+      - nm: 577.0
+        intensity: 500.0
+        label: ''
+      - nm: 579.0
+        intensity: 500.0
+        label: ''
+      basis: Hg I 546.1nm green + 435.8nm blue + 404.7nm violet; discharge tube green-tinted
+      source: Wikipedia Mercury-vapor lamp; NIST Hg I
 Tl:
   atomic_number: 81
   name: Thallium
-  status: visible
-  hex: "#3fe83f"
-  basis: Tl I 535.0nm green singlet; classical bright green flame
-  source: Wikipedia Flame test (bright green); NIST 535nm
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#3fe83f'
+      hex_basis: canonical_descriptor
+      basis: Tl I 535.0nm green singlet; classical bright green flame
+      source: Wikipedia Flame test (bright green); NIST 535nm
 Pb:
   atomic_number: 82
   name: Lead
-  status: visible
-  hex: "#a3a3e8"
-  basis: Pb I 405.8nm violet + 368.3nm UV; flame pale blue or grayish
-  source: Helmenstine chart; NIST Pb I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#bf00ff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 405.8
+        intensity: 300.0
+        label: ''
+      - nm: 368.3
+        intensity: 100.0
+        label: (UV)
+      - nm: 722.9
+        intensity: 100.0
+        label: ''
+      basis: Pb I 405.8nm violet + 368.3nm UV; flame pale blue or grayish
+      source: Helmenstine chart; NIST Pb I
 Bi:
   atomic_number: 83
   name: Bismuth
-  status: visible
-  hex: "#5fa3a3"
-  basis: Bi I 472.3nm + 422.8nm; flame pale blue-cyan
-  source: Helmenstine chart; NIST Bi I
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#05b0ff'
+      hex_basis: cie_computed
+      emission_lines:
+      - nm: 472.3
+        intensity: 300.0
+        label: ''
+      - nm: 422.8
+        intensity: 200.0
+        label: ''
+      basis: Bi I 472.3nm + 422.8nm; flame pale blue-cyan
+      source: Helmenstine chart; NIST Bi I
 Po:
   atomic_number: 84
   name: Polonium
-  status: too_radioactive
-  hex: null
-  basis: All Po isotopes radioactive; flame test unsafe
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: All Po isotopes radioactive; flame test unsafe
+      source: Helmenstine chart (radioactive)
 At:
   atomic_number: 85
   name: Astatine
-  status: too_radioactive
-  hex: null
-  basis: All At isotopes radioactive with t½ ≤ 8 hours; no flame test data
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: All At isotopes radioactive with t½ ≤ 8 hours; no flame test data
+      source: Helmenstine chart (radioactive)
 Rn:
   atomic_number: 86
   name: Radon
-  status: too_radioactive
-  hex: null
-  basis: Radioactive noble gas; discharge in trace amounts only, not characterized for flame test
-  source: Helmenstine chart (radioactive)
-
-# ── Period 7 ───────────────────────────────────────────────────────
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive noble gas; discharge in trace amounts only, not characterized for flame test
+      source: Helmenstine chart (radioactive)
 Fr:
   atomic_number: 87
   name: Francium
-  status: too_radioactive
-  hex: null
-  basis: Longest-lived isotope t½ ≈ 22 minutes; predicted similar to Cs but never observed
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Longest-lived isotope t½ ≈ 22 minutes; predicted similar to Cs but never observed
+      source: Helmenstine chart (radioactive)
 Ra:
   atomic_number: 88
   name: Radium
-  status: visible
-  hex: "#dc143c"
-  basis: Predicted/observed crimson flame in line with alkaline-earth pattern (Sr-like); radium salts genuinely emit red
-  source: Wikipedia Radium; Helmenstine chart (red)
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#dc143c'
+      hex_basis: canonical_descriptor
+      basis: Predicted/observed crimson flame in line with alkaline-earth pattern (Sr-like); radium salts genuinely emit red
+      source: Wikipedia Radium; Helmenstine chart (red)
 Ac:
   atomic_number: 89
   name: Actinium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive (t½ 21.8 yr for 227Ac); no documented flame test
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive (t½ 21.8 yr for 227Ac); no documented flame test
+      source: Helmenstine chart (radioactive)
 Th:
   atomic_number: 90
   name: Thorium
-  status: visible
-  hex: "#e8e8e8"
-  basis: ThO2 (thoria) gas mantle emits brilliant white from thermal continuum + selective IR
-  source: Wikipedia Gas mantle; pyrotechnic literature
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#e8e8e8'
+      hex_basis: chart_approx
+      basis: ThO2 (thoria) gas mantle emits brilliant white from thermal continuum + selective IR
+      source: Wikipedia Gas mantle; pyrotechnic literature
 Pa:
   atomic_number: 91
   name: Protactinium
-  status: too_radioactive
-  hex: null
-  basis: All Pa isotopes radioactive; no flame test characterized
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: All Pa isotopes radioactive; no flame test characterized
+      source: Helmenstine chart (radioactive)
 U:
   atomic_number: 92
   name: Uranium
-  status: visible
-  hex: "#cfe83b"
-  basis: U I + UO2 fluorescence green-yellow; uranium glass fluoresces green under UV
-  source: Wikipedia Uranium glass; Helmenstine chart
-
+  regimes:
+    atomic_flame:
+      status: visible
+      hex: '#cfe83b'
+      hex_basis: chart_approx
+      basis: U I + UO2 fluorescence green-yellow; uranium glass fluoresces green under UV
+      source: Wikipedia Uranium glass; Helmenstine chart
 Np:
   atomic_number: 93
   name: Neptunium
-  status: too_radioactive
-  hex: null
-  basis: All Np isotopes radioactive; standard flame test not performed
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: All Np isotopes radioactive; standard flame test not performed
+      source: Helmenstine chart (radioactive)
 Pu:
   atomic_number: 94
   name: Plutonium
-  status: too_radioactive
-  hex: null
-  basis: Highly radioactive; flame test unsafe
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Highly radioactive; flame test unsafe
+      source: Helmenstine chart (radioactive)
 Am:
   atomic_number: 95
   name: Americium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive; flame test unsafe
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive; flame test unsafe
+      source: Helmenstine chart (radioactive)
 Cm:
   atomic_number: 96
   name: Curium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive; flame test unsafe
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive; flame test unsafe
+      source: Helmenstine chart (radioactive)
 Bk:
   atomic_number: 97
   name: Berkelium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive; no characterized flame test
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive; no characterized flame test
+      source: Helmenstine chart (radioactive)
 Cf:
   atomic_number: 98
   name: Californium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive; no characterized flame test
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive; no characterized flame test
+      source: Helmenstine chart (radioactive)
 Es:
   atomic_number: 99
   name: Einsteinium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive; quantities insufficient for flame test
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive; quantities insufficient for flame test
+      source: Helmenstine chart (radioactive)
 Fm:
   atomic_number: 100
   name: Fermium
-  status: too_radioactive
-  hex: null
-  basis: Radioactive; only synthesized in trace amounts
-  source: Helmenstine chart (radioactive)
-
+  regimes:
+    atomic_flame:
+      status: too_radioactive
+      hex: null
+      basis: Radioactive; only synthesized in trace amounts
+      source: Helmenstine chart (radioactive)
 Md:
   atomic_number: 101
   name: Mendelevium
-  status: too_short
-  hex: null
-  basis: Longest-lived isotope t½ ≈ 51.5 days; insufficient for flame test
-  source: Helmenstine chart (X)
-
-No:
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Longest-lived isotope t½ ≈ 51.5 days; insufficient for flame test
+      source: Helmenstine chart (X)
+false:
   atomic_number: 102
   name: Nobelium
-  status: too_short
-  hex: null
-  basis: Longest-lived isotope t½ ≈ 58 minutes
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Longest-lived isotope t½ ≈ 58 minutes
+      source: Helmenstine chart (X)
 Lr:
   atomic_number: 103
   name: Lawrencium
-  status: too_short
-  hex: null
-  basis: Longest-lived isotope t½ ≈ 11 hours
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Longest-lived isotope t½ ≈ 11 hours
+      source: Helmenstine chart (X)
 Rf:
   atomic_number: 104
   name: Rutherfordium
-  status: too_short
-  hex: null
-  basis: Half-life of seconds to minutes; no flame test possible
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life of seconds to minutes; no flame test possible
+      source: Helmenstine chart (X)
 Db:
   atomic_number: 105
   name: Dubnium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Sg:
   atomic_number: 106
   name: Seaborgium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Bh:
   atomic_number: 107
   name: Bohrium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Hs:
   atomic_number: 108
   name: Hassium
-  status: too_short
-  hex: null
-  basis: Half-life ≤ 10 seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life ≤ 10 seconds; no observation
+      source: Helmenstine chart (X)
 Mt:
   atomic_number: 109
   name: Meitnerium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Ds:
   atomic_number: 110
   name: Darmstadtium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Rg:
   atomic_number: 111
   name: Roentgenium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Cn:
   atomic_number: 112
   name: Copernicium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Nh:
   atomic_number: 113
   name: Nihonium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Fl:
   atomic_number: 114
   name: Flerovium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Mc:
   atomic_number: 115
   name: Moscovium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Lv:
   atomic_number: 116
   name: Livermorium
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Ts:
   atomic_number: 117
   name: Tennessine
-  status: too_short
-  hex: null
-  basis: Half-life seconds; no observation
-  source: Helmenstine chart (X)
-
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life seconds; no observation
+      source: Helmenstine chart (X)
 Og:
   atomic_number: 118
   name: Oganesson
-  status: too_short
-  hex: null
-  basis: Half-life milliseconds; no observation
-  source: Helmenstine chart (X)
+  regimes:
+    atomic_flame:
+      status: too_short
+      hex: null
+      basis: Half-life milliseconds; no observation
+      source: Helmenstine chart (X)

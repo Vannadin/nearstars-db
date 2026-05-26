@@ -1,0 +1,420 @@
+# Molecular plasma colors — reentry + aurora regimes.
+#
+# Companion DB to db/refs/element_plasma_colors.yaml. Captures the
+# molecular-band emission that dominates the visible signature of
+# reentry plasma (8000–15000 K shock layer) and aurora (low-density
+# upper atmosphere forbidden + allowed transitions) for atmospherically-
+# abundant species.
+#
+# Schema per molecule:
+#   formula:   string (chemical formula)
+#   mass_amu:  molecular mass (atomic mass units)
+#   atoms:     number of atoms (1=mono, 2=diatomic, 3+=polyatomic)
+#   regimes:
+#     reentry_plasma: { status, hex, emission_bands, basis, source }
+#     aurora:         { status, hex, emission_bands, basis, source }
+#
+# For polyatomic molecules at aurora altitudes (CO2, H2O, CH4, NH3, SO2):
+# status=not_emitter with `dissociation_products` listing the atomic
+# species that carry emission (look those up in element DB).
+
+N2:
+  formula: N2
+  mass_amu: 28.01
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#5060c0'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 670.0
+        intensity: 500.0
+        label: N2 1P (vibrational head)
+      - nm: 391.4
+        intensity: 600.0
+        label: N2+ 1NG
+      - nm: 427.8
+        intensity: 400.0
+        label: N2+ 1NG
+      basis: N2 1P red + N2+ 1NG violet. Earth-reentry visual signature is blue-violet — established by NASA reentry imaging. (Naive CIE mix of NIST relative intensities gives yellow because V(λ) heavily downweights violet at 391nm, but observed absolute photon flux at 391nm is high enough to dominate.)
+      source: Air plasma optical spectra; NASA reentry imaging
+    aurora:
+      status: visible
+      hex: '#7070d0'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 670.0
+        intensity: 500.0
+        label: N2 1P red lower border
+      - nm: 391.4
+        intensity: 800.0
+        label: N2+ 1NG violet
+      - nm: 427.8
+        intensity: 500.0
+        label: N2+ 1NG blue
+      basis: Aurora — N2+ 391nm is the bright violet-blue band visible at the lower altitude limit (~100km).
+      source: Earth aurora spectroscopy
+N2+:
+  formula: N2+
+  mass_amu: 28.01
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#4060d0'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 391.4
+        intensity: 1000.0
+        label: 1NG (0,0)
+      - nm: 427.8
+        intensity: 600.0
+        label: 1NG (0,1)
+      basis: Ionized N2+ — First Negative bands 391+427nm. Pure violet-blue.
+      source: Air plasma + auroral physics
+    aurora:
+      status: visible
+      hex: '#5060d8'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 391.4
+        intensity: 1000.0
+        label: 1NG (0,0)
+      - nm: 427.8
+        intensity: 600.0
+        label: 1NG (0,1)
+      basis: N2+ 391nm violet is the bright lower-border auroral band.
+      source: Earth aurora spectroscopy
+O2:
+  formula: O2
+  mass_amu: 32.0
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#ff5300'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 762.0
+        intensity: 300.0
+        label: Atmospheric A-band
+      - nm: 688.0
+        intensity: 200.0
+        label: B-band
+      - nm: 628.0
+        intensity: 100.0
+        label: γ-band
+      basis: O2 itself contributes mild red bands in shock plasma. Most visible emission from dissociation products (atomic O).
+      source: NIST O2 + reentry literature
+    aurora:
+      status: not_visible_to_humans
+      hex: null
+      basis: O2 contributes mainly IR airglow at 864nm at aurora altitudes. Visible signature comes from dissociation product OI (see element DB).
+      source: Airglow spectroscopy
+OH:
+  formula: OH
+  mass_amu: 17.01
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: not_visible_to_humans
+      hex: null
+      basis: OH A-X bands at 309/315nm are UV. Reentry plasma perceptual contribution from OH is essentially nil.
+      source: NIST OH; H2O combustion spectra
+    aurora:
+      status: not_visible_to_humans
+      hex: null
+      basis: OH Meinel bands at 700-880nm are near-IR airglow. Sky cameras need IR sensors to capture them.
+      source: OH Meinel airglow literature
+'NO':
+  formula: 'NO'
+  mass_amu: 30.01
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#00ff9d'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 237.0
+        intensity: 100.0
+        label: NO γ-band UV (V≈0)
+      - nm: 440.0
+        intensity: 200.0
+        label: NO β-band
+      - nm: 500.0
+        intensity: 200.0
+        label: NO continuum (recombination)
+      basis: NO from N+O recombination in shock layer. γ-band UV mostly invisible; visible contribution faint blue-green from broad continuum (Venus airglow analog).
+      source: Venus airglow studies; NIST NO
+    aurora:
+      status: visible
+      hex: '#00ff98'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 500.0
+        intensity: 200.0
+        label: NO recombination continuum
+      - nm: 440.0
+        intensity: 100.0
+      basis: NO continuum from N+O recombination — pale blue-green. Visible on Venus airglow.
+      source: Venus airglow
+CO:
+  formula: CO
+  mass_amu: 28.01
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#50d098'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 520.0
+        intensity: 300.0
+        label: CO Cameron a³Π-X¹Σ
+      - nm: 425.0
+        intensity: 200.0
+        label: CO Ångström
+      basis: CO Cameron bands green. Mars EDL camera footage shows this.
+      source: arXiv 2007.04869; NASA Mars EDL
+    aurora:
+      status: visible
+      hex: '#48c890'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 520.0
+        intensity: 400.0
+        label: CO Cameron
+      - nm: 500.0
+        intensity: 300.0
+        label: CO Cameron
+      basis: CO Cameron green is the visible signature of Mars aurora.
+      source: Mars MAVEN aurora detection
+CN:
+  formula: CN
+  mass_amu: 26.02
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#7080d0'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 388.3
+        intensity: 500.0
+        label: CN violet B-X (0,0)
+      - nm: 387.1
+        intensity: 400.0
+        label: CN violet (1,1)
+      - nm: 421.6
+        intensity: 300.0
+        label: CN red
+      basis: CN violet 388nm is the iconic violet-blue band of CO2-atmosphere reentry plasma (Mars EDL signature).
+      source: arXiv 2007.04869; Mars EDL imaging
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: CN production requires N + C in vapor — possible in tholin haze upper atmosphere (Titan), but emission ratio in aurora-like conditions not well characterized.
+      source: Titan upper-atmosphere photochemistry studies
+C2:
+  formula: C2
+  mass_amu: 24.02
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#5fc890'
+      hex_basis: canonical_descriptor
+      emission_bands:
+      - nm: 516.5
+        intensity: 500.0
+        label: C2 Swan d-a (0,0) green
+      - nm: 473.7
+        intensity: 400.0
+        label: C2 Swan (1,2) blue-green
+      basis: C2 Swan bands — bright green signature of carbon-rich plasmas (Mars EDL + comet comas).
+      source: Comet coma + arXiv 2007.04869 CO2 plasma
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: C2 doesn't survive in low-density aurora environments; any C is typically in CO or CN.
+      source: Upper atmosphere chemistry
+H2:
+  formula: H2
+  mass_amu: 2.02
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#ffc142'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 656.3
+        intensity: 800.0
+        label: Hα (dissociation product)
+      - nm: 486.1
+        intensity: 200.0
+        label: Hβ
+      - nm: 600.0
+        intensity: 300.0
+        label: H2 Werner band visible
+      basis: H2 mostly dissociates → atomic H Balmer dominates. Pink-red plasma. Gas-giant reentry chemistry.
+      source: Brown dwarf aurora; H2 plasma physics
+    aurora:
+      status: visible
+      hex: '#ffaab6'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 656.3
+        intensity: 1000.0
+        label: Hα (Lyman aurora secondary)
+      - nm: 486.1
+        intensity: 200.0
+        label: Hβ
+      basis: Jupiter/Saturn aurorae — dominantly UV (Lyman α 121nm + H2 Werner/Lyman bands). Visible band shows weak Hα.
+      source: Jupiter Hubble aurora imaging
+CH:
+  formula: CH
+  mass_amu: 13.02
+  atoms: 2
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#3b00ff'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 431.3
+        intensity: 400.0
+        label: CH A-X (0,0) blue
+      - nm: 387.1
+        intensity: 200.0
+        label: CH B-X UV
+      - nm: 387.3
+        intensity: 200.0
+        label: CH
+      basis: CH 431nm blue from methane dissociation in shock layer. Common in Titan / sub-Neptune reentry.
+      source: Hydrocarbon combustion; comet spectra
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: CH doesn't persist in low-density aurora; CH4 photolysis products are mostly C2H, C2H2 (no strong visible emitter).
+      source: Titan photochemistry literature
+CO2:
+  formula: CO2
+  mass_amu: 44.01
+  atoms: 3
+  regimes:
+    reentry_plasma:
+      status: not_emitter
+      hex: null
+      basis: 'CO2 itself dissociates in shock layer. Visible plasma color comes from products: CO Cameron green + C2 Swan + CN violet + atomic O. See CO, C2, CN, O entries.'
+      source: CO2 reentry chemistry; arXiv 2007.04869
+      dissociation_products:
+      - CO
+      - C2
+      - CN
+      - O
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: Photo-dissociates above ~80 km. Emission goes to CO, O.
+      source: Mars/Venus upper atmosphere photochemistry
+      dissociation_products:
+      - CO
+      - O
+H2O:
+  formula: H2O
+  mass_amu: 18.02
+  atoms: 3
+  regimes:
+    reentry_plasma:
+      status: not_emitter
+      hex: null
+      basis: H2O dissociates → atomic H (Balmer) + OH (Meinel UV). Visible plasma is dominantly H Hα pink.
+      source: Steam atmosphere reentry models
+      dissociation_products:
+      - H
+      - OH
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: Photo-dissociates above ~80 km; emission from H Balmer + OH.
+      source: Comet outgassing parallels
+      dissociation_products:
+      - H
+      - OH
+CH4:
+  formula: CH4
+  mass_amu: 16.04
+  atoms: 5
+  regimes:
+    reentry_plasma:
+      status: not_emitter
+      hex: null
+      basis: CH4 dissociates → CH (431nm blue) + C2 (Swan green) + Hα. Titan reentry signature.
+      source: Titan reentry; hydrocarbon combustion
+      dissociation_products:
+      - CH
+      - C2
+      - H
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: Photo-dissociates; products mostly aliphatic radicals without strong visible emission. Tholin chemistry forms haze.
+      source: Titan upper-atmosphere photochemistry
+      dissociation_products:
+      - CH
+      - C2H
+      - C2H2
+NH3:
+  formula: NH3
+  mass_amu: 17.03
+  atoms: 4
+  regimes:
+    reentry_plasma:
+      status: not_emitter
+      hex: null
+      basis: NH3 dissociates → NH + H. Weak emission, mostly Hα + NH bands.
+      source: Ice-giant atmosphere chemistry
+      dissociation_products:
+      - NH
+      - H
+      - N
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: Photo-dissociates; products N + H carry emission.
+      source: Ice-giant photochemistry
+      dissociation_products:
+      - N
+      - H
+SO2:
+  formula: SO2
+  mass_amu: 64.06
+  atoms: 3
+  regimes:
+    reentry_plasma:
+      status: visible
+      hex: '#00a9ff'
+      hex_basis: cie_computed
+      emission_bands:
+      - nm: 280.0
+        intensity: 100.0
+        label: SO2 A-X UV (V≈0)
+      - nm: 340.0
+        intensity: 100.0
+        label: SO2 UV
+      - nm: 470.0
+        intensity: 200.0
+        label: SO continuum
+      basis: SO2 dissociates to SO + O. Some weak visible continuum. Venus / Io plume reentry territory.
+      source: Venus atmospheric chemistry; Io plume spectra
+    aurora:
+      status: not_emitter
+      hex: null
+      basis: Photo-dissociates → SO + O. Io plasma torus has SO2+/S+/O+ ion emission but that's a different regime.
+      source: Io plasma torus studies
+      dissociation_products:
+      - SO
+      - O
