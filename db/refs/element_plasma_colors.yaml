@@ -469,9 +469,9 @@ Al:
     atomic_flame:
       status: visible
       hex: '#e8e8e8'
-      hex_basis: chart_approx
-      basis: Al I 396.2/394.4nm UV-violet; combustion appears bright white from Al2O3 incandescence
-      source: Wikipedia Aluminum spectrum; pyrotechnic literature
+      hex_basis: canonical_descriptor
+      basis: Al I 396.2/394.4nm UV-violet emission. Real Al combustion (aluminum-powder pyrotechnics, thermite) appears brilliant white from Al2O3 thermal incandescence — continuum rather than atomic emission. Canonical descriptor is 'brilliant white'.
+      source: Pyrotechnic literature (Conkling); NIST Al I
     reentry_plasma:
       status: visible
       hex: '#ff00a4'
@@ -684,10 +684,26 @@ Ti:
   regimes:
     atomic_flame:
       status: visible
-      hex: '#a3d8e8'
-      hex_basis: chart_approx
-      basis: Ti I emission predominantly UV-blue; visible discharge pale blue-cyan
-      source: Helmenstine chart; NIST Ti I
+      hex: '#26ff2f'
+      hex_basis: cie_computed
+      basis: Ti I green cluster 498/506/519/520nm + Ti II 453nm blue. Atomic Ti emission in plasma/arc discharge is dominantly green from the visible Ti I lines.
+      source: NIST Ti I + Ti II
+      emission_lines:
+      - nm: 498.2
+        intensity: 200.0
+        label: Ti I
+      - nm: 506.5
+        intensity: 250.0
+        label: Ti I
+      - nm: 519.3
+        intensity: 250.0
+        label: Ti I
+      - nm: 520.5
+        intensity: 300.0
+        label: Ti I
+      - nm: 453.4
+        intensity: 100.0
+        label: Ti II blue
 V:
   atomic_number: 23
   name: Vanadium
@@ -704,10 +720,26 @@ Cr:
   regimes:
     atomic_flame:
       status: visible
-      hex: '#ffb74d'
-      hex_basis: chart_approx
-      basis: Cr I multi-line red-orange dominant; Cr metal vaporization yields orange-yellow
-      source: Helmenstine chart
+      hex: '#38ff02'
+      hex_basis: cie_computed
+      basis: Cr I 520.4/520.6/520.8nm triplet — the famous 'chrome-green' responsible for emerald color in chromium-containing minerals (emerald, ruby, alexandrite). The chart's orange-yellow depiction does not match chromium's true atomic spectrum.
+      source: NIST Cr I; classical chrome-green flame chemistry
+      emission_lines:
+      - nm: 520.4
+        intensity: 350.0
+        label: Cr I (a)
+      - nm: 520.6
+        intensity: 350.0
+        label: Cr I (b)
+      - nm: 520.8
+        intensity: 350.0
+        label: Cr I (c)
+      - nm: 425.4
+        intensity: 100.0
+        label: Cr I violet
+      - nm: 427.5
+        intensity: 100.0
+        label: Cr I
 Mn:
   atomic_number: 25
   name: Manganese
@@ -823,31 +855,39 @@ Ge:
   name: Germanium
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#c0c0c0'
-      hex_basis: chart_approx
-      basis: Ge I lines mostly in UV; visible emission pale gray-blue
-      source: NIST Ge I; Helmenstine chart
+      status: not_visible_to_humans
+      hex: null
+      basis: Ge I dominant emission UV (265/270/304nm electronic). Visible lines 535/572nm perceptually negligible vs thermal continuum. No documented characteristic flame color.
+      source: NIST Ge I (mostly UV)
 As:
   atomic_number: 33
   name: Arsenic
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#8fd8e8'
-      hex_basis: chart_approx
-      basis: As I 286nm UV + visible 235nm; flame appears pale blue from arsenic oxide
-      source: Wikipedia Arsenic; Helmenstine chart (pale blue)
+      status: not_visible_to_humans
+      hex: null
+      basis: As I dominant UV (235/278/286nm). Visible 615nm orange faint single line. Real arsenic flame appears pale-bluish white from oxide incandescence rather than atomic As emission.
+      source: NIST As I (mostly UV)
 Se:
   atomic_number: 34
   name: Selenium
   regimes:
     atomic_flame:
       status: visible
-      hex: '#5b9fe8'
-      hex_basis: chart_approx
-      basis: Se I 473.1nm + 479.9nm blue; flame appears blue
-      source: Wikipedia Selenium; NIST Se I
+      hex: '#00ffc8'
+      hex_basis: cie_computed
+      basis: Se I 473.1/479.9nm blue doublet + 506nm green minor. Selenium discharge is characteristically pale blue.
+      source: NIST Se I; selenium lamp discharge
+      emission_lines:
+      - nm: 473.1
+        intensity: 400.0
+        label: Se I (a)
+      - nm: 479.9
+        intensity: 350.0
+        label: Se I (b)
+      - nm: 506.1
+        intensity: 200.0
+        label: Se I (c)
 Br:
   atomic_number: 35
   name: Bromine
@@ -917,10 +957,23 @@ Y:
   regimes:
     atomic_flame:
       status: visible
-      hex: '#e8d83b'
-      hex_basis: chart_approx
-      basis: Y I red-orange lines + YO bands; flame yields carmine-red transitioning to yellow
-      source: Helmenstine chart (yellow)
+      hex: '#ff6601'
+      hex_basis: cie_computed
+      basis: YO molecular band system 615-648nm orange-red dominates yttrium flame chemistry (YCl3, YNO3 salts). Atomic Y I 410nm violet is weaker. The chart's yellow depiction leans toward green-yellow rather than the spectroscopic orange-red.
+      source: YO band system (Joshi et al.); NIST Y I
+      emission_lines:
+      - nm: 615.6
+        intensity: 400.0
+        label: YO band (0,0)
+      - nm: 636.4
+        intensity: 350.0
+        label: YO band
+      - nm: 648.2
+        intensity: 300.0
+        label: YO band
+      - nm: 410.2
+        intensity: 100.0
+        label: Y I violet
 Zr:
   atomic_number: 40
   name: Zirconium
@@ -947,10 +1000,23 @@ Mo:
   regimes:
     atomic_flame:
       status: visible
-      hex: '#cfe83b'
-      hex_basis: chart_approx
-      basis: Mo I + MoO bands in yellow-green
-      source: Helmenstine chart
+      hex: '#99ff00'
+      hex_basis: cie_computed
+      basis: Mo I 550-553nm yellow-green doublet. Documented in molybdenum arc discharges and molybdate flame chemistry.
+      source: NIST Mo I; Mo discharge tube
+      emission_lines:
+      - nm: 550.6
+        intensity: 400.0
+        label: Mo I (a)
+      - nm: 553.3
+        intensity: 350.0
+        label: Mo I (b)
+      - nm: 515.5
+        intensity: 200.0
+        label: Mo I
+      - nm: 379.8
+        intensity: 100.0
+        label: Mo I UV-violet
 Tc:
   atomic_number: 43
   name: Technetium
@@ -1028,31 +1094,42 @@ Sn:
   name: Tin
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#5b8fe8'
-      hex_basis: chart_approx
-      basis: Sn I 326nm UV + 452/563nm; flame pale blue-white
-      source: Wikipedia Tin; Helmenstine chart
+      status: not_visible_to_humans
+      hex: null
+      basis: Sn I dominant UV (235/284nm). Visible 452/563nm minor lines; tin flame appearance is pale blue-white incandescence from SnO/SnO2 rather than characteristic atomic emission.
+      source: NIST Sn I (mostly UV)
 Sb:
   atomic_number: 51
   name: Antimony
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#a3d8e8'
-      hex_basis: chart_approx
-      basis: Sb I 252.8/259.8nm UV + visible bands; flame pale blue-green
-      source: Wikipedia Antimony; Helmenstine chart
+      status: not_visible_to_humans
+      hex: null
+      basis: Sb I dominant UV (252/259nm). Visible 614/777nm faint. Antimony flame test appearance is pale blue-green from oxide incandescence rather than atomic Sb emission.
+      source: NIST Sb I (mostly UV)
 Te:
   atomic_number: 52
   name: Tellurium
   regimes:
     atomic_flame:
       status: visible
-      hex: '#9be88f'
-      hex_basis: chart_approx
-      basis: Te I bands in green; flame pale green from tellurium oxide
-      source: Wikipedia Tellurium; Helmenstine chart
+      hex: '#8bff00'
+      hex_basis: cie_computed
+      basis: Te I 525-567nm green band. Tellurium halide flame chemistry gives characteristic pale green.
+      source: NIST Te I; Te halide flame literature
+      emission_lines:
+      - nm: 525.7
+        intensity: 400.0
+        label: Te I band
+      - nm: 535.4
+        intensity: 350.0
+        label: Te I
+      - nm: 566.9
+        intensity: 300.0
+        label: Te I
+      - nm: 700.6
+        intensity: 100.0
+        label: Te I red
 I:
   atomic_number: 53
   name: Iodine
@@ -1293,20 +1370,46 @@ W:
   regimes:
     atomic_flame:
       status: visible
-      hex: '#3fe85f'
-      hex_basis: chart_approx
-      basis: W I lines in green-yellow; chart renders bright green
-      source: Helmenstine chart
+      hex: '#8bff00'
+      hex_basis: cie_computed
+      basis: W I 540/547nm green cluster + 522/560 secondary. Documented in tungsten lamp discharge spectra.
+      source: NIST W I; tungsten lamp discharge
+      emission_lines:
+      - nm: 540.1
+        intensity: 400.0
+        label: W I (a)
+      - nm: 547.6
+        intensity: 350.0
+        label: W I (b)
+      - nm: 522.5
+        intensity: 300.0
+        label: W I
+      - nm: 560.6
+        intensity: 200.0
+        label: W I
 Re:
   atomic_number: 75
   name: Rhenium
   regimes:
     atomic_flame:
       status: visible
-      hex: '#3fe87f'
-      hex_basis: chart_approx
-      basis: Re I multi-line; chart renders green
-      source: Helmenstine chart
+      hex: '#6cff3d'
+      hex_basis: cie_computed
+      basis: Re I 488-528nm green cluster + 581nm yellow. Atomic rhenium plasma emission falls in cyan-green to yellow.
+      source: NIST Re I
+      emission_lines:
+      - nm: 488.9
+        intensity: 350.0
+        label: Re I
+      - nm: 506.6
+        intensity: 400.0
+        label: Re I
+      - nm: 527.6
+        intensity: 350.0
+        label: Re I
+      - nm: 581.7
+        intensity: 200.0
+        label: Re I yellow
 Os:
   atomic_number: 76
   name: Osmium
@@ -1478,9 +1581,9 @@ Th:
     atomic_flame:
       status: visible
       hex: '#e8e8e8'
-      hex_basis: chart_approx
-      basis: ThO2 (thoria) gas mantle emits brilliant white from thermal continuum + selective IR
-      source: Wikipedia Gas mantle; pyrotechnic literature
+      hex_basis: canonical_descriptor
+      basis: 'ThO2-impregnated Welsbach gas mantle: brilliant white thermal continuum + selective IR emission. Discovered 1885 (Auer von Welsbach), commercialized in gas lamps. Canonical ''brilliant white'' descriptor.'
+      source: Wikipedia Gas mantle; Welsbach 1885 patent
 Pa:
   atomic_number: 91
   name: Protactinium
@@ -1497,9 +1600,9 @@ U:
     atomic_flame:
       status: visible
       hex: '#cfe83b'
-      hex_basis: chart_approx
-      basis: U I + UO2 fluorescence green-yellow; uranium glass fluoresces green under UV
-      source: Wikipedia Uranium glass; Helmenstine chart
+      hex_basis: canonical_descriptor
+      basis: 'Uranium signature green from two combined mechanisms: (a) UO2 thermal incandescence in oxidizing flame and (b) U(VI) fluorescence (uranyl ion ~520nm emission) in uranium glass under UV. Both produce the same yellow-green descriptor.'
+      source: Wikipedia Uranium glass; Auer 1903 mantle observations
 Np:
   atomic_number: 93
   name: Neptunium
