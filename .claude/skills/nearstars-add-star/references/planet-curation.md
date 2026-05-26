@@ -123,15 +123,20 @@ request stays in Phase 1.
 
 ### Prerequisites before entering Phase 2 (CLAUDE.md §7)
 
-Phase 2 is 1-2 hours per system, so before writing any code create these
-two files in the working directory.
+Phase 2 is 1-2 hours per system. The actual deliverable is a
+declarative measurements file; the workspace artifacts capture the
+reasoning behind it.
 
-- `checklist.md` — per-planet priority 1-5 source checks as checkboxes
-- `context-notes.md` — append paper selections, tier conflict
-  resolutions, and `recommended` decisions continuously during the work
+- `phase2/<system>/measurements.yaml` — the deliverable. Declarative
+  array-of-measurements format that `scripts/pipeline/apply_phase2.py
+  <system>` reads. **Don't write per-system Python.**
+- `phase2/<system>/checklist.md` — per-planet priority 1–5 source
+  checks as checkboxes
+- `phase2/<system>/context-notes.md` — append paper selections, tier
+  conflict resolutions, and `recommended` decisions continuously
 
-Without these artifacts, a later session (or the same session after a
-break) cannot resume Phase 2 — the in-progress decision context is lost.
+Without checklist + context-notes, a later session can't resume Phase 2 —
+the in-progress decision context is lost.
 
 Goal: comprehensive measurement collection per the methodology's
 five-priority order, with one explicitly chosen `recommended: true`
@@ -217,6 +222,25 @@ Likely first in-game implementation. Phase 2 should produce:
 - Radius measurements: Agol 2021 (TTV-constrained) + JWST follow-ups
 
 Estimated time: 1-2 hours.
+
+### Applying measurements
+
+When all measurements are recorded in `phase2/<system>/measurements.yaml`,
+write to the curated db files with the generic applier:
+
+```bash
+python3 scripts/pipeline/apply_phase2.py <system>           # writes
+python3 scripts/pipeline/apply_phase2.py <system> --check   # diff only
+```
+
+YAML shape is isomorphic to the subset of
+`db/stellar_props_curated.json` + `db/planets_curated.json` that Phase 2
+writes — see `phase2/alpha_centauri_proxima/measurements.yaml` or
+`phase2/trappist_1/measurements.yaml` for working examples. Each host
+in YAML REPLACES that host's full entry in the curated json.
+
+Then re-run the pipeline (`./run_pipeline.sh` or just `build_systems.py
++ validate.py`) as usual.
 
 ---
 

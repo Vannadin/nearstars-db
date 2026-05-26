@@ -72,14 +72,18 @@
 **언제.** "Phase 3 진행", "<행성> 합성", "이 행성 Phase 3 까지 올려줘" 같은 요청.
 
 **파일.**
-- `scripts/phase3/score_papers.py` — 들어오는 bibcode triage
-- `scripts/phase3/fetch_arxiv_texts.py` — arXiv 에서 전문 PDF 수집
-- `scripts/phase3/build_bibliography.py` — bibcode → reference 딕셔너리
-- `scripts/phase3/build_manual_fetch.py` — 수동 다운로드 필요 논문 목록 작성
-- `scripts/phase3/expand_citations.py` — 합성문에 인용 인라인 삽입
+- `scripts/phase3/run_phase3.py` — Steps 2–6 (bib build → system bib → expand → score → inject → fetch) 드라이버. `phase3/<system>/system.yaml` 을 읽어 모든 stage 실행
+- `scripts/phase3/build_bibliography.py` — ADS + arXiv 행성별 (혹은 `--system`) bibliography 빌더
+- `scripts/phase3/expand_citations.py` — 1-hop citation graph walk
+- `scripts/phase3/score_papers.py` — authority + relevance 점수 + filter
+- `scripts/phase3/inject_papers.py` — `system.yaml` 기반으로 ADS 검색이 놓친 paper 일괄 inject (시스템별 `add_missing_papers.py` 대체)
+- `scripts/phase3/fetch_arxiv_texts.py` — pending paper 의 arXiv 전문을 ar5iv 로 수집
+- `scripts/phase3/build_manual_fetch.py` — 수동 다운로드 필요 논문 HTML 인덱스
+- `scripts/phase3/verify_triage.py` — 게이트: score ≥ 14 paper 전부 triage 분류 확인
+- `scripts/phase3/check_block_parity.py` — preflight: en/ko 블록 구조 일치 검사
 - `scripts/phase3/field_tooltips.py` — 뷰어 용 용어 툴팁
 - `scripts/phase3/build_html.py` — 행성별 HTML (en + ko 미러, 토글)
-- `phase3/<system>/add_missing_papers.py` — 시스템별 후속 추가
+- `phase3/<system>/system.yaml` — planets, score thresholds, paper injections 선언형 설정
 
 **드라이버.** `nearstars-phase3` 스킬이 절차를 정의합니다 (triage → 정독 → 합성 → 검증 → ko 미러 → 시각 확인).
 
@@ -150,9 +154,10 @@
 **드라이버.** `nearstars-add-star` 스킬.
 
 **파일.**
-- `phase2/<system>/apply_phase2.py` — 시스템별 스크립트. 논문별 측정치를 `db/planets_curated.json` (array form, recommended 플래그 포함) 에 적재합니다. 특정 시스템을 Phase 1 → Phase 2 로 격상할 때 실행합니다.
+- `scripts/pipeline/apply_phase2.py` — 제네릭 applier. `phase2/<system>/measurements.yaml` 을 읽어 `stellar_props_curated.json` + `planets_curated.json` 에 머지. `--check` 플래그로 diff 만 확인 가능.
+- `phase2/<system>/measurements.yaml` — Phase 2 측정 array 선언형 (논문별, recommended 플래그). 시스템당 한 파일. 기존 시스템별 `apply_phase2.py` 를 대체합니다.
 
-**워크플로.** `target_list.json` 편집 → `./run_pipeline.sh` → `stellar_props_curated.json`·`planets_curated.json`·`binary_orbits.json` 수동 큐레이션 (또는 논문 배치 스크립트가 있는 시스템은 `apply_phase2.py` 실행) → 재검증.
+**워크플로.** `target_list.json` 편집 → `./run_pipeline.sh` → Phase 2 격상 시 `phase2/<system>/measurements.yaml` 작성 → `python3 scripts/pipeline/apply_phase2.py <system>` → 재검증.
 
 ## 10. 개발 헬퍼
 

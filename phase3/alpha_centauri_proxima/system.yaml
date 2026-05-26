@@ -1,0 +1,47 @@
+system_slug: alpha_centauri_proxima
+display_name: Alpha Centauri + Proxima
+system_query: Alpha Centauri
+planets:
+  - Alpha Centauri A
+  - Alpha Centauri B
+  - Proxima Cen
+  - Proxima Cen b
+  - Proxima Cen d
+score:
+  keep_threshold: 8
+  mark_skipped_below: 14
+expand:
+  max_per_seed: 60
+  since_year: 2000
+
+# Critical discovery / atmosphere papers that ADS keyword search misses
+# (their titles don't contain the system+letter compound, so
+# build_bibliography.py never finds them).
+injections:
+  - bibcode: 2016Natur.536..437A
+    targets: [proxima-cen-b, proxima-cen]
+    note: Anglada-Escudé 2016 Proxima b discovery
+  - bibcode: 2022A&A...658A.115F
+    targets: [proxima-cen-d, proxima-cen-b, proxima-cen]
+    note: Faria 2022 Proxima d candidate
+  - bibcode: 2025A&A...700A..11S
+    targets: [proxima-cen-b, proxima-cen-d, proxima-cen]
+    note: Suárez Mascareño 2025 NIRPS — SM25
+  - bibcode: 2020A&A...639A..77S
+    targets: [proxima-cen-b, proxima-cen]
+    note: Suárez Mascareño 2020 Revisiting Proxima
+  - bibcode: 2016A&A...586A..90P
+    targets: [alpha-centauri-a, alpha-centauri-b, _system-alpha-centauri]
+    note: Pourbaix & Boffin 2016 masses
+  - bibcode: 2017A&A...601A.120B
+    targets: [proxima-cen-b, proxima-cen]
+    note: Boutle 2017 Proxima GCM
+  - bibcode: 2016A&A...596A.112T
+    targets: [proxima-cen-b, proxima-cen]
+    note: Turbet 2016 Proxima 1D climate
+  - bibcode: 2012ApJ...757..112B
+    targets: [proxima-cen, proxima-cen-b]
+    note: Boyajian 2012 Proxima R
+  - bibcode: 2018A&A...612A..49R
+    targets: [proxima-cen, proxima-cen-b]
+    note: Reiners 2018 CARMENES Proxima high-energy

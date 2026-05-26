@@ -1,0 +1,21 @@
+system_slug: trappist_1
+display_name: TRAPPIST-1
+system_query: TRAPPIST-1
+planets:
+  - TRAPPIST-1 b
+  - TRAPPIST-1 c
+  - TRAPPIST-1 d
+  - TRAPPIST-1 e
+  - TRAPPIST-1 f
+  - TRAPPIST-1 g
+  - TRAPPIST-1 h
+score:
+  keep_threshold: 8
+  mark_skipped_below: 14
+expand:
+  max_per_seed: 60
+  since_year: 2000
+# No injections needed — initial Phase 3 pass found all critical papers
+# via the standard ADS keyword search. If JWST atmosphere papers start
+# slipping through the keyword filter, add them here.
+injections: []

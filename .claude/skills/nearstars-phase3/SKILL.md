@@ -119,94 +119,64 @@ Goal: cheap upfront work that prevents painful surprises later.
 
 ---
 
-## Step 2 — Per-planet bibliographies
+## Steps 2–6 — `run_phase3.py` driver
 
-For each planet, build a focused bibliography:
-
-```bash
-python3 scripts/phase3/build_bibliography.py "<System> <letter>"
-# e.g. "TRAPPIST-1 d"
-```
-
-Output: `docs/phase3/_bib/<slug>.yaml` with ADS + arXiv hits, status
-field `pending`. Idempotent — re-running merges new entries.
-
-If the system has 6+ planets, run them sequentially (arXiv 3 s rate
-limit is per-IP; parallel hits 429).
-
----
-
-## Step 3 — System-level supplementary bibliography
-
-ADS+arXiv keyword search by planet letter misses system-wide papers
-(e.g. Lincowski 2018 "Evolved Climates and Observational
-Discriminants for the TRAPPIST-1 Planetary System" — discusses all 7,
-appears only inconsistently per-planet). Run the system-level query
-separately:
+Steps 2–6 (per-planet bibs, system bib, citation expansion, score+filter,
+ADS-missed paper injection, arXiv full-text fetch) are mechanical and
+run from a single declarative `phase3/<system>/system.yaml`. The driver
+loops through stages with the per-system parameters baked into YAML.
 
 ```bash
-python3 scripts/phase3/build_bibliography.py "<System>" --system --max 200
-# → docs/phase3/_bib/_system-<slug>.yaml
+python3 scripts/phase3/run_phase3.py <system_slug>            # stages 2–6
+python3 scripts/phase3/run_phase3.py <system_slug> --stage 5  # just score
+python3 scripts/phase3/run_phase3.py <system_slug> --dry-run  # preview only
 ```
 
-The synthesis files for each planet draw from both the per-planet bib
-AND this system pool.
+`system.yaml` shape (see `phase3/alpha_centauri_proxima/system.yaml`
+for a real example):
 
----
-
-## Step 4 — Expand 1-hop citations
-
-ADS+arXiv keyword search alone misses papers cited by the primary
-references (e.g. Piaulet 2025 cites Greene 2023; if the keyword query
-doesn't find both, the synthesis misses one). Walk the citation graph
-1 hop:
-
-```bash
-python3 scripts/phase3/expand_citations.py docs/phase3/_bib/<slug>.yaml \
-    --max-per-seed 60 --since-year 2000
+```yaml
+system_slug: <slug matching the dir name>
+display_name: <human-readable>
+system_query: <bare system name for Step 3 --system pass>
+planets: [ "<System> b", "<System> c", ... ]
+score:
+  keep_threshold: 8
+  mark_skipped_below: 14
+expand:
+  max_per_seed: 60
+  since_year: 2000
+injections:                # papers ADS keyword search misses
+  - bibcode: "<bibcode>"
+    targets: [<bib-slug>, ...]
+    note: "<reason>"
 ```
 
-Expect 10–25× growth in bib size. Most of the new entries are noise
-(cited methodology, unrelated comparison objects) — filter in Step 5.
+Stage details:
 
----
+- **Stage 2** — `build_bibliography.py` per planet. arXiv 3 s rate
+  limit is per-IP; the driver runs sequentially.
+- **Stage 3** — `build_bibliography.py "<system_query>" --system --max 200`.
+  Captures system-wide papers (e.g. Lincowski 2018 "Evolved Climates
+  and Observational Discriminants for the TRAPPIST-1 Planetary System").
+- **Stage 4** — `expand_citations.py` per bib. 1-hop walk to catch papers
+  cited by primary references (e.g. Piaulet 2025 cites Greene 2023; the
+  keyword search may not find both). Expect 10–25× bib growth.
+- **Stage 5** — `score_papers.py` per bib. Score buckets: **≥ 14**
+  must-read, **8–13** cite-only (`status: skipped`), **< 8** dropped.
+  Full schema + sanity counts in [`references/scoring-reference.md`](references/scoring-reference.md).
+- **Stage 5b** — `inject_papers.py <system>` injects every bibcode listed
+  in `system.yaml`'s `injections:` block into its target bibs as
+  `status: pending`. Use this for papers whose title doesn't repeat the
+  planet name so ADS keyword search misses them.
+- **Stage 6** — `fetch_arxiv_texts.py` per bib. Pulls ar5iv full text
+  for every pending paper with an arxiv_id. Output:
+  `docs/phase3/_papers/<arxiv_id>.{html,md}` (git-ignored, regenerable).
 
-## Step 5 — Score + filter
-
-Two thresholds matter here and they answer different questions.
-`--keep-threshold N` decides what stays in the bibliography at all
-(audit-trail retention). `--mark-skipped-below M` decides what gets
-fetched in Step 6 (arXiv API budget). They are independent — typical
-settings are `--keep-threshold 8 --mark-skipped-below 14`.
-
-```bash
-python3 scripts/phase3/score_papers.py docs/phase3/_bib/<slug>.yaml \
-    --keep-threshold 8 --mark-skipped-below 14
-```
-
-Score buckets: **≥ 14** must-read (Step 6 fetches), **8–13** cite-only
-(`status: skipped`, kept in bib), **< 8** dropped. Full schema +
-sanity-check counts in [`references/scoring-reference.md`](references/scoring-reference.md).
-Idempotent — re-running on `fetched` / `skipped` papers is a no-op.
-
-**verify:** score distribution within ±50% of the sanity-check counts
-in `references/scoring-reference.md`. If 14+ count is <5 for a major
-system or >50, the keyword set or thresholds need adjustment before
-proceeding.
-
----
-
-## Step 6 — Fetch arXiv texts
-
-For all papers still `status: pending` with `arxiv_id` set, fetch
-ar5iv HTML + extracted markdown:
-
-```bash
-python3 scripts/phase3/fetch_arxiv_texts.py docs/phase3/_bib/<slug>.yaml
-```
-
-Output: `docs/phase3/_papers/<arxiv_id>.{html,md}` (git-ignored,
-regenerable).
+**verify:** Stage 5 score distribution should be within ±50% of the
+sanity-check counts in `references/scoring-reference.md`. If 14+ count
+is < 5 for a major system or > 50, the keyword set or thresholds need
+adjustment.
 
 Idempotent: already-fetched papers are skipped. arXiv rate limit 3 s
 is enforced.
@@ -242,10 +212,11 @@ This is the gate before Step 8. Don't draft synthesis prose without
 having explicitly read the deep_read set in full — abstract-only
 drafting introduces sloppy citations (caught at Step 10 VERIFY).
 
-**verify:** every `combined_score >= 14` paper has an explicit
-deep_read / skim / skip / manual_followup classification recorded
-in `phase3/<system>/context-notes.md`. No high-score paper left as
-`pending`.
+**verify:** `python3 scripts/phase3/verify_triage.py <system>` exits 0.
+Every `combined_score >= 14` paper must carry an explicit deep_read /
+skim / skip / manual_followup classification (recorded in `category:`
+on the bib YAML entry, with the reasoning logged in
+`phase3/<system>/context-notes.md`).
 
 ---
 
@@ -394,6 +365,18 @@ Style policy:
 ---
 
 ## Step 12 — Build HTML + reports index
+
+Pre-flight (fail fast before the build):
+
+```bash
+python3 scripts/phase3/check_block_parity.py <slug>
+```
+
+This runs the same en/ko block-pairing logic that `build_html.py` does
+internally, so structural drift is reported with a clean message
+before the HTML build commits to writing anything.
+
+Then build:
 
 ```bash
 python3 scripts/phase3/build_html.py <slug>

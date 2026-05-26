@@ -72,14 +72,18 @@ Correctness checks live across several functional groups. This index gathers the
 **Trigger.** Phrases like "Phase 3 진행", "<planet> 합성", "이 행성 Phase 3 까지 올려줘".
 
 **Files.**
-- `scripts/phase3/score_papers.py` — triage incoming bibcodes
-- `scripts/phase3/fetch_arxiv_texts.py` — pull full-text PDFs from arXiv
-- `scripts/phase3/build_bibliography.py` — bibcode → reference dict
-- `scripts/phase3/build_manual_fetch.py` — list papers needing manual download
-- `scripts/phase3/expand_citations.py` — inline citations in synthesis text
+- `scripts/phase3/run_phase3.py` — driver for Steps 2–6 (bib build → system bib → expand → score → inject → fetch) from `phase3/<system>/system.yaml`
+- `scripts/phase3/build_bibliography.py` — ADS + arXiv per-planet (or `--system`) bibliography
+- `scripts/phase3/expand_citations.py` — 1-hop citation-graph walk
+- `scripts/phase3/score_papers.py` — authority + relevance scoring, filter
+- `scripts/phase3/inject_papers.py` — inject ADS-missed papers from `system.yaml` (replaces per-system `add_missing_papers.py`)
+- `scripts/phase3/fetch_arxiv_texts.py` — pull full-text via ar5iv for pending papers
+- `scripts/phase3/build_manual_fetch.py` — manual-followup HTML index
+- `scripts/phase3/verify_triage.py` — gate: every score≥14 paper triaged
+- `scripts/phase3/check_block_parity.py` — preflight: en/ko block structure match
 - `scripts/phase3/field_tooltips.py` — tooltip glossary for the viewer
 - `scripts/phase3/build_html.py` — per-planet HTML (en + ko mirror, toggle)
-- `phase3/<system>/add_missing_papers.py` — per-system follow-up additions
+- `phase3/<system>/system.yaml` — planets, score thresholds, paper injections
 
 **Driver.** `nearstars-phase3` skill — defines the procedure (triage → deep-read → synthesize → validate → ko mirror → visual check).
 
@@ -150,9 +154,10 @@ Correctness checks live across several functional groups. This index gathers the
 **Driver.** `nearstars-add-star` skill.
 
 **Files.**
-- `phase2/<system>/apply_phase2.py` — per-system script that loads paper-by-paper measurements into `db/planets_curated.json` (array form, recommended-flagged). Run when upgrading Phase 1 → Phase 2 for a specific system.
+- `scripts/pipeline/apply_phase2.py` — generic applier; reads `phase2/<system>/measurements.yaml` and writes to `stellar_props_curated.json` + `planets_curated.json`. Use `--check` to diff without writing.
+- `phase2/<system>/measurements.yaml` — declarative Phase 2 measurement arrays (paper-by-paper, recommended-flagged). One file per system; replaces the old per-system `apply_phase2.py`.
 
-**Workflow.** Edit `target_list.json` → `./run_pipeline.sh` → manual curation of `stellar_props_curated.json`, `planets_curated.json`, `binary_orbits.json` (or run `apply_phase2.py` for systems with a paper-batch script) → re-validate.
+**Workflow.** Edit `target_list.json` → `./run_pipeline.sh` → for Phase 2: write `phase2/<system>/measurements.yaml`, then `python3 scripts/pipeline/apply_phase2.py <system>` → re-validate.
 
 ## 10. Dev helpers
 
