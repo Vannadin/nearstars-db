@@ -194,6 +194,22 @@ input[type=checkbox]{accent-color:#4a88b8}
 
 /* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
 [data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
+
+/* ── 모바일 (≤600px) ── detail panel grid 를 single column 으로, padding 압축 ── */
+@media (max-width: 600px) {
+  [data-ns="v2"] .a2-detail { margin: 6px 8px 10px; border-radius: 12px; }
+  [data-ns="v2"] .a2-detail-inner { padding: 16px 14px; }
+  [data-ns="v2"] .a2-dp-grid { grid-template-columns: 1fr; gap: 20px; }
+  [data-ns="v2"] .a2-star-img-wrap { width: 100%; max-width: 280px; margin: 0 auto; }
+  [data-ns="v2"] .a2-rep-row { gap: 6px; padding-bottom: 10px; margin-bottom: 14px; }
+  [data-ns="v2"] .a2-rep-index { width: 100%; text-align: right; margin-left: 0; margin-top: 2px; }
+  [data-ns="v2"] .a2-row td { padding: 10px 10px; font-size: 12px; }
+  [data-ns="v2"] .a2-th { padding: 10px 10px; font-size: 9.5px; }
+  [data-ns="v2"] .a2-mt th, [data-ns="v2"] .a2-mt td { padding: 7px 9px; font-size: 11px; }
+  [data-ns="v2"] .a2-pill { font-size: 8.5px; margin-left: 4px; padding: 1px 5px; }
+  [data-ns="v2"] .a2-section-h { font-size: 9.5px; margin-bottom: 10px; }
+  [data-ns="v2"] .a2-kv { grid-template-columns: 56px 1fr; gap: 4px 10px; }
+}
 </style>
 </head>
 <body>
@@ -279,9 +295,15 @@ const V2_PLANETS = [
   { name: 'Proxima d', m: 0.26, r: null,   p:    5.122, rec: true },
 ];
 
+// brown dwarf (L/T/Y) → 'M' 그룹으로 매핑. spectral classification 상 M 의
+// 차가운 연속선상이라 wash/spectral bar 색이 따뜻한 빨강 톤이 자연스러움.
+// (Y dwarf 는 실제로는 거의 magenta 지만 NearStars 거리권에서 거의 발견되지 않음)
 function v2Spec(s) {
   if (!s) return 'X';
-  return ['O','B','A','F','G','K','M'].includes(s[0]) ? s[0] : 'X';
+  const c = s[0];
+  if (['O','B','A','F','G','K','M'].includes(c)) return c;
+  if (['L','T','Y'].includes(c)) return 'M';
+  return 'X';
 }
 
 // HSL 변환으로 채도 cap — cool star (M/L/T/Y dwarf) 의 새빨간 출력 완화.
