@@ -4,6 +4,9 @@
 # populated for every element (preserves v1 data). reentry_plasma
 # and aurora regimes are added in subsequent passes for the species
 # where they're meaningfully different from atomic_flame.
+# phosphor_emission regime added for lanthanides where Ln3+ in a
+# solid host matrix is the chemistry-dominant signature (display
+# phosphors, X-ray screens, etc.).
 #
 # Schema per regime:
 #   status:    visible | no_flame_color | not_visible_to_humans
@@ -1215,6 +1218,19 @@ Ce:
       hex_basis: chart_approx
       basis: Ce3+ has 5d→4f broadband emission (parity-allowed, host-dependent). In YAG:Ce host → yellow 535nm (white-LED phosphor). In Ce-glass / CeO2 → blue-violet to white. Classical flame test gives little. The chart's blue reflects either Ce3+ 5d-4f UV-violet tail or CeO2 incandescence — phosphor regime rather than atomic flame.
       source: Yen-Shionoya-Yamamoto; YAG:Ce white-LED literature
+    phosphor_emission:
+      status: visible
+      hex: '#ffd400'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 535.0
+        intensity: 1000.0
+        label: Ce3+ 5d→4f broadband (YAG:Ce)
+      - nm: 450.0
+        intensity: 200.0
+        label: Ce3+ 5d→4f (Lu2SiO5:Ce PET scintillator)
+      basis: Ce3+ 5d→4f broadband emission, host-dependent. YAG:Ce (Y3Al5O12:Ce) is THE yellow phosphor in white LEDs (blue InGaN + YAG:Ce yellow → white). Lu2SiO5:Ce (LSO) is the workhorse PET scanner blue scintillator. Parity-allowed transition (not 4f-4f) so broadband, not narrow.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook Ch.6; white-LED literature
 Pr:
   atomic_number: 59
   name: Praseodymium
@@ -1224,6 +1240,25 @@ Pr:
       hex: null
       basis: 'The chart''s ''magenta'' is anomalous — not corroborated by either atomic plasma color or aqueous Pr3+ color (both are pale green). Pr3+ phosphors in YAG host emit RED at 615nm (3P0→3H6), but classical Pr salt flame is faintly green-yellow. The most honest call: no_data for the flame regime. Phosphor regime if introduced would show red.'
       source: Yen-Shionoya-Yamamoto; WebElements Pr aqueous
+    phosphor_emission:
+      status: visible
+      hex: '#f25a3a'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 615.0
+        intensity: 1000.0
+        label: Pr3+ 3P0→3H6 (YAG:Pr red)
+      - nm: 650.0
+        intensity: 400.0
+        label: Pr3+ 3P0→3F2
+      - nm: 525.0
+        intensity: 300.0
+        label: Pr3+ 3P0→3H5 (green)
+      - nm: 488.0
+        intensity: 200.0
+        label: Pr3+ 3P0→3H4 (blue-green)
+      basis: 'Pr3+ phosphor in YAG host: dominant 615nm red 3P0→3H6 + minor green/blue lines. Studied as red phosphor for white LEDs (alternative to Eu3+) and quantum-cutting phosphor for Hg-free fluorescent lamps.'
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook Ch.5
 Nd:
   atomic_number: 60
   name: Neodymium
@@ -1253,6 +1288,25 @@ Sm:
       hex_basis: chart_approx
       basis: Sm3+ 600nm orange dominant (Y2O3:Sm). Used as orange phosphor reference but not dominant display phosphor. Classical Sm salt flame is very faint; aqueous Sm3+ is pale yellow. The chart's pale peach reflects Sm3+ orange phosphor color in flame slot.
       source: Yen-Shionoya-Yamamoto; CaF2:Sm2+ Maiman ruby laser predecessor
+    phosphor_emission:
+      status: visible
+      hex: '#ff8c00'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 600.0
+        intensity: 1000.0
+        label: Sm3+ 4G5/2→6H7/2 (Y2O3:Sm)
+      - nm: 647.0
+        intensity: 600.0
+        label: Sm3+ 4G5/2→6H9/2
+      - nm: 565.0
+        intensity: 200.0
+        label: Sm3+ 4G5/2→6H5/2 yellow-green
+      - nm: 705.0
+        intensity: 200.0
+        label: Sm3+ 4G5/2→6H11/2 deep red
+      basis: 'Sm3+ phosphor in Y2O3 host: orange 600nm dominant (4G5/2→6H7/2). Used as orange phosphor reference but not a dominant display phosphor (Eu3+ takes the red niche). Sm2+ in CaF2 was a historical optical-pumping ruby laser predecessor (Maiman).'
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook Ch.5
 Eu:
   atomic_number: 63
   name: Europium
@@ -1263,6 +1317,28 @@ Eu:
       hex_basis: chart_approx
       basis: The named Eu signature is the solid-state Eu3+ red phosphor 612nm (5D0→7F2, the iconic Y2O3:Eu TV red since 1964). Classical Eu salt in flame is very pale violet, barely visible. The chart's pale violet is actually a fair atomic-flame observation — one of the chart's better entries. The famous red is the phosphor regime, not flame.
       source: Yen-Shionoya-Yamamoto; Y2O3:Eu TV phosphor literature
+    phosphor_emission:
+      status: visible
+      hex: '#ff0a14'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 612.0
+        intensity: 1000.0
+        label: Eu3+ 5D0→7F2 (Y2O3:Eu — iconic TV red)
+      - nm: 590.0
+        intensity: 200.0
+        label: Eu3+ 5D0→7F1 orange MD
+      - nm: 632.0
+        intensity: 150.0
+        label: Eu3+ 5D0→7F3
+      - nm: 707.0
+        intensity: 200.0
+        label: Eu3+ 5D0→7F4 deep red
+      - nm: 579.0
+        intensity: 50.0
+        label: Eu3+ 5D0→7F0 (often forbidden)
+      basis: 'Eu3+ in Y2O3 or Y2O2S host: 612nm red 5D0→7F2 is THE iconic red phosphor for CRT TVs (1964 onward), tri-color fluorescent lamps, plasma displays. One of the sharpest and most efficient narrow red emitters known. Eu2+ broadband phosphors (BAM blue, SrAl2O4 green afterglow) exist but the famous color is Eu3+ red.'
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook Ch.5; Y2O3:Eu TV phosphor history
 Gd:
   atomic_number: 64
   name: Gadolinium
@@ -1282,6 +1358,25 @@ Tb:
       hex_basis: chart_approx
       basis: Tb3+ 545nm green is the iconic fluorescent-lamp green phosphor (LaPO4:Ce,Tb tri-color lamp) and X-ray screen green (Gd2O2S:Tb). Classical Tb salt flame is barely visible. The chart's yellow-green represents phosphor color in flame slot — regime mismatch, color direction correct.
       source: Yen-Shionoya-Yamamoto; LaPO4:Ce,Tb fluorescent lamp
+    phosphor_emission:
+      status: visible
+      hex: '#4aff2e'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 545.0
+        intensity: 1000.0
+        label: Tb3+ 5D4→7F5 (LaPO4:Ce,Tb green)
+      - nm: 488.0
+        intensity: 200.0
+        label: Tb3+ 5D4→7F6 blue-green
+      - nm: 587.0
+        intensity: 250.0
+        label: Tb3+ 5D4→7F4 yellow
+      - nm: 622.0
+        intensity: 150.0
+        label: Tb3+ 5D4→7F3 orange-red
+      basis: Tb3+ in LaPO4:Ce,Tb (LAP) and Gd2O2S:Tb is THE standard green phosphor for tri-color fluorescent lamps and X-ray intensifying screens. The 545nm 5D4→7F5 transition is one of the most efficient narrow green emitters known. Near photopic peak sensitivity — perceptually very bright.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook Ch.5; tri-color lamp
 Dy:
   atomic_number: 66
   name: Dysprosium
@@ -1292,6 +1387,22 @@ Dy:
       hex_basis: chart_approx
       basis: Dy3+ has blue (480nm) + yellow (575nm) dual emission — used as single-dopant white-LED phosphor candidate. Classical Dy salt flame is very faint; aqueous Dy3+ is pale yellow-green. The chart's pale cyan-green picks up the blue component (480nm) but misses the dominant yellow.
       source: Yen-Shionoya-Yamamoto; CaSO4:Dy dosimeter
+    phosphor_emission:
+      status: visible
+      hex: '#fff5b0'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 575.0
+        intensity: 1000.0
+        label: Dy3+ 4F9/2→6H13/2 (yellow — dominant)
+      - nm: 480.0
+        intensity: 400.0
+        label: Dy3+ 4F9/2→6H15/2 (blue)
+      - nm: 663.0
+        intensity: 100.0
+        label: Dy3+ 4F9/2→6H11/2 (red weak)
+      basis: Dy3+ phosphor has dual blue (480nm) + yellow (575nm) emission — studied as single-dopant white-LED phosphor. Y/B ratio is host-dependent (lower symmetry → stronger yellow). CaSO4:Dy is used in radiation dosimetry phosphors.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook; single-dopant white LED literature
 Ho:
   atomic_number: 67
   name: Holmium
@@ -1302,6 +1413,22 @@ Ho:
       hex_basis: chart_approx
       basis: Ho3+ 540nm green dominant (Y2O3:Ho phosphor; up-conversion green from Yb,Ho co-doped IR pump). Classical flame is very faint. The chart's bright green is one of the more defensible Ln entries — matches phosphor color and is plausibly observable in concentrated salt flame.
       source: Yen-Shionoya-Yamamoto; up-conversion phosphor literature
+    phosphor_emission:
+      status: visible
+      hex: '#4aff3a'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 540.0
+        intensity: 1000.0
+        label: Ho3+ 5S2,5F4→5I8 (Y2O3:Ho green)
+      - nm: 644.0
+        intensity: 400.0
+        label: Ho3+ 5F5→5I8 red
+      - nm: 488.0
+        intensity: 100.0
+        label: Ho3+ 5F3→5I8 blue weak
+      basis: Ho3+ 540nm green dominant + 644nm red secondary. Y2O3:Ho phosphor. Used in up-conversion phosphors with Yb3+ sensitizer (980nm IR pump → visible green) for anti-counterfeiting inks and biological imaging. Ho:YAG laser at 2.1μm IR for medical applications.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook; up-conversion literature
 Er:
   atomic_number: 68
   name: Erbium
@@ -1312,6 +1439,22 @@ Er:
       hex_basis: chart_approx
       basis: Er3+ 545nm green dominant + 1.5μm IR (Er-doped fiber amplifier, the basis of optical telecom). Classical flame faint. The chart's pale green reflects Er3+ phosphor color in flame slot — regime mismatch, color direction correct.
       source: EDFA literature; Yen-Shionoya-Yamamoto
+    phosphor_emission:
+      status: visible
+      hex: '#50ff3a'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 545.0
+        intensity: 1000.0
+        label: Er3+ 4S3/2→4I15/2 (Y2O3:Er green)
+      - nm: 525.0
+        intensity: 400.0
+        label: Er3+ 2H11/2→4I15/2 green
+      - nm: 660.0
+        intensity: 300.0
+        label: Er3+ 4F9/2→4I15/2 red
+      basis: Er3+ 545nm green dominant. Er-doped silica fiber is the basis of Erbium-Doped Fiber Amplifier (EDFA) at 1.5μm — the foundation of long-haul optical telecom. Er3+/Yb3+ up-conversion phosphors convert IR pump to visible green.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook; EDFA literature
 Tm:
   atomic_number: 69
   name: Thulium
@@ -1335,6 +1478,22 @@ Tm:
       - nm: 360.0
         intensity: 100.0
         label: Tm3+ 1D2-3H6 UV
+    phosphor_emission:
+      status: visible
+      hex: '#1a3aff'
+      hex_basis: canonical_descriptor
+      emission_lines:
+      - nm: 455.0
+        intensity: 1000.0
+        label: Tm3+ 1D2→3F4 (LaOBr:Tm blue)
+      - nm: 477.0
+        intensity: 400.0
+        label: Tm3+ 1G4→3H6 blue
+      - nm: 650.0
+        intensity: 200.0
+        label: Tm3+ 1G4→3F4 red minor
+      basis: Tm3+ 455nm blue dominant. LaOBr:Tm is the BLUE component of rare-earth X-ray intensifying screens (paired with Gd2O2S:Tb green and Y2O2S:Eu red for tri-color X-ray imaging). Tm:YAG laser at 2.0μm IR for surgical applications.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook; X-ray screen literature
 Yb:
   atomic_number: 70
   name: Ytterbium

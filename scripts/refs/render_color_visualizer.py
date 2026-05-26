@@ -83,7 +83,7 @@ def build_element_data(db: dict) -> dict:
             "name": e["name"],
             "regimes": {},
         }
-        for regime_name in ("atomic_flame", "reentry_plasma", "aurora"):
+        for regime_name in ("atomic_flame", "reentry_plasma", "aurora", "phosphor_emission"):
             r = e["regimes"].get(regime_name)
             if r is None:
                 entry["regimes"][regime_name] = None
@@ -177,7 +177,9 @@ def render_molecular_panel(mdb: dict) -> str:
 PALETTE_DESCRIPTORS = {
     "earth_like":  ("N2 / O2 (Earth, Trappist-1 e)",  "N2 / O2 우점 (Earth, Trappist-1 e)"),
     "co2":         ("CO2 (Mars / Venus)",             "CO2 우점 (Mars / Venus)"),
-    "gas_giant":   ("H2 + He (Gas giant)",            "H2 + He (가스 자이언트)"),
+    "ice_giant":   ("H2 + He + CH4 / NH3 (Uranus / Neptune)",
+                    "H2 + He + CH4 / NH3 (Uranus / Neptune)"),
+    "gas_giant":   ("H2 + He (Jupiter / Saturn)",     "H2 + He (Jupiter / Saturn)"),
     "methane":     ("CH4 (Titan)",                    "CH4 (타이탄)"),
     "steam":       ("H2O (Steam atmosphere)",         "H2O (수증기 대기)"),
     "pure_h2":     ("Pure H2 (Cold sub-Neptune)",     "순수 H2 (차가운 sub-Neptune)"),
@@ -565,6 +567,7 @@ def build_t(palettes):
         "regime_atomic_flame": "Flame test (~2000K)",
         "regime_reentry_plasma": "Reentry plasma (~10000K)",
         "regime_aurora": "Aurora (low density)",
+        "regime_phosphor_emission": "Phosphor (Ln3+ in matrix)",
         "th_streak_species": "Species",
         "th_streak_color":   "Color",
         "th_streak_rgb":     "RGB · intensity",
@@ -592,6 +595,7 @@ def build_t(palettes):
         "regime_atomic_flame": "불꽃 (~2000K)",
         "regime_reentry_plasma": "재진입 plasma (~10000K)",
         "regime_aurora": "오로라 (저밀도)",
+        "regime_phosphor_emission": "Phosphor (Ln3+ 고체)",
         "th_streak_species": "종",
         "th_streak_color":   "색",
         "th_streak_rgb":     "RGB · 강도",
@@ -833,6 +837,7 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
     <button class="on" data-regime="atomic_flame" data-i18n="regime_atomic_flame"></button>
     <button data-regime="reentry_plasma" data-i18n="regime_reentry_plasma"></button>
     <button data-regime="aurora" data-i18n="regime_aurora"></button>
+    <button data-regime="phosphor_emission" data-i18n="regime_phosphor_emission"></button>
   </div>
 </div>
 
@@ -916,14 +921,15 @@ function applyRegime() {{
     const formula = cell.dataset.formula;
     const mol = MOLECULES[formula];
     if (!mol) return;
-    // Molecular only has reentry_plasma + aurora regimes — atomic_flame is not applicable
-    if (regime === 'atomic_flame') {{
-      cell.classList.remove('visible');
+    // Molecular only has reentry_plasma + aurora regimes — other regimes n/a
+    if (regime === 'atomic_flame' || regime === 'phosphor_emission') {{
+      cell.classList.remove('visible', 'research-pending');
       cell.style.background = '';
       cell.style.color = '';
       const status = cell.querySelector('.mol-status');
-      status.textContent = 'atomic regime n/a';
-      cell.title = `${{formula}} — molecular emitters don't have an atomic flame regime`;
+      const label = regime === 'atomic_flame' ? 'atomic regime n/a' : 'phosphor regime n/a';
+      status.textContent = label;
+      cell.title = `${{formula}} — molecular emitters don't have a ${{regime}} regime`;
       return;
     }}
     const r = mol.regimes[regime];

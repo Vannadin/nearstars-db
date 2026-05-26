@@ -35,7 +35,7 @@ VALID_STATUS = {
     "not_emitter",
 }
 VALID_HEX_BASIS = {"cie_computed", "canonical_descriptor", "chart_approx"}
-VALID_REGIMES = {"atomic_flame", "reentry_plasma", "aurora"}
+VALID_REGIMES = {"atomic_flame", "reentry_plasma", "aurora", "phosphor_emission"}
 
 HEX_RE = re.compile(r"^#[0-9a-f]{6}$")
 REQUIRED_TOP = {"atomic_number", "name", "regimes"}
@@ -64,29 +64,30 @@ def validate_regime(prefix: str, regime_name: str, regime: dict, errors: list) -
         elif hex_basis not in VALID_HEX_BASIS:
             errors.append(f"{prefix}.{regime_name}: invalid hex_basis {hex_basis!r}")
 
-        if hex_basis == "cie_computed":
-            if not lines:
-                errors.append(f"{prefix}.{regime_name}: hex_basis=cie_computed requires emission_lines")
-            else:
-                for i, ln in enumerate(lines):
-                    if not isinstance(ln, dict):
-                        errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: not a mapping")
-                        continue
-                    if "nm" not in ln or "intensity" not in ln:
-                        errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: missing nm or intensity")
-                        continue
-                    nm = ln["nm"]
-                    inten = ln["intensity"]
-                    if not isinstance(nm, (int, float)) or not (200 <= nm <= 2000):
-                        errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: nm={nm} out of plausible range (200–2000)")
-                    if not isinstance(inten, (int, float)) or inten <= 0:
-                        errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: intensity={inten} must be positive")
-        elif lines is not None:
-            # emission_lines present but hex_basis != cie_computed
+        # cie_computed REQUIRES emission_lines; canonical_descriptor MAY have
+        # them as documentation (e.g., phosphor lines that ground the
+        # canonical display color); chart_approx should NOT.
+        if hex_basis == "cie_computed" and not lines:
+            errors.append(f"{prefix}.{regime_name}: hex_basis=cie_computed requires emission_lines")
+        if hex_basis == "chart_approx" and lines is not None:
             errors.append(
-                f"{prefix}.{regime_name}: emission_lines present but hex_basis={hex_basis} "
-                f"(emission_lines is meaningful only with cie_computed)"
+                f"{prefix}.{regime_name}: emission_lines present but hex_basis=chart_approx "
+                f"(if lines exist with known intensities, basis should be cie_computed)"
             )
+        if lines is not None:
+            for i, ln in enumerate(lines):
+                if not isinstance(ln, dict):
+                    errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: not a mapping")
+                    continue
+                if "nm" not in ln or "intensity" not in ln:
+                    errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: missing nm or intensity")
+                    continue
+                nm = ln["nm"]
+                inten = ln["intensity"]
+                if not isinstance(nm, (int, float)) or not (200 <= nm <= 2000):
+                    errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: nm={nm} out of plausible range (200–2000)")
+                if not isinstance(inten, (int, float)) or inten <= 0:
+                    errors.append(f"{prefix}.{regime_name}.emission_lines[{i}]: intensity={inten} must be positive")
     else:
         if hex_val is not None:
             errors.append(f"{prefix}.{regime_name}: status={status} but hex={hex_val!r} (should be null)")
