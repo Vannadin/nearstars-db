@@ -169,7 +169,7 @@ def render_ko(data) -> str:
         "",
         "재진입 플라즈마(8,000–15,000 K)는 원자 불꽃 방출과 다릅니다 — 분자 "
         "밴드(N2+, C2 Swan, CN violet)가 우세합니다. Firefly cfg 의 "
-        "bulk gas 색은 [composition-color reference](../../.claude/skills/firefly-cfg/references/composition-color.md) 를 참고하세요.",
+        "bulk gas 색은 [composition-color reference](../../../.claude/skills/firefly-cfg/references/composition-color.md) 를 참고하세요.",
         "",
     ]
     period_titles_ko = {
@@ -193,8 +193,8 @@ def render_ko(data) -> str:
         lines.append("")
     lines.append("## Related")
     lines.append("")
-    lines.append("- [composition-color (firefly-cfg 스킬)](../../.claude/skills/firefly-cfg/references/composition-color.md) — 재진입 plasma bulk gas 팔레트 (다른 물리 영역)")
-    lines.append("- [phase3-mapping (firefly-cfg 스킬)](../../.claude/skills/firefly-cfg/references/phase3-mapping.md) — Phase 3 → Firefly 필드 매핑")
+    lines.append("- [composition-color (firefly-cfg 스킬)](../../../.claude/skills/firefly-cfg/references/composition-color.md) — 재진입 plasma bulk gas 팔레트 (다른 물리 영역)")
+    lines.append("- [phase3-mapping (firefly-cfg 스킬)](../../../.claude/skills/firefly-cfg/references/phase3-mapping.md) — Phase 3 → Firefly 필드 매핑")
     lines.append("")
     return "\n".join(lines)
 

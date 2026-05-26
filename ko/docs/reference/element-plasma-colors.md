@@ -15,7 +15,7 @@
 | 반감기 부족 | 합성 원소, 관측 전 붕괴 | null |
 | 자료 없음 | 문헌이 침묵 | null |
 
-재진입 플라즈마(8,000–15,000 K)는 원자 불꽃 방출과 다릅니다 — 분자 밴드(N2+, C2 Swan, CN violet)가 우세합니다. Firefly cfg 의 bulk gas 색은 [composition-color reference](../../.claude/skills/firefly-cfg/references/composition-color.md) 를 참고하세요.
+재진입 플라즈마(8,000–15,000 K)는 원자 불꽃 방출과 다릅니다 — 분자 밴드(N2+, C2 Swan, CN violet)가 우세합니다. Firefly cfg 의 bulk gas 색은 [composition-color reference](../../../.claude/skills/firefly-cfg/references/composition-color.md) 를 참고하세요.
 
 ## 1주기
 
@@ -182,5 +182,5 @@
 
 ## Related
 
-- [composition-color (firefly-cfg 스킬)](../../.claude/skills/firefly-cfg/references/composition-color.md) — 재진입 plasma bulk gas 팔레트 (다른 물리 영역)
-- [phase3-mapping (firefly-cfg 스킬)](../../.claude/skills/firefly-cfg/references/phase3-mapping.md) — Phase 3 → Firefly 필드 매핑
+- [composition-color (firefly-cfg 스킬)](../../../.claude/skills/firefly-cfg/references/composition-color.md) — 재진입 plasma bulk gas 팔레트 (다른 물리 영역)
+- [phase3-mapping (firefly-cfg 스킬)](../../../.claude/skills/firefly-cfg/references/phase3-mapping.md) — Phase 3 → Firefly 필드 매핑
