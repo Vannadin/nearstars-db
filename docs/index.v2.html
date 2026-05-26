@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<!-- v2 디자인 샘플. 헤더는 v1 유지, 본문 table+detail은 viewer-v2/A2 스타일을 vanilla 변환. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NearStars DB · v2</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.v2.css">
+<style>
+/* 전역 — 모바일에서 padding 이 폭에 더해져 카드가 viewport 폭을 넘는 걸 방지 */
+[data-ns="v2"], [data-ns="v2"] *, [data-ns="v2"] *::before, [data-ns="v2"] *::after { box-sizing: border-box; }
+body { overflow-x: hidden; }
+
+/* v1 헤더는 index.html의 인라인 스타일에서 발췌 (헤더 영역만) */
+header{padding:14px 20px;align-items:center;gap:20px}
+h1{font-size:17px;white-space:nowrap}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex:1}
+input[type=text]{background:#101826;border:1px solid #243040;color:#c0cce0;padding:6px 12px;border-radius:6px;font-size:13px;width:210px;outline:none}
+input[type=text]:focus{border-color:#4a88b8}
+select{background:#101826;border:1px solid #243040;color:#c0cce0;padding:5px 10px;border-radius:6px;font-size:13px;outline:none;cursor:pointer}
+.fg{display:flex;align-items:center;gap:7px;font-size:12px;color:#5a7898}
+input[type=range]{accent-color:#4a88b8;width:100px}
+label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#8898b0}
+input[type=checkbox]{accent-color:#4a88b8}
+.seg{display:flex;border:1px solid #243040;border-radius:6px;overflow:hidden;flex-shrink:0}
+.seg button{background:none;border:none;border-right:1px solid #243040;color:#4a6888;font-size:12px;padding:4px 10px;cursor:pointer;transition:background .12s,color .12s;white-space:nowrap}
+.seg button:last-child{border-right:none}
+.seg button:hover{color:#8aaac8}
+.seg button.on{background:#1a2e42;color:#8aaad0;font-weight:600}
+.stats-bar{padding:6px 20px;font-size:12px;color:#3a5060;border-bottom:1px solid #141e28;background:#090d16;display:flex;align-items:center;gap:10px}
+.stats-bar .spacer{flex:1}
+.help-btn{background:none;border:1px solid #243040;color:#4a6888;font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;letter-spacing:.3px}
+.help-btn:hover{border-color:#4a88b8;color:#8aaac8}
+
+/* ── v2 본문 — A2_RefinedSpectral.jsx 의 a2_styles 를 그대로 vanilla 이식 ── */
+[data-ns="v2"] .a2-root { position: relative; display: flex; flex-direction: column;
+                          min-height: 100%; font-family: var(--v2-font-sans);
+                          color: var(--v2-fg-2); padding-bottom: 80px; }
+
+[data-ns="v2"] .a2-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+[data-ns="v2"] .a2-th { padding: 11px 16px; text-align: left;
+                        font: 600 10.5px/1 var(--v2-font-sans); letter-spacing: 0.08em;
+                        text-transform: uppercase; color: var(--v2-fg-4);
+                        border-bottom: 1px solid var(--v2-bd-2);
+                        background: var(--v2-surface-1); }
+[data-ns="v2"] .a2-th.bar { padding: 0; width: 14px; }
+
+[data-ns="v2"] .a2-row { transition: background 200ms var(--v2-ease); cursor: pointer; }
+[data-ns="v2"] .a2-row td { padding: 11px 16px; border-bottom: 1px solid var(--v2-bd-1);
+                            font-size: 13px; color: var(--v2-fg-2); white-space: nowrap; }
+[data-ns="v2"] .a2-row td.bar { padding: 0; width: 14px; position: relative; }
+[data-ns="v2"] .a2-row td.bar::before {
+  content: ''; position: absolute; left: 5px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 24px; border-radius: 2px;
+  background: var(--spec-color, var(--v2-fg-5));
+  box-shadow: 0 0 10px var(--spec-glow, transparent),
+              inset 0 0 0 1px rgba(255,255,255,0.12);
+  transition: height 240ms var(--v2-ease),
+              box-shadow 240ms var(--v2-ease);
+}
+
+[data-ns="v2"] .a2-row:hover {
+  background: linear-gradient(90deg,
+              var(--spec-tint, transparent) 0%,
+              transparent 45%);
+}
+[data-ns="v2"] .a2-row.open {
+  background: linear-gradient(90deg,
+              var(--spec-tint-strong, var(--v2-surface-2)) 0%,
+              var(--v2-surface-2) 60%);
+  box-shadow: inset 0 1px 0 var(--v2-bd-2),
+              inset 0 -1px 0 var(--v2-bd-2);
+}
+[data-ns="v2"] .a2-row.open td.bar::before {
+  height: 32px;
+  box-shadow: 0 0 16px var(--spec-color),
+              0 0 6px var(--spec-color),
+              inset 0 0 0 1px rgba(255,255,255,0.18);
+}
+
+[data-ns="v2"] .a2-mono { font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums;
+                          color: var(--v2-fg-2); }
+[data-ns="v2"] .a2-mono.dim { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-sysname { color: var(--v2-fg-1); font-weight: 500; }
+
+[data-ns="v2"] .a2-pill { display: inline-flex; align-items: center; padding: 1px 7px;
+                          margin-left: 6px; border-radius: 999px;
+                          font: 600 9.5px/1.6 var(--v2-font-sans); letter-spacing: 0.05em;
+                          text-transform: uppercase; }
+[data-ns="v2"] .a2-pill.p2 { color: var(--v2-accent); background: var(--v2-accent-bg); }
+[data-ns="v2"] .a2-pill.p3 { color: var(--v2-danger); background: var(--v2-danger-bg); }
+
+[data-ns="v2"] .a2-pc { font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums;
+                        font-size: 12px; color: var(--v2-accent);
+                        background: var(--v2-accent-bg); padding: 2px 8px;
+                        border-radius: 999px; font-weight: 500; }
+[data-ns="v2"] .a2-pc.zero { color: var(--v2-fg-5); background: transparent;
+                             padding: 0; font-size: 13px; }
+
+@keyframes a2-springdown {
+  from { transform: translateY(-12px) scale(0.985); opacity: 0; filter: blur(8px); }
+  to   { transform: translateY(0)     scale(1);     opacity: 1; filter: blur(0); }
+}
+[data-ns="v2"] .a2-detail { position: relative;
+                            margin: 8px 16px 12px;
+                            border-radius: 14px;
+                            overflow: hidden;
+                            background: linear-gradient(180deg,
+                              var(--spec-tint-strong, var(--v2-surface-1)) 0%,
+                              var(--v2-surface-1) 60%,
+                              var(--v2-surface-1) 100%);
+                            border: 1px solid var(--v2-bd-2);
+                            box-shadow: var(--v2-shadow-card);
+                            animation: a2-springdown 420ms var(--v2-spring); }
+[data-ns="v2"] .a2-detail::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(80% 60% at 12% 0%,
+    var(--spec-tint-strong, transparent), transparent 70%);
+  pointer-events: none;
+}
+[data-ns="v2"] .a2-detail-inner { position: relative; padding: 22px 24px; }
+
+[data-ns="v2"] .a2-rep-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+                             padding-bottom: 14px; margin-bottom: 18px;
+                             border-bottom: 1px solid var(--v2-bd-1); }
+[data-ns="v2"] .a2-rep-label { font: 600 10.5px/1 var(--v2-font-sans);
+                               letter-spacing: 0.08em; text-transform: uppercase;
+                               color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-rep-chip { display: inline-flex; align-items: center; gap: 6px;
+                              padding: 3px 11px; border-radius: 999px;
+                              background: var(--v2-surface-2); border: 1px solid var(--v2-bd-2);
+                              font: 500 12px/1.4 var(--v2-font-sans); color: var(--v2-fg-2);
+                              cursor: pointer; transition: var(--v2-t-fast);
+                              text-decoration: none; }
+[data-ns="v2"] .a2-rep-chip:hover { background: var(--v2-surface-3); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-rep-chip b { font: 700 9.5px/1 var(--v2-font-sans); letter-spacing: 0.06em; }
+[data-ns="v2"] .a2-rep-chip.p2 b { color: var(--v2-accent); }
+[data-ns="v2"] .a2-rep-chip.p3 b { color: var(--v2-danger); }
+[data-ns="v2"] .a2-rep-index { margin-left: auto; font-size: 11px; color: var(--v2-fg-4); }
+
+[data-ns="v2"] .a2-dp-grid { display: grid; grid-template-columns: 280px 1fr; gap: 28px; }
+
+[data-ns="v2"] .a2-section-h { display: flex; align-items: baseline; gap: 12px;
+                               font: 500 10.5px/1 var(--v2-font-sans);
+                               letter-spacing: 0.12em; text-transform: uppercase;
+                               color: var(--v2-fg-3); margin-bottom: 14px;
+                               padding-bottom: 8px; }
+[data-ns="v2"] .a2-section-h::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--v2-bd-2), transparent);
+}
+
+[data-ns="v2"] .a2-kv { display: grid; grid-template-columns: 64px 1fr; gap: 4px 14px;
+                       font-size: 12px; }
+[data-ns="v2"] .a2-kv .k { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-kv .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono);
+                          font-variant-numeric: tabular-nums; }
+
+[data-ns="v2"] .a2-star-img-wrap { position: relative; width: 220px; aspect-ratio: 1;
+                                  border-radius: 12px; overflow: hidden;
+                                  border: 1px solid var(--v2-bd-2);
+                                  box-shadow: var(--v2-shadow-inset); }
+[data-ns="v2"] .a2-reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+                            width: 26px; height: 26px; border: 1.5px solid var(--v2-reticle);
+                            border-radius: 50%; box-shadow: 0 0 12px var(--v2-reticle-faint); }
+[data-ns="v2"] .a2-reticle::before, [data-ns="v2"] .a2-reticle::after { content: ''; position: absolute;
+                            background: var(--v2-reticle); }
+[data-ns="v2"] .a2-reticle::before { width: 1px; height: 14px; left: 50%; top: -18px;
+                                    transform: translateX(-50%); }
+[data-ns="v2"] .a2-reticle::after  { width: 14px; height: 1px; top: 50%; left: -18px;
+                                    transform: translateY(-50%); }
+
+[data-ns="v2"] .a2-mt { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 4px; }
+[data-ns="v2"] .a2-mt th { padding: 8px 12px; text-align: left;
+                          font: 600 9.5px/1 var(--v2-font-sans); letter-spacing: 0.08em;
+                          text-transform: uppercase; color: var(--v2-fg-4);
+                          border-bottom: 1px solid var(--v2-bd-1); }
+[data-ns="v2"] .a2-mt td { padding: 8px 12px; font-size: 12px; color: var(--v2-fg-2);
+                          font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums;
+                          border-bottom: 1px solid var(--v2-bd-1); }
+[data-ns="v2"] .a2-mt td.nm { font-family: var(--v2-font-sans); color: var(--v2-fg-1); font-weight: 500; }
+[data-ns="v2"] .a2-mt tr.rec td { background: var(--v2-ok-bg); }
+[data-ns="v2"] .a2-mt tr.rec td.nm { box-shadow: inset 2px 0 0 var(--v2-ok); }
+[data-ns="v2"] .a2-rec-tick { color: var(--v2-ok); font: 600 11px/1 var(--v2-font-sans);
+                             letter-spacing: 0.05em; }
+
+[data-ns="v2"] .a2-method { display: inline-flex; padding: 2px 8px; border-radius: 999px;
+                            font: 500 9.5px/1.4 var(--v2-font-sans);
+                            letter-spacing: 0.04em; text-transform: uppercase; }
+[data-ns="v2"] .a2-method.interferometry { color: var(--v2-spec-O); background: rgba(178,196,255,0.10); }
+[data-ns="v2"] .a2-method.spectroscopic_calibration { color: var(--v2-spec-K); background: rgba(255,180,122,0.10); }
+[data-ns="v2"] .a2-method.ttv { color: var(--v2-spec-A); background: rgba(207,220,255,0.10); }
+[data-ns="v2"] .a2-method.discovery { color: var(--v2-ok); background: var(--v2-ok-bg); }
+[data-ns="v2"] .a2-method.binary_orbit { color: var(--v2-danger); background: var(--v2-danger-bg); }
+[data-ns="v2"] .a2-method.default { color: var(--v2-fg-3); background: var(--v2-surface-2); }
+
+/* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
+[data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
+
+/* ── Star Color chart (swatch + Hex/0-1/0-255 copy rows) ── */
+[data-ns="v2"] .a2-cc-wrap {
+  display: flex; align-items: center; gap: 18px;
+  padding: 12px 14px;
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  border-radius: var(--v2-r-row);
+}
+[data-ns="v2"] .a2-cc-swatch {
+  width: 56px; height: 56px; border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: var(--v2-shadow-inset), 0 0 24px var(--cc-glow, transparent);
+}
+[data-ns="v2"] .a2-cc-vals { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+[data-ns="v2"] .a2-cc-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; font-size: 12px; }
+[data-ns="v2"] .a2-cc-row .k { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-cc-row .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-ns="v2"] .a2-cc-copy {
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-4); padding: 3px 9px; border-radius: 4px;
+  font: 500 10.5px/1 var(--v2-font-sans); cursor: pointer; letter-spacing: 0.02em;
+  transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-cc-copy:hover { border-color: var(--v2-bd-3); color: var(--v2-fg-2); }
+[data-ns="v2"] .a2-cc-copy.copied { color: var(--v2-ok); border-color: var(--v2-ok); }
+
+/* ── DSS picker (FOV + Survey + external links) ── */
+[data-ns="v2"] .a2-img-links { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+[data-ns="v2"] .a2-fov-picker, [data-ns="v2"] .a2-survey-picker { display: flex; gap: 4px; flex-wrap: wrap; }
+[data-ns="v2"] .a2-fov-btn, [data-ns="v2"] .a2-survey-btn {
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-4); padding: 3px 9px; border-radius: 4px;
+  font: 500 10.5px/1.4 var(--v2-font-sans);
+  cursor: pointer; transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-fov-btn:hover, [data-ns="v2"] .a2-survey-btn:hover { color: var(--v2-fg-2); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-fov-btn.on, [data-ns="v2"] .a2-survey-btn.on { background: var(--v2-surface-3); color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-survey-btn:disabled {
+  color: var(--v2-fg-5); text-decoration: line-through; cursor: not-allowed;
+  border-color: rgba(255,255,255,0.04);
+}
+[data-ns="v2"] .a2-ext-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+[data-ns="v2"] .a2-ext-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--v2-surface-1); border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-3); padding: 4px 11px; border-radius: var(--v2-r-chip);
+  font: 500 11px/1.4 var(--v2-font-sans); cursor: pointer;
+  text-decoration: none; transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-ext-link:hover { background: var(--v2-surface-2); color: var(--v2-fg-2); }
+
+/* ── Wide kv (astrometry — 키가 길어져서 a2-kv 보다 넓은 컬럼 필요) ── */
+[data-ns="v2"] .a2-kv-wide { display: grid; grid-template-columns: 96px 1fr; gap: 5px 14px; font-size: 12px; }
+[data-ns="v2"] .a2-kv-wide .k { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-kv-wide .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums; }
+
+/* ── 행성 풀 테이블 — 모바일에서 가로 스크롤 ── */
+[data-ns="v2"] .a2-mt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+[data-ns="v2"] .a2-mt-scroll table { min-width: 760px; }
+[data-ns="v2"] .a2-mt a.sl { color: var(--v2-accent); text-decoration: none; }
+[data-ns="v2"] .a2-mt a.sl:hover { text-decoration: underline; }
+
+/* ── 모바일 카드 — v1 .mc 패턴 골격 + v2 컬러링(좌측 spec bar / hover·open wash) ── */
+[data-ns="v2"] .a2-cards-wrap { display: none; padding: 12px 14px 80px; }
+[data-ns="v2"] .a2-cards-list { display: flex; flex-direction: column; gap: 10px; }
+
+[data-ns="v2"] .a2-card {
+  position: relative; overflow: hidden;
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  border-radius: var(--v2-r-card);
+  padding: 13px 14px 13px 20px;
+  cursor: pointer;
+  transition: background 200ms var(--v2-ease), border-color 200ms var(--v2-ease);
+}
+[data-ns="v2"] .a2-card::before {
+  /* 좌측 4px spec bar — desktop row 의 td.bar::before 와 같은 컨셉 */
+  content: ''; position: absolute;
+  left: 0; top: 13px; bottom: 13px; width: 4px;
+  border-radius: 0 2px 2px 0;
+  background: var(--spec-color, var(--v2-fg-5));
+  box-shadow: 0 0 10px var(--spec-glow, transparent),
+              inset 0 0 0 1px rgba(255,255,255,0.12);
+  transition: top 200ms var(--v2-ease), bottom 200ms var(--v2-ease),
+              box-shadow 200ms var(--v2-ease);
+}
+[data-ns="v2"] .a2-card::after {
+  /* 카드 wash — desktop row 의 linear-gradient 와 같은 패턴 */
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(90deg, var(--spec-tint, transparent) 0%, transparent 55%);
+  opacity: 0; transition: opacity 200ms var(--v2-ease);
+}
+[data-ns="v2"] .a2-card:hover::after { opacity: 1; }
+[data-ns="v2"] .a2-card.open {
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--spec-tint-strong, var(--v2-surface-2)) 100%, transparent) 0%,
+    var(--v2-surface-1) 80%);
+  border-color: var(--v2-bd-3);
+}
+[data-ns="v2"] .a2-card.open::before { top: 18px; bottom: 18px;
+  box-shadow: 0 0 16px var(--spec-color), 0 0 6px var(--spec-color),
+              inset 0 0 0 1px rgba(255,255,255,0.18); }
+
+[data-ns="v2"] .a2-card-head { display: flex; align-items: center; gap: 10px; }
+[data-ns="v2"] .a2-card-name {
+  flex: 1; min-width: 0;
+  font-size: 16px; font-weight: 600; color: var(--v2-fg-1);
+  letter-spacing: -0.01em;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+[data-ns="v2"] .a2-card-pills { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+[data-ns="v2"] .a2-card-sub {
+  margin-top: 5px;
+  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  font-size: 12px; color: var(--v2-fg-3);
+}
+[data-ns="v2"] .a2-card-sub .name { color: var(--v2-fg-3); }
+
+[data-ns="v2"] .a2-card-stats {
+  margin-top: 12px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 10px 12px;
+}
+@media (max-width: 380px) {
+  [data-ns="v2"] .a2-card-stats { grid-template-columns: repeat(2, 1fr); }
+}
+[data-ns="v2"] .a2-card-stat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+[data-ns="v2"] .a2-card-stat-k {
+  font-size: 9.5px; color: var(--v2-fg-4);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+[data-ns="v2"] .a2-card-stat-v {
+  font: 500 13px/1.2 var(--v2-font-mono);
+  color: var(--v2-fg-2);
+  font-variant-numeric: tabular-nums;
+}
+
+[data-ns="v2"] .a2-card-expand {
+  margin: 14px -14px -13px -20px;
+  padding: 16px 14px 4px 20px;
+  border-top: 1px solid var(--v2-bd-1);
+  animation: a2-springdown 380ms var(--v2-spring);
+}
+
+/* ── ≤600px: 데스크탑 테이블 숨기고 카드 모드로 전환 ── */
+@media (max-width: 600px) {
+  [data-ns="v2"] .a2-table { display: none; }
+  [data-ns="v2"] .a2-cards-wrap { display: block; }
+
+  /* detail content 자체의 모바일 압축 (카드 내부에 들어가는 경우 + 데스크탑 detail 양쪽 모두) */
+  [data-ns="v2"] .a2-dp-grid { grid-template-columns: 1fr; gap: 20px; }
+  [data-ns="v2"] .a2-star-img-wrap { width: 100%; max-width: 280px; margin: 0 auto; }
+  [data-ns="v2"] .a2-rep-row { gap: 6px; padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  [data-ns="v2"] .a2-rep-index { width: 100%; text-align: right; margin-left: 0; margin-top: 2px; }
+  [data-ns="v2"] .a2-mt th, [data-ns="v2"] .a2-mt td { padding: 7px 9px; font-size: 11px; }
+  [data-ns="v2"] .a2-section-h { font-size: 9.5px; margin-bottom: 10px; }
+  [data-ns="v2"] .a2-kv { grid-template-columns: 56px 1fr; gap: 4px 10px; }
+  [data-ns="v2"] .a2-kv-wide { grid-template-columns: 80px 1fr; gap: 4px 12px; }
+  [data-ns="v2"] .a2-cc-wrap { padding: 10px 12px; gap: 14px; }
+  [data-ns="v2"] .a2-cc-swatch { width: 48px; height: 48px; }
+  [data-ns="v2"] .a2-cc-row { grid-template-columns: 48px 1fr auto; gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NearStars <span>DB</span></h1>
+  <div class="filters">
+    <input type="text" id="q" placeholder="Search system or star…" autocomplete="off">
+    <div class="fg">
+      <span>Spec</span>
+      <select id="spec">
+        <option value="">All</option>
+        <option>O</option><option>B</option><option>A</option>
+        <option>F</option><option>G</option><option>K</option><option>M</option>
+      </select>
+    </div>
+    <div class="fg">
+      <span>Dist ≤</span>
+      <input type="range" id="dist" min="0" max="30" value="15" step="0.5">
+      <span id="dist-lbl">15 pc</span>
+    </div>
+    <div class="seg">
+      <button class="on">pc</button><button>ly</button><button>AU</button>
+    </div>
+    <label><input type="checkbox"> Has planets</label>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <span id="stats">— / 152 systems</span>
+  <span class="spacer"></span>
+  <span style="color:#3a5060;font-size:11px">v2 preview · sample data</span>
+</div>
+
+<!-- ── v2 본문: data-ns="v2" 스코프 안에서만 v2 토큰 활성 ───────────────── -->
+<div data-ns="v2" class="a2-root">
+  <table class="a2-table">
+    <thead>
+      <tr>
+        <th class="a2-th bar"></th>
+        <th class="a2-th sortable" data-col="sysName">System</th>
+        <th class="a2-th sortable" data-col="starName">Primary star</th>
+        <th class="a2-th sortable" data-col="spec">Spec</th>
+        <th class="a2-th sortable" data-col="dist">Distance</th>
+        <th class="a2-th sortable" data-col="teff">Teff</th>
+        <th class="a2-th sortable" data-col="mass">Mass</th>
+        <th class="a2-th sortable" data-col="rad">Radius</th>
+        <th class="a2-th sortable" data-col="np">Planets</th>
+      </tr>
+    </thead>
+    <tbody id="a2-tbody"></tbody>
+  </table>
+  <div class="a2-cards-wrap">
+    <div class="a2-cards-list" id="a2-cards"></div>
+  </div>
+</div>
+
+<script>
+// docs/index.v2.html — sample 의 v2 디자인을 실제 data.json fetch + filter/sort + 단일 OPEN
+// 토글에 묶은 메인 페이지 1차 버전. swap 이전이라 v1 docs/index.html 의 풀 인터랙션
+// (단위 토글, 다국어, glossary, howto modal, DSS picker 라이브 fetch) 은 일단 빠져 있음.
+
+let DB = [];
+let FILTER = { q: '', spec: '', dist: 30, hpx: false };
+let SORT   = { col: 'dist', dir: 1 };
+let OPEN_KEY = null;  // 메인 페이지는 단일 OPEN (한 번에 하나만)
+
+fetch('data.json').then(r => r.json()).then(data => {
+  DB = data;
+  bindFilters();
+  bindSort();
+  renderAll();
+}).catch(err => {
+  document.getElementById('a2-tbody').innerHTML = `<tr><td colspan="9" style="padding:24px;color:var(--v2-fg-4)">Failed to load data.json: ${err.message}</td></tr>`;
+});
+
+function pickRec(arr, key) {
+  if (!arr) return null;
+  if (!Array.isArray(arr)) return arr[key] ?? null;
+  if (!arr.length) return null;
+  const rec = arr.find(m => m.recommended);
+  return (rec ? rec[key] : arr[0][key]) ?? null;
+}
+
+function flatRows() {
+  return DB.map(sys => {
+    const primary = sys.stars[0];
+    const plx     = primary.raw.parallax_mas;
+    const dist    = plx ? 1000 / plx : null;
+    return {
+      sys, primary,
+      sysName:  sys.system_name,
+      starName: primary.name + (primary.component ? ' ' + primary.component : ''),
+      spec:     primary.raw.spectype || '—',
+      dist,
+      teff:     primary.raw.teff_k,
+      mass:     pickRec(primary.raw.mass_measurements, 'value_msun'),
+      rad:      pickRec(primary.raw.radius_measurements, 'value_rsun'),
+      np:       sys.planets.length,
+    };
+  });
+}
+
+function applyFilter(rows) {
+  const q = FILTER.q.toLowerCase();
+  return rows.filter(r => {
+    if (q && !r.sysName.toLowerCase().includes(q) && !r.starName.toLowerCase().includes(q)) return false;
+    if (FILTER.spec && r.spec[0] !== FILTER.spec) return false;
+    if (r.dist == null || r.dist > FILTER.dist) return false;
+    if (FILTER.hpx && r.np === 0) return false;
+    return true;
+  });
+}
+
+function applySort(rows) {
+  return rows.slice().sort((a, b) => {
+    let av = a[SORT.col], bv = b[SORT.col];
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    if (typeof av === 'string') return av.localeCompare(bv) * SORT.dir;
+    return ((av < bv ? -1 : av > bv ? 1 : 0)) * SORT.dir;
+  });
+}
+
+function bindFilters() {
+  document.getElementById('q').addEventListener('input', e => { FILTER.q = e.target.value; renderAll(); });
+  document.getElementById('spec').addEventListener('change', e => { FILTER.spec = e.target.value; renderAll(); });
+  document.getElementById('dist').addEventListener('input', e => {
+    FILTER.dist = +e.target.value;
+    document.getElementById('dist-lbl').textContent = `${FILTER.dist} pc`;
+    renderAll();
+  });
+  document.querySelectorAll('header input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', e => { FILTER.hpx = e.target.checked; renderAll(); });
+  });
+}
+
+function bindSort() {
+  document.querySelectorAll('.a2-th.sortable').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const col = th.dataset.col;
+      if (SORT.col === col) SORT.dir = -SORT.dir;
+      else { SORT.col = col; SORT.dir = 1; }
+      renderAll();
+    });
+  });
+}
+// brown dwarf (L/T/Y) → 'M' 그룹으로 매핑. spectral classification 상 M 의
+// 차가운 연속선상이라 wash/spectral bar 색이 따뜻한 빨강 톤이 자연스러움.
+// (Y dwarf 는 실제로는 거의 magenta 지만 NearStars 거리권에서 거의 발견되지 않음)
+function v2Spec(s) {
+  if (!s) return 'X';
+  const c = s[0];
+  if (['O','B','A','F','G','K','M'].includes(c)) return c;
+  if (['L','T','Y'].includes(c)) return 'M';
+  return 'X';
+}
+
+// HSL 변환으로 채도 cap — cool star (M/L/T/Y dwarf) 의 새빨간 출력 완화.
+// hot blue star 쪽은 원래 채도가 낮아서 영향 없음.
+function clampSatRGB(r, g, b, maxS) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+  const d = max - min;
+  let s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  if (s <= maxS) return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+  let h;
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  s = maxS;
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  return [
+    Math.round(hue2rgb(p, q, h + 1/3) * 255),
+    Math.round(hue2rgb(p, q, h)       * 255),
+    Math.round(hue2rgb(p, q, h - 1/3) * 255),
+  ];
+}
+
+// Hex 반환 — radial-gradient 에서 `${teffColor}77` 같이 알파 concat 하려면 8-digit hex 가 필요.
+// rgb(...) 문자열 + "77" 은 invalid CSS 라 브라우저가 transparent로 fallback → 흰빛처럼 보임.
+function teffRGBv2(t) {
+  if (!t) return '#ffd2a1';
+  const k = t / 100;
+  const cl = v => Math.max(0, Math.min(255, v));
+  const r = k <= 66 ? 255 : cl(329.7 * Math.pow(k - 60, -0.1332));
+  const g = k <= 66 ? cl(99.47 * Math.log(k) - 161.12) : cl(288.12 * Math.pow(k - 60, -0.0755));
+  const b = k >= 66 ? 255 : (k <= 19 ? 0 : cl(138.52 * Math.log(k - 10) - 305.04));
+  const [cr, cg, cb] = clampSatRGB(r, g, b, 0.75);
+  const h = (n) => n.toString(16).padStart(2, '0');
+  return `#${h(cr)}${h(cg)}${h(cb)}`;
+}
+
+function specStrongBg(cls) {
+  // surface-α 를 한 단계 강하게 (A2_RefinedSpectral.jsx 의 replace 로직과 동일)
+  const map = {
+    O: 'rgba(178,196,255,0.18)',
+    B: 'rgba(158,184,255,0.18)',
+    A: 'rgba(207,220,255,0.16)',
+    F: 'rgba(243,247,194,0.18)',
+    G: 'rgba(255,226,138,0.20)',
+    K: 'rgba(255,180,122,0.20)',
+    M: 'rgba(255,138,118,0.22)',
+    X: 'rgba(163,176,200,0.16)',
+  };
+  return map[cls] || map.X;
+}
+
+function specStyleVars(cls) {
+  const specBg = `var(--v2-spec-${cls}-bg)`;
+  const strongBg = specStrongBg(cls);
+  return [
+    `--spec-color: var(--v2-spec-${cls})`,
+    `--spec-tint: ${specBg}`,
+    `--spec-tint-strong: ${strongBg}`,
+    `--spec-glow: ${specBg}`,
+  ].join('; ');
+}
+
+// 0-1 / 0-255 컬러 분해 (v1 docs/index.html 의 to01 / to255 와 동일 패턴)
+function hexToRGB(hex) {
+  const m = hex.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (!m) return { r: 255, g: 200, b: 140 };
+  return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
+}
+function rgb01(rgb) { return [rgb.r, rgb.g, rgb.b].map(v => (v / 255).toFixed(3)).join(', '); }
+function rgb255(rgb) { return [rgb.r, rgb.g, rgb.b].join(', '); }
+
+// 별의 mass/radius measurement 배열을 row 형태로 — Phase 1 single dict / Phase 2 array 모두 처리.
+function measArray(raw, kind) {
+  // kind: 'mass' | 'radius'
+  const arr = raw?.[`${kind}_measurements`];
+  if (!arr) return [];
+  if (Array.isArray(arr)) return arr;
+  return [arr];
+}
+
+function fmt(v, dec) {
+  return (v == null || isNaN(v)) ? '—' : (+v).toFixed(dec);
+}
+
+function safeNum(v, dec, suffix) {
+  if (v == null || isNaN(v)) return '—';
+  return (+v).toFixed(dec) + (suffix || '');
+}
+
+// detail panel content — row 객체 r 받음. r.sys (원본 시스템) / r.primary (대표 별) 사용.
+function detailContentHTML(r) {
+  const sys     = r.sys;
+  const st      = r.primary;
+  const raw     = st.raw;
+  const teffColor = teffRGBv2(r.teff);
+  const rgb     = hexToRGB(teffColor);
+  const simbadUrl = `https://simbad.u-strasbg.fr/simbad/sim-id?Ident=${encodeURIComponent(st.name)}`;
+
+  const mArr = measArray(raw, 'mass');
+  const rArr = measArray(raw, 'radius');
+  const measRows = mArr.map(m => `
+    <tr class="${m.recommended ? 'rec' : ''}">
+      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
+      <td><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
+      <td>${fmt(m.value_msun, 4)}</td>
+      <td>${fmt(m.uncertainty_msun, 4)}</td>
+      <td>${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+    </tr>
+  `).join('');
+
+  const radRows = rArr.map(m => `
+    <tr class="${m.recommended ? 'rec' : ''}">
+      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
+      <td><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
+      <td>${fmt(m.value_rsun, 5)}</td>
+      <td>${fmt(m.uncertainty_rsun, 5)}</td>
+      <td>${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+    </tr>
+  `).join('');
+
+  const planetRows = sys.planets.map(p => {
+    const pr = p.raw;
+    return `
+    <tr>
+      <td class="nm">${p.name}</td>
+      <td><span class="a2-method default">${pr.discoverymethod || '—'}</span></td>
+      <td>${fmt(pr.period_days, 3)}</td>
+      <td>${fmt(pr.semi_major_axis_au, 4)}</td>
+      <td>${fmt(pr.eccentricity, 3)}</td>
+      <td>${pr.inclination_deg != null ? (+pr.inclination_deg).toFixed(2) : '—'}</td>
+      <td>${fmt(pr.mass_mearth, 3)}</td>
+      <td>${fmt(pr.radius_rearth, 3)}</td>
+      <td class="nm">${pr.reference || '—'}</td>
+    </tr>`;
+  }).join('');
+
+  // P2/P3 chips placeholder — REPORTS 데이터가 별도 fetch라 일단 빈 chips.
+  const p3chips = '';
+
+  const fovOpts = [5, 15, 30, 60, 120];
+  const fovOn = 15;
+  const surveys = [
+    { name: 'Legacy', avail: false },
+    { name: 'PS1', avail: false },
+    { name: 'SkyM', avail: true },
+    { name: '2MASS', avail: true },
+    { name: 'unWISE', avail: true },
+    { name: 'POSS2 B', avail: true, on: true },
+    { name: 'POSS2 R', avail: true },
+    { name: 'POSS1', avail: false },
+  ];
+
+  return `
+    <div class="a2-rep-row">
+      <span class="a2-rep-label">Reports</span>
+      <a class="a2-rep-chip p2" href="phase2/${encodeURIComponent(sys.system_name.toLowerCase().replace(/\\s/g, '-'))}.html"><b>P2</b> view</a>
+      ${p3chips}
+      <a class="a2-rep-index" href="reports.html">all reports →</a>
+    </div>
+    <div class="a2-dp-grid">
+      <div>
+        <div class="a2-star-img-wrap"
+             style="background: radial-gradient(circle at 50% 50%, ${teffColor} 0%, ${teffColor}77 8%, #1a0e08 35%, #050a0e 75%)">
+          <div class="a2-reticle"></div>
+        </div>
+        <div style="font-size:10px; font-family: var(--v2-font-mono); color: var(--v2-fg-4); margin-top:8px">
+          Teff ${r.teff != null ? r.teff.toLocaleString() : '—'} K · radial gradient mock
+        </div>
+
+        <div class="a2-img-links">
+          <div class="a2-fov-picker">
+            ${[5,15,30,60,120].map(f => `<button class="a2-fov-btn${f === 15 ? ' on' : ''}">${f}′</button>`).join('')}
+          </div>
+          <div class="a2-ext-row">
+            <a class="a2-ext-link" href="${simbadUrl}" target="_blank" rel="noopener">SIMBAD ↗</a>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <div class="a2-section-h">${st.name}${st.component ? ' ' + st.component : ''} — Star Color (Teff ${r.teff != null ? r.teff.toLocaleString() : '—'} K)</div>
+          <div class="a2-cc-wrap" style="--cc-glow: ${teffColor}55">
+            <div class="a2-cc-swatch" style="background: ${teffColor}"></div>
+            <div class="a2-cc-vals">
+              <div class="a2-cc-row"><span class="k">Hex</span><span class="v">${teffColor.toUpperCase()}</span><button class="a2-cc-copy" data-c="${teffColor.toUpperCase()}">copy</button></div>
+              <div class="a2-cc-row"><span class="k">0–1</span><span class="v">${rgb01(rgb)}</span><button class="a2-cc-copy" data-c="${rgb01(rgb)}">copy</button></div>
+              <div class="a2-cc-row"><span class="k">0–255</span><span class="v">${rgb255(rgb)}</span><button class="a2-cc-copy" data-c="${rgb255(rgb)}">copy</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Astrometry · ${raw.source || '—'} · ${raw.epoch_label || ''}</div>
+          <div class="a2-kv-wide">
+            <span class="k">RA</span><span class="v">${safeNum(raw.ra_deg, 6, ' °')}</span>
+            <span class="k">Dec</span><span class="v">${safeNum(raw.dec_deg, 6, ' °')}</span>
+            <span class="k">Parallax</span><span class="v">${raw.parallax_mas != null ? `${(+raw.parallax_mas).toFixed(3)} ± ${(+(raw.parallax_error_mas || 0)).toFixed(3)} mas` : '—'}</span>
+            <span class="k">PM RA</span><span class="v">${safeNum(raw.pmra_mas_yr, 3, ' mas/yr')}</span>
+            <span class="k">PM Dec</span><span class="v">${safeNum(raw.pmdec_mas_yr, 3, ' mas/yr')}</span>
+            <span class="k">RV</span><span class="v">${raw.radial_velocity_km_s != null ? `${(+raw.radial_velocity_km_s).toFixed(2)} km/s · ${raw.radial_velocity_source || ''}` : '—'}</span>
+            <span class="k">Teff</span><span class="v">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span>
+            <span class="k">App. Mag</span><span class="v">${raw.vmag_v != null ? (+raw.vmag_v).toFixed(2) + ' V' : '—'}</span>
+            <span class="k">Spec Type</span><span class="v">${raw.spectype || '—'}</span>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Distance derived</div>
+          <div class="a2-kv-wide">
+            <span class="k">pc</span><span class="v">${r.dist != null ? r.dist.toFixed(4) + ' pc' : '—'}</span>
+            <span class="k">ly</span><span class="v">${r.dist != null ? (r.dist*3.262).toFixed(3) + ' ly' : '—'}</span>
+            <span class="k">km</span><span class="v">${r.dist != null ? (r.dist*3.0857e13).toExponential(4) + ' km' : '—'}</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        ${mArr.length > 0 ? `
+        <div class="a2-section-h">Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${mArr.length} ${mArr.length === 1 ? 'paper' : 'papers'}</span></div>
+        <table class="a2-mt">
+          <thead><tr><th>Paper</th><th>Method</th><th>M☉</th><th>±</th><th></th></tr></thead>
+          <tbody>${measRows}</tbody>
+        </table>` : ''}
+
+        ${rArr.length > 0 ? `
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Radius measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${rArr.length} ${rArr.length === 1 ? 'paper' : 'papers'}</span></div>
+          <table class="a2-mt">
+            <thead><tr><th>Paper</th><th>Method</th><th>R☉</th><th>±</th><th></th></tr></thead>
+            <tbody>${radRows}</tbody>
+          </table>
+        </div>` : ''}
+
+        ${sys.planets.length > 0 ? `
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Planets · ${sys.planets.length}</div>
+          <div class="a2-mt-scroll">
+            <table class="a2-mt">
+              <thead><tr><th>Planet</th><th>Method</th><th>Period (d)</th><th>SMA (AU)</th><th>Ecc</th><th>Inc (°)</th><th>M⊕</th><th>R⊕</th><th>Reference</th></tr></thead>
+              <tbody>${planetRows}</tbody>
+            </table>
+          </div>
+        </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function rowKey(r) { return `${r.sysName}|${r.starName}`; }
+
+function rowsToRender() {
+  const rows = applySort(applyFilter(flatRows()));
+  document.getElementById('stats').textContent = `${rows.length} / ${DB.length} systems · within ${FILTER.dist} pc`;
+  return rows;
+}
+
+function renderRows() {
+  const tbody = document.getElementById('a2-tbody');
+  const rows = rowsToRender();
+  const html = [];
+  for (const r of rows) {
+    const key = rowKey(r);
+    const isOpen = OPEN_KEY === key;
+    const cls = v2Spec(r.spec);
+    const rowStyle = specStyleVars(cls);
+
+    const planetCell = r.np > 0
+      ? `<span class="a2-pc">${r.np}</span>`
+      : `<span class="a2-pc zero">—</span>`;
+
+    html.push(`
+      <tr class="a2-row ${isOpen ? 'open' : ''}" style="${rowStyle}" data-key="${key}">
+        <td class="bar"></td>
+        <td><span class="a2-sysname">${r.sysName}</span></td>
+        <td>${r.starName}</td>
+        <td><span class="v2-sb ${cls}">${r.spec}</span></td>
+        <td><span class="a2-mono">${r.dist != null ? r.dist.toFixed(3) + ' pc' : '—'}</span></td>
+        <td><span class="a2-mono">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span></td>
+        <td><span class="a2-mono">${r.mass != null ? r.mass.toFixed(3) + ' M☉' : '—'}</span></td>
+        <td><span class="a2-mono">${r.rad != null ? r.rad.toFixed(3) + ' R☉' : '—'}</span></td>
+        <td>${planetCell}</td>
+      </tr>
+    `);
+    if (isOpen) {
+      html.push(`<tr><td colspan="9" style="padding:0">
+        <div class="a2-detail" style="${rowStyle}">
+          <div class="a2-detail-inner">${detailContentHTML(r)}</div>
+        </div>
+      </td></tr>`);
+    }
+  }
+  tbody.innerHTML = html.join('');
+}
+
+function renderCards() {
+  const wrap = document.getElementById('a2-cards');
+  // 데스크탑은 renderRows에서 stats 갱신하므로 카드만 그릴 때는 동일 rows 재사용.
+  const rows = applySort(applyFilter(flatRows()));
+  const html = [];
+  for (const r of rows) {
+    const key = rowKey(r);
+    const isOpen = OPEN_KEY === key;
+    const cls = v2Spec(r.spec);
+    const cardStyle = specStyleVars(cls);
+
+    const planetPill = r.np > 0
+      ? `<span class="a2-pc">${r.np}p</span>`
+      : `<span class="a2-pc zero">—</span>`;
+
+    html.push(`
+      <div class="a2-card ${isOpen ? 'open' : ''}" data-key="${key}" style="${cardStyle}">
+        <div class="a2-card-head">
+          <div class="a2-card-name">${r.sysName}</div>
+          <div class="a2-card-pills">
+            <span class="v2-sb ${cls}">${r.spec}</span>
+            ${planetPill}
+          </div>
+        </div>
+        <div class="a2-card-sub">
+          <span class="name">${r.starName}</span>
+        </div>
+        <div class="a2-card-stats">
+          <div class="a2-card-stat"><span class="a2-card-stat-k">DIST</span><span class="a2-card-stat-v">${r.dist != null ? r.dist.toFixed(3) + ' pc' : '—'}</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">TEFF</span><span class="a2-card-stat-v">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">MASS</span><span class="a2-card-stat-v">${r.mass != null ? r.mass.toFixed(3) + ' M☉' : '—'}</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">RADIUS</span><span class="a2-card-stat-v">${r.rad != null ? r.rad.toFixed(3) + ' R☉' : '—'}</span></div>
+        </div>
+        ${isOpen ? `<div class="a2-card-expand">${detailContentHTML(r)}</div>` : ''}
+      </div>
+    `);
+  }
+  wrap.innerHTML = html.join('');
+}
+
+function toggleKey(key) {
+  OPEN_KEY = (OPEN_KEY === key) ? null : key;
+  renderAll();
+}
+
+function attachClicks() {
+  document.querySelectorAll('.a2-row, .a2-card').forEach(el => {
+    el.addEventListener('click', (e) => {
+      // 내부 인터랙티브 요소 (copy/link/picker) 는 토글에 전파 안 함.
+      if (e.target.closest('.a2-cc-copy, .a2-ext-link, .a2-fov-btn, .a2-survey-btn, .a2-rep-chip, .a2-rep-index, a, button')) return;
+      toggleKey(el.dataset.key);
+    });
+  });
+  document.querySelectorAll('.a2-cc-copy').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const val = btn.dataset.c;
+      if (!navigator.clipboard) { btn.textContent = 'err'; return; }
+      navigator.clipboard.writeText(val).then(() => {
+        btn.classList.add('copied');
+        const orig = btn.textContent;
+        btn.textContent = 'copied';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1200);
+      });
+    });
+  });
+}
+
+function renderAll() {
+  renderRows();
+  renderCards();
+  attachClicks();
+}
+</script>
+
+</body>
+</html>
