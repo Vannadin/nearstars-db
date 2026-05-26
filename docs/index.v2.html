@@ -305,9 +305,11 @@ input[type=checkbox]{accent-color:#4a88b8}
     var(--v2-surface-1) 80%);
   border-color: var(--v2-bd-3);
 }
-[data-ns="v2"] .a2-card.open::before { top: 18px; bottom: 18px;
+[data-ns="v2"] .a2-card.open::before {
+  /* top/bottom 은 closed 와 동일하게 둠 — 5px shift 가 "bar 가 밑으로 내려간 것"처럼 보였음. */
   box-shadow: 0 0 16px var(--spec-color), 0 0 6px var(--spec-color),
-              inset 0 0 0 1px rgba(255,255,255,0.18); }
+              inset 0 0 0 1px rgba(255,255,255,0.18);
+}
 
 [data-ns="v2"] .a2-card-head { display: flex; align-items: center; gap: 10px; }
 [data-ns="v2"] .a2-card-name {
