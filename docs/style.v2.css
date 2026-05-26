@@ -1,0 +1,214 @@
+/* docs/ 페이지의 v2 디자인 토큰. 헤더는 v1 유지, 본문은 data-ns="v2" 스코프로 활성. */
+/* 출처: ~/Desktop/NearStars Design System/colors_and_type.v2.css (1:1 복사, SoT 동기화 유지) */
+
+/* ════════════════════════════════════════════════════════════════════════
+   NearStars Design System — v2 tokens
+   ──
+   v2 takes the same data-first DNA and refines it: deeper near-black
+   canvas, translucent "glass" surfaces, hairline insets, Geist
+   typography, spring-eased motion. Designed for the brief
+   "더 모던하고 세련되게" — Linear / Vercel / Arc-style.
+   ──
+   Sits alongside the original colors_and_type.css (v1) — both stylesheets
+   coexist; v2 is namespaced under [data-ns="v2"] selectors so a v1 page
+   is unaffected when this file loads.
+   ════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
+
+:root, [data-ns="v2"] {
+  /* ── canvas ─────────────────────────────────────────────────────────
+     Near-black with a 2-point ambient warm/cool gradient. Mounted with
+     fixed attachment so it doesn't move when content scrolls.            */
+  --v2-bg-canvas:        #06070a;
+  --v2-bg-grad:
+    radial-gradient(60% 50% at 18% -10%, rgba(122,168,255,0.07), transparent 70%),
+    radial-gradient(50% 45% at 92% 110%, rgba(224,144,208,0.05), transparent 70%),
+    radial-gradient(40% 40% at 60% 50%, rgba(78,201,176,0.025), transparent 75%);
+
+  /* ── glass surfaces ─────────────────────────────────────────────────
+     Whiteish-on-canvas translucent fills. Always paired with backdrop-
+     filter blur for the actual glass feel.                               */
+  --v2-surface-1:        rgba(255,255,255,0.022);  /* row tint, soft cards    */
+  --v2-surface-2:        rgba(255,255,255,0.045);  /* hovered row             */
+  --v2-surface-3:        rgba(255,255,255,0.07);   /* open row / pressed btn  */
+  --v2-surface-sticky:   rgba(10,12,18,0.62);      /* sticky header (solid+α) */
+  --v2-surface-pop:      rgba(14,16,24,0.86);      /* tooltips / popovers     */
+
+  /* ── hairlines (inset whites, not dark outlines) ───────────────────── */
+  --v2-bd-1:             rgba(255,255,255,0.05);   /* row dividers            */
+  --v2-bd-2:             rgba(255,255,255,0.09);   /* card borders            */
+  --v2-bd-3:             rgba(255,255,255,0.14);   /* focus, strong dividers  */
+
+  /* ── foreground (white at α — cool, deliberately lower contrast) ──── */
+  --v2-fg-1:             rgba(255,255,255,0.94);   /* h1, primary             */
+  --v2-fg-2:             rgba(255,255,255,0.78);   /* body                    */
+  --v2-fg-3:             rgba(255,255,255,0.56);   /* secondary / labels      */
+  --v2-fg-4:             rgba(255,255,255,0.36);   /* dim / mono meta         */
+  --v2-fg-5:             rgba(255,255,255,0.20);   /* empty / "—"             */
+
+  /* ── accent: refined electric blue with white core ─────────────────── */
+  --v2-accent:           #7aa8ff;
+  --v2-accent-soft:      rgba(122,168,255,0.78);
+  --v2-accent-bg:        rgba(122,168,255,0.10);
+  --v2-accent-glow:      rgba(122,168,255,0.32);
+
+  /* ── status ─────────────────────────────────────────────────────────
+     Slightly more saturated / teal-leaning than v1. Glow tokens are used
+     for soft outer-shadows on the "Bold" variant.                        */
+  --v2-ok:               #4ec9b0;
+  --v2-ok-bg:            rgba(78,201,176,0.12);
+  --v2-ok-glow:          rgba(78,201,176,0.28);
+  --v2-warn:             #e0b070;
+  --v2-warn-bg:          rgba(224,176,112,0.12);
+  --v2-danger:           #e090d0;
+  --v2-danger-bg:        rgba(224,144,208,0.12);
+  --v2-danger-glow:      rgba(224,144,208,0.30);
+
+  /* ── spectral palette (vivid, oklch-based) ─────────────────────────── */
+  /* These are the *foreground* colours; the pill background is the same
+     hue at low alpha so the chip glows in its own colour.                */
+  --v2-spec-O:           #b2c4ff;   --v2-spec-O-bg: rgba(178,196,255,0.10);
+  --v2-spec-B:           #9eb8ff;   --v2-spec-B-bg: rgba(158,184,255,0.10);
+  --v2-spec-A:           #cfdcff;   --v2-spec-A-bg: rgba(207,220,255,0.08);
+  --v2-spec-F:           #f3f7c2;   --v2-spec-F-bg: rgba(243,247,194,0.10);
+  --v2-spec-G:           #ffe28a;   --v2-spec-G-bg: rgba(255,226,138,0.12);
+  --v2-spec-K:           #ffb47a;   --v2-spec-K-bg: rgba(255,180,122,0.12);
+  --v2-spec-M:           #ff8a76;   --v2-spec-M-bg: rgba(255,138,118,0.14);
+  --v2-spec-X:           #a3b0c8;   --v2-spec-X-bg: rgba(163,176,200,0.08);
+
+  /* ── type ───────────────────────────────────────────────────────────
+     Geist sans + Geist Mono (Vercel's open-source family — modern,
+     low-contrast, very wide-weight range). KR fallback for bilingual.   */
+  --v2-font-sans:        'Geist', 'Inter', system-ui, -apple-system, 'Noto Sans KR', sans-serif;
+  --v2-font-mono:        'Geist Mono', 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+  --v2-font-display:     'Geist', system-ui, sans-serif;   /* same family — heavier weights */
+
+  /* ── scale (mostly same as v1 — density is preserved) ──────────────── */
+  --v2-fs-display:       40px;        /* large Teff readout in C variant */
+  --v2-fs-h1:            18px;
+  --v2-fs-h2:            11px;        /* one size smaller; uppercase     */
+  --v2-fs-h3:            13px;
+  --v2-fs-body:          14px;
+  --v2-fs-meta:          12px;
+  --v2-fs-mono:          12.5px;
+  --v2-fs-pill:          11px;
+  --v2-fs-micro:         10px;
+
+  /* ── radii (softer; pills are fully rounded) ──────────────────────── */
+  --v2-r-card:           14px;
+  --v2-r-row:            10px;
+  --v2-r-input:          8px;
+  --v2-r-chip:           999px;
+  --v2-r-tag:            4px;
+
+  /* ── shadows ───────────────────────────────────────────────────────── */
+  /* 1) inset hairline gives the "glass" lid feel;
+     2) outer drop-shadow only on raised surfaces (popovers, focused row) */
+  --v2-shadow-inset:     inset 0 1px 0 rgba(255,255,255,0.05);
+  --v2-shadow-card:      inset 0 1px 0 rgba(255,255,255,0.06),
+                         0 24px 80px -28px rgba(0,0,0,0.7);
+  --v2-shadow-pop:       0 12px 48px -8px rgba(0,0,0,0.7),
+                         inset 0 1px 0 rgba(255,255,255,0.08);
+  --v2-shadow-accent:    0 0 0 1px var(--v2-accent-glow),
+                         0 0 24px var(--v2-accent-glow);
+
+  /* ── motion ───────────────────────────────────────────────────────── */
+  /* spring: gentle overshoot for row expand                              */
+  /* ease:   broad asymmetric ease for fades / blurs                      */
+  --v2-spring:           cubic-bezier(0.34, 1.4, 0.64, 1);
+  --v2-ease:             cubic-bezier(0.32, 0.72, 0, 1);
+  --v2-t-fast:           160ms var(--v2-ease);
+  --v2-t-base:           260ms var(--v2-ease);
+  --v2-t-spring:         420ms var(--v2-spring);
+
+  /* ── reticle (unchanged accent — still observatory green) ──────────── */
+  --v2-reticle:          rgba(122,234,168,0.78);
+  --v2-reticle-faint:    rgba(122,234,168,0.22);
+}
+
+/* ════════════════════════════════════════════════════════════════════
+   Reusable atoms for v2 — drop into a page with <html data-ns="v2"> or
+   inside [data-ns="v2"] scope.
+   ════════════════════════════════════════════════════════════════════ */
+
+[data-ns="v2"] {
+  background:
+    var(--v2-bg-grad),
+    var(--v2-bg-canvas);
+  background-attachment: fixed;
+  color: var(--v2-fg-2);
+  font-family: var(--v2-font-sans);
+  font-feature-settings: 'ss01', 'cv11', 'tnum';  /* Geist stylistic alt + tabular */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+[data-ns="v2"] a       { color: var(--v2-accent); text-decoration: none; }
+[data-ns="v2"] a:hover { color: #aac8ff; }
+
+[data-ns="v2"] .v2-h1 {
+  font-size: var(--v2-fs-h1); font-weight: 600; letter-spacing: -0.01em;
+  color: var(--v2-fg-1);
+}
+[data-ns="v2"] .v2-h1 .accent { color: var(--v2-accent); font-weight: 400; }
+
+[data-ns="v2"] .v2-h2 {
+  font-size: var(--v2-fs-h2); font-weight: 500;
+  color: var(--v2-fg-3); text-transform: uppercase; letter-spacing: 0.12em;
+}
+
+[data-ns="v2"] .v2-mono { font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums; }
+
+/* glass card */
+[data-ns="v2"] .v2-card {
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  border-radius: var(--v2-r-card);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  box-shadow: var(--v2-shadow-inset);
+}
+
+/* segmented + pill button */
+[data-ns="v2"] .v2-seg {
+  display: inline-flex; padding: 2px; gap: 2px;
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  border-radius: var(--v2-r-input);
+}
+[data-ns="v2"] .v2-seg button {
+  background: transparent; border: none; color: var(--v2-fg-3);
+  font: 500 12px/1 var(--v2-font-sans);
+  padding: 5px 11px; border-radius: 6px; cursor: pointer;
+  transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .v2-seg button:hover { color: var(--v2-fg-2); }
+[data-ns="v2"] .v2-seg button.on   { background: var(--v2-surface-3); color: var(--v2-fg-1); }
+
+/* spectral pill (v2) */
+[data-ns="v2"] .v2-sb {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: var(--v2-r-chip);
+  font: 500 11px/1.4 var(--v2-font-mono); letter-spacing: 0.02em;
+}
+[data-ns="v2"] .v2-sb.O { color: var(--v2-spec-O); background: var(--v2-spec-O-bg); }
+[data-ns="v2"] .v2-sb.B { color: var(--v2-spec-B); background: var(--v2-spec-B-bg); }
+[data-ns="v2"] .v2-sb.A { color: var(--v2-spec-A); background: var(--v2-spec-A-bg); }
+[data-ns="v2"] .v2-sb.F { color: var(--v2-spec-F); background: var(--v2-spec-F-bg); }
+[data-ns="v2"] .v2-sb.G { color: var(--v2-spec-G); background: var(--v2-spec-G-bg); }
+[data-ns="v2"] .v2-sb.K { color: var(--v2-spec-K); background: var(--v2-spec-K-bg); }
+[data-ns="v2"] .v2-sb.M { color: var(--v2-spec-M); background: var(--v2-spec-M-bg); }
+[data-ns="v2"] .v2-sb.X { color: var(--v2-spec-X); background: var(--v2-spec-X-bg); }
+
+/* curation pills (v2) */
+[data-ns="v2"] .v2-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 9px; border-radius: var(--v2-r-chip);
+  font: 600 10px/1.4 var(--v2-font-sans);
+  letter-spacing: 0.04em; text-transform: uppercase;
+}
+[data-ns="v2"] .v2-pill.p2  { color: var(--v2-accent);  background: var(--v2-accent-bg); }
+[data-ns="v2"] .v2-pill.p3  { color: var(--v2-danger);  background: var(--v2-danger-bg); }
+[data-ns="v2"] .v2-pill.ok  { color: var(--v2-ok);      background: var(--v2-ok-bg); }
+[data-ns="v2"] .v2-pill.mf  { color: var(--v2-warn);    background: var(--v2-warn-bg); }

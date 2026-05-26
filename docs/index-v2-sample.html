@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<!-- v2 디자인 샘플. 헤더는 v1 유지, 본문 table+detail은 viewer-v2/A2 스타일을 vanilla 변환. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NearStars DB · v2 sample</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.v2.css">
+<style>
+/* v1 헤더는 index.html의 인라인 스타일에서 발췌 (헤더 영역만) */
+header{padding:14px 20px;align-items:center;gap:20px}
+h1{font-size:17px;white-space:nowrap}
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap;flex:1}
+input[type=text]{background:#101826;border:1px solid #243040;color:#c0cce0;padding:6px 12px;border-radius:6px;font-size:13px;width:210px;outline:none}
+input[type=text]:focus{border-color:#4a88b8}
+select{background:#101826;border:1px solid #243040;color:#c0cce0;padding:5px 10px;border-radius:6px;font-size:13px;outline:none;cursor:pointer}
+.fg{display:flex;align-items:center;gap:7px;font-size:12px;color:#5a7898}
+input[type=range]{accent-color:#4a88b8;width:100px}
+label{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;color:#8898b0}
+input[type=checkbox]{accent-color:#4a88b8}
+.seg{display:flex;border:1px solid #243040;border-radius:6px;overflow:hidden;flex-shrink:0}
+.seg button{background:none;border:none;border-right:1px solid #243040;color:#4a6888;font-size:12px;padding:4px 10px;cursor:pointer;transition:background .12s,color .12s;white-space:nowrap}
+.seg button:last-child{border-right:none}
+.seg button:hover{color:#8aaac8}
+.seg button.on{background:#1a2e42;color:#8aaad0;font-weight:600}
+.stats-bar{padding:6px 20px;font-size:12px;color:#3a5060;border-bottom:1px solid #141e28;background:#090d16;display:flex;align-items:center;gap:10px}
+.stats-bar .spacer{flex:1}
+.help-btn{background:none;border:1px solid #243040;color:#4a6888;font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;letter-spacing:.3px}
+.help-btn:hover{border-color:#4a88b8;color:#8aaac8}
+
+/* ── v2 본문 — A2_RefinedSpectral.jsx 의 a2_styles 를 그대로 vanilla 이식 ── */
+[data-ns="v2"] .a2-root { position: relative; display: flex; flex-direction: column;
+                          min-height: 100%; font-family: var(--v2-font-sans);
+                          color: var(--v2-fg-2); padding-bottom: 80px; }
+
+[data-ns="v2"] .a2-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+[data-ns="v2"] .a2-th { padding: 11px 16px; text-align: left;
+                        font: 600 10.5px/1 var(--v2-font-sans); letter-spacing: 0.08em;
+                        text-transform: uppercase; color: var(--v2-fg-4);
+                        border-bottom: 1px solid var(--v2-bd-2);
+                        background: var(--v2-surface-1); }
+[data-ns="v2"] .a2-th.bar { padding: 0; width: 14px; }
+
+[data-ns="v2"] .a2-row { transition: background 200ms var(--v2-ease); cursor: pointer; }
+[data-ns="v2"] .a2-row td { padding: 11px 16px; border-bottom: 1px solid var(--v2-bd-1);
+                            font-size: 13px; color: var(--v2-fg-2); white-space: nowrap; }
+[data-ns="v2"] .a2-row td.bar { padding: 0; width: 14px; position: relative; }
+[data-ns="v2"] .a2-row td.bar::before {
+  content: ''; position: absolute; left: 5px; top: 50%;
+  transform: translateY(-50%);
+  width: 4px; height: 24px; border-radius: 2px;
+  background: var(--spec-color, var(--v2-fg-5));
+  box-shadow: 0 0 10px var(--spec-glow, transparent),
+              inset 0 0 0 1px rgba(255,255,255,0.12);
+  transition: height 240ms var(--v2-ease),
+              box-shadow 240ms var(--v2-ease);
+}
+
+[data-ns="v2"] .a2-row:hover {
+  background: linear-gradient(90deg,
+              var(--spec-tint, transparent) 0%,
+              transparent 45%);
+}
+[data-ns="v2"] .a2-row.open {
+  background: linear-gradient(90deg,
+              var(--spec-tint-strong, var(--v2-surface-2)) 0%,
+              var(--v2-surface-2) 60%);
+  box-shadow: inset 0 1px 0 var(--v2-bd-2),
+              inset 0 -1px 0 var(--v2-bd-2);
+}
+[data-ns="v2"] .a2-row.open td.bar::before {
+  height: 32px;
+  box-shadow: 0 0 16px var(--spec-color),
+              0 0 6px var(--spec-color),
+              inset 0 0 0 1px rgba(255,255,255,0.18);
+}
+
+[data-ns="v2"] .a2-mono { font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums;
+                          color: var(--v2-fg-2); }
+[data-ns="v2"] .a2-mono.dim { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-sysname { color: var(--v2-fg-1); font-weight: 500; }
+
+[data-ns="v2"] .a2-pill { display: inline-flex; align-items: center; padding: 1px 7px;
+                          margin-left: 6px; border-radius: 999px;
+                          font: 600 9.5px/1.6 var(--v2-font-sans); letter-spacing: 0.05em;
+                          text-transform: uppercase; }
+[data-ns="v2"] .a2-pill.p2 { color: var(--v2-accent); background: var(--v2-accent-bg); }
+[data-ns="v2"] .a2-pill.p3 { color: var(--v2-danger); background: var(--v2-danger-bg); }
+
+[data-ns="v2"] .a2-pc { font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums;
+                        font-size: 12px; color: var(--v2-accent);
+                        background: var(--v2-accent-bg); padding: 2px 8px;
+                        border-radius: 999px; font-weight: 500; }
+[data-ns="v2"] .a2-pc.zero { color: var(--v2-fg-5); background: transparent;
+                             padding: 0; font-size: 13px; }
+
+@keyframes a2-springdown {
+  from { transform: translateY(-12px) scale(0.985); opacity: 0; filter: blur(8px); }
+  to   { transform: translateY(0)     scale(1);     opacity: 1; filter: blur(0); }
+}
+[data-ns="v2"] .a2-detail { position: relative;
+                            margin: 8px 16px 12px;
+                            border-radius: 14px;
+                            overflow: hidden;
+                            background: linear-gradient(180deg,
+                              var(--spec-tint-strong, var(--v2-surface-1)) 0%,
+                              var(--v2-surface-1) 60%,
+                              var(--v2-surface-1) 100%);
+                            border: 1px solid var(--v2-bd-2);
+                            box-shadow: var(--v2-shadow-card);
+                            animation: a2-springdown 420ms var(--v2-spring); }
+[data-ns="v2"] .a2-detail::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(80% 60% at 12% 0%,
+    var(--spec-tint-strong, transparent), transparent 70%);
+  pointer-events: none;
+}
+[data-ns="v2"] .a2-detail-inner { position: relative; padding: 22px 24px; }
+
+[data-ns="v2"] .a2-rep-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+                             padding-bottom: 14px; margin-bottom: 18px;
+                             border-bottom: 1px solid var(--v2-bd-1); }
+[data-ns="v2"] .a2-rep-label { font: 600 10.5px/1 var(--v2-font-sans);
+                               letter-spacing: 0.08em; text-transform: uppercase;
+                               color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-rep-chip { display: inline-flex; align-items: center; gap: 6px;
+                              padding: 3px 11px; border-radius: 999px;
+                              background: var(--v2-surface-2); border: 1px solid var(--v2-bd-2);
+                              font: 500 12px/1.4 var(--v2-font-sans); color: var(--v2-fg-2);
+                              cursor: pointer; transition: var(--v2-t-fast);
+                              text-decoration: none; }
+[data-ns="v2"] .a2-rep-chip:hover { background: var(--v2-surface-3); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-rep-chip b { font: 700 9.5px/1 var(--v2-font-sans); letter-spacing: 0.06em; }
+[data-ns="v2"] .a2-rep-chip.p2 b { color: var(--v2-accent); }
+[data-ns="v2"] .a2-rep-chip.p3 b { color: var(--v2-danger); }
+[data-ns="v2"] .a2-rep-index { margin-left: auto; font-size: 11px; color: var(--v2-fg-4); }
+
+[data-ns="v2"] .a2-dp-grid { display: grid; grid-template-columns: 280px 1fr; gap: 28px; }
+
+[data-ns="v2"] .a2-section-h { display: flex; align-items: baseline; gap: 12px;
+                               font: 500 10.5px/1 var(--v2-font-sans);
+                               letter-spacing: 0.12em; text-transform: uppercase;
+                               color: var(--v2-fg-3); margin-bottom: 14px;
+                               padding-bottom: 8px; }
+[data-ns="v2"] .a2-section-h::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, var(--v2-bd-2), transparent);
+}
+
+[data-ns="v2"] .a2-kv { display: grid; grid-template-columns: 64px 1fr; gap: 4px 14px;
+                       font-size: 12px; }
+[data-ns="v2"] .a2-kv .k { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-kv .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono);
+                          font-variant-numeric: tabular-nums; }
+
+[data-ns="v2"] .a2-star-img-wrap { position: relative; width: 220px; aspect-ratio: 1;
+                                  border-radius: 12px; overflow: hidden;
+                                  border: 1px solid var(--v2-bd-2);
+                                  box-shadow: var(--v2-shadow-inset); }
+[data-ns="v2"] .a2-reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+                            width: 26px; height: 26px; border: 1.5px solid var(--v2-reticle);
+                            border-radius: 50%; box-shadow: 0 0 12px var(--v2-reticle-faint); }
+[data-ns="v2"] .a2-reticle::before, [data-ns="v2"] .a2-reticle::after { content: ''; position: absolute;
+                            background: var(--v2-reticle); }
+[data-ns="v2"] .a2-reticle::before { width: 1px; height: 14px; left: 50%; top: -18px;
+                                    transform: translateX(-50%); }
+[data-ns="v2"] .a2-reticle::after  { width: 14px; height: 1px; top: 50%; left: -18px;
+                                    transform: translateY(-50%); }
+
+[data-ns="v2"] .a2-mt { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 4px; }
+[data-ns="v2"] .a2-mt th { padding: 8px 12px; text-align: left;
+                          font: 600 9.5px/1 var(--v2-font-sans); letter-spacing: 0.08em;
+                          text-transform: uppercase; color: var(--v2-fg-4);
+                          border-bottom: 1px solid var(--v2-bd-1); }
+[data-ns="v2"] .a2-mt td { padding: 8px 12px; font-size: 12px; color: var(--v2-fg-2);
+                          font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums;
+                          border-bottom: 1px solid var(--v2-bd-1); }
+[data-ns="v2"] .a2-mt td.nm { font-family: var(--v2-font-sans); color: var(--v2-fg-1); font-weight: 500; }
+[data-ns="v2"] .a2-mt tr.rec td { background: var(--v2-ok-bg); }
+[data-ns="v2"] .a2-mt tr.rec td.nm { box-shadow: inset 2px 0 0 var(--v2-ok); }
+[data-ns="v2"] .a2-rec-tick { color: var(--v2-ok); font: 600 11px/1 var(--v2-font-sans);
+                             letter-spacing: 0.05em; }
+
+[data-ns="v2"] .a2-method { display: inline-flex; padding: 2px 8px; border-radius: 999px;
+                            font: 500 9.5px/1.4 var(--v2-font-sans);
+                            letter-spacing: 0.04em; text-transform: uppercase; }
+[data-ns="v2"] .a2-method.interferometry { color: var(--v2-spec-O); background: rgba(178,196,255,0.10); }
+[data-ns="v2"] .a2-method.spectroscopic_calibration { color: var(--v2-spec-K); background: rgba(255,180,122,0.10); }
+[data-ns="v2"] .a2-method.ttv { color: var(--v2-spec-A); background: rgba(207,220,255,0.10); }
+[data-ns="v2"] .a2-method.discovery { color: var(--v2-ok); background: var(--v2-ok-bg); }
+[data-ns="v2"] .a2-method.binary_orbit { color: var(--v2-danger); background: var(--v2-danger-bg); }
+[data-ns="v2"] .a2-method.default { color: var(--v2-fg-3); background: var(--v2-surface-2); }
+
+/* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
+[data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>NearStars <span>DB</span></h1>
+  <div class="filters">
+    <input type="text" id="q" placeholder="Search system or star…" autocomplete="off">
+    <div class="fg">
+      <span>Spec</span>
+      <select id="spec">
+        <option value="">All</option>
+        <option>O</option><option>B</option><option>A</option>
+        <option>F</option><option>G</option><option>K</option><option>M</option>
+      </select>
+    </div>
+    <div class="fg">
+      <span>Dist ≤</span>
+      <input type="range" id="dist" min="0" max="30" value="15" step="0.5">
+      <span id="dist-lbl">15 pc</span>
+    </div>
+    <div class="seg">
+      <button class="on">pc</button><button>ly</button><button>AU</button>
+    </div>
+    <label><input type="checkbox"> Has planets</label>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <span>8 / 142 systems · within 15.0 pc</span>
+  <span class="spacer"></span>
+  <div class="seg">
+    <button class="on">한</button><button>EN</button>
+  </div>
+  <button class="help-btn">사용법</button>
+  <button class="help-btn">? 용어 설명</button>
+</div>
+
+<!-- ── v2 본문: data-ns="v2" 스코프 안에서만 v2 토큰 활성 ───────────────── -->
+<div data-ns="v2" class="a2-root">
+  <table class="a2-table">
+    <thead>
+      <tr>
+        <th class="a2-th bar"></th>
+        <th class="a2-th">System</th>
+        <th class="a2-th">Primary star</th>
+        <th class="a2-th">Spec</th>
+        <th class="a2-th">Distance</th>
+        <th class="a2-th">Teff</th>
+        <th class="a2-th">Mass</th>
+        <th class="a2-th">Radius</th>
+        <th class="a2-th">Planets</th>
+      </tr>
+    </thead>
+    <tbody id="a2-tbody"></tbody>
+  </table>
+</div>
+
+<script>
+// shared.jsx 의 V2_SYSTEMS / V2_MEASUREMENTS / V2_PLANETS 를 인라인 데모 데이터로
+const V2_SYSTEMS = [
+  { sys: 'Alpha Centauri', comp: 'A', name: 'α Cen A',  spec: 'G2V',   dist: 1.348, teff: 5790, mass: 1.079, rad: 1.234,  np: 0, p2: true,  p3: ['★'] },
+  { sys: 'Alpha Centauri', comp: 'B', name: 'α Cen B',  spec: 'K1V',   dist: 1.348, teff: 5260, mass: 0.909, rad: 0.863,  np: 0, p2: true,  p3: ['★'] },
+  { sys: 'Proxima Cen',    comp: '',  name: 'Proxima Cen', spec: 'M5.5Ve', dist: 1.301, teff: 2980, mass: 0.122, rad: 0.154, np: 3, p2: true,  p3: ['★','b','d'] },
+  { sys: "Barnard's Star", comp: '',  name: "Barnard's Star", spec: 'M4Ve', dist: 1.828, teff: 3134, mass: 0.144, rad: 0.196, np: 1, p2: false, p3: [] },
+  { sys: 'Wolf 359',       comp: '',  name: 'Wolf 359',   spec: 'M6V',     dist: 2.408, teff: 2800, mass: 0.110, rad: 0.144,  np: 2, p2: false, p3: [] },
+  { sys: 'Lalande 21185',  comp: '',  name: 'Lalande 21185', spec: 'M2V',  dist: 2.546, teff: 3601, mass: 0.389, rad: 0.392,  np: 2, p2: false, p3: [] },
+  { sys: 'Sirius',         comp: 'A', name: 'Sirius A',  spec: 'A1V',     dist: 2.637, teff: 9940, mass: 2.063, rad: 1.711,  np: 0, p2: false, p3: [] },
+  { sys: 'TRAPPIST-1',     comp: '',  name: 'TRAPPIST-1', spec: 'M8V',    dist: 12.43, teff: 2566, mass: 0.0898, rad: 0.1192, np: 7, p2: true,  p3: ['b','c','d','e','f','g','h'] },
+  // brown dwarf — Teff 1310K 면 채도 cap (maxS=0.75) 발동.
+  { sys: 'Luhman 16',      comp: 'A', name: 'Luhman 16 A', spec: 'L7.5',  dist: 1.998, teff: 1310, mass: 0.034, rad: 0.103, np: 0, p2: false, p3: [] },
+];
+
+const V2_MEASUREMENTS = [
+  { ref: 'Boyajian 2012',  method: 'interferometry',            val: 0.1221, err: 0.0022, rec: true },
+  { ref: 'Mann 2019',      method: 'spectroscopic_calibration', val: 0.124,  err: 0.005 },
+  { ref: 'Ségransan 2003', method: 'interferometry',            val: 0.118,  err: 0.011 },
+];
+
+const V2_PLANETS = [
+  { name: 'Proxima b', m: 1.07, r: 1.03,   p:   11.186, rec: true },
+  { name: 'Proxima c', m: 7.0,  r: null,   p: 1928 },
+  { name: 'Proxima d', m: 0.26, r: null,   p:    5.122, rec: true },
+];
+
+function v2Spec(s) {
+  if (!s) return 'X';
+  return ['O','B','A','F','G','K','M'].includes(s[0]) ? s[0] : 'X';
+}
+
+// HSL 변환으로 채도 cap — cool star (M/L/T/Y dwarf) 의 새빨간 출력 완화.
+// hot blue star 쪽은 원래 채도가 낮아서 영향 없음.
+function clampSatRGB(r, g, b, maxS) {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  if (max === min) return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+  const d = max - min;
+  let s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+  if (s <= maxS) return [Math.round(r*255), Math.round(g*255), Math.round(b*255)];
+  let h;
+  if (max === r) h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+  else if (max === g) h = ((b - r) / d + 2) / 6;
+  else h = ((r - g) / d + 4) / 6;
+  s = maxS;
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1/6) return p + (q - p) * 6 * t;
+    if (t < 1/2) return q;
+    if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  return [
+    Math.round(hue2rgb(p, q, h + 1/3) * 255),
+    Math.round(hue2rgb(p, q, h)       * 255),
+    Math.round(hue2rgb(p, q, h - 1/3) * 255),
+  ];
+}
+
+// Hex 반환 — radial-gradient 에서 `${teffColor}77` 같이 알파 concat 하려면 8-digit hex 가 필요.
+// rgb(...) 문자열 + "77" 은 invalid CSS 라 브라우저가 transparent로 fallback → 흰빛처럼 보임.
+function teffRGBv2(t) {
+  if (!t) return '#ffd2a1';
+  const k = t / 100;
+  const cl = v => Math.max(0, Math.min(255, v));
+  const r = k <= 66 ? 255 : cl(329.7 * Math.pow(k - 60, -0.1332));
+  const g = k <= 66 ? cl(99.47 * Math.log(k) - 161.12) : cl(288.12 * Math.pow(k - 60, -0.0755));
+  const b = k >= 66 ? 255 : (k <= 19 ? 0 : cl(138.52 * Math.log(k - 10) - 305.04));
+  const [cr, cg, cb] = clampSatRGB(r, g, b, 0.75);
+  const h = (n) => n.toString(16).padStart(2, '0');
+  return `#${h(cr)}${h(cg)}${h(cb)}`;
+}
+
+function specStrongBg(cls) {
+  // surface-α 를 한 단계 강하게 (A2_RefinedSpectral.jsx 의 replace 로직과 동일)
+  const map = {
+    O: 'rgba(178,196,255,0.18)',
+    B: 'rgba(158,184,255,0.18)',
+    A: 'rgba(207,220,255,0.16)',
+    F: 'rgba(243,247,194,0.18)',
+    G: 'rgba(255,226,138,0.20)',
+    K: 'rgba(255,180,122,0.20)',
+    M: 'rgba(255,138,118,0.22)',
+    X: 'rgba(163,176,200,0.16)',
+  };
+  return map[cls] || map.X;
+}
+
+// 다중 OPEN 지원 — Proxima Cen (M5.5Ve, cap 미발동) + Luhman 16 A (L7.5, cap 발동) 동시에 열어
+// 두 detail의 star image radial gradient를 직접 비교할 수 있게.
+const OPEN_KEYS = new Set([
+  'Proxima Cen|Proxima Cen',
+  'Luhman 16|Luhman 16 A',
+]);
+
+function renderRows() {
+  const tbody = document.getElementById('a2-tbody');
+  const html = [];
+  for (const s of V2_SYSTEMS) {
+    const key = `${s.sys}|${s.name}`;
+    const isOpen = OPEN_KEYS.has(key);
+    const cls = v2Spec(s.spec);
+    const specBg = `var(--v2-spec-${cls}-bg)`;
+    const strongBg = specStrongBg(cls);
+    const rowStyle = [
+      `--spec-color: var(--v2-spec-${cls})`,
+      `--spec-tint: ${specBg}`,
+      `--spec-tint-strong: ${strongBg}`,
+      `--spec-glow: ${specBg}`,
+    ].join('; ');
+
+    const pills = [
+      s.p2 ? `<span class="a2-pill p2">P2</span>` : '',
+      s.p3.length > 0 ? `<span class="a2-pill p3">P3·${s.p3.length}${s.p3.includes('★') ? '★' : ''}</span>` : '',
+    ].join('');
+
+    const planetCell = s.np > 0
+      ? `<span class="a2-pc">${s.np}</span>`
+      : `<span class="a2-pc zero">—</span>`;
+
+    html.push(`
+      <tr class="a2-row ${isOpen ? 'open' : ''}" style="${rowStyle}" data-key="${key}">
+        <td class="bar"></td>
+        <td><span class="a2-sysname">${s.sys}${s.comp ? ' ' + s.comp : ''}</span>${pills}</td>
+        <td>${s.name}</td>
+        <td><span class="v2-sb ${cls}">${s.spec}</span></td>
+        <td><span class="a2-mono">${s.dist.toFixed(3)} pc</span></td>
+        <td><span class="a2-mono">${s.teff.toLocaleString()} K</span></td>
+        <td><span class="a2-mono">${s.mass.toFixed(3)} M☉</span></td>
+        <td><span class="a2-mono">${s.rad.toFixed(3)} R☉</span></td>
+        <td>${planetCell}</td>
+      </tr>
+    `);
+    if (isOpen) {
+      html.push(`<tr><td colspan="9" style="padding:0">${renderDetail(s, rowStyle)}</td></tr>`);
+    }
+  }
+  tbody.innerHTML = html.join('');
+  attachRowClicks();
+}
+
+function renderDetail(s, rowStyle) {
+  const teffColor = teffRGBv2(s.teff);
+  const meas = V2_MEASUREMENTS.map(m => `
+    <tr class="${m.rec ? 'rec' : ''}">
+      <td class="nm">${m.ref}</td>
+      <td><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
+      <td>${m.val.toFixed(4)}</td>
+      <td>${m.err.toFixed(4)}</td>
+      <td>${m.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+    </tr>
+  `).join('');
+
+  const planets = V2_PLANETS.map(p => `
+    <tr class="${p.rec ? 'rec' : ''}">
+      <td class="nm">${p.name}</td>
+      <td>${p.m.toFixed(3)}</td>
+      <td>${p.r != null ? p.r.toFixed(3) : '—'}</td>
+      <td>${p.p.toFixed(3)}</td>
+      <td>${p.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+    </tr>
+  `).join('');
+
+  const p3chips = s.p3.map(l => `<a class="a2-rep-chip p3"><b>P3</b> ${l}</a>`).join('');
+
+  return `
+    <div class="a2-detail" style="${rowStyle}">
+      <div class="a2-detail-inner">
+        <div class="a2-rep-row">
+          <span class="a2-rep-label">Reports</span>
+          <a class="a2-rep-chip p2"><b>P2</b> view</a>
+          ${p3chips}
+          <a class="a2-rep-index">all reports →</a>
+        </div>
+        <div class="a2-dp-grid">
+          <div>
+            <div class="a2-star-img-wrap"
+                 style="background: radial-gradient(circle at 50% 50%, ${teffColor} 0%, ${teffColor}77 8%, #1a0e08 35%, #050a0e 75%)">
+              <div class="a2-reticle"></div>
+            </div>
+            <div style="font-size:10px; font-family: var(--v2-font-mono); color: var(--v2-fg-4); margin-top:8px">
+              Pan-STARRS PS1 · star at crosshair · epoch 2012
+            </div>
+            <div style="margin-top:22px">
+              <div class="a2-section-h">Astrometry</div>
+              <div class="a2-kv">
+                <span class="k">Dist</span><span class="v">${s.dist.toFixed(3)} pc · ${(s.dist*3.262).toFixed(2)} ly</span>
+                <span class="k">V mag</span><span class="v">11.13</span>
+                <span class="k">Teff</span><span class="v">${s.teff.toLocaleString()} K</span>
+                <span class="k">Mass</span><span class="v">${s.mass.toFixed(4)} M☉</span>
+                <span class="k">Radius</span><span class="v">${s.rad.toFixed(4)} R☉</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="a2-section-h">
+              Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${V2_MEASUREMENTS.length} papers</span>
+            </div>
+            <table class="a2-mt">
+              <thead><tr><th>Paper</th><th>Method</th><th>M☉</th><th>±</th><th></th></tr></thead>
+              <tbody>${meas}</tbody>
+            </table>
+            <div style="margin-top:22px">
+              <div class="a2-section-h">Planets · ${V2_PLANETS.length}</div>
+              <table class="a2-mt">
+                <thead><tr><th>Planet</th><th>M⊕</th><th>R⊕</th><th>Period (d)</th><th></th></tr></thead>
+                <tbody>${planets}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function attachRowClicks() {
+  document.querySelectorAll('.a2-row').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const key = tr.dataset.key;
+      if (OPEN_KEYS.has(key)) OPEN_KEYS.delete(key);
+      else OPEN_KEYS.add(key);
+      renderRows();
+    });
+  });
+}
+
+renderRows();
+</script>
+
+</body>
+</html>
