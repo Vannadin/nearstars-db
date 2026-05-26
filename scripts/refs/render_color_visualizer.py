@@ -223,6 +223,175 @@ def render_palettes_section() -> str:
     return f'<div class="palette-grid">{cards}</div>'
 
 
+# ── Reentry scene SVG (per-palette mini diorama) ──────────────────
+
+def _hex_op(rgb_i, max_intensity=3.0):
+    """(R, G, B, intensity) → ('#rrggbb', opacity 0..1)."""
+    r, g, b, i = rgb_i
+    hex_val = f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+    opacity = min(1.0, i / max_intensity)
+    return hex_val, opacity
+
+
+def render_reentry_scene_svg(palette_name: str, palette: dict, scene_id: str) -> str:
+    """Refined side-view diorama showing how a palette's 9 ATMOFX_BODY
+    colors compose in real reentry rendering.
+
+    Composition (back to front):
+      atmospheric backdrop with star field → outer shock ring → trail
+      (multi-stop gradient) → streak particles (animated drift) →
+      wrap layer envelope → hull glow (radial) → main bow shock arc →
+      Apollo-style capsule with heatshield.
+    """
+    glow_h,    glow_o    = _hex_op(DEFAULTS_HEX_RGB["glow"])
+    ghot_h,    ghot_o    = _hex_op(DEFAULTS_HEX_RGB["glow_hot"])
+    tp_h,      tp_o      = _hex_op(palette["trail_primary"])
+    ts_h,      ts_o      = _hex_op(palette["trail_secondary"])
+    tt_h,      tt_o      = _hex_op(palette["trail_tertiary"])
+    wl_h,      wl_o      = _hex_op(palette["wrap_layer"])
+    sw_h,      sw_o      = _hex_op(palette["shockwave"])
+    streak_h            = tp_h   # default streak follows trail_primary
+
+    # Per-scene staggered animation delays so motion isn't synchronized across cards.
+    seed = sum(ord(c) for c in scene_id) % 7
+
+    return f'''<svg class="reentry-scene" viewBox="0 0 320 160" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <!-- atmospheric backdrop: deep space → faint haze near bottom -->
+    <linearGradient id="atm-{scene_id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#01030a"/>
+      <stop offset="65%" stop-color="#02060f"/>
+      <stop offset="100%" stop-color="#0a0e1a"/>
+    </linearGradient>
+
+    <!-- main trail: hot core → primary → secondary → tertiary → fade -->
+    <radialGradient id="trail-{scene_id}" cx="78%" cy="50%" r="78%">
+      <stop offset="0%"   stop-color="{ghot_h}" stop-opacity="{ghot_o:.3f}"/>
+      <stop offset="8%"   stop-color="{tp_h}"   stop-opacity="{tp_o:.3f}"/>
+      <stop offset="30%"  stop-color="{tp_h}"   stop-opacity="{tp_o*0.85:.3f}"/>
+      <stop offset="55%"  stop-color="{ts_h}"   stop-opacity="{ts_o*0.6:.3f}"/>
+      <stop offset="80%"  stop-color="{tt_h}"   stop-opacity="{tt_o*0.25:.3f}"/>
+      <stop offset="100%" stop-color="{tt_h}"   stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- hull glow: hot core → cooler rim -->
+    <radialGradient id="glow-{scene_id}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="{ghot_h}" stop-opacity="{ghot_o:.3f}"/>
+      <stop offset="45%" stop-color="{glow_h}" stop-opacity="{glow_o*0.85:.3f}"/>
+      <stop offset="100%" stop-color="{glow_h}" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- wrap layer: soft envelope falloff -->
+    <radialGradient id="wrap-{scene_id}" cx="50%" cy="50%" r="50%">
+      <stop offset="40%"  stop-color="{wl_h}" stop-opacity="{wl_o*0.55:.3f}"/>
+      <stop offset="100%" stop-color="{wl_h}" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- bloom filter — soft glow on emissive layers -->
+    <filter id="bloom-{scene_id}" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="1.6" result="b1"/>
+      <feGaussianBlur stdDeviation="3" in="SourceGraphic" result="b2"/>
+      <feMerge>
+        <feMergeNode in="b2"/>
+        <feMergeNode in="b1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- soft blur for trail body -->
+    <filter id="soft-{scene_id}">
+      <feGaussianBlur stdDeviation="1.2"/>
+    </filter>
+
+    <!-- subtle star field pattern -->
+    <pattern id="stars-{scene_id}" x="0" y="0" width="160" height="160"
+             patternUnits="userSpaceOnUse">
+      <circle cx="22"  cy="34"  r="0.5" fill="#fff" opacity="0.35"/>
+      <circle cx="78"  cy="18"  r="0.4" fill="#fff" opacity="0.28"/>
+      <circle cx="45"  cy="92"  r="0.6" fill="#fff" opacity="0.4"/>
+      <circle cx="118" cy="55"  r="0.4" fill="#fff" opacity="0.3"/>
+      <circle cx="135" cy="118" r="0.5" fill="#fff" opacity="0.34"/>
+      <circle cx="90"  cy="135" r="0.3" fill="#fff" opacity="0.22"/>
+      <circle cx="12"  cy="115" r="0.4" fill="#fff" opacity="0.28"/>
+      <circle cx="62"  cy="58"  r="0.3" fill="#fff" opacity="0.25"/>
+    </pattern>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="320" height="160" fill="url(#atm-{scene_id})"/>
+  <rect width="320" height="160" fill="url(#stars-{scene_id})"/>
+
+  <!-- outer shock ripple (faint, atmospheric distortion) -->
+  <ellipse cx="252" cy="80" rx="55" ry="40" fill="none"
+           stroke="{sw_h}" stroke-width="0.5"
+           opacity="{sw_o*0.18:.3f}" filter="url(#soft-{scene_id})"/>
+
+  <!-- main plasma trail (multi-stop radial, soft blur) -->
+  <path d="M 248,80 Q 200,52 60,72 Q 25,80 12,82 Q 25,80 60,88 Q 200,108 248,80 Z"
+        fill="url(#trail-{scene_id})" filter="url(#soft-{scene_id})"/>
+
+  <!-- streak particles (varied sizes; animated drift via CSS class) -->
+  <g class="streaks" filter="url(#bloom-{scene_id})" style="animation-delay: {seed*0.3:.1f}s">
+    <circle class="streak streak-1" cx="220" cy="74" r="2.6" fill="{streak_h}" opacity="0.95"/>
+    <circle class="streak streak-2" cx="188" cy="84" r="2.2" fill="{streak_h}" opacity="0.85"/>
+    <circle class="streak streak-3" cx="152" cy="76" r="1.9" fill="{streak_h}" opacity="0.7"/>
+    <circle class="streak streak-4" cx="112" cy="83" r="1.6" fill="{streak_h}" opacity="0.55"/>
+    <circle class="streak streak-5" cx="72"  cy="78" r="1.3" fill="{streak_h}" opacity="0.4"/>
+    <circle class="streak streak-6" cx="38"  cy="80" r="1.0" fill="{streak_h}" opacity="0.25"/>
+  </g>
+
+  <!-- wrap layer envelope -->
+  <ellipse cx="252" cy="80" rx="34" ry="24" fill="url(#wrap-{scene_id})"
+           filter="url(#soft-{scene_id})"/>
+
+  <!-- hull glow (bright core radial) -->
+  <ellipse cx="252" cy="80" rx="22" ry="15" fill="url(#glow-{scene_id})"
+           filter="url(#bloom-{scene_id})"/>
+
+  <!-- bow shock — three layered arcs (outer soft, mid, sharp inner) -->
+  <path d="M 272,52 Q 296,80 272,108" stroke="{sw_h}" stroke-width="0.7"
+        fill="none" opacity="{sw_o*0.3:.3f}" stroke-linecap="round"
+        filter="url(#soft-{scene_id})"/>
+  <path d="M 268,56 Q 290,80 268,104" stroke="{sw_h}" stroke-width="1.6"
+        fill="none" opacity="{sw_o*0.55:.3f}" stroke-linecap="round"
+        filter="url(#bloom-{scene_id})"/>
+  <path d="M 264,62 Q 282,80 264,98" stroke="{sw_h}" stroke-width="2.8"
+        fill="none" opacity="{sw_o*0.95:.3f}" stroke-linecap="round"
+        filter="url(#bloom-{scene_id})"/>
+
+  <!-- Apollo-style capsule -->
+  <g class="capsule">
+    <!-- conical heatshield (right-facing, slightly darker rim) -->
+    <path d="M 254,68 L 263,73 L 266,80 L 263,87 L 254,92 Z"
+          fill="#3a2820" stroke="#150a06" stroke-width="0.5"/>
+    <!-- capsule body (light gray) -->
+    <path d="M 226,68 L 254,68 L 254,92 L 226,92 Q 222,80 226,68 Z"
+          fill="#9a9a9a" stroke="#3a3a3a" stroke-width="0.6"/>
+    <!-- window strip -->
+    <rect x="234" y="77" width="7" height="3.2" rx="0.8" fill="#0a0a14"/>
+    <!-- detail lines (panel seams) -->
+    <line x1="226" y1="74" x2="252" y2="74" stroke="#5e5e5e" stroke-width="0.35"/>
+    <line x1="226" y1="86" x2="252" y2="86" stroke="#5e5e5e" stroke-width="0.35"/>
+  </g>
+</svg>'''
+
+
+def render_reentry_scenes_section() -> str:
+    cards = []
+    for name, palette in PALETTES.items():
+        svg = render_reentry_scene_svg(name, palette, name)
+        cards.append(
+            f'<div class="reentry-card">'
+            f'<div class="reentry-card-head">'
+            f'<h4>{name}</h4>'
+            f'<p class="scene-rule" data-i18n="palette_{name}_rule"></p>'
+            f'</div>'
+            f'{svg}'
+            f'</div>'
+        )
+    return f'<div class="reentry-grid">{"".join(cards)}</div>'
+
+
 # ── Streak table ───────────────────────────────────────────────────
 
 STREAK_USECASE_EN = {
@@ -387,6 +556,7 @@ def build_t(palettes):
         "intro_2": "Toggle regime to see how the same element shifts color between flame test, reentry plasma, and aurora. Hover any cell for spectroscopic basis.",
         "h_periodic": "Periodic table — atomic emission",
         "h_molecular": "Molecular emitters",
+        "h_scenes": "Reentry scene previews",
         "h_bulk": "Bulk-gas reentry palettes (Firefly emitter)",
         "h_streak": "Secondary-species streak palette",
         "h_bodies": "Currently emitted bodies",
@@ -413,6 +583,7 @@ def build_t(palettes):
         "intro_2": "Regime 을 전환하면 같은 원소가 불꽃 / 재진입 / 오로라 영역에서 어떻게 색이 바뀌는지 비교할 수 있습니다. 셀에 마우스를 올리면 분광학적 근거가 보입니다.",
         "h_periodic": "주기율표 — 원자 emission",
         "h_molecular": "분자 emitter",
+        "h_scenes": "재진입 장면 미리보기",
         "h_bulk": "Bulk-gas 재진입 팔레트 (Firefly emitter)",
         "h_streak": "2차 종 streak 팔레트",
         "h_bodies": "현재 emit 된 행성들",
@@ -508,6 +679,64 @@ TEMPLATE = """<!DOCTYPE html>
 .mol-cell .mol-atoms {{ display: block; font-size: 8px; opacity: 0.75; margin-top: 2px }}
 .mol-cell .mol-status {{ display: block; font-size: 7px; margin-top: 2px; opacity: 0.7 }}
 .mol-cell[data-kind="polyatomic"] {{ border-style: dashed }}
+
+.reentry-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 0.9rem; margin: 1rem 0;
+}}
+.reentry-card {{
+  background: linear-gradient(180deg, #0a1018 0%, #050810 100%);
+  border: 1px solid var(--bd-mid);
+  border-radius: 6px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4), 0 1px 8px rgba(0,0,0,0.2);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}}
+.reentry-card:hover {{
+  border-color: var(--accent);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5), 0 4px 16px rgba(74,136,184,0.18);
+  transform: translateY(-1px);
+}}
+.reentry-card-head {{
+  padding: 0.6rem 0.8rem 0.4rem 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}}
+.reentry-card h4 {{
+  margin: 0; font-family: var(--mono);
+  font-size: 0.95rem; color: var(--fg-emph);
+  letter-spacing: 0.02em;
+}}
+.reentry-card .scene-rule {{
+  font-size: 0.74rem; color: var(--fg-muted);
+  margin: 0.18rem 0 0 0;
+  font-weight: 400;
+}}
+.reentry-scene {{
+  width: 100%; height: auto; display: block;
+  background: #000;
+}}
+
+/* Subtle drift animation on streak particles */
+.streak {{
+  transform-origin: 0 0;
+  animation: streak-drift 6s ease-in-out infinite;
+}}
+.streak-1 {{ animation-duration: 5.5s; animation-delay: -0.4s }}
+.streak-2 {{ animation-duration: 6.2s; animation-delay: -1.1s }}
+.streak-3 {{ animation-duration: 5.8s; animation-delay: -2.0s }}
+.streak-4 {{ animation-duration: 6.5s; animation-delay: -2.7s }}
+.streak-5 {{ animation-duration: 5.3s; animation-delay: -3.4s }}
+.streak-6 {{ animation-duration: 6.8s; animation-delay: -4.1s }}
+@keyframes streak-drift {{
+  0%, 100% {{ transform: translateX(0) translateY(0); opacity: var(--o, 0.7) }}
+  50%      {{ transform: translateX(-22px) translateY(2px); opacity: 0.3 }}
+}}
+
+@media (prefers-reduced-motion: reduce) {{
+  .streak {{ animation: none }}
+}}
 
 .palette-grid {{
   display: grid;
@@ -609,6 +838,11 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <section>
 <h2 data-i18n="h_molecular"></h2>
 {molecular_panel}
+</section>
+
+<section>
+<h2 data-i18n="h_scenes"></h2>
+{reentry_scenes_section}
 </section>
 
 <section>
@@ -756,6 +990,7 @@ def main() -> int:
     layout = build_layout()
     periodic = render_periodic_table(db, layout)
     molecular = render_molecular_panel(mdb)
+    reentry_scenes_section = render_reentry_scenes_section()
     palettes_section = render_palettes_section()
     streak_table = render_streak_table()
 
@@ -776,6 +1011,7 @@ def main() -> int:
     html_out = TEMPLATE.format(
         periodic_table=periodic,
         molecular_panel=molecular,
+        reentry_scenes_section=reentry_scenes_section,
         palettes_section=palettes_section,
         streak_table=streak_table,
         bodies_section=bodies_section,
