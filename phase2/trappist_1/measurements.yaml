@@ -1,0 +1,451 @@
+stellar:
+  TRAPPIST-1:
+    mass_measurements:
+    - value_msun: 0.08
+      uncertainty_msun: 0.009
+      method: evolutionary_model
+      reference: Gillon et al. 2016
+      bibcode: 2016Natur.533..221G
+      doi: 10.1038/nature17448
+      recommended: false
+    - value_msun: 0.0802
+      uncertainty_msun: 0.0073
+      method: evolutionary_model
+      reference: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      recommended: false
+    - value_msun: 0.089
+      uncertainty_msun: 0.006
+      method: evolutionary_model
+      reference: Van Grootel et al. 2018
+      bibcode: 2018ApJ...853...30V
+      doi: 10.3847/1538-4357/aaa023
+      recommended: false
+    - value_msun: 0.089
+      uncertainty_msun: 0.007
+      method: evolutionary_model
+      reference: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      recommended: false
+    - value_msun: 0.0908
+      uncertainty_msun: 0.02
+      method: spectroscopic_calibration
+      reference: Stassun et al. 2019
+      bibcode: 2019AJ....158..138S
+      doi: 10.3847/1538-3881/ab3467
+      recommended: false
+    - value_msun: 0.0898
+      uncertainty_msun: 0.0023
+      method: evolutionary_model
+      reference: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.117
+      uncertainty_rsun: 0.004
+      method: sed_fitting
+      reference: Gillon et al. 2016
+      bibcode: 2016Natur.533..221G
+      doi: 10.1038/nature17448
+      recommended: false
+    - value_rsun: 0.117
+      uncertainty_rsun: 0.0036
+      method: sed_fitting
+      reference: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      recommended: false
+    - value_rsun: 0.1148
+      uncertainty_rsun: 0.0034
+      method: sed_fitting
+      reference: Stassun et al. 2019
+      bibcode: 2019AJ....158..138S
+      doi: 10.3847/1538-3881/ab3467
+      recommended: false
+    - value_rsun: 0.1234
+      uncertainty_rsun: 0.0033
+      method: sed_fitting
+      reference: Ducrot et al. 2020
+      bibcode: 2020A&A...640A.112D
+      doi: 10.1051/0004-6361/201937392
+      recommended: false
+    - value_rsun: 0.1192
+      uncertainty_rsun: 0.0013
+      method: sed_fitting
+      reference: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      recommended: true
+    teff_measurements:
+    - value_k: 2559
+      uncertainty_k: 50
+      method: sed_fitting
+      reference: Gillon et al. 2016
+      bibcode: 2016Natur.533..221G
+      doi: 10.1038/nature17448
+      recommended: false
+    - value_k: 2566
+      uncertainty_k: 26
+      method: sed_fitting
+      reference: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      recommended: true
+    luminosity_measurements:
+    - value_lsun: 0.000522
+      uncertainty_lsun: 1.9e-05
+      method: bolometric_flux
+      reference: Van Grootel et al. 2018
+      bibcode: 2018ApJ...853...30V
+      doi: 10.3847/1538-4357/aaa023
+      recommended: true
+    age_measurements:
+    - value_gyr: 7.6
+      uncertainty_gyr: 2.2
+      method: kinematic
+      reference: Burgasser & Mamajek 2017
+      bibcode: 2017ApJ...845..110B
+      doi: 10.3847/1538-4357/aa7fea
+      recommended: true
+    metallicity_measurements:
+    - value_dex: 0.04
+      uncertainty_dex: 0.08
+      method: low_res_spectroscopy
+      reference: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      recommended: true
+    rotation_measurements:
+    - value_days: 3.295
+      uncertainty_days: 0.003
+      method: photometric_variability
+      reference: Vida et al. 2017
+      bibcode: 2017ApJ...841..124V
+      doi: 10.3847/1538-4357/aa6f05
+      recommended: true
+planets:
+  TRAPPIST-1:
+  - pl_name: TRAPPIST-1 b
+    orbital:
+      semi_major_axis_au: 0.01154
+      inclination_deg: 89.728
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.85
+      uncertainty_mearth: 0.72
+      mass_type: true mass
+      radius_rearth: 1.086
+      uncertainty_rearth: 0.035
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 1.017
+      uncertainty_mearth: 0.154
+      mass_type: true mass
+      radius_rearth: 1.121
+      uncertainty_rearth: 0.031
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 1.374
+      uncertainty_mearth: 0.069
+      mass_type: true mass
+      radius_rearth: 1.116
+      uncertainty_rearth: 0.014
+    environment:
+    - equilibrium_temperature_k: 391
+      uncertainty_equilibrium_temperature_k: 8
+      bond_albedo: 0.0
+      density_g_cc: 5.43
+      uncertainty_density_g_cc: 0.18
+      method: derived_from_a_l_albedo
+      reference: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      recommended: true
+    atmosphere:
+    - detection: false
+      species_excluded:
+      - CO2
+      significance_sigma: 5
+      method: emission_spectrum
+      reference: Greene et al. 2023
+      bibcode: 2023Natur.618...39G
+      doi: 10.1038/s41586-023-05951-7
+      recommended: true
+  - pl_name: TRAPPIST-1 c
+    orbital:
+      semi_major_axis_au: 0.0158
+      inclination_deg: 89.778
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      true_mass_mearth: 1.38
+      uncertainty_mearth: 0.61
+      mass_type: true mass
+      radius_rearth: 1.056
+      uncertainty_rearth: 0.035
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 1.156
+      uncertainty_mearth: 0.142
+      mass_type: true mass
+      radius_rearth: 1.095
+      uncertainty_rearth: 0.03
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 1.308
+      uncertainty_mearth: 0.056
+      mass_type: true mass
+      radius_rearth: 1.097
+      uncertainty_rearth: 0.014
+    atmosphere:
+    - detection: false
+      species_excluded:
+      - CO2
+      method: emission_spectrum
+      reference: Zieba et al. 2023
+      bibcode: 2023Natur.620..746Z
+      doi: 10.1038/s41586-023-06232-z
+      recommended: true
+  - pl_name: TRAPPIST-1 d
+    orbital:
+      semi_major_axis_au: 0.02227
+      inclination_deg: 89.896
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.41
+      uncertainty_mearth: 0.27
+      mass_type: true mass
+      radius_rearth: 0.772
+      uncertainty_rearth: 0.03
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.297
+      uncertainty_mearth: 0.039
+      mass_type: true mass
+      radius_rearth: 0.784
+      uncertainty_rearth: 0.023
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 0.388
+      uncertainty_mearth: 0.012
+      mass_type: true mass
+      radius_rearth: 0.788
+      uncertainty_rearth: 0.011
+  - pl_name: TRAPPIST-1 e
+    orbital:
+      semi_major_axis_au: 0.02925
+      inclination_deg: 89.793
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.62
+      uncertainty_mearth: 0.58
+      mass_type: true mass
+      radius_rearth: 0.918
+      uncertainty_rearth: 0.039
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.772
+      uncertainty_mearth: 0.079
+      mass_type: true mass
+      radius_rearth: 0.91
+      uncertainty_rearth: 0.026
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 0.692
+      uncertainty_mearth: 0.022
+      mass_type: true mass
+      radius_rearth: 0.92
+      uncertainty_rearth: 0.013
+  - pl_name: TRAPPIST-1 f
+    orbital:
+      semi_major_axis_au: 0.03849
+      inclination_deg: 89.74
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.68
+      uncertainty_mearth: 0.18
+      mass_type: true mass
+      radius_rearth: 1.045
+      uncertainty_rearth: 0.038
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.934
+      uncertainty_mearth: 0.08
+      mass_type: true mass
+      radius_rearth: 1.046
+      uncertainty_rearth: 0.029
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 1.039
+      uncertainty_mearth: 0.031
+      mass_type: true mass
+      radius_rearth: 1.045
+      uncertainty_rearth: 0.013
+  - pl_name: TRAPPIST-1 g
+    orbital:
+      semi_major_axis_au: 0.04683
+      inclination_deg: 89.742
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      true_mass_mearth: 1.34
+      uncertainty_mearth: 0.88
+      mass_type: true mass
+      radius_rearth: 1.127
+      uncertainty_rearth: 0.041
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 1.148
+      uncertainty_mearth: 0.098
+      mass_type: true mass
+      radius_rearth: 1.148
+      uncertainty_rearth: 0.032
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 1.321
+      uncertainty_mearth: 0.038
+      mass_type: true mass
+      radius_rearth: 1.129
+      uncertainty_rearth: 0.015
+  - pl_name: TRAPPIST-1 h
+    orbital:
+      semi_major_axis_au: 0.06189
+      inclination_deg: 89.805
+      longitude_of_ascending_node_deg: null
+      epoch_jd: null
+      mean_anomaly_at_epoch_deg: null
+      source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: null
+    physical:
+    - source: Gillon et al. 2017
+      bibcode: 2017Natur.542..456G
+      doi: 10.1038/nature21360
+      method: ttv
+      recommended: false
+      radius_rearth: 0.755
+      uncertainty_rearth: 0.034
+    - source: Luger et al. 2017
+      bibcode: 2017NatAs...1E.129L
+      doi: 10.1038/s41550-017-0129
+      method: discovery
+      recommended: false
+      radius_rearth: 0.752
+      uncertainty_rearth: 0.032
+    - source: Grimm et al. 2018
+      bibcode: 2018A&A...613A..68G
+      doi: 10.1051/0004-6361/201732233
+      method: ttv
+      recommended: false
+      true_mass_mearth: 0.331
+      uncertainty_mearth: 0.056
+      mass_type: true mass
+      radius_rearth: 0.773
+      uncertainty_rearth: 0.026
+    - source: Agol et al. 2021
+      bibcode: 2021PSJ.....2....1A
+      doi: 10.3847/PSJ/abd022
+      method: ttv
+      recommended: true
+      true_mass_mearth: 0.326
+      uncertainty_mearth: 0.02
+      mass_type: true mass
+      radius_rearth: 0.755
+      uncertainty_rearth: 0.014
