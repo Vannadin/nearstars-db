@@ -380,11 +380,338 @@ MOLECULES = {
             },
         },
     },
+
+    # ── Tier 1: 2 new diatomic emitters ──────────────────────────────
+    "SO": {
+        "formula": "SO",
+        "mass_amu": 48.06,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "canonical_hex": "#6c98a8",   # Venus airglow + Io plume pale blue-green
+                "lines": [(470.0, 300, "SO A-X visible continuum"),
+                          (250.0, 100, "SO A-X UV (V≈0)"),
+                          (282.0, 100, "SO B-X UV")],
+                "basis": "SO A 3Π - X 3Σ band system. Strong UV component + visible "
+                         "continuum near 470nm gives pale blue-green appearance. "
+                         "Co-emits with NO continuum in Venus airglow.",
+                "source": "Venus airglow studies; Io plasma torus; NIST SO",
+            },
+            "aurora": {
+                "canonical_hex": "#7aa8b8",
+                "lines": [(470.0, 200, "SO A-X visible"),
+                          (500.0, 150, "SO continuum")],
+                "basis": "SO contributes to airglow + Io magnetosphere aurora. Pale blue-green continuum.",
+                "source": "Io aurora observations; Venus night airglow",
+            },
+        },
+    },
+    "NH": {
+        "formula": "NH",
+        "mass_amu": 15.01,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "lines": [(336.0, 300, "NH A 3Π - X 3Σ (UV dominant)"),
+                          (470.0, 80, "NH visible band (faint)"),
+                          (630.0, 50, "NH (b 1Σ) faint")],
+                "basis": "NH A 3Π - X 3Σ system. Dominant UV at 336nm; visible bands "
+                         "weak but present. NH3 dissociation product in ice-giant reentry.",
+                "source": "NIST NH; comet coma; ice-giant chemistry",
+            },
+            "aurora": {
+                "lines": [(336.0, 400, "NH A-X UV"),
+                          (470.0, 100, "NH visible faint")],
+                "basis": "NH from NH3 photolysis in sub-Neptune / ice-giant upper atmosphere. "
+                         "Mostly UV; faint visible blue.",
+                "source": "Titan + ice-giant upper-atmosphere chemistry",
+            },
+        },
+    },
+
+    # ── Tier 1: 3 polyatomic precursors (not_emitter w/ dissociation) ──
+    "H2S": {
+        "formula": "H2S",
+        "mass_amu": 34.08,
+        "atoms": 3,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "not_emitter",
+                "basis": "H2S dissociates in shock layer → SH + H, then → S + H. "
+                         "Visible plasma comes from SO continuum (if O present) + S atomic. "
+                         "Volcanic outgassing reentry signature.",
+                "dissociation_products": ["S", "SO", "H"],
+                "source": "Venus + Io plume volcanic chemistry",
+            },
+            "aurora": {
+                "status": "not_emitter",
+                "basis": "Photo-dissociates in upper atmosphere → S + H. Sulfur "
+                         "contributes to weak airglow if abundant.",
+                "dissociation_products": ["S", "H"],
+                "source": "Volcanic photochemistry; Io plume",
+            },
+        },
+    },
+    "O3": {
+        "formula": "O3",
+        "mass_amu": 48.00,
+        "atoms": 3,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "not_emitter",
+                "basis": "O3 dissociates rapidly above ~600K → O2 + O. At reentry temps, "
+                         "essentially zero O3 survives. Visible plasma from O atomic + "
+                         "O2 bands. Chappuis-band blue color is absorption, not emission.",
+                "dissociation_products": ["O2", "O"],
+                "source": "Atmospheric photochemistry; Chappuis band literature",
+            },
+            "aurora": {
+                "status": "not_emitter",
+                "basis": "O3 photolysis above 80 km fuels OH Meinel airglow (O3 + hν → "
+                         "O2 + O*; O* + H2O → 2 OH*). Indirect emitter via OH.",
+                "dissociation_products": ["OH", "O", "O2"],
+                "source": "OH Meinel airglow mechanism",
+            },
+        },
+    },
+    "HCN": {
+        "formula": "HCN",
+        "mass_amu": 27.03,
+        "atoms": 3,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "not_emitter",
+                "basis": "HCN dissociates → CN + H in shock layer. Visible signature "
+                         "is CN violet 388nm + Hα. Tholin haze + sub-Neptune reentry.",
+                "dissociation_products": ["CN", "H"],
+                "source": "Titan tholin chemistry; comet HCN observations",
+            },
+            "aurora": {
+                "status": "not_emitter",
+                "basis": "Photodissociates in upper atmosphere → CN + H. CN violet "
+                         "from this process possible in Titan-class aurorae but observation limited.",
+                "dissociation_products": ["CN", "H"],
+                "source": "Titan upper-atmosphere photochemistry",
+            },
+        },
+    },
+
+    # ── Tier 2: stubs (no_data; upgrade when Phase 3 encounters) ─────
+    "TiO": {
+        "formula": "TiO",
+        "mass_amu": 63.87,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Lava-world rock vapor + late M-dwarf atmosphere candidate. "
+                         "Complex γ/γ' band system in red/IR; visible-band emission "
+                         "not well characterized for our plasma temperature regime.",
+                "source": "Late M-dwarf atmospheric models; meteor spectroscopy",
+                "upgrade_when": "Phase 3 lava world synthesis cites TiO emission, OR M-dwarf surface mineral vapor analysis",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Not applicable in normal aurora altitudes; TiO would only appear "
+                         "in extreme hot-jupiter upper atmospheres.",
+                "source": "—",
+                "upgrade_when": "Hot Jupiter Phase 3 synthesis",
+            },
+        },
+    },
+    "SiO": {
+        "formula": "SiO",
+        "mass_amu": 44.08,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Lava-world silicate vapor. Strongest emission IR (8μm); "
+                         "visible band emission near-UV (220nm) below human range. "
+                         "Likely contributes via continuum.",
+                "source": "Lava planet atmosphere models",
+                "upgrade_when": "Phase 3 lava world synthesis with silicate vapor",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Not applicable at standard aurora altitudes.",
+                "source": "—",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "FeO": {
+        "formula": "FeO",
+        "mass_amu": 71.84,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Iron oxide vapor in meteor + lava-world atmospheres. "
+                         "Orange band system 580-620nm — but emission strength in "
+                         "shock-heated plasma not curated.",
+                "source": "Meteor spectroscopy",
+                "upgrade_when": "Phase 3 cites FeO band; meteor-class entry effects",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Meteor-class aurora chemistry; mostly Fe I atomic.",
+                "source": "Meteor aurora literature",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "MgO": {
+        "formula": "MgO",
+        "mass_amu": 40.30,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Magnesium oxide rock vapor. Green band system 500nm — but "
+                         "emission largely overshadowed by atomic Mg b triplet "
+                         "(see element DB Mg entry).",
+                "source": "Meteor + lava chemistry",
+                "upgrade_when": "Phase 3 specifies MgO band over atomic Mg",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Atomic Mg dominates over MgO in low-density aurora.",
+                "source": "—",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "VO": {
+        "formula": "VO",
+        "mass_amu": 66.94,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Vanadium oxide. Cool-dwarf atmospheric opacity signature; "
+                         "complex band system mostly in red/IR. Emission characteristics "
+                         "in plasma not characterized.",
+                "source": "Late M-dwarf + brown dwarf atmospheres",
+                "upgrade_when": "Late-M-dwarf planet Phase 3 with surface vapor",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Not applicable.",
+                "source": "—",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "HCl": {
+        "formula": "HCl",
+        "mass_amu": 36.46,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Hydrogen chloride trace. UV-dominant emission; visible "
+                         "contribution faint. Venus + volcanic outgassing context.",
+                "source": "Venus atmospheric chemistry",
+                "upgrade_when": "Phase 3 Venus-class with HCl trace",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Photodissociates → H + Cl. Cl atomic emission cataloged in element DB.",
+                "source": "—",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "HF": {
+        "formula": "HF",
+        "mass_amu": 20.01,
+        "atoms": 2,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Hydrogen fluoride trace. Emission mostly IR rotational/vibrational. "
+                         "Volcanic / cometary outgassing context.",
+                "source": "Comet HF observations",
+                "upgrade_when": "Phase 3 cometary outgassing scenario",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Photodissociates; products mostly invisible (Cl F UV).",
+                "source": "—",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "C2H2": {
+        "formula": "C2H2",
+        "mass_amu": 26.04,
+        "atoms": 4,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Acetylene — Titan tholin precursor + Jupiter aurora chemistry. "
+                         "Dissociates to CH + CH or C2 + H2 + H. Reentry contribution "
+                         "primarily via C2 Swan + CH bands (see C2, CH entries).",
+                "dissociation_products": ["C2", "CH", "H"],
+                "source": "Titan + sub-Neptune hydrocarbon photochemistry",
+                "upgrade_when": "Phase 3 Titan-class tholin haze synthesis",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "Tholin photochemistry intermediate; not a direct emitter.",
+                "dissociation_products": ["C2", "CH", "H"],
+                "source": "—",
+                "upgrade_when": "—",
+            },
+        },
+    },
+    "NH2": {
+        "formula": "NH2",
+        "mass_amu": 16.02,
+        "atoms": 3,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "no_data",
+                "basis": "Amidogen — NH3 photolysis intermediate. Visible band system "
+                         "around 570-690nm (NH2 α-bands). Not characterized for our "
+                         "plasma regime.",
+                "source": "NIST NH2; comet spectra",
+                "upgrade_when": "Phase 3 ammonia-rich atmosphere photochemistry",
+            },
+            "aurora": {
+                "status": "no_data",
+                "basis": "NH2 α-bands visible in comet comae; sub-Neptune aurora possible.",
+                "source": "Comet NH2 imaging",
+                "upgrade_when": "Sub-Neptune aurora Phase 3",
+            },
+        },
+    },
+    "H2SO4": {
+        "formula": "H2SO4",
+        "mass_amu": 98.08,
+        "atoms": 7,
+        "regimes": {
+            "reentry_plasma": {
+                "status": "not_emitter",
+                "basis": "Sulfuric acid — Venus cloud chemistry. Dissociates → "
+                         "SO3 + H2O → SO2 + O + ... Cascades to SO + S emission.",
+                "dissociation_products": ["SO3", "SO2", "SO", "H2O", "H"],
+                "source": "Venus cloud chemistry",
+            },
+            "aurora": {
+                "status": "not_emitter",
+                "basis": "Photolyzes; products feed SO + atomic S emission.",
+                "dissociation_products": ["SO", "S", "OH"],
+                "source": "Venus upper-atmosphere photochemistry",
+            },
+        },
+    },
 }
 
 
 def build_regime(name: str, data: dict) -> dict:
-    if data.get("status") in ("not_emitter", "not_visible_to_humans"):
+    if data.get("status") in ("not_emitter", "not_visible_to_humans", "no_data"):
         result = {
             "status": data["status"],
             "hex": None,
@@ -393,6 +720,8 @@ def build_regime(name: str, data: dict) -> dict:
         }
         if "dissociation_products" in data:
             result["dissociation_products"] = data["dissociation_products"]
+        if "upgrade_when" in data:
+            result["upgrade_when"] = data["upgrade_when"]
         return result
 
     # If `canonical_hex` is provided, use it (well-documented reentry/

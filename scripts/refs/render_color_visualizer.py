@@ -122,6 +122,7 @@ def build_molecular_data(mdb: dict) -> dict:
                 "basis": r.get("basis", ""),
                 "source": r.get("source", ""),
                 "dissociation_products": r.get("dissociation_products"),
+                "upgrade_when": r.get("upgrade_when"),
             }
         data[formula] = entry
     return data
@@ -675,6 +676,11 @@ TEMPLATE = """<!DOCTYPE html>
   transition: background 0.4s ease, color 0.4s ease;
 }}
 .mol-cell.visible {{ background-image: none; border-color: rgba(0,0,0,0.5) }}
+.mol-cell.research-pending {{
+  background-image: repeating-linear-gradient(45deg, #1f1f10 0 4px, #2c2c14 4px 8px);
+  border-color: #4a4818;
+  color: #c8b870;
+}}
 .mol-cell .mol-formula {{ display: block; font-weight: bold; font-size: 14px }}
 .mol-cell .mol-atoms {{ display: block; font-size: 8px; opacity: 0.75; margin-top: 2px }}
 .mol-cell .mol-status {{ display: block; font-size: 7px; margin-top: 2px; opacity: 0.7 }}
@@ -922,7 +928,7 @@ function applyRegime() {{
     }}
     const r = mol.regimes[regime];
     const status = cell.querySelector('.mol-status');
-    cell.classList.remove('visible');
+    cell.classList.remove('visible', 'research-pending');
     cell.style.background = '';
     cell.style.color = '';
     if (r && r.status === 'visible' && r.hex) {{
@@ -932,12 +938,21 @@ function applyRegime() {{
       status.textContent = '';
       cell.title = `${{formula}} (${{mol.atoms}}-atom) — ${{r.basis}}`;
     }} else {{
-      const lbl = ({{
-        'not_emitter': r && r.dissociation_products ? '→ ' + r.dissociation_products.join('+') : 'no emit',
-        'not_visible_to_humans': 'UV/IR',
-      }})[r ? r.status : ''] || (r ? r.status : 'no data');
+      let lbl = '';
+      let tipExtra = '';
+      if (r && r.status === 'not_emitter') {{
+        lbl = r.dissociation_products ? '→ ' + r.dissociation_products.join('+') : 'no emit';
+      }} else if (r && r.status === 'not_visible_to_humans') {{
+        lbl = 'UV/IR';
+      }} else if (r && r.status === 'no_data') {{
+        lbl = 'research pending';
+        cell.classList.add('research-pending');
+        if (r.upgrade_when) tipExtra = `\\nupgrade when: ${{r.upgrade_when}}`;
+      }} else {{
+        lbl = r ? r.status : 'no data';
+      }}
       status.textContent = lbl;
-      cell.title = `${{formula}} (${{mol.atoms}}-atom) — ${{r ? r.basis : 'no data'}}`;
+      cell.title = `${{formula}} (${{mol.atoms}}-atom) — ${{r ? r.basis : 'no data'}}${{tipExtra}}`;
     }}
   }});
 
