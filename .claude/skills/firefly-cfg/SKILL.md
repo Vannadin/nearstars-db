@@ -71,102 +71,84 @@ These values are fixed for this mod. Do not ask the user.
 
 ## 3. Phase 3 → Firefly cfg workflow
 
-When generating from a Phase 3 host directory (e.g.,
-`docs/phase3/trappist-1-e.md`):
+The skill ships a generic emitter: `scripts/emit_firefly_cfg.py`. Run
+it from project root after Phase 3 syntheses are committed.
 
-### Step 0 — Confirm Firefly cfg is appropriate
-
-Skip Firefly cfg entirely if:
-- `atmosphere_present = false` → no `ATMOFX_BODY` written.
-- `atmosphere_pressure_pa < 100 Pa` → atmosphere is below the visible-effect threshold; skip unless Phase 3 explicitly marks "thin reentry plasma desired".
-
-### Step 1 — Read Phase 3 inputs
-
-Required fields from the Phase 3 Decisions table:
-- `atmosphere_present`
-- `atmosphere_pressure_pa`
-- `atmosphere_composition_volume_pct` (dominant species + traces)
-- `atmosphere_temperature_K_surface` (optional but informs particle threshold)
-- `body_kopernicus_name`
-- `aurora_color_primary_hex` (optional; used for streak echo)
-
-If Phase 3 declares any of the optional `atmofx_*_hex_intensity`
-override fields (see [phase3-mapping](references/phase3-mapping.md) §2),
-prefer them over the composition-derived defaults.
-
-### Step 2 — Derive multipliers from pressure
-
-Use the table in [phase3-mapping](references/phase3-mapping.md) §3:
-
-```
-pressure_bar           strength    wrap_fresnel
-≤ 0.01                 0.5         0
-0.01 – 0.5             0.6–0.8     0
-0.5 – 2 (Earth-like)   1.0         0 (clear) / 1 (hazy)
-2 – 20                 1.0–1.2     1
-50+                    1.0–1.5     1
-gas giant outer        1.0         1
+```bash
+python3 .claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py
+python3 .claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py --dry-run
+python3 .claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py --slug trappist-1-e
 ```
 
-### Step 3 — Pick colors from composition (two layers)
+Output: `dist/NearStars-Configs/Patches/Firefly/<KopernicusName>.cfg`
+per atmospheric body plus `NearStarsPlanetPack.cfg` covering all of
+them. The emitter is deterministic and idempotent — re-running on
+unchanged inputs produces byte-identical output.
 
-**Bulk gas (>50% volume)** → trail_primary, trail_secondary,
-trail_tertiary, wrap_layer, shockwave. Pick a row from
-[composition-color](references/composition-color.md) §3:
+### What the emitter does
 
-- N2 + O2 → Earth-like palette (warm trail, blue-violet shockwave).
-- CO2 → Mars/Venus palette (blue trail, green shockwave).
-- H2 + He → physics pink-yellow OR stylized deep blue (see §5 stock case study).
-- CH4, H2O, pure-H2 → specialty rows.
+For each Phase 3 markdown (`docs/phase3/<slug>.md`):
 
-**Secondary species (0.5–10% volume)** → trail_streak, wrap_streak.
-Pick a row from [composition-color](references/composition-color.md) §4
-(secondary-species table). Examples: CO2 1–10% in N2 → green streak;
-He in H2 → yellow streak; SO2 trace in CO2 → pale blue-green streak.
+1. **Gate.** Extract `atmosphere_present` from the Decisions table.
+   Skip if false or pressure < 100 Pa (Mars-thin threshold).
+2. **Pressure → multipliers.** Apply the piecewise table from
+   [phase3-mapping](references/phase3-mapping.md) §3:
+   - ≤ 0.01 bar → strength 0.5, fresnel 0
+   - 0.01–0.5 bar → strength 0.7
+   - 0.5–2 bar (Earth-like) → strength 1.0, fresnel 1 if ≥ 1 bar
+   - 2–20 bar → strength 1.1
+   - 20–50 bar → strength 1.2
+   - 50+ bar → strength 1.3
+3. **Composition → bulk-gas palette.** Match the dominant species
+   against the palette set in [composition-color](references/composition-color.md)
+   §3 (Earth-like / CO2 / Gas-giant / CH4 / Steam / Pure-H2).
+4. **Secondary species → streak.** First 0.5–10% volume secondary that
+   matches the streak palette ([composition-color §4](references/composition-color.md))
+   or `db/refs/element_plasma_colors.yaml`. Falls back to
+   `trail_primary` when no secondary matches.
+5. **Temperature → particle_threshold.** Reads `equilibrium_temp_k`
+   or `surface_temp_substellar_k`; > 300 K → 1500, else 1800.
+6. **Emit `ATMOFX_BODY`** with all 9 Color keys filled, multipliers
+   from steps 2–5, plus glow/glow_hot at Default values (material-
+   driven, not gas-driven).
+7. **Emit `NearStarsPlanetPack.cfg`** listing every body that got an
+   `ATMOFX_BODY`.
 
-If atmosphere has no significant secondary, streak = `trail_primary`
-(default fallback, no separate streak chemistry).
+### Element plasma colors
+
+For trace-species streaks the emitter reads `db/refs/element_plasma_colors.yaml`
+— a curated per-element hex DB replacing pixel-sampling of the
+Helmenstine 2017 plasma chart. Companion human-readable view:
+[`docs/reference/element-plasma-colors.md`](../../../docs/reference/element-plasma-colors.md).
+
+To update an element's color: edit the YAML, run
+`python3 scripts/refs/validate_element_colors.py`, then
+`python3 scripts/refs/render_element_colors_doc.py` to refresh the
+companion doc (en + ko mirror).
+
+### When you do it manually (audit pass)
+
+The full step-by-step manual procedure (parse Phase 3 by hand, apply
+each lookup, validate Color block) is preserved in earlier versions of
+this section for audit / cross-check purposes. If you need to verify
+what the emitter is doing for a specific body, the procedure is:
+
+1. Read `atmosphere_present`, `atmosphere_surface_pressure_pa`,
+   `atmosphere_composition` from the Decisions table.
+2. Apply the pressure piecewise from §3 above.
+3. Pick the bulk palette from [composition-color §3](references/composition-color.md).
+4. Pick the streak color from [composition-color §4](references/composition-color.md)
+   or `db/refs/element_plasma_colors.yaml`.
+5. Cross-check against the emitter output in
+   `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg`.
+
+Discrepancy → bug in the emitter or the Decisions table; investigate
+both.
 
 **Do NOT** echo aurora_color_* into streaks. Aurora and reentry plasma
 are different physical regimes (upper-atmosphere low-density
 forbidden-line emission vs. lower-atmosphere shock-heated ionization).
 Aurora feeds EVE/aurora mods, not Firefly.
-
-### Step 4 — Default `glow` / `glow_hot`
-
-These are hull-surface heating, not gas-specific. Use the shipped
-Default values unless the user explicitly overrides:
-
-```
-glow     = 191 80 50 1.4
-glow_hot = 191 90 65 2.5
-```
-
-### Step 5 — Set particle / streak fields
-
-| Field | Default | Override when |
-|---|---|---|
-| `particle_threshold` | 1800 | Hot atmosphere (T > 300 K) → 1500. Lava world → 1200. |
-| `streak_probability` | 0.07 if atmosphere, else 0 | Phase 3 says "no streaks" |
-| `streak_threshold` | 0 | Empirically tuned; -0.5 to 0 typical |
-
-### Step 6 — Emit `ATMOFX_BODY`
-
-Concatenate the values into the schema in
-[atmofx-body](references/atmofx-body.md) skeleton. Verify with the
-checklist in that file before saving.
-
-### Step 7 — Emit / update `ATMOFX_PLANET_PACK`
-
-NearStars ships one pack covering every atmosphere-bearing body. The
-pack's `affected_bodies` list grows as bodies are added. Do not ship
-a per-body pack node — one pack only.
-
-### Step 8 — Validate
-
-- Every color in `Color { … }` is `R G B intensity` (4 space-separated
-  tokens). Run a regex check.
-- Every multiplier is a bare float (no `f` suffix, no comma).
 - `name` matches the Kopernicus body name exactly.
 - `config_version = 5`.
 - If the body name is in `affected_bodies`, the pack tag has

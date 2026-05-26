@@ -143,9 +143,16 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Driver.** `firefly-cfg` skill. Pinned to Firefly `mod_version: 1.0.6` (M1rageDev/Firefly, GPL-3.0). Schema claims cite `ConfigManager.cs:line`.
 
-**References (in skill).** Five node-type files (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (atmosphere → reentry palette via thunderchild's chart + bulk-gas plasma table), `phase3-mapping` (Phase 3 row → Firefly field), `pitfalls`.
+**Files.**
+- `.claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py` — generic emitter: Phase 3 Decisions → ATMOFX_BODY + planet pack. Bulk-gas palettes hardcoded (composition-color.md §3); streak species from element DB.
+- `db/refs/element_plasma_colors.yaml` — per-element flame/plasma hex DB (118 entries). Replaces pixel-sampling of the Helmenstine 2017 chart.
+- `scripts/refs/validate_element_colors.py` — schema check for the DB.
+- `scripts/refs/render_element_colors_doc.py` — re-render the companion doc (en + ko mirror).
+- `docs/reference/element-plasma-colors.md` — companion view (generated, do not hand-edit).
 
-**Output.** `dist/NearStars-Configs/Patches/Firefly/`.
+**References (in skill).** Five node-type files (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (atmosphere → reentry palette via bulk-gas plasma table), `phase3-mapping` (Phase 3 row → Firefly field), `pitfalls`.
+
+**Output.** `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg` per atmospheric body + `NearStarsPlanetPack.cfg`.
 
 ## 9. Add star / Phase 2 curation
 

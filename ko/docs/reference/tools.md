@@ -143,9 +143,16 @@
 
 **드라이버.** `firefly-cfg` 스킬. Firefly `mod_version: 1.0.6` (M1rageDev/Firefly, GPL-3.0) 에 핀. 모든 스키마 주장은 `ConfigManager.cs:line` 형태로 출처 인용.
 
-**스킬 내 references.** 다섯 개 노드 타입 (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (대기 조성 → 재진입 팔레트, thunderchild 차트 + bulk-gas 플라즈마 표 기반), `phase3-mapping` (Phase 3 행 → Firefly 필드 매핑), `pitfalls`.
+**파일.**
+- `.claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py` — 제네릭 emitter: Phase 3 Decisions → ATMOFX_BODY + planet pack. Bulk-gas 팔레트 6종을 emitter 안에 박아두고, streak 종은 원소 DB 참조.
+- `db/refs/element_plasma_colors.yaml` — 원소별 불꽃/플라즈마 hex DB (118 entries). Helmenstine 2017 차트의 그라디언트 픽셀 샘플링을 대체.
+- `scripts/refs/validate_element_colors.py` — DB 스키마 점검.
+- `scripts/refs/render_element_colors_doc.py` — companion doc 재렌더 (en + ko 미러).
+- `docs/reference/element-plasma-colors.md` — 사람용 view (생성물, 직접 편집 금지).
 
-**출력.** `dist/NearStars-Configs/Patches/Firefly/`.
+**스킬 내 references.** 다섯 개 노드 타입 (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (대기 조성 → 재진입 팔레트, bulk-gas 플라즈마 표 기반), `phase3-mapping` (Phase 3 행 → Firefly 필드 매핑), `pitfalls`.
+
+**출력.** `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg` 행성당 1개 + `NearStarsPlanetPack.cfg`.
 
 ## 9. 별 추가 / Phase 2 큐레이션
 
