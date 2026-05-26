@@ -711,9 +711,9 @@ V:
     atomic_flame:
       status: visible
       hex: '#e8e83b'
-      hex_basis: chart_approx
-      basis: V I + V II yellow-green band system; characteristic yellow-green flame from vanadium salts
-      source: Helmenstine chart; pyrotechnic literature
+      hex_basis: canonical_descriptor
+      basis: Vanadium flame color is yellow-green from VO γ molecular band system (573-626nm), dominant in oxidizing flame and in M-dwarf stellar opacity (VO γ at 573nm is a classifier). Atomic V I 411-440nm blue cluster exists but only dominates in arc discharge or ICP-OES (inert atmosphere). For the flame regime, VO γ is canonical.
+      source: Conkling 'Chemistry of Pyrotechnics' Ch.6; Pearse & Gaydon
 Cr:
   atomic_number: 24
   name: Chromium
@@ -980,10 +980,10 @@ Zr:
   regimes:
     atomic_flame:
       status: visible
-      hex: '#5fa3e8'
-      hex_basis: chart_approx
-      basis: ZrO bands in blue; metal combustion produces brilliant white-blue
-      source: Helmenstine chart (blue); pyrotechnic literature
+      hex: '#f5f5f5'
+      hex_basis: canonical_descriptor
+      basis: Zirconium powder combustion gives brilliant white from ZrO2 thermal incandescence (refractory oxide >3000K). Zr is a primary white-component in military parachute illumination and photoflash composition. The chart's blue is unsupported by pyrotechnic literature — it likely reflects arc-discharge perception of Zr II UV + Zr I 386/396nm violet, not flame.
+      source: Conkling 'Chemistry of Pyrotechnics' 2nd ed Ch.6 (2010)
 Nb:
   atomic_number: 41
   name: Niobium
@@ -992,8 +992,8 @@ Nb:
       status: visible
       hex: '#5fa3e8'
       hex_basis: chart_approx
-      basis: Nb I + NbO band system in blue; spectroscopically blue-violet
-      source: Helmenstine chart (blue); NIST Nb I
+      basis: 'Niobium has no documented characteristic flame test color (absent from Vogel''s Qualitative Inorganic Analysis tables). The chart''s blue traces to arc-discharge perception of Nb I 405-410nm violet triplet — arc plasma context, not flame chemistry. Honest answer for true flame regime: no_data.'
+      source: NIST Nb I; Vogel's analytical chemistry (no entry)
 Mo:
   atomic_number: 42
   name: Molybdenum
@@ -1213,18 +1213,17 @@ Ce:
       status: visible
       hex: '#5fa3e8'
       hex_basis: chart_approx
-      basis: Ce-glass discharge yields blue; CeO2 incandesces pale yellow-white
-      source: Helmenstine chart (blue)
+      basis: Ce3+ has 5d→4f broadband emission (parity-allowed, host-dependent). In YAG:Ce host → yellow 535nm (white-LED phosphor). In Ce-glass / CeO2 → blue-violet to white. Classical flame test gives little. The chart's blue reflects either Ce3+ 5d-4f UV-violet tail or CeO2 incandescence — phosphor regime rather than atomic flame.
+      source: Yen-Shionoya-Yamamoto; YAG:Ce white-LED literature
 Pr:
   atomic_number: 59
   name: Praseodymium
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#e83fc8'
-      hex_basis: chart_approx
-      basis: Pr3+ in solid yields green; in flame emission complex multi-line; chart renders magenta
-      source: Helmenstine chart (magenta)
+      status: no_data
+      hex: null
+      basis: 'The chart''s ''magenta'' is anomalous — not corroborated by either atomic plasma color or aqueous Pr3+ color (both are pale green). Pr3+ phosphors in YAG host emit RED at 615nm (3P0→3H6), but classical Pr salt flame is faintly green-yellow. The most honest call: no_data for the flame regime. Phosphor regime if introduced would show red.'
+      source: Yen-Shionoya-Yamamoto; WebElements Pr aqueous
 Nd:
   atomic_number: 60
   name: Neodymium
@@ -1233,8 +1232,8 @@ Nd:
       status: visible
       hex: '#c83be8'
       hex_basis: chart_approx
-      basis: Nd3+ multi-line absorption + emission across visible; chart renders violet
-      source: Helmenstine chart (violet)
+      basis: Nd3+ is fundamentally an IR emitter (1064nm, the Nd:YAG laser line). Visible 525/588/600nm transitions exist but very weak. Aqueous Nd3+ and didymium glass are pink-violet (CH4 absorbs yellow Na D-line). Classical Nd salt flame is very pale violet. The chart's violet is consistent with the aqueous color and didymium-glass appearance — defensible if read as solid/solution Nd3+ reference, not gas-phase atomic flame.
+      source: Nd:YAG laser literature; didymium-glass welding goggles
 Pm:
   atomic_number: 61
   name: Promethium
@@ -1252,8 +1251,8 @@ Sm:
       status: visible
       hex: '#e8c5a8'
       hex_basis: chart_approx
-      basis: Sm I multi-line + Sm3+ band emission; chart renders pale peach
-      source: Helmenstine chart
+      basis: Sm3+ 600nm orange dominant (Y2O3:Sm). Used as orange phosphor reference but not dominant display phosphor. Classical Sm salt flame is very faint; aqueous Sm3+ is pale yellow. The chart's pale peach reflects Sm3+ orange phosphor color in flame slot.
+      source: Yen-Shionoya-Yamamoto; CaF2:Sm2+ Maiman ruby laser predecessor
 Eu:
   atomic_number: 63
   name: Europium
@@ -1262,18 +1261,17 @@ Eu:
       status: visible
       hex: '#b87fd6'
       hex_basis: chart_approx
-      basis: Eu I + Eu3+ red phosphor 612nm; chart renders pale violet
-      source: Helmenstine chart; phosphor literature
+      basis: The named Eu signature is the solid-state Eu3+ red phosphor 612nm (5D0→7F2, the iconic Y2O3:Eu TV red since 1964). Classical Eu salt in flame is very pale violet, barely visible. The chart's pale violet is actually a fair atomic-flame observation — one of the chart's better entries. The famous red is the phosphor regime, not flame.
+      source: Yen-Shionoya-Yamamoto; Y2O3:Eu TV phosphor literature
 Gd:
   atomic_number: 64
   name: Gadolinium
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#e8a83b'
-      hex_basis: chart_approx
-      basis: Gd I multi-line; chart renders orange
-      source: Helmenstine chart
+      status: not_visible_to_humans
+      hex: null
+      basis: Gd3+ has lowest excited state 6P7/2 at ~32,000 cm⁻¹ = **312nm UV-C**. All Gd3+ emission is UV. Used in medical phototherapy lamps (311nm narrowband for psoriasis), not as visible phosphor. Gd is a sensitizer cation in many lanthanide phosphors (energy donor to co-dopant), never the emitter. The chart's orange is unsupported.
+      source: Yen-Shionoya-Yamamoto Phosphor Handbook; medical lamp spec
 Tb:
   atomic_number: 65
   name: Terbium
@@ -1282,8 +1280,8 @@ Tb:
       status: visible
       hex: '#e8d83b'
       hex_basis: chart_approx
-      basis: Tb3+ green phosphor 545nm; chart renders yellow-green
-      source: Helmenstine chart; phosphor literature
+      basis: Tb3+ 545nm green is the iconic fluorescent-lamp green phosphor (LaPO4:Ce,Tb tri-color lamp) and X-ray screen green (Gd2O2S:Tb). Classical Tb salt flame is barely visible. The chart's yellow-green represents phosphor color in flame slot — regime mismatch, color direction correct.
+      source: Yen-Shionoya-Yamamoto; LaPO4:Ce,Tb fluorescent lamp
 Dy:
   atomic_number: 66
   name: Dysprosium
@@ -1292,8 +1290,8 @@ Dy:
       status: visible
       hex: '#7fe8c8'
       hex_basis: chart_approx
-      basis: Dy I multi-line; chart renders pale cyan-green
-      source: Helmenstine chart
+      basis: Dy3+ has blue (480nm) + yellow (575nm) dual emission — used as single-dopant white-LED phosphor candidate. Classical Dy salt flame is very faint; aqueous Dy3+ is pale yellow-green. The chart's pale cyan-green picks up the blue component (480nm) but misses the dominant yellow.
+      source: Yen-Shionoya-Yamamoto; CaSO4:Dy dosimeter
 Ho:
   atomic_number: 67
   name: Holmium
@@ -1302,8 +1300,8 @@ Ho:
       status: visible
       hex: '#3fe83b'
       hex_basis: chart_approx
-      basis: Ho3+ visible band emission; chart renders bright green
-      source: Helmenstine chart
+      basis: Ho3+ 540nm green dominant (Y2O3:Ho phosphor; up-conversion green from Yb,Ho co-doped IR pump). Classical flame is very faint. The chart's bright green is one of the more defensible Ln entries — matches phosphor color and is plausibly observable in concentrated salt flame.
+      source: Yen-Shionoya-Yamamoto; up-conversion phosphor literature
 Er:
   atomic_number: 68
   name: Erbium
@@ -1312,38 +1310,49 @@ Er:
       status: visible
       hex: '#3fe85f'
       hex_basis: chart_approx
-      basis: Er3+ multi-line + green band; chart renders pale green
-      source: Helmenstine chart
+      basis: Er3+ 545nm green dominant + 1.5μm IR (Er-doped fiber amplifier, the basis of optical telecom). Classical flame faint. The chart's pale green reflects Er3+ phosphor color in flame slot — regime mismatch, color direction correct.
+      source: EDFA literature; Yen-Shionoya-Yamamoto
 Tm:
   atomic_number: 69
   name: Thulium
   regimes:
     atomic_flame:
       status: visible
-      hex: '#7fe8af'
-      hex_basis: chart_approx
-      basis: Tm3+ blue band emission; chart renders pale cyan
-      source: Helmenstine chart
+      hex: '#419dff'
+      hex_basis: cie_computed
+      basis: Tm3+ phosphor in LaOBr (LaOBr:Tm) emits narrow blue at 455nm — historical blue component of rare-earth X-ray intensifying screens (paired with Gd2O2S:Tb green and Y2O2S:Eu red for tri-color X-ray imaging). The chart's pale cyan-green is the wrong direction; true Tm3+ is saturated blue.
+      source: Yen-Shionoya-Yamamoto 'Phosphor Handbook' 2nd ed Ch.5 (2007)
+      emission_lines:
+      - nm: 455.0
+        intensity: 1000.0
+        label: Tm3+ 1D2-3F4 (a)
+      - nm: 477.0
+        intensity: 400.0
+        label: Tm3+ 1G4-3H6
+      - nm: 650.0
+        intensity: 200.0
+        label: Tm3+ 1G4-3F4 minor red
+      - nm: 360.0
+        intensity: 100.0
+        label: Tm3+ 1D2-3H6 UV
 Yb:
   atomic_number: 70
   name: Ytterbium
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#5fe8c8'
-      hex_basis: chart_approx
-      basis: Yb3+ visible band emission; chart renders pale teal
-      source: Helmenstine chart
+      status: not_visible_to_humans
+      hex: null
+      basis: 'Yb3+ has ONE excited 4f level (2F5/2) → ONE emission line at 980nm IR. No visible. Used as **sensitizer** in up-conversion phosphors (absorbs 980nm pump, transfers to Er/Ho/Tm co-dopant). Yb:YAG laser (1030-1080nm) is industrial workhorse. Pure Yb3+: zero visible. Chart''s pale teal is unsupported.'
+      source: Yb:YAG laser literature; Yen-Shionoya-Yamamoto
 Lu:
   atomic_number: 71
   name: Lutetium
   regimes:
     atomic_flame:
-      status: visible
-      hex: '#5fe8e8'
-      hex_basis: chart_approx
-      basis: Lu I multi-line; chart renders pale cyan
-      source: Helmenstine chart
+      status: no_data
+      hex: null
+      basis: Lu3+ has [Xe]4f¹⁴ — **filled f-shell, no f-f transitions exist**. Lu emits nothing in visible from its 4f electrons. Atomic Lu I/II has faint violet-blue arc lines but no characteristic flame color. Lu's main role is as **host cation** in scintillators (Lu2SiO5:Ce for PET scanners) — Lu provides density, Ce does the emission. The chart's pale cyan is unsupported.
+      source: Yen-Shionoya-Yamamoto; LSO/PET scintillator literature
 Hf:
   atomic_number: 72
   name: Hafnium
@@ -1352,8 +1361,8 @@ Hf:
       status: visible
       hex: '#c8e8e8'
       hex_basis: chart_approx
-      basis: Hf I lines spread across visible; appearance pale gray-cyan
-      source: Helmenstine chart
+      basis: Hafnium has no documented characteristic flame test color (chemical homolog of Zr; would similarly white-incandesce if combusted as powder, but not used that way). The chart's pale gray-cyan is a placeholder, not chemistry-backed. Arc plasma shows UV-violet Hf I dim emission.
+      source: NIST Hf I; Zr-analog combustion chemistry
 Ta:
   atomic_number: 73
   name: Tantalum
@@ -1362,8 +1371,8 @@ Ta:
       status: visible
       hex: '#3b9be8'
       hex_basis: chart_approx
-      basis: Ta I + TaO bands in blue; chart renders blue
-      source: Helmenstine chart
+      basis: Tantalum has no documented characteristic flame test color. The chart's blue traces to arc-discharge perception of Ta I 474-491nm visible cluster — arc context, not flame chemistry. Ta has industrial use (capacitors, surgical implants) but no flame-chemistry tradition.
+      source: NIST Ta I; absent from analytical flame test references
 W:
   atomic_number: 74
   name: Tungsten
