@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="style.v2.css">
 <style>
+/* 전역 — 모바일에서 padding 이 폭에 더해져 카드가 viewport 폭을 넘는 걸 방지 */
+[data-ns="v2"], [data-ns="v2"] *, [data-ns="v2"] *::before, [data-ns="v2"] *::after { box-sizing: border-box; }
+body { overflow-x: hidden; }
+
 /* v1 헤더는 index.html의 인라인 스타일에서 발췌 (헤더 영역만) */
 header{padding:14px 20px;align-items:center;gap:20px}
 h1{font-size:17px;white-space:nowrap}
@@ -258,7 +262,7 @@ input[type=checkbox]{accent-color:#4a88b8}
 [data-ns="v2"] .a2-mt a.sl:hover { text-decoration: underline; }
 
 /* ── 모바일 카드 — v1 .mc 패턴 골격 + v2 컬러링(좌측 spec bar / hover·open wash) ── */
-[data-ns="v2"] .a2-cards-wrap { display: none; padding: 12px 12px 80px; }
+[data-ns="v2"] .a2-cards-wrap { display: none; padding: 12px 14px 80px; }
 [data-ns="v2"] .a2-cards-list { display: flex; flex-direction: column; gap: 10px; }
 
 [data-ns="v2"] .a2-card {
