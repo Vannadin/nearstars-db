@@ -195,6 +195,68 @@ input[type=checkbox]{accent-color:#4a88b8}
 /* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
 [data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
 
+/* ── Star Color chart (swatch + Hex/0-1/0-255 copy rows) ── */
+[data-ns="v2"] .a2-cc-wrap {
+  display: flex; align-items: center; gap: 18px;
+  padding: 12px 14px;
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  border-radius: var(--v2-r-row);
+}
+[data-ns="v2"] .a2-cc-swatch {
+  width: 56px; height: 56px; border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: var(--v2-shadow-inset), 0 0 24px var(--cc-glow, transparent);
+}
+[data-ns="v2"] .a2-cc-vals { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+[data-ns="v2"] .a2-cc-row { display: grid; grid-template-columns: 56px 1fr auto; gap: 12px; align-items: center; font-size: 12px; }
+[data-ns="v2"] .a2-cc-row .k { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-cc-row .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+[data-ns="v2"] .a2-cc-copy {
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-4); padding: 3px 9px; border-radius: 4px;
+  font: 500 10.5px/1 var(--v2-font-sans); cursor: pointer; letter-spacing: 0.02em;
+  transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-cc-copy:hover { border-color: var(--v2-bd-3); color: var(--v2-fg-2); }
+[data-ns="v2"] .a2-cc-copy.copied { color: var(--v2-ok); border-color: var(--v2-ok); }
+
+/* ── DSS picker (FOV + Survey + external links) ── */
+[data-ns="v2"] .a2-img-links { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+[data-ns="v2"] .a2-fov-picker, [data-ns="v2"] .a2-survey-picker { display: flex; gap: 4px; flex-wrap: wrap; }
+[data-ns="v2"] .a2-fov-btn, [data-ns="v2"] .a2-survey-btn {
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-4); padding: 3px 9px; border-radius: 4px;
+  font: 500 10.5px/1.4 var(--v2-font-sans);
+  cursor: pointer; transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-fov-btn:hover, [data-ns="v2"] .a2-survey-btn:hover { color: var(--v2-fg-2); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-fov-btn.on, [data-ns="v2"] .a2-survey-btn.on { background: var(--v2-surface-3); color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-survey-btn:disabled {
+  color: var(--v2-fg-5); text-decoration: line-through; cursor: not-allowed;
+  border-color: rgba(255,255,255,0.04);
+}
+[data-ns="v2"] .a2-ext-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+[data-ns="v2"] .a2-ext-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--v2-surface-1); border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-3); padding: 4px 11px; border-radius: var(--v2-r-chip);
+  font: 500 11px/1.4 var(--v2-font-sans); cursor: pointer;
+  text-decoration: none; transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-ext-link:hover { background: var(--v2-surface-2); color: var(--v2-fg-2); }
+
+/* ── Wide kv (astrometry — 키가 길어져서 a2-kv 보다 넓은 컬럼 필요) ── */
+[data-ns="v2"] .a2-kv-wide { display: grid; grid-template-columns: 96px 1fr; gap: 5px 14px; font-size: 12px; }
+[data-ns="v2"] .a2-kv-wide .k { color: var(--v2-fg-4); }
+[data-ns="v2"] .a2-kv-wide .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono); font-variant-numeric: tabular-nums; }
+
+/* ── 행성 풀 테이블 — 모바일에서 가로 스크롤 ── */
+[data-ns="v2"] .a2-mt-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -4px; }
+[data-ns="v2"] .a2-mt-scroll table { min-width: 760px; }
+[data-ns="v2"] .a2-mt a.sl { color: var(--v2-accent); text-decoration: none; }
+[data-ns="v2"] .a2-mt a.sl:hover { text-decoration: underline; }
+
 /* ── 모바일 카드 — v1 .mc 패턴 골격 + v2 컬러링(좌측 spec bar / hover·open wash) ── */
 [data-ns="v2"] .a2-cards-wrap { display: none; padding: 12px 12px 80px; }
 [data-ns="v2"] .a2-cards-list { display: flex; flex-direction: column; gap: 10px; }
@@ -290,6 +352,10 @@ input[type=checkbox]{accent-color:#4a88b8}
   [data-ns="v2"] .a2-mt th, [data-ns="v2"] .a2-mt td { padding: 7px 9px; font-size: 11px; }
   [data-ns="v2"] .a2-section-h { font-size: 9.5px; margin-bottom: 10px; }
   [data-ns="v2"] .a2-kv { grid-template-columns: 56px 1fr; gap: 4px 10px; }
+  [data-ns="v2"] .a2-kv-wide { grid-template-columns: 80px 1fr; gap: 4px 12px; }
+  [data-ns="v2"] .a2-cc-wrap { padding: 10px 12px; gap: 14px; }
+  [data-ns="v2"] .a2-cc-swatch { width: 48px; height: 48px; }
+  [data-ns="v2"] .a2-cc-row { grid-template-columns: 48px 1fr auto; gap: 10px; }
 }
 </style>
 </head>
@@ -353,30 +419,53 @@ input[type=checkbox]{accent-color:#4a88b8}
 </div>
 
 <script>
-// shared.jsx 의 V2_SYSTEMS / V2_MEASUREMENTS / V2_PLANETS 를 인라인 데모 데이터로
+// 풀 mock 데이터 — 실제 nearstars-db 의 buildDetail() 이 표시하는 필드 셋을 그대로 따라감.
+// extra 안에 ra/dec/plx/pmra/pmdec/rv/vmag/src/ep/raSrc 추가. Proxima Cen 만 실제 Gaia DR3 값,
+// 나머지는 데모용 대략 mock (sample 목적엔 충분).
 const V2_SYSTEMS = [
-  { sys: 'Alpha Centauri', comp: 'A', name: 'α Cen A',  spec: 'G2V',   dist: 1.348, teff: 5790, mass: 1.079, rad: 1.234,  np: 0, p2: true,  p3: ['★'] },
-  { sys: 'Alpha Centauri', comp: 'B', name: 'α Cen B',  spec: 'K1V',   dist: 1.348, teff: 5260, mass: 0.909, rad: 0.863,  np: 0, p2: true,  p3: ['★'] },
-  { sys: 'Proxima Cen',    comp: '',  name: 'Proxima Cen', spec: 'M5.5Ve', dist: 1.301, teff: 2980, mass: 0.122, rad: 0.154, np: 3, p2: true,  p3: ['★','b','d'] },
-  { sys: "Barnard's Star", comp: '',  name: "Barnard's Star", spec: 'M4Ve', dist: 1.828, teff: 3134, mass: 0.144, rad: 0.196, np: 1, p2: false, p3: [] },
-  { sys: 'Wolf 359',       comp: '',  name: 'Wolf 359',   spec: 'M6V',     dist: 2.408, teff: 2800, mass: 0.110, rad: 0.144,  np: 2, p2: false, p3: [] },
-  { sys: 'Lalande 21185',  comp: '',  name: 'Lalande 21185', spec: 'M2V',  dist: 2.546, teff: 3601, mass: 0.389, rad: 0.392,  np: 2, p2: false, p3: [] },
-  { sys: 'Sirius',         comp: 'A', name: 'Sirius A',  spec: 'A1V',     dist: 2.637, teff: 9940, mass: 2.063, rad: 1.711,  np: 0, p2: false, p3: [] },
-  { sys: 'TRAPPIST-1',     comp: '',  name: 'TRAPPIST-1', spec: 'M8V',    dist: 12.43, teff: 2566, mass: 0.0898, rad: 0.1192, np: 7, p2: true,  p3: ['b','c','d','e','f','g','h'] },
+  { sys: 'Alpha Centauri', comp: 'A', name: 'α Cen A',  spec: 'G2V',   dist: 1.348, teff: 5790, mass: 1.079, rad: 1.234,  np: 0, p2: true,  p3: ['★'],
+    extra: { ra: 219.902066, dec: -60.833975, plx: 743.130, plxe: 1.300, pmra: -3679.250, pmdec:   473.670, rv: -22.39, rvSrc: 'Gaia DR3', vmag:  0.01, src: 'Gaia DR3', ep: 'J2016.0' } },
+  { sys: 'Alpha Centauri', comp: 'B', name: 'α Cen B',  spec: 'K1V',   dist: 1.348, teff: 5260, mass: 0.909, rad: 0.863,  np: 0, p2: true,  p3: ['★'],
+    extra: { ra: 219.914123, dec: -60.838151, plx: 743.130, plxe: 1.300, pmra: -3614.390, pmdec:   802.980, rv: -18.43, rvSrc: 'Gaia DR3', vmag:  1.33, src: 'Gaia DR3', ep: 'J2016.0' } },
+  { sys: 'Proxima Cen',    comp: '',  name: 'Proxima Cen', spec: 'M5.5Ve', dist: 1.301, teff: 2980, mass: 0.122, rad: 0.154, np: 3, p2: true,  p3: ['★','b','d'],
+    extra: { ra: 217.392321, dec: -62.676075, plx: 768.066, plxe: 0.050, pmra: -3781.310, pmdec:   769.770, rv: -22.345, rvSrc: 'Gaia DR3', vmag: 11.13, src: 'Gaia DR3', ep: 'J2016.0' } },
+  { sys: "Barnard's Star", comp: '',  name: "Barnard's Star", spec: 'M4Ve', dist: 1.828, teff: 3134, mass: 0.144, rad: 0.196, np: 1, p2: false, p3: [],
+    extra: { ra: 269.448504, dec:   4.668288, plx: 546.976, plxe: 0.034, pmra:  -801.551, pmdec: 10362.394, rv: -110.20, rvSrc: 'Gaia DR3', vmag:  9.51, src: 'Gaia DR3', ep: 'J2016.0' } },
+  { sys: 'Wolf 359',       comp: '',  name: 'Wolf 359',   spec: 'M6V',     dist: 2.408, teff: 2800, mass: 0.110, rad: 0.144,  np: 2, p2: false, p3: [],
+    extra: { ra: 164.103188, dec:   7.002736, plx: 415.179, plxe: 0.068, pmra: -3866.330, pmdec: -2699.215, rv:  19.32, rvSrc: 'Gaia DR3', vmag: 13.45, src: 'Gaia DR3', ep: 'J2016.0' } },
+  { sys: 'Lalande 21185',  comp: '',  name: 'Lalande 21185', spec: 'M2V',  dist: 2.546, teff: 3601, mass: 0.389, rad: 0.392,  np: 2, p2: false, p3: [],
+    extra: { ra: 165.834239, dec:  35.969561, plx: 392.752, plxe: 0.067, pmra: -580.140,  pmdec: -4767.090, rv:  -84.69, rvSrc: 'Gaia DR3', vmag:  7.47, src: 'Gaia DR3', ep: 'J2016.0' } },
+  { sys: 'Sirius',         comp: 'A', name: 'Sirius A',  spec: 'A1V',     dist: 2.637, teff: 9940, mass: 2.063, rad: 1.711,  np: 0, p2: false, p3: [],
+    extra: { ra: 101.287155, dec: -16.716116, plx: 379.210, plxe: 1.580, pmra: -546.010,  pmdec: -1223.080, rv:  -5.50, rvSrc: 'SIMBAD',   vmag: -1.46, src: 'Hipparcos', ep: 'J1991.25' } },
+  { sys: 'TRAPPIST-1',     comp: '',  name: 'TRAPPIST-1', spec: 'M8V',    dist: 12.43, teff: 2566, mass: 0.0898, rad: 0.1192, np: 7, p2: true,  p3: ['b','c','d','e','f','g','h'],
+    extra: { ra: 346.622469, dec:  -5.041272, plx:  80.450, plxe: 0.117, pmra:   930.880,  pmdec:  -479.380, rv:  -54.38, rvSrc: 'Gaia DR3', vmag: 18.80, src: 'Gaia DR3', ep: 'J2016.0' } },
   // brown dwarf — Teff 1310K 면 채도 cap (maxS=0.75) 발동.
-  { sys: 'Luhman 16',      comp: 'A', name: 'Luhman 16 A', spec: 'L7.5',  dist: 1.998, teff: 1310, mass: 0.034, rad: 0.103, np: 0, p2: false, p3: [] },
+  { sys: 'Luhman 16',      comp: 'A', name: 'Luhman 16 A', spec: 'L7.5',  dist: 1.998, teff: 1310, mass: 0.034, rad: 0.103, np: 0, p2: false, p3: [],
+    extra: { ra: 162.299291, dec: -53.319573, plx: 500.510, plxe: 0.110, pmra: -2762.470, pmdec:   358.720, rv:  21.20, rvSrc: 'Bedin 2017', vmag: 23.25, src: 'Gaia DR3', ep: 'J2016.0' } },
 ];
 
+// Mass measurements — Proxima Cen 기준 mock (실제 별과 무관, 디자인 시연용).
 const V2_MEASUREMENTS = [
-  { ref: 'Boyajian 2012',  method: 'interferometry',            val: 0.1221, err: 0.0022, rec: true },
-  { ref: 'Mann 2019',      method: 'spectroscopic_calibration', val: 0.124,  err: 0.005 },
-  { ref: 'Ségransan 2003', method: 'interferometry',            val: 0.118,  err: 0.011 },
+  { ref: 'Boyajian 2012',  method: 'interferometry',            val: 0.1221, err: 0.0022, rec: true,  doi: '10.1088/0004-637X/757/2/112' },
+  { ref: 'Mann 2019',      method: 'spectroscopic_calibration', val: 0.124,  err: 0.005,              doi: '10.3847/1538-4357/ab3a3d' },
+  { ref: 'Ségransan 2003', method: 'interferometry',            val: 0.118,  err: 0.011,              doi: '10.1051/0004-6361:20030130' },
+];
+
+const V2_RADIUS_MEAS = [
+  { ref: 'Boyajian 2012',  method: 'interferometry',            val: 0.1542, err: 0.0045, rec: true,  doi: '10.1088/0004-637X/757/2/112' },
+  { ref: 'Demory 2009',    method: 'interferometry',            val: 0.141,  err: 0.007,              doi: '10.1051/0004-6361/200913354' },
 ];
 
 const V2_PLANETS = [
-  { name: 'Proxima b', m: 1.07, r: 1.03,   p:   11.186, rec: true },
-  { name: 'Proxima c', m: 7.0,  r: null,   p: 1928 },
-  { name: 'Proxima d', m: 0.26, r: null,   p:    5.122, rec: true },
+  { name: 'Proxima b', m: 1.07, r: 1.03,   p:   11.186, rec: true,
+    sma: 0.04857, ecc: 0.109, inc: null, incNote: '—',
+    method: 'Radial Velocity', ref: 'Anglada-Escudé 2016' },
+  { name: 'Proxima c', m: 7.0,  r: null,   p: 1928.0,
+    sma: 1.489,   ecc: 0.04,  inc: null, incNote: '—',
+    method: 'Radial Velocity', ref: 'Damasso 2020' },
+  { name: 'Proxima d', m: 0.26, r: null,   p:    5.122, rec: true,
+    sma: 0.02885, ecc: 0,     inc: null, incNote: '—',
+    method: 'Radial Velocity', ref: 'Faria 2022' },
 ];
 
 // brown dwarf (L/T/Y) → 'M' 그룹으로 매핑. spectral classification 상 M 의
@@ -468,12 +557,31 @@ function specStyleVars(cls) {
   ].join('; ');
 }
 
-// detail panel content (rep-row + dp-grid) — desktop row 의 wrapper 와 mobile card 의 expand 양쪽에서 재사용.
+// 0-1 / 0-255 컬러 분해 (v1 docs/index.html 의 to01 / to255 와 동일 패턴)
+function hexToRGB(hex) {
+  const m = hex.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (!m) return { r: 255, g: 200, b: 140 };
+  return { r: parseInt(m[1], 16), g: parseInt(m[2], 16), b: parseInt(m[3], 16) };
+}
+function rgb01(rgb) { return [rgb.r, rgb.g, rgb.b].map(v => (v / 255).toFixed(3)).join(', '); }
+function rgb255(rgb) { return [rgb.r, rgb.g, rgb.b].join(', '); }
+
+// 행성 데이터 (Proxima Cen 만 sample 채움, 나머지는 빈 배열로 처리)
+function planetsFor(s) {
+  if (s.np > 0 && s.sys === 'Proxima Cen') return V2_PLANETS;
+  return [];
+}
+
+// detail panel content — desktop row wrapper 와 mobile card expand 양쪽에서 재사용.
 function detailContentHTML(s) {
   const teffColor = teffRGBv2(s.teff);
-  const meas = V2_MEASUREMENTS.map(m => `
+  const rgb = hexToRGB(teffColor);
+  const ex = s.extra || {};
+  const simbadUrl = `https://simbad.u-strasbg.fr/simbad/sim-id?Ident=${encodeURIComponent(s.name)}`;
+
+  const measRows = V2_MEASUREMENTS.map(m => `
     <tr class="${m.rec ? 'rec' : ''}">
-      <td class="nm">${m.ref}</td>
+      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.ref}</a>` : m.ref}</td>
       <td><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
       <td>${m.val.toFixed(4)}</td>
       <td>${m.err.toFixed(4)}</td>
@@ -481,17 +589,45 @@ function detailContentHTML(s) {
     </tr>
   `).join('');
 
-  const planets = V2_PLANETS.map(p => `
+  const radRows = V2_RADIUS_MEAS.map(m => `
+    <tr class="${m.rec ? 'rec' : ''}">
+      <td class="nm">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.ref}</a>` : m.ref}</td>
+      <td><span class="a2-method ${m.method}">${m.method.replace(/_/g, ' ')}</span></td>
+      <td>${m.val.toFixed(5)}</td>
+      <td>${m.err.toFixed(5)}</td>
+      <td>${m.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+    </tr>
+  `).join('');
+
+  const plList = planetsFor(s);
+  const planetRows = plList.map(p => `
     <tr class="${p.rec ? 'rec' : ''}">
       <td class="nm">${p.name}</td>
+      <td><span class="a2-method default">${p.method}</span></td>
+      <td>${p.p.toFixed(3)}</td>
+      <td>${p.sma != null ? p.sma.toFixed(4) : '—'}</td>
+      <td>${p.ecc != null ? p.ecc.toFixed(3) : '—'}</td>
+      <td>${p.inc != null ? p.inc.toFixed(2) : (p.incNote || '—')}</td>
       <td>${p.m.toFixed(3)}</td>
       <td>${p.r != null ? p.r.toFixed(3) : '—'}</td>
-      <td>${p.p.toFixed(3)}</td>
-      <td>${p.rec ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
+      <td class="nm">${p.ref}</td>
     </tr>
   `).join('');
 
   const p3chips = s.p3.map(l => `<a class="a2-rep-chip p3"><b>P3</b> ${l}</a>`).join('');
+
+  const fovOpts = [5, 15, 30, 60, 120];
+  const fovOn = 15;
+  const surveys = [
+    { name: 'Legacy', avail: false },
+    { name: 'PS1', avail: false },
+    { name: 'SkyM', avail: true },
+    { name: '2MASS', avail: true },
+    { name: 'unWISE', avail: true },
+    { name: 'POSS2 B', avail: true, on: true },
+    { name: 'POSS2 R', avail: true },
+    { name: 'POSS1', avail: false },
+  ];
 
   return `
     <div class="a2-rep-row">
@@ -507,34 +643,84 @@ function detailContentHTML(s) {
           <div class="a2-reticle"></div>
         </div>
         <div style="font-size:10px; font-family: var(--v2-font-mono); color: var(--v2-fg-4); margin-top:8px">
-          Pan-STARRS PS1 · star at crosshair · epoch 2012
+          DSS POSS2 blue · star at crosshair · plate epoch 1976.20
         </div>
+
+        <div class="a2-img-links">
+          <div class="a2-fov-picker">
+            ${fovOpts.map(f => `<button class="a2-fov-btn${f === fovOn ? ' on' : ''}">${f}′</button>`).join('')}
+          </div>
+          <div class="a2-survey-picker">
+            ${surveys.map(s => `<button class="a2-survey-btn${s.on ? ' on' : ''}"${s.avail ? '' : ' disabled'}>${s.name}</button>`).join('')}
+          </div>
+          <div class="a2-ext-row">
+            <a class="a2-ext-link" href="${simbadUrl}" target="_blank" rel="noopener">SIMBAD ↗</a>
+            <button class="a2-ext-link">☄ Stellarium</button>
+          </div>
+        </div>
+
         <div style="margin-top:22px">
-          <div class="a2-section-h">Astrometry</div>
-          <div class="a2-kv">
-            <span class="k">Dist</span><span class="v">${s.dist.toFixed(3)} pc · ${(s.dist*3.262).toFixed(2)} ly</span>
-            <span class="k">V mag</span><span class="v">11.13</span>
+          <div class="a2-section-h">${s.name}${s.comp ? ' ' + s.comp : ''} — Star Color (Teff ${s.teff.toLocaleString()} K)</div>
+          <div class="a2-cc-wrap" style="--cc-glow: ${teffColor}55">
+            <div class="a2-cc-swatch" style="background: ${teffColor}"></div>
+            <div class="a2-cc-vals">
+              <div class="a2-cc-row"><span class="k">Hex</span><span class="v">${teffColor.toUpperCase()}</span><button class="a2-cc-copy" data-c="${teffColor.toUpperCase()}">copy</button></div>
+              <div class="a2-cc-row"><span class="k">0–1</span><span class="v">${rgb01(rgb)}</span><button class="a2-cc-copy" data-c="${rgb01(rgb)}">copy</button></div>
+              <div class="a2-cc-row"><span class="k">0–255</span><span class="v">${rgb255(rgb)}</span><button class="a2-cc-copy" data-c="${rgb255(rgb)}">copy</button></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Astrometry · ${ex.src || 'Gaia DR3'} · ${ex.ep || 'J2016.0'}</div>
+          <div class="a2-kv-wide">
+            <span class="k">RA</span><span class="v">${ex.ra != null ? ex.ra.toFixed(6) : '—'} °</span>
+            <span class="k">Dec</span><span class="v">${ex.dec != null ? ex.dec.toFixed(6) : '—'} °</span>
+            <span class="k">Parallax</span><span class="v">${ex.plx != null ? `${ex.plx.toFixed(3)} ± ${(ex.plxe || 0).toFixed(3)} mas` : '—'}</span>
+            <span class="k">PM RA</span><span class="v">${ex.pmra != null ? ex.pmra.toFixed(3) + ' mas/yr' : '—'}</span>
+            <span class="k">PM Dec</span><span class="v">${ex.pmdec != null ? ex.pmdec.toFixed(3) + ' mas/yr' : '—'}</span>
+            <span class="k">RV</span><span class="v">${ex.rv != null ? `${ex.rv.toFixed(2)} km/s · ${ex.rvSrc || ''}` : '—'}</span>
             <span class="k">Teff</span><span class="v">${s.teff.toLocaleString()} K</span>
-            <span class="k">Mass</span><span class="v">${s.mass.toFixed(4)} M☉</span>
-            <span class="k">Radius</span><span class="v">${s.rad.toFixed(4)} R☉</span>
+            <span class="k">App. Mag</span><span class="v">${ex.vmag != null ? ex.vmag.toFixed(2) + ' V' : '—'}</span>
+            <span class="k">Spec Type</span><span class="v">${s.spec}</span>
+          </div>
+        </div>
+
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Distance derived</div>
+          <div class="a2-kv-wide">
+            <span class="k">pc</span><span class="v">${s.dist.toFixed(4)} pc</span>
+            <span class="k">ly</span><span class="v">${(s.dist*3.262).toFixed(3)} ly</span>
+            <span class="k">km</span><span class="v">${(s.dist*3.0857e13).toExponential(4)} km</span>
           </div>
         </div>
       </div>
       <div>
-        <div class="a2-section-h">
-          Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${V2_MEASUREMENTS.length} papers</span>
-        </div>
+        <div class="a2-section-h">Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${V2_MEASUREMENTS.length} papers</span></div>
         <table class="a2-mt">
           <thead><tr><th>Paper</th><th>Method</th><th>M☉</th><th>±</th><th></th></tr></thead>
-          <tbody>${meas}</tbody>
+          <tbody>${measRows}</tbody>
         </table>
+
         <div style="margin-top:22px">
-          <div class="a2-section-h">Planets · ${V2_PLANETS.length}</div>
+          <div class="a2-section-h">Radius measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${V2_RADIUS_MEAS.length} papers</span></div>
           <table class="a2-mt">
-            <thead><tr><th>Planet</th><th>M⊕</th><th>R⊕</th><th>Period (d)</th><th></th></tr></thead>
-            <tbody>${planets}</tbody>
+            <thead><tr><th>Paper</th><th>Method</th><th>R☉</th><th>±</th><th></th></tr></thead>
+            <tbody>${radRows}</tbody>
           </table>
         </div>
+
+        ${plList.length > 0 ? `
+        <div style="margin-top:22px">
+          <div class="a2-section-h">Planets · ${plList.length}</div>
+          <div class="a2-mt-scroll">
+            <table class="a2-mt">
+              <thead><tr><th>Planet</th><th>Method</th><th>Period (d)</th><th>SMA (AU)</th><th>Ecc</th><th>Inc (°)</th><th>M⊕</th><th>R⊕</th><th>Reference</th></tr></thead>
+              <tbody>${planetRows}</tbody>
+            </table>
+          </div>
+        </div>
+        ` : ''}
       </div>
     </div>
   `;
@@ -635,7 +821,24 @@ function toggleKey(key) {
 
 function attachClicks() {
   document.querySelectorAll('.a2-row, .a2-card').forEach(el => {
-    el.addEventListener('click', () => toggleKey(el.dataset.key));
+    el.addEventListener('click', (e) => {
+      // 내부 인터랙티브 요소 (copy/link/picker) 는 토글에 전파 안 함.
+      if (e.target.closest('.a2-cc-copy, .a2-ext-link, .a2-fov-btn, .a2-survey-btn, .a2-rep-chip, .a2-rep-index, a, button')) return;
+      toggleKey(el.dataset.key);
+    });
+  });
+  document.querySelectorAll('.a2-cc-copy').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const val = btn.dataset.c;
+      if (!navigator.clipboard) { btn.textContent = 'err'; return; }
+      navigator.clipboard.writeText(val).then(() => {
+        btn.classList.add('copied');
+        const orig = btn.textContent;
+        btn.textContent = 'copied';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = orig; }, 1200);
+      });
+    });
   });
 }
 
