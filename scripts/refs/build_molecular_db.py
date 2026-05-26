@@ -496,7 +496,16 @@ MOLECULES = {
         },
     },
 
-    # ── Tier 2: stubs (no_data; upgrade when Phase 3 encounters) ─────
+    # ── Tier 2: stubs + refined entries ──────────────────────────────
+    # Status decided after spectroscopic review. Where the literature
+    # supports it, entries have been upgraded out of no_data (FeO
+    # reentry → visible, NH2 aurora → visible). Where the molecule's
+    # role is thermal opacity rather than plasma emission (TiO, VO),
+    # no_data is retained with a note about the future thermal_emission
+    # regime. Where the molecule dissociates rather than emits in
+    # visible (HCl, HF), status is not_emitter with explicit dissociation
+    # products pointing at the atomic species in element DB.
+
     "TiO": {
         "formula": "TiO",
         "mass_amu": 63.87,
@@ -504,18 +513,22 @@ MOLECULES = {
         "regimes": {
             "reentry_plasma": {
                 "status": "no_data",
-                "basis": "Lava-world rock vapor + late M-dwarf atmosphere candidate. "
-                         "Complex γ/γ' band system in red/IR; visible-band emission "
-                         "not well characterized for our plasma temperature regime.",
-                "source": "Late M-dwarf atmospheric models; meteor spectroscopy",
-                "upgrade_when": "Phase 3 lava world synthesis cites TiO emission, OR M-dwarf surface mineral vapor analysis",
+                "basis": "Titanium monoxide is primarily a *thermal opacity* signature, "
+                         "not a plasma emitter. γ-system (A 3Φ - X 3Δ) red bands at "
+                         "670/705/770nm dominate M-dwarf atmospheric opacity and lava-"
+                         "world surface glow. α-system (B 3Π - X 3Δ) at 487nm contributes "
+                         "blue-green minority. At reentry plasma temps (8000-15000 K) TiO "
+                         "dissociates to Ti + O — direct emission negligible.",
+                "source": "NIST TiO; M-dwarf opacity literature",
+                "upgrade_when": "Future `thermal_emission` regime is added (covers lava-world surface + cool-dwarf atmosphere thermal radiation, not shock-heated plasma)",
             },
             "aurora": {
                 "status": "no_data",
-                "basis": "Not applicable in normal aurora altitudes; TiO would only appear "
-                         "in extreme hot-jupiter upper atmospheres.",
+                "basis": "Not applicable at typical aurora altitudes — TiO requires "
+                         "high-T atmosphere where it's a thermal opacity signature, not "
+                         "an electron-impact emitter.",
                 "source": "—",
-                "upgrade_when": "Hot Jupiter Phase 3 synthesis",
+                "upgrade_when": "Hot-Jupiter Phase 3 with very high-T upper atmosphere",
             },
         },
     },
@@ -525,16 +538,18 @@ MOLECULES = {
         "atoms": 2,
         "regimes": {
             "reentry_plasma": {
-                "status": "no_data",
-                "basis": "Lava-world silicate vapor. Strongest emission IR (8μm); "
-                         "visible band emission near-UV (220nm) below human range. "
-                         "Likely contributes via continuum.",
-                "source": "Lava planet atmosphere models",
-                "upgrade_when": "Phase 3 lava world synthesis with silicate vapor",
+                "status": "not_visible_to_humans",
+                "basis": "Silicon monoxide emission is dominated by IR rotational-"
+                         "vibrational bands (fundamental at 8μm + overtones). Electronic "
+                         "transitions UV 220-280nm. Visible γ-system bands at 433/471nm "
+                         "exist but are perceptually negligible vs IR thermal continuum. "
+                         "Lava-world silicate vapor candidate.",
+                "source": "NIST SiO; lava-planet atmosphere models",
+                "upgrade_when": "Phase 3 lava world with explicit visible-band SiO emission scenario",
             },
             "aurora": {
                 "status": "no_data",
-                "basis": "Not applicable at standard aurora altitudes.",
+                "basis": "Not relevant at aurora altitudes (SiO requires high surface T).",
                 "source": "—",
                 "upgrade_when": "—",
             },
@@ -546,16 +561,24 @@ MOLECULES = {
         "atoms": 2,
         "regimes": {
             "reentry_plasma": {
-                "status": "no_data",
-                "basis": "Iron oxide vapor in meteor + lava-world atmospheres. "
-                         "Orange band system 580-620nm — but emission strength in "
-                         "shock-heated plasma not curated.",
-                "source": "Meteor spectroscopy",
-                "upgrade_when": "Phase 3 cites FeO band; meteor-class entry effects",
+                "canonical_hex": "#ff6030",
+                "lines": [(580.0, 400, "FeO B-X (0,0) orange"),
+                          (597.0, 350, "FeO B-X (0,1)"),
+                          (612.0, 300, "FeO B-X (0,2)"),
+                          (560.0, 200, "FeO B-X high-v")],
+                "basis": "Iron monoxide B-X orange band system 580-612nm is the iconic "
+                         "afterglow color of meteor ablation — the orange streak you see "
+                         "behind a bright meteor is largely FeO chemiluminescence "
+                         "(Fe + O3 → FeO* + O2; FeO* → FeO + hν). Same chemistry in "
+                         "meteor-class reentry of rocky bodies.",
+                "source": "Meteor spectroscopy (Jenniskens 2007); NIST FeO B-X",
             },
             "aurora": {
                 "status": "no_data",
-                "basis": "Meteor-class aurora chemistry; mostly Fe I atomic.",
+                "basis": "Meteor aurora signature is mostly atomic Fe (element DB) plus "
+                         "the FeO orange afterglow in the wake. Whether 'aurora' "
+                         "(magnetospheric) FeO emission exists for any natural body "
+                         "is not well documented.",
                 "source": "Meteor aurora literature",
                 "upgrade_when": "—",
             },
@@ -568,16 +591,20 @@ MOLECULES = {
         "regimes": {
             "reentry_plasma": {
                 "status": "no_data",
-                "basis": "Magnesium oxide rock vapor. Green band system 500nm — but "
-                         "emission largely overshadowed by atomic Mg b triplet "
-                         "(see element DB Mg entry).",
-                "source": "Meteor + lava chemistry",
-                "upgrade_when": "Phase 3 specifies MgO band over atomic Mg",
+                "basis": "MgO B 1Σ - X 1Σ green band system near 500nm exists, but in "
+                         "plasma MgO dissociates rapidly and the visible signature is "
+                         "dominated by atomic Mg b triplet (516.7/517.3/518.4nm — see "
+                         "element DB Mg entry). MgO direct emission contribution to "
+                         "perceived color is negligible vs atomic Mg.",
+                "dissociation_products": ["Mg", "O"],
+                "source": "NIST MgO; meteor spectroscopy",
+                "upgrade_when": "Phase 3 lava-world scenario where MgO molecular band is explicitly modeled vs atomic Mg",
             },
             "aurora": {
                 "status": "no_data",
-                "basis": "Atomic Mg dominates over MgO in low-density aurora.",
-                "source": "—",
+                "basis": "Atomic Mg b triplet dominates in low-density meteor aurora.",
+                "dissociation_products": ["Mg", "O"],
+                "source": "Meteor aurora literature",
                 "upgrade_when": "—",
             },
         },
@@ -589,11 +616,13 @@ MOLECULES = {
         "regimes": {
             "reentry_plasma": {
                 "status": "no_data",
-                "basis": "Vanadium oxide. Cool-dwarf atmospheric opacity signature; "
-                         "complex band system mostly in red/IR. Emission characteristics "
-                         "in plasma not characterized.",
-                "source": "Late M-dwarf + brown dwarf atmospheres",
-                "upgrade_when": "Late-M-dwarf planet Phase 3 with surface vapor",
+                "basis": "Vanadium monoxide γ-system 570-580nm + α-system 786-854nm "
+                         "(Wing-Ford band) is a diagnostic feature in late M-dwarf and "
+                         "brown-dwarf atmospheric opacity. Same caveat as TiO: it's a "
+                         "thermal-opacity signature, not a shock-plasma emitter. At "
+                         "reentry temps dissociates to V + O.",
+                "source": "NIST VO; late-M/brown-dwarf atmosphere literature (Allard et al.)",
+                "upgrade_when": "Future `thermal_emission` regime, OR a NearStars planet around an L-dwarf",
             },
             "aurora": {
                 "status": "no_data",
@@ -609,17 +638,21 @@ MOLECULES = {
         "atoms": 2,
         "regimes": {
             "reentry_plasma": {
-                "status": "no_data",
-                "basis": "Hydrogen chloride trace. UV-dominant emission; visible "
-                         "contribution faint. Venus + volcanic outgassing context.",
-                "source": "Venus atmospheric chemistry",
-                "upgrade_when": "Phase 3 Venus-class with HCl trace",
+                "status": "not_emitter",
+                "basis": "HCl intrinsic emission is dominated by IR vibrational-"
+                         "rotational fundamentals (~3.4μm) + UV electronic transitions "
+                         "(170-220nm V→0). At plasma temps HCl dissociates rapidly to "
+                         "H + Cl. Visible signature inherits from atomic H Balmer + "
+                         "atomic Cl I (754nm + visible bands; see element DB).",
+                "dissociation_products": ["H", "Cl"],
+                "source": "NIST HCl; Venus atmospheric chemistry",
             },
             "aurora": {
-                "status": "no_data",
-                "basis": "Photodissociates → H + Cl. Cl atomic emission cataloged in element DB.",
-                "source": "—",
-                "upgrade_when": "—",
+                "status": "not_emitter",
+                "basis": "Photodissociates above ~80km → H + Cl. Visible contribution "
+                         "via atomic Cl (faint visible) + Hα.",
+                "dissociation_products": ["H", "Cl"],
+                "source": "Atmospheric photochemistry",
             },
         },
     },
@@ -629,17 +662,20 @@ MOLECULES = {
         "atoms": 2,
         "regimes": {
             "reentry_plasma": {
-                "status": "no_data",
-                "basis": "Hydrogen fluoride trace. Emission mostly IR rotational/vibrational. "
-                         "Volcanic / cometary outgassing context.",
-                "source": "Comet HF observations",
-                "upgrade_when": "Phase 3 cometary outgassing scenario",
+                "status": "not_emitter",
+                "basis": "HF intrinsic emission is dominantly IR (3μm vibrational) + UV "
+                         "electronic. No significant visible band. At plasma temps "
+                         "dissociates → H + F. F atomic emission also mostly UV/IR — "
+                         "essentially invisible in this regime.",
+                "dissociation_products": ["H", "F"],
+                "source": "NIST HF; comet HF observations",
             },
             "aurora": {
-                "status": "no_data",
-                "basis": "Photodissociates; products mostly invisible (Cl F UV).",
-                "source": "—",
-                "upgrade_when": "—",
+                "status": "not_emitter",
+                "basis": "Photodissociates; products invisible. HF rarely seen in "
+                         "non-cometary aurora contexts.",
+                "dissociation_products": ["H", "F"],
+                "source": "Comet HF literature",
             },
         },
     },
@@ -649,20 +685,22 @@ MOLECULES = {
         "atoms": 4,
         "regimes": {
             "reentry_plasma": {
-                "status": "no_data",
-                "basis": "Acetylene — Titan tholin precursor + Jupiter aurora chemistry. "
-                         "Dissociates to CH + CH or C2 + H2 + H. Reentry contribution "
-                         "primarily via C2 Swan + CH bands (see C2, CH entries).",
+                "status": "not_emitter",
+                "basis": "Acetylene undergoes stepwise plasma dissociation: "
+                         "C2H2 + e⁻ → C2H + H, C2H → C2 + H, 2C2H → C2 + C2H2. "
+                         "Visible signature is the sum of C2 Swan (516/473nm green) + "
+                         "CH (431nm blue) + atomic Hα. Titan tholin precursor + "
+                         "Jupiter auroral hydrocarbon chemistry.",
                 "dissociation_products": ["C2", "CH", "H"],
-                "source": "Titan + sub-Neptune hydrocarbon photochemistry",
-                "upgrade_when": "Phase 3 Titan-class tholin haze synthesis",
+                "source": "Titan + sub-Neptune hydrocarbon photochemistry; Jupiter auroral H2/C chemistry",
             },
             "aurora": {
-                "status": "no_data",
-                "basis": "Tholin photochemistry intermediate; not a direct emitter.",
+                "status": "not_emitter",
+                "basis": "Photolyzes above ~80km in tholin chemistry. Products: "
+                         "C2H, C2, CH, H — direct emission via C2 Swan + Hα in "
+                         "Jovian-class aurora.",
                 "dissociation_products": ["C2", "CH", "H"],
-                "source": "—",
-                "upgrade_when": "—",
+                "source": "Titan upper-atmosphere photochemistry; Jupiter Hubble observations",
             },
         },
     },
@@ -672,18 +710,27 @@ MOLECULES = {
         "atoms": 3,
         "regimes": {
             "reentry_plasma": {
-                "status": "no_data",
-                "basis": "Amidogen — NH3 photolysis intermediate. Visible band system "
-                         "around 570-690nm (NH2 α-bands). Not characterized for our "
-                         "plasma regime.",
-                "source": "NIST NH2; comet spectra",
-                "upgrade_when": "Phase 3 ammonia-rich atmosphere photochemistry",
+                "status": "not_emitter",
+                "basis": "Amidogen — NH3 photolysis intermediate. At reentry plasma "
+                         "temperatures NH2 dissociates rapidly to NH + H. Visible "
+                         "signature inherits from NH bands (336nm UV + faint visible) "
+                         "+ atomic Hα.",
+                "dissociation_products": ["NH", "H"],
+                "source": "NIST NH2; ice-giant chemistry",
             },
             "aurora": {
-                "status": "no_data",
-                "basis": "NH2 α-bands visible in comet comae; sub-Neptune aurora possible.",
-                "source": "Comet NH2 imaging",
-                "upgrade_when": "Sub-Neptune aurora Phase 3",
+                "canonical_hex": "#e87850",
+                "lines": [(597.6, 300, "NH2 α-band A-X (0,9,0)"),
+                          (610.6, 350, "NH2 α-band (0,8,0)"),
+                          (630.6, 400, "NH2 α-band (0,7,0)"),
+                          (653.0, 350, "NH2 α-band (0,6,0)"),
+                          (666.5, 300, "NH2 α-band (0,5,0)")],
+                "basis": "NH2 A 2A1 - X 2B1 α-band system 597-666nm is famously observed "
+                         "in comet comae (Halley's comet bright red α-band). In "
+                         "ammonia-rich sub-Neptune / ice-giant upper atmospheres at low "
+                         "density, NH2 from NH3 photolysis can persist long enough to "
+                         "emit. Warm red-orange visual signature.",
+                "source": "Comet NH2 spectroscopy (Halley 1986); NIST NH2",
             },
         },
     },
@@ -694,14 +741,18 @@ MOLECULES = {
         "regimes": {
             "reentry_plasma": {
                 "status": "not_emitter",
-                "basis": "Sulfuric acid — Venus cloud chemistry. Dissociates → "
-                         "SO3 + H2O → SO2 + O + ... Cascades to SO + S emission.",
-                "dissociation_products": ["SO3", "SO2", "SO", "H2O", "H"],
-                "source": "Venus cloud chemistry",
+                "basis": "Sulfuric acid undergoes thermal + photolytic cascade: "
+                         "H2SO4 → SO3 + H2O → SO2 + ½ O2 → SO + O → S + O. Visible "
+                         "signature comes from the cascade products: SO band (pale "
+                         "blue-green) + S atomic. Venus cloud-droplet chemistry; "
+                         "no direct H2SO4 emission.",
+                "dissociation_products": ["SO3", "SO2", "SO", "S", "H2O"],
+                "source": "Venus cloud + photochemistry literature",
             },
             "aurora": {
                 "status": "not_emitter",
-                "basis": "Photolyzes; products feed SO + atomic S emission.",
+                "basis": "Photolyzes; products feed SO continuum + atomic S faint "
+                         "emission at Venus mesosphere altitudes.",
                 "dissociation_products": ["SO", "S", "OH"],
                 "source": "Venus upper-atmosphere photochemistry",
             },
