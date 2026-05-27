@@ -769,8 +769,11 @@ for target in target_list:
         existing_dois    = {s.get("doi")     for s in sources if s.get("doi")}
         existing_bibcodes = {s.get("bibcode") for s in sources if s.get("bibcode")}
 
-        # 질량·반지름 측정값의 DOI/bibcode 자동 추가
-        for kind, meas_list in (("mass", mass_meas), ("radius", radius_meas)):
+        # 질량·반지름·disk 측정값의 DOI/bibcode 자동 추가.
+        # disk 는 한 별이 여러 belt × paper entries 를 가질 수 있어서
+        # belt label 을 used_for 에 포함시킨다 (e.g. "eps Eri disk main_cold").
+        for kind, meas_list in (("mass", mass_meas), ("radius", radius_meas),
+                                 ("disk", disk_meas)):
             for m in meas_list:
                 # emit_source=false 면 sources[] 자동 생성 건너뜀
                 # (cross-reference 목적의 superseded entry 등).
@@ -793,7 +796,10 @@ for target in target_list:
                 if "source_used_for" in m:
                     src_used = m["source_used_for"]
                 else:
-                    src_used = [f"{star_name} {kind} ({m.get('method', 'unspecified')})"]
+                    label = f"{star_name} {kind}"
+                    if kind == "disk" and m.get("belt"):
+                        label = f"{label} {m['belt']}"
+                    src_used = [f"{label} ({m.get('method', 'unspecified')})"]
                 sources.append({
                     "title":    src_title,
                     "doi":      doi,

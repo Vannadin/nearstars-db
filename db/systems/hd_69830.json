@@ -384,6 +384,42 @@
       "used_for": [
         "HD 69830 radius (unverified)"
       ]
+    },
+    {
+      "title": "Beichman et al. 2005",
+      "doi": "10.1086/430059",
+      "bibcode": "2005ApJ...626.1061B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "HD 69830 disk warm (sed_fit)"
+      ]
+    },
+    {
+      "title": "Smith, Wyatt & Haniff 2009",
+      "doi": "10.1051/0004-6361/200912330",
+      "bibcode": "2009A&A...503..265S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "HD 69830 disk warm (sed_fit)"
+      ]
+    },
+    {
+      "title": "Lisse et al. 2007",
+      "doi": "10.1086/510999",
+      "bibcode": "2007ApJ...658..584L",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "HD 69830 disk warm (sed_fit)"
+      ]
+    },
+    {
+      "title": "Wyatt et al. 2007",
+      "doi": "10.1086/518404",
+      "bibcode": "2007ApJ...663..365W",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "HD 69830 disk warm (unverified)"
+      ]
     }
   ],
   "meta": {

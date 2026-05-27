@@ -258,6 +258,60 @@
       "used_for": [
         "Fomalhaut radius (interferometry)"
       ]
+    },
+    {
+      "title": "Kalas et al. 2005",
+      "doi": "10.1038/nature03601",
+      "bibcode": "2005Natur.435.1067K",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Fomalhaut disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Boley et al. 2012",
+      "doi": "10.1088/2041-8205/750/1/L21",
+      "bibcode": "2012ApJ...750L..21B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Fomalhaut disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "White et al. 2017",
+      "doi": "10.3847/1538-4357/aa74cb",
+      "bibcode": "2017ApJ...842...80W",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Fomalhaut disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Gaspar et al. 2023",
+      "doi": "10.1038/s41550-023-01962-6",
+      "bibcode": "2023NatAs...7..790G",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Fomalhaut disk inner_warm (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Acke et al. 2012",
+      "doi": "10.1051/0004-6361/201118581",
+      "bibcode": "2012A&A...540A.125A",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Fomalhaut disk main_cold (sed_fit)"
+      ]
+    },
+    {
+      "title": "Holland et al. 2017",
+      "doi": "10.1093/mnras/stx1378",
+      "bibcode": "2017MNRAS.470.3606H",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Fomalhaut disk main_cold (photometric_excess)"
+      ]
     }
   ],
   "meta": {
