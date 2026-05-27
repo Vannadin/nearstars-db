@@ -247,9 +247,15 @@ Stellarium 까지 포함한 3-way 비교는
 | 행성 | **e, f, g, h** | **f, g, h** (e 없음) |
 | 출처 | Feng 2017 | Feng 2017, `pl_controv_flag=1` |
 
-> **NS는 Tau Ceti e 누락.** 같은 출처 논문, 같은 dispute flag. 의도적
-> curation 가능성 높지만 (e가 4개 중 가장 disputed) 미확인. → open
-> question.
+> **NS는 Tau Ceti e 누락 — 2026-05-27 RESOLVED.** NEA 가
+> 2026-04-09 에 e 의 disposition 을 "False Positive Planet" 으로
+> flip 했습니다. Figueira 외 2025 (`2025A&A...700A.174F`,
+> doi:10.1051/0004-6361/202553869) ESPRESSO sub-10 cm/s RV 비검출
+> 인용. DB 의 2026-05-22 retrieval 이 정상적으로 e 누락 상태를
+> 가져왔습니다 — 큐레이션 오버사이트 아님. Figueira 2025 는 f/g/h 도
+> ESPRESSO 검출 floor 근처에 있다고 보고하며, NEA 는 f/g/h 를 여전히
+> pl_controv_flag=1 로 분류하지만 Feng 2017 의 4 행성 시스템 전체가
+> retraction watch 상태입니다.
 
 ### TRAPPIST-1
 
@@ -306,9 +312,14 @@ Stellarium 까지 포함한 3-way 비교는
    단계가 retraction을 능동적으로 모니터링해야 작동. NEA의
    `pl_controv_flag` 가 우리 리뷰 경로에 전파되는지 확인 필요.
 
-3. **Tau Ceti e 조사.** Feng 2017의 4개 검출 중 가장 disputed라
-   의도적으로 뺐을 가능성이 높지만, 또는 단순 누락. 어느 쪽이든
-   `db/systems/tau_cet.json::meta.notes` 에 명시 권장.
+3. **Tau Ceti e 조사 — 2026-05-27 RESOLVED.** 큐레이션 오버사이트가
+   아닙니다. NEA 가 2026-04-09 에 e 를 "False Positive Planet" 으로
+   재분류했습니다 (Figueira 외 2025 ESPRESSO 비검출). 처분 이력은
+   `tau_cet.json::meta.notes` 에 기록. f/g/h 는 여전히
+   `pl_controv_flag=1` 이지만 retraction watch (같은 Figueira 2025 가
+   f/g/h 도 검출 floor 근처/이하로 보고). Project Hail Mary 연결
+   (Tau Cet e = "Adrian") 은 [cultural-context](cultural-context.md)
+   참조.
 
 4. **Proxima T_eff 재검토.** NS의 3498 K가 출판된 범위 상단에 있음.
    `proxima_cen.json::meta.notes` 에 선택 근거 명시 권장.

@@ -425,6 +425,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md."
   }
 }

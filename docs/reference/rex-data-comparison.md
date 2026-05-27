@@ -259,9 +259,15 @@ rotation convention.
 | Planets | **e, f, g, h** | **f, g, h** (no e) |
 | Source | Feng 2017 | Feng 2017, `pl_controv_flag=1` |
 
-> **NS is missing Tau Ceti e.** Same source paper, same dispute
-> flag. Probably intentional curation (e was the most disputed of
-> the four), but unverified. → open question.
+> **NS is missing Tau Ceti e — RESOLVED 2026-05-27.** NEA flipped
+> e's disposition to "False Positive Planet" on 2026-04-09, citing
+> Figueira et al. 2025 (`2025A&A...700A.174F`,
+> doi:10.1051/0004-6361/202553869) ESPRESSO sub-10 cm/s RV
+> non-detection. DB retrieval 2026-05-22 correctly inherited the
+> absence — not a curation oversight. Figueira 2025 also reports
+> that f/g/h sit at or below ESPRESSO's detection floor; NEA still
+> classifies them as pl_controv_flag=1, but the entire Feng 2017
+> 4-planet system is now on retraction watch.
 
 ### TRAPPIST-1
 
@@ -319,9 +325,14 @@ Example: TRAPPIST-1b a = 0.01155 AU (REX) vs 0.01154 AU (NS).
    confirming that NEA's `pl_controv_flag` propagates into our review
    path.
 
-3. **Tau Ceti e investigation.** Either deliberately dropped (most
-   disputed of the four Feng 2017 detections) or oversight. Document
-   in `db/systems/tau_cet.json::meta.notes` either way.
+3. **Tau Ceti e investigation — RESOLVED 2026-05-27.** Not a curation
+   oversight. NEA reclassified e to "False Positive Planet" on
+   2026-04-09 per Figueira et al. 2025 (ESPRESSO non-detection).
+   `tau_cet.json::meta.notes` updated with the disposition history.
+   f/g/h remain `pl_controv_flag=1` but are on retraction watch
+   (same Figueira 2025 paper finds them at/below the detection
+   floor). See [cultural-context](cultural-context.md) for the
+   Project Hail Mary connection (Tau Cet e = "Adrian").
 
 4. **Proxima T_eff worth a second look.** NS's 3498 K sits at the
    upper bound of the published range. Document the choice in
