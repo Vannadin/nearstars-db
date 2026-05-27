@@ -1379,69 +1379,105 @@
   "tau Cet": [
     {
       "pl_name": "tau Cet f",
-      "orbital": {
-        "semi_major_axis_au": 1.334,
-        "eccentricity": 0.16,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 119.75,
-        "epoch_jd": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "source": "Feng et al. 2017",
-        "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
-      },
-      "physical": {
-        "mass_mearth": 3.93,
-        "uncertainty_mearth": 1.05,
-        "mass_type": "Msini",
-        "source": "Feng et al. 2017",
-        "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
-      }
+      "orbital": [
+        {
+          "period_days": 636.13,
+          "uncertainty_period_days": 47.69,
+          "semi_major_axis_au": 1.334,
+          "uncertainty_semi_major_axis_au": 0.044,
+          "eccentricity": 0.16,
+          "uncertainty_eccentricity": 0.16,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 119.75,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 3.93,
+          "uncertainty_mearth": 1.37,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     },
     {
       "pl_name": "tau Cet g",
-      "orbital": {
-        "semi_major_axis_au": 0.133,
-        "eccentricity": 0.06,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 395.341,
-        "epoch_jd": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "source": "Feng et al. 2017",
-        "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
-      },
-      "physical": {
-        "mass_mearth": 1.75,
-        "uncertainty_mearth": 0.25,
-        "mass_type": "Msini",
-        "source": "Feng et al. 2017",
-        "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
-      }
+      "orbital": [
+        {
+          "period_days": 20.0,
+          "uncertainty_period_days": 0.02,
+          "semi_major_axis_au": 0.133,
+          "uncertainty_semi_major_axis_au": 0.002,
+          "eccentricity": 0.06,
+          "uncertainty_eccentricity": 0.13,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 395.341,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.75,
+          "uncertainty_mearth": 0.4,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     },
     {
       "pl_name": "tau Cet h",
-      "orbital": {
-        "semi_major_axis_au": 0.243,
-        "eccentricity": 0.23,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 7.45,
-        "epoch_jd": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "source": "Feng et al. 2017",
-        "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
-      },
-      "physical": {
-        "mass_mearth": 1.83,
-        "uncertainty_mearth": 0.68,
-        "mass_type": "Msini",
-        "source": "Feng et al. 2017",
-        "bibcode": "2017AJ....154..135F",
-        "doi": "10.3847/1538-3881/aa83b4"
-      }
+      "orbital": [
+        {
+          "period_days": 49.41,
+          "uncertainty_period_days": 0.1,
+          "semi_major_axis_au": 0.243,
+          "uncertainty_semi_major_axis_au": 0.003,
+          "eccentricity": 0.23,
+          "uncertainty_eccentricity": 0.16,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 7.45,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.83,
+          "uncertainty_mearth": 0.68,
+          "mass_type": "Msini",
+          "source": "Feng et al. 2017",
+          "bibcode": "2017AJ....154..135F",
+          "doi": "10.3847/1538-3881/aa83b4",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     }
   ],
   "GJ 357": [

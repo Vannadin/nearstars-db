@@ -20,16 +20,43 @@
         "vmag_v": 3.5342,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5320,
-        "spectype": "G8V",
+        "spectype": "G8 V",
         "mass_measurements": [
           {
             "value_msun": 0.783,
             "uncertainty_msun": 0.012,
-            "method": "unverified",
-            "reference": "Feng et al. 2017",
-            "bibcode": "2017AJ....154..135F",
-            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "asteroseismology",
+            "reference": "Teixeira et al. 2009",
+            "bibcode": "2009A&A...494..237T",
+            "doi": "10.1051/0004-6361:200810746",
             "recommended": true
+          },
+          {
+            "value_msun": 0.8,
+            "uncertainty_msun": 0.008,
+            "method": "asteroseismology",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": false
+          },
+          {
+            "value_msun": 0.69,
+            "uncertainty_msun": 0.09,
+            "method": "evolutionary_model",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": false
+          },
+          {
+            "value_msun": 0.78,
+            "uncertainty_msun": 0.01,
+            "method": "asteroseismology",
+            "reference": "Tang & Gai 2011",
+            "bibcode": "2011A&A...526A..35T",
+            "doi": "10.1051/0004-6361/201014886",
+            "recommended": false
           }
         ],
         "radius_measurements": [
@@ -75,12 +102,178 @@
             "notes": "Earlier VLTI/VINCI angular diameter (1-2% accuracy) used in Pijpers 2003 (2003A&A...406L..15P) to derive R = 0.773 +/- 0.004(int) +/- 0.02(ext) R_sun. Superseded by CHARA/FLUOR (Di Folco 2007) and CHARA/MIRC-X (Korolik 2023)."
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5320,
+            "uncertainty_k": 40,
+            "method": "high_res_spectroscopy",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": true
+          },
+          {
+            "value_k": 5370,
+            "uncertainty_k": 20,
+            "method": "sed_fitting",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": false
+          },
+          {
+            "value_k": 5344,
+            "uncertainty_k": 24,
+            "method": "sed_fitting",
+            "reference": "Heiter et al. 2015",
+            "bibcode": "2015A&A...582A..49H",
+            "doi": "10.1051/0004-6361/201526319",
+            "recommended": false
+          },
+          {
+            "value_k": 5283,
+            "uncertainty_k": 22,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2004",
+            "bibcode": "2004A&A...415.1153S",
+            "doi": "10.1051/0004-6361:20034469",
+            "recommended": false
+          },
+          {
+            "value_k": 5400,
+            "uncertainty_k": 50,
+            "method": "high_res_spectroscopy",
+            "reference": "Pavlenko et al. 2012",
+            "bibcode": "2012MNRAS.422..542P",
+            "doi": "10.1111/j.1365-2966.2012.20629.x",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.488,
+            "uncertainty_lsun": 0.01,
+            "method": "bolometric_flux",
+            "reference": "Boyajian et al. 2013",
+            "bibcode": "2013ApJ...771...40B",
+            "doi": "10.1088/0004-637X/771/1/40",
+            "recommended": true
+          },
+          {
+            "value_lsun": 0.488,
+            "uncertainty_lsun": 0.01,
+            "method": "bolometric_flux",
+            "reference": "Pijpers 2003",
+            "bibcode": "2003A&A...406L..15P",
+            "doi": "10.1051/0004-6361:20030882",
+            "recommended": false
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 5.8,
+            "uncertainty_gyr": 1.0,
+            "method": "activity_age",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "doi": "10.1086/591785",
+            "recommended": true
+          },
+          {
+            "value_gyr": 9.0,
+            "uncertainty_gyr": 1.0,
+            "method": "asteroseismology",
+            "reference": "Tang & Gai 2011",
+            "bibcode": "2011A&A...526A..35T",
+            "doi": "10.1051/0004-6361/201014886",
+            "recommended": false
+          },
+          {
+            "value_gyr": 10.0,
+            "uncertainty_gyr": 1.5,
+            "method": "isochrone",
+            "reference": "Di Folco et al. 2004",
+            "bibcode": "2004A&A...426..601D",
+            "doi": "10.1051/0004-6361:20047189",
+            "recommended": false
+          },
+          {
+            "value_gyr": 8.4,
+            "uncertainty_gyr": 4.0,
+            "method": "activity_age",
+            "reference": "Lachaume et al. 1999",
+            "bibcode": "1999A&A...348..897L",
+            "doi": null,
+            "recommended": false
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.55,
+            "uncertainty_dex": 0.05,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2004",
+            "bibcode": "2004A&A...415.1153S",
+            "doi": "10.1051/0004-6361:20034469",
+            "recommended": true
+          },
+          {
+            "value_dex": -0.49,
+            "uncertainty_dex": 0.03,
+            "method": "high_res_spectroscopy",
+            "reference": "Heiter et al. 2015",
+            "bibcode": "2015A&A...582A..49H",
+            "doi": "10.1051/0004-6361/201526319",
+            "recommended": false
+          },
+          {
+            "value_dex": -0.5,
+            "uncertainty_dex": 0.1,
+            "method": "high_res_spectroscopy",
+            "reference": "Pavlenko et al. 2012",
+            "bibcode": "2012MNRAS.422..542P",
+            "doi": "10.1111/j.1365-2966.2012.20629.x",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 46.0,
+            "uncertainty_days": 4.0,
+            "method": "photometric_variability",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": true
+          },
+          {
+            "value_days": 34.0,
+            "uncertainty_days": 5.0,
+            "method": "photometric_variability",
+            "reference": "Baliunas et al. 1996",
+            "bibcode": "1996ApJ...457L..99B",
+            "doi": "10.1086/309879",
+            "recommended": false
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.96,
+            "method": "ca_ii_h_k",
+            "reference": "Baliunas et al. 1996",
+            "bibcode": "1996ApJ...457L..99B",
+            "doi": "10.1086/309879",
+            "recommended": true
+          },
+          {
+            "value_log_rhk": -4.96,
+            "method": "ca_ii_h_k",
+            "reference": "Henry et al. 1996",
+            "bibcode": "1996AJ....111..439H",
+            "doi": "10.1086/117796",
+            "recommended": false
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "single",
@@ -149,11 +342,11 @@
         "icrs_vx_j2000_km_s": 16.7233022405222,
         "icrs_vy_j2000_km_s": -25.007544719835593,
         "icrs_vz_j2000_km_s": 14.233293728719648,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 0.488,
+        "age_gyr": 5.8,
+        "metallicity_fe_h_dex": -0.55,
+        "rotation_period_days": 46.0,
+        "activity_log_rhk": -4.96,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -207,25 +400,37 @@
       },
       "curated": {
         "pl_name": "tau Cet g",
-        "orbital": {
-          "semi_major_axis_au": 0.133,
-          "eccentricity": 0.06,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 395.341,
-          "epoch_jd": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "Feng et al. 2017",
-          "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
-        },
-        "physical": {
-          "mass_mearth": 1.75,
-          "uncertainty_mearth": 0.25,
-          "mass_type": "Msini",
-          "source": "Feng et al. 2017",
-          "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
-        }
+        "orbital": [
+          {
+            "period_days": 20.0,
+            "uncertainty_period_days": 0.02,
+            "semi_major_axis_au": 0.133,
+            "uncertainty_semi_major_axis_au": 0.002,
+            "eccentricity": 0.06,
+            "uncertainty_eccentricity": 0.13,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": 395.341,
+            "epoch_jd": null,
+            "mean_anomaly_at_epoch_deg": null,
+            "source": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 1.75,
+            "uncertainty_mearth": 0.4,
+            "mass_type": "Msini",
+            "source": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     },
     {
@@ -272,25 +477,37 @@
       },
       "curated": {
         "pl_name": "tau Cet h",
-        "orbital": {
-          "semi_major_axis_au": 0.243,
-          "eccentricity": 0.23,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 7.45,
-          "epoch_jd": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "Feng et al. 2017",
-          "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
-        },
-        "physical": {
-          "mass_mearth": 1.83,
-          "uncertainty_mearth": 0.68,
-          "mass_type": "Msini",
-          "source": "Feng et al. 2017",
-          "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
-        }
+        "orbital": [
+          {
+            "period_days": 49.41,
+            "uncertainty_period_days": 0.1,
+            "semi_major_axis_au": 0.243,
+            "uncertainty_semi_major_axis_au": 0.003,
+            "eccentricity": 0.23,
+            "uncertainty_eccentricity": 0.16,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": 7.45,
+            "epoch_jd": null,
+            "mean_anomaly_at_epoch_deg": null,
+            "source": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 1.83,
+            "uncertainty_mearth": 0.68,
+            "mass_type": "Msini",
+            "source": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     },
     {
@@ -337,25 +554,37 @@
       },
       "curated": {
         "pl_name": "tau Cet f",
-        "orbital": {
-          "semi_major_axis_au": 1.334,
-          "eccentricity": 0.16,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 119.75,
-          "epoch_jd": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "Feng et al. 2017",
-          "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
-        },
-        "physical": {
-          "mass_mearth": 3.93,
-          "uncertainty_mearth": 1.05,
-          "mass_type": "Msini",
-          "source": "Feng et al. 2017",
-          "bibcode": "2017AJ....154..135F",
-          "doi": "10.3847/1538-3881/aa83b4"
-        }
+        "orbital": [
+          {
+            "period_days": 636.13,
+            "uncertainty_period_days": 47.69,
+            "semi_major_axis_au": 1.334,
+            "uncertainty_semi_major_axis_au": 0.044,
+            "eccentricity": 0.16,
+            "uncertainty_eccentricity": 0.16,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": 119.75,
+            "epoch_jd": null,
+            "mean_anomaly_at_epoch_deg": null,
+            "source": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 3.93,
+            "uncertainty_mearth": 1.37,
+            "mass_type": "Msini",
+            "source": "Feng et al. 2017",
+            "bibcode": "2017AJ....154..135F",
+            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     }
   ],
@@ -379,31 +608,30 @@
       ]
     },
     {
-      "title": "Feng et al. 2017",
-      "doi": "10.3847/1538-3881/aa83b4",
-      "bibcode": "2017AJ....154..135F",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "tau Cet mass (unverified)"
-      ]
-    },
-    {
-      "title": "Korolik et al. 2023: Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog",
-      "doi": "10.3847/1538-3881/ace911",
-      "bibcode": "2023AJ....166..123K",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "tau Cet mean radius (recommended, CHARA/MIRC-X interferometry)"
-      ]
-    },
-    {
-      "title": "Teixeira et al. 2009: Solar-like oscillations in the G8 V star tau Ceti",
+      "title": "Teixeira et al. 2009",
       "doi": "10.1051/0004-6361:200810746",
       "bibcode": "2009A&A...494..237T",
       "accessed": "2026-05-28",
       "used_for": [
-        "tau Cet radius (alternative; asteroseismic + Di Folco 2007 angular diameter)",
-        "consistency cross-check with Feng 2017 mass (0.783 +/- 0.012 M_sun)"
+        "tau Cet mass (asteroseismology)"
+      ]
+    },
+    {
+      "title": "Korolik et al. 2023",
+      "doi": "10.3847/1538-3881/ace911",
+      "bibcode": "2023AJ....166..123K",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "tau Cet mass (asteroseismology)"
+      ]
+    },
+    {
+      "title": "Tang & Gai 2011",
+      "doi": "10.1051/0004-6361/201014886",
+      "bibcode": "2011A&A...526A..35T",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "tau Cet mass (asteroseismology)"
       ]
     },
     {
@@ -441,6 +669,15 @@
       "used_for": [
         "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
+    },
+    {
+      "title": "Feng et al. 2017",
+      "doi": "10.3847/1538-3881/aa83b4",
+      "bibcode": "2017AJ....154..135F",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "planet tau Cet g orbital"
+      ]
     }
   ],
   "meta": {
@@ -452,6 +689,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md."
+    "notes": "Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md. Korolik 2023 (2023AJ....166..123K) Section 4 additionally reports an independent dynamical-stability concern: the Feng 2017 architecture may not retain long-term stability at the low orbital inclinations implied by the pole-on stellar geometry (i_star = 7 +/- 7 deg)."
   }
 }
