@@ -37,10 +37,46 @@
       "★": "phase3/61-vir.html"
     }
   },
+  "AU Mic": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/au-mic.html"
+    }
+  },
+  "delta": {
+    "phase2": null,
+    "phase3": {
+      "pavonis": "phase3/delta-pavonis.html"
+    }
+  },
+  "eps Eri": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/eps-eri.html"
+    }
+  },
+  "Fomalhaut": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/fomalhaut.html"
+    }
+  },
+  "HD 69830": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/hd-69830.html"
+    }
+  },
   "tau Cet": {
     "phase2": null,
     "phase3": {
       "★": "phase3/tau-cet.html"
+    }
+  },
+  "Vega": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/vega.html"
     }
   }
 }
