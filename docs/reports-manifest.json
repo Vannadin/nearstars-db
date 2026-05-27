@@ -82,6 +82,7 @@
     "phase2": null,
     "phase3": {
       "★": "phase3/tau-cet.html",
+      "e": "phase3/tau-cet-e.html",
       "f": "phase3/tau-cet-f.html",
       "g": "phase3/tau-cet-g.html",
       "h": "phase3/tau-cet-h.html"
