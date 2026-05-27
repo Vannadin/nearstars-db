@@ -32,7 +32,49 @@
             "recommended": true
           }
         ],
-        "radius_measurements": [],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.793,
+            "uncertainty_rsun": 0.004,
+            "method": "interferometry",
+            "instrument": "CHARA Array / MIRC-X (H-band, 6T, baselines 34-330 m)",
+            "angular_diameter_mas": 2.019,
+            "angular_diameter_uncertainty_mas": 0.012,
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "arxiv": "2307.10394",
+            "recommended": true,
+            "notes": "Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog. Most recent direct interferometric radius; supersedes Teixeira 2009 / Di Folco 2004 with new CHARA/MIRC-X 2021 data. Consistent within errors with Teixeira 2009 (0.793 +/- 0.004 R_sun)."
+          },
+          {
+            "value_rsun": 0.793,
+            "uncertainty_rsun": 0.004,
+            "method": "interferometry",
+            "instrument": "VLTI / VINCI (K-band, via Pijpers 2003 / Di Folco 2004 angular diameter)",
+            "angular_diameter_mas": 2.015,
+            "angular_diameter_uncertainty_mas": 0.011,
+            "reference": "Teixeira et al. 2009",
+            "bibcode": "2009A&A...494..237T",
+            "doi": "10.1051/0004-6361:200810746",
+            "arxiv": "0811.3989",
+            "recommended": false,
+            "notes": "Solar-like oscillations in the G8 V star tau Ceti. Interferometric radius adopted from Di Folco et al. 2007 (CHARA/FLUOR, theta_LD = 2.015 +/- 0.011 mas) combined with Hipparcos parallax; used together with asteroseismic mean density to derive M = 0.783 +/- 0.012 M_sun (the value adopted in this DB's mass entry, Feng 2017's reference)."
+          },
+          {
+            "value_rsun": 0.773,
+            "uncertainty_rsun": 0.02,
+            "method": "interferometry",
+            "instrument": "VLTI / VINCI (K-band, commissioning)",
+            "angular_diameter_mas": null,
+            "angular_diameter_uncertainty_mas": null,
+            "reference": "Pijpers et al. 2003 / Di Folco et al. 2004",
+            "bibcode": "2004A&A...426..601D",
+            "doi": "10.1051/0004-6361:20047189",
+            "recommended": false,
+            "notes": "Earlier VLTI/VINCI angular diameter (1-2% accuracy) used in Pijpers 2003 (2003A&A...406L..15P) to derive R = 0.773 +/- 0.004(int) +/- 0.02(ext) R_sun. Superseded by CHARA/FLUOR (Di Folco 2007) and CHARA/MIRC-X (Korolik 2023)."
+          }
+        ],
         "teff_measurements": [],
         "luminosity_measurements": [],
         "age_measurements": [],
@@ -116,7 +158,7 @@
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103913840534.094,
-        "mean_radius_km": null
+        "mean_radius_km": 551690.1
       }
     }
   ],
@@ -343,6 +385,34 @@
       "accessed": "2026-05-22",
       "used_for": [
         "tau Cet mass (unverified)"
+      ]
+    },
+    {
+      "title": "Korolik et al. 2023: Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog",
+      "doi": "10.3847/1538-3881/ace911",
+      "bibcode": "2023AJ....166..123K",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "tau Cet mean radius (recommended, CHARA/MIRC-X interferometry)"
+      ]
+    },
+    {
+      "title": "Teixeira et al. 2009: Solar-like oscillations in the G8 V star tau Ceti",
+      "doi": "10.1051/0004-6361:200810746",
+      "bibcode": "2009A&A...494..237T",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "tau Cet radius (alternative; asteroseismic + Di Folco 2007 angular diameter)",
+        "consistency cross-check with Feng 2017 mass (0.783 +/- 0.012 M_sun)"
+      ]
+    },
+    {
+      "title": "Di Folco et al. 2007: CHARA/FLUOR angular diameter of tau Ceti",
+      "doi": "10.1051/0004-6361:20077625",
+      "bibcode": "2007A&A...474..243D",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
     }
   ],
