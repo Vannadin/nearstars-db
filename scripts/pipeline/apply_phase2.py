@@ -34,8 +34,11 @@ YAML shape (top-level keys, all optional but at least one required):
           physical: {...} | [ {...}, ... ]
 
 Merge semantics: each `<Host Name>` REPLACES the host's full entry in the
-curated JSON. No per-field partial merge. To preserve existing fields,
-include them in YAML.
+curated JSON. EXCEPTION: narrative fields `meta_notes` and `sources_extra`
+are preserved from the existing entry when omitted from YAML — this
+prevents routine measurement updates from silently wiping curator notes
+and supporting references. To explicitly delete a preserved field, set
+it to `null` in YAML.
 """
 from __future__ import annotations
 
@@ -65,15 +68,35 @@ def load_yaml(slug: str) -> dict:
     return data
 
 
+# 화이트리스트된 narrative 필드 — YAML 이 이 키를 명시하지 않으면 기존 값 보존.
+# meta_notes 와 sources_extra 는 측정 배열과 다른 라이프사이클을 가져서
+# (한 번 큐레이팅 후 거의 변경 없음), 일상적인 mass/radius YAML 갱신이
+# 실수로 wipe 하는 사고를 방지. YAML 에 `meta_notes: null` 처럼 명시적 null
+# 을 적으면 삭제도 가능 (`is None` 으로 구분).
+_STELLAR_PRESERVE_IF_ABSENT = ("meta_notes", "sources_extra")
+
+
 def merge(yaml_data: dict) -> tuple[dict, dict]:
-    """Return (new_stellar, new_planets) — db merged with YAML overrides."""
+    """Return (new_stellar, new_planets) — db merged with YAML overrides.
+
+    Stellar host 처리는 whole-entry replacement 가 기본이지만,
+    _STELLAR_PRESERVE_IF_ABSENT 의 narrative 필드는 YAML 에서 키 자체가
+    부재할 때 기존 값을 자동 보존. 명시적 삭제는 YAML 에 `<field>: null` 로
+    적어서 가능.
+    Planets host 는 종전대로 list 통째로 교체.
+    """
     with open(STELLAR, encoding="utf-8") as f:
         stellar = json.load(f)
     with open(PLANETS, encoding="utf-8") as f:
         planets = json.load(f)
 
     for host, entry in (yaml_data.get("stellar") or {}).items():
-        stellar[host] = entry
+        existing = stellar.get(host) or {}
+        new_entry = dict(entry)
+        for key in _STELLAR_PRESERVE_IF_ABSENT:
+            if key not in new_entry and key in existing:
+                new_entry[key] = existing[key]
+        stellar[host] = new_entry
     for host, plist in (yaml_data.get("planets") or {}).items():
         planets[host] = plist
 
