@@ -349,6 +349,51 @@
       "used_for": [
         "eps Eri radius (unverified)"
       ]
+    },
+    {
+      "title": "Greaves et al. 1998",
+      "doi": null,
+      "bibcode": "1998ApJ...506L.133G",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "eps Eri disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Backman et al. 2009",
+      "doi": null,
+      "bibcode": "2009ApJ...690.1522B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "eps Eri disk asteroid_analog (sed_fit)"
+      ]
+    },
+    {
+      "title": "MacGregor et al. 2015",
+      "doi": null,
+      "bibcode": "2015ApJ...809L..47M",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "eps Eri disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Booth et al. 2017",
+      "doi": null,
+      "bibcode": "2017MNRAS.469.3200B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "eps Eri disk asteroid_analog (sed_fit)"
+      ]
+    },
+    {
+      "title": "Su et al. 2017",
+      "doi": null,
+      "bibcode": "2017AJ....153..226S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "eps Eri disk asteroid_analog (sed_fit)"
+      ]
     }
   ],
   "meta": {

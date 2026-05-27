@@ -360,6 +360,24 @@
       "used_for": [
         "61 Vir mass (unverified)"
       ]
+    },
+    {
+      "title": "Wyatt et al. 2012",
+      "doi": null,
+      "bibcode": "2012MNRAS.424.1206W",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "61 Vir disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Su et al. 2017",
+      "doi": null,
+      "bibcode": "2017AJ....153..226S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "61 Vir disk main_cold (sed_fit)"
+      ]
     }
   ],
   "meta": {

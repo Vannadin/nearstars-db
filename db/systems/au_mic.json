@@ -515,6 +515,60 @@
       ]
     },
     {
+      "title": "Krist et al. 2005",
+      "doi": null,
+      "bibcode": "2005AJ....129.1008K",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "AU Mic disk single (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Schneider et al. 2014",
+      "doi": null,
+      "bibcode": "2014AJ....148...59S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "AU Mic disk single (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Boccaletti et al. 2015",
+      "doi": null,
+      "bibcode": "2015Natur.526..230B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "AU Mic disk single (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Boccaletti et al. 2018",
+      "doi": null,
+      "bibcode": "2018A&A...614A..52B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "AU Mic disk single (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Chen et al. 2005",
+      "doi": null,
+      "bibcode": "2005ApJ...634.1372C",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "AU Mic disk single (sed_fit)"
+      ]
+    },
+    {
+      "title": "Strubbe & Chiang 2006",
+      "doi": null,
+      "bibcode": "2006ApJ...648..652S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "AU Mic disk single (sed_fit)"
+      ]
+    },
+    {
       "title": "Mallorquin et al. 2024",
       "doi": "10.1051/0004-6361/202450047",
       "bibcode": "2024A&A...689A.132M",

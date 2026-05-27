@@ -236,6 +236,51 @@
       "used_for": [
         "Vega radius (interferometry)"
       ]
+    },
+    {
+      "title": "Aumann et al. 1984",
+      "doi": null,
+      "bibcode": "1984ApJ...278L..23A",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Vega disk single (photometric_excess)"
+      ]
+    },
+    {
+      "title": "Holland et al. 1998",
+      "doi": null,
+      "bibcode": "1998Natur.392..788H",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Vega disk cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Su et al. 2013",
+      "doi": null,
+      "bibcode": "2013ApJ...763..118S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Vega disk warm (sed_fit)"
+      ]
+    },
+    {
+      "title": "Sibthorpe et al. 2010",
+      "doi": null,
+      "bibcode": "2010A&A...518L.130S",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Vega disk cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Hughes et al. 2012",
+      "doi": null,
+      "bibcode": "2012ApJ...750...82H",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Vega disk cold (resolved_imaging)"
+      ]
     }
   ],
   "meta": {

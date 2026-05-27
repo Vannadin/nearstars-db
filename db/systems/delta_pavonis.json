@@ -137,6 +137,33 @@
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
+    },
+    {
+      "title": "Lawler & Tanner 2014",
+      "doi": "10.1088/0004-637X/780/1/28",
+      "bibcode": "2014ApJ...780...28L",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Delta Pavonis disk main_cold (sed_fit)"
+      ]
+    },
+    {
+      "title": "Eiroa et al. 2013 (DUNES)",
+      "doi": "10.1051/0004-6361/201321050",
+      "bibcode": "2013A&A...555A..11E",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Delta Pavonis disk main_cold (sed_fit)"
+      ]
+    },
+    {
+      "title": "Beichman et al. 2006",
+      "doi": "10.1086/508449",
+      "bibcode": "2006ApJ...652.1674B",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Delta Pavonis disk main_cold (photometric_excess)"
+      ]
     }
   ],
   "meta": {
