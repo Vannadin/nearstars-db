@@ -97,23 +97,40 @@ Magnetic field is the hardest to pin down per planet. Best practice:
 ## Circumstellar disk → Kopernicus Ring (star body)
 
 A stellar debris or protoplanetary disk renders in Kopernicus as a
-`Ring` subnode attached to the **star body** (not a planet). This
-section maps Phase 3 Decisions fields (defined in
+`Rings { Ring { ... } }` block attached as a **direct child of the
+star `Body`** (sibling to `ScaledVersion` and `Atmosphere`, NOT nested
+inside `ScaledVersion`). This follows the ballisticfox/Kopernicus
+convention documented in
+[`.claude/skills/kopernicus-cfg/references/gas-giant.md`](../../kopernicus-cfg/references/gas-giant.md)
+§ Rings.
+
+This section maps Phase 3 Decisions fields (defined in
 [`synthesis-template.md`](synthesis-template.md) § "Circumstellar
-disk") to the Kopernicus Ring fields the kopernicus-cfg emitter will
-write.
+disk") to the Kopernicus Ring fields the emitter writes. Emitter must
+also read the star's mean radius (from `stars[0].principia.mean_radius_km`)
+to convert AU geometry into Kopernicus's body-radius-multiplier
+convention.
 
 | Phase 3 field | Kopernicus Ring field | Unit conversion | Notes |
 |---|---|---|---|
-| `disk_present` | (presence gate) | — | If false, omit the entire Ring subnode |
-| `disk_inner_radius_au` | `innerRadius` | × 1.496e8 (AU → km) | KSP km |
-| `disk_outer_radius_au` | `outerRadius` | × 1.496e8 (AU → km) | KSP km |
-| `disk_tint_rgb_hex` | `color` | hex → RGBA (alpha = `disk_opacity`) | Linear-space; Kopernicus expects 0–1 floats |
-| `disk_opacity` | (alpha channel of `color`) | direct | Or per-mesh `unlit` parameter; emitter chooses |
-| `disk_imaging_inclination_deg` | `rotation` (axis tilt) | direct | Only emit if `disk_resolved_imaging=true` and value is constrained |
-| `disk_morphology` | (steps / texture path) | prose → texture variant | Single-ring → solid; multi-ring → `steps` divisions; asymmetric → custom texture path with placeholder per `kopernicus-emit-workspace` convention |
-| `disk_planetesimal_belt_inferred` | (asteroid belt cfg, separate from Ring) | bool | If true, optionally emit a sparse `Asteroid` group at the disk midpoint; not part of Ring subnode |
+| `disk_present` | (presence gate) | — | If false, omit the entire `Rings` block |
+| `disk_inner_radius_au` | `innerRadius` | `(au × 1.495978707e8) / star_radius_km` | **Body-radius multiplier** (Kopernicus convention), not km |
+| `disk_outer_radius_au` | `outerRadius` | same as inner | **Body-radius multiplier** |
+| `disk_tint_rgb_hex` | `color` | hex → 4 floats `R,G,B,A` | `A` = `disk_opacity`; linear-space, 0–1 |
+| `disk_opacity` | (alpha of `color`) | direct | — |
+| `disk_imaging_inclination_deg` | `angle` | direct (degrees) | Ring tilt vs equatorial plane; emit only when `disk_resolved_imaging=true` |
+| `disk_morphology` | (`steps` + `texture` path) | prose → texture variant | Single-ring → `steps=128` solid; multi-ring → higher steps + per-belt texture; asymmetric → custom texture; placeholder path under `NearStars-Textures/PluginData/<star>/disk_<belt>.dds` |
+| `disk_planetesimal_belt_inferred` | (asteroid belt cfg, separate from Rings) | bool | If true, optionally emit a sparse `Asteroid` group at the disk midpoint; not part of the `Rings` block |
 | `disk_dust_temperature_k` | (informational, drives `disk_tint_rgb_hex` synth) | — | Phase 3 step uses dust T to pick the hex; cfg writer just uses the hex |
+
+Default Ring fields emitted with fixed values (per `gas-giant.md` § Rings template; not driven by Phase 3 sources):
+
+- `longitudeOfAscendingNode = 0`
+- `unlit = false`, `useNewShader = true`, `lockRotation = true`
+- `penumbraMultipler = 1000.0`, `albedoStrength = 1`, `scatteringStrength = 1`, `anisotropy = 0.9`, `fadeoutMinAlpha = 1`
+- `steps = 128` (single ring) or higher with per-belt finer divisions for multi-ring textures
+
+**Multi-paper geometry merge**: when the `recommended: true` entry per belt has a null field (e.g. Su 2013 warm component lacks `outer_radius_au`; Sibthorpe 2010 supplies it from resolved imaging), the emitter falls back to non-recommended same-belt entries to fill null fields. The recommended entry stays canonical for its non-null fields.
 
 Source priority for disk geometry:
 
@@ -151,12 +168,20 @@ yaml indirection.
 
 | Phase 3 field | Kopernicus Ring field | Unit conversion | Notes |
 |---|---|---|---|
-| `ring_present` | (presence gate) | — | If false, omit the entire Ring subnode |
-| `ring_inner_au` | `innerRadius` | × 1.496e8 (AU → km) | KSP km |
-| `ring_outer_au` | `outerRadius` | × 1.496e8 (AU → km) | KSP km |
-| `ring_color_hex` | `color` | hex → RGBA (alpha = `ring_opacity`) | Linear-space; Kopernicus expects 0–1 floats |
-| `ring_opacity` | (alpha channel of `color`) | direct | — |
-| `ring_morphology` | (steps / texture path) | prose → texture variant | Single-ring → solid; multi-ring → `steps` divisions; shepherded → divisions at shepherd-moon resonances |
+| `ring_present` | (presence gate) | — | If false, omit the entire `Rings` block |
+| `ring_inner_au` | `innerRadius` | `(au × 1.495978707e8) / planet_radius_km` | **Body-radius multiplier** (Kopernicus convention), not km |
+| `ring_outer_au` | `outerRadius` | same as inner | **Body-radius multiplier** |
+| `ring_color_hex` | `color` | hex → 4 floats `R,G,B,A` | `A` = `ring_opacity`; linear-space, 0–1 |
+| `ring_opacity` | (alpha of `color`) | direct | — |
+| `ring_morphology` | (`steps` + `texture` path) | prose → texture variant | Single-ring → `steps=128`; multi-ring → higher steps + per-section texture; shepherded → divisions at shepherd-moon resonances |
+
+Same nesting + default-field convention as the Circumstellar-disk
+section above: `Rings { Ring { ... } }` is a **direct child of
+`@Body[<planet>]`**, sibling to `ScaledVersion`. Default Ring fields
+(`longitudeOfAscendingNode`, `unlit`, `useNewShader`, `lockRotation`,
+`penumbraMultipler`, `albedoStrength`, `scatteringStrength`,
+`anisotropy`, `fadeoutMinAlpha`) emit at the same fixed values per
+`gas-giant.md`.
 
 Source priority for planetary rings:
 
@@ -176,8 +201,12 @@ lifetime. Rare for NS targets — included for completeness.
 
 | Phase 3 field | Kopernicus Ring field | Unit conversion | Notes |
 |---|---|---|---|
-| `circumplanetary_disk_present` | (presence gate) | — | If false, omit |
-| `circumplanetary_disk_radius_planet_radii` | `outerRadius` | × planet `Properties.radius` km | Inner radius defaults to planet Roche limit unless cited |
-| `circumplanetary_disk_tint_rgb_hex` | `color` | hex → RGBA | Warmer (yellower) than debris disks due to dust T ~150–300 K |
-| `circumplanetary_disk_opacity` | (alpha channel) | direct | Typically higher than debris (still actively accreting) |
+| `circumplanetary_disk_present` | (presence gate) | — | If false, omit the entire `Rings` block |
+| `circumplanetary_disk_radius_planet_radii` | `outerRadius` | direct (already a multiplier) | Body-radius multiplier; planet-relative |
+| `circumplanetary_disk_tint_rgb_hex` | `color` | hex → 4 floats `R,G,B,A` | Warmer (yellower) than debris disks due to dust T ~150–300 K |
+| `circumplanetary_disk_opacity` | (alpha of `color`) | direct | Typically higher than debris (still actively accreting) |
 | `circumplanetary_disk_dust_temperature_k` | (informational) | — | Drives tint synth |
+
+Inner radius defaults to planet Roche limit unless cited explicitly
+(emit as a low multiplier such as 1.2). Nesting + default fields per
+the Circumstellar-disk section.

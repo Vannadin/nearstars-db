@@ -123,6 +123,9 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Driver.** `kopernicus-cfg` skill.
 
+**Files.**
+- `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` — bulk emitter (v1.1, 2026-05-27). Scope: circumstellar-disk Rings (star body) + planetary-ring Rings (planet body). Reads `stars[0].raw.disk_measurements` + Phase 3 `disk_tint_rgb_hex` + `disk_opacity`, converts AU → body-radius multipliers, multi-paper merge for null backfill. Full Properties / Orbit / PQS / Atmosphere still hand-written per `.claude/skills/kopernicus-cfg/references/*.md` templates.
+
 **Output.** `dist/NearStars-Configs/Patches/Kopernicus/`.
 
 ## 7. Principia cfg generation

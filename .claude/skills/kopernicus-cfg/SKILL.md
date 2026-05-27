@@ -100,7 +100,47 @@ Common errors and fixes: [references/pitfalls.md](references/pitfalls.md)
 
 ---
 
-## 3. Sol-Based References
+## 3. Bulk emission
+
+For repetitive cfg generation, use `scripts/emit_kopernicus_cfg.py` instead of hand-writing every body. The emitter reads `db/systems/<star>.json` + `docs/phase3/<slug>.md` and writes Module Manager patches.
+
+**Current scope** (v1.1, 2026-05-27):
+
+- Circumstellar disk Rings (star body) — reads `stars[0].raw.disk_measurements` (Phase 2, commit `641754b`), applies `disk_tint_rgb_hex` + `disk_opacity` from Phase 3 Decisions, converts AU → body-radius multipliers using `stars[0].principia.mean_radius_km`.
+- Multi-paper geometry merge: when the `recommended: true` entry per belt has a null field, the emitter scans non-recommended same-belt entries to backfill. Recommended stays canonical for non-null fields.
+- Planetary ring Rings (planet body) — same primitive; reads `phase3/<system>/kopernicus_extras.yaml` (sidecar yaml; not yet populated for any system).
+
+**CLI.**
+
+```bash
+python3 .claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py [<system_slug>...] [--dry-run] [--output PATH]
+```
+
+No slugs → emit for every star with `disk_measurements`. Output combined into `dist/NearStars-Configs/Patches/Kopernicus/disk-rings.cfg` (gitignored).
+
+**Static checks the emitter runs on its own output:** Module Manager `@Kopernicus:FOR[NearStarsSystem]` header present, brace balance, every Ring has `innerRadius` `outerRadius` `color` `angle`.
+
+**Out of scope** (manual §1–§2 procedure still applies):
+
+- Full Properties block (gravParameter, mean radius, displayName, description)
+- Orbit block
+- PQS terrain
+- Atmosphere
+- Star body Light / Coronas / GalacticOrbit
+- `flightGlobalsIndex` per-system allocation
+
+For these, hand-write per the templates in §4 (Sol-Based References) below or wait for the v2 emitter expansion.
+
+**Open issues v2 → v3:**
+
+- Tau Ceti `stars[0].principia.mean_radius_km` is null; emitter errors out. Needs Phase 1 curation pass before emission.
+- Fomalhaut `inner_warm` (Gáspár 2023) has null geometry with no sibling entries to backfill. Manual override needed (extension of `kopernicus_extras.yaml` to stellar disks).
+- 1.2× outer-radius fallback for narrow rings (Vega warm, ε Eri belts) — sensible visual placeholder but not measurement-grounded.
+- Texture pipeline: emitter writes placeholder paths under `NearStars-Textures/PluginData/<belt>/disk.dds`; assets do not yet exist.
+
+---
+
+## 4. Sol-Based References
 
 Read the relevant file for the body type being created. Each file contains a complete cfg block based on real Sol data, adapted to NearStars naming conventions.
 

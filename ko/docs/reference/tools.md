@@ -123,6 +123,9 @@
 
 **드라이버.** `kopernicus-cfg` 스킬.
 
+**파일.**
+- `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` — 일괄 emitter (v1.1, 2026-05-27). 범위: 항성 주위 disk Rings (별 body) + 행성 ring Rings (행성 body). `stars[0].raw.disk_measurements` + Phase 3 `disk_tint_rgb_hex` + `disk_opacity` 를 읽어 AU → body-radius multiplier 변환, 같은 belt 의 multi-paper merge 로 null 백필. 전체 Properties / Orbit / PQS / Atmosphere 는 여전히 `.claude/skills/kopernicus-cfg/references/*.md` 템플릿 따라 수동 작성.
+
 **출력.** `dist/NearStars-Configs/Patches/Kopernicus/`.
 
 ## 7. Principia cfg 생성
