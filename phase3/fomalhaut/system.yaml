@@ -1,0 +1,19 @@
+system_slug: fomalhaut
+display_name: Fomalhaut
+system_query: Fomalhaut
+planets: []
+score:
+  keep_threshold: 8
+  mark_skipped_below: 14
+expand:
+  max_per_seed: 60
+  since_year: 1980
+
+# Synthesized via batch retrofit under
+# phase3/circumstellar-disk-schema workspace, 2026-05-27.
+# This workspace's checklist + context-notes capture the
+# Decisions classification log and Step 10 VERIFY pass.
+# Future revisions (e.g. when Phase 2 disk_measurements are
+# ingested) should run the standard pipeline starting from
+# this yaml.
+injections: []
