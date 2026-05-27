@@ -32,6 +32,41 @@ input[type=checkbox]{accent-color:#4a88b8}
 .stats-bar .spacer{flex:1}
 .help-btn{background:none;border:1px solid #243040;color:#4a6888;font-size:12px;padding:3px 10px;border-radius:12px;cursor:pointer;letter-spacing:.3px}
 .help-btn:hover{border-color:#4a88b8;color:#8aaac8}
+.lang-toggle-wrap{display:flex;gap:3px}
+.lang-tg{background:none;border:1px solid #243040;color:#4a6888;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;transition:color .12s,background .12s,border-color .12s}
+.lang-tg:hover{color:#8aaac8}
+.lang-tg.on{background:#1a2e42;color:#8aaad0;border-color:#2a4863}
+
+/* ── 사용법 modal ─────────────────────────────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;-webkit-overflow-scrolling:touch}
+.modal-overlay.open{display:flex}
+.modal{background:#0c121e;border:1px solid #2a4868;border-radius:10px;max-width:580px;width:100%;padding:22px 26px;color:#c0cce0;box-shadow:0 12px 48px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #1a2535}
+.modal-head h2{font-size:16px;color:#d8e4f0;font-weight:600;flex:1;min-width:0}
+.modal-close{background:none;border:1px solid #2a4868;color:#8aaad0;padding:4px 12px;border-radius:5px;cursor:pointer;font-size:12px;flex-shrink:0;font-family:inherit;transition:background .12s,color .12s}
+.modal-close:hover{background:#152030;color:#aac8e8}
+.modal h3{font-size:11px;color:#5a88b8;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 6px;padding-bottom:3px;border-bottom:1px solid #131c28;font-weight:700}
+.modal ul{list-style:disc;padding-left:20px;margin:4px 0 6px}
+.modal li{margin-bottom:5px;font-size:13px;color:#a8bcd0;line-height:1.55}
+.modal li b{color:#cce0f4}
+.modal kbd{background:#101826;border:1px solid #243040;padding:1px 6px;border-radius:3px;font-family:monospace;font-size:11px;color:#90b0d0}
+.modal-footer{margin-top:16px;padding-top:12px;border-top:1px solid #1a2535;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;color:#5a7898;flex-wrap:wrap}
+.modal-footer label{font-size:12px;color:#7a92ac;gap:6px;display:flex;align-items:center}
+
+/* glossary tooltip — kv 라벨/단위 토큰 hover 시 도움말 popup */
+[data-ns="v2"] .help { text-decoration: underline dotted rgba(120,150,180,0.4); text-underline-offset: 2px; cursor: help; }
+[data-ns="v2"] .help:hover { text-decoration-color: rgba(150,200,240,0.75); color: var(--v2-fg-1); }
+.a2-tooltip {
+  position: absolute; display: none; z-index: 1000;
+  max-width: 360px; padding: 8px 12px;
+  background: var(--v2-surface-3, #1a2330);
+  border: 1px solid var(--v2-bd-3, #2a3a50);
+  border-radius: 6px;
+  color: var(--v2-fg-2, #c0cce0);
+  font: 500 12px/1.5 var(--v2-font-sans, system-ui);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  pointer-events: none;
+}
 
 /* ── v2 본문 — A2_RefinedSpectral.jsx 의 a2_styles 를 그대로 vanilla 이식 ── */
 [data-ns="v2"] .a2-root { position: relative; display: flex; flex-direction: column;
@@ -140,7 +175,21 @@ input[type=checkbox]{accent-color:#4a88b8}
 [data-ns="v2"] .a2-rep-chip.p3 b { color: var(--v2-danger); }
 [data-ns="v2"] .a2-rep-index { margin-left: auto; font-size: 11px; color: var(--v2-fg-4); }
 
-[data-ns="v2"] .a2-dp-grid { display: grid; grid-template-columns: 280px 1fr; gap: 28px; }
+/* dp-grid 균등 분배 — wide screen 에서 좌측만 비대칭 wide 되는 것 방지. */
+[data-ns="v2"] .a2-dp-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; align-items: start; min-width: 0; }
+[data-ns="v2"] .a2-dp-grid > div { min-width: 0; max-width: 100%; }
+@media (max-width: 1300px) {
+  [data-ns="v2"] .a2-dp-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 900px) {
+  [data-ns="v2"] .a2-dp-grid { grid-template-columns: 1fr; }
+}
+
+/* measurement 블록 — Mass / Radius 를 좌우 2 컬럼 sub-grid 로. 좁으면 1 컬럼. */
+[data-ns="v2"] .a2-meas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: start; margin-top: 22px; }
+@media (max-width: 900px) {
+  [data-ns="v2"] .a2-meas-grid { grid-template-columns: 1fr; }
+}
 
 [data-ns="v2"] .a2-section-h { display: flex; align-items: baseline; gap: 12px;
                                font: 500 10.5px/1 var(--v2-font-sans);
@@ -158,19 +207,70 @@ input[type=checkbox]{accent-color:#4a88b8}
 [data-ns="v2"] .a2-kv .v { color: var(--v2-fg-2); font-family: var(--v2-font-mono);
                           font-variant-numeric: tabular-nums; }
 
-[data-ns="v2"] .a2-star-img-wrap { position: relative; width: 220px; aspect-ratio: 1;
-                                  border-radius: 12px; overflow: hidden;
-                                  border: 1px solid var(--v2-bd-2);
-                                  box-shadow: var(--v2-shadow-inset); }
+/* ── DSS image box (실제 별 이미지 + reticle + caption + survey/FOV picker) ── */
+[data-ns="v2"] .a2-star-img-box { width: 100%; max-width: 100%; }
+[data-ns="v2"] .a2-dss-wrap {
+  position: relative; display: inline-block; line-height: 0;
+  border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--v2-bd-2);
+  box-shadow: var(--v2-shadow-inset);
+  background: #050a0e;
+  max-width: 100%;
+}
+[data-ns="v2"] .a2-star-img {
+  display: block; width: 240px; height: 240px; object-fit: cover;
+}
+[data-ns="v2"] .a2-img-no {
+  display: flex; align-items: center; justify-content: center;
+  width: 240px; height: 240px; color: var(--v2-fg-4);
+  font: 500 12px/1 var(--v2-font-mono); letter-spacing: 0.04em;
+}
+[data-ns="v2"] .a2-img-cap {
+  font: 500 10px/1.4 var(--v2-font-mono);
+  color: var(--v2-fg-4); margin-top: 6px;
+}
 [data-ns="v2"] .a2-reticle { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
                             width: 26px; height: 26px; border: 1.5px solid var(--v2-reticle);
-                            border-radius: 50%; box-shadow: 0 0 12px var(--v2-reticle-faint); }
+                            border-radius: 50%; box-shadow: 0 0 12px var(--v2-reticle-faint);
+                            pointer-events: none; }
 [data-ns="v2"] .a2-reticle::before, [data-ns="v2"] .a2-reticle::after { content: ''; position: absolute;
                             background: var(--v2-reticle); }
 [data-ns="v2"] .a2-reticle::before { width: 1px; height: 14px; left: 50%; top: -18px;
                                     transform: translateX(-50%); }
 [data-ns="v2"] .a2-reticle::after  { width: 14px; height: 1px; top: 50%; left: -18px;
                                     transform: translateY(-50%); }
+
+/* survey picker — v1 의 .pk-btn 패턴을 v2 토큰으로 */
+[data-ns="v2"] .a2-survey-picker { display: flex; gap: 3px; flex-wrap: wrap; }
+[data-ns="v2"] .a2-survey-btn {
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-4); padding: 3px 8px; border-radius: 4px;
+  font: 500 10.5px/1.4 var(--v2-font-sans);
+  cursor: pointer; transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-survey-btn:hover:not(:disabled):not(.on) {
+  color: var(--v2-fg-2); border-color: var(--v2-bd-3);
+}
+[data-ns="v2"] .a2-survey-btn.on {
+  background: var(--v2-surface-3); color: var(--v2-fg-1); border-color: var(--v2-bd-3);
+}
+[data-ns="v2"] .a2-survey-btn:disabled {
+  color: var(--v2-fg-5); text-decoration: line-through; cursor: not-allowed;
+  border-color: rgba(255,255,255,0.04);
+}
+
+/* Stellarium 버튼 — SIMBAD link 와 크기·톤 통일 */
+[data-ns="v2"] .a2-stl-btn {
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-3); padding: 3px 9px; border-radius: 4px;
+  font: 500 10.5px/1.4 var(--v2-font-sans); cursor: pointer;
+  transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-stl-btn:hover:not(:disabled) { color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-stl-btn:disabled { opacity: 0.7; cursor: wait; }
+[data-ns="v2"] .a2-stl-btn.ok  { color: var(--v2-ok);     border-color: var(--v2-ok); }
+[data-ns="v2"] .a2-stl-btn.web { color: var(--v2-accent); border-color: rgba(99,179,237,0.5); }
+[data-ns="v2"] .a2-stl-btn.err { color: var(--v2-danger); border-color: rgba(252,129,129,0.4); }
 
 [data-ns="v2"] .a2-mt { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 4px; }
 [data-ns="v2"] .a2-mt th { padding: 8px 12px; text-align: left;
@@ -196,10 +296,14 @@ input[type=checkbox]{accent-color:#4a88b8}
 [data-ns="v2"] .a2-method.binary_orbit { color: var(--v2-danger); background: var(--v2-danger-bg); }
 [data-ns="v2"] .a2-method.default { color: var(--v2-fg-3); background: var(--v2-surface-2); }
 
-/* a2 row가 v1의 spec pill (.sb) 을 그대로 못 쓰므로 .v2-sb 를 같은 height로 정렬 */
-[data-ns="v2"] .a2-table .v2-sb { min-width: 56px; justify-content: flex-start; }
-/* 긴 분광형 (sdM7.5, M5.5Ve+T5 등) 이 옆 컬럼 침범하지 않도록 폭 제한 + ellipsis */
-[data-ns="v2"] .v2-sb { max-width: 96px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* 카드 등 일반 컨텍스트에서는 텍스트 길이에 맞춘 자연 폭. */
+[data-ns="v2"] .v2-sb { width: max-content; max-width: 100%; white-space: nowrap; }
+/* 표 안에서는 모든 row 의 spec pill 폭이 동일 120px — 너무 긴 spec 은 ellipsis 로 짤림. */
+[data-ns="v2"] .a2-table .v2-sb {
+  width: 120px; min-width: 120px; max-width: 120px;
+  justify-content: flex-start;
+  overflow: hidden; text-overflow: ellipsis;
+}
 
 /* grid item 의 default min-width: auto 가 자식 (760px planet table) 따라 부모를 늘리는 걸 막음.
    이게 없으면 행성 많은 시스템에서 detail content 가 row/card 폭을 뚫고 우측으로 overflow. */
@@ -233,13 +337,34 @@ input[type=checkbox]{accent-color:#4a88b8}
 [data-ns="v2"] .a2-cc-copy.copied { color: var(--v2-ok); border-color: var(--v2-ok); }
 
 /* ── DSS picker (FOV + Survey + external links) ── */
-[data-ns="v2"] .a2-img-links { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
-[data-ns="v2"] .a2-fov-picker, [data-ns="v2"] .a2-survey-picker { display: flex; gap: 4px; flex-wrap: wrap; }
+/* 좌(이미지) + 우(컨트롤) 한 row, 그 밑에 caption 전체 폭. nowrap 으로 좌우 유지. */
+[data-ns="v2"] .a2-star-img-box {
+  display: flex; flex-direction: column; gap: 8px;
+}
+[data-ns="v2"] .a2-star-img-row {
+  display: flex; gap: 14px; align-items: stretch; flex-wrap: nowrap;
+}
+[data-ns="v2"] .a2-star-img-row .a2-dss-wrap { flex-shrink: 0; }
+[data-ns="v2"] .a2-img-links {
+  flex: 1 1 0; min-width: 0; max-width: 320px;
+  display: flex; flex-direction: column; gap: 4px;
+  justify-content: flex-start;
+}
+/* FOV 1줄 (5 컬럼, 짧은 숫자라 좁게), Survey + SIMBAD + Stellarium 2 컬럼 × 5 줄.
+   minmax(0, 1fr) — 좁아져도 grid item 이 0 까지 압축 가능 (default 는 min-content). */
+[data-ns="v2"] .a2-fov-picker {
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px;
+}
+[data-ns="v2"] .a2-survey-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px;
+}
 [data-ns="v2"] .a2-fov-btn, [data-ns="v2"] .a2-survey-btn {
   background: transparent; border: 1px solid var(--v2-bd-2);
-  color: var(--v2-fg-4); padding: 3px 9px; border-radius: 4px;
+  color: var(--v2-fg-4); padding: 4px 4px; border-radius: 4px;
   font: 500 10.5px/1.4 var(--v2-font-sans);
   cursor: pointer; transition: var(--v2-t-fast);
+  text-align: center; white-space: nowrap;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis;
 }
 [data-ns="v2"] .a2-fov-btn:hover, [data-ns="v2"] .a2-survey-btn:hover { color: var(--v2-fg-2); border-color: var(--v2-bd-3); }
 [data-ns="v2"] .a2-fov-btn.on, [data-ns="v2"] .a2-survey-btn.on { background: var(--v2-surface-3); color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
@@ -247,15 +372,21 @@ input[type=checkbox]{accent-color:#4a88b8}
   color: var(--v2-fg-5); text-decoration: line-through; cursor: not-allowed;
   border-color: rgba(255,255,255,0.04);
 }
-[data-ns="v2"] .a2-ext-row { display: flex; gap: 6px; margin-top: 4px; flex-wrap: wrap; }
+/* SIMBAD / Stellarium — survey-grid 안에서 같은 셀 크기로 정렬. */
+[data-ns="v2"] .a2-survey-grid .a2-ext-link,
+[data-ns="v2"] .a2-survey-grid .a2-stl-btn {
+  padding: 4px 4px; font: 500 10.5px/1.4 var(--v2-font-sans);
+  justify-content: center; text-align: center;
+  white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+}
 [data-ns="v2"] .a2-ext-link {
   display: inline-flex; align-items: center; gap: 4px;
-  background: var(--v2-surface-1); border: 1px solid var(--v2-bd-2);
-  color: var(--v2-fg-3); padding: 4px 11px; border-radius: var(--v2-r-chip);
-  font: 500 11px/1.4 var(--v2-font-sans); cursor: pointer;
+  background: transparent; border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-3); padding: 3px 9px; border-radius: 4px;
+  font: 500 10.5px/1.4 var(--v2-font-sans); cursor: pointer;
   text-decoration: none; transition: var(--v2-t-fast);
 }
-[data-ns="v2"] .a2-ext-link:hover { background: var(--v2-surface-2); color: var(--v2-fg-2); }
+[data-ns="v2"] .a2-ext-link:hover { color: var(--v2-fg-1); border-color: var(--v2-bd-3); }
 
 /* ── Wide kv (astrometry — 키가 길어져서 a2-kv 보다 넓은 컬럼 필요) ── */
 [data-ns="v2"] .a2-kv-wide { display: grid; grid-template-columns: 96px 1fr; gap: 5px 14px; font-size: 12px; }
@@ -271,6 +402,37 @@ input[type=checkbox]{accent-color:#4a88b8}
 /* ── 모바일 카드 — v1 .mc 패턴 골격 + v2 컬러링(좌측 spec bar / hover·open wash) ── */
 [data-ns="v2"] .a2-cards-wrap { display: none; padding: 12px 14px 80px; }
 [data-ns="v2"] .a2-cards-list { display: flex; flex-direction: column; gap: 10px; }
+
+/* 모바일 sort UI — 카드 모드에서만 보임. 데스크탑은 컬럼 헤더 클릭으로 정렬. */
+[data-ns="v2"] .a2-cards-sort {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 0 12px;
+}
+[data-ns="v2"] .a2-cs-label {
+  font: 600 10.5px/1 var(--v2-font-sans);
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--v2-fg-4);
+}
+[data-ns="v2"] .a2-cs-select {
+  flex: 1;
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-2);
+  padding: 6px 10px; border-radius: 6px;
+  font: 500 12px/1.2 var(--v2-font-sans);
+  outline: none; cursor: pointer;
+}
+[data-ns="v2"] .a2-cs-select:focus { border-color: var(--v2-bd-3); }
+[data-ns="v2"] .a2-cs-dir {
+  background: var(--v2-surface-1);
+  border: 1px solid var(--v2-bd-2);
+  color: var(--v2-fg-2);
+  padding: 6px 12px; border-radius: 6px;
+  font: 500 13px/1 var(--v2-font-sans);
+  cursor: pointer; min-width: 40px;
+  transition: var(--v2-t-fast);
+}
+[data-ns="v2"] .a2-cs-dir:hover { border-color: var(--v2-bd-3); color: var(--v2-fg-1); }
 
 [data-ns="v2"] .a2-card {
   position: relative; overflow: hidden;
@@ -359,20 +521,54 @@ input[type=checkbox]{accent-color:#4a88b8}
   [data-ns="v2"] .a2-table { display: none; }
   [data-ns="v2"] .a2-cards-wrap { display: block; }
 
+  /* 헤더 — 하이브리드: title 위, search 전체 폭, 그 외 filters 는 한 row wrap. */
+  header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 14px;
+    gap: 8px;
+  }
+  header h1 { font-size: 16px; }
+  .filters {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 10px;
+    flex: none;
+  }
+  /* search — 전체 폭 차지하고 다음 항목들을 새 줄로 밀어냄 */
+  .filters input[type=text] { width: 100%; flex-basis: 100%; }
+  /* dist slider — 라벨+슬라이더+값을 한 줄에 컴팩트하게 */
+  .filters .fg { gap: 6px; flex-wrap: nowrap; }
+  .filters .fg input[type=range] { width: 90px; min-width: 0; }
+
+  /* stats-bar — column stack, 어중간 wrap 방지 */
+  .stats-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    padding: 8px 14px;
+  }
+  .stats-bar .spacer { display: none; }
+
   /* detail content 자체의 모바일 압축 (카드 내부에 들어가는 경우 + 데스크탑 detail 양쪽 모두) */
   [data-ns="v2"] .a2-dp-grid { grid-template-columns: 1fr; gap: 20px; }
-  [data-ns="v2"] .a2-star-img-wrap { width: 100%; max-width: 280px; margin: 0 auto; }
   [data-ns="v2"] .a2-rep-row { gap: 6px; padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   [data-ns="v2"] .a2-rep-index { width: 100%; text-align: right; margin-left: 0; margin-top: 2px; }
   [data-ns="v2"] .a2-mt th, [data-ns="v2"] .a2-mt td { padding: 7px 9px; font-size: 11px; }
   [data-ns="v2"] .a2-section-h { font-size: 9.5px; margin-bottom: 10px; }
   [data-ns="v2"] .a2-kv { grid-template-columns: 56px 1fr; gap: 4px 10px; }
-  [data-ns="v2"] .a2-kv-wide { grid-template-columns: 80px 1fr; gap: 4px 12px; }
+  [data-ns="v2"] .a2-kv-wide { grid-template-columns: 96px 1fr; gap: 4px 12px; }
   [data-ns="v2"] .a2-cc-wrap { padding: 10px 12px; gap: 14px; }
   [data-ns="v2"] .a2-cc-swatch { width: 48px; height: 48px; }
   [data-ns="v2"] .a2-cc-row { grid-template-columns: 48px 1fr auto; gap: 10px; }
-  /* 별 이미지 — 모바일은 카드 폭의 거의 전체를 채워서 보기 좋게 */
-  [data-ns="v2"] .a2-star-img-wrap { max-width: 100%; }
+  /* survey picker — 모바일 버튼 폰트/패딩 축소 */
+  [data-ns="v2"] .a2-survey-btn { padding: 2px 6px; font-size: 10px; }
+  [data-ns="v2"] .a2-stl-btn { padding: 3px 9px; font-size: 10.5px; }
+  /* 별 이미지 — 모바일은 더 작게 */
+  [data-ns="v2"] .a2-star-img,
+  [data-ns="v2"] .a2-img-no { width: 160px; height: 160px; }
 
   /* v1 의 stack-카드 패턴 — thead 숨기고 tr 가 카드, td 가 라벨/값 grid row */
   [data-ns="v2"] .a2-mt-scroll { overflow-x: visible; margin: 0; }
@@ -428,31 +624,76 @@ input[type=checkbox]{accent-color:#4a88b8}
 <header>
   <h1>NearStars <span>DB</span></h1>
   <div class="filters">
-    <input type="text" id="q" placeholder="Search system or star…" autocomplete="off">
+    <input type="text" id="q" data-i18n-placeholder="search" placeholder="Search system or star…" autocomplete="off">
     <div class="fg">
-      <span>Spec</span>
+      <span data-i18n="spec">Spec</span>
       <select id="spec">
-        <option value="">All</option>
+        <option value="" data-i18n="specAll">All</option>
         <option>O</option><option>B</option><option>A</option>
         <option>F</option><option>G</option><option>K</option><option>M</option>
       </select>
     </div>
     <div class="fg">
-      <span>Dist ≤</span>
+      <span data-i18n="dist">Dist ≤</span>
       <input type="range" id="dist" min="0" max="30" value="15" step="0.5">
       <span id="dist-lbl">15 pc</span>
     </div>
-    <div class="seg">
-      <button class="on">pc</button><button>ly</button><button>AU</button>
+    <div class="seg" id="dist-seg">
+      <button class="on" data-dist="pc">pc</button><button data-dist="ly">ly</button><button data-dist="AU">AU</button>
     </div>
-    <label><input type="checkbox"> Has planets</label>
+    <label><input type="checkbox"> <span data-i18n="hasPlanets">Has planets</span></label>
+    <div class="fg">
+      <span title="Star units">★</span>
+      <div class="seg" id="srad-seg">
+        <button class="on" data-srad="rsun">R☉</button><button data-srad="km">km</button>
+      </div>
+      <div class="seg" id="smass-seg">
+        <button class="on" data-smass="msun">M☉</button><button data-smass="ton">t</button>
+      </div>
+    </div>
+    <div class="fg">
+      <span title="Planet units">⊕</span>
+      <div class="seg" id="prad-seg">
+        <button class="on" data-prad="rearth">R⊕</button><button data-prad="km">km</button>
+      </div>
+      <div class="seg" id="pmass-seg">
+        <button class="on" data-pmass="mearth">M⊕</button><button data-pmass="ton">t</button>
+      </div>
+    </div>
   </div>
 </header>
 
 <div class="stats-bar">
   <span id="stats">— / 152 systems</span>
   <span class="spacer"></span>
+  <button id="howto-btn" class="help-btn" type="button">? How to use</button>
+  <div class="lang-toggle-wrap">
+    <button class="lang-tg" data-lang="en">EN</button>
+    <button class="lang-tg" data-lang="ko">한</button>
+  </div>
   <span style="color:#3a5060;font-size:11px">v2 preview · sample data</span>
+</div>
+
+<!-- ── Howto modal (init 시 빌드, 클릭 시 toggle) ───────────────────────── -->
+<div class="modal-overlay" id="howto-overlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="howto-title">NearStars DB · How to use</h2>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0">
+        <div class="lang-toggle-wrap">
+          <button class="lang-tg" data-lang="en">EN</button>
+          <button class="lang-tg" data-lang="ko">한</button>
+        </div>
+        <button class="modal-close" id="howto-close" type="button">Close</button>
+      </div>
+    </div>
+    <p id="howto-intro" style="font-size:13px;color:#a8bcd0;line-height:1.6"></p>
+    <div id="howto-body"></div>
+    <div class="modal-footer">
+      <label><input type="checkbox" id="howto-dontshow"> <span id="howto-dontshow-lbl">Don't show again</span></label>
+      <button class="modal-close" id="howto-start" type="button">Get started</button>
+    </div>
+  </div>
 </div>
 
 <!-- ── v2 본문: data-ns="v2" 스코프 안에서만 v2 토큰 활성 ───────────────── -->
@@ -461,19 +702,33 @@ input[type=checkbox]{accent-color:#4a88b8}
     <thead>
       <tr>
         <th class="a2-th bar"></th>
-        <th class="a2-th sortable" data-col="sysName">System</th>
-        <th class="a2-th sortable" data-col="starName">Primary star</th>
-        <th class="a2-th sortable" data-col="spec">Spec</th>
+        <th class="a2-th sortable" data-col="sysName" data-i18n="columns.sysName">System</th>
+        <th class="a2-th sortable" data-col="starName" data-i18n="columns.starName">Primary star</th>
+        <th class="a2-th sortable" data-col="spec" data-i18n="columns.spec">Spec</th>
         <th class="a2-th sortable" data-col="dist">Distance</th>
-        <th class="a2-th sortable" data-col="teff">Teff</th>
-        <th class="a2-th sortable" data-col="mass">Mass</th>
-        <th class="a2-th sortable" data-col="rad">Radius</th>
-        <th class="a2-th sortable" data-col="np">Planets</th>
+        <th class="a2-th sortable" data-col="teff" data-i18n="columns.teff">Teff</th>
+        <th class="a2-th sortable" data-col="mass" data-i18n="columns.mass">Mass</th>
+        <th class="a2-th sortable" data-col="rad" data-i18n="columns.rad">Radius</th>
+        <th class="a2-th sortable" data-col="np" data-i18n="columns.np">Planets</th>
       </tr>
     </thead>
     <tbody id="a2-tbody"></tbody>
   </table>
   <div class="a2-cards-wrap">
+    <div class="a2-cards-sort">
+      <span class="a2-cs-label" data-i18n="sort">Sort</span>
+      <select id="a2-sort-col" class="a2-cs-select">
+        <option value="sysName"   data-i18n="columns.sysName">System</option>
+        <option value="starName"  data-i18n="columns.starName">Star</option>
+        <option value="spec"      data-i18n="columns.spec">Spec</option>
+        <option value="dist" selected data-i18n="columns.dist">Distance</option>
+        <option value="teff"      data-i18n="columns.teff">Teff</option>
+        <option value="mass"      data-i18n="columns.mass">Mass</option>
+        <option value="rad"       data-i18n="columns.rad">Radius</option>
+        <option value="np"        data-i18n="columns.np">Planets</option>
+      </select>
+      <button id="a2-sort-dir" class="a2-cs-dir" type="button" aria-label="Toggle sort direction">↑</button>
+    </div>
     <div class="a2-cards-list" id="a2-cards"></div>
   </div>
 </div>
@@ -484,9 +739,687 @@ input[type=checkbox]{accent-color:#4a88b8}
 // (단위 토글, 다국어, glossary, howto modal, DSS picker 라이브 fetch) 은 일단 빠져 있음.
 
 let DB = [];
+let REPORTS = {};
 let FILTER = { q: '', spec: '', dist: 30, hpx: false };
 let SORT   = { col: 'dist', dir: 1 };
 let OPEN_KEY = null;  // 메인 페이지는 단일 OPEN (한 번에 하나만)
+
+// ── i18n ─────────────────────────────────────────────────────────────────────
+const T = {
+  en: {
+    search: 'Search system or star…',
+    spec: 'Spec', specAll: 'All',
+    dist: 'Dist ≤',
+    hasPlanets: 'Has planets',
+    sort: 'Sort',
+    columns: { sysName: 'System', starName: 'Primary star', spec: 'Spec',
+               dist: 'Distance', teff: 'Teff', mass: 'Mass', rad: 'Radius', np: 'Planets' },
+    stats: (n, m, d) => `${n} / ${m} systems · within ${d}`,
+    reports: { title: 'Reports', view: 'view', index: 'all reports →' },
+    detail: {
+      starColor: 'Star Color',
+      astrometry: 'Astrometry',
+      derivedPos: 'Derived Position',
+      principia: 'Principia',
+      massMeas: 'Mass measurements',
+      radMeas: 'Radius measurements',
+      planets: 'Planets',
+      papers: (n) => `${n} ${n === 1 ? 'paper' : 'papers'}`,
+      paper: 'Paper', method: 'Method', ref: 'Reference',
+      rec: 'REC ✓',
+      appMag: 'App. Mag', specType: 'Spec Type', meanRadius: 'Mean Radius',
+      planet: 'Planet',
+    },
+    units: [
+      ['M☉', 'Solar mass = 1.989 × 10³⁰ kg'],
+      ['R☉', 'Solar radius = 695,700 km'],
+      ['M⊕', 'Earth mass = 5.972 × 10²⁴ kg'],
+      ['R⊕', 'Earth radius = 6,371 km'],
+      ['pc', 'Parsec = 3.086 × 10¹³ km ≈ 3.26 light-years'],
+      ['ly', 'Light-year = 9.461 × 10¹² km ≈ 0.307 pc'],
+      ['AU', 'Astronomical Unit = 149,597,870 km (Earth–Sun distance)'],
+      ['K', 'Kelvin — absolute temperature (0 K = −273.15°C)'],
+      ['mas', 'Milliarcsecond = 1/3,600,000°'],
+      ['mas/yr', 'Milliarcseconds per year — proper motion unit (annual angular displacement)'],
+      ['km/s', 'Kilometers per second — velocity unit'],
+      ['°', 'Degree — angle unit (1° = 60′ = 3600″)'],
+      ['mag', 'Magnitude — stellar brightness scale (lower = brighter; 1 mag ≈ 2.512×)'],
+      ['km³/s²', 'Unit of gravitational parameter (GM)'],
+    ],
+    howto: {
+      btn: '? How to use',
+      title: 'NearStars DB · How to use',
+      close: 'Close',
+      startBtn: 'Get started',
+      dontShow: "Don't show again",
+      intro: 'A database viewer for the NearStars KSP mod — 152 nearby stellar systems curated from Gaia / SIMBAD / NASA Exoplanet Archive.',
+      sections: [
+        { h: '1. Search & filter', items: [
+          'Type a star or system name in the <b>search box</b>.',
+          'Pin spectral types via <b>Spec</b> (O/B/A/F/G/K/M).',
+          'Set distance cap with <b>Dist ≤</b> (unit follows the pc/ly/AU toggle).',
+          'Tick <b>Has planets</b> to keep only systems with confirmed planets.',
+        ]},
+        { h: '2. Detail panel', items: [
+          'Click a row (desktop) or card (mobile) to expand the detail panel.',
+          'You get the star\'s position, color, measurements, planet list, per-paper sources with DOI links.',
+          'Click again to collapse.',
+        ]},
+        { h: '3. Sky images (survey / FOV)', items: [
+          'The image inside the detail panel is a real-sky cutout from STScI DSS, ESA HiPS, Legacy DR10.',
+          'Use <b>survey buttons</b> (DSS-B/R, 2MASS, WISE…) to switch bands.',
+          'Adjust <b>FOV</b> 5\'/15\'/30\'/60\'/120\' for the field of view.',
+          'Every survey × FOV combination is cached so re-toggling is instant.',
+        ]},
+        { h: '4. Glossary', items: [
+          'KV labels (RA, Dec, Parallax, GM, …) and unit tokens (mas, pc, K, °, …) are <b>dotted-underlined</b>.',
+          'Hover (desktop) or tap (mobile) to see the explanation.',
+        ]},
+        { h: '5. Other', items: [
+          'Switch language with <kbd>EN / 한</kbd> at the top right.',
+          'Sample reports: <a href="phase2/trappist-1.html" style="color:var(--v2-accent)">P2 TRAPPIST-1</a>, <a href="phase3/trappist-1-d.html" style="color:var(--v2-accent)">P3 TRAPPIST-1 d</a>.',
+        ]},
+      ],
+    },
+    params: [
+      ['RA', 'Right Ascension — east-west sky coordinate. ICRS, J2000 frame.'],
+      ['Dec', 'Declination — north-south sky coordinate. ICRS, J2000 frame.'],
+      ['Teff', 'Effective temperature — stellar surface temperature; determines star color.'],
+      ['Parallax', "Apparent shift in star position due to Earth's orbit. Larger = closer star."],
+      ['PM RA', 'Proper motion RA component — annual angular displacement in RA (cos δ corrected).'],
+      ['PM Dec', 'Proper motion Dec component — annual angular displacement in Dec.'],
+      ['RV', 'Radial velocity — speed along the line of sight (toward/away from observer).'],
+      ['GM', 'Gravitational parameter = G × mass. Used directly in orbital simulation.'],
+      ['App. Mag', 'Apparent magnitude (V band). Converted from Gaia G+BP-RP; Hipparcos for bright stars.'],
+      ['Spec Type', 'Spectral classification — encodes temperature class (O/B/A/F/G/K/M…) + luminosity class (V = main sequence, III = giant, etc.).'],
+      ['Mean Radius', 'Mean spherical radius used by Principia for the rigid-body gravity model.'],
+      ['B1950.0', 'Reference epoch used in-game. Origin: Solar System Barycenter (SSB).'],
+      ['Pos ULP', 'Position unit-in-last-place — numerical precision of the derived position.'],
+    ],
+  },
+  ko: {
+    search: '시스템 또는 항성 검색…',
+    spec: '분광형', specAll: '전체',
+    dist: '거리 ≤',
+    hasPlanets: '행성 있음',
+    sort: '정렬',
+    columns: { sysName: '시스템', starName: '대표 항성', spec: '분광형',
+               dist: '거리', teff: '유효온도', mass: '질량', rad: '반지름', np: '행성' },
+    stats: (n, m, d) => `${n} / ${m}개 시스템 · ${d} 이내`,
+    reports: { title: '큐레이션 보고서', view: '보기', index: '전체 인덱스 →' },
+    detail: {
+      starColor: '항성 색',
+      astrometry: '측성 데이터',
+      derivedPos: '게임내 좌표',
+      principia: 'Principia',
+      massMeas: '질량 측정',
+      radMeas: '반지름 측정',
+      planets: '행성',
+      papers: (n) => `${n}개 논문`,
+      paper: '논문', method: '방법', ref: '참고문헌',
+      rec: '권장 ✓',
+      appMag: '겉보기 등급', specType: '분광형', meanRadius: '평균 반경',
+      planet: '행성',
+    },
+    units: [
+      ['M☉', '태양 질량 = 1.989 × 10³⁰ kg'],
+      ['R☉', '태양 반지름 = 695,700 km'],
+      ['M⊕', '지구 질량 = 5.972 × 10²⁴ kg'],
+      ['R⊕', '지구 반지름 = 6,371 km'],
+      ['pc', '파섹 = 3.086 × 10¹³ km ≈ 3.26 광년'],
+      ['ly', '광년 = 9.461 × 10¹² km ≈ 0.307 pc'],
+      ['AU', '천문단위 = 149,597,870 km (지구–태양 거리)'],
+      ['K', '켈빈 — 절대온도 (0 K = −273.15°C)'],
+      ['mas', '밀리초각 = 1/3,600,000°'],
+      ['mas/yr', '밀리초각/년 — 고유운동 단위. 매년 별이 하늘에서 이동하는 각거리'],
+      ['km/s', '킬로미터/초 — 속도 단위'],
+      ['°', '도 — 각도 단위 (1° = 60′ = 3600″)'],
+      ['mag', '등급 — 별의 밝기 척도 (값이 작을수록 밝음, 1등급 차이 = 약 2.512배)'],
+      ['km³/s²', '중력 파라미터(GM) 단위'],
+    ],
+    howto: {
+      btn: '? 사용법',
+      title: 'NearStars DB 사용법',
+      close: '닫기',
+      startBtn: '시작하기',
+      dontShow: '다시 보지 않기',
+      intro: 'KSP 모드 NearStars의 데이터베이스 뷰어입니다. 152개 인근 항성계의 Gaia/SIMBAD/NASA Archive 기반 큐레이션 결과를 확인할 수 있습니다.',
+      sections: [
+        { h: '1. 검색 & 필터', items: [
+          '상단 <b>검색창</b>에 별 이름이나 시스템 이름을 입력해서 좁힙니다.',
+          '<b>분광형</b> 드롭다운으로 분광형(O/B/A/F/G/K/M)을 한정합니다.',
+          '<b>거리 ≤</b> 슬라이더로 거리 상한선을 정합니다 (단위는 pc/ly/AU 토글).',
+          '<b>행성 있음</b> 체크박스로 행성을 가진 시스템만 봅니다.',
+        ]},
+        { h: '2. 상세 패널', items: [
+          '표의 행(데스크탑) 또는 카드(모바일)를 <b>클릭</b>해서 상세를 펼칩니다.',
+          '별의 위치/색/측정값, 행성 목록, 출처 paper(DOI 링크)를 모두 볼 수 있습니다.',
+          '다시 같은 행/카드를 누르면 접힙니다.',
+        ]},
+        { h: '3. 별 이미지 (서베이 / 시야각)', items: [
+          '상세 패널 안의 사진은 STScI DSS, ESA HiPS, Legacy DR10 에서 가져온 실제 천체 이미지입니다.',
+          '아래의 <b>서베이 버튼</b>(DSS-B/R, 2MASS, WISE 등)으로 파장대를 바꿉니다.',
+          '<b>FOV</b>로 시야각을 조정합니다 (5\'/15\'/30\'/60\'/120\').',
+          '한 번 본 조합은 메모리에 캐시되어 다시 토글해도 즉시 표시됩니다.',
+        ]},
+        { h: '4. 용어 도움말', items: [
+          'KV 라벨 (RA, Dec, 시차, GM 등) 과 단위 토큰 (mas, pc, K, ° 등) 에 <b>점선 밑줄</b>이 표시됩니다.',
+          '호버(데스크탑) 또는 탭(모바일) 하면 설명이 popup 으로 표시됩니다.',
+        ]},
+        { h: '5. 그 외', items: [
+          '우상단 <kbd>EN / 한</kbd>으로 언어 전환.',
+          '샘플 보고서: <a href="phase2/trappist-1.html" style="color:var(--v2-accent)">P2 TRAPPIST-1</a>, <a href="phase3/trappist-1-d.html" style="color:var(--v2-accent)">P3 TRAPPIST-1 d</a>.',
+        ]},
+      ],
+    },
+    params: [
+      ['RA', '적경 — 천구상 동서 방향 좌표. ICRS 기준 J2000.'],
+      ['Dec', '적위 — 천구상 남북 방향 좌표. ICRS 기준 J2000.'],
+      ['Teff', '유효 온도 — 항성 표면 평균 온도. 별 색깔을 결정.'],
+      ['Parallax', '시차 — 지구 공전에 따른 별의 겉보기 위치 변화. 값이 클수록 가까운 별.'],
+      ['PM RA', '고유운동 적경 성분 — 별이 RA 방향으로 매년 이동하는 각거리 (cos δ 보정값).'],
+      ['PM Dec', '고유운동 적위 성분 — 별이 Dec 방향으로 매년 이동하는 각거리.'],
+      ['RV', '시선속도 — 별이 관측자 방향으로 가까워지거나 멀어지는 속도.'],
+      ['GM', '중력 파라미터 = G × 질량. 궤도 시뮬레이션에 직접 사용.'],
+      ['겉보기 등급', '겉보기 등급 (V 밴드). Gaia G+BP-RP에서 변환, 밝은 별은 Hipparcos 직접 인용.'],
+      ['분광형', '분광 분류 — 온도 클래스 (O/B/A/F/G/K/M…) + 광도 클래스 (V = 주계열성, III = 거성 등) 부호화.'],
+      ['평균 반경', 'Principia 의 강체 중력 모델이 사용하는 평균 구형 반경.'],
+      ['B1950.0', '게임 내 기준 에포크. 좌표계 원점은 태양계 질량중심(SSB).'],
+      ['Pos ULP', '위치 ULP — derived position 의 수치 정밀도 한계.'],
+    ],
+  },
+};
+let LANG = (localStorage.getItem('nearstars-lang') ||
+            (navigator.language && navigator.language.startsWith('ko') ? 'ko' : 'en'));
+function tt() { return T[LANG] || T.en; }
+function tLookup(path) {
+  return path.split('.').reduce((v, p) => (v == null ? v : v[p]), tt());
+}
+function applyStaticLabels() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const v = tLookup(el.dataset.i18n);
+    if (v != null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const v = tLookup(el.dataset.i18nPlaceholder);
+    if (v != null) el.placeholder = v;
+  });
+  document.querySelectorAll('.lang-tg').forEach(b => b.classList.toggle('on', b.dataset.lang === LANG));
+  document.documentElement.lang = LANG;
+}
+function setLang(l) {
+  LANG = l;
+  localStorage.setItem('nearstars-lang', l);
+  applyStaticLabels();
+  if (typeof buildHowtoBody === 'function') buildHowtoBody();
+  if (DB.length) renderAll();
+}
+
+// ── Glossary tooltip ────────────────────────────────────────────────────────
+const escAttr = s => String(s).replace(/"/g, '&quot;').replace(/</g, '&lt;');
+function buildHelpMap() {
+  const t = tt();
+  const m = {};
+  for (const [k, v] of (t.units  || [])) m[k] = v;
+  for (const [k, v] of (t.params || [])) m[k] = v;
+  return m;
+}
+// detail panel mount 후 kv 라벨 + value 안 단위 토큰에 .help 클래스 + data-help 부여.
+// 같은 .k 를 두 번 decorate 하지 않도록 _glossDone flag 체크.
+function decorateGlossary(root) {
+  const help = buildHelpMap();
+  // value 안에 등장할 단위 토큰 — symbol 시작이거나 known 단위 prefix
+  const units = Object.keys(help)
+    .filter(u => /^[^A-Za-z]|^(mas|pc|ly|AU|K|mag|km)/.test(u))
+    .sort((a, b) => b.length - a.length);
+
+  root.querySelectorAll('.a2-kv-wide .k, .a2-kv .k').forEach(span => {
+    if (span.dataset._glossDone === '1') return;
+    const lbl = span.textContent.trim();
+    if (help[lbl]) {
+      span.classList.add('help');
+      span.dataset.help = help[lbl];
+    }
+    span.dataset._glossDone = '1';
+  });
+
+  root.querySelectorAll('.a2-kv-wide .v, .a2-kv .v').forEach(span => {
+    if (span.dataset._glossDone === '1') return;
+    let html = span.innerHTML;
+    for (const u of units) {
+      if (!help[u]) continue;
+      // 이미 span 안에 wrap 된 단위는 다시 wrap 하지 않도록 lookbehind 회피.
+      const esc = u.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      // word-boundary 대신 visible-token boundary — 앞에는 공백/줄시작/>, 뒤는 공백/줄끝/<,/. /」
+      html = html.replace(
+        new RegExp(`(^|[\\s>])(${esc})(?=[\\s<,.\\u00b7]|$)`, 'g'),
+        (m0, pre, hit) => `${pre}<span class="help" data-help="${escAttr(help[u])}">${hit}</span>`
+      );
+    }
+    span.innerHTML = html;
+    span.dataset._glossDone = '1';
+  });
+}
+
+let _tipEl = null;
+function initTooltip() {
+  if (_tipEl) return;
+  _tipEl = document.createElement('div');
+  _tipEl.className = 'a2-tooltip';
+  document.body.appendChild(_tipEl);
+  document.addEventListener('mouseover', (e) => {
+    const el = e.target.closest('.help[data-help]');
+    if (!el) return;
+    _tipEl.textContent = el.dataset.help;
+    _tipEl.style.display = 'block';
+    const rect = el.getBoundingClientRect();
+    const tipW = _tipEl.offsetWidth;
+    let left = rect.left + window.scrollX;
+    if (left + tipW > window.innerWidth - 8) left = window.innerWidth - tipW - 8;
+    _tipEl.style.left = Math.max(8, left) + 'px';
+    _tipEl.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (e.target.closest('.help')) _tipEl.style.display = 'none';
+  });
+  // 모바일 터치 시 잠시 표시
+  document.addEventListener('touchstart', (e) => {
+    const el = e.target.closest('.help[data-help]');
+    if (!el) { _tipEl.style.display = 'none'; return; }
+    _tipEl.textContent = el.dataset.help;
+    _tipEl.style.display = 'block';
+    const rect = el.getBoundingClientRect();
+    _tipEl.style.left = Math.max(8, rect.left + window.scrollX) + 'px';
+    _tipEl.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
+    setTimeout(() => { _tipEl.style.display = 'none'; }, 3000);
+  }, { passive: true });
+}
+initTooltip();
+
+// ── Howto modal ─────────────────────────────────────────────────────────────
+const HOWTO_KEY = 'nearstars-howto-seen';
+function buildHowtoBody() {
+  const h = tt().howto;
+  if (!h) return;
+  document.getElementById('howto-title').textContent = h.title;
+  document.getElementById('howto-close').textContent = h.close;
+  document.getElementById('howto-start').textContent = h.startBtn;
+  document.getElementById('howto-dontshow-lbl').textContent = h.dontShow;
+  document.getElementById('howto-intro').textContent = h.intro;
+  document.getElementById('howto-btn').textContent = h.btn;
+  const body = document.getElementById('howto-body');
+  body.innerHTML = h.sections.map(s =>
+    `<h3>${s.h}</h3><ul>${s.items.map(it => `<li>${it}</li>`).join('')}</ul>`
+  ).join('');
+}
+function openHowto() {
+  buildHowtoBody();
+  document.getElementById('howto-overlay').classList.add('open');
+}
+function closeHowto() {
+  document.getElementById('howto-overlay').classList.remove('open');
+  if (document.getElementById('howto-dontshow').checked) {
+    try { localStorage.setItem(HOWTO_KEY, '1'); } catch {}
+  }
+}
+document.getElementById('howto-btn').addEventListener('click', openHowto);
+document.getElementById('howto-close').addEventListener('click', closeHowto);
+document.getElementById('howto-start').addEventListener('click', closeHowto);
+document.getElementById('howto-overlay').addEventListener('click', (e) => {
+  if (e.target.id === 'howto-overlay') closeHowto();
+});
+// first-visit auto-open (data 로드와 무관)
+if (!localStorage.getItem(HOWTO_KEY)) {
+  setTimeout(openHowto, 200);
+} else {
+  // 버튼 라벨 초기화 (modal 열지 않아도 버튼은 표시되어야 함)
+  buildHowtoBody();
+}
+
+// ── v1 에서 포팅한 상수 / DSS·Survey·Stellarium 헬퍼들 ─────────────────────────
+const PC_TO_KM = 3.08567758e13;
+const PC_TO_LY = 3.26156;
+const PC_TO_AU = 206264.806;
+const RSUN_KM    = 695700;
+const REARTH_KM  = 6371;
+const MSUN_TON   = 1.989e27;
+const MEARTH_TON = 5.972e21;
+
+let UNIT_DIST = (localStorage.getItem('nearstars-unit-dist') || 'pc');
+let UNIT_SRAD  = (localStorage.getItem('nearstars-unit-srad')  || 'rsun');
+let UNIT_SMASS = (localStorage.getItem('nearstars-unit-smass') || 'msun');
+let UNIT_PRAD  = (localStorage.getItem('nearstars-unit-prad')  || 'rearth');
+let UNIT_PMASS = (localStorage.getItem('nearstars-unit-pmass') || 'mearth');
+function sci(v, d = 4) { return v == null ? '—' : (+v).toExponential(d); }
+function fSRad(rsun) {
+  if (rsun == null) return '—';
+  if (UNIT_SRAD === 'km') return Math.round(rsun * RSUN_KM).toLocaleString() + ' km';
+  return rsun.toFixed(3) + ' R☉';
+}
+function fSMass(msun) {
+  if (msun == null) return '—';
+  if (UNIT_SMASS === 'ton') return sci(msun * MSUN_TON) + ' t';
+  return msun.toFixed(3) + ' M☉';
+}
+function fPRad(rearth) {
+  if (rearth == null) return '—';
+  if (UNIT_PRAD === 'km') return Math.round(rearth * REARTH_KM).toLocaleString() + ' km';
+  return rearth.toFixed(3) + ' R⊕';
+}
+function fPMass(mearth) {
+  if (mearth == null) return '—';
+  if (UNIT_PMASS === 'ton') return sci(mearth * MEARTH_TON) + ' t';
+  return mearth.toFixed(3) + ' M⊕';
+}
+function sMassLabel() { return UNIT_SMASS === 'ton' ? 't' : 'M☉'; }
+function sRadLabel()  { return UNIT_SRAD  === 'km'  ? 'km' : 'R☉'; }
+function pMassLabel() { return UNIT_PMASS === 'ton' ? 't' : 'M⊕'; }
+function pRadLabel()  { return UNIT_PRAD  === 'km'  ? 'km' : 'R⊕'; }
+
+// (UNIT_DIST 정의는 위에서 이미 함, 기존 토글)
+function _unused() { return UNIT_DIST; }  // keep reference
+function distConv(pc) {
+  if (pc == null) return null;
+  if (UNIT_DIST === 'ly') return pc * PC_TO_LY;
+  if (UNIT_DIST === 'AU') return pc * PC_TO_AU;
+  return pc;
+}
+function fDist(pc) {
+  if (pc == null) return '—';
+  const v = distConv(pc);
+  if (UNIT_DIST === 'AU') return v.toLocaleString(undefined, { maximumFractionDigits: 0 }) + ' AU';
+  return v.toFixed(3) + ' ' + UNIT_DIST;
+}
+function fDistLabelOnly(pc) {
+  // slider 라벨용 — 단위 prefix 만, 숫자 정밀도 짧게
+  if (pc == null) return '—';
+  const v = distConv(pc);
+  if (UNIT_DIST === 'AU') return Math.round(v).toLocaleString() + ' AU';
+  return v.toFixed(1) + ' ' + UNIT_DIST;
+}
+
+const hipsUrl = (hipsId) => (ra, dec, fovArcmin) =>
+  `https://alasky.cds.unistra.fr/hips-image-services/hips2fits?hips=${encodeURIComponent(hipsId)}&ra=${ra.toFixed(6)}&dec=${dec.toFixed(6)}&fov=${(fovArcmin/60).toFixed(5)}&width=512&height=512&projection=TAN&format=jpg`;
+
+const STAR_SURVEYS = [
+  { name: 'legacy', label: 'Legacy DR10', epoch: 2018, decRange: [-30, 84],
+    url: (ra, dec, fovArcmin) => {
+      const sizePix  = 512;
+      const pixscale = (fovArcmin * 60) / sizePix;
+      return `https://www.legacysurvey.org/viewer/jpeg-cutout?ra=${ra.toFixed(6)}&dec=${dec.toFixed(6)}&size=${sizePix}&layer=ls-dr10&pixscale=${pixscale.toFixed(4)}`;
+    }
+  },
+  { name: 'ps1', label: 'Pan-STARRS PS1', epoch: 2012, decRange: [-30, 90],
+    url: hipsUrl('CDS/P/PanSTARRS/DR1/color-i-r-g') },
+  { name: 'skymapper', label: 'SkyMapper DR4', epoch: 2017, decRange: [-90, 28],
+    url: hipsUrl('CDS/P/skymapper-color-IRG') },
+  { name: '2mass', label: '2MASS color', epoch: 1999, decRange: [-90, 90],
+    url: hipsUrl('CDS/P/2MASS/color') },
+  { name: 'unwise', label: 'unWISE W1/W2', epoch: 2015, decRange: [-90, 90],
+    url: hipsUrl('CDS/P/unWISE/color-W2-W1W2-W1') },
+  { name: 'dss_b', label: 'DSS POSS2 blue', epoch: 1993, decRange: [-90, 90], stsciVariant: 'poss2ukstu_blue',
+    url: (ra, dec, fov) => `https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_blue&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none` },
+  { name: 'dss_r', label: 'DSS POSS2 red', epoch: 1993, decRange: [-90, 90], stsciVariant: 'poss2ukstu_red',
+    url: (ra, dec, fov) => `https://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none` },
+  { name: 'dss_p1', label: 'DSS POSS1', epoch: 1955, decRange: [-30, 90], stsciVariant: 'poss1_blue',
+    url: (ra, dec, fov) => `https://archive.stsci.edu/cgi-bin/dss_search?v=poss1_blue&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=${fov}&w=${fov}&f=gif&c=none` }
+];
+const SURVEY_PRIORITY = ['ps1', 'legacy', 'skymapper', '2mass', 'unwise', 'dss_b', 'dss_r', 'dss_p1'];
+const PICKER_SHORT = {
+  legacy: 'Legacy', ps1: 'PS1', skymapper: 'SkyM', '2mass': '2MASS', unwise: 'unWISE',
+  dss_b: 'POSS2 B', dss_r: 'POSS2 R', dss_p1: 'POSS1'
+};
+
+function safeId(name) { return name.replace(/[^a-z0-9]/gi, '_'); }
+function propagateCoords(ra, dec, pmra, pmdec, fromYear, toYear) {
+  const dt     = toYear - fromYear;
+  const cosDec = Math.cos(dec * Math.PI / 180);
+  return {
+    ra:  ra  + (pmra  || 0) * dt / (3.6e6 * cosDec),
+    dec: dec + (pmdec || 0) * dt / 3.6e6
+  };
+}
+function pickSurveys(dec) {
+  return STAR_SURVEYS.filter(s => dec >= s.decRange[0] && dec <= s.decRange[1]);
+}
+function defaultFovFromMag(mag) {
+  if (mag == null) return 5;
+  if (mag <= -1)   return 120;
+  if (mag <= 0.5)  return 60;
+  if (mag <= 2)    return 30;
+  if (mag <= 4)    return 15;
+  return 5;
+}
+
+const PLATE_EPOCH_CACHE = new Map();
+async function getPlateEpoch(stsciVariant, ra, dec) {
+  const key = `${stsciVariant}|${ra.toFixed(2)}|${dec.toFixed(2)}`;
+  if (PLATE_EPOCH_CACHE.has(key)) return PLATE_EPOCH_CACHE.get(key);
+  let epoch = null;
+  try {
+    const url = `https://archive.stsci.edu/cgi-bin/dss_search?v=${stsciVariant}&r=${ra.toFixed(6)}&d=${dec.toFixed(6)}&e=J2000&h=1&w=1&f=fits&c=none`;
+    const resp = await fetch(url, { headers: { 'Range': 'bytes=0-2879' } });
+    const buf  = await resp.arrayBuffer();
+    const text = new TextDecoder('latin1').decode(buf);
+    const m    = text.match(/DATE-OBS\s*=\s*'(\d{4})-(\d{2})-(\d{2})/);
+    if (m) epoch = parseInt(m[1]) + (parseInt(m[2]) - 1) / 12 + parseInt(m[3]) / 365.25;
+  } catch (e) {}
+  PLATE_EPOCH_CACHE.set(key, epoch);
+  return epoch;
+}
+
+const HIPS_POS_CACHE = new Map();
+const HIPS_CATALOGS = {
+  '2mass':     { table: 'II/246/out',     ra: 'RAJ2000', dec: 'DEJ2000', mag: 'Jmag'      },
+  skymapper:   { table: 'II/379/smssdr4', ra: 'RAICRS',  dec: 'DEICRS',  mag: 'gPSF'      },
+  unwise:      { table: 'II/365/catwise', ra: 'RA_ICRS', dec: 'DE_ICRS', mag: 'W1mproPM'  }
+};
+async function getHipsCatalogPos(surveyName, ra, dec) {
+  const key = `${surveyName}|${ra.toFixed(3)}|${dec.toFixed(3)}`;
+  if (HIPS_POS_CACHE.has(key)) return HIPS_POS_CACHE.get(key);
+  const cat = HIPS_CATALOGS[surveyName];
+  if (!cat) return null;
+  let pos = null;
+  try {
+    const q = `SELECT TOP 1 ${cat.ra}, ${cat.dec} FROM "${cat.table}" `
+            + `WHERE 1=CONTAINS(POINT('ICRS',${cat.ra},${cat.dec}),CIRCLE('ICRS',${ra.toFixed(6)},${dec.toFixed(6)},0.02)) `
+            + `AND ${cat.mag} IS NOT NULL ORDER BY ${cat.mag}`;
+    const url = `https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=json&QUERY=${encodeURIComponent(q)}`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+    const row  = json.data?.[0];
+    if (row && row[0] != null && row[1] != null) pos = { ra: row[0], dec: row[1] };
+  } catch (e) {}
+  HIPS_POS_CACHE.set(key, pos);
+  return pos;
+}
+
+const IMG_CACHE = new Map();
+function setImgSrc(img, url) {
+  if (img.src === url) return;
+  if (!IMG_CACHE.has(url)) {
+    const pre = new Image();
+    pre.src = url;
+    IMG_CACHE.set(url, pre);
+  }
+  img.src = url;
+}
+
+function applySurveyUrl(img) {
+  const survey = STAR_SURVEYS.find(s => s.name === img.dataset.survey);
+  if (!survey) return;
+  const ra    = parseFloat(img.dataset.raOrig);
+  const dec   = parseFloat(img.dataset.decOrig);
+  const pmra  = parseFloat(img.dataset.pmra  || '0');
+  const pmdec = parseFloat(img.dataset.pmdec || '0');
+  const fov   = parseFloat(img.dataset.fov   || '5');
+  const c     = propagateCoords(ra, dec, pmra, pmdec, 2016, survey.epoch);
+  setImgSrc(img, survey.url(c.ra, c.dec, fov));
+  img.style.display = '';
+  const box = img.closest('.a2-star-img-box');
+  const fb  = box?.querySelector('.a2-img-no');
+  if (fb) fb.remove();
+  const ret = img.parentElement.querySelector('.a2-reticle');
+  if (ret) ret.style.display = '';
+  const cap = box?.querySelector('.a2-img-cap');
+  if (cap) cap.textContent = `${survey.label} · star at crosshair · epoch ${survey.epoch}`;
+  box?.querySelectorAll('.a2-survey-btn').forEach(b => b.classList.toggle('on', b.dataset.survey === survey.name));
+  if (survey.stsciVariant) {
+    const targetName = survey.name;
+    getPlateEpoch(survey.stsciVariant, ra, dec).then(realEpoch => {
+      if (realEpoch == null) return;
+      if (img.dataset.survey !== targetName) return;
+      const fov2  = parseFloat(img.dataset.fov || '5');
+      const c2    = propagateCoords(ra, dec, pmra, pmdec, 2016, realEpoch);
+      setImgSrc(img, survey.url(c2.ra, c2.dec, fov2));
+      const drift = Math.abs(realEpoch - survey.epoch);
+      const note  = drift > 10 ? ' · STScI served older plate' : '';
+      if (cap) cap.textContent = `${survey.label} · star at crosshair · plate epoch ${realEpoch.toFixed(2)}${note}`;
+    });
+  } else if (HIPS_CATALOGS[survey.name] && Math.hypot(pmra, pmdec) > 1000) {
+    const targetName = survey.name;
+    getHipsCatalogPos(survey.name, c.ra, c.dec).then(pos => {
+      if (!pos) return;
+      if (img.dataset.survey !== targetName) return;
+      const fov2 = parseFloat(img.dataset.fov || '5');
+      setImgSrc(img, survey.url(pos.ra, pos.dec, fov2));
+      if (cap) cap.textContent = `${survey.label} · star at crosshair · catalog-anchored`;
+    });
+  }
+}
+
+function nextSurvey(img) {
+  const list = (img.dataset.surveyList || '').split(',').filter(Boolean);
+  const idx  = list.indexOf(img.dataset.survey);
+  if (idx >= 0 && idx < list.length - 1) {
+    img.dataset.survey = list[idx + 1];
+    applySurveyUrl(img);
+  } else {
+    img.style.display = 'none';
+    let fb = img.parentElement.querySelector('.a2-img-no');
+    if (!fb) { fb = document.createElement('div'); fb.className = 'a2-img-no'; img.parentElement.appendChild(fb); }
+    fb.textContent = 'No image';
+    const ret = img.parentElement.querySelector('.a2-reticle');
+    if (ret) ret.style.display = 'none';
+  }
+}
+
+function upgradeToPreferred(img) {
+  if (img.dataset.upgraded === '1') return;
+  img.dataset.upgraded = '1';
+  const preferred = img.dataset.preferred;
+  if (!preferred || preferred === img.dataset.survey) return;
+  if (img.dataset.userSelected === '1') return;
+  const ps = STAR_SURVEYS.find(s => s.name === preferred);
+  if (!ps) return;
+  const ra    = parseFloat(img.dataset.raOrig);
+  const dec   = parseFloat(img.dataset.decOrig);
+  const pmra  = parseFloat(img.dataset.pmra  || '0');
+  const pmdec = parseFloat(img.dataset.pmdec || '0');
+  const fov   = parseFloat(img.dataset.fov   || '5');
+  const c     = propagateCoords(ra, dec, pmra, pmdec, 2016, ps.epoch);
+  const pre   = new Image();
+  pre.onload  = () => {
+    if (img.dataset.userSelected === '1') return;
+    img.dataset.survey = ps.name;
+    applySurveyUrl(img);
+  };
+  pre.src = ps.url(c.ra, c.dec, fov);
+}
+
+async function openStellarium(btn, name, raDeg, decDeg, skyPrecomputed) {
+  const API = 'http://localhost:8090';
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '…';
+  const webWin = window.open('', '_blank');
+  let desktopOk = false;
+  try {
+    const status = await fetch(`${API}/api/main/status`, { signal: AbortSignal.timeout(1500) });
+    if (status.ok) {
+      const targets = [name];
+      if (skyPrecomputed) {
+        const expanded = skyPrecomputed.replace(/^(HIP|HD|HR|TYC|GJ|SAO|2MASS|UCAC|NLTT|LSPM)(\d)/, '$1 $2');
+        if (!targets.includes(expanded)) targets.push(expanded);
+      }
+      for (const t of targets) {
+        const r = await fetch(`${API}/api/main/focus`, {
+          method: 'POST',
+          body: new URLSearchParams({ target: t }),
+          signal: AbortSignal.timeout(2000)
+        });
+        if (r.ok && (await r.text()).trim() === 'true') { desktopOk = true; break; }
+      }
+    }
+  } catch {}
+  if (desktopOk) {
+    webWin.close();
+    btn.textContent = '☄ Stellarium ✓';
+    btn.classList.add('ok');
+    setTimeout(() => { btn.textContent = label; btn.classList.remove('ok'); btn.disabled = false; }, 2500);
+  } else {
+    let skyId = skyPrecomputed;
+    if (!skyId) {
+      try {
+        const r = await fetch('https://api.noctuasky.com/api/v1/skysources/name/' + encodeURIComponent(name),
+          { signal: AbortSignal.timeout(3000) });
+        if (r.ok) {
+          const d = await r.json();
+          if (d.names?.length && d.names[0] !== '?') {
+            const genericRe = /^(?:Gaia DR|TYC|2MASS|UCAC|SAO|NLTT|LSPM)\b/;
+            let primary = d.names[0];
+            if (genericRe.test(primary) && d.short_name && !genericRe.test(d.short_name)) primary = d.short_name;
+            skyId = primary.replace(/^NAME\s+/, '').replace(/^[*]\s+/, '').replace(/\s+/g, '');
+          }
+        }
+      } catch {}
+      skyId = skyId || name.replace(/\s+/g, '');
+    }
+    webWin.location.href = 'https://stellarium-web.org/skysource/' + skyId;
+    if (skyPrecomputed) {
+      btn.textContent = '☄ Stellarium Web ✓';
+      btn.classList.add('web');
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('web'); btn.disabled = false; }, 2500);
+    } else {
+      btn.textContent = '☄ Web (' + name + ')';
+      btn.classList.add('err');
+      setTimeout(() => { btn.textContent = label; btn.classList.remove('err'); btn.disabled = false; }, 4000);
+    }
+  }
+}
+// expose for inline onload/onerror/onclick attrs
+Object.assign(window, { upgradeToPreferred, nextSurvey, openStellarium });
+
+// FOV / Survey picker — document-level delegation (한 번만 등록).
+// renderAll 매번 호출되어도 새로 그려진 button 이 자동으로 트랩됨.
+document.addEventListener('click', (e) => {
+  const fov = e.target.closest('.a2-fov-btn');
+  if (fov) {
+    e.stopPropagation();
+    const img = document.getElementById(fov.dataset.target);
+    if (!img) return;
+    img.dataset.fov = fov.dataset.fov;
+    applySurveyUrl(img);
+    fov.closest('.a2-fov-picker').querySelectorAll('.a2-fov-btn').forEach(b => b.classList.remove('on'));
+    fov.classList.add('on');
+    return;
+  }
+  const sv = e.target.closest('.a2-survey-btn');
+  if (sv && !sv.disabled) {
+    e.stopPropagation();
+    const img = document.getElementById(sv.dataset.target);
+    if (!img) return;
+    img.dataset.userSelected = '1';
+    img.dataset.survey = sv.dataset.survey;
+    applySurveyUrl(img);
+  }
+});
+
+// lang toggle 은 fetch 와 무관하게 한 번만 bind
+document.querySelectorAll('.lang-tg').forEach(b => {
+  b.addEventListener('click', () => setLang(b.dataset.lang));
+});
+applyStaticLabels();
 
 fetch('data.json').then(r => r.json()).then(data => {
   DB = data;
@@ -496,6 +1429,13 @@ fetch('data.json').then(r => r.json()).then(data => {
 }).catch(err => {
   document.getElementById('a2-tbody').innerHTML = `<tr><td colspan="9" style="padding:24px;color:var(--v2-fg-4)">Failed to load data.json: ${err.message}</td></tr>`;
 });
+
+// REPORTS manifest — Phase 2 / Phase 3 큐레이션 보고서 메타. data.json 과 독립 fetch.
+// 도착 시점이 data.json 보다 늦어도 OK (받자마자 re-render 트리거).
+fetch('reports-manifest.json').then(r => r.ok ? r.json() : {}).then(m => {
+  REPORTS = m;
+  if (DB.length) renderAll();
+}).catch(() => {});
 
 function pickRec(arr, key) {
   if (!arr) return null;
@@ -550,12 +1490,32 @@ function bindFilters() {
   document.getElementById('spec').addEventListener('change', e => { FILTER.spec = e.target.value; renderAll(); });
   document.getElementById('dist').addEventListener('input', e => {
     FILTER.dist = +e.target.value;
-    document.getElementById('dist-lbl').textContent = `${FILTER.dist} pc`;
+    document.getElementById('dist-lbl').textContent = fDistLabelOnly(FILTER.dist);
     renderAll();
   });
   document.querySelectorAll('header input[type="checkbox"]').forEach(cb => {
     cb.addEventListener('change', e => { FILTER.hpx = e.target.checked; renderAll(); });
   });
+  // dist segmented (pc/ly/AU)
+  const bindUnitSeg = (segId, dataAttr, setter, storageKey) => {
+    document.querySelectorAll(`#${segId} button`).forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = btn.dataset[dataAttr];
+        setter(val);
+        localStorage.setItem(storageKey, val);
+        document.querySelectorAll(`#${segId} button`).forEach(b => b.classList.toggle('on', b === btn));
+        if (segId === 'dist-seg') document.getElementById('dist-lbl').textContent = fDistLabelOnly(FILTER.dist);
+        renderAll();
+      });
+    });
+    // 초기 active button 동기화 (localStorage 복원)
+    document.querySelectorAll(`#${segId} button`).forEach(b => b.classList.toggle('on', b.dataset[dataAttr] === ({dist:UNIT_DIST,srad:UNIT_SRAD,smass:UNIT_SMASS,prad:UNIT_PRAD,pmass:UNIT_PMASS})[dataAttr]));
+  };
+  bindUnitSeg('dist-seg',  'dist',  v => UNIT_DIST  = v, 'nearstars-unit-dist');
+  bindUnitSeg('srad-seg',  'srad',  v => UNIT_SRAD  = v, 'nearstars-unit-srad');
+  bindUnitSeg('smass-seg', 'smass', v => UNIT_SMASS = v, 'nearstars-unit-smass');
+  bindUnitSeg('prad-seg',  'prad',  v => UNIT_PRAD  = v, 'nearstars-unit-prad');
+  bindUnitSeg('pmass-seg', 'pmass', v => UNIT_PMASS = v, 'nearstars-unit-pmass');
 }
 
 function bindSort() {
@@ -565,9 +1525,25 @@ function bindSort() {
       const col = th.dataset.col;
       if (SORT.col === col) SORT.dir = -SORT.dir;
       else { SORT.col = col; SORT.dir = 1; }
+      syncMobileSort();
       renderAll();
     });
   });
+  const sel = document.getElementById('a2-sort-col');
+  const btn = document.getElementById('a2-sort-dir');
+  if (sel) sel.addEventListener('change', e => { SORT.col = e.target.value; renderAll(); });
+  if (btn) btn.addEventListener('click', () => {
+    SORT.dir = -SORT.dir;
+    btn.textContent = SORT.dir === 1 ? '↑' : '↓';
+    renderAll();
+  });
+}
+
+function syncMobileSort() {
+  const sel = document.getElementById('a2-sort-col');
+  const btn = document.getElementById('a2-sort-dir');
+  if (sel) sel.value = SORT.col;
+  if (btn) btn.textContent = SORT.dir === 1 ? '↑' : '↓';
 }
 // brown dwarf (L/T/Y) → 'M' 그룹으로 매핑. spectral classification 상 M 의
 // 차가운 연속선상이라 wash/spectral bar 색이 따뜻한 빨강 톤이 자연스러움.
@@ -679,160 +1655,258 @@ function safeNum(v, dec, suffix) {
 }
 
 // detail panel content — row 객체 r 받음. r.sys (원본 시스템) / r.primary (대표 별) 사용.
+// v1 의 buildDetail 패턴을 v2 디자인 토큰 + a2-* 클래스로 이식.
 function detailContentHTML(r) {
-  const sys     = r.sys;
-  const st      = r.primary;
-  const raw     = st.raw;
+  const sys = r.sys;
+  const st  = r.primary;
+  const raw = st.raw;
   const teffColor = teffRGBv2(r.teff);
-  const rgb     = hexToRGB(teffColor);
+  const rgb = hexToRGB(teffColor);
   const simbadUrl = `https://simbad.u-strasbg.fr/simbad/sim-id?Ident=${encodeURIComponent(st.name)}`;
 
+  // ── DSS 이미지 + FOV/Survey picker + SIMBAD + Stellarium ────────────────────
+  let dssHTML = '';
+  if (raw.ra_deg != null && raw.dec_deg != null) {
+    const surveys   = pickSurveys(raw.dec_deg);
+    const initial   = STAR_SURVEYS.find(s => s.name === 'dss_b');
+    const preferred = SURVEY_PRIORITY.find(n => surveys.some(s => s.name === n)) || initial.name;
+    const fov0      = defaultFovFromMag(raw.vmag_v);
+    const fovOpts   = [5, 15, 30, 60, 120];
+    const imgId     = `dss-${safeId(st.name + (st.component || ''))}`;
+    const raR       = +raw.ra_deg.toFixed(6);
+    const decR      = +raw.dec_deg.toFixed(6);
+    const pmraR     = +(raw.pmra_mas_yr  || 0).toFixed(3);
+    const pmdecR    = +(raw.pmdec_mas_yr || 0).toFixed(3);
+    const c         = propagateCoords(raR, decR, pmraR, pmdecR, 2016, initial.epoch);
+    const stlName   = JSON.stringify(st.name).replace(/"/g, '&quot;');
+    const stlId     = JSON.stringify(raw.stellarium_id || null).replace(/"/g, '&quot;');
+    dssHTML = `
+      <div class="a2-star-img-box">
+        <div class="a2-star-img-row">
+          <div class="a2-dss-wrap">
+            <img class="a2-star-img" id="${imgId}"
+              data-ra-orig="${raR.toFixed(6)}" data-dec-orig="${decR.toFixed(6)}"
+              data-pmra="${pmraR.toFixed(3)}" data-pmdec="${pmdecR.toFixed(3)}"
+              data-fov="${fov0}" data-survey="${initial.name}"
+              data-survey-list="${surveys.map(s => s.name).join(',')}"
+              data-preferred="${preferred}"
+              src="${initial.url(c.ra, c.dec, fov0)}"
+              alt="${st.name} ${initial.label}" loading="lazy"
+              onload="upgradeToPreferred(this)" onerror="nextSurvey(this)">
+            <div class="a2-reticle"></div>
+          </div>
+          <div class="a2-img-links">
+            <div class="a2-fov-picker">
+              ${fovOpts.map(f => `<button class="a2-fov-btn${f === fov0 ? ' on' : ''}" data-target="${imgId}" data-fov="${f}">${f}′</button>`).join('')}
+            </div>
+            <div class="a2-survey-grid">
+              ${STAR_SURVEYS.map(s => {
+                const inCov = surveys.includes(s);
+                const tip   = inCov
+                  ? `${s.label} · epoch ${s.epoch}`
+                  : `${s.label} · dec ${raw.dec_deg.toFixed(1)}° outside coverage [${s.decRange[0]}, ${s.decRange[1]}]`;
+                return `<button class="a2-survey-btn${s.name === initial.name ? ' on' : ''}" data-target="${imgId}" data-survey="${s.name}" title="${tip}"${inCov ? '' : ' disabled'}>${PICKER_SHORT[s.name] || s.label}</button>`;
+              }).join('')}
+              <a class="a2-ext-link" href="${simbadUrl}" target="_blank" rel="noopener">SIMBAD ↗</a>
+              <button class="a2-stl-btn" onclick="openStellarium(this,${stlName},${raw.ra_deg},${raw.dec_deg},${stlId})">☄ Stellarium</button>
+            </div>
+          </div>
+        </div>
+        <div class="a2-img-cap">${initial.label} · star at crosshair · epoch ${initial.epoch}</div>
+      </div>`;
+  }
+
+  const td = tt().detail;
+  // ── Star Color ──
+  const colorHTML = `
+    <div style="margin-top:18px">
+      <div class="a2-section-h">${st.name}${st.component ? ' ' + st.component : ''} — ${td.starColor} (Teff ${r.teff != null ? r.teff.toLocaleString() : '—'} K)</div>
+      <div class="a2-cc-wrap" style="--cc-glow: ${teffColor}55">
+        <div class="a2-cc-swatch" style="background: ${teffColor}"></div>
+        <div class="a2-cc-vals">
+          <div class="a2-cc-row"><span class="k">Hex</span><span class="v">${teffColor.toUpperCase()}</span><button class="a2-cc-copy" data-c="${teffColor.toUpperCase()}">copy</button></div>
+          <div class="a2-cc-row"><span class="k">0–1</span><span class="v">${rgb01(rgb)}</span><button class="a2-cc-copy" data-c="${rgb01(rgb)}">copy</button></div>
+          <div class="a2-cc-row"><span class="k">0–255</span><span class="v">${rgb255(rgb)}</span><button class="a2-cc-copy" data-c="${rgb255(rgb)}">copy</button></div>
+        </div>
+      </div>
+    </div>`;
+
+  // ── Astrometry ──
+  const astrometryHTML = `
+    <div style="margin-top:22px">
+      <div class="a2-section-h">${td.astrometry} · ${raw.source || '—'} · ${raw.epoch_label || ''}</div>
+      <div class="a2-kv-wide">
+        <span class="k">RA</span><span class="v">${safeNum(raw.ra_deg, 6, ' °')}</span>
+        <span class="k">Dec</span><span class="v">${safeNum(raw.dec_deg, 6, ' °')}</span>
+        <span class="k">Parallax</span><span class="v">${raw.parallax_mas != null ? `${(+raw.parallax_mas).toFixed(4)} ± ${(+(raw.parallax_error_mas || 0)).toFixed(4)} mas` : '—'}</span>
+        <span class="k">PM RA</span><span class="v">${safeNum(raw.pmra_mas_yr, 4, ' mas/yr')}</span>
+        <span class="k">PM Dec</span><span class="v">${safeNum(raw.pmdec_mas_yr, 4, ' mas/yr')}</span>
+        <span class="k">RV</span><span class="v">${raw.radial_velocity_km_s != null ? `${(+raw.radial_velocity_km_s).toFixed(4)} km/s · ${raw.radial_velocity_source || ''}` : '—'}</span>
+        <span class="k">Teff</span><span class="v">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span>
+        <span class="k">${td.appMag}</span><span class="v">${raw.vmag_v != null ? (+raw.vmag_v).toFixed(2) + ' V' : '—'}</span>
+        <span class="k">${td.specType}</span><span class="v">${raw.spectype || '—'}</span>
+      </div>
+    </div>`;
+
+  // ── Derived Position B1950.0 / J2000.0 ──
+  let derivedHTML = '';
+  if (st.derived) {
+    const d = st.derived;
+    const distKm = d.distance_km ?? (d.distance_pc != null ? d.distance_pc * PC_TO_KM : null);
+    const distLy = d.distance_pc != null ? d.distance_pc * PC_TO_LY : null;
+    derivedHTML += `
+      <div>
+        <div class="a2-section-h">${td.derivedPos} · ${d.epoch_label || 'B1950.0'}</div>
+        <div class="a2-kv-wide">
+          <span class="k">Distance (pc)</span><span class="v">${d.distance_pc != null ? d.distance_pc.toFixed(4) + ' pc' : '—'}</span>
+          <span class="k">Distance (ly)</span><span class="v">${distLy != null ? distLy.toFixed(3) + ' ly' : '—'}</span>
+          <span class="k">Distance (km)</span><span class="v">${distKm != null ? distKm.toExponential(4) + ' km' : '—'}</span>
+          <span class="k">X</span><span class="v">${d.icrs_x_km != null ? d.icrs_x_km.toExponential(4) + ' km' : '—'}</span>
+          <span class="k">Y</span><span class="v">${d.icrs_y_km != null ? d.icrs_y_km.toExponential(4) + ' km' : '—'}</span>
+          <span class="k">Z</span><span class="v">${d.icrs_z_km != null ? d.icrs_z_km.toExponential(4) + ' km' : '—'}</span>
+          <span class="k">Vx</span><span class="v">${d.icrs_vx_km_s != null ? d.icrs_vx_km_s.toFixed(6) + ' km/s' : '—'}</span>
+          <span class="k">Vy</span><span class="v">${d.icrs_vy_km_s != null ? d.icrs_vy_km_s.toFixed(6) + ' km/s' : '—'}</span>
+          <span class="k">Vz</span><span class="v">${d.icrs_vz_km_s != null ? d.icrs_vz_km_s.toFixed(6) + ' km/s' : '—'}</span>
+          <span class="k">Pos ULP</span><span class="v">${d.position_ulp_km != null ? d.position_ulp_km.toExponential(3) + ' km' : '—'}</span>
+        </div>
+      </div>`;
+    if (d.icrs_x_j2000_km != null) {
+      derivedHTML += `
+      <div style="margin-top:22px">
+        <div class="a2-section-h">${td.derivedPos} · J2000.0</div>
+        <div class="a2-kv-wide">
+          <span class="k">X</span><span class="v">${d.icrs_x_j2000_km.toExponential(4)} km</span>
+          <span class="k">Y</span><span class="v">${d.icrs_y_j2000_km.toExponential(4)} km</span>
+          <span class="k">Z</span><span class="v">${d.icrs_z_j2000_km.toExponential(4)} km</span>
+          <span class="k">Vx</span><span class="v">${d.icrs_vx_j2000_km_s != null ? d.icrs_vx_j2000_km_s.toFixed(6) + ' km/s' : '—'}</span>
+          <span class="k">Vy</span><span class="v">${d.icrs_vy_j2000_km_s != null ? d.icrs_vy_j2000_km_s.toFixed(6) + ' km/s' : '—'}</span>
+          <span class="k">Vz</span><span class="v">${d.icrs_vz_j2000_km_s != null ? d.icrs_vz_j2000_km_s.toFixed(6) + ' km/s' : '—'}</span>
+        </div>
+      </div>`;
+    }
+  }
+
+  // ── Principia ──
+  let principiaHTML = '';
+  if (st.principia) {
+    const p = st.principia;
+    principiaHTML = `
+      <div style="margin-top:22px">
+        <div class="a2-section-h">${td.principia}</div>
+        <div class="a2-kv-wide">
+          <span class="k">GM</span><span class="v">${p.gravitational_parameter_km3_s2 != null ? p.gravitational_parameter_km3_s2.toExponential(4) + ' km³/s²' : '—'}</span>
+          <span class="k">${td.meanRadius}</span><span class="v">${p.mean_radius_km != null ? p.mean_radius_km.toFixed(1) + ' km' : '—'}</span>
+        </div>
+      </div>`;
+  }
+
+  // ── Mass / Radius measurements ──
   const mArr = measArray(raw, 'mass');
   const rArr = measArray(raw, 'radius');
+  const sMassU = (v) => v == null ? '—' : (UNIT_SMASS === 'ton' ? sci(v * MSUN_TON) : v.toFixed(4));
+  const sRadU  = (v) => v == null ? '—' : (UNIT_SRAD  === 'km'  ? Math.round(v * RSUN_KM).toLocaleString() : v.toFixed(5));
+  const sML = sMassLabel(), sRL = sRadLabel();
   const measRows = mArr.map(m => `
     <tr class="${m.recommended ? 'rec' : ''}">
-      <td class="nm" data-label="Paper">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
-      <td data-label="Method"><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
-      <td data-label="M☉">${fmt(m.value_msun, 4)}</td>
-      <td data-label="±">${fmt(m.uncertainty_msun, 4)}</td>
-      <td data-label="">${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
-    </tr>
-  `).join('');
-
+      <td class="nm" data-label="${td.paper}">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
+      <td data-label="${td.method}"><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
+      <td data-label="${sML}">${sMassU(m.value_msun)}</td>
+      <td data-label="±">${sMassU(m.uncertainty_msun)}</td>
+      <td data-label="">${m.recommended ? `<span class="a2-rec-tick">${td.rec}</span>` : ''}</td>
+    </tr>`).join('');
   const radRows = rArr.map(m => `
     <tr class="${m.recommended ? 'rec' : ''}">
-      <td class="nm" data-label="Paper">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
-      <td data-label="Method"><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
-      <td data-label="R☉">${fmt(m.value_rsun, 5)}</td>
-      <td data-label="±">${fmt(m.uncertainty_rsun, 5)}</td>
-      <td data-label="">${m.recommended ? '<span class="a2-rec-tick">REC ✓</span>' : ''}</td>
-    </tr>
-  `).join('');
+      <td class="nm" data-label="${td.paper}">${m.doi ? `<a class="sl" href="https://doi.org/${m.doi}" target="_blank">${m.reference || '—'}</a>` : (m.reference || '—')}</td>
+      <td data-label="${td.method}"><span class="a2-method ${(m.method || 'default').replace(/[^a-z_]/gi,'')}">${(m.method || '—').replace(/_/g, ' ')}</span></td>
+      <td data-label="${sRL}">${sRadU(m.value_rsun)}</td>
+      <td data-label="±">${sRadU(m.uncertainty_rsun)}</td>
+      <td data-label="">${m.recommended ? `<span class="a2-rec-tick">${td.rec}</span>` : ''}</td>
+    </tr>`).join('');
+  const massHTML = mArr.length > 0 ? `
+    <div>
+      <div class="a2-section-h">${td.massMeas} <span style="color: var(--v2-fg-5); font-weight: 400"> · ${td.papers(mArr.length)}</span></div>
+      <table class="a2-mt">
+        <thead><tr><th>${td.paper}</th><th>${td.method}</th><th>${sML}</th><th>±</th><th></th></tr></thead>
+        <tbody>${measRows}</tbody>
+      </table>
+    </div>` : '';
+  const radHTML = rArr.length > 0 ? `
+    <div>
+      <div class="a2-section-h">${td.radMeas} <span style="color: var(--v2-fg-5); font-weight: 400"> · ${td.papers(rArr.length)}</span></div>
+      <table class="a2-mt">
+        <thead><tr><th>${td.paper}</th><th>${td.method}</th><th>${sRL}</th><th>±</th><th></th></tr></thead>
+        <tbody>${radRows}</tbody>
+      </table>
+    </div>` : '';
+  const measWrapHTML = (mArr.length > 0 || rArr.length > 0) ? `
+    <div class="a2-meas-grid">
+      ${massHTML}
+      ${radHTML}
+    </div>` : '';
 
+  // ── Planets (전체 폭, dp-grid 밖) ──
+  const pML = pMassLabel(), pRL = pRadLabel();
+  const pMassU = (v) => v == null ? '—' : (UNIT_PMASS === 'ton' ? sci(v * MEARTH_TON) : v.toFixed(3));
+  const pRadU  = (v) => v == null ? '—' : (UNIT_PRAD  === 'km'  ? Math.round(v * REARTH_KM).toLocaleString() : v.toFixed(3));
   const planetRows = sys.planets.map(p => {
     const pr = p.raw;
     return `
     <tr>
-      <td class="nm" data-label="Planet">${p.name}</td>
-      <td data-label="Method"><span class="a2-method default">${pr.discoverymethod || '—'}</span></td>
+      <td class="nm" data-label="${td.planet}">${p.name}</td>
+      <td data-label="${td.method}"><span class="a2-method default">${pr.discoverymethod || '—'}</span></td>
       <td data-label="Period (d)">${fmt(pr.period_days, 3)}</td>
       <td data-label="SMA (AU)">${fmt(pr.semi_major_axis_au, 4)}</td>
       <td data-label="Ecc">${fmt(pr.eccentricity, 3)}</td>
       <td data-label="Inc (°)">${pr.inclination_deg != null ? (+pr.inclination_deg).toFixed(2) : '—'}</td>
-      <td data-label="M⊕">${fmt(pr.mass_mearth, 3)}</td>
-      <td data-label="R⊕">${fmt(pr.radius_rearth, 3)}</td>
-      <td class="nm" data-label="Reference">${pr.reference || '—'}</td>
+      <td data-label="${pML}">${pMassU(pr.mass_mearth)}</td>
+      <td data-label="${pRL}">${pRadU(pr.radius_rearth)}</td>
+      <td class="nm" data-label="${td.ref}">${pr.reference || '—'}</td>
     </tr>`;
   }).join('');
+  const planetsHTML = sys.planets.length > 0 ? `
+    <div style="margin-top:22px">
+      <div class="a2-section-h">${td.planets} · ${sys.planets.length}</div>
+      <div class="a2-mt-scroll">
+        <table class="a2-mt">
+          <thead><tr><th>${td.planet}</th><th>${td.method}</th><th>Period (d)</th><th>SMA (AU)</th><th>Ecc</th><th>Inc (°)</th><th>${pML}</th><th>${pRL}</th><th>${td.ref}</th></tr></thead>
+          <tbody>${planetRows}</tbody>
+        </table>
+      </div>
+    </div>` : '';
 
-  // P2/P3 chips placeholder — REPORTS 데이터가 별도 fetch라 일단 빈 chips.
-  const p3chips = '';
-
-  const fovOpts = [5, 15, 30, 60, 120];
-  const fovOn = 15;
-  const surveys = [
-    { name: 'Legacy', avail: false },
-    { name: 'PS1', avail: false },
-    { name: 'SkyM', avail: true },
-    { name: '2MASS', avail: true },
-    { name: 'unWISE', avail: true },
-    { name: 'POSS2 B', avail: true, on: true },
-    { name: 'POSS2 R', avail: true },
-    { name: 'POSS1', avail: false },
-  ];
+  // REPORTS manifest 기반 P2 / P3 chips — 없으면 rep-row 자체 안 보임.
+  const rep = REPORTS[sys.system_name];
+  const tr = tt().reports;
+  let chips = '';
+  if (rep) {
+    if (rep.phase2) chips += `<a class="a2-rep-chip p2" href="${rep.phase2}"><b>P2</b> ${tr.view}</a>`;
+    if (rep.phase3) {
+      Object.keys(rep.phase3).sort().forEach(letter => {
+        chips += `<a class="a2-rep-chip p3" href="${rep.phase3[letter]}"><b>P3</b> ${letter}</a>`;
+      });
+    }
+  }
+  const repRowHTML = chips
+    ? `<div class="a2-rep-row"><span class="a2-rep-label">${tr.title}</span>${chips}<a class="a2-rep-index" href="reports.html">${tr.index}</a></div>`
+    : '';
 
   return `
-    <div class="a2-rep-row">
-      <span class="a2-rep-label">Reports</span>
-      <a class="a2-rep-chip p2" href="phase2/${encodeURIComponent(sys.system_name.toLowerCase().replace(/\\s/g, '-'))}.html"><b>P2</b> view</a>
-      ${p3chips}
-      <a class="a2-rep-index" href="reports.html">all reports →</a>
-    </div>
+    ${repRowHTML}
     <div class="a2-dp-grid">
       <div>
-        <div class="a2-star-img-wrap"
-             style="background: radial-gradient(circle at 50% 50%, ${teffColor} 0%, ${teffColor}77 8%, #1a0e08 35%, #050a0e 75%)">
-          <div class="a2-reticle"></div>
-        </div>
-        <div style="font-size:10px; font-family: var(--v2-font-mono); color: var(--v2-fg-4); margin-top:8px">
-          Teff ${r.teff != null ? r.teff.toLocaleString() : '—'} K · radial gradient mock
-        </div>
-
-        <div class="a2-img-links">
-          <div class="a2-fov-picker">
-            ${[5,15,30,60,120].map(f => `<button class="a2-fov-btn${f === 15 ? ' on' : ''}">${f}′</button>`).join('')}
-          </div>
-          <div class="a2-ext-row">
-            <a class="a2-ext-link" href="${simbadUrl}" target="_blank" rel="noopener">SIMBAD ↗</a>
-          </div>
-        </div>
-
-        <div style="margin-top:22px">
-          <div class="a2-section-h">${st.name}${st.component ? ' ' + st.component : ''} — Star Color (Teff ${r.teff != null ? r.teff.toLocaleString() : '—'} K)</div>
-          <div class="a2-cc-wrap" style="--cc-glow: ${teffColor}55">
-            <div class="a2-cc-swatch" style="background: ${teffColor}"></div>
-            <div class="a2-cc-vals">
-              <div class="a2-cc-row"><span class="k">Hex</span><span class="v">${teffColor.toUpperCase()}</span><button class="a2-cc-copy" data-c="${teffColor.toUpperCase()}">copy</button></div>
-              <div class="a2-cc-row"><span class="k">0–1</span><span class="v">${rgb01(rgb)}</span><button class="a2-cc-copy" data-c="${rgb01(rgb)}">copy</button></div>
-              <div class="a2-cc-row"><span class="k">0–255</span><span class="v">${rgb255(rgb)}</span><button class="a2-cc-copy" data-c="${rgb255(rgb)}">copy</button></div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:22px">
-          <div class="a2-section-h">Astrometry · ${raw.source || '—'} · ${raw.epoch_label || ''}</div>
-          <div class="a2-kv-wide">
-            <span class="k">RA</span><span class="v">${safeNum(raw.ra_deg, 6, ' °')}</span>
-            <span class="k">Dec</span><span class="v">${safeNum(raw.dec_deg, 6, ' °')}</span>
-            <span class="k">Parallax</span><span class="v">${raw.parallax_mas != null ? `${(+raw.parallax_mas).toFixed(3)} ± ${(+(raw.parallax_error_mas || 0)).toFixed(3)} mas` : '—'}</span>
-            <span class="k">PM RA</span><span class="v">${safeNum(raw.pmra_mas_yr, 3, ' mas/yr')}</span>
-            <span class="k">PM Dec</span><span class="v">${safeNum(raw.pmdec_mas_yr, 3, ' mas/yr')}</span>
-            <span class="k">RV</span><span class="v">${raw.radial_velocity_km_s != null ? `${(+raw.radial_velocity_km_s).toFixed(2)} km/s · ${raw.radial_velocity_source || ''}` : '—'}</span>
-            <span class="k">Teff</span><span class="v">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span>
-            <span class="k">App. Mag</span><span class="v">${raw.vmag_v != null ? (+raw.vmag_v).toFixed(2) + ' V' : '—'}</span>
-            <span class="k">Spec Type</span><span class="v">${raw.spectype || '—'}</span>
-          </div>
-        </div>
-
-        <div style="margin-top:22px">
-          <div class="a2-section-h">Distance derived</div>
-          <div class="a2-kv-wide">
-            <span class="k">pc</span><span class="v">${r.dist != null ? r.dist.toFixed(4) + ' pc' : '—'}</span>
-            <span class="k">ly</span><span class="v">${r.dist != null ? (r.dist*3.262).toFixed(3) + ' ly' : '—'}</span>
-            <span class="k">km</span><span class="v">${r.dist != null ? (r.dist*3.0857e13).toExponential(4) + ' km' : '—'}</span>
-          </div>
-        </div>
+        ${dssHTML}
+        ${colorHTML}
       </div>
       <div>
-        ${mArr.length > 0 ? `
-        <div class="a2-section-h">Mass measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${mArr.length} ${mArr.length === 1 ? 'paper' : 'papers'}</span></div>
-        <table class="a2-mt">
-          <thead><tr><th>Paper</th><th>Method</th><th>M☉</th><th>±</th><th></th></tr></thead>
-          <tbody>${measRows}</tbody>
-        </table>` : ''}
-
-        ${rArr.length > 0 ? `
-        <div style="margin-top:22px">
-          <div class="a2-section-h">Radius measurements <span style="color: var(--v2-fg-5); font-weight: 400"> · ${rArr.length} ${rArr.length === 1 ? 'paper' : 'papers'}</span></div>
-          <table class="a2-mt">
-            <thead><tr><th>Paper</th><th>Method</th><th>R☉</th><th>±</th><th></th></tr></thead>
-            <tbody>${radRows}</tbody>
-          </table>
-        </div>` : ''}
-
-        ${sys.planets.length > 0 ? `
-        <div style="margin-top:22px">
-          <div class="a2-section-h">Planets · ${sys.planets.length}</div>
-          <div class="a2-mt-scroll">
-            <table class="a2-mt">
-              <thead><tr><th>Planet</th><th>Method</th><th>Period (d)</th><th>SMA (AU)</th><th>Ecc</th><th>Inc (°)</th><th>M⊕</th><th>R⊕</th><th>Reference</th></tr></thead>
-              <tbody>${planetRows}</tbody>
-            </table>
-          </div>
-        </div>
-        ` : ''}
+        ${astrometryHTML}
+        ${principiaHTML}
+      </div>
+      <div>
+        ${derivedHTML}
       </div>
     </div>
+    ${measWrapHTML}
+    ${planetsHTML}
   `;
 }
 
@@ -840,8 +1914,37 @@ function rowKey(r) { return `${r.sysName}|${r.starName}`; }
 
 function rowsToRender() {
   const rows = applySort(applyFilter(flatRows()));
-  document.getElementById('stats').textContent = `${rows.length} / ${DB.length} systems · within ${FILTER.dist} pc`;
+  const t = tt();
+  document.getElementById('stats').textContent = t.stats(rows.length, DB.length, fDistLabelOnly(FILTER.dist));
+  // 컬럼 헤더 단위 변환
+  const setTh = (col, label) => {
+    const th = document.querySelector(`.a2-th[data-col="${col}"]`);
+    if (th) th.textContent = label;
+  };
+  setTh('dist', `${t.columns.dist} (${UNIT_DIST})`);
+  setTh('mass', `${t.columns.mass} (${sMassLabel()})`);
+  setTh('rad',  `${t.columns.rad} (${sRadLabel()})`);
   return rows;
+}
+
+// REPORTS 기반 P2 / P3·N pill HTML — 시스템 이름 옆에 작게 표시.
+function repPillHTML(sysName) {
+  const rep = REPORTS[sysName];
+  if (!rep) return '';
+  let h = '';
+  if (rep.phase2) h += `<span class="a2-pill p2" title="Phase 2 curated">P2</span>`;
+  const p3keys = Object.keys(rep.phase3 || {});
+  const p3star = p3keys.includes('★');
+  const p3pn   = p3keys.filter(k => k !== '★').length;
+  if (p3star || p3pn > 0) {
+    const parts = [];
+    if (p3star) parts.push('star');
+    if (p3pn > 0) parts.push(`${p3pn} planet${p3pn > 1 ? 's' : ''}`);
+    const tip   = `Phase 3 syntheses (${parts.join(' + ')})`;
+    const label = p3pn > 0 ? `P3·${p3pn}${p3star ? '★' : ''}` : 'P3·★';
+    h += `<span class="a2-pill p3" title="${tip}">${label}</span>`;
+  }
+  return h;
 }
 
 function renderRows() {
@@ -861,13 +1964,13 @@ function renderRows() {
     html.push(`
       <tr class="a2-row ${isOpen ? 'open' : ''}" style="${rowStyle}" data-key="${key}">
         <td class="bar"></td>
-        <td><span class="a2-sysname">${r.sysName}</span></td>
+        <td><span class="a2-sysname">${r.sysName}</span>${repPillHTML(r.sysName)}</td>
         <td>${r.starName}</td>
         <td><span class="v2-sb ${cls}">${r.spec}</span></td>
-        <td><span class="a2-mono">${r.dist != null ? r.dist.toFixed(3) + ' pc' : '—'}</span></td>
+        <td><span class="a2-mono">${fDist(r.dist)}</span></td>
         <td><span class="a2-mono">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span></td>
-        <td><span class="a2-mono">${r.mass != null ? r.mass.toFixed(3) + ' M☉' : '—'}</span></td>
-        <td><span class="a2-mono">${r.rad != null ? r.rad.toFixed(3) + ' R☉' : '—'}</span></td>
+        <td><span class="a2-mono">${fSMass(r.mass)}</span></td>
+        <td><span class="a2-mono">${fSRad(r.rad)}</span></td>
         <td>${planetCell}</td>
       </tr>
     `);
@@ -900,7 +2003,7 @@ function renderCards() {
     html.push(`
       <div class="a2-card ${isOpen ? 'open' : ''}" data-key="${key}" style="${cardStyle}">
         <div class="a2-card-head">
-          <div class="a2-card-name">${r.sysName}</div>
+          <div class="a2-card-name">${r.sysName}${repPillHTML(r.sysName)}</div>
           <div class="a2-card-pills">
             <span class="v2-sb ${cls}">${r.spec}</span>
             ${planetPill}
@@ -910,10 +2013,10 @@ function renderCards() {
           <span class="name">${r.starName}</span>
         </div>
         <div class="a2-card-stats">
-          <div class="a2-card-stat"><span class="a2-card-stat-k">DIST</span><span class="a2-card-stat-v">${r.dist != null ? r.dist.toFixed(3) + ' pc' : '—'}</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">DIST</span><span class="a2-card-stat-v">${fDist(r.dist)}</span></div>
           <div class="a2-card-stat"><span class="a2-card-stat-k">TEFF</span><span class="a2-card-stat-v">${r.teff != null ? r.teff.toLocaleString() + ' K' : '—'}</span></div>
-          <div class="a2-card-stat"><span class="a2-card-stat-k">MASS</span><span class="a2-card-stat-v">${r.mass != null ? r.mass.toFixed(3) + ' M☉' : '—'}</span></div>
-          <div class="a2-card-stat"><span class="a2-card-stat-k">RADIUS</span><span class="a2-card-stat-v">${r.rad != null ? r.rad.toFixed(3) + ' R☉' : '—'}</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">MASS</span><span class="a2-card-stat-v">${fSMass(r.mass)}</span></div>
+          <div class="a2-card-stat"><span class="a2-card-stat-k">RADIUS</span><span class="a2-card-stat-v">${fSRad(r.rad)}</span></div>
         </div>
         ${isOpen ? `<div class="a2-card-expand">${detailContentHTML(r)}</div>` : ''}
       </div>
@@ -930,8 +2033,8 @@ function toggleKey(key) {
 function attachClicks() {
   document.querySelectorAll('.a2-row, .a2-card').forEach(el => {
     el.addEventListener('click', (e) => {
-      // 내부 인터랙티브 요소 (copy/link/picker) 는 토글에 전파 안 함.
-      if (e.target.closest('.a2-cc-copy, .a2-ext-link, .a2-fov-btn, .a2-survey-btn, .a2-rep-chip, .a2-rep-index, a, button')) return;
+      // 내부 인터랙티브 요소 (copy/link/picker/detail content) 는 토글에 전파 안 함.
+      if (e.target.closest('.a2-cc-copy, .a2-ext-link, .a2-fov-btn, .a2-survey-btn, .a2-stl-btn, .a2-rep-chip, .a2-rep-index, .a2-card-expand, a, button')) return;
       toggleKey(el.dataset.key);
     });
   });
@@ -954,6 +2057,12 @@ function renderAll() {
   renderRows();
   renderCards();
   attachClicks();
+  // detail panel 의 별 이미지 마운트 — caption / plate epoch refinement / 액티브 picker highlight.
+  // initial src 는 이미 markup 에서 설정되어 setImgSrc 가 noop 이지만, applySurveyUrl 안에서
+  // STScI plate epoch refinement (실제 plate 관측일로 caption 보정 + PM 재투영) 가 트리거됨.
+  document.querySelectorAll('.a2-star-img').forEach(applySurveyUrl);
+  // 라벨/단위 토큰에 .help 데코레이션 — tooltip 시스템과 연동.
+  decorateGlossary(document);
 }
 </script>
 
