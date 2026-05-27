@@ -250,6 +250,34 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
 - 두 항목이 동일한 방법 계층을 공유한다면 분수 불확도가 더 작은 것을 선택합니다.
   선택 근거는 `meta.notes`에 기록합니다.
 
+`disk_measurements` 에 관한 참고사항 (Phase 2 확장 2026-05-27 추가).
+
+```json
+{
+  "belt": "main_cold",
+  "inner_radius_au": 62,
+  "outer_radius_au": 200,
+  "dust_temperature_k": 50,
+  "dust_mass_mearth": 0.013,
+  "morphology": "cold Kuiper analog with sharp inner edge",
+  "resolved": true,
+  "observatory": "Herschel-PACS",
+  "inclination_deg": 6.2,
+  "method": "resolved_imaging",
+  "reference": "Sibthorpe et al. 2010",
+  "bibcode": "2010A&A...518L.130S",
+  "doi": "10.1051/0004-6361/201014574",
+  "recommended": true
+}
+```
+
+- Entry 단위는 (paper × belt) 입니다. 다벨트 원반 (Vega / Fomalhaut / ε Eri 등) 은 같은 bibcode 로 벨트 수만큼의 entry 를 등록합니다.
+- `belt` enum 은 개방형입니다. 권장 값. `inner_warm`, `intermediate`, `main_cold`, `single`, `asteroid_analog`, `warm`, `cold`. 새 paper 가 다른 명명을 쓰면 그대로 추가 가능합니다.
+- `resolved=true` 는 observatory 가 disk 를 공간적으로 분해했음을 의미합니다 (ALMA / HST / SPHERE / JWST). `false` 는 SED-only 또는 광학적 초과 검출만.
+- Disk 전용 보조 필드 (value 도 uncertainty 도 아닌 descriptor). `belt`, `morphology`, `resolved`, `observatory`, `notes`. `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]` 에 등록.
+- Method 계층 (`recommended` 선정의 canonical 순서). `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
+- 모든 value 키는 null 허용입니다. Detection-only paper (예. Aumann 1984 IRAS) 는 대부분의 기하 필드가 null 인 entry 1개를 등록합니다.
+
 ---
 
 ### `planets[]`

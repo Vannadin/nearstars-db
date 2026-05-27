@@ -263,6 +263,34 @@ Notes on `mass_measurements` and `radius_measurements`:
 - If two entries share the same method tier, prefer the one with smaller
   fractional uncertainty. Document the choice in `meta.notes`.
 
+Notes on `disk_measurements` (Phase 2 expansion 2026-05-27).
+
+```json
+{
+  "belt": "main_cold",
+  "inner_radius_au": 62,
+  "outer_radius_au": 200,
+  "dust_temperature_k": 50,
+  "dust_mass_mearth": 0.013,
+  "morphology": "cold Kuiper analog with sharp inner edge",
+  "resolved": true,
+  "observatory": "Herschel-PACS",
+  "inclination_deg": 6.2,
+  "method": "resolved_imaging",
+  "reference": "Sibthorpe et al. 2010",
+  "bibcode": "2010A&A...518L.130S",
+  "doi": "10.1051/0004-6361/201014574",
+  "recommended": true
+}
+```
+
+- Entry granularity: per (paper × belt). Multi-belt disks (Vega / Fomalhaut / ε Eri etc.) emit one entry per belt sharing the same bibcode.
+- `belt` enum is open-ended; recommended values: `inner_warm`, `intermediate`, `main_cold`, `single`, `asteroid_analog`, `warm`, `cold`. Add new strings if a paper uses one.
+- `resolved=true` means an observatory spatially resolved the disk (ALMA / HST / SPHERE / JWST). `false` means SED-only or photometric-excess detection.
+- Disk-only descriptor fields (neither value nor uncertainty): `belt`, `morphology`, `resolved`, `observatory`, `notes`. Registered in `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]`.
+- Method tier (canonical for `recommended` selection): `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
+- All value keys are nullable. Detection-only papers (e.g. Aumann 1984 IRAS) emit one entry with most geometry fields = null.
+
 ---
 
 ### `planets[]`

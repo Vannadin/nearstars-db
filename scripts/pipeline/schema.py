@@ -332,6 +332,26 @@ STELLAR_MEASUREMENT_KINDS = {
             "unverified",
         },
     },
+    "disk_measurements": {
+        # 한 entry = (paper × belt). Multi-belt 별 (Vega/Fomalhaut/eps Eri) 은
+        # 같은 bibcode 로 여러 entry. 일부 paper (Aumann 1984 IRAS) 는 detection
+        # 만 — 대부분 value_keys 가 null.
+        "value_keys": {
+            "inner_radius_au",
+            "outer_radius_au",
+            "dust_temperature_k",
+            "dust_mass_mearth",
+            "inclination_deg",
+        },
+        "methods": {
+            "sed_fit",            # Spitzer/Herschel SED 두 성분 fit
+            "resolved_imaging",   # ALMA/Herschel/HST/SPHERE/JWST imaging
+            "photometric_excess", # IRAS/WISE/Spitzer-MIPS 단순 초과
+            "unverified",
+        },
+        # disk-specific 보조 필드 (value 도 uncertainty 도 아닌 descriptor 들)
+        "extra_keys": {"belt", "morphology", "resolved", "observatory", "notes"},
+    },
 }
 
 STELLAR_CURATED_TOPLEVEL_ALLOWED = {
@@ -374,11 +394,13 @@ def validate_stellar_props_curated(records):
             allowed_value_keys = kind["value_keys"]
             allowed_uncertainty_keys = _uncertainty_keys_for(allowed_value_keys)
             allowed_methods = kind["methods"]
+            extra_keys = kind.get("extra_keys", set())
             allowed_all = (
                 STELLAR_MEASUREMENT_BASE_REQUIRED
                 | STELLAR_MEASUREMENT_COMMON_OPTIONAL
                 | allowed_value_keys
                 | allowed_uncertainty_keys
+                | extra_keys
             )
 
             n_recommended = 0
