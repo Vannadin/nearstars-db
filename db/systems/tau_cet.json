@@ -39,6 +39,53 @@
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
+        "disk_measurements": [
+          {
+            "belt": "single",
+            "inner_radius_au": 6,
+            "outer_radius_au": 55,
+            "dust_temperature_k": 60,
+            "dust_mass_mearth": 1.2,
+            "morphology": "broad single ring; no resolved inner gap",
+            "resolved": true,
+            "observatory": "ALMA",
+            "method": "resolved_imaging",
+            "reference": "MacGregor et al. 2016",
+            "bibcode": "2016ApJ...828..113M",
+            "doi": "10.3847/0004-637X/828/2/113",
+            "recommended": true
+          },
+          {
+            "belt": "single",
+            "inner_radius_au": null,
+            "outer_radius_au": null,
+            "dust_temperature_k": 70,
+            "uncertainty_dust_temperature_k": 10,
+            "dust_mass_mearth": null,
+            "morphology": "submm excess detection; KBO analog",
+            "resolved": false,
+            "observatory": "JCMT-SCUBA",
+            "method": "photometric_excess",
+            "reference": "Greaves et al. 2004",
+            "bibcode": "2004MNRAS.351L..54G",
+            "doi": "10.1111/j.1365-2966.2004.07957.x",
+            "recommended": false
+          },
+          {
+            "belt": "single",
+            "inner_radius_au": null,
+            "outer_radius_au": null,
+            "dust_temperature_k": null,
+            "dust_mass_mearth": null,
+            "morphology": "two-component SED fit; superseded by MacGregor 2016 resolved imaging",
+            "resolved": false,
+            "observatory": "Herschel",
+            "method": "sed_fit",
+            "reference": "Lawler et al. 2014",
+            "bibcode": "arXiv:1409.0023",
+            "recommended": false
+          }
+        ],
         "stellarium_id": "tauCet"
       },
       "derived": {
