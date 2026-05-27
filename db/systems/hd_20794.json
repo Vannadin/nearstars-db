@@ -347,7 +347,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -356,7 +356,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -365,7 +365,7 @@
       "title": "Nari et al. 2025",
       "doi": "10.1051/0004-6361/202451769",
       "bibcode": "2025A&A...693A.297N",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "HD 20794 mass (unverified)"
       ]
@@ -374,14 +374,14 @@
       "title": "Feng et al. 2017",
       "doi": "10.1051/0004-6361/201730406",
       "bibcode": "2017A&A...605A.103F",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet HD 20794 e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

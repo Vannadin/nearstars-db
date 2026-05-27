@@ -94,15 +94,9 @@ def to_filename(name):
 COMPONENT_RE = re.compile(r"^.+\s+([A-Z])$")
 
 # 알려진 선형 전파 한계 노트 (Barnard's Star perspective acceleration 등)
-PROPAGATION_NOTES = {
-    "Barnard's star": (
-        "Linear propagation accumulates ~0.5 AU position error over "
-        "66 years from perspective acceleration (μ≈10,300 mas/yr, "
-        "ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for "
-        "KSP. For sub-AU accuracy, override with JPL Horizons state "
-        "vector at JD2433282.5."
-    ),
-}
+# meta.notes 의 소스는 stellar_props_curated[<star>].meta_notes (top-level 자유
+# 서술 필드). build 가 이를 그대로 흘려 보내고, phase_reliable=false 인 다성계
+# 라면 자동 warning 을 append. 과거 PROPAGATION_NOTES 하드코드 dict 는 제거.
 
 
 def coalesce(*candidates):
@@ -474,6 +468,12 @@ binary_orbits = load_json(f"{DB}/binary_orbits.json")
 _curated_path = f"{DB}/planets_curated.json"
 planets_curated = load_json(_curated_path) if os.path.exists(_curated_path) else {}
 
+# disk_measurements 는 stellar 와 의미 분리되어 별도 source 파일에 보관.
+# 스키마: {star_name: {"disk_measurements": [...]}}. star_name 은
+# stellar_props_curated 의 키와 동일 규칙. 누락 시 빈 배열로 처리.
+_disks_path = f"{DB}/disks_curated.json"
+disks_curated = load_json(_disks_path) if os.path.exists(_disks_path) else {}
+
 os.makedirs(f"{DB}/systems", exist_ok=True)
 
 errors   = []
@@ -526,6 +526,25 @@ for target in target_list:
         metallicity_meas = curated.get("metallicity_measurements", [])
         rotation_meas    = curated.get("rotation_measurements", [])
         activity_meas    = curated.get("activity_measurements", [])
+        # disk_measurements 는 별도 source 파일 (db/disks_curated.json) 에서 로드
+        disk_meas        = (disks_curated.get(star_name) or {}).get("disk_measurements", [])
+
+        # build-control 필드는 sources[] 생성에만 쓰이고 system 파일 output 에는
+        # 노출하지 않음 (그 raw 인용은 curated.json 에 남음). 측정 dict 사본을
+        # 만들어서 strip — 원본 curated 객체는 건드리지 않음.
+        _BUILD_CONTROL_FIELDS = {"source_title", "source_used_for", "emit_source"}
+        def _strip_build_control(arr):
+            return [{k: v for k, v in m.items() if k not in _BUILD_CONTROL_FIELDS}
+                    for m in (arr or [])]
+        mass_meas_out        = _strip_build_control(mass_meas)
+        radius_meas_out      = _strip_build_control(radius_meas)
+        teff_meas_out        = _strip_build_control(teff_meas)
+        luminosity_meas_out  = _strip_build_control(luminosity_meas)
+        age_meas_out         = _strip_build_control(age_meas)
+        metallicity_meas_out = _strip_build_control(metallicity_meas)
+        rotation_meas_out    = _strip_build_control(rotation_meas)
+        activity_meas_out    = _strip_build_control(activity_meas)
+        disk_meas_out        = _strip_build_control(disk_meas)
 
         # Recommended resolved single values (array → recommended:true → value_*)
         rec_teff_arr = _pick_recommended(teff_meas)
@@ -599,16 +618,22 @@ for target in target_list:
             "vmag_source":             phot.get("vmag_source"),
             "teff_k":                  teff_k,
             "spectype":                spectype,
-            "mass_measurements":       mass_meas,
-            "radius_measurements":     radius_meas,
-            "teff_measurements":       teff_meas,
-            "luminosity_measurements": luminosity_meas,
-            "age_measurements":        age_meas,
-            "metallicity_measurements": metallicity_meas,
-            "rotation_measurements":   rotation_meas,
-            "activity_measurements":   activity_meas,
+            "mass_measurements":       mass_meas_out,
+            "radius_measurements":     radius_meas_out,
+            "teff_measurements":       teff_meas_out,
+            "luminosity_measurements": luminosity_meas_out,
+            "age_measurements":        age_meas_out,
+            "metallicity_measurements": metallicity_meas_out,
+            "rotation_measurements":   rotation_meas_out,
+            "activity_measurements":   activity_meas_out,
             "stellarium_id":           stellarium_ids_map.get(star_name),
         }
+        # disk_measurements 는 데이터 있는 별에만 emit (key 자체를 누락시켜
+        # disk 가 없는 별의 raw 블록을 작게 유지). 위치는 stellarium_id 직전.
+        if disk_meas_out:
+            si = raw_block.pop("stellarium_id")
+            raw_block["disk_measurements"] = disk_meas_out
+            raw_block["stellarium_id"] = si
 
         # Phase 2 expansion: curated array → recommended → 단일값 (derived 에 병합)
         stellar_props_resolved = {
@@ -736,23 +761,56 @@ for target in target_list:
         # 질량·반지름 측정값의 DOI/bibcode 자동 추가
         for kind, meas_list in (("mass", mass_meas), ("radius", radius_meas)):
             for m in meas_list:
+                # emit_source=false 면 sources[] 자동 생성 건너뜀
+                # (cross-reference 목적의 superseded entry 등).
+                if m.get("emit_source") is False:
+                    continue
                 doi = m.get("doi")
                 bc  = m.get("bibcode")
                 if doi in existing_dois or (not doi and bc in existing_bibcodes):
                     continue
                 if not doi and not bc:
                     continue
+                # source_title / source_used_for: per-measurement override 필드.
+                # 큐레이션 시 풍부한 title (논문 부제 포함) 이나 다중 used_for 라벨
+                # 을 묶고 싶을 때 사용. 없으면 reference + 기본 한 줄.
+                src_title = m.get("source_title") or m.get("reference") or doi or bc
+                src_used  = m.get("source_used_for") or [
+                    f"{star_name} {kind} ({m.get('method', 'unspecified')})"
+                ]
                 sources.append({
-                    "title":    m.get("reference") or doi or bc,
+                    "title":    src_title,
                     "doi":      doi,
                     "bibcode":  bc,
                     "accessed": RETRIEVAL_DATE,
-                    "used_for": [f"{star_name} {kind} ({m.get('method', 'unspecified')})"],
+                    "used_for": src_used,
                 })
                 if doi:
                     existing_dois.add(doi)
                 if bc:
                     existing_bibcodes.add(bc)
+
+        # 측정값에 묶이지 않는 supporting reference (curated.sources_extra) 병합.
+        for extra in (curated.get("sources_extra") or []):
+            if not isinstance(extra, dict):
+                continue
+            doi = extra.get("doi")
+            bc  = extra.get("bibcode")
+            if doi and doi in existing_dois:
+                continue
+            if bc and not doi and bc in existing_bibcodes:
+                continue
+            sources.append({
+                "title":    extra.get("title") or extra.get("reference") or doi or bc,
+                "doi":      doi,
+                "bibcode":  bc,
+                "accessed": RETRIEVAL_DATE,
+                "used_for": extra.get("used_for") or [],
+            })
+            if doi:
+                existing_dois.add(doi)
+            if bc:
+                existing_bibcodes.add(bc)
 
         # curated 행성 출처 추가 (bibcode-or-doi dedup; bibcode propagation)
         # Phase 2 array form은 각 element를 별도 source로 추가.
@@ -791,7 +849,7 @@ for target in target_list:
         cm = COMPONENT_RE.match(star_name)
         component = cm.group(1) if cm else None
 
-        notes = PROPAGATION_NOTES.get(star_name, "")
+        notes = (curated.get("meta_notes") or "").strip()
         if bs and bs.get("meta", {}).get("phase_reliable") is False:
             warn = (f"Binary orbit {bs['meta'].get('orbit_id')} flagged "
                     f"phase_reliable=false — relative geometry of components "

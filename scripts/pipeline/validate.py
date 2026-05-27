@@ -9,6 +9,7 @@ from schema import (
     validate_binary_orbits,
     validate_stellar_props_curated,
     validate_planets_curated,
+    validate_disks_curated,
 )
 
 JD_B1950 = 2433282.5
@@ -262,6 +263,21 @@ try:
         ok(f"planets_curated.json 스키마 통과 ({len(planets_curated)}호스트 / {n_planets}행성)")
 except FileNotFoundError:
     warn("(planets_curated.json)", "파일 없음")
+
+
+# ── 4f. disks_curated.json 스키마 ────────────────────────────────────────────
+print("\n── 4f. disks_curated 스키마 ─────────────────────────────────────────────")
+try:
+    with open(f"{DB}/disks_curated.json") as f:
+        disks_curated = json.load(f)
+    dc_errs = validate_disks_curated(disks_curated)
+    for e in dc_errs:
+        fail("(disks_curated.json)", e)
+    if not dc_errs:
+        n_disk = sum(len(v.get("disk_measurements", [])) for v in disks_curated.values())
+        ok(f"disks_curated.json 스키마 통과 ({len(disks_curated)}호스트 / {n_disk}entries)")
+except FileNotFoundError:
+    warn("(disks_curated.json)", "파일 없음")
 
 
 # ── 5. 행성 호스트 확인 ───────────────────────────────────────────────────────

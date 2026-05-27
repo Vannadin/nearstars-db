@@ -218,7 +218,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -227,7 +227,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -236,14 +236,14 @@
       "title": "Astudillo Defru et al. 2017",
       "doi": "10.1051/0004-6361/201630153",
       "bibcode": "2017A&A...602A..88A",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "GJ 273 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -211,7 +211,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -220,7 +220,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -229,7 +229,7 @@
       "title": "Philipot et al. 2023",
       "doi": "10.1051/0004-6361/202346612",
       "bibcode": "2023A&A...678A.107P",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "HD 140901 mass (unverified)"
       ]
@@ -238,14 +238,14 @@
       "title": "Feng et al. 2022",
       "doi": "10.3847/1538-4365/ac7e57",
       "bibcode": "2022ApJS..262...21F",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet HD 140901 b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -843,7 +843,8 @@
         "doi": "10.1093/mnras/stab1167",
         "recommended": true
       }
-    ]
+    ],
+    "meta_notes": "Linear propagation accumulates ~0.5 AU position error over 66 years from perspective acceleration (μ≈10,300 mas/yr, ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for KSP. For sub-AU accuracy, override with JPL Horizons state vector at JD2433282.5."
   },
   "GJ 667 C": {
     "mass_measurements": [
@@ -1365,6 +1366,70 @@
         "bibcode": "2017AJ....154..135F",
         "doi": "10.3847/1538-3881/aa83b4",
         "recommended": true
+      }
+    ],
+    "meta_notes": "Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md.",
+    "radius_measurements": [
+      {
+        "value_rsun": 0.793,
+        "uncertainty_rsun": 0.004,
+        "method": "interferometry",
+        "instrument": "CHARA Array / MIRC-X (H-band, 6T, baselines 34-330 m)",
+        "angular_diameter_mas": 2.019,
+        "angular_diameter_uncertainty_mas": 0.012,
+        "reference": "Korolik et al. 2023",
+        "bibcode": "2023AJ....166..123K",
+        "doi": "10.3847/1538-3881/ace911",
+        "arxiv": "2307.10394",
+        "recommended": true,
+        "notes": "Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog. Most recent direct interferometric radius; supersedes Teixeira 2009 / Di Folco 2004 with new CHARA/MIRC-X 2021 data. Consistent within errors with Teixeira 2009 (0.793 +/- 0.004 R_sun).",
+        "source_title": "Korolik et al. 2023: Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog",
+        "source_used_for": [
+          "tau Cet mean radius (recommended, CHARA/MIRC-X interferometry)"
+        ]
+      },
+      {
+        "value_rsun": 0.793,
+        "uncertainty_rsun": 0.004,
+        "method": "interferometry",
+        "instrument": "VLTI / VINCI (K-band, via Pijpers 2003 / Di Folco 2004 angular diameter)",
+        "angular_diameter_mas": 2.015,
+        "angular_diameter_uncertainty_mas": 0.011,
+        "reference": "Teixeira et al. 2009",
+        "bibcode": "2009A&A...494..237T",
+        "doi": "10.1051/0004-6361:200810746",
+        "arxiv": "0811.3989",
+        "recommended": false,
+        "notes": "Solar-like oscillations in the G8 V star tau Ceti. Interferometric radius adopted from Di Folco et al. 2007 (CHARA/FLUOR, theta_LD = 2.015 +/- 0.011 mas) combined with Hipparcos parallax; used together with asteroseismic mean density to derive M = 0.783 +/- 0.012 M_sun (the value adopted in this DB's mass entry, Feng 2017's reference).",
+        "source_title": "Teixeira et al. 2009: Solar-like oscillations in the G8 V star tau Ceti",
+        "source_used_for": [
+          "tau Cet radius (alternative; asteroseismic + Di Folco 2007 angular diameter)",
+          "consistency cross-check with Feng 2017 mass (0.783 +/- 0.012 M_sun)"
+        ]
+      },
+      {
+        "value_rsun": 0.773,
+        "uncertainty_rsun": 0.02,
+        "method": "interferometry",
+        "instrument": "VLTI / VINCI (K-band, commissioning)",
+        "angular_diameter_mas": null,
+        "angular_diameter_uncertainty_mas": null,
+        "reference": "Pijpers et al. 2003 / Di Folco et al. 2004",
+        "bibcode": "2004A&A...426..601D",
+        "doi": "10.1051/0004-6361:20047189",
+        "recommended": false,
+        "notes": "Earlier VLTI/VINCI angular diameter (1-2% accuracy) used in Pijpers 2003 (2003A&A...406L..15P) to derive R = 0.773 +/- 0.004(int) +/- 0.02(ext) R_sun. Superseded by CHARA/FLUOR (Di Folco 2007) and CHARA/MIRC-X (Korolik 2023).",
+        "emit_source": false
+      }
+    ],
+    "sources_extra": [
+      {
+        "title": "Di Folco et al. 2007: CHARA/FLUOR angular diameter of tau Ceti",
+        "doi": "10.1051/0004-6361:20077625",
+        "bibcode": "2007A&A...474..243D",
+        "used_for": [
+          "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
+        ]
       }
     ]
   },
@@ -2753,7 +2818,8 @@
         "doi": null,
         "recommended": true
       }
-    ]
+    ],
+    "meta_notes": "RV assumed zero: no radial velocity available for WISEP J121756.91+162640.2 A"
   },
   "GJ 433": {
     "mass_measurements": [
@@ -3774,7 +3840,6 @@
       }
     ]
   },
-
   "40 Eridani A": {
     "teff_k": 5126,
     "teff_bibcode": "2020MNRAS.493.2377R",
@@ -3823,8 +3888,8 @@
     ],
     "luminosity_measurements": [
       {
-        "value_lsun": 0.400,
-        "uncertainty_lsun": 0.010,
+        "value_lsun": 0.4,
+        "uncertainty_lsun": 0.01,
         "method": "bolometric_flux",
         "reference": "Rains et al. 2020",
         "bibcode": "2020MNRAS.493.2377R",
@@ -3864,7 +3929,7 @@
       },
       {
         "value_dex": -0.31,
-        "uncertainty_dex": 0.10,
+        "uncertainty_dex": 0.1,
         "method": "high_res_spectroscopy",
         "reference": "Bensby et al. 2014",
         "bibcode": "2014A&A...562A..71B",
@@ -3902,7 +3967,6 @@
       }
     ]
   },
-
   "40 Eridani B": {
     "teff_k": 17200,
     "teff_bibcode": "2017ApJ...848...16B",
@@ -3923,7 +3987,7 @@
     "radius_measurements": [
       {
         "value_rsun": 0.01308,
-        "uncertainty_rsun": 0.00020,
+        "uncertainty_rsun": 0.0002,
         "method": "sed_fitting",
         "reference": "Bond et al. 2017",
         "bibcode": "2017ApJ...848...16B",
@@ -3965,7 +4029,6 @@
       }
     ]
   },
-
   "40 Eridani C": {
     "teff_k": 3167,
     "teff_bibcode": "2015ApJ...804...64M",

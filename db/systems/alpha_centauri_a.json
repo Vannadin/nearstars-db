@@ -260,7 +260,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -269,7 +269,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -278,7 +278,7 @@
       "title": "Pourbaix & Boffin 2016",
       "doi": "10.1051/0004-6361/201527859",
       "bibcode": "2016A&A...586A..90P",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"
       ]
@@ -287,7 +287,7 @@
       "title": "Kervella et al. 2016",
       "doi": "10.1051/0004-6361/201629201",
       "bibcode": "2016A&A...594A.107K",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"
       ]
@@ -296,7 +296,7 @@
       "title": "Joyce & Chaboyer 2018",
       "doi": "10.3847/1538-4357/aad464",
       "bibcode": "2018ApJ...864...99J",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Alpha Centauri A mass (evolutionary_model)"
       ]
@@ -305,7 +305,7 @@
       "title": "Bazot et al. 2007",
       "doi": "10.1051/0004-6361:20065694",
       "bibcode": "2007A&A...470..295B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Alpha Centauri A mass (asteroseismology)"
       ]
@@ -314,7 +314,7 @@
       "title": "Kervella et al. 2017",
       "doi": "10.1051/0004-6361/201629505",
       "bibcode": "2017A&A...597A.137K",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Alpha Centauri A radius (interferometry)"
       ]
@@ -323,14 +323,14 @@
       "title": "Kervella et al. 2003",
       "doi": "10.1051/0004-6361:20030570",
       "bibcode": "2003A&A...404.1087K",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Alpha Centauri A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

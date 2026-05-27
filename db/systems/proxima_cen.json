@@ -468,7 +468,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -477,7 +477,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -486,7 +486,7 @@
       "title": "Suárez Mascareño et al. 2025",
       "doi": "10.1051/0004-6361/202554723",
       "bibcode": "2025A&A...700A..11M",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Proxima Cen mass (evolutionary_model)"
       ]
@@ -495,7 +495,7 @@
       "title": "Mann et al. 2019",
       "doi": "10.3847/1538-4357/aaf3bc",
       "bibcode": "2019ApJ...871...63M",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Proxima Cen mass (spectroscopic_calibration)"
       ]
@@ -504,7 +504,7 @@
       "title": "Anglada-Escudé et al. 2016",
       "doi": "10.1038/nature19106",
       "bibcode": "2016Natur.536..437A",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Proxima Cen mass (spectroscopic_calibration)"
       ]
@@ -513,7 +513,7 @@
       "title": "Boyajian et al. 2012",
       "doi": "10.1088/0004-637X/757/2/112",
       "bibcode": "2012ApJ...757..112B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Proxima Cen radius (interferometry)"
       ]
@@ -522,7 +522,7 @@
       "title": "Demory et al. 2009",
       "doi": "10.1051/0004-6361/200911976",
       "bibcode": "2009A&A...505..205D",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Proxima Cen radius (interferometry)"
       ]
@@ -531,7 +531,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "Proxima Cen radius (sed_fitting)"
       ]
@@ -540,14 +540,14 @@
       "title": "Faria et al. 2022",
       "doi": "10.1051/0004-6361/202142337",
       "bibcode": "2022A&A...658A.115F",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet Proxima Cen d orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
