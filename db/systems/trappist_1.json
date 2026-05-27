@@ -1026,7 +1026,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "epoch propagation method"
       ]
@@ -1035,7 +1035,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -1044,7 +1044,7 @@
       "title": "Gillon et al. 2016",
       "doi": "10.1038/nature17448",
       "bibcode": "2016Natur.533..221G",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1053,7 +1053,7 @@
       "title": "Gillon et al. 2017",
       "doi": "10.1038/nature21360",
       "bibcode": "2017Natur.542..456G",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1062,7 +1062,7 @@
       "title": "Van Grootel et al. 2018",
       "doi": "10.3847/1538-4357/aaa023",
       "bibcode": "2018ApJ...853...30V",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1071,7 +1071,7 @@
       "title": "Grimm et al. 2018",
       "doi": "10.1051/0004-6361/201732233",
       "bibcode": "2018A&A...613A..68G",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1080,7 +1080,7 @@
       "title": "Stassun et al. 2019",
       "doi": "10.3847/1538-3881/ab3467",
       "bibcode": "2019AJ....158..138S",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 mass (spectroscopic_calibration)"
       ]
@@ -1089,7 +1089,7 @@
       "title": "Agol et al. 2021",
       "doi": "10.3847/PSJ/abd022",
       "bibcode": "2021PSJ.....2....1A",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1098,7 +1098,7 @@
       "title": "Ducrot et al. 2020",
       "doi": "10.1051/0004-6361/201937392",
       "bibcode": "2020A&A...640A.112D",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "TRAPPIST-1 radius (sed_fitting)"
       ]
@@ -1107,7 +1107,7 @@
       "title": "Greene et al. 2023",
       "doi": "10.1038/s41586-023-05951-7",
       "bibcode": "2023Natur.618...39G",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "planet TRAPPIST-1 b atmosphere"
       ]
@@ -1116,7 +1116,7 @@
       "title": "Zieba et al. 2023",
       "doi": "10.1038/s41586-023-06232-z",
       "bibcode": "2023Natur.620..746Z",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "planet TRAPPIST-1 c atmosphere"
       ]
@@ -1125,14 +1125,14 @@
       "title": "Luger et al. 2017",
       "doi": "10.1038/s41550-017-0129",
       "bibcode": "2017NatAs...1E.129L",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "planet TRAPPIST-1 h physical"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-27",
+    "retrieval_date": "2026-05-28",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

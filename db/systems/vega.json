@@ -205,7 +205,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "epoch propagation method"
       ]
@@ -214,7 +214,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -223,7 +223,7 @@
       "title": "Yoon et al. 2010 (rotating model from interferometry)",
       "doi": "10.1088/0004-637X/708/1/71",
       "bibcode": "2010ApJ...708...71Y",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "Vega mass (evolutionary_model)"
       ]
@@ -232,14 +232,14 @@
       "title": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
       "doi": "10.1088/2041-8205/761/1/L3",
       "bibcode": "2012ApJ...761L...3M",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "Vega radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-27",
+    "retrieval_date": "2026-05-28",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
