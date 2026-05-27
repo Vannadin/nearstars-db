@@ -34,13 +34,20 @@
   "61 Vir": {
     "phase2": null,
     "phase3": {
-      "★": "phase3/61-vir.html"
+      "★": "phase3/61-vir.html",
+      "b": "phase3/61-vir-b.html",
+      "c": "phase3/61-vir-c.html",
+      "d": "phase3/61-vir-d.html"
     }
   },
   "AU Mic": {
     "phase2": null,
     "phase3": {
-      "★": "phase3/au-mic.html"
+      "★": "phase3/au-mic.html",
+      "b": "phase3/au-mic-b.html",
+      "c": "phase3/au-mic-c.html",
+      "d": "phase3/au-mic-d.html",
+      "e": "phase3/au-mic-e.html"
     }
   },
   "delta": {
@@ -52,7 +59,8 @@
   "eps Eri": {
     "phase2": null,
     "phase3": {
-      "★": "phase3/eps-eri.html"
+      "★": "phase3/eps-eri.html",
+      "b": "phase3/eps-eri-b.html"
     }
   },
   "Fomalhaut": {
@@ -64,13 +72,19 @@
   "HD 69830": {
     "phase2": null,
     "phase3": {
-      "★": "phase3/hd-69830.html"
+      "★": "phase3/hd-69830.html",
+      "b": "phase3/hd-69830-b.html",
+      "c": "phase3/hd-69830-c.html",
+      "d": "phase3/hd-69830-d.html"
     }
   },
   "tau Cet": {
     "phase2": null,
     "phase3": {
-      "★": "phase3/tau-cet.html"
+      "★": "phase3/tau-cet.html",
+      "f": "phase3/tau-cet-f.html",
+      "g": "phase3/tau-cet-g.html",
+      "h": "phase3/tau-cet-h.html"
     }
   },
   "Vega": {
