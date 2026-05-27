@@ -3712,69 +3712,159 @@
   "Teegarden's Star": [
     {
       "pl_name": "Teegarden's Star b",
-      "orbital": {
-        "semi_major_axis_au": 0.0259,
-        "eccentricity": 0.03,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 338.0,
-        "epoch_jd": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "source": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033"
-      },
-      "physical": {
-        "mass_mearth": 1.16,
-        "uncertainty_mearth": 0.12,
-        "mass_type": "Msini",
-        "source": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033"
-      }
+      "orbital": [
+        {
+          "period_days": 4.91,
+          "uncertainty_period_days": 0.015,
+          "semi_major_axis_au": 0.0263,
+          "uncertainty_semi_major_axis_au": null,
+          "eccentricity": 0.0,
+          "uncertainty_eccentricity": 0.41,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": null,
+          "epoch_jd": 2457905.9,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Zechmeister et al. 2019",
+          "bibcode": "2019A&A...627A..49Z",
+          "doi": "10.1051/0004-6361/201935460",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "period_days": 4.91,
+          "uncertainty_period_days": 0.03,
+          "semi_major_axis_au": 0.02625,
+          "uncertainty_semi_major_axis_au": 8e-05,
+          "eccentricity": 0.11,
+          "uncertainty_eccentricity": 0.08,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 277.0,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Dreizler et al. 2024",
+          "bibcode": "2024A&A...684A.117D",
+          "doi": "10.1051/0004-6361/202348033",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.05,
+          "uncertainty_mearth": 0.09,
+          "mass_type": "Msini",
+          "source": "Zechmeister et al. 2019",
+          "bibcode": "2019A&A...627A..49Z",
+          "doi": "10.1051/0004-6361/201935460",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "mass_mearth": 1.05,
+          "uncertainty_mearth": 0.16,
+          "mass_type": "Msini",
+          "source": "Dreizler et al. 2024",
+          "bibcode": "2024A&A...684A.117D",
+          "doi": "10.1051/0004-6361/202348033",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     },
     {
       "pl_name": "Teegarden's Star c",
-      "orbital": {
-        "semi_major_axis_au": 0.0455,
-        "eccentricity": 0.04,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 301.0,
-        "epoch_jd": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "source": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033"
-      },
-      "physical": {
-        "mass_mearth": 1.05,
-        "uncertainty_mearth": 0.14,
-        "mass_type": "Msini",
-        "source": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033"
-      }
+      "orbital": [
+        {
+          "period_days": 11.41,
+          "uncertainty_period_days": 0.09,
+          "semi_major_axis_au": 0.0496,
+          "uncertainty_semi_major_axis_au": null,
+          "eccentricity": 0.0,
+          "uncertainty_eccentricity": 0.37,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": null,
+          "epoch_jd": 2457908.8,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Zechmeister et al. 2019",
+          "bibcode": "2019A&A...627A..49Z",
+          "doi": "10.1051/0004-6361/201935460",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "period_days": 11.4,
+          "uncertainty_period_days": 0.04,
+          "semi_major_axis_au": 0.04679,
+          "uncertainty_semi_major_axis_au": 0.00015,
+          "eccentricity": 0.06,
+          "uncertainty_eccentricity": 0.07,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": 64.0,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Dreizler et al. 2024",
+          "bibcode": "2024A&A...684A.117D",
+          "doi": "10.1051/0004-6361/202348033",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.11,
+          "uncertainty_mearth": 0.11,
+          "mass_type": "Msini",
+          "source": "Zechmeister et al. 2019",
+          "bibcode": "2019A&A...627A..49Z",
+          "doi": "10.1051/0004-6361/201935460",
+          "method": "rv",
+          "recommended": false
+        },
+        {
+          "mass_mearth": 1.32,
+          "uncertainty_mearth": 0.18,
+          "mass_type": "Msini",
+          "source": "Dreizler et al. 2024",
+          "bibcode": "2024A&A...684A.117D",
+          "doi": "10.1051/0004-6361/202348033",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     },
     {
       "pl_name": "Teegarden's Star d",
-      "orbital": {
-        "semi_major_axis_au": 0.0791,
-        "eccentricity": 0.07,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 345.0,
-        "epoch_jd": null,
-        "mean_anomaly_at_epoch_deg": null,
-        "source": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033"
-      },
-      "physical": {
-        "mass_mearth": 0.82,
-        "uncertainty_mearth": 0.17,
-        "mass_type": "Msini",
-        "source": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033"
-      }
+      "orbital": [
+        {
+          "period_days": 26.13,
+          "uncertainty_period_days": 0.04,
+          "semi_major_axis_au": 0.0848,
+          "uncertainty_semi_major_axis_au": 0.0003,
+          "eccentricity": 0.0,
+          "uncertainty_eccentricity": null,
+          "longitude_of_ascending_node_deg": null,
+          "argument_of_periapsis_deg": null,
+          "epoch_jd": null,
+          "mean_anomaly_at_epoch_deg": null,
+          "source": "Dreizler et al. 2024",
+          "bibcode": "2024A&A...684A.117D",
+          "doi": "10.1051/0004-6361/202348033",
+          "method": "rv",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 0.82,
+          "uncertainty_mearth": 0.17,
+          "mass_type": "Msini",
+          "source": "Dreizler et al. 2024",
+          "bibcode": "2024A&A...684A.117D",
+          "doi": "10.1051/0004-6361/202348033",
+          "method": "rv",
+          "recommended": true
+        }
+      ]
     }
   ],
   "Ross 508": [
