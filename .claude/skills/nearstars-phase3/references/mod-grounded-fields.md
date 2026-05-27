@@ -93,3 +93,91 @@ Magnetic field is the hardest to pin down per planet. Best practice:
 6. **Pick a dipole tilt within 5–15°** per interesting-first — too
    small makes auroras a uniform polar cap (boring); too large is
    physically implausible
+
+## Circumstellar disk → Kopernicus Ring (star body)
+
+A stellar debris or protoplanetary disk renders in Kopernicus as a
+`Ring` subnode attached to the **star body** (not a planet). This
+section maps Phase 3 Decisions fields (defined in
+[`synthesis-template.md`](synthesis-template.md) § "Circumstellar
+disk") to the Kopernicus Ring fields the kopernicus-cfg emitter will
+write.
+
+| Phase 3 field | Kopernicus Ring field | Unit conversion | Notes |
+|---|---|---|---|
+| `disk_present` | (presence gate) | — | If false, omit the entire Ring subnode |
+| `disk_inner_radius_au` | `innerRadius` | × 1.496e8 (AU → km) | KSP km |
+| `disk_outer_radius_au` | `outerRadius` | × 1.496e8 (AU → km) | KSP km |
+| `disk_tint_rgb_hex` | `color` | hex → RGBA (alpha = `disk_opacity`) | Linear-space; Kopernicus expects 0–1 floats |
+| `disk_opacity` | (alpha channel of `color`) | direct | Or per-mesh `unlit` parameter; emitter chooses |
+| `disk_imaging_inclination_deg` | `rotation` (axis tilt) | direct | Only emit if `disk_resolved_imaging=true` and value is constrained |
+| `disk_morphology` | (steps / texture path) | prose → texture variant | Single-ring → solid; multi-ring → `steps` divisions; asymmetric → custom texture path with placeholder per `kopernicus-emit-workspace` convention |
+| `disk_planetesimal_belt_inferred` | (asteroid belt cfg, separate from Ring) | bool | If true, optionally emit a sparse `Asteroid` group at the disk midpoint; not part of Ring subnode |
+| `disk_dust_temperature_k` | (informational, drives `disk_tint_rgb_hex` synth) | — | Phase 3 step uses dust T to pick the hex; cfg writer just uses the hex |
+
+Source priority for disk geometry:
+
+1. ALMA / VLT-SPHERE / HST-STIS resolved imaging — gives
+   `disk_inner_radius_au`, `disk_outer_radius_au`,
+   `disk_imaging_inclination_deg` directly
+2. Herschel / Spitzer SED fit (e.g. Su 2013, Sibthorpe 2018) —
+   gives `disk_inner_radius_au` (or single representative radius)
+   + `disk_dust_temperature_k` from black-body fit
+3. Photometric IR excess only (IRAS, WISE, Spitzer-MIPS without
+   spatially-resolved data) — gives `disk_present`,
+   `disk_dust_temperature_k`; geometry needs the
+   black-body-fit-with-assumed-grain-size shortcut
+
+**Texture path convention** (deferred to the texture pipeline per
+the open question in
+[`phase3/kopernicus-emit-workspace/context-notes.md`](../../../phase3/kopernicus-emit-workspace/context-notes.md)):
+emit a placeholder path string under
+`GameData/NearStarsSystem/PluginData/<star>/disk_<variant>.dds` and
+log the missing-asset entry. Module Manager won't fail to load with
+a missing texture path; the star just uses the fallback ring shader
+until the asset pipeline fills the dds.
+
+## Planetary ring → Kopernicus Ring (planet body)
+
+A Saturn-like planetary ring renders in Kopernicus as a `Ring`
+subnode attached to the **planet body**. Same Kopernicus primitive
+as Circumstellar disk; different parent body and different field
+prefix.
+
+Field names match the sidecar yaml defined in
+[`phase3/kopernicus-emit-workspace/context-notes.md`](../../../phase3/kopernicus-emit-workspace/context-notes.md)
+so the emitter can read Phase 3 Decisions directly without a sidecar
+yaml indirection.
+
+| Phase 3 field | Kopernicus Ring field | Unit conversion | Notes |
+|---|---|---|---|
+| `ring_present` | (presence gate) | — | If false, omit the entire Ring subnode |
+| `ring_inner_au` | `innerRadius` | × 1.496e8 (AU → km) | KSP km |
+| `ring_outer_au` | `outerRadius` | × 1.496e8 (AU → km) | KSP km |
+| `ring_color_hex` | `color` | hex → RGBA (alpha = `ring_opacity`) | Linear-space; Kopernicus expects 0–1 floats |
+| `ring_opacity` | (alpha channel of `color`) | direct | — |
+| `ring_morphology` | (steps / texture path) | prose → texture variant | Single-ring → solid; multi-ring → `steps` divisions; shepherded → divisions at shepherd-moon resonances |
+
+Source priority for planetary rings:
+
+1. Direct imaging (Cassini-class observation) — almost never
+   available for exoplanets; effectively Sol-only (Saturn, Jupiter
+   faint, Uranus narrow, Neptune narrow)
+2. Transit detection (J1407 b-class ring; rare and disputed)
+3. Confidence=low aesthetic choice for gameplay variety —
+   interesting-first rule applies. Document tie-break in Basis.
+
+## Circumplanetary disk → Kopernicus Ring (planet body)
+
+A young protoplanetary or moon-forming disk (e.g. PDS 70 c) uses
+the same Kopernicus Ring primitive at the planet body but is
+distinct from a Saturn-like ring in scale + dust temperature +
+lifetime. Rare for NS targets — included for completeness.
+
+| Phase 3 field | Kopernicus Ring field | Unit conversion | Notes |
+|---|---|---|---|
+| `circumplanetary_disk_present` | (presence gate) | — | If false, omit |
+| `circumplanetary_disk_radius_planet_radii` | `outerRadius` | × planet `Properties.radius` km | Inner radius defaults to planet Roche limit unless cited |
+| `circumplanetary_disk_tint_rgb_hex` | `color` | hex → RGBA | Warmer (yellower) than debris disks due to dust T ~150–300 K |
+| `circumplanetary_disk_opacity` | (alpha channel) | direct | Typically higher than debris (still actively accreting) |
+| `circumplanetary_disk_dust_temperature_k` | (informational) | — | Drives tint synth |

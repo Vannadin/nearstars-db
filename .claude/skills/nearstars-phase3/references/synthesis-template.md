@@ -129,6 +129,116 @@ match by exact key):
 - `star_apparent_angular_diameter_deg`
 - `stellar_illumination_color_temp_k`
 
+### Planetary ring (Saturn-like)
+
+Include this group only when `ring_present=true`. Field names match
+the sidecar yaml in `phase3/kopernicus-emit-workspace/context-notes.md`
+so the kopernicus-cfg emitter reads Phase 3 Decisions directly without
+a translation layer.
+
+- `ring_present` (bool)
+- `ring_inner_au` (float, AU from planet center)
+- `ring_outer_au` (float, AU)
+- `ring_color_hex` (hex; cfg-ready synth)
+- `ring_opacity` (float 0–1; cfg-ready synth)
+- `ring_morphology` (prose — single-ring / multi-ring / shepherded / faint)
+- `ring_observed` (bool; true for Sol's Saturn/Jupiter/Uranus/Neptune, almost always false for NS exoplanets)
+
+### Circumplanetary disk (young / PDS 70-class)
+
+Include this group only when `circumplanetary_disk_present=true`.
+Distinct from a Saturn-like ring: this is a young protoplanetary
+or moon-forming disk, dust + gas, much larger radius, much warmer.
+Rare for NS targets (no PDS 70-class planets in current catalog) but
+field set defined for future-proofing.
+
+- `circumplanetary_disk_present` (bool)
+- `circumplanetary_disk_radius_planet_radii` (float; disk extent in planet radii)
+- `circumplanetary_disk_dust_temperature_k` (float, K)
+- `circumplanetary_disk_tint_rgb_hex` (hex; cfg-ready synth)
+- `circumplanetary_disk_opacity` (float 0–1)
+
+### Stellar Physical
+
+These fields are used when the Phase 3 markdown is a **stellar
+synthesis** (the body of the markdown is the star itself, not a
+planet). Canonical structural example: `docs/phase3/alpha-centauri-a.md`.
+
+The section structure (Intro / Decisions / Surface / Atmosphere /
+Rotation & spin / Visual styling / Bibliography / Open items) is
+identical to planetary syntheses; only the Decisions field set differs.
+
+- `spectral_type` (MK string, e.g. `G2V`, `A1V`, `M3.5Ve`)
+- `mass_msun` (float, M☉)
+- `radius_rsun` (float, R☉)
+- `teff_k` (float, K)
+- `luminosity_lsun` (float, L☉)
+- `metallicity_fe_h_dex` (float, dex)
+- `age_gyr` (float, Gyr)
+
+### Stellar Activity
+
+- `rotation_period_days` (float)
+- `activity_log_rhk` (float, log R'HK; Ca II H&K chromospheric index)
+- `activity_cycle_years` (float; cycle length if observed)
+- `x_ray_log_lx_cgs_min`, `x_ray_log_lx_cgs_max` (float, log L_X erg/s; cycle bounds)
+- `limb_darkening_alpha_h` (float; power-law exponent, H band; from interferometry)
+- `flare_rate_per_day` (float; for active M/K dwarfs)
+- `flare_energy_log_erg_max` (float; observed/inferred maximum flare energy)
+
+### Stellar Visual
+
+- `visual_surface_tint_hex_primary` (hex; cfg-ready synth, blackbody + metallicity reddening)
+- `stellar_color_temp_k` (float; cfg illumination color temp, usually = `teff_k`)
+- `visual_corona_extent_radii` (float; angular extent of corona/chromosphere visual band)
+- `visual_spot_coverage_max` (float 0–1; cycle-max spot fraction for animated activity)
+
+### Multi-star binary event
+
+Open-ended naming pattern for binary geometry events visible from a
+planet. Use one field per distinct event, named after the event:
+
+- `visual_companion_event_<descriptor>` (bool or prose)
+
+Examples from `alpha-centauri-a.md`:
+- `visual_companion_event_corona_visible_during_b_eclipse` (bool)
+
+Document the event in the Visual styling section prose so the cfg
+writer knows what animation to author. These fields are tie-break
+territory (observation rarely constrains the visibility threshold) —
+the interesting-first rule applies.
+
+### Circumstellar disk (debris / protoplanetary disk around a star)
+
+Include this group only when `disk_present=true`. The disk attaches
+to the star body in Kopernicus (as opposed to Planetary ring which
+attaches to a planet body). Mapping to Kopernicus Ring fields in
+[`mod-grounded-fields.md`](mod-grounded-fields.md) § "Circumstellar
+disk".
+
+- `disk_present` (bool)
+- `disk_inner_radius_au` (float, AU from star center)
+- `disk_outer_radius_au` (float, AU)
+- `disk_dust_temperature_k` (float, K; for cold debris disks usually 50–150 K)
+- `disk_tint_rgb_hex` (hex; cfg-ready synth from dust temp + composition)
+- `disk_opacity` (float 0–1; cfg-ready synth from optical depth)
+- `disk_morphology` (prose — single-ring / multi-ring / two-belt / asymmetric / warped / planetesimal-stirred)
+- `disk_resolved_imaging` (bool; true for Fomalhaut/Vega/AU Mic class, false for SED-only-inferred)
+- `disk_imaging_observatory` (prose; Herschel / ALMA / HST-STIS / VLT-SPHERE / JWST-MIRI)
+- `disk_imaging_inclination_deg` (float; orbital-plane inclination from imaging, only if resolved)
+- `disk_mass_mearth` (float, M⊕; total dust mass if estimated)
+- `disk_planetesimal_belt_inferred` (bool; true if dust replenishment requires a parent body belt)
+
+Source priority for disk fields:
+
+1. ALMA / VLT-SPHERE / HST resolved imaging — gives geometry directly
+2. Herschel / Spitzer SED-fit — gives inner/outer radius from
+   black-body fit + dust mass
+3. Photometric IR excess (IRAS, WISE) — gives `disk_present` and
+   dust temperature only; geometry needs assumption
+4. Confidence=low aesthetic guess per interesting-first rule when
+   geometry is unconstrained
+
 ### Decision-table field map
 
 When deep-reading a paper (SKILL.md Step 8), scan for these specific
@@ -145,6 +255,14 @@ quantities and write each one into the matching Decisions-table field:
 | Spin-orbit state (1:1 vs 3:2), obliquity damping | `tidally_locked`, `obliquity_deg` |
 | Mineralogy / surface composition predictions | `surface_tint_rgb_hex_*`, `surface_morphology` |
 | Stellar XUV flux, microflare statistics | (atmosphere retention caveats — used in Atmosphere prose, not a single field) |
+| Ring resolved imaging (Saturn/Cassini scale) or inferred | `ring_present`, `ring_inner_au`, `ring_outer_au`, `ring_color_hex` |
+| Circumplanetary disk imaging (PDS 70-class ALMA) | `circumplanetary_disk_present`, `circumplanetary_disk_radius_planet_radii` |
+| Stellar interferometric R, asteroseismic M, age models | `radius_rsun`, `mass_msun`, `age_gyr`, `limb_darkening_alpha_h` |
+| Stellar spectroscopy (Teff, [Fe/H], log L) | `teff_k`, `metallicity_fe_h_dex`, `luminosity_lsun`, `spectral_type` |
+| Stellar activity (Ca II H&K, X-ray cycle, flares) | `activity_log_rhk`, `activity_cycle_years`, `x_ray_log_lx_cgs_*`, `flare_rate_per_day`, `flare_energy_log_erg_max` |
+| ALMA / Herschel / HST resolved disk imaging | `disk_inner_radius_au`, `disk_outer_radius_au`, `disk_morphology`, `disk_resolved_imaging`, `disk_imaging_observatory`, `disk_imaging_inclination_deg` |
+| Spitzer / IRAS / WISE IR excess SED fit | `disk_present`, `disk_dust_temperature_k`, `disk_mass_mearth` |
+| Inferred planetesimal-belt parent body from disk replenishment | `disk_planetesimal_belt_inferred` |
 
 For mod-grounded fields (Kerbalism / EVE / Scatterer), the analogous
 look-for table is in [`mod-grounded-fields.md`](mod-grounded-fields.md).

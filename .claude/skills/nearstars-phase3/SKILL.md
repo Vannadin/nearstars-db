@@ -78,6 +78,7 @@ mention this upfront so the user can escalate Phase 2 via
 
 | System size | Approx model time |
 |---|---|
+| Stellar-only (no planets — host star synthesis with or without circumstellar disk) | 1–2 h |
 | Single-planet system | 1–3 h |
 | 2–3 planet system | 3–6 h |
 | Full 7-planet system (TRAPPIST-1 scale) | 6–15 h |
@@ -93,10 +94,15 @@ Goal: cheap upfront work that prevents painful surprises later.
 
 1. **Confirm Phase 2 is done** for every planet in the target system.
    Check `db/planets_curated.json` for `physical` array entries with
-   real measurements (not just NASA-Archive auto-fill). If Phase 2 is
-   incomplete, **stop and ask the user** whether to:
+   real measurements (not just NASA-Archive auto-fill). For **stellar
+   synthesis** (host-star Phase 3, with or without circumstellar disk),
+   also check `db/systems/<star>.json` `disk_measurements` if a disk
+   is suspected. If Phase 2 is incomplete, **stop and ask the user**
+   whether to:
    - Escalate Phase 2 first (use `nearstars-add-star` with "Phase 2 격상")
-   - Proceed with Phase 1 inputs (degrades synthesis confidence)
+   - Proceed with Phase 1 inputs (degrades synthesis confidence — mark
+     affected Decisions rows as Confidence=low with literature-direct
+     citation in Basis)
 2. **Create the working dir** per CLAUDE.md §7 (registered in AGENTS.md
    §2 as `phase3/<system>/`):
    ```bash
@@ -282,9 +288,20 @@ to drafting the markdown.
 
 ### Step 9.1 — Standard structure
 
-Use `docs/phase3/trappist-1-e.md` or `trappist-1-f.md` as the
-structural template — both apply the documented-divergence policy
-in full (`## Canonical alternatives` section + Basis notes).
+For **planetary** synthesis use `docs/phase3/trappist-1-e.md` or
+`trappist-1-f.md` as the structural template — both apply the
+documented-divergence policy in full (`## Canonical alternatives`
+section + Basis notes).
+
+For **stellar** synthesis (host star with or without circumstellar
+disk) use `docs/phase3/alpha-centauri-a.md` as the structural
+template. The 8-section structure (Intro / Decisions / Surface /
+Atmosphere / Rotation & spin / Visual styling / Bibliography / Open
+items) is identical to planetary; only the Decisions field set
+differs. Stellar Decisions fields are documented in
+[`references/synthesis-template.md`](references/synthesis-template.md)
+§ "Stellar Physical / Activity / Visual / Multi-star binary event /
+Circumstellar disk".
 
 **Do not** copy from `trappist-1-d.md` as a structural base. d predates
 the documented-divergence policy and has no `## Canonical alternatives`
