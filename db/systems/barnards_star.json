@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 9.5874,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3278,
+        "teff_k": 3195,
         "spectype": "M4.0 Ve",
         "mass_measurements": [
           {
@@ -30,6 +30,15 @@
             "bibcode": "2015ApJ...804...64M",
             "doi": "10.1088/0004-637X/804/1/64",
             "recommended": true
+          },
+          {
+            "value_msun": 0.162,
+            "uncertainty_msun": 0.007,
+            "method": "spectroscopic_calibration",
+            "reference": "González Hernández et al. 2024",
+            "bibcode": "2024A&A...690A..79G",
+            "doi": "10.1051/0004-6361/202451311",
+            "recommended": false
           }
         ],
         "radius_measurements": [
@@ -41,14 +50,154 @@
             "bibcode": "2021MNRAS.504.5788R",
             "doi": "10.1093/mnras/stab1167",
             "recommended": true
+          },
+          {
+            "value_rsun": 0.1867,
+            "uncertainty_rsun": 0.0012,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": false
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 3195,
+            "uncertainty_k": 28,
+            "method": "sed_fitting",
+            "reference": "González Hernández et al. 2024",
+            "bibcode": "2024A&A...690A..79G",
+            "doi": "10.1051/0004-6361/202451311",
+            "recommended": true
+          },
+          {
+            "value_k": 3224,
+            "uncertainty_k": 10,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": false
+          },
+          {
+            "value_k": 3273,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "reference": "Marfil et al. 2021",
+            "bibcode": "2021A&A...656A.162M",
+            "doi": "10.1051/0004-6361/202141980",
+            "recommended": false
+          },
+          {
+            "value_k": 3273,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "reference": "Passegger et al. 2018",
+            "bibcode": "2018A&A...615A...6P",
+            "doi": "10.1051/0004-6361/201732312",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.003558,
+            "uncertainty_lsun": 7.2e-05,
+            "method": "bolometric_flux",
+            "reference": "González Hernández et al. 2024",
+            "bibcode": "2024A&A...690A..79G",
+            "doi": "10.1051/0004-6361/202451311",
+            "recommended": true
+          },
+          {
+            "value_lsun": 0.00338,
+            "uncertainty_lsun": 3e-05,
+            "method": "bolometric_flux",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": false
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 10.0,
+            "uncertainty_gyr": 2.0,
+            "method": "kinematic",
+            "reference": "Toledo-Padrón et al. 2019",
+            "bibcode": "2019MNRAS.488.5145T",
+            "doi": "10.1093/mnras/stz1975",
+            "recommended": true
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.15,
+            "uncertainty_dex": 0.16,
+            "method": "high_res_spectroscopy",
+            "reference": "Marfil et al. 2021",
+            "bibcode": "2021A&A...656A.162M",
+            "doi": "10.1051/0004-6361/202141980",
+            "recommended": true
+          },
+          {
+            "value_dex": -0.39,
+            "uncertainty_dex": 0.17,
+            "method": "high_res_spectroscopy",
+            "reference": "Rojas-Ayala et al. 2012",
+            "bibcode": "2012ApJ...748...93R",
+            "doi": "10.1088/0004-637X/748/2/93",
+            "recommended": false
+          },
+          {
+            "value_dex": -0.4,
+            "uncertainty_dex": 0.12,
+            "method": "high_res_spectroscopy",
+            "reference": "Newton et al. 2014",
+            "bibcode": "2014AJ....147...20N",
+            "doi": "10.1088/0004-6256/147/1/20",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 145.0,
+            "uncertainty_days": 15.0,
+            "method": "photometric_variability",
+            "reference": "Toledo-Padrón et al. 2019",
+            "bibcode": "2019MNRAS.488.5145T",
+            "doi": "10.1093/mnras/stz1975",
+            "recommended": true
+          },
+          {
+            "value_days": 152.0,
+            "uncertainty_days": 17.0,
+            "method": "photometric_variability",
+            "reference": "González Hernández et al. 2024",
+            "bibcode": "2024A&A...690A..79G",
+            "doi": "10.1051/0004-6361/202451311",
+            "recommended": false
+          },
+          {
+            "value_days": 130.0,
+            "uncertainty_days": 10.0,
+            "method": "photometric_variability",
+            "reference": "Benedict et al. 1998",
+            "bibcode": "1998AJ....116..429B",
+            "doi": "10.1086/300420",
+            "recommended": false
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.69,
+            "method": "log_rhk",
+            "reference": "Toledo-Padrón et al. 2019",
+            "bibcode": "2019MNRAS.488.5145T",
+            "doi": "10.1093/mnras/stz1975",
+            "recommended": true
+          }
+        ],
         "stellarium_id": "Barnard'sStar"
       },
       "derived": {
@@ -70,11 +219,11 @@
         "icrs_vx_j2000_km_s": -5.815395023725568,
         "icrs_vy_j2000_km_s": 117.57220972362427,
         "icrs_vz_j2000_km_s": 80.37323072618808,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 0.003558,
+        "age_gyr": 10.0,
+        "metallicity_fe_h_dex": -0.15,
+        "rotation_period_days": 145.0,
+        "activity_log_rhk": -5.69,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -128,25 +277,37 @@
       },
       "curated": {
         "pl_name": "Barnard d",
-        "orbital": {
-          "semi_major_axis_au": 0.0188,
-          "eccentricity": 0.04,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": -51.8,
-          "epoch_jd": 2460243.7,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        },
-        "physical": {
-          "mass_mearth": 0.263,
-          "uncertainty_mearth": 0.024,
-          "mass_type": "Msini",
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        }
+        "orbital": [
+          {
+            "period_days": 2.3402,
+            "uncertainty_period_days": 0.0003,
+            "semi_major_axis_au": 0.0188,
+            "uncertainty_semi_major_axis_au": 0.0003,
+            "eccentricity": 0.04,
+            "uncertainty_eccentricity": 0.05,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": -51.8,
+            "epoch_jd": 2460243.7,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.263,
+            "uncertainty_mearth": 0.024,
+            "mass_type": "Msini",
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     },
     {
@@ -193,25 +354,61 @@
       },
       "curated": {
         "pl_name": "Barnard b",
-        "orbital": {
-          "semi_major_axis_au": 0.0229,
-          "eccentricity": 0.03,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 3.8,
-          "epoch_jd": 2460243.38,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        },
-        "physical": {
-          "mass_mearth": 0.299,
-          "uncertainty_mearth": 0.026,
-          "mass_type": "Msini",
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        }
+        "orbital": [
+          {
+            "period_days": 3.1533,
+            "uncertainty_period_days": 0.0006,
+            "semi_major_axis_au": 0.0229,
+            "uncertainty_semi_major_axis_au": 0.0003,
+            "eccentricity": 0.0,
+            "longitude_of_ascending_node_deg": null,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "González Hernández et al. 2024",
+            "bibcode": "2024A&A...690A..79G",
+            "doi": "10.1051/0004-6361/202451311",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "period_days": 3.1542,
+            "uncertainty_period_days": 0.0004,
+            "semi_major_axis_au": 0.0229,
+            "uncertainty_semi_major_axis_au": 0.0003,
+            "eccentricity": 0.03,
+            "uncertainty_eccentricity": 0.03,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": 3.8,
+            "epoch_jd": 2460243.38,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.37,
+            "uncertainty_mearth": 0.05,
+            "mass_type": "Msini",
+            "source": "González Hernández et al. 2024",
+            "bibcode": "2024A&A...690A..79G",
+            "doi": "10.1051/0004-6361/202451311",
+            "method": "rv",
+            "recommended": false
+          },
+          {
+            "mass_mearth": 0.299,
+            "uncertainty_mearth": 0.026,
+            "mass_type": "Msini",
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     },
     {
@@ -258,25 +455,37 @@
       },
       "curated": {
         "pl_name": "Barnard c",
-        "orbital": {
-          "semi_major_axis_au": 0.0274,
-          "eccentricity": 0.08,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 90.8,
-          "epoch_jd": 2460242.92,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        },
-        "physical": {
-          "mass_mearth": 0.335,
-          "uncertainty_mearth": 0.03,
-          "mass_type": "Msini",
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        }
+        "orbital": [
+          {
+            "period_days": 4.1244,
+            "uncertainty_period_days": 0.0006,
+            "semi_major_axis_au": 0.0274,
+            "uncertainty_semi_major_axis_au": 0.0004,
+            "eccentricity": 0.08,
+            "uncertainty_eccentricity": 0.06,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": 90.8,
+            "epoch_jd": 2460242.92,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.335,
+            "uncertainty_mearth": 0.03,
+            "mass_type": "Msini",
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     },
     {
@@ -323,25 +532,37 @@
       },
       "curated": {
         "pl_name": "Barnard e",
-        "orbital": {
-          "semi_major_axis_au": 0.0381,
-          "eccentricity": 0.04,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": -27.5,
-          "epoch_jd": 2460245.3,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        },
-        "physical": {
-          "mass_mearth": 0.193,
-          "uncertainty_mearth": 0.033,
-          "mass_type": "Msini",
-          "source": "Basant et al. 2025",
-          "bibcode": "2025ApJ...982L...1B",
-          "doi": "10.3847/2041-8213/adb8d5"
-        }
+        "orbital": [
+          {
+            "period_days": 6.7392,
+            "uncertainty_period_days": 0.0028,
+            "semi_major_axis_au": 0.0381,
+            "uncertainty_semi_major_axis_au": 0.0005,
+            "eccentricity": 0.04,
+            "uncertainty_eccentricity": 0.04,
+            "longitude_of_ascending_node_deg": null,
+            "argument_of_periapsis_deg": -27.5,
+            "epoch_jd": 2460245.3,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.193,
+            "uncertainty_mearth": 0.033,
+            "mass_type": "Msini",
+            "source": "Basant et al. 2025",
+            "bibcode": "2025ApJ...982L...1B",
+            "doi": "10.3847/2041-8213/adb8d5",
+            "method": "rv",
+            "recommended": true
+          }
+        ]
       }
     }
   ],
@@ -374,9 +595,27 @@
       ]
     },
     {
+      "title": "González Hernández et al. 2024",
+      "doi": "10.1051/0004-6361/202451311",
+      "bibcode": "2024A&A...690A..79G",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Barnard's star mass (spectroscopic_calibration)"
+      ]
+    },
+    {
       "title": "Rains et al. 2021",
       "doi": "10.1093/mnras/stab1167",
       "bibcode": "2021MNRAS.504.5788R",
+      "accessed": "2026-05-28",
+      "used_for": [
+        "Barnard's star radius (interferometry)"
+      ]
+    },
+    {
+      "title": "Boyajian et al. 2012",
+      "doi": "10.1088/0004-637X/757/2/112",
+      "bibcode": "2012ApJ...757..112B",
       "accessed": "2026-05-28",
       "used_for": [
         "Barnard's star radius (interferometry)"
@@ -401,6 +640,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "Linear propagation accumulates ~0.5 AU position error over 66 years from perspective acceleration (μ≈10,300 mas/yr, ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for KSP. For sub-AU accuracy, override with JPL Horizons state vector at JD2433282.5."
+    "notes": "Linear propagation accumulates ~0.5 AU position error over 66 years from perspective acceleration (μ≈10,300 mas/yr, ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for KSP. For sub-AU accuracy, override with JPL Horizons state vector at JD2433282.5. Phase 2 curation 2026-05-28: the historical Ribas 2018 super-Earth b at 0.4 AU (P=233 d) was refuted by Lubin 2021 (2021AJ....162...61L) — the current Barnard b at P=3.15 d (González Hernández 2024 / Basant 2025) is a different planet that reuses the b designation."
   }
 }
