@@ -30,5 +30,17 @@
       "g": "phase3/trappist-1-g.html",
       "h": "phase3/trappist-1-h.html"
     }
+  },
+  "61 Vir": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/61-vir.html"
+    }
+  },
+  "tau Cet": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/tau-cet.html"
+    }
   }
 }
