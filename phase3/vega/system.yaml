@@ -1,0 +1,20 @@
+system_slug: vega
+display_name: Vega
+system_query: Vega
+planets: []
+score:
+  keep_threshold: 8
+  mark_skipped_below: 14
+expand:
+  max_per_seed: 60
+  since_year: 1980
+
+# This workspace did not run the mechanical bibliography pipeline.
+# Phase 3 markdown was synthesized by a sub-agent in 2026-05-27
+# directly from cited literature, under the
+# phase3/circumstellar-disk-schema workspace's batch-retrofit.
+# See context-notes.md for the Decisions-row classification +
+# open items. Future revisions (e.g. when Phase 2
+# disk_measurements are ingested) should run the standard
+# pipeline starting from this yaml.
+injections: []
