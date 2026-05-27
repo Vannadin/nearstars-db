@@ -364,7 +364,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "epoch propagation method"
       ]
@@ -373,7 +373,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -382,7 +382,7 @@
       "title": "Feng et al. 2017",
       "doi": "10.3847/1538-3881/aa83b4",
       "bibcode": "2017AJ....154..135F",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "tau Cet mass (unverified)"
       ]
@@ -391,7 +391,7 @@
       "title": "Korolik et al. 2023: Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog",
       "doi": "10.3847/1538-3881/ace911",
       "bibcode": "2023AJ....166..123K",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "tau Cet mean radius (recommended, CHARA/MIRC-X interferometry)"
       ]
@@ -400,7 +400,7 @@
       "title": "Teixeira et al. 2009: Solar-like oscillations in the G8 V star tau Ceti",
       "doi": "10.1051/0004-6361:200810746",
       "bibcode": "2009A&A...494..237T",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "tau Cet radius (alternative; asteroseismic + Di Folco 2007 angular diameter)",
         "consistency cross-check with Feng 2017 mass (0.783 +/- 0.012 M_sun)"
@@ -410,14 +410,14 @@
       "title": "Di Folco et al. 2007: CHARA/FLUOR angular diameter of tau Ceti",
       "doi": "10.1051/0004-6361:20077625",
       "bibcode": "2007A&A...474..243D",
-      "accessed": "2026-05-27",
+      "accessed": "2026-05-28",
       "used_for": [
         "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-27",
+    "retrieval_date": "2026-05-28",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

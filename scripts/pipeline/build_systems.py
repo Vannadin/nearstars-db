@@ -516,18 +516,28 @@ for target in target_list:
         phot  = photometry.get(star_name, {})
         props   = stellar_props.get(star_name, {})
         curated = stellar_curated.get(star_name, {})
-        # curated 값이 있으면 raw보다 우선 적용
-        mass_meas        = curated.get("mass_measurements")   or props.get("mass_measurements", [])
-        radius_meas      = curated.get("radius_measurements") or props.get("radius_measurements", [])
-        # Phase 2 expansion (2026-05-21): 6 추가 카테고리
+        # curated 에 키가 *존재* 하면 빈 리스트라도 그 의도를 존중 (raw 무시).
+        # 키가 없으면 raw 로 fallback (mass/radius 만 raw 데이터 보유; 나머지 6
+        # 카테고리는 raw 가 없어서 동일 결과).
+        def _curated_or_raw(key):
+            if key in curated:
+                return curated[key]
+            return props.get(key, [])
+        mass_meas        = _curated_or_raw("mass_measurements")
+        radius_meas      = _curated_or_raw("radius_measurements")
+        # Phase 2 expansion (2026-05-21): 6 추가 카테고리 (raw 무관)
         teff_meas        = curated.get("teff_measurements", [])
         luminosity_meas  = curated.get("luminosity_measurements", [])
         age_meas         = curated.get("age_measurements", [])
         metallicity_meas = curated.get("metallicity_measurements", [])
         rotation_meas    = curated.get("rotation_measurements", [])
         activity_meas    = curated.get("activity_measurements", [])
-        # disk_measurements 는 별도 source 파일 (db/disks_curated.json) 에서 로드
-        disk_meas        = (disks_curated.get(star_name) or {}).get("disk_measurements", [])
+        # disk_measurements 는 별도 source 파일 (db/disks_curated.json) 에서 로드.
+        # 'present in disks_curated' 자체가 vetted 상태를 의미하므로 빈 리스트도
+        # 가능. host_in_disks_curated 플래그로 emit 결정.
+        _disk_rec = disks_curated.get(star_name) or {}
+        host_in_disks_curated = star_name in disks_curated
+        disk_meas        = _disk_rec.get("disk_measurements", [])
 
         # build-control 필드는 sources[] 생성에만 쓰이고 system 파일 output 에는
         # 노출하지 않음 (그 raw 인용은 curated.json 에 남음). 측정 dict 사본을
@@ -628,10 +638,11 @@ for target in target_list:
             "activity_measurements":   activity_meas_out,
             "stellarium_id":           stellarium_ids_map.get(star_name),
         }
-        # disk_measurements 는 데이터 있는 별에만 emit (key 자체를 누락시켜
-        # disk 가 없는 별의 raw 블록을 작게 유지). 위치는 stellarium_id 직전.
-        if disk_meas_out:
-            si = raw_block.pop("stellarium_id")
+        # disk_measurements 는 disks_curated 에 host entry 가 있는 별에만 emit
+        # (빈 리스트도 'vetted no disk' 의미로 보존). 키 부재 = unvetted.
+        # 위치는 stellarium_id 직전 — pop/reinsert 로 순서 유지.
+        if host_in_disks_curated:
+            si = raw_block.pop("stellarium_id", None)
             raw_block["disk_measurements"] = disk_meas_out
             raw_block["stellarium_id"] = si
 
@@ -773,11 +784,16 @@ for target in target_list:
                     continue
                 # source_title / source_used_for: per-measurement override 필드.
                 # 큐레이션 시 풍부한 title (논문 부제 포함) 이나 다중 used_for 라벨
-                # 을 묶고 싶을 때 사용. 없으면 reference + 기본 한 줄.
-                src_title = m.get("source_title") or m.get("reference") or doi or bc
-                src_used  = m.get("source_used_for") or [
-                    f"{star_name} {kind} ({m.get('method', 'unspecified')})"
-                ]
+                # 을 묶고 싶을 때 사용. 키가 *존재* 하면 그 값을 우선 (빈 문자열·
+                # 빈 리스트도 큐레이터 의도). 키 부재 시에만 reference + 기본 한 줄.
+                if "source_title" in m:
+                    src_title = m["source_title"]
+                else:
+                    src_title = m.get("reference") or doi or bc
+                if "source_used_for" in m:
+                    src_used = m["source_used_for"]
+                else:
+                    src_used = [f"{star_name} {kind} ({m.get('method', 'unspecified')})"]
                 sources.append({
                     "title":    src_title,
                     "doi":      doi,
@@ -791,17 +807,30 @@ for target in target_list:
                     existing_bibcodes.add(bc)
 
         # 측정값에 묶이지 않는 supporting reference (curated.sources_extra) 병합.
+        # title-only entry (doi=null, bibcode=null) 는 title 자체로 dedup 해서
+        # 같은 빌드 내 중복 emit 방지.
+        existing_title_only = {
+            s.get("title") for s in sources
+            if not s.get("doi") and not s.get("bibcode")
+        }
         for extra in (curated.get("sources_extra") or []):
             if not isinstance(extra, dict):
                 continue
             doi = extra.get("doi")
             bc  = extra.get("bibcode")
+            title = extra.get("title") or extra.get("reference") or doi or bc
             if doi and doi in existing_dois:
                 continue
             if bc and not doi and bc in existing_bibcodes:
                 continue
+            if not doi and not bc:
+                # title-only — title 빈 값은 거부 (식별 불가).
+                if not title:
+                    continue
+                if title in existing_title_only:
+                    continue
             sources.append({
-                "title":    extra.get("title") or extra.get("reference") or doi or bc,
+                "title":    title,
                 "doi":      doi,
                 "bibcode":  bc,
                 "accessed": RETRIEVAL_DATE,
@@ -811,6 +840,8 @@ for target in target_list:
                 existing_dois.add(doi)
             if bc:
                 existing_bibcodes.add(bc)
+            if not doi and not bc:
+                existing_title_only.add(title)
 
         # curated 행성 출처 추가 (bibcode-or-doi dedup; bibcode propagation)
         # Phase 2 array form은 각 element를 별도 source로 추가.

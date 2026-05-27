@@ -270,7 +270,15 @@ print("\n── 4f. disks_curated 스키마 ────────────
 try:
     with open(f"{DB}/disks_curated.json") as f:
         disks_curated = json.load(f)
-    dc_errs = validate_disks_curated(disks_curated)
+    # target_list components 와 cross-check (typo / orphan 잡기)
+    known_components = set()
+    try:
+        with open(f"{DB}/target_list.json") as f:
+            for tgt in json.load(f):
+                known_components.update(tgt.get("components", []))
+    except FileNotFoundError:
+        known_components = None   # cross-check 생략
+    dc_errs = validate_disks_curated(disks_curated, known_components=known_components)
     for e in dc_errs:
         fail("(disks_curated.json)", e)
     if not dc_errs:

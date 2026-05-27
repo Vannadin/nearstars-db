@@ -258,6 +258,12 @@ def validate_binary_orbits(binary_orbits):
 # (phase2/schema-expansion/context-notes.md) 에 문서화됨 — 코드는 whitelist
 # 만 강제하고 recommended:true 선택은 사용자가 manual 로 함.
 
+# build-control 필드 — mass/radius 의 자동 sources[] 항목 생성을 제어한다.
+# build_systems.py 의 sources[] 루프만 이 필드들을 읽고, raw block 으로 가기
+# 직전에 strip 된다. mass/radius 외 측정 종류 (teff/lum/age/...) 에는 자동
+# source 생성이 없으므로 적용되지 않는다.
+_SOURCE_CONTROL_FIELDS = {"source_title", "source_used_for", "emit_source"}
+
 STELLAR_MEASUREMENT_KINDS = {
     "mass_measurements": {
         # methodology.md tier: binary_orbit > asteroseismology > evolutionary_model
@@ -268,6 +274,7 @@ STELLAR_MEASUREMENT_KINDS = {
             "spectroscopic", "spectroscopic_calibration",
             "unverified",
         },
+        "extra_keys": set(_SOURCE_CONTROL_FIELDS),
     },
     "radius_measurements": {
         # methodology.md tier: interferometry > eclipsing_binary > sed_fitting > evolutionary_model
@@ -282,7 +289,7 @@ STELLAR_MEASUREMENT_KINDS = {
         # interferometric measurements often carry paper-level metadata
         # (instrument, angular_diameter_mas, arxiv id, narrative notes).
         # tau Cet / Korolik 2023 is the canonical example.
-        "extra_keys": {
+        "extra_keys": _SOURCE_CONTROL_FIELDS | {
             "instrument",
             "angular_diameter_mas", "angular_diameter_uncertainty_mas",
             "arxiv", "notes",
@@ -362,6 +369,13 @@ STELLAR_MEASUREMENT_KINDS = {
     },
 }
 
+# disk_measurements 는 별도 db/disks_curated.json 으로 분리 (validate_disks_curated).
+# 키 이름이 rename 되더라도 stellar_props_curated 에서 자동으로 빠지도록 상수화.
+DISK_KIND = "disk_measurements"
+assert DISK_KIND in STELLAR_MEASUREMENT_KINDS, (
+    f"DISK_KIND constant out of sync with STELLAR_MEASUREMENT_KINDS keys"
+)
+
 STELLAR_CURATED_TOPLEVEL_ALLOWED = {
     "teff_k", "teff_bibcode", "spectype",
     "spectype_bibcode", "spectype_reference",
@@ -370,20 +384,13 @@ STELLAR_CURATED_TOPLEVEL_ALLOWED = {
     # 형식: [{"title", "doi", "bibcode", "used_for": [str, ...]}, ...]
     # tau Cet 의 Di Folco 2007 (angular diameter source for Teixeira radius) 가 사례.
     "sources_extra",
-} | (set(STELLAR_MEASUREMENT_KINDS.keys()) - {"disk_measurements"})
-# disk_measurements 는 별도 db/disks_curated.json 으로 분리 (validate_disks_curated).
+} | (set(STELLAR_MEASUREMENT_KINDS.keys()) - {DISK_KIND})
 
 STELLAR_MEASUREMENT_BASE_REQUIRED = {"method", "recommended"}
-STELLAR_MEASUREMENT_COMMON_OPTIONAL = {
-    "reference", "bibcode", "doi",
-    # source 블록 풍부화 — 빌드 생성 sources[] entry 의 title/used_for 를
-    # 그대로 override (per-measurement). tau Cet 의 Korolik 2023 etc. 가
-    # 첫 사용 사례 (long human-readable title + 다중 used_for 라벨).
-    "source_title", "source_used_for",
-    # 자동 sources[] entry 생성 억제 (default true). superseded/non-canonical
-    # 인 측정값이지만 cross-reference 목적으로 보관할 때 false 로 설정.
-    "emit_source",
-}
+STELLAR_MEASUREMENT_COMMON_OPTIONAL = {"reference", "bibcode", "doi"}
+# 참고: source_title / source_used_for / emit_source 는 mass/radius 의 extra_keys
+# 로 제한됨 (자동 sources[] 생성이 mass/radius 에만 있기 때문). 다른 카테고리에
+# 적용해도 빌드가 무시하므로 schema 단계에서 거부한다.
 
 # Backward-compat union (methodology.md 등 외부 문서 참조용).
 # 캐노니컬 소스는 STELLAR_MEASUREMENT_KINDS[*]["methods"].
@@ -463,6 +470,13 @@ def validate_stellar_props_curated(records):
                     )
                 if m.get("recommended") is True:
                     n_recommended += 1
+                    # recommended 측정값은 derived value 의 출처가 되므로 sources[] 에서
+                    # 빠질 수 없음. emit_source=false 와 양립 불가.
+                    if m.get("emit_source") is False:
+                        errors.append(
+                            f"stellar_props_curated[{star}].{mk}[{i}]: recommended:true 와 "
+                            f"emit_source:false 양립 불가 (derived 값의 attribution 누락)"
+                        )
                 unk = mkeys - allowed_all
                 if unk:
                     errors.append(f"stellar_props_curated[{star}].{mk}[{i}]: 알 수 없는 키 {sorted(unk)}")
@@ -477,13 +491,22 @@ def validate_stellar_props_curated(records):
 # ── disks_curated.json 스키마 ───────────────────────────────────────────────
 # debris/circumstellar disk 측정값은 star 와 1:N 관계지만 (한 별이 다수의 belt
 # entry 보유), stellar_props 와 의미가 분리되어 별도 파일로 관리.
-# 구조: {star_name: {"disk_measurements": [entry, ...]}}
+# 구조: {star_name: {"disk_measurements": [entry, ...], "meta_notes": str?}}
 # entry 는 STELLAR_MEASUREMENT_KINDS["disk_measurements"] 스키마 재사용.
 
-def validate_disks_curated(records):
-    """db/disks_curated.json 검증."""
+DISKS_CURATED_TOPLEVEL_ALLOWED = {"disk_measurements", "meta_notes"}
+
+def validate_disks_curated(records, known_components=None):
+    """db/disks_curated.json 검증.
+
+    Args:
+        records: parsed JSON.
+        known_components: target_list.json 의 components 합집합 (set). 주어지면
+            disks_curated 의 host key 가 active target 이 아닌 경우 에러로 보고
+            (typo/orphan 방지). None 이면 cross-check 생략.
+    """
     errors = []
-    kind = STELLAR_MEASUREMENT_KINDS["disk_measurements"]
+    kind = STELLAR_MEASUREMENT_KINDS[DISK_KIND]
     allowed_value_keys = kind["value_keys"]
     allowed_uncertainty_keys = _uncertainty_keys_for(allowed_value_keys)
     allowed_methods = kind["methods"]
@@ -500,7 +523,12 @@ def validate_disks_curated(records):
         if not isinstance(rec, dict):
             errors.append(f"disks_curated[{star}]: dict 아님")
             continue
-        unknown = set(rec.keys()) - {"disk_measurements"}
+        if known_components is not None and star not in known_components:
+            errors.append(
+                f"disks_curated[{star}]: target_list 의 components 에 없음 "
+                f"(typo 또는 orphan — 캐노니컬 이름 확인 필요)"
+            )
+        unknown = set(rec.keys()) - DISKS_CURATED_TOPLEVEL_ALLOWED
         if unknown:
             errors.append(f"disks_curated[{star}]: 알 수 없는 키 {sorted(unknown)}")
 
@@ -514,7 +542,13 @@ def validate_disks_curated(records):
                 errors.append(f"disks_curated[{star}].disk_measurements[{i}]: dict 아님")
                 continue
             mkeys = set(m.keys())
-            # disk 는 value_keys 중 적어도 하나는 필요 (전부 null 도 detection-only 로 허용 — 단지 키는 존재)
+            # value_keys 중 적어도 하나의 키가 *존재* 해야 함 (값 자체는 null 가능 —
+            # IRAS 등 detection-only paper 도 belt/morphology 만 남는 경우 허용).
+            if not (mkeys & allowed_value_keys):
+                errors.append(
+                    f"disks_curated[{star}].disk_measurements[{i}]: "
+                    f"value 키 누락 (허용: {sorted(allowed_value_keys)} 중 하나 이상 키 존재)"
+                )
             forbidden = [k for k in mkeys if k.startswith(MEASUREMENT_FORBIDDEN_PREFIX)]
             if forbidden:
                 errors.append(
