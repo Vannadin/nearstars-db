@@ -19,13 +19,63 @@
         "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
         "vmag_v": 9.58,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 17099,
+        "teff_k": 17200,
         "spectype": "DA2.9",
-        "mass_measurements": [],
-        "radius_measurements": [],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "mass_measurements": [
+          {
+            "value_msun": 0.573,
+            "uncertainty_msun": 0.018,
+            "method": "binary_orbit",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.01308,
+            "uncertainty_rsun": 0.0002,
+            "method": "sed_fitting",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": true
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 17200,
+            "uncertainty_k": 110,
+            "method": "high_res_spectroscopy",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": true
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.01349,
+            "uncertainty_lsun": 0.00054,
+            "method": "bolometric_flux",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 1.8,
+            "uncertainty_gyr": 0.5,
+            "method": "isochrone",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": true
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -37,34 +87,34 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.007735116119533,
         "distance_km": 154522559818552.72,
-        "icrs_x_km": 67479598654770.87,
-        "icrs_y_km": 137572768924266.19,
-        "icrs_z_km": -20476321646675.754,
-        "icrs_vx_km_s": 37.710297605426405,
-        "icrs_vy_km_s": -42.454682462485195,
-        "icrs_vz_km_s": -78.27669971970161,
-        "position_ulp_km": 0.03054729112423131,
-        "icrs_x_j2000_km": 67539551251546.3,
-        "icrs_y_j2000_km": 137505678124818.77,
-        "icrs_z_j2000_km": -20599020999297.582,
-        "icrs_vx_j2000_km_s": 38.24242053837247,
-        "icrs_vy_j2000_km_s": -42.05716580961466,
-        "icrs_vz_j2000_km_s": -77.47954581787975,
+        "icrs_x_km": 67480020397127.82,
+        "icrs_y_km": 137573465156028.88,
+        "icrs_z_km": -20476380271457.406,
+        "icrs_vx_km_s": 37.61726737864152,
+        "icrs_vy_km_s": -42.541747086501026,
+        "icrs_vz_km_s": -78.33105954226465,
+        "position_ulp_km": 0.030547445718737992,
+        "icrs_x_j2000_km": 67539888044752.45,
+        "icrs_y_j2000_km": 137506251039783.45,
+        "icrs_z_j2000_km": -20599057750048.06,
+        "icrs_vx_j2000_km_s": 38.23749922584842,
+        "icrs_vy_j2000_km_s": -42.07369815476615,
+        "icrs_vz_j2000_km_s": -77.39922622395049,
         "orbit_id": "BC",
         "orbit_role": "primary",
-        "mass_ratio_q": 0.25873221216041403,
+        "mass_ratio_q": 0.2621684264743755,
         "barycenter_method": "mass_weighted_average(40 Eridani B,40 Eridani C)",
-        "phase_reliable": false,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "phase_reliable": true,
+        "luminosity_lsun": 0.01349,
+        "age_gyr": 1.8,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 76044228130.314,
+        "mean_radius_km": 9099.8
       }
     }
   ],
@@ -74,7 +124,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -83,14 +133,23 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Bond et al. 2017",
+      "doi": "10.3847/1538-4357/aa8a63",
+      "bibcode": "2017ApJ...848...16B",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "40 Eridani B mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -98,7 +157,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "Binary orbit BC flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
+    "notes": ""
   },
   "binary_orbit_ref": "40_eridani_a.json"
 }

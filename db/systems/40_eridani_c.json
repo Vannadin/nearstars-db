@@ -19,13 +19,63 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 11.3058,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3331,
-        "spectype": "M4.5V",
-        "mass_measurements": [],
-        "radius_measurements": [],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "teff_k": 3167,
+        "spectype": "M4.5 Ve",
+        "mass_measurements": [
+          {
+            "value_msun": 0.2036,
+            "uncertainty_msun": 0.0064,
+            "method": "binary_orbit",
+            "reference": "Mason, Hartkopf & Miles 2017",
+            "bibcode": "2017AJ....154..200M",
+            "doi": "10.3847/1538-3881/aa803e",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.274,
+            "uncertainty_rsun": 0.011,
+            "method": "spectroscopic_calibration",
+            "reference": "Mann et al. 2015",
+            "bibcode": "2015ApJ...804...64M",
+            "doi": "10.1088/0004-637X/804/1/64",
+            "recommended": true
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 3167,
+            "uncertainty_k": 60,
+            "method": "low_res_spectroscopy",
+            "reference": "Mann et al. 2015",
+            "bibcode": "2015ApJ...804...64M",
+            "doi": "10.1088/0004-637X/804/1/64",
+            "recommended": true
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00651,
+            "uncertainty_lsun": 0.00013,
+            "method": "bolometric_flux",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 1.8,
+            "uncertainty_gyr": 0.5,
+            "method": "isochrone",
+            "reference": "Bond et al. 2017",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": true
+          }
+        ],
         "metallicity_measurements": [],
         "rotation_measurements": [],
         "activity_measurements": [],
@@ -37,34 +87,34 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.013747228688032,
         "distance_km": 154708074228252.88,
-        "icrs_x_km": 67482939038027.65,
-        "icrs_y_km": 137577336554966.06,
-        "icrs_z_km": -20471966210260.664,
-        "icrs_vx_km_s": 38.98932082382574,
-        "icrs_vy_km_s": -45.11055216836994,
-        "icrs_vz_km_s": -75.23018396170619,
-        "position_ulp_km": 0.030548305341985507,
-        "icrs_x_j2000_km": 67543169477172.43,
-        "icrs_y_j2000_km": 137506450907474.97,
-        "icrs_z_j2000_km": -20592996467271.03,
-        "icrs_vx_j2000_km_s": 37.464788620935266,
-        "icrs_vy_j2000_km_s": -46.249437378844014,
-        "icrs_vz_j2000_km_s": -77.5140298904258,
+        "icrs_x_km": 67483331606893.37,
+        "icrs_y_km": 137578550764894.5,
+        "icrs_z_km": -20472223507882.38,
+        "icrs_vx_km_s": 38.98440686801142,
+        "icrs_vy_km_s": -45.34904781404313,
+        "icrs_vz_km_s": -75.063157974169,
+        "position_ulp_km": 0.030548574950749363,
+        "icrs_x_j2000_km": 67543403059579.99,
+        "icrs_y_j2000_km": 137507244040538.06,
+        "icrs_z_j2000_km": -20593252045588.934,
+        "icrs_vx_j2000_km_s": 37.238862425724825,
+        "icrs_vy_j2000_km_s": -46.66629750895513,
+        "icrs_vz_j2000_km_s": -77.68565547610423,
         "orbit_id": "BC",
         "orbit_role": "secondary",
-        "mass_ratio_q": 0.741267787839586,
+        "mass_ratio_q": 0.7378315735256245,
         "barycenter_method": "mass_weighted_average(40 Eridani B,40 Eridani C)",
-        "phase_reliable": false,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "phase_reliable": true,
+        "luminosity_lsun": 0.00651,
+        "age_gyr": 1.8,
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": null,
-        "mean_radius_km": null
+        "gravitational_parameter_km3_s2": 27020252787.665,
+        "mean_radius_km": 190621.8
       }
     }
   ],
@@ -74,7 +124,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -83,14 +133,32 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-22",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Mason, Hartkopf & Miles 2017",
+      "doi": "10.3847/1538-3881/aa803e",
+      "bibcode": "2017AJ....154..200M",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "40 Eridani C mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Mann et al. 2015",
+      "doi": "10.1088/0004-637X/804/1/64",
+      "bibcode": "2015ApJ...804...64M",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "40 Eridani C radius (spectroscopic_calibration)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-22",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -98,7 +166,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "Binary orbit BC flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
+    "notes": ""
   },
   "binary_orbit_ref": "40_eridani_a.json"
 }
