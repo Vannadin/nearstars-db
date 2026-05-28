@@ -22,6 +22,7 @@
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
     "phase3": {
+      "★": "phase3/trappist-1.html",
       "b": "phase3/trappist-1-b.html",
       "c": "phase3/trappist-1-c.html",
       "d": "phase3/trappist-1-d.html",
@@ -48,6 +49,21 @@
       "c": "phase3/au-mic-c.html",
       "d": "phase3/au-mic-d.html",
       "e": "phase3/au-mic-e.html"
+    }
+  },
+  "barnards": {
+    "phase2": null,
+    "phase3": {
+      "star": "phase3/barnards-star.html"
+    }
+  },
+  "barnards-star": {
+    "phase2": null,
+    "phase3": {
+      "b": "phase3/barnards-star-b.html",
+      "c": "phase3/barnards-star-c.html",
+      "d": "phase3/barnards-star-d.html",
+      "e": "phase3/barnards-star-e.html"
     }
   },
   "delta": {
@@ -86,6 +102,20 @@
       "f": "phase3/tau-cet-f.html",
       "g": "phase3/tau-cet-g.html",
       "h": "phase3/tau-cet-h.html"
+    }
+  },
+  "teegardens": {
+    "phase2": null,
+    "phase3": {
+      "star": "phase3/teegardens-star.html"
+    }
+  },
+  "teegardens-star": {
+    "phase2": null,
+    "phase3": {
+      "b": "phase3/teegardens-star-b.html",
+      "c": "phase3/teegardens-star-c.html",
+      "d": "phase3/teegardens-star-d.html"
     }
   },
   "Vega": {

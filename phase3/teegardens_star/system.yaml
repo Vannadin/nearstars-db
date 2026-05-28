@@ -1,0 +1,43 @@
+# Phase 3 driver config for Teegarden's Star system
+system_slug: teegardens_star
+display_name: Teegarden's Star
+system_query: Teegarden
+planets:
+  - Teegarden's Star
+  - Teegarden's Star b
+  - Teegarden's Star c
+  - Teegarden's Star d
+score:
+  keep_threshold: 8
+  mark_skipped_below: 14
+expand:
+  max_per_seed: 60
+  since_year: 2000
+
+# Critical discovery / refinement / habitability papers that ADS keyword
+# search may miss (the planet-letter compound isn't always in the title).
+injections:
+  - bibcode: 2019A&A...627A..49Z
+    targets: [teegarden-s-star-b, teegarden-s-star-c, teegarden-s-star, _system-teegarden]
+    note: Zechmeister 2019 — CARMENES discovery of Teegarden b and c
+  - bibcode: 2024A&A...684A.117D
+    targets: [teegarden-s-star-b, teegarden-s-star-c, teegarden-s-star-d, teegarden-s-star, _system-teegarden]
+    note: Dreizler 2024 — Teegarden d discovery + b/c refinement (rotation 96 d)
+  - bibcode: 2019A&A...625A..68S
+    targets: [teegarden-s-star, _system-teegarden]
+    note: Schweitzer 2019 — CARMENES M-dwarf masses/radii incl. Teegarden
+  - bibcode: 2020A&A...642A.115C
+    targets: [teegarden-s-star, _system-teegarden]
+    note: Cifuentes 2020 — CARMENES SED photometry, Teff & luminosity
+  - bibcode: 2019A&A...627A.161P
+    targets: [teegarden-s-star, _system-teegarden]
+    note: Passegger 2019 — high-res spectroscopy Teff & [Fe/H]
+  - bibcode: 2019ApJ...880L..21W
+    targets: [teegarden-s-star-b, teegarden-s-star-c, _system-teegarden]
+    note: Wandel 2019 — habitability of Teegarden b (M-dwarf flux & atmosphere)
+  - bibcode: 2025ApJ...984..181H
+    targets: [teegarden-s-star-b, teegarden-s-star-c, _system-teegarden]
+    note: Habitability analysis / atmosphere modeling 2025 (Teegarden + sister systems)
+  - bibcode: 2026AJ....171..155F
+    targets: [teegarden-s-star-b, teegarden-s-star, _system-teegarden]
+    note: Recent (2026) Teegarden b atmosphere / characterization paper

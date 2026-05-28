@@ -1,0 +1,61 @@
+planet: Teegarden's Star d
+slug: teegarden-s-star-d
+generated_at: '2026-05-27T23:54:23.558212Z'
+sources:
+  ads: queried (0 hits)
+  arxiv: queried (0 hits)
+papers:
+- arxiv_id: '2402.00923'
+  ads_bibcode: 2024A&A...684A.117D
+  title: Teegarden's Star revisited. A nearby planetary system with at least three planets
+  authors:
+  - Dreizler, S.
+  - Luque, R.
+  - Ribas, I.
+  - Koseleva, V.
+  - Ruh, H. L.
+  - Nagel, E.
+  - Pozuelos, F. J.
+  - Zechmeister, M.
+  - Reiners, A.
+  - Caballero, J. A.
+  - Amado, P. J.
+  - Béjar, V. J. S.
+  - Bean, J. L.
+  - Brady, M.
+  - Cifuentes, C.
+  - Gillon, M.
+  - Hatzes, A. P.
+  - Henning, Th.
+  - Kasper, D.
+  - Montes, D.
+  - Morales, J. C.
+  - Murray, C. A.
+  - Pallé, E.
+  - Quirrenbach, A.
+  - Seifahrt, A.
+  - Schweitzer, A.
+  - Stürmer, J.
+  - Stefánsson, G.
+  - Linares, J. I. Vico
+  year: '2024'
+  pubdate: '2024-04-00'
+  doi: 10.1051/0004-6361/202348033
+  abstract: The two known planets in the planetary system of Teegarden's Star are among the most Earth-like exoplanets currently
+    known. Revisiting this nearby planetary system with two planets in the habitable zone aims at a more complete census of
+    planets around very low-mass stars. A significant number of new radial velocity measurements from CARMENES, ESPRESSO,
+    MAROON-X, and HPF, as well as photometry from TESS motivated a deeper search for additional planets. We confirm and refine
+    the orbital parameters of the two know planets Teegarden's Star b and c. We also report the detection of a third planet
+    d with an orbital period of 26.13 ± 0.04 days and a minimum mass of 0.82 ± 0.17 M<SUB>⊕</SUB>. A signal at 96 days is
+    attributed to the stellar rotation period. The interpretation of a signal at 172 days remains open. The TESS data exclude
+    transiting short-period planets down to about half an Earth radius. We compare the planetary system architecture of very
+    low-mass stars. In the currently known configuration, the planetary system of Teegarden's star is dynamically quite different
+    from that of TRAPPIST-1, which is more compact, but dynamically similar to others such as GJ 1002. <P />Full Table A.1
+    is available at the CDS via anonymous ftp to <A href="https://cdsarc.cds.unistra.fr">cdsarc.cds.unistra.fr</A> (ftp://130.79.128.5)
+    or via <A href="https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/684/A117">https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/684/A117</A>
+    <P />Based on observations collected at the European Southern Observatory under ESO programme(s) 0103.C-0152(A).
+  status: fetched
+  category: deep_read
+  skip_reason: null
+  fetch_error: null
+filtered_papers: []

@@ -1,0 +1,772 @@
+planet: Teegarden's Star b
+slug: teegarden-s-star-b
+generated_at: '2026-05-27T23:54:11.490485Z'
+sources:
+  ads: queried (13 hits)
+  arxiv: queried (7 hits)
+papers:
+- &id001
+  arxiv_id: '2512.19231'
+  ads_bibcode: 2026ApJ...996L..43B
+  title: Disentangling the Hemispheres of Teegarden's Star b with LIFE
+  authors:
+  - Boukrouche, Ryan
+  - Janson, Markus
+  year: '2026'
+  pubdate: '2026-01-00'
+  doi: 10.3847/2041-8213/ae2fdd
+  abstract: Teegarden's Star is one of the most promising targets for the first observations of LIFE as a nontransiting rocky
+    planet with similar bulk properties to the Earth and a relatively quiescent M dwarf host star. We use LIFEsim, a software
+    developed by the LIFE team based in ETH Zurich, along with thermal emission maps obtained from a suite of three-dimensional
+    global climate model simulations, to explore the sensitivity of LIFE to the observation geometry. We find that 3 days
+    of observation in broad band would be enough to disentangle the hemispheres of the planet with a 1σ or 3σ confidence level
+    with a baseline or optimistic scenario, respectively. Doing the same for a fast rotator in the habitable zone of a G-class
+    star would be prohibitively challenging. Given enough observation time, the sensitivity of LIFE may allow some spatial
+    resolution of Teegarden's Star b to be achieved, which may directly link to the presence of water clouds and therefore
+    an active hydrology.
+  status: fetched
+  category: deep_read
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 10
+  combined_score: 20
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(sys_in_title, planet_b_in_title, topics=4) → combined=20>=10
+- &id002
+  arxiv_id: '2510.11940'
+  ads_bibcode: 2025ApJ...993L..19B
+  title: 'Near the Runaway: The Climate and Habitability of Teegarden''s Star b'
+  authors:
+  - Boukrouche, Ryan
+  - Caballero, Rodrigo
+  - Lewis, Neil T.
+  year: '2025'
+  pubdate: '2025-11-00'
+  doi: 10.3847/2041-8213/ae122a
+  abstract: Teegarden's Star b, a nearby terrestrial world receiving an Earth-like instellation, is a prime candidate for
+    next-generation observatories targeting temperate exoplanets in their habitable zones. We employ a suite of three-dimensional
+    global climate model simulations to (1) map the inner boundary of the habitable zone of Teegarden's Star b and (2) characterize
+    its surface climate under the assumption of an Earth-analog atmosphere. Our simulations show that, with its most recently
+    estimated instellation of 1481 W m<SUP>−2</SUP>, Teegarden's Star b remains below the runaway greenhouse threshold for
+    both low (α<SUB>s</SUB> = 0.07, ocean-dominated) and moderate (α<SUB>s</SUB> = 0.30, land-dominated) surface albedos.
+    However, a different estimate of 1565 W m<SUP>−2</SUP> places it beyond the runaway threshold. The result that Teegarden's
+    Star b is habitable under the most recent instellation measurement reinforces its status as one of the most compelling
+    targets for future habitability and biosignature searches. Given the planet's proximity to the runaway threshold, it would
+    benefit from a comparative study done with other models using different parameterizations.
+  status: fetched
+  category: deep_read
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 10
+  combined_score: 20
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(sys_in_title, planet_b_in_title, topics=7) → combined=20>=10
+- &id003
+  arxiv_id: '2411.07922'
+  ads_bibcode: 2024ApJ...977...88B
+  title: The Impact of Water Clouds on the Prospective Emission Spectrum of Teegarden's Star b as Observed by LIFE
+  authors:
+  - Boukrouche, Ryan
+  - Caballero, Rodrigo
+  - Janson, Markus
+  year: '2024'
+  pubdate: '2024-12-00'
+  doi: 10.3847/1538-4357/ad8f30
+  abstract: Nontransiting terrestrial planets will be accessible by upcoming observatories of which LIFE is an example. Planet
+    b orbiting Teegarden's Star is one of the optimal targets for such missions. We use a one-dimensional atmospheric model
+    with real gas radiation, a multispecies pseudo-adiabatic convection-condensation scheme, and a water cloud scheme to estimate
+    the impact of the cloud coverage on the emission spectrum of the target, as well as to assess how sensitive LIFE could
+    be to changes in outgoing flux caused by these clouds. Though the emergent flux decreases with a higher cloud coverage,
+    it does not decrease by more than 1 order of magnitude as the coverage increases from 0% to 90%. This allows LIFE to retain
+    a high sensitivity to the cloud cover fraction for wavelengths longer than 7 μm. In this spectral range, with at least
+    1 bar of N<SUB>2</SUB>, LIFE is able to distinguish cloud cover fractions as small as 10% given an integration time of
+    24 hr, and yields much better precision with a week-long integration. An integration time of 1 week also allows the resolution
+    of local variations in spectral flux, which can lead to easier molecule identification. This ability remains if the planet
+    is a CO<SUB>2</SUB>-dominated Venus analog. Partial pressures of N<SUB>2</SUB> lower than 1 bar may create a degeneracy
+    with the cloud cover fraction. LIFE shows promising potential for detecting and characterizing atmospheres even with a
+    high cloud coverage, and retaining a fine sensitivity to relatively small differences in cloud cover fractions.
+  status: fetched
+  category: deep_read
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 10
+  combined_score: 20
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(sys_in_title, planet_b_in_title, topics=3) → combined=20>=10
+- &id004
+  arxiv_id: '2512.16575'
+  ads_bibcode: 2026AJ....171..155F
+  title: Probing Thermal Gradient of Habitable-zone Rocky Planets as an Anti-indicator of a Global Surface Ocean Using Mid-infrared
+    Direct Imaging
+  authors:
+  - Fujii, Yuka
+  - Angerhausen, Daniel
+  - Matsuo, Taro
+  - Wolf, Eric T.
+  year: '2026'
+  pubdate: '2026-03-00'
+  doi: 10.3847/1538-3881/ae367b
+  abstract: 'Future direct-imaging missions, such as the Large Interferometer for Exoplanets (LIFE), aim to observe thermal
+    emission from potentially habitable planets to characterize their surface environments and search for signs of life. Previous
+    studies of directly imaged Earth-like planets have mainly examined the signatures of atmospheric composition, often using
+    1D models, while the effect of horizontal temperature gradients has received limited attention. Because a pronounced horizontal
+    temperature gradient may signal the absence of a global ocean, we investigate its detectability through thermal-emission
+    direct imaging. Adopting Teegarden''s Star b (zero-albedo equilibrium temperature ∼280 K) as a benchmark, we compute 3D
+    atmospheric structures with and without a global ocean using the ROCKE-3D general circulation model and simulate geometry-dependent
+    thermal-emission spectra. We show that the temperature gradients that disfavor a global-ocean scenario manifest in both
+    orbital phase variation and spectral shape of the snapshot spectra. The phase variation is more readily detectable: one-day
+    integrations with LIFE at two orbital phases would reveal flux variations in no-ocean cases with 1─10 bar atmospheres,
+    depending on background atmospheric composition. Shapshot spectra provide complementary diagnostics of global temperature
+    contrast, the running brightness temperature of the continuum, and detailed absorption band shapes, but require longer
+    integration times. These 3D effects, if neglected, can bias interpretations based on 1D models. We also assess their detectability
+    for other nearby exoplanets. Our results highlight the need to incorporate 3D atmospheric structures when characterizing
+    rocky exoplanets, both to constrain surface conditions and to avoid misinterpretation of spectral data.'
+  status: fetched
+  category: deep_read
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 7
+  combined_score: 17
+  filter_decision: keep
+  filter_reason: auth(journal=AJ, has_arxiv, has_doi) + rel(sys_in_abstract, planet_b_in_abstract, topics=5) → combined=17>=10
+- &id005
+  arxiv_id: '2402.00923'
+  ads_bibcode: 2024A&A...684A.117D
+  title: Teegarden's Star revisited. A nearby planetary system with at least three planets
+  authors:
+  - Dreizler, S.
+  - Luque, R.
+  - Ribas, I.
+  - Koseleva, V.
+  - Ruh, H. L.
+  - Nagel, E.
+  - Pozuelos, F. J.
+  - Zechmeister, M.
+  - Reiners, A.
+  - Caballero, J. A.
+  - Amado, P. J.
+  - Béjar, V. J. S.
+  - Bean, J. L.
+  - Brady, M.
+  - Cifuentes, C.
+  - Gillon, M.
+  - Hatzes, A. P.
+  - Henning, Th.
+  - Kasper, D.
+  - Montes, D.
+  - Morales, J. C.
+  - Murray, C. A.
+  - Pallé, E.
+  - Quirrenbach, A.
+  - Seifahrt, A.
+  - Schweitzer, A.
+  - Stürmer, J.
+  - Stefánsson, G.
+  - Linares, J. I. Vico
+  year: '2024'
+  pubdate: '2024-04-00'
+  doi: 10.1051/0004-6361/202348033
+  abstract: The two known planets in the planetary system of Teegarden's Star are among the most Earth-like exoplanets currently
+    known. Revisiting this nearby planetary system with two planets in the habitable zone aims at a more complete census of
+    planets around very low-mass stars. A significant number of new radial velocity measurements from CARMENES, ESPRESSO,
+    MAROON-X, and HPF, as well as photometry from TESS motivated a deeper search for additional planets. We confirm and refine
+    the orbital parameters of the two know planets Teegarden's Star b and c. We also report the detection of a third planet
+    d with an orbital period of 26.13 ± 0.04 days and a minimum mass of 0.82 ± 0.17 M<SUB>⊕</SUB>. A signal at 96 days is
+    attributed to the stellar rotation period. The interpretation of a signal at 172 days remains open. The TESS data exclude
+    transiting short-period planets down to about half an Earth radius. We compare the planetary system architecture of very
+    low-mass stars. In the currently known configuration, the planetary system of Teegarden's star is dynamically quite different
+    from that of TRAPPIST-1, which is more compact, but dynamically similar to others such as GJ 1002. <P />Full Table A.1
+    is available at the CDS via anonymous ftp to <A href="https://cdsarc.cds.unistra.fr">cdsarc.cds.unistra.fr</A> (ftp://130.79.128.5)
+    or via <A href="https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/684/A117">https://cdsarc.cds.unistra.fr/viz-bin/cat/J/A+A/684/A117</A>
+    <P />Based on observations collected at the European Southern Observatory under ESO programme(s) 0103.C-0152(A).
+  status: fetched
+  category: deep_read
+  skip_reason: null
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 7
+  combined_score: 17
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(sys_in_title, planet_b_in_abstract) → combined=17>=10
+- &id006
+  arxiv_id: '2303.00540'
+  ads_bibcode: 2023NewA..10202024S
+  title: 'New models of reflection spectra for terrestrial exoplanets: Present and prebiotic Earth orbiting around stars of
+    different spectral types'
+  authors:
+  - Singla, Manika
+  - Sengupta, Sujan
+  year: '2023'
+  pubdate: '2023-08-00'
+  doi: 10.1016/j.newast.2023.102024
+  abstract: In order to recognize a habitable exoplanet from future observed spectra, we present new model reflected spectra
+    and geometric albedo for modern and prebiotic (∼3.9 Ga) Earth-like exoplanets orbiting within the habitable zone of stars
+    of spectral types F, G, K and M. We compute this for various atmospheric and surface compositions of the planets. Molecules
+    that are potential biosignatures and act as greenhouse agents are incorporated in our model atmosphere. Various combinations
+    of solid and liquid materials such as ocean, coast, land consisting of trees, grass, sand or rocks determine the surface
+    albedo of the planet. Geometric albedo and model reflected spectra for a set of nine potential habitable planets, including
+    Proxima Centauri b, TRAPPIST-1d, Kepler-1649c and Teegarden's Star-b, are also presented. We employ the opacity data derived
+    by using the open-source package Exo-Transmit and adopt different atmospheric Temperature-Pressure profiles depending
+    on the properties of the terrestrial exoplanets. The model-reflected spectra are constructed by numerically solving the
+    multiple scattering radiative transfer equations. We verified our model reflected spectra for a few specific cases by
+    comparing with those published by other researchers. We demonstrate that prebiotic Earth-like exoplanets and present Earth-like
+    exoplanets with increased amount of greenhouse gases in their atmospheres scatter more starlight in the optical. We also
+    present the transmission spectra for modern and prebiotic Earth-like exoplanets with cloudy and cloudless atmospheres.
+  status: fetched
+  category: skim
+  skip_reason: null
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 8
+  combined_score: 14
+  filter_decision: keep
+  filter_reason: auth(has_arxiv, has_doi) + rel(sys_in_abstract, planet_b_in_abstract, topics=7) → combined=14>=10
+- &id007
+  arxiv_id: null
+  ads_bibcode: 2023AJ....165...34H
+  title: A Catalog of Habitable Zone Exoplanets
+  authors:
+  - Hill, Michelle L.
+  - Bott, Kimberly
+  - Dalba, Paul A.
+  - Fetherolf, Tara
+  - Kane, Stephen R.
+  - Kopparapu, Ravi
+  - Li, Zhexing
+  - Ostberg, Colby
+  year: '2023'
+  pubdate: '2023-02-00'
+  doi: 10.3847/1538-3881/aca1c0
+  abstract: The search for habitable planets has revealed many planets that can vary greatly from an Earth analog environment.
+    These include highly eccentric orbits, giant planets, different bulk densities, relatively active stars, and evolved stars.
+    This work catalogs all planets found to reside in the habitable zone (HZ) and provides HZ boundaries, orbit characterization,
+    and the potential for spectroscopic follow-up observations. Demographics of the HZ planets are compared with a full catalog
+    of exoplanets. Extreme planets within the HZ are highlighted, and how their unique properties may affect their potential
+    habitability is discussed. Kepler-296 f is the most eccentric ≤2 R <SUB>⊕</SUB> planet that spends 100% of its orbit in
+    the HZ. HD 106270 b and HD 38529 c are the most massive planets (≤13 M <SUB>J</SUB>) that orbit within the HZ, and are
+    ideal targets for determining the properties of potential hosts of HZ exomoons. These planets, along with the others highlighted,
+    will serve as special edge cases to the Earth-based scenario, and observations of these targets will help test the resilience
+    of habitability outside the standard model. The most promising observational HZ target that is known to transit is GJ
+    414 A b. Of the transiting, ≤2 R <SUB>⊕</SUB> HZ planets, LHS 1140 b, TRAPPIST-1 d, and K2-3 d are the most favorable.
+    Of the nontransiting HZ planets, HD 102365 b and 55 Cnc f are the most promising, and the best nontransiting candidates
+    that have ≤2 R <SUB>⊕</SUB> are GJ 667 C c, Wolf 1061 c, Ross 508 b, Teegarden's Star b, and Proxima Cen b.
+  status: skipped
+  category: skip
+  skip_reason: null
+  fetch_error: no_arxiv_id
+  authority_score: 8
+  relevance_score: 6
+  combined_score: 14
+  filter_decision: keep
+  filter_reason: auth(journal=AJ, has_doi) + rel(sys_in_abstract, planet_b_in_abstract, topics=2) → combined=14>=10
+- &id008
+  arxiv_id: '2204.03501'
+  ads_bibcode: 2022A&A...662A..15M
+  title: Tidally driven tectonic activity as a parameter in exoplanet habitability
+  authors:
+  - McIntyre, S. R. N.
+  year: '2022'
+  pubdate: '2022-06-00'
+  doi: 10.1051/0004-6361/202141112
+  abstract: 'Context. The habitability of an exoplanet is defined by its ability to support surface liquid water. The long-term
+    carbon cycle plays an important role in regulating planetary temperature, thus supporting the conditions for the preservation
+    of surface liquid water and, consequently, the habitability of exoplanets. <BR /> Aims: On Earth, plate tectonics play
+    an integral role in driving the long-term carbon cycle; however, on tidally locked rocky exoplanets, alternative tectonic
+    mechanisms driven by tidal stress and tidal heating could serve this purpose in an analogous way. <BR /> Methods: We calculated
+    tidal stress and tidal heating rates to model the likelihood of tectonic activity maintaining stable climates suitable
+    for surface liquid water on tidally locked rocky exoplanets with radii of R<SUB>p</SUB> ≤ 1.23 R<SUB>⊕</SUB>. <BR /> Results:
+    Applying the tidal models to our sample of 767 tidally locked rocky exoplanets reveals that ~10% of exoplanets, including
+    Proxima Cen b and GJ 1061 d from the circumstellar habitable zone (CHZ), pass the tidal stress subduction threshold for
+    mobile lid tectonic activity and simultaneously reside within the optimal tidal heating zone. This subset of exoplanets
+    could sustain tidally induced temperate mobile lid tectonic activity that is comparable to plate tectonics on Earth, aiding
+    in maintaining the presence of surface liquid water. Furthermore, ~40% of exoplanets from our sample located in the CHZ
+    would be unable to maintain the tectonic activity needed to stabilise the climate and are unlikely to retain surface liquid
+    water. When broadening our modelling to establish the overlap between tidal stress, tidal heating, and the CHZ to discover
+    optimal regions to target for future observations, we determined that tidally driven tectonic activity conducive to the
+    maintenance of surface liquid water occurs predominantly around M dwarfs. We identified intersections, where both mobile
+    lid and optimal tidal heating could be sustained on eccentric (e &gt; 0.1) Earth-sized exoplanets (R<SUB>p</SUB> = 1.0-1.23
+    R<SUB>⊕</SUB>) orbiting in the CHZ of low-mass M dwarfs. <P />Table 1 is only available at the CDS via anonymous ftp to
+    <A href="http://cdsarc.u-strasbg.fr">cdsarc.u-strasbg.fr</A> (ftp://130.79.128.5) or via <A href="http://cdsarc.u-strasbg.fr/viz-bin/cat/J/A+A/662/A15">http://cdsarc.u-strasbg.fr/viz-bin/cat/J/A+A/662/A15</A>'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (13 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 3
+  combined_score: 13
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(topics=7) → combined=13>=10
+- &id009
+  arxiv_id: null
+  ads_bibcode: 2026nova.pres14654A
+  title: 'Teegarden''s Star b: (Almost) Too Hot to Handle?'
+  authors:
+  - Astrobites
+  year: '2026'
+  pubdate: '2026-02-00'
+  doi: null
+  abstract: Astrobites reports on the potential habitability of Teegarden's Star b, a promising Earth-like planet.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 9
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(neutral) + rel(sys_in_title, planet_b_in_title) → combined=12>=10
+- &id010
+  arxiv_id: '2210.02484'
+  ads_bibcode: null
+  title: A Catalog of Habitable Zone Exoplanets
+  authors:
+  - Michelle L. Hill
+  - Kimberly Bott
+  - Paul A. Dalba
+  - Tara Fetherolf
+  - Stephen R. Kane
+  - Ravi Kopparapu
+  - Zhexing Li
+  - Colby Ostberg
+  year: '2022'
+  pubdate: '2022-10-05'
+  doi: null
+  abstract: The search for habitable planets has revealed many planets that can vary greatly from an Earth analog environment.
+    These include highly eccentric orbits, giant planets, different bulk densities, relatively active stars, and evolved stars.
+    This work catalogs all planets found to reside in the HZ and provides HZ boundaries, orbit characterization, and the potential
+    for spectroscopic follow-up observations. Demographics of the HZ planets are compared with a full catalog of exoplanets.
+    Extreme planets within the HZ are highlighted, and how their unique properties may affect their potential habitability.
+    Kepler-296 f is the most eccentric <2 $R_\oplus$ planet that spends 100% of its orbit in the HZ. HD 106270 b and HD 38529
+    c are the most massive planets (<13 $M_J$) that orbit within the HZ, and are ideal targets for determining the properties
+    of potential hosts of HZ exomoons. These planets, along with the others highlighted, will serve as special edge-cases
+    to the Earth-based scenario and observations of these targets will help test the resilience of habitability outside the
+    standard model. The most promising observational HZ target that is known to transit is GJ 414 A b. Of the transiting,
+    <2 $R_\oplus$ HZ planets, LHS 1140 b, TRAPPIST-1 d and K2-3 d are the most favorable. Of the non-transiting HZ planets,
+    HD 102365 b and 55 Cnc f are the most promising, and the best non-transiting candidates that are <2 $R_\oplus$ are GJ
+    667 C c, Wolf 1061 c, Ross 508 b, Teegarden's Star b, and Proxima Cen b.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (11 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 6
+  combined_score: 11
+  filter_decision: keep
+  filter_reason: auth(has_arxiv) + rel(sys_in_abstract, planet_b_in_abstract, topics=2) → combined=11>=10
+- &id011
+  arxiv_id: null
+  ads_bibcode: 2025AAS...24540406M
+  title: 'Teegarden''s Star-b and c: Exoplanets Nearly as Good as Earth?'
+  authors:
+  - Micho, Matthew
+  - Guinan, Edward
+  - Engle, Scott
+  year: '2025'
+  pubdate: '2025-01-00'
+  doi: null
+  abstract: 'Teegarden''s Star (TGS) is an inactive M7V star that is only ~12.6 ly away, and hosts two of the most promising
+    planets for potential extraterrestrial life. TGS hosts at least three exoplanets, two of which are in its habitable zone
+    (HZ): TGS-b and TGS-c (Zechmeister et. al. 2019). These earth-size planets are listed in the Habitable Worlds Catalog,
+    with Earth Similarity Indices (ESI) of 0.97 (revised to 0.93) and 0.66 respectively. TGS-b is located on the inner (hot)
+    edge of the star''s HZ with a = 0.0259 AU. It has an orbital period of P<SUB>rot</SUB> = 4.91 days, an approximate mass
+    of M<SUB>p</SUB> sin i ≈ 1.16 M<SUB></SUB>, bolometric irradiance of S/S<SUB></SUB> ≈ 1.08, and an equilibrium temperature
+    of T<SUB>eq</SUB> ≈ 263 K. TGS-c is located inside the outer (cold) edge of the HZ with a = 0.0445 AU. It has an orbital
+    period of P<SUB>rot</SUB> = 11.4 days, an approximate mass of M<SUB>p</SUB> sin i ≈ 1.05 M<SUB></SUB>, a bolometric irradiance
+    of S/S<SUB></SUB> ≈ 0.35, and an equilibrium temperature of T<SUB>eq</SUB> ≈ 263 K. The potential for these planets to
+    be habitable is strongly dependent on the radiative and magnetic properties of the host star, as well as the age, environmental,
+    and geomagnetic properties of the planets. One of most important measurable properties is the planet''s age, which we
+    determined through a combination of known rotation period (with gyrochronology), metallicity, kinematics, and X-ray measurements
+    of the host star. Utilizing the P<SUB>rot</SUB> - Age relationship from Engle &amp; Guinan (2023), we find that TGS is
+    likely very old (8±2 Gyr). This is ~3.5 billion years older than Earth, and provides more than enough time for complex
+    life (if any) to arise. Utilizing X-ray measurements from XMM-Newton, we determined that TGS-b and TGS-c, respectively,
+    receive ~100 and ~33 times the Earth''s X-ray irradiance. Adopting our age estimate and using the F<SUB>Ly</SUB><SUB></SUB><SUB></SUB>
+    - Age relations from Engle (2024), we find well as that TGS-b and -c receive 4.7 and 1.5 times the Earth''s Lyman- FUV
+    flux. These XUV irradiances are significantly lower than similar exoplanetary systems, such as TRAPPIST-1, and gives some
+    hope for these TGS planets to retain their atmospheres/water and to support life.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 0
+  relevance_score: 10
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(conf=AAS) + rel(sys_in_title, planet_b_in_title, topics=4) → combined=10>=10
+- &id012
+  arxiv_id: null
+  ads_bibcode: 2025JGRE..13008029R
+  title: 'Ignan Earths: Habitability of Terrestrial Planets With Extreme Internal Heating'
+  authors:
+  - Reinhold, Matthew
+  - Schaefer, Laura
+  year: '2025'
+  pubdate: '2025-01-00'
+  doi: 10.1029/2023JE008029
+  abstract: Is it possible for a rocky planet to have too much internal heating to maintain a habitable surface environment?
+    In the Solar System, the best example of a world with high internal heating is Jupiter's moon Io, which has a heat flux
+    of approximately 2 W ${\mathrm{m}}^{-2}$ compared to the Earth's ${\sim} $ 90 mW ${\mathrm{m}}^{-2}$. The ultimate upper
+    limit to internal heating rates is the Tidal Venus Limit, where the geothermal heat flux exceeds the Runaway Greenhouse
+    Limit of ${\sim} $300 W ${\mathrm{m}}^{-2}$ for an Earth-mass planet. Between Io and a Tidal Venus there is a wide range
+    of internal heating rates whose effects on planetary habitability remain unexplored. We investigate the habitability of
+    these worlds, referred to as Ignan Earth's. We demonstrate how the mantle will remain largely solid despite high internal
+    heating, allowing for the formation of a convectively buoyant and stable crust. In addition, we model the long-term climate
+    of Ignan Earth's by simulating the carbonate-silicate cycle in a vertical tectonic regime (known as heat-pipe tectonics,
+    expected to dominate on such worlds) at varying amounts of internal heating. We find that Earth-mass planets with internal
+    heating fluxes below ${\sim} $15 W ${\mathrm{m}}^{-2}$ produce average surface temperatures that Earth has experienced
+    in its past (below 30${}^{\circ}$C), and worlds with significantly higher heat fluxes still result in surface temperatures
+    far below that of 100${}^{\circ}$C, indicating a wide range of internal heating rates may be conducive with habitability.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 7
+  relevance_score: 3
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=JGRE, has_doi) + rel(topics=8) → combined=10>=10
+- &id013
+  arxiv_id: '2102.07815'
+  ads_bibcode: 2021arXiv210207815I
+  title: Post-Keplerian obliquity variations and the habitability of rocky planets orbiting fast spinning, oblate late M dwarfs
+  authors:
+  - Iorio, Lorenzo
+  year: '2021'
+  pubdate: '2021-02-00'
+  doi: 10.48550/arXiv.2102.07815
+  abstract: A couple of dozen Earth-like planets orbiting M dwarfs have been discovered so far. Some of them have attracted
+    interest because of their potential long-term habitability; such a possibility is currently vigorously debated in the
+    literature. I show that post-Keplerian (pK) orbit precessions may impact the habitability of a fictitious telluric planet
+    orbiting an oblate late-type M dwarf of spectral class M9V with $M_\star=0.08\,M_\odot$ at $a=0.02\,\mathrm{au}$, corresponding
+    to an orbital period $P_\mathrm{b}\simeq 4\,\mathrm{d}$, inducing long-term variations of the planetary obliquity $\varepsilon$
+    which, under certain circumstances, may not be deemed as negligible from the point of view of life's sustainability. I
+    resume the analytical orbit-averaged equations of the pK precessions, both classical and general relativistic, of the
+    unit vectors $\boldsymbol{\hat{S}},\,\boldsymbol{\hat{h}}$ of both the planet's spin and orbital angular momenta $\boldsymbol
+    S,\,\boldsymbol{L}$ entering $\varepsilon$, and numerically integrate them by producing time series of the pK changes
+    $\Delta\varepsilon(t)$ of the obliquity. For rapidly rotating M dwarfs with rotational periods of the order of $P_\star
+    \simeq 0.1-1\,\mathrm{d}$, the planet's obliquity $\varepsilon$ can undergo classical pK large variations $\Delta\varepsilon(t)$
+    up to tens of degrees over timescales $\Delta t \simeq 20-200\,\mathrm{kyr}$, depending on the mutual orientations of
+    the star's spin ${\boldsymbol J}_\star$, of $\boldsymbol S$, and of $\boldsymbol L$. Instead, $\Delta\varepsilon(t)$ are
+    $\lesssim 1-1.5^\circ$ for the planet b of the Teegarden's Star. In certain circumstances, the M dwarf's oblateness $J_2^\star$
+    should be considered as one of the key dynamical features to be taken into account in compiling budgets of the long-term
+    habitability of rocky planets around fast spinning late M dwarfs. (Abridged)
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 4
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(has_arxiv, has_doi) + rel(sys_in_abstract, topics=4) → combined=10>=10
+- &id014
+  arxiv_id: null
+  ads_bibcode: 2021AAS...23723001G
+  title: Tidal Effects on the Planets of Teegarden's Star
+  authors:
+  - Guez, I. A.
+  - Barnes, R.
+  year: '2021'
+  pubdate: '2021-01-00'
+  doi: null
+  abstract: The Teegarden Star system is composed of two Earth-sized planets orbiting a 0.08 solar-mass M dwarf star and is
+    just 12 light years from Earth. Both planets are located in the habitable zone of their star, with Teegarden's Star b
+    near the inner edge and Teegarden's Star c near the outer edge. Both planets tidally interact with their host star and
+    close enough to that they significantly perturb each other's orbits. <P />In such configurations, planetary obliquity
+    can become locked at values greater than zero, a configuration known as a Cassini state. Since Teegarden's Star b's obliquity
+    may be detectable via a JWST phase curve, we simulated the evolution of the system for its age with VPLanet over a wide
+    range of plausible initial conditions to predict the possible values of their obliquity today. We find the final distribution
+    of obliquities for both planets are confined to be less than 1°. <P />We further explored the tidal heating in the two
+    planet and find that even this small obliquity can be enough to power a runaway greenhouse effect on planet b, possibly
+    desiccating it. On planet c, the Cassini state may power Io-like volcanism. The Cassini states adds about 1 W/m<SUP>2</SUP>
+    to the total tidal heating.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 0
+  relevance_score: 10
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(conf=AAS) + rel(sys_in_title, planet_b_in_abstract, topics=8) → combined=10>=10
+- arxiv_id: '1906.07196'
+  ads_bibcode: 2019A&A...627A..49Z
+  title: The CARMENES search for exoplanets around M dwarfs. Two temperate Earth-mass planet candidates around Teegarden's
+    Star
+  authors:
+  - Zechmeister, M.
+  - Dreizler, S.
+  - Ribas, I.
+  - Reiners, A.
+  - Caballero, J. A.
+  - Bauer, F. F.
+  - Béjar, V. J. S.
+  - González-Cuesta, L.
+  - Herrero, E.
+  - Lalitha, S.
+  - López-González, M. J.
+  - Luque, R.
+  - Morales, J. C.
+  - Pallé, E.
+  - Rodríguez, E.
+  - Rodríguez López, C.
+  - Tal-Or, L.
+  - Anglada-Escudé, G.
+  - Quirrenbach, A.
+  - Amado, P. J.
+  - Abril, M.
+  - Aceituno, F. J.
+  - Aceituno, J.
+  - Alonso-Floriano, F. J.
+  - Ammler-von Eiff, M.
+  - Antona Jiménez, R.
+  - Anwand-Heerwart, H.
+  - Arroyo-Torres, B.
+  - Azzaro, M.
+  - Baroch, D.
+  - Barrado, D.
+  - Becerril, S.
+  - Benítez, D.
+  - Berdiñas, Z. M.
+  - Bergond, G.
+  - Bluhm, P.
+  - Brinkmöller, M.
+  - del Burgo, C.
+  - Calvo Ortega, R.
+  - Cano, J.
+  - Cardona Guillén, C.
+  - Carro, J.
+  - Cárdenas Vázquez, M. C.
+  - Casal, E.
+  - Casasayas-Barris, N.
+  - Casanova, V.
+  - Chaturvedi, P.
+  - Cifuentes, C.
+  - Claret, A.
+  - Colomé, J.
+  - Cortés-Contreras, M.
+  - Czesla, S.
+  - Díez-Alonso, E.
+  - Dorda, R.
+  - Fernández, M.
+  - Fernández-Martín, A.
+  - Fuhrmeister, B.
+  - Fukui, A.
+  - Galadí-Enríquez, D.
+  - Gallardo Cava, I.
+  - Garcia de la Fuente, J.
+  - Garcia-Piquer, A.
+  - García Vargas, M. L.
+  - Gesa, L.
+  - Góngora Rueda, J.
+  - González-Álvarez, E.
+  - González Hernández, J. I.
+  - González-Peinado, R.
+  - Grözinger, U.
+  - Guàrdia, J.
+  - Guijarro, A.
+  - de Guindos, E.
+  - Hatzes, A. P.
+  - Hauschildt, P. H.
+  - Hedrosa, R. P.
+  - Helmling, J.
+  - Henning, T.
+  - Hermelo, I.
+  - Hernández Arabi, R.
+  - Hernández Castaño, L.
+  - Hernández Otero, F.
+  - Hintz, D.
+  - Huke, P.
+  - Huber, A.
+  - Jeffers, S. V.
+  - Johnson, E. N.
+  - de Juan, E.
+  - Kaminski, A.
+  - Kemmer, J.
+  - Kim, M.
+  - Klahr, H.
+  - Klein, R.
+  - Klüter, J.
+  - Klutsch, A.
+  - Kossakowski, D.
+  - Kürster, M.
+  - Labarga, F.
+  - Lafarga, M.
+  - Llamas, M.
+  - Lampón, M.
+  - Lara, L. M.
+  - Launhardt, R.
+  - Lázaro, F. J.
+  - Lodieu, N.
+  - López del Fresno, M.
+  - López-Puertas, M.
+  - López Salas, J. F.
+  - López-Santiago, J.
+  - Magán Madinabeitia, H.
+  - Mall, U.
+  - Mancini, L.
+  - Mandel, H.
+  - Marfil, E.
+  - Marín Molina, J. A.
+  - Maroto Fernández, D.
+  - Martín, E. L.
+  - Martín-Fernández, P.
+  - Martín-Ruiz, S.
+  - Marvin, C. J.
+  - Mirabet, E.
+  - Montañés-Rodríguez, P.
+  - Montes, D.
+  - Moreno-Raya, M. E.
+  - Nagel, E.
+  - Naranjo, V.
+  - Narita, N.
+  - Nortmann, L.
+  - Nowak, G.
+  - Ofir, A.
+  - Oshagh, M.
+  - Panduro, J.
+  - Parviainen, H.
+  - Pascual, J.
+  - Passegger, V. M.
+  - Pavlov, A.
+  - Pedraz, S.
+  - Pérez-Calpena, A.
+  - Pérez Medialdea, D.
+  - Perger, M.
+  - Perryman, M. A. C.
+  - Rabaza, O.
+  - Ramón Ballesta, A.
+  - Rebolo, R.
+  - Redondo, P.
+  - Reffert, S.
+  - Reinhardt, S.
+  - Rhode, P.
+  - Rix, H.-W.
+  - Rodler, F.
+  - Rodríguez Trinidad, A.
+  - Rosich, A.
+  - Sadegi, S.
+  - Sánchez-Blanco, E.
+  - Sánchez Carrasco, M. A.
+  - Sánchez-López, A.
+  - Sanz-Forcada, J.
+  - Sarkis, P.
+  - Sarmiento, L. F.
+  - Schäfer, S.
+  - Schmitt, J. H. M. M.
+  - Schöfer, P.
+  - Schweitzer, A.
+  - Seifert, W.
+  - Shulyak, D.
+  - Solano, E.
+  - Sota, A.
+  - Stahl, O.
+  - Stock, S.
+  - Strachan, J. B. P.
+  - Stuber, T.
+  - Stürmer, J.
+  - Suárez, J. C.
+  - Tabernero, H. M.
+  - Tala Pinto, M.
+  - Trifonov, T.
+  - Veredas, G.
+  - Vico Linares, J. I.
+  - Vilardell, F.
+  - Wagner, K.
+  - Wolthoff, V.
+  - Xu, W.
+  - Yan, F.
+  - Zapatero Osorio, M. R.
+  year: '2019'
+  pubdate: '2019-07-00'
+  doi: 10.1051/0004-6361/201935460
+  abstract: 'Context. Teegarden''s Star is the brightest and one of the nearest ultra-cool dwarfs in the solar neighbourhood.
+    For its late spectral type (M7.0 V), the star shows relatively little activity and is a prime target for near-infrared
+    radial velocity surveys such as CARMENES. <BR /> Aims: As part of the CARMENES search for exoplanets around M dwarfs,
+    we obtained more than 200 radial-velocity measurements of Teegarden''s Star and analysed them for planetary signals. <BR
+    /> Methods: We find periodic variability in the radial velocities of Teegarden''s Star. We also studied photometric measurements
+    to rule out stellar brightness variations mimicking planetary signals. <BR /> Results: We find evidence for two planet
+    candidates, each with 1.1 M<SUB>⊕</SUB> minimum mass, orbiting at periods of 4.91 and 11.4 d, respectively. No evidence
+    for planetary transits could be found in archival and follow-up photometry. Small photometric variability is suggestive
+    of slow rotation and old age. <BR /> Conclusions: The two planets are among the lowest-mass planets discovered so far,
+    and they are the first Earth-mass planets around an ultra-cool dwarf for which the masses have been determined using radial
+    velocities. <P />Tables D.1 and D.2 are only available at the CDS via anonymous ftp to <A href="http://cdsarc.u-strasbg.fr">http://cdsarc.u-strasbg.fr</A>
+    (ftp://130.79.128.5) or via <A href="http://cdsarc.u-strasbg.fr/viz-bin/qcat?J/A+A/627/A49">http://cdsarc.u-strasbg.fr/viz-bin/qcat?J/A+A/627/A49</A>'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1906.07704'
+  ads_bibcode: 2019ApJ...880L..21W
+  title: On the Habitability of Teegarden’s Star Planets
+  authors:
+  - Wandel, Amri
+  - Tal-Or, Lev
+  year: '2019'
+  pubdate: '2019-08-00'
+  doi: 10.3847/2041-8213/ab2df7
+  abstract: We study the habitability of the two {1.3}<SUB>-0.3</SUB><SUP>+0.7</SUP> Earth-mass planets, recently detected
+    by the CARMENES collaboration, around the ultra-cool nearby M-dwarf Teegarden’s Star. With orbital periods of 4.9 and
+    11.4 days, both planets are likely to be within the habitable zone and tidally locked. They are among the most Earth-like
+    exoplanets yet discovered. Applying an analytic habitability model we find that surface liquid water could be present
+    on both planets for a wide range of atmospheric properties, which makes them attractive targets for biosignature searches.
+    The prospects of the planets retaining such an atmosphere over their history are discussed.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2504.00978'
+  ads_bibcode: 2025ApJ...984..181H
+  title: The Climates and Thermal Emission Spectra of Prime Nearby Temperate Rocky Exoplanet Targets
+  authors:
+  - Hammond, Tobi
+  - Komacek, Thaddeus D.
+  - Kopparapu, Ravi K.
+  - Fauchez, Thomas J.
+  - Mandell, Avi M.
+  - Wolf, Eric T.
+  - Kofman, Vincent
+  - Kane, Stephen R.
+  - Johnson, Ted M.
+  - Desai, Anmol
+  - Arney, Giada
+  - Crouse, Jaime S.
+  year: '2025'
+  pubdate: '2025-05-00'
+  doi: 10.3847/1538-4357/adc73b
+  abstract: 'Over the course of the past decade, advances in radial velocity and transit techniques have enabled the detection
+    of rocky exoplanets in the habitable zones of nearby stars. Future observations with novel methods are required to characterize
+    this sample of planets, especially those that are nontransiting. One proposed method is the Planetary Infrared Excess
+    (PIE) technique, which would enable the characterization of nontransiting planets by measuring the excess IR flux from
+    the planet relative to the star''s spectral energy distribution. In this work, we predict the efficacy of future observations
+    using the PIE technique by potential future observatories such as the MIRECLE mission concept. To do so, we conduct a
+    broad suite of 21 general circulation model (GCM) simulations, with ExoCAM, of seven nearby habitable zone targets for
+    three choices of atmospheric composition with varying partial pressure of CO<SUB>2</SUB>. We then construct thermal phase
+    curves and emission spectra by post-processing our ExoCAM GCM simulations with the Planetary Spectrum Generator (PSG).
+    We find that all cases have distinguishable carbon dioxide and water features assuming a 90° orbital inclination. Notably,
+    we predict that CO<SUB>2</SUB> is potentially detectable at 15 μm with MIRECLE for at least four nearby known nontransiting
+    rocky planet candidate targets in the habitable zone: Proxima Centauri b, GJ 1061 d, GJ 1002 b, and Teegarden''s Star
+    c. Our ExoCAM GCMs and PSG post-processing demonstrate the potential to observationally characterize nearby nontransiting
+    rocky planets and better constrain the potential for habitability in our solar neighborhood.'
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+filtered_papers:
+- *id001
+- *id002
+- *id003
+- *id004
+- *id005
+- *id006
+- *id007
+- *id008
+- *id009
+- *id010
+- *id011
+- *id012
+- *id013
+- *id014
