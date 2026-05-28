@@ -95,3 +95,49 @@ Each agent must:
 ## Decisions log
 
 - 2026-05-29: System workspace created. Agent A/B/C plan finalized. Working concurrently after this checkpoint.
+
+## Agent A — 40 Eri A Decisions classification
+
+Per Phase 3 skill Step 9.0. Every Decisions row planned for `docs/phase3/40-eridani-a.md` is labeled below.
+
+### Phase 2 verification log (2026-05-29)
+
+- **Mass 0.78 ± 0.08 Msun (Ma 2018)** — VERIFIED at paper Table 2. Method: M-R relation (Torres 2010) + spectroscopic params, labeled `evolutionary_model` in schema.
+- **Mass alt 0.76 ± 0.03 Msun (Diaz 2018)** — VERIFIED at paper Table 1 SPECIES.
+- **Radius 0.8061 ± 0.0036 Rsun (Boyajian 2012)** — VERIFIED at paper Table 6 (CHARA Classic interferometry, θ_LD = 1.504 ± 0.006 mas, listed as GJ 166A). REPLACES Rains 2020 as recommended because Boyajian has tighter fractional σ (0.45% vs 0.75%); both are interferometry-tier; tie-break by uncertainty per add-star skill.
+- **Radius alt 0.804 ± 0.006 Rsun (Rains 2020)** — VERIFIED at paper Table 4 (VLTI/PIONIER, 40 Eri A is star #7 of 16 in Table 1 sample).
+- **Teff 5143 ± 14 K (Boyajian 2012)** — VERIFIED at paper Table 6. REPLACES Rains 2020 5126 ± 30 K as recommended. Top-level `teff_k` updated.
+- **Teff alt 5126 ± 30 K (Rains 2020)** — VERIFIED.
+- **Teff alt 5151 ± 55 K (Diaz 2018)** — VERIFIED at SPECIES Table 1.
+- **Luminosity 0.4078 ± 0.0032 Lsun (Boyajian 2012)** — VERIFIED at paper Table 6 (bolometric flux integration). REPLACES Rains 2020.
+- **Luminosity alt 0.40 ± 0.01 Lsun (Rains 2020)** — VERIFIED at paper Table 4.
+- **Age 6.9 ± 4.7 Gyr (Ma 2018)** — VERIFIED at paper Table 2 (PARSEC isochrone via SED fitting; NOT Y-Y as 2026-05-27 prep notes claimed). KEPT as recommended for the K-dwarf measurement category, but documented-divergence with Bond 2017 below.
+- **Age alt 9.23 ± 4.84 Gyr (Diaz 2018)** — VERIFIED at SPECIES Table 1.
+- **Age alt 1.8 Gyr (Bond 2017 IFMR-derived)** — VERIFIED at §6.2 (initial mass ~1.8 Msun, MS lifetime 1.7 Gyr + cooling age 122 Myr). Paper states "earlier concerns about an excessive age...appear to be resolved". No formal uncertainty in section text.
+- **[Fe/H] -0.29 ± 0.12 (Diaz 2018)** — VERIFIED at SPECIES Table 1. KEPT recommended.
+- **[Fe/H] alt -0.42 ± 0.04 (Ma 2018)** — VERIFIED at Ma 2018 Table 2; CORRECTS the prep notes which conflated -0.29 with Ma 2018.
+- **[Fe/H] alt -0.31 ± 0.10 (Bensby 2014)** — paper-stated value retained (paper-level verification deferred due to no direct table access; bibcode 2014A&A...562A..71B confirmed correct title).
+- **P_rot 42 d (Burrows 2024)** — VERIFIED at paper abstract + multiple section quotes ("~42 days", "stellar rotation period of ∼42 days"). REMOVED fabricated ±2.5 d uncertainty (paper does not quote a formal σ). Method `photometric_variability` retained because Burrows' inference is from line-RV + activity-correlation periodograms.
+- **log R'HK -4.99 (Jenkins 2011)** — bibcode 2011A&A...531A...8J VERIFIED (paper title "Chromospheric activities and kinematics for solar type dwarfs and subgiants"). Specific HD 26965 row not table-verified (CDS table access limited in this session); value matches prep notes and well-known literature usage. Caveat in meta_notes.
+- **log R'HK alt -4.94 (Henry 1996)** — bibcode 1996AJ....111..439H confirmed correct title ("A Survey of Ca II H and K Chromospheric Emission in Southern Solar-Type Stars"). Same paper-table caveat.
+
+### Phase 3 Decisions row classification (16 rows)
+
+- `spectral_type` = K0.5 V → **canonical-aligned** (Gray 2006 / Keenan & McNeil 1989)
+- `mass_msun` = 0.78 ± 0.08 → **canonical-aligned** (Ma 2018; no dynamical alternative available because A-BC orbit is unfitted)
+- `radius_rsun` = 0.8061 ± 0.0036 → **canonical-aligned** (Boyajian 2012 CHARA)
+- `teff_k` = 5143 ± 14 → **canonical-aligned** (Boyajian 2012)
+- `luminosity_lsun` = 0.4078 ± 0.0032 → **canonical-aligned** (Boyajian 2012)
+- `metallicity_fe_h_dex` = −0.29 ± 0.12 → **canonical-aligned** (Diaz 2018; Bensby 2014 within 1σ)
+- `age_gyr` = 1.8 → **documented-divergence** (Bond 2017 IFMR system-coeval vs Ma 2018 6.9 Gyr K-dwarf isochrone). cfg picks Bond because system-coeval anchored by the WD progenitor is more physically constraining than a single K-dwarf isochrone with 4.7 Gyr error.
+- `rotation_period_days` = 42 → **canonical-aligned** (Burrows 2024 NEID activity); pre-Burrows Saar & Osten 1997 ~37 d is documented in Open items as a historical alternative reading
+- `activity_log_rhk` = −4.99 → **canonical-aligned** (Jenkins 2011)
+- `x_ray_log_lx_cgs` ~ 27.0 → **canonical-aligned** (ROSAT all-sky survey baseline; Schmitt 1985)
+- `vulcan_disposition` = "Refuted (Burrows 2024)" → **canonical-aligned**
+- `visual_surface_tint_hex_primary` = `#ffd5a8` (orange-tinted warm-white for K0.5 V) → **tie-break** (interesting-first vs sun-like)
+- `stellar_color_temp_k` = 5143 → **canonical-aligned** (derived from Teff)
+- `star_in_planet_sky_apparent_diameter_arcmin` (from B-C barycenter at ~400 AU) → **canonical-aligned** (derived geometry)
+- `visual_companion_event_b_c_pair_visible_arcsec` = ~83 → **canonical-aligned** (WDS J04153−0739)
+- `apparent_magnitude_v_from_earth` = 4.43 → **canonical-aligned** (Hipparcos)
+
+Row counts: **14 canonical-aligned**, **1 tie-break**, **1 documented-divergence** (age).

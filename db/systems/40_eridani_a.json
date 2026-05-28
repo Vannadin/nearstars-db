@@ -19,7 +19,7 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 4.4098,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5126,
+        "teff_k": 5143,
         "spectype": "K0.5 V",
         "mass_measurements": [
           {
@@ -43,16 +43,40 @@
         ],
         "radius_measurements": [
           {
+            "value_rsun": 0.8061,
+            "uncertainty_rsun": 0.0036,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "instrument": "CHARA Classic",
+            "angular_diameter_mas": 1.504,
+            "angular_diameter_uncertainty_mas": 0.006,
+            "recommended": true
+          },
+          {
             "value_rsun": 0.804,
             "uncertainty_rsun": 0.006,
             "method": "interferometry",
             "reference": "Rains et al. 2020",
             "bibcode": "2020MNRAS.493.2377R",
             "doi": "10.1093/mnras/staa282",
-            "recommended": true
+            "instrument": "VLTI/PIONIER",
+            "angular_diameter_mas": 1.486,
+            "angular_diameter_uncertainty_mas": 0.012,
+            "recommended": false
           }
         ],
         "teff_measurements": [
+          {
+            "value_k": 5143,
+            "uncertainty_k": 14,
+            "method": "interferometry",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": true
+          },
           {
             "value_k": 5126,
             "uncertainty_k": 30,
@@ -60,10 +84,28 @@
             "reference": "Rains et al. 2020",
             "bibcode": "2020MNRAS.493.2377R",
             "doi": "10.1093/mnras/staa282",
-            "recommended": true
+            "recommended": false
+          },
+          {
+            "value_k": 5151,
+            "uncertainty_k": 55,
+            "method": "high_res_spectroscopy",
+            "reference": "Diaz et al. 2018",
+            "bibcode": "2018AJ....155..126D",
+            "doi": "10.3847/1538-3881/aaa896",
+            "recommended": false
           }
         ],
         "luminosity_measurements": [
+          {
+            "value_lsun": 0.4078,
+            "uncertainty_lsun": 0.0032,
+            "method": "bolometric_flux",
+            "reference": "Boyajian et al. 2012",
+            "bibcode": "2012ApJ...757..112B",
+            "doi": "10.1088/0004-637X/757/2/112",
+            "recommended": true
+          },
           {
             "value_lsun": 0.4,
             "uncertainty_lsun": 0.01,
@@ -71,7 +113,7 @@
             "reference": "Rains et al. 2020",
             "bibcode": "2020MNRAS.493.2377R",
             "doi": "10.1093/mnras/staa282",
-            "recommended": true
+            "recommended": false
           }
         ],
         "age_measurements": [
@@ -92,6 +134,14 @@
             "bibcode": "2018AJ....155..126D",
             "doi": "10.3847/1538-3881/aaa896",
             "recommended": false
+          },
+          {
+            "value_gyr": 1.8,
+            "method": "isochrone",
+            "reference": "Bond et al. 2017 (IFMR-derived system-coeval from 40 Eri B WD progenitor)",
+            "bibcode": "2017ApJ...848...16B",
+            "doi": "10.3847/1538-4357/aa8a63",
+            "recommended": false
           }
         ],
         "metallicity_measurements": [
@@ -105,6 +155,15 @@
             "recommended": true
           },
           {
+            "value_dex": -0.42,
+            "uncertainty_dex": 0.04,
+            "method": "high_res_spectroscopy",
+            "reference": "Ma et al. 2018",
+            "bibcode": "2018MNRAS.480.2411M",
+            "doi": "10.1093/mnras/sty1933",
+            "recommended": false
+          },
+          {
             "value_dex": -0.31,
             "uncertainty_dex": 0.1,
             "method": "high_res_spectroscopy",
@@ -116,10 +175,9 @@
         ],
         "rotation_measurements": [
           {
-            "value_days": 42.0,
-            "uncertainty_days": 2.5,
+            "value_days": 42,
             "method": "photometric_variability",
-            "reference": "Burrows et al. 2024",
+            "reference": "Burrows et al. 2024 (paper states ~42 d, no formal uncertainty)",
             "bibcode": "2024AJ....167..243B",
             "doi": "10.3847/1538-3881/ad34d5",
             "recommended": true
@@ -164,16 +222,16 @@
         "icrs_vx_j2000_km_s": 24.373210758976676,
         "icrs_vy_j2000_km_s": -70.97942358263597,
         "icrs_vz_j2000_km_s": -74.87059081117776,
-        "luminosity_lsun": 0.4,
+        "luminosity_lsun": 0.4078,
         "age_gyr": 6.9,
         "metallicity_fe_h_dex": -0.29,
-        "rotation_period_days": 42.0,
+        "rotation_period_days": 42,
         "activity_log_rhk": -4.99,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103515703214.04,
-        "mean_radius_km": 559342.8
+        "mean_radius_km": 560803.8
       }
     }
   ],
@@ -216,6 +274,15 @@
       ]
     },
     {
+      "title": "Boyajian et al. 2012",
+      "doi": "10.1088/0004-637X/757/2/112",
+      "bibcode": "2012ApJ...757..112B",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "40 Eridani A radius (interferometry)"
+      ]
+    },
+    {
       "title": "Rains et al. 2020",
       "doi": "10.1093/mnras/staa282",
       "bibcode": "2020MNRAS.493.2377R",
@@ -234,7 +301,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Phase 2 verification 2026-05-29 (Agent A). Radius/Teff/luminosity recommended switched from Rains 2020 to Boyajian 2012 (both CHARA-class interferometry, Boyajian has tighter fractional uncertainty: 0.45% vs 0.75% on R; 0.27% vs 0.59% on Teff; 0.8% vs 2.5% on L; method-tier tiebreak per add-star skill). 40 Eri A confirmed in both samples (Rains 2020 Table 1 as star #7 of 16 southern; Boyajian 2012 sample as GJ 166A). Documented Ma 2018 vs Bond 2017 age divergence: Ma 2018 isochrone 6.9 +/- 4.7 Gyr from K-dwarf SED+PARSEC isochrone fit, while Bond 2017 IFMR-derived system-coeval ~1.8 Gyr from 40 Eri B white-dwarf progenitor (initial mass ~1.8 M_sun, MS lifetime 1.7 Gyr + 122 Myr cooling). Bond 2017 explicitly says 'earlier concerns about an excessive age...appear to be resolved' (Section 6.2). Phase 3 synthesis adopts ~1.8 Gyr in Decisions but documents both in Canonical alternatives. Ma 2018 [Fe/H] is -0.42 +/- 0.04 (not -0.29; that came from Diaz 2018); Ma 2018 alt added. Burrows 2024 reports rotation period as '~42 days' with no formal uncertainty stated in the paper - earlier DB had a fabricated +/-2.5 d; replaced with paper-stated value and no uncertainty key. Pre-Burrows P_rot literature is contradictory: Saar & Osten 1997 cite ~37-38 d, Diaz 2018 sees ~38 d in HARPS S-indices, and Burrows 2024 NEID activity analysis lands at ~42 d. Planet HD 26965 b (Ma 2018 'Vulcan') refuted by Burrows 2024 multi-instrument 16-year RV; not in planets_curated.json. No 2025/2026 post-Burrows confirmation or replacement candidate found."
   },
   "binary_orbit": {
     "system_id": "40_eridani",
