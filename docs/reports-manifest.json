@@ -1,4 +1,16 @@
 {
+  "40 Eridani A": {
+    "phase2": "phase2/40-eridani-a.html",
+    "phase3": {}
+  },
+  "40 Eridani B": {
+    "phase2": "phase2/40-eridani-b.html",
+    "phase3": {}
+  },
+  "40 Eridani C": {
+    "phase2": "phase2/40-eridani-c.html",
+    "phase3": {}
+  },
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
     "phase3": {
@@ -11,6 +23,10 @@
       "★": "phase3/alpha-centauri-b.html"
     }
   },
+  "Barnard's star": {
+    "phase2": "phase2/barnard-s-star.html",
+    "phase3": {}
+  },
   "Proxima Cen": {
     "phase2": "phase2/proxima-cen.html",
     "phase3": {
@@ -18,6 +34,20 @@
       "b": "phase3/proxima-cen-b.html",
       "d": "phase3/proxima-cen-d.html"
     }
+  },
+  "tau Cet": {
+    "phase2": "phase2/tau-cet.html",
+    "phase3": {
+      "★": "phase3/tau-cet.html",
+      "e": "phase3/tau-cet-e.html",
+      "f": "phase3/tau-cet-f.html",
+      "g": "phase3/tau-cet-g.html",
+      "h": "phase3/tau-cet-h.html"
+    }
+  },
+  "Teegarden's Star": {
+    "phase2": "phase2/teegarden-s-star.html",
+    "phase3": {}
   },
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
@@ -92,16 +122,6 @@
       "b": "phase3/hd-69830-b.html",
       "c": "phase3/hd-69830-c.html",
       "d": "phase3/hd-69830-d.html"
-    }
-  },
-  "tau Cet": {
-    "phase2": null,
-    "phase3": {
-      "★": "phase3/tau-cet.html",
-      "e": "phase3/tau-cet-e.html",
-      "f": "phase3/tau-cet-f.html",
-      "g": "phase3/tau-cet-g.html",
-      "h": "phase3/tau-cet-h.html"
     }
   },
   "teegardens": {
