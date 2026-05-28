@@ -24,8 +24,14 @@
     }
   },
   "Barnard's star": {
-    "phase2": "phase2/barnard-s-star.html",
-    "phase3": {}
+    "phase2": "phase2/barnards-star.html",
+    "phase3": {
+      "★": "phase3/barnards-star.html",
+      "b": "phase3/barnards-star-b.html",
+      "c": "phase3/barnards-star-c.html",
+      "d": "phase3/barnards-star-d.html",
+      "e": "phase3/barnards-star-e.html"
+    }
   },
   "Proxima Cen": {
     "phase2": "phase2/proxima-cen.html",
@@ -46,8 +52,13 @@
     }
   },
   "Teegarden's Star": {
-    "phase2": "phase2/teegarden-s-star.html",
-    "phase3": {}
+    "phase2": "phase2/teegardens-star.html",
+    "phase3": {
+      "★": "phase3/teegardens-star.html",
+      "b": "phase3/teegardens-star-b.html",
+      "c": "phase3/teegardens-star-c.html",
+      "d": "phase3/teegardens-star-d.html"
+    }
   },
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
@@ -81,25 +92,10 @@
       "e": "phase3/au-mic-e.html"
     }
   },
-  "barnards": {
+  "Delta Pavonis": {
     "phase2": null,
     "phase3": {
-      "star": "phase3/barnards-star.html"
-    }
-  },
-  "barnards-star": {
-    "phase2": null,
-    "phase3": {
-      "b": "phase3/barnards-star-b.html",
-      "c": "phase3/barnards-star-c.html",
-      "d": "phase3/barnards-star-d.html",
-      "e": "phase3/barnards-star-e.html"
-    }
-  },
-  "delta": {
-    "phase2": null,
-    "phase3": {
-      "pavonis": "phase3/delta-pavonis.html"
+      "★": "phase3/delta-pavonis.html"
     }
   },
   "eps Eri": {
@@ -122,20 +118,6 @@
       "b": "phase3/hd-69830-b.html",
       "c": "phase3/hd-69830-c.html",
       "d": "phase3/hd-69830-d.html"
-    }
-  },
-  "teegardens": {
-    "phase2": null,
-    "phase3": {
-      "star": "phase3/teegardens-star.html"
-    }
-  },
-  "teegardens-star": {
-    "phase2": null,
-    "phase3": {
-      "b": "phase3/teegardens-star-b.html",
-      "c": "phase3/teegardens-star-c.html",
-      "d": "phase3/teegardens-star-d.html"
     }
   },
   "Vega": {

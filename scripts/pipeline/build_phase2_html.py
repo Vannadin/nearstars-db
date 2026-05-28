@@ -39,8 +39,14 @@ PHASE2_NEW_CATS = (
 
 
 def to_url_slug(name: str) -> str:
-    """TRAPPIST-1 → trappist-1, Alpha Centauri A → alpha-centauri-a."""
+    """TRAPPIST-1 → trappist-1, Barnard's star → barnards-star.
+
+    Apostrophe is stripped before non-alnum normalization so 's possessives
+    collapse to plain s. Must match build_reports_index.py::to_url_slug and
+    build_systems.py::to_filename (the latter uses '_' instead of '-').
+    """
     s = name.lower()
+    s = s.replace("'", "")
     s = re.sub(r'[^a-z0-9]+', '-', s)
     return s.strip('-')
 
