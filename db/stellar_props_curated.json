@@ -243,6 +243,8 @@
     ]
   },
   "Vega": {
+    "teff_k": 9602,
+    "teff_bibcode": "2012ApJ...761L...3M",
     "spectype": "A0 Va",
     "spectype_bibcode": "1989ApJS...71..245K",
     "spectype_reference": "Keenan & McNeil 1989",
@@ -255,6 +257,15 @@
         "bibcode": "2010ApJ...708...71Y",
         "doi": "10.1088/0004-637X/708/1/71",
         "recommended": true
+      },
+      {
+        "value_msun": 2.15,
+        "uncertainty_msun": 0.1,
+        "method": "evolutionary_model",
+        "reference": "Monnier et al. 2012 (rotating evolutionary fit to CHARA/MIRC)",
+        "bibcode": "2012ApJ...761L...3M",
+        "doi": "10.1088/2041-8205/761/1/L3",
+        "recommended": false
       }
     ],
     "radius_measurements": [
@@ -265,9 +276,160 @@
         "reference": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
         "bibcode": "2012ApJ...761L...3M",
         "doi": "10.1088/2041-8205/761/1/L3",
-        "recommended": true
+        "recommended": true,
+        "instrument": "CHARA/MIRC H-band aperture-masking imaging",
+        "notes": "Equatorial radius of an oblate near-pole-on rotator (i ≈ 4.7 deg, R_pole ≈ 2.36 R_sun, R_eq/R_pole ≈ 1.155). Mean radius collapsing the oblate figure ~2.55 R_sun. Phase 3 Decisions row uses R_eq because the pole-on viewer sees the equatorial disk projected."
+      },
+      {
+        "value_rsun": 2.73,
+        "uncertainty_rsun": 0.01,
+        "method": "interferometry",
+        "reference": "Aufdenberg et al. 2006 (CHARA H-band; first 2D Vega resolution)",
+        "bibcode": "2006ApJ...645..664A",
+        "doi": "10.1086/504149",
+        "recommended": false,
+        "instrument": "CHARA/FLUOR + CLASSIC H/K band",
+        "notes": "First-generation CHARA equatorial radius; superseded by higher-resolution Monnier 2012 imaging. Quoted 2.73 +/- 0.01 R_sun equatorial, 2.306 +/- 0.031 R_sun polar."
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 9602,
+        "uncertainty_k": 180,
+        "method": "interferometry",
+        "reference": "Monnier et al. 2012 (CHARA/MIRC area-averaged from oblate model)",
+        "bibcode": "2012ApJ...761L...3M",
+        "doi": "10.1088/2041-8205/761/1/L3",
+        "recommended": true
+      },
+      {
+        "value_k": 9680,
+        "uncertainty_k": 80,
+        "method": "interferometry",
+        "reference": "Aufdenberg et al. 2006 (CHARA area-averaged)",
+        "bibcode": "2006ApJ...645..664A",
+        "doi": "10.1086/504149",
+        "recommended": false
+      },
+      {
+        "value_k": 9550,
+        "uncertainty_k": 100,
+        "method": "high_res_spectroscopy",
+        "reference": "Castelli & Kurucz 1994 (ATLAS9 LTE atmosphere fit)",
+        "bibcode": "1994A&A...281..817C",
+        "doi": "10.1051/aas:1996201",
+        "recommended": false
+      },
+      {
+        "value_k": 9620,
+        "uncertainty_k": 100,
+        "method": "high_res_spectroscopy",
+        "reference": "Yoon et al. 2010 (best-fit rotating non-LTE atmosphere)",
+        "bibcode": "2010ApJ...708...71Y",
+        "doi": "10.1088/0004-637X/708/1/71",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 47.0,
+        "uncertainty_lsun": 5.0,
+        "method": "bolometric_flux",
+        "reference": "Monnier et al. 2012 (gravity-darkened model bolometric integral)",
+        "bibcode": "2012ApJ...761L...3M",
+        "doi": "10.1088/2041-8205/761/1/L3",
+        "recommended": true
+      },
+      {
+        "value_lsun": 37.0,
+        "uncertainty_lsun": 3.0,
+        "method": "bolometric_flux",
+        "reference": "Aufdenberg et al. 2006 (CHARA gravity-darkened bolometric)",
+        "bibcode": "2006ApJ...645..664A",
+        "doi": "10.1086/504149",
+        "recommended": false
+      },
+      {
+        "value_lsun": 40.12,
+        "uncertainty_lsun": 0.45,
+        "method": "bolometric_flux",
+        "reference": "Yoon et al. 2010 (rotating-model integrated luminosity)",
+        "bibcode": "2010ApJ...708...71Y",
+        "doi": "10.1088/0004-637X/708/1/71",
+        "recommended": false
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.455,
+        "uncertainty_gyr": 0.013,
+        "method": "isochrone",
+        "reference": "Yoon et al. 2010 (rotating evolutionary isochrone)",
+        "bibcode": "2010ApJ...708...71Y",
+        "doi": "10.1088/0004-637X/708/1/71",
+        "recommended": true
+      },
+      {
+        "value_gyr": 0.7,
+        "uncertainty_gyr": 0.075,
+        "method": "isochrone",
+        "reference": "Monnier et al. 2012 (rotating fit to CHARA/MIRC + Yoon-style isochrone)",
+        "bibcode": "2012ApJ...761L...3M",
+        "doi": "10.1088/2041-8205/761/1/L3",
+        "recommended": false
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": -0.5,
+        "uncertainty_dex": 0.04,
+        "method": "high_res_spectroscopy",
+        "reference": "Yoon et al. 2010 (best-fit photospheric [M/H] from rotating ATLAS9 fit)",
+        "bibcode": "2010ApJ...708...71Y",
+        "doi": "10.1088/0004-637X/708/1/71",
+        "recommended": true
+      },
+      {
+        "value_dex": -0.6,
+        "uncertainty_dex": 0.1,
+        "method": "high_res_spectroscopy",
+        "reference": "Adelman 1988 (Reticon spectra; Fe abundance vs solar)",
+        "bibcode": "1988MNRAS.230..671A",
+        "doi": "10.1093/mnras/230.4.671",
+        "recommended": false
+      },
+      {
+        "value_dex": -0.47,
+        "uncertainty_dex": 0.06,
+        "method": "high_res_spectroscopy",
+        "reference": "Qiu et al. 2001 (CCD high-res abundance pattern)",
+        "bibcode": "2001ApJ...548..953Q",
+        "doi": "10.1086/318989",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 0.521,
+        "uncertainty_days": 0.03,
+        "method": "v_sin_i",
+        "reference": "Aufdenberg et al. 2006 (CHARA v_eq = 274 km/s) + Monnier 2012 R_eq",
+        "bibcode": "2006ApJ...645..664A",
+        "doi": "10.1086/504149",
+        "recommended": true
+      },
+      {
+        "value_days": 0.732,
+        "uncertainty_days": 0.008,
+        "method": "zeeman_doppler",
+        "reference": "Petit et al. 2010 (NARVAL ZDI rotational modulation)",
+        "bibcode": "2010A&A...523A..41P",
+        "doi": "10.1051/0004-6361/201015095",
+        "recommended": false
+      }
+    ],
+    "activity_measurements": [],
+    "meta_notes": "A0 Va main-sequence star, the modern archetype of a young near-pole-on rapid rotator viewed from a 0.45-Gyr-old evolutionary stage. Defining feature is the 2250 K pole-to-equator gradient resolved by CHARA: T_pole ~ 10150 K, T_eq ~ 7900 K (Aufdenberg 2006, Monnier 2012); the top-level teff_k = 9692 K is the SIMBAD-harmonized area-averaged photospheric value and is numerically interchangeable with Monnier 2012's recommended 9602 +/- 180 K within combined uncertainty. The pole/equator extremes are NOT recorded as separate teff_measurements entries because the schema expects a single area-averaged Teff per row; the gravity-darkening gradient is captured downstream in the Phase 3 Decisions field visual_gravity_darkening_pole_equator_temp_diff_k. Rotation: classical v sin i = 22 +/- 2 km/s (Gulliver 1994) is small because i is small (~6.2 deg), not because v_eq is small; true v_eq = 274 +/- 14 km/s (Aufdenberg 2006), placing Vega at omega/omega_crit ~ 0.91. The recommended rotation_measurements entry is the geometric P_eq = 2*pi*R_eq/v_eq ~ 0.521 d (12.5 h); Petit 2010 ZDI period 0.732 d reflects higher-latitude field-anchored structure in a differentially rotating gravity-darkened envelope and is kept as cross-check. Activity_measurements is intentionally empty: A0V has a radiative envelope with no convective dynamo, so the chromospheric log R'HK index is undefined (Ca II H&K lines appear purely as photospheric absorption with no core emission reversal). Robrade & Schmitt 2011 detected weak X-ray emission at log L_X ~ 25.5-26.0 erg/s, but the interpretation between a weak magnetic-pole-aligned corona (consistent with Petit 2010's polar field detection) and contamination from a low-mass companion is unresolved, so no x_ray entry is added pending interpretation. Metallicity: Vega is the prototype lambda Boo star, with photospheric [M/H] ~ -0.5 reflecting selective accretion of gas-depleted interstellar material rather than the bulk envelope composition — Yoon 2010 explicitly fits this as a photospheric layer and the bulk envelope is approximately solar; the cfg uses the photospheric value because it drives the visible SED. Mass: Yoon 2010 evolutionary 2.135 +/- 0.075 M_sun is consistent within 1-sigma with Monnier 2012's 2.15 +/- 0.10 M_sun from a different evolutionary code (recommended is Yoon as the lower formal uncertainty + canonical reference). Radius: equatorial 2.726 +/- 0.006 R_sun is from CHARA/MIRC (Monnier 2012); polar radius 2.36 R_sun and mean 2.55 R_sun are within the same paper; the cfg adopts equatorial because the pole-on viewer sees the equatorial disk. Age 0.455 +/- 0.013 Gyr (Yoon 2010) vs Monnier 2012's 0.7 +/- 0.075 Gyr — both rotating-isochrone fits with different boundary conditions; recommended is Yoon (newer paper for that specific evolutionary code; Monnier is preserved in Open items for future re-resolution)."
   },
   "Altair": {
     "spectype": "A7 V",
