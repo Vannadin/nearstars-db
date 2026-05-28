@@ -5,13 +5,15 @@
 planet-hosting star at 3.220 ± 0.001 pc (Gaia DR3 parallax
 310.58 ± 0.14 mas), eclipsed only by Proxima. A young, magnetically
 active K2V dwarf with M = 0.82 ± 0.02 M☉ (Llop-Sayson 2021),
-R = 0.759 ± 0.012 R☉ (Rosenthal 2021), and Teff ≈ 5180 K, it sits
-~0.34 L☉ on the main sequence with the activity signatures of a star
-roughly an order of magnitude younger than the Sun. The age is best
-estimated at ≈ 440 Myr from isochrone + kinematics + activity
-diagnostics (Mamajek & Hillenbrand 2008; Janson 2008), placing
-ε Eri within the loose end of the AB Doradus / Local Association
-kinematic complex.
+R = 0.735 ± 0.005 R☉ (Baines & Armstrong 2012 PAVO/CHARA limb-
+darkened angular diameter), and Teff = 5039 ± 126 K (Baines 2012
+interferometric, L_bol + θ_LD via Stefan–Boltzmann), it sits at
+0.320 ± 0.011 L☉ on the main sequence with the activity signatures
+of a star roughly an order of magnitude younger than the Sun. The
+age is best estimated at ≈ 440 Myr from isochrone + kinematics +
+activity diagnostics (Mamajek & Hillenbrand 2008; Janson 2008),
+placing ε Eri within the loose end of the AB Doradus / Local
+Association kinematic complex.
 
 The distinguishing feature of the system is not the star but its
 debris architecture. ε Eri hosts a resolved triple-belt disk: an
@@ -53,20 +55,20 @@ star + disk + jovian point of light).
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | K2V | high | Keenan & McNeil 1989; Gray 2003; DB |
-| `mass_msun` | 0.82 ± 0.02 | high | Llop-Sayson 2021 — joint RV + direct imaging + Hipparcos/Gaia astrometry fit |
-| `radius_rsun` | 0.759 ± 0.012 | high | Rosenthal 2021 — California Legacy Survey stellar parameter table; consistent with Di Folco 2007 VLTI/VINCI interferometry |
-| `teff_k` | 5180 | high | DB; agrees with Valenti & Fischer 2005 SME and Brewer 2016 |
-| `luminosity_lsun` | 0.34 | high | derived from R, Teff via Stefan–Boltzmann |
-| `metallicity_fe_h_dex` | −0.13 ± 0.04 | high | Valenti & Fischer 2005; Brewer 2016 — slightly sub-solar |
-| `age_gyr` | 0.44 ± 0.10 | high | Mamajek & Hillenbrand 2008 — joint isochrone + Ca II HK + X-ray + rotation; Janson 2008 confirms via kinematics |
-| `rotation_period_days` | 11.2 | high | Donahue 1996 — Mt. Wilson Ca II HK 14-yr timeseries; later confirmed by MOST photometry (Croll 2006) |
-| `activity_log_rhk` | −4.4 | high | Henry 1996; Zechmeister 2013 — strongly active K dwarf locus |
+| `mass_msun` | 0.82 ± 0.02 | high | Llop-Sayson 2021 — joint RV + Hipparcos IAD + Gaia DR2 astrometry + multi-epoch vortex coronagraphy fit; Takeda 2007 (0.83 ± 0.04) and Valenti & Fischer 2005 (0.85) bracket within 1σ |
+| `radius_rsun` | 0.735 ± 0.005 | high | Baines & Armstrong 2012 — PAVO@CHARA limb-darkened angular diameter θ_LD = 2.126 ± 0.014 mas combined with Hipparcos parallax. Direct interferometric measurement (most-direct method). Di Folco 2007 VLTI/VINCI θ_LD = 2.148 ± 0.029 mas → R = 0.74 ± 0.01 R☉ confirms independently. Rosenthal 2021 CLS SED-fit R = 0.759 ± 0.012 R☉ is ~3% higher; offset traces to direct-angular-diameter vs SED-fit method choice. **Phase 3 earlier cited Rosenthal SED value as primary — corrected to track Phase 2 interferometric pick.** |
+| `teff_k` | 5039 ± 126 | high | Baines & Armstrong 2012 — interferometric T_eff from L_bol + θ_LD via Stefan-Boltzmann inversion (most-direct method). Spectroscopic cross-checks: Valenti & Fischer 2005 SME 5146 ± 44 K; Brewer 2016 5076 ± 25 K; Tsantaki 2013 5077 ± 31 K all bracket within combined uncertainty. **Phase 3 earlier used the DB raw value 5180 K (Gaia-DR3 photometric proxy) — corrected to track Phase 2 interferometric pick (~140 K lower).** |
+| `luminosity_lsun` | 0.320 ± 0.011 | high | Baines & Armstrong 2012 — bolometric flux from spectrum + Hipparcos parallax (most-direct method). Eiroa 2013 DUNES gives 0.34 ± 0.02 L☉ from independent SED fit, consistent at 1σ |
+| `metallicity_fe_h_dex` | −0.13 ± 0.04 | high | Valenti & Fischer 2005 SPOCS SME spectroscopy; Brewer 2016 confirms at −0.10 ± 0.03; Tsantaki 2013 −0.09 ± 0.03. Slightly sub-solar, consistent with the local young K dwarf population |
+| `age_gyr` | 0.44 ± 0.10 | medium | Mamajek & Hillenbrand 2008 — joint isochrone + Ca II HK + X-ray + rotation activity-rotation fit. The published formal uncertainty is symmetric ± 0.10 Gyr, but gyrochrone systematics at this age have factor-of-2 spread; Barnes 2007 gyrochrone alone gives 0.82 ± 0.05 Gyr from P_rot = 11.2 d, and Llop-Sayson 2021 adopts 400–800 Myr in their host-star prior. Confidence kept medium to reflect this unresolved spread. Janson 2008 confirms youth via kinematics |
+| `rotation_period_days` | 11.20 ± 0.05 | high | Donahue 1996 — Mt. Wilson Ca II HK 14-yr timeseries (canonical eps Eri rotation measurement); Croll 2006 MOST photometric variability 11.45 ± 0.05 d independent confirmation; Roettenbacher 2016 Doppler imaging consistent at ~11.5 d |
+| `activity_log_rhk` | −4.39 ± 0.07 | high | Zechmeister 2013 modern HARPS epoch; Henry 1996 Mt Wilson −4.46 historically canonical (0.07 dex offset reflects activity-cycle phase + instrumental scatter, not real long-term change). Strongly active K dwarf locus |
 | `activity_cycle_years` | 2.95 | high | Metcalfe 2013 — short chromospheric magnetic cycle; Coffaro 2020 confirms in X-ray |
 | `x_ray_log_lx_cgs_min` | 28.3 | medium | Coffaro 2020 — XMM cycle minimum |
 | `x_ray_log_lx_cgs_max` | 28.9 | medium | Coffaro 2020 — XMM cycle maximum; cycle amplitude factor ~4 |
 | `limb_darkening_alpha_h` | ~0.20 | low | Tie-break: not directly measured for ε Eri; interpolated from K-dwarf grid (Claret 2018) between α Cen B (0.18) and cooler K dwarfs (0.25). Confidence low — within-window guess |
-| `visual_surface_tint_hex_primary` | `#ffd9a8` (warm orange K2V, slightly cooler than α Cen B `#ffcb91`) | medium | Teff 5180 K blackbody + active-chromosphere brightening of Hα slightly raises perceived warmth |
-| `stellar_color_temp_k` | 5180 | high | derived from Teff |
+| `visual_surface_tint_hex_primary` | `#ffd9a8` (warm orange K2V, slightly cooler than α Cen B `#ffcb91`) | medium | Teff 5039 K blackbody + active-chromosphere brightening of Hα slightly raises perceived warmth. Tint pick unchanged from earlier Phase 3 draft (the ~140 K Teff shift between 5180 and 5039 keeps the K2V hex within the same K-dwarf orange-warm window) |
+| `stellar_color_temp_k` | 5039 | high | derived from Teff (Baines & Armstrong 2012 interferometric); tracks updated Phase 2 pick (was 5180 K from DB photometric proxy in earlier Phase 3 draft) |
 | `visual_spot_coverage_max` | 0.10 | medium | TiO-band + rotational modulation analysis (Frohlich 2007; Roettenbacher 2016 Doppler imaging of ε Eri) indicates 5–10% disk coverage at cycle maximum |
 | `disk_present` | true | high | Greaves 1998 JCMT/SCUBA — first sub-mm detection; resolved by countless follow-up campaigns |
 | `disk_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS — warm asteroid-belt analog inferred from mid-IR excess; Su 2017 refinement |
@@ -85,12 +87,13 @@ star + disk + jovian point of light).
 
 The photosphere of ε Eridani is a textbook K2V — modestly smaller
 and cooler than α Cen B (K1V, 5230 K, 0.86 R☉) and noticeably
-warmer than 61 Cyg A (K5V, 4400 K). At 5180 K, most of the continuum
-emerges between 5500 Å and 9000 Å, with the strongest molecular
-features being the MgH and CaH bands in the green and the TiO heads
-beginning to take a bite below ~6300 Å. The integrated luminosity
-0.34 L☉ places ε Eri's HZ at ≈ 0.5–0.95 AU — completely interior to
-the asteroid-belt analog and far inside the jovian at 3.5 AU. Limb
+warmer than 61 Cyg A (K5V, 4400 K). At 5039 K (Baines & Armstrong
+2012 interferometric), most of the continuum emerges between
+5500 Å and 9000 Å, with the strongest molecular features being the
+MgH and CaH bands in the green and the TiO heads beginning to take
+a bite below ~6300 Å. The integrated luminosity 0.320 ± 0.011 L☉
+places ε Eri's HZ at ≈ 0.50–0.92 AU — completely interior to the
+asteroid-belt analog and far inside the jovian at 3.5 AU. Limb
 darkening has not been measured directly for ε Eri; the cfg adopts a
 mid-K-dwarf power-law exponent α ≈ 0.20 interpolated from the Claret
 2018 grid between Kervella's α Cen B measurement (0.18) and cooler K
@@ -322,21 +325,61 @@ visual with real-time progression.
 - **Hatzes A. P. et al. 2000** — *Evidence for a Long-Period Planet
   Orbiting ε Eridani*, ApJ 544, L145 (`2000ApJ...544L.145H`). The
   RV discovery paper; sets the historical context.
+- **Baines E. K. & Armstrong J. T. 2012** — *Confirming Fundamental
+  Properties of the Exoplanet Host Star ε Eridani Using the
+  Navy Optical Interferometer and PAVO/CHARA*, ApJ 761, 57
+  (`2012ApJ...761...57B`, doi:10.1088/0004-637X/761/1/57). PAVO@CHARA
+  limb-darkened angular diameter θ_LD = 2.126 ± 0.014 mas; combined
+  with Hipparcos parallax gives R = 0.735 ± 0.005 R☉, and via
+  L_bol + θ_LD Stefan-Boltzmann inversion T_eff = 5039 ± 126 K,
+  L = 0.320 ± 0.011 L☉. **Primary Phase 2 anchor for ε Eri R / Teff /
+  L** (most-direct method, all three derived self-consistently);
+  supersedes the older Rosenthal 2021 SED-fit R = 0.759 R☉ picks used
+  in an earlier draft of this synthesis.
+- **Donahue R. A., Saar S. H., Baliunas S. L. 1996** — *A
+  Relationship between Mean Rotation Period in Lower Main-Sequence
+  Stars and Its Observed Range*, ApJ 466, 384 (`1996ApJ...466..384D`,
+  doi:10.1086/177517). Mt. Wilson Ca II HK Project ~14-yr timeseries
+  gives P_rot = 11.20 ± 0.05 d for ε Eri. **Primary Phase 2 anchor
+  for ε Eri rotation period.**
 
 ### Read (context / methodology, not decision-driving)
 
 - **Rosenthal L. J. et al. 2021** — *The California Legacy Survey.
   I. A Catalog of 178 Planets from Precision Radial Velocity
   Monitoring of 719 Nearby Stars over Three Decades*, ApJS 255, 8
-  (`2021ApJS..255....8R`). Source of the adopted R = 0.759 R☉.
+  (`2021ApJS..255....8R`, doi:10.3847/1538-4365/abe23c). CLS table
+  R = 0.759 ± 0.012 R☉ from SED fitting + Gaia parallax — ~3% higher
+  than the modern Baines 2012 PAVO/CHARA direct interferometric pick;
+  kept as a cross-check alternate.
 - **Valenti J. A. & Fischer D. A. 2005** — *Spectroscopic Properties
-  of Cool Stars (SPOCS). I.* (`2005ApJS..159..141V`). [Fe/H] =
-  −0.13 ± 0.04 from SME spectroscopy.
+  of Cool Stars (SPOCS). I.* (`2005ApJS..159..141V`,
+  doi:10.1086/430500). SME spectroscopic Teff = 5146 ± 44 K, [Fe/H] =
+  −0.13 ± 0.04 — primary [Fe/H] anchor, Teff cross-check.
 - **Brewer J. M. et al. 2016** — *Spectral Properties of Cool Stars*
-  (`2016ApJS..225...32B`). Confirms Teff = 5180 K, [Fe/H] = −0.13.
+  (`2016ApJS..225...32B`, doi:10.3847/0067-0049/225/2/32). SME
+  Teff = 5076 ± 25 K, [Fe/H] = −0.10 ± 0.03 — independent spectroscopic
+  cross-check, brackets VF05 within combined uncertainty.
+- **Tsantaki M. et al. 2013** — *Deriving precise parameters for cool
+  solar-type stars: optimizing the iron line list*
+  (`2013A&A...555A.150T`, doi:10.1051/0004-6361/201321103). High-res
+  Teff = 5077 ± 31 K, [Fe/H] = −0.09 ± 0.03 — homogeneous-pipeline
+  spectroscopic cross-check.
+- **Takeda Y. et al. 2007** — *Structure and evolution of nearby
+  stars with planets. II.* (`2007ApJS..168..297T`, doi:10.1086/509763).
+  Evolutionary-model mass 0.83 ± 0.04 M☉ for ε Eri; cross-check on
+  Llop-Sayson 2021 joint-fit mass.
+- **Barnes S. A. 2007** — *Ages for Illustrative Field Stars Using
+  Gyrochronology* (`2007ApJ...669.1167B`, doi:10.1086/519295).
+  Gyrochronology age 0.82 ± 0.05 Gyr for ε Eri from P_rot = 11.2 d
+  alone — older than the Mamajek & Hillenbrand 2008 activity-rotation
+  joint fit (0.44 Gyr), illustrating the factor-of-2 systematics
+  between gyrochrone calibrations at this age.
 - **Di Folco E. et al. 2007** — *VLTI/VINCI interferometry of nearby
-  stars including ε Eri* (`2007A&A...475..243D`). Angular diameter
-  consistent with the adopted R = 0.759 R☉.
+  stars including ε Eri* (`2007A&A...475..243D`,
+  doi:10.1051/0004-6361:20065445). VLTI/VINCI θ_LD = 2.148 ± 0.029 mas
+  → R = 0.74 ± 0.01 R☉ — independent interferometric cross-check on
+  the Baines 2012 PAVO/CHARA primary pick.
 - **Henry T. J. et al. 1996** — *The Solar Neighborhood. IV. Discovery
   of the Twentieth Nearest Star System* (`1996AJ....111..439H`).
   log R'HK reference for ε Eri.

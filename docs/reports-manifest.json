@@ -39,10 +39,11 @@
       "★": "phase3/delta-pavonis.html"
     }
   },
-  "Fomalhaut": {
-    "phase2": "phase2/fomalhaut.html",
+  "eps Eri": {
+    "phase2": "phase2/eps-eri.html",
     "phase3": {
-      "★": "phase3/fomalhaut.html"
+      "★": "phase3/eps-eri.html",
+      "b": "phase3/eps-eri-b.html"
     }
   },
   "Proxima Cen": {
@@ -104,11 +105,10 @@
       "e": "phase3/au-mic-e.html"
     }
   },
-  "eps Eri": {
+  "Fomalhaut": {
     "phase2": null,
     "phase3": {
-      "★": "phase3/eps-eri.html",
-      "b": "phase3/eps-eri-b.html"
+      "★": "phase3/fomalhaut.html"
     }
   },
   "HD 69830": {
