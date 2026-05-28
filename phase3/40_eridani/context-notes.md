@@ -196,3 +196,39 @@ so citing the 2017 orbit keeps the mass/orbit chain self-consistent.
 Mason 2021 is listed in Open items for follow-up so a future
 reconciliation pass can adopt it together with a re-derived dynamical
 mass.
+
+## Agent C — 40 Eri C Decisions classification
+
+Per Step 9.0 of `nearstars-phase3` SKILL.md. Diagnostic question per
+`references/conflict-resolution.md` § "Tie-break vs. divergence" applied
+to each row of the 40 Eri C Decisions table before drafting prose.
+
+Row counts: **9 canonical-aligned, 4 tie-break, 0 documented-divergence.**
+
+| Row | Label | Justification |
+|---|---|---|
+| `spectral_type` = M4.5 Ve | canonical-aligned | Gray & Garrison 1989 reclassification adopted by IAU; SIMBAD lists M4.5Ve. Mann 2015 Table 5 lists M4.7 (paper-level variation); diff is within MK classification scatter, M4.5 Ve is the broader-community canonical. Documented in prose. |
+| `mass_msun` = 0.2041 ± 0.0064 | canonical-aligned | Mason, Hartkopf & Miles 2017 §3 binary_orbit dynamical fit (page 6). DB Phase 2 recommended:true. |
+| `radius_rsun` = 0.274 ± 0.011 | canonical-aligned | Mann et al. 2015 Table 5 'Gl 166 C' row (M_K relation + BT-Settl). DB Phase 2 recommended:true. |
+| `teff_k` = 3167 ± 61 | canonical-aligned | Mann et al. 2015 Table 5. DB Phase 2 recommended:true. |
+| `luminosity_lsun` = 6.51e-3 ± 0.13e-3 | canonical-aligned | Cifuentes et al. 2020 CARMENES catalog VizieR J/A+A/642/A115. DB Phase 2 recommended:true. |
+| `metallicity_fe_h_dex` = -0.21 ± 0.08 | canonical-aligned | Mann et al. 2015 Table 5 (low_res_spectroscopy + Mann 2013a calibration). DB Phase 2 recommended:true. |
+| `age_gyr` = 1.8 ± 0.5 | canonical-aligned | Bond et al. 2017 §6.2 system-coeval IFMR-derived. Uncertainty curator-estimated (paper reports only ~1.8 Gyr). |
+| `rotation_period_days` = N/A | canonical-aligned | Shan 2024 8.56 d is quality flag D (debated, 27 of 166 periods). No conflicting paper-confirmed value. Recording N/A here matches Phase 2 decision (no recommended:true entry; meta_notes only). |
+| `activity_h_alpha_pew_a` = N/A (range -2 to -4 reported) | canonical-aligned | Multi-survey scatter (CARMENES / Schoefer / Newton); no single-paper anchor curated. Range matches each survey within its own error budget. |
+| `flare_rate_per_day` = N/A | canonical-aligned | DY Eri variable designation confirms flare activity, but no quantitative survey-derived rate in current bibliography. Open item. |
+| `x_ray_log_lx_lbol` = qualitatively "bright" | canonical-aligned | No paper anchor for 40 Eri C specifically; ROSAT All-Sky Survey detection is system-blended with B WD. Qualitative only. |
+| `visual_surface_tint_hex_primary` = `#d97f4a` (warm red-orange, M4.5 V Planck + Hα tint) | tie-break | Planck-locus blackbody at 3167 K + Hα emission boost in red wavelengths. No paper specifies a hex; tie-break: interesting-first toward saturated red-orange over generic dull-red. |
+| `stellar_color_temp_k` = 3167 | canonical-aligned | Derived from Teff. |
+| `flare_aurora_color_hint` (downstream Firefly) | tie-break | Active M dwarf → strong Hα 656 nm tint in plasma effects; specific palette deferred to firefly-cfg skill. Tie-break: documented as a Phase 3 hint, exact palette downstream. |
+| `visual_companion_event_b_visible_as_blue_point` | tie-break | BC 33 AU mean separation → B WD at apparent V ~ 5-7 from C, distinctly blue. No paper studied this view; interesting-first. |
+| `visual_companion_event_a_visible_as_orange_distant_point` | tie-break | A-BC ~2050 AU mean separation → A at V ~ 5 from C, distinctly orange (K0.5 V). Interesting-first; tie-break. |
+| `agb_spin_up_narrative` (prose, not a cfg field) | canonical-aligned | Bond 2017 §6.2 explicitly cites Fuhrmann et al. 2014 suggestion that C "may have been spun up to higher rotational velocity by accretion during the AGB phase of B". Documented in Rotation section narrative; not a Decisions row. |
+
+Notes:
+- No `## Canonical alternatives` section needed — 0 documented-divergences.
+- Hex tint #d97f4a is a tie-break under Confidence: low. Document the
+  Planck calc + Hα reasoning in the Visual styling section.
+- AGB-spin-up is paper-cited (Bond 2017 + Fuhrmann 2014), so it's
+  canonical-aligned even though it's narrative-only.
+
