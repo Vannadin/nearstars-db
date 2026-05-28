@@ -19,23 +19,10 @@ Usage:
 from __future__ import annotations
 
 import json
-import re
 import sys
 from pathlib import Path
 
-
-def to_url_slug(name: str) -> str:
-    """`Barnard's star` -> `barnards-star` (apostrophe 제거 후 non-alnum -> '-').
-
-    build_systems.py 의 to_filename (`-` 대신 `_`) 과 같은 정규화 규칙을 사용해야
-    Phase 2/Phase 3 산출물 파일명이 일치한다. 과거 버전은 apostrophe 를 그대로
-    non-alnum 으로 치환해서 `barnard-s-star` 를 만들었지만, Phase 3 빌더는
-    apostrophe 를 먼저 제거하여 `barnards-star` 를 만들어 미스매치 발생.
-    """
-    s = name.lower()
-    s = s.replace("'", "")
-    s = re.sub(r'[^a-z0-9]+', '-', s)
-    return s.strip('-')
+from _naming import to_url_slug
 
 
 def load_db_names(repo: Path) -> tuple[dict[str, str], dict[str, tuple[str, str]]]:

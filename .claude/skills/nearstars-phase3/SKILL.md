@@ -108,6 +108,28 @@ Goal: cheap upfront work that prevents painful surprises later.
    ```bash
    mkdir -p phase3/<system_slug>
    ```
+
+   **`<system_slug>` canonical rule** (must match the Phase 2 / viewer slug
+   so the reports manifest can pair them):
+
+   1. lowercase the host name
+   2. strip apostrophes (`'`)
+   3. non-alphanumeric runs → single `-`
+   4. trim trailing `-`
+
+   Examples:
+   - `Barnard's star` → `barnards-star` (NOT `barnard-s-star`)
+   - `Teegarden's Star` → `teegardens-star`
+   - `TRAPPIST-1` → `trappist-1`
+   - `Alpha Centauri A` → `alpha-centauri-a`
+   - `40 Eridani A` → `40-eridani-a`
+
+   The same rule is implemented in `scripts/pipeline/_naming.py::to_url_slug`;
+   import it if you need the slug programmatically. For per-planet
+   synthesis files, append `-<letter>` (e.g. `barnards-star-b`). Drift
+   from this rule breaks `docs/reports.html` host pairing — see commit
+   e0da593 for the recovery.
+
    Inside, create `checklist.md` with stage-based checkboxes — the
    canonical pattern from `phase3/trappist_1/checklist.md`:
    ```markdown

@@ -56,6 +56,34 @@ db/
 
 ---
 
+## Naming canonicalization
+
+호스트/행성 이름 → 슬러그·파일명 변환은 `scripts/pipeline/_naming.py` 한 곳에서만 정의한다. 빌더가 자기 버전의 `to_url_slug` 를 재구현하면 매니페스트 매칭이 깨진다 (commit `e0da593` 의 회복 참조).
+
+**규칙**
+
+1. lowercase
+2. apostrophe (`'`) 제거 — `Barnard's` → `barnards`
+3. non-alphanumeric 연속 → 단일 separator
+4. 양 끝 separator 제거
+
+**Separator 두 종류**
+
+- URL 슬러그 (`-`): `docs/phase2/<slug>.html`, `docs/phase3/<slug>.html`, `reports-manifest.json` 의 매칭 키
+- File 슬러그 (`_`): `db/systems/<slug>.json`
+
+| 호스트 | URL slug | File slug |
+|---|---|---|
+| Barnard's star | `barnards-star` | `barnards_star` |
+| Teegarden's Star | `teegardens-star` | `teegardens_star` |
+| TRAPPIST-1 | `trappist-1` | `trappist_1` |
+| Alpha Centauri A | `alpha-centauri-a` | `alpha_centauri_a` |
+| 40 Eridani A | `40-eridani-a` | `40_eridani_a` |
+
+**새 빌더를 작성할 때** — `from _naming import to_url_slug, to_file_slug, to_filename` 으로 import. 함수를 다시 구현하지 말 것. 큐레이터 행동을 통제하는 스킬 문서 (`nearstars-add-star`, `nearstars-phase3`) 에도 같은 규칙이 명시돼 있다.
+
+---
+
 ## JSON Schema
 
 ### Top-level
