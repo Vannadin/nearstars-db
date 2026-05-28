@@ -1,6 +1,7 @@
 # raw 파일들을 조합해 db/systems/*.json 재생성. B1950+J2000 전파, vmag_v 포함.
 import json, math, re, os
 from PyAstronomy.pyasl import MarkleyKESolver
+from _naming import to_filename
 
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB   = os.path.join(BASE, "db")
@@ -81,13 +82,6 @@ def propagate(pos, vel, dt_s):
 
 def ulp_km(pos):
     return abs(max(pos, key=abs)) * ULP
-
-
-def to_filename(name):
-    s = name.lower()
-    s = s.replace("'", "")
-    s = re.sub(r"[^a-z0-9]+", "_", s)
-    return s.strip("_") + ".json"
 
 
 # 컴포넌트 글자 추출용 패턴 (예: "Alpha Centauri A" → "A")
