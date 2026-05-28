@@ -155,7 +155,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "epoch propagation method"
       ]
@@ -164,7 +164,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -173,14 +173,14 @@
       "title": "Damasso et al. 2022",
       "doi": "10.1051/0004-6361/202243522",
       "bibcode": "2022A&A...666A.187D",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "GJ 514 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-29",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

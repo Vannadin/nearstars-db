@@ -1,4 +1,16 @@
 {
+  "40 Eridani A": {
+    "phase2": "phase2/40-eridani-a.html",
+    "phase3": {}
+  },
+  "40 Eridani B": {
+    "phase2": "phase2/40-eridani-b.html",
+    "phase3": {}
+  },
+  "40 Eridani C": {
+    "phase2": "phase2/40-eridani-c.html",
+    "phase3": {}
+  },
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
     "phase3": {
@@ -50,10 +62,10 @@
       "e": "phase3/au-mic-e.html"
     }
   },
-  "delta": {
+  "Delta Pavonis": {
     "phase2": null,
     "phase3": {
-      "pavonis": "phase3/delta-pavonis.html"
+      "★": "phase3/delta-pavonis.html"
     }
   },
   "eps Eri": {

@@ -482,7 +482,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "epoch propagation method"
       ]
@@ -491,7 +491,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -500,7 +500,7 @@
       "title": "Wittrock et al. 2023",
       "doi": null,
       "bibcode": "2023AJ....166..232W",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic mass (unverified)"
       ]
@@ -509,7 +509,7 @@
       "title": "Donati et al. 2023",
       "doi": null,
       "bibcode": "2023MNRAS.525..455D",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic radius (unverified)"
       ]
@@ -518,7 +518,7 @@
       "title": "Krist et al. 2005",
       "doi": null,
       "bibcode": "2005AJ....129.1008K",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -527,7 +527,7 @@
       "title": "Schneider et al. 2014",
       "doi": null,
       "bibcode": "2014AJ....148...59S",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -536,7 +536,7 @@
       "title": "Boccaletti et al. 2015",
       "doi": null,
       "bibcode": "2015Natur.526..230B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -545,7 +545,7 @@
       "title": "Boccaletti et al. 2018",
       "doi": null,
       "bibcode": "2018A&A...614A..52B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -554,7 +554,7 @@
       "title": "Chen et al. 2005",
       "doi": null,
       "bibcode": "2005ApJ...634.1372C",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic disk single (sed_fit)"
       ]
@@ -563,7 +563,7 @@
       "title": "Strubbe & Chiang 2006",
       "doi": null,
       "bibcode": "2006ApJ...648..652S",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "AU Mic disk single (sed_fit)"
       ]
@@ -572,7 +572,7 @@
       "title": "Mallorquin et al. 2024",
       "doi": "10.1051/0004-6361/202450047",
       "bibcode": "2024A&A...689A.132M",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "planet AU Mic b orbital"
       ]
@@ -581,14 +581,14 @@
       "title": "Donati et al. 2025",
       "doi": "10.1051/0004-6361/202555371",
       "bibcode": "2025A&A...700A.227D",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "planet AU Mic e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-29",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

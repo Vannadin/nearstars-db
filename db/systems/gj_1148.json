@@ -220,7 +220,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "epoch propagation method"
       ]
@@ -229,7 +229,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -238,7 +238,7 @@
       "title": "Stassun et al. 2019",
       "doi": null,
       "bibcode": "2019AJ....158..138S",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "GJ 1148 mass (unverified)"
       ]
@@ -247,14 +247,14 @@
       "title": "Trifonov et al. 2018",
       "doi": null,
       "bibcode": "2018A&A...609A.117T",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "planet GJ 1148 b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-29",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -94,7 +94,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +103,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -112,7 +112,7 @@
       "title": "Bond et al. 2015",
       "doi": "10.1088/0004-637X/813/2/106",
       "bibcode": "2015ApJ...813..106B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "Procyon B mass (binary_orbit)"
       ]
@@ -121,14 +121,14 @@
       "title": "Provencal et al. 2002 (mass-radius for DQZ WD)",
       "doi": "10.1086/338769",
       "bibcode": "2002ApJ...568..324P",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-29",
       "used_for": [
         "Procyon B radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-29",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
