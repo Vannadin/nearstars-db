@@ -115,6 +115,20 @@ Before running the pipeline, check that:
   fallback to first entry — yes, returns `block[0]` when no
   `recommended: true`.
 
+## 2026-05-29 — Warm-up resumption (Tier 2)
+
+Original Phase 2 work (mass/radius/teff/luminosity/age/metallicity/rotation)
+is intact in `db/stellar_props_curated.json` and was not affected by the
+2026-05-28 rollback (`a2ef49c`). Only `activity_measurements` was never
+populated. Adding it now under the new 7-step procedure.
+
+Procedure differences vs original 2026-05-20 work:
+- Pre-curation lit search required (silence ≠ "no activity measurement
+  exists"). HD 69830 false-negative on interferometry was the trigger.
+- Citation value-check at abstract+Table level before DB write.
+- Multi-layer commit: DB structured field + meta_notes prose + Phase 3
+  narrative (if any) + bibliography section in same commit.
+
 ## Related
 
 - [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to

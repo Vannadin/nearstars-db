@@ -92,6 +92,21 @@ Method labels:
   `evolutionary_model` since both papers cite Van Grootel 2018 evolutionary
   models as their stellar prior, with TTV providing only cross-check.
 
-## Related
+---
 
-- [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to
+## 2026-05-29 Warm-up addendum — activity category
+
+Tier 2 warm-up scope per 2026-05-28 postmortem. New 7-step procedure applies
+(pre-curation lit search → citation value-check → DOI/abstract verify →
+multi-layer commit → Phase 2→3 reconciliation → no false-negative claims →
+verification subagent).
+
+### activity_measurements (currently empty)
+
+- [ ] Pre-curation lit search: `"TRAPPIST-1" (Halpha OR "log R'HK" OR X-ray OR chromospheric)`
+- [ ] Candidate papers: collect bibcodes from search, fetch each abstract+Table
+- [ ] Value-check vs paper body — no paraphrasing, no downstream re-quoting
+- [ ] DB entry: append to `db/stellar_props_curated.json`
+- [ ] Phase 3 narrative sweep: if any docs/phase3/trappist-1*.md mentions
+      activity/Halpha/X-ray, sync narrative in same commit
+- [ ] Verification subagent spot-check after commit

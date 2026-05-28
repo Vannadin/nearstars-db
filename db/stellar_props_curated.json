@@ -1899,7 +1899,28 @@
         "doi": "10.3847/1538-4357/aa6f05",
         "recommended": true
       }
-    ]
+    ],
+    "activity_measurements": [
+      {
+        "value_x_ray_log_lx_lbol": -3.55,
+        "uncertainty_x_ray_log_lx_lbol": 0.15,
+        "method": "x_ray",
+        "reference": "Wheatley et al. 2017",
+        "bibcode": "2017MNRAS.465L..74W",
+        "doi": "10.1093/mnrasl/slw192",
+        "recommended": false
+      },
+      {
+        "value_x_ray_log_lx_lbol": -3.52,
+        "uncertainty_x_ray_log_lx_lbol": 0.17,
+        "method": "x_ray",
+        "reference": "Burgasser & Mamajek 2017",
+        "bibcode": "2017ApJ...845..110B",
+        "doi": "10.3847/1538-4357/aa7fea",
+        "recommended": true
+      }
+    ],
+    "meta_notes": "Activity (X-ray): underlying observation is Wheatley et al. 2017 (XMM-Newton 2014-12-17, 30 ks). The Wheatley paper reports Lx/Lbol = 2-4 x 10^-4 as a range bracketing two spectral-model fits (APEC vs cemekl); we record this as log Lx/Lbol = -3.55 +/- 0.15 (mid + half log-range). Burgasser & Mamajek 2017 Table 1 row 'log10(L_X/L_bol)' gives a single derived value -3.52 +/- 0.17 dex citing the same Wheatley measurement, which is the recommended entry here. Activity (H-alpha): literature reports log L_Halpha/L_bol in the range -4.85 to -4.60 dex across four surveys (Gizis 2000, Reiners & Basri 2008, Barnes et al. 2014, Burgasser et al. 2015; collated in Burgasser & Mamajek 2017 Table 1 refs 5-8). No single-paper anchor recorded because the current activity schema (value_h_alpha_ew_angstrom) does not have a log-ratio key, and the multi-survey spread exceeds tier-3 single-value tolerance. Schema extension for value_log_l_halpha_lbol is a separate task."
   },
   "AU Mic": {
     "mass_measurements": [
@@ -4026,15 +4047,16 @@
         "doi": "10.3847/1538-4357/aa8a63",
         "recommended": true
       }
-    ]
+    ],
+    "meta_notes": "Age: Bond 2017 §6.2 reports total age ~1.8 Gyr (cooling age 122 Myr + IFMR-derived progenitor lifetime 1.7 Gyr via Salaris+2009) with no formal sigma; the uncertainty_gyr=0.5 above is a curator estimate, not paper-stated. Spectral type DA2.9 from Gianninas, Bergeron & Ruiz 2011 (2011ApJ...743..138G, hereafter GBR11). Magnetic field: Landstreet & Bagnulo 2015 (2015A&A...580A.120L, DOI 10.1051/0004-6361/201526434) is the authoritative non-detection — high-sensitivity ESPaDOnS broad-band circular polarimetry sets an upper limit of ~250 G on any field, with mean noise sigma<Bz> ~ 85 G. Fabrika et al. 2003 (astro-ph/0006050, BSAO 55 publication) had earlier reported tentative variability with semi-amplitude ~4-5 kG and two candidate rotation periods (2h 25m, 5h 17m), but explicitly noted they could not 'determine firmly a real sole period'; the more sensitive Landstreet & Bagnulo 2015 measurement effectively refutes the kG-level detection, so no rotation entry is curated. Metallicity: Bond 2017 does not measure atmospheric [M/H]; Fabrika 2003 reports ultra-weak metal absorption lines but attributes them to circumstellar/interstellar gas (accretion from ISM and from dM4e companion 40 Eri C at ~10^-19 Msun/yr), not photospheric pollution. No DAZ-style atmospheric abundance analysis available. Activity (chromospheric): N/A for radiative-atmosphere DA WD — no convective envelope to host the Halpha/Ca II / log R'HK indicators meaningful for M and FGK dwarfs."
   },
   "40 Eridani C": {
-    "teff_k": 3167,
+    "teff_k": 3362,
     "teff_bibcode": "2015ApJ...804...64M",
     "spectype": "M4.5 Ve",
     "mass_measurements": [
       {
-        "value_msun": 0.2036,
+        "value_msun": 0.2041,
         "uncertainty_msun": 0.0064,
         "method": "binary_orbit",
         "reference": "Mason, Hartkopf & Miles 2017",
@@ -4045,8 +4067,8 @@
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.274,
-        "uncertainty_rsun": 0.011,
+        "value_rsun": 0.242,
+        "uncertainty_rsun": 0.004,
         "method": "spectroscopic_calibration",
         "reference": "Mann et al. 2015",
         "bibcode": "2015ApJ...804...64M",
@@ -4056,8 +4078,8 @@
     ],
     "teff_measurements": [
       {
-        "value_k": 3167,
-        "uncertainty_k": 60,
+        "value_k": 3362,
+        "uncertainty_k": 18,
         "method": "low_res_spectroscopy",
         "reference": "Mann et al. 2015",
         "bibcode": "2015ApJ...804...64M",
@@ -4086,6 +4108,7 @@
         "doi": "10.3847/1538-4357/aa8a63",
         "recommended": true
       }
-    ]
+    ],
+    "meta_notes": "Mass: Mason, Hartkopf & Miles 2017 §3 paper body explicitly states 0.2041 +/- 0.0064 Msun (paper mass sum 0.776 +/- 0.024 Msun split via Heintz 1974 mass ratio with van Leeuwen 2007 Hipparcos parallax). Note Bond et al. 2017 lists 0.573 Msun for 40 Eri B while Mason 2017 lists 0.575 Msun for B from the same dynamics — paper-level disagreement at the per-mille level, both within stated 1-sigma. We adopt Bond 2017 for B (recommended) and Mason 2017 for C (recommended). Mann et al. 2015 also reports a semi-empirical M_K-based mass M = 0.233 +/- 0.011 Msun (Table 7 'Gl 166 C' row) — independent method (spectroscopic_calibration), not recorded as a separate entry here; future schema-tier work could add it as recommended:false. Radius / Teff: Mann et al. 2015 Table 7 'Gl 166 C' row gives R = 0.242 +/- 0.004 Rsun and Teff = 3362 +/- 18 K. These supersede earlier draft values (R 0.274 +/- 0.011, Teff 3167 +/- 60) that did not trace back to the Mann 2015 table; the 2026-05-27 context-notes carried the unverified values until the 2026-05-29 re-verification pass. Age: system-coeval with 40 Eri B via Bond 2017 §6.2 IFMR-derived progenitor lifetime ~1.8 Gyr; uncertainty 0.5 Gyr is a curator estimate (paper reports only '~1.8 Gyr'). Mann 2015 Table 7 best-fit age log(age)=9.44 (~2.75 Gyr) with sigma_age=0.60 dex is fully consistent within 1 sigma. Luminosity: Cifuentes et al. 2020 CARMENES catalog row matched by Karmn J04153-076 / GJ 166 C identifier; the value L = (6.51 +/- 0.13) x 10^-3 Lsun listed above was carried in from the 2026-05-27 working notes and has NOT been independently verified against CDS Table A.3 in the 2026-05-29 pass. Mann 2015 implied L from F_bol = 0.87259 x 10^-8 erg s^-1 cm^-2 and d = 5.04 pc gives ~6.9 x 10^-3 Lsun (~6% offset); resolution deferred to a follow-up VizieR query. Metallicity: not directly measured for 40 Eri C in any of the verified references in this pass. System-wide [Fe/H] for 40 Eri A is -0.31 +/- 0.03 (Sousa et al. 2008, cited by Mason 2017 §3); 40 Eri C is expected to share this composition as a co-eval companion, but no separate measurement entry is curated. Rotation: 2026-05-27 working notes flagged Kemmer 2025 P_rot ~ 137 d as provisional and deferred; the 2026-05-29 lit-search pass could not independently locate a Kemmer 2025 paper, while Suarez Mascareno et al. 2024 (CARMENES VII, 2024A&A...684A...9S) and Diez Alonso et al. 2019 (CARMENES IV, 2019A&A...621A.126D) are the more plausible primary photometric rotation sources for this star. Deferred to a follow-up CARMENES-catalog verification. Activity (H-alpha): 40 Eri C is the variable star DY Eri, an optically active flare star; multi-survey H-alpha equivalent-width values scatter over roughly pEW = -2 to -4 Angstrom across CARMENES / Schoefer / Newton samples, no single-paper anchor curated in this pass. Deferred."
   }
 }

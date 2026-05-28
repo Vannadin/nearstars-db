@@ -19,11 +19,11 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 11.3058,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3167,
+        "teff_k": 3362,
         "spectype": "M4.5 Ve",
         "mass_measurements": [
           {
-            "value_msun": 0.2036,
+            "value_msun": 0.2041,
             "uncertainty_msun": 0.0064,
             "method": "binary_orbit",
             "reference": "Mason, Hartkopf & Miles 2017",
@@ -34,8 +34,8 @@
         ],
         "radius_measurements": [
           {
-            "value_rsun": 0.274,
-            "uncertainty_rsun": 0.011,
+            "value_rsun": 0.242,
+            "uncertainty_rsun": 0.004,
             "method": "spectroscopic_calibration",
             "reference": "Mann et al. 2015",
             "bibcode": "2015ApJ...804...64M",
@@ -45,8 +45,8 @@
         ],
         "teff_measurements": [
           {
-            "value_k": 3167,
-            "uncertainty_k": 60,
+            "value_k": 3362,
+            "uncertainty_k": 18,
             "method": "low_res_spectroscopy",
             "reference": "Mann et al. 2015",
             "bibcode": "2015ApJ...804...64M",
@@ -113,8 +113,8 @@
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 27020252787.665,
-        "mean_radius_km": 190621.8
+        "gravitational_parameter_km3_s2": 27086609007.674,
+        "mean_radius_km": 168359.4
       }
     }
   ],
@@ -166,7 +166,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Mass: Mason, Hartkopf & Miles 2017 §3 paper body explicitly states 0.2041 +/- 0.0064 Msun (paper mass sum 0.776 +/- 0.024 Msun split via Heintz 1974 mass ratio with van Leeuwen 2007 Hipparcos parallax). Note Bond et al. 2017 lists 0.573 Msun for 40 Eri B while Mason 2017 lists 0.575 Msun for B from the same dynamics — paper-level disagreement at the per-mille level, both within stated 1-sigma. We adopt Bond 2017 for B (recommended) and Mason 2017 for C (recommended). Mann et al. 2015 also reports a semi-empirical M_K-based mass M = 0.233 +/- 0.011 Msun (Table 7 'Gl 166 C' row) — independent method (spectroscopic_calibration), not recorded as a separate entry here; future schema-tier work could add it as recommended:false. Radius / Teff: Mann et al. 2015 Table 7 'Gl 166 C' row gives R = 0.242 +/- 0.004 Rsun and Teff = 3362 +/- 18 K. These supersede earlier draft values (R 0.274 +/- 0.011, Teff 3167 +/- 60) that did not trace back to the Mann 2015 table; the 2026-05-27 context-notes carried the unverified values until the 2026-05-29 re-verification pass. Age: system-coeval with 40 Eri B via Bond 2017 §6.2 IFMR-derived progenitor lifetime ~1.8 Gyr; uncertainty 0.5 Gyr is a curator estimate (paper reports only '~1.8 Gyr'). Mann 2015 Table 7 best-fit age log(age)=9.44 (~2.75 Gyr) with sigma_age=0.60 dex is fully consistent within 1 sigma. Luminosity: Cifuentes et al. 2020 CARMENES catalog row matched by Karmn J04153-076 / GJ 166 C identifier; the value L = (6.51 +/- 0.13) x 10^-3 Lsun listed above was carried in from the 2026-05-27 working notes and has NOT been independently verified against CDS Table A.3 in the 2026-05-29 pass. Mann 2015 implied L from F_bol = 0.87259 x 10^-8 erg s^-1 cm^-2 and d = 5.04 pc gives ~6.9 x 10^-3 Lsun (~6% offset); resolution deferred to a follow-up VizieR query. Metallicity: not directly measured for 40 Eri C in any of the verified references in this pass. System-wide [Fe/H] for 40 Eri A is -0.31 +/- 0.03 (Sousa et al. 2008, cited by Mason 2017 §3); 40 Eri C is expected to share this composition as a co-eval companion, but no separate measurement entry is curated. Rotation: 2026-05-27 working notes flagged Kemmer 2025 P_rot ~ 137 d as provisional and deferred; the 2026-05-29 lit-search pass could not independently locate a Kemmer 2025 paper, while Suarez Mascareno et al. 2024 (CARMENES VII, 2024A&A...684A...9S) and Diez Alonso et al. 2019 (CARMENES IV, 2019A&A...621A.126D) are the more plausible primary photometric rotation sources for this star. Deferred to a follow-up CARMENES-catalog verification. Activity (H-alpha): 40 Eri C is the variable star DY Eri, an optically active flare star; multi-survey H-alpha equivalent-width values scatter over roughly pEW = -2 to -4 Angstrom across CARMENES / Schoefer / Newton samples, no single-paper anchor curated in this pass. Deferred."
   },
   "binary_orbit_ref": "40_eridani_a.json"
 }

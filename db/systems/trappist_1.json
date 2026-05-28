@@ -188,7 +188,26 @@
             "recommended": true
           }
         ],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_x_ray_log_lx_lbol": -3.55,
+            "uncertainty_x_ray_log_lx_lbol": 0.15,
+            "method": "x_ray",
+            "reference": "Wheatley et al. 2017",
+            "bibcode": "2017MNRAS.465L..74W",
+            "doi": "10.1093/mnrasl/slw192",
+            "recommended": false
+          },
+          {
+            "value_x_ray_log_lx_lbol": -3.52,
+            "uncertainty_x_ray_log_lx_lbol": 0.17,
+            "method": "x_ray",
+            "reference": "Burgasser & Mamajek 2017",
+            "bibcode": "2017ApJ...845..110B",
+            "doi": "10.3847/1538-4357/aa7fea",
+            "recommended": true
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -1140,6 +1159,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Activity (X-ray): underlying observation is Wheatley et al. 2017 (XMM-Newton 2014-12-17, 30 ks). The Wheatley paper reports Lx/Lbol = 2-4 x 10^-4 as a range bracketing two spectral-model fits (APEC vs cemekl); we record this as log Lx/Lbol = -3.55 +/- 0.15 (mid + half log-range). Burgasser & Mamajek 2017 Table 1 row 'log10(L_X/L_bol)' gives a single derived value -3.52 +/- 0.17 dex citing the same Wheatley measurement, which is the recommended entry here. Activity (H-alpha): literature reports log L_Halpha/L_bol in the range -4.85 to -4.60 dex across four surveys (Gizis 2000, Reiners & Basri 2008, Barnes et al. 2014, Burgasser et al. 2015; collated in Burgasser & Mamajek 2017 Table 1 refs 5-8). No single-paper anchor recorded because the current activity schema (value_h_alpha_ew_angstrom) does not have a log-ratio key, and the multi-survey spread exceeds tier-3 single-value tolerance. Schema extension for value_log_l_halpha_lbol is a separate task."
   }
 }
