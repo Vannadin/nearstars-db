@@ -1,0 +1,564 @@
+planet: Barnards Star c
+slug: barnards-star-c
+generated_at: '2026-05-27T23:53:21.369282Z'
+sources:
+  ads: queried (18 hits)
+  arxiv: queried (0 hits)
+papers:
+- &id001
+  arxiv_id: null
+  ads_bibcode: 1886MNRAS..46Q.495.
+  title: observations of Comets d 1885 (Fabry), e 1885 (Barnard), c 1886, and I. 1886 (Brooks) at the Sydney Observatory
+  authors: []
+  year: '1886'
+  pubdate: '1886-06-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (11 < 14)
+  fetch_error: null
+  authority_score: 7
+  relevance_score: 4
+  combined_score: 11
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS) + rel(sys_in_title) → combined=11>=10
+- &id002
+  arxiv_id: null
+  ads_bibcode: 1888SidM....7..153W
+  title: The Comets of 1887
+  authors:
+  - Wilson, H. C.
+  year: '1888'
+  pubdate: '1888-04-00'
+  doi: null
+  abstract: Comet 1886 VII (Finlay e 1886, Sept 26); Comet 1886 VIII (Barnard c 1887, Jan 23); Comet 1886 IX (Barnard-Hartwig,
+    f 1886, Oct 4); Comet 1887 I (a 1887, June 18); Comet 1887 II (Brooks b 1887 Jan 22); Comet 1887 III (Barnard d 1887 Feb
+    16); Comet 1887 IV (Barnard e 1887 May 12); (Barnard d 1887 Feb 16); Comet 1887 V (Olbers-Brooks f 1887 Aug 24)
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (8 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 5
+  combined_score: 8
+  filter_decision: borderline
+  filter_reason: auth(neutral) + rel(sys_in_abstract, planet_c_in_abstract) → combined=8 (>= keep threshold 8 but <10)
+- &id003
+  arxiv_id: null
+  ads_bibcode: 1887SidM....6..112.
+  title: Editorial Notes
+  authors: []
+  year: '1887'
+  pubdate: '1887-03-00'
+  doi: null
+  abstract: Comet a 1887 (Thome), Comet b 1887, (Brooks), Comet 1886 (Barnard c 1887, Jan 23), Distribution of the Minor Planets,
+    The Swift-Watson Intra-Mercurial Observations, "Astronomy and the Ice Age", Temporary Stars, Warner Observatory, Comets
+    Chiefly Optical Phenomena
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (8 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 5
+  combined_score: 8
+  filter_decision: borderline
+  filter_reason: auth(neutral) + rel(sys_in_abstract, planet_c_in_abstract) → combined=8 (>= keep threshold 8 but <10)
+- arxiv_id: null
+  ads_bibcode: 2015AtmRe.160...50S
+  title: Relationship between the effective cloud optical depth and different atmospheric transmission factors
+  authors:
+  - Serrano, D.
+  - Marín, M. J.
+  - Núñez, M.
+  - Gandía, S.
+  - Utrillas, M. P.
+  - Martínez-Lozano, J. A.
+  year: '2015'
+  pubdate: '2015-06-00'
+  doi: 10.1016/j.atmosres.2015.03.004
+  abstract: This study examines the sensitivity of cloud optical depth (COD) for overcast conditions to radiation transmission
+    using data collected in Valencia, Spain. These relationships are provided as simple empirical functions, therefore avoiding
+    the need to apply complex model minimisation schemes to obtain COD. Comparisons are presented between COD obtained by
+    a minimization method and several radiation transmission factors comprising a clearness index (k<SUB>t</SUB>), a modified
+    version (k<SUB>t</SUB>'), a cloud modification factor (CMF) and its modified version (CMF'). Additionally, a statistical
+    model of COD proposed by J.C. Barnard and C.N. Long (2004) is tested with our data. Statistical relationships between
+    COD and these variables were developed for measurements in the ultraviolet Erythema Radiation (UVER) range as well as
+    for broadband measurements covering the full solar spectrum. Measurements collected in 2011 were used to develop power
+    and exponential relationships relating COD to the above transmission factors, and subsequently tested with independent
+    data collected in 2012. In general, expressions relating COD to CMF perform better and exhibit a higher correlation than
+    equivalent expressions relating COD to clearness indices, especially in the UVER range. The expression of Barnard and
+    Long is potentially adequate for the estimation of COD for both UVER and broadband solar radiation in Valencia, but the
+    regression coefficients need tuning for local conditions.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 3
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(sys_in_abstract, topics=2) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1973BBRC...55.1044.
+  title: 'Reconstitution of a partially purified endplate acetylcholine receptor preparation in lipid bilayer membranes,:
+    Volume 54, Number 2, September 18, 1973 by G. Kemp, J. 0. Dolly, E. A. Barnard, and C. E. Wenner, pp. 607–613'
+  authors: []
+  year: '1973'
+  pubdate: '1973-00-00'
+  doi: 10.1016/0006-291X(73)91249-7
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1955Natur.176T.490.
+  title: 'Department of Scientificand Industrial Research: Mr. E. Barnard, C.B., C.B.E.'
+  authors: []
+  year: '1955'
+  pubdate: '1955-09-00'
+  doi: 10.1038/176490d0
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 2021JHA....52..168K
+  title: Jan Walery Jędrzejewicz (1835-1887) and his Observations of Comets
+  authors:
+  - Królikowska, Małgorzata
+  - Sołtan, Andrzej M.
+  year: '2021'
+  pubdate: '2021-05-00'
+  doi: 10.1177/00218286211012166
+  abstract: Jan Walery Jędrzejewicz was a medical doctor with active practice in Płońsk and an astronomer by passion. In fact,
+    astronomy was a second profession for `Dr. Jedrzejewicz', as he signed his astronomical publications. He built his own
+    observatory in Płońsk, small village situated about 70 km from Warsaw, which he equipped with professional instruments.
+    Thanks to that, he could perform precise astronomical observations. In the astronomical community, he was known and esteemed
+    for his precise measurements of double stars. He also measured the position of many comets discovered at that times, including
+    long-period ones. This study is devoted to the analysis of precision of Jędrzejewicz measurements on the examples of three
+    long-period comets, today known as C/1885 X1 Fabry, C/1885 X2 Barnard and C/1886 T1 Barnard-Hartwig.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 2
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(sys_in_abstract) → combined=6<8
+- arxiv_id: null
+  ads_bibcode: 1982Ethol..60..256.
+  title: Besprechungen / Reviews
+  authors: []
+  year: '1982'
+  pubdate: '1982-01-00'
+  doi: 10.1111/j.1439-0310.1982.tb01084.x
+  abstract: 'Book reviewed in this article: Barnard, C. J., und H. Stephens (1981): Prey size selection by lapwings in lapwing/gull
+    associations (Beutesuche bei Kiebitzen, die mit Möwen ver-gesellschaftet sind). Rivault, C. (1981): Rôle des facteurs
+    sociaux sur l''expression de la rythmicité circadienne dans un groupe chez Periplaneta americana (Dictyopt.) Schöne, H.,
+    und J. Tengö (1981): Competition of males, courtship behaviour and chemical communication in the digger wasp Bembix rostrata
+    (Hymenoptera, Sphecidae) (Wettstreit der Männchen, Balz und Duftsignale bei der Wegwespe B. Shillito Walser, E., E. Walters
+    und P. Hague (1981): A statistical analysis of the structure of bleats from sheep of four different breeds (Unterschiede
+    in der Klangstruktur des Blökens von vier Schafrassen: Statistische Analyse). Dücker, G., M. Horter und A. Brinkmann (1981):
+    Untersuchungen über die Dauer kontinuierlichen Eintrageverhaltens bei Mäusen (Perseverance of retrieval behaviour in mice).
+    De Boer, B. A. (1981): Influence of population density on the territorial, courting and spawning behaviour of male Chromis
+    cyanea (Pomacentridae) (Einfluß der Populationsdichte auf Revier-, Balz- und Laichverhalten des Pomacentriden Ch. c.).
+    Reinhardt, V., und A. Reinhardt (1981): Cohesive relationships in a cattle herd (Bos indicus) (Persönliche Bindungen innerhalb
+    einer Rinderherde). Searcy, W. A., P. D. McArthur, S. S. Peters und P. Marler (1981): Response of male song and swamp
+    sparrows to neighbour, stranger, and self songs (Antworten von Sing- und Sumpfammermännchen auf nachbarlichen, fremden
+    und eigenen Gesang). de Waal, F. B. M., und J. A. R. A. M. van Hooff (1981): Side-directed communication and agonistic
+    interactions in chimpanzees (An Dritte gerichtetes Verhalten in Auseinandersetzungen zwischen Schimpansen). Payne, R.
+    B., W. L. Thompson, K. L. Fiala und L. L. Sweany (1981): Local song traditions in indigo buntings: Cultural transmission
+    of behavior patterns across generations (Gesangstraditionen bei Indigofinken). Tasker, C. R., und J. A. Mills (1981):
+    A functional analysis of courtship feeding in the red-billed gull, Larus novaehollandiae scopulinus (Funktions-analyse
+    des Balzfütterns bei Weißkopf-Lachmöwen). Burger, J., und M. Gochfeld (1981): Age-related differences in piracy behaviour
+    of four species of gulls, Larus (Altersabhängigkeit räuberischen Verhaltens bei vier Möwenarten). Conover, M. R., und
+    D. E. Miller (1981): Elicitation of vocalizations and pecking in ring-billed gull chicks (Auslösung von Rufen und Picken
+    bei Kücken der Kragenmöwe). Martens, J. (1981): Lautäußerungen der Baumläufer des Himalaya und zur akustischen Evolution
+    der Gattung Certhia (Vocalizations of Tree Creepers in the Himalayas). Zusi, R. L., und D. Bridge (1981): On the slit
+    pupil of the Black Skimmer (Rhynchops niger) (Über die schlitzförmige Pupille des Scherenschnabels). Nelson, B. (1978):
+    The Gannet (Der Baßtölpel). King, A. S., und J. McLelland, eds. (1981): Form and function in birds, Vol. 2 (Funktionsmorphologie
+    der Vögel, Bd. 2). Roy, M. Aaron, ed. (1980): Species identity and attachment. Fantino, E., and Ch. F. Logan (1979): The
+    experimental analysis of behavior: A biological perspective (Experimentelle Verhaltensanalyse in biologischer Sicht).'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 3
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract, topics=2) → combined=6<8
+- arxiv_id: null
+  ads_bibcode: 2011YarPV...3c..28T
+  title: To the problem of meteoroid stream research
+  authors:
+  - Tikhomirova, E. N.
+  year: '2011'
+  pubdate: '2011-09-00'
+  doi: null
+  abstract: 'In the context of the perturbed two-body problem a criterion for identification of a probable meteoroid parent
+    body is suggested. Analytical solutions of equations of motion take into account radiation pressure, Poynting-Robertson
+    effect and its corpuscular part. We found that parent comets for meteor showers beta Cancrids and lambda Cygnids are the
+    comets 3D/Biela and 73P/Schwassmann-Wachmann correspondingly. For kappa Cygnids we found two associations: 177/P Barnard
+    and C/1905 III F1 Giacobini.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1986Ethol..72...79.
+  title: Reviews
+  authors: []
+  year: '1986'
+  pubdate: '1986-01-00'
+  doi: 10.1111/j.1439-0310.1986.tb00608.x
+  abstract: 'Book reviewed in this article: Books: Trivers, R. L. (1985): Social evolution (Entwicklung des Sozialverhaltens)
+    Books: Payne, R. B. (1984): Sexual selection, lek and arena behavior, and sexual size dimorphism in birds (Sexuelle Zuchtwahl,
+    Arenaverhalten und Größengeschlechtsdimorphismus bei Vögeln) Books: Barnard, C. J., and D. B. A. Thompson, (1985): Gulls
+    and plovers Books: Dobat, K. (1985): Blüten und Fledermäuse (Chiropterophilie) (Bats and flowers) Books: Fenton, M. B.
+    (1985): Communication in the Chiroptera (Verständigung bei Fledermäusen) Books: Payne, R., ed. (1983): Communication and
+    behavior of whales (Verständigung und Verhalten von Walen) Books: Roeder, J. J. (1985): Evolution des systèmes de communication
+    chez les carnivores et les primates: organisation sociale et modalités de communication Books: Preuschoft, H., D. J. Chivers,
+    W. Y. Brockelman &amp; N. Creel, eds. (1984): The lesser apes. Evolutionary and behavioural biology (Die Gibbons. Evolutions-
+    und Verhaltensbiologie) Books: Becker, C. (1984): Orang-Utans und Bonobos im Spiel (Orang-Utans and Bonobos in play) Books:
+    Häßlin, J. H., und G. Nogge (1985): Der Kölner Zoo (The Cologne Zoo) Books: Hess, J. (1985): Tierkinder - Tiermütter (Animal
+    mothers and children) Books: Obst, F. J. (1985): Die Welt der Schildkröten (The world of turtles) Books: Kästle, W. (1984):
+    Echsen im Terrarium (Lizards in captivity)'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1985Ethol..70..337.
+  title: Reviews
+  authors: []
+  year: '1985'
+  pubdate: '1985-01-00'
+  doi: 10.1111/j.1439-0310.1985.tb00523.x
+  abstract: 'Book Reviewed in this article: Books: Hummel, H. E., &amp; T. A. Miller, eds. (1984): Techniques in pheromone
+    research (Methoden der Pheromon-Forschung). Laybourn-Parry, J. (1984): A functional biology of free-living protozoa (Biologie
+    und Ökologie freilebender Protozoen). Bone, Q., &amp; N. B. Marshall (1985): Biologie der Fische (Biology of fishes).
+    Unshelm, J., G. van Putten &amp; K. Zeeb, eds. (1984): Proceedings of the international congress on applied ethology in
+    farm animals. Taylor, R. J. (1984): Predation (Räuber und Beute). Barnard, C. J., ed. (1984): Producers and scroungers.
+    Strategies of exploitation and parasitism (Produzenten und Nutznießer. Wie man auf Kosten anderer lebt). Woolfenden, G.
+    E., &amp; J. W. Fitzpatrick (1984): The Florida Scrub Jay. Demography of a cooperative-breeding bird (Der Buschblauhäher.
+    Murie, J. O., &amp; G. R. Michener, eds. (1984): The biology of ground-dwelling squirrels (Jahreszyklen, Etho-Ökologie
+    und Sozialverhalten von Erdhörnchen). Portmann, A. (1984): Vom Wunder des Vogellebens (The wonders of bird life). Chamisso,
+    A. von (1819–1836): … und lassen gelten, was ich beobachtet habe. Naturwissenschaftliche Schriften mit Zeichnungen des
+    Autors (Scientific publications with drawings by the author).'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1984Ethol..66...77.
+  title: Besprechungen/Reviews
+  authors: []
+  year: '1984'
+  pubdate: '1984-01-00'
+  doi: 10.1111/j.1439-0310.1984.tb01357.x
+  abstract: 'Book reviewed in this article: Bücher/Books: Barnard, C. J. (1983): Animal behaviour: ecology and evolution (Verhalten
+    der Tiere: Ökologie und Evolution). Gwynne, D. T., and G. K. Morris, eds. (1983): Orthopteran mating systems. Brian, M.
+    V. (1983): Social insects, ecology and behavioural biology (Soziale Insekten: Ökologie, Lebensweise, Verhalten). Hasler,
+    H. D., und A. T. Scholl (1983): Olfactory imprinting and homing in salmon (Duftprägung und Heimfinden bei Lachsen). Papi,
+    F., and H. G. Wallraff, eds. (1982): Avian navigation (Orientierungsverhalten von Vögeln). Simons, D. (1984): Problemverständnis
+    und Problemlöseverhalten bei Primaten (Cognitive skills and problem solving in primates). Wolf, G., und J. Hess (1983):
+    Seele oder Programm? (Soul or program?). Koenig, O. (1980): Tier und Mensch (Animals and men). Rensch, B. (1979): Lebensweg
+    eines Biologen in einem turbulenten Jahrhundert (Life of a biologist in a troublesome century). Herter, K. (1979): Begegnungen
+    mit Menschen und Tieren. Erinnerungen eines Zoologen 1891–1978 (Memories of a zoologist). Mohr, H. (1983): Biologische
+    Wurzeln der Ethik (The natural roots of ethics).'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1983Ethol..63..251.
+  title: Besprechungen/Reviews
+  authors: []
+  year: '1983'
+  pubdate: '1983-01-00'
+  doi: 10.1111/j.1439-0310.1983.tb00091.x
+  abstract: 'Book reviewed in this article: Zahavi, A. (1982): The pattern of vocal signals and the information they convey
+    (Welche Aussagen werden durch Lautsignale vermittelt?). Gibson, R. M., and P. A. Jewell (1982): Semen quality, female
+    choice and multiple mating in domestic sheep: A test of TRIVERS'' sexual competence hypothesis (Weibchenwahl, wiederholte
+    Paarungen und Beschaffenheit des Samens bei Hausschafen: eine Prüfung von TRIVERS'' Hypothese der sexuellen Kompetenz).
+    Kruijt, J. P., I. Bossema und G. J. Lammers (1982): Effects of early experience and male activity on mate choice in mallard
+    females (Anas platyrhynchos) (Einflüsse früher Erfahrungen und der Aktivität der Erpel auf die Partnerwahl von Stockenten).
+    Barnard, C. J., D. B. A. Thompson, und H. Stephens (1982): Time budgets, feeding efficiency and flock dynamics in mixed
+    species flocks of lapwings, golden plovers, and gulls (Zeiteinteilung, Erfolg der Nahrungsuche und Zusammensetzung gemischter
+    Schwärme von Kiebitzen, Goldregenpfeifern und Möwen). Searcy, W. A., M. H. Searcy, und P. Marler (1982): The response
+    of swamp sparrows to acoustically distinct song types (Reaktionen von Melospiza georgiana-Männchen und -Weibchen auf verschiedene
+    Gesangsformen). Reznikova, J. I. (1982): Interspecific communication between ants (Zwischenartliche Verständigung bei
+    Ameisen). Assem, J. van den, und F. Jachmann (1982): The coevolution of receptivity signalling and body-size dimorphism
+    in the Chalcidoidea (Koevolution der Signalgebung paarungsbereiter Weibchen und des Größendimorphismus bei Erzwespen).
+    Thompson, N. S. (1982): A comparison of cawing in the European carrion crow (Corvus corone) and the American common crow
+    (Corvus brachyrhynchos) (Ein Vergleich der Rufe europäischer und amerikanischer Krähen). Rowland, W. J. (1982): The effects
+    of male nuptial coloration on stickleback aggression: a reexamination (Löst das Prachtkleid des Stichlings Angriffe aus?).
+    Barlow, G. W., und K. R. McKaye (1982): A comparison of feeding, spacing, and aggression in color morphs of the Midas
+    cichlid II. After 24 hours without food (Ein Vergleich der Farbvarianten des Zitronenbuntbarsches in Nahrungsaufnahme,
+    Abstandhalten und Angriffsbereitschaft II, nach 24 h ohne Futter). Bermond, B. (1982): Effects of androgen treatment of
+    full-grown puberally castrated rats upon male sexual behavior, intermale aggressive behavior and the sequential patterning
+    of aggressive interactions (Wirkungen einer Testosteronbehandlung in der Jugend kastrierter Rattenmännchen). Zalucki,
+    M. P., und R. L. Kitching (1982): The analysis and description of movement in adult Danaus plexippus L. (Lepidoptera:
+    Danainae) (Die Flugbahnen des Monarchen). Thibout, E. (1982): Le comportement sexuel du doryphore Leptinotarsa decemlineata
+    Say et son possible contrôle par l''hormone juvénile et les corps allates (Das Paarungsverhalten des Kartoffelkäfers;
+    mögliche Einflüsse des Juvenilhormons und der corpora allata). Chase, J. D. (1982): Dynamics of hierarchy formation: the
+    sequential development of dominance relationships (Die Entstehung von Rangordnung als dynamischer Vorgang). Byrne, R.
+    W. (1982): Primate vocalisations: structural and functional approaches to understanding (Aufbau und Funktion von Lautäußerungen
+    bei Primaten). Appleby, M. C. (1982): The consequences and causes of high social rank in red deer stags (Folgen und Ursachen
+    hohen Ranges bei Rothirschen). Zweers, G. A. (1982): Drinking of the pigeon (Columba livia L.) (Das Trinken der Tauben).
+    Zweers, G. (1982): The feeding system of the pigeon (Das Nahrungsaufnahme-system der Taube). Starck, D. (1978, 1979, 1982):
+    Vergleichende Anatomie der Wirbeltiere auf evolutionsbiologischer Grundlage (Comparative anatomy of vertebrates with reference
+    to evolutionary biology). Hennig, Willi (hrsg. von Wolfgang Hennig) (1982): Phylogenetische Systematik. Hennig, W. † (1983:)
+    Stammesgeschichte der Chordaten (Evolutionary history of the Chordata). Shields, W. M. (1982): Philopatry, inbreeding,
+    and the evolution of sex (Ortstreue, Inzucht und die Evolution der Sexualität). Csanyi, V. (1982): General theory of evolution
+    (Allgemeine Evolutionstheorie). Eibl-Eibesfeldt, I. (1978, 1980): Grundriß der Vergleichenden Verhaltensforschung (Ethology
+    — The biology of behavior. Barnett, S. A. (1981): Modern ethology. The science of animal behavior (Ethologie. Hinde, R.
+    A. (1982): Ethology: Its nature and relations with other sciences (Ethologie: ihre Eigenart und ihre Beziehungen zu anderen
+    Wissenschaften).'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1982Ethol..58...79.
+  title: Besprechungen/Reviews
+  authors: []
+  year: '1982'
+  pubdate: '1982-01-00'
+  doi: 10.1111/j.1439-0310.1982.tb00310.x
+  abstract: 'Book reviewed in this article: Goosen, C. (1980): After-effects of allogrooming on proximity and locomotion in
+    pairs of stumptailed macaques (Macaca arctoides) (Nachwirkungen sozialer Hautpflege zwischen Bärenmakaken auf ihr Bestreben,
+    in der Nähe des anderen zu bleiben oder umherzulaufen) Chalmers, N. R. (1980): Developmental relationships among social
+    manipulatory, postural, and locomotor behaviours in olive baboons, Papio anubis (Beziehungen zwischen Sozialverhalten,
+    Handfertigkeit, Haltungen und Bewegungen während der Jugendentwicklung Grüner Paviane) Farr, J. A. (1980): Social behavior
+    patterns as determinants of reproductive success in the Guppy, Poecilia reticulata Peters (Pisces: Poeciliidae). An experimental
+    study of the effects of intermale competition, female choice, and sexual selection (Die Bedeutung von Sozialverhaltensweisen
+    und Farbmustern für den Fortpflanzungserfolg konkurrierender Guppymännchen) Kikkawa, J. (1980): Weight changes in relation
+    to social hierarchy in captive flocks of Silvereyes, Zosterops lateralis (Gewichtsveränderungen und Rangordnung bei Brillenvögeln
+    in Gefangenschaft) Mueller, H. C., und P. G. Parker (1980): Naive ducklings show different cardiac response to hawk than
+    to goose models (Unerfahrene Entenkücken beantworten Raubvogel- oder Gänseattrappen mit unterschiedlichen Herzfrequenzänderungen)
+    Barnard, C. J. (1980): Factors affecting flock size mean and variance in a winter population of House Sparrows (Passer
+    domesticus L.) (Welche Faktoren beeinflussen die Schwarmgröße überwinternder Haussperlinge?) Caro, T. M. (1980): Predatory
+    behaviour in domestic cat mothers (Beutefangverhalten von Hauskatzenmüttern) Catchpole, C. K. (1980): Sexual selection
+    and the evolution of complex songs among European warblers of the genus Acrocephalus (Geschlechtliche Zuchtwahl und die
+    Evolution komplexer Gesänge bei Rohrsängern) Randall, D. J., W. W. Burggren, A. B. Farrell and M. St. Haswell (1981):
+    The evolution of air breathing in vertebrates (Die Entwicklung der Luftatmung bei Wirbeltieren) Popper, A. N., and R.
+    R. Fay, eds. (1980): Proceedings in life sciences. Comparative studies of hearing in vertebrates (Fortschritte der Wissenschaften
+    vom Leben. Vergleichende Untersuchungen des Gehörsinnes bei Wirbeltieren) Laverack, M. S., und D. J. Cosens, eds. (1981):
+    Sense organs (Sinnesorgane) Burtt, E. H. (1978): The behavioral significance of color (Die Bedeutung von Farben für das
+    Verhalten) Ward, P. (1979): Colour for survival (Überleben durch Farben) Siewing, R., ed. (1980): Lehrbuch der Zoologie.
+    Band 1: Allgemeine Zoologie (A textbook of zoology. Vol. 1: General zoology). Begründet von H. Wurmbach Kaestner, A. (1980):
+    Lehrbuch der Speziellen Zoologie. Band 1: Wirbellose Tiere (A textbook of special zoology: vol. 1: invertebrates), herausgegeben
+    von H.-E. Gruner. 1. Teil: Einführung, Protozoa, Placozoa, Porifera, bearbeitet von K. G. Grell, H.-E. Gruner und E. F.
+    Kilian'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1965GForS..20..148.
+  title: Book Reviews
+  authors: []
+  year: '1965'
+  pubdate: '1965-06-00'
+  doi: 10.1111/j.1365-2494.1965.tb00411.x
+  abstract: 'Book reviewed in this artilce: BARNARD, C. (Ed.) Grasses and grasslands. LARIN, I, V. Pasture rotation. System
+    for the care and utilization of pastures THOMAS, J. O.; DAVIES, L. J. Common British grasses and legumes. MINISTRY OF
+    AGRICULTURE, FISHERIES AND FOOD. Sheep breeding and management MINISTRY OF AGRICULTURE, FISHERIES AND FOOD. The farmer''s
+    weather. MINISTRY OF AGRICULTURE, FISHERIES AND FOOD. Beef production'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 2020EGUGA..2215755H
+  title: GloFAS-ERA5 operational global river discharge reanalysis 1979-present
+  authors:
+  - Harrigan, Shaun
+  - Zsoter, Ervin
+  - Alfieri, Lorenzo
+  - Prudhomme, Christel
+  - Salamon, Peter
+  - Wetterhall, Fredrik
+  - Barnard, Christopher
+  - Cloke, Hannah
+  - Pappenberger, Florian
+  year: '2020'
+  pubdate: '2020-05-00'
+  doi: 10.5194/egusphere-egu2020-15755
+  abstract: 'Estimating how much water is flowing through rivers at the global scale is challenging due to a lack of observations
+    in space and time. A way forward is to optimally combine the global network of Earth system observations with advanced
+    Numerical Weather Prediction (NWP) models to generate consistent spatio-temporal maps of land, ocean, and atmospheric
+    variables of interest, known as a reanalysis. While the current generation of NWP output runoff at each grid cell, they
+    currently do not produce river discharge at catchment scales directly, and thus have limited utility in hydrological applications
+    such as flood and drought monitoring and forecasting. This is overcome in the Global Flood Awareness System (GloFAS; http://www.globalfloods.eu/)
+    by coupling surface and sub-surface runoff from the HTESSEL land surface model used within ECMWF''s latest global atmospheric
+    reanalysis (ERA5) with the LISFLOOD hydrological and channel routing model.This work presents the new GloFAS-ERA5 global
+    river discharge reanalysis dataset launched on 5 November 2019 (version 2.1 release). The river discharge reanalysis is
+    a global gridded dataset with a horizontal resolution of 0.1° at a daily time step. An innovative feature is that it is
+    produced in an operational environment so is available to users from 1 January 1979 until near real time (2 to 5 days
+    behind real time). The reanalysis was evaluated against a global network of 1801 river discharge observation stations.
+    Results found that the GloFAS-ERA5 reanalysis was skilful against a mean flow benchmark in 86 % of catchments according
+    to the modified Kling-Gupta Efficiency Skill Score, although the strength of skill varied considerably with location.
+    The global median Pearson correlation coefficient was 0.61 with an interquartile range of 0.44 to 0.74. The long-term
+    and operational nature of the GloFAS-ERA5 reanalysis dataset provides a valuable dataset to the user community for large
+    scale hydrology applications ranging from monitoring global flood and drought conditions, understanding hydroclimatic
+    variability and change, initialising hydrological forecasts, and as raw input to post-processing and machine learning
+    methods that can add further value.Data availibility: The dataset is openly available from the Copernicus Climate Change
+    Service (C3S) Climate Data Store (C3S): https://cds.climate.copernicus.eu/cdsapp#!/dataset/cems-glofas-historical?tab=overview
+    and further details and the evaluation of the dataset can be found in the accompanying data description paper: Data paper:
+    Harrigan, S., Zsoter, E., Alfieri, L., Prudhomme, C., Salamon, P., Wetterhall, F., Barnard, C., Cloke, H., and Pappenberger,
+    F.: GloFAS-ERA5 operational global river discharge reanalysis 1979-present, Earth Syst. Sci. Data Discuss., https://doi.org/10.5194/essd-2019-232,
+    2020.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 1
+  relevance_score: 3
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(conf=EGUGA, has_doi) + rel(sys_in_abstract, topics=3) → combined=4<8
+- arxiv_id: null
+  ads_bibcode: 2023EGUGA..25.9310G
+  title: Assessing fire danger synchronicity in Europe
+  authors:
+  - Gincheva, Andrina
+  - Moreno, Alberto
+  - Jerez, Sonia
+  - Montávez, Juan Pedro
+  - Turco, Marco
+  year: '2023'
+  pubdate: '2023-05-00'
+  doi: 10.5194/egusphere-egu23-9310
+  abstract: This contribution seeks to better understand recent changes in synchronous fire danger across Europe that can
+    overwhelm fire suppression capacity. We analyze the spatio-temporal synchronicity of fire danger in Europe over the period
+    1979-2021 based on the Canadian Fire Weather Index, one of the most commonly used fire indices globally (FWI; Vitolo et
+    al. 2020). The daily synchronicity index indicates the total area with a level of FWI above 50, that represents the extreme
+    fire danger threshold as classified by the European Forest Fire Information System (EFFIS). The annual mean surface affected
+    by synchronicity extreme fire danger increased by about 100000 km2 over the 42-year-long study period (i.e. 57% of the
+    mean historical value). The expansion of synchronized fire potential can compromise fire management efforts.ReferencesVitolo,
+    C., Di Giuseppe, F., Barnard, C., Coughlan, R., San-Miguel-Ayanz, J., Libertá, G., &amp; Krzeminski, B. (2020). ERA5-based
+    global meteorological wildfire danger maps. Scientific data, 7(1), 1-11.AcknowledgmentsWe acknowledge funding through
+    the project ONFIRE, grant PID2021-123193OB-I00, funded by MCIN/AEI/ 10.13039/501100011033. A.G. thanks the Ministerio
+    de Ciencia, Innovación y Universidades of Spain for PhD contract FPU19/06536.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 1
+  relevance_score: 2
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(conf=EGUGA, has_doi) + rel(sys_in_abstract) → combined=3<8
+- arxiv_id: null
+  ads_bibcode: 2020zndo...3859513V
+  title: Forecasting wildfire danger with GEFF (code for paper)
+  authors:
+  - Vitolo, Claudia
+  - Di Giuseppe, Francesca
+  year: '2020'
+  pubdate: '2020-05-27'
+  doi: 10.5281/zenodo.3859513
+  abstract: 'Code to reproduce the following paper: Di Giuseppe, F., Vitolo, C., Krzeminski, B., Barnard, C., Maciel, P.,
+    and San-Miguel, J.: Fire Weather Index: the skill provided by the European Centre for Medium-Range Weather Forecasts ensemble
+    prediction system, Nat. Hazards Earth Syst. Sci., 20, 2365–2378, https://doi.org/10.5194/nhess-20-2365-2020, 2020.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 1
+  relevance_score: 2
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(data_catalog, has_doi) + rel(sys_in_abstract) → combined=3<8
+- arxiv_id: '2503.08095'
+  ads_bibcode: 2025ApJ...982L...1B
+  title: Four Sub-Earth Planets Orbiting Barnard's Star from MAROON-X and ESPRESSO
+  authors:
+  - Basant, Ritvik
+  - Luque, Rafael
+  - Bean, Jacob L.
+  - Seifahrt, Andreas
+  - Brady, Madison
+  - Zhao, Lily L.
+  - Brown, Nina
+  - Das, Tanya
+  - Stürmer, Julian
+  - Kasper, David
+  - Gupta, Rohan
+  - Stefánsson, Guđmundur
+  year: '2025'
+  pubdate: '2025-03-00'
+  doi: 10.3847/2041-8213/adb8d5
+  abstract: Barnard's Star is an old, single M dwarf star that comprises the second-closest extrasolar system. It has a long
+    history of claimed planet detections from both radial velocities and astrometry. However, none of these claimed detections
+    have so far withstood further scrutiny. Continuing this story, extreme precision radial velocity measurements from the
+    ESPRESSO instrument have recently been used to identify four new sub-Earth-mass planet candidates around Barnard's Star.
+    We present here 112 radial velocities of Barnard's Star from the MAROON-X instrument that were obtained independently
+    to search for planets around this compelling object. The data have a typical precision of 30 cm s<SUP>−1</SUP> and are
+    contemporaneous with the published ESPRESSO measurements (2021─2023). The MAROON-X data on their own confirm planet b
+    (P = 3.154 days) and planet candidates c and d (P = 4.124 and 2.340 days, respectively). Furthermore, adding the MAROON-X
+    data to the ESPRESSO data strengthens the evidence for planet candidate e (P = 6.739 days), thus leading to its confirmation.
+    The signals from all four planets are &lt;50 cm s<SUP>−1</SUP>, the minimum masses of the planets range from 0.19 to 0.34
+    M<SUB>⊕</SUB>, and the system is among the most compact known among late M dwarfs hosting low-mass planets. The current
+    data rule out planets with masses &gt;0.57 M<SUB>⊕ </SUB>(with a 99% detection probability) in Barnard's Star's habitable
+    zone (P = 10─42 days).
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+filtered_papers:
+- *id001
+- *id002
+- *id003

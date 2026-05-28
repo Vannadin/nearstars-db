@@ -1,0 +1,389 @@
+planet: Barnards Star e
+slug: barnards-star-e
+generated_at: '2026-05-27T23:53:36.320365Z'
+sources:
+  ads: queried (17 hits)
+  arxiv: queried (0 hits)
+papers:
+- &id001
+  arxiv_id: null
+  ads_bibcode: 1886IORP....1S..96.
+  title: Plate. Trajectorias Apparentes dos Cometas Barnard e Fabry durante os mezes de Junho, Julho e Agosto de 1886
+  authors: []
+  year: '1886'
+  pubdate: '1886-00-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 9
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(neutral) + rel(sys_in_title, planet_e_in_title) → combined=12>=10
+- &id002
+  arxiv_id: null
+  ads_bibcode: 1882AN....103..317M
+  title: Osservazioni delle comete Barnard e Finlay (Cruls)
+  authors:
+  - Millosevich, E.
+  year: '1882'
+  pubdate: '1882-11-00'
+  doi: 10.1002/asna.18821032008
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 9
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(neutral) + rel(sys_in_title, planet_e_in_title) → combined=12>=10
+- &id003
+  arxiv_id: null
+  ads_bibcode: 1882AN....103..255M
+  title: Osservazioni delle comete Barnard e Cruls
+  authors:
+  - Millosevich, E.
+  year: '1882'
+  pubdate: '1882-10-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 9
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(neutral) + rel(sys_in_title, planet_e_in_title) → combined=12>=10
+- &id004
+  arxiv_id: null
+  ads_bibcode: 1881AN....100Q.349C
+  title: Beobachtung des Cometen Barnard e 1881 auf der Wiener Sternwarte
+  authors:
+  - Coggia, J.
+  year: '1881'
+  pubdate: '1881-10-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 9
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(neutral) + rel(sys_in_title, planet_e_in_title) → combined=12>=10
+- &id005
+  arxiv_id: null
+  ads_bibcode: 1881AN....100..349M
+  title: Osservazione della cometa di Barnard e 1881
+  authors:
+  - Millosevich, E.
+  year: '1881'
+  pubdate: '1881-10-00'
+  doi: 10.1002/asna.18811002211
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 9
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(neutral) + rel(sys_in_title, planet_e_in_title) → combined=12>=10
+- &id006
+  arxiv_id: null
+  ads_bibcode: 1888SidM....7..153W
+  title: The Comets of 1887
+  authors:
+  - Wilson, H. C.
+  year: '1888'
+  pubdate: '1888-04-00'
+  doi: null
+  abstract: Comet 1886 VII (Finlay e 1886, Sept 26); Comet 1886 VIII (Barnard c 1887, Jan 23); Comet 1886 IX (Barnard-Hartwig,
+    f 1886, Oct 4); Comet 1887 I (a 1887, June 18); Comet 1887 II (Brooks b 1887 Jan 22); Comet 1887 III (Barnard d 1887 Feb
+    16); Comet 1887 IV (Barnard e 1887 May 12); (Barnard d 1887 Feb 16); Comet 1887 V (Olbers-Brooks f 1887 Aug 24)
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (8 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 5
+  combined_score: 8
+  filter_decision: borderline
+  filter_reason: auth(neutral) + rel(sys_in_abstract, planet_e_in_abstract) → combined=8 (>= keep threshold 8 but <10)
+- arxiv_id: null
+  ads_bibcode: 2021JRASC.115...26S
+  title: 'Pen and Pixel: Jupiter-Saturn Conjunction / Barnard''s E / Ghost Nebula / Rosette Nebula'
+  authors:
+  - Stone, Gary
+  - Brecher, Ron
+  - Dev, Dave
+  - Wiwchar, Sheila
+  year: '2021'
+  pubdate: '2021-02-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 2008JBAA..118..354G
+  title: 'Letter to the Editor: Discovery by E. E. Barnard of light diffusion through the Cassini Division in Saturn''s rings'
+  authors:
+  - Griffin, R. F.
+  year: '2008'
+  pubdate: '2008-12-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 2008yCat.7220....0B
+  title: 'VizieR Online Data Catalog: Barnard''s Catalogue of 349 Dark Objects in the Sky (Barnard, 1927)'
+  authors:
+  - Barnard, E. E.
+  year: '2008'
+  pubdate: '2008-06-00'
+  doi: null
+  abstract: This catalogue was created based on the original published catalogue by Barnard E.E., 1927, Carnegie Institution
+    of Washington, "A photographic Atlas of selected regions of the Milky Way". The catalogue contains positions of 349 Barnard
+    Objects. <P />The objects with numbers from 1 to 175 are classified in the first Barnard catalogue (1919ApJ....49....1B);
+    three of the objects in that list have been omitted here (Nos 52, 131a, and 172) because these objects had been listed
+    twice. <P />The objects from Barnard's second list are numbered from 201 to 370 -- there are therefore no objects having
+    the numbers from 176 to 200. Their positions were determined by Miss Calvert. <P />The epoch for all positions in the
+    original published catalogue was 1875.0. Positions for both 1875.0 and 2000.0, the diameters and the notes are included
+    in this machine-readable catalogue. <P />(2 data files).
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 0
+  relevance_score: 7
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(data_catalog) + rel(sys_in_title, planet_e_in_abstract) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 2001yCat.7220....0B
+  title: 'VizieR Online Data Catalog: Barnard''s Catalogue of 349 Dark Objects in the Sky (Barnard, 1927)'
+  authors:
+  - Barnard, E. E.
+  year: '2001'
+  pubdate: '2001-01-00'
+  doi: null
+  abstract: This catalogue was created based on the original published catalogue by Barnard E.E., 1927, Carnegie Institution
+    of Washington, "A photographic Atlas of selected regions of the Milky Way". The catalogue contains positions of 349 Barnard
+    Objects. The objects with numbers from 1 to 175 are classified in the first Barnard catalogue (1919ApJ....49....1B); three
+    of the objects in that list have been omitted here (Nos 52, 131a, and 172) because these objects had been listed twice.
+    The objects from Barnard's second list are numbered from 201 to 370 -- there are therefore no objects having the numbers
+    from 176 to 200. Their positions were determined by Miss Calvert. The epoch for all positions in the original published
+    catalogue was 1875.0. Positions for both 1875.0 and 2000.0, the diameters and the notes are included in this machine-readable
+    catalogue. (2 data files).
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 0
+  relevance_score: 7
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(data_catalog) + rel(sys_in_title, planet_e_in_abstract) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1993JBAA..103...34S
+  title: 'E.E. Barnard and Mars: The early years'
+  authors:
+  - Sheehan, W.
+  year: '1993'
+  pubdate: '1993-02-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1904BuAsI..21R.365.
+  title: Revue des publications astronomiques. Barnard (E. E.) - Observations micrométriques d'Eros faites avec le réfracteur
+    de 49 pouces de l'Observatoire Yerkes pendant l'opposition de 1900-1901. Chicago, imprimerie de l'Université, 1902
+  authors: []
+  year: '1904'
+  pubdate: '1904-00-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1895BuAsI..12...28J
+  title: Mémoires et observations. Observations des comètes Barnard (e 1892), Holmes (f 1892), Rordame-Quénisset, Finlay,
+    Denning (1894 I), Gale et de la planète (1894 BC), faites à l'observatoire de Nice
+  authors:
+  - Javelle, S.
+  year: '1895'
+  pubdate: '1895-00-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1884AN....110..383M
+  title: Osservazioni delle comete 1884 II (Barnard) e 1884 Wolf
+  authors:
+  - Millosevich, E.
+  year: '1884'
+  pubdate: '1884-12-00'
+  doi: 10.1002/asna.18841102208
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1883MmSSI..11A..80M
+  title: Appendice. Determinazione Dell'Orbita Della Cometa Barnard (e 1881)
+  authors:
+  - Millosevich, E.
+  year: '1883'
+  pubdate: '1883-00-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 4
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_title) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 1886SidM....5..181.
+  title: Editorial Notes
+  authors: []
+  year: '1886'
+  pubdate: '1886-06-00'
+  doi: null
+  abstract: Comet 1882 II; Comet Discoveries; Comet Barnard by E. E. Barnard; Observations of the Companion of Sirius by Malcolm
+    McNeill; The Red-Spot on Jupiter by G. W. Hough; Jupiter-Black Transit of Satellite IV by E. E. Barnard; Comets a and
+    b 1886 (Brooks); Comet a 1886 (Brooks); Comet b 1886 (Brooks); &amp;omicron Ceti and χ Cygni; The Warner Astronomical
+    Prizes; Observations of Barnard's Comet; Observations of Fabry's Comet; Comet Barnard; Comet Barnard (a) 1885 by E. E.
+    Barnard; Book Notices
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: null
+  ads_bibcode: 1885SidM....4..246.
+  title: Editorial Notes
+  authors: []
+  year: '1885'
+  pubdate: '1885-10-00'
+  doi: null
+  abstract: Comet Brooks by William R. Brooks; New Star in Andromeda by William Brooks; The New Star in Andromeda Nebula by
+    E. E. Barnard; Small Nebula Involved in Preceding End of Great Andromeda Nebula by E. E. Barnard; Small Nebula Involved
+    in Preceding End of Great Andromeda Nebula by E. E. Barnard; Barnard's Comet by Lewis Swift; Notes on the Nebula of Andromeda
+    by J. R. H.; The Titles of Contributions to Astronomical Periodicals by X. Y. Z.; Roller Planimeter; Recent Discoveries;
+    Merope Nebula, E. Coronæ Brook's Comet by Lewis Swift; Comet A 1885 [Barnard] by E. E. Barnard; Observations of Comet
+    A 1885 [Barnard] made with the 6-inch Equatorial of Vanderbilt University Observatory; The October Planets; Book Notices;
+    Books Received; Papers
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 2
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(sys_in_abstract) → combined=5<8
+- arxiv_id: '2503.08095'
+  ads_bibcode: 2025ApJ...982L...1B
+  title: Four Sub-Earth Planets Orbiting Barnard's Star from MAROON-X and ESPRESSO
+  authors:
+  - Basant, Ritvik
+  - Luque, Rafael
+  - Bean, Jacob L.
+  - Seifahrt, Andreas
+  - Brady, Madison
+  - Zhao, Lily L.
+  - Brown, Nina
+  - Das, Tanya
+  - Stürmer, Julian
+  - Kasper, David
+  - Gupta, Rohan
+  - Stefánsson, Guđmundur
+  year: '2025'
+  pubdate: '2025-03-00'
+  doi: 10.3847/2041-8213/adb8d5
+  abstract: Barnard's Star is an old, single M dwarf star that comprises the second-closest extrasolar system. It has a long
+    history of claimed planet detections from both radial velocities and astrometry. However, none of these claimed detections
+    have so far withstood further scrutiny. Continuing this story, extreme precision radial velocity measurements from the
+    ESPRESSO instrument have recently been used to identify four new sub-Earth-mass planet candidates around Barnard's Star.
+    We present here 112 radial velocities of Barnard's Star from the MAROON-X instrument that were obtained independently
+    to search for planets around this compelling object. The data have a typical precision of 30 cm s<SUP>−1</SUP> and are
+    contemporaneous with the published ESPRESSO measurements (2021─2023). The MAROON-X data on their own confirm planet b
+    (P = 3.154 days) and planet candidates c and d (P = 4.124 and 2.340 days, respectively). Furthermore, adding the MAROON-X
+    data to the ESPRESSO data strengthens the evidence for planet candidate e (P = 6.739 days), thus leading to its confirmation.
+    The signals from all four planets are &lt;50 cm s<SUP>−1</SUP>, the minimum masses of the planets range from 0.19 to 0.34
+    M<SUB>⊕</SUB>, and the system is among the most compact known among late M dwarfs hosting low-mass planets. The current
+    data rule out planets with masses &gt;0.57 M<SUB>⊕ </SUB>(with a 99% detection probability) in Barnard's Star's habitable
+    zone (P = 10─42 days).
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+filtered_papers:
+- *id001
+- *id002
+- *id003
+- *id004
+- *id005
+- *id006

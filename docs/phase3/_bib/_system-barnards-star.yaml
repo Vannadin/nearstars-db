@@ -1,0 +1,3484 @@
+planet: Barnards Star
+slug: barnards-star
+generated_at: '2026-05-27T23:55:09.209420Z'
+sources:
+  ads: queried (45 hits)
+  arxiv: queried (42 hits)
+papers:
+- &id001
+  arxiv_id: '1906.06797'
+  ads_bibcode: 2019ApJ...881..114Y
+  title: Impact of Stellar Superflares on Planetary Habitability
+  authors:
+  - Yamashiki, Yosuke A.
+  - Maehara, Hiroyuki
+  - Airapetian, Vladimir
+  - Notsu, Yuta
+  - Sato, Tatsuhiko
+  - Notsu, Shota
+  - Kuroki, Ryusuke
+  - Murashima, Keiya
+  - Sato, Hiroaki
+  - Namekata, Kosuke
+  - Sasaki, Takanori
+  - Scott, Thomas B.
+  - Bando, Hina
+  - Nashimoto, Subaru
+  - Takagi, Fuka
+  - Ling, Cassandra
+  - Nogami, Daisaku
+  - Shibata, Kazunari
+  year: '2019'
+  pubdate: '2019-08-00'
+  doi: 10.3847/1538-4357/ab2a71
+  abstract: High-energy radiation caused by exoplanetary space weather events from planet-hosting stars can play a crucial
+    role in conditions promoting or destroying habitability in addition to the conventional factors. In this paper, we present
+    the first quantitative impact evaluation system of stellar flares on the habitability factors with an emphasis on the
+    impact of stellar proton events. We derive the maximum flare energy from stellar star spot sizes and examine the impacts
+    of flare-associated ionizing radiation on CO<SUB>2</SUB>, H<SUB>2</SUB>, and N<SUB>2</SUB>+ O<SUB>2</SUB>-rich atmospheres
+    of a number of well-characterized terrestrial type exoplanets. Our simulations based on the Particle and Heavy Ion Transport
+    code System suggest that the estimated ground-level dose for each planet in the case of terrestrial-level atmospheric
+    pressure (1 bar) for each exoplanet does not exceed the critical dose for complex (multicellular) life to persist, even
+    for the planetary surface of Proxima Centauri b, Ross-128 b, and TRAPPIST-1 e. However, when we take into account the
+    effects of the possible maximum flares from those host stars, the estimated dose reaches fatal levels at the terrestrial
+    lowest atmospheric depth on TRAPPIST-1 e and Ross-128 b. Large fluxes of coronal X-ray and ultraviolet radiation from
+    active stars induce high atmospheric escape rates from close-in exoplanets, suggesting that the atmospheric depth can
+    be substantially smaller than that on Earth. In a scenario with the atmospheric thickness of one-tenth of Earth’s, the
+    radiation dose from close-in planets including Proxima Centauri b and TRAPPIST-1 e reaches near fatal levels with annual
+    frequency of flare occurrence from their host stars.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (12 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 2
+  combined_score: 12
+  filter_decision: keep
+  filter_reason: auth(journal=ApJ, has_arxiv, has_doi) + rel(topics=4) → combined=12>=10
+- &id002
+  arxiv_id: '1709.01025'
+  ads_bibcode: 2018MNRAS.473L.131W
+  title: Three small transiting planets around the M-dwarf host star LP 358-499
+  authors:
+  - Wells, R.
+  - Poppenhaeger, K.
+  - Watson, C. A.
+  year: '2018'
+  pubdate: '2018-01-00'
+  doi: 10.1093/mnrasl/slx171
+  abstract: We report on the detection of three transiting small planets around the low-mass star LP 358-499 (K2-133), using
+    photometric data from the Kepler-K2 mission. Using multiband photometry, we determine the host star to be an early M dwarf
+    with an age likely older than a gigayear. The three detected planets K2-133 b, c and d have orbital periods of ca. 3,
+    4.9 and 11 d and transit depths of ca. 700, 1000 and 2000 ppm, respectively. We also report a planetary candidate EPIC
+    247887989.01 with a period of 26.6 d and a depth of ca. 1000 ppm, which may be at the inner edge of the stellar habitable
+    zone, depending on the specific host star properties. Using the transit parameters and the stellar properties, we estimate
+    that the innermost planet may be rocky. The system is suited for follow-up observations to measure planetary masses and
+    JWST transmission spectra of planetary atmospheres.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (11 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 1
+  combined_score: 11
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS, has_arxiv, has_doi) + rel(topics=3) → combined=11>=10
+- &id003
+  arxiv_id: '2301.08162'
+  ads_bibcode: 2023AJ....165..134O
+  title: Characterization of a Set of Small Planets with TESS and CHEOPS and an Analysis of Photometric Performance
+  authors:
+  - Oddo, Dominic
+  - Dragomir, Diana
+  - Brandeker, Alexis
+  - Osborn, Hugh P.
+  - Collins, Karen
+  - Stassun, Keivan G.
+  - Astudillo-Defru, Nicola
+  - Bieryla, Allyson
+  - Howell, Steve B.
+  - Ciardi, David R.
+  - Quinn, Samuel
+  - Almenara, Jose M.
+  - Briceño, César
+  - Collins, Kevin I.
+  - Colón, Knicole D.
+  - Conti, Dennis M.
+  - Crouzet, Nicolas
+  - Furlan, Elise
+  - Gan, Tianjun
+  - Gnilka, Crystal L.
+  - Goeke, Robert F.
+  - Gonzales, Erica
+  - Harris, Mallory
+  - Jenkins, Jon M.
+  - Jensen, Eric L. N.
+  - Latham, David
+  - Law, Nicholas
+  - Lund, Michael B.
+  - Mann, Andrew W.
+  - Massey, Bob
+  - Murgas, Felipe
+  - Ricker, George
+  - Relles, Howard M.
+  - Rowden, Pamela
+  - Schwarz, Richard P.
+  - Schlieder, Joshua
+  - Shporer, Avi
+  - Seager, Sara
+  - Srdoc, Gregor
+  - Torres, Guillermo
+  - Twicken, Joseph D.
+  - Vanderspek, Roland
+  - Winn, Joshua N.
+  - Ziegler, Carl
+  year: '2023'
+  pubdate: '2023-03-00'
+  doi: 10.3847/1538-3881/acb4e3
+  abstract: The radius valley carries implications for how the atmospheres of small planets form and evolve, but this feature
+    is visible only with highly precise characterizations of many small planets. We present the characterization of nine planets
+    and one planet candidate with both NASA TESS and ESA CHEOPS observations, which adds to the overall population of planets
+    bordering the radius valley. While five of our planets-TOI 118 b, TOI 262 b, TOI 455 b, TOI 560 b, and TOI 562 b-have
+    already been published, we vet and validate transit signals as planetary using follow-up observations for four new TESS
+    planets, including TOI 198 b, TOI 244 b, TOI 444 b, and TOI 470 b. While a three times increase in primary mirror size
+    should mean that one CHEOPS transit yields an equivalent model uncertainty in transit depth as about nine TESS transits
+    in the case that the star is equally as bright in both bands, we find that our CHEOPS transits typically yield uncertainties
+    equivalent to between two and 12 TESS transits, averaging 5.9 equivalent transits. Therefore, we find that while our fits
+    to CHEOPS transits provide overall lower uncertainties on transit depth and better precision relative to fits to TESS
+    transits, our uncertainties for these fits do not always match expected predictions given photon-limited noise. We find
+    no correlations between number of equivalent transits and any physical parameters, indicating that this behavior is not
+    strictly systematic, but rather might be due to other factors such as in-transit gaps during CHEOPS visits or nonhomogeneous
+    detrending of CHEOPS light curves.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=AJ, has_arxiv, has_doi) + rel(no_signal) → combined=10>=10
+- &id004
+  arxiv_id: '1705.01481'
+  ads_bibcode: 2017MNRAS.470.3664H
+  title: Relativistic generalization of the incentive trap of interstellar travel with application to Breakthrough Starshot
+  authors:
+  - Heller, René
+  year: '2017'
+  pubdate: '2017-09-00'
+  doi: 10.1093/mnras/stx1493
+  abstract: As new concepts of sending interstellar spacecraft to the nearest stars are now being investigated by various
+    research teams, crucial questions about the timing of such a vast financial and labour investment arise. If humanity could
+    build high-speed interstellar lightsails and reach α Centauri 20 yr after launch, would it be better to wait a few years,
+    then take advantage of further technology improvements and arrive earlier despite waiting? The risk of being overtaken
+    by a future, faster probe has been described earlier as the incentive trap. Based on 211 yr of historical data, we find
+    that the speed growth of artificial vehicles, from steam-driven locomotives to Voyager 1, is much faster than previously
+    believed, about 4.72 per cent annually or a doubling every 15 yr. We derive the mathematical framework to calculate the
+    minimum of the wait time to launch t plus travel time τ(t) and extend it into the relativistic regime. We show that the
+    t + τ(t) minimum disappears for nearby targets. There is no use of waiting once we can reach an object within about 20
+    yr of travel, irrespective of the actual speed. In terms of speed, the t + τ(t) minimum for a travel to α Centauri occurs
+    at 19.6 per cent the speed of light (c), in agreement with the 20 per cent c proposed by the Breakthrough Starshot initiative.
+    If interstellar travel at 20 per cent c could be achieved within 45 yr from today and the kinetic energy be increased
+    at a rate consistent with the historical record, then humans can reach the 10 most nearby stars within 100 yr from today.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=MNRAS, has_arxiv, has_doi) + rel(no_signal) → combined=10>=10
+- &id005
+  arxiv_id: astro-ph/0511281
+  ads_bibcode: 2006PASP..118..227P
+  title: Optical Spectroscopy of a Flare on Barnard's Star
+  authors:
+  - Paulson, Diane B.
+  - Allred, Joel C.
+  - Anderson, Ryan B.
+  - Hawley, Suzanne L.
+  - Cochran, William D.
+  - Yelda, Sylvana
+  year: '2006'
+  pubdate: '2006-02-00'
+  doi: 10.1086/499497
+  abstract: We present optical spectra of a flare on Barnard's star. Several photospheric and chromospheric species were enhanced
+    by the flare heating. An analysis of the Balmer lines shows that their shapes are best explained by Stark broadening rather
+    than chromospheric mass motions. We estimate the temperature of the flaring region in the lower atmosphere to be &gt;=8000
+    K and the electron density to be ~10<SUP>14</SUP> cm<SUP>-3</SUP>, similar to values observed in other dM flares. Because
+    Barnard's star is considered to be one of our oldest neighbors, a flare of this magnitude is probably quite rare.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 1
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(topics=3) → combined=10>=10
+- &id006
+  arxiv_id: astro-ph/0310568
+  ads_bibcode: 2004A&A...414..181A
+  title: Studying the populations of our Galaxy using the kinematics of sdB stars
+  authors:
+  - Altmann, M.
+  - Edelmann, H.
+  - de Boer, K. S.
+  year: '2004'
+  pubdate: '2004-01-00'
+  doi: 10.1051/0004-6361:20031606
+  abstract: We have analysed the kinematics of a sample of 114 hot subdwarf stars. For 2/3 of the stars, new proper motions,
+    spectroscopic and photometric data are presented. The vast majority of the stars show a kinematic behaviour that is similar
+    to that of Thick Disk stars. Some stars have velocities rather fitting to solar, i.e. Thin Disk, kinematics. About ∼15
+    objects have orbital velocities which differ considerably from those of Disk stars. These are members of the Galactic
+    Halo. We investigated the velocity dispersions and calculated the orbits. Most stars feature orbits with disk character
+    (eccentricity of less than 0.5), a few reach far above the Galactic plane and have very eccentric orbits (eccentricity
+    of more than 0.7). The intermediate eccentricity range is poorly populated. This seems to indicate that the (Thick) Disk
+    and the Halo are kinematically disjunct. Plotting a histogram of the orbit data points along z leads to the z-distance
+    probability distribution of the star; doing this for the whole sample leads to the z-distance probability distribution
+    of the sample. The logarithmic histogram shows two slopes, each representing the scale height of a population. The disk
+    component has a scale height of 0.9 (±0.1) kpc, which is consistent with earlier results and is similar to that of the
+    Thick Disk. The other slope represents a component with a scale height ∼7 kpc, a much flatter gradient than for the disk
+    component. This shows that the vast majority of the sdBs are disk stars, but a Halo minority is present, too. The kinematic
+    history and population membership of the sdB stars on the whole is different from that of the cooler HBA stars, which
+    are predominantly or even exclusively Halo objects. This leads to the question, whether the Halo sdB stars are of similar
+    origin as the HBA stars, or whether their kinematical behaviour possibly represents another origin, such as infalling
+    stellar aggregates or inner disk events. <P />Based on data obtained at the 1.54 m telescope of the European Southern
+    Observatory, runs 58.D-0478, 60.D-0306, 62.L-0220, 64.L-0077, 64.H-0023(A), 65.H-0250, 65.H-0341(A) and 68.D-0192(A).
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(no_signal) → combined=10>=10
+- &id007
+  arxiv_id: astro-ph/0106222
+  ads_bibcode: 2001A&A...374L..12S
+  title: Search for nearby stars among proper motion stars selected by optical-to-infrared photometry. I. Discovery of LHS
+    2090 at spectroscopic distance of d ~ 6 pc
+  authors:
+  - Scholz, R.-D.
+  - Meusinger, H.
+  - Jahreiß, H.
+  year: '2001'
+  pubdate: '2001-08-00'
+  doi: 10.1051/0004-6361:20010811
+  abstract: We present the discovery of a previously unknown very nearby star - LHS 2090 at a distance of only d=6 pc. In
+    order to find nearby (i.e. d &lt; 25 pc) red dwarfs, we re-identified high proper motion stars (mu &gt;0.18 arcsec/yr)
+    from the NLTT catalogue (Luyten \cite{luyten7980}) in optical Digitized Sky Survey data for two different epochs and in
+    the 2MASS data base. Only proper motion stars with large R-K<SUB>s</SUB> colour index and with relatively bright infrared
+    magnitudes (K<SUB>s</SUB>&lt;10) were selected for follow-up spectroscopy. The low-resolution spectrum of LHS 2090 and
+    its large proper motion (0.79 arcsec/yr) classify this star as an M6.5 dwarf. The resulting spectroscopic distance estimate
+    from comparing the infrared JHK<SUB>s</SUB> magnitudes of LHS 2090 with absolute magnitudes of M6.5 dwarfs is 6.0+/-1.1
+    pc assuming an uncertainty in absolute magnitude of +/-0.4 mag.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (10 < 14)
+  fetch_error: null
+  authority_score: 10
+  relevance_score: 0
+  combined_score: 10
+  filter_decision: keep
+  filter_reason: auth(journal=A&A, has_arxiv, has_doi) + rel(no_signal) → combined=10>=10
+- &id008
+  arxiv_id: '1704.05556'
+  ads_bibcode: 2017Natur.544..333D
+  title: A temperate rocky super-Earth transiting a nearby cool star
+  authors:
+  - Dittmann, Jason A.
+  - Irwin, Jonathan M.
+  - Charbonneau, David
+  - Bonfils, Xavier
+  - Astudillo-Defru, Nicola
+  - Haywood, Raphaëlle D.
+  - Berta-Thompson, Zachory K.
+  - Newton, Elisabeth R.
+  - Rodriguez, Joseph E.
+  - Winters, Jennifer G.
+  - Tan, Thiam-Guan
+  - Almenara, Jose-Manuel
+  - Bouchy, François
+  - Delfosse, Xavier
+  - Forveille, Thierry
+  - Lovis, Christophe
+  - Murgas, Felipe
+  - Pepe, Francesco
+  - Santos, Nuno C.
+  - Udry, Stephane
+  - Wünsche, Anaël
+  - Esquerdo, Gilbert A.
+  - Latham, David W.
+  - Dressing, Courtney D.
+  year: '2017'
+  pubdate: '2017-04-00'
+  doi: 10.1038/nature22055
+  abstract: M dwarf stars, which have masses less than 60 per cent that of the Sun, make up 75 per cent of the population
+    of the stars in the Galaxy. The atmospheres of orbiting Earth-sized planets are observationally accessible via transmission
+    spectroscopy when the planets pass in front of these stars. Statistical results suggest that the nearest transiting Earth-sized
+    planet in the liquid-water, habitable zone of an M dwarf star is probably around 10.5 parsecs away. A temperate planet
+    has been discovered orbiting Proxima Centauri, the closest M dwarf, but it probably does not transit and its true mass
+    is unknown. Seven Earth-sized planets transit the very low-mass star TRAPPIST-1, which is 12 parsecs away, but their masses
+    and, particularly, their densities are poorly constrained. Here we report observations of LHS 1140b, a planet with a radius
+    of 1.4 Earth radii transiting a small, cool star (LHS 1140) 12 parsecs away. We measure the mass of the planet to be 6.6
+    times that of Earth, consistent with a rocky bulk composition. LHS 1140b receives an insolation of 0.46 times that of
+    Earth, placing it within the liquid-water, habitable zone. With 90 per cent confidence, we place an upper limit on the
+    orbital eccentricity of 0.29. The circular orbit is unlikely to be the result of tides and therefore was probably present
+    at formation. Given its large surface gravity and cool insolation, the planet may have retained its atmosphere despite
+    the greater luminosity (compared to the present-day) of its host star in its youth. Because LHS 1140 is nearby, telescopes
+    currently under construction might be able to search for specific atmospheric gases in the future.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 3
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(has_arxiv, has_doi) + rel(topics=7) → combined=9 (>= keep threshold 8 but <10)
+- &id009
+  arxiv_id: '1302.7281'
+  ads_bibcode: 2013PASP..125..357D
+  title: The Pan-STARRS Moving Object Processing System
+  authors:
+  - Denneau, Larry
+  - Jedicke, Robert
+  - Grav, Tommy
+  - Granvik, Mikael
+  - Kubica, Jeremy
+  - Milani, Andrea
+  - Vereš, Peter
+  - Wainscoat, Richard
+  - Chang, Daniel
+  - Pierfederici, Francesco
+  - Kaiser, N.
+  - Chambers, K. C.
+  - Heasley, J. N.
+  - Magnier, Eugene A.
+  - Price, P. A.
+  - Myers, Jonathan
+  - Kleyna, Jan
+  - Hsieh, Henry
+  - Farnocchia, Davide
+  - Waters, Chris
+  - Sweeney, W. H.
+  - Green, Denver
+  - Bolin, Bryce
+  - Burgett, W. S.
+  - Morgan, J. S.
+  - Tonry, John L.
+  - Hodapp, K. W.
+  - Chastel, Serge
+  - Chesley, Steve
+  - Fitzsimmons, Alan
+  - Holman, Matthew
+  - Spahr, Tim
+  - Tholen, David
+  - Williams, Gareth V.
+  - Abe, Shinsuke
+  - Armstrong, J. D.
+  - Bressi, Terry H.
+  - Holmes, Robert
+  - Lister, Tim
+  - McMillan, Robert S.
+  - Micheli, Marco
+  - Ryan, Eileen V.
+  - Ryan, William H.
+  - Scotti, James V.
+  year: '2013'
+  pubdate: '2013-04-00'
+  doi: 10.1086/670337
+  abstract: We describe the Pan-STARRS Moving Object Processing System (MOPS), a modern software package that produces automatic
+    asteroid discoveries and identifications from catalogs of transient detections from next-generation astronomical survey
+    telescopes. MOPS achieves &gt;99.5% efficiency in producing orbits from a synthetic but realistic population of asteroids
+    whose measurements were simulated for a Pan-STARRS4-class telescope. Additionally, using a nonphysical grid population,
+    we demonstrate that MOPS can detect populations of currently unknown objects such as interstellar asteroids. MOPS has
+    been adapted successfully to the prototype Pan-STARRS1 telescope despite differences in expected false detection rates,
+    fill-factor loss, and relatively sparse observing cadence compared to a hypothetical Pan-STARRS4 telescope and survey.
+    MOPS remains highly efficient at detecting objects but drops to 80% efficiency at producing orbits. This loss is primarily
+    due to configurable MOPS processing limits that are not yet tuned for the Pan-STARRS1 mission. The core MOPS software
+    package is the product of more than 15 person-years of software development and incorporates countless additional years
+    of effort in third-party software to perform lower-level functions such as spatial searching or orbit determination. We
+    describe the high-level design of MOPS and essential subcomponents, the suitability of MOPS for other survey programs,
+    and suggest a road map for future MOPS development.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 0
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(no_signal) → combined=9 (>= keep threshold 8 but <10)
+- &id010
+  arxiv_id: '1205.1388'
+  ads_bibcode: 2012PASP..124..586A
+  title: Design and Construction of Absorption Cells for Precision Radial Velocities in the K Band Using Methane Isotopologues
+  authors:
+  - Anglada-Escudé, Guillem
+  - Plavchan, Peter
+  - Mills, Sean
+  - Gao, Peter
+  - García-Berríos, Edgardo
+  - Lewis, Nathan S.
+  - Sung, Keeyoon
+  - Ciardi, David
+  - Beichman, Chas
+  - Brinkworth, Carolyn
+  - Johnson, John
+  - Davison, Cassy
+  - White, Russel
+  - Prato, Lisa
+  year: '2012'
+  pubdate: '2012-06-00'
+  doi: 10.1086/666489
+  abstract: We present a method to optimize absorption cells for precise wavelength calibration in the near-infrared. We apply
+    it to design and optimize methane isotopologue cells for precision radial velocity measurements in the K band. We also
+    describe the construction and installation of two such cells for the CSHELL spectrograph at NASA’s IRTF. We have obtained
+    their high-resolution laboratory spectra, which we can then use in precision radial velocity measurements and which can
+    also have other applications. In terms of obtainable RV precision, methane should outperform other proposed cells, such
+    as the ammonia cell () recently demonstrated on CRIRES/VLT. The laboratory spectra of the ammonia and methane cells show
+    strong absorption features in the H band that could also be exploited for precision Doppler measurements. We present spectra
+    and preliminary radial velocity measurements obtained during our first-light run. These initial results show that a precision
+    down to can be obtained using a wavelength interval of only 5 nm in the K band and S/N ∼ 150. This supports the prediction
+    that a precision down to a few meters per second can be achieved on late-M dwarfs using the new generation of NIR spectrographs,
+    thus enabling the detection of terrestrial planets in their habitable zones. Doppler measurements in the NIR can also
+    be used to mitigate the radial velocity jitter due to stellar activity, enabling more efficient surveys on young active
+    stars.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 0
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(no_signal) → combined=9 (>= keep threshold 8 but <10)
+- &id011
+  arxiv_id: '1103.0004'
+  ads_bibcode: 2011PASP..123..709M
+  title: Precise Stellar Radial Velocities of an M Dwarf with a Michelson Interferometer and a Medium-Resolution Near-Infrared
+    Spectrograph
+  authors:
+  - Muirhead, Philip S.
+  - Edelstein, Jerry
+  - Erskine, David J.
+  - Wright, Jason T.
+  - Muterspaugh, Matthew W.
+  - Covey, Kevin R.
+  - Wishnow, Edward H.
+  - Hamren, Katherine
+  - Andelson, Phillip
+  - Kimber, David
+  - Mercer, Tony
+  - Halverson, Samuel P.
+  - Vanderburg, Andrew
+  - Mondo, Daniel
+  - Czeszumska, Agnieszka
+  - Lloyd, James P.
+  year: '2011'
+  pubdate: '2011-06-00'
+  doi: 10.1086/660802
+  abstract: Precise near-infrared radial velocimetry enables efficient detection and transit verification of low-mass extrasolar
+    planets orbiting M-dwarf hosts, which are faint for visible-wavelength radial velocity surveys. The TripleSpec Exoplanet
+    Discovery Instrument (TEDI) is the combination of a variable-delay Michelson interferometer and a medium-resolution (R
+    = 2700) near-infrared spectrograph on the Palomar 200 inch (5 m) Hale Telescope. We used TEDI to monitor GJ 699, a nearby
+    mid-M dwarf, over 11 nights spread across 3 months. Analysis of 106 independent observations reveals a root-mean-squared
+    precision of less than 37 m s<SUP>-1</SUP> for 5 minutes of integration time. This performance is within a factor of 2
+    of our expected photon-limited precision. We further decompose the residuals into a 33 m s<SUP>-1</SUP> white noise component
+    and a 15 m s<SUP>-1</SUP> systematic noise component, which we identify as being likely due to contamination by telluric
+    absorption lines. With further development this technique holds promise for broad implementation on medium-resolution
+    near-infrared spectrographs to search for low-mass exoplanets orbiting M dwarfs and to verify low-mass transit candidates.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 0
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(topics=2, skip_pattern=\binstrument\b.*\bperformance\) → combined=9
+    (>= keep threshold 8 but <10)
+- &id012
+  arxiv_id: '1011.2020'
+  ads_bibcode: 2010PASP..122.1437P
+  title: All-Sky Spectrally Matched UBVRI - ZY and u<SUP>′</SUP> g<SUP>′</SUP> r<SUP>′</SUP> i<SUP>′</SUP> z<SUP>′</SUP> Magnitudes
+    for Stars in the Tycho2 Catalog
+  authors:
+  - Pickles, A.
+  - Depagne, É.
+  year: '2010'
+  pubdate: '2010-12-00'
+  doi: 10.1086/657947
+  abstract: We present fitted UBVRI - ZY and u<SUP>′</SUP> g<SUP>′</SUP> r<SUP>′</SUP> i<SUP>′</SUP> z<SUP>′</SUP> magnitudes,
+    spectral types, and distances for 2.4 million stars, derived from synthetic photometry of a library spectrum that best
+    matches the Tycho2 B<SUB>T</SUB> V<SUB>T</SUB>, NOMAD R<SUB>N</SUB>, and 2MASS JHK<SUB>2/S</SUB> catalog magnitudes. We
+    present similarly synthesized multifilter magnitudes, types, and distances for 4.8 million stars with 2MASS and SDSS photometry
+    to g &lt; 16 within the Sloan survey region, for Landolt and Sloan primary standards, and for Sloan northern (photometric
+    telescope) and southern secondary standards. The synthetic magnitude zero points for B<SUB>T</SUB> V<SUB>T</SUB>, UBVRI,
+    Z<SUB>V</SUB> Y<SUB>V</SUB>, JHK<SUB>2/S</SUB>, JHK<SUB>MKO</SUB>, Stromgren uvby, Sloan u<SUP>′</SUP> g<SUP>′</SUP> r<SUP>′</SUP>
+    i<SUP>′</SUP> z<SUP>′</SUP>, and ugriz are calibrated on 20 CALSPEC spectrophotometric standards. The UBVRI and ugriz
+    zero points have dispersions of 1-3%, for standards covering a range of color from -0.3 &lt; V - I &lt; 4.6 those for
+    other filters are in the range of 2-5%. The spectrally matched fits to Tycho2 stars provide estimated 1σ errors per star
+    of ∼0.2, 0.15, 0.12, 0.10, and 0.08 mag, respectively, in either UBVRI or u<SUP>′</SUP> g<SUP>′</SUP> r<SUP>′</SUP> i<SUP>′</SUP>
+    z<SUP>′</SUP> those for at least 70% of the SDSS survey region to g &lt; 16 have estimated 1σ errors per star of ∼0.2,
+    0.06, 0.04, 0.04, and 0.05 in u<SUP>′</SUP> g<SUP>′</SUP> r<SUP>′</SUP> i<SUP>′</SUP> z<SUP>′</SUP> or UBVRI. The density
+    of Tycho2 stars, averaging about 60 stars per square degree, provides sufficient stars to enable automatic flux calibrations
+    for most digital images with fields of view of 0.5° or more. Using several such standards per field, automatic flux calibration
+    can be achieved to a few percent in any filter, at any air mass, in most workable observing conditions, to facilitate
+    intercomparison of data from different sites, telescopes, and instruments.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 0
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(no_signal) → combined=9 (>= keep threshold 8 but <10)
+- &id013
+  arxiv_id: astro-ph/0606663
+  ads_bibcode: 2006PASP..118..947T
+  title: Astrophysics in 2005
+  authors:
+  - Trimble, Virginia
+  - Aschwanden, Markus J.
+  - Hansen, Carl J.
+  year: '2006'
+  pubdate: '2006-07-00'
+  doi: 10.1086/506157
+  abstract: We bring you, as usual, the Sun and Moon and stars, plus some galaxies and a new section on astrobiology. Some
+    highlights are short (the newly identified class of gamma-ray bursts, and the Deep Impact on Comet 9P/Tempel 1), some
+    long (the age of the universe, which will be found to have the Earth at its center), and a few metonymic, for instance
+    the term ``down-sizing'' to describe the evolution of star formation rates with redshift.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 0
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(no_signal) → combined=9 (>= keep threshold 8 but <10)
+- &id014
+  arxiv_id: astro-ph/0507115
+  ads_bibcode: 2005PASP..117.1021S
+  title: 'Astrometric Methods and Instrumentation to Identify and Characterize Extrasolar Planets: A Review'
+  authors:
+  - Sozzetti, Alessandro
+  year: '2005'
+  pubdate: '2005-10-00'
+  doi: 10.1086/444487
+  abstract: I present a review of astrometric techniques and instrumentation used to search for, detect, and characterize
+    extrasolar planets. First, I briefly summarize the properties of the current sample of extrasolar planets, in connection
+    with predictions from theoretical models of planet formation and evolution. Next, the generic approach to planet detection
+    with astrometry is described, with significant discussion of a variety of technical, statistical, and astrophysical issues
+    to be faced by future ground-based and space-borne efforts in order to achieve the required degree of measurement precision.
+    After a brief summary of past and present efforts to detect planets via milliarcsecond astrometry, I then discuss the
+    planet-finding capabilities of future astrometric observatories aiming at microarcsecond precision. Finally, I outline
+    a number of experiments that can be conducted by means of high-precision astrometry during the next decade, to illustrate
+    its potential for important contributions to planetary science, compared to other indirect and direct methods for the
+    detection and characterization of planetary systems.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (9 < 14)
+  fetch_error: null
+  authority_score: 9
+  relevance_score: 0
+  combined_score: 9
+  filter_decision: borderline
+  filter_reason: auth(journal=PASP, has_arxiv, has_doi) + rel(no_signal) → combined=9 (>= keep threshold 8 but <10)
+- &id015
+  arxiv_id: '2603.11561'
+  ads_bibcode: null
+  title: Atmospheric Escape Rates from Mars - If it Orbited an Old M-Dwarf Star
+  authors:
+  - David A. Brain
+  - Ofer Cohen
+  - Thomas E. Cravens
+  - Kevin France
+  - Alex Glocer
+  - Parker Hinton
+  - Francois Leblanc
+  - Yingjuan Ma
+  - Akifumi Nakayama
+  - Shotaro Sakai
+  - Ryoya Sakata
+  - Kanako Seki
+  - Julián D. Alvarado-Gómez
+  - Zachory Berta-Thompson
+  - Eryn M. Cangi
+  - Michael Chaffin
+  - Jean-Yves Chaufray
+  - Renata Frelikh
+  - Yoshifumi Futaana
+  - Katherine Garcia-Sage
+  - Lukas Hanson
+  - Mats Holmström
+  - Bruce Jakosky
+  - Riku Jarvinen
+  - Ravi Kopparapu
+  - Daniel R. Marsh
+  - Aimee Merkel
+  - Thomas Earle Moore
+  - Yuta Notsu
+  - Rachel A. Osten
+  - William K. Peterson
+  - Laura Peticolas
+  - Robin Ramstad
+  - Kevin B. Stevenson
+  - Robert Strangeway
+  - Wenyi Sun
+  - Naoki Terada
+  - Aline A. Vidotto
+  year: '2026'
+  pubdate: '2026-03-12'
+  doi: null
+  abstract: Atmospheric escape is an important process that influences the evolution of planetary atmospheres. A variety of
+    physical mechanisms can contribute to escape from an atmosphere, including thermal escape, ion escape, photochemical escape,
+    and sputtering. Here we estimate escape rates via each of these processes for a hypothetical Mars-like exoplanet orbiting
+    Barnard's star (an old, inactive M dwarf star). We place the planet at an orbital distance that receives the same total
+    stellar flux as it does in our solar system. We use the measured stellar extreme ultraviolet (EUV) spectrum and assumptions
+    on the star's magnetic field to determine both the high-energy radiation and the stellar wind environment around the planet.
+    This information is used to model the response of the planet's thermosphere, exosphere and magnetosphere using a variety
+    of models that have been validated against solar system observations. We find overall escape rates that are dominated
+    by thermal processes and elevated by 2-5 orders of magnitude relative to present-day Mars, suggesting that a Mars-like
+    planet orbiting Barnard's star would not retain a significant atmosphere for more than 10's of millions of years. Recently
+    reported planets around Barnard's star should also not have retained significant atmospheres. By extension, Mars-like
+    planets orbiting any M dwarf near the 'Habitable Zone' should not retain atmospheres for extended periods of time.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (8 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 3
+  combined_score: 8
+  filter_decision: borderline
+  filter_reason: auth(has_arxiv) + rel(topics=9) → combined=8 (>= keep threshold 8 but <10)
+- &id016
+  arxiv_id: '2009.01259'
+  ads_bibcode: null
+  title: 'The High-Energy Radiation Environment Around a 10 Gyr M Dwarf: Habitable at Last?'
+  authors:
+  - Kevin France
+  - Girish Duvvuri
+  - Hilary Egan
+  - Tommi Koskinen
+  - David J. Wilson
+  - Allison Youngblood
+  - Cynthia S. Froning
+  - Alexander Brown
+  - Julian D. Alvarado-Gomez
+  - Zachory K. Berta-Thompson
+  - Jeremy J. Drake
+  - Cecilia Garraffo
+  - Lisa Kaltenegger
+  - Adam F. Kowalski
+  - Jeffrey L. Linsky
+  - R. O. Parke Loyd
+  - Pablo J. D. Mauas
+  - Yamila Miguel
+  - J. Sebastian Pineda
+  - Sarah Rugheimer
+  - P. Christian Schneider
+  - Feng Tian
+  - Mariela Vieytes
+  year: '2020'
+  pubdate: '2020-09-02'
+  doi: 10.3847/1538-3881/abb465
+  abstract: 'High levels of X-ray and UV activity on young M dwarfs may drive rapid atmospheric escape on temperate, terrestrial
+    planets orbiting within the liquid water habitable zone. However, secondary atmospheres on planets orbiting older, less
+    active M dwarfs may be stable and present more promising candidates for biomarker searches. We present new HST and Chandra
+    observations of Barnard''s Star (GJ 699), a 10 Gyr old M3.5 dwarf, acquired as part of the Mega-MUSCLES program. Despite
+    the old age and long rotation period of Barnard''s star, we observe two FUV ($δ_{130}$ $\approx$ 5000s; $E_{130}$ $\approx$
+    10$^{29.5}$ erg each) and one X-ray ($E_{X}$ $\approx$ 10$^{29.2}$ erg) flares, and estimate a high-energy flare duty
+    cycle (defined here as the fraction of the time the star is in a flare state) of $\sim$ 25\%. A 5 A - 10 $μ$m SED of GJ
+    699 is created and used to evaluate the atmospheric stability of a hypothetical, unmagnetized terrestrial planet in the
+    habitable zone ($r_{HZ}$ $\sim$ 0.1 AU). Both thermal and non-thermal escape modeling indicate (1) the $quiescent$ stellar
+    XUV flux does not lead to strong atmospheric escape: atmospheric heating rates are comparable to periods of high solar
+    activity on modern Earth, and (2) the $flare$ environment could drive the atmosphere into a hydrodynamic loss regime at
+    the observed flare duty cycle: sustained exposure to the flare environment of GJ 699 results in the loss of $\approx$
+    87 Earth atmospheres Gyr$^{-1}$ through thermal processes and $\approx$ 3 Earth atmospheres Gyr$^{-1}$ through ion loss
+    processes, respectively. These results suggest that if rocky planet atmospheres can survive the initial $\sim$ 5 Gyr of
+    high stellar activity, or if a second generation atmosphere can be formed or acquired, the flare duty cycle may be the
+    controlling stellar parameter for the stability of Earth-like atmospheres around old M stars.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (8 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 3
+  combined_score: 8
+  filter_decision: borderline
+  filter_reason: auth(has_arxiv) + rel(topics=11) → combined=8 (>= keep threshold 8 but <10)
+- arxiv_id: '2102.08493'
+  ads_bibcode: null
+  title: Reconstructing the Extreme Ultraviolet Emission of Cool Dwarfs Using Differential Emission Measure Polynomials
+  authors:
+  - Girish M. Duvvuri
+  - J. Sebastian Pineda
+  - Zachory K. Berta-Thompson
+  - Alexander Brown
+  - Kevin France
+  - Adam F. Kowalski
+  - Seth Redfield
+  - Dennis Tilipman
+  - Mariela C. Vieytes
+  - David J. Wilson
+  - Allison Youngblood
+  - Cynthia S. Froning
+  - Jeffrey Linsky
+  - R. O. Parke Loyd
+  - Pablo Mauas
+  - Yamila Miguel
+  - Elisabeth R. Newton
+  - Sarah Rugheimer
+  - P. Christian Schneider
+  year: '2021'
+  pubdate: '2021-02-16'
+  doi: 10.3847/1538-4357/abeaaf
+  abstract: 'Characterizing the atmospheres of planets orbiting M dwarfs requires understanding the spectral energy distributions
+    of M dwarfs over planetary lifetimes. Surveys like MUSCLES, HAZMAT, and FUMES have collected multiwavelength spectra across
+    the spectral type''s range of Teff and activity, but the extreme ultraviolet flux (EUV, 100 to 912 Angstroms) of most
+    of these stars remains unobserved because of obscuration by the interstellar medium compounded with limited detector sensitivity.
+    While targets with observable EUV flux exist, there is no currently operational facility observing between 150 and 912
+    Angstroms. Inferring the spectra of exoplanet hosts in this regime is critical to studying the evolution of planetary
+    atmospheres because the EUV heats the top of the thermosphere and drives atmospheric escape. This paper presents our implementation
+    of the differential emission measure technique to reconstruct the EUV spectra of cool dwarfs. We characterize our method''s
+    accuracy and precision by applying it to the Sun and AU Mic. We then apply it to three fainter M dwarfs: GJ 832, Barnard''s
+    Star, and TRAPPIST-1. We demonstrate that with the strongest far ultraviolet (FUV, 912 to 1700 Angstroms) emission lines,
+    observed with Hubble Space Telescope and/or Far Ultraviolet Spectroscopic Explorer, and a coarse X-ray spectrum from either
+    Chandra X-ray Observatory or XMM-Newton, we can reconstruct the Sun''s EUV spectrum to within a factor of 1.8, with our
+    model''s formal uncertainties encompassing the data. We report the integrated EUV flux of our M dwarf sample with uncertainties
+    between a factor of 2 to 7 depending on available data quality.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 2
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=4) → combined=7<8
+- arxiv_id: '1803.07646'
+  ads_bibcode: null
+  title: 'Optical and Near-Infrared Radial Velocity Content of M Dwarfs: Testing Models with Barnard''s Star'
+  authors:
+  - Étienne Artigau
+  - Lison Malo
+  - René Doyon
+  - Pedro Figueira
+  - Xavier Delfosse
+  - Nicola Astudillo-Defru
+  year: '2018'
+  pubdate: '2018-03-20'
+  doi: 10.3847/1538-3881/aab77d
+  abstract: High precision radial velocity (RV) measurements have been central in the study of exoplanets during the last
+    two decades, from the early discovery of hot Jupiters, to the recent mass measurements of Earth-sized planets uncovered
+    by transit surveys. While optical radial-velocity is now a mature field, there is currently a strong effort to push the
+    technique into the near-infrared (nIR) domain (chiefly $Y$, $J$, $H$ and $K$ band passes) to probe planetary systems around
+    late-type stars. The combined lower mass and luminosity of M dwarfs leads to an increased reflex RV signal for planets
+    in the habitable zone compared to Sun-like stars. The estimates on the detectability of planets rely on various instrumental
+    characteristics, but also on a prior knowledge of the stellar spectrum. While the overall properties of M dwarf spectra
+    have been extensively tested against observations, the same is not true for their detailed line profiles, which leads
+    to significant uncertainties when converting a given signal-to-noise ratio to a corresponding RV precision as attainable
+    on a given spectrograph. By combining archival CRIRES and HARPS data with ESPaDOnS data of Barnard's star, we show that
+    state-of-the-art atmosphere models over-predict the $Y$ and $J$-band RV content by more than a factor of $\sim$$2$, while
+    under-predicting the $H$ and $K$-band content by half.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 2
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=4) → combined=7<8
+- arxiv_id: '1511.03550'
+  ads_bibcode: 2015Natur.527..204B
+  title: A rocky planet transiting a nearby low-mass star
+  authors:
+  - Berta-Thompson, Zachory K.
+  - Irwin, Jonathan
+  - Charbonneau, David
+  - Newton, Elisabeth R.
+  - Dittmann, Jason A.
+  - Astudillo-Defru, Nicola
+  - Bonfils, Xavier
+  - Gillon, Michaël
+  - Jehin, Emmanuël
+  - Stark, Antony A.
+  - Stalder, Brian
+  - Bouchy, Francois
+  - Delfosse, Xavier
+  - Forveille, Thierry
+  - Lovis, Christophe
+  - Mayor, Michel
+  - Neves, Vasco
+  - Pepe, Francesco
+  - Santos, Nuno C.
+  - Udry, Stéphane
+  - Wünsche, Anaël
+  year: '2015'
+  pubdate: '2015-11-00'
+  doi: 10.1038/nature15762
+  abstract: 'M-dwarf stars—hydrogen-burning stars that are smaller than 60 per cent of the size of the Sun—are the most common
+    class of star in our Galaxy and outnumber Sun-like stars by a ratio of 12:1. Recent results have shown that M dwarfs host
+    Earth-sized planets in great numbers: the average number of M-dwarf planets that are between 0.5 to 1.5 times the size
+    of Earth is at least 1.4 per star. The nearest such planets known to transit their star are 39 parsecs away, too distant
+    for detailed follow-up observations to measure the planetary masses or to study their atmospheres. Here we report observations
+    of GJ 1132b, a planet with a size of 1.2 Earth radii that is transiting a small star 12 parsecs away. Our Doppler mass
+    measurement of GJ 1132b yields a density consistent with an Earth-like bulk composition, similar to the compositions of
+    the six known exoplanets with masses less than six times that of the Earth and precisely measured densities. Receiving
+    19 times more stellar radiation than the Earth, the planet is too hot to be habitable but is cool enough to support a
+    substantial atmosphere, one that has probably been considerably depleted of hydrogen. Because the host star is nearby
+    and only 21 per cent the radius of the Sun, existing and upcoming telescopes will be able to observe the composition and
+    dynamics of the planetary atmosphere.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 1
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(topics=3) → combined=7<8
+- arxiv_id: '1411.6017'
+  ads_bibcode: null
+  title: 'A search for TiO in the optical high-resolution transmission spectrum of HD 209458b: Hindrance due to inaccuracies
+    in the line database'
+  authors:
+  - H. J. Hoeijmakers
+  - R. J. de Kok
+  - I. A. G. Snellen
+  - M. Brogi
+  - J. L. Birkby
+  - H. Schwarz
+  year: '2014'
+  pubdate: '2014-11-21'
+  doi: 10.1051/0004-6361/201424794
+  abstract: 'The spectral signature of an exoplanet can be separated from the spectrum of its host star using high-resolution
+    spectroscopy. During such observations, the radial component of the planet''s orbital velocity changes, resulting in a
+    significant Doppler shift which allows its spectral features to be extracted. Aims: In this work, we aim to detect TiO
+    in the optical transmission spectrum of HD 209458b. Gaseous TiO has been suggested as the cause of the thermal inversion
+    layer invoked to explain the dayside spectrum of this planet. Method: We used archival data from the 8.2m Subaru Telescope
+    taken with the High Dispersion Spectrograph of a transit of HD209458b in 2002. We created model transmission spectra which
+    include absorption by TiO, and cross-correlated them with the residual spectral data after removal of the dominating stellar
+    absorption features. We subsequently co-added the correlation signal in time, taking into account the change in Doppler
+    shift due to the orbit of the planet. Results: We detect no significant cross-correlation signal due to TiO, though artificial
+    injection of our template spectra into the data indicates a sensitivity down to a volume mixing ratio of ~10E-10. However,
+    cross-correlating the template spectra with a HARPS spectrum of Barnard''s star yields only a weak wavelength-dependent
+    correlation, even though Barnard''s star is an M4V dwarf which exhibits clear TiO absorption. We infer that the TiO line
+    list poorly match the real positions of TiO lines at spectral resolutions of ~100,000. Similar line lists are also used
+    in the PHOENIX and Kurucz stellar atmosphere suites and we show that their synthetic M-dwarf spectra also correlate poorly
+    with the HARPS spectra of Barnard''s star and five other M-dwarfs. We conclude that the lack of an accurate TiO line list
+    is currently critically hampering this high-resolution retrieval technique.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 2
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=4) → combined=7<8
+- arxiv_id: null
+  ads_bibcode: 2007PASP..119..828B
+  title: 'Knowing Our Neighbors: Fundamental Properties of Nearby Stars'
+  authors:
+  - Bartlett, Jennifer Lynn
+  year: '2007'
+  pubdate: '2007-07-00'
+  doi: 10.1086/520554
+  abstract: The stars within 25 pc constitute the sample that we aspire to know thoroughly. A well-understood, volume-limited
+    sample of nearby stars is an essential input for the stellar luminosity function, the mass-luminosity relationship, the
+    stellar velocity distribution, and the stellar multiplicity fraction, including substellar companions. Such samples help
+    define stellar populations and estimate the amount mass contributed by local stars. In addition, the stars in this volume
+    provide insight into stellar evolution and the history of star formation in the disk. These physical relationships and
+    subsamples describe the makeup of our Galaxy and, by extension, more distant galaxies. However, models are being developed
+    from an incomplete catalog with limited parameters. Although trigonometric parallaxes establish both sample membership
+    and the cosmic distance scale, many objects within reach of ground-based telescopes remain unmeasured. To advance the
+    solar neighborhood census, observations of 56 nearby stars are presented, including astrometric companion search results,
+    along with a possible a new infrared parallax program.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 7
+  relevance_score: 0
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(journal=PASP, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2004PASP..116..187T
+  title: Astrophysics in 2003
+  authors:
+  - Trimble, Virginia
+  - Aschwanden, Markus J.
+  year: '2004'
+  pubdate: '2004-03-00'
+  doi: 10.1086/383241
+  abstract: Five coherent sections appear this year, addressing solar physics, cosmology (with WMAP highlights), gamma-ray
+    bursters (and their association with Type Ia supernovae), extra-solar-system planets, and the formation and evolution
+    of galaxies (from reionization to assemblage of Local Group galaxies). There are also eight incoherent sections that deal
+    with other topics in stellar, galactic, and planetary astronomy and the people who study them.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 7
+  relevance_score: 0
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(journal=PASP, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2000PASP..112..434T
+  title: Astrophysics in 1999
+  authors:
+  - Trimble, Virginia
+  - Aschwanden, Markus J.
+  year: '2000'
+  pubdate: '2000-04-00'
+  doi: 10.1086/316546
+  abstract: The year 1999 saw the arrival of a star with three planets, a universe with three parameters, and a solar corona
+    that could be heated at least three ways. In addition, there were at least three papers on every question that has ever
+    been asked in astrophysics, from ``Will the Universe expand forever?'' to ``Does mantle convection occur in one or two
+    layers?'' The answers generally were, ``Yes,'' ``No,'' and ``None of the above,'' to each of the questions. The authors
+    have done their best to organize the richness around centers defined by objects, methods, and madnesses.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 7
+  relevance_score: 0
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(journal=PASP, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1983MNRAS.205P..39J
+  title: A failed search for black dwarfs as companions to nearby stars.
+  authors:
+  - Jameson, R. F.
+  - Sherrington, M. R.
+  - Giles, A. B.
+  year: '1983'
+  pubdate: '1983-10-00'
+  doi: 10.1093/mnras/205.1.39P
+  abstract: Observations of 64-64-arcsec and 65 x 65-arcsec regions around 21 nearby stars, obtained with UKIRT and AAT, respectively,
+    in March and June, 1981, are reported. The survey was undertaken to search for 'black dwarf' (0.001-0.08-solar-mass, 0.1-solar
+    radius) companion objects. The limiting K magnitudes for the telescopes were about 14.5 and 15.0, and all objects detected
+    were measured at J, H, and K to calculate approximate temperatures and radii. Black-dwarf candidates were defined as objects
+    with temperatures less than about 2500 K and radii about 0.2 solar radius, but no such objects were found. It is pointed
+    out that the design of the search favors detection of companions with a relatively large separation from the primary star;
+    hence the result indicates that there are few or no black-dwarf companions beyond about 10 arcsec from nearby stars.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (7 < 14)
+  fetch_error: null
+  authority_score: 7
+  relevance_score: 0
+  combined_score: 7
+  filter_decision: skip
+  filter_reason: auth(journal=MNRAS) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2602.00382'
+  ads_bibcode: 2026arXiv260200382W
+  title: Radial and Rotational Velocities of a Volume-Complete Sample of M Dwarfs with Masses 0.1-0.3 Msun within 15 parsecs
+  authors:
+  - Winters, Jennifer G.
+  - Pass, Emily K.
+  - Charbonneau, David
+  - Irwin, Jonathan
+  - Latham, David W.
+  - Mink, Jessica
+  - Esquerdo, Gilbert A.
+  - Berlind, Perry
+  - Calkins, Michael L.
+  - Payne, Matthew J.
+  year: '2026'
+  pubdate: '2026-01-00'
+  doi: 10.48550/arXiv.2602.00382
+  abstract: We present the results from a five-year campaign to gather multi-epoch, high-resolution spectra of a volume-complete
+    sample of 413 M dwarfs with masses 10-30% that of the Sun that lie within 15 parsecs. We report weighted mean systemic
+    radial velocities (RV) and rotational broadening measurements ($v \sin i$) for our targets. Our typical relative RV uncertainties
+    are less than $50$ m/s for the isolated, slowly rotating targets in our sample, and increase but remain less than 1 km/s
+    for more rapidly rotating stars. The majority of the single stars in our sample ($71\pm3$%) have rotational broadening
+    below our detection limit of 3.4 km/s. When combined with astrometric data, our radial velocities allow us to calculate
+    galactic space motions, which we use to assign thin or thick disk membership. We determine that 81% and 8% of our sample
+    are highly probable thin and highly probable thick disk members, respectively. We report seven new multi-lined multiple
+    systems and identify six additional targets with velocity variations indicative of long-period binaries, of which three
+    are new detections. Finally, we find no significant difference in the stellar multiplicity rates of the thin disk ($22\pm2$%)
+    and thick disk ($21\pm8$%) populations in our sample, implying that mid-M dwarfs are not significantly losing their companions
+    at these relative ages. Our survey more than triples the number of these fully-convective stars with complete astrometric
+    data and uniformly derived, multi-epoch, high-resolution RVs and rotational broadening measurements.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2509.10883'
+  ads_bibcode: 2026PhR..1150....1P
+  title: 'Space astrometry with Gaia: Advances in understanding our Galaxy'
+  authors:
+  - Perryman, Michael
+  year: '2026'
+  pubdate: '2026-01-00'
+  doi: 10.1016/j.physrep.2025.09.004
+  abstract: Gaia is a satellite mission of the European Space Agency which is creating a catalogue of extremely accurate positions,
+    distances and space motions of two billion stars in our Galaxy, along with more than one hundred thousand solar system
+    asteroids, and several million distant quasars, all on the same extragalactic reference system. Complementary information
+    on each object's multi-epoch photometry and spectra provides a vast and unprecedented data base of (model-dependent) fundamental
+    physical quantities, such as each star's mass, age, and chemical composition. I outline the field's historical context,
+    and explain the key principles involved in these space measurements. This is followed by a broad review of the many areas
+    of solar system science, stellar structure and evolution, and topics in Galactic structure, evolution, and dynamics, that
+    are being derived from these data.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2025FrRS....635015J
+  title: 'The single beacon: progresses in understanding Earth as an exoplanet using DSCOVR/EPIC observations'
+  authors:
+  - Jian, Xun
+  - Gu, Lixiang
+  - Fan, Siteng
+  - Bartlett, Stuart J.
+  - Yang, Jiani
+  - Jiang, Jonathan H.
+  - Luo, Yangcheng
+  - Yung, Yuk L.
+  year: '2025'
+  pubdate: '2025-08-00'
+  doi: 10.3389/frsen.2025.1635015
+  abstract: Almost 6000 exoplanets have thus far been confirmed, revolutionizing our understanding of planetary habitability.
+    Yet, despite the identification of Earth-like exoplanets, definitive evidence of extraterrestrial life remains elusive.
+    Studying Earth, the only confirmed habitable and inhabited planet, as a proxy exoplanet provides critical insights for
+    interpreting forthcoming exoplanet direct-imaging data. Observations from the Deep Space Climate Observatory/Earth Polychromatic
+    Imaging Camera (DSCOVR/EPIC), located at the first Sun-Earth Lagrangian point (L1), offer a unique opportunity to analyze
+    Earth's full-disk, single-point multi-spectrum light curves. Here, we review progress that treat EPIC data as if Earth
+    were an unresolved, distant world. These studies reveal information about planetary rotation, cloud patterns, and surface
+    types. Autocorrelation of the time series recovers the 24 h rotation period, while principal component analysis (PCA)
+    highlights the land-ocean spectral contrast, enabling the reconstruction of a coarse two-dimensional surface map. Modeling
+    studies further quantify the contributions of different planetary surfaces and clouds to Earth's observable brightness,
+    with low-level clouds playing a dominant role. Additionally, the effects of Earth's atmosphere, particularly within strong
+    oxygen bands, have been simulated and evaluated. The rich temporal─spectral "light-curve complexity" produced by its heterogeneous
+    surface and dynamic atmosphere has emerged as a practical, observation-based metric of habitability. Comparisons with
+    simulations and other solar system planets demonstrate that Earth's light curves exhibit the highest complexity, underscoring
+    its unique status as the only known habitable and inhabited exoplanet. These findings provide a valuable observational
+    baseline for future exoplanet studies, refining our ability to recognize life-supporting worlds beyond the Solar System.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 2
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(topics=5) → combined=6<8
+- arxiv_id: '2503.08095'
+  ads_bibcode: null
+  title: Four sub-Earth planets orbiting Barnard's Star from MAROON-X and ESPRESSO
+  authors:
+  - Ritvik Basant
+  - Rafael Luque
+  - Jacob L. Bean
+  - Andreas Seifahrt
+  - Madison Brady
+  - Lily L. Zhao
+  - Nina Brown
+  - Tanya Das
+  - Julian Stürmer
+  - David Kasper
+  - Rohan Gupta
+  - Guðmundur Stefánsson
+  year: '2025'
+  pubdate: '2025-03-11'
+  doi: null
+  abstract: Barnard's Star is an old, single M dwarf star that comprises the second-closest extrasolar system. It has a long
+    history of claimed planet detections from both radial velocities and astrometry. However, none of these claimed detections
+    have so far withstood further scrutiny. Continuing this story, extreme precision radial velocity (EPRV) measurements from
+    the ESPRESSO instrument have recently been used to identify four new sub-Earth-mass planet candidates around Barnard's
+    Star. We present here 112 radial velocities of Barnard's Star from the MAROON-X instrument that were obtained independently
+    to search for planets around this compelling object. The data have a typical precision of 30\,cm\,s$^{-1}$ and are contemporaneous
+    with the published ESPRESSO measurements (2021 -- 2023). The MAROON-X data on their own confirm planet b ($P$\,=\,3.154\,d)
+    and planet candidates c and d ($P$\,=\,4.124\,d and 2.340\,d, respectively). Furthermore, adding the MAROON-X data to
+    the ESPRESSO data strengthens the evidence for planet candidate e ($P$\,=\,6.739\,d), thus leading to its confirmation.
+    The signals from all four planets are $<$50\,cm\,s$^{-1}$, the minimum masses of the planets range from 0.19 to 0.34\,$M_{\oplus}$,
+    and the system is among the most compact known among late M dwarfs hosting low-mass planets. The current data rule out
+    planets with masses $>0.57\,M_{\oplus}$ (with a $99\%$ detection probability) in Barnard Star's habitable zone ($P$\,=\,10
+    -- 42\,d).
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=3) → combined=6<8
+- arxiv_id: '2410.00569'
+  ads_bibcode: null
+  title: A sub-Earth-mass planet orbiting Barnard's star
+  authors:
+  - J. I. Gonzalez Hernandez
+  - A. Suarez Mascareno
+  - A. M. Silva
+  - A. K. Stefanov
+  - J. P. Faria
+  - H. M. Tabernero
+  - A. Sozzetti
+  - R. Rebolo
+  - F. Pepe
+  - N. C. Santos
+  - S. Cristiani
+  - C. Lovis
+  - X. Dumusque
+  - P. Figueira
+  - J. Lillo-Box
+  - N. Nari
+  - S. Benatti
+  - M. J. Hobson
+  - A. Castro-Gonz'alez
+  - R. Allart
+  - V. M. Passegger
+  - M. -R. Zapatero Osorio
+  - V. Adibekyan
+  - Y. Alibert
+  - C. Allende Prieto
+  - F. Bouchy
+  - M. Damasso
+  - V. D'Odorico
+  - P. Di Marcantonio
+  - D. Ehrenreich
+  - G. Lo Curto
+  - R. G'enova Santos
+  - C. J. A. P. Martins
+  - A. Mehner
+  - G. Micela
+  - P. Molaro
+  - N. Nunes
+  - E. Palle
+  - S. G. Sousa
+  - S. Udry
+  year: '2024'
+  pubdate: '2024-10-01'
+  doi: 10.1051/0004-6361/202451311
+  abstract: Barnard's star is a primary target within the ESPRESSO guaranteed time observations (GTO) as it is the second
+    closest neighbour to our Sun after the $α$ Centauri stellar system. We present here a large set of 156 ESPRESSO observations
+    of Barnard's star carried out over four years with the goal of exploring periods of shorter than 50 days, thus including
+    the habitable zone (HZ). Our analysis of ESPRESSO data using Gaussian process (GP) to model stellar activity suggests
+    a long-term activity cycle at 3200d and confirms stellar activity due to rotation at 140d as the dominant source of radial
+    velocity (RV) variations. These results are in agreement with findings based on publicly available HARPS, HARPS-N, and
+    CARMENES data. ESPRESSO RVs do not support the existence of the previously reported candidate planet at 233d. After subtracting
+    the GP model, ESPRESSO RVs reveal several short-period candidate planet signals at periods of 3.15d, 4.12d, 2.34d, and
+    6.74d. We confirm the 3.15d signal as a sub-Earth mass planet, with a semi-amplitude of $55 \pm 7$cm/s, leading to a planet
+    minimum mass $m_p \sin i$ of $0.37 \pm 0.05$Mearth, which is about three times the mass of Mars. ESPRESSO RVs suggest
+    the possible existence of a candidate system with four sub-Earth mass planets in circular orbits with semi-amplitudes
+    from 20 to 47cm/s, thus corresponding to minimum masses in the range of 0.17-0.32Mearth. The sub-Earth mass planet at
+    $3.1533 \pm 0.0006$d is in a close-to circular orbit with a semi-major axis of $0.0229 \pm 0.0003$AU, thus located inwards
+    from the HZ of Barnard's star, with an equilibrium temperature of 400K. Additional ESPRESSO observations would be required
+    to confirm that the other three candidate signals originate from a compact short-period planet system orbiting Barnard's
+    star inwards from its HZ.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=2) → combined=6<8
+- arxiv_id: null
+  ads_bibcode: 2023AcAau.202..157L
+  title: Development of the HeliosX mission analysis code for advanced ICF space propulsion
+  authors:
+  - Long, Kelvin F.
+  year: '2023'
+  pubdate: '2023-01-00'
+  doi: 10.1016/j.actaastro.2022.10.022
+  abstract: This work presents some of the first results from a recently developed fusion propulsion code which calculates
+    the performance of an advanced spacecraft design. HeliosX is a system integrated programming design tool written in Fortran
+    95 for the purpose of calculating spacecraft mission profile and propulsion performance for inertial confinement fusion
+    driven designs. This code uses the vehicle configuration input and then calculates the likely mission profile for a given
+    destination target. The key capability under development is the inclusion of the fusion propulsion system and an adequate
+    modelling of its likely energy outputs and how this integrates into the mission profile. The results of a comparison to
+    a concept from the literature are firstly presented for an interstellar flyby probe and then perturbations of this design
+    to include updates and revisions to its input parameters and expected performance. Although the code is still being developed
+    the early results show good potential to enabling a numerical tool for conducting spacecraft performance assessment of
+    fusion based propulsion systems. The preliminary results of modelling different missions are shown for an interstellar
+    target in ∼37-100 years trip times and ∼0.05-0.12c cruise speeds in flyby and rendezvous modes for orbital insertion to
+    a distance ∼4.3-5.9 ly . A description is given for how the baseline concepts are being evolved since the code has been
+    developed in parallel with the design process which aims to design improved vehicle concepts. Ultimately the calculations
+    shown in this paper are working towards the development of a design tool which can facilitate the proper analysis of a
+    range of different spacecraft designs and place them on a consistent modelling basis so that feasibility assessments can
+    be made.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(journal=AcAau, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2022AcAau.197..298L
+  title: Phenomenology and capabilities of mutually guided laser and neutral particle beams for deep space propulsion
+  authors:
+  - Limbach, Christopher M.
+  - Morgan, Hayden P.
+  year: '2022'
+  pubdate: '2022-08-00'
+  doi: 10.1016/j.actaastro.2022.04.006
+  abstract: Here we present a detailed analysis of a new concept for beam propulsion that extends the propagation range through
+    space by circumventing fundamental limitations on the beam divergence. Using a combination of spatially overlapped continuous
+    laser and neutral particle beams, opto-mechanical forces and light refraction are simultaneously exploited to produce
+    self-guided modes. The aim of the present work is to elucidate the relevant physical phenomena, their relation to the
+    conditions for self-guiding, and practical considerations for the design parameters of such a propulsion system. Methods
+    for computing the lowest order axisymmetric self-guided modes are presented along with the resulting spatial mode structure.
+    Key non-dimensional parameters are derived, including the use of linear stability analysis to determine features of the
+    dynamic interaction. Based on these findings, a beam parameter optimization framework is proposed and applied to a 100-year
+    interstellar flyby mission to Proxima b. With 200 GW of combined laser and particle beam power, we find that a 0.3 kg
+    spacecraft could be accelerated to 0 . 044 c over a distance of 4 . 37 × 10<SUP>6</SUP> km (0.029 AU) using a small 1
+    m<SUP>2</SUP> beam cross-section. Compared to an equivalent particle beam with no self-guiding, this represents an over
+    50 × increase in payload. Similar payload mass would be possible by laser propulsion with an approximately 10<SUP>4</SUP>
+    m<SUP>2</SUP> area laser array. These results suggest that self-guided beam propulsion possesses unique attributes that
+    could enable the acceleration of larger spacecraft to relativistic velocities and enhance scientific capabilities for
+    future interstellar and interstellar-precursor missions.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(journal=AcAau, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2206.05233'
+  ads_bibcode: null
+  title: 'Characterizing and Mitigating Telluric Absorption in Precise Radial Velocities II: A Study of an M2 Type Star'
+  authors:
+  - Natasha Latouf
+  - Sharon Xuesong-Wang
+  - Bryson Cale
+  - Peter Plavchan
+  year: '2022'
+  pubdate: '2022-06-10'
+  doi: null
+  abstract: Telluric absorption lines impact measuring precise radial velocities (RVs) from ground-based, high-resolution
+    spectrographs. In this paper, we simulate the dependence of this impact on stellar spectral type and extend the work of
+    the first paper in this series, which studied a G type star, to a synthetic M dwarf star. We quantify the bias in precise
+    RV measurements in the visible and near-infrared (NIR) from the presence of tellurics in a simulated set of observations.
+    We find that M dwarf RVs are more impacted by tellurics compared to G type stars. Specifically, for an M dwarf star, tellurics
+    can induce RV errors of up to 16 cm/s in the red-optical and in excess of 220 cm/s in the NIR. For a G dwarf, comparable
+    RV systematics are 3 cm/s in the red optical and 240 cm/s in the NIR. We attribute this relative increase for M dwarfs
+    stars to the increased concordance in wavelength between telluric lines and stellar Doppler information content. We compare
+    the results of our simulation to data collected on Barnard's star from the iSHELL spectrograph at the NASA Infrared Telescope
+    Facility (IRTF). This study was conducted as a follow-up to the NASA probe mission concept study EarthFinder.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=2) → combined=6<8
+- arxiv_id: '2201.11288'
+  ads_bibcode: null
+  title: Rotational modulation of spectroscopic Zeeman signatures in low-mass stars
+  authors:
+  - Ryan C. Terrien
+  - Allison Keen
+  - Katy Oda
+  - Winter Parts
+  - Guðmundur Stefánsson
+  - Suvrath Mahadevan
+  - Paul Robertson
+  - Joe P. Ninan
+  - Corey Beard
+  - Chad F. Bender
+  - William D. Cochran
+  - Katia Cunha
+  - Scott A. Diddams
+  - Connor Fredrick
+  - Samuel Halverson
+  - Fred Hearty
+  - Adam Ickler
+  - Shubham Kanodia
+  - Jessica E. Libby-Roberts
+  - Jack Lubin
+  - Andrew J. Metcalf
+  - Freja Olsen
+  - Lawrence W. Ramsey
+  - Arpita Roy
+  - Christian Schwab
+  - Verne V. Smith
+  - Ben Turner
+  year: '2022'
+  pubdate: '2022-01-27'
+  doi: 10.3847/2041-8213/ac4fc8
+  abstract: Accurate tracers of the stellar magnetic field and rotation are cornerstones for the study of M dwarfs and for
+    reliable detection and characterization of their exoplanetary companions. Such measurements are particularly challenging
+    for old, slowly rotating, fully convective M dwarfs. To explore the use of new activity and rotation tracers, we examined
+    multi-year near-infrared spectroscopic monitoring of two such stars -- GJ 699 (Barnard's Star) and Teegarden's Star --
+    carried out with Habitable Zone Planet Finder spectrograph. We detected periodic variations in absorption line widths
+    across the stellar spectrum with higher amplitudes towards longer wavelengths. We also detected similar variations in
+    the strength and width of the 12435.67 Angstrom neutral potassium (K I) line, a known tracer of the photospheric magnetic
+    field. Attributing these variations to rotational modulation, we confirm the known $145\pm15$ d rotation period of GJ
+    699, and measure the rotation period of Teegarden's Star to be $99.6\pm1.4$ d. Based on simulations of the K I line and
+    the wavelength-dependence of the line width signal, we argue that the observed signals are consistent with varying photospheric
+    magnetic fields and the associated Zeeman effect. These results highlight the value of detailed line profile measurements
+    in the near-infrared for diagnosing stellar magnetic field variability. Such measurements may be pivotal for disentangling
+    activity and exoplanet-related signals in spectroscopic monitoring of old, low-mass stars.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=2) → combined=6<8
+- arxiv_id: '2103.11196'
+  ads_bibcode: 2021Msngr.182...38K
+  title: PCS — A Roadmap for Exoearth Imaging with the ELT
+  authors:
+  - Kasper, M.
+  - Cerpa Urra, N.
+  - Pathak, P.
+  - Bonse, M.
+  - Nousiainen, J.
+  - Engler, B.
+  - Heritier, C. T.
+  - Kammerer, J.
+  - Leveratto, S.
+  - Rajani, C.
+  - Bristow, P.
+  - Le Louarn, M.
+  - Madec, P.-Y.
+  - Ströbele, S.
+  - Verinaud, C.
+  - Glauser, A.
+  - Quanz, S. P.
+  - Helin, T.
+  - Keller, C.
+  - Snik, F.
+  - Boccaletti, A.
+  - Chauvin, G.
+  - Mouillet, D.
+  - Kulcsár, C.
+  - Raynaud, H.-F.
+  year: '2021'
+  pubdate: '2021-03-00'
+  doi: 10.18727/0722-6691/5221
+  abstract: The Planetary Camera and Spectrograph (PCS) for the Extremely Large Telescope (ELT) will be dedicated to detecting
+    and characterising nearby exoplanets with sizes from sub-Neptune to Earth-size in the neighbourhood of the Sun. This goal
+    is achieved by a combination of eXtreme Adaptive Optics (XAO), coronagraphy and spectroscopy. PCS will allow us not only
+    to take images, but also to look for biosignatures such as molecular oxygen in the exoplanets' atmospheres. This article
+    describes the PCS primary science goals, the instrument concept and the research and development activities that will
+    be carried out over the coming years.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(skip_pattern=\bsub[- ]Neptune\b) → no_relevance_signal
+- arxiv_id: '2006.08784'
+  ads_bibcode: null
+  title: Directly imaged exoplanets in reflected starlight. The importance of knowing the planet radius
+  authors:
+  - Óscar Carrión-González
+  - Antonio García Muñoz
+  - Juan Cabrera
+  - Szilárd Csizmadia
+  - Nuno C. Santos
+  - Heike Rauer
+  year: '2020'
+  pubdate: '2020-06-15'
+  doi: 10.1051/0004-6361/202038101
+  abstract: We have investigated the information content in reflected-starlight spectra of exoplanets. We specify our analysis
+    to Barnard's Star b candidate super-Earth, for which we assume a radius 0.6 times that of Neptune, an atmosphere dominated
+    by H$_2$-He, and a CH$_4$ volume mixing ratio of 5$\cdot$10$^{-3}$. The main conclusions of our study are however planet-independent.
+    We set up a model of the exoplanet described by seven parameters including its radius, atmospheric methane abundance and
+    basic properties of a cloud layer. We generate synthetic spectra at zero phase (full disk illumination) from 500 to 900
+    nm and spectral resolution R$\sim$125-225. We simulate a measured spectrum with a simplified, wavelength-independent noise
+    model at Signal-to-Noise ratio S/N=10. With an MCMC-based retrieval methodology, we analyse which planet/atmosphere parameters
+    can be inferred from the measured spectrum and the theoretical correlations amongst them. We consider limiting cases in
+    which the planet radius is either known or completely unknown, and intermediate cases in which the planet radius is partly
+    constrained. If the planet radius is known, we can generally discriminate between cloud-free and cloudy atmospheres, and
+    constrain the methane abundance to within two orders of magnitude. If the planet radius is unknown, new correlations between
+    model parameters occur and the accuracy of the retrievals decreases. Without a radius determination, it is challenging
+    to discern whether the planet has clouds, and the estimates on methane abundance degrade. However, we find the planet
+    radius is constrained to within a factor of two for all the cases explored. Having a priori information on the planet
+    radius, even if approximate, helps improve the retrievals. We urge exoplanet detection efforts to extend the population
+    of long-period planets with mass and radius determinations.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=3) → combined=6<8
+- arxiv_id: '1901.00219'
+  ads_bibcode: null
+  title: Breezing through the space environment of Barnard's Star b
+  authors:
+  - Julián D. Alvarado-Gómez
+  - Cecilia Garraffo
+  - Jeremy J. Drake
+  - Benjamin P. Brown
+  - Jeffrey S. Oishi
+  - Sofia P. Moschou
+  - Ofer Cohen
+  year: '2019'
+  pubdate: '2019-01-01'
+  doi: 10.3847/2041-8213/ab1489
+  abstract: A physically realistic stellar wind model based on Alfvén wave dissipation has been used to simulate the wind
+    from Barnard's Star and to estimate the conditions at the location of its recently discovered planetary companion. Such
+    models require knowledge of the stellar surface magnetic field that is currently unknown for Barnard's Star. We circumvent
+    this by considering the observed field distributions of three different stars that constitute admissible magnetic proxies
+    of this object. Under these considerations, Barnard's Star b experiences less intense wind pressure than the much more
+    close-in planet Proxima~b and the planets of the TRAPPIST-1 system. The milder wind conditions are more a result of its
+    much greater orbital distance rather than in differences in the surface magnetic field strengths of the host stars. The
+    dynamic pressure experienced by the planet is comparable to present-day Earth values, but it can undergo variations by
+    factors of several during current sheet crossings in each orbit. The magnetospause standoff distance would be $\sim$\,$20
+    - 40$\,\% smaller than that of the Earth for an equivalent planetary magnetic field strength.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=2) → combined=6<8
+- arxiv_id: '1808.07798'
+  ads_bibcode: 2018Geosc...8..362C
+  title: 'A Review on Substellar Objects below the Deuterium Burning Mass Limit: Planets, Brown Dwarfs or What?'
+  authors:
+  - Caballero, José A.
+  year: '2018'
+  pubdate: '2018-09-00'
+  doi: 10.3390/geosciences8100362
+  abstract: '"Free-floating, non-deuterium-burning, substellar objects" are isolated bodies of a few Jupiter masses found
+    in very young open clusters and associations, nearby young moving groups and in the immediate vicinity of the Sun. They
+    are neither brown dwarfs nor planets. I look over their nomenclature, history of discovery, sites of detection, formation
+    mechanisms and future directions of research. Most free-floating, non-deuterium-burning, substellar objects share the
+    same formation mechanism as low-mass stars and brown dwarfs, but there are still a few caveats, such as the value of the
+    opacity mass limit, the minimum mass at which an isolated body can form via turbulent fragmentation from a cloud. The
+    least massive free-floating substellar objects found to date have masses of about 0.004 Msol, but current and future surveys
+    should aim at breaking this record. For that, we may need LSST, Euclid and WFIRST.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2014AcAau.104..458M
+  title: Going to Alpha Centauri B and setting up a Radio Bridge
+  authors:
+  - Maccone, Claudio
+  year: '2014'
+  pubdate: '2014-11-00'
+  doi: 10.1016/j.actaastro.2014.03.008
+  abstract: 'How to exploit the Sun as a gravitational lens has been studied extensively during the last 20 years, especially
+    by this author (Refs. [1-7]). In essence, a spacecraft dubbed FOCAL (an acronym for "Fast Outgoing Cyclopean Astronomical
+    Lens") should be launched in the direction of the sky opposite to the area of the sky we wish to see highly magnified
+    both at radio and other frequencies. After FOCAL reached the minimal focal distance of 550 AU from the Sun, highly magnified
+    radio images of celestial objects located on the opposite side of the Sun will automatically be produced. In this paper
+    we apply the FOCAL mission concept to the goal of exploring the neighborhood of the Alpha Centauri B star, where the nearest
+    exoplanet to the Solar system was recently discovered. We suggest that: <P />&lt;ce:list <P />A first FOCAL 1 spacecraft
+    is launched away from the Sun up to about 1000 AU in the direction of the sky opposite to Alpha Centauri B. This spacecraft
+    will then act as a relay satellite to insure robust telecommunications across the 4.37 light year interstellar distance
+    between the Solar System and Alpha Centauri B.&lt;/ce:para&gt; <P />A second FOCAL 2 spacecraft is launched towards Alpha
+    Centauri B as the truly interstellar spacecraft going to Alpha Centauri B. It may take quite a few years to get there
+    of course (50 years?), depending on the propulsion system, but its robust telecommunications with the Earth are insured
+    by the gravitational lens of the Sun and the FOCAL 1 relay spacecraft.&lt;/ce:para&gt; <P />After FOCAL 2 reached Alpha
+    Centauri B, we suggest positioning it in the direction opposite to the Sun beyond the minimal focal distance of 452 AU
+    for Alpha Centauri B, say at 800 AU beyond the star. Thus, the two stars (the Sun and Alpha Centauri B) and the two spacecrafts
+    (FOCAL 1 and FOCAL 2) will make up a RADIO BRIDGE, insuring robust telecommunications for all future space missions to
+    the Alpha Centauri system to come.&lt;/ce:para&gt; <P />In conclusion, this paper goes beyond traditional papers only
+    concerned with propulsion for the first interstellar mission, in that it points out that a robust telecommunication system
+    has to be created by exploiting both stars'' gravitational lenses plus two FOCAL spacecrafts on opposite sides.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(journal=AcAau, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1201.2189'
+  ads_bibcode: null
+  title: 'Characterizing the Cool KOIs III. KOI-961: A Small Star with Large Proper Motion and Three Small Planets'
+  authors:
+  - Philip S. Muirhead
+  - John Asher Johnson
+  - Kevin Apps
+  - Joshua A. Carter
+  - Timothy D. Morton
+  - Daniel C. Fabrycky
+  - J. Sebastian Pineda
+  - Michael Bottom
+  - Barbara Rojas-Ayala
+  - Everett Schlawin
+  - Katherine Hamren
+  - Kevin R. Covey
+  - Justin R. Crepp
+  - Keivan G. Stassun
+  - Joshua Pepper
+  - Leslie Hebb
+  - Evan N. Kirby
+  - Andrew W. Howard
+  - Howard T. Isaacson
+  - Geoffrey W. Marcy
+  - David Levitan
+  - Tanio Diaz-Santos
+  - Lee Armus
+  - James P. Lloyd
+  year: '2012'
+  pubdate: '2012-01-10'
+  doi: 10.1088/0004-637X/747/2/144
+  abstract: We present the characterization of the star KOI 961, an M dwarf with transit signals indicative of three short-period
+    exoplanets, originally discovered by the Kepler Mission. We proceed by comparing KOI 961 to Barnard's Star, a nearby,
+    well-characterized mid-M dwarf. By comparing colors, optical and near-infrared spectra, we find remarkable agreement between
+    the two, implying similar effective temperatures and metallicities. Both are metal-poor compared to the Solar neighborhood,
+    have low projected rotational velocity, high absolute radial velocity, large proper motion and no quiescent H-alpha emission--all
+    of which is consistent with being old M dwarfs. We combine empirical measurements of Barnard's Star and expectations from
+    evolutionary isochrones to estimate KOI 961's mass (0.13 +/- 0.05 Msun), radius (0.17 +/- 0.04 Rsun) and luminosity (2.40
+    x 10^(-3.0 +/- 0.3) Lsun). We calculate KOI 961's distance (38.7 +/- 6.3 pc) and space motions, which, like Barnard's
+    Star, are consistent with a high scale-height population in the Milky Way. We perform an independent multi-transit fit
+    to the public Kepler light curve and significantly revise the transit parameters for the three planets. We calculate the
+    false-positive probability for each planet-candidate, and find a less than 1% chance that any one of the transiting signals
+    is due to a background or hierarchical eclipsing binary, validating the planetary nature of the transits. The best-fitting
+    radii for all three planets are less than 1 Rearth, with KOI 961.03 being Mars-sized (Rp = 0.57 +/- 0.18 Rearth), and
+    they represent some of the smallest exoplanets detected to date.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=2) → combined=6<8
+- arxiv_id: '1005.3833'
+  ads_bibcode: 2010arXiv1005.3833L
+  title: 'PROJECT ICARUS: Son of Daedalus, Flying Closer to Another Star'
+  authors:
+  - Long, K. F.
+  - Obousy, R. K.
+  - Tziolas, A. C.
+  - Mann, A.
+  - Osborne, R.
+  - Presby, A.
+  - Fogg, M.
+  year: '2010'
+  pubdate: '2010-05-00'
+  doi: 10.48550/arXiv.1005.3833
+  abstract: During the 1970s members of the British Interplanetary Society embarked on a landmark theoretical engineering
+    design study to send a probe to Barnard's star. Project Daedalus was a two-stage vehicle employing electron beam driven
+    inertial confinement fusion engines to reach its target destination. This paper sets out the proposal for a successor
+    interstellar design study called Project Icarus. This is an attempt to redesign the Daedalus vehicle with similar terms
+    of reference. The aim of this study is to evolve an improved engineering design and move us closer to achieving interstellar
+    exploration. Although this paper does not discuss prematurely what design modification are likely to occur some indications
+    are given from the nature of the discussions. This paper is a submission of the Project Icarus Study Group.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 6
+  relevance_score: 0
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv, has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '0908.0944'
+  ads_bibcode: null
+  title: The M dwarf planet search programme at the ESO VLT + UVES. A search for terrestrial planets in the habitable zone
+    of M dwarfs
+  authors:
+  - M. Zechmeister
+  - M. Kürster
+  - M. Endl
+  year: '2009'
+  pubdate: '2009-08-06'
+  doi: 10.1051/0004-6361/200912479
+  abstract: We present radial velocity (RV) measurements of our sample of 40 M dwarfs from our planet search programme with
+    VLT+UVES begun in 2000. Although with our RV precision down to 2 - 2.5 m/s and timebase line of up to 7 years, we are
+    capable of finding planets of a few Earth masses in the close-in habitable zones of M dwarfs, there is no detection of
+    a planetary companion. To demonstrate this we present mass detection limits allowing us to exclude Jupiter-mass planets
+    up to 1 AU for most of our sample stars. We identified 6 M dwarfs that host a brown dwarf or low-mass stellar companion.
+    With the exception of these, all other sample stars show low RV variability with an rms < 20 m/s. Some high proper motion
+    stars exhibit a linear RV trend consistent with their secular acceleration. Furthermore, we examine our data sets for
+    a possible correlation between RVs and stellar activity as seen in variations of the Halpha line strength. For Barnard's
+    star we found a significant anticorrelation, but most of the sample stars do not show such a correlation.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (6 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 1
+  combined_score: 6
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=3) → combined=6<8
+- arxiv_id: '2604.00571'
+  ads_bibcode: null
+  title: 'Beyond Beryllium: AI-Accelerated Materials Discovery for Interstellar Spacecraft Shielding'
+  authors:
+  - Yue Li
+  - Xu Pan
+  - Kaiyuan Guo
+  year: '2026'
+  pubdate: '2026-04-01'
+  doi: null
+  abstract: 'Project Daedalus (1973--1978), the most detailed interstellar probe design study ever conducted, specified a
+    9 mm beryllium erosion shield to protect the spacecraft payload during its 5.9 light-year cruise to Barnard''s Star at
+    12% of the speed of light. This design, however, predated both the isolation of two-dimensional materials and the development
+    of graph neural network (GNN) property predictors. Here, we systematically screen 20 candidate materials--spanning conventional
+    aerospace metals, transition metal dichalcogenides, and ultra-high-temperature ceramics--using density functional theory
+    (DFT) data from the JARVIS database (76,000 materials) with independent validation by the Atomistic Line Graph Neural
+    Network (ALIGNN). We evaluate candidates across four criteria: specific mechanical stiffness (KV/rho), sputtering resistance,
+    thermal neutron absorption cross-section, and thermodynamic stability. Our screening identifies hexagonal boron nitride
+    (h-BN) and boron carbide (B4C) as dual-function materials offering simultaneous mechanical protection and neutron radiation
+    shielding, and we propose a graphene/h-BN/polymer layered heterostructure shield design that achieves an estimated 47%
+    mass reduction relative to the original beryllium specification. These findings will become immediately actionable upon
+    the successful development of fusion pulse propulsion, which we note remains an outstanding engineering challenge.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2511.05331'
+  ads_bibcode: null
+  title: EMPEROR I. Exoplanet MCMC parallel tempering for RV orbit retrieval
+  authors:
+  - Pablo A. Peña
+  - James S. Jenkins
+  year: '2025'
+  pubdate: '2025-11-07'
+  doi: 10.1051/0004-6361/202554336
+  abstract: We present EMPEROR, an open-source Python framework designed for efficient exoplanet detection and characterisation
+    with radial velocities (RV). EMPEROR integrates Dynamic Nested Sampling (DNS) and Adaptive Parallel Tempering (APT) Markov
+    Chain Monte Carlo (MCMC), supporting multiple noise models such as Gaussian Processes (GPs) and Moving Averages (MA).
+    The framework enables systematic model comparison using statistical metrics, including Bayesian evidence ($\ln{\mathcal{Z}}$)
+    and Bayesian Information Criterion (BIC), while providing automated, publish-ready visualisations. EMPEROR is evaluated
+    across three distinct systems to assess its capabilities in different detection scenarios. Sampling performance, model
+    selection, and the search for Earth-mass planets are evaluated in data for 51 Pegasi, HD 55693 and Barnard's Star (GJ
+    699). For 51 Pegasi, APT achieves an effective sampling increase over DNS by a factor 3.76, while retrieving tighter parameter
+    estimates. For HD 55693 the stellar rotation $P_{\text{rot}}=29.72^{+0.01}_{-0.02}$ and magnetic cycle $P_{\text{mag}}=2557.0^{+70.1}_{-36.7}$
+    are recovered, while demonstrating the sensitivity of $\ln{\mathcal{Z}}$ to prior selection. For Barnard's star, several
+    noise models are compared, and the confirmed planet parameters are successfully retrieved with all of them. The best model
+    shows a period of 3.1536$\pm$0.0003~d, minimum mass of 0.38$\pm$0.03 M$_{\rm{\oplus}}$, and semi-major axis of 0.02315$\pm$0.00039~AU.
+    Purely statistical inference might be insufficient on its own for robust exoplanet detection. Effective methodologies
+    must integrate domain knowledge, heuristic criteria, and multi-faceted model comparisons. The versatility of EMPEROR in
+    handling diverse noise structures, its systematic model selection, and its improved performance make it a valuable tool
+    for RV exoplanetary studies.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2508.04569'
+  ads_bibcode: null
+  title: Rotational modulation and long-term evolution of the small-scale magnetic fields of M dwarfs observed with SPIRou
+  authors:
+  - P. I. Cristofari
+  - J. -F. Donati
+  - S. Bellotti
+  - É. Artigau
+  - A. Carmona
+  - C. Moutou
+  - X. Delfosse
+  - P. Petit
+  - B. Finociety
+  - J. Dias do Nascimento
+  year: '2025'
+  pubdate: '2025-08-06'
+  doi: null
+  abstract: M dwarfs are known to host magnetic fields, impacting exoplanet studies and playing a key role in stellar and
+    planetary formation and evolution. Observations revealed the long-term evolution of the large-scale magnetic field reconstructed
+    with Zeeman-Doppler imaging, and a diversity of their topologies. These large-scale magnetic fields only account for a
+    small amount of the unsigned magnetic flux that can be probed by directly modeling the Zeeman broadening of spectral lines
+    in unpolarized spectra. We aim at investigating the long-term behavior of the average small-scale magnetic field of M
+    dwarfs with time, and assess our ability to detect rotational modulation from time series of field measurements derived
+    from unpolarized spectra. We perform fits of synthetic spectra computed with ZeeTurbo to near-infrared high-resolution
+    spectra recorded with SPIRou between 2019 and 2024 in the context of the SLS and SPICE large programs. The analysis is
+    performed on the spectra of 2 partially convective (AD Leo, DS Leo) and 3 fully convective (PM J18482+0741, CN Leo, Barnard
+    star) M dwarfs, along with EV Lac whose mass is close to the fully-convective limit. Our analysis provides measurements
+    of the average small-scale magnetic field, which are compared to longitudinal magnetic field and temperature variation
+    measurements (d$Temp$) obtained from the same data. We were able to detect the rotation period in the small-scale magnetic
+    field series for 4 of the 6 stars in our sample. We find that the average magnetic field can vary by up to 0.3 kG throughout
+    the year (e.g., CN Leo), or of up to 1 kG across rotation phases. The rotation periods retrieved from longitudinal and
+    small-scale magnetic fields are found in agreement within error bars. d$Temp$ measurements are found to anti-correlate
+    with small-scale magnetic field measurements for three stars (EV Lac, DS Leo and Barnard's star).
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2506.20864'
+  ads_bibcode: null
+  title: 'The Rayleigh Criterion: Resolution Limits of Astronomical Periodograms'
+  authors:
+  - V. Ramirez Delgado
+  - J. S. Caicedo Vivas
+  - S. Dodson-Robinson
+  - C. Haley
+  year: '2025'
+  pubdate: '2025-06-25'
+  doi: null
+  abstract: The Rayleigh criterion determines the resolution limit of a periodogram, which is the minimum frequency separation
+    required to barely resolve two sinusoids. Failing to consider the Rayleigh criterion may result in incorrect interpretations
+    of long-period signals or spurious claims that two closely spaced periodogram peaks represent two distinct physical processes.
+    We demonstrate how applying the Rayleigh criterion can help observers avoid false positive detections caused by uneven
+    observing cadence or insufficient observing time baseline. We present three synthetic datasets that illustrate (1) a single
+    oscillation with a split Lomb-Scargle periodogram peak resulting from uneven observing cadence can be mistaken for two
+    oscillations if the Rayleigh criterion is neglected, (2) oversampling a periodogram's frequency grid does not improve
+    resolution, and (3) observing time baseline requirements for resolving two closely spaced oscillations. We use the Rayleigh
+    criterion to revisit detections of planets, stellar activity, and differential rotation from four published datasets.
+    We show that the frequency separation between planet 55~Cnc~d and the activity cycle is too small to distinguish the two
+    phenomena based on published radial velocities (RVs) alone. Likewise, the contested 4970-day planet orbiting HD~99492
+    cannot be statistically separated from zero frequency. We determine that a cubic polynomial better explains the long-term
+    RV variability of Barnard's star than a sinusoid model. Finally, our re-analysis of {\it Kepler} observations of two active
+    stars shows that the signals previously attributed to differential rotation can be modeled by a Gaussian process with
+    a single quasiperiodicity. This work demonstrates the importance of the Rayleigh criterion when constructing a time-domain
+    model.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2410.00577'
+  ads_bibcode: null
+  title: 'A sub-Earth-mass planet orbiting Barnard''s star: No evidence of transits in TESS photometry'
+  authors:
+  - A. K. Stefanov
+  - J. I. González Hernández
+  - A. Suárez Mascareño
+  - N. Nari
+  - R. Rebolo
+  - M. Damasso
+  - A. Castro-González
+  - M. -R. Zapatero Osorio
+  - C. Allende Prieto
+  - A. M. Silva
+  - C. J. A. P. Martins
+  year: '2024'
+  pubdate: '2024-10-01'
+  doi: 10.1051/0004-6361/202452450
+  abstract: A sub-Earth-mass planet orbiting Barnard's star, designated as Barnard b, has been recently announced. At almost
+    the same time, the first photometric data of Barnard's star by the Transit Exoplanet Survey Satellite (TESS) was released
+    in Sector 80. We explore the possibility of emergent transits of Barnard b in TESS photometry. The detrended 2 min light
+    curve appears to be flat, with a flux root mean square of 0.411 parts per thousand. Attempts of blind and informed transit-curve
+    model inference suggest no evidence of transiting Barnard b, or any other body. This provides a 3$σ$ upper bound of 87.9
+    degrees for the orbital inclination of Barnard b.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2409.07260'
+  ads_bibcode: null
+  title: Measuring Sub-Kelvin Variations in Stellar Temperature with High-Resolution Spectroscopy
+  authors:
+  - Étienne Artigau
+  - Charles Cadieux
+  - Neil J. Cook
+  - René Doyon
+  - Laurie Dauplaise
+  - Luc Arnold
+  - Maya Cadieux
+  - Jean-François Donati
+  - Paul Cristofari
+  - Xavier Delfosse
+  - Pascal Fouqué
+  - Claire Moutou
+  - Pierre Larue
+  - Romain Allart
+  year: '2024'
+  pubdate: '2024-09-11'
+  doi: null
+  abstract: The detection of stellar variability often relies on the measurement of selected activity indicators such as coronal
+    emission lines and non-thermal emissions. On the flip side, the effective stellar temperature is normally seen as one
+    of the key fundamental parameters (with mass and radius) to understanding the basic physical nature of a star and its
+    relation with its environment (e.g., planetary instellation). We present a novel approach for measuring disk-averaged
+    temperature variations to sub-Kelvin accuracy inspired by algorithms developed for precision radial velocity. This framework
+    uses the entire content of the spectrum, not just pre-identified lines, and can be applied to existing data obtained with
+    high-resolution spectrographs. We demonstrate the framework by recovering the known rotation periods and temperature modulation
+    of Barnard star and AU Mic in datasets obtained in the infrared with SPIRou at CHFT and at optical wavelengths on $ε$
+    Eridani with HARPS at ESO 3.6-m telescope. We use observations of the transiting hot Jupiter HD189733\,b, obtained with
+    SPIRou, to show that this method can unveil the minute temperature variation signature expected during the transit event,
+    an effect analogous to the Rossiter-McLaughlin effect but in temperature space. This method is a powerful new tool for
+    characterizing stellar activity, and in particular temperature and magnetic features at the surfaces of cool stars, affecting
+    both precision radial velocity and transit spectroscopic observations. We demonstrate the method in the context of high-resolution
+    spectroscopy but the method could be used at lower resolution.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(skip_pattern=\bhot Jupiter\b) → no_relevance_signal
+- arxiv_id: '2312.05480'
+  ads_bibcode: null
+  title: Mitigating astrometric bias in barycentric correction with PEXO
+  authors:
+  - Yicheng Rui
+  - Fabo Feng
+  year: '2023'
+  pubdate: '2023-12-09'
+  doi: null
+  abstract: Extremely precise radial velocity is essential for the detection of sub-m/s radial velocity of stars induced by
+    Earth-like planets. Although modeling of the barycentric correction of radial velocity could achieve 1 mm/s precision,
+    the input astrometry could be biased due to nonlinear motions of stars caused by companions. To account for astrometry-induced
+    bias in barycentric correction, we correct for astrometric bias by minimizing the scatter of reduced RV data with PEXO.
+    In particular, we apply this method to the barycentric correction for 266 stars from HARPS data archive. We find that
+    the RV scatter for 8 targets are significantly reduced due to correction of astrometric bias. Among these targets, 2 targets
+    exhibit bias caused by known massive companions, while for the remaining 6 targets, the bias could be attributed to unknown
+    companions or Gaia systematics. Furthermore, 14 targets have an astrometry-induced annual RV variation higher than 0.05
+    m/s, and 10 of them are closer than 10 pc. We show the results of Barnard's star as an example, and find that an annual
+    RV bias of 10 cm/s is mitigated by replacing BarCor by PEXO as the barycentric correction code. Our work demonstrates
+    the necessity of astrometric bias correction and the utilization of barycentric correction code within a relativistic
+    framework in high-precision RV for the detection of Earth-like planets.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2310.12125'
+  ads_bibcode: null
+  title: Comprehensive High-resolution Chemical Spectroscopy of Barnard's Star with SPIRou
+  authors:
+  - Farbod Jahandar
+  - René Doyon
+  - Étienne Artigau
+  - Neil J. Cook
+  - Charles Cadieux
+  - David Lafrenière
+  - Thierry Forveille
+  - Jean-François Donati
+  - Pascal Fouqué
+  - Andrés Carmona
+  - Ryan Cloutier
+  - Paul Cristofari
+  - Eric Gaidos
+  - João Gomes da Silva
+  - Lison Malo
+  - Eder Martioli
+  - J. -D. do Nascimento
+  - Stefan Pelletier
+  - Thomas Vandal
+  - Kim Venn
+  year: '2023'
+  pubdate: '2023-10-18'
+  doi: null
+  abstract: Determination of fundamental parameters of stars impacts all fields of astrophysics, from galaxy evolution to
+    constraining the internal structure of exoplanets. This paper presents a detailed spectroscopic analysis of Barnard's
+    star that compares an exceptionally high-quality (an average signal-to-noise ratio of $\sim$1000 in the entire domain),
+    high-resolution NIR spectrum taken with CFHT/SPIRou to PHOENIX-ACES stellar atmosphere models. The observed spectrum shows
+    thousands of lines not identified in the models with a similar large number of lines present in the model but not in the
+    observed data. We also identify several other caveats such as continuum mismatch, unresolved contamination and spectral
+    lines significantly shifted from their expected wavelengths, all of these can be a source of bias for abundance determination.
+    Out of $>10^4$ observed lines in the NIR that could be used for chemical spectroscopy, we identify a short list of a few
+    hundred lines that are reliable. We present a novel method for determining the effective temperature and overall metallicity
+    of slowly-rotating M dwarfs that uses several groups of lines as opposed to bulk spectral fitting methods. With this method,
+    we infer $T_{eff}$ = 3231 $\pm$ 21 K for Barnard's star, consistent with the value of 3238 $\pm$ 11 K inferred from the
+    interferometric method. We also provide abundance measurements of 15 different elements for Barnard's star, including
+    the abundances of four elements (K, O, Y, Th) never reported before for this star. This work emphasizes the need to improve
+    current atmosphere models to fully exploit the NIR domain for chemical spectroscopy analysis.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2309.15377'
+  ads_bibcode: null
+  title: The most sensitive SETI observations toward Barnard's star with FAST
+  authors:
+  - Zhen-Zhao Tao
+  - Bo-Lun Huang
+  - Xiao-Hang Luan
+  - Jian-Kang Li
+  - Hai-Chen Zhao
+  - Hong-Feng Wang
+  - Tong-Jie Zhang
+  year: '2023'
+  pubdate: '2023-09-27'
+  doi: 10.3847/1538-3881/acfc1e
+  abstract: Search for extraterrestrial intelligence (SETI) has been mainly focused on nearby stars and their planets in recent
+    years. Barnard's star is the second closest star system to the sun and the closest star in the FAST observable sky which
+    makes the minimum Equivalent Isotropic Radiated Power (EIRP) required for a hypothetical radio transmitter from Barnard's
+    star to be detected by FAST telescope a mere 4.36x10^8 W. In this paper, we present the Five-hundred-meter Aperture Spherical
+    radio Telescope (FAST) telescope as the most sensitive instrument for radio SETI observations toward nearby star systems
+    and conduct a series of observations to Barnard's star (GJ 699). By applying the multi-beam coincidence matching (MBCM)
+    strategy on the FAST telescope, we search for narrow-band signals (~Hz) in the frequency range of 1.05-1.45 GHz, and two
+    orthogonal linear polarization directions are recorded. Despite finding no evidence of radio technosignatures in our series
+    of observations, we have developed predictions regarding the hypothetical extraterrestrial intelligence (ETI) signal originating
+    from Barnard's star. These predictions are based on the star's physical properties and our observation strategy.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(skip_pattern=\b(SETI|technosignature|narrow) → no_relevance_signal
+- arxiv_id: '2304.13779'
+  ads_bibcode: null
+  title: Simulation of the Earth's radio leakage from mobile towers as seen from selected nearby stellar systems
+  authors:
+  - Ramiro C. Saide
+  - Michael A. Garrett
+  - Nalini. Heeralall-Issur
+  year: '2023'
+  pubdate: '2023-04-26'
+  doi: 10.1093/mnras/stad378
+  abstract: Mobile communication towers represent a relatively new but growing contributor to the total radio leakage associated
+    with planet Earth. We investigate the overall power contribution of mobile communication towers to the Earthś radio leakage
+    budget, as seen from a selection of different nearby stellar systems. We created a model of this leakage using publicly
+    available data of mobile tower locations. The model grids the planet's surface into small, computationally manageable
+    regions, assuming a simple integrated transmission pattern for the mobile antennas. In this model, these mobile tower
+    regions rise and set as the Earth rotates. In this way, a dynamic power spectrum of the Earth was determined, summed over
+    all cellular frequency bands. We calculated this dynamic power spectrum from three different viewing points, HD 95735,
+    Barnard star, and Alpha Centauri A. Our preliminary results demonstrate that the peak power leaking into space from mobile
+    towers is $\sim 4$GW. This is associated with LTE mobile tower technology emanating from the East Coast of China as viewed
+    from HD 95735. We demonstrate that the mobile tower leakage is periodic, direction dependent, and could not currently
+    be detected by a nearby civilization located within 10 light years of the Earth, using instrumentation with a sensitivity
+    similar to the Green Bank Telescope. We plan to extend our model to include more powerful 5G mobile systems, radar installations,
+    ground based uplinks (including the Deep Space Network), and various types of satellite services, including low Earth
+    orbit constellations such as Starlink and OneWeb.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2207.13524'
+  ads_bibcode: null
+  title: Line-by-line velocity measurements, an outlier-resistant method for precision velocimetry
+  authors:
+  - Étienne Artigau
+  - Charles Cadieux
+  - Neil J. Cook
+  - René Doyon
+  - Thomas Vandal
+  - Jean-Françcois Donati
+  - Claire Moutou
+  - Xavier Delfosse
+  - Pascal Fouqué
+  - Eder Martioli
+  - François Bouchy
+  - Jasmine Parsons
+  - Andres Carmona
+  - Xavier Dumusque
+  - Nicola Astudillo-Defru
+  - Xavier Bonfils
+  - Lucille Mignon
+  year: '2022'
+  pubdate: '2022-07-27'
+  doi: 10.3847/1538-3881/ac7ce6
+  abstract: We present a new algorithm for precision radial velocity (pRV) measurements, a line-by-line (LBL) approach designed
+    to handle outlying spectral information in a simple but efficient manner. The effectiveness of the LBL method is demonstrated
+    on two datasets, one obtained with SPIRou on Barnard's star, and the other with HARPS on Proxima Centauri. In the near-infrared,
+    the LBL provides a framework for m/s-level accuracy in pRV measurements despite the challenges associated with telluric
+    absorption and sky emission lines. We confirm with SPIRou measurements spanning 2.7 years that the candidate super-Earth
+    on a 233-day orbit around Barnard's star is an artifact due to a combination of time-sampling and activity. The LBL analysis
+    of the Proxima Centauri HARPS post-upgrade data alone easily recovers the Proxima b signal and also provides a 2-sigma
+    detection of the recently confirmed 5-day Proxima d planet, but argues against the presence of the candidate Proxima c
+    with a period of 1900 days. We provide evidence that the Proxima c signal is associated with small, unaccounted systematic
+    effects affecting the HARPS-TERRA template matching RV extraction method for long-period signals. Finally, the LBL framework
+    provides a very effective activity indicator, akin to the full width at half maximum derived from the cross-correlation
+    function, from which we infer a rotation period of $92.1^{+4.2}_{-3.5}$ days for Proxima.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2205.00067'
+  ads_bibcode: null
+  title: A novel framework for semi-Bayesian radial velocities through template matching
+  authors:
+  - A. M. Silva
+  - J. P. Faria
+  - N. C. Santos
+  - S. G. Sousa
+  - P. T. P. Viana
+  - J. H. C. Martins
+  - P. Figueira
+  - C. Lovis
+  - F. Pepe
+  - S. Cristiani
+  - R. Rebolo
+  - R. Allart
+  - A. Cabral
+  - A. Mehner
+  - A. Sozzetti
+  - A. Suárez Mascareño
+  - C. J. A. P. Martins
+  - D. Ehrenreich
+  - D. Mégevand
+  - E. Palle
+  - G. Lo Curto
+  - H. M. Tabernero
+  - J. Lillo-Box
+  - J. I. González Hernández
+  - M. R. Zapatero Osorio
+  - N. C. Hara
+  - N. J. Nunes
+  - P. Di Marcantonio
+  - S. Udry
+  - V. Adibekyan
+  - X. Dumusque
+  year: '2022'
+  pubdate: '2022-04-29'
+  doi: 10.1051/0004-6361/202142262
+  abstract: 'The detection and characterization of an increasing variety of exoplanets has been in part possible thanks to
+    the continuous development of high-resolution, stable spectrographs, and using the Doppler radial-velocity (RV) method.
+    The Cross Correlation Function (CCF) method is one of the traditional approaches for RV extraction. More recently, template
+    matching was introduced as an advantageous alternative for M-dwarf stars. In this paper, we describe a new implementation
+    of template matching within a semi-Bayesian framework, providing a more statistically principled characterization of the
+    RV measurements. In this context, a common RV shift is used to describe the difference between each spectral order of
+    a given stellar spectrum and a template built from the available observations. Posterior probability distributions are
+    obtained for the relative RV associated with each spectrum, after marginalizing with respect to the continuum. This methodology
+    was named S-BART: Semi-Bayesian Approach for RVs with Template-matching, and it can be applied to HARPS and ESPRESSO.
+    The application of our method to HARPS archival observations of Barnard''s star allowed us to validate our implementation
+    against HARPS-TERRA and SERVAL. Then, we applied it to 33 ESPRESSO targets, evaluating its performance and comparing it
+    with the CCF method. We found a decrease in the median RV scatter of \sim 10\% and \sim 4\% for M- and K-type stars, respectively.
+    S-BART yields more precise RV estimates than the CCF method, particularly in the case of M-type stars where a median uncertainty
+    of \sim 15 cm/s is achieved over 309 observations. Further, we estimated the nightly zero point (NZP) of ESPRESSO, finding
+    a weighted NZP scatter below \sim 0.7 m/s. As this includes stellar variability, photon noise, and potential planetary
+    signals, it should be taken as an upper limit of the RV precision attainable with ESPRESSO data.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2021AGUFMSM15A1957B
+  title: Atmospheric Escape Rates from Mars If It Orbited an M Dwarf Star
+  authors:
+  - Brain, Dave
+  - Peterson, William
+  - Cohen, Ofer
+  - Cravens, Thomas
+  - France, Kevin
+  - Futaana, Yoshifumi
+  - Glocer, Alex
+  - Holmstrom, Mats
+  - Kistler, Lynn
+  - Ma, Yingjuan
+  - Merkel, Aimee
+  - Peticolas, Laura
+  - Ramstad, Robin
+  - Sakai, Shotaro
+  - Sakata, Ryoya
+  - Seki, Kanako
+  - Strangeway, Robert
+  - Vidotto, Aline
+  year: '2021'
+  pubdate: '2021-12-00'
+  doi: null
+  abstract: 'Atmospheric escape from exoplanets is a topic of great interest for the exoplanet community since atmospheric
+    retention is an important component of surface habitability. While atmospheric escape has been detected from large exoplanets,
+    it remains difficult to measure for smaller (rocky) planets. Indeed, for rocky planets orbiting active stars it is thought
+    that it may be difficult for atmospheres to be retained at all. In the absence of detailed observations, one option is
+    to leverage observations and models for planets in our own solar system. Here we consider atmospheric escape from Mars
+    if it orbited an M Dwarf star similar to Barnards star. Our analysis considers five escape processes: hydrodynamic escape,
+    thermal escape, photochemical escape, ion escape, and sputtering. To estimate the escape rate via each process from our
+    hypothetical ExoMars, we use a combination of scaling laws derived from spacecraft observations of escape from present
+    day Mars, and models for escape that have been validated using observations. We provide escape rate estimates for important
+    species in the Martian upper atmosphere: O, O2, H, and CO2, and use them to estimate the lifetime of the Martian atmosphere.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 0
+  relevance_score: 5
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(conf=AGUFM) + rel(sys_in_abstract, topics=9) → combined=5<8
+- arxiv_id: '2105.07005'
+  ads_bibcode: null
+  title: Stellar Activity Manifesting at a One Year Alias Explains Barnard b as a False Positive
+  authors:
+  - Jack Lubin
+  - Paul Robertson
+  - Gudmundur Stefansson
+  - Joe Ninan
+  - Suvrath Mahadevan
+  - Michael Endl
+  - Eric Ford
+  - Jason T. Wright
+  - Corey Beard
+  - Chad Bender
+  - William D. Cochran
+  - Scott A. Diddams
+  - Connor Fredrick
+  - Samuel Halverson
+  - Shubham Kanodia
+  - Andrew J. Metcalf
+  - Lawrence Ramsey
+  - Arpita Roy
+  - Christian Schwab
+  - Ryan Terrien
+  year: '2021'
+  pubdate: '2021-05-14'
+  doi: null
+  abstract: Barnard's star is among the most studied stars given its proximity to the Sun. It is often considered $the$ Radial
+    Velocity (RV) standard for fully convective stars due to its RV stability and equatorial declination. Recently, an $M
+    \sin i = 3.3 M_{\oplus}$ super-Earth planet candidate with a 233 day orbital period was announced by Ribas et al. (2018).
+    New observations from the near-infrared Habitable-zone Planet Finder (HPF) Doppler spectrometer do not show this planetary
+    signal. We ran a suite of experiments on both the original data and a combined original + HPF data set. These experiments
+    include model comparisons, periodogram analyses, and sampling sensitivity, all of which show the signal at the proposed
+    period of 233 days is transitory in nature. The power in the signal is largely contained within 211 RVs that were taken
+    within a 1000 day span of observing. Our preferred model of the system is one which features stellar activity without
+    a planet. We propose that the candidate planetary signal is an alias of the 145 day rotation period. This result highlights
+    the challenge of analyzing long-term, quasi-periodic activity signals over multi-year and multi-instrument observing campaigns.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1908.07560'
+  ads_bibcode: null
+  title: Precise Radial Velocities of Cool Low Mass Stars With iSHELL
+  authors:
+  - Bryson Cale
+  - Peter Plavchan
+  - Danny LeBrun
+  - Jonathan Gagné
+  - Peter Gao
+  - Angelle Tanner
+  - Charles Beichman
+  - Sharon Xeusong-Wang
+  - Eric Gaidos
+  - Johanna Teske
+  - David Ciardi
+  - Gautam Vasisht
+  - Stephen R. Kane
+  - Kaspar von Braun
+  year: '2019'
+  pubdate: '2019-08-20'
+  doi: 10.3847/1538-3881/ab3b0f
+  abstract: The coolest dwarf stars are intrinsically faint at visible wavelengths and exhibit rotationally modulated stellar
+    activity from spots and plages. It is advantageous to observe these stars at near infrared (NIR) wavelengths (1-2.5 microns)
+    where they emit the bulk of their bolometric luminosity and are most quiescent. In this work we describe our methodology
+    and results in obtaining precise radial velocity (RV) measurements of low mass stars using K-band spectra taken with the
+    R~80,000 iSHELL spectrograph and the NASA Infrared Telescope Facility (IRTF) using a methane isotopologue gas cell in
+    the calibration unit. Our novel analysis pipeline extracts RVs by minimizing the RMS of the residuals between the observed
+    spectrum and a forward model. The model accounts for the gas cell, tellurics, blaze function, multiple sources of quasi-sinusoidal
+    fringing, and line spread function of the spectrograph (LSF). The stellar template is derived iteratively using the target
+    observations themselves through averaging barycenter-shifted residuals. We have demonstrated 5 ms^-1 precision over one
+    year timescales for the M4 dwarf Barnard's Star and K dwarf 61 Cygni A, and 3 ms^-1 over a month for the M2 dwarf GJ 15
+    A. This work demonstrates the potential for iSHELL to determine dynamical masses for candidate exoplanets discovered with
+    the NASA TESS mission, and to search for exoplanets orbiting moderately active and/or young K and M dwarfs.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1901.00503'
+  ads_bibcode: null
+  title: 'Wobble: A Data-driven Analysis Technique for Time-series Stellar Spectra'
+  authors:
+  - Megan Bedell
+  - David W. Hogg
+  - Daniel Foreman-Mackey
+  - Benjamin T. Montet
+  - Rodrigo Luger
+  year: '2019'
+  pubdate: '2019-01-02'
+  doi: 10.3847/1538-3881/ab40a7
+  abstract: In recent years, dedicated extreme-precision radial velocity (EPRV) spectrographs have produced vast quantities
+    of high-resolution, high-signal-to-noise time-series spectra for bright stars. These data contain valuable information
+    for the dual purposes of planet detection via the measured RVs and stellar characterization via the co-added spectra.
+    However, considerable data analysis challenges exist in extracting these data products from the observed spectra at the
+    highest possible precision, including the issue of poorly-characterized telluric absorption features and the common use
+    of an assumed stellar spectral template. In both of these examples, precision-limiting reliance on external information
+    can be sidestepped using the data directly. Here we propose a data-driven method to simultaneously extract precise RVs
+    and infer the underlying stellar and telluric spectra using a linear model (in the log of flux). The model employs a convex
+    objective and convex regularization to keep the optimization of the spectral components fast. We implement this method
+    in wobble, an open-source python package which uses TensorFlow in one of its first non-neural-network applications to
+    astronomical data. In this work, we demonstrate the performance of wobble on archival HARPS spectra. We recover the canonical
+    exoplanet 51 Pegasi b, detect the secular RV evolution of the M dwarf Barnard's Star, and retrieve the Rossiter-McLaughlin
+    effect for the Hot Jupiter HD 189733b. The method additionally produces extremely high-S/N composite stellar spectra and
+    detailed time-variable telluric spectra, which we also present here.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(topics=2, skip_pattern=\bhot Jupiter\b) → no_relevance_signal
+- arxiv_id: '1812.06712'
+  ads_bibcode: null
+  title: 'Stellar activity analysis of Barnard''s Star: Very slow rotation and evidence for long-term activity cycle'
+  authors:
+  - B. Toledo-Padrón
+  - J. I. González Hernández
+  - C. Rodríguez-López
+  - A. Suárez Mascareño
+  - R. Rebolo
+  - R. P. Butler
+  - I. Ribas
+  - G. Anglada-Escudé
+  - E. N. Johnson
+  - A. Reiners
+  - J. A. Caballero
+  - A. Quirrenbach
+  - P. J. Amado
+  - V. J. S. Béjar
+  - J. C. Morales
+  - M. Perger
+  - S. V. Jeffers
+  - S. Vogt
+  - J. Teske
+  - S. Shectman
+  - J. Crane
+  - M. Díaz
+  - P. Arriagada
+  - B. Holden
+  - J. Burt
+  - E. Rodríguez
+  - E. Herrero
+  - F. Murgas
+  - E. Pallé
+  - N. Morales
+  - M. J. López-González
+  - E. Díez Alonso
+  - M. Tuomi
+  - M. Kiraga
+  - S. G. Engle
+  - E. F. Guinan
+  - J. B. P. Strachan
+  - F. J. Aceituno
+  - J. Aceituno
+  - V. M. Casanova
+  - S. Martín-Ruiz
+  - D. Montes
+  - J. L. Ortiz
+  - A. Sota
+  - J. Briol
+  - L. Barbieri
+  - I. Cervini
+  - M. Deldem
+  - F. Dubois
+  - F. -J. Hambsch
+  - B. Harris
+  - C. Kotnik
+  - L. Logie
+  - J. Lopez
+  - M. McNeely
+  - Y. Ogmen
+  - L. Pérez
+  - S. Rau
+  - D. Rodríguez
+  - F. S. Urquijo
+  - S. Vanaverbeke
+  year: '2018'
+  pubdate: '2018-12-17'
+  doi: 10.1093/mnras/stz1975
+  abstract: 'The search for Earth-like planets around late-type stars using ultra-stable spectrographs requires a very precise
+    characterization of the stellar activity and the magnetic cycle of the star, since these phenomena induce radial velocity
+    (RV) signals that can be misinterpreted as planetary signals. Among the nearby stars, we have selected Barnard''s Star
+    (Gl 699) to carry out a characterization of these phenomena using a set of spectroscopic data that covers about 14.5 years
+    and comes from seven different spectrographs: HARPS, HARPS-N, CARMENES, HIRES, UVES, APF, and PFS; and a set of photometric
+    data that covers about 15.1 years and comes from four different photometric sources: ASAS, FCAPT-RCT, AAVSO, and SNO.
+    We have measured different chromospheric activity indicators (H$α$, Ca~{\sc II}~HK and Na I D), as well as the FWHM of
+    the cross-correlation function computed for a sub-set of the spectroscopic data. The analysis of Generalized Lomb-Scargle
+    periodograms of the time series of different activity indicators reveals that the rotation period of the star is 145 $\pm$
+    15 days, consistent with the expected rotation period according to the low activity level of the star and previous claims.
+    The upper limit of the predicted activity-induced RV signal corresponding to this rotation period is about 1 m/s. We also
+    find evidence of a long-term cycle of 10 $\pm$ 2 years that is consistent with previous estimates of magnetic cycles from
+    photometric time series in other M stars of similar activity levels. The available photometric data of the star also support
+    the detection of both the long-term and the rotation signals.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1811.05955'
+  ads_bibcode: null
+  title: A candidate super-Earth planet orbiting near the snow line of Barnard's star
+  authors:
+  - I. Ribas
+  - M. Tuomi
+  - A. Reiners
+  - R. P. Butler
+  - J. C. Morales
+  - M. Perger
+  - S. Dreizler
+  - C. Rodríguez-López
+  - J. I. González Hernández
+  - A. Rosich
+  - F. Feng
+  - T. Trifonov
+  - S. S. Vogt
+  - J. A. Caballero
+  - A. Hatzes
+  - E. Herrero
+  - S. V. Jeffers
+  - M. Lafarga
+  - F. Murgas
+  - R. P. Nelson
+  - E. Rodríguez
+  - J. B. P. Strachan
+  - L. Tal-Or
+  - J. Teske
+  - B. Toledo-Padrón
+  - M. Zechmeister
+  - A. Quirrenbach
+  - P. J. Amado
+  - M. Azzaro
+  - V. J. S. Béjar
+  - J. R. Barnes
+  - Z. M. Berdiñas
+  - J. Burt
+  - G. Coleman
+  - M. Cortés-Contreras
+  - J. Crane
+  - S. G. Engle
+  - E. F. Guinan
+  - C. A. Haswell
+  - Th. Henning
+  - B. Holden
+  - J. Jenkins
+  - H. R. A. Jones
+  - A. Kaminski
+  - M. Kiraga
+  - M. Kürster
+  - M. H. Lee
+  - M. J. López-González
+  - D. Montes
+  - J. Morin
+  - A. Ofir
+  - E. Pallé
+  - R. Rebolo
+  - S. Reffert
+  - A. Schweitzer
+  - W. Seifert
+  - S. A. Shectman
+  - D. Staab
+  - R. A. Street
+  - A. Suárez Mascareño
+  - Y. Tsapras
+  - S. X. Wang
+  - G. Anglada-Escudé
+  year: '2018'
+  pubdate: '2018-11-14'
+  doi: 10.1038/s41586-018-0677-y
+  abstract: At a distance of 1.8 parsecs, Barnard's star (Gl 699) is a red dwarf with the largest apparent motion of any known
+    stellar object. It is the closest single star to the Sun, second only to the alpha Centauri triple stellar system. Barnard's
+    star is also among the least magnetically active red dwarfs known and has an estimated age older than our Solar System.
+    Its properties have made it a prime target for planet searches employing techniques such as radial velocity, astrometry,
+    and direct imaging, all with different sensitivity limits but ultimately leading to disproved or null results. Here we
+    report that the combination of numerous measurements from high-precision radial velocity instruments reveals the presence
+    of a low-amplitude but significant periodic signal at 233 days. Independent photometric and spectroscopic monitoring,
+    as well as the analysis of instrumental systematic effects, show that this signal is best explained as arising from a
+    planetary companion. The candidate planet around Barnard's star is a cold super-Earth with a minimum mass of 3.2 Earth
+    masses orbiting near its snow-line. The combination of all radial velocity datasets spanning 20 years additionally reveals
+    a long-term modulation that could arise from a magnetic activity cycle or from a more distant planetary object. Because
+    of its proximity to the Sun, the proposed planet has a maximum angular separation of 220 milli-arcseconds from Barnard's
+    star, making it an excellent target for complementary direct imaging and astrometric observations.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1811.05920'
+  ads_bibcode: null
+  title: Prospects for detecting the astrometric signature of Barnard's Star b
+  authors:
+  - Lev Tal-Or
+  - Shay Zucker
+  - Ignasi Ribas
+  - Guillem Anglada-Escudé
+  - Ansgar Reiners
+  year: '2018'
+  pubdate: '2018-11-14'
+  doi: 10.1051/0004-6361/201834643
+  abstract: A low-amplitude periodic signal in the radial velocity (RV) time series of Barnard's Star was recently attributed
+    to a planetary companion with a minimum mass of ${\sim}$3.2 $M_\oplus$ at an orbital period of $\sim$233 days. The relatively
+    long orbital period and the proximity of Barnard's Star to the Sun raises the question whether the true mass of the planet
+    can be constrained by accurate astrometric measurements. By combining the assumption of an isotropic probability distribution
+    of the orbital orientation with the RV-analysis results, we calculated the probability density function of the astrometric
+    signature of the planet. In addition, we reviewed the astrometric capabilities and limitations of current and upcoming
+    astrometric instruments. We conclude that Gaia and the Hubble Space Telescope (HST) are currently the best-suited instruments
+    to perform the astrometric follow-up observations. Taking the optimistic estimate of their single-epoch accuracy to be
+    $\sim$30 $μ$as, we find a probability of $\sim$10% to detect the astrometric signature of Barnard's Star b with $\sim$50
+    individual-epoch observations. In case of no detection, the implied mass upper limit would be $\sim$8 $M_\oplus$, which
+    would place the planet in the super-Earth mass range. In the next decade, observations with the Wide-Field Infrared Space
+    Telescope (WFIRST) may increase the prospects of measuring the true mass of the planet to $\sim$99%.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1710.05276'
+  ads_bibcode: null
+  title: High-Resolution Spectroscopic Detection of TiO and Stratosphere in the Day-side of WASP-33b
+  authors:
+  - Stevanus K. Nugroho
+  - Hajime Kawahara
+  - Kento Masuda
+  - Teruyuki Hirano
+  - Takayuki Kotani
+  - Akito Tajitsu
+  year: '2017'
+  pubdate: '2017-10-15'
+  doi: 10.3847/1538-3881/aa9433
+  abstract: We report high-resolution spectroscopic detection of TiO molecular signature in the day-side spectra of WASP-33
+    b, the second hottest known hot Jupiter. We used High-Dispersion Spectrograph (HDS; R $\sim$ 165,000) in the wavelength
+    range of 0.62 -- 0.88 $μ$m with the Subaru telescope to obtain the day-side spectra of WASP-33 b. We suppress and correct
+    the systematic effects of the instrument, the telluric and stellar lines by using SYSREM algorithm after the selection
+    of good orders based on Barnard star and other M-type stars. We detect a 4.8-$σ$ signal at an orbital velocity of $K_{p}$=
+    +237.5 $^{+13.0}_{-5.0}$ km s$^{-1}$ and systemic velocity $V_{sys}$= -1.5 $^{+4.0} _{-10.5}$ km s$^{-1}$, which agree
+    with the derived values from the previous analysis of primary transit. Our detection with the temperature inversion model
+    implies the existence of stratosphere in its atmosphere, however, we were unable to constrain the volume-mixing ratio
+    of the detected TiO. We also measure the stellar radial velocity and use it to obtain a more stringent constraint on the
+    orbital velocity, $K_{p} = 239.0^{+2.0}_{-1.0}$ km s$^{-1}$. Our results demonstrate that high-dispersion spectroscopy
+    is a powerful tool to characterize the atmosphere of an exoplanet, even in the optical wavelength range, and show a promising
+    potential in using and developing similar techniques with high-dispersion spectrograph on current 10m-class and future
+    extremely large telescopes.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(skip_pattern=\bhot Jupiter\b) → no_relevance_signal
+- arxiv_id: '1705.04690'
+  ads_bibcode: null
+  title: High-cadence spectroscopy of M-dwarfs - II. Searching for stellar pulsations with HARPS
+  authors:
+  - Zaira M. Berdiñas
+  - Cristina Rodríguez-López
+  - Pedro J. Amado
+  - Guillem Anglada-Escudé
+  - John R. Barnes
+  - James MacDonald
+  - Mathias Zechmeister
+  - Luis F. Sarmiento
+  year: '2017'
+  pubdate: '2017-05-12'
+  doi: 10.1093/mnras/stx1140
+  abstract: Stellar oscillations appear all across the Hertzsprung-Russell diagram. Recent theoretical studies support their
+    existence also in the atmospheres of M dwarfs. These studies predict for them short periodicities ranging from 20~min
+    to 3~h. Our Cool Tiny Beats (CTB) programme aims at finding these oscillations for the very first time. With this goal,
+    CTB explores the short time domain of M dwarfs using radial velocity data from the HARPS-ESO and HARPS-N high-precision
+    spectrographs. Here we present the results for the two most long-term stable targets observed to date with CTB, GJ~588
+    and GJ~699 (i.e. Barnard's star). In the first part of this work we detail the correction of several instrumental effects.
+    These corrections are specially relevant when searching for sub-night signals. Results show no significant signals in
+    the range where M dwarfs pulsations were predicted. However, we estimate that stellar pulsations with amplitudes larger
+    than $\sim0.5\,\mathrm{m\,s}^{-1}$ can be detected with a 90% completeness with our observations. This result, along with
+    the excess of power regions detected in the periodograms, open the possibility of non-resolved very low amplitude pulsation
+    signals. Next generation more precise instrumentation would be required to detect such oscillations. However, the possibility
+    of detecting pulsating M-dwarf stars with larger amplitudes is feasible due to the short size of the analysed sample.
+    This motivates the need for completeness of the CTB survey.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1507.01254'
+  ads_bibcode: null
+  title: Constraints on the substellar companions in wide orbits around the Barnard's Star from CanariCam mid-infrared imaging
+  authors:
+  - B. Gauza
+  - V. J. S. Béjar
+  - R. Rebolo
+  - C. Álvarez
+  - G. Bihain
+  - M. R. Zapatero Osorio
+  - J. A. Caballero
+  - C. M. Telesco
+  - C. Packham
+  year: '2015'
+  pubdate: '2015-07-05'
+  doi: 10.1093/mnras/stv1350
+  abstract: We have performed mid-infrared imaging of Barnard's Star, one of the nearest stars to the Sun, using CanariCam
+    on the 10.4 m Gran Telescopio Canarias. We aim to investigate an area within 1-10 arcsec separations, which for the 1.83
+    pc distance of the star translates to projected orbital separations of 1.8-18 AU (P > 12 yr), which have not been explored
+    yet with astrometry or radial velocity programs. It is therefore an opportunity to enter the domain of distances where
+    most giant planets are expected to form. We performed deep imaging in the N-band window (Si-2 filter, 8.7 μm) reaching
+    a 3σ detection limit of 0.85+/-0.18 mJy and angular resolution of 0.24 arcsec, close to the diffraction limit of the telescope
+    at this wavelength. A total of 80 min on-source integration time data were collected and combined for the deepest image.
+    We achieved a dynamical range of 8.0+/-0.1 mag in the 8.7 μm band, at angular separations from ~2 to 10 arcsec and of
+    ~6-8 mag at 1-2 arcsec. No additional sources were found. Our detectability limits provide further constraints to the
+    presence of substellar companions of the Barnard's Star. According to solar metallicity evolutionary models, we can exclude
+    companions of masses larger than 15 MJup (Teff > 400 K), ages of a few Gyr, and located in ~3.6-18 AU orbits with a 3σ
+    confidence level. This minimum mass is approximately 5 MJup smaller than any previous imaging survey that explored the
+    surroundings of Barnard's Star could restrict.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '1208.2273'
+  ads_bibcode: null
+  title: Precise Doppler Monitoring of Barnard's Star
+  authors:
+  - Jieun Choi
+  - Chris McCarthy
+  - Geoffrey W. Marcy
+  - Andrew W. Howard
+  - Debra A. Fischer
+  - John A. Johnson
+  - Howard Isaacson
+  - Jason T. Wright
+  year: '2012'
+  pubdate: '2012-08-10'
+  doi: 10.1088/0004-637X/764/2/131
+  abstract: We present 248 precise Doppler measurements of Barnard's Star (Gl 699), the second nearest star system to Earth,
+    obtained from Lick and Keck Observatories during 25 years between 1987 and 2012. The early precision was 20 \ms{} but
+    was 2 \ms{} during the last 8 years, constituting the most extensive and sensitive search for Doppler signatures of planets
+    around this stellar neighbor. We carefully analyze the 136 Keck radial velocities spanning 8 years by first applying a
+    periodogram analysis to search for nearly circular orbits. We find no significant periodic Doppler signals with amplitudes
+    above $\sim$2 \ms{}, setting firm upper limits on the minimum mass (\msini) of any planets with orbital periods from 0.1
+    to 1000 days. Using a Monte Carlo analysis for circular orbits, we determine that planetary companions to Barnard's Star
+    with masses above 2 \mearth{} and periods below 10 days would have been detected. Planets with periods up to 2 years and
+    masses above 10 \mearth{} (0.03 \mjup) are also ruled out. A similar analysis allowing for eccentric orbits yields comparable
+    mass limits. The habitable zone of Barnard's Star appears to be devoid of roughly Earth-mass planets or larger, save for
+    face-on orbits. Previous claims of planets around the star by van de Kamp are strongly refuted. The radial velocity of
+    Barnard's Star increases with time at $4.515\pm0.002$ \msy{}, consistent with the predicted geometrical effect, secular
+    acceleration, that exchanges transverse for radial components of velocity.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: astro-ph/0303528
+  ads_bibcode: null
+  title: The low-level radial velocity variability in Barnard's star (=GJ 699). Secular acceleration, indications for convective
+    redshift, and planet mass limits
+  authors:
+  - M. Kuerster
+  - M. Endl
+  - F. Rouesnel
+  - S. Els
+  - A. Kaufer
+  - S. Brillant
+  - A. P. Hatzes
+  - S. H. Saar
+  - W. D. Cochran
+  year: '2003'
+  pubdate: '2003-03-24'
+  doi: 10.1051/0004-6361:20030396
+  abstract: We report results from 2 1/2 yr of high precision radial velocity (RV) monitoring of Barnard's star. The high
+    RV measurement precision of the VLT-UT2+UVES of 2.65 m/s made the following findings possible. (1) The first detection
+    of the change in the RV of a star caused by its space motion (RV secular acceleration). (2) An anti-correlation of the
+    measured RV with the strength of the filling-in of the Halpha line by emission. (3) Very stringent mass upper limits to
+    planetary companions. Using only data from the first 2 years, we obtain a best-fit value for the RV secular acceleration
+    of 5.15+/-0.89 m/s/yr. This agrees with the predicted value of 4.50 m/s/yr based on the Hipparcos proper motion and parallax
+    combined with the known absolute radial velocity of the star. When the RV data of the last half-year are added the best-fit
+    slope is strongly reduced to 2.97+/-0.51 m/s/yr suggesting the presence of additional RV variability in the star. Part
+    of it can be attributed to stellar activity as we demonstrate by correlating the residual RVs with an index that describes
+    the filling-in of the Halpha line by emission. A correlation coefficient of -0.50 indicates that the appearance of active
+    regions causes a blueshift of photospheric absorption lines. Assuming that active regions basically inhibit convection
+    we discuss the possibility that the fundamental (inactive) convection pattern in this M4V star produces a convective redshift.
+    We also determine upper limits to the projected mass msini and to the true mass m of hypothetical planetary companions
+    in circular orbits. For the separation range 0.017-0.98 AU we exclude any planet with msini>0.12 Mjupiter and m>0.86 Mjupiter.
+    Throughout the habitable zone, i.e. 0.034-0.082 AU, we exclude planets with msini>7.5 Mearth and m>3.1 Mneptune.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: astro-ph/0302206
+  ads_bibcode: null
+  title: Discovery of a New Nearby Star
+  authors:
+  - B. J. Teegarden
+  - S. H. Pravdo
+  - M. Hicks
+  - S. B. Shaklan
+  - K. Covey
+  - O. Fraser
+  - S. L. Hawley
+  - T. McGlynn
+  - I. N. Reid
+  year: '2003'
+  pubdate: '2003-02-11'
+  doi: 10.1086/375803
+  abstract: We report the discovery of a nearby star with a very large proper motion of 5.06 +/- 0.03 arcsec/yr. The star
+    is called SO025300.5+165258 and referred to herein as HPMS (high proper motion star). The discovery came as a result of
+    a search of the SkyMorph database, a sensitive and persistent survey that is well suited for finding stars with high proper
+    motions. There are currently only 7 known stars with proper motions > 5 arcsec/yr. We have determined a preliminary value
+    for the parallax of 0.43 +/- 0.13 arcsec. If this value holds our new star ranks behind only the Alpha Centauri system
+    (including Proxima Centauri) and Barnard's star in the list of our nearest stellar neighbors. The spectrum and measured
+    tangential velocity indicate that HPMS is a main-sequence star with spectral type M6.5. However, if our distance measurement
+    is correct, the HPMS is underluminous by 1.2 +/- 0.7 mag.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: astro-ph/9909455
+  ads_bibcode: null
+  title: Nearby Microlensing Events - Identification of the Candidates for the SIM
+  authors:
+  - Samir Salim
+  - Andrew Gould
+  year: '1999'
+  pubdate: '1999-09-28'
+  doi: 10.1086/309196
+  abstract: The Space Interferometry Mission (SIM) is the instrument of choice when it comes to observing astrometric microlensing
+    events where nearby, usually high-proper-motion stars (``lenses''), pass in front of more distant stars (``sources'').
+    Each such encounter produces a deflection in the source's apparent position that when observed by SIM can lead to a precise
+    mass determination of the nearby lens star. We search for lens-source encounters during the 2005-2015 period using Hipparcos,
+    ACT and NLTT to select lenses, and USNO-A2.0 to search for the corresponding sources, and rank these by the SIM time required
+    for a 1% mass measurement. For Hipparcos and ACT lenses, the lens distance and lens-source impact parameter are precisely
+    determined so the events are well characterized. We present 32 candidates beginning with a 61 Cyg A event in 2012 that
+    requires only a few minutes of SIM time. Proxima Centauri and Barnard's star each generate several events. For NLTT lenses,
+    the distance is known only to a factor of 3, and the impact parameter only to 1''. Together, these produce uncertainties
+    of a factor ~10 in the amount of SIM time required. We present a list of 146 NLTT candidates and show how single-epoch
+    CCD photometry of the candidates could reduce the uncertainty in SIM time to a factor of ~1.5.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(no_signal) → no_relevance_signal
+- arxiv_id: astro-ph/9905318
+  ads_bibcode: null
+  title: 'Interferometric Astrometry of Proxima Centauri and Barnard''s Star Using Hubble Space Telescope Fine Guidance Sensor
+    3: Detection Limits for sub-Stellar Companions'
+  authors:
+  - G. Fritz Benedict
+  - Barbara McArthur
+  - D. W. Chappell
+  - E. Nelan
+  - W. H. Jefferys
+  - W. van Altena
+  - J. Lee
+  - D. Cornell
+  - P. J. Shelus
+  - P. D. Hemenway
+  - Otto G. Franz
+  - L. H. Wasserman
+  - R. L. Duncombe
+  - D. Story
+  - A. L. Whipple
+  - L. W. Fredrick
+  year: '1999'
+  pubdate: '1999-05-25'
+  doi: 10.1086/300975
+  abstract: We report on a sub-stellar companion search utilizing interferometric fringe-tracking astrometry acquired with
+    Fine Guidance Sensor 3 (FGS 3) on the Hubble Space Telescope. Our targets were Proxima Centauri and Barnard's Star. We
+    obtain absolute parallax values for Proxima Cen pi_{abs} = 0.7687 arcsecond and for Barnard's Star pi_{abs} = 0.5454 arcsecond.
+    Once low-amplitude instrumental systematic errors are identified and removed, our companion detection sensitivity is less
+    than or equal to one Jupiter mass for periods longer than 60 days for Proxima Cen. Between the astrometry and the radial
+    velocity results we exclude all companions with M > 0.8M_{Jup} for the range of periods 1 < P < 1000 days. For Barnard's
+    Star our companion detection sensitivity is less than or equal to one Jupiter mass for periods long er than 150 days.
+    Our null results for Barnard's Star are consistent with those of Gatewood (1995).
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(other_system_primary) → no_relevance_signal
+- arxiv_id: astro-ph/9806276
+  ads_bibcode: null
+  title: 'Photometry of Proxima Centauri and Barnard''s Star Using HST Fine Guidance Sensor 3: A Search for Periodic Variations'
+  authors:
+  - G. Fritz Benedict
+  - Barbara McArthur
+  - E. Nelan
+  - D. Story
+  - A. L. Whipple
+  - P. J. Shelus
+  - W. H. Jefferys
+  - P. D. Hemenway
+  - Otto G. Franz
+  - L. H. Wasserman
+  - R. L. Duncombe
+  - Wm. van Altena
+  - L. W. Fredrick
+  year: '1998'
+  pubdate: '1998-06-19'
+  doi: 10.1086/300420
+  abstract: 'We have observed Proxima Centauri and Barnard''s Star with Hubble Space Telescope Fine Guidance Sensor 3. Proxima
+    Centauri exhibits small-amplitude, periodic photometric variations. Once several sources of systematic photometric error
+    are corrected, we obtain 2 milli-magnitude internal photometric precision. We identify two distinct behavior modes over
+    the past four years: higher amplitude, longer period; smaller amplitude, shorter period. Within the errors one period
+    (P ~ 83d) is twice the other. Barnard''s Star shows very weak evidence for periodicity on a timescale of approximately
+    130 days. If we interpret these periodic phenomena as rotational modulation of star spots, we identify three discrete
+    spots on Proxima Cen and possibly one spot on Barnard''s Star. We find that the disturbances change significantly on time
+    scales as short as one rotation period.'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (5 < 14)
+  fetch_error: null
+  authority_score: 5
+  relevance_score: 0
+  combined_score: 5
+  filter_decision: skip
+  filter_reason: auth(has_arxiv) + rel(other_system_primary) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2024AdSpR..74..415L
+  title: Optimal strategies for the exploration of near-by stars
+  authors:
+  - Lebert, Johannes
+  - Hein, Andreas M.
+  - Dziura, Martin
+  year: '2024'
+  pubdate: '2024-07-00'
+  doi: 10.1016/j.asr.2024.04.003
+  abstract: Interstellar exploration is defined as bi-objective multi-vehicle problem with profits. Mission return increases
+    approximately linearly with mission duration. Lower probe numbers enable more efficient routing through shorter transfers.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2024nap..book27639N
+  title: 'Extraterrestrial Life: an Anthology and Bibliography, Compiled by Elie a. Shneour and Eric a. Ottesen.'
+  authors:
+  - National Research Council
+  year: '2024'
+  pubdate: '2024-03-00'
+  doi: 10.17226/27639
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2022Univ....8..421L
+  title: Interstellar Propulsion Using Laser-Driven Inertial Confinement Fusion Physics
+  authors:
+  - Long, Kelvin F.
+  year: '2022'
+  pubdate: '2022-08-00'
+  doi: 10.3390/universe8080421
+  abstract: To transport a spacecraft to distances far beyond the solar heliosphere and around the planets of other stars
+    will require advanced space propulsion systems that go beyond the existing technological state of the art. The release
+    of fusion energy from the interaction of two low mass atomic nuclei that are able to overcome the Coulomb barrier offers
+    the potential for ∼10<SUP>11</SUP>J/g specific energy release and implies that robotic missions to the nearby stars to
+    distances of ∼5─10 ly may be possible in trip durations of the order of ∼50─100 years, travelling at cruise speeds of
+    the order of ∼0.05─0.15 c. Such missions would be characterised with ∼kN-MN thrust levels, ∼GW-TW jet powers, ∼kW/kg-MW/kg
+    specific powers. One of the innovative methods by which fusion reactions can be ignited is via the impingement of laser
+    beams onto an inertial confinement fusion capsule, imploding it to a thermonuclear state. This paper gives an overview
+    of the physics of inertial confinement fusion and the interaction of a laser beam with a capsule to include the simulation
+    of a 1D particle-in-cell code calculation to illustrate the effects. In the application to deep space missions, various
+    spacecraft concepts from the literature are discussed, and the range of values assumed for the pulse frequency, burn fraction
+    and areal density appropriate for the mission are presented. It is concluded that advanced space propulsion via inertial
+    confinement fusion is a plausible part of our future, provided that experimental validation of ignition is on the horizon
+    and numerical models for feasibility concepts are developed to high fidelity and on a consistent basis.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2022SPIE12184E..1HW
+  title: First light of NIRPS, the near-infrared adaptive-optics assisted high resolution spectrograph for the ESO 3.6m
+  authors:
+  - Wildi, François
+  - Bouchy, François
+  - Doyon, René
+  - Blind, Nicolas
+  - Genolet, Ludovic
+  - Sordet, Michael
+  - Segovia, Alex
+  - Grieves, Nolan
+  - Malo, Lison
+  - Artigau, Étienne
+  - St-Antoine, Jonathan
+  - Vallée, Philippe
+  - Rasilla, Jose Luis
+  - Gracia Temich, Felix
+  - Poulin-Girard, Anne-Sophie
+  - Brousseau, Denis
+  - Sosnowska, Danuta
+  - Reshetov, Vlad
+  - Baron, Frédérique
+  - Thibault, Simon
+  - Bovay, Sébastien
+  - Frensch, Yolanda
+  - Lo Curto, Gaspare
+  - Hubin, Norbert
+  - Zins, Gérard
+  - Peroux, Céline
+  - Cabral, Alexandre
+  year: '2022'
+  pubdate: '2022-08-00'
+  doi: 10.1117/12.2630016
+  abstract: NIRPS is an infrared precision Radial Velocity (pRV) spectrograph covering the range 950 nm-1800 nm. NIRPS uses
+    a high-order Adaptive Optics (AO) system to couple the starlight into a fiber corresponding to 0.4" on the sky as efficiently
+    or better than HARPS or ESPRESSO couple the light in a 1.0" fiber. This allows the spectrograph to be very compact, more
+    thermally stable, and less costly. Using a custom tan(θ)=4 dispersion grating in combination with a start-of-the-art Hawaii4RG
+    detector makes NIRPS very efficient with complete coverage of the YJH bands at just under 100 000 resolution. On the ESO
+    3.6-m telescope, NIRPS and HARPS are working simultaneously on the same target, building a single powerful high-resolution,
+    high-fidelity spectrograph covering the 0.37-1.8 µm domain. NIRPS will complement HARPS in validating Earth-like planets
+    found around G and K-type stars whose signal is at the same order of magnitude than the stellar noise. While the telescope-side
+    AO system was installed on the ESO 3.6-m telescope in 2019, the infrared cryogenic spectrograph has been integrated at
+    the telescope in early-2022 and has had first light in June 2022. Results from the first light mission show that NIRPS
+    performs very nicely, that the AO system works up to magnitude I=14.5, that the transmission matches requirements and
+    that the RV stability of 1 m/s is within reach While performance assessment is ongoing, NIRPS has demonstrated on-sky
+    m/s-level stability over a night and &lt;3 m/s level over two weeks. Limitations on the RV performances arise from modal
+    noise that can be mitigated through better scrambling strategies. Better performances are also expected following a grating
+    upgrade in July 2022; these will be tested in late-2022.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2020PhyU...63..562P
+  title: Study of exoplanets by spectroscopic methods
+  authors:
+  - Panchuk, V. E.
+  - Balega, Yu Yu
+  - Klochkova, V. G.
+  - Sachkov, M. E.
+  year: '2020'
+  pubdate: '2020-09-00'
+  doi: 10.3367/UFNe.2019.07.038597
+  abstract: A review of spectroscopic methods for observations of stars in searching for and studying exoplanets is presented.
+    Instrumental errors in measuring radial velocities and strategies to decrease (or fundamentally eliminate) them are considered.
+    The role of astrometric and photometric methods is pointed out. The results of the study of the chemical composition of
+    parent stars and the spectroscopy of transit phenomena are discussed. Some promising directions are evaluated. The development
+    of Russian ground-based and orbital instruments for spectroscopy and spectropolarimetry of stars is reported.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2019ConPh..60...63I
+  title: The exoplanet handbook, 2nd edition
+  authors:
+  - Ishak, B.
+  year: '2019'
+  pubdate: '2019-01-00'
+  doi: 10.1080/00107514.2019.1606033
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2014A&G....55d4.30H
+  title: Testing proposed planetary systems - to destruction
+  authors:
+  - Horner, J.
+  - Wittenmyer, R. A.
+  - Marshall, J. P.
+  - Hinse, T. C.
+  - Robertson, P.
+  year: '2014'
+  pubdate: '2014-08-00'
+  doi: 10.1093/astrogeo/atu164
+  abstract: J Horner, R A Wittenmyer, J P Marshall, T C Hinse and P Robertson examine the dynamics of exoplanet systems and
+    find that some of them don't last long. The stability of planetary systems offers a check on the likelihood of proposed
+    multiple-exoplanet systems.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2012PhPro..38..109L
+  title: The Science and Fiction of Robert L. Forward
+  authors:
+  - Lundquist, Charles A.
+  year: '2012'
+  pubdate: '2012-00-00'
+  doi: 10.1016/j.phpro.2012.08.016
+  abstract: One way to examine a relationship between science and science fiction is to look at the works of individuals who
+    simultaneously were practicing scientists and authors of science fiction. Dr. Robert L. Forward is such an individual.
+    From 1980 through 1997 he wrote and published about twelve science fiction novels. During the same time interval, he produced
+    many scientific and technical papers. Writing science fiction was essentially a byproduct of his scientific research.
+    His early research concerned gravitation and astronomical objects. Later he studied space transportation technologies,
+    including photon propelled sails, antimatter rockets and long tethers. An immediate observation is that Dr. Forward, in
+    his science fiction, took particular care that the circumstances and technologies used had reasonable scientific bases.
+    A prime example is his use of antimatter propulsion in his fiction. In his scientific career, Dr. Forward was a leading
+    proponent that antimatter propulsion was possible, but very expensive. Enormous sails propelled in space by astronomical
+    photons or laser beams is another propulsion technology employed in his novels. If a distinction is made between fiction
+    based on sound scientific principles and fiction that is pure fantasy, the works of Robert Forward clearly fall in the
+    first grouping.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2003A&G....44c...8B
+  title: 'NAM 2003: Data and debate'
+  authors:
+  - Bowler, Sue
+  year: '2003'
+  pubdate: '2003-06-00'
+  doi: 10.1046/j.1468-4004.2003.44307_2.x
+  abstract: Sue Bowler draws together some of the NAM scientific sessions, to capture the flavour of this lively and popular
+    meeting.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (4 < 14)
+  fetch_error: null
+  authority_score: 4
+  relevance_score: 0
+  combined_score: 4
+  filter_decision: skip
+  filter_reason: auth(has_doi) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 2002ESASP.485..235F
+  title: The Darwin mission and exo-planets
+  authors:
+  - Fridlund, M.
+  year: '2002'
+  pubdate: '2002-01-00'
+  doi: null
+  abstract: Darwin is a cornerstone mission of the Horizons 2000+ program of the European Space Agency. It has the express
+    purpose of carrying out the first direct search for terrestrial exoplanets, and to achieve unprecedented spatial resolution
+    in the infrared wavelength region. The detection and study of terrestrial exoplanets promises to usher in a new era in
+    science and will affect a broad spectrum of diciplines. Further, the time line for implementation of such an instrument
+    is now likely to be of the close order of 10 years, leading to possible answers to one of mankind's most
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1992AdSpR..12d.157P
+  title: The search for extra-solar planetary systems
+  authors:
+  - Paresce, Francesco
+  year: '1992'
+  pubdate: '1992-00-00'
+  doi: 10.1016/0273-1177(92)90169-X
+  abstract: 'I review the observational evidence for planetary systems around nearby stars and, using our own solar system
+    as a guide, assess the stringent requirements that new searches need to meet in order to unambiguously establish the presence
+    of another planetary system. Basically, these requirements are: 1 milliarcsecond or better positional accuracy for astrometric
+    techniques, 9 orders of magnitude or better star to planet luminosity ratio discrimination at 0.5 to 1'''' separation
+    in the optical for direct imaging techniques, 10 meters sec<SUP>-1</SUP> or better radial velocity accuracy for reflex
+    motion techniques and +/-1% or better brightness fluctuation accuracy for planet/star occultation measurements. The astrometric
+    accuracy is in reach of HST, direct imaging will require much larger telescopes and/or a 50 times smoother mirror than
+    HST while the reflex motion and occultation techniques best performed on the ground are just becoming viable and promise
+    exciting new discoveries. On the other hand, new indirect evidence on the existence of other planetary systems also comes
+    from the observation of large dusty disks around nearby main sequence stars not too dissimilar from our sun. In one particular
+    case, that of Beta Pictoris, a flattened disk seen nearly edge-on has been imaged in the optical and near IR down to almost
+    70 AU of the star. It probably represents a young planetary system in its clearing out phase as planetesimals collide,
+    erode and are swept out of the inner system by radiation pressure. The hypothesized Kuiper belt around our solar system
+    may be the analogous structure in a later evolutionary stage. Features of this type have been detected in the far IR and
+    sub-millimeter wavelength regions around 50-100 nearby main sequence and pre-main sequence stars. I discuss a battery
+    of new accurate observations planned in the near future of these objects some of which may actually harbour planets or
+    planetesimals that will certainly dramatically improve our knowledge of planetary system formation processes and our peculiar
+    position in this scheme. <P />Affiliated with the Astrophysics Division, Space Science Department, ESA'
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1991psas.conf.....D
+  title: 'Planetary Sciences: American and Soviet Research/Proceedings from the U.S.-U.S.S.R. Workshop on Planetary Sciences'
+  authors:
+  - Donahue, Thomas M.
+  - Triver, Kathleen Kearney
+  - Abramson, David M.
+  year: '1991'
+  pubdate: '1991-00-00'
+  doi: 10.17226/1790
+  abstract: This book contains the proceedings from a workshop on planetary sciences sponsored by the Academy of Sciences
+    of the USSR and the National Academy of Sciences. The proceedings include papers written by American and Soviet scientists
+    who examine the current theoretical understanding of how the planets were formed and how they evolved to their present
+    state. They assess the type of observations and experiments that are needed to advance understanding of the formation
+    and evolution of the solar system based on the current theoretical framework.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1990nap..book.1732N
+  title: 'Strategy for the Detection and Study of Other Planetary Systems and Extrasolar Planetary Materials: 1990-2000'
+  authors:
+  - National Research Council
+  year: '1990'
+  pubdate: '1990-00-00'
+  doi: 10.17226/1732
+  abstract: This volume addresses a new opportunity in the planetary sciences—to extend our exploration outward to discover
+    and study planetary systems that may have formed or are forming around other stars. It concludes that a coordinated program
+    of astronomical observation, laboratory research, theoretical development, and understanding of the dynamics and origins
+    of whatever may be found would be a technologically feasible and potentially richly rewarding extension of the study of
+    bodies within the solar system.
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1983CoPhC..29..269S
+  title: 'Programs `CELESTE'' and `STELLA'' for computations in special relativity: Evaluation of the celestial view from
+    an interstellar spacecraft'
+  authors:
+  - Sheldon, E.
+  - Giles, R. H.
+  year: '1983'
+  pubdate: '1983-05-00'
+  doi: 10.1016/0010-4655(83)90007-3
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1982nap..book..549N
+  title: 'Astronomy and Astrophysics for the 1980''s, Volume 1: Report of the Astronomy Survey Committee'
+  authors:
+  - National Research Council
+  year: '1982'
+  pubdate: '1982-00-00'
+  doi: 10.17226/549
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: null
+  ads_bibcode: 1921AN....213Q..77.
+  title: Barnards Stern
+  authors: []
+  year: '1921'
+  pubdate: '1921-03-00'
+  doi: null
+  abstract: null
+  status: skipped
+  category: null
+  skip_reason: below_score_threshold (3 < 14)
+  fetch_error: null
+  authority_score: 3
+  relevance_score: 0
+  combined_score: 3
+  filter_decision: skip
+  filter_reason: auth(neutral) + rel(no_signal) → no_relevance_signal
+- arxiv_id: '2410.00569'
+  ads_bibcode: 2024A&A...690A..79G
+  title: A sub-Earth-mass planet orbiting Barnard's star
+  authors:
+  - González Hernández, J. I.
+  - Suárez Mascareño, A.
+  - Silva, A. M.
+  - Stefanov, A. K.
+  - Faria, J. P.
+  - Tabernero, H. M.
+  - Sozzetti, A.
+  - Rebolo, R.
+  - Pepe, F.
+  - Santos, N. C.
+  - Cristiani, S.
+  - Lovis, C.
+  - Dumusque, X.
+  - Figueira, P.
+  - Lillo-Box, J.
+  - Nari, N.
+  - Benatti, S.
+  - Hobson, M. J.
+  - Castro-González, A.
+  - Allart, R.
+  - Passegger, V. M.
+  - Zapatero Osorio, M.-R.
+  - Adibekyan, V.
+  - Alibert, Y.
+  - Allende Prieto, C.
+  - Bouchy, F.
+  - Damasso, M.
+  - D'Odorico, V.
+  - Di Marcantonio, P.
+  - Ehrenreich, D.
+  - Lo Curto, G.
+  - Santos, R. Génova
+  - Martins, C. J. A. P.
+  - Mehner, A.
+  - Micela, G.
+  - Molaro, P.
+  - Nunes, N.
+  - Palle, E.
+  - Sousa, S. G.
+  - Udry, S.
+  year: '2024'
+  pubdate: '2024-10-00'
+  doi: 10.1051/0004-6361/202451311
+  abstract: Context. ESPRESSO guaranteed time observations (GTOs) at the 8.2m VLT telescope were performed to look for Earth-like
+    exoplanets in the habitable zone of nearby stars. Barnard's star is a primary target within the ESPRESSO GTO as it is
+    the second closest neighbour to our Sun after the α Centauri stellar system. Aims. We present here a large set of 156
+    ESPRESSO observations of Barnard's star carried out over four years with the goal of exploring periods of shorter than
+    50 days, thus including the habitable zone (HZ). Methods. Our analysis of ESPRESSO data using Gaussian process (GP) to
+    model stellar activity suggests a long-term activity cycle at 3200 d and confirms stellar activity due to rotation at
+    140 d as the dominant source of radial velocity (RV) variations. These results are in agreement with findings based on
+    publicly available HARPS, HARPS-N, and CARMENES data. ESPRESSO RVs do not support the existence of the previously reported
+    candidate planet at 233 d. Results. After subtracting the GP model, ESPRESSO RVs reveal several short-period candidate
+    planet signals at periods of 3.15 d, 4.12 d, 2.34 d, and 6.74 d. We confirm the 3.15 d signal as a sub-Earth mass planet,
+    with a semi-amplitude of 55 ± 7 cm s<SUP>−1</SUP>, leading to a planet minimum mass m<SUB>p</SUB> sin i of 0.37 ± 0.05
+    M<SUB>⊕</SUB>, which is about three times the mass of Mars. ESPRESSO RVs suggest the possible existence of a candidate
+    system with four sub-Earth mass planets in circular orbits with semi-amplitudes from 20 to 47 cm s<SUP>−1</SUP>, thus
+    corresponding to minimum masses in the range of 0.17─0.32 M<SUB>⊕</SUB>. Conclusions. The sub-Earth mass planet at 3.1533
+    ± 0.0006 d is in a close-to circular orbit with a semi-major axis of 0.0229 ± 0.0003 AU, thus located inwards from the
+    HZ of Barnard's star, with an equilibrium temperature of 400 K. Additional ESPRESSO observations would be required to
+    confirm that the other three candidate signals originate from a compact short-period planet system orbiting Barnard's
+    star inwards from its HZ.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '2503.08095'
+  ads_bibcode: 2025ApJ...982L...1B
+  title: Four Sub-Earth Planets Orbiting Barnard's Star from MAROON-X and ESPRESSO
+  authors:
+  - Basant, Ritvik
+  - Luque, Rafael
+  - Bean, Jacob L.
+  - Seifahrt, Andreas
+  - Brady, Madison
+  - Zhao, Lily L.
+  - Brown, Nina
+  - Das, Tanya
+  - Stürmer, Julian
+  - Kasper, David
+  - Gupta, Rohan
+  - Stefánsson, Guđmundur
+  year: '2025'
+  pubdate: '2025-03-00'
+  doi: 10.3847/2041-8213/adb8d5
+  abstract: Barnard's Star is an old, single M dwarf star that comprises the second-closest extrasolar system. It has a long
+    history of claimed planet detections from both radial velocities and astrometry. However, none of these claimed detections
+    have so far withstood further scrutiny. Continuing this story, extreme precision radial velocity measurements from the
+    ESPRESSO instrument have recently been used to identify four new sub-Earth-mass planet candidates around Barnard's Star.
+    We present here 112 radial velocities of Barnard's Star from the MAROON-X instrument that were obtained independently
+    to search for planets around this compelling object. The data have a typical precision of 30 cm s<SUP>−1</SUP> and are
+    contemporaneous with the published ESPRESSO measurements (2021─2023). The MAROON-X data on their own confirm planet b
+    (P = 3.154 days) and planet candidates c and d (P = 4.124 and 2.340 days, respectively). Furthermore, adding the MAROON-X
+    data to the ESPRESSO data strengthens the evidence for planet candidate e (P = 6.739 days), thus leading to its confirmation.
+    The signals from all four planets are &lt;50 cm s<SUP>−1</SUP>, the minimum masses of the planets range from 0.19 to 0.34
+    M<SUB>⊕</SUB>, and the system is among the most compact known among late M dwarfs hosting low-mass planets. The current
+    data rule out planets with masses &gt;0.57 M<SUB>⊕ </SUB>(with a 99% detection probability) in Barnard's Star's habitable
+    zone (P = 10─42 days).
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: '1811.05955'
+  ads_bibcode: 2018Natur.563..365R
+  title: A candidate super-Earth planet orbiting near the snow line of Barnard's star
+  authors:
+  - Ribas, I.
+  - Tuomi, M.
+  - Reiners, A.
+  - Butler, R. P.
+  - Morales, J. C.
+  - Perger, M.
+  - Dreizler, S.
+  - Rodríguez-López, C.
+  - González Hernández, J. I.
+  - Rosich, A.
+  - Feng, F.
+  - Trifonov, T.
+  - Vogt, S. S.
+  - Caballero, J. A.
+  - Hatzes, A.
+  - Herrero, E.
+  - Jeffers, S. V.
+  - Lafarga, M.
+  - Murgas, F.
+  - Nelson, R. P.
+  - Rodríguez, E.
+  - Strachan, J. B. P.
+  - Tal-Or, L.
+  - Teske, J.
+  - Toledo-Padrón, B.
+  - Zechmeister, M.
+  - Quirrenbach, A.
+  - Amado, P. J.
+  - Azzaro, M.
+  - Béjar, V. J. S.
+  - Barnes, J. R.
+  - Berdiñas, Z. M.
+  - Burt, J.
+  - Coleman, G.
+  - Cortés-Contreras, M.
+  - Crane, J.
+  - Engle, S. G.
+  - Guinan, E. F.
+  - Haswell, C. A.
+  - Henning, Th.
+  - Holden, B.
+  - Jenkins, J.
+  - Jones, H. R. A.
+  - Kaminski, A.
+  - Kiraga, M.
+  - Kürster, M.
+  - Lee, M. H.
+  - López-González, M. J.
+  - Montes, D.
+  - Morin, J.
+  - Ofir, A.
+  - Pallé, E.
+  - Rebolo, R.
+  - Reffert, S.
+  - Schweitzer, A.
+  - Seifert, W.
+  - Shectman, S. A.
+  - Staab, D.
+  - Street, R. A.
+  - Suárez Mascareño, A.
+  - Tsapras, Y.
+  - Wang, S. X.
+  - Anglada-Escudé, G.
+  year: '2018'
+  pubdate: '2018-11-00'
+  doi: 10.1038/s41586-018-0677-y
+  abstract: Barnard's star is a red dwarf, and has the largest proper motion (apparent motion across the sky) of all known
+    stars. At a distance of 1.8 parsecs<SUP>1</SUP>, it is the closest single star to the Sun; only the three stars in the
+    α Centauri system are closer. Barnard's star is also among the least magnetically active red dwarfs known<SUP>2,3</SUP>
+    and has an estimated age older than the Solar System. Its properties make it a prime target for planetary searches; various
+    techniques with different sensitivity limits have been used previously, including radial-velocity imaging<SUP>4-6</SUP>,
+    astrometry<SUP>7,8</SUP> and direct imaging<SUP>9</SUP>, but all ultimately led to negative or null results. Here we combine
+    numerous measurements from high-precision radial-velocity instruments, revealing the presence of a low-amplitude periodic
+    signal with a period of 233 days. Independent photometric and spectroscopic monitoring, as well as an analysis of instrumental
+    systematic effects, suggest that this signal is best explained as arising from a planetary companion. The candidate planet
+    around Barnard's star is a cold super-Earth, with a minimum mass of 3.2 times that of Earth, orbiting near its snow line
+    (the minimum distance from the star at which volatile compounds could condense). The combination of all radial-velocity
+    datasets spanning 20 years of measurements additionally reveals a long-term modulation that could arise from a stellar
+    magnetic-activity cycle or from a more distant planetary object. Because of its proximity to the Sun, the candidate planet
+    has a maximum angular separation of 220 milliarcseconds from Barnard's star, making it an excellent target for direct
+    imaging and astrometric observations in the future.
+  status: fetched
+  category: null
+  skip_reason: null
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2021AJ....162...61L
+  title: Stellar Activity Manifesting at a One-year Alias Explains Barnard b as a False Positive
+  authors:
+  - Lubin, Jack
+  - Robertson, Paul
+  - Stefansson, Gudmundur
+  - Ninan, Joe
+  - Mahadevan, Suvrath
+  - Endl, Michael
+  - Ford, Eric
+  - Wright, Jason T.
+  - Beard, Corey
+  - Bender, Chad
+  - Cochran, William D.
+  - Diddams, Scott A.
+  - Fredrick, Connor
+  - Halverson, Samuel
+  - Kanodia, Shubham
+  - Metcalf, Andrew J.
+  - Ramsey, Lawrence
+  - Roy, Arpita
+  - Schwab, Christian
+  - Terrien, Ryan
+  year: '2021'
+  pubdate: '2021-08-00'
+  doi: 10.3847/1538-3881/ac0057
+  abstract: Barnard's star is among the most studied stars given its proximity to the Sun. It is often considered the radial
+    velocity (RV) standard for fully convective stars due to its RV stability and equatorial decl. Recently, an $M\sin i=3.3{M}_{\oplus
+    }$ super-Earth planet candidate with a 233 day orbital period was announced by Ribas et al. New observations from the
+    near-infrared Habitable-zone Planet Finder (HPF) Doppler spectrometer do not show this planetary signal. We ran a suite
+    of experiments on both the original data and a combined original + HPF data set. These experiments include model comparisons,
+    periodogram analyses, and sampling sensitivity, all of which show the signal at the proposed period of 233 days is transitory
+    in nature. The power in the signal is largely contained within 211 RVs that were taken within a 1000 day span of observing.
+    Our preferred model of the system is one that features stellar activity without a planet. We propose that the candidate
+    planetary signal is an alias of the 145 day rotation period. This result highlights the challenge of analyzing long-term,
+    quasi-periodic activity signals over multiyear and multi-instrument observing campaigns.
+  status: skipped
+  category: null
+  skip_reason: null
+  fetch_error: no_arxiv_id
+filtered_papers:
+- *id001
+- *id002
+- *id003
+- *id004
+- *id005
+- *id006
+- *id007
+- *id008
+- *id009
+- *id010
+- *id011
+- *id012
+- *id013
+- *id014
+- *id015
+- *id016
