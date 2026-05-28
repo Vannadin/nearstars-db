@@ -13,7 +13,9 @@
   },
   "40 Eridani C": {
     "phase2": "phase2/40-eridani-c.html",
-    "phase3": {}
+    "phase3": {
+      "★": "phase3/40-eridani-c.html"
+    }
   },
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
