@@ -69,7 +69,7 @@ static), the flare color, and the spot-coverage cycle phase.
 | `radius_rsun` | 0.82 ± 0.02 | high | Donati 2023 ZDI Stokes V+I inversion from v sin i + P_rot = 4.863 d (sin i ≈ 1 from disk + RM geometry); Phase 2 recommended. No published CHARA interferometric diameter despite AU Mic being within CHARA's declination reach (dec −31°); Plavchan 2020 M_K-empirical R = 0.75 ± 0.03 R☉ kept as cross-check |
 | `teff_k` | 3700 ± 100 | high | Plavchan 2020 high-resolution spectroscopic Teff; Phase 2 recommended. Gaia DR3 GSP-Phot 3518 K (kept as cross-check, used for the separate visual `stellar_color_temp_k` row) runs cool because BP/RP photometric Teff is poorly calibrated below 3800 K for spotted active M dwarfs |
 | `luminosity_lsun` | 0.09 ± 0.02 | high | Plavchan 2020 SED-integrated bolometric luminosity anchored on Hipparcos/Gaia parallax; Phase 2 recommended. Stefan–Boltzmann from R = 0.82 R☉ + Teff = 3700 K gives 0.114 L☉ and from R = 0.75 R☉ + Teff = 3650 K gives 0.090 L☉, bracketing the SED value |
-| `metallicity_fe_h_dex` | +0.12 ± 0.05 | medium | Shkolnik 2017 (HAZMAT II) β Pic MG mean [Fe/H] — adopted as coeval-group calibration; Phase 2 recommended. No direct high-resolution [Fe/H] of AU Mic exists in the literature (molecular blanketing of the M1Ve photosphere defeats the standard FGK iron-line technique) |
+| `metallicity_fe_h_dex` | +0.12 ± 0.05 | medium | Miles & Shkolnik 2017 (HAZMAT II) β Pic MG mean [Fe/H] — adopted as coeval-group calibration; Phase 2 recommended. No direct high-resolution [Fe/H] of AU Mic exists in the literature (molecular blanketing of the M1Ve photosphere defeats the standard FGK iron-line technique) |
 | `age_gyr` | 0.022 ± 0.003 | high | Mamajek & Bell 2014 — β Pic MG isochronal age 22 ± 3 Myr; Phase 2 recommended. Cross-check Binks & Jeffries 2014 LDB age 21 ± 4 Myr is independent of isochrone-pipeline systematics and fully consistent |
 | `rotation_period_days` | 4.863 ± 0.01 | high | Plavchan 2020 — TESS Sectors 1+27 photometric rotational modulation (multi-spot, 4.863 d primary); Phase 2 recommended. Donati 2023 ZDI inversion adopts the same period |
 | `activity_log_rhk` | −3.9 | low | Saturated young-M-dwarf regime estimate consistent with the Hα + X-ray saturated locus; NOT a paper-cited value for AU Mic specifically. Phase 2 anchors activity on Hα EW = −2.4 ± 0.3 Å (Houdebine 2010) because Mt-Wilson R'HK is not validated for active M1Ve photospheres (Ca II H&K is contaminated by molecular bands at Teff < 4000 K). Stelzer 2013 X-ray cross-check log(L_X/L_bol) ≈ −3.0 supports the saturated-regime classification |
@@ -380,24 +380,24 @@ the NS DB as a separate entry; see Open items.
   doi:10.1093/mnrasl/slt141). LDB age 21 ± 4 Myr from low-mass β
   Pic MG members; independent of isochrone-pipeline systematics.
   Phase 2 cross-check on the age.
-- **Shkolnik E. L. et al. 2017** — *HAZMAT II: Ultraviolet
+- **Miles B. E. & Shkolnik E. L. 2017** — *HAZMAT II: Ultraviolet
   Variability of Low-Mass Stars in the GALEX Archive*, ApJ 838,
-  87 (`2017ApJ...838...87S`, arXiv:1611.02835,
-  doi:10.3847/1538-4357/aa615f). β Pic MG and young M-dwarf
+  87 (`2017AJ....154...67M`, arXiv:1611.02835,
+  doi:10.3847/1538-3881/aa71ab). β Pic MG and young M-dwarf
   activity calibration; provides the +0.12 ± 0.05 group-mean [Fe/H]
   adopted as the coeval-group calibration for AU Mic. **Primary
   Phase 2 anchor for [Fe/H]** (no direct high-res [Fe/H] of AU Mic
   itself has been published).
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and
   filling of the very active M dwarf AU Mic*, MNRAS 525, 455
-  (`2023MNRAS.525..455D`, doi:10.1093/mnras/stad2301).
+  (`2023MNRAS.525.2015D`, doi:10.1093/mnras/stad2301).
   Zeeman-Doppler imaging; large-scale dipole component ~2 kG,
   total field RMS ~4.6 kG; ZDI radius 0.82 ± 0.02 R☉; spot
   latitude distribution. **Primary Phase 2 anchor for radius.**
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation
   Measurements and Dynamical Mass Determination of the AU Mic
   System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719,
-  doi:10.3847/1538-3881/acfda7). N-body + TTV dynamical mass
+  doi:10.3847/1538-3881/acfda8). N-body + TTV dynamical mass
   0.51 ± 0.028 M☉ for the host star; introduces planet d as a
   TTV-only candidate. **Primary Phase 2 anchor for mass**
   (model-independent through orbital dynamics, supersedes M_K

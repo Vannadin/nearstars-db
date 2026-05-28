@@ -137,7 +137,7 @@ dominate the optical appearance.
 analysis places c well to the right of the loss boundary. For an
 18 M⊕ core at 0.22 AU around a 0.822 L☉ G-dwarf, the XUV-driven mass
 loss rate scales to ~10⁷ g/s — about 0.1% of the envelope mass lost
-per Gyr. Over the 7.7 Gyr system age the total loss is ~0.8% of the
+per Gyr. Over the 5.5 Gyr system age the total loss is ~0.8% of the
 envelope, well below the 3–5% nominal envelope mass. c retains its
 primary atmosphere comfortably.
 
@@ -188,7 +188,7 @@ c's spin state is determined by the balance of tidal-damping and
 eccentricity-pumping timescales. At a 38-day orbital period, 0.22 AU
 separation, and 18 M⊕ mass, the tidal locking timescale for an
 Earth-analog interior Q is ~1–3 Gyr (Henning & Hurford 2014 scaling).
-This is comparable to but shorter than the 7.7 Gyr system age — c
+This is comparable to but shorter than the 5.5 Gyr system age — c
 has had time to damp obliquity and spin angular velocity but not
 necessarily to reach strict 1:1 lock.
 
@@ -338,7 +338,7 @@ Combining the surface and atmosphere decisions:
 - **Rathsam A. et al. 2023** — *Lithium depletion in solar analogs*,
   MNRAS 525, 4642 (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589).
   Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age
-  (7.70 +0.28/-0.26 Gyr); sets the photoevaporation-evolution
+  (5.50 +0.78/-0.74 Gyr); sets the photoevaporation-evolution
   timescale.
 - **von Braun K. et al. 2014** — *Stellar diameters V*, MNRAS 438,
   2413 (`2014MNRAS.438.2413V`, doi:10.1093/mnras/stt2360). Inherited

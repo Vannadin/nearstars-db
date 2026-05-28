@@ -153,8 +153,8 @@
         ],
         "age_measurements": [
           {
-            "value_gyr": 7.7,
-            "uncertainty_gyr": 0.28,
+            "value_gyr": 5.5,
+            "uncertainty_gyr": 0.76,
             "method": "isochrone",
             "reference": "Rathsam et al. 2023",
             "bibcode": "2023MNRAS.525.4642R",
@@ -358,7 +358,7 @@
         "icrs_vy_j2000_km_s": 47.82986610180534,
         "icrs_vz_j2000_km_s": -38.388360559764365,
         "luminosity_lsun": 0.8222,
-        "age_gyr": 7.7,
+        "age_gyr": 5.5,
         "metallicity_fe_h_dex": 0.006,
         "rotation_period_days": 32.1,
         "activity_log_rhk": -5.0,
@@ -662,6 +662,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "G6.5V solar-twin (0.93 Msun, 0.987 Rsun, Teff 5568 K) at 8.534 pc with three RV-detected planets (b/c/d, Vogt 2010) and a Herschel-resolved cold debris belt at ~30-96 AU (Wyatt 2012). Phase 2 anchor is Rathsam et al. 2023 (lithium-depletion solar-analog isochrone) which supplies the smallest formal uncertainties on mass, Teff, [Fe/H], and age. Radius primary is von Braun 2014 CHARA interferometry (R = 0.9867 +/- 0.0048 Rsun) — supersedes the Vogt 2010 evolutionary radius (0.963 +/- 0.011) which earlier Phase 3 drafts incorrectly labeled 'interferometric angular diameter combined with parallax'; Vogt 2010 actually derives R from Takeda 2007 isochrone analysis. Age is contentious: isochrone consensus (Rathsam 2023 / Vogt 2010 / von Braun 2014) gives 7.7-9 Gyr while activity-age (Mamajek 2008) gives 6.1 +/- 1.7 Gyr — Phase 3 adopts the isochrone value but flags Confidence=medium. Rotation P_rot = 32.1 +/- 0.2 d is Yu 2024's direct Gaussian-process detection from 18-year HARPS RV+activity time series, replacing the earlier inferred ~29 d from Wright 2004 S-index variation. log R'HK = -5.0 (Isaacson 2010 / Henry 1996) places 61 Vir firmly in the inactive G-dwarf locus, consistent with the ~8 Gyr isochrone age."
+    "notes": "G6.5V solar-twin (0.93 Msun, 0.987 Rsun, Teff 5568 K) at 8.534 pc with three RV-detected planets (b/c/d, Vogt 2010) and a Herschel-resolved cold debris belt at ~30-96 AU (Wyatt 2012). Phase 2 anchor is Rathsam et al. 2023 (lithium-depletion solar-analog isochrone) which supplies the smallest formal uncertainties on mass, Teff, [Fe/H], and age. Radius primary is von Braun 2014 CHARA interferometry (R = 0.9867 +/- 0.0048 Rsun) — supersedes the Vogt 2010 evolutionary radius (0.963 +/- 0.011) which earlier Phase 3 drafts incorrectly labeled 'interferometric angular diameter combined with parallax'; Vogt 2010 actually derives R from Takeda 2007 isochrone analysis. Age is convergent: Rathsam 2023 Yale-Yonsei isochrone gives 5.50 +0.78/-0.74 Gyr (encoded as 5.50 +/- 0.76), Mamajek 2008 gyrochronology gives 6.1 +/- 1.7 Gyr -- the two recent diagnostics overlap at 1 sigma and Phase 3 adopts Rathsam (newer paper, smaller formal uncertainty). Vogt 2010 (8.96 +/- 2.76 Gyr) and von Braun 2014 (8.6 Gyr) older isochrone fits sit at the upper end of the spread but are within combined uncertainties of Rathsam. Rotation P_rot = 32.1 +/- 0.2 d is Yu 2024's direct Gaussian-process detection from 18-year HARPS RV+activity time series, replacing the earlier inferred ~29 d from Wright 2004 S-index variation. log R'HK = -5.0 (Isaacson 2010 / Henry 1996) places 61 Vir firmly in the inactive G-dwarf locus, consistent with the ~8 Gyr isochrone age. Citation audit (2026-05-28): Rathsam 2023 Table A1 row for HD 115617 = HIP 64924 confirmed; central values for mass (0.93 Msun), Teff (5568 K), [Fe/H] (+0.006 dex) match the paper but NS uncertainties in the array entries (mass +/- 0.012, Teff +/- 33 K, [Fe/H] +/- 0.018) are wider than Rathsam Table A1 (mass +/- 0.01, Teff +/- 6 K, [Fe/H] +/- 0.004). Likely earlier sigma-floors carried in from cross-check averaging; future revision should tighten to Rathsam published uncertainties."
   }
 }

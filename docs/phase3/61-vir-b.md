@@ -86,13 +86,13 @@ synthesis:
    1.87 g⊕ and bulk density 6.27 g/cc.
 
 3. **Cosmochemical context.** 61 Vir's [Fe/H] = +0.006 ± 0.004
-   (Rathsam 2023) and ~7.7 Gyr isochrone age give b an Earth-analog
+   (Rathsam 2023) and ~5.5 Gyr isochrone age give b an Earth-analog
    initial volatile
    inventory but a much harsher atmospheric loss history. Owen & Wu
    2017's photoevaporation-valley physics places b firmly in the
    "core-only" regime: any initial H/He envelope of a 5 M⊕ core at
    0.05 AU around a G-dwarf is lost on a timescale ≲ 50 Myr, far
-   shorter than the 7.7 Gyr system age. Secondary atmospheric retention
+   shorter than the 5.5 Gyr system age. Secondary atmospheric retention
    depends on the balance between outgassing and XUV-driven loss; for
    b's parameters, the equilibrium is marginal.
 
@@ -303,7 +303,7 @@ surface renderers:
 - **Rathsam A. et al. 2023** — *Lithium depletion in solar analogs*,
   MNRAS 525, 4642 (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589).
   Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age
-  (7.70 +0.28/-0.26 Gyr); sets the system-evolution timescale for
+  (5.50 +0.78/-0.74 Gyr); sets the system-evolution timescale for
   atmospheric loss.
 - **von Braun K. et al. 2014** — *Stellar diameters V*, MNRAS 438,
   2413 (`2014MNRAS.438.2413V`, doi:10.1093/mnras/stt2360). Inherited

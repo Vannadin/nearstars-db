@@ -67,7 +67,7 @@ tie-break 4 개는 시각 hex 색조, 원반 substructure 애니메이션 선택
 | `radius_rsun` | 0.82 ± 0.02 | high | Donati 2023 ZDI Stokes V+I inversion. v sin i + P_rot = 4.863 d (disk + RM 기하에서 sin i ≈ 1) 로부터 유도. Phase 2 recommended. AU Mic 은 dec −31° 로 CHARA 사정거리 안에 있지만, 출판된 간섭계 각지름은 없음. Plavchan 2020 의 M_K-실험식 반지름 0.75 ± 0.03 R☉ 는 cross-check 로 유지 |
 | `teff_k` | 3700 ± 100 | high | Plavchan 2020 고분해능 분광 Teff. Phase 2 recommended. Gaia DR3 GSP-Phot 3518 K (cross-check 로 유지, 시각용 `stellar_color_temp_k` 행에 별도로 채택) 는 BP/RP 광도 Teff 가 활동성 흑점 M 왜성에서 3800 K 이하로 잘 보정되지 않아 차게 나오는 알려진 편향 때문 |
 | `luminosity_lsun` | 0.09 ± 0.02 | high | Plavchan 2020 의 SED 적분 볼로메트릭 광도 (Hipparcos/Gaia 시차에 정박). Phase 2 recommended. R = 0.82 R☉ + Teff = 3700 K 의 Stefan–Boltzmann 은 0.114 L☉, R = 0.75 R☉ + Teff = 3650 K 는 0.090 L☉ 로 SED 값을 양쪽에서 둘러쌈 |
-| `metallicity_fe_h_dex` | +0.12 ± 0.05 | medium | Shkolnik 2017 (HAZMAT II) 의 β Pic MG 평균 [Fe/H] — 동기 그룹 보정값으로 채택. Phase 2 recommended. 활동성 M1Ve 광구의 분자 차폐가 표준 FGK 철-라인 기법을 무력화하기에 AU Mic 자체에 대한 고분해능 [Fe/H] 직접 측정은 문헌에 없음 |
+| `metallicity_fe_h_dex` | +0.12 ± 0.05 | medium | Miles & Shkolnik 2017 (HAZMAT II) 의 β Pic MG 평균 [Fe/H] — 동기 그룹 보정값으로 채택. Phase 2 recommended. 활동성 M1Ve 광구의 분자 차폐가 표준 FGK 철-라인 기법을 무력화하기에 AU Mic 자체에 대한 고분해능 [Fe/H] 직접 측정은 문헌에 없음 |
 | `age_gyr` | 0.022 ± 0.003 | high | Mamajek & Bell 2014 — β Pic MG isochrone 나이 22 ± 3 Myr. Phase 2 recommended. Cross-check 는 Binks & Jeffries 2014 의 LDB 나이 21 ± 4 Myr 로, isochrone 파이프라인 systematics 와 무관하며 완전히 일관 |
 | `rotation_period_days` | 4.863 ± 0.01 | high | Plavchan 2020 — TESS Sectors 1+27 광도 자전 변조 (다-흑점, 주성분 4.863 d). Phase 2 recommended. Donati 2023 ZDI inversion 도 같은 주기 채택 |
 | `activity_log_rhk` | −3.9 | low | 포화 어린 M-왜성 영역의 추정값으로 Hα + X 선 포화 locus 와 일관. AU Mic 자체에 paper-cited 값 아님. Phase 2 는 활동성을 Hα EW = −2.4 ± 0.3 Å (Houdebine 2010) 로 정박. Mt-Wilson R'HK 보정은 활동성 M1Ve 광구에 대해 검증되지 않았기 때문 (Teff < 4000 K 에서 Ca II H&K 가 분자 밴드에 오염됨). Stelzer 2013 X 선 cross-check log(L_X/L_bol) ≈ −3.0 가 포화 영역 분류를 뒷받침 |
@@ -349,23 +349,23 @@ items 참조.
   doi:10.1093/mnrasl/slt141). 저질량 β Pic MG 멤버에서 얻은
   LDB 나이 21 ± 4 Myr. isochrone 파이프라인 systematics 와 무관.
   나이의 Phase 2 cross-check.
-- **Shkolnik E. L. et al. 2017** — *HAZMAT II: Ultraviolet
+- **Miles B. E. & Shkolnik E. L. 2017** — *HAZMAT II: Ultraviolet
   Variability of Low-Mass Stars in the GALEX Archive*, ApJ 838,
-  87 (`2017ApJ...838...87S`, arXiv:1611.02835,
-  doi:10.3847/1538-4357/aa615f). β Pic MG 와 어린 M-왜성 활동 보정.
+  87 (`2017AJ....154...67M`, arXiv:1611.02835,
+  doi:10.3847/1538-3881/aa71ab). β Pic MG 와 어린 M-왜성 활동 보정.
   AU Mic 에 대한 동기 그룹 보정값으로 채택한 +0.12 ± 0.05 그룹
   평균 [Fe/H] 를 제공. **[Fe/H] 의 Phase 2 primary anchor** (AU Mic
   자체에 대한 직접 고분해능 [Fe/H] 측정은 출판된 바 없음).
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and
   filling of the very active M dwarf AU Mic*, MNRAS 525, 455
-  (`2023MNRAS.525..455D`, doi:10.1093/mnras/stad2301).
+  (`2023MNRAS.525.2015D`, doi:10.1093/mnras/stad2301).
   Zeeman-Doppler imaging. 대규모 쌍극자 성분 ~2 kG, 전체 자기장
   RMS ~4.6 kG. ZDI 반지름 0.82 ± 0.02 R☉. 흑점 위도 분포.
   **반지름의 Phase 2 primary anchor.**
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation
   Measurements and Dynamical Mass Determination of the AU Mic
   System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719,
-  doi:10.3847/1538-3881/acfda7). host 별 N-body + TTV 동역학
+  doi:10.3847/1538-3881/acfda8). host 별 N-body + TTV 동역학
   질량 0.51 ± 0.028 M☉. 행성 d 를 TTV 전용 후보로 도입. **질량의
   Phase 2 primary anchor** (궤도 동역학을 통한 모델 비의존 측정.
   M_K 실험식 보정값을 supersede).

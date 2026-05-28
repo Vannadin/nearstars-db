@@ -295,8 +295,8 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   설정.
 - **Baines E. K. & Armstrong J. T. 2012** — *Navy Optical
   Interferometer 와 PAVO/CHARA 를 이용한 외계행성 호스트 별
-  ε Eridani 의 기본 속성 확인*, ApJ 761, 57 (`2012ApJ...761...57B`,
-  doi:10.1088/0004-637X/761/1/57). PAVO@CHARA 한계 어두워짐 각지름
+  ε Eridani 의 기본 속성 확인*, ApJ 761, 57 (`2012ApJ...744..138B`,
+  doi:10.1088/0004-637X/744/2/138). PAVO@CHARA 한계 어두워짐 각지름
   θ_LD = 2.126 ± 0.014 mas. Hipparcos 시차와 결합하면 R = 0.735 ±
   0.005 R☉. L_bol + θ_LD Stefan-Boltzmann 역산으로 T_eff = 5039 ±
   126 K, L = 0.320 ± 0.011 L☉. **ε Eri 의 R / Teff / L 1차 Phase 2

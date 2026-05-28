@@ -28,7 +28,7 @@
             "method": "evolutionary_model",
             "reference": "Wittrock et al. 2023",
             "bibcode": "2023AJ....166..232W",
-            "doi": "10.3847/1538-3881/acfda7",
+            "doi": "10.3847/1538-3881/acfda8",
             "recommended": true
           },
           {
@@ -56,7 +56,7 @@
             "uncertainty_rsun": 0.02,
             "method": "spectroscopic_calibration",
             "reference": "Donati et al. 2023",
-            "bibcode": "2023MNRAS.525..455D",
+            "bibcode": "2023MNRAS.525.2015D",
             "doi": "10.1093/mnras/stad2301",
             "recommended": true,
             "notes": "ZDI Stokes V+I inversion radius from v sin i and P_rot = 4.863 d with sin i ≈ 1 (disk + RM-confirmed edge-on geometry). AU Mic is bright enough and far enough north (dec -31) for CHARA to attempt, but no interferometric angular diameter has been published as of 2025; Donati 2023 ZDI radius is the tightest available radius constraint."
@@ -95,7 +95,7 @@
             "uncertainty_k": 100,
             "method": "high_res_spectroscopy",
             "reference": "Donati et al. 2023",
-            "bibcode": "2023MNRAS.525..455D",
+            "bibcode": "2023MNRAS.525.2015D",
             "doi": "10.1093/mnras/stad2301",
             "recommended": false
           },
@@ -145,9 +145,9 @@
             "value_dex": 0.12,
             "uncertainty_dex": 0.05,
             "method": "photometric_calibration",
-            "reference": "Shkolnik et al. 2017 (HAZMAT II β Pic MG mean)",
-            "bibcode": "2017ApJ...838...87S",
-            "doi": "10.3847/1538-4357/aa615f",
+            "reference": "Miles & Shkolnik 2017 (HAZMAT II)",
+            "bibcode": "2017AJ....154...67M",
+            "doi": "10.3847/1538-3881/aa71ab",
             "recommended": true
           }
         ],
@@ -634,7 +634,7 @@
     },
     {
       "title": "Wittrock et al. 2023",
-      "doi": "10.3847/1538-3881/acfda7",
+      "doi": "10.3847/1538-3881/acfda8",
       "bibcode": "2023AJ....166..232W",
       "accessed": "2026-05-28",
       "used_for": [
@@ -662,7 +662,7 @@
     {
       "title": "Donati et al. 2023",
       "doi": "10.1093/mnras/stad2301",
-      "bibcode": "2023MNRAS.525..455D",
+      "bibcode": "2023MNRAS.525.2015D",
       "accessed": "2026-05-28",
       "used_for": [
         "AU Mic radius (spectroscopic_calibration)"
@@ -741,6 +741,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "M1Ve pre-main-sequence flare star (~22 Myr, β Pictoris Moving Group canonical member). The Phase 3 markdown at the time of this curation used `teff_k = 3518` from Gaia DR3 GSP-Phot and derived `luminosity_lsun = 0.092` via Stefan-Boltzmann at that Teff; Phase 2 recommends Plavchan 2020 high-res spectroscopic Teff = 3700 ± 100 K (per methodology tier: high_res_spectroscopy > photometric_color). The 3700 vs 3518 K offset reconciles at <2σ and traces to GSP-Phot's known cool-bias below 3800 K for spotted active M dwarfs. Phase 2 also recommends Plavchan 2020 bolometric L = 0.09 ± 0.02 Lsun (direct SED integration) over the Stefan-Boltzmann derivation. Phase 3 markdown's `stellar_color_temp_k` row was tied to 3518 K (Gaia BP/RP color-equivalent); this is acceptable as a separate visual-rendering anchor (color-equivalent blackbody) distinct from the spectroscopic Teff, but the Decisions row basis is updated to make this distinction explicit. Activity is reported as Hα EW (Houdebine 2010, -2.4 ± 0.3 Å) rather than log R'HK because the Mt-Wilson R'HK calibration is not validated for active M1Ve photospheres; Phase 3 markdown's `activity_log_rhk = -3.9` is retained as a derived saturated-regime estimate but flagged as not paper-cited. Radius (0.82 Rsun, Donati 2023 ZDI) has no published CHARA interferometric counterpart; AU Mic at dec -31 is reachable by CHARA but no diameter has been published. Mass (0.51 Msun, Wittrock 2023 TTV+N-body) is the most-direct constraint, model-independent through orbital dynamics. [Fe/H] = +0.12 ± 0.05 is the β Pic MG mean (Shkolnik 2017 HAZMAT II) since no direct high-res [Fe/H] of AU Mic has been published — open item for future SPIRou/ESPRESSO follow-up. Saturated activity (Hα emission, kG-class ZDI fields, log L_X/L_bol ~ -3.0, super-flares to 10^34-10^35 erg) is the dominant photophysical fact; activity_cycle is unresolved at this age (pre-MS saturated dynamo)."
+    "notes": "M1Ve pre-main-sequence flare star (~22 Myr, β Pictoris Moving Group canonical member). The Phase 3 markdown at the time of this curation used `teff_k = 3518` from Gaia DR3 GSP-Phot and derived `luminosity_lsun = 0.092` via Stefan-Boltzmann at that Teff; Phase 2 recommends Plavchan 2020 high-res spectroscopic Teff = 3700 ± 100 K (per methodology tier: high_res_spectroscopy > photometric_color). The 3700 vs 3518 K offset reconciles at <2σ and traces to GSP-Phot's known cool-bias below 3800 K for spotted active M dwarfs. Phase 2 also recommends Plavchan 2020 bolometric L = 0.09 ± 0.02 Lsun (direct SED integration) over the Stefan-Boltzmann derivation. Phase 3 markdown's `stellar_color_temp_k` row was tied to 3518 K (Gaia BP/RP color-equivalent); this is acceptable as a separate visual-rendering anchor (color-equivalent blackbody) distinct from the spectroscopic Teff, but the Decisions row basis is updated to make this distinction explicit. Activity is reported as Hα EW (Houdebine 2010, -2.4 ± 0.3 Å) rather than log R'HK because the Mt-Wilson R'HK calibration is not validated for active M1Ve photospheres; Phase 3 markdown's `activity_log_rhk = -3.9` is retained as a derived saturated-regime estimate but flagged as not paper-cited. Radius (0.82 Rsun, Donati 2023 ZDI) has no published CHARA interferometric counterpart; AU Mic at dec -31 is reachable by CHARA but no diameter has been published. Mass (0.51 Msun, Wittrock 2023 TTV+N-body) is the most-direct constraint, model-independent through orbital dynamics. [Fe/H] = +0.12 ± 0.05 is the β Pic MG mean (Shkolnik 2017 HAZMAT II) since no direct high-res [Fe/H] of AU Mic has been published — open item for future SPIRou/ESPRESSO follow-up. Saturated activity (Hα emission, kG-class ZDI fields, log L_X/L_bol ~ -3.0, super-flares to 10^34-10^35 erg) is the dominant photophysical fact; activity_cycle is unresolved at this age (pre-MS saturated dynamo). Citation fixes (audit 2026-05-28): Wittrock 2023 DOI corrected acfda7 -> acfda8 (single-char typo on TTV mass paper). Donati 2023 ZDI radius bibcode page corrected ..455D -> .2015D (MNRAS volume 525 pages 2015-2039, not page 455). Shkolnik 2017 HAZMAT II metallicity entry corrected to Miles & Shkolnik 2017 AJ 154 67 (the actual HAZMAT II UV paper containing the beta Pic MG [Fe/H] mean) -- the Shkolnik 2017 ApJ 838 87 bibcode pointed to a different paper."
   }
 }

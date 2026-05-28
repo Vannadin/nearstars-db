@@ -56,7 +56,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `surface_tint_rgb_hex_accent` | `#c84a18` (substellar 마그마-바다 glow) | low | Tie-break. ~1450 K 의 substellar 부분 용융 영역이 적-주황으로 복사 (Wien 피크 2 μm 이지만 가시광 꼬리 두드러짐). interesting-first 가 균일한 어두운 표면 대신 가시 lava-glow accent 채택 |
 | `surface_morphology` | substellar 마그마 바다 ~1500 km 반경. 중위도 식은 basalt 평원. 휘발성 제거된 야간 regolith | medium | Tie-break. Léger 2009 CoRoT-7b 마그마-바다 템플릿. 규산염 solidus 의 substellar isotherm 에서 ~30° 마그마-pond 반경 |
 | `tidal_heating_w_m2` | 0.1–1 | medium | 4.2 일 주기에서 e=0.12 에 대한 Bolmont 2020 스케일링. 이심률 기여는 이 질량에서 적당하지만 자명하지 않음. 일사 예산을 보충하지만 지배하지는 않음 |
-| `radiogenic_heat_w_m2` | 0.05 | medium | 5 M⊕ × 7.7 Gyr 붕괴의 지구 아날로그. 부분 용융 내부와 일관 |
+| `radiogenic_heat_w_m2` | 0.05 | medium | 5 M⊕ × 5.5 Gyr 붕괴의 지구 아날로그. 부분 용융 내부와 일관 |
 | `star_apparent_angular_diameter_deg` | 1.04 | high | 유도. 2 × R★ / a × (180/π). 0.0502 AU 의 0.9867 R☉ (von Braun 2014 CHARA) |
 | `stellar_illumination_color_temp_k` | 5568 | high | 호스트 Teff (Rathsam 2023) |
 
@@ -79,11 +79,11 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
    R ≈ 1.65 R⊕, 표면중력 1.87 g⊕, 벌크 밀도 6.27 g/cc.
 
 3. **우주화학적 맥락.** 61 Vir 의 [Fe/H] = +0.006 ± 0.004 (Rathsam
-   2023) 과 ~7.7 Gyr isochrone 나이는 b 에 지구 아날로그 초기 휘발성
+   2023) 과 ~5.5 Gyr isochrone 나이는 b 에 지구 아날로그 초기 휘발성
    inventory 를 주지만, 대기 손실 이력은 훨씬 가혹합니다. Owen & Wu
    2017 의 광증발 valley 물리는 b 를 "코어만" 영역에 단단히 위치시킵니다.
    G 왜성 0.05 AU 의 5 M⊕ 코어 위 초기 H/He 외피는 ≲ 50 Myr 시간 안에
-   손실되는데, 7.7 Gyr 시스템 나이보다 한참 짧습니다. 이차 대기 보유는
+   손실되는데, 5.5 Gyr 시스템 나이보다 한참 짧습니다. 이차 대기 보유는
    outgassing 과 XUV 손실의 균형에 달려 있는데, b 의 파라미터에서는
    그 균형이 위태로운 경계입니다.
 
@@ -272,7 +272,7 @@ burst 가 있는 변형 렌더링은 Phase 3.5 시각 디테일 레이어에서 
 
 - **Rathsam A. et al. 2023** — *Lithium depletion in solar analogs*,
   MNRAS 525, 4642 (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589).
-  호스트 합성에서 상속. 61 Vir 의 Phase 2 나이 앵커 (7.70 +0.28/-0.26
+  호스트 합성에서 상속. 61 Vir 의 Phase 2 나이 앵커 (5.50 +0.78/-0.74
   Gyr). 대기 손실의 시스템 진화 시간 스케일을 결정.
 - **von Braun K. et al. 2014** — *Stellar diameters V*, MNRAS 438,
   2413 (`2014MNRAS.438.2413V`, doi:10.1093/mnras/stt2360). 호스트

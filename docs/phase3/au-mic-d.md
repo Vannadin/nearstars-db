@@ -316,7 +316,7 @@ with a thin atmosphere — distinct from b/c's gas-giant disks:
 
 ### Read (instrument / non-decisive)
 
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI of host star; provides stellar magnetic-field context for the planetary radiation environment.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 2015 (`2023MNRAS.525.2015D`). ZDI of host star; provides stellar magnetic-field context for the planetary radiation environment.
 - **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). Methodology for AU Mic RV detrending applied (indirectly) to Mallorquin 2024's recovery of d.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)

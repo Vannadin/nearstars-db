@@ -26,9 +26,9 @@
             "value_msun": 0.863,
             "uncertainty_msun": 0.043,
             "method": "evolutionary_model",
-            "reference": "Tanner et al. 2019",
-            "bibcode": "2019ApJ...873...91T",
-            "doi": "10.3847/1538-4357/aafe73",
+            "reference": "Tanner et al. 2015",
+            "bibcode": "2015ApJ...800..115T",
+            "doi": "10.1088/0004-637X/800/2/115",
             "recommended": true
           },
           {
@@ -64,9 +64,9 @@
             "value_rsun": 0.905,
             "uncertainty_rsun": 0.019,
             "method": "sed_fitting",
-            "reference": "Tanner et al. 2019",
-            "bibcode": "2019ApJ...873...91T",
-            "doi": "10.3847/1538-4357/aafe73",
+            "reference": "Tanner et al. 2015",
+            "bibcode": "2015ApJ...800..115T",
+            "doi": "10.1088/0004-637X/800/2/115",
             "recommended": true,
             "notes": "Stefan-Boltzmann from L_bol = 0.622 +/- 0.012 Lsun + Teff = 5402 +/- 11 K. No direct interferometric diameter exists for HD 69830 (not included in any CHARA or VLTI-PIONIER Sun-like-star programme through 2026). Stassun 2018 TIC-8 SED radius 1.056 +/- 0.126 Rsun has 13x larger uncertainty and is consistent within combined errors but uses photometric Teff scale rather than spectroscopic."
           },
@@ -94,9 +94,9 @@
             "value_k": 5402,
             "uncertainty_k": 11,
             "method": "high_res_spectroscopy",
-            "reference": "Tanner et al. 2019",
-            "bibcode": "2019ApJ...873...91T",
-            "doi": "10.3847/1538-4357/aafe73",
+            "reference": "Tanner et al. 2015",
+            "bibcode": "2015ApJ...800..115T",
+            "doi": "10.1088/0004-637X/800/2/115",
             "recommended": true
           },
           {
@@ -141,9 +141,9 @@
             "value_lsun": 0.622,
             "uncertainty_lsun": 0.012,
             "method": "bolometric_flux",
-            "reference": "Tanner et al. 2019",
-            "bibcode": "2019ApJ...873...91T",
-            "doi": "10.3847/1538-4357/aafe73",
+            "reference": "Tanner et al. 2015",
+            "bibcode": "2015ApJ...800..115T",
+            "doi": "10.1088/0004-637X/800/2/115",
             "recommended": true
           }
         ],
@@ -170,9 +170,9 @@
             "value_gyr": 10.6,
             "uncertainty_gyr": 2.0,
             "method": "isochrone",
-            "reference": "Tanner et al. 2019",
-            "bibcode": "2019ApJ...873...91T",
-            "doi": "10.3847/1538-4357/aafe73",
+            "reference": "Tanner et al. 2015",
+            "bibcode": "2015ApJ...800..115T",
+            "doi": "10.1088/0004-637X/800/2/115",
             "recommended": false
           }
         ],
@@ -181,9 +181,9 @@
             "value_dex": -0.04,
             "uncertainty_dex": 0.02,
             "method": "high_res_spectroscopy",
-            "reference": "Tanner et al. 2019",
-            "bibcode": "2019ApJ...873...91T",
-            "doi": "10.3847/1538-4357/aafe73",
+            "reference": "Tanner et al. 2015",
+            "bibcode": "2015ApJ...800..115T",
+            "doi": "10.1088/0004-637X/800/2/115",
             "recommended": true
           },
           {
@@ -592,9 +592,9 @@
       ]
     },
     {
-      "title": "Tanner et al. 2019",
-      "doi": "10.3847/1538-4357/aafe73",
-      "bibcode": "2019ApJ...873...91T",
+      "title": "Tanner et al. 2015",
+      "doi": "10.1088/0004-637X/800/2/115",
+      "bibcode": "2015ApJ...800..115T",
       "accessed": "2026-05-28",
       "used_for": [
         "HD 69830 mass (evolutionary_model)"
@@ -691,6 +691,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "K0V (Houk & Smith-Moore 1988) sitting just at the G8V/K0V boundary; modern Teff scales (Tanner 2019 5402 K, Brewer 2016 5410 K, Tsantaki 2013 5391 K) all cluster within 20 K of the K0V/G8V transition near 5400 K, with the spectral-type letter assignment depending on which calibration the catalog uses. No direct interferometric angular diameter exists — HD 69830 was not included in Boyajian 2012 CHARA Sun-like-star survey nor in any VLTI-PIONIER programme through 2026. No published asteroseismology either (predicted nu_max ~ 3000 uHz peaks too high for TESS short-cadence and HD 69830 has not been a CHEOPS target). Mass and radius therefore both anchored on Tanner 2019 isochrone + bolometric-flux Stefan-Boltzmann (0.863 +/- 0.043 Msun, 0.905 +/- 0.019 Rsun), with Lovis 2006 (0.86 +/- 0.03 Msun) and Rosenthal 2021 (0.887 +/- 0.019 Rsun) kept as cross-check alternates. Age has a wide literature spread: Mamajek 2008 gyrochronology gives 5.7 +/- 1 Gyr (recommended), Lovis 2006 isochrone gives 4-10 Gyr broad range, Tanner 2019 isochrone gives 10.6 +/- 2 Gyr — Tanner 2019 hits the upper-main-sequence subgiant turnoff degeneracy at this Teff and metallicity, so the gyrochronological 5.7 Gyr is adopted (more reliable diagnostic for an inactive late-G/early-K dwarf at this metallicity). Rotation period 35.5 +/- 0.5 d (Suarez Mascareno 2015) is the only direct P_rot measurement, from Ca II H&K chromospheric activity rotational modulation in long-term HARPS time series; Mamajek 2008 gyrochronology gives 34 +/- 3 d, consistent. Activity log R'HK = -4.95 +/- 0.04 (Gomes da Silva 2021, 240-spectrum HARPS weighted mean) supersedes Henry 1996 Mt Wilson single-snapshot -5.00; Phase 3 markdown currently quotes -5.0 colloquially and should track -4.95. Disk measurements (Beichman 2005 warm dust at ~1 AU, Smith-Wyatt-Haniff 2009 MIDI/VLTI refit, Lisse 2007 composition model, Wyatt 2007 steady-state limit) are stored separately in db/disks_curated.json per the disk-meta migration."
+    "notes": "K0V (Houk & Smith-Moore 1988) sitting just at the G8V/K0V boundary; modern Teff scales (Tanner 2015 5402 K, Brewer 2016 5410 K, Tsantaki 2013 5391 K) all cluster within 20 K of the K0V/G8V transition near 5400 K, with the spectral-type letter assignment depending on which calibration the catalog uses. Tanner 2015 reports a direct interferometric angular diameter from CHARA Classic (with co-author T. Boyajian) — this is the only interferometric measurement; HD 69830 was not in Boyajian 2012 Sun-like-star survey nor in any VLTI-PIONIER programme through 2026. No published asteroseismology either (predicted nu_max ~ 3000 uHz peaks too high for TESS short-cadence and HD 69830 has not been a CHEOPS target). Mass and radius therefore both anchored on Tanner 2015 CHARA interferometric theta_LD + bolometric-flux Stefan-Boltzmann (0.863 +/- 0.043 Msun, 0.905 +/- 0.019 Rsun), with Lovis 2006 (0.86 +/- 0.03 Msun) and Rosenthal 2021 (0.887 +/- 0.019 Rsun) kept as cross-check alternates. Age has a wide literature spread: Mamajek 2008 gyrochronology gives 5.7 +/- 1 Gyr (recommended), Lovis 2006 isochrone gives 4-10 Gyr broad range, Tanner 2015 isochrone gives 10.6 +/- 2 Gyr — Tanner 2015 hits the upper-main-sequence subgiant turnoff degeneracy at this Teff and metallicity, so the gyrochronological 5.7 Gyr is adopted (more reliable diagnostic for an inactive late-G/early-K dwarf at this metallicity). Rotation period 35.5 +/- 0.5 d (Suarez Mascareno 2015) is the only direct P_rot measurement, from Ca II H&K chromospheric activity rotational modulation in long-term HARPS time series; Mamajek 2008 gyrochronology gives 34 +/- 3 d, consistent. Activity log R'HK = -4.95 +/- 0.04 (Gomes da Silva 2021, 240-spectrum HARPS weighted mean) supersedes Henry 1996 Mt Wilson single-snapshot -5.00; Phase 3 markdown currently quotes -5.0 colloquially and should track -4.95. Disk measurements (Beichman 2005 warm dust at ~1 AU, Smith-Wyatt-Haniff 2009 MIDI/VLTI refit, Lisse 2007 composition model, Wyatt 2007 steady-state limit) are stored separately in db/disks_curated.json per the disk-meta migration. OPEN: Teff 5402 +/- 11 K and Tanner 2015 alternate-age 10.6 +/- 2 Gyr in the measurement arrays need full-text verification against the Tanner 2015 ApJ 800 115 published paper — abstract reports Teff 5385 +/- 44 K from spectral fitting and age 7.5 +/- 3 Gyr; current array values may have come from the paper body interferometric Stefan-Boltzmann inversion or from a different source. Audit 2026-05-28."
   }
 }

@@ -2498,30 +2498,6 @@
     ],
     "meta_notes": "M8V ultracool dwarf — log R'HK and Ca II H&K unmeasurable (cool, red, no photospheric continuum at HK wavelengths). H-alpha EW: too faint (V~18.8, J~11.4) for CARMENES/Reiners 2018 survey; no canonical paper-cited EW exists. Activity therefore proxied by X-ray (Wheatley 2017 XMM-Newton, 30 ks): log(L_X/L_bol) = -3.72 (APEC), with model-dependent range -3.70 to -3.40 across spectral models; sits below Wright & Drake 2016 fully-convective saturation cutoff (~10^-3) consistent with the ~7.6 Gyr Burgasser & Mamajek 2017 age. Wilson et al. 2021 (2021ApJ...911...18W, Mega-MUSCLES) reconstructs intrinsic Ly-alpha = 1.40e-14 erg/s/cm2 at Earth — kept as cross-reference but not added as activity_measurements entry since the schema's value_keys cover X-ray + H-alpha + log R'HK + Ca II HK, not Ly-alpha directly."
   },
-  "AU Mic": {
-    "mass_measurements": [
-      {
-        "value_msun": 0.51,
-        "uncertainty_msun": 0.028,
-        "method": "unverified",
-        "reference": "Wittrock et al. 2023",
-        "bibcode": "2023AJ....166..232W",
-        "doi": null,
-        "recommended": true
-      }
-    ],
-    "radius_measurements": [
-      {
-        "value_rsun": 0.82,
-        "uncertainty_rsun": 0.02,
-        "method": "unverified",
-        "reference": "Donati et al. 2023",
-        "bibcode": "2023MNRAS.525..455D",
-        "doi": null,
-        "recommended": true
-      }
-    ]
-  },
   "Gliese 12": {
     "mass_measurements": [
       {
@@ -2708,8 +2684,8 @@
     ],
     "age_measurements": [
       {
-        "value_gyr": 7.70,
-        "uncertainty_gyr": 0.28,
+        "value_gyr": 5.5,
+        "uncertainty_gyr": 0.76,
         "method": "isochrone",
         "reference": "Rathsam et al. 2023",
         "bibcode": "2023MNRAS.525.4642R",
@@ -2822,7 +2798,7 @@
     ],
     "activity_measurements": [
       {
-        "value_log_rhk": -5.00,
+        "value_log_rhk": -5.0,
         "method": "log_rhk",
         "reference": "Isaacson & Fischer 2010",
         "bibcode": "2010ApJ...725..875I",
@@ -2830,7 +2806,7 @@
         "recommended": true
       },
       {
-        "value_log_rhk": -5.00,
+        "value_log_rhk": -5.0,
         "method": "log_rhk",
         "reference": "Henry et al. 1996",
         "bibcode": "1996AJ....111..439H",
@@ -2838,7 +2814,7 @@
         "recommended": false
       }
     ],
-    "meta_notes": "G6.5V solar-twin (0.93 Msun, 0.987 Rsun, Teff 5568 K) at 8.534 pc with three RV-detected planets (b/c/d, Vogt 2010) and a Herschel-resolved cold debris belt at ~30-96 AU (Wyatt 2012). Phase 2 anchor is Rathsam et al. 2023 (lithium-depletion solar-analog isochrone) which supplies the smallest formal uncertainties on mass, Teff, [Fe/H], and age. Radius primary is von Braun 2014 CHARA interferometry (R = 0.9867 +/- 0.0048 Rsun) — supersedes the Vogt 2010 evolutionary radius (0.963 +/- 0.011) which earlier Phase 3 drafts incorrectly labeled 'interferometric angular diameter combined with parallax'; Vogt 2010 actually derives R from Takeda 2007 isochrone analysis. Age is contentious: isochrone consensus (Rathsam 2023 / Vogt 2010 / von Braun 2014) gives 7.7-9 Gyr while activity-age (Mamajek 2008) gives 6.1 +/- 1.7 Gyr — Phase 3 adopts the isochrone value but flags Confidence=medium. Rotation P_rot = 32.1 +/- 0.2 d is Yu 2024's direct Gaussian-process detection from 18-year HARPS RV+activity time series, replacing the earlier inferred ~29 d from Wright 2004 S-index variation. log R'HK = -5.0 (Isaacson 2010 / Henry 1996) places 61 Vir firmly in the inactive G-dwarf locus, consistent with the ~8 Gyr isochrone age."
+    "meta_notes": "G6.5V solar-twin (0.93 Msun, 0.987 Rsun, Teff 5568 K) at 8.534 pc with three RV-detected planets (b/c/d, Vogt 2010) and a Herschel-resolved cold debris belt at ~30-96 AU (Wyatt 2012). Phase 2 anchor is Rathsam et al. 2023 (lithium-depletion solar-analog isochrone) which supplies the smallest formal uncertainties on mass, Teff, [Fe/H], and age. Radius primary is von Braun 2014 CHARA interferometry (R = 0.9867 +/- 0.0048 Rsun) — supersedes the Vogt 2010 evolutionary radius (0.963 +/- 0.011) which earlier Phase 3 drafts incorrectly labeled 'interferometric angular diameter combined with parallax'; Vogt 2010 actually derives R from Takeda 2007 isochrone analysis. Age is convergent: Rathsam 2023 Yale-Yonsei isochrone gives 5.50 +0.78/-0.74 Gyr (encoded as 5.50 +/- 0.76), Mamajek 2008 gyrochronology gives 6.1 +/- 1.7 Gyr -- the two recent diagnostics overlap at 1 sigma and Phase 3 adopts Rathsam (newer paper, smaller formal uncertainty). Vogt 2010 (8.96 +/- 2.76 Gyr) and von Braun 2014 (8.6 Gyr) older isochrone fits sit at the upper end of the spread but are within combined uncertainties of Rathsam. Rotation P_rot = 32.1 +/- 0.2 d is Yu 2024's direct Gaussian-process detection from 18-year HARPS RV+activity time series, replacing the earlier inferred ~29 d from Wright 2004 S-index variation. log R'HK = -5.0 (Isaacson 2010 / Henry 1996) places 61 Vir firmly in the inactive G-dwarf locus, consistent with the ~8 Gyr isochrone age. Citation audit (2026-05-28): Rathsam 2023 Table A1 row for HD 115617 = HIP 64924 confirmed; central values for mass (0.93 Msun), Teff (5568 K), [Fe/H] (+0.006 dex) match the paper but NS uncertainties in the array entries (mass +/- 0.012, Teff +/- 33 K, [Fe/H] +/- 0.018) are wider than Rathsam Table A1 (mass +/- 0.01, Teff +/- 6 K, [Fe/H] +/- 0.004). Likely earlier sigma-floors carried in from cross-check averaging; future revision should tighten to Rathsam published uncertainties."
   },
   "HD 147513": {
     "mass_measurements": [
@@ -3902,7 +3878,7 @@
   },
   "HD 69830": {
     "teff_k": 5402,
-    "teff_bibcode": "2019ApJ...873...91T",
+    "teff_bibcode": "2015ApJ...800..115T",
     "spectype": "K0V",
     "spectype_bibcode": "1988MSS...C04....0H",
     "spectype_reference": "Houk & Smith-Moore 1988 MK catalog",
@@ -3911,9 +3887,9 @@
         "value_msun": 0.863,
         "uncertainty_msun": 0.043,
         "method": "evolutionary_model",
-        "reference": "Tanner et al. 2019",
-        "bibcode": "2019ApJ...873...91T",
-        "doi": "10.3847/1538-4357/aafe73",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": true
       },
       {
@@ -3949,9 +3925,9 @@
         "value_rsun": 0.905,
         "uncertainty_rsun": 0.019,
         "method": "sed_fitting",
-        "reference": "Tanner et al. 2019",
-        "bibcode": "2019ApJ...873...91T",
-        "doi": "10.3847/1538-4357/aafe73",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": true,
         "notes": "Stefan-Boltzmann from L_bol = 0.622 +/- 0.012 Lsun + Teff = 5402 +/- 11 K. No direct interferometric diameter exists for HD 69830 (not included in any CHARA or VLTI-PIONIER Sun-like-star programme through 2026). Stassun 2018 TIC-8 SED radius 1.056 +/- 0.126 Rsun has 13x larger uncertainty and is consistent within combined errors but uses photometric Teff scale rather than spectroscopic."
       },
@@ -3979,9 +3955,9 @@
         "value_k": 5402,
         "uncertainty_k": 11,
         "method": "high_res_spectroscopy",
-        "reference": "Tanner et al. 2019",
-        "bibcode": "2019ApJ...873...91T",
-        "doi": "10.3847/1538-4357/aafe73",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": true
       },
       {
@@ -4026,9 +4002,9 @@
         "value_lsun": 0.622,
         "uncertainty_lsun": 0.012,
         "method": "bolometric_flux",
-        "reference": "Tanner et al. 2019",
-        "bibcode": "2019ApJ...873...91T",
-        "doi": "10.3847/1538-4357/aafe73",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": true
       }
     ],
@@ -4055,9 +4031,9 @@
         "value_gyr": 10.6,
         "uncertainty_gyr": 2.0,
         "method": "isochrone",
-        "reference": "Tanner et al. 2019",
-        "bibcode": "2019ApJ...873...91T",
-        "doi": "10.3847/1538-4357/aafe73",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": false
       }
     ],
@@ -4066,9 +4042,9 @@
         "value_dex": -0.04,
         "uncertainty_dex": 0.02,
         "method": "high_res_spectroscopy",
-        "reference": "Tanner et al. 2019",
-        "bibcode": "2019ApJ...873...91T",
-        "doi": "10.3847/1538-4357/aafe73",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": true
       },
       {
@@ -4147,7 +4123,7 @@
         "recommended": false
       },
       {
-        "value_log_rhk": -5.00,
+        "value_log_rhk": -5.0,
         "method": "log_rhk",
         "reference": "Henry et al. 1996 (Mt Wilson)",
         "bibcode": "1996AJ....111..439H",
@@ -4155,7 +4131,7 @@
         "recommended": false
       }
     ],
-    "meta_notes": "K0V (Houk & Smith-Moore 1988) sitting just at the G8V/K0V boundary; modern Teff scales (Tanner 2019 5402 K, Brewer 2016 5410 K, Tsantaki 2013 5391 K) all cluster within 20 K of the K0V/G8V transition near 5400 K, with the spectral-type letter assignment depending on which calibration the catalog uses. No direct interferometric angular diameter exists — HD 69830 was not included in Boyajian 2012 CHARA Sun-like-star survey nor in any VLTI-PIONIER programme through 2026. No published asteroseismology either (predicted nu_max ~ 3000 uHz peaks too high for TESS short-cadence and HD 69830 has not been a CHEOPS target). Mass and radius therefore both anchored on Tanner 2019 isochrone + bolometric-flux Stefan-Boltzmann (0.863 +/- 0.043 Msun, 0.905 +/- 0.019 Rsun), with Lovis 2006 (0.86 +/- 0.03 Msun) and Rosenthal 2021 (0.887 +/- 0.019 Rsun) kept as cross-check alternates. Age has a wide literature spread: Mamajek 2008 gyrochronology gives 5.7 +/- 1 Gyr (recommended), Lovis 2006 isochrone gives 4-10 Gyr broad range, Tanner 2019 isochrone gives 10.6 +/- 2 Gyr — Tanner 2019 hits the upper-main-sequence subgiant turnoff degeneracy at this Teff and metallicity, so the gyrochronological 5.7 Gyr is adopted (more reliable diagnostic for an inactive late-G/early-K dwarf at this metallicity). Rotation period 35.5 +/- 0.5 d (Suarez Mascareno 2015) is the only direct P_rot measurement, from Ca II H&K chromospheric activity rotational modulation in long-term HARPS time series; Mamajek 2008 gyrochronology gives 34 +/- 3 d, consistent. Activity log R'HK = -4.95 +/- 0.04 (Gomes da Silva 2021, 240-spectrum HARPS weighted mean) supersedes Henry 1996 Mt Wilson single-snapshot -5.00; Phase 3 markdown currently quotes -5.0 colloquially and should track -4.95. Disk measurements (Beichman 2005 warm dust at ~1 AU, Smith-Wyatt-Haniff 2009 MIDI/VLTI refit, Lisse 2007 composition model, Wyatt 2007 steady-state limit) are stored separately in db/disks_curated.json per the disk-meta migration."
+    "meta_notes": "K0V (Houk & Smith-Moore 1988) sitting just at the G8V/K0V boundary; modern Teff scales (Tanner 2015 5402 K, Brewer 2016 5410 K, Tsantaki 2013 5391 K) all cluster within 20 K of the K0V/G8V transition near 5400 K, with the spectral-type letter assignment depending on which calibration the catalog uses. Tanner 2015 reports a direct interferometric angular diameter from CHARA Classic (with co-author T. Boyajian) — this is the only interferometric measurement; HD 69830 was not in Boyajian 2012 Sun-like-star survey nor in any VLTI-PIONIER programme through 2026. No published asteroseismology either (predicted nu_max ~ 3000 uHz peaks too high for TESS short-cadence and HD 69830 has not been a CHEOPS target). Mass and radius therefore both anchored on Tanner 2015 CHARA interferometric theta_LD + bolometric-flux Stefan-Boltzmann (0.863 +/- 0.043 Msun, 0.905 +/- 0.019 Rsun), with Lovis 2006 (0.86 +/- 0.03 Msun) and Rosenthal 2021 (0.887 +/- 0.019 Rsun) kept as cross-check alternates. Age has a wide literature spread: Mamajek 2008 gyrochronology gives 5.7 +/- 1 Gyr (recommended), Lovis 2006 isochrone gives 4-10 Gyr broad range, Tanner 2015 isochrone gives 10.6 +/- 2 Gyr — Tanner 2015 hits the upper-main-sequence subgiant turnoff degeneracy at this Teff and metallicity, so the gyrochronological 5.7 Gyr is adopted (more reliable diagnostic for an inactive late-G/early-K dwarf at this metallicity). Rotation period 35.5 +/- 0.5 d (Suarez Mascareno 2015) is the only direct P_rot measurement, from Ca II H&K chromospheric activity rotational modulation in long-term HARPS time series; Mamajek 2008 gyrochronology gives 34 +/- 3 d, consistent. Activity log R'HK = -4.95 +/- 0.04 (Gomes da Silva 2021, 240-spectrum HARPS weighted mean) supersedes Henry 1996 Mt Wilson single-snapshot -5.00; Phase 3 markdown currently quotes -5.0 colloquially and should track -4.95. Disk measurements (Beichman 2005 warm dust at ~1 AU, Smith-Wyatt-Haniff 2009 MIDI/VLTI refit, Lisse 2007 composition model, Wyatt 2007 steady-state limit) are stored separately in db/disks_curated.json per the disk-meta migration. OPEN: Teff 5402 +/- 11 K and Tanner 2015 alternate-age 10.6 +/- 2 Gyr in the measurement arrays need full-text verification against the Tanner 2015 ApJ 800 115 published paper — abstract reports Teff 5385 +/- 44 K from spectral fitting and age 7.5 +/- 3 Gyr; current array values may have come from the paper body interferometric Stefan-Boltzmann inversion or from a different source. Audit 2026-05-28."
   },
   "TOI-540": {
     "spectype": "M V",
@@ -4306,7 +4282,7 @@
   },
   "eps Eri": {
     "teff_k": 5039,
-    "teff_bibcode": "2012ApJ...761...57B",
+    "teff_bibcode": "2012ApJ...744..138B",
     "spectype": "K2 V",
     "spectype_bibcode": "1989ApJS...71..245K",
     "spectype_reference": "Keenan & McNeil 1989",
@@ -4345,8 +4321,8 @@
         "uncertainty_rsun": 0.005,
         "method": "interferometry",
         "reference": "Baines & Armstrong 2012",
-        "bibcode": "2012ApJ...761...57B",
-        "doi": "10.1088/0004-637X/761/1/57",
+        "bibcode": "2012ApJ...744..138B",
+        "doi": "10.1088/0004-637X/744/2/138",
         "recommended": true,
         "notes": "PAVO@CHARA limb-darkened angular diameter theta_LD = 2.126 +/- 0.014 mas combined with Hipparcos parallax 310.94 +/- 0.16 mas gives R = 0.735 +/- 0.005 Rsun. Direct interferometric measurement -- the most-direct stellar radius method."
       },
@@ -4375,8 +4351,8 @@
         "uncertainty_k": 126,
         "method": "interferometry",
         "reference": "Baines & Armstrong 2012",
-        "bibcode": "2012ApJ...761...57B",
-        "doi": "10.1088/0004-637X/761/1/57",
+        "bibcode": "2012ApJ...744..138B",
+        "doi": "10.1088/0004-637X/744/2/138",
         "recommended": true
       },
       {
@@ -4409,12 +4385,12 @@
     ],
     "luminosity_measurements": [
       {
-        "value_lsun": 0.320,
+        "value_lsun": 0.32,
         "uncertainty_lsun": 0.011,
         "method": "bolometric_flux",
         "reference": "Baines & Armstrong 2012",
-        "bibcode": "2012ApJ...761...57B",
-        "doi": "10.1088/0004-637X/761/1/57",
+        "bibcode": "2012ApJ...744..138B",
+        "doi": "10.1088/0004-637X/744/2/138",
         "recommended": true
       },
       {
@@ -4430,7 +4406,7 @@
     "age_measurements": [
       {
         "value_gyr": 0.44,
-        "uncertainty_gyr": 0.10,
+        "uncertainty_gyr": 0.1,
         "method": "activity_age",
         "reference": "Mamajek & Hillenbrand 2008",
         "bibcode": "2008ApJ...687.1264M",
@@ -4458,7 +4434,7 @@
         "recommended": true
       },
       {
-        "value_dex": -0.10,
+        "value_dex": -0.1,
         "uncertainty_dex": 0.03,
         "method": "high_res_spectroscopy",
         "reference": "Brewer et al. 2016",
@@ -4478,7 +4454,7 @@
     ],
     "rotation_measurements": [
       {
-        "value_days": 11.20,
+        "value_days": 11.2,
         "uncertainty_days": 0.05,
         "method": "photometric_variability",
         "reference": "Donahue et al. 1996",
@@ -4515,7 +4491,7 @@
         "recommended": false
       }
     ],
-    "meta_notes": "K2 V active young dwarf, second-nearest planet host after Proxima (d = 3.220 +/- 0.001 pc). Has direct interferometric angular diameter -- both Di Folco 2007 (VLTI/VINCI) and Baines & Armstrong 2012 (PAVO@CHARA) resolved theta_LD ~ 2.12-2.15 mas. Phase 2 recommends Baines 2012 (R = 0.735 +/- 0.005 Rsun from PAVO@CHARA theta_LD = 2.126 +/- 0.014 mas + Hipparcos parallax 310.94 +/- 0.16 mas; Teff = 5039 +/- 126 K from L_bol + theta_LD Stefan-Boltzmann inversion; L = 0.320 +/- 0.011 Lsun bolometric) for the radius/Teff/L trio because the same paper derives all three self-consistently from theta_LD + bolometric flux + parallax (most-direct method). Earlier Phase 3 cited Rosenthal 2021 SED-fit R = 0.759 +/- 0.012 Rsun as primary; the ~3% offset traces to direct-angular-diameter vs SED-fit method choice. The DB raw teff_k = 5180 K (Gaia-DR3-derived photometric proxy) is also higher than the interferometric value by ~140 K. Mass = 0.82 +/- 0.02 Msun (Llop-Sayson 2021 joint RV + Hipparcos IAD + Gaia DR2 + multi-epoch vortex coronagraphy fit; schema method 'evolutionary_model' is the closest tier-allowed match for this joint dynamical-fit-with-stellar-evolution-prior procedure) is the modern canonical pick. Age 0.44 +/- 0.10 Gyr (Mamajek & Hillenbrand 2008 activity-rotation joint isochrone+CaIIHK+Xray+rotation fit) is the published symmetric formal uncertainty -- but gyrochrone systematics at this age are factor-of-2 and the literature spread runs 0.2-0.9 Gyr; Llop-Sayson 2021 adopts 400-800 Myr as the host-star prior. Donahue 1996 P_rot = 11.20 +/- 0.05 d from 14-yr Mt Wilson Ca II HK Project is the canonical eps Eri rotation period; schema method 'photometric_variability' is the closest tier-allowed match for periodic-flux-timeseries rotation extraction (Ca II HK index is the flux). Croll 2006 MOST broadband photometry 11.45 d independent confirmation. Activity log R'HK = -4.39 (Zechmeister 2013 modern HARPS epoch) places eps Eri in the active K dwarf locus; Metcalfe 2013 resolved dual chromospheric cycles 2.95 +/- 0.03 yr (short) + 12.7 +/- 0.3 yr (long), and Coffaro 2020 confirms the 2.95-yr cycle in 17 years of XMM monitoring with log L_X cycle 28.3-28.9 cgs. No asteroseismology: Bonanno 2008 attempted RV-based mode detection but the activity floor swamps p-mode amplitudes."
+    "meta_notes": "K2 V active young dwarf, second-nearest planet host after Proxima (d = 3.220 +/- 0.001 pc). Has direct interferometric angular diameter -- both Di Folco 2007 (VLTI/VINCI) and Baines & Armstrong 2012 (PAVO@CHARA) resolved theta_LD ~ 2.12-2.15 mas. Phase 2 recommends Baines 2012 (R = 0.735 +/- 0.005 Rsun from PAVO@CHARA theta_LD = 2.126 +/- 0.014 mas + Hipparcos parallax 310.94 +/- 0.16 mas; Teff = 5039 +/- 126 K from L_bol + theta_LD Stefan-Boltzmann inversion; L = 0.320 +/- 0.011 Lsun bolometric) for the radius/Teff/L trio because the same paper derives all three self-consistently from theta_LD + bolometric flux + parallax (most-direct method). Earlier Phase 3 cited Rosenthal 2021 SED-fit R = 0.759 +/- 0.012 Rsun as primary; the ~3% offset traces to direct-angular-diameter vs SED-fit method choice. The DB raw teff_k = 5180 K (Gaia-DR3-derived photometric proxy) is also higher than the interferometric value by ~140 K. Mass = 0.82 +/- 0.02 Msun (Llop-Sayson 2021 joint RV + Hipparcos IAD + Gaia DR2 + multi-epoch vortex coronagraphy fit; schema method 'evolutionary_model' is the closest tier-allowed match for this joint dynamical-fit-with-stellar-evolution-prior procedure) is the modern canonical pick. Age 0.44 +/- 0.10 Gyr (Mamajek & Hillenbrand 2008 activity-rotation joint isochrone+CaIIHK+Xray+rotation fit) is the published symmetric formal uncertainty -- but gyrochrone systematics at this age are factor-of-2 and the literature spread runs 0.2-0.9 Gyr; Llop-Sayson 2021 adopts 400-800 Myr as the host-star prior. Donahue 1996 P_rot = 11.20 +/- 0.05 d from 14-yr Mt Wilson Ca II HK Project is the canonical eps Eri rotation period; schema method 'photometric_variability' is the closest tier-allowed match for periodic-flux-timeseries rotation extraction (Ca II HK index is the flux). Croll 2006 MOST broadband photometry 11.45 d independent confirmation. Activity log R'HK = -4.39 (Zechmeister 2013 modern HARPS epoch) places eps Eri in the active K dwarf locus; Metcalfe 2013 resolved dual chromospheric cycles 2.95 +/- 0.03 yr (short) + 12.7 +/- 0.3 yr (long), and Coffaro 2020 confirms the 2.95-yr cycle in 17 years of XMM monitoring with log L_X cycle 28.3-28.9 cgs. No asteroseismology: Bonanno 2008 attempted RV-based mode detection but the activity floor swamps p-mode amplitudes. Attribution note (audit 2026-05-28): the radius/Teff/L recommended picks now correctly cite Baines & Armstrong 2012 ApJ 744 138 (eps Eri paper), corrected from an earlier mis-citation to 2012ApJ...761...57B which is the Baines+ 2012 ApJ 761 paper on HR 8799. The Llop-Sayson 2021 mass value 0.82 +/- 0.02 Msun is downstream of Baines & Armstrong 2011/2012 -- kept as the recommended primary since it is the formally published joint-fit reanalysis, with a notes field acknowledging the upstream interferometric anchor."
   },
   "GJ 179": {
     "mass_measurements": [
@@ -5494,7 +5470,6 @@
     ],
     "meta_notes": "M4.5 Ve flare star (variable designation DY Eri). [Fe/H] not directly measured at this spectral type for this star; inherits system-coeval value [Fe/H] ~ -0.30 from 40 Eridani A (Diaz 2018 / Bensby 2014), recorded narratively rather than as a measurement since no paper reports a 40 Eri C-specific spectroscopic value. P_rot tentatively ~137 d (Kemmer 2025 CARMENES, provisional pending independent confirmation); not added as a measurement until verified. Activity is real (DY Eri = UV Ceti-class flare star) but no single canonical paper-cited Halpha EW or log L_X / L_bol value pinned yet; CARMENES Jeffers 2018 reports Halpha pEW in the -2 to -4 A range. Add when a single recommended source is chosen."
   },
-
   "Delta Pavonis": {
     "teff_k": 5644,
     "teff_bibcode": "2021A&A...646A..77G",
@@ -5629,7 +5604,7 @@
         "recommended": false
       },
       {
-        "value_gyr": 8.30,
+        "value_gyr": 8.3,
         "uncertainty_gyr": 1.5,
         "method": "activity_age",
         "reference": "Eiroa et al. 2013 (Ca II age)",
@@ -5668,7 +5643,7 @@
       },
       {
         "value_dex": 0.37,
-        "uncertainty_dex": 0.20,
+        "uncertainty_dex": 0.2,
         "method": "high_res_spectroscopy",
         "reference": "Bensby et al. 2014",
         "bibcode": "2014A&A...562A..71B",
@@ -5708,7 +5683,6 @@
     ],
     "meta_notes": "G8 IV subgiant Sun-analog (1.06 Msun, 1.12 Rsun) — exceptionally inactive (log R'HK = -5.13, well below solar minimum -4.96; Gomes da Silva 2021 weighted mean of 6002 HARPS spectra). No direct interferometric diameter (declination -66) so radius from PARSEC isochrone (1.115 +/- 0.025 Rsun, Gomes 2021). Bruntt 2010 quoted R = 1.22 +/- 0.02 from L+Teff Stefan-Boltzmann with older Hipparcos parallax + Teff = 5604 K — Phase 3 markdown cites this as 'asteroseismic + interferometric' but no asteroseismology paper for delta Pav has been published and there is no interferometric measurement; that Phase 3 basis attribution is incorrect and the divergence with current Phase 2 (1.115 vs 1.22, ~9%) traces to (a) updated parallax and (b) PARSEC vs Stefan-Boltzmann method choice. Rotation P_rot = 175 +/- 30 d is an upper limit derived from Ramirez 2013 v sin i = 0.32 km/s + R = 1.115 Rsun assuming i = 90 deg (the HARPS vsini detection floor); true P_rot may be longer. Age 5.04 +/- 1.23 Gyr (Gomes 2021 PARSEC isochrone) is the young end of the literature spread — Bensby 2014 also gives ~5 Gyr, but Tsantaki 2013 and Eiroa 2013 Ca II age both give 8-9 Gyr. Adopt 5 Gyr per tier hierarchy (newest paper, smallest uncertainty) but flag this is contentious. X-ray non-detection (ROSAT, Hunsch 1998) gives log L_X < 26.6 cgs (i.e. log(L_X/L_bol) < -7.08), consistent with the very low log R'HK; not added as a separate activity_measurements entry since log_rhk is higher tier and a single recommended is set."
   },
-
   "AU Mic": {
     "teff_k": 3700,
     "teff_bibcode": "2020Natur.582..497P",
@@ -5722,11 +5696,11 @@
         "method": "evolutionary_model",
         "reference": "Wittrock et al. 2023",
         "bibcode": "2023AJ....166..232W",
-        "doi": "10.3847/1538-3881/acfda7",
+        "doi": "10.3847/1538-3881/acfda8",
         "recommended": true
       },
       {
-        "value_msun": 0.50,
+        "value_msun": 0.5,
         "uncertainty_msun": 0.03,
         "method": "spectroscopic_calibration",
         "reference": "Plavchan et al. 2020",
@@ -5735,7 +5709,7 @@
         "recommended": false
       },
       {
-        "value_msun": 0.50,
+        "value_msun": 0.5,
         "uncertainty_msun": 0.03,
         "method": "spectroscopic_calibration",
         "reference": "Donati et al. 2025",
@@ -5750,7 +5724,7 @@
         "uncertainty_rsun": 0.02,
         "method": "spectroscopic_calibration",
         "reference": "Donati et al. 2023",
-        "bibcode": "2023MNRAS.525..455D",
+        "bibcode": "2023MNRAS.525.2015D",
         "doi": "10.1093/mnras/stad2301",
         "recommended": true,
         "notes": "ZDI Stokes V+I inversion radius from v sin i and P_rot = 4.863 d with sin i ≈ 1 (disk + RM-confirmed edge-on geometry). AU Mic is bright enough and far enough north (dec -31) for CHARA to attempt, but no interferometric angular diameter has been published as of 2025; Donati 2023 ZDI radius is the tightest available radius constraint."
@@ -5789,7 +5763,7 @@
         "uncertainty_k": 100,
         "method": "high_res_spectroscopy",
         "reference": "Donati et al. 2023",
-        "bibcode": "2023MNRAS.525..455D",
+        "bibcode": "2023MNRAS.525.2015D",
         "doi": "10.1093/mnras/stad2301",
         "recommended": false
       },
@@ -5839,9 +5813,9 @@
         "value_dex": 0.12,
         "uncertainty_dex": 0.05,
         "method": "photometric_calibration",
-        "reference": "Shkolnik et al. 2017 (HAZMAT II β Pic MG mean)",
-        "bibcode": "2017ApJ...838...87S",
-        "doi": "10.3847/1538-4357/aa615f",
+        "reference": "Miles & Shkolnik 2017 (HAZMAT II)",
+        "bibcode": "2017AJ....154...67M",
+        "doi": "10.3847/1538-3881/aa71ab",
         "recommended": true
       }
     ],
@@ -5876,6 +5850,6 @@
         "recommended": false
       }
     ],
-    "meta_notes": "M1Ve pre-main-sequence flare star (~22 Myr, β Pictoris Moving Group canonical member). The Phase 3 markdown at the time of this curation used `teff_k = 3518` from Gaia DR3 GSP-Phot and derived `luminosity_lsun = 0.092` via Stefan-Boltzmann at that Teff; Phase 2 recommends Plavchan 2020 high-res spectroscopic Teff = 3700 ± 100 K (per methodology tier: high_res_spectroscopy > photometric_color). The 3700 vs 3518 K offset reconciles at <2σ and traces to GSP-Phot's known cool-bias below 3800 K for spotted active M dwarfs. Phase 2 also recommends Plavchan 2020 bolometric L = 0.09 ± 0.02 Lsun (direct SED integration) over the Stefan-Boltzmann derivation. Phase 3 markdown's `stellar_color_temp_k` row was tied to 3518 K (Gaia BP/RP color-equivalent); this is acceptable as a separate visual-rendering anchor (color-equivalent blackbody) distinct from the spectroscopic Teff, but the Decisions row basis is updated to make this distinction explicit. Activity is reported as Hα EW (Houdebine 2010, -2.4 ± 0.3 Å) rather than log R'HK because the Mt-Wilson R'HK calibration is not validated for active M1Ve photospheres; Phase 3 markdown's `activity_log_rhk = -3.9` is retained as a derived saturated-regime estimate but flagged as not paper-cited. Radius (0.82 Rsun, Donati 2023 ZDI) has no published CHARA interferometric counterpart; AU Mic at dec -31 is reachable by CHARA but no diameter has been published. Mass (0.51 Msun, Wittrock 2023 TTV+N-body) is the most-direct constraint, model-independent through orbital dynamics. [Fe/H] = +0.12 ± 0.05 is the β Pic MG mean (Shkolnik 2017 HAZMAT II) since no direct high-res [Fe/H] of AU Mic has been published — open item for future SPIRou/ESPRESSO follow-up. Saturated activity (Hα emission, kG-class ZDI fields, log L_X/L_bol ~ -3.0, super-flares to 10^34-10^35 erg) is the dominant photophysical fact; activity_cycle is unresolved at this age (pre-MS saturated dynamo)."
+    "meta_notes": "M1Ve pre-main-sequence flare star (~22 Myr, β Pictoris Moving Group canonical member). The Phase 3 markdown at the time of this curation used `teff_k = 3518` from Gaia DR3 GSP-Phot and derived `luminosity_lsun = 0.092` via Stefan-Boltzmann at that Teff; Phase 2 recommends Plavchan 2020 high-res spectroscopic Teff = 3700 ± 100 K (per methodology tier: high_res_spectroscopy > photometric_color). The 3700 vs 3518 K offset reconciles at <2σ and traces to GSP-Phot's known cool-bias below 3800 K for spotted active M dwarfs. Phase 2 also recommends Plavchan 2020 bolometric L = 0.09 ± 0.02 Lsun (direct SED integration) over the Stefan-Boltzmann derivation. Phase 3 markdown's `stellar_color_temp_k` row was tied to 3518 K (Gaia BP/RP color-equivalent); this is acceptable as a separate visual-rendering anchor (color-equivalent blackbody) distinct from the spectroscopic Teff, but the Decisions row basis is updated to make this distinction explicit. Activity is reported as Hα EW (Houdebine 2010, -2.4 ± 0.3 Å) rather than log R'HK because the Mt-Wilson R'HK calibration is not validated for active M1Ve photospheres; Phase 3 markdown's `activity_log_rhk = -3.9` is retained as a derived saturated-regime estimate but flagged as not paper-cited. Radius (0.82 Rsun, Donati 2023 ZDI) has no published CHARA interferometric counterpart; AU Mic at dec -31 is reachable by CHARA but no diameter has been published. Mass (0.51 Msun, Wittrock 2023 TTV+N-body) is the most-direct constraint, model-independent through orbital dynamics. [Fe/H] = +0.12 ± 0.05 is the β Pic MG mean (Shkolnik 2017 HAZMAT II) since no direct high-res [Fe/H] of AU Mic has been published — open item for future SPIRou/ESPRESSO follow-up. Saturated activity (Hα emission, kG-class ZDI fields, log L_X/L_bol ~ -3.0, super-flares to 10^34-10^35 erg) is the dominant photophysical fact; activity_cycle is unresolved at this age (pre-MS saturated dynamo). Citation fixes (audit 2026-05-28): Wittrock 2023 DOI corrected acfda7 -> acfda8 (single-char typo on TTV mass paper). Donati 2023 ZDI radius bibcode page corrected ..455D -> .2015D (MNRAS volume 525 pages 2015-2039, not page 455). Shkolnik 2017 HAZMAT II metallicity entry corrected to Miles & Shkolnik 2017 AJ 154 67 (the actual HAZMAT II UV paper containing the beta Pic MG [Fe/H] mean) -- the Shkolnik 2017 ApJ 838 87 bibcode pointed to a different paper."
   }
 }

@@ -328,7 +328,7 @@ visual with real-time progression.
 - **Baines E. K. & Armstrong J. T. 2012** — *Confirming Fundamental
   Properties of the Exoplanet Host Star ε Eridani Using the
   Navy Optical Interferometer and PAVO/CHARA*, ApJ 761, 57
-  (`2012ApJ...761...57B`, doi:10.1088/0004-637X/761/1/57). PAVO@CHARA
+  (`2012ApJ...744..138B`, doi:10.1088/0004-637X/744/2/138). PAVO@CHARA
   limb-darkened angular diameter θ_LD = 2.126 ± 0.014 mas; combined
   with Hipparcos parallax gives R = 0.735 ± 0.005 R☉, and via
   L_bol + θ_LD Stefan-Boltzmann inversion T_eff = 5039 ± 126 K,

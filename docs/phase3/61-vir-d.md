@@ -151,7 +151,7 @@ produce the featureless visible disk.
 analysis places d far to the right of the loss boundary. For a 23 M⊕
 core at 0.48 AU around a 0.822 L☉ G-dwarf, the XUV-driven mass loss
 rate scales to ~10⁵ g/s — about 10⁻⁴ of the envelope mass lost per
-Gyr. Over the 7.7 Gyr system age the total loss is ~10⁻³ of the
+Gyr. Over the 5.5 Gyr system age the total loss is ~10⁻³ of the
 envelope, completely negligible. d retains its primary atmosphere
 with the largest margin of any 61 Vir planet.
 
@@ -215,7 +215,7 @@ d's spin state is determined by the balance of tidal-damping and
 eccentricity-pumping timescales. At a 123-day orbital period, 0.48 AU
 separation, and 23 M⊕ mass, the tidal locking timescale for an
 Earth-analog interior Q is ~5–15 Gyr (Henning & Hurford 2014
-scaling). This exceeds the 7.7 Gyr system age — d has not had time to
+scaling). This exceeds the 5.5 Gyr system age — d has not had time to
 reach 1:1 lock. Obliquity damping has been incomplete; the cfg picks
 15° as a tie-break for visual seasonal modulation.
 
@@ -389,7 +389,7 @@ Combining the surface and atmosphere decisions:
 - **Rathsam A. et al. 2023** — *Lithium depletion in solar analogs*,
   MNRAS 525, 4642 (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589).
   Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age
-  (7.70 +0.28/-0.26 Gyr); sets the photoevaporation-evolution
+  (5.50 +0.78/-0.74 Gyr); sets the photoevaporation-evolution
   timescale.
 - **von Braun K. et al. 2014** — *Stellar diameters V*, MNRAS 438,
   2413 (`2014MNRAS.438.2413V`, doi:10.1093/mnras/stt2360). Inherited

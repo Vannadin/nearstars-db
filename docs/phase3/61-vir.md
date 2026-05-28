@@ -15,10 +15,12 @@ L☉ (von Braun 2014 bolometric flux + Hipparcos parallax) is the
 canonical direct value. Metallicity sits essentially at solar
 ([Fe/H] = +0.006 ± 0.004, Rathsam 2023; consistent with Sousa 2008,
 Maldonado 2015, Vogt 2010, all within ±0.02 dex), and the modern
-isochrone age is 7.70 +0.28/-0.26 Gyr (Rathsam 2023) — older than the
-~6 Gyr Mamajek & Hillenbrand 2008 activity-age but in line with the
-Vogt 2010 / von Braun 2014 / Sanz-Forcada 2010 isochrone consensus
-(~8–9 Gyr). The star is quiet: photospheric rotation P_rot = 32.1 ± 0.2
+isochrone age is 5.50 +0.78/-0.74 Gyr (Rathsam 2023 Table A1 for
+HD 115617 / HIP 64924), which overlaps the Mamajek & Hillenbrand 2008
+activity-age + isochrone value of 6.1 ± 1.7 Gyr at 1σ; the older
+isochrone fits (Vogt 2010 8.96 +2.76/-3.08 Gyr, von Braun 2014 8.6
+Gyr, Sanz-Forcada 2010 X-ray 7.96 Gyr — all ~8–9 Gyr) sit at the
+upper end of the combined uncertainty. The star is quiet: photospheric rotation P_rot = 32.1 ± 0.2
 d (Yu et al. 2024 Gaussian-process modeling of 18-yr HARPS RV+activity
 time series, superseding the earlier Wright 2004 inference of ~29 d
 from S-index variation), log R'HK ≈ −5.0 (Isaacson & Fischer 2010;
@@ -42,9 +44,11 @@ radius row carries a corrected attribution (the canonical CHARA
 interferometric value from von Braun 2014, not the Vogt 2010
 evolutionary radius which earlier drafts mislabeled as
 interferometric), and the age row is now isochrone-led (Rathsam 2023)
-with the older activity-age (Mamajek 2008) demoted to cross-check —
-literature splits between ~6 and ~8 Gyr depending on method, with
-Phase 3 adopting the isochrone consensus at Confidence=medium. The
+with the Mamajek & Hillenbrand 2008 activity-age + isochrone combo as
+a cross-check — the two converge near 5–6 Gyr, while the older Vogt
+2010 / von Braun 2014 / Sanz-Forcada 2010 isochrones at ~8–9 Gyr sit
+within the combined uncertainty and motivate holding Confidence=medium
+pending asteroseismic arbitration. The
 three tie-breaks are visual tint, debris-ring scattering tint, and
 debris-ring opacity where Herschel's far-IR detection doesn't
 constrain the optical appearance.
@@ -59,7 +63,7 @@ constrain the optical appearance.
 | `teff_k` | 5568 ± 4 | high | Rathsam et al. 2023 high-resolution solar-analog differential spectroscopy; von Braun 2014 sed_fitting from interferometric θ_LD gives 5538 ± 13 K and Vogt 2010 spectroscopic 5577 ± 33 K bracket within combined uncertainty; replaces Gaia DR3 photometric 5552 K used in the earlier draft |
 | `luminosity_lsun` | 0.8222 ± 0.0033 | high | von Braun et al. 2014 bolometric flux integration + Hipparcos parallax; Vogt 2010's 0.82 (from L = R²·(T/T☉)⁴) agrees within rounding |
 | `metallicity_fe_h_dex` | +0.006 ± 0.004 | high | Rathsam et al. 2023 high-res differential spectroscopy (smallest formal uncertainty); Vogt 2010 (-0.01), Sousa 2008 (-0.02 ± 0.01), Maldonado 2015 (-0.02 ± 0.01), Rosenthal 2021 (+0.0275 ± 0.06) all agree within combined errors at near-solar |
-| `age_gyr` | 7.70 +0.28/-0.26 | medium | Rathsam et al. 2023 Yale-Potsdam isochrone (newest paper, tightest formal uncertainty). Vogt 2010 (8.96 +2.76/-3.08) and von Braun 2014 (8.6) both give ~8–9 Gyr isochrone; Sanz-Forcada 2010 X-ray age 7.96 Gyr agrees. **Documented divergence:** Mamajek & Hillenbrand 2008 chromospheric activity-age gives 6.1 ± 1.7 Gyr — methodology disagreement between isochrone (older) and activity-age (younger) cohorts. Phase 3 picks the isochrone consensus but holds Confidence=medium to flag the unresolved split |
+| `age_gyr` | 5.50 +0.78/-0.74 | medium | Rathsam et al. 2023 Yale-Yonsei isochrone, Table A1 row for HD 115617 / HIP 64924 (newest paper, tightest formal uncertainty). Mamajek & Hillenbrand 2008 chromospheric activity-age + isochrone gives 6.1 ± 1.7 Gyr — overlaps Rathsam at 1σ, so the older "isochrone-vs-activity" framing no longer applies. **Residual older-isochrone tension:** Vogt 2010 (8.96 +2.76/-3.08), von Braun 2014 (8.6), and Sanz-Forcada 2010 X-ray (7.96 Gyr) all sit at ~8–9 Gyr — within combined uncertainty of Rathsam but at the upper end of the literature spread. Phase 3 holds Confidence=medium pending asteroseismic arbitration |
 | `rotation_period_days` | 32.1 ± 0.2 | high | Yu et al. 2024 multidimensional-GP modeling of 18-year HARPS RV + activity-indicator time series; the first direct rotation-period detection. Supersedes the earlier Wright 2004 inference (~29 d from S_HK fluctuation; Vogt 2010 §4 RV-jitter modeling also reported 28–30 d power) — the ~10% upward revision reflects the better cycle-baseline of the HARPS data |
 | `activity_log_rhk` | −5.0 | high | Isaacson & Fischer 2010 California HK catalog (long-term monitoring stable at quiet G-dwarf locus); Henry et al. 1996 Mt Wilson cross-check agrees |
 | `x_ray_log_lx_cgs_min` | 26.7 | medium | Schmitt & Liefke 2004 — NEXXUS-2 ROSAT survey lower bound |
@@ -223,7 +227,7 @@ A's `#fff4e8` cream, 47 UMa, etc.).
   (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589, arXiv:2309.00471).
   Solar-analog differential high-resolution spectroscopy; supplies the
   Phase 2 anchors for Teff (5568 ± 4 K), mass (0.93 ± 0.01 M☉),
-  [Fe/H] (+0.006 ± 0.004), age (7.70 +0.28/-0.26 Gyr), and log g
+  [Fe/H] (+0.006 ± 0.004), age (5.50 +0.78/-0.74 Gyr), and log g
   (4.390 ± 0.012). **Primary Phase 2 anchor for 61 Vir** (newest paper,
   smallest uncertainties); replaces Pavlenko 2012 in the earlier
   draft.
@@ -265,11 +269,12 @@ A's `#fff4e8` cream, 47 UMa, etc.).
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age Estimation
   for Solar-Type Dwarfs Using Activity-Rotation Diagnostics*, ApJ 687,
   1264 (`2008ApJ...687.1264M`, arXiv:0807.1686). Chromospheric
-  activity-age + isochrone combo giving 6.1 ± 1.7 Gyr — the **younger
-  end** of the literature spread. **Documented divergence** vs.
-  Rathsam 2023 / von Braun 2014 / Vogt 2010 isochrone consensus
-  (~7.7–9 Gyr); Phase 3 picks the isochrone value but flags
-  Confidence=medium to reflect the unresolved split.
+  activity-age + isochrone combo giving 6.1 ± 1.7 Gyr — overlaps the
+  Rathsam 2023 Yale-Yonsei isochrone value (5.50 +0.78/-0.74 Gyr) at
+  1σ, so no methodology divergence remains. The older Vogt 2010 /
+  von Braun 2014 isochrone fits (~8–9 Gyr) sit at the upper end of
+  combined uncertainty; Phase 3 picks Rathsam and holds
+  Confidence=medium pending asteroseismic arbitration.
 - **Wright J. T. et al. 2004** — *Chromospheric Ca II Emission in
   Nearby F, G, K, and M Stars*, ApJS 152, 261 (`2004ApJS..152..261W`,
   doi:10.1086/386283). Catalog of Mt-Wilson S-indices and inferred
@@ -312,8 +317,10 @@ A's `#fff4e8` cream, 47 UMa, etc.).
 - **Sanz-Forcada J. et al. 2010** — *X-ray ages for nearby stars*,
   A&A 511, L8 (`2010A&A...511L...8S`,
   doi:10.1051/0004-6361/200913670). 61 Vir X-ray-inferred age 7.96
-  Gyr, consistent with the isochrone consensus (~8 Gyr) and inconsistent
-  with the younger Mamajek 2008 activity age.
+  Gyr, sitting at the older-isochrone end alongside Vogt 2010 / von
+  Braun 2014. In tension with the Rathsam 2023 + Mamajek 2008
+  convergence at 5–6 Gyr — motivates the medium Confidence on the
+  age row.
 
 ### Read (instrument-only, not visual-informative)
 
@@ -371,12 +378,13 @@ yaml exists yet.
   reflected-light regime via direct imaging proposals.
 - **Asteroseismic campaign**: 61 Vir at Vmag 4.71 is HARPS/ESPRESSO
   reachable; a dedicated p-mode detection would tighten the
-  asteroseismic age and arbitrate the isochrone-vs-activity
-  age divergence (Rathsam 2023 7.70 +0.28/-0.26 Gyr vs Mamajek 2008
-  6.1 ± 1.7 Gyr — the two pipelines differ by ~1.5σ in opposite
-  directions). An age tied to seismic Δν + ν_max would drop the
-  uncertainty by a factor of ~3 and likely confirm the isochrone
-  reading given the Yu 2024 P_rot = 32.1 d already aligns with the
+  asteroseismic age and arbitrate the residual older-isochrone
+  tension (Vogt 2010 / von Braun 2014 / Sanz-Forcada 2010 ~8–9 Gyr vs
+  Rathsam 2023 5.50 +0.78/-0.74 Gyr and Mamajek 2008 6.1 ± 1.7 Gyr,
+  the latter two converging at 5–6 Gyr within combined uncertainty).
+  An age tied to seismic Δν + ν_max would drop the uncertainty by a
+  factor of ~3 and likely confirm the younger reading given the Yu
+  2024 P_rot = 32.1 d already aligns with the
   ~8 Gyr Skumanich expectation.
 - **Direct-imaging follow-up of the debris ring**: ALMA millimetre
   imaging (CO + dust continuum) would refine the ring geometry beyond
