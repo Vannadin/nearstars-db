@@ -21,10 +21,9 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
-
-from _naming import to_url_slug, to_file_slug
 
 
 # Categories added in the 2026-05-21 Phase 2 schema expansion.
@@ -37,6 +36,23 @@ PHASE2_NEW_CATS = (
     'rotation_measurements',
     'activity_measurements',
 )
+
+
+def to_url_slug(name: str) -> str:
+    """TRAPPIST-1 → trappist-1, Alpha Centauri A → alpha-centauri-a."""
+    s = name.lower()
+    s = re.sub(r'[^a-z0-9]+', '-', s)
+    return s.strip('-')
+
+
+def to_filename_slug(name: str) -> str:
+    """Match the existing db/systems/ filename convention.
+
+    TRAPPIST-1 → trappist_1, Alpha Centauri A → alpha_centauri_a.
+    """
+    s = name.lower()
+    s = re.sub(r'[^a-z0-9]+', '_', s)
+    return s.strip('_')
 
 
 def find_phase2_hosts(stellar_curated: dict) -> list[str]:
@@ -370,7 +386,7 @@ fetch('../data.json')
 
 def build_one(repo: Path, system_name: str) -> Path:
     url_slug = to_url_slug(system_name)
-    file_slug = to_file_slug(system_name)
+    file_slug = to_filename_slug(system_name)
     html = (PAGE_TEMPLATE
             .replace('__SYSTEM_NAME__', system_name)
             .replace('__JSON_FILENAME__', file_slug))

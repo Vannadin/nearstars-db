@@ -65,10 +65,7 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 17518042082.376,
@@ -212,7 +209,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -221,7 +218,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -230,14 +227,14 @@
       "title": "Kaminski et al. 2025",
       "doi": "10.1051/0004-6361/202453381",
       "bibcode": "2025A&A...696A.101K",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "G 192-15 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

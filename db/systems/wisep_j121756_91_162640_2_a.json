@@ -1,0 +1,157 @@
+{
+  "system_name": "WISEP J121756.91+162640.2 A",
+  "stars": [
+    {
+      "name": "WISEP J121756.91+162640.2 A",
+      "component": "A",
+      "raw": {
+        "source": "SIMBAD",
+        "source_id": "WISE J121756.90+162640.8",
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 184.4848104583333,
+        "dec_deg": 16.448248749999998,
+        "parallax_mas": 107.4,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": 754.9,
+        "pmdec_mas_yr": -1249.8,
+        "radial_velocity_km_s": null,
+        "radial_velocity_source": "unavailable",
+        "teff_k": 575.0,
+        "spectype": "T8.5",
+        "mass_measurements": [
+          {
+            "value_msun": 0.029,
+            "uncertainty_msun": 0.005,
+            "method": "archive_composite",
+            "reference": "NASA Exoplanet Archive (pscomppars composite)",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.091,
+            "uncertainty_rsun": 0.004,
+            "method": "archive_composite",
+            "reference": "NASA Exoplanet Archive (pscomppars composite)",
+            "doi": null,
+            "recommended": true
+          }
+        ],
+        "vmag_v": null,
+        "vmag_source": "unavailable_brown_dwarf"
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 9.31098696461825,
+        "distance_km": 287307037382774.7,
+        "icrs_x_km": -274678537152186.8,
+        "icrs_y_km": -21474788494308.562,
+        "icrs_z_km": 81460950363398.48,
+        "icrs_vx_km_s": -12.966425311473321,
+        "icrs_vy_km_s": -34.439479820328,
+        "icrs_vz_km_s": -52.906697177737094,
+        "position_ulp_km": 0.060990887263342855,
+        "icrs_x_j2000_km": -274698996615357.28,
+        "icrs_y_j2000_km": -21529129860727.46,
+        "icrs_z_j2000_km": 81377469944055.67,
+        "icrs_vx_j2000_km_s": -12.966425311473321,
+        "icrs_vy_j2000_km_s": -34.439479820328,
+        "icrs_vz_j2000_km_s": -52.906697177737094
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 3848660760.522,
+        "mean_radius_km": 63308.7
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "WISEP J121756.91+162640.2 A b",
+      "host_star": "WISEP J121756.91+162640.2 A",
+      "raw": {
+        "source": "NASA Exoplanet Archive",
+        "pl_name": "WISEP J121756.91+162640.2 A b",
+        "reference": "<a refstr=LIU_ET_AL__2013 href=https://ui.adsabs.harvard.edu/abs/2012ApJ...758...57L/abstract target=ref> Liu et al. 2013 </a>",
+        "retrieval_date": "2026-05-16",
+        "period_days": null,
+        "period_err_days": null,
+        "semi_major_axis_au": 8.0,
+        "semi_major_axis_err_au": 1.3,
+        "eccentricity": null,
+        "inclination_deg": null,
+        "inclination_note": "not constrained",
+        "mass_mearth": 6992.0,
+        "mass_err_mearth": 636.0,
+        "mass_type": "Mass",
+        "radius_rearth": 10.468,
+        "radius_err_rearth": 0.327,
+        "discoverymethod": "Imaging",
+        "pl_controv_flag": 0,
+        "pubdate": null
+      },
+      "kopernicus": {
+        "semi_major_axis_m": 1196782965600.0,
+        "eccentricity": 0.0,
+        "eccentricity_note": "assumed circular",
+        "inclination_deg": 90.0,
+        "inclination_note": "assumed edge-on; not observed",
+        "longitude_of_ascending_node_deg": 0.0,
+        "argument_of_periapsis_deg": 0.0,
+        "mean_anomaly_at_epoch_deg": 0.0,
+        "mean_anomaly_note": "arbitrary; epoch is game start",
+        "orbital_epoch_jd": 2433282.5,
+        "mass_kg": 4.1757622400000005e+28,
+        "radius_m": 66691628.0,
+        "radius_note": null
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Simultaneous solution for proper motion, parallax, and radial velocity",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-05-16",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-05-16",
+      "used_for": [
+        "planet orbital elements",
+        "stellar mass (composite)",
+        "stellar radius (composite)",
+        "spectral type"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-05-16",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-05-16",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433647.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": "RV assumed zero: no radial velocity available for WISEP J121756.91+162640.2 A"
+  }
+}

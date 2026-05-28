@@ -48,9 +48,9 @@ strong support, low = aesthetic choice within the allowed window.
 | `radius_rjup` | 1.05 | low | Tie-break: no transit. Burrows 2003 / Fortney 2007 evolutionary tracks for 0.78 M_Jup at 0.44 Gyr predict 1.03–1.12 R_Jup with solar metallicity; cfg picks 1.05 as mid-range. Mawet 2019 Ms-band non-detection sets an upper limit excluding hot-start inflated radii > 1.3 R_Jup |
 | `surface_gravity_g_earth` | 22 | medium | derived: g = G M / R² with M = 0.78 M_Jup, R = 1.05 R_Jup → 21.6 m/s² ≈ 22 × Earth |
 | `density_g_cc` | 0.85 | medium | derived: 0.78 M_Jup / (1.05 R_Jup)³ × ρ_Jup; consistent with mature solar-composition jovian |
-| `insolation_s_earth` | 0.0257 | high | derived: S = L_star / a² = 0.320 L☉ / (3.53 AU)² = 0.0257 S⊕ (tracks updated host Phase 2 L = 0.320 ± 0.011 L☉ from Baines & Armstrong 2012; previous draft used 0.34 L☉ giving 0.0273 S⊕) |
-| `equilibrium_temp_k_a0` | 111 | high | derived: T_eq = 278 K × (L/a²)^0.25 = 278 × 0.0257^0.25 (was 113 K with old L = 0.34) |
-| `equilibrium_temp_k_a03` | 102 | high | derived; Earth-analog A = 0.3 (was 103 K with old L = 0.34) |
+| `insolation_s_earth` | 0.027 | high | derived: S = L_star / a² = 0.34 L☉ / (3.53 AU)² = 0.0273 S⊕ |
+| `equilibrium_temp_k_a0` | 113 | high | derived: T_eq = 278 K × (L/a²)^0.25 = 278 × 0.0273^0.25 |
+| `equilibrium_temp_k_a03` | 103 | high | derived; Earth-analog A = 0.3 |
 | `bond_albedo` | 0.34 | low | Tie-break: Saturn-analog 0.342 (Hanel 1983; Li 2018) picked over Jupiter's 0.503 because cooler T_eq ≈ 113 K skews cloud chemistry toward thicker ammonia-ice deck more like Saturn than Jupiter; Uranus 0.300 also bracketed |
 | `intrinsic_luminosity_w_m2` | 0.5 | low | Tie-break: Burrows 2003 cooling track for 0.78 M_Jup at 0.44 Gyr predicts internal T ~ 100 K; cfg picks conservative 0.5 W/m² intrinsic flux (well below Jupiter's 5.4 W/m²; consistent with the older + lower-mass + less-inflated state) |
 | `atmosphere_present` | true | high | gas giant by definition; H₂/He bulk inferred from M-R consistency with solar composition |
@@ -60,7 +60,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `atmosphere_tint_rgb_hex` | `#d8c098` (warm-cream limb haze under K2V illumination) | low | Tie-break: ammonia-ice atmosphere is intrinsically near-white; K2V 5180 K SED shifts perception warmer than Sun-illuminated Jupiter |
 | `cloud_cover_fraction` | 0.85 | medium | jovian-analog: zonal banding nearly complete coverage with belt/zone contrast; cfg picks 0.85 to allow distinct dark belts vs bright zones rather than uniform overcast |
 | `cloud_morphology` | zonal bands with ammonia-ice cloud deck at ≈ 0.5–1 bar level; possible water-cloud deck below at ≈ 5 bar (inaccessible to visible imaging); faint photochemical haze layer above 100 mbar from CH₄ photolysis under K2V UV | low | Tie-break: no GCM; cfg adopts Saturn-analog band structure with ε Eri's elevated K-dwarf UV driving a slightly more prominent stratospheric haze layer than Saturn |
-| `cloud_tint_rgb_hex` | `#e8dac4` (warm cream — NH₃ ice + K2V illumination) | low | Tie-break: Saturn's ammonia clouds appear cream-white under solar illumination; under 5039 K K2V the perceived hue shifts further into warm cream |
+| `cloud_tint_rgb_hex` | `#e8dac4` (warm cream — NH₃ ice + K2V illumination) | low | Tie-break: Saturn's ammonia clouds appear cream-white under solar illumination; under 5180 K K2V the perceived hue shifts further into warm cream |
 | `photochemical_haze_present` | true | medium | ε Eri's elevated FUV flux (France 2018 MUSCLES, 5–20× solar) drives CH₄ photolysis above 100 mbar; tholin / hydrocarbon haze layer is expected analogous to Titan's atmosphere chemistry but on a jovian H₂ background |
 | `photochemical_haze_tint_rgb_hex` | `#b08858` (light tholin from CH₄ photolysis under K2V UV) | low | Tie-break: laboratory tholin chemistry (Khare 1984; Hörst 2018) gives orange-tan absorption signatures; haze layer is thin and renders as a subtle limb-darkening rather than a dominant tint |
 | `planet_disk_tint_rgb_hex_primary` | `#e8dac4` (cream-white zones — dominant cloud-deck appearance from a planetary-scale observer) | low | downstream of `cloud_tint_rgb_hex` |
@@ -76,8 +76,8 @@ strong support, low = aesthetic choice within the allowed window.
 | `aurora_oval_magnetic_latitude_deg` | 70 | medium | Jupiter-analog auroral oval at 65–75° magnetic latitude (Clarke 1996 HST FUV; Bonfond 2017); scales to ε Eri b's magnetospheric standoff |
 | `aurora_intensity_kR_typical` | 1000 | low | Tie-break: Jupiter UV aurora ≈ 100–1000 kR depending on solar wind state (Clarke 2009); ε Eri's 30× solar wind drives proportionally stronger driver; cfg picks 1000 kR as mid-range for ε Eri's active state |
 | `companion_position_relative_belts` | between asteroid-belt analog (3 AU) and intermediate belt (20 AU); inner-gap sculptor in Su 2017 Genie three-belt model | high | Su 2017 §4 — gap-clearing requires a planet of M ≳ 0.5 M_Jup between the two belts; ε Eri b's mass and location match the requirement |
-| `star_apparent_angular_diameter_deg` | 0.111 | high | derived: 2 R_star / a = 2 × 0.735 R☉ / 3.53 AU × (180/π); tracks updated host Phase 2 R = 0.735 ± 0.005 R☉ (Baines & Armstrong 2012 PAVO/CHARA interferometric); compares with Sun-from-Jupiter 0.10°. Previous draft used 0.759 R☉ giving 0.115° |
-| `stellar_illumination_color_temp_k` | 5039 | high | inherited from host Phase 3 (`docs/phase3/eps-eri.md`) — tracks updated Phase 2 T_eff = 5039 ± 126 K from Baines & Armstrong 2012 interferometric (was 5180 K in earlier draft from DB photometric proxy) |
+| `star_apparent_angular_diameter_deg` | 0.115 | high | derived: 2 R_star / a = 2 × 0.759 R☉ / 3.53 AU × (180/π); compares with Sun-from-Jupiter 0.10° |
+| `stellar_illumination_color_temp_k` | 5180 | high | inherited from host Phase 3 (`docs/phase3/eps-eri.md`) |
 
 ## Surface synthesis
 
@@ -87,9 +87,8 @@ rendering is the cloud deck, conventionally referenced to the 1 bar
 pressure level where the optical opacity transitions from clear gas
 above to dense particulate-laden gas below.
 
-The equilibrium temperature at 3.5 AU under L_star = 0.320 ± 0.011 L☉
-(Baines & Armstrong 2012, updated Phase 2 anchor) is T_eq ≈ 111 K
-(A = 0) or 102 K (A = 0.3). Both values are colder than
+The equilibrium temperature at 3.5 AU under L_star = 0.34 L☉ is
+T_eq ≈ 113 K (A = 0) or 103 K (A = 0.3). Both values are colder than
 Jupiter (T_eq ≈ 110 K) and warmer than Saturn (T_eq ≈ 81 K). The
 condensation chemistry on a H₂/He atmosphere at these temperatures
 follows the well-established Lewis 1969 / Atreya 1999 thermochemical
@@ -104,7 +103,7 @@ higher mass.
 The cloud deck reads as warm cream-white (`#e8dac4`) under K2V
 illumination. Ammonia ice in the laboratory has an intrinsic albedo
 in the visible near 0.8–0.9 with a slight yellow tint from trace
-absorption at 1.5–2.0 μm; under 5039 K K2V illumination the perceived
+absorption at 1.5–2.0 μm; under 5180 K K2V illumination the perceived
 hue shifts further toward warm cream relative to the Sun-illuminated
 Jupiter palette. Belt-zone contrast (`#c4a878` warm cream-brown for
 belt bands) is muted compared to Jupiter because the convective drive
@@ -188,7 +187,7 @@ populations. From an observer on a hypothetical large moon at, say,
 20 R_planet (Io-analog distance scaled to ε Eri b's larger radius),
 the planet subtends ≈ 5.7° in the sky — nearly 12× the lunar
 diameter from Earth — and dominates the daytime sky with a banded
-cream-white disk. The ε Eri star itself is a tiny 0.111° point — 1/4
+cream-white disk. The ε Eri star itself is a tiny 0.115° point — 1/4
 the Sun's angular size from Earth, comparable to Sun-from-Jupiter
 geometry — appearing as a deep orange point with the K2V color
 temperature. The contrast between the warm-cream planet disk and the
@@ -284,7 +283,7 @@ Combining surface (cloud-deck) and atmosphere decisions:
   (`#c84080`) auroral rings, brighter than Jupiter's visible aurora
   by ~10× given ε Eri's elevated stellar wind. Visible from
   nightside angles only; obscured by the cloud deck on the dayside.
-- **Star in sky.** ε Eridani subtends 0.111° from ε Eri b — about
+- **Star in sky.** ε Eridani subtends 0.115° from ε Eri b — about
   the angular diameter of Saturn from Earth — appearing as a deep
   orange (K2V `#ffd9a8`) point/disk. From a hypothetical large moon
   at 20 R_planet, the planet itself dominates the sky at ~5.7°,

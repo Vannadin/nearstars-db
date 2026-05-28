@@ -19,213 +19,16 @@
         "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
         "vmag_v": 3.5856,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5644,
-        "spectype": "G8 IV",
-        "mass_measurements": [
-          {
-            "value_msun": 1.064,
-            "uncertainty_msun": 0.013,
-            "method": "evolutionary_model",
-            "reference": "Gomes da Silva et al. 2021",
-            "bibcode": "2021A&A...646A..77G",
-            "doi": "10.1051/0004-6361/202039765",
-            "recommended": true
-          },
-          {
-            "value_msun": 1.03,
-            "uncertainty_msun": 0.07,
-            "method": "evolutionary_model",
-            "reference": "Bensby et al. 2014",
-            "bibcode": "2014A&A...562A..71B",
-            "doi": "10.1051/0004-6361/201322631",
-            "recommended": false
-          },
-          {
-            "value_msun": 0.967,
-            "uncertainty_msun": 0.016,
-            "method": "spectroscopic",
-            "reference": "Tsantaki et al. 2013",
-            "bibcode": "2013A&A...555A.150T",
-            "doi": "10.1051/0004-6361/201321103",
-            "recommended": false
-          },
-          {
-            "value_msun": 0.98,
-            "uncertainty_msun": 0.02,
-            "method": "evolutionary_model",
-            "reference": "Ramirez et al. 2013",
-            "bibcode": "2013ApJ...764...78R",
-            "doi": "10.1088/0004-637X/764/1/78",
-            "recommended": false
-          }
-        ],
-        "radius_measurements": [
-          {
-            "value_rsun": 1.115,
-            "uncertainty_rsun": 0.025,
-            "method": "evolutionary_model",
-            "reference": "Gomes da Silva et al. 2021",
-            "bibcode": "2021A&A...646A..77G",
-            "doi": "10.1051/0004-6361/202039765",
-            "recommended": true,
-            "notes": "PARSEC isochrone with Gaia DR2 parallax + AMBRE-HARPS Teff/[Fe/H]. No direct interferometric diameter exists (dec -66 too south for CHARA; never published by PAVO@SUSI or VLTI-PIONIER). Stefan-Boltzmann from L=1.246 + Teff=5644 gives R ~ 1.17 — within combined uncertainty of this and Bruntt 2010."
-          },
-          {
-            "value_rsun": 1.056,
-            "uncertainty_rsun": 0.126,
-            "method": "sed_fitting",
-            "reference": "Stassun et al. 2018 (TIC-8)",
-            "bibcode": "2018AJ....156..102S",
-            "doi": "10.3847/1538-3881/aad050",
-            "recommended": false
-          }
-        ],
-        "teff_measurements": [
-          {
-            "value_k": 5644,
-            "uncertainty_k": 30,
-            "method": "high_res_spectroscopy",
-            "reference": "Gomes da Silva et al. 2021",
-            "bibcode": "2021A&A...646A..77G",
-            "doi": "10.1051/0004-6361/202039765",
-            "recommended": true
-          },
-          {
-            "value_k": 5566,
-            "uncertainty_k": 36,
-            "method": "high_res_spectroscopy",
-            "reference": "Tsantaki et al. 2013",
-            "bibcode": "2013A&A...555A.150T",
-            "doi": "10.1051/0004-6361/201321103",
-            "recommended": false
-          },
-          {
-            "value_k": 5598,
-            "uncertainty_k": 80,
-            "method": "photometric_color",
-            "reference": "Casagrande et al. 2011 (IRFM)",
-            "bibcode": "2011A&A...530A.138C",
-            "doi": "10.1051/0004-6361/201016276",
-            "recommended": false
-          }
-        ],
-        "luminosity_measurements": [
-          {
-            "value_lsun": 1.246,
-            "uncertainty_lsun": 0.05,
-            "method": "bolometric_flux",
-            "reference": "Eiroa et al. 2013 (DUNES)",
-            "bibcode": "2013A&A...555A..11E",
-            "doi": "10.1051/0004-6361/201321050",
-            "recommended": true
-          }
-        ],
-        "age_measurements": [
-          {
-            "value_gyr": 5.04,
-            "uncertainty_gyr": 1.23,
-            "method": "isochrone",
-            "reference": "Gomes da Silva et al. 2021",
-            "bibcode": "2021A&A...646A..77G",
-            "doi": "10.1051/0004-6361/202039765",
-            "recommended": true
-          },
-          {
-            "value_gyr": 4.9,
-            "uncertainty_gyr": 3.0,
-            "method": "isochrone",
-            "reference": "Bensby et al. 2014",
-            "bibcode": "2014A&A...562A..71B",
-            "doi": "10.1051/0004-6361/201322631",
-            "recommended": false
-          },
-          {
-            "value_gyr": 8.48,
-            "uncertainty_gyr": 1.27,
-            "method": "isochrone",
-            "reference": "Tsantaki et al. 2013",
-            "bibcode": "2013A&A...555A.150T",
-            "doi": "10.1051/0004-6361/201321103",
-            "recommended": false
-          },
-          {
-            "value_gyr": 8.3,
-            "uncertainty_gyr": 1.5,
-            "method": "activity_age",
-            "reference": "Eiroa et al. 2013 (Ca II age)",
-            "bibcode": "2013A&A...555A..11E",
-            "doi": "10.1051/0004-6361/201321050",
-            "recommended": false
-          }
-        ],
-        "metallicity_measurements": [
-          {
-            "value_dex": 0.36,
-            "uncertainty_dex": 0.02,
-            "method": "high_res_spectroscopy",
-            "reference": "Gomes da Silva et al. 2021",
-            "bibcode": "2021A&A...646A..77G",
-            "doi": "10.1051/0004-6361/202039765",
-            "recommended": true
-          },
-          {
-            "value_dex": 0.32,
-            "uncertainty_dex": 0.03,
-            "method": "high_res_spectroscopy",
-            "reference": "Tsantaki et al. 2013",
-            "bibcode": "2013A&A...555A.150T",
-            "doi": "10.1051/0004-6361/201321103",
-            "recommended": false
-          },
-          {
-            "value_dex": 0.33,
-            "uncertainty_dex": 0.07,
-            "method": "high_res_spectroscopy",
-            "reference": "Ramirez et al. 2013",
-            "bibcode": "2013ApJ...764...78R",
-            "doi": "10.1088/0004-637X/764/1/78",
-            "recommended": false
-          },
-          {
-            "value_dex": 0.37,
-            "uncertainty_dex": 0.2,
-            "method": "high_res_spectroscopy",
-            "reference": "Bensby et al. 2014",
-            "bibcode": "2014A&A...562A..71B",
-            "doi": "10.1051/0004-6361/201322631",
-            "recommended": false
-          }
-        ],
-        "rotation_measurements": [
-          {
-            "value_days": 175,
-            "uncertainty_days": 30,
-            "method": "v_sin_i",
-            "reference": "Ramirez et al. 2013",
-            "bibcode": "2013ApJ...764...78R",
-            "doi": "10.1088/0004-637X/764/1/78",
-            "recommended": true
-          }
-        ],
-        "activity_measurements": [
-          {
-            "value_log_rhk": -5.13,
-            "uncertainty_log_rhk": 0.003,
-            "method": "log_rhk",
-            "reference": "Gomes da Silva et al. 2021",
-            "bibcode": "2021A&A...646A..77G",
-            "doi": "10.1051/0004-6361/202039765",
-            "recommended": true
-          },
-          {
-            "value_log_rhk": -5.09,
-            "method": "log_rhk",
-            "reference": "Eiroa et al. 2013 (DUNES compilation)",
-            "bibcode": "2013A&A...555A..11E",
-            "doi": "10.1051/0004-6361/201321050",
-            "recommended": false
-          }
-        ],
+        "teff_k": 5604,
+        "spectype": "G8IV",
+        "mass_measurements": [],
+        "radius_measurements": [],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "disk_measurements": [
           {
             "belt": "main_cold",
@@ -302,19 +105,16 @@
         "icrs_vx_j2000_km_s": 13.719709653526445,
         "icrs_vy_j2000_km_s": 43.96727152648562,
         "icrs_vz_j2000_km_s": -13.194164170938494,
-        "luminosity_lsun": 1.246,
-        "age_gyr": 5.04,
-        "metallicity_fe_h_dex": 0.36,
-        "rotation_period_days": 175,
-        "activity_log_rhk": -5.13,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 141206036179.152,
-        "mean_radius_km": 775705.5
+        "gravitational_parameter_km3_s2": null,
+        "mean_radius_km": null
       }
     }
   ],
@@ -324,7 +124,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -333,86 +133,14 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
-      ]
-    },
-    {
-      "title": "Gomes da Silva et al. 2021",
-      "doi": "10.1051/0004-6361/202039765",
-      "bibcode": "2021A&A...646A..77G",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis mass (evolutionary_model)"
-      ]
-    },
-    {
-      "title": "Bensby et al. 2014",
-      "doi": "10.1051/0004-6361/201322631",
-      "bibcode": "2014A&A...562A..71B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis mass (evolutionary_model)"
-      ]
-    },
-    {
-      "title": "Tsantaki et al. 2013",
-      "doi": "10.1051/0004-6361/201321103",
-      "bibcode": "2013A&A...555A.150T",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis mass (spectroscopic)"
-      ]
-    },
-    {
-      "title": "Ramirez et al. 2013",
-      "doi": "10.1088/0004-637X/764/1/78",
-      "bibcode": "2013ApJ...764...78R",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis mass (evolutionary_model)"
-      ]
-    },
-    {
-      "title": "Stassun et al. 2018 (TIC-8)",
-      "doi": "10.3847/1538-3881/aad050",
-      "bibcode": "2018AJ....156..102S",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis radius (sed_fitting)"
-      ]
-    },
-    {
-      "title": "Lawler & Tanner 2014",
-      "doi": "10.1088/0004-637X/780/1/28",
-      "bibcode": "2014ApJ...780...28L",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis disk main_cold (sed_fit)"
-      ]
-    },
-    {
-      "title": "Eiroa et al. 2013 (DUNES)",
-      "doi": "10.1051/0004-6361/201321050",
-      "bibcode": "2013A&A...555A..11E",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis disk main_cold (sed_fit)"
-      ]
-    },
-    {
-      "title": "Beichman et al. 2006",
-      "doi": "10.1086/508449",
-      "bibcode": "2006ApJ...652.1674B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "Delta Pavonis disk main_cold (photometric_excess)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -420,6 +148,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "G8 IV subgiant Sun-analog (1.06 Msun, 1.12 Rsun) — exceptionally inactive (log R'HK = -5.13, well below solar minimum -4.96; Gomes da Silva 2021 weighted mean of 6002 HARPS spectra). No direct interferometric diameter (declination -66) so radius from PARSEC isochrone (1.115 +/- 0.025 Rsun, Gomes 2021). Bruntt 2010 quoted R = 1.22 +/- 0.02 from L+Teff Stefan-Boltzmann with older Hipparcos parallax + Teff = 5604 K — Phase 3 markdown cites this as 'asteroseismic + interferometric' but no asteroseismology paper for delta Pav has been published and there is no interferometric measurement; that Phase 3 basis attribution is incorrect and the divergence with current Phase 2 (1.115 vs 1.22, ~9%) traces to (a) updated parallax and (b) PARSEC vs Stefan-Boltzmann method choice. Rotation P_rot = 175 +/- 30 d is an upper limit derived from Ramirez 2013 v sin i = 0.32 km/s + R = 1.115 Rsun assuming i = 90 deg (the HARPS vsini detection floor); true P_rot may be longer. Age 5.04 +/- 1.23 Gyr (Gomes 2021 PARSEC isochrone) is the young end of the literature spread — Bensby 2014 also gives ~5 Gyr, but Tsantaki 2013 and Eiroa 2013 Ca II age both give 8-9 Gyr. Adopt 5 Gyr per tier hierarchy (newest paper, smallest uncertainty) but flag this is contentious. X-ray non-detection (ROSAT, Hunsch 1998) gives log L_X < 26.6 cgs (i.e. log(L_X/L_bol) < -7.08), consistent with the very low log R'HK; not added as a separate activity_measurements entry since log_rhk is higher tier and a single recommended is set."
+    "notes": ""
   }
 }

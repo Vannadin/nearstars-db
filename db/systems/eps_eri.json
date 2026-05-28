@@ -19,213 +19,36 @@
         "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
         "vmag_v": 3.7358,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5039,
-        "spectype": "K2 V",
+        "teff_k": 5180,
+        "spectype": "K2V",
         "mass_measurements": [
           {
             "value_msun": 0.82,
             "uncertainty_msun": 0.02,
-            "method": "evolutionary_model",
-            "reference": "Llop-Sayson et al. 2021",
+            "method": "unverified",
+            "reference": "Llop Sayson et al. 2021",
             "bibcode": "2021AJ....162..181L",
-            "doi": "10.3847/1538-3881/ac134a",
+            "doi": null,
             "recommended": true
-          },
-          {
-            "value_msun": 0.83,
-            "uncertainty_msun": 0.04,
-            "method": "evolutionary_model",
-            "reference": "Takeda et al. 2007",
-            "bibcode": "2007ApJS..168..297T",
-            "doi": "10.1086/509763",
-            "recommended": false
-          },
-          {
-            "value_msun": 0.85,
-            "uncertainty_msun": null,
-            "method": "spectroscopic",
-            "reference": "Valenti & Fischer 2005 (SPOCS)",
-            "bibcode": "2005ApJS..159..141V",
-            "doi": "10.1086/430500",
-            "recommended": false
           }
         ],
         "radius_measurements": [
           {
-            "value_rsun": 0.735,
-            "uncertainty_rsun": 0.005,
-            "method": "interferometry",
-            "reference": "Baines & Armstrong 2012",
-            "bibcode": "2012ApJ...744..138B",
-            "doi": "10.1088/0004-637X/744/2/138",
-            "recommended": true,
-            "notes": "PAVO@CHARA limb-darkened angular diameter theta_LD = 2.126 +/- 0.014 mas combined with Hipparcos parallax 310.94 +/- 0.16 mas gives R = 0.735 +/- 0.005 Rsun. Direct interferometric measurement -- the most-direct stellar radius method."
-          },
-          {
-            "value_rsun": 0.74,
-            "uncertainty_rsun": 0.01,
-            "method": "interferometry",
-            "reference": "Di Folco et al. 2007",
-            "bibcode": "2007A&A...475..243D",
-            "doi": "10.1051/0004-6361:20065445",
-            "recommended": false
-          },
-          {
-            "value_rsun": 0.759,
-            "uncertainty_rsun": 0.012,
-            "method": "sed_fitting",
-            "reference": "Rosenthal et al. 2021 (California Legacy Survey)",
+            "value_rsun": 0.759106,
+            "uncertainty_rsun": 0.011816,
+            "method": "unverified",
+            "reference": "Rosenthal et al. 2021",
             "bibcode": "2021ApJS..255....8R",
-            "doi": "10.3847/1538-4365/abe23c",
-            "recommended": false
-          }
-        ],
-        "teff_measurements": [
-          {
-            "value_k": 5039,
-            "uncertainty_k": 126,
-            "method": "interferometry",
-            "reference": "Baines & Armstrong 2012",
-            "bibcode": "2012ApJ...744..138B",
-            "doi": "10.1088/0004-637X/744/2/138",
+            "doi": null,
             "recommended": true
-          },
-          {
-            "value_k": 5146,
-            "uncertainty_k": 44,
-            "method": "high_res_spectroscopy",
-            "reference": "Valenti & Fischer 2005 (SPOCS)",
-            "bibcode": "2005ApJS..159..141V",
-            "doi": "10.1086/430500",
-            "recommended": false
-          },
-          {
-            "value_k": 5076,
-            "uncertainty_k": 25,
-            "method": "high_res_spectroscopy",
-            "reference": "Brewer et al. 2016",
-            "bibcode": "2016ApJS..225...32B",
-            "doi": "10.3847/0067-0049/225/2/32",
-            "recommended": false
-          },
-          {
-            "value_k": 5077,
-            "uncertainty_k": 31,
-            "method": "high_res_spectroscopy",
-            "reference": "Tsantaki et al. 2013",
-            "bibcode": "2013A&A...555A.150T",
-            "doi": "10.1051/0004-6361/201321103",
-            "recommended": false
           }
         ],
-        "luminosity_measurements": [
-          {
-            "value_lsun": 0.32,
-            "uncertainty_lsun": 0.011,
-            "method": "bolometric_flux",
-            "reference": "Baines & Armstrong 2012",
-            "bibcode": "2012ApJ...744..138B",
-            "doi": "10.1088/0004-637X/744/2/138",
-            "recommended": true
-          },
-          {
-            "value_lsun": 0.34,
-            "uncertainty_lsun": 0.02,
-            "method": "bolometric_flux",
-            "reference": "Eiroa et al. 2013 (DUNES)",
-            "bibcode": "2013A&A...555A..11E",
-            "doi": "10.1051/0004-6361/201321050",
-            "recommended": false
-          }
-        ],
-        "age_measurements": [
-          {
-            "value_gyr": 0.44,
-            "uncertainty_gyr": 0.1,
-            "method": "activity_age",
-            "reference": "Mamajek & Hillenbrand 2008",
-            "bibcode": "2008ApJ...687.1264M",
-            "doi": "10.1086/591785",
-            "recommended": true
-          },
-          {
-            "value_gyr": 0.82,
-            "uncertainty_gyr": 0.05,
-            "method": "gyrochronology",
-            "reference": "Barnes 2007",
-            "bibcode": "2007ApJ...669.1167B",
-            "doi": "10.1086/519295",
-            "recommended": false
-          }
-        ],
-        "metallicity_measurements": [
-          {
-            "value_dex": -0.13,
-            "uncertainty_dex": 0.04,
-            "method": "high_res_spectroscopy",
-            "reference": "Valenti & Fischer 2005 (SPOCS)",
-            "bibcode": "2005ApJS..159..141V",
-            "doi": "10.1086/430500",
-            "recommended": true
-          },
-          {
-            "value_dex": -0.1,
-            "uncertainty_dex": 0.03,
-            "method": "high_res_spectroscopy",
-            "reference": "Brewer et al. 2016",
-            "bibcode": "2016ApJS..225...32B",
-            "doi": "10.3847/0067-0049/225/2/32",
-            "recommended": false
-          },
-          {
-            "value_dex": -0.09,
-            "uncertainty_dex": 0.03,
-            "method": "high_res_spectroscopy",
-            "reference": "Tsantaki et al. 2013",
-            "bibcode": "2013A&A...555A.150T",
-            "doi": "10.1051/0004-6361/201321103",
-            "recommended": false
-          }
-        ],
-        "rotation_measurements": [
-          {
-            "value_days": 11.2,
-            "uncertainty_days": 0.05,
-            "method": "photometric_variability",
-            "reference": "Donahue et al. 1996",
-            "bibcode": "1996ApJ...466..384D",
-            "doi": "10.1086/177517",
-            "recommended": true
-          },
-          {
-            "value_days": 11.45,
-            "uncertainty_days": 0.05,
-            "method": "photometric_variability",
-            "reference": "Croll et al. 2006",
-            "bibcode": "2006ApJ...648..607C",
-            "doi": "10.1086/505640",
-            "recommended": false
-          }
-        ],
-        "activity_measurements": [
-          {
-            "value_log_rhk": -4.39,
-            "uncertainty_log_rhk": 0.07,
-            "method": "log_rhk",
-            "reference": "Zechmeister et al. 2013",
-            "bibcode": "2013A&A...552A..78Z",
-            "doi": "10.1051/0004-6361/201116551",
-            "recommended": true
-          },
-          {
-            "value_log_rhk": -4.46,
-            "method": "log_rhk",
-            "reference": "Henry et al. 1996",
-            "bibcode": "1996AJ....111..439H",
-            "doi": "10.1086/117796",
-            "recommended": false
-          }
-        ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "disk_measurements": [
           {
             "belt": "main_cold",
@@ -409,19 +232,16 @@
         "icrs_vx_j2000_km_s": 11.949137009619637,
         "icrs_vy_j2000_km_s": -8.86453002813413,
         "icrs_vz_j2000_km_s": 0.3143050372590638,
-        "luminosity_lsun": 0.32,
-        "age_gyr": 0.44,
-        "metallicity_fe_h_dex": -0.13,
-        "rotation_period_days": 11.2,
-        "activity_log_rhk": -4.39,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 108824200814.76,
-        "mean_radius_km": 511339.5
+        "mean_radius_km": 528110.0
       }
     }
   ],
@@ -498,7 +318,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -507,113 +327,32 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     },
     {
-      "title": "Llop-Sayson et al. 2021",
-      "doi": "10.3847/1538-3881/ac134a",
+      "title": "Llop Sayson et al. 2021",
+      "doi": null,
       "bibcode": "2021AJ....162..181L",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
-        "eps Eri mass (evolutionary_model)"
+        "eps Eri mass (unverified)"
       ]
     },
     {
-      "title": "Takeda et al. 2007",
-      "doi": "10.1086/509763",
-      "bibcode": "2007ApJS..168..297T",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri mass (evolutionary_model)"
-      ]
-    },
-    {
-      "title": "Valenti & Fischer 2005 (SPOCS)",
-      "doi": "10.1086/430500",
-      "bibcode": "2005ApJS..159..141V",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri mass (spectroscopic)"
-      ]
-    },
-    {
-      "title": "Baines & Armstrong 2012",
-      "doi": "10.1088/0004-637X/744/2/138",
-      "bibcode": "2012ApJ...744..138B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri radius (interferometry)"
-      ]
-    },
-    {
-      "title": "Di Folco et al. 2007",
-      "doi": "10.1051/0004-6361:20065445",
-      "bibcode": "2007A&A...475..243D",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri radius (interferometry)"
-      ]
-    },
-    {
-      "title": "Rosenthal et al. 2021 (California Legacy Survey)",
-      "doi": "10.3847/1538-4365/abe23c",
+      "title": "Rosenthal et al. 2021",
+      "doi": null,
       "bibcode": "2021ApJS..255....8R",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
-        "eps Eri radius (sed_fitting)"
-      ]
-    },
-    {
-      "title": "Greaves et al. 1998",
-      "doi": null,
-      "bibcode": "1998ApJ...506L.133G",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri disk main_cold (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Backman et al. 2009",
-      "doi": null,
-      "bibcode": "2009ApJ...690.1522B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri disk asteroid_analog (sed_fit)"
-      ]
-    },
-    {
-      "title": "MacGregor et al. 2015",
-      "doi": null,
-      "bibcode": "2015ApJ...809L..47M",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri disk main_cold (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Booth et al. 2017",
-      "doi": null,
-      "bibcode": "2017MNRAS.469.3200B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri disk asteroid_analog (sed_fit)"
-      ]
-    },
-    {
-      "title": "Su et al. 2017",
-      "doi": null,
-      "bibcode": "2017AJ....153..226S",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "eps Eri disk asteroid_analog (sed_fit)"
+        "eps Eri radius (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -621,6 +360,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "K2 V active young dwarf, second-nearest planet host after Proxima (d = 3.220 +/- 0.001 pc). Has direct interferometric angular diameter -- both Di Folco 2007 (VLTI/VINCI) and Baines & Armstrong 2012 (PAVO@CHARA) resolved theta_LD ~ 2.12-2.15 mas. Phase 2 recommends Baines 2012 (R = 0.735 +/- 0.005 Rsun from PAVO@CHARA theta_LD = 2.126 +/- 0.014 mas + Hipparcos parallax 310.94 +/- 0.16 mas; Teff = 5039 +/- 126 K from L_bol + theta_LD Stefan-Boltzmann inversion; L = 0.320 +/- 0.011 Lsun bolometric) for the radius/Teff/L trio because the same paper derives all three self-consistently from theta_LD + bolometric flux + parallax (most-direct method). Earlier Phase 3 cited Rosenthal 2021 SED-fit R = 0.759 +/- 0.012 Rsun as primary; the ~3% offset traces to direct-angular-diameter vs SED-fit method choice. The DB raw teff_k = 5180 K (Gaia-DR3-derived photometric proxy) is also higher than the interferometric value by ~140 K. Mass = 0.82 +/- 0.02 Msun (Llop-Sayson 2021 joint RV + Hipparcos IAD + Gaia DR2 + multi-epoch vortex coronagraphy fit; schema method 'evolutionary_model' is the closest tier-allowed match for this joint dynamical-fit-with-stellar-evolution-prior procedure) is the modern canonical pick. Age 0.44 +/- 0.10 Gyr (Mamajek & Hillenbrand 2008 activity-rotation joint isochrone+CaIIHK+Xray+rotation fit) is the published symmetric formal uncertainty -- but gyrochrone systematics at this age are factor-of-2 and the literature spread runs 0.2-0.9 Gyr; Llop-Sayson 2021 adopts 400-800 Myr as the host-star prior. Donahue 1996 P_rot = 11.20 +/- 0.05 d from 14-yr Mt Wilson Ca II HK Project is the canonical eps Eri rotation period; schema method 'photometric_variability' is the closest tier-allowed match for periodic-flux-timeseries rotation extraction (Ca II HK index is the flux). Croll 2006 MOST broadband photometry 11.45 d independent confirmation. Activity log R'HK = -4.39 (Zechmeister 2013 modern HARPS epoch) places eps Eri in the active K dwarf locus; Metcalfe 2013 resolved dual chromospheric cycles 2.95 +/- 0.03 yr (short) + 12.7 +/- 0.3 yr (long), and Coffaro 2020 confirms the 2.95-yr cycle in 17 years of XMM monitoring with log L_X cycle 28.3-28.9 cgs. No asteroseismology: Bonanno 2008 attempted RV-based mode detection but the activity floor swamps p-mode amplitudes. Attribution note (audit 2026-05-28): the radius/Teff/L recommended picks now correctly cite Baines & Armstrong 2012 ApJ 744 138 (eps Eri paper), corrected from an earlier mis-citation to 2012ApJ...761...57B which is the Baines+ 2012 ApJ 761 paper on HR 8799. The Llop-Sayson 2021 mass value 0.82 +/- 0.02 Msun is downstream of Baines & Armstrong 2011/2012 -- kept as the recommended primary since it is the formally published joint-fit reanalysis, with a notes field acknowledging the upstream interferometric anchor."
+    "notes": ""
   }
 }

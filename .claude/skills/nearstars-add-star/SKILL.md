@@ -252,22 +252,6 @@ After the pipeline finishes, inspect the new file:
 python3 -c "import json; d=json.load(open('db/systems/<filename>.json')); print(json.dumps({k:v for k,v in d.items() if k!='planets'}, indent=2)[:1500])"
 ```
 
-The `<filename>` is the canonical file slug — `scripts/pipeline/_naming.py::to_filename`
-derives it from the host name and `build_systems.py` calls that function.
-Rule: lowercase + strip apostrophes + non-alphanumeric runs collapse to `_`.
-
-Examples:
-- `Barnard's star` → `barnards_star.json`
-- `Teegarden's Star` → `teegardens_star.json`
-- `TRAPPIST-1` → `trappist_1.json`
-- `Alpha Centauri A` → `alpha_centauri_a.json`
-- `40 Eridani A` → `40_eridani_a.json`
-
-You don't construct this manually — the build derives it. But when
-referencing the file in checklists, notes, or other skills, use the
-same rule (the URL slug variant uses `-` instead of `_`; see the
-nearstars-phase3 skill).
-
 Checklist for each new component:
 
 - [ ] File exists at `db/systems/<filename>.json`

@@ -5,21 +5,13 @@ AU Microscopii (HD 197481, GJ 803, HIP 102409) 는 9.714 pc 거리의
 가까운 M1Ve 전주계열 왜성으로 (Gaia DR3 시차 102.94 ± 0.02 mas,
 이 DB), NearStars 카탈로그 전체에서 가장 어린 별 중 하나입니다.
 나이는 ~22 Myr (Mamajek & Bell 2014 의 β Pictoris 운동성단
-isochrone 나이) 이고, AU Mic 은 그 운동성단의 대표 멤버이며,
-Binks & Jeffries 2014 의 리튬 결핍 경계 (LDB) 교차 확인도 21 ± 4
-Myr 로 동일한 값을 줍니다. Phase 2 기본 파라미터는 Wittrock 2023
-N-body + TTV 동역학 질량 M = 0.51 ± 0.028 M☉, Donati 2023 분광편광
-ZDI 반지름 R = 0.82 ± 0.02 R☉, Plavchan 2020 고분해능 분광 Teff
-= 3700 ± 100 K, 그리고 Plavchan 2020 SED 적분 광도 L = 0.09 ± 0.02
-L☉ 입니다 — 같은 동역학 질량의 정착된 M1V 가 낼 값보다 약 1.5
-배 큰데, AU Mic 이 아직 주계열로 수축 중이며 약간 부풀어 있기
-때문입니다. Gaia DR3 GSP-Phot 은 BP/RP 광도 색에서 Teff = 3518 K
-를 보고하는데, 분광 값보다 차게 나옵니다. 이는 GSP-Phot 격자가
-3800 K 이하 활동성 어린 M 왜성에서 일반적으로 차게 편향되는
-알려진 현상이라 cross-check 로만 유지하고, Phase 2 primary 는
-Plavchan 의 3700 K 를 채택합니다. 3518 K BP/RP-등가 값은
-시각 색온도 렌더링용 `stellar_color_temp_k` 행에 별도로 살려두며
-(아래 참조), SED 조명은 3700 K 를 씁니다.
+isochrone 나이) 이고, AU Mic 은 그 운동성단의 대표 멤버입니다.
+기본 파라미터는 Donati 2023 분광편광 모델링 (R = 0.82 ± 0.02 R☉) 과
+Wittrock 2023 N-body + TTV-anchored 동역학 (M = 0.51 ± 0.028 M☉)
+에서 가져왔고, Gaia 는 Teff = 3518 K 를 줍니다. R 과 Teff 로
+Stefan–Boltzmann 에서 유도한 광도는 L ≈ 0.092 L☉ 로, 같은 Teff 의
+나이 든 M1V 값보다 약 1.5 배 큽니다. AU Mic 이 아직 주계열로
+수축 중이며 약간 부풀어 있기 때문입니다.
 
 카탈로그의 다른 M 왜성과 AU Mic 을 가르는 결정적 특징은
 **분해된 가장자리 정면 잔해 원반** (HST/STIS — Krist 2005, 더 깊은
@@ -62,16 +54,15 @@ tie-break 4 개는 시각 hex 색조, 원반 substructure 애니메이션 선택
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `spectral_type` | M1Ve | high | Hawley 1996 PMSU. Gaia DR3 spectype = M1VeBa1 |
-| `mass_msun` | 0.51 ± 0.028 | high | Wittrock 2023 — TTV + N-body 동역학 fit. Phase 2 recommended (궤도 동역학 기반이라 가장 직접적이고 모델 비의존) |
-| `radius_rsun` | 0.82 ± 0.02 | high | Donati 2023 ZDI Stokes V+I inversion. v sin i + P_rot = 4.863 d (disk + RM 기하에서 sin i ≈ 1) 로부터 유도. Phase 2 recommended. AU Mic 은 dec −31° 로 CHARA 사정거리 안에 있지만, 출판된 간섭계 각지름은 없음. Plavchan 2020 의 M_K-실험식 반지름 0.75 ± 0.03 R☉ 는 cross-check 로 유지 |
-| `teff_k` | 3700 ± 100 | high | Plavchan 2020 고분해능 분광 Teff. Phase 2 recommended. Gaia DR3 GSP-Phot 3518 K (cross-check 로 유지, 시각용 `stellar_color_temp_k` 행에 별도로 채택) 는 BP/RP 광도 Teff 가 활동성 흑점 M 왜성에서 3800 K 이하로 잘 보정되지 않아 차게 나오는 알려진 편향 때문 |
-| `luminosity_lsun` | 0.09 ± 0.02 | high | Plavchan 2020 의 SED 적분 볼로메트릭 광도 (Hipparcos/Gaia 시차에 정박). Phase 2 recommended. R = 0.82 R☉ + Teff = 3700 K 의 Stefan–Boltzmann 은 0.114 L☉, R = 0.75 R☉ + Teff = 3650 K 는 0.090 L☉ 로 SED 값을 양쪽에서 둘러쌈 |
-| `metallicity_fe_h_dex` | +0.12 ± 0.05 | medium | Miles & Shkolnik 2017 (HAZMAT II) 의 β Pic MG 평균 [Fe/H] — 동기 그룹 보정값으로 채택. Phase 2 recommended. 활동성 M1Ve 광구의 분자 차폐가 표준 FGK 철-라인 기법을 무력화하기에 AU Mic 자체에 대한 고분해능 [Fe/H] 직접 측정은 문헌에 없음 |
-| `age_gyr` | 0.022 ± 0.003 | high | Mamajek & Bell 2014 — β Pic MG isochrone 나이 22 ± 3 Myr. Phase 2 recommended. Cross-check 는 Binks & Jeffries 2014 의 LDB 나이 21 ± 4 Myr 로, isochrone 파이프라인 systematics 와 무관하며 완전히 일관 |
-| `rotation_period_days` | 4.863 ± 0.01 | high | Plavchan 2020 — TESS Sectors 1+27 광도 자전 변조 (다-흑점, 주성분 4.863 d). Phase 2 recommended. Donati 2023 ZDI inversion 도 같은 주기 채택 |
-| `activity_log_rhk` | −3.9 | low | 포화 어린 M-왜성 영역의 추정값으로 Hα + X 선 포화 locus 와 일관. AU Mic 자체에 paper-cited 값 아님. Phase 2 는 활동성을 Hα EW = −2.4 ± 0.3 Å (Houdebine 2010) 로 정박. Mt-Wilson R'HK 보정은 활동성 M1Ve 광구에 대해 검증되지 않았기 때문 (Teff < 4000 K 에서 Ca II H&K 가 분자 밴드에 오염됨). Stelzer 2013 X 선 cross-check log(L_X/L_bol) ≈ −3.0 가 포화 영역 분류를 뒷받침 |
-| `activity_h_alpha_ew_angstrom` | −2.4 ± 0.3 | high | Houdebine 2010 — 방출 Hα 등가폭. 활동성 M1Ve 에 대한 Phase 2 recommended 활동성 지표 (음의 EW = 방출). 포화 어린 M-왜성 영역 |
+| `spectral_type` | M1Ve | high | Hawley 1996. Gaia DR3 spectype = M1VeBa1 |
+| `mass_msun` | 0.51 ± 0.028 | high | Wittrock 2023. TTV + N-body 동역학 fit. DB recommended |
+| `radius_rsun` | 0.82 ± 0.02 | high | Donati 2023 분광편광 ZDI, 간섭계 상한과 일관 |
+| `teff_k` | 3518 | high | Gaia DR3 BP/RP 유도 Teff. Plavchan 2020 (3700 ± 100) 과 결합 오차 안에서 일치 |
+| `luminosity_lsun` | 0.092 | high | R 과 Teff 로 Stefan–Boltzmann 유도 (4π·(0.82 R☉)²·σ·(3518)⁴ = 0.092 L☉) |
+| `metallicity_fe_h_dex` | +0.12 | medium | β Pic MG 평균 금속도 (Shkolnik 2017). DB 에 AU Mic 직접 측정 없음 |
+| `age_gyr` | 0.022 ± 0.003 | high | Mamajek & Bell 2014. β Pic MG isochrone 나이 22 ± 3 Myr. 리튬 결핍 경계로 보강 |
+| `rotation_period_days` | 4.86 | high | Plavchan 2020. TESS 광도 자전 변조 (다-흑점, 주성분 4.863 d) |
+| `activity_log_rhk` | −3.9 | high | 포화 M-왜성 활동 영역. Stelzer 2013 X 선 + Hα 지수. super-saturated locus 와 일관 |
 | `activity_cycle_years` | null | low | AU Mic 나이에서 사이클 분해 불가 — 전주계열 포화 dynamo, 장기 변조 관측 없음. null 유지, 임의값 금지 |
 | `x_ray_log_lx_cgs_min` | 29.7 | high | Stelzer 2013 ROSAT + XMM 정적값. 포화 영역 log(L_X/L_bol) ≈ −3 |
 | `x_ray_log_lx_cgs_max` | 30.7 | medium | eRosita 급 flare 피크 (~10× 정적). Cully 1993 EUVE 이벤트 및 Tristan 2023 TESS 유도 flare X 선 등가량과 일관 |
@@ -83,7 +74,7 @@ tie-break 4 개는 시각 hex 색조, 원반 substructure 애니메이션 선택
 | `limb_darkening_alpha_h` | ~0.45 | low | Tie-break. AU Mic 직접 측정 없음. Claret 2018 M-왜성 격자에서 Teff = 3500 K interpolation. interesting-first 가 가장자리 어두워짐을 살짝 보존 |
 | `visual_surface_tint_hex_primary` | `#e0743a` (M1V 의 깊은 주황-빨강) | medium | Teff 3518 K 흑체 + 분자 밴드 억제. M5.5 Proxima `#c54c2a` 보다 살짝 덜 붉음. Teff 가 ~540 K 더 높아 더 따뜻 |
 | `visual_flare_color_hex` | `#ff9050` (백색광 flare 연속체. T_bb ~9000 K flare ribbon 으로 정적 상태보다 살짝 푸름) | medium | Kowalski 2013 dM-flare 연속체 분해. 순수 Hα reddening 과의 tie-break — 어두운 붉은 정적 디스크 위에서 flare 가 눈에 띄게 밝아지도록 선택 |
-| `stellar_color_temp_k` | 3518 | high | Gaia DR3 BP/RP 광도 색-등가 흑체. 분광 Teff (3700 K) 와 의도적으로 구분 — 게임 내 시각 흑체 렌더러가 관측 광도 색을 맞추기 때문이지, SED 정박 분광 Teff 를 맞추기 위함이 아님. 두 값은 결합 오차 안에서 양 끝 |
+| `stellar_color_temp_k` | 3518 | high | Teff 유도 |
 | `visual_spot_coverage_max` | 0.12 | high | `spot_coverage_max_fraction` 과 동일. 활동 애니메이션 레이어용 |
 | `disk_present` | true | high | Krist 2005 HST/STIS 최초 분해 edge-on 영상 |
 | `disk_inner_radius_au` | 35 | high | Schneider 2014 HST/STIS 깊은 영상. ~35 AU 표면 밝기 break. Strubbe & Chiang 2006 SED-fit 과 일관 |
@@ -101,20 +92,14 @@ tie-break 4 개는 시각 hex 색조, 원반 substructure 애니메이션 선택
 ## Surface synthesis
 
 AU Mic 의 광구는 카탈로그에서 가장 깊은 붉은 연속체 중 하나입니다 —
-다만 Proxima 나 TRAPPIST-1 host 보다는 따뜻합니다. Phase 2 가
-정박한 분광 Teff = 3700 ± 100 K (Plavchan 2020) 와 R = 0.82 ±
-0.02 R☉ (Donati 2023 ZDI) 에서 SED 적분 볼로메트릭 광도는 L =
-0.09 ± 0.02 L☉ 입니다 (태양의 약 1/11. Plavchan 2020 직접 적분).
-대부분의 플럭스는 0.7–2.0 μm 사이에서 나옵니다. TiO 밴드가 6500 Å
+다만 Proxima 나 TRAPPIST-1 host 보다는 따뜻합니다. Teff = 3518 K
+와 R = 0.82 R☉ 에서 통합 광도는 0.092 L☉ (태양의 약 1/11) 로,
+대부분의 플럭스가 0.7–2.0 μm 사이로 나옵니다. TiO 밴드가 6500 Å
 아래 가시 연속체를 가파르게 억제하고, VO 와 물 밴드가 근적외선을
 빚어냅니다. AU Mic 이 전주계열 (~22 Myr) 이라 반지름은 같은 Teff
 의 정착된 M1V 보다 ~10% 큰데, Donati 2023 ZDI 반지름 0.82 R☉ 는
 22 Myr / 0.51 M☉ 의 PARSEC 및 Baraffe 전주계열 진화 트랙과
-일관됩니다. Gaia DR3 GSP-Phot 의 광도 색-등가 Teff 는 3518 K 로
-분광 값보다 ~180 K 차며, 이는 활동성 흑점 어린 M 왜성에 대한
-GSP-Phot 의 알려진 차-편향입니다. 시각 색 렌더링용 `stellar_color_temp_k`
-정박값으로 보존하고 (시각 스타일링 절 참조), SED 조명은 3700 K 를
-씁니다.
+일관됩니다.
 
 표면의 결정적 특징은 **흑점 복합체** 입니다. Plavchan 2020 TESS
 광도는 적어도 세 개의 지속적인 활동 경도를 요구하는 다중 모드
@@ -133,14 +118,12 @@ Granulation, faculae, plage 도 있지만 통합 광도에 대한 기여는
 Donati 2023 §3 경유 인용) 의 3D-RHD 모델이 게임 내 애니메이션
 광구 텍스처에 쓸 granulation 대비와 시간 스케일 격자를 제공합니다.
 
-광물학적으로 광구는 약간 super-solar 한 [Fe/H] ≈ +0.12 ± 0.05
-(β Pic MG 평균 — Shkolnik 2017 HAZMAT II. AU Mic 자체의 고분해능
-[Fe/H] 직접 측정이 문헌에 없어 동기 그룹 보정값을 Phase 2
-recommended 로 채택. 활동성 M1Ve 광구의 분자 차폐가 표준 FGK
-철-라인 기법을 무력화함) 로, 태양형 metallicity M1V 보다 SED 를
-장파장 쪽으로 살짝 reddening 시킵니다. 게임 내 조명 색온도의
-분광 분해능에서는 보이지 않지만, 순수한 3700 K Planckian 보다
-더 깊은 붉은빛의 `#e0743a` 를 정당화하는 근거가 됩니다.
+광물학적으로 광구는 super-solar [Fe/H] ≈ +0.12 (β Pic MG 평균 —
+Shkolnik 2017. DB 에 AU Mic 직접 측정은 없음) 로, 태양형 metallicity
+M1V 보다 SED 를 장파장 쪽으로 살짝 reddening 시킵니다. 게임 내
+조명 색온도의 분광 분해능에서는 보이지 않지만, 순수한 3518 K
+Planckian 보다 더 깊은 붉은빛의 `#e0743a` 를 정당화하는 근거가
+됩니다.
 
 ## Atmosphere synthesis
 
@@ -162,19 +145,14 @@ Davenport et al. 2020 (TESS 첫해 M-왜성 flare 서베이) 도 같은
 flare 율 분포 형태를 확인하며, AU Mic 은 활동적 M1V locus 의
 고에너지 꼬리에 위치합니다.
 
-색채권은 Hα 방출로 채워집니다 — Phase 2 는 활동성 강도를 Hα 등가폭
-= −2.4 ± 0.3 Å (Houdebine 2010. 음의 EW = 방출) 로 정박하며, 이는
-포화 M1Ve 의 canonical 값입니다. He I 10830 Å 은 흡수와 방출 사이를
-순환하고, 폭이 넓은 Mg II h&k 도 보입니다. Lyman-α 의 UV 플럭스는
-태양의 10²–10³ 배 높습니다. 전이 영역은 매우 밝습니다 — Loyd et al.
-2018 이 포화 활동 locus 와 일관된 FUV 플럭스를 측정했습니다. 활동
-사이클이 이를 변조하지 않는데 — AU Mic 은 사이클을 보이기에는
-너무 어리고 너무 포화돼 있어 — 고에너지 출력은 수십 년 단위에서
-거의 일정하며, 준-확률적인 super-flare 가 박자를 찍습니다. (참고.
-Decisions 테이블은 포화 locus 합의와의 후방 호환성을 위해
-`activity_log_rhk = −3.9` 행을 유지하지만, 이는 영역 추정값이며 AU Mic
-자체의 단일 paper-cited 측정값이 아닙니다. Mt-Wilson R'HK 보정은
-활동성 M1Ve 광구에 대해 검증되지 않았습니다.)
+색채권은 Hα 방출 (정적에서 EW ≈ 1 Å, flare 동안 수 Å), He I
+10830 Å 흡수-방출 순환, 폭이 넓은 Mg II h&k 로 채워집니다. Lyman-α
+의 UV 플럭스는 태양의 10²–10³ 배 높습니다. 전이 영역은 매우
+밝습니다 — Loyd et al. 2018 이 포화 활동 locus 와 일관된 FUV
+플럭스를 측정했습니다. 활동 사이클이 이를 변조하지 않는데 —
+AU Mic 은 사이클을 보이기에는 너무 어리고 너무 포화돼 있어 —
+고에너지 출력은 수십 년 단위에서 거의 일정하며, 준-확률적인
+super-flare 가 박자를 찍습니다.
 
 항성풍도 그에 맞춰 강합니다. 질량 손실률은 ~10× 태양으로
 추정됩니다 (Plavchan 2020 §4 배경 맥락. Boccaletti 2015 + Chiang &
@@ -292,14 +270,9 @@ items 참조.
 
 - **Plavchan P. et al. 2020** — *A planet within the debris disk
   around the pre-main-sequence star AU Microscopii*, Nature 582,
-  497 (`2020Natur.582..497P`, arXiv:2006.13248,
-  doi:10.1038/s41586-020-2400-z). TESS 가 발견한 AU Mic b 의 통과
-  hot Neptune. 4.86 d 자전 주기. 광도곡선의 다-흑점 복잡도.
-  **Teff = 3700 ± 100 K, L = 0.09 ± 0.02 L☉, P_rot = 4.863 d 의 Phase 2
-  primary anchor** — 고분해능 분광 Teff 가 Gaia DR3 BP/RP GSP-Phot
-  3518 K (cross-check 로 유지) 를 supersede. M_K 기반 질량 0.50 ±
-  0.03 M☉ 와 반지름 0.75 ± 0.03 R☉ 는 Wittrock 2023 (동역학) 과 Donati
-  2023 (ZDI) 의 cross-check 대안으로 유지.
+  497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS 가 발견한
+  AU Mic b 의 통과 hot Neptune. 4.86 d 자전 주기. 광도곡선의 다-흑점
+  복잡도.
 - **Krist J. E. et al. 2005** — *Hubble Space Telescope Advanced
   Camera for Surveys Coronagraphic Imaging of the AU Microscopii
   Debris Disk*, AJ 129, 1008 (`2005AJ....129.1008K`). HST 분해
@@ -339,43 +312,18 @@ items 참조.
   온도를 정박.
 - **Mamajek E. E. & Bell C. P. M. 2014** — *On the age of the
   beta Pictoris moving group*, MNRAS 445, 2169
-  (`2014MNRAS.445.2169M`, arXiv:1409.2737,
-  doi:10.1093/mnras/stu1894). β Pic MG (와 따라서 AU Mic) 의
-  isochrone 나이 22 ± 3 Myr. LDB 로 확인. **나이의 Phase 2 primary
-  anchor.**
-- **Binks A. S. & Jeffries R. D. 2014** — *A lithium depletion
-  boundary age of 21 Myr for the Beta Pictoris moving group*,
-  MNRAS 438, L11 (`2014MNRAS.438L..11B`, arXiv:1310.2613,
-  doi:10.1093/mnrasl/slt141). 저질량 β Pic MG 멤버에서 얻은
-  LDB 나이 21 ± 4 Myr. isochrone 파이프라인 systematics 와 무관.
-  나이의 Phase 2 cross-check.
-- **Miles B. E. & Shkolnik E. L. 2017** — *HAZMAT II: Ultraviolet
-  Variability of Low-Mass Stars in the GALEX Archive*, ApJ 838,
-  87 (`2017AJ....154...67M`, arXiv:1611.02835,
-  doi:10.3847/1538-3881/aa71ab). β Pic MG 와 어린 M-왜성 활동 보정.
-  AU Mic 에 대한 동기 그룹 보정값으로 채택한 +0.12 ± 0.05 그룹
-  평균 [Fe/H] 를 제공. **[Fe/H] 의 Phase 2 primary anchor** (AU Mic
-  자체에 대한 직접 고분해능 [Fe/H] 측정은 출판된 바 없음).
+  (`2014MNRAS.445.2169M`, arXiv:1409.2737). β Pic MG (와 따라서
+  AU Mic) 의 isochrone 나이 22 ± 3 Myr. LDB 로 확인.
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and
   filling of the very active M dwarf AU Mic*, MNRAS 525, 455
-  (`2023MNRAS.525.2015D`, doi:10.1093/mnras/stad2301).
-  Zeeman-Doppler imaging. 대규모 쌍극자 성분 ~2 kG, 전체 자기장
-  RMS ~4.6 kG. ZDI 반지름 0.82 ± 0.02 R☉. 흑점 위도 분포.
-  **반지름의 Phase 2 primary anchor.**
+  (`2023MNRAS.525..455D`). Zeeman-Doppler imaging. 대규모 쌍극자
+  성분 ~2 kG, 전체 자기장 RMS ~4.6 kG. ZDI 반지름 0.82 R☉. 흑점
+  위도 분포.
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation
   Measurements and Dynamical Mass Determination of the AU Mic
-  System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719,
-  doi:10.3847/1538-3881/acfda8). host 별 N-body + TTV 동역학
-  질량 0.51 ± 0.028 M☉. 행성 d 를 TTV 전용 후보로 도입. **질량의
-  Phase 2 primary anchor** (궤도 동역학을 통한 모델 비의존 측정.
-  M_K 실험식 보정값을 supersede).
-- **Houdebine E. R. 2010** — *Observation and modelling of main-
-  sequence star chromospheres — XIV. Rotation of dM1 stars*,
-  MNRAS 407, 1657 (`2010MNRAS.407.1657H`,
-  doi:10.1111/j.1365-2966.2010.16827.x). AU Mic 과 dM1 표본의
-  Hα 등가폭 측정. 방출에서 EW ≈ −2.4 ± 0.3 Å. **활동성의 Phase 2
-  primary anchor** (이 분광 등급에서 canonical 지표인 Hα EW.
-  log R'HK 는 활동성 M1Ve 광구에 검증되지 않음).
+  System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719).
+  host 별 N-body + TTV 동역학 질량 0.51 ± 0.028 M☉. 행성 d 를
+  TTV 전용 후보로 도입.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic
   System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`,
   arXiv:2306.00077). TESS Sectors 1+27 flare 센서스. 10³¹ erg 위
@@ -391,10 +339,8 @@ items 참조.
   ~10³⁴–10³⁵ erg.
 - **Stelzer B. et al. 2013** — *The UV and X-ray activity of the M
   dwarfs within 10 pc of the Sun*, MNRAS 431, 2063
-  (`2013MNRAS.431.2063S`, arXiv:1302.1061,
-  doi:10.1093/mnras/stt220). AU Mic 정적 X 선 광도 log L_X ≈ 29.7
-  cgs 와 log(L_X/L_bol) ≈ −3.0. 포화 활동 영역. Hα 정박된 활동성
-  행의 Phase 2 cross-check.
+  (`2013MNRAS.431.2063S`, arXiv:1302.1061). AU Mic 정적 X 선
+  광도 log L_X ≈ 29.7 cgs. 포화 활동 영역.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -403,23 +349,15 @@ items 참조.
   arXiv:2102.05288). TESS + 지상 후속으로 AU Mic c 확인. 항성
   결정적이지 않지만 행성 명단을 정의.
 - **Mallorquin M. et al. 2024** — *AU Mic system characterization
-  with ESPRESSO* (`2024A&A...689A.132M`,
-  doi:10.1051/0004-6361/202450047). ESPRESSO RV + TESS 재분석으로
-  b/c 의 궤도와 질량 파라미터 정밀화. 항성 질량 / 반지름의 Phase 2
-  cross-check (Wittrock 2023 과 Donati 2023 과 1σ 안에서 일관).
+  with ESPRESSO* (`2024A&A...689A.132M`). b/c 의 궤도와 질량
+  파라미터 정밀화. 항성 결정적이지 않음.
 - **Donati J.-F. et al. 2025** — *AU Mic system characterized with
-  ESPRESSO* (`2025A&A...700A.227D`,
-  doi:10.1051/0004-6361/202555371). AU Mic e 후보 추가. ESPRESSO +
-  SPIRou 로부터 M = 0.50 ± 0.03 M☉, R = 0.75 ± 0.03 R☉ 보고.
-  질량과 반지름의 Phase 2 cross-check (Plavchan 2020 의 M_K 기반
-  값과 일관. Donati 2023 ZDI 반지름과 Wittrock 2023 동역학 질량의
-  1σ 안에 위치).
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar
-  Activity: Chromatic Radial Velocities of the Young AU Mic
-  Planetary System*, AJ 162, 295 (`2021AJ....162..295C`,
-  arXiv:2109.13996). 가우시안 프로세스 활동 detrending 을 활용한
-  AU Mic b 의 RV 질량. 행성 질량의 Phase 2 cross-check (Mallorquin
-  2024 가 supersede 하지만 역사적으로 중요).
+  ESPRESSO* (`2025A&A...700A.227D`). AU Mic e 후보 추가. 항성
+  합성에는 맥락 정보뿐.
+- **Shkolnik E. L. et al. 2017** — *HAZMAT II: Ultraviolet
+  Variability of Low-Mass Stars in the GALEX Archive*, ApJ 838,
+  87 (`2017ApJ...838...87S`, arXiv:1611.02835). β Pic MG 와 어린
+  M-왜성 활동 보정. AU Mic 포화 상태에 대한 맥락.
 - **Smith B. A. & Terrile R. J. 1981** — *A Circumstellar Disk
   Around AU Microscopii?* (분해 이전, 초기 IR 초과 검출).
 

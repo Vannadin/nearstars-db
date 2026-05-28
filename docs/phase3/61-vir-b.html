@@ -357,40 +357,39 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_181"></li>
 <li data-i18n="li_182"></li>
 <li data-i18n="li_183"></li>
-<li data-i18n="li_184"></li>
 </ul>
-<h3 data-i18n="h3_185"></h3>
+<h3 data-i18n="h3_184"></h3>
 <ul class="intro">
-<li data-i18n="li_186"></li>
+<li data-i18n="li_185"></li>
 </ul>
-<h3 data-i18n="h3_187"></h3>
-<p class="intro" data-i18n="p_188"></p>
+<h3 data-i18n="h3_186"></h3>
+<p class="intro" data-i18n="p_187"></p>
 <ul class="intro">
+<li data-i18n="li_188"></li>
 <li data-i18n="li_189"></li>
 <li data-i18n="li_190"></li>
-<li data-i18n="li_191"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_192"></h2>
+<h2 data-i18n="h2_191"></h2>
 <ul class="intro">
+<li data-i18n="li_192"></li>
 <li data-i18n="li_193"></li>
 <li data-i18n="li_194"></li>
 <li data-i18n="li_195"></li>
 <li data-i18n="li_196"></li>
 <li data-i18n="li_197"></li>
-<li data-i18n="li_198"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_199"></h2>
+<h2 data-i18n="h2_198"></h2>
 <ul class="intro">
+<li data-i18n="li_199"></li>
 <li data-i18n="li_200"></li>
 <li data-i18n="li_201"></li>
 <li data-i18n="li_202"></li>
 <li data-i18n="li_203"></li>
 <li data-i18n="li_204"></li>
-<li data-i18n="li_205"></li>
 </ul>
 </section>
 </main>
@@ -453,7 +452,7 @@ const T = {
   "td_49":"<span class=\"field-tt\" data-ko-tip=\"항성으로부터 받는 복사 (지구 일조량 단위).\" data-en-tip=\"Stellar irradiance at the planet, in Earth-insolation units.\"><code>insolation_s_earth</code></span>",
   "td_50":"326",
   "td_51":"high",
-  "td_52":"derived from L = 0.822 L☉ (von Braun 2014) and a = 0.0502 AU",
+  "td_52":"derived from L = 0.82 L☉ and a = 0.0502 AU",
   "td_53":"<span class=\"field-tt\" data-ko-tip=\"평형 온도 (K). 대기·온실효과 없이 흡수-방사 균형 가정.\" data-en-tip=\"Equilibrium temperature (K) assuming no atmosphere and pure radiative balance.\"><code>equilibrium_temp_k</code></span> (A=0)",
   "td_54":"1180",
   "td_55":"high",
@@ -531,20 +530,20 @@ const T = {
   "td_127":"medium",
   "td_128":"Earth-analog at 5 M⊕ × 6 Gyr decay; consistent with a partially molten interior",
   "td_129":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
-  "td_130":"1.04",
+  "td_130":"1.02",
   "td_131":"high",
-  "td_132":"derived: 2 × R★ / a × (180/π); 0.9867 R☉ (von Braun 2014 CHARA) at 0.0502 AU",
+  "td_132":"derived: 2 × R★ / a × (180/π); 0.963 R☉ at 0.0502 AU",
   "td_133":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
-  "td_134":"5568",
+  "td_134":"5552",
   "td_135":"high",
-  "td_136":"host Teff (Rathsam 2023)",
+  "td_136":"host Teff",
   "h2_137":"Surface synthesis",
   "p_138":"61 Vir b is the RV-only super-Earth archetype of a hot inner planet around a solar-twin host. Three observational anchors pin the synthesis:",
   "p_139":"1. <b>Insolation 326 S⊕</b> is the canonical &quot;lava world&quot; regime. Léger 2009 introduced this regime with CoRoT-7b (4.8 M⊕, S ≈ 2500 S⊕, T_eq ≈ 1810 K), and 55 Cnc e (8 M⊕, S ≈ 2400 S⊕, T_eq ≈ 2000 K) extended it; b sits at the cooler end of the lava-world family with T_eq ≈ 1180 K. At this temperature, a basaltic surface is solid in the bulk and partial-melt in the substellar hemisphere only, rather than fully molten across the dayside.",
   "p_140":"2. <b>No transit and no JWST follow-up.</b> The planet&#x27;s true mass and radius are unconstrained; b will not be transit-characterized without a future astrometric inclination or direct-imaging campaign. The cfg adopts Zeng 2016 mass–radius scaling for an Earth-composition rocky core: R ≈ 1.65 R⊕ for Msini = 5.1 M⊕, with surface gravity 1.87 g⊕ and bulk density 6.27 g/cc.",
-  "p_141":"3. <b>Cosmochemical context.</b> 61 Vir&#x27;s [Fe/H] = +0.006 ± 0.004 (Rathsam 2023) and ~5.5 Gyr isochrone age give b an Earth-analog initial volatile inventory but a much harsher atmospheric loss history. Owen &amp; Wu 2017&#x27;s photoevaporation-valley physics places b firmly in the &quot;core-only&quot; regime: any initial H/He envelope of a 5 M⊕ core at 0.05 AU around a G-dwarf is lost on a timescale ≲ 50 Myr, far shorter than the 5.5 Gyr system age. Secondary atmospheric retention depends on the balance between outgassing and XUV-driven loss; for b&#x27;s parameters, the equilibrium is marginal.",
+  "p_141":"3. <b>Cosmochemical context.</b> 61 Vir&#x27;s [Fe/H] ≈ 0.0 dex (Pavlenko 2012) and ~6 Gyr age give b an Earth-analog initial volatile inventory but a much harsher atmospheric loss history. Owen &amp; Wu 2017&#x27;s photoevaporation-valley physics places b firmly in the &quot;core-only&quot; regime: any initial H/He envelope of a 5 M⊕ core at 0.05 AU around a G-dwarf is lost on a timescale ≲ 50 Myr, far shorter than the 6 Gyr system age. Secondary atmospheric retention depends on the balance between outgassing and XUV-driven loss; for b&#x27;s parameters, the equilibrium is marginal.",
   "p_142":"The cfg adopts the <b>partial-melt substellar magma ocean</b> scenario: the substellar hemisphere within ~30° of the substellar point hosts a shallow magma-ocean structure where surface temperatures exceed the silicate solidus (T ≈ 1500 K for tholeiitic basalts, lower for volatile-rich melts). This is a tie-break choice over the fully solidified &quot;Mercury-with-stronger-insolation&quot; interpretation; interesting-first picks the magma ocean because it gives b a visually distinctive feature absent in the rest of the system.",
-  "p_143":"<b>Color choice.</b> Under the solar-twin illumination (Teff 5568 K, near-Sol SED), surface tints are perceived essentially as they would be from Earth — no significant M-dwarf red-shift correction needed. The primary surface tint <span class=\"hex-chip\" style=\"background:#3a2a22\"></span><code>#3a2a22</code> is a dark partial-melt basaltic crust tone, between fresh ultramafic black (~<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code>) and weathered Mercury regolith (~<span class=\"hex-chip\" style=\"background:#5a4a3a\"></span><code>#5a4a3a</code>). The accent <span class=\"hex-chip\" style=\"background:#c84a18\"></span><code>#c84a18</code> encodes the substellar magma-ocean glow as a visible red-orange patch — the Wien peak of 1450 K thermal emission is at λ ≈ 2 μm (near-IR) but the visible tail is bright enough to be perceptible against the cooler mid-latitude crust.",
+  "p_143":"<b>Color choice.</b> Under the solar-twin illumination (Teff 5552 K, near-Sol SED), surface tints are perceived essentially as they would be from Earth — no significant M-dwarf red-shift correction needed. The primary surface tint <span class=\"hex-chip\" style=\"background:#3a2a22\"></span><code>#3a2a22</code> is a dark partial-melt basaltic crust tone, between fresh ultramafic black (~<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code>) and weathered Mercury regolith (~<span class=\"hex-chip\" style=\"background:#5a4a3a\"></span><code>#5a4a3a</code>). The accent <span class=\"hex-chip\" style=\"background:#c84a18\"></span><code>#c84a18</code> encodes the substellar magma-ocean glow as a visible red-orange patch — the Wien peak of 1450 K thermal emission is at λ ≈ 2 μm (near-IR) but the visible tail is bright enough to be perceptible against the cooler mid-latitude crust.",
   "p_144":"<b>Morphology under tidal lock.</b> The substellar magma pond is a permanent feature, fixed in the surface frame. Convective heat flow within the magma pond, sustained by stellar insolation rather than internal heating, drives partial silicate vapor outgassing into the exosphere. Mid-latitudes are crusted basaltic plains; the nightside is cold, dark, and volatile-stripped over the system&#x27;s 6 Gyr — Mercury- analog impact-cratered regolith covers the antistellar hemisphere with no detectable volatile cold-trap because there is no atmospheric transport from the dayside to deliver fresh volatiles.",
   "h2_145":"Atmosphere synthesis",
   "p_146":"The atmospheric inference for b is entirely theoretical. There is no JWST transit or eclipse measurement, and the planet is too faint in contrast for current-generation direct imaging. The cfg adopts a <b>vestigial silicate-vapor exosphere</b> with no visible Rayleigh atmosphere — the airless interpretation modified by ongoing magma-pond outgassing.",
@@ -567,7 +566,7 @@ const T = {
   "li_163":"<b>Nightside.</b> Cold (~200 K) and dark; surface tint same as mid-latitudes but with no illumination. Visible only by sister-planet reflected light. Volatile-stripped Mercury-analog regolith.",
   "li_164":"<b>Terminator band.</b> Sharp due to the absence of atmospheric scattering. Topographic features cast long shadows in the grazing solar-yellow light.",
   "li_165":"<b>Atmosphere haze.</b> None visible; the silicate-vapor exosphere is ~10⁻⁷ Pa, well below any Rayleigh threshold. The limb is a clean edge from disk to space.",
-  "li_166":"<b>Star in sky.</b> 61 Vir subtends 1.04° at b — about 2× the Sun&#x27;s angular size from Earth. Color essentially solar-yellow (Teff 5568 K → <span class=\"hex-chip\" style=\"background:#fff2dc\"></span><code>#fff2dc</code> cfg-encoded tint). At 326× Earth-noon brightness the surface is illuminated like a hot-Mercury dayside.",
+  "li_166":"<b>Star in sky.</b> 61 Vir subtends 1.02° at b — about 2× the Sun&#x27;s angular size from Earth. Color essentially solar-yellow (Teff 5552 K → <span class=\"hex-chip\" style=\"background:#fff2dc\"></span><code>#fff2dc</code> cfg-encoded tint). At 326× Earth-noon brightness the surface is illuminated like a hot-Mercury dayside.",
   "li_167":"<b>Sister planets in sky.</b> c (next out at 0.22 AU) at angular size ~0.05° from b&#x27;s perspective at inferior conjunction (every ~5 days by synodic period); d (at 0.48 AU) much smaller and not always visible.",
   "li_168":"<b>Optional magma-pond animation.</b> A subtle thermal pulsation of the magma-pond accent tint (modulating from <span class=\"hex-chip\" style=\"background:#c84a18\"></span><code>#c84a18</code> to a brighter <span class=\"hex-chip\" style=\"background:#e85a28\"></span><code>#e85a28</code> over the eccentricity cycle) would faithfully render the insolation-driven heat-flow modulation. Low-priority visual easter egg.",
   "h2_169":"Bibliography",
@@ -580,33 +579,32 @@ const T = {
   "li_176":"<b>Vinson A. M. &amp; Hansen B. M. S. 2017</b> — <i>On the spin states of habitable zone exoplanets around M dwarfs: the effect of a planetary companion</i>, MNRAS 472, 3217 (<code>2017MNRAS.472.3217V</code>, arXiv:1708.00006). Tidal-locking timescales for rocky planets; b&#x27;s parameters give ~10⁵–10⁶ yr. Anchors the <code>tidally_locked = true</code> choice.",
   "li_177":"<b>Bolmont E. et al. 2020</b> — <i>Tidal dissipation and obliquity evolution of TRAPPIST-1 planets</i> (<code>2020A&amp;A...644A.165B</code>, arXiv: 2002.02015). Tidal heating scaling for rocky exoplanets; provides the 0.1–1 W/m² estimate at e=0.12, P=4.2 d.",
   "h3_178":"Read (context / methodology, not decision-driving)",
-  "li_179":"<b>Rathsam A. et al. 2023</b> — <i>Lithium depletion in solar analogs</i>, MNRAS 525, 4642 (<code>2023MNRAS.525.4642R</code>, doi:10.1093/mnras/stad2589). Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age (5.50 +0.78/-0.74 Gyr); sets the system-evolution timescale for atmospheric loss.",
-  "li_180":"<b>von Braun K. et al. 2014</b> — <i>Stellar diameters V</i>, MNRAS 438, 2413 (<code>2014MNRAS.438.2413V</code>, doi:10.1093/mnras/stt2360). Inherited from host-star synthesis. CHARA interferometric R = 0.9867 ± 0.0048 R☉ and L = 0.8222 ± 0.0033 L☉ — anchors the insolation and apparent-angular-diameter derivations.",
-  "li_181":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs Using Activity-Rotation Diagnostics</i>, ApJ 687, 1264 (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). Inherited from the host-star synthesis. Activity-age 6.1 ± 1.7 Gyr; demoted to cross-check vs Rathsam 2023 isochrone (documented divergence in the host-star reconciliation).",
-  "li_182":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i>, MNRAS 424, 1206 (<code>2012MNRAS.424.1206W</code>, arXiv:1206.2370). Inherited from host-star synthesis. Cited briefly because the cold debris belt at ~30 AU does not interact dynamically with the inner planets at b&#x27;s separation.",
-  "li_183":"<b>Lopez E. D. &amp; Fortney J. J. 2014</b> — <i>Understanding the mass-radius relation for sub-Neptunes</i>, ApJ 792, 1 (<code>2014ApJ...792....1L</code>, arXiv:1311.0329). Sub-Neptune envelope mass-radius scaling; informs the bounds on b&#x27;s potential unphotoevaporated H/He envelope (excluded as discussed).",
-  "li_184":"<b>Howe A. R. et al. 2014</b> — <i>Mass-radius relations and core-envelope decompositions of super-Earths and sub-Neptunes</i>, ApJ 787, 173 (<code>2014ApJ...787..173H</code>, arXiv:1311.0329). Used briefly in the context of envelope-vs-rocky decision; b is rocky.",
-  "h3_185":"Read (instrument-only, not visual-informative)",
-  "li_186":"<b>Marcy G. W. et al. 2014</b> — Kepler super-Earth statistics; b is not in the Kepler sample but used as a calibration anchor in follow-up studies.",
-  "h3_187":"Not read — no arXiv preprint or low-priority (~10 papers)",
-  "p_188":"The b-specific arXiv record is small (the planet was discovered in 2010 with no follow-up transit or atmospheric characterization). The not-read set is predominantly:",
-  "li_189":"<b>Dynamical-stability follow-ups</b> — Vogt 2010 + extensions; b is stable inside the Vogt 2010 dynamical solution, no further refinement needed for cfg purposes.",
-  "li_190":"<b>Transit search non-detections</b> — confirmed b does not transit; no information beyond the inclination posterior already used.",
-  "li_191":"<b>Atmospheric escape rate calculations</b> — uses generic XUV scaling rather than 61 Vir specific stellar wind models.",
-  "h2_192":"Open items for follow-up",
-  "li_193":"<b>True mass and radius.</b> b&#x27;s mass is Msini-only and the radius is a mass–radius scaling estimate. A future direct-imaging campaign (HabEx / LUVOIR era) or precise astrometric inclination from Gaia DR5+ would convert Msini to true mass and constrain radius from a thermal-emission detection. Until then, all radius-dependent fields carry Confidence=medium.",
-  "li_194":"<b>Cfg variant: runaway-Venus retained atmosphere.</b> Even with the photoevaporation valley argument, a small fraction of secondary atmospheres (steam + CO₂ + N₂, ~1–10 bar) is consistent with the airless cfg&#x27;s parameters. A cfg variant with a thick steam atmosphere would render b as a cloud-covered featureless white-yellow disk (Venus-analog), distinct from the magma-pond visual. Preserve as a cfg switch for users who prefer the &quot;retained atmosphere&quot; reading.",
-  "li_195":"<b>Cfg variant: 3:2 spin-orbit resonance.</b> At e=0.12, b sits on the 1:1/3:2 boundary. A 3:2 cfg variant (Mercury-analog) would render with a slowly drifting substellar magma pond rather than a fixed one — visually distinctive but harder to animate at KSP scale. Document as Phase 3.5 alternative.",
-  "li_196":"<b>Surface mineralogy from future JWST or HabEx spectroscopy.</b> No current instrument can resolve b&#x27;s surface composition. If a reflected-light direct-imaging campaign yields a thermal-emission spectrum, surface-tint hex codes could be refined from the inferred basalt composition (basalt vs. ultramafic vs. silica-rich).",
-  "li_197":"<b>Magma-pond outgassing rate.</b> Schaefer &amp; Fegley 2009&#x27;s outgassing scaling is well-established but planet-specific exospheric modeling is missing. A future Vidotto-style 3D MHD wind + outgassing model could refine the exosphere column density.",
-  "li_198":"<b>Sister-planet conjunction visibility.</b> The eccentric d (e=0.35) and modestly eccentric c (e=0.14) produce time-variable conjunction geometries. Sub-Neptune c at ~5 R⊕ would reach mv ≈ −4 at b&#x27;s inferior-conjunction distance — bright enough to be a distinctive sky feature. Compute exact visibility for Phase 3.5 cfg.",
-  "h2_199":"Related",
-  "li_200":"<a href=\"61-vir.md\">61-vir</a> — host star Phase 3 synthesis",
-  "li_201":"<a href=\"61-vir-c.md\">61-vir-c</a> — next-outward sibling sub-Neptune at 0.22 AU",
-  "li_202":"<a href=\"61-vir-d.md\">61-vir-d</a> — outermost sibling sub-Neptune at 0.48 AU",
-  "li_203":"<a href=\"trappist-1-b.md\">trappist-1-b</a> — adjacent hot-rocky analog around an M-dwarf (different host illumination but same surface category)",
-  "li_204":"<a href=\"proxima-cen-d.md\">proxima-cen-d</a> — sub-Earth USP RV-only analog (smaller, around M-dwarf)",
-  "li_205":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_179":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs Using Activity-Rotation Diagnostics</i>, ApJ 687, 1264 (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). Inherited from the host-star synthesis. Gives 61 Vir age 6.1 ± 1.7 Gyr; sets the system-evolution timescale for atmospheric loss.",
+  "li_180":"<b>Pavlenko Y. V. et al. 2012</b> — <i>Effective temperatures, gravities, metallicities, and ages of 18 solar twin candidates</i> (<code>2012MNRAS.422..542P</code>, arXiv:1112.0590). Inherited from host-star synthesis. Confirms 61 Vir solar-twin abundance pattern.",
+  "li_181":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i>, MNRAS 424, 1206 (<code>2012MNRAS.424.1206W</code>, arXiv:1204.6063). Inherited from host-star synthesis. Cited briefly because the cold debris belt at ~30 AU does not interact dynamically with the inner planets at b&#x27;s separation.",
+  "li_182":"<b>Lopez E. D. &amp; Fortney J. J. 2014</b> — <i>Understanding the mass-radius relation for sub-Neptunes</i>, ApJ 792, 1 (<code>2014ApJ...792....1L</code>, arXiv:1311.0329). Sub-Neptune envelope mass-radius scaling; informs the bounds on b&#x27;s potential unphotoevaporated H/He envelope (excluded as discussed).",
+  "li_183":"<b>Howe A. R. et al. 2014</b> — <i>Mass-radius relations and core-envelope decompositions of super-Earths and sub-Neptunes</i>, ApJ 787, 173 (<code>2014ApJ...787..173H</code>, arXiv:1311.0329). Used briefly in the context of envelope-vs-rocky decision; b is rocky.",
+  "h3_184":"Read (instrument-only, not visual-informative)",
+  "li_185":"<b>Marcy G. W. et al. 2014</b> — Kepler super-Earth statistics; b is not in the Kepler sample but used as a calibration anchor in follow-up studies.",
+  "h3_186":"Not read — no arXiv preprint or low-priority (~10 papers)",
+  "p_187":"The b-specific arXiv record is small (the planet was discovered in 2010 with no follow-up transit or atmospheric characterization). The not-read set is predominantly:",
+  "li_188":"<b>Dynamical-stability follow-ups</b> — Vogt 2010 + extensions; b is stable inside the Vogt 2010 dynamical solution, no further refinement needed for cfg purposes.",
+  "li_189":"<b>Transit search non-detections</b> — confirmed b does not transit; no information beyond the inclination posterior already used.",
+  "li_190":"<b>Atmospheric escape rate calculations</b> — uses generic XUV scaling rather than 61 Vir specific stellar wind models.",
+  "h2_191":"Open items for follow-up",
+  "li_192":"<b>True mass and radius.</b> b&#x27;s mass is Msini-only and the radius is a mass–radius scaling estimate. A future direct-imaging campaign (HabEx / LUVOIR era) or precise astrometric inclination from Gaia DR5+ would convert Msini to true mass and constrain radius from a thermal-emission detection. Until then, all radius-dependent fields carry Confidence=medium.",
+  "li_193":"<b>Cfg variant: runaway-Venus retained atmosphere.</b> Even with the photoevaporation valley argument, a small fraction of secondary atmospheres (steam + CO₂ + N₂, ~1–10 bar) is consistent with the airless cfg&#x27;s parameters. A cfg variant with a thick steam atmosphere would render b as a cloud-covered featureless white-yellow disk (Venus-analog), distinct from the magma-pond visual. Preserve as a cfg switch for users who prefer the &quot;retained atmosphere&quot; reading.",
+  "li_194":"<b>Cfg variant: 3:2 spin-orbit resonance.</b> At e=0.12, b sits on the 1:1/3:2 boundary. A 3:2 cfg variant (Mercury-analog) would render with a slowly drifting substellar magma pond rather than a fixed one — visually distinctive but harder to animate at KSP scale. Document as Phase 3.5 alternative.",
+  "li_195":"<b>Surface mineralogy from future JWST or HabEx spectroscopy.</b> No current instrument can resolve b&#x27;s surface composition. If a reflected-light direct-imaging campaign yields a thermal-emission spectrum, surface-tint hex codes could be refined from the inferred basalt composition (basalt vs. ultramafic vs. silica-rich).",
+  "li_196":"<b>Magma-pond outgassing rate.</b> Schaefer &amp; Fegley 2009&#x27;s outgassing scaling is well-established but planet-specific exospheric modeling is missing. A future Vidotto-style 3D MHD wind + outgassing model could refine the exosphere column density.",
+  "li_197":"<b>Sister-planet conjunction visibility.</b> The eccentric d (e=0.35) and modestly eccentric c (e=0.14) produce time-variable conjunction geometries. Sub-Neptune c at ~5 R⊕ would reach mv ≈ −4 at b&#x27;s inferior-conjunction distance — bright enough to be a distinctive sky feature. Compute exact visibility for Phase 3.5 cfg.",
+  "h2_198":"Related",
+  "li_199":"<a href=\"61-vir.md\">61-vir</a> — host star Phase 3 synthesis",
+  "li_200":"<a href=\"61-vir-c.md\">61-vir-c</a> — next-outward sibling sub-Neptune at 0.22 AU",
+  "li_201":"<a href=\"61-vir-d.md\">61-vir-d</a> — outermost sibling sub-Neptune at 0.48 AU",
+  "li_202":"<a href=\"trappist-1-b.md\">trappist-1-b</a> — adjacent hot-rocky analog around an M-dwarf (different host illumination but same surface category)",
+  "li_203":"<a href=\"proxima-cen-d.md\">proxima-cen-d</a> — sub-Earth USP RV-only analog (smaller, around M-dwarf)",
+  "li_204":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
   "title":"61 Vir b — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -664,7 +662,7 @@ const T = {
   "td_49":"<span class=\"field-tt\" data-ko-tip=\"항성으로부터 받는 복사 (지구 일조량 단위).\" data-en-tip=\"Stellar irradiance at the planet, in Earth-insolation units.\"><code>insolation_s_earth</code></span>",
   "td_50":"326",
   "td_51":"high",
-  "td_52":"L = 0.822 L☉ (von Braun 2014) 와 a = 0.0502 AU 에서 유도",
+  "td_52":"L = 0.82 L☉ 와 a = 0.0502 AU 에서 유도",
   "td_53":"<span class=\"field-tt\" data-ko-tip=\"평형 온도 (K). 대기·온실효과 없이 흡수-방사 균형 가정.\" data-en-tip=\"Equilibrium temperature (K) assuming no atmosphere and pure radiative balance.\"><code>equilibrium_temp_k</code></span> (A=0)",
   "td_54":"1180",
   "td_55":"high",
@@ -740,22 +738,22 @@ const T = {
   "td_125":"<span class=\"field-tt\" data-ko-tip=\"방사성 동위원소 붕괴 열 (W/m²). 지구 ≈ 0.087.\" data-en-tip=\"Radiogenic heat from isotope decay (W/m²). Earth ≈ 0.087.\"><code>radiogenic_heat_w_m2</code></span>",
   "td_126":"0.05",
   "td_127":"medium",
-  "td_128":"5 M⊕ × 5.5 Gyr 붕괴의 지구 아날로그. 부분 용융 내부와 일관",
+  "td_128":"5 M⊕ × 6 Gyr 붕괴의 지구 아날로그. 부분 용융 내부와 일관",
   "td_129":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
-  "td_130":"1.04",
+  "td_130":"1.02",
   "td_131":"high",
-  "td_132":"유도. 2 × R★ / a × (180/π). 0.0502 AU 의 0.9867 R☉ (von Braun 2014 CHARA)",
+  "td_132":"유도. 2 × R★ / a × (180/π). 0.0502 AU 의 0.963 R☉",
   "td_133":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
-  "td_134":"5568",
+  "td_134":"5552",
   "td_135":"high",
-  "td_136":"호스트 Teff (Rathsam 2023)",
+  "td_136":"호스트 Teff",
   "h2_137":"Surface synthesis",
   "p_138":"61 Vir b 는 솔라 트윈 호스트 주위의 RV-only 안쪽 행성 슈퍼지구 원형 입니다. 관측적 anchor 세 가지가 합성을 고정합니다.",
   "p_139":"1. <b>일조량 326 S⊕</b> 는 표준적인 &quot;용암 세계&quot; 영역입니다. Léger 2009 가 CoRoT-7b (4.8 M⊕, S ≈ 2500 S⊕, T_eq ≈ 1810 K) 로 이 영역을 도입하고 55 Cnc e (8 M⊕, S ≈ 2400 S⊕, T_eq ≈ 2000 K) 가 확장했습니다. b 는 T_eq ≈ 1180 K 로 용암-세계 가족의 차가운 끝쪽에 위치합니다. 이 온도 에서 basalt 표면은 본체는 고체이고 substellar 반구에서만 부분 용융 이며, dayside 전체가 완전 용융하지는 않습니다.",
   "p_140":"2. <b>트랜짓 없음, JWST follow-up 없음.</b> 행성의 진질량과 반지름은 제약되지 않습니다. 미래의 천체측정 경사각이나 직접 영상 캠페인 없이는 b 가 트랜짓 특성화되지 않습니다. cfg 는 지구 조성 암석 핵에 대한 Zeng 2016 mass-radius 스케일링을 채택. Msini = 5.1 M⊕ 에서 R ≈ 1.65 R⊕, 표면중력 1.87 g⊕, 벌크 밀도 6.27 g/cc.",
-  "p_141":"3. <b>우주화학적 맥락.</b> 61 Vir 의 [Fe/H] = +0.006 ± 0.004 (Rathsam 2023) 과 ~5.5 Gyr isochrone 나이는 b 에 지구 아날로그 초기 휘발성 inventory 를 주지만, 대기 손실 이력은 훨씬 가혹합니다. Owen &amp; Wu 2017 의 광증발 valley 물리는 b 를 &quot;코어만&quot; 영역에 단단히 위치시킵니다. G 왜성 0.05 AU 의 5 M⊕ 코어 위 초기 H/He 외피는 ≲ 50 Myr 시간 안에 손실되는데, 5.5 Gyr 시스템 나이보다 한참 짧습니다. 이차 대기 보유는 outgassing 과 XUV 손실의 균형에 달려 있는데, b 의 파라미터에서는 그 균형이 위태로운 경계입니다.",
+  "p_141":"3. <b>우주화학적 맥락.</b> 61 Vir 의 [Fe/H] ≈ 0.0 dex (Pavlenko 2012) 와 ~6 Gyr 나이는 b 에 지구 아날로그 초기 휘발성 inventory 를 주지만, 대기 손실 이력은 훨씬 가혹합니다. Owen &amp; Wu 2017 의 광증발 valley 물리는 b 를 &quot;코어만&quot; 영역에 단단히 위치시킵니다. G 왜성 0.05 AU 의 5 M⊕ 코어 위 초기 H/He 외피는 ≲ 50 Myr 시간 안에 손실되는데, 6 Gyr 시스템 나이보다 한참 짧습니다. 이차 대기 보유는 outgassing 과 XUV 손실의 균형에 달려 있는데, b 의 파라미터에서는 그 균형이 위태로 운 경계입니다.",
   "p_142":"cfg 는 <b>부분 용융 substellar 마그마-바다</b> 시나리오를 채택합니다. substellar 점 주위 ~30° 안의 substellar 반구가 표면 온도가 규산염 solidus (tholeiitic basalt 의 T ≈ 1500 K, 휘발성 풍부 용융의 경우 더 낮음) 를 초과하는 얕은 마그마-바다 구조를 호스트합니다. 이는 완전 고화된 &quot;더 강한 일조량을 받는 수성&quot; 해석에 대한 tie-break 선택입니다. interesting-first 가 마그마 바다를 선택한 이유는 그것이 시스템의 다른 어디에도 없는 시각적으로 두드러진 feature 를 b 에게 주기 때문입니다.",
-  "p_143":"<b>색 선택.</b> 솔라 트윈 조명 (Teff 5568 K, 거의 태양 SED) 아래에서 표면 색조는 사실상 지구에서 보이는 그대로 인식됩니다. 의미 있는 M 왜성 적색 변위 보정이 필요 없습니다. primary 표면 색조 <span class=\"hex-chip\" style=\"background:#3a2a22\"></span><code>#3a2a22</code> 는 어두운 부분 용융 basalt 지각 톤으로, 신선한 ultramafic 검정 (~<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code>) 과 풍화된 수성 regolith (~<span class=\"hex-chip\" style=\"background:#5a4a3a\"></span><code>#5a4a3a</code>) 사이입니다. accent <span class=\"hex-chip\" style=\"background:#c84a18\"></span><code>#c84a18</code> 는 substellar 마그마-바다 glow 를 가시 적-주황 patch 로 인코딩합니다. 1450 K 열복사의 Wien 피크는 λ ≈ 2 μm (근적외) 에 있지만 가시 꼬리는 차가운 중위도 지각 대비 충분히 밝게 인식됩니다.",
+  "p_143":"<b>색 선택.</b> 솔라 트윈 조명 (Teff 5552 K, 거의 태양 SED) 아래에서 표면 색조는 사실상 지구에서 보이는 그대로 인식됩니다. 의미 있는 M 왜성 적색 변위 보정이 필요 없습니다. primary 표면 색조 <span class=\"hex-chip\" style=\"background:#3a2a22\"></span><code>#3a2a22</code> 는 어두운 부분 용융 basalt 지각 톤으로, 신선한 ultramafic 검정 (~<span class=\"hex-chip\" style=\"background:#1a1612\"></span><code>#1a1612</code>) 과 풍화된 수성 regolith (~<span class=\"hex-chip\" style=\"background:#5a4a3a\"></span><code>#5a4a3a</code>) 사이입니다. accent <span class=\"hex-chip\" style=\"background:#c84a18\"></span><code>#c84a18</code> 는 substellar 마그마-바다 glow 를 가시 적-주황 patch 로 인코딩합니다. 1450 K 열복사의 Wien 피크는 λ ≈ 2 μm (근적외) 에 있지만 가시 꼬리는 차가운 중위도 지각 대비 충분히 밝게 인식됩니다.",
   "p_144":"<b>조석 고정 하의 형태.</b> substellar 마그마 pond 는 영구적 feature 로, 표면 frame 에서 고정됩니다. 내부 가열이 아닌 항성 일사로 유지되는 마그마 pond 내 대류 열흐름이 부분 규산염 증기 outgassing 을 외기권 으로 구동합니다. 중위도는 지각화된 basalt 평원이고, 야간면은 시스템의 6 Gyr 에 걸쳐 차갑고 어두우며 휘발성이 제거된 상태입니다. 수성 아날로그 충돌 크레이터화된 regolith 가 antistellar 반구를 덮습니다. dayside 에서 신선한 휘발성을 운반해 줄 대기 수송이 없으므로 검출 가능한 휘발성 cold-trap 도 없습니다.",
   "h2_145":"Atmosphere synthesis",
   "p_146":"b 에 대한 대기 추론은 완전히 이론적입니다. JWST 트랜짓이나 식 측정이 없고, 행성은 현 세대 직접 영상에 대비비로 너무 어둡습니다. cfg 는 <b>가시 Rayleigh 대기 없는 잔여 규산염 증기 외기권</b> 을 채택합니다 — 진행 중인 마그마-pond outgassing 으로 수정된 무대기 해석입니다.",
@@ -778,7 +776,7 @@ const T = {
   "li_163":"<b>야간면.</b> 차갑고 (~200 K) 어두움. 표면 색조는 중위도와 같지만 조명이 없습니다. 자매 행성 반사광으로만 보입니다. 휘발성이 제거된 수성 아날로그 regolith.",
   "li_164":"<b>Terminator 밴드.</b> 대기 산란이 없어 또렷합니다. 지형 feature 가 스치는 태양빛 노란빛 아래로 긴 그림자를 드리웁니다.",
   "li_165":"<b>대기 haze.</b> 가시광에서 없음. 규산염-증기 외기권은 ~10⁻⁷ Pa 로 Rayleigh 임계값 한참 아래입니다. limb 는 디스크에서 우주로의 깨끗한 가장자리.",
-  "li_166":"<b>하늘의 별.</b> 61 Vir 가 b 에서 1.04° 차지 — 지구에서 본 태양 각 크기의 약 2 배. 색은 본질적으로 태양빛 노란 (Teff 5568 K → <span class=\"hex-chip\" style=\"background:#fff2dc\"></span><code>#fff2dc</code> cfg-인코딩 색조). 326× 지구 정오 밝기에서 표면은 뜨거운 수성 dayside 처럼 조명됩니다.",
+  "li_166":"<b>하늘의 별.</b> 61 Vir 가 b 에서 1.02° 차지 — 지구에서 본 태양 각 크기의 약 2 배. 색은 본질적으로 태양빛 노란 (Teff 5552 K → <span class=\"hex-chip\" style=\"background:#fff2dc\"></span><code>#fff2dc</code> cfg-인코딩 색조). 326× 지구 정오 밝기에서 표면은 뜨거운 수성 dayside 처럼 조명됩니다.",
   "li_167":"<b>하늘의 자매 행성.</b> c (다음 외측 0.22 AU) 가 b 의 시점에서 내합 시 각 크기 ~0.05° (회합 주기 ~5 일 마다). d (0.48 AU) 는 훨씬 작고 항상 보이지는 않습니다.",
   "li_168":"<b>선택적 마그마-pond 애니메이션.</b> 마그마-pond accent 색조의 미묘한 열 펄세이션 (이심률 사이클에 걸쳐 <span class=\"hex-chip\" style=\"background:#c84a18\"></span><code>#c84a18</code> 에서 더 밝은 <span class=\"hex-chip\" style=\"background:#e85a28\"></span><code>#e85a28</code> 으로 변조) 이 일사 구동 열흐름 변조를 충실하게 렌더링해 줍니다. 우선 순위 낮은 시각 이스터에그.",
   "h2_169":"Bibliography",
@@ -791,33 +789,32 @@ const T = {
   "li_176":"<b>Vinson A. M. &amp; Hansen B. M. S. 2017</b> — <i>On the spin states of habitable zone exoplanets around M dwarfs: the effect of a planetary companion</i>, MNRAS 472, 3217 (<code>2017MNRAS.472.3217V</code>, arXiv:1708.00006). 암석 행성의 조석 고정 시간 스케일. b 의 파라미터에서 ~10⁵–10⁶ 년. <code>tidally_locked = true</code> 선택의 anchor.",
   "li_177":"<b>Bolmont E. et al. 2020</b> — <i>Tidal dissipation and obliquity evolution of TRAPPIST-1 planets</i> (<code>2020A&amp;A...644A.165B</code>, arXiv: 2002.02015). 암석 외계행성의 조석 가열 스케일링. e=0.12, P=4.2 d 에서 0.1–1 W/m² 추정값 제공.",
   "h3_178":"Read (context / methodology, not decision-driving)",
-  "li_179":"<b>Rathsam A. et al. 2023</b> — <i>Lithium depletion in solar analogs</i>, MNRAS 525, 4642 (<code>2023MNRAS.525.4642R</code>, doi:10.1093/mnras/stad2589). 호스트 합성에서 상속. 61 Vir 의 Phase 2 나이 앵커 (5.50 +0.78/-0.74 Gyr). 대기 손실의 시스템 진화 시간 스케일을 결정.",
-  "li_180":"<b>von Braun K. et al. 2014</b> — <i>Stellar diameters V</i>, MNRAS 438, 2413 (<code>2014MNRAS.438.2413V</code>, doi:10.1093/mnras/stt2360). 호스트 합성에서 상속. CHARA 간섭 R = 0.9867 ± 0.0048 R☉ 와 L = 0.8222 ± 0.0033 L☉ — 일사와 겉보기 각지름 유도의 앵커.",
-  "li_181":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs Using Activity-Rotation Diagnostics</i>, ApJ 687, 1264 (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). 호스트 합성에서 상속. 활동도-나이 6.1 ± 1.7 Gyr. Rathsam 2023 isochrone 에 대한 교차 확인으로 강등 (호스트 합성에서 documented divergence).",
-  "li_182":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i>, MNRAS 424, 1206 (<code>2012MNRAS.424.1206W</code>, arXiv:1206.2370). 호스트 합성에서 상속. ~30 AU 의 차가운 debris 띠가 b 의 분리에서 안쪽 행성과 동역학 적으로 상호작용하지 않으므로 간략히 인용.",
-  "li_183":"<b>Lopez E. D. &amp; Fortney J. J. 2014</b> — <i>Understanding the mass-radius relation for sub-Neptunes</i>, ApJ 792, 1 (<code>2014ApJ...792....1L</code>, arXiv:1311.0329). sub-Neptune envelope mass-radius 스케일링. b 의 잠재적 광증발되지 않은 H/He 외피에 대한 경계를 정보화 (논의된 대로 배제).",
-  "li_184":"<b>Howe A. R. et al. 2014</b> — <i>Mass-radius relations and core-envelope decompositions of super-Earths and sub-Neptunes</i>, ApJ 787, 173 (<code>2014ApJ...787..173H</code>, arXiv:1311.0329). envelope-vs-rocky 결정의 맥락에서 간략히 사용. b 는 암석.",
-  "h3_185":"Read (instrument-only, not visual-informative)",
-  "li_186":"<b>Marcy G. W. et al. 2014</b> — Kepler 슈퍼지구 통계. b 는 Kepler 샘플이 아니지만 후속 연구의 보정 anchor 로 사용.",
-  "h3_187":"Not read — no arXiv preprint or low-priority (~10 papers)",
-  "p_188":"b 특정 arXiv 기록은 작습니다 (행성은 2010 년 발견되었고 트랜짓이나 대기 특성화 follow-up 이 없습니다). 읽지 않은 집합은 주로 다음과 같습니다.",
-  "li_189":"<b>동역학 안정성 follow-up.</b> Vogt 2010 + 확장. b 는 Vogt 2010 의 동역학 해 안에서 안정. cfg 목적으로 추가 정밀화 불필요.",
-  "li_190":"<b>트랜짓 탐색 non-detection.</b> b 가 트랜짓하지 않음을 확인. 이미 사용된 경사각 posterior 너머의 정보 없음.",
-  "li_191":"<b>대기 탈출율 계산.</b> 61 Vir 특정 항성풍 모델이 아닌 일반 XUV 스케일링을 사용.",
-  "h2_192":"Open items for follow-up",
-  "li_193":"<b>진질량과 반지름.</b> b 의 질량은 Msini 전용이고 반지름은 mass-radius 스케일링 추정치. 미래의 직접 영상 캠페인 (HabEx / LUVOIR 시대) 이나 Gaia DR5+ 의 정밀 천체측정 경사각이 Msini 를 진질량으로 변환하고 열복사 검출에서 반지름을 제약합니다. 그때까지는 반지름 의존 필드는 모두 Confidence=medium 유지.",
-  "li_194":"<b>Cfg variant. runaway-Venus 보유 대기.</b> 광증발 valley 논거에도 불구하고 작은 비율의 이차 대기 (증기 + CO₂ + N₂, ~1–10 bar) 가 무대기 cfg 파라미터와 일관됩니다. 두꺼운 증기 대기가 있는 cfg variant 는 b 를 구름 덮인 featureless 흰-노란 디스크 (금성 아날로그) 로 렌더링하며 마그마-pond 시각과 구분됩니다. &quot;보유 대기&quot; 해석을 선호하는 사용자를 위한 cfg 스위치로 보존.",
-  "li_195":"<b>Cfg variant. 3:2 spin-orbit 공명.</b> e=0.12 에서 b 는 1:1/3:2 경계 위에 위치. 3:2 cfg variant (수성 아날로그) 는 고정된 substellar 마그마 pond 대신 천천히 drift 하는 것으로 렌더링됩니다 — 시각적으로 두드러 지지만 KSP 스케일에서 애니메이션화하기 더 어려움. Phase 3.5 대안 으로 명시.",
-  "li_196":"<b>미래 JWST 또는 HabEx 분광에서의 표면 광물학.</b> 현재 b 의 표면 조성을 분해할 수 있는 도구는 없음. 반사광 직접 영상 캠페인이 열복사 스펙트럼을 산출하면 추론된 basalt 조성 (basalt vs ultramafic vs 실리카-풍부) 에서 표면-색조 hex 코드를 정밀화 가능.",
-  "li_197":"<b>마그마-pond outgassing 율.</b> Schaefer &amp; Fegley 2009 의 outgassing 스케일링은 잘 확립되어 있으나 행성 특정 외기권 모델링은 부재. 미래의 Vidotto 스타일 3D MHD 항성풍 + outgassing 모델이 외기권 컬럼 밀도를 정밀화 가능.",
-  "li_198":"<b>자매 행성 합 가시성.</b> 이심 d (e=0.35) 와 적당히 이심한 c (e=0.14) 가 시간 가변 합 기하학을 생성. sub-Neptune c (~5 R⊕) 는 b 의 내합 거리에서 mv ≈ −4 에 도달 — 두드러진 sky feature 일 만큼 밝음. Phase 3.5 cfg 를 위한 정확한 가시성 계산.",
-  "h2_199":"Related",
-  "li_200":"<a href=\"61-vir.md\">61-vir</a> — 호스트 별 Phase 3 합성.",
-  "li_201":"<a href=\"61-vir-c.md\">61-vir-c</a> — 다음 외측 자매 sub-Neptune. 0.22 AU.",
-  "li_202":"<a href=\"61-vir-d.md\">61-vir-d</a> — 최외 자매 sub-Neptune. 0.48 AU.",
-  "li_203":"<a href=\"trappist-1-b.md\">trappist-1-b</a> — 인접 뜨거운 암석 아날로그. M 왜성 주위 (호스트 조명은 다르지만 표면 카테고리 동일).",
-  "li_204":"<a href=\"proxima-cen-d.md\">proxima-cen-d</a> — sub-Earth USP RV-only 아날로그 (더 작고, M 왜성 주위).",
-  "li_205":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마.",
+  "li_179":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs Using Activity-Rotation Diagnostics</i>, ApJ 687, 1264 (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). 호스트 합성에서 상속. 61 Vir 나이 6.1 ± 1.7 Gyr. 대기 손실의 시스템 진화 시간 스케일을 결정.",
+  "li_180":"<b>Pavlenko Y. V. et al. 2012</b> — <i>Effective temperatures, gravities, metallicities, and ages of 18 solar twin candidates</i> (<code>2012MNRAS.422..542P</code>, arXiv:1112.0590). 호스트 합성에서 상속. 61 Vir 솔라 트윈 풍부도 패턴 확인.",
+  "li_181":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i>, MNRAS 424, 1206 (<code>2012MNRAS.424.1206W</code>, arXiv:1204.6063). 호스트 합성에서 상속. ~30 AU 의 차가운 debris 띠가 b 의 분리에서 안쪽 행성과 동역학 적으로 상호작용하지 않으므로 간략히 인용.",
+  "li_182":"<b>Lopez E. D. &amp; Fortney J. J. 2014</b> — <i>Understanding the mass-radius relation for sub-Neptunes</i>, ApJ 792, 1 (<code>2014ApJ...792....1L</code>, arXiv:1311.0329). sub-Neptune envelope mass-radius 스케일링. b 의 잠재적 광증발되지 않은 H/He 외피에 대한 경계를 정보화 (논의된 대로 배제).",
+  "li_183":"<b>Howe A. R. et al. 2014</b> — <i>Mass-radius relations and core-envelope decompositions of super-Earths and sub-Neptunes</i>, ApJ 787, 173 (<code>2014ApJ...787..173H</code>, arXiv:1311.0329). envelope-vs-rocky 결정의 맥락에서 간략히 사용. b 는 암석.",
+  "h3_184":"Read (instrument-only, not visual-informative)",
+  "li_185":"<b>Marcy G. W. et al. 2014</b> — Kepler 슈퍼지구 통계. b 는 Kepler 샘플이 아니지만 후속 연구의 보정 anchor 로 사용.",
+  "h3_186":"Not read — no arXiv preprint or low-priority (~10 papers)",
+  "p_187":"b 특정 arXiv 기록은 작습니다 (행성은 2010 년 발견되었고 트랜짓이나 대기 특성화 follow-up 이 없습니다). 읽지 않은 집합은 주로 다음과 같습니다.",
+  "li_188":"<b>동역학 안정성 follow-up.</b> Vogt 2010 + 확장. b 는 Vogt 2010 의 동역학 해 안에서 안정. cfg 목적으로 추가 정밀화 불필요.",
+  "li_189":"<b>트랜짓 탐색 non-detection.</b> b 가 트랜짓하지 않음을 확인. 이미 사용된 경사각 posterior 너머의 정보 없음.",
+  "li_190":"<b>대기 탈출율 계산.</b> 61 Vir 특정 항성풍 모델이 아닌 일반 XUV 스케일링을 사용.",
+  "h2_191":"Open items for follow-up",
+  "li_192":"<b>진질량과 반지름.</b> b 의 질량은 Msini 전용이고 반지름은 mass-radius 스케일링 추정치. 미래의 직접 영상 캠페인 (HabEx / LUVOIR 시대) 이나 Gaia DR5+ 의 정밀 천체측정 경사각이 Msini 를 진질량으로 변환하고 열복사 검출에서 반지름을 제약합니다. 그때까지는 반지름 의존 필드는 모두 Confidence=medium 유지.",
+  "li_193":"<b>Cfg variant. runaway-Venus 보유 대기.</b> 광증발 valley 논거에도 불구하고 작은 비율의 이차 대기 (증기 + CO₂ + N₂, ~1–10 bar) 가 무대기 cfg 파라미터와 일관됩니다. 두꺼운 증기 대기가 있는 cfg variant 는 b 를 구름 덮인 featureless 흰-노란 디스크 (금성 아날로그) 로 렌더링하며 마그마-pond 시각과 구분됩니다. &quot;보유 대기&quot; 해석을 선호하는 사용자를 위한 cfg 스위치로 보존.",
+  "li_194":"<b>Cfg variant. 3:2 spin-orbit 공명.</b> e=0.12 에서 b 는 1:1/3:2 경계 위에 위치. 3:2 cfg variant (수성 아날로그) 는 고정된 substellar 마그마 pond 대신 천천히 drift 하는 것으로 렌더링됩니다 — 시각적으로 두드러 지지만 KSP 스케일에서 애니메이션화하기 더 어려움. Phase 3.5 대안 으로 명시.",
+  "li_195":"<b>미래 JWST 또는 HabEx 분광에서의 표면 광물학.</b> 현재 b 의 표면 조성을 분해할 수 있는 도구는 없음. 반사광 직접 영상 캠페인이 열복사 스펙트럼을 산출하면 추론된 basalt 조성 (basalt vs ultramafic vs 실리카-풍부) 에서 표면-색조 hex 코드를 정밀화 가능.",
+  "li_196":"<b>마그마-pond outgassing 율.</b> Schaefer &amp; Fegley 2009 의 outgassing 스케일링은 잘 확립되어 있으나 행성 특정 외기권 모델링은 부재. 미래의 Vidotto 스타일 3D MHD 항성풍 + outgassing 모델이 외기권 컬럼 밀도를 정밀화 가능.",
+  "li_197":"<b>자매 행성 합 가시성.</b> 이심 d (e=0.35) 와 적당히 이심한 c (e=0.14) 가 시간 가변 합 기하학을 생성. sub-Neptune c (~5 R⊕) 는 b 의 내합 거리에서 mv ≈ −4 에 도달 — 두드러진 sky feature 일 만큼 밝음. Phase 3.5 cfg 를 위한 정확한 가시성 계산.",
+  "h2_198":"Related",
+  "li_199":"<a href=\"61-vir.md\">61-vir</a> — 호스트 별 Phase 3 합성.",
+  "li_200":"<a href=\"61-vir-c.md\">61-vir-c</a> — 다음 외측 자매 sub-Neptune. 0.22 AU.",
+  "li_201":"<a href=\"61-vir-d.md\">61-vir-d</a> — 최외 자매 sub-Neptune. 0.48 AU.",
+  "li_202":"<a href=\"trappist-1-b.md\">trappist-1-b</a> — 인접 뜨거운 암석 아날로그. M 왜성 주위 (호스트 조명은 다르지만 표면 카테고리 동일).",
+  "li_203":"<a href=\"proxima-cen-d.md\">proxima-cen-d</a> — sub-Earth USP RV-only 아날로그 (더 작고, M 왜성 주위).",
+  "li_204":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마.",
   "title":"61 Vir b — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

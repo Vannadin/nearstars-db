@@ -41,12 +41,9 @@ db/target_list.json
 - Multi-component systems share one entry with multiple components:
   `"Alpha Centauri A"`, `"Alpha Centauri B"` → single entry, `binary: true`.
 - Single stars: `"Vega"`, `"Altair"`.
-- `to_filename()` in `scripts/pipeline/_naming.py` converts name → filename:
+- `to_filename()` in `build_systems.py` converts name → filename:
   lowercase, apostrophes stripped, non-alphanumeric → `_`, trim edges.
-  Example: `"Chi-1 Orionis A"` → `chi_1_orionis_a.json`. The same module
-  exposes `to_url_slug()` (separator `-`) used by Phase 2/3 HTML and the
-  reports manifest. See `docs/reference/methodology.md` "Naming
-  canonicalization" for the full rule.
+  Example: `"Chi-1 Orionis A"` → `chi_1_orionis_a.json`.
 
 ---
 

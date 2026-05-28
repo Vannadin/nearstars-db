@@ -73,8 +73,8 @@ inheritance from AU Mic c's better-constrained parameters).
 | `atmospheric_escape_rate_g_s` | 1e7 | low | lower than c because of greater distance from AU Mic; energy-limited estimate with AU Mic XUV at 0.16 AU |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b/c because of greater distance and smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b/c but fainter |
-| `star_apparent_angular_diameter_deg` | 2.7 | low | derived: 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° (R from Phase 2 anchor Donati 2023 ZDI) |
-| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` (one parameter that doesn't depend on e being confirmed) |
+| `star_apparent_angular_diameter_deg` | 2.7 | low | derived: 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° |
+| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff (one parameter that doesn't depend on e being confirmed) |
 
 ## Surface synthesis
 
@@ -257,7 +257,7 @@ dominate the appearance from any AU Mic vantage point.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, arXiv:2306.00077). TESS flare census; rate 5.6/day above 10³¹ erg. Drives the activity-contamination concern for the e RV signal.
 - **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, arXiv:2012.04970). SPIRou near-IR ZDI + RV of AU Mic; methodology that fed into the Donati 2025 SPIRou + ESPRESSO joint analysis.
 - **Boldog Z. et al. 2025** — *Transit-timing variations in the AU Mic system observed with CHEOPS*, A&A 694, A137 (`2025A&A...694A.137B`, arXiv:2501.13575). CHEOPS TTV refinement of b/c orbits with d as inner perturber. Does NOT address e at the 33 d period — Boldog's TTV fit does not require an outer 33-d perturber. Neither confirms nor refutes e; most recent TTV study with no signature at e's period.
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 2015 (`2023MNRAS.525.2015D`). ZDI of host star; provides stellar magnetic-field context for any close-in candidate.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI of host star; provides stellar magnetic-field context for any close-in candidate.
 - **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 (`1966Icar....5..375G`). Tidal damping timescale framework used for the conditional 1:1 spin-orbit conclusion.
 - **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 (`2020ApJ...894...84S`, arXiv:2004.03007). Substellar-convection framework applied to the day-night redistribution discussion.
 

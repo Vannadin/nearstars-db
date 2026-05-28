@@ -19,19 +19,22 @@ Usage:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
-from _naming import to_url_slug
+
+def to_url_slug(name: str) -> str:
+    s = name.lower()
+    s = re.sub(r'[^a-z0-9]+', '-', s)
+    return s.strip('-')
 
 
 def load_db_names(repo: Path) -> tuple[dict[str, str], dict[str, tuple[str, str]]]:
     """Return ({host_slug: host_display_name}, {planet_slug: (host_slug, planet_letter)}).
 
-    Host names come from the union of stellar_props_curated, planets_curated,
-    target_list, and disks_curated keys so a star with only disk curation
-    (e.g. Delta Pavonis) still resolves. Planet letter is the suffix after
-    the host slug.
+    The host display name comes from stellar_props_curated keys.
+    Planet letter is the suffix after the host slug.
     """
     stellar = json.loads((repo / 'db' / 'stellar_props_curated.json').read_text())
     planets = json.loads((repo / 'db' / 'planets_curated.json').read_text())
@@ -39,16 +42,6 @@ def load_db_names(repo: Path) -> tuple[dict[str, str], dict[str, tuple[str, str]
     host_names: dict[str, str] = {}
     for host_name in stellar:
         host_names[to_url_slug(host_name)] = host_name
-    # target_list components: canonical roster including disk-only / no-planet hosts.
-    target_list_path = repo / 'db' / 'target_list.json'
-    if target_list_path.exists():
-        for tgt in json.loads(target_list_path.read_text()):
-            for comp in tgt.get('components', []):
-                host_names.setdefault(to_url_slug(comp), comp)
-    disks_path = repo / 'db' / 'disks_curated.json'
-    if disks_path.exists():
-        for host_name in json.loads(disks_path.read_text()):
-            host_names.setdefault(to_url_slug(host_name), host_name)
     # planets_curated keys are host names; the planet name is in each entry.
     planet_map: dict[str, tuple[str, str]] = {}
     for host_name, entries in planets.items():

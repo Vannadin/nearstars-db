@@ -5,25 +5,21 @@
 subgiant 별 중 하나로, 거리는 6.10 ± 0.005 pc 입니다 (Gaia DR3 시차
 163.95 ± 0.12 mas). 분광형 G8IV (Gray 2006 NStars, Houk & Cowley 1975)
 는 주계열을 막 벗어난 단계를 의미합니다. 중심 수소가 소진되고 수소
-껍질 연소가 시작되며 외피가 부풀어 오르는 시점입니다. 유효 온도
-5644 ± 30 K (Gomes da Silva 2021 AMBRE-HARPS) 와 V = 3.56 으로,
-남반구에서 가장 밝은 G subgiant 이자 인근 subgiant 연구의 교과서적
-표적입니다. 확정된 행성은 없습니다. 초고정밀 RV (HARPS, Tinney 2005,
-Mawet 2017) 와 직접 촬영 (Lannier 2017) 캠페인이 1 AU 에서 ~3 M_Jup
-이상, 거주가능영역에서 해왕성 질량 이상을 모두 배제했으며, ESPRESSO
-시대에는 이 한계가 더 깊이 내려갑니다.
+껍질 연소가 시작되며 외피가 부풀어 오르는 시점입니다. 유효 온도 5604 K
+(Gaia DR3) 와 V = 3.56 으로, 남반구에서 가장 밝은 G subgiant 이자 인근
+subgiant 연구의 교과서적 표적입니다. 확정된 행성은 없습니다. 초고정밀
+RV (HARPS, Tinney 2005, Mawet 2017) 와 직접 촬영 (Lannier 2017) 캠페인
+이 1 AU 에서 ~3 M_Jup 이상, 거주가능영역에서 해왕성 질량 이상을 모두
+배제했으며, ESPRESSO 시대에는 이 한계가 더 깊이 내려갑니다.
 
 대신 δ Pav 가 가진 것은 차가운 잔해 원반입니다. Spitzer/MIPS 70 µm
 초과 (Beichman 2006) 로 처음 검출됐고, Herschel/PACS 가 70, 100, 160
 µm 측광으로 확인했습니다 (Eiroa 2013 DUNES, Lawler & Tanner 2014).
 SED 에 대한 modified blackbody fit 은 약 30–80 AU 의 단일 차가운 belt
 를 주며, 먼지 온도 T_d ≈ 55 K, 먼지 질량 M_d ~ 0.01 M⊕ 입니다. 작지만
-명확하며, 어느 정도 오래된 시스템 (시스템 나이 ~5 Gyr, Gomes da Silva
-2021 PARSEC isochrone. 다만 문헌은 pipeline 에 따라 5–9 Gyr 로 갈림)
-에 존재한다는 점이 핵심입니다. 50 AU 위치의 µm-cm 먼지 충돌 cascade
-수명 (50–500 Myr) 의 ~5 배 이상이라, 충돌로 보충되는
-microplanetesimal 저장소가 얇은 카이퍼 belt 와 유사한 형태로 존재해야
-한다는 것을 의미합니다.
+명확하며, 무엇보다 오래된 시스템 (나이 ~7 Gyr, Holmberg 2009) 에
+존재한다는 점이 핵심입니다. 이는 충돌로 보충되는 microplanetesimal 저
+장소가 얇은 카이퍼 belt 와 유사한 형태로 존재한다는 것을 의미합니다.
 
 **NearStars 시나리오 선택. 약간 부풀어 오른, G8V 왜성보다 살짝 더
 붉은 늙고 조용한 G8 subgiant 별을, ~30–80 AU 의 희미한 단일 차가운
@@ -38,19 +34,19 @@ microplanetesimal 저장소가 얇은 카이퍼 belt 와 유사한 형태로 존
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | G8IV | high | Gray 2006 NStars, Houk & Cowley 1975 MK 카탈로그. HR 도 위치로 subgiant 분류 확인 |
-| `mass_msun` | 1.064 ± 0.013 | high | Gomes da Silva 2021 PARSEC isochrone (Gaia DR2 시차 + AMBRE-HARPS Teff/[Fe/H]). 이전 Bensby 2014 (1.03 ± 0.07) 와 Spada 2011 (~1.05) subgiant fit 을 1σ 안에서 supersede |
-| `radius_rsun` | 1.115 ± 0.025 | medium | Gomes da Silva 2021 PARSEC isochrone (질량과 동일 fit). 발표된 간섭계 직경 없음 (δ Pav 적위 −66° 가 CHARA 범위 밖, PAVO@SUSI · VLTI-PIONIER 모두 관측 발표 없음). Bruntt 2010 의 R = 1.22 ± 0.02 는 Stefan-Boltzmann (L+Teff) 유도값으로, Gomes 2021 와 9% 차이는 (a) Gaia DR2 시차 갱신과 (b) PARSEC vs Stefan-Boltzmann 방법 차이 때문 |
-| `teff_k` | 5644 ± 30 | high | Gomes da Silva 2021 AMBRE-HARPS pipeline. Tsantaki 2013 고분해 5566 ± 36 K 와 Casagrande 2011 IRFM 5598 ± 80 K 가 결합 오차 안에서 일치 |
-| `luminosity_lsun` | 1.246 ± 0.05 | high | Eiroa 2013 DUNES, SED + Hipparcos 시차에서 직접 적분한 bolometric flux. R + Teff Stefan-Boltzmann 유도값 (현재 Gomes 2021 값으로 ~1.17) 보다 우위 |
-| `metallicity_fe_h_dex` | +0.36 ± 0.02 | high | Gomes da Silva 2021 AMBRE-HARPS (가장 작은 형식 오차). Tsantaki 2013 +0.32 ± 0.03, Ramirez 2013 +0.33 ± 0.07, Bensby 2014 +0.37 ± 0.20 모두 결합 오차 안에서 일치 |
-| `age_gyr` | 5.04 ± 1.23 | low | Gomes da Silva 2021 PARSEC isochrone (newest paper, 가장 작은 stated 오차). Bensby 2014 도 ~5 Gyr (Geneva-Copenhagen) 로 동의. 그러나 Tsantaki 2013 isochrone (8.5 ± 1.3) 와 Eiroa 2013 Ca II age (8.3) 는 ~8–9 Gyr. 문헌이 pipeline 에 따라 ~5 와 ~9 Gyr 로 갈림. tier hierarchy 로 Gomes 2021 채택하되, 미해소 spread 를 반영해 Confidence 는 low 유지 |
-| `rotation_period_days` | ≤175 (상한). Skumanich 기준 best estimate ~30 | low | Ramirez 2013 v sin i = 0.32 ± 0.05 km/s (HARPS solar-twin 정밀도. 이전 1–3 km/s 상한 supersede) + R = 1.115 R☉ + sin i ≤ 1 ⇒ 어느 inclination 에서든 P_rot ≤ 175 d. 광도 주기 미검출. ~5 Gyr 에서 태양형 초기 spin 가정한 Skumanich braking 은 P_rot 를 30 d 부근에 두지만 직접 측정은 아님 |
-| `activity_log_rhk` | −5.13 ± 0.003 | high | Gomes da Silva 2021. 2003–2016 HARPS 스펙트럼 6002 개의 가중평균. 태양 최소 (log R'HK ≈ −4.96) 보다 한참 아래로, 알려진 G subgiant 중 가장 비활성에 속함. Boro Saikia 2018 다중-survey 중앙값 −4.99 / HARPS 단독 중앙값 −5.49 가 양쪽으로 bracket. Henry 1996 Mt Wilson −5.10 과 일치 |
+| `mass_msun` | 1.05 ± 0.04 | medium | Bensby 2014 Geneva-Copenhagen + Spada 2011 진화 fit. isochrone 나이와 일관 |
+| `radius_rsun` | 1.22 ± 0.02 | high | Bruntt 2010. asteroseismic + 간섭계 R. Gaia DR3 SED-fit R 과 일관 |
+| `teff_k` | 5604 ± 30 | high | Gaia DR3 GSP-Phot 5604 K. Bensby 2014 분광 5587 ± 50 K 와 1σ 일치 |
+| `luminosity_lsun` | 1.20 ± 0.04 | high | R 과 Teff 에서 Stefan–Boltzmann 유도. Eiroa 2013 SED fit 1.22 L☉ 와 일치 |
+| `metallicity_fe_h_dex` | +0.33 ± 0.05 | high | Bensby 2014. FEROS 고분해 분광, super-solar (thin disk 종족과 일관) |
+| `age_gyr` | 7.0 ± 0.5 | medium | Holmberg 2009 Geneva-Copenhagen isochrone 6.6 Gyr, Spada 2011 subgiant 모델 7.5 Gyr. 중간값 채택, subgiant 단계가 강하게 제약 |
+| `rotation_period_days` | ~30 (불확실) | low | 신뢰할 만한 광도 주기 없음. vsini ≈ 1.7 km/s (Bensby 2014) + R = 1.22 R☉ → i ≤ 90° 에서 P_rot ≥ 30 d. 7 Gyr 의 Skumanich braking 이 느린 회전을 지지 |
+| `activity_log_rhk` | −5.10 | medium | Henry 1996 + Gray 2006 NStars. 인근 G subgiant 표본에서 가장 색채권 활동이 약한 별 중 하나. 노년 + 초기 subgiant 단계와 일관 |
 | `activity_cycle_years` | 미상 | low | Mt. Wilson 장기 모니터링 커버리지 없음. 이 진화 단계의 subgiant 는 약화되거나 불규칙한 사이클을 보이는 경우가 많음 |
 | `x_ray_log_lx_cgs_max` | 26.6 | medium | ROSAT 전천 미검출 상한 (Hünsch 1998). 매우 약한 코로나와 일관 |
-| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Claret 2011 LD 표에서 Teff ≈ 5640 K, log g ≈ 4.0 의 G8IV 로 유도. 간섭계 직접 LD 측정은 없음 (δ Pav 간섭계 관측 자체가 없음) |
-| `visual_surface_tint_hex_primary` | `#ffe8c8` (G2V Sol 보다 더 붉은 amber-cream) | medium | Tie-break. G8IV 흑체 5644 K + +0.36 dex 금속도 reddening. subgiant envelope 부풀림이 disk integrated 색을 같은 Teff 의 G8V 보다 살짝 더 붉게 시프트 |
-| `stellar_color_temp_k` | 5644 | high | Teff (Gomes da Silva 2021) 유도 |
+| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Bruntt 2010 대기 모델 + Claret 2011 LD 표에서 Teff=5604 의 G8IV 로 유도. 간섭계 직접 LD 측정은 없음 |
+| `visual_surface_tint_hex_primary` | `#ffe8c8` (G2V Sol 보다 더 붉은 amber-cream) | medium | Tie-break. G8IV 흑체 5604 K + +0.33 dex 금속도 reddening. subgiant envelope 부풀림이 disk integrated 색을 같은 Teff 의 G8V 보다 살짝 더 붉게 시프트 |
+| `stellar_color_temp_k` | 5604 | high | Teff (Gaia DR3) 유도 |
 | `visual_corona_extent_radii` | 1.6 | low | Tie-break. 약한 색채권 + 낮은 log R'HK = -5.1 → 절제된 corona band. 태양형 더 밝은 halo 대신 얇은 ring 으로 렌더 |
 | `disk_present` | true | high | Beichman 2006 Spitzer/MIPS 70 µm 초과. Eiroa 2013 Herschel/PACS 가 70/100/160 µm 에서 확인 |
 | `disk_inner_radius_au` | 30 | medium | Lawler & Tanner 2014 단일 belt fit r_in ≈ 30 AU (T_d = 55 K modified blackbody). Eiroa 2013 는 grain size 에 따라 r_in 23–35 AU |
@@ -228,40 +224,21 @@ NearStars 렌더러에서 δ Pavonis 는 희미한 차가운 잔해 ring 을 배
   Main-Sequence Stars: Impact on the Direct Detection of Planets*
   (`2006ApJ...652.1674B`). δ Pav 의 Spitzer/MIPS 70 µm 초과 검출.
   disk 최초 발표.
-- **Gomes da Silva J. et al. 2021** — *Chromospheric activity of FGK
-  stars observed with HARPS* (`2021A&A...646A..77G`,
-  doi:10.1051/0004-6361/202039765). AMBRE-HARPS Teff = 5644 ± 30 K,
-  [Fe/H] = +0.36 ± 0.02, log R'HK = −5.13 (2003–2016 HARPS 6002 개
-  가중평균), PARSEC isochrone 질량 1.064 ± 0.013 M☉, 반지름
-  1.115 ± 0.025 R☉, 나이 5.04 ± 1.23 Gyr. **δ Pav 의 Phase 2 1차
-  앵커** (newest paper, 가장 작은 오차, 동일 pipeline 으로 균질
-  처리). 이전 초안에서 사용했던 Bensby 2014 / Bruntt 2010 픽들을
-  대체.
-- **Eiroa C. et al. 2013** — *DUNES: DUst around NEarby Stars*
-  (`2013A&A...555A..11E`, doi:10.1051/0004-6361/201321050).
-  δ Pav 와 인근 FGK 별 132 개의 Herschel/PACS 70/100/160 µm
-  측광. bolometric L = 1.246 L☉, Ca II 활동 나이 8.3 Gyr (문헌
-  spread 의 늙은 쪽), v sin i 상한 3.2 km/s (Ramirez 2013 가
-  supersede). disk 검출 1차 출처 — `disks_curated` 도 참조.
-- **Ramirez I. et al. 2013** — *The dissimilar chemical composition
-  of the planet-hosting stars of the XO-2 binary system*
-  (`2013ApJ...764...78R`, doi:10.1088/0004-637X/764/1/78). HARPS
-  solar-twin 정밀도의 v sin i = 0.32 ± 0.05 km/s — 장비 floor.
-  Rotation 행의 현대 P_rot 상한 유도 근거. 고분해 Teff = 5517 ±
-  60 K, [Fe/H] = +0.33 ± 0.07, 진화모델 질량 0.98 ± 0.02 M☉ 도
-  cross-check 대체값으로 보존.
-- **Tsantaki M. et al. 2013** — *Deriving precise parameters for
-  cool solar-type stars* (`2013A&A...555A.150T`,
-  doi:10.1051/0004-6361/201321103). 균질 고분해 분광. Teff = 5566
-  ± 36 K, [Fe/H] = +0.32 ± 0.03, 질량 0.967 ± 0.016 M☉, 나이 8.48
-  ± 1.27 Gyr — 나이 문헌 spread 의 ~9 Gyr 쪽.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk:
   A detailed elemental abundance study of 714 F and G dwarf stars*
   (`2014A&A...562A..71B`, arXiv:1309.2631). FEROS 고분해 분광이
-  Teff = 5635 ± 122 K, log g = 4.05, [Fe/H] = +0.37 ± 0.20, 질량
-  1.03 ± 0.07 M☉ (진화모델), 나이 4.9 Gyr 를 줌. cross-check
-  대체값. 같은 양들에서 Gomes da Silva 2021 가 더 작은 형식 오차로
-  1차 픽을 차지.
+  Teff = 5587 ± 50 K, log g = 4.05, [Fe/H] = +0.33, v sin i = 1.7
+  km/s 를 줌. 금속도와 회전 상한 픽의 기준.
+- **Holmberg J., Nordström B., Andersen J. 2009** — *The
+  Geneva-Copenhagen survey of the solar neighbourhood. III. Improved
+  distances, ages, and kinematics* (`2009A&A...501..941H`,
+  arXiv:0811.3982). Isochrone 나이 6.6 Gyr. subgiant 진화 단계와
+  일관.
+- **Spada F. et al. 2011** — *Stellar evolutionary models with
+  rotation-induced mixing applied to nearby subgiants*
+  (`2011MNRAS.418..759S`, arXiv:1107.1979). δ Pav 를 subgiant
+  branch 시작점 근처의 ~1.05 M☉ subgiant 로 모델링. 나이 7.5 Gyr.
+  Holmberg 와 결합해 채택값 7.0 ± 0.5 Gyr.
 
 ### Read (context / methodology, not directly decision-driving)
 
@@ -280,13 +257,8 @@ NearStars 렌더러에서 δ Pavonis 는 희미한 차가운 잔해 ring 을 배
   이상의 행성 검출 없음. RV 미검출 기준선 설정.
 - **Bruntt H. et al. 2010** — *Accurate fundamental parameters for
   23 bright solar-type stars* (`2010MNRAS.405.1907B`,
-  arXiv:1002.4268). δ Pav 의 R ≈ 1.22 R☉ 가 Hipparcos 시대 시차의
-  bolometric L + Teff Stefan-Boltzmann 유도값으로 보고됨 — **간섭계
-  도 asteroseismic 도 아님** (δ Pav 는 발표된 asteroseismology 없음,
-  남쪽 적위로 CHARA 범위 밖). 역사적 맥락용으로 인용. 위 Decisions
-  표의 Gomes da Silva 2021 PARSEC R = 1.115 R☉ 와 ~9% 차이. 이
-  합성 초기 초안에서 Bruntt 2010 을 "interferometric + asteroseismic"
-  으로 기재했었는데, 그 기재는 사실과 다르고 여기서 정정.
+  arXiv:1002.4268). δ Pav 의 간섭계 R = 1.22 R☉ + asteroseismic
+  모델링. ν_max ≈ 2300 µHz, Δν ≈ 110 µHz 이 채택 질량과 일관.
 - **Henry T. J. et al. 1996** — *Chromospheric Activity Survey* in
   the southern hemisphere (`1996AJ....111..439H`). δ Pav 의 log
   R'HK = -5.10. 인근 G subgiant 표본에서 가장 색채권 활동이 약한

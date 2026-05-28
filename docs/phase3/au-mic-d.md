@@ -79,8 +79,8 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `aurora_present` | true | medium | thin atmosphere + weak B-field + intense stellar wind → visible aurora; Mars-analog CO₂⁺ emission |
 | `aurora_color_primary_hex` | `#ff6b6b` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm; Mars-analog visible aurora |
 | `aurora_emission_species_primary` | CO₂⁺ doublet + CO Cameron bands + O 297.2 nm | medium | thin CO₂ atmosphere chemistry; MAVEN Mars-aurora analog |
-| `star_apparent_angular_diameter_deg` | 4.2 | high | derived: 2 × 0.82 R☉ / 0.105 AU × (180/π) ≈ 4.2° (R from Phase 2 anchor Donati 2023 ZDI) |
-| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` |
+| `star_apparent_angular_diameter_deg` | 4.2 | high | derived: 2 × 0.82 R☉ / 0.105 AU × (180/π) ≈ 4.2° |
+| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
 
 ## Surface synthesis
 
@@ -316,7 +316,7 @@ with a thin atmosphere — distinct from b/c's gas-giant disks:
 
 ### Read (instrument / non-decisive)
 
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 2015 (`2023MNRAS.525.2015D`). ZDI of host star; provides stellar magnetic-field context for the planetary radiation environment.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI of host star; provides stellar magnetic-field context for the planetary radiation environment.
 - **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). Methodology for AU Mic RV detrending applied (indirectly) to Mallorquin 2024's recovery of d.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)

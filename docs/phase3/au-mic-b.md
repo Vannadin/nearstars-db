@@ -65,8 +65,8 @@ pattern choice). No documented divergences.
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I absorption implies mass-loss ~10⁹–10¹⁰ g/s under energy-limited escape with AU Mic XUV; Plavchan 2020 §6 estimates similar; Cale 2021 §5 |
 | `aurora_present` | true | medium | strong stellar wind + H-rich upper atmosphere; H Balmer-α + H₂ Lyman + Werner bands expected |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm + Lyman-α downconverted gives pink-red dominant; interesting-first picks the bright pink over a fainter UV-only rendering |
-| `star_apparent_angular_diameter_deg` | 6.2 | high | derived: 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° (R from Phase 2 anchor Donati 2023 ZDI) |
-| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` |
+| `star_apparent_angular_diameter_deg` | 6.2 | high | derived: 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° |
+| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
 
 ## Surface synthesis
 
@@ -247,7 +247,7 @@ the horizon.
 ### Read (context / methodology, not decision-driving)
 
 - **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, arXiv:2012.04970). SPIRou near-IR ZDI of AU Mic + RV; provides supporting stellar-activity context for the GP detrending used by Mallorquin 2024.
-- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 2015 (`2023MNRAS.525.2015D`). ZDI dipole 2 kG, total RMS 4.6 kG; sets the stellar magnetic-field context.
+- **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI dipole 2 kG, total RMS 4.6 kG; sets the stellar magnetic-field context.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, arXiv:2306.00077). TESS flare census; rate 5.6/day above 10³¹ erg; relevant for atmosphere-escape and aurora timing.
 - **Lavie B. et al. 2017** — *HELIOS-RETRIEVAL: Open-source Nested Sampling Atmospheric Retrieval Code for Exoplanets*, AJ 154, 91 (`2017AJ....154...91L`, arXiv:1610.03216). Cool-Neptune photochemistry framework adopted for the trace-species composition.
 - **Sing D. K. et al. 2016** — *A continuum from clear to cloudy hot-Jupiter exoplanets without primordial water depletion*, Nature 529, 59 (`2016Natur.529...59S`, arXiv:1512.04341). Census of cloud-deck pressures in hot/warm gas giants; supports the 0.70 cloud-cover choice.

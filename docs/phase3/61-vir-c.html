@@ -365,38 +365,37 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_189"></li>
 <li data-i18n="li_190"></li>
 <li data-i18n="li_191"></li>
-<li data-i18n="li_192"></li>
 </ul>
-<h3 data-i18n="h3_193"></h3>
+<h3 data-i18n="h3_192"></h3>
 <ul class="intro">
-<li data-i18n="li_194"></li>
+<li data-i18n="li_193"></li>
 </ul>
-<h3 data-i18n="h3_195"></h3>
-<p class="intro" data-i18n="p_196"></p>
+<h3 data-i18n="h3_194"></h3>
+<p class="intro" data-i18n="p_195"></p>
 <ul class="intro">
+<li data-i18n="li_196"></li>
 <li data-i18n="li_197"></li>
 <li data-i18n="li_198"></li>
-<li data-i18n="li_199"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_200"></h2>
+<h2 data-i18n="h2_199"></h2>
 <ul class="intro">
+<li data-i18n="li_200"></li>
 <li data-i18n="li_201"></li>
 <li data-i18n="li_202"></li>
 <li data-i18n="li_203"></li>
 <li data-i18n="li_204"></li>
 <li data-i18n="li_205"></li>
-<li data-i18n="li_206"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_207"></h2>
+<h2 data-i18n="h2_206"></h2>
 <ul class="intro">
+<li data-i18n="li_207"></li>
 <li data-i18n="li_208"></li>
 <li data-i18n="li_209"></li>
 <li data-i18n="li_210"></li>
-<li data-i18n="li_211"></li>
 </ul>
 </section>
 </main>
@@ -459,7 +458,7 @@ const T = {
   "td_49":"<span class=\"field-tt\" data-ko-tip=\"항성으로부터 받는 복사 (지구 일조량 단위).\" data-en-tip=\"Stellar irradiance at the planet, in Earth-insolation units.\"><code>insolation_s_earth</code></span>",
   "td_50":"17.4",
   "td_51":"high",
-  "td_52":"derived from L = 0.822 L☉ (von Braun 2014) and a = 0.2175 AU",
+  "td_52":"derived from L = 0.82 L☉ and a = 0.2175 AU",
   "td_53":"<span class=\"field-tt\" data-ko-tip=\"평형 온도 (K). 대기·온실효과 없이 흡수-방사 균형 가정.\" data-en-tip=\"Equilibrium temperature (K) assuming no atmosphere and pure radiative balance.\"><code>equilibrium_temp_k</code></span> (A=0)",
   "td_54":"525",
   "td_55":"high",
@@ -537,13 +536,13 @@ const T = {
   "td_127":"low",
   "td_128":"Rocky-core radiogenic contribution; small fraction of total heat flux for a gas planet",
   "td_129":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
-  "td_130":"0.241",
+  "td_130":"0.235",
   "td_131":"high",
-  "td_132":"derived: 2 × R★ / a × (180/π); 0.9867 R☉ (von Braun 2014 CHARA) at 0.2175 AU",
+  "td_132":"derived: 2 × R★ / a × (180/π); 0.963 R☉ at 0.2175 AU",
   "td_133":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
-  "td_134":"5568",
+  "td_134":"5552",
   "td_135":"high",
-  "td_136":"host Teff (Rathsam 2023)",
+  "td_136":"host Teff",
   "h2_137":"Surface synthesis",
   "p_138":"61 Vir c has <b>no rocky surface</b> in the cfg-rendering sense — the planet is a sub-Neptune with a continuous H/He envelope wrapped over a rocky/icy core. The visible &quot;surface&quot; the cfg renders is the cloud-deck at the ~1 bar reference level, where photochemical haze and deep KCl / Na₂S clouds combine to produce a featureless globally cloud-covered appearance under solar-twin illumination.",
   "p_139":"The deep interior structure is inferred from mass–radius scaling for sub-Neptunes (Lopez &amp; Fortney 2014, Howe 2014). For Msini = 18.2 M⊕ at 0.22 AU around a G-dwarf, three mass–radius branches are observationally consistent:",
@@ -555,13 +554,13 @@ const T = {
   "p_145":"<b>Morphology under pseudo-synchronous rotation.</b> With a 38 d orbital period and e=0.14, the spin state is most likely <b>pseudo-synchronous</b> (Hut 1981, Henning &amp; Hurford 2014) — rotation rate matching the orbital angular velocity at pericenter, ~30 d sidereal period rather than locked 38 d. Showman 2009 and Lewis 2014 GCMs for warm sub-Neptunes in this rotation regime predict a strong eastward super-rotating equatorial jet (~1 km/s) driving a thin zonal banding structure under the global haze deck. The bands are faint — order-unity-contrast clouds + haze blend them into a soft global gradient rather than a Jupiter-style sharp zonal stripes.",
   "h2_146":"Atmosphere synthesis",
   "p_147":"c&#x27;s atmosphere is canonical sub-Neptune territory: a retained H/He primary envelope of 3–5% by mass over a rocky/icy core, with trace condensable volatiles (H₂O, CH₄, NH₃) and photochemical hazes that dominate the optical appearance.",
-  "p_148":"<b>Retention argument.</b> Owen &amp; Wu 2017&#x27;s photoevaporation valley analysis places c well to the right of the loss boundary. For an 18 M⊕ core at 0.22 AU around a 0.822 L☉ G-dwarf, the XUV-driven mass loss rate scales to ~10⁷ g/s — about 0.1% of the envelope mass lost per Gyr. Over the 5.5 Gyr system age the total loss is ~0.8% of the envelope, well below the 3–5% nominal envelope mass. c retains its primary atmosphere comfortably.",
+  "p_148":"<b>Retention argument.</b> Owen &amp; Wu 2017&#x27;s photoevaporation valley analysis places c well to the right of the loss boundary. For an 18 M⊕ core at 0.22 AU around a 0.82 L☉ G-dwarf, the XUV-driven mass loss rate scales to ~10⁷ g/s — about 0.1% of the envelope mass lost per Gyr. Over the 6.1 Gyr system age the total loss is ~0.6% of the envelope, well below the 3–5% nominal envelope mass. c retains its primary atmosphere comfortably.",
   "p_149":"<b>Pressure profile.</b> No surface — the envelope is hydrostatically continuous from low-density gas at the top to multi-kbar supercritical H/He at the rocky-core boundary. The cfg adopts a 1-bar reference level for the &quot;cloud-top&quot; surface that the renderer treats as the visible disk. Scale height 220 km at this level is consistent with sub-Neptune scale-height estimates (Lewis 2014). Atmospheric composition follows the standard primordial-envelope model (Madhusudhan 2012, Moses 2013): H₂ ~75%, He ~24%, H₂O ~0.3%, CH₄ ~0.1%, NH₃ ~0.05%, with traces of CO, CO₂, HCN, and photochemical hazes that dominate the optical appearance.",
   "p_150":"<b>Clouds.</b> At T_eq ~ 480 K and pressures of 0.1–10 bar, the condensable species in equilibrium are KCl (condensing at ~600 K), Na₂S (~700 K), and water ice (condensing at upper altitudes where T drops below 273 K). KCl/Na₂S clouds form the deep cloud deck; water-ice clouds form an upper-altitude condensate veil where the temperature inverts above the haze layer. Above all of this, photochemical haze (Morley 2015, Lavvas 2017) builds up from methane + HCN photolysis under solar-twin UV — producing the optically thick blanket that makes warm sub-Neptunes featureless in transmission spectroscopy.",
   "p_151":"<b>Sky appearance from a hypothetical aerostat at 1 bar.</b> The sky above is hazy cream-orange (<span class=\"hex-chip\" style=\"background:#d8c8a8\"></span><code>#d8c8a8</code>) with the disk of 61 Vir visible through the haze as a diffuse warm-yellow patch at angular diameter ~0.23° — about half the Sun&#x27;s apparent diameter from Earth. Surface brightness through the haze is significantly reduced from the direct insolation level (S = 17.4 S⊕ at top of atmosphere becomes ~3 S⊕ at the 1-bar level after haze attenuation). Day-night contrast is moderate: ~80 K temperature difference between the substellar cloud-top (~460 K) and antistellar cloud-top (~380 K) drives a pseudo-zonal circulation that smooths out sharp terminator features.",
-  "p_152":"<b>Photochemical haze chemistry.</b> The 5568 K solar-twin SED gives a near-Earth-Sun UV-to-visible ratio. Methane photolysis at λ ≲ 200 nm produces HCN, C₂H₂, and higher-mass haze precursors that nucleate into the optically thick haze layer (Lavvas 2017). The haze is distributed across the stratosphere from ~0.01 to ~0.1 bar, with optical depth τ ≫ 1 at visible wavelengths — making c essentially opaque to direct surface viewing.",
+  "p_152":"<b>Photochemical haze chemistry.</b> The 5552 K solar-twin SED gives a near-Earth-Sun UV-to-visible ratio. Methane photolysis at λ ≲ 200 nm produces HCN, C₂H₂, and higher-mass haze precursors that nucleate into the optically thick haze layer (Lavvas 2017). The haze is distributed across the stratosphere from ~0.01 to ~0.1 bar, with optical depth τ ≫ 1 at visible wavelengths — making c essentially opaque to direct surface viewing.",
   "h2_153":"Rotation &amp; spin synthesis",
-  "p_154":"c&#x27;s spin state is determined by the balance of tidal-damping and eccentricity-pumping timescales. At a 38-day orbital period, 0.22 AU separation, and 18 M⊕ mass, the tidal locking timescale for an Earth-analog interior Q is ~1–3 Gyr (Henning &amp; Hurford 2014 scaling). This is comparable to but shorter than the 5.5 Gyr system age — c has had time to damp obliquity and spin angular velocity but not necessarily to reach strict 1:1 lock.",
+  "p_154":"c&#x27;s spin state is determined by the balance of tidal-damping and eccentricity-pumping timescales. At a 38-day orbital period, 0.22 AU separation, and 18 M⊕ mass, the tidal locking timescale for an Earth-analog interior Q is ~1–3 Gyr (Henning &amp; Hurford 2014 scaling). This is comparable to the 6.1 Gyr system age — c has had time to damp obliquity and spin angular velocity but not necessarily to reach strict 1:1 lock.",
   "p_155":"With eccentricity 0.14 (Vogt 2010), Hut 1981&#x27;s pseudo-synchronous state is the most likely outcome: rotation rate matching the orbital angular velocity at pericenter, giving a sidereal period of ~30 d (vs. the orbital 38 d). This produces a slowly drifting substellar point in the rotating frame, with the substellar longitude completing a full rotation in ~150 days.",
   "p_156":"<b>KSP implementation note.</b> The cfg adopts <code>rotation_period_days</code> = 30 (pseudo-synchronous, ~2 590 000 s in Kopernicus units). This is distinct from the orbital period and produces a non-locked but slow rotation that gives c a faint diurnal cycle for any orbital observer.",
   "p_157":"<b>Obliquity.</b> Tidal damping has reduced obliquity but the pseudo-synchronous state allows non-zero residual obliquity. The cfg picks 5° as a tie-break — small enough to be dynamically plausible, large enough to give a faint seasonal modulation of the cloud bands.",
@@ -594,31 +593,30 @@ const T = {
   "li_184":"<b>Henning W. G. &amp; Hurford T. 2014</b> — <i>Tidal heating in multilayered terrestrial exoplanets</i>, ApJ 789, 30 (<code>2014ApJ...789...30H</code>, arXiv:1311.5904). Sub-Neptune tidal heating + spin-locking timescales; gives ~1–3 Gyr for c&#x27;s parameters.",
   "li_185":"<b>Bolmont E. et al. 2020</b> — <i>Tidal dissipation and obliquity evolution</i> (<code>2020A&amp;A...644A.165B</code>, arXiv:2002.02015). Provides the tidal-heating flux scaling for c (0.001–0.01 W/m²).",
   "h3_186":"Read (context / methodology, not decision-driving)",
-  "li_187":"<b>Rathsam A. et al. 2023</b> — <i>Lithium depletion in solar analogs</i>, MNRAS 525, 4642 (<code>2023MNRAS.525.4642R</code>, doi:10.1093/mnras/stad2589). Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age (5.50 +0.78/-0.74 Gyr); sets the photoevaporation-evolution timescale.",
-  "li_188":"<b>von Braun K. et al. 2014</b> — <i>Stellar diameters V</i>, MNRAS 438, 2413 (<code>2014MNRAS.438.2413V</code>, doi:10.1093/mnras/stt2360). Inherited from host-star synthesis. L = 0.8222 ± 0.0033 L☉ anchors the insolation derivation.",
-  "li_189":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs</i> (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). Inherited from host-star synthesis. Activity-age 6.1 ± 1.7 Gyr — demoted to cross-check vs Rathsam 2023 isochrone (documented divergence in host-star reconciliation).",
-  "li_190":"<b>Fulton B. J. et al. 2017</b> — <i>The California-Kepler Survey III. A Gap in the Radius Distribution of Small Planets</i>, AJ 154, 109 (<code>2017AJ....154..109F</code>, arXiv:1703.10375). Radius valley demographics; supports the H/He envelope canonical reading for c&#x27;s 18 M⊕ population.",
-  "li_191":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i> (<code>2012MNRAS.424.1206W</code>, arXiv:1206.2370). Inherited from host-star synthesis. Cited briefly; the cold debris ring at 30 AU does not interact dynamically with c at 0.22 AU.",
-  "li_192":"<b>Madhusudhan N. et al. 2021</b> — <i>Habitability and biosignatures of Hycean worlds</i>, ApJ 918, 1 (<code>2021ApJ...918....1M</code>, arXiv:2108.10888). Hycean alternative scenario for sub-Neptunes; relevant to d&#x27;s Open-items variant. Less applicable to c at its warmer T_eq but cited as the broader sub-Neptune classification framework.",
-  "h3_193":"Read (instrument-only, not visual-informative)",
-  "li_194":"<b>Marcy G. W. et al. 2014</b> — Kepler super-Earth statistics context.",
-  "h3_195":"Not read — no arXiv preprint or low-priority (~10 papers)",
-  "p_196":"The c-specific arXiv record is small. The not-read set is predominantly:",
-  "li_197":"<b>Dynamical-stability follow-ups</b> of the Vogt 2010 system.",
-  "li_198":"<b>Transit search non-detections</b> confirming c does not transit; Geometric transit probability for c at e=0.14, a=0.22 AU is ~1.5%, so the non-detection is consistent with random inclination.",
-  "li_199":"<b>Generic photoevaporation-rate calculations</b> without 61 Vir-specific stellar wind models.",
-  "h2_200":"Open items for follow-up",
-  "li_201":"<b>True mass and radius from direct imaging.</b> c&#x27;s mass is Msini-only and its radius is a mass–radius scaling estimate. A future direct-imaging campaign would yield true mass + radius from a reflected-light detection; HabEx / LUVOIR era observation.",
-  "li_202":"<b>Cfg variant: water-rich Hycean-style envelope.</b> At c&#x27;s insolation (T_eq ~ 480 K), a water-rich envelope with H₂ atmosphere is observationally consistent with the H/He primary envelope. Cfg variant would render c as a denser, less hazy, deeper-blue disk. Document as Phase 3.5 alternative.",
-  "li_203":"<b>Cfg variant: rocky no-envelope alternative.</b> Photoevaporation physics strongly favors envelope retention but a small residual probability remains for a pure-rocky 18 M⊕ planet (R ≈ 2.4 R⊕, density ~6.5 g/cc). Render would be a hot rocky world similar to b but cooler — visually distinct from the haze-covered canonical reading. Preserve as cfg variant.",
-  "li_204":"<b>Future JWST or HabEx transmission spectroscopy.</b> Although c does not transit, future direct-imaging spectroscopy could resolve the cloud-top composition. Refinement opportunities: H₂O/CH₄/NH₃ abundances, haze optical depth, deeper cloud composition (KCl vs Na₂S vs ZnS).",
-  "li_205":"<b>GCM-driven cloud morphology.</b> Lewis 2014 GCMs for warm sub-Neptunes predict zonal banding but the band contrast at c&#x27;s specific parameters has not been simulated. A targeted GCM run would constrain the <span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span> choice between &quot;global haze deck&quot; and &quot;haze + visible Jupiter-style bands.&quot;",
-  "li_206":"<b>Atmospheric escape rate cross-check.</b> Owen &amp; Wu 2017 generic scaling supports envelope retention; a 61 Vir-specific stellar wind + XUV model (Vidotto-style) would refine the loss-rate estimate.",
-  "h2_207":"Related",
-  "li_208":"<a href=\"61-vir.md\">61-vir</a> — host star Phase 3 synthesis",
-  "li_209":"<a href=\"61-vir-b.md\">61-vir-b</a> — next-inward sibling hot super-Earth at 0.05 AU",
-  "li_210":"<a href=\"61-vir-d.md\">61-vir-d</a> — next-outward sibling sub-Neptune at 0.48 AU (cooler analog)",
-  "li_211":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_187":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs</i> (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). Inherited from host-star synthesis. Gives 61 Vir age 6.1 ± 1.7 Gyr; sets the photoevaporation evolution timescale.",
+  "li_188":"<b>Pavlenko Y. V. et al. 2012</b> — <i>Solar twin candidates</i> (<code>2012MNRAS.422..542P</code>, arXiv:1112.0590). Inherited from host-star synthesis. Confirms solar-twin SED for the photochemical haze model.",
+  "li_189":"<b>Fulton B. J. et al. 2017</b> — <i>The California-Kepler Survey III. A Gap in the Radius Distribution of Small Planets</i>, AJ 154, 109 (<code>2017AJ....154..109F</code>, arXiv:1703.10375). Radius valley demographics; supports the H/He envelope canonical reading for c&#x27;s 18 M⊕ population.",
+  "li_190":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i> (<code>2012MNRAS.424.1206W</code>, arXiv:1204.6063). Inherited from host-star synthesis. Cited briefly; the cold debris ring at 30 AU does not interact dynamically with c at 0.22 AU.",
+  "li_191":"<b>Madhusudhan N. et al. 2021</b> — <i>Habitability and biosignatures of Hycean worlds</i>, ApJ 918, 1 (<code>2021ApJ...918....1M</code>, arXiv:2108.10888). Hycean alternative scenario for sub-Neptunes; relevant to d&#x27;s Open-items variant. Less applicable to c at its warmer T_eq but cited as the broader sub-Neptune classification framework.",
+  "h3_192":"Read (instrument-only, not visual-informative)",
+  "li_193":"<b>Marcy G. W. et al. 2014</b> — Kepler super-Earth statistics context.",
+  "h3_194":"Not read — no arXiv preprint or low-priority (~10 papers)",
+  "p_195":"The c-specific arXiv record is small. The not-read set is predominantly:",
+  "li_196":"<b>Dynamical-stability follow-ups</b> of the Vogt 2010 system.",
+  "li_197":"<b>Transit search non-detections</b> confirming c does not transit; Geometric transit probability for c at e=0.14, a=0.22 AU is ~1.5%, so the non-detection is consistent with random inclination.",
+  "li_198":"<b>Generic photoevaporation-rate calculations</b> without 61 Vir-specific stellar wind models.",
+  "h2_199":"Open items for follow-up",
+  "li_200":"<b>True mass and radius from direct imaging.</b> c&#x27;s mass is Msini-only and its radius is a mass–radius scaling estimate. A future direct-imaging campaign would yield true mass + radius from a reflected-light detection; HabEx / LUVOIR era observation.",
+  "li_201":"<b>Cfg variant: water-rich Hycean-style envelope.</b> At c&#x27;s insolation (T_eq ~ 480 K), a water-rich envelope with H₂ atmosphere is observationally consistent with the H/He primary envelope. Cfg variant would render c as a denser, less hazy, deeper-blue disk. Document as Phase 3.5 alternative.",
+  "li_202":"<b>Cfg variant: rocky no-envelope alternative.</b> Photoevaporation physics strongly favors envelope retention but a small residual probability remains for a pure-rocky 18 M⊕ planet (R ≈ 2.4 R⊕, density ~6.5 g/cc). Render would be a hot rocky world similar to b but cooler — visually distinct from the haze-covered canonical reading. Preserve as cfg variant.",
+  "li_203":"<b>Future JWST or HabEx transmission spectroscopy.</b> Although c does not transit, future direct-imaging spectroscopy could resolve the cloud-top composition. Refinement opportunities: H₂O/CH₄/NH₃ abundances, haze optical depth, deeper cloud composition (KCl vs Na₂S vs ZnS).",
+  "li_204":"<b>GCM-driven cloud morphology.</b> Lewis 2014 GCMs for warm sub-Neptunes predict zonal banding but the band contrast at c&#x27;s specific parameters has not been simulated. A targeted GCM run would constrain the <span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span> choice between &quot;global haze deck&quot; and &quot;haze + visible Jupiter-style bands.&quot;",
+  "li_205":"<b>Atmospheric escape rate cross-check.</b> Owen &amp; Wu 2017 generic scaling supports envelope retention; a 61 Vir-specific stellar wind + XUV model (Vidotto-style) would refine the loss-rate estimate.",
+  "h2_206":"Related",
+  "li_207":"<a href=\"61-vir.md\">61-vir</a> — host star Phase 3 synthesis",
+  "li_208":"<a href=\"61-vir-b.md\">61-vir-b</a> — next-inward sibling hot super-Earth at 0.05 AU",
+  "li_209":"<a href=\"61-vir-d.md\">61-vir-d</a> — next-outward sibling sub-Neptune at 0.48 AU (cooler analog)",
+  "li_210":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
   "title":"61 Vir c — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -676,7 +674,7 @@ const T = {
   "td_49":"<span class=\"field-tt\" data-ko-tip=\"항성으로부터 받는 복사 (지구 일조량 단위).\" data-en-tip=\"Stellar irradiance at the planet, in Earth-insolation units.\"><code>insolation_s_earth</code></span>",
   "td_50":"17.4",
   "td_51":"high",
-  "td_52":"L = 0.822 L☉ (von Braun 2014) 와 a = 0.2175 AU 에서 유도",
+  "td_52":"L = 0.82 L☉ 와 a = 0.2175 AU 에서 유도",
   "td_53":"<span class=\"field-tt\" data-ko-tip=\"평형 온도 (K). 대기·온실효과 없이 흡수-방사 균형 가정.\" data-en-tip=\"Equilibrium temperature (K) assuming no atmosphere and pure radiative balance.\"><code>equilibrium_temp_k</code></span> (A=0)",
   "td_54":"525",
   "td_55":"high",
@@ -754,13 +752,13 @@ const T = {
   "td_127":"low",
   "td_128":"암석 핵 방사성 기여. 가스 행성의 총 열흐름의 작은 비율",
   "td_129":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
-  "td_130":"0.241",
+  "td_130":"0.235",
   "td_131":"high",
-  "td_132":"유도. 2 × R★ / a × (180/π). 0.2175 AU 의 0.9867 R☉ (von Braun 2014 CHARA)",
+  "td_132":"유도. 2 × R★ / a × (180/π). 0.2175 AU 의 0.963 R☉",
   "td_133":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
-  "td_134":"5568",
+  "td_134":"5552",
   "td_135":"high",
-  "td_136":"호스트 Teff (Rathsam 2023)",
+  "td_136":"호스트 Teff",
   "h2_137":"Surface synthesis",
   "p_138":"61 Vir c 는 cfg-렌더링 의미의 <b>암석 표면이 없습니다</b> — 행성은 암석 / 얼음 핵 위에 H/He 외피가 연속적으로 감긴 sub-Neptune 입니다. cfg 가 렌더링하는 가시 &quot;표면&quot; 은 ~1 bar 기준 레벨의 구름 데크입니다. 거기서 광화학 haze 와 깊은 KCl / Na₂S 구름이 결합해 솔라 트윈 조명 아래 featureless 전역 구름-덮인 외관을 생성합니다.",
   "p_139":"깊은 내부 구조는 sub-Neptune mass-radius 스케일링 (Lopez &amp; Fortney 2014. Howe 2014) 에서 추론됩니다. G 왜성 0.22 AU 의 Msini = 18.2 M⊕ 에서 관측적으로 일관된 mass-radius 분기 세 가지가 있습니다.",
@@ -772,13 +770,13 @@ const T = {
   "p_145":"<b>Pseudo-synchronous 자전 하의 형태.</b> 38 일 궤도 주기와 e=0.14 에서 spin 상태는 <b>pseudo-synchronous</b> 가 가장 그럴듯합니다 (Hut 1981, Henning &amp; Hurford 2014) — 자전율이 근일점 궤도 각속도와 일치하는 ~30 일 sidereal 주기 (lock 된 38 일이 아닌). 이 자전 영역의 따뜻한 sub-Neptune 에 대한 Showman 2009 와 Lewis 2014 GCM 은 전역 haze 데크 아래에 얇은 zonal banding 구조를 구동하는 강한 동풍 super-rotating 적도 jet (~1 km/s) 을 예측합니다. 띠는 옅음 — 단위 대비 정도의 구름 + haze 가 그것을 Jupiter 스타일의 또렷한 zonal 줄무늬가 아닌 부드러운 전역 gradient 로 섞어 버립니다.",
   "h2_146":"Atmosphere synthesis",
   "p_147":"c 의 대기는 표준적인 sub-Neptune 영역입니다. 암석 / 얼음 핵 위 3–5% 질량의 보유된 H/He 일차 외피, 미량 응결 휘발성 (H₂O, CH₄, NH₃), 그리고 광학 외관을 지배하는 광화학 haze.",
-  "p_148":"<b>보유 논거.</b> Owen &amp; Wu 2017 의 광증발 valley 분석은 c 를 손실 경계 한참 오른쪽에 위치시킵니다. 0.822 L☉ G 왜성 0.22 AU 의 18 M⊕ 핵에서 XUV 구동 질량 손실율은 ~10⁷ g/s — Gyr 당 외피 질량의 약 0.1% 손실. 5.5 Gyr 시스템 나이에 걸쳐 총 손실은 외피의 ~0.8% 로, 3–5% 명목 외피 질량 한참 아래. c 는 일차 대기를 여유 있게 보유합니다.",
+  "p_148":"<b>보유 논거.</b> Owen &amp; Wu 2017 의 광증발 valley 분석은 c 를 손실 경계 한참 오른쪽에 위치시킵니다. 0.82 L☉ G 왜성 0.22 AU 의 18 M⊕ 핵에서 XUV 구동 질량 손실율은 ~10⁷ g/s — Gyr 당 외피 질량의 약 0.1% 손실. 6.1 Gyr 시스템 나이에 걸쳐 총 손실은 외피의 ~0.6% 로, 3–5% 명목 외피 질량 한참 아래. c 는 일차 대기를 여유 있게 보유합니다.",
   "p_149":"<b>압력 프로파일.</b> 표면 없음 — 외피는 상단의 저밀도 가스에서 암석-핵 경계의 다 kbar 초임계 H/He 까지 정수압적으로 연속. cfg 는 렌더러가 가시 디스크로 취급하는 &quot;구름-top&quot; 표면에 대해 1 bar 기준 레벨을 채택합니다. 이 레벨의 스케일 높이 220 km 는 sub-Neptune 스케일 높이 추정 (Lewis 2014) 과 일관. 대기 조성은 표준 원시-외피 모델 (Madhusudhan 2012, Moses 2013) 을 따름. H₂ ~75%, He ~24%, H₂O ~0.3%, CH₄ ~0.1%, NH₃ ~0.05%, CO, CO₂, HCN 미량, 그리고 광학 외관을 지배하는 광화학 haze.",
   "p_150":"<b>구름.</b> T_eq ~ 480 K 와 압력 0.1–10 bar 에서 평형의 응결 종은 KCl (~600 K 응결), Na₂S (~700 K), 그리고 상부 고도에서 T 가 273 K 아래로 떨어지는 곳의 물 얼음. KCl/Na₂S 구름이 깊은 구름 데크를 형성. haze 층 위 온도 역전에서는 상부 고도 응결 veil 로 물 얼음 구름이 형성됨. 그 모든 것 위로는 솔라 트윈 UV 아래의 메탄 + HCN 광분해에서 광화학 haze (Morley 2015, Lavvas 2017) 가 축적됨 — 따뜻한 sub-Neptune 을 투과 분광에서 featureless 로 만드는 광학적으로 두꺼운 담요를 생성.",
   "p_151":"<b>1 bar 의 가상 비행선에서 본 하늘 외관.</b> 위쪽 하늘은 haze 가 낀 크림-주황 (<span class=\"hex-chip\" style=\"background:#d8c8a8\"></span><code>#d8c8a8</code>) 이고, 61 Vir 디스크는 haze 를 통해 각지름 ~0.23° 의 흩어진 따뜻한-노란 patch 로 보임 — 지구에서 본 태양 겉보기 지름의 약 절반. haze 를 통한 표면 밝기는 직접 일사 수준에서 의미 있게 감소 (대기 상단에서 S = 17.4 S⊕ 가 haze 감쇠 후 1 bar 레벨에서 ~3 S⊕). Day-night 대비는 적당 — substellar 구름-top (~460 K) 과 antistellar 구름-top (~380 K) 의 ~80 K 온도차가 또렷한 terminator feature 를 부드럽게 하는 pseudo-zonal 순환을 구동.",
-  "p_152":"<b>광화학 haze 화학.</b> 5568 K 솔라 트윈 SED 는 거의 지구-태양 UV-to- 가시 비율을 줌. λ ≲ 200 nm 의 메탄 광분해는 HCN, C₂H₂, 그리고 광학 적으로 두꺼운 haze 층으로 핵형성하는 더 무거운 haze 전구체를 생성 (Lavvas 2017). haze 는 ~0.01 에서 ~0.1 bar 의 성층권 전체에 분포하며 가시 파장에서 광학 깊이 τ ≫ 1 — 본질적으로 c 를 직접 표면 관측에 대해 불투명하게 만듦.",
+  "p_152":"<b>광화학 haze 화학.</b> 5552 K 솔라 트윈 SED 는 거의 지구-태양 UV-to- 가시 비율을 줌. λ ≲ 200 nm 의 메탄 광분해는 HCN, C₂H₂, 그리고 광학 적으로 두꺼운 haze 층으로 핵형성하는 더 무거운 haze 전구체를 생성 (Lavvas 2017). haze 는 ~0.01 에서 ~0.1 bar 의 성층권 전체에 분포하며 가시 파장에서 광학 깊이 τ ≫ 1 — 본질적으로 c 를 직접 표면 관측에 대해 불투명하게 만듦.",
   "h2_153":"Rotation &amp; spin synthesis",
-  "p_154":"c 의 spin 상태는 조석-감쇠와 이심률-펌핑 시간 스케일의 균형으로 결정됩니다. 38 일 궤도 주기, 0.22 AU 분리, 18 M⊕ 질량에서 지구 아날로그 내부 Q 의 조석 고정 시간은 ~1–3 Gyr (Henning &amp; Hurford 2014 스케일링) 입니다. 이는 5.5 Gyr 시스템 나이에 견줄 만하지만 조금 짧습니다 — c 는 obliquity 와 spin 각속도를 감쇠시킬 시간은 있었지만 반드시 엄격한 1:1 lock 에 도달한 것은 아닙니다.",
+  "p_154":"c 의 spin 상태는 조석-감쇠와 이심률-펌핑 시간 스케일의 균형으로 결정됩니다. 38 일 궤도 주기, 0.22 AU 분리, 18 M⊕ 질량에서 지구 아날로그 내부 Q 의 조석 고정 시간은 ~1–3 Gyr (Henning &amp; Hurford 2014 스케일링) 입니다. 이는 6.1 Gyr 시스템 나이와 비슷합니다 — c 는 obliquity 와 spin 각속도를 감쇠시킬 시간은 있었지만 반드시 엄격한 1:1 lock 에 도달한 것은 아닙니다.",
   "p_155":"이심률 0.14 (Vogt 2010) 에서 Hut 1981 의 pseudo-synchronous 상태가 가장 그럴듯한 결과. 자전율이 근일점 궤도 각속도와 일치하여, sidereal 주기는 ~30 일 (궤도의 38 일 대비). 이는 회전 frame 에서 천천히 drift 하는 substellar 점을 생성. substellar 경도가 ~150 일 만에 전체 회전 완료.",
   "p_156":"<b>KSP 구현 노트.</b> cfg 는 <code>rotation_period_days</code> = 30 (pseudo-synchronous, Kopernicus 단위로 ~2 590 000 초) 을 채택. 이는 궤도 주기와 구분되며, 어떤 궤도 관측자에게 c 에 옅은 일주 사이클을 주는 lock 안 된 느린 자전을 생성.",
   "p_157":"<b>Obliquity.</b> 조석 감쇠가 obliquity 를 줄였지만 pseudo-synchronous 상태가 0 이 아닌 잔존 obliquity 를 허용. cfg 는 tie-break 으로 5° 채택 — 동역학적으로 그럴듯할 정도로 작고, 구름 띠에 옅은 계절 변조를 줄 정도로 큼.",
@@ -811,31 +809,30 @@ const T = {
   "li_184":"<b>Henning W. G. &amp; Hurford T. 2014</b> — <i>Tidal heating in multilayered terrestrial exoplanets</i>, ApJ 789, 30 (<code>2014ApJ...789...30H</code>, arXiv:1311.5904). sub-Neptune 조석 가열 + spin-lock 시간 스케일. c 의 파라미터에서 ~1–3 Gyr 제공.",
   "li_185":"<b>Bolmont E. et al. 2020</b> — <i>Tidal dissipation and obliquity evolution</i> (<code>2020A&amp;A...644A.165B</code>, arXiv:2002.02015). c 의 조석-가열 flux 스케일링 제공 (0.001–0.01 W/m²).",
   "h3_186":"Read (context / methodology, not decision-driving)",
-  "li_187":"<b>Rathsam A. et al. 2023</b> — <i>Lithium depletion in solar analogs</i>, MNRAS 525, 4642 (<code>2023MNRAS.525.4642R</code>, doi:10.1093/mnras/stad2589). 호스트 합성에서 상속. 61 Vir 의 Phase 2 나이 앵커 (5.50 +0.78/-0.74 Gyr). 광증발 진화 시간 스케일을 결정.",
-  "li_188":"<b>von Braun K. et al. 2014</b> — <i>Stellar diameters V</i>, MNRAS 438, 2413 (<code>2014MNRAS.438.2413V</code>, doi:10.1093/mnras/stt2360). 호스트 합성에서 상속. L = 0.8222 ± 0.0033 L☉ 가 일사 유도의 앵커.",
-  "li_189":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs</i> (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). 호스트 합성에서 상속. 활동도-나이 6.1 ± 1.7 Gyr — Rathsam 2023 isochrone 에 대한 교차 확인으로 강등 (호스트 합성에서 documented divergence).",
-  "li_190":"<b>Fulton B. J. et al. 2017</b> — <i>The California-Kepler Survey III. A Gap in the Radius Distribution of Small Planets</i>, AJ 154, 109 (<code>2017AJ....154..109F</code>, arXiv:1703.10375). 반지름 valley 인구. c 의 18 M⊕ 인구에 대한 H/He 외피 canonical 해석을 지지.",
-  "li_191":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i> (<code>2012MNRAS.424.1206W</code>, arXiv:1206.2370). 호스트 합성에서 상속. 간략 히 인용. 30 AU 의 차가운 debris 고리는 0.22 AU 의 c 와 동역학적으로 상호작용하지 않음.",
-  "li_192":"<b>Madhusudhan N. et al. 2021</b> — <i>Habitability and biosignatures of Hycean worlds</i>, ApJ 918, 1 (<code>2021ApJ...918....1M</code>, arXiv:2108.10888). sub-Neptune 의 Hycean 대안 시나리오. d 의 Open-items variant 와 관련. 더 따뜻한 T_eq 의 c 에는 덜 적용되지만 더 넓은 sub-Neptune 분류 프레임워크로 인용.",
-  "h3_193":"Read (instrument-only, not visual-informative)",
-  "li_194":"<b>Marcy G. W. et al. 2014</b> — Kepler 슈퍼지구 통계 맥락.",
-  "h3_195":"Not read — no arXiv preprint or low-priority (~10 papers)",
-  "p_196":"c 특정 arXiv 기록은 작습니다. 읽지 않은 집합은 주로 다음과 같습니다.",
-  "li_197":"<b>Vogt 2010 시스템의 동역학 안정성 follow-up.</b>",
-  "li_198":"<b>트랜짓 탐색 non-detection.</b> c 가 트랜짓하지 않음을 확인. e=0.14, a=0.22 AU 에서 c 의 기하학적 트랜짓 확률은 ~1.5% 이므로 non-detection 은 무작위 경사와 일관.",
-  "li_199":"<b>61 Vir 특정 항성풍 모델 없이 일반 광증발율 계산.</b>",
-  "h2_200":"Open items for follow-up",
-  "li_201":"<b>직접 영상에서의 진질량과 반지름.</b> c 의 질량은 Msini 전용이고 반지름은 mass-radius 스케일링 추정치. 미래의 직접 영상 캠페인이 반사광 검출에서 진질량 + 반지름을 산출. HabEx / LUVOIR 시대 관측.",
-  "li_202":"<b>Cfg variant. 물-풍부 Hycean 스타일 외피.</b> c 의 일조량 (T_eq ~ 480 K) 에서 H₂ 대기를 가진 물-풍부 외피는 H/He 일차 외피와 관측적으로 일관. cfg variant 는 c 를 더 밀도 높고 덜 haze 가 낀, 더 깊은-청 디스크로 렌더링. Phase 3.5 대안으로 명시.",
-  "li_203":"<b>Cfg variant. 암석 외피-없음 대안.</b> 광증발 물리가 외피 보유를 강하게 선호하지만 순수 암석 18 M⊕ 행성 (R ≈ 2.4 R⊕. 밀도 ~6.5 g/cc) 의 작은 잔여 확률 남아 있음. 렌더는 b 와 비슷한 뜨거운 암석 세계지만 더 차가움 — haze 덮인 canonical 해석과 시각적으로 구분. cfg variant 로 보존.",
-  "li_204":"<b>미래 JWST 또는 HabEx 투과 분광.</b> c 가 트랜짓하지 않지만, 미래의 직접-영상 분광이 구름-top 조성을 분해할 수 있음. 정밀화 기회. H₂O/CH₄/NH₃ 풍부도, haze 광학 깊이, 더 깊은 구름 조성 (KCl vs Na₂S vs ZnS).",
-  "li_205":"<b>GCM 구동 구름 형태.</b> 따뜻한 sub-Neptune 에 대한 Lewis 2014 GCM 은 zonal banding 을 예측하지만 c 의 특정 파라미터에서의 띠 대비는 시뮬레이션된 바 없음. 표적 GCM 실행이 &quot;전역 haze 데크&quot; 와 &quot;haze + 가시 Jupiter 스타일 띠&quot; 사이의 <span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span> 선택을 제약 가능.",
-  "li_206":"<b>대기 탈출율 교차 점검.</b> Owen &amp; Wu 2017 일반 스케일링이 외피 보유를 지지. 61 Vir 특정 항성풍 + XUV 모델 (Vidotto 스타일) 이 손실율 추정을 정밀화.",
-  "h2_207":"Related",
-  "li_208":"<a href=\"61-vir.md\">61-vir</a> — 호스트 별 Phase 3 합성.",
-  "li_209":"<a href=\"61-vir-b.md\">61-vir-b</a> — 다음 안쪽 자매 뜨거운 슈퍼지구. 0.05 AU.",
-  "li_210":"<a href=\"61-vir-d.md\">61-vir-d</a> — 다음 외측 자매 sub-Neptune. 0.48 AU (더 차가운 아날로그).",
-  "li_211":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마.",
+  "li_187":"<b>Mamajek E. E. &amp; Hillenbrand L. A. 2008</b> — <i>Improved Age Estimation for Solar-Type Dwarfs</i> (<code>2008ApJ...687.1264M</code>, arXiv:0807.1686). 호스트 합성에서 상속. 61 Vir 나이 6.1 ± 1.7 Gyr. 광증발 진화 시간 스케일을 결정.",
+  "li_188":"<b>Pavlenko Y. V. et al. 2012</b> — <i>Solar twin candidates</i> (<code>2012MNRAS.422..542P</code>, arXiv:1112.0590). 호스트 합성에서 상속. 광화학 haze 모델을 위한 솔라 트윈 SED 확인.",
+  "li_189":"<b>Fulton B. J. et al. 2017</b> — <i>The California-Kepler Survey III. A Gap in the Radius Distribution of Small Planets</i>, AJ 154, 109 (<code>2017AJ....154..109F</code>, arXiv:1703.10375). 반지름 valley 인구. c 의 18 M⊕ 인구에 대한 H/He 외피 canonical 해석을 지지.",
+  "li_190":"<b>Wyatt M. C. et al. 2012</b> — <i>Herschel imaging of 61 Vir</i> (<code>2012MNRAS.424.1206W</code>, arXiv:1204.6063). 호스트 합성에서 상속. 간략 히 인용. 30 AU 의 차가운 debris 고리는 0.22 AU 의 c 와 동역학적으로 상호작용하지 않음.",
+  "li_191":"<b>Madhusudhan N. et al. 2021</b> — <i>Habitability and biosignatures of Hycean worlds</i>, ApJ 918, 1 (<code>2021ApJ...918....1M</code>, arXiv:2108.10888). sub-Neptune 의 Hycean 대안 시나리오. d 의 Open-items variant 와 관련. 더 따뜻한 T_eq 의 c 에는 덜 적용되지만 더 넓은 sub-Neptune 분류 프레임워크로 인용.",
+  "h3_192":"Read (instrument-only, not visual-informative)",
+  "li_193":"<b>Marcy G. W. et al. 2014</b> — Kepler 슈퍼지구 통계 맥락.",
+  "h3_194":"Not read — no arXiv preprint or low-priority (~10 papers)",
+  "p_195":"c 특정 arXiv 기록은 작습니다. 읽지 않은 집합은 주로 다음과 같습니다.",
+  "li_196":"<b>Vogt 2010 시스템의 동역학 안정성 follow-up.</b>",
+  "li_197":"<b>트랜짓 탐색 non-detection.</b> c 가 트랜짓하지 않음을 확인. e=0.14, a=0.22 AU 에서 c 의 기하학적 트랜짓 확률은 ~1.5% 이므로 non-detection 은 무작위 경사와 일관.",
+  "li_198":"<b>61 Vir 특정 항성풍 모델 없이 일반 광증발율 계산.</b>",
+  "h2_199":"Open items for follow-up",
+  "li_200":"<b>직접 영상에서의 진질량과 반지름.</b> c 의 질량은 Msini 전용이고 반지름은 mass-radius 스케일링 추정치. 미래의 직접 영상 캠페인이 반사광 검출에서 진질량 + 반지름을 산출. HabEx / LUVOIR 시대 관측.",
+  "li_201":"<b>Cfg variant. 물-풍부 Hycean 스타일 외피.</b> c 의 일조량 (T_eq ~ 480 K) 에서 H₂ 대기를 가진 물-풍부 외피는 H/He 일차 외피와 관측적으로 일관. cfg variant 는 c 를 더 밀도 높고 덜 haze 가 낀, 더 깊은-청 디스크로 렌더링. Phase 3.5 대안으로 명시.",
+  "li_202":"<b>Cfg variant. 암석 외피-없음 대안.</b> 광증발 물리가 외피 보유를 강하게 선호하지만 순수 암석 18 M⊕ 행성 (R ≈ 2.4 R⊕. 밀도 ~6.5 g/cc) 의 작은 잔여 확률 남아 있음. 렌더는 b 와 비슷한 뜨거운 암석 세계지만 더 차가움 — haze 덮인 canonical 해석과 시각적으로 구분. cfg variant 로 보존.",
+  "li_203":"<b>미래 JWST 또는 HabEx 투과 분광.</b> c 가 트랜짓하지 않지만, 미래의 직접-영상 분광이 구름-top 조성을 분해할 수 있음. 정밀화 기회. H₂O/CH₄/NH₃ 풍부도, haze 광학 깊이, 더 깊은 구름 조성 (KCl vs Na₂S vs ZnS).",
+  "li_204":"<b>GCM 구동 구름 형태.</b> 따뜻한 sub-Neptune 에 대한 Lewis 2014 GCM 은 zonal banding 을 예측하지만 c 의 특정 파라미터에서의 띠 대비는 시뮬레이션된 바 없음. 표적 GCM 실행이 &quot;전역 haze 데크&quot; 와 &quot;haze + 가시 Jupiter 스타일 띠&quot; 사이의 <span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span> 선택을 제약 가능.",
+  "li_205":"<b>대기 탈출율 교차 점검.</b> Owen &amp; Wu 2017 일반 스케일링이 외피 보유를 지지. 61 Vir 특정 항성풍 + XUV 모델 (Vidotto 스타일) 이 손실율 추정을 정밀화.",
+  "h2_206":"Related",
+  "li_207":"<a href=\"61-vir.md\">61-vir</a> — 호스트 별 Phase 3 합성.",
+  "li_208":"<a href=\"61-vir-b.md\">61-vir-b</a> — 다음 안쪽 자매 뜨거운 슈퍼지구. 0.05 AU.",
+  "li_209":"<a href=\"61-vir-d.md\">61-vir-d</a> — 다음 외측 자매 sub-Neptune. 0.48 AU (더 차가운 아날로그).",
+  "li_210":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마.",
   "title":"61 Vir c — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

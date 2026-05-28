@@ -188,16 +188,7 @@
             "recommended": true
           }
         ],
-        "activity_measurements": [
-          {
-            "value_x_ray_log_lx_lbol": -3.72,
-            "method": "x_ray",
-            "reference": "Wheatley et al. 2017",
-            "bibcode": "2017MNRAS.465L..74W",
-            "doi": "10.1093/mnrasl/slw192",
-            "recommended": true
-          }
-        ],
+        "activity_measurements": [],
         "stellarium_id": null
       },
       "derived": {
@@ -224,10 +215,7 @@
         "metallicity_fe_h_dex": 0.04,
         "rotation_period_days": 3.295,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": -3.72,
-        "activity_ca_ii_log_lhk": null
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 11917577113.616,
@@ -1038,7 +1026,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -1047,7 +1035,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -1056,7 +1044,7 @@
       "title": "Gillon et al. 2016",
       "doi": "10.1038/nature17448",
       "bibcode": "2016Natur.533..221G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1065,7 +1053,7 @@
       "title": "Gillon et al. 2017",
       "doi": "10.1038/nature21360",
       "bibcode": "2017Natur.542..456G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1074,7 +1062,7 @@
       "title": "Van Grootel et al. 2018",
       "doi": "10.3847/1538-4357/aaa023",
       "bibcode": "2018ApJ...853...30V",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1083,7 +1071,7 @@
       "title": "Grimm et al. 2018",
       "doi": "10.1051/0004-6361/201732233",
       "bibcode": "2018A&A...613A..68G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1092,7 +1080,7 @@
       "title": "Stassun et al. 2019",
       "doi": "10.3847/1538-3881/ab3467",
       "bibcode": "2019AJ....158..138S",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 mass (spectroscopic_calibration)"
       ]
@@ -1101,7 +1089,7 @@
       "title": "Agol et al. 2021",
       "doi": "10.3847/PSJ/abd022",
       "bibcode": "2021PSJ.....2....1A",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1110,7 +1098,7 @@
       "title": "Ducrot et al. 2020",
       "doi": "10.1051/0004-6361/201937392",
       "bibcode": "2020A&A...640A.112D",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "TRAPPIST-1 radius (sed_fitting)"
       ]
@@ -1119,7 +1107,7 @@
       "title": "Greene et al. 2023",
       "doi": "10.1038/s41586-023-05951-7",
       "bibcode": "2023Natur.618...39G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet TRAPPIST-1 b atmosphere"
       ]
@@ -1128,7 +1116,7 @@
       "title": "Zieba et al. 2023",
       "doi": "10.1038/s41586-023-06232-z",
       "bibcode": "2023Natur.620..746Z",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet TRAPPIST-1 c atmosphere"
       ]
@@ -1137,14 +1125,14 @@
       "title": "Luger et al. 2017",
       "doi": "10.1038/s41550-017-0129",
       "bibcode": "2017NatAs...1E.129L",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet TRAPPIST-1 h physical"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -1152,6 +1140,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "M8V ultracool dwarf — log R'HK and Ca II H&K unmeasurable (cool, red, no photospheric continuum at HK wavelengths). H-alpha EW: too faint (V~18.8, J~11.4) for CARMENES/Reiners 2018 survey; no canonical paper-cited EW exists. Activity therefore proxied by X-ray (Wheatley 2017 XMM-Newton, 30 ks): log(L_X/L_bol) = -3.72 (APEC), with model-dependent range -3.70 to -3.40 across spectral models; sits below Wright & Drake 2016 fully-convective saturation cutoff (~10^-3) consistent with the ~7.6 Gyr Burgasser & Mamajek 2017 age. Wilson et al. 2021 (2021ApJ...911...18W, Mega-MUSCLES) reconstructs intrinsic Ly-alpha = 1.40e-14 erg/s/cm2 at Earth — kept as cross-reference but not added as activity_measurements entry since the schema's value_keys cover X-ray + H-alpha + log R'HK + Ca II HK, not Ly-alpha directly."
+    "notes": ""
   }
 }

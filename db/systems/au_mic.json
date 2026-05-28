@@ -19,169 +19,36 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 8.6673,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3700,
-        "spectype": "M1Ve",
+        "teff_k": 3518,
+        "spectype": "M1VeBa1",
         "mass_measurements": [
           {
             "value_msun": 0.51,
             "uncertainty_msun": 0.028,
-            "method": "evolutionary_model",
+            "method": "unverified",
             "reference": "Wittrock et al. 2023",
             "bibcode": "2023AJ....166..232W",
-            "doi": "10.3847/1538-3881/acfda8",
+            "doi": null,
             "recommended": true
-          },
-          {
-            "value_msun": 0.5,
-            "uncertainty_msun": 0.03,
-            "method": "spectroscopic_calibration",
-            "reference": "Plavchan et al. 2020",
-            "bibcode": "2020Natur.582..497P",
-            "doi": "10.1038/s41586-020-2400-z",
-            "recommended": false
-          },
-          {
-            "value_msun": 0.5,
-            "uncertainty_msun": 0.03,
-            "method": "spectroscopic_calibration",
-            "reference": "Donati et al. 2025",
-            "bibcode": "2025A&A...700A.227D",
-            "doi": "10.1051/0004-6361/202555371",
-            "recommended": false
           }
         ],
         "radius_measurements": [
           {
             "value_rsun": 0.82,
             "uncertainty_rsun": 0.02,
-            "method": "spectroscopic_calibration",
+            "method": "unverified",
             "reference": "Donati et al. 2023",
-            "bibcode": "2023MNRAS.525.2015D",
-            "doi": "10.1093/mnras/stad2301",
-            "recommended": true,
-            "notes": "ZDI Stokes V+I inversion radius from v sin i and P_rot = 4.863 d with sin i ≈ 1 (disk + RM-confirmed edge-on geometry). AU Mic is bright enough and far enough north (dec -31) for CHARA to attempt, but no interferometric angular diameter has been published as of 2025; Donati 2023 ZDI radius is the tightest available radius constraint."
-          },
-          {
-            "value_rsun": 0.75,
-            "uncertainty_rsun": 0.03,
-            "method": "spectroscopic_calibration",
-            "reference": "Plavchan et al. 2020",
-            "bibcode": "2020Natur.582..497P",
-            "doi": "10.1038/s41586-020-2400-z",
-            "recommended": false
-          },
-          {
-            "value_rsun": 0.75,
-            "uncertainty_rsun": 0.03,
-            "method": "spectroscopic_calibration",
-            "reference": "Donati et al. 2025",
-            "bibcode": "2025A&A...700A.227D",
-            "doi": "10.1051/0004-6361/202555371",
-            "recommended": false
-          }
-        ],
-        "teff_measurements": [
-          {
-            "value_k": 3700,
-            "uncertainty_k": 100,
-            "method": "high_res_spectroscopy",
-            "reference": "Plavchan et al. 2020",
-            "bibcode": "2020Natur.582..497P",
-            "doi": "10.1038/s41586-020-2400-z",
-            "recommended": true
-          },
-          {
-            "value_k": 3650,
-            "uncertainty_k": 100,
-            "method": "high_res_spectroscopy",
-            "reference": "Donati et al. 2023",
-            "bibcode": "2023MNRAS.525.2015D",
-            "doi": "10.1093/mnras/stad2301",
-            "recommended": false
-          },
-          {
-            "value_k": 3518,
-            "uncertainty_k": 50,
-            "method": "photometric_color",
-            "reference": "Gaia DR3 GSP-Phot",
-            "bibcode": "2023A&A...674A...1G",
-            "doi": "10.1051/0004-6361/202243940",
-            "recommended": false
-          }
-        ],
-        "luminosity_measurements": [
-          {
-            "value_lsun": 0.09,
-            "uncertainty_lsun": 0.02,
-            "method": "bolometric_flux",
-            "reference": "Plavchan et al. 2020",
-            "bibcode": "2020Natur.582..497P",
-            "doi": "10.1038/s41586-020-2400-z",
+            "bibcode": "2023MNRAS.525..455D",
+            "doi": null,
             "recommended": true
           }
         ],
-        "age_measurements": [
-          {
-            "value_gyr": 0.022,
-            "uncertainty_gyr": 0.003,
-            "method": "isochrone",
-            "reference": "Mamajek & Bell 2014",
-            "bibcode": "2014MNRAS.445.2169M",
-            "doi": "10.1093/mnras/stu1894",
-            "recommended": true
-          },
-          {
-            "value_gyr": 0.021,
-            "uncertainty_gyr": 0.004,
-            "method": "isochrone",
-            "reference": "Binks & Jeffries 2014",
-            "bibcode": "2014MNRAS.438L..11B",
-            "doi": "10.1093/mnrasl/slt141",
-            "recommended": false
-          }
-        ],
-        "metallicity_measurements": [
-          {
-            "value_dex": 0.12,
-            "uncertainty_dex": 0.05,
-            "method": "photometric_calibration",
-            "reference": "Miles & Shkolnik 2017 (HAZMAT II)",
-            "bibcode": "2017AJ....154...67M",
-            "doi": "10.3847/1538-3881/aa71ab",
-            "recommended": true
-          }
-        ],
-        "rotation_measurements": [
-          {
-            "value_days": 4.863,
-            "uncertainty_days": 0.01,
-            "method": "photometric_variability",
-            "reference": "Plavchan et al. 2020",
-            "bibcode": "2020Natur.582..497P",
-            "doi": "10.1038/s41586-020-2400-z",
-            "recommended": true
-          }
-        ],
-        "activity_measurements": [
-          {
-            "value_h_alpha_ew_angstrom": -2.4,
-            "uncertainty_h_alpha_ew_angstrom": 0.3,
-            "method": "h_alpha",
-            "reference": "Houdebine 2010",
-            "bibcode": "2010MNRAS.407.1657H",
-            "doi": "10.1111/j.1365-2966.2010.16827.x",
-            "recommended": true
-          },
-          {
-            "value_x_ray_log_lx_lbol": -3.0,
-            "uncertainty_x_ray_log_lx_lbol": 0.15,
-            "method": "x_ray",
-            "reference": "Stelzer et al. 2013",
-            "bibcode": "2013MNRAS.431.2063S",
-            "doi": "10.1093/mnras/stt220",
-            "recommended": false
-          }
-        ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
         "disk_measurements": [
           {
             "belt": "single",
@@ -306,15 +173,12 @@
         "icrs_vx_j2000_km_s": 0.153640137001525,
         "icrs_vy_j2000_km_s": 19.45658368472101,
         "icrs_vz_j2000_km_s": -10.576607761108027,
-        "luminosity_lsun": 0.09,
-        "age_gyr": 0.022,
-        "metallicity_fe_h_dex": 0.12,
-        "rotation_period_days": 4.863,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": -2.4,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 67683344409.18,
@@ -618,7 +482,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -627,113 +491,50 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     },
     {
       "title": "Wittrock et al. 2023",
-      "doi": "10.3847/1538-3881/acfda8",
+      "doi": null,
       "bibcode": "2023AJ....166..232W",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
-        "AU Mic mass (evolutionary_model)"
-      ]
-    },
-    {
-      "title": "Plavchan et al. 2020",
-      "doi": "10.1038/s41586-020-2400-z",
-      "bibcode": "2020Natur.582..497P",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic mass (spectroscopic_calibration)"
-      ]
-    },
-    {
-      "title": "Donati et al. 2025",
-      "doi": "10.1051/0004-6361/202555371",
-      "bibcode": "2025A&A...700A.227D",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic mass (spectroscopic_calibration)"
+        "AU Mic mass (unverified)"
       ]
     },
     {
       "title": "Donati et al. 2023",
-      "doi": "10.1093/mnras/stad2301",
-      "bibcode": "2023MNRAS.525.2015D",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic radius (spectroscopic_calibration)"
-      ]
-    },
-    {
-      "title": "Krist et al. 2005",
       "doi": null,
-      "bibcode": "2005AJ....129.1008K",
-      "accessed": "2026-05-28",
+      "bibcode": "2023MNRAS.525..455D",
+      "accessed": "2026-05-27",
       "used_for": [
-        "AU Mic disk single (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Schneider et al. 2014",
-      "doi": null,
-      "bibcode": "2014AJ....148...59S",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic disk single (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Boccaletti et al. 2015",
-      "doi": null,
-      "bibcode": "2015Natur.526..230B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic disk single (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Boccaletti et al. 2018",
-      "doi": null,
-      "bibcode": "2018A&A...614A..52B",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic disk single (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Chen et al. 2005",
-      "doi": null,
-      "bibcode": "2005ApJ...634.1372C",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic disk single (sed_fit)"
-      ]
-    },
-    {
-      "title": "Strubbe & Chiang 2006",
-      "doi": null,
-      "bibcode": "2006ApJ...648..652S",
-      "accessed": "2026-05-28",
-      "used_for": [
-        "AU Mic disk single (sed_fit)"
+        "AU Mic radius (unverified)"
       ]
     },
     {
       "title": "Mallorquin et al. 2024",
       "doi": "10.1051/0004-6361/202450047",
       "bibcode": "2024A&A...689A.132M",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "planet AU Mic b orbital"
+      ]
+    },
+    {
+      "title": "Donati et al. 2025",
+      "doi": "10.1051/0004-6361/202555371",
+      "bibcode": "2025A&A...700A.227D",
+      "accessed": "2026-05-27",
+      "used_for": [
+        "planet AU Mic e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -741,6 +542,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "M1Ve pre-main-sequence flare star (~22 Myr, β Pictoris Moving Group canonical member). The Phase 3 markdown at the time of this curation used `teff_k = 3518` from Gaia DR3 GSP-Phot and derived `luminosity_lsun = 0.092` via Stefan-Boltzmann at that Teff; Phase 2 recommends Plavchan 2020 high-res spectroscopic Teff = 3700 ± 100 K (per methodology tier: high_res_spectroscopy > photometric_color). The 3700 vs 3518 K offset reconciles at <2σ and traces to GSP-Phot's known cool-bias below 3800 K for spotted active M dwarfs. Phase 2 also recommends Plavchan 2020 bolometric L = 0.09 ± 0.02 Lsun (direct SED integration) over the Stefan-Boltzmann derivation. Phase 3 markdown's `stellar_color_temp_k` row was tied to 3518 K (Gaia BP/RP color-equivalent); this is acceptable as a separate visual-rendering anchor (color-equivalent blackbody) distinct from the spectroscopic Teff, but the Decisions row basis is updated to make this distinction explicit. Activity is reported as Hα EW (Houdebine 2010, -2.4 ± 0.3 Å) rather than log R'HK because the Mt-Wilson R'HK calibration is not validated for active M1Ve photospheres; Phase 3 markdown's `activity_log_rhk = -3.9` is retained as a derived saturated-regime estimate but flagged as not paper-cited. Radius (0.82 Rsun, Donati 2023 ZDI) has no published CHARA interferometric counterpart; AU Mic at dec -31 is reachable by CHARA but no diameter has been published. Mass (0.51 Msun, Wittrock 2023 TTV+N-body) is the most-direct constraint, model-independent through orbital dynamics. [Fe/H] = +0.12 ± 0.05 is the β Pic MG mean (Shkolnik 2017 HAZMAT II) since no direct high-res [Fe/H] of AU Mic has been published — open item for future SPIRou/ESPRESSO follow-up. Saturated activity (Hα emission, kG-class ZDI fields, log L_X/L_bol ~ -3.0, super-flares to 10^34-10^35 erg) is the dominant photophysical fact; activity_cycle is unresolved at this age (pre-MS saturated dynamo). Citation fixes (audit 2026-05-28): Wittrock 2023 DOI corrected acfda7 -> acfda8 (single-char typo on TTV mass paper). Donati 2023 ZDI radius bibcode page corrected ..455D -> .2015D (MNRAS volume 525 pages 2015-2039, not page 455). Shkolnik 2017 HAZMAT II metallicity entry corrected to Miles & Shkolnik 2017 AJ 154 67 (the actual HAZMAT II UV paper containing the beta Pic MG [Fe/H] mean) -- the Shkolnik 2017 ApJ 838 87 bibcode pointed to a different paper."
+    "notes": ""
   }
 }

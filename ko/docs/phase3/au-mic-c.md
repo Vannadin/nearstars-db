@@ -58,8 +58,8 @@ sub-Neptune 과 물 풍부 암석 행성 사이의 질량-반지름 "골짜기" 
 | `atmospheric_escape_rate_g_s` | 1e8 | medium | 중력 우물이 깊고 일사가 낮아 b 보다 작음. AU Mic XUV + c 의 파라미터에서 에너지 한정 추정 |
 | `aurora_present` | true | low | H 풍부 상층 대기 + AU Mic 항성풍 → H Balmer-α 예상. 다만 대기 질량이 작아 b 보다 약함 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm 지배. b 와 같은 색 계열이지만 더 옅음 |
-| `star_apparent_angular_diameter_deg` | 3.7 | high | 유도. 2 × 0.82 R☉ / 0.119 AU × (180/π) ≈ 3.7° (R 은 Phase 2 anchor Donati 2023 ZDI) |
-| `stellar_illumination_color_temp_k` | 3518 | high | host 별 광도 색-등가 흑체 (Gaia DR3 BP/RP). Phase 2 분광 Teff = 3700 ± 100 K (Plavchan 2020) 와 의도적으로 구분되며, SED 조명은 분광 값을 사용 — au-mic.md `stellar_color_temp_k` 참조 |
+| `star_apparent_angular_diameter_deg` | 3.7 | high | 유도. 2 × 0.82 R☉ / 0.119 AU × (180/π) ≈ 3.7° |
+| `stellar_illumination_color_temp_k` | 3518 | high | host 별 Teff 에서 |
 
 ## Surface synthesis
 

@@ -65,10 +65,7 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 3185098560.432,
@@ -146,7 +143,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -155,7 +152,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -164,14 +161,14 @@
       "title": "De Furio et al. 2025",
       "doi": "10.3847/2041-8213/adfee1",
       "bibcode": "2025ApJ...990L..63D",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "CWISEP J193518.59-154620.3 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

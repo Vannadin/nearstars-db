@@ -44,7 +44,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `radius_rearth` | 5.0 | medium | Tie-break: no transit; mass–radius for 23 M⊕ with a 5–8% H/He envelope (Lopez & Fortney 2014, Howe 2014) gives R = 4.5–5.5 R⊕; cfg picks 5.0 R⊕ as the cool-sub-Neptune mid-range, slightly larger than c because d's cooler envelope is less compressed |
 | `surface_gravity_g_earth` | 0.92 | medium | derived = 22.9 / 5.0² (at the H/He envelope nominal cloud-top reference radius) |
 | `density_g_cc` | 1.00 | medium | derived; consistent with a ~5–8% H/He envelope on a rocky core, slightly less dense than c at the cooler equilibrium |
-| `insolation_s_earth` | 3.63 | high | derived from L = 0.822 L☉ (von Braun 2014) and a = 0.476 AU |
+| `insolation_s_earth` | 3.62 | high | derived from L = 0.82 L☉ and a = 0.476 AU |
 | `insolation_s_earth_periastron` | 8.57 | high | derived; S × (1 − e)⁻² at e = 0.35 |
 | `insolation_s_earth_apoastron` | 1.99 | high | derived; S × (1 + e)⁻² at e = 0.35 |
 | `equilibrium_temp_k` (A=0) | 383 | high | derived |
@@ -69,8 +69,8 @@ strong support, low = aesthetic choice within the allowed window.
 | `tidal_heating_w_m2` | 0.005–0.05 | medium | Bolmont 2020 / Henning & Hurford 2014 scaling for e=0.35 at 123 d period; higher than c because of larger e but still negligible vs. insolation budget |
 | `radiogenic_heat_w_m2` | 0.01 | low | Rocky-core radiogenic contribution; small fraction of total heat flux for a gas planet |
 | `seasonal_amplitude_factor` | 4.3 | high | derived: S_peri / S_apo = ((1+e)/(1-e))² = 4.3× at e=0.35; the largest seasonal modulation in the 61 Vir system |
-| `star_apparent_angular_diameter_deg` | 0.110 | high | derived: 2 × R★ / a; 0.9867 R☉ (von Braun 2014 CHARA) at 0.476 AU |
-| `stellar_illumination_color_temp_k` | 5568 | high | host Teff (Rathsam 2023) |
+| `star_apparent_angular_diameter_deg` | 0.108 | high | derived: 2 × R★ / a; 0.963 R☉ at 0.476 AU |
+| `stellar_illumination_color_temp_k` | 5552 | high | host Teff |
 
 ## Surface synthesis
 
@@ -149,9 +149,9 @@ produce the featureless visible disk.
 
 **Retention argument.** Owen & Wu 2017's photoevaporation valley
 analysis places d far to the right of the loss boundary. For a 23 M⊕
-core at 0.48 AU around a 0.822 L☉ G-dwarf, the XUV-driven mass loss
+core at 0.48 AU around a 0.82 L☉ G-dwarf, the XUV-driven mass loss
 rate scales to ~10⁵ g/s — about 10⁻⁴ of the envelope mass lost per
-Gyr. Over the 5.5 Gyr system age the total loss is ~10⁻³ of the
+Gyr. Over the 6.1 Gyr system age the total loss is ~10⁻³ of the
 envelope, completely negligible. d retains its primary atmosphere
 with the largest margin of any 61 Vir planet.
 
@@ -201,7 +201,7 @@ and the disk appears more uniformly bright. The seasonal cycle
 period is 123 d, and the orbital phase determines a slow brightness
 modulation observable in reflected light at the few-percent level.
 
-**Photochemical haze chemistry.** The 5568 K solar-twin SED gives a
+**Photochemical haze chemistry.** The 5552 K solar-twin SED gives a
 near-Earth-Sun UV-to-visible ratio. Methane photolysis at λ ≲ 200 nm
 produces HCN, C₂H₂, and higher-mass haze precursors (Lavvas 2017).
 The cooler stratosphere at d (compared to c) reduces the photolysis
@@ -215,7 +215,7 @@ d's spin state is determined by the balance of tidal-damping and
 eccentricity-pumping timescales. At a 123-day orbital period, 0.48 AU
 separation, and 23 M⊕ mass, the tidal locking timescale for an
 Earth-analog interior Q is ~5–15 Gyr (Henning & Hurford 2014
-scaling). This exceeds the 5.5 Gyr system age — d has not had time to
+scaling). This exceeds the 6.1 Gyr system age — d has not had time to
 reach 1:1 lock. Obliquity damping has been incomplete; the cfg picks
 15° as a tie-break for visual seasonal modulation.
 
@@ -386,27 +386,20 @@ Combining the surface and atmosphere decisions:
 
 ### Read (context / methodology, not decision-driving)
 
-- **Rathsam A. et al. 2023** — *Lithium depletion in solar analogs*,
-  MNRAS 525, 4642 (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589).
-  Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age
-  (5.50 +0.78/-0.74 Gyr); sets the photoevaporation-evolution
-  timescale.
-- **von Braun K. et al. 2014** — *Stellar diameters V*, MNRAS 438,
-  2413 (`2014MNRAS.438.2413V`, doi:10.1093/mnras/stt2360). Inherited
-  from host-star synthesis. L = 0.8222 ± 0.0033 L☉ anchors the
-  insolation derivation for d's eccentric orbit.
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-Type Dwarfs* (`2008ApJ...687.1264M`,
-  arXiv:0807.1686). Inherited from host-star synthesis. Activity-age
-  6.1 ± 1.7 Gyr — demoted to cross-check vs Rathsam 2023 isochrone
-  (documented divergence in host-star reconciliation).
+  arXiv:0807.1686). Inherited from host-star synthesis. Gives 61 Vir
+  age 6.1 ± 1.7 Gyr; sets the photoevaporation evolution timescale.
+- **Pavlenko Y. V. et al. 2012** — *Solar twin candidates*
+  (`2012MNRAS.422..542P`, arXiv:1112.0590). Inherited from host-star
+  synthesis. Confirms solar-twin SED for the photochemical-haze model.
 - **Fulton B. J. et al. 2017** — *The California-Kepler Survey III.
   A Gap in the Radius Distribution of Small Planets*, AJ 154, 109
   (`2017AJ....154..109F`, arXiv:1703.10375). Radius valley
   demographics; supports the H/He envelope canonical reading for d's
   23 M⊕ population.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*
-  (`2012MNRAS.424.1206W`, arXiv:1206.2370). Inherited from host-star
+  (`2012MNRAS.424.1206W`, arXiv:1204.6063). Inherited from host-star
   synthesis. Cited briefly; the cold debris ring at 30 AU does not
   interact dynamically with d at 0.48 AU (d sits well inside the
   ring's inner edge).

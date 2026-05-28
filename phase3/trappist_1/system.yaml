@@ -15,72 +15,7 @@ score:
 expand:
   max_per_seed: 60
   since_year: 2000
-# Stellar synthesis pass (2026-05-28): ADS keyword search for the bare
-# system name "TRAPPIST-1" misses the foundational stellar-parameter and
-# activity papers because their titles describe TRAPPIST-1 as the host
-# star but lead with the planet system context. Inject the canonical
-# stellar refs explicitly so they appear in `_bib/trappist-1.yaml`.
-injections:
-  - bibcode: "2018ApJ...853...30V"
-    targets: [trappist-1]
-    note: "Van Grootel 2018 — stellar M, L_bol, R from interferometric+SED fit"
-  - bibcode: "2017ApJ...845..110B"
-    targets: [trappist-1]
-    note: "Burgasser & Mamajek 2017 — kinematic age 7.6 ± 2.2 Gyr"
-  - bibcode: "2017ApJ...841..124V"
-    targets: [trappist-1]
-    note: "Vida 2017 — K2 rotation period 3.295 d + flare statistics"
-  - bibcode: "2017MNRAS.465L..74W"
-    targets: [trappist-1]
-    note: "Wheatley 2017 — XMM/Chandra X-ray luminosity log L_X = 26.4 erg/s"
-  - bibcode: "2017A&A...599L...3B"
-    targets: [trappist-1]
-    note: "Bourrier 2017 — HST/STIS Lyman-α and XUV escape"
-  - bibcode: "2018A&A...612A..49R"
-    targets: [trappist-1]
-    note: "Reiners et al. 2018 CARMENES — M-dwarf magnetic-field Zeeman survey, includes TRAPPIST-1"
-  - bibcode: "2020A&A...640A.112D"
-    targets: [trappist-1]
-    note: "Ducrot 2020 — SPECULOOS Spitzer Exploration Science Program, alternate R_star = 0.1234 R_sun"
-  - bibcode: "2017Natur.542..456G"
-    targets: [trappist-1]
-    note: "Gillon 2017 — seven-planet discovery, original stellar params [Fe/H], spectype"
-  - bibcode: "2017NatAs...1E.129L"
-    targets: [trappist-1]
-    note: "Luger 2017 — K2 c45 campaign, planet h discovery + activity index"
-  - bibcode: "2018ApJ...857...39M"
-    targets: [trappist-1]
-    note: "Morris 2018 — bright starspots from K2 + Spitzer transit-residual analysis"
-  - bibcode: "2018ApJ...863L..32M"
-    targets: [trappist-1]
-    note: "Morris 2018b — non-detection of stellar-activity contamination in Spitzer transit"
-  - bibcode: "2021ApJ...911...18W"
-    targets: [trappist-1]
-    note: "Wilson 2021 Mega-MUSCLES — full UV-to-X-ray SED of TRAPPIST-1"
-  - bibcode: "2018ApJ...858...55P"
-    targets: [trappist-1]
-    note: "Paudel 2018 — K2 ultracool dwarf flare statistics including TRAPPIST-1"
-  - bibcode: "2020ApJ...900...27G"
-    targets: [trappist-1]
-    note: "Glazier 2020 — Evryscope+K2 superflare constraints"
-  - bibcode: "2016Natur.533..221G"
-    targets: [trappist-1]
-    note: "Gillon 2016 — original discovery of three innermost planets, host-star spectype M8V"
-  - bibcode: "2017ApJ...851...77R"
-    targets: [trappist-1]
-    note: "Roettenbacher & Kane 2017 — stellar activity context for TRAPPIST-1"
-  - bibcode: "2015ApJ...810..158F"
-    targets: [trappist-1]
-    note: "Filippazzo 2015 — fundamental params for ultracool dwarfs, baseline L*/Teff for TRAPPIST-1"
-  - bibcode: "2010ApJ...710..924R"
-    targets: [trappist-1]
-    note: "Reiners & Basri 2010 — magnetic field 600 G for M8 TRAPPIST-1, v sin i 6 km/s"
-  - bibcode: "2017ApJ...843L..33G"
-    targets: [trappist-1]
-    note: "Garraffo 2017 — stellar wind / magnetospheric environment for TRAPPIST-1 planets"
-  - bibcode: "2023ApJ...959...64H"
-    targets: [trappist-1]
-    note: "Howard 2023 — TESS NIR flare spectra"
-  - bibcode: "2019ApJ...886..131G"
-    targets: [trappist-1]
-    note: "Gonzales 2019 — reanalysis of fundamental params + age, post-VG18 update"
+# No injections needed — initial Phase 3 pass found all critical papers
+# via the standard ADS keyword search. If JWST atmosphere papers start
+# slipping through the keyword filter, add them here.
+injections: []

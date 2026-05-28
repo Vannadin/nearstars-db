@@ -110,10 +110,7 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": null,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 27020252787.665,
@@ -127,7 +124,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -136,7 +133,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -145,7 +142,7 @@
       "title": "Mason, Hartkopf & Miles 2017",
       "doi": "10.3847/1538-3881/aa803e",
       "bibcode": "2017AJ....154..200M",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "40 Eridani C mass (binary_orbit)"
       ]
@@ -154,14 +151,14 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "40 Eridani C radius (spectroscopic_calibration)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -169,7 +166,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "M4.5 Ve flare star (variable designation DY Eri). [Fe/H] not directly measured at this spectral type for this star; inherits system-coeval value [Fe/H] ~ -0.30 from 40 Eridani A (Diaz 2018 / Bensby 2014), recorded narratively rather than as a measurement since no paper reports a 40 Eri C-specific spectroscopic value. P_rot tentatively ~137 d (Kemmer 2025 CARMENES, provisional pending independent confirmation); not added as a measurement until verified. Activity is real (DY Eri = UV Ceti-class flare star) but no single canonical paper-cited Halpha EW or log L_X / L_bol value pinned yet; CARMENES Jeffers 2018 reports Halpha pEW in the -2 to -4 A range. Add when a single recommended source is chosen."
+    "notes": ""
   },
   "binary_orbit_ref": "40_eridani_a.json"
 }

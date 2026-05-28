@@ -34,11 +34,9 @@ db/target_list.json
 - 다중 구성 요소 시스템은 여러 구성 요소를 하나의 항목으로 묶습니다.
   `"Alpha Centauri A"`, `"Alpha Centauri B"` → 단일 항목, `binary: true`.
 - 단독 별의 경우. `"Vega"`, `"Altair"`.
-- `scripts/pipeline/_naming.py`의 `to_filename()` 함수가 이름을 파일명으로 변환합니다.
+- `build_systems.py`의 `to_filename()` 함수가 이름을 파일명으로 변환합니다.
   소문자로 변환, 아포스트로피 제거, 영숫자 이외의 문자는 `_`로 대체, 양쪽 끝 정리.
-  예시. `"Chi-1 Orionis A"` → `chi_1_orionis_a.json`. 같은 모듈의
-  `to_url_slug()` (separator `-`) 는 Phase 2/3 HTML 과 reports 매니페스트에서 사용. 전체 규칙은 `docs/reference/methodology.md`
-  "Naming canonicalization" 참조.
+  예시. `"Chi-1 Orionis A"` → `chi_1_orionis_a.json`.
 
 ---
 

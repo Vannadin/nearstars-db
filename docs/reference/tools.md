@@ -29,7 +29,6 @@ Correctness checks live across several functional groups. This index gathers the
 | Dynamical stability of curated + hypothetical bodies | `phase3/stability-sim/scripts/run.py` | [4](#4-stability-sandbox) | Before shipping a moon / extra-body cfg, or as a baseline-DB sanity check |
 | `ko/` mirror file parity | `scripts/check-mirrors.sh` | [10](#10-dev-helpers) | Before commit / release |
 | Phase 3 synthesis policy fit | `nearstars-phase3` audit-pass procedure | [3](#3-phase-3-synthesis-pipeline) | After a synthesis batch — manual, output at `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
-| Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [10](#10-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
 
 ## 1. Data engine
 
@@ -49,7 +48,6 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/pipeline/generate_target_list.py` — rebuild `target_list.json` from `db/systems/`
 - `scripts/pipeline/validate.py` — schema validation; exits non-zero on failure
 - `scripts/pipeline/schema.py` — shared schema + validators
-- `scripts/pipeline/_naming.py` — canonical host/planet name → slug / filename conversion (single source of truth; all builders import from here)
 - `scripts/pipeline/test_hierarchical.py` — hierarchical binary structure test
 
 **Orchestrator.** `./run_pipeline.sh` runs fetch → build → validate → site build in order.
@@ -180,8 +178,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/check-mirrors.sh` — verify `ko/` mirror parity (missing or stale files)
 - `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
-- `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
-- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness. Manual invocation only.
+- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check. Manual invocation only.
 
 ## Skills directory layout
 

@@ -1,25 +1,4 @@
 {
-  "40 Eridani A": {
-    "phase2": "phase2/40-eridani-a.html",
-    "phase3": {}
-  },
-  "40 Eridani B": {
-    "phase2": "phase2/40-eridani-b.html",
-    "phase3": {}
-  },
-  "40 Eridani C": {
-    "phase2": "phase2/40-eridani-c.html",
-    "phase3": {}
-  },
-  "61 Vir": {
-    "phase2": "phase2/61-vir.html",
-    "phase3": {
-      "★": "phase3/61-vir.html",
-      "b": "phase3/61-vir-b.html",
-      "c": "phase3/61-vir-c.html",
-      "d": "phase3/61-vir-d.html"
-    }
-  },
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
     "phase3": {
@@ -32,54 +11,6 @@
       "★": "phase3/alpha-centauri-b.html"
     }
   },
-  "AU Mic": {
-    "phase2": "phase2/au-mic.html",
-    "phase3": {
-      "★": "phase3/au-mic.html",
-      "b": "phase3/au-mic-b.html",
-      "c": "phase3/au-mic-c.html",
-      "d": "phase3/au-mic-d.html",
-      "e": "phase3/au-mic-e.html"
-    }
-  },
-  "Barnard's star": {
-    "phase2": "phase2/barnards-star.html",
-    "phase3": {
-      "★": "phase3/barnards-star.html",
-      "b": "phase3/barnards-star-b.html",
-      "c": "phase3/barnards-star-c.html",
-      "d": "phase3/barnards-star-d.html",
-      "e": "phase3/barnards-star-e.html"
-    }
-  },
-  "Delta Pavonis": {
-    "phase2": "phase2/delta-pavonis.html",
-    "phase3": {
-      "★": "phase3/delta-pavonis.html"
-    }
-  },
-  "eps Eri": {
-    "phase2": "phase2/eps-eri.html",
-    "phase3": {
-      "★": "phase3/eps-eri.html",
-      "b": "phase3/eps-eri-b.html"
-    }
-  },
-  "Fomalhaut": {
-    "phase2": "phase2/fomalhaut.html",
-    "phase3": {
-      "★": "phase3/fomalhaut.html"
-    }
-  },
-  "HD 69830": {
-    "phase2": "phase2/hd-69830.html",
-    "phase3": {
-      "★": "phase3/hd-69830.html",
-      "b": "phase3/hd-69830-b.html",
-      "c": "phase3/hd-69830-c.html",
-      "d": "phase3/hd-69830-d.html"
-    }
-  },
   "Proxima Cen": {
     "phase2": "phase2/proxima-cen.html",
     "phase3": {
@@ -88,29 +19,9 @@
       "d": "phase3/proxima-cen-d.html"
     }
   },
-  "tau Cet": {
-    "phase2": "phase2/tau-cet.html",
-    "phase3": {
-      "★": "phase3/tau-cet.html",
-      "e": "phase3/tau-cet-e.html",
-      "f": "phase3/tau-cet-f.html",
-      "g": "phase3/tau-cet-g.html",
-      "h": "phase3/tau-cet-h.html"
-    }
-  },
-  "Teegarden's Star": {
-    "phase2": "phase2/teegardens-star.html",
-    "phase3": {
-      "★": "phase3/teegardens-star.html",
-      "b": "phase3/teegardens-star-b.html",
-      "c": "phase3/teegardens-star-c.html",
-      "d": "phase3/teegardens-star-d.html"
-    }
-  },
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
     "phase3": {
-      "★": "phase3/trappist-1.html",
       "b": "phase3/trappist-1-b.html",
       "c": "phase3/trappist-1-c.html",
       "d": "phase3/trappist-1-d.html",
@@ -120,8 +31,65 @@
       "h": "phase3/trappist-1-h.html"
     }
   },
+  "61 Vir": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/61-vir.html",
+      "b": "phase3/61-vir-b.html",
+      "c": "phase3/61-vir-c.html",
+      "d": "phase3/61-vir-d.html"
+    }
+  },
+  "AU Mic": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/au-mic.html",
+      "b": "phase3/au-mic-b.html",
+      "c": "phase3/au-mic-c.html",
+      "d": "phase3/au-mic-d.html",
+      "e": "phase3/au-mic-e.html"
+    }
+  },
+  "delta": {
+    "phase2": null,
+    "phase3": {
+      "pavonis": "phase3/delta-pavonis.html"
+    }
+  },
+  "eps Eri": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/eps-eri.html",
+      "b": "phase3/eps-eri-b.html"
+    }
+  },
+  "Fomalhaut": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/fomalhaut.html"
+    }
+  },
+  "HD 69830": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/hd-69830.html",
+      "b": "phase3/hd-69830-b.html",
+      "c": "phase3/hd-69830-c.html",
+      "d": "phase3/hd-69830-d.html"
+    }
+  },
+  "tau Cet": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/tau-cet.html",
+      "e": "phase3/tau-cet-e.html",
+      "f": "phase3/tau-cet-f.html",
+      "g": "phase3/tau-cet-g.html",
+      "h": "phase3/tau-cet-h.html"
+    }
+  },
   "Vega": {
-    "phase2": "phase2/vega.html",
+    "phase2": null,
     "phase3": {
       "★": "phase3/vega.html"
     }

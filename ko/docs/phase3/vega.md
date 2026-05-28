@@ -12,20 +12,20 @@ Vega 에는 확정된 행성이 없습니다. 가장 깊은 RV 탐색 (Hunsch & 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | A0Va | high | SIMBAD harmonized MK; Gray & Garrison 1987 측광 표준 |
-| `mass_msun` | 2.135 ± 0.075 | high | Yoon 외 2010 (`2010ApJ...708...71Y`) — CHARA 간섭계 R 과 SED 에 회전 진화 모델 fit. Phase 2 `mass_measurements` 의 recommended 픽. Monnier 2012 의 독립 회전 진화 fit 2.15 ± 0.10 M☉ 도 1σ 안에서 일치 (배열의 cross-check) |
-| `radius_rsun` (적도) | 2.726 ± 0.006 | high | Monnier 외 2012 (`2012ApJ...761L...3M`) — CHARA/MIRC 영상. 편구형 빠른 자전체의 적도 반지름 (R_pole ≈ 2.36 R☉, R_eq/R_pole ≈ 1.15). Phase 2 `radius_measurements` 의 recommended 픽. Aufdenberg 2006 의 1세대 CHARA 2.73 ± 0.01 R☉ 은 cross-check 으로 보존 |
-| `teff_k` (유효) | 9692 | high | SIMBAD harmonized 값. Phase 2 `teff_measurements` 의 recommended 픽은 Monnier 2012 의 편구 모델 면적 평균 9602 ± 180 K 이고, 표제값과 결합 불확정성 안에서 수치적으로 호환됩니다. 2250 K 의 극-적도 기울기는 이 행이 아니라 `visual_gravity_darkening_pole_equator_temp_diff_k` 에 기록됩니다 |
-| `luminosity_lsun` | 47 ± 5 | high | Monnier 2012 중력 감광 모델의 볼로메트릭 적분 (Phase 2 `luminosity_measurements` 의 recommended 픽). Aufdenberg 2006 의 37 ± 3 L☉ 와 Yoon 2010 의 40.1 ± 0.45 L☉ 는 같은 물리 fit 을 다른 boundary 로 푼 결과로 cross-check 에 보존 |
-| `metallicity_fe_h_dex` | −0.5 | high | Yoon 2010 의 회전 ATLAS9 대기 fit 에서 얻은 광구 [M/H] = −0.5 ± 0.04 (Phase 2 `metallicity_measurements` 의 recommended 픽). Adelman 1988 Reticon 분광 (−0.6 ± 0.1) 과 Qiu 2001 (−0.47 ± 0.06) 이 cross-check. Vega 는 λ Boötis 원형이며 광구값은 bulk 외피 조성이 아니라 gas-depleted 성간물질의 선택적 강착을 반영합니다. cfg 가 광구값을 쓰는 이유는 가시 SED 를 광구가 결정하기 때문 |
-| `age_gyr` | 0.455 ± 0.013 | high | Yoon 외 2010 회전 모델 isochrone (Phase 2 `age_measurements` 의 recommended 픽). Monnier 2012 의 CHARA/MIRC + 대안 isochrone 0.7 ± 0.075 Gyr 는 cross-check 으로 보존. 두 값 모두 boundary 조건이 다른 회전 isochrone 프레임이며, Yoon 이 더 새롭고 formal uncertainty 가 작아 채택. Monnier 는 Open items 에 보존 |
-| `rotation_v_eq_km_s` | 274 ± 14 | high | Aufdenberg 2006 (`2006ApJ...645..664A`) — CHARA 중력 감광 fit. ω/ω_crit ≈ 0.91. 고전 v sin i = 22 ± 2 km/s (Gulliver 1994) 가 작은 이유는 v_eq 가 작아서가 아니라 i = 6.2° 가 작기 때문. 중력 감광 자전체에서 주기 정의가 모호하므로 v_eq 가 cfg 안정 핸들 |
-| `rotation_period_hours` (적도) | 12.5 | high | Phase 2 `rotation_measurements` 의 recommended 기하 유도 P_eq = 0.521 ± 0.03 d ≈ 12.5 h. 2π R_eq / v_eq (Aufdenberg 2006 + Monnier 2012). Petit 외 2010 의 ZDI 주기 0.732 ± 0.008 d ≈ 17.6 h 는 cross-check 이며, 차등 회전하는 중력 감광 외피에서 고위도 anchored 자기 구조를 반영. cfg 는 적도 기하 사용 |
+| `mass_msun` | 2.135 ± 0.075 | high | Yoon 외 2010 (`2010ApJ...708...71Y`) — CHARA 간섭계 R 과 SED 에 회전 진화 모델을 fit |
+| `radius_rsun` (적도) | 2.726 ± 0.006 | high | Monnier 외 2012 (`2012ApJ...761L...3M`) — CHARA/MIRC 영상; 편구 형 빠른 자전체의 적도 반지름 (R_pole ≈ 2.36 R☉, R_eq/R_pole ≈ 1.15) |
+| `teff_k` (유효) | 9692 | high | SIMBAD harmonized 값. Aufdenberg 2006 의 면적 평균 Teff 와 일치 |
+| `luminosity_lsun` | 47 ± 5 | high | Aufdenberg 2006 / Monnier 2012 — 중력 감광 모델의 총 적분 광도; 볼로메트릭 출력 |
+| `metallicity_fe_h_dex` | −0.5 | medium | Yoon 2010 best-fit 모델이 λ Boo 류 표면 metal weak 조성을 채택. Vega 는 알려진 λ Boo 등급 A형으로 광구가 금속 결핍 (Adelman & Gulliver 1990). DB 에 metallicity_measurements 없음, 문헌 합의값 |
+| `age_gyr` | 0.455 ± 0.013 | high | Yoon 외 2010 — 회전 모델 isochrone. Monnier 2012 는 중력 감광 fit 으로 0.7 ± 0.075 Gyr 보고; cfg 는 Yoon 표제값을 채택, Monnier 값은 Open items 에 보존 |
+| `rotation_v_eq_km_s` | 274 ± 14 | high | Aufdenberg 2006 (`2006ApJ...645..664A`) — CHARA 중력 감광 fit; ω/ω_crit ≈ 0.91. 중력 감광 자전체에서 주기는 정의가 모호하므로 v_eq 가 cfg 안정 핸들 |
+| `rotation_period_hours` (적도) | 12.5 | medium | 기하 유도값. 2π R_eq / v_eq = 2π · 2.726 R☉ / 274 km/s ≈ 12.5 h. Petit 외 2010 의 ZDI 주기 0.732 d ≈ 17.6 h 는 자기 구조 (고위도 anchored) 반영이며, cfg 는 적도 기하 사용 |
 | `limb_darkening_alpha_h` | n/a (중력 감광 모델로 대체) | high | Aufdenberg 2006 / Monnier 2012 — Vega 는 단일 α limb-darkening law 로 잘 맞지 않음. 2D von Zeipel 중력 감광 β = 0.231 이 cfg 에 유의미한 매개변수 |
 | `visual_gravity_darkening_pole_equator_temp_diff_k` | 2250 (T_pole 10150 K, T_eq 7900 K) | high | Aufdenberg 2006 — CHARA H 밴드 간섭계가 기울기를 직접 분해 |
 | `visual_surface_tint_hex_primary` | `#cfe0ff` (pole-on 핫화이트블루, 적도 limb 는 약간 차가운 톤) | low | Tie-break. 면적 평균 9692 K 의 흑체는 거의 순수한 white-blue (~`#d8e6ff`). cfg 는 pole-on 시야를 지배하는 뜨거운 극면을 강조해 약간 더 푸르게 조정하고, limb 는 `#e8e2d6` (~7900 K) 적도 띠로 어두워짐. `conflict-resolution.md` 의 interesting-first 원칙 적용 |
 | `stellar_color_temp_k` | 9692 | high | 인게임 조명용으로 면적 평균 Teff 에서 유도 |
 | `visual_pole_on_inclination_deg` | 6.2 ± 0.3 | high | Aufdenberg 2006 / Monnier 2012 — 자전축이 지구 시선과 거의 일치 |
-| `activity_log_rhk` | n/a (A형은 대류 Ca II H&K 원이 없음) | high | A0V 왜성은 복사 외피라 채층 활동 지수가 정의 안 됨. Phase 2 `activity_measurements` 는 의도적으로 빈 `[]` 이고, 그 사유는 `meta_notes` 에 기록. Robrade & Schmitt 2011 (`2011A&A...531A..58R`) 의 log L_X ≈ 25.5–26.0 erg/s X-ray 검출은 이상하게 약함 — 논쟁적이며 자기 극 면 기하 (Petit 2010) 에서 비롯되었을 가능성. 해석이 정착되기 전까지 `x_ray` 측정값으로는 추가하지 않음 |
+| `activity_log_rhk` | n/a (A형은 대류 Ca II H&K 원이 없음) | high | A0V 왜성은 복사 외피라 채층 활동 지수가 정의 안 됨. Robrade & Schmitt 2011 (`2011A&A...531A..58R`) 의 log L_X ≈ 25.5–26.0 erg/s X-ray 검출은 이상하게 약함 — 논쟁적이며 자기 극 면 기하 (Petit 2010) 에서 비롯되었을 가능성 |
 | `disk_present` | true | high | Aumann 외 1984 — IRAS 60 μm + 100 μm 초과; Vega-like 원반의 *정의적* 관측 |
 | `disk_inner_radius_au` | 14 ± 2 (따뜻한 내부 띠); 62 ± 9 (차가운 외부 띠 내부 가장자리) | medium | 두 띠 구조. Su 외 2013 이 Spitzer-IRS + Herschel-PACS 를 fit, 14 AU 따뜻한 성분 + 62 AU 차가운 성분; Sibthorpe 2010 은 Herschel 영상만으로 외부 띠 내부 가장자리를 70 AU 로 선호 |
 | `disk_outer_radius_au` | 200 ± 20 (차가운 외부 띠 외부 가장자리) | medium | Sibthorpe 외 2010 (`2010A&A...518L.130S`) — Herschel-PACS 70/100/160 μm; 차가운 띠가 비교적 선명한 외부 가장자리와 함께 ~200 AU 까지 확장 |
@@ -85,21 +85,19 @@ Vega 는 고전 line broadening 측정 (Gulliver 외 1994) 에서 v_eq sin i = 2
 ### Read (visual-informative, drove decisions above)
 
 - **Aumann H. H. 외 1984** — *Discovery of a Shell Around Alpha Lyrae*, ApJ 278, L23 (`1984ApJ...278L..23A`). "Vega 현상" 을 명명한 IRAS 발견 논문. 60 + 100 μm 초과. 최초로 식별된 잔해 원반.
-- **Aufdenberg J. P. 외 2006** — *First results from the CHARA Array. VII. Long-baseline interferometric measurements of Vega consistent with a pole-on, rapidly rotating star*, ApJ 645, 664 (`2006ApJ...645..664A`, arXiv:astro-ph/0603327). CHARA H 밴드 간섭계. v_eq = 274 km/s, i = 5° ± 2°, T_pole = 10150 K, T_eq = 7900 K, ω/ω_crit = 0.91. Vega 의 현대적 그림을 정의. **Phase 2 anchor** — rotation_measurements 의 기하 유도 P_eq 와 Teff/L cross-check 항목.
+- **Aufdenberg J. P. 외 2006** — *First results from the CHARA Array. VII. Long-baseline interferometric measurements of Vega consistent with a pole-on, rapidly rotating star*, ApJ 645, 664 (`2006ApJ...645..664A`, arXiv:astro-ph/0603327). CHARA H 밴드 간섭계. v_eq = 274 km/s, i = 5° ± 2°, T_pole = 10150 K, T_eq = 7900 K, ω/ω_crit = 0.91. Vega 의 현대적 그림을 정의.
 - **Peterson D. M. 외 2006** — *Vega is a rapidly rotating star*, Nature 440, 896 (`2006Natur.440..896P`). 독립적 NPOI 간섭계 확인. Aufdenberg 와 동일 결론.
-- **Yoon J. 외 2010** — *A New View of Vega's Composition, Mass, and Age*, ApJ 708, 71 (`2010ApJ...708...71Y`). 간섭계 R + SED 에 회전 진화 모델 fit. M = 2.135 ± 0.075 M☉, 연령 0.455 ± 0.013 Gyr, [M/H] = −0.5 ± 0.04, L = 40.1 ± 0.45 L☉, Teff = 9620 ± 100 K. 오래된 Vega "metallicity problem" 을 정상 metallicity 외피에서 λ Boo 표면 결핍으로 해소. **Vega 의 1차 Phase 2 anchor** — `mass_measurements`, `age_measurements`, `metallicity_measurements` 의 recommended 픽이고 `teff_measurements`, `luminosity_measurements` 의 cross-check 항목.
-- **Monnier J. D. 외 2012** — *Resolving Vega and the Inclination Controversy with CHARA/MIRC*, ApJ 761, L3 (`2012ApJ...761L...3M`). 더 높은 해상도 CHARA/MIRC 영상. R_eq = 2.726 ± 0.006 R☉, 면적 평균 Teff = 9602 ± 180 K, L = 47 ± 5 L☉, M = 2.15 ± 0.10 M☉ (회전 진화 fit), 연령 0.7 ± 0.075 Gyr. 작은 Aufdenberg 경사와 후속 우려를 조정. **Phase 2 anchor** — `radius_measurements`, `teff_measurements`, `luminosity_measurements` 의 recommended 픽이고 `mass_measurements` 와 `age_measurements` 의 cross-check 항목.
+- **Yoon J. 외 2010** — *A New View of Vega's Composition, Mass, and Age*, ApJ 708, 71 (`2010ApJ...708...71Y`). 간섭계 R + SED 에 회전 진화 모델 fit. M = 2.135 ± 0.075 M☉, 연령 0.455 ± 0.013 Gyr, [M/H] = −0.5. 오래된 Vega "metallicity problem" 을 정상 metallicity 외피에서 λ Boo 표면 결핍으로 해소.
+- **Monnier J. D. 외 2012** — *Resolving Vega and the Inclination Controversy with CHARA/MIRC*, ApJ 761, L3 (`2012ApJ...761L...3M`). 더 높은 해상도 CHARA/MIRC 영상. R_eq = 2.726 ± 0.006 R☉. 작은 Aufdenberg 경사와 후속 우려를 조정. 연령 0.7 ± 0.075 Gyr (Yoon 과 다름에 주의).
 - **Su K. Y. L. 외 2013** — *Asteroid Belts in Debris Disk Twins: Vega and Fomalhaut*, ApJ 763, 118 (`2013ApJ...763..118S`, arXiv:1211.7298). Spitzer-IRS + Herschel-PACS 두 성분 SED fit. 14 AU 따뜻한 170 K 내부 띠 + 62–200 AU 차가운 50 K 외부 띠. 행성소체-휘젓는 행성을 함의하는 cleared gap. 두 띠 cfg morphology 를 정의.
 - **Sibthorpe B. 외 2010** — *The Vega debris disc: A view from Herschel*, A&A 518, L130 (`2010A&A...518L.130S`). Herschel-PACS 70/100/160 μm 분해 영상. 외부 가장자리보다 내부 가장자리가 선명한 원반 radial profile. 작은 grain 의 radiation pressure / PR-drag 제거 지지. 외부 가장자리 반지름 ~200 AU.
 - **Holland W. S. 외 1998** — *Submillimetre images of dusty debris around nearby stars*, Nature 392, 788 (`1998Natur.392..788H`). JCMT-SCUBA 850 μm. Vega 원반의 첫 서브밀리미터 분해 영상. 차가운 잔해 ring 구조 확립.
 - **Hughes A. M. 외 2012** — *Confirmation of the Vega Asteroid Belt with Combined Spitzer and Submillimeter Array Observations*, ApJ 750, 82 (`2012ApJ...750...82H`, arXiv:1203.0598). SMA / 초기 ALMA 시대 880 μm 관측. 차가운 띠 구조 확인. 내부 가장자리 제약.
-- **Petit P. 외 2010** — *A weak magnetic field at the surface of Vega*, A&A 523, A41 (`2010A&A...523A..41P`, arXiv:1006.5868). NARVAL spectropolarimetry. ~0.6 G longitudinal 자기장. 가능한 극 자기 spot. P_rot ZDI 추정 0.732 ± 0.008 d (적도 12.5 h 보다 길음, 고위도 anchored). **Phase 2 cross-check** — `rotation_measurements` (zeeman_doppler 방법).
+- **Petit P. 외 2010** — *A weak magnetic field at the surface of Vega*, A&A 523, A41 (`2010A&A...523A..41P`, arXiv:1006.5868). NARVAL spectropolarimetry. ~0.6 G longitudinal 자기장. 가능한 극 자기 spot. P_rot ZDI 추정 0.732 d (적도 12.5 h 보다 길음, 고위도 anchored).
 
 ### Read (context / methodology, not directly decision-driving)
 
-- **Adelman S. J. 1988** — *Abundance Analyses for the lambda Bootis Stars*, MNRAS 230, 671 (`1988MNRAS.230..671A`, doi:10.1093/mnras/230.4.671). Vega 및 다른 λ Boo 별의 Reticon 고분해 분광. 태양 대비 Fe = −0.6 ± 0.1 — CHARA 이전의 canonical λ Boo abundance 패턴 논문. **Phase 2 cross-check** — `metallicity_measurements`.
 - **Adelman S. J. & Gulliver A. F. 1990** — Vega 의 abundance 분석. λ Boötis 분광 특이성 식별. [M/H] = −0.5 광구값의 methodology 참조.
-- **Qiu H. M. 외 2001** — *The Abundance Patterns of Sirius and Vega*, ApJ 548, 953 (`2001ApJ...548..953Q`, doi:10.1086/318989). 두 별의 CCD 고분해 abundance 패턴. Vega [Fe/H] = −0.47 ± 0.06 으로 Adelman 1988 의 광구 결핍 확인. **Phase 2 cross-check** — `metallicity_measurements`.
 - **Gulliver A. F. 외 1994** — *The Spectrum of Vega: A Pole-on View of a Rapidly Rotating Star*, ApJ 429, L81. Vega 의 작은 v sin i 가 큰 v 를 숨긴다는 (CHARA 이전) 분광학적 첫 시사.
 - **Robrade J. & Schmitt J. H. M. M. 2011** — *X-ray detection of the very low-mass companion of Vega-like α Lyrae*, A&A 531, A58 (`2011A&A...531A..58R`). XMM-Newton 검출 log L_X ≈ 25.5–26 erg/s. 약한 코로나 vs 동반체 오염의 논쟁적 해석.
 - **Hurt S. A. 외 2021** — *A Decade of Radial Velocity Monitoring of Vega*, AJ 161, 157 (`2021AJ....161..157H`). 현재까지 가장 깊은 RV 상한. 0.04 AU 의 0.6 일 후보 신호, 미확인. ~7 AU 이내 토성 질량 동반체 배제.

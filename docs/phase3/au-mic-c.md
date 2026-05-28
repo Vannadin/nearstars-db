@@ -62,8 +62,8 @@ tint hex). No documented divergences.
 | `atmospheric_escape_rate_g_s` | 1e8 | medium | lower than b because of greater gravity well + lower insolation; energy-limited estimate from AU Mic XUV + c's parameters |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b due to smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b but fainter |
-| `star_apparent_angular_diameter_deg` | 3.7 | high | derived: 2 × 0.82 R☉ / 0.119 AU × (180/π) ≈ 3.7° (R from Phase 2 anchor Donati 2023 ZDI) |
-| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` |
+| `star_apparent_angular_diameter_deg` | 3.7 | high | derived: 2 × 0.82 R☉ / 0.119 AU × (180/π) ≈ 3.7° |
+| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
 
 ## Surface synthesis
 

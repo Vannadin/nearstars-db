@@ -169,10 +169,7 @@
         "metallicity_fe_h_dex": -0.29,
         "rotation_period_days": 42.0,
         "activity_log_rhk": -4.99,
-        "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null,
-        "activity_x_ray_log_lx_lbol": null,
-        "activity_ca_ii_log_lhk": null
+        "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103515703214.04,
@@ -186,7 +183,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "epoch propagation method"
       ]
@@ -195,7 +192,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -204,7 +201,7 @@
       "title": "Ma et al. 2018",
       "doi": "10.1093/mnras/sty1933",
       "bibcode": "2018MNRAS.480.2411M",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "40 Eridani A mass (evolutionary_model)"
       ]
@@ -213,7 +210,7 @@
       "title": "Diaz et al. 2018",
       "doi": "10.3847/1538-3881/aaa896",
       "bibcode": "2018AJ....155..126D",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "40 Eridani A mass (evolutionary_model)"
       ]
@@ -222,14 +219,14 @@
       "title": "Rains et al. 2020",
       "doi": "10.1093/mnras/staa282",
       "bibcode": "2020MNRAS.493.2377R",
-      "accessed": "2026-05-28",
+      "accessed": "2026-05-27",
       "used_for": [
         "40 Eridani A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-28",
+    "retrieval_date": "2026-05-27",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -262,7 +259,7 @@
       {
         "name": "40 Eridani C",
         "mass_msun": 0.2036,
-        "mass_source": "mason_2017",
+        "mass_source": "bond_2017",
         "astrometry_source": "mass_weighted_average",
         "astrometry_quality": "barycentric"
       }
@@ -283,7 +280,7 @@
         "P_yr": 230.3,
         "P_yr_err": 0.68,
         "T_jd_tt": 2395929.775,
-        "T_yr": 1847.7338,
+        "T_yr": 1847.7,
         "e": 0.4294,
         "e_err": 0.0027,
         "a_arcsec": 6.93,
@@ -297,7 +294,7 @@
         "grade": 1,
         "node_resolved": false,
         "phase_reliable": true,
-        "note": "Inner B-C pair. Mason+2017 definitive orbit (ORB6 grade 1); ~71% of cycle observed, sigma(P)/P=0.3%, sigma(a)/a=0.7%. Yields dynamical masses M_B=0.573 (Bond+2017 HST FGS) and M_C=0.2036 (Mason+2017 from Kepler's law). Replaces legacy Heintz 1974 (was grade 4/5, B1950 equinox). Outer A-BC orbit (~8000 yr, Tokovinin MSC 2018) remains undetermined — 40 Eri A handled as single component."
+        "note": "Inner B-C pair. Mason+2017 definitive orbit (ORB6 grade 1); ~71% of cycle observed, sigma(P)/P=0.3%, sigma(a)/a=0.7%. Yields dynamical masses M_B=0.573, M_C=0.2036 Msun (Bond+2017). Replaces legacy Heintz 1974 (was grade 4/5, B1950 equinox). Outer A-BC orbit (~8000 yr, Tokovinin MSC 2018) remains undetermined — 40 Eri A handled as single component."
       }
     ]
   }
