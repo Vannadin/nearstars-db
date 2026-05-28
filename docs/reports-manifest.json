@@ -39,11 +39,13 @@
       "★": "phase3/delta-pavonis.html"
     }
   },
-  "eps Eri": {
-    "phase2": "phase2/eps-eri.html",
+  "HD 69830": {
+    "phase2": "phase2/hd-69830.html",
     "phase3": {
-      "★": "phase3/eps-eri.html",
-      "b": "phase3/eps-eri-b.html"
+      "★": "phase3/hd-69830.html",
+      "b": "phase3/hd-69830-b.html",
+      "c": "phase3/hd-69830-c.html",
+      "d": "phase3/hd-69830-d.html"
     }
   },
   "Proxima Cen": {
@@ -105,19 +107,17 @@
       "e": "phase3/au-mic-e.html"
     }
   },
+  "eps Eri": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/eps-eri.html",
+      "b": "phase3/eps-eri-b.html"
+    }
+  },
   "Fomalhaut": {
     "phase2": null,
     "phase3": {
       "★": "phase3/fomalhaut.html"
-    }
-  },
-  "HD 69830": {
-    "phase2": null,
-    "phase3": {
-      "★": "phase3/hd-69830.html",
-      "b": "phase3/hd-69830-b.html",
-      "c": "phase3/hd-69830-c.html",
-      "d": "phase3/hd-69830-d.html"
     }
   },
   "Vega": {
