@@ -642,6 +642,9 @@ input[type=checkbox]{accent-color:#4a88b8}
       <button class="on" data-dist="pc">pc</button><button data-dist="ly">ly</button><button data-dist="AU">AU</button>
     </div>
     <label><input type="checkbox"> <span data-i18n="hasPlanets">Has planets</span></label>
+    <div class="seg" id="phase-seg" title="Curation phase filter">
+      <button class="on" data-phase="all">All</button><button data-phase="p2">P2+</button><button data-phase="p3">P3+</button><button data-phase="both">Both</button>
+    </div>
     <div class="fg">
       <span title="Star units">★</span>
       <div class="seg" id="srad-seg">
@@ -740,7 +743,7 @@ input[type=checkbox]{accent-color:#4a88b8}
 
 let DB = [];
 let REPORTS = {};
-let FILTER = { q: '', spec: '', dist: 30, hpx: false };
+let FILTER = { q: '', spec: '', dist: 30, hpx: false, phase: 'all' };
 let SORT   = { col: 'dist', dir: 1 };
 let OPEN_KEY = null;  // 메인 페이지는 단일 OPEN (한 번에 하나만)
 
@@ -1471,6 +1474,14 @@ function applyFilter(rows) {
     if (FILTER.spec && r.spec[0] !== FILTER.spec) return false;
     if (r.dist == null || r.dist > FILTER.dist) return false;
     if (FILTER.hpx && r.np === 0) return false;
+    if (FILTER.phase !== 'all') {
+      const rep = REPORTS[r.sysName] || {};
+      const hasP2 = !!rep.phase2;
+      const hasP3 = !!(rep.phase3 && Object.keys(rep.phase3).length);
+      if (FILTER.phase === 'p2'   && !hasP2) return false;
+      if (FILTER.phase === 'p3'   && !hasP3) return false;
+      if (FILTER.phase === 'both' && !(hasP2 && hasP3)) return false;
+    }
     return true;
   });
 }
@@ -1511,6 +1522,20 @@ function bindFilters() {
     // 초기 active button 동기화 (localStorage 복원)
     document.querySelectorAll(`#${segId} button`).forEach(b => b.classList.toggle('on', b.dataset[dataAttr] === ({dist:UNIT_DIST,srad:UNIT_SRAD,smass:UNIT_SMASS,prad:UNIT_PRAD,pmass:UNIT_PMASS})[dataAttr]));
   };
+  // phase filter seg (All / P2+ / P3+ / Both)
+  document.querySelectorAll('#phase-seg button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      FILTER.phase = btn.dataset.phase;
+      localStorage.setItem('nearstars-filter-phase', FILTER.phase);
+      document.querySelectorAll('#phase-seg button').forEach(b => b.classList.toggle('on', b === btn));
+      renderAll();
+    });
+  });
+  const savedPhase = localStorage.getItem('nearstars-filter-phase');
+  if (savedPhase && ['all','p2','p3','both'].includes(savedPhase)) {
+    FILTER.phase = savedPhase;
+    document.querySelectorAll('#phase-seg button').forEach(b => b.classList.toggle('on', b.dataset.phase === savedPhase));
+  }
   bindUnitSeg('dist-seg',  'dist',  v => UNIT_DIST  = v, 'nearstars-unit-dist');
   bindUnitSeg('srad-seg',  'srad',  v => UNIT_SRAD  = v, 'nearstars-unit-srad');
   bindUnitSeg('smass-seg', 'smass', v => UNIT_SMASS = v, 'nearstars-unit-smass');
