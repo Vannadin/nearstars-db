@@ -141,3 +141,58 @@ Per Phase 3 skill Step 9.0. Every Decisions row planned for `docs/phase3/40-erid
 - `apparent_magnitude_v_from_earth` = 4.43 → **canonical-aligned** (Hipparcos)
 
 Row counts: **14 canonical-aligned**, **1 tie-break**, **1 documented-divergence** (age).
+
+## Agent B — 40 Eri B Decisions classification
+
+Step 9.0 pre-draft classification per nearstars-phase3 skill. Every
+Decisions row labelled before prose drafting. 40 Eri B is a stellar
+synthesis on a DA white dwarf: most rows are direct paper-anchored
+numbers from Bond et al. 2017, so canonical-aligned dominates.
+
+| Decisions row | Value | Class | Note |
+|---|---|---|---|
+| `spectral_type` | DA2.9 | canonical-aligned | GBR11 (Gianninas, Bergeron & Ruiz 2011) is the canonical DA temperature-index source; Bond 2017 §2 adopts. |
+| `mass_msun` | 0.573 ± 0.018 | canonical-aligned | Bond 2017 dynamical mass via HST/FGS astrometry + Mason 2017 BC orbit. Mason 2017 reports a virtually identical 0.575 ± 0.018 from the same orbital fit; the small difference is the parallax adoption. |
+| `radius_rsun` | 0.01308 ± 0.00020 | canonical-aligned | Bond 2017 SED-fit (BVRI + ubvy + JHK + Hipparcos π + Teff_atm). |
+| `teff_k` | 17200 ± 110 | canonical-aligned | Bond 2017 Balmer-line atmosphere fit (Tremblay & Bergeron 2009 grid). |
+| `luminosity_lsun` | 0.01349 ± 0.00054 | canonical-aligned | Bond 2017 bolometric flux integration. |
+| `log_g_cgs` | 7.957 ± 0.020 | canonical-aligned | Bond 2017 atmosphere fit. |
+| `gravitational_redshift_km_s` | 27.82 ± 0.97 | canonical-aligned | Bond 2017 derived from R, M (GR consistency check). |
+| `cooling_age_myr` | ~122 | canonical-aligned | Bond 2017 §6.2 thin-H cooling track. No formal σ stated by paper. |
+| `progenitor_initial_mass_msun` | ~1.8 | canonical-aligned | Bond 2017 §6.2 IFMR (Salaris+2009) inversion. |
+| `pre_wd_lifetime_gyr` | ~1.7 | canonical-aligned | Bond 2017 §6.2 main-sequence + post-MS lifetime for 1.8 M☉ progenitor. |
+| `total_age_gyr` | 1.8 ± 0.5 | canonical-aligned | Bond 2017 §6.2 sum (122 Myr + 1.7 Gyr). DB σ=0.5 is a curator estimate (Phase 2 meta_notes confirms no paper-stated σ); kept consistent with DB. |
+| `h_envelope_mass_fraction_log_qh` | ≈ −10 | canonical-aligned | Bond 2017 §6.1 — thin H layer; canonical thick-H value (q_H ≈ 10⁻⁴) does not fit cooling track. |
+| `magnetic_field_upper_limit_gauss` | <250 | canonical-aligned | Landstreet & Bagnulo 2015 ESPaDOnS limit, σ⟨Bz⟩ ≈ 85 G. |
+| `core_composition` | CO | canonical-aligned | Bond 2017 §6.3 — CO-core MRR fits 40 Eri B to within errors; standard for M_init ~ 1.8 M☉ progenitor. |
+| `metal_pollution_dazness` | none (clean DA) | canonical-aligned | Bond 2017 implicit (Balmer-only atmosphere fit); Fabrika 2003 ultra-weak metal lines attributed to circumstellar/ISM gas, not photospheric. |
+| `convective_envelope` | none (purely radiative atmosphere) | canonical-aligned | Bond 2017 §6.1 explicit; Teff 17,200 K is well above the H-convection-zone onset (~13,000 K for DA). |
+| `companion_a_separation_arcsec` | ~83 (no fitted orbit) | canonical-aligned | Tokovinin MSC 2018 wide-binary geometry. |
+| `companion_c_orbit_period_yr` | 230.09 ± 0.68 | canonical-aligned | Mason, Hartkopf & Miles 2017 — Binary Star Orbits V, grade 1. |
+| `companion_c_orbit_eccentricity` | 0.4300 ± 0.0027 | canonical-aligned | Mason 2017 Table 4. |
+| `companion_c_orbit_a_arcsec` | 6.9310 ± 0.0500 | canonical-aligned | Mason 2017 Table 4. |
+| `visual_surface_tint_hex_primary` | `#cfd9ff` (bright blue-white) | tie-break | Planck-locus at 17,200 K → blue-white tint; cfg picks a saturated blue-white for visual distinctiveness from solar-white companions. Documented as tie-break in Basis. |
+| `stellar_color_temp_k` | 17200 | canonical-aligned | Identical to Teff for a clean DA radiative atmosphere. |
+| `visual_apparent_diameter_arcsec_at_1au` | 25.09 | canonical-aligned | Derived geometric (2 R★ / a × (180·3600/π)). |
+
+Row count summary: **20 canonical-aligned, 1 tie-break, 0 documented-divergence.**
+No `## Canonical alternatives` section required.
+
+Mason BC orbit verification note: the Phase 2 working-notes recorded
+`P = 230.30 ± 0.68 yr` and `e = 0.4294 ± 0.0027`; the actual Mason 2017
+Table 4 values are P = 230.09 ± 0.68 and e = 0.4300 ± 0.0027 (verified
+2026-05-29 via ar5iv 1707.03635). The Phase 3 synthesis uses the
+paper-actual numbers. The Phase 2 DB does not contain any BC orbit
+entries (orbit lives outside `stellar_props_curated.json`), so no DB
+patch is needed from Phase 3 — flag only.
+
+Mason 2021 update note: a newer orbit fit (Mason et al. 2021,
+`2021AJ....162...53M`, P = 233.20 ± 0.65 yr, e = 0.4141 ± 0.0072,
+a = 6.88788 ± 0.03488″) supersedes Mason 2017 in the Sixth Orbit
+Catalog and on Wikipedia. The Phase 3 synthesis uses Mason 2017
+because (1) the task brief and Phase 2 prep both refer to Mason 2017,
+(2) Bond 2017's mass measurement explicitly uses the Mason 2017 orbit,
+so citing the 2017 orbit keeps the mass/orbit chain self-consistent.
+Mason 2021 is listed in Open items for follow-up so a future
+reconciliation pass can adopt it together with a re-derived dynamical
+mass.
