@@ -188,7 +188,16 @@
             "recommended": true
           }
         ],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_x_ray_log_lx_lbol": -3.72,
+            "method": "x_ray",
+            "reference": "Wheatley et al. 2017",
+            "bibcode": "2017MNRAS.465L..74W",
+            "doi": "10.1093/mnrasl/slw192",
+            "recommended": true
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -216,7 +225,9 @@
         "rotation_period_days": 3.295,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null
+        "activity_log_lhalpha_lbol": null,
+        "activity_x_ray_log_lx_lbol": -3.72,
+        "activity_ca_ii_log_lhk": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 11917577113.616,
@@ -1141,6 +1152,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "M8V ultracool dwarf — log R'HK and Ca II H&K unmeasurable (cool, red, no photospheric continuum at HK wavelengths). H-alpha EW: too faint (V~18.8, J~11.4) for CARMENES/Reiners 2018 survey; no canonical paper-cited EW exists. Activity therefore proxied by X-ray (Wheatley 2017 XMM-Newton, 30 ks): log(L_X/L_bol) = -3.72 (APEC), with model-dependent range -3.70 to -3.40 across spectral models; sits below Wright & Drake 2016 fully-convective saturation cutoff (~10^-3) consistent with the ~7.6 Gyr Burgasser & Mamajek 2017 age. Wilson et al. 2021 (2021ApJ...911...18W, Mega-MUSCLES) reconstructs intrinsic Ly-alpha = 1.40e-14 erg/s/cm2 at Earth — kept as cross-reference but not added as activity_measurements entry since the schema's value_keys cover X-ray + H-alpha + log R'HK + Ca II HK, not Ly-alpha directly."
   }
 }

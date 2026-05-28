@@ -111,7 +111,9 @@
         "rotation_period_days": null,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null
+        "activity_log_lhalpha_lbol": null,
+        "activity_x_ray_log_lx_lbol": null,
+        "activity_ca_ii_log_lhk": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 76044228130.314,
@@ -158,7 +160,7 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "DA2.9 white dwarf with H atmosphere stripped of metals; metallicity_measurements N/A by definition (no spectroscopic Fe/H accessible). Rotation undetermined for old DA WDs and no published P_rot value; rotation_measurements left empty. Photospheric activity (Halpha, Ca II HK, X-ray) inapplicable to a cooling WD; activity_measurements left empty. Magnetic upper limit |Bz| < 250 G (Landstreet et al. 2015, 2015A&A...580A.120L) confirms non-magnetic — recorded here rather than as an activity_measurement entry."
   },
   "binary_orbit_ref": "40_eridani_a.json"
 }

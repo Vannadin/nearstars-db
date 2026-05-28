@@ -225,7 +225,9 @@
         "rotation_period_days": 145.0,
         "activity_log_rhk": -5.69,
         "activity_h_alpha_ew_angstrom": null,
-        "activity_log_lhalpha_lbol": null
+        "activity_log_lhalpha_lbol": null,
+        "activity_x_ray_log_lx_lbol": null,
+        "activity_ca_ii_log_lhk": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 21366702842.898,

@@ -2255,7 +2255,18 @@
         "doi": "10.3847/1538-4357/aa6f05",
         "recommended": true
       }
-    ]
+    ],
+    "activity_measurements": [
+      {
+        "value_x_ray_log_lx_lbol": -3.72,
+        "method": "x_ray",
+        "reference": "Wheatley et al. 2017",
+        "bibcode": "2017MNRAS.465L..74W",
+        "doi": "10.1093/mnrasl/slw192",
+        "recommended": true
+      }
+    ],
+    "meta_notes": "M8V ultracool dwarf — log R'HK and Ca II H&K unmeasurable (cool, red, no photospheric continuum at HK wavelengths). H-alpha EW: too faint (V~18.8, J~11.4) for CARMENES/Reiners 2018 survey; no canonical paper-cited EW exists. Activity therefore proxied by X-ray (Wheatley 2017 XMM-Newton, 30 ks): log(L_X/L_bol) = -3.72 (APEC), with model-dependent range -3.70 to -3.40 across spectral models; sits below Wright & Drake 2016 fully-convective saturation cutoff (~10^-3) consistent with the ~7.6 Gyr Burgasser & Mamajek 2017 age. Wilson et al. 2021 (2021ApJ...911...18W, Mega-MUSCLES) reconstructs intrinsic Ly-alpha = 1.40e-14 erg/s/cm2 at Earth — kept as cross-reference but not added as activity_measurements entry since the schema's value_keys cover X-ray + H-alpha + log R'HK + Ca II HK, not Ly-alpha directly."
   },
   "AU Mic": {
     "mass_measurements": [
@@ -4521,7 +4532,8 @@
         "doi": "10.3847/1538-4357/aa8a63",
         "recommended": true
       }
-    ]
+    ],
+    "meta_notes": "DA2.9 white dwarf with H atmosphere stripped of metals; metallicity_measurements N/A by definition (no spectroscopic Fe/H accessible). Rotation undetermined for old DA WDs and no published P_rot value; rotation_measurements left empty. Photospheric activity (Halpha, Ca II HK, X-ray) inapplicable to a cooling WD; activity_measurements left empty. Magnetic upper limit |Bz| < 250 G (Landstreet et al. 2015, 2015A&A...580A.120L) confirms non-magnetic — recorded here rather than as an activity_measurement entry."
   },
   "40 Eridani C": {
     "teff_k": 3167,
@@ -4581,6 +4593,7 @@
         "doi": "10.3847/1538-4357/aa8a63",
         "recommended": true
       }
-    ]
+    ],
+    "meta_notes": "M4.5 Ve flare star (variable designation DY Eri). [Fe/H] not directly measured at this spectral type for this star; inherits system-coeval value [Fe/H] ~ -0.30 from 40 Eridani A (Diaz 2018 / Bensby 2014), recorded narratively rather than as a measurement since no paper reports a 40 Eri C-specific spectroscopic value. P_rot tentatively ~137 d (Kemmer 2025 CARMENES, provisional pending independent confirmation); not added as a measurement until verified. Activity is real (DY Eri = UV Ceti-class flare star) but no single canonical paper-cited Halpha EW or log L_X / L_bol value pinned yet; CARMENES Jeffers 2018 reports Halpha pEW in the -2 to -4 A range. Add when a single recommended source is chosen."
   }
 }

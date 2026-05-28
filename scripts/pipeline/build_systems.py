@@ -649,6 +649,8 @@ for target in target_list:
             "activity_log_rhk":             rec_act_arr.get("value_log_rhk"),
             "activity_h_alpha_ew_angstrom": rec_act_arr.get("value_h_alpha_ew_angstrom"),
             "activity_log_lhalpha_lbol":    rec_act_arr.get("value_log_lhalpha_lbol"),
+            "activity_x_ray_log_lx_lbol":   rec_act_arr.get("value_x_ray_log_lx_lbol"),
+            "activity_ca_ii_log_lhk":       rec_act_arr.get("value_ca_ii_log_lhk"),
         }
 
         # ── derived 블록 (B1950, J2000 모두 포함) ──
