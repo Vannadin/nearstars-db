@@ -8,9 +8,10 @@ revision of the MK system — and a Hipparcos / Gaia DR3 parallax of
 129.81 mas put it at **7.704 pc ≈ 25.13 ly**. The fundamental
 parameters are tightly anchored by VLTI/VINCI interferometry
 (Di Folco 2004): R = 1.842 ± 0.019 R☉, and the evolutionary mass from
-Mamajek 2012 is M = 1.92 ± 0.02 M☉. Effective temperature Teff ≈
-8689 K and a corresponding luminosity L ≈ 16.6 L☉ make Fomalhaut a
-factor of ~17 more luminous than the Sun in the bolometric and
+Mamajek 2012 is M = 1.92 ± 0.02 M☉. Effective temperature Teff =
+8751 ± 90 K (Di Folco 2004, bolometric flux + interferometric θ_LD)
+and a corresponding luminosity L = 16.63 ± 0.48 L☉ (Mamajek 2012)
+make Fomalhaut a factor of ~17 more luminous than the Sun in the bolometric and
 ~24× brighter in the visible band.
 
 Fomalhaut is the primary of a **hierarchical wide triple system**. The
@@ -56,16 +57,16 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | A4V | high | Gray & Garrison 1989 — MK standard; Mamajek 2012 adopts A3V/A4V boundary |
-| `mass_msun` | 1.92 ± 0.02 | high | Mamajek 2012 — isochrone fit using Y² evolutionary tracks anchored to interferometric R |
-| `radius_rsun` | 1.842 ± 0.019 | high | Di Folco et al. 2004 — VLTI/VINCI K-band limb-darkened interferometry; θ_LD = 2.223 ± 0.022 mas |
-| `teff_k` | 8689 | high | SIMBAD compilation; Di Folco 2004 derives 8751 ± 90 K from bolometric flux + θ_LD, consistent within 1σ |
-| `luminosity_lsun` | 16.6 | high | derived from R and Teff via Stefan–Boltzmann; Mamajek 2012 quotes 16.63 ± 0.48 |
-| `metallicity_fe_h_dex` | −0.03 ± 0.05 | medium | Saffe et al. 2008 — high-resolution spectroscopy of Castor moving-group A-stars; essentially solar |
-| `age_gyr` | 0.44 ± 0.04 | high | Mamajek 2012 — joint isochronal + kinematic Castor moving group; supersedes earlier 200 Myr estimates |
-| `rotation_period_days` | 0.97 | medium | derived from v sin i = 93 km/s (Royer 2007) + R = 1.842 R☉; assumes i ≈ 65° from disk inclination (Le Bouquin 2009) |
+| `mass_msun` | 1.92 ± 0.02 | high | Phase 2 recommended: Mamajek 2012 — isochrone fit using Y² evolutionary tracks anchored to Di Folco 2004 interferometric R |
+| `radius_rsun` | 1.842 ± 0.019 | high | Phase 2 recommended: Di Folco et al. 2004 — VLTI/VINCI K-band limb-darkened interferometry; θ_LD = 2.223 ± 0.022 mas (1% precision) |
+| `teff_k` | 8751 ± 90 | high | Phase 2 recommended: Di Folco et al. 2004 — bolometric flux + θ_LD; supersedes the SIMBAD compilation scalar 8689 K cited in earlier drafts of this synthesis. The 8689 vs 8751 K shift is well within 1σ and does not propagate to disk-irradiation or HZ-boundary picks |
+| `luminosity_lsun` | 16.63 ± 0.48 | high | Phase 2 recommended: Mamajek 2012 — bolometric flux from photometric SED + Hipparcos parallax. Earlier draft labelled this row "derived from R and Teff via Stefan–Boltzmann"; the value adopted is and was always Mamajek 2012's directly-measured bolometric L, not a Stefan-Boltzmann re-derivation |
+| `metallicity_fe_h_dex` | −0.03 ± 0.05 | medium | Phase 2 recommended: Saffe et al. 2008 — high-resolution spectroscopy of Castor moving-group A-stars; essentially solar. Erspamer & North 2003 automated DETAIL synthesis gives −0.27 ± 0.13 (kept as cross-check; runs systematically lower than dedicated Castor-MG analyses) |
+| `age_gyr` | 0.44 ± 0.04 | high | Phase 2 recommended: Mamajek 2012 — joint isochronal + Castor moving-group kinematic membership; supersedes earlier ~200 Myr estimates (Barrado y Navascués 1998) |
+| `rotation_period_days` | 0.97 ± 0.1 | medium | Phase 2 recommended: Royer et al. 2007 — v sin i = 93 ± 3 km/s + R = 1.842 R☉ + disk-aligned spin axis i ≈ 65.6° (Le Bouquin 2009) ⇒ P_rot = 2πR sin i / (v sin i) ≈ 0.97 d. Assumes spin-disk alignment, which Le Bouquin 2009 demonstrates to ~3° |
 | `limb_darkening_alpha_h` | 0.211 ± 0.020 | high | Davis et al. 2005 — SUSI optical interferometry; A-star limb darkening slightly stronger than solar G-types |
-| `visual_surface_tint_hex_primary` | `#cfe0ff` (cool blue-white, A-star) | medium | Tie-break: A4V blackbody at 8689 K + bolometric correction; visually distinguishable from Vega's slightly bluer A0V tint |
-| `stellar_color_temp_k` | 8689 | high | = Teff |
+| `visual_surface_tint_hex_primary` | `#cfe0ff` (cool blue-white, A-star) | medium | Tie-break: A4V blackbody at 8751 K + bolometric correction; visually distinguishable from Vega's slightly bluer A0V tint |
+| `stellar_color_temp_k` | 8751 | high | = Teff (Phase 2 Di Folco 2004) |
 | `visual_companion_event_tw_psa_apparent_diameter_arcmin` | 0.00006 (point source, V ≈ 6.5 from any Fomalhaut planet) | medium | derived: 2 R(K4V) / 0.91 ly ≈ 0.004 arcsec ≈ point source; visible as a faint orange star, not a disk |
 | `visual_companion_event_lp_876_10_apparent_diameter_arcmin` | 0.00001 (point source, V ≈ 11 from any Fomalhaut planet) | medium | derived: M4V at 5.7 ly is below naked-eye limit but trivially visible in any in-game telescope view |
 | `disk_present` | true | high | Kalas et al. 2005 HST/ACS resolved coronagraphy |
@@ -84,7 +85,7 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 ## Surface synthesis
 
 The photosphere of Fomalhaut sits squarely in the A-type main
-sequence at Teff = 8689 K, ~3000 K hotter than the Sun and ~700 K
+sequence at Teff = 8751 K, ~3000 K hotter than the Sun and ~650 K
 cooler than the canonical A0V standard Vega. At this temperature the
 continuum opacity is dominated by the Balmer / Paschen jumps of
 hydrogen and the bolometric SED peaks at ~334 nm, well into the UV.
@@ -133,7 +134,7 @@ plausibly attributable to a magnetically active **late-type
 companion at small separation** rather than to Fomalhaut A itself.
 No coronal X-ray cycle is expected and none is observed.
 
-The UV/FUV flux is intrinsically high — the Wien tail of an 8689 K
+The UV/FUV flux is intrinsically high — the Wien tail of an 8751 K
 photosphere puts substantial energy below 200 nm — and this is the
 dominant atmospheric-erosion driver for any inner planet around an
 A-star. The XUV/EUV flux relative to bolometric is, however, low
@@ -197,7 +198,7 @@ From a candidate planet at the inner edge of the habitable zone
 2R★/a × (180·60/π) ≈ 0.06° — about ⅛ the angular diameter of the
 Sun seen from Earth. Despite the small angular size, the surface
 brightness is much higher than the Sun's because of the T⁴ scaling
-(Teff = 8689 K vs 5778 K → 5.1× higher per unit solid angle), so
+(Teff = 8751 K vs 5778 K → 5.3× higher per unit solid angle), so
 the bolometric flux at HZ is ~5× the solar constant at 1 AU. The
 visible-band illumination is even more strongly weighted to the
 blue, giving any HZ planet a noticeably cooler-spectrum daytime sky
@@ -313,7 +314,9 @@ alignment phenomena on human timescales.
 - **Royer F. et al. 2007** — *Rotational velocities of A-type stars*,
   A&A 463, 671 (`2007A&A...463..671R`, arXiv:astro-ph/0610785).
   Gives v sin i = 93 ± 3 km/s for Fomalhaut; combined with disk
-  inclination to derive rotation period.
+  inclination to derive P_rot ≈ 0.97 d. **Phase 2 recommended
+  rotation source** (via `v_sin_i` method, since no direct
+  photometric or asteroseismic period exists).
 - **Acke B. et al. 2012** — *Herschel images of Fomalhaut: An
   extrasolar Kuiper Belt at the height of its dynamical activity*,
   A&A 540, A125 (`2012A&A...540A.125A`, arXiv:1204.5037).
@@ -327,6 +330,22 @@ alignment phenomena on human timescales.
   like stars*, A&A 490, 297 (`2008A&A...490..297S`,
   arXiv:0805.3936). High-resolution metallicity for Castor moving-
   group A-stars including Fomalhaut; [Fe/H] = −0.03 ± 0.05.
+  **Phase 2 recommended metallicity source.**
+- **Erspamer D. & North P. 2003** — *Automated spectroscopic
+  abundances of A- and F-type stars using echelle spectrographs.
+  II.* A&A 398, 1121 (`2003A&A...398.1121E`,
+  arXiv:astro-ph/0211123). Automated DETAIL synthesis pipeline
+  applied to a broad A/F sample; gives Fomalhaut [Fe/H] =
+  −0.27 ± 0.13. Phase 2 cross-check value, kept as non-recommended
+  because it runs systematically lower than dedicated Castor-MG
+  high-resolution analyses (Saffe 2008).
+- **Böhm-Vitense E. 2007** — *Chromospheric activity in G- and
+  K-main-sequence stars, and what it tells us about stellar
+  dynamos*, ApJ 657, 486 (`2007ApJ...657..486B`). Establishes the
+  ~F5 V boundary below which a convective envelope is too thin to
+  sustain a magnetic dynamo and a chromosphere; underpins the
+  Phase 2 decision to leave `activity_measurements` empty for
+  Fomalhaut.
 - **Stapelfeldt K. R. et al. 2004** — *First Look at the Fomalhaut
   Debris Disk with Spitzer*, ApJS 154, 458
   (`2004ApJS..154..458S`). Spitzer/MIPS 24/70/160 µm photometry;
@@ -397,10 +416,19 @@ Filtered bib preserved in `docs/phase3/_bib/fomalhaut.yaml` with
   the candidate "S1" naming) would be needed and the cfg should
   document the divergence from the current consensus. Until then,
   no planet is included.
-- **Phase 2 `teff_measurements` and `metallicity_measurements`
-  population**: DB has `teff_k = 8689` as a SIMBAD compilation
-  scalar with no provenance entry; Saffe 2008 metallicity is also
-  not in DB. Both should be added with paper-cited Phase 2 entries.
+- **A-type chromospheric-activity proxy**: `activity_measurements`
+  in the DB is intentionally empty because log R'HK is undefined for
+  A4 V (no convective envelope, no chromospheric Ca II H&K cores —
+  the Bohm-Vitense 2007 chromospheric boundary lies near F5 V, well
+  cooler than Fomalhaut). The only observational counterpart is the
+  ROSAT non-detection (Schröder & Schmitt 2007, log L_X < 27.5
+  erg/s); this is captured narratively in `meta_notes` rather than
+  as a measurement entry because the `x_ray` method on the schema
+  whitelist is intended for detections rather than upper-limit
+  non-detections. If a future XMM-Newton or eROSITA detection is
+  unambiguously attributed to Fomalhaut A (rather than a coronally
+  active companion at small separation), the entry should be
+  promoted to a paper-cited `x_ray` measurement.
 - **Gravity-darkening map**: No resolved interferometric gravity-
   darkening map of Fomalhaut exists (unlike Vega, Altair, Regulus).
   CHARA/MIRC or VLTI/GRAVITY observation of the von-Zeipel

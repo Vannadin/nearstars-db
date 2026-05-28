@@ -39,6 +39,12 @@
       "★": "phase3/delta-pavonis.html"
     }
   },
+  "Fomalhaut": {
+    "phase2": "phase2/fomalhaut.html",
+    "phase3": {
+      "★": "phase3/fomalhaut.html"
+    }
+  },
   "Proxima Cen": {
     "phase2": "phase2/proxima-cen.html",
     "phase3": {
@@ -79,12 +85,6 @@
       "h": "phase3/trappist-1-h.html"
     }
   },
-  "Vega": {
-    "phase2": "phase2/vega.html",
-    "phase3": {
-      "★": "phase3/vega.html"
-    }
-  },
   "61 Vir": {
     "phase2": null,
     "phase3": {
@@ -111,12 +111,6 @@
       "b": "phase3/eps-eri-b.html"
     }
   },
-  "Fomalhaut": {
-    "phase2": null,
-    "phase3": {
-      "★": "phase3/fomalhaut.html"
-    }
-  },
   "HD 69830": {
     "phase2": null,
     "phase3": {
@@ -124,6 +118,12 @@
       "b": "phase3/hd-69830-b.html",
       "c": "phase3/hd-69830-c.html",
       "d": "phase3/hd-69830-d.html"
+    }
+  },
+  "Vega": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/vega.html"
     }
   }
 }

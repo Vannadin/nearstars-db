@@ -459,6 +459,8 @@
     ]
   },
   "Fomalhaut": {
+    "teff_k": 8751,
+    "teff_bibcode": "2004A&A...426..601D",
     "spectype": "A4 V",
     "spectype_bibcode": "1989ApJS...71..245K",
     "spectype_reference": "Keenan & McNeil 1989",
@@ -483,7 +485,73 @@
         "doi": "10.1051/0004-6361:20047189",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 8751,
+        "uncertainty_k": 90,
+        "method": "interferometry",
+        "reference": "Di Folco et al. 2004",
+        "bibcode": "2004A&A...426..601D",
+        "doi": "10.1051/0004-6361:20047189",
+        "recommended": true
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 16.63,
+        "uncertainty_lsun": 0.48,
+        "method": "bolometric_flux",
+        "reference": "Mamajek 2012",
+        "bibcode": "2012ApJ...754L..20M",
+        "doi": "10.1088/2041-8205/754/2/L20",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.44,
+        "uncertainty_gyr": 0.04,
+        "method": "kinematic",
+        "reference": "Mamajek 2012",
+        "bibcode": "2012ApJ...754L..20M",
+        "doi": "10.1088/2041-8205/754/2/L20",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": -0.03,
+        "uncertainty_dex": 0.05,
+        "method": "high_res_spectroscopy",
+        "reference": "Saffe et al. 2008",
+        "bibcode": "2008A&A...490..297S",
+        "doi": "10.1051/0004-6361:200810260",
+        "recommended": true
+      },
+      {
+        "value_dex": -0.27,
+        "uncertainty_dex": 0.13,
+        "method": "high_res_spectroscopy",
+        "reference": "Erspamer & North 2003",
+        "bibcode": "2003A&A...398.1121E",
+        "doi": "10.1051/0004-6361:20021711",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 0.97,
+        "uncertainty_days": 0.1,
+        "method": "v_sin_i",
+        "reference": "Royer et al. 2007",
+        "bibcode": "2007A&A...463..671R",
+        "doi": "10.1051/0004-6361:20065224",
+        "recommended": true
+      }
+    ],
+    "activity_measurements": [],
+    "meta_notes": "A4 V main-sequence star with no convective envelope, so chromospheric Ca II H&K emission cores are absent and the log R'HK index used for solar-type activity synthesis is undefined (Bohm-Vitense 2007 places the chromospheric activity boundary near F5 V, well cooler than Fomalhaut). activity_measurements left empty by design — the canonical observational counterpart is a ROSAT X-ray non-detection (Schroeder & Schmitt 2007, 2007A&A...475..677S; log L_X < 27.5 erg/s, 0.1-2.4 keV) and the marginal XMM-Newton point source is most likely a magnetically active late-type companion at small separation rather than Fomalhaut A itself; this is recorded narratively here rather than as an activity_measurements entry because the X-ray method whitelist applies to detections rather than upper-limit non-detections. Teff = 8751 +/- 90 K is the Di Folco 2004 bolometric-flux + theta_LD value rather than the SIMBAD compilation scalar 8689 K used in older Phase 3 drafts (1sigma consistent). Rotation P_rot = 0.97 d is derived from Royer 2007 v sin i = 93 +/- 3 km/s and the interferometric R = 1.842 R_sun assuming spin-disk alignment (i ~ 65.6 deg, Le Bouquin 2009); the deprojected equatorial velocity v_eq ~ 102 km/s is well below the 390 km/s critical break-up. Age 0.44 +/- 0.04 Gyr from Mamajek 2012 joint isochrone + Castor moving-group kinematic membership; this supersedes the older Barrado y Navascues 1998 ~200 Myr estimate. [Fe/H] = -0.03 from Saffe 2008 high-res Castor-MG sample; Erspamer & North 2003 -0.27 +/- 0.13 is from automated DETAIL synthesis on a broader A-star sample and runs systematically lower than dedicated Castor-MG analyses (kept as cross-check)."
   },
   "61 Cygni A": {
     "spectype": "K5 V",
