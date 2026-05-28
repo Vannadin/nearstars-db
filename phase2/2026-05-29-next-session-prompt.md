@@ -45,11 +45,11 @@ eps Eri / AU Mic / Vega / Fomalhaut 의 나머지 카테고리 — 처음부터 
 
 | Tier | 내용 | 상태 |
 |---|---|---|
-| Tier 1 | Phase 3 ← Phase 1 stellar 워크플로우 역전 (7 호스트) | **0/7**. 어제 작업 전부 revert. Delta Pav 도 다시 |
-| Tier 2 | Phase 2 카테고리 누락 (TRAPPIST-1 + 40 Eri B/C) | **0**. 다시 |
-| Tier 3 | 40 Eri Phase 3 (40 Eri A Phase 2 prerequisite) | ⏸ 미시작. `phase2/40_eridani/` 작업 폴더 보존됨 |
-| Tier 4 | TRAPPIST-1 planet schema Phase 1→2 | ⏸ 미시작, 큰 작업 |
-| Tier 5 | controversial 행성 정리 | 사실상 종료, HD 26965 b 만 보류 |
+| Tier 1 | Phase 3 ← Phase 1 stellar 워크플로우 역전 (7 호스트) | **0/7**. 어제 작업 전부 revert. Delta Pav 도 다시. (40 Eri A 까지 묶으면 0/8) |
+| Tier 2 | Phase 2 카테고리 누락 (TRAPPIST-1 + 40 Eri B/C) | **사실상 완료** (2026-05-29 워밍업 12c1355 + 119114a). Deferred 후속: 40 Eri C [Fe/H] entry 추가, Cifuentes 2020 L VizieR verify, Kemmer/Suarez Mascareno P_rot follow-up. |
+| Tier 3 | 40 Eri Phase 3 (40 Eri A Phase 2 prerequisite) | ⏸ 미시작. `phase2/40_eridani/` 작업 폴더 보존됨. 사용자 결정: "3 > 2 > 1 순" 으로 Tier 1 끝낸 후 마지막. |
+| Tier 4 | TRAPPIST-1 planet schema Phase 1→2 | **부분 완료** — TRAPPIST-1 7 행성 `physical` block 은 2026-05-20 작업으로 이미 array form (3 entries each: Gillon 2017 + Grimm 2018 + Agol 2021). `orbital` 만 의도적 Phase 1 single dict (Agol 2021 canonical, paper-to-paper variation <5%). full array 화는 우선순위 낮음. |
+| Tier 5 | controversial 행성 정리 | **사실상 종료**. Proxima c / tau Cet b/c/d 는 NASA Archive 정렬로 처리됨. HD 26965 b 만 refuted markdown 작성 여부 보류 — 사용자가 "안 만들 듯, 나중에" 결정. |
 
 ## 작업 폴더 보존 상태 (untracked, 검토 필요)
 
