@@ -6,13 +6,13 @@ G-type subgiants to the Sun, at 6.10 ± 0.005 pc (Gaia DR3 parallax
 163.95 ± 0.12 mas). The spectral classification G8IV (Gray 2006
 NStars; Houk & Cowley 1975) places it just off the main sequence —
 core hydrogen exhausted, hydrogen-shell burning beginning to inflate
-the envelope. Effective temperature 5604 K (Gaia DR3) and V = 3.56
-make it the brightest G subgiant in the southern sky and a textbook
-target for nearby-subgiant studies. No confirmed planets exist:
-extreme-precision RV (HARPS, Tinney 2005; Mawet 2017) and
-direct-imaging (Lannier 2017) campaigns rule out anything more
-massive than ~3 M_Jup at 1 AU and Neptune-mass at the habitable
-zone, and the ESPRESSO-era limits push deeper.
+the envelope. Effective temperature 5644 ± 30 K (Gomes da Silva
+2021 AMBRE-HARPS) and V = 3.56 make it the brightest G subgiant in
+the southern sky and a textbook target for nearby-subgiant studies.
+No confirmed planets exist: extreme-precision RV (HARPS, Tinney
+2005; Mawet 2017) and direct-imaging (Lannier 2017) campaigns rule
+out anything more massive than ~3 M_Jup at 1 AU and Neptune-mass at
+the habitable zone, and the ESPRESSO-era limits push deeper.
 
 What δ Pav *does* host is a cold debris disk first detected as a
 Spitzer/MIPS 70 µm excess (Beichman 2006) and resolved
@@ -20,9 +20,11 @@ photometrically by Herschel/PACS at 70, 100, and 160 µm (Eiroa 2013
 DUNES; Lawler & Tanner 2014). Modified blackbody fits to the SED
 give a single cold belt at roughly 30–80 AU with dust temperature
 T_d ≈ 55 K and dust mass M_d ~ 0.01 M⊕ — small but unambiguous, and
-notably old (system age ~7 Gyr, Holmberg 2009), implying a
-collisionally replenished planetesimal reservoir analogous to a thin
-Kuiper Belt.
+moderately old (system age ~5 Gyr from Gomes da Silva 2021 PARSEC
+isochrone, with literature spread 5–9 Gyr across pipelines), already
+~5× the typical 50–500 Myr collisional cascade lifetime of µm-cm
+dust at 50 AU, implying a collisionally replenished planetesimal
+reservoir analogous to a thin Kuiper Belt.
 
 **Scenario choice for NearStars: an old, quiet G8 subgiant —
 slightly inflated, slightly redder than a G8V dwarf, viewed against
@@ -37,19 +39,19 @@ visually subtle until ALMA or JWST resolves it.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | G8IV | high | Gray 2006 NStars; Houk & Cowley 1975 MK catalog; subgiant classification confirmed by HR-diagram position |
-| `mass_msun` | 1.05 ± 0.04 | medium | Bensby 2014 Geneva-Copenhagen + Spada 2011 evolutionary fit; consistent with isochrone age |
-| `radius_rsun` | 1.22 ± 0.02 | high | Bruntt 2010 — asteroseismic + interferometric R; consistent with Gaia DR3 SED-fit R |
-| `teff_k` | 5604 ± 30 | high | Gaia DR3 GSP-Phot 5604 K; Bensby 2014 spectroscopic 5587 ± 50 K agrees within 1σ |
-| `luminosity_lsun` | 1.20 ± 0.04 | high | derived from R and Teff via Stefan–Boltzmann; Eiroa 2013 SED fit 1.22 L☉ agrees |
-| `metallicity_fe_h_dex` | +0.33 ± 0.05 | high | Bensby 2014 — high-resolution FEROS spectroscopy, super-solar (consistent with thin-disk population) |
-| `age_gyr` | 7.0 ± 0.5 | medium | Holmberg 2009 Geneva-Copenhagen isochrone 6.6 Gyr; Spada 2011 subgiant model 7.5 Gyr; midpoint adopted, subgiant phase tightly constrains |
-| `rotation_period_days` | ~30 (uncertain) | low | No reliable photometric period; vsini ≈ 1.7 km/s (Bensby 2014) + R = 1.22 R☉ implies P_rot ≥ 30 d for i ≤ 90°; Skumanich braking at 7 Gyr supports slow rotation |
-| `activity_log_rhk` | −5.10 | medium | Henry 1996 + Gray 2006 NStars — among the most chromospherically quiet G subgiants in the local sample; consistent with old age + early subgiant phase |
+| `mass_msun` | 1.064 ± 0.013 | high | Gomes da Silva 2021 PARSEC isochrone with Gaia DR2 parallax + AMBRE-HARPS Teff/[Fe/H]; supersedes earlier Bensby 2014 (1.03 ± 0.07) and Spada 2011 (~1.05) subgiant fits, all within 1σ |
+| `radius_rsun` | 1.115 ± 0.025 | medium | Gomes da Silva 2021 PARSEC isochrone (same fit as mass). No direct interferometric diameter exists (δ Pav dec −66° too far south for CHARA; never observed by PAVO@SUSI or VLTI-PIONIER). Bruntt 2010 quoted R = 1.22 ± 0.02 from L+Teff Stefan-Boltzmann with older parallax; the 9% offset vs Gomes 2021 traces to (a) updated Gaia DR2 parallax and (b) PARSEC vs Stefan-Boltzmann method choice |
+| `teff_k` | 5644 ± 30 | high | Gomes da Silva 2021 AMBRE-HARPS pipeline; Tsantaki 2013 high-res 5566 ± 36 K and Casagrande 2011 IRFM 5598 ± 80 K bracket within combined uncertainty |
+| `luminosity_lsun` | 1.246 ± 0.05 | high | Eiroa 2013 DUNES bolometric flux from SED + Hipparcos parallax; supersedes Stefan-Boltzmann derivation from R + Teff (which gives ~1.17 with current Gomes 2021 values) |
+| `metallicity_fe_h_dex` | +0.36 ± 0.02 | high | Gomes da Silva 2021 AMBRE-HARPS (smallest formal uncertainty); Tsantaki 2013 +0.32 ± 0.03, Ramirez 2013 +0.33 ± 0.07, Bensby 2014 +0.37 ± 0.20 all agree within combined errors |
+| `age_gyr` | 5.04 ± 1.23 | low | Gomes da Silva 2021 PARSEC isochrone (newest paper, smallest stated uncertainty); Bensby 2014 also gives ~5 Gyr from Geneva-Copenhagen. Tsantaki 2013 isochrone (8.5 ± 1.3) and Eiroa 2013 Ca II age (8.3) both give ~8–9 Gyr — literature is split between ~5 and ~9 Gyr depending on pipeline. Tier-hierarchy pick goes to Gomes 2021 (newest, tightest), but Confidence kept low to reflect the unresolved spread |
+| `rotation_period_days` | ≤175 (upper limit); best estimate ~30 from Skumanich | low | Ramirez 2013 v sin i = 0.32 ± 0.05 km/s (HARPS solar-twin precision, supersedes earlier 1–3 km/s upper limits) + R = 1.115 R☉ + sin i ≤ 1 ⇒ P_rot ≤ 175 d for any inclination. No photometric period detected. Skumanich-braking expectation at ~5 Gyr with Sun-like initial spin places P_rot near 30 d but is not directly measured |
+| `activity_log_rhk` | −5.13 ± 0.003 | high | Gomes da Silva 2021 — weighted mean of 6002 HARPS spectra 2003–2016; well below solar minimum (log R'HK ≈ −4.96), one of the most inactive G subgiants known. Boro Saikia 2018 multi-survey median −4.99 / HARPS-only median −5.49 brackets this; Henry 1996 Mt Wilson −5.10 agrees |
 | `activity_cycle_years` | unknown | low | No long-term Mt. Wilson program coverage; subgiants in this evolutionary phase often show weakened or irregular cycles |
 | `x_ray_log_lx_cgs_max` | 26.6 | medium | ROSAT all-sky non-detection upper limit (Hünsch 1998); consistent with very weak corona |
-| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | derived from Bruntt 2010 atmosphere model + Claret 2011 LD tables for G8IV at Teff=5604; no direct interferometric LD measurement |
-| `visual_surface_tint_hex_primary` | `#ffe8c8` (amber-cream, redder than G2V Sol) | medium | Tie-break: G8IV blackbody at 5604 K + +0.33 dex metallicity reddening; subgiant envelope inflation shifts disk integrated color slightly redder than a G8V dwarf at same Teff |
-| `stellar_color_temp_k` | 5604 | high | derived from Teff (Gaia DR3) |
+| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Claret 2011 LD tables for G8IV at Teff ≈ 5640 K, log g ≈ 4.0; no direct interferometric LD measurement (no interferometry of δ Pav exists) |
+| `visual_surface_tint_hex_primary` | `#ffe8c8` (amber-cream, redder than G2V Sol) | medium | Tie-break: G8IV blackbody at 5644 K + +0.36 dex metallicity reddening; subgiant envelope inflation shifts disk integrated color slightly redder than a G8V dwarf at same Teff |
+| `stellar_color_temp_k` | 5644 | high | derived from Teff (Gomes da Silva 2021) |
 | `visual_corona_extent_radii` | 1.6 | low | Tie-break: weak chromosphere + low log R'HK = -5.1 → muted corona band; rendered as a thin ring rather than the brighter Sun-like halo |
 | `disk_present` | true | high | Beichman 2006 Spitzer/MIPS 70 µm excess; Eiroa 2013 Herschel/PACS confirmed at 70/100/160 µm |
 | `disk_inner_radius_au` | 30 | medium | Lawler & Tanner 2014 single-belt fit r_in ≈ 30 AU from modified blackbody at T_d = 55 K; Eiroa 2013 finds r_in 23–35 AU depending on grain size |
@@ -244,22 +246,43 @@ visual choices:
   Main-Sequence Stars: Impact on the Direct Detection of Planets*
   (`2006ApJ...652.1674B`). Spitzer/MIPS 70 µm detection of δ Pav
   excess; first announcement of the disk.
+- **Gomes da Silva J. et al. 2021** — *Chromospheric activity of FGK
+  stars observed with HARPS* (`2021A&A...646A..77G`,
+  doi:10.1051/0004-6361/202039765). AMBRE-HARPS Teff = 5644 ± 30 K,
+  [Fe/H] = +0.36 ± 0.02, log R'HK = −5.13 (weighted mean of 6002
+  HARPS spectra), PARSEC isochrone mass = 1.064 ± 0.013 M☉, radius =
+  1.115 ± 0.025 R☉, age = 5.04 ± 1.23 Gyr. **Primary Phase 2 anchor
+  for δ Pav** (newest paper, smallest uncertainties, homogeneous
+  treatment); supersedes the older Bensby 2014 / Bruntt 2010 picks
+  used in an earlier draft of this synthesis.
+- **Eiroa C. et al. 2013** — *DUNES: DUst around NEarby Stars*
+  (`2013A&A...555A..11E`, doi:10.1051/0004-6361/201321050).
+  Herschel/PACS 70/100/160 µm photometry of δ Pav and 132 nearby FGK
+  stars; bolometric L = 1.246 L☉, Ca II activity age 8.3 Gyr (the
+  older end of the literature spread), v sin i upper limit 3.2 km/s
+  (superseded by Ramirez 2013). Also the primary disk-detection
+  source — see `disks_curated`.
+- **Ramirez I. et al. 2013** — *The dissimilar chemical composition
+  of the planet-hosting stars of the XO-2 binary system*
+  (`2013ApJ...764...78R`, doi:10.1088/0004-637X/764/1/78).
+  HARPS solar-twin-precision v sin i = 0.32 ± 0.05 km/s for δ Pav at
+  the instrumental floor; sets the modern P_rot upper-bound
+  derivation in the Rotation row. Also high-res Teff = 5517 ± 60 K,
+  [Fe/H] = +0.33 ± 0.07, evolutionary-model mass 0.98 ± 0.02 M☉
+  (all kept as cross-check alternates).
+- **Tsantaki M. et al. 2013** — *Deriving precise parameters for
+  cool solar-type stars: optimizing the iron line list*
+  (`2013A&A...555A.150T`, doi:10.1051/0004-6361/201321103).
+  Homogeneous high-res spectroscopy: Teff = 5566 ± 36 K, [Fe/H] =
+  +0.32 ± 0.03, mass 0.967 ± 0.016 M☉, age 8.48 ± 1.27 Gyr — the
+  ~9 Gyr end of the age literature spread.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk:
   A detailed elemental abundance study of 714 F and G dwarf stars*
   (`2014A&A...562A..71B`, arXiv:1309.2631). FEROS high-resolution
-  spectroscopy gives Teff = 5587 ± 50 K, log g = 4.05, [Fe/H] =
-  +0.33, v sin i = 1.7 km/s — anchors the metallicity and rotation
-  upper-limit picks.
-- **Holmberg J., Nordström B., Andersen J. 2009** — *The
-  Geneva-Copenhagen survey of the solar neighbourhood. III. Improved
-  distances, ages, and kinematics* (`2009A&A...501..941H`,
-  arXiv:0811.3982). Isochrone age 6.6 Gyr; consistent with the
-  subgiant evolutionary phase.
-- **Spada F. et al. 2011** — *Stellar evolutionary models with
-  rotation-induced mixing applied to nearby subgiants*
-  (`2011MNRAS.418..759S`, arXiv:1107.1979). δ Pav modeled as a
-  ~1.05 M☉ subgiant near base of subgiant branch; age 7.5 Gyr;
-  combined with Holmberg gives adopted 7.0 ± 0.5 Gyr.
+  spectroscopy gives Teff = 5635 ± 122 K, log g = 4.05, [Fe/H] =
+  +0.37 ± 0.20, mass 1.03 ± 0.07 M☉ (evolutionary), age 4.9 Gyr —
+  cross-check alternate; Gomes da Silva 2021 supersedes for primary
+  pick (tighter formal uncertainties on the same quantities).
 
 ### Read (context / methodology, not directly decision-driving)
 
@@ -279,9 +302,16 @@ visual choices:
   m sin i ~ 10 M⊕ at <2 AU; sets the RV non-detection baseline.
 - **Bruntt H. et al. 2010** — *Accurate fundamental parameters for
   23 bright solar-type stars* (`2010MNRAS.405.1907B`,
-  arXiv:1002.4268). Interferometric R = 1.22 R☉ + asteroseismic
-  modeling for δ Pav; ν_max ≈ 2300 µHz, Δν ≈ 110 µHz consistent
-  with adopted mass.
+  arXiv:1002.4268). Quotes R ≈ 1.22 R☉ for δ Pav derived from
+  bolometric L + Teff via Stefan-Boltzmann with the Hipparcos-era
+  parallax — **not** an interferometric or asteroseismic measurement
+  (δ Pav has no published asteroseismology, and the southern
+  declination keeps it out of CHARA). Cited here for historical
+  context; the value diverges by ~9% from the modern Gomes da Silva
+  2021 PARSEC R = 1.115 R☉ recommended in the Decisions table above.
+  Earlier drafts of this synthesis attributed Bruntt 2010 as
+  "interferometric + asteroseismic" — that attribution was incorrect
+  and is corrected here.
 - **Henry T. J. et al. 1996** — *Chromospheric Activity Survey* in
   the southern hemisphere (`1996AJ....111..439H`). Log R'HK =
   -5.10 for δ Pav, one of the most chromospherically quiet G
