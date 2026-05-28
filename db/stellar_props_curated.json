@@ -3088,7 +3088,7 @@
     ],
     "activity_measurements": [
       {
-        "value_h_alpha_ew_angstrom": -5.25,
+        "value_log_lhalpha_lbol": -5.25,
         "method": "h_alpha",
         "reference": "Zechmeister et al. 2019",
         "bibcode": "2019A&A...627A..49Z",

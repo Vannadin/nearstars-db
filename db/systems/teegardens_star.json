@@ -172,7 +172,7 @@
         ],
         "activity_measurements": [
           {
-            "value_h_alpha_ew_angstrom": -5.25,
+            "value_log_lhalpha_lbol": -5.25,
             "method": "h_alpha",
             "reference": "Zechmeister et al. 2019",
             "bibcode": "2019A&A...627A..49Z",
@@ -206,7 +206,8 @@
         "metallicity_fe_h_dex": -0.19,
         "rotation_period_days": 96.0,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": -5.25
+        "activity_h_alpha_ew_angstrom": null,
+        "activity_log_lhalpha_lbol": -5.25
       },
       "principia": {
         "gravitational_parameter_km3_s2": 11811407161.602,
@@ -244,14 +245,14 @@
         "pubdate": null
       },
       "derived": {
-        "semi_major_axis_m": 3926944105.875,
+        "semi_major_axis_m": 3874584851.13,
         "eccentricity": 0.11,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 277.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 6.27081e+24,
+        "mass_kg": 6.927751999999999e+24,
         "mass_type": "Msini",
         "radius_m": 6689550.0,
         "equilibrium_temperature_k": null,
@@ -280,8 +281,8 @@
           {
             "period_days": 4.91,
             "uncertainty_period_days": 0.03,
-            "semi_major_axis_au": 0.02625,
-            "uncertainty_semi_major_axis_au": 8e-05,
+            "semi_major_axis_au": 0.0259,
+            "uncertainty_semi_major_axis_au": 0.0008,
             "eccentricity": 0.11,
             "uncertainty_eccentricity": 0.08,
             "longitude_of_ascending_node_deg": null,
@@ -307,8 +308,8 @@
             "recommended": false
           },
           {
-            "mass_mearth": 1.05,
-            "uncertainty_mearth": 0.16,
+            "mass_mearth": 1.16,
+            "uncertainty_mearth": 0.12,
             "mass_type": "Msini",
             "source": "Dreizler et al. 2024",
             "bibcode": "2024A&A...684A.117D",
@@ -348,14 +349,14 @@
         "pubdate": null
       },
       "derived": {
-        "semi_major_axis_m": 6999684370.0529995,
+        "semi_major_axis_m": 6806703116.849999,
         "eccentricity": 0.06,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 64.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 7.883304000000001e+24,
+        "mass_kg": 6.27081e+24,
         "mass_type": "Msini",
         "radius_m": 6498420.0,
         "equilibrium_temperature_k": null,
@@ -384,8 +385,8 @@
           {
             "period_days": 11.4,
             "uncertainty_period_days": 0.04,
-            "semi_major_axis_au": 0.04679,
-            "uncertainty_semi_major_axis_au": 0.00015,
+            "semi_major_axis_au": 0.0455,
+            "uncertainty_semi_major_axis_au": 0.0015,
             "eccentricity": 0.06,
             "uncertainty_eccentricity": 0.07,
             "longitude_of_ascending_node_deg": null,
@@ -411,8 +412,8 @@
             "recommended": false
           },
           {
-            "mass_mearth": 1.32,
-            "uncertainty_mearth": 0.18,
+            "mass_mearth": 1.05,
+            "uncertainty_mearth": 0.14,
             "mass_type": "Msini",
             "source": "Dreizler et al. 2024",
             "bibcode": "2024A&A...684A.117D",
@@ -452,7 +453,7 @@
         "pubdate": null
       },
       "derived": {
-        "semi_major_axis_m": 12685899435.36,
+        "semi_major_axis_m": 11833191572.37,
         "eccentricity": 0.0,
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
@@ -471,8 +472,8 @@
           {
             "period_days": 26.13,
             "uncertainty_period_days": 0.04,
-            "semi_major_axis_au": 0.0848,
-            "uncertainty_semi_major_axis_au": 0.0003,
+            "semi_major_axis_au": 0.0791,
+            "uncertainty_semi_major_axis_au": 0.0027,
             "eccentricity": 0.0,
             "uncertainty_eccentricity": null,
             "longitude_of_ascending_node_deg": null,

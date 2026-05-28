@@ -347,7 +347,8 @@
         "metallicity_fe_h_dex": -0.55,
         "rotation_period_days": 46.0,
         "activity_log_rhk": -4.96,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "activity_log_lhalpha_lbol": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103913840534.094,

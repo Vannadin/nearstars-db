@@ -335,10 +335,13 @@ STELLAR_MEASUREMENT_KINDS = {
         },
     },
     "activity_measurements": {
-        # 여러 지표 중 하나만 있으면 됨 (paper 마다 다름)
+        # 여러 지표 중 하나만 있으면 됨 (paper 마다 다름).
+        # value_log_lhalpha_lbol: 정규화 Hα 광도 log(L_Hα/L_bol). 후기 M 왜성에서
+        # EW 보다 자주 보고되는 활동성 지표 (Zechmeister 2019 Teegarden 사례).
         "value_keys": {
             "value_log_rhk",
             "value_h_alpha_ew_angstrom",
+            "value_log_lhalpha_lbol",
             "value_x_ray_log_lx_lbol",
             "value_ca_ii_log_lhk",
         },

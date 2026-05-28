@@ -654,6 +654,7 @@ for target in target_list:
             "rotation_period_days":         rec_rot_arr.get("value_days"),
             "activity_log_rhk":             rec_act_arr.get("value_log_rhk"),
             "activity_h_alpha_ew_angstrom": rec_act_arr.get("value_h_alpha_ew_angstrom"),
+            "activity_log_lhalpha_lbol":    rec_act_arr.get("value_log_lhalpha_lbol"),
         }
 
         # ── derived 블록 (B1950, J2000 모두 포함) ──

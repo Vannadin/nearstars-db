@@ -3733,8 +3733,8 @@
         {
           "period_days": 4.91,
           "uncertainty_period_days": 0.03,
-          "semi_major_axis_au": 0.02625,
-          "uncertainty_semi_major_axis_au": 8e-05,
+          "semi_major_axis_au": 0.0259,
+          "uncertainty_semi_major_axis_au": 0.0008,
           "eccentricity": 0.11,
           "uncertainty_eccentricity": 0.08,
           "longitude_of_ascending_node_deg": null,
@@ -3760,8 +3760,8 @@
           "recommended": false
         },
         {
-          "mass_mearth": 1.05,
-          "uncertainty_mearth": 0.16,
+          "mass_mearth": 1.16,
+          "uncertainty_mearth": 0.12,
           "mass_type": "Msini",
           "source": "Dreizler et al. 2024",
           "bibcode": "2024A&A...684A.117D",
@@ -3794,8 +3794,8 @@
         {
           "period_days": 11.4,
           "uncertainty_period_days": 0.04,
-          "semi_major_axis_au": 0.04679,
-          "uncertainty_semi_major_axis_au": 0.00015,
+          "semi_major_axis_au": 0.0455,
+          "uncertainty_semi_major_axis_au": 0.0015,
           "eccentricity": 0.06,
           "uncertainty_eccentricity": 0.07,
           "longitude_of_ascending_node_deg": null,
@@ -3821,8 +3821,8 @@
           "recommended": false
         },
         {
-          "mass_mearth": 1.32,
-          "uncertainty_mearth": 0.18,
+          "mass_mearth": 1.05,
+          "uncertainty_mearth": 0.14,
           "mass_type": "Msini",
           "source": "Dreizler et al. 2024",
           "bibcode": "2024A&A...684A.117D",
@@ -3838,8 +3838,8 @@
         {
           "period_days": 26.13,
           "uncertainty_period_days": 0.04,
-          "semi_major_axis_au": 0.0848,
-          "uncertainty_semi_major_axis_au": 0.0003,
+          "semi_major_axis_au": 0.0791,
+          "uncertainty_semi_major_axis_au": 0.0027,
           "eccentricity": 0.0,
           "uncertainty_eccentricity": null,
           "longitude_of_ascending_node_deg": null,
