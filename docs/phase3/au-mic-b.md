@@ -65,8 +65,8 @@ pattern choice). No documented divergences.
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I absorption implies mass-loss ~10⁹–10¹⁰ g/s under energy-limited escape with AU Mic XUV; Plavchan 2020 §6 estimates similar; Cale 2021 §5 |
 | `aurora_present` | true | medium | strong stellar wind + H-rich upper atmosphere; H Balmer-α + H₂ Lyman + Werner bands expected |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm + Lyman-α downconverted gives pink-red dominant; interesting-first picks the bright pink over a fainter UV-only rendering |
-| `star_apparent_angular_diameter_deg` | 6.2 | high | derived: 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
+| `star_apparent_angular_diameter_deg` | 6.2 | high | derived: 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° (R from Phase 2 anchor Donati 2023 ZDI) |
+| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` |
 
 ## Surface synthesis
 

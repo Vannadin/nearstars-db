@@ -79,8 +79,8 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `aurora_present` | true | medium | thin atmosphere + weak B-field + intense stellar wind → visible aurora; Mars-analog CO₂⁺ emission |
 | `aurora_color_primary_hex` | `#ff6b6b` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm; Mars-analog visible aurora |
 | `aurora_emission_species_primary` | CO₂⁺ doublet + CO Cameron bands + O 297.2 nm | medium | thin CO₂ atmosphere chemistry; MAVEN Mars-aurora analog |
-| `star_apparent_angular_diameter_deg` | 4.2 | high | derived: 2 × 0.82 R☉ / 0.105 AU × (180/π) ≈ 4.2° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
+| `star_apparent_angular_diameter_deg` | 4.2 | high | derived: 2 × 0.82 R☉ / 0.105 AU × (180/π) ≈ 4.2° (R from Phase 2 anchor Donati 2023 ZDI) |
+| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` |
 
 ## Surface synthesis
 

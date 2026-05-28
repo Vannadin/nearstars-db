@@ -73,8 +73,8 @@ inheritance from AU Mic c's better-constrained parameters).
 | `atmospheric_escape_rate_g_s` | 1e7 | low | lower than c because of greater distance from AU Mic; energy-limited estimate with AU Mic XUV at 0.16 AU |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b/c because of greater distance and smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b/c but fainter |
-| `star_apparent_angular_diameter_deg` | 2.7 | low | derived: 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff (one parameter that doesn't depend on e being confirmed) |
+| `star_apparent_angular_diameter_deg` | 2.7 | low | derived: 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° (R from Phase 2 anchor Donati 2023 ZDI) |
+| `stellar_illumination_color_temp_k` | 3518 | high | host star photometric color-equivalent blackbody (Gaia DR3 BP/RP); distinct from Phase 2 spectroscopic Teff = 3700 ± 100 K (Plavchan 2020) which drives the SED — see au-mic.md `stellar_color_temp_k` (one parameter that doesn't depend on e being confirmed) |
 
 ## Surface synthesis
 

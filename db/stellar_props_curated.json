@@ -5461,5 +5461,175 @@
       }
     ],
     "meta_notes": "G8 IV subgiant Sun-analog (1.06 Msun, 1.12 Rsun) — exceptionally inactive (log R'HK = -5.13, well below solar minimum -4.96; Gomes da Silva 2021 weighted mean of 6002 HARPS spectra). No direct interferometric diameter (declination -66) so radius from PARSEC isochrone (1.115 +/- 0.025 Rsun, Gomes 2021). Bruntt 2010 quoted R = 1.22 +/- 0.02 from L+Teff Stefan-Boltzmann with older Hipparcos parallax + Teff = 5604 K — Phase 3 markdown cites this as 'asteroseismic + interferometric' but no asteroseismology paper for delta Pav has been published and there is no interferometric measurement; that Phase 3 basis attribution is incorrect and the divergence with current Phase 2 (1.115 vs 1.22, ~9%) traces to (a) updated parallax and (b) PARSEC vs Stefan-Boltzmann method choice. Rotation P_rot = 175 +/- 30 d is an upper limit derived from Ramirez 2013 v sin i = 0.32 km/s + R = 1.115 Rsun assuming i = 90 deg (the HARPS vsini detection floor); true P_rot may be longer. Age 5.04 +/- 1.23 Gyr (Gomes 2021 PARSEC isochrone) is the young end of the literature spread — Bensby 2014 also gives ~5 Gyr, but Tsantaki 2013 and Eiroa 2013 Ca II age both give 8-9 Gyr. Adopt 5 Gyr per tier hierarchy (newest paper, smallest uncertainty) but flag this is contentious. X-ray non-detection (ROSAT, Hunsch 1998) gives log L_X < 26.6 cgs (i.e. log(L_X/L_bol) < -7.08), consistent with the very low log R'HK; not added as a separate activity_measurements entry since log_rhk is higher tier and a single recommended is set."
+  },
+
+  "AU Mic": {
+    "teff_k": 3700,
+    "teff_bibcode": "2020Natur.582..497P",
+    "spectype": "M1Ve",
+    "spectype_bibcode": "1996AJ....112.2799H",
+    "spectype_reference": "Hawley et al. 1996 PMSU",
+    "mass_measurements": [
+      {
+        "value_msun": 0.51,
+        "uncertainty_msun": 0.028,
+        "method": "evolutionary_model",
+        "reference": "Wittrock et al. 2023",
+        "bibcode": "2023AJ....166..232W",
+        "doi": "10.3847/1538-3881/acfda7",
+        "recommended": true
+      },
+      {
+        "value_msun": 0.50,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Plavchan et al. 2020",
+        "bibcode": "2020Natur.582..497P",
+        "doi": "10.1038/s41586-020-2400-z",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.50,
+        "uncertainty_msun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Donati et al. 2025",
+        "bibcode": "2025A&A...700A.227D",
+        "doi": "10.1051/0004-6361/202555371",
+        "recommended": false
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.82,
+        "uncertainty_rsun": 0.02,
+        "method": "spectroscopic_calibration",
+        "reference": "Donati et al. 2023",
+        "bibcode": "2023MNRAS.525..455D",
+        "doi": "10.1093/mnras/stad2301",
+        "recommended": true,
+        "notes": "ZDI Stokes V+I inversion radius from v sin i and P_rot = 4.863 d with sin i ≈ 1 (disk + RM-confirmed edge-on geometry). AU Mic is bright enough and far enough north (dec -31) for CHARA to attempt, but no interferometric angular diameter has been published as of 2025; Donati 2023 ZDI radius is the tightest available radius constraint."
+      },
+      {
+        "value_rsun": 0.75,
+        "uncertainty_rsun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Plavchan et al. 2020",
+        "bibcode": "2020Natur.582..497P",
+        "doi": "10.1038/s41586-020-2400-z",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.75,
+        "uncertainty_rsun": 0.03,
+        "method": "spectroscopic_calibration",
+        "reference": "Donati et al. 2025",
+        "bibcode": "2025A&A...700A.227D",
+        "doi": "10.1051/0004-6361/202555371",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3700,
+        "uncertainty_k": 100,
+        "method": "high_res_spectroscopy",
+        "reference": "Plavchan et al. 2020",
+        "bibcode": "2020Natur.582..497P",
+        "doi": "10.1038/s41586-020-2400-z",
+        "recommended": true
+      },
+      {
+        "value_k": 3650,
+        "uncertainty_k": 100,
+        "method": "high_res_spectroscopy",
+        "reference": "Donati et al. 2023",
+        "bibcode": "2023MNRAS.525..455D",
+        "doi": "10.1093/mnras/stad2301",
+        "recommended": false
+      },
+      {
+        "value_k": 3518,
+        "uncertainty_k": 50,
+        "method": "photometric_color",
+        "reference": "Gaia DR3 GSP-Phot",
+        "bibcode": "2023A&A...674A...1G",
+        "doi": "10.1051/0004-6361/202243940",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.09,
+        "uncertainty_lsun": 0.02,
+        "method": "bolometric_flux",
+        "reference": "Plavchan et al. 2020",
+        "bibcode": "2020Natur.582..497P",
+        "doi": "10.1038/s41586-020-2400-z",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.022,
+        "uncertainty_gyr": 0.003,
+        "method": "isochrone",
+        "reference": "Mamajek & Bell 2014",
+        "bibcode": "2014MNRAS.445.2169M",
+        "doi": "10.1093/mnras/stu1894",
+        "recommended": true
+      },
+      {
+        "value_gyr": 0.021,
+        "uncertainty_gyr": 0.004,
+        "method": "isochrone",
+        "reference": "Binks & Jeffries 2014",
+        "bibcode": "2014MNRAS.438L..11B",
+        "doi": "10.1093/mnrasl/slt141",
+        "recommended": false
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.12,
+        "uncertainty_dex": 0.05,
+        "method": "photometric_calibration",
+        "reference": "Shkolnik et al. 2017 (HAZMAT II β Pic MG mean)",
+        "bibcode": "2017ApJ...838...87S",
+        "doi": "10.3847/1538-4357/aa615f",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 4.863,
+        "uncertainty_days": 0.01,
+        "method": "photometric_variability",
+        "reference": "Plavchan et al. 2020",
+        "bibcode": "2020Natur.582..497P",
+        "doi": "10.1038/s41586-020-2400-z",
+        "recommended": true
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -2.4,
+        "uncertainty_h_alpha_ew_angstrom": 0.3,
+        "method": "h_alpha",
+        "reference": "Houdebine 2010",
+        "bibcode": "2010MNRAS.407.1657H",
+        "doi": "10.1111/j.1365-2966.2010.16827.x",
+        "recommended": true
+      },
+      {
+        "value_x_ray_log_lx_lbol": -3.0,
+        "uncertainty_x_ray_log_lx_lbol": 0.15,
+        "method": "x_ray",
+        "reference": "Stelzer et al. 2013",
+        "bibcode": "2013MNRAS.431.2063S",
+        "doi": "10.1093/mnras/stt220",
+        "recommended": false
+      }
+    ],
+    "meta_notes": "M1Ve pre-main-sequence flare star (~22 Myr, β Pictoris Moving Group canonical member). The Phase 3 markdown at the time of this curation used `teff_k = 3518` from Gaia DR3 GSP-Phot and derived `luminosity_lsun = 0.092` via Stefan-Boltzmann at that Teff; Phase 2 recommends Plavchan 2020 high-res spectroscopic Teff = 3700 ± 100 K (per methodology tier: high_res_spectroscopy > photometric_color). The 3700 vs 3518 K offset reconciles at <2σ and traces to GSP-Phot's known cool-bias below 3800 K for spotted active M dwarfs. Phase 2 also recommends Plavchan 2020 bolometric L = 0.09 ± 0.02 Lsun (direct SED integration) over the Stefan-Boltzmann derivation. Phase 3 markdown's `stellar_color_temp_k` row was tied to 3518 K (Gaia BP/RP color-equivalent); this is acceptable as a separate visual-rendering anchor (color-equivalent blackbody) distinct from the spectroscopic Teff, but the Decisions row basis is updated to make this distinction explicit. Activity is reported as Hα EW (Houdebine 2010, -2.4 ± 0.3 Å) rather than log R'HK because the Mt-Wilson R'HK calibration is not validated for active M1Ve photospheres; Phase 3 markdown's `activity_log_rhk = -3.9` is retained as a derived saturated-regime estimate but flagged as not paper-cited. Radius (0.82 Rsun, Donati 2023 ZDI) has no published CHARA interferometric counterpart; AU Mic at dec -31 is reachable by CHARA but no diameter has been published. Mass (0.51 Msun, Wittrock 2023 TTV+N-body) is the most-direct constraint, model-independent through orbital dynamics. [Fe/H] = +0.12 ± 0.05 is the β Pic MG mean (Shkolnik 2017 HAZMAT II) since no direct high-res [Fe/H] of AU Mic has been published — open item for future SPIRou/ESPRESSO follow-up. Saturated activity (Hα emission, kG-class ZDI fields, log L_X/L_bol ~ -3.0, super-flares to 10^34-10^35 erg) is the dominant photophysical fact; activity_cycle is unresolved at this age (pre-MS saturated dynamo)."
   }
 }

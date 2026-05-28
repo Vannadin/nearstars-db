@@ -63,8 +63,8 @@ canonical-aligned. 세 개는 tie-break (대기 색 hex, 구름 색 hex, 띠
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I 흡수가 AU Mic XUV 하 에너지 한정 탈출에서 질량 손실 ~10⁹–10¹⁰ g/s 를 함의. Plavchan 2020 §6 이 비슷한 값을 추정. Cale 2021 §5 |
 | `aurora_present` | true | medium | 강한 항성풍 + H 풍부 상층 대기 → H Balmer-α + H₂ Lyman + Werner 밴드 예상 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm + Lyman-α downconvert 가 분홍-빨강 지배색을 줌. interesting-first 가 옅은 UV-only 렌더링 대신 밝은 분홍을 선택 |
-| `star_apparent_angular_diameter_deg` | 6.2 | high | 유도. 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° |
-| `stellar_illumination_color_temp_k` | 3518 | high | host 별 Teff 에서 |
+| `star_apparent_angular_diameter_deg` | 6.2 | high | 유도. 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° (R 은 Phase 2 anchor Donati 2023 ZDI) |
+| `stellar_illumination_color_temp_k` | 3518 | high | host 별 광도 색-등가 흑체 (Gaia DR3 BP/RP). Phase 2 분광 Teff = 3700 ± 100 K (Plavchan 2020) 와 의도적으로 구분되며, SED 조명은 분광 값을 사용 — au-mic.md `stellar_color_temp_k` 참조 |
 
 ## Surface synthesis
 

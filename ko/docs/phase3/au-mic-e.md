@@ -68,8 +68,8 @@ divergence 없음 (여기서의 모든 선택은 제약 없는 윈도우 안의 
 | `atmospheric_escape_rate_g_s` | 1e7 | low | AU Mic 에서 더 멀어 c 보다 작음. 0.16 AU 의 AU Mic XUV 에 대한 에너지 한정 추정 |
 | `aurora_present` | true | low | H 풍부 상층 대기 + AU Mic 항성풍 → H Balmer-α 예상. 다만 거리가 더 멀고 대기 질량이 작아 b/c 보다 약함 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm 지배. b/c 와 같은 색 계열이지만 더 옅음 |
-| `star_apparent_angular_diameter_deg` | 2.7 | low | 유도. 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° |
-| `stellar_illumination_color_temp_k` | 3518 | high | host 별 Teff 에서 (e 의 확인 여부에 의존하지 않는 유일한 파라미터) |
+| `star_apparent_angular_diameter_deg` | 2.7 | low | 유도. 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° (R 은 Phase 2 anchor Donati 2023 ZDI) |
+| `stellar_illumination_color_temp_k` | 3518 | high | host 별 광도 색-등가 흑체 (Gaia DR3 BP/RP). Phase 2 분광 Teff = 3700 ± 100 K (Plavchan 2020) 와 의도적으로 구분되며, SED 조명은 분광 값을 사용 — au-mic.md `stellar_color_temp_k` 참조 (e 의 확인 여부에 의존하지 않는 유일한 파라미터) |
 
 ## Surface synthesis
 
