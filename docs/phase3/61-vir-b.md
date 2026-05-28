@@ -41,7 +41,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `radius_rearth` | 1.65 | medium | Tie-break: no transit; mass–radius scaling Zeng 2016 for a 5–7 M⊕ rocky-Earth-composition core gives R ≈ 1.5–1.8 R⊕; cfg picks 1.65 R⊕ as the Earth-composition mid-range |
 | `surface_gravity_g_earth` | 1.87 | medium | derived = 5.1 / 1.65² (Earth-composition core) |
 | `density_g_cc` | 6.27 | medium | derived; consistent with Earth-like rocky-iron mix |
-| `insolation_s_earth` | 326 | high | derived from L = 0.82 L☉ and a = 0.0502 AU |
+| `insolation_s_earth` | 326 | high | derived from L = 0.822 L☉ (von Braun 2014) and a = 0.0502 AU |
 | `equilibrium_temp_k` (A=0) | 1180 | high | derived |
 | `equilibrium_temp_k` (A=0.3) | 1080 | high | derived |
 | `bond_albedo` | 0.1 | medium | Tie-break: range 0.05–0.2 for hot dark silicate / partial-melt surface; cfg picks 0.1 (CoRoT-7b / 55 Cnc e analog) |
@@ -61,8 +61,8 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_morphology` | substellar magma ocean ~1500 km radius; basaltic cooled plains in mid-latitudes; volatile-stripped nightside regolith | medium | Tie-break: Léger 2009 CoRoT-7b magma-ocean template; substellar isotherm at silicate solidus gives ~30° magma-pond radius |
 | `tidal_heating_w_m2` | 0.1–1 | medium | Bolmont 2020 scaling for e=0.12 at 4.2 d period; eccentricity contribution is non-trivial but modest at this mass; supplements but does not dominate the insolation budget |
 | `radiogenic_heat_w_m2` | 0.05 | medium | Earth-analog at 5 M⊕ × 6 Gyr decay; consistent with a partially molten interior |
-| `star_apparent_angular_diameter_deg` | 1.02 | high | derived: 2 × R★ / a × (180/π); 0.963 R☉ at 0.0502 AU |
-| `stellar_illumination_color_temp_k` | 5552 | high | host Teff |
+| `star_apparent_angular_diameter_deg` | 1.04 | high | derived: 2 × R★ / a × (180/π); 0.9867 R☉ (von Braun 2014 CHARA) at 0.0502 AU |
+| `stellar_illumination_color_temp_k` | 5568 | high | host Teff (Rathsam 2023) |
 
 ## Surface synthesis
 
@@ -85,13 +85,14 @@ synthesis:
    rocky core: R ≈ 1.65 R⊕ for Msini = 5.1 M⊕, with surface gravity
    1.87 g⊕ and bulk density 6.27 g/cc.
 
-3. **Cosmochemical context.** 61 Vir's [Fe/H] ≈ 0.0 dex (Pavlenko
-   2012) and ~6 Gyr age give b an Earth-analog initial volatile
+3. **Cosmochemical context.** 61 Vir's [Fe/H] = +0.006 ± 0.004
+   (Rathsam 2023) and ~7.7 Gyr isochrone age give b an Earth-analog
+   initial volatile
    inventory but a much harsher atmospheric loss history. Owen & Wu
    2017's photoevaporation-valley physics places b firmly in the
    "core-only" regime: any initial H/He envelope of a 5 M⊕ core at
    0.05 AU around a G-dwarf is lost on a timescale ≲ 50 Myr, far
-   shorter than the 6 Gyr system age. Secondary atmospheric retention
+   shorter than the 7.7 Gyr system age. Secondary atmospheric retention
    depends on the balance between outgassing and XUV-driven loss; for
    b's parameters, the equilibrium is marginal.
 
@@ -104,7 +105,7 @@ solidified "Mercury-with-stronger-insolation" interpretation;
 interesting-first picks the magma ocean because it gives b a visually
 distinctive feature absent in the rest of the system.
 
-**Color choice.** Under the solar-twin illumination (Teff 5552 K,
+**Color choice.** Under the solar-twin illumination (Teff 5568 K,
 near-Sol SED), surface tints are perceived essentially as they would
 be from Earth — no significant M-dwarf red-shift correction needed.
 The primary surface tint `#3a2a22` is a dark partial-melt basaltic
@@ -243,9 +244,9 @@ surface renderers:
 - **Atmosphere haze.** None visible; the silicate-vapor exosphere is
   ~10⁻⁷ Pa, well below any Rayleigh threshold. The limb is a clean
   edge from disk to space.
-- **Star in sky.** 61 Vir subtends 1.02° at b — about 2× the Sun's
+- **Star in sky.** 61 Vir subtends 1.04° at b — about 2× the Sun's
   angular size from Earth. Color essentially solar-yellow (Teff
-  5552 K → `#fff2dc` cfg-encoded tint). At 326× Earth-noon brightness
+  5568 K → `#fff2dc` cfg-encoded tint). At 326× Earth-noon brightness
   the surface is illuminated like a hot-Mercury dayside.
 - **Sister planets in sky.** c (next out at 0.22 AU) at angular size
   ~0.05° from b's perspective at inferior conjunction (every ~5 days
@@ -299,17 +300,24 @@ surface renderers:
 
 ### Read (context / methodology, not decision-driving)
 
+- **Rathsam A. et al. 2023** — *Lithium depletion in solar analogs*,
+  MNRAS 525, 4642 (`2023MNRAS.525.4642R`, doi:10.1093/mnras/stad2589).
+  Inherited from host-star synthesis. Phase 2 anchor for 61 Vir age
+  (7.70 +0.28/-0.26 Gyr); sets the system-evolution timescale for
+  atmospheric loss.
+- **von Braun K. et al. 2014** — *Stellar diameters V*, MNRAS 438,
+  2413 (`2014MNRAS.438.2413V`, doi:10.1093/mnras/stt2360). Inherited
+  from host-star synthesis. CHARA interferometric R = 0.9867 ± 0.0048
+  R☉ and L = 0.8222 ± 0.0033 L☉ — anchors the insolation and
+  apparent-angular-diameter derivations.
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-Type Dwarfs Using Activity-Rotation
   Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`, arXiv:0807.1686).
-  Inherited from the host-star synthesis. Gives 61 Vir age 6.1 ±
-  1.7 Gyr; sets the system-evolution timescale for atmospheric loss.
-- **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
-  metallicities, and ages of 18 solar twin candidates*
-  (`2012MNRAS.422..542P`, arXiv:1112.0590). Inherited from host-star
-  synthesis. Confirms 61 Vir solar-twin abundance pattern.
+  Inherited from the host-star synthesis. Activity-age 6.1 ± 1.7 Gyr;
+  demoted to cross-check vs Rathsam 2023 isochrone (documented
+  divergence in the host-star reconciliation).
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*, MNRAS
-  424, 1206 (`2012MNRAS.424.1206W`, arXiv:1204.6063). Inherited from
+  424, 1206 (`2012MNRAS.424.1206W`, arXiv:1206.2370). Inherited from
   host-star synthesis. Cited briefly because the cold debris belt at
   ~30 AU does not interact dynamically with the inner planets at
   b's separation.

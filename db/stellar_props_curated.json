@@ -2571,28 +2571,274 @@
     ]
   },
   "61 Vir": {
+    "teff_k": 5568,
+    "teff_bibcode": "2023MNRAS.525.4642R",
+    "spectype": "G6.5V",
+    "spectype_bibcode": "2006AJ....132..161G",
+    "spectype_reference": "Gray et al. 2006 NStars",
     "mass_measurements": [
+      {
+        "value_msun": 0.93,
+        "uncertainty_msun": 0.01,
+        "method": "evolutionary_model",
+        "reference": "Rathsam et al. 2023",
+        "bibcode": "2023MNRAS.525.4642R",
+        "doi": "10.1093/mnras/stad2589",
+        "recommended": true
+      },
       {
         "value_msun": 0.942,
         "uncertainty_msun": 0.034,
-        "method": "unverified",
+        "method": "evolutionary_model",
         "reference": "Vogt et al. 2010",
         "bibcode": "2010ApJ...708.1366V",
-        "doi": null,
-        "recommended": true
+        "doi": "10.1088/0004-637X/708/2/1366",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.914,
+        "uncertainty_msun": 0.037,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021 (California Legacy Survey)",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": "10.3847/1538-4365/abe23c",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.876,
+        "uncertainty_msun": null,
+        "method": "spectroscopic",
+        "reference": "Sousa et al. 2008",
+        "bibcode": "2008A&A...487..373S",
+        "doi": "10.1051/0004-6361:200809698",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
+        "value_rsun": 0.9867,
+        "uncertainty_rsun": 0.0048,
+        "method": "interferometry",
+        "instrument": "CHARA Array (long-baseline optical interferometry)",
+        "angular_diameter_mas": 1.073,
+        "angular_diameter_uncertainty_mas": 0.005,
+        "reference": "von Braun et al. 2014",
+        "bibcode": "2014MNRAS.438.2413V",
+        "doi": "10.1093/mnras/stt2360",
+        "arxiv": "1312.1792",
+        "recommended": true,
+        "notes": "Stellar diameters and temperatures V — 11 newly characterized exoplanet host stars. CHARA limb-darkened angular diameter combined with Hipparcos parallax. This is the canonical direct radius for 61 Vir; supersedes the Vogt 2010 evolutionary-model radius (0.963) which was mislabeled 'interferometric' in earlier Phase 3 drafts."
+      },
+      {
         "value_rsun": 0.963,
         "uncertainty_rsun": 0.011,
-        "method": "unverified",
+        "method": "evolutionary_model",
         "reference": "Vogt et al. 2010",
         "bibcode": "2010ApJ...708.1366V",
-        "doi": null,
+        "doi": "10.1088/0004-637X/708/2/1366",
+        "recommended": false
+      },
+      {
+        "value_rsun": 1.033,
+        "uncertainty_rsun": 0.023,
+        "method": "evolutionary_model",
+        "reference": "Rosenthal et al. 2021 (California Legacy Survey)",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": "10.3847/1538-4365/abe23c",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5568,
+        "uncertainty_k": 4,
+        "method": "high_res_spectroscopy",
+        "reference": "Rathsam et al. 2023",
+        "bibcode": "2023MNRAS.525.4642R",
+        "doi": "10.1093/mnras/stad2589",
+        "recommended": true
+      },
+      {
+        "value_k": 5538,
+        "uncertainty_k": 13,
+        "method": "sed_fitting",
+        "reference": "von Braun et al. 2014",
+        "bibcode": "2014MNRAS.438.2413V",
+        "doi": "10.1093/mnras/stt2360",
+        "recommended": false
+      },
+      {
+        "value_k": 5577,
+        "uncertainty_k": 33,
+        "method": "high_res_spectroscopy",
+        "reference": "Vogt et al. 2010",
+        "bibcode": "2010ApJ...708.1366V",
+        "doi": "10.1088/0004-637X/708/2/1366",
+        "recommended": false
+      },
+      {
+        "value_k": 5558,
+        "uncertainty_k": 19,
+        "method": "high_res_spectroscopy",
+        "reference": "Sousa et al. 2008",
+        "bibcode": "2008A&A...487..373S",
+        "doi": "10.1051/0004-6361:200809698",
+        "recommended": false
+      },
+      {
+        "value_k": 5579,
+        "uncertainty_k": 10,
+        "method": "high_res_spectroscopy",
+        "reference": "Maldonado et al. 2015",
+        "bibcode": "2015A&A...579A..20M",
+        "doi": "10.1051/0004-6361/201525764",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.8222,
+        "uncertainty_lsun": 0.0033,
+        "method": "bolometric_flux",
+        "reference": "von Braun et al. 2014",
+        "bibcode": "2014MNRAS.438.2413V",
+        "doi": "10.1093/mnras/stt2360",
         "recommended": true
       }
-    ]
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7.70,
+        "uncertainty_gyr": 0.28,
+        "method": "isochrone",
+        "reference": "Rathsam et al. 2023",
+        "bibcode": "2023MNRAS.525.4642R",
+        "doi": "10.1093/mnras/stad2589",
+        "recommended": true
+      },
+      {
+        "value_gyr": 8.96,
+        "uncertainty_gyr": 2.76,
+        "method": "isochrone",
+        "reference": "Vogt et al. 2010 (adopted from Takeda 2007)",
+        "bibcode": "2010ApJ...708.1366V",
+        "doi": "10.1088/0004-637X/708/2/1366",
+        "recommended": false
+      },
+      {
+        "value_gyr": 8.6,
+        "uncertainty_gyr": null,
+        "method": "isochrone",
+        "reference": "von Braun et al. 2014",
+        "bibcode": "2014MNRAS.438.2413V",
+        "doi": "10.1093/mnras/stt2360",
+        "recommended": false
+      },
+      {
+        "value_gyr": 6.1,
+        "uncertainty_gyr": 1.7,
+        "method": "activity_age",
+        "reference": "Mamajek & Hillenbrand 2008",
+        "bibcode": "2008ApJ...687.1264M",
+        "doi": "10.1086/591785",
+        "recommended": false
+      },
+      {
+        "value_gyr": 7.96,
+        "uncertainty_gyr": null,
+        "method": "activity_age",
+        "reference": "Sanz-Forcada et al. 2010",
+        "bibcode": "2010A&A...511L...8S",
+        "doi": "10.1051/0004-6361/200913670",
+        "recommended": false
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.006,
+        "uncertainty_dex": 0.004,
+        "method": "high_res_spectroscopy",
+        "reference": "Rathsam et al. 2023",
+        "bibcode": "2023MNRAS.525.4642R",
+        "doi": "10.1093/mnras/stad2589",
+        "recommended": true
+      },
+      {
+        "value_dex": -0.01,
+        "uncertainty_dex": null,
+        "method": "high_res_spectroscopy",
+        "reference": "Vogt et al. 2010",
+        "bibcode": "2010ApJ...708.1366V",
+        "doi": "10.1088/0004-637X/708/2/1366",
+        "recommended": false
+      },
+      {
+        "value_dex": -0.02,
+        "uncertainty_dex": 0.01,
+        "method": "high_res_spectroscopy",
+        "reference": "Sousa et al. 2008",
+        "bibcode": "2008A&A...487..373S",
+        "doi": "10.1051/0004-6361:200809698",
+        "recommended": false
+      },
+      {
+        "value_dex": -0.02,
+        "uncertainty_dex": 0.01,
+        "method": "high_res_spectroscopy",
+        "reference": "Maldonado et al. 2015",
+        "bibcode": "2015A&A...579A..20M",
+        "doi": "10.1051/0004-6361/201525764",
+        "recommended": false
+      },
+      {
+        "value_dex": 0.0275,
+        "uncertainty_dex": 0.06,
+        "method": "high_res_spectroscopy",
+        "reference": "Rosenthal et al. 2021 (California Legacy Survey)",
+        "bibcode": "2021ApJS..255....8R",
+        "doi": "10.3847/1538-4365/abe23c",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 32.1,
+        "uncertainty_days": 0.2,
+        "method": "photometric_variability",
+        "reference": "Yu et al. 2024",
+        "bibcode": "2024MNRAS.528.5511Y",
+        "doi": "10.1093/mnras/stae137",
+        "recommended": true
+      },
+      {
+        "value_days": 29.0,
+        "uncertainty_days": null,
+        "method": "photometric_variability",
+        "reference": "Wright et al. 2004",
+        "bibcode": "2004ApJS..152..261W",
+        "doi": "10.1086/386283",
+        "recommended": false
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.00,
+        "method": "log_rhk",
+        "reference": "Isaacson & Fischer 2010",
+        "bibcode": "2010ApJ...725..875I",
+        "doi": "10.1088/0004-637X/725/1/875",
+        "recommended": true
+      },
+      {
+        "value_log_rhk": -5.00,
+        "method": "log_rhk",
+        "reference": "Henry et al. 1996",
+        "bibcode": "1996AJ....111..439H",
+        "doi": "10.1086/117796",
+        "recommended": false
+      }
+    ],
+    "meta_notes": "G6.5V solar-twin (0.93 Msun, 0.987 Rsun, Teff 5568 K) at 8.534 pc with three RV-detected planets (b/c/d, Vogt 2010) and a Herschel-resolved cold debris belt at ~30-96 AU (Wyatt 2012). Phase 2 anchor is Rathsam et al. 2023 (lithium-depletion solar-analog isochrone) which supplies the smallest formal uncertainties on mass, Teff, [Fe/H], and age. Radius primary is von Braun 2014 CHARA interferometry (R = 0.9867 +/- 0.0048 Rsun) — supersedes the Vogt 2010 evolutionary radius (0.963 +/- 0.011) which earlier Phase 3 drafts incorrectly labeled 'interferometric angular diameter combined with parallax'; Vogt 2010 actually derives R from Takeda 2007 isochrone analysis. Age is contentious: isochrone consensus (Rathsam 2023 / Vogt 2010 / von Braun 2014) gives 7.7-9 Gyr while activity-age (Mamajek 2008) gives 6.1 +/- 1.7 Gyr — Phase 3 adopts the isochrone value but flags Confidence=medium. Rotation P_rot = 32.1 +/- 0.2 d is Yu 2024's direct Gaussian-process detection from 18-year HARPS RV+activity time series, replacing the earlier inferred ~29 d from Wright 2004 S-index variation. log R'HK = -5.0 (Isaacson 2010 / Henry 1996) places 61 Vir firmly in the inactive G-dwarf locus, consistent with the ~8 Gyr isochrone age."
   },
   "HD 147513": {
     "mass_measurements": [
