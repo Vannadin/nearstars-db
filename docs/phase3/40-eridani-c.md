@@ -3,8 +3,8 @@
 
 40 Eridani C (GJ 166 C, HIP 19849 C, the variable star DY Eri) is the
 M4.5 Ve flare-star member of the 40 Eri triple system. It lies 5.01 pc
-from the Sun and orbits the DA2.9 white dwarf 40 Eri B with a 230.29-yr
-visual-spectroscopic period (Mason, Hartkopf & Miles 2017, e = 0.4294,
+from the Sun and orbits the DA2.9 white dwarf 40 Eri B with a 230.09-yr
+visual-spectroscopic period (Mason, Hartkopf & Miles 2017, e = 0.4300,
 a = 6.93″, mean separation ≈ 33 AU). The inner BC pair in turn moves
 around the K0.5 V primary 40 Eri A at roughly 83″ angular separation —
 an unresolved ~8000-yr outer orbit (Tokovinin MSC 2018). With V = 11.17
@@ -41,7 +41,7 @@ from a hypothetical C-orbiting observer.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | M4.5 Ve | high | Gray & Garrison community canonical; SIMBAD M4.5Ve. Mann 2015 Table 5 lists M4.7 (within MK scatter); the e suffix marks chromospheric emission consistent with DY Eri flare activity |
-| `mass_msun` | 0.2041 ± 0.0064 | high | Mason, Hartkopf & Miles 2017 §3 — BC binary dynamical fit, P = 230.29 yr, mass sum 0.776 ± 0.024 M☉ split via Heintz 1974 mass ratio + van Leeuwen 2007 parallax |
+| `mass_msun` | 0.2041 ± 0.0064 | high | Mason, Hartkopf & Miles 2017 §3 — BC binary dynamical fit, P = 230.09 yr, mass sum 0.776 ± 0.024 M☉ split via Heintz 1974 mass ratio + van Leeuwen 2007 parallax |
 | `radius_rsun` | 0.274 ± 0.011 | high | Mann et al. 2015 Table 5 'Gl 166 C' row — M_K-band radius relation calibrated against interferometric M-dwarf sample + BT-Settl atmosphere model fit |
 | `teff_k` | 3167 ± 61 | high | Mann et al. 2015 Table 5 — low-resolution SNIFS optical + SpeX NIR spectra fit to BT-Settl atmosphere grid |
 | `luminosity_lsun` | 6.51e-3 ± 0.13e-3 | high | Cifuentes et al. 2020 CARMENES catalog row Karmn J04153-076 (VizieR J/A+A/642/A115); multi-band SED integration with Gaia DR2 distance |
@@ -217,7 +217,7 @@ optical level, and a strong red-orange limb darkening characteristic
 of the molecular-band atmosphere.
 
 The companion B at 33 AU mean separation (BC orbit Mason 2017, e =
-0.4294 → periastron ~19 AU, apastron ~47 AU) appears as a brilliant
+0.4300 → periastron ~19 AU, apastron ~47 AU) appears as a brilliant
 blue-white point of extraordinary brightness. With B's M_V ≈ 11.0
 (DA WD, T_eff ≈ 17,200 K), from a C-orbiting observer at 33 AU
 B's apparent magnitude is roughly V ≈ -13 (mag = M_V + 5·log₁₀(33 AU
@@ -260,8 +260,8 @@ deferred until a paper-confirmed cycle period exists.
 - **Mason B. D., Hartkopf W. I., Miles K. N. 2017** — *Binary Star
   Orbits. V. The Nearby White Dwarf/Red Dwarf Pair 40 Eri BC*,
   AJ 154, 200 (`2017AJ....154..200M`, arXiv:1707.03635,
-  DOI 10.3847/1538-3881/aa803e). Updated 230.29-yr BC visual-
-  spectroscopic orbit; mass sum 0.776 ± 0.024 M☉, e = 0.4294,
+  DOI 10.3847/1538-3881/aa803e). Updated 230.09-yr BC visual-
+  spectroscopic orbit; mass sum 0.776 ± 0.024 M☉, e = 0.4300,
   a = 6.93″. With Heintz 1974 mass ratio gives M_C = 0.2041 ±
   0.0064 M☉. **Primary anchor for the C dynamical mass.**
 - **Mann A. W., Feiden G. A., Gaidos E., Boyajian T., von Braun K.
@@ -281,10 +281,11 @@ deferred until a paper-confirmed cycle period exists.
   GJ 166 C entry (VizieR J/A+A/642/A115) gives L = (6.51 ± 0.13) ×
   10⁻³ L☉. **Primary anchor for luminosity.**
 - **Bond H. E., Bergeron P., Bédard A. 2017** — *The aged
-  Sirius-like system: 40 Eridani revisited*, ApJ 848, 16
+  Astrophysical Implications of a New Dynamical Mass for the Nearby
+  White Dwarf 40 Eridani B*, ApJ 848, 16
   (`2017ApJ...848...16B`, arXiv:1709.00478, DOI 10.3847/1538-4357/aa8a63).
   HST/COS UV spectroscopy of 40 Eri B; full system reanalysis. §6.2
-  IFMR (Cummings 2018) implies M_progenitor ≈ 1.8 M☉ for B, giving
+  IFMR (Salaris et al. 2009, M_final = 0.134 M_initial + 0.331) implies M_progenitor ≈ 1.8 M☉ for B, giving
   system-coeval total age ≈ 1.8 Gyr. Same section cites Fuhrmann
   et al. 2014 on the AGB-mass-transfer spin-up scenario for C.
   **Primary anchor for age + AGB-spin-up narrative.**
@@ -309,7 +310,7 @@ deferred until a paper-confirmed cycle period exists.
   *The white dwarf initial–final mass relation for progenitor masses
   up to 7.5 M☉*, ApJ 866, 21. IFMR used by Bond 2017 for the
   progenitor mass inversion of 40 Eri B.
-- **Fuhrmann K., Chini R., Buda L.-S., MacDonald J. 2014** —
+- **Fuhrmann K., Chini R., Buda L.-S. & Pozo Nuñez F. 2014** —
   *On the Age of Gliese 86*, ApJ 785, 68 (`2014ApJ...785...68F`,
   DOI 10.1088/0004-637X/785/1/68). Primarily an age determination
   of the Gl 86 K+WD binary, with 40 Eri C cited as an analog case
@@ -407,6 +408,6 @@ what the read set above already covers.
 ## Related
 
 - [40-eridani-a](40-eridani-a.md) — K0.5 V primary, refuted Vulcan planet, ~83″ unresolved from BC
-- [40-eridani-b](40-eridani-b.md) — DA2.9 white dwarf companion at 230.29-yr binary orbit with C
+- [40-eridani-b](40-eridani-b.md) — DA2.9 white dwarf companion at 230.09-yr binary orbit with C
 - [methodology](../reference/methodology.md) — schema source for the Decisions table
 - [binary-epoch-pipeline](../reference/binary-epoch-pipeline.md) — applies to the BC visual-spectroscopic orbit Kepler→ICRS construction

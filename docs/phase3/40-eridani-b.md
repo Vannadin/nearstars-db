@@ -218,8 +218,9 @@ neutral white.
 
 ### Read (decision-driving)
 
-- **Bond H. E. et al. 2017** — *The Sirius-like Triple Star System
-  HD 26965 (40 Eridani)*, ApJ 848, 16 (`2017ApJ...848...16B`,
+- **Bond H. E., Bergeron P. & Bédard A. 2017** — *Astrophysical
+  Implications of a New Dynamical Mass for the Nearby White Dwarf 40
+  Eridani B*, ApJ 848, 16 (`2017ApJ...848...16B`,
   arXiv:1709.00478, DOI 10.3847/1538-4357/aa8a63). HST/FGS
   astrometry of the BC pair anchored on the Mason 2017 visual
   orbit; pure-H model atmosphere Balmer-line fit; SED fit to

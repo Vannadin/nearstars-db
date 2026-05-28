@@ -187,8 +187,9 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 
 ### Read (decision-driving)
 
-- **Bond H. E. et al. 2017** — *The Sirius-like Triple Star System
-  HD 26965 (40 Eridani)*, ApJ 848, 16 (`2017ApJ...848...16B`,
+- **Bond H. E., Bergeron P. & Bédard A. 2017** — *Astrophysical
+  Implications of a New Dynamical Mass for the Nearby White Dwarf 40
+  Eridani B*, ApJ 848, 16 (`2017ApJ...848...16B`,
   arXiv:1709.00478, DOI 10.3847/1538-4357/aa8a63). Mason 2017
   시각 궤도에 정박해 BC 페어를 HST/FGS 로 astrometry 한 결과를,
   순수-H 모델 대기 Balmer-line fit 과 BVRI + ubvy + JHK +
