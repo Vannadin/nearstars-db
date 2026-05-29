@@ -69,17 +69,26 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `visual_companion_event_tw_psa_apparent_diameter_arcmin` | 0.00006 (point source, V ≈ 6.5 from any Fomalhaut planet) | medium | derived: 2 R(K4V) / 0.91 ly ≈ 0.004 arcsec ≈ point source; visible as a faint orange star, not a disk |
 | `visual_companion_event_lp_876_10_apparent_diameter_arcmin` | 0.00001 (point source, V ≈ 11 from any Fomalhaut planet) | medium | derived: M4V at 5.7 ly is below naked-eye limit but trivially visible in any in-game telescope view |
 | `disk_present` | true | high | Kalas et al. 2005 HST/ACS resolved coronagraphy |
-| `disk_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — main ring inner edge after eccentric-orbit deprojection |
-| `disk_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — main ring outer edge |
-| `disk_dust_temperature_k` | 65 | high | Stapelfeldt 2004 Spitzer; Acke 2012 Herschel SED-fit of cold component |
-| `disk_tint_rgb_hex` | `#d8c4a6` (warm dusty buff, T_dust ≈ 65 K) | low | Tie-break: cold debris dust scatters more efficiently in red than blue; tint chosen to read as "dusty ring" against the blue-white star backdrop |
-| `disk_opacity` | 0.35 | low | Tie-break: optically thin in reality (τ ≈ 10⁻⁴); in-game opacity boosted for visibility per interesting-first rule |
-| `disk_morphology` | three-belt eccentric main ring with warm inner asteroid analog | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST — full multi-belt architecture |
+| `disk_belts` | warm, intermediate, cold | high | Gáspár et al. 2023 JWST/MIRI resolves a three-belt architecture: inner warm + intermediate + the classic eccentric cold main ring (Kalas 2005 / Boley 2012 / White 2017) |
+| `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 (`2023NatAs...7..790G`) JWST/MIRI — inner warm belt inner edge |
+| `disk_warm_outer_radius_au` | 90 | high | Gáspár et al. 2023 — inner warm belt outer extent |
+| `disk_warm_tint_rgb_hex` | `#f0d0a0` (warm amber, hot inner belt) | low | Tie-break: hot inner dust scatters A-star light with a warmer cast than the cold ring; interesting-first |
+| `disk_warm_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
+| `disk_intermediate_inner_radius_au` | 60 | high | Gáspár et al. 2023 JWST/MIRI — intermediate belt inner edge |
+| `disk_intermediate_outer_radius_au` | 110 | high | Gáspár et al. 2023 — intermediate belt outer edge |
+| `disk_intermediate_tint_rgb_hex` | `#e0cca8` (buff, between warm and cold) | low | Tie-break: intermediate tone between the inner warm and outer cold belts |
+| `disk_intermediate_opacity` | 0.25 | low | Tie-break: faint intermediate dust, boosted for visibility |
+| `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — main ring inner edge after eccentric-orbit deprojection |
+| `disk_cold_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — main ring outer edge |
+| `disk_cold_dust_temperature_k` | 65 | high | Stapelfeldt 2004 Spitzer; Acke 2012 Herschel SED-fit of the cold component |
+| `disk_cold_tint_rgb_hex` | `#c8ccd4` (cool grey, 65 K cold ring) | low | Tie-break: 65 K icy dust reads cooler than the inner belts; the showpiece eccentric ring |
+| `disk_cold_opacity` | 0.35 | low | Tie-break: optically thin in reality (τ ≈ 10⁻⁴); boosted for visibility per interesting-first |
+| `disk_morphology` | three-belt eccentric architecture: warm inner belt (~10–90 AU) + intermediate belt (~60–110 AU) + the classic eccentric cold main ring (133–158 AU, sharp inner edge) | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST/MIRI — full multi-belt architecture |
 | `disk_resolved_imaging` | true | high | HST/ACS (Kalas 2005), ALMA (Boley 2012, White 2017), JWST/MIRI (Gáspár 2023) |
 | `disk_imaging_observatory` | HST-ACS + ALMA + JWST-MIRI | high | as above |
-| `disk_imaging_inclination_deg` | 65.6 ± 0.4 | high | Le Bouquin 2009; reconfirmed Boley 2012 ALMA |
-| `disk_mass_mearth` | 0.015 (main ring, mm-cm grains) to 4–10 (planetesimal reservoir) | medium | Holland 2017 SCUBA-2 + ALMA; lower bound from imaged grains, upper bound from collisional cascade modeling |
-| `disk_planetesimal_belt_inferred` | true | high | Sharp inner edge (Kalas 2005) requires shepherding bodies; collisional cascade replenishment requires parent planetesimal population (Wyatt 2008 framework, applied to Fomalhaut by Boley 2012) |
+| `disk_imaging_inclination_deg` | 65.6 ± 0.4 (cold ring); ~67.5 (inner belts, Gáspár 2023) | high | Le Bouquin 2009 / Boley 2012 ALMA for the cold ring; Gáspár 2023 for the inner belts |
+| `disk_mass_mearth` | 0.015 (cold main ring, mm-cm grains) to 4–10 (planetesimal reservoir) | medium | Holland 2017 SCUBA-2 + ALMA; lower bound from imaged grains, upper bound from collisional cascade modeling |
+| `disk_planetesimal_belt_inferred` | true | high | Sharp inner edge of the cold ring (Kalas 2005) requires shepherding bodies; collisional-cascade replenishment requires a parent planetesimal population (Wyatt 2008, applied by Boley 2012) |
 
 ## Surface synthesis
 
@@ -208,9 +217,11 @@ from any inner-system planet, the 133–158 AU main ring forms a
 ~25–30 arcminute thin elliptical band across the sky (eccentricity
 e ≈ 0.11 producing a visible offset of the star from the ring
 center — 14 AU offset, easily visible in any wide-field view). The
-ring is rendered with the cfg `disk_tint_rgb_hex = #d8c4a6` — a
-warm dusty buff representing the ~65 K dust thermal emission
-re-scattering A-star light. The `disk_opacity = 0.35` is a tie-break
+cold main ring is rendered as its own Kopernicus `Ring` with
+`disk_cold_tint_rgb_hex = #c8ccd4` — a cool grey representing the
+~65 K dust re-scattering A-star light; the inner warm (`#f0d0a0`) and
+intermediate (`#e0cca8`) belts render as separate Rings inside the
+same `Rings {}` block. The `disk_cold_opacity = 0.35` is a tie-break
 boost from the physical optical depth (~10⁻⁴) to ensure the ring
 reads as visible in-game rather than as a numerical artifact.
 
@@ -383,13 +394,12 @@ Filtered bib preserved in `docs/phase3/_bib/fomalhaut.yaml` with
   separate DB entries, the in-game player could fly between all
   three on real interstellar trajectories. Flag as Phase 2 DB
   expansion candidate.
-- **Phase 2 `disk_measurements` ingest**: This synthesis sources
-  disk parameters directly from the literature because
-  `db/systems/fomalhaut.json` has no `disk_measurements` block.
-  Add a parsing step to extract Kalas 2005 / Boley 2012 / White
-  2017 / Gáspár 2023 disk geometry into the DB so downstream
-  Kopernicus cfg writers can read the data without re-parsing the
-  Phase 3 markdown.
+- **Disk geometry is multi-belt in `disks_curated.json`** (audited
+  2026-05-29): Fomalhaut's warm + intermediate + cold belts are
+  separate `belt` entries, and the Decisions table renders them as
+  per-belt `disk_<belt>_*` fields → one Kopernicus Ring each.
+  Remaining: a grain-size / Mie color synthesis to replace the
+  tie-break per-belt tints.
 - **"Fomalhaut b S1" candidate revisit**: If a 2026+ JWST/MIRI or
   ground-based ELT follow-up reverses the Gáspár & Rieke 2020 dust-
   cloud interpretation and re-establishes a bound planet at ~115 AU,
