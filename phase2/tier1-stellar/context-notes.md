@@ -145,7 +145,28 @@ section.
   the restore step can leave the target file unstaged (' M' = worktree-only). Just
   re-add before committing.
 
-## Vega
-(next -- A0 V, pole-on RAPID rotator with strong gravity darkening; expect
-pole/equator Teff split, v sin i low but true v high, age from rotation models;
-NO rotation-activity in the usual sense, NO log R'HK; very different A-star regime)
+## Vega (DONE 2026-05-30)
+- First A-star. Gravity-darkened pole-on rapid rotator -> polar/equatorial Teff/R
+  differ; a single value is an approximation. Anchored on Monnier 2012 (cached
+  1211.6055), chosen over the research-suggested Yoon 2010 BECAUSE Yoon has no
+  arXiv (IOP only, uncacheable) and Monnier is the most recent revision + fully
+  cache-verifiable. Discipline > recency-of-the-headline-number.
+- Monnier Table 2 cache-verified (body for mass/age/Z/rotation; HTML for the
+  Table 2 R/Teff/L numbers, same ar5iv-table-not-in-text issue as Baines/von
+  Braun): R_pol 2.418 / R_eq 2.726, T_pol 10070 / T_eq 8910 / mean 9360, L_bol
+  47.2 (apparent 58.4), mass 2.15, age 700 Myr, P 0.71 d, beta 0.231.
+- Recorded: radius = equatorial 2.726 (rec) + polar 2.418 (alt, emit_source false);
+  Teff = mean 9360 (rec, polar/eq in meta_notes); L = bolometric 47.2 (rec) +
+  Aufdenberg 37 (alt); age = Monnier 0.70 (rec) + Yoon 0.455 (alt, DIVERGENCE
+  455-700 Myr); [Fe/H] -0.5 (lambda Boo, Yoon); rotation 0.71 d (Petit 2010 ZDI).
+- ACTIVITY left EMPTY by design: log R'HK is not defined for A0 V (no convective
+  dynamo). X-ray non-detection (Pease 2006) noted in meta_notes only. So Vega has
+  7 categories -- the missing one is physically correct, not a gap.
+- SCHEMA GOTCHA: age method 'evolutionary_model' is NOT in the age whitelist
+  (only activity_age/asteroseismology/gyrochronology/isochrone/kinematic/
+  unverified). Rotating evolutionary tracks (Geneva/BASTI) -> use method
+  'isochrone'. Caught by validate.py (FAIL 2), fixed.
+
+## Fomalhaut
+(next -- A4/A3 V, young ~440 Myr, eccentric debris ring; interferometric radius
+likely (CHARA/Di Folco), age from MG/debris; another A-star, NO log R'HK)

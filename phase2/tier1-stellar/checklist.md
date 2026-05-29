@@ -26,8 +26,8 @@ Phase 3 md re-synthesis (consuming the new values) is the downstream follow-on.
 - [x] AU Mic    (M1 Ve) — radius divergence (Gallenne 2022 refereed 0.862 vs White unrefereed 0.75); Cristofari/Donati Teff/L, BPMG age 23 Myr, X-ray activity
 - [x] HD 69830  (K0 V) — single-anchor Tanner 2015 (CHARA interf R/Teff/L + SME/Y2 mass/age/[Fe/H]); old-age divergence ~6-10 Gyr; no rotation period (7 cats)
 - [x] 61 Vir    (G7 V) — single-anchor von Braun 2014 (CHARA interf R/Teff/L + Y2 mass/age); rotation 29 d (Baliunas 1996); old-age divergence ~6-9 Gyr (8 cats)
-- [ ] Vega      (A0 V; pole-on rapid rotator, gravity darkening)  ← CURRENT
-- [ ] Fomalhaut (A4 V; young A star, eccentric ring)
+- [x] Vega      (A0 V) — gravity-darkened Monnier 2012 (R pol/eq, mean Teff 9360, L 47.2, age 700 Myr); P 0.71 d; NO log R'HK (A star); age divergence 455-700 Myr (7 cats)
+- [ ] Fomalhaut (A4 V; young A star, eccentric ring)  ← CURRENT
 
 ## Done
 (none yet — delta Pav was host #1, committed 8e9b4b7 before this campaign dir existed)

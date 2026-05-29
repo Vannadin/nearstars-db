@@ -19,9 +19,18 @@
         "radial_velocity_source": "simbad",
         "vmag_v": 0.03,
         "vmag_source": "hipparcos_hardcoded",
-        "teff_k": 9692,
+        "teff_k": 9360,
         "spectype": "A0 Va",
         "mass_measurements": [
+          {
+            "value_msun": 2.15,
+            "uncertainty_msun": 0.1,
+            "method": "evolutionary_model",
+            "reference": "Monnier et al. 2012",
+            "bibcode": "2012ApJ...761L...3M",
+            "doi": "10.1088/2041-8205/761/1/L3",
+            "recommended": true
+          },
           {
             "value_msun": 2.135,
             "uncertainty_msun": 0.075,
@@ -29,25 +38,98 @@
             "reference": "Yoon et al. 2010 (rotating model from interferometry)",
             "bibcode": "2010ApJ...708...71Y",
             "doi": "10.1088/0004-637X/708/1/71",
-            "recommended": true
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
             "value_rsun": 2.726,
-            "uncertainty_rsun": 0.006,
+            "uncertainty_rsun": 0.007,
             "method": "interferometry",
-            "reference": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
+            "reference": "Monnier et al. 2012",
+            "bibcode": "2012ApJ...761L...3M",
+            "doi": "10.1088/2041-8205/761/1/L3",
+            "instrument": "CHARA/MIRC (6-beam imaging)",
+            "recommended": true,
+            "notes": "Equatorial radius (gravity-darkened Concordance Model, Table 2). Polar radius is 2.418 +/- 0.012 Rsun; the star is oblate (pole-on)."
+          },
+          {
+            "value_rsun": 2.418,
+            "uncertainty_rsun": 0.012,
+            "method": "interferometry",
+            "reference": "Monnier et al. 2012",
+            "bibcode": "2012ApJ...761L...3M",
+            "recommended": false,
+            "notes": "Polar radius (gravity-darkened Concordance Model, Table 2)."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 9360,
+            "uncertainty_k": 90,
+            "method": "interferometry",
+            "reference": "Monnier et al. 2012",
             "bibcode": "2012ApJ...761L...3M",
             "doi": "10.1088/2041-8205/761/1/L3",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 47.2,
+            "uncertainty_lsun": 2.0,
+            "method": "bolometric_flux",
+            "reference": "Monnier et al. 2012",
+            "bibcode": "2012ApJ...761L...3M",
+            "doi": "10.1088/2041-8205/761/1/L3",
+            "recommended": true
+          },
+          {
+            "value_lsun": 37.0,
+            "uncertainty_lsun": 3.0,
+            "method": "bolometric_flux",
+            "reference": "Aufdenberg et al. 2006",
+            "bibcode": "2006ApJ...645..664A",
+            "recommended": false
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 0.7,
+            "uncertainty_gyr": 0.15,
+            "method": "isochrone",
+            "reference": "Monnier et al. 2012",
+            "bibcode": "2012ApJ...761L...3M",
+            "recommended": true
+          },
+          {
+            "value_gyr": 0.455,
+            "uncertainty_gyr": 0.013,
+            "method": "isochrone",
+            "reference": "Yoon et al. 2010",
+            "bibcode": "2010ApJ...708...71Y",
+            "recommended": false
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.5,
+            "method": "high_res_spectroscopy",
+            "reference": "Yoon et al. 2010",
+            "bibcode": "2010ApJ...708...71Y",
+            "recommended": true
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 0.71,
+            "uncertainty_days": 0.03,
+            "method": "zeeman_doppler",
+            "reference": "Petit et al. 2010",
+            "bibcode": "2010A&A...523A..41P",
+            "recommended": true
+          }
+        ],
         "activity_measurements": [],
         "disk_measurements": [
           {
@@ -187,15 +269,15 @@
         "icrs_vx_j2000_km_s": 4.483432767291257,
         "icrs_vy_j2000_km_s": 18.002564130940815,
         "icrs_vz_j2000_km_s": -0.334384498993197,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "luminosity_lsun": 47.2,
+        "age_gyr": 0.7,
+        "metallicity_fe_h_dex": -0.5,
+        "rotation_period_days": 0.71,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 283341059438.43,
+        "gravitational_parameter_km3_s2": 285331746038.7,
         "mean_radius_km": 1896478.2
       }
     }
@@ -206,7 +288,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -215,34 +297,34 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Monnier et al. 2012",
+      "doi": "10.1088/2041-8205/761/1/L3",
+      "bibcode": "2012ApJ...761L...3M",
+      "accessed": "2026-05-30",
+      "used_for": [
+        "Vega mass (evolutionary_model)"
       ]
     },
     {
       "title": "Yoon et al. 2010 (rotating model from interferometry)",
       "doi": "10.1088/0004-637X/708/1/71",
       "bibcode": "2010ApJ...708...71Y",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega mass (evolutionary_model)"
-      ]
-    },
-    {
-      "title": "Monnier et al. 2012 (equatorial radius; rapid rotator)",
-      "doi": "10.1088/2041-8205/761/1/L3",
-      "bibcode": "2012ApJ...761L...3M",
-      "accessed": "2026-05-29",
-      "used_for": [
-        "Vega radius (interferometry)"
       ]
     },
     {
       "title": "Aumann et al. 1984",
       "doi": null,
       "bibcode": "1984ApJ...278L..23A",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega disk single (photometric_excess)"
       ]
@@ -251,7 +333,7 @@
       "title": "Holland et al. 1998",
       "doi": null,
       "bibcode": "1998Natur.392..788H",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -260,7 +342,7 @@
       "title": "Wilner et al. 2002",
       "doi": null,
       "bibcode": "2002ApJ...569L.115W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -269,7 +351,7 @@
       "title": "Su et al. 2013",
       "doi": null,
       "bibcode": "2013ApJ...763..118S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega disk warm (sed_fit)"
       ]
@@ -278,7 +360,7 @@
       "title": "Sibthorpe et al. 2010",
       "doi": null,
       "bibcode": "2010A&A...518L.130S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -287,14 +369,14 @@
       "title": "Hughes et al. 2012",
       "doi": null,
       "bibcode": "2012ApJ...750...82H",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -302,6 +384,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Stellar Phase 2 curated 2026-05-30 under curation-data-contract (Tier 1 inversion fix). Vega is a POLE-ON RAPID ROTATOR (i ~5-6 deg) with strong gravity darkening, so polar and equatorial Teff/R differ substantially and a single value is an approximation. Primary anchor = Monnier et al. 2012 CHARA/MIRC imaging 'Concordance Model' (the most recent revision; argues earlier work overestimated gravity darkening; all values cache-verified from its Table 2): R_polar 2.418 +/- 0.012, R_equatorial 2.726 +/- 0.007 Rsun (recommended radius = equatorial, the larger extent; Phase 3 should treat the star as oblate, mean ~2.6 Rsun); T_polar 10070 +/- 90, T_equatorial 8910 +/- 130, surface-mean Teff 9360 +/- 90 K (recommended); bolometric L 47.2 +/- 2.0 Lsun (apparent, pole-on-inflated, 58.4 +/- 2.2); mass 2.15 (+0.10/-0.15) Msun; age 700 (+150/-75) Myr (rotation-aware Geneva tracks). The four gravity-darkened models disagree: equatorial Teff spans 7557 (Peterson 2006) - 8910 (Monnier); ages 455 Myr (Yoon 2010, non-rotating isochrones) - 700 Myr (Monnier, rotation-aware) -- DOCUMENTED DIVERGENCE, recommend Monnier. Yoon 2010 (no arXiv) alt: mass 2.135, R_pol 2.362/R_eq 2.818, T_pol 10059/T_eq 8152, age 455 Myr. [Fe/H] = -0.5 (lambda Boo surface depletion; Yoon Z ~0.008, Monnier adopts Z 0.006/[Fe/H] -0.5). Rotation P = 0.71 +/- 0.03 d (Petit 2010 spectropolarimetric magnetic detection; Alina 2012; consistent with Monnier v_eq+R), omega/omega_crit ~0.77-0.88, v sin i 22 km/s, v_eq ~195-236 km/s, gravity-darkening beta 0.231. ACTIVITY: log R'HK is NOT physically defined for an A0 V star (no convective dynamo/chromosphere) -- intentionally not recorded; X-ray is a non-detection, L_X < 2e25 erg/s (Pease, Drake & Kashyap 2006, 'the darkest bright star')."
   }
 }

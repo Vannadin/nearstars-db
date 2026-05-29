@@ -1,0 +1,43 @@
+host: Vega
+slug: vega
+generated_at: '2026-05-30'
+note: 'Phase 2 anchor bibliography for Vega (alpha Lyr, HD 172167, A0 V) — Tier 1 stellar inversion fix. POLE-ON RAPID ROTATOR
+  with gravity darkening: polar and equatorial Teff/R differ strongly, and the four gravity-darkened interferometric models
+  (Aufdenberg 2006, Peterson 2006, Yoon 2010, Monnier 2012) disagree (equatorial Teff 7557-8910 K; age 455-700 Myr). Primary
+  anchor = Monnier et al. 2012 CHARA/MIRC imaging (the most recent revision, argues earlier work overestimated gravity darkening;
+  cache-verifiable on arXiv): R_pol 2.418 / R_eq 2.726, T_pol 10070 / T_eq 8910 / mean 9360, L_bol 47.2 (apparent 58.4), mass
+  2.15, age 700 Myr, omega/omega_crit 0.774. Yoon 2010 (NO arXiv, IOP only) is the alternative (mass 2.135, R_pol 2.362/R_eq
+  2.818, age 455 Myr, [M/H] -0.4 / Z 0.008 lambda-Boo). NO log R''HK exists (A0 V has no chromospheric dynamo); X-ray is a
+  non-detection (Pease 2006 L_X < 2e25 erg/s). Rotation P ~ 0.71 d (Petit 2010 magnetic detection, via Monnier).'
+papers:
+- arxiv_id: '1211.6055'
+  ads_bibcode: 2012ApJ...761L...3M
+  title: Monnier et al. 2012 — CHARA/MIRC imaging gravity-darkened model (PRIMARY ANCHOR R/Teff/L/age/mass/rotation)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0603327
+  ads_bibcode: 2006ApJ...645..664A
+  title: Aufdenberg et al. 2006 — CHARA/FLUOR gravity-darkened model, true L 37 vs apparent 57 (alt)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: astro-ph/0603520
+  ads_bibcode: 2006Natur.440..896P
+  title: Peterson et al. 2006 — NPOI gravity-darkened model (alt; equatorial Teff 7557)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2010ApJ...708...71Y
+  title: Yoon et al. 2010 — NPOI gravity-darkened + rotating evolutionary; mass 2.135, age 455, [M/H] -0.4 (alt; no arXiv,
+    IOP only)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2006ApJ...636..426P
+  title: Pease, Drake & Kashyap 2006 — Chandra X-ray non-detection, L_X < 2e25 erg/s (no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
