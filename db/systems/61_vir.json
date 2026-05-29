@@ -19,36 +19,138 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 4.7105,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5552,
-        "spectype": "G6.5V",
+        "teff_k": 5538,
+        "spectype": "G7 V",
         "mass_measurements": [
           {
-            "value_msun": 0.942,
-            "uncertainty_msun": 0.034,
-            "method": "unverified",
-            "reference": "Vogt et al. 2010",
-            "bibcode": "2010ApJ...708.1366V",
-            "doi": null,
+            "value_msun": 0.93,
+            "method": "evolutionary_model",
+            "reference": "von Braun et al. 2014",
+            "bibcode": "2014MNRAS.438.2413V",
+            "doi": "10.1093/mnras/stt2360",
             "recommended": true
+          },
+          {
+            "value_msun": 0.92,
+            "uncertainty_msun": 0.013,
+            "method": "evolutionary_model",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
-            "value_rsun": 0.963,
-            "uncertainty_rsun": 0.011,
-            "method": "unverified",
-            "reference": "Vogt et al. 2010",
-            "bibcode": "2010ApJ...708.1366V",
-            "doi": null,
+            "value_rsun": 0.9867,
+            "uncertainty_rsun": 0.0048,
+            "method": "interferometry",
+            "reference": "von Braun et al. 2014",
+            "bibcode": "2014MNRAS.438.2413V",
+            "doi": "10.1093/mnras/stt2360",
+            "instrument": "CHARA Array",
+            "angular_diameter_mas": 1.073,
+            "angular_diameter_uncertainty_mas": 0.005,
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5538,
+            "uncertainty_k": 13,
+            "method": "interferometry",
+            "reference": "von Braun et al. 2014",
+            "bibcode": "2014MNRAS.438.2413V",
+            "doi": "10.1093/mnras/stt2360",
+            "recommended": true
+          },
+          {
+            "value_k": 5559,
+            "uncertainty_k": 17,
+            "method": "high_res_spectroscopy",
+            "reference": "Sousa et al. 2008",
+            "bibcode": "2008A&A...487..373S",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.8222,
+            "uncertainty_lsun": 0.0033,
+            "method": "bolometric_flux",
+            "reference": "von Braun et al. 2014",
+            "bibcode": "2014MNRAS.438.2413V",
+            "doi": "10.1093/mnras/stt2360",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 7.69,
+            "uncertainty_gyr": 1.44,
+            "method": "isochrone",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": true
+          },
+          {
+            "value_gyr": 8.6,
+            "method": "isochrone",
+            "reference": "von Braun et al. 2014",
+            "bibcode": "2014MNRAS.438.2413V",
+            "recommended": false
+          },
+          {
+            "value_gyr": 6.4,
+            "method": "activity_age",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "recommended": false
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.01,
+            "uncertainty_dex": 0.01,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2013",
+            "bibcode": "2013A&A...556A.150S",
+            "recommended": true
+          },
+          {
+            "value_dex": -0.02,
+            "uncertainty_dex": 0.01,
+            "method": "high_res_spectroscopy",
+            "reference": "Sousa et al. 2008",
+            "bibcode": "2008A&A...487..373S",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 29.0,
+            "method": "photometric_variability",
+            "reference": "Baliunas et al. 1996",
+            "bibcode": "1996ApJ...457L..99B",
+            "recommended": true
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.013,
+            "uncertainty_log_rhk": 0.003,
+            "method": "log_rhk",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": true
+          },
+          {
+            "value_log_rhk": -5.001,
+            "method": "log_rhk",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "recommended": false
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "main_cold",
@@ -89,16 +191,16 @@
         "icrs_vx_j2000_km_s": 5.254232095270769,
         "icrs_vy_j2000_km_s": 47.82986610180534,
         "icrs_vz_j2000_km_s": -38.388360559764365,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 0.8222,
+        "age_gyr": 7.69,
+        "metallicity_fe_h_dex": -0.01,
+        "rotation_period_days": 29.0,
+        "activity_log_rhk": -5.013,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 125015118496.956,
-        "mean_radius_km": 669959.1
+        "gravitational_parameter_km3_s2": 123422569216.74,
+        "mean_radius_km": 686447.2
       }
     }
   ],
@@ -304,7 +406,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -313,32 +415,50 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     },
     {
-      "title": "Vogt et al. 2010",
-      "doi": null,
-      "bibcode": "2010ApJ...708.1366V",
-      "accessed": "2026-05-29",
+      "title": "von Braun et al. 2014",
+      "doi": "10.1093/mnras/stt2360",
+      "bibcode": "2014MNRAS.438.2413V",
+      "accessed": "2026-05-30",
       "used_for": [
-        "61 Vir mass (unverified)"
+        "61 Vir mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Gomes da Silva et al. 2021",
+      "doi": null,
+      "bibcode": "2021A&A...646A..77G",
+      "accessed": "2026-05-30",
+      "used_for": [
+        "61 Vir mass (evolutionary_model)"
       ]
     },
     {
       "title": "Wyatt et al. 2012",
       "doi": null,
       "bibcode": "2012MNRAS.424.1206W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "61 Vir disk main_cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Vogt et al. 2010",
+      "doi": null,
+      "bibcode": "2010ApJ...708.1366V",
+      "accessed": "2026-05-30",
+      "used_for": [
+        "planet 61 Vir b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -346,6 +466,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Stellar Phase 2 curated 2026-05-30 under curation-data-contract (Tier 1 inversion fix). Radius/Teff/luminosity/mass/age anchored on von Braun et al. 2014 (2014MNRAS.438.2413V) CHARA interferometry: theta_LD 1.073 +/- 0.005 mas (theta_UD 1.037) -> R 0.9867 +/- 0.0048 Rsun, F_bol 36.06e-8 erg/s/cm2 -> Teff 5538 +/- 13 K and L 0.8222 +/- 0.0033 Lsun; Y2 isochrones (input [Fe/H] +0.01) -> mass 0.93 Msun, age 8.6 Gyr. No asteroseismology exists. Prior unverified Vogt 2010 mass 0.942 / radius 0.963 superseded. Boyajian 2012/2013 do NOT contain 61 Vir (verified) -- von Braun is the sole interferometric source. [Fe/H] = Santos/Sousa 2013 -0.01 +/- 0.01 (Sousa 2008 -0.02 +/- 0.01; near-solar). Activity = Gomes da Silva 2021 AMBRE-HARPS log R'HK -5.013 (1251 spectra; inactive); Mamajek 2008 -5.001 corroborates; X-ray is faint, log(Lx/Lbol) ~ -6.9 (Wright 2011 compilation of ROSAT/Voges 1999) -- available for the Phase 3 activity axis but not recorded as a measurement here (VizieR-only). AGE IS A DOCUMENTED DIVERGENCE but all old: isochrone 8.6 (von Braun) / 7.69 +/- 1.44 (Gomes da Silva 2021) / 6.3 (Valenti & Fischer 2005) vs activity/gyrochronology 6.1-6.6 (Mamajek 2008); recommended the Gomes da Silva 7.69 +/- 1.44 whose range (~6.2-9.1 Gyr) brackets the spread. Rotation = Baliunas et al. 1996 Ca II HK chromospheric period 29 d (the original measurement, no arXiv; compiled by Wright 2011 and adopted by Vogt 2010)."
   }
 }

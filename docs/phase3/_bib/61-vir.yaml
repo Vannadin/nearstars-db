@@ -1,0 +1,47 @@
+host: 61 Vir
+slug: 61-vir
+generated_at: '2026-05-30'
+note: 'Phase 2 anchor bibliography for 61 Vir (HD 115617, G7 V solar analog; 3 super-Earths + debris disk) — Tier 1 stellar
+  inversion fix. Radius/Teff/ luminosity/mass/age anchored on von Braun et al. 2014 CHARA interferometry (theta_LD 1.073 mas
+  -> R 0.9867, Teff 5538, L 0.822, Y2 mass 0.93, isochrone age 8.6). No asteroseismology exists. [Fe/H] = Sousa 2008 -0.02
+  (near-solar). Rotation = Baliunas 1996 Ca II HK 29 d (compiled by Wright 2011). Activity = Gomes da Silva 2021 log R''HK
+  -5.013 (inactive) + Wright 2011 X-ray log(Lx/Lbol) -6.90. AGE DIVERGENCE (all old): isochrone 6.3 (VF05) / 7.69 (GdS21)
+  / 8.6 (vB14) vs activity/gyro 6.1-6.6 (Mamajek 2008); ~6-9 Gyr. Boyajian 2012/2013 do NOT contain 61 Vir (verified) -- von
+  Braun is the sole interferometric source.'
+papers:
+- arxiv_id: '1312.1792'
+  ads_bibcode: 2014MNRAS.438.2413V
+  title: von Braun et al. 2014 — CHARA interferometry, R/Teff/L + Y2 mass/age (PRIMARY ANCHOR)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2012.10199'
+  ads_bibcode: 2021A&A...646A..77G
+  title: Gomes da Silva et al. 2021 — AMBRE-HARPS log R'HK -5.013 (RECOMMENDED activity; VizieR row)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0805.4826'
+  ads_bibcode: 2008A&A...487..373S
+  title: Sousa et al. 2008 — HARPS [Fe/H] -0.02 / Teff 5558 (RECOMMENDED [Fe/H]; VizieR row)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1109.4634'
+  ads_bibcode: 2011ApJ...743...48W
+  title: Wright et al. 2011 — Prot 29 d (compiled, ref Baliunas 1996) + X-ray log(Lx/Lbol) -6.90 (VizieR row)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '0807.1686'
+  ads_bibcode: 2008ApJ...687.1264M
+  title: Mamajek & Hillenbrand 2008 — activity-age 6.1-6.6 Gyr, log R'HK -5.001 (age + activity alt)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 1996ApJ...457L..99B
+  title: Baliunas et al. 1996 — Ca II HK rotation 29 d (original rotation source; no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null

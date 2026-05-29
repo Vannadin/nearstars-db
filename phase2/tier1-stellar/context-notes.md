@@ -126,6 +126,26 @@ section.
   v sin i 0.8 + CHES empirical 41.7 d noted in meta_notes only.
 - This is the model case for "interferometry + SED + SME single-paper anchor".
 
-## 61 Vir
-(next -- G7 V solar analog with super-Earths; expect good interferometry/astero +
-HARPS activity; likely a clean FGK case like eps Eri)
+## 61 Vir (DONE 2026-05-30)
+- Twin of the HD 69830 pattern: single dedicated interferometric paper (von Braun
+  et al. 2014, cached 1312.1792) anchors R/Teff/L/mass/age, all cache-verified
+  from its Tables 2/3/4: theta_LD 1.073 -> R 0.9867, F_bol 36.06e-8 -> Teff 5538 +
+  L 0.8222, Y2 -> mass 0.93 / age 8.6.
+- No asteroseismology (verified). Boyajian 2012/2013 do NOT contain 61 Vir
+  (verified) -- von Braun is the sole interferometric source.
+- [Fe/H] = Santos/Sousa 2013 -0.01 (GdS VizieR recno 21, near-solar); activity =
+  GdS 2021 logR'HK -5.013 (1251 obs, cache-verified row) + Mamajek -5.001.
+- Rotation = Baliunas 1996 29 d (Ca II HK, no arXiv; Wright 2011 compiles, Vogt
+  2010 adopts) -> recorded photometric_variability. UNLIKE HD 69830/tau Cet, this
+  host HAS a measured period -> full 8 categories.
+- Age divergence (all old ~6-9 Gyr): recommended GdS 7.69+/-1.44 (clean error,
+  brackets the spread) over von Braun isochrone 8.6 / Mamajek activity 6.4.
+- GIT GOTCHA repeat: after build_systems, `git add` then the date-churn
+  `git restore` -- but verify staging with `git status --porcelain` before commit;
+  the restore step can leave the target file unstaged (' M' = worktree-only). Just
+  re-add before committing.
+
+## Vega
+(next -- A0 V, pole-on RAPID rotator with strong gravity darkening; expect
+pole/equator Teff split, v sin i low but true v high, age from rotation models;
+NO rotation-activity in the usual sense, NO log R'HK; very different A-star regime)
