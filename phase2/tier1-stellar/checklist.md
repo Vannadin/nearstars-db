@@ -22,8 +22,8 @@ Phase 3 md re-synthesis (consuming the new values) is the downstream follow-on.
 
 ## Hosts
 - [x] eps Eri   (K2 V) — 8 cats anchored on Baines 2012 interferometry; age divergence documented
-- [ ] tau Cet   (G8 V; pole-on solar analog; radius already Korolik 2023)  ← CURRENT
-- [ ] AU Mic    (M1 Ve; ~22 Myr Beta Pic MG, flare star, edge-on disk)
+- [x] tau Cet   (G8.5 V) — mass/L Teixeira 2009 astero, Teff Korolik 2023 interf; old-isochrone age (inactive); rotation gyro-only (unverified)
+- [ ] AU Mic    (M1 Ve; ~22 Myr Beta Pic MG, flare star, edge-on disk)  ← CURRENT
 - [ ] HD 69830  (K0 V; 3 Neptunes + warm asteroid belt)
 - [ ] 61 Vir    (G7 V; solar analog, super-Earths)
 - [ ] Vega      (A0 V; pole-on rapid rotator, gravity darkening)

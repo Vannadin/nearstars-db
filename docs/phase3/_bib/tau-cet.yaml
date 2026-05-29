@@ -1,0 +1,74 @@
+host: tau Cet
+slug: tau-cet
+generated_at: '2026-05-29'
+note: 'Phase 2 anchor bibliography for tau Cet (HD 10700, G8 V pole-on solar analog) — Tier 1 stellar inversion fix. Radius
+  already settled on Korolik 2023 CHARA/MIRC-X (theta_LD 2.019 mas -> R 0.793). Mass + luminosity = Teixeira 2009 asteroseismology
+  (M 0.783 from mean density + interferometric radius, L 0.488). Teff = Korolik 2023 interferometric 5370 K (theta_LD + Boyajian
+  2013 Fbol); Korolik Table 1 adopts the spectroscopic 5320 K. [Fe/H] = Santos 2013 -0.52 (very metal-poor; Bruntt 2010 -0.18
+  is an alpha-enhanced outlier). Activity = Gomes da Silva 2021 HARPS log R''HK -4.977 (very inactive). Rotation has NO direct
+  photometric period; Korolik 2023 gyrochronology gives 46 d (recorded unverified). AGE IS A DOCUMENTED DIVERGENCE: isochrone
+  ~10 Gyr (Di Folco 2004, adopted by Korolik) vs activity-age 5.8 Gyr (Mamajek 2008); range 4.4-12.4 Gyr. The old isochrone
+  age is recommended as consistent with the very low activity + slow rotation. Suarez Mascareno 2015/2016 do NOT contain tau
+  Cet (verified).'
+papers:
+- arxiv_id: '2307.10394'
+  ads_bibcode: 2023AJ....166..123K
+  title: Korolik et al. 2023 — CHARA/MIRC-X interferometry, R/Teff/age/P_rot (ANCHOR radius+teff)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0811.3989'
+  ads_bibcode: 2009A&A...494..237T
+  title: Teixeira et al. 2009 — asteroseismology, mass 0.783 + luminosity 0.488 (RECOMMENDED mass+lum)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2012.10199'
+  ads_bibcode: 2021A&A...646A..77G
+  title: Gomes da Silva et al. 2021 — AMBRE-HARPS log R'HK -4.977 (RECOMMENDED activity); carries Santos 2013 [Fe/H]/Teff
+    row
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0807.1686'
+  ads_bibcode: 2008ApJ...687.1264M
+  title: Mamajek & Hillenbrand 2008 — activity-age 5.8 Gyr, log R'HK -4.958 (age alternative)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1307.0354'
+  ads_bibcode: 2013A&A...556A.150S
+  title: Santos et al. 2013 — high-res spectroscopy [Fe/H] -0.52, Teff 5310 (RECOMMENDED [Fe/H]; VizieR row)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1002.4268'
+  ads_bibcode: 2010MNRAS.405.1907B
+  title: Bruntt et al. 2010 — spectroscopy [Fe/H] -0.18 (alpha-enhanced outlier)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '0710.1731'
+  ads_bibcode: 2007A&A...475..243D
+  title: Di Folco et al. 2007 — CHARA/FLUOR interferometry (radius cross-check)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2004A&A...426..601D
+  title: Di Folco et al. 2004 — VLTI/VINCI + isochrone age ~10 Gyr (RECOMMENDED age; no arXiv, value via Korolik cache)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2013ApJ...771...40B
+  title: Boyajian et al. 2013 — bolometric flux Fbol 112.6e-8 (Teff/L basis for Korolik; VizieR J/ApJ/771/40)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 1996ApJ...457L..99B
+  title: Baliunas et al. 1996 — Ca II HK chromospheric rotation ~34 d (rotation alternative; no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null

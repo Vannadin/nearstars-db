@@ -19,17 +19,26 @@
         "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
         "vmag_v": 3.5342,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5320,
-        "spectype": "G8V",
+        "teff_k": 5370,
+        "spectype": "G8.5 V",
         "mass_measurements": [
           {
             "value_msun": 0.783,
             "uncertainty_msun": 0.012,
-            "method": "unverified",
-            "reference": "Feng et al. 2017",
-            "bibcode": "2017AJ....154..135F",
-            "doi": "10.3847/1538-3881/aa83b4",
+            "method": "asteroseismology",
+            "reference": "Teixeira et al. 2009",
+            "bibcode": "2009A&A...494..237T",
+            "doi": "10.1051/0004-6361:200810746",
             "recommended": true
+          },
+          {
+            "value_msun": 0.69,
+            "uncertainty_msun": 0.09,
+            "method": "spectroscopic",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": false
           }
         ],
         "radius_measurements": [
@@ -75,12 +84,103 @@
             "notes": "Earlier VLTI/VINCI angular diameter (1-2% accuracy) used in Pijpers 2003 (2003A&A...406L..15P) to derive R = 0.773 +/- 0.004(int) +/- 0.02(ext) R_sun. Superseded by CHARA/FLUOR (Di Folco 2007) and CHARA/MIRC-X (Korolik 2023)."
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "teff_measurements": [
+          {
+            "value_k": 5370,
+            "uncertainty_k": 20,
+            "method": "interferometry",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "doi": "10.3847/1538-3881/ace911",
+            "recommended": true
+          },
+          {
+            "value_k": 5320,
+            "uncertainty_k": 40,
+            "method": "high_res_spectroscopy",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "recommended": false
+          },
+          {
+            "value_k": 5310,
+            "uncertainty_k": 17,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2013",
+            "bibcode": "2013A&A...556A.150S",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.488,
+            "uncertainty_lsun": 0.01,
+            "method": "photometric",
+            "reference": "Teixeira et al. 2009",
+            "bibcode": "2009A&A...494..237T",
+            "doi": "10.1051/0004-6361:200810746",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 10.0,
+            "method": "isochrone",
+            "reference": "Di Folco et al. 2004",
+            "bibcode": "2004A&A...426..601D",
+            "recommended": true
+          },
+          {
+            "value_gyr": 5.8,
+            "method": "activity_age",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "recommended": false
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.52,
+            "uncertainty_dex": 0.01,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2013",
+            "bibcode": "2013A&A...556A.150S",
+            "recommended": true
+          },
+          {
+            "value_dex": -0.18,
+            "method": "high_res_spectroscopy",
+            "reference": "Bruntt et al. 2010",
+            "bibcode": "2010MNRAS.405.1907B",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 46,
+            "uncertainty_days": 4,
+            "method": "unverified",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "recommended": true
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.977,
+            "method": "log_rhk",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": true
+          },
+          {
+            "value_log_rhk": -4.958,
+            "method": "log_rhk",
+            "reference": "Mamajek & Hillenbrand 2008",
+            "bibcode": "2008ApJ...687.1264M",
+            "recommended": false
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "single",
@@ -149,11 +249,11 @@
         "icrs_vx_j2000_km_s": 16.7233022405222,
         "icrs_vy_j2000_km_s": -25.007544719835593,
         "icrs_vz_j2000_km_s": 14.233293728719648,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 0.488,
+        "age_gyr": 10.0,
+        "metallicity_fe_h_dex": -0.52,
+        "rotation_period_days": 46,
+        "activity_log_rhk": -4.977,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -379,31 +479,21 @@
       ]
     },
     {
-      "title": "Feng et al. 2017",
-      "doi": "10.3847/1538-3881/aa83b4",
-      "bibcode": "2017AJ....154..135F",
-      "accessed": "2026-05-29",
-      "used_for": [
-        "tau Cet mass (unverified)"
-      ]
-    },
-    {
-      "title": "Korolik et al. 2023: Refining the Stellar Parameters of tau Ceti: a Pole-on Solar Analog",
-      "doi": "10.3847/1538-3881/ace911",
-      "bibcode": "2023AJ....166..123K",
-      "accessed": "2026-05-29",
-      "used_for": [
-        "tau Cet mean radius (recommended, CHARA/MIRC-X interferometry)"
-      ]
-    },
-    {
-      "title": "Teixeira et al. 2009: Solar-like oscillations in the G8 V star tau Ceti",
+      "title": "Teixeira et al. 2009",
       "doi": "10.1051/0004-6361:200810746",
       "bibcode": "2009A&A...494..237T",
       "accessed": "2026-05-29",
       "used_for": [
-        "tau Cet radius (alternative; asteroseismic + Di Folco 2007 angular diameter)",
-        "consistency cross-check with Feng 2017 mass (0.783 +/- 0.012 M_sun)"
+        "tau Cet mass (asteroseismology)"
+      ]
+    },
+    {
+      "title": "Korolik et al. 2023",
+      "doi": "10.3847/1538-3881/ace911",
+      "bibcode": "2023AJ....166..123K",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "tau Cet mass (spectroscopic)"
       ]
     },
     {
@@ -441,6 +531,15 @@
       "used_for": [
         "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
+    },
+    {
+      "title": "Feng et al. 2017",
+      "doi": "10.3847/1538-3881/aa83b4",
+      "bibcode": "2017AJ....154..135F",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "planet tau Cet g orbital"
+      ]
     }
   ],
   "meta": {
@@ -452,6 +551,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": "Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md."
+    "notes": "Stellar Phase 2 curated 2026-05-29 under curation-data-contract (Tier 1 inversion fix). Radius = Korolik 2023 CHARA/MIRC-X interferometry (theta_LD 2.019 +/- 0.012 mas -> R 0.793 +/- 0.004 Rsun, recommended). Mass = Teixeira 2009 asteroseismology 0.783 +/- 0.012 Msun (mean density + interferometric radius; cache-verified); Korolik 2023 g*R^2 mass 0.69 +/- 0.09 (spectroscopic logg) is the alternative. Luminosity = Teixeira 2009 0.488 +/- 0.010 Lsun (M_V + bolometric correction). Teff = Korolik 2023 interferometric 5370 +/- 20 K (theta_LD + Boyajian 2013 Fbol); Korolik Table 1 adopts the spectroscopic 5320 +/- 40 K (Santos 2013 gives 5310 +/- 17). [Fe/H] = Santos 2013 -0.52 +/- 0.01 (very metal-poor; Bruntt 2010 -0.18 is an alpha-enhanced outlier). Activity = Gomes da Silva 2021 AMBRE-HARPS log R'HK -4.977 (very inactive; long-term declining trend + ~11 yr cycle); Mamajek 2008 -4.958 corroborates. Rotation: NO direct photometric period exists; Korolik 2023 gyrochronology gives 46 +/- 4 d (recorded method=unverified), Baliunas 1996 Ca II HK ~34 d. AGE IS A DOCUMENTED DIVERGENCE: isochrone ~10 Gyr (Di Folco 2004, adopted by Korolik 2023) recommended as consistent with the very low activity + slow rotation, vs activity-age 5.8 Gyr (Mamajek 2008); Korolik quotes a literature range 4.4-12.4 Gyr. Gomes da Silva 2021 isochrone age (0.028 Gyr) is a metal-poor-star fit failure, rejected. Suarez Mascareno 2015/2016 do NOT contain tau Cet (verified). --- PLANETS: Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md."
   }
 }
