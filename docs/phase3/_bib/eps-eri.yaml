@@ -1,0 +1,71 @@
+host: eps Eri
+slug: eps-eri
+generated_at: '2026-05-29'
+note: 'Phase 2 anchor bibliography for eps Eri (HD 22049, K2 V) — Tier 1 stellar inversion fix. Radius/Teff/luminosity/mass
+  anchored on Baines & Armstrong 2012 CHARA/NPOI interferometry (theta_LD 2.153 mas -> R 0.74, Teff 5039 K, L 0.32, M 0.82
+  isochrone); arXiv 1112.0447 is the erratum carrying the corrected fundamental-properties table, cited as the primary 2012ApJ...744..138B.
+  [Fe/H] = Sousa 2008 HARPS. Rotation = Croll 2006 MOST photometry (no arXiv). Activity = Gomes da Silva 2021 HARPS log R''HK
+  + Coffaro 2020 XMM X-ray. Age is a DOCUMENTED DIVERGENCE: young activity/gyro indicators (Mamajek 2008 ~0.4-0.8 Gyr) vs
+  isochrone (Baines ~1, VF2005 ~2.6 Gyr); the young range is physically preferred for this active K dwarf. Boyajian et al.
+  2012 does NOT contain eps Eri (verified) — not cited.'
+papers:
+- arxiv_id: '1112.0447'
+  ads_bibcode: 2012ApJ...744..138B
+  title: Baines & Armstrong 2012 — CHARA/NPOI interferometry, R/Teff/L/mass (ANCHOR); arXiv id is the erratum 2012ApJ...748...72B
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0710.1731'
+  ads_bibcode: 2007A&A...475..243D
+  title: Di Folco et al. 2007 — VLTI/VINCI theta_LD 2.126 mas (radius alternative)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0805.4826'
+  ads_bibcode: 2008A&A...487..373S
+  title: Sousa et al. 2008 — HARPS high-res spectroscopy [Fe/H], Teff (RECOMMENDED [Fe/H])
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0311541
+  ads_bibcode: 2004A&A...415.1153S
+  title: Santos et al. 2004 — high-res spectroscopy [Fe/H] (alternative)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2012.10199'
+  ads_bibcode: 2021A&A...646A..77G
+  title: Gomes da Silva et al. 2021 — AMBRE-HARPS log R'HK activity (RECOMMENDED activity)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0807.1686'
+  ads_bibcode: 2008ApJ...687.1264M
+  title: Mamajek & Hillenbrand 2008 — activity/gyro age (RECOMMENDED age, young branch)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2002.11009'
+  ads_bibcode: 2020A&A...636A..49C
+  title: Coffaro et al. 2020 — XMM-Newton X-ray Lx + Ca II cycle (activity secondary)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0711.0806'
+  ads_bibcode: 2007AN....328.1037F
+  title: Fröhlich 2007 — MOST differential-rotation reanalysis (rotation alternative)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2006ApJ...648..607C
+  title: Croll et al. 2006 — MOST photometric rotation 11.35/11.55 d (RECOMMENDED rotation; no arXiv, ADS value-check)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2005ApJS..159..141V
+  title: Valenti & Fischer 2005 — SPOCS spectroscopy, mass/age/Teff alternatives (no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null

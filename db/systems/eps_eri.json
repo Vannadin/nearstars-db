@@ -19,36 +19,174 @@
         "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
         "vmag_v": 3.7358,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5180,
-        "spectype": "K2V",
+        "teff_k": 5039,
+        "spectype": "K2 V",
         "mass_measurements": [
           {
             "value_msun": 0.82,
-            "uncertainty_msun": 0.02,
-            "method": "unverified",
-            "reference": "Llop Sayson et al. 2021",
-            "bibcode": "2021AJ....162..181L",
-            "doi": null,
+            "uncertainty_msun": 0.05,
+            "method": "evolutionary_model",
+            "reference": "Baines & Armstrong 2012",
+            "bibcode": "2012ApJ...744..138B",
+            "doi": "10.1088/0004-637X/744/2/138",
             "recommended": true
+          },
+          {
+            "value_msun": 0.708,
+            "uncertainty_msun": 0.067,
+            "method": "evolutionary_model",
+            "reference": "Valenti & Fischer 2005",
+            "bibcode": "2005ApJS..159..141V",
+            "recommended": false
+          },
+          {
+            "value_msun": 0.775,
+            "uncertainty_msun": 0.022,
+            "method": "evolutionary_model",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
-            "value_rsun": 0.759106,
-            "uncertainty_rsun": 0.011816,
-            "method": "unverified",
-            "reference": "Rosenthal et al. 2021",
-            "bibcode": "2021ApJS..255....8R",
-            "doi": null,
+            "value_rsun": 0.74,
+            "uncertainty_rsun": 0.01,
+            "method": "interferometry",
+            "reference": "Baines & Armstrong 2012",
+            "bibcode": "2012ApJ...744..138B",
+            "doi": "10.1088/0004-637X/744/2/138",
+            "instrument": "NOI (Navy Optical Interferometer)",
+            "angular_diameter_mas": 2.153,
+            "angular_diameter_uncertainty_mas": 0.028,
+            "recommended": true
+          },
+          {
+            "value_rsun": 0.73,
+            "uncertainty_rsun": 0.01,
+            "method": "interferometry",
+            "reference": "Di Folco et al. 2007",
+            "bibcode": "2007A&A...475..243D",
+            "instrument": "CHARA/FLUOR (K'-band)",
+            "angular_diameter_mas": 2.126,
+            "angular_diameter_uncertainty_mas": 0.014,
+            "recommended": false,
+            "notes": "Limb-darkened angular diameter; R ~0.73 Rsun from theta_LD + Hipparcos parallax, consistent with Baines 2012 NOI optical measurement."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 5039,
+            "uncertainty_k": 126,
+            "method": "interferometry",
+            "reference": "Baines & Armstrong 2012",
+            "bibcode": "2012ApJ...744..138B",
+            "doi": "10.1088/0004-637X/744/2/138",
+            "recommended": true
+          },
+          {
+            "value_k": 5073,
+            "uncertainty_k": 42,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2004",
+            "bibcode": "2004A&A...415.1153S",
+            "recommended": false
+          },
+          {
+            "value_k": 5049,
+            "uncertainty_k": 48,
+            "method": "high_res_spectroscopy",
+            "reference": "Tsantaki et al. 2013",
+            "bibcode": "2013A&A...556A.150S",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.32,
+            "uncertainty_lsun": 0.03,
+            "method": "bolometric_flux",
+            "reference": "Baines & Armstrong 2012",
+            "bibcode": "2012ApJ...744..138B",
+            "doi": "10.1088/0004-637X/744/2/138",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 0.44,
+            "method": "gyrochronology",
+            "reference": "Barnes 2007",
+            "bibcode": "2007ApJ...669.1167B",
+            "recommended": true
+          },
+          {
+            "value_gyr": 1.0,
+            "method": "isochrone",
+            "reference": "Baines & Armstrong 2012",
+            "bibcode": "2012ApJ...744..138B",
+            "recommended": false
+          },
+          {
+            "value_gyr": 2.6,
+            "method": "isochrone",
+            "reference": "Valenti & Fischer 2005",
+            "bibcode": "2005ApJS..159..141V",
+            "recommended": false
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.13,
+            "uncertainty_dex": 0.04,
+            "method": "high_res_spectroscopy",
+            "reference": "Santos et al. 2004",
+            "bibcode": "2004A&A...415.1153S",
+            "recommended": true
+          },
+          {
+            "value_dex": -0.11,
+            "uncertainty_dex": 0.03,
+            "method": "high_res_spectroscopy",
+            "reference": "Sousa et al. 2008",
+            "bibcode": "2008A&A...487..373S",
+            "recommended": false
+          },
+          {
+            "value_dex": -0.15,
+            "uncertainty_dex": 0.03,
+            "method": "high_res_spectroscopy",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 11.45,
+            "uncertainty_days": 0.2,
+            "method": "photometric_variability",
+            "reference": "Croll et al. 2006",
+            "bibcode": "2006ApJ...648..607C",
+            "recommended": true
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.496,
+            "method": "log_rhk",
+            "reference": "Gomes da Silva et al. 2021",
+            "bibcode": "2021A&A...646A..77G",
+            "recommended": true
+          },
+          {
+            "value_x_ray_log_lx_lbol": -4.79,
+            "method": "x_ray",
+            "reference": "Coffaro et al. 2020",
+            "bibcode": "2020A&A...636A..49C",
+            "recommended": false
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "main_cold",
@@ -232,16 +370,16 @@
         "icrs_vx_j2000_km_s": 11.949137009619637,
         "icrs_vy_j2000_km_s": -8.86453002813413,
         "icrs_vz_j2000_km_s": 0.3143050372590638,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "luminosity_lsun": 0.32,
+        "age_gyr": 0.44,
+        "metallicity_fe_h_dex": -0.13,
+        "rotation_period_days": 11.45,
+        "activity_log_rhk": -4.496,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 108824200814.76,
-        "mean_radius_km": 528110.0
+        "mean_radius_km": 514818.0
       }
     }
   ],
@@ -333,21 +471,30 @@
       ]
     },
     {
-      "title": "Llop Sayson et al. 2021",
-      "doi": null,
-      "bibcode": "2021AJ....162..181L",
+      "title": "Baines & Armstrong 2012",
+      "doi": "10.1088/0004-637X/744/2/138",
+      "bibcode": "2012ApJ...744..138B",
       "accessed": "2026-05-29",
       "used_for": [
-        "eps Eri mass (unverified)"
+        "eps Eri mass (evolutionary_model)"
       ]
     },
     {
-      "title": "Rosenthal et al. 2021",
+      "title": "Valenti & Fischer 2005",
       "doi": null,
-      "bibcode": "2021ApJS..255....8R",
+      "bibcode": "2005ApJS..159..141V",
       "accessed": "2026-05-29",
       "used_for": [
-        "eps Eri radius (unverified)"
+        "eps Eri mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Gomes da Silva et al. 2021",
+      "doi": null,
+      "bibcode": "2021A&A...646A..77G",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "eps Eri mass (evolutionary_model)"
       ]
     },
     {
@@ -403,6 +550,15 @@
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
+    },
+    {
+      "title": "Llop Sayson et al. 2021",
+      "doi": null,
+      "bibcode": "2021AJ....162..181L",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "planet eps Eri b orbital"
+      ]
     }
   ],
   "meta": {
@@ -414,6 +570,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Phase 2 curated 2026-05-29 under curation-data-contract (Tier 1 inversion fix; replaces the prior Phase-1 unverified mass/radius). Radius/Teff/luminosity/mass anchored on Baines & Armstrong 2012 NOI interferometry (theta_LD 2.153 +/- 0.028 mas -> R 0.74 +/- 0.01 Rsun, Teff 5039 +/- 126 K via theta_LD + bolometric flux, L 0.32 +/- 0.03 Lsun, M 0.82 +/- 0.05 Msun via Yonsei-Yale isochrone); cross-checked by Di Folco 2007 CHARA/FLUOR theta_LD 2.126 +/- 0.014 mas (-> R ~0.73). No asteroseismic solution exists (the star is too active). Prior unverified values (Llop Sayson 2021 M 0.82, Rosenthal 2021 R 0.759) superseded by the interferometric anchor. [Fe/H] = Santos 2004 high-res spectroscopy -0.13 +/- 0.04 (Sousa 2008 -0.11 +/- 0.03, Gomes da Silva 2021 / Tsantaki 2013 -0.15 +/- 0.03 corroborate; all slightly sub-solar). Rotation = Croll 2006 MOST photometry, two spots P1 = 11.35 d / P2 = 11.55 d (differential rotation k ~ 0.09); Froehlich 2007 reanalysis confirms P1 = 11.348 +/- 0.037, P2 = 11.553 +/- 0.020 d, equatorial P ~ 11.2 d. Activity = Gomes da Silva 2021 AMBRE-HARPS log R'HK -4.496 (553 spectra; active K dwarf, well above the -4.9 inactive floor); X-ray Lx ~ 2e28 erg/s (XMM-Newton 0.2-2 keV, cycle-averaged, Coffaro 2020), combined with L = 0.32 Lsun (1.22e33 erg/s) giving log(Lx/Lbol) ~ -4.8; Ca II cycle 2.92 yr. AGE IS A DOCUMENTED DIVERGENCE: gyrochronology/activity indicators give a young age (Barnes 2007 gyrochronology 0.44 Gyr, adopted by Coffaro 2020; literature range 0.2-0.93 Gyr per Fuhrmann 2004 / Song 2000), recommended as consistent with the high activity + 11 d rotation, versus isochrone ages that are unreliable for cool MS dwarfs (Baines 2012 Y2 ~1 Gyr, the authors explicitly noting it is older than other studies; Valenti & Fischer 2005 ~2.6 Gyr; Gomes da Silva 2021 isochrone ~4.8 Gyr). Phase 3 must document the young-vs-isochrone split. Boyajian et al. 2012 does NOT contain eps Eri (verified absent in all VizieR tables) -- not cited despite its fame as an interferometric-radius sample."
   }
 }
