@@ -70,10 +70,10 @@
             "belt": "asteroid_analog",
             "inner_radius_au": 3,
             "outer_radius_au": null,
-            "dust_temperature_k": 150,
+            "dust_temperature_k": 120,
             "dust_mass_mearth": null,
             "inclination_deg": null,
-            "morphology": "warm inner asteroid-belt analog at ~3 AU from Spitzer/IRS 2-component SED decomposition; canonical inner-belt source",
+            "morphology": "warm inner asteroid-belt analog at ~3 AU from Spitzer/IRS 2-component SED decomposition; canonical inner-belt source. Model belt T ~120 K (observed range 100-150 K)",
             "resolved": false,
             "observatory": "Spitzer-IRS/MIPS",
             "method": "sed_fit",
@@ -86,10 +86,10 @@
             "belt": "main_cold",
             "inner_radius_au": null,
             "outer_radius_au": null,
-            "dust_temperature_k": 35,
+            "dust_temperature_k": 55,
             "dust_mass_mearth": null,
             "inclination_deg": null,
-            "morphology": "cold component of Spitzer/IRS+MIPS 2-component SED fit; SED-only, geometry refined later by MacGregor 2015 ALMA",
+            "morphology": "cold component of Spitzer/IRS+MIPS 2-component SED fit, color temperature ~55 K (audit 2026-05-29: was 35 K, which is the Greaves 1998 SCUBA value); SED-only, geometry refined later by MacGregor 2015 ALMA",
             "resolved": false,
             "observatory": "Spitzer-IRS/MIPS",
             "method": "sed_fit",
@@ -137,12 +137,12 @@
             "dust_temperature_k": null,
             "dust_mass_mearth": null,
             "inclination_deg": null,
-            "morphology": "intermediate dust population at ~20 AU inferred from Herschel-resolved SED + multi-wavelength decomposition; least-resolved of the three belts; canonical intermediate-belt source",
+            "morphology": "intermediate dust population at ~20 AU from Herschel SED decomposition (Greaves 2014); re-attributed 2026-05-29 from Booth 2017, which resolves only the 69 AU ring and finds no strong 20 AU emission",
             "resolved": false,
-            "observatory": "Herschel-SPIRE",
+            "observatory": "Herschel-SPIRE/PACS",
             "method": "sed_fit",
-            "reference": "Booth et al. 2017",
-            "bibcode": "2017MNRAS.469.3200B",
+            "reference": "Greaves et al. 2014",
+            "bibcode": "2014ApJ...791L..11G",
             "doi": null,
             "recommended": true
           },
@@ -384,6 +384,15 @@
       "accessed": "2026-05-29",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
+      ]
+    },
+    {
+      "title": "Greaves et al. 2014",
+      "doi": null,
+      "bibcode": "2014ApJ...791L..11G",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "eps Eri disk intermediate (sed_fit)"
       ]
     },
     {

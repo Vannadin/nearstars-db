@@ -68,12 +68,12 @@
           },
           {
             "belt": "single",
-            "inner_radius_au": 35,
+            "inner_radius_au": 10,
             "outer_radius_au": 210,
             "dust_temperature_k": null,
             "dust_mass_mearth": null,
             "inclination_deg": 89.5,
-            "morphology": "edge-on debris disk; surface-brightness break at ~35 AU, halo traced to ~210 AU",
+            "morphology": "edge-on debris disk traced from ~10 AU (cleared inner zone) to ~210 AU halo; surface-brightness break at ~35 AU (audit 2026-05-29: inner edge corrected 35 -> 10 AU)",
             "resolved": true,
             "observatory": "HST-STIS",
             "method": "resolved_imaging",
@@ -81,7 +81,7 @@
             "bibcode": "2014AJ....148...59S",
             "doi": null,
             "recommended": true,
-            "notes": "Canonical geometry adopted for cfg synthesis (inner 35 AU, outer 210 AU). Deep HST/STIS revisit refining Krist 2005."
+            "notes": "Canonical geometry adopted for cfg synthesis (inner ~10 AU cleared, break ~35 AU, outer ~210 AU). Deep HST/STIS revisit refining Krist 2005."
           },
           {
             "belt": "single",
@@ -136,12 +136,12 @@
           },
           {
             "belt": "single",
-            "inner_radius_au": 35,
+            "inner_radius_au": 43,
             "outer_radius_au": null,
-            "dust_temperature_k": 50,
+            "dust_temperature_k": null,
             "dust_mass_mearth": null,
             "inclination_deg": null,
-            "morphology": "birth-ring planetesimal belt at ~35 AU supplying dust to outer halo via radiation/wind pressure",
+            "morphology": "birth-ring planetesimal belt at r_BR ~ 43 AU supplying dust to outer halo via radiation/wind pressure (audit 2026-05-29: was 35 AU; paper states 43 AU)",
             "resolved": false,
             "observatory": null,
             "method": "sed_fit",
@@ -149,7 +149,7 @@
             "bibcode": "2006ApJ...648..652S",
             "doi": null,
             "recommended": false,
-            "notes": "Theoretical birth-ring SED model. Birth-ring radius and dust temperature consistent with Schneider 2014 / Chen 2005."
+            "notes": "Theoretical birth-ring SED model, r_BR = 43 AU. Dust temperature 50 K removed (audit 2026-05-29: not in this paper; 50 K is from Chen 2005)."
           }
         ],
         "stellarium_id": "V*AUMic"

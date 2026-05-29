@@ -94,8 +94,9 @@
             "inclination_deg": null,
             "method": "resolved_imaging",
             "reference": "Wilner et al. 2002",
+            "bibcode": "2002ApJ...569L.115W",
             "recommended": false,
-            "notes": "No bibcode listed in Phase 3 bibliography; specific radii not adopted as canonical"
+            "notes": "Wilner, Holman, Kuchner & Ho 2002, 'Millimeter-Wave Aperture Synthesis Imaging of Vega: Evidence for a Ring Arc at 95 AU'; bibcode added 2026-05-29 audit (was null); specific radii not adopted as canonical"
           },
           {
             "belt": "warm",
@@ -116,12 +117,12 @@
           },
           {
             "belt": "cold",
-            "inner_radius_au": 62,
+            "inner_radius_au": 110,
             "uncertainty_inner_radius_au": 9,
             "outer_radius_au": null,
             "dust_temperature_k": 50,
             "dust_mass_mearth": 0.013,
-            "morphology": "cold Kuiper-analog outer belt with inner edge at 62 AU; cleared gap from 14 to 62 AU implies planetesimal-stirring planets",
+            "morphology": "cold Kuiper-analog outer belt with inner edge at ~110 AU (audit 2026-05-29: was 62 AU; Su 2013 reports ~110 AU); wide cleared gap from the 14 AU warm belt implies planetesimal-stirring planets",
             "resolved": true,
             "observatory": "Spitzer-MIPS",
             "inclination_deg": 6.2,
@@ -250,6 +251,15 @@
       "title": "Holland et al. 1998",
       "doi": null,
       "bibcode": "1998Natur.392..788H",
+      "accessed": "2026-05-29",
+      "used_for": [
+        "Vega disk cold (resolved_imaging)"
+      ]
+    },
+    {
+      "title": "Wilner et al. 2002",
+      "doi": null,
+      "bibcode": "2002ApJ...569L.115W",
       "accessed": "2026-05-29",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
