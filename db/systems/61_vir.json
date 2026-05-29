@@ -66,40 +66,6 @@
             "doi": null,
             "notes": "70/100/160 um resolved; dust mass quoted as 6-8x Sun's Edgeworth-Kuiper inventory, midpoint adopted via 5e-3 Mearth KBO reference",
             "recommended": true
-          },
-          {
-            "belt": "main_cold",
-            "inner_radius_au": null,
-            "outer_radius_au": null,
-            "dust_temperature_k": null,
-            "dust_mass_mearth": null,
-            "inclination_deg": null,
-            "morphology": null,
-            "resolved": false,
-            "observatory": "Herschel",
-            "method": "sed_fit",
-            "reference": "Tanner et al. 2014",
-            "bibcode": null,
-            "doi": null,
-            "notes": "SED + imaging follow-up; reinforces Wyatt 2012 cold-belt geometry without independent geometry values",
-            "recommended": false
-          },
-          {
-            "belt": "main_cold",
-            "inner_radius_au": null,
-            "outer_radius_au": null,
-            "dust_temperature_k": null,
-            "dust_mass_mearth": null,
-            "inclination_deg": null,
-            "morphology": null,
-            "resolved": false,
-            "observatory": "Spitzer+Herschel",
-            "method": "sed_fit",
-            "reference": "Su et al. 2017",
-            "bibcode": "2017AJ....153..226S",
-            "doi": null,
-            "notes": "Cold-disk sample within Spitzer + Herschel survey; consistent with Wyatt 2012, no independent geometry refit",
-            "recommended": false
           }
         ],
         "stellarium_id": "61Vir"
@@ -368,15 +334,6 @@
       "accessed": "2026-05-29",
       "used_for": [
         "61 Vir disk main_cold (resolved_imaging)"
-      ]
-    },
-    {
-      "title": "Su et al. 2017",
-      "doi": null,
-      "bibcode": "2017AJ....153..226S",
-      "accessed": "2026-05-29",
-      "used_for": [
-        "61 Vir disk main_cold (sed_fit)"
       ]
     }
   ],

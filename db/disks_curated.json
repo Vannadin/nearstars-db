@@ -544,24 +544,24 @@
         "reference": "Beichman et al. 2005",
         "bibcode": "2005ApJ...626.1061B",
         "doi": "10.1086/430059",
-        "recommended": false
+        "recommended": true
       },
       {
         "belt": "warm",
-        "inner_radius_au": 0.92,
-        "outer_radius_au": 1.16,
+        "inner_radius_au": null,
+        "outer_radius_au": null,
         "dust_temperature_k": null,
         "dust_mass_mearth": null,
         "inclination_deg": null,
-        "morphology": "warm belt refined by mid-IR interferometry + SED refit; consistent with planet d at 0.63 AU being interior to the inner shoulder at ~0.9 AU",
+        "morphology": "HD 69830 unresolved by MIDI/VISIR; only a mid-IR interferometric upper limit on the dust size (< 2.4 AU). Does not independently constrain the warm-belt radii.",
         "resolved": false,
-        "observatory": "MIDI/VLTI + Spitzer SED",
-        "notes": "Mid-IR interferometric upper limit on disc size 2.4 AU; SED refit narrows the warm-belt radial range from Beichman 2005's 0.7-1.2 AU to 0.92-1.16 AU. Refines BB-radius placement; supersedes Beichman 2005 geometrically while Beichman 2005 remains canonical for dust mass + composition (multi-paper geometry merge via emitter).",
-        "method": "sed_fit",
+        "observatory": "MIDI/VLTI + VISIR",
+        "notes": "Audit 2026-05-29: prior entry mis-attributed the 0.92-1.16 AU SED range (actually Lisse 2007 / Beichman 2005) to this paper with method sed_fit. Smith, Wyatt & Haniff 2009 is interferometric and reports only a 0.05-2.4 AU unresolved size limit -- it does not provide a fitted belt geometry. Demoted from recommended; recommended geometry moved to Beichman 2005.",
+        "method": "unverified",
         "reference": "Smith, Wyatt & Haniff 2009",
         "bibcode": "2009A&A...503..265S",
         "doi": "10.1051/0004-6361/200912330",
-        "recommended": true
+        "recommended": false
       },
       {
         "belt": "warm",
@@ -617,40 +617,6 @@
         "doi": null,
         "notes": "70/100/160 um resolved; dust mass quoted as 6-8x Sun's Edgeworth-Kuiper inventory, midpoint adopted via 5e-3 Mearth KBO reference",
         "recommended": true
-      },
-      {
-        "belt": "main_cold",
-        "inner_radius_au": null,
-        "outer_radius_au": null,
-        "dust_temperature_k": null,
-        "dust_mass_mearth": null,
-        "inclination_deg": null,
-        "morphology": null,
-        "resolved": false,
-        "observatory": "Herschel",
-        "method": "sed_fit",
-        "reference": "Tanner et al. 2014",
-        "bibcode": null,
-        "doi": null,
-        "notes": "SED + imaging follow-up; reinforces Wyatt 2012 cold-belt geometry without independent geometry values",
-        "recommended": false
-      },
-      {
-        "belt": "main_cold",
-        "inner_radius_au": null,
-        "outer_radius_au": null,
-        "dust_temperature_k": null,
-        "dust_mass_mearth": null,
-        "inclination_deg": null,
-        "morphology": null,
-        "resolved": false,
-        "observatory": "Spitzer+Herschel",
-        "method": "sed_fit",
-        "reference": "Su et al. 2017",
-        "bibcode": "2017AJ....153..226S",
-        "doi": null,
-        "notes": "Cold-disk sample within Spitzer + Herschel survey; consistent with Wyatt 2012, no independent geometry refit",
-        "recommended": false
       }
     ]
   },
@@ -698,7 +664,7 @@
         "observatory": "Herschel",
         "method": "sed_fit",
         "reference": "Lawler et al. 2014",
-        "bibcode": "arXiv:1409.0023",
+        "bibcode": "2014MNRAS.444.2665L",
         "recommended": false
       }
     ]

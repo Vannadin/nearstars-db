@@ -124,7 +124,7 @@
             "observatory": "Herschel",
             "method": "sed_fit",
             "reference": "Lawler et al. 2014",
-            "bibcode": "arXiv:1409.0023",
+            "bibcode": "2014MNRAS.444.2665L",
             "recommended": false
           }
         ],
@@ -427,7 +427,7 @@
     {
       "title": "Lawler et al. 2014",
       "doi": null,
-      "bibcode": "arXiv:1409.0023",
+      "bibcode": "2014MNRAS.444.2665L",
       "accessed": "2026-05-29",
       "used_for": [
         "tau Cet disk single (sed_fit)"
