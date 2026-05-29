@@ -109,5 +109,23 @@ section.
   `git restore --worktree -- db/systems/ ':(exclude)db/systems/<host>.json'` to
   drop the date churn. Do NOT git-add the 150 date-only files.
 
-## HD 69830
-(next -- K0 V, hosts 3 Neptune-mass planets + a warm asteroid/debris belt)
+## HD 69830 (DONE 2026-05-30)
+- Cleanest host yet: ONE dedicated paper (Tanner et al. 2015, cached 1412.5251)
+  anchors 6 of 7 categories, all cache-text-verified from its Table 2 + abstract:
+  theta_LD 0.674 -> R 0.9058, L 0.622 (SED), Teff 5394 (CHARA+SED) / 5385 (SME),
+  M 0.863 (Y2), [Fe/H] -0.04 (SME), v sin i 0.8, age 10.6 (HRD) / 7.5 (SME).
+- No asteroseismology exists (verified). Recommended mass = Tanner isochrone (no
+  better method available for this star).
+- Age: recommended Tanner's SME-isochrone 7.5+/-3 (the more precise of their two)
+  + Mamajek activity-age 5.9 alt; 10.6 HRD in meta_notes. Tanner explicitly says
+  all methods (incl. Mamajek 5.7-6.1 activity/gyro) agree it is OLD, ruling out
+  the old Song 2000 "young" claim -> relevant to the asteroid belt being
+  non-primordial. Unlike eps Eri/tau Cet the age methods broadly AGREE (~6-10 Gyr).
+- Activity = GdS 2021 logR'HK -4.999 wmean (VizieR recno 1388, 711 obs; -5.013 med).
+- ROTATION: no measured period (same as tau Cet pattern) -> 7 categories not 8.
+  v sin i 0.8 + CHES empirical 41.7 d noted in meta_notes only.
+- This is the model case for "interferometry + SED + SME single-paper anchor".
+
+## 61 Vir
+(next -- G7 V solar analog with super-Earths; expect good interferometry/astero +
+HARPS activity; likely a clean FGK case like eps Eri)

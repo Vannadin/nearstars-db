@@ -3312,26 +3312,141 @@
     ]
   },
   "HD 69830": {
+    "teff_k": 5394,
+    "teff_bibcode": "2015ApJ...800..115T",
+    "spectype": "K0 V",
+    "spectype_reference": "Gray et al. 2006 (NStars)",
+    "spectype_bibcode": "2006AJ....132..161G",
+    "meta_notes": "Stellar Phase 2 curated 2026-05-30 under curation-data-contract (Tier 1 inversion fix). Radius/Teff/luminosity/mass/age/[Fe/H] all anchored on Tanner et al. 2015 (2015ApJ...800..115T), a dedicated stellar-parameters paper: CHARA interferometry resolved the star (theta_LD 0.674 +/- 0.014 mas -> R 0.9058 +/- 0.0190 Rsun), SED bolometric fit gives L 0.622 +/- 0.014 Lsun and Teff 5394 +/- 62 K (SME spectral Teff 5385 +/- 44 agrees to 9 K), SME spectroscopy gives [Fe/H] -0.04 +/- 0.03 and log g 4.49, Y2 isochrones give mass 0.863 +/- 0.043. No asteroseismology exists for this star. Prior unverified values (Lovis 2006 M 0.86, Rosenthal 2021 R 0.887) superseded by Tanner. [Fe/H] alternatives: Santos 2004 -0.03 +/- 0.04, Sousa 2008 -0.06 +/- 0.02 (all slightly sub-solar). Activity = Gomes da Silva 2021 AMBRE-HARPS log R'HK -4.999 (wmean; -5.013 median, 711 spectra; inactive). AGE IS A DOCUMENTED DIVERGENCE but all methods agree the star is OLD and rule out the youngest (~0.6-2 Gyr, Song 2000) ages: Tanner SME-isochrone 7.5 +/- 3 Gyr (recommended, the more precise of Tanner's two) vs Tanner HRD-isochrone 10.6 +/- 4 vs Mamajek & Hillenbrand 2008 activity/gyrochronology 5.7-6.1 Gyr; ranges overlap ~6-10 Gyr. Tanner notes the old age means the warm asteroid belt cannot be primordial (must be replenished; Beichman 2005). ROTATION: NO measured photometric period exists; only v sin i 0.8 +/- 0.5 km/s (Tanner 2015 SME) and an empirical-relation estimate (~41.7 d, CHES Bao 2024) -- not recorded as a rotation_measurement.",
     "mass_measurements": [
       {
-        "value_msun": 0.86,
-        "uncertainty_msun": 0.03,
-        "method": "unverified",
-        "reference": "Lovis et al. 2006",
-        "bibcode": "2006Natur.441..305L",
-        "doi": "10.1038/nature04828",
+        "value_msun": 0.863,
+        "uncertainty_msun": 0.043,
+        "method": "evolutionary_model",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
         "recommended": true
+      },
+      {
+        "value_msun": 0.82,
+        "uncertainty_msun": 0.03,
+        "method": "evolutionary_model",
+        "reference": "Sousa et al. 2008",
+        "bibcode": "2008A&A...487..373S",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.886947,
-        "uncertainty_rsun": 0.019437,
-        "method": "unverified",
-        "reference": "Rosenthal et al. 2021",
-        "bibcode": "2021ApJS..255....8R",
-        "doi": null,
+        "value_rsun": 0.9058,
+        "uncertainty_rsun": 0.019,
+        "method": "interferometry",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
+        "instrument": "CHARA Array",
+        "angular_diameter_mas": 0.674,
+        "angular_diameter_uncertainty_mas": 0.014,
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5394,
+        "uncertainty_k": 62,
+        "method": "interferometry",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
+        "recommended": true
+      },
+      {
+        "value_k": 5385,
+        "uncertainty_k": 44,
+        "method": "high_res_spectroscopy",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "recommended": false
+      },
+      {
+        "value_k": 5402,
+        "uncertainty_k": 28,
+        "method": "high_res_spectroscopy",
+        "reference": "Sousa et al. 2008",
+        "bibcode": "2008A&A...487..373S",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.622,
+        "uncertainty_lsun": 0.014,
+        "method": "bolometric_flux",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "doi": "10.1088/0004-637X/800/2/115",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": -0.04,
+        "uncertainty_dex": 0.03,
+        "method": "high_res_spectroscopy",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "recommended": true
+      },
+      {
+        "value_dex": -0.06,
+        "uncertainty_dex": 0.02,
+        "method": "high_res_spectroscopy",
+        "reference": "Sousa et al. 2008",
+        "bibcode": "2008A&A...487..373S",
+        "recommended": false
+      },
+      {
+        "value_dex": -0.03,
+        "uncertainty_dex": 0.04,
+        "method": "high_res_spectroscopy",
+        "reference": "Santos et al. 2004",
+        "bibcode": "2004A&A...415.1153S",
+        "recommended": false
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7.5,
+        "uncertainty_gyr": 3.0,
+        "method": "isochrone",
+        "reference": "Tanner et al. 2015",
+        "bibcode": "2015ApJ...800..115T",
+        "recommended": true
+      },
+      {
+        "value_gyr": 5.9,
+        "method": "activity_age",
+        "reference": "Mamajek & Hillenbrand 2008",
+        "bibcode": "2008ApJ...687.1264M",
+        "recommended": false
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.999,
+        "uncertainty_log_rhk": 0.003,
+        "method": "log_rhk",
+        "reference": "Gomes da Silva et al. 2021",
+        "bibcode": "2021A&A...646A..77G",
+        "recommended": true
+      },
+      {
+        "value_log_rhk": -4.95,
+        "method": "log_rhk",
+        "reference": "Valenti & Fischer 2005",
+        "bibcode": "2005ApJS..159..141V",
+        "recommended": false
       }
     ]
   },

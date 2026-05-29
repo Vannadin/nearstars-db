@@ -24,8 +24,8 @@ Phase 3 md re-synthesis (consuming the new values) is the downstream follow-on.
 - [x] eps Eri   (K2 V) — 8 cats anchored on Baines 2012 interferometry; age divergence documented
 - [x] tau Cet   (G8.5 V) — mass/L Teixeira 2009 astero, Teff Korolik 2023 interf; old-isochrone age (inactive); rotation gyro-only (unverified)
 - [x] AU Mic    (M1 Ve) — radius divergence (Gallenne 2022 refereed 0.862 vs White unrefereed 0.75); Cristofari/Donati Teff/L, BPMG age 23 Myr, X-ray activity
-- [ ] HD 69830  (K0 V; 3 Neptunes + warm asteroid belt)  ← CURRENT
-- [ ] 61 Vir    (G7 V; solar analog, super-Earths)
+- [x] HD 69830  (K0 V) — single-anchor Tanner 2015 (CHARA interf R/Teff/L + SME/Y2 mass/age/[Fe/H]); old-age divergence ~6-10 Gyr; no rotation period (7 cats)
+- [ ] 61 Vir    (G7 V; solar analog, super-Earths)  ← CURRENT
 - [ ] Vega      (A0 V; pole-on rapid rotator, gravity darkening)
 - [ ] Fomalhaut (A4 V; young A star, eccentric ring)
 
