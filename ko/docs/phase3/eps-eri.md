@@ -66,16 +66,24 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 | `stellar_color_temp_k` | 5180 | high | Teff 유도 |
 | `visual_spot_coverage_max` | 0.10 | medium | TiO 밴드 + 회전 변조 분석 (Frohlich 2007. Roettenbacher 2016 ε Eri Doppler imaging) 에서 사이클 최대기에 디스크 5–10% 면적 |
 | `disk_present` | true | high | Greaves 1998 JCMT/SCUBA. 첫 sub-mm 검출. 수많은 후속 캠페인이 분해 |
-| `disk_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS. 중적외 excess 로부터 따뜻한 asteroid belt analog 추정. Su 2017 정련 |
-| `disk_outer_radius_au` | 64 | high | MacGregor 2015 ALMA. 차가운 링이 64.4 ± 0.5 AU 에서 분해됨. Booth 2017 Herschel/SPIRE 확인 |
-| `disk_morphology` | three-belt. ~3 AU 안쪽 asteroid analog + ~20 AU 중간 성분 + ~64 AU 차가운 Kuiper analog 링 (좁고 이심 e ≈ 0.07) | medium | Su 2017 Genie 모델 + Booth 2017 다중 belt SED 분해. 중간 성분이 가장 덜 분해됨 (medium) |
-| `disk_dust_temperature_k` | 35 (차가운 링), 150 (안쪽 belt) | high | Backman 2009 (안쪽), MacGregor 2015 (차가운 링). 둘 다 SED fit 에서 직접 |
-| `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017. 세 belt 통합 dust 질량. 불확실도는 중간 belt 입도 가정에서 옴 |
+| `disk_belts` | asteroid, intermediate, cold | medium | 3 벨트 구조. 따뜻한 asteroid analog (~3 AU) + 중간 성분 (~20 AU) + 차가운 Kuiper analog 링 (~64 AU). intermediate 가 가장 덜 분해된 층 |
+| `disk_asteroid_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS — 중적외 excess 로부터 따뜻한 asteroid belt analog (Su 2017 정련) |
+| `disk_asteroid_dust_temperature_k` | 120 | high | Backman 2009 — 안쪽 warm belt 모델 T (2026-05-29 감사: 150 에서 정정, 150 은 관측 상한) |
+| `disk_asteroid_tint_rgb_hex` | `#e8dcc8` (옅은 따뜻-중성) | low | 광학 산란광 색 없음 (벨트는 sub-mm/mm 로만 분해). eps Eri 의 K2V 주황-백색 + grain albedo 에서 합성 |
+| `disk_asteroid_opacity` | 0.25 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
+| `disk_intermediate_inner_radius_au` | 20 | medium | Greaves 2014 Herschel — 중간 dust 성분 (2026-05-29 재귀속, Booth 2017 은 69 AU 링만 분해하고 20 AU 방출 없음). 가장 덜 분해된 belt |
+| `disk_intermediate_tint_rgb_hex` | `#e4dcd0` (옅은 따뜻-중성) | low | K2V 별색 + albedo 에서 합성. 광학 색 미측정 |
+| `disk_intermediate_opacity` | 0.20 | low | Tie-break. 희미한 중간 dust, 가시성 위해 boost |
+| `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — 좁고 이심(e ≈ 0.07) 차가운 링이 64.4 ± 0.5 AU 에서 분해 (Booth 2017 Herschel 확인) |
+| `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves 차가운 링 SED |
+| `disk_cold_tint_rgb_hex` | `#dcd6cc` (옅은 따뜻-중성) | low | K2V 별색 + albedo 에서 합성. 링은 sub-mm/mm 로 분해됐고 광학 산란광으론 촬영된 적 없음 |
+| `disk_cold_opacity` | 0.30 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
+| `disk_morphology` | three-belt. ~3 AU 안쪽 asteroid analog + ~20 AU 중간 성분 + ~64 AU 차가운 Kuiper analog 링 (좁고 이심 e ≈ 0.07) | medium | Su 2017 Genie 모델 + Booth 2017 / Greaves 2014 다중 belt 분해. intermediate 가 가장 덜 분해됨 |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA. Booth 2017 Herschel/SPIRE. Su 2017 Spitzer/MIPS. 여러 파장에서 차가운 링이 분해됨 |
-| `disk_imaging_observatory` | ALMA (차가운 링 지오메트리), Herschel SPIRE (질량), Spitzer IRS/MIPS (따뜻한 성분) | high | MacGregor 2015. Booth 2017. Su 2017. Backman 2009 |
+| `disk_imaging_observatory` | ALMA (차가운 링 지오메트리), Herschel-SPIRE (질량), Spitzer-IRS/MIPS (따뜻한 성분) | high | MacGregor 2015. Booth 2017. Su 2017. Backman 2009 |
 | `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 Herschel 분해 inclination. ε Eri b 궤도면과 일관 (Roettenbacher 2022) |
+| `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017. 세 belt 통합 dust 질량 |
 | `disk_planetesimal_belt_inferred` | true | high | dust 보충 시간 척도 (~Myr) 가 각 링에 모행성체 population 을 요구. Su 2017 |
-| `disk_tint_rgb_hex` | `#bd8c5e` (35 K 의 따뜻한 sub-mm-bright 링. 산란광에서 옅은 주황-갈색 후광으로 렌더) | low | Tie-break. ALMA 연속체는 정의상 비조명. 산란광 색조는 게임 내에서 α Cen / Sol 의 행성간 산란광과 구별되도록 선택 |
 | `companion_jovian_present` | true (ε Eri b. a = 3.5 AU. M = 0.78 M_Jup) | high | Mawet 2019 직접 촬영. Llop-Sayson 2021. Roettenbacher 2022 천체측정 확정. 행성 Phase 3 은 별도 워크스페이스로 미룸 |
 
 ## Surface synthesis
@@ -208,10 +216,10 @@ asteroseismic 제약을 인코딩하지 않습니다.
 ~3 AU 의 안쪽 asteroid belt analog 가 가장 따뜻하고 가장 광학적으로
 얇으며, 옅은 따뜻한 색조의 dust 산란 층으로 렌더링됩니다. 태양
 배경과 구별되는 정도라 "여기는 만약 암석 행성이 있었다면 자리잡았을
-지점" 으로 시각적으로 식별됩니다. cfg 색조 `disk_tint_rgb_hex = #bd8c5e`
-는 윈도우 내 tie-break 입니다. ALMA 연속체는 정의상 가시광 정보가
-없으므로 산란광 색조는 오래되고 가공된 silicate-rich dust 와 일관된
-따뜻한 갈색-주황으로 기본 설정됐습니다.
+지점" 으로 시각적으로 식별됩니다. belt별 cfg 색조 (`disk_<belt>_tint_rgb_hex`, ≈ `#dcd6cc`–`#e8dcc8`)
+는 옅은 따뜻-중성, Confidence=low 입니다. eps Eri 벨트는 sub-mm/mm
+로만 분해돼 광학 산란광 색이 존재하지 않으므로, 색조는 측정값이
+아니라 K2V 주황-백색 별색 + grain albedo 에서 합성한 값입니다.
 
 ε Eri b 는 a ≈ 3.5 AU 의 Jupiter 질량 jovian 점광원으로, 안쪽
 asteroid belt 와 중간 dust 성분 사이의 갭에 박혀 있습니다. 넓은
@@ -355,14 +363,12 @@ tracer 중 하나로만 사용한 별 종족 운동학 논문 등. 전체 필터
 
 ## Open items for follow-up
 
-- **Phase 2 `disk_measurements` ingest.** DB 스키마에는 현재
-  `disk_measurements` 배열이 없으므로, 이 합성은 Backman 2009,
-  MacGregor 2015, Booth 2017 를 Phase 2 를 거치지 않고 문헌에서 직접
-  인용합니다. DB 스키마가 확장되거나 (또는 `db/disks/` 동반 디렉터리
-  가 도입되면), 삼중 belt 지오메트리는 위 cfg 픽과 일치하는
-  `recommended` 플래그가 붙은 `disk_measurements` 레코드로 ingest
-  되어야 합니다 (`disk_inner_radius_au=3`, `disk_outer_radius_au=64`,
-  `disk_morphology="three-belt"`).
+- **disk 지오메트리가 `disks_curated.json` 에 multi-belt 로 기록됨**
+  (2026-05-29 감사). eps Eri 의 asteroid + intermediate + cold 벨트가
+  별도 `belt` 항목 (Backman 2009, Greaves 2014, MacGregor 2015) 이며,
+  Decisions 표가 belt별 `disk_<belt>_*` 필드로 렌더 → belt당 Kopernicus
+  Ring 하나씩. 남은 것은 K2V 별색 기반 tie-break tint 를 대체할
+  grain-size / Mie 색 합성.
 - **ε Eri b 행성 Phase 3 후속.** jovian 동반자의 대기, 링 시스템
   가능성, 색조, 그리고 위성 population 은 이 별 합성의 범위 밖입니다.
   Mawet 2019 + Llop-Sayson 2021 + Roettenbacher 2022 와 2026–2027

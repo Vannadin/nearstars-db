@@ -69,16 +69,24 @@ star + disk + jovian point of light).
 | `stellar_color_temp_k` | 5180 | high | derived from Teff |
 | `visual_spot_coverage_max` | 0.10 | medium | TiO-band + rotational modulation analysis (Frohlich 2007; Roettenbacher 2016 Doppler imaging of ε Eri) indicates 5–10% disk coverage at cycle maximum |
 | `disk_present` | true | high | Greaves 1998 JCMT/SCUBA — first sub-mm detection; resolved by countless follow-up campaigns |
-| `disk_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS — warm asteroid-belt analog inferred from mid-IR excess; Su 2017 refinement |
-| `disk_outer_radius_au` | 64 | high | MacGregor 2015 ALMA — cold ring resolved at 64.4 ± 0.5 AU; Booth 2017 Herschel/SPIRE confirms |
-| `disk_morphology` | three-belt: inner asteroid analog at ~3 AU + intermediate population at ~20 AU + cold Kuiper-analog ring at ~64 AU (narrow, eccentric e ≈ 0.07) | medium | Su 2017 Genie model + Booth 2017 multi-belt SED decomposition; intermediate component is the least-resolved layer (medium confidence) |
-| `disk_dust_temperature_k` | 35 (cold ring); 150 (inner belt) | high | Backman 2009 (inner); MacGregor 2015 (cold ring) — both directly from SED fits |
-| `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017 — integrated dust mass across all three belts; uncertainty driven by intermediate-belt grain-size assumption |
+| `disk_belts` | asteroid, intermediate, cold | medium | Three-belt architecture: warm asteroid analog (~3 AU) + intermediate population (~20 AU) + cold Kuiper-analog ring (~64 AU); the intermediate belt is the least-resolved layer |
+| `disk_asteroid_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS — warm asteroid-belt analog from mid-IR excess (Su 2017 refinement) |
+| `disk_asteroid_dust_temperature_k` | 120 | high | Backman 2009 — inner warm belt model T (audit 2026-05-29: was 150, the observed upper bound) |
+| `disk_asteroid_tint_rgb_hex` | `#e8dcc8` (pale warm-neutral) | low | No optical scattered-light color (belts resolved only in sub-mm/mm); synthesized from eps Eri's K2V orange-white color + grain albedo |
+| `disk_asteroid_opacity` | 0.25 | low | Tie-break: optically thin in reality; boosted for visibility |
+| `disk_intermediate_inner_radius_au` | 20 | medium | Greaves 2014 Herschel — intermediate dust population (re-attributed 2026-05-29 from Booth 2017, which resolves only the 69 AU ring and finds no 20 AU emission); least-resolved belt |
+| `disk_intermediate_tint_rgb_hex` | `#e4dcd0` (pale warm-neutral) | low | Synthesized from the K2V star color + albedo; no optical color measured |
+| `disk_intermediate_opacity` | 0.20 | low | Tie-break: faint intermediate dust, boosted for visibility |
+| `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — narrow eccentric (e ≈ 0.07) cold ring resolved at 64.4 ± 0.5 AU (Booth 2017 Herschel confirms) |
+| `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves cold-ring SED |
+| `disk_cold_tint_rgb_hex` | `#dcd6cc` (pale warm-neutral) | low | Synthesized from the K2V star color + albedo; the ring is sub-mm/mm-resolved, never imaged in optical scattered light |
+| `disk_cold_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
+| `disk_morphology` | three-belt: inner asteroid analog at ~3 AU + intermediate population at ~20 AU + cold Kuiper-analog ring at ~64 AU (narrow, eccentric e ≈ 0.07) | medium | Su 2017 Genie model + Booth 2017 / Greaves 2014 multi-belt decomposition; intermediate is the least-resolved layer |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA; Booth 2017 Herschel/SPIRE; Su 2017 Spitzer/MIPS — cold ring resolved at multiple wavelengths |
-| `disk_imaging_observatory` | ALMA (cold ring geometry), Herschel SPIRE (mass), Spitzer IRS/MIPS (warm components) | high | MacGregor 2015; Booth 2017; Su 2017; Backman 2009 |
+| `disk_imaging_observatory` | ALMA (cold ring geometry), Herschel-SPIRE (mass), Spitzer-IRS/MIPS (warm components) | high | MacGregor 2015; Booth 2017; Su 2017; Backman 2009 |
 | `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 Herschel-resolved inclination; consistent with ε Eri b orbital plane (Roettenbacher 2022) |
-| `disk_planetesimal_belt_inferred` | true | high | Dust replenishment timescale (~Myr) requires parent planetesimal population at each ring; Su 2017 |
-| `disk_tint_rgb_hex` | `#bd8c5e` (warm sub-mm-bright ring at 35 K, rendered as faint orange-brown halo in scattered light) | low | Tie-break: ALMA continuum is unilluminated by definition; visible-light scattered tint chosen for in-game distinction from α Cen / Sol diffuse interplanetary glow |
+| `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017 — integrated dust mass across all three belts |
+| `disk_planetesimal_belt_inferred` | true | high | Dust replenishment timescale (~Myr) requires a parent planetesimal population at each ring; Su 2017 |
 | `companion_jovian_present` | true (ε Eri b at a = 3.5 AU, M = 0.78 M_Jup) | high | Mawet 2019 direct imaging; Llop-Sayson 2021; Roettenbacher 2022 astrometric confirmation. Planet Phase 3 deferred to separate workspace |
 
 ## Surface synthesis
@@ -226,10 +234,11 @@ inner asteroid-belt analog at ~3 AU is the warmest and most
 optically thin; rendered as a faint warm-tinted dust scattering
 layer, distinct enough from the solar background to be visually
 identifiable as "this is where the rocky planets would be if there
-were any". The cfg tint `disk_tint_rgb_hex = #bd8c5e` is a
-within-window tie-break — ALMA continuum carries no visible
-information, so the scattered-light tint defaults to a warm brown-
-orange consistent with old, processed silicate-rich dust.
+were any". The per-belt cfg tints (`disk_<belt>_tint_rgb_hex`, ≈ `#dcd6cc`–`#e8dcc8`)
+are pale warm-neutral, Confidence=low — eps Eri's belts are resolved
+only in sub-mm/mm, so no optical scattered-light color exists; the
+tints are synthesized from the K2V orange-white star color + grain
+albedo rather than measured.
 
 ε Eri b is a Jupiter-mass jovian point of light at a ≈ 3.5 AU,
 embedded in the gap between the inner asteroid belt and the
@@ -391,14 +400,12 @@ annotations.
 
 ## Open items for follow-up
 
-- **Phase 2 `disk_measurements` ingest**: the DB schema currently has
-  no `disk_measurements` array, so this synthesis cites Backman 2009,
-  MacGregor 2015, and Booth 2017 directly from the literature rather
-  than through Phase 2. When the DB schema is extended (or when a
-  `db/disks/` companion is introduced), the three-belt geometry should
-  be ingested as `disk_measurements` records with `recommended` flags
-  matching the cfg picks above (`disk_inner_radius_au=3`,
-  `disk_outer_radius_au=64`, `disk_morphology="three-belt"`).
+- **Disk geometry is multi-belt in `disks_curated.json`** (audited
+  2026-05-29): eps Eri's asteroid + intermediate + cold belts are
+  separate `belt` entries (Backman 2009, Greaves 2014, MacGregor 2015),
+  and the Decisions table renders them as per-belt `disk_<belt>_*`
+  fields → one Kopernicus Ring each. Remaining: a grain-size / Mie
+  color synthesis to replace the K2V-derived tie-break tints.
 - **ε Eri b planet Phase 3 follow-up**: the jovian companion's
   atmosphere, ring-system possibility, color tint, and any moon
   population are out of scope for this stellar synthesis. A separate
