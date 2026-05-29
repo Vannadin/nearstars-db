@@ -27,7 +27,17 @@ Phase 3 md re-synthesis (consuming the new values) is the downstream follow-on.
 - [x] HD 69830  (K0 V) — single-anchor Tanner 2015 (CHARA interf R/Teff/L + SME/Y2 mass/age/[Fe/H]); old-age divergence ~6-10 Gyr; no rotation period (7 cats)
 - [x] 61 Vir    (G7 V) — single-anchor von Braun 2014 (CHARA interf R/Teff/L + Y2 mass/age); rotation 29 d (Baliunas 1996); old-age divergence ~6-9 Gyr (8 cats)
 - [x] Vega      (A0 V) — gravity-darkened Monnier 2012 (R pol/eq, mean Teff 9360, L 47.2, age 700 Myr); P 0.71 d; NO log R'HK (A star); age divergence 455-700 Myr (7 cats)
-- [ ] Fomalhaut (A4 V; young A star, eccentric ring)  ← CURRENT
+- [x] Fomalhaut (A4 V) — single-anchor Mamajek 2012 (R/Teff/L from Absil theta_LD + age 440 Myr); NO log R'HK (A star); v sin i only, no period (6 cats)
 
-## Done
-(none yet — delta Pav was host #1, committed 8e9b4b7 before this campaign dir existed)
+## DONE — all 7 Tier 1 inversion hosts complete (2026-05-30)
+Plus delta Pav (host #1, committed 8e9b4b7 before this campaign dir existed) = 8 total.
+Commits: eps-eri 78bff2a, tau-cet 5ab9bff, au-mic 82a6167, hd-69830 b46d98d,
+61-vir 23c24a4, vega d757cf7, fomalhaut (this commit).
+Every host: arxiv-pinned bib, cache/VizieR value-check, schema gate, systems
+rebuilt (date-churn reverted), one commit. The Phase-3-on-Phase-1 inversion is
+resolved for all stellar hosts.
+
+## Remaining downstream (NOT Tier 1)
+- Phase 3 md re-synthesis consuming the new measured values (the 7 hosts' Phase 3
+  narratives still reflect pre-Phase-2 inputs where they exist).
+- Disk Mie/grain-size color synthesis (separate follow-on from the disk detour).

@@ -167,6 +167,35 @@ section.
   unverified). Rotating evolutionary tracks (Geneva/BASTI) -> use method
   'isochrone'. Caught by validate.py (FAIL 2), fixed.
 
-## Fomalhaut
-(next -- A4/A3 V, young ~440 Myr, eccentric debris ring; interferometric radius
-likely (CHARA/Di Folco), age from MG/debris; another A-star, NO log R'HK)
+## Fomalhaut (DONE 2026-05-30)
+- Single-anchor Mamajek 2012 (cached 1206.6353) for mass/R/Teff/L/age, all
+  cache-verified (text + Table 2): mass 1.92, R 1.842, Teff 8590, L 16.63, age
+  440 Myr. Radius/Teff use Absil 2009 (cached 0908.3133) excess-corrected theta_LD
+  2.223 mas -> fixed the existing DB radius attribution (was wrongly credited to
+  Di Folco 2004; the 1.842 value is Mamajek's derived R).
+- Radius/Teff DIVERGENCE: Davis 2005 (no arXiv) R 1.744 / Teff 8819 (uncorrected
+  for circumstellar excess) -- documented, Absil/Mamajek preferred.
+- [Fe/H] = Dunkin 1997 -0.03 (near-solar; A-star spectroscopic [Fe/H] scattered,
+  Mamajek assumes protosolar). Rotation: only v sin i ~93 km/s -> not recorded
+  (the 10.3 d is the K-dwarf companion). Activity: none (A star). 6 categories.
+- Unlike Vega, Fomalhaut is a NORMAL A-rotator (mild gravity darkening) so single
+  Teff/R are fine.
+
+## CAMPAIGN COMPLETE (2026-05-30) -- all 7 Tier 1 hosts done
+- Pattern that worked: per host, one research subagent gathers candidate anchors
+  (bibcode+arxiv_id+value+location) -> main thread pins bib, fetches to cache,
+  value-checks every recommended number against the cached text or the named
+  VizieR catalog row -> writes the 8-category entry with documented divergences
+  -> schema gate -> build_systems (revert date-churn) -> one commit.
+- Recurring science patterns: (1) interferometry+SED single-paper anchors are the
+  cleanest (HD 69830/Tanner, 61 Vir/von Braun, Fomalhaut/Mamajek). (2) Age is the
+  usual divergence -> pick the method consistent with activity+rotation (young for
+  active eps Eri/AU Mic, old for inactive tau Cet/HD 69830/61 Vir). (3) A-stars
+  (Vega, Fomalhaut) have NO log R'HK by physics -> activity left empty, correct.
+  (4) Catalog/survey papers carry per-star values in VizieR, not the ar5iv body.
+  (5) Fame-traps avoided: Boyajian 2012 lacks eps Eri & 61 Vir; Suarez Mascareno
+  lacks tau Cet; NEXXUS lacks AU Mic; White 2019 (AU Mic R) is an unrefereed AAS
+  abstract. (6) build_systems date-stamp churns all 151 files on a day rollover --
+  stage only the target, restore the rest.
+- Schema reminders learned: age method has NO 'evolutionary_model' (use isochrone);
+  rotation has no km/s value key (v sin i only -> don't record a period).

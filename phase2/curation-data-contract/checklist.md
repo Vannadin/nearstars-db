@@ -47,11 +47,17 @@ it → run A/B/C**.
       eps Eri (1ef2224); science-faithful tints (cf265c7)
 - Valuable but a DETOUR from the original Tier 1 goal.
 
-## REMAINING — original Tier 1 goal (the inversion fix, NOT yet done)
-Build Phase 2 STELLAR measurements (8 categories) for the other 7 inversion hosts,
-one at a time under the contract. Their DISKS are now clean, but their stellar
-Phase 3 still sits on Phase 1:
-- eps Eri · AU Mic · HD 69830 · 61 Vir · Vega · Fomalhaut · tau Cet
+## Tier 1 — COMPLETE (2026-05-30)
+Built Phase 2 STELLAR measurements for all 7 remaining inversion hosts, one at a
+time under the contract (see phase2/tier1-stellar/ for the campaign log). Each:
+arxiv-pinned bib + cache/VizieR value-check + schema gate + systems rebuild + commit.
+- eps Eri 78bff2a · tau Cet 5ab9bff · AU Mic 82a6167 · HD 69830 b46d98d ·
+  61 Vir 23c24a4 · Vega d757cf7 · Fomalhaut (final)
+Plus delta Pav (host #1, 8e9b4b7) = 8 hosts. The Phase-3-on-Phase-1 inversion is
+resolved across all stellar hosts.
+
+Downstream (separate from Tier 1): Phase 3 md re-synthesis on the new values;
+disk Mie/grain-size color synthesis.
 
 ## Discipline (non-negotiable, from root-cause)
 - One host at a time. No parallel subagent batch until a verified template exists.

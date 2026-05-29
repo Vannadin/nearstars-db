@@ -1,0 +1,43 @@
+host: Fomalhaut
+slug: fomalhaut
+generated_at: '2026-05-30'
+note: 'Phase 2 anchor bibliography for Fomalhaut (alpha PsA, HD 216956, A3/A4 V; eccentric debris ring, wide triple) — Tier
+  1 stellar inversion fix. Mass/radius/ Teff/luminosity/age all anchored on Mamajek 2012, the dedicated age paper that also
+  re-derives the fundamental parameters: mass 1.92 (isochrone), R 1.842 (interferometry, theta_LD 2.223 mas from Absil 2009
+  which removes the resolved hot-dust K-band excess), Teff 8590, L 16.63 (bolometric, Davis f_bol + revised parallax), age
+  440 +/- 40 Myr (isochrone of A + gyro/Li/X-ray of the companion TW PsA). RADIUS/Teff DIVERGENCE: Davis 2005 gives R 1.744
+  / Teff 8819 because it did NOT subtract the circumstellar excess -> Absil/Mamajek corrected values preferred. [Fe/H] near-solar
+  (Mamajek assumes protosolar; Dunkin 1997 measured -0.03; A-star spectroscopic [Fe/H] is scattered/unreliable). Rotation:
+  only v sin i ~93 km/s (Royer 2007), NO measured period for the A-star (the 10.3 d is the K-dwarf companion) -- not recorded.
+  NO log R''HK (A star); no standalone X-ray detection of the A primary.'
+papers:
+- arxiv_id: '1206.6353'
+  ads_bibcode: 2012ApJ...754L..20M
+  title: Mamajek 2012 — fundamental params + age 440 Myr (PRIMARY ANCHOR mass/R/Teff/L/age)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0908.3133'
+  ads_bibcode: 2009ApJ...704..150A
+  title: Absil et al. 2009 — VLTI/VINCI theta_LD 2.223 mas (excess-corrected; radius input) + v sin i 93
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0610785
+  ads_bibcode: 2007A&A...463..671R
+  title: Royer et al. 2007 — A-star v sin i compilation, Fomalhaut ~93 km/s (rotation context)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2005AN....326...25D
+  title: Davis et al. 2005 — SUSI interferometry R 1.744 / Teff 8819 (uncorrected; alt, no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 1997MNRAS.286..604D
+  title: Dunkin et al. 1997 — high-res spectroscopy [Fe/H] -0.03 (alt; no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
