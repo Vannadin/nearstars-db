@@ -216,6 +216,8 @@ attaches to a planet body). Mapping to Kopernicus Ring fields in
 [`mod-grounded-fields.md`](mod-grounded-fields.md) § "Circumstellar
 disk".
 
+**Single-belt (default — most hosts).** Use the unsuffixed fields:
+
 - `disk_present` (bool)
 - `disk_inner_radius_au` (float, AU from star center)
 - `disk_outer_radius_au` (float, AU)
@@ -228,6 +230,32 @@ disk".
 - `disk_imaging_inclination_deg` (float; orbital-plane inclination from imaging, only if resolved)
 - `disk_mass_mearth` (float, M⊕; total dust mass if estimated)
 - `disk_planetesimal_belt_inferred` (bool; true if dust replenishment requires a parent body belt)
+
+**Multi-belt (Vega / Fomalhaut / eps Eri class).** When `db/disks_curated.json`
+holds more than one `belt` for the host, the disk renders as one Kopernicus
+`Ring` per belt. Keep `disk_present=true` as the gate, add `disk_belts`, and emit
+a **belt-keyed** copy of the per-belt fields — `disk_<belt>_<field>`, where
+`<belt>` is the `disks_curated` belt name normalized to one token
+(`main_cold`→`cold`, `inner_warm`→`warm`, `asteroid_analog`→`asteroid`,
+`intermediate`→`intermediate`):
+
+- `disk_present` (bool — true if any belt exists)
+- `disk_belts` (prose, ordered inner→outer, e.g. `warm, cold` or `asteroid, intermediate, cold`)
+- per belt `<b>`: `disk_<b>_inner_radius_au`, `disk_<b>_outer_radius_au`,
+  `disk_<b>_dust_temperature_k`, `disk_<b>_tint_rgb_hex`, `disk_<b>_opacity`,
+  `disk_<b>_morphology`, `disk_<b>_resolved_imaging`,
+  `disk_<b>_imaging_inclination_deg`, `disk_<b>_mass_mearth`
+- `disk_imaging_observatory` and `disk_planetesimal_belt_inferred` may stay
+  unsuffixed (system-level) or be given per belt if they differ
+
+The geometry (inner/outer/temp/inclination/mass) of each belt comes from that
+belt's `recommended:true` `disks_curated` entry (with the multi-paper merge
+fallback in mod-grounded-fields). Phase 3 adds only the cfg-ready aesthetic
+fields per belt — `disk_<b>_tint_rgb_hex` (from that belt's dust temperature +
+composition) and `disk_<b>_opacity` (from its optical depth). A warm
+asteroid-belt analog reads redder/brighter than a cold Kuiper analog, so the
+per-belt tints differ. A single-belt host uses the unsuffixed form above; do
+not emit empty belt-keyed fields.
 
 Source priority for disk fields:
 

@@ -159,7 +159,7 @@ measured input; P3-synth = synthesized (no measurement possible for exoplanets).
 | Magnetic field | magnetic_field_strength_microtesla_equator, magnetic_dipole_moment_normalized_earth, magnetic_dipole_tilt_deg | P3-synth (dynamo scaling) | Kerbalism |
 | Radiation / belts | radiation_belt_present, radiation_inner/outer_belt_radius_planet_radii, surface_radiation_dose_msv_yr, atmospheric_shielding_g_cm2 | P3-synth | Kerbalism |
 | Aurora | aurora_present (← atmosphere AND non-zero B), aurora_color_primary/secondary_hex, aurora_emission_species_primary, aurora_oval_magnetic_latitude_deg, aurora_intensity_kR_typical, aurora_visibility_fraction_year | P3-synth | EVE (local emitter) |
-| Rings & disks | (a) planetary ring `ring_*` (7) (b) circumplanetary disk `circumplanetary_disk_*` (5) (c) circumstellar disk `disk_*` (12) | only (c) → `disks_curated` | Kopernicus Ring |
+| Rings & disks | (a) planetary ring `ring_*` (7) (b) circumplanetary disk `circumplanetary_disk_*` (5) (c) circumstellar disk `disk_*` (12); multi-belt hosts use per-belt `disk_<belt>_*` → one Kopernicus `Ring` per belt | only (c) → `disks_curated` (per-belt) | Kopernicus Ring(s) |
 | Sky from surface | star_apparent_angular_diameter_deg, stellar_illumination_color_temp_k | star+orbit synth | Kopernicus/Scatterer |
 | Stellar physical | spectral_type, mass_msun, radius_rsun, teff_k, luminosity_lsun, metallicity_fe_h_dex, age_gyr | stellar 7 of 8 | Kopernicus |
 | Stellar activity | rotation_period_days, activity_log_rhk, activity_cycle_years, x_ray_log_lx_cgs_min/max, limb_darkening_alpha_h, flare_rate_per_day, flare_energy_log_erg_max | stellar rotation+activity | Firefly/EVE |

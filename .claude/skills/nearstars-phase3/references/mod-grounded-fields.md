@@ -132,6 +132,20 @@ Default Ring fields emitted with fixed values (per `gas-giant.md` § Rings templ
 
 **Multi-paper geometry merge**: when the `recommended: true` entry per belt has a null field (e.g. Su 2013 warm component lacks `outer_radius_au`; Sibthorpe 2010 supplies it from resolved imaging), the emitter falls back to non-recommended same-belt entries to fill null fields. The recommended entry stays canonical for its non-null fields.
 
+**Multi-belt → one `Ring` per belt.** When the host has more than one belt
+(Phase 3 `disk_belts` lists them; `disks_curated` has >1 distinct `belt`), emit
+**one `Ring { ... }` node per belt inside the single `Rings { }` block**, reading
+that belt's keyed fields. The table above applies per belt:
+`disk_<belt>_inner_radius_au` → that Ring's `innerRadius`,
+`disk_<belt>_outer_radius_au` → `outerRadius`,
+`disk_<belt>_tint_rgb_hex` + `disk_<belt>_opacity` → that Ring's `color` (RGBA),
+`disk_<belt>_imaging_inclination_deg` → `angle`. Each belt keeps its own tint, so
+a warm inner belt and a cold outer belt render distinctly. Order the `Ring` nodes
+inner→outer; each belt's geometry comes from its own `recommended:true`
+`disks_curated` entry (same per-belt merge as above). A single-belt host emits one
+`Ring` from the unsuffixed `disk_*` fields (unchanged). Texture paths stay per
+belt: `…/PluginData/<star>/disk_<belt>.dds`.
+
 Source priority for disk geometry:
 
 1. ALMA / VLT-SPHERE / HST-STIS resolved imaging — gives
