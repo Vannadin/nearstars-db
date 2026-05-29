@@ -31,13 +31,13 @@ Vega 에는 확정된 행성이 없습니다. 가장 깊은 RV 탐색 (Hunsch & 
 | `disk_warm_inner_radius_au` | 14 ± 2 | medium | Su 외 2013 — ~14 AU 따뜻한 소행성대 유사 내부 띠 (Spitzer-IRS + Herschel-PACS) |
 | `disk_warm_dust_temperature_k` | 170 | medium | Su 외 2013 두 성분 SED — 따뜻한 dust 분포 |
 | `disk_warm_mass_mearth` | 0.0003 | medium | Su 외 2013 — 따뜻한 띠 dust 질량 |
-| `disk_warm_tint_rgb_hex` | `#f0d0a0` (따뜻한 amber, 더 뜨거운 내부 띠) | low | Tie-break. 170 K 가공된 규산염 grain 이 A0V 빛을 차가운 외부 띠보다 더 따뜻하게 산란. 무채색 대신 interesting-first |
+| `disk_warm_tint_rgb_hex` | `#dde3ed` (옅은 청백색) | low | 광학 산란광 색 미측정 (Vega 벨트는 열복사 IR/mm 로만 분해됨). Vega 의 A0V 청백색 + grain albedo 에서 합성. 큰 잔해 입자는 거의 중성으로 산란해 벨트가 별색에 가깝게 보임 |
 | `disk_warm_opacity` | 0.02 | low | Tie-break. τ ~ 10⁻⁴ (Su 2013); 희미하지만 보이는 값으로 boost |
 | `disk_cold_inner_radius_au` | 110 ± 9 | medium | Su 외 2013 — 차가운 카이퍼대 유사 내부 가장자리 ~110 AU (2026-05-29 감사: 62 에서 정정) |
 | `disk_cold_outer_radius_au` | 200 ± 20 | medium | Sibthorpe 외 2010 (`2010A&A...518L.130S`) Herschel-PACS — 차가운 띠가 ~200 AU 까지 확장 |
 | `disk_cold_dust_temperature_k` | 50 | medium | Su 외 2013 — 차가운 dust 분포 |
 | `disk_cold_mass_mearth` | 0.013 | medium | Su 외 2013 — 차가운 띠 dust 질량. 모천체 질량은 훨씬 크지만 미관측 |
-| `disk_cold_tint_rgb_hex` | `#d8d8e4` (희미한 차가운 회색, 얼음 외부 띠) | low | Tie-break. 50 K 얼음 grain 이 A0V 빛을 따뜻한 띠보다 더 푸르고 희미하게 산란. interesting-first |
+| `disk_cold_tint_rgb_hex` | `#d6deec` (옅은 청백색) | low | 광학 산란광 색 미측정 (열복사 IR/mm 만). Vega 의 A0V 청백색 + albedo 에서 합성. 두 벨트는 색조가 아니라 반지름/밝기로 구분 |
 | `disk_cold_opacity` | 0.06 | low | Tie-break. τ ~ 10⁻⁴ (Su 2013); 가시성 위해 boost. 보수적 값은 Open items 에 |
 | `disk_morphology` | 두 띠. ~14 AU 따뜻한 소행성대 유사 + ~110–200 AU 차가운 카이퍼대 유사 + cleared gap (14→110 AU) = 행성소체 휘젓는 행성 함의 | high | Su 외 2013 두 성분 SED + Spitzer-MIPS 영상. Cleared gap 이 Vega 의 가장 강한 간접 행성 증거 |
 | `disk_resolved_imaging` | true | high | Holland 1998 SCUBA 850 μm (`1998Natur.392..788H`); Wilner 2002 OVRO 1.3 mm; Su 2013 Spitzer-MIPS; Sibthorpe 2010 Herschel-PACS; Hughes 2012 ALMA |
@@ -81,7 +81,7 @@ Vega 는 고전 line broadening 측정 (Gulliver 외 1994) 에서 v_eq sin i = 2
 - **표면 디테일.** 입상 구조 없음, 흑점 없음, faculae 없음. 지배적인 가시 특징은 2250 K 극-적도 온도 기울기. 시야 중심 근처의 찬란한 `#cfe0ff` 가 적도 limb 근처의 `#e8e2d6` 로 페이드. 전환은 매끄럽고 (선명한 경계 없음) pole-on 관측자에게는 거의 축대칭.
 - **극/적도 특징.** Petit 2010 의 옅은 ZDI 극 자기 spot — 현 cfg 에서는 미렌더링이지만 Open items 의 확장 후보.
 - **대기 haze.** 없음. A형은 채층이 없고, limb 가 부드러운 haze 띠 없이 깨끗하게 잘림.
-- **잔해 원반 시각 (간판 특징).** Vega 는 IRAS 원형 잔해 원반이고 cfg 는 이를 거리에서 시스템의 시각적 지배 요소로 묘사. 원반은 두 개의 구분된 성분을 가진 정면 luminous 구조로 렌더링됩니다. ~14 AU 의 내부 따뜻한 띠는 `#f0d0a0` 의 따뜻한 amber (170 K dust 의 산란광) 로 빛나는 옅고 좁은 환형, 궤도 뷰 zoom 에서는 본질적으로 비가시이고 플레이어가 내부 시스템에 접근할 때 보이기 시작; 14–110 AU 의 cleared gap 은 미발견 행성소체-휘젓는 행성이 존재해야 할 위치를 시각적으로 식별하는 빈 환형 — cfg 가 Vega 의 "잃어버린 행성" 을 가장 강력하게 암시; 110–200 AU 의 외부 차가운 띠는 주된 시각 요소, `#d8d8e4` 희미한 차가운 회색 톤 (50 K 얼음 dust 의 산란광 proxy 색), opacity 0.06, Sibthorpe 2010 morphology 따라 외부보다 내부 가장자리가 더 선명한 정면 밝은 ring — IRAS 가 발견한 구조이자 cfg 의 "당신은 Vega 에 있다" 단서.
+- **잔해 원반 시각 (간판 특징).** Vega 는 IRAS 원형 잔해 원반이고 cfg 는 이를 거리에서 시스템의 시각적 지배 요소로 묘사. 원반은 두 개의 구분된 성분을 가진 정면 luminous 구조로 렌더링됩니다. ~14 AU 의 내부 따뜻한 띠는 옅은 청백색 `#dde3ed` (중성 입자에 산란된 A0V 별빛) 로 빛나는 옅고 좁은 환형, 궤도 뷰 zoom 에서는 본질적으로 비가시이고 플레이어가 내부 시스템에 접근할 때 보이기 시작; 14–110 AU 의 cleared gap 은 미발견 행성소체-휘젓는 행성이 존재해야 할 위치를 시각적으로 식별하는 빈 환형 — cfg 가 Vega 의 "잃어버린 행성" 을 가장 강력하게 암시; 110–200 AU 의 외부 차가운 띠는 주된 시각 요소, 옅은 청백색 `#d6deec` 톤 (산란된 A0V 별빛; 광학 색 미측정), opacity 0.06, Sibthorpe 2010 morphology 따라 외부보다 내부 가장자리가 더 선명한 정면 밝은 ring — IRAS 가 발견한 구조이자 cfg 의 "당신은 Vega 에 있다" 단서.
 - **별이 하늘에서 보이는 모습 (1 AU 의 가상 내부 행성에서).** 각 지름 ≈ 2 · R_eq / a · (180·60/π) ≈ 0.087° (~5.2 arcmin) — 지구에서 본 태양의 ~16% 각 크기이지만 단위 면적당 ~7 배 밝음 (Teff 비율)^4. 조명 색온도 ~9700 K 는 약간 푸른 daylight 로 렌더링 — sunlight 가 태양 참조 대비 눈에 띄게 더 푸른 톤.
 - **가상 내부 행성에서 본 원반.** 110–200 AU 의 외부 띠가 정면 ring 으로 하늘에서 ~30° 에서 ~90° 까지 차지 — NearStars 에서 가장 시각적으로 두드러진 특징 중 하나인 striking 한 야간 "Vega ring". Pole-on 기하 덕에 ring 이 edge-on streak 가 아니라 진짜 ring (완전 환형) 으로 보입니다.
 - **자매 행성이 하늘에서.** 확정 없음. cfg 에 Vega 의 행성 body 없음. Su 2013 의 gap-clearer 행성이 미래 cfg variant 에 추가되면 내부 시스템 점광원으로 등장할 예정.

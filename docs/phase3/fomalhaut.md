@@ -72,16 +72,16 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `disk_belts` | warm, intermediate, cold | high | Gáspár et al. 2023 JWST/MIRI resolves a three-belt architecture: inner warm + intermediate + the classic eccentric cold main ring (Kalas 2005 / Boley 2012 / White 2017) |
 | `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 (`2023NatAs...7..790G`) JWST/MIRI — inner warm belt inner edge |
 | `disk_warm_outer_radius_au` | 90 | high | Gáspár et al. 2023 — inner warm belt outer extent |
-| `disk_warm_tint_rgb_hex` | `#f0d0a0` (warm amber, hot inner belt) | low | Tie-break: hot inner dust scatters A-star light with a warmer cast than the cold ring; interesting-first |
+| `disk_warm_tint_rgb_hex` | `#dedede` (pale neutral white) | low | JWST/MIRI mid-IR only — no optical scattered-light color; synthesized from Fomalhaut's A3V white color + grain albedo |
 | `disk_warm_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_intermediate_inner_radius_au` | 60 | high | Gáspár et al. 2023 JWST/MIRI — intermediate belt inner edge |
 | `disk_intermediate_outer_radius_au` | 110 | high | Gáspár et al. 2023 — intermediate belt outer edge |
-| `disk_intermediate_tint_rgb_hex` | `#e0cca8` (buff, between warm and cold) | low | Tie-break: intermediate tone between the inner warm and outer cold belts |
+| `disk_intermediate_tint_rgb_hex` | `#d8d8da` (pale neutral) | low | Mid-IR only — no optical color; synthesized from the A3V white star + albedo |
 | `disk_intermediate_opacity` | 0.25 | low | Tie-break: faint intermediate dust, boosted for visibility |
 | `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — main ring inner edge after eccentric-orbit deprojection |
 | `disk_cold_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — main ring outer edge |
 | `disk_cold_dust_temperature_k` | 65 | high | Stapelfeldt 2004 Spitzer; Acke 2012 Herschel SED-fit of the cold component |
-| `disk_cold_tint_rgb_hex` | `#c8ccd4` (cool grey, 65 K cold ring) | low | Tie-break: 65 K icy dust reads cooler than the inner belts; the showpiece eccentric ring |
+| `disk_cold_tint_rgb_hex` | `#d6d8da` (near-neutral grey-white) | medium | MEASURED: Kalas 2005 HST/ACS + Acke 2012 — faint, low-albedo (~0.05–0.1), large grains → near-neutral/gray scattered light close to the A3V white star (the "blue Fomalhaut" is the planet candidate, not the ring) |
 | `disk_cold_opacity` | 0.35 | low | Tie-break: optically thin in reality (τ ≈ 10⁻⁴); boosted for visibility per interesting-first |
 | `disk_morphology` | three-belt eccentric architecture: warm inner belt (~10–90 AU) + intermediate belt (~60–110 AU) + the classic eccentric cold main ring (133–158 AU, sharp inner edge) | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST/MIRI — full multi-belt architecture |
 | `disk_resolved_imaging` | true | high | HST/ACS (Kalas 2005), ALMA (Boley 2012, White 2017), JWST/MIRI (Gáspár 2023) |
@@ -218,9 +218,10 @@ from any inner-system planet, the 133–158 AU main ring forms a
 e ≈ 0.11 producing a visible offset of the star from the ring
 center — 14 AU offset, easily visible in any wide-field view). The
 cold main ring is rendered as its own Kopernicus `Ring` with
-`disk_cold_tint_rgb_hex = #c8ccd4` — a cool grey representing the
-~65 K dust re-scattering A-star light; the inner warm (`#f0d0a0`) and
-intermediate (`#e0cca8`) belts render as separate Rings inside the
+`disk_cold_tint_rgb_hex = #d6d8da` — a near-neutral grey-white
+(measured: Kalas 2005 low-albedo large-grain scattering) from ~65 K dust
+re-scattering A-star light; the inner warm (`#dedede`) and
+intermediate (`#d8d8da`) belts render as separate Rings inside the
 same `Rings {}` block. The `disk_cold_opacity = 0.35` is a tie-break
 boost from the physical optical depth (~10⁻⁴) to ensure the ring
 reads as visible in-game rather than as a numerical artifact.
