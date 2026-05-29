@@ -1,0 +1,49 @@
+host: 40 Eridani A
+slug: 40-eridani-a
+generated_at: '2026-05-29'
+note: 'A-lite retrofit bibliography. 40 Eri A Phase 3 was synthesized without a _bib (live web search), so this pins the cited
+  + recommended-anchor papers by arxiv_id for the convergent _papers cache. Verified clean 2026-05-29.
+
+  '
+papers:
+- arxiv_id: '1807.07098'
+  ads_bibcode: 2018MNRAS.480.2411M
+  title: Ma et al. 2018 — mass (Torres relation) + isochrone age anchor
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1208.2431'
+  ads_bibcode: 2012ApJ...757..112B
+  title: Boyajian et al. 2012 — CHARA interferometry, R/Teff/L anchor
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1801.03970'
+  ads_bibcode: 2018AJ....155..126D
+  title: Diaz et al. 2018 — SPECIES [Fe/H] + mass cross-check
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2404.17494'
+  ads_bibcode: 2024AJ....167..243B
+  title: Burrows et al. 2024 — NEID rotation period ~42 d, HD 26965 b refutation
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1709.00478'
+  ads_bibcode: 2017ApJ...848...16B
+  title: Bond et al. 2017 — 40 Eri B WD IFMR system age (divergence alt)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2004.02343'
+  ads_bibcode: 2020MNRAS.493.2377R
+  title: Rains et al. 2020 — VLTI/PIONIER angular diameter (R/Teff/L alternative)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2011A&A...531A...8J
+  title: Jenkins et al. 2011 — log R'HK activity (VizieR catalog, no ar5iv)
+  status: skipped
+  category: manual_followup

@@ -31,9 +31,12 @@ it → run A/B/C**.
 - [x] check.sh → all pass, 0 FAIL (only 2 pre-existing stale-mirror WARN, unrelated)
 
 ## Step 3 — A/B/C
-- [ ] **A** — retrofit 40 Eri `_bib` (pin the 9 verified papers by arxiv_id +
-      cache) → lock the clean host as canonical template, demonstrate convergence
-- [ ] **B** — surface cleanup folded into Step 2; confirm check.sh green
+- [x] contract dir committed (542fb6a) — protects the foundation
+- [x] 40 Eri A mass label SUSPECT fixed (76c9fc2) — multi-layer, empirical_relation
+- [x] **A** (A-lite) — authored 40-eridani-{a,b,c}.yaml pinning cited+anchor papers;
+      fetch validated all 20 arxiv_ids resolve (0 failed) + cached to _papers.
+      Caught Ma 2018 + Boyajian 2012 (primary anchors) lacking inline arxiv pins.
+- [x] **B** — surface cleanup folded into Step 2 (7d6a855); check.sh green
 - [ ] **C** — Tier 1: delta-pavonis Phase 2 from Rains 2020 anchor, full SPEC
       discipline, single host, check.sh gate, then decide expansion
 

@@ -1,0 +1,68 @@
+host: 40 Eridani C
+slug: 40-eridani-c
+generated_at: '2026-05-29'
+note: 'A-lite retrofit bibliography (see 40-eridani-a.yaml). 40 Eri C (M4.5 Ve flare star DY Eri) cited + anchor papers pinned
+  by arxiv_id for the convergent cache.
+
+  '
+papers:
+- arxiv_id: '1707.03635'
+  ads_bibcode: 2017AJ....154..200M
+  title: Mason, Hartkopf & Miles 2017 — dynamical mass from B-C orbit
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1501.01635'
+  ads_bibcode: 2015ApJ...804...64M
+  title: Mann et al. 2015 — M dwarf R/Teff/[Fe/H] calibration (anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2007.15077'
+  ads_bibcode: 2020A&A...642A.115C
+  title: Cifuentes et al. 2020 — CARMENES bolometric luminosity
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1709.00478'
+  ads_bibcode: 2017ApJ...848...16B
+  title: Bond et al. 2017 — system-coeval age (from 40 Eri B WD)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2401.09550'
+  ads_bibcode: 2024A&A...684A...9S
+  title: Shan et al. 2024 — context
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1404.5292'
+  ads_bibcode: 2014ApJ...787L..29K
+  title: Kervella et al. 2014 — mass context
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1602.09142'
+  ads_bibcode: 2016ApJ...820...89F
+  title: context
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1611.04857'
+  ads_bibcode: 2017AJ....154..224N
+  title: Newton et al. 2017 — MEarth M dwarf rotation context
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1711.06576'
+  ads_bibcode: 2018A&A...612A..49R
+  title: Reiners et al. 2018 — CARMENES M dwarf sample context
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1903.06803'
+  ads_bibcode: 2019A&A...623A..44S
+  title: context
+  status: fetched
+  category: skim
+  fetch_error: null
