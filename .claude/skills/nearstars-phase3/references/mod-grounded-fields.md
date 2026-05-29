@@ -147,7 +147,7 @@ Source priority for disk geometry:
 
 **Texture path convention** (deferred to the texture pipeline per
 the open question in
-[`phase3/kopernicus-emit-workspace/context-notes.md`](../../../phase3/kopernicus-emit-workspace/context-notes.md)):
+[`phase3/kopernicus-emit-workspace/context-notes.md`](../../../../phase3/kopernicus-emit-workspace/context-notes.md)):
 emit a placeholder path string under
 `GameData/NearStarsSystem/PluginData/<star>/disk_<variant>.dds` and
 log the missing-asset entry. Module Manager won't fail to load with
@@ -162,7 +162,7 @@ as Circumstellar disk; different parent body and different field
 prefix.
 
 Field names match the sidecar yaml defined in
-[`phase3/kopernicus-emit-workspace/context-notes.md`](../../../phase3/kopernicus-emit-workspace/context-notes.md)
+[`phase3/kopernicus-emit-workspace/context-notes.md`](../../../../phase3/kopernicus-emit-workspace/context-notes.md)
 so the emitter can read Phase 3 Decisions directly without a sidecar
 yaml indirection.
 

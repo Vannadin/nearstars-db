@@ -329,4 +329,4 @@ cfg 결정에 영향이 없습니다. Mt. Wilson HK 서베이 노트 (Wright 200
 
 - [methodology](../reference/methodology.md) — Decisions 표 스키마의 원본.
 - [alpha-centauri-a](alpha-centauri-a.md) — G2V 비교 anchor (5847 K cream-white vs δ Pav 의 5604 K amber-cream).
-- [conflict-resolution](../../.claude/skills/nearstars-phase3/references/conflict-resolution.md) — 시각 색조와 corona extent 픽에 사용된 tie-break 정책.
+- [conflict-resolution](../../../.claude/skills/nearstars-phase3/references/conflict-resolution.md) — 시각 색조와 corona extent 픽에 사용된 tie-break 정책.

@@ -33,7 +33,7 @@ done
 for d in phase3/*/; do
   name=$(basename "$d")
   case "$name" in
-    _*|html-pipeline|stability-sim|generic-driver|kopernicus-emit-workspace) ;;  # allowlist
+    _*|html-pipeline|stability-sim|generic-driver|kopernicus-emit-workspace|circumstellar-disk-schema) ;;  # allowlist
     *[-]*) echo "  [FAIL] phase3 non-snake_case system dir: $name"; fail=1 ;;
   esac
 done

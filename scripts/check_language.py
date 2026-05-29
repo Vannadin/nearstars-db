@@ -42,6 +42,9 @@ EXCLUDE_GLOBS = ("**/_papers/**", "**/_archive/**")
 # 의도된 한글 영역 (사용자 명시 allowlist)
 ALLOWLIST_GLOBS = (
     "phase3/_audit/*.md",
+    # Korean-by-intent recovery/handoff notes (preserved as written).
+    "phase2/2026-05-28-tier1-postmortem.md",
+    "phase2/2026-05-29-next-session-prompt.md",
 )
 
 
