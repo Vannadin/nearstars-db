@@ -1,0 +1,67 @@
+host: AU Mic
+slug: au-mic
+generated_at: '2026-05-30'
+note: 'Phase 2 anchor bibliography for AU Mic (HD 197481, M1 Ve, ~22 Myr Beta Pic moving group flare star) — Tier 1 stellar
+  inversion fix. RADIUS DIVERGENCE: the community-standard 0.75 Rsun is from White et al. 2019 (AAS conference abstract, unrefereed,
+  no arXiv); the only refereed interferometric radius is Gallenne 2022 VLTI/PIONIER (theta_LD 0.825 mas -> R 0.862 +/- 0.052),
+  recommended per the contract refereed-interferometry priority. Mass = Plavchan 2020 PMS isochrone 0.50 (community standard;
+  Donati 2023 isochronal 0.60 alt). Teff = Donati 2023 / Cristofari 2023 SPIRou 3665 K. Luminosity = Donati 2023 logL -0.99
+  (Plavchan ~0.09 alt). Age = Mamajek & Bell 2014 Beta Pic MG 23 +/- 3 Myr (association isochrone + LDB). [M/H] = Cristofari
+  2023 +0.12 (~solar). Rotation = Plavchan 2020 TESS 4.863 d. Activity = Tsikoudi & Kellett 2000 ROSAT Lx 2.24e29 erg/s (near
+  saturation, log Lx/Lbol ~ -3); strong field <B> 2.61 kG (Donati 2023). NEXXUS (Schmitt & Liefke 2004) does NOT contain AU
+  Mic (G/K sample) -- not used.'
+papers:
+- arxiv_id: '2006.13248'
+  ads_bibcode: 2020Natur.582..497P
+  title: Plavchan et al. 2020 — TESS planet b discovery; M 0.50, R 0.75, Teff 3700, Prot 4.863 (RECOMMENDED mass+rotation)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2207.04116'
+  ads_bibcode: 2022A&A...665A..41G
+  title: Gallenne et al. 2022 — VLTI/PIONIER interferometry, theta_LD 0.825 mas -> R 0.862 (RECOMMENDED radius, only refereed)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2304.09642'
+  ads_bibcode: 2023MNRAS.525..455D
+  title: Donati et al. 2023 — SPIRou Teff 3665, logL -0.99, mass 0.60, Prot 4.856, <B> 2.61 kG (RECOMMENDED teff+lum)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2303.11241'
+  ads_bibcode: 2023MNRAS.522.1342C
+  title: Cristofari et al. 2023 — SPIRou atmospheric fit [M/H] +0.12, Teff 3665 (RECOMMENDED metallicity)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1409.2737'
+  ads_bibcode: 2014MNRAS.445.2169M
+  title: Mamajek & Bell 2014 — Beta Pic moving group age 23 +/- 3 Myr, isochrone + LDB (RECOMMENDED age)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1612.04591'
+  ads_bibcode: 2017A&A...600A..83M
+  title: Messina et al. 2017 — Beta Pic association rotation catalog, AU Mic Prot 4.86 d (rotation alt)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '2011.13357'
+  ads_bibcode: 2021MNRAS.502..188K
+  title: Klein et al. 2021 — SPIRou RV; Table 2 stellar params incl L 0.09 (luminosity alt)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2000MNRAS.319.1147T
+  title: Tsikoudi & Kellett 2000 — ROSAT X-ray Lx 2.24e29 erg/s (RECOMMENDED activity; no arXiv, ADS/text value-check)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2019AAS...23325941W
+  title: White et al. 2019 — CHARA interferometry R 0.75 (radius alt; UNREFEREED AAS abstract, no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null

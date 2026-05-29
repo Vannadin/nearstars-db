@@ -80,6 +80,34 @@ section.
 - GdS isochrone age 0.028 Gyr is a metal-poor-star fit failure -> rejected (same
   catalog-isochrone-unreliable pattern seen for eps Eri's 4.8 Gyr).
 
-## AU Mic
-(next -- M1 Ve, young ~22 Myr Beta Pic MG, flare star; expect rotation + flares
-well-measured, age from moving-group membership, very different regime from FGK)
+## AU Mic (DONE 2026-05-30)
+- First M-dwarf host. Radius = the contested category. The famous 0.75 Rsun is
+  White et al. 2019 -- an UNREFEREED AAS conference abstract (no journal, no
+  arXiv). Only refereed interferometric radius is Gallenne 2022 VLTI/PIONIER
+  (cache-verified: theta_LD 0.825 +/- 0.033stat +/- 0.038sys -> R 0.862 +/- 0.052).
+  Recommended Gallenne per contract; kept White 0.75 + Donati 0.82 as alts so the
+  divergence is on the record. Fame-trap avoided (cf. Boyajian/eps Eri).
+- Mass divergence: Plavchan 2020 0.50 (community standard, Klein 2021 Table
+  cache-verified "M_S 0.50+/-0.03 P20") recommended over Donati 2023 0.60.
+- Teff/[M/H] = Cristofari 2023 SPIRou (cache: Teff 3665+/-31, [M/H] +0.12+/-0.10,
+  [alpha/Fe] 0 -> [M/H]~[Fe/H]). L = Donati 2023 logL -0.99 (cache, Table) -> 0.102.
+- Age = Mamajek & Bell 2014 BPMG 23+/-3 Myr (cache: isochrone 22+/-3 + LDB; 12 Myr
+  kinematic explicitly rejected). Association-membership age, the right anchor type.
+- Rotation = Plavchan 2020 TESS 4.86 d (Klein Table cache-verified). Activity =
+  Tsikoudi & Kellett 2000 ROSAT Lx 2.24e29 -> log(Lx/Lbol)~-3.2 (near saturation).
+  Magnetic <B> 2.61 kG (Donati 2023) noted in meta_notes for the Phase 3 magnetic
+  axis (not a stellar_props category).
+- Plavchan 2020 .md extracted as 1 line (Nature arXiv abstract-only) -> verified
+  its values via the Klein 2021 Table cache instead (which attributes them to P20).
+
+## BUILD GOTCHA (2026-05-30): date-stamp churn
+- build_systems.py line 25 stamps RETRIEVAL_DATE = date.today() into EVERY system
+  file. When the calendar day rolls over, a rebuild rewrites all 151 files with
+  only the new "accessed"/"retrieval_date" -- NOT a content change. Confirmed via
+  `git diff -- db/systems ':(exclude)...au_mic.json'` filtered of date lines = empty.
+- Per-host discipline: stage ONLY the target host's system file, then
+  `git restore --worktree -- db/systems/ ':(exclude)db/systems/<host>.json'` to
+  drop the date churn. Do NOT git-add the 150 date-only files.
+
+## HD 69830
+(next -- K0 V, hosts 3 Neptune-mass planets + a warm asteroid/debris belt)

@@ -19,36 +19,142 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 8.6673,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3518,
-        "spectype": "M1VeBa1",
+        "teff_k": 3665,
+        "spectype": "M1 Ve",
         "mass_measurements": [
           {
-            "value_msun": 0.51,
-            "uncertainty_msun": 0.028,
-            "method": "unverified",
-            "reference": "Wittrock et al. 2023",
-            "bibcode": "2023AJ....166..232W",
-            "doi": null,
+            "value_msun": 0.5,
+            "uncertainty_msun": 0.03,
+            "method": "evolutionary_model",
+            "reference": "Plavchan et al. 2020",
+            "bibcode": "2020Natur.582..497P",
             "recommended": true
+          },
+          {
+            "value_msun": 0.6,
+            "uncertainty_msun": 0.04,
+            "method": "evolutionary_model",
+            "reference": "Donati et al. 2023",
+            "bibcode": "2023MNRAS.525..455D",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
+            "value_rsun": 0.862,
+            "uncertainty_rsun": 0.052,
+            "method": "interferometry",
+            "reference": "Gallenne et al. 2022",
+            "bibcode": "2022A&A...665A..41G",
+            "arxiv": "2207.04116",
+            "instrument": "VLTI/PIONIER",
+            "angular_diameter_mas": 0.825,
+            "angular_diameter_uncertainty_mas": 0.05,
+            "recommended": true,
+            "notes": "theta_LD = 0.825 +/- 0.033(stat) +/- 0.038(sys) mas. Only refereed interferometric radius for AU Mic."
+          },
+          {
+            "value_rsun": 0.75,
+            "uncertainty_rsun": 0.03,
+            "method": "interferometry",
+            "reference": "White et al. 2019",
+            "bibcode": "2019AAS...23325941W",
+            "recommended": false,
+            "notes": "CHARA interferometry, the community-standard radius (adopted by Plavchan 2020) -- but published ONLY as an unrefereed AAS conference abstract, no journal paper or arXiv."
+          },
+          {
             "value_rsun": 0.82,
             "uncertainty_rsun": 0.02,
-            "method": "unverified",
+            "method": "sed_fitting",
             "reference": "Donati et al. 2023",
             "bibcode": "2023MNRAS.525..455D",
-            "doi": null,
+            "recommended": false,
+            "notes": "Adopted value; R inferred from L + Teff (their own derived R is 0.78 +/- 0.04). Sits between White 0.75 and Gallenne 0.862."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 3665,
+            "uncertainty_k": 31,
+            "method": "high_res_spectroscopy",
+            "reference": "Cristofari et al. 2023",
+            "bibcode": "2023MNRAS.522.1342C",
+            "recommended": true
+          },
+          {
+            "value_k": 3700,
+            "uncertainty_k": 70,
+            "method": "photometric_color",
+            "reference": "Donati et al. 2023",
+            "bibcode": "2023MNRAS.525..455D",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.102,
+            "uncertainty_lsun": 0.002,
+            "method": "photometric",
+            "reference": "Donati et al. 2023",
+            "bibcode": "2023MNRAS.525..455D",
+            "recommended": true
+          },
+          {
+            "value_lsun": 0.09,
+            "uncertainty_lsun": 0.02,
+            "method": "sed_fitting",
+            "reference": "Plavchan et al. 2009",
+            "bibcode": "2009ApJ...698.1068P",
+            "recommended": false
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 0.023,
+            "uncertainty_gyr": 0.003,
+            "method": "isochrone",
+            "reference": "Mamajek & Bell 2014",
+            "bibcode": "2014MNRAS.445.2169M",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "metallicity_measurements": [
+          {
+            "value_dex": 0.12,
+            "uncertainty_dex": 0.1,
+            "method": "high_res_spectroscopy",
+            "reference": "Cristofari et al. 2023",
+            "bibcode": "2023MNRAS.522.1342C",
+            "recommended": true
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 4.86,
+            "uncertainty_days": 0.01,
+            "method": "photometric_variability",
+            "reference": "Plavchan et al. 2020",
+            "bibcode": "2020Natur.582..497P",
+            "recommended": true
+          },
+          {
+            "value_days": 4.86,
+            "uncertainty_days": 0.02,
+            "method": "photometric_variability",
+            "reference": "Messina et al. 2017",
+            "bibcode": "2017A&A...600A..83M",
+            "recommended": false
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_x_ray_log_lx_lbol": -3.24,
+            "method": "x_ray",
+            "reference": "Tsikoudi & Kellett 2000",
+            "bibcode": "2000MNRAS.319.1147T",
+            "recommended": true
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "single",
@@ -173,16 +279,16 @@
         "icrs_vx_j2000_km_s": 0.153640137001525,
         "icrs_vy_j2000_km_s": 19.45658368472101,
         "icrs_vz_j2000_km_s": -10.576607761108027,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "luminosity_lsun": 0.102,
+        "age_gyr": 0.023,
+        "metallicity_fe_h_dex": 0.12,
+        "rotation_period_days": 4.86,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 67683344409.18,
-        "mean_radius_km": 570474.0
+        "gravitational_parameter_km3_s2": 66356220009.0,
+        "mean_radius_km": 599693.4
       }
     }
   ],
@@ -482,7 +588,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -491,34 +597,43 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     },
     {
-      "title": "Wittrock et al. 2023",
+      "title": "Plavchan et al. 2020",
       "doi": null,
-      "bibcode": "2023AJ....166..232W",
-      "accessed": "2026-05-29",
+      "bibcode": "2020Natur.582..497P",
+      "accessed": "2026-05-30",
       "used_for": [
-        "AU Mic mass (unverified)"
+        "AU Mic mass (evolutionary_model)"
       ]
     },
     {
       "title": "Donati et al. 2023",
       "doi": null,
       "bibcode": "2023MNRAS.525..455D",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
-        "AU Mic radius (unverified)"
+        "AU Mic mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Gallenne et al. 2022",
+      "doi": null,
+      "bibcode": "2022A&A...665A..41G",
+      "accessed": "2026-05-30",
+      "used_for": [
+        "AU Mic radius (interferometry)"
       ]
     },
     {
       "title": "Krist et al. 2005",
       "doi": null,
       "bibcode": "2005AJ....129.1008K",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -527,7 +642,7 @@
       "title": "Schneider et al. 2014",
       "doi": null,
       "bibcode": "2014AJ....148...59S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -536,7 +651,7 @@
       "title": "Boccaletti et al. 2015",
       "doi": null,
       "bibcode": "2015Natur.526..230B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -545,7 +660,7 @@
       "title": "Boccaletti et al. 2018",
       "doi": null,
       "bibcode": "2018A&A...614A..52B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "AU Mic disk single (resolved_imaging)"
       ]
@@ -554,7 +669,7 @@
       "title": "Chen et al. 2005",
       "doi": null,
       "bibcode": "2005ApJ...634.1372C",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "AU Mic disk single (sed_fit)"
       ]
@@ -563,7 +678,7 @@
       "title": "Strubbe & Chiang 2006",
       "doi": null,
       "bibcode": "2006ApJ...648..652S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "AU Mic disk single (sed_fit)"
       ]
@@ -572,7 +687,7 @@
       "title": "Mallorquin et al. 2024",
       "doi": "10.1051/0004-6361/202450047",
       "bibcode": "2024A&A...689A.132M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "planet AU Mic b orbital"
       ]
@@ -581,14 +696,23 @@
       "title": "Donati et al. 2025",
       "doi": "10.1051/0004-6361/202555371",
       "bibcode": "2025A&A...700A.227D",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "planet AU Mic e orbital"
+      ]
+    },
+    {
+      "title": "Wittrock et al. 2023",
+      "doi": null,
+      "bibcode": "2023AJ....166..232W",
+      "accessed": "2026-05-30",
+      "used_for": [
+        "planet AU Mic d orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -596,6 +720,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Stellar Phase 2 curated 2026-05-30 under curation-data-contract (Tier 1 inversion fix; M dwarf regime, very different from the FGK hosts). AU Mic is a ~22 Myr Beta Pic moving group M1 Ve flare star. RADIUS IS A DOCUMENTED DIVERGENCE: the community-standard 0.75 Rsun traces to White et al. 2019, which exists ONLY as an unrefereed AAS conference abstract (no journal paper, no arXiv); the only refereed interferometric radius is Gallenne 2022 VLTI/PIONIER (theta_LD 0.825 +/- 0.033stat +/- 0.038sys mas -> R 0.862 +/- 0.052 Rsun), recommended per the contract refereed-interferometry priority. Donati 2023 infers R 0.78-0.82 from L+Teff (between the two, supporting the larger value). MASS DIVERGENCE: Plavchan 2020 PMS-isochrone 0.50 +/- 0.03 (community standard, propagated to all planet papers; Wittrock 2023 0.51 agrees) recommended over Donati 2023 Dartmouth-isochrone 0.60 +/- 0.04. Teff = Cristofari 2023 SPIRou atmospheric fit 3665 +/- 31 K ([M/H] +0.12 +/- 0.10, [alpha/Fe] 0.00 +/- 0.04, log g 4.52, with magnetic fields modelled); Donati 2023 V-I color gives 3700 +/- 70. Luminosity = Donati 2023 log(L/Lsun) = -0.99 +/- 0.01 -> 0.102 Lsun (M_bol 7.22 + BC + distance); Plavchan 2009 SED gives 0.09 +/- 0.02. Age = Mamajek & Bell 2014 Beta Pic MG 23 +/- 3 Myr (median of F/G-star isochrones 22 +/- 3 Myr reconciled with the Li-depletion-boundary age; the oft-cited ~12 Myr kinematic/expansion age is explicitly rejected). [M/H] +0.12 +/- 0.10 ~ [Fe/H] since [alpha/Fe]=0 (Cristofari 2023). Rotation = Plavchan 2020 TESS 4.86 +/- 0.01 d (Messina 2017 4.86 +/- 0.02, Klein 2021 / Donati 2023 4.83-4.86 d corroborate). Activity = Tsikoudi & Kellett 2000 ROSAT quiescent Lx 2.24e29 erg/s (0.1-2.4 keV); with L 0.102 Lsun (3.90e32 erg/s) this is log(Lx/Lbol) ~ -3.2, near the saturation limit for active M dwarfs. Strong magnetic field for the Phase 3 magnetic axis: small-scale <B> = 2.61 +/- 0.05 kG, large-scale 550 +/- 30 G (Donati 2023 SPIRou ZDI). NEXXUS (Schmitt & Liefke 2004) does NOT contain AU Mic (G/K sample) -- the '2.51e29 from NEXXUS' web claim is wrong; Tsikoudi & Kellett 2000 used instead."
   }
 }
