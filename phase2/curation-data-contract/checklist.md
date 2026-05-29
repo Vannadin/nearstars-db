@@ -37,8 +37,21 @@ it → run A/B/C**.
       fetch validated all 20 arxiv_ids resolve (0 failed) + cached to _papers.
       Caught Ma 2018 + Boyajian 2012 (primary anchors) lacking inline arxiv pins.
 - [x] **B** — surface cleanup folded into Step 2 (7d6a855); check.sh green
-- [ ] **C** — Tier 1: delta-pavonis Phase 2 from Rains 2020 anchor, full SPEC
-      discipline, single host, check.sh gate, then decide expansion
+- [x] **C** — Tier 1 host #1: delta-pavonis Phase 2 DONE (8e9b4b7) on Rains 2020
+      anchor; full SPEC discipline + check.sh gate. Caught 4 contamination items.
+
+## Step 4 — Disk detour (2026-05-29, triggered by the δ Pav disk fabrication)
+- [x] δ Pav disk = fabricated, removed (9c477a2); audited all 7 disk hosts
+      (09eb0d1 + cc30ea3) — 61 Vir Tanner fabricated, several mis-cites fixed
+- [x] Multi-belt Phase 3 schema (faaaccd) + applied to Vega/Fomalhaut (f8dd360),
+      eps Eri (1ef2224); science-faithful tints (cf265c7)
+- Valuable but a DETOUR from the original Tier 1 goal.
+
+## REMAINING — original Tier 1 goal (the inversion fix, NOT yet done)
+Build Phase 2 STELLAR measurements (8 categories) for the other 7 inversion hosts,
+one at a time under the contract. Their DISKS are now clean, but their stellar
+Phase 3 still sits on Phase 1:
+- eps Eri · AU Mic · HD 69830 · 61 Vir · Vega · Fomalhaut · tau Cet
 
 ## Discipline (non-negotiable, from root-cause)
 - One host at a time. No parallel subagent batch until a verified template exists.
