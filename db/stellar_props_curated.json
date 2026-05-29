@@ -1,4 +1,146 @@
 {
+  "Delta Pavonis": {
+    "teff_k": 5571,
+    "teff_bibcode": "2020MNRAS.493.2377R",
+    "spectype": "G8 IV",
+    "spectype_reference": "Gray et al. 2006 (NStars)",
+    "meta_notes": "Phase 2 curated 2026-05-29 under curation-data-contract (Tier 1 host #1, rewrite of the rolled-back Delta Pav template). Radius/Teff/luminosity anchored on Rains et al. 2020 VLTI/PIONIER direct interferometry (theta_LD = 1.828 +/- 0.025 mas -> R 1.197 +/- 0.016 Rsun, Teff 5571 +/- 48 K, L 1.24 +/- 0.03 Lsun); the prior synthesis used Bruntt 2010 asteroseismic R and Gaia GSP-Phot Teff and falsely assumed no interferometry (dec -66 is reachable by VLTI/SUSI, only CHARA/NPOI cannot). Rains cross-checks Bruntt 2010 asteroseismic R 1.20 / L 1.22 within 1 sigma; the prior md mislabeled Bruntt's luminosity (1.22) as radius. Mass = Bruntt 2010 asteroseismology 1.07 +/- 0.13 (no binary orbit; Lund et al. 2025 TESS gives modern nu_max 2269.8 / Delta_nu 107.9 uHz but no published modeled M/R). [Fe/H] = Gomes da Silva 2021 AMBRE-HARPS +0.36 +/- 0.02 (Bensby 2014 +0.37, Bruntt 2010 +0.33 corroborate). Activity = Gomes da Silva 2021 HARPS log R'HK -5.13 (replaces Henry 1996 -4.999; very inactive old subgiant); Hunsch 1998 ROSAT log(Lx/Lbol) ~ -6.4. Age is a DOCUMENTED DIVERGENCE: Holmberg 2009 GCS III isochrone 9.3 Gyr (range 5.8-10.7) recommended as consistent with the very low activity + slow rotation, vs Bensby 2014 isochrone 4.9 Gyr (range 3.3-9.6); ranges overlap 5.8-9.6 -- Phase 3 must document this. Rotation: only v sin i ~ 1.7 km/s (Bruntt 2010) -> P_rot <~ 36 d (sin i upper bound); no measured period, so not recorded as a rotation_measurement. Gaia DR3 GSP-Phot/FLAME rejected (Teff 5437, [Fe/H] +0.03, age 0.59 Gyr biased for this bright metal-rich star).",
+    "mass_measurements": [
+      {
+        "value_msun": 1.07,
+        "uncertainty_msun": 0.13,
+        "method": "asteroseismology",
+        "reference": "Bruntt et al. 2010",
+        "bibcode": "2010MNRAS.405.1907B",
+        "recommended": true
+      },
+      {
+        "value_msun": 1.03,
+        "uncertainty_msun": 0.07,
+        "method": "evolutionary_model",
+        "reference": "Bensby et al. 2014",
+        "bibcode": "2014A&A...562A..71B",
+        "recommended": false
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 1.197,
+        "uncertainty_rsun": 0.016,
+        "method": "interferometry",
+        "reference": "Rains et al. 2020",
+        "bibcode": "2020MNRAS.493.2377R",
+        "doi": "10.1093/mnras/staa282",
+        "instrument": "VLTI/PIONIER",
+        "angular_diameter_mas": 1.828,
+        "angular_diameter_uncertainty_mas": 0.025,
+        "recommended": true
+      },
+      {
+        "value_rsun": 1.2,
+        "uncertainty_rsun": 0.04,
+        "method": "asteroseismology",
+        "reference": "Bruntt et al. 2010",
+        "bibcode": "2010MNRAS.405.1907B",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5571,
+        "uncertainty_k": 48,
+        "method": "interferometry",
+        "reference": "Rains et al. 2020",
+        "bibcode": "2020MNRAS.493.2377R",
+        "doi": "10.1093/mnras/staa282",
+        "recommended": true
+      },
+      {
+        "value_k": 5550,
+        "method": "high_res_spectroscopy",
+        "reference": "Bruntt et al. 2010",
+        "bibcode": "2010MNRAS.405.1907B",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 1.24,
+        "uncertainty_lsun": 0.03,
+        "method": "bolometric_flux",
+        "reference": "Rains et al. 2020",
+        "bibcode": "2020MNRAS.493.2377R",
+        "doi": "10.1093/mnras/staa282",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": 0.36,
+        "uncertainty_dex": 0.02,
+        "method": "high_res_spectroscopy",
+        "reference": "Gomes da Silva et al. 2021",
+        "bibcode": "2021A&A...646A..77G",
+        "recommended": true
+      },
+      {
+        "value_dex": 0.37,
+        "method": "high_res_spectroscopy",
+        "reference": "Bensby et al. 2014",
+        "bibcode": "2014A&A...562A..71B",
+        "recommended": false
+      },
+      {
+        "value_dex": 0.33,
+        "method": "high_res_spectroscopy",
+        "reference": "Bruntt et al. 2010",
+        "bibcode": "2010MNRAS.405.1907B",
+        "recommended": false
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 9.3,
+        "uncertainty_gyr": 2.5,
+        "method": "isochrone",
+        "reference": "Holmberg et al. 2009",
+        "bibcode": "2009A&A...501..941H",
+        "recommended": true
+      },
+      {
+        "value_gyr": 4.9,
+        "uncertainty_gyr": 3.2,
+        "method": "isochrone",
+        "reference": "Bensby et al. 2014",
+        "bibcode": "2014A&A...562A..71B",
+        "recommended": false
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.13,
+        "method": "log_rhk",
+        "reference": "Gomes da Silva et al. 2021",
+        "bibcode": "2021A&A...646A..77G",
+        "recommended": true
+      },
+      {
+        "value_log_rhk": -4.999,
+        "uncertainty_log_rhk": 0.018,
+        "method": "log_rhk",
+        "reference": "Henry et al. 1996",
+        "bibcode": "1996AJ....111..439H",
+        "recommended": false
+      },
+      {
+        "value_x_ray_log_lx_lbol": -6.4,
+        "method": "x_ray",
+        "reference": "Hünsch et al. 1998",
+        "bibcode": "1998A&AS..132..155H",
+        "recommended": false
+      }
+    ]
+  },
   "Arcturus": {
     "spectype": "K1.5 III Fe-0.5",
     "spectype_bibcode": "1989ApJS...71..245K",

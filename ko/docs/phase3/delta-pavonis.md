@@ -5,8 +5,9 @@
 subgiant 별 중 하나로, 거리는 6.10 ± 0.005 pc 입니다 (Gaia DR3 시차
 163.95 ± 0.12 mas). 분광형 G8IV (Gray 2006 NStars, Houk & Cowley 1975)
 는 주계열을 막 벗어난 단계를 의미합니다. 중심 수소가 소진되고 수소
-껍질 연소가 시작되며 외피가 부풀어 오르는 시점입니다. 유효 온도 5604 K
-(Gaia DR3) 와 V = 3.56 으로, 남반구에서 가장 밝은 G subgiant 이자 인근
+껍질 연소가 시작되며 외피가 부풀어 오르는 시점입니다. 유효 온도 5571 K
+(Rains 2020 VLTI/PIONIER 간섭계) 와 V = 3.56 으로, 남반구에서 가장 밝은
+G subgiant 이자 인근
 subgiant 연구의 교과서적 표적입니다. 확정된 행성은 없습니다. 초고정밀
 RV (HARPS, Tinney 2005, Mawet 2017) 와 직접 촬영 (Lannier 2017) 캠페인
 이 1 AU 에서 ~3 M_Jup 이상, 거주가능영역에서 해왕성 질량 이상을 모두
@@ -17,7 +18,7 @@ RV (HARPS, Tinney 2005, Mawet 2017) 와 직접 촬영 (Lannier 2017) 캠페인
 µm 측광으로 확인했습니다 (Eiroa 2013 DUNES, Lawler & Tanner 2014).
 SED 에 대한 modified blackbody fit 은 약 30–80 AU 의 단일 차가운 belt
 를 주며, 먼지 온도 T_d ≈ 55 K, 먼지 질량 M_d ~ 0.01 M⊕ 입니다. 작지만
-명확하며, 무엇보다 오래된 시스템 (나이 ~7 Gyr, Holmberg 2009) 에
+명확하며, 무엇보다 오래된 시스템 (나이 ~9 Gyr, Holmberg 2009) 에
 존재한다는 점이 핵심입니다. 이는 충돌로 보충되는 microplanetesimal 저
 장소가 얇은 카이퍼 belt 와 유사한 형태로 존재한다는 것을 의미합니다.
 
@@ -34,19 +35,19 @@ SED 에 대한 modified blackbody fit 은 약 30–80 AU 의 단일 차가운 be
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | G8IV | high | Gray 2006 NStars, Houk & Cowley 1975 MK 카탈로그. HR 도 위치로 subgiant 분류 확인 |
-| `mass_msun` | 1.05 ± 0.04 | medium | Bensby 2014 Geneva-Copenhagen + Spada 2011 진화 fit. isochrone 나이와 일관 |
-| `radius_rsun` | 1.22 ± 0.02 | high | Bruntt 2010. asteroseismic + 간섭계 R. Gaia DR3 SED-fit R 과 일관 |
-| `teff_k` | 5604 ± 30 | high | Gaia DR3 GSP-Phot 5604 K. Bensby 2014 분광 5587 ± 50 K 와 1σ 일치 |
-| `luminosity_lsun` | 1.20 ± 0.04 | high | R 과 Teff 에서 Stefan–Boltzmann 유도. Eiroa 2013 SED fit 1.22 L☉ 와 일치 |
-| `metallicity_fe_h_dex` | +0.33 ± 0.05 | high | Bensby 2014. FEROS 고분해 분광, super-solar (thin disk 종족과 일관) |
-| `age_gyr` | 7.0 ± 0.5 | medium | Holmberg 2009 Geneva-Copenhagen isochrone 6.6 Gyr, Spada 2011 subgiant 모델 7.5 Gyr. 중간값 채택, subgiant 단계가 강하게 제약 |
-| `rotation_period_days` | ~30 (불확실) | low | 신뢰할 만한 광도 주기 없음. vsini ≈ 1.7 km/s (Bensby 2014) + R = 1.22 R☉ → i ≤ 90° 에서 P_rot ≥ 30 d. 7 Gyr 의 Skumanich braking 이 느린 회전을 지지 |
-| `activity_log_rhk` | −5.10 | medium | Henry 1996 + Gray 2006 NStars. 인근 G subgiant 표본에서 가장 색채권 활동이 약한 별 중 하나. 노년 + 초기 subgiant 단계와 일관 |
+| `mass_msun` | 1.07 ± 0.13 | medium | Bruntt 2010 asteroseismic scaling (ν_max). Bensby 2014 진화값 1.03 과 1σ 내 일치 |
+| `radius_rsun` | 1.197 ± 0.016 | high | Rains 2020 VLTI/PIONIER 간섭계, θ_LD = 1.828 ± 0.025 mas. Bruntt 2010 asteroseismic 1.20 과 일치 |
+| `teff_k` | 5571 ± 48 | high | Rains 2020 간섭계 θ_LD + bolometric flux. Bruntt 2010 분광 5550 K 과 일치 (Gaia DR3 GSP-Phot 은 이 금속풍부 별에서 편향) |
+| `luminosity_lsun` | 1.24 ± 0.03 | high | Rains 2020 bolometric flux 적분. Bruntt 2010 의 1.22 L☉ 와 일치 |
+| `metallicity_fe_h_dex` | +0.36 ± 0.02 | high | Gomes da Silva 2021 AMBRE-HARPS. Bensby 2014 +0.37, Bruntt 2010 +0.33 이 뒷받침, super-solar |
+| `age_gyr` | 9.3 (5.8–10.7) | medium | Holmberg 2009 GCS III isochrone. 매우 낮은 활동도 (log R'HK −5.13) + 느린 회전과 일관. Bensby 2014 isochrone 4.9 Gyr (3.3–9.6) 와 발산 — 두 범위가 겹쳐 나이는 본질적으로 불확실 |
+| `rotation_period_days` | ~35 (불확실) | low | 측정된 주기 없음. vsini ≈ 1.7 km/s (Bruntt 2010) + R = 1.197 R☉ → P_rot ≲ 36 d (sin i ≤ 1). 매우 낮은 활동도가 느린 회전을 지지 |
+| `activity_log_rhk` | −5.13 | high | Gomes da Silva 2021 HARPS (6002 스펙트럼, 2003–2016). Henry 1996 −4.999 와 일치. 알려진 G subgiant 중 색채권 활동이 가장 약한 축 |
 | `activity_cycle_years` | 미상 | low | Mt. Wilson 장기 모니터링 커버리지 없음. 이 진화 단계의 subgiant 는 약화되거나 불규칙한 사이클을 보이는 경우가 많음 |
-| `x_ray_log_lx_cgs_max` | 26.6 | medium | ROSAT 전천 미검출 상한 (Hünsch 1998). 매우 약한 코로나와 일관 |
-| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Bruntt 2010 대기 모델 + Claret 2011 LD 표에서 Teff=5604 의 G8IV 로 유도. 간섭계 직접 LD 측정은 없음 |
-| `visual_surface_tint_hex_primary` | `#ffe8c8` (G2V Sol 보다 더 붉은 amber-cream) | medium | Tie-break. G8IV 흑체 5604 K + +0.33 dex 금속도 reddening. subgiant envelope 부풀림이 disk integrated 색을 같은 Teff 의 G8V 보다 살짝 더 붉게 시프트 |
-| `stellar_color_temp_k` | 5604 | high | Teff (Gaia DR3) 유도 |
+| `x_ray_log_lx_cgs_max` | 27.3 | medium | Hünsch 1998 ROSAT 검출 (0.073 ct/s) → log L_X ≈ 27.3 erg/s, log(L_X/L_bol) ≈ −6.4. 약하지만 검출된 코로나 |
+| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Claret 2011 LD 표에서 Teff = 5571 (Rains 2020) 의 G8IV 로 유도. 간섭계 직접 LD 측정은 없음 |
+| `visual_surface_tint_hex_primary` | `#ffe8c8` (G2V Sol 보다 더 붉은 amber-cream) | medium | Tie-break. G8IV 흑체 5571 K + +0.36 dex 금속도 reddening. subgiant envelope 부풀림이 disk integrated 색을 같은 Teff 의 G8V 보다 살짝 더 붉게 시프트 |
+| `stellar_color_temp_k` | 5571 | high | Teff (Rains 2020) 유도 |
 | `visual_corona_extent_radii` | 1.6 | low | Tie-break. 약한 색채권 + 낮은 log R'HK = -5.1 → 절제된 corona band. 태양형 더 밝은 halo 대신 얇은 ring 으로 렌더 |
 | `disk_present` | true | high | Beichman 2006 Spitzer/MIPS 70 µm 초과. Eiroa 2013 Herschel/PACS 가 70/100/160 µm 에서 확인 |
 | `disk_inner_radius_au` | 30 | medium | Lawler & Tanner 2014 단일 belt fit r_in ≈ 30 AU (T_d = 55 K modified blackbody). Eiroa 2013 는 grain size 에 따라 r_in 23–35 AU |

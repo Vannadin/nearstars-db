@@ -6,8 +6,9 @@ G-type subgiants to the Sun, at 6.10 ± 0.005 pc (Gaia DR3 parallax
 163.95 ± 0.12 mas). The spectral classification G8IV (Gray 2006
 NStars; Houk & Cowley 1975) places it just off the main sequence —
 core hydrogen exhausted, hydrogen-shell burning beginning to inflate
-the envelope. Effective temperature 5604 K (Gaia DR3) and V = 3.56
-make it the brightest G subgiant in the southern sky and a textbook
+the envelope. Effective temperature 5571 K (Rains 2020 VLTI/PIONIER
+interferometry) and V = 3.56 make it the brightest G subgiant in the
+southern sky and a textbook
 target for nearby-subgiant studies. No confirmed planets exist:
 extreme-precision RV (HARPS, Tinney 2005; Mawet 2017) and
 direct-imaging (Lannier 2017) campaigns rule out anything more
@@ -20,7 +21,7 @@ photometrically by Herschel/PACS at 70, 100, and 160 µm (Eiroa 2013
 DUNES; Lawler & Tanner 2014). Modified blackbody fits to the SED
 give a single cold belt at roughly 30–80 AU with dust temperature
 T_d ≈ 55 K and dust mass M_d ~ 0.01 M⊕ — small but unambiguous, and
-notably old (system age ~7 Gyr, Holmberg 2009), implying a
+notably old (system age ~9 Gyr, Holmberg 2009), implying a
 collisionally replenished planetesimal reservoir analogous to a thin
 Kuiper Belt.
 
@@ -37,19 +38,19 @@ visually subtle until ALMA or JWST resolves it.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | G8IV | high | Gray 2006 NStars; Houk & Cowley 1975 MK catalog; subgiant classification confirmed by HR-diagram position |
-| `mass_msun` | 1.05 ± 0.04 | medium | Bensby 2014 Geneva-Copenhagen + Spada 2011 evolutionary fit; consistent with isochrone age |
-| `radius_rsun` | 1.22 ± 0.02 | high | Bruntt 2010 — asteroseismic + interferometric R; consistent with Gaia DR3 SED-fit R |
-| `teff_k` | 5604 ± 30 | high | Gaia DR3 GSP-Phot 5604 K; Bensby 2014 spectroscopic 5587 ± 50 K agrees within 1σ |
-| `luminosity_lsun` | 1.20 ± 0.04 | high | derived from R and Teff via Stefan–Boltzmann; Eiroa 2013 SED fit 1.22 L☉ agrees |
-| `metallicity_fe_h_dex` | +0.33 ± 0.05 | high | Bensby 2014 — high-resolution FEROS spectroscopy, super-solar (consistent with thin-disk population) |
-| `age_gyr` | 7.0 ± 0.5 | medium | Holmberg 2009 Geneva-Copenhagen isochrone 6.6 Gyr; Spada 2011 subgiant model 7.5 Gyr; midpoint adopted, subgiant phase tightly constrains |
-| `rotation_period_days` | ~30 (uncertain) | low | No reliable photometric period; vsini ≈ 1.7 km/s (Bensby 2014) + R = 1.22 R☉ implies P_rot ≥ 30 d for i ≤ 90°; Skumanich braking at 7 Gyr supports slow rotation |
-| `activity_log_rhk` | −5.10 | medium | Henry 1996 + Gray 2006 NStars — among the most chromospherically quiet G subgiants in the local sample; consistent with old age + early subgiant phase |
+| `mass_msun` | 1.07 ± 0.13 | medium | Bruntt 2010 asteroseismic scaling (ν_max); Bensby 2014 evolutionary 1.03 agrees within 1σ |
+| `radius_rsun` | 1.197 ± 0.016 | high | Rains 2020 VLTI/PIONIER interferometry, θ_LD = 1.828 ± 0.025 mas; Bruntt 2010 asteroseismic 1.20 agrees |
+| `teff_k` | 5571 ± 48 | high | Rains 2020 interferometric θ_LD + bolometric flux; Bruntt 2010 spectroscopic 5550 K agrees (Gaia DR3 GSP-Phot biased for this metal-rich star) |
+| `luminosity_lsun` | 1.24 ± 0.03 | high | Rains 2020 bolometric flux integration; Bruntt 2010 1.22 L☉ agrees |
+| `metallicity_fe_h_dex` | +0.36 ± 0.02 | high | Gomes da Silva 2021 AMBRE-HARPS; Bensby 2014 +0.37 and Bruntt 2010 +0.33 corroborate, super-solar |
+| `age_gyr` | 9.3 (5.8–10.7) | medium | Holmberg 2009 GCS III isochrone, consistent with very low activity (log R'HK −5.13) + slow rotation; Bensby 2014 isochrone 4.9 Gyr (3.3–9.6) diverges — ranges overlap, age genuinely uncertain |
+| `rotation_period_days` | ~35 (uncertain) | low | No measured period; vsini ≈ 1.7 km/s (Bruntt 2010) + R = 1.197 R☉ gives P_rot ≲ 36 d (sin i ≤ 1); very low activity supports slow rotation |
+| `activity_log_rhk` | −5.13 | high | Gomes da Silva 2021 HARPS (6002 spectra, 2003–2016); Henry 1996 −4.999 agrees; among the most chromospherically quiet G subgiants known |
 | `activity_cycle_years` | unknown | low | No long-term Mt. Wilson program coverage; subgiants in this evolutionary phase often show weakened or irregular cycles |
-| `x_ray_log_lx_cgs_max` | 26.6 | medium | ROSAT all-sky non-detection upper limit (Hünsch 1998); consistent with very weak corona |
-| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | derived from Bruntt 2010 atmosphere model + Claret 2011 LD tables for G8IV at Teff=5604; no direct interferometric LD measurement |
-| `visual_surface_tint_hex_primary` | `#ffe8c8` (amber-cream, redder than G2V Sol) | medium | Tie-break: G8IV blackbody at 5604 K + +0.33 dex metallicity reddening; subgiant envelope inflation shifts disk integrated color slightly redder than a G8V dwarf at same Teff |
-| `stellar_color_temp_k` | 5604 | high | derived from Teff (Gaia DR3) |
+| `x_ray_log_lx_cgs_max` | 27.3 | medium | Hünsch 1998 ROSAT detection (0.073 ct/s) → log L_X ≈ 27.3 erg/s, log(L_X/L_bol) ≈ −6.4; weak but detected corona |
+| `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Claret 2011 LD tables for G8IV at Teff = 5571 (Rains 2020); no direct interferometric LD measurement |
+| `visual_surface_tint_hex_primary` | `#ffe8c8` (amber-cream, redder than G2V Sol) | medium | Tie-break: G8IV blackbody at 5571 K + +0.36 dex metallicity reddening; subgiant envelope inflation shifts disk integrated color slightly redder than a G8V dwarf at same Teff |
+| `stellar_color_temp_k` | 5571 | high | derived from Teff (Rains 2020) |
 | `visual_corona_extent_radii` | 1.6 | low | Tie-break: weak chromosphere + low log R'HK = -5.1 → muted corona band; rendered as a thin ring rather than the brighter Sun-like halo |
 | `disk_present` | true | high | Beichman 2006 Spitzer/MIPS 70 µm excess; Eiroa 2013 Herschel/PACS confirmed at 70/100/160 µm |
 | `disk_inner_radius_au` | 30 | medium | Lawler & Tanner 2014 single-belt fit r_in ≈ 30 AU from modified blackbody at T_d = 55 K; Eiroa 2013 finds r_in 23–35 AU depending on grain size |

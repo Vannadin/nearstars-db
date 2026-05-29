@@ -286,6 +286,7 @@ STELLAR_MEASUREMENT_KINDS = {
         "methods": {
             "interferometry", "eclipsing_binary", "sed_fitting",
             "evolutionary_model", "spectroscopic_calibration",
+            "asteroseismology",
             "unverified",
         },
         # interferometric measurements often carry paper-level metadata
