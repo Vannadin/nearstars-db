@@ -25,7 +25,7 @@
           {
             "value_msun": 0.78,
             "uncertainty_msun": 0.08,
-            "method": "evolutionary_model",
+            "method": "empirical_relation",
             "reference": "Ma et al. 2018",
             "bibcode": "2018MNRAS.480.2411M",
             "doi": "10.1093/mnras/sty1933",
@@ -261,7 +261,7 @@
       "bibcode": "2018MNRAS.480.2411M",
       "accessed": "2026-05-29",
       "used_for": [
-        "40 Eridani A mass (evolutionary_model)"
+        "40 Eridani A mass (empirical_relation)"
       ]
     },
     {

@@ -268,10 +268,12 @@ STELLAR_MEASUREMENT_KINDS = {
     "mass_measurements": {
         # methodology.md tier: binary_orbit > asteroseismology > evolutionary_model
         #                      > spectroscopic / spectroscopic_calibration
+        # empirical_relation = Torres et al. 2010 M-R-Teff / mass-luminosity relations.
         "value_keys": {"value_msun"},
         "methods": {
             "binary_orbit", "asteroseismology", "evolutionary_model",
             "spectroscopic", "spectroscopic_calibration",
+            "empirical_relation",
             "unverified",
         },
         "extra_keys": set(_SOURCE_CONTROL_FIELDS),

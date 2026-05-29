@@ -37,7 +37,7 @@ Keyed by canonical host name. Partial override allowed (no top-level required ke
 
 | category | value key | uncertainty key | allowed `method` |
 |---|---|---|---|
-| `mass_measurements` | `value_msun` | `uncertainty_msun` | binary_orbit, asteroseismology, evolutionary_model, spectroscopic, spectroscopic_calibration, unverified |
+| `mass_measurements` | `value_msun` | `uncertainty_msun` | binary_orbit, asteroseismology, evolutionary_model, spectroscopic, spectroscopic_calibration, empirical_relation, unverified |
 | `radius_measurements` | `value_rsun` | `uncertainty_rsun` | interferometry, eclipsing_binary, sed_fitting, evolutionary_model, spectroscopic_calibration, unverified |
 | `teff_measurements` | `value_k` | `uncertainty_k` | high_res_spectroscopy, low_res_spectroscopy, sed_fitting, photometric_color, interferometry, unverified |
 | `luminosity_measurements` | `value_lsun` | `uncertainty_lsun` | bolometric_flux, sed_fitting, photometric, unverified |
