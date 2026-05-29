@@ -5,30 +5,24 @@
 subgiant 별 중 하나로, 거리는 6.10 ± 0.005 pc 입니다 (Gaia DR3 시차
 163.95 ± 0.12 mas). 분광형 G8IV (Gray 2006 NStars, Houk & Cowley 1975)
 는 주계열을 막 벗어난 단계를 의미합니다. 중심 수소가 소진되고 수소
-껍질 연소가 시작되며 외피가 부풀어 오르는 시점입니다. 유효 온도 5571 K
-(Rains 2020 VLTI/PIONIER 간섭계) 와 V = 3.56 으로, 남반구에서 가장 밝은
-G subgiant 이자 인근
-subgiant 연구의 교과서적 표적입니다. 확정된 행성은 없습니다. 초고정밀
-RV (HARPS, Tinney 2005, Mawet 2017) 와 직접 촬영 (Lannier 2017) 캠페인
-이 1 AU 에서 ~3 M_Jup 이상, 거주가능영역에서 해왕성 질량 이상을 모두
-배제했으며, ESPRESSO 시대에는 이 한계가 더 깊이 내려갑니다.
+껍질 연소가 외피를 부풀리기 시작한 시점입니다. 반지름·온도·광도는 Rains
+2020 의 VLTI/PIONIER 간섭계 각지름에 anchor 합니다 (θ_LD = 1.828 ± 0.025
+mas → R = 1.197 ± 0.016 R☉, Teff = 5571 ± 48 K, L = 1.24 ± 0.03 L☉).
+남반구에서 가장 밝은 G subgiant 이자 인근 subgiant 연구의 교과서적
+표적입니다.
 
-대신 δ Pav 가 가진 것은 차가운 잔해 원반입니다. Spitzer/MIPS 70 µm
-초과 (Beichman 2006) 로 처음 검출됐고, Herschel/PACS 가 70, 100, 160
-µm 측광으로 확인했습니다 (Eiroa 2013 DUNES, Lawler & Tanner 2014).
-SED 에 대한 modified blackbody fit 은 약 30–80 AU 의 단일 차가운 belt
-를 주며, 먼지 온도 T_d ≈ 55 K, 먼지 질량 M_d ~ 0.01 M⊕ 입니다. 작지만
-명확하며, 무엇보다 오래된 시스템 (나이 ~9 Gyr, Holmberg 2009) 에
-존재한다는 점이 핵심입니다. 이는 충돌로 보충되는 microplanetesimal 저
-장소가 얇은 카이퍼 belt 와 유사한 형태로 존재한다는 것을 의미합니다.
+δ Pav 에는 확정된 행성이 없고 (초고정밀 RV — Tinney 2005, Mawet 2017 —
+와 직접 촬영 Lannier 2017 이 1 AU 밖 ~3 M_Jup 이상의 거대행성을 배제),
+일부 옛 카탈로그 주장과 달리 **잔해 원반도 없습니다**. 가장 깊은 관측
+(Eiroa 2013 DUNES, Herschel/PACS 70/100/160 µm) 이 δ Pav 를 비검출
+(non-excess) 별로 분류하며, 표본에서 가장 낮은 축의 분율 광도 상한
+L_dust/L_★ < 5×10⁻⁷ 을 줍니다.
 
-**NearStars 시나리오 선택. 약간 부풀어 오른, G8V 왜성보다 살짝 더
-붉은 늙고 조용한 G8 subgiant 별을, ~30–80 AU 의 희미한 단일 차가운
-잔해 ring 을 배경으로 보여 줍니다.** 항성 파라미터는 canonical 정렬
-입니다. 원반 지오메트리는 SED 역해석에만 의존하며 (Herschel 는 belt
-를 분해하지 못함), 원반 색조와 불투명도는 medium/low 신뢰도로
-표기됩니다. cfg 는 ALMA 나 JWST 가 분해할 때까지 belt 를 시각적으로
-은은하게 운영합니다.
+**NearStars 시나리오 선택. 행성도 잔해 ring 도 없이 홀로 선, 늙고 매우
+조용한 G8 subgiant 별입니다.** G8V 왜성보다 약간 부풀고 약간 더 붉습니다.
+모든 항성 파라미터는 canonical 정렬이며 직접 측정에 anchor 합니다 (R/Teff/L
+은 간섭계, 질량은 성진학). 본질적으로 불확실한 양은 나이 하나뿐으로, 두
+isochrone 분석이 서로 발산합니다.
 
 ## Decisions
 
@@ -48,286 +42,204 @@ SED 에 대한 modified blackbody fit 은 약 30–80 AU 의 단일 차가운 be
 | `limb_darkening_alpha_h` | 0.16 ± 0.02 | medium | Claret 2011 LD 표에서 Teff = 5571 (Rains 2020) 의 G8IV 로 유도. 간섭계 직접 LD 측정은 없음 |
 | `visual_surface_tint_hex_primary` | `#ffe8c8` (G2V Sol 보다 더 붉은 amber-cream) | medium | Tie-break. G8IV 흑체 5571 K + +0.36 dex 금속도 reddening. subgiant envelope 부풀림이 disk integrated 색을 같은 Teff 의 G8V 보다 살짝 더 붉게 시프트 |
 | `stellar_color_temp_k` | 5571 | high | Teff (Rains 2020) 유도 |
-| `visual_corona_extent_radii` | 1.6 | low | Tie-break. 약한 색채권 + 낮은 log R'HK = -5.1 → 절제된 corona band. 태양형 더 밝은 halo 대신 얇은 ring 으로 렌더 |
-| `disk_present` | true | high | Beichman 2006 Spitzer/MIPS 70 µm 초과. Eiroa 2013 Herschel/PACS 가 70/100/160 µm 에서 확인 |
-| `disk_inner_radius_au` | 30 | medium | Lawler & Tanner 2014 단일 belt fit r_in ≈ 30 AU (T_d = 55 K modified blackbody). Eiroa 2013 는 grain size 에 따라 r_in 23–35 AU |
-| `disk_outer_radius_au` | 80 | medium | Lawler & Tanner 2014 r_out ≈ 80 AU. SED 만, 분해되지 않음 |
-| `disk_dust_temperature_k` | 55 ± 5 | high | Eiroa 2013 + Lawler & Tanner 2014 SED fit 모두 T_d ≈ 55 K, modified blackbody 방출률 지수 β ≈ 0.8 로 수렴 |
-| `disk_tint_rgb_hex` | `#3a2a18` (희미한 따뜻한 회색, 낮은 불투명도) | low | Tie-break. 55 K 먼지는 원적외선으로 복사. 가시광 색조는 산란광 dust albedo 추정 (~0.1 회갈색 규산염/얼음 혼합), resolved imaging 이 없으므로 |
-| `disk_opacity` | 0.02 | low | Tie-break. L_d/L_★ ≈ 2×10⁻⁵ (Eiroa 2013) 에서 광학 깊이 τ ≈ 10⁻⁵. 매우 희미한 시각적 feature 로 렌더. 긴 노출에서 겨우 감지 가능 |
-| `disk_morphology` | "단일 차가운 belt, 적당한 먼지 질량, 비대칭 검출되지 않음 (분해 불가)" | medium | Lawler & Tanner 2014. SED 에 belt 하나로 fit. 두 번째 belt component 불필요. 공간 분해 불가이므로 형태 세부는 추론 |
-| `disk_resolved_imaging` | false | high | Eiroa 2013 / Lawler 2014 모두 Herschel PSF (70 µm 에서 ~5″) 가 6.1 pc 거리의 belt 를 분해하지 못한다고 언급 (예상 각 크기 ~5–13″). 2026 년 시점에 ALMA / JWST resolved imaging 없음 |
-| `disk_imaging_observatory` | "Herschel-PACS (SED only)" | high | Eiroa 2013 DUNES 서베이 + Lawler 2014 follow-up. 최초 검출은 Spitzer/MIPS |
-| `disk_mass_mearth` | 0.012 | medium | Lawler & Tanner 2014 먼지 질량 (mm-cm grain). planetesimal 모체 질량은 직접 제약되지 않으나 먼지 질량보다 훨씬 크다고 추정 |
-| `disk_planetesimal_belt_inferred` | true | high | 나이 ~7 Gyr ≫ 50 AU 에서 µm-cm 먼지의 충돌 cascade 수명. 보충이 planetesimal 저장소를 요구 (Wyatt 2008 프레임워크, Lawler & Tanner 2014 가 적용) |
+| `visual_corona_extent_radii` | 1.6 | low | Tie-break. 약한 색채권 + 낮은 log R'HK = −5.13 → 절제된 corona band. 태양형 더 밝은 halo 대신 얇은 ring 으로 렌더 |
+| `disk_present` | false | high | Eiroa 2013 DUNES 비검출, L_dust/L_★ < 5×10⁻⁷ (Herschel/PACS 70/100/160 µm 전부 광구와 일치). 잔해 ring 없음 |
 
 ## Surface synthesis
 
-δ Pavonis 는 짧지만 시각적으로 의미 있는 subgiant 단계에 있습니다.
-중심 수소가 소진됐고, 얇은 수소 껍질 연소가 envelope 를 부풀리기 시작
-했으며, 별은 subgiant branch 를 따라 red-giant branch 의 시작점을
-향해 올라가고 있습니다. 그 결과는 같은 질량의 G8V 왜성보다 ~20% 더
-크고 ~200 K 더 차가운 광구입니다. Stefan–Boltzmann 광도 1.20 L☉ 는
-G8V analog 보다 약간 더 높습니다. 반지름 증가가 온도 감소를 앞지르기
-때문입니다. 이로 인해 별은 역설적인 성격을 갖습니다. 태양보다 색은
-붉지만 광도는 여전히 살짝 더 높습니다.
+δ Pavonis 는 짧지만 시각적으로 중요한 subgiant 단계에 있습니다. 중심
+수소가 소진되고 얇은 수소 연소 껍질이 외피를 부풀리기 시작하며, 별은
+subgiant 가지를 따라 적색거성 가지 바닥으로 올라가는 중입니다. 그 결과
+광구는 같은 질량의 G8V 왜성보다 ~20% 크고 ~200 K 더 차갑습니다. 광도
+1.24 L☉ 는 — 반지름 증가가 온도 하락을 앞지르기에 G8V 유사 별보다 살짝
+더 밝습니다 — 색은 태양보다 붉으면서도 밝기는 약간 더 높은 역설적
+성격을 줍니다.
 
-통합 disk 색은 G2V 태양에 비해 amber-cream 방향으로 눈에 띄게 이동
-합니다. Teff = 5604 K 에서 흑체 피크는 518 nm 부근 (여전히 황록색) 에
-있지만, 가시광 전체 기울기는 G2V 보다 완만하며 Sol 보다 적색이 더
-많고 청색이 더 적습니다. +0.33 dex super-solar 금속도가 line
-blanketing 으로 가시광 연속체를 ~30 K 등가로 reddening 시키는 효과가
-더해져, cfg 색조 `#ffe8c8` 가 진화된 G8 별의 따뜻한 cream 을 잡아
-냅니다. α Cen A 의 `#fff4e8` (5847 K G2V) 와의 대비는 실재하며,
-나란히 렌더하면 눈에 보입니다.
+disk integrated 색은 G2V 태양 대비 amber-cream 쪽으로 뚜렷이 이동합니다.
+Teff = 5571 K 에서 흑체 정점은 약 520 nm — 여전히 황록이지만, 가시
+파장에 걸친 기울기가 G2V 보다 완만해 Sol 보다 붉은 쪽이 많고 푸른 쪽이
+적습니다. +0.36 dex 의 super-solar 금속도가 line blanketing 으로 가시
+연속체를 더 붉히면서, cfg tint `#ffe8c8` 가 진화한 G8 별의 따뜻한 cream
+을 담아냅니다. α Cen A 의 `#fff4e8` (5847 K G2V) 와의 대비는 나란히
+렌더하면 실제로 보입니다.
 
-Limb darkening 은 G2V 보다 강합니다. 더 차갑고 확장된 대기가 limb
-근처에서 광자 평균자유경로를 길게 만들기 때문입니다. Claret 2011 LD
-표를 G8IV 로 보간한 H 밴드 α 지수 ≈ 0.16 은 α Cen A 의 측정값 0.14
-보다 ~15% 높으며, fly-by 렌더에서 미묘하지만 실재하는 시각 효과로
-나타납니다. limb 가 G2V 왜성보다 뚜렷이 더 그늘져 보입니다.
+Limb darkening 은 G2V 보다 강합니다. 더 차갑고 확장된 대기가 limb 근처
+에서 광자 평균자유행로가 더 길기 때문입니다. H 밴드 α 지수 ≈0.16 (Claret
+2011 LD 표를 G8IV 로 보간) 은 α Cen A 의 측정값 0.14 보다 ~15% 높아,
+fly-by 렌더에서 limb 가 G2V 왜성보다 뚜렷이 더 그늘진 미묘하지만 실제적인
+효과를 냅니다.
 
-흑점 면적은 적당합니다. 측정된 회전 주기나 사이클이 없어 광도 변동
-제약은 느슨하지만 (Hipparcos H_p 진폭 < 0.005 mag), log R'HK = -5.10
-(Henry 1996) 은 δ Pav 를 비활성 G subgiant locus 한가운데에 단단히
-놓습니다. α Cen A 보다 조용하고, Mt. Wilson 표본에서 가장 자기적으로
-죽은 별들과 비슷한 수준입니다. cfg 렌더러에서는 흑점 밀도를 태양 극대
-값의 절반으로 설정하고 무작위로 분포시키며, 강한 사이클 변조는
-적용하지 않습니다.
+흑점 커버리지는 보통입니다. 측정된 자전 주기나 사이클이 없어 광도 변광
+제약은 느슨하지만 (Hipparcos H_p 진폭 < 0.005 mag), log R'HK = −5.13
+(Gomes da Silva 2021) 은 δ Pav 를 비활동 G subgiant 자리에 확고히
+놓습니다 — α Cen A 보다 조용하고, Mt. Wilson 표본에서 자기적으로 가장
+죽은 별들에 견줄 만합니다. cfg 렌더러에서는 흑점 밀도를 태양 극대값의
+절반으로, 무작위 분포에 사이클 변조 없이 설정합니다.
 
 ## Atmosphere synthesis
 
-δ Pav 의 색채권과 코로나도 그에 상응해 약합니다. log R'HK = -5.10
-(Henry 1996, Gray 2006 NStars) 의 색채권 Ca II H&K 핵 플럭스는
-색채권 "basal flux floor" 근처에 위치합니다. 더 이상의 활동 감소가
-관측되지 않는 영역으로, δ Pav 는 사실상 이 진화 단계의 자기 정적
-점근선에 도달해 있습니다. ROSAT 미검출 (Hünsch 1998) 은 log L_X
-< 26.6 (cgs, 0.5–2 keV) 를 줍니다. 활동 최저기의 태양보다 한 자릿수
-약하며, 별이 주계열을 벗어나 부풀어 오를 때 예상되는 중력과 대류
-약화와 일관됩니다.
+δ Pav 의 색채권과 코로나도 그만큼 약합니다. 색채권 Ca II H&K 코어 플럭스
+log R'HK = −5.13 (Gomes da Silva 2021, HARPS 6002 스펙트럼. Henry 1996
+−4.999) 은 더 이상의 활동 감소가 관측되지 않는 색채권 "basal flux floor"
+근처에 있습니다 — δ Pav 는 사실상 이 진화 단계의 자기 정적 점근선에
+도달했습니다. ROSAT 검출 (Hünsch 1998) 은 log L_X ≈ 27.3 (cgs, 0.5–2
+keV), 즉 log(L_X/L_bol) ≈ −6.4 을 주며, 약하지만 실재하는 코로나입니다.
+태양 활동 극소보다 한 자릿수 약하며, 주계열을 벗어나며 대류가 약해지는
+것과 일관됩니다.
 
-전이 영역의 UV 방출은 그에 상응해 희미하지만, δ Pav 는 IUE 와
-HST/STIS 로 관측됐고 Mg II h&k 와 Si IV 방출선이 약하나 0 이 아닌
-강도로 검출됐습니다. flare 측정은 없습니다. δ Pav 는 인근 표본에서
-가장 flare 가 조용한 별 중 하나이며, 어떤 모니터링 캠페인에서도
-이벤트가 보고되지 않았습니다. 통합 XUV 광도는 ≲ 10⁻⁵ L_bol 로,
-시스템의 전체 7 Gyr 수명 동안 안쪽 행성 후보의 대기를 침식시킬 수
-있는 임계값보다 훨씬 낮습니다.
+전이영역 UV 방출도 그만큼 희미하지만, δ Pav 는 IUE 와 HST/STIS 로
+관측됐고 Mg II h&k 와 Si IV 방출선이 약하지만 0 이 아닌 강도로
+검출됐습니다. 측정된 플레어는 없습니다 — δ Pav 는 인근 표본에서 가장
+플레어가 조용한 별 중 하나로, 어떤 모니터링 캠페인에서도 사건이 보고된
+적 없습니다. 적분 XUV 광도는 ≲ 10⁻⁵ L_bol 로, 시스템의 ~9 Gyr 전 기간에
+걸쳐 안쪽 후보 행성의 대기를 침식할 임계보다 훨씬 낮습니다.
 
-이 우호적 우주환경은 (현재 미확인인) 가상의 행성에 흥미로운 함의를
-가집니다. δ Pav 의 거주가능영역 (Kopparapu 2013 보수 한계를 1.20 L☉
-로 스케일하면 약 1.0–1.7 AU) 에서 XUV 구동 대기 탈출은 시스템 전체
-수명에 걸쳐 무시할 만한 수준입니다. cfg 는 게임 내 대기 보존 모델링을
-위해 의미 있는 CME 플럭스가 없는 우호적 항성풍 환경을 기록합니다.
+이 온화한 우주 날씨 상태는 가상의 (현재 미확정) 행성에 흥미로운 함의를
+줍니다. δ Pav 의 거주가능영역 — Kopparapu 2013 보수적 한계를 1.24 L☉ 로
+스케일하면 대략 1.0–1.7 AU — 에서 XUV 구동 대기 탈출은 시스템 전 수명에
+걸쳐 무시할 만합니다. cfg 는 의미 있는 CME 플럭스가 없는 온화한 항성풍
+환경을 인코딩해 인게임 대기 보존 모델링에 씁니다.
 
-광구 자체의 항성 대기는 색채권 시작부에서 canonical G8IV 온도 반전을
-보입니다. T 는 τ=1 의 5604 K 에서 τ ≈ 10⁻⁴ 근처의 ~4200 K 온도 최저
-점까지 떨어진 다음, 색채권을 통과해 ~10⁴ K 로, 전이 영역에서 ~10⁵ K
-까지 상승합니다. 차가운 온도 최저점은 G2V Sol 보다 더 깊고 더
-넓습니다. 더 크고 천천히 대류하는 envelope 가 내놓는 음향 플럭스가
-더 낮은 특징입니다.
+광구 자체의 항성 대기는 색채권 onset 에서 canonical 한 G8IV 온도 역전을
+보입니다. T 는 τ=1 의 5571 K 에서 τ ≈ 10⁻⁴ 부근 약 4200 K 의 온도
+최소로 떨어진 뒤, 색채권을 거쳐 ~10⁴ K, 전이영역에서 ~10⁵ K 로
+상승합니다. 차가운 온도 최소는 G2V Sol 보다 깊고 넓으며, 더 크고 느리게
+대류하는 외피의 낮은 음향 플럭스의 특징입니다.
 
 ## Rotation & spin synthesis
 
-δ Pavonis 는 천천히 회전합니다. 얼마나 천천히인지는 잘 측정되지
-않았습니다. 사영 회전 속도 v sin i ≈ 1.7 km/s (Bensby 2014, Valenti &
-Fischer 2005 가 HARPS / Keck 분광으로 비슷한 값을 줌) 와 R = 1.22 R☉
-를 결합하면 회전 속도 *상한* 이 2π·R/P_rot ≥ 1.7 km/s, 즉 P_rot · sin
-i ≤ 36 d 입니다. 경사각 제약 없이는 주기가 위로만 제한됩니다. i = 90°
-(equator-on) 에서 P_rot ≤ 36 d, 무작위 경사각에서 가장 가능성 높은
-주기는 ~30 d 입니다.
+δ Pavonis 는 느리게 자전합니다 — 정확히 얼마나 느린지는 잘 모릅니다.
+투영 자전 속도 v sin i ≈ 1.7 km/s (Bruntt 2010. Valenti & Fischer 2005
+도 유사값) 와 R = 1.197 R☉ 를 결합하면 주기는 위로만 제한됩니다.
+P_rot · sin i ≤ 36 d 이므로 i = 90° (적도 정면) 에서 P_rot ≤ 36 d, 전형
+적 무작위 경사에서는 가장 그럴듯한 주기가 ~30 d 입니다.
 
-G8V zero-age main-sequence 회전 ~5 d 에서 시작해 Skumanich braking
-을 P ∝ √t 로 7 Gyr 까지 스케일하면 ~50 d 가 나오지만, subgiant
-expansion 이 angular momentum 보존으로 envelope 가 부풀어 오를 때
-표면 회전을 더 늦춥니다. Spada & Lanzafame 2020 의 subgiant 회전
-모델은 초기 main-sequence 회전 주기 25–35 d 인 별이 이 진화 단계에서
-30–45 d 를 가진다고 예측합니다. cfg 는 window 내 추정값으로 30 d 를
-채택하고 Confidence=low 로 표기하며, 향후 광도 모니터링을 위한 open
-item 으로 남깁니다.
+G8V zero-age 주계열 자전 ~5 d 에서 출발해 ~9 Gyr 로 P ∝ √t 스케일한
+Skumanich braking 은 ~55 d 를 예측합니다 — 다만 subgiant 팽창이 외피
+부풀림에 따른 각운동량 보존으로 표면 자전을 더 늦춥니다. Spada & Lanzafame
+2020 subgiant 자전 모델은 이 단계에서 30–45 d 를 예측합니다. cfg 는 35 d
+를 window 내 추정으로 채택하고 Confidence=low 로 표기하며, 향후 광도
+모니터링을 open item 으로 남깁니다.
 
-회전 splitting 의 직접 asteroseismic 검출은 존재하지 않습니다. Bruntt
-2010 의 지상 캠페인이 p-mode 진동을 검출했지만 (ν_max ≈ 2300 µHz,
-Δν ≈ 110 µHz, M ≈ 1.05 M☉ 과 R ≈ 1.22 R☉ 와 일관), 데이터 품질이
-mode 의 회전 splitting 을 분해하기에 부족했습니다. 추후 TESS 또는
-PLATO 캠페인이 이를 좁힐 것이며, cfg open items 가 이 의존성을 기록
-합니다.
+성진학 진동은 검출됐습니다 — Bruntt 2010 이 p-mode 를 처음 측정했고,
+Lund 2025 (TESS) 가 ν_max = 2269.8 ± 64.4 µHz, Δν = 107.9 ± 0.2 µHz 로
+정밀화했습니다 — 그러나 어떤 캠페인도 아직 모드의 자전 분리를 분해하지
+못했고, 그것이 주기와 경사를 고정할 것입니다. 향후 PLATO 캠페인이 이를
+조일 것이며, cfg open item 이 그 의존성을 기록합니다.
 
-Obliquity 는 관측적으로 제약되지 않습니다. 자전축에 토크를 줄
-동반자가 없는 고립된 단일 별의 경우, spin angular momentum 기준
-프레임에 대한 obliquity = 0° 를 기본값으로 합니다. cfg 는 시각적
-강조를 위한 특별한 기울임 없이 within-window 기본값으로 0° 를
-코드화합니다.
+Obliquity 는 관측적으로 미제약입니다. 자전축을 토크할 동반자가 없는 고립
+단일 별이므로, 자전 각운동량 기준틀에 대해 obliquity = 0° 를 기본값으로
+둡니다. cfg 는 시각적 연출을 위한 특별한 기울임 없이 0° 를 window 내
+기본값으로 인코딩합니다.
 
 ## Visual styling
 
-NearStars 렌더러에서 δ Pavonis 는 희미한 차가운 잔해 ring 을 배경으로
-한 늙고 조용한 G8 subgiant 별로 묘사됩니다. 주요 시각 선택은 다음과
+NearStars 렌더러에서 δ Pavonis 는 행성도 잔해 ring 도 동반자도 없는,
+늙고 조용한 고립 G8 subgiant 로 묘사됩니다. 핵심 시각 선택은 다음과
 같습니다.
 
-- **전반적 외형.** 따뜻한 amber-cream 항성 디스크 (`#ffe8c8`). α Cen A
-  의 cream-white 보다 뚜렷이 더 붉지만 K 왜성 오렌지보다는 따뜻한
-  색조입니다. G2V Sol 과 나란히 두면 대비가 미묘하지만 실재하며,
-  행성 하늘에서 단독으로 보면 δ Pav 는 "지친 태양, 살짝 더 붉고
-  살짝 더 큰" 인상을 줍니다.
-- **디스크 세부.** 가상의 근접 fly-by 렌더에서 광구 granulation 은
-  G2V 보다 ~5% 낮은 대비로 렌더됩니다. 더 크고 천천히 대류하는
-  envelope 가 상승하는 뜨거운 plume 과 차가운 intergranular lane
-  사이 온도 차를 더 얕게 만들기 때문입니다. Granulation cell 은
-  R* 로 스케일하면 각 크기가 ~30% 더 큽니다.
-- **Limb 외형.** α Cen A 보다 뚜렷이 더 limb 가 어둡습니다. 더
-  차가운 광구와 비스듬한 시야각에서의 강한 H⁻ 불투명도 때문입니다.
-  fly-by 렌더에서 limb 가 눈에 띄게 그늘져 보입니다.
-- **Corona / 색채권.** 1.6 R★ (`visual_corona_extent_radii`) 의
-  얇고 희미한 ring 으로 렌더됩니다. 매우 약한 색채권과 코로나
-  방출을 반영합니다. 활성 prominence 렌더 없음, flare 시각화도
-  없습니다.
-- **흑점 / faculae.** 태양 극소기 진폭의 절반으로 설정, 저위도에
-  무작위 분포, 현재 cfg 에서는 사이클 변조 없음.
-- **차가운 잔해 ring.** 별로부터 30–80 AU 에 Kopernicus ring 을
-  매우 낮은 불투명도 (0.02) 와 희미한 따뜻한 회색 색조 (`#3a2a18`)
-  로 부착합니다. ring 은 안쪽 시스템에서 긴 노출 렌더로 겨우 보이는
-  수준이며, 1.3 AU 거리의 후보 행성에서 보면 ring 은 반사된 햇빛
-  먼지의 얇은 띠로 보입니다. 지구의 황도광보다 훨씬 희미합니다.
-  Herschel 가 belt 를 분해하지 못했고 SED 가 단일 차가운 component
-  를 지지하므로 형태는 단일 균일 belt 로 렌더됩니다. 추후 ALMA /
-  JWST 촬영이 비대칭이나 다중 component 를 드러내면 이 픽을
-  재검토합니다 (Open items 참고).
-- **후보 HZ 에서의 겉보기 각지름.** 1.3 AU 의 가상 1 M⊕ 행성에서
-  δ Pav 는 ~0.50° 각지름을 채웁니다. 지구에서 본 Sol (0.53°) 과
-  비슷합니다.
-- **잔해 디스크에서의 하늘.** 잔해 belt 의 안쪽 가장자리 (~30 AU)
-  에 있는 가상의 관측자는 δ Pav 를 빛나는 amber-cream 점광원으로
-  보게 됩니다. 조명 강도는 1.2/(30)² = 1.3×10⁻³ L☉/AU², 즉 지구에서
-  본 Sol 의 약 1/770 입니다. 명확히 별빛이며 긴 그림자를 드리우지만
-  태양-밝기는 아닙니다. 안쪽 zodiacal-dust 산란과 바깥쪽 belt 가
-  황도를 따라 희미한 빛의 띠를 만듭니다.
-- **고립 cue.** α Cen 시스템의 이중성 페어 렌더와 달리 δ Pav 는
-  홀로 서 있습니다. 두 번째 태양도, 궤도 conjunction 이벤트도
-  없습니다. 시각 styling 은 disk 와 subgiant 색조에 기대어 별에
-  personality 를 부여합니다.
+- **Global appearance** — 따뜻한 amber-cream 항성 disk (`#ffe8c8`).
+  α Cen A 의 cream-white 보다 뚜렷이 붉지만 K 왜성 orange 보다는 따뜻한
+  tint 입니다. G2V Sol 과 나란히 두면 대비가 미묘하지만 실재하며, 행성
+  하늘에 홀로 있으면 δ Pav 는 "살짝 붉고 살짝 큰, 지친 태양"으로 읽힙니다.
+- **Disk detail** — 가상의 근접 fly-by 에서 광구 granulation 은 G2V 보다
+  ~5% 낮은 대비로 렌더됩니다. 더 크고 느리게 대류하는 외피가 뜨거운 상승
+  plume 과 차가운 intergranular lane 사이 온도차를 더 얕게 만들기
+  때문입니다. Granulation cell 은 각크기가 ~30% 큽니다 (R★ 로 스케일).
+- **Limb appearance** — α Cen A 보다 limb 쪽이 뚜렷이 더 어둡습니다. 더
+  차가운 광구와 oblique 시야각에서 강한 H⁻ 불투명도 때문입니다. fly-by
+  렌더에서 limb 가 눈에 띄게 그늘집니다.
+- **Corona / chromosphere** — 1.6 R★ (`visual_corona_extent_radii`) 의
+  얇고 희미한 ring 으로 렌더됩니다. 매우 약한 색채권·코로나 방출을
+  반영합니다. 활동성 prominence 렌더 없음, 플레어 시각 없음.
+- **Spots / faculae** — 태양 극소 진폭의 절반으로, 저위도에 무작위 분포
+  하며 현재 cfg 에서 사이클 변조 없음.
+- **No debris ring** — 초기 NearStars 초안은 30–80 AU 에 차가운 잔해
+  ring 을 붙였지만, 이는 조작된 인용에서 비롯된 것으로 밝혀졌습니다.
+  Eiroa 2013 DUNES 는 깨끗한 비검출입니다 (L_dust/L_★ < 5×10⁻⁷). δ Pav 는
+  어떤 종류의 주위 ring 도 없이 렌더됩니다.
+- **Apparent diameter from candidate HZ** — 1.3 AU 의 가상 1 M⊕ 행성은
+  δ Pav 가 각지름 ~0.50° 를 채우는 것을 보게 됩니다. 지구에서 본 Sol
+  (0.53°) 과 견줄 만합니다.
+- **Isolation cue** — α Cen 계의 쌍성 렌더와 달리 δ Pav 는 홀로 섭니다.
+  두 번째 태양 없음, 궤도 합 사건 없음, ring 없음. 시각 연출은 subgiant
+  색과 부풀어 limb darkening 된 disk 에 기댑니다.
 
 ## Bibliography
 
 ### Read (visual-informative, drove decisions above)
 
-- **Eiroa C. et al. 2013** — *DUNES: Disc Around NEarby Stars with
-  Herschel*, A&A 555, A11 (`2013A&A...555A..11E`, arXiv:1305.0155).
-  인근 FGK 별 133 개에 대한 Herschel/PACS 서베이. δ Pavonis 가
-  70/100/160 µm 에서 검출되며, SED fit 으로 T_d ≈ 55 K, L_d/L_★ ≈
-  2×10⁻⁵ 의 단일 차가운 belt 를 줍니다.
-- **Lawler S. M. & Tanner A. M. 2014** — *Tracing planet formation
-  with detailed analysis of debris disk SEDs* (`2014ApJ...780...28L`,
-  arXiv:1310.3559). δ Pav 를 포함한 Eiroa 2013 데이터의 modified
-  blackbody 분석. belt 지오메트리 r ≈ 30–80 AU, 먼지 질량 ~0.012 M⊕,
-  나이 논거로부터 planetesimal 보충 요구 정련.
-- **Beichman C. A. et al. 2006** — *New Debris Disks around Nearby
-  Main-Sequence Stars: Impact on the Direct Detection of Planets*
-  (`2006ApJ...652.1674B`). δ Pav 의 Spitzer/MIPS 70 µm 초과 검출.
-  disk 최초 발표.
+- **Rains A. D. et al. 2020** — *Precision angular diameters for 16
+  southern stars with VLTI/PIONIER* (`2020MNRAS.493.2377R`,
+  arXiv:2004.02343). 직접 간섭계 θ_LD = 1.828 ± 0.025 mas → R = 1.197 ±
+  0.016 R☉, Teff = 5571 ± 48 K, L = 1.24 ± 0.03 L☉. 반지름·온도·광도의
+  anchor.
+- **Bruntt H. et al. 2010** — *Accurate fundamental parameters for
+  23 bright solar-type stars* (`2010MNRAS.405.1907B`,
+  arXiv:1002.4268). δ Pav 의 성진학 + 분광 분석. 성진학 M = 1.07 ± 0.13
+  M☉, R = 1.20 R☉, Teff ≈ 5550 K, [Fe/H] = +0.33, v sin i ≈ 1.7 km/s.
+  질량과 자전의 anchor.
+- **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
+  of 1674 FGK stars from the AMBRE-HARPS sample* (`2021A&A...646A..77G`).
+  HARPS 6002 스펙트럼에서 log R'HK = −5.13. [Fe/H] = +0.36 ± 0.02.
+  활동도와 금속도의 anchor.
+- **Eiroa C. et al. 2013** — *DUNES: DUst around NEarby Stars,
+  observational results* (`2013A&A...555A..11E`, arXiv:1305.0155).
+  Herschel/PACS 서베이. δ Pav 는 **비검출 (non-excess)** 별로,
+  L_dust/L_★ < 5×10⁻⁷ — `disk_present = false` 의 근거.
 - **Bensby T. et al. 2014** — *Exploring the Milky Way stellar disk:
-  A detailed elemental abundance study of 714 F and G dwarf stars*
-  (`2014A&A...562A..71B`, arXiv:1309.2631). FEROS 고분해 분광이
-  Teff = 5587 ± 50 K, log g = 4.05, [Fe/H] = +0.33, v sin i = 1.7
-  km/s 를 줌. 금속도와 회전 상한 픽의 기준.
+  714 F and G dwarf stars* (`2014A&A...562A..71B`, arXiv:1309.2631).
+  FEROS 고분해 분광. [Fe/H] = +0.37, 질량 1.03 M☉, isochrone 나이 4.9
+  Gyr — 나이 발산의 젊은 쪽.
 - **Holmberg J., Nordström B., Andersen J. 2009** — *The
-  Geneva-Copenhagen survey of the solar neighbourhood. III. Improved
-  distances, ages, and kinematics* (`2009A&A...501..941H`,
-  arXiv:0811.3982). Isochrone 나이 6.6 Gyr. subgiant 진화 단계와
-  일관.
-- **Spada F. et al. 2011** — *Stellar evolutionary models with
-  rotation-induced mixing applied to nearby subgiants*
-  (`2011MNRAS.418..759S`, arXiv:1107.1979). δ Pav 를 subgiant
-  branch 시작점 근처의 ~1.05 M☉ subgiant 로 모델링. 나이 7.5 Gyr.
-  Holmberg 와 결합해 채택값 7.0 ± 0.5 Gyr.
+  Geneva-Copenhagen survey III* (`2009A&A...501..941H`,
+  arXiv:0811.3982). Isochrone 나이 9.3 Gyr (5.8–10.7) — 채택한 (더 늙은)
+  나이로, 매우 낮은 활동도와 일관.
 
 ### Read (context / methodology, not directly decision-driving)
 
+- **Lund M. N. et al. 2025** — *The TESS Legacy Sample of Bright
+  Stars. I.* (`2025A&A...701A.285L`, arXiv:2508.08699). δ Pav 의 현대
+  TESS 성진학 검출. ν_max = 2269.8 ± 64.4 µHz, Δν = 107.9 ± 0.2 µHz
+  (모델링된 M/R/age 는 미발표).
+- **Spada F. et al. 2011** — *Stellar evolutionary models*
+  (`2011MNRAS.416..447S`, arXiv:1105.3125). δ Pav 의 질량/나이에 대한
+  subgiant 진화 맥락.
 - **Mawet D. et al. 2017** — *Characterization of Exoplanets from
   Their Formation. I.* (`2017AJ....153...44M`, arXiv:1609.06163).
-  δ Pav 와 다른 인근 FGK 별에 대한 NIRC2 vortex coronagraph 깊은
-  촬영. 동반자 질량 한계 >1 AU 에서 ~3 M_Jup. 차가운 disk 안쪽
-  영역에 거대 행성이 없음을 확인.
+  NIRC2 vortex coronagraph. 1 AU 밖 ~3 M_Jup 동반자 한계.
 - **Lannier J. et al. 2017** — *Combining direct imaging and radial
-  velocity data toward a full exploration of the giant planet
-  population* (`2017A&A...603A..54L`, arXiv:1705.03477). δ Pav 가
-  SPHERE 직접 촬영 서베이에 포함됨. 동반자 검출 없음.
-- **Tinney C. G. et al. 2005** — *The Anglo-Australian Planet
-  Search. XI. Five Planets and a Brown Dwarf* (`2005ApJ...623L.121T`).
-  δ Pav 의 HARPS / AAPS RV 모니터링. <2 AU 에서 m sin i ~ 10 M⊕
-  이상의 행성 검출 없음. RV 미검출 기준선 설정.
-- **Bruntt H. et al. 2010** — *Accurate fundamental parameters for
-  23 bright solar-type stars* (`2010MNRAS.405.1907B`,
-  arXiv:1002.4268). δ Pav 의 간섭계 R = 1.22 R☉ + asteroseismic
-  모델링. ν_max ≈ 2300 µHz, Δν ≈ 110 µHz 이 채택 질량과 일관.
-- **Henry T. J. et al. 1996** — *Chromospheric Activity Survey* in
-  the southern hemisphere (`1996AJ....111..439H`). δ Pav 의 log
-  R'HK = -5.10. 인근 G subgiant 표본에서 가장 색채권 활동이 약한
-  별 중 하나.
-- **Hünsch M. et al. 1998** — *ROSAT All-Sky Survey of nearby
-  stars* (`1998A&AS..132..155H`). δ Pav X 선 미검출, 상한 log
-  L_X < 26.6 cgs.
+  velocity* (`2017A&A...603A..54L`, arXiv:1705.03477). SPHERE 직접
+  촬영 서베이의 δ Pav. 동반자 미검출.
+- **Tinney C. G. et al. 2005** — *The Anglo-Australian Planet Search*
+  (`2005ApJ...623L.121T`). δ Pav RV 모니터링. 행성 미검출 — RV 비검출
+  기준선.
+- **Henry T. J. et al. 1996** — *A survey of Ca II H and K
+  chromospheric emission in southern solar-type stars*
+  (`1996AJ....111..439H`). log R'HK = −4.999. 비활동 분류를 뒷받침.
+- **Hünsch M. et al. 1998** — *ROSAT all-sky survey catalogue of
+  nearby stars* (`1998A&AS..132..155H`). δ Pav X 선 검출, 0.073 ct/s →
+  log L_X ≈ 27.3 cgs.
 - **Gray R. O. et al. 2006** — *NStars: Spectral Classifications of
   Nearby Stars* (`2006AJ....132..161G`, arXiv:astro-ph/0603770).
-  G8IV 분류와 log R'HK = -5.10 확인.
-- **Valenti J. A. & Fischer D. A. 2005** — *Spectroscopic
-  Properties of Cool Stars (SPOCS)* (`2005ApJS..159..141V`). v sin
-  i 와 색채권 측정값. Bensby 2014 를 지지.
-
-### Read (instrument / non-cfg-decisive)
-
-- **Trilling D. E. et al. 2008** — *Debris Disks around Sun-like
-  Stars* (`2008ApJ...674.1086T`). δ Pav 를 포함한 Spitzer 24/70 µm
-  서베이. disk 검출 census 의 맥락.
-- **Spada F. & Lanzafame A. C. 2020** — *Asteroseismic rotation
-  for subgiants* (`2020A&A...636A..76S`, arXiv:2003.06224). Rotation
-  & spin synthesis 에서 사용한 δ Pav-class subgiant 의 회전 주기
-  모델 floor 를 설정.
-- **Kopparapu R. K. et al. 2013** — *Habitable Zones around
-  Main-Sequence Stars: New Estimates* (`2013ApJ...765..131K`).
-  1.20 L☉ 로 스케일한 HZ 한계가 보수적으로 1.0–1.7 AU 범위를
-  줌. Atmosphere synthesis 산문에서 사용.
-
-### Not read — no arXiv preprint or low-priority (~25 papers)
-
-학회 abstract (DPS, EPSC, AAS), 새 데이터가 없는 disk SED follow-up
-노트 (~12 개 follow-up 참고), 서베이 논문 내 한 줄 카탈로그 언급은
-cfg 결정에 영향이 없습니다. Mt. Wilson HK 서베이 노트 (Wright 2004)
-는 log R'HK floor 를 확인하지만 Henry 1996 외에 새 제약을 추가하지
-않습니다. 필터된 전체 bib 는 이 별에 대한 bib 검색 파이프라인이
-실행되면 `docs/phase3/_bib/delta-pavonis.yaml` 에 `status: skipped`
-주석과 함께 보존됩니다 (현재 보류 — Open items 참고).
+  G8IV 분류 확인.
 
 ## Open items for follow-up
 
-- **Phase 2 `disk_measurements` ingest.** DB `delta_pavonis.json` 에
-  현재 `disk_measurements` 블록이 없습니다. Herschel/PACS 플럭스
-  (Eiroa 2013), Lawler & Tanner 2014 SED-fit 지오메트리, Spitzer
-  70 µm 초과 (Beichman 2006) 를 paper 인용 Phase 2 측정치로
-  ingest 해야 disk 지오메트리 행의 Confidence=medium 에서 이
-  합성을 격상할 수 있습니다.
-- **Resolved imaging (ALMA / JWST-MIRI).** 6.1 pc 거리의 30–80
-  AU belt 는 하늘에서 ~5–13″ 에 걸쳐 있습니다. ALMA Band 6 의 1″
-  각 분해능 안에 충분히 들어가며, MIRI coronagraph inner working
-  angle 의 안쪽에 막 들어옵니다. resolved imaging 캠페인이 안/바깥
-  반지름을 좁히고, belt 비대칭이나 warp (보이지 않는 행성 perturber
-  를 의미) 를 검출하며, 경사각을 제약할 수 있습니다. disk 지오메트리
-  Confidence 가 high 로 올라갑니다.
-- **Subgiant 나이 정련.** 7.0 ± 0.5 Gyr 나이는 isochrone (Holmberg
-  2009) 과 단일 파라미터 subgiant 모델 (Spada 2011) 에 기반합니다.
-  δ Pav 를 관측할 때 PLATO 급 asteroseismology 가 p-mode 회전
-  splitting 을 분해해 나이를 ~5% 로 좁힐 것입니다. cfg `age_gyr`
-  Confidence 가 medium 에서 high 로 올라갑니다.
-- **광도 회전 주기.** TESS Cycle 4+ 가 δ Pav 를 관측할 예정입니다
-  (남쪽 연속 관측 영역에 유리한 적위). 깨끗한 회전 주기 검출이
-  현재 Confidence=low 추정치를 대체할 것입니다.
-- **`docs/phase3/_bib/delta-pavonis.yaml` bib 검색.** ADS+arXiv
-  파이프라인이 아직 이 별에 대한 bibliography YAML 을 생성하지
-  않았습니다. DB Phase 2 disk ingest 가 완료된 후에 실행해 disk
-  논문들이 점수 순 출력에 포함되도록 합니다.
+- **TESS 모드 기반 성진학 질량/나이**. Lund 2025 가 δ Pav 의 ν_max + Δν
+  를 발표했으나 모델링된 M/R/age 는 없습니다. scaling 관계나 grid 모델
+  해 (또는 자전 분리를 분해하는 PLATO 캠페인) 가 질량을 조이고 Holmberg
+  대 Bensby 나이 발산 (9.3 대 4.9 Gyr) 을 해소해 `age_gyr` Confidence 를
+  high 로 올릴 것입니다.
+- **광도 자전 주기**. TESS Cycle 4+ 가 δ Pav 를 관측해야 합니다 (남쪽
+  적위 유리). 깨끗한 자전 주기 검출이 현재 Confidence=low 인 ~35 d
+  추정을 대체할 것입니다.
+- **금속도 불확실도**. Bensby 2014 카탈로그 [Fe/H] 오차가 깔끔히 고정되지
+  않았습니다. 채택한 +0.36 ± 0.02 (Gomes da Silva 2021) 는 더 조인 함량이
+  필요할 때 Bensby 의 형식 오차와 교차검증해야 합니다.
 
 ## Related
 
 - [methodology](../reference/methodology.md) — Decisions 표 스키마의 원본.
-- [alpha-centauri-a](alpha-centauri-a.md) — G2V 비교 anchor (5847 K cream-white vs δ Pav 의 5604 K amber-cream).
+- [alpha-centauri-a](alpha-centauri-a.md) — G2V 비교 anchor (5847 K cream-white vs δ Pav 의 5571 K amber-cream).
 - [conflict-resolution](../../../.claude/skills/nearstars-phase3/references/conflict-resolution.md) — 시각 색조와 corona extent 픽에 사용된 tie-break 정책.

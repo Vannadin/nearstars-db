@@ -111,3 +111,29 @@ activity = Henry log R'HK -4.999±0.018 (rec) + Hünsch X-ray log(Lx/Lbol) -6.4 
 - Rotation: no Prot exists; keep vsini 1.7 km/s → P_rot ≲ 36 d (sin i upper bound), low confidence.
 - Gaia DR3 GSP-Phot/FLAME: REJECTED (Teff 5437 / [Fe/H] +0.03 / age 0.59 Gyr all biased for this
   bright metal-rich star).
+
+## 2026-05-29 — DISK value-check CATCH (fabricated recommended source)
+disks_curated "Delta Pavonis" recommended entry cited "Lawler & Tanner 2014",
+bibcode 2014ApJ...780...28L, arXiv:1310.3559. ALL THREE ARE FABRICATED/WRONG:
+  - bibcode 2014ApJ...780...28L: ADS no hit (does not exist)
+  - arXiv 1310.3559: actually Hu & Liu 2013 PRA superfluid physics paper (unrelated)
+  - author search Lawler+Tanner 2013-2015: no debris-disk paper exists
+Real δ Pav debris disk literature: Beichman 2006 (2006ApJ...652.1674B, astro-ph/0611682,
+Spitzer/MIPS 70um detection) + Eiroa 2010 (2010A&A...518L.131E DUNES first results) +
+Eiroa 2013 (2013A&A...555A..11E, arXiv 1305.0155, DUNES full). Also real: Lawler 2009
+(2009ApJ...705...89L Spitzer/IRS debris) + Tanner 2009 (2009ApJ...704..109T 160um survey).
+→ The geometry values (inner 30 / outer 80 / dust mass 0.012) were attributed to a
+nonexistent paper. Must re-anchor on Eiroa 2013 with value-checked numbers, drop Lawler 2014.
+
+## 2026-05-29 — DISK catch ESCALATED: there is NO disk (non-detection)
+Web subagent (Eiroa 2013 PDF + VizieR DUNES J/A+A/555/A11): δ Pav (HIP 99240) is in
+table12 "Non excess sources" (recno 114), NOT table14 (excess sources). Strongest limit
+in the survey: L_dust/L_* < 5e-7 (one of the two lowest, both within 6.1 pc). PACS
+70/100/160 um all consistent with photosphere (chi = -3.0/+1.2/-0.1). δ Pav absent from
+Beichman 2006, Tanner 2009 (0908.0049), Lawler 2009 (0909.0058) samples. "Lawler & Tanner
+2014" does not exist (2014ApJ...780...28C is a solar-physics paper; the entry confabulated
+the two real 2009 Spitzer papers + a fake 2014 date + a physics arXiv id).
+=> FIX: remove δ Pav from disks_curated (not a disk host); record the Eiroa 2013
+non-detection (L/L* < 5e-7) in the stellar meta_notes; rewrite Phase 3 md disk sections
+(disk_present -> false, geometry rows removed, "cold debris ring" prose replaced with the
+non-detection) in en + ko. Recommended disk source for the limit = Eiroa 2013 (2013A&A...555A..11E).
