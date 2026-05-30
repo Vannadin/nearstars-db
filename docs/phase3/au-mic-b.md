@@ -4,7 +4,7 @@
 AU Microscopii b is a 4.79 ± 0.29 R⊕, 8.99 ± 2.61 M⊕ low-density
 warm Neptune on an 8.463-day orbit around the 22-Myr-old pre-main-sequence
 M1Ve flare star AU Microscopii. Plavchan et al. 2020 (Nature 582, 497;
-`2020Natur.582..497P`, arXiv:2006.13428) discovered the planet in TESS
+`2020Natur.582..497P`, arXiv:2006.13248) discovered the planet in TESS
 transits; Cale et al. 2021 (AJ 162, 295; `2021AJ....162..295C`,
 arXiv:2109.13996) provided the first robust RV mass after Gaussian-process
 detrending of the host star's spot signal; Mallorquin et al. 2024
@@ -45,7 +45,7 @@ pattern choice). No documented divergences.
 | `radius_rearth` | 4.79 ± 0.29 | high | Mallorquin 2024 TESS + ground-based transits |
 | `surface_gravity_g_earth` | 0.39 | high | derived = 8.99 / 4.79² |
 | `density_g_cc` | 0.45 | high | derived; ≈ 0.08 ρ_Earth, ≈ 0.27 ρ_Neptune — puffy envelope confirmed |
-| `insolation_s_earth` | 18.8 | high | derived from L = 0.092 L☉ and a = 0.07 AU |
+| `insolation_s_earth` | 20.8 | high | derived from L = 0.102 L☉ (Donati 2023, recommended) and a = 0.07 AU |
 | `equilibrium_temp_k` (A=0) | 593 | high | derived; consistent with TEPCat 556 K reported with non-zero albedo |
 | `equilibrium_temp_k` (A=0.1) | 577 | high | derived; modest gas-giant albedo |
 | `bond_albedo` | 0.10 | medium | gas-giant Neptune-analog low albedo; Cale 2021 §4 discussion |
@@ -54,7 +54,7 @@ pattern choice). No documented divergences.
 | `atmosphere_present` | true | high | Allart 2023 He I 10830 detection; bulk density requires ≥ 30% H/He by mass |
 | `atmosphere_surface_pressure_pa` | 1.0e7 | medium | hot-Neptune envelope mass ~30% of total → ~10⁷ Pa at the τ = 1 cloud deck; Lopez & Fortney 2014 mass-radius envelope mass-fraction calibration |
 | `atmosphere_composition` | H₂ ~85%, He ~15%, trace H₂O / CH₄ / NH₃ / CO at solar abundance; photochemical haze in upper layer | medium | Allart 2023 He detection; high-mass-loss escape; Lavie 2017 cool-Neptune photochemistry analog |
-| `atmosphere_scale_height_km` | 290 | high | derived: kT/μg with T = 600 K, μ = 2.3 (H/He), g = 3.8 m/s² — large H/He scale height drives Allart 2023's detectability |
+| `atmosphere_scale_height_km` | 567 | high | derived: kT/μg with T = 600 K, μ = 2.3 (H/He), g = 3.8 m/s² — large H/He scale height drives Allart 2023's detectability |
 | `atmosphere_tint_rgb_hex` | `#7c4a32` | low | Tie-break: interesting-first. Photochemical hydrocarbon haze under M-dwarf SED → muted red-brown, deeper than Jupiter's tan; chosen over a uniform peach for clearer banding contrast |
 | `cloud_cover_fraction` | 0.70 | medium | gas-giant analog with banded cloud structure; Sing 2016 hot-Neptune cloud-deck census suggests common |
 | `cloud_morphology` | Jupiter-band-analog zonal cloud structure with bright zones and dark belts; equatorial superrotation jet; faint polar hood under M-dwarf insolation | low | Tie-break: interesting-first. GCM-class simulations of puffy Neptunes (Showman 2009, Lewis 2010 hot-Jupiter analogs adapted to Neptune temperatures) favor banded structure; cfg picks the banded reading over a featureless uniform haze for visual interest |
@@ -65,8 +65,8 @@ pattern choice). No documented divergences.
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I absorption implies mass-loss ~10⁹–10¹⁰ g/s under energy-limited escape with AU Mic XUV; Plavchan 2020 §6 estimates similar; Cale 2021 §5 |
 | `aurora_present` | true | medium | strong stellar wind + H-rich upper atmosphere; H Balmer-α + H₂ Lyman + Werner bands expected |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm + Lyman-α downconverted gives pink-red dominant; interesting-first picks the bright pink over a fainter UV-only rendering |
-| `star_apparent_angular_diameter_deg` | 6.2 | high | derived: 2 × 0.82 R☉ / 0.07 AU × (180/π) ≈ 6.2° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
+| `star_apparent_angular_diameter_deg` | 6.6 | high | derived: 2 × 0.862 R☉ / 0.07 AU × (180/π) ≈ 6.6° |
+| `stellar_illumination_color_temp_k` | 3665 | high | from host star Teff |
 
 ## Surface synthesis
 
@@ -214,10 +214,10 @@ The visual presentation of AU Mic b combines five elements:
   observer. The tail brightens during AU Mic super-flare events.
   Color picked at `#ff6e8c` (H Balmer-α + Lyman-α downconvert) as
   a tie-break against a UV-only rendering that would be invisible.
-- **Star in sky.** AU Mic subtends 6.2° in b's sky (12× the Sun
+- **Star in sky.** AU Mic subtends 6.6° in b's sky (12× the Sun
   from Earth) — a vast deep-red disk taking up roughly 1/30 of the
   full hemisphere. Surface illumination at the substellar cloud
-  top is about 18.8× Earth's, but red-shifted heavily into the
+  top is about 20.8× Earth's, but red-shifted heavily into the
   near-IR; visually the cloud top appears bright but flat-toned
   rather than blue-sky bright. Super-flares (10³⁴ erg events
   several times per year; Tristan 2023) briefly brighten the
@@ -237,7 +237,7 @@ the horizon.
 
 ### Read (visual-informative, drove decisions above)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13428). TESS discovery of AU Mic b; transit-derived radius 4.0 R⊕ (later refined to 4.79); discussion of host XUV environment and atmospheric escape regime. Cornerstone paper.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of AU Mic b; transit-derived radius 4.0 R⊕ (later refined to 4.79); discussion of host XUV environment and atmospheric escape regime. Cornerstone paper.
 - **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). First robust RV mass with multi-instrument GP detrending; reports inflated low density consistent with puffy envelope.
 - **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO + TESS joint analysis; refines b's mass to 8.99 ± 2.61 M⊕ and radius to 4.79 ± 0.29 R⊕; supersedes Cale 2021's higher mass via improved stellar-activity modeling. **Adopted as headline source.**
 - **Allart R. et al. 2023** — *Homogeneous search for helium in the atmosphere of 11 gas giants with HST/STIS and CARMENES*, A&A 677, A164 (`2023A&A...677A.164A`, arXiv:2308.10891). Reports marginal-to-significant He I 10830 Å detection during AU Mic b transit; constrains escape rate and extended-atmosphere geometry. Drives the atmosphere-present and escape-tail cfg picks.

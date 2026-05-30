@@ -1547,7 +1547,7 @@
           "epoch_jd": 2460548.59,
           "mean_anomaly_at_epoch_deg": 0.0,
           "source": "Suárez Mascareño et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
+          "bibcode": "2025A&A...700A..11S",
           "doi": "10.1051/0004-6361/202554723",
           "method": "rv",
           "recommended": true
@@ -1579,7 +1579,7 @@
           "uncertainty_mearth": 0.055,
           "mass_type": "Msini",
           "source": "Suárez Mascareño et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
+          "bibcode": "2025A&A...700A..11S",
           "doi": "10.1051/0004-6361/202554723",
           "method": "rv",
           "recommended": true
@@ -1612,7 +1612,7 @@
           "epoch_jd": 2460557.55,
           "mean_anomaly_at_epoch_deg": 0.0,
           "source": "Suárez Mascareño et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
+          "bibcode": "2025A&A...700A..11S",
           "doi": "10.1051/0004-6361/202554723",
           "method": "rv",
           "recommended": true
@@ -1634,7 +1634,7 @@
           "uncertainty_mearth": 0.038,
           "mass_type": "Msini",
           "source": "Suárez Mascareño et al. 2025",
-          "bibcode": "2025A&A...700A..11M",
+          "bibcode": "2025A&A...700A..11S",
           "doi": "10.1051/0004-6361/202554723",
           "method": "rv",
           "recommended": true

@@ -46,21 +46,21 @@ strong support, low = aesthetic choice within the allowed window.
 | `mass_mjup` | 0.78 ± 0.12 | high | Llop-Sayson 2021 — deprojected from M sin i ≈ 0.66 M_Jup using disk-aligned i = 34° |
 | `mass_mearth` | 248 | high | derived from 0.78 M_Jup × 317.8 |
 | `radius_rjup` | 1.05 | low | Tie-break: no transit. Burrows 2003 / Fortney 2007 evolutionary tracks for 0.78 M_Jup at 0.44 Gyr predict 1.03–1.12 R_Jup with solar metallicity; cfg picks 1.05 as mid-range. Mawet 2019 Ms-band non-detection sets an upper limit excluding hot-start inflated radii > 1.3 R_Jup |
-| `surface_gravity_g_earth` | 22 | medium | derived: g = G M / R² with M = 0.78 M_Jup, R = 1.05 R_Jup → 21.6 m/s² ≈ 22 × Earth |
+| `surface_gravity_g_earth` | 1.8 | medium | derived: g = G M / R² with M = 0.78 M_Jup, R = 1.05 R_Jup → 17.5 m/s² = 1.79 g⊕ (dimensionless g_Earth units, as e.g. TRAPPIST-1 d = 0.624) |
 | `density_g_cc` | 0.85 | medium | derived: 0.78 M_Jup / (1.05 R_Jup)³ × ρ_Jup; consistent with mature solar-composition jovian |
-| `insolation_s_earth` | 0.027 | high | derived: S = L_star / a² = 0.34 L☉ / (3.53 AU)² = 0.0273 S⊕ |
-| `equilibrium_temp_k_a0` | 113 | high | derived: T_eq = 278 K × (L/a²)^0.25 = 278 × 0.0273^0.25 |
-| `equilibrium_temp_k_a03` | 103 | high | derived; Earth-analog A = 0.3 |
-| `bond_albedo` | 0.34 | low | Tie-break: Saturn-analog 0.342 (Hanel 1983; Li 2018) picked over Jupiter's 0.503 because cooler T_eq ≈ 113 K skews cloud chemistry toward thicker ammonia-ice deck more like Saturn than Jupiter; Uranus 0.300 also bracketed |
+| `insolation_s_earth` | 0.026 | high | derived: S = L_star / a² = 0.32 L☉ (Baines & Armstrong 2012, recommended) / (3.53 AU)² = 0.0257 S⊕ |
+| `equilibrium_temp_k_a0` | 111 | high | derived: T_eq = 278 K × (L/a²)^0.25 = 278 × 0.0257^0.25 |
+| `equilibrium_temp_k_a03` | 102 | high | derived; Earth-analog A = 0.3 |
+| `bond_albedo` | 0.34 | low | Tie-break: Saturn-analog 0.342 (Hanel 1983; Li 2018) picked over Jupiter's 0.503 because cooler T_eq ≈ 111 K skews cloud chemistry toward thicker ammonia-ice deck more like Saturn than Jupiter; Uranus 0.300 also bracketed |
 | `intrinsic_luminosity_w_m2` | 0.5 | low | Tie-break: Burrows 2003 cooling track for 0.78 M_Jup at 0.44 Gyr predicts internal T ~ 100 K; cfg picks conservative 0.5 W/m² intrinsic flux (well below Jupiter's 5.4 W/m²; consistent with the older + lower-mass + less-inflated state) |
 | `atmosphere_present` | true | high | gas giant by definition; H₂/He bulk inferred from M-R consistency with solar composition |
 | `atmosphere_reference_pressure_pa` | 100 000 | medium | gas giant has no solid surface; cfg-reference 1 bar level for cloud-deck rendering, conventional jovian KSP atmosphere altitude origin |
-| `atmosphere_composition` | H₂ ~89%, He ~10%, CH₄ ~0.2%, NH₃ ~0.02%, H₂O ~0.01% (deep), trace CO and HCN from photochemistry | low | Tie-break: no spectrum. Solar-composition jovian default per Lodders 2003 protosolar abundance, with Jupiter/Saturn-like volatile inventory and condensation chemistry truncated at T = 113 K equilibrium |
-| `atmosphere_scale_height_km` | 18 | medium | derived: H = kT / (μ m_H g) with T = 113 K, μ = 2.3, g = 22 m/s² ≈ 18 km |
-| `atmosphere_tint_rgb_hex` | `#d8c098` (warm-cream limb haze under K2V illumination) | low | Tie-break: ammonia-ice atmosphere is intrinsically near-white; K2V 5180 K SED shifts perception warmer than Sun-illuminated Jupiter |
+| `atmosphere_composition` | H₂ ~89%, He ~10%, CH₄ ~0.2%, NH₃ ~0.02%, H₂O ~0.01% (deep), trace CO and HCN from photochemistry | low | Tie-break: no spectrum. Solar-composition jovian default per Lodders 2003 protosolar abundance, with Jupiter/Saturn-like volatile inventory and condensation chemistry truncated at T = 111 K equilibrium |
+| `atmosphere_scale_height_km` | 23 | medium | derived: H = kT / (μ m_H g) with T = 111 K, μ = 2.3, g = 17.5 m/s² ≈ 23 km |
+| `atmosphere_tint_rgb_hex` | `#d8c098` (warm-cream limb haze under K2V illumination) | low | Tie-break: ammonia-ice atmosphere is intrinsically near-white; K2V 5039 K SED shifts perception warmer than Sun-illuminated Jupiter |
 | `cloud_cover_fraction` | 0.85 | medium | jovian-analog: zonal banding nearly complete coverage with belt/zone contrast; cfg picks 0.85 to allow distinct dark belts vs bright zones rather than uniform overcast |
 | `cloud_morphology` | zonal bands with ammonia-ice cloud deck at ≈ 0.5–1 bar level; possible water-cloud deck below at ≈ 5 bar (inaccessible to visible imaging); faint photochemical haze layer above 100 mbar from CH₄ photolysis under K2V UV | low | Tie-break: no GCM; cfg adopts Saturn-analog band structure with ε Eri's elevated K-dwarf UV driving a slightly more prominent stratospheric haze layer than Saturn |
-| `cloud_tint_rgb_hex` | `#e8dac4` (warm cream — NH₃ ice + K2V illumination) | low | Tie-break: Saturn's ammonia clouds appear cream-white under solar illumination; under 5180 K K2V the perceived hue shifts further into warm cream |
+| `cloud_tint_rgb_hex` | `#e8dac4` (warm cream — NH₃ ice + K2V illumination) | low | Tie-break: Saturn's ammonia clouds appear cream-white under solar illumination; under 5039 K K2V the perceived hue shifts further into warm cream |
 | `photochemical_haze_present` | true | medium | ε Eri's elevated FUV flux (France 2018 MUSCLES, 5–20× solar) drives CH₄ photolysis above 100 mbar; tholin / hydrocarbon haze layer is expected analogous to Titan's atmosphere chemistry but on a jovian H₂ background |
 | `photochemical_haze_tint_rgb_hex` | `#b08858` (light tholin from CH₄ photolysis under K2V UV) | low | Tie-break: laboratory tholin chemistry (Khare 1984; Hörst 2018) gives orange-tan absorption signatures; haze layer is thin and renders as a subtle limb-darkening rather than a dominant tint |
 | `planet_disk_tint_rgb_hex_primary` | `#e8dac4` (cream-white zones — dominant cloud-deck appearance from a planetary-scale observer) | low | downstream of `cloud_tint_rgb_hex` |
@@ -69,15 +69,15 @@ strong support, low = aesthetic choice within the allowed window.
 | `ring_observed` | false | high | Mawet 2019 Ms-band direct imaging detection without ring component |
 | `rotation_period_hours` | 10 | low | Tie-break: no rotation measurement. Jupiter-analog 9.93 h (Jupiter has fastest jovian rotation in the Solar System); cfg picks 10 h as round-number Jupiter-like value rather than slower Saturn-like (10.7 h) or Uranus-like (17.2 h) because mass-scaling and the angular-momentum budget at 3.5 AU favor Jupiter-class rapid rotation |
 | `magnetic_field_strength_microtesla_equator` | 400 | medium | scaled jovian dynamo: Jupiter's surface field ≈ 430 μT (equator); for 0.78 M_Jup with vigorous convection and Jupiter-like rotation, cfg picks 400 μT — below Jupiter by ~7% reflecting slightly weaker convective drive at lower mass |
-| `magnetic_dipole_moment_normalized_earth` | 17000 | medium | scaling: Jupiter dipole moment ≈ 20 000 × Earth; ε Eri b at 0.78 M_Jup ≈ 17 000 × Earth by linear-mass scaling |
+| `magnetic_dipole_moment_normalized_earth` | 15600 | medium | scaling: Jupiter dipole moment ≈ 20 000 × Earth; ε Eri b at 0.78 M_Jup ≈ 15 600 × Earth by linear-mass scaling (0.78 × 20 000) |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: Jupiter 9.6°, Saturn 0°, Neptune 47°. cfg picks Jupiter-analog 10° for visible auroral oval offset; Saturn-aligned 0° would be visually uninteresting |
 | `aurora_present` | true | medium | ε Eri's stellar wind ≈ 30× solar mass-loss rate (Wood 2002) + cycle-active corona drives strong incident plasma flux at 3.5 AU; combined with jovian magnetospheric capture this produces auroral emission analogous to Jupiter's but with elevated driver |
 | `aurora_color_primary_hex` | `#c84080` (H-Balmer α 656 nm red-pink dominant in H₂-rich jovian atmosphere) | low | Tie-break: Jupiter UV aurora is brightest in Lyα + H₂ Lyman/Werner bands but the visible-band component is H-Balmer α; under K2V illumination context the visible-band aurora reads as red-pink |
 | `aurora_oval_magnetic_latitude_deg` | 70 | medium | Jupiter-analog auroral oval at 65–75° magnetic latitude (Clarke 1996 HST FUV; Bonfond 2017); scales to ε Eri b's magnetospheric standoff |
 | `aurora_intensity_kR_typical` | 1000 | low | Tie-break: Jupiter UV aurora ≈ 100–1000 kR depending on solar wind state (Clarke 2009); ε Eri's 30× solar wind drives proportionally stronger driver; cfg picks 1000 kR as mid-range for ε Eri's active state |
 | `companion_position_relative_belts` | between asteroid-belt analog (3 AU) and intermediate belt (20 AU); inner-gap sculptor in Su 2017 Genie three-belt model | high | Su 2017 §4 — gap-clearing requires a planet of M ≳ 0.5 M_Jup between the two belts; ε Eri b's mass and location match the requirement |
-| `star_apparent_angular_diameter_deg` | 0.115 | high | derived: 2 R_star / a = 2 × 0.759 R☉ / 3.53 AU × (180/π); compares with Sun-from-Jupiter 0.10° |
-| `stellar_illumination_color_temp_k` | 5180 | high | inherited from host Phase 3 (`docs/phase3/eps-eri.md`) |
+| `star_apparent_angular_diameter_deg` | 0.112 | high | derived: 2 R_star / a = 2 × 0.74 R☉ / 3.53 AU × (180/π); compares with Sun-from-Jupiter 0.10° |
+| `stellar_illumination_color_temp_k` | 5039 | high | inherited from host Phase 3 (`docs/phase3/eps-eri.md`) |
 
 ## Surface synthesis
 
@@ -87,8 +87,8 @@ rendering is the cloud deck, conventionally referenced to the 1 bar
 pressure level where the optical opacity transitions from clear gas
 above to dense particulate-laden gas below.
 
-The equilibrium temperature at 3.5 AU under L_star = 0.34 L☉ is
-T_eq ≈ 113 K (A = 0) or 103 K (A = 0.3). Both values are colder than
+The equilibrium temperature at 3.5 AU under L_star = 0.32 L☉ is
+T_eq ≈ 111 K (A = 0) or 102 K (A = 0.3). Both values are colder than
 Jupiter (T_eq ≈ 110 K) and warmer than Saturn (T_eq ≈ 81 K). The
 condensation chemistry on a H₂/He atmosphere at these temperatures
 follows the well-established Lewis 1969 / Atreya 1999 thermochemical
@@ -103,11 +103,11 @@ higher mass.
 The cloud deck reads as warm cream-white (`#e8dac4`) under K2V
 illumination. Ammonia ice in the laboratory has an intrinsic albedo
 in the visible near 0.8–0.9 with a slight yellow tint from trace
-absorption at 1.5–2.0 μm; under 5180 K K2V illumination the perceived
+absorption at 1.5–2.0 μm; under 5039 K K2V illumination the perceived
 hue shifts further toward warm cream relative to the Sun-illuminated
 Jupiter palette. Belt-zone contrast (`#c4a878` warm cream-brown for
 belt bands) is muted compared to Jupiter because the convective drive
-at T_eq ≈ 113 K is weaker than Jupiter's, but stronger than Saturn's
+at T_eq ≈ 111 K is weaker than Jupiter's, but stronger than Saturn's
 because the planet's internal heat flux (~0.5 W/m² adopted) gives a
 nontrivial convective overturn — broadly consistent with Sromovsky
 2007 belt-zone amplitude scaling.
@@ -145,13 +145,13 @@ Burrows 2012 hot-start models with T_eff > 700 K are excluded at the
 prediction (T_eff ≈ 150 K including internal flux) consistent with
 the data. The atmospheric composition is therefore drawn entirely
 from the solar-composition jovian default per Lodders 2003 protosolar
-abundance + Atreya 1999 condensation chemistry truncated at T = 113 K.
+abundance + Atreya 1999 condensation chemistry truncated at T = 111 K.
 
 **Pressure reference.** Gas giants have no solid surface; the cfg
 reference pressure is set at 1 bar (100 000 Pa) where the ammonia
 cloud deck condenses. Conventional KSP atmosphere altitude origin
 matches this level. Above 1 bar, pressure decreases with scale
-height H ≈ 18 km — about half Earth's and Jupiter's scale heights
+height H ≈ 23 km — somewhat below Earth's and Jupiter's scale heights
 because of the colder temperature combined with higher gravity.
 
 **Composition.** H₂ ≈ 89%, He ≈ 10% by volume — solar protosolar
@@ -182,12 +182,12 @@ without committing to a specific optical depth.
 
 **Sky appearance from a Hill-sphere observer.** The Hill sphere
 radius for 0.78 M_Jup at 3.53 AU around 0.82 M☉ is r_H ≈
-0.36 AU = 280 R_planet — large enough to host substantial moon
+0.237 AU = 472 R_planet — large enough to host substantial moon
 populations. From an observer on a hypothetical large moon at, say,
 20 R_planet (Io-analog distance scaled to ε Eri b's larger radius),
 the planet subtends ≈ 5.7° in the sky — nearly 12× the lunar
 diameter from Earth — and dominates the daytime sky with a banded
-cream-white disk. The ε Eri star itself is a tiny 0.115° point — 1/4
+cream-white disk. The ε Eri star itself is a tiny 0.112° point — 1/4
 the Sun's angular size from Earth, comparable to Sun-from-Jupiter
 geometry — appearing as a deep orange point with the K2V color
 temperature. The contrast between the warm-cream planet disk and the
@@ -245,7 +245,7 @@ or axis-tilt cfg) = 25° from orbital normal.
 convection and a Jupiter-class rotation period (10 h) sustains a
 strong dipolar field. Scaling from Jupiter (surface equatorial field
 ≈ 430 μT, dipole moment ≈ 2 × 10⁴ × Earth) by linear mass gives ε
-Eri b ≈ 400 μT and ≈ 1.7 × 10⁴ × Earth — both adopted in the cfg.
+Eri b ≈ 400 μT and ≈ 1.56 × 10⁴ × Earth — both adopted in the cfg.
 The dipole tilt is set to Jupiter-analog 10° for visually distinct
 auroral oval rendering. The Jupiter-analog rotation + magnetic field
 combination places ε Eri b firmly in the "strong magnetosphere"
@@ -283,7 +283,7 @@ Combining surface (cloud-deck) and atmosphere decisions:
   (`#c84080`) auroral rings, brighter than Jupiter's visible aurora
   by ~10× given ε Eri's elevated stellar wind. Visible from
   nightside angles only; obscured by the cloud deck on the dayside.
-- **Star in sky.** ε Eridani subtends 0.115° from ε Eri b — about
+- **Star in sky.** ε Eridani subtends 0.112° from ε Eri b — about
   the angular diameter of Saturn from Earth — appearing as a deep
   orange (K2V `#ffd9a8`) point/disk. From a hypothetical large moon
   at 20 R_planet, the planet itself dominates the sky at ~5.7°,
@@ -299,7 +299,7 @@ Combining surface (cloud-deck) and atmosphere decisions:
   at the 3.5 AU separation; non-detection sets `ring_present = false`
   with medium confidence (a Jupiter-faint ring is below the Mawet
   detection threshold and not excluded).
-- **Hill-sphere context.** r_H ≈ 0.36 AU = 280 R_planet. Large
+- **Hill-sphere context.** r_H ≈ 0.237 AU = 472 R_planet. Large
   enough to host a substantial moon population; cfg does not commit
   to specific moons (out of scope for this Phase 3) but the
   Hill-sphere extent itself is a visual landmark when rendered as a
@@ -481,7 +481,7 @@ b-relevant paper set is fully contained within the host bibliography.
   still stores i = 78.81° ± 29.34° (Llop-Sayson 2021 RV-only). A
   future Phase 2 refresh should update the DB to the coplanar value
   or carry both as alternative measurements.
-- **Moon system Phase 3**: Hill-sphere radius ~0.36 AU is large
+- **Moon system Phase 3**: Hill-sphere radius ~0.237 AU is large
   enough to host a substantial moon population. A future Phase 3
   follow-up could speculate on icy/rocky moons in the 5–50 R_planet
   range, anchored on (a) the protoplanetary-disk circumplanetary-

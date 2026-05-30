@@ -47,9 +47,9 @@ False Positive reclassification.
 | `surface_gravity_g_earth` | 1.20 | low | derived = 3.93 / 1.81²; same caveat |
 | `density_g_cc` | 3.66 | low | derived; sub-Neptune-class if it existed |
 | `water_mass_fraction` | 0.10–0.30 | low | Theoretical: an inner-edge optimistic-HZ super-Earth at 0.538 AU around a metal-poor G8V would carry a modest volatile inventory in the Feng 2017 picture |
-| `insolation_s_earth` | 1.58 | low | derived L_bol/a²: 0.457 L☉ / (0.538 AU)² — between Earth (1.0) and Venus (1.91); inside the conservative HZ inner edge for G8V (Kopparapu 2014: ~1.05 S⊕) |
-| `equilibrium_temp_k` (A=0) | 313 | low | derived 278 × (L/a²)^0.25 — slightly above Earth's 255 K |
-| `equilibrium_temp_k` (A=0.3) | 286 | low | derived with Earth-analog albedo — comfortably in the liquid-water range |
+| `insolation_s_earth` | 1.69 | low | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / (0.538 AU)² — between Earth (1.0) and Venus (1.91); inside the conservative HZ inner edge for G8V (Kopparapu 2014: ~1.05 S⊕) |
+| `equilibrium_temp_k` (A=0) | 317 | low | derived 278 × (L/a²)^0.25 — slightly above Earth's 255 K |
+| `equilibrium_temp_k` (A=0.3) | 290 | low | derived with Earth-analog albedo — comfortably in the liquid-water range |
 | `bond_albedo` | 0.30 | low | Tie-break: Earth-analog default for a temperate super-Earth in the original Feng 2017 picture |
 | `surface_temp_global_mean_k` | 295 | low | Earth-analog moderate-greenhouse scenario from the historical reading — assumes thin N₂/CO₂ atmosphere with modest H₂O vapor |
 | `surface_temp_substellar_k` | 310 | low | Asynchronous slow rotator — diurnal substellar peak modestly above mean |
@@ -57,7 +57,7 @@ False Positive reclassification.
 | `atmosphere_present` | true (Earth-analog) | low | Historical Feng 2017 picture assumed a temperate atmosphere; no observation ever attempted because the planet does not exist |
 | `atmosphere_surface_pressure_pa` | 100 000 | low | 1 bar adopted as the canonical Earth-analog default for the historical scenario; never measured |
 | `atmosphere_composition` | N₂ ~78%, CO₂ ~2–5%, H₂O variable, trace O₂ uncertain | low | Historical Earth-analog reading; metal-poor host slightly reduces primordial volatile inventory; no biosphere assumption |
-| `atmosphere_scale_height_km` | 8.5 | low | derived: kT/μg with T≈290 K, μ=29, g=11.8 m/s² |
+| `atmosphere_scale_height_km` | 7.0 | low | derived: kT/μg with T≈290 K, μ=29, g=11.8 m/s² |
 | `atmosphere_tint_rgb_hex` | `#8a99aa` (pale blue-grey under cleaner G8V SED) | low | Tie-break: Rayleigh scattering at 1 bar gives an Earth-like blue, slightly cooler-toned than the Sun's pale-blue because of the metal-poor SED |
 | `cloud_cover_fraction` | 0.50 | low | Earth-analog default for the historical picture |
 | `cloud_tint_rgb_hex` | `#ece6dc` (clean cream-white H₂O clouds under G8V light) | low | Tie-break: standard H₂O cloud-top reflectance under the cleaner-yellow G8V SED |
@@ -77,16 +77,16 @@ False Positive reclassification.
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break: [OI] 557.7 nm green if any O₂; N₂ Vegard-Kaplan blue-green otherwise |
 | `aurora_intensity_kR_typical` | 1 | low | Quiet host — auroral excitation rate well below Earth's |
 | `star_apparent_angular_diameter_deg` | 0.786 | low | derived: 2 × R★ / a × (180/π); roughly 1.5× the Sun seen from Earth |
-| `stellar_illumination_color_temp_k` | 5344 | low | host Teff (Pavlenko 2012); applies to the historical scenario only |
+| `stellar_illumination_color_temp_k` | 5370 | low | host Teff (Pavlenko 2012); applies to the historical scenario only |
 
 ## Surface synthesis
 
-In the Feng 2017 picture, τ Ceti e sat at 1.58 S⊕ — comparable to
+In the Feng 2017 picture, τ Ceti e sat at 1.69 S⊕ — comparable to
 or slightly inside the conservative habitable zone inner edge for a
 G8V host (Kopparapu 2014: ~1.05 S⊕). At this insolation, e was the
 "interesting" planet of the four — warmer than Earth but not in
 the Venus-class runaway regime, with an equilibrium temperature of
-313 K at zero albedo or 286 K under an Earth-analog 0.3 bond
+317 K at zero albedo or 290 K under an Earth-analog 0.3 bond
 albedo, comfortably in the liquid-water range. Güdel 2014's
 optimistic habitable zone (which extends inward to 0.75 S⊕ for an
 Earth-mass body) was the framework most often cited when e was
@@ -136,10 +136,10 @@ Earth-analog default is 1 bar surface pressure. This was the
 working assumption in habitability discussions and in popular-
 science treatments (including *Project Hail Mary*'s Adrian
 rendering). Under Wordsworth 2015's framework, an inner-HZ super-
-Earth at 1.58 S⊕ on a metal-poor quiet G dwarf could maintain a
+Earth at 1.69 S⊕ on a metal-poor quiet G dwarf could maintain a
 1-bar N₂-dominated atmosphere over multi-Gyr timescales — XUV-
 driven hydrodynamic loss is negligible (log L_X ≤ 26.5; Schmitt
-1985), Jeans escape for N₂ at Teq = 286 K is ineffective.
+1985), Jeans escape for N₂ at Teq = 290 K is ineffective.
 
 **Composition (historical).** Earth-analog with metal-poor host
 correction: N₂ ~78%, CO₂ ~2–5% (slightly elevated relative to Earth
@@ -239,7 +239,7 @@ it does not).
 - **Star in sky (historical).** τ Ceti would subtend 0.786° from
   e's surface — about 1.5× the Sun's angular size from Earth. A
   bright pale-yellow disk under the metal-poor G8V illumination,
-  delivering 1.58× Earth's irradiance at the substellar point.
+  delivering 1.69× Earth's irradiance at the substellar point.
 - **"Adrian" cultural cross-reference.** Andy Weir's *Project
   Hail Mary* (2021) names e as Adrian and uses it as the
   protagonist's mission target. The novel adopts Feng 2017's

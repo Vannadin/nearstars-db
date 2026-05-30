@@ -53,7 +53,7 @@ inheritance from AU Mic c's better-constrained parameters).
 | `radius_rearth` | 2.9 | low | Tie-break: no transit; estimated from Chen & Kipping 2017 mass-radius relation for a sub-Neptune at 21 M⊕ (≈ 2.6–3.2 R⊕ window). cfg picks 2.9 for visual parallel with AU Mic c at 2.79 R⊕ |
 | `surface_gravity_g_earth` | 2.5 | low | derived = 21.1 / 2.9² (assuming the placeholder radius); strongly dependent on the radius assumption |
 | `density_g_cc` | 4.7 | low | derived; slightly higher than AU Mic c's 3.7 g/cc — consistent with smaller envelope mass fraction at greater distance |
-| `insolation_s_earth` | 3.6 | low | derived from L = 0.092 L☉ and a = 0.161 AU |
+| `insolation_s_earth` | 3.9 | low | derived from L = 0.102 L☉ (Donati 2023, recommended) and a = 0.161 AU |
 | `equilibrium_temp_k` (A=0) | 381 | low | derived; substantially cooler than b/c/d because of greater distance |
 | `equilibrium_temp_k` (A=0.1) | 371 | low | derived; modest sub-Neptune albedo |
 | `bond_albedo` | 0.10 | low | sub-Neptune analog low albedo; no measurement |
@@ -62,7 +62,7 @@ inheritance from AU Mic c's better-constrained parameters).
 | `atmosphere_present` | true (assumed thin H/He envelope) | low | mass 21 M⊕ at 0.16 AU under M-dwarf XUV is in the regime where a small H/He envelope can survive over 22 Myr (Owen & Wu 2017); no direct detection |
 | `atmosphere_surface_pressure_pa` | 1.0e6 | low | cloud-deck pressure for a thin H/He envelope; same analog as AU Mic c |
 | `atmosphere_composition` | H₂ ~80%, He ~15%, H₂O ~2%, CH₄ + NH₃ + CO trace; potential photochemical haze | low | inherited from AU Mic c sub-Neptune analog; no direct measurement |
-| `atmosphere_scale_height_km` | 50 | low | derived: kT/μg with T = 380 K, μ = 2.5, g = 24.5 m/s² |
+| `atmosphere_scale_height_km` | 51 | low | derived: kT/μg with T = 380 K, μ = 2.5, g = 24.5 m/s² |
 | `atmosphere_tint_rgb_hex` | `#8a6a4c` | low | Tie-break: same family as AU Mic c — sub-Neptune photochemical haze under M-dwarf SED. Cooler than c (380 K vs 450 K) but cfg keeps the same hex for visual consistency across the AU Mic sub-Neptune pair |
 | `cloud_cover_fraction` | 0.60 | low | sub-Neptune analog; slightly less than c because of cooler temperature and reduced photochemical haze generation |
 | `cloud_morphology` | banded zonal cloud structure with equatorial superrotation; weaker than c's banding because of cooler temperature and slower rotation; potential H₂O/NH₃ ice cloud condensation at low latitudes | low | Showman 2009 scaled to cooler sub-Neptune; canonical reading for warm sub-Neptunes; specific morphology uncertain without observations |
@@ -73,8 +73,8 @@ inheritance from AU Mic c's better-constrained parameters).
 | `atmospheric_escape_rate_g_s` | 1e7 | low | lower than c because of greater distance from AU Mic; energy-limited estimate with AU Mic XUV at 0.16 AU |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b/c because of greater distance and smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b/c but fainter |
-| `star_apparent_angular_diameter_deg` | 2.7 | low | derived: 2 × 0.82 R☉ / 0.161 AU × (180/π) ≈ 2.7° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff (one parameter that doesn't depend on e being confirmed) |
+| `star_apparent_angular_diameter_deg` | 2.9 | low | derived: 2 × 0.862 R☉ / 0.161 AU × (180/π) ≈ 2.9° |
+| `stellar_illumination_color_temp_k` | 3665 | high | from host star Teff (one parameter that doesn't depend on e being confirmed) |
 
 ## Surface synthesis
 
@@ -150,8 +150,8 @@ around a flare-saturated M1V is not measurable from current data.
 **Sky appearance.** Under the assumed thin H/He envelope, the
 daytime sky on e (if descending toward the cloud deck) would
 appear as a deeper-cream-toned banded surface lit by AU Mic at
-2.7° angular diameter. Surface insolation 3.6× Earth's — substantial,
-but lower than at b (18.8×) or c (6.5×). The visual presentation
+2.9° angular diameter. Surface insolation 3.9× Earth's — substantial,
+but lower than at b (20.8×) or c (7.2×). The visual presentation
 would be a smaller, cooler cousin to c.
 
 **Atmospheric escape.** The XUV-driven escape rate at 0.16 AU
@@ -201,7 +201,7 @@ The visual presentation of AU Mic e (conditional on confirmation)
 is a smaller, cooler, more weakly-banded cousin to AU Mic c:
 
 - **Global appearance.** A warm sub-Neptune disk with faint zonal
-  banding, lit by AU Mic at 2.7° angular diameter (5× the Sun from
+  banding, lit by AU Mic at 2.9° angular diameter (5× the Sun from
   Earth — still dominant but reduced compared to the inner three
   planets). The disk shows muted red-brown bands (`#8a6a4c` for
   primary haze, `#a08868` for zone clouds) — slightly cooler-toned
@@ -220,9 +220,9 @@ is a smaller, cooler, more weakly-banded cousin to AU Mic c:
 - **No prominent escape tail.** Unlike b, e's atmospheric escape
   is estimated at ~10⁷ g/s — invisible at any practical observation
   geometry. Cfg renders no extended halo or escape tail for e.
-- **Star in sky.** AU Mic subtends 2.7° in e's sky (5× the Sun
+- **Star in sky.** AU Mic subtends 2.9° in e's sky (5× the Sun
   from Earth) — a moderate red disk dominating the daytime sky.
-  Surface insolation 3.6× Earth's at substellar cloud top.
+  Surface insolation 3.9× Earth's at substellar cloud top.
   Super-flares brighten illumination by 1–3 magnitudes for tens of
   minutes — least dramatic among the four planets because of
   greatest distance, but still substantial because of AU Mic's
@@ -252,7 +252,7 @@ dominate the appearance from any AU Mic vantage point.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13428). TESS discovery of b; defines the system's stellar-activity context relevant to the e-controversy.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of b; defines the system's stellar-activity context relevant to the e-controversy.
 - **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, arXiv:2102.05288). Discovery of c; the sub-Neptune analog from which most of e's cfg parameters are inherited.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, arXiv:2306.00077). TESS flare census; rate 5.6/day above 10³¹ erg. Drives the activity-contamination concern for the e RV signal.
 - **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, arXiv:2012.04970). SPIRou near-IR ZDI + RV of AU Mic; methodology that fed into the Donati 2025 SPIRou + ESPRESSO joint analysis.

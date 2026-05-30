@@ -4,9 +4,9 @@
 τ Ceti h 는 metal-poor G8V τ Ceti 주위를 49.41 일 주기로 0.243 AU 에서
 도는 1.83 M⊕ (M sin i) RV 후보 행성입니다 (Feng 2017,
 `2017AJ....154..135F`). `db/systems/tau_cet.json` 에서 g (0.133 AU) 와
-f (1.334 AU) 사이에 위치. 호스트 광도 0.457 L☉ 기준 조사량은
-**7.74 S⊕** — 더 어둡고 차가운 호스트라는 점을 빼면 Venus 급 조사량.
-평형 온도는 albedo 0 에서 466 K, Venus 형 구름 albedo 에서 426 K 로
+f (1.334 AU) 사이에 위치. 호스트 광도 0.488 L☉ 기준 조사량은
+**8.26 S⊕** — 더 어둡고 차가운 호스트라는 점을 빼면 Venus 급 조사량.
+평형 온도는 albedo 0 에서 472 K, Venus 형 구름 albedo 에서 334 K 로
 H₂O 임계점보다 한참 위, 고전적 runaway-greenhouse 영역. 행성은 NEA
 에서 **disputed** (`pl_controv_flag = 1`) 로 표시됩니다 — RV 단독,
 transit 없음, 직접 영상 없음. 주목할 점은 h 의 이심률 (0.23) 이
@@ -38,9 +38,9 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `surface_gravity_g_earth` | 1.29 | medium | derived = 1.83 / 1.19² |
 | `density_g_cc` | 5.99 | medium | derived. 지구형 암석 조성이 mass–radius 관계 픽과 일관 |
 | `water_mass_fraction` | < 0.001 | medium | runaway-greenhouse 이력. 원시 물은 광분해되어 H 로 Gyr 시간 척도에 걸쳐 손실. 표면은 절대적으로 건조 |
-| `insolation_s_earth` | 7.74 | high | derived L_bol/a²: 0.457 / 0.243² |
-| `equilibrium_temp_k` (A=0) | 466 | high | derived 278 × (L/a²)^0.25 |
-| `equilibrium_temp_k` (A=0.75, Venus-cloud) | 330 | high | Venus-analog 구름-정상 bond albedo 로 derived |
+| `insolation_s_earth` | 8.26 | high | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / 0.243² |
+| `equilibrium_temp_k` (A=0) | 472 | high | derived 278 × (L/a²)^0.25 |
+| `equilibrium_temp_k` (A=0.75, Venus-cloud) | 334 | high | Venus-analog 구름-정상 bond albedo 로 derived |
 | `bond_albedo` | 0.75 | medium | Venus-analog 황산염 구름 데크. Tomasko 2008 Venus bond albedo |
 | `surface_temp_global_mean_k` | 720 | medium | 50-bar CO₂ + H₂SO₄ 구름의 runaway-greenhouse. ~Venus 표면 온도 |
 | `surface_temp_substellar_k` | 730 | medium | 두꺼운 대기가 dayside vs. nightside 를 균질화. substellar 증폭 최소 |
@@ -48,7 +48,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `atmosphere_present` | true (두꺼운 CO₂) | medium | 채택된 Venus-analog 시나리오. 조용한 호스트 XUV 가 7 Gyr 동안 무거운 CO₂ 를 보존 |
 | `atmosphere_surface_pressure_pa` | 5 000 000 | medium | 50 bar — Venus 92 bar 와 지구 1 bar 사이의 중간 값. metal-poor 호스트가 원시 탈가스 휘발성 인벤토리를 줄였음을 시사해 Venus 보다 낮음 |
 | `atmosphere_composition` | CO₂ ~95%, N₂ ~3.5%, SO₂ + H₂SO₄ 에어로졸 ~1%, 미량 H₂O <100 ppm | medium | Venus analog. 화산 SO₂ 에서 황산염 에어로졸을 가진 CO₂-runaway 종점 |
-| `atmosphere_scale_height_km` | 12 | medium | derived. kT/μg with T≈460 K (중간 대기), μ=44, g=12.6 m/s² |
+| `atmosphere_scale_height_km` | 6.9 | medium | derived. kT/μg with T≈460 K (중간 대기), μ=44, g=12.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#d8c490` (G8V 조명 아래 CO₂ + 황산염 에어로졸 안개의 따뜻한 노랑-크림) | medium | Venus-analog 구름-정상 반사도. G8V 조명은 Sol 보다 더 깨끗한 노랑이라 Venus 보다 살짝 더 차가운-노랑 톤 |
 | `cloud_cover_fraction` | 1.00 | high | Venus-analog 완전 구름 커버. 모든 파장에서 표면 가림 |
 | `cloud_morphology` | 저위도에서 미세한 띠 모양 열 구조를 가진 전구 균질 황산염 안개. Venus 의 그것과 유사한 극 "collar" 피처 가능 | medium | Tomasko 2008 Venus 형태. 자전 속도가 Hadley-cell 구조에 충분히 비슷 |
@@ -67,11 +67,11 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `radiogenic_heat_w_m2` | 0.04 | medium | 지구형 맨틀 방사성을 질량으로 스케일 |
 | `aurora_present` | false | high | 전구 자기장 없음 → 유도 전용 태양풍 상호작용. auroral 오발 없음 (Venus-analog) |
 | `star_apparent_angular_diameter_deg` | 1.74 | high | derived. 2 × R★ / a × (180/π). 지구에서 본 태양의 3.3× |
-| `stellar_illumination_color_temp_k` | 5344 | high | 호스트 Teff (Pavlenko 2012) |
+| `stellar_illumination_color_temp_k` | 5370 | high | 호스트 Teff (Pavlenko 2012) |
 
 ## Surface synthesis
 
-τ Ceti h 는 시스템의 **Venus analog** 입니다. 7.74 S⊕ 조사량에서는
+τ Ceti h 는 시스템의 **Venus analog** 입니다. 8.26 S⊕ 조사량에서는
 적당한 원시 대기 탈가스조차 runaway greenhouse 로 이어집니다 — H₂O 가
 H + O 로 광분해되고, H 가 탈출 (이 저-XUV 호스트에서는 활성 초기
 태양 주위 Venus 보다 느리게 Jeans 로, 그래도 7 Gyr 에 걸쳐 효율적),
@@ -136,7 +136,7 @@ cfg 는 **황산염 에어로졸 구름을 가진 50-bar CO₂ runaway-greenhous
 h 의 지배적 시각 피처.
 
 **표면에서의 하늘 모습.** 노랑-크림 안개가 별을 가림. 표면 조명은
-구름 정상에서의 7.74 S⊕ 에도 불구하고 입사 플럭스의 약 5% — 거의
+구름 정상에서의 8.26 S⊕ 에도 불구하고 입사 플럭스의 약 5% — 거의
 표면에서의 황혼 조건. 표면 시야는 보이는 별 원반 없는 균일한 노랑-
 갈 글로우. Venus-analog 조건. 궤도에서 h 는 미세한 띠를 가진 특징
 없는 노랑-크림 진주 (`#e0cba0`).
@@ -164,12 +164,12 @@ P_spin) = 49.41 × 32.94 / 16.47 ≈ 98.8 d (대략 2 × P_orb). 느린
 
 **조석 고정 시간 척도.** P = 49.41 d 는 g 의 20 d 보다 훨씬 길고.
 τ_tidal 은 P^(13/3) 로 스케일하므로 h 의 조석 damping 은 g 의 약
-(49.41/20)^(13/3) ≈ 250× 느림. g 가 7 Gyr 동안 고정되었든 아니든,
+(49.41/20)^(13/3) ≈ 50× 느림. g 가 7 Gyr 동안 고정되었든 아니든,
 h 는 거의 확실히 완전 고정이 아님 — 안정 libration 을 가진 3:2
 공명이 가장 plausible 한 상태.
 
-**KSP 구현 노트.** 3:2 의 경우. `rotationPeriod` = (3/2) × 49.41 d ×
-86400 s/d ≈ 6.4 × 10⁶ s. 비동기 빠른-자전자 대안 (가능성 훨씬 낮음).
+**KSP 구현 노트.** 3:2 의 경우. `rotationPeriod` = (2/3) × 49.41 d ×
+86400 s/d ≈ 32.94 d ≈ 2.85 × 10⁶ s. 비동기 빠른-자전자 대안 (가능성 훨씬 낮음).
 24 h 지구 analog.
 
 **Obliquity.** 7 Gyr 조석 damping 이 obliquity 를 0 으로 끌어냄.

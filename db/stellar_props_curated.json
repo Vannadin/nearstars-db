@@ -2013,7 +2013,7 @@
         "uncertainty_msun": 0.0022,
         "method": "evolutionary_model",
         "reference": "Suárez Mascareño et al. 2025",
-        "bibcode": "2025A&A...700A..11M",
+        "bibcode": "2025A&A...700A..11S",
         "doi": "10.1051/0004-6361/202554723",
         "recommended": true
       },
@@ -2060,7 +2060,7 @@
         "uncertainty_rsun": 0.021,
         "method": "evolutionary_model",
         "reference": "Suárez Mascareño et al. 2025",
-        "bibcode": "2025A&A...700A..11M",
+        "bibcode": "2025A&A...700A..11S",
         "doi": "10.1051/0004-6361/202554723",
         "recommended": false
       },

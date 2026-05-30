@@ -42,7 +42,7 @@ tint hex). No documented divergences.
 | `radius_rearth` | 2.79 ± 0.18 | high | Mallorquin 2024 TESS reanalysis |
 | `surface_gravity_g_earth` | 1.86 | high | derived = 14.46 / 2.79² |
 | `density_g_cc` | 3.7 | high | derived; ≈ 0.67 ρ_Earth — consistent with thin H/He + rocky core OR water-rich mantle |
-| `insolation_s_earth` | 6.5 | high | derived from L = 0.092 L☉ and a = 0.119 AU |
+| `insolation_s_earth` | 7.2 | high | derived from L = 0.102 L☉ (Donati 2023, recommended) and a = 0.119 AU |
 | `equilibrium_temp_k` (A=0) | 454 | high | derived; consistent with TEPCat 428 K reported with non-zero albedo |
 | `equilibrium_temp_k` (A=0.1) | 442 | high | derived; modest sub-Neptune albedo |
 | `bond_albedo` | 0.10 | medium | sub-Neptune analog low albedo; cloud-deck reflectance |
@@ -51,7 +51,7 @@ tint hex). No documented divergences.
 | `atmosphere_present` | true (thin H/He envelope) | medium | density consistent with envelope mass ~5%; Lopez & Fortney 2014 scaling; no direct atmospheric detection yet |
 | `atmosphere_surface_pressure_pa` | 1.0e6 | medium | cloud-deck pressure for thin envelope; sub-Neptune analog; Owen & Wu 2017 photoevaporation valley framework |
 | `atmosphere_composition` | H₂ ~80%, He ~15%, H₂O ~2%, CH₄ + NH₃ + CO trace; potential photochemical haze | medium | sub-Neptune analog; if water-world variant, H₂O could be higher (5–10%) |
-| `atmosphere_scale_height_km` | 60 | high | derived: kT/μg with T = 450 K, μ = 2.5 (H/He + heavier admixture), g = 18.2 m/s² |
+| `atmosphere_scale_height_km` | 82 | high | derived: kT/μg with T = 450 K, μ = 2.5 (H/He + heavier admixture), g = 18.2 m/s² |
 | `atmosphere_tint_rgb_hex` | `#8a6a4c` | low | Tie-break: interesting-first. Sub-Neptune photochemical haze under M-dwarf SED → muted red-brown, similar to b but less pronounced because of less inflation |
 | `cloud_cover_fraction` | 0.65 | medium | sub-Neptune analog with banded structure but more variable than puffy Neptunes |
 | `cloud_morphology` | banded zonal cloud structure with equatorial superrotation, less pronounced than b; potential H₂O/NH₃ ice cloud condensation at terminator | medium | Showman 2009 scaled to sub-Neptune temperature + rotation; canonical for warm sub-Neptunes |
@@ -62,8 +62,8 @@ tint hex). No documented divergences.
 | `atmospheric_escape_rate_g_s` | 1e8 | medium | lower than b because of greater gravity well + lower insolation; energy-limited estimate from AU Mic XUV + c's parameters |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b due to smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b but fainter |
-| `star_apparent_angular_diameter_deg` | 3.7 | high | derived: 2 × 0.82 R☉ / 0.119 AU × (180/π) ≈ 3.7° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
+| `star_apparent_angular_diameter_deg` | 3.9 | high | derived: 2 × 0.862 R☉ / 0.119 AU × (180/π) ≈ 3.9° |
+| `stellar_illumination_color_temp_k` | 3665 | high | from host star Teff |
 
 ## Surface synthesis
 
@@ -130,11 +130,11 @@ illumination, with the equatorial superrotation jet visible but less
 pronounced than b's. The cloud-top color (`#b0987a`) is more muted
 than b's (`#c0a880`) because of the higher gravity and reduced
 atmospheric scale height — less haze accumulation in the visible
-column. The star fills 3.7° in c's sky (about 7× the Sun from Earth)
-and is the dominant illumination source; surface insolation is 6.5×
+column. The star fills 3.9° in c's sky (about 7× the Sun from Earth)
+and is the dominant illumination source; surface insolation is 7.2×
 Earth's at the substellar cloud top, but red-shifted.
 
-**Atmospheric escape.** With c at 0.119 AU receiving 6.5× Earth's
+**Atmospheric escape.** With c at 0.119 AU receiving 7.2× Earth's
 insolation, the XUV-driven escape rate is roughly an order of
 magnitude lower than b's: ~10⁸ g/s under energy-limited assumptions
 with AU Mic's saturated-regime XUV flux. This is sufficient to lose
@@ -165,7 +165,7 @@ match the orbital `period`.
 
 **Mild seasonal modulation.** Obliquity damped to zero, but
 eccentricity 0.18 drives substantial insolation variation (1 +/- 36%)
-along the orbit. Periapsis insolation is ~9 S⊕, apoapsis ~4 S⊕ — a
+along the orbit. Periapsis insolation is ~11 S⊕, apoapsis ~5 S⊕ — a
 factor-of-2 variation. The thick atmosphere smooths this to ~30 K
 cloud-top temperature variation across the orbit, visible as a
 modest brightening of the dayside near periapsis.
@@ -181,7 +181,7 @@ host-star spot signal would dominate at AU Mic c's transit depth.
 The visual presentation of AU Mic c is a softer, smaller cousin to b:
 
 - **Global appearance.** A warm sub-Neptune disk with muted zonal
-  banding, lit by AU Mic at 3.7° angular diameter (7× the Sun from
+  banding, lit by AU Mic at 3.9° angular diameter (7× the Sun from
   Earth — still dominant but no longer overwhelming). The disk shows
   muted red-brown bands (`#8a6a4c` for primary haze, `#b0987a` for
   zone clouds) — slightly more muted than b because of less
@@ -189,8 +189,8 @@ The visual presentation of AU Mic c is a softer, smaller cousin to b:
 - **Banded structure.** Equatorial superrotation jet produces a
   faint equatorial zone with darker mid-latitude belts. Polar
   regions show subtle hood-like darkening. Bands are narrower than
-  b's because of the smaller atmospheric scale height (60 km vs.
-  290 km) — they appear as fine stripes rather than broad zones.
+  b's because of the smaller atmospheric scale height (82 km vs.
+  567 km) — they appear as fine stripes rather than broad zones.
   Tie-break: chose banded over uniform haze for visual interest.
 - **Cloud-top texture.** Less turbulent than b — c's smaller scale
   height + slower rotation means eddies and Rossby waves develop
@@ -201,9 +201,9 @@ The visual presentation of AU Mic c is a softer, smaller cousin to b:
   rather than a comet-like tail. Cfg renders this as a subtle
   upper-atmosphere glow at the day-night terminator during super-flare
   events, not as a discrete trailing structure.
-- **Star in sky.** AU Mic subtends 3.7° in c's sky (7× the Sun from
+- **Star in sky.** AU Mic subtends 3.9° in c's sky (7× the Sun from
   Earth) — a moderate-sized deep-red disk dominating the daytime sky.
-  Surface insolation 6.5× Earth's at substellar cloud top.
+  Surface insolation 7.2× Earth's at substellar cloud top.
   Super-flares brighten illumination by 1–3 magnitudes for tens of
   minutes — slightly less dramatic than at b because of greater
   distance.
@@ -230,7 +230,7 @@ spots crossing the stellar disk lasting ~3 hours.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13428). TESS discovery of b; provides context for the system's overall stellar-activity environment and the multi-spot complexity of AU Mic's lightcurve.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of b; provides context for the system's overall stellar-activity environment and the multi-spot complexity of AU Mic's lightcurve.
 - **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). First robust RV mass for b with GP detrending; methodology applied to c.
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719). TTV-based dynamical mass for b and c; introduces d candidate. Confirms c's mass within Mallorquin 2024 uncertainty.
 - **Zeng L. et al. 2019** — *Growth model interpretation of planet size distribution*, PNAS 116, 9723 (`2019PNAS..116.9723Z`, arXiv:1906.04253). Water-world mass-radius models used for the c water-world variant interpretation.

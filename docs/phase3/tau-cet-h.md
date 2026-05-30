@@ -4,10 +4,10 @@
 τ Ceti h is a 1.83 M⊕ (M sin i) RV candidate on a 49.41-day orbit at
 0.243 AU around the metal-poor G8V τ Ceti (Feng 2017,
 `2017AJ....154..135F`). It sits between g (0.133 AU) and f (1.334
-AU) in `db/systems/tau_cet.json`. At 0.457 L☉ host luminosity, h
-receives **7.74 S⊕** — Venus-class insolation but on a fainter,
-cooler host. The equilibrium temperature is 466 K at zero albedo or
-426 K with a Venus-like cloud albedo, comfortably above the H₂O
+AU) in `db/systems/tau_cet.json`. At 0.488 L☉ host luminosity, h
+receives **8.26 S⊕** — Venus-class insolation but on a fainter,
+cooler host. The equilibrium temperature is 472 K at zero albedo or
+334 K with a Venus-like cloud albedo, comfortably above the H₂O
 critical point and in the classic runaway-greenhouse regime. The
 planet is **disputed** in NEA (`pl_controv_flag = 1`) — RV-only, no
 transit, no direct imaging. Notably, h's eccentricity (0.23) is the
@@ -42,9 +42,9 @@ alternatives are preserved as cfg variants.
 | `surface_gravity_g_earth` | 1.29 | medium | derived = 1.83 / 1.19² |
 | `density_g_cc` | 5.99 | medium | derived; Earth-like rocky composition consistent with the mass–radius relation pick |
 | `water_mass_fraction` | < 0.001 | medium | Runaway-greenhouse history: any primordial water photolyzed and lost as H over Gyr timescales; surface absolutely dry |
-| `insolation_s_earth` | 7.74 | high | derived L_bol/a²: 0.457 / 0.243² |
-| `equilibrium_temp_k` (A=0) | 466 | high | derived 278 × (L/a²)^0.25 |
-| `equilibrium_temp_k` (A=0.75, Venus-cloud) | 330 | high | derived with Venus-analog cloud-top bond albedo |
+| `insolation_s_earth` | 8.26 | high | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / 0.243² |
+| `equilibrium_temp_k` (A=0) | 472 | high | derived 278 × (L/a²)^0.25 |
+| `equilibrium_temp_k` (A=0.75, Venus-cloud) | 334 | high | derived with Venus-analog cloud-top bond albedo |
 | `bond_albedo` | 0.75 | medium | Venus-analog sulfate cloud deck; Tomasko 2008 Venus bond albedo |
 | `surface_temp_global_mean_k` | 720 | medium | Runaway-greenhouse with 50-bar CO₂ + H₂SO₄ clouds; ~Venus surface temperature |
 | `surface_temp_substellar_k` | 730 | medium | Thick atmosphere homogenizes dayside vs. nightside; minimal substellar enhancement |
@@ -52,7 +52,7 @@ alternatives are preserved as cfg variants.
 | `atmosphere_present` | true (thick CO₂) | medium | Adopted Venus-analog scenario; quiet host XUV preserves heavy CO₂ over 7 Gyr |
 | `atmosphere_surface_pressure_pa` | 5 000 000 | medium | 50 bar — intermediate between Venus's 92 bar and Earth's 1 bar; lower than Venus because metal-poor host implies less primordial outgassed volatile inventory |
 | `atmosphere_composition` | CO₂ ~95%, N₂ ~3.5%, SO₂ + H₂SO₄ aerosols ~1%, trace H₂O <100 ppm | medium | Venus analog; CO₂-runaway endpoint with sulfate aerosols from volcanic SO₂ |
-| `atmosphere_scale_height_km` | 12 | medium | derived: kT/μg with T≈460 K (mid-atmosphere), μ=44, g=12.6 m/s² |
+| `atmosphere_scale_height_km` | 6.9 | medium | derived: kT/μg with T≈460 K (mid-atmosphere), μ=44, g=12.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#d8c490` (warm yellow-cream from CO₂ + sulfate aerosol haze under G8V illumination) | medium | Venus-analog cloud-top reflectance; G8V illumination is cleaner-yellow than Sol's, giving a slightly cooler-yellow tone than Venus |
 | `cloud_cover_fraction` | 1.00 | high | Venus-analog complete cloud cover; surface obscured at all wavelengths |
 | `cloud_morphology` | global homogeneous sulfate haze with subtle banded thermal structure at low latitudes; possible polar "collar" feature analogous to Venus's | medium | Tomasko 2008 Venus morphology; rotation rate similar enough for Hadley-cell structure |
@@ -71,11 +71,11 @@ alternatives are preserved as cfg variants.
 | `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics scaled by mass |
 | `aurora_present` | false | high | No global magnetic field → induced-only solar-wind interaction; no auroral oval (Venus-analog) |
 | `star_apparent_angular_diameter_deg` | 1.74 | high | derived: 2 × R★ / a × (180/π); 3.3× the Sun seen from Earth |
-| `stellar_illumination_color_temp_k` | 5344 | high | host Teff (Pavlenko 2012) |
+| `stellar_illumination_color_temp_k` | 5370 | high | host Teff (Pavlenko 2012) |
 
 ## Surface synthesis
 
-τ Ceti h is the system's **Venus analog**. At 7.74 S⊕ insolation,
+τ Ceti h is the system's **Venus analog**. At 8.26 S⊕ insolation,
 even moderate primordial atmospheric outgassing leads to a runaway
 greenhouse: H₂O is photolyzed to H + O, the H escapes (via Jeans on
 this low-XUV host, more slowly than on Venus around the active early
@@ -152,7 +152,7 @@ altitude is ~50–70 km above the surface; cloud-top temperature is
 
 **Sky appearance from the surface.** Yellow-cream haze obscures the
 star. Surface illumination is approximately 5% of incident flux —
-nearly twilight conditions at the surface despite 7.74 S⊕ at the
+nearly twilight conditions at the surface despite 8.26 S⊕ at the
 cloud top. The view from the surface is a uniform yellow-brown
 glow, with no visible stellar disk; Venus-analog conditions. From
 orbit, h is a featureless yellow-cream pearl (`#e0cba0`) with subtle
@@ -184,13 +184,13 @@ single Hadley cell per hemisphere.
 
 **Tidal-lock timescale.** P = 49.41 d is far longer than g's 20 d;
 τ_tidal scales as P^(13/3), so h's tidal damping is roughly
-(49.41/20)^(13/3) ≈ 250× slower than g's. Whether g is locked over
+(49.41/20)^(13/3) ≈ 50× slower than g's. Whether g is locked over
 7 Gyr or not, h almost certainly is not fully locked — the 3:2
 resonance with stable libration is the most plausible state.
 
-**KSP implementation note.** For 3:2: `rotationPeriod` = (3/2) ×
-49.41 d × 86400 s/d ≈ 6.4 × 10⁶ s. Asynchronous fast-rotator
-alternative (much less likely): 24 h Earth analog.
+**KSP implementation note.** For 3:2: `rotationPeriod` = (2/3) ×
+49.41 d × 86400 s/d ≈ 32.94 d ≈ 2.85 × 10⁶ s. Asynchronous
+fast-rotator alternative (much less likely): 24 h Earth analog.
 
 **Obliquity.** Tidal damping over 7 Gyr drives obliquity to zero;
 libration-induced insolation variation from the e = 0.23 eccentric

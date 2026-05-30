@@ -4,10 +4,10 @@
 τ Ceti g is a 1.75 M⊕ (M sin i) RV candidate on a 20.0-day orbit at
 0.133 AU around the metal-poor G8V τ Ceti (Feng 2017,
 `2017AJ....154..135F`). It is the innermost of the three planets
-currently in `db/systems/tau_cet.json`. At 0.457 L☉ host
-luminosity, g receives **25.85 S⊕** — roughly Mercury-class
+currently in `db/systems/tau_cet.json`. At 0.488 L☉ host
+luminosity, g receives **27.59 S⊕** — roughly Mercury-class
 illumination but on a fainter, cooler host. The equilibrium
-temperature is 627 K at zero albedo or 574 K with an Earth-analog
+temperature is 638 K at zero albedo or 584 K with an Earth-analog
 albedo, comfortably above the H₂O critical point and approaching
 silicate vaporization for some mineral phases. The planet is
 **disputed** in NEA (`pl_controv_flag = 1`) — RV-only, no transit,
@@ -19,7 +19,7 @@ environment, leaving an exposed silicate surface with photolytic
 oxidation patches, possible silicate-vapor cap near the substellar
 point, and an ash-grey palette under quiet G8V illumination.** The
 host's metal-poor SED and basal XUV mean atmospheric escape is
-*thermal Jeans only* — no hydrodynamic loss — but at 627 K dayside
+*thermal Jeans only* — no hydrodynamic loss — but at 638 K dayside
 temperature and 0.13 AU separation, even Jeans escape for low-
 molecular-weight species (H₂O, CH₄) operates efficiently over 7 Gyr.
 The alternative thick-CO₂ Venus-analog reading is preserved as a
@@ -42,14 +42,14 @@ in picking the visually distinctive bare-rock outcome.
 | `surface_gravity_g_earth` | 1.26 | medium | derived = 1.75 / 1.18² |
 | `density_g_cc` | 5.84 | medium | derived; Earth-like rocky composition consistent with the mass–radius relation pick |
 | `water_mass_fraction` | < 0.01 | low | High insolation + low-XUV thermal Jeans escape over 7 Gyr → primordial water mostly lost; surface volatile inventory minimal |
-| `insolation_s_earth` | 25.85 | high | derived L_bol/a²: 0.457 / 0.133² |
-| `equilibrium_temp_k` (A=0) | 627 | high | derived 278 × (L/a²)^0.25 |
-| `equilibrium_temp_k` (A=0.3) | 574 | high | derived with Earth-analog albedo |
+| `insolation_s_earth` | 27.59 | high | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / 0.133² |
+| `equilibrium_temp_k` (A=0) | 638 | high | derived 278 × (L/a²)^0.25 |
+| `equilibrium_temp_k` (A=0.3) | 584 | high | derived with Earth-analog albedo |
 | `bond_albedo` | 0.10 | low | Tie-break: low-albedo basalt / silicate surface; bare-rock airless body, Mercury-analog albedo |
 | `surface_temp_substellar_k` | 700 | low | Slow rotator (3:2 resonance, 30-day solar day) → substellar temperature exceeds equilibrium because heat redistribution is incomplete |
 | `surface_temp_nightside_k` | 200 | low | 3:2 resonance gives long thermal-decay time; nightside cools but not to deep-space limit |
 | `surface_temp_global_mean_k` | 500 | low | Asymmetric heat distribution from slow rotation; subsolar-to-antisolar contrast moderated by conduction |
-| `atmosphere_present` | false | medium | Tie-break: bare-rock airless adopted. Quiet host XUV preserves heavy molecules, but at 627 K Teq, even N₂ and CO₂ Jeans-escape on a ~2 M⊕ body over 7 Gyr; outgassing too slow on a likely cold-interior super-Earth |
+| `atmosphere_present` | false | medium | Tie-break: bare-rock airless adopted. Quiet host XUV preserves heavy molecules, but at 638 K Teq, even N₂ and CO₂ Jeans-escape on a ~2 M⊕ body over 7 Gyr; outgassing too slow on a likely cold-interior super-Earth |
 | `atmosphere_surface_pressure_pa` | 0 | medium | Adopted scenario (bare rock); 1–100 mbar trace CO₂ + Na exosphere possible but not in cfg |
 | `atmosphere_composition` | n/a (trace silicate-vapor + Na exosphere possible) | low | If any atmosphere, Mercury-analog: photolytically liberated Na, K, Si from regolith at substellar |
 | `atmosphere_scale_height_km` | n/a | high | No bulk atmosphere |
@@ -70,11 +70,11 @@ in picking the visually distinctive bare-rock outcome.
 | `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics scaled by mass |
 | `aurora_present` | false | high | No atmosphere; no aurora possible |
 | `star_apparent_angular_diameter_deg` | 3.17 | high | derived: 2 × R★ / a × (180/π); 6× the Sun seen from Earth |
-| `stellar_illumination_color_temp_k` | 5344 | high | host Teff (Pavlenko 2012) |
+| `stellar_illumination_color_temp_k` | 5370 | high | host Teff (Pavlenko 2012) |
 
 ## Surface synthesis
 
-τ Ceti g is in the **bare-rock** regime: 25.85 S⊕ insolation places
+τ Ceti g is in the **bare-rock** regime: 27.59 S⊕ insolation places
 it well inside the runaway-greenhouse limit (Kopparapu 2014 inner
 edge for a G8V is ~1.0 S⊕), but unlike Venus, g lacks the secondary
 outgassing rate to maintain a thick CO₂ atmosphere against Jeans
@@ -84,9 +84,9 @@ escape over 7 Gyr. Two competing effects determine the outcome:
    (Schmitt 1985), log R'HK = −4.95 (Pavlenko 2012), basal FUV
    (Judge 2004). XUV-driven hydrodynamic escape is negligible.
    Heavy molecules (N₂, CO₂, SO₂) are not blow-off-limited.
-2. But thermal Jeans escape at Teq = 627 K is non-negligible. The
+2. But thermal Jeans escape at Teq = 638 K is non-negligible. The
    escape velocity for a 1.75 M⊕ planet of 1.18 R⊕ radius is
-   13.7 km/s; the thermal velocity of N₂ at 627 K is 0.67 km/s,
+   13.7 km/s; the thermal velocity of N₂ at 638 K is 0.67 km/s,
    giving a Jeans parameter of 21 — formally retained — but for
    the upper-atmosphere effective temperature (typically 2–4× the
    surface in a thin/no-atmosphere regime), the Jeans parameter
@@ -138,7 +138,7 @@ substellar silicate-vapor cloud is rendered.
 ## Atmosphere synthesis
 
 The cfg adopts **no bulk atmosphere**. The reasoning is in the
-Surface synthesis above: thermal Jeans escape at 627 K Teq with
+Surface synthesis above: thermal Jeans escape at 638 K Teq with
 modest upper-atmosphere heating bleeds N₂ and CO₂ over 7 Gyr on a
 2 M⊕ body, and the quiet host produces no replenishing photochemistry
 of significance. The atmosphere is therefore vanishingly thin — a
@@ -152,7 +152,7 @@ resolution.
 
 **Sky appearance.** From the surface, the sky is black, dominated by
 the host star at 3.17° angular diameter — about 6× the Sun's angular
-size from Earth. The surface receives 25.85 S⊕ of pale-yellow G8V
+size from Earth. The surface receives 27.59 S⊕ of pale-yellow G8V
 illumination at the substellar point; dayside surface temperatures
 exceed 700 K. Other stars are easily visible during dayside because
 no atmosphere scatters the host light; the night sky is similar to
@@ -193,8 +193,8 @@ solar day) and produces visually distinctive thermal asymmetry
 across the surface. The 1:1 lock alternative is preserved as a cfg
 variant in the Open items.
 
-**KSP implementation note.** For 3:2: `rotationPeriod` = (3/2) ×
-orbital period = 30 days (2.592×10⁶ s). For 1:1 alternative:
+**KSP implementation note.** For 3:2: `rotationPeriod` = (2/3) ×
+orbital period = 13.33 days (1.152×10⁶ s). For 1:1 alternative:
 20 days (1.728×10⁶ s).
 
 **Obliquity.** Tidal damping over 7 Gyr should pull obliquity to
@@ -228,7 +228,7 @@ remnant field at ~0.5 μT.
 - **Mid-latitudes / longitudes.** Ash-grey basalt with subtle
   variations in albedo from differential weathering. Crater rays
   visible as bright lineations.
-- **Terminator.** High contrast under grazing 5344 K G8V light;
+- **Terminator.** High contrast under grazing 5370 K G8V light;
   topographic shadows reveal cratering depth. The terminator
   band is sharp because the lack of atmosphere produces no
   scattering.

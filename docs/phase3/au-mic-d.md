@@ -18,7 +18,7 @@ relation rather than a measurement.
 Because d does not transit, its bulk density, atmosphere, and surface
 properties are inferred rather than measured. The mass uncertainty
 (± 0.511 M⊕, nearly 50%) is large. Insolation at 0.105 AU around
-0.092 L☉ is ~8.4 × Earth's — well inside any reasonable habitable-zone
+0.102 L☉ is ~9.3 × Earth's — well inside any reasonable habitable-zone
 boundary, with equilibrium temperature ~440 K assuming Earth-analog
 albedo. d orbits inside the snow line and inside the resolved debris
 disk (35–210 AU); it is one of three small inner planets (with b and c)
@@ -48,13 +48,13 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `eccentricity` | 0.00305 | high | Wittrock 2023 TTV fit |
 | `argument_of_periastron_deg` | 160.79 | medium | Wittrock 2023 TTV fit (low-e → weak constraint) |
 | `sidereal_period_days` | 12.73596 | high | Wittrock 2023 TTV fit; consistent with Mallorquin 2024 RV |
-| `semi_major_axis_au` | 0.105 | medium | derived from period + M☉ via Kepler's third law; Wittrock 2023 §4 |
+| `semi_major_axis_au` | 0.105 | medium | Wittrock 2023 reported value |
 | `inclination_deg` | 89.32 | medium | Wittrock 2023 TTV fit (consistent with edge-on but no transit observed) |
 | `mass_mearth` | 1.053 ± 0.511 | medium | Wittrock 2023 N-body + TTV dynamical fit |
 | `radius_rearth` | 1.02 | low | Tie-break: no transit detected; NEA placeholder from mass-radius relation (Chen & Kipping 2017 probabilistic relation); cfg picks 1.02 for visual recognition as an Earth-analog rocky planet |
 | `surface_gravity_g_earth` | 1.01 | low | derived = 1.053 / 1.02²; downstream of radius assumption |
 | `density_g_cc` | 5.45 | low | derived; consistent with Earth-analog rocky composition |
-| `insolation_s_earth` | 8.4 | high | derived from L = 0.092 L☉ and a = 0.105 AU |
+| `insolation_s_earth` | 9.3 | high | derived from L = 0.102 L☉ (Donati 2023, recommended) and a = 0.105 AU |
 | `equilibrium_temp_k` (A=0) | 478 | high | derived |
 | `equilibrium_temp_k` (A=0.1) | 466 | high | derived; modest dark-basalt albedo |
 | `bond_albedo` | 0.10 | medium | dark basaltic surface with partial dust covering; M-dwarf SED reduces effective albedo |
@@ -63,7 +63,7 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `atmosphere_present` | true (thin secondary CO₂) | medium | Documented divergence: see Canonical alternatives. Outgassing from active interior (Driscoll & Barnes 2015 tidal-heating-driven volcanism scaling for young rocky planets) replenishes a thin secondary atmosphere despite AU Mic XUV bombardment |
 | `atmosphere_surface_pressure_pa` | 10000 | medium | Documented divergence: see Canonical alternatives. ~0.1 bar CO₂ from outgassing balance vs. escape; conservative variant is 0 (airless) |
 | `atmosphere_composition` | CO₂ ~85%, N₂ ~10%, SO₂ ~3%, H₂O trace; outgassing-replenished | medium | volcanic-outgassing composition under reducing-to-oxidizing transition; trace SO₂ from volcanic plumes |
-| `atmosphere_scale_height_km` | 13 | medium | derived: kT/μg with T = 450 K, μ = 43 (CO₂), g = 9.9 m/s² |
+| `atmosphere_scale_height_km` | 8.7 | medium | derived: kT/μg with T = 450 K, μ = 43 (CO₂), g = 9.9 m/s² |
 | `atmosphere_tint_rgb_hex` | `#704030` | low | Tie-break: interesting-first. Thin CO₂ + volcanic dust under M1V red illumination → muted red-brown haze, distinctive from b/c's H/He bands |
 | `cloud_cover_fraction` | 0.20 | medium | thin atmosphere → limited cloud formation; sparse SO₂ aerosol haze near volcanic regions |
 | `cloud_morphology` | sparse cumulus / SO₂ haze patches near volcanic regions; mostly clear elsewhere | low | Tie-break: distinctive over generic; SO₂ plumes localized to active volcanic provinces |
@@ -79,8 +79,8 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `aurora_present` | true | medium | thin atmosphere + weak B-field + intense stellar wind → visible aurora; Mars-analog CO₂⁺ emission |
 | `aurora_color_primary_hex` | `#ff6b6b` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm; Mars-analog visible aurora |
 | `aurora_emission_species_primary` | CO₂⁺ doublet + CO Cameron bands + O 297.2 nm | medium | thin CO₂ atmosphere chemistry; MAVEN Mars-aurora analog |
-| `star_apparent_angular_diameter_deg` | 4.2 | high | derived: 2 × 0.82 R☉ / 0.105 AU × (180/π) ≈ 4.2° |
-| `stellar_illumination_color_temp_k` | 3518 | high | from host star Teff |
+| `star_apparent_angular_diameter_deg` | 4.4 | high | derived: 2 × 0.862 R☉ / 0.105 AU × (180/π) ≈ 4.4° |
+| `stellar_illumination_color_temp_k` | 3665 | high | from host star Teff |
 
 ## Surface synthesis
 
@@ -237,7 +237,7 @@ with a thin atmosphere — distinct from b/c's gas-giant disks:
 
 - **Global appearance.** A dark basaltic disk with iron-oxide
   reddening and a bright substellar lava province, lit by AU Mic
-  at 4.2° angular diameter (8× the Sun from Earth). The dayside
+  at 4.4° angular diameter (8× the Sun from Earth). The dayside
   hemisphere shows the characteristic "eyeball" geometry of a
   tidally-locked rocky planet with an active substellar zone; the
   substellar lava province is the brightest feature, glowing
@@ -271,9 +271,9 @@ with a thin atmosphere — distinct from b/c's gas-giant disks:
   latitude (~40°) because of the weak field. Visible from much of
   the nightside hemisphere during flare events; only at high
   magnetic latitude during quiescence.
-- **Star in sky.** AU Mic subtends 4.2° in d's sky (8× the Sun from
+- **Star in sky.** AU Mic subtends 4.4° in d's sky (8× the Sun from
   Earth) — a vast deep-red disk dominating the daytime sky. Surface
-  illumination 8.4× Earth's at substellar but red-shifted into the
+  illumination 9.3× Earth's at substellar but red-shifted into the
   near-IR; the visible-light brightness is comparable to Earth's
   noon sun. Super-flares brighten by 1–3 magnitudes for tens of
   minutes — visible as transient brightening of the substellar lava
@@ -308,7 +308,7 @@ with a thin atmosphere — distinct from b/c's gas-giant disks:
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13428). TESS discovery of b; provides the stellar-activity context that informs d's atmosphere retention discussion.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of b; provides the stellar-activity context that informs d's atmosphere retention discussion.
 - **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, arXiv:2102.05288). Discovery of c; defines the inner planetary architecture that allowed TTV detection of d.
 - **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 (`2017ApJ...834...17C`, arXiv:1603.08614). Mass-radius relation used by NASA Exoplanet Archive for the placeholder radius of d (1.02 R⊕).
 - **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 (`1966Icar....5..375G`). Tidal damping timescale framework used for the 1:1 spin-orbit conclusion.

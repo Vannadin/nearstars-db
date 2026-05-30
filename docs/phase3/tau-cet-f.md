@@ -6,10 +6,10 @@
 `2017AJ....154..135F`). It is the outermost of the three planets
 currently in `db/systems/tau_cet.json` (f, g, h all from Feng 2017;
 e is logged as a curation gap in the host Phase 3 synthesis). At
-0.457 L☉ host luminosity, f receives 0.26 S⊕ — that is **outside**
+0.488 L☉ host luminosity, f receives 0.27 S⊕ — that is **outside**
 the conservative-habitable-zone outer edge (Kopparapu 2014's
 maximum-greenhouse limit for a G8V is ≈ 0.36 S⊕). f's equilibrium
-temperature is 199 K (A=0) or 182 K (A=0.3), and a thin secondary
+temperature is 202 K (A=0) or 184 K (A=0.3), and a thin secondary
 atmosphere cannot warm the surface above the water freezing point on
 this host. The planet is **disputed** in NEA (`pl_controv_flag = 1`)
 — RV-only, no transit, no direct imaging, no JWST follow-up.
@@ -44,9 +44,9 @@ preserved as a cfg variant in the Open items.
 | `surface_gravity_g_earth` | 1.20 | medium | derived = 3.93 / 1.81² |
 | `density_g_cc` | 3.66 | low | derived from Msini and assumed R; if true mass is 5 M⊕ at the same R, ρ rises to 4.66 g/cc and the planet becomes more Earth-like |
 | `water_mass_fraction` | 0.05–0.20 | low | Theoretical: a sub-Neptune-radius super-Earth in the outer system likely carries a volatile envelope, consistent with formation beyond the iceline |
-| `insolation_s_earth` | 0.257 | high | derived L_bol/a²: 0.457 L☉ / (1.334 AU)² |
-| `equilibrium_temp_k` (A=0) | 199 | high | derived 278 × (L/a²)^0.25 |
-| `equilibrium_temp_k` (A=0.3) | 182 | high | derived with Earth-analog albedo |
+| `insolation_s_earth` | 0.274 | high | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / (1.334 AU)² |
+| `equilibrium_temp_k` (A=0) | 202 | high | derived 278 × (L/a²)^0.25 |
+| `equilibrium_temp_k` (A=0.3) | 184 | high | derived with Earth-analog albedo |
 | `bond_albedo` | 0.50 | medium | High ice/snow surface cover under thin N₂/CO₂; comparable to Snowball-Earth bond albedo (Pierrehumbert 2011) |
 | `surface_temp_global_mean_k` | 175 | low | Wordsworth 2015 thin-atmosphere outer-HZ scaling; below the H₂O freezing point everywhere |
 | `surface_temp_substellar_k` | 195 | low | Asynchronous slow rotator — substellar warming is transient as the dayside circulates over multi-week timescales |
@@ -54,7 +54,7 @@ preserved as a cfg variant in the Open items.
 | `atmosphere_present` | true (thin residual) | medium | The host's basal FUV / quiescent XUV environment (Schmitt 1985, Judge 2004) implies negligible XUV-driven escape; outgassing-accumulated N₂ + CO₂ should survive over 7 Gyr |
 | `atmosphere_surface_pressure_pa` | 10 000 | low | 0.1 bar adopted as the canonical "thin secondary atmosphere" for an outer-HZ super-Earth (Wordsworth 2015); not measured |
 | `atmosphere_composition` | N₂ ~80%, CO₂ ~10–20%, trace H₂O, Ar | low | Wordsworth 2015 cold-trap argument: most H₂O frozen out; N₂ from late outgassing; CO₂ partial pressure capped by frost-point at ~190 K (Bolmont 2018 review framework) |
-| `atmosphere_scale_height_km` | 6.5 | medium | derived: kT/μg with T≈180 K, μ=32 (mixed N₂/CO₂), g=11.8 m/s² |
+| `atmosphere_scale_height_km` | 3.9 | medium | derived: kT/μg with T≈180 K, μ=32 (mixed N₂/CO₂), g=11.8 m/s² |
 | `atmosphere_tint_rgb_hex` | `#7a7068` (very thin atmosphere, faint Rayleigh under cleaner G8V SED) | low | Tie-break: 0.1 bar is below visible Rayleigh threshold; the metal-poor cleaner-blue host SED makes any residual scattering marginally cooler-toned than around the Sun |
 | `cloud_cover_fraction` | 0.20 | low | Sporadic CO₂ ice cirrus at the cold tropopause; H₂O cloud formation suppressed below the freezing point |
 | `cloud_tint_rgb_hex` | `#e8e0d0` (clean ice cirrus under pale G8V light) | low | Tie-break: M-dwarf-style warm cream is replaced by a cleaner near-white because the host SED is not strongly red-shifted |
@@ -74,15 +74,15 @@ preserved as a cfg variant in the Open items.
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break: [OI] 557.7 nm green if trace O₂ from photolysis; N₂ Vegard-Kaplan blue-green otherwise |
 | `aurora_intensity_kR_typical` | 1 | low | Quiet host — proton flux at f's distance is well below Earth's, giving aurora intensity ~10× weaker than Earth's typical 10 kR |
 | `star_apparent_angular_diameter_deg` | 0.317 | high | derived: 2 × R★ / a = 2 × 0.793 R☉ / 1.334 AU × (180/π) — 60% of the Sun seen from Earth |
-| `stellar_illumination_color_temp_k` | 5344 | high | host Teff (Pavlenko 2012) |
+| `stellar_illumination_color_temp_k` | 5370 | high | host Teff (Pavlenko 2012) |
 
 ## Surface synthesis
 
 τ Ceti f lies well outside the conservative habitable zone outer
 edge. Kopparapu 2014's maximum-greenhouse outer limit for a G8V at
-Teff = 5344 K places the runaway-CO₂-cloud boundary at S ≈ 0.36 S⊕;
-f at 0.257 S⊕ is firmly beyond it. Without an active greenhouse, the
-planet's equilibrium temperature is 199 K at zero albedo, or 182 K
+Teff = 5370 K places the runaway-CO₂-cloud boundary at S ≈ 0.36 S⊕;
+f at 0.274 S⊕ is firmly beyond it. Without an active greenhouse, the
+planet's equilibrium temperature is 202 K at zero albedo, or 184 K
 under an Earth-analog 0.3 bond albedo — comfortably below the water
 ice point. Wordsworth 2015 finds that thin secondary atmospheres
 (0.01–0.1 bar) on cold outer-HZ super-Earths cannot maintain surface
@@ -165,7 +165,7 @@ second-order effect on the composition.
 orbit — limb haze is faint, on the order of 10 km thick at the
 boundary. From the surface, the sky is a pale washed-out blue-white
 (`#7a7068`) shifted slightly cooler than Earth's because of the host
-SED. Daytime is dim — illumination ~26% of Earth's solar irradiance,
+SED. Daytime is dim — illumination ~27% of Earth's solar irradiance,
 roughly equivalent to a heavily overcast Earth day. The host star
 subtends 0.317° in f's sky (about 60% of the Sun seen from Earth);
 it appears as a small pale-yellow disk, much less imposing than the
@@ -200,7 +200,7 @@ unless gameplay reasons favor a different value.
 **Obliquity.** Adopt Earth-analog 23° as a default tie-break — no
 constraint, no preferred direction. Mild seasonal forcing
 (insolation varies by ~ ±9% over the eccentric orbit) is the only
-"seasonal" cycle, and at S = 0.26 S⊕ the surface temperature
+"seasonal" cycle, and at S = 0.27 S⊕ the surface temperature
 response is muted (≲ 4 K).
 
 **Magnetic dynamo expectation.** A 4–5 M⊕ rocky body with a multi-
