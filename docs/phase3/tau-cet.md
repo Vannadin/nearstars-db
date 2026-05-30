@@ -76,7 +76,7 @@ picks; the stellar layer is re-anchored on the frozen Phase 2 sources
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016 — ALMA resolved fit, inner edge ~6 AU |
 | `disk_outer_radius_au` | 55 | high | MacGregor 2016 — ALMA resolved fit, outer edge ~55 AU |
 | `disk_dust_temperature_k` | 60 | high | MacGregor 2016 SED + Greaves 2004 60–80 K consistent |
-| `disk_tint_rgb_hex` | `#fbe8d3` (pale warm cream) | low | No measured optical color (thermal/mm only). Mie synthesis: amorphous silicate + organics (Lawler 2014; a_min ~0.31 µm) — the organics absorb blue, giving a slightly warm reflectance, which under the G8.5 V light reads as a pale warm cream |
+| `disk_tint_rgb_hex` | `#ffe4bd` (warm; vivid `#ffc100`) | low | No measured optical color (thermal/mm only). Mie reflectance synthesis: amorphous silicate + organics (Lawler 2014; a_min ~0.31 µm) — organics absorb blue → distinctly warm reflectance (B/I 0.40, the warmest belt); renderer applies the G8.5 V light. Vivid pack: `#ffc100` (amber) |
 | `disk_opacity` | 0.15 | low | Tie-break: physical optical depth is ~10⁻³ from MacGregor 2016 dust mass + ring geometry, but cfg uses 0.15 for in-game visibility against deep-space background; documented as a render-visibility tradeoff |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3 — single broad ring explicitly favored over multi-belt; no resolved inner gap |
 | `disk_resolved_imaging` | true | high | MacGregor 2016 — ALMA Band 6 resolved |
@@ -253,7 +253,9 @@ ring extending from ~6 AU (inner edge) to ~55 AU (outer edge),
 with a peak surface density around 30 AU and a total dust mass of
 roughly 1.2 M⊕ — about 10–20× the dust inventory of our own
 Kuiper Belt. NearStars renders this as a faint, broad, dimly
-amber-grey annulus around τ Ceti, encoded with hex `#b8aa9c` and
+warm annulus around τ Ceti, encoded with the reflectance hex `#ffe4bd`
+(vivid pack `#ffc100` amber — its silicate+organic grains are the
+warmest-reflectance belt in the catalog, B/I 0.40) and
 in-game opacity 0.15 (physical optical depth is ~10⁻³, but the
 cfg uses a higher visibility setting so the belt is recognizable
 against the deep-space background). The belt has no inner gap or

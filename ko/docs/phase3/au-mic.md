@@ -82,7 +82,7 @@ follow-up 워크스페이스용으로 표시만 해 둡니다. AU Mic 은 넓은
 | `disk_inner_radius_au` | 35 | high | Schneider 2014 HST/STIS 깊은 영상. ~35 AU 표면 밝기 break. Strubbe & Chiang 2006 SED-fit 과 일관 |
 | `disk_outer_radius_au` | 210 | high | Schneider 2014. ~210 AU 까지 확장된 후광, 그 너머로는 STIS 감도 아래로 떨어짐 |
 | `disk_dust_temperature_k` | 50 | high | Chen 2005 Spitzer SED-fit 차가운 성분. 0.092 L☉ host 주위 35 AU planetesimal 휘저음 벨트와 일관 |
-| `disk_tint_rgb_hex` | `#fbeacb` (옅은 크림색, 붉은 M1V 빛 아래 푸른 쪽으로 기우는 반사율) | medium | CORRECTED. 원반은 무채색이 아니라 반사율이 측정상 푸릅니다 (Krist 2005, B/I ~ 1.6. Fitzgerald 2007 근적외선에서 푸름. Graham 2007 의 a ~0.1 µm 다공성 blowout 미세입자). Mie 산란 합성 결과, 그 강한 청색 산란이 붉은 M1V 별빛을 무채색 회색보다 더 푸르고 밝은 쪽으로 옮겨 옅은 크림색 절대색이 나옵니다 (유명한 "AU Mic 블루" 는 원반과 별의 상대 반사율이지 절대 색조가 아닙니다) |
+| `disk_tint_rgb_hex` | `#e3f0ff` (파랑. vivid `#acd6ff`) | medium | CORRECTED. 원반은 무채색이 아니라 측정상 푸릅니다 (Krist 2005, B/I ~ 1.6. Fitzgerald 2007 근적외선에서 푸름. Graham 2007 의 a ~0.1 µm 다공성 blowout 미세입자). Mie 반사율 합성이 이를 재현합니다 (B/I 1.74 ≈ 측정값 1.6). cfg 색조는 먼지 고유의 푸른 반사율 색이며 (렌더러가 그 위에 M1V 별빛을 입힙니다). vivid 팩. `#acd6ff` |
 | `disk_opacity` | 0.4 | medium | Boccaletti 2018 SPHERE 편광 강도비. 중간 범위 opacity 렌더가 원반 가시성과 배경별 가시성을 모두 보존 |
 | `disk_morphology` | edge-on planetesimal 휘저음, 애니메이션된 방사형 움직임 substructure (바깥 방향 4–10 km/s) | high | Boccaletti 2015 + 2018 multi-epoch SPHERE 의 빠르게 움직이는 피처 검출. Chiang & Fung 2017 의 항성풍 발사 먼지 ridge 모델 |
 | `disk_resolved_imaging` | true | high | HST/STIS (Krist 2005, Schneider 2014). VLT/SPHERE (Boccaletti 2015, 2018) |
@@ -259,13 +259,13 @@ AU Mic 의 시각적 표현은 NearStars 카탈로그에서 가장 독특하며 
   에서 본 AU Mic 중심과의 각거리 ~3.6°) 부터 ~210 AU 바깥쪽
   후광까지 뻗습니다. edge-on (i = 89.5°) 으로 보면 AU Mic
   양쪽 하늘을 이등분하는 가늘고 밝은 줄로 보이며, 표면 밝기는
-  배경으로 부드럽게 사라집니다. cfg 원반 색조 `#9a8a78` 는
-  따뜻한 무채색 회색입니다 — 게임 내 렌더 분해능에서 산란광은
-  무채색이고, 먼지 온도 ~50 K 는 광학 대역에서 원반 자체의
-  열복사가 보이기에는 너무 차갑습니다. SPHERE 편광 영상
-  (Boccaletti 2018) 은 산란에서 약간 붉은 색을 보이는데, hex
-  선택에서 따뜻한 편향으로 보존되되 과도하게 채도를 올리지는
-  않았습니다.
+  배경으로 부드럽게 사라집니다. cfg 원반 색조 `#e3f0ff` 는
+  파랑입니다 — AU Mic 원반은 산란광에서 파란색으로 측정됐고
+  (Krist 2005, B/I ~ 1.6. 작고 다공성인 입자), Mie 반사율 합성이
+  이를 재현합니다 (B/I 1.74). 먼지 온도 ~50 K 는 광학 대역에서
+  원반 자체의 열복사가 보이기에는 너무 차가우므로, 이건 순수한
+  청색-기울기 산란입니다. vivid cfg 팩은 이를 `#acd6ff` 로 채도를
+  올리며, 렌더러가 그 위에 붉은 M1V 별빛을 입힙니다.
 - **원반의 움직이는 substructure (애니메이션)** — cfg 의 가장
   야심찬 시각 피처입니다. Multi-epoch SPHERE 영상 (Boccaletti
   2015, 2018) 은 남동쪽 ansa 를 따라 식별 가능한 다섯 개의 밀도

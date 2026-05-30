@@ -72,7 +72,7 @@ Teixeira 2009 asteroseismology, Santos 2013, Gomes da Silva 2021) 에
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016. ALMA 분해 fit, 안쪽 가장자리 ~6 AU |
 | `disk_outer_radius_au` | 55 | high | MacGregor 2016. ALMA 분해 fit, 바깥쪽 가장자리 ~55 AU |
 | `disk_dust_temperature_k` | 60 | high | MacGregor 2016 SED + Greaves 2004 의 60–80 K 와 일치 |
-| `disk_tint_rgb_hex` | `#fbe8d3` (옅은 따뜻한 크림) | low | 측정된 광학 색 없음 (열적/mm 관측만 존재). Mie 산란 합성. 비정질 규산염 + 유기물 (Lawler 2014; a_min ~0.31 µm) 조성에서 유기물이 청색을 흡수해 약간 따뜻한 반사율을 만들고, G8.5 V 광원 아래에서는 옅은 따뜻한 크림으로 읽힘 |
+| `disk_tint_rgb_hex` | `#ffe4bd` (따뜻함; vivid `#ffc100`) | low | 측정된 광학 색 없음 (열적/mm 관측만 존재). Mie 반사율 합성. 비정질 규산염 + 유기물 (Lawler 2014; a_min ~0.31 µm) 조성에서 유기물이 청색을 흡수해 뚜렷이 따뜻한 반사율을 만듭니다 (B/I 0.40, 가장 따뜻한 벨트). 렌더러가 그 위에 G8.5 V 별빛을 입힙니다. Vivid 팩. `#ffc100` (호박색) |
 | `disk_opacity` | 0.15 | low | Tie-break. MacGregor 2016 의 먼지 질량 + 고리 기하에서 나오는 물리 광학적 깊이는 ~10⁻³ 이지만, 게임 내에서 우주 배경 대비 가시성을 살리기 위해 cfg 는 0.15 를 사용. 렌더 가시성 trade-off 로 문서화 |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3. multi-belt 보다 단일 넓은 고리를 명시적으로 선호. 분해된 안쪽 갭 없음 |
 | `disk_resolved_imaging` | true | high | MacGregor 2016. ALMA Band 6 분해 |
@@ -229,8 +229,10 @@ Band 6 영상 (MacGregor 2016) 은 약 6 AU (안쪽 가장자리) 부터 ~55 AU
 (바깥쪽 가장자리) 까지 뻗는 단일 넓은 고리를 분해하는데, 30 AU
 근처에 표면 밀도 피크가 있고 총 먼지 질량은 약 1.2 M⊕ — 우리
 카이퍼 벨트 먼지 인벤토리의 ~10–20 배입니다. NearStars 는 이를
-τ Ceti 주위의 희미하고 넓고 어둑한 호박-회색 환대로 렌더링하며,
-hex `#b8aa9c` 와 게임 내 opacity 0.15 로 인코딩합니다 (물리 광학적
+τ Ceti 주위의 희미하고 넓고 어둑한 따뜻한 환대로 렌더링하며,
+반사율 hex `#ffe4bd` (vivid 팩 `#ffc100` 호박색 — 규산염+유기물
+입자라 카탈로그에서 가장 따뜻한-반사율 벨트, B/I 0.40) 와 게임 내
+opacity 0.15 로 인코딩합니다 (물리 광학적
 깊이는 ~10⁻³ 이지만, cfg 는 깊은 우주 배경 대비 벨트가 알아볼 수
 있게 더 높은 가시성 설정을 사용). ALMA 정밀도에서 분해된 안쪽 갭
 이나 shepherding 구조는 없어서 cfg 고리는 6–55 AU 폭 전체에 걸쳐

@@ -77,11 +77,11 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `disk_belts` | warm, intermediate, cold | high | Gáspár et al. 2023 JWST/MIRI resolves a three-belt architecture: inner warm + intermediate + the classic eccentric cold main ring (Kalas 2005 / Boley 2012 / White 2017) |
 | `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 (`2023NatAs...7..790G`) JWST/MIRI — inner warm belt inner edge |
 | `disk_warm_outer_radius_au` | 90 | high | Gáspár et al. 2023 — inner warm belt outer extent |
-| `disk_warm_tint_rgb_hex` | `#ceddfa` (pale blue-white) | low | No measured optical color (thermal/interferometric only). Mie synthesis: carbonaceous grains (hot ring near carbon sublimation) are dark but large → near-neutral reflectance × the A4 V blue-white light → pale blue-white |
+| `disk_warm_tint_rgb_hex` | `#ffffff` (neutral; vivid `#fefeff`) | low | No measured optical color (thermal/interferometric only). Mie reflectance synthesis: carbonaceous grains, dark but large → neutral reflectance (B/I 1.00); renderer applies the A4 V blue-white light → pale blue-white in-game. Vivid pack: `#fefeff` |
 | `disk_warm_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_intermediate_inner_radius_au` | 60 | high | Gáspár et al. 2023 JWST/MIRI — intermediate belt inner edge |
 | `disk_intermediate_outer_radius_au` | 110 | high | Gáspár et al. 2023 — intermediate belt outer edge |
-| `disk_intermediate_tint_rgb_hex` | `#cfdefa` (pale blue-white) | low | No measured optical color (mid-IR only). Mie synthesis: silicate grains, large vs optical λ → near-neutral reflectance × A4 V light → pale blue-white |
+| `disk_intermediate_tint_rgb_hex` | `#fff9f6` (near-neutral; vivid `#ffece4`) | low | No measured optical color (mid-IR only). Mie reflectance synthesis: silicate grains, large vs optical λ → near-neutral reflectance (B/I 0.76); renderer applies the A4 V light. Vivid pack: `#ffece4` |
 | `disk_intermediate_opacity` | 0.25 | low | Tie-break: faint intermediate dust, boosted for visibility |
 | `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — main ring inner edge after eccentric-orbit deprojection |
 | `disk_cold_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — main ring outer edge |
