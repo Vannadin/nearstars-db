@@ -37,7 +37,18 @@ Every host: arxiv-pinned bib, cache/VizieR value-check, schema gate, systems
 rebuilt (date-churn reverted), one commit. The Phase-3-on-Phase-1 inversion is
 resolved for all stellar hosts.
 
+## Downstream — Phase 3 re-synthesis COMPLETE (2026-05-30)
+All 7 hosts' Phase 3 docs re-synthesized on the frozen Phase 2 values (en+ko,
+block-parity-gated, check.sh green, pushed). Method: per-host Opus draft+adversarial
+-verify workflow produced the verified value-diffs (cache-only, deterministic), the
+main thread applied the EN edits, and a second Opus workflow mirrored the ko files.
+Commits: eps-eri a217968 (pilot), tau-cet 7d06f07, au-mic eef0c87, hd-69830 afafbbb,
+61-vir 1833b6b, vega 65f6bff, fomalhaut ef82777.
+- Each got: stellar Decisions rows re-anchored on the Phase 2 recommended sources,
+  prose numbers/contradictions fixed, a ## Canonical alternatives section for the
+  documented divergences, and bibliography source-swaps.
+- Caught + fixed: tau-cet dropped a "## Visual styling" heading during the Canonical
+  -alternatives insertion (the ko agent faithfully mirrored the break; both restored).
+
 ## Remaining downstream (NOT Tier 1)
-- Phase 3 md re-synthesis consuming the new measured values (the 7 hosts' Phase 3
-  narratives still reflect pre-Phase-2 inputs where they exist).
 - Disk Mie/grain-size color synthesis (separate follow-on from the disk detour).
