@@ -86,3 +86,5 @@ unverified M/R to proper method tiers + fill the empty high-impact categories
 
 ## Log
 - 2026-05-31: pre-research complete (6 parallel agents). Starting Phase 2 with YZ Cet (simplest).
+- 2026-05-31: YZ Cet DONE (Phase 2 commit 542cea8 + Phase 3 docs). Caught a 3rd arXiv collision (Schweitzer 1904.06025 was an ML paper → 1904.06860). Branch hygiene: a parallel session had switched the shared checkout to docs/planet-pack-techniques; my YZ Cet commit landed there by accident → cherry-picked to new branch feat/visual-batch-1, restored docs/planet-pack-techniques to its PR tip (81a2cfa). All visual-batch work now lives on feat/visual-batch-1.
+- NEXT: eps Ind A (Phase 2 + brown-dwarf pair decision) → GJ 9066 → GJ 896 A (binary) → HD 219134 → 55 Cnc.

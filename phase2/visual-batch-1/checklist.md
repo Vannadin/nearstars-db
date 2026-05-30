@@ -16,12 +16,12 @@ Systems (distance, visual hook):
 
 ## Per-system (each: pre-research → Phase 2 → Phase 3 → moons)
 
-### YZ Cet
-- [ ] Pre-research: Gaia DR3 id, parallax, structure confirmed (in DB?)
-- [ ] Phase 2 stellar: teff/R/L/mass/age + rotation + activity (M flare star)
-- [ ] Phase 2 planets: b, c, d (confirmed) + any disputed/extra
-- [ ] Phase 3 visual: stellar color/flare, aurora (star-planet B-field), rocky tints
-- [ ] Moons (cfg/downstream, artistic): n/a small rocky — likely none
+### YZ Cet  ✅ DONE (Phase 2 + Phase 3)
+- [x] Pre-research: Gaia 2358524597030794112, single M4.0Ve, 12.1 ly
+- [x] Phase 2 stellar: rotation 68.4d (Stock20), activity -4.71 (Astudillo17), teff 3100/L 0.0022 (Cifuentes20), R/M (Schweitzer19); metallicity skipped
+- [x] Phase 2 planets: b, c, d re-pinned Stock20 (Msini, no radius); tentative "e" excluded
+- [x] Phase 3 visual: stellar #cf5630 + flare + SPI radio aurora (Pineda23/Trigilio23); planets b/c/d warm rocky (471/410/357 K); no disk
+- [x] Moons: n/a (small rocky)
 
 ### eps Ind A
 - [ ] Pre-research: A vs brown-dwarf pair eps Ind B (Ba+Bb) — scope decision

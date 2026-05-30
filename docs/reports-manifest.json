@@ -123,5 +123,14 @@
     "phase3": {
       "★": "phase3/vega.html"
     }
+  },
+  "YZ Cet": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/yz-cet.html",
+      "b": "phase3/yz-cet-b.html",
+      "c": "phase3/yz-cet-c.html",
+      "d": "phase3/yz-cet-d.html"
+    }
   }
 }
