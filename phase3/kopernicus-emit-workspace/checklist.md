@@ -59,6 +59,37 @@ Concrete next-session steps. Each block is one commit's worth.
   validation)
 - [ ] `./scripts/check.sh` clean
 
+## Stage 5 — Star rendering (DONE 2026-05-31)
+
+The rings layer (Stage 1–3 above, disk-rings.cfg) and now the **star
+bodies** are implemented. Star work shipped this session:
+
+- [x] `scripts/star_render.py` — pure Teff/L/spectype → ScaledVersion
+  field synthesis. Blackbody→sRGB (ported from `disk_color_mie.py`, no
+  numpy). `luminosity = 1360 × L/Lsun` (Sol convention; corrected the old
+  star-body.md `0.0017` bug). `sunAU = 13599840256` constant. Parametric
+  intensity curves (∝ √L). rim/sunspot by spectral class. Self-test prints
+  M-orange / G-white / A-blue.
+- [x] `emit_kopernicus_cfg.py` extended: `load_star_renders` (all stars in
+  a file), `render_star_body_block` (full `Body{}`: Template Sun +
+  Properties + Orbit placeholder + ScaledVersion{Light,Material,Coronas}),
+  `render_stars_combined`, `static_check_stars`. main() emits **stars.cfg**
+  alongside disk-rings.cfg. Missing radius/GM → skip+warn (not abort).
+- [x] Verified: 122 star bodies, idempotent, brace-balanced, rings path
+  byte-identical (no regression), colors sane (Vega/Sirius/Fomalhaut blue,
+  Proxima orange), Vega luminosity 64192 = 1360×47.
+- [x] star-body.md: luminosity bug fixed; "Sol uses no Atmosphere/
+  HazardousBody on stars" documented (verified vs 00_Sol-Kopernicus.cfg);
+  research cross-linked to planet-pack-techniques.md §2.4–2.5.
+
+Remaining star follow-ups:
+- [ ] Star **Orbit** is a placeholder (`semiMajorAxis = 1e16`); wire real
+  galactic placement / GalacticOrbit (Principia overrides in n-body for now).
+- [ ] flightGlobalsIndex allocation (currently auto-assigned; see
+  file-structure.md 1000+/100-per-system).
+- [ ] Register emitter in `docs/reference/tools.md` (en+ko); add SKILL.md §3.
+- [ ] Curve fidelity refinement (parametric MVP).
+
 ## Out of scope (subsequent sessions)
 
 - PQS texture asset generation (heightmap + colormap PNG files)
