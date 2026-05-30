@@ -29,6 +29,7 @@
 | 큐레이션된 + 가상 바디의 동역학적 안정성 | `phase3/stability-sim/scripts/run.py` | [4](#4-안정성-샌드박스) | 위성·추가 바디 cfg 출시 전, 혹은 기준 DB sanity 확인 |
 | `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [10](#10-개발-헬퍼) | 커밋 / 릴리스 전 |
 | Phase 3 합성 정책 적합성 | `nearstars-phase3` 의 audit-pass 절차 | [3](#3-phase-3-합성-파이프라인) | 합성 배치 후 — 수동, 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
+| 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [10](#10-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
 
 ## 1. 데이터 엔진
 
@@ -48,6 +49,7 @@
 - `scripts/pipeline/generate_target_list.py` — `db/systems/` 에서 `target_list.json` 재생성
 - `scripts/pipeline/validate.py` — 스키마 검증, 실패 시 non-zero exit
 - `scripts/pipeline/schema.py` — 공용 스키마 + 검증기
+- `scripts/pipeline/_naming.py` — 호스트/행성 이름 → 슬러그/파일명 변환의 단일 정의 (모든 빌더가 여기서 import, 재구현 금지)
 - `scripts/pipeline/test_hierarchical.py` — 위계적 다성계 구조 테스트
 
 **오케스트레이터.** `./run_pipeline.sh` 가 fetch → build → validate → site build 를 순서대로 돌립니다.
@@ -83,6 +85,7 @@
 - `scripts/phase3/check_block_parity.py` — preflight: en/ko 블록 구조 일치 검사
 - `scripts/phase3/field_tooltips.py` — 뷰어 용 용어 툴팁
 - `scripts/phase3/build_html.py` — 행성별 HTML (en + ko 미러, 토글)
+- `scripts/phase3/disk_color_mie.py` — 잔해 벨트의 산란광 반사율 색 합성 (Bohren-Huffman Mie, 입자 크기 분포 + 조성 n,k, 등에너지 백색 균형 → sRGB hex). 입력: a_min/a_max/slope/composition/Teff. AU Mic 청색, Fomalhaut 회색 등 측정된 색 2건으로 검증. numpy only.
 - `phase3/<system>/system.yaml` — planets, score thresholds, paper injections 선언형 설정
 
 **드라이버.** `nearstars-phase3` 스킬이 절차를 정의합니다 (triage → 정독 → 합성 → 검증 → ko 미러 → 시각 확인).
@@ -178,7 +181,8 @@
 - `scripts/check-mirrors.sh` — `ko/` 미러의 누락·구버전 상태 확인
 - `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
-- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사. 수동 실행 전용.
+- `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
+- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도. 수동 실행 전용.
 
 ## 스킬 디렉터리 배치
 
@@ -219,3 +223,10 @@ target_list.json
 [9] nearstars-add-star — 새 별에 대해 위 체인 전체를 구동하는 절차
 [10] 개발 헬퍼 — 체인과 직교
 ```
+
+## 관련 문서
+
+- [methodology](methodology.md) — 클러스터 허브. 데이터 엔진과 검증 툴이 이 방법론을 문서화
+- [adding_stars](adding_stars.md) — 여기 있는 스크립트 인덱스를 활용하는 실무 시퀀스
+- [mod-reference](mod-reference.md) — 다운스트림 모드 측 툴
+- [guideline](guideline.md) — 툴들의 컨텍스트가 되는 프로젝트 범위 (단계, 거리 한계)

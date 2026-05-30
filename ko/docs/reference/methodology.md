@@ -9,6 +9,7 @@ Principia proto 파일과 Kopernicus cfg 파일입니다.
 
 - [목표](#목표)
 - [출력 구조](#출력-구조)
+- [명칭 정규화](#명칭-정규화)
 - [JSON 스키마](#json-스키마)
 - [에포크 처리](#에포크-처리)
 - [다중성계 에포크](#다중성계-에포크)
@@ -16,6 +17,7 @@ Principia proto 파일과 Kopernicus cfg 파일입니다.
 - [데이터 소스](#데이터-소스)
 - [알려진 이슈 및 미결 결정 사항](#알려진-이슈-및-미결-결정-사항)
 - [범위 외 항목](#범위-외-항목)
+- [관련 문서](#관련-문서)
 
 ---
 
@@ -52,6 +54,34 @@ db/
 ```
 
 파이프라인 실행 순서, 스크립트 설명, 새 별 추가 절차는 [`adding_stars.md`](adding_stars.md) 참조.
+
+---
+
+## 명칭 정규화
+
+호스트/행성 이름 → 슬러그·파일명 변환은 `scripts/pipeline/_naming.py` 한 곳에서만 정의한다. 빌더가 자기 버전의 `to_url_slug` 를 재구현하면 매니페스트 매칭이 깨진다 (commit `e0da593` 의 회복 참조).
+
+**규칙**
+
+1. lowercase
+2. apostrophe (`'`) 제거 — `Barnard's` → `barnards`
+3. non-alphanumeric 연속 → 단일 separator
+4. 양 끝 separator 제거
+
+**Separator 두 종류**
+
+- URL 슬러그 (`-`): `docs/phase2/<slug>.html`, `docs/phase3/<slug>.html`, `reports-manifest.json` 의 매칭 키
+- File 슬러그 (`_`): `db/systems/<slug>.json`
+
+| 호스트 | URL slug | File slug |
+|---|---|---|
+| Barnard's star | `barnards-star` | `barnards_star` |
+| Teegarden's Star | `teegardens-star` | `teegardens_star` |
+| TRAPPIST-1 | `trappist-1` | `trappist_1` |
+| Alpha Centauri A | `alpha-centauri-a` | `alpha_centauri_a` |
+| 40 Eridani A | `40-eridani-a` | `40_eridani_a` |
+
+**새 빌더를 작성할 때** — `from _naming import to_url_slug, to_file_slug, to_filename` 으로 import. 함수를 다시 구현하지 말 것. 큐레이터 행동을 통제하는 스킬 문서 (`nearstars-add-star`, `nearstars-phase3`) 에도 같은 규칙이 명시돼 있다.
 
 ---
 
@@ -944,3 +974,16 @@ Alpha Centauri(~4e13 km)에서의 배정밀도 위치 ULP는 약 9 m으로, 힘 
 - 시각 및 아트 파라미터 (atmosphere, terrain, Scatterer, EVE)
 - 포함할 시스템에 관한 커뮤니티 투표
 - 성간 거리 스케일링 결정 (위의 알려진 이슈 참조)
+
+## 관련 문서
+
+- [adding_stars](adding_stars.md) — 새 컴포넌트를 파이프라인에 추가하는 실무 워크플로
+- [binary-epoch-pipeline](binary-epoch-pipeline.md) — 다성계 Kepler→ICRS 전체 수학 + 워크드 예시 (α Cen AB 예시 §9)
+- [data-sources](data-sources.md) — 외부 카탈로그 인용 + attribution 정책
+- [archive_issues](archive_issues.md) — 교차 검증 중 발견된 상위 카탈로그 결함 기록
+- [tools](tools.md) — 목적별 프로젝트 전체 툴 인덱스
+- [mod-reference](mod-reference.md) — KSP 모드 설치 참조 (하위 소비자)
+- [mod-release-layout](mod-release-layout.md) — 모드 배포 repo 관례
+- [guideline](guideline.md) — 프로젝트 범위, 단계, 거리 한계
+- [principia-cfg-reference](principia-cfg-reference.md) — Principia cfg API (방법론 에포크 처리의 하위 소비자)
+- [rex-data-comparison](rex-data-comparison.md) — REX v0.9.6 vs NearStars (방법론 선택의 타당성 검증)
