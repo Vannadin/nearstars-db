@@ -34,7 +34,14 @@ after each host is done. Divergences → focused re-investigation.
 - [x] systems + check — check.sh green
 - [x] prep diff — fresh consistently accurate; prep had source-attribution drift. No fixes needed.
 
-## Post-build integrity fix
+## Pipeline hardening (root-cause fixes, committed separately)
+- a3d7bac: schema.canonical_json/write_canonical + validate gate — curated source
+  files must be canonical (indent=2/ensure_ascii=False/order/trailing nl); writers
+  use apply_phase2.py / write_canonical, never raw json.dump.
+- 01cd605: build_systems write_system_doc skips date-only rewrites (no more 151-file
+  date churn; "0 written, 151 skipped").
+
+## Post-build integrity fix (this batch)
 - curated.json got reindented 1-space + key-reordered by build agents → renormalized to
   indent=2 + original key order; verified ONLY Barnard + Teegarden entries differ from HEAD.
 - Teegarden agent's systems-restore had reverted barnard systems → rebuilt both via build_systems,
