@@ -1,0 +1,47 @@
+host: YZ Cet
+slug: yz-cet
+generated_at: '2026-05-31'
+note: 'Phase 2 anchor bibliography for YZ Cet (GJ 54.1, M4.0Ve flare star; 3 RV super-Earths b/c/d + first-detected exoplanet
+  radio aurora). Stellar M/R/Teff/L from Stock 2020 (CARMENES char.) + Cifuentes 2020 (VizieR J/A+A/642/A115 SED) + Schweitzer
+  2019 (M-Mks). Rotation P_rot 68.4 d (Stock 2020, photometric). Planets b/c/d best params = Stock 2020; discovery = Astudillo-Defru
+  2017. VISUAL hook: star-planet magnetic interaction radio aurora (Pineda & Villadsen 2023) + b magnetic field inference
+  (Trigilio 2023); UV-Cet/BY-Dra flare variability. Tentative 4th signal "e" EXCLUDED (superseded by Stock 2020 +229 RVs).
+  Catalog papers (Cifuentes/Schweitzer) carry per-star values in VizieR, not the ar5iv body — value-check by Karmn/object
+  ID, not the fetched text.'
+papers:
+- arxiv_id: '2002.01772'
+  ads_bibcode: 2020A&A...636A.119S
+  title: Stock et al. 2020 — CARMENES characterization; M/R/Teff/L, P_rot 68.4 d, b/c/d best orbital + Msini (PRIMARY ANCHOR)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1708.03336'
+  ads_bibcode: 2017A&A...605L..11A
+  title: Astudillo-Defru et al. 2017 — HARPS discovery of b/c/d; alt Teff/R/M (discovery)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2007.15077'
+  ads_bibcode: 2020A&A...642A.115C
+  title: Cifuentes et al. 2020 — CARMENES input cat. V, 20-band SED Teff/L/R/mass (VizieR J/A+A/642/A115; RECOMMENDED teff/L)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1904.06860'
+  ads_bibcode: 2019A&A...625A..68S
+  title: Schweitzer et al. 2019 — CARMENES M-dwarf masses/radii via M-Mks + SED (alt M/R; VizieR)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '2304.00031'
+  ads_bibcode: 2023NatAs...7..569P
+  title: Pineda & Villadsen 2023 — coherent radio bursts / star-planet magnetic interaction aurora (VISUAL hook)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2305.00809'
+  ads_bibcode: 2023A&A...680L...1T
+  title: Trigilio et al. 2023 — SPI radio emission infers YZ Cet b magnetic field (VISUAL)
+  status: fetched
+  category: skim
+  fetch_error: null

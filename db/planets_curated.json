@@ -4744,68 +4744,172 @@
   "YZ Cet": [
     {
       "pl_name": "YZ Cet b",
-      "orbital": {
-        "semi_major_axis_au": 0.01634,
-        "eccentricity": 0.06,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 197.0,
-        "epoch_jd": 2452996.25,
-        "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732"
-      },
-      "physical": {
-        "mass_mearth": 0.7,
-        "uncertainty_mearth": 0.09,
-        "mass_type": "Msini",
-        "source": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732"
-      }
+      "orbital": [
+        {
+          "period_days": 2.02087,
+          "uncertainty_period_days": 9e-05,
+          "semi_major_axis_au": 0.01634,
+          "uncertainty_semi_major_axis_au": 0.00041,
+          "eccentricity": 0.06,
+          "uncertainty_eccentricity": 0.06,
+          "argument_of_periapsis_deg": 197.0,
+          "epoch_jd": 2452996.25,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732",
+          "method": "rv",
+          "recommended": true
+        },
+        {
+          "period_days": 1.96876,
+          "uncertainty_period_days": 0.00021,
+          "semi_major_axis_au": 0.01557,
+          "uncertainty_semi_major_axis_au": 0.00052,
+          "eccentricity": 0.0,
+          "uncertainty_eccentricity": 0.12,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Astudillo-Defru et al. 2017",
+          "bibcode": "2017A&A...605L..11A",
+          "doi": "10.1051/0004-6361/201731581",
+          "method": "rv",
+          "recommended": false
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 0.7,
+          "uncertainty_mearth": 0.09,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732",
+          "method": "rv",
+          "recommended": true
+        },
+        {
+          "mass_mearth": 0.75,
+          "uncertainty_mearth": 0.13,
+          "mass_type": "Msini",
+          "source": "Astudillo-Defru et al. 2017",
+          "bibcode": "2017A&A...605L..11A",
+          "doi": "10.1051/0004-6361/201731581",
+          "method": "rv",
+          "recommended": false
+        }
+      ]
     },
     {
       "pl_name": "YZ Cet c",
-      "orbital": {
-        "semi_major_axis_au": 0.02156,
-        "eccentricity": 0.0,
-        "longitude_of_ascending_node_deg": null,
-        "epoch_jd": 2452997.62,
-        "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732"
-      },
-      "physical": {
-        "mass_mearth": 1.14,
-        "uncertainty_mearth": 0.11,
-        "mass_type": "Msini",
-        "source": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732"
-      }
+      "orbital": [
+        {
+          "period_days": 3.05989,
+          "uncertainty_period_days": 0.0001,
+          "semi_major_axis_au": 0.02156,
+          "uncertainty_semi_major_axis_au": 0.00054,
+          "eccentricity": 0.0,
+          "epoch_jd": 2452997.62,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732",
+          "method": "rv",
+          "recommended": true
+        },
+        {
+          "period_days": 3.06008,
+          "uncertainty_period_days": 0.00022,
+          "semi_major_axis_au": 0.0209,
+          "uncertainty_semi_major_axis_au": 0.0007,
+          "eccentricity": 0.04,
+          "uncertainty_eccentricity": 0.11,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Astudillo-Defru et al. 2017",
+          "bibcode": "2017A&A...605L..11A",
+          "doi": "10.1051/0004-6361/201731581",
+          "method": "rv",
+          "recommended": false
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.14,
+          "uncertainty_mearth": 0.11,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732",
+          "method": "rv",
+          "recommended": true
+        },
+        {
+          "mass_mearth": 0.98,
+          "uncertainty_mearth": 0.14,
+          "mass_type": "Msini",
+          "source": "Astudillo-Defru et al. 2017",
+          "bibcode": "2017A&A...605L..11A",
+          "doi": "10.1051/0004-6361/201731581",
+          "method": "rv",
+          "recommended": false
+        }
+      ]
     },
     {
       "pl_name": "YZ Cet d",
-      "orbital": {
-        "semi_major_axis_au": 0.02851,
-        "eccentricity": 0.07,
-        "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 200.0,
-        "epoch_jd": 2452996.83,
-        "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732"
-      },
-      "physical": {
-        "mass_mearth": 1.09,
-        "uncertainty_mearth": 0.12,
-        "mass_type": "Msini",
-        "source": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732"
-      }
+      "orbital": [
+        {
+          "period_days": 4.65626,
+          "uncertainty_period_days": 0.00029,
+          "semi_major_axis_au": 0.02851,
+          "uncertainty_semi_major_axis_au": 0.00071,
+          "eccentricity": 0.07,
+          "uncertainty_eccentricity": 0.05,
+          "argument_of_periapsis_deg": 200.0,
+          "epoch_jd": 2452996.83,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732",
+          "method": "rv",
+          "recommended": true
+        },
+        {
+          "period_days": 4.65627,
+          "uncertainty_period_days": 0.00042,
+          "semi_major_axis_au": 0.02764,
+          "uncertainty_semi_major_axis_au": 0.00093,
+          "eccentricity": 0.129,
+          "uncertainty_eccentricity": 0.096,
+          "mean_anomaly_at_epoch_deg": 0.0,
+          "source": "Astudillo-Defru et al. 2017",
+          "bibcode": "2017A&A...605L..11A",
+          "doi": "10.1051/0004-6361/201731581",
+          "method": "rv",
+          "recommended": false
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 1.09,
+          "uncertainty_mearth": 0.12,
+          "mass_type": "Msini",
+          "source": "Stock et al. 2020",
+          "bibcode": "2020A&A...636A.119S",
+          "doi": "10.1051/0004-6361/201936732",
+          "method": "rv",
+          "recommended": true
+        },
+        {
+          "mass_mearth": 1.14,
+          "uncertainty_mearth": 0.17,
+          "mass_type": "Msini",
+          "source": "Astudillo-Defru et al. 2017",
+          "bibcode": "2017A&A...605L..11A",
+          "doi": "10.1051/0004-6361/201731581",
+          "method": "rv",
+          "recommended": false
+        }
+      ]
     }
   ],
   "HD 22496": [

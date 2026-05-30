@@ -4381,25 +4381,143 @@
     ]
   },
   "YZ Cet": {
+    "teff_k": 3100,
+    "spectype": "M4.5 V",
     "mass_measurements": [
       {
-        "value_msun": 0.142,
-        "uncertainty_msun": 0.01,
-        "method": "unverified",
-        "reference": "Stock et al. 2020",
-        "bibcode": "2020A&A...636A.119S",
-        "doi": "10.1051/0004-6361/201936732",
+        "value_msun": 0.1368,
+        "uncertainty_msun": 0.0033,
+        "method": "spectroscopic_calibration",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
         "recommended": true
+      },
+      {
+        "value_msun": 0.1418,
+        "uncertainty_msun": 0.0098,
+        "method": "spectroscopic_calibration",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.1475,
+        "uncertainty_msun": 0.01,
+        "method": "spectroscopic_calibration",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.13,
+        "uncertainty_msun": 0.013,
+        "method": "spectroscopic_calibration",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...605L..11A",
+        "doi": "10.1051/0004-6361/201731581",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.157,
-        "uncertainty_rsun": 0.005,
-        "method": "unverified",
+        "value_rsun": 0.1571,
+        "uncertainty_rsun": 0.0052,
+        "method": "sed_fitting",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      },
+      {
+        "value_rsun": 0.1626,
+        "uncertainty_rsun": 0.0056,
+        "method": "sed_fitting",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": false
+      },
+      {
+        "value_rsun": 0.168,
+        "uncertainty_rsun": 0.009,
+        "method": "sed_fitting",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...605L..11A",
+        "doi": "10.1051/0004-6361/201731581",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": true
+      },
+      {
+        "value_k": 3151,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      },
+      {
+        "value_k": 3056,
+        "uncertainty_k": 60,
+        "method": "high_res_spectroscopy",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...605L..11A",
+        "doi": "10.1051/0004-6361/201731581",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0022,
+        "uncertainty_lsun": 4.9e-05,
+        "method": "bolometric_flux",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": true
+      },
+      {
+        "value_lsun": 0.002195,
+        "uncertainty_lsun": 3.5e-05,
+        "method": "bolometric_flux",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 68.4,
+        "uncertainty_days": 0.05,
+        "method": "photometric_variability",
         "reference": "Stock et al. 2020",
         "bibcode": "2020A&A...636A.119S",
         "doi": "10.1051/0004-6361/201936732",
+        "recommended": true,
+        "notes": "Combined V-band photometry (ASH2+SNO+ASAS+ASAS-SN). Supersedes the 83 d value from Astudillo-Defru 2017; R+I band gives 68.5 +/- 1.0 d."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.71,
+        "uncertainty_log_rhk": 0.21,
+        "method": "log_rhk",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...605L..11A",
+        "doi": "10.1051/0004-6361/201731581",
         "recommended": true
       }
     ]
