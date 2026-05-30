@@ -82,7 +82,7 @@ follow-up 워크스페이스용으로 표시만 해 둡니다. AU Mic 은 넓은
 | `disk_inner_radius_au` | 35 | high | Schneider 2014 HST/STIS 깊은 영상. ~35 AU 표면 밝기 break. Strubbe & Chiang 2006 SED-fit 과 일관 |
 | `disk_outer_radius_au` | 210 | high | Schneider 2014. ~210 AU 까지 확장된 후광, 그 너머로는 STIS 감도 아래로 떨어짐 |
 | `disk_dust_temperature_k` | 50 | high | Chen 2005 Spitzer SED-fit 차가운 성분. 0.092 L☉ host 주위 35 AU planetesimal 휘저음 벨트와 일관 |
-| `disk_tint_rgb_hex` | `#9a8a78` (따뜻한 회색, 차가운 규산염 우세) | medium | Tie-break. SPHERE 편광 색이 산란된 별 SED 보다 약간 더 붉지만, 게임 내 렌더 분해능에서 먼지 산란이 무채색이라 cfg 는 따뜻한 무채색 회색을 채택 |
+| `disk_tint_rgb_hex` | `#fbeacb` (옅은 크림색, 붉은 M1V 빛 아래 푸른 쪽으로 기우는 반사율) | medium | CORRECTED. 원반은 무채색이 아니라 반사율이 측정상 푸릅니다 (Krist 2005, B/I ~ 1.6. Fitzgerald 2007 근적외선에서 푸름. Graham 2007 의 a ~0.1 µm 다공성 blowout 미세입자). Mie 산란 합성 결과, 그 강한 청색 산란이 붉은 M1V 별빛을 무채색 회색보다 더 푸르고 밝은 쪽으로 옮겨 옅은 크림색 절대색이 나옵니다 (유명한 "AU Mic 블루" 는 원반과 별의 상대 반사율이지 절대 색조가 아닙니다) |
 | `disk_opacity` | 0.4 | medium | Boccaletti 2018 SPHERE 편광 강도비. 중간 범위 opacity 렌더가 원반 가시성과 배경별 가시성을 모두 보존 |
 | `disk_morphology` | edge-on planetesimal 휘저음, 애니메이션된 방사형 움직임 substructure (바깥 방향 4–10 km/s) | high | Boccaletti 2015 + 2018 multi-epoch SPHERE 의 빠르게 움직이는 피처 검출. Chiang & Fung 2017 의 항성풍 발사 먼지 ridge 모델 |
 | `disk_resolved_imaging` | true | high | HST/STIS (Krist 2005, Schneider 2014). VLT/SPHERE (Boccaletti 2015, 2018) |

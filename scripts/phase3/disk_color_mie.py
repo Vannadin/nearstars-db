@@ -79,17 +79,29 @@ def _lin_rgb(spec):
     X, Y, Z = cie_xyz(WL, spec)
     return _M_XYZ2RGB @ np.array([X, Y, Z])
 
-def color_from_reflectance(qsca_lambda):
-    """White-balanced reflectance color: a FLAT (grey) reflectance maps to
-    neutral grey; blue-sloped -> blue, red-sloped -> red. (Equal-energy
-    reference: divide the spectrum's linear RGB by a flat spectrum's RGB.)"""
-    rgb = _lin_rgb(qsca_lambda) / _lin_rgb(np.ones_like(WL))
+SOLAR_TEFF = 5772.0
+
+def _to_hex(rgb):
     rgb = np.clip(rgb, 1e-6, None)
     rgb = rgb / rgb.max()
-    rgb = 0.85 * rgb + 0.15 * rgb.mean()  # mild desaturation toward grey (dust, not neon)
+    rgb = 0.82 * rgb + 0.18 * rgb.mean()  # mild desaturation toward grey (dust, not neon)
     srgb = np.where(rgb <= 0.0031308, 12.92 * rgb, 1.055 * rgb ** (1 / 2.4) - 0.055)
-    srgb = np.clip(srgb, 0, 1)
-    return "#" + "".join(f"{int(round(c * 255)):02x}" for c in srgb)
+    return "#" + "".join(f"{int(round(c * 255)):02x}" for c in np.clip(srgb, 0, 1))
+
+def color_reflectance(qsca_lambda):
+    """Intrinsic dust reflectance color (star-independent), white-balanced to a
+    flat illuminant: flat reflectance -> neutral grey. Matches the measured
+    disk-vs-star colors (AU Mic blue, Fomalhaut grey)."""
+    return _to_hex(_lin_rgb(qsca_lambda) / _lin_rgb(np.ones_like(WL)))
+
+def color_absolute(qsca_lambda, teff):
+    """ABSOLUTE scattered-starlight color = star_blackbody(Teff) * Qsca(lambda),
+    white-balanced to the SUN (a neutral grain under a Sun-like star -> white;
+    under a K/M star -> warm; under an A star -> blue-white). This is the repo
+    convention (star color baked in), upgraded from crude 'star color + albedo'
+    to proper grain-size Mie scattering."""
+    spec = planck(WL, teff) * qsca_lambda
+    return _to_hex(_lin_rgb(spec) / _lin_rgb(planck(WL, SOLAR_TEFF)))
 
 
 def planck(wl_nm, teff):
@@ -126,7 +138,7 @@ def belt_color(a_min, a_max, q, comp, teff):
         qs = np.array([mie_qsca(xi, m) for xi in x])
         qsca_lambda += w * (a ** 2) * qs
     qsca_lambda /= np.trapz(weights * sizes ** 2, sizes)
-    return color_from_reflectance(qsca_lambda), qsca_lambda
+    return qsca_lambda
 
 
 def a_blow(L, M, rho=2.5):
@@ -170,9 +182,9 @@ BELTS = [
 ]
 
 if __name__ == "__main__":
-    print(f"{'belt':40s} {'a_blow':>7s} {'a_min':>7s} {'comp':9s} {'hex':9s}")
+    print(f"{'belt':40s} {'a_blow':>7s} {'a_min':>7s} {'comp':9s} {'absolute':9s} {'reflect':9s}")
     for name, amin, amax, q, comp, L, M, teff in BELTS:
         ab = a_blow(L, M)
         am = amin if amin is not None else max(ab, 0.05)
-        hexc, _ = belt_color(am, amax, q, comp, teff)
-        print(f"{name:40s} {ab:7.2f} {am:7.2f} {comp:9s} {hexc}")
+        qsca = belt_color(am, amax, q, comp, teff)
+        print(f"{name:40s} {ab:7.2f} {am:7.2f} {comp:9s} {color_absolute(qsca, teff):9s} {color_reflectance(qsca):9s}")

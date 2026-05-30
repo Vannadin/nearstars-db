@@ -33,13 +33,13 @@ Vega has no confirmed planets. The deepest RV searches (Hunsch & Schmitt 2019 an
 | `disk_warm_inner_radius_au` | 14 ± 2 | medium | Su et al. 2013 — warm asteroid-analog inner belt at ~14 AU (Spitzer-IRS + Herschel-PACS) |
 | `disk_warm_dust_temperature_k` | 170 | medium | Su et al. 2013 two-component SED — warm dust population |
 | `disk_warm_mass_mearth` | 0.0003 | medium | Su et al. 2013 — warm-belt dust mass |
-| `disk_warm_tint_rgb_hex` | `#dde3ed` (pale blue-white) | low | No optical scattered-light color measured (Vega's belts are resolved only in thermal IR/mm); synthesized from Vega's A0V blue-white color + grain albedo. Large debris grains scatter near-neutrally, so the belt reads close to the star color |
+| `disk_warm_tint_rgb_hex` | `#c7d8fa` (pale blue-white) | low | No measured optical color (thermal/mm only). Mie synthesis: large blowout-size silicate grains (a_min ~11 µm) scatter near-neutrally, so the belt reflects the A0V blue-white starlight ≈ unchanged → pale blue-white |
 | `disk_warm_opacity` | 0.02 | low | Tie-break: τ ~ 10⁻⁴ (Su 2013); boosted to a faint-but-visible value |
 | `disk_cold_inner_radius_au` | 110 ± 9 | medium | Su et al. 2013 — cold Kuiper-analog inner edge ~110 AU (audit 2026-05-29: corrected from 62) |
 | `disk_cold_outer_radius_au` | 200 ± 20 | medium | Sibthorpe et al. 2010 (`2010A&A...518L.130S`) Herschel-PACS — cold belt extends to ~200 AU |
 | `disk_cold_dust_temperature_k` | 50 | medium | Su et al. 2013 — cold dust population |
 | `disk_cold_mass_mearth` | 0.013 | medium | Su et al. 2013 — cold-belt dust mass; parent-body mass much larger but unobserved |
-| `disk_cold_tint_rgb_hex` | `#d6deec` (faint blue-white) | low | No optical scattered-light color measured (thermal IR/mm only); synthesized from Vega's A0V blue-white color + albedo. The two belts differ by radius/brightness, not hue |
+| `disk_cold_tint_rgb_hex` | `#c7d8fa` (faint blue-white) | low | No measured optical color (thermal IR/mm only). Mie synthesis: same large near-neutral grains as the warm belt → reflects the A0V blue-white light; the two belts differ by radius/brightness, not hue |
 | `disk_cold_opacity` | 0.06 | low | Tie-break: τ ~ 10⁻⁴ (Su 2013); boosted for visibility. Conservative value in Open items |
 | `disk_morphology` | two-belt: warm asteroid-analog at ~14 AU + cold Kuiper-analog at ~110–200 AU + a cleared gap (14→110 AU) implying planetesimal-stirring planets | high | Su et al. 2013 two-component SED + Spitzer-MIPS imaging; the cleared gap is the strongest indirect planet evidence at Vega |
 | `disk_resolved_imaging` | true | high | Holland 1998 SCUBA 850 μm (`1998Natur.392..788H`); Wilner 2002 OVRO 1.3 mm; Su 2013 Spitzer-MIPS; Sibthorpe 2010 Herschel-PACS; Hughes 2012 ALMA |
@@ -150,7 +150,7 @@ The full filtered bib is preserved as a future task. Skipped entries include pho
 - **Su 2013 gap-clearer planets between 14 and 110 AU.** Currently inferred only from the disk morphology. A future direct-imaging confirmation (JWST-NIRCam or extreme-AO) would convert this from inference to confirmed planet bodies, triggering cfg additions.
 - **Conservative-opacity disk variant.** Current cfg uses `disk_opacity` = 0.06 (interesting-first tie-break); the observation-consistent value is τ ~ 10⁻⁴ (essentially invisible). A "realistic" cfg variant with the physically-faithful opacity should be authored as a player-selectable option.
 - **Polar magnetic spot from Petit 2010.** Not currently rendered. A future cfg variant could add a faint blue-shifted spot at the pole for the close fly-by view, matching the ZDI structure.
-- **Disk dust-size and color synthesis upgrade.** Current `disk_tint_rgb_hex` uses an HST-STIS-Fomalhaut palette convention; a proper synthesis from grain-size distribution + Vega illumination spectrum (Mie scattering) would give a defensible color rather than a tie-break.
+- **Disk dust-size and color synthesis — DONE (2026-05-30).** Replaced the palette-convention tints with a Mie-scattering synthesis (`scripts/phase3/disk_color_mie.py`): large blowout-size silicate grains (a_min ~11 µm) scatter near-neutrally, so both belts reflect the A0V blue-white light → `#c7d8fa`. Validated against the two measured disk colors (AU Mic blue, Fomalhaut grey).
 - **Cycle phase / epoch synchronization.** Vega has no observed activity cycle (radiative envelope), so unlike α Cen A no epoch synchronization is needed — but if the Petit 2010 magnetic geometry is implemented as a slowly-rotating polar feature, an epoch reference would become necessary.
 
 ## Related

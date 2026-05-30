@@ -74,14 +74,14 @@ star + disk + jovian point of light).
 | `disk_belts` | asteroid, intermediate, cold | medium | Three-belt architecture: warm asteroid analog (~3 AU) + intermediate population (~20 AU) + cold Kuiper-analog ring (~64 AU); the intermediate belt is the least-resolved layer |
 | `disk_asteroid_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS — warm asteroid-belt analog from mid-IR excess (Su 2017 refinement) |
 | `disk_asteroid_dust_temperature_k` | 120 | high | Backman 2009 — inner warm belt model T (audit 2026-05-29: was 150, the observed upper bound) |
-| `disk_asteroid_tint_rgb_hex` | `#e8dcc8` (pale warm-neutral) | low | No optical scattered-light color (belts resolved only in sub-mm/mm); synthesized from eps Eri's K2V orange-white color + grain albedo |
+| `disk_asteroid_tint_rgb_hex` | `#fdf3e3` (pale warm-neutral) | low | No measured optical color (thermal/IR only — HST/STIS non-detection, arXiv:2408.06973). Mie synthesis (disk_color_mie.py): silicate grains a_min ~2 µm (Backman 2009) are large vs optical λ → near-neutral reflectance, scattering the K2V starlight to a pale warm-cream |
 | `disk_asteroid_opacity` | 0.25 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_intermediate_inner_radius_au` | 20 | medium | Greaves 2014 Herschel — intermediate dust population (re-attributed 2026-05-29 from Booth 2017, which resolves only the 69 AU ring and finds no 20 AU emission); least-resolved belt |
-| `disk_intermediate_tint_rgb_hex` | `#e4dcd0` (pale warm-neutral) | low | Synthesized from the K2V star color + albedo; no optical color measured |
+| `disk_intermediate_tint_rgb_hex` | `#fdf6e9` (pale warm-neutral) | low | No measured optical color. Mie synthesis: blowout-size silicate grains (a_min ~0.2 µm) give a faint blue-leaning reflectance, but under the K2V illumination the absolute color stays pale warm-cream |
 | `disk_intermediate_opacity` | 0.20 | low | Tie-break: faint intermediate dust, boosted for visibility |
 | `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — narrow eccentric (e ≈ 0.07) cold ring resolved at 64.4 ± 0.5 AU (Booth 2017 Herschel confirms) |
 | `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves cold-ring SED |
-| `disk_cold_tint_rgb_hex` | `#dcd6cc` (pale warm-neutral) | low | Synthesized from the K2V star color + albedo; the ring is sub-mm/mm-resolved, never imaged in optical scattered light |
+| `disk_cold_tint_rgb_hex` | `#fdf3e5` (pale warm-neutral) | low | No measured optical color (sub-mm/mm only). Mie synthesis: large icy/silicate grains (a ~15–135 µm, Backman 2009) → neutral reflectance × K2V light → pale warm-cream |
 | `disk_cold_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_morphology` | three-belt: inner asteroid analog at ~3 AU + intermediate population at ~20 AU + cold Kuiper-analog ring at ~64 AU (narrow, eccentric e ≈ 0.07) | medium | Su 2017 Genie model + Booth 2017 / Greaves 2014 multi-belt decomposition; intermediate is the least-resolved layer |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA; Booth 2017 Herschel/SPIRE; Su 2017 Spitzer/MIPS — cold ring resolved at multiple wavelengths |
@@ -262,9 +262,11 @@ inner asteroid-belt analog at ~3 AU is the warmest and most
 optically thin; rendered as a faint warm-tinted dust scattering
 layer, distinct enough from the solar background to be visually
 identifiable as "this is where the rocky planets would be if there
-were any". The per-belt cfg tints (`disk_<belt>_tint_rgb_hex`, ≈ `#dcd6cc`–`#e8dcc8`)
-are pale warm-neutral, Confidence=low — eps Eri's belts are resolved
-only in sub-mm/mm, so no optical scattered-light color exists; the
+were any". The per-belt cfg tints (`disk_<belt>_tint_rgb_hex`, ≈ `#fdf3e3`–`#fdf6e9`)
+are pale warm-cream, Confidence=low — eps Eri's belts are resolved
+only in sub-mm/mm, so no optical scattered-light color exists; the Mie
+synthesis (disk_color_mie.py) gives a near-neutral reflectance off the
+silicate/icy grains, scattering the K2V starlight to pale warm-cream; the
 tints are synthesized from the K2V orange-white star color + grain
 albedo rather than measured.
 

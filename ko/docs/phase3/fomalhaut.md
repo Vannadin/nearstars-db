@@ -74,11 +74,11 @@ Kalas et al. 2008 이 HST 가시광 영상에서 보고한 그 유명한
 | `disk_belts` | warm, intermediate, cold | high | Gáspár 외 2023 JWST/MIRI 가 3 벨트 구조를 분해. 안쪽 warm + intermediate + 고전적 편심 cold 주 고리 (Kalas 2005 / Boley 2012 / White 2017) |
 | `disk_warm_inner_radius_au` | 10 | high | Gáspár 외 2023 (`2023NatAs...7..790G`) JWST/MIRI — 안쪽 warm 벨트 안쪽 가장자리 |
 | `disk_warm_outer_radius_au` | 90 | high | Gáspár 외 2023 — warm 벨트 바깥쪽 범위 |
-| `disk_warm_tint_rgb_hex` | `#dedede` (옅은 중성 백색) | low | JWST/MIRI 중적외선만 — 광학 산란광 색 없음. Fomalhaut 의 A3V 백색 + grain albedo 에서 합성 |
+| `disk_warm_tint_rgb_hex` | `#ceddfa` (옅은 청백) | low | 광학 산란광 색 측정값 없음 (열복사/간섭계 자료만). Mie 산란 합성. 탄소질 입자 (탄소 승화 경계 근처의 뜨거운 고리) 는 어둡지만 입자가 커서 거의 중성 반사율 → A4 V 청백색 빛과 곱해져 옅은 청백색 |
 | `disk_warm_opacity` | 0.30 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
 | `disk_intermediate_inner_radius_au` | 60 | high | Gáspár 외 2023 JWST/MIRI — intermediate 벨트 안쪽 가장자리 |
 | `disk_intermediate_outer_radius_au` | 110 | high | Gáspár 외 2023 — intermediate 벨트 바깥쪽 가장자리 |
-| `disk_intermediate_tint_rgb_hex` | `#d8d8da` (옅은 중성) | low | 중적외선만 — 광학 색 없음. A3V 백색 별 + albedo 에서 합성 |
+| `disk_intermediate_tint_rgb_hex` | `#cfdefa` (옅은 청백) | low | 광학 색 측정값 없음 (중적외선만). Mie 산란 합성. 규산염 입자가 광학 파장 대비 커서 거의 중성 반사율 → A4 V 빛과 곱해져 옅은 청백색 |
 | `disk_intermediate_opacity` | 0.25 | low | Tie-break. 희미한 intermediate 먼지, 가시성 위해 boost |
 | `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — 편심 궤도 보정 후 주 고리 안쪽 가장자리 |
 | `disk_cold_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — 주 고리 바깥쪽 가장자리 |

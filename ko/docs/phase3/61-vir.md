@@ -56,7 +56,7 @@ debris 띠를 분해**하며, 바깥쪽은 ≈ 96 AU 까지 뻗고 dust 온도 ~
 | `disk_inner_radius_au` | 30 | high | Wyatt 2012. Herschel/PACS 분해 지오메트리. modified-blackbody SED fit 으로 온도-가중 반경이 30 AU 근방 |
 | `disk_outer_radius_au` | 96 | medium | Wyatt 2012. 70/100/160 μm 에서 분해된 바깥쪽 경계. 안쪽보다 약간 덜 제약됨 |
 | `disk_dust_temperature_k` | 50 | high | Wyatt 2012. modified-blackbody SED fit (범위 30–60 K) |
-| `disk_tint_rgb_hex` | `#9ca4b5` (차가운 강철빛 산란 색조) | low | Tie-break. 50 K 열복사 피크는 원적외선에 있어 사람 눈에는 안 보임. cfg 는 궤도 뷰 렌더러에서 띠가 인식 가능하도록 차가운 회색 산란 색조를 선택 |
+| `disk_tint_rgb_hex` | `#fceee7` (옅은 따뜻한-중립색) | low | 측정된 광학 색이 없음 (열복사/mm 만, 분광 특징 없음, Wyatt 2012). Mie 산란 합성. blowout 크기의 규산염 입자 (a_min ~0.44 µm) → 거의 중립적인 반사율 × G7 V 별빛 → 옅은 따뜻한-중립 크림색 |
 | `disk_opacity` | 0.10 | low | Tie-break. Herschel τ ~ 10⁻⁵ (원적외선 광학 깊이) 는 플레이어 가시성 한참 아래. cfg 는 렌더러 가시 값을 채택하되 띠가 분명히 희미하게 보이도록 유지 |
 | `disk_morphology` | single cold belt, KBO analog | high | Wyatt 2012. 단일한 넓은 띠. warp/gap/이중대 구조 보고 없음 |
 | `disk_resolved_imaging` | true | high | Wyatt 2012. Herschel/PACS 70/100/160 μm 에서 분해 |

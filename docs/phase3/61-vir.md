@@ -58,7 +58,7 @@ constrain the optical appearance.
 | `disk_inner_radius_au` | 30 | high | Wyatt 2012 — Herschel/PACS resolved geometry; modified-blackbody SED fit places the temperature-weighted radius near 30 AU |
 | `disk_outer_radius_au` | 96 | medium | Wyatt 2012 — resolved outer cutoff at 70/100/160 μm; outer edge slightly less constrained than the inner |
 | `disk_dust_temperature_k` | 50 | high | Wyatt 2012 — modified-blackbody SED fit (range 30–60 K) |
-| `disk_tint_rgb_hex` | `#9ca4b5` (cool steel-blue scattering tint) | low | Tie-break: 50 K thermal emission peaks in far-IR (invisible to the eye); cfg picks a cool-grey scattering tint so the ring is recognizable in the orbit-view renderer |
+| `disk_tint_rgb_hex` | `#fceee7` (pale warm-neutral) | low | No measured optical color (thermal/mm only; no spectral features, Wyatt 2012). Mie synthesis: blowout-size silicate grains (a_min ~0.44 µm) → near-neutral reflectance × the G7 V light → pale warm-neutral cream |
 | `disk_opacity` | 0.10 | low | Tie-break: Herschel τ ~ 10⁻⁵ (optical depth in far-IR) is far below player visibility; cfg picks a renderer-visible value while keeping the ring obviously faint |
 | `disk_morphology` | single cold belt, KBO analog | high | Wyatt 2012 — single broad ring; no warps, gaps, or two-belt structure reported |
 | `disk_resolved_imaging` | true | high | Wyatt 2012 — Herschel/PACS resolved at 70/100/160 μm |

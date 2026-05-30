@@ -72,7 +72,7 @@ Teixeira 2009 asteroseismology, Santos 2013, Gomes da Silva 2021) 에
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016. ALMA 분해 fit, 안쪽 가장자리 ~6 AU |
 | `disk_outer_radius_au` | 55 | high | MacGregor 2016. ALMA 분해 fit, 바깥쪽 가장자리 ~55 AU |
 | `disk_dust_temperature_k` | 60 | high | MacGregor 2016 SED + Greaves 2004 의 60–80 K 와 일치 |
-| `disk_tint_rgb_hex` | `#b8aa9c` (따뜻한 grey-brown, 금속이 적은 카이퍼 벨트 analog) | low | Tie-break. 조성은 직접 측정되지 않음. 모성이 metal-poor 라 원시 입자에 철이 덜 들어가 reddening 도 적었을 것이라는 가정으로 Sol KBO 기준보다 덜 붉은 색조를 채택. interesting-first 룰 적용 |
+| `disk_tint_rgb_hex` | `#fbe8d3` (옅은 따뜻한 크림) | low | 측정된 광학 색 없음 (열적/mm 관측만 존재). Mie 산란 합성. 비정질 규산염 + 유기물 (Lawler 2014; a_min ~0.31 µm) 조성에서 유기물이 청색을 흡수해 약간 따뜻한 반사율을 만들고, G8.5 V 광원 아래에서는 옅은 따뜻한 크림으로 읽힘 |
 | `disk_opacity` | 0.15 | low | Tie-break. MacGregor 2016 의 먼지 질량 + 고리 기하에서 나오는 물리 광학적 깊이는 ~10⁻³ 이지만, 게임 내에서 우주 배경 대비 가시성을 살리기 위해 cfg 는 0.15 를 사용. 렌더 가시성 trade-off 로 문서화 |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3. multi-belt 보다 단일 넓은 고리를 명시적으로 선호. 분해된 안쪽 갭 없음 |
 | `disk_resolved_imaging` | true | high | MacGregor 2016. ALMA Band 6 분해 |

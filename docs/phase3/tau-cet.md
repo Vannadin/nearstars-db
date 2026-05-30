@@ -76,7 +76,7 @@ picks; the stellar layer is re-anchored on the frozen Phase 2 sources
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016 — ALMA resolved fit, inner edge ~6 AU |
 | `disk_outer_radius_au` | 55 | high | MacGregor 2016 — ALMA resolved fit, outer edge ~55 AU |
 | `disk_dust_temperature_k` | 60 | high | MacGregor 2016 SED + Greaves 2004 60–80 K consistent |
-| `disk_tint_rgb_hex` | `#b8aa9c` (warm grey-brown, metal-poor analog of Kuiper Belt) | low | Tie-break: composition not directly measured; cfg adopts a slightly less reddened tint than the Sol KBO reference to reflect the metal-poor parent star (less iron in primordial grain population); interesting-first per the interesting-first rule |
+| `disk_tint_rgb_hex` | `#fbe8d3` (pale warm cream) | low | No measured optical color (thermal/mm only). Mie synthesis: amorphous silicate + organics (Lawler 2014; a_min ~0.31 µm) — the organics absorb blue, giving a slightly warm reflectance, which under the G8.5 V light reads as a pale warm cream |
 | `disk_opacity` | 0.15 | low | Tie-break: physical optical depth is ~10⁻³ from MacGregor 2016 dust mass + ring geometry, but cfg uses 0.15 for in-game visibility against deep-space background; documented as a render-visibility tradeoff |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3 — single broad ring explicitly favored over multi-belt; no resolved inner gap |
 | `disk_resolved_imaging` | true | high | MacGregor 2016 — ALMA Band 6 resolved |
