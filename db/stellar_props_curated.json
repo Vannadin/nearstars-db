@@ -1259,15 +1259,39 @@
     ]
   },
   "GJ 896 A": {
+    "spectype": "M3.5 Ve",
+    "spectype_reference": "SIMBAD (BD+19 5116A); Curiel et al. 2022",
     "mass_measurements": [
       {
         "value_msun": 0.43599,
         "uncertainty_msun": 0.00092,
-        "method": "unverified",
+        "method": "binary_orbit",
         "reference": "Curiel et al. 2022",
         "bibcode": "2022AJ....164...93C",
         "doi": "10.3847/1538-3881/ac7c66",
         "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.35,
+        "method": "unverified",
+        "reference": "Curiel et al. 2022 (citing Morin et al. 2008; Pearce et al. 2020)",
+        "bibcode": "2022AJ....164...93C",
+        "doi": "10.3847/1538-3881/ac7c66",
+        "recommended": true,
+        "notes": "Approximate radius ~0.35 Rsun. Curiel 2022 does not measure R; quotes it from prior literature, so method=unverified (a real literature value outside the radius enum, not a dubious one). No uncertainty published. Verbatim (2208.14553.md:191): \"GJ 896A has a radius of ~0.35 R_sun (e.g., Morin et al., 2008; Pearce et al., 2020)\". Also stated in the intro (2208.14553.md:27): \"GJ 896A, is an M3.5 star with ... a radius of 0.35 R_sun\"."
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 1.061,
+        "method": "unverified",
+        "reference": "Curiel et al. 2022 (citing Delfosse 1999; Morin 2008; Davison 2015; Pearce 2020)",
+        "bibcode": "2022AJ....164...93C",
+        "doi": "10.3847/1538-3881/ac7c66",
+        "recommended": true,
+        "notes": "Fast rotator (P_rot = 1.061 d), consistent with an active M3.5Ve flare dwarf. Curiel 2022 quotes this from prior literature (not its own measurement); the underlying determination is the Morin et al. 2008 spectropolarimetric/ZDI study of EQ Peg A. method=unverified because the value enters Curiel only as a literature compilation cite. No uncertainty published. Verbatim (2208.14553.md:27): \"GJ 896A, is an M3.5 star with an estimated mass of 0.39 M_sun, a radius of 0.35 R_sun, a rotation period of 1.061 days, and a rotational inclination angle of 60 deg\"."
       }
     ]
   },
@@ -1394,28 +1418,127 @@
     ]
   },
   "55 Cnc": {
+    "teff_k": 5196,
+    "teff_bibcode": "2011ApJ...740...49V",
+    "spectype": "K0IV-V",
     "mass_measurements": [
       {
         "value_msun": 0.905,
         "uncertainty_msun": 0.015,
-        "method": "unverified",
-        "reference": "Bourrier et al. 2018",
-        "bibcode": "2018A&A...619A...1B",
-        "doi": "10.1051/0004-6361/201833154",
-        "recommended": true
+        "method": "evolutionary_model",
+        "reference": "von Braun et al. 2011",
+        "bibcode": "2011ApJ...740...49V",
+        "doi": "10.1088/0004-637X/740/1/49",
+        "recommended": true,
+        "source_title": "The 55 Cancri System: Fundamental Stellar Parameters, Habitable Zone Planet, and Super-Earth Diameter"
+      },
+      {
+        "value_msun": 1.015,
+        "uncertainty_msun": 0.051,
+        "method": "evolutionary_model",
+        "reference": "Crida et al. 2018 (via Moutou et al. 2025 Table 1)",
+        "bibcode": "2026A&A...705A.190M",
+        "doi": "10.1051/0004-6361/202556146",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
         "value_rsun": 0.943,
         "uncertainty_rsun": 0.01,
+        "method": "interferometry",
+        "instrument": "CHARA Array",
+        "angular_diameter_mas": 0.711,
+        "angular_diameter_uncertainty_mas": 0.004,
+        "reference": "von Braun et al. 2011",
+        "bibcode": "2011ApJ...740...49V",
+        "doi": "10.1088/0004-637X/740/1/49",
+        "arxiv": "1107.1936",
+        "recommended": true,
+        "source_title": "The 55 Cancri System: Fundamental Stellar Parameters, Habitable Zone Planet, and Super-Earth Diameter",
+        "notes": "R = 0.943 +/- 0.010 Rsun from CHARA limb-darkened angular diameter theta_LD = 0.711 +/- 0.004 mas (theta_UD = 0.685 +/- 0.004 mas) combined with Hipparcos parallax. Verbatim Table 1 (1107.1936.md:25, 1107.1936.md:24). RE-ANCHOR: the DB previously carried this exact 0.943 value with method=unverified mis-attributed to Bourrier 2018, which itself cites von Braun 2011 for R (1807.04301.md:21)."
+      },
+      {
+        "value_rsun": 0.98,
+        "uncertainty_rsun": 0.016,
         "method": "unverified",
+        "reference": "Moutou et al. 2025 (Table 1, citing Crida et al. 2018)",
+        "bibcode": "2026A&A...705A.190M",
+        "doi": "10.1051/0004-6361/202556146",
+        "recommended": false,
+        "notes": "R = 0.980 +/- 0.016 Rsun tabulated in Moutou Table 1 (2510.11523.md:20). Larger than the direct CHARA radius; method not explicitly stated in cached text (transit-density-derived per Crida 2018), so recorded as unverified and not adopted."
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5196,
+        "uncertainty_k": 24,
+        "method": "interferometry",
+        "reference": "von Braun et al. 2011",
+        "bibcode": "2011ApJ...740...49V",
+        "doi": "10.1088/0004-637X/740/1/49",
+        "recommended": true
+      },
+      {
+        "value_k": 5172,
+        "uncertainty_k": 18,
+        "method": "high_res_spectroscopy",
+        "reference": "Yee et al. 2017 (via Bourrier 2018 Table 1)",
+        "bibcode": "2018A&A...619A...1B",
+        "doi": "10.1051/0004-6361/201833154",
+        "recommended": false
+      },
+      {
+        "value_k": 5198,
+        "uncertainty_k": 31,
+        "method": "high_res_spectroscopy",
+        "reference": "Moutou et al. 2025 (SPIRou Zeeturbo)",
+        "bibcode": "2026A&A...705A.190M",
+        "doi": "10.1051/0004-6361/202556146",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.582,
+        "uncertainty_lsun": 0.014,
+        "method": "bolometric_flux",
+        "reference": "von Braun et al. 2011",
+        "bibcode": "2011ApJ...740...49V",
+        "doi": "10.1088/0004-637X/740/1/49",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 38.8,
+        "uncertainty_days": 0.05,
+        "method": "photometric_variability",
+        "reference": "Bourrier et al. 2018",
+        "bibcode": "2018A&A...619A...1B",
+        "doi": "10.1051/0004-6361/201833154",
+        "recommended": true,
+        "notes": "P_rot = 38.8 +/- 0.05 d, adopted by Bourrier 2018 from a sine fit to the H-alpha activity-index residuals (Table 1, 1807.04301.md:29; method detail 1807.04301.md:50,56). Season-9 APT photometry gives 40.4 +/- 0.8 d and the weighted-mean of all photometric seasons 40.04 +/- 0.39 d; consistent with the ~39 d Ca II period of Henry et al. 2000 and 42.7 +/- 2.5 d (Fischer 2008). Moutou 2025 independently recovers P_rot = 38.7 +/- 0.8 d (GPR; 2510.11523.md:90,32) and adopts 39 d (ZDI, Folsom 2020)."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.03,
+        "method": "log_rhk",
         "reference": "Bourrier et al. 2018",
         "bibcode": "2018A&A...619A...1B",
         "doi": "10.1051/0004-6361/201833154",
         "recommended": true
       }
-    ]
+    ],
+    "sources_extra": [
+      {
+        "reference": "von Braun et al. 2011",
+        "bibcode": "2011ApJ...740...49V",
+        "note": "Companion arXiv ids 1106.1152 (full fundamental-properties paper, von Braun 2011b) and 1107.1936 (cached AAS proceedings carrying the Table 1 anchor values)."
+      }
+    ],
+    "meta_notes": "A-B binary has NO published Keplerian orbit. 55 Cnc B (M4.5V) sits at a projected separation of ~1065 au (84 arcsec visual; Eggenberger 2004 / Mugrauer 2006), with an estimated orbital period of ~30000 yr (Moutou 2025; 2510.11523.md:128,140). Left UNMODELED (note only); do not synthesize binary_orbit. Hipparcos V cross-check: DB Gaia-converted V = 5.9501 agrees with the literature/Hipparcos V = 5.95 quoted by Bourrier 2018 (1807.04301.md:11) -- no Gaia-saturation discrepancy. [Fe/H] skipped per project policy (lit. ~0.31-0.42 dex, super-metal-rich)."
   },
   "GJ 436": {
     "mass_measurements": [
@@ -1684,25 +1807,82 @@
     ]
   },
   "eps Ind A": {
+    "teff_k": 4700,
+    "spectype": "K5 V",
     "mass_measurements": [
       {
-        "value_msun": 0.781,
-        "uncertainty_msun": 0.036,
-        "method": "unverified",
-        "reference": "Matthews et al. 2026",
-        "bibcode": "2026arXiv260308780M",
-        "doi": null,
+        "value_msun": 0.782,
+        "uncertainty_msun": 0.023,
+        "method": "asteroseismology",
+        "reference": "Lundkvist et al. 2024",
+        "bibcode": "2024ApJ...964..110L",
+        "doi": "10.3847/1538-4357/ad25f2",
         "recommended": true
+      },
+      {
+        "value_msun": 0.762,
+        "uncertainty_msun": 0.038,
+        "method": "empirical_relation",
+        "reference": "Demory et al. 2009",
+        "bibcode": "2009A&A...505..205D",
+        "doi": "10.1051/0004-6361/200911976",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.679,
-        "uncertainty_rsun": 0.004,
+        "value_rsun": 0.713,
+        "uncertainty_rsun": 0.006,
+        "method": "interferometry",
+        "reference": "Lundkvist et al. 2024",
+        "bibcode": "2024ApJ...964..110L",
+        "doi": "10.3847/1538-4357/ad25f2",
+        "angular_diameter_mas": 1.817,
+        "angular_diameter_uncertainty_mas": 0.013,
+        "recommended": true,
+        "notes": "R from Rains et al. 2020 limb-darkened angular diameter (theta_LD = 1.817 +/- 0.013 mas) combined with Gaia DR3 distance d = 3.648 pc; Lundkvist et al. 2024 report the resulting 0.713 +/- 0.006 Rsun, \"in excellent agreement with the value found by Rains et al. 2020\"."
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4700,
+        "uncertainty_k": 65,
+        "method": "high_res_spectroscopy",
+        "reference": "Lundkvist et al. 2024",
+        "bibcode": "2024ApJ...964..110L",
+        "doi": "10.3847/1538-4357/ad25f2",
+        "recommended": true
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.239,
+        "uncertainty_lsun": 0.001,
+        "method": "bolometric_flux",
+        "reference": "Feng et al. 2019",
+        "bibcode": "2019MNRAS.490.5002F",
+        "doi": "10.1093/mnras/stz2912",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 35.0,
         "method": "unverified",
-        "reference": "Matthews et al. 2024",
-        "bibcode": "2024Natur.633..789M",
+        "reference": "Feng et al. 2018",
+        "bibcode": "2018arXiv180308163F",
         "doi": null,
+        "recommended": true,
+        "notes": "P_rot ~35 d. Method does not map to the rotation enum: it is NOT photometric — derived from HARPS RV + spectroscopic activity-index (NaD1/NaD2/R'HK/BIS) periodograms, where the 17.8 d signal is the half-rotation alias of ~35 d. Verbatim: \"The rotation period of Epsilon Indi is about 35 d, approximately double 17.8 d.\" No formal uncertainty published; supersedes the older 22 d (Saar & Osten 1997) and ~20 d (Lachaume 1999) estimates. Chen 2022 confirms the star lacks a published photometric rotation period. Feng 2019 corroborates ~35 d."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.72,
+        "method": "log_rhk",
+        "reference": "Chen et al. 2022 (adopting Pace 2013)",
+        "bibcode": "2022AJ....163..288C",
+        "doi": "10.3847/1538-3881/ac66d2",
         "recommended": true
       }
     ]
@@ -2758,25 +2938,113 @@
     ]
   },
   "HD 219134": {
+    "teff_k": 4858,
+    "spectype": "K3 V",
+    "meta_notes": "Phase 2 (2026-05-31). Radius: Ligi et al. 2019 VEGA/CHARA interferometry (theta_LD = 1.035 +/- 0.021 mas) gives R = 0.726 +/- 0.014 Rsun, replacing the prior DB unverified 0.778 Rsun (Gillon 2017). Mass tiebreak: Ligi 2019 report a DIRECT mass M = 0.696 +/- 0.078 Msun from the interferometric radius combined with the transit-derived stellar density (rho = 1.82 +/- 0.19 rho_sun); this is recommended over the evolutionary value (Motalebi 2015 SYCLIST 0.78 +/- 0.02; Ligi C2kSMO range 0.755-0.810, reference model 0.755 +/- 0.040) because it is a measurement rather than a model, though it carries ~11% uncertainty and no clean schema method (recorded as method=unverified, the escape hatch for a real technique outside the whitelist). The two agree at ~1.5 sigma. Teff = 4858 +/- 50 K (Ligi interferometric, F_bol + theta_LD); Motalebi SPC gives 4941 +/- 50 K (alt). Luminosity L = 0.264 +/- 0.004 Lsun (Ligi bolometric flux). Activity: Johnson et al. 2016 measure an 11.7 yr (4230 +/- 100 d) S-index magnetic cycle and a mean <log R'HK> = -4.89. Rotation is genuinely contested: Motalebi 2015 found 42.3 d from log R'HK + CCF FWHM/bisector periodograms; Johnson 2016 found 22.83 +/- 0.03 d in the Ca II S_HK series (possibly the first harmonic of ~45 d differential rotation, and identical to planet f's 22.8 d period — the basis for f being contested); Vogt 2015 estimated ~20 d from v sin i = 1.8 km/s. No photometric period exists (Vogt APT photometry is flat to ~0.0002 mag), so all candidates use method=unverified. Recommended: Johnson 22.83 d (most precise, dedicated S_HK analysis), with the 42.3 d alternative documented. Age poorly constrained (models 0.2-13.8 Gyr; activity ~3-9 Gyr) -> omitted. [Fe/H] skipped per policy. Effectively single: a V~9.4 M dwarf lies at ~106.6\" (~700 AU projected, P~20 kyr; Eggleton & Tokovinin 2008 via Vogt 2015) -> meta note only, NOT a binary_orbits entry.",
     "mass_measurements": [
       {
-        "value_msun": 0.81,
-        "uncertainty_msun": 0.03,
+        "value_msun": 0.696,
+        "uncertainty_msun": 0.078,
         "method": "unverified",
-        "reference": "Gillon et al. 2017",
-        "bibcode": "2017NatAs...1E..56G",
-        "doi": null,
+        "reference": "Ligi et al. 2019",
+        "bibcode": "2019A&A...631A..92L",
+        "doi": "10.1051/0004-6361/201936259",
         "recommended": true
+      },
+      {
+        "value_msun": 0.78,
+        "uncertainty_msun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Motalebi et al. 2015",
+        "bibcode": "2015A&A...584A..72M",
+        "doi": "10.1051/0004-6361/201526822",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.778,
-        "uncertainty_rsun": 0.005,
+        "value_rsun": 0.726,
+        "uncertainty_rsun": 0.014,
+        "method": "interferometry",
+        "reference": "Ligi et al. 2019",
+        "bibcode": "2019A&A...631A..92L",
+        "doi": "10.1051/0004-6361/201936259",
+        "instrument": "VEGA/CHARA",
+        "angular_diameter_mas": 1.035,
+        "angular_diameter_uncertainty_mas": 0.021,
+        "recommended": true,
+        "notes": "VEGA/CHARA visible-wavelength interferometry, limb-darkened angular diameter theta_LD = 1.035 +/- 0.021 mas. Replaces the prior DB unverified 0.778 Rsun. Verbatim: \"we measure a stellar radius ... of R_star = 0.726 +/- 0.014 R_sun\". Smaller than the earlier CHARA Classic value (Boyajian 2012b theta = 1.106 +/- 0.007 mas) because VEGA reaches higher spatial frequencies."
+      },
+      {
+        "value_rsun": 0.77,
+        "uncertainty_rsun": 0.02,
+        "method": "evolutionary_model",
+        "reference": "Vogt et al. 2015",
+        "bibcode": "2015ApJ...814...12V",
+        "doi": "10.1088/0004-637X/814/1/12",
+        "recommended": false,
+        "notes": "Takeda et al. 2007 evolutionary R adopted by Vogt 2015 Table 1. Verbatim: \"Takeda et al. (2007) derive mass and radius estimates of M/Msun = 0.794 and R/Rsun = 0.77\". Consistent with the Ligi interferometric value at ~2 sigma."
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4858,
+        "uncertainty_k": 50,
+        "method": "interferometry",
+        "reference": "Ligi et al. 2019",
+        "bibcode": "2019A&A...631A..92L",
+        "doi": "10.1051/0004-6361/201936259",
+        "recommended": true
+      },
+      {
+        "value_k": 4941,
+        "uncertainty_k": 50,
+        "method": "high_res_spectroscopy",
+        "reference": "Motalebi et al. 2015",
+        "bibcode": "2015A&A...584A..72M",
+        "doi": "10.1051/0004-6361/201526822",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.264,
+        "uncertainty_lsun": 0.004,
+        "method": "bolometric_flux",
+        "reference": "Ligi et al. 2019",
+        "bibcode": "2019A&A...631A..92L",
+        "doi": "10.1051/0004-6361/201936259",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 22.83,
+        "uncertainty_days": 0.03,
         "method": "unverified",
-        "reference": "Gillon et al. 2017",
-        "bibcode": "2017NatAs...1E..56G",
-        "doi": null,
+        "reference": "Johnson et al. 2016",
+        "bibcode": "2016ApJ...821...74J",
+        "doi": "10.3847/0004-637X/821/2/74",
+        "recommended": true,
+        "notes": "From a sinusoid fit to the post-2007 Ca II S_HK time series (NOT photometric; no rotation enum maps to S_HK periodogram -> method=unverified). Verbatim: \"This yielded a period of 22.83 +/- 0.03 days with S_HK amplitude 0.0077 +/- 0.0003, which matches the orbital period of HD 219134 f found by V15 to within one standard deviation\" -- this coincidence is the basis for planet f being flagged controversial. CONTESTED: Motalebi 2015 instead found P_rot = 42.3 d (log R'HK + CCF FWHM/bisector); Johnson notes 22.83 d may be the first harmonic of a ~45 d period under solar-like differential rotation. Vogt 2015 estimated ~20 d from v sin i = 1.8 km/s. No formal uncertainty on the 42.3 d value."
+      },
+      {
+        "value_days": 42.3,
+        "method": "unverified",
+        "reference": "Motalebi et al. 2015",
+        "bibcode": "2015A&A...584A..72M",
+        "doi": "10.1051/0004-6361/201526822",
+        "recommended": false,
+        "notes": "From GLS periodograms of log R'HK, CCF FWHM, and bisector span (HARPS-N). Verbatim: \"A periodic variation around 42.3 days is indeed observed in the log R'HK as well as in the CCF FWHM and in the bisector span ... we can therefore safely consider the 42.3 days as a valid estimation of the rotational period of the star (P_rot).\" No published formal uncertainty."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.89,
+        "method": "log_rhk",
+        "reference": "Johnson et al. 2016",
+        "bibcode": "2016ApJ...821...74J",
+        "doi": "10.3847/0004-637X/821/2/74",
         "recommended": true
       }
     ]
@@ -3302,26 +3570,137 @@
     ]
   },
   "GJ 9066": {
+    "teff_k": 3100,
+    "spectype": "M4.5 V",
     "mass_measurements": [
       {
-        "value_msun": 0.15,
-        "uncertainty_msun": 0.01,
-        "method": "unverified",
-        "reference": "Quirrenbach et al. 2022",
-        "bibcode": "2022A&A...663A..48Q",
-        "doi": "10.1051/0004-6361/202142915",
+        "value_msun": 0.1478,
+        "uncertainty_msun": 0.0036,
+        "method": "spectroscopic_calibration",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
         "recommended": true
+      },
+      {
+        "value_msun": 0.1596,
+        "uncertainty_msun": 0.0101,
+        "method": "spectroscopic_calibration",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": false
+      },
+      {
+        "value_msun": 0.15,
+        "uncertainty_msun": 0.02,
+        "method": "unverified",
+        "reference": "Feng et al. 2020",
+        "bibcode": "2020ApJS..250...29F",
+        "doi": "10.3847/1538-4365/abb139",
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.164,
-        "uncertainty_rsun": 0.005,
-        "method": "unverified",
+        "value_rsun": 0.1646,
+        "uncertainty_rsun": 0.0053,
+        "method": "sed_fitting",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true,
+        "notes": "VizieR J/A+A/625/A68/tableb1 Rad (recno 17, Gl 83.1). Quirrenbach 2022 Table 1 adopts the rounded 0.164 +/- 0.005 from this source."
+      },
+      {
+        "value_rsun": 0.174,
+        "uncertainty_rsun": 0.0057,
+        "method": "sed_fitting",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": false,
+        "notes": "VizieR J/A+A/642/A115/tablea3 Radius (recno 326, J02002+130 = TZ Ari)."
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": true
+      },
+      {
+        "value_k": 3193,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      },
+      {
+        "value_k": 3154,
+        "uncertainty_k": 54,
+        "method": "high_res_spectroscopy",
+        "reference": "Passegger et al. 2019 (via Quirrenbach et al. 2022 Table 1)",
+        "bibcode": "2019A&A...627A.161P",
+        "doi": "10.1051/0004-6361/201935679",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00254,
+        "uncertainty_lsun": 2e-05,
+        "method": "bolometric_flux",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      },
+      {
+        "value_lsun": 0.002519,
+        "uncertainty_lsun": 3.3e-05,
+        "method": "bolometric_flux",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 1.96,
+        "uncertainty_days": 0.02,
+        "method": "photometric_variability",
         "reference": "Quirrenbach et al. 2022",
         "bibcode": "2022A&A...663A..48Q",
         "doi": "10.1051/0004-6361/202142915",
+        "recommended": true,
+        "notes": "Active fast rotator (BY Dra / flare star). P_rot confirmed from OSN R + V band photometry (strong peak at 1.96 d) and corroborated by the chromatic 1.96 d RV modulation plus H-alpha / Ca II IRT line variability. Verbatim Quirrenbach 2022. \"the rotation period is 1.96 +/- 0.02 d.\" Shan et al. 2024 (CARMENES rotation catalog, arXiv 2401.09550) narratively flags TZ Ari as the lone RV-discovered planet host with P_rot < 15 d, but its per-star tabulated value lives in VizieR/CDS, not the fetched ar5iv body. Earlier literature 30 d (Astudillo-Defru 2017, cited by Feng 2020) is the superseded value."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -1.906,
+        "uncertainty_h_alpha_ew_angstrom": 0.025,
+        "method": "h_alpha",
+        "reference": "Schoefer et al. 2019 (via Quirrenbach et al. 2022 Table 1)",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114",
         "recommended": true
+      },
+      {
+        "value_log_rhk": -4.79,
+        "uncertainty_log_rhk": 0.42,
+        "method": "log_rhk",
+        "reference": "Astudillo-Defru et al. 2017 (via Quirrenbach et al. 2022 Table 1)",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078",
+        "recommended": false
       }
     ]
   },

@@ -1,0 +1,145 @@
+stellar:
+  eps Ind A:
+    teff_k: 4700
+    spectype: K5 V
+    mass_measurements:
+    - value_msun: 0.782
+      uncertainty_msun: 0.023
+      method: asteroseismology
+      reference: Lundkvist et al. 2024
+      bibcode: 2024ApJ...964..110L
+      doi: 10.3847/1538-4357/ad25f2
+      recommended: true
+    - value_msun: 0.762
+      uncertainty_msun: 0.038
+      method: empirical_relation
+      reference: Demory et al. 2009
+      bibcode: 2009A&A...505..205D
+      doi: 10.1051/0004-6361/200911976
+      recommended: false
+    radius_measurements:
+    - value_rsun: 0.713
+      uncertainty_rsun: 0.006
+      method: interferometry
+      reference: Lundkvist et al. 2024
+      bibcode: 2024ApJ...964..110L
+      doi: 10.3847/1538-4357/ad25f2
+      angular_diameter_mas: 1.817
+      angular_diameter_uncertainty_mas: 0.013
+      recommended: true
+      notes: R from Rains et al. 2020 limb-darkened angular diameter (theta_LD = 1.817
+        +/- 0.013 mas) combined with Gaia DR3 distance d = 3.648 pc; Lundkvist et al.
+        2024 report the resulting 0.713 +/- 0.006 Rsun, "in excellent agreement with the
+        value found by Rains et al. 2020".
+    teff_measurements:
+    - value_k: 4700
+      uncertainty_k: 65
+      method: high_res_spectroscopy
+      reference: Lundkvist et al. 2024
+      bibcode: 2024ApJ...964..110L
+      doi: 10.3847/1538-4357/ad25f2
+      recommended: true
+    luminosity_measurements:
+    - value_lsun: 0.239
+      uncertainty_lsun: 0.001
+      method: bolometric_flux
+      reference: Feng et al. 2019
+      bibcode: 2019MNRAS.490.5002F
+      doi: 10.1093/mnras/stz2912
+      recommended: true
+    rotation_measurements:
+    - value_days: 35.0
+      method: unverified
+      reference: Feng et al. 2018
+      bibcode: 2018arXiv180308163F
+      doi: null
+      recommended: true
+      notes: "P_rot ~35 d. Method does not map to the rotation enum: it is NOT photometric\
+        \ — derived from HARPS RV + spectroscopic activity-index (NaD1/NaD2/R'HK/BIS)\
+        \ periodograms, where the 17.8 d signal is the half-rotation alias of ~35 d.\
+        \ Verbatim: \"The rotation period of Epsilon Indi is about 35 d, approximately\
+        \ double 17.8 d.\" No formal uncertainty published; supersedes the older 22 d\
+        \ (Saar & Osten 1997) and ~20 d (Lachaume 1999) estimates. Chen 2022 confirms\
+        \ the star lacks a published photometric rotation period. Feng 2019 corroborates ~35 d."
+    activity_measurements:
+    - value_log_rhk: -4.72
+      method: log_rhk
+      reference: Chen et al. 2022 (adopting Pace 2013)
+      bibcode: 2022AJ....163..288C
+      doi: 10.3847/1538-3881/ac66d2
+      recommended: true
+planets:
+  eps Ind A:
+  - pl_name: eps Ind A b
+    orbital:
+    - semi_major_axis_au: 20.9
+      uncertainty_semi_major_axis_au: 5.8
+      eccentricity: 0.244
+      uncertainty_eccentricity: 0.11
+      inclination_deg: 102.3
+      uncertainty_inclination_deg: 1.9
+      longitude_of_ascending_node_deg: 44.6
+      uncertainty_longitude_of_ascending_node_deg: 1.3
+      argument_of_periapsis_deg: 62.0
+      uncertainty_argument_of_periapsis_deg: 48.0
+      period_days: 39447.0
+      uncertainty_period_days: 17897.0
+      source: Matthews et al. 2026
+      bibcode: null
+      doi: 10.3847/2041-8213/ae5823
+      method: astrometric
+      recommended: true
+    - semi_major_axis_au: 11.55
+      uncertainty_semi_major_axis_au: 0.98
+      eccentricity: 0.26
+      uncertainty_eccentricity: 0.07
+      inclination_deg: 64.25
+      uncertainty_inclination_deg: 13.8
+      longitude_of_ascending_node_deg: 250.2
+      uncertainty_longitude_of_ascending_node_deg: 14.72
+      argument_of_periapsis_deg: 77.83
+      uncertainty_argument_of_periapsis_deg: 20.21
+      period_days: 16511.0
+      uncertainty_period_days: 2096.0
+      source: Feng et al. 2019
+      bibcode: 2019MNRAS.490.5002F
+      doi: 10.1093/mnras/stz2912
+      method: astrometric
+      recommended: false
+    - semi_major_axis_au: 12.82
+      uncertainty_semi_major_axis_au: 4.18
+      eccentricity: 0.01
+      uncertainty_eccentricity: 0.12
+      argument_of_periapsis_deg: 88.56
+      period_days: 19205.51
+      uncertainty_period_days: 10111.37
+      source: Feng et al. 2018
+      bibcode: 2018arXiv180308163F
+      doi: null
+      method: rv
+      recommended: false
+    physical:
+    - true_mass_mearth: 2425.0
+      uncertainty_mearth: 232.0
+      mass_type: true mass
+      source: Matthews et al. 2026
+      bibcode: null
+      doi: 10.3847/2041-8213/ae5823
+      method: astrometric
+      recommended: true
+    - true_mass_mearth: 1033.0
+      uncertainty_mearth: 207.0
+      mass_type: true mass
+      source: Feng et al. 2019
+      bibcode: 2019MNRAS.490.5002F
+      doi: 10.1093/mnras/stz2912
+      method: astrometric
+      recommended: false
+    - mass_mearth: 861.0
+      uncertainty_mearth: 140.0
+      mass_type: Msini
+      source: Feng et al. 2018
+      bibcode: 2018arXiv180308163F
+      doi: null
+      method: rv
+      recommended: false

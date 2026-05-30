@@ -1,0 +1,42 @@
+host: GJ 896 A
+slug: gj-896-a
+generated_at: '2026-05-31'
+note: 'Phase 2 bibliography for GJ 896 A (EQ Peg A = BD+19 5116A = Karmn J23318+199E),
+  M3.5Ve flare dwarf at 6.25 pc (20.4 ly), the more-massive component of the visual
+  M+M binary GJ 896 AB (WDS J23317+1956). Curiel et al. 2022 is the single PRIMARY
+  source: VLBA+Gaia astrometric discovery of the Jovian planet GJ 896 A b, plus
+  dynamical masses of A and B and the fully-characterized 3D A-B mutual orbit
+  (Table 3). DRAFT step: fetch only. Catalog teff/L sources were checked and found
+  EMPTY for this object: Cifuentes 2020 (J/A+A/642/A115) lists GJ 896 A as Karmn
+  J23318+199E = "EQ Peg Aab", SpType "M3.5 V+", but with BLANK Lbol/Teff/Radius/Mass
+  (it is a composite/unresolved binary, excluded from the fundamental-parameter
+  fit); Schweitzer 2019 (J/A+A/625/A68) has NO row for it. teff and L are therefore
+  UNVERIFIED and omitted from the curation.
+
+  '
+papers:
+- arxiv_id: '2208.14553'
+  ads_bibcode: 2022AJ....164...93C
+  doi: 10.3847/1538-3881/ac7c66
+  title: Curiel et al. 2022 — 3D orbital architecture of GJ 896 AB + planet GJ 896 A b
+    (VLBA+Gaia astrometry); planet b discovery, dynamical masses m_A m_B, A-B mutual orbit
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2020A&A...642A.115C
+  doi: 10.26093/cds/vizier.36420115
+  title: Cifuentes et al. 2020 — CARMENES input catalogue of M dwarfs V (VizieR J/A+A/642/A115);
+    GJ 896 A = Karmn J23318+199E (EQ Peg Aab). CHECKED — Teff/Lbol/Radius/Mass BLANK
+    for this composite source.
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2019A&A...625A..68S
+  doi: 10.1051/0004-6361/201834965
+  title: Schweitzer et al. 2019 — CARMENES masses/radii of M dwarfs (VizieR J/A+A/625/A68).
+    CHECKED — NO row for GJ 896 A (Karmn J23318+199E); object not in the resolved-parameter sample.
+  status: skipped
+  category: manual_followup
+  fetch_error: null

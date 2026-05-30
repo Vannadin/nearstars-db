@@ -19,36 +19,141 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 12.3921,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3193,
-        "spectype": "M4.5V",
+        "teff_k": 3100,
+        "spectype": "M4.5 V",
         "mass_measurements": [
           {
-            "value_msun": 0.15,
-            "uncertainty_msun": 0.01,
-            "method": "unverified",
-            "reference": "Quirrenbach et al. 2022",
-            "bibcode": "2022A&A...663A..48Q",
-            "doi": "10.1051/0004-6361/202142915",
+            "value_msun": 0.1478,
+            "uncertainty_msun": 0.0036,
+            "method": "spectroscopic_calibration",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
             "recommended": true
+          },
+          {
+            "value_msun": 0.1596,
+            "uncertainty_msun": 0.0101,
+            "method": "spectroscopic_calibration",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295",
+            "recommended": false
+          },
+          {
+            "value_msun": 0.15,
+            "uncertainty_msun": 0.02,
+            "method": "unverified",
+            "reference": "Feng et al. 2020",
+            "bibcode": "2020ApJS..250...29F",
+            "doi": "10.3847/1538-4365/abb139",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
-            "value_rsun": 0.164,
-            "uncertainty_rsun": 0.005,
-            "method": "unverified",
+            "value_rsun": 0.1646,
+            "uncertainty_rsun": 0.0053,
+            "method": "sed_fitting",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": true,
+            "notes": "VizieR J/A+A/625/A68/tableb1 Rad (recno 17, Gl 83.1). Quirrenbach 2022 Table 1 adopts the rounded 0.164 +/- 0.005 from this source."
+          },
+          {
+            "value_rsun": 0.174,
+            "uncertainty_rsun": 0.0057,
+            "method": "sed_fitting",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295",
+            "recommended": false,
+            "notes": "VizieR J/A+A/642/A115/tablea3 Radius (recno 326, J02002+130 = TZ Ari)."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 3100,
+            "method": "sed_fitting",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295",
+            "recommended": true
+          },
+          {
+            "value_k": 3193,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": false
+          },
+          {
+            "value_k": 3154,
+            "uncertainty_k": 54,
+            "method": "high_res_spectroscopy",
+            "reference": "Passegger et al. 2019 (via Quirrenbach et al. 2022 Table 1)",
+            "bibcode": "2019A&A...627A.161P",
+            "doi": "10.1051/0004-6361/201935679",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00254,
+            "uncertainty_lsun": 2e-05,
+            "method": "bolometric_flux",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": true
+          },
+          {
+            "value_lsun": 0.002519,
+            "uncertainty_lsun": 3.3e-05,
+            "method": "bolometric_flux",
+            "reference": "Cifuentes et al. 2020",
+            "bibcode": "2020A&A...642A.115C",
+            "doi": "10.1051/0004-6361/202038295",
+            "recommended": false
+          }
+        ],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 1.96,
+            "uncertainty_days": 0.02,
+            "method": "photometric_variability",
             "reference": "Quirrenbach et al. 2022",
             "bibcode": "2022A&A...663A..48Q",
             "doi": "10.1051/0004-6361/202142915",
-            "recommended": true
+            "recommended": true,
+            "notes": "Active fast rotator (BY Dra / flare star). P_rot confirmed from OSN R + V band photometry (strong peak at 1.96 d) and corroborated by the chromatic 1.96 d RV modulation plus H-alpha / Ca II IRT line variability. Verbatim Quirrenbach 2022. \"the rotation period is 1.96 +/- 0.02 d.\" Shan et al. 2024 (CARMENES rotation catalog, arXiv 2401.09550) narratively flags TZ Ari as the lone RV-discovered planet host with P_rot < 15 d, but its per-star tabulated value lives in VizieR/CDS, not the fetched ar5iv body. Earlier literature 30 d (Astudillo-Defru 2017, cited by Feng 2020) is the superseded value."
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_h_alpha_ew_angstrom": -1.906,
+            "uncertainty_h_alpha_ew_angstrom": 0.025,
+            "method": "h_alpha",
+            "reference": "Schoefer et al. 2019 (via Quirrenbach et al. 2022 Table 1)",
+            "bibcode": "2019A&A...623A..44S",
+            "doi": "10.1051/0004-6361/201834114",
+            "recommended": true
+          },
+          {
+            "value_log_rhk": -4.79,
+            "uncertainty_log_rhk": 0.42,
+            "method": "log_rhk",
+            "reference": "Astudillo-Defru et al. 2017 (via Quirrenbach et al. 2022 Table 1)",
+            "bibcode": "2017A&A...600A..13A",
+            "doi": "10.1051/0004-6361/201527078",
+            "recommended": false
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -70,16 +175,16 @@
         "icrs_vx_j2000_km_s": -28.15979922804119,
         "icrs_vy_j2000_km_s": 10.545150087749791,
         "icrs_vz_j2000_km_s": -42.9524474490194,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.00254,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 1.96,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": -1.906
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 19906866002.7,
-        "mean_radius_km": 114094.8
+        "gravitational_parameter_km3_s2": 19614898634.66,
+        "mean_radius_km": 114512.2
       }
     }
   ],
@@ -118,9 +223,9 @@
         "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 321.79,
-        "mean_anomaly_at_epoch_deg": 0.0,
+        "mean_anomaly_at_epoch_deg": 268.04,
         "orbital_epoch_jd": 2451411.05,
-        "mass_kg": 3.9860831057993405e+26,
+        "mass_kg": 3.9858462799999995e+26,
         "mass_type": "Msini",
         "radius_m": 61161600.0,
         "equilibrium_temperature_k": null,
@@ -128,25 +233,64 @@
       },
       "curated": {
         "pl_name": "GJ 9066 c",
-        "orbital": {
-          "semi_major_axis_au": 0.88,
-          "eccentricity": 0.46,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 321.79,
-          "epoch_jd": 2451411.05,
-          "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Quirrenbach et al. 2022",
-          "bibcode": "2022A&A...663A..48Q",
-          "doi": "10.1051/0004-6361/202142915"
-        },
-        "physical": {
-          "mass_mearth": 66.74396547,
-          "uncertainty_mearth": 6.35656814,
-          "mass_type": "Msini",
-          "source": "Quirrenbach et al. 2022",
-          "bibcode": "2022A&A...663A..48Q",
-          "doi": "10.1051/0004-6361/202142915"
-        }
+        "orbital": [
+          {
+            "period_days": 771.36,
+            "uncertainty_period_days": 1.34,
+            "semi_major_axis_au": 0.88,
+            "uncertainty_semi_major_axis_au": 0.02,
+            "eccentricity": 0.46,
+            "uncertainty_eccentricity": 0.04,
+            "argument_of_periapsis_deg": 321.79,
+            "uncertainty_argument_of_periapsis_deg": 5.32,
+            "epoch_jd": 2451411.05,
+            "mean_anomaly_at_epoch_deg": 268.04,
+            "source": "Quirrenbach et al. 2022",
+            "bibcode": "2022A&A...663A..48Q",
+            "doi": "10.1051/0004-6361/202142915",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "period_days": 767.887,
+            "uncertainty_period_days": 7.5,
+            "semi_major_axis_au": 0.87,
+            "uncertainty_semi_major_axis_au": 0.04,
+            "eccentricity": 0.33,
+            "uncertainty_eccentricity": 0.1,
+            "argument_of_periapsis_deg": 278.0,
+            "uncertainty_argument_of_periapsis_deg": 119.0,
+            "epoch_jd": 2450884.0,
+            "mean_anomaly_at_epoch_deg": 0.0,
+            "source": "Feng et al. 2020",
+            "bibcode": "2020ApJS..250...29F",
+            "doi": "10.3847/1538-4365/abb139",
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 66.74,
+            "uncertainty_mearth": 6.36,
+            "mass_type": "Msini",
+            "source": "Quirrenbach et al. 2022",
+            "bibcode": "2022A&A...663A..48Q",
+            "doi": "10.1051/0004-6361/202142915",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "mass_mearth": 71.6,
+            "uncertainty_mearth": 10.3,
+            "mass_type": "Msini",
+            "source": "Feng et al. 2020",
+            "bibcode": "2020ApJS..250...29F",
+            "doi": "10.3847/1538-4365/abb139",
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     }
   ],
@@ -155,7 +299,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
         "epoch propagation method"
       ]
@@ -164,23 +308,50 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Schweitzer et al. 2019",
+      "doi": "10.1051/0004-6361/201834965",
+      "bibcode": "2019A&A...625A..68S",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "GJ 9066 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Cifuentes et al. 2020",
+      "doi": "10.1051/0004-6361/202038295",
+      "bibcode": "2020A&A...642A.115C",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "GJ 9066 mass (spectroscopic_calibration)"
+      ]
+    },
+    {
+      "title": "Feng et al. 2020",
+      "doi": "10.3847/1538-4365/abb139",
+      "bibcode": "2020ApJS..250...29F",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "GJ 9066 mass (unverified)"
       ]
     },
     {
       "title": "Quirrenbach et al. 2022",
       "doi": "10.1051/0004-6361/202142915",
       "bibcode": "2022A&A...663A..48Q",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
-        "GJ 9066 mass (unverified)"
+        "planet GJ 9066 c orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-31",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

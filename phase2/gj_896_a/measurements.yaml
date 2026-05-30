@@ -1,0 +1,86 @@
+stellar:
+  GJ 896 A:
+    spectype: M3.5 Ve
+    spectype_reference: SIMBAD (BD+19 5116A); Curiel et al. 2022
+    mass_measurements:
+    - value_msun: 0.43599
+      uncertainty_msun: 0.00092
+      method: binary_orbit
+      reference: Curiel et al. 2022
+      bibcode: 2022AJ....164...93C
+      doi: 10.3847/1538-3881/ac7c66
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.35
+      method: unverified
+      reference: Curiel et al. 2022 (citing Morin et al. 2008; Pearce et al. 2020)
+      bibcode: 2022AJ....164...93C
+      doi: 10.3847/1538-3881/ac7c66
+      recommended: true
+      notes: 'Approximate radius ~0.35 Rsun. Curiel 2022 does not measure R; quotes it from prior literature,
+        so method=unverified (a real literature value outside the radius enum, not a dubious one). No
+        uncertainty published. Verbatim (2208.14553.md:191): "GJ 896A has a radius of ~0.35 R_sun (e.g.,
+        Morin et al., 2008; Pearce et al., 2020)". Also stated in the intro (2208.14553.md:27): "GJ 896A,
+        is an M3.5 star with ... a radius of 0.35 R_sun".'
+    rotation_measurements:
+    - value_days: 1.061
+      method: unverified
+      reference: Curiel et al. 2022 (citing Delfosse 1999; Morin 2008; Davison 2015; Pearce 2020)
+      bibcode: 2022AJ....164...93C
+      doi: 10.3847/1538-3881/ac7c66
+      recommended: true
+      notes: 'Fast rotator (P_rot = 1.061 d), consistent with an active M3.5Ve flare dwarf. Curiel 2022
+        quotes this from prior literature (not its own measurement); the underlying determination is the
+        Morin et al. 2008 spectropolarimetric/ZDI study of EQ Peg A. method=unverified because the value
+        enters Curiel only as a literature compilation cite. No uncertainty published. Verbatim (2208.14553.md:27):
+        "GJ 896A, is an M3.5 star with an estimated mass of 0.39 M_sun, a radius of 0.35 R_sun, a rotation
+        period of 1.061 days, and a rotational inclination angle of 60 deg".'
+planets:
+  GJ 896 A:
+  - pl_name: GJ 896 A b
+    orbital:
+    - semi_major_axis_au: 0.63965
+      uncertainty_semi_major_axis_au: 0.00067
+      eccentricity: 0.35
+      uncertainty_eccentricity: 0.19
+      inclination_deg: 69.2
+      uncertainty_inclination_deg: 25.61
+      longitude_of_ascending_node_deg: 45.62
+      uncertainty_longitude_of_ascending_node_deg: 9.6
+      argument_of_periapsis_deg: 353.11
+      uncertainty_argument_of_periapsis_deg: 11.81
+      period_days: 284.39
+      uncertainty_period_days: 1.47
+      epoch_jd: 2455702.65
+      mean_anomaly_at_epoch_deg: 0.0
+      source: Curiel et al. 2022
+      bibcode: 2022AJ....164...93C
+      doi: 10.3847/1538-3881/ac7c66
+      method: astrometric
+      recommended: true
+    - semi_major_axis_au: 0.6352
+      uncertainty_semi_major_axis_au: 0.0018
+      eccentricity: 0.3
+      uncertainty_eccentricity: 0.11
+      inclination_deg: 66.0
+      uncertainty_inclination_deg: 15.0
+      longitude_of_ascending_node_deg: 47.7
+      uncertainty_longitude_of_ascending_node_deg: 12.1
+      argument_of_periapsis_deg: 344.0
+      uncertainty_argument_of_periapsis_deg: 13.1
+      period_days: 281.56
+      uncertainty_period_days: 1.67
+      source: Curiel et al. 2022 (single-companion fit, Table 2 col 3)
+      bibcode: 2022AJ....164...93C
+      doi: 10.3847/1538-3881/ac7c66
+      method: astrometric
+      recommended: false
+    physical:
+    - true_mass_mearth: 718.2922
+      uncertainty_mearth: 181.1622
+      mass_type: true mass
+      source: Curiel et al. 2022
+      bibcode: 2022AJ....164...93C
+      doi: 10.3847/1538-3881/ac7c66
+      method: astrometric
+      recommended: true

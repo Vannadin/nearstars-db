@@ -19,36 +19,118 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 5.9501,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 5249,
+        "teff_k": 5196,
         "spectype": "K0IV-V",
         "mass_measurements": [
           {
             "value_msun": 0.905,
             "uncertainty_msun": 0.015,
-            "method": "unverified",
-            "reference": "Bourrier et al. 2018",
-            "bibcode": "2018A&A...619A...1B",
-            "doi": "10.1051/0004-6361/201833154",
+            "method": "evolutionary_model",
+            "reference": "von Braun et al. 2011",
+            "bibcode": "2011ApJ...740...49V",
+            "doi": "10.1088/0004-637X/740/1/49",
             "recommended": true
+          },
+          {
+            "value_msun": 1.015,
+            "uncertainty_msun": 0.051,
+            "method": "evolutionary_model",
+            "reference": "Crida et al. 2018 (via Moutou et al. 2025 Table 1)",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
             "value_rsun": 0.943,
             "uncertainty_rsun": 0.01,
+            "method": "interferometry",
+            "instrument": "CHARA Array",
+            "angular_diameter_mas": 0.711,
+            "angular_diameter_uncertainty_mas": 0.004,
+            "reference": "von Braun et al. 2011",
+            "bibcode": "2011ApJ...740...49V",
+            "doi": "10.1088/0004-637X/740/1/49",
+            "arxiv": "1107.1936",
+            "recommended": true,
+            "notes": "R = 0.943 +/- 0.010 Rsun from CHARA limb-darkened angular diameter theta_LD = 0.711 +/- 0.004 mas (theta_UD = 0.685 +/- 0.004 mas) combined with Hipparcos parallax. Verbatim Table 1 (1107.1936.md:25, 1107.1936.md:24). RE-ANCHOR: the DB previously carried this exact 0.943 value with method=unverified mis-attributed to Bourrier 2018, which itself cites von Braun 2011 for R (1807.04301.md:21)."
+          },
+          {
+            "value_rsun": 0.98,
+            "uncertainty_rsun": 0.016,
             "method": "unverified",
+            "reference": "Moutou et al. 2025 (Table 1, citing Crida et al. 2018)",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "recommended": false,
+            "notes": "R = 0.980 +/- 0.016 Rsun tabulated in Moutou Table 1 (2510.11523.md:20). Larger than the direct CHARA radius; method not explicitly stated in cached text (transit-density-derived per Crida 2018), so recorded as unverified and not adopted."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 5196,
+            "uncertainty_k": 24,
+            "method": "interferometry",
+            "reference": "von Braun et al. 2011",
+            "bibcode": "2011ApJ...740...49V",
+            "doi": "10.1088/0004-637X/740/1/49",
+            "recommended": true
+          },
+          {
+            "value_k": 5172,
+            "uncertainty_k": 18,
+            "method": "high_res_spectroscopy",
+            "reference": "Yee et al. 2017 (via Bourrier 2018 Table 1)",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "recommended": false
+          },
+          {
+            "value_k": 5198,
+            "uncertainty_k": 31,
+            "method": "high_res_spectroscopy",
+            "reference": "Moutou et al. 2025 (SPIRou Zeeturbo)",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "recommended": false
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.582,
+            "uncertainty_lsun": 0.014,
+            "method": "bolometric_flux",
+            "reference": "von Braun et al. 2011",
+            "bibcode": "2011ApJ...740...49V",
+            "doi": "10.1088/0004-637X/740/1/49",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 38.8,
+            "uncertainty_days": 0.05,
+            "method": "photometric_variability",
+            "reference": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "recommended": true,
+            "notes": "P_rot = 38.8 +/- 0.05 d, adopted by Bourrier 2018 from a sine fit to the H-alpha activity-index residuals (Table 1, 1807.04301.md:29; method detail 1807.04301.md:50,56). Season-9 APT photometry gives 40.4 +/- 0.8 d and the weighted-mean of all photometric seasons 40.04 +/- 0.39 d; consistent with the ~39 d Ca II period of Henry et al. 2000 and 42.7 +/- 2.5 d (Fischer 2008). Moutou 2025 independently recovers P_rot = 38.7 +/- 0.8 d (GPR; 2510.11523.md:90,32) and adopts 39 d (ZDI, Folsom 2020)."
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -5.03,
+            "method": "log_rhk",
             "reference": "Bourrier et al. 2018",
             "bibcode": "2018A&A...619A...1B",
             "doi": "10.1051/0004-6361/201833154",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
         "stellarium_id": "rho01Cnc"
       },
       "derived": {
@@ -70,11 +152,11 @@
         "icrs_vx_j2000_km_s": 0.2558218512589647,
         "icrs_vy_j2000_km_s": 42.102606625365134,
         "icrs_vz_j2000_km_s": 0.637140427946008,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.582,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "rotation_period_days": 38.8,
+        "activity_log_rhk": -5.03,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
@@ -126,43 +208,76 @@
         }
       },
       "derived": {
-        "semi_major_axis_m": 2309791123.6080003,
+        "semi_major_axis_m": 2303807208.78,
         "eccentricity": 0.05,
         "inclination_deg": 83.59,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 86.0,
-        "mean_anomaly_at_epoch_deg": 4.0,
-        "orbital_epoch_jd": 2457063.2096,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
         "mass_kg": 4.7717878e+25,
         "mass_type": "true mass",
-        "radius_m": 11945625.0,
+        "radius_m": 11977480.0,
         "equilibrium_temperature_k": null,
         "density_g_cc": null
       },
       "curated": {
         "pl_name": "55 Cnc e",
-        "orbital": {
-          "semi_major_axis_au": 0.01544,
-          "eccentricity": 0.05,
-          "inclination_deg": 83.59,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 86.0,
-          "epoch_jd": 2457063.2096,
-          "mean_anomaly_at_epoch_deg": 4.0,
-          "source": "Bourrier et al. 2018",
-          "bibcode": "2018A&A...619A...1B",
-          "doi": "10.1051/0004-6361/201833154"
-        },
-        "physical": {
-          "true_mass_mearth": 7.99,
-          "uncertainty_mearth": 0.32,
-          "mass_type": "true mass",
-          "radius_rearth": 1.875,
-          "uncertainty_rearth": 0.029,
-          "source": "Bourrier et al. 2018",
-          "bibcode": "2018A&A...619A...1B",
-          "doi": "10.1051/0004-6361/201833154"
-        }
+        "orbital": [
+          {
+            "period_days": 0.73654737,
+            "semi_major_axis_au": 0.0154,
+            "uncertainty_semi_major_axis_au": 0.0001,
+            "eccentricity": 0.05,
+            "uncertainty_eccentricity": 0.03,
+            "inclination_deg": 83.59,
+            "uncertainty_inclination_deg": 0.47,
+            "argument_of_periapsis_deg": 86.0,
+            "tranmid_bjd": 2455733.006,
+            "uncertainty_tranmid_bjd": 0.0014,
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "transit",
+            "recommended": true
+          },
+          {
+            "period_days": 0.736546,
+            "semi_major_axis_au": 0.016,
+            "uncertainty_semi_major_axis_au": 0.0003,
+            "eccentricity": 0.01,
+            "uncertainty_eccentricity": 0.02,
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "true_mass_mearth": 7.99,
+            "uncertainty_mearth": 0.32,
+            "mass_type": "true mass",
+            "radius_rearth": 1.88,
+            "uncertainty_rearth": 0.03,
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "transit",
+            "recommended": true
+          },
+          {
+            "mass_mearth": 9.35,
+            "uncertainty_mearth": 0.44,
+            "mass_type": "Msini",
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     },
     {
@@ -198,9 +313,9 @@
         "eccentricity": 0.0029,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 23.0,
-        "mean_anomaly_at_epoch_deg": 67.0,
-        "orbital_epoch_jd": 2455495.595,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
         "mass_kg": 1.6483272000000002e+27,
         "mass_type": "Msini",
         "radius_m": 88556900.0,
@@ -209,25 +324,58 @@
       },
       "curated": {
         "pl_name": "55 Cnc b",
-        "orbital": {
-          "semi_major_axis_au": 0.118,
-          "eccentricity": 0.0029,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 23.0,
-          "epoch_jd": 2455495.595,
-          "mean_anomaly_at_epoch_deg": 67.0,
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        },
-        "physical": {
-          "mass_mearth": 276.0,
-          "uncertainty_mearth": 9.0,
-          "mass_type": "Msini",
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        }
+        "orbital": [
+          {
+            "period_days": 14.651552,
+            "uncertainty_period_days": 3.6e-05,
+            "semi_major_axis_au": 0.118,
+            "uncertainty_semi_major_axis_au": 0.002,
+            "eccentricity": 0.0029,
+            "uncertainty_eccentricity": 0.0027,
+            "tranmid_bjd": 2455495.595,
+            "uncertainty_tranmid_bjd": 0.013,
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "period_days": 14.6516,
+            "uncertainty_period_days": 0.0001,
+            "semi_major_axis_au": 0.1134,
+            "uncertainty_semi_major_axis_au": 0.0006,
+            "eccentricity": 0.0,
+            "uncertainty_eccentricity": 0.01,
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 276.0,
+            "uncertainty_mearth": 9.0,
+            "mass_type": "Msini",
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "mass_mearth": 255.4,
+            "uncertainty_mearth": 2.9,
+            "mass_type": "Msini",
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     },
     {
@@ -263,9 +411,9 @@
         "eccentricity": 0.088,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 31.0,
-        "mean_anomaly_at_epoch_deg": 59.0,
-        "orbital_epoch_jd": 2455491.23,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
         "mass_kg": 3.3802652000000006e+26,
         "mass_type": "Msini",
         "radius_m": 54217210.0,
@@ -274,25 +422,58 @@
       },
       "curated": {
         "pl_name": "55 Cnc c",
-        "orbital": {
-          "semi_major_axis_au": 0.247,
-          "eccentricity": 0.088,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 31.0,
-          "epoch_jd": 2455491.23,
-          "mean_anomaly_at_epoch_deg": 59.0,
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        },
-        "physical": {
-          "mass_mearth": 56.6,
-          "uncertainty_mearth": 2.2,
-          "mass_type": "Msini",
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        }
+        "orbital": [
+          {
+            "period_days": 44.3936,
+            "uncertainty_period_days": 0.0024,
+            "semi_major_axis_au": 0.247,
+            "uncertainty_semi_major_axis_au": 0.004,
+            "eccentricity": 0.088,
+            "uncertainty_eccentricity": 0.23,
+            "tranmid_bjd": 2455491.23,
+            "uncertainty_tranmid_bjd": 0.34,
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "period_days": 44.3989,
+            "uncertainty_period_days": 0.0043,
+            "semi_major_axis_au": 0.2373,
+            "uncertainty_semi_major_axis_au": 0.0013,
+            "eccentricity": 0.03,
+            "uncertainty_eccentricity": 0.02,
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 56.6,
+            "uncertainty_mearth": 2.2,
+            "mass_type": "Msini",
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "mass_mearth": 51.2,
+            "uncertainty_mearth": 1.3,
+            "mass_type": "Msini",
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     },
     {
@@ -328,9 +509,9 @@
         "eccentricity": 0.063,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 100.0,
-        "mean_anomaly_at_epoch_deg": 350.0,
-        "orbital_epoch_jd": 2455236.4,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
         "mass_kg": 2.896517e+26,
         "mass_type": "Msini",
         "radius_m": 48355890.0,
@@ -339,25 +520,58 @@
       },
       "curated": {
         "pl_name": "55 Cnc f",
-        "orbital": {
-          "semi_major_axis_au": 0.802,
-          "eccentricity": 0.063,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 100.0,
-          "epoch_jd": 2455236.4,
-          "mean_anomaly_at_epoch_deg": 350.0,
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        },
-        "physical": {
-          "mass_mearth": 48.5,
-          "uncertainty_mearth": 2.8,
-          "mass_type": "Msini",
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        }
+        "orbital": [
+          {
+            "period_days": 260.58,
+            "uncertainty_period_days": 0.15,
+            "semi_major_axis_au": 0.802,
+            "uncertainty_semi_major_axis_au": 0.014,
+            "eccentricity": 0.063,
+            "uncertainty_eccentricity": 0.048,
+            "tranmid_bjd": 2455236.4,
+            "uncertainty_tranmid_bjd": 2.6,
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "period_days": 259.88,
+            "uncertainty_period_days": 0.29,
+            "semi_major_axis_au": 0.7708,
+            "uncertainty_semi_major_axis_au": 0.0044,
+            "eccentricity": 0.08,
+            "uncertainty_eccentricity": 0.05,
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 48.5,
+            "uncertainty_mearth": 2.8,
+            "mass_type": "Msini",
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "mass_mearth": 47.8,
+            "uncertainty_mearth": 2.4,
+            "mass_type": "Msini",
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     },
     {
@@ -393,10 +607,10 @@
         "eccentricity": 0.0913,
         "inclination_deg": 89.73,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": -90.0,
-        "mean_anomaly_at_epoch_deg": 180.0,
-        "orbital_epoch_jd": 2451517.8,
-        "mass_kg": 7.250874982930228e+27,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 7.25084802e+27,
         "mass_type": "Msini",
         "radius_m": 82823000.0,
         "equilibrium_temperature_k": null,
@@ -404,25 +618,58 @@
       },
       "curated": {
         "pl_name": "55 Cnc d",
-        "orbital": {
-          "semi_major_axis_au": 5.6,
-          "eccentricity": 0.0913,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": -90.0,
-          "epoch_jd": 2451517.8,
-          "mean_anomaly_at_epoch_deg": 180.0,
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        },
-        "physical": {
-          "mass_mearth": 1214.10451474,
-          "uncertainty_mearth": 41.31769291,
-          "mass_type": "Msini",
-          "source": "Moutou et al. 2026",
-          "bibcode": "2026A&A...705A.190M",
-          "doi": "10.1051/0004-6361/202556146"
-        }
+        "orbital": [
+          {
+            "period_days": 4799.0,
+            "uncertainty_period_days": 15.0,
+            "semi_major_axis_au": 5.6,
+            "uncertainty_semi_major_axis_au": 0.1,
+            "eccentricity": 0.0913,
+            "uncertainty_eccentricity": 0.0067,
+            "tranmid_bjd": 2451517.8,
+            "uncertainty_tranmid_bjd": 20.0,
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "period_days": 5574.2,
+            "uncertainty_period_days": 93.8,
+            "semi_major_axis_au": 5.957,
+            "uncertainty_semi_major_axis_au": 0.074,
+            "eccentricity": 0.13,
+            "uncertainty_eccentricity": 0.02,
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 1214.1,
+            "uncertainty_mearth": 41.3,
+            "mass_type": "Msini",
+            "source": "Moutou et al. 2025",
+            "bibcode": "2026A&A...705A.190M",
+            "doi": "10.1051/0004-6361/202556146",
+            "method": "rv",
+            "recommended": true
+          },
+          {
+            "mass_mearth": 991.6,
+            "uncertainty_mearth": 30.7,
+            "mass_type": "Msini",
+            "source": "Bourrier et al. 2018",
+            "bibcode": "2018A&A...619A...1B",
+            "doi": "10.1051/0004-6361/201833154",
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     }
   ],
@@ -431,7 +678,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
         "epoch propagation method"
       ]
@@ -440,32 +687,41 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "The 55 Cancri System: Fundamental Stellar Parameters, Habitable Zone Planet, and Super-Earth Diameter",
+      "doi": "10.1088/0004-637X/740/1/49",
+      "bibcode": "2011ApJ...740...49V",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "55 Cnc mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Crida et al. 2018 (via Moutou et al. 2025 Table 1)",
+      "doi": "10.1051/0004-6361/202556146",
+      "bibcode": "2026A&A...705A.190M",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "55 Cnc mass (evolutionary_model)"
       ]
     },
     {
       "title": "Bourrier et al. 2018",
       "doi": "10.1051/0004-6361/201833154",
       "bibcode": "2018A&A...619A...1B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
-        "55 Cnc mass (unverified)"
-      ]
-    },
-    {
-      "title": "Moutou et al. 2026",
-      "doi": "10.1051/0004-6361/202556146",
-      "bibcode": "2026A&A...705A.190M",
-      "accessed": "2026-05-29",
-      "used_for": [
-        "planet 55 Cnc b orbital"
+        "planet 55 Cnc e orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-31",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -473,6 +729,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "A-B binary has NO published Keplerian orbit. 55 Cnc B (M4.5V) sits at a projected separation of ~1065 au (84 arcsec visual; Eggenberger 2004 / Mugrauer 2006), with an estimated orbital period of ~30000 yr (Moutou 2025; 2510.11523.md:128,140). Left UNMODELED (note only); do not synthesize binary_orbit. Hipparcos V cross-check: DB Gaia-converted V = 5.9501 agrees with the literature/Hipparcos V = 5.95 quoted by Bourrier 2018 (1807.04301.md:11) -- no Gaia-saturation discrepancy. [Fe/H] skipped per project policy (lit. ~0.31-0.42 dex, super-metal-rich)."
   }
 }

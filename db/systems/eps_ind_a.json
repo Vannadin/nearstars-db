@@ -19,36 +19,87 @@
         "radial_velocity_source": "gaia_dr3",
         "vmag_v": 4.6632,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 4754,
-        "spectype": "K5V",
+        "teff_k": 4700,
+        "spectype": "K5 V",
         "mass_measurements": [
           {
-            "value_msun": 0.781,
-            "uncertainty_msun": 0.036,
-            "method": "unverified",
-            "reference": "Matthews et al. 2026",
-            "bibcode": "2026arXiv260308780M",
-            "doi": null,
+            "value_msun": 0.782,
+            "uncertainty_msun": 0.023,
+            "method": "asteroseismology",
+            "reference": "Lundkvist et al. 2024",
+            "bibcode": "2024ApJ...964..110L",
+            "doi": "10.3847/1538-4357/ad25f2",
             "recommended": true
+          },
+          {
+            "value_msun": 0.762,
+            "uncertainty_msun": 0.038,
+            "method": "empirical_relation",
+            "reference": "Demory et al. 2009",
+            "bibcode": "2009A&A...505..205D",
+            "doi": "10.1051/0004-6361/200911976",
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
-            "value_rsun": 0.679,
-            "uncertainty_rsun": 0.004,
-            "method": "unverified",
-            "reference": "Matthews et al. 2024",
-            "bibcode": "2024Natur.633..789M",
-            "doi": null,
+            "value_rsun": 0.713,
+            "uncertainty_rsun": 0.006,
+            "method": "interferometry",
+            "reference": "Lundkvist et al. 2024",
+            "bibcode": "2024ApJ...964..110L",
+            "doi": "10.3847/1538-4357/ad25f2",
+            "angular_diameter_mas": 1.817,
+            "angular_diameter_uncertainty_mas": 0.013,
+            "recommended": true,
+            "notes": "R from Rains et al. 2020 limb-darkened angular diameter (theta_LD = 1.817 +/- 0.013 mas) combined with Gaia DR3 distance d = 3.648 pc; Lundkvist et al. 2024 report the resulting 0.713 +/- 0.006 Rsun, \"in excellent agreement with the value found by Rains et al. 2020\"."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 4700,
+            "uncertainty_k": 65,
+            "method": "high_res_spectroscopy",
+            "reference": "Lundkvist et al. 2024",
+            "bibcode": "2024ApJ...964..110L",
+            "doi": "10.3847/1538-4357/ad25f2",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.239,
+            "uncertainty_lsun": 0.001,
+            "method": "bolometric_flux",
+            "reference": "Feng et al. 2019",
+            "bibcode": "2019MNRAS.490.5002F",
+            "doi": "10.1093/mnras/stz2912",
+            "recommended": true
+          }
+        ],
         "age_measurements": [],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 35.0,
+            "method": "unverified",
+            "reference": "Feng et al. 2018",
+            "bibcode": "2018arXiv180308163F",
+            "doi": null,
+            "recommended": true,
+            "notes": "P_rot ~35 d. Method does not map to the rotation enum: it is NOT photometric — derived from HARPS RV + spectroscopic activity-index (NaD1/NaD2/R'HK/BIS) periodograms, where the 17.8 d signal is the half-rotation alias of ~35 d. Verbatim: \"The rotation period of Epsilon Indi is about 35 d, approximately double 17.8 d.\" No formal uncertainty published; supersedes the older 22 d (Saar & Osten 1997) and ~20 d (Lachaume 1999) estimates. Chen 2022 confirms the star lacks a published photometric rotation period. Feng 2019 corroborates ~35 d."
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_log_rhk": -4.72,
+            "method": "log_rhk",
+            "reference": "Chen et al. 2022 (adopting Pace 2013)",
+            "bibcode": "2022AJ....163..288C",
+            "doi": "10.3847/1538-3881/ac66d2",
+            "recommended": true
+          }
+        ],
         "stellarium_id": null
       },
       "derived": {
@@ -70,16 +121,16 @@
         "icrs_vx_j2000_km_s": -18.009482253076552,
         "icrs_vy_j2000_km_s": 88.35659922067674,
         "icrs_vz_j2000_km_s": 9.872190087156362,
-        "luminosity_lsun": null,
+        "luminosity_lsun": 0.239,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
-        "activity_log_rhk": null,
+        "rotation_period_days": 35.0,
+        "activity_log_rhk": -4.72,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 103648415654.058,
-        "mean_radius_km": 472380.3
+        "gravitational_parameter_km3_s2": 103781128094.076,
+        "mean_radius_km": 496034.1
       }
     }
   ],
@@ -116,11 +167,11 @@
         "semi_major_axis_m": 3126595497630.0,
         "eccentricity": 0.244,
         "inclination_deg": 102.3,
-        "longitude_of_ascending_node_deg": null,
+        "longitude_of_ascending_node_deg": 44.6,
         "argument_of_periapsis_deg": 62.0,
         "mean_anomaly_at_epoch_deg": null,
         "orbital_epoch_jd": null,
-        "mass_kg": 1.4482768617737601e+28,
+        "mass_kg": 1.4482585e+28,
         "mass_type": "true mass",
         "radius_m": 80274600.0,
         "equilibrium_temperature_k": null,
@@ -128,26 +179,92 @@
       },
       "curated": {
         "pl_name": "eps Ind A b",
-        "orbital": {
-          "semi_major_axis_au": 20.9,
-          "eccentricity": 0.244,
-          "inclination_deg": 102.3,
-          "longitude_of_ascending_node_deg": null,
-          "argument_of_periapsis_deg": 62.0,
-          "epoch_jd": null,
-          "mean_anomaly_at_epoch_deg": null,
-          "source": "Matthews et al. 2026",
-          "bibcode": "2026arXiv260308780M",
-          "doi": null
-        },
-        "physical": {
-          "true_mass_mearth": 2425.03074541,
-          "uncertainty_mearth": 232.01473711,
-          "mass_type": "true mass",
-          "source": "Matthews et al. 2026",
-          "bibcode": "2026arXiv260308780M",
-          "doi": null
-        }
+        "orbital": [
+          {
+            "semi_major_axis_au": 20.9,
+            "uncertainty_semi_major_axis_au": 5.8,
+            "eccentricity": 0.244,
+            "uncertainty_eccentricity": 0.11,
+            "inclination_deg": 102.3,
+            "uncertainty_inclination_deg": 1.9,
+            "longitude_of_ascending_node_deg": 44.6,
+            "uncertainty_longitude_of_ascending_node_deg": 1.3,
+            "argument_of_periapsis_deg": 62.0,
+            "uncertainty_argument_of_periapsis_deg": 48.0,
+            "period_days": 39447.0,
+            "uncertainty_period_days": 17897.0,
+            "source": "Matthews et al. 2026",
+            "bibcode": null,
+            "doi": "10.3847/2041-8213/ae5823",
+            "method": "astrometric",
+            "recommended": true
+          },
+          {
+            "semi_major_axis_au": 11.55,
+            "uncertainty_semi_major_axis_au": 0.98,
+            "eccentricity": 0.26,
+            "uncertainty_eccentricity": 0.07,
+            "inclination_deg": 64.25,
+            "uncertainty_inclination_deg": 13.8,
+            "longitude_of_ascending_node_deg": 250.2,
+            "uncertainty_longitude_of_ascending_node_deg": 14.72,
+            "argument_of_periapsis_deg": 77.83,
+            "uncertainty_argument_of_periapsis_deg": 20.21,
+            "period_days": 16511.0,
+            "uncertainty_period_days": 2096.0,
+            "source": "Feng et al. 2019",
+            "bibcode": "2019MNRAS.490.5002F",
+            "doi": "10.1093/mnras/stz2912",
+            "method": "astrometric",
+            "recommended": false
+          },
+          {
+            "semi_major_axis_au": 12.82,
+            "uncertainty_semi_major_axis_au": 4.18,
+            "eccentricity": 0.01,
+            "uncertainty_eccentricity": 0.12,
+            "argument_of_periapsis_deg": 88.56,
+            "period_days": 19205.51,
+            "uncertainty_period_days": 10111.37,
+            "source": "Feng et al. 2018",
+            "bibcode": "2018arXiv180308163F",
+            "doi": null,
+            "method": "rv",
+            "recommended": false
+          }
+        ],
+        "physical": [
+          {
+            "true_mass_mearth": 2425.0,
+            "uncertainty_mearth": 232.0,
+            "mass_type": "true mass",
+            "source": "Matthews et al. 2026",
+            "bibcode": null,
+            "doi": "10.3847/2041-8213/ae5823",
+            "method": "astrometric",
+            "recommended": true
+          },
+          {
+            "true_mass_mearth": 1033.0,
+            "uncertainty_mearth": 207.0,
+            "mass_type": "true mass",
+            "source": "Feng et al. 2019",
+            "bibcode": "2019MNRAS.490.5002F",
+            "doi": "10.1093/mnras/stz2912",
+            "method": "astrometric",
+            "recommended": false
+          },
+          {
+            "mass_mearth": 861.0,
+            "uncertainty_mearth": 140.0,
+            "mass_type": "Msini",
+            "source": "Feng et al. 2018",
+            "bibcode": "2018arXiv180308163F",
+            "doi": null,
+            "method": "rv",
+            "recommended": false
+          }
+        ]
       }
     }
   ],
@@ -156,7 +273,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
         "epoch propagation method"
       ]
@@ -165,32 +282,59 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-31",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     },
     {
-      "title": "Matthews et al. 2026",
-      "doi": null,
-      "bibcode": "2026arXiv260308780M",
-      "accessed": "2026-05-29",
+      "title": "Lundkvist et al. 2024",
+      "doi": "10.3847/1538-4357/ad25f2",
+      "bibcode": "2024ApJ...964..110L",
+      "accessed": "2026-05-31",
       "used_for": [
-        "eps Ind A mass (unverified)"
+        "eps Ind A mass (asteroseismology)"
       ]
     },
     {
-      "title": "Matthews et al. 2024",
-      "doi": null,
-      "bibcode": "2024Natur.633..789M",
-      "accessed": "2026-05-29",
+      "title": "Demory et al. 2009",
+      "doi": "10.1051/0004-6361/200911976",
+      "bibcode": "2009A&A...505..205D",
+      "accessed": "2026-05-31",
       "used_for": [
-        "eps Ind A radius (unverified)"
+        "eps Ind A mass (empirical_relation)"
+      ]
+    },
+    {
+      "title": "Matthews et al. 2026",
+      "doi": "10.3847/2041-8213/ae5823",
+      "bibcode": null,
+      "accessed": "2026-05-31",
+      "used_for": [
+        "planet eps Ind A b orbital"
+      ]
+    },
+    {
+      "title": "Feng et al. 2019",
+      "doi": "10.1093/mnras/stz2912",
+      "bibcode": "2019MNRAS.490.5002F",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "planet eps Ind A b orbital"
+      ]
+    },
+    {
+      "title": "Feng et al. 2018",
+      "doi": null,
+      "bibcode": "2018arXiv180308163F",
+      "accessed": "2026-05-31",
+      "used_for": [
+        "planet eps Ind A b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-31",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

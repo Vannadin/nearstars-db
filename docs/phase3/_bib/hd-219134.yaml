@@ -1,0 +1,50 @@
+host: HD 219134
+slug: hd-219134
+generated_at: '2026-05-31'
+note: 'Phase 2 bibliography for HD 219134 (= HR 8832 = GJ 892 = HIP 114622), K3V at 21.3 ly, Gaia DR3 2009481748875806976.
+  Effectively single (wide V~9.4 M dwarf at ~700 AU is meta.notes only, not a binary_orbits entry). Pins the primary interferometric
+  stellar source (Ligi 2019 VEGA/CHARA, which replaces the DB unverified 0.778 Rsun radius), the transiting-planet discovery
+  (Gillon 2017 b & c), the RV discovery (Motalebi 2015), the g/h source (Vogt 2015 — fixes the DB provenance bug where g/h
+  cite "Gillon" but the bibcode is Vogt), and the activity-cycle source (Johnson 2016). Six planets b,c,d,f,g,h (lettering
+  legitimately skips e — no planet e exists). f & g are contested (pl_controv_flag=1) but NOT retracted; kept per the gameplay-variety
+  policy and annotated. DRAFT step: fetch only.
+
+  '
+papers:
+- arxiv_id: '1909.10058'
+  ads_bibcode: 2019A&A...631A..92L
+  doi: 10.1051/0004-6361/201936259
+  title: Ligi et al. 2019 — VEGA/CHARA interferometric radius (0.726 Rsun), direct mass, density, revised transiting-planet
+    radii (PRIMARY stellar anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1703.01430'
+  ads_bibcode: 2017NatAs...1E..56G
+  doi: 10.1038/s41550-017-0056
+  title: Gillon et al. 2017 — Spitzer transits of b & c, transit mass + radius (recommended for b/c physical)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1507.08532'
+  ads_bibcode: 2015A&A...584A..72M
+  doi: 10.1051/0004-6361/201526822
+  title: Motalebi et al. 2015 — HARPS-N RV discovery (b transiting + c,d,h), stellar parameters
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1509.07912'
+  ads_bibcode: 2015ApJ...814...12V
+  doi: 10.1088/0004-637X/814/1/12
+  title: Vogt et al. 2015 — Keck/HIRES + APF RV, planets f & g + cold-Saturn h orbit (source for g/h; corrects DB provenance
+    bug)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1602.05200'
+  ads_bibcode: 2016ApJ...821...74J
+  doi: 10.3847/0004-637X/821/2/74
+  title: Johnson et al. 2016 — long-term S-index activity cycle (~11.7 yr) (activity_measurements)
+  status: fetched
+  category: deep_read
+  fetch_error: null
