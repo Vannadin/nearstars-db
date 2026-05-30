@@ -37,7 +37,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `mass_mearth` | 1.308 | high | Agol 2021 TTV |
 | `radius_rearth` | 1.097 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 1.087 | high | derived = 1.308 / 1.097² |
-| `density_g_cc` | 6.36 | high | derived; Agol 2021 reports ~5.7 (uncertainty bars overlap) |
+| `density_g_cc` | 5.45 | high | Agol 2021 reports 5.447 g/cc (≈ 0.991 ρ⊕) |
 | `insolation_s_earth` | 2.27 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 339 | high | Agol 2021 |
 | `dayside_brightness_temp_k_15um` | 380 | high | Zieba 2023 MIRI F1500W eclipse |
@@ -375,9 +375,9 @@ Notable items skipped:
   modeling) if those become available.
 - Cfg variant for the "airless bare-rock" interpretation, paired with
   b's airless cfg as a coordinated palette.
-- Refine the `density_g_cc` entry: the derived value (6.36) is
-  slightly higher than Agol 2021's reported 5.7, reflecting different
-  uncertainty propagation. Phase 2 should reconcile.
+- The `density_g_cc` entry (5.45) now matches Agol 2021's reported
+  5.447 g/cc (≈ 0.991 ρ⊕) exactly; the earlier derived-vs-reported
+  discrepancy is closed.
 - Magnetic field strength is low-confidence scaling-based. Direct
   radio-emission upper limits (e.g., Vedantham 2020) could tighten the
   dipole moment range.

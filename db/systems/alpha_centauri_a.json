@@ -26,18 +26,18 @@
             "value_msun": 1.1055,
             "uncertainty_msun": 0.0039,
             "method": "binary_orbit",
-            "reference": "Pourbaix & Boffin 2016",
-            "bibcode": "2016A&A...586A..90P",
-            "doi": "10.1051/0004-6361/201527859",
+            "reference": "Kervella et al. 2016",
+            "bibcode": "2016A&A...594A.107K",
+            "doi": "10.1051/0004-6361/201629201",
             "recommended": true
           },
           {
             "value_msun": 1.133,
             "uncertainty_msun": 0.005,
             "method": "binary_orbit",
-            "reference": "Kervella et al. 2016",
-            "bibcode": "2016A&A...594A.107K",
-            "doi": "10.1051/0004-6361/201629201",
+            "reference": "Pourbaix & Boffin 2016",
+            "bibcode": "2016A&A...586A..90P",
+            "doi": "10.1051/0004-6361/201527859",
             "recommended": false
           },
           {
@@ -275,18 +275,18 @@
       ]
     },
     {
-      "title": "Pourbaix & Boffin 2016",
-      "doi": "10.1051/0004-6361/201527859",
-      "bibcode": "2016A&A...586A..90P",
+      "title": "Kervella et al. 2016",
+      "doi": "10.1051/0004-6361/201629201",
+      "bibcode": "2016A&A...594A.107K",
       "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"
       ]
     },
     {
-      "title": "Kervella et al. 2016",
-      "doi": "10.1051/0004-6361/201629201",
-      "bibcode": "2016A&A...594A.107K",
+      "title": "Pourbaix & Boffin 2016",
+      "doi": "10.1051/0004-6361/201527859",
+      "bibcode": "2016A&A...586A..90P",
       "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"

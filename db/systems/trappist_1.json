@@ -171,9 +171,9 @@
             "value_dex": 0.04,
             "uncertainty_dex": 0.08,
             "method": "low_res_spectroscopy",
-            "reference": "Gillon et al. 2017",
-            "bibcode": "2017Natur.542..456G",
-            "doi": "10.1038/nature21360",
+            "reference": "Gillon et al. 2016",
+            "bibcode": "2016Natur.533..221G",
+            "doi": "10.1038/nature17448",
             "recommended": true
           }
         ],
@@ -295,7 +295,7 @@
         "mass_kg": 8.2058028e+24,
         "mass_type": "true mass",
         "radius_m": 7110036.000000001,
-        "equilibrium_temperature_k": 391,
+        "equilibrium_temperature_k": 398,
         "density_g_cc": 5.43
       },
       "curated": {
@@ -350,7 +350,7 @@
         ],
         "environment": [
           {
-            "equilibrium_temperature_k": 391,
+            "equilibrium_temperature_k": 398,
             "uncertainty_equilibrium_temperature_k": 8,
             "bond_albedo": 0.0,
             "density_g_cc": 5.43,
@@ -1045,7 +1045,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -1054,7 +1054,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -1063,7 +1063,7 @@
       "title": "Gillon et al. 2016",
       "doi": "10.1038/nature17448",
       "bibcode": "2016Natur.533..221G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1072,7 +1072,7 @@
       "title": "Gillon et al. 2017",
       "doi": "10.1038/nature21360",
       "bibcode": "2017Natur.542..456G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1081,7 +1081,7 @@
       "title": "Van Grootel et al. 2018",
       "doi": "10.3847/1538-4357/aaa023",
       "bibcode": "2018ApJ...853...30V",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1090,7 +1090,7 @@
       "title": "Grimm et al. 2018",
       "doi": "10.1051/0004-6361/201732233",
       "bibcode": "2018A&A...613A..68G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1099,7 +1099,7 @@
       "title": "Stassun et al. 2019",
       "doi": "10.3847/1538-3881/ab3467",
       "bibcode": "2019AJ....158..138S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 mass (spectroscopic_calibration)"
       ]
@@ -1108,7 +1108,7 @@
       "title": "Agol et al. 2021",
       "doi": "10.3847/PSJ/abd022",
       "bibcode": "2021PSJ.....2....1A",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 mass (evolutionary_model)"
       ]
@@ -1117,7 +1117,7 @@
       "title": "Ducrot et al. 2020",
       "doi": "10.1051/0004-6361/201937392",
       "bibcode": "2020A&A...640A.112D",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "TRAPPIST-1 radius (sed_fitting)"
       ]
@@ -1126,7 +1126,7 @@
       "title": "Greene et al. 2023",
       "doi": "10.1038/s41586-023-05951-7",
       "bibcode": "2023Natur.618...39G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "planet TRAPPIST-1 b atmosphere"
       ]
@@ -1135,7 +1135,7 @@
       "title": "Zieba et al. 2023",
       "doi": "10.1038/s41586-023-06232-z",
       "bibcode": "2023Natur.620..746Z",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "planet TRAPPIST-1 c atmosphere"
       ]
@@ -1144,14 +1144,14 @@
       "title": "Luger et al. 2017",
       "doi": "10.1038/s41550-017-0129",
       "bibcode": "2017NatAs...1E.129L",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "planet TRAPPIST-1 h physical"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -23,8 +23,9 @@ Janson 2008). ε Eri 는 AB Doradus / Local Association 운동학 복합체
 (Su 2017 "Genie" 모델) 은 gap-clearing 행성들이 다중 belt 구조를
 sculpting 한다는 것입니다. 시스템에는 오래 논쟁된 jovian ε Eri b
 도 있으며, 결국 직접 촬영으로 확정되었고 (Mawet 2019) 천체 측정 +
-RV 조합으로 정밀화되었습니다 (Llop-Sayson 2021. Roettenbacher 2022).
-M sin i ≈ 0.78 M_Jup, a ≈ 3.5 AU, P ≈ 7.4 yr, e ≈ 0.07. 바깥쪽의
+RV 조합으로 정밀화되었습니다 (Llop-Sayson 2021). 천체측정으로
+역투영한 실제 질량은 M_b ≈ 0.66 M_Jup, i = 78.81°, a ≈ 3.5 AU,
+P ≈ 7.4 yr, e ≈ 0.07 입니다. 바깥쪽의
 "ε Eri c" 후보 (Quillen 2002. Benedict 2006) 는 Mawet 2019 의 imaging
 미검출로 배제됐습니다.
 
@@ -40,7 +41,7 @@ X 선 사이클이 XMM 모니터링에서 검출됩니다 (Coffaro 2020).
 
 **NearStars 시나리오 선택. 어리고 빠르게 자전하며 자기 활동이 매우
 강한 K2V 왜성으로, 구조적으로 드문 삼중 링 debris 디스크와 확인된
-~0.78 M_Jup jovian 동반자를 3.5 AU 에 가집니다. 시각 스타일링은
+~0.66 M_Jup jovian 동반자를 3.5 AU 에 가집니다. 시각 스타일링은
 주황색 K2V 연속체, 사이클 활동기의 따뜻한 corona 색조, 그리고 어떤
 넓은 궤도 fly-by 에서든 시스템의 시그니처가 되는 세 개의 동심 디스크
 링을 강조합니다.** 18 개 cfg 픽 중 15 개는 canonical 일치, 3 개는
@@ -82,10 +83,10 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 | `disk_morphology` | three-belt. ~3 AU 안쪽 asteroid analog + ~20 AU 중간 성분 + ~64 AU 차가운 Kuiper analog 링 (좁고 이심 e ≈ 0.07) | medium | Su 2017 Genie 모델 + Booth 2017 / Greaves 2014 다중 belt 분해. intermediate 가 가장 덜 분해됨 |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA. Booth 2017 Herschel/SPIRE. Su 2017 Spitzer/MIPS. 여러 파장에서 차가운 링이 분해됨 |
 | `disk_imaging_observatory` | ALMA (차가운 링 지오메트리), Herschel-SPIRE (질량), Spitzer-IRS/MIPS (따뜻한 성분) | high | MacGregor 2015. Booth 2017. Su 2017. Backman 2009 |
-| `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 Herschel 분해 inclination. ε Eri b 궤도면과 일관 (Roettenbacher 2022) |
+| `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 ALMA/Herschel 분해, 차가운 main ring 의 inclination. ε Eri b 와 coplanar 가 아님. Llop-Sayson 2021 은 행성 궤도 (i = 78.81°) 가 링의 34° 에서 ~2σ 벗어났다고 봄 (coplanar 해는 ~1σ 만 허용) |
 | `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017. 세 belt 통합 dust 질량 |
 | `disk_planetesimal_belt_inferred` | true | high | dust 보충 시간 척도 (~Myr) 가 각 링에 모행성체 population 을 요구. Su 2017 |
-| `companion_jovian_present` | true (ε Eri b. a = 3.5 AU. M = 0.78 M_Jup) | high | Mawet 2019 직접 촬영. Llop-Sayson 2021. Roettenbacher 2022 천체측정 확정. 행성 Phase 3 은 별도 워크스페이스로 미룸 |
+| `companion_jovian_present` | true (ε Eri b. a = 3.5 AU. 실제 질량 M_b = 0.66 M_Jup, i = 78.81°) | high | Mawet 2019 직접 촬영. Llop-Sayson 2021 RV + Hipparcos–Gaia 천체측정 (채택 실제 질량, Mawet 의 edge-on M sin i 를 대체). 행성 Phase 3 은 별도 워크스페이스로 미룸 |
 
 ## Surface synthesis
 
@@ -185,9 +186,12 @@ Roettenbacher 2016 의 Doppler imaging 은 차등 회전을 직접 분해했
 적도-극 shear ≈ 0.4 d). 태양과 비슷한 분수 shear 가 더 짧은 평균
 주기에 작용하는 형태입니다. 회전축 inclination 은 Roettenbacher
 2016 §4 의 흑점 패턴 + v sin i 분광 broadening 결합 fit 에서
-i ≈ 30° 로 잘 제약됩니다. 우연히도 디스크 inclination (34°) 과
-천체측정에서 추정된 ε Eri b 궤도 inclination (Roettenbacher 2022)
-와도 비슷한 값이라, 시스템이 coplanar 임을 시사합니다.
+i ≈ 30° 로 잘 제약됩니다. 차가운 debris 링의 34° inclination
+(Booth 2017) 과는 가깝지만, 행성과는 다릅니다. Llop-Sayson 2021
+천체측정 fit 은 ε Eri b 를 i = 78.81° 에 놓아 34° 링 평면에서
+~2σ 벗어나 있습니다 (coplanar 한 32° 해는 ~1σ 만 허용). 즉 행성은
+링과 별 자전축 어느 쪽과도 coplanar 가 아니라 어긋나 있을 가능성이
+가장 높습니다.
 
 Asteroseismic 검출은 시도된 적이 있지만 marginal 합니다. Bonanno
 et al. 2008 은 radial-velocity 모니터링에서 잠정적 ν_max ≈ 1700 μHz
@@ -332,17 +336,27 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   분포*, AJ 153, 226 (`2017AJ....153..226S`, arXiv:1703.10330). "Genie"
   다중 belt sculpting 모델. 삼중 링 시스템 + 행성 perturber 의
   canonical 해석.
-- **Mawet D. et al. 2019** — *Keck Ms-band Vortex Coronagraphy 와
-  Radial Velocities 를 이용한 ε Eridani 의 심층 탐사*, AJ 157, 33
+- **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
+  Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157, 33
   (`2019AJ....157...33M`, arXiv:1810.03794). ε Eri b 직접 촬영 확정.
-  바깥쪽 "ε Eri c" 배제.
-- **Llop-Sayson J. et al. 2021** — *Radial Velocities 와 Astrometry
-  의 결합 분석에서 도출한 ε Eri b 의 본질에 대한 제약*, AJ 162, 181
-  (`2021AJ....162..181L`, arXiv:2108.05552). RV + Hipparcos/Gaia
-  천체측정 결합 fit. M_b = 0.78 M_Jup, i = 78.8°, a = 3.5 AU.
-- **Roettenbacher R. M. et al. 2022** — *ε Eri b 의 신뢰할 만한 천체
-  측정 검출 없음* (`2022AJ....163...19R`, arXiv:2110.10643). 천체
-  측정 교차 확인. ε Eri b 의 inclination 이 디스크 평면과 일관.
+  바깥쪽 "ε Eri c" 배제. RV 하한 M sin i = 0.72 M_Jup. 정보 없는
+  edge-on 사전분포로는 M_b = 0.78 (−0.12/+0.38) M_Jup, i = 89° ± 42°.
+  디스크 coplanar Gaussian 사전분포 (i = 34° ± 2°) 를 넣으면 대신
+  M_b ≈ 1.19 M_Jup. Llop-Sayson 2021 의 천체측정 정련 실제 질량으로
+  대체됨.
+- **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
+  of ε Eridani b with Radial Velocities, Hipparcos IAD–Gaia DR2
+  Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
+  AJ 162, 181 (`2021AJ....162..181L`, arXiv:2108.02305). RV +
+  Hipparcos IAD–Gaia DR2 천체측정 + 직접 촬영 상한 결합 fit. 채택
+  실제 질량 M_b = 0.66 (−0.09/+0.12) M_Jup, i = 78.81°
+  (−22.41/+29.34), a = 3.5 AU. 천체측정은 더 낮은 질량과 더 edge-on
+  인 행성을 선호하며, 궤도를 차가운 링의 34° 평면에서 ~2σ 벗어난
+  곳에 놓습니다 (coplanar 해는 ~1σ 만 허용).
+- **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
+  Detection of ε Eri b* (`2022AJ....163...19R`, arXiv:2110.10643).
+  천체측정 교차 확인 (Phase 3 캐시에 없음. 여기서는 unverified.
+  디스크와의 coplanar 결론은 이 합성에서 사실로 단정하지 않음).
 - **Roettenbacher R. M. et al. 2016** — *활동성 별 ζ Andromedae 의
   태양형 dynamo 부재… 와 ε Eri Doppler Image* (`2016Natur.533..217R`).
   분해된 polar-spot 면적이 있는 ε Eri Doppler imaging 포함.

@@ -1,21 +1,17 @@
 host: eps Eri
 slug: eps-eri
 generated_at: '2026-05-29'
-note: 'Phase 2 anchor bibliography for eps Eri (HD 22049, K2 V) — Tier 1 stellar inversion
-  fix. Radius/Teff/luminosity/mass anchored on Baines & Armstrong 2012 CHARA/NPOI
-  interferometry (theta_LD 2.153 mas -> R 0.74, Teff 5039 K, L 0.32, M 0.82 isochrone);
-  arXiv 1112.0447 is the erratum carrying the corrected fundamental-properties table,
-  cited as the primary 2012ApJ...744..138B. [Fe/H] = Sousa 2008 HARPS. Rotation =
-  Croll 2006 MOST photometry (no arXiv). Activity = Gomes da Silva 2021 HARPS log
-  R''HK + Coffaro 2020 XMM X-ray. Age is a DOCUMENTED DIVERGENCE: young activity/gyro
-  indicators (Mamajek 2008 ~0.4-0.8 Gyr) vs isochrone (Baines ~1, VF2005 ~2.6 Gyr);
-  the young range is physically preferred for this active K dwarf. Boyajian et al.
+note: 'Phase 2 anchor bibliography for eps Eri (HD 22049, K2 V) — Tier 1 stellar inversion fix. Radius/Teff/luminosity/mass
+  anchored on Baines & Armstrong 2012 CHARA/NPOI interferometry (theta_LD 2.153 mas -> R 0.74, Teff 5039 K, L 0.32, M 0.82
+  isochrone); arXiv 1112.0447 is the erratum carrying the corrected fundamental-properties table, cited as the primary 2012ApJ...744..138B.
+  [Fe/H] = Sousa 2008 HARPS. Rotation = Croll 2006 MOST photometry (no arXiv). Activity = Gomes da Silva 2021 HARPS log R''HK
+  + Coffaro 2020 XMM X-ray. Age is a DOCUMENTED DIVERGENCE: young activity/gyro indicators (Mamajek 2008 ~0.4-0.8 Gyr) vs
+  isochrone (Baines ~1, VF2005 ~2.6 Gyr); the young range is physically preferred for this active K dwarf. Boyajian et al.
   2012 does NOT contain eps Eri (verified) — not cited.'
 papers:
 - arxiv_id: '1112.0447'
   ads_bibcode: 2012ApJ...744..138B
-  title: Baines & Armstrong 2012 — CHARA/NPOI interferometry, R/Teff/L/mass (ANCHOR);
-    arXiv id is the erratum 2012ApJ...748...72B
+  title: Baines & Armstrong 2012 — CHARA/NPOI interferometry, R/Teff/L/mass (ANCHOR); arXiv id is the erratum 2012ApJ...748...72B
   status: fetched
   category: deep_read
   fetch_error: null
@@ -27,8 +23,7 @@ papers:
   fetch_error: null
 - arxiv_id: '0805.4826'
   ads_bibcode: 2008A&A...487..373S
-  title: Sousa et al. 2008 — HARPS high-res spectroscopy [Fe/H], Teff (RECOMMENDED
-    [Fe/H])
+  title: Sousa et al. 2008 — HARPS high-res spectroscopy [Fe/H], Teff (RECOMMENDED [Fe/H])
   status: fetched
   category: deep_read
   fetch_error: null
@@ -64,21 +59,27 @@ papers:
   fetch_error: null
 - arxiv_id: null
   ads_bibcode: 2006ApJ...648..607C
-  title: Croll et al. 2006 — MOST photometric rotation 11.35/11.55 d (RECOMMENDED
-    rotation; no arXiv, ADS value-check)
+  title: Croll et al. 2006 — MOST photometric rotation 11.35/11.55 d (RECOMMENDED rotation; no arXiv, ADS value-check)
   status: skipped
   category: manual_followup
   fetch_error: null
 - arxiv_id: null
   ads_bibcode: 2005ApJS..159..141V
-  title: Valenti & Fischer 2005 — SPOCS spectroscopy, mass/age/Teff alternatives (no
-    arXiv)
+  title: Valenti & Fischer 2005 — SPOCS spectroscopy, mass/age/Teff alternatives (no arXiv)
   status: skipped
   category: manual_followup
   fetch_error: null
 - arxiv_id: '1810.03794'
   ads_bibcode: 2019AJ....157...33M
   title: Mawet et al. 2019 — eps Eri b Keck/NIRC2 imaging + refined orbit
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2108.02305'
+  ads_bibcode: 2021AJ....162..181L
+  title: Llop-Sayson et al. 2021 — Constraining the Orbit and Mass of eps Eri b with RVs, Hipparcos IAD-Gaia DR2 astrometry,
+    and multi-epoch vortex coronagraphy upper limits (planet mass/orbit anchor; corrects prior 2108.05552 collision which
+    was an unrelated ML paper)
   status: fetched
   category: deep_read
   fetch_error: null

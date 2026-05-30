@@ -8,11 +8,11 @@ monitoring of any K star — a legacy of the planet hunt that
 culminated in the retracted Dumusque 2012 claim and the subsequent
 Rajpaul 2016 ruling-out.
 
-The fundamental parameters from Pourbaix & Boffin 2016 and Kervella
-2017 are exceptionally tight: M_B = 0.9373 ± 0.0028 M☉, R_B = 0.8632
+The fundamental parameters from Kervella 2016 and Kervella
+2017 are exceptionally tight: M_B = 0.9373 ± 0.0033 M☉, R_B = 0.8632
 ± 0.0037 R☉, both shared in the same double-lined orbital and
 interferometric solution as the primary. Effective temperature
-5236 ± 51 K from Porto de Mello 2008 places B at the warm end of the
+5316 ± 28 K from Porto de Mello 2008 places B at the warm end of the
 K1V locus; surface metallicity is +0.25 ± 0.04 (essentially identical
 to A, consistent with formation from a common protostellar cloud).
 System age 5.3 ± 0.3 Gyr is set by the joint asteroseismic + classical
@@ -52,10 +52,10 @@ the Open items.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | K1V | high | Porto de Mello 2008; IAU MK |
-| `mass_msun` | 0.9373 ± 0.0028 | high | Pourbaix & Boffin 2016 |
+| `mass_msun` | 0.9373 ± 0.0033 | high | Kervella et al. 2016 |
 | `radius_rsun` | 0.8632 ± 0.0037 | high | Kervella 2017 VLTI/PIONIER |
-| `teff_k` | 5236 ± 51 | high | Porto de Mello 2008 |
-| `luminosity_lsun` | 0.500 | high | derived from R and Teff |
+| `teff_k` | 5316 ± 28 | high | Porto de Mello 2008 |
+| `luminosity_lsun` | 0.503 | high | derived from R and Teff |
 | `metallicity_fe_h_dex` | +0.25 ± 0.04 | high | Porto de Mello 2008 |
 | `age_gyr` | 5.3 ± 0.3 | high | Joyce & Chaboyer 2018 (joint with A) |
 | `rotation_period_days` | 38 ± 2 | high | DeWarf 2010 (range 36–40) |
@@ -65,14 +65,14 @@ the Open items.
 | `x_ray_log_lx_cgs_max` | 27.5 | medium | Robrade 2016 cycle maximum |
 | `has_planet_b` | false | high | Rajpaul 2016 retraction of Dumusque 2012; Plavchan 2015 independent re-analysis; Demory 2015 transit non-detection; Krishnamurthy 2021 ASTERIA non-detection |
 | `limb_darkening_alpha_h` | 0.1545 ± 0.0044 | high | Kervella 2017 — H band power-law fit |
-| `visual_surface_tint_hex_primary` | `#ffcfa0` (warm orange K1V) | high | K1V blackbody at 5236 K |
-| `stellar_color_temp_k` | 5236 | high | derived |
+| `visual_surface_tint_hex_primary` | `#ffcfa0` (warm orange K1V) | high | K1V blackbody at 5316 K |
+| `stellar_color_temp_k` | 5316 | high | derived |
 | `visual_in_planet_sky_apparent_diameter_arcmin` (from a hypothetical HZ planet at 0.7 AU) | 1.1 | high | derived: 2 R★/a |
 
 ## Surface synthesis
 
 The photosphere of α Centauri B is a textbook quiet K1V — moderately
-metal-rich (Δ[Fe/H] = +0.25 vs. solar), 5236 K Teff, with 3D
+metal-rich (Δ[Fe/H] = +0.25 vs. solar), 5316 K Teff, with 3D
 hydrodynamic granulation simulations (Bigot 2006, used by Kervella
 2017) reproducing the VLTI/PIONIER visibility data better than 1D
 atmosphere models. The H-band power-law limb-darkening exponent
@@ -143,7 +143,7 @@ directly resolved.
 In NearStars, α Cen B renders as a warm-orange K1V with the
 `#ffcfa0` photospheric tint — clearly distinct from A's cream and
 visually similar to other K-dwarfs in the catalog (e.g., ε Eri).
-The 5236 K stellar SED feeds the in-game illumination engine for any
+The 5316 K stellar SED feeds the in-game illumination engine for any
 hypothetical planet at B's habitable zone, producing a sunset-orange
 ambient lighting rather than the solar white of A.
 
@@ -168,8 +168,11 @@ items.
 
 - **Kervella P. et al. 2017** — arXiv:1610.06185 (shared with A
   bibliography). R_B = 0.8632 ± 0.0037 R☉; α(B) = 0.1545 ± 0.0044.
+- **Kervella P. et al. 2016** — arXiv:1610.06079. Revised binary
+  orbital fit; M_B = 0.9373 ± 0.0033 M☉ adopted as the recommended
+  dynamical mass.
 - **Pourbaix D. & Boffin H. M. J. 2016** — arXiv:1601.01636. M_B =
-  0.9373 ± 0.0028 M☉ from the binary orbital fit.
+  0.972 ± 0.0045 M☉ from the binary orbital fit.
 - **Joyce M. & Chaboyer B. 2018** — arXiv:1806.07567. System age
   5.3 ± 0.3 Gyr.
 - **DeWarf L. E. et al. 2010** — (`2010ApJ...722..343D`,
@@ -254,6 +257,12 @@ items.
   patterns for B (Bigot 2006) are not in the cfg's scalar
   `limb_darkening_alpha_h`; a cfg variant capturing the 3D
   granulation could support extreme close-up flybys.
+- **Surface tint synthesized at superseded Teff**: the `#ffcfa0`
+  photospheric tint was derived at the old 5236 K Teff before the
+  correction to Porto de Mello 2008's actual 5316 K. The 80 K shift
+  at ~5300 K is below the 8-bit RGB perceptual threshold, so the hex
+  is left unchanged; a re-synthesis is unnecessary but noted for
+  provenance.
 
 ## Related
 

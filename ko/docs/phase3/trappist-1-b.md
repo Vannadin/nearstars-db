@@ -40,7 +40,7 @@ high = 직접 측정되었거나 강하게 제약됨, medium = 강한 근거를 
 | `surface_gravity_g_earth` | 1.103 | high | 유도값 = 1.374 / 1.116² |
 | `density_g_cc` | 5.43 | high | Agol 2021 |
 | `insolation_s_earth` | 4.25 | high | Agol 2021 |
-| `equilibrium_temp_k` (A=0)   | 397 | high | Agol 2021 |
+| `equilibrium_temp_k` (A=0)   | 398 | high | Agol 2021 의 insolation S_b = 4.153 S⊕ 에서 A_B=0 으로 유도 (비교용으로 Gillon 2017 은 400 K 제시) |
 | `dayside_brightness_temp_k_15um` | 503 | high | Greene 2023 F1500W eclipse |
 | `dayside_brightness_temp_k_phase_curve` | 490 | high | Ducrot 2025 MIRI 15 μm phase curve |
 | `bond_albedo` | 0.0 | high | Greene 2023, Ducrot 2025 — dayside-only 재복사 |

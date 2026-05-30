@@ -166,7 +166,7 @@ ghost-cite bib entries + false "papers in host bib" claim; α Cen A/B DB age 4.8
 2019 (1812.08964)" was an arXiv COLLISION (resolves to a controls paper), source removed;
 eps Eri b wrong Llop-Sayson arXiv 2108.05552 removed (COLLISION → ML paper).
 
-## DEFERRED — needs careful dedicated pass (not rushed)
+## DEFERRED — needs careful dedicated pass (not rushed)   [ALL RESOLVED 2026-05-30 — see "RESOLVED" below]
 1. **eps Eri b mass/inclination** — DB 0.66 MJup "true mass" (likely M sin i mislabeled) vs doc
    0.78 (Mawet 2019 joint-fit at i≈89°) vs 1.19 (coplanar i=34°). cfg uses i=34° but mass 0.78
    (the i≈89° value) → internally inconsistent. Needs the CORRECT Llop-Sayson 2021 arXiv id
@@ -183,3 +183,53 @@ eps Eri b wrong Llop-Sayson arXiv 2108.05552 removed (COLLISION → ML paper).
    Gillon 2016/2017 — needs Agol 2021 full text (cache abstract-only) + Gillon fetch.
 5. Systematic: legacy docs have several arXiv-id COLLISIONS (wrong id → unrelated paper) —
    worth a dedicated arXiv-id integrity sweep across all legacy bibs.
+
+## RESOLVED — careful dedicated pass (2026-05-30)
+All five deferred items fixed. DB edits via `schema.write_canonical`; Phase 3 docs (en+ko)
++ HTML rebuilt; `check.sh` green except one unrelated parallel-session file (a missing ko
+mirror for `plans/universe-sandbox-nbody-comparison.md`, not ours). Every value was
+re-verified against the frozen `_papers` cache on the main thread — agent reports were NOT
+trusted blind. Research/fetch + doc-edits were delegated to subagents; value-check stayed on main.
+
+1. **α Cen A/B masses — attributions were SWAPPED.** cache `1610.06079.md:86-87` Table 1: the
+   P16 column (Pourbaix & Boffin 2016) = 1.133 / 0.972; the K16 column (Kervella et al. 2016) =
+   1.1055 ± 0.0039 / 0.9373 ± 0.0033 (the DB-recommended values). Swapped reference/bibcode/doi so
+   1.1055/0.9373 → Kervella 2016 and 1.133/0.972 → Pourbaix & Boffin 2016. Docs reattributed
+   (intro + Decisions + Bibliography), M_B uncert 0.0028→0.0033, A parallax 747.17 reattributed
+   Pourbaix→Kervella, luminosity A 1.519→1.521 / B 0.500→0.503.
+   - α Cen B Teff: DB already correct (5316 ± 28, Porto de Mello 2008). The DOC was wrong
+     (5236 ± 51, an untraceable digit-swap) → corrected to 5316 ± 28 (value + uncertainty);
+     stellar_color_temp_k → 5316; tint hex left unchanged (80 K shift sub-perceptual, noted in
+     Open items).
+2. **TRAPPIST-1** — the wrong densities lived ONLY in the Phase 3 docs (DB c–h density = null).
+   cache `2010.01074.md:25` Agol Table 6: c = 5.447, d = 4.354 (b = 5.425, so DB b 5.43 is correct).
+   Doc c 6.36→5.45 (+ the "Agol reports ~5.7" fabrication → 5.447, open item closed), d 5.43→4.35.
+   b T_eq DB 391→398 (A=0, derived from Agol insolation S_b = 4.153 S⊕; Agol has NO T_eq column —
+   Gillon 2017 gives 400 K). [Fe/H] attribution Gillon 2017 → Gillon 2016 (the originating NIR
+   measurement; value +0.04 ± 0.08 unchanged, per the existing-host metallicity policy).
+3. **Proxima** — radius: Boyajian 2012 EXCLUDES GJ 551 (cache `1208.2431.md:107,117`, no Proxima
+   radius) → removed that mis-cited entry, promoted Demory 2009 (0.141 ± 0.011) to recommended;
+   doc 0.1542→0.141. Teff: DB Passegger 2019 (2904 ± 51) kept (correct); doc 2980/Boyajian →
+   2904/Passegger. Rotation: SM2016 gives 116.6 d / 82.5 ± 8.25 d, not 83.0 ± 0.8 (cache
+   `1506.08039.md:184`) → removed the SM2016 entry, promoted Benedict 1998 (83.5 ± 0.5); doc
+   82.6/SM2020 → 83.5/Benedict (SM2020 adopts 83.2, SM2025 GP 83.2 ± 1.6 corroborate). Activity:
+   SM2016's real value = −5.65 ± 0.17 (cache `1506.08039.md:184`), not −5.55; doc −4.0 was
+   implausible → DB −5.55→−5.65 + uncertainty 0.17; doc −4.0→−5.65 + prose rewrite (old slow
+   rotator, low/moderate quiescent activity, still flares). Stale SM25-bibcode open item removed
+   (DB already stores 2025A&A...700A..11S).
+4. **eps Eri b** — the DB was ALREADY CORRECT (true mass 0.66 M_Jup @ i = 78.81°, Llop-Sayson 2021,
+   2021AJ....162..181L; cache `2108.02305.md:170` — astrometry-deprojected, NOT M sin i). The DOC
+   was the inconsistent artifact: it used Mawet's 0.78 mislabeled "M sin i" and cited the COLLISION
+   arXiv 2108.05552 (an unrelated ML paper) with a wrong title. Fixed doc to 0.66 @ 78.81°,
+   corrected the citation to arXiv 2108.02305, documented the Mawet mass history (M sin i 0.72;
+   0.78 @ i≈89°; 1.19 @ i=34° coplanar), and softened the coplanar claim (Llop-Sayson: planet ~2σ
+   off the 34° ring; Roettenbacher 2022 unverified). Correct pin added to `_bib/eps-eri.yaml`.
+   NO DB change.
+5. **arXiv-id integrity sweep** — read-only sweep of all audited legacy bibs: 0 NEW collisions; the
+   two known historical collisions (2108.05552, 1812.08964) are no longer live anchors; all
+   load-bearing curated citations resolve correctly. (Large auto-harvested bib lists have many
+   uncached entries, not verifiable in a read-only pass.)
+
+Minor follow-ups left (NOT blocking, flagged by agents): α Cen B `limb_darkening_alpha_h` ±0.0044
+vs cache ±0.0055; α Cen Related-line phrasing now imprecise after re-attribution; `binary_orbits.json`
+α Cen mass provenance (`pourbaix_correia_2017`, B = 0.9092) differs from the stellar_props layer.

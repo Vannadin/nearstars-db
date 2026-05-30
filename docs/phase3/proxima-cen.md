@@ -4,9 +4,9 @@ Proxima Centauri (α Cen C, GJ 551) is the closest star to the Sun at
 1.301 ± 0.001 pc — gravitationally bound to the α Cen AB pair at a
 projected separation of ~13 000 AU and an inferred orbital period of
 roughly 547 000 years (Kervella 2017 astrometry). An M5.5Ve flare
-star with a mass of just 0.122 M☉, radius 0.1542 ± 0.0045 R☉
-(Boyajian 2012 interferometry), and an effective temperature of
-2980 ± 80 K, it lies at the deep red end of the main sequence and
+star with a mass of just 0.122 M☉, radius 0.141 ± 0.011 R☉
+(Demory et al. 2009 VLTI/VINCI interferometry), and an effective
+temperature of 2904 ± 51 K, it lies at the deep red end of the main sequence and
 hosts two confirmed planets (Proxima b — Anglada-Escudé 2016; Proxima
 d — Faria 2022, confirmed by Suárez Mascareño et al. 2025) plus a
 candidate Proxima c (sub-Neptune at 5.2 AU; not yet confirmed at the
@@ -14,9 +14,13 @@ candidate Proxima c (sub-Neptune at 5.2 AU; not yet confirmed at the
 
 Compared to the quiet α Cen AB pair only 0.27 pc away, Proxima is a
 dramatically more energetic and variable star. Its rotation period
-of 82.6 ± 0.1 days (Suárez Mascareño 2020) is slow for an M dwarf —
-consistent with old age — but its chromospheric activity is high:
-log R'HK ≈ −4.0, Hα frequently in emission, kG-level surface magnetic
+of 83.5 ± 0.5 days (Benedict et al. 1998 HST photometry; modern
+Suárez Mascareño work corroborates ~83 d — SM2020 adopts 83.2, SM2025
+GP fit gives 83.2 ± 1.6) is slow for an M dwarf, consistent with old
+age. As an old, slow rotator it is only moderately-to-weakly active by
+the quiescent chromospheric measure — log R'HK ≈ −5.65 ± 0.17
+(Suárez Mascareño et al. 2016 Ca II H&K) — yet it still flares
+frequently, with Hα often in emission and kG-level surface magnetic
 fields measured by Reiners et al. 2018 from CARMENES Zeeman analysis.
 The X-ray, FUV, and UV outputs cycle on a ~7-year timescale (Wargelin
 2024) and flare frequently — Vida 2019 TESS observations resolved
@@ -50,13 +54,13 @@ specific flare hex tint).
 |---|---|---|---|
 | `spectral_type` | M5.5Ve | high | Hawley 1996; DB |
 | `mass_msun` | 0.1221 | high | Mann 2015 M–K relation; DB recommended |
-| `radius_rsun` | 0.1542 ± 0.0045 | high | Boyajian 2012 interferometry |
-| `teff_k` | 2980 ± 80 | high | Boyajian 2012; Passegger 2019 |
+| `radius_rsun` | 0.141 ± 0.011 | high | Demory et al. 2009 (VLTI/VINCI interferometry) |
+| `teff_k` | 2904 ± 51 | high | Passegger et al. 2019 high-res spectroscopy (consistent with SM2020/2025 adopted 2900 ± 100) |
 | `luminosity_lsun` | 0.001567 | high | derived from R, Teff |
 | `metallicity_fe_h_dex` | +0.21 | medium | Passegger 2019 H-band |
 | `age_gyr` | 4.85 | medium | dynamics + activity proxy; Feng & Jones 2018 capture vs. coeval ambiguity |
-| `rotation_period_days` | 82.6 ± 0.1 | high | Suárez Mascareño 2020 ESPRESSO |
-| `activity_log_rhk` | −4.0 | high | high; chromospherically active |
+| `rotation_period_days` | 83.5 ± 0.5 | high | Benedict et al. 1998 (HST photometric); modern SM corroborates ~83 d (SM2020 adopts 83.2; SM2025 GP 83.2 ± 1.6) |
+| `activity_log_rhk` | −5.65 ± 0.17 | high | Suárez Mascareño et al. 2016 (Ca II H&K; SM2020 recalibrates to −4.98) — old slow rotator, low/moderate quiescent activity |
 | `activity_cycle_years` | 7 | medium | Wargelin 2024 X-ray + UV + optical cycle |
 | `x_ray_log_lx_cgs_quiescent` | 27.0 | medium | Damonte 2026 XMM time-resolved spectra |
 | `x_ray_log_lx_cgs_flare_peak` | 28.5 | medium | Fuhrmeister 2022 simultaneous X-ray + FUV peak |
@@ -66,20 +70,20 @@ specific flare hex tint).
 | `flare_rate_superflare_per_year` | 3 (≥ 10³³ erg); 0.5 (≥ 10³⁴ erg) | high | Vida 2019 TESS — explicit numbers in §4 from cumulative flare frequency distribution |
 | `orbital_role_around_acen_ab` | bound at ~13 000 AU; P ≈ 547 000 yr | medium | Kervella 2017 astrometric tracking; Feng & Jones 2018 capture analysis |
 | `limb_darkening_alpha_h` | ~0.4 | low | Tie-break: not directly measured for Proxima; interpolated from M-dwarf model grid (Claret 2018); interesting-first per the interesting-first rule for slight visual variation |
-| `visual_surface_tint_hex_primary` | `#c54c2a` (deep red M5.5V) | high | Teff 2980 K blackbody + molecular band suppression below 6500 Å |
+| `visual_surface_tint_hex_primary` | `#c54c2a` (deep red M5.5V) | high | Teff 2904 K blackbody + molecular band suppression below 6500 Å |
 | `visual_flare_color_hex` | `#ff5e2a` (Hα-dominated optical flare with broadband continuum brightening) | medium | Tie-break: Vida 2019 + Anglada-Escudé 2016 supplement flare spectra; specific hex chosen for in-game visibility against the dim red quiescent continuum |
-| `stellar_color_temp_k` | 2980 | high | derived |
+| `stellar_color_temp_k` | 2904 | high | derived |
 
 ## Surface synthesis
 
 Proxima Centauri's photosphere is one of the dimmest and reddest in
-the NearStars catalog. At 2980 K Teff and 0.1542 R☉, its total
+the NearStars catalog. At 2904 K Teff and 0.141 R☉, its total
 luminosity is just 0.00157 L☉ — about 1/640 of the Sun. The visible
 continuum below 6500 Å is heavily depressed by TiO, VO, and water
 bands, with most of the radiated flux emerging in the near- and
 mid-infrared. The H-band photospheric structure is poorly modeled by
-1D atmospheres (Boyajian 2012 §4 warns that GJ 551's red colors
-extrapolate beyond the validated range of the calibrations), so the
+1D atmospheres (M-dwarf model atmospheres extrapolate the deep red
+molecular bands beyond their validated range), so the
 cfg adopts a tentative limb-darkening exponent α ≈ 0.4 interpolated
 from the Claret 2018 M-dwarf grid as a tie-break against a
 phenomenological dim-edge model.
@@ -129,9 +133,10 @@ the Vida 2019 superflare sample.
 
 ## Rotation & spin synthesis
 
-The 82.6-day rotation period (Suárez Mascareño 2020) is well-measured
-from optical photometry and chromospheric activity tracers in
-ESPRESSO. It is long for an M5.5V — implying old age (≥ 4 Gyr based
+The ~83.5-day rotation period (Benedict et al. 1998 HST photometry)
+is corroborated by modern optical photometry and chromospheric activity
+tracers — SM2020 adopts 83.2 d and the SM2025 GP fit gives 83.2 ± 1.6 d.
+It is long for an M5.5V — implying old age (≥ 4 Gyr based
 on the Newton 2018 M-dwarf gyrochronology), consistent with the
 ~4.85 Gyr DB Phase 2 attribution. Differential rotation has not been
 resolved.
@@ -173,17 +178,32 @@ planetary atmosphere.
 
 ### Read (visual-informative, drove decisions above)
 
-- **Boyajian T. S. et al. 2012** — *Stellar Diameters and Temperatures
-  II*, ApJ 757, 112 (`2012ApJ...757..112B`, arXiv:1208.2431). CHARA
-  interferometric R = 0.1542 ± 0.0045 R☉; Teff cross-check.
+- **Demory B.-O. et al. 2009** — *Mass-radius relation of low and very
+  low-mass stars revisited with the VLTI*, A&A 505, 205
+  (`2009A&A...505..205D`, arXiv:0906.0602). VLTI/VINCI interferometric
+  R = 0.141 ± 0.011 R☉ — the recommended Proxima radius.
+- **Passegger V. M. et al. 2019** — *The CARMENES search for exoplanets
+  around M dwarfs. Photospheric parameters of target stars from
+  high-resolution spectroscopy* (`2019A&A...627A.161P`,
+  arXiv:1907.00807). High-res spectroscopic Teff = 2904 ± 51 K and
+  H-band metallicity.
+- **Suárez Mascareño A. et al. 2016** — *Characterization of the radial
+  velocity signal induced by rotation in late-type dwarfs*
+  (`2016A&A...595A..12S`, arXiv:1506.08039). Ca II H&K activity index
+  log R'HK = −5.65 ± 0.17 for GJ 551 (recalibrated to −4.98 in SM2020).
 - **Suárez Mascareño A. et al. 2020** — *Revisiting Proxima with
   ESPRESSO* (`2020A&A...639A..77S`, arXiv:2005.12114). ESPRESSO RV
-  monitoring; rotation period 82.6 ± 0.1 d; activity index timeseries.
+  monitoring; adopts rotation period ~83.2 d (87 ± 12 d measured);
+  recalibrated activity index timeseries.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
   system of Proxima with NIRPS: Breaking the m/s barrier*
   (`2025A&A...700A..11S`, arXiv:2507.21751). The current best orbital
   fit for Proxima b (e ≈ 0, P = 11.18465 d, Msini = 1.055 M⊕) and
-  confirmation of Proxima d.
+  confirmation of Proxima d; GP rotation period 83.2 ± 1.6 d.
+- **Benedict G. F. et al. 1998** — *Photometry of Proxima Centauri and
+  Barnard's Star Using Hubble Space Telescope Fine Guidance Sensor 3*,
+  AJ 116, 429 (`1998AJ....116..429B`). HST/FGS3 photometric rotation
+  period 83.5 ± 0.5 d — the recommended Proxima rotation period.
 - **Anglada-Escudé G. et al. 2016** — *A terrestrial planet candidate
   in a temperate orbit around Proxima Centauri*, Nature 536, 437
   (`2016Natur.536..437A`, arXiv:1609.03449). Original discovery of
@@ -256,10 +276,6 @@ planetary atmosphere.
   potentially much younger if captured from a star-forming region
   encounter) propagates into the cfg `age_gyr` confidence. A future
   Gaia DR4 astrometric solution might tighten the encounter dynamics.
-- **DB JSON SM25 bibcode erratum**: DB stores
-  `bibcode = 2025A&A...700A..11M` but ADS resolves the paper at
-  `2025A&A...700A..11S` (last initial S, not M). The DB attribution
-  for Proxima b/d orbit + mass should be corrected.
 
 ## Related
 

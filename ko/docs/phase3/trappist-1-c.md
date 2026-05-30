@@ -38,7 +38,7 @@ Kopernicus / atmosphere cfg-ready 값. `Confidence`. high = 직접 측정
 | `mass_mearth` | 1.308 | high | Agol 2021 TTV |
 | `radius_rearth` | 1.097 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 1.087 | high | derived = 1.308 / 1.097² |
-| `density_g_cc` | 6.36 | high | derived; Agol 2021 은 ~5.7 보고 (불확실성 bar 가 겹침) |
+| `density_g_cc` | 5.45 | high | Agol 2021 이 5.447 g/cc (≈ 0.991 ρ⊕) 보고 |
 | `insolation_s_earth` | 2.27 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 339 | high | Agol 2021 |
 | `dayside_brightness_temp_k_15um` | 380 | high | Zieba 2023 MIRI F1500W eclipse |
@@ -380,9 +380,9 @@ c 의 참고문헌은 b 의 것보다 작음 (32 vs 66). arXiv 가 없는 논문
   진행.
 - "대기 없는 맨 암석" 해석에 대응하는 cfg 변형도 준비. b 의 대기
   없는 cfg 와 팔레트를 맞춰 페어링하는 방식.
-- `density_g_cc` 항목 보정. derived 값 (6.36) 이 Agol 2021 의
-  5.7 보다 약간 높은데, 이는 불확실성 전파 방식의 차이를 반영.
-  Phase 2 에서 조정 필요.
+- `density_g_cc` 항목 (5.45) 이 이제 Agol 2021 이 보고한 5.447 g/cc
+  (≈ 0.991 ρ⊕) 와 정확히 일치하므로, 이전의 derived 값과 보고값
+  사이의 불일치는 해소됨.
 - 자기장 강도는 스케일링 기반의 low-confidence 값. Vedantham 2020
   같은 직접적인 radio emission 상한을 사용하면 dipole moment 범위를
   더 좁힐 수 있음.

@@ -1808,7 +1808,7 @@
       ],
       "environment": [
         {
-          "equilibrium_temperature_k": 391,
+          "equilibrium_temperature_k": 398,
           "uncertainty_equilibrium_temperature_k": 8,
           "bond_albedo": 0.0,
           "density_g_cc": 5.43,

@@ -747,18 +747,18 @@
         "value_msun": 1.1055,
         "uncertainty_msun": 0.0039,
         "method": "binary_orbit",
-        "reference": "Pourbaix & Boffin 2016",
-        "bibcode": "2016A&A...586A..90P",
-        "doi": "10.1051/0004-6361/201527859",
+        "reference": "Kervella et al. 2016",
+        "bibcode": "2016A&A...594A.107K",
+        "doi": "10.1051/0004-6361/201629201",
         "recommended": true
       },
       {
         "value_msun": 1.133,
         "uncertainty_msun": 0.005,
         "method": "binary_orbit",
-        "reference": "Kervella et al. 2016",
-        "bibcode": "2016A&A...594A.107K",
-        "doi": "10.1051/0004-6361/201629201",
+        "reference": "Pourbaix & Boffin 2016",
+        "bibcode": "2016A&A...586A..90P",
+        "doi": "10.1051/0004-6361/201527859",
         "recommended": false
       },
       {
@@ -945,18 +945,18 @@
         "value_msun": 0.9373,
         "uncertainty_msun": 0.0033,
         "method": "binary_orbit",
-        "reference": "Pourbaix & Boffin 2016",
-        "bibcode": "2016A&A...586A..90P",
-        "doi": "10.1051/0004-6361/201527859",
+        "reference": "Kervella et al. 2016",
+        "bibcode": "2016A&A...594A.107K",
+        "doi": "10.1051/0004-6361/201629201",
         "recommended": true
       },
       {
         "value_msun": 0.972,
         "uncertainty_msun": 0.0045,
         "method": "binary_orbit",
-        "reference": "Kervella et al. 2016",
-        "bibcode": "2016A&A...594A.107K",
-        "doi": "10.1051/0004-6361/201629201",
+        "reference": "Pourbaix & Boffin 2016",
+        "bibcode": "2016A&A...586A..90P",
+        "doi": "10.1051/0004-6361/201527859",
         "recommended": false
       },
       {
@@ -2039,21 +2039,12 @@
     "radius_measurements": [
       {
         "value_rsun": 0.141,
-        "uncertainty_rsun": 0.007,
-        "method": "interferometry",
-        "reference": "Boyajian et al. 2012",
-        "bibcode": "2012ApJ...757..112B",
-        "doi": "10.1088/0004-637X/757/2/112",
-        "recommended": true
-      },
-      {
-        "value_rsun": 0.141,
         "uncertainty_rsun": 0.011,
         "method": "interferometry",
         "reference": "Demory et al. 2009",
         "bibcode": "2009A&A...505..205D",
         "doi": "10.1051/0004-6361/200911976",
-        "recommended": false
+        "recommended": true
       },
       {
         "value_rsun": 0.141,
@@ -2156,15 +2147,6 @@
     ],
     "rotation_measurements": [
       {
-        "value_days": 83.0,
-        "uncertainty_days": 0.8,
-        "method": "photometric_variability",
-        "reference": "Suárez Mascareño et al. 2016",
-        "bibcode": "2016MNRAS.459.3565S",
-        "doi": "10.1093/mnras/stw1059",
-        "recommended": true
-      },
-      {
         "value_days": 89.8,
         "uncertainty_days": 4.0,
         "method": "zeeman_doppler",
@@ -2180,12 +2162,13 @@
         "reference": "Benedict et al. 1998",
         "bibcode": "1998AJ....116..429B",
         "doi": "10.1086/300420",
-        "recommended": false
+        "recommended": true
       }
     ],
     "activity_measurements": [
       {
-        "value_log_rhk": -5.55,
+        "value_log_rhk": -5.65,
+        "uncertainty_log_rhk": 0.17,
         "method": "log_rhk",
         "reference": "Suárez Mascareño et al. 2016",
         "bibcode": "2016MNRAS.459.3565S",
@@ -2393,9 +2376,9 @@
         "value_dex": 0.04,
         "uncertainty_dex": 0.08,
         "method": "low_res_spectroscopy",
-        "reference": "Gillon et al. 2017",
-        "bibcode": "2017Natur.542..456G",
-        "doi": "10.1038/nature21360",
+        "reference": "Gillon et al. 2016",
+        "bibcode": "2016Natur.533..221G",
+        "doi": "10.1038/nature17448",
         "recommended": true
       }
     ],

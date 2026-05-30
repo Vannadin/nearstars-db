@@ -34,7 +34,7 @@ support, low = aesthetic choice within the allowed window.
 | `mass_mearth` | 0.388 | high | Agol 2021 TTV; Piaulet 2025 reconfirms |
 | `radius_rearth` | 0.788 | high | Agol 2021; Piaulet 2025 transit fit |
 | `surface_gravity_g_earth` | 0.624 | high | derived = 0.388 / 0.788² |
-| `density_g_cc` | 5.43 | high | Agol 2021 |
+| `density_g_cc` | 4.35 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.3) | 262 | high | Piaulet 2025 |
 | `equilibrium_temp_k` (A=0)   | 287 | high | derived from a/R★, T★ = 2566 K |
 | `bond_albedo` | 0.10 | medium | bare-rock analog from T-1 b/c JWST emission; uncertainty 0.05–0.20 |

@@ -4,7 +4,7 @@
 nearest stellar pair and the closest G-type star to the Sun. Spectral
 type G2V (Porto de Mello 2008) — essentially a solar twin at a
 distance of 1.3384 ± 0.0011 pc (Kervella 2017, derived from the
-Pourbaix & Boffin 2016 parallax of 747.17 ± 0.61 mas). With α Centauri
+Kervella et al. 2016 parallax of 747.17 ± 0.61 mas). With α Centauri
 B it forms a visual binary of 79.91-year period in a moderately
 eccentric (e ≈ 0.52) orbit ranging from 11.2 AU at periastron to 35.6
 AU at apastron. Proxima Centauri, gravitationally bound at roughly
@@ -13,7 +13,7 @@ AU at apastron. Proxima Centauri, gravitationally bound at roughly
 The fundamental parameters are exceptionally well-constrained.
 Interferometric angular diameters from VLTI/PIONIER (Kervella 2017)
 give R = 1.2234 ± 0.0053 R☉ (0.43% precision), while the
-double-lined spectroscopic binary solution of Pourbaix & Boffin 2016
+revised binary orbital fit of Kervella et al. 2016
 fixes the dynamical mass at 1.1055 ± 0.0039 M☉. Asteroseismic
 oscillations detected by Bouchy & Carrier (2001) and de Meulenaer
 2010 — combined with the classical observables — yield an age of
@@ -45,10 +45,10 @@ literature is silent.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | G2V | high | Porto de Mello 2008; IAU MK system |
-| `mass_msun` | 1.1055 ± 0.0039 | high | Pourbaix & Boffin 2016 — double-lined visual+spectroscopic binary fit |
+| `mass_msun` | 1.1055 ± 0.0039 | high | Kervella et al. 2016 — revised binary orbital fit |
 | `radius_rsun` | 1.2234 ± 0.0053 | high | Kervella 2017 — VLTI/PIONIER limb-darkened interferometry |
 | `teff_k` | 5847 ± 27 | high | Porto de Mello 2008 — high-resolution spectroscopy, differential to Sun |
-| `luminosity_lsun` | 1.519 | high | derived from R and Teff via Stefan–Boltzmann; Bigot 2008 agrees |
+| `luminosity_lsun` | 1.521 | high | derived from R and Teff via Stefan–Boltzmann; Bigot 2008 agrees |
 | `metallicity_fe_h_dex` | +0.24 ± 0.03 | high | Porto de Mello 2008 — adopted in Joyce 2018 |
 | `age_gyr` | 5.3 ± 0.3 | high | Joyce & Chaboyer 2018 — joint asteroseismic + classical, DSEP code, 31 viable model pairs |
 | `rotation_period_days` | 22 ± 3 | high | DeWarf 2010 — photometric variability |
@@ -175,9 +175,15 @@ amplitude modulation).
 - **Pourbaix D. & Boffin H. M. J. 2016** — *Parallax and masses of α
   Centauri revisited*, A&A 586, A90 (`2016A&A...586A..90P`,
   arXiv:1601.01636). Double-lined visual-spectroscopic binary fit
-  using ESO/HARPS archive; revised orbital parallax 743 mas, M_A =
-  1.1055 ± 0.0039 M☉ and M_B = 0.9373 ± 0.0028 M☉; sets the
-  dynamical mass anchor for the system.
+  using ESO/HARPS archive; orbital parallax 743 ± 1.3 mas, M_A =
+  1.133 ± 0.0050 M☉ and M_B = 0.972 ± 0.0045 M☉.
+- **Kervella P. et al. 2016** — *Close stellar conjunctions of α
+  Centauri A and B until 2050*, A&A 594, A107 (`2016A&A...594A.107K`,
+  arXiv:1610.06079). Revised binary orbital fit recomputed on the
+  Pourbaix & Boffin radial-velocity set with new VLT/NACO + ALMA
+  astrometry; orbital parallax 747.17 ± 0.61 mas and the lower
+  dynamical masses M_A = 1.1055 ± 0.0039 M☉ and M_B = 0.9373 ±
+  0.0033 M☉ adopted as the system mass anchor.
 - **Kervella P. et al. 2017** — *The radii and limb darkenings of α
   Centauri A and B*, A&A 597, A137 (`2017A&A...597A.137K`,
   arXiv:1610.06185). VLTI/PIONIER interferometry in H band; angular

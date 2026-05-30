@@ -24,9 +24,10 @@ The cold ring is narrow, eccentric (e ≈ 0.07), and bracketed by a
 total dust mass of ≈ 0.04 M⊕ — the canonical reading (Su 2017
 "Genie" model) is that gap-clearing planets sculpt the multi-belt
 structure. The system also hosts the long-debated jovian ε Eri b,
-finally confirmed by direct imaging (Mawet 2019) and refined by
-astrometric + RV combinations (Llop-Sayson 2021; Roettenbacher 2022):
-M sin i ≈ 0.78 M_Jup at a ≈ 3.5 AU, P ≈ 7.4 yr, e ≈ 0.07. A claimed
+finally confirmed by direct imaging (Mawet 2019) and refined by an
+astrometric + RV combination (Llop-Sayson 2021): a true (astrometry-
+deprojected) mass M_b ≈ 0.66 M_Jup at i = 78.81°, a ≈ 3.5 AU,
+P ≈ 7.4 yr, e ≈ 0.07. A claimed
 outer "ε Eri c" (Quillen 2002; Benedict 2006) was ruled out by Mawet
 2019 imaging non-detection.
 
@@ -43,7 +44,7 @@ parallel X-ray cycle is detected in XMM monitoring (Coffaro 2020).
 
 **Scenario choice for NearStars: a young, fast-rotating, very
 magnetically active K2V dwarf with a structurally rare triple-ring
-debris disk and a confirmed ~0.78 M_Jup jovian companion at 3.5 AU.
+debris disk and a confirmed ~0.66 M_Jup jovian companion at 3.5 AU.
 Visual styling emphasizes the orange K2V continuum, the warm tint
 of the cycle-active corona, and the three concentric disk rings as
 the system's signature feature seen in any wide-orbit fly-by.** 18
@@ -86,10 +87,10 @@ star + disk + jovian point of light).
 | `disk_morphology` | three-belt: inner asteroid analog at ~3 AU + intermediate population at ~20 AU + cold Kuiper-analog ring at ~64 AU (narrow, eccentric e ≈ 0.07) | medium | Su 2017 Genie model + Booth 2017 / Greaves 2014 multi-belt decomposition; intermediate is the least-resolved layer |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA; Booth 2017 Herschel/SPIRE; Su 2017 Spitzer/MIPS — cold ring resolved at multiple wavelengths |
 | `disk_imaging_observatory` | ALMA (cold ring geometry), Herschel-SPIRE (mass), Spitzer-IRS/MIPS (warm components) | high | MacGregor 2015; Booth 2017; Su 2017; Backman 2009 |
-| `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 Herschel-resolved inclination; consistent with ε Eri b orbital plane (Roettenbacher 2022) |
+| `disk_imaging_inclination_deg` | 34 ± 2 | high | Booth 2017 ALMA/Herschel-resolved inclination of the cold main ring. NOT coplanar with ε Eri b: Llop-Sayson 2021 finds the planet's orbit (i = 78.81°) ~2σ off the ring's 34° (a coplanar solution is only ~1σ allowed) |
 | `disk_mass_mearth` | 0.04 | medium | Greaves 2014 + Booth 2017 — integrated dust mass across all three belts |
 | `disk_planetesimal_belt_inferred` | true | high | Dust replenishment timescale (~Myr) requires a parent planetesimal population at each ring; Su 2017 |
-| `companion_jovian_present` | true (ε Eri b at a = 3.5 AU, M = 0.78 M_Jup) | high | Mawet 2019 direct imaging; Llop-Sayson 2021; Roettenbacher 2022 astrometric confirmation. Planet Phase 3 deferred to separate workspace |
+| `companion_jovian_present` | true (ε Eri b at a = 3.5 AU, true mass M_b = 0.66 M_Jup at i = 78.81°) | high | Mawet 2019 direct imaging; Llop-Sayson 2021 RV + Hipparcos–Gaia astrometry (adopted true mass, supersedes Mawet's edge-on M sin i). Planet Phase 3 deferred to separate workspace |
 
 ## Surface synthesis
 
@@ -199,10 +200,12 @@ than its high latitudes (i.e. equator–pole shear ≈ 0.4 d), a
 similar fractional shear to the Sun but operating on a shorter mean
 period. The rotation axis inclination is well-constrained at
 i ≈ 30° from a joint fit to the spot pattern and the v sin i
-spectroscopic broadening (Roettenbacher 2016 §4) — coincidentally
-similar to the disk inclination (34°) and the inferred ε Eri b
-orbital inclination from astrometry (Roettenbacher 2022), suggesting
-a coplanar system.
+spectroscopic broadening (Roettenbacher 2016 §4) — close to the cold
+debris ring's 34° inclination (Booth 2017), but NOT to the planet:
+Llop-Sayson 2021's astrometric fit places ε Eri b at i = 78.81°,
+~2σ away from the 34° ring plane (a coplanar 32° solution is only
+~1σ allowed). So the planet is most probably misaligned with both
+the ring and the stellar spin axis, not coplanar with them.
 
 Asteroseismic detection has been attempted but is marginal: Bonanno
 et al. 2008 reported a tentative ν_max ≈ 1700 μHz from radial-
@@ -370,16 +373,26 @@ visual with real-time progression.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157,
   33 (`2019AJ....157...33M`, arXiv:1810.03794). Direct imaging
-  confirmation of ε Eri b; rules out outer "ε Eri c".
-- **Llop-Sayson J. et al. 2021** — *Constraints on the Nature of ε
-  Eri b from a Combined Analysis of Radial Velocities and
-  Astrometry*, AJ 162, 181 (`2021AJ....162..181L`,
-  arXiv:2108.05552). Joint RV + Hipparcos/Gaia astrometric fit;
-  M_b = 0.78 M_Jup at i = 78.8°; a = 3.5 AU.
+  confirmation of ε Eri b; rules out outer "ε Eri c". RV lower limit
+  M sin i = 0.72 M_Jup; with the uninformative edge-on prior
+  M_b = 0.78 (−0.12/+0.38) M_Jup at i = 89° ± 42°; imposing a
+  disk-coplanar Gaussian prior (i = 34° ± 2°) instead gives
+  M_b ≈ 1.19 M_Jup. Superseded by Llop-Sayson 2021's astrometry-
+  tightened true mass.
+- **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
+  of ε Eridani b with Radial Velocities, Hipparcos IAD–Gaia DR2
+  Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
+  AJ 162, 181 (`2021AJ....162..181L`, arXiv:2108.02305). Joint RV +
+  Hipparcos IAD–Gaia DR2 astrometric + direct-imaging upper-limit
+  fit. Adopted true mass M_b = 0.66 (−0.09/+0.12) M_Jup at
+  i = 78.81° (−22.41/+29.34); a = 3.5 AU. The astrometry favors a
+  lower-mass, more edge-on planet, and places the orbit ~2σ off the
+  cold ring's 34° plane (a coplanar solution is only ~1σ allowed).
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
   Detection of ε Eri b* (`2022AJ....163...19R`, arXiv:2110.10643).
-  Astrometric cross-check; provides ε Eri b inclination consistent
-  with the disk plane.
+  Astrometric cross-check (NOT in the Phase 3 cache — unverified
+  here; its coplanar-with-disk conclusion is not asserted as fact in
+  this synthesis).
 - **Roettenbacher R. M. et al. 2016** — *No Sun-like Dynamo on the
   Active Star ζ Andromedae… and ε Eri Doppler Image*
   (`2016Natur.533..217R`). Includes ε Eri Doppler imaging with
