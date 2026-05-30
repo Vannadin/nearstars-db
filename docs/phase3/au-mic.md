@@ -6,13 +6,15 @@ pre-main-sequence dwarf at 9.714 pc (Gaia DR3 parallax 102.94 ± 0.02
 mas, this DB) — one of the youngest stars in the entire NearStars
 catalog at ~22 Myr (Mamajek & Bell 2014 isochronal age of the β
 Pictoris Moving Group, of which AU Mic is a canonical member).
-The fundamental parameters come from Donati 2023 spectropolarimetric
-modeling (R = 0.82 ± 0.02 R☉) and Wittrock 2023 N-body + TTV-anchored
-dynamics (M = 0.51 ± 0.028 M☉); Gaia gives Teff = 3518 K. Derived
-luminosity from R and Teff via Stefan–Boltzmann is L ≈ 0.092 L☉ —
-about 1.5× the value an old M1V would have at the same Teff, because
-AU Mic is still contracting onto the main sequence and remains
-slightly inflated.
+The fundamental parameters come from the frozen Phase 2 layer:
+R = 0.862 ± 0.052 R☉ (Gallenne 2022 VLTI/PIONIER, the only refereed
+interferometric radius — the widely-cited 0.75 R☉ traces to an
+unrefereed White 2019 AAS abstract; see Canonical alternatives),
+M = 0.50 ± 0.03 M☉ (Plavchan 2020 PMS isochrone), and Teff = 3665 ± 31 K
+(Cristofari 2023 SPIRou atmospheric fit). The luminosity is
+L = 0.102 L☉ (Donati 2023, log L/L☉ = −0.99 ± 0.01) — elevated for an
+M1V because AU Mic is still contracting onto the main sequence and
+remains slightly inflated.
 
 What sets AU Mic apart from every other M dwarf in the catalog is
 **the resolved edge-on debris disk** (HST/STIS — Krist 2005; deeper
@@ -47,36 +49,37 @@ on sky); AT Mic is also a β Pic MG member and shares AU Mic's
 flare star, slightly inflated and pre-main-sequence, with kG-class
 magnetic fields, frequent super-flares, > 10% spot coverage, and a
 spectacular edge-on resolved debris disk extending 35–210 AU with
-animated radial moving substructures.** All 21 cfg picks track the
-canonical parameter set; the four tie-break picks involve the visual
-hex tint, the disk-substructure animation choice (animated vs.
-static), the flare color, and the spot-coverage cycle phase.
+animated radial moving substructures.** The stellar layer is
+re-anchored on the frozen Phase 2 sources (Gallenne 2022 interferometry,
+Plavchan 2020, Cristofari 2023, Donati 2023, Mamajek & Bell 2014) with
+documented radius / mass / luminosity divergences; tie-break picks
+involve the visual hex tint, the disk-substructure animation choice,
+the flare color, and the spot-coverage cycle phase.
 
 ## Decisions
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | M1Ve | high | Hawley 1996; Gaia DR3 spectype = M1VeBa1 |
-| `mass_msun` | 0.51 ± 0.028 | high | Wittrock 2023 — TTV + N-body dynamical fit; DB recommended |
-| `radius_rsun` | 0.82 ± 0.02 | high | Donati 2023 spectropolarimetric ZDI consistent with interferometric upper limits |
-| `teff_k` | 3518 | high | Gaia DR3 BP/RP-derived Teff; consistent with Plavchan 2020 (3700 ± 100) within combined error |
-| `luminosity_lsun` | 0.092 | high | derived from R, Teff via Stefan–Boltzmann (4π·(0.82 R☉)²·σ·(3518)⁴ = 0.092 L☉) |
-| `metallicity_fe_h_dex` | +0.12 | medium | β Pic MG mean metallicity (Shkolnik 2017); no direct AU Mic measurement in DB |
-| `age_gyr` | 0.022 ± 0.003 | high | Mamajek & Bell 2014 — β Pic MG isochronal age 22 ± 3 Myr; corroborated by Lithium depletion boundary |
+| `mass_msun` | 0.50 ± 0.03 | high | Plavchan 2020 — PMS isochrone (Phase 2 recommended, community standard). DOCUMENTED DIVERGENCE vs Donati 2023 Dartmouth 0.60 (see Canonical alternatives) |
+| `radius_rsun` | 0.862 ± 0.052 | high | Gallenne 2022 — VLTI/PIONIER interferometry, θ_LD 0.825 mas (Phase 2 recommended; only refereed interferometric radius). DOCUMENTED DIVERGENCE vs the unrefereed White 2019 AAS-abstract 0.75 (see Canonical alternatives) |
+| `teff_k` | 3665 ± 31 | high | Cristofari 2023 — SPIRou atmospheric fit with magnetic fields (Phase 2 recommended; supersedes the Gaia 3518); Donati 2023 V−I color gives 3700 ± 70 |
+| `luminosity_lsun` | 0.102 ± 0.002 | high | Donati 2023 — log(L/L☉) = −0.99 ± 0.01 (M_bol + BC + distance; Phase 2 recommended). Plavchan 2009 SED gives 0.09 (see Canonical alternatives) |
+| `metallicity_fe_h_dex` | +0.12 ± 0.10 | medium | Cristofari 2023 — direct SPIRou spectroscopy [M/H] (Phase 2 recommended; [α/Fe] = 0 so [M/H] ≈ [Fe/H]; supersedes the β Pic MG mean) |
+| `age_gyr` | 0.023 ± 0.003 | high | Mamajek & Bell 2014 — β Pic MG isochronal 22 ± 3 Myr reconciled with the Li-depletion-boundary age; the ~12 Myr kinematic age is explicitly rejected |
 | `rotation_period_days` | 4.86 | high | Plavchan 2020 — TESS photometric rotational modulation (multi-spot, 4.863 d primary) |
-| `activity_log_rhk` | −3.9 | high | Saturated M-dwarf activity regime; Stelzer 2013 X-ray + Hα index; consistent with super-saturated locus |
 | `activity_cycle_years` | null | low | No cycle resolved at AU Mic's age — pre-main-sequence saturated dynamo, no observed long-term modulation. Set null; do not invent |
-| `x_ray_log_lx_cgs_min` | 29.7 | high | Stelzer 2013 ROSAT + XMM quiescent value; saturated regime log(L_X/L_bol) ≈ −3 |
-| `x_ray_log_lx_cgs_max` | 30.7 | medium | eRosita-class flare peak (~10× quiescent); consistent with Cully 1993 EUVE event and Tristan 2023 TESS-derived flare X-ray equivalent |
+| `x_ray_log_lx_cgs` | 29.35 | high | Tsikoudi & Kellett 2000 — ROSAT quiescent Lx = 2.24e29 erg/s, log(Lx/Lbol) ≈ −3.24, saturated regime (Phase 2 recommended activity proxy). NOTE: there is NO chromospheric log R'HK in the frozen Phase 2 layer for AU Mic — the X-ray index is the activity proxy (the earlier −3.9 log R'HK row was an unsourced placeholder, removed) |
 | `flare_rate_per_day` | 5.6 | high | Tristan 2023 — TESS Sectors 1+27 flare census; 26.3 flares per TESS sector (~27.4 d) integrated above ~10³¹ erg |
 | `flare_energy_log_erg_max` | 34.5 | medium | Cully 1993 EUVE 1992 mega-flare; consistent with Tristan 2023 upper-end TESS optical events ≥ 10³⁴ erg in white-light band |
-| `magnetic_dipole_strength_kG` | 2.0 | high | Donati 2023 ZDI dipole component (Stokes V inversion) |
-| `magnetic_total_field_kG_rms` | 4.6 | high | Donati 2023 — Stokes V total field RMS (large-scale) |
+| `magnetic_dipole_strength_kG` | 0.55 | high | Donati 2023 — large-scale field 550 ± 30 G (ZDI, mostly poloidal/axisymmetric) |
+| `magnetic_total_field_kG_rms` | 2.61 ± 0.05 | high | Donati 2023 — small-scale mean field ⟨B⟩ from Zeeman broadening (Phase 2 DB meta_notes) |
 | `spot_coverage_max_fraction` | 0.12 | high | Plavchan 2020 + Donati 2023 — multi-spot models require ≥ 10% disk coverage; visible asymmetry of TESS lightcurve |
 | `limb_darkening_alpha_h` | ~0.45 | low | Tie-break: not directly measured for AU Mic; interpolated from Claret 2018 M-dwarf grid at Teff = 3500 K; interesting-first preserves slight visual edge dimming |
-| `visual_surface_tint_hex_primary` | `#e0743a` (deep orange-red, M1V) | medium | Teff 3518 K blackbody + molecular-band suppression; slightly less red than M5.5 Proxima (`#c54c2a`), warmer because Teff ~540 K higher |
+| `visual_surface_tint_hex_primary` | `#e0743a` (deep orange-red, M1V) | medium | Teff 3665 K blackbody + molecular-band suppression (hex retained; the 3518→3665 K shift is within rendering tolerance, slightly warmer/less red than M5.5 Proxima `#c54c2a` since Teff ~620 K higher) |
 | `visual_flare_color_hex` | `#ff9050` (white-light flare continuum, slightly bluer than quiescent due to T_bb ~9000 K flare ribbon) | medium | Kowalski 2013 dM-flare continuum decomposition; tie-break against pure Hα reddening — chosen so flares brighten visibly against the dim red quiescent disk |
-| `stellar_color_temp_k` | 3518 | high | derived from Teff |
+| `v_sin_i_km_s` | ~9.0 | medium | Derived from R = 0.862 R☉ and P_rot = 4.86 d (edge-on, sin i ≈ 1); consistent with Kochukhov & Reiners; supersedes the ~8.5 keyed to the old 0.82 R☉ |
+| `stellar_color_temp_k` | 3665 | high | derived from Teff (Cristofari 2023) |
 | `visual_spot_coverage_max` | 0.12 | high | same as `spot_coverage_max_fraction`; for animated activity layer |
 | `disk_present` | true | high | Krist 2005 HST/STIS first resolved edge-on imaging |
 | `disk_inner_radius_au` | 35 | high | Schneider 2014 HST/STIS deep imaging — surface-brightness break at ~35 AU; Strubbe & Chiang 2006 SED-fit consistent |
@@ -95,14 +98,14 @@ static), the flare color, and the spot-coverage cycle phase.
 
 AU Mic's photosphere is one of the deepest red continua in the
 catalog — but warmer than Proxima or the TRAPPIST-1 host. At
-Teff = 3518 K and R = 0.82 R☉, the integrated luminosity is
-0.092 L☉ (about 1/11 of the Sun), with most flux emerging between
-0.7 and 2.0 μm. TiO bands suppress the visible continuum below
-6500 Å sharply; VO and water bands shape the near-infrared. Because
-AU Mic is pre-main-sequence (~22 Myr), the radius is ~10% larger
-than a settled M1V of the same Teff would show — the Donati 2023 ZDI
-radius of 0.82 R☉ is consistent with PARSEC and Baraffe pre-MS
-evolutionary tracks at 22 Myr / 0.51 M☉.
+Teff = 3665 K (Cristofari 2023) and R = 0.862 R☉ (Gallenne 2022),
+the luminosity is 0.102 L☉ (Donati 2023; about 1/10 of the Sun),
+with most flux emerging between 0.7 and 2.0 μm. TiO bands suppress
+the visible continuum below 6500 Å sharply; VO and water bands shape
+the near-infrared. Because AU Mic is pre-main-sequence (~22 Myr), the
+radius is inflated relative to a settled M1V — the Gallenne 2022
+interferometric radius 0.862 R☉ is consistent with PARSEC and Baraffe
+pre-MS evolutionary tracks at 22 Myr / 0.50 M☉.
 
 The defining surface feature is the **spot complex**. Plavchan 2020
 TESS photometry shows multi-modal rotational modulation that
@@ -129,16 +132,17 @@ MG mean — Shkolnik 2017; no direct AU Mic measurement is on file
 in the DB), slightly reddening the SED toward the long-wavelength
 end relative to a solar-metallicity M1V. This is invisible at the
 spectral resolution of the in-game illumination color but justifies
-the deeper-red `#e0743a` over a pure 3518 K Planckian.
+the deeper-red `#e0743a` over a pure 3665 K Planckian.
 
 ## Atmosphere synthesis
 
 AU Mic is one of the most chromospherically and coronally active
 stars in the solar neighborhood — its outer atmosphere drives most
 of the spaceweather-relevant physics for planet b/c/d/e and for the
-debris disk. The quiescent X-ray luminosity is log L_X ≈ 29.7 cgs
-(Stelzer 2013 ROSAT + XMM), placing AU Mic in the **saturated
-regime**: log(L_X/L_bol) ≈ −3.0, the empirical upper limit for rapid
+debris disk. The quiescent X-ray luminosity is log L_X ≈ 29.35 cgs
+(Tsikoudi & Kellett 2000 ROSAT, Lx = 2.24e29 erg/s), placing AU Mic in
+the **saturated regime**: log(L_X/L_bol) ≈ −3.24, near the empirical
+upper limit for rapid
 M-dwarf rotators. The corona reaches temperatures up to ~10⁷ K
 during flares.
 
@@ -191,8 +195,8 @@ modulation) is fast by main-sequence M-dwarf standards but
 characteristic of a pre-MS M1V. Skumanich-like braking has barely
 begun to act on AU Mic at 22 Myr; the rotation is rapid because it
 has not had time to spin down via magnetic braking. The spin axis
-is consistent with edge-on (v sin i ≈ 8 km/s — Donati 2023 — implies
-sin i ≈ 1 given R = 0.82 R☉ and P = 4.86 d), aligning the rotation
+is consistent with edge-on (v sin i ≈ 9 km/s implies sin i ≈ 1 given
+R = 0.862 R☉ and P = 4.86 d), aligning the rotation
 axis with the disk's edge-on inclination of ~89°. This is the
 expected outcome for a star born from a coherent angular-momentum
 field.
@@ -219,6 +223,34 @@ also nearly in the plane of the sky. This means rotational
 shortening of spot features (foreshortening at high latitudes) is
 substantial and must be rendered.
 
+## Canonical alternatives
+
+**Radius — refereed interferometry vs the community-standard value.**
+The cfg adopts R = 0.862 ± 0.052 R☉ from Gallenne 2022 (VLTI/PIONIER,
+θ_LD 0.825 mas), the only *refereed* interferometric radius. The
+widely-quoted 0.75 R☉ traces to White et al. 2019, which exists only
+as an unrefereed AAS conference abstract (no journal paper, no arXiv);
+Donati 2023 infers 0.78–0.82 R☉ from L + Teff, sitting between the two
+and supporting the larger value. A future cfg could expose the 0.75
+community value as an alternate scenario, but the refereed
+interferometric radius is the principled default.
+
+**Mass — Plavchan vs Donati.** The cfg uses M = 0.50 ± 0.03 M☉
+(Plavchan 2020 PMS isochrone, the community standard propagated to all
+the planet papers); Donati 2023 derives a higher 0.60 ± 0.04 M☉ from
+Dartmouth tracks.
+
+**Luminosity — Donati vs Plavchan.** The cfg uses L = 0.102 L☉
+(Donati 2023, log L = −0.99); Plavchan 2009's SED gives 0.09 L☉. The
+two agree to ~10%.
+
+**Activity index.** AU Mic is an M dwarf with a convective dynamo, so
+log R'HK is physically definable in principle, but there is NO
+chromospheric log R'HK in the frozen Phase 2 layer — the cfg activity
+proxy is the X-ray log(Lx/Lbol) ≈ −3.24 (Tsikoudi & Kellett 2000),
+near the saturation ceiling. (The earlier −3.9 log R'HK figure was an
+unsourced placeholder.)
+
 ## Visual styling
 
 The visual presentation of AU Mic is the most distinctive in the
@@ -228,7 +260,7 @@ NearStars catalog and combines four elements:
   angular diameter as seen from AU Mic b (0.07 AU), 0.8° from c
   (0.119 AU). The color is similar to a sunset Sun on Earth, but
   the spectrum is much redder; rendering uses both the photometric
-  hex tint and the SED-illumination color temperature (3518 K) to
+  hex tint and the SED-illumination color temperature (3665 K) to
   drive scene lighting for any nearby body.
 - **Spots and faculae** — multi-spot complex covering > 10% of the
   visible disk during peak activity; rendered as dark patches with
@@ -292,11 +324,27 @@ the NS DB as a separate entry; see Open items.
 
 ### Read (visual-informative, drove decisions above)
 
+- **Gallenne A. et al. 2022** — *The radius and effective temperature
+  of the pre-main-sequence M dwarf AU Mic via VLTI/PIONIER*, A&A 665,
+  A41 (`2022A&A...665A..41G`, arXiv:2207.04116). The only *refereed*
+  interferometric radius: θ_LD = 0.825 ± 0.033 ± 0.038 mas →
+  R = 0.862 ± 0.052 R☉. Phase 2 recommended radius.
+- **Cristofari P. I. et al. 2023** — *Atmospheric parameters and
+  magnetic fields of M dwarfs from SPIRou*, MNRAS 522, 1342
+  (`2023MNRAS.522.1342C`, arXiv:2303.11241). SPIRou atmospheric fit
+  (with magnetic fields): Teff = 3665 ± 31 K, [M/H] = +0.12 ± 0.10,
+  log g = 4.52. Phase 2 recommended Teff + metallicity.
+- **Tsikoudi V. & Kellett B. J. 2000** — *ROSAT all-sky survey X-ray
+  emission from late-type stars*, MNRAS 319, 1147 (`2000MNRAS.319.1147T`).
+  AU Mic quiescent Lx = 2.24 × 10²⁹ erg/s (log Lx 29.35, log Lx/Lbol
+  ≈ −3.24). Phase 2 recommended X-ray activity proxy. (Supersedes the
+  earlier Stelzer 2013 citation; the NEXXUS 2.51e29 value cited online
+  is WRONG for AU Mic — NEXXUS is a G/K sample.)
 - **Plavchan P. et al. 2020** — *A planet within the debris disk
   around the pre-main-sequence star AU Microscopii*, Nature 582,
   497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of
-  AU Mic b transiting hot Neptune; 4.86-d rotation period;
-  multi-spot complexity in the lightcurve.
+  AU Mic b transiting hot Neptune; 4.86-d rotation period; PMS-isochrone
+  mass 0.50 ± 0.03 M☉ (Phase 2 recommended mass); multi-spot complexity.
 - **Krist J. E. et al. 2005** — *Hubble Space Telescope Advanced
   Camera for Surveys Coronagraphic Imaging of the AU Microscopii
   Debris Disk*, AJ 129, 1008 (`2005AJ....129.1008K`). First HST
@@ -342,14 +390,17 @@ the NS DB as a separate entry; see Open items.
   Myr for the β Pic MG (and thus for AU Mic); LDB confirmation.
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and
   filling of the very active M dwarf AU Mic*, MNRAS 525, 455
-  (`2023MNRAS.525..455D`). Zeeman-Doppler imaging; large-scale
-  dipole component ~2 kG, total field RMS ~4.6 kG; ZDI radius
-  0.82 R☉; spot latitude distribution.
+  (`2023MNRAS.525..455D`, arXiv:2304.09642). SPIRou ZDI: small-scale
+  mean field ⟨B⟩ = 2.61 ± 0.05 kG, large-scale field 550 ± 30 G
+  (Phase 2 recommended magnetic values); log L/L☉ = −0.99 ± 0.01 →
+  L 0.102 (Phase 2 recommended luminosity); V−I Teff 3700 ± 70 and
+  Dartmouth mass 0.60 (divergence alternatives).
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation
   Measurements and Dynamical Mass Determination of the AU Mic
   System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719).
-  N-body + TTV dynamical mass 0.51 ± 0.028 M☉ for the host
-  star; introduces planet d as a TTV-only candidate.
+  N-body + TTV dynamical mass 0.51 ± 0.028 M☉ — consistent with, but
+  superseded as the cfg value by, the Plavchan 2020 0.50 ± 0.03;
+  introduces planet d as a TTV-only candidate.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic
   System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`,
   arXiv:2306.00077). TESS Sectors 1+27 flare census; rate
@@ -366,8 +417,9 @@ the NS DB as a separate entry; see Open items.
   ~10³⁴–10³⁵ erg in the EUV.
 - **Stelzer B. et al. 2013** — *The UV and X-ray activity of the M
   dwarfs within 10 pc of the Sun*, MNRAS 431, 2063
-  (`2013MNRAS.431.2063S`, arXiv:1302.1061). AU Mic quiescent X-ray
-  luminosity log L_X ≈ 29.7 cgs; saturated activity regime.
+  (`2013MNRAS.431.2063S`, arXiv:1302.1061). AU Mic quiescent X-ray;
+  context only — NOT in the frozen Phase 2 bib (the cfg X-ray proxy is
+  Tsikoudi & Kellett 2000, log Lx 29.35).
 
 ### Read (context / methodology, not decision-driving)
 
