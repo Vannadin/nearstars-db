@@ -1333,7 +1333,7 @@
         "semi_major_axis_au": 0.133,
         "eccentricity": 0.06,
         "longitude_of_ascending_node_deg": null,
-        "argument_of_periapsis_deg": 395.341,
+        "argument_of_periapsis_deg": 35.341,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
         "source": "Feng et al. 2017",

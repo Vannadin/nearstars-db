@@ -72,3 +72,9 @@ papers:
   status: skipped
   category: manual_followup
   fetch_error: null
+- arxiv_id: '1708.02051'
+  ads_bibcode: 2017AJ....154..135F
+  title: Feng et al. 2017 — tau Cet 4-planet e/f/g/h solution (planet orbital anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null

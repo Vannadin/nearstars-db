@@ -143,3 +143,43 @@ eps Eri b (worst — ALL 10 cornerstone papers UNCACHED):
 fabricated Teff + DB age; Proxima activity logR'HK -4.0 (1.55 dex); TRAPPIST-1 d/c densities;
 the fabricated citations (no fetch needed to DELETE/correct obvious ones like Atri+Mogan,
 Tomasko, Güdel).
+
+---
+
+# FIXES APPLIED (2026-05-30)
+
+**Batch 1 (7a8c38c)** — Proxima SM25 bibcode ...11M→...11S (6 entries); stale-stellar recompute
+in au-mic/tau-cet/eps-eri planet docs (insolation/Teq/color-temp/angular-diameter onto
+recommended host L/Teff/R); arithmetic (scale heights, tau Cet g/h spin-orbit (2/3)·P + tidal
+50×, eps Eri b gravity 1.8 g_E / Hill 0.237 AU / dipole 15600); AU Mic Plavchan arXiv
+2006.13428→2006.13248; AU Mic d Kepler-claim→Wittrock.
+
+**Batch 2 (e91a791)** — citation fixes: HD 69830 drop "& Mogan" (single-author) + Atri dose
+demoted + Madhusudhan 2016→drop + phantom radius; tau Cet MacGregor→Lawler 2014, drop
+Tomasko/Güdel/W&P fabrications, solar-day prose (g 40 d, h 98.8 d); 61 Vir drop wrong/dup
+arXiv (Bolmont 2002.02015, Howe 1311.0329) + Vinson→Hut 1981 + Makarov ghost; eps Eri b
+ghost-cite bib entries + false "papers in host bib" claim; α Cen A/B DB age 4.81→5.3±0.3
+(Joyce & Chaboyer 2018 1σ, cache 1806.07567:300).
+
+**Batch 3 (this commit)** — fetch-verified: tau Cet g ω 395.341→35.341 (Feng 2017 reported
+6.90 rad raw, normalized; DB+doc); HD 69830 c/d revert to Lovis 2006 (11.8/18.1) — "Tanner
+2019 (1812.08964)" was an arXiv COLLISION (resolves to a controls paper), source removed;
+eps Eri b wrong Llop-Sayson arXiv 2108.05552 removed (COLLISION → ML paper).
+
+## DEFERRED — needs careful dedicated pass (not rushed)
+1. **eps Eri b mass/inclination** — DB 0.66 MJup "true mass" (likely M sin i mislabeled) vs doc
+   0.78 (Mawet 2019 joint-fit at i≈89°) vs 1.19 (coplanar i=34°). cfg uses i=34° but mass 0.78
+   (the i≈89° value) → internally inconsistent. Needs the CORRECT Llop-Sayson 2021 arXiv id
+   (2108.05552 was a collision) + a synthesis decision on cfg inclination, then recompute
+   gravity/density. Mawet 2019 (1810.03794) IS correctly cached for cross-check.
+2. **α Cen A/B masses** — values 1.1055/0.9373 correct but attributed to Pourbaix 2016; the
+   tight uncertainties are from Kervella et al. 2016 (arXiv 1610.06079, not yet fetched).
+   Re-attribute after fetch. Also α Cen B Phase 3 Teff 5236±51 "Porto de Mello 2008" is wrong
+   (PdM = 5316±28; 5236 is Kervella interferometric) — fix attribution/value after fetch.
+3. **Proxima** stellar desyncs (doc radius 0.1542/DB 0.141; Teff 2980/DB 2904; rotation SM2020
+   82.6/DB SM2016 83.0; activity doc -4.0/DB -5.55) — legacy DB itself unverified (SM2016 etc.
+   uncached); needs fetch round.
+4. **TRAPPIST-1** densities (d 5.43→~4.37, c 6.36→~5.46), b T_eq 391→398, metallicity
+   Gillon 2016/2017 — needs Agol 2021 full text (cache abstract-only) + Gillon fetch.
+5. Systematic: legacy docs have several arXiv-id COLLISIONS (wrong id → unrelated paper) —
+   worth a dedicated arXiv-id integrity sweep across all legacy bibs.

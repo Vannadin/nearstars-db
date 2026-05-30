@@ -33,7 +33,7 @@ in picking the visually distinctive bare-rock outcome.
 | `tidally_locked` | maybe (3:2 or 1:1; cfg picks 3:2 Mercury-analog) | medium | Vinson 2017 / Makarov 2018: at P=20 d on a 0.78 M☉ host, tidal damping over 7 Gyr is borderline. e = 0.06 puts g in the 3:2-capture-permitted zone; the cfg picks 3:2 (interesting-first) over the asynchronous alternative |
 | `obliquity_deg` | 0 | medium | Tidal damping over 7 Gyr; standard for short-period rocky planets |
 | `eccentricity` | 0.06 | medium | Feng 2017 RV (consistent with secular forcing from h/f) |
-| `argument_of_periastron_deg` | 395.341 | medium | Feng 2017 RV |
+| `argument_of_periastron_deg` | 35.341 | medium | Feng 2017 RV (reports 6.90 rad; normalized to [0,360)) |
 | `sidereal_period_days` | 20.00 | high | Feng 2017 RV — uncertainty ±0.02 d |
 | `semi_major_axis_au` | 0.133 | high | Feng 2017 (±0.001 from Kepler's third law + host mass) |
 | `inclination_deg` | 35 | low | Tie-break: τ Ceti debris disk inclination (Lawler et al. 2014, adopted by MacGregor et al. 2016; assumed coplanar) |

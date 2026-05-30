@@ -29,7 +29,7 @@ Venus-analog 해석 대안은 cfg variant 로 보존. 이 합성은
 | `tidally_locked` | 가능 (3:2 or 1:1. cfg 는 3:2 수성-analog 픽) | medium | Vinson 2017 / Makarov 2018. 0.78 M☉ 호스트에서 P=20 d, 7 Gyr 조석 damping 은 borderline. e = 0.06 은 g 를 3:2 포획 허용 영역에 두며, cfg 는 interesting-first 로 비동기 대안 대신 3:2 픽 |
 | `obliquity_deg` | 0 | medium | 7 Gyr 조석 damping. 단주기 암석 행성의 표준 |
 | `eccentricity` | 0.06 | medium | Feng 2017 RV (h/f 의 secular 강제와 일관) |
-| `argument_of_periastron_deg` | 395.341 | medium | Feng 2017 RV |
+| `argument_of_periastron_deg` | 35.341 | medium | Feng 2017 RV (6.90 rad 보고. [0,360) 으로 정규화) |
 | `sidereal_period_days` | 20.00 | high | Feng 2017 RV — 불확실성 ±0.02 d |
 | `semi_major_axis_au` | 0.133 | high | Feng 2017 (호스트 질량 + Kepler 3 법칙에서 ±0.001) |
 | `inclination_deg` | 35 | low | Tie-break. τ Ceti 잔해 원반 경사 (Lawler et al. 2014, MacGregor et al. 2016 이 채택. 공면 가정) |

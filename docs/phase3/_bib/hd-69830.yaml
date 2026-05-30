@@ -1,24 +1,30 @@
 host: HD 69830
 slug: hd-69830
 generated_at: '2026-05-30'
-note: 'Phase 2 anchor bibliography for HD 69830 (GJ 302, K0 V; 3 Neptunes + warm asteroid belt) — Tier 1 stellar inversion
-  fix. Radius/Teff/luminosity/mass/age/ [Fe/H] all anchored on Tanner et al. 2015, a dedicated stellar-parameters paper combining
-  CHARA interferometry (theta_LD 0.674 mas, star resolved -> R 0.906), SED bolometric fit (L 0.622, Teff 5394) and SME spectroscopy
-  + Y2 isochrones (M 0.863, [Fe/H] -0.04). No asteroseismology exists for this star. Activity = Gomes da Silva 2021 HARPS
-  log R''HK -4.999 (inactive). AGE IS A DOCUMENTED DIVERGENCE: Tanner Y2 isochrone 10.6 +/- 4 vs SME 7.5 +/- 3 Gyr vs Mamajek
-  2008 activity-age 5.7-6.1 Gyr; old inactive K dwarf, methods overlap ~7-10 Gyr. ROTATION: P_rot 35.1 +/- 0.8 d (Simpson
-  et al. 2010, Ca II H&K periodogram, grade=probable — significant in 1 of 8 seasons; corroborated by P_calc ~35 d and
-  v sin i 0.8 +/- 0.5 km/s from Tanner 2015). Earlier Tier 1 note "no measured period exists" was a false negative.'
+note: 'Phase 2 anchor bibliography for HD 69830 (GJ 302, K0 V; 3 Neptunes + warm asteroid
+  belt) — Tier 1 stellar inversion fix. Radius/Teff/luminosity/mass/age/ [Fe/H] all
+  anchored on Tanner et al. 2015, a dedicated stellar-parameters paper combining CHARA
+  interferometry (theta_LD 0.674 mas, star resolved -> R 0.906), SED bolometric fit
+  (L 0.622, Teff 5394) and SME spectroscopy + Y2 isochrones (M 0.863, [Fe/H] -0.04).
+  No asteroseismology exists for this star. Activity = Gomes da Silva 2021 HARPS log
+  R''HK -4.999 (inactive). AGE IS A DOCUMENTED DIVERGENCE: Tanner Y2 isochrone 10.6
+  +/- 4 vs SME 7.5 +/- 3 Gyr vs Mamajek 2008 activity-age 5.7-6.1 Gyr; old inactive
+  K dwarf, methods overlap ~7-10 Gyr. ROTATION: P_rot 35.1 +/- 0.8 d (Simpson et al.
+  2010, Ca II H&K periodogram, grade=probable — significant in 1 of 8 seasons; corroborated
+  by P_calc ~35 d and v sin i 0.8 +/- 0.5 km/s from Tanner 2015). Earlier Tier 1 note
+  "no measured period exists" was a false negative.'
 papers:
 - arxiv_id: '1412.5251'
   ads_bibcode: 2015ApJ...800..115T
-  title: Tanner et al. 2015 — CHARA interferometry + SED + SME, R/Teff/L/mass/age/[Fe/H] (PRIMARY ANCHOR)
+  title: Tanner et al. 2015 — CHARA interferometry + SED + SME, R/Teff/L/mass/age/[Fe/H]
+    (PRIMARY ANCHOR)
   status: fetched
   category: deep_read
   fetch_error: null
 - arxiv_id: '2012.10199'
   ads_bibcode: 2021A&A...646A..77G
-  title: Gomes da Silva et al. 2021 — AMBRE-HARPS log R'HK -4.999 (RECOMMENDED activity; VizieR row)
+  title: Gomes da Silva et al. 2021 — AMBRE-HARPS log R'HK -4.999 (RECOMMENDED activity;
+    VizieR row)
   status: fetched
   category: deep_read
   fetch_error: null
@@ -42,13 +48,15 @@ papers:
   fetch_error: null
 - arxiv_id: '1006.4121'
   ads_bibcode: 2010MNRAS.408.1666S
-  title: Simpson et al. 2010 — Ca II H&K + APT rotation periods of exoplanet hosts; HD 69830 P_rot 35.1 d (RECOMMENDED rotation)
+  title: Simpson et al. 2010 — Ca II H&K + APT rotation periods of exoplanet hosts;
+    HD 69830 P_rot 35.1 d (RECOMMENDED rotation)
   status: fetched
   category: deep_read
   fetch_error: null
 - arxiv_id: null
   ads_bibcode: 2006Natur.441..305L
-  title: Lovis et al. 2006 — 3-Neptune discovery, age 4-10 Gyr (planet host context; old astro-ph, no ar5iv)
+  title: Lovis et al. 2006 — 3-Neptune discovery, age 4-10 Gyr (planet host context;
+    old astro-ph, no ar5iv)
   status: skipped
   category: manual_followup
   fetch_error: null

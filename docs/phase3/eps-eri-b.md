@@ -341,8 +341,8 @@ Combining surface (cloud-deck) and atmosphere decisions:
   models. **Cornerstone observational paper.**
 - **Llop-Sayson J. et al. 2021** — *Constraints on the Nature of ε
   Eri b from a Combined Analysis of Radial Velocities and
-  Astrometry*, AJ 162, 181 (`2021AJ....162..181L`,
-  arXiv:2108.05552). Joint RV + Hipparcos/Gaia astrometric fit;
+  Astrometry*, AJ 162, 181 (`2021AJ....162..181L`).
+  Joint RV + Hipparcos/Gaia astrometric fit;
   M sin i ≈ 0.66 M_Jup; deprojected mass 0.78 ± 0.12 M_Jup using
   disk-aligned i = 34°; a = 3.5 AU. **Cornerstone observational
   paper.**
