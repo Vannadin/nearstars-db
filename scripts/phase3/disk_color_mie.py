@@ -86,7 +86,7 @@ def color_from_reflectance(qsca_lambda):
     rgb = _lin_rgb(qsca_lambda) / _lin_rgb(np.ones_like(WL))
     rgb = np.clip(rgb, 1e-6, None)
     rgb = rgb / rgb.max()
-    rgb = 0.72 * rgb + 0.28 * rgb.mean()  # desaturate toward grey (dust, not neon)
+    rgb = 0.85 * rgb + 0.15 * rgb.mean()  # mild desaturation toward grey (dust, not neon)
     srgb = np.where(rgb <= 0.0031308, 12.92 * rgb, 1.055 * rgb ** (1 / 2.4) - 0.055)
     srgb = np.clip(srgb, 0, 1)
     return "#" + "".join(f"{int(round(c * 255)):02x}" for c in srgb)
@@ -134,6 +134,24 @@ def a_blow(L, M, rho=2.5):
     return 0.5 * (L / M) * (2.5 / rho)
 
 
+# Phase 2 provenance for the grain-size + composition inputs below (the
+# scattered-light status per belt; only AU Mic + Fomalhaut-main are MEASURED
+# colors, the rest are synthesized). Researched 2026-05-30, value-checked.
+#   eps Eri: Backman 2009 (2009ApJ...690.1522B) silicate inner + icy/sil cold
+#            15/135 um grains; Su 2017 (2017AJ....153..226S); NO scattered light
+#            (HST/STIS non-detection, arXiv:2408.06973, omega<0.487).
+#   Fomalhaut: cold main ring MEASURED neutral/grey (Kalas 2005 2005Natur.435.1067K,
+#            Acke 2012 cometary fluffy aggregates); inner hot = carbon (sublimation);
+#            intermediate thermal-only.
+#   Vega: featureless silicate, large blowout grains (Su 2013 2013ApJ...763..118S);
+#            thermal/mm only.
+#   AU Mic: MEASURED BLUE (Krist 2005 2005AJ....129.1008K, B/I~1.6; Fitzgerald 2007
+#            2007ApJ...670..536F; porous aggregates Graham 2007 2007ApJ...654..595G).
+#   HD 69830: crystalline olivine (Beichman 2005 2005ApJ...626.1061B; Lisse 2007
+#            2007ApJ...658..584L); thermal/mm only.
+#   61 Vir: no spectral features (Wyatt 2012 2012MNRAS.424.1206W); thermal/mm only.
+#   tau Cet: amorphous silicate + organics (Lawler 2014 2014MNRAS.444.2665L);
+#            thermal/mm only.
 # (belt, a_min_um or None->a_blow, a_max_um, q, comp, starL, starM, Teff)
 BELTS = [
     ("eps Eri asteroid ~3AU",     2.0,  1000, 3.5, "astrosil", 0.32, 0.82, 5039),

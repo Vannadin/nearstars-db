@@ -85,6 +85,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/phase3/check_block_parity.py` — preflight: en/ko block structure match
 - `scripts/phase3/field_tooltips.py` — tooltip glossary for the viewer
 - `scripts/phase3/build_html.py` — per-planet HTML (en + ko mirror, toggle)
+- `scripts/phase3/disk_color_mie.py` — synthesize a debris belt's scattered-light reflectance color (Bohren-Huffman Mie over grain-size dist + composition n,k, white-balanced to equal-energy → sRGB hex). Inputs: a_min/a_max/slope/composition/Teff. Validated vs the 2 measured colors (AU Mic blue, Fomalhaut grey). numpy-only.
 - `phase3/<system>/system.yaml` — planets, score thresholds, paper injections
 
 **Driver.** `nearstars-phase3` skill — defines the procedure (triage → deep-read → synthesize → validate → ko mirror → visual check).
