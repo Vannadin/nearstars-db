@@ -4,20 +4,19 @@
 61 Virginis (HD 115617, HIP 64924, GJ 506) is a naked-eye G6.5V solar
 twin at 8.534 ± 0.001 pc (Gaia DR3 parallax 117.17 ± 0.15 mas, or
 27.83 light-years) in the constellation Virgo. Spectral type G6.5V
-from the Gaia label is consistent with the older G7V Gray 2003
-classification; effective temperature Teff = 5552 K (Gaia DR3) places
-it ~220 K cooler than the Sun, with a mass of 0.942 ± 0.034 M☉ and
-radius 0.963 ± 0.011 R☉ derived by Vogt 2010 from their
-HIRES+long-baseline interferometric analysis. The bolometric
-luminosity L = 0.82 L☉ follows from the radius and Teff. Metallicity
-sits essentially at solar within errors ([Fe/H] ≈ +0.00 ± 0.05;
-Pavlenko 2012, Bensby 2014, Brewer 2016), and chromospheric
-activity-age dating gives ≈ 6.1 ± 1.7 Gyr (Mamajek & Hillenbrand
-2008), making 61 Vir an old-disk solar twin a billion years senior to
-Sol. The star is quiet: photospheric rotation P_rot ≈ 29 d (Wright
-2004 from S_HK fluctuations, confirmed by Vogt 2010 §4 via RV
-jitter), log R'HK ≈ −5.0 (Isaacson & Fischer 2010), and a low X-ray
-luminosity log L_X ≈ 26.7–27.0 cgs (Schmitt & Liefke 2004 NEXXUS-2).
+(Gray 2003 G7V) is now anchored on von Braun 2014, which directly
+resolved the star with CHARA interferometry: θ_LD = 1.073 ± 0.005 mas
+→ R = 0.9867 ± 0.0048 R☉, Teff = 5538 K (θ_LD + bolometric flux),
+L = 0.8222 ± 0.0033 L☉, and a Y² mass of 0.93 M☉ — placing it ~230 K
+cooler than the Sun at otherwise solar-twin parameters. Metallicity
+sits essentially at solar ([Fe/H] = −0.01 ± 0.01; Santos/Sousa 2013).
+The age is a documented divergence (~6–9 Gyr): the cfg adopts the
+Gomes da Silva 2021 isochrone 7.69 ± 1.44 Gyr, against von Braun's
+8.6 Gyr and the Mamajek 2008 activity-age 6.1–6.6 Gyr — making 61 Vir
+an old-disk solar twin senior to Sol. The star is quiet: rotation
+P_rot ≈ 29 d (Baliunas 1996 Ca II HK), log R'HK = −5.013 (Gomes da
+Silva 2021), and faint X-ray emission (log Lx/Lbol ~ −6.9, Wright
+2011).
 
 61 Vir hosts three RV-detected planets (Vogt 2010 — a HIRES + AAT
 joint solution): b a super-Earth at 4.215 d / 5.1 M⊕ Msini, c a warm
@@ -30,29 +29,31 @@ inventory.
 
 **Scenario choice for NearStars: a quiet, slightly cool G6.5V solar
 twin with a single resolved cold debris ring at ~30 AU and three
-inner planets shown as foreground points of light.** All seven
-Stellar-Physical decisions are canonical-aligned; the three tie-breaks
-are visual tint, debris-ring scattering tint, and debris-ring opacity
-where Herschel's far-IR detection doesn't constrain the optical
-appearance.
+inner planets shown as foreground points of light.** The stellar
+layer is re-anchored on von Braun 2014 CHARA interferometry + Gomes da
+Silva 2021 activity (with a documented age divergence); the three
+tie-breaks are visual tint, debris-ring scattering tint, and
+debris-ring opacity where Herschel's far-IR detection doesn't
+constrain the optical appearance.
 
 ## Decisions
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `spectral_type` | G6.5V | high | Gaia DR3 spectral label; consistent with older G7V (Gray 2003) at finer subtype resolution |
-| `mass_msun` | 0.942 ± 0.034 | high | Vogt 2010 — HIRES + long-baseline interferometric analysis, adopted in DB Phase 2 recommended |
-| `radius_rsun` | 0.963 ± 0.011 | high | Vogt 2010 — same analysis; interferometric angular diameter combined with parallax |
-| `teff_k` | 5552 | high | Gaia DR3; Pavlenko 2012 reports 5538 K from high-resolution spectroscopy, consistent within errors |
-| `luminosity_lsun` | 0.82 | high | Vogt 2010 — derived from R, Teff via Stefan–Boltzmann; matches the R²·(T/T☉)⁴ = 0.79 closed-form within rounding |
-| `metallicity_fe_h_dex` | +0.00 ± 0.05 | high | Pavlenko 2012 solar-twin differential analysis; Bensby 2014, Brewer 2016 SPOCS concur within ±0.03 dex |
-| `age_gyr` | 6.1 ± 1.7 | medium | Mamajek & Hillenbrand 2008 — chromospheric activity-age + isochrone combination; standard 61 Vir age reference |
-| `rotation_period_days` | 29 | high | Wright 2004 — chromospheric S_HK fluctuation period; Vogt 2010 §4 confirms via RV jitter modeling |
-| `activity_log_rhk` | −5.0 | high | Isaacson & Fischer 2010 — California HK catalog; long-term monitoring stable at quiet G-dwarf locus |
-| `x_ray_log_lx_cgs_min` | 26.7 | medium | Schmitt & Liefke 2004 — NEXXUS-2 ROSAT survey lower bound |
-| `x_ray_log_lx_cgs_max` | 27.0 | medium | Schmitt & Liefke 2004 — NEXXUS-2 ROSAT survey upper bound; no resolved cycle yet |
-| `visual_surface_tint_hex_primary` | `#fff2dc` (warm cream, slightly more amber than Sun) | medium | Tie-break: G6.5V blackbody at 5552 K + interesting-first cue that this is a cooler G-dwarf than the player's Sol reference |
-| `stellar_color_temp_k` | 5552 | high | derived from Teff |
+| `spectral_type` | G7 V | high | von Braun 2014 (Table 4); consistent with Gray 2003 |
+| `mass_msun` | 0.93 | high | von Braun 2014 — Y² isochrone on the interferometric R, Teff (Phase 2 recommended; supersedes Vogt 2010) |
+| `radius_rsun` | 0.9867 ± 0.0048 | high | von Braun 2014 — CHARA interferometry, θ_LD 1.073 ± 0.005 mas (Phase 2 recommended; the sole interferometric radius — Boyajian 2012/2013 do NOT contain 61 Vir) |
+| `teff_k` | 5538 | high | von Braun 2014 — interferometric θ_LD + bolometric flux (Phase 2 recommended; supersedes the Gaia 5552) |
+| `luminosity_lsun` | 0.8222 ± 0.0033 | high | von Braun 2014 — bolometric flux F_bol 36.06e-8 erg/s/cm² + parallax (Phase 2 recommended) |
+| `metallicity_fe_h_dex` | −0.01 ± 0.01 | high | Santos/Sousa 2013 (Phase 2 recommended; near-solar; Sousa 2008 −0.02 corroborates) |
+| `age_gyr` | 7.69 ± 1.44 | medium | Gomes da Silva 2021 isochrone (Phase 2 recommended). DOCUMENTED DIVERGENCE: von Braun 2014 isochrone 8.6 vs Mamajek 2008 activity-age 6.1–6.6 Gyr — all old, ~6–9 Gyr (see Canonical alternatives) |
+| `rotation_period_days` | 29 | high | Baliunas 1996 — Mt Wilson Ca II HK period (Phase 2 recommended; compiled by Wright 2011, adopted by Vogt 2010) |
+| `activity_log_rhk` | −5.013 ± 0.003 | high | Gomes da Silva 2021 — AMBRE-HARPS, 1251 spectra (Phase 2 recommended; Mamajek 2008 −5.001 corroborates) — inactive |
+| `x_ray_log_lx_lbol` | ~ −6.9 | low | Wright 2011 (ROSAT/Voges 1999 compilation) — faint X-ray, log(Lx/Lbol) ~ −6.9; VizieR-only, not a frozen Phase 2 measurement |
+| `visual_surface_tint_hex_primary` | `#fff2dc` (warm cream, slightly more amber than Sun) | medium | Tie-break: G7 V blackbody at 5538 K + interesting-first cue that this is a cooler G-dwarf than the player's Sol reference (hex unchanged; 5552→5538 K shift below the perception threshold) |
+| `stellar_color_temp_k` | 5538 | high | derived from Teff (von Braun 2014) |
+| `activity_cycle_years` | null | low | No cycle resolved; record null/unmeasured |
+| `visual_spot_coverage_max` | 0.003 | low | Synthesis: very inactive (log R'HK −5.013), ≤0.3% disk coverage |
 | `disk_present` | true | high | Wyatt et al. 2012 — Herschel/PACS resolved cold ring; SED-confirmed by Tanner 2014, Su 2017 |
 | `disk_inner_radius_au` | 30 | high | Wyatt 2012 — Herschel/PACS resolved geometry; modified-blackbody SED fit places the temperature-weighted radius near 30 AU |
 | `disk_outer_radius_au` | 96 | medium | Wyatt 2012 — resolved outer cutoff at 70/100/160 μm; outer edge slightly less constrained than the inner |
@@ -67,11 +68,12 @@ appearance.
 
 ## Surface synthesis
 
-61 Vir's photosphere sits ~220 K cooler than Sol — Teff 5552 K versus
-the 5772 K solar reference — but at otherwise solar-twin parameters:
-mass 0.942 M☉, radius 0.963 R☉, [Fe/H] within 0.05 dex of solar. The
-luminosity 0.82 L☉ is the natural consequence of the lower
-temperature given an essentially solar radius. In the visible band
+61 Vir's photosphere sits ~230 K cooler than Sol — Teff 5538 K versus
+the 5772 K solar reference (von Braun 2014 interferometric) — but at
+otherwise solar-twin parameters: mass 0.93 M☉, radius 0.9867 R☉,
+[Fe/H] within 0.01 dex of solar. The luminosity 0.8222 L☉ is the
+natural consequence of the lower temperature given an essentially
+solar radius. In the visible band
 the spectrum carries the canonical G-dwarf Ca II H&K, Mg b, Na D, and
 Hα signature with line depths intermediate between a Sun-like G2V and
 a slightly redder K0V; high-resolution spectroscopy by Pavlenko et
@@ -97,7 +99,7 @@ adopts the 1D prediction with Confidence=medium pending direct
 interferometric follow-up.
 
 The slight amber shift in the visual tint is a tie-break: the
-blackbody peak at 5552 K is shifted 8% redward of solar in λ_max
+blackbody peak at 5538 K is shifted ~8% redward of solar in λ_max
 terms, contributing to the slightly creamier visual cue selected over
 a pure solar match.
 
@@ -131,9 +133,9 @@ equivalent insolation.
 
 ## Rotation & spin synthesis
 
-The 29-day rotation period (Wright 2004 from chromospheric S_HK
-fluctuations, confirmed in Vogt 2010 §4 via the 28–30 d power in the
-RV residuals) is slightly slower than the Sun's 25.4 d Carrington
+The 29-day rotation period (Baliunas 1996 Mt Wilson Ca II HK; compiled
+by Wright 2011 and confirmed in Vogt 2010 §4 via the 28–30 d power in
+the RV residuals) is slightly slower than the Sun's 25.4 d Carrington
 rotation, consistent with the ~1 Gyr age advantage over Sol via the
 Skumanich braking law P_rot ∝ √t. The exponent fit through old-disk
 solar twins (Mamajek & Hillenbrand 2008 gyrochronology) gives an
@@ -154,6 +156,22 @@ planetary system, consistent with a randomly oriented spin axis. The
 Vogt 2010 inclination posterior for b/c/d is consistent with a
 co-planar near-edge-on system but cannot be tied directly to the
 stellar spin.
+
+## Canonical alternatives
+
+**Age — isochrone vs activity.** The cfg adopts the Gomes da Silva
+2021 isochrone age 7.69 ± 1.44 Gyr, whose range (~6.2–9.1 Gyr) brackets
+the spread. The documented alternatives are von Braun 2014's
+interferometric-isochrone 8.6 Gyr and the Mamajek & Hillenbrand 2008
+activity/gyrochronology age 6.1–6.6 Gyr. All credible methods agree
+61 Vir is an old-disk solar twin, ~6–9 Gyr, senior to the Sun; the
+divergence is only which old value to carry.
+
+**Radius/Teff — interferometry vs the earlier Vogt/Gaia values.** The
+cfg uses von Braun 2014 CHARA interferometry (R 0.9867, Teff 5538);
+the pre-Phase-2 narrative used Vogt 2010 (R 0.963) and the Gaia 5552 K.
+von Braun is the sole interferometric source — Boyajian 2012/2013 were
+verified to NOT contain 61 Vir.
 
 ## Visual styling
 
@@ -200,13 +218,25 @@ A's `#fff4e8` cream, 47 UMa, etc.).
 
 ### Read (visual-informative, drove decisions above)
 
+- **von Braun K. et al. 2014** — *Stellar diameters and temperatures
+  VI: high-resolution angular diameters of exoplanet host stars*,
+  MNRAS 438, 2413 (`2014MNRAS.438.2413V`, arXiv:1312.1792). CHARA
+  interferometry of 61 Vir: θ_LD = 1.073 ± 0.005 mas → R = 0.9867 ±
+  0.0048 R☉; F_bol 36.06e-8 → Teff 5538 ± 13 K, L 0.8222 ± 0.0033 L☉;
+  Y² mass 0.93 M☉, age 8.6 Gyr. **Phase 2 anchor for the stellar
+  layer** (the sole interferometric radius for 61 Vir).
+- **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
+  of the AMBRE-HARPS sample*, A&A 646, A77 (`2021A&A...646A..77G`,
+  arXiv:2012.10199). log R'HK = −5.013 (1251 spectra) and an isochrone
+  age 7.69 ± 1.44 Gyr. Phase 2 recommended activity + age.
+- **Santos N. C. et al. 2013** — *SWEET-Cat*, A&A 556, A150
+  (`2013A&A...556A.150S`). [Fe/H] = −0.01 ± 0.01 (Phase 2 recommended
+  metallicity; Sousa 2008 −0.02 corroborates).
 - **Vogt S. S. et al. 2010** — *A Super-Earth and Two Neptunes
   Orbiting the Nearby Sun-Like Star 61 Virginis*, ApJ 708, 1366
-  (`2010ApJ...708.1366V`). The foundational paper for 61 Vir's
-  stellar parameters (M = 0.942 ± 0.034 M☉, R = 0.963 ± 0.011 R☉,
-  L = 0.82 L☉) and the three planet detections (b 4.215 d, c 38.021 d,
-  d 123.01 d). HIRES + AAT joint RV solution; the source attribution
-  for the DB recommended physical parameters.
+  (`2010ApJ...708.1366V`). The three planet detections (b 4.215 d,
+  c 38.021 d, d 123.01 d). Its stellar parameters (M 0.942, R 0.963,
+  L 0.82) are superseded by the von Braun 2014 interferometry above.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir: implications
   for the prevalence of debris in low-mass planetary systems*, MNRAS
   424, 1206 (`2012MNRAS.424.1206W`, arXiv:1204.6063). Herschel/PACS
@@ -216,13 +246,13 @@ A's `#fff4e8` cream, 47 UMa, etc.).
   Circumstellar-disk Decisions row.
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age Estimation
   for Solar-Type Dwarfs Using Activity-Rotation Diagnostics*, ApJ 687,
-  1264 (`2008ApJ...687.1264M`, arXiv:0807.1686). Chromospheric
-  activity-age + isochrone combo; the standard 61 Vir age reference
-  giving 6.1 ± 1.7 Gyr.
-- **Wright J. T. et al. 2004** — *Chromospheric Ca II Emission in
-  Nearby F, G, K, and M Stars*, ApJS 152, 261 (`2004ApJS..152..261W`).
-  Catalog of Mt-Wilson S-indices and inferred rotation periods; 61 Vir
-  P_rot ≈ 29 d from S_HK fluctuations.
+  1264 (`2008ApJ...687.1264M`, arXiv:0807.1686). Activity/gyrochronology
+  age 6.1–6.6 Gyr and log R'HK −5.001 — the documented-divergence
+  alternative to the Gomes da Silva 2021 isochrone age.
+- **Baliunas S. L. et al. 1996** / **Wright J. T. et al. 2004** — Mt
+  Wilson Ca II HK rotation P_rot ≈ 29 d for 61 Vir (`2004ApJS..152..261W`);
+  Baliunas 1996 is the Phase 2 recommended rotation source, compiled by
+  Wright 2011.
 - **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
   metallicities, and ages of 18 solar twin candidates*
   (`2012MNRAS.422..542P`, arXiv:1112.0590). High-resolution
