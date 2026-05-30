@@ -1,0 +1,54 @@
+host: "Barnard's star"
+slug: barnards-star
+generated_at: '2026-05-30'
+note: 'Phase 2 anchor bibliography for Barnard''s star (GJ 699, M4.0 Ve) — Tier 1 Batch 2. Mass/radius/luminosity
+  anchored on Schweitzer et al. 2019 CARMENES (spectroscopic_calibration mass 0.162 Msun; interferometric radius
+  0.187 Rsun via Boyajian 2012b theta_LD 0.952 mas + Gaia DR2 distance). Teff recommended = González Hernández
+  et al. 2024 ESPRESSO (3195±28 K, SteParSyn). [Fe/H] recommended = Jahandar et al. 2023 SPIRou NIR
+  (-0.39±0.03 dex); documented divergence with Schweitzer VIS (-0.15) and Marfil (-0.57). Rotation/activity
+  = Toledo-Padrón et al. 2019 (P_rot 145±15 d, log R''HK -5.82±0.08). Age = Ribas et al. 2018 kinematic
+  8.5±1.5 Gyr. MISATTRIBUTION FIXED: prior DB radius cited Rains 2021 (southern TESS sample, wrong star);
+  replaced with Schweitzer 2019 interferometric anchor.'
+papers:
+- arxiv_id: '2410.00569'
+  ads_bibcode: 2024A&A...690A..79G
+  title: González Hernández et al. 2024 — ESPRESSO master spectrum, Teff 3195±28 K, SteParSyn (RECOMMENDED Teff)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1904.03231'
+  ads_bibcode: 2019A&A...625A..68S
+  title: Schweitzer et al. 2019 — CARMENES, mass 0.162 Msun spectroscopic_calibration (RECOMMENDED mass), radius 0.187 Rsun interferometry (RECOMMENDED radius), luminosity 0.003558 Lsun (RECOMMENDED luminosity)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2110.07329'
+  ads_bibcode: 2021A&A...656A.162M
+  title: Marfil et al. 2021 — CARMENES VIS+NIR, Teff 3254±32 K, [Fe/H] -0.57±0.10 (alternatives)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2310.12125'
+  ads_bibcode: null
+  title: Jahandar et al. 2023 — SPIRou NIR, Teff 3231±21 K, [Fe/H] -0.39±0.03 (RECOMMENDED metallicity); bibcode not confirmed in cache header
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1812.06712'
+  ads_bibcode: 2019MNRAS.488.5145T
+  title: Toledo-Padrón et al. 2019 — MNRAS 488 5145, P_rot 145±15 d photometric_variability (RECOMMENDED rotation), log R'HK -5.82±0.08 (RECOMMENDED activity)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1501.01635'
+  ads_bibcode: 2015ApJ...804...64M
+  title: Mann et al. 2015 — ApJ 804 64, M_K empirical_relation mass 0.161±0.006 Msun (alternative mass)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1208.2431'
+  ads_bibcode: null
+  title: Boyajian et al. 2012b — ApJ 757 112, limb-darkened angular diameter theta_LD 0.952 mas (radius source for Schweitzer 2019 interferometric R)
+  status: fetched
+  category: deep_read
+  fetch_error: null

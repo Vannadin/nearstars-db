@@ -1,0 +1,66 @@
+host: "Teegarden's Star"
+slug: teegardens-star
+generated_at: '2026-05-30'
+note: "Phase 2 anchor bibliography for Teegarden's Star (GJ 1061 neighbour; M7.0 V, J02530+168) — full 8-category
+  curation. Mass/Teff/radius/luminosity/metallicity recommended = Schweitzer et al.
+  2019 CARMENES (spectroscopic_calibration mass 0.089 Msun; sed_fitting radius 0.107
+  Rsun; high_res_spectroscopy Teff 2904 K; bolometric_flux L 0.00073 Lsun; [Fe/H]
+  -0.19 dex). Interferometry impossible at 0.032 mas angular diameter. Dreizler
+  et al. 2024 (arXiv 2402.00923) gives updated mass 0.097 Msun + radius 0.120 Rsun
+  (evolutionary_model, 'This work') as alternates — not recommended because Schweitzer
+  2019 spectroscopic calibration is the canonical method for this mass range. Rotation
+  = P_rot 96.2 d from Lafarga et al. 2021 as cited in Dreizler 2024 Table 2; no
+  formal uncertainty given. Age = Zechmeister et al. 2019 kinematic/PARSEC 7±3 Gyr
+  (thick-disc membership). Activity = Fuhrmeister et al. 2025 (arXiv 2504.02338)
+  XMM-Newton + Chandra X-ray detection log(LX/Lbol) = -4.9 quiescent (supersedes
+  Zechmeister 2019 upper limit <-4.23). Spectral type M7.0 V from Alonso-Floriano
+  et al. 2015 (Alo15 in Zechmeister 2019 Table 1)."
+papers:
+- arxiv_id: '1904.03231'
+  ads_bibcode: 2019A&A...625A..68S
+  title: Schweitzer et al. 2019 — CARMENES, mass 0.089 Msun spectroscopic_calibration (RECOMMENDED
+    mass), radius 0.107 Rsun sed_fitting (RECOMMENDED radius), Teff 2904 K (RECOMMENDED
+    Teff), L 0.00073 Lsun (RECOMMENDED luminosity), [Fe/H] -0.19 dex (RECOMMENDED metallicity)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1906.07196'
+  ads_bibcode: 2019A&A...627A..49Z
+  title: Zechmeister et al. 2019 — CARMENES planet discovery paper; stellar table
+    Teff/L/R/M/[Fe/H]; age 7±3 Gyr PARSEC Bayesian + kinematic thick-disc (RECOMMENDED
+    age); X-ray upper limit log(LX/Lbol) < -4.23 (Stelzer 2014, superseded); spectral
+    type M7.0 V (Alo15)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2402.00923'
+  ads_bibcode: 2024A&A...684A.117D
+  title: Dreizler et al. 2024 — "Teegarden's Star revisited", A&A 684 A117; mass
+    0.097±0.010 Msun + radius 0.120±0.012 Rsun (evolutionary_model, alt); P_rot
+    96.2 d cited from Lafarga 2021 (RECOMMENDED rotation); planet d discovery
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2504.02338'
+  ads_bibcode: null
+  title: Fuhrmeister et al. 2025 — "Coronal and chromospheric activity of Teegarden's
+    star"; XMM-Newton + Chandra X-ray log(LX/Lbol) = -4.9 quiescent detection
+    (RECOMMENDED activity); Chandra log(LX/Lbol) = -4.9 (line 137), XMM quiescent
+    -5.0 to -4.81 range (Table 1 line 32); Fuhrmeister first author
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2110.07329'
+  ads_bibcode: 2021A&A...656A.162M
+  title: Marfil et al. 2021 — CARMENES VIS+NIR SteParSyn; Teff 3034±45 K, [Fe/H]
+    -0.11±0.28 (Dreizler 2024 adopts these as "This work" update via re-run)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '2007.15077'
+  ads_bibcode: null
+  title: Cifuentes et al. 2020 (CARMENES cool star input catalogue) — photometric
+    data, luminosity cross-check
+  status: fetched
+  category: skim
+  fetch_error: null

@@ -68,6 +68,12 @@
       "e": "phase3/au-mic-e.html"
     }
   },
+  "Barnard's star": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/barnards-star.html"
+    }
+  },
   "Delta Pavonis": {
     "phase2": null,
     "phase3": {
@@ -104,6 +110,12 @@
       "f": "phase3/tau-cet-f.html",
       "g": "phase3/tau-cet-g.html",
       "h": "phase3/tau-cet-h.html"
+    }
+  },
+  "Teegarden's Star": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/teegardens-star.html"
     }
   },
   "Vega": {

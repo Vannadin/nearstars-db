@@ -1101,31 +1101,149 @@
     ]
   },
   "Barnard's star": {
-    "teff_k": 3278,
+    "teff_k": 3195,
+    "teff_bibcode": "2024A&A...690A..79G",
     "spectype": "M4.0 Ve",
+    "meta_notes": "Linear propagation accumulates ~0.5 AU position error over 66 years from perspective acceleration (μ≈10,300 mas/yr, ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for KSP. For sub-AU accuracy, override with JPL Horizons state vector at JD2433282.5.",
     "mass_measurements": [
+      {
+        "value_msun": 0.162,
+        "uncertainty_msun": 0.007,
+        "method": "spectroscopic_calibration",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      },
       {
         "value_msun": 0.161,
         "uncertainty_msun": 0.006,
-        "method": "spectroscopic_calibration",
+        "method": "empirical_relation",
         "reference": "Mann et al. 2015",
         "bibcode": "2015ApJ...804...64M",
         "doi": "10.1088/0004-637X/804/1/64",
-        "recommended": true
+        "recommended": false
       }
     ],
     "radius_measurements": [
       {
-        "value_rsun": 0.1868,
-        "uncertainty_rsun": 0.0011,
+        "value_rsun": 0.187,
+        "uncertainty_rsun": 0.001,
         "method": "interferometry",
-        "reference": "Rains et al. 2021",
-        "bibcode": "2021MNRAS.504.5788R",
-        "doi": "10.1093/mnras/stab1167",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "angular_diameter_mas": 0.952,
+        "notes": "R_interf via Boyajian et al. 2012b limb-darkened angular diameter + Gaia DR2 distance",
         "recommended": true
       }
     ],
-    "meta_notes": "Linear propagation accumulates ~0.5 AU position error over 66 years from perspective acceleration (μ≈10,300 mas/yr, ϖ≈548 mas, RV≈−110 km/s). Within perturber tolerance for KSP. For sub-AU accuracy, override with JPL Horizons state vector at JD2433282.5."
+    "teff_measurements": [
+      {
+        "value_k": 3195,
+        "uncertainty_k": 28,
+        "method": "high_res_spectroscopy",
+        "reference": "González Hernández et al. 2024",
+        "bibcode": "2024A&A...690A..79G",
+        "doi": "10.1051/0004-6361/202451311",
+        "recommended": true
+      },
+      {
+        "value_k": 3273,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      },
+      {
+        "value_k": 3254,
+        "uncertainty_k": 32,
+        "method": "high_res_spectroscopy",
+        "reference": "Marfil et al. 2021",
+        "bibcode": "2021A&A...656A.162M",
+        "doi": "10.1051/0004-6361/202141980",
+        "recommended": false
+      },
+      {
+        "value_k": 3231,
+        "uncertainty_k": 21,
+        "method": "high_res_spectroscopy",
+        "reference": "Jahandar et al. 2023",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.003558,
+        "uncertainty_lsun": 7.2e-05,
+        "method": "bolometric_flux",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": -0.39,
+        "uncertainty_dex": 0.03,
+        "method": "high_res_spectroscopy",
+        "reference": "Jahandar et al. 2023",
+        "recommended": true
+      },
+      {
+        "value_dex": -0.15,
+        "uncertainty_dex": 0.16,
+        "method": "high_res_spectroscopy",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": false
+      },
+      {
+        "value_dex": -0.57,
+        "uncertainty_dex": 0.1,
+        "method": "high_res_spectroscopy",
+        "reference": "Marfil et al. 2021",
+        "bibcode": "2021A&A...656A.162M",
+        "doi": "10.1051/0004-6361/202141980",
+        "recommended": false
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 145,
+        "uncertainty_days": 15,
+        "method": "photometric_variability",
+        "reference": "Toledo-Padrón et al. 2019",
+        "bibcode": "2019MNRAS.488.5145T",
+        "doi": "10.1093/mnras/stz1647",
+        "recommended": true
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.82,
+        "uncertainty_log_rhk": 0.08,
+        "method": "log_rhk",
+        "reference": "Toledo-Padrón et al. 2019",
+        "bibcode": "2019MNRAS.488.5145T",
+        "doi": "10.1093/mnras/stz1647",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 8.5,
+        "uncertainty_gyr": 1.5,
+        "method": "kinematic",
+        "reference": "Ribas et al. 2018",
+        "bibcode": "2018Natur.563..365R",
+        "recommended": true
+      }
+    ]
   },
   "GJ 667 C": {
     "mass_measurements": [
@@ -3225,25 +3343,119 @@
     ]
   },
   "Teegarden's Star": {
+    "teff_k": 2904,
+    "teff_bibcode": "2019A&A...625A..68S",
+    "spectype": "M7.0 V",
+    "meta_notes": "Interferometry impossible at ~0.032 mas angular diameter (Gaia parallax 261 mas, R 0.107 Rsun). Schweitzer 2019 radius via SED fitting. Dreizler 2024 mass/radius are evolutionary_model re-derivation (alternate). P_rot 96.2 d adopted by Dreizler 2024 from Lafarga et al. 2021 spectroscopic activity indices; no formal uncertainty quoted. Age >8 Gyr from kinematic (thick-disc) consistent with PARSEC Bayesian 7±3 Gyr; recommended = 7±3 Gyr (Zechmeister 2019). log(LX/Lbol) = -4.9 from Fuhrmeister 2025 XMM-Newton+Chandra quiescent detection, superseding Zechmeister 2019 upper limit <-4.23.",
     "mass_measurements": [
+      {
+        "value_msun": 0.089,
+        "uncertainty_msun": 0.009,
+        "method": "spectroscopic_calibration",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      },
       {
         "value_msun": 0.097,
         "uncertainty_msun": 0.01,
-        "method": "unverified",
+        "method": "evolutionary_model",
+        "reference": "Dreizler et al. 2024",
+        "bibcode": "2024A&A...684A.117D",
+        "doi": "10.1051/0004-6361/202348033",
+        "recommended": false
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.107,
+        "uncertainty_rsun": 0.004,
+        "method": "sed_fitting",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "notes": "Interferometry impossible at ~0.032 mas; radius from SED fitting",
+        "recommended": true
+      },
+      {
+        "value_rsun": 0.12,
+        "uncertainty_rsun": 0.012,
+        "method": "evolutionary_model",
+        "reference": "Dreizler et al. 2024",
+        "bibcode": "2024A&A...684A.117D",
+        "doi": "10.1051/0004-6361/202348033",
+        "recommended": false
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 2904,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00073,
+        "uncertainty_lsun": 1e-05,
+        "method": "bolometric_flux",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      }
+    ],
+    "metallicity_measurements": [
+      {
+        "value_dex": -0.19,
+        "uncertainty_dex": 0.16,
+        "method": "high_res_spectroscopy",
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965",
+        "recommended": true
+      },
+      {
+        "value_dex": -0.55,
+        "uncertainty_dex": 0.17,
+        "method": "high_res_spectroscopy",
+        "reference": "Rojas-Ayala et al. 2012",
+        "recommended": false
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7,
+        "uncertainty_gyr": 3,
+        "method": "kinematic",
+        "reference": "Zechmeister et al. 2019",
+        "bibcode": "2019A&A...627A..49Z",
+        "doi": "10.1051/0004-6361/201935460",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 96.2,
+        "uncertainty_days": null,
+        "method": "photometric_variability",
         "reference": "Dreizler et al. 2024",
         "bibcode": "2024A&A...684A.117D",
         "doi": "10.1051/0004-6361/202348033",
         "recommended": true
       }
     ],
-    "radius_measurements": [
+    "activity_measurements": [
       {
-        "value_rsun": 0.12,
-        "uncertainty_rsun": 0.012,
-        "method": "unverified",
-        "reference": "Dreizler et al. 2024",
-        "bibcode": "2024A&A...684A.117D",
-        "doi": "10.1051/0004-6361/202348033",
+        "value_x_ray_log_lx_lbol": -4.9,
+        "uncertainty_x_ray_log_lx_lbol": null,
+        "method": "x_ray",
+        "reference": "Fuhrmeister et al. 2025",
         "recommended": true
       }
     ]
@@ -4842,7 +5054,7 @@
         "recommended": true
       },
       {
-        "value_lsun": 0.40,
+        "value_lsun": 0.4,
         "uncertainty_lsun": 0.01,
         "method": "bolometric_flux",
         "reference": "Rains et al. 2020",

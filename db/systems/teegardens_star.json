@@ -19,36 +19,120 @@
         "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
         "vmag_v": 15.3227,
         "vmag_source": "gaia_dr3_converted",
-        "teff_k": 3034,
-        "spectype": "dM6",
+        "teff_k": 2904,
+        "spectype": "M7.0 V",
         "mass_measurements": [
+          {
+            "value_msun": 0.089,
+            "uncertainty_msun": 0.009,
+            "method": "spectroscopic_calibration",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": true
+          },
           {
             "value_msun": 0.097,
             "uncertainty_msun": 0.01,
-            "method": "unverified",
+            "method": "evolutionary_model",
             "reference": "Dreizler et al. 2024",
             "bibcode": "2024A&A...684A.117D",
             "doi": "10.1051/0004-6361/202348033",
-            "recommended": true
+            "recommended": false
           }
         ],
         "radius_measurements": [
           {
+            "value_rsun": 0.107,
+            "uncertainty_rsun": 0.004,
+            "method": "sed_fitting",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "notes": "Interferometry impossible at ~0.032 mas; radius from SED fitting",
+            "recommended": true
+          },
+          {
             "value_rsun": 0.12,
             "uncertainty_rsun": 0.012,
-            "method": "unverified",
+            "method": "evolutionary_model",
+            "reference": "Dreizler et al. 2024",
+            "bibcode": "2024A&A...684A.117D",
+            "doi": "10.1051/0004-6361/202348033",
+            "recommended": false
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 2904,
+            "uncertainty_k": 51,
+            "method": "high_res_spectroscopy",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": true
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 0.00073,
+            "uncertainty_lsun": 1e-05,
+            "method": "bolometric_flux",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 7,
+            "uncertainty_gyr": 3,
+            "method": "kinematic",
+            "reference": "Zechmeister et al. 2019",
+            "bibcode": "2019A&A...627A..49Z",
+            "doi": "10.1051/0004-6361/201935460",
+            "recommended": true
+          }
+        ],
+        "metallicity_measurements": [
+          {
+            "value_dex": -0.19,
+            "uncertainty_dex": 0.16,
+            "method": "high_res_spectroscopy",
+            "reference": "Schweitzer et al. 2019",
+            "bibcode": "2019A&A...625A..68S",
+            "doi": "10.1051/0004-6361/201834965",
+            "recommended": true
+          },
+          {
+            "value_dex": -0.55,
+            "uncertainty_dex": 0.17,
+            "method": "high_res_spectroscopy",
+            "reference": "Rojas-Ayala et al. 2012",
+            "recommended": false
+          }
+        ],
+        "rotation_measurements": [
+          {
+            "value_days": 96.2,
+            "uncertainty_days": null,
+            "method": "photometric_variability",
             "reference": "Dreizler et al. 2024",
             "bibcode": "2024A&A...684A.117D",
             "doi": "10.1051/0004-6361/202348033",
             "recommended": true
           }
         ],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
-        "metallicity_measurements": [],
-        "rotation_measurements": [],
-        "activity_measurements": [],
+        "activity_measurements": [
+          {
+            "value_x_ray_log_lx_lbol": -4.9,
+            "uncertainty_x_ray_log_lx_lbol": null,
+            "method": "x_ray",
+            "reference": "Fuhrmeister et al. 2025",
+            "recommended": true
+          }
+        ],
         "stellarium_id": "GAT1370"
       },
       "derived": {
@@ -70,16 +154,16 @@
         "icrs_vx_j2000_km_s": -28.090481254110603,
         "icrs_vy_j2000_km_s": 59.096243062962095,
         "icrs_vz_j2000_km_s": -66.14939512892471,
-        "luminosity_lsun": null,
-        "age_gyr": null,
-        "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "luminosity_lsun": 0.00073,
+        "age_gyr": 7,
+        "metallicity_fe_h_dex": -0.19,
+        "rotation_period_days": 96.2,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 12873106681.746,
-        "mean_radius_km": 83484.0
+        "gravitational_parameter_km3_s2": 11811407161.602,
+        "mean_radius_km": 74439.9
       }
     }
   ],
@@ -285,7 +369,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -294,23 +378,32 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Schweitzer et al. 2019",
+      "doi": "10.1051/0004-6361/201834965",
+      "bibcode": "2019A&A...625A..68S",
+      "accessed": "2026-05-30",
+      "used_for": [
+        "Teegarden's Star mass (spectroscopic_calibration)"
       ]
     },
     {
       "title": "Dreizler et al. 2024",
       "doi": "10.1051/0004-6361/202348033",
       "bibcode": "2024A&A...684A.117D",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
-        "Teegarden's Star mass (unverified)"
+        "Teegarden's Star mass (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
@@ -318,6 +411,6 @@
     "coordinate_origin": "SSB",
     "coordinate_frame": "ICRF",
     "coordinate_units": "km, km/s",
-    "notes": ""
+    "notes": "Interferometry impossible at ~0.032 mas angular diameter (Gaia parallax 261 mas, R 0.107 Rsun). Schweitzer 2019 radius via SED fitting. Dreizler 2024 mass/radius are evolutionary_model re-derivation (alternate). P_rot 96.2 d adopted by Dreizler 2024 from Lafarga et al. 2021 spectroscopic activity indices; no formal uncertainty quoted. Age >8 Gyr from kinematic (thick-disc) consistent with PARSEC Bayesian 7±3 Gyr; recommended = 7±3 Gyr (Zechmeister 2019). log(LX/Lbol) = -4.9 from Fuhrmeister 2025 XMM-Newton+Chandra quiescent detection, superseding Zechmeister 2019 upper limit <-4.23."
   }
 }
