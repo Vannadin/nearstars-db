@@ -31,7 +31,7 @@ strong support, low = aesthetic choice within the allowed window.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `tidally_locked` | true | high | 4.215 d orbit at 0.050 AU; tidal-locking timescale ~10⁵–10⁶ yr (Vinson 2017 scaling for 5 M⊕, G-dwarf host) ≪ 6 Gyr system age |
+| `tidally_locked` | true | high | 4.215 d orbit at 0.050 AU; tidal-locking timescale ~10⁵–10⁶ yr (standard equilibrium-tide estimate, Hut 1981) ≪ 6 Gyr system age |
 | `obliquity_deg` | 0 | high | tidal damping |
 | `eccentricity` | 0.12 | high | Vogt 2010 RV fit |
 | `argument_of_periastron_deg` | 105 | high | Vogt 2010 |
@@ -179,14 +179,14 @@ darker analog of Mercury's nightside.
 ## Rotation & spin synthesis
 
 The 4.215-day orbital period at 0.050 AU around a 0.94 M☉ host gives a
-tidal-locking timescale of ~10⁵–10⁶ years (Vinson 2017 scaling for
-5 M⊕ rocky planets at G-dwarf hosts), four to five orders of magnitude
+tidal-locking timescale of ~10⁵–10⁶ years (standard equilibrium-tide
+estimate, Hut 1981), four to five orders of magnitude
 shorter than the 6 Gyr system age. The 1:1 spin-orbit resonance is
 fully established. Obliquity has damped to zero over the same
 timescale.
 
-**Higher-order resonances.** At eccentricity 0.12 (Vogt 2010 fit), the
-Makarov 2012 / Vinson 2017 stability analysis allows for a 3:2
+**Higher-order resonances.** At eccentricity 0.12 (Vogt 2010 fit), a
+spin-orbit stability analysis allows for a 3:2
 resonance trap as an alternative to 1:1, by analogy with Mercury's
 3:2 lock at e = 0.205. The boundary is e ≈ 0.1–0.15 for a rocky
 planet of b's mass at this orbital period; b sits **on** the boundary.
@@ -287,15 +287,14 @@ surface renderers:
   arXiv:1705.10810). Photoevaporation-valley physics. Places b firmly
   in the "core-only" regime — any initial H/He envelope is lost on
   ≲ 50 Myr. Drives the `atmosphere_present = false` choice.
-- **Vinson A. M. & Hansen B. M. S. 2017** — *On the spin states of
-  habitable zone exoplanets around M dwarfs: the effect of a planetary
-  companion*, MNRAS 472, 3217 (`2017MNRAS.472.3217V`, arXiv:1708.00006).
-  Tidal-locking timescales for rocky planets; b's parameters give
-  ~10⁵–10⁶ yr. Anchors the `tidally_locked = true` choice.
+- **Hut P. 1981** — *Tidal evolution in close binary systems*, A&A
+  99, 126 (`1981A&A....99..126H`). Standard equilibrium-tide model;
+  the tidal-locking timescale estimate for b's parameters (~10⁵–10⁶ yr)
+  follows from it. Anchors the `tidally_locked = true` choice.
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
-  evolution of TRAPPIST-1 planets* (`2020A&A...644A.165B`, arXiv:
-  2002.02015). Tidal heating scaling for rocky exoplanets; provides
-  the 0.1–1 W/m² estimate at e=0.12, P=4.2 d.
+  evolution of TRAPPIST-1 planets* (`2020A&A...644A.165B`). Tidal
+  heating scaling for rocky exoplanets; provides the 0.1–1 W/m²
+  estimate at e=0.12, P=4.2 d.
 
 ### Read (context / methodology, not decision-driving)
 
@@ -320,7 +319,7 @@ surface renderers:
   unphotoevaporated H/He envelope (excluded as discussed).
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
   decompositions of super-Earths and sub-Neptunes*, ApJ 787, 173
-  (`2014ApJ...787..173H`, arXiv:1311.0329). Used briefly in the
+  (`2014ApJ...787..173H`). Used briefly in the
   context of envelope-vs-rocky decision; b is rocky.
 
 ### Read (instrument-only, not visual-informative)

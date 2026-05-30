@@ -36,7 +36,7 @@ alternatives are preserved as cfg variants.
 | `argument_of_periastron_deg` | 7.45 | medium | Feng 2017 RV |
 | `sidereal_period_days` | 49.41 | high | Feng 2017 RV — uncertainty ±0.08 d |
 | `semi_major_axis_au` | 0.243 | high | Feng 2017 (±0.003 from Kepler's third law + host mass) |
-| `inclination_deg` | 35 | low | Tie-break: τ Ceti debris disk inclination (MacGregor 2016, assumed coplanar) |
+| `inclination_deg` | 35 | low | Tie-break: τ Ceti debris disk inclination (Lawler et al. 2014, adopted by MacGregor et al. 2016; assumed coplanar) |
 | `mass_mearth` | 1.83 (M sin i; true mass ≳ 2.3 M⊕ assuming sin i ≈ 0.7) | medium | Feng 2017 RV (±0.68 — the largest fractional uncertainty of the three) |
 | `radius_rearth` | 1.19 | low | Feng 2017 catalogued radius from mass–radius relation (rocky); not directly measured |
 | `surface_gravity_g_earth` | 1.29 | medium | derived = 1.83 / 1.19² |
@@ -45,7 +45,7 @@ alternatives are preserved as cfg variants.
 | `insolation_s_earth` | 8.26 | high | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / 0.243² |
 | `equilibrium_temp_k` (A=0) | 472 | high | derived 278 × (L/a²)^0.25 |
 | `equilibrium_temp_k` (A=0.75, Venus-cloud) | 334 | high | derived with Venus-analog cloud-top bond albedo |
-| `bond_albedo` | 0.75 | medium | Venus-analog sulfate cloud deck; Tomasko 2008 Venus bond albedo |
+| `bond_albedo` | 0.75 | low | Venus-analog sulfate cloud deck (Venus analog; standard value) |
 | `surface_temp_global_mean_k` | 720 | medium | Runaway-greenhouse with 50-bar CO₂ + H₂SO₄ clouds; ~Venus surface temperature |
 | `surface_temp_substellar_k` | 730 | medium | Thick atmosphere homogenizes dayside vs. nightside; minimal substellar enhancement |
 | `surface_temp_nightside_k` | 710 | medium | Same — thick atmosphere transports heat efficiently around the slow rotator |
@@ -55,7 +55,7 @@ alternatives are preserved as cfg variants.
 | `atmosphere_scale_height_km` | 6.9 | medium | derived: kT/μg with T≈460 K (mid-atmosphere), μ=44, g=12.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#d8c490` (warm yellow-cream from CO₂ + sulfate aerosol haze under G8V illumination) | medium | Venus-analog cloud-top reflectance; G8V illumination is cleaner-yellow than Sol's, giving a slightly cooler-yellow tone than Venus |
 | `cloud_cover_fraction` | 1.00 | high | Venus-analog complete cloud cover; surface obscured at all wavelengths |
-| `cloud_morphology` | global homogeneous sulfate haze with subtle banded thermal structure at low latitudes; possible polar "collar" feature analogous to Venus's | medium | Tomasko 2008 Venus morphology; rotation rate similar enough for Hadley-cell structure |
+| `cloud_morphology` | global homogeneous sulfate haze with subtle banded thermal structure at low latitudes; possible polar "collar" feature analogous to Venus's | medium | Venus-analog cloud morphology (Venus analog; standard value); rotation rate similar enough for Hadley-cell structure |
 | `cloud_tint_rgb_hex` | `#e0cba0` (yellow-cream cloud tops, G8V-illuminated) | medium | Same physics as `atmosphere_tint`; cloud-top reflectance is the dominant visual feature |
 | `ocean_present` | false | high | Far above water critical point; surface absolutely dry |
 | `ocean_extent_substellar_radius_deg` | 0 | high | No surface liquid |
@@ -64,7 +64,7 @@ alternatives are preserved as cfg variants.
 | `surface_tint_rgb_hex_primary` | `#5a4838` (dark basaltic surface, obscured by cloud deck — visible only in occasional cloud breaks at PQS gameplay resolution) | low | Tie-break: Venus surface is dark basalt at radar wavelengths (Magellan); for cfg the surface tint is mostly irrelevant because the cloud deck obscures it |
 | `surface_tint_rgb_hex_accent` | `#7a3a20` (volcanic surface flows / iron-rich basalt patches) | low | Tie-break: Venus-analog volcanic geology; mostly invisible from orbit |
 | `surface_morphology` | volcanic plains with shield volcanoes, tessera highlands, impact crater fields; mostly obscured by cloud deck | medium | Venus analog (Ivanov & Head 2011) |
-| `magnetic_field_present` | false | medium | Slow rotation (3:2, ~74-d solar day) + tidally heated but probably mostly-solid mantle → likely no active dynamo; Venus-analog absence of global field |
+| `magnetic_field_present` | false | medium | Slow rotation (3:2, ~98.8-d solar day) + tidally heated but probably mostly-solid mantle → likely no active dynamo; Venus-analog absence of global field |
 | `magnetic_field_strength_microtesla_equator` | 0.1 | low | Tie-break: induced magnetic moment only from solar-wind interaction; Venus analog |
 | `tidal_heating_w_m2` | 0.05–0.5 | medium | e = 0.23 at a = 0.243 AU is significant; Bolmont 2020 scaling gives elevated tidal flux but still well below Io (~2 W/m²) — possibly Venus-analog volcanic activity |
 | `induction_heating_w_m2` | < 0.001 | medium | Quiet host magnetic field; negligible induction |
@@ -261,9 +261,10 @@ interaction.
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. 3:2 capture probability > 80% for
   e ≳ 0.10; anchors the cfg's 3:2 spin-orbit pick for h.
-- **Tomasko M. G. et al. 2008** — *Venus cloud morphology and
-  bond albedo from Pioneer-Venus / Galileo*. Bond albedo 0.75 +
-  cloud structure template adopted for h.
+- **Venus bond albedo + cloud morphology (standard value)** —
+  Venus-analog bond albedo 0.75 + cloud structure template adopted
+  for h. No single primary citation pinned; standard Venus
+  reference value. Confidence low.
 - **Ivanov M. A. & Head J. W. 2011** — *Venus geologic units
   from Magellan*. Surface morphology template for the obscured
   basement (volcanic plains, tessera highlands, impact craters).
@@ -273,8 +274,9 @@ interaction.
 - **Kopparapu R. K. et al. 2014** — *Habitable zones*. Inner-
   edge runaway-greenhouse limit for a G8V is ~1.0 S⊕; h at
   7.74 S⊕ is firmly in the runaway regime.
-- **MacGregor M. A. et al. 2016** — τ Ceti debris disk
-  inclination ~35°; adopted as h's orbital plane default.
+- **Lawler S. M. et al. 2014** — τ Ceti debris disk
+  inclination ~35° (Herschel); adopted by MacGregor et al. 2016
+  (ALMA) and used here as h's orbital plane default.
 - **Bolmont E. et al. 2020** — Tidal evolution framework;
   h's e = 0.23 at 0.243 AU gives estimated 0.05–0.5 W/m² tidal
   flux.

@@ -32,7 +32,7 @@ Venus-analog 해석 대안은 cfg variant 로 보존. 이 합성은
 | `argument_of_periastron_deg` | 395.341 | medium | Feng 2017 RV |
 | `sidereal_period_days` | 20.00 | high | Feng 2017 RV — 불확실성 ±0.02 d |
 | `semi_major_axis_au` | 0.133 | high | Feng 2017 (호스트 질량 + Kepler 3 법칙에서 ±0.001) |
-| `inclination_deg` | 35 | low | Tie-break. τ Ceti 잔해 원반 경사 (MacGregor 2016, 공면 가정) |
+| `inclination_deg` | 35 | low | Tie-break. τ Ceti 잔해 원반 경사 (Lawler et al. 2014, MacGregor et al. 2016 이 채택. 공면 가정) |
 | `mass_mearth` | 1.75 (M sin i. sin i ≈ 0.7 가정 시 실제 질량 ≳ 2.2 M⊕) | medium | Feng 2017 RV (±0.25) |
 | `radius_rearth` | 1.18 | low | Feng 2017 이 mass–radius 관계 (Weiss & Marcy 2014 암석) 로 카탈로그한 반지름. 직접 측정 아님 |
 | `surface_gravity_g_earth` | 1.26 | medium | derived = 1.75 / 1.18² |
@@ -42,7 +42,7 @@ Venus-analog 해석 대안은 cfg variant 로 보존. 이 합성은
 | `equilibrium_temp_k` (A=0) | 638 | high | derived 278 × (L/a²)^0.25 |
 | `equilibrium_temp_k` (A=0.3) | 584 | high | 지구형 albedo 로 derived |
 | `bond_albedo` | 0.10 | low | Tie-break. 저-albedo 현무암 / 규산염 표면. 맨 암석 무대기, 수성-analog albedo |
-| `surface_temp_substellar_k` | 700 | low | 느린 자전자 (3:2 공명, 30 일 태양일) → 열 재분배가 불완전해 substellar 가 평형 온도 초과 |
+| `surface_temp_substellar_k` | 700 | low | 느린 자전자 (3:2 공명, 40 일 태양일) → 열 재분배가 불완전해 substellar 가 평형 온도 초과 |
 | `surface_temp_nightside_k` | 200 | low | 3:2 공명은 긴 열 감쇠 시간을 줌. nightside 는 식지만 deep-space 한계까지는 아님 |
 | `surface_temp_global_mean_k` | 500 | low | 느린 자전에서의 비대칭 열 분포. 전도가 subsolar–antisolar 대비를 완화 |
 | `atmosphere_present` | false | medium | Tie-break. 맨 암석 무대기 채택. 조용한 호스트 XUV 가 무거운 분자를 보존하지만, 638 K Teq 에서는 ~2 M⊕ 체에서 N₂ 와 CO₂ 도 7 Gyr 에 걸쳐 Jeans 탈출. 차가운 내부 super-Earth 에서는 탈가스도 너무 느림 |
@@ -158,13 +158,13 @@ Mercury" 대안 시스템 설명에 흥미가 있는 독자는 둘을 바꿀 수
 1. **3:2 spin-orbit 공명 (수성 analog).** e = 0.06 에서 3:2 포획 확률
    은 ~50–70% (Makarov 2018 Figure 7, 이 주기와 이심률의 super-Earth
    질량체). 3:2 포획은 libration 영역들 간 상당한 열 비대칭을
-   가진 30 일 태양일을 만듦.
+   가진 40 일 태양일을 만듦.
 2. **비동기 느린 자전자.** 3:2 포획이 실패했다면 행성은 원시 주기
    (시간에서 일까지 어디든 가능) 로 자전하며 3:2 나 1:1 쪽으로
    꾸준한 damping. 이 궤도 주기에서 7 Gyr 에 걸친 damping 은 거의
    완성에 가까울 것.
 
-cfg 는 **3:2 (수성 analog)** 를 interesting-first 픽으로 채택. 30 일
+cfg 는 **3:2 (수성 analog)** 를 interesting-first 픽으로 채택. 40 일
 태양일은 표면 온도의 상당한 일주 사이클 (subsolar 가 태양일에 걸쳐
 200 → 700 → 200 K 사이를 swing) 을 만들고, 표면을 가로지르는 시각
 적으로 구별되는 열 비대칭을 만듦. 1:1 고정 대안은 Open item 의
@@ -178,7 +178,7 @@ cfg variant 로 보존.
 은 20 일 궤도 주기에 걸쳐 적당한 "계절" 을 주지만 — 밝아짐/식어짐
 사이클로는 감지되어도 반구 계절로는 아님.
 
-**자기 dynamo 기대치.** 1.75 M⊕ 체에 3:2 느린 자전 (~30 일 태양일)
+**자기 dynamo 기대치.** 1.75 M⊕ 체에 3:2 느린 자전 (~40 일 태양일)
 과 아마도 차가운 내부는 전구 dynamo 를 유지하기 어려움. 수성의
 dynamo 는 부분적으로 녹은 코어에 의해 비정상적으로 유지됨. 같은
 것이 metal-poor super-Earth 에 적용되는지는 불분명. cfg 는 비관적
@@ -243,8 +243,9 @@ dynamo 는 부분적으로 녹은 코어에 의해 비정상적으로 유지됨.
 - **Kopparapu R. K. et al. 2014** — *Habitable zones*. G8V 의
   inner-edge runaway-greenhouse 한계는 ~1.0 S⊕. 25.85 S⊕ 의 g 는
   한참 안쪽.
-- **MacGregor M. A. et al. 2016** — τ Ceti 잔해 원반 경사 ~35°.
-  g 의 궤도면 기본값으로 채택.
+- **Lawler S. M. et al. 2014** — τ Ceti 잔해 원반 경사 ~35°
+  (Herschel). MacGregor et al. 2016 (ALMA) 이 채택했고 여기서는
+  g 의 궤도면 기본값으로 사용.
 - **Bolmont E. et al. 2020** — 조석 진화 프레임워크. g 의 적당한
   e = 0.06 가 0.133 AU 에서 ~0.05 W/m² 플럭스.
 - **Owen J. E. & Wu Y. 2017** — *Evaporation valley*. sub-Neptune
@@ -270,7 +271,7 @@ dynamo 는 부분적으로 녹은 코어에 의해 비정상적으로 유지됨.
 | Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
 |---|---|---|---|
 | `atmosphere_present` | false (맨 암석 수성 analog) | true, 두꺼운 CO₂ Venus analog (~10 bar, T_surf ~700 K) | 둘 다 미제약 윈도우 안에서 방어 가능. 수성-analog 는 시각적으로 구별되는 충돌구 기반암 표면을 줌. Venus-analog 는 τ Cet h 와 시각적으로 비슷한 구름 가린 노랑 행성을 줌. interesting-first 가 g 를 h 와 시각적으로 구분하기 위해 수성-analog 픽. Venus-analog 는 cfg variant 로 보존. |
-| `tidally_locked` | 가능 (3:2 공명, 30 일 태양일) | 1:1 완전 고정 | Vinson 2017 / Makarov 2018 이 e = 0.06 에서 3:2 포획 확률 ~50–70% 를 줌. cfg 는 시각 비대칭 (수성 analog substellar libration 존 vs. 완전 고정의 균일 열장) 을 위해 3:2 픽. 1:1 대안은 cfg variant 로 보존. |
+| `tidally_locked` | 가능 (3:2 공명, 40 일 태양일) | 1:1 완전 고정 | Vinson 2017 / Makarov 2018 이 e = 0.06 에서 3:2 포획 확률 ~50–70% 를 줌. cfg 는 시각 비대칭 (수성 analog substellar libration 존 vs. 완전 고정의 균일 열장) 을 위해 3:2 픽. 1:1 대안은 cfg variant 로 보존. |
 
 ## Open items for follow-up
 

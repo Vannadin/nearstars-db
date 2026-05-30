@@ -112,8 +112,8 @@
         ],
         "age_measurements": [
           {
-            "value_gyr": 4.81,
-            "uncertainty_gyr": 0.5,
+            "value_gyr": 5.3,
+            "uncertainty_gyr": 0.3,
             "method": "isochrone",
             "reference": "Joyce & Chaboyer 2018",
             "bibcode": "2018ApJ...864...99J",
@@ -207,7 +207,7 @@
         "barycenter_method": "mass_weighted_average(Alpha Centauri A,Alpha Centauri B)",
         "phase_reliable": true,
         "luminosity_lsun": 0.503,
-        "age_gyr": 4.81,
+        "age_gyr": 5.3,
         "metallicity_fe_h_dex": 0.25,
         "rotation_period_days": 41.0,
         "activity_log_rhk": -4.85,
@@ -225,7 +225,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "epoch propagation method"
       ]
@@ -234,7 +234,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -243,7 +243,7 @@
       "title": "Pourbaix & Boffin 2016",
       "doi": "10.1051/0004-6361/201527859",
       "bibcode": "2016A&A...586A..90P",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri B mass (binary_orbit)"
       ]
@@ -252,7 +252,7 @@
       "title": "Kervella et al. 2016",
       "doi": "10.1051/0004-6361/201629201",
       "bibcode": "2016A&A...594A.107K",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri B mass (binary_orbit)"
       ]
@@ -261,7 +261,7 @@
       "title": "Joyce & Chaboyer 2018",
       "doi": "10.3847/1538-4357/aad464",
       "bibcode": "2018ApJ...864...99J",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri B mass (evolutionary_model)"
       ]
@@ -270,7 +270,7 @@
       "title": "Kervella et al. 2017",
       "doi": "10.1051/0004-6361/201629505",
       "bibcode": "2017A&A...597A.137K",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri B radius (interferometry)"
       ]
@@ -279,7 +279,7 @@
       "title": "Bigot et al. 2006",
       "doi": "10.1051/0004-6361:20053187",
       "bibcode": "2006A&A...446..635B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri B radius (interferometry)"
       ]
@@ -288,14 +288,14 @@
       "title": "Kervella et al. 2003",
       "doi": "10.1051/0004-6361:20030570",
       "bibcode": "2003A&A...404.1087K",
-      "accessed": "2026-05-29",
+      "accessed": "2026-05-30",
       "used_for": [
         "Alpha Centauri B radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-05-30",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

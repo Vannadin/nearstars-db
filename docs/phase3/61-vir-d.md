@@ -333,7 +333,7 @@ Combining the surface and atmosphere decisions:
   R⊕; cfg picks 5.0 R⊕. Anchors the `radius_rearth` tie-break.
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
   decompositions of super-Earths and sub-Neptunes*, ApJ 787, 173
-  (`2014ApJ...787..173H`, arXiv:1311.0329). Sub-Neptune mass-radius
+  (`2014ApJ...787..173H`). Sub-Neptune mass-radius
   diversity; supports the H/He envelope canonical reading and bounds
   the Hycean / water-rich alternative.
 - **Madhusudhan N. 2012** — *C/O ratio as a dimension for
@@ -377,7 +377,7 @@ Combining the surface and atmosphere decisions:
   arXiv:1311.5904). Sub-Neptune tidal heating + spin-locking
   timescales; gives ~5–15 Gyr for d's parameters (exceeds system age).
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
-  evolution* (`2020A&A...644A.165B`, arXiv:2002.02015). Provides the
+  evolution* (`2020A&A...644A.165B`). Provides the
   tidal-heating flux scaling for d (0.005–0.05 W/m²).
 - **Lewis J. S. 1969** — *The clouds of Jupiter and the NH₃-H₂O and
   NH₃-H₂S systems*, Icarus 10, 365. Foundational thermochemistry for

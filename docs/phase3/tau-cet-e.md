@@ -5,7 +5,7 @@
 by Feng et al. 2017 (`2017AJ....154..135F`, arXiv:1708.02051) around
 the metal-poor G8V τ Ceti — a 3.93 M⊕ (M sin i) super-Earth on a
 162.87-day orbit at 0.538 AU, sitting just inside the optimistic
-habitable zone (Güdel 2014). It was the most disputed of the four
+habitable zone (Kopparapu et al. 2014). It was the most disputed of the four
 Feng detections from the start, with the lowest amplitude-to-noise
 ratio and a stellar-activity contamination concern flagged in
 Feng 2017 §6.
@@ -87,9 +87,9 @@ G8V host (Kopparapu 2014: ~1.05 S⊕). At this insolation, e was the
 "interesting" planet of the four — warmer than Earth but not in
 the Venus-class runaway regime, with an equilibrium temperature of
 317 K at zero albedo or 290 K under an Earth-analog 0.3 bond
-albedo, comfortably in the liquid-water range. Güdel 2014's
-optimistic habitable zone (which extends inward to 0.75 S⊕ for an
-Earth-mass body) was the framework most often cited when e was
+albedo, comfortably in the liquid-water range. Kopparapu et al.
+2014's optimistic inner edge (which extends inward to ~0.75 S⊕)
+was the framework most often cited when e was
 discussed as a habitability target between 2017 and 2025.
 
 **The historical scenario assumed a partially-ocean-covered super-
@@ -300,21 +300,19 @@ it does not).
 
 ### Read (context for habitability framing)
 
-- **Güdel M. et al. 2014** — *Habitable zone limits including
-  optimistic inner-edge*, A&A 571, A85 (`2014A&A...571A..85G`).
-  Inner-edge optimistic limit at ~0.75 S⊕ for a G8V; places
-  Feng 2017's e at 1.58 S⊕ comfortably inside the optimistic HZ.
-  Drove popular-science framing of e as "habitable."
 - **Kopparapu R. K. et al. 2014** — *Habitable zones around
-  main-sequence stars*. Conservative HZ inner edge at ~1.05 S⊕
-  for a G8V; e at 1.58 S⊕ sits just inside the runaway-greenhouse
-  warning band on the conservative reading. The mismatch between
-  Güdel and Kopparapu inner edges was part of the debate over
+  main-sequence stars*, ApJL 787, L29 (arXiv:1404.5292, cache
+  `_papers/1404.5292.md`). Conservative HZ inner edge at ~1.05 S⊕
+  for a G8V; the optimistic inner edge extends inward to ~0.75 S⊕,
+  placing Feng 2017's e at 1.58 S⊕ comfortably inside the
+  optimistic HZ and driving the popular-science framing of e as
+  "habitable." The gap between the conservative (~1.05 S⊕) and
+  optimistic (~0.75 S⊕) inner edges was part of the debate over
   e's habitability classification before refutation.
-- **Wordsworth R. & Pierrehumbert R. 2015** — *Atmospheric
-  retention of super-Earths on quiet G/K hosts*. Framework
+- **Wordsworth & Pierrehumbert 2015** (general atmospheric-escape
+  argument) — used here as a generic atmosphere-retention reference
   underlying the 1-bar Earth-analog atmosphere assumed in the
-  historical reading.
+  historical reading; specific title not pinned.
 
 ### Read (host star context)
 

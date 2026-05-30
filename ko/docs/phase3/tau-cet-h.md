@@ -32,7 +32,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `argument_of_periastron_deg` | 7.45 | medium | Feng 2017 RV |
 | `sidereal_period_days` | 49.41 | high | Feng 2017 RV — 불확실성 ±0.08 d |
 | `semi_major_axis_au` | 0.243 | high | Feng 2017 (호스트 질량 + Kepler 3 법칙에서 ±0.003) |
-| `inclination_deg` | 35 | low | Tie-break. τ Ceti 잔해 원반 경사 (MacGregor 2016, 공면 가정) |
+| `inclination_deg` | 35 | low | Tie-break. τ Ceti 잔해 원반 경사 (Lawler et al. 2014, MacGregor et al. 2016 이 채택. 공면 가정) |
 | `mass_mearth` | 1.83 (M sin i. sin i ≈ 0.7 가정 시 실제 질량 ≳ 2.3 M⊕) | medium | Feng 2017 RV (±0.68 — 세 행성 중 분수 불확실성이 가장 큼) |
 | `radius_rearth` | 1.19 | low | Feng 2017 이 mass–radius 관계 (암석) 로 카탈로그한 반지름. 직접 측정 아님 |
 | `surface_gravity_g_earth` | 1.29 | medium | derived = 1.83 / 1.19² |
@@ -41,7 +41,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `insolation_s_earth` | 8.26 | high | derived L_bol/a²: 0.488 L☉ (Teixeira 2009, recommended) / 0.243² |
 | `equilibrium_temp_k` (A=0) | 472 | high | derived 278 × (L/a²)^0.25 |
 | `equilibrium_temp_k` (A=0.75, Venus-cloud) | 334 | high | Venus-analog 구름-정상 bond albedo 로 derived |
-| `bond_albedo` | 0.75 | medium | Venus-analog 황산염 구름 데크. Tomasko 2008 Venus bond albedo |
+| `bond_albedo` | 0.75 | low | Venus-analog 황산염 구름 데크 (Venus analog. 표준값) |
 | `surface_temp_global_mean_k` | 720 | medium | 50-bar CO₂ + H₂SO₄ 구름의 runaway-greenhouse. ~Venus 표면 온도 |
 | `surface_temp_substellar_k` | 730 | medium | 두꺼운 대기가 dayside vs. nightside 를 균질화. substellar 증폭 최소 |
 | `surface_temp_nightside_k` | 710 | medium | 같음 — 두꺼운 대기가 느린 자전자 주위로 열을 효율적으로 수송 |
@@ -51,7 +51,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `atmosphere_scale_height_km` | 6.9 | medium | derived. kT/μg with T≈460 K (중간 대기), μ=44, g=12.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#d8c490` (G8V 조명 아래 CO₂ + 황산염 에어로졸 안개의 따뜻한 노랑-크림) | medium | Venus-analog 구름-정상 반사도. G8V 조명은 Sol 보다 더 깨끗한 노랑이라 Venus 보다 살짝 더 차가운-노랑 톤 |
 | `cloud_cover_fraction` | 1.00 | high | Venus-analog 완전 구름 커버. 모든 파장에서 표면 가림 |
-| `cloud_morphology` | 저위도에서 미세한 띠 모양 열 구조를 가진 전구 균질 황산염 안개. Venus 의 그것과 유사한 극 "collar" 피처 가능 | medium | Tomasko 2008 Venus 형태. 자전 속도가 Hadley-cell 구조에 충분히 비슷 |
+| `cloud_morphology` | 저위도에서 미세한 띠 모양 열 구조를 가진 전구 균질 황산염 안개. Venus 의 그것과 유사한 극 "collar" 피처 가능 | medium | Venus-analog 구름 형태 (Venus analog. 표준값). 자전 속도가 Hadley-cell 구조에 충분히 비슷 |
 | `cloud_tint_rgb_hex` | `#e0cba0` (G8V 조명을 받는 노랑-크림 구름 정상) | medium | `atmosphere_tint` 와 같은 물리. 구름 정상 반사도가 지배적 시각 피처 |
 | `ocean_present` | false | high | 물 임계점 한참 위. 표면 절대 건조 |
 | `ocean_extent_substellar_radius_deg` | 0 | high | 표면 액체 없음 |
@@ -60,7 +60,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `surface_tint_rgb_hex_primary` | `#5a4838` (어두운 현무암 표면. 구름 데크가 가림 — 가끔의 구름 틈을 통해 PQS 게임플레이 해상도에서만 보임) | low | Tie-break. Venus 표면은 레이더 파장에서 어두운 현무암 (Magellan). cfg 에는 구름 데크가 가리므로 표면 틴트가 거의 무관 |
 | `surface_tint_rgb_hex_accent` | `#7a3a20` (화산 표면 흐름 / 철-풍부 현무암 패치) | low | Tie-break. Venus-analog 화산 지질학. 궤도에서는 대부분 보이지 않음 |
 | `surface_morphology` | shield 화산, tessera 고지, 충돌구 들판이 있는 화산 평원. 대부분 구름 데크에 가려짐 | medium | Venus analog (Ivanov & Head 2011) |
-| `magnetic_field_present` | false | medium | 느린 자전 (3:2, ~74-d 태양일) + 조석으로 가열되지만 아마도 대부분 고체인 맨틀 → 활성 dynamo 가능성 낮음. Venus-analog 의 전구 자기장 부재 |
+| `magnetic_field_present` | false | medium | 느린 자전 (3:2, ~98.8-d 태양일) + 조석으로 가열되지만 아마도 대부분 고체인 맨틀 → 활성 dynamo 가능성 낮음. Venus-analog 의 전구 자기장 부재 |
 | `magnetic_field_strength_microtesla_equator` | 0.1 | low | Tie-break. 태양풍 상호작용에서 오는 유도 자기 모멘트만. Venus analog |
 | `tidal_heating_w_m2` | 0.05–0.5 | medium | a = 0.243 AU 에서 e = 0.23 은 유의함. Bolmont 2020 스케일링은 상승된 조석 플럭스를 주지만 Io (~2 W/m²) 한참 아래 — Venus-analog 화산 활동 가능 |
 | `induction_heating_w_m2` | < 0.001 | medium | 조용한 호스트 자기장. induction 무시 가능 |
@@ -230,9 +230,9 @@ e = 0.23 의 이심 궤도에서 오는 libration 유도 조사량 변동은 궤
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. e ≳ 0.10 에서 3:2 포획 확률 > 80%.
   h 의 3:2 spin-orbit cfg 픽 정박.
-- **Tomasko M. G. et al. 2008** — *Venus cloud morphology and
-  bond albedo from Pioneer-Venus / Galileo*. h 에 채택된 bond
-  albedo 0.75 + 구름 구조 템플릿.
+- **Venus bond albedo + 구름 형태 (표준값)** — h 에 채택된
+  Venus-analog bond albedo 0.75 + 구름 구조 템플릿. 단일 primary
+  인용은 핀하지 않음. 표준 Venus 참조값. Confidence low.
 - **Ivanov M. A. & Head J. W. 2011** — *Venus geologic units
   from Magellan*. 가려진 기반 (화산 평원, tessera 고지, 충돌구)
   의 표면 형태 템플릿.
@@ -242,8 +242,9 @@ e = 0.23 의 이심 궤도에서 오는 libration 유도 조사량 변동은 궤
 - **Kopparapu R. K. et al. 2014** — *Habitable zones*. G8V 의
   inner-edge runaway-greenhouse 한계는 ~1.0 S⊕. 7.74 S⊕ 의 h 는
   runaway 영역에 확실히 위치.
-- **MacGregor M. A. et al. 2016** — τ Ceti 잔해 원반 경사 ~35°.
-  h 의 궤도면 기본값으로 채택.
+- **Lawler S. M. et al. 2014** — τ Ceti 잔해 원반 경사 ~35°
+  (Herschel). MacGregor et al. 2016 (ALMA) 이 채택했고 여기서는
+  h 의 궤도면 기본값으로 사용.
 - **Bolmont E. et al. 2020** — 조석 진화 프레임워크. 0.243 AU 의
   h 가 e = 0.23 에서 0.05–0.5 W/m² 추정 조석 플럭스.
 - **Makarov V. V. 2018** — 조석 고정 시간 척도 + 3:2 포획. h 가

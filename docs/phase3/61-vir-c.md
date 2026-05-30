@@ -286,7 +286,7 @@ Combining the surface and atmosphere decisions:
   R⊕; cfg picks 4.5 R⊕. Anchors the `radius_rearth` tie-break.
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
   decompositions of super-Earths and sub-Neptunes*, ApJ 787, 173
-  (`2014ApJ...787..173H`, arXiv:1311.0329). Sub-Neptune mass-radius
+  (`2014ApJ...787..173H`). Sub-Neptune mass-radius
   diversity; supports the H/He envelope canonical reading and bounds
   the water-rich alternative.
 - **Madhusudhan N. 2012** — *C/O ratio as a dimension for
@@ -330,7 +330,7 @@ Combining the surface and atmosphere decisions:
   arXiv:1311.5904). Sub-Neptune tidal heating + spin-locking
   timescales; gives ~1–3 Gyr for c's parameters.
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
-  evolution* (`2020A&A...644A.165B`, arXiv:2002.02015). Provides the
+  evolution* (`2020A&A...644A.165B`). Provides the
   tidal-heating flux scaling for c (0.001–0.01 W/m²).
 
 ### Read (context / methodology, not decision-driving)

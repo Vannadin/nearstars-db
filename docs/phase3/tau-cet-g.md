@@ -36,7 +36,7 @@ in picking the visually distinctive bare-rock outcome.
 | `argument_of_periastron_deg` | 395.341 | medium | Feng 2017 RV |
 | `sidereal_period_days` | 20.00 | high | Feng 2017 RV — uncertainty ±0.02 d |
 | `semi_major_axis_au` | 0.133 | high | Feng 2017 (±0.001 from Kepler's third law + host mass) |
-| `inclination_deg` | 35 | low | Tie-break: τ Ceti debris disk inclination (MacGregor 2016, assumed coplanar) |
+| `inclination_deg` | 35 | low | Tie-break: τ Ceti debris disk inclination (Lawler et al. 2014, adopted by MacGregor et al. 2016; assumed coplanar) |
 | `mass_mearth` | 1.75 (M sin i; true mass ≳ 2.2 M⊕ assuming sin i ≈ 0.7) | medium | Feng 2017 RV (±0.25) |
 | `radius_rearth` | 1.18 | low | Feng 2017 catalogued radius from mass–radius relation (Weiss & Marcy 2014 rocky); not directly measured |
 | `surface_gravity_g_earth` | 1.26 | medium | derived = 1.75 / 1.18² |
@@ -46,7 +46,7 @@ in picking the visually distinctive bare-rock outcome.
 | `equilibrium_temp_k` (A=0) | 638 | high | derived 278 × (L/a²)^0.25 |
 | `equilibrium_temp_k` (A=0.3) | 584 | high | derived with Earth-analog albedo |
 | `bond_albedo` | 0.10 | low | Tie-break: low-albedo basalt / silicate surface; bare-rock airless body, Mercury-analog albedo |
-| `surface_temp_substellar_k` | 700 | low | Slow rotator (3:2 resonance, 30-day solar day) → substellar temperature exceeds equilibrium because heat redistribution is incomplete |
+| `surface_temp_substellar_k` | 700 | low | Slow rotator (3:2 resonance, 40-day solar day) → substellar temperature exceeds equilibrium because heat redistribution is incomplete |
 | `surface_temp_nightside_k` | 200 | low | 3:2 resonance gives long thermal-decay time; nightside cools but not to deep-space limit |
 | `surface_temp_global_mean_k` | 500 | low | Asymmetric heat distribution from slow rotation; subsolar-to-antisolar contrast moderated by conduction |
 | `atmosphere_present` | false | medium | Tie-break: bare-rock airless adopted. Quiet host XUV preserves heavy molecules, but at 638 K Teq, even N₂ and CO₂ Jeans-escape on a ~2 M⊕ body over 7 Gyr; outgassing too slow on a likely cold-interior super-Earth |
@@ -178,7 +178,7 @@ Two competing scenarios:
 1. **3:2 spin-orbit resonance (Mercury analog).** At e = 0.06,
    capture probability into 3:2 is ~50–70% (Makarov 2018 Figure 7
    for super-Earth-mass bodies at this period and eccentricity).
-   The 3:2 capture creates a 30-day solar day with substantial
+   The 3:2 capture creates a 40-day solar day with substantial
    thermal asymmetry between the libration regions.
 2. **Asynchronous slow rotator.** If 3:2 capture failed, the
    planet rotates at a primordial period (could be anywhere from
@@ -187,7 +187,7 @@ Two competing scenarios:
    complete.
 
 The cfg adopts **3:2 (Mercury analog)** as the interesting-first
-pick. The 30-day solar day creates substantial diurnal cycling of
+pick. The 40-day solar day creates substantial diurnal cycling of
 surface temperature (subsolar swings 200 → 700 → 200 K over the
 solar day) and produces visually distinctive thermal asymmetry
 across the surface. The 1:1 lock alternative is preserved as a cfg
@@ -204,7 +204,7 @@ period — perceptible as a brightening/cooling cycle but not as
 hemispheric seasons.
 
 **Magnetic dynamo expectation.** A 1.75 M⊕ body with 3:2 slow
-rotation (~30-d solar day) and probably cold interior is unlikely
+rotation (~40-d solar day) and probably cold interior is unlikely
 to sustain a global dynamo. Mercury's dynamo is anomalously
 maintained by a partially-molten core; whether the same applies to
 a metal-poor super-Earth is unclear. The cfg pessimistically
@@ -281,8 +281,9 @@ remnant field at ~0.5 μT.
 - **Kopparapu R. K. et al. 2014** — *Habitable zones*. Inner-edge
   runaway-greenhouse limit for a G8V is ~1.0 S⊕; g at 25.85 S⊕
   is far inside.
-- **MacGregor M. A. et al. 2016** — τ Ceti debris disk inclination
-  ~35°; adopted as g's orbital plane default.
+- **Lawler S. M. et al. 2014** — τ Ceti debris disk inclination
+  ~35° (Herschel); adopted by MacGregor et al. 2016 (ALMA) and
+  used here as g's orbital plane default.
 - **Bolmont E. et al. 2020** — Tidal evolution framework; g's
   modest e = 0.06 at 0.133 AU gives ~0.05 W/m² flux.
 - **Owen J. E. & Wu Y. 2017** — *Evaporation valley*. Sub-
@@ -310,7 +311,7 @@ remnant field at ~0.5 μT.
 | Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
 |---|---|---|---|
 | `atmosphere_present` | false (bare-rock Mercury analog) | true, thick CO₂ Venus analog (~10 bar, T_surf ~700 K) | Both are defensible within the unconstrained window. Mercury-analog gives a visually distinctive cratered bedrock surface; Venus-analog gives an obscured cloud-covered yellow planet visually similar to τ Cet h. Interesting-first picks Mercury-analog to differentiate g visually from h. Venus-analog preserved as cfg variant. |
-| `tidally_locked` | maybe (3:2 resonance, 30-d solar day) | 1:1 fully locked | Vinson 2017 / Makarov 2018 give 3:2 capture probability ~50–70% at e = 0.06. The cfg picks 3:2 for visual asymmetry (Mercury analog substellar libration zone vs. uniform thermal field of full lock). 1:1 alternative preserved as cfg variant. |
+| `tidally_locked` | maybe (3:2 resonance, 40-d solar day) | 1:1 fully locked | Vinson 2017 / Makarov 2018 give 3:2 capture probability ~50–70% at e = 0.06. The cfg picks 3:2 for visual asymmetry (Mercury analog substellar libration zone vs. uniform thermal field of full lock). 1:1 alternative preserved as cfg variant. |
 
 ## Open items for follow-up
 

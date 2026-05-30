@@ -851,8 +851,8 @@
     ],
     "age_measurements": [
       {
-        "value_gyr": 4.81,
-        "uncertainty_gyr": 0.5,
+        "value_gyr": 5.3,
+        "uncertainty_gyr": 0.3,
         "method": "isochrone",
         "reference": "Joyce & Chaboyer 2018",
         "bibcode": "2018ApJ...864...99J",
@@ -1031,8 +1031,8 @@
     ],
     "age_measurements": [
       {
-        "value_gyr": 4.81,
-        "uncertainty_gyr": 0.5,
+        "value_gyr": 5.3,
+        "uncertainty_gyr": 0.3,
         "method": "isochrone",
         "reference": "Joyce & Chaboyer 2018",
         "bibcode": "2018ApJ...864...99J",

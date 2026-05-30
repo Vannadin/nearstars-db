@@ -421,6 +421,23 @@ Combining surface (cloud-deck) and atmosphere decisions:
   evolution scenario for brown dwarfs and giant planets* (`2010
   A&A...522A..13R`). Dynamo scaling for jovians; consistent with
   the cfg's 400 μT pick from Jupiter scaling.
+- **Metcalfe T. S. et al. 2013** — *Magnetic Activity Cycles in the
+  Exoplanet Host Star ε Eridani*, ApJ 763, L26
+  (`2013ApJ...763L..26M`, arXiv:1212.5343). First report of the
+  ~2.95-yr chromospheric activity cycle; drives the cycle-phase
+  magnetospheric-driver synchronization noted in Open items.
+  (Not fetched in the b-bibliography; cited from the host Phase 3.)
+- **Coffaro M. et al. 2020** — *A solar-like magnetic cycle on the
+  mature K-dwarf 61 Cygni A and the X-ray cycle of ε Eridani*, A&A
+  636, A49 (`2020A&A...636A..49C`, arXiv:2002.11009). Refines the
+  X-ray cycle amplitude that modulates the wind driver at ε Eri b's
+  orbit. (Pinned in the host bibliography `eps-eri.yaml`, status
+  fetched; not separately pinned for b.)
+- **Canup R. M. & Ward W. R. 2002** — *Formation of the Galilean
+  Satellites: Conditions of Accretion*, AJ 124, 3404
+  (`2002AJ....124.3404C`). Circumplanetary-disk satellite-accretion
+  framework; context for the speculative moon-system Open item.
+  (Not fetched in the b-bibliography.)
 
 ### Read (instrument / non-cfg-decisive)
 
@@ -458,10 +475,14 @@ Combining surface (cloud-deck) and atmosphere decisions:
   2022, Saide 2023) — already cited in host Phase 3, not relevant
   to b.
 
-The full filtered bibliography is preserved with the host star Phase
-3 audit trail in `phase3/eps_eri/system.yaml` + workspace notes; no
-separate `docs/phase3/_bib/eps-eri-b.yaml` was generated because the
-b-relevant paper set is fully contained within the host bibliography.
+The host star Phase 3 audit trail is preserved in
+`phase3/eps_eri/system.yaml` + workspace notes, but its pinned
+bibliography (`docs/phase3/_bib/eps-eri.yaml`) contains only the
+stellar papers — it has zero planet-b entries. The planet-b paper
+set (Hatzes 2000, Mawet 2019, Llop-Sayson 2021, Roettenbacher 2022,
+Booth 2017, Su 2017) is cited in this document's own Bibliography
+above but is not yet pinned/cached in a `docs/phase3/_bib/eps-eri-b.yaml`;
+a dedicated b-bibliography fetch is a follow-up pass.
 
 ## Open items for follow-up
 

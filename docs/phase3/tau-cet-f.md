@@ -38,7 +38,7 @@ preserved as a cfg variant in the Open items.
 | `argument_of_periastron_deg` | 119.75 | medium | Feng 2017 RV fit |
 | `sidereal_period_days` | 636.13 | high | Feng 2017 RV — uncertainty ±11.7 d |
 | `semi_major_axis_au` | 1.334 | high | Feng 2017 (±0.017 from Kepler's third law + host mass) |
-| `inclination_deg` | 35 | low | Tie-break: adopts the τ Ceti debris disk inclination (MacGregor 2016, assumed coplanar) — Feng 2017 §5.2 also defaults to this |
+| `inclination_deg` | 35 | low | Tie-break: adopts the τ Ceti debris disk inclination (Lawler et al. 2014, adopted by MacGregor et al. 2016; assumed coplanar) — Feng 2017 §5.2 also defaults to this |
 | `mass_mearth` | 3.93 (M sin i; true mass ≳ 5 M⊕ assuming sin i ≈ 0.7) | medium | Feng 2017 RV; ±1.05 from RV amplitude fit |
 | `radius_rearth` | 1.81 | low | Feng 2017 catalogued radius from mass–radius relation (Weiss & Marcy 2014 sub-Neptune); not directly measured |
 | `surface_gravity_g_earth` | 1.20 | medium | derived = 3.93 / 1.81² |
@@ -263,10 +263,10 @@ visual cfg.
   arXiv:1801.05415). Re-examination of the 4-planet system with
   expanded HARPS dataset; 636-d signal stable; controversial flag
   in NEA reflects the persisting amplitude-to-noise concerns.
-- **Wordsworth R. & Pierrehumbert R. 2015** — *Atmospheric
-  retention of cold super-Earths on quiet G/K hosts*. Theoretical
-  framework for the 0.1 bar N₂ / trace CO₂ secondary atmosphere
-  adopted for f.
+- **Wordsworth & Pierrehumbert 2015** (general atmospheric-escape
+  argument) — used here as a generic atmosphere-retention reference
+  for the 0.1 bar N₂ / trace CO₂ secondary atmosphere adopted for f;
+  specific title not pinned.
 - **Kopparapu R. K. et al. 2014** — *Habitable zones around
   main-sequence stars*. Outer-edge maximum-greenhouse limit for a
   G8V at Teff = 5344 K is S ≈ 0.36 S⊕; f at 0.26 S⊕ is firmly
@@ -279,7 +279,8 @@ visual cfg.
 
 - **MacGregor M. A. et al. 2016** — *τ Ceti debris disk ALMA
   imaging*, ApJ 828, 113 (`2016ApJ...828..113M`). Disk plane
-  inclination ~35° — adopted as the f orbital plane default
+  inclination ~35°, the value assumed from Lawler et al. 2014
+  (Herschel) — adopted as the f orbital plane default
   (Feng 2017 also assumes coplanarity).
 - **Tuomi M. et al. 2013** — *Signals embedded in the radial
   velocity noise: τ Ceti 5-planet claim*, A&A 551, A79
