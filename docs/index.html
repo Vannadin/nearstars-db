@@ -59,7 +59,8 @@ input[type=checkbox]{accent-color:#4a88b8}
 .a2-tooltip {
   position: absolute; display: none; z-index: 1000;
   max-width: 360px; padding: 8px 12px;
-  background: var(--v2-surface-3, #1a2330);
+  background: var(--v2-surface-pop, #0e1018);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--v2-bd-3, #2a3a50);
   border-radius: 6px;
   color: var(--v2-fg-2, #c0cce0);
@@ -1220,11 +1221,13 @@ function initTooltip() {
       _tipEl.innerHTML = buildSpecTip(spec);
       _tipEl.style.display = 'block';
       const r = sb.getBoundingClientRect();
-      const w = _tipEl.offsetWidth;
+      const w = _tipEl.offsetWidth, hgt = _tipEl.offsetHeight;
       let l = r.left + window.scrollX;
       if (l + w > window.innerWidth - 8) l = window.innerWidth - w - 8;
       _tipEl.style.left = Math.max(8, l) + 'px';
-      _tipEl.style.top  = (r.bottom + window.scrollY + 6) + 'px';
+      let topV = r.bottom + 6;
+      if (topV + hgt > window.innerHeight - 8) topV = r.top - hgt - 6;
+      _tipEl.style.top = (Math.max(8, topV) + window.scrollY) + 'px';
       return;
     }
     const el = e.target.closest('.help[data-help]');
@@ -1252,8 +1255,11 @@ function initTooltip() {
       _tipEl.innerHTML = buildSpecTip(spec);
       _tipEl.style.display = 'block';
       const r = sb.getBoundingClientRect();
+      const hgt = _tipEl.offsetHeight;
       _tipEl.style.left = Math.max(8, r.left + window.scrollX) + 'px';
-      _tipEl.style.top  = (r.bottom + window.scrollY + 6) + 'px';
+      let topV = r.bottom + 6;
+      if (topV + hgt > window.innerHeight - 8) topV = r.top - hgt - 6;
+      _tipEl.style.top = (Math.max(8, topV) + window.scrollY) + 'px';
       setTimeout(() => { _tipEl.style.display = 'none'; }, 3000);
       return;
     }
