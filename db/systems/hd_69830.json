@@ -135,7 +135,18 @@
             "recommended": false
           }
         ],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 35.1,
+            "uncertainty_days": 0.8,
+            "method": "unverified",
+            "reference": "Simpson et al. 2010",
+            "bibcode": "2010MNRAS.408.1666S",
+            "doi": "10.1111/j.1365-2966.2010.17230.x",
+            "recommended": true,
+            "notes": "Ca II H&K periodogram (Mount Wilson HK), grade=probable (significant in only 1 of 8 seasons); corroborated by activity-calibration P_calc~35 d and the long-rotation expectation from log R'HK~-5.0. method=unverified because a chromospheric-index period is outside the photometric/v_sin_i/ZDI schema taxonomy."
+          }
+        ],
         "activity_measurements": [
           {
             "value_log_rhk": -4.999,
@@ -248,7 +259,7 @@
         "luminosity_lsun": 0.622,
         "age_gyr": 7.5,
         "metallicity_fe_h_dex": -0.04,
-        "rotation_period_days": null,
+        "rotation_period_days": 35.1,
         "activity_log_rhk": -4.999,
         "activity_h_alpha_ew_angstrom": null
       },
