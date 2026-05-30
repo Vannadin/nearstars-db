@@ -3,26 +3,32 @@
 
 τ Ceti (HD 10700, HIP 8102, GJ 71) is the nearest single G-type
 star to the Sun at 3.652 ± 0.002 pc / 11.91 ly — Gaia DR3 parallax
-273.81 ± 0.17 mas (DB Phase 2). Spectral type G8V (Gray 2006), it
-sits at the cool, faint end of the solar analog locus with M =
-0.783 ± 0.012 M☉ (Feng 2017), R = 0.793 ± 0.004 R☉ (Teixeira 2009
-asteroseismology + Di Folco 2007 interferometry), and Teff =
-5344 ± 50 K (Pavlenko 2012). Its defining property among nearby
-G dwarfs is an unusually low metallicity, [Fe/H] = −0.55 ± 0.05
-(Pavlenko 2012; Santos 2013 reports −0.49 ± 0.05 in good
-agreement) — exceptionally iron-poor for a planet host and roughly
+273.81 ± 0.17 mas (DB Phase 2). Spectral type G8.5 V (Gray et al.
+2006 NStars), it sits at the cool, faint end of the solar analog
+locus with M = 0.783 ± 0.012 M☉ (Teixeira 2009 asteroseismology),
+R = 0.793 ± 0.004 R☉ (Korolik 2023 CHARA/MIRC-X interferometry,
+θ_LD 2.019 mas), and Teff = 5370 ± 20 K (Korolik 2023 interferometric
+θ_LD + Boyajian 2013 bolometric flux). Its defining property among
+nearby G dwarfs is an unusually low metallicity, [Fe/H] = −0.52 ± 0.01
+(Santos 2013) — exceptionally iron-poor for a planet host and roughly
 0.8 dex below the α Cen A reference.
 
 τ Ceti's other distinguishing features are an old, kinematically
-quiet history and a prominent cold debris disk. Pavlenko 2012
-places τ Ceti in the Eggen 1971 super-population of old disk
-stars; combined with the 34-day rotation period (Baliunas 1996 Mt
-Wilson Ca II H&K monitoring) and the gyrochronological calibration
-of Mamajek & Hillenbrand 2008, this gives an age of 7 ± 1.5 Gyr.
-Chromospheric activity is extreme in the *quiet* direction:
-log R'HK = −4.95 (Pavlenko 2012) places τ Ceti among the most
-inactive G dwarfs in the HK survey, with X-ray emission below the
-EXOSAT detection threshold (Schmitt 1985, log L_X ≤ 26.5).
+quiet history and a prominent cold debris disk. The age is a
+documented divergence (see Canonical alternatives): the cfg adopts
+the Di Folco 2004 isochrone value ~10 Gyr (adopted by Korolik 2023),
+consistent with the very low activity and slow rotation, against the
+Mamajek & Hillenbrand 2008 activity-age of 5.8 Gyr, within a literature
+range of 4.4–12.4 Gyr. No direct photometric rotation period exists —
+τ Ceti is nearly pole-on (i = 7 ± 7°, v sin i ~0.1 km/s), so the cfg
+carries the Korolik 2023 gyrochronological 46 ± 4 d (against the
+Baliunas 1996 Ca II HK ~34 d). Chromospheric activity is extreme in
+the *quiet* direction: log R'HK = −4.977 (Gomes da Silva 2021) places
+τ Ceti among the most inactive G dwarfs — though Gomes da Silva caution
+that it is NOT a flat standard, showing ~11 yr cyclic variability plus
+a long-term declining trend. X-ray emission is below the historical
+EXOSAT threshold (Schmitt 1985, log L_X ≤ 26.5; no measurement in the
+Phase 2 layer).
 Surrounding the star is a cold, broad debris disk first detected
 in SCUBA submillimeter excess by Greaves 2004 and resolved by ALMA
 Band 6 imaging in MacGregor 2016 as a single ring spanning roughly
@@ -43,26 +49,29 @@ item.
 roughly 80% of the Sun's mass and 46% of its luminosity, with a
 slightly cooler-yellow visual tint than Sol, viewed against the
 backdrop of a broad ALMA-resolved cold debris belt at 6–55 AU
-and the f / g / h planet system as faint inner points.** 22 cfg
-picks: 18 canonical-aligned, 4 tie-break (visual hex, disk hex,
-disk opacity, disk morphology compositional inference).
+and the f / g / h planet system as faint inner points.** ~24 cfg
+picks; the stellar layer is re-anchored on the frozen Phase 2 sources
+(Korolik 2023 interferometry, Teixeira 2009 asteroseismology, Santos
+2013, Gomes da Silva 2021) with documented age + rotation divergences.
 
 ## Decisions
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `spectral_type` | G8V | high | Gray 2006; SIMBAD; DB |
-| `mass_msun` | 0.783 ± 0.012 | high | Feng 2017 — M–K relation with Mann 2015 calibration; Teixeira 2009 asteroseismic 0.783 ± 0.012 agrees |
-| `radius_rsun` | 0.793 ± 0.004 | high | Teixeira 2009 asteroseismic + Di Folco 2007 VLTI/VINCI interferometry |
-| `teff_k` | 5344 ± 50 | high | Pavlenko 2012 — high-resolution spectroscopy, differential to Sun; Santos 2013 = 5333 ± 20 K within 1σ |
-| `luminosity_lsun` | 0.457 | high | derived from R and Teff via Stefan–Boltzmann |
-| `metallicity_fe_h_dex` | −0.55 ± 0.05 | high | Pavlenko 2012 — differential LTE analysis vs Sun; Santos 2013 = −0.49 ± 0.05 within 1σ |
-| `age_gyr` | 7.0 ± 1.5 | medium | Pavlenko 2012 — Eggen 1971 super-population kinematics + chromospheric activity proxy; Mamajek & Hillenbrand 2008 gyrochronology from 34-d rotation agrees on 6–8 Gyr |
-| `rotation_period_days` | 34 | high | Baliunas 1996 — Mt Wilson Ca II H&K timeseries; Pavlenko 2012 confirms |
-| `activity_log_rhk` | −4.95 | high | Pavlenko 2012 — among the most inactive G dwarfs in the HK survey |
-| `x_ray_log_lx_cgs_max` | 26.5 | medium | Schmitt 1985 — EXOSAT non-detection upper limit; Judge 2004 confirms quiescent FUV emission |
-| `visual_surface_tint_hex_primary` | `#ffe9c8` (cream-yellow, slightly less yellow than Sol) | medium | Tie-break: G8V blackbody at 5344 K + metal-poor SED is marginally bluer than solar-metallicity equivalent (less line blanketing in the blue at [Fe/H] = −0.55); interesting-first per the interesting-first rule for visual distinction from α Cen A's metal-rich cream |
-| `stellar_color_temp_k` | 5344 | high | derived from Teff |
+| `spectral_type` | G8.5 V | high | Gray et al. 2006 (NStars); DB |
+| `mass_msun` | 0.783 ± 0.012 | high | Teixeira 2009 — asteroseismic mean density + interferometric radius (Phase 2 recommended); Korolik 2023 g·R² mass 0.69 ± 0.09 is the alternative |
+| `radius_rsun` | 0.793 ± 0.004 | high | Korolik 2023 — CHARA/MIRC-X interferometry, θ_LD 2.019 ± 0.012 mas (Phase 2 recommended; supersedes Teixeira 2009 / Di Folco 2007, same 0.793) |
+| `teff_k` | 5370 ± 20 | high | Korolik 2023 — interferometric θ_LD + Boyajian 2013 bolometric flux (Phase 2 recommended; spectroscopic Korolik 5320 / Santos 2013 5310 are alternatives; supersedes the Pavlenko 2012 5344) |
+| `luminosity_lsun` | 0.488 ± 0.010 | high | Teixeira 2009 — M_V + bolometric correction (Phase 2 recommended; consistent with R 0.793, Teff 5370 via Stefan–Boltzmann) |
+| `metallicity_fe_h_dex` | −0.52 ± 0.01 | high | Santos 2013 (SWEET-Cat; Phase 2 recommended) — very metal-poor; Bruntt 2010 −0.18 is the rejected α-enhanced outlier |
+| `age_gyr` | 10 | medium | Di Folco 2004 isochrone (Phase 2 recommended, adopted by Korolik 2023), consistent with the very low activity + slow rotation. DOCUMENTED DIVERGENCE vs Mamajek 2008 activity-age 5.8 Gyr; literature range 4.4–12.4 Gyr (see Canonical alternatives) |
+| `rotation_period_days` | 46 ± 4 | medium | Korolik 2023 gyrochronology (Phase 2 recommended; method=unverified — NO direct photometric period, the star is pole-on). DOCUMENTED DIVERGENCE vs Baliunas 1996 Ca II HK ~34 d (see Canonical alternatives) |
+| `activity_log_rhk` | −4.977 | high | Gomes da Silva 2021 — AMBRE-HARPS (Phase 2 recommended; Mamajek 2008 −4.958 corroborates; supersedes Pavlenko 2012 −4.95) |
+| `activity_cycle_years` | ~11 | low | Gomes da Silva 2021 — a ~11 yr cyclic variability with a superimposed long-term declining trend (GdS explicitly warn τ Cet is NOT a flat activity standard) |
+| `limb_darkening_alpha_h` | 0.14 ± 0.03 | medium | Korolik 2023 — H-band linear limb-darkening fit from the CHARA/MIRC-X visibilities |
+| `spin_axis_inclination_deg` | 7 ± 7 | medium | Korolik 2023 — nearly pole-on (v sin i ~0.1 km/s vs v_eq from R + P_gyro); the disk axis (i ~35°, Lawler 2014) is misaligned |
+| `visual_surface_tint_hex_primary` | `#ffe9c8` (cream-yellow, slightly less yellow than Sol) | medium | Tie-break: G8.5 V blackbody at 5370 K + metal-poor SED is marginally bluer than a solar-metallicity equivalent (less blue line blanketing at [Fe/H] = −0.52); distinguished from α Cen A's metal-rich cream |
+| `stellar_color_temp_k` | 5370 | high | derived from Teff (Korolik 2023) |
 | `disk_present` | true | high | Greaves 2004 SCUBA 850 μm excess; MacGregor 2016 ALMA Band 6 resolved imaging |
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016 — ALMA resolved fit, inner edge ~6 AU |
 | `disk_outer_radius_au` | 55 | high | MacGregor 2016 — ALMA resolved fit, outer edge ~55 AU |
@@ -78,26 +87,26 @@ disk opacity, disk morphology compositional inference).
 ## Surface synthesis
 
 τ Ceti's photosphere is a colder, older, and substantially more
-iron-poor cousin of the Sun. The effective temperature of 5344 K
-sits 433 K below Sol's 5777 K; combined with R = 0.793 R☉, the
-Stefan–Boltzmann bolometric luminosity is 0.457 L☉, a little under
-half the solar reference. The G8V classification (Gray 2006) places
+iron-poor cousin of the Sun. The effective temperature of 5370 K
+(Korolik 2023 interferometric) sits ~400 K below Sol's 5772 K;
+combined with R = 0.793 R☉, the measured bolometric luminosity is
+0.488 L☉ (Teixeira 2009, M_V + bolometric correction; consistent
+with R and Teff via Stefan–Boltzmann), a little under half the solar
+reference. The G8.5 V classification (Gray et al. 2006) places
 τ Ceti at the cool faint end of the solar analog band, comparable
 in temperature to ε Eridani's K2V but with the lower-gravity
 envelope of a true G dwarf rather than a young K star.
 
-The metallicity [Fe/H] = −0.55 (Pavlenko 2012) is the headline
-distinguishing feature. At nearly four times less iron than the
-Sun, line blanketing in the blue continuum is correspondingly
-weaker, and the integrated visible SED is marginally bluer than a
-solar-metallicity G8V would be at the same Teff — the difference is
-small (~10–20 K equivalent blue-shift) but enough to push the
-cfg surface tint away from the warm-cream of α Cen A's +0.24 dex
-metallicity toward a cleaner pale-yellow. Santos 2013's
-[Fe/H] = −0.49 ± 0.05 measurement is statistically consistent and
-reinforces the picture, with the two analyses differing primarily
-in the model atmosphere grid used; Pavlenko 2012's differential
-analysis against the Sun is preferred as the cleaner observable.
+The metallicity [Fe/H] = −0.52 (Santos 2013, the Phase 2 recommended
+value) is the headline distinguishing feature. At roughly three times
+less iron than the Sun, line blanketing in the blue continuum is
+correspondingly weaker, and the integrated visible SED is marginally
+bluer than a solar-metallicity G8.5 V would be at the same Teff — the
+difference is small (~10–20 K equivalent blue-shift) but enough to push
+the cfg surface tint away from the warm-cream of α Cen A's +0.24 dex
+metallicity toward a cleaner pale-yellow. Bruntt 2010's [Fe/H] = −0.18
+is a known α-enhanced outlier and is rejected; the Santos 2013
+SWEET-Cat value anchors the DB.
 
 Granulation is not directly imaged but is predicted to be Sun-like
 in pattern and somewhat slower in timescale because of the lower
@@ -106,27 +115,29 @@ giving τ Ceti's p-mode oscillations a slightly longer characteristic
 period than the Sun's 5-minute oscillation). Teixeira 2009 detected
 the p-mode spectrum with HARPS, finding Δν = 169.0 ± 0.5 μHz and
 ν_max ≈ 4490 μHz, consistent with the asteroseismic radius and mass
-adopted above. Limb darkening is not directly measured in H band
-(no VLTI interferometric campaign of τ Ceti at the precision of
-Kervella 2017 on α Cen A); the cfg leaves `limb_darkening_alpha_h`
-unfilled and adopts the Sun-like default in the downstream renderer.
+adopted above. Limb darkening IS now constrained: Korolik 2023 fit an
+H-band linear limb-darkening coefficient α ≈ 0.14 ± 0.03 directly from
+the CHARA/MIRC-X visibilities, which the cfg adopts.
 
 Sunspot coverage is essentially undetectable at the photometric
 precision of long-term ground-based monitoring. With log R'HK =
-−4.95, τ Ceti is fractionally less active than α Cen A and well
-below the modern Sun — chromospheric Ca II H&K emission shows no
-detectable cycle in the Baliunas 1996 record, consistent with a
-saturated-quiet regime expected for old, slowly rotating, low-
-metallicity G dwarfs.
+−4.977 (Gomes da Silva 2021), τ Ceti is fractionally less active than
+α Cen A and well below the modern Sun. It is NOT, however, a flat
+standard: Gomes da Silva 2021 explicitly find a ~11 yr cyclic
+variability superimposed on a long-term declining activity trend, and
+caution against using τ Ceti as a constant-activity reference —
+consistent with a quiet-but-cycling regime for an old, slowly
+rotating, low-metallicity G dwarf.
 
 ## Atmosphere synthesis
 
 The chromosphere–transition-region–corona structure of τ Ceti is
-the canonical quiet G-dwarf reference. Pavlenko 2012's
-log R'HK = −4.95 places the chromospheric Ca II H&K emission near
-the basal flux floor — the minimum expected from acoustic heating
-alone, with no detectable magnetic-cycle modulation. Hα is in
-absorption with no measurable variability.
+the canonical quiet G-dwarf reference. Gomes da Silva 2021's
+log R'HK = −4.977 places the chromospheric Ca II H&K emission near
+the basal flux floor — close to the minimum expected from acoustic
+heating — but with a real ~11 yr magnetic-cycle modulation and a
+long-term declining trend (Gomes da Silva 2021), so it is low-amplitude
+rather than truly flat. Hα is in absorption with only weak variability.
 
 X-ray emission is below the EXOSAT detection threshold: Schmitt
 1985 reports an upper limit log L_X ≤ 26.5 cgs (0.1–2.4 keV).
@@ -154,22 +165,23 @@ driven by stellar XUV that is the rule for K and M dwarfs.
 
 ## Rotation & spin synthesis
 
-τ Ceti rotates with a period of 34 days (Baliunas 1996 Mt Wilson
-Ca II H&K monitoring, confirmed by Pavlenko 2012 from combined HK
-and photometric data). Some recent zeeman-doppler imaging (Boro
-Saikia 2018) prefers a 46 d period, but the HK-traced 34 d value
-remains the canonical reference and matches the Skumanich braking
-expectation for a 7 Gyr old G8V — P_rot ∝ √t, anchored to the
-solar 25-day rotation at 4.6 Gyr, predicts ~31 days at 7 Gyr,
-within the measurement scatter of 34 d.
+τ Ceti has NO directly measured photometric rotation period — it is
+nearly pole-on (inclination i = 7 ± 7°, v sin i ~0.1 km/s, Korolik
+2023), so rotational modulation is not observable and periodogram
+peaks have false-alarm probabilities near unity. The cfg therefore
+carries the Korolik 2023 gyrochronological estimate of 46 ± 4 days
+(method recorded as unverified), against the older Baliunas 1996
+Ca II H&K value of ~34 d — a documented divergence (see Canonical
+alternatives). Both are slow, as expected for an old G dwarf.
 
-The slow rotation is consistent with the old age inferred from
-Pavlenko 2012's Eggen 1971 super-population kinematic membership
-and Mamajek & Hillenbrand 2008's gyrochronological calibration
-applied to the 34-d period (which yields 6.5 Gyr from the
-Skumanich law with their B–V color). The combined age estimate of
-7.0 ± 1.5 Gyr is the cfg adoption, with the uncertainty range
-spanning both gyrochronology and kinematic estimates.
+The slow rotation is consistent with the old age. The cfg adopts the
+Di Folco 2004 isochrone age of ~10 Gyr (adopted by Korolik 2023) as
+the value most consistent with the very low activity and slow
+rotation, against the Mamajek & Hillenbrand 2008 activity-age of
+5.8 Gyr — a documented divergence within a literature range of
+4.4–12.4 Gyr (Canonical alternatives). Gomes da Silva 2021's
+isochrone fit of 0.028 Gyr is a metal-poor-star fit failure and is
+rejected.
 
 Asteroseismic p-mode oscillations were detected by Teixeira 2009
 in 8 nights of HARPS RV monitoring: Δν = 169.0 ± 0.5 μHz, ν_max ≈
@@ -179,10 +191,30 @@ radius and higher mean sound speed; this constrains the mass to
 0.783 ± 0.012 M☉ and the radius to 0.793 ± 0.004 R☉ with
 percent-level precision, the values adopted in the Decisions table.
 
-Differential rotation is not resolved. The rotation axis
-inclination is poorly constrained; for visual rendering NearStars
-adopts a default ~30° tilt to the line of sight consistent with a
-randomly oriented spin axis.
+Differential rotation is not resolved. The rotation axis is nearly
+pole-on (i = 7 ± 7°, Korolik 2023), which NearStars reflects in the
+rendered spin geometry; note this stellar spin axis is misaligned
+with the debris-disk axis (i_disk ~35°, Lawler 2014), a misalignment
+Korolik 2023 explicitly flags.
+
+## Canonical alternatives
+
+**Age — isochrone vs activity.** The cfg adopts the Di Folco 2004
+isochrone age ~10 Gyr (adopted by Korolik 2023), the value most
+consistent with τ Ceti's very low activity and slow rotation. The
+documented alternative is the Mamajek & Hillenbrand 2008 activity-age
+of 5.8 Gyr; the full literature spread is 4.4–12.4 Gyr (Korolik 2023).
+The Gomes da Silva 2021 isochrone fit (0.028 Gyr) is a metal-poor-star
+fit failure and is rejected. All credible methods agree τ Ceti is old;
+the divergence is whether it is ~6 or ~10 Gyr.
+
+**Rotation — gyrochronology vs Ca II HK.** τ Ceti has NO direct
+photometric rotation period (it is pole-on, v sin i ~0.1 km/s). The cfg
+carries the Korolik 2023 gyrochronological 46 ± 4 d (recorded
+method=unverified, and tied to the ~10 Gyr age); the documented
+alternative is the older Baliunas 1996 Ca II H&K ~34 d. Boro Saikia
+2018 ZDI independently prefers ~46 d, supporting the cfg choice. The
+two are coupled to the age divergence above.
 
 ## Visual styling
 
@@ -208,11 +240,12 @@ illumination color seen from f's surface is the same warm cream
 tint shifted toward a slightly cleaner pale-yellow by the
 combination of metal-poor SED and cooler Teff.
 
-Sunspots and faculae are not rendered as animated features —
-τ Ceti is too quiet to show resolved activity at the precision
-of the NearStars renderer. The X-ray and chromospheric output are
-encoded as a flat baseline with no cycle modulation, contrasting
-sharply with α Cen A's 19-year Sun-like cycle.
+Sunspots and faculae are rendered only as a very low-amplitude
+feature — τ Ceti is quiet, but NOT flat: the chromospheric output is
+encoded with a shallow ~11 yr cycle plus a slow long-term decline
+(Gomes da Silva 2021), much milder than α Cen A's 19-year Sun-like
+cycle. X-ray output stays near zero (below the historical EXOSAT
+limit; no Phase 2 X-ray measurement).
 
 The defining visual element of the system is the cold debris
 disk. ALMA Band 6 imaging (MacGregor 2016) resolves a single broad
@@ -254,57 +287,73 @@ binary-pair framings (α Cen A/B).
   imaging of τ Ceti's disk; single broad ring 6–55 AU; dust mass
   ~1.2 M⊕; collisional cascade requires a parent planetesimal
   body belt. Anchors all `disk_*` Decisions rows.
-- **Pavlenko Y. V. et al. 2012** — *Spectral analysis of τ Ceti:
-  abundances and age*, MNRAS 422, 542 (`2012MNRAS.422..542P`,
-  arXiv:1112.1709). Differential LTE analysis vs Sun;
-  [Fe/H] = −0.55 ± 0.05; log R'HK = −4.95; Eggen 1971
-  super-population age 7 ± 1 Gyr. Anchors metallicity, activity,
-  age Decisions rows.
-- **Santos N. C. et al. 2013** — *SWEET-Cat: A catalogue of
-  parameters for stars with exoplanets*, A&A 556, A150
-  (`2013A&A...556A.150S`, arXiv:1307.0354). Independent
-  spectroscopic [Fe/H] = −0.49 ± 0.05 and Teff = 5333 ± 20 K,
-  confirming Pavlenko 2012 within 1σ.
+- **Korolik M. et al. 2023** — *Refining the Stellar Parameters of
+  τ Ceti: a Pole-on Solar Analog*, AJ 166, 123 (`2023AJ....166..123K`,
+  arXiv:2307.10394). CHARA/MIRC-X interferometry: θ_LD 2.019 ± 0.012
+  mas → R 0.793 ± 0.004 R☉; interferometric Teff 5370 ± 20 K (with
+  Boyajian 2013 F_bol); H-band limb-darkening α ≈ 0.14; nearly pole-on
+  (i = 7 ± 7°); gyrochronological P_rot 46 ± 4 d; adopts the Di Folco
+  2004 ~10 Gyr age. Phase 2 anchor for radius/Teff/limb-darkening/spin/
+  rotation.
+- **Teixeira T. C. et al. 2009** — *Solar-like oscillations in τ Ceti*,
+  A&A 494, 237 (`2009A&A...494..237T`, arXiv:0811.3989). HARPS p-mode
+  detection; asteroseismic mass 0.783 ± 0.012 M☉ and luminosity
+  0.488 ± 0.010 L☉ (M_V + bolometric correction). Phase 2 recommended
+  mass + luminosity.
+- **Santos N. C. et al. 2013** — *SWEET-Cat: A catalogue of parameters
+  for stars with exoplanets*, A&A 556, A150 (`2013A&A...556A.150S`,
+  arXiv:1307.0354). Spectroscopic [Fe/H] = −0.52 ± 0.01. Phase 2
+  recommended metallicity (very iron-poor).
+- **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
+  of the AMBRE-HARPS sample*, A&A 646, A77 (`2021A&A...646A..77G`,
+  arXiv:2012.10199). log R'HK = −4.977; a ~11 yr cyclic variability
+  with a long-term declining trend (NOT a flat activity standard).
+  Phase 2 recommended activity.
+- **Di Folco E. et al. 2004** — *VLTI near-IR interferometric radii of
+  nearby stars*, A&A 426, 601 (`2004A&A...426..601D`). Isochrone age
+  ~10 Gyr for τ Ceti, adopted by Korolik 2023; Phase 2 recommended age
+  (see Canonical alternatives).
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
   (`2017AJ....154..135F`, arXiv:1708.02051). Four-planet RV
-  discovery (e, f, g, h); host mass M = 0.783 ± 0.012 M☉ adopted
-  for the Decisions table. The DB Phase 2 stores planets f, g, h
-  but omits e (see Open items).
+  discovery (e, f, g, h). The DB Phase 2 stores planets f, g, h
+  but omits e (see Open items). (Mass now anchored on Teixeira 2009,
+  not Feng's M–K relation.)
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved age
   estimation for solar-type dwarfs using activity-rotation
   diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
-  arXiv:0807.1686). Gyrochronological calibration applied to
-  τ Ceti's 34-d rotation yields ~6.5 Gyr, agreeing with Pavlenko
-  2012's kinematic age.
+  arXiv:0807.1686). Activity-age 5.8 Gyr — the documented-divergence
+  alternative to the Di Folco 2004 isochrone age (Canonical alternatives).
+- **Pavlenko Y. V. et al. 2012** — *Spectral analysis of τ Ceti*,
+  MNRAS 422, 542 (`2012MNRAS.422..542P`, arXiv:1112.1709). Earlier
+  differential analysis ([Fe/H] −0.55, Teff 5344, log R'HK −4.95, age
+  7 Gyr) — SUPERSEDED across the board by the Phase 2 layer above; not
+  in the Phase 2 bib.
 - **Baliunas S. L. et al. 1996** — *Chromospheric variations in
   main-sequence stars II*, ApJ 438, 269 (`1995ApJ...438..269B`).
-  Mt Wilson Ca II H&K survey; τ Ceti rotation period 34 d;
-  exceptionally flat HK record without resolved cycle.
+  Mt Wilson Ca II H&K survey; τ Ceti ~34 d (the documented-divergence
+  alternative to the Korolik 2023 gyrochronological 46 d).
 
 ### Read (context / methodology, not directly decision-driving)
 
-- **Teixeira T. C. et al. 2009** — *Solar-like oscillations in
-  τ Ceti*, A&A 494, 237 (`2009A&A...494..237T`, arXiv:0811.3989).
-  HARPS p-mode detection; Δν = 169.0 ± 0.5 μHz, ν_max ≈ 4490 μHz;
-  asteroseismic mass and radius cross-check.
 - **Di Folco E. et al. 2007** — *VLTI/VINCI interferometric
   diameters of nearby exoplanet host stars*, A&A 475, 243
   (`2007A&A...475..243D`, arXiv:0710.1731). VINCI K-band angular
-  diameter; consistent with Teixeira 2009 asteroseismic radius.
+  diameter; the earlier interferometric radius, consistent with and
+  superseded by Korolik 2023 CHARA/MIRC-X.
 - **Schmitt J. H. M. M. et al. 1985** — *EXOSAT observations of
   nearby stars: τ Ceti upper limit*. log L_X ≤ 26.5 non-detection;
-  quiescent corona reference.
+  historical X-ray context only — NOT in the Phase 2 layer, no cfg row.
 - **Judge P. G. et al. 2004** — *FUV spectroscopy of τ Ceti from
   FUSE: chromospheric basal flux*, ApJ 613, 1306. Quiescent
   chromosphere reference; basal flux floor.
 - **Gray R. O. et al. 2006** — *Contributions to the Nearby Stars
-  (NStars) Project: spectroscopy of stars within 40 pc — south*.
-  G8V spectral classification.
+  (NStars) Project: spectroscopy of stars within 40 pc — south*
+  (`2006AJ....132..161G`). G8.5 V spectral classification.
 - **Boro Saikia S. et al. 2018** — *Solar-type magnetic activity
-  on τ Ceti from ZDI*, A&A 620, L11. Zeeman-Doppler-imaging
-  prefers 46 d rotation; cfg retains 34 d Baliunas 1996 canonical
-  value (see Decisions Basis).
+  on τ Ceti from ZDI*, A&A 620, L11. Zeeman-Doppler-imaging prefers
+  a 46 d rotation — consistent with the Korolik 2023 gyrochronological
+  46 ± 4 d now carried by the cfg.
 
 ### Read (instrument / non-cfg-decisive)
 
