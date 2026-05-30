@@ -1,0 +1,54 @@
+host: eps Ind A
+slug: eps-ind-a
+generated_at: '2026-05-31'
+note: 'Phase 2 bibliography for eps Ind A (GJ 845 A = HD 209100 = HIP 108870), K5V at 11.9 ly. Pins discovery + reanalysis
+  papers for planet b (cold super-Jupiter), dedicated stellar-parameter sources (asteroseismology, interferometry, spectroscopy,
+  activity), and the eps Ind B brown-dwarf-pair dynamical-mass source (Chen 2022). DRAFT step: fetch only. Per-star values
+  from catalog/survey papers live in VizieR, not the ar5iv body — those are marked manual_followup.
+
+  '
+papers:
+- arxiv_id: '1803.08163'
+  ads_bibcode: 2018arXiv180308163F   # arXiv-only preprint (Feng, Tuomi, Jones); ADS has no refereed-journal bibcode. RV result superseded/published via Feng 2019 MNRAS.
+  title: Feng et al. 2018 — discovery RV, closest Jovian exoplanet in eps Ind triple system
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1910.06804'
+  ads_bibcode: 2019MNRAS.490.5002F
+  title: Feng et al. 2019 — RV + Hipparcos/Gaia astrometry orbit, true mass ~3 MJ (alt)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2503.01599'
+  ads_bibcode: 2024Natur.633..789M
+  title: Matthews et al. 2024 — JWST/MIRI direct imaging discovery image, first-epoch params (alt)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2603.08780'
+  ads_bibcode: null   # ApJL 2026, DOI 10.3847/2041-8213/ae5823; exact ADS volume/page UNVERIFIED (sources disagree 984/L30 vs 1002/L5). arXiv id is the load-bearing pin.
+  doi: 10.3847/2041-8213/ae5823
+  title: Matthews et al. 2026 — 2nd-epoch JWST/MIRI, best mass 7.6 MJ + orbit (recommended anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2403.04509'
+  ads_bibcode: 2024ApJ...964..110L
+  doi: 10.3847/1538-4357/ad25f2
+  title: Lundkvist et al. 2024 — RV asteroseismology of eps Ind A (HARPS+UVES), mass + R + Teff (recommended mass anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2009A&A...505..205D
+  title: Demory et al. 2009 — VLTI/VINCI interferometric radius/Teff/L (VizieR J/A+A/505/205)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
+- arxiv_id: '2205.08077'
+  ads_bibcode: 2022AJ....163..288C
+  title: Chen et al. 2022 — VLT dynamical masses eps Ind Ba/Bb + Ba-Bb mutual orbit
+  status: fetched
+  category: deep_read
+  fetch_error: null

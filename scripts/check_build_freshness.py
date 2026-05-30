@@ -61,7 +61,12 @@ else:
         )
 
 # 2. reports.html / reports-manifest.json freshness vs docs/phase{2,3}/
-phase_html = list((DOCS / "phase2").glob("*.html")) + list((DOCS / "phase3").glob("*.html"))
+phase_html = [
+    f for f in (list((DOCS / "phase2").glob("*.html")) + list((DOCS / "phase3").glob("*.html")))
+    # manual-fetch.html + _-prefixed are not per-host reports; they're freshness-
+    # gated separately (manual-fetch by section 5) and must not drive reports.html.
+    if not f.stem.startswith("_") and f.stem != "manual-fetch"
+]
 reports_html = DOCS / "reports.html"
 reports_manifest = DOCS / "reports-manifest.json"
 for target_name, target in (("docs/reports.html", reports_html),
@@ -126,6 +131,24 @@ if reports_manifest.exists():
             f"docs/reports-manifest.json missing {len(dangling)} html file(s): "
             f"{sorted(dangling)[:5]}{'...' if len(dangling) > 5 else ''} — "
             f"rebuild reports index."
+        )
+
+
+# 5. manual-fetch.html freshness vs its sources (_bib/*.yaml + manual-paper-followup.md)
+manual_fetch = DOCS / "phase3" / "manual-fetch.html"
+mf_sources = (list((DOCS / "phase3" / "_bib").glob("*.yaml"))
+              + list((ROOT / "phase3").glob("*/manual-paper-followup.md")))
+if not manual_fetch.exists():
+    failures.append("docs/phase3/manual-fetch.html missing — run build_manual_fetch.py")
+else:
+    newest_mf_src = newest_mtime(mf_sources)
+    if newest_mf_src > manual_fetch.stat().st_mtime + 1.0:
+        from datetime import datetime
+        m_dt = datetime.fromtimestamp(manual_fetch.stat().st_mtime)
+        s_dt = datetime.fromtimestamp(newest_mf_src)
+        failures.append(
+            f"docs/phase3/manual-fetch.html stale: mtime {m_dt:%Y-%m-%d %H:%M} vs newest "
+            f"_bib/manual-paper-followup {s_dt:%Y-%m-%d %H:%M} — run build_manual_fetch.py"
         )
 
 

@@ -24,6 +24,8 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 
 ADS_BASE = 'https://ui.adsabs.harvard.edu/abs/'
 
@@ -259,6 +261,8 @@ h3 { font-size: 13px; margin: 18px 0 6px; color: var(--fg-muted); text-transform
 
 __SYSTEMS__
 
+__BIB_AUTO__
+
 <section>
   <h2 data-i18n="tips_h2"></h2>
   <ol class="tips">
@@ -365,6 +369,8 @@ def build_i18n(systems: list) -> str:
         'intro_p1': 'Papers surfaced by ADS but without an arXiv preprint at retrieval time. Claude cannot fetch these automatically, so the Phase 3 synthesis was built without their full text.',
         'intro_p2': 'Bibcodes link to the ADS abstract page. If you can access any of these (institutional library, Nature subscription, etc.), paste the abstract or full text back into a Phase 3 session and the affected synthesis files can be revised.',
         'stat_label': 'Pending fetches:',
+        'bibauto_h2': 'Auto-tracked from bibliographies',
+        'bibauto_note': 'Papers flagged manual-fetch in the curated Phase 2/3 bibliographies (no arXiv preprint / paywalled / VizieR-only). Auto-aggregated from docs/phase3/_bib/*.yaml — stays current as curation proceeds.',
         'tier_A_h3': 'Tier A — likely to change cfg decisions',
         'tier_B_h3': 'Tier B — useful context',
         'tier_C_h3': 'Tier C — conference proceedings / catalogs',
@@ -384,6 +390,8 @@ def build_i18n(systems: list) -> str:
         'intro_p1': 'ADS 에는 등록되어 있으나 fetch 시점에 arXiv preprint 가 없었던 논문들입니다. Claude 가 자동으로 가져올 수 없어서, Phase 3 합성은 이 논문들의 본문을 보지 못한 채 작성되었습니다.',
         'intro_p2': 'Bibcode 를 클릭하면 ADS abstract 페이지로 이동합니다. 어떤 경로로든 접근 가능하시면 (소속 도서관, Nature 구독 등) abstract 나 본문을 Phase 3 세션에 붙여 주시면 해당 합성 파일이 갱신됩니다.',
         'stat_label': '수동 fetch 대기:',
+        'bibauto_h2': '서지에서 자동 집계',
+        'bibauto_note': '큐레이션된 Phase 2/3 서지에서 수동 fetch 로 표시된 논문들 (arXiv preprint 없음 / 페이월 / VizieR 전용). docs/phase3/_bib/*.yaml 에서 자동 집계되어, 큐레이션이 진행될수록 자동으로 갱신됩니다.',
         'tier_A_h3': 'Tier A — cfg 결정을 바꿀 가능성 높음',
         'tier_B_h3': 'Tier B — 맥락에 유용',
         'tier_C_h3': 'Tier C — 학회 proceedings · catalog',
@@ -396,6 +404,79 @@ def build_i18n(systems: list) -> str:
         'footer_note': 'NearStars · 수동 fetch 인덱스 · phase3/<system>/manual-paper-followup.md 에서 자동 생성',
     }
     return json.dumps({'en': en_dict, 'ko': ko_dict}, ensure_ascii=False, indent=2)
+
+
+def collect_bib_manual(repo: Path) -> list:
+    """Auto-track manual-fetch papers from the curated Phase 2/3 bibliographies.
+
+    Reads docs/phase3/_bib/*.yaml and collects entries flagged
+    status=manual_followup/skipped (papers that can't be auto-fetched but bear
+    on the synthesis). Auto-harvested mega-bibs (where >=50% of entries are
+    un-fetched) and _system-* files are skipped, so only the genuine
+    curation-relevant manual papers surface. Self-updating: as curation adds
+    such an entry to any anchor bib, it appears here on the next build.
+    """
+    bib_dir = repo / 'docs' / 'phase3' / '_bib'
+    out = []
+    for f in sorted(bib_dir.glob('*.yaml')):
+        if f.name.startswith('_system-'):
+            continue
+        try:
+            doc = yaml.safe_load(f.read_text(encoding='utf-8')) or {}
+        except Exception:
+            continue
+        papers = doc.get('papers') or []
+        if not papers:
+            continue
+        manual = [p for p in papers
+                  if p.get('status') in ('manual_followup', 'skipped')
+                  or p.get('category') == 'manual_followup']
+        if not manual or len(manual) / len(papers) >= 0.5:
+            continue  # nothing to track, or an auto-harvested mega-bib
+        rows = []
+        for p in manual:
+            bib = (p.get('ads_bibcode') or '').strip()
+            yr = bib[:4] if bib[:4].isdigit() else ''
+            rows.append({
+                'bibcode': bib,
+                'arxiv': (p.get('arxiv_id') or '').strip(),
+                'title': p.get('title') or '',
+                'year': yr,
+            })
+        out.append({'host': doc.get('host') or f.stem, 'papers': rows})
+    return out
+
+
+def render_bib_auto(bib_systems: list) -> str:
+    """One card per system, listing its bibliography manual-fetch entries."""
+    if not bib_systems:
+        return ''
+    cards = []
+    for s in bib_systems:
+        body = '\n'.join(
+            '        <tr>'
+            '<td class="bib" data-label="Bibcode">'
+            + (f'<a href="{html.escape(ADS_BASE + p["bibcode"] + "/abstract")}" target="_blank" rel="noopener">{html.escape(p["bibcode"])}</a>'
+               if p['bibcode'] else html.escape(p['arxiv'] or '—'))
+            + '</td>'
+            f'<td class="year" data-label="Year">{html.escape(p["year"])}</td>'
+            f'<td class="title" data-label="Title">{inline_md(p["title"])}</td>'
+            '</tr>'
+            for p in s['papers'])
+        cards.append(
+            '<section class="system-card">\n'
+            f'  <h3 class="sys">{html.escape(s["host"])}</h3>\n'
+            '  <table class="mft">\n'
+            '    <thead><tr><th data-i18n="th_bibcode"></th><th data-i18n="th_year"></th><th data-i18n="th_title"></th></tr></thead>\n'
+            f'    <tbody>\n{body}\n    </tbody>\n'
+            '  </table>\n'
+            '</section>')
+    return (
+        '<section>\n'
+        '  <h2 data-i18n="bibauto_h2"></h2>\n'
+        '  <p class="note" data-i18n="bibauto_note"></p>\n'
+        + '\n'.join(cards)
+        + '\n</section>')
 
 
 def main() -> int:
@@ -428,8 +509,11 @@ def main() -> int:
     # which build_i18n then reads.
     systems_html = render_systems(systems)
     tips_html = render_tips(systems)
+    bib_auto = collect_bib_manual(repo)
+    bib_auto_html = render_bib_auto(bib_auto)
     page = (PAGE_TEMPLATE
         .replace('__SYSTEMS__', systems_html)
+        .replace('__BIB_AUTO__', bib_auto_html)
         .replace('__TIPS__', tips_html)
         .replace('__I18N_DICT__', build_i18n(systems)))
 
@@ -437,8 +521,10 @@ def main() -> int:
     out.write_text(page, encoding='utf-8')
     total_a = sum(max(0, len(s['data']['A']) - 1) for s in systems)
     total_b = sum(max(0, len(s['data']['B']) - 1) for s in systems)
-    print(f'wrote {out.relative_to(repo)}  ({len(systems)} systems, '
-          f'{total_a} Tier A + {total_b} Tier B papers)')
+    total_bib = sum(len(s['papers']) for s in bib_auto)
+    print(f'wrote {out.relative_to(repo)}  ({len(systems)} md-systems, '
+          f'{total_a} Tier A + {total_b} Tier B; {len(bib_auto)} bib-systems, '
+          f'{total_bib} auto-tracked papers)')
     return 0
 
 
