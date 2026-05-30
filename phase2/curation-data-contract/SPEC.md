@@ -58,6 +58,18 @@ Keyed by canonical host name. Partial override allowed (no top-level required ke
   `angular_diameter_uncertainty_mas`, `arxiv`, `notes`.
 - `mass`/`radius` extra keys: `source_title`, `source_used_for`, `emit_source`
   (build-control for the auto `sources[]` loop; stripped before raw block).
+- `rotation_measurements` extra key: `notes` (grade / technique caveat, e.g. a
+  chromospheric Ca II H&K period recorded with `method=unverified`).
+
+**Category completeness is impact-ordered, not all-mandatory.** Priority for the
+cfg / visual layer: rotation > activity > teff / R / L / mass > age > metallicity.
+- **[Fe/H] is skipped for new hosts** — metallicity only weakly tints the SED
+  (line blanketing, below perception), does not drive magnetic field or stellar
+  wind (rotation + activity dynamo do), and Kopernicus does not ingest it.
+- **A-type stars** leave `activity_measurements` empty (no chromospheric dynamo).
+- Never fabricate a rotation period from v sin i / pole-on geometry — record
+  `method=unverified` or omit. `method=unverified` flags a real measurement whose
+  technique is outside the whitelist, not a dubious value.
 
 ### B. Disk — `db/disks_curated.json`
 Keyed by component name (must exist in `target_list.json` components — orphan/typo
@@ -101,6 +113,20 @@ by **non-deterministic live web search**. The fix is already-built infrastructur
 
 A value whose source is not pinned + cached is not "verified" — it is
 "re-discoverable", which is the divergent state to avoid.
+
+**Catalog / survey papers carry per-star values in VizieR, not the ar5iv body.**
+Large catalogs (Cifuentes 2020, Mann 2015, Schweitzer 2019, Gomes da Silva,
+Sousa / Santos) publish per-object measurements in their VizieR table, not in
+the cached paper text. Value-check those against the named VizieR catalog (e.g.
+`J/A+A/642/A115`) by object ID — a named-catalog lookup is deterministic too.
+
+**Writing curated is canonical-writer-only.** Persist
+`db/stellar_props_curated.json` / `db/planets_curated.json` through
+`scripts/pipeline/apply_phase2.py` (from `phase2/<slug>/measurements.yaml`) or
+`schema.write_canonical` — never a hand-rolled `json.dump`. A divergent indent
+or key order re-serializes the whole file (a thousands-line diff that can mask
+other entries). `validate.py` (check.sh gate 1) hard-fails any non-canonical
+curated file, so the gate catches it before commit.
 
 ---
 

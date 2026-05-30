@@ -279,6 +279,10 @@ def validate_binary_orbits(binary_orbits):
 # metallicity/rotation/activity 6개 카테고리 추가. tier 우선순위는 코드 외부
 # (phase2/schema-expansion/context-notes.md) 에 문서화됨 — 코드는 whitelist
 # 만 강제하고 recommended:true 선택은 사용자가 manual 로 함.
+#
+# 모든 카테고리의 "unverified" 는 escape hatch 다 — 값은 실측이지만 기법이
+# 화이트리스트 밖일 때 쓴다 (예: 채층 Ca II H&K 자전주기, Simpson 2010 HD 69830).
+# "값이 의심스럽다" 는 뜻이 아니며 recommended:true 도 허용된다 (단서는 notes 에).
 
 # build-control 필드 — mass/radius 의 자동 sources[] 항목 생성을 제어한다.
 # build_systems.py 의 sources[] 루프만 이 필드들을 읽고, raw block 으로 가기

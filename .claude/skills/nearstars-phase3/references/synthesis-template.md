@@ -222,7 +222,7 @@ disk".
 - `disk_inner_radius_au` (float, AU from star center)
 - `disk_outer_radius_au` (float, AU)
 - `disk_dust_temperature_k` (float, K; for cold debris disks usually 50–150 K)
-- `disk_tint_rgb_hex` (hex; cfg-ready synth from dust temp + composition)
+- `disk_tint_rgb_hex` (hex; Mie scattered-light reflectance synth + faithful/vivid variants — see [`disk-color.md`](disk-color.md))
 - `disk_opacity` (float 0–1; cfg-ready synth from optical depth)
 - `disk_morphology` (prose — single-ring / multi-ring / two-belt / asymmetric / warped / planetesimal-stirred)
 - `disk_resolved_imaging` (bool; true for Fomalhaut/Vega/AU Mic class, false for SED-only-inferred)

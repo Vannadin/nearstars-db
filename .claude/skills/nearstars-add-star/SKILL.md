@@ -343,6 +343,68 @@ user rather than silently picking.
 
 ---
 
+## Curation discipline (value-check, writer, categories)
+
+**Value-check against the frozen cache.** Discovery may use live web
+(ADS / arXiv / VizieR), but every `recommended` value you COMMIT must be
+checked against the cached paper text, never re-fetched live. Flow: pin
+`arxiv_id` in `docs/phase3/_bib/<slug>.yaml` →
+`python3 scripts/phase3/fetch_arxiv_texts.py <bib>` caches to
+`docs/phase3/_papers/<id>.md` → grep the cache for the exact value.
+Catalog / survey papers (Cifuentes 2020, Mann 2015, Schweitzer 2019,
+Gomes da Silva, Sousa / Santos) carry per-star values in their **VizieR
+catalog**, not the ar5iv body — verify the named catalog (e.g.
+`J/A+A/642/A115`) by object ID. Never cite from memory. See
+`[[project-nearstars-curation-contract]]`.
+
+**Write curated only through the canonical writer.** Edit
+`db/stellar_props_curated.json` / `db/planets_curated.json` via
+`apply_phase2.py <slug>` (from `phase2/<slug>/measurements.yaml`) or
+`schema.write_canonical(path, data)`. NEVER hand-roll `json.dump` — a
+different indent or key order re-serializes all ~142 keys (a 10k-line
+diff that can mask another star's data). `validate.py` (check.sh gate 1)
+now hard-fails any non-canonical curated file. See
+`[[project-curated-whole-file-rewrite]]`.
+
+**Category completeness is impact-ordered, not all-mandatory.** The eight
+stellar categories matter to the cfg / visual layer in this order:
+rotation > activity > teff / R / L / mass > age > metallicity.
+- **[Fe/H]: skip for new hosts.** Metallicity only weakly tints the SED
+  (line blanketing, below perception threshold); it does NOT drive
+  magnetic field or stellar wind (those come from rotation + activity
+  dynamo scaling), and Kopernicus does not ingest it. Don't spend
+  research time on it. See `[[feedback-skip-metallicity]]`.
+- **A-type stars: leave `activity_measurements` empty** — no chromospheric
+  Ca II H&K dynamo, so log R'HK is undefined (omitting it is correct).
+- **Rotation only from a real period.** Pole-on or v sin i-only stars
+  have no measured P_rot — record `method=unverified` with a `notes`
+  caveat, or omit. Never fabricate a period.
+
+**`method=unverified` is the escape hatch, not a quality flag.** Use it
+for a *real* measurement whose technique is outside the schema whitelist
+(e.g. a chromospheric Ca II H&K rotation period — Simpson 2010 for
+HD 69830). `recommended: true` is still allowed; put the grade / technique
+caveat in `notes`.
+
+**Don't infer "no measurement exists" from silence.** A negative claim
+("no interferometric radius", "no measured rotation") must come from an
+explicit lit / VizieR search, not from a quiet first pass. (HD 69830's
+rotation was asserted absent in a prior note, but Simpson 2010 had
+measured 35.1 d.)
+
+**Delegate cache-bound work to subagents (token economy).** Reading
+caches, drafting entries, and ko mirrors are delegable; the main thread
+keeps the value-check gate in one deterministic place and verifies with
+`check.sh` + block parity. Agent teams are safe ONLY when inputs are
+frozen / cached (parallel × no live network × narrow scope): draft agents
+propose `(bibcode, value, cache line)`, the main thread value-checks,
+adversarial verify agents (refute-by-default) catch unbacked values, and
+you ALWAYS self-verify block parity — never trust an agent's self-report.
+See `[[feedback-agent-token-saving]]` and
+`[[project-phase23-agent-methodology]]`.
+
+---
+
 ## Autonomy guards (autonomy ≠ carelessness)
 
 Autonomous execution is the default (`[[feedback-autonomy]]`), but the

@@ -492,6 +492,37 @@ specific step or reference in this skill:
 - **Canonical-vs-cfg divergence requires a `## Canonical alternatives`
   section.** Step 9 plus `references/conflict-resolution.md` §
   "Documented divergence".
+- **A-type / hot stars: no chromospheric-activity rows.** A-types have no
+  Ca II H&K dynamo, so `activity_log_rhk` and friends stay null; synthesize
+  `visual_surface_tint_hex` from Teff + spectral type. Metallicity
+  line-blanketing is only a sub-perception tertiary tie-break — usually
+  skipped. See [[feedback-skip-metallicity]].
+- **Debris-disk tint is Mie-synthesized, not eyeballed.** When a host has a
+  disk, derive `disk_tint_rgb_hex` per `references/disk-color.md`
+  (`scripts/phase3/disk_color_mie.py`); emit faithful + vivid variants.
+
+---
+
+## Agent-team delegation (when frozen, parallelize)
+
+Phase 3 synthesis parallelizes well ONCE Phase 2 is frozen and the
+`docs/phase3/_papers/<arxiv_id>.md` cache is populated — that is the only
+safe condition (parallel × no live network × narrow per-host scope). To
+save main-thread tokens:
+
+- **Delegate** cache reading, per-host synthesis drafting, and the Korean
+  mirror to subagents. Keep the Step 10 VERIFY gate (value ↔ cached paper)
+  on the main thread, in one deterministic place.
+- **Draft → verify pipeline.** Draft agents return `(bibcode, value, cache
+  line)`; the main thread value-checks; adversarial verify agents
+  (refute-by-default) kill unbacked numbers.
+- **ALWAYS self-verify block parity** after a delegated en or ko edit —
+  never trust an agent's self-report. (A delegated tau-cet ko mirror once
+  silently dropped a `## Visual styling` heading; block parity caught it.)
+- EN value edits stay on the main thread for citation integrity; the Korean
+  mirror is the most cleanly delegable piece.
+
+See [[feedback-agent-token-saving]] and [[project-phase23-agent-methodology]].
 
 ---
 
