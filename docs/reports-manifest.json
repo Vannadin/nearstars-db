@@ -124,6 +124,50 @@
       "★": "phase3/vega.html"
     }
   },
+  "55 Cnc": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/55-cnc.html",
+      "b": "phase3/55-cnc-b.html",
+      "c": "phase3/55-cnc-c.html",
+      "d": "phase3/55-cnc-d.html",
+      "e": "phase3/55-cnc-e.html",
+      "f": "phase3/55-cnc-f.html"
+    }
+  },
+  "eps Ind A": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/eps-ind-a.html",
+      "b": "phase3/eps-ind-a-b.html"
+    }
+  },
+  "GJ 896 A": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/gj-896-a.html",
+      "b": "phase3/gj-896-a-b.html"
+    }
+  },
+  "GJ 9066": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/gj-9066.html",
+      "c": "phase3/gj-9066-c.html"
+    }
+  },
+  "HD 219134": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/hd-219134.html",
+      "b": "phase3/hd-219134-b.html",
+      "c": "phase3/hd-219134-c.html",
+      "d": "phase3/hd-219134-d.html",
+      "f": "phase3/hd-219134-f.html",
+      "g": "phase3/hd-219134-g.html",
+      "h": "phase3/hd-219134-h.html"
+    }
+  },
   "YZ Cet": {
     "phase2": null,
     "phase3": {
