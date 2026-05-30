@@ -81,27 +81,35 @@ def _lin_rgb(spec):
 
 SOLAR_TEFF = 5772.0
 
-def _to_hex(rgb):
+# sat: chroma factor about the grey point. 0.82 = faithful (mild desaturation,
+# dust not neon); ~2.6 = the "vivid" / prettier cfg pack (saturation boosted so
+# the disk colors are clearly visible), same HUE, just pushed off grey.
+SAT_FAITHFUL = 0.82
+SAT_VIVID = 2.6
+
+def _to_hex(rgb, sat):
     rgb = np.clip(rgb, 1e-6, None)
     rgb = rgb / rgb.max()
-    rgb = 0.82 * rgb + 0.18 * rgb.mean()  # mild desaturation toward grey (dust, not neon)
+    rgb = rgb.mean() + sat * (rgb - rgb.mean())   # scale chroma about grey
+    rgb = np.clip(rgb, 0, None)
+    rgb = rgb / max(rgb.max(), 1e-9)
     srgb = np.where(rgb <= 0.0031308, 12.92 * rgb, 1.055 * rgb ** (1 / 2.4) - 0.055)
     return "#" + "".join(f"{int(round(c * 255)):02x}" for c in np.clip(srgb, 0, 1))
 
-def color_reflectance(qsca_lambda):
+def color_reflectance(qsca_lambda, sat=SAT_FAITHFUL):
     """Intrinsic dust reflectance color (star-independent), white-balanced to a
     flat illuminant: flat reflectance -> neutral grey. Matches the measured
     disk-vs-star colors (AU Mic blue, Fomalhaut grey)."""
-    return _to_hex(_lin_rgb(qsca_lambda) / _lin_rgb(np.ones_like(WL)))
+    return _to_hex(_lin_rgb(qsca_lambda) / _lin_rgb(np.ones_like(WL)), sat)
 
-def color_absolute(qsca_lambda, teff):
+def color_absolute(qsca_lambda, teff, sat=SAT_FAITHFUL):
     """ABSOLUTE scattered-starlight color = star_blackbody(Teff) * Qsca(lambda),
     white-balanced to the SUN (a neutral grain under a Sun-like star -> white;
     under a K/M star -> warm; under an A star -> blue-white). This is the repo
     convention (star color baked in), upgraded from crude 'star color + albedo'
-    to proper grain-size Mie scattering."""
+    to proper grain-size Mie scattering with wavelength-dependent n,k."""
     spec = planck(WL, teff) * qsca_lambda
-    return _to_hex(_lin_rgb(spec) / _lin_rgb(planck(WL, SOLAR_TEFF)))
+    return _to_hex(_lin_rgb(spec) / _lin_rgb(planck(WL, SOLAR_TEFF)), sat)
 
 
 def planck(wl_nm, teff):
@@ -112,30 +120,46 @@ def planck(wl_nm, teff):
 
 # ── per-belt synthesis ───────────────────────────────────────────────────────
 
-# representative optical-band (n, k) per composition class
-COMP = {
-    "astrosil":   (1.65, 0.02),   # astronomical silicate (Draine), weakly absorbing
-    "olivine":    (1.67, 0.01),   # crystalline olivine, transparent-ish
-    "ice_sil":    (1.45, 0.005),  # icy/silicate mix, large transparent grains
-    "carbon":     (1.95, 0.45),   # amorphous carbon, strongly absorbing -> dark
-    "sil_org":    (1.70, 0.10),   # amorphous silicate + organics
+WL = np.linspace(380, 780, 41)  # optical band, nm
+
+# Wavelength-dependent optical constants n(lambda), k(lambda), sampled at
+# [400,500,600,700,800] nm from the literature and interpolated to WL. k carries
+# the blue-absorption that reddens absorbing materials; transparent grains (ice,
+# forsterite) get their color from grain size alone. Representative optical-band
+# values from:
+#   astrosil  — Draine 2003 astronomical silicate (2003ApJ...598.1017D)
+#   carbon    — amorphous C, Rouleau & Martin 1991 (1991ApJ...377..526R)
+#   ice       — water ice, Warren & Brandt 2008 (2008JGRD..11314220W)
+#   olivine   — Mg-rich crystalline forsterite, Jäger et al. 2003 (2003A&A...408..193J)
+#   tholin    — Titan organic tholin, Khare et al. 1984 (1984Icar...60..127K)
+# ice_sil / sil_org are 50/50 mass-ish blends (eps Eri cold ring / tau Cet).
+_WLS = np.array([400.0, 500.0, 600.0, 700.0, 800.0])
+_NK = {
+    "astrosil": ([1.70, 1.69, 1.69, 1.69, 1.69], [0.031, 0.017, 0.010, 0.006, 0.004]),
+    "carbon":   ([1.98, 1.96, 1.95, 1.94, 1.93], [0.64, 0.58, 0.54, 0.51, 0.49]),
+    "ice":      ([1.32, 1.31, 1.31, 1.31, 1.31], [1e-9, 2e-9, 1e-8, 3e-8, 6e-8]),
+    "olivine":  ([1.65, 1.64, 1.64, 1.63, 1.63], [3e-4, 1.5e-4, 1e-4, 8e-5, 7e-5]),
+    "tholin":   ([1.66, 1.65, 1.64, 1.63, 1.63], [0.27, 0.065, 0.022, 0.010, 0.006]),
+    "ice_sil":  ([1.51, 1.50, 1.50, 1.50, 1.50], [0.015, 0.009, 0.005, 0.003, 0.002]),
+    "sil_org":  ([1.68, 1.67, 1.66, 1.66, 1.65], [0.15, 0.04, 0.016, 0.008, 0.005]),
 }
 
-WL = np.linspace(380, 780, 81)  # optical band, nm
+def _m_lambda(comp):
+    n_s, k_s = _NK[comp]
+    n = np.interp(WL, _WLS, n_s)
+    k = np.interp(WL, _WLS, k_s)
+    return n + 1j * k
 
 def belt_color(a_min, a_max, q, comp, teff):
-    """Intrinsic dust REFLECTANCE color = Qsca(lambda) under an equal-energy
-    illuminant (star-independent). This is what 'the disk is blue/grey/red'
-    means observationally (disk-relative-to-star); the renderer applies the
-    in-game star illumination on top. Matches the two measured anchors."""
-    n, k = COMP[comp]
-    m = complex(n, k)
+    """Size-distribution-integrated Qsca(lambda) with wavelength-dependent n,k.
+    Returns the per-wavelength scattering efficiency (the reflectance spectrum)."""
+    m = _m_lambda(comp)
     sizes = np.logspace(np.log10(a_min), np.log10(a_max), 40)  # micron
     weights = sizes ** (-q)
     qsca_lambda = np.zeros_like(WL)
     for a, w in zip(sizes, weights):
         x = 2 * np.pi * a * 1000.0 / WL  # a[µm]->nm; x=2πa/λ
-        qs = np.array([mie_qsca(xi, m) for xi in x])
+        qs = np.array([mie_qsca(x[j], m[j]) for j in range(len(WL))])
         qsca_lambda += w * (a ** 2) * qs
     qsca_lambda /= np.trapz(weights * sizes ** 2, sizes)
     return qsca_lambda
@@ -181,10 +205,15 @@ BELTS = [
     ("[val] Fomalhaut main (measured GREY)", None, 1000, 3.5, "ice_sil", 16.63, 1.92, 8590),
 ]
 
+def band_ratio(qsca, lo=445.0, hi=806.0):
+    return float(np.interp(lo, WL, qsca) / np.interp(hi, WL, qsca))  # B/I reflectance ratio
+
 if __name__ == "__main__":
-    print(f"{'belt':40s} {'a_blow':>7s} {'a_min':>7s} {'comp':9s} {'absolute':9s} {'reflect':9s}")
+    print(f"{'belt':40s} {'a_min':>6s} {'comp':9s} {'faithful':9s} {'vivid':9s} {'B/I':>5s}")
     for name, amin, amax, q, comp, L, M, teff in BELTS:
         ab = a_blow(L, M)
         am = amin if amin is not None else max(ab, 0.05)
         qsca = belt_color(am, amax, q, comp, teff)
-        print(f"{name:40s} {ab:7.2f} {am:7.2f} {comp:9s} {color_absolute(qsca, teff):9s} {color_reflectance(qsca):9s}")
+        faith = color_reflectance(qsca, SAT_FAITHFUL)
+        vivid = color_reflectance(qsca, SAT_VIVID)
+        print(f"{name:40s} {am:6.2f} {comp:9s} {faith:9s} {vivid:9s} {band_ratio(qsca):5.2f}")
