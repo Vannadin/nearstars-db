@@ -68,6 +68,18 @@ input[type=checkbox]{accent-color:#4a88b8}
   pointer-events: none;
 }
 
+/* spectral-type tooltip (ported from v1) */
+.a2-tooltip.spec-tip { max-width: 300px; padding: 12px 15px; white-space: normal; text-align: left; }
+.tip-head{font-size:18px;font-weight:700;color:#d0e8ff;font-family:monospace;margin-bottom:7px;letter-spacing:.5px}
+.tip-cls{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.tip-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.15)}
+.tip-cls-name{font-size:13px;font-weight:600;color:#c0d8f0}
+.tip-temp{font-size:12px;color:#6090b0;margin-bottom:6px;padding-left:20px}
+.tip-desc{font-size:12px;color:#8aaac0;line-height:1.6;margin-bottom:7px;padding-left:20px}
+.tip-row{font-size:12px;color:#7090a8;margin-bottom:3px;padding-left:4px}
+.tip-row b{color:#90b8d0}
+.tip-sfx{font-size:11px;color:#506070;margin-top:2px;padding-left:4px}
+
 /* ── v2 본문 — A2_RefinedSpectral.jsx 의 a2_styles 를 그대로 vanilla 이식 ── */
 [data-ns="v2"] .a2-root { position: relative; display: flex; flex-direction: column;
                           min-height: 100%; font-family: var(--v2-font-sans);
@@ -1004,6 +1016,195 @@ function decorateGlossary(root) {
   });
 }
 
+// ── Spectral type tooltip (ported from index.v1.html) ──────────────────────
+const SPEC_DOT = {O:'#9ab0ff',B:'#a8c8ff',A:'#d0e8ff',F:'#eeff90',G:'#ffe840',K:'#ff9020',M:'#ff4020',L:'#cc2000',T:'#880000',Y:'#440000',W:'#8888ff',C:'#ff8800',S:'#ff6600',D:'#e0e0ff'};
+
+const SPEC_INFO = {
+  ko: {
+    class: {
+      O:  {color:'청백색',     temp:'>30,000 K',       desc:'가장 뜨거운 항성. 자외선 방출 극대, 수명 수백만 년. 예: 제타 퍼피스.'},
+      B:  {color:'청백색',     temp:'10,000–30,000 K',  desc:'고온 항성. 헬륨 흡수선 강함. 예: 리겔, 스피카.'},
+      A:  {color:'흰색',       temp:'7,500–10,000 K',   desc:'수소 발머선 최대. 예: 시리우스, 베가, 알타이르.'},
+      F:  {color:'황백색',     temp:'6,000–7,500 K',    desc:'칼슘 이온선 출현, 수소선 약화 시작. 예: 프로키온.'},
+      G:  {color:'황색',       temp:'5,200–6,000 K',    desc:'태양형 항성. Ca H&K선 강함. 예: 태양(G2V), 알파 켄타우리 A.'},
+      K:  {color:'주황색',     temp:'3,700–5,200 K',    desc:'분자선 출현, 수소선 약. 예: 아크투루스, 엡실론 에리다니.'},
+      M:  {color:'적색',       temp:'2,400–3,700 K',    desc:'TiO 분자띠 특징. 가장 흔한 항성. 예: 프록시마, 바너드 별.'},
+      L:  {color:'암적색',     temp:'1,300–2,400 K',    desc:'갈색왜성/초저온 항성. 금속수소화물·알칼리 금속선.'},
+      T:  {color:'근적외선',   temp:'700–1,300 K',      desc:'갈색왜성. 메탄(CH₄) 흡수띠 강함.'},
+      Y:  {color:'적외선',     temp:'<700 K',           desc:'가장 차가운 갈색왜성. 암모니아 검출.'},
+      W:  {color:'청색',       temp:'>25,000 K',        desc:'울프-레이에 항성. 강한 방출선, 극심한 질량 손실.'},
+      C:  {color:'적색',       temp:'2,000–5,000 K',    desc:'탄소별. C/O > 1. 탄소 분자선(CN, C₂) 특징.'},
+      S:  {color:'적색',       temp:'2,000–4,000 K',    desc:'ZrO 분자선 특징의 거성. M형과 C형의 중간.'},
+      D:  {color:'흰색~청색',  temp:'4,000–150,000+ K', desc:'백색왜성. 핵연료 소진된 항성 잔해. 태양 크기의 지구 정도.'},
+    },
+    lum: {
+      'Ia':'밝은 초거성 (Bright Supergiant)', 'Ib':'초거성 (Supergiant)',
+      'II':'밝은 거성 (Bright Giant)', 'III':'거성 (Giant)',
+      'IV':'준거성 (Subgiant)', 'V':'주계열성 · 왜성 (Main Sequence)',
+      'VI':'준왜성 (Subdwarf)', 'VII':'백색왜성 (White Dwarf)',
+    },
+    suffix: {
+      e:'방출선 존재 — 성주 원반 또는 껍질의 증거',
+      p:'특이 조성 (peculiar) — 비정상 원소 분포',
+      n:'자전에 의한 광폭 흡수선 (nebulous)',
+      v:'변광 (variable) — 밝기 변화',
+      m:'금속선형 (metallic-lined)',
+      f:'질소·헬륨 방출선 (O형·WR형)',
+      k:'성간 흡수선 검출',
+      q:'P Cygni 프로파일 (방출+흡수)',
+    },
+    subNote: '세부 등급 {sub} — 0: 해당 형 최고온, 9: 최저온',
+    prefix: {sd:'준왜성 (subdwarf)', D:'백색왜성 (white dwarf)'},
+    wd: {
+      header: '태양형 항성의 잔해. 핵융합 정지, 축퇴된 전자 압력으로 유지. 지구 크기에 태양 수준 질량.',
+      letters: {
+        A: '수소 우세 대기 (H I 발머선)',
+        B: '헬륨 우세 대기 (He I 흡수선)',
+        C: '연속 스펙트럼 (식별 가능한 흡수선 없음)',
+        O: '고온 헬륨 (He II 흡수선, > 80,000 K)',
+        Z: '금속 오염 (Ca·Fe·Mg 등) — 행성 잔해 누적의 증거',
+        Q: '탄소 특성 (대기에 탄소)',
+        H: '자기장 (~1 MG 이상)',
+        X: '식별 불명 / 특이',
+        V: '변광 (ZZ Ceti 류 맥동)',
+        P: '편광 (자기장 동반)',
+        E: '방출선',
+      },
+      tempLabel: '온도 지수',
+      tempNote: 'Teff ≈ 50,400 / 지수 K',
+      compNote: '여러 글자가 붙으면 첫 글자가 주 특징, 나머지는 부 특징입니다 (예: DAZ = 수소 + 금속 오염).',
+    },
+  },
+  en: {
+    class: {
+      O:  {color:'Blue-white',    temp:'>30,000 K',       desc:'Hottest class. Extreme UV output, lifespan millions of years. e.g. Zeta Puppis.'},
+      B:  {color:'Blue-white',    temp:'10,000–30,000 K',  desc:'Hot. Strong helium absorption. e.g. Rigel, Spica.'},
+      A:  {color:'White',         temp:'7,500–10,000 K',   desc:'Peak hydrogen Balmer lines. e.g. Sirius, Vega, Altair.'},
+      F:  {color:'Yellow-white',  temp:'6,000–7,500 K',    desc:'Ionized calcium lines appear. e.g. Procyon.'},
+      G:  {color:'Yellow',        temp:'5,200–6,000 K',    desc:'Solar-type. Strong Ca H&K. e.g. Sun (G2V), Alpha Cen A.'},
+      K:  {color:'Orange',        temp:'3,700–5,200 K',    desc:'Molecular lines appear, weak hydrogen. e.g. Arcturus, Epsilon Eridani.'},
+      M:  {color:'Red',           temp:'2,400–3,700 K',    desc:'TiO molecular bands. Most common type. e.g. Proxima, Barnard\'s Star.'},
+      L:  {color:'Dark red',      temp:'1,300–2,400 K',    desc:'Brown dwarf/ultra-cool. Metal hydride & alkali metal lines.'},
+      T:  {color:'Near-IR',       temp:'700–1,300 K',      desc:'Brown dwarf. Strong methane (CH₄) absorption.'},
+      Y:  {color:'Infrared',      temp:'<700 K',           desc:'Coldest brown dwarfs. Ammonia detected.'},
+      W:  {color:'Blue',          temp:'>25,000 K',        desc:'Wolf-Rayet star. Broad emission lines, extreme mass loss.'},
+      C:  {color:'Red',           temp:'2,000–5,000 K',    desc:'Carbon star. C/O > 1. CN and C₂ molecular bands.'},
+      S:  {color:'Red',           temp:'2,000–4,000 K',    desc:'Giant with ZrO bands. Intermediate between M and C.'},
+      D:  {color:'White to blue', temp:'4,000–150,000+ K', desc:'White dwarf. Stellar remnant after fuel exhaustion. Earth-sized.'},
+    },
+    lum: {
+      'Ia':'Bright Supergiant', 'Ib':'Supergiant',
+      'II':'Bright Giant', 'III':'Giant',
+      'IV':'Subgiant', 'V':'Main Sequence (Dwarf)',
+      'VI':'Subdwarf', 'VII':'White Dwarf',
+    },
+    suffix: {
+      e:'Emission lines — evidence of circumstellar disk or shell',
+      p:'Peculiar composition — abnormal element distribution',
+      n:'Rotationally broadened lines (nebulous)',
+      v:'Variable brightness',
+      m:'Metallic-lined',
+      f:'N/He emission lines (O/WR type)',
+      k:'Interstellar absorption lines detected',
+      q:'P Cygni profile (emission + absorption)',
+    },
+    subNote: 'Sub-type {sub} — 0: hottest in class, 9: coolest',
+    prefix: {sd:'Subdwarf', D:'White dwarf'},
+    wd: {
+      header: 'Stellar remnant after fuel exhaustion. Earth-sized, sustained by electron degeneracy pressure; up to ~1.4 M☉.',
+      letters: {
+        A: 'Hydrogen-dominated atmosphere (H I Balmer lines)',
+        B: 'Helium-dominated (He I lines)',
+        C: 'Continuous spectrum (no identifiable lines)',
+        O: 'Hot helium (He II lines, > 80,000 K)',
+        Z: 'Metal-polluted (Ca, Fe, Mg) — planetary debris accretion signature',
+        Q: 'Carbon features (DQ — carbon in atmosphere)',
+        H: 'Magnetic field (~1 MG or more)',
+        X: 'Unclassified / peculiar',
+        V: 'Variable (ZZ Ceti pulsator etc.)',
+        P: 'Polarized (magnetic)',
+        E: 'Emission lines',
+      },
+      tempLabel: 'Temperature index',
+      tempNote: 'Teff ≈ 50,400 / index K',
+      compNote: 'When multiple letters appear, the first marks the primary feature and the rest are secondary (e.g. DAZ = hydrogen-dominated + metal-polluted).',
+    },
+  }
+};
+
+function parseSpecWD(spec) {
+  // White dwarf format: D + composition letters (1-3 of A/B/C/O/Z/Q/H/X/V/P/E)
+  //   + optional temperature index (digit + optional decimal)
+  //   + optional trailing peculiar/variable suffix.
+  // The leading D classifies it as a degenerate; subsequent letters describe
+  // *atmospheric composition*, not main-sequence class. The numeric index is
+  // a temperature proxy: Teff ≈ 50,400 / index K.
+  const m = spec.trim().match(/^D([ABCOZQHXVPE]+)(\d+\.?\d*)?(.*)$/);
+  if (!m) return null;
+  return {
+    kind: 'WD',
+    composition: m[1].split(''),
+    tempIndex: m[2] ? parseFloat(m[2]) : null,
+    extras: (m[3] || '').trim(),
+  };
+}
+
+function parseSpec(spec) {
+  if (!spec || spec === '—') return null;
+  // White dwarfs use an entirely different classification scheme — route them
+  // to parseSpecWD so we don't mis-render "DA2" as an A-type main-sequence star.
+  if (/^D[ABCOZQHXVPE]/.test(spec.trim())) return parseSpecWD(spec);
+  // prefix: sd, D (fallback for non-letter-matched D... cases), esd, etc.
+  const m = spec.match(/^(sd|esd|D)?([OBAFGKMLTYSWCD])(\d+\.?\d*)?\s*(Ia|Ib|II|III|IV|VI|VII|V)?\s*([a-z]*)/i);
+  if (!m) return null;
+  return { prefix: (m[1]||'').toLowerCase(), cls: m[2].toUpperCase(), sub: m[3]||'', lum: m[4]||'', suffix: m[5]||'' };
+}
+
+function buildWDTip(spec, p) {
+  const wd = SPEC_INFO[LANG].wd;
+  const dot = SPEC_DOT.D;
+  const title = LANG === 'ko' ? '백색왜성 (white dwarf)' : 'White dwarf';
+  let h = `<div class="tip-head">${spec}</div>`;
+  h += `<div class="tip-cls"><span class="tip-dot" style="background:${dot}"></span><span class="tip-cls-name">${title}</span></div>`;
+  h += `<div class="tip-desc">${wd.header}</div>`;
+  p.composition.forEach(letter => {
+    if (wd.letters[letter]) {
+      h += `<div class="tip-row"><b>D${letter}</b> — ${wd.letters[letter]}</div>`;
+    }
+  });
+  if (p.tempIndex != null) {
+    const teff = Math.round(50400 / p.tempIndex).toLocaleString();
+    h += `<div class="tip-row"><b>${wd.tempLabel} ${p.tempIndex}</b> — Teff ≈ ${teff} K <span style="opacity:0.7">(${wd.tempNote})</span></div>`;
+  }
+  if (p.composition.length > 1) {
+    h += `<div class="tip-sfx">${wd.compNote}</div>`;
+  }
+  return h;
+}
+
+function buildSpecTip(spec) {
+  const p = parseSpec(spec);
+  if (!p) return `<div class="tip-head">${spec}</div><div class="tip-desc">Unknown spectral type</div>`;
+  if (p.kind === 'WD') return buildWDTip(spec, p);
+  const d = SPEC_INFO[LANG];
+  const cls = d.class[p.cls];
+  const dot = SPEC_DOT[p.cls] || '#888';
+  let h = `<div class="tip-head">${spec}</div>`;
+  if (cls) {
+    h += `<div class="tip-cls"><span class="tip-dot" style="background:${dot}"></span><span class="tip-cls-name">${p.cls}${LANG==='ko'?'형':''} · ${cls.color}</span></div>`;
+    h += `<div class="tip-temp">T: ${cls.temp}</div>`;
+    h += `<div class="tip-desc">${cls.desc}</div>`;
+  }
+  if (p.sub) h += `<div class="tip-row">${d.subNote.replace('{sub}', p.sub)}</div>`;
+  if (p.lum && d.lum[p.lum]) h += `<div class="tip-row"><b>${p.lum}</b> — ${d.lum[p.lum]}</div>`;
+  if (p.prefix && d.prefix[p.prefix]) h += `<div class="tip-row"><b>${p.prefix}</b> — ${d.prefix[p.prefix]}</div>`;
+  p.suffix.split('').forEach(c => {
+    if (d.suffix[c]) h += `<div class="tip-sfx"><b>${c}</b>: ${d.suffix[c]}</div>`;
+  });
+  return h;
+}
+
+
 let _tipEl = null;
 function initTooltip() {
   if (_tipEl) return;
@@ -1011,8 +1212,24 @@ function initTooltip() {
   _tipEl.className = 'a2-tooltip';
   document.body.appendChild(_tipEl);
   document.addEventListener('mouseover', (e) => {
+    const sb = e.target.closest('.v2-sb');
+    if (sb) {
+      const spec = sb.textContent.trim();
+      if (!spec || spec === '—') { _tipEl.style.display = 'none'; return; }
+      _tipEl.className = 'a2-tooltip spec-tip';
+      _tipEl.innerHTML = buildSpecTip(spec);
+      _tipEl.style.display = 'block';
+      const r = sb.getBoundingClientRect();
+      const w = _tipEl.offsetWidth;
+      let l = r.left + window.scrollX;
+      if (l + w > window.innerWidth - 8) l = window.innerWidth - w - 8;
+      _tipEl.style.left = Math.max(8, l) + 'px';
+      _tipEl.style.top  = (r.bottom + window.scrollY + 6) + 'px';
+      return;
+    }
     const el = e.target.closest('.help[data-help]');
     if (!el) return;
+    _tipEl.className = 'a2-tooltip';
     _tipEl.textContent = el.dataset.help;
     _tipEl.style.display = 'block';
     const rect = el.getBoundingClientRect();
@@ -1023,12 +1240,26 @@ function initTooltip() {
     _tipEl.style.top  = (rect.bottom + window.scrollY + 6) + 'px';
   });
   document.addEventListener('mouseout', (e) => {
-    if (e.target.closest('.help')) _tipEl.style.display = 'none';
+    if (e.target.closest('.help') || e.target.closest('.v2-sb')) _tipEl.style.display = 'none';
   });
   // 모바일 터치 시 잠시 표시
   document.addEventListener('touchstart', (e) => {
+    const sb = e.target.closest('.v2-sb');
+    if (sb) {
+      const spec = sb.textContent.trim();
+      if (!spec || spec === '—') { _tipEl.style.display = 'none'; return; }
+      _tipEl.className = 'a2-tooltip spec-tip';
+      _tipEl.innerHTML = buildSpecTip(spec);
+      _tipEl.style.display = 'block';
+      const r = sb.getBoundingClientRect();
+      _tipEl.style.left = Math.max(8, r.left + window.scrollX) + 'px';
+      _tipEl.style.top  = (r.bottom + window.scrollY + 6) + 'px';
+      setTimeout(() => { _tipEl.style.display = 'none'; }, 3000);
+      return;
+    }
     const el = e.target.closest('.help[data-help]');
     if (!el) { _tipEl.style.display = 'none'; return; }
+    _tipEl.className = 'a2-tooltip';
     _tipEl.textContent = el.dataset.help;
     _tipEl.style.display = 'block';
     const rect = el.getBoundingClientRect();
