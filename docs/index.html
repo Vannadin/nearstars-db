@@ -1150,15 +1150,65 @@ function parseSpecWD(spec) {
   };
 }
 
+const SPEC_PEC = {
+  ko: {
+    CN:'CN(시안) 분자띠', CH:'CH 분자띠', Fe:'철(Fe) 선', Ca:'칼슘(Ca) 선',
+    Ba:'바륨(Ba) 선', Sr:'스트론튬(Sr) 선', Eu:'유로퓸(Eu) 선', Mg:'마그네슘(Mg) 선',
+    Mn:'망간(Mn) 선', Hg:'수은(Hg) 선', Si:'규소(Si) 선', Cr:'크롬(Cr) 선',
+    He:'헬륨(He) 선', Tc:'테크네튬(Tc) 선', Ti:'티타늄(Ti) 선',
+    Hdel:'Hδ(수소 델타) 선', Hbet:'Hβ 선', Hgam:'Hγ 선',
+    _strong:'강함 (정상보다 흡수 큼)', _weak:'약함 / 결핍 (정상보다 흡수 작음)', _idx:'세기 지수'
+  },
+  en: {
+    CN:'CN (cyanogen) band', CH:'CH band', Fe:'iron (Fe) lines', Ca:'calcium (Ca) lines',
+    Ba:'barium (Ba) lines', Sr:'strontium (Sr) lines', Eu:'europium (Eu) lines', Mg:'magnesium (Mg) lines',
+    Mn:'manganese (Mn) lines', Hg:'mercury (Hg) lines', Si:'silicon (Si) lines', Cr:'chromium (Cr) lines',
+    He:'helium (He) lines', Tc:'technetium (Tc) lines', Ti:'titanium (Ti) lines',
+    Hdel:'Hδ (hydrogen-delta) line', Hbet:'Hβ line', Hgam:'Hγ line',
+    _strong:'enhanced (stronger than normal)', _weak:'weak / deficient (weaker than normal)', _idx:'strength index'
+  }
+};
+const SPEC_LUMSUB = {
+  ko: { a:'a — 해당 광도계급 내 밝은 쪽', b:'b — 해당 광도계급 내 어두운 쪽',
+        range:'두 계급 사이의 전이 / 중간 단계', plus:'반계급 늦음 — 다음(차가운) 아형 쪽',
+        uncertain:': — 분류가 불확실함', pref:{sd:'준왜성 (subdwarf)', esd:'극준왜성 (extreme subdwarf)', d:'왜성 — 주계열 표기 (dwarf)'} },
+  en: { a:'a — brighter end of this luminosity class', b:'b — fainter end of this luminosity class',
+        range:'transition / intermediate between the two classes', plus:'half-subtype later — toward the next (cooler) sub-type',
+        uncertain:': — classification uncertain', pref:{sd:'subdwarf', esd:'extreme subdwarf', d:'dwarf (main-sequence notation)'} }
+};
+
 function parseSpec(spec) {
   if (!spec || spec === '—') return null;
-  // White dwarfs use an entirely different classification scheme — route them
-  // to parseSpecWD so we don't mis-render "DA2" as an A-type main-sequence star.
-  if (/^D[ABCOZQHXVPE]/.test(spec.trim())) return parseSpecWD(spec);
-  // prefix: sd, D (fallback for non-letter-matched D... cases), esd, etc.
-  const m = spec.match(/^(sd|esd|D)?([OBAFGKMLTYSWCD])(\d+\.?\d*)?\s*(Ia|Ib|II|III|IV|VI|VII|V)?\s*([a-z]*)/i);
+  spec = spec.trim();
+  if (/^D[ABCOZQHXVPE]/.test(spec)) return parseSpecWD(spec);
+  // Composite / multiple system: split on a whitespace-padded '+' where the
+  // following part starts with a real class letter (e.g. "G3 III + G0 III").
+  // A bare "K2+V" (no class letter after '+') is a half-subtype, not composite.
+  const parts = spec.split(/\s*\+\s*/);
+  if (parts.length > 1 && parts.slice(1).every(p => /^(sd|esd|d)?[OBAFGKMLTYSWC]/i.test(p.trim()))) {
+    const comps = parts.map(parseSpecOne).filter(Boolean);
+    if (comps.length > 1) return { kind: 'composite', comps };
+  }
+  return parseSpecOne(spec);
+}
+
+function parseSpecOne(spec) {
+  spec = (spec || '').trim();
+  if (!spec) return null;
+  const uncertain = spec.includes(':');
+  spec = spec.replace(/:/g, '');
+  // prefix | class | subclass(.5) | half(+) | separator | luminosity(range + a/b) | extras
+  const m = spec.match(/^(sd|esd|d)?\s*([OBAFGKMLTYSWC])\s*(\d+(?:\.\d+)?)?\s*(\+)?\s*[-\/ ]*((?:Ia-0|Iab|III|VII|Ia|Ib|IV|VI|II|V)[ab]?(?:\s*[-\/]\s*(?:Ia-0|Iab|III|VII|Ia|Ib|IV|VI|II|V)[ab]?)?)?\s*(.*)$/i);
   if (!m) return null;
-  return { prefix: (m[1]||'').toLowerCase(), cls: m[2].toUpperCase(), sub: m[3]||'', lum: m[4]||'', suffix: m[5]||'' };
+  return {
+    prefix: (m[1] || '').toLowerCase(),
+    cls: m[2].toUpperCase(),
+    sub: m[3] || '',
+    half: m[4] || '',
+    lum: (m[5] || '').replace(/\s+/g, ''),
+    extras: (m[6] || '').trim(),
+    uncertain
+  };
 }
 
 function buildWDTip(spec, p) {
@@ -1183,26 +1233,72 @@ function buildWDTip(spec, p) {
   return h;
 }
 
-function buildSpecTip(spec) {
-  const p = parseSpec(spec);
-  if (!p) return `<div class="tip-head">${spec}</div><div class="tip-desc">Unknown spectral type</div>`;
-  if (p.kind === 'WD') return buildWDTip(spec, p);
-  const d = SPEC_INFO[LANG];
+function decodeExtras(extras) {
+  const rows = [];
+  if (!extras) return rows;
+  const pec = SPEC_PEC[LANG];
+  const re = /(Hdel|Hbet|Hgam|CN|CH|Ba|Sr|Eu|Fe|Ca|Mg|Mn|Hg|Si|Cr|He|Tc|Ti)\s*([+-]?\d+(?:\.\d+)?)?/g;
+  let mm, consumed = '';
+  while ((mm = re.exec(extras))) {
+    const code = mm[1], idx = mm[2] || '';
+    const name = pec[code] || code;
+    let note = '';
+    if (idx) note = ' — ' + (parseFloat(idx) < 0 ? pec._weak : pec._strong) + ` (${pec._idx} ${idx})`;
+    rows.push(`<div class="tip-row"><b>${code}${idx}</b> — ${name}${note}</div>`);
+    consumed += mm[0];
+  }
+  // leftover single-letter MK suffixes (e/p/v/n/m/f/k/q)
+  const suf = SPEC_INFO[LANG].suffix;
+  let rest = extras;
+  consumed.split('').forEach(ch => { rest = rest.replace(ch, ''); });
+  rest.split('').forEach(c => { if (suf[c]) rows.push(`<div class="tip-sfx"><b>${c}</b>: ${suf[c]}</div>`); });
+  return rows;
+}
+
+function buildOneTip(p, label) {
+  const d = SPEC_INFO[LANG], pl = SPEC_LUMSUB[LANG];
   const cls = d.class[p.cls];
   const dot = SPEC_DOT[p.cls] || '#888';
-  let h = `<div class="tip-head">${spec}</div>`;
+  let h = '';
+  if (label) h += `<div class="tip-cls-name" style="font-family:monospace;color:#d0e8ff;margin:2px 0 4px">${label}</div>`;
   if (cls) {
-    h += `<div class="tip-cls"><span class="tip-dot" style="background:${dot}"></span><span class="tip-cls-name">${p.cls}${LANG==='ko'?'형':''} · ${cls.color}</span></div>`;
+    h += `<div class="tip-cls"><span class="tip-dot" style="background:${dot}"></span><span class="tip-cls-name">${p.cls}${LANG === 'ko' ? '형' : ''} · ${cls.color}</span></div>`;
     h += `<div class="tip-temp">T: ${cls.temp}</div>`;
     h += `<div class="tip-desc">${cls.desc}</div>`;
   }
   if (p.sub) h += `<div class="tip-row">${d.subNote.replace('{sub}', p.sub)}</div>`;
-  if (p.lum && d.lum[p.lum]) h += `<div class="tip-row"><b>${p.lum}</b> — ${d.lum[p.lum]}</div>`;
-  if (p.prefix && d.prefix[p.prefix]) h += `<div class="tip-row"><b>${p.prefix}</b> — ${d.prefix[p.prefix]}</div>`;
-  p.suffix.split('').forEach(c => {
-    if (d.suffix[c]) h += `<div class="tip-sfx"><b>${c}</b>: ${d.suffix[c]}</div>`;
-  });
+  if (p.half === '+') h += `<div class="tip-row"><b>${p.cls}${p.sub}+</b> — ${pl.plus}</div>`;
+  if (p.prefix && pl.pref[p.prefix]) h += `<div class="tip-row"><b>${p.prefix}</b> — ${pl.pref[p.prefix]}</div>`;
+  if (p.lum) {
+    const sl = /[ab]$/.test(p.lum) ? p.lum.slice(-1) : '';
+    const core = sl ? p.lum.slice(0, -1) : p.lum;
+    const ends = core.split(/[-\/]/).filter(Boolean);
+    const named = ends.map(x => d.lum[x] ? `<b>${x}</b> — ${d.lum[x]}` : `<b>${x}</b>`);
+    if (named.length) {
+      h += `<div class="tip-row">${named.join('<br>')}</div>`;
+      if (ends.length > 1) h += `<div class="tip-sfx">${pl.range}</div>`;
+    }
+    if (sl && pl[sl]) h += `<div class="tip-row">${pl[sl]}</div>`;
+  }
+  decodeExtras(p.extras).forEach(r => h += r);
+  if (p.uncertain) h += `<div class="tip-sfx">${pl.uncertain}</div>`;
   return h;
+}
+
+function buildSpecTip(spec) {
+  const p = parseSpec(spec);
+  if (!p) return `<div class="tip-head">${spec}</div><div class="tip-desc">${LANG === 'ko' ? '알 수 없는 분광형' : 'Unknown spectral type'}</div>`;
+  if (p.kind === 'WD') return buildWDTip(spec, p);
+  let h = `<div class="tip-head">${spec}</div>`;
+  if (p.kind === 'composite') {
+    h += `<div class="tip-desc">${LANG === 'ko' ? '복합 스펙트럼 — 여러 별의 빛이 겹쳐 보이는 다중성' : 'Composite spectrum — blended light of multiple stars'}</div>`;
+    p.comps.forEach(c => {
+      h += `<div style="margin-top:7px;border-top:1px solid rgba(255,255,255,0.10);padding-top:6px"></div>`;
+      h += buildOneTip(c, c.cls + c.sub + (c.lum ? (' ' + c.lum) : ''));
+    });
+    return h;
+  }
+  return h + buildOneTip(p, '');
 }
 
 
