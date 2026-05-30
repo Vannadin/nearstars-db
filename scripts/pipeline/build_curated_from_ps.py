@@ -13,6 +13,8 @@ Usage:
 """
 import argparse, json, os, re, sys, time, urllib.parse, urllib.request
 
+from schema import write_canonical
+
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB   = f"{BASE}/db"
 RETRIEVAL_DATE = "2026-05-19"
@@ -348,10 +350,8 @@ def main():
         print("[DRY RUN] 파일 미수정")
         return
 
-    with open(f"{DB}/planets_curated.json", "w") as f:
-        json.dump(planets_curated, f, indent=2, ensure_ascii=False)
-    with open(f"{DB}/stellar_props_curated.json", "w") as f:
-        json.dump(stellar_curated, f, indent=2, ensure_ascii=False)
+    write_canonical(f"{DB}/planets_curated.json", planets_curated)
+    write_canonical(f"{DB}/stellar_props_curated.json", stellar_curated)
     print(f"저장: {DB}/planets_curated.json, {DB}/stellar_props_curated.json")
 
 

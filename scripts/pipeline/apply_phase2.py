@@ -49,6 +49,8 @@ from pathlib import Path
 
 import yaml
 
+from schema import canonical_json
+
 ROOT = Path(__file__).resolve().parents[2]
 STELLAR = ROOT / "db" / "stellar_props_curated.json"
 PLANETS = ROOT / "db" / "planets_curated.json"
@@ -104,7 +106,7 @@ def merge(yaml_data: dict) -> tuple[dict, dict]:
 
 
 def _serialize(d: dict) -> str:
-    return json.dumps(d, indent=2, ensure_ascii=False)
+    return canonical_json(d)
 
 
 def write_if_changed(path: Path, new: dict) -> bool:

@@ -10,7 +10,21 @@ from schema import (
     validate_stellar_props_curated,
     validate_planets_curated,
     validate_disks_curated,
+    canonical_json,
 )
+
+
+def _check_canonical(fname, path):
+    """Fail if a curated source file isn't in canonical serialization.
+    Catches the indent/key-order/ascii drift that turns a one-entry edit into a
+    whole-file diff. Writers must use schema.write_canonical / apply_phase2.py."""
+    raw = open(path, encoding="utf-8").read()
+    if raw != canonical_json(json.loads(raw)):
+        fail(fname, "canonical format 위반 (indent=2 / ensure_ascii=False / "
+                    "trailing newline / 키 순서 보존) — 직접 json.dump 하지 말고 "
+                    "apply_phase2.py 또는 schema.write_canonical 로 기록하세요")
+        return False
+    return True
 
 JD_B1950 = 2433282.5
 JD_J2000 = 2451545.0
@@ -246,6 +260,8 @@ try:
         fail("(stellar_props_curated.json)", e)
     if not sc_errs:
         ok(f"stellar_props_curated.json 스키마 통과 ({len(stellar_curated)}개 호스트)")
+    if _check_canonical("(stellar_props_curated.json)", f"{DB}/stellar_props_curated.json"):
+        ok("stellar_props_curated.json canonical format 통과")
 except FileNotFoundError:
     warn("(stellar_props_curated.json)", "파일 없음")
 
@@ -261,6 +277,8 @@ try:
     if not pc_errs:
         n_planets = sum(len(v) for v in planets_curated.values())
         ok(f"planets_curated.json 스키마 통과 ({len(planets_curated)}호스트 / {n_planets}행성)")
+    if _check_canonical("(planets_curated.json)", f"{DB}/planets_curated.json"):
+        ok("planets_curated.json canonical format 통과")
 except FileNotFoundError:
     warn("(planets_curated.json)", "파일 없음")
 

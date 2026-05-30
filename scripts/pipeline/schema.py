@@ -10,7 +10,29 @@ mismatches and exits non-zero on failure.
 Goal: catch typos like `error_msun` vs `uncertainty_msun` at fetch time,
 before they propagate to `db/systems/*.json`.
 """
+import json
 import sys
+from pathlib import Path
+
+
+def canonical_json(data) -> str:
+    """Canonical serialization for the curated JSON source files.
+
+    indent=2, UTF-8 (no \\uXXXX ascii escaping), insertion order preserved,
+    single trailing newline. Every writer of db/stellar_props_curated.json and
+    db/planets_curated.json MUST go through this (apply_phase2.py,
+    build_curated_from_ps.py). Hand-rolled `json.dump` with a different indent
+    or key order re-serializes the WHOLE file, so a one-entry edit explodes
+    into a thousands-line diff that can mask other stars' data. validate.py
+    enforces this format as a gate.
+    """
+    return json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+
+
+def write_canonical(path, data) -> None:
+    """Write `data` to `path` in canonical_json form. The single approved way
+    to persist the curated source files."""
+    Path(path).write_text(canonical_json(data), encoding="utf-8")
 
 
 ASTROMETRY_REQUIRED = {
