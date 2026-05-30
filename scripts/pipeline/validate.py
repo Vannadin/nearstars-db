@@ -331,3 +331,8 @@ if errors:
         print(f"  {e}")
 if not errors:
     print("\n검증 통과.")
+
+# check.sh gate 1 은 비정상 종료코드로 실패를 감지한다 (`|| fail=1`).
+# 예전엔 sys.exit 가 없어 errors 가 있어도 exit 0 → 게이트가 스키마 실패를
+# 전혀 못 잡던 버그가 있었음 (canonical 게이트 포함). 반드시 non-zero 로 종료.
+sys.exit(1 if errors else 0)

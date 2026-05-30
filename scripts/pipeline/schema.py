@@ -358,6 +358,8 @@ STELLAR_MEASUREMENT_KINDS = {
             "zeeman_doppler", "asteroseismology",
             "unverified",
         },
+        # grade/method 단서를 적는 narrative 필드 (radius_measurements 와 동일).
+        "extra_keys": {"notes"},
     },
     "activity_measurements": {
         # 여러 지표 중 하나만 있으면 됨 (paper 마다 다름)
