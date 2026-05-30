@@ -4,8 +4,8 @@
 ε Eridani (HD 22049, HIP 16537, GJ 144) 는 Proxima 다음으로 가까운
 행성 보유 별이며, 거리는 3.220 ± 0.001 pc 입니다 (Gaia DR3 시차
 310.58 ± 0.14 mas). 어리고 자기 활동이 강한 K2V 왜성으로, 질량
-M = 0.82 ± 0.02 M☉ (Llop-Sayson 2021), 반지름 R = 0.759 ± 0.012 R☉
-(Rosenthal 2021), 유효 온도 약 5180 K 입니다. 광도는 ≈ 0.34 L☉ 로
+M = 0.82 ± 0.05 M☉ (Baines & Armstrong 2012), 반지름 R = 0.74 ± 0.01 R☉
+(Baines & Armstrong 2012 NOI 간섭계), 유효 온도 약 5039 K 입니다. 광도는 ≈ 0.32 L☉ 로
 주계열 위에 자리하며, 활동도 지표는 태양보다 약 한 자릿수 더 어린
 별의 특성을 보입니다. 나이는 isochrone + 운동학 + 활동도 진단을
 결합해 ≈ 440 Myr 로 가장 잘 추정됩니다 (Mamajek & Hillenbrand 2008.
@@ -28,14 +28,15 @@ M sin i ≈ 0.78 M_Jup, a ≈ 3.5 AU, P ≈ 7.4 yr, e ≈ 0.07. 바깥쪽의
 "ε Eri c" 후보 (Quillen 2002. Benedict 2006) 는 Mawet 2019 의 imaging
 미검출로 배제됐습니다.
 
-색채권은 시끄럽습니다. log R'HK ≈ −4.4 (Henry 1996. Zechmeister
-2013) 는 ε Eri 를 활동적 K 왜성 locus 의 한가운데 놓습니다. Donahue
-1996 은 Mt. Wilson Ca II H&K 시계열에서 P_rot = 11.2 d 를 측정했는데,
-태양보다 두 배 빠르며 Skumanich braking 법칙과 ~440 Myr 나이와
-일관됩니다. Metcalfe 2013 은 Ca II HK 기록에서 약 2.95 년의 색채권
-자기 사이클을 분해했고 (주계열 기준으로 짧음. 다시 한 번 어린 나이와
-일관), 평행하게 X 선 사이클이 XMM 모니터링에서 검출됩니다 (Coffaro
-2020).
+색채권은 시끄럽습니다. log R'HK ≈ −4.50 (Gomes da Silva 2021
+AMBRE-HARPS, 553 스펙트럼. Henry 1996) 은 ε Eri 를 활동적 K 왜성
+locus 의 한가운데 놓습니다. Croll 2006 은 MOST 광도에서 P_rot ≈ 11.45 d
+(흑점 두 개, 11.35 / 11.55 d) 를 측정했고 (Fröhlich 2007 확인, Donahue
+1996 의 Ca II H&K 주기와도 일관), 태양보다 두 배 빠르며 Skumanich
+braking 법칙과 ~440 Myr 나이와 일관됩니다. Coffaro 2020 은 색채권
+자기 사이클을 ≈ 2.92 년으로 정밀화했고 (Metcalfe 2013 이 ~2.95 년으로
+처음 보고. 주계열 기준으로 짧아 다시 한 번 어린 나이와 일관), 평행하게
+X 선 사이클이 XMM 모니터링에서 검출됩니다 (Coffaro 2020).
 
 **NearStars 시나리오 선택. 어리고 빠르게 자전하며 자기 활동이 매우
 강한 K2V 왜성으로, 구조적으로 드문 삼중 링 debris 디스크와 확인된
@@ -50,20 +51,20 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | K2V | high | Keenan & McNeil 1989. Gray 2003. DB |
-| `mass_msun` | 0.82 ± 0.02 | high | Llop-Sayson 2021. RV + 직접 촬영 + Hipparcos/Gaia 천체측정 결합 fit |
-| `radius_rsun` | 0.759 ± 0.012 | high | Rosenthal 2021. California Legacy Survey 항성 파라미터 테이블. Di Folco 2007 VLTI/VINCI 간섭계와 일관 |
-| `teff_k` | 5180 | high | DB. Valenti & Fischer 2005 SME 와 Brewer 2016 일치 |
-| `luminosity_lsun` | 0.34 | high | R 과 Teff 로 Stefan–Boltzmann 유도 |
-| `metallicity_fe_h_dex` | −0.13 ± 0.04 | high | Valenti & Fischer 2005. Brewer 2016. 살짝 sub-solar |
-| `age_gyr` | 0.44 ± 0.10 | high | Mamajek & Hillenbrand 2008. isochrone + Ca II HK + X 선 + 회전 결합. Janson 2008 이 운동학으로 확정 |
-| `rotation_period_days` | 11.2 | high | Donahue 1996. Mt. Wilson Ca II HK 14 년 시계열. Croll 2006 MOST 광도로 재확인 |
-| `activity_log_rhk` | −4.4 | high | Henry 1996. Zechmeister 2013. 강한 활동 K 왜성 locus |
-| `activity_cycle_years` | 2.95 | high | Metcalfe 2013. 짧은 색채권 자기 사이클. Coffaro 2020 이 X 선에서 확인 |
+| `mass_msun` | 0.82 ± 0.05 | high | Baines & Armstrong 2012. 간섭계 R·Teff 위에 Yonsei-Yale isochrone (Phase 2 권장. Llop-Sayson 2021 대체) |
+| `radius_rsun` | 0.74 ± 0.01 | high | Baines & Armstrong 2012. NOI 간섭계, θ_LD = 2.153 ± 0.028 mas + Benedict 2006 시차 (Phase 2 권장. Rosenthal 2021 모델값 대체) |
+| `teff_k` | 5039 ± 126 | high | Baines & Armstrong 2012. 간섭계 θ_LD + bolometric flux (Phase 2 권장. 5180 K 분광 추정 대체) |
+| `luminosity_lsun` | 0.32 ± 0.03 | high | Baines & Armstrong 2012. bolometric flux (Phase 2 권장. R 0.74·Teff 5039 의 Stefan–Boltzmann 과 일관) |
+| `metallicity_fe_h_dex` | −0.13 ± 0.04 | high | Santos 2004 (Phase 2 권장. Sousa 2008 −0.11·Gomes da Silva 2021 −0.15 가 보강). 살짝 sub-solar |
+| `age_gyr` | 0.44 ± 0.10 | high | Barnes 2007 gyrochronology (Phase 2 권장 어린 가지. Coffaro 2020 채택). 강한 활동 + 11 d 회전과 일관. isochrone 과의 DOCUMENTED DIVERGENCE (Canonical alternatives 참조) |
+| `rotation_period_days` | 11.45 ± 0.2 | high | Croll 2006. MOST 광도, 흑점 두 개 P1 = 11.35 / P2 = 11.55 d (Phase 2 권장). Fröhlich 2007 확인, Donahue 1996 Ca II HK 일관 |
+| `activity_log_rhk` | −4.496 | high | Gomes da Silva 2021. AMBRE-HARPS, 553 스펙트럼 (Phase 2 권장. Henry 1996 −4.4 대체). 강한 활동 K 왜성 locus |
+| `activity_cycle_years` | 2.92 | high | Coffaro 2020. Ca II HK 사이클 2.92 ± 0.02 년 + 평행 X 선 사이클 (Metcalfe 2013 이 ~2.95 년으로 처음 보고) |
 | `x_ray_log_lx_cgs_min` | 28.3 | medium | Coffaro 2020. XMM 사이클 최소 |
 | `x_ray_log_lx_cgs_max` | 28.9 | medium | Coffaro 2020. XMM 사이클 최대. 사이클 진폭 약 4 배 |
 | `limb_darkening_alpha_h` | ~0.20 | low | Tie-break. ε Eri 는 직접 측정값이 없으며 Claret 2018 K 왜성 그리드에서 α Cen B (0.18) 와 더 차가운 K 왜성 (0.25) 사이로 보간. low 신뢰도, 윈도우 내 추측 |
-| `visual_surface_tint_hex_primary` | `#ffd9a8` (따뜻한 주황 K2V. α Cen B `#ffcb91` 보다 약간 더 차가운 톤) | medium | Teff 5180 K 흑체 + 활동성 색채권의 Hα 채움이 체감 따뜻함을 살짝 올림 |
-| `stellar_color_temp_k` | 5180 | high | Teff 유도 |
+| `visual_surface_tint_hex_primary` | `#ffd9a8` (따뜻한 주황 K2V. α Cen B `#ffcb91` 보다 약간 더 차가운 톤) | medium | Teff 5039 K 흑체 + 활동성 색채권의 Hα 채움이 체감 따뜻함을 살짝 올림 (hex 유지. 5180→5039 변화는 렌더링 허용오차 내라 적대적 검증이 보정 파이프라인 없는 재채색을 보류) |
+| `stellar_color_temp_k` | 5039 | high | Teff 유도 (Baines & Armstrong 2012) |
 | `visual_spot_coverage_max` | 0.10 | medium | TiO 밴드 + 회전 변조 분석 (Frohlich 2007. Roettenbacher 2016 ε Eri Doppler imaging) 에서 사이클 최대기에 디스크 5–10% 면적 |
 | `disk_present` | true | high | Greaves 1998 JCMT/SCUBA. 첫 sub-mm 검출. 수많은 후속 캠페인이 분해 |
 | `disk_belts` | asteroid, intermediate, cold | medium | 3 벨트 구조. 따뜻한 asteroid analog (~3 AU) + 중간 성분 (~20 AU) + 차가운 Kuiper analog 링 (~64 AU). intermediate 가 가장 덜 분해된 층 |
@@ -90,10 +91,10 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 
 ε Eridani 의 광구는 교과서적인 K2V 입니다. α Cen B (K1V, 5230 K,
 0.86 R☉) 보다 약간 더 작고 차가우며, 61 Cyg A (K5V, 4400 K) 보다는
-눈에 띄게 따뜻합니다. 5180 K 에서는 연속체 대부분이 5500 Å 와
+눈에 띄게 따뜻합니다. 5039 K 에서는 연속체 대부분이 5500 Å 와
 9000 Å 사이로 나오며, 가장 강한 분자 형상은 녹색에서의 MgH 와 CaH
 밴드, 그리고 ~6300 Å 이하부터 본격적으로 들어오는 TiO 헤드입니다.
-통합 광도 0.34 L☉ 는 ε Eri 의 HZ 를 ≈ 0.5–0.95 AU 에 놓으며, 안쪽
+통합 광도 0.32 L☉ 는 ε Eri 의 HZ 를 ≈ 0.48–0.93 AU 에 놓으며, 안쪽
 asteroid belt analog 보다 완전히 안쪽이고 3.5 AU 의 jovian 보다
 한참 안쪽입니다. ε Eri 의 limb darkening 은 직접 측정된 적이 없으며,
 cfg 는 Claret 2018 그리드에서 Kervella 의 α Cen B 값 (0.18) 과
@@ -131,8 +132,8 @@ zodi 의 약 1–3× 로 정량화). 64 AU 의 차가운 링은 어떤 관측자
 
 ε Eri 의 색채권과 corona 는 가장 어린 M 왜성들을 제외하면 NearStars
 카탈로그의 어떤 K 왜성보다도 시끄럽습니다. Ca II H&K 방출 코어가
-눈에 띄게 채워져 있으며, log R'HK ≈ −4.4 (Henry 1996. Zechmeister
-2013 갱신) 는 ε Eri 를 현대 태양보다 한 자릿수 더 활동적인 위치에
+눈에 띄게 채워져 있으며, log R'HK ≈ −4.50 (Gomes da Silva 2021
+AMBRE-HARPS. Henry 1996) 은 ε Eri 를 현대 태양보다 한 자릿수 더 활동적인 위치에
 놓습니다. 색채권은 강한 UV 연속체와 라인 방출 (Lyα, Mg II h&k,
 Si IV, C IV) 을 구동하며 Linsky 1995 와 MUSCLES 서베이의 France
 2018 이 매핑했는데, FUV 광도가 밴드에 따라 태양값을 5–20 배
@@ -140,8 +141,9 @@ Si IV, C IV) 을 구동하며 Linsky 1995 와 MUSCLES 서베이의 France
 
 corona 도 마찬가지로 활동적입니다. Coffaro 2020 은 17 년 XMM
 모니터링을 이용해 0.2–2 keV 에서 log L_X 사이클을 28.3 (사이클
-최소) 부터 28.9 (사이클 최대) cgs 까지 분해했습니다. 2.95 년 주기에
-4 배 진폭이며, Metcalfe 2013 의 Ca II HK 사이클과 위상 불확실도
+최소) 부터 28.9 (사이클 최대) cgs 까지 분해했습니다. 2.92 년 주기에
+4 배 진폭이며 (Coffaro 2020. Metcalfe 2013 이 ~2.95 년 처음 보고),
+Ca II HK 사이클과 위상 불확실도
 내에서 일치합니다. 이로써 ε Eri 는 태양 근방에서 가장 잘 특성화된
 별 자기 사이클 중 가장 짧은 사이클을 가집니다 (태양 11 년 사이클
 보다 약 4 배 짧음. 다시 어린 나이와 일관. Bohm-Vitense 2007 의
@@ -167,15 +169,16 @@ Wood 2002 의 Lyα 흡수 측정은 ε Eri 의 질량 손실률을 태양의 약
 
 ## Rotation & spin synthesis
 
-11.2 일 회전 주기 (Donahue 1996. Croll 2006 MOST 광도와 Roettenbacher
-2016 Doppler imaging 으로 확인) 는 주계열 K 왜성치고 빠릅니다.
-태양은 25 일, α Cen B 는 ≈ 38 일에 자전합니다. Skumanich braking
-법칙 P_rot ∝ √t 는 ε Eri 의 나이를 태양의 약 (11.2/25)² ≈ 0.20,
-즉 ~900 Myr 로 시사합니다. 직접 fit 된 Mamajek & Hillenbrand 2008
-gyrochronology 는 살짝 다른 braking calibration 에서 440 Myr 를
-줍니다. 둘 다 이 나이 범위 gyrochronology 에서 예상되는 2 배
-시스템 오차 안에서 일치하며, cfg 는 더 낮은 Mamajek 값을 명시적
-~100 Myr 불확실도와 함께 채택합니다.
+≈ 11.45 일 회전 주기 (Croll 2006 MOST 광도, 흑점 두 개 11.35 / 11.55 d.
+Fröhlich 2007 확인, Donahue 1996 Ca II HK 주기 및 Roettenbacher 2016
+Doppler imaging 과 일관) 는 주계열 K 왜성치고 빠릅니다. 태양은 25 일,
+α Cen B 는 ≈ 38 일에 자전합니다. Skumanich braking 법칙 P_rot ∝ √t 는
+ε Eri 의 나이를 태양의 약 (11.45/25)² ≈ 0.21, 즉 ~950 Myr 로 시사합니다.
+직접 fit 된 Barnes 2007 gyrochronology 는 (Coffaro 2020 채택) 살짝 다른
+braking calibration 에서 440 Myr 를 줍니다. 둘은 이 나이 범위
+gyrochronology 에서 예상되는 2 배 시스템 오차만큼 차이 나며, cfg 는
+더 낮은 gyrochronology 값 (0.44 Gyr) 을 명시적 ~100 Myr 불확실도와
+함께 채택합니다. 어린-vs-isochrone 나이 분기는 Canonical alternatives 참조.
 
 Roettenbacher 2016 의 Doppler imaging 은 차등 회전을 직접 분해했
 습니다. ε Eri 의 적도는 고위도보다 약 12% 빠르게 회전합니다 (즉
@@ -192,6 +195,27 @@ et al. 2008 은 radial-velocity 모니터링에서 잠정적 ν_max ≈ 1700 μH
 높은 활동 floor 가 p-mode 진폭을 가립니다. cfg 는 이 때문에
 asteroseismic 제약을 인코딩하지 않습니다.
 
+## Canonical alternatives
+
+**나이 — 어린 값 (gyrochronology/활동도) vs isochrone.** cfg 는 어린
+가지 `age_gyr = 0.44` 를 Barnes 2007 gyrochronology (Coffaro 2020 채택)
+에서 채택합니다. ε Eri 의 측정된 강한 활동 (log R'HK −4.50) 과 빠른
+11.45 d 회전과 일관된 값이기 때문입니다. Phase 2 DB 는 이를 documented
+divergence 로 표시합니다. 모델 isochrone 은 별을 더 늙게 놓습니다 —
+Baines & Armstrong 2012 Y² ≈ 1 Gyr (저자가 다른 연구보다 늙다고 명시),
+Valenti & Fischer 2005 ≈ 2.6 Gyr, Gomes da Silva 2021 isochrone fit
+≈ 4.8 Gyr. isochrone 나이는 차가운 주계열 왜성에서 신뢰할 수 없으므로
+(트랙들이 뭉칩니다) 자기 활동이 강한 K 왜성에는 활동도/gyro 나이가
+선호됩니다. 문헌 범위는 0.2–0.93 Gyr 입니다 (Fuhrmann 2004. Song 2000).
+향후 cfg 는 늙은 isochrone 나이를 대체 "진화된" 시나리오로 노출할 수
+있으나, 어린 나이가 물리적으로 동기 부여된 기본값입니다.
+
+**반지름/Teff — 간섭계 vs 이전 모델값.** cfg 는 Baines & Armstrong
+2012 NOI 간섭계 (R 0.74, Teff 5039) 를 씁니다. Phase 2 이전 서술은
+Rosenthal 2021 (R 0.759) 과 5180 K 분광 Teff 를 썼습니다. ε Eri 를
+담았다고 흔히 가정되는 Boyajian et al. 2012 는 실제로 담고 있지 않음이
+확인되어 인용하지 않습니다.
+
 ## Visual styling
 
 ε Eri 는 따뜻한 주황 K2V 로 렌더링됩니다. cfg 색조 `#ffd9a8` 는
@@ -200,7 +224,7 @@ asteroseismic 제약을 인코딩하지 않습니다.
 주황" 으로 읽히도록 했습니다. 색채권의 Hα 와 Ca II HK 방출 코어는
 고해상도 클로즈업에서 옅은 분홍-따뜻 성분을 추가합니다. 3 년마다
 사이클 최대기에 ~20% 밝아지도록 애니메이션되며 (Metcalfe 2013),
-11.2 일 회전 주기 위에 빠른 흑점 변조가 겹쳐집니다.
+11.45 일 회전 주기 위에 빠른 흑점 변조가 겹쳐집니다.
 
 지구에서 3.22 pc 거리에서 보면 겉보기 등급 V = 3.74 로 ε Eri 는
 쉽게 맨눈으로 보입니다 (Eridanus 별자리를 잡는 정도지만 화려하지는
@@ -241,6 +265,29 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 
 ### Read (visual-informative, drove decisions above)
 
+- **Baines E. K. & Armstrong J. T. 2012** — *Confirming Fundamental
+  Properties of the Exoplanet Host Star ε Eridani Using the Navy
+  Optical Interferometer*, ApJ 744, 138 (`2012ApJ...744..138B`,
+  arXiv:1112.0447). NOI 간섭계: θ_LD = 2.153 ± 0.028 mas →
+  R = 0.74 ± 0.01 R☉, Teff = 5039 ± 126 K (θ_LD + bolometric flux),
+  L = 0.32 ± 0.03 L☉, M = 0.82 ± 0.05 M☉ (Yonsei-Yale isochrone).
+  반지름/Teff/광도/질량의 Phase 2 권장 앵커.
+- **Croll B. et al. 2006** — *MOST 으로 ε Eridani 흑점 탐색*, ApJ 648,
+  607 (`2006ApJ...648..607C`). MOST 우주 광도가 흑점 두 개를 분해
+  (P1 = 11.35 d, P2 = 11.55 d). Phase 2 권장 회전 주기.
+- **Fröhlich H.-E. 2007** — *MOST 자료로 본 ε Eri 의 차등 회전*, AN
+  328, 1037 (`2007AN....328.1037F`, arXiv:0711.0806). Bayesian 재분석이
+  P1 = 11.348, P2 = 11.553 d, k ≈ 0.09 를 확인.
+- **Gomes da Silva J. et al. 2021** — *AMBRE-HARPS 표본 1674 FGK 별의
+  색채권 활동도*, A&A 646, A77 (`2021A&A...646A..77G`, arXiv:2012.10199).
+  553 스펙트럼에서 log R'HK = −4.496. Phase 2 권장 활동도 지수.
+- **Santos N. C. et al. 2004** — *행성 보유성의 분광 금속함량*, A&A
+  415, 1153 (`2004A&A...415.1153S`). [Fe/H] = −0.13 ± 0.04. Phase 2
+  권장 금속함량.
+- **Barnes S. A. 2007** — *Gyrochronology 를 이용한 예시 field 별
+  나이*, ApJ 669, 1167 (`2007ApJ...669.1167B`). ε Eri 의 gyrochronology
+  나이 ≈ 0.44 Gyr (Coffaro 2020 채택). Phase 2 권장 나이 (어린 가지 —
+  Canonical alternatives 참조).
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-type Dwarfs Using Activity-Rotation
   Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
@@ -251,7 +298,8 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   확인.
 - **Donahue R. A. et al. 1996** — *Mt. Wilson HK 프로젝트의 차가운
   주계열 별 회전* (`1996ApJ...466..384D`). ~14 년 Ca II H&K 시계열
-  에서 P_rot = 11.2 d. canonical 회전 측정.
+  에서 P_rot = 11.2 d. Croll 2006 MOST 두-흑점 주기와 일관하며
+  (권장값으로는 그쪽으로 대체됨).
 - **Metcalfe T. S. et al. 2013** — *외계행성 보유성 ε Eridani 의
   자기 활동 사이클*, ApJ 763, L26 (`2013ApJ...763L..26M`,
   arXiv:1212.5343). Mt. Wilson + SMARTS Ca II HK 에서 2.95 년의
@@ -304,15 +352,17 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 
 - **Rosenthal L. J. et al. 2021** — *California Legacy Survey. I.
   근방 별 719 개의 정밀 RV 모니터링에서 도출한 행성 178 개 카탈로그*,
-  ApJS 255, 8 (`2021ApJS..255....8R`). 채택된 R = 0.759 R☉ 의 출처.
+  ApJS 255, 8 (`2021ApJS..255....8R`). 과거 채택값 R = 0.759 R☉ 의 출처
+  (현재 Baines & Armstrong 2012 간섭계 R 0.74 로 대체됨).
 - **Valenti J. A. & Fischer D. A. 2005** — *차가운 별의 분광 속성
   (SPOCS). I.* (`2005ApJS..159..141V`). SME 분광에서 [Fe/H] =
   −0.13 ± 0.04.
 - **Brewer J. M. et al. 2016** — *차가운 별의 분광 속성*
-  (`2016ApJS..225...32B`). Teff = 5180 K, [Fe/H] = −0.13 확인.
-- **Di Folco E. et al. 2007** — *ε Eri 를 포함한 근방 별의 VLTI/VINCI
-  간섭계* (`2007A&A...475..243D`). 채택된 R = 0.759 R☉ 와 일관한
-  각지름.
+  (`2016ApJS..225...32B`). 분광 Teff = 5180 K, [Fe/H] = −0.13
+  (Teff 는 Baines 2012 간섭계 5039 K 로 대체됨).
+- **Di Folco E. et al. 2007** — *ε Eri 를 포함한 근방 별의 CHARA/FLUOR
+  간섭계* (`2007A&A...475..243D`). θ_LD = 2.126 mas, Baines & Armstrong
+  2012 를 보강하는 독립 간섭계 교차 확인.
 - **Henry T. J. et al. 1996** — *Solar Neighborhood. IV. 스무 번째로
   가까운 별 시스템 발견* (`1996AJ....111..439H`). ε Eri 의 log R'HK
   참조.
