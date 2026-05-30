@@ -24,6 +24,37 @@ JD_J2000      = 2451545.0   # J2000.0
 JD_B1950      = 2433282.5   # B1950.0 (Sol/RSS 에포크)
 RETRIEVAL_DATE = __import__("datetime").date.today().isoformat()
 
+# 매 실행마다 today() 가 retrieval_date/accessed 에 박혀 151개 systems 파일이
+# 통째로 churn 나는 것을 막는다. 내용(날짜 제외)이 같으면 기존 파일을 그대로 두어
+# 날짜가 "마지막으로 데이터가 실제 바뀐 날" 을 가리키게 한다.
+_VOLATILE_DATE_KEYS = {"retrieval_date", "accessed"}
+
+
+def _strip_dates(obj):
+    if isinstance(obj, dict):
+        return {k: ("" if k in _VOLATILE_DATE_KEYS else _strip_dates(v))
+                for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_strip_dates(x) for x in obj]
+    return obj
+
+
+def write_system_doc(out_path, doc):
+    """Write doc unless ONLY volatile date fields would change.
+    Returns 'wrote' or 'skipped'."""
+    if os.path.exists(out_path):
+        try:
+            with open(out_path, encoding="utf-8") as f:
+                old = json.load(f)
+            if _strip_dates(old) == _strip_dates(doc):
+                return "skipped"
+        except (json.JSONDecodeError, OSError):
+            pass
+    with open(out_path, "w") as f:
+        json.dump(doc, f, indent=2, ensure_ascii=False)
+    return "wrote"
+
+
 _KEPLER_SOLVER = MarkleyKESolver()
 
 # 고정 소스 항목
@@ -472,6 +503,7 @@ os.makedirs(f"{DB}/systems", exist_ok=True)
 
 errors   = []
 written  = 0
+skipped  = 0
 
 # ── 항성별 시스템 JSON 생성 ───────────────────────────────────────────────────
 with open(f"{BASE}/db/target_list.json") as f:
@@ -920,12 +952,13 @@ for target in target_list:
                 doc["binary_orbit_ref"] = primary_fname
 
         out_path = f"{DB}/systems/{fname}"
-        with open(out_path, "w") as f:
-            json.dump(doc, f, indent=2, ensure_ascii=False)
-        written += 1
+        if write_system_doc(out_path, doc) == "wrote":
+            written += 1
+        else:
+            skipped += 1
 
 # ── 결과 요약 ──────────────────────────────────────────────────────────────────
-print(f"\n완료: {written}개 파일 작성")
+print(f"\n완료: {written}개 파일 작성, {skipped}개 변경 없음(날짜만) 건너뜀")
 if errors:
     print(f"오류 ({len(errors)}개):")
     for e in errors:
