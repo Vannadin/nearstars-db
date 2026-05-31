@@ -50,8 +50,8 @@ alternatives are preserved as cfg variants.
 | `surface_temp_substellar_k` | 730 | medium | Thick atmosphere homogenizes dayside vs. nightside; minimal substellar enhancement |
 | `surface_temp_nightside_k` | 710 | medium | Same — thick atmosphere transports heat efficiently around the slow rotator |
 | `atmosphere_present` | true (thick CO₂) | medium | Adopted Venus-analog scenario; quiet host XUV preserves heavy CO₂ over 7 Gyr |
-| `atmosphere_surface_pressure_pa` | 5 000 000 | medium | 50 bar — intermediate between Venus's 92 bar and Earth's 1 bar; lower than Venus because metal-poor host implies less primordial outgassed volatile inventory |
-| `atmosphere_composition` | CO₂ ~95%, N₂ ~3.5%, SO₂ + H₂SO₄ aerosols ~1%, trace H₂O <100 ppm | medium | Venus analog; CO₂-runaway endpoint with sulfate aerosols from volcanic SO₂ |
+| `atmosphere_surface_pressure_pa` | 5 000 000 | low | scenario choice — Venus analog; mixing ratios are template values, no atmospheric data for this planet |
+| `atmosphere_composition` | CO₂ ~95%, N₂ ~3.5%, SO₂ + H₂SO₄ aerosols ~1%, trace H₂O <100 ppm | low | scenario choice — Venus analog; mixing ratios are template values, no atmospheric data for this planet |
 | `atmosphere_scale_height_km` | 6.9 | medium | derived: kT/μg with T≈460 K (mid-atmosphere), μ=44, g=12.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#d8c490` (warm yellow-cream from CO₂ + sulfate aerosol haze under G8V illumination) | medium | Venus-analog cloud-top reflectance; G8V illumination is cleaner-yellow than Sol's, giving a slightly cooler-yellow tone than Venus |
 | `cloud_cover_fraction` | 1.00 | high | Venus-analog complete cloud cover; surface obscured at all wavelengths |

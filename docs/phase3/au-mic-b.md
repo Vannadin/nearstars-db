@@ -60,10 +60,10 @@ pattern choice). No documented divergences.
 | `cloud_morphology` | Jupiter-band-analog zonal cloud structure with bright zones and dark belts; equatorial superrotation jet; faint polar hood under M-dwarf insolation | low | Tie-break: interesting-first. GCM-class simulations of puffy Neptunes (Showman 2009, Lewis 2010 hot-Jupiter analogs adapted to Neptune temperatures) favor banded structure; cfg picks the banded reading over a featureless uniform haze for visual interest |
 | `cloud_tint_rgb_hex` | `#c0a880` | low | Tie-break: warm cream of H₂O/NH₃ cloud particles under M1V red illumination; chosen over a uniform cream for terminator contrast |
 | `surface_morphology` | n/a — no solid surface; gas-giant envelope all the way down | high | density and mass-radius position rule out a rocky surface |
-| `magnetic_field_present` | true | medium | hot Neptunes with H-rich envelopes sustain dynamos; Yadav & Thorngren 2017 scaling for sub-Saturns |
+| `magnetic_field_present` | true | low | hot Neptunes with H-rich envelopes sustain dynamos; Yadav & Thorngren 2017 scaling for sub-Saturns |
 | `magnetic_field_strength_microtesla_equator` | 100 | low | Tie-break: order-of-magnitude estimate from Yadav 2017 dynamo scaling for inflated Neptune; not measured |
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I absorption implies mass-loss ~10⁹–10¹⁰ g/s under energy-limited escape with AU Mic XUV; Plavchan 2020 §6 estimates similar; Cale 2021 §5 |
-| `aurora_present` | true | medium | strong stellar wind + H-rich upper atmosphere; H Balmer-α + H₂ Lyman + Werner bands expected |
+| `aurora_present` | true | low | strong stellar wind + H-rich upper atmosphere; H Balmer-α + H₂ Lyman + Werner bands expected |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm + Lyman-α downconverted gives pink-red dominant; interesting-first picks the bright pink over a fainter UV-only rendering |
 | `star_apparent_angular_diameter_deg` | 6.6 | high | derived: 2 × 0.862 R☉ / 0.07 AU × (180/π) ≈ 6.6° |
 | `stellar_illumination_color_temp_k` | 3665 | high | from host star Teff |

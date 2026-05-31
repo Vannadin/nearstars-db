@@ -27,8 +27,8 @@ sub-Neptune 과 물 풍부 암석 행성 사이의 질량-반지름 "골짜기" 
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `tidally_locked` | true | high | 18.86 d 궤도. 0.51 M☉ 주위 0.119 AU 의 sub-Neptune 에서 조석 감쇠 ≪ 22 Myr |
-| `obliquity_deg` | 0 | high | 조석 감쇠 |
+| `tidally_locked` | false (pseudo-synchronous; 3:2 candidate) | high | 18.86 d 궤도. 0.51 M☉ 주위 0.119 AU 의 sub-Neptune 에서 조석 감쇠 ≪ 22 Myr. 다만 e = 0.18 이 의사 동기 자전을 구동 (Hut 1981 ω/n ≈ 1.24) — 순수 1:1 이 아닌 3:2-capture 영역 |
+| `obliquity_deg` | 5 | high | 조석 감쇠가 0 을 향하지만, 이심 의사 동기 spin 상태를 위해 작은 잔차를 유지 |
 | `eccentricity` | 0.18 | medium | Mallorquin 2024 ESPRESSO + TESS 결합 fit |
 | `argument_of_periastron_deg` | 72.8 | medium | Mallorquin 2024 |
 | `sidereal_period_days` | 18.859023 | high | Martioli 2021 TESS Sector 27 + Sector 1 |
@@ -242,6 +242,11 @@ c 의 특성화에 대한 학회 초록과 제안 요약 (NIRSpec 제안, 지상
 - **Phase 곡선.** c 의 Spitzer/JWST phase 곡선이 주야 온도 대비와
   구름 꼭대기 분포를 제약할 것입니다. 측정될 때까지 500 K / 380 K
   픽은 medium confidence 에 남아 있습니다.
+- **3:2 spin-orbit-resonance cfg variant.** e = 0.18 에서 의사 동기
+  평형 (Hut 1981 ω/n ≈ 1.24) 은 순수 1:1 이 아니라 3:2 spin-orbit-
+  capture 영역에 놓입니다. 3:2 cfg variant (자전 주기 = (2/3) ×
+  18.859023 d ≈ 12.57 d) 는 고정된 주간 면 대신 천천히 이주하는
+  substellar 점과 이심률 구동 일사 계절을 만들어냅니다.
 - **cfg variant. water world.** 물 풍부 해석 (Zeng 2019 질량-반지름
   branch) 은 thin-H/He envelope 의 의미 있는 대안입니다. "c water
   world" cfg variant 가 H₂O 얼음 구름과 살짝 다른 시각 외관 (더

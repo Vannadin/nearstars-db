@@ -54,8 +54,8 @@ divergence 는 없습니다 — Proxima d 는 너무 최근에 발견되어 cano
 | `surface_tint_rgb_hex_primary` | `#5a3a2a` (빨강 별 아래 iron-oxidized basalt regolith) | medium | Tie-break. Mercury 표면 색조 × M 왜성 SED. interesting-first 가 중립 회색보다 따뜻한 흙 톤 선택 |
 | `surface_tint_rgb_hex_accent` | `#6a4632` (substellar 햇볕에 구워진 basalt) | low | Mercury-analog substellar regolith reddening. 용융 없음 (substellar ~460 K ≪ silicate solidus ~1300 K) |
 | `surface_morphology` | impact-cratered basalt 지형. substellar 햇볕에 구워진 basalt. antistellar volatile cold-trap regolith | medium | Tie-break. Mercury analog + ~1.9 S⊕ 일조량 driven 주간 열 기울기 (용융 없음) |
-| `magnetic_field_present` | true (약한, 유도된) | medium | Tie-break. conducting 철핵 + Proxima 항성풍 → 유도된 자기장. 직접 측정되지 않았지만 Mercury 와의 analogy 로 가능 |
-| `magnetic_dipole_moment_normalized_earth` | 0.001 | medium | Tie-break. Mercury-analog 매우 작은 핵 쌍극자. interesting-first 가 cfg 에서 aurora-equivalent flare-magnetosphere 상호작용을 유지하도록 작은 0 이 아닌 값 선택 |
+| `magnetic_field_present` | true (약한, 유도된) | low | 제약되지 않은 Mercury-analog 유도 모멘트. 측정된 적 없고 렌더되는 aurora 도 없음 (airless) |
+| `magnetic_dipole_moment_normalized_earth` | 0.001 | low | 제약되지 않은 Mercury-analog 유도 모멘트. 측정된 적 없고 렌더되는 aurora 도 없음 (airless) |
 | `radiation_belt_present` | false | high | 대기 없음 + 무시할 만한 B 필드 → 갇힌 입자 population 없음 |
 | `surface_radiation_dose_msv_yr` | 10⁵ | high | Atri 2020 (1910.09871) 스케일링, 대기 차폐 없음. flare/우주선 양성자 구동 |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |

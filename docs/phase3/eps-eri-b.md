@@ -200,8 +200,8 @@ peak (28 μm) — invisible to the unaided eye, but a faint
 self-illuminated reddish-warm cast at 4.6 μm where Mawet 2019
 detected the planet. Aurora emission at high magnetic latitudes
 provides the only visible-light nightside signal: a faint H-Balmer α
-red-pink ring at ~70° magnetic latitude, brighter than Jupiter's
-visible aurora by perhaps 10× given ε Eri's elevated stellar wind.
+red-pink ring at ~70° magnetic latitude, plausibly brighter than
+Jupiter's visible aurora given ε Eri's elevated stellar wind.
 
 ## Rotation & spin synthesis
 
@@ -280,8 +280,8 @@ Combining surface (cloud-deck) and atmosphere decisions:
   terminator.
 - **Aurora ring.** At high magnetic latitudes (~70° in the cfg)
   both north and south poles show faint H-Balmer α red-pink
-  (`#c84080`) auroral rings, brighter than Jupiter's visible aurora
-  by ~10× given ε Eri's elevated stellar wind. Visible from
+  (`#c84080`) auroral rings, plausibly brighter than Jupiter's
+  visible aurora given ε Eri's elevated stellar wind. Visible from
   nightside angles only; obscured by the cloud deck on the dayside.
 - **Star in sky.** ε Eridani subtends 0.112° from ε Eri b — about
   the angular diameter of Saturn from Earth — appearing as a deep

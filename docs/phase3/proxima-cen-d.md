@@ -57,8 +57,8 @@ discovered for a canonical climate model to exist.
 | `surface_tint_rgb_hex_primary` | `#5a3a2a` (iron-oxidized basaltic regolith under red star) | medium | Tie-break: Mercury surface tint × M-dwarf SED; interesting-first selects warm earthy tone over neutral gray |
 | `surface_tint_rgb_hex_accent` | `#6a4632` (substellar sun-baked basalt) | low | Mercury-analog substellar regolith reddening; NO melt (substellar ~460 K ≪ silicate solidus ~1300 K) |
 | `surface_morphology` | impact-cratered basaltic terrain; substellar sun-baked basalt; antistellar volatile cold-trap regolith | medium | Tie-break: Mercury analog + dayside thermal gradient driven by ~1.9 S⊕ insolation (no melt) |
-| `magnetic_field_present` | true (weak, induced) | medium | Tie-break: conducting iron core + Proxima stellar wind → induction-driven field; not directly measured but plausible by analogy with Mercury |
-| `magnetic_dipole_moment_normalized_earth` | 0.001 | medium | Tie-break: Mercury-analog very small core dipole; interesting-first picks small non-zero value to keep aurora-equivalent flare-magnetosphere interaction in cfg |
+| `magnetic_field_present` | true (weak, induced) | low | unconstrained Mercury-analog induced moment; not measured, no rendered aurora (airless) |
+| `magnetic_dipole_moment_normalized_earth` | 0.001 | low | unconstrained Mercury-analog induced moment; not measured, no rendered aurora (airless) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field → no trapped particle population |
 | `surface_radiation_dose_msv_yr` | 10⁵ | high | Atri 2020 (1910.09871) scaling with no atmospheric shield; flare/cosmic-proton-driven |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |

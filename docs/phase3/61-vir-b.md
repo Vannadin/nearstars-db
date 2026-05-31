@@ -116,7 +116,7 @@ visible tail is bright enough to be perceptible against the cooler
 mid-latitude crust.
 
 **Morphology under tidal lock.** The substellar magma pond is a
-permanent feature, fixed in the surface frame. Convective heat flow
+slowly-librating substellar feature (e = 0.12 libration). Convective heat flow
 within the magma pond, sustained by stellar insolation rather than
 internal heating, drives partial silicate vapor outgassing into the
 exosphere. Mid-latitudes are crusted basaltic plains; the nightside

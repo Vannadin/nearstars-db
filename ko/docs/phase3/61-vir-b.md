@@ -104,8 +104,8 @@ substellar 마그마-바다 glow 를 가시 적-주황 patch 로 인코딩합니
 1450 K 열복사의 Wien 피크는 λ ≈ 2 μm (근적외) 에 있지만 가시 꼬리는
 차가운 중위도 지각 대비 충분히 밝게 인식됩니다.
 
-**조석 고정 하의 형태.** substellar 마그마 pond 는 영구적 feature 로,
-표면 frame 에서 고정됩니다. 내부 가열이 아닌 항성 일사로 유지되는
+**조석 고정 하의 형태.** substellar 마그마 pond 는 천천히 librate 하는
+substellar feature 입니다 (e = 0.12 libration). 내부 가열이 아닌 항성 일사로 유지되는
 마그마 pond 내 대류 열흐름이 부분 규산염 증기 outgassing 을 외기권
 으로 구동합니다. 중위도는 지각화된 basalt 평원이고, 야간면은 시스템의
 6 Gyr 에 걸쳐 차갑고 어두우며 휘발성이 제거된 상태입니다. 수성

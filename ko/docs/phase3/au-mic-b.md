@@ -58,10 +58,10 @@ canonical-aligned. 세 개는 tie-break (대기 색 hex, 구름 색 hex, 띠
 | `cloud_morphology` | 밝은 zone 과 어두운 belt 의 Jupiter-band-analog 띠상 구름 구조. 적도 superrotation jet. M-왜성 일사 하의 옅은 극 hood | low | Tie-break. interesting-first. puffy Neptune 의 GCM 급 시뮬레이션 (Showman 2009, Lewis 2010 hot-Jupiter analog 를 Neptune 온도에 적응) 이 띠 구조를 선호. cfg 는 시각적 흥미를 위해 균일 haze 가 아닌 띠 해석 선택 |
 | `cloud_tint_rgb_hex` | `#c0a880` | low | Tie-break. M1V 의 붉은 조명 하 H₂O/NH₃ 구름 입자의 따뜻한 크림. terminator 대비를 위해 균일 크림 대신 선택 |
 | `surface_morphology` | n/a — 단단한 표면 없음. 끝까지 가스 자이언트 envelope | high | 밀도와 질량-반지름 위치가 암석 표면을 배제 |
-| `magnetic_field_present` | true | medium | H 풍부 envelope 의 hot Neptune 은 dynamo 유지. sub-Saturn 에 대한 Yadav & Thorngren 2017 스케일링 |
+| `magnetic_field_present` | true | low | H 풍부 envelope 의 hot Neptune 은 dynamo 유지. sub-Saturn 에 대한 Yadav & Thorngren 2017 스케일링 |
 | `magnetic_field_strength_microtesla_equator` | 100 | low | Tie-break. inflated Neptune 에 대한 Yadav 2017 dynamo 스케일링의 자릿수 추정. 측정 없음 |
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I 흡수가 AU Mic XUV 하 에너지 한정 탈출에서 질량 손실 ~10⁹–10¹⁰ g/s 를 함의. Plavchan 2020 §6 이 비슷한 값을 추정. Cale 2021 §5 |
-| `aurora_present` | true | medium | 강한 항성풍 + H 풍부 상층 대기 → H Balmer-α + H₂ Lyman + Werner 밴드 예상 |
+| `aurora_present` | true | low | 강한 항성풍 + H 풍부 상층 대기 → H Balmer-α + H₂ Lyman + Werner 밴드 예상 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm + Lyman-α downconvert 가 분홍-빨강 지배색을 줌. interesting-first 가 옅은 UV-only 렌더링 대신 밝은 분홍을 선택 |
 | `star_apparent_angular_diameter_deg` | 6.6 | high | 유도. 2 × 0.862 R☉ / 0.07 AU × (180/π) ≈ 6.6° |
 | `stellar_illumination_color_temp_k` | 3665 | high | host 별 Teff 에서 |

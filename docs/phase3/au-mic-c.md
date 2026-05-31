@@ -31,8 +31,8 @@ tint hex). No documented divergences.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
-| `tidally_locked` | true | high | 18.86 d orbit; tidal damping ≪ 22 Myr age for sub-Neptune at 0.119 AU around 0.51 M☉ |
-| `obliquity_deg` | 0 | high | tidal damping |
+| `tidally_locked` | false (pseudo-synchronous; 3:2 candidate) | high | 18.86 d orbit; tidal damping ≪ 22 Myr age for sub-Neptune at 0.119 AU around 0.51 M☉, but e = 0.18 drives pseudo-synchronous rotation (Hut 1981 ω/n ≈ 1.24) — 3:2-capture regime, not pure 1:1 |
+| `obliquity_deg` | 5 | high | tidal damping toward zero; small residual retained for the eccentric, pseudo-synchronous spin state |
 | `eccentricity` | 0.18 | medium | Mallorquin 2024 ESPRESSO + TESS joint fit |
 | `argument_of_periastron_deg` | 72.8 | medium | Mallorquin 2024 |
 | `sidereal_period_days` | 18.859023 | high | Martioli 2021 TESS Sector 27 + Sector 1 |
@@ -266,6 +266,12 @@ this writing.
 - **Phase curve.** Spitzer/JWST phase curve of c would constrain the
   day-night temperature contrast and the cloud-top distribution.
   Until measured, the 500 K / 380 K picks remain at medium confidence.
+- **3:2 spin-orbit-resonance cfg variant.** At e = 0.18 the pseudo-
+  synchronous equilibrium (Hut 1981 ω/n ≈ 1.24) sits in the 3:2
+  spin-orbit-capture regime rather than pure 1:1. A 3:2 cfg variant
+  (rotation period = (2/3) × 18.859023 d ≈ 12.57 d) would produce a
+  slowly migrating substellar point and eccentricity-driven insolation
+  seasons rather than a fixed dayside.
 - **Cfg variant: water world.** The water-rich interpretation
   (Zeng 2019 mass-radius branch) is a meaningful alternative to the
   thin-H/He envelope. A "c water world" cfg variant could ship a

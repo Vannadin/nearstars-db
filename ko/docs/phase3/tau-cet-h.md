@@ -46,8 +46,8 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `surface_temp_substellar_k` | 730 | medium | 두꺼운 대기가 dayside vs. nightside 를 균질화. substellar 증폭 최소 |
 | `surface_temp_nightside_k` | 710 | medium | 같음 — 두꺼운 대기가 느린 자전자 주위로 열을 효율적으로 수송 |
 | `atmosphere_present` | true (두꺼운 CO₂) | medium | 채택된 Venus-analog 시나리오. 조용한 호스트 XUV 가 7 Gyr 동안 무거운 CO₂ 를 보존 |
-| `atmosphere_surface_pressure_pa` | 5 000 000 | medium | 50 bar — Venus 92 bar 와 지구 1 bar 사이의 중간 값. metal-poor 호스트가 원시 탈가스 휘발성 인벤토리를 줄였음을 시사해 Venus 보다 낮음 |
-| `atmosphere_composition` | CO₂ ~95%, N₂ ~3.5%, SO₂ + H₂SO₄ 에어로졸 ~1%, 미량 H₂O <100 ppm | medium | Venus analog. 화산 SO₂ 에서 황산염 에어로졸을 가진 CO₂-runaway 종점 |
+| `atmosphere_surface_pressure_pa` | 5 000 000 | low | 시나리오 선택 — Venus analog. 혼합비는 템플릿 값이며 이 행성에 대한 대기 데이터는 없음 |
+| `atmosphere_composition` | CO₂ ~95%, N₂ ~3.5%, SO₂ + H₂SO₄ 에어로졸 ~1%, 미량 H₂O <100 ppm | low | 시나리오 선택 — Venus analog. 혼합비는 템플릿 값이며 이 행성에 대한 대기 데이터는 없음 |
 | `atmosphere_scale_height_km` | 6.9 | medium | derived. kT/μg with T≈460 K (중간 대기), μ=44, g=12.6 m/s² |
 | `atmosphere_tint_rgb_hex` | `#d8c490` (G8V 조명 아래 CO₂ + 황산염 에어로졸 안개의 따뜻한 노랑-크림) | medium | Venus-analog 구름-정상 반사도. G8V 조명은 Sol 보다 더 깨끗한 노랑이라 Venus 보다 살짝 더 차가운-노랑 톤 |
 | `cloud_cover_fraction` | 1.00 | high | Venus-analog 완전 구름 커버. 모든 파장에서 표면 가림 |

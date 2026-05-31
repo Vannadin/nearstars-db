@@ -369,17 +369,18 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_185"></li>
 <li data-i18n="li_186"></li>
 <li data-i18n="li_187"></li>
+<li data-i18n="li_188"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_188"></h2>
+<h2 data-i18n="h2_189"></h2>
 <ul class="intro">
-<li data-i18n="li_189"></li>
 <li data-i18n="li_190"></li>
 <li data-i18n="li_191"></li>
 <li data-i18n="li_192"></li>
 <li data-i18n="li_193"></li>
 <li data-i18n="li_194"></li>
+<li data-i18n="li_195"></li>
 </ul>
 </section>
 </main>
@@ -399,13 +400,13 @@ const T = {
   "th_6":"Confidence",
   "th_7":"Basis",
   "td_8":"<span class=\"field-tt\" data-ko-tip=\"조석 고정 여부. 행성이 모항성에 한 면만 보임 (true/false).\" data-en-tip=\"Tidal locking — same hemisphere always faces the host star (true/false).\"><code>tidally_locked</code></span>",
-  "td_9":"true",
+  "td_9":"false (pseudo-synchronous; 3:2 candidate)",
   "td_10":"high",
-  "td_11":"18.86 d orbit; tidal damping ≪ 22 Myr age for sub-Neptune at 0.119 AU around 0.51 M☉",
+  "td_11":"18.86 d orbit; tidal damping ≪ 22 Myr age for sub-Neptune at 0.119 AU around 0.51 M☉, but e = 0.18 drives pseudo-synchronous rotation (Hut 1981 ω/n ≈ 1.24) — 3:2-capture regime, not pure 1:1",
   "td_12":"<span class=\"field-tt\" data-ko-tip=\"자전축 기울기 (도). 지구 ≈ 23.5°.\" data-en-tip=\"Axial tilt in degrees. Earth ≈ 23.5°.\"><code>obliquity_deg</code></span>",
-  "td_13":"0",
+  "td_13":"5",
   "td_14":"high",
-  "td_15":"tidal damping",
+  "td_15":"tidal damping toward zero; small residual retained for the eccentric, pseudo-synchronous spin state",
   "td_16":"<span class=\"field-tt\" data-ko-tip=\"궤도 이심률. 0 = 정원, 1 = 포물선.\" data-en-tip=\"Orbital eccentricity. 0 = circle, 1 = parabolic.\"><code>eccentricity</code></span>",
   "td_17":"0.18",
   "td_18":"medium",
@@ -576,15 +577,16 @@ const T = {
   "li_183":"<b>Atmospheric detection.</b> No JWST or ground-based transmission spectrum has been published for c. NIRSpec/NIRISS observations could constrain composition and reveal whether the headline thin-H/He interpretation or the water-world variant is correct. If H₂O features are detected at high significance and H₂ features absent, switch the cfg to a water-world variant with <span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span> dominated by H₂O/CH₄/CO₂.",
   "li_184":"<b>He I 10830 Å observation.</b> A non-detection of He I escape from c would corroborate the smaller-escape-tail picture; a detection would imply the H/He envelope is being more rapidly stripped than estimated and the cfg&#x27;s atmospheric_escape_rate should be revised upward.",
   "li_185":"<b>Phase curve.</b> Spitzer/JWST phase curve of c would constrain the day-night temperature contrast and the cloud-top distribution. Until measured, the 500 K / 380 K picks remain at medium confidence.",
-  "li_186":"<b>Cfg variant: water world.</b> The water-rich interpretation (Zeng 2019 mass-radius branch) is a meaningful alternative to the thin-H/He envelope. A &quot;c water world&quot; cfg variant could ship a steam-dominated atmosphere with H₂O ice clouds and a slightly different visual appearance (bluer-tinted clouds, less haze). Listed as a follow-up cfg variant.",
-  "li_187":"<b>Mature-system variant.</b> At 1 Gyr, c would shrink to ~2.5 R⊕ as the envelope cools; a &quot;mature AU Mic c&quot; cfg variant could ship the deflated state for comparison.",
-  "h2_188":"Related",
-  "li_189":"<a href=\"au-mic.md\">au-mic</a> — host star synthesis with disk geometry",
-  "li_190":"<a href=\"au-mic-b.md\">au-mic-b</a> — sister planet, puffy hot Neptune at 8.5 d",
-  "li_191":"<a href=\"au-mic-d.md\">au-mic-d</a> — sister planet, Earth-mass TTV candidate at 12.7 d",
-  "li_192":"<a href=\"au-mic-e.md\">au-mic-e</a> — sister planet, ESPRESSO RV candidate at 33.1 d",
-  "li_193":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
-  "li_194":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream cfg writers",
+  "li_186":"<b>3:2 spin-orbit-resonance cfg variant.</b> At e = 0.18 the pseudo- synchronous equilibrium (Hut 1981 ω/n ≈ 1.24) sits in the 3:2 spin-orbit-capture regime rather than pure 1:1. A 3:2 cfg variant (rotation period = (2/3) × 18.859023 d ≈ 12.57 d) would produce a slowly migrating substellar point and eccentricity-driven insolation seasons rather than a fixed dayside.",
+  "li_187":"<b>Cfg variant: water world.</b> The water-rich interpretation (Zeng 2019 mass-radius branch) is a meaningful alternative to the thin-H/He envelope. A &quot;c water world&quot; cfg variant could ship a steam-dominated atmosphere with H₂O ice clouds and a slightly different visual appearance (bluer-tinted clouds, less haze). Listed as a follow-up cfg variant.",
+  "li_188":"<b>Mature-system variant.</b> At 1 Gyr, c would shrink to ~2.5 R⊕ as the envelope cools; a &quot;mature AU Mic c&quot; cfg variant could ship the deflated state for comparison.",
+  "h2_189":"Related",
+  "li_190":"<a href=\"au-mic.md\">au-mic</a> — host star synthesis with disk geometry",
+  "li_191":"<a href=\"au-mic-b.md\">au-mic-b</a> — sister planet, puffy hot Neptune at 8.5 d",
+  "li_192":"<a href=\"au-mic-d.md\">au-mic-d</a> — sister planet, Earth-mass TTV candidate at 12.7 d",
+  "li_193":"<a href=\"au-mic-e.md\">au-mic-e</a> — sister planet, ESPRESSO RV candidate at 33.1 d",
+  "li_194":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_195":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream cfg writers",
   "title":"AU Mic c — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -599,13 +601,13 @@ const T = {
   "th_6":"Confidence",
   "th_7":"Basis",
   "td_8":"<span class=\"field-tt\" data-ko-tip=\"조석 고정 여부. 행성이 모항성에 한 면만 보임 (true/false).\" data-en-tip=\"Tidal locking — same hemisphere always faces the host star (true/false).\"><code>tidally_locked</code></span>",
-  "td_9":"true",
+  "td_9":"false (pseudo-synchronous; 3:2 candidate)",
   "td_10":"high",
-  "td_11":"18.86 d 궤도. 0.51 M☉ 주위 0.119 AU 의 sub-Neptune 에서 조석 감쇠 ≪ 22 Myr",
+  "td_11":"18.86 d 궤도. 0.51 M☉ 주위 0.119 AU 의 sub-Neptune 에서 조석 감쇠 ≪ 22 Myr. 다만 e = 0.18 이 의사 동기 자전을 구동 (Hut 1981 ω/n ≈ 1.24) — 순수 1:1 이 아닌 3:2-capture 영역",
   "td_12":"<span class=\"field-tt\" data-ko-tip=\"자전축 기울기 (도). 지구 ≈ 23.5°.\" data-en-tip=\"Axial tilt in degrees. Earth ≈ 23.5°.\"><code>obliquity_deg</code></span>",
-  "td_13":"0",
+  "td_13":"5",
   "td_14":"high",
-  "td_15":"조석 감쇠",
+  "td_15":"조석 감쇠가 0 을 향하지만, 이심 의사 동기 spin 상태를 위해 작은 잔차를 유지",
   "td_16":"<span class=\"field-tt\" data-ko-tip=\"궤도 이심률. 0 = 정원, 1 = 포물선.\" data-en-tip=\"Orbital eccentricity. 0 = circle, 1 = parabolic.\"><code>eccentricity</code></span>",
   "td_17":"0.18",
   "td_18":"medium",
@@ -776,15 +778,16 @@ const T = {
   "li_183":"<b>대기 검출.</b> c 에 대해 JWST 나 지상 기반 투과 스펙트럼이 출판 되지 않았습니다. NIRSpec/NIRISS 관측이 조성을 제약하고 headline thin-H/He 해석이 옳은지 water-world variant 가 옳은지 드러낼 수 있습니다. H₂O 피처가 높은 유의성으로 검출되고 H₂ 피처가 부재 하면 cfg 를 H₂O/CH₄/CO₂ 가 지배하는 <span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span> 의 water-world variant 로 전환.",
   "li_184":"<b>He I 10830 Å 관측.</b> c 에서 He I 탈출 비검출이 더 작은 탈출 꼬리 그림을 보강할 것입니다. 검출은 H/He envelope 가 추정보다 더 빠르게 스트립되고 있음을 함의하고 cfg 의 atmospheric_escape_rate 가 상향 조정되어야 함을 의미합니다.",
   "li_185":"<b>Phase 곡선.</b> c 의 Spitzer/JWST phase 곡선이 주야 온도 대비와 구름 꼭대기 분포를 제약할 것입니다. 측정될 때까지 500 K / 380 K 픽은 medium confidence 에 남아 있습니다.",
-  "li_186":"<b>cfg variant. water world.</b> 물 풍부 해석 (Zeng 2019 질량-반지름 branch) 은 thin-H/He envelope 의 의미 있는 대안입니다. &quot;c water world&quot; cfg variant 가 H₂O 얼음 구름과 살짝 다른 시각 외관 (더 푸르스름한 구름, 더 적은 haze) 을 가진 증기 우세 대기를 배포할 수 있습니다. follow-up cfg variant 로 등재.",
-  "li_187":"<b>성숙한 시스템 variant.</b> 1 Gyr 에서 c 는 envelope 가 식으면서 ~2.5 R⊕ 로 축소될 것입니다. &quot;성숙한 AU Mic c&quot; cfg variant 가 비교를 위해 deflated 상태를 배포할 수 있습니다.",
-  "h2_188":"Related",
-  "li_189":"<a href=\"au-mic.md\">au-mic</a> — disk 기하를 포함한 host 별 합성",
-  "li_190":"<a href=\"au-mic-b.md\">au-mic-b</a> — 자매 행성. 8.5 d 의 puffy hot Neptune",
-  "li_191":"<a href=\"au-mic-d.md\">au-mic-d</a> — 자매 행성. 12.7 d 의 지구질량 TTV 후보",
-  "li_192":"<a href=\"au-mic-e.md\">au-mic-e</a> — 자매 행성. 33.1 d 의 ESPRESSO RV 후보",
-  "li_193":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마",
-  "li_194":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream cfg 작성기",
+  "li_186":"<b>3:2 spin-orbit-resonance cfg variant.</b> e = 0.18 에서 의사 동기 평형 (Hut 1981 ω/n ≈ 1.24) 은 순수 1:1 이 아니라 3:2 spin-orbit- capture 영역에 놓입니다. 3:2 cfg variant (자전 주기 = (2/3) × 18.859023 d ≈ 12.57 d) 는 고정된 주간 면 대신 천천히 이주하는 substellar 점과 이심률 구동 일사 계절을 만들어냅니다.",
+  "li_187":"<b>cfg variant. water world.</b> 물 풍부 해석 (Zeng 2019 질량-반지름 branch) 은 thin-H/He envelope 의 의미 있는 대안입니다. &quot;c water world&quot; cfg variant 가 H₂O 얼음 구름과 살짝 다른 시각 외관 (더 푸르스름한 구름, 더 적은 haze) 을 가진 증기 우세 대기를 배포할 수 있습니다. follow-up cfg variant 로 등재.",
+  "li_188":"<b>성숙한 시스템 variant.</b> 1 Gyr 에서 c 는 envelope 가 식으면서 ~2.5 R⊕ 로 축소될 것입니다. &quot;성숙한 AU Mic c&quot; cfg variant 가 비교를 위해 deflated 상태를 배포할 수 있습니다.",
+  "h2_189":"Related",
+  "li_190":"<a href=\"au-mic.md\">au-mic</a> — disk 기하를 포함한 host 별 합성",
+  "li_191":"<a href=\"au-mic-b.md\">au-mic-b</a> — 자매 행성. 8.5 d 의 puffy hot Neptune",
+  "li_192":"<a href=\"au-mic-d.md\">au-mic-d</a> — 자매 행성. 12.7 d 의 지구질량 TTV 후보",
+  "li_193":"<a href=\"au-mic-e.md\">au-mic-e</a> — 자매 행성. 33.1 d 의 ESPRESSO RV 후보",
+  "li_194":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마",
+  "li_195":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream cfg 작성기",
   "title":"AU Mic c — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",
