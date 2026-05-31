@@ -246,9 +246,10 @@ def collect_docs() -> dict[str, list[dict]]:
         if md.stem in {'_template', 'README'}:
             continue
         slug = md.stem
+        ko = REPO / 'ko' / 'plans' / f'{slug}.md'
         out = f'plans__{slug}.html'
         _LINK_MAP[slug] = out
-        groups['plans'].append({'slug': slug, 'out': out, 'en': md, 'ko': None})
+        groups['plans'].append({'slug': slug, 'out': out, 'en': md, 'ko': ko if ko.exists() else None})
 
     return groups
 
