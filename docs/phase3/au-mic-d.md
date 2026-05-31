@@ -70,7 +70,7 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `cloud_tint_rgb_hex` | `#a08070` | low | Tie-break: warm cream of SO₂ haze under M-dwarf SED |
 | `ocean_present` | false (sub-glacial possible on cold nightside; visible surface is dry) | medium | Documented divergence: see Canonical alternatives. Surface temperature regime (530 K dayside, 250 K nightside) plus thin atmosphere precludes stable surface liquid water; cold-trap ice possible on far-side hemispheres |
 | `surface_tint_rgb_hex_primary` | `#5a4030` | medium | dark basaltic surface under M1V illumination; iron-oxide reddening from photochemical alteration |
-| `surface_tint_rgb_hex_accent` | `#a04020` | low | Tie-break: interesting-first. Cooling-lava red at active volcanic regions OR photolytic oxidation patches both fit; cfg picks lava for visual distinctiveness |
+| `surface_tint_rgb_hex_accent` | `#a04020` | low | Tidal heating on a very young (~22 Myr) close-in planet can drive Io-analog volcanism (Driscoll & Barnes 2015); localized cooling-lava hotspots are a low-confidence possibility, NOT insolation melt (T_eq 478 K is below the silicate solidus) |
 | `surface_morphology` | dark basaltic plains with iron-oxide reddening; localized cooling-lava patches at substellar; nightside cold-trap with surface ice + frost lag | medium | tidally-heated young rocky planet (Driscoll & Barnes 2015 framework); volcanic resurfacing on Myr timescales |
 | `surface_ice_caps` | nightside frost cap at hemispheric anti-substellar position; sublimation-driven volatile cycle | medium | tidally-locked terminator condensation; thin atmosphere allows volatile transport day to night |
 | `magnetic_field_present` | true (weak) | low | Earth-mass rocky planet with active interior; dynamo possible despite slow rotation |
@@ -100,9 +100,11 @@ plausible reading within the observational window. The surface is
 basaltic with iron-oxide reddening; the dark primary tone (`#5a4030`)
 reflects the M1V illumination + ferric mineral reddening common to
 weathered basalts under reducing atmospheric chemistry. The accent
-tone (`#a04020`) represents active cooling-lava patches near the
-substellar point — a tie-break choice favoring visual interest over
-a uniformly weathered surface.
+tone (`#a04020`) represents localized cooling-lava hotspots near the
+substellar point — a low-confidence possibility driven by tidal
+heating on this very young (~22 Myr) close-in planet (Driscoll &
+Barnes 2015), not by insolation melt (T_eq 478 K sits below the
+silicate solidus).
 
 **Surface morphology under tidal lock.** With 1:1 spin-orbit
 synchronization, the substellar hemisphere remains permanently

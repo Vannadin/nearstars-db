@@ -6,11 +6,10 @@ by Faria et al. 2022 (`2022A&A...658A.115F`, arXiv:2202.05188), and
 confirmed at high significance in the NIRPS + ESPRESSO joint analysis
 of Suárez Mascareño et al. 2025 (`2025A&A...700A..11S`,
 arXiv:2507.21751). At a semi-major axis of 0.029 AU it sits inside
-the inner edge of any habitable-zone interpretation; the orbit is so
-tight that even with Proxima's faint M5.5V illumination the
-insolation reaches ~17× Earth's, giving an equilibrium temperature
-of 326 K (A = 0.3) — comparable to Mercury and far above any
-liquid-water threshold.
+the inner edge of any habitable-zone interpretation; even so, with
+Proxima's faint M5.5V illumination (L = 0.00155 L☉) the insolation
+is only ~1.9× Earth's, giving an equilibrium temperature of 326 K
+(A = 0.3) — comparable to Mercury and above any liquid-water threshold.
 
 The planet has not been seen in transit; Suárez Mascareño 2025 §4
 confirms a high orbital inclination that places transit geometry
@@ -21,10 +20,10 @@ the best-studied USP analog — Mercury — combined with the constraints
 of M-dwarf irradiation and Proxima's flare environment.
 
 **Scenario choice for NearStars: a hot, tidally-locked, Mercury-like
-sub-Earth-mass rocky planet with an exposed basaltic surface,
-substellar partial-melt magma pond, vestigial sodium-vapor
-exosphere, and no atmospheric shielding from Proxima's flare
-output.** 32 cfg picks; 17 canonical-aligned (orbital + bulk
+sub-Earth-mass rocky planet with an airless, sun-baked basaltic
+surface (substellar peaks ~460 K, far below the silicate solidus →
+no melt), a vestigial sodium-vapor exosphere, and no atmospheric
+shielding from Proxima's flare output.** 32 cfg picks; 17 canonical-aligned (orbital + bulk
 parameters), 15 tie-break (surface visuals, weak atmosphere/exosphere
 choice, magnetic field inference) where the literature is silent on
 specific values. No documented divergences — Proxima d is too newly
@@ -43,25 +42,25 @@ discovered for a canonical climate model to exist.
 | `radius_rearth` | 0.65 | medium | Tie-break: non-transiting; mass-radius for ~0.3 M⊕ rocky → 0.6–0.7 R⊕; interesting-first selects 0.65 for visual distinction from Earth |
 | `surface_gravity_g_earth` | 0.62 | medium | derived = 0.26 / 0.65² |
 | `density_g_cc` | 5.2 | medium | Tie-break: assumed Earth-like rocky; Mercury-density 5.4 alternative within window |
-| `insolation_s_earth` | 17 | high | derived from L = 0.00157 L☉ and a = 0.029 AU |
+| `insolation_s_earth` | 1.9 | high | derived from L = 0.00155 L☉ and a = 0.029 AU |
 | `equilibrium_temp_k` (A=0) | 357 | high | derived |
 | `equilibrium_temp_k` (A=0.3) | 326 | high | derived; rocky bond albedo |
 | `bond_albedo` | 0.15 | medium | Tie-break: hot rocky range 0.06–0.2; Mercury analog 0.12; interesting-first picks 0.15 between dark basalt and brighter regolith |
-| `surface_temp_substellar_k` | 800 | medium | Tie-break: airless 1100 K, full atmospheric transport 700 K; partial transport (Mercury-analog vestigial exosphere) gives intermediate 800 K |
+| `surface_temp_substellar_k` | 460 | medium | airless substellar peak (no redistribution) at ~1.9 S⊕ ≈ 460 K; far below the silicate solidus (~1300 K) → solid rock, no melt |
 | `surface_temp_nightside_k` | 80 | medium | Tie-break: airless cold trap (Mercury nightside ~100 K); slight thermal inertia → ~80 K |
-| `atmosphere_present` | false (vestigial Na vapor only) | medium | Tie-break: escape ratio strongly favors loss at 17 S⊕ + Proxima flare environment; interesting-first picks Mercury-analog vestigial exosphere over fully airless |
+| `atmosphere_present` | false (vestigial Na vapor only) | medium | Tie-break: escape ratio strongly favors loss at ~1.9 S⊕ + Proxima flare environment; interesting-first picks Mercury-analog vestigial exosphere over fully airless |
 | `atmosphere_surface_pressure_pa` | 10⁻⁹ | medium | Tie-break: Mercury Na exosphere column density 10¹⁰ /cm² ≈ 10⁻⁹ Pa equivalent (Killen 2007 Mercury exosphere review for analogy) |
 | `atmosphere_composition` | sodium-dominated vapor (sputter-produced) | low | Tie-break: Mercury analog; sputtering by Proxima stellar wind on basaltic surface |
 | `atmosphere_tint_rgb_hex` | n/a (no visible atmosphere) | high | derived |
 | `cloud_cover_fraction` | 0 | high | no atmosphere |
-| `ocean_present` | false | high | T > 600 K rules out surface water |
+| `ocean_present` | false | high | airless, no stable surface liquid; dayside ~460 K rules out persistent water |
 | `surface_tint_rgb_hex_primary` | `#5a3a2a` (iron-oxidized basaltic regolith under red star) | medium | Tie-break: Mercury surface tint × M-dwarf SED; interesting-first selects warm earthy tone over neutral gray |
-| `surface_tint_rgb_hex_accent` | `#8a5a30` (substellar partial-melt magma glow) | low | Tie-break: T_substellar > 800 K → partial silicate melt visible on terminator-facing slopes; visual glow chosen to stand out against the cold nightside |
-| `surface_morphology` | impact-cratered basaltic terrain; substellar partial-melt pond; antistellar volatile cold-trap regolith | medium | Tie-break: Mercury analog + partial-melt thermal gradient driven by 17 S⊕ insolation |
+| `surface_tint_rgb_hex_accent` | `#6a4632` (substellar sun-baked basalt) | low | Mercury-analog substellar regolith reddening; NO melt (substellar ~460 K ≪ silicate solidus ~1300 K) |
+| `surface_morphology` | impact-cratered basaltic terrain; substellar sun-baked basalt; antistellar volatile cold-trap regolith | medium | Tie-break: Mercury analog + dayside thermal gradient driven by ~1.9 S⊕ insolation (no melt) |
 | `magnetic_field_present` | true (weak, induced) | medium | Tie-break: conducting iron core + Proxima stellar wind → induction-driven field; not directly measured but plausible by analogy with Mercury |
 | `magnetic_dipole_moment_normalized_earth` | 0.001 | medium | Tie-break: Mercury-analog very small core dipole; interesting-first picks small non-zero value to keep aurora-equivalent flare-magnetosphere interaction in cfg |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field → no trapped particle population |
-| `surface_radiation_dose_msv_yr` | 10⁵ | high | Atri 2020 (1910.09871) scaling with no atmospheric shield × 17× insolation |
+| `surface_radiation_dose_msv_yr` | 10⁵ | high | Atri 2020 (1910.09871) scaling with no atmospheric shield; flare/cosmic-proton-driven |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | no atmosphere to excite |
 | `flare_dose_event_msv` | 10⁴ | high | Atri 2020 + Vida 2019 superflare integrated proton dose at d's distance |
@@ -70,23 +69,22 @@ discovered for a canonical climate model to exist.
 
 ## Surface synthesis
 
-Proxima d's surface is governed by two competing thermal regimes: an
-airless ultra-hot dayside and a deeply cold nightside, with sharp
-terminator gradients. At 17× Earth's insolation and an albedo of
-0.15, the equilibrium temperature (326 K) is a global mean —
-substellar temperatures peak much higher (800 K nominal in the
-tie-break, with airless extremes pushing 1100 K).
+Proxima d's surface is governed by two competing thermal regimes: a
+hot but airless dayside and a deeply cold nightside, with sharp
+terminator gradients. At ~1.9× Earth's insolation and an albedo of
+0.15, the equilibrium temperature (326 K) is a global mean — the
+airless substellar point (no day-night redistribution) peaks only
+around 460 K.
 
-The substellar hemisphere is dominated by silicate melts and
-volatilization. At sustained substellar T ≥ 800 K, iron-rich basalts
-partially melt, producing fluid pockets at depth and surface
-features reminiscent of Io's silicate volcanism (without the
-tidal-heating engine — Proxima d has no significant tidal heat).
-Magma ponds at substellar are a tie-break choice over the more
-conservative "fully solidified rock" alternative; the partial-melt
-geometry produces a glowing accent visible from a hypothetical
-spacecraft as the planet approaches mid-day terminator (`surface_tint_rgb_hex_accent
-= #8a5a30`).
+That ~460 K substellar peak is far below the basalt/silicate solidus
+of ~1200–1300 K, so the dayside is a solid, sun-baked basaltic
+surface — there is no melt and no magma pond. An Io-style silicate
+volcanism would require a tidal-heating engine, but Proxima d has no
+significant tidal heat, so that pathway is ruled out as well. The
+substellar accent is therefore a dry regolith-reddening tone rather
+than a glow: warm baked basalt visible from a hypothetical spacecraft
+as the planet approaches mid-day terminator (`surface_tint_rgb_hex_accent
+= #6a4632`).
 
 The antistellar hemisphere is a volatile cold-trap analog of
 Mercury's permanently-shadowed polar craters — temperatures near 80 K
@@ -98,7 +96,7 @@ system; volatile retention in the antistellar cold-trap is plausible
 but not directly measurable.
 
 Surface morphology — impact craters from 4 Gyr of bombardment, with
-substellar partial-melt deformation overprinting older terrain — is
+the sun-baked substellar regolith overprinting older terrain — is
 inferred entirely from the Mercury analog. The cfg `surface_morphology`
 field captures this with the standard Mercury-style hummocky basaltic
 texture, biased toward the brown-red end of the silicate palette by
@@ -107,11 +105,10 @@ the M-dwarf illumination spectrum.
 ## Atmosphere synthesis
 
 Proxima d has effectively no atmosphere in the conventional sense.
-At the surface gravity of 0.62 g_⊕ and substellar temperature ~800 K,
+At the surface gravity of 0.62 g_⊕ and a substellar peak ~460 K,
 the Jeans-escape parameter for any plausible secondary atmosphere is
-> 100 for H₂, > 30 for H₂O, > 5 for CO₂ — all favorable for thermal
-escape over Gyr timescales. The 17× insolation also drives strong
-XUV-driven hydrodynamic escape; Lee 2021 (2109.06963) found that
+favorable for H₂ and H₂O over Gyr timescales. Proxima's intense XUV
+output also drives strong hydrodynamic escape; Lee 2021 (2109.06963) found that
 even Proxima b at 0.05 AU experiences Venus-analog escape rates,
 and at d's much closer 0.029 AU the loss rates scale up by another
 order of magnitude.
@@ -161,7 +158,7 @@ Proxima d is the most visually muted of the five entries in this
 synthesis. The deep red M5.5V illumination (`stellar_color_temp_k = 2980`)
 combined with the iron-oxidized basaltic surface produces a warm,
 saturated red-brown global tint (`#5a3a2a`), with a subtle warmer
-accent (`#8a5a30`) at the substellar partial-melt region. Cratering
+accent (`#6a4632`) at the sun-baked substellar region. Cratering
 and ridge geometry follow the Mercury-analog template.
 
 From orbit, the planet shows the classic hot-Mercury phase curve:
@@ -261,6 +258,6 @@ purely a hot-rocky visual destination for player exploration.
 ## Related
 
 - [proxima-cen](proxima-cen.md) — host star; flare environment drives the atmosphere-stripped scenario
-- [proxima-cen-b](proxima-cen-b.md) — outer sibling at HZ; contrast — d sits inside the inner edge of any HZ interpretation at 17× Earth's insolation
+- [proxima-cen-b](proxima-cen-b.md) — outer sibling at HZ; contrast — d sits inside the inner edge of any HZ interpretation at ~1.9× Earth's insolation
 - [methodology](../reference/methodology.md) — Decisions schema
 - [mod-reference](../reference/mod-reference.md) — downstream mods

@@ -559,6 +559,34 @@ these actions require explicit confirmation or a Read-first step.
 
 ---
 
+## Physical-plausibility gates (don't let "interesting-first" go un-physical)
+
+The interesting-first tie-break picks the more vivid option *when the literature
+is silent* — it never licenses a physically impossible feature. Gate the
+recurring temptations:
+
+- **Molten / lava / magma surface** only when EITHER (a) the substellar (or
+  equilibrium) temperature clears the silicate solidus — substellar ≳ ~1300 K,
+  i.e. T_eq ≳ ~1000 K — OR (b) a *cited* interior-heating mechanism (tidal
+  heating in a young or eccentric close-in system; stellar-wind induction
+  heating — e.g. Driscoll & Barnes 2015, Kislyakova 2018, Bolmont 2020) makes
+  Io-analog volcanism plausible. A merely *hot* close-in planet (T_eq ~400–900 K)
+  defaults to **airless baked bare rock**, NOT lava. Never style lava "for
+  visual distinctiveness" alone. (Caught 2026-05-31: Proxima d magma pond at
+  ~460 K substellar on a fabricated 17 S⊕; au-mic-d "lava for distinctiveness".)
+- **Tidal locking** of close-in planets is correct physics (lock time ≪ age),
+  but **eccentric** ones settle into pseudo-synchronous rotation or a spin-orbit
+  resonance (Mercury 3:2) — note that, don't force obliquity 0 / pure 1:1.
+- **Recompute derived numbers, don't copy them.** T_eq = 278.3·L^0.25/√a and
+  S = L/a² must be recomputed from the curated L and a; a guessed/copied value
+  (Proxima d's "17 S⊕" vs the real ~1.9) propagates into temperature, melt, and
+  radiation rows.
+- Induced magnetic fields, aurorae, and specific atmospheres on non-transiting
+  planets are tie-breaks too — keep them physically gated and flagged
+  low-confidence, not reflexive defaults.
+
+---
+
 ## Related documents
 
 - `docs/phase3/trappist-1-{e,f}.md` — canonical structural examples (with divergence section)
