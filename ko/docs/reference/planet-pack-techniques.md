@@ -19,7 +19,7 @@
 > [§1 Licensing](#1-licensing--attribution) 참고.
 >
 > **로컬 전용 동반 자료.** Paid-Early-Access (blackrack release-5
-> volumetric) 스키마 세부는 이 파일에 없다. [[feedback_patreon_assets]]
+> volumetric) 스키마 세부는 이 파일에 없다. [[feedback-patreon-assets]]
 > 방침에 따라 `~/Desktop/ksp-mod-refs/_notes/` 에만 둔다.
 
 ---
@@ -75,10 +75,13 @@
   NearStars config 를 GPL 로 강제하게 되어 CC-BY-NC-SA 와 비호환) 이고,
   **텍스처/메시도 사용 금지** (All Rights Reserved). CS 를 읽고 이해한
   기법을 재구현하는 것은 괜찮지만, cfg 를 붙여넣는 것은 안 된다.
-- **blackrack volumetric clouds.** 현재 유료 릴리스(V5)는 Patreon
-  Early-Access 다 — 절대 재배포 금지, V5 스키마 사실도 로컬 전용으로
-  유지 ([[feedback_patreon_assets]], [[reference_volumetric_clouds_naming]]).
-  무료 release-3 스키마 (`layerRaymarchedVolume`) 는 공개되어 있다.
+- **blackrack의 True Volumetric Clouds** (별칭 *EVE Volumetrics*, **EVE-Redux**
+  내장) — SPVE/CS/PW가 올라타는 볼류메트릭 구름 시스템이다. **V3·V5는 별도
+  제품이 아니라 순차 릴리스 번호다.** V3는 무료 공개 릴리스(cfg 노드
+  `layerRaymarchedVolume`), V5는 현재 유료 Patreon Early-Access 릴리스
+  (`layerRaymarchedVolumeV5`)다. 유료 릴리스는 절대 재배포 금지, V5 전용 스키마
+  사실도 로컬 전용으로 유지한다. 무료 release-3 스키마는 공개되어 있다.
+  ([[feedback-patreon-assets]], [[reference-volumetric-clouds-naming]] 참고.)
 
 ### 1.3 번들된 서드파티 플러그인 (각자 라이선스)
 
@@ -288,7 +291,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 - **Scatterer atmosphere** (`Scatterer_atmosphere { Atmo { … } }`).
   Rayleigh/Mie beta, `useOzone` + `ozoneAbsorption/Height/Falloff` (**범용
-  성층권 흡수체** 슬롯 — [[project_phase3_stratospheric_absorbers]] 참고),
+  성층권 흡수체** 슬롯 — [[project-phase3-stratospheric-absorbers]] 참고),
   `multipleScattering`, `godrayStrength` (~0.7 이 무난한 기본값),
   `averageGroundReflectance`.
 - **재정의 말고 패치하라.** 기존 atmosphere 를 다시 선언하는 대신
@@ -338,7 +341,7 @@ semiMajorAxis = min/max; inclination; eccentricity } } }` 와 여러 반경
 
 ## 7. Parallax conventions (fills the pending Parallax reference)
 
-([[project_nearstars_mod_refs_pending]] 의 "Parallax still unwritten"
+([[project-nearstars-mod-refs-pending]] 의 "Parallax still unwritten"
 항목을 해소한다.)
 
 - **ParallaxScaled / `Terrain.cfg`** (`@ParallaxTerrain … :FINAL`).
@@ -500,4 +503,4 @@ biome 키 지역 crew report, 5개 언어 로컬라이제이션 레이아웃.
 - SPVE — <https://github.com/TheSpacePotato/SpacePotato-s-Volumetric-Enhancements> (CC BY-NC 4.0)
 - Cosmic Serenity — <https://github.com/ProximaCentauri-star/Cosmic-Serenity> (configs GPL-3.0; assets ARR)
 - Promised Worlds — <https://github.com/PromisedWorlds/PromisedWorlds> (CC-BY-NC-SA; bundled plugins MIT/GPL-3.0; settings DLL proprietary)
-- blackrack True Volumetric Clouds / EVE-Redux — Patreon (paid EA; see [[reference_volumetric_clouds_naming]])
+- blackrack True Volumetric Clouds / EVE-Redux — Patreon (paid EA; see [[reference-volumetric-clouds-naming]])

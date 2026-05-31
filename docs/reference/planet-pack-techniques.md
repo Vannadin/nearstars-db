@@ -20,7 +20,7 @@
 >
 > **Local-only companion.** Paid-Early-Access (blackrack release-5
 > volumetric) schema specifics are NOT in this file; they live in
-> `~/Desktop/ksp-mod-refs/_notes/` per [[feedback_patreon_assets]].
+> `~/Desktop/ksp-mod-refs/_notes/` per [[feedback-patreon-assets]].
 
 ---
 
@@ -75,10 +75,14 @@ The constraints below apply only to **copying the actual files**.
   force NearStars configs to GPL — incompatible with CC-BY-NC-SA) and
   **do not use any texture/mesh** (All Rights Reserved). Re-implementing
   a technique you understood from reading CS is fine; pasting its cfg is not.
-- **blackrack volumetric clouds:** the current paid release (V5) is
-  Patreon Early-Access — never redistribute, and keep V5 schema facts
-  local-only ([[feedback_patreon_assets]], [[reference_volumetric_clouds_naming]]).
-  The free release-3 schema (`layerRaymarchedVolume`) is public.
+- **blackrack's True Volumetric Clouds** (a.k.a. *EVE Volumetrics*, shipped
+  inside **EVE-Redux**) — the volumetric cloud system SPVE/CS/PW build on.
+  **V3 and V5 are sequential release numbers, not separate products:** V3 is
+  the free public release (cfg node `layerRaymarchedVolume`); V5 is the
+  current paid Patreon Early-Access release (`layerRaymarchedVolumeV5`).
+  Never redistribute the paid release, and keep V5-only schema facts
+  local-only. The free release-3 schema is public.
+  (See [[feedback-patreon-assets]], [[reference-volumetric-clouds-naming]].)
 
 ### 1.3 Bundled third-party plugins (their own licenses)
 
@@ -291,7 +295,7 @@ ambience) — a clean, general "you are inside region X" mechanism.
 - **Scatterer atmosphere** (`Scatterer_atmosphere { Atmo { … } }`):
   Rayleigh/Mie betas, `useOzone` + `ozoneAbsorption/Height/Falloff` (a
   **generic stratospheric absorber** slot — see
-  [[project_phase3_stratospheric_absorbers]]), `multipleScattering`,
+  [[project-phase3-stratospheric-absorbers]]), `multipleScattering`,
   `godrayStrength` (~0.7 is a safe default), `averageGroundReflectance`.
 - **Patch, don't redefine:** use `@Atmo:HAS[#name[X]] { … }` with
   `:LAST`/`:AFTER` to re-tune an existing atmosphere instead of
@@ -341,7 +345,7 @@ For exoplanets with no real DEM, these stacks generate plausible relief:
 ## 7. Parallax conventions (fills the pending Parallax reference)
 
 (Addresses the "Parallax still unwritten" item in
-[[project_nearstars_mod_refs_pending]].)
+[[project-nearstars-mod-refs-pending]].)
 
 - **ParallaxScaled / `Terrain.cfg`** (`@ParallaxTerrain … :FINAL`):
   `ParallaxScaledProperties { mode = FromTerrain; Material {
@@ -505,4 +509,4 @@ interstellar systems); biome-keyed localized crew reports with the
 - SPVE — <https://github.com/TheSpacePotato/SpacePotato-s-Volumetric-Enhancements> (CC BY-NC 4.0)
 - Cosmic Serenity — <https://github.com/ProximaCentauri-star/Cosmic-Serenity> (configs GPL-3.0; assets ARR)
 - Promised Worlds — <https://github.com/PromisedWorlds/PromisedWorlds> (CC-BY-NC-SA; bundled plugins MIT/GPL-3.0; settings DLL proprietary)
-- blackrack True Volumetric Clouds / EVE-Redux — Patreon (paid EA; see [[reference_volumetric_clouds_naming]])
+- blackrack True Volumetric Clouds / EVE-Redux — Patreon (paid EA; see [[reference-volumetric-clouds-naming]])
