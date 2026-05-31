@@ -152,6 +152,26 @@ else:
         )
 
 
+# 6. every Phase-2-grade host must have a docs/phase2/<slug>.html
+#    (build_phase2_html.py coverage — catches the "curated Phase 2 but viewer
+#    page never regenerated" gap that left new hosts showing Phase 3 only).
+try:
+    sys.path.insert(0, str(ROOT / "scripts" / "pipeline"))
+    from build_phase2_html import find_phase2_hosts
+    from _naming import to_url_slug
+    stellar_c = json.loads((DB / "stellar_props_curated.json").read_text(encoding="utf-8"))
+    missing_p2 = [h for h in find_phase2_hosts(stellar_c)
+                  if not (DOCS / "phase2" / f"{to_url_slug(h)}.html").exists()]
+    if missing_p2:
+        failures.append(
+            f"{len(missing_p2)} Phase-2 host(s) missing docs/phase2/*.html: "
+            f"{sorted(missing_p2)[:6]}{'...' if len(missing_p2) > 6 else ''} "
+            f"— run build_phase2_html.py"
+        )
+except Exception as e:
+    failures.append(f"phase2-coverage check errored: {e}")
+
+
 # Output
 if failures:
     for msg in failures:
