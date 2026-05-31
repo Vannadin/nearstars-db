@@ -53,6 +53,51 @@ template = '''<!DOCTYPE html>
 <script>
   const md = document.getElementById('src').textContent;
   document.getElementById('content').innerHTML = marked.parse(md, { gfm: true, breaks: false });
+  // 색 카탈로그 등에서 첫 열이 "color"인 표의 색 이름 셀 앞에 참고용 색 칩을 주입 (en/ko 키워드)
+  (function(){
+    var MAP = [
+      [['무지개','rainbow','iridescent','spectral','스펙트럼','full-spectrum','play-of-color','flash','섬광','opal','오팔','nacre','진주층','labradorite','라브라도'], 'linear-gradient(90deg,#ee3322,#eedd00,#22cc44,#2299dd,#8833ee)'],
+      [['백열','광휘','glow','glowing','incandescent','빛나는','molten'], 'linear-gradient(90deg,#5a1500,#e8862e,#ffd9a0)'],
+      [['황동','금색','gold','brass','electrum','자연금'], 'linear-gradient(135deg,#b8860b,#ffe085,#8a6a00)'],
+      [['은회','강철','steely','silver','gunmetal','건메탈','steel','specular'], '#aab2bd'],
+      [['회청','grey-blue','gray-blue'], '#6b7a90'],
+      [['황록','yellow-green','yellowgreen'], '#a9c520'],
+      [['청록','cyan','teal','aquamarine','turquoise','터키석','터쿼이즈'], '#2bb3c0'],
+      [['마젠타','magenta'], '#c0398f'],
+      [['분홍','장미','살구','salmon','pink','rose'], '#e58aa0'],
+      [['보라','자주','purple','violet','lilac','royal'], '#7b3fa0'],
+      [['적갈','황갈','갈색','황토','brown','tan','ochre','red-brown','rust'], '#8a6d3b'],
+      [['청','남색','blue','cobalt','sapphire','azure','ultramarine','navy'], '#2f6fd0'],
+      [['녹','에메랄드','올리브','green','emerald','olive','malachite'], '#2e9e4f'],
+      [['주황','orange'], '#e8862e'],
+      [['적','진홍','주홍','red','crimson','scarlet','vermilion','ruby'], '#c0392b'],
+      [['황','yellow','golden','lemon'], '#e6c100'],
+      [['백','흰','white','frost','서리'], '#eef0f2'],
+      [['회','grey','gray','hazy','흐림'], '#9aa0a6'],
+      [['흑','검','어두','dark','black','jet','sooty'], '#222222'],
+    ];
+    function swatch(text){
+      var t = text.toLowerCase();
+      for (var i=0;i<MAP.length;i++){
+        var keys = MAP[i][0];
+        for (var j=0;j<keys.length;j++){ if (t.indexOf(keys[j])>=0) return MAP[i][1]; }
+      }
+      return null;
+    }
+    document.querySelectorAll('#content table').forEach(function(tbl){
+      var th = tbl.querySelector('thead th');
+      if (!th || th.textContent.trim().toLowerCase() !== 'color') return;
+      tbl.querySelectorAll('tbody tr').forEach(function(tr){
+        var td = tr.querySelector('td');
+        if (!td) return;
+        var css = swatch(td.textContent);
+        if (!css) return;
+        var sp = document.createElement('span');
+        sp.style.cssText = 'display:inline-block;width:0.85em;height:0.85em;margin-right:6px;border:1px solid rgba(0,0,0,0.3);border-radius:3px;vertical-align:-1px;background:'+css;
+        td.insertBefore(sp, td.firstChild);
+      });
+    });
+  })();
 </script>
 </body>
 </html>
