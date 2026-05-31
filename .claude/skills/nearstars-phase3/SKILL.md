@@ -31,6 +31,7 @@ This file drives workflow + judgment. Detail lives in references/:
 - [`scoring-reference.md`](references/scoring-reference.md) — authority + relevance schema
 - [`conflict-resolution.md`](references/conflict-resolution.md) — tie-break, divergence, failure modes
 - [`mod-grounded-fields.md`](references/mod-grounded-fields.md) — which cfg fields each Phase 3 row feeds
+- [`color-materials.md`](../../../docs/reference/color-materials.md) — color → material/mechanism catalog + observation veto gate (in docs/reference, mirrored)
 
 ---
 
