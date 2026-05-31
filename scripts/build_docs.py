@@ -39,7 +39,7 @@ GH_CSS = 'https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown
 _LINK_MAP: dict[str, str] = {}
 
 _FRONTMATTER_RE = re.compile(r'^---\n.*?\n---\n+', re.DOTALL)
-_MD_LINK_RE = re.compile(r'\]\(([^)]+)\)')
+_FULL_LINK_RE = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
 
 
 def _strip_frontmatter(md: str) -> tuple[str, str]:
@@ -56,20 +56,26 @@ def _strip_frontmatter(md: str) -> tuple[str, str]:
 
 
 def _rewrite_links(md: str) -> str:
-    """Rewrite internal *.md link targets to their generated page."""
+    """Rewrite internal *.md links.
+
+    - target maps to a built wiki page → point at it.
+    - non-.md target (http, anchor, relative .html) → leave untouched.
+    - internal .md NOT in the built set → drop to plain text. Those point
+      outside the published docs/ tree (e.g. into .claude/ skill refs) and
+      would 404 on the site; the link is valid only in the repo file view.
+    """
     def repl(m):
-        target = m.group(1)
+        text, target = m.group(1), m.group(2)
         if target.startswith(('http://', 'https://', '#', 'mailto:')):
             return m.group(0)
         base, _, anchor = target.partition('#')
         if not base.endswith('.md'):
             return m.group(0)
-        slug = Path(base).stem
-        out = _LINK_MAP.get(slug)
-        if not out:
-            return m.group(0)
-        return f']({out}{("#" + anchor) if anchor else ""})'
-    return _MD_LINK_RE.sub(repl, md)
+        out = _LINK_MAP.get(Path(base).stem)
+        if out:
+            return f'[{text}]({out}{("#" + anchor) if anchor else ""})'
+        return text  # unbuilt internal .md → de-link (no broken href on site)
+    return _FULL_LINK_RE.sub(repl, md)
 
 
 def _first_h1(md: str) -> str:
@@ -125,6 +131,7 @@ def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
         '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
         '<a class="nav-x" href="../index.html">⌗ System database</a>',
         '<a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>',
+        '<a class="nav-x" href="../firefly-colors.html">◳ Element &amp; plasma colors</a>',
     ]
     labels = {'reference': 'Reference', 'plans': 'Plans'}
     for g in ('reference', 'plans'):

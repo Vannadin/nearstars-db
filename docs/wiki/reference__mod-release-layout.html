@@ -53,6 +53,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
+<a class="nav-x" href="../firefly-colors.html">◳ Element &amp; plasma colors</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
@@ -142,7 +143,7 @@ NearStars/
 > Exception: Principia patches (`@principia_gravity_model`,
 > `@principia_initial_state`) deliberately diverge from the
 > `:NEEDS:FOR[NearStarsSystem]` form below — see the
-> [`principia-cfg` skill](../../.claude/skills/principia-cfg/SKILL.md)
+> `principia-cfg` skill
 > for the rationale (they edit nodes Sol-Configs already authored, so
 > `:FOR[NearStarsSystem]` claims authorship spuriously).
 
@@ -333,7 +334,7 @@ NearStars/
 
 > 상태. Sol 전용이 현재 MVP. 아래 RSS 측 패치는 향후 목표 구조로서 문서화한 것이며, 현재 릴리스에는 포함되지 않습니다.
 >
-> 예외. Principia 패치 (`@principia_gravity_model`, `@principia_initial_state`) 는 아래 `:NEEDS:FOR[NearStarsSystem]` 형식에서 의도적으로 벗어납니다 — 그 이유는 [`principia-cfg` 스킬](../../../.claude/skills/principia-cfg/SKILL.md) 참고 (Sol-Configs 가 이미 만든 노드를 편집하기 때문에 `:FOR[NearStarsSystem]` 이 작성자임을 잘못 주장하게 됨).
+> 예외. Principia 패치 (`@principia_gravity_model`, `@principia_initial_state`) 는 아래 `:NEEDS:FOR[NearStarsSystem]` 형식에서 의도적으로 벗어납니다 — 그 이유는 `principia-cfg` 스킬 참고 (Sol-Configs 가 이미 만든 노드를 편집하기 때문에 `:FOR[NearStarsSystem]` 이 작성자임을 잘못 주장하게 됨).
 
 RSS와 Sol 모두 중심별을 `name = Sun`으로 정의하므로, `referenceBody = Sun`은 수정 없이 양쪽에서 동작합니다. 호환성 분기는 두 곳에서만 발생합니다.
 

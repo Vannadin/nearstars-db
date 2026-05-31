@@ -53,6 +53,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
+<a class="nav-x" href="../firefly-colors.html">◳ Element &amp; plasma colors</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
@@ -92,7 +93,7 @@ body { margin: 0; background: #fff; color: #1f2328;
 > values, what variants (Sol Real / Sol Quarter / RSS) are MVP-supported,
 > and the rationale for diverging from `:NEEDS:FOR[NearStarsSystem]` on
 > Principia patches — see the
-> [`principia-cfg` skill](../../.claude/skills/principia-cfg/SKILL.md).
+> `principia-cfg` skill.
 
 ---
 
@@ -538,7 +539,7 @@ Sol-Configs ships its own `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cf
 - [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — the Cartesian state vectors produced by §9–11 of that doc feed `principia_initial_state` body blocks here
 - [mod-reference](reference__mod-reference.html) — Principia install and dependency tier
 - [mod-release-layout](reference__mod-release-layout.html) — §2.1 covers how Principia patches are placed in `Patches/Principia/`
-- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — the canonical worked example downstream of Principia's per-body gravity model
+- alpha-centauri-a, alpha-centauri-b — the canonical worked example downstream of Principia's per-body gravity model
 </script>
 <script type="text/markdown" id="md-ko"># Principia CFG 기술 참조
 
@@ -547,7 +548,7 @@ Sol-Configs ships its own `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cf
 
 > **관점.** 이 문서는 **외부 Principia CFG API 레퍼런스** 입니다 — Principia 가 받아들이는 노드/키의 전체 집합과 그 의미를 상위 코드와 문서로부터 정리한 것. 특정 행성 팩과 독립적입니다.
 >
-> **NearStars 고유 구현** — 실제로 emit 하는 노드 부분집합, `db/systems/*.json` 필드 → CFG 값 매핑, 지원 변형 (Sol Real / Sol Quarter / RSS), Principia 패치에서 `:NEEDS:FOR[NearStarsSystem]` 컨벤션을 벗어난 이유 — 는 [`principia-cfg` 스킬](../../../.claude/skills/principia-cfg/SKILL.md) 참고.
+> **NearStars 고유 구현** — 실제로 emit 하는 노드 부분집합, `db/systems/*.json` 필드 → CFG 값 매핑, 지원 변형 (Sol Real / Sol Quarter / RSS), Principia 패치에서 `:NEEDS:FOR[NearStarsSystem]` 컨벤션을 벗어난 이유 — 는 `principia-cfg` 스킬 참고.
 
 ---
 
@@ -993,7 +994,7 @@ Sol-Configs는 `:FOR[SolSystem]`으로 자체 `Real_Sol-GravityModel.cfg`, `Real
 - [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — 해당 문서 §9–11 이 만들어 내는 Cartesian 상태 벡터가 여기 `principia_initial_state` 의 body 블록에 공급됩니다.
 - [mod-reference](reference__mod-reference.html) — Principia 설치와 의존성 티어.
 - [mod-release-layout](reference__mod-release-layout.html) — §2.1 이 Principia 패치를 `Patches/Principia/` 에 어떻게 배치하는지 다룹니다.
-- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — Principia 의 body 별 gravity 모델 다운스트림의 정전 워크드 예시.
+- alpha-centauri-a, alpha-centauri-b — Principia 의 body 별 gravity 모델 다운스트림의 정전 워크드 예시.
 </script>
 <script>
 const srcs = {};
