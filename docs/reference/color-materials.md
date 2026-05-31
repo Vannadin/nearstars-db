@@ -37,10 +37,10 @@ stellar SED), and how stable/expected is it?**
   tholin orange, water-ice white) → **lane 1: Phase 3 grounded**, normal
   confidence.
 - **Exotic-but-real** (halogen-gas tints, iodine-vapor violet, a transition-metal
-  chromophore mineral, a chromophore that exists but isn't an expected formation
-  outcome) → **lane 2: cfg-artistic override**, the same flagged downstream layer
-  as moons and synthetic eccentricity. Confidence=low, documented divergence,
-  **but carries a genuine chemistry hook** — not fabrication.
+  or charge-transfer chromophore mineral, structural iridescence) → **lane 2:
+  cfg-artistic override**, the same flagged downstream layer as moons and
+  synthetic eccentricity. Confidence=low, documented divergence, **but carries a
+  genuine chemistry hook** — not fabrication.
 - **Life-dependent** (chlorophyll green, retinal "Purple Earth", halophile pinks)
   → lane 2, flagged speculative.
 
@@ -56,110 +56,177 @@ Fabricating a chromophore is the delta-Pav-disk failure mode.
 
 ## Color physics — why some colors are easy and some are hard
 
-Read this before reaching for a color; it explains why we keep landing on
-yellow-green instead of pure green, and where the vivid colors actually live.
+Read this before reaching for a color; it names the mechanisms and explains why
+some hues are cheap and some are exotic.
 
-- **The band-pass rule (why pure green is hard).** A green look needs to absorb
-  *both* red and blue while passing green — a band-pass. Common atmospheric
-  gases absorb only one side: CH₄ eats red → the result reads blue/cyan, not
-  green. Single-absorber atmospheres slide toward blue or toward red/brown,
-  never cleanly green. Pure green needs two complementary absorbers (chlorophyll)
-  or an intrinsically green gas (Cl₂/ClO₂) → that's why atmospheric green is
-  almost always lane 2.
+- **The band-pass rule (why pure green/magenta are hard).** A green look must
+  absorb *both* red and blue while passing green; magenta must pass red *and*
+  blue while notching out green. Common single absorbers kill one side only
+  (CH₄ eats red → reads blue/cyan), so they slide toward blue or red/brown,
+  never cleanly green or magenta. Those need a tuned narrow-notch absorber
+  (chlorophyll, retinal) or an intrinsically colored species → usually lane 2.
+- **The three inorganic color engines.** Vivid mineral color comes from one of:
+  (1) **d-d crystal field** — a transition-metal ion's d-orbital transition
+  (Cu²⁺ blue/green, Cr³⁺ green *or* red, Mn²⁺ pink, Mn³⁺ purple, Co²⁺ pink,
+  V³⁺ violet); (2) **intervalence charge transfer (IVCT)** — an electron hops
+  between two adjacent metal ions, a *very* strong absorber so a trace gives a
+  deep color (Fe²⁺→Ti⁴⁺ sapphire blue, Fe²⁺→Fe³⁺ vivianite); (3) **radiation
+  color centers** — irradiation + a trace dopant traps a defect (amethyst purple,
+  purple fluorite, amazonite blue-green). Crystal field gives most hues; IVCT
+  gives the *deepest blues*; color centers give irradiated purples/blues.
+- **The band-gap ruler (semiconductor warm series).** For sulfide/oxide
+  semiconductors the band gap sets the color and slides smoothly:
+  Eg ≳ 3.0 eV → white (S₈-poor, TiO₂) · ~2.6 eV → **yellow** (S₈, orpiment) ·
+  ~2.2 eV → **orange-red** (hematite) · ~2.0 eV → **deep red** (cinnabar) ·
+  ≲ 1.7 eV → **black**. Lowering Eg walks yellow→orange→red→black — that's why
+  the S / As–S / Hg–S / Fe-oxide series is one gradient, not four coincidences.
 - **Emission can be vivid where reflectance cannot.** Reflectance/scattering is
-  broadband — you're filtering a continuum, so it tends pale or muddy. Emission
-  lines are narrow and monochromatic, so airglow/aurora can show *pure,
-  saturated* hues (O I 557.7 nm green, N₂⁺ 427.8 nm violet-blue) no reflective
-  atmosphere can match. **For a vivid pure color, reach for a glow, not a tint.**
-- **Transition-metal d-orbital (crystal-field) absorption is the main *inorganic*
-  vivid color.** Fe, Cr, Cu, Mn do the heavy lifting — no life required. This is
-  the lever for a vivid-but-grounded surface.
-- **Oxidation state and fresh-vs-weathered set the hue.** Fe²⁺ → greens (olivine,
-  serpentine, green clays); Fe³⁺ → reds/yellow-browns (hematite, goethite). Same
-  element, opposite color, depending on redox. Fresh/reducing = green;
-  weathered/oxidizing = red-yellow. Mn-oxide varnish blackens exposed rock over time.
+  broadband → pale or muddy. Emission lines are narrow → airglow/aurora show
+  *pure, saturated* hues (O I 557.7 nm green, N₂⁺ 427.8 nm violet-blue) no
+  reflective surface can match. **For a vivid pure color, reach for a glow.**
+- **Structural color is a separate category** (see its own section). Color from
+  wavelength-scale *structure* (thin films, lamellae, sphere lattices)
+  interfering with light, not from absorption. It is **goniochromic** — the hue
+  shifts with viewing angle (opal fire, labradorite flash, oil-slick) — and
+  cannot be faked with a flat diffuse tint; it needs an iridescence/specular
+  shader.
+- **Metallic luster is a finish, not a hue.** Pyrite gold, native gold, an
+  M-type metal world (16 Psyche) read metallic because of high *specular*,
+  angle-independent reflection — the cfg cue is a metallic/specular material,
+  not a diffuse albedo color. And exposed Fe-Ni reads *dark gunmetal*, not a
+  bright mirror (Psyche visible albedo ~0.1–0.3).
+- **Oxidation state and fresh-vs-weathered set the hue.** Fe²⁺ → greens
+  (olivine, serpentine); Fe³⁺ → reds/yellow-browns (hematite, goethite). Same
+  element, opposite color. Fresh/reducing = green; weathered/oxidizing =
+  red-yellow. Mn-oxide varnish blackens exposed rock over time.
 - **Biology makes the most vivid colors** because pigments are tuned narrow-band
   absorbers (chlorophyll notches red+blue; phycoerythrin ~530–570 nm; retinal
-  ~568 nm). The reflected complement is saturated. But it's life-dependent →
-  speculative lane. (Melanin is the exception — a *broadband* absorber → dark
-  brown/black, not vivid.)
+  ~568 nm → magenta). But it's life-dependent → speculative. (Melanin is the
+  exception — broadband → dark brown/black, not vivid.)
 - **Cool stars red-shift the sky.** Rayleigh ∝ λ⁻⁴, but you can only scatter the
   blue the star emits. An M-dwarf's red/IR-peaked SED leaves little short-λ flux
-  → the same clear atmosphere reads wan grey-blue, not vivid blue. The illuminant
-  is the variable, not the scattering.
+  → the same clear atmosphere reads wan grey-blue, not vivid blue. *Caveat:* a
+  pure-violet/lavender Rayleigh sky is **not** physical under a Sun-like star
+  (violet depletion + eye response) — don't route lavender to plain Rayleigh.
 - **Incandescence is set by temperature, not composition** — blackbody, first
-  visible dull-red glow at the Draper point (~800 K), through orange/yellow to
-  white-hot (≳1500 K). Route only if surface T actually clears the threshold.
+  dull-red glow at the Draper point (~800 K), through orange/yellow to white-hot
+  (≳1500 K). Route only if surface T clears the threshold.
 - **Cloud color follows a condensation-temperature ladder.** Cold→hot:
   CH₄/N₂/H₂O/NH₃ ices (white) → NH₄SH + tholin (brown/tan) → H₂SO₄ (yellow-white)
   → low-T salts/sulfides KCl, ZnS, Na₂S, MnS, Cr (~600–1400 K) → silicate/iron/
   corundum (~1300–2000 K, grey mineral dust). Pick the species from cloud-deck T.
-- **Hot Jupiters default dark; bright ones are the exception.** Broad Na/K D-line
-  wings (plus TiO/VO in the hottest) drink the optical → most measured hot
-  Jupiters are low-albedo (TrES-2 b ≈ black). High albedo needs reflective
-  silicate/metal clouds outscattering the alkali absorption (HD 189733 b, LTT 9779 b).
+- **Hot Jupiters default dark; bright ones are the exception.** Broad Na/K wings
+  (plus TiO/VO in the hottest) drink the optical → most measured hot Jupiters are
+  low-albedo (TrES-2 b ≈ black). High albedo needs reflective silicate/metal
+  clouds (HD 189733 b blue, LTT 9779 b mirror).
 
 ---
 
 ## Vivid color playbook (color-indexed; the primary entry point)
 
-"I want a green world" → here are the plausible realizations across domains and
-which lane they land in. Detail rows are in the per-domain tables below.
+"I want an *X* world" → here are the plausible realizations across domains and
+which lane each lands in. Detail rows are in the per-domain tables below.
 
-### Vivid blue  *(easiest to ground)*
-- **Atmosphere** — strong Rayleigh (clear, deep N₂/CO₂; bright shortwave star)
-  · CH₄ absorption on a cold H₂/He giant (Neptune). lane 1.
-- **Hot Jupiter** — silicate-cloud reflection + Na absorption → cobalt blue;
-  *measured* on HD 189733 b (Evans 2013). lane 1.
-- **Surface** — Cu²⁺ azurite, lazurite/lapis (S₃⁻ radical) ultramarine, glacial
-  blue ice (thick clear ice). lane 1–2.
-- **Ocean** — deep pure liquid water. lane 1.
+### Blue
+- **Atmosphere** — Rayleigh (clear molecular column; vivid only under a bright
+  blue-rich star) · CH₄ on a cold giant (Neptune) · measured cobalt on hot
+  Jupiter HD 189733 b (silicate clouds + Na). lane 1.
+- **Surface (vivid, no life)** — IVCT sapphire (Fe²⁺→Ti⁴⁺, the deepest) ·
+  lazurite/lapis ultramarine (S₃⁻ radical) · Cu²⁺ azurite · hydrated copper
+  sulfate (blue wet, white dry) · amazonite (Pb radiation centers). lane 1–2.
+- **Ice / water** — glacial blue ice & deep water (O–H vibrational overtone
+  absorbs red — needs depth/clarity). lane 1.
+- **Emission** — N₂⁺ 427.8 nm violet-blue auroral fringe. tie-break.
+- *Most grounded:* Rayleigh + deep-water/ice overtone (pure physics). *Most vivid:*
+  sapphire IVCT / lazurite.
 
 ### Cyan / teal
-- **Atmosphere** — CH₄ + thin high haze (Uranus pale vs Neptune deep). lane 1.
+- **Atmosphere** — CH₄ + high haze (Uranus pale vs Neptune deep). lane 1.
 - **Surface** — Cu²⁺ turquoise / chrysocolla / atacamite (arid or saline Cu
   weathering). lane 1–2.
-- **Ocean** — glacial rock-flour suspension scatters blue-green. lane 1.
+- **Ocean** — glacial rock-flour suspension · shallow water over bright sand. lane 1.
 
-### Green  *(hard as an atmosphere; easy on a surface)*
-- **Emission (vivid, real)** — O I 557.7 nm airglow/aurora is the purest green
-  there is; a strong-airglow / auroral world *glows* vivid green at the limb.
-  tie-break, low-conf.
-- **Surface, no life (best inorganic vivid green)** — **Cr³⁺ emerald green**
-  (uvarovite, chrome diopside, fuchsite) is the most saturated inorganic green;
-  **Cu²⁺ malachite** green; olivine/peridot + serpentine + green clays give a
-  subtler olive/bottle green (fresh ultramafic). lane 1–2.
-- **Biology (most iconic)** — chlorophyll vegetation (surface) / phytoplankton
-  (ocean). lane 2 speculative.
+### Green
+- **Surface (vivid, no life — the headline)** — Cr³⁺ emerald (uvarovite, chrome
+  diopside, fuchsite) is the purest inorganic green; Cu²⁺ malachite; olivine/
+  serpentine give a subtler olive. lane 1–2.
+- **Emission** — O I 557.7 nm airglow/aurora is the purest green there is (a limb
+  glow). tie-break.
+- **Biology** — chlorophyll vegetation / phytoplankton. lane 2 speculative.
 - **Ocean** — dissolved Fe(II) "ferrous sea" (Archean hypothesis). lane 2.
-- **Atmosphere (gas)** — only yellow-green: Cl₂ / ClO₂. No clean pure-green gas
-  exists → atmospheric green is essentially artistic. lane 2 + weak hook.
+- **Atmosphere (gas)** — only yellow-green (Cl₂/ClO₂); no clean pure-green gas
+  → atmospheric green is essentially artistic. lane 2 + weak hook.
 
-### Purple / violet
-- **Atmosphere** — I₂ (iodine) vapor is violet. lane 2 + hook.
-- **Surface / biosphere** — retinal phototrophs reflect purple ("Purple Earth",
-  DasSarma & Schwieterman). lane 2 speculative. Anthocyanin flora (pH-tunable).
-- **Surface mineral** — fluorite/some Mn or Fe phosphates (subtle). lane 2.
-
-### Yellow → orange → brown → red  *(well-grounded gradient)*
-- Sulfuric-acid / sulfur aerosol (Venus pale yellow) → elemental sulfur surface
-  (Io yellow, reddening when hot) → orpiment yellow / realgar red (As-S) →
-  tholin photochemical haze (Titan/Pluto orange-brown) → goethite yellow-brown →
-  hematite iron-oxide red (Mars) → cinnabar scarlet (HgS). lane 1, the As/Hg
-  ones lane 2.
+### Purple / violet / indigo
+- **Surface (vivid, no life)** — Mn³⁺ minerals (purpurite, sugilite, charoite)
+  are the real purple chromophore — Mn³⁺ is to purple what Cr³⁺ is to green ·
+  V³⁺ tanzanite blue-violet · amethyst & purple fluorite (radiation color
+  centers). lane 2.
+- **Atmosphere** — I₂ (iodine) vapor is genuinely violet. lane 2 + hook.
+- **Biology** — retinal "Purple Earth" (DasSarma & Schwieterman); anthocyanin
+  flora (pH-tunable). lane 2 speculative.
+- **Emission** — N₂⁺ 427.8 nm violet glow. tie-break.
+- *Veto:* plain Rayleigh does **not** give a lavender sky under a Sun-like star.
 
 ### Pink / rose / magenta
-- **Surface mineral** — Mn²⁺ rhodochrosite / rhodonite rose. lane 1–2.
-- **Ocean / biosphere** — halophile blooms (Dunaliella + Halobacterium
-  carotenoids) dye a whole brine lagoon pink-red. lane 2 speculative.
-- **Ice** — thin tholin over N₂/CH₄ ice cap (Triton/Pluto pinks). lane 1.
+- **Surface (no life)** — Mn²⁺ rhodochrosite/rhodonite rose · Co²⁺ erythrite
+  ("cobalt bloom") crimson-pink · rose quartz (Fe-Ti inclusion IVCT, pale only).
+  lane 1–2.
+- **Biology** — halophile brine lagoons (carotenoids/bacterioruberin) ·
+  retinal magenta · anthocyanins. lane 2 speculative.
+- **Ice** — thin tholin over N₂/CH₄ ice (Triton/Pluto). lane 1.
+- *Magenta is non-spectral* — needs a green-notch absorber → retinal (life),
+  Co²⁺, or IVCT, never broadband scattering.
 
-### White / grey / black
-- White ← thick non-absorbing cloud, water/CO₂/N₂ ice, anorthosite, evaporite
-  salt (gypsum/halite), Ceres sodium-carbonate faculae. Grey ← aerosol/silicate
-  haze, mineral cloud (hot), basalt. Black ← carbon/organics, basalt, obsidian
-  glass, Mn-oxide desert varnish, ultra-low-albedo hot Jupiter (Na/K + TiO/VO;
-  e.g. TrES-2 b). lane 1.
+### Red / crimson / maroon
+- **Surface** — hematite (Fe³⁺, the ubiquitous planetary red, Mars) · cinnabar
+  (HgS, most saturated) · Cr³⁺ ruby (same ion as emerald, flipped by the host
+  lattice) · realgar (As-S). lane 1 (hematite) / lane 2 (Hg, As, ruby).
+- **Emission** — O I 630.0 nm red aurora (high rarefied O). tie-break.
+- **Biology** — phycoerythrin red algae · far-red chlorophyll maroon (M-dwarf
+  foliage). lane 2 speculative.
+- **Incandescent** — dull-red glow at T ≳ 800 K. conditional.
+
+### Orange
+- **Atmosphere/haze** — tholin (low-pressure → orange-red; high-pressure →
+  yellow). lane 1.
+- **Surface** — hot sulfur allotropes (Io vents) · realgar · incandescent ~1000 K.
+  lane 1.
+- **Biology** — carotenoids. lane 2 speculative.
+
+### Yellow
+- **Surface (vivid, no life)** — elemental sulfur S₈ (band-gap yellow; Io plains)
+  is grounded *and* vivid · orpiment (As-S) gold-yellow · jarosite/goethite
+  yellow-brown. lane 1 (S₈) / lane 2 (As).
+- **Cloud/haze** — H₂SO₄ + sulfur haze (Venus, pale) · high-pressure tholin. lane 1.
+- **Emission** — Na D 589 nm sodium glow. tie-break.
+
+### Gold / metallic *(a finish, not a hue)*
+- **Surface** — pyrite FeS₂ brass-gold (ubiquitous, grounded) · native gold /
+  electrum (true gold, rare) · peacock-ore bornite (iridescent tarnish, see
+  structural) · specular hematite & Fe-Ni metal (steely). lane 1–2.
+- **Whole world** — M-type metal asteroid (16 Psyche): real, but reads *dark
+  gunmetal* with a specular sheen, not a bright mirror. lane 2, flag dark.
+- *cfg cue:* high specular + metallic material, not a diffuse tint.
+
+### Brown / tan *(the realistic baseline — intrinsically muddy)*
+- Goethite/limonite ochre · NH₄SH belts · tholin haze · CDOM tea-water ·
+  desert varnish · mixed regolith. All lane 1. No vivid option exists — use as
+  the honest default, not the spectacle.
+
+### White / grey / black / silver
+- **White** ← volatile ice (H₂O/CO₂/N₂/CH₄), SO₂ frost (Io), anorthosite/feldspar,
+  evaporite salt (gypsum/halite), Ceres Na-carbonate faculae, NH₃ cloud, metal-
+  cloud LTT 9779 b. **Grey** ← basalt, weathered regolith, aerosol/silicate haze,
+  hot mineral cloud (the no-chromophore default). **Black** ← carbon/organics,
+  obsidian, Mn varnish, ultra-dark hot Jupiter (TrES-2 b). **Silver** ← Fe-Ni
+  metal (specular, neutral). lane 1.
+
+### Iridescent / structural *(goniochromic — needs a special shader)*
+- Opal play-of-color (silica sphere lattice) · nacre · labradorite/spectrolite
+  flash · moonstone structural blue · bornite/bismuth tarnish-film rainbows ·
+  oil-slick/frost films. Vivid but **viewing-angle dependent** → lane 2 artistic
+  with a rendering caveat (not a flat tint). See the structural section.
 
 ---
 
@@ -198,8 +265,8 @@ real example · in-game hook**. Persistence collapses the routing decision
 
 | color | mechanism | conditions | persistence → lane | example | hook |
 |---|---|---|---|---|---|
-| orange / brown | tholin (CH₄+N₂ → UV-cracked organics) | reducing atmosphere + UV/cosmic-ray flux | common → P3 | Titan, Pluto, Triton | UV-cooked organic smog |
-| pale yellow-tan | sulfur / polysulfur photochemical haze | S-bearing volcanic gas + photolysis | common → P3 | Venus upper haze, Io plume tops | a sulfur-tinted photochemical veil |
+| orange / brown | tholin (CH₄+N₂ → UV-cracked organics), low-pressure | reducing atmosphere + UV/cosmic-ray flux | common → P3 | Titan, Pluto, Triton | UV-cooked organic smog |
+| yellow-tan | tholin (high-pressure films) / sulfur photochemical haze | denser organic haze; or S-bearing gas + photolysis | common → P3 | deep Titan haze, Venus, Io tops | a sulfur-and-organic photochemical veil |
 | upper-sky tint | generalized stratospheric absorber (any stratified absorbing species) | a UV-absorbing layer aloft (O₃, CH₄, SO₂, tholin, NO₂…) | common → P3 | Scatterer useOzone slot (generic) | a high absorbing layer paints the upper sky |
 
 ### Atmosphere — *measured* exoplanet reflected color (strongest anchors)
@@ -224,34 +291,56 @@ real example · in-game hook**. Persistence collapses the routing decision
 
 > Aurora/airglow needs three things: the emitting species, a particle-excitation
 > source, and (for organized aurora) a magnetic field. On non-transiting planets
-> the field is unmeasured → keep it a flagged low-confidence tie-break, never a
-> default. Jupiter's aurora is the most *powerful* in the solar system yet mostly
-> UV/IR — power is not visibility.
+> the field is unmeasured → keep it a flagged low-confidence tie-break.
 
-### Surface — transition-metal chromophores (the vivid-inorganic core)
+### Surface — crystal-field & charge-transfer chromophores (the vivid-inorganic core)
 
 | color | mechanism | conditions | persistence → lane | example | hook |
 |---|---|---|---|---|---|
-| vivid emerald green | Cr³⁺ crystal-field (uvarovite, chrome diopside, fuchsite) | trace Cr³⁺ in Ca/Al/Mg silicate, ultramafic/chromite host | uncommon → P3/artistic | uvarovite, chrome diopside | chromium-stained emerald rock |
+| vivid emerald green | Cr³⁺ crystal field (uvarovite, chrome diopside, fuchsite) | trace Cr³⁺ in Ca/Al/Mg silicate, ultramafic/chromite host | uncommon → P3/artistic | uvarovite | chromium-stained emerald rock |
+| blood-red | Cr³⁺ crystal field in corundum (strong field flips it red) | trace Cr in Al₂O₃, short Cr–O bonds | rare → artistic | ruby | chromium ruby-red (same ion as emerald) |
 | rust red / ochre | Fe³⁺ oxide — hematite (α-Fe₂O₃) | oxidized iron + weathering/UV | common → P3 | Mars | oxidized iron bleeds red |
-| yellow-brown / ochre | Fe³⁺ oxy-hydroxide — goethite/limonite | hydrated oxidized iron, damp weathering | common → P3 | bog iron, Mars dust | hydrated rust, yellow-brown |
-| olive / bottle green | Fe²⁺ in olivine/peridot, pyroxene | fresh unoxidized ultramafic/mafic | common (fresh) → P3 | olivine sand (Papakōlea), peridot | unweathered ferrous-green mantle rock |
-| green | Fe²⁺/Fe³⁺ in serpentine | hydrated (serpentinized) ultramafic | common → P3 | serpentinite | water-altered mantle green |
-| grey-green (muted) | green clays (glauconite, celadonite, chlorite) | marine/altered-basalt clay, mixed-valence Fe | common → P3 | greensand, celadonite | iron-clay green earth |
+| yellow-brown | Fe³⁺ oxy-hydroxide — goethite/limonite/jarosite | hydrated oxidized iron; jarosite = acid-sulfate | common → P3 | bog iron, Mars dust | hydrated rust, yellow-brown |
+| olive / bottle green | Fe²⁺ in olivine/peridot, pyroxene | fresh unoxidized ultramafic/mafic | common (fresh) → P3 | olivine sand (Papakōlea) | unweathered ferrous-green mantle rock |
+| green | Fe²⁺/Fe³⁺ in serpentine / green clays | hydrated (serpentinized) ultramafic; or marine clay | common → P3 | serpentinite, greensand | water-altered mantle green |
 | malachite green | Cu²⁺ carbonate (malachite) | secondary Cu, CO₂-rich oxidized weathering | uncommon → P3/artistic | malachite | copper-carbonate green crust |
 | azure / deep blue | Cu²⁺ carbonate (azurite) | Cu oxidation zone, high carbonate | uncommon → P3/artistic | azurite | copper blue, azurite |
-| bright turquoise / cyan | Cu²⁺ (turquoise, chrysocolla, atacamite) | arid Cu weathering; atacamite needs Cl-rich/saline | rare → artistic | turquoise, chrysocolla | desert copper turquoise |
+| turquoise / cyan | Cu²⁺ (turquoise, chrysocolla, atacamite) | arid Cu weathering; atacamite needs Cl-rich/saline | rare → artistic | turquoise | desert copper turquoise |
+| vivid blue (bleaches dry) | Cu²⁺ d-d in hydrated [Cu(H₂O)₆]²⁺ | hydrated copper-sulfate efflorescence, arid Cu weathering | uncommon → P3/artistic | chalcanthite | copper salt, blue when wet, white when dry |
 | rose / pink | Mn²⁺ carbonate/silicate (rhodochrosite, rhodonite) | Mn-rich carbonate/metamorphic, reducing | uncommon → P3/artistic | rhodochrosite | manganese-pink rock |
+| violet → royal purple | Mn³⁺ crystal field (purpurite, sugilite, charoite) | oxidized Mn in phosphate/alkaline silicate | rare → artistic | sugilite | manganese purple (purple's Cr³⁺) |
+| crimson → pink | Co²⁺ crystal field (erythrite, "cobalt bloom") | secondary hydrated Co-arsenate over Co ore | rare → artistic | erythrite | a crimson cobalt-bloom crust |
+| blue-violet (pleochroic) | V³⁺ crystal field in zoisite | trace vanadium in Ca-Al silicate, metamorphic | rare → artistic | tanzanite | vanadium-stained zoisite, blue-violet |
+| deep sapphire blue | Fe²⁺→Ti⁴⁺ intervalence charge transfer (IVCT) | trace Fe+Ti on adjacent Al sites in Al₂O₃ | rare → artistic | sapphire | iron-titanium electron-trade burns it blue |
+| blue → indigo (in light) | Fe²⁺→Fe³⁺ internal photo-oxidation of iron(II) phosphate | anoxic, P-rich, Fe-rich sediment; deepens in light/air | uncommon → P3/artistic | vivianite | ferrous phosphate that oxidizes itself blue |
+| pale rose | Fe–Ti IVCT in dumortierite-like nanofiber inclusions | massive quartz with trace Ti+Fe borosilicate fibers | rare → artistic (pale) | rose quartz | a faint rose-quartz blush |
 | sooty black veneer | Mn³⁺/⁴⁺ oxides (desert varnish) | arid surface, Mn-oxide coating over time | common → P3 | desert varnish | manganese-blackened varnish |
 
-### Surface — non-metal vivid chromophores (rare but genuine inorganic)
+### Surface — band-gap semiconductor, radical & color-center chromophores
+
+> Band-gap ruler: lowering Eg walks **yellow → orange → red → black** (S₈ ~2.6 →
+> hematite ~2.2 → cinnabar ~2.0 eV). Radical and color-center routes are separate
+> mechanisms grouped here.
 
 | color | mechanism | conditions | persistence → lane | example | hook |
 |---|---|---|---|---|---|
+| lemon → golden yellow | elemental sulfur S₈ band-gap (~2.6 eV) | cold-quenched S volcanism/fumaroles | common → P3 | Io plains | sulfur-yellow volcanic pavement |
+| golden yellow | orpiment As₂S₃ band-gap | higher-T As+S fumarole/hot-spring | rare → artistic | orpiment | a gold-yellow arsenic glass |
+| ruby red / orange | realgar α-As₄S₄ band-gap/charge transfer | low-T hydrothermal/volcanic As+S | rare → artistic | realgar | arsenic-sulfide ruby crust |
+| scarlet / vermilion | cinnabar HgS band-gap (~2.0 eV) | low-T Hg-rich hydrothermal/volcanic vents | rare → artistic | cinnabar | mercury-sulfide vermilion |
 | ultramarine blue | S₃⁻ trisulfur radical in aluminosilicate cage (lazurite) | S-bearing alkaline metamorphism, reducing-then-trapped | rare → artistic | lapis lazuli | trapped sulfur radicals glow blue |
-| ruby red / orange | As–S charge-transfer (realgar α-As₄S₄) | low-T hydrothermal/volcanic As+S, fumaroles | rare → artistic | realgar | arsenic-sulfide ruby crust |
-| golden yellow | As–S (orpiment As₂S₃) | higher-T As+S, hot-spring/fumarole | rare → artistic | orpiment | gold-yellow arsenic glass |
-| scarlet / vermilion | HgS charge-transfer (cinnabar) | low-T Hg-rich hydrothermal/volcanic vents | rare → artistic | cinnabar | mercury-sulfide vermilion |
+| purple (heat-fades to yellow) | Fe³⁺ + γ-irradiation → hole color center in quartz | trace Fe in quartz + U/Th/K-40 dose | uncommon → P3/artistic | amethyst | irradiated iron-doped quartz; citrine when heated |
+| green→blue→purple | colloidal-Ca + F-center color centers in fluorite | CaF₂ near radioactive host, irradiated | rare → artistic | purple fluorite | radiation-grown calcium colloids |
+| blue-green | Pb + water radiation color centers in microcline | K-feldspar with Pb + bound H₂O, irradiated | rare → artistic | amazonite | irradiated lead-bearing feldspar |
+
+### Surface — metallic / specular luster (a distinct LOOK — high specular, angle-independent)
+
+| color | mechanism | conditions | persistence → lane | example | hook |
+|---|---|---|---|---|---|
+| brass-gold (metallic) | pyrite FeS₂ metallic luster | sulfidic/hydrothermal Fe-S deposits | common → P3 | pyrite ("fool's gold") | a brassy metallic sheen, fool's gold |
+| true / pale gold | native gold / electrum (Au, Ag-alloyed) | native-metal concentration, hydrothermal | rare → artistic | native gold | a buttery native-gold luster |
+| steely silver-grey | specular hematite + iron-nickel metal | exposed metal/specularite, polished oxide | uncommon → P3/artistic | specularite, meteoric Fe-Ni | a polished steel-grey sheen |
+| dark gunmetal (metallic) | M-type asteroid Fe-Ni metal regolith (exposed-core analog) | disrupted differentiated body, metal-rich crust | rare → artistic (dark, not mirror) | 16 Psyche | a stripped metal core, gunmetal-dull |
 
 ### Surface — common rock, ice, sulfur, carbon, melt
 
@@ -260,9 +349,11 @@ real example · in-game hook**. Persistence collapses the routing decision
 | dark grey / black | basalt, mafic/ultramafic silicate | volcanic, unweathered | common → P3 | Moon maria, Mercury | fresh basaltic plains |
 | light grey / white | anorthosite / plagioclase feldspar | feldspathic highland crust | common → P3 | lunar highlands | bright feldspathic rock |
 | pinkish grey | granite (K-feldspar + quartz) | felsic continental crust | common → P3 | granite shields | pink-grey granite |
+| mid-grey (featureless) | space-weathered mixed regolith | airless body, micrometeorite + solar-wind gardening | common → P3 | most airless surfaces | weathered regolith greys to a default |
 | bright white | sulfate/evaporite (gypsum, halite, anhydrite) | evaporated brine, arid basin | common → P3 | White Sands, salt flats | blinding white salt flat |
 | brilliant white spot | sodium-carbonate brine evaporite | cryovolcanic brine reaching surface | common → P3 | Ceres / Occator faculae | bright salt-fountain residue |
 | bright yellow | elemental sulfur (S₈, cool) | S volcanism/fumaroles, cold-quenched | common → P3 | Io plains | sulfur-paved volcanic plains |
+| white frost | SO₂ frost (high-scattering condensate) | active S volcanism + cold traps; vents stay dark | common → P3 | Io (Colchis Regio) | volcanic sulfur-dioxide frost whitens the plains |
 | orange → red → black | hot sulfur allotropes (heat-shifted) | molten/hot sulfur near vents | common → P3 | Io hot flows | hot sulfur darkens toward the vent |
 | bright white | clean water ice / frost | cold surface, fresh H₂O grains | common → P3 | Europa, Enceladus | clean water-ice shell |
 | white | CO₂ / N₂ / CH₄ volatile frost | very cold, condensed volatiles | common → P3 | Mars caps, Triton, Pluto | frozen-volatile frost |
@@ -270,8 +361,7 @@ real example · in-game hook**. Persistence collapses the routing decision
 | red-brown / salmon | tholin staining on ice (irradiated CH₄+N₂) | UV/cosmic-ray-processed methane on cold ice | common → P3 | Pluto, Charon pole, Triton | radiation-tanned organic ice |
 | very dark / black | graphite / soot / refractory organics | C-rich primitive material | common → P3 | C-type asteroids, comet crust | carbon-blackened crust |
 | jet black (glassy) | obsidian / silicate volcanic glass | rapid-quenched felsic-intermediate melt | common → P3 | obsidian flows | glass-black quenched lava |
-| dull red glow | blackbody incandescence onset (Draper ~800 K) | surface T ≳ 800 K | conditional → P3 if T clears | hot lava skin | first dull-red heat glow |
-| orange → white-hot glow | hotter blackbody | T ≈ 1000–1500+ K | conditional → P3 | active lava, 55 Cnc e dayside | molten rock glowing in the visible |
+| dull red → white-hot glow | blackbody incandescence (Draper ~800 K → ≳1500 K) | surface T clears the threshold | conditional → P3 if T clears | active lava, 55 Cnc e dayside | molten rock glowing in the visible |
 
 > "Nitrogen-ice pink" is **not** intrinsic N₂ color — it's a thin tholin layer
 > from irradiated methane on N₂/CH₄ ice. Attribute it to tholin, not nitrogen.
@@ -281,14 +371,15 @@ real example · in-game hook**. Persistence collapses the routing decision
 | color | mechanism | conditions | persistence → lane | example | hook |
 |---|---|---|---|---|---|
 | deep blue | pure water — overtone red-absorption + scattering of blue | clear deep water column | common → P3 | Earth open ocean | water eats the red, scatters the blue |
-| turquoise / milky cyan | glacial rock flour suspended (scatters blue-green) | fine mineral suspension from erosion | common → P3 | Lake Louise, meltwater lakes | rock dust turns the water glacier-blue |
+| turquoise / milky cyan | glacial rock flour suspended (scatters blue-green) | fine mineral suspension from erosion | common → P3 | Lake Louise | rock dust turns the water turquoise |
+| tropical cyan | short-path scattering over a bright shallow floor | shallow clear water over carbonate/quartz sand | common → P3 | tropical lagoons | shallow water over bright sand glows cyan |
 | green | dissolved Fe(II) opens a green window (absorbs blue + red) | anoxic, ferruginous (Archean-type) | uncommon → P3/artistic | early-Earth "green ocean" hypothesis | a ferrous sea under an oxygen-free sky |
 | rusty red | suspended ferric iron oxide | oxidized iron-laden water, river plumes | uncommon → P3/artistic | iron-stained estuaries | iron rust clouding the shallows |
 | brown / tea | CDOM (dissolved organics, tannins) absorbs blue+UV | organic-rich, swampy catchment | common → P3 | Rio Negro, blackwater rivers | tannin-stained tea-dark water |
 | dark / near-black | liquid hydrocarbons (CH₄/C₂H₆), low albedo | very cold (~90 K) hydrocarbon cycle | common (cold) → P3 | Titan, Kraken Mare | a methane-ethane sea, black and still |
 | pale / colorless | liquid sulfuric acid / concentrated brine | hot S-rich (acid) or evaporite brine | uncommon → P3/artistic | Venus-droplet analog | a caustic glassy surface liquid |
 | glowing orange-red | incandescent molten silicate (lava lake) | T_surf ≳ ~1000–1300 K, active volcanism | conditional → P3 if T clears | Io paterae, 55 Cnc e | molten rock glowing like an ember |
-| pink / red | halophile carotenoids (Dunaliella + Halobacterium) | hypersaline brine, high UV | speculative → artistic | Lake Hillier, saltern ponds | a brine lagoon dyed by salt-loving microbes |
+| pink / red | halophile carotenoids (Dunaliella + Halobacterium/Salinibacter) | hypersaline brine, high UV | speculative → artistic | Lake Hillier | a brine lagoon dyed by salt-loving microbes |
 | green / teal | phytoplankton / chlorophyll bloom | life, nutrient-rich shallows | speculative → artistic | Earth coastal blooms | bloom-tinted living shallows |
 
 ### Biological pigments (life-dependent → speculative, but the most vivid)
@@ -309,7 +400,7 @@ real example · in-game hook**. Persistence collapses the routing decision
 | color | mechanism | conditions | persistence → lane | example | hook |
 |---|---|---|---|---|---|
 | white | water-ice cloud (non-absorbing, high scattering) | T allows H₂O condensation | common → P3 | Earth | bright water-ice cloud deck |
-| white | ammonia (NH₃) ice cloud | cold giant, NH₃ condenses (~150 K) | common → P3 | Jupiter/Saturn zones | frozen-ammonia cloud tops |
+| white | ammonia (NH₃) ice cloud (pure) | cold giant, NH₃ condenses (~150 K) | common → P3 | Jupiter pure-NH₃ regions | frozen-ammonia cloud tops |
 | bright white | methane/ethane ice cloud | very cold ice-giant atmosphere | common → P3 | Neptune bright clouds, Titan | high methane-ice cirrus |
 | brown / tan | NH₄SH — colorless fresh, radiolysis/UV products absorb blue | giant-planet belt chemistry, warm layer | common → P3 | Jupiter belts | ammonium-sulfide brown belts |
 | yellowish-white | sulfuric-acid (H₂SO₄) aerosol droplets | S volcanism, hot thick atmosphere | common → P3 | Venus | a sulfuric-acid cloud veil |
@@ -317,6 +408,29 @@ real example · in-game hook**. Persistence collapses the routing decision
 | grey / muddy (hot) | silicate + iron + corundum mineral clouds | hot (L-dwarf / hot-Jupiter), ~1300–2000 K | measured (BDs) → P3 | L dwarfs, hot Jupiters | clouds of molten rock and iron dust |
 | salt-and-sulfide haze | low-T mineral clouds — KCl, ZnS, Na₂S, MnS, Cr | ~600–1400 K (T-dwarf / warm giant) | measured → P3 | T dwarfs | salt-and-sulfide haze in a warm sky |
 | very red (NIR) | thick mineral-dust clouds redden a young/dusty atmosphere | dusty L-dwarf / low-gravity giant | measured → P3 | HR 8799 b/c/d, ULAS J2227 | dust so thick the whole world glows red |
+
+---
+
+## Structural & interference color (goniochromic — a separate category)
+
+Color from wavelength-scale **physical structure** (thin films, lamellae, sphere
+lattices) interfering with light, not from absorption. Unlike everything above,
+the hue **shifts with viewing/lighting angle (goniochromism)** and **cannot be
+reproduced by a flat diffuse tint** — it needs an iridescence/specular shader, an
+environment map, or at minimum a strong specular+fresnel pass. Route to **lane 2
+/ artistic with a rendering caveat**: real and groundable, but a *material-finish*
+decision, not a flat surface color (the way emission is a special mechanism, not
+a tint). Vivid but directional.
+
+| color | mechanism | conditions | persistence → lane | example | hook |
+|---|---|---|---|---|---|
+| shifting spectral patches | photonic lattice — Bragg diffraction off ordered ~150–300 nm silica spheres | hydrated silica deposits into a regular sphere lattice | rare → artistic (play-of-color) | precious opal | a buried sphere-lattice fires color as it turns |
+| blue/green/gold flash | multilayer interference off ~128–252 nm exsolution lamellae | slow-cooled Ca-rich plagioclase (Bøggild gap) | rare → artistic (directional flash) | labradorite / spectrolite | feldspar lamellae flash labradorite blue |
+| floating blue-white sheen | Rayleigh scattering off sub-λ feldspar lamellae (structural, not pigment) | orthoclase-albite intergrowth, lamellae ~120–150 nm | rare → artistic (goniochromic) | moonstone (adularescence) | sub-wavelength lamellae scatter a moonlit blue |
+| pastel blue-green sheen | aragonite-platelet thin-film + edge diffraction | layered ~0.5 µm carbonate tablets + organic sheets | rare → artistic (iridescent) | nacre / mother-of-pearl | a layered shell-stack shimmers nacreous |
+| rainbow blue-purple-gold | thin-film interference in a wavelength-thin tarnish on Cu-Fe sulfide | bornite surface grows an oxide film ~λ thick | rare → artistic (iridescent) | bornite "peacock ore" | a tarnish-film rainbow over copper ore |
+| full-spectrum rainbow | thin-film interference in a bismuth-oxide surface film | bismuth oxidizes on cooling in air | rare → artistic (iridescent) | bismuth crystal | an oxide-film rainbow on bare metal |
+| moving rainbow | thin-film interference in a liquid/ice film of varying thickness | a transparent film ~λ thick over a reflective base | conditional → artistic (iridescent) | oil slick, soap bubble, frost film | a thin film of varying depth paints a rainbow |
 
 ---
 
@@ -333,6 +447,7 @@ free). The veto only bites when a relevant measurement exists.
 | solid/rocky surface tint, lava surface | bulk density (mass+radius) → mini-Neptune / gas envelope → no visible surface | any sub-Neptune with H/He envelope |
 | reflected-light color | a *measured* geometric albedo / reflected color | HD 189733 b deep blue (Evans 2013); TrES-2 b near-black (low albedo) |
 | liquid-water ocean | T_eq far above water critical / far below freezing without a greenhouse → no stable liquid water | hot/cold extremes |
+| lavender / violet Rayleigh sky | basic optics — violet depletion + eye response means clear-air scattering reads blue, not violet, under a Sun-like star | (route violet to I₂ gas / Mn³⁺ surface / aurora instead) |
 
 When vetoed, offer the nearest non-contradicted alternative (e.g. thick
 atmosphere vetoed on TRAPPIST-1 b → dark basaltic bare-rock surface, thin/no
@@ -342,27 +457,27 @@ sky).
 
 ## Worked examples
 
-**Tau Ceti e — vivid green atmosphere (the PHM concept).** Tau Ceti e is
-RV-only (non-transiting): radius, atmosphere, and albedo were never measured →
-**unconstrained**, no veto possible. A green *atmosphere* (gas tint) has no clean
-mechanism — Cl₂/ClO₂ only reach yellow-green → lane 2, weak hook. But a green
-*world* is easy: route the green to the **surface** (Cr³⁺ emerald / serpentine /
-olivine — inorganic, no life) or to **vegetation** (chlorophyll, lane 2
-speculative), optionally with an **O I 557.7 nm green airglow** at the limb.
-**Verdict: keep the green** — as a green surface (best-grounded) ± green airglow,
-not as a green gas tint. In-game: *"Tau Ceti e wears a chromium-and-serpentine
-green crust under a faint oxygen-green airglow."* (Value-check mineral color
-claims against a source before committing the entry.)
+**Tau Ceti e — vivid green (the PHM concept).** RV-only (non-transiting): radius,
+atmosphere, albedo never measured → **unconstrained**, no veto. A green *gas*
+atmosphere has no clean mechanism (Cl₂/ClO₂ only reach yellow-green → lane 2,
+weak). But a green *world* is easy: route green to the **surface** (Cr³⁺ emerald /
+serpentine, inorganic) or **vegetation** (chlorophyll, lane 2 speculative), ±
+an **O I 557.7 nm green airglow**. **Verdict: keep the green** — as a green
+surface ± airglow, not a green gas. In-game: *"a chromium-and-serpentine green
+crust under a faint oxygen-green airglow."*
 
-**Vivid green, no life — the inorganic route.** When the user wants saturated
-green without invoking biology: Cr³⁺ minerals (uvarovite/chrome diopside/fuchsite)
-give the purest inorganic emerald; Cu²⁺ malachite a strong green; serpentine/
-olivine a broader olive crust. All lane 1–2, no veto on a non-transiting world.
+**Pick-your-engine — vivid color with no life.** The inorganic palette is wide:
+**blue** (IVCT sapphire / lazurite / Cu azurite), **green** (Cr³⁺ emerald /
+Cu malachite), **purple** (Mn³⁺ sugilite / amethyst), **red** (cinnabar / Cr³⁺
+ruby / hematite), **yellow** (S₈ / orpiment), **pink** (Co²⁺ erythrite / Mn²⁺
+rhodochrosite), **gold-metallic** (pyrite / native gold), **iridescent** (opal /
+labradorite). None needs a biosphere — the green section is no longer the only
+deep one. Each lands lane 1–2 with a real chemistry hook; structural/metallic
+ones carry a finish/shader caveat.
 
 **"Thick atmosphere on TRAPPIST-1 b" — rejected.** JWST emission (Greene 2023)
-shows a bare-rock dayside → thick atmosphere **vetoed at step 1**, regardless of
-appeal. Alternative offered: dark basaltic/ultramafic bare-rock surface tint,
-no sky.
+shows a bare-rock dayside → thick atmosphere **vetoed at step 1**. Alternative:
+dark basaltic/ultramafic bare-rock surface tint, no sky.
 
 ---
 
@@ -371,13 +486,15 @@ no sky.
   artistic / speculative / uncertain** carry low confidence and **must be
   source-pinned at point-of-use** (value-check discipline) when written into a
   real body's Phase 3 doc or cfg.
-- For the purest saturated colors, prefer an **emission** mechanism (airglow/
-  aurora) or a **transition-metal/biological** chromophore over a gas tint or
-  generic scattering — broadband scattering tends pale.
+- For the purest saturated colors, prefer **emission** (airglow/aurora) or a
+  **transition-metal / IVCT / biological** chromophore over a gas tint or generic
+  scattering — broadband scattering tends pale.
+- **Structural and metallic** colors are *material-finish* decisions (specular,
+  iridescence, angle), not flat tints — flag the rendering need.
 - Reflectance vs starlight convention follows `disk-color.md`: intrinsic
   material color, with the renderer/star applying illumination. For the disk
   domain use the Mie engine (`scripts/phase3/disk_color_mie.py`), not this table.
-- Aurora *emission-line* colors (the exact wavelengths) are cataloged in
+- Aurora *emission-line* colors (exact wavelengths) are cataloged in
   [`element-plasma-colors.md`](./element-plasma-colors.md); firefly
   `composition-color.md` covers reentry-plasma bulk-gas colors.
 - Wiring into the synthesis flow (a formal color gate in SKILL.md + a
