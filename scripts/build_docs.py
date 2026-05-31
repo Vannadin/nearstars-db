@@ -1,23 +1,26 @@
-# reference/plans 산문 문서를 사이드바 달린 정적 HTML 위키로 빌드 (en/ko 통짜 토글)
-"""Build a sidebar-navigated static doc site from the prose docs.
+# reference/plans 산문 문서를 GitHub 스타일 HTML 뷰어로 빌드 (preview-md.sh + 한/영 토글 + 사이드바)
+"""Build a sidebar-navigated static doc site, matching the local preview viewer.
 
-Covers docs/reference/*.md (with ko/ mirrors → 한/EN toggle) and
-plans/*.md (English only). Unlike scripts/phase3/build_html.py, this
-renders each language **whole** and toggles visibility, so it needs no
-block-level en/ko parity — robust for hand-written prose that drifts.
+This mirrors scripts/preview-md.sh exactly: client-side rendering via
+**marked.js** (GitHub-flavored markdown) styled with **github-markdown-css**.
+It deliberately does NOT pull in the DB site's design (style.css) — that
+broke tables and re-skinned the docs. The only additions over the local
+preview are a 한/EN toggle and a left sidebar.
+
+Covers docs/reference/*.md (+ ko/ mirrors) and plans/*.md (+ ko/plans/
+mirrors). Each page embeds the raw markdown for each available language
+and marked renders the selected one client-side — no server-side parser,
+so every GFM feature (tables included) renders correctly.
 
 Outputs under docs/wiki/:
-  - index.html                         # docs hub (sidebar landing)
-  - reference__<slug>.html             # one page per reference doc
-  - plans__<slug>.html                 # one page per plans doc
+  - index.html                 # docs hub
+  - reference__<slug>.html
+  - plans__<slug>.html
 
-Usage: python3 scripts/build_docs.py      (builds everything)
+Usage: python3 scripts/build_docs.py
 
-Self-contained markdown subset: frontmatter strip, ATX headings, hr,
-fenced code, blockquotes, bullet + ordered lists (one nesting level),
-pipe tables, paragraphs, inline bold/italic/code/links. No images.
-Internal `*.md` links are rewritten to the generated page when the
-target is one of the built docs.
+Internal *.md links are rewritten to the generated page when the target
+is one of the built docs.
 """
 
 from __future__ import annotations
@@ -29,209 +32,69 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 OUT_DIR = REPO / 'docs' / 'wiki'
 
-# ── inline markdown (mirrors scripts/phase3/build_html.py) ──────────────────
-_LINK_RE = re.compile(r'\[([^\]]+)\]\(([^)]+)\)')
-_INLINE_CODE_RE = re.compile(r'`([^`]+)`')
-_BOLD_RE = re.compile(r'\*\*([^*]+)\*\*')
-_ITALIC_RE = re.compile(r'(?<!\*)\*([^*]+)\*(?!\*)')
+MARKED = 'https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js'
+GH_CSS = 'https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css'
 
 # slug → output filename, filled by collect_docs(); used to rewrite links.
 _LINK_MAP: dict[str, str] = {}
 
-
-def _rewrite_target(target: str) -> str:
-    """Rewrite an internal *.md link to its generated page, else leave it."""
-    if target.startswith(('http://', 'https://', '#', 'mailto:')):
-        return target
-    # strip any anchor, take the basename without .md
-    base = target.split('#', 1)[0]
-    if not base.endswith('.md'):
-        return target
-    slug = Path(base).stem
-    return _LINK_MAP.get(slug, target)
+_FRONTMATTER_RE = re.compile(r'^---\n.*?\n---\n+', re.DOTALL)
+_MD_LINK_RE = re.compile(r'\]\(([^)]+)\)')
 
 
-def inline_md(text: str) -> str:
-    out = html.escape(text)
-    out = _LINK_RE.sub(lambda m: f'<a href="{html.escape(_rewrite_target(m.group(2)), quote=True)}">{m.group(1)}</a>', out)
-    out = _INLINE_CODE_RE.sub(lambda m: f'<code>{m.group(1)}</code>', out)
-    out = _BOLD_RE.sub(lambda m: f'<b>{m.group(1)}</b>', out)
-    out = _ITALIC_RE.sub(lambda m: f'<i>{m.group(1)}</i>', out)
-    return out
+def _strip_frontmatter(md: str) -> tuple[str, str]:
+    """Drop a leading YAML frontmatter block; return (body, title_from_fm)."""
+    title = ''
+    m = _FRONTMATTER_RE.match(md)
+    if m:
+        fm = m.group(0)
+        tm = re.search(r'^title:\s*(.+)$', fm, re.MULTILINE)
+        if tm:
+            title = tm.group(1).strip()
+        md = md[m.end():]
+    return md, title
 
 
-# ── block parser → HTML ─────────────────────────────────────────────────────
-_HEADING_RE = re.compile(r'^(#{1,6})\s+(.+?)\s*$')
-_TABLE_SEP_RE = re.compile(r'^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$')
-_BULLET_RE = re.compile(r'^(\s*)[-*]\s+(.+)$')
-_ORDERED_RE = re.compile(r'^(\s*)\d+\.\s+(.+)$')
-_FENCE_RE = re.compile(r'^```(\w*)\s*$')
-_HR_RE = re.compile(r'^---+\s*$')
+def _rewrite_links(md: str) -> str:
+    """Rewrite internal *.md link targets to their generated page."""
+    def repl(m):
+        target = m.group(1)
+        if target.startswith(('http://', 'https://', '#', 'mailto:')):
+            return m.group(0)
+        base, _, anchor = target.partition('#')
+        if not base.endswith('.md'):
+            return m.group(0)
+        slug = Path(base).stem
+        out = _LINK_MAP.get(slug)
+        if not out:
+            return m.group(0)
+        return f']({out}{("#" + anchor) if anchor else ""})'
+    return _MD_LINK_RE.sub(repl, md)
 
 
-def _split_table_row(line: str) -> list[str]:
-    return [c.strip() for c in line.strip().strip('|').split('|')]
+def _first_h1(md: str) -> str:
+    for ln in md.splitlines():
+        if ln.startswith('# '):
+            return ln[2:].strip()
+    return ''
 
 
-def _strip_frontmatter(lines: list[str]) -> tuple[list[str], dict[str, str]]:
-    """If the doc opens with a --- fence, pull it off and parse simple keys."""
-    meta: dict[str, str] = {}
-    if lines and lines[0].strip() == '---':
-        i = 1
-        while i < len(lines) and lines[i].strip() != '---':
-            if ':' in lines[i]:
-                k, _, v = lines[i].partition(':')
-                meta[k.strip()] = v.strip()
-            i += 1
-        return lines[i + 1:], meta
-    return lines, meta
+def _prep(md_path: Path) -> tuple[str, str]:
+    """Read a markdown file → (rendered-ready markdown, title)."""
+    raw = md_path.read_text(encoding='utf-8')
+    body, fm_title = _strip_frontmatter(raw)
+    body = _rewrite_links(body)
+    title = fm_title or _first_h1(body) or md_path.stem
+    return body, title
 
 
-def _render_list(lines: list[str], i: int, ordered: bool) -> tuple[str, int]:
-    """Render a (possibly one-level-nested) list starting at line i."""
-    tag = 'ol' if ordered else 'ul'
-    rx = _ORDERED_RE if ordered else _BULLET_RE
-    out = [f'<{tag}>']
-    while i < len(lines):
-        m = rx.match(lines[i])
-        if not m:
-            # allow the other list type at the same spot to break out cleanly
-            break
-        indent = len(m.group(1))
-        if indent >= 2:
-            # nested item belongs to a sublist — handled by recursion below;
-            # if we reach here at top level it's malformed, treat as flat.
-            pass
-        item_html = inline_md(m.group(2))
-        i += 1
-        # gather wrapped continuation lines (indented, non-blank, non-list)
-        cont = []
-        sub_html = ''
-        while i < len(lines):
-            nxt = lines[i]
-            if nxt.strip() == '':
-                break
-            bm, om = _BULLET_RE.match(nxt), _ORDERED_RE.match(nxt)
-            if bm and len(bm.group(1)) >= 2:
-                sub_html, i = _render_list(lines, i, ordered=False)
-                continue
-            if om and len(om.group(1)) >= 2:
-                sub_html, i = _render_list(lines, i, ordered=True)
-                continue
-            if bm or om:
-                break
-            if not nxt.startswith('  '):
-                break
-            cont.append(nxt.strip())
-            i += 1
-        if cont:
-            item_html += ' ' + inline_md(' '.join(cont))
-        out.append(f'<li>{item_html}{sub_html}</li>')
-    out.append(f'</{tag}>')
-    return ''.join(out), i
-
-
-def md_to_html(text: str) -> tuple[str, str]:
-    """Render a whole markdown doc → (body_html, title). Title = first H1."""
-    lines = text.replace('\r', '').split('\n')
-    lines, meta = _strip_frontmatter(lines)
-    title = meta.get('title', '')
-    parts: list[str] = []
-    i = 0
-    n = len(lines)
-    while i < n:
-        line = lines[i]
-        stripped = line.strip()
-
-        if not stripped:
-            i += 1
-            continue
-
-        m = _HEADING_RE.match(line)
-        if m:
-            level = len(m.group(1))
-            txt = m.group(2)
-            if level == 1 and not title:
-                title = txt
-                i += 1
-                continue
-            parts.append(f'<h{level}>{inline_md(txt)}</h{level}>')
-            i += 1
-            continue
-
-        if _HR_RE.match(line):
-            parts.append('<hr>')
-            i += 1
-            continue
-
-        m = _FENCE_RE.match(line)
-        if m:
-            lang = m.group(1)
-            body = []
-            i += 1
-            while i < n and not _FENCE_RE.match(lines[i]):
-                body.append(lines[i])
-                i += 1
-            i += 1
-            cls = f' class="lang-{lang}"' if lang else ''
-            parts.append(f'<pre><code{cls}>{html.escape(chr(10).join(body))}</code></pre>')
-            continue
-
-        if stripped.startswith('>'):
-            quote = []
-            while i < n and lines[i].strip().startswith('>'):
-                quote.append(re.sub(r'^\s*>\s?', '', lines[i]))
-                i += 1
-            inner = inline_md(' '.join(q.strip() for q in quote if q.strip()))
-            parts.append(f'<blockquote>{inner}</blockquote>')
-            continue
-
-        if stripped.startswith('|') and i + 1 < n and _TABLE_SEP_RE.match(lines[i + 1]):
-            header = _split_table_row(line)
-            i += 2
-            rows = []
-            while i < n and lines[i].strip().startswith('|'):
-                rows.append(_split_table_row(lines[i]))
-                i += 1
-            thead = ''.join(f'<th>{inline_md(c)}</th>' for c in header)
-            tbody = ''.join(
-                '<tr>' + ''.join(f'<td>{inline_md(c)}</td>' for c in r) + '</tr>'
-                for r in rows
-            )
-            parts.append(f'<div class="tbl"><table><thead><tr>{thead}</tr></thead><tbody>{tbody}</tbody></table></div>')
-            continue
-
-        if _BULLET_RE.match(line):
-            blk, i = _render_list(lines, i, ordered=False)
-            parts.append(blk)
-            continue
-        if _ORDERED_RE.match(line):
-            blk, i = _render_list(lines, i, ordered=True)
-            parts.append(blk)
-            continue
-
-        # paragraph
-        para = [line]
-        i += 1
-        while i < n:
-            nxt = lines[i]
-            ns = nxt.strip()
-            if not ns or _HEADING_RE.match(nxt) or _HR_RE.match(nxt) or _FENCE_RE.match(nxt):
-                break
-            if ns.startswith('>') or _BULLET_RE.match(nxt) or _ORDERED_RE.match(nxt):
-                break
-            if ns.startswith('|') and i + 1 < n and _TABLE_SEP_RE.match(lines[i + 1]):
-                break
-            para.append(nxt)
-            i += 1
-        parts.append(f'<p>{inline_md(" ".join(p.strip() for p in para))}</p>')
-
-    return '\n'.join(parts), (title or 'Untitled')
+def _embed(md: str) -> str:
+    """Escape a markdown string for embedding in a <script> block."""
+    return md.replace('</script>', '<\\/script>')
 
 
 # ── doc discovery ────────────────────────────────────────────────────────────
 def collect_docs() -> dict[str, list[dict]]:
-    """Return {group: [ {slug, out, en_path, ko_path|None, title}, ... ]}."""
     groups: dict[str, list[dict]] = {'reference': [], 'plans': []}
 
     for md in sorted((REPO / 'docs' / 'reference').glob('*.md')):
@@ -239,8 +102,8 @@ def collect_docs() -> dict[str, list[dict]]:
         ko = REPO / 'ko' / 'docs' / 'reference' / f'{slug}.md'
         out = f'reference__{slug}.html'
         _LINK_MAP[slug] = out
-        groups['reference'].append(
-            {'slug': slug, 'out': out, 'en': md, 'ko': ko if ko.exists() else None})
+        groups['reference'].append({'slug': slug, 'out': out, 'en': md,
+                                    'ko': ko if ko.exists() else None})
 
     for md in sorted((REPO / 'plans').glob('*.md')):
         if md.stem in {'_template', 'README'}:
@@ -249,16 +112,17 @@ def collect_docs() -> dict[str, list[dict]]:
         ko = REPO / 'ko' / 'plans' / f'{slug}.md'
         out = f'plans__{slug}.html'
         _LINK_MAP[slug] = out
-        groups['plans'].append({'slug': slug, 'out': out, 'en': md, 'ko': ko if ko.exists() else None})
+        groups['plans'].append({'slug': slug, 'out': out, 'en': md,
+                                'ko': ko if ko.exists() else None})
 
     return groups
 
 
-# ── page templating ──────────────────────────────────────────────────────────
-def sidebar_html(groups: dict[str, list[dict]], active: str = '') -> str:
+# ── templating ───────────────────────────────────────────────────────────────
+def sidebar_html(groups: dict[str, list[dict]], active: str) -> str:
     rows = [
         '<nav class="side">',
-        '<div class="brand">NearStars <span>docs</span></div>',
+        '<a class="brand" href="index.html">NearStars <span>docs</span></a>',
         '<a class="nav-x" href="../index.html">⌗ System database</a>',
         '<a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>',
     ]
@@ -272,89 +136,59 @@ def sidebar_html(groups: dict[str, list[dict]], active: str = '') -> str:
     return '\n'.join(rows)
 
 
-_PAGE_CSS = """
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+_CSS = """
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 """
 
 
-def page_html(title: str, sidebar: str, en_body: str, ko_body: str | None) -> str:
-    bilingual = ko_body is not None
+def page_html(title: str, sidebar: str, en_md: str, ko_md: str | None) -> str:
+    bilingual = ko_md is not None
     if bilingual:
         toggle = ('<div class="seg" id="lang-seg">'
-                  '<button class="on" data-lang="ko">한</button>'
+                  '<button data-lang="ko">한</button>'
                   '<button data-lang="en">EN</button></div>')
-        bodies = (f'<div data-langbody="ko">{ko_body}</div>'
-                  f'<div data-langbody="en" style="display:none">{en_body}</div>')
+        ko_block = f'<script type="text/markdown" id="md-ko">{_embed(ko_md)}</script>'
     else:
         toggle = '<span class="lang-only">EN only</span>'
-        bodies = f'<div data-langbody="en">{en_body}</div>'
+        ko_block = ''
+    en_block = f'<script type="text/markdown" id="md-en">{_embed(en_md)}</script>'
 
-    script = """
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
-}
-"""
     return f'''<!DOCTYPE html>
 <!-- autogenerated by scripts/build_docs.py — do not edit by hand -->
 <html lang="ko">
@@ -362,18 +196,40 @@ if (seg) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{html.escape(title)} · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
-<style>{_PAGE_CSS}</style>
+<link rel="stylesheet" href="{GH_CSS}">
+<script src="{MARKED}"></script>
+<style>{_CSS}</style>
 </head>
 <body>
 <div class="layout">
 {sidebar}
-<main class="docmain">
-<div class="topbar">{toggle}</div>
-{bodies}
-</main>
+<div class="content-wrap">
+  <div class="topbar">{toggle}</div>
+  <article class="markdown-body" id="content"></article>
 </div>
-<script>{script}</script>
+</div>
+{en_block}
+{ko_block}
+<script>
+const srcs = {{}};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {{
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], {{ gfm: true, breaks: false }});
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
+}}
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {{
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+}});
+</script>
 </body>
 </html>
 '''
@@ -383,33 +239,33 @@ def build() -> None:
     groups = collect_docs()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # first pass: render bodies + titles (titles needed for the sidebar)
+    # pass 1: prep markdown + titles (sidebar needs every title)
     for g in groups.values():
         for d in g:
-            d['en_body'], d['title'] = md_to_html(d['en'].read_text(encoding='utf-8'))
-            d['ko_body'] = (md_to_html(d['ko'].read_text(encoding='utf-8'))[0]
-                            if d['ko'] else None)
+            d['en_md'], d['title'] = _prep(d['en'])
+            d['ko_md'] = _prep(d['ko'])[0] if d['ko'] else None
 
-    # second pass: emit pages (sidebar now has every title)
+    # pass 2: emit pages
     count = 0
     for g in groups.values():
         for d in g:
             sb = sidebar_html(groups, active=d['out'])
-            page = page_html(d['title'], sb, d['en_body'], d['ko_body'])
-            (OUT_DIR / d['out']).write_text(page, encoding='utf-8')
+            (OUT_DIR / d['out']).write_text(
+                page_html(d['title'], sb, d['en_md'], d['ko_md']), encoding='utf-8')
             count += 1
 
-    # hub landing
-    intro_en = ('<h1>NearStars documentation</h1>'
-                '<p>Reference docs and planning notes for the NearStars KSP planet pack. '
-                'Reference docs carry a 한/EN toggle; planning notes are English only. '
-                'Pick a page from the sidebar.</p>')
-    intro_ko = ('<h1>NearStars 문서</h1>'
-                '<p>NearStars KSP 행성팩의 레퍼런스 문서와 기획 노트입니다. '
-                '레퍼런스 문서는 한/EN 토글이 있고, 기획 노트는 영어만 있습니다. '
-                '왼쪽 사이드바에서 페이지를 고르세요.</p>')
-    hub = page_html('Docs', sidebar_html(groups, active='index.html'), intro_en, intro_ko)
-    (OUT_DIR / 'index.html').write_text(hub, encoding='utf-8')
+    # hub
+    hub_en = ('# NearStars documentation\n\n'
+              'Reference docs and planning notes for the NearStars KSP planet pack. '
+              'Reference docs and mirrored plans carry a 한/EN toggle. '
+              'Pick a page from the sidebar.\n')
+    hub_ko = ('# NearStars 문서\n\n'
+              'NearStars KSP 행성팩의 레퍼런스 문서와 기획 노트입니다. '
+              '레퍼런스 문서와 미러된 기획 노트에는 한/EN 토글이 있습니다. '
+              '왼쪽 사이드바에서 페이지를 고르세요.\n')
+    (OUT_DIR / 'index.html').write_text(
+        page_html('Docs', sidebar_html(groups, active='index.html'), hub_en, hub_ko),
+        encoding='utf-8')
 
     print(f'build_docs: wrote {count} doc pages + hub → {OUT_DIR.relative_to(REPO)}/')
 

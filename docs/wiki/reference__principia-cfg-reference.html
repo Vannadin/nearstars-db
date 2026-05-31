@@ -5,70 +5,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Principia CFG Technical Reference · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="side">
-<div class="brand">NearStars <span>docs</span></div>
+<a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
@@ -83,507 +72,948 @@ body { margin: 0 }
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
-<main class="docmain">
-<div class="topbar"><div class="seg" id="lang-seg"><button class="on" data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
-<div data-langbody="ko"><blockquote>출처: mockingbirdnest/Principia GitHub 저장소, 위키, <code>astronomy/*.cfg</code> 파일 목적: KSP 행성 팩용 Principia 호환 CFG 파일 생성을 위한 참조 문서</blockquote>
-<blockquote><b>관점.</b> 이 문서는 <b>외부 Principia CFG API 레퍼런스</b> 입니다 — Principia 가 받아들이는 노드/키의 전체 집합과 그 의미를 상위 코드와 문서로부터 정리한 것. 특정 행성 팩과 독립적입니다. <b>NearStars 고유 구현</b> — 실제로 emit 하는 노드 부분집합, <code>db/systems/*.json</code> 필드 → CFG 값 매핑, 지원 변형 (Sol Real / Sol Quarter / RSS), Principia 패치에서 <code>:NEEDS:FOR[NearStarsSystem]</code> 컨벤션을 벗어난 이유 — 는 <a href="../../../.claude/skills/principia-cfg/SKILL.md"><code>principia-cfg</code> 스킬</a> 참고.</blockquote>
-<hr>
-<h2>개요</h2>
-<p>Principia는 KSP의 패치드-코닉(영향권) 중력을 완전한 N체 물리학으로 대체합니다. KSP의 GameDatabase에서 설정을 읽으며(Kopernicus와 동일한 시스템), <code>GameDatabase.Instance.GetAtMostOneNode(name)</code>를 통해 Config 노드를 탐색합니다. ModuleManager 머지가 적용되며, 모든 패치 처리 이후 각 최상위 노드는 <b>최대 하나</b>만 존재해야 합니다.</p>
-<hr>
-<h2>최상위 CFG 노드</h2>
-<div class="tbl"><table><thead><tr><th>노드 이름</th><th>목적</th></tr></thead><tbody><tr><td><code>principia_gravity_model</code></td><td>물리적 속성 (질량, 자전, 지오퍼텐셜)</td></tr><tr><td><code>principia_initial_state</code></td><td>기준 에포크에서의 직교 좌표 위치 및 속도</td></tr><tr><td><code>principia_numerics_blueprint</code></td><td>수치 적분기 설정</td></tr><tr><td><code>principia_draw_styles</code></td><td>궤적 시각화 색상 및 선 스타일</td></tr><tr><td><code>principia_override_version_check</code></td><td>KSP 버전 불일치 치명적 오류 억제</td></tr></tbody></table></div>
-<p><b>규칙</b>: ModuleManager 처리 이후 각 노드는 <b>최대 하나</b>만 존재할 수 있습니다. <code>principia_gravity_model</code> 루트가 두 개이면 충돌합니다.</p>
-<hr>
-<h2><code>principia_gravity_model</code></h2>
-<p>정확한 자전 및 중력 매개변수를 제공합니다. Principia가 <code>CelestialBody</code> 필드에서 파생할 값들을 덮어씁니다. 선택 사항이며, 없을 경우 KSP의 <code>gravParameter</code>, <code>angularV</code>, <code>initialRotation</code>으로 폴백합니다.</p>
-<h3>구조</h3>
-<pre><code class="lang-cfg">principia_gravity_model[:NEEDS[SomeMod]] {
-  body { ... }
-  body { ... }
-}</code></pre>
-<p>애드온에서 패치하려면.</p>
-<pre><code class="lang-cfg">@principia_gravity_model:NEEDS[OPM] {
-  body { ... }
-}</code></pre>
-<h3><code>body</code> 노드 키</h3>
-<div class="tbl"><table><thead><tr><th>키</th><th>타입</th><th>필수 여부</th><th>비고</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>Yes</td><td><code>displayName</code>이 아닌 <code>CelestialBody.name</code> (Kopernicus <code>Body { name = X }</code>)과 일치해야 합니다</td></tr><tr><td><code>gravitational_parameter</code></td><td>quantity (m³/s²)</td><td>조건부*</td><td>μ = GM. <code>principia_initial_state</code>가 존재할 경우 필수</td></tr><tr><td><code>reference_instant</code></td><td>instant</td><td>No</td><td>자전 기준 에포크. 기본값: <code>JD2451545.000000000</code> (J2000)</td></tr><tr><td><code>axis_right_ascension</code></td><td>quantity (angle)</td><td>No</td><td>북극의 ICRF 적경. 기본값: <code>-90 deg</code></td></tr><tr><td><code>axis_declination</code></td><td>quantity (angle)</td><td>No</td><td>북극의 ICRF 적위. 기본값: <code>90 deg</code></td></tr><tr><td><code>reference_angle</code></td><td>quantity (angle)</td><td>No</td><td><code>reference_instant</code> 시점의 본초 자오선 각도 W₀. 기본값: KSP의 <code>initialRotation</code></td></tr><tr><td><code>angular_frequency</code></td><td>quantity (angle/time)</td><td>No</td><td>항성 자전 속도. 기본값: KSP의 <code>angularV</code></td></tr><tr><td><code>reference_radius</code></td><td>quantity (length)</td><td>조건부</td><td><code>j2</code> 또는 <code>geopotential_row</code>가 존재할 경우 필수</td></tr><tr><td><code>j2</code></td><td>float</td><td>No</td><td>비정규화된 J₂ 대역 조화함수. <code>geopotential_row</code>와 상호 배타적</td></tr><tr><td><code>geopotential_row</code></td><td>sub-node (반복)</td><td>No</td><td>완전한 구면 조화함수 지오퍼텐셜. <code>j2</code>와 상호 배타적</td></tr></tbody></table></div>
-<p>*<code>principia_initial_state</code>가 존재할 경우 <code>gravitational_parameter</code>는 필수입니다.</p>
-<p><b>자전 모델 규약</b>: IAU 2009 WG on Cartographic Coordinates를 따릅니다. 기본값 <code>-90 deg</code> / <code>90 deg</code>는 극을 KSP 내부 프레임에 맞춥니다.</p>
-<h3>J2 예시</h3>
-<pre><code class="lang-cfg">body {
-  name                    = Sun
-  gravitational_parameter = 1.3271244004193938e+11 km^3/s^2
-  reference_instant       = JD2451545.000000000
-  axis_right_ascension    = 286.13 deg
-  axis_declination        = 63.87 deg
-  reference_angle         = 84.176 deg
-  angular_frequency       = 14.1844000 deg / d
-  reference_radius        = 696000.0 km
-  j2                      = 2.11060885327268404e-07
-}</code></pre>
-<h3>지오퍼텐셜 예시</h3>
-<pre><code class="lang-cfg">body {
-  name             = Earth
-  reference_radius = 6378.1363 km
-  geopotential_row {
-    degree = 2
-    geopotential_column {
-      order = 0
-      cos   = -4.84169457320000017e-04
-      sin   = 0.0
-    }
-    geopotential_column {
-      order = 2
-      cos   = 2.43937341593980011e-06
-      sin   = -1.40029401183640008e-06
-    }
-  }
-}</code></pre>
-<hr>
-<h2><code>principia_initial_state</code></h2>
-<p>관성 좌표계에서 모든 천체의 직교 초기 조건을 제공합니다. <b>없을 경우</b>, Principia는 KSP의 케플러 궤도 요소(야코비 좌표)에서 초기 상태를 파생합니다. <b>있을 경우</b>, 이 노드와 <code>principia_gravity_model</code> 모두 필수이며 모든 천체를 포함해야 합니다.</p>
-<h3>구조</h3>
-<pre><code class="lang-cfg">principia_initial_state[:NEEDS[RealSolarSystem]] {
-  game_epoch         = JD2433647.5
-  solar_system_epoch = JD2433282.500000000
-  body { ... }
-  body { ... }
-}</code></pre>
-<h3>최상위 필드</h3>
-<div class="tbl"><table><thead><tr><th>키</th><th>타입</th><th>비고</th></tr></thead><tbody><tr><td><code>game_epoch</code></td><td>instant</td><td>KSP Universal Time 0이 매핑되는 실제 시각 (인게임 시작 날짜)</td></tr><tr><td><code>solar_system_epoch</code></td><td>instant</td><td>상태 벡터가 유효한 에포크. <code>game_epoch</code> 이하여야 합니다. Principia는 이 시점부터 순방향으로 적분합니다.</td></tr></tbody></table></div>
-<p><b>에포크 참고</b>: <code>solar_system_epoch</code>는 JPL 데이터 기준 에포크이고, <code>game_epoch</code>는 RSS/Sol 게임 시작 날짜입니다. Principia는 로드 시 그 간격을 사전 적분합니다.</p>
-<h3><code>body</code> 노드 키</h3>
-<div class="tbl"><table><thead><tr><th>키</th><th>타입</th><th>필수 여부</th><th>비고</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>Yes</td><td>KSP 천체 이름과 일치해야 합니다</td></tr><tr><td><code>x</code>, <code>y</code>, <code>z</code></td><td>quantity (length)</td><td>Yes</td><td>중심 관성 프레임에서의 위치</td></tr><tr><td><code>vx</code>, <code>vy</code>, <code>vz</code></td><td>quantity (length/time)</td><td>Yes</td><td>중심 관성 프레임에서의 속도</td></tr></tbody></table></div>
-<p><b>좌표 프레임</b>: 태양계 질량 중심이 원점인 중심 관성 프레임이며, 축은 Unity 월드 프레임과 정렬됩니다.</p>
-<h3>예시</h3>
-<pre><code class="lang-cfg">principia_initial_state:NEEDS[RealSolarSystem] {
-  game_epoch         = JD2433647.5
-  solar_system_epoch = JD2433282.500000000
-  body {
-    name = Earth
-    x    = -2.720318042296709e+07 km
-    y    = +1.329407956490104e+08 km
-    z    = +5.764165538717468e+07 km
-    vx   = -2.975363625990147e+01 km/s
-    vy   = -5.189341029926219e+00 km/s
-    vz   = -2.251484908750744e+00 km/s
-  }
-}</code></pre>
-<hr>
-<h2><code>principia_numerics_blueprint</code></h2>
-<p>수치 적분 알고리즘을 제어합니다. 선택 사항이며, 없을 경우 Principia는 컴파일된 기본값을 사용합니다.</p>
-<h3>구조</h3>
-<pre><code class="lang-cfg">principia_numerics_blueprint {
-  downsampling {
-    tolerance = 10 m
-  }
-  ephemeris {
-    fixed_step_size_integrator = QUINLAN_TREMAINE_1990_ORDER_12
-    integration_step_size      = 10 min
-    fitting_tolerance          = 1 mm
-    geopotential_tolerance     = 0x1.0p-24
-  }
-  history {
-    fixed_step_size_integrator = QUINLAN_1999_ORDER_8A
-    integration_step_size      = 10 s
-  }
-  psychohistory {
-    adaptive_step_size_integrator = DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM
-    length_integration_tolerance  = 1 mm
-    speed_integration_tolerance   = 1 mm/s
-  }
-}</code></pre>
-<h3>하위 노드</h3>
-<ul><li><b><code>downsampling</code></b>: <code>tolerance</code> (length) — 궤적 다운샘플링의 최대 위치 오차</li><li><b><code>ephemeris</code></b>: 배경 천체 적분<ul><li><code>fixed_step_size_integrator</code> — 적분기 이름 (아래 참조)<ul><li><code>integration_step_size</code> — 스텝 크기 (RSS/Sol 표준: <code>10 min</code>)<ul><li><code>fitting_tolerance</code> — 다항식 피팅 정확도<ul><li><code>geopotential_tolerance</code> — 조화함수 제거 임계값 (예: <code>0x1.0p-24</code>)</li><li><b><code>history</code></b>: 비행체 과거 궤적 적분기</li><li><b><code>psychohistory</code></b>: 비행체 미래/예측 적분기 (가변 스텝)</li></ul></li></ul></li></ul></li></ul></li></ul>
-<h3>지원 적분기</h3>
-<p><b>Symmetric Linear Multistep (에페메리스에 권장).</b></p>
-<ul><li><code>QUINLAN_TREMAINE_1990_ORDER_8/10/12/14</code></li><li><code>QUINLAN_1999_ORDER_8A</code> / <code>QUINLAN_1999_ORDER_8B</code></li></ul>
-<p><b>Symplectic Runge-Kutta-Nyström (SRKN).</b></p>
-<ul><li><code>BLANES_MOAN_2002_SRKN_6B</code> / <code>_11B</code> / <code>_14A</code></li></ul>
-<p><b>Symplectic Partitioned Runge-Kutta (SPRK).</b></p>
-<ul><li><code>MCLACHLAN_1995_SB3A_4</code> / <code>_5</code></li><li><code>MCLACHLAN_ATELA_1992_ORDER_4_OPTIMAL</code> / <code>ORDER_5_OPTIMAL</code></li><li><code>OKUNBOR_SKEEL_1994_ORDER_6_METHOD_13</code></li></ul>
-<p><b>Adaptive (psychohistory 전용).</b></p>
-<ul><li><code>DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM</code></li></ul>
-<hr>
-<h2><code>principia_draw_styles</code></h2>
-<pre><code class="lang-cfg">principia_draw_styles {
-  history           { colour = #aa0000  style = solid  }
-  prediction        { colour = #00ff00  style = dashed }
-  flight_plan       { colour = #0000ff  style = faded  }
-  burn              { colour = #ffff00  style = solid  }
-  target_history    { colour = #ff8800  style = dashed }
-  target_prediction { colour = #ff00ff  style = faded  }
-}</code></pre>
-<ul><li><code>colour</code>: HTML RGB 16진수 (<code>#rrggbb</code>)</li><li><code>style</code>: <code>solid</code>, <code>dashed</code>, 또는 <code>faded</code></li></ul>
-<hr>
-<h2><code>principia_override_version_check</code></h2>
-<pre><code class="lang-cfg">principia_override_version_check {
-  version = 1.12.5
-  version = 1.12.4
-}</code></pre>
-<p>KSP 버전 불일치 치명적 충돌을 로그 경고로 대체합니다. 여러 <code>version</code> 값을 허용합니다.</p>
-<hr>
-<h2>타입 참조</h2>
-<h3><code>quantity</code></h3>
-<p>형식: <code>&lt;number&gt; &lt;unit&gt;</code> — 숫자는 <code>strtod</code> 구문을 사용합니다 (과학적 표기법 지원).</p>
-<p>예시: <code>3.986004e+14 m^3/s^2</code>, <code>-2.975 km/s</code>, <code>14.1844 deg / d</code>, <code>10 min</code>, <code>1 mm</code>, <code>0.5 au</code></p>
-<p>**ModuleManager 수식 연산자 (<code>*=</code>, <code>+=</code>)는 quantity 값에 동작하지 않습니다.** 항상 완전히 계산된 값을 제공하십시오.</p>
-<div class="tbl"><table><thead><tr><th>차원</th><th>지원 단위</th></tr></thead><tbody><tr><td>Length</td><td><code>μm</code>, <code>mm</code>, <code>cm</code>, <code>m</code>, <code>km</code>, <code>au</code></td></tr><tr><td>Time</td><td><code>ms</code>, <code>s</code>, <code>min</code>, <code>h</code>, <code>d</code></td></tr><tr><td>Angle</td><td><code>deg</code>, <code>°</code>, <code>rad</code></td></tr><tr><td>Compound</td><td><code>km^3/s^2</code>, <code>deg / d</code>, <code>km/s</code>, <code>m^3/s^2</code>, <code>m s^-1</code></td></tr></tbody></table></div>
-<h3><code>instant</code> (지구시)</h3>
-<div class="tbl"><table><thead><tr><th>형식</th><th>예시</th></tr></thead><tbody><tr><td>Julian Date</td><td><code>JD2451545.000000000</code></td></tr><tr><td>Modified Julian Date</td><td><code>MJD51544.5</code></td></tr><tr><td>ISO 8601 (TT)</td><td><code>2000-01-01T12:00:00</code></td></tr></tbody></table></div>
-<p>J2000 = <code>JD2451545.0</code> = <code>2000-01-01T12:00:00</code> TT.</p>
-<hr>
-<h2>Kopernicus 연동</h2>
-<h3>천체 탐색</h3>
-<p>Principia는 <code>FlightGlobals.Bodies</code>(Kopernicus가 채움)에서 천체를 탐색합니다. Kopernicus <code>Body {}</code> 노드를 직접 읽지는 않습니다. <code>body { name = X }</code>의 <code>name</code>은 <code>displayName</code>이 아닌 <code>CelestialBody.name</code> (= Kopernicus <code>Body { name = X }</code>)과 일치해야 합니다.</p>
-<h3>두 가지 초기화 경로</h3>
-<p><b>경로 1 — 직교 좌표 (<code>principia_initial_state</code> 있음).</b></p>
-<ul><li>각 천체에 <code>InsertCelestialAbsoluteCartesian()</code>을 사용합니다</li><li><code>principia_initial_state</code>와 <code>principia_gravity_model</code> 모두 필수</li><li><code>FlightGlobals.Bodies</code>의 모든 천체가 두 노드에 항목을 가져야 합니다</li><li>모든 <code>body</code>에 <code>gravitational_parameter</code>가 필수</li><li>Kopernicus 케플러 요소는 무시됩니다</li><li>적용 모드: Sol-Configs, RealSolarSystem</li></ul>
-<p><b>경로 2 — 케플러 폴백 (<code>principia_initial_state</code> 없음).</b></p>
-<ul><li>각 천체에 <code>InsertCelestialJacobiKeplerian()</code>을 사용합니다</li><li>KSP/Kopernicus 궤도 요소를 접촉 요소(야코비 좌표)로 사용합니다</li><li><code>principia_gravity_model</code>은 선택 사항이며 <code>CelestialBody</code> 데이터를 보완합니다</li><li><code>gravitational_parameter</code>는 선택 사항 (기본값: <code>body.gravParameter</code>)</li><li>적용 모드: stock KSP, 가상 행성 팩</li></ul>
-<h3>Stock KSP Jool 시스템 안정화</h3>
-<p><code>principia_initial_state</code> 없이 케플러 모드에서 Principia는 자동으로 <code>StabilizeKSP()</code>를 적용합니다.</p>
-<ul><li>Vall과 Tylo의 평균 운동이 Laythe와의 1:2:4 공명에서 벗어나도록 조정됩니다</li><li>Bop의 궤도가 역행으로 반전됩니다</li></ul>
-<p>코드에서 적용되며, CFG에서는 적용되지 않습니다. <code>principia_initial_state</code>가 있을 때는 적용되지 않습니다.</p>
-<h3>조석 고정</h3>
-<p>Principia는 모든 천체에 강제로 <code>body.tidallyLocked = false</code>를 설정합니다. 조석 고정 천체는 <code>principia_gravity_model</code>에서 <code>angular_frequency</code>를 궤도 주기에 맞게 설정해야 합니다.</p>
-<hr>
-<h2>실용 패턴</h2>
-<h3>패턴 1: 가상 행성 팩 (케플러 모드)</h3>
-<p><code>principia_gravity_model</code>만 필요합니다. <code>principia_initial_state</code>는 없습니다. Principia가 Kopernicus 궤도에서 위치를 파생합니다.</p>
-<pre><code class="lang-cfg">principia_gravity_model:NEEDS[MyPack] {
-  body {
-    name                    = MyStar
-    gravitational_parameter = 1.8e+18 m^3/s^2
-    axis_right_ascension    = -90 deg
-    axis_declination        = 89.5 deg
-    reference_angle         = 0 deg
-    angular_frequency       = 2.1e-05 rad/s
-  }
-  body {
-    name                    = MyPlanet
-    gravitational_parameter = 4.5e+12 m^3/s^2
-    axis_right_ascension    = -90 deg
-    axis_declination        = 75.0 deg
-  }
-}</code></pre>
-<h3>패턴 2: 기존 gravity model 패치</h3>
-<pre><code class="lang-cfg">@principia_gravity_model:FOR[MyPack]:NEEDS[MyPack] {
-  body {
-    name                    = NewMoon
-    gravitational_parameter = 8.5e+10 m^3/s^2
-    axis_right_ascension    = 120 deg
-    axis_declination        = -15.0 deg
-  }
-}</code></pre>
-<h3>패턴 3: NearStars — Sol-Configs + RSS 이중 지원</h3>
-<p>NearStars는 Sol-Configs(ballisticfox) 위에서 실행됩니다. RSS 호환은 향후 목표이며, Sol Real 과 RSS 가 동일한 <code>solar_system_epoch</code> 및 <code>game_epoch</code> 을 공유하므로 동일한 직교 좌표 상태 벡터가 양쪽에 그대로 사용 가능합니다. Sol-Configs (및 향후 RSS) 가 자체 <code>principia_gravity_model</code> 과 <code>principia_initial_state</code> 를 포함하므로 NearStars 는 자체 천체만 패치합니다.</p>
-<p><b>에포크 참조.</b></p>
-<div class="tbl"><table><thead><tr><th>변형</th><th><code>solar_system_epoch</code></th><th><code>game_epoch</code></th><th>NEEDS 태그</th></tr></thead><tbody><tr><td>Sol real scale</td><td>JD2433282.5 (1950-Jan-01)</td><td>JD2433647.5 (1951-Jan-01)</td><td><code>SolSystem,!SolQuarterScale</code></td></tr><tr><td>Sol quarter scale</td><td>JD2433465.0</td><td>—</td><td><code>SolSystem,SolQuarterScale</code></td></tr><tr><td>RSS</td><td>JD2433282.5 (1950-Jan-01)</td><td>JD2433647.5 (1951-Jan-01)</td><td><code>RSSConfig</code></td></tr></tbody></table></div>
-<p>Sol real-scale과 RSS는 동일한 에포크를 공유하므로 직교 좌표도 동일하게 사용할 수 있습니다. Sol quarter-scale은 <code>solar_system_epoch</code>가 다르므로 별도의 좌표가 필요합니다.</p>
-<p><b>gravity_model</b>: 중력 매개변수는 스케일과 무관하므로 태양계 모드당 하나의 패치 (총 2개). <b>initial_state</b>: 스케일별로 에포크가 다르므로 총 3개의 패치.</p>
-<pre><code class="lang-cfg">// gravity model — Sol (all scales)
-@principia_gravity_model:NEEDS[NearStarsSystem,SolSystem] {
-  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
-  // ... all NearStars bodies
-}
-
-// gravity model — RSS
-@principia_gravity_model:NEEDS[NearStarsSystem,RSSConfig] {
-  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
-  // ... all NearStars bodies (same values — duplication unavoidable with MM)
-}
-
-// initial state — Sol real scale (solar_system_epoch = JD2433282.5)
-@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,!SolQuarterScale] {
-  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
-  // ... all NearStars bodies
-}
-
-// initial state — RSS (solar_system_epoch = JD2433282.5, same coords as Sol real)
-@principia_initial_state:NEEDS[NearStarsSystem,RSSConfig] {
-  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
-  // ... all NearStars bodies
-}
-
-// initial state — Sol quarter scale (solar_system_epoch = JD2433465.0, different coords)
-@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,SolQuarterScale] {
-  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
-  // ... all NearStars bodies
-}</code></pre>
-<p><b>좌표 값</b>: <code>x/y/z</code>는 Sol 중심에서의 물리적 거리 (파섹 → km). <code>vx/vy/vz</code>는 중심 프레임에서의 고유 운동 + 시선 속도 (km/s). 항성 거리에서는 Sol 시스템에 대한 중력 영향이 무시할 수 있는 수준이므로, 항목은 오직 Principia의 일관성 검사를 통과하기 위해 존재합니다.</p>
-<hr>
-<h2>핵심 제약 사항</h2>
-<ol><li>ModuleManager 처리 후 각 최상위 노드는 최대 하나만 존재할 수 있습니다.</li><li><code>principia_initial_state</code>가 있으면 <code>principia_gravity_model</code>은 필수이며 <code>FlightGlobals.Bodies</code>의 모든 천체를 포함해야 합니다.</li><li><code>principia_initial_state</code>가 있으면 <code>principia_gravity_model</code>의 모든 <code>body</code>에 <code>gravitational_parameter</code>가 필수입니다.</li><li><code>j2</code>와 <code>geopotential_row</code>는 동일 천체에서 상호 배타적입니다.</li><li><code>j2</code> 또는 <code>geopotential_row</code>가 있을 경우에만 <code>reference_radius</code>가 필수입니다.</li><li>ModuleManager 수식 연산자 (<code>*=</code>, <code>+=</code>)는 <code>quantity</code> 값에 동작하지 않습니다.</li><li>천체 <code>name</code>은 <code>displayName</code>이 아닌 <code>CelestialBody.name</code>과 일치해야 합니다.</li><li><code>solar_system_epoch</code> ≤ <code>game_epoch</code>.</li></ol>
-<hr>
-<h2>IAU 명목 단위 상수</h2>
-<p>Principia의 TRAPPIST 설정에서 단위 약어로 사용됩니다.</p>
-<div class="tbl"><table><thead><tr><th>기호</th><th>값</th></tr></thead><tbody><tr><td><code>GM☉</code></td><td>1.327124400419394e+20 m³/s²</td></tr><tr><td><code>GM🜨</code></td><td>3.986004e+14 m³/s²</td></tr></tbody></table></div>
-<hr>
-<h2>제공 파일 위치 (Principia 저장소)</h2>
-<div class="tbl"><table><thead><tr><th>소스 경로</th><th>로드 시점</th></tr></thead><tbody><tr><td><code>astronomy/sol_gravity_model.cfg</code></td><td><code>:NEEDS[RealSolarSystem]</code></td></tr><tr><td><code>astronomy/sol_initial_state_jd_2433282_500000000.cfg</code></td><td><code>:NEEDS[RealSolarSystem]</code></td></tr><tr><td><code>astronomy/sol_numerics_blueprint.cfg</code></td><td><code>:NEEDS[RealSolarSystem]</code></td></tr></tbody></table></div>
-<p>Sol-Configs는 <code>:FOR[SolSystem]</code>으로 자체 <code>Real_Sol-GravityModel.cfg</code>, <code>Real_Sol-InitialState.cfg</code>, <code>Quarter_Sol-GravityModel.cfg</code>, <code>Quarter_Sol-InitialState.cfg</code>를 제공합니다.</p>
-<h2>Related</h2>
-<ul><li><a href="reference__methodology.html">methodology</a> — Principia 의 gravitational_parameter, mass, radius 에 공급되는 DB 측 스키마.</li><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — 해당 문서 §9–11 이 만들어 내는 Cartesian 상태 벡터가 여기 <code>principia_initial_state</code> 의 body 블록에 공급됩니다.</li><li><a href="reference__mod-reference.html">mod-reference</a> — Principia 설치와 의존성 티어.</li><li><a href="reference__mod-release-layout.html">mod-release-layout</a> — §2.1 이 Principia 패치를 <code>Patches/Principia/</code> 에 어떻게 배치하는지 다룹니다.</li><li><a href="../phase3/alpha-centauri-a.md">alpha-centauri-a</a>, <a href="../phase3/alpha-centauri-b.md">alpha-centauri-b</a> — Principia 의 body 별 gravity 모델 다운스트림의 정전 워크드 예시.</li></ul></div><div data-langbody="en" style="display:none"><blockquote>Source: mockingbirdnest/Principia GitHub repo, wiki, and astronomy/*.cfg files Purpose: Reference for generating Principia-compatible CFG files for KSP planet packs</blockquote>
-<blockquote><b>Perspective.</b> This document is the <b>external Principia CFG API reference</b> — the full set of nodes/keys Principia accepts and their meanings, sourced from upstream code and docs. Independent of any particular planet pack. For <b>NearStars-specific implementation</b> — which subset of nodes the project actually emits, how <code>db/systems/*.json</code> fields map to CFG values, what variants (Sol Real / Sol Quarter / RSS) are MVP-supported, and the rationale for diverging from <code>:NEEDS:FOR[NearStarsSystem]</code> on Principia patches — see the <a href="../../.claude/skills/principia-cfg/SKILL.md"><code>principia-cfg</code> skill</a>.</blockquote>
-<hr>
-<h2>Overview</h2>
-<p>Principia replaces KSP&#x27;s patched-conic (sphere-of-influence) gravity with full N-body physics. It reads configuration from KSP&#x27;s GameDatabase (same system as Kopernicus). Config nodes are discovered via <code>GameDatabase.Instance.GetAtMostOneNode(name)</code> — ModuleManager merging applies, and there must be <b>at most one</b> instance of each top-level node after all patches resolve.</p>
-<hr>
-<h2>Top-Level CFG Nodes</h2>
-<div class="tbl"><table><thead><tr><th>Node name</th><th>Purpose</th></tr></thead><tbody><tr><td><code>principia_gravity_model</code></td><td>Physical properties (mass, rotation, geopotential)</td></tr><tr><td><code>principia_initial_state</code></td><td>Cartesian positions and velocities at a reference epoch</td></tr><tr><td><code>principia_numerics_blueprint</code></td><td>Numerical integrator configuration</td></tr><tr><td><code>principia_draw_styles</code></td><td>Trajectory visualization colors and line styles</td></tr><tr><td><code>principia_override_version_check</code></td><td>Suppress KSP version mismatch fatal error</td></tr></tbody></table></div>
-<p><b>Rule</b>: Each node may appear <b>at most once</b> after ModuleManager processing. Two <code>principia_gravity_model</code> roots = crash.</p>
-<hr>
-<h2><code>principia_gravity_model</code></h2>
-<p>Provides accurate rotational and gravitational parameters. Overrides values Principia would derive from <code>CelestialBody</code> fields. Optional — if absent, falls back to KSP&#x27;s <code>gravParameter</code>, <code>angularV</code>, <code>initialRotation</code>.</p>
-<h3>Structure</h3>
-<pre><code class="lang-cfg">principia_gravity_model[:NEEDS[SomeMod]] {
-  body { ... }
-  body { ... }
-}</code></pre>
-<p>To patch from an addon:</p>
-<pre><code class="lang-cfg">@principia_gravity_model:NEEDS[OPM] {
-  body { ... }
-}</code></pre>
-<h3><code>body</code> node keys</h3>
-<div class="tbl"><table><thead><tr><th>Key</th><th>Type</th><th>Required</th><th>Notes</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>Yes</td><td>Must match <code>CelestialBody.name</code> (Kopernicus <code>Body { name = X }</code>), not <code>displayName</code></td></tr><tr><td><code>gravitational_parameter</code></td><td>quantity (m³/s²)</td><td>Conditional*</td><td>μ = GM. Required if <code>principia_initial_state</code> is present</td></tr><tr><td><code>reference_instant</code></td><td>instant</td><td>No</td><td>Epoch for rotation reference. Default: <code>JD2451545.000000000</code> (J2000)</td></tr><tr><td><code>axis_right_ascension</code></td><td>quantity (angle)</td><td>No</td><td>ICRF RA of north pole. Default: <code>-90 deg</code></td></tr><tr><td><code>axis_declination</code></td><td>quantity (angle)</td><td>No</td><td>ICRF Dec of north pole. Default: <code>90 deg</code></td></tr><tr><td><code>reference_angle</code></td><td>quantity (angle)</td><td>No</td><td>Prime meridian angle W₀ at <code>reference_instant</code>. Default: KSP&#x27;s <code>initialRotation</code></td></tr><tr><td><code>angular_frequency</code></td><td>quantity (angle/time)</td><td>No</td><td>Sidereal rotation rate. Default: KSP&#x27;s <code>angularV</code></td></tr><tr><td><code>reference_radius</code></td><td>quantity (length)</td><td>Conditional</td><td>Required if <code>j2</code> or <code>geopotential_row</code> is present</td></tr><tr><td><code>j2</code></td><td>float</td><td>No</td><td>Unnormalized J₂ zonal harmonic. Mutually exclusive with <code>geopotential_row</code></td></tr><tr><td><code>geopotential_row</code></td><td>sub-node (repeating)</td><td>No</td><td>Full spherical harmonic geopotential. Mutually exclusive with <code>j2</code></td></tr></tbody></table></div>
-<p>*<code>gravitational_parameter</code> is required when <code>principia_initial_state</code> is present.</p>
-<p><b>Rotation model convention</b>: Follows IAU 2009 WG on Cartographic Coordinates. Default <code>-90 deg</code> / <code>90 deg</code> aligns pole with KSP&#x27;s internal frame.</p>
-<h3>J2 example</h3>
-<pre><code class="lang-cfg">body {
-  name                    = Sun
-  gravitational_parameter = 1.3271244004193938e+11 km^3/s^2
-  reference_instant       = JD2451545.000000000
-  axis_right_ascension    = 286.13 deg
-  axis_declination        = 63.87 deg
-  reference_angle         = 84.176 deg
-  angular_frequency       = 14.1844000 deg / d
-  reference_radius        = 696000.0 km
-  j2                      = 2.11060885327268404e-07
-}</code></pre>
-<h3>Geopotential example</h3>
-<pre><code class="lang-cfg">body {
-  name             = Earth
-  reference_radius = 6378.1363 km
-  geopotential_row {
-    degree = 2
-    geopotential_column {
-      order = 0
-      cos   = -4.84169457320000017e-04
-      sin   = 0.0
-    }
-    geopotential_column {
-      order = 2
-      cos   = 2.43937341593980011e-06
-      sin   = -1.40029401183640008e-06
-    }
-  }
-}</code></pre>
-<hr>
-<h2><code>principia_initial_state</code></h2>
-<p>Provides Cartesian initial conditions for every body in an inertial frame. If <b>absent</b>, Principia derives initial states from KSP&#x27;s Keplerian orbital elements (Jacobi coordinates). If <b>present</b>, both this node and <code>principia_gravity_model</code> are required and must cover every body.</p>
-<h3>Structure</h3>
-<pre><code class="lang-cfg">principia_initial_state[:NEEDS[RealSolarSystem]] {
-  game_epoch         = JD2433647.5
-  solar_system_epoch = JD2433282.500000000
-  body { ... }
-  body { ... }
-}</code></pre>
-<h3>Top-level fields</h3>
-<div class="tbl"><table><thead><tr><th>Key</th><th>Type</th><th>Notes</th></tr></thead><tbody><tr><td><code>game_epoch</code></td><td>instant</td><td>KSP Universal Time 0 mapped to a real instant (in-game start date)</td></tr><tr><td><code>solar_system_epoch</code></td><td>instant</td><td>Epoch at which state vectors are valid. Must be ≤ <code>game_epoch</code>. Principia integrates forward from here.</td></tr></tbody></table></div>
-<p><b>Epoch note</b>: <code>solar_system_epoch</code> is the JPL data reference epoch; <code>game_epoch</code> is the RSS/Sol game start date. Principia pre-integrates the gap at load time.</p>
-<h3><code>body</code> node keys</h3>
-<div class="tbl"><table><thead><tr><th>Key</th><th>Type</th><th>Required</th><th>Notes</th></tr></thead><tbody><tr><td><code>name</code></td><td>string</td><td>Yes</td><td>Must match KSP body name</td></tr><tr><td><code>x</code>, <code>y</code>, <code>z</code></td><td>quantity (length)</td><td>Yes</td><td>Position in barycentric inertial frame</td></tr><tr><td><code>vx</code>, <code>vy</code>, <code>vz</code></td><td>quantity (length/time)</td><td>Yes</td><td>Velocity in barycentric inertial frame</td></tr></tbody></table></div>
-<p><b>Coordinate frame</b>: Barycentric inertial frame, axes aligned to Unity world frame, origin at solar system barycentre.</p>
-<h3>Example</h3>
-<pre><code class="lang-cfg">principia_initial_state:NEEDS[RealSolarSystem] {
-  game_epoch         = JD2433647.5
-  solar_system_epoch = JD2433282.500000000
-  body {
-    name = Earth
-    x    = -2.720318042296709e+07 km
-    y    = +1.329407956490104e+08 km
-    z    = +5.764165538717468e+07 km
-    vx   = -2.975363625990147e+01 km/s
-    vy   = -5.189341029926219e+00 km/s
-    vz   = -2.251484908750744e+00 km/s
-  }
-}</code></pre>
-<hr>
-<h2><code>principia_numerics_blueprint</code></h2>
-<p>Controls numerical integration algorithms. Optional — Principia uses compiled-in defaults if absent.</p>
-<h3>Structure</h3>
-<pre><code class="lang-cfg">principia_numerics_blueprint {
-  downsampling {
-    tolerance = 10 m
-  }
-  ephemeris {
-    fixed_step_size_integrator = QUINLAN_TREMAINE_1990_ORDER_12
-    integration_step_size      = 10 min
-    fitting_tolerance          = 1 mm
-    geopotential_tolerance     = 0x1.0p-24
-  }
-  history {
-    fixed_step_size_integrator = QUINLAN_1999_ORDER_8A
-    integration_step_size      = 10 s
-  }
-  psychohistory {
-    adaptive_step_size_integrator = DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM
-    length_integration_tolerance  = 1 mm
-    speed_integration_tolerance   = 1 mm/s
-  }
-}</code></pre>
-<h3>Sub-nodes</h3>
-<ul><li><b><code>downsampling</code></b>: <code>tolerance</code> (length) — max positional error for trajectory downsampling</li><li><b><code>ephemeris</code></b>: Background celestial-body integration<ul><li><code>fixed_step_size_integrator</code> — integrator name (see below)<ul><li><code>integration_step_size</code> — step size (<code>10 min</code> standard for RSS/Sol)<ul><li><code>fitting_tolerance</code> — accuracy for polynomial fitting<ul><li><code>geopotential_tolerance</code> — threshold for dropping harmonics (e.g. <code>0x1.0p-24</code>)</li><li><b><code>history</code></b>: Vessel past trajectory integrator</li><li><b><code>psychohistory</code></b>: Vessel future/prediction integrator (adaptive step)</li></ul></li></ul></li></ul></li></ul></li></ul>
-<h3>Supported integrators</h3>
-<p><b>Symmetric Linear Multistep (recommended for ephemeris):</b></p>
-<ul><li><code>QUINLAN_TREMAINE_1990_ORDER_8/10/12/14</code></li><li><code>QUINLAN_1999_ORDER_8A</code> / <code>QUINLAN_1999_ORDER_8B</code></li></ul>
-<p><b>Symplectic Runge-Kutta-Nyström (SRKN):</b></p>
-<ul><li><code>BLANES_MOAN_2002_SRKN_6B</code> / <code>_11B</code> / <code>_14A</code></li></ul>
-<p><b>Symplectic Partitioned Runge-Kutta (SPRK):</b></p>
-<ul><li><code>MCLACHLAN_1995_SB3A_4</code> / <code>_5</code></li><li><code>MCLACHLAN_ATELA_1992_ORDER_4_OPTIMAL</code> / <code>ORDER_5_OPTIMAL</code></li><li><code>OKUNBOR_SKEEL_1994_ORDER_6_METHOD_13</code></li></ul>
-<p><b>Adaptive (psychohistory only):</b></p>
-<ul><li><code>DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM</code></li></ul>
-<hr>
-<h2><code>principia_draw_styles</code></h2>
-<pre><code class="lang-cfg">principia_draw_styles {
-  history           { colour = #aa0000  style = solid  }
-  prediction        { colour = #00ff00  style = dashed }
-  flight_plan       { colour = #0000ff  style = faded  }
-  burn              { colour = #ffff00  style = solid  }
-  target_history    { colour = #ff8800  style = dashed }
-  target_prediction { colour = #ff00ff  style = faded  }
-}</code></pre>
-<ul><li><code>colour</code>: HTML RGB hex (<code>#rrggbb</code>)</li><li><code>style</code>: <code>solid</code>, <code>dashed</code>, or <code>faded</code></li></ul>
-<hr>
-<h2><code>principia_override_version_check</code></h2>
-<pre><code class="lang-cfg">principia_override_version_check {
-  version = 1.12.5
-  version = 1.12.4
-}</code></pre>
-<p>Converts the fatal KSP version mismatch crash into a logged warning. Multiple <code>version</code> values allowed.</p>
-<hr>
-<h2>Type Reference</h2>
-<h3><code>quantity</code></h3>
-<p>Format: <code>&lt;number&gt; &lt;unit&gt;</code> — number uses <code>strtod</code> syntax (supports scientific notation).</p>
-<p>Examples: <code>3.986004e+14 m^3/s^2</code>, <code>-2.975 km/s</code>, <code>14.1844 deg / d</code>, <code>10 min</code>, <code>1 mm</code>, <code>0.5 au</code></p>
-<p>**ModuleManager math operators (<code>*=</code>, <code>+=</code>) do NOT work on quantity values.** Always supply the full computed value.</p>
-<div class="tbl"><table><thead><tr><th>Dimension</th><th>Supported units</th></tr></thead><tbody><tr><td>Length</td><td><code>μm</code>, <code>mm</code>, <code>cm</code>, <code>m</code>, <code>km</code>, <code>au</code></td></tr><tr><td>Time</td><td><code>ms</code>, <code>s</code>, <code>min</code>, <code>h</code>, <code>d</code></td></tr><tr><td>Angle</td><td><code>deg</code>, <code>°</code>, <code>rad</code></td></tr><tr><td>Compound</td><td><code>km^3/s^2</code>, <code>deg / d</code>, <code>km/s</code>, <code>m^3/s^2</code>, <code>m s^-1</code></td></tr></tbody></table></div>
-<h3><code>instant</code> (Terrestrial Time)</h3>
-<div class="tbl"><table><thead><tr><th>Format</th><th>Example</th></tr></thead><tbody><tr><td>Julian Date</td><td><code>JD2451545.000000000</code></td></tr><tr><td>Modified Julian Date</td><td><code>MJD51544.5</code></td></tr><tr><td>ISO 8601 (TT)</td><td><code>2000-01-01T12:00:00</code></td></tr></tbody></table></div>
-<p>J2000 = <code>JD2451545.0</code> = <code>2000-01-01T12:00:00</code> TT.</p>
-<hr>
-<h2>Kopernicus Integration</h2>
-<h3>Body discovery</h3>
-<p>Principia discovers bodies from <code>FlightGlobals.Bodies</code> (populated by Kopernicus). It does <b>not</b> read Kopernicus <code>Body {}</code> nodes directly. The <code>name</code> in <code>body { name = X }</code> must match <code>CelestialBody.name</code> (= Kopernicus <code>Body { name = X }</code>), not <code>displayName</code>.</p>
-<h3>Two initialization paths</h3>
-<p><b>Path 1 — Cartesian (with <code>principia_initial_state</code>):</b></p>
-<ul><li>Uses <code>InsertCelestialAbsoluteCartesian()</code> for each body</li><li>Both <code>principia_initial_state</code> and <code>principia_gravity_model</code> required</li><li>Every body in <code>FlightGlobals.Bodies</code> must have entries in both nodes</li><li><code>gravitational_parameter</code> is required in every <code>body</code></li><li>Kopernicus Keplerian elements are ignored</li><li>Mode: Sol-Configs, RealSolarSystem</li></ul>
-<p><b>Path 2 — Keplerian fallback (no <code>principia_initial_state</code>):</b></p>
-<ul><li>Uses <code>InsertCelestialJacobiKeplerian()</code> for each body</li><li>Uses KSP/Kopernicus orbital elements as osculating elements (Jacobi coordinates)</li><li><code>principia_gravity_model</code> is optional; supplements CelestialBody data</li><li><code>gravitational_parameter</code> optional (defaults to <code>body.gravParameter</code>)</li><li>Mode: stock KSP, fictional planet packs</li></ul>
-<h3>Stock KSP Jool system stabilization</h3>
-<p>Without <code>principia_initial_state</code>, Principia automatically applies <code>StabilizeKSP()</code> in Keplerian mode:</p>
-<ul><li>Vall&#x27;s and Tylo&#x27;s mean motions shifted out of 1:2:4 resonance with Laythe</li><li>Bop&#x27;s orbit flipped retrograde</li></ul>
-<p>Applied in code, not CFG. Does not apply when <code>principia_initial_state</code> is present.</p>
-<h3>Tidal locking</h3>
-<p>Principia forcibly sets <code>body.tidallyLocked = false</code> for all bodies. Tidally locked bodies must set <code>angular_frequency</code> to match their orbital period via <code>principia_gravity_model</code>.</p>
-<hr>
-<h2>Practical Patterns</h2>
-<h3>Pattern 1: Fictional planet pack (Keplerian mode)</h3>
-<p>Only <code>principia_gravity_model</code> needed. No <code>principia_initial_state</code>. Principia derives positions from Kopernicus orbits.</p>
-<pre><code class="lang-cfg">principia_gravity_model:NEEDS[MyPack] {
-  body {
-    name                    = MyStar
-    gravitational_parameter = 1.8e+18 m^3/s^2
-    axis_right_ascension    = -90 deg
-    axis_declination        = 89.5 deg
-    reference_angle         = 0 deg
-    angular_frequency       = 2.1e-05 rad/s
-  }
-  body {
-    name                    = MyPlanet
-    gravitational_parameter = 4.5e+12 m^3/s^2
-    axis_right_ascension    = -90 deg
-    axis_declination        = 75.0 deg
-  }
-}</code></pre>
-<h3>Pattern 2: Patching an existing gravity model</h3>
-<pre><code class="lang-cfg">@principia_gravity_model:FOR[MyPack]:NEEDS[MyPack] {
-  body {
-    name                    = NewMoon
-    gravitational_parameter = 8.5e+10 m^3/s^2
-    axis_right_ascension    = 120 deg
-    axis_declination        = -15.0 deg
-  }
-}</code></pre>
-<h3>Pattern 3: NearStars — Sol-Configs + RSS dual support</h3>
-<p>NearStars runs on top of Sol-Configs (ballisticfox). RSS compatibility is a future target — the Cartesian state vectors below are valid for both variants since they share the same <code>solar_system_epoch</code> and <code>game_epoch</code>. Sol-Configs (and eventually RSS) ships its own <code>principia_gravity_model</code> and <code>principia_initial_state</code>, so NearStars only patches in its own bodies.</p>
-<p><b>Epoch reference:</b></p>
-<div class="tbl"><table><thead><tr><th>Variant</th><th><code>solar_system_epoch</code></th><th><code>game_epoch</code></th><th>NEEDS tag</th></tr></thead><tbody><tr><td>Sol real scale</td><td>JD2433282.5 (1950-Jan-01)</td><td>JD2433647.5 (1951-Jan-01)</td><td><code>SolSystem,!SolQuarterScale</code></td></tr><tr><td>Sol quarter scale</td><td>JD2433465.0</td><td>—</td><td><code>SolSystem,SolQuarterScale</code></td></tr><tr><td>RSS</td><td>JD2433282.5 (1950-Jan-01)</td><td>JD2433647.5 (1951-Jan-01)</td><td><code>RSSConfig</code></td></tr></tbody></table></div>
-<p>Sol real-scale and RSS share identical epochs → same Cartesian coords usable for both. Sol quarter-scale has a different <code>solar_system_epoch</code> → needs separate coords.</p>
-<p><b>gravity_model</b>: gravitational parameters are scale-independent → one patch per solar system mod (2 total). <b>initial_state</b>: epoch differs per scale → 3 patches total.</p>
-<pre><code class="lang-cfg">// gravity model — Sol (all scales)
-@principia_gravity_model:NEEDS[NearStarsSystem,SolSystem] {
-  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
-  // ... all NearStars bodies
-}
-
-// gravity model — RSS
-@principia_gravity_model:NEEDS[NearStarsSystem,RSSConfig] {
-  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
-  // ... all NearStars bodies (same values — duplication unavoidable with MM)
-}
-
-// initial state — Sol real scale (solar_system_epoch = JD2433282.5)
-@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,!SolQuarterScale] {
-  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
-  // ... all NearStars bodies
-}
-
-// initial state — RSS (solar_system_epoch = JD2433282.5, same coords as Sol real)
-@principia_initial_state:NEEDS[NearStarsSystem,RSSConfig] {
-  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
-  // ... all NearStars bodies
-}
-
-// initial state — Sol quarter scale (solar_system_epoch = JD2433465.0, different coords)
-@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,SolQuarterScale] {
-  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
-  // ... all NearStars bodies
-}</code></pre>
-<p><b>Coordinate values</b>: <code>x/y/z</code> = physical distance from Sol barycentre (parsecs → km). <code>vx/vy/vz</code> = proper motion + radial velocity in barycentric frame (km/s). At stellar distances, gravitational influence on the Sol system is negligible — the entries exist solely to satisfy Principia&#x27;s consistency check.</p>
-<hr>
-<h2>Key Constraints</h2>
-<ol><li>At most one of each top-level node after ModuleManager processing.</li><li>If <code>principia_initial_state</code> is present → <code>principia_gravity_model</code> is mandatory and must cover every body in <code>FlightGlobals.Bodies</code>.</li><li>If <code>principia_initial_state</code> is present → <code>gravitational_parameter</code> is required in every <code>body</code> of <code>principia_gravity_model</code>.</li><li><code>j2</code> and <code>geopotential_row</code> are mutually exclusive on the same body.</li><li><code>reference_radius</code> is required if and only if <code>j2</code> or any <code>geopotential_row</code> is present.</li><li>ModuleManager math operators (<code>*=</code>, <code>+=</code>) do not work on <code>quantity</code> values.</li><li>Body <code>name</code> must match <code>CelestialBody.name</code>, not <code>displayName</code>.</li><li><code>solar_system_epoch</code> ≤ <code>game_epoch</code>.</li></ol>
-<hr>
-<h2>IAU Nominal Unit Constants</h2>
-<p>Used in Principia&#x27;s TRAPPIST configs as unit shorthand:</p>
-<div class="tbl"><table><thead><tr><th>Symbol</th><th>Value</th></tr></thead><tbody><tr><td><code>GM☉</code></td><td>1.327124400419394e+20 m³/s²</td></tr><tr><td><code>GM🜨</code></td><td>3.986004e+14 m³/s²</td></tr></tbody></table></div>
-<hr>
-<h2>Shipped File Locations (Principia repo)</h2>
-<div class="tbl"><table><thead><tr><th>Source path</th><th>Loaded when</th></tr></thead><tbody><tr><td><code>astronomy/sol_gravity_model.cfg</code></td><td><code>:NEEDS[RealSolarSystem]</code></td></tr><tr><td><code>astronomy/sol_initial_state_jd_2433282_500000000.cfg</code></td><td><code>:NEEDS[RealSolarSystem]</code></td></tr><tr><td><code>astronomy/sol_numerics_blueprint.cfg</code></td><td><code>:NEEDS[RealSolarSystem]</code></td></tr></tbody></table></div>
-<p>Sol-Configs ships its own <code>Real_Sol-GravityModel.cfg</code>, <code>Real_Sol-InitialState.cfg</code>, <code>Quarter_Sol-GravityModel.cfg</code>, <code>Quarter_Sol-InitialState.cfg</code> with <code>:FOR[SolSystem]</code>.</p>
-<h2>Related</h2>
-<ul><li><a href="reference__methodology.html">methodology</a> — DB-side schema that feeds gravitational_parameter, mass, radius into Principia</li><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — the Cartesian state vectors produced by §9–11 of that doc feed <code>principia_initial_state</code> body blocks here</li><li><a href="reference__mod-reference.html">mod-reference</a> — Principia install and dependency tier</li><li><a href="reference__mod-release-layout.html">mod-release-layout</a> — §2.1 covers how Principia patches are placed in <code>Patches/Principia/</code></li><li><a href="../phase3/alpha-centauri-a.md">alpha-centauri-a</a>, <a href="../phase3/alpha-centauri-b.md">alpha-centauri-b</a> — the canonical worked example downstream of Principia&#x27;s per-body gravity model</li></ul></div>
-</main>
+<div class="content-wrap">
+  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <article class="markdown-body" id="content"></article>
 </div>
-<script>
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
+</div>
+<script type="text/markdown" id="md-en"># Principia CFG Technical Reference
+
+> Source: mockingbirdnest/Principia GitHub repo, wiki, and astronomy/*.cfg files  
+> Purpose: Reference for generating Principia-compatible CFG files for KSP planet packs
+
+> **Perspective.** This document is the **external Principia CFG API
+> reference** — the full set of nodes/keys Principia accepts and their
+> meanings, sourced from upstream code and docs. Independent of any
+> particular planet pack.
+>
+> For **NearStars-specific implementation** — which subset of nodes the
+> project actually emits, how `db/systems/*.json` fields map to CFG
+> values, what variants (Sol Real / Sol Quarter / RSS) are MVP-supported,
+> and the rationale for diverging from `:NEEDS:FOR[NearStarsSystem]` on
+> Principia patches — see the
+> [`principia-cfg` skill](../../.claude/skills/principia-cfg/SKILL.md).
+
+---
+
+## Overview
+
+Principia replaces KSP's patched-conic (sphere-of-influence) gravity with full N-body physics. It reads configuration from KSP's GameDatabase (same system as Kopernicus). Config nodes are discovered via `GameDatabase.Instance.GetAtMostOneNode(name)` — ModuleManager merging applies, and there must be **at most one** instance of each top-level node after all patches resolve.
+
+---
+
+## Top-Level CFG Nodes
+
+| Node name | Purpose |
+|---|---|
+| `principia_gravity_model` | Physical properties (mass, rotation, geopotential) |
+| `principia_initial_state` | Cartesian positions and velocities at a reference epoch |
+| `principia_numerics_blueprint` | Numerical integrator configuration |
+| `principia_draw_styles` | Trajectory visualization colors and line styles |
+| `principia_override_version_check` | Suppress KSP version mismatch fatal error |
+
+**Rule**: Each node may appear **at most once** after ModuleManager processing. Two `principia_gravity_model` roots = crash.
+
+---
+
+## `principia_gravity_model`
+
+Provides accurate rotational and gravitational parameters. Overrides values Principia would derive from `CelestialBody` fields. Optional — if absent, falls back to KSP's `gravParameter`, `angularV`, `initialRotation`.
+
+### Structure
+
+```cfg
+principia_gravity_model[:NEEDS[SomeMod]] {
+  body { ... }
+  body { ... }
 }
+```
+
+To patch from an addon:
+
+```cfg
+@principia_gravity_model:NEEDS[OPM] {
+  body { ... }
+}
+```
+
+### `body` node keys
+
+| Key | Type | Required | Notes |
+|---|---|---|---|
+| `name` | string | Yes | Must match `CelestialBody.name` (Kopernicus `Body { name = X }`), not `displayName` |
+| `gravitational_parameter` | quantity (m³/s²) | Conditional* | μ = GM. Required if `principia_initial_state` is present |
+| `reference_instant` | instant | No | Epoch for rotation reference. Default: `JD2451545.000000000` (J2000) |
+| `axis_right_ascension` | quantity (angle) | No | ICRF RA of north pole. Default: `-90 deg` |
+| `axis_declination` | quantity (angle) | No | ICRF Dec of north pole. Default: `90 deg` |
+| `reference_angle` | quantity (angle) | No | Prime meridian angle W₀ at `reference_instant`. Default: KSP's `initialRotation` |
+| `angular_frequency` | quantity (angle/time) | No | Sidereal rotation rate. Default: KSP's `angularV` |
+| `reference_radius` | quantity (length) | Conditional | Required if `j2` or `geopotential_row` is present |
+| `j2` | float | No | Unnormalized J₂ zonal harmonic. Mutually exclusive with `geopotential_row` |
+| `geopotential_row` | sub-node (repeating) | No | Full spherical harmonic geopotential. Mutually exclusive with `j2` |
+
+*`gravitational_parameter` is required when `principia_initial_state` is present.
+
+**Rotation model convention**: Follows IAU 2009 WG on Cartographic Coordinates. Default `-90 deg` / `90 deg` aligns pole with KSP's internal frame.
+
+### J2 example
+
+```cfg
+body {
+  name                    = Sun
+  gravitational_parameter = 1.3271244004193938e+11 km^3/s^2
+  reference_instant       = JD2451545.000000000
+  axis_right_ascension    = 286.13 deg
+  axis_declination        = 63.87 deg
+  reference_angle         = 84.176 deg
+  angular_frequency       = 14.1844000 deg / d
+  reference_radius        = 696000.0 km
+  j2                      = 2.11060885327268404e-07
+}
+```
+
+### Geopotential example
+
+```cfg
+body {
+  name             = Earth
+  reference_radius = 6378.1363 km
+  geopotential_row {
+    degree = 2
+    geopotential_column {
+      order = 0
+      cos   = -4.84169457320000017e-04
+      sin   = 0.0
+    }
+    geopotential_column {
+      order = 2
+      cos   = 2.43937341593980011e-06
+      sin   = -1.40029401183640008e-06
+    }
+  }
+}
+```
+
+---
+
+## `principia_initial_state`
+
+Provides Cartesian initial conditions for every body in an inertial frame. If **absent**, Principia derives initial states from KSP's Keplerian orbital elements (Jacobi coordinates). If **present**, both this node and `principia_gravity_model` are required and must cover every body.
+
+### Structure
+
+```cfg
+principia_initial_state[:NEEDS[RealSolarSystem]] {
+  game_epoch         = JD2433647.5
+  solar_system_epoch = JD2433282.500000000
+  body { ... }
+  body { ... }
+}
+```
+
+### Top-level fields
+
+| Key | Type | Notes |
+|---|---|---|
+| `game_epoch` | instant | KSP Universal Time 0 mapped to a real instant (in-game start date) |
+| `solar_system_epoch` | instant | Epoch at which state vectors are valid. Must be ≤ `game_epoch`. Principia integrates forward from here. |
+
+**Epoch note**: `solar_system_epoch` is the JPL data reference epoch; `game_epoch` is the RSS/Sol game start date. Principia pre-integrates the gap at load time.
+
+### `body` node keys
+
+| Key | Type | Required | Notes |
+|---|---|---|---|
+| `name` | string | Yes | Must match KSP body name |
+| `x`, `y`, `z` | quantity (length) | Yes | Position in barycentric inertial frame |
+| `vx`, `vy`, `vz` | quantity (length/time) | Yes | Velocity in barycentric inertial frame |
+
+**Coordinate frame**: Barycentric inertial frame, axes aligned to Unity world frame, origin at solar system barycentre.
+
+### Example
+
+```cfg
+principia_initial_state:NEEDS[RealSolarSystem] {
+  game_epoch         = JD2433647.5
+  solar_system_epoch = JD2433282.500000000
+  body {
+    name = Earth
+    x    = -2.720318042296709e+07 km
+    y    = +1.329407956490104e+08 km
+    z    = +5.764165538717468e+07 km
+    vx   = -2.975363625990147e+01 km/s
+    vy   = -5.189341029926219e+00 km/s
+    vz   = -2.251484908750744e+00 km/s
+  }
+}
+```
+
+---
+
+## `principia_numerics_blueprint`
+
+Controls numerical integration algorithms. Optional — Principia uses compiled-in defaults if absent.
+
+### Structure
+
+```cfg
+principia_numerics_blueprint {
+  downsampling {
+    tolerance = 10 m
+  }
+  ephemeris {
+    fixed_step_size_integrator = QUINLAN_TREMAINE_1990_ORDER_12
+    integration_step_size      = 10 min
+    fitting_tolerance          = 1 mm
+    geopotential_tolerance     = 0x1.0p-24
+  }
+  history {
+    fixed_step_size_integrator = QUINLAN_1999_ORDER_8A
+    integration_step_size      = 10 s
+  }
+  psychohistory {
+    adaptive_step_size_integrator = DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM
+    length_integration_tolerance  = 1 mm
+    speed_integration_tolerance   = 1 mm/s
+  }
+}
+```
+
+### Sub-nodes
+
+- **`downsampling`**: `tolerance` (length) — max positional error for trajectory downsampling
+- **`ephemeris`**: Background celestial-body integration
+  - `fixed_step_size_integrator` — integrator name (see below)
+  - `integration_step_size` — step size (`10 min` standard for RSS/Sol)
+  - `fitting_tolerance` — accuracy for polynomial fitting
+  - `geopotential_tolerance` — threshold for dropping harmonics (e.g. `0x1.0p-24`)
+- **`history`**: Vessel past trajectory integrator
+- **`psychohistory`**: Vessel future/prediction integrator (adaptive step)
+
+### Supported integrators
+
+**Symmetric Linear Multistep (recommended for ephemeris):**
+- `QUINLAN_TREMAINE_1990_ORDER_8/10/12/14`
+- `QUINLAN_1999_ORDER_8A` / `QUINLAN_1999_ORDER_8B`
+
+**Symplectic Runge-Kutta-Nyström (SRKN):**
+- `BLANES_MOAN_2002_SRKN_6B` / `_11B` / `_14A`
+
+**Symplectic Partitioned Runge-Kutta (SPRK):**
+- `MCLACHLAN_1995_SB3A_4` / `_5`
+- `MCLACHLAN_ATELA_1992_ORDER_4_OPTIMAL` / `ORDER_5_OPTIMAL`
+- `OKUNBOR_SKEEL_1994_ORDER_6_METHOD_13`
+
+**Adaptive (psychohistory only):**
+- `DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM`
+
+---
+
+## `principia_draw_styles`
+
+```cfg
+principia_draw_styles {
+  history           { colour = #aa0000  style = solid  }
+  prediction        { colour = #00ff00  style = dashed }
+  flight_plan       { colour = #0000ff  style = faded  }
+  burn              { colour = #ffff00  style = solid  }
+  target_history    { colour = #ff8800  style = dashed }
+  target_prediction { colour = #ff00ff  style = faded  }
+}
+```
+
+- `colour`: HTML RGB hex (`#rrggbb`)
+- `style`: `solid`, `dashed`, or `faded`
+
+---
+
+## `principia_override_version_check`
+
+```cfg
+principia_override_version_check {
+  version = 1.12.5
+  version = 1.12.4
+}
+```
+
+Converts the fatal KSP version mismatch crash into a logged warning. Multiple `version` values allowed.
+
+---
+
+## Type Reference
+
+### `quantity`
+
+Format: `<number> <unit>` — number uses `strtod` syntax (supports scientific notation).
+
+Examples: `3.986004e+14 m^3/s^2`, `-2.975 km/s`, `14.1844 deg / d`, `10 min`, `1 mm`, `0.5 au`
+
+**ModuleManager math operators (`*=`, `+=`) do NOT work on quantity values.** Always supply the full computed value.
+
+| Dimension | Supported units |
+|---|---|
+| Length | `μm`, `mm`, `cm`, `m`, `km`, `au` |
+| Time | `ms`, `s`, `min`, `h`, `d` |
+| Angle | `deg`, `°`, `rad` |
+| Compound | `km^3/s^2`, `deg / d`, `km/s`, `m^3/s^2`, `m s^-1` |
+
+### `instant` (Terrestrial Time)
+
+| Format | Example |
+|---|---|
+| Julian Date | `JD2451545.000000000` |
+| Modified Julian Date | `MJD51544.5` |
+| ISO 8601 (TT) | `2000-01-01T12:00:00` |
+
+J2000 = `JD2451545.0` = `2000-01-01T12:00:00` TT.
+
+---
+
+## Kopernicus Integration
+
+### Body discovery
+
+Principia discovers bodies from `FlightGlobals.Bodies` (populated by Kopernicus). It does **not** read Kopernicus `Body {}` nodes directly. The `name` in `body { name = X }` must match `CelestialBody.name` (= Kopernicus `Body { name = X }`), not `displayName`.
+
+### Two initialization paths
+
+**Path 1 — Cartesian (with `principia_initial_state`):**
+- Uses `InsertCelestialAbsoluteCartesian()` for each body
+- Both `principia_initial_state` and `principia_gravity_model` required
+- Every body in `FlightGlobals.Bodies` must have entries in both nodes
+- `gravitational_parameter` is required in every `body`
+- Kopernicus Keplerian elements are ignored
+- Mode: Sol-Configs, RealSolarSystem
+
+**Path 2 — Keplerian fallback (no `principia_initial_state`):**
+- Uses `InsertCelestialJacobiKeplerian()` for each body
+- Uses KSP/Kopernicus orbital elements as osculating elements (Jacobi coordinates)
+- `principia_gravity_model` is optional; supplements CelestialBody data
+- `gravitational_parameter` optional (defaults to `body.gravParameter`)
+- Mode: stock KSP, fictional planet packs
+
+### Stock KSP Jool system stabilization
+
+Without `principia_initial_state`, Principia automatically applies `StabilizeKSP()` in Keplerian mode:
+- Vall's and Tylo's mean motions shifted out of 1:2:4 resonance with Laythe
+- Bop's orbit flipped retrograde
+
+Applied in code, not CFG. Does not apply when `principia_initial_state` is present.
+
+### Tidal locking
+
+Principia forcibly sets `body.tidallyLocked = false` for all bodies. Tidally locked bodies must set `angular_frequency` to match their orbital period via `principia_gravity_model`.
+
+---
+
+## Practical Patterns
+
+### Pattern 1: Fictional planet pack (Keplerian mode)
+
+Only `principia_gravity_model` needed. No `principia_initial_state`. Principia derives positions from Kopernicus orbits.
+
+```cfg
+principia_gravity_model:NEEDS[MyPack] {
+  body {
+    name                    = MyStar
+    gravitational_parameter = 1.8e+18 m^3/s^2
+    axis_right_ascension    = -90 deg
+    axis_declination        = 89.5 deg
+    reference_angle         = 0 deg
+    angular_frequency       = 2.1e-05 rad/s
+  }
+  body {
+    name                    = MyPlanet
+    gravitational_parameter = 4.5e+12 m^3/s^2
+    axis_right_ascension    = -90 deg
+    axis_declination        = 75.0 deg
+  }
+}
+```
+
+### Pattern 2: Patching an existing gravity model
+
+```cfg
+@principia_gravity_model:FOR[MyPack]:NEEDS[MyPack] {
+  body {
+    name                    = NewMoon
+    gravitational_parameter = 8.5e+10 m^3/s^2
+    axis_right_ascension    = 120 deg
+    axis_declination        = -15.0 deg
+  }
+}
+```
+
+### Pattern 3: NearStars — Sol-Configs + RSS dual support
+
+NearStars runs on top of Sol-Configs (ballisticfox). RSS compatibility is a future target — the Cartesian state vectors below are valid for both variants since they share the same `solar_system_epoch` and `game_epoch`. Sol-Configs (and eventually RSS) ships its own `principia_gravity_model` and `principia_initial_state`, so NearStars only patches in its own bodies.
+
+**Epoch reference:**
+
+| Variant | `solar_system_epoch` | `game_epoch` | NEEDS tag |
+|---|---|---|---|
+| Sol real scale | JD2433282.5 (1950-Jan-01) | JD2433647.5 (1951-Jan-01) | `SolSystem,!SolQuarterScale` |
+| Sol quarter scale | JD2433465.0 | — | `SolSystem,SolQuarterScale` |
+| RSS | JD2433282.5 (1950-Jan-01) | JD2433647.5 (1951-Jan-01) | `RSSConfig` |
+
+Sol real-scale and RSS share identical epochs → same Cartesian coords usable for both.  
+Sol quarter-scale has a different `solar_system_epoch` → needs separate coords.
+
+**gravity_model**: gravitational parameters are scale-independent → one patch per solar system mod (2 total).  
+**initial_state**: epoch differs per scale → 3 patches total.
+
+```cfg
+// gravity model — Sol (all scales)
+@principia_gravity_model:NEEDS[NearStarsSystem,SolSystem] {
+  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
+  // ... all NearStars bodies
+}
+
+// gravity model — RSS
+@principia_gravity_model:NEEDS[NearStarsSystem,RSSConfig] {
+  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
+  // ... all NearStars bodies (same values — duplication unavoidable with MM)
+}
+
+// initial state — Sol real scale (solar_system_epoch = JD2433282.5)
+@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,!SolQuarterScale] {
+  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
+  // ... all NearStars bodies
+}
+
+// initial state — RSS (solar_system_epoch = JD2433282.5, same coords as Sol real)
+@principia_initial_state:NEEDS[NearStarsSystem,RSSConfig] {
+  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
+  // ... all NearStars bodies
+}
+
+// initial state — Sol quarter scale (solar_system_epoch = JD2433465.0, different coords)
+@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,SolQuarterScale] {
+  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
+  // ... all NearStars bodies
+}
+```
+
+**Coordinate values**: `x/y/z` = physical distance from Sol barycentre (parsecs → km). `vx/vy/vz` = proper motion + radial velocity in barycentric frame (km/s). At stellar distances, gravitational influence on the Sol system is negligible — the entries exist solely to satisfy Principia's consistency check.
+
+---
+
+## Key Constraints
+
+1. At most one of each top-level node after ModuleManager processing.
+2. If `principia_initial_state` is present → `principia_gravity_model` is mandatory and must cover every body in `FlightGlobals.Bodies`.
+3. If `principia_initial_state` is present → `gravitational_parameter` is required in every `body` of `principia_gravity_model`.
+4. `j2` and `geopotential_row` are mutually exclusive on the same body.
+5. `reference_radius` is required if and only if `j2` or any `geopotential_row` is present.
+6. ModuleManager math operators (`*=`, `+=`) do not work on `quantity` values.
+7. Body `name` must match `CelestialBody.name`, not `displayName`.
+8. `solar_system_epoch` ≤ `game_epoch`.
+
+---
+
+## IAU Nominal Unit Constants
+
+Used in Principia's TRAPPIST configs as unit shorthand:
+
+| Symbol | Value |
+|---|---|
+| `GM☉` | 1.327124400419394e+20 m³/s² |
+| `GM🜨` | 3.986004e+14 m³/s² |
+
+---
+
+## Shipped File Locations (Principia repo)
+
+| Source path | Loaded when |
+|---|---|
+| `astronomy/sol_gravity_model.cfg` | `:NEEDS[RealSolarSystem]` |
+| `astronomy/sol_initial_state_jd_2433282_500000000.cfg` | `:NEEDS[RealSolarSystem]` |
+| `astronomy/sol_numerics_blueprint.cfg` | `:NEEDS[RealSolarSystem]` |
+
+Sol-Configs ships its own `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cfg`, `Quarter_Sol-GravityModel.cfg`, `Quarter_Sol-InitialState.cfg` with `:FOR[SolSystem]`.
+
+## Related
+
+- [methodology](reference__methodology.html) — DB-side schema that feeds gravitational_parameter, mass, radius into Principia
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — the Cartesian state vectors produced by §9–11 of that doc feed `principia_initial_state` body blocks here
+- [mod-reference](reference__mod-reference.html) — Principia install and dependency tier
+- [mod-release-layout](reference__mod-release-layout.html) — §2.1 covers how Principia patches are placed in `Patches/Principia/`
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — the canonical worked example downstream of Principia's per-body gravity model
+</script>
+<script type="text/markdown" id="md-ko"># Principia CFG 기술 참조
+
+> 출처: mockingbirdnest/Principia GitHub 저장소, 위키, `astronomy/*.cfg` 파일  
+> 목적: KSP 행성 팩용 Principia 호환 CFG 파일 생성을 위한 참조 문서
+
+> **관점.** 이 문서는 **외부 Principia CFG API 레퍼런스** 입니다 — Principia 가 받아들이는 노드/키의 전체 집합과 그 의미를 상위 코드와 문서로부터 정리한 것. 특정 행성 팩과 독립적입니다.
+>
+> **NearStars 고유 구현** — 실제로 emit 하는 노드 부분집합, `db/systems/*.json` 필드 → CFG 값 매핑, 지원 변형 (Sol Real / Sol Quarter / RSS), Principia 패치에서 `:NEEDS:FOR[NearStarsSystem]` 컨벤션을 벗어난 이유 — 는 [`principia-cfg` 스킬](../../../.claude/skills/principia-cfg/SKILL.md) 참고.
+
+---
+
+## 개요
+
+Principia는 KSP의 패치드-코닉(영향권) 중력을 완전한 N체 물리학으로 대체합니다. KSP의 GameDatabase에서 설정을 읽으며(Kopernicus와 동일한 시스템), `GameDatabase.Instance.GetAtMostOneNode(name)`를 통해 Config 노드를 탐색합니다. ModuleManager 머지가 적용되며, 모든 패치 처리 이후 각 최상위 노드는 **최대 하나**만 존재해야 합니다.
+
+---
+
+## 최상위 CFG 노드
+
+| 노드 이름 | 목적 |
+|---|---|
+| `principia_gravity_model` | 물리적 속성 (질량, 자전, 지오퍼텐셜) |
+| `principia_initial_state` | 기준 에포크에서의 직교 좌표 위치 및 속도 |
+| `principia_numerics_blueprint` | 수치 적분기 설정 |
+| `principia_draw_styles` | 궤적 시각화 색상 및 선 스타일 |
+| `principia_override_version_check` | KSP 버전 불일치 치명적 오류 억제 |
+
+**규칙**: ModuleManager 처리 이후 각 노드는 **최대 하나**만 존재할 수 있습니다. `principia_gravity_model` 루트가 두 개이면 충돌합니다.
+
+---
+
+## `principia_gravity_model`
+
+정확한 자전 및 중력 매개변수를 제공합니다. Principia가 `CelestialBody` 필드에서 파생할 값들을 덮어씁니다. 선택 사항이며, 없을 경우 KSP의 `gravParameter`, `angularV`, `initialRotation`으로 폴백합니다.
+
+### 구조
+
+```cfg
+principia_gravity_model[:NEEDS[SomeMod]] {
+  body { ... }
+  body { ... }
+}
+```
+
+애드온에서 패치하려면.
+
+```cfg
+@principia_gravity_model:NEEDS[OPM] {
+  body { ... }
+}
+```
+
+### `body` 노드 키
+
+| 키 | 타입 | 필수 여부 | 비고 |
+|---|---|---|---|
+| `name` | string | Yes | `displayName`이 아닌 `CelestialBody.name` (Kopernicus `Body { name = X }`)과 일치해야 합니다 |
+| `gravitational_parameter` | quantity (m³/s²) | 조건부* | μ = GM. `principia_initial_state`가 존재할 경우 필수 |
+| `reference_instant` | instant | No | 자전 기준 에포크. 기본값: `JD2451545.000000000` (J2000) |
+| `axis_right_ascension` | quantity (angle) | No | 북극의 ICRF 적경. 기본값: `-90 deg` |
+| `axis_declination` | quantity (angle) | No | 북극의 ICRF 적위. 기본값: `90 deg` |
+| `reference_angle` | quantity (angle) | No | `reference_instant` 시점의 본초 자오선 각도 W₀. 기본값: KSP의 `initialRotation` |
+| `angular_frequency` | quantity (angle/time) | No | 항성 자전 속도. 기본값: KSP의 `angularV` |
+| `reference_radius` | quantity (length) | 조건부 | `j2` 또는 `geopotential_row`가 존재할 경우 필수 |
+| `j2` | float | No | 비정규화된 J₂ 대역 조화함수. `geopotential_row`와 상호 배타적 |
+| `geopotential_row` | sub-node (반복) | No | 완전한 구면 조화함수 지오퍼텐셜. `j2`와 상호 배타적 |
+
+*`principia_initial_state`가 존재할 경우 `gravitational_parameter`는 필수입니다.
+
+**자전 모델 규약**: IAU 2009 WG on Cartographic Coordinates를 따릅니다. 기본값 `-90 deg` / `90 deg`는 극을 KSP 내부 프레임에 맞춥니다.
+
+### J2 예시
+
+```cfg
+body {
+  name                    = Sun
+  gravitational_parameter = 1.3271244004193938e+11 km^3/s^2
+  reference_instant       = JD2451545.000000000
+  axis_right_ascension    = 286.13 deg
+  axis_declination        = 63.87 deg
+  reference_angle         = 84.176 deg
+  angular_frequency       = 14.1844000 deg / d
+  reference_radius        = 696000.0 km
+  j2                      = 2.11060885327268404e-07
+}
+```
+
+### 지오퍼텐셜 예시
+
+```cfg
+body {
+  name             = Earth
+  reference_radius = 6378.1363 km
+  geopotential_row {
+    degree = 2
+    geopotential_column {
+      order = 0
+      cos   = -4.84169457320000017e-04
+      sin   = 0.0
+    }
+    geopotential_column {
+      order = 2
+      cos   = 2.43937341593980011e-06
+      sin   = -1.40029401183640008e-06
+    }
+  }
+}
+```
+
+---
+
+## `principia_initial_state`
+
+관성 좌표계에서 모든 천체의 직교 초기 조건을 제공합니다. **없을 경우**, Principia는 KSP의 케플러 궤도 요소(야코비 좌표)에서 초기 상태를 파생합니다. **있을 경우**, 이 노드와 `principia_gravity_model` 모두 필수이며 모든 천체를 포함해야 합니다.
+
+### 구조
+
+```cfg
+principia_initial_state[:NEEDS[RealSolarSystem]] {
+  game_epoch         = JD2433647.5
+  solar_system_epoch = JD2433282.500000000
+  body { ... }
+  body { ... }
+}
+```
+
+### 최상위 필드
+
+| 키 | 타입 | 비고 |
+|---|---|---|
+| `game_epoch` | instant | KSP Universal Time 0이 매핑되는 실제 시각 (인게임 시작 날짜) |
+| `solar_system_epoch` | instant | 상태 벡터가 유효한 에포크. `game_epoch` 이하여야 합니다. Principia는 이 시점부터 순방향으로 적분합니다. |
+
+**에포크 참고**: `solar_system_epoch`는 JPL 데이터 기준 에포크이고, `game_epoch`는 RSS/Sol 게임 시작 날짜입니다. Principia는 로드 시 그 간격을 사전 적분합니다.
+
+### `body` 노드 키
+
+| 키 | 타입 | 필수 여부 | 비고 |
+|---|---|---|---|
+| `name` | string | Yes | KSP 천체 이름과 일치해야 합니다 |
+| `x`, `y`, `z` | quantity (length) | Yes | 중심 관성 프레임에서의 위치 |
+| `vx`, `vy`, `vz` | quantity (length/time) | Yes | 중심 관성 프레임에서의 속도 |
+
+**좌표 프레임**: 태양계 질량 중심이 원점인 중심 관성 프레임이며, 축은 Unity 월드 프레임과 정렬됩니다.
+
+### 예시
+
+```cfg
+principia_initial_state:NEEDS[RealSolarSystem] {
+  game_epoch         = JD2433647.5
+  solar_system_epoch = JD2433282.500000000
+  body {
+    name = Earth
+    x    = -2.720318042296709e+07 km
+    y    = +1.329407956490104e+08 km
+    z    = +5.764165538717468e+07 km
+    vx   = -2.975363625990147e+01 km/s
+    vy   = -5.189341029926219e+00 km/s
+    vz   = -2.251484908750744e+00 km/s
+  }
+}
+```
+
+---
+
+## `principia_numerics_blueprint`
+
+수치 적분 알고리즘을 제어합니다. 선택 사항이며, 없을 경우 Principia는 컴파일된 기본값을 사용합니다.
+
+### 구조
+
+```cfg
+principia_numerics_blueprint {
+  downsampling {
+    tolerance = 10 m
+  }
+  ephemeris {
+    fixed_step_size_integrator = QUINLAN_TREMAINE_1990_ORDER_12
+    integration_step_size      = 10 min
+    fitting_tolerance          = 1 mm
+    geopotential_tolerance     = 0x1.0p-24
+  }
+  history {
+    fixed_step_size_integrator = QUINLAN_1999_ORDER_8A
+    integration_step_size      = 10 s
+  }
+  psychohistory {
+    adaptive_step_size_integrator = DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM
+    length_integration_tolerance  = 1 mm
+    speed_integration_tolerance   = 1 mm/s
+  }
+}
+```
+
+### 하위 노드
+
+- **`downsampling`**: `tolerance` (length) — 궤적 다운샘플링의 최대 위치 오차
+- **`ephemeris`**: 배경 천체 적분
+  - `fixed_step_size_integrator` — 적분기 이름 (아래 참조)
+  - `integration_step_size` — 스텝 크기 (RSS/Sol 표준: `10 min`)
+  - `fitting_tolerance` — 다항식 피팅 정확도
+  - `geopotential_tolerance` — 조화함수 제거 임계값 (예: `0x1.0p-24`)
+- **`history`**: 비행체 과거 궤적 적분기
+- **`psychohistory`**: 비행체 미래/예측 적분기 (가변 스텝)
+
+### 지원 적분기
+
+**Symmetric Linear Multistep (에페메리스에 권장).**
+- `QUINLAN_TREMAINE_1990_ORDER_8/10/12/14`
+- `QUINLAN_1999_ORDER_8A` / `QUINLAN_1999_ORDER_8B`
+
+**Symplectic Runge-Kutta-Nyström (SRKN).**
+- `BLANES_MOAN_2002_SRKN_6B` / `_11B` / `_14A`
+
+**Symplectic Partitioned Runge-Kutta (SPRK).**
+- `MCLACHLAN_1995_SB3A_4` / `_5`
+- `MCLACHLAN_ATELA_1992_ORDER_4_OPTIMAL` / `ORDER_5_OPTIMAL`
+- `OKUNBOR_SKEEL_1994_ORDER_6_METHOD_13`
+
+**Adaptive (psychohistory 전용).**
+- `DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM`
+
+---
+
+## `principia_draw_styles`
+
+```cfg
+principia_draw_styles {
+  history           { colour = #aa0000  style = solid  }
+  prediction        { colour = #00ff00  style = dashed }
+  flight_plan       { colour = #0000ff  style = faded  }
+  burn              { colour = #ffff00  style = solid  }
+  target_history    { colour = #ff8800  style = dashed }
+  target_prediction { colour = #ff00ff  style = faded  }
+}
+```
+
+- `colour`: HTML RGB 16진수 (`#rrggbb`)
+- `style`: `solid`, `dashed`, 또는 `faded`
+
+---
+
+## `principia_override_version_check`
+
+```cfg
+principia_override_version_check {
+  version = 1.12.5
+  version = 1.12.4
+}
+```
+
+KSP 버전 불일치 치명적 충돌을 로그 경고로 대체합니다. 여러 `version` 값을 허용합니다.
+
+---
+
+## 타입 참조
+
+### `quantity`
+
+형식: `<number> <unit>` — 숫자는 `strtod` 구문을 사용합니다 (과학적 표기법 지원).
+
+예시: `3.986004e+14 m^3/s^2`, `-2.975 km/s`, `14.1844 deg / d`, `10 min`, `1 mm`, `0.5 au`
+
+**ModuleManager 수식 연산자 (`*=`, `+=`)는 quantity 값에 동작하지 않습니다.** 항상 완전히 계산된 값을 제공하십시오.
+
+| 차원 | 지원 단위 |
+|---|---|
+| Length | `μm`, `mm`, `cm`, `m`, `km`, `au` |
+| Time | `ms`, `s`, `min`, `h`, `d` |
+| Angle | `deg`, `°`, `rad` |
+| Compound | `km^3/s^2`, `deg / d`, `km/s`, `m^3/s^2`, `m s^-1` |
+
+### `instant` (지구시)
+
+| 형식 | 예시 |
+|---|---|
+| Julian Date | `JD2451545.000000000` |
+| Modified Julian Date | `MJD51544.5` |
+| ISO 8601 (TT) | `2000-01-01T12:00:00` |
+
+J2000 = `JD2451545.0` = `2000-01-01T12:00:00` TT.
+
+---
+
+## Kopernicus 연동
+
+### 천체 탐색
+
+Principia는 `FlightGlobals.Bodies`(Kopernicus가 채움)에서 천체를 탐색합니다. Kopernicus `Body {}` 노드를 직접 읽지는 않습니다. `body { name = X }`의 `name`은 `displayName`이 아닌 `CelestialBody.name` (= Kopernicus `Body { name = X }`)과 일치해야 합니다.
+
+### 두 가지 초기화 경로
+
+**경로 1 — 직교 좌표 (`principia_initial_state` 있음).**
+- 각 천체에 `InsertCelestialAbsoluteCartesian()`을 사용합니다
+- `principia_initial_state`와 `principia_gravity_model` 모두 필수
+- `FlightGlobals.Bodies`의 모든 천체가 두 노드에 항목을 가져야 합니다
+- 모든 `body`에 `gravitational_parameter`가 필수
+- Kopernicus 케플러 요소는 무시됩니다
+- 적용 모드: Sol-Configs, RealSolarSystem
+
+**경로 2 — 케플러 폴백 (`principia_initial_state` 없음).**
+- 각 천체에 `InsertCelestialJacobiKeplerian()`을 사용합니다
+- KSP/Kopernicus 궤도 요소를 접촉 요소(야코비 좌표)로 사용합니다
+- `principia_gravity_model`은 선택 사항이며 `CelestialBody` 데이터를 보완합니다
+- `gravitational_parameter`는 선택 사항 (기본값: `body.gravParameter`)
+- 적용 모드: stock KSP, 가상 행성 팩
+
+### Stock KSP Jool 시스템 안정화
+
+`principia_initial_state` 없이 케플러 모드에서 Principia는 자동으로 `StabilizeKSP()`를 적용합니다.
+- Vall과 Tylo의 평균 운동이 Laythe와의 1:2:4 공명에서 벗어나도록 조정됩니다
+- Bop의 궤도가 역행으로 반전됩니다
+
+코드에서 적용되며, CFG에서는 적용되지 않습니다. `principia_initial_state`가 있을 때는 적용되지 않습니다.
+
+### 조석 고정
+
+Principia는 모든 천체에 강제로 `body.tidallyLocked = false`를 설정합니다. 조석 고정 천체는 `principia_gravity_model`에서 `angular_frequency`를 궤도 주기에 맞게 설정해야 합니다.
+
+---
+
+## 실용 패턴
+
+### 패턴 1: 가상 행성 팩 (케플러 모드)
+
+`principia_gravity_model`만 필요합니다. `principia_initial_state`는 없습니다. Principia가 Kopernicus 궤도에서 위치를 파생합니다.
+
+```cfg
+principia_gravity_model:NEEDS[MyPack] {
+  body {
+    name                    = MyStar
+    gravitational_parameter = 1.8e+18 m^3/s^2
+    axis_right_ascension    = -90 deg
+    axis_declination        = 89.5 deg
+    reference_angle         = 0 deg
+    angular_frequency       = 2.1e-05 rad/s
+  }
+  body {
+    name                    = MyPlanet
+    gravitational_parameter = 4.5e+12 m^3/s^2
+    axis_right_ascension    = -90 deg
+    axis_declination        = 75.0 deg
+  }
+}
+```
+
+### 패턴 2: 기존 gravity model 패치
+
+```cfg
+@principia_gravity_model:FOR[MyPack]:NEEDS[MyPack] {
+  body {
+    name                    = NewMoon
+    gravitational_parameter = 8.5e+10 m^3/s^2
+    axis_right_ascension    = 120 deg
+    axis_declination        = -15.0 deg
+  }
+}
+```
+
+### 패턴 3: NearStars — Sol-Configs + RSS 이중 지원
+
+NearStars는 Sol-Configs(ballisticfox) 위에서 실행됩니다. RSS 호환은 향후 목표이며, Sol Real 과 RSS 가 동일한 `solar_system_epoch` 및 `game_epoch` 을 공유하므로 동일한 직교 좌표 상태 벡터가 양쪽에 그대로 사용 가능합니다. Sol-Configs (및 향후 RSS) 가 자체 `principia_gravity_model` 과 `principia_initial_state` 를 포함하므로 NearStars 는 자체 천체만 패치합니다.
+
+**에포크 참조.**
+
+| 변형 | `solar_system_epoch` | `game_epoch` | NEEDS 태그 |
+|---|---|---|---|
+| Sol real scale | JD2433282.5 (1950-Jan-01) | JD2433647.5 (1951-Jan-01) | `SolSystem,!SolQuarterScale` |
+| Sol quarter scale | JD2433465.0 | — | `SolSystem,SolQuarterScale` |
+| RSS | JD2433282.5 (1950-Jan-01) | JD2433647.5 (1951-Jan-01) | `RSSConfig` |
+
+Sol real-scale과 RSS는 동일한 에포크를 공유하므로 직교 좌표도 동일하게 사용할 수 있습니다.
+Sol quarter-scale은 `solar_system_epoch`가 다르므로 별도의 좌표가 필요합니다.
+
+**gravity_model**: 중력 매개변수는 스케일과 무관하므로 태양계 모드당 하나의 패치 (총 2개).
+**initial_state**: 스케일별로 에포크가 다르므로 총 3개의 패치.
+
+```cfg
+// gravity model — Sol (all scales)
+@principia_gravity_model:NEEDS[NearStarsSystem,SolSystem] {
+  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
+  // ... all NearStars bodies
+}
+
+// gravity model — RSS
+@principia_gravity_model:NEEDS[NearStarsSystem,RSSConfig] {
+  body { name = AlphaCentauriA  gravitational_parameter = ...  axis_right_ascension = ...  axis_declination = ... }
+  // ... all NearStars bodies (same values — duplication unavoidable with MM)
+}
+
+// initial state — Sol real scale (solar_system_epoch = JD2433282.5)
+@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,!SolQuarterScale] {
+  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
+  // ... all NearStars bodies
+}
+
+// initial state — RSS (solar_system_epoch = JD2433282.5, same coords as Sol real)
+@principia_initial_state:NEEDS[NearStarsSystem,RSSConfig] {
+  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
+  // ... all NearStars bodies
+}
+
+// initial state — Sol quarter scale (solar_system_epoch = JD2433465.0, different coords)
+@principia_initial_state:NEEDS[NearStarsSystem,SolSystem,SolQuarterScale] {
+  body { name = AlphaCentauriA  x = ...  y = ...  z = ...  vx = ...  vy = ...  vz = ... }
+  // ... all NearStars bodies
+}
+```
+
+**좌표 값**: `x/y/z`는 Sol 중심에서의 물리적 거리 (파섹 → km). `vx/vy/vz`는 중심 프레임에서의 고유 운동 + 시선 속도 (km/s). 항성 거리에서는 Sol 시스템에 대한 중력 영향이 무시할 수 있는 수준이므로, 항목은 오직 Principia의 일관성 검사를 통과하기 위해 존재합니다.
+
+---
+
+## 핵심 제약 사항
+
+1. ModuleManager 처리 후 각 최상위 노드는 최대 하나만 존재할 수 있습니다.
+2. `principia_initial_state`가 있으면 `principia_gravity_model`은 필수이며 `FlightGlobals.Bodies`의 모든 천체를 포함해야 합니다.
+3. `principia_initial_state`가 있으면 `principia_gravity_model`의 모든 `body`에 `gravitational_parameter`가 필수입니다.
+4. `j2`와 `geopotential_row`는 동일 천체에서 상호 배타적입니다.
+5. `j2` 또는 `geopotential_row`가 있을 경우에만 `reference_radius`가 필수입니다.
+6. ModuleManager 수식 연산자 (`*=`, `+=`)는 `quantity` 값에 동작하지 않습니다.
+7. 천체 `name`은 `displayName`이 아닌 `CelestialBody.name`과 일치해야 합니다.
+8. `solar_system_epoch` ≤ `game_epoch`.
+
+---
+
+## IAU 명목 단위 상수
+
+Principia의 TRAPPIST 설정에서 단위 약어로 사용됩니다.
+
+| 기호 | 값 |
+|---|---|
+| `GM☉` | 1.327124400419394e+20 m³/s² |
+| `GM🜨` | 3.986004e+14 m³/s² |
+
+---
+
+## 제공 파일 위치 (Principia 저장소)
+
+| 소스 경로 | 로드 시점 |
+|---|---|
+| `astronomy/sol_gravity_model.cfg` | `:NEEDS[RealSolarSystem]` |
+| `astronomy/sol_initial_state_jd_2433282_500000000.cfg` | `:NEEDS[RealSolarSystem]` |
+| `astronomy/sol_numerics_blueprint.cfg` | `:NEEDS[RealSolarSystem]` |
+
+Sol-Configs는 `:FOR[SolSystem]`으로 자체 `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cfg`, `Quarter_Sol-GravityModel.cfg`, `Quarter_Sol-InitialState.cfg`를 제공합니다.
+
+## Related
+
+- [methodology](reference__methodology.html) — Principia 의 gravitational_parameter, mass, radius 에 공급되는 DB 측 스키마.
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — 해당 문서 §9–11 이 만들어 내는 Cartesian 상태 벡터가 여기 `principia_initial_state` 의 body 블록에 공급됩니다.
+- [mod-reference](reference__mod-reference.html) — Principia 설치와 의존성 티어.
+- [mod-release-layout](reference__mod-release-layout.html) — §2.1 이 Principia 패치를 `Patches/Principia/` 에 어떻게 배치하는지 다룹니다.
+- [alpha-centauri-a](../phase3/alpha-centauri-a.md), [alpha-centauri-b](../phase3/alpha-centauri-b.md) — Principia 의 body 별 gravity 모델 다운스트림의 정전 워크드 예시.
+</script>
+<script>
+const srcs = {};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], { gfm: true, breaks: false });
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
+}
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+});
 </script>
 </body>
 </html>

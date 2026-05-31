@@ -5,70 +5,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Universe Sandbox vs Principia n-body engine comparison · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="side">
-<div class="brand">NearStars <span>docs</span></div>
+<a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
@@ -83,157 +72,651 @@ body { margin: 0 }
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i on" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
-<main class="docmain">
-<div class="topbar"><div class="seg" id="lang-seg"><button class="on" data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
-<div data-langbody="ko"><h1>Universe Sandbox vs Principia n-body 엔진 비교</h1>
-<p><b>NearStars 와의 연관성.</b> NearStars 는 n-body KSP 모드인 <b>Principia</b> 에 각 컴포넌트의 ICRF Cartesian 상태 <code>(x, y, z, vx, vy, vz)</code> 를 <code>JD2433282.5</code> 시점 기준으로 공급하고, Principia 가 시스템 전체를 전방 적분합니다. 앞으로 가능한 방향 중 하나는 <b>커스텀 Principia 브랜치</b> (슐츠 와 함께) 입니다. 그래서 이 노트는 Stellarium 비교와는 다른 질문을 던집니다. &quot;우리 컨벤션이 맞는가&quot; 가 아니라 **&quot;실시간 인터랙티브 n-body 를 위해 Universe Sandbox 가 실제로 해낸 것 중 Principia 브랜치가 가져올 법한 것은 무엇이고, 무엇이 US² 의 목표에 종속된 결과라 <i>가져오면 안 되는 것</i>인가&quot;** 입니다. 자매 노트는 <a href="plans__stellarium-binary-orbit-comparison.html"><code>stellarium-binary-orbit-comparison.md</code></a> 를 참고하시기 바랍니다.</p>
-<p><b>⚠ 출처 품질에 관한 주의(중요).</b> Stellarium 노트는 Stellarium 이 오픈소스이기에 <b>실제 소스 라인</b>(<code>Star.hpp#L364-L373</code>) 을 인용할 수 있었습니다. <b>반면 Universe Sandbox 는 클로즈드소스 상용 소프트웨어입니다.</b> 여기 적힌 내용은 모두 공개된 개발자 발언(개발 블로그, FAQ, 팀원의 Steam 포럼 게시글) 또는 팀이 관리하는 위키에서 온 것입니다. 각 주장에는 다음 태그를 붙였습니다.</p>
-<ul><li><b>[DEV]</b> — 개발자 직접 발언(블로그 / FAQ / 포럼 인용).</li><li><b>[WIKI]</b> — 팀 관리 위키, 개발자 발언 그대로는 아님.</li><li><b>[INFER]</b> — 관찰된 동작 / 설계로부터 추론.</li><li><b>[NO SRC]</b> — 출처를 찾지 못함. 미상으로 취급.</li></ul>
-<p>Principia 쪽은 오픈소스라 신뢰도가 높습니다(위키 + 배포된 <code>sol_numerics_blueprint.cfg</code> + 소스 헤더). 그쪽의 divergence flag 는 충실도 차이가 아니라 사소한 표현 차이에 불과합니다.</p>
-<p><b>범위.</b> 읽기 전용 연구. 이 레포에 코드 변경 없음.</p>
-<p><b>외부 참조.</b></p>
-<ul><li>Universe Sandbox 개발 블로그: https://universesandbox.com/blog/</li><li>US² FAQ: https://universesandbox.com/faq/ (+ legacy /faq/original/)</li><li>US² integrator 포럼 스레드(n-body 리드 개발자 &quot;Greenleaf&quot;): https://steamcommunity.com/app/230290/discussions/0/520518053429453785/</li><li>Principia 위키: https://github.com/mockingbirdnest/Principia/wiki</li><li>Principia Jool-stability 노트(symplectic 근거): https://github.com/mockingbirdnest/Principia/wiki/On-the-dynamical-stability-of-Principia&#x27;s-modified-Jool-system</li><li>우리 파이프라인: <a href="reference__binary-epoch-pipeline.html"><code>../docs/reference/binary-epoch-pipeline.md</code></a>, <a href="reference__principia-cfg-reference.html"><code>../docs/reference/principia-cfg-reference.md</code></a></li></ul>
-<hr>
-<h2>1. Executive summary</h2>
-<div class="tbl"><table><thead><tr><th>질문</th><th>답</th></tr></thead><tbody><tr><td>수치적 목표가 같은가?</td><td><b>아니오.</b> US² 는 <b>실시간 인터랙티비티</b>(바디를 잡고 던지고, 충돌·파편화하며, 어떤 속도에서도 반응) 를 최적화합니다. Principia 는 고정된 초기 상태를 타임워프 하에서 <b>결정론적이고 장기 안정적으로 전방 적분</b>하는 데 최적화합니다.</td></tr><tr><td>기본 integrator</td><td>US²: <b>PEFRL</b>(4차 symplectic) [WIKI], velocity-Verlet, RK4, RKF, Adams, Hermite, Forest-Ruth 등을 포함하는 <i>선택 가능한 모음</i> 에서 고른 것 [DEV]. Principia: <b><code>QUINLAN_TREMAINE_1990_ORDER_12</code></b>(12차 symmetric linear multistep, conjugate-symplectic) — <i>모든</i> 천체에 고정.</td></tr><tr><td>Timestep</td><td>US²: <b>adaptive</b>, step-doubling 오차 추정으로 <b>길이 단위 tolerance</b> 를 사용자에게 노출해 제어 [DEV]. Principia: <b>fixed</b>(ephemeris 10분 / vessel history 10초), adaptive 는 vessel <i>prediction</i> 에만.</td></tr><tr><td>정확도/속도 제어</td><td>US²: <b>사용자에게 노출</b> — 시뮬레이션 속도 슬라이더는 자동 제한되는 target 으로, 오차가 가장 큰 단일 바디에 의해 캡 됨 [DEV+WIKI]. Principia: 런타임에 사용자 튜닝 없음. 정확성은 fixed step + symplecticity 의 성질로 보장.</td></tr><tr><td>상대론</td><td>US²: <b>Newtonian 전용</b>, GR 없음. 빛 속도 중력 전파 + PN 보정은 <i>지향점</i> 수준 [DEV]. Principia: Newtonian + geopotential 구면조화함수(J₂ / 전체 C̄ₙₘ,S̄ₙₘ), 마찬가지로 GR 없음.</td></tr><tr><td>충돌 / 병합 / Roche</td><td>US²: <b>일급 기능</b> — overlap 검출, 운동량/에너지 보존 병합, cratering, 파편화, Roche 조석 붕괴 [DEV+WIKI]. Principia: <b>없음</b> — 바디는 연속 궤적 위의 점질량.</td></tr><tr><td>다체 스케일링</td><td>US²: 기본은 직접 O(N²), 수천 개 파편에는 <b>Barnes-Hut tree</b> opt-in [DEV]. Unity DOTS/Burst 로 CPU 멀티코어, <b>GPU 아님</b> [DEV]. Principia: massive body 는 n-body, vessel 은 무질량 test particle, N 은 작음(행성+항성 정도).</td></tr><tr><td>결정론 / 가역성</td><td>Principia: fixed-step <b>symmetric</b> 방법 → 결정론적, 시간 역행 가능, secular 에너지 drift 없음 [DEV-rationale]. US²: adaptive + 충돌 + RNG 파편 → 설계상 재현 <b>불가</b>.</td></tr><tr><td>Principia 브랜치가 US² 에서 가져와야 할 것?</td><td><b>짧은 목록뿐이며, 대부분 코어 integrator 가 아니라 UX/ergonomics.</b> §6 참고. US² 의 선택 대부분은 &quot;인터랙티브 샌드박스&quot; 에서 따라 나온 것이고, KSP/Principia 는 그게 아닙니다.</td></tr></tbody></table></div>
-<hr>
-<h2>2. Universe Sandbox 가 실제로 하는 것</h2>
-<p>읽을 소스가 없어 Stellarium 노트보다 신뢰도가 낮습니다. 태그는 위에서 정의한 대로입니다.</p>
-<h3>2.1 하나의 integrator 가 아니라 integrator 모음</h3>
-<p><b>[DEV]</b> n-body 리드 개발자(&quot;Steam 의 Greenleaf&quot;, Thomas Grønneløv / &quot;Naml&quot; 로 알려짐) 가 역대 집합을 나열했습니다. explicit &amp; semi-implicit Euler, RK2, RK4, RKF(Runge-Kutta-Fehlberg), Adams-Bashforth 6차, Adams-Moulton 6차, Hermite 5차, <b>PEFRL</b>, <b>Forest-Ruth</b>. &quot;대규모 NBody 재작성&quot; 과정에서 대부분이 일시적으로 빠졌고, 다시 추가되는 중이었습니다. 현재 노출된 기본값은 <b>PEFRL</b>(4차 symplectic 으로, position-extended Forest-Ruth 계열) [WIKI] 이며, velocity-Verlet 가 명시적으로 문서화된 Verlet 변형입니다 [DEV].</p>
-<blockquote><code>x(t+dt)=x(t)+v(t)·dt+0.5·a(t)·dt²</code>, <code>v(t+dt)=v(t)+0.5·(a(t)+a(t+dt))·dt</code></blockquote>
-<p>밝힌 철학 [DEV]. <i>&quot;사용자가 작업에 맞는 integrator 를 고르게 하고, 합리적인 기본값을 정해 둔다 … 빠른 chaotic 시뮬레이션 → 속도가 중요, 장기 안정성 분석 → 정확도가 중요.&quot;</i></p>
-<h3>2.2 길이 tolerance 를 사용자에게 노출하는 adaptive timestep</h3>
-<p><b>[DEV]</b> 가장 흥미로운 설계 포인트입니다. 사용자는 step 당 최대 위치 오차에 해당하는 <b>길이 단위 tolerance</b> 를 설정합니다. 매 step 마다 엔진은 한 번의 전체 <code>dt</code> 와 두 번의 <code>½dt</code> step 을 밟아 비교하고(표준 step-doubling), tolerance 아래로 유지되도록 step 을 줄입니다.</p>
-<blockquote><i>&quot;적분 step 길이는 이 tolerance 보다 큰 위치 오차를 만들지 않도록 조정된다.&quot;</i></blockquote>
-<p><b>[DEV]</b> 따라서 시뮬레이션 속도 슬라이더는 정확도를 지키기 위해 <b>자동 제한되는 target</b> 입니다. <b>[WIKI]</b> UI 는 심지어 지금 <i>어느 단일 바디</i> 가 오차가 가장 커서 속도를 캡 하고 있는지까지 표시합니다. <b>[DEV]</b> tolerance 를 올리면 → 빨라지지만 오차가 누적되며 궤도가 &quot;무너질&quot; 수 있습니다.</p>
-<h3>2.3 Newtonian 전용</h3>
-<p><b>[DEV]</b> <i>&quot;Universe Sandbox 의 물리는 현재 Newtonian 뿐이다.&quot;</i> GR 없음. 중력파는 n-body 방법의 범위 밖이라고 명시했습니다. 지향하는 미래는 중력이 즉시가 아니라 <code>c</code> 로 전파되는 것, 그리고 가능하다면 post-Newtonian 보정입니다. GR 토글은 존재하지 않습니다 [NO SRC for any implemented GR effect].</p>
-<h3>2.4 충돌, 병합, 파편화, Roche</h3>
-<p><b>[DEV+WIKI]</b> 일급 기능이자 제품의 시그니처입니다.</p>
-<ul><li>충돌 = overlap 검출. <b>병합</b>(&quot;Combine&quot;) 또는 가상의 탄성 <b>bounce</b> 로 해소하며, 운동량/에너지를 보존하고 충격 가열을 동반합니다.</li><li>Cratering. 충격 에너지가 더 큰 바디 질량의 일부를 녹이고, 녹은 질량 → 질량/운동량/에너지를 보존하도록 무작위 질량/위치/속도로 뽑힌 파편이 됩니다.</li><li>파편화 유형 세 가지. <b>collision</b>, <b>Roche</b>(조석 — 같은 step 당 중력/조석력 평가에서 계산), <b>spin</b>.</li><li>파편 수는 성능을 위해 자동으로 캡 됩니다.</li></ul>
-<p><b>[INFER]</b> 조석(Roche) 평가와 overlap 검출은 모두 step 당 중력 계산에 얹혀 돌아가고, 파편은 새로운 중력 바디가 됩니다. step 내부의 정확한 순서는 출처 없음입니다.</p>
-<h3>2.5 스케일링: O(N²) → Barnes-Hut, GPU 가 아닌 CPU</h3>
-<p><b>[DEV]</b> 기본 중력은 직접 all-pairs <b>O(N²)</b> 입니다. 수천 개의 파편/링/은하 입자에는 <b>Barnes-Hut tree</b> 가 스케일링 답이며(정확도가 약간 떨어지고, &quot;gravity tree ratio&quot; 로 튜닝 가능) 실험적 opt-in 으로 배포됩니다 [WIKI]. 2025년 재작성에서 엔진은 <b>Unity DOTS / ECS / Burst / Job System</b> 으로 옮겨졌습니다 — 캐시 친화적이고 멀티스레드인 <b>CPU</b> 방식입니다. <b>[NO SRC]</b> 중력 step 이 GPU 에서 돈다는 주장은 출처가 없습니다(GPU 라고 하는 검색 스니펫은 무관한 학술 논문과 혼동한 것으로 보입니다).</p>
-<h3>2.6 정밀도 / 프레임</h3>
-<p><b>[NO SRC]</b> float64 위치나 floating-origin / origin-rebasing 방식을 확인해 주는 1차 발언이 없습니다. tolerance 가 &quot;길이 단위&quot; 라는 것만이 유일하게 인접한 사실입니다. 은하 스케일 시뮬레이션은 스스로 &quot;대표적일 뿐 그다지 정확하지 않다&quot; 고 설명하는데, 이는 <i>물리</i> 측 주의이지 부동소수점 측 이야기가 아닙니다.</p>
-<hr>
-<h2>3. Principia 가 하는 것(신뢰도 높음, 오픈소스)</h2>
-<h3>3.1 천체에 대한 fixed-step symplectic</h3>
-<p>기본 ephemeris integrator: <b><code>QUINLAN_TREMAINE_1990_ORDER_12</code></b> — 12차 <b>symmetric linear multistep</b> 방법으로, <b>step 10분 고정</b>입니다. Conjugate-symplectic 이라 <b>secular 에너지 drift 가 없고</b>, step 을 줄이면 작아지는 유계 진동만 남습니다. 밝힌 근거(Jool 노트).</p>
-<blockquote><i>&quot;conjugate-symplectic 이라 에너지 drift 를 보이지 않는다 … 관측자는 여러 시점의 에너지를 측정해 비물리적인 계통적 drift 를 알아챌 수 없다.&quot;</i></blockquote>
-<p>배포된 다른 fixed-step 계열들. Blanes-Moan SRKN, McLachlan / McLachlan-Atela / Okunbor-Skeel SPRK, Quinlan-1999 SLMS.</p>
-<h3>3.2 vessel 미래에만 adaptive</h3>
-<p>Vessel <b>prediction / flight-plan</b> 은 <b><code>DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM</code></b>(embedded RKN 4(3)4, adaptive, tolerance 1 mm / 1 mm·s⁻¹) 를 쓰며 — <b>symplectic 이 아닙니다.</b> Vessel <i>history</i> 는 fixed-step Quinlan-1999 order 8A, 10초입니다. 즉 Principia 는 이미 내부적으로 <b>adaptive embedded-RKN</b> 을 돌리고 있으며, 그것을 천체 백본이 아니라 test particle 의 미래에만 가두어 둔 것뿐입니다.</p>
-<h3>3.3 Geopotential, 정밀도, epoch, 결정론</h3>
-<ul><li><b>Geopotential.</b> IERS-2010 normalized 구면조화함수, 또는 단일 unnormalized J₂(<code>J₂ = −C̄₂₀·√5</code>). <code>geopotential_tolerance</code> 가 작은 항을 잘라내 속도를 높입니다.</li><li><b>정밀도.</b> binary64 double, SI 단위, P/Invoke 를 통한 native C++14.</li><li><b>프레임/epoch.</b> <code>solar_system_epoch</code>(TT) 의 Cartesian 상태를 <code>game_epoch</code> 까지 미리 적분, IAU-2009 극/회전 컨벤션. NearStars 의 <code>JD2433282.5</code> 와 일치합니다.</li><li><b>결정론.</b> fixed-step <i>symmetric</i> 방법은 결정론적이고 시간 역행이 가능합니다(이 성질 때문에 선택됨). adaptive vessel-prediction 구간은 bit 단위로 역행되지 않습니다.</li><li><b>Warp.</b> 타임워프 하에서도 step 은 <b>고정</b>되며, warp 는 그저 벽시계 초당 더 많은 step 을 돌릴 뿐입니다. vessel 이 없으면 6,000,000× 까지 매끄럽고, vessel 이 있으면 ~1,000,000× 를 넘어가며 버벅입니다.</li></ul>
-<hr>
-<h2>4. 핵심 철학의 갈림</h2>
-<div class="tbl"><table><thead><tr><th></th><th>Universe Sandbox</th><th>Principia</th></tr></thead><tbody><tr><td><b>목표</b></td><td>실시간 <i>인터랙티브</i> 샌드박스 — 잡고, 던지고, 부수고, 지켜본다</td><td>게임플레이를 위한 <i>고정</i> 시스템의 결정론적 전방 적분</td></tr><tr><td><b>기본 integrator 차수</b></td><td>4차(PEFRL)</td><td>12차(Quinlan-Tremaine)</td></tr><tr><td><b>Step 제어</b></td><td>Adaptive, 사용자 노출 길이 tolerance</td><td>Fixed step, 런타임 손잡이 없음</td></tr><tr><td><b>빠르게 돌릴 때 무엇이 양보되나</b></td><td>정확도가 점진적으로 저하, 궤도가 &quot;무너질&quot; 수 있음</td><td>아무것도 — 같은 step, 벽시계만 더 쓰며 정확성 보존</td></tr><tr><td><b>시스템을 라이브로 편집</b></td><td>핵심 기능</td><td>use case 아님, 상태는 초기 상태 cfg 에서 옴</td></tr><tr><td><b>충돌/병합/Roche</b></td><td>일급</td><td>없음(점질량)</td></tr><tr><td><b>재현성</b></td><td>목표 아님(RNG 파편, adaptive)</td><td>설계상 결정론적 &amp; 가역적</td></tr></tbody></table></div>
-<p>한 문장으로. <b>US² 는 인터랙티브 시뮬레이션을 살려 두려고 integrator 를 적응시키고, Principia 는 긴 시뮬레이션이 물리적으로 정직하게 유지되도록 integrator 를 고정합니다.</b> 다른 거의 모든 차이는 여기서 따라 나옵니다.</p>
-<p>여기서 <b>천체 백본</b> 에 대해서는 흔한 &quot;게임 = 덜 정확하다&quot; 직관이 <i>뒤집힌다</i> 는 점에 주목하시기 바랍니다. Principia 의 기본값은 12차 symplectic 방법으로 — US² 의 4차 기본값보다 <i>차수가 높고</i> 장기 보장도 강합니다 — 이는 Principia 가 <i>알려져 있고 비교적 안정적인 위계</i> 를 적분하기 때문입니다. US² 는 <i>사용자가 임의로 구성한 혼돈에 충돌까지 얹힌 상황을 실시간으로</i> 견뎌야 하므로, 점진적 저하를 갖춘 더 낮은 차수의 adaptive 방식을 택합니다. &quot;어느 쪽이 더 낫다&quot; 가 아니라 서로 다른 문제입니다.</p>
-<hr>
-<h2>5. 둘이 일치하는 지점</h2>
-<p>Stellarium 사례보다는 적지만, 실재합니다.</p>
-<ol><li><b>Newtonian 중력, GR 없음.</b> 둘 다 GR 을 n-body 엔진의 범위 밖으로 봅니다(US² 는 지향점 수준, Principia 는 geopotential 조화함수는 배포하지만 상대론은 없음). NearStars 의 항성/행성 스케일에서는 양쪽 모두 옳은 선택입니다.</li><li><b>안정한 경우엔 기본적으로 symplectic.</b> US² 의 기본 PEFRL 과 Principia 의 Quinlan-Tremaine 은 둘 다 <b>symplectic/에너지 보존</b> 계열입니다. 두 팀 모두 독립적으로, 장기간 도는 중력계에는 drift 하는 순진한 RK4 가 아니라 symplectic 방법이 필요하다는 결론에 이르렀습니다(US² 는 심지어 Euler 를 &quot;그게 얼마나 나쁜지 보여주려고&quot; 남겨 둡니다 [DEV]).</li><li><b>어렵고 불확실한 부분엔 adaptive embedded 방법.</b> US² 는 어디서나 adaptive step-doubling 을 쓰고, Principia 는 vessel prediction 에 adaptive embedded RKN 을 씁니다. 둘 다 궤적이 민감한 곳에서는 adaptive 제어를 꺼내 드는데, 그 경계를 다르게 그을 뿐입니다.</li></ol>
-<hr>
-<h2>6. 커스텀 Principia 브랜치에 대한 함의</h2>
-<p>정직한 헤드라인. <b>US² 를 인상적으로 만드는 대부분은 &quot;인터랙티브 샌드박스&quot; 에 종속된 것이고, KSP/Principia 는 그게 아닙니다.</b> KSP 에서는 별을 집어 던지지 않습니다. 결정론적이고 warp 안정적인 시스템 속에서 vessel 을 날립니다. 그래서 가져올 목록은 짧고 대부분 ergonomic 입니다. 실제로 고려할 만한 것을 대략의 우선순위로 정리합니다.</p>
-<p><b>진지하게 고려할 만함</b></p>
-<ol><li>**사용자에게 노출하는 정확도/속도 tolerance + &quot;최악 오차 바디&quot; 표시.** US² 의 최고의 UX 아이디어입니다. Principia 의 정확성은 플레이어에게 보이지 않습니다(fixed step, 다이얼 없음). 브랜치는 단일 &quot;최대 위치 오차&quot; tolerance 를 노출하고, 매끄러운 warp 를 묶고 있는 <i>어느 바디</i> 가 현재 binding constraint 인지 드러낼 수 있습니다. 이는 symplectic 천체 integrator 를 <i>건드리지 않고</i> 이식 가능합니다 — 진단/UX 레이어에 살게 됩니다. <b>주의.</b> Principia 의 안정성 논증 전체가 <i>fixed</i> step 위에 서 있습니다. 순진하게 &quot;천체 step 을 adaptive 하게 만든다&quot; 면 conjugate-symplecticity 와 no-drift 보장이 깨집니다. 가져올 것은 <i>표시와 step 크기 선택기</i> 이지 천체 adaptive stepping 이 아닙니다.</li></ol>
-<p><b>조건부 — 브랜치의 목표가 이를 포함할 때만</b></p>
-<ol><li><b>충돌 / 병합 / Roche 붕괴.</b> 브랜치가 바디를 <i>충돌·병합</i> 시키길 원한다면(US² 의 시그니처), Principia 에는 이를 위한 장치가 전혀 없습니다 — US² 가 레퍼런스 설계입니다(overlap 검출, 운동량/에너지 보존 병합, 파편 생성, step 당 조석 Roche). 이는 큰 기능이며, Principia 의 &quot;점질량의 연속 궤적&quot; 모델과 근본적으로 상충하고, 자체 설계가 필요합니다. 가정하지 말고 flag 하시기 바랍니다.</li><li><b>다체용 Barnes-Hut tree.</b> 브랜치가 <i>수천</i> 개 바디(잔해 링, 포획된 무리) 를 시뮬레이션할 때만 관련됩니다. NearStars 의 footprint 는 수십 개의 항성/행성 정도라 직접 O(N²) 로도 충분합니다. 브랜치 범위가 N 을 자릿수 단위로 키우지 않는 한 보류합니다.</li></ol>
-<p><b>가져올 가치가 별로 없음</b></p>
-<ol><li><b>낮은 차수의 adaptive 천체 integrator.</b> US² 의 adaptive PEFRL 접근은 실시간으로 임의의 혼돈을 견디려 존재합니다. 고정되고 큐레이션된 NearStars 시스템에는, 장기 안정성 목표에 대해 Principia 의 fixed 12차 symplectic 이 <i>엄밀히 더 낫습니다.</i> 여기서 US² 방식을 채택하는 것은 퇴보입니다.</li><li><b>GPU offload.</b> US² 는 일부러 하지 않았습니다(CPU/DOTS/Burst). NearStars 의 N 규모에서 Principia 브랜치가 그럴 이유도 없습니다.</li></ol>
-<p><b>브랜치의 열린 설계 질문.</b> 진짜로 어렵고 흥미로운 긴장은 #1 + #4 를 함께 두는 것입니다 — <i>천체 백본에 대해 Principia 의 fixed-step symplectic 보장을 유지하면서, 플레이어에게 US² 식 정확도/속도 다이얼을 줄 수 있는가?</i> 깔끔한 답은 아마 per-step adaptivity 가 아니라 <b>step 크기 선택</b>(예: 10분 ↔ 2.5분, Principia 가 이미 대조 검증하는 Richardson 쌍) 을 노출하고 worst-offender 진단을 얹는 것입니다. 이러면 symplectic 성질을 지키면서 UX 를 전달합니다. 슐츠 와 함께 가장 먼저 프로토타이핑할 대상입니다.</p>
-<hr>
-<h2>7. 열린 질문</h2>
-<ul><li><b>US² float 정밀도 &amp; floating-origin.</b> [NO SRC]. 브랜치가 언젠가 US² 와 수치적으로 상호운용하거나 교차 검증해야 한다면 float64 여부와 origin-rebasing 방식을 확인해야 하는데, 현재로선 미상이고 출처가 없습니다.</li><li><b>US² 충돌-step 순서.</b> [INFER only]. step 내부에서 overlap 해소가 integrator advance 보다 앞에 도는지 뒤에 도는지는 출처가 없습니다. Principia 쪽 충돌을 설계할 일이 생길 때만 의미가 있습니다.</li><li><b>현재 US² 빌드의 PEFRL 정확한 계수.</b> [WIKI] 는 PEFRL 기본값이라고 하지만, 배포 빌드의 정확한 방법/차수는 재작성 이후 개발자가 확인해 주지 않았습니다.</li><li><b>브랜치가 충돌/병합을 원하긴 하는가?</b> 이 단일 결정이 §6 #2(US² 에서 파생된 큰 기능) 가 범위 안인지 밖인지를 가릅니다. 엔진 작업에 앞서 제품 차원의 판단이 필요합니다.</li></ul>
-<h2>Related</h2>
-<ul><li><a href="plans__stellarium-binary-orbit-comparison.html">stellarium-binary-orbit-comparison</a> — 자매 노트. 그쪽은 소스 라인을 인용할 수 있고(오픈소스), 이쪽은 할 수 없다(US² 는 클로즈드)</li><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — NearStars 가 Principia 가 적분할 Cartesian 상태를 만드는 방식</li><li><a href="reference__principia-cfg-reference.html">principia-cfg-reference</a> — 이 노트가 비교 대상으로 삼는 Principia cfg/numerics 레이어</li></ul></div><div data-langbody="en" style="display:none"><h1>Universe Sandbox vs Principia n-body engine comparison</h1>
-<p><b>NearStars connection.</b> NearStars feeds <b>Principia</b> (the n-body KSP mod) an ICRF Cartesian state <code>(x, y, z, vx, vy, vz)</code> per component at <code>JD2433282.5</code>, and Principia forward-integrates the whole system. A possible future direction is a <b>custom Principia branch</b> (with 슐츠). This note therefore asks a different question than the Stellarium comparison did: not &quot;is our convention right&quot; but **&quot;what has Universe Sandbox done for real-time interactive n-body that a Principia branch could plausibly borrow — and what is downstream of US²&#x27;s goals and should <i>not</i> be borrowed.&quot;** See <a href="plans__stellarium-binary-orbit-comparison.html"><code>stellarium-binary-orbit-comparison.md</code></a> for the sibling note.</p>
-<p><b>⚠ Source-quality caveat (important).</b> The Stellarium note cited <b>actual source lines</b> (<code>Star.hpp#L364-L373</code>) because Stellarium is open source. <b>Universe Sandbox is closed-source commercial software.</b> Everything here is from public developer statements (dev blog, FAQ, Steam forum posts by team members) or the team-maintained wiki. Claims are tagged:</p>
-<ul><li><b>[DEV]</b> — direct developer statement (blog / FAQ / forum quote).</li><li><b>[WIKI]</b> — team-maintained wiki, not a verbatim dev quote.</li><li><b>[INFER]</b> — inferred from observed behavior / design.</li><li><b>[NO SRC]</b> — could not be sourced; treat as unknown.</li></ul>
-<p>The Principia side is open source and high-confidence (wiki + shipped <code>sol_numerics_blueprint.cfg</code> + source headers); divergence flags there are minor wording gaps, not fidelity gaps.</p>
-<p><b>Scope.</b> Read-only research. No code changes in this repo.</p>
-<p><b>External references.</b></p>
-<ul><li>Universe Sandbox dev blog: https://universesandbox.com/blog/</li><li>US² FAQ: https://universesandbox.com/faq/ (+ legacy /faq/original/)</li><li>US² integrator forum thread (lead n-body dev &quot;Greenleaf&quot;): https://steamcommunity.com/app/230290/discussions/0/520518053429453785/</li><li>Principia wiki: https://github.com/mockingbirdnest/Principia/wiki</li><li>Principia Jool-stability note (the symplectic rationale): https://github.com/mockingbirdnest/Principia/wiki/On-the-dynamical-stability-of-Principia&#x27;s-modified-Jool-system</li><li>Our pipeline: <a href="reference__binary-epoch-pipeline.html"><code>../docs/reference/binary-epoch-pipeline.md</code></a>, <a href="reference__principia-cfg-reference.html"><code>../docs/reference/principia-cfg-reference.md</code></a></li></ul>
-<hr>
-<h2>1. Executive summary</h2>
-<div class="tbl"><table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Same numerical goal?</td><td><b>No.</b> US² optimizes for <b>real-time interactivity</b> (grab/throw bodies, collisions, fragmentation, responsive at any speed). Principia optimizes for <b>deterministic, long-term-stable forward integration</b> of a fixed initial state under time-warp.</td></tr><tr><td>Default integrator</td><td>US²: <b>PEFRL</b> (4th-order symplectic) [WIKI], from a <i>selectable suite</i> incl. velocity-Verlet, RK4, RKF, Adams, Hermite, Forest-Ruth [DEV]. Principia: <b><code>QUINLAN_TREMAINE_1990_ORDER_12</code></b> (12th-order symmetric linear multistep, conjugate-symplectic) — fixed for <i>all</i> celestials.</td></tr><tr><td>Timestep</td><td>US²: <b>adaptive</b>, controlled by a user-facing <b>tolerance in units of length</b> via step-doubling error estimate [DEV]. Principia: <b>fixed</b> (10 min ephemeris / 10 s vessel history); adaptive only for vessel <i>prediction</i>.</td></tr><tr><td>Accuracy/speed control</td><td>US²: <b>exposed to the user</b> — sim-speed slider is an auto-limited target, capped by the single worst-error body [DEV+WIKI]. Principia: not user-tuned at runtime; correctness is a property of the fixed step + symplecticity.</td></tr><tr><td>Relativity</td><td>US²: <b>Newtonian only</b>, no GR; speed-of-light gravity + PN corrections are <i>aspirational</i> [DEV]. Principia: Newtonian + geopotential spherical harmonics (J₂ / full C̄ₙₘ,S̄ₙₘ); no GR either.</td></tr><tr><td>Collisions / mergers / Roche</td><td>US²: <b>first-class</b> — overlap detection, momentum/energy-conserving merge, cratering, fragmentation, Roche tidal disruption [DEV+WIKI]. Principia: <b>none</b> — bodies are point masses on continuous trajectories.</td></tr><tr><td>Many-body scaling</td><td>US²: direct O(N²) default, <b>Barnes-Hut tree</b> opt-in for thousands of fragments [DEV]; CPU multicore via Unity DOTS/Burst, <b>not GPU</b> [DEV]. Principia: massive bodies n-body, vessels massless test particles; N is small (~planets+stars).</td></tr><tr><td>Determinism / reversibility</td><td>Principia: fixed-step <b>symmetric</b> methods → deterministic, time-reversible, no secular energy drift [DEV-rationale]. US²: adaptive + collisions + RNG fragments → <b>not</b> reproducible by design.</td></tr><tr><td>Should a Principia branch borrow from US²?</td><td><b>A short list, mostly UX/ergonomics, not the core integrator.</b> See §6. Most US² choices follow from &quot;interactive sandbox,&quot; which KSP/Principia is not.</td></tr></tbody></table></div>
-<hr>
-<h2>2. What Universe Sandbox actually does</h2>
-<p>Confidence is lower than the Stellarium note — no source to read. Tags as defined above.</p>
-<h3>2.1 Integrator suite, not one integrator</h3>
-<p><b>[DEV]</b> The lead n-body dev (&quot;Greenleaf&quot; on Steam, identified as Thomas Grønneløv / &quot;Naml&quot;) listed the historical set: explicit &amp; semi-implicit Euler, RK2, RK4, RKF (Runge-Kutta-Fehlberg), Adams- Bashforth 6th, Adams-Moulton 6th, Hermite 5th, <b>PEFRL</b>, and <b>Forest-Ruth</b>. A &quot;large NBody rewrite&quot; temporarily cut most; they were being re-added. The currently exposed default is <b>PEFRL</b> (a 4th-order symplectic position-extended Forest-Ruth-like method) [WIKI]; velocity-Verlet is the explicitly documented Verlet variant [DEV]:</p>
-<blockquote><code>x(t+dt)=x(t)+v(t)·dt+0.5·a(t)·dt²</code>, <code>v(t+dt)=v(t)+0.5·(a(t)+a(t+dt))·dt</code></blockquote>
-<p>Stated philosophy [DEV]: <i>&quot;let the user pick the right integrator for the job, and set a sensible default … fast chaotic sim → speed matters; long-running stability analysis → accuracy matters.&quot;</i></p>
-<h3>2.2 Adaptive timestep with a user-facing length tolerance</h3>
-<p><b>[DEV]</b> This is the most interesting design point. The user sets a <b>tolerance in units of length</b> = max positional error per step. Each step the engine takes one full <code>dt</code> and two <code>½dt</code> steps, compares them (standard step-doubling), and shrinks the step to stay under tolerance:</p>
-<blockquote><i>&quot;the integration step length will be adjusted to not generate a position error larger than this tolerance.&quot;</i></blockquote>
-<p><b>[DEV]</b> The sim-speed slider is therefore a <b>target, auto-limited</b> to preserve accuracy. <b>[WIKI]</b> The UI even names <i>which single body</i> is currently the worst-error offender capping your speed. <b>[DEV]</b> Raise tolerance → faster but orbits may &quot;fall apart&quot; as error accumulates.</p>
-<h3>2.3 Newtonian only</h3>
-<p><b>[DEV]</b> <i>&quot;the physics in Universe Sandbox is currently only Newtonian.&quot;</i> No GR. Gravitational waves explicitly out of scope of an n-body method. Aspirational future: gravity propagating at <code>c</code> instead of instantaneously, and possible post-Newtonian corrections. No GR toggle exists [NO SRC for any implemented GR effect].</p>
-<h3>2.4 Collisions, mergers, fragmentation, Roche</h3>
-<p><b>[DEV+WIKI]</b> First-class, and the product&#x27;s signature feature:</p>
-<ul><li>Collision = overlap detection; resolve by <b>merge</b> (&quot;Combine&quot;) or fictional elastic <b>bounce</b>, conserving momentum/energy, with impact heating.</li><li>Cratering: impact energy melts a mass fraction of the larger body; melted mass → fragments with random mass/position/velocity drawn to conserve mass/momentum/energy.</li><li>Three fragmentation types: <b>collision</b>, <b>Roche</b> (tidal — computed from the same per-step gravity/tidal-force evaluation), <b>spin</b>.</li><li>Fragment count auto-capped for performance.</li></ul>
-<p><b>[INFER]</b> Tidal (Roche) evaluation and overlap detection both ride on the per-step gravity computation; fragments become new gravitating bodies. Exact ordering within a step not sourced.</p>
-<h3>2.5 Scaling: O(N²) → Barnes-Hut, CPU not GPU</h3>
-<p><b>[DEV]</b> Default gravity is direct all-pairs <b>O(N²)</b>. For thousands of fragments/ring/galaxy particles, a <b>Barnes-Hut tree</b> is the scaling answer (slightly reduced accuracy, tunable &quot;gravity tree ratio&quot;) — shippable as an experimental opt-in [WIKI]. The 2025 rewrite moved the engine to <b>Unity DOTS / ECS / Burst / Job System</b> — cache-friendly, multithreaded <b>CPU</b>. <b>[NO SRC]</b> that the gravity step runs on GPU (a search snippet claiming GPU appears to conflate it with unrelated academic papers).</p>
-<h3>2.6 Precision / frame</h3>
-<p><b>[NO SRC]</b> No primary statement confirming float64 positions or any floating-origin / origin-rebasing scheme. Tolerance being &quot;in units of length&quot; is the only adjacent fact. Galaxy-scale sims are self-described as &quot;only representative and not very accurate&quot; — a <i>physics</i> caveat, not a floating-point one.</p>
-<hr>
-<h2>3. What Principia does (high-confidence, open source)</h2>
-<h3>3.1 Fixed-step symplectic for celestials</h3>
-<p>Default ephemeris integrator: <b><code>QUINLAN_TREMAINE_1990_ORDER_12</code></b> — a 12th-order <b>symmetric linear multistep</b> method, <b>fixed step 10 min</b>. Conjugate-symplectic → <b>no secular energy drift</b>, only bounded oscillation (shrinkable by reducing the step). Stated rationale (Jool note):</p>
-<blockquote><i>&quot;being conjugate-symplectic, it does not exhibit energy drift … our observer cannot measure the energy at various times and notice an unphysical systematic drift.&quot;</i></blockquote>
-<p>Other shipped fixed-step families: Blanes-Moan SRKN, McLachlan / McLachlan-Atela / Okunbor-Skeel SPRK, Quinlan-1999 SLMS.</p>
-<h3>3.2 Adaptive only for the vessel future</h3>
-<p>Vessel <b>prediction / flight-plan</b> uses <b><code>DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM</code></b> (embedded RKN 4(3)4, adaptive, tolerances 1 mm / 1 mm·s⁻¹) — <b>not symplectic</b>. Vessel <i>history</i> is fixed-step Quinlan-1999 order 8A at 10 s. So Principia already runs an <b>adaptive embedded-RKN</b> internally; it just confines it to test-particle futures, not the celestial backbone.</p>
-<h3>3.3 Geopotential, precision, epoch, determinism</h3>
-<ul><li><b>Geopotential:</b> IERS-2010 normalized spherical harmonics, or single unnormalized J₂ (<code>J₂ = −C̄₂₀·√5</code>). <code>geopotential_tolerance</code> prunes small terms for speed.</li><li><b>Precision:</b> binary64 doubles, SI units, native C++14 via P/Invoke.</li><li><b>Frame/epoch:</b> Cartesian state at <code>solar_system_epoch</code> (TT), pre-integrated to <code>game_epoch</code>; IAU-2009 pole/rotation convention. Matches NearStars&#x27;s <code>JD2433282.5</code>.</li><li><b>Determinism:</b> fixed-step <i>symmetric</i> methods are deterministic and time-reversible (the property they are chosen for). The adaptive vessel-prediction segment is not bit-reversible.</li><li><b>Warp:</b> step stays <b>fixed</b> under time-warp; warp just runs more steps per wall-clock second. Smooth to 6,000,000× with no vessels; janky past ~1,000,000× with vessels.</li></ul>
-<hr>
-<h2>4. The core philosophical split</h2>
-<div class="tbl"><table><thead><tr><th></th><th>Universe Sandbox</th><th>Principia</th></tr></thead><tbody><tr><td><b>Goal</b></td><td>Real-time <i>interactive</i> sandbox — grab, throw, smash, watch</td><td>Deterministic forward integration of a <i>fixed</i> system for gameplay</td></tr><tr><td><b>Default integrator order</b></td><td>4th (PEFRL)</td><td>12th (Quinlan-Tremaine)</td></tr><tr><td><b>Step control</b></td><td>Adaptive, user-facing length tolerance</td><td>Fixed step, no runtime knob</td></tr><tr><td><b>What gives when you go fast</b></td><td>Accuracy degrades gracefully; orbits may &quot;fall apart&quot;</td><td>Nothing — same step, just more wall-clock; correctness preserved</td></tr><tr><td><b>Editing the system live</b></td><td>Central feature</td><td>Not a use case; state comes from the initial-state cfg</td></tr><tr><td><b>Collisions/mergers/Roche</b></td><td>First-class</td><td>Absent (point masses)</td></tr><tr><td><b>Reproducibility</b></td><td>Not a goal (RNG fragments, adaptive)</td><td>Deterministic &amp; reversible by construction</td></tr></tbody></table></div>
-<p>The single sentence: <b>US² makes the integrator adapt to keep an interactive sim alive; Principia fixes the integrator so a long sim stays physically honest.</b> Almost every other difference falls out of that.</p>
-<p>Note the <i>inversion</i> of the usual &quot;game = less accurate&quot; intuition for the <b>celestial backbone</b>: Principia&#x27;s default is a 12th-order symplectic method — <i>higher</i> order and stronger long-term guarantees than US²&#x27;s 4th-order default — because Principia integrates a <i>known, relatively stable hierarchy</i>. US² must survive <i>arbitrary user-constructed chaos plus collisions in real time</i>, so it picks a lower-order adaptive scheme with graceful degradation. Different problems, not &quot;one is better.&quot;</p>
-<hr>
-<h2>5. Where they agree</h2>
-<p>Less than the Stellarium case, but real:</p>
-<ol><li><b>Newtonian gravity, no GR.</b> Both treat GR as out of scope for an n-body engine (US² aspirationally; Principia ships geopotential harmonics but no relativity). For NearStars&#x27;s stellar/planetary scales this is the right call in both.</li><li><b>Symplectic-by-default for the stable case.</b> US²&#x27;s default PEFRL and Principia&#x27;s Quinlan-Tremaine are both <b>symplectic/energy- conserving</b> families. Both teams independently concluded that for long-running gravitational systems you want a symplectic method, not a naive RK4 that drifts. (US² even keeps Euler around &quot;primarily to show how bad it is&quot; [DEV].)</li><li><b>Adaptive embedded methods for the hard/uncertain part.</b> US² uses adaptive step-doubling everywhere; Principia uses adaptive embedded RKN for vessel prediction. Both reach for adaptive control where the trajectory is sensitive — they just draw the boundary differently.</li></ol>
-<hr>
-<h2>6. Implications for a custom Principia branch</h2>
-<p>The honest headline: <b>most of what makes US² impressive is downstream of &quot;interactive sandbox,&quot; which KSP/Principia is not.</b> You don&#x27;t throw stars around in KSP; you fly vessels through a deterministic, warp-stable system. So the borrow list is short and mostly ergonomic. What is actually worth considering, in rough priority:</p>
-<p><b>Worth seriously considering</b></p>
-<ol><li>**User-facing accuracy/speed tolerance + &quot;worst-offender body&quot; readout.** US²&#x27;s best UX idea. Principia&#x27;s correctness is invisible to the player (fixed step, no dial). A branch could expose a single &quot;max positional error&quot; tolerance and surface <i>which body</i> is currently the binding constraint on smooth warp. This is portable <i>without</i> touching the symplectic celestial integrator — it would live in the diagnostic/UX layer. <b>Caveat:</b> Principia&#x27;s whole stability argument rests on the <i>fixed</i> step; a naive &quot;make the celestial step adaptive&quot; would break conjugate-symplecticity and the no-drift guarantee. The borrow is the <i>readout and a step-size chooser</i>, not adaptive celestial stepping.</li></ol>
-<p><b>Conditional — only if the branch&#x27;s goal includes it</b></p>
-<ol><li><b>Collisions / mergers / Roche disruption.</b> If the branch wants bodies to <i>collide and merge</i> (US²&#x27;s signature), there is no Principia machinery for it — US² is the reference design (overlap detection, momentum/energy-conserving merge, fragment spawning, per-step tidal Roche). This is a large feature, fundamentally at odds with Principia&#x27;s &quot;continuous trajectory of point masses&quot; model, and would need its own design. Flag, don&#x27;t assume.</li><li><b>Barnes-Hut tree for many-body.</b> Only relevant if the branch simulates <i>thousands</i> of bodies (debris rings, captured swarms). NearStars&#x27;s footprint is ~tens of stars/planets, where direct O(N²) is trivially fine. Defer unless the branch&#x27;s scope explicitly grows N by orders of magnitude.</li></ol>
-<p><b>Probably not worth borrowing</b></p>
-<ol><li><b>Lower-order adaptive celestial integrator.</b> US²&#x27;s adaptive PEFRL approach exists to survive arbitrary chaos in real time. For a fixed, curated NearStars system, Principia&#x27;s fixed 12th-order symplectic is <i>strictly better</i> for the long-term-stability goal. Adopting US²&#x27;s approach here would be a regression.</li><li><b>GPU offload.</b> US² explicitly didn&#x27;t do this (CPU/DOTS/Burst). No reason for a Principia branch to either at NearStars&#x27;s N.</li></ol>
-<p><b>Open design question for the branch:</b> the genuinely hard, interesting tension is #1 + #4 together — <i>can you keep Principia&#x27;s fixed-step symplectic guarantee for the celestial backbone while giving the player a US²-style accuracy/speed dial?</i> The clean answer is probably: expose <b>step-size selection</b> (e.g. 10 min ↔ 2.5 min, the Richardson pair Principia already validates against) plus the worst-offender diagnostic, rather than per-step adaptivity. That keeps the symplectic property while delivering the UX. This is the thing to prototype first with 슐츠.</p>
-<hr>
-<h2>7. Open questions</h2>
-<ul><li><b>US² float precision &amp; floating-origin.</b> [NO SRC]. If the branch ever needs to interoperate or cross-check against US² numerically, we&#x27;d need to confirm float64 and any origin-rebasing — currently unknown and unsourced.</li><li><b>US² collision-step ordering.</b> [INFER only]. Whether overlap resolution runs before/after the integrator advance within a step is not sourced; matters only if we ever design Principia-side collisions.</li><li><b>PEFRL exact coefficients in current US² build.</b> [WIKI] says PEFRL default; the precise method/order in the shipped build isn&#x27;t dev-confirmed post-rewrite.</li><li><b>Does the branch want collisions/mergers at all?</b> This single decision determines whether §6 #2 (a large US²-derived feature) is in or out of scope. Needs a product call before any engine work.</li></ul>
-<h2>Related</h2>
-<ul><li><a href="plans__stellarium-binary-orbit-comparison.html">stellarium-binary-orbit-comparison</a> — the sibling note; that one <i>could</i> cite source lines (open source), this one cannot (US² is closed)</li><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — how NearStars produces the Cartesian state Principia integrates</li><li><a href="reference__principia-cfg-reference.html">principia-cfg-reference</a> — the Principia cfg/numerics layer this compares against</li></ul></div>
-</main>
+<div class="content-wrap">
+  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <article class="markdown-body" id="content"></article>
 </div>
+</div>
+<script type="text/markdown" id="md-en"># Universe Sandbox vs Principia n-body engine comparison
+
+**NearStars connection.** NearStars feeds **Principia** (the n-body KSP
+mod) an ICRF Cartesian state `(x, y, z, vx, vy, vz)` per component at
+`JD2433282.5`, and Principia forward-integrates the whole system. A
+possible future direction is a **custom Principia branch** (with 슐츠).
+This note therefore asks a different question than the Stellarium
+comparison did: not "is our convention right" but **"what has Universe
+Sandbox done for real-time interactive n-body that a Principia branch
+could plausibly borrow — and what is downstream of US²'s goals and
+should *not* be borrowed."** See
+[`stellarium-binary-orbit-comparison.md`](plans__stellarium-binary-orbit-comparison.html)
+for the sibling note.
+
+**⚠ Source-quality caveat (important).** The Stellarium note cited
+**actual source lines** (`Star.hpp#L364-L373`) because Stellarium is
+open source. **Universe Sandbox is closed-source commercial software.**
+Everything here is from public developer statements (dev blog, FAQ,
+Steam forum posts by team members) or the team-maintained wiki. Claims
+are tagged:
+- **[DEV]** — direct developer statement (blog / FAQ / forum quote).
+- **[WIKI]** — team-maintained wiki, not a verbatim dev quote.
+- **[INFER]** — inferred from observed behavior / design.
+- **[NO SRC]** — could not be sourced; treat as unknown.
+
+The Principia side is open source and high-confidence (wiki + shipped
+`sol_numerics_blueprint.cfg` + source headers); divergence flags there
+are minor wording gaps, not fidelity gaps.
+
+**Scope.** Read-only research. No code changes in this repo.
+
+**External references.**
+- Universe Sandbox dev blog: https://universesandbox.com/blog/
+- US² FAQ: https://universesandbox.com/faq/ (+ legacy /faq/original/)
+- US² integrator forum thread (lead n-body dev "Greenleaf"):
+  https://steamcommunity.com/app/230290/discussions/0/520518053429453785/
+- Principia wiki: https://github.com/mockingbirdnest/Principia/wiki
+- Principia Jool-stability note (the symplectic rationale):
+  https://github.com/mockingbirdnest/Principia/wiki/On-the-dynamical-stability-of-Principia's-modified-Jool-system
+- Our pipeline: [`../docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html),
+  [`../docs/reference/principia-cfg-reference.md`](reference__principia-cfg-reference.html)
+
+---
+
+## 1. Executive summary
+
+| Question | Answer |
+|----------|--------|
+| Same numerical goal? | **No.** US² optimizes for **real-time interactivity** (grab/throw bodies, collisions, fragmentation, responsive at any speed). Principia optimizes for **deterministic, long-term-stable forward integration** of a fixed initial state under time-warp. |
+| Default integrator | US²: **PEFRL** (4th-order symplectic) [WIKI], from a *selectable suite* incl. velocity-Verlet, RK4, RKF, Adams, Hermite, Forest-Ruth [DEV]. Principia: **`QUINLAN_TREMAINE_1990_ORDER_12`** (12th-order symmetric linear multistep, conjugate-symplectic) — fixed for *all* celestials. |
+| Timestep | US²: **adaptive**, controlled by a user-facing **tolerance in units of length** via step-doubling error estimate [DEV]. Principia: **fixed** (10 min ephemeris / 10 s vessel history); adaptive only for vessel *prediction*. |
+| Accuracy/speed control | US²: **exposed to the user** — sim-speed slider is an auto-limited target, capped by the single worst-error body [DEV+WIKI]. Principia: not user-tuned at runtime; correctness is a property of the fixed step + symplecticity. |
+| Relativity | US²: **Newtonian only**, no GR; speed-of-light gravity + PN corrections are *aspirational* [DEV]. Principia: Newtonian + geopotential spherical harmonics (J₂ / full C̄ₙₘ,S̄ₙₘ); no GR either. |
+| Collisions / mergers / Roche | US²: **first-class** — overlap detection, momentum/energy-conserving merge, cratering, fragmentation, Roche tidal disruption [DEV+WIKI]. Principia: **none** — bodies are point masses on continuous trajectories. |
+| Many-body scaling | US²: direct O(N²) default, **Barnes-Hut tree** opt-in for thousands of fragments [DEV]; CPU multicore via Unity DOTS/Burst, **not GPU** [DEV]. Principia: massive bodies n-body, vessels massless test particles; N is small (~planets+stars). |
+| Determinism / reversibility | Principia: fixed-step **symmetric** methods → deterministic, time-reversible, no secular energy drift [DEV-rationale]. US²: adaptive + collisions + RNG fragments → **not** reproducible by design. |
+| Should a Principia branch borrow from US²? | **A short list, mostly UX/ergonomics, not the core integrator.** See §6. Most US² choices follow from "interactive sandbox," which KSP/Principia is not. |
+
+---
+
+## 2. What Universe Sandbox actually does
+
+Confidence is lower than the Stellarium note — no source to read. Tags
+as defined above.
+
+### 2.1 Integrator suite, not one integrator
+
+**[DEV]** The lead n-body dev ("Greenleaf" on Steam, identified as
+Thomas Grønneløv / "Naml") listed the historical set: explicit &
+semi-implicit Euler, RK2, RK4, RKF (Runge-Kutta-Fehlberg), Adams-
+Bashforth 6th, Adams-Moulton 6th, Hermite 5th, **PEFRL**, and
+**Forest-Ruth**. A "large NBody rewrite" temporarily cut most; they
+were being re-added. The currently exposed default is **PEFRL** (a
+4th-order symplectic position-extended Forest-Ruth-like method) [WIKI];
+velocity-Verlet is the explicitly documented Verlet variant [DEV]:
+> `x(t+dt)=x(t)+v(t)·dt+0.5·a(t)·dt²`, `v(t+dt)=v(t)+0.5·(a(t)+a(t+dt))·dt`
+
+Stated philosophy [DEV]: *"let the user pick the right integrator for
+the job, and set a sensible default … fast chaotic sim → speed matters;
+long-running stability analysis → accuracy matters."*
+
+### 2.2 Adaptive timestep with a user-facing length tolerance
+
+**[DEV]** This is the most interesting design point. The user sets a
+**tolerance in units of length** = max positional error per step. Each
+step the engine takes one full `dt` and two `½dt` steps, compares them
+(standard step-doubling), and shrinks the step to stay under tolerance:
+> *"the integration step length will be adjusted to not generate a
+> position error larger than this tolerance."*
+
+**[DEV]** The sim-speed slider is therefore a **target, auto-limited**
+to preserve accuracy. **[WIKI]** The UI even names *which single body*
+is currently the worst-error offender capping your speed. **[DEV]**
+Raise tolerance → faster but orbits may "fall apart" as error
+accumulates.
+
+### 2.3 Newtonian only
+
+**[DEV]** *"the physics in Universe Sandbox is currently only
+Newtonian."* No GR. Gravitational waves explicitly out of scope of an
+n-body method. Aspirational future: gravity propagating at `c` instead
+of instantaneously, and possible post-Newtonian corrections. No GR
+toggle exists [NO SRC for any implemented GR effect].
+
+### 2.4 Collisions, mergers, fragmentation, Roche
+
+**[DEV+WIKI]** First-class, and the product's signature feature:
+- Collision = overlap detection; resolve by **merge** ("Combine") or
+  fictional elastic **bounce**, conserving momentum/energy, with impact
+  heating.
+- Cratering: impact energy melts a mass fraction of the larger body;
+  melted mass → fragments with random mass/position/velocity drawn to
+  conserve mass/momentum/energy.
+- Three fragmentation types: **collision**, **Roche** (tidal — computed
+  from the same per-step gravity/tidal-force evaluation), **spin**.
+- Fragment count auto-capped for performance.
+
+**[INFER]** Tidal (Roche) evaluation and overlap detection both ride on
+the per-step gravity computation; fragments become new gravitating
+bodies. Exact ordering within a step not sourced.
+
+### 2.5 Scaling: O(N²) → Barnes-Hut, CPU not GPU
+
+**[DEV]** Default gravity is direct all-pairs **O(N²)**. For thousands
+of fragments/ring/galaxy particles, a **Barnes-Hut tree** is the
+scaling answer (slightly reduced accuracy, tunable "gravity tree
+ratio") — shippable as an experimental opt-in [WIKI]. The 2025 rewrite
+moved the engine to **Unity DOTS / ECS / Burst / Job System** —
+cache-friendly, multithreaded **CPU**. **[NO SRC]** that the gravity
+step runs on GPU (a search snippet claiming GPU appears to conflate it
+with unrelated academic papers).
+
+### 2.6 Precision / frame
+
+**[NO SRC]** No primary statement confirming float64 positions or any
+floating-origin / origin-rebasing scheme. Tolerance being "in units of
+length" is the only adjacent fact. Galaxy-scale sims are self-described
+as "only representative and not very accurate" — a *physics* caveat,
+not a floating-point one.
+
+---
+
+## 3. What Principia does (high-confidence, open source)
+
+### 3.1 Fixed-step symplectic for celestials
+
+Default ephemeris integrator: **`QUINLAN_TREMAINE_1990_ORDER_12`** — a
+12th-order **symmetric linear multistep** method, **fixed step 10 min**.
+Conjugate-symplectic → **no secular energy drift**, only bounded
+oscillation (shrinkable by reducing the step). Stated rationale (Jool
+note):
+> *"being conjugate-symplectic, it does not exhibit energy drift … our
+> observer cannot measure the energy at various times and notice an
+> unphysical systematic drift."*
+
+Other shipped fixed-step families: Blanes-Moan SRKN, McLachlan /
+McLachlan-Atela / Okunbor-Skeel SPRK, Quinlan-1999 SLMS.
+
+### 3.2 Adaptive only for the vessel future
+
+Vessel **prediction / flight-plan** uses **`DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM`**
+(embedded RKN 4(3)4, adaptive, tolerances 1 mm / 1 mm·s⁻¹) — **not
+symplectic**. Vessel *history* is fixed-step Quinlan-1999 order 8A at
+10 s. So Principia already runs an **adaptive embedded-RKN** internally;
+it just confines it to test-particle futures, not the celestial
+backbone.
+
+### 3.3 Geopotential, precision, epoch, determinism
+
+- **Geopotential:** IERS-2010 normalized spherical harmonics, or single
+  unnormalized J₂ (`J₂ = −C̄₂₀·√5`). `geopotential_tolerance` prunes
+  small terms for speed.
+- **Precision:** binary64 doubles, SI units, native C++14 via P/Invoke.
+- **Frame/epoch:** Cartesian state at `solar_system_epoch` (TT),
+  pre-integrated to `game_epoch`; IAU-2009 pole/rotation convention.
+  Matches NearStars's `JD2433282.5`.
+- **Determinism:** fixed-step *symmetric* methods are deterministic and
+  time-reversible (the property they are chosen for). The adaptive
+  vessel-prediction segment is not bit-reversible.
+- **Warp:** step stays **fixed** under time-warp; warp just runs more
+  steps per wall-clock second. Smooth to 6,000,000× with no vessels;
+  janky past ~1,000,000× with vessels.
+
+---
+
+## 4. The core philosophical split
+
+| | Universe Sandbox | Principia |
+|---|---|---|
+| **Goal** | Real-time *interactive* sandbox — grab, throw, smash, watch | Deterministic forward integration of a *fixed* system for gameplay |
+| **Default integrator order** | 4th (PEFRL) | 12th (Quinlan-Tremaine) |
+| **Step control** | Adaptive, user-facing length tolerance | Fixed step, no runtime knob |
+| **What gives when you go fast** | Accuracy degrades gracefully; orbits may "fall apart" | Nothing — same step, just more wall-clock; correctness preserved |
+| **Editing the system live** | Central feature | Not a use case; state comes from the initial-state cfg |
+| **Collisions/mergers/Roche** | First-class | Absent (point masses) |
+| **Reproducibility** | Not a goal (RNG fragments, adaptive) | Deterministic & reversible by construction |
+
+The single sentence: **US² makes the integrator adapt to keep an
+interactive sim alive; Principia fixes the integrator so a long sim
+stays physically honest.** Almost every other difference falls out of
+that.
+
+Note the *inversion* of the usual "game = less accurate" intuition for
+the **celestial backbone**: Principia's default is a 12th-order
+symplectic method — *higher* order and stronger long-term guarantees
+than US²'s 4th-order default — because Principia integrates a *known,
+relatively stable hierarchy*. US² must survive *arbitrary
+user-constructed chaos plus collisions in real time*, so it picks a
+lower-order adaptive scheme with graceful degradation. Different
+problems, not "one is better."
+
+---
+
+## 5. Where they agree
+
+Less than the Stellarium case, but real:
+1. **Newtonian gravity, no GR.** Both treat GR as out of scope for an
+   n-body engine (US² aspirationally; Principia ships geopotential
+   harmonics but no relativity). For NearStars's stellar/planetary
+   scales this is the right call in both.
+2. **Symplectic-by-default for the stable case.** US²'s default PEFRL
+   and Principia's Quinlan-Tremaine are both **symplectic/energy-
+   conserving** families. Both teams independently concluded that for
+   long-running gravitational systems you want a symplectic method, not
+   a naive RK4 that drifts. (US² even keeps Euler around "primarily to
+   show how bad it is" [DEV].)
+3. **Adaptive embedded methods for the hard/uncertain part.** US² uses
+   adaptive step-doubling everywhere; Principia uses adaptive embedded
+   RKN for vessel prediction. Both reach for adaptive control where the
+   trajectory is sensitive — they just draw the boundary differently.
+
+---
+
+## 6. Implications for a custom Principia branch
+
+The honest headline: **most of what makes US² impressive is downstream
+of "interactive sandbox," which KSP/Principia is not.** You don't throw
+stars around in KSP; you fly vessels through a deterministic,
+warp-stable system. So the borrow list is short and mostly ergonomic.
+What is actually worth considering, in rough priority:
+
+**Worth seriously considering**
+1. **User-facing accuracy/speed tolerance + "worst-offender body"
+   readout.** US²'s best UX idea. Principia's correctness is invisible
+   to the player (fixed step, no dial). A branch could expose a single
+   "max positional error" tolerance and surface *which body* is
+   currently the binding constraint on smooth warp. This is portable
+   *without* touching the symplectic celestial integrator — it would
+   live in the diagnostic/UX layer. **Caveat:** Principia's whole
+   stability argument rests on the *fixed* step; a naive "make the
+   celestial step adaptive" would break conjugate-symplecticity and the
+   no-drift guarantee. The borrow is the *readout and a step-size
+   chooser*, not adaptive celestial stepping.
+
+**Conditional — only if the branch's goal includes it**
+2. **Collisions / mergers / Roche disruption.** If the branch wants
+   bodies to *collide and merge* (US²'s signature), there is no
+   Principia machinery for it — US² is the reference design (overlap
+   detection, momentum/energy-conserving merge, fragment spawning,
+   per-step tidal Roche). This is a large feature, fundamentally at
+   odds with Principia's "continuous trajectory of point masses" model,
+   and would need its own design. Flag, don't assume.
+3. **Barnes-Hut tree for many-body.** Only relevant if the branch
+   simulates *thousands* of bodies (debris rings, captured swarms).
+   NearStars's footprint is ~tens of stars/planets, where direct O(N²)
+   is trivially fine. Defer unless the branch's scope explicitly grows
+   N by orders of magnitude.
+
+**Probably not worth borrowing**
+4. **Lower-order adaptive celestial integrator.** US²'s adaptive PEFRL
+   approach exists to survive arbitrary chaos in real time. For a fixed,
+   curated NearStars system, Principia's fixed 12th-order symplectic is
+   *strictly better* for the long-term-stability goal. Adopting US²'s
+   approach here would be a regression.
+5. **GPU offload.** US² explicitly didn't do this (CPU/DOTS/Burst). No
+   reason for a Principia branch to either at NearStars's N.
+
+**Open design question for the branch:** the genuinely hard,
+interesting tension is #1 + #4 together — *can you keep Principia's
+fixed-step symplectic guarantee for the celestial backbone while giving
+the player a US²-style accuracy/speed dial?* The clean answer is
+probably: expose **step-size selection** (e.g. 10 min ↔ 2.5 min, the
+Richardson pair Principia already validates against) plus the
+worst-offender diagnostic, rather than per-step adaptivity. That keeps
+the symplectic property while delivering the UX. This is the thing to
+prototype first with 슐츠.
+
+---
+
+## 7. Open questions
+
+- **US² float precision & floating-origin.** [NO SRC]. If the branch
+  ever needs to interoperate or cross-check against US² numerically,
+  we'd need to confirm float64 and any origin-rebasing — currently
+  unknown and unsourced.
+- **US² collision-step ordering.** [INFER only]. Whether overlap
+  resolution runs before/after the integrator advance within a step is
+  not sourced; matters only if we ever design Principia-side collisions.
+- **PEFRL exact coefficients in current US² build.** [WIKI] says PEFRL
+  default; the precise method/order in the shipped build isn't
+  dev-confirmed post-rewrite.
+- **Does the branch want collisions/mergers at all?** This single
+  decision determines whether §6 #2 (a large US²-derived feature) is in
+  or out of scope. Needs a product call before any engine work.
+
+## Related
+
+- [stellarium-binary-orbit-comparison](plans__stellarium-binary-orbit-comparison.html) — the sibling note; that one *could* cite source lines (open source), this one cannot (US² is closed)
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — how NearStars produces the Cartesian state Principia integrates
+- [principia-cfg-reference](reference__principia-cfg-reference.html) — the Principia cfg/numerics layer this compares against
+</script>
+<script type="text/markdown" id="md-ko"># Universe Sandbox vs Principia n-body 엔진 비교
+
+**NearStars 와의 연관성.** NearStars 는 n-body KSP 모드인 **Principia**
+에 각 컴포넌트의 ICRF Cartesian 상태 `(x, y, z, vx, vy, vz)` 를
+`JD2433282.5` 시점 기준으로 공급하고, Principia 가 시스템 전체를 전방
+적분합니다. 앞으로 가능한 방향 중 하나는 **커스텀 Principia 브랜치**
+(슐츠 와 함께) 입니다. 그래서 이 노트는 Stellarium 비교와는 다른 질문을
+던집니다. "우리 컨벤션이 맞는가" 가 아니라 **"실시간 인터랙티브 n-body
+를 위해 Universe Sandbox 가 실제로 해낸 것 중 Principia 브랜치가 가져올
+법한 것은 무엇이고, 무엇이 US² 의 목표에 종속된 결과라 *가져오면 안 되는
+것*인가"** 입니다. 자매 노트는
+[`stellarium-binary-orbit-comparison.md`](plans__stellarium-binary-orbit-comparison.html)
+를 참고하시기 바랍니다.
+
+**⚠ 출처 품질에 관한 주의(중요).** Stellarium 노트는 Stellarium 이
+오픈소스이기에 **실제 소스 라인**(`Star.hpp#L364-L373`) 을 인용할 수
+있었습니다. **반면 Universe Sandbox 는 클로즈드소스 상용
+소프트웨어입니다.** 여기 적힌 내용은 모두 공개된 개발자 발언(개발 블로그,
+FAQ, 팀원의 Steam 포럼 게시글) 또는 팀이 관리하는 위키에서 온 것입니다.
+각 주장에는 다음 태그를 붙였습니다.
+- **[DEV]** — 개발자 직접 발언(블로그 / FAQ / 포럼 인용).
+- **[WIKI]** — 팀 관리 위키, 개발자 발언 그대로는 아님.
+- **[INFER]** — 관찰된 동작 / 설계로부터 추론.
+- **[NO SRC]** — 출처를 찾지 못함. 미상으로 취급.
+
+Principia 쪽은 오픈소스라 신뢰도가 높습니다(위키 + 배포된
+`sol_numerics_blueprint.cfg` + 소스 헤더). 그쪽의 divergence flag 는
+충실도 차이가 아니라 사소한 표현 차이에 불과합니다.
+
+**범위.** 읽기 전용 연구. 이 레포에 코드 변경 없음.
+
+**외부 참조.**
+- Universe Sandbox 개발 블로그: https://universesandbox.com/blog/
+- US² FAQ: https://universesandbox.com/faq/ (+ legacy /faq/original/)
+- US² integrator 포럼 스레드(n-body 리드 개발자 "Greenleaf"):
+  https://steamcommunity.com/app/230290/discussions/0/520518053429453785/
+- Principia 위키: https://github.com/mockingbirdnest/Principia/wiki
+- Principia Jool-stability 노트(symplectic 근거):
+  https://github.com/mockingbirdnest/Principia/wiki/On-the-dynamical-stability-of-Principia's-modified-Jool-system
+- 우리 파이프라인: [`../docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html),
+  [`../docs/reference/principia-cfg-reference.md`](reference__principia-cfg-reference.html)
+
+---
+
+## 1. Executive summary
+
+| 질문 | 답 |
+|----------|--------|
+| 수치적 목표가 같은가? | **아니오.** US² 는 **실시간 인터랙티비티**(바디를 잡고 던지고, 충돌·파편화하며, 어떤 속도에서도 반응) 를 최적화합니다. Principia 는 고정된 초기 상태를 타임워프 하에서 **결정론적이고 장기 안정적으로 전방 적분**하는 데 최적화합니다. |
+| 기본 integrator | US²: **PEFRL**(4차 symplectic) [WIKI], velocity-Verlet, RK4, RKF, Adams, Hermite, Forest-Ruth 등을 포함하는 *선택 가능한 모음* 에서 고른 것 [DEV]. Principia: **`QUINLAN_TREMAINE_1990_ORDER_12`**(12차 symmetric linear multistep, conjugate-symplectic) — *모든* 천체에 고정. |
+| Timestep | US²: **adaptive**, step-doubling 오차 추정으로 **길이 단위 tolerance** 를 사용자에게 노출해 제어 [DEV]. Principia: **fixed**(ephemeris 10분 / vessel history 10초), adaptive 는 vessel *prediction* 에만. |
+| 정확도/속도 제어 | US²: **사용자에게 노출** — 시뮬레이션 속도 슬라이더는 자동 제한되는 target 으로, 오차가 가장 큰 단일 바디에 의해 캡 됨 [DEV+WIKI]. Principia: 런타임에 사용자 튜닝 없음. 정확성은 fixed step + symplecticity 의 성질로 보장. |
+| 상대론 | US²: **Newtonian 전용**, GR 없음. 빛 속도 중력 전파 + PN 보정은 *지향점* 수준 [DEV]. Principia: Newtonian + geopotential 구면조화함수(J₂ / 전체 C̄ₙₘ,S̄ₙₘ), 마찬가지로 GR 없음. |
+| 충돌 / 병합 / Roche | US²: **일급 기능** — overlap 검출, 운동량/에너지 보존 병합, cratering, 파편화, Roche 조석 붕괴 [DEV+WIKI]. Principia: **없음** — 바디는 연속 궤적 위의 점질량. |
+| 다체 스케일링 | US²: 기본은 직접 O(N²), 수천 개 파편에는 **Barnes-Hut tree** opt-in [DEV]. Unity DOTS/Burst 로 CPU 멀티코어, **GPU 아님** [DEV]. Principia: massive body 는 n-body, vessel 은 무질량 test particle, N 은 작음(행성+항성 정도). |
+| 결정론 / 가역성 | Principia: fixed-step **symmetric** 방법 → 결정론적, 시간 역행 가능, secular 에너지 drift 없음 [DEV-rationale]. US²: adaptive + 충돌 + RNG 파편 → 설계상 재현 **불가**. |
+| Principia 브랜치가 US² 에서 가져와야 할 것? | **짧은 목록뿐이며, 대부분 코어 integrator 가 아니라 UX/ergonomics.** §6 참고. US² 의 선택 대부분은 "인터랙티브 샌드박스" 에서 따라 나온 것이고, KSP/Principia 는 그게 아닙니다. |
+
+---
+
+## 2. Universe Sandbox 가 실제로 하는 것
+
+읽을 소스가 없어 Stellarium 노트보다 신뢰도가 낮습니다. 태그는 위에서
+정의한 대로입니다.
+
+### 2.1 하나의 integrator 가 아니라 integrator 모음
+
+**[DEV]** n-body 리드 개발자("Steam 의 Greenleaf", Thomas Grønneløv /
+"Naml" 로 알려짐) 가 역대 집합을 나열했습니다. explicit & semi-implicit
+Euler, RK2, RK4, RKF(Runge-Kutta-Fehlberg), Adams-Bashforth 6차,
+Adams-Moulton 6차, Hermite 5차, **PEFRL**, **Forest-Ruth**. "대규모
+NBody 재작성" 과정에서 대부분이 일시적으로 빠졌고, 다시 추가되는
+중이었습니다. 현재 노출된 기본값은 **PEFRL**(4차 symplectic 으로,
+position-extended Forest-Ruth 계열) [WIKI] 이며, velocity-Verlet 가
+명시적으로 문서화된 Verlet 변형입니다 [DEV].
+> `x(t+dt)=x(t)+v(t)·dt+0.5·a(t)·dt²`, `v(t+dt)=v(t)+0.5·(a(t)+a(t+dt))·dt`
+
+밝힌 철학 [DEV]. *"사용자가 작업에 맞는 integrator 를 고르게 하고,
+합리적인 기본값을 정해 둔다 … 빠른 chaotic 시뮬레이션 → 속도가 중요,
+장기 안정성 분석 → 정확도가 중요."*
+
+### 2.2 길이 tolerance 를 사용자에게 노출하는 adaptive timestep
+
+**[DEV]** 가장 흥미로운 설계 포인트입니다. 사용자는 step 당 최대 위치
+오차에 해당하는 **길이 단위 tolerance** 를 설정합니다. 매 step 마다
+엔진은 한 번의 전체 `dt` 와 두 번의 `½dt` step 을 밟아 비교하고(표준
+step-doubling), tolerance 아래로 유지되도록 step 을 줄입니다.
+> *"적분 step 길이는 이 tolerance 보다 큰 위치 오차를 만들지 않도록
+> 조정된다."*
+
+**[DEV]** 따라서 시뮬레이션 속도 슬라이더는 정확도를 지키기 위해 **자동
+제한되는 target** 입니다. **[WIKI]** UI 는 심지어 지금 *어느 단일 바디*
+가 오차가 가장 커서 속도를 캡 하고 있는지까지 표시합니다. **[DEV]**
+tolerance 를 올리면 → 빨라지지만 오차가 누적되며 궤도가 "무너질" 수
+있습니다.
+
+### 2.3 Newtonian 전용
+
+**[DEV]** *"Universe Sandbox 의 물리는 현재 Newtonian 뿐이다."* GR
+없음. 중력파는 n-body 방법의 범위 밖이라고 명시했습니다. 지향하는 미래는
+중력이 즉시가 아니라 `c` 로 전파되는 것, 그리고 가능하다면 post-Newtonian
+보정입니다. GR 토글은 존재하지 않습니다 [NO SRC for any implemented GR
+effect].
+
+### 2.4 충돌, 병합, 파편화, Roche
+
+**[DEV+WIKI]** 일급 기능이자 제품의 시그니처입니다.
+- 충돌 = overlap 검출. **병합**("Combine") 또는 가상의 탄성
+  **bounce** 로 해소하며, 운동량/에너지를 보존하고 충격 가열을
+  동반합니다.
+- Cratering. 충격 에너지가 더 큰 바디 질량의 일부를 녹이고, 녹은 질량
+  → 질량/운동량/에너지를 보존하도록 무작위 질량/위치/속도로 뽑힌
+  파편이 됩니다.
+- 파편화 유형 세 가지. **collision**, **Roche**(조석 — 같은 step 당
+  중력/조석력 평가에서 계산), **spin**.
+- 파편 수는 성능을 위해 자동으로 캡 됩니다.
+
+**[INFER]** 조석(Roche) 평가와 overlap 검출은 모두 step 당 중력 계산에
+얹혀 돌아가고, 파편은 새로운 중력 바디가 됩니다. step 내부의 정확한
+순서는 출처 없음입니다.
+
+### 2.5 스케일링: O(N²) → Barnes-Hut, GPU 가 아닌 CPU
+
+**[DEV]** 기본 중력은 직접 all-pairs **O(N²)** 입니다. 수천 개의
+파편/링/은하 입자에는 **Barnes-Hut tree** 가 스케일링 답이며(정확도가
+약간 떨어지고, "gravity tree ratio" 로 튜닝 가능) 실험적 opt-in 으로
+배포됩니다 [WIKI]. 2025년 재작성에서 엔진은 **Unity DOTS / ECS / Burst /
+Job System** 으로 옮겨졌습니다 — 캐시 친화적이고 멀티스레드인 **CPU**
+방식입니다. **[NO SRC]** 중력 step 이 GPU 에서 돈다는 주장은 출처가
+없습니다(GPU 라고 하는 검색 스니펫은 무관한 학술 논문과 혼동한 것으로
+보입니다).
+
+### 2.6 정밀도 / 프레임
+
+**[NO SRC]** float64 위치나 floating-origin / origin-rebasing 방식을
+확인해 주는 1차 발언이 없습니다. tolerance 가 "길이 단위" 라는 것만이
+유일하게 인접한 사실입니다. 은하 스케일 시뮬레이션은 스스로 "대표적일
+뿐 그다지 정확하지 않다" 고 설명하는데, 이는 *물리* 측 주의이지
+부동소수점 측 이야기가 아닙니다.
+
+---
+
+## 3. Principia 가 하는 것(신뢰도 높음, 오픈소스)
+
+### 3.1 천체에 대한 fixed-step symplectic
+
+기본 ephemeris integrator: **`QUINLAN_TREMAINE_1990_ORDER_12`** — 12차
+**symmetric linear multistep** 방법으로, **step 10분 고정**입니다.
+Conjugate-symplectic 이라 **secular 에너지 drift 가 없고**, step 을
+줄이면 작아지는 유계 진동만 남습니다. 밝힌 근거(Jool 노트).
+> *"conjugate-symplectic 이라 에너지 drift 를 보이지 않는다 …
+> 관측자는 여러 시점의 에너지를 측정해 비물리적인 계통적 drift 를
+> 알아챌 수 없다."*
+
+배포된 다른 fixed-step 계열들. Blanes-Moan SRKN, McLachlan /
+McLachlan-Atela / Okunbor-Skeel SPRK, Quinlan-1999 SLMS.
+
+### 3.2 vessel 미래에만 adaptive
+
+Vessel **prediction / flight-plan** 은
+**`DORMAND_ELMIKKAWY_PRINCE_1986_RKN_434FM`**(embedded RKN 4(3)4,
+adaptive, tolerance 1 mm / 1 mm·s⁻¹) 를 쓰며 — **symplectic 이 아닙니다.**
+Vessel *history* 는 fixed-step Quinlan-1999 order 8A, 10초입니다. 즉
+Principia 는 이미 내부적으로 **adaptive embedded-RKN** 을 돌리고
+있으며, 그것을 천체 백본이 아니라 test particle 의 미래에만 가두어 둔
+것뿐입니다.
+
+### 3.3 Geopotential, 정밀도, epoch, 결정론
+
+- **Geopotential.** IERS-2010 normalized 구면조화함수, 또는 단일
+  unnormalized J₂(`J₂ = −C̄₂₀·√5`). `geopotential_tolerance` 가 작은
+  항을 잘라내 속도를 높입니다.
+- **정밀도.** binary64 double, SI 단위, P/Invoke 를 통한 native
+  C++14.
+- **프레임/epoch.** `solar_system_epoch`(TT) 의 Cartesian 상태를
+  `game_epoch` 까지 미리 적분, IAU-2009 극/회전 컨벤션. NearStars 의
+  `JD2433282.5` 와 일치합니다.
+- **결정론.** fixed-step *symmetric* 방법은 결정론적이고 시간 역행이
+  가능합니다(이 성질 때문에 선택됨). adaptive vessel-prediction 구간은
+  bit 단위로 역행되지 않습니다.
+- **Warp.** 타임워프 하에서도 step 은 **고정**되며, warp 는 그저
+  벽시계 초당 더 많은 step 을 돌릴 뿐입니다. vessel 이 없으면
+  6,000,000× 까지 매끄럽고, vessel 이 있으면 ~1,000,000× 를 넘어가며
+  버벅입니다.
+
+---
+
+## 4. 핵심 철학의 갈림
+
+| | Universe Sandbox | Principia |
+|---|---|---|
+| **목표** | 실시간 *인터랙티브* 샌드박스 — 잡고, 던지고, 부수고, 지켜본다 | 게임플레이를 위한 *고정* 시스템의 결정론적 전방 적분 |
+| **기본 integrator 차수** | 4차(PEFRL) | 12차(Quinlan-Tremaine) |
+| **Step 제어** | Adaptive, 사용자 노출 길이 tolerance | Fixed step, 런타임 손잡이 없음 |
+| **빠르게 돌릴 때 무엇이 양보되나** | 정확도가 점진적으로 저하, 궤도가 "무너질" 수 있음 | 아무것도 — 같은 step, 벽시계만 더 쓰며 정확성 보존 |
+| **시스템을 라이브로 편집** | 핵심 기능 | use case 아님, 상태는 초기 상태 cfg 에서 옴 |
+| **충돌/병합/Roche** | 일급 | 없음(점질량) |
+| **재현성** | 목표 아님(RNG 파편, adaptive) | 설계상 결정론적 & 가역적 |
+
+한 문장으로. **US² 는 인터랙티브 시뮬레이션을 살려 두려고 integrator 를
+적응시키고, Principia 는 긴 시뮬레이션이 물리적으로 정직하게 유지되도록
+integrator 를 고정합니다.** 다른 거의 모든 차이는 여기서 따라
+나옵니다.
+
+여기서 **천체 백본** 에 대해서는 흔한 "게임 = 덜 정확하다" 직관이
+*뒤집힌다* 는 점에 주목하시기 바랍니다. Principia 의 기본값은 12차
+symplectic 방법으로 — US² 의 4차 기본값보다 *차수가 높고* 장기 보장도
+강합니다 — 이는 Principia 가 *알려져 있고 비교적 안정적인 위계* 를
+적분하기 때문입니다. US² 는 *사용자가 임의로 구성한 혼돈에 충돌까지
+얹힌 상황을 실시간으로* 견뎌야 하므로, 점진적 저하를 갖춘 더 낮은 차수의
+adaptive 방식을 택합니다. "어느 쪽이 더 낫다" 가 아니라 서로 다른
+문제입니다.
+
+---
+
+## 5. 둘이 일치하는 지점
+
+Stellarium 사례보다는 적지만, 실재합니다.
+1. **Newtonian 중력, GR 없음.** 둘 다 GR 을 n-body 엔진의 범위 밖으로
+   봅니다(US² 는 지향점 수준, Principia 는 geopotential 조화함수는
+   배포하지만 상대론은 없음). NearStars 의 항성/행성 스케일에서는 양쪽
+   모두 옳은 선택입니다.
+2. **안정한 경우엔 기본적으로 symplectic.** US² 의 기본 PEFRL 과
+   Principia 의 Quinlan-Tremaine 은 둘 다 **symplectic/에너지 보존**
+   계열입니다. 두 팀 모두 독립적으로, 장기간 도는 중력계에는 drift 하는
+   순진한 RK4 가 아니라 symplectic 방법이 필요하다는 결론에
+   이르렀습니다(US² 는 심지어 Euler 를 "그게 얼마나 나쁜지 보여주려고"
+   남겨 둡니다 [DEV]).
+3. **어렵고 불확실한 부분엔 adaptive embedded 방법.** US² 는 어디서나
+   adaptive step-doubling 을 쓰고, Principia 는 vessel prediction 에
+   adaptive embedded RKN 을 씁니다. 둘 다 궤적이 민감한 곳에서는
+   adaptive 제어를 꺼내 드는데, 그 경계를 다르게 그을 뿐입니다.
+
+---
+
+## 6. 커스텀 Principia 브랜치에 대한 함의
+
+정직한 헤드라인. **US² 를 인상적으로 만드는 대부분은 "인터랙티브
+샌드박스" 에 종속된 것이고, KSP/Principia 는 그게 아닙니다.** KSP 에서는
+별을 집어 던지지 않습니다. 결정론적이고 warp 안정적인 시스템 속에서
+vessel 을 날립니다. 그래서 가져올 목록은 짧고 대부분 ergonomic
+입니다. 실제로 고려할 만한 것을 대략의 우선순위로 정리합니다.
+
+**진지하게 고려할 만함**
+1. **사용자에게 노출하는 정확도/속도 tolerance + "최악 오차 바디"
+   표시.** US² 의 최고의 UX 아이디어입니다. Principia 의 정확성은
+   플레이어에게 보이지 않습니다(fixed step, 다이얼 없음). 브랜치는 단일
+   "최대 위치 오차" tolerance 를 노출하고, 매끄러운 warp 를 묶고 있는
+   *어느 바디* 가 현재 binding constraint 인지 드러낼 수 있습니다. 이는
+   symplectic 천체 integrator 를 *건드리지 않고* 이식 가능합니다 —
+   진단/UX 레이어에 살게 됩니다. **주의.** Principia 의 안정성 논증
+   전체가 *fixed* step 위에 서 있습니다. 순진하게 "천체 step 을
+   adaptive 하게 만든다" 면 conjugate-symplecticity 와 no-drift 보장이
+   깨집니다. 가져올 것은 *표시와 step 크기 선택기* 이지 천체 adaptive
+   stepping 이 아닙니다.
+
+**조건부 — 브랜치의 목표가 이를 포함할 때만**
+2. **충돌 / 병합 / Roche 붕괴.** 브랜치가 바디를 *충돌·병합* 시키길
+   원한다면(US² 의 시그니처), Principia 에는 이를 위한 장치가 전혀
+   없습니다 — US² 가 레퍼런스 설계입니다(overlap 검출, 운동량/에너지
+   보존 병합, 파편 생성, step 당 조석 Roche). 이는 큰 기능이며,
+   Principia 의 "점질량의 연속 궤적" 모델과 근본적으로 상충하고, 자체
+   설계가 필요합니다. 가정하지 말고 flag 하시기 바랍니다.
+3. **다체용 Barnes-Hut tree.** 브랜치가 *수천* 개 바디(잔해 링, 포획된
+   무리) 를 시뮬레이션할 때만 관련됩니다. NearStars 의 footprint 는
+   수십 개의 항성/행성 정도라 직접 O(N²) 로도 충분합니다. 브랜치 범위가
+   N 을 자릿수 단위로 키우지 않는 한 보류합니다.
+
+**가져올 가치가 별로 없음**
+4. **낮은 차수의 adaptive 천체 integrator.** US² 의 adaptive PEFRL
+   접근은 실시간으로 임의의 혼돈을 견디려 존재합니다. 고정되고
+   큐레이션된 NearStars 시스템에는, 장기 안정성 목표에 대해 Principia 의
+   fixed 12차 symplectic 이 *엄밀히 더 낫습니다.* 여기서 US² 방식을
+   채택하는 것은 퇴보입니다.
+5. **GPU offload.** US² 는 일부러 하지 않았습니다(CPU/DOTS/Burst).
+   NearStars 의 N 규모에서 Principia 브랜치가 그럴 이유도 없습니다.
+
+**브랜치의 열린 설계 질문.** 진짜로 어렵고 흥미로운 긴장은 #1 + #4 를
+함께 두는 것입니다 — *천체 백본에 대해 Principia 의 fixed-step
+symplectic 보장을 유지하면서, 플레이어에게 US² 식 정확도/속도 다이얼을
+줄 수 있는가?* 깔끔한 답은 아마 per-step adaptivity 가 아니라
+**step 크기 선택**(예: 10분 ↔ 2.5분, Principia 가 이미 대조 검증하는
+Richardson 쌍) 을 노출하고 worst-offender 진단을 얹는 것입니다. 이러면
+symplectic 성질을 지키면서 UX 를 전달합니다. 슐츠 와 함께 가장 먼저
+프로토타이핑할 대상입니다.
+
+---
+
+## 7. 열린 질문
+
+- **US² float 정밀도 & floating-origin.** [NO SRC]. 브랜치가 언젠가
+  US² 와 수치적으로 상호운용하거나 교차 검증해야 한다면 float64 여부와
+  origin-rebasing 방식을 확인해야 하는데, 현재로선 미상이고 출처가
+  없습니다.
+- **US² 충돌-step 순서.** [INFER only]. step 내부에서 overlap 해소가
+  integrator advance 보다 앞에 도는지 뒤에 도는지는 출처가 없습니다.
+  Principia 쪽 충돌을 설계할 일이 생길 때만 의미가 있습니다.
+- **현재 US² 빌드의 PEFRL 정확한 계수.** [WIKI] 는 PEFRL 기본값이라고
+  하지만, 배포 빌드의 정확한 방법/차수는 재작성 이후 개발자가 확인해
+  주지 않았습니다.
+- **브랜치가 충돌/병합을 원하긴 하는가?** 이 단일 결정이 §6 #2(US²
+  에서 파생된 큰 기능) 가 범위 안인지 밖인지를 가릅니다. 엔진 작업에
+  앞서 제품 차원의 판단이 필요합니다.
+
+## Related
+
+- [stellarium-binary-orbit-comparison](plans__stellarium-binary-orbit-comparison.html) — 자매 노트. 그쪽은 소스 라인을 인용할 수 있고(오픈소스), 이쪽은 할 수 없다(US² 는 클로즈드)
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — NearStars 가 Principia 가 적분할 Cartesian 상태를 만드는 방식
+- [principia-cfg-reference](reference__principia-cfg-reference.html) — 이 노트가 비교 대상으로 삼는 Principia cfg/numerics 레이어
+</script>
 <script>
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
+const srcs = {};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], { gfm: true, breaks: false });
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
 }
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+});
 </script>
 </body>
 </html>

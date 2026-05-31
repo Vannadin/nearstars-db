@@ -5,70 +5,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nearby Star Systems KSP Mod — Project Guideline · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="side">
-<div class="brand">NearStars <span>docs</span></div>
+<a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
@@ -83,133 +72,353 @@ body { margin: 0 }
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
-<main class="docmain">
-<div class="topbar"><div class="seg" id="lang-seg"><button class="on" data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
-<div data-langbody="ko"><p><b>목표.</b> KSP 1.12.x 의 Sol-Configs (실제 태양계) 위에 근접 항성계를 추가합니다. RSS 호환은 향후 목표입니다.</p>
-<hr>
-<h2>1. 프로젝트 개요</h2>
-<div class="tbl"><table><thead><tr><th>항목</th><th>내용</th></tr></thead><tbody><tr><td>모드명</td><td>NearStars</td></tr><tr><td>KSP 버전</td><td>1.12.x</td></tr><tr><td>라이선스</td><td>CC-BY-NC-SA-4.0 (Sol과 동일)</td></tr><tr><td>유형</td><td>Sol 기반 애드온. RSS 호환은 미지원 (향후 목표).</td></tr></tbody></table></div>
-<p>이 모드는 새로운 항성계를 추가하며, Sol의 기존 천체는 수정하거나 교체하지 않습니다. RSS 호환은 계획 중이지만 현재 릴리스에는 포함되지 않습니다.</p>
-<hr>
-<h2>2. 의존성</h2>
-<p><b>필수.</b></p>
-<div class="tbl"><table><thead><tr><th>모드</th><th>역할</th></tr></thead><tbody><tr><td>Sol-Configs (ballisticfox)</td><td>실제 태양계 베이스 (<code>FOR[SolSystem]</code>)</td></tr><tr><td>Kopernicus (ballisticfox fork)</td><td>천체 정의 프레임워크</td></tr><tr><td>Module Manager</td><td>조건부 패칭 (<code>NEEDS[]</code>)</td></tr><tr><td>Parallax Continued</td><td>지형 셰이더 및 스캐터</td></tr><tr><td>EVE Volumetrics V5</td><td>구름 레이어 (대기 있는 천체 전용)</td></tr><tr><td>BurstPQS</td><td>지형 생성 최적화</td></tr></tbody></table></div>
-<p><b>향후 목표 (현재 미지원).</b></p>
-<div class="tbl"><table><thead><tr><th>모드</th><th>태그</th></tr></thead><tbody><tr><td>RealSolarSystem</td><td><code>FOR[RSSConfig]</code></td></tr></tbody></table></div>
-<p>참고. <a href="https://github.com/CharonSSS/RSS-Origin-2">RSS-Origin 2</a> (CharonSSS, v1.0.0 2026-05-21 릴리스) 는 Sol 지원이 추가된 RSS-Origin v1.x 의 후속작이며, Sol 기반 환경에서 사용하는 정식 소행성/혜성/왜소행성 애드온입니다. v1.x 가 위치한 <code>CharonSSS/RSS-Origin</code> 과는 별도 저장소입니다. §5.1 의 패치 템플릿은 추후 RSS 지원 시 자연스럽게 확장될 수 있도록 설계되어 있습니다.</p>
-<hr>
-<h2>3. 대상 항성계</h2>
-<h3>3.1 거리 제한</h3>
-<div class="tbl"><table><thead><tr><th>엔진</th><th>최대 범위</th><th>출처</th></tr></thead><tbody><tr><td>Kopernicus (렌더링 + SOI)</td><td>~50 ly</td><td>REX 개발자</td></tr><tr><td>Principia (중력 섭동체)</td><td>~80 ly</td><td>RSS-Origin 2 개발자</td></tr></tbody></table></div>
-<p>~50 ly를 초과하는 Kopernicus 천체는 맵 뷰 오류, 렌더러의 부동소수점 결함, 또는 엔진 충돌이 발생할 수 있습니다. 이는 엄격한 제약 조건으로, 모든 Kopernicus 천체는 반드시 50 ly 이내에 있어야 합니다.</p>
-<p>Principia는 KSP의 렌더링 제한을 받지 않는 별도의 메커니즘을 통해 별을 중력 섭동체로 등록합니다. 따라서 50–80 ly 범위의 별은 <b>Principia 전용 항목</b> (Kopernicus 천체 없음, 시각적 존재 없음, 중력 효과만) 후보가 됩니다.</p>
-<h3>3.2 범위</h3>
-<p>현재 데이터 파이프라인은 50 ly 이내의 모든 확인된 행성계와 주목할 만한 항성계를 포함합니다. 이는 Kopernicus 범위를 완전히 커버합니다. 현재 항성계 목록과 개수는 <a href="https://vannadin.github.io/nearstars-db/">라이브 DB 뷰어</a> 에서 확인할 수 있습니다. 50–80 ly 구간의 Principia 전용 패스는 필요 시 나중에 추가할 수 있습니다.</p>
-<h3>3.3 개발 순서</h3>
-<p><b>하나의 완전한 시스템을 먼저 빌드하고, 그 다음 확장합니다.</b> 첫 번째 시스템은 이후 모든 시스템의 템플릿이자 참조 구현이 됩니다. 첫 번째 시스템이 완전히 플레이 가능해지기 전에 (해당 시스템의 Phase 1 + Phase 2 완료) 두 번째 시스템을 시작하지 않습니다.</p>
-<p>최종 모드 수록은 <b>~10개 항성계</b> 로, 본 저장소의 연구 데이터베이스 안에서 선별됩니다. 선택 목록과 순서는 아직 결정 중이며, 후보로는 Proxima Centauri (가장 가깝고, 단일 별, 행성 2개), Barnard&#x27;s Star (5.96 ly), Alpha Centauri (계층적 삼중성, 컴포넌트 3개), 그 외 여러 시스템이 있습니다.</p>
-<hr>
-<h2>4. 모드 릴리즈 저장소 컨벤션</h2>
-<p>모드 릴리즈는 <code>nearstars-db</code> 가 아닌 <b>별도 저장소</b>(<code>NearStars-Configs/</code> + <code>NearStars-Textures/</code>)에 위치합니다. 디렉토리 구조, cfg 컨벤션, 텍스처 컨벤션은 <a href="reference__mod-release-layout.html"><code>mod-release-layout.md</code></a> 에서 다룹니다.</p>
-<ul><li>§1 저장소 구조</li><li>§2 설정 파일 컨벤션 (패치 태그, 천체 식별자, 별/행성 템플릿, 파일 분리)</li><li>§3 텍스처 컨벤션</li></ul>
-<p>이 문서의 이후 섹션은 프로젝트 수준의 스코프 (대상, 데이터 출처, 단계, 인덱스 할당) 만 다룹니다.</p>
-<hr>
-<h2>7. flightGlobalsIndex 할당</h2>
-<p>Sol-Configs (아래 표의 NAIF SPK-style ID 체계) 및 RSS-Origin v1.x 와 충돌하지 않아야 합니다. NearStars 는 1000+ 구간을 시스템당 100개 인덱스로 사용하며, 이는 Sol-Configs 의 행성 계열 (≤916) 과 소행성 계열 (≥9000) 사이의 빈 구간에 위치합니다.</p>
-<div class="tbl"><table><thead><tr><th>범위</th><th>소유자</th></tr></thead><tbody><tr><td>0–99</td><td>기본 KSP / RealSolarSystem (KSP-RO/RealSolarSystem은 1–25, 50, 60, 91–95 사용)</td></tr><tr><td><code>10</code>, <code>100</code>–<code>916</code></td><td>Sol-Configs 의 행성 및 위성 — NAIF SPK-style ID 체계 (Sol=<code>10</code>; Mercury=<code>100</code>; Venus=<code>200</code>; Earth=<code>300</code>, Luna=<code>301</code>; Mars=<code>400</code>, Phobos=<code>401</code>, Deimos=<code>402</code>; Jupiter=<code>500</code>, Galilean 위성=<code>501–504</code>, Amalthea=<code>505</code>, Himalia=<code>514</code>; Saturn=<code>600</code>, 주요 위성=<code>601–609</code>, Phoebe=<code>615</code>; Uranus=<code>700</code>, 주요 위성=<code>701–705</code>, Sycorax=<code>715</code>; Neptune=<code>800</code>, Triton=<code>801</code>, Nereid=<code>802</code>, Proteus=<code>808</code>; 명왕성계=<code>901–916</code>)</td></tr><tr><td><code>9xxx</code>–<code>9xxxxxx</code></td><td>Sol-Configs 의 소행성 — <code>9</code> + 소행성 번호 (Ida=<code>9243</code>, Dactyl=<code>92431</code>, Pallas=<code>902</code>, Ryugu=<code>9162173</code>)</td></tr><tr><td><code>10xxxxxx</code>+</td><td>Sol-Configs 의 TNO / 왜소행성 (Eris=<code>10134340</code>, Arrokoth=<code>10486958</code>)</td></tr><tr><td>1000–1099</td><td>NearStars — 첫 번째 항성계 (미정). Sol-Configs 의 행성계 ID (<code>≤916</code>) 와 소행성 ID (<code>≥9000</code>) 사이의 빈 <code>1000–8999</code> 구간에 위치</td></tr><tr><td>1100–1199</td><td>NearStars — 두 번째 항성계 (미정)</td></tr><tr><td>1200–1299</td><td>NearStars — 세 번째 항성계 (미정)</td></tr><tr><td>1300+</td><td>NearStars — 이후 시스템 (시스템당 +100)</td></tr></tbody></table></div>
-<p>참고. RSS-Origin 2 자체는 <code>flightGlobalsIndex</code> 값을 명시 부여하지 않고 Kopernicus 자동 할당에 맡깁니다. NearStars 의 1000+ 구간은 향후 다른 애드온이 명시 부여를 도입할 경우를 대비한 마진이며, 현 시점 v2 와의 충돌과는 별개입니다.</p>
-<p>각 100-인덱스 블록 내에서는 천체당 1씩 증가합니다. 별, 행성, 위성, 질량 중심은 같은 블록을 공유합니다.</p>
-<hr>
-<h2>8. 천문 데이터 출처</h2>
-<p>모든 궤도 파라미터와 물리 상수는 실제 관측 데이터에서 가져와야 합니다.</p>
-<ul><li><b>궤도 데이터.</b> NASA JPL Horizons, SIMBAD</li><li><b>외계행성.</b> NASA Exoplanet Archive</li><li><b>항성 물리.</b> SIMBAD Astronomical Database</li><li>텍스처 출처는 <code>Credits-License.md</code>에 문서화해야 합니다.</li></ul>
-<hr>
-<h2>9. 개발 단계</h2>
-<p><b>규칙. 다음 시스템을 시작하기 전에 하나의 시스템을 처음부터 끝까지 완성합니다.</b></p>
-<h3>Phase 1 — 첫 번째 시스템: 별 스켈레톤 (MVP)</h3>
-<ul><li>[ ] 파일럿 시스템 선택 (권장: Proxima Centauri)</li><li>[ ] 저장소 구조 설정</li><li>[ ] 별 천체 정의: 궤도, ScaledVersion, Properties</li><li>[ ] 아이콘 및 현지화 키 스켈레톤</li><li>[ ] Kopernicus 로드 확인 (Sol + RSS)</li></ul>
-<h3>Phase 2 — 첫 번째 시스템: 행성</h3>
-<ul><li>[ ] 행성 정의 (대기, PQS, 바이옴)</li><li>[ ] 모든 천체가 올바르게 로드되고 공전하는지 확인</li></ul>
-<h3>Phase 3 — 첫 번째 시스템: 비주얼</h3>
-<ul><li>[ ] 텍스처 제작 (높이맵, 컬러 맵)</li><li>[ ] Parallax 지형 및 스캐터</li><li>[ ] 대기 있는 천체용 EVE 구름 레이어</li><li>[ ] Scatterer 대기 설정</li></ul>
-<h3>Phase 4 — 첫 번째 시스템: 마무리 + 확장</h3>
-<ul><li>[ ] 모든 천체에 대한 과학 실험 텍스트</li><li>[ ] 호환성 패치 (Principia, 해당 시 Kerbalism)</li><li>[ ] 성능 최적화 패스</li><li>[ ] Phase 1–3을 템플릿으로 삼아 두 번째 시스템 시작</li></ul>
-<hr>
-<h2>10. 미결 결정 사항</h2>
-<ul><li>[x] 최종 모드명 — <code>NearStars</code>로 확정</li><li>[ ] 파일럿 시스템 선택 (Proxima Centauri 권장)</li><li>[ ] 항성 간 거리 스케일링 전략 — 실제 거리는 KSP에서 물리적으로 불가능하므로 상징적 압축이 필요합니다. Sol 기본, Sol 1/4, RSS 1:1 스케일 전반에 걸쳐 일관성을 유지해야 합니다. Kopernicus 하드 제한: ~50 ly (§3.1 참고).</li><li>[x] macOS 텍스처 포맷 호환성 전략 — Windows 전용 모드이므로 BC5/BC7/BC4 DDS를 제한 없이 사용 가능</li><li>[ ] RSS EVE 버전: V3 (무료) vs V5 (Patreon) — 둘 다 지원할지, Sol처럼 V5만 지원할지</li><li>[ ] Principia 호환성: 스케일 변형별 별도 중력 모델 cfg가 필요하며, 50–80 ly 별에 대한 Principia 전용 항목 가능 (Kopernicus 천체 불필요)</li><li>[ ] Sol Quarter 스케일 지원 — 지원 예정, 우선순위 낮음. <code>principia-cfg</code> skill MVP 는 Sol Real 스케일만 출력. Quarter 좌표는 별도 <code>solar_system_epoch</code> 라서 별개 cfg 파일이 필요하며 후속 작업.</li></ul>
-<h2>Related</h2>
-<ul><li><a href="reference__methodology.html">methodology</a> — 클러스터 허브. DB 측 워크플로우.</li><li><a href="reference__mod-reference.html">mod-reference</a> — 다운스트림 모드와 의존성 티어.</li><li><a href="reference__mod-release-layout.html">mod-release-layout</a> — 모드 릴리스 측의 repo 레이아웃.</li><li><a href="reference__data-sources.html">data-sources</a> — 외부 데이터의 인용 요구사항.</li><li><a href="reference__rex-data-comparison.html">rex-data-comparison</a> — REX 는 §1 에서 정신적 선조로 인용됩니다.</li></ul></div><div data-langbody="en" style="display:none"><p><b>Goal:</b> Add nearby star systems to KSP 1.12.x on top of Sol-Configs (real solar system). RSS compatibility is a planned future target.</p>
-<hr>
-<h2>1. Project Overview</h2>
-<div class="tbl"><table><thead><tr><th>Item</th><th>Detail</th></tr></thead><tbody><tr><td>Mod name</td><td>NearStars</td></tr><tr><td>KSP version</td><td>1.12.x</td></tr><tr><td>License</td><td>CC-BY-NC-SA-4.0 (matching Sol)</td></tr><tr><td>Type</td><td>Sol-based addon. RSS compatibility deferred.</td></tr></tbody></table></div>
-<p>The mod adds new star systems; it does not touch or replace existing Sol bodies. RSS compatibility is planned but not currently shipped.</p>
-<hr>
-<h2>2. Dependencies</h2>
-<p><b>Required:</b></p>
-<div class="tbl"><table><thead><tr><th>Mod</th><th>Role</th></tr></thead><tbody><tr><td>Sol-Configs (ballisticfox)</td><td>Real solar system base (<code>FOR[SolSystem]</code>)</td></tr><tr><td>Kopernicus (ballisticfox fork)</td><td>Body definition framework</td></tr><tr><td>Module Manager</td><td>Conditional patching (<code>NEEDS[]</code>)</td></tr><tr><td>Parallax Continued</td><td>Terrain shaders and scatters</td></tr><tr><td>EVE Volumetrics V5</td><td>Cloud layers (atmospheric bodies only)</td></tr><tr><td>BurstPQS</td><td>Terrain generation optimization</td></tr></tbody></table></div>
-<p><b>Future target (not currently supported):</b></p>
-<div class="tbl"><table><thead><tr><th>Mod</th><th>Tag</th></tr></thead><tbody><tr><td>RealSolarSystem</td><td><code>FOR[RSSConfig]</code></td></tr></tbody></table></div>
-<p>Note: <a href="https://github.com/CharonSSS/RSS-Origin-2">RSS-Origin 2</a> (CharonSSS, v1.0.0 released 2026-05-21) is the Sol-compatible successor of RSS-Origin v1.x and is now the canonical asteroid/comet/dwarf-planet add-on for Sol-based installs. It is a separate repository from <code>CharonSSS/RSS-Origin</code> (v1.x, no Sol support). The patch templates in §5.1 are designed to extend cleanly to RSS once RSS support is implemented.</p>
-<hr>
-<h2>3. Target Star Systems</h2>
-<h3>3.1 Distance limits</h3>
-<div class="tbl"><table><thead><tr><th>Engine</th><th>Max range</th><th>Source</th></tr></thead><tbody><tr><td>Kopernicus (rendering + SOI)</td><td>~50 ly</td><td>REX developer</td></tr><tr><td>Principia (gravitational perturber)</td><td>~80 ly</td><td>RSS-Origin 2 developer</td></tr></tbody></table></div>
-<p>Kopernicus bodies beyond ~50 ly risk map-view failures, floating-point glitches in the renderer, or engine crashes. This is a hard constraint — all Kopernicus bodies must be within 50 ly.</p>
-<p>Principia registers stars as gravitational perturbers through a separate mechanism that is not subject to KSP&#x27;s rendering limits. Stars in the 50–80 ly range are therefore candidates for <b>Principia-only entries</b> (no Kopernicus body, no visual presence, gravity effect only).</p>
-<h3>3.2 Scope</h3>
-<p>The current data pipeline covers all confirmed planetary systems and noteworthy stellar systems within 50 ly. This fully covers the Kopernicus range. See the <a href="https://vannadin.github.io/nearstars-db/">live DB viewer</a> for the current system list and count. A separate Principia-only pass for the 50–80 ly band can be added later if desired.</p>
-<h3>3.3 Development order</h3>
-<p><b>Build one complete system first, then expand.</b> The first system serves as the template and reference implementation for all subsequent systems. Do not start a second system until the first is fully playable (Phase 1 + Phase 2 complete for that system).</p>
-<p>The final mod ships <b>~10 stellar systems</b> selected from the research database in this repo. Selection list and order are still being decided — candidates include Proxima Centauri (nearest, single-star, 2 planets), Barnard&#x27;s Star (5.96 ly), Alpha Centauri (hierarchical triple, 3 components), and others.</p>
-<hr>
-<h2>4. Mod-release repo conventions</h2>
-<p>The mod release lives in a <b>separate repo</b> (<code>NearStars-Configs/</code> + <code>NearStars-Textures/</code>), not in <code>nearstars-db</code>. Its directory layout, cfg conventions, and texture conventions are documented in <a href="reference__mod-release-layout.html"><code>mod-release-layout.md</code></a>:</p>
-<ul><li>§1 Repository structure</li><li>§2 Config conventions (patch tags, body identifier, star/planet templates, file separation)</li><li>§3 Texture conventions</li></ul>
-<p>This document keeps project-level scope (targets, data sources, phases, index allocation) below.</p>
-<hr>
-<h2>7. flightGlobalsIndex Allocation</h2>
-<p>Must not collide with Sol-Configs (NAIF SPK-style IDs, see table below) or RSS-Origin v1.x. NearStars uses 1000+ with 100 indices per system, which sits in the empty band between Sol-Configs&#x27; planetary IDs (≤916) and its asteroid IDs (≥9000).</p>
-<div class="tbl"><table><thead><tr><th>Range</th><th>Owner</th></tr></thead><tbody><tr><td>0–99</td><td>Stock KSP / RealSolarSystem (KSP-RO/RealSolarSystem occupies 1–25, 50, 60, 91–95)</td></tr><tr><td><code>10</code>, <code>100</code>–<code>916</code></td><td>Sol-Configs planets and moons — NAIF SPK-style IDs (Sol=<code>10</code>; Mercury=<code>100</code>; Venus=<code>200</code>; Earth=<code>300</code>, Luna=<code>301</code>; Mars=<code>400</code>, Phobos=<code>401</code>, Deimos=<code>402</code>; Jupiter=<code>500</code>, Galileans=<code>501–504</code>, Amalthea=<code>505</code>, Himalia=<code>514</code>; Saturn=<code>600</code>, major moons=<code>601–609</code>, Phoebe=<code>615</code>; Uranus=<code>700</code>, major moons=<code>701–705</code>, Sycorax=<code>715</code>; Neptune=<code>800</code>, Triton=<code>801</code>, Nereid=<code>802</code>, Proteus=<code>808</code>; Pluto system=<code>901–916</code>)</td></tr><tr><td><code>9xxx</code>–<code>9xxxxxx</code></td><td>Sol-Configs asteroids — <code>9</code> + asteroid number (Ida=<code>9243</code>, Dactyl=<code>92431</code>, Pallas=<code>902</code>, Ryugu=<code>9162173</code>)</td></tr><tr><td><code>10xxxxxx</code>+</td><td>Sol-Configs TNOs / dwarf planets (Eris=<code>10134340</code>, Arrokoth=<code>10486958</code>)</td></tr><tr><td>1000–1099</td><td>NearStars — first star system (TBD). Sits in the empty <code>1000–8999</code> band between Sol-Configs planet IDs (<code>≤916</code>) and asteroid IDs (<code>≥9000</code>).</td></tr><tr><td>1100–1199</td><td>NearStars — second star system (TBD)</td></tr><tr><td>1200–1299</td><td>NearStars — third star system (TBD)</td></tr><tr><td>1300+</td><td>NearStars — further systems (+100 per system)</td></tr></tbody></table></div>
-<p>Note: RSS-Origin 2 itself does not assign explicit <code>flightGlobalsIndex</code> values — it relies on Kopernicus auto-assignment. The NearStars 1000+ block is therefore a buffer against future explicit assignments by any add-on, not a collision with v2 as shipped today.</p>
-<p>Within each 100-index block, increment by 1 per body. Stars, planets, moons, and barycenters share the block.</p>
-<hr>
-<h2>8. Astronomical Data Sources</h2>
-<p>All orbital parameters and physical constants must come from real observational data.</p>
-<ul><li><b>Orbital data:</b> NASA JPL Horizons, SIMBAD</li><li><b>Exoplanets:</b> NASA Exoplanet Archive</li><li><b>Stellar physics:</b> SIMBAD Astronomical Database</li><li>Texture sources must be documented in <code>Credits-License.md</code></li></ul>
-<hr>
-<h2>9. Development Phases</h2>
-<p><b>Rule: complete one system end-to-end before starting the next.</b></p>
-<h3>Phase 1 — First system: star skeleton (MVP)</h3>
-<ul><li>[ ] Choose pilot system (recommendation: Proxima Centauri)</li><li>[ ] Repository structure setup</li><li>[ ] Star body definition: orbit, ScaledVersion, Properties</li><li>[ ] Icon and localization key skeleton</li><li>[ ] Verify load in Kopernicus (Sol + RSS)</li></ul>
-<h3>Phase 2 — First system: planets</h3>
-<ul><li>[ ] Planet definitions (atmosphere, PQS, biomes)</li><li>[ ] Verify all bodies load and orbit correctly</li></ul>
-<h3>Phase 3 — First system: visuals</h3>
-<ul><li>[ ] Texture production (heightmaps, color maps)</li><li>[ ] Parallax terrain and scatters</li><li>[ ] EVE cloud layers for atmospheric bodies</li><li>[ ] Scatterer atmosphere configs</li></ul>
-<h3>Phase 4 — First system: polish + expand</h3>
-<ul><li>[ ] Science experiment text for all bodies</li><li>[ ] Compatibility patches (Principia, Kerbalism if applicable)</li><li>[ ] Performance pass</li><li>[ ] Begin second system using Phase 1–3 as template</li></ul>
-<hr>
-<h2>10. Open Decisions</h2>
-<ul><li>[x] Final mod name — settled as <code>NearStars</code></li><li>[ ] Pilot system selection (Proxima Centauri recommended)</li><li>[ ] Inter-stellar distance scaling strategy — real distances are physically impossible in KSP; symbolic compression required. Must be consistent across Sol stock, Sol quarter, and RSS 1:1 scales. Kopernicus hard limit: ~50 ly (see §3.1).</li><li>[x] macOS texture format compatibility strategy — Windows-only mod; BC5/BC7/BC4 DDS usable without restriction</li><li>[ ] RSS EVE version: V3 (free) vs V5 (Patreon) — whether to support both or V5 only like Sol</li><li>[ ] Principia compatibility: requires separate gravity model cfgs per scale variant; Principia-only entries for 50–80 ly stars are possible (no Kopernicus body needed)</li><li>[ ] Sol Quarter scale support — planned, lower priority. <code>principia-cfg</code> skill MVP ships Sol Real scale only; Quarter coords are deferred (different <code>solar_system_epoch</code> ⇒ separate cfg files).</li></ul>
-<h2>Related</h2>
-<ul><li><a href="reference__methodology.html">methodology</a> — cluster hub; DB-side workflow</li><li><a href="reference__mod-reference.html">mod-reference</a> — downstream mods and dependency tiers</li><li><a href="reference__mod-release-layout.html">mod-release-layout</a> — repo layout for the mod-release side</li><li><a href="reference__data-sources.html">data-sources</a> — citation requirements for external data</li><li><a href="reference__rex-data-comparison.html">rex-data-comparison</a> — REX is cited as the spiritual predecessor in §1</li></ul></div>
-</main>
+<div class="content-wrap">
+  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <article class="markdown-body" id="content"></article>
 </div>
+</div>
+<script type="text/markdown" id="md-en"># Nearby Star Systems KSP Mod — Project Guideline
+
+**Goal:** Add nearby star systems to KSP 1.12.x on top of Sol-Configs (real solar system). RSS compatibility is a planned future target.
+
+---
+
+## 1. Project Overview
+
+| Item | Detail |
+|------|--------|
+| Mod name | NearStars |
+| KSP version | 1.12.x |
+| License | CC-BY-NC-SA-4.0 (matching Sol) |
+| Type | Sol-based addon. RSS compatibility deferred. |
+
+The mod adds new star systems; it does not touch or replace existing Sol bodies. RSS compatibility is planned but not currently shipped.
+
+---
+
+## 2. Dependencies
+
+**Required:**
+
+| Mod | Role |
+|-----|------|
+| Sol-Configs (ballisticfox) | Real solar system base (`FOR[SolSystem]`) |
+| Kopernicus (ballisticfox fork) | Body definition framework |
+| Module Manager | Conditional patching (`NEEDS[]`) |
+| Parallax Continued | Terrain shaders and scatters |
+| EVE Volumetrics V5 | Cloud layers (atmospheric bodies only) |
+| BurstPQS | Terrain generation optimization |
+
+**Future target (not currently supported):**
+
+| Mod | Tag |
+|-----|-----|
+| RealSolarSystem | `FOR[RSSConfig]` |
+
+Note: [RSS-Origin 2](https://github.com/CharonSSS/RSS-Origin-2) (CharonSSS, v1.0.0 released 2026-05-21) is the Sol-compatible successor of RSS-Origin v1.x and is now the canonical asteroid/comet/dwarf-planet add-on for Sol-based installs. It is a separate repository from `CharonSSS/RSS-Origin` (v1.x, no Sol support). The patch templates in §5.1 are designed to extend cleanly to RSS once RSS support is implemented.
+
+---
+
+## 3. Target Star Systems
+
+### 3.1 Distance limits
+
+| Engine | Max range | Source |
+|--------|-----------|--------|
+| Kopernicus (rendering + SOI) | ~50 ly | REX developer |
+| Principia (gravitational perturber) | ~80 ly | RSS-Origin 2 developer |
+
+Kopernicus bodies beyond ~50 ly risk map-view failures, floating-point glitches in the renderer, or engine crashes. This is a hard constraint — all Kopernicus bodies must be within 50 ly.
+
+Principia registers stars as gravitational perturbers through a separate mechanism that is not subject to KSP's rendering limits. Stars in the 50–80 ly range are therefore candidates for **Principia-only entries** (no Kopernicus body, no visual presence, gravity effect only).
+
+### 3.2 Scope
+
+The current data pipeline covers all confirmed planetary systems and noteworthy stellar systems within 50 ly. This fully covers the Kopernicus range. See the [live DB viewer](https://vannadin.github.io/nearstars-db/) for the current system list and count. A separate Principia-only pass for the 50–80 ly band can be added later if desired.
+
+### 3.3 Development order
+
+**Build one complete system first, then expand.** The first system serves as the template and reference implementation for all subsequent systems. Do not start a second system until the first is fully playable (Phase 1 + Phase 2 complete for that system).
+
+The final mod ships **~10 stellar systems** selected from the research database in this repo. Selection list and order are still being decided — candidates include Proxima Centauri (nearest, single-star, 2 planets), Barnard's Star (5.96 ly), Alpha Centauri (hierarchical triple, 3 components), and others.
+
+---
+
+## 4. Mod-release repo conventions
+
+The mod release lives in a **separate repo** (`NearStars-Configs/` + `NearStars-Textures/`), not in `nearstars-db`. Its directory layout, cfg conventions, and texture conventions are documented in [`mod-release-layout.md`](reference__mod-release-layout.html):
+
+- §1 Repository structure
+- §2 Config conventions (patch tags, body identifier, star/planet templates, file separation)
+- §3 Texture conventions
+
+This document keeps project-level scope (targets, data sources, phases, index allocation) below.
+
+---
+
+## 7. flightGlobalsIndex Allocation
+
+Must not collide with Sol-Configs (NAIF SPK-style IDs, see table below)
+or RSS-Origin v1.x. NearStars uses 1000+ with 100 indices per system,
+which sits in the empty band between Sol-Configs' planetary IDs (≤916)
+and its asteroid IDs (≥9000).
+
+| Range | Owner |
+|-------|-------|
+| 0–99 | Stock KSP / RealSolarSystem (KSP-RO/RealSolarSystem occupies 1–25, 50, 60, 91–95) |
+| `10`, `100`–`916` | Sol-Configs planets and moons — NAIF SPK-style IDs (Sol=`10`; Mercury=`100`; Venus=`200`; Earth=`300`, Luna=`301`; Mars=`400`, Phobos=`401`, Deimos=`402`; Jupiter=`500`, Galileans=`501–504`, Amalthea=`505`, Himalia=`514`; Saturn=`600`, major moons=`601–609`, Phoebe=`615`; Uranus=`700`, major moons=`701–705`, Sycorax=`715`; Neptune=`800`, Triton=`801`, Nereid=`802`, Proteus=`808`; Pluto system=`901–916`) |
+| `9xxx`–`9xxxxxx` | Sol-Configs asteroids — `9` + asteroid number (Ida=`9243`, Dactyl=`92431`, Pallas=`902`, Ryugu=`9162173`) |
+| `10xxxxxx`+ | Sol-Configs TNOs / dwarf planets (Eris=`10134340`, Arrokoth=`10486958`) |
+| 1000–1099 | NearStars — first star system (TBD). Sits in the empty `1000–8999` band between Sol-Configs planet IDs (`≤916`) and asteroid IDs (`≥9000`). |
+| 1100–1199 | NearStars — second star system (TBD) |
+| 1200–1299 | NearStars — third star system (TBD) |
+| 1300+ | NearStars — further systems (+100 per system) |
+
+Note: RSS-Origin 2 itself does not assign explicit `flightGlobalsIndex`
+values — it relies on Kopernicus auto-assignment. The NearStars 1000+
+block is therefore a buffer against future explicit assignments by any
+add-on, not a collision with v2 as shipped today.
+
+Within each 100-index block, increment by 1 per body. Stars, planets,
+moons, and barycenters share the block.
+
+---
+
+## 8. Astronomical Data Sources
+
+All orbital parameters and physical constants must come from real observational data.
+
+- **Orbital data:** NASA JPL Horizons, SIMBAD
+- **Exoplanets:** NASA Exoplanet Archive
+- **Stellar physics:** SIMBAD Astronomical Database
+- Texture sources must be documented in `Credits-License.md`
+
+---
+
+## 9. Development Phases
+
+**Rule: complete one system end-to-end before starting the next.**
+
+### Phase 1 — First system: star skeleton (MVP)
+- [ ] Choose pilot system (recommendation: Proxima Centauri)
+- [ ] Repository structure setup
+- [ ] Star body definition: orbit, ScaledVersion, Properties
+- [ ] Icon and localization key skeleton
+- [ ] Verify load in Kopernicus (Sol + RSS)
+
+### Phase 2 — First system: planets
+- [ ] Planet definitions (atmosphere, PQS, biomes)
+- [ ] Verify all bodies load and orbit correctly
+
+### Phase 3 — First system: visuals
+- [ ] Texture production (heightmaps, color maps)
+- [ ] Parallax terrain and scatters
+- [ ] EVE cloud layers for atmospheric bodies
+- [ ] Scatterer atmosphere configs
+
+### Phase 4 — First system: polish + expand
+- [ ] Science experiment text for all bodies
+- [ ] Compatibility patches (Principia, Kerbalism if applicable)
+- [ ] Performance pass
+- [ ] Begin second system using Phase 1–3 as template
+
+---
+
+## 10. Open Decisions
+
+- [x] Final mod name — settled as `NearStars`
+- [ ] Pilot system selection (Proxima Centauri recommended)
+- [ ] Inter-stellar distance scaling strategy — real distances are physically impossible in KSP; symbolic compression required. Must be consistent across Sol stock, Sol quarter, and RSS 1:1 scales. Kopernicus hard limit: ~50 ly (see §3.1).
+- [x] macOS texture format compatibility strategy — Windows-only mod; BC5/BC7/BC4 DDS usable without restriction
+- [ ] RSS EVE version: V3 (free) vs V5 (Patreon) — whether to support both or V5 only like Sol
+- [ ] Principia compatibility: requires separate gravity model cfgs per scale variant; Principia-only entries for 50–80 ly stars are possible (no Kopernicus body needed)
+- [ ] Sol Quarter scale support — planned, lower priority. `principia-cfg` skill MVP ships Sol Real scale only; Quarter coords are deferred (different `solar_system_epoch` ⇒ separate cfg files).
+
+## Related
+
+- [methodology](reference__methodology.html) — cluster hub; DB-side workflow
+- [mod-reference](reference__mod-reference.html) — downstream mods and dependency tiers
+- [mod-release-layout](reference__mod-release-layout.html) — repo layout for the mod-release side
+- [data-sources](reference__data-sources.html) — citation requirements for external data
+- [rex-data-comparison](reference__rex-data-comparison.html) — REX is cited as the spiritual predecessor in §1
+</script>
+<script type="text/markdown" id="md-ko"># 근접 항성계 KSP 모드 — 프로젝트 가이드라인
+
+**목표.** KSP 1.12.x 의 Sol-Configs (실제 태양계) 위에 근접 항성계를 추가합니다. RSS 호환은 향후 목표입니다.
+
+---
+
+## 1. 프로젝트 개요
+
+| 항목 | 내용 |
+|------|------|
+| 모드명 | NearStars |
+| KSP 버전 | 1.12.x |
+| 라이선스 | CC-BY-NC-SA-4.0 (Sol과 동일) |
+| 유형 | Sol 기반 애드온. RSS 호환은 미지원 (향후 목표). |
+
+이 모드는 새로운 항성계를 추가하며, Sol의 기존 천체는 수정하거나 교체하지 않습니다. RSS 호환은 계획 중이지만 현재 릴리스에는 포함되지 않습니다.
+
+---
+
+## 2. 의존성
+
+**필수.**
+
+| 모드 | 역할 |
+|------|------|
+| Sol-Configs (ballisticfox) | 실제 태양계 베이스 (`FOR[SolSystem]`) |
+| Kopernicus (ballisticfox fork) | 천체 정의 프레임워크 |
+| Module Manager | 조건부 패칭 (`NEEDS[]`) |
+| Parallax Continued | 지형 셰이더 및 스캐터 |
+| EVE Volumetrics V5 | 구름 레이어 (대기 있는 천체 전용) |
+| BurstPQS | 지형 생성 최적화 |
+
+**향후 목표 (현재 미지원).**
+
+| 모드 | 태그 |
+|------|------|
+| RealSolarSystem | `FOR[RSSConfig]` |
+
+참고. [RSS-Origin 2](https://github.com/CharonSSS/RSS-Origin-2) (CharonSSS, v1.0.0 2026-05-21 릴리스) 는 Sol 지원이 추가된 RSS-Origin v1.x 의 후속작이며, Sol 기반 환경에서 사용하는 정식 소행성/혜성/왜소행성 애드온입니다. v1.x 가 위치한 `CharonSSS/RSS-Origin` 과는 별도 저장소입니다. §5.1 의 패치 템플릿은 추후 RSS 지원 시 자연스럽게 확장될 수 있도록 설계되어 있습니다.
+
+---
+
+## 3. 대상 항성계
+
+### 3.1 거리 제한
+
+| 엔진 | 최대 범위 | 출처 |
+|------|----------|------|
+| Kopernicus (렌더링 + SOI) | ~50 ly | REX 개발자 |
+| Principia (중력 섭동체) | ~80 ly | RSS-Origin 2 개발자 |
+
+~50 ly를 초과하는 Kopernicus 천체는 맵 뷰 오류, 렌더러의 부동소수점 결함, 또는 엔진 충돌이 발생할 수 있습니다. 이는 엄격한 제약 조건으로, 모든 Kopernicus 천체는 반드시 50 ly 이내에 있어야 합니다.
+
+Principia는 KSP의 렌더링 제한을 받지 않는 별도의 메커니즘을 통해 별을 중력 섭동체로 등록합니다. 따라서 50–80 ly 범위의 별은 **Principia 전용 항목** (Kopernicus 천체 없음, 시각적 존재 없음, 중력 효과만) 후보가 됩니다.
+
+### 3.2 범위
+
+현재 데이터 파이프라인은 50 ly 이내의 모든 확인된 행성계와 주목할 만한 항성계를 포함합니다. 이는 Kopernicus 범위를 완전히 커버합니다. 현재 항성계 목록과 개수는 [라이브 DB 뷰어](https://vannadin.github.io/nearstars-db/) 에서 확인할 수 있습니다. 50–80 ly 구간의 Principia 전용 패스는 필요 시 나중에 추가할 수 있습니다.
+
+### 3.3 개발 순서
+
+**하나의 완전한 시스템을 먼저 빌드하고, 그 다음 확장합니다.** 첫 번째 시스템은 이후 모든 시스템의 템플릿이자 참조 구현이 됩니다. 첫 번째 시스템이 완전히 플레이 가능해지기 전에 (해당 시스템의 Phase 1 + Phase 2 완료) 두 번째 시스템을 시작하지 않습니다.
+
+최종 모드 수록은 **~10개 항성계** 로, 본 저장소의 연구 데이터베이스 안에서 선별됩니다. 선택 목록과 순서는 아직 결정 중이며, 후보로는 Proxima Centauri (가장 가깝고, 단일 별, 행성 2개), Barnard's Star (5.96 ly), Alpha Centauri (계층적 삼중성, 컴포넌트 3개), 그 외 여러 시스템이 있습니다.
+
+---
+
+## 4. 모드 릴리즈 저장소 컨벤션
+
+모드 릴리즈는 `nearstars-db` 가 아닌 **별도 저장소**(`NearStars-Configs/` + `NearStars-Textures/`)에 위치합니다. 디렉토리 구조, cfg 컨벤션, 텍스처 컨벤션은 [`mod-release-layout.md`](reference__mod-release-layout.html) 에서 다룹니다.
+
+- §1 저장소 구조
+- §2 설정 파일 컨벤션 (패치 태그, 천체 식별자, 별/행성 템플릿, 파일 분리)
+- §3 텍스처 컨벤션
+
+이 문서의 이후 섹션은 프로젝트 수준의 스코프 (대상, 데이터 출처, 단계, 인덱스 할당) 만 다룹니다.
+
+---
+
+## 7. flightGlobalsIndex 할당
+
+Sol-Configs (아래 표의 NAIF SPK-style ID 체계) 및 RSS-Origin v1.x 와 충돌하지 않아야 합니다. NearStars 는 1000+ 구간을 시스템당 100개 인덱스로 사용하며, 이는 Sol-Configs 의 행성 계열 (≤916) 과 소행성 계열 (≥9000) 사이의 빈 구간에 위치합니다.
+
+| 범위 | 소유자 |
+|------|--------|
+| 0–99 | 기본 KSP / RealSolarSystem (KSP-RO/RealSolarSystem은 1–25, 50, 60, 91–95 사용) |
+| `10`, `100`–`916` | Sol-Configs 의 행성 및 위성 — NAIF SPK-style ID 체계 (Sol=`10`; Mercury=`100`; Venus=`200`; Earth=`300`, Luna=`301`; Mars=`400`, Phobos=`401`, Deimos=`402`; Jupiter=`500`, Galilean 위성=`501–504`, Amalthea=`505`, Himalia=`514`; Saturn=`600`, 주요 위성=`601–609`, Phoebe=`615`; Uranus=`700`, 주요 위성=`701–705`, Sycorax=`715`; Neptune=`800`, Triton=`801`, Nereid=`802`, Proteus=`808`; 명왕성계=`901–916`) |
+| `9xxx`–`9xxxxxx` | Sol-Configs 의 소행성 — `9` + 소행성 번호 (Ida=`9243`, Dactyl=`92431`, Pallas=`902`, Ryugu=`9162173`) |
+| `10xxxxxx`+ | Sol-Configs 의 TNO / 왜소행성 (Eris=`10134340`, Arrokoth=`10486958`) |
+| 1000–1099 | NearStars — 첫 번째 항성계 (미정). Sol-Configs 의 행성계 ID (`≤916`) 와 소행성 ID (`≥9000`) 사이의 빈 `1000–8999` 구간에 위치 |
+| 1100–1199 | NearStars — 두 번째 항성계 (미정) |
+| 1200–1299 | NearStars — 세 번째 항성계 (미정) |
+| 1300+ | NearStars — 이후 시스템 (시스템당 +100) |
+
+참고. RSS-Origin 2 자체는 `flightGlobalsIndex` 값을 명시 부여하지 않고 Kopernicus 자동 할당에 맡깁니다. NearStars 의 1000+ 구간은 향후 다른 애드온이 명시 부여를 도입할 경우를 대비한 마진이며, 현 시점 v2 와의 충돌과는 별개입니다.
+
+각 100-인덱스 블록 내에서는 천체당 1씩 증가합니다. 별, 행성, 위성, 질량 중심은 같은 블록을 공유합니다.
+
+---
+
+## 8. 천문 데이터 출처
+
+모든 궤도 파라미터와 물리 상수는 실제 관측 데이터에서 가져와야 합니다.
+
+- **궤도 데이터.** NASA JPL Horizons, SIMBAD
+- **외계행성.** NASA Exoplanet Archive
+- **항성 물리.** SIMBAD Astronomical Database
+- 텍스처 출처는 `Credits-License.md`에 문서화해야 합니다.
+
+---
+
+## 9. 개발 단계
+
+**규칙. 다음 시스템을 시작하기 전에 하나의 시스템을 처음부터 끝까지 완성합니다.**
+
+### Phase 1 — 첫 번째 시스템: 별 스켈레톤 (MVP)
+- [ ] 파일럿 시스템 선택 (권장: Proxima Centauri)
+- [ ] 저장소 구조 설정
+- [ ] 별 천체 정의: 궤도, ScaledVersion, Properties
+- [ ] 아이콘 및 현지화 키 스켈레톤
+- [ ] Kopernicus 로드 확인 (Sol + RSS)
+
+### Phase 2 — 첫 번째 시스템: 행성
+- [ ] 행성 정의 (대기, PQS, 바이옴)
+- [ ] 모든 천체가 올바르게 로드되고 공전하는지 확인
+
+### Phase 3 — 첫 번째 시스템: 비주얼
+- [ ] 텍스처 제작 (높이맵, 컬러 맵)
+- [ ] Parallax 지형 및 스캐터
+- [ ] 대기 있는 천체용 EVE 구름 레이어
+- [ ] Scatterer 대기 설정
+
+### Phase 4 — 첫 번째 시스템: 마무리 + 확장
+- [ ] 모든 천체에 대한 과학 실험 텍스트
+- [ ] 호환성 패치 (Principia, 해당 시 Kerbalism)
+- [ ] 성능 최적화 패스
+- [ ] Phase 1–3을 템플릿으로 삼아 두 번째 시스템 시작
+
+---
+
+## 10. 미결 결정 사항
+
+- [x] 최종 모드명 — `NearStars`로 확정
+- [ ] 파일럿 시스템 선택 (Proxima Centauri 권장)
+- [ ] 항성 간 거리 스케일링 전략 — 실제 거리는 KSP에서 물리적으로 불가능하므로 상징적 압축이 필요합니다. Sol 기본, Sol 1/4, RSS 1:1 스케일 전반에 걸쳐 일관성을 유지해야 합니다. Kopernicus 하드 제한: ~50 ly (§3.1 참고).
+- [x] macOS 텍스처 포맷 호환성 전략 — Windows 전용 모드이므로 BC5/BC7/BC4 DDS를 제한 없이 사용 가능
+- [ ] RSS EVE 버전: V3 (무료) vs V5 (Patreon) — 둘 다 지원할지, Sol처럼 V5만 지원할지
+- [ ] Principia 호환성: 스케일 변형별 별도 중력 모델 cfg가 필요하며, 50–80 ly 별에 대한 Principia 전용 항목 가능 (Kopernicus 천체 불필요)
+- [ ] Sol Quarter 스케일 지원 — 지원 예정, 우선순위 낮음. `principia-cfg` skill MVP 는 Sol Real 스케일만 출력. Quarter 좌표는 별도 `solar_system_epoch` 라서 별개 cfg 파일이 필요하며 후속 작업.
+
+## Related
+
+- [methodology](reference__methodology.html) — 클러스터 허브. DB 측 워크플로우.
+- [mod-reference](reference__mod-reference.html) — 다운스트림 모드와 의존성 티어.
+- [mod-release-layout](reference__mod-release-layout.html) — 모드 릴리스 측의 repo 레이아웃.
+- [data-sources](reference__data-sources.html) — 외부 데이터의 인용 요구사항.
+- [rex-data-comparison](reference__rex-data-comparison.html) — REX 는 §1 에서 정신적 선조로 인용됩니다.
+</script>
 <script>
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
+const srcs = {};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], { gfm: true, breaks: false });
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
 }
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+});
 </script>
 </body>
 </html>

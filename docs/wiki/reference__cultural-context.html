@@ -5,70 +5,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cultural context — NS systems in science fiction · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="side">
-<div class="brand">NearStars <span>docs</span></div>
+<a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i on" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
@@ -83,57 +72,138 @@ body { margin: 0 }
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
-<main class="docmain">
-<div class="topbar"><div class="seg" id="lang-seg"><button class="on" data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
-<div data-langbody="ko"><p>&lt;!-- NS 시스템의 사이파이 / 대중문화 레퍼런스 인덱스 --&gt;</p>
-<p>NearStars 는 실재 가까운 별을 다루고, 그중 일부는 사이파이에서 주요 무대로 등장합니다. 이 문서는 그 연결을 인덱스화하고, 소설 사실과 실제 사실을 구분하며, 소설이 plot 을 anchor 한 retracted / refuted 행성을 표시합니다. Cultural reference 는 cfg 로 emit 되지 않습니다 — 이 doc 는 narrative reference 전용입니다.</p>
-<h2>Tau Ceti — <i>Project Hail Mary</i> (Andy Weir, 2021)</h2>
-<ul><li><b>소설의 행성</b>: &quot;Adrian&quot; = Tau Cet e</li><li><b>실제 status</b>: Tau Cet e 는 2026-04-09 NASA Exoplanet Archive 에서 <b>&quot;False Positive Planet&quot;</b> 으로 재분류 되었습니다 (Figueira 외 2025, <code>2025A&amp;A...700A.174F</code> ESPRESSO sub-10 cm/s RV 비검출 인용). 소설은 Feng 2017 검출 picture 기반으로 집필 되었고, 그 picture 는 이제 obsolete 입니다.</li><li><b>소설이 맞춘 점</b>: G8V 분광형, ~9 Gyr 나이 (태양의 두 배), 안정적 astrobiology 대상으로서의 Tau Ceti</li><li><b>소설이 틀린 점 (현 데이터 기준)</b>: Adrian 이 거주 가능한 super-Earth 라는 가정 — 기반 RV 신호가 이제는 항성 활동으로 간주됨. 또 실재의 잔해 원반 (ALMA-resolved 6–55 AU, ~1.2 M⊕, MacGregor 2016) 도 소설에 없는데, 실제 진입 시 항해 위험.</li><li><b>Weir 의 Adrian 명시 파라미터</b> (소설 텍스트 + Weir 인터뷰 종합. <code>docs/phase3/tau-cet-e.md § Bibliography</code> 참조). 표면 중력 <b>1.4 g</b> (Weir Sciam 팟캐스트. Feng 2017 의 3.93 M⊕ + 암석질 mass-radius 관계, ~1.68 R⊕ 함의). 대기 <b>91% CO₂ / 7% CH₄ / 1% Ar / 미량</b> (질소 미존재 — Taumoeba 가 질소 불내성). 표면 압력 명시 안 됨. 91.2 km 고도에서 0.02 bar / −51 °C 이 다 bar CO₂ 우세 표면을 함의. 우주에서 본 색 <b>녹색</b> (광화학 haze + 대기 부유 Taumoeba 생물). Weir 가 Feng 2017 궤도 직접 사용 (P ≈ 168 d, a ≈ 0.55 AU). 자전 주기 / day length 명시 안 됨. <b>표면 해양 없음</b> — sampling 임무는 10 km xenonite chain 으로 대기 상층 91.2 km 클라우드 타겟. 표면 도달 안 함.</li><li><b>&quot;거주 가능 Earth-analog&quot; 프레이밍에서 갈라짐</b>: Weir 의 Adrian 은 wet Earth-analog 아닙니다. CO₂ 우세 세계로 광화학 CH₄ haze 와 대기 부유 미생물 생태계 (Taumoeba 가 대기 상층 거주). &quot;거주 가능 super-Earth&quot; 해석은 2017–2024 popular-science 가 Feng 의 숫자에 입힌 gloss 이지 Weir 의 묘사 아닙니다. 1.4 g 표면 중력 (카탈로그 1.20 g 가 아니라) 도 Weir 가 popular-science sub-Neptune 핏보다 더 암석질 작은 반지름 천체를 채택했음을 함의.</li><li><b>Adrian = 유일한 Astrophage-저항 생물권</b>: 소설의 핵심 worldbuilding 전제. Astrophage 가 단일 Adrian-origin panspermia 이벤트에서 Earth, Erid, Adrian 을 seeding (Weir, Astronomy.com 인터뷰). 오직 Adrian 만 Taumoeba 자연 포식자를 가지고 있어 Astrophage 가 다른 시스템 모두에서 포식자를 넘어 자라났다. NS 는 cfg 에서 이걸 모델링 못 함 — flavor-text 전용.</li><li><b>Adrian ≠ Erid (worldbuilding 혼동 경고)</b>: Adrian (Tau Cet e) 는 1.4 g + CO₂ 우세. Erid (40 Eri A b) 는 Weir 의 worldbuilding 부록 문서 기준으로 <b>2.09 g</b>, <b>28 atm NH₃</b> (made-up 이지만 관측과 비충돌), <b>5.1시간 항성일</b> (약 18,397 초), <b>210 °C</b> 표면온도 (28 atm 압력이 물의 끓는점을 끌어올려 표면 액체수 존재), <b>지구의 25배</b> 자기장, <b>8.47 M⊕</b> (Ma 2018 측정값), <b>12,835 km</b> 반경 (Weir 도출값). Popular summary (일부 검색 엔진 answer box 포함) 가 두 세계를 자주 혼동. 위의 anchor 파라미터는 Adrian 전용. Erid 는 아래 40 Eri A 항목 참조.</li><li><b>NS DB</b>: e 는 정상적으로 누락 상태 (NEA-inherited). f/g/h 는 여전히 <code>pl_controv_flag=1</code> 이지만 retraction watch (Figueira 2025 가 detection floor 근처/이하 보고).</li></ul>
-<h2>40 Eridani A — <i>Star Trek</i> (Vulcan) + <i>Project Hail Mary</i> (Erid)</h2>
-<ul><li><b>소설의 행성</b>: 40 Eri A b 가 <i>Star Trek</i> 의 Vulcan (Roddenberry 가 1991년 <i>Sky &amp; Telescope</i> 편지에서 Epsilon Eri 가 아닌 40 Eri 로 확정). <i>Project Hail Mary</i> 의 Eridian (Rocky 종족) 도 40 Eridani A 출신.</li><li><b>실제 status</b>: 40 Eri A b 는 확정된 외계행성 (Ma 2018, <code>2018AJ....155..117M</code>). 주기 42.245 d (Weir 인용), 8.47 M⊕ super-Earth, a ≈ 0.224 AU, e = 0.04. 현대 기준 거주 가능 영역 밖 — Vulcan 픽션이 발견 이전이라 Earth-like 세계를 가정함.</li><li><b>Weir 의 Erid 명시 파라미터</b> (worldbuilding 부록 문서, 사용자 2026-05-27 제공 &quot;eridian.docx&quot;). 실제 관측값으로는 질량 8.47 M⊕, 반장축 0.224 AU, e = 0.04, 주기 42.245 d, 별로부터의 에너지 플럭스 12,537 W/m². 관측과 충돌하지 않는 made-up 파라미터로는 암석질 + 금속 풍부 조성, 밀도 5,710 kg/m³, 반경 12,835 km, 대기 대부분 NH₃ (Weir 가 &quot;NH4&quot; 로 표기 — NH₃ 의 분자식 오기), 표면 압력 28 atm, 평균 표면온도 210 °C, 유도된 표면 중력 2.09 g, 자기장 지구의 약 25배 (이만한 NH₃ 대기 유지에 필요), 용융 금속 코어, 판구조 활동, 표면 액체수 존재 (28 atm 에서 물의 끓는점이 210 °C 위로 올라감), 항성일 5.1시간 (약 18,397 초 — 자기장 다이나모를 돌릴 만큼 빠른 자전).</li><li><b>Weir 의 panspermia framing</b>: worldbuilding 부록은 &quot;수십억 년 전 Tau Ceti 발 panspermia 이벤트가 지구와 Eridian 모성에 생명을 seeding 했다&quot; 고 명시. Adrian (Tau Cet e) 을 panspermia 발원지로, 지구 + Erid 를 수용지로 설정 — 위의 Adrian 항목 + 소설의 Astrophage 배경설정과 정합. NS 는 cfg 에서 모델링 못 함, flavor-text 전용.</li><li><b>NS DB</b>: <code>40_eridani_a.json</code> (호스트 A — 행성 b 아직 ingest 안 됨) + <code>40_eridani_b.json</code> (백색왜성, 별개 별) + <code>40_eridani_c.json</code> (M 왜성) — 다중성계. 40 Eri A b ingest + Phase 3 작업은 보류 (사용자 결정 2026-05-27).</li></ul>
-<h2>Epsilon Eridani — <i>Babylon 5</i> (Vorlon homeworld), 초기 <i>Star Trek</i> (원래 Vulcan)</h2>
-<ul><li><b>소설의 행성</b>: <i>Babylon 5</i> (J. Michael Straczynski) 의 Vorlon Prime. 40 Eri A 로 retcon 되기 전 초기 <i>Star Trek</i> 의 Vulcan.</li><li><b>실제 status</b>: ε Eri b 는 확정된 RV 행성 (Hatzes 2000 + Mawet 2019 직접 영상), ~3.5 AU, M sin i ~0.78 M_Jup — 가스 거인이지 Earth-like 아님. 세 띠 잔해 원반으로 둘러싸여 있음.</li><li><b>NS DB</b>: <code>eps_eri.json</code> (host + b 등재. Phase 3 합성 <code>docs/phase3/eps-eri.md</code> + <code>eps-eri-b.md</code>)</li></ul>
-<h2>Wolf 359 — <i>Star Trek: The Next Generation</i> (Battle of Wolf 359)</h2>
-<ul><li><b>소설의 행성</b>: TNG &quot;The Best of Both Worlds&quot; (1990) 의 Battle of Wolf 359 는 Starfleet 의 Borg 조우 — 실제 별 위치 사용하지만 canonical 행성 없음.</li><li><b>실제 status</b>: Wolf 359 는 7.86 ly 의 M6.5 플레어 별. 확정된 행성 없음 (깊은 RV 상한).</li><li><b>NS DB</b>: <code>wolf_359.json</code> (host 만, 행성 없음)</li></ul>
-<h2>Alpha Centauri — <i>Avatar</i> (Pandora), <i>삼체</i>, 다수</h2>
-<ul><li><b>소설의 행성</b>: <i>Avatar</i> (Cameron 2009) 의 Pandora 는 α Cen A 궤도. 류츠신 <i>삼체</i> 의 trisolaran 모성 (canonical 한 α Cen 3-body chaos 가 trisolaran problem 의 원조).</li><li><b>실제 status</b>: α Cen A/B + Proxima 가 ~13,000 AU 떨어진 hierarchical triple. Proxima b 는 거주 가능 영역 Earth-mass 확정. Proxima d 후보 (Faria 2022). α Cen A/B 행성은 미확정 (Beichman &amp; Sanghi 2025 의 &quot;S1&quot; JWST/MIRI 후보 ~1.5 AU, follow-up 대기).</li><li><b>NS DB</b>: Jacobi 다중성 파이프라인 + Principia n-body export 가 적용된 완전 triple — NS 의 canonical hierarchical 다중성 쇼케이스</li></ul>
-<h2>방법론 노트</h2>
-<p>픽션은 관측을 overrule 하지 않습니다. 소설이 plot 을 anchor 한 행성이 추후 refuted 되면 (Tau Cet e 처럼) NS DB 는 현실의 disposition 을 따릅니다. Cultural reference 는 narrative companion 으로 문서화되지 cfg-emitted description 으로는 안 됩니다. 미래에 per-body description string feature 가 ship 되면 이 doc 는 fiction-aware flavor text 의 source 가 됩니다 — 그때까지는 repo documentation 전용입니다.</p>
-<h2>Related</h2>
-<ul><li><a href="reference__rex-data-comparison.html">rex-data-comparison</a> — Tau Cet e 의 역사적 큐레이션 논의 (해결됨)</li><li><a href="reference__methodology.html">methodology</a> — 이 doc 가 존중하는 provenance-first DB 정책</li><li><a href="../phase3/eps-eri.md"><code>docs/phase3/eps-eri.md</code></a> — 호스트 합성 (Babylon 5 / Trek 노트 범위)</li><li><a href="../phase3/alpha-centauri-a.md"><code>docs/phase3/alpha-centauri-a.md</code></a> — 호스트 합성 (Pandora / trisolaran 컨텍스트 범위)</li></ul></div><div data-langbody="en" style="display:none"><p>&lt;!-- NS 시스템의 사이파이 / 대중문화 레퍼런스 인덱스 --&gt;</p>
-<p>NearStars covers real nearby stars; several of those have prominent appearances in science fiction. This doc indexes the connections, distinguishes novel-fact from real-fact, and flags retracted-or-refuted planets that fiction has anchored to. Cultural references are NOT cfg-emitted — keep this doc as narrative reference only.</p>
-<h2>Tau Ceti — <i>Project Hail Mary</i> (Andy Weir, 2021)</h2>
-<ul><li><b>Body in novel</b>: &quot;Adrian&quot; = Tau Cet e</li><li><b>Status in real world</b>: Tau Cet e was reclassified to <b>&quot;False Positive Planet&quot;</b> by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 (<code>2025A&amp;A...700A.174F</code>) ESPRESSO sub-10 cm/s RV non-detection. The novel was written from the Feng 2017 detection picture; that picture is now obsolete.</li><li><b>What the novel got right</b>: G8V spectral type, ~9 Gyr age (twice solar), Tau Ceti as a long-stable astrobiology target</li><li><b>What the novel got wrong (per current data)</b>: Adrian as a habitable super-Earth — the underlying RV signal is now considered stellar activity. The novel also omits the substantial debris disk (ALMA-resolved 6–55 AU, ~1.2 M⊕ dust, MacGregor 2016), which would pose a real navigation hazard.</li><li><b>Weir&#x27;s stated Adrian parameters</b> (compiled from novel text + Weir interviews; see <code>docs/phase3/tau-cet-e.md § Bibliography</code>): surface gravity <b>1.4 g</b> (Weir Sciam podcast; from Feng 2017&#x27;s 3.93 M⊕ + rocky mass-radius relation, implying ~1.68 R⊕); atmosphere <b>91% CO₂ / 7% CH₄ / 1% Ar / trace</b> (no significant N₂ — Taumoeba is nitrogen-intolerant); surface pressure not stated, but 0.02 bar / −51 °C at 91.2 km altitude implies a multi-bar CO₂-dominated surface; color <b>green</b> from space (photochemical haze + airborne Taumoeba biology); Weir uses Feng 2017&#x27;s orbit directly (P ≈ 168 d, a ≈ 0.55 AU); day length / rotation not stated; <b>no surface ocean</b> — the sampling mission targets upper-atmosphere clouds at 91.2 km via a 10 km xenonite chain, never the surface.</li><li><b>Diverges from the &quot;habitable Earth-analog&quot; framing</b>: Weir&#x27;s Adrian is <i>not</i> a wet Earth-analog. It is a CO₂-dominated world with photochemical CH₄ haze and an airborne microbial ecosystem (Taumoeba lives in the upper atmosphere). The &quot;habitable super-Earth&quot; reading was a 2017–2024 popular-science gloss on Feng&#x27;s numbers, not Weir&#x27;s depiction. The 1.4 g surface gravity (rather than the catalog 1.20 g) also implies Weir adopted a rockier, smaller-radius body than the popular-science sub-Neptune fit.</li><li><b>Adrian as the unique Astrophage-resistant biosphere</b>: the novel&#x27;s central worldbuilding premise. Astrophage seeded Earth, Erid, and Adrian from a single Adrian-origin panspermia event (Weir, Astronomy.com interview); only Adrian carries Taumoeba, the natural predator, which is why Astrophage has out-grown its predator in every other system. NS cannot model this in cfg — flavor-text only.</li><li><b>Adrian ≠ Erid (worldbuilding-conflation warning)</b>: Adrian (Tau Cet e) is 1.4 g + CO₂-dominated. Erid (40 Eri A b), per Weir&#x27;s worldbuilding companion document, is <b>2.09 g</b> + <b>28 atm NH₃</b> (made-up but not in conflict with observation) + <b>5.1-h sidereal day</b> (≈ 18 397 s) + <b>210 °C</b> surface temperature (boiling point of water raised by pressure → liquid water still present) + <b>25 × Earth</b> magnetic field + <b>8.47 M⊕</b> (Ma 2018 measured) + <b>12 835 km</b> radius (Weir-derived). Popular summaries (including some search-engine answer boxes) routinely conflate the two worlds. Anchor parameters above are Adrian-specific; for Erid see the 40 Eri A entry below.</li><li><b>NS DB</b>: e is correctly absent (NEA-inherited disposition). f/g/h remain <code>pl_controv_flag=1</code> but on retraction watch (Figueira 2025 also reports them at or below detection floor).</li></ul>
-<h2>40 Eridani A — <i>Star Trek</i> (Vulcan) + <i>Project Hail Mary</i> (Erid)</h2>
-<ul><li><b>Body in fiction</b>: 40 Eri A b serves as Vulcan in the <i>Star Trek</i> canon (Roddenberry&#x27;s letter to <i>Sky &amp; Telescope</i> 1991 confirmed 40 Eri over Epsilon Eri). The Eridians of <i>Project Hail Mary</i> (Rocky&#x27;s species) also originate from 40 Eridani A.</li><li><b>Status in real world</b>: 40 Eri A b confirmed exoplanet (Ma 2018, <code>2018AJ....155..117M</code>); 42.245 d period (Weir-cited), 8.47 M⊕ super-Earth, a ≈ 0.224 AU, e = 0.04. Not in the habitable zone in modern terms — the Vulcan fiction predates this discovery and assumed an Earth-like world.</li><li><b>Weir&#x27;s stated Erid parameters</b> (companion worldbuilding document, &quot;eridian.docx&quot; provided by user 2026-05-27): real-observation values are mass 8.47 M⊕, semi-major axis 0.224 AU, e = 0.04, period 42.245 d, stellar flux 12 537 W/m². Made-up parameters consistent with observation: composition rocky-metal-rich, density 5 710 kg/m³, radius 12 835 km, atmosphere mostly NH₃ (Weir writes &quot;NH4&quot; — chemical-formula typo for NH₃), surface pressure 28 atm, mean surface temperature 210 °C, derived gravity 2.09 g, magnetic field ≈ 25 × Earth (required to retain such a thick ammonia atmosphere), molten metal core, tectonic activity, liquid water present (raised boiling point of water above 210 °C at 28 atm), solar day 5.1 h (≈ 18 397 s, fast enough to dynamo-generate the field).</li><li><b>Weir&#x27;s panspermia framing</b>: the worldbuilding companion states &quot;A panspermia event from Tau Ceti billions of years ago seeded life on both Earth and the Eridian homeworld.&quot; This sets Adrian (Tau Cet e) as the panspermia origin and Earth + Erid as recipients — consistent with the Astrophage backstory in the novel and with the Adrian section above. NS does not model this; flavor-text only.</li><li><b>NS DB</b>: <code>40_eridani_a.json</code> (host A; planet b not yet ingested) + <code>40_eridani_b.json</code> (white dwarf, separate star) + <code>40_eridani_c.json</code> (M dwarf) — multi-star system. 40 Eri A b ingest + Phase 3 deferred (user 2026-05-27).</li></ul>
-<h2>Epsilon Eridani — <i>Babylon 5</i> (Vorlon homeworld), early <i>Star Trek</i> (original Vulcan)</h2>
-<ul><li><b>Body in fiction</b>: Vorlon Prime in <i>Babylon 5</i> (J. Michael Straczynski). Original Vulcan in early <i>Star Trek</i> lore before being retconned to 40 Eri A.</li><li><b>Status in real world</b>: ε Eri b confirmed RV planet (Hatzes 2000 + Mawet 2019 direct imaging) at ~3.5 AU, M sin i ~0.78 M_Jup — a gas giant, not Earth-like. Surrounded by a three-belt debris disk.</li><li><b>NS DB</b>: <code>eps_eri.json</code> (host + b in DB; Phase 3 synthesis at <code>docs/phase3/eps-eri.md</code> + <code>eps-eri-b.md</code>)</li></ul>
-<h2>Wolf 359 — <i>Star Trek: The Next Generation</i> (Battle of Wolf 359)</h2>
-<ul><li><b>Body in fiction</b>: The Battle of Wolf 359 (TNG &quot;The Best of Both Worlds&quot;, 1990) is a fictional Starfleet encounter with the Borg — set at the real star&#x27;s location but with no canonical planet.</li><li><b>Status in real world</b>: Wolf 359 is an M6.5 flare star at 7.86 ly. No confirmed planets (deep RV upper limits).</li><li><b>NS DB</b>: <code>wolf_359.json</code> (host only, no planets)</li></ul>
-<h2>Alpha Centauri — <i>Avatar</i> (Pandora), <i>Three-Body Problem</i>, many</h2>
-<ul><li><b>Body in fiction</b>: Pandora orbiting α Cen A in <i>Avatar</i> (Cameron 2009). The trisolaran homeworld of Liu Cixin&#x27;s <i>Three-Body Problem</i> (the trisolaran problem is the canonical α Cen 3-body chaos).</li><li><b>Status in real world</b>: α Cen A/B with Proxima at ~13 000 AU. Proxima b confirmed habitable-zone Earth-mass; Proxima d candidate (Faria 2022). α Cen A/B planets remain unconfirmed (Beichman &amp; Sanghi 2025 &quot;S1&quot; JWST/MIRI candidate at ~1.5 AU pending follow-up).</li><li><b>NS DB</b>: full triple system with Jacobi multi-star pipeline + Principia n-body export — the canonical hierarchical-multi-star showcase in NS</li></ul>
-<h2>Methodology note</h2>
-<p>Fiction does not override observation. When a novel anchors plot to a planet that is later refuted (like Tau Cet e), the NS DB follows real-world disposition. Cultural references are documented here as a narrative companion, not as cfg-emitted descriptions. If a future feature ships per-body description strings, this doc is the source of the fiction-aware flavor text — until then it is repo documentation only.</p>
-<h2>Related</h2>
-<ul><li><a href="reference__rex-data-comparison.html">rex-data-comparison</a> — Tau Cet e historical curation discussion (now resolved)</li><li><a href="reference__methodology.html">methodology</a> — provenance-first DB policy that this doc respects</li><li><a href="../phase3/eps-eri.md"><code>docs/phase3/eps-eri.md</code></a> — host synthesis with Babylon 5 / Trek note in scope</li><li><a href="../phase3/alpha-centauri-a.md"><code>docs/phase3/alpha-centauri-a.md</code></a> — host synthesis with Pandora / trisolaran context in scope</li></ul></div>
-</main>
+<div class="content-wrap">
+  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <article class="markdown-body" id="content"></article>
 </div>
+</div>
+<script type="text/markdown" id="md-en"><!-- NS 시스템의 사이파이 / 대중문화 레퍼런스 인덱스 -->
+# Cultural context — NS systems in science fiction
+
+NearStars covers real nearby stars; several of those have prominent appearances in science fiction. This doc indexes the connections, distinguishes novel-fact from real-fact, and flags retracted-or-refuted planets that fiction has anchored to. Cultural references are NOT cfg-emitted — keep this doc as narrative reference only.
+
+## Tau Ceti — *Project Hail Mary* (Andy Weir, 2021)
+
+- **Body in novel**: "Adrian" = Tau Cet e
+- **Status in real world**: Tau Cet e was reclassified to **"False Positive Planet"** by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 (`2025A&A...700A.174F`) ESPRESSO sub-10 cm/s RV non-detection. The novel was written from the Feng 2017 detection picture; that picture is now obsolete.
+- **What the novel got right**: G8V spectral type, ~9 Gyr age (twice solar), Tau Ceti as a long-stable astrobiology target
+- **What the novel got wrong (per current data)**: Adrian as a habitable super-Earth — the underlying RV signal is now considered stellar activity. The novel also omits the substantial debris disk (ALMA-resolved 6–55 AU, ~1.2 M⊕ dust, MacGregor 2016), which would pose a real navigation hazard.
+- **Weir's stated Adrian parameters** (compiled from novel text + Weir interviews; see `docs/phase3/tau-cet-e.md § Bibliography`): surface gravity **1.4 g** (Weir Sciam podcast; from Feng 2017's 3.93 M⊕ + rocky mass-radius relation, implying ~1.68 R⊕); atmosphere **91% CO₂ / 7% CH₄ / 1% Ar / trace** (no significant N₂ — Taumoeba is nitrogen-intolerant); surface pressure not stated, but 0.02 bar / −51 °C at 91.2 km altitude implies a multi-bar CO₂-dominated surface; color **green** from space (photochemical haze + airborne Taumoeba biology); Weir uses Feng 2017's orbit directly (P ≈ 168 d, a ≈ 0.55 AU); day length / rotation not stated; **no surface ocean** — the sampling mission targets upper-atmosphere clouds at 91.2 km via a 10 km xenonite chain, never the surface.
+- **Diverges from the "habitable Earth-analog" framing**: Weir's Adrian is *not* a wet Earth-analog. It is a CO₂-dominated world with photochemical CH₄ haze and an airborne microbial ecosystem (Taumoeba lives in the upper atmosphere). The "habitable super-Earth" reading was a 2017–2024 popular-science gloss on Feng's numbers, not Weir's depiction. The 1.4 g surface gravity (rather than the catalog 1.20 g) also implies Weir adopted a rockier, smaller-radius body than the popular-science sub-Neptune fit.
+- **Adrian as the unique Astrophage-resistant biosphere**: the novel's central worldbuilding premise. Astrophage seeded Earth, Erid, and Adrian from a single Adrian-origin panspermia event (Weir, Astronomy.com interview); only Adrian carries Taumoeba, the natural predator, which is why Astrophage has out-grown its predator in every other system. NS cannot model this in cfg — flavor-text only.
+- **Adrian ≠ Erid (worldbuilding-conflation warning)**: Adrian (Tau Cet e) is 1.4 g + CO₂-dominated. Erid (40 Eri A b), per Weir's worldbuilding companion document, is **2.09 g** + **28 atm NH₃** (made-up but not in conflict with observation) + **5.1-h sidereal day** (≈ 18 397 s) + **210 °C** surface temperature (boiling point of water raised by pressure → liquid water still present) + **25 × Earth** magnetic field + **8.47 M⊕** (Ma 2018 measured) + **12 835 km** radius (Weir-derived). Popular summaries (including some search-engine answer boxes) routinely conflate the two worlds. Anchor parameters above are Adrian-specific; for Erid see the 40 Eri A entry below.
+- **NS DB**: e is correctly absent (NEA-inherited disposition). f/g/h remain `pl_controv_flag=1` but on retraction watch (Figueira 2025 also reports them at or below detection floor).
+
+## 40 Eridani A — *Star Trek* (Vulcan) + *Project Hail Mary* (Erid)
+
+- **Body in fiction**: 40 Eri A b serves as Vulcan in the *Star Trek* canon (Roddenberry's letter to *Sky & Telescope* 1991 confirmed 40 Eri over Epsilon Eri). The Eridians of *Project Hail Mary* (Rocky's species) also originate from 40 Eridani A.
+- **Status in real world**: 40 Eri A b confirmed exoplanet (Ma 2018, `2018AJ....155..117M`); 42.245 d period (Weir-cited), 8.47 M⊕ super-Earth, a ≈ 0.224 AU, e = 0.04. Not in the habitable zone in modern terms — the Vulcan fiction predates this discovery and assumed an Earth-like world.
+- **Weir's stated Erid parameters** (companion worldbuilding document, "eridian.docx" provided by user 2026-05-27): real-observation values are mass 8.47 M⊕, semi-major axis 0.224 AU, e = 0.04, period 42.245 d, stellar flux 12 537 W/m². Made-up parameters consistent with observation: composition rocky-metal-rich, density 5 710 kg/m³, radius 12 835 km, atmosphere mostly NH₃ (Weir writes "NH4" — chemical-formula typo for NH₃), surface pressure 28 atm, mean surface temperature 210 °C, derived gravity 2.09 g, magnetic field ≈ 25 × Earth (required to retain such a thick ammonia atmosphere), molten metal core, tectonic activity, liquid water present (raised boiling point of water above 210 °C at 28 atm), solar day 5.1 h (≈ 18 397 s, fast enough to dynamo-generate the field).
+- **Weir's panspermia framing**: the worldbuilding companion states "A panspermia event from Tau Ceti billions of years ago seeded life on both Earth and the Eridian homeworld." This sets Adrian (Tau Cet e) as the panspermia origin and Earth + Erid as recipients — consistent with the Astrophage backstory in the novel and with the Adrian section above. NS does not model this; flavor-text only.
+- **NS DB**: `40_eridani_a.json` (host A; planet b not yet ingested) + `40_eridani_b.json` (white dwarf, separate star) + `40_eridani_c.json` (M dwarf) — multi-star system. 40 Eri A b ingest + Phase 3 deferred (user 2026-05-27).
+
+## Epsilon Eridani — *Babylon 5* (Vorlon homeworld), early *Star Trek* (original Vulcan)
+
+- **Body in fiction**: Vorlon Prime in *Babylon 5* (J. Michael Straczynski). Original Vulcan in early *Star Trek* lore before being retconned to 40 Eri A.
+- **Status in real world**: ε Eri b confirmed RV planet (Hatzes 2000 + Mawet 2019 direct imaging) at ~3.5 AU, M sin i ~0.78 M_Jup — a gas giant, not Earth-like. Surrounded by a three-belt debris disk.
+- **NS DB**: `eps_eri.json` (host + b in DB; Phase 3 synthesis at `docs/phase3/eps-eri.md` + `eps-eri-b.md`)
+
+## Wolf 359 — *Star Trek: The Next Generation* (Battle of Wolf 359)
+
+- **Body in fiction**: The Battle of Wolf 359 (TNG "The Best of Both Worlds", 1990) is a fictional Starfleet encounter with the Borg — set at the real star's location but with no canonical planet.
+- **Status in real world**: Wolf 359 is an M6.5 flare star at 7.86 ly. No confirmed planets (deep RV upper limits).
+- **NS DB**: `wolf_359.json` (host only, no planets)
+
+## Alpha Centauri — *Avatar* (Pandora), *Three-Body Problem*, many
+
+- **Body in fiction**: Pandora orbiting α Cen A in *Avatar* (Cameron 2009). The trisolaran homeworld of Liu Cixin's *Three-Body Problem* (the trisolaran problem is the canonical α Cen 3-body chaos).
+- **Status in real world**: α Cen A/B with Proxima at ~13 000 AU. Proxima b confirmed habitable-zone Earth-mass; Proxima d candidate (Faria 2022). α Cen A/B planets remain unconfirmed (Beichman & Sanghi 2025 "S1" JWST/MIRI candidate at ~1.5 AU pending follow-up).
+- **NS DB**: full triple system with Jacobi multi-star pipeline + Principia n-body export — the canonical hierarchical-multi-star showcase in NS
+
+## Methodology note
+
+Fiction does not override observation. When a novel anchors plot to a planet that is later refuted (like Tau Cet e), the NS DB follows real-world disposition. Cultural references are documented here as a narrative companion, not as cfg-emitted descriptions. If a future feature ships per-body description strings, this doc is the source of the fiction-aware flavor text — until then it is repo documentation only.
+
+## Related
+
+- [rex-data-comparison](reference__rex-data-comparison.html) — Tau Cet e historical curation discussion (now resolved)
+- [methodology](reference__methodology.html) — provenance-first DB policy that this doc respects
+- [`docs/phase3/eps-eri.md`](../phase3/eps-eri.md) — host synthesis with Babylon 5 / Trek note in scope
+- [`docs/phase3/alpha-centauri-a.md`](../phase3/alpha-centauri-a.md) — host synthesis with Pandora / trisolaran context in scope
+</script>
+<script type="text/markdown" id="md-ko"><!-- NS 시스템의 사이파이 / 대중문화 레퍼런스 인덱스 -->
+# Cultural context — NS 시스템의 사이파이 레퍼런스
+
+NearStars 는 실재 가까운 별을 다루고, 그중 일부는 사이파이에서 주요 무대로 등장합니다. 이 문서는 그 연결을 인덱스화하고, 소설 사실과 실제 사실을 구분하며, 소설이 plot 을 anchor 한 retracted / refuted 행성을 표시합니다. Cultural reference 는 cfg 로 emit 되지 않습니다 — 이 doc 는 narrative reference 전용입니다.
+
+## Tau Ceti — *Project Hail Mary* (Andy Weir, 2021)
+
+- **소설의 행성**: "Adrian" = Tau Cet e
+- **실제 status**: Tau Cet e 는 2026-04-09 NASA Exoplanet Archive 에서 **"False Positive Planet"** 으로 재분류 되었습니다 (Figueira 외 2025, `2025A&A...700A.174F` ESPRESSO sub-10 cm/s RV 비검출 인용). 소설은 Feng 2017 검출 picture 기반으로 집필 되었고, 그 picture 는 이제 obsolete 입니다.
+- **소설이 맞춘 점**: G8V 분광형, ~9 Gyr 나이 (태양의 두 배), 안정적 astrobiology 대상으로서의 Tau Ceti
+- **소설이 틀린 점 (현 데이터 기준)**: Adrian 이 거주 가능한 super-Earth 라는 가정 — 기반 RV 신호가 이제는 항성 활동으로 간주됨. 또 실재의 잔해 원반 (ALMA-resolved 6–55 AU, ~1.2 M⊕, MacGregor 2016) 도 소설에 없는데, 실제 진입 시 항해 위험.
+- **Weir 의 Adrian 명시 파라미터** (소설 텍스트 + Weir 인터뷰 종합. `docs/phase3/tau-cet-e.md § Bibliography` 참조). 표면 중력 **1.4 g** (Weir Sciam 팟캐스트. Feng 2017 의 3.93 M⊕ + 암석질 mass-radius 관계, ~1.68 R⊕ 함의). 대기 **91% CO₂ / 7% CH₄ / 1% Ar / 미량** (질소 미존재 — Taumoeba 가 질소 불내성). 표면 압력 명시 안 됨. 91.2 km 고도에서 0.02 bar / −51 °C 이 다 bar CO₂ 우세 표면을 함의. 우주에서 본 색 **녹색** (광화학 haze + 대기 부유 Taumoeba 생물). Weir 가 Feng 2017 궤도 직접 사용 (P ≈ 168 d, a ≈ 0.55 AU). 자전 주기 / day length 명시 안 됨. **표면 해양 없음** — sampling 임무는 10 km xenonite chain 으로 대기 상층 91.2 km 클라우드 타겟. 표면 도달 안 함.
+- **"거주 가능 Earth-analog" 프레이밍에서 갈라짐**: Weir 의 Adrian 은 wet Earth-analog 아닙니다. CO₂ 우세 세계로 광화학 CH₄ haze 와 대기 부유 미생물 생태계 (Taumoeba 가 대기 상층 거주). "거주 가능 super-Earth" 해석은 2017–2024 popular-science 가 Feng 의 숫자에 입힌 gloss 이지 Weir 의 묘사 아닙니다. 1.4 g 표면 중력 (카탈로그 1.20 g 가 아니라) 도 Weir 가 popular-science sub-Neptune 핏보다 더 암석질 작은 반지름 천체를 채택했음을 함의.
+- **Adrian = 유일한 Astrophage-저항 생물권**: 소설의 핵심 worldbuilding 전제. Astrophage 가 단일 Adrian-origin panspermia 이벤트에서 Earth, Erid, Adrian 을 seeding (Weir, Astronomy.com 인터뷰). 오직 Adrian 만 Taumoeba 자연 포식자를 가지고 있어 Astrophage 가 다른 시스템 모두에서 포식자를 넘어 자라났다. NS 는 cfg 에서 이걸 모델링 못 함 — flavor-text 전용.
+- **Adrian ≠ Erid (worldbuilding 혼동 경고)**: Adrian (Tau Cet e) 는 1.4 g + CO₂ 우세. Erid (40 Eri A b) 는 Weir 의 worldbuilding 부록 문서 기준으로 **2.09 g**, **28 atm NH₃** (made-up 이지만 관측과 비충돌), **5.1시간 항성일** (약 18,397 초), **210 °C** 표면온도 (28 atm 압력이 물의 끓는점을 끌어올려 표면 액체수 존재), **지구의 25배** 자기장, **8.47 M⊕** (Ma 2018 측정값), **12,835 km** 반경 (Weir 도출값). Popular summary (일부 검색 엔진 answer box 포함) 가 두 세계를 자주 혼동. 위의 anchor 파라미터는 Adrian 전용. Erid 는 아래 40 Eri A 항목 참조.
+- **NS DB**: e 는 정상적으로 누락 상태 (NEA-inherited). f/g/h 는 여전히 `pl_controv_flag=1` 이지만 retraction watch (Figueira 2025 가 detection floor 근처/이하 보고).
+
+## 40 Eridani A — *Star Trek* (Vulcan) + *Project Hail Mary* (Erid)
+
+- **소설의 행성**: 40 Eri A b 가 *Star Trek* 의 Vulcan (Roddenberry 가 1991년 *Sky & Telescope* 편지에서 Epsilon Eri 가 아닌 40 Eri 로 확정). *Project Hail Mary* 의 Eridian (Rocky 종족) 도 40 Eridani A 출신.
+- **실제 status**: 40 Eri A b 는 확정된 외계행성 (Ma 2018, `2018AJ....155..117M`). 주기 42.245 d (Weir 인용), 8.47 M⊕ super-Earth, a ≈ 0.224 AU, e = 0.04. 현대 기준 거주 가능 영역 밖 — Vulcan 픽션이 발견 이전이라 Earth-like 세계를 가정함.
+- **Weir 의 Erid 명시 파라미터** (worldbuilding 부록 문서, 사용자 2026-05-27 제공 "eridian.docx"). 실제 관측값으로는 질량 8.47 M⊕, 반장축 0.224 AU, e = 0.04, 주기 42.245 d, 별로부터의 에너지 플럭스 12,537 W/m². 관측과 충돌하지 않는 made-up 파라미터로는 암석질 + 금속 풍부 조성, 밀도 5,710 kg/m³, 반경 12,835 km, 대기 대부분 NH₃ (Weir 가 "NH4" 로 표기 — NH₃ 의 분자식 오기), 표면 압력 28 atm, 평균 표면온도 210 °C, 유도된 표면 중력 2.09 g, 자기장 지구의 약 25배 (이만한 NH₃ 대기 유지에 필요), 용융 금속 코어, 판구조 활동, 표면 액체수 존재 (28 atm 에서 물의 끓는점이 210 °C 위로 올라감), 항성일 5.1시간 (약 18,397 초 — 자기장 다이나모를 돌릴 만큼 빠른 자전).
+- **Weir 의 panspermia framing**: worldbuilding 부록은 "수십억 년 전 Tau Ceti 발 panspermia 이벤트가 지구와 Eridian 모성에 생명을 seeding 했다" 고 명시. Adrian (Tau Cet e) 을 panspermia 발원지로, 지구 + Erid 를 수용지로 설정 — 위의 Adrian 항목 + 소설의 Astrophage 배경설정과 정합. NS 는 cfg 에서 모델링 못 함, flavor-text 전용.
+- **NS DB**: `40_eridani_a.json` (호스트 A — 행성 b 아직 ingest 안 됨) + `40_eridani_b.json` (백색왜성, 별개 별) + `40_eridani_c.json` (M 왜성) — 다중성계. 40 Eri A b ingest + Phase 3 작업은 보류 (사용자 결정 2026-05-27).
+
+## Epsilon Eridani — *Babylon 5* (Vorlon homeworld), 초기 *Star Trek* (원래 Vulcan)
+
+- **소설의 행성**: *Babylon 5* (J. Michael Straczynski) 의 Vorlon Prime. 40 Eri A 로 retcon 되기 전 초기 *Star Trek* 의 Vulcan.
+- **실제 status**: ε Eri b 는 확정된 RV 행성 (Hatzes 2000 + Mawet 2019 직접 영상), ~3.5 AU, M sin i ~0.78 M_Jup — 가스 거인이지 Earth-like 아님. 세 띠 잔해 원반으로 둘러싸여 있음.
+- **NS DB**: `eps_eri.json` (host + b 등재. Phase 3 합성 `docs/phase3/eps-eri.md` + `eps-eri-b.md`)
+
+## Wolf 359 — *Star Trek: The Next Generation* (Battle of Wolf 359)
+
+- **소설의 행성**: TNG "The Best of Both Worlds" (1990) 의 Battle of Wolf 359 는 Starfleet 의 Borg 조우 — 실제 별 위치 사용하지만 canonical 행성 없음.
+- **실제 status**: Wolf 359 는 7.86 ly 의 M6.5 플레어 별. 확정된 행성 없음 (깊은 RV 상한).
+- **NS DB**: `wolf_359.json` (host 만, 행성 없음)
+
+## Alpha Centauri — *Avatar* (Pandora), *삼체*, 다수
+
+- **소설의 행성**: *Avatar* (Cameron 2009) 의 Pandora 는 α Cen A 궤도. 류츠신 *삼체* 의 trisolaran 모성 (canonical 한 α Cen 3-body chaos 가 trisolaran problem 의 원조).
+- **실제 status**: α Cen A/B + Proxima 가 ~13,000 AU 떨어진 hierarchical triple. Proxima b 는 거주 가능 영역 Earth-mass 확정. Proxima d 후보 (Faria 2022). α Cen A/B 행성은 미확정 (Beichman & Sanghi 2025 의 "S1" JWST/MIRI 후보 ~1.5 AU, follow-up 대기).
+- **NS DB**: Jacobi 다중성 파이프라인 + Principia n-body export 가 적용된 완전 triple — NS 의 canonical hierarchical 다중성 쇼케이스
+
+## 방법론 노트
+
+픽션은 관측을 overrule 하지 않습니다. 소설이 plot 을 anchor 한 행성이 추후 refuted 되면 (Tau Cet e 처럼) NS DB 는 현실의 disposition 을 따릅니다. Cultural reference 는 narrative companion 으로 문서화되지 cfg-emitted description 으로는 안 됩니다. 미래에 per-body description string feature 가 ship 되면 이 doc 는 fiction-aware flavor text 의 source 가 됩니다 — 그때까지는 repo documentation 전용입니다.
+
+## Related
+
+- [rex-data-comparison](reference__rex-data-comparison.html) — Tau Cet e 의 역사적 큐레이션 논의 (해결됨)
+- [methodology](reference__methodology.html) — 이 doc 가 존중하는 provenance-first DB 정책
+- [`docs/phase3/eps-eri.md`](../phase3/eps-eri.md) — 호스트 합성 (Babylon 5 / Trek 노트 범위)
+- [`docs/phase3/alpha-centauri-a.md`](../phase3/alpha-centauri-a.md) — 호스트 합성 (Pandora / trisolaran 컨텍스트 범위)
+</script>
 <script>
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
+const srcs = {};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], { gfm: true, breaks: false });
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
 }
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+});
 </script>
 </body>
 </html>

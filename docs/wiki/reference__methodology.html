@@ -5,70 +5,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stellar System Data Research Methodology · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="side">
-<div class="brand">NearStars <span>docs</span></div>
+<a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
@@ -83,961 +72,2063 @@ body { margin: 0 }
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
-<main class="docmain">
-<div class="topbar"><div class="seg" id="lang-seg"><button class="on" data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
-<div data-langbody="ko"><p>이 문서는 공개 천문 카탈로그를 출처로 삼아 항성 및 행성 데이터의 구조화된 JSON 데이터베이스를 구축하는 워크플로를 정의합니다. 데이터베이스는 두 개의 하위 소비자에게 공급됩니다. 각각 별도 세션 또는 에이전트에서 작성되는 Principia proto 파일과 Kopernicus cfg 파일입니다.</p>
-<h2>목차</h2>
-<ul><li><a href="#목표">목표</a></li><li><a href="#출력-구조">출력 구조</a></li><li><a href="#명칭-정규화">명칭 정규화</a></li><li><a href="#json-스키마">JSON 스키마</a></li><li><a href="#에포크-처리">에포크 처리</a></li><li><a href="#다중성계-에포크">다중성계 에포크</a></li><li><a href="#출처-기록-프로토콜">출처 기록 프로토콜</a></li><li><a href="#데이터-소스">데이터 소스</a></li><li><a href="#알려진-이슈-및-미결-결정-사항">알려진 이슈 및 미결 결정 사항</a></li><li><a href="#범위-외-항목">범위 외 항목</a></li><li><a href="#관련-문서">관련 문서</a></li></ul>
-<hr>
-<h2>목표</h2>
-<p>항성계당 JSON 파일 하나. 각 파일에는 다음이 포함됩니다.</p>
-<ul><li>출처 카탈로그로부터 받은 그대로의 원시 관측값</li><li>Principia 및 Kopernicus에 바로 사용할 수 있도록 변환된 파생값</li><li>완전한 출처 정보: 소스명, 카탈로그 ID, 취득일, 에포크</li></ul>
-<p>데이터베이스는 유일한 진실의 원천입니다. 하위 에이전트가 외부 카탈로그를 직접 조회하거나 독립적으로 단위 변환을 수행할 필요가 없어야 합니다.</p>
-<hr>
-<h2>출력 구조</h2>
-<pre><code>db/
-  target_list.json            # 파이프라인 입력
-  astrometry_raw.json         # 자동 fetch — Gaia DR3 + SIMBAD
-  photometry_raw.json         # 자동 fetch — Gaia DR3
-  stellar_props_raw.json      # 자동 fetch — SIMBAD (Teff, 스펙형, mesDiameter)
-  stellar_props_curated.json  # 수동 입력 — 질량/반지름 정밀 문헌값
-  planets_raw.json            # 자동 fetch — NASA Exoplanet Archive
-  planets_curated.json        # 수동 입력 — 궤도/환경/대기 상세 문헌값
-  binary_orbits.json          # 수동 입력 — 쌍성 궤도
-  systems/
-    alpha_centauri_a.json
-    barnards_star.json
-    tau_cet.json
-    ...                       # 항성 컴포넌트별 1파일
-  backups/                    # 이전 스냅샷 보관 (수동 백업 시점)</code></pre>
-<p>파이프라인 실행 순서, 스크립트 설명, 새 별 추가 절차는 <a href="reference__adding_stars.html"><code>adding_stars.md</code></a> 참조.</p>
-<hr>
-<h2>명칭 정규화</h2>
-<p>호스트/행성 이름 → 슬러그·파일명 변환은 <code>scripts/pipeline/_naming.py</code> 한 곳에서만 정의한다. 빌더가 자기 버전의 <code>to_url_slug</code> 를 재구현하면 매니페스트 매칭이 깨진다 (commit <code>e0da593</code> 의 회복 참조).</p>
-<p><b>규칙</b></p>
-<ol><li>lowercase</li><li>apostrophe (<code>&#x27;</code>) 제거 — <code>Barnard&#x27;s</code> → <code>barnards</code></li><li>non-alphanumeric 연속 → 단일 separator</li><li>양 끝 separator 제거</li></ol>
-<p><b>Separator 두 종류</b></p>
-<ul><li>URL 슬러그 (<code>-</code>): <code>docs/phase2/&lt;slug&gt;.html</code>, <code>docs/phase3/&lt;slug&gt;.html</code>, <code>reports-manifest.json</code> 의 매칭 키</li><li>File 슬러그 (<code>_</code>): <code>db/systems/&lt;slug&gt;.json</code></li></ul>
-<div class="tbl"><table><thead><tr><th>호스트</th><th>URL slug</th><th>File slug</th></tr></thead><tbody><tr><td>Barnard&#x27;s star</td><td><code>barnards-star</code></td><td><code>barnards_star</code></td></tr><tr><td>Teegarden&#x27;s Star</td><td><code>teegardens-star</code></td><td><code>teegardens_star</code></td></tr><tr><td>TRAPPIST-1</td><td><code>trappist-1</code></td><td><code>trappist_1</code></td></tr><tr><td>Alpha Centauri A</td><td><code>alpha-centauri-a</code></td><td><code>alpha_centauri_a</code></td></tr><tr><td>40 Eridani A</td><td><code>40-eridani-a</code></td><td><code>40_eridani_a</code></td></tr></tbody></table></div>
-<p><b>새 빌더를 작성할 때</b> — <code>from _naming import to_url_slug, to_file_slug, to_filename</code> 으로 import. 함수를 다시 구현하지 말 것. 큐레이터 행동을 통제하는 스킬 문서 (<code>nearstars-add-star</code>, <code>nearstars-phase3</code>) 에도 같은 규칙이 명시돼 있다.</p>
-<hr>
-<h2>JSON 스키마</h2>
-<h3>최상위 수준</h3>
-<pre><code class="lang-json">{
-  &quot;system_name&quot;: &quot;Alpha Centauri A&quot;,
-  &quot;stars&quot;: [ ... ],
-  &quot;planets&quot;: [ ... ],
-  &quot;sources&quot;: [ ... ],
-  &quot;meta&quot;: { ... }
-}</code></pre>
-<p>JSON 파일은 시스템 단위가 아닌 <b>항성 컴포넌트</b> 단위로 작성합니다. <code>system_name</code>은 컴포넌트 이름과 일치합니다 (예: <code>Alpha Centauri A</code>, <code>Alpha Centauri B</code>, <code>Proxima Centauri</code>는 각각 별도 파일). <code>stars</code> 배열에는 항상 정확히 하나의 항목이 담깁니다 — 해당 파일이 기술하는 컴포넌트입니다. 이중성/다중성계의 상호 궤도 데이터는 <code>binary_orbits.json</code>에 저장되며, 대표 컴포넌트 파일(일반적으로 <code>A</code>)에 임베드됩니다. 형제 컴포넌트는 <code>binary_orbit_ref</code>를 통해 이를 참조합니다.</p>
-<p>이 선택은 하위 Kopernicus/Principia cfg 작성자가 데이터를 소비하는 방식을 반영합니다. 각 <code>CelestialBody</code>(단일 별)가 cfg <code>Body { }</code> 노드와 1:1로 대응하기 때문에, 컴포넌트별 파일 구조를 사용하면 cfg 생성 시 인덱싱이 필요 없습니다.</p>
-<h3><code>meta</code></h3>
-<pre><code class="lang-json">{
-  &quot;retrieval_date&quot;: &quot;2026-05-16&quot;,
-  &quot;solar_system_epoch_jd&quot;: 2433282.5,
-  &quot;solar_system_epoch_label&quot;: &quot;B1950.0&quot;,
-  &quot;game_epoch_jd_sol&quot;: 2433647.5,
-  &quot;game_epoch_jd_rss&quot;: 2433647.5,
-  &quot;coordinate_origin&quot;: &quot;SSB&quot;,
-  &quot;coordinate_frame&quot;: &quot;ICRF&quot;,
-  &quot;coordinate_units&quot;: &quot;km, km/s&quot;,
-  &quot;notes&quot;: &quot;&quot;
-}</code></pre>
-<p><code>solar_system_epoch_jd</code>는 모든 상태 벡터가 표현되는 에포크입니다. Sol과 RSS 모두 <code>solar_system_epoch</code>으로 <b>JD2433282.5</b> (명목상 B1950.0, 1950-01-01 TDB)를 사용합니다. JPL Horizons 조회 시 이 값과 일치시켜야 합니다.</p>
-<p>참고: 엄밀히 말하면 Besselian 에포크 B1950.0 = JD2433282.423이며, JD2433282.5는 1950-01-01.0 TT 자정으로 약 1.85시간 차이가 납니다. Sol과 RSS 모두 관례적으로 2433282.5를 사용하며, JPL Horizons도 이 날짜를 직접 수락합니다. B1950.0을 정밀하게 계산하는 소프트웨어와 교차 검증하는 경우에는 알아둘 만한 차이지만, KSP 목적으로는 무시할 수 있는 수준입니다.</p>
-<p><code>game_epoch_jd</code>는 상태 벡터에 영향을 주지 않습니다. Sol과 RSS는 동일한 값을 사용합니다.</p>
-<ul><li>Sol: <code>JD2433647.5</code></li><li>RSS: <code>JD2433647.5</code></li></ul>
-<p>좌표 원점은 태양이 아닌 <b>태양계 무게중심(SSB)</b> 입니다. 태양 자체는 이 파일들에서 SSB로부터 약 10⁵ km 떨어진 위치에 있습니다. 모든 상태 벡터는 동일한 SSB-ICRF 기준계로 표현되어야 합니다.</p>
-<hr>
-<h3><code>stars[]</code></h3>
-<p><code>stars</code> 배열의 길이는 항상 1입니다 — 해당 파일이 기술하는 단일 컴포넌트입니다. (이중성/다중성계는 컴포넌트별로 파일을 분리합니다. 위의 &quot;최상위 수준&quot; 참조.)</p>
-<pre><code class="lang-json">{
-  &quot;name&quot;: &quot;Alpha Centauri A&quot;,
-  &quot;component&quot;: &quot;A&quot;,
-
-  &quot;raw&quot;: {
-    &quot;source&quot;: &quot;Gaia DR3&quot;,
-    &quot;source_id&quot;: &quot;5853498713160606720&quot;,
-    &quot;epoch_jd&quot;: 2457389.0,
-    &quot;epoch_label&quot;: &quot;J2016.0&quot;,
-    &quot;ra_deg&quot;: 219.90085,
-    &quot;dec_deg&quot;: -60.83562,
-    &quot;parallax_mas&quot;: 742.12,
-    &quot;parallax_error_mas&quot;: 1.40,
-    &quot;pmra_mas_yr&quot;: -3678.19,
-    &quot;pmdec_mas_yr&quot;: 481.84,
-    &quot;radial_velocity_km_s&quot;: -22.4,
-    &quot;radial_velocity_source&quot;: &quot;Gaia DR3&quot;,
-
-    &quot;vmag_v&quot;: -0.01,
-    &quot;vmag_source&quot;: &quot;hipparcos_hardcoded&quot;,
-
-    &quot;teff_k&quot;: 5790,
-    &quot;spectype&quot;: &quot;G2 V&quot;,
-
-    &quot;mass_measurements&quot;: [
-      {
-        &quot;value_msun&quot;: 1.1055,
-        &quot;uncertainty_msun&quot;: 0.0039,
-        &quot;method&quot;: &quot;binary_orbit&quot;,
-        &quot;reference&quot;: &quot;Pourbaix et al. 2002&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361:20021249&quot;,
-        &quot;recommended&quot;: true
-      },
-      {
-        &quot;value_msun&quot;: 1.100,
-        &quot;uncertainty_msun&quot;: 0.006,
-        &quot;method&quot;: &quot;evolutionary_model&quot;,
-        &quot;reference&quot;: &quot;Thevenin et al. 2002&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361:20021791&quot;,
-        &quot;recommended&quot;: false
-      }
-    ],
-
-    &quot;radius_measurements&quot;: [
-      {
-        &quot;value_rsun&quot;: 1.2234,
-        &quot;uncertainty_rsun&quot;: 0.0053,
-        &quot;method&quot;: &quot;interferometry&quot;,
-        &quot;reference&quot;: &quot;Kervella et al. 2017&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361/201629505&quot;,
-        &quot;recommended&quot;: true
-      },
-      {
-        &quot;value_rsun&quot;: 1.227,
-        &quot;uncertainty_rsun&quot;: 0.005,
-        &quot;method&quot;: &quot;evolutionary_model&quot;,
-        &quot;reference&quot;: &quot;Thevenin et al. 2002&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361:20021791&quot;,
-        &quot;recommended&quot;: false
-      }
-    ]
-  },
-
-  &quot;derived&quot;: {
-    &quot;epoch_jd&quot;: 2433282.5,
-    &quot;epoch_label&quot;: &quot;B1950.0&quot;,
-    &quot;propagation_method&quot;: &quot;linear&quot;,
-    &quot;distance_pc&quot;: 1.3475,
-    &quot;distance_km&quot;: 4.153e+13,
-    &quot;icrs_x_km&quot;:  2.634e+13,
-    &quot;icrs_y_km&quot;: -3.197e+13,
-    &quot;icrs_z_km&quot;: -1.272e+13,
-    &quot;icrs_vx_km_s&quot;: 1.3204,
-    &quot;icrs_vy_km_s&quot;: -4.4012,
-    &quot;icrs_vz_km_s&quot;:  0.8913,
-    &quot;position_ulp_km&quot;: 5.9e-3,
-    &quot;icrs_x_j2000_km&quot;:  2.557e+13,
-    &quot;icrs_y_j2000_km&quot;: -3.127e+13,
-    &quot;icrs_z_j2000_km&quot;: -1.255e+13,
-    &quot;icrs_vx_j2000_km_s&quot;: 1.3204,
-    &quot;icrs_vy_j2000_km_s&quot;: -4.4012,
-    &quot;icrs_vz_j2000_km_s&quot;:  0.8913
-  },
-
-  &quot;principia&quot;: {
-    &quot;gravitational_parameter_km3_s2&quot;: 146713602439.899,
-    &quot;mean_radius_km&quot;: 851119.4
-  }
-}</code></pre>
-<p><code>derived</code>에 관한 참고사항.</p>
-<ul><li>모든 단위는 Principia/Sol 관례를 따릅니다. <b>km</b> 및 <b>km/s</b>.</li><li><code>propagation_method: &quot;linear&quot;</code>는 일정한 공간 속도(고유운동 + 시선 속도)로 위치를 전파했음을 의미합니다. KSP 시간 규모(수십~수백 년)에서 항성 섭동체에 적합합니다.</li><li><code>position_ulp_km</code>은 <code>abs(largest_coordinate_km) * 2^-52</code>입니다. Alpha Centauri(~4e13 km)의 경우 약 0.009 km (9 m)으로, 중력 섭동체로서는 허용 가능한 수준이지만 별 주변의 근거리 궤도 역학에는 부적합합니다.</li><li>좌표 원점은 태양이 아닌 <b>SSB</b>입니다. 이 파일들에서 태양 자체는 SSB로부터 약 10⁵ km 떨어진 위치에 있습니다.</li></ul>
-<p><code>mass_measurements</code> 및 <code>radius_measurements</code>에 관한 참고사항.</p>
-<ul><li>공개된 모든 값을 개수에 관계없이 배열에 넣습니다.</li><li><code>recommended: true</code>는 <code>principia</code> 블록에서 사용하는 값을 표시합니다. 각 배열에서 정확히 하나의 항목만 <code>recommended: true</code>를 가져야 합니다.</li><li><code>recommended</code> 우선순위는 출판일이나 저널 권위가 아닌 측정 방법으로 결정됩니다. 방법 계층 구조는 다음과 같습니다.</li></ul>
-<p>질량:</p>
-<ol><li><code>binary_orbit</code> — 직접 역학적 측정, 가장 신뢰성 높음<ol><li><code>asteroseismology</code> — 모델 의존적이나 잘 제약됨<ol><li><code>evolutionary_model</code> — 간접적; 더 나은 방법이 없을 때만 사용<ol><li><code>spectroscopic</code> / <code>spectroscopic_calibration</code> — 스펙트럼 피팅 기반<ol><li><code>unverified</code> — Curation Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.</li></ol></li></ol></li></ol></li></ol></li></ol>
-<p>반지름:</p>
-<ol><li><code>interferometry</code> — 직접 각지름 측정<ol><li><code>eclipsing_binary</code> — 직접 기하학적 측정<ol><li><code>sed_fitting</code> — 볼로메트릭 플럭스 + Teff + 거리 (준직접적)<ol><li><code>evolutionary_model</code> — 간접적; 더 나은 방법이 없을 때만 사용<ol><li><code>spectroscopic_calibration</code> — 경험적 반지름-색/분광형 관계 (예. M 왜성의 Mann et al. 2015)<ol><li><code>unverified</code> — Curation Phase 1 batch 동일 의미.</li></ol></li></ol></li></ol></li></ol></li></ol></li></ol>
-<p>카테고리별 method 화이트리스트는 <code>scripts/pipeline/schema.py STELLAR_MEASUREMENT_KINDS[*][&quot;methods&quot;]</code> 에 정의 (2026-05-21 Phase 2 확장으로 mass/radius 외 6개 카테고리 추가됨. teff/luminosity/age/metallicity/rotation/activity). 합집합은 backward compat 용으로 <code>STELLAR_ALLOWED_METHODS</code> 에 노출. 신규 method 추가 시 canonical KINDS dict 와 본 hierarchy 문서 양쪽 갱신 필요.</p>
-<ul><li>두 항목이 동일한 방법 계층을 공유한다면 분수 불확도가 더 작은 것을 선택합니다. 선택 근거는 <code>meta.notes</code>에 기록합니다.</li></ul>
-<p><code>disk_measurements</code> 에 관한 참고사항 (Phase 2 확장 2026-05-27 추가).</p>
-<pre><code class="lang-json">{
-  &quot;belt&quot;: &quot;main_cold&quot;,
-  &quot;inner_radius_au&quot;: 62,
-  &quot;outer_radius_au&quot;: 200,
-  &quot;dust_temperature_k&quot;: 50,
-  &quot;dust_mass_mearth&quot;: 0.013,
-  &quot;morphology&quot;: &quot;cold Kuiper analog with sharp inner edge&quot;,
-  &quot;resolved&quot;: true,
-  &quot;observatory&quot;: &quot;Herschel-PACS&quot;,
-  &quot;inclination_deg&quot;: 6.2,
-  &quot;method&quot;: &quot;resolved_imaging&quot;,
-  &quot;reference&quot;: &quot;Sibthorpe et al. 2010&quot;,
-  &quot;bibcode&quot;: &quot;2010A&amp;A...518L.130S&quot;,
-  &quot;doi&quot;: &quot;10.1051/0004-6361/201014574&quot;,
-  &quot;recommended&quot;: true
-}</code></pre>
-<ul><li>Entry 단위는 (paper × belt) 입니다. 다벨트 원반 (Vega / Fomalhaut / ε Eri 등) 은 같은 bibcode 로 벨트 수만큼의 entry 를 등록합니다.</li><li><code>belt</code> enum 은 개방형입니다. 권장 값. <code>inner_warm</code>, <code>intermediate</code>, <code>main_cold</code>, <code>single</code>, <code>asteroid_analog</code>, <code>warm</code>, <code>cold</code>. 새 paper 가 다른 명명을 쓰면 그대로 추가 가능합니다.</li><li><code>resolved=true</code> 는 observatory 가 disk 를 공간적으로 분해했음을 의미합니다 (ALMA / HST / SPHERE / JWST). <code>false</code> 는 SED-only 또는 광학적 초과 검출만.</li><li>Disk 전용 보조 필드 (value 도 uncertainty 도 아닌 descriptor). <code>belt</code>, <code>morphology</code>, <code>resolved</code>, <code>observatory</code>, <code>notes</code>. <code>schema.py STELLAR_MEASUREMENT_KINDS[&quot;disk_measurements&quot;][&quot;extra_keys&quot;]</code> 에 등록.</li><li>Method 계층 (<code>recommended</code> 선정의 canonical 순서). <code>resolved_imaging</code> &gt; <code>sed_fit</code> &gt; <code>photometric_excess</code> &gt; <code>unverified</code>.</li><li>모든 value 키는 null 허용입니다. Detection-only paper (예. Aumann 1984 IRAS) 는 대부분의 기하 필드가 null 인 entry 1개를 등록합니다.</li></ul>
-<hr>
-<h3><code>planets[]</code></h3>
-<p>확인된 행성은 각각 별도의 항목으로 등록합니다.</p>
-<pre><code class="lang-json">{
-  &quot;name&quot;: &quot;Proxima Centauri b&quot;,
-  &quot;host_star&quot;: &quot;Proxima Centauri&quot;,
-
-  &quot;raw&quot;: {
-    &quot;pl_name&quot;: &quot;Proxima Cen b&quot;,
-    &quot;reference&quot;: &quot;Anglada-Escude et al. 2016&quot;,
-    &quot;retrieval_date&quot;: &quot;2026-05-16&quot;,
-    &quot;period_days&quot;: 11.1868,
-    &quot;period_err_days&quot;: 0.0002,
-    &quot;semi_major_axis_au&quot;: 0.04856,
-    &quot;semi_major_axis_err_au&quot;: 0.00030,
-    &quot;eccentricity&quot;: 0.0,
-    &quot;inclination_deg&quot;: null,
-    &quot;inclination_err_deg&quot;: null,
-    &quot;omega_deg&quot;: null,
-    &quot;tperi_bjd&quot;: null,
-    &quot;tperi_err_bjd&quot;: null,
-    &quot;tranmid_bjd&quot;: null,
-    &quot;tranmid_err_bjd&quot;: null,
-    &quot;mass_mearth&quot;: 1.27,
-    &quot;mass_err_mearth&quot;: 0.18,
-    &quot;mass_type&quot;: &quot;Msini&quot;,
-    &quot;radius_rearth&quot;: null,
-    &quot;radius_err_rearth&quot;: null,
-    &quot;discoverymethod&quot;: &quot;Radial Velocity&quot;,
-    &quot;pl_controv_flag&quot;: 0,
-    &quot;pubdate&quot;: &quot;2016-08&quot;,
-    &quot;tepcat&quot;: null
-  },
-
-  &quot;derived&quot;: {
-    &quot;semi_major_axis_m&quot;: 7.265e+09,
-    &quot;eccentricity&quot;: 0.0,
-    &quot;inclination_deg&quot;: null,
-    &quot;longitude_of_ascending_node_deg&quot;: null,
-    &quot;argument_of_periapsis_deg&quot;: null,
-    &quot;mean_anomaly_at_epoch_deg&quot;: null,
-    &quot;orbital_epoch_jd&quot;: null,
-    &quot;mass_kg&quot;: 7.548e+24,
-    &quot;mass_type&quot;: &quot;minimum (M sin i)&quot;,
-    &quot;radius_m&quot;: null
-  }
-}</code></pre>
-<p><code>raw</code> 블록은 <code>fetch_planets.py</code> 출력을 그대로 반영합니다.</p>
-<ul><li>궤도 필드는 NASA Exoplanet Archive의 <code>pscomppars</code> 열 이름을 사용합니다 (<code>tperi_bjd</code>, <code>tranmid_bjd</code>, <code>omega_deg</code> 등). 근일점 통과 시각(<code>tperi_bjd</code>)과 트랜짓 중점(<code>tranmid_bjd</code>) 모두 저장됩니다. 평균 근점 이각의 기준으로 어느 것을 사용할지는 검출 방법에 따라 다릅니다.</li><li><code>tepcat</code>은 TEPCat이 트랜짓 행성의 질량/반지름을 독립적으로 도출한 경우 채워지는 중첩 객체입니다. <code>null</code>일 수 있습니다.</li></ul>
-<p><code>derived</code> 블록은 단위 변환만 수행합니다(AU → m, M⊕ → kg, R⊕ → m). 우선순위 체인은 <code>curated &gt; tepcat &gt; nasa_archive</code>입니다. 측정값이 없으면 <code>null</code>로 유지합니다 — 기본값 가정(에지온 경사, 원형 이심률, 게임 시작 시 평균 근점 이각)은 DB가 아닌 Kopernicus cfg 생성 단계에서 처리합니다. cfg를 작성하는 하위 에이전트가 이러한 기본값을 선택하고 문서화할 책임을 집니다.</p>
-<h3><code>sources[]</code></h3>
-<p>조사 과정에서 참고한 모든 논문과 카탈로그를 여기에 기록합니다. 파일의 전체 참고문헌 목록입니다.</p>
-<pre><code class="lang-json">[
-  {
-    &quot;title&quot;: &quot;Constraining the difference in convective blueshift between the components of alpha Centauri with precise radial velocities&quot;,
-    &quot;doi&quot;: &quot;10.1051/0004-6361:20021249&quot;,
-    &quot;bibcode&quot;: &quot;2002A&amp;A...394..151P&quot;,
-    &quot;accessed&quot;: &quot;2026-05-16&quot;,
-    &quot;used_for&quot;: [&quot;Alpha Centauri A mass&quot;, &quot;Alpha Centauri B mass&quot;]
-  },
-  {
-    &quot;title&quot;: &quot;Gaia Data Release 3&quot;,
-    &quot;doi&quot;: null,
-    &quot;bibcode&quot;: &quot;2023A&amp;A...674A...1G&quot;,
-    &quot;accessed&quot;: &quot;2026-05-16&quot;,
-    &quot;used_for&quot;: [&quot;Alpha Centauri A astrometry&quot;, &quot;Alpha Centauri B astrometry&quot;]
-  }
-]</code></pre>
-<ul><li><code>doi</code>와 <code>bibcode</code>는 가능한 경우 둘 다 제공합니다. 하나가 없으면 <code>null</code>로 설정합니다.</li><li><code>used_for</code>에는 해당 출처에서 가져온 내용을 기록합니다. 참고했지만 사용하지 않은 항목도 괜찮습니다 — <code>&quot;used_for&quot;: [&quot;consulted; superseded by Pourbaix et al. 2002&quot;]</code>처럼 기록하세요.</li></ul>
-<hr>
-<p><code>null</code> 필드에 관한 참고사항.</p>
-<ul><li>null은 데이터 부재를 의미하며, 0이 아닙니다. DB는 누락된 측정값에 대해 기본값을 대입하지 않습니다 — 그것은 Kopernicus cfg 작성자의 역할입니다.</li><li>하위 에이전트는 null을 확인하고, 가정한 기본값(예: RV 전용 검출에서 <code>inclination = 90 deg</code>)을 cfg 자체에 문서화해야 합니다.</li></ul>
-<hr>
-<h2>에포크 처리</h2>
-<h3>대상 에포크</h3>
-<p>Sol과 RSS 모두 <code>solar_system_epoch</code>으로 <b>JD2433282.5</b> (B1950.0, 1950-01-01 TDB)를 사용합니다. <code>derived</code>의 모든 상태 벡터는 이 에포크의 SSB-ICRF 좌표로 표현되어야 합니다.</p>
-<p><code>game_epoch</code>은 별개이며 상태 벡터에 영향을 주지 않습니다. Sol과 RSS는 동일한 값을 사용합니다.</p>
-<ul><li>Sol: <code>JD2433647.5</code></li><li>RSS: <code>JD2433647.5</code></li></ul>
-<p>MM 패치 작성 시 Sol과 RSS 변형은 NEEDS 태그(<code>SolSystem</code> vs <code>RSSConfig</code>)만 다르며, 에포크 값은 동일합니다.</p>
-<h3>전파가 필요한 이유</h3>
-<p>Gaia DR3 위치는 <b>J2016.0</b> (JD2457389.0)을 기준으로 합니다. 대상 에포크는 JD2433282.5이며, 차이는 약 24,000일(~66년)입니다.</p>
-<p>Alpha Centauri(공간 속도 ~25 km/s)의 경우, 66년간의 위치 이동은 ~5.2e10 km(~350 AU)입니다. 따라서 전파는 항상 필요합니다.</p>
-<h3>선형 전파</h3>
-<p>SSB-ICRF에서의 등속(균일 직선) 전파는 Gaia와 Hipparcos가 사용하는 표준 모델입니다. KSP 관련 시간 규모에서 항성 섭동체에 충분합니다.</p>
-<p>선형 전파에서 생략되는 주요 고차 효과는 <b>투시 가속도(perspective acceleration)</b> 입니다. 이는 별의 거리가 변함에 따라 나타나는 고유운동 변화율의 겉보기 변화입니다. 대부분의 대상 별에서는 섭동체 정밀도 수준에서 무시할 수 있습니다.</p>
-<p><b>예외: Barnard&#x27;s Star</b> (μ ≈ 10,300 mas/yr, ϖ ≈ 548 mas, RV ≈ −110 km/s)는 투시 가속도만으로 66년간 약 0.5 AU의 위치 오차가 누적됩니다. 이는 KSP 중력 효과의 섭동체 정밀도 허용 범위 내이므로, 파이프라인은 다른 별들과 동일하게 선형 전파를 적용합니다. 알려진 불일치는 <code>barnards_star.json</code>의 <code>meta.notes</code>에 기록됩니다. 향후 Barnard&#x27;s Star에 대해 sub-AU 정밀도가 필요하다면, JPL Horizons에서 JD2433282.5의 상태 벡터를 직접 가져와 <code>derived</code> 블록을 수동으로 덮어쓰세요.</p>
-<p>참고문헌.</p>
-<ul><li>Butkevich &amp; Lindegren (2014), A&amp;A 570, A62 — <code>doi:10.1051/0004-6361/201424483</code>, <code>arXiv:1407.4664</code> Gaia 시대의 에포크 전파에 관한 기준 논문. 균일 직선 운동의 엄밀한 폐형식 표현을 도출하며, Gaia 파이프라인에서 직접 사용됩니다.</li><li>ESA SP-1200 (1997), Vol. 1, Sec. 1.2 (Hipparcos Catalogue, Lindegren et al.) Hipparcos 정밀도에서도 1세기 미만의 시간 규모에서 균일 공간 운동이 대부분의 별에 유효함을 명시합니다.</li></ul>
-<pre><code class="lang-python">def propagate_icrs(x0, y0, z0, vx, vy, vz, jd_from, jd_to):
-    &quot;&quot;&quot;
-    Linear propagation from jd_from to jd_to.
-    Units: km and km/s (matching Principia/Sol convention).
-    See Butkevich &amp; Lindegren (2014) Eq. 4-7 for the full derivation.
-    &quot;&quot;&quot;
-    dt_s = (jd_to - jd_from) * 86400.0
-    return (
-        x0 + vx * dt_s,
-        y0 + vy * dt_s,
-        z0 + vz * dt_s
-    )</code></pre>
-<h3><code>propagation_method</code> 값</h3>
-<div class="tbl"><table><thead><tr><th>값</th><th>의미</th><th>소스 에포크</th></tr></thead><tbody><tr><td><code>&quot;linear&quot;</code> (Gaia)</td><td>Gaia DR3 → 일정 공간 속도 → 대상 에포크</td><td>J2016.0 (JD2457389.0)</td></tr><tr><td><code>&quot;linear&quot;</code> (SIMBAD)</td><td>Gaia 포화 밝은 별에 대한 SIMBAD 폴백 → 선형 전파</td><td>J2000.0 (JD2451545.0)</td></tr><tr><td><code>&quot;kepler_thiele_innes&quot;</code></td><td>궤도 결합된 다성계 컴포넌트 → Markley Kepler + Thiele-Innes 회전 (Hilditch 컨벤션) → ICRS 직교</td><td>궤도 fit 의 카탈로그 에포크. <code>build_systems.py:solve_orbit_relative</code> 가 대상 에포크로 전파</td></tr><tr><td><code>&quot;horizons_direct&quot;</code></td><td>JPL Horizons 상태 벡터를 JD2433282.5 에서 직접 import — 전파 안 함</td><td>JD2433282.5 (대상 에포크)</td></tr></tbody></table></div>
-<p>SIMBAD 폴백 경로는 Gaia DR3 ID가 없는 별, 즉 Gaia에서 포화된 밝은 별(V &lt; ~6)인 Alpha Centauri A와 B, Sirius, Procyon, Pollux 등에 적용됩니다. <code>fetch_astrometry.py</code>는 SIMBAD의 <code>basic</code> 테이블을 조회하며, 해당 천체측정은 J2000.0 기준(Gaia의 J2016.0보다 약 16년 이전)입니다. <code>raw.epoch_jd</code> 필드에 실제 소스 에포크가 기록되므로, <code>build_systems.py</code>는 소스에 관계없이 올바르게 전파합니다.</p>
-<p>현재 <code>&quot;horizons_direct&quot;</code>는 Barnard&#x27;s Star에만 적용됩니다. 향후 Horizons에서 이용 가능한 별이 있다면 동일한 처리를 평가해야 합니다.</p>
-<h3>에포크 필드 요약</h3>
-<div class="tbl"><table><thead><tr><th>필드</th><th>위치</th><th>내용</th></tr></thead><tbody><tr><td><code>raw.epoch_jd</code></td><td>별</td><td>소스 에포크 — Gaia의 경우 J2016.0, SIMBAD 폴백의 경우 J2000.0</td></tr><tr><td><code>derived.epoch_jd</code></td><td>별</td><td>대상 에포크 (JD2433282.5)</td></tr><tr><td><code>meta.solar_system_epoch_jd</code></td><td>시스템</td><td>JD2433282.5 (Sol과 RSS 공통)</td></tr><tr><td><code>meta.game_epoch_jd_sol</code></td><td>시스템</td><td>JD2433647.5</td></tr><tr><td><code>meta.game_epoch_jd_rss</code></td><td>시스템</td><td>JD2433647.5</td></tr><tr><td><code>raw.tperi_bjd</code> / <code>raw.tranmid_bjd</code></td><td>행성</td><td>아카이브 기준 에포크 (근일점 또는 트랜짓 중점)</td></tr><tr><td><code>derived.orbital_epoch_jd</code></td><td>행성</td><td>큐레이션 출처의 에포크 (있는 경우). 없으면 null</td></tr></tbody></table></div>
-<hr>
-<h2>다중성계 에포크</h2>
-<blockquote>수학적 파이프라인 전체와 워크드 예시(α Cen, Sirius)는 <a href="reference__binary-epoch-pipeline.html"><code>docs/reference/binary-epoch-pipeline.md</code></a> 참조. 이 섹션은 DB에 영향을 미치는 결정 사항과 스키마만 다룹니다.</blockquote>
-<h3>다중성계에서 선형 역전파가 실패하는 이유</h3>
-<p>단일 별의 경우, Gaia/SIMBAD 천체측정의 JD2433282.5까지의 선형 외삽으로 충분합니다 (&quot;선형 전파&quot; 참조). 다중성계에서는 컴포넌트들이 상호 궤도 운동 중이기 때문에 이 방법이 <b>틀립니다</b>. 상대 위치가 직선 이동이 아닌 회전을 하기 때문입니다.</p>
-<p>예를 들어 Alpha Centauri AB는 궤도 주기가 79.762년입니다. JD2433282.5는 Gaia의 J2016 에포크보다 ~66년 이전 — 거의 한 바퀴에 해당합니다. 선형 전파는 A–B 벡터를 0° 회전시키지만, 실제 기하학적 구조는 ~300° 회전했습니다. 그 결과 생성된 cfg는 잘못된 중력 기하학을 가지게 되고, Principia의 N체 적분기가 가짜 이심률과 에너지로 시작하게 됩니다.</p>
-<p>해법은 다음과 같습니다. 각 다중성계는 피팅된 Kepler 해를 저장하며, 빌드 시 컴포넌트들의 공통 <b>무게중심</b>을 선형으로 전파한 뒤, JD2433282.5에서 평가한 Kepler 파생 (B−A) 오프셋을 적용하여 개별 컴포넌트를 배치합니다.</p>
-<h3>파이프라인 개요</h3>
-<pre><code>barycenter_astrometry  → linear propagation (J2016 / J2000 → JD2433282.5)
-                          → R_bary, V_bary at target epoch
-                                  +
-orbits[].(P,T,e,a,i,ω,Ω)  → Kepler solver (M → E → ν)
-                          → Thiele-Innes rotation → (B−A) in ICRS (N,E,W)
-                                  +
-mass ratio q             → r_A = R_bary − q_B · r_AB
-                          → r_B = R_bary + q_A · r_AB</code></pre>
-<p>삼중성계의 경우 동일한 파이프라인이 중첩 형태로 실행됩니다(AB 내부 궤도, (AB)–C 외부 궤도). binary-epoch-pipeline.md §6 참조.</p>
-<h3><code>binary_orbits.json</code> 스키마 (신규)</h3>
-<p>기존 스키마는 시스템별 단일 <code>raw</code> 블록에 Kepler 요소를 임베드했습니다. 새 스키마는 <b>컴포넌트별</b> 사실(질량, 천체측정 소스)과 <b>궤도별</b> 사실(관련 두 천체, Kepler 요소, 출처 논문, 등급, 위상 신뢰성)을 배열로 분리합니다. 시스템당 여러 궤도(삼중성계)도 자연스럽게 표현됩니다.</p>
-<pre><code class="lang-json">{
-  &quot;Alpha Centauri&quot;: {
-    &quot;system_id&quot;: &quot;alpha_centauri&quot;,
-    &quot;hierarchy&quot;: &quot;triple&quot;,
-    &quot;components&quot;: [
-      {
-        &quot;name&quot;: &quot;Alpha Centauri A&quot;,
-        &quot;mass_msun&quot;: 1.0788,
-        &quot;mass_source&quot;: &quot;pourbaix_correia_2017&quot;,
-        &quot;astrometry_source&quot;: &quot;mass_weighted_average&quot;,
-        &quot;astrometry_quality&quot;: &quot;barycentric&quot;
-      },
-      { &quot;name&quot;: &quot;Alpha Centauri B&quot;, &quot;mass_msun&quot;: 0.9092, ... },
-      { &quot;name&quot;: &quot;Proxima Cen&quot;,     &quot;mass_msun&quot;: 0.1221, ... }
-    ],
-    &quot;orbits&quot;: [
-      {
-        &quot;orbit_id&quot;: &quot;AB&quot;,
-        &quot;relates&quot;: [&quot;Alpha Centauri A&quot;, &quot;Alpha Centauri B&quot;],
-        &quot;primary&quot;:   &quot;Alpha Centauri A&quot;,
-        &quot;secondary&quot;: &quot;Alpha Centauri B&quot;,
-        &quot;source&quot;:    &quot;akeson_2021&quot;,
-        &quot;doi&quot;:       &quot;10.3847/1538-3881/abfaff&quot;,
-        &quot;equinox&quot;:   &quot;J2000&quot;,
-        &quot;P_yr&quot;:      79.762,
-        &quot;T_jd_tt&quot;:   2435291.6,
-        &quot;e&quot;:         0.51947,
-        &quot;a_arcsec&quot;:  17.4930,
-        &quot;i_deg&quot;:     79.2430,
-        &quot;omega_deg&quot;: 231.519,
-        &quot;Omega_deg&quot;: 205.073,
-        &quot;grade&quot;:           1,
-        &quot;node_resolved&quot;:   true,
-        &quot;phase_reliable&quot;:  true
-      }
-    ]
-  }
-}</code></pre>
-<p>삼중성계는 두 개의 궤도를 나열하고 외부 궤도에 <code>primary_is_barycenter_of</code>를 사용합니다. 전체 삼중성 예시는 binary-epoch-pipeline.md §6 참조.</p>
-<h3>스키마 필드 참조</h3>
-<div class="tbl"><table><thead><tr><th>필드</th><th>필수 여부</th><th>참고</th></tr></thead><tbody><tr><td><code>system_id</code></td><td>필수</td><td>파일명 기반으로 사용하는 슬러그. 소문자, 밑줄 사용.</td></tr><tr><td><code>hierarchy</code></td><td>필수</td><td><code>&quot;binary&quot;</code>, <code>&quot;triple&quot;</code>, <code>&quot;binary+cpm&quot;</code> (CPM = 공통 고유운동 동반성).</td></tr><tr><td><code>components[].name</code></td><td>필수</td><td><code>target_list.json</code>의 컴포넌트 이름과 정확히 일치해야 함.</td></tr><tr><td><code>components[].mass_msun</code></td><td>필수</td><td><code>mass_source</code>와 함께 기재 (논문 bibcode 또는 <code>gaia_dr3_nss</code>).</td></tr><tr><td><code>components[].astrometry_source</code></td><td>필수</td><td><code>gaia_dr3</code> / <code>simbad</code> / <code>mass_weighted_average</code> / <code>gaia_dr3_nss_barycenter</code> / <code>hipparcos_barycenter</code> / <code>single_component:&lt;Name&gt;</code> 중 하나. 빌드가 무게중심 천체측정을 어디서 가져올지 결정합니다 — 아래 &quot;하이브리드 저장&quot; 참고.</td></tr><tr><td><code>components[].astrometry_quality</code></td><td>필수</td><td><code>barycentric</code> / <code>photocenter_contaminated</code> / <code>single_component</code>. 정보용. validate.py가 경고에 활용.</td></tr><tr><td><code>barycenter_astrometry</code> (시스템 수준)</td><td>조건부</td><td><code>ra_deg</code>/<code>dec_deg</code>/<code>parallax_mas</code>/<code>pm_ra_masyr</code>/<code>pm_dec_masyr</code>/<code>radial_velocity_km_s</code>/<code>epoch_jd</code> 블록. <code>astrometry_source</code>가 <code>gaia_dr3_nss_barycenter</code> 또는 <code>hipparcos_barycenter</code>인 경우 <b>필수</b> (컴포넌트 천체측정에서 도출 불가한 공개 카탈로그 무게중심값). 나머지 경우 생략 — 빌드가 <code>astrometry_raw.json</code>에서 질량 가중 평균을 실시간 계산.</td></tr><tr><td><code>orbits[].orbit_id</code></td><td>필수</td><td><code>&quot;AB&quot;</code>, <code>&quot;inner&quot;</code>, <code>&quot;outer&quot;</code>. 항목 내에서 고유.</td></tr><tr><td><code>orbits[].relates</code></td><td>필수</td><td>이 궤도가 다루는 컴포넌트 또는 무게중심.</td></tr><tr><td><code>orbits[].primary</code> / <code>secondary</code></td><td>필수</td><td>하나는 컴포넌트이거나 <code>primary_is_barycenter_of</code>여야 함.</td></tr><tr><td><code>orbits[].primary_is_barycenter_of</code></td><td>조건부</td><td>삼중성의 외부 궤도용. 내부 시스템을 구성하는 컴포넌트 이름 목록.</td></tr><tr><td><code>orbits[].source</code></td><td>필수</td><td><code>&quot;akeson_2021&quot;</code> (논문 키) 또는 <code>&quot;orb6:grade=1&quot;</code> 또는 <code>&quot;gaia_dr3_nss:OrbitalAlternative&quot;</code>.</td></tr><tr><td><code>orbits[].P_yr</code> / <code>T_jd_tt</code> / <code>e</code></td><td>필수</td><td>Kepler 핵심 요소. <code>T</code>는 근일점 통과 시각 JD (TT).</td></tr><tr><td><code>orbits[].a_arcsec</code> 또는 <code>a_au</code></td><td>필수</td><td>상대 장반경. 카탈로그 관례는 <code>arcsec</code>; 시차로 변환.</td></tr><tr><td><code>orbits[].i_deg</code>/<code>omega_deg</code>/<code>Omega_deg</code></td><td>필수</td><td>경사각, 근일점 편각, 승교점 경도.</td></tr><tr><td><code>orbits[].A</code>/<code>B</code>/<code>F</code>/<code>G</code> (<code>C</code>/<code>H</code> 선택)</td><td>선택</td><td>직접 공개된 경우의 Thiele-Innes 상수 (arcsec). <code>a</code>/<code>i</code>/<code>omega</code>/<code>Omega</code> 대체 가능 (Gaia NSS).</td></tr><tr><td><code>orbits[].grade</code></td><td>필수</td><td>Orb6 품질 등급 1–9. ≤3이면 출판 품질.</td></tr><tr><td><code>orbits[].node_resolved</code></td><td>필수</td><td>RV 데이터가 있어 (i,ω,Ω)가 물리적으로 올바른 교점 직선을 반영하면 <code>true</code>. 카탈로그가 거울 축퇴 해를 제시하면 <code>false</code>.</td></tr><tr><td><code>orbits[].phase_reliable</code></td><td>필수</td><td><code>grade ≥ 4</code>이거나 관측 커버리지 대비 외삽이 0.5×P를 초과하면 <code>false</code>. false인 경우에도 빌드는 실행되지만 영향받은 컴포넌트 파일의 <code>meta.notes</code>에 경고가 기록됨.</td></tr></tbody></table></div>
-<h4><code>_principia_notes</code> 메타 블록</h4>
-<p><code>binary_orbits.json</code> 의 최상위 <code>_principia_notes</code> 키 (언더스코어 접두사이므로 validator 가 스킵). 빌드에서 사용하는 에포크 상수 (<code>solar_system_epoch_jd</code>, <code>game_epoch_sol_jd</code>) 와 <code>schema_version</code> 문자열 (&quot;YYYY-MM-DD-components-orbits&quot;) 을 기록합니다. <code>schema_version</code> 은 컴포넌트/궤도 shape 가 바뀔 때마다 갱신됩니다. 하위 도구 (예. <code>scripts/pipeline/build_systems.py</code>) 가 sanity check 용으로 읽을 수 있지만 권위 있는 값은 아닙니다 — 코드에 있는 상수의 사본일 뿐입니다.</p>
-<h4>하이브리드 천체측정 저장</h4>
-<p>DB는 컴포넌트별 파생/계산 천체측정값을 저장하지 않습니다. 공개 무게중심 해(Gaia DR3 NSS, Hipparcos 다중성계 부록)만 시스템 수준의 <code>barycenter_astrometry</code> 블록에 저장됩니다. <code>astrometry_source = &quot;mass_weighted_average&quot;</code>인 경우 빌드가 <code>astrometry_raw.json</code>에서 질량 가중 평균을 실시간 계산합니다. [[project-nearstars-db-principle]] 참조.</p>
-<h4>Thiele-Innes 관례 (Hilditch / Pourbaix)</h4>
-<p><code>build_systems.py</code>는 Hilditch / Pourbaix 관례를 적용합니다.</p>
-<pre><code>ΔN = A · x_p + F · y_p     (북)
-ΔE = B · x_p + G · y_p     (동)
-ΔW = C · x_p + H · y_p     (관측자 반대 방향)</code></pre>
-<p>이 관례는 NearStars 모든 문서와 코드에서 통일된 표준입니다. <code>binary-epoch-pipeline.md</code> §2 step 5 와 §10 워크드 예시도 동일한 공식을 사용합니다. 위 형식이 α Cen 과 Sirius 의 레거시 <code>individual_states.b1950</code> 값을 &lt; 0.05 % 이내로 재현합니다.</p>
-<h3>무게중심 천체측정 결정 트리 (요약)</h3>
-<p>각 다중성계에서 <code>components[].astrometry_source</code> 필드는 다음 결정 트리에 따라 선택됩니다. 컴포넌트 중 <code>astrometry_source: &quot;unset&quot;</code>인 항목이 있으면 빌드가 실행을 거부합니다.</p>
-<pre><code>Gaia DR3 NSS row exists for this system?
-├── YES → astrometry_source = gaia_dr3_nss_barycenter
-│         astrometry_quality = barycentric
-│
-└── NO  → resolved pair (separation &gt; ~1″, both have Gaia 5-param)?
-          ├── YES → astrometry_source = mass_weighted_average
-          │         astrometry_quality = barycentric
-          │         (PM averaging cancels orbital tangent velocity)
-          │
-          └── NO  → Hipparcos multi-star annex (DMSA flag C/O/V/X)?
-                    ├── YES → astrometry_source = hipparcos_barycenter
-                    │         astrometry_quality = barycentric
-                    │
-                    └── NO  → astrometry_source = gaia_dr3 (or simbad if saturated)
-                              astrometry_quality = photocenter_contaminated
-                              (flag, allow but warn)</code></pre>
-<p>광도 중심 흔들림 오차 모델은 binary-epoch-pipeline.md §8 참조.</p>
-<h3>시스템별 옵션 평가 (최선 추정치; 구현 시 검증 필요)</h3>
-<div class="tbl"><table><thead><tr><th>시스템</th><th>계층 구조</th><th>권장 옵션</th><th>소스 논문 오버라이드</th></tr></thead><tbody><tr><td>Alpha Centauri AB</td><td>binary</td><td>gaia_dr3_nss_barycenter</td><td>Akeson et al. 2021</td></tr><tr><td>Sirius AB</td><td>binary</td><td>hipparcos_barycenter (A saturated; B is WD)</td><td>Bond et al. 2017</td></tr><tr><td>61 Cygni AB</td><td>binary</td><td>mass_weighted_average (wide, both in Gaia)</td><td>Malkov et al. 2012 — <code>phase_reliable: false</code> (P~679 yr, grade ≥3)</td></tr><tr><td>40 Eridani ABC</td><td>triple</td><td>A: gaia_dr3 / B+C close pair: NSS or mass-weighted</td><td>조사 필요</td></tr><tr><td>Eta Cassiopeiae AB</td><td>binary</td><td>mass_weighted_average</td><td>Tokovinin 2021 — P=480 yr, <code>phase_reliable: false</code> 가능성 높음</td></tr><tr><td>36 Ophiuchi ABC</td><td>triple</td><td>A,B: mass-weighted on close pair / C: static CPM at fixed offset</td><td>조사 필요</td></tr></tbody></table></div>
-<p>실제 <code>astrometry_source</code> 값은 구현 세션에서 확정됩니다 — 위 표는 출발점이며 확정값이 아닙니다.</p>
-<h3>위상 신뢰성 의미론</h3>
-<p>다음 경우에 <code>phase_reliable: false</code>로 설정합니다.</p>
-<ul><li>Orb6 grade ≥ 4, 또는</li><li>관측 커버리지가 주기의 절반 미만(외삽 &gt; 0.5 P), 또는</li><li>근일점 통과 시각 오차가 주기의 5%를 초과하는 경우</li></ul>
-<p><code>phase_reliable: false</code>인 경우 빌드는 계속 실행됩니다(가용 해에서 구한 최선 추정치를 출력). 그러나 영향받은 컴포넌트 파일의 <code>meta.notes</code>에 경고가 기록됩니다. 하위 Kopernicus cfg는 여전히 값을 사용할 수 있지만, Principia 장기 시뮬레이션 사용자는 ~0.5 P 이후의 상대 기하학을 신뢰해서는 안 됩니다.</p>
-<p>위상 불신뢰 광시야 CPM 동반성(P &gt; 1000년, 피팅된 궤도 없음)의 경우, <code>orbit_type: &quot;static_cpm&quot;</code>을 사용합니다 — binary-epoch-pipeline.md §6 참조 — 이는 상대 위치를 카탈로그 기준 에포크에 동결합니다.</p>
-<hr>
-<h2>출처 기록 프로토콜</h2>
-<p>참고한 모든 논문과 카탈로그를 기록합니다. 값을 사용하지 않은 경우에도 <code>used_for</code>에 이유를 기재하세요.</p>
-<p>SIMBAD bibcode는 출처가 아닙니다. <code>https://ui.adsabs.harvard.edu/abs/&lt;bibcode&gt;</code>를 통해 원본 논문으로 해석하고 거기서 DOI를 기록하세요.</p>
-<p>동일 방법 계층의 두 논문이 충돌하면 둘 다 <code>sources[]</code>와 측정값 배열에 추가하고, 선택 근거를 <code>meta.notes</code>에 문서화하세요.</p>
-<hr>
-<h2>데이터 소스</h2>
-<p>아래의 모든 소스는 자유롭게 접근 가능합니다. astroquery가 대부분을 통합 Python 인터페이스로 지원합니다. 직접 접근이나 폴백을 위한 raw TAP 엔드포인트도 나열합니다.</p>
-<hr>
-<h3>근처 항성계</h3>
-<p><b>RECONS (Research Consortium on Nearby Stars)</b> 10파섹(~32.6광년) 이내의 모든 항성계에 관한 권위 있는 목록. 별이 프로젝트의 50광년 범위 내에 있음을 확인하고, 별의 상태를 갱신하는 새로 측정된 거리를 파악하는 데 사용하는 기본 참고 자료.</p>
-<ul><li>URL: <code>https://www.recons.org</code></li><li>새 시차가 측정될 때마다 정기 업데이트</li><li>사용 시기: 후보 별이 실제로 50광년 이내인지 확인할 때, 다른 데이터베이스에 아직 두드러지지 않은 새로 발견된 근처 시스템을 찾을 때</li></ul>
-<hr>
-<h3>천체측정 및 항성 위치</h3>
-<p><b>Gaia DR3</b> 근처 별의 위치, 고유운동, 시차, 시선 속도의 주요 소스.</p>
-<ul><li>TAP endpoint: <code>https://gea.esac.esa.int/tap-server/tap</code></li><li>astroquery: <code>from astroquery.gaia import Gaia</code></li><li>Table: <code>gaiadr3.gaia_source</code></li><li>Key columns: <code>source_id</code>, <code>ra</code>, <code>dec</code>, <code>parallax</code>, <code>parallax_error</code>, <code>pmra</code>, <code>pmdec</code>, <code>radial_velocity</code></li><li>Epoch: J2016.0 (JD2457389.0)</li><li>Caveat: <code>radial_velocity</code>는 희미한 적색 왜성에서 null.</li></ul>
-<p><b>Hipparcos</b> Gaia 이전 카탈로그. 근처 별 모두에서 Gaia DR3로 대체됐지만, 밝기 포화(V &lt; ~6 mag)로 Gaia에 누락된 별의 교차 확인이나 대체 소스로 유용.</p>
-<ul><li>Access via VizieR: catalogue <code>I/311</code></li><li>TAP endpoint: <code>https://tapvizier.cds.unistra.fr/TAPVizieR/tap</code></li></ul>
-<p><b>JPL Horizons</b> 태양계 천체 및 일부 근처 별의 SSB-ICRF 직접 상태 벡터(위치 + 속도). 출력값이 Principia/Sol 단위(km, km/s) 및 에포크(B1950.0 = JD2433282.5)와 직접 일치합니다.</p>
-<ul><li>Web: <code>https://ssd.jpl.nasa.gov/horizons/</code></li><li>Batch API: <code>https://ssd.jpl.nasa.gov/horizons_batch.cgi</code></li><li>astroquery: <code>from astroquery.jplhorizons import Horizons</code></li><li>Settings: <code>VECTORS</code>, frame <code>ICRF</code>, center <code>@SSB</code>, epoch <code>1950-Jan-01</code></li><li>Coverage: Alpha Centauri, Barnard&#x27;s Star 확인 가능. 다른 대상 시스템 커버리지는 다를 수 있음.</li></ul>
-<hr>
-<h3>항성 물리 파라미터 (질량, 반지름, Teff)</h3>
-<p><b>SIMBAD</b> 문헌 집성 서비스. 질량/반지름을 직접 열로 저장하지 않고 TAP를 통해 <code>mesMass</code> 및 <code>mesDiameter</code> 측정 테이블을 조회합니다.</p>
-<ul><li>TAP endpoint: <code>https://simbad.u-strasbg.fr/simbad/sim-tap/sync</code></li><li>astroquery: <code>from astroquery.simbad import Simbad</code></li><li>사용 용도: 질량, 반지름, 스펙트럼형, 교차 ID, RV 폴백, bibcode → 논문 추적</li></ul>
-<p><b>VizieR</b> 출판된 천문 카탈로그 라이브러리. 개별 논문의 수천 개 항성 파라미터 테이블을 호스팅하며, 문헌값의 가장 완전한 집성 서비스.</p>
-<ul><li>TAP endpoint: <code>https://tapvizier.cds.unistra.fr/TAPVizieR/tap</code></li><li>astroquery: <code>from astroquery.vizier import Vizier</code></li><li>이 프로젝트와 관련된 주요 호스팅 카탈로그.<ul><li><code>I/355</code> — Gaia DR3<ul><li><code>I/311</code> — Hipparcos<ul><li><code>B/pastel/pastel</code> — PASTEL (아래 참조)<ul><li><code>J/A+A/556/A150</code> — SWEET-Cat (아래 참조)<ul><li>개별 간섭측정 논문 (CHARA, VLTI/GRAVITY 결과)</li></ul></li></ul></li></ul></li></ul></li></ul></li></ul>
-<p><b>PASTEL</b> 문헌에서 도출된 항성 대기 파라미터(Teff, log g, [Fe/H])의 편집본. 진화 모델 질량 추정을 교차 확인하는 공개 Teff 값을 찾는 데 유용.</p>
-<ul><li>URL: <code>https://pastel.obs.u-bordeaux1.fr/</code></li><li>Access via VizieR: <code>B/pastel/pastel</code></li><li>참고: 질량이나 반지름을 직접 제공하지 않으며, 이를 도출하는 데 사용하는 분광 파라미터를 제공.</li></ul>
-<p><b>SWEET-Cat</b> 행성 호스트 별의 대기 파라미터 및 질량 카탈로그. 확인된 행성이 있는 대부분의 별을 다루며, 가능한 경우 균일하게 도출됨.</p>
-<ul><li>URL: <code>https://sweetcat.iastro.pt/</code></li><li>Access via VizieR: <code>J/A+A/556/A150</code></li><li>제공 항목: Teff, log g, [Fe/H], 항성 질량</li><li>주의: 질량은 보정 공식에서 도출된 것이며 직접 측정값이 아님. 이중성 궤도나 간섭측정 값보다 낮은 우선순위.</li></ul>
-<hr>
-<h3>행성 궤도 요소 및 물리 파라미터</h3>
-<h4>조사 우선순위 순서</h4>
-<p>행성 시스템을 조사할 때 아래 소스를 순서대로 확인하고 가장 정밀한 값을 사용합니다. NASA Archive만으로는 충분하지 않습니다.</p>
-<div class="tbl"><table><thead><tr><th>우선순위</th><th>소스</th><th>최적 용도</th></tr></thead><tbody><tr><td>1</td><td>Individual paper (ADS)</td><td>가장 최신/확정적인 궤도 해</td></tr><tr><td>2</td><td>DACE</td><td>RV 궤도 요소 (T₀, ω, 이심률 상세)</td></tr><tr><td>3</td><td>TEPCat</td><td>트랜짓 시스템 — 동일 피트에서 질량 + 반지름</td></tr><tr><td>4</td><td>exoplanet.eu</td><td>교차 확인; NASA Archive보다 최근 발견 조기 포착</td></tr><tr><td>5</td><td>NASA Exoplanet Archive</td><td>기준값; 파이프라인 자동 fetch에서 사용</td></tr></tbody></table></div>
-<p>값을 사용하지 않더라도 참고한 모든 소스를 기록하세요. 각 행성에 대해 <code>planets_curated.json</code> 항목은 출처 DOI와 함께 가용한 최선의 값을 반영해야 합니다.</p>
-<hr>
-<p><b>NASA Exoplanet Archive</b> TAP 지원을 갖춘 가장 포괄적인 행성 데이터베이스. 궤도 요소의 주요 소스.</p>
-<ul><li>TAP endpoint: <code>https://exoplanetarchive.ipac.caltech.edu/TAP/sync</code></li><li>astroquery: <code>from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive</code></li><li>Table: <code>ps</code> (Planetary Systems); filter <code>default_flag = 1</code></li><li>Table: <code>pscomppars</code> (composite best parameters per planet)</li><li>Key columns: <code>pl_orbper</code>, <code>pl_orbsmax</code>, <code>pl_orbeccen</code>, <code>pl_orbincl</code>, <code>pl_orblper</code>, <code>pl_bmasse</code>, <code>pl_rade</code>, <code>pl_tranmid</code>, <code>pl_refname</code></li><li>주의: <code>default_flag = 1</code>은 아카이브의 최선 파라미터 선택이며, 항상 최신이 아닐 수 있음. <code>pl_refname</code>을 확인하고 출처 논문과 대조하세요.</li></ul>
-<p><b>DACE (Data &amp; Analysis Center for Exoplanets)</b> 제네바 천문대의 RV 행성 데이터베이스. RV 검출 행성에 대해 NASA Archive보다 상세한 궤도 해를 제공합니다 — T₀, ω, 이심률 신뢰 구간, 전체 RV 시계열 포함.</p>
-<ul><li>URL: <code>https://dace.unige.ch/exoplanets/</code></li><li>특히 강점: 근처 M 왜성 행성, HARPS/ESPRESSO 대상</li><li>사용 시기: NASA Archive 궤도 요소가 희소하거나 구식인 경우</li></ul>
-<p><b>Extrasolar Planets Encyclopaedia (exoplanet.eu)</b> 유럽 카탈로그. 새로 발표된 행성에 대해 NASA Archive보다 빠르게 업데이트됩니다. 교차 확인 및 NASA Archive에 아직 없는 최근 발견을 파악하는 데 유용.</p>
-<ul><li>URL: <code>https://exoplanet.eu</code></li><li>TAP endpoint: <code>http://voparis-tap-planeto.obspm.fr/tap</code></li><li>astroquery: <code>import pyvo; pyvo.dal.TAPService(&quot;http://voparis-tap-planeto.obspm.fr/tap&quot;)</code></li><li>Table: <code>exoplanet.epn_core</code></li><li>웹사이트에서 벌크 CSV 다운로드도 가능.</li></ul>
-<p><b>TEPCat (Transiting Extrasolar Planet Catalogue)</b> 트랜짓 시스템의 물리적·궤도 특성에 관한 중요 편집본. 독립적으로 도출되었으며 NASA Archive의 단순 미러가 아닙니다. 도출 방법론이 문서화된 트랜짓 측정 반지름과 질량에 특히 유용.</p>
-<ul><li>URL: <code>https://www.astro.keele.ac.uk/jkt/tepcat/</code></li><li>벌크 다운로드용 기계 가독형 테이블 제공.</li><li>재현성을 위한 월간 스냅샷 아카이브.</li><li>제공 항목: 항성 질량/반지름, 행성 질량/반지름, 궤도 요소, 자전축 기울기, 평형 온도.</li></ul>
-<p><b>Open Exoplanet Catalogue</b> 커뮤니티 유지 GitHub 리포지토리. JSON/XML 형식. 대형 아카이브에서 충분히 다루지 않는 시스템의 빠른 조회에 유용.</p>
-<ul><li>URL: <code>https://github.com/openexoplanetcatalogue/open_exoplanet_catalogue</code></li><li>접근: 직접 다운로드 또는 <code>git clone</code>.</li></ul>
-<hr>
-<h3>트랜짓 타이밍 및 역표 데이터</h3>
-<p><b>NASA Exoplanet Archive Transit and Ephemeris Service</b> 아카이브의 확인된 행성에 대한 트랜짓 시각 계산. TRAPPIST-1과 같이 TTV가 지배적인 시스템에 필수.</p>
-<ul><li>URL: <code>https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TransitView/nph-visibletbls</code></li></ul>
-<p><b>Exoplanet Transit Database (ETD)</b> 아마추어 및 전문 트랜짓 관측. 동료 심사 TTV 분석보다 정밀도는 낮지만 광범위한 커버리지를 제공하며 에포크 정제에 유용.</p>
-<ul><li>URL: <code>http://var2.astro.cz/ETD/</code></li></ul>
-<hr>
-<h3>문헌 및 논문 접근</h3>
-<p><b>NASA ADS (Astrophysics Data System)</b> 천문학의 권위 있는 문헌 데이터베이스. 다음 용도로 사용.</p>
-<ul><li>SIMBAD에서 bibcode를 전체 논문으로 추적</li><li>특정 시스템의 가장 최근 궤도 분석 찾기</li><li>모든 측정 항목의 DOI 취득</li></ul>
-<ul><li>URL: <code>https://ui.adsabs.harvard.edu</code></li><li>API: <code>https://api.adsabs.harvard.edu/v1/</code></li></ul>
-<p><b>arXiv (astro-ph.EP, astro-ph.SR)</b> 프리프린트 서버. 많은 궤도 분석과 항성 파라미터 논문이 저널 출판 전 여기에 등장.</p>
-<ul><li>URL: <code>https://arxiv.org/list/astro-ph.EP/recent</code></li></ul>
-<hr>
-<h3>아카이브 및 우주 임무 데이터</h3>
-<p><b>MAST (Mikulski Archive for Space Telescopes)</b> Kepler, K2, TESS, HST 데이터를 호스팅. 특정 시스템의 raw 광도 곡선이나 트랜짓 측광이 필요한 경우 관련.</p>
-<ul><li>URL: <code>https://mast.stsci.edu</code></li><li>astroquery: <code>from astroquery.mast import Observations</code></li></ul>
-<hr>
-<h3>접근 우선순위 요약</h3>
-<div class="tbl"><table><thead><tr><th>데이터 유형</th><th>주요 소스</th><th>보조 소스</th><th>교차 확인</th></tr></thead><tbody><tr><td>위치, PM, 시차</td><td>Gaia DR3</td><td>Hipparcos (밝은 별)</td><td>JPL Horizons</td></tr><tr><td>시선 속도</td><td>Gaia DR3</td><td>SIMBAD</td><td>발견 논문</td></tr><tr><td>상태 벡터 (km, km/s)</td><td>Gaia DR3 → 변환</td><td>JPL Horizons (직접)</td><td>--</td></tr><tr><td>항성 질량</td><td>SIMBAD <code>mesMass</code></td><td>SWEET-Cat</td><td>VizieR (논문별)</td></tr><tr><td>항성 반지름</td><td>SIMBAD <code>mesDiameter</code></td><td>TEPCat</td><td>VizieR (간섭측정 논문)</td></tr><tr><td>궤도 요소</td><td>NASA Exoplanet Archive</td><td>exoplanet.eu</td><td>TEPCat</td></tr><tr><td>행성 질량</td><td>NASA Exoplanet Archive</td><td>TEPCat</td><td>발견 논문</td></tr><tr><td>행성 반지름</td><td>NASA Exoplanet Archive</td><td>TEPCat</td><td>발견 논문</td></tr><tr><td>트랜짓 타이밍</td><td>NASA Archive ephemeris</td><td>ETD</td><td>출처 논문 (TTV 분석)</td></tr><tr><td>논문 검색</td><td>ADS</td><td>arXiv</td><td>--</td></tr></tbody></table></div>
-<hr>
-<h2>알려진 이슈 및 미결 결정 사항</h2>
-<h3>성간 거리에서의 KSP 렌더링 엔진 한계</h3>
-<p>Principia는 거리에 관계없이 먼 별을 중력 섭동체로 올바르게 등록합니다. Alpha Centauri(~4e13 km)에서의 배정밀도 위치 ULP는 약 9 m으로, 힘 계산에 허용 가능한 수준입니다.</p>
-<p>그러나 KSP의 렌더링 엔진은 별개의 문제입니다. 성간 거리에서 렌더러(Principia가 아닌)의 부동 소수점 정밀도가 시각적 결함, SOI/맵 뷰 실패, 또는 엔진 충돌을 일으킬 수 있습니다. 이 규모에서는 테스트된 바 없습니다.</p>
-<p><b>cfg 생성을 시작하기 전에 이 절충안을 결정해야 합니다.</b></p>
-<ul><li>실제 거리 사용 → Principia 물리 정확, KSP 렌더러 동작 미확인</li><li>거리 축소 → KSP 렌더러 안정, Principia 물리 부정확</li></ul>
-<p>각 시스템 파일의 <code>meta.notes</code>에 결정 사항과 그 근거를 기록하세요.</p>
-<hr>
-<h2>범위 외 항목</h2>
-<p>다음 사항은 여기가 아닌 별도 세션 또는 에이전트에서 처리합니다.</p>
-<ul><li>Kopernicus cfg 생성</li><li>Principia 패치 작성 (Sol Real 변형, Sol Quarter 변형, RSS 변형)</li><li>시각 및 아트 파라미터 (atmosphere, terrain, Scatterer, EVE)</li><li>포함할 시스템에 관한 커뮤니티 투표</li><li>성간 거리 스케일링 결정 (위의 알려진 이슈 참조)</li></ul>
-<h2>관련 문서</h2>
-<ul><li><a href="reference__adding_stars.html">adding_stars</a> — 새 컴포넌트를 파이프라인에 추가하는 실무 워크플로</li><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — 다성계 Kepler→ICRS 전체 수학 + 워크드 예시 (α Cen AB 예시 §9)</li><li><a href="reference__data-sources.html">data-sources</a> — 외부 카탈로그 인용 + attribution 정책</li><li><a href="reference__archive_issues.html">archive_issues</a> — 교차 검증 중 발견된 상위 카탈로그 결함 기록</li><li><a href="reference__tools.html">tools</a> — 목적별 프로젝트 전체 툴 인덱스</li><li><a href="reference__mod-reference.html">mod-reference</a> — KSP 모드 설치 참조 (하위 소비자)</li><li><a href="reference__mod-release-layout.html">mod-release-layout</a> — 모드 배포 repo 관례</li><li><a href="reference__guideline.html">guideline</a> — 프로젝트 범위, 단계, 거리 한계</li><li><a href="reference__principia-cfg-reference.html">principia-cfg-reference</a> — Principia cfg API (방법론 에포크 처리의 하위 소비자)</li><li><a href="reference__rex-data-comparison.html">rex-data-comparison</a> — REX v0.9.6 vs NearStars (방법론 선택의 타당성 검증)</li></ul></div><div data-langbody="en" style="display:none"><p>This document defines the workflow for building a structured JSON database of stellar and planetary data, sourced from public astronomical catalogues. The database feeds two downstream consumers: Principia proto files and Kopernicus cfg files, written in separate sessions or agents.</p>
-<h2>Table of Contents</h2>
-<ul><li><a href="#goal">Goal</a></li><li><a href="#output-structure">Output Structure</a></li><li><a href="#json-schema">JSON Schema</a></li><li><a href="#epoch-handling">Epoch Handling</a></li><li><a href="#multiple-system-epoch">Multiple-System Epoch</a></li><li><a href="#source-recording-protocol">Source Recording Protocol</a></li><li><a href="#data-sources">Data Sources</a></li><li><a href="#known-issues-and-open-decisions">Known Issues and Open Decisions</a></li><li><a href="#out-of-scope">Out of Scope</a></li><li><a href="#related">Related</a></li></ul>
-<hr>
-<h2>Goal</h2>
-<p>One JSON file per star system. Each file contains:</p>
-<ul><li>Raw observational values, exactly as received from the source catalogue</li><li>Derived/converted values ready for Principia and Kopernicus</li><li>Full provenance: source name, catalogue ID, retrieval date, epoch</li></ul>
-<p>The database is the single source of truth. No downstream agent should need to query an external catalogue or perform unit conversions independently.</p>
-<hr>
-<h2>Output Structure</h2>
-<pre><code>db/
-  target_list.json            # 파이프라인 입력
-  astrometry_raw.json         # 자동 fetch — Gaia DR3 + SIMBAD
-  photometry_raw.json         # 자동 fetch — Gaia DR3
-  stellar_props_raw.json      # 자동 fetch — SIMBAD (Teff, 스펙형, mesDiameter)
-  stellar_props_curated.json  # 수동 입력 — 질량/반지름 정밀 문헌값
-  planets_raw.json            # 자동 fetch — NASA Exoplanet Archive
-  planets_curated.json        # 수동 입력 — 궤도/환경/대기 상세 문헌값
-  binary_orbits.json          # 수동 입력 — 쌍성 궤도
-  systems/
-    alpha_centauri_a.json
-    barnards_star.json
-    tau_cet.json
-    ...                       # 항성 컴포넌트별 1파일
-  backups/                    # 이전 스냅샷 보관 (수동 백업 시점)</code></pre>
-<p>파이프라인 실행 순서, 스크립트 설명, 새 별 추가 절차는 <a href="reference__adding_stars.html"><code>adding_stars.md</code></a> 참조.</p>
-<hr>
-<h2>Naming canonicalization</h2>
-<p>호스트/행성 이름 → 슬러그·파일명 변환은 <code>scripts/pipeline/_naming.py</code> 한 곳에서만 정의한다. 빌더가 자기 버전의 <code>to_url_slug</code> 를 재구현하면 매니페스트 매칭이 깨진다 (commit <code>e0da593</code> 의 회복 참조).</p>
-<p><b>규칙</b></p>
-<ol><li>lowercase</li><li>apostrophe (<code>&#x27;</code>) 제거 — <code>Barnard&#x27;s</code> → <code>barnards</code></li><li>non-alphanumeric 연속 → 단일 separator</li><li>양 끝 separator 제거</li></ol>
-<p><b>Separator 두 종류</b></p>
-<ul><li>URL 슬러그 (<code>-</code>): <code>docs/phase2/&lt;slug&gt;.html</code>, <code>docs/phase3/&lt;slug&gt;.html</code>, <code>reports-manifest.json</code> 의 매칭 키</li><li>File 슬러그 (<code>_</code>): <code>db/systems/&lt;slug&gt;.json</code></li></ul>
-<div class="tbl"><table><thead><tr><th>호스트</th><th>URL slug</th><th>File slug</th></tr></thead><tbody><tr><td>Barnard&#x27;s star</td><td><code>barnards-star</code></td><td><code>barnards_star</code></td></tr><tr><td>Teegarden&#x27;s Star</td><td><code>teegardens-star</code></td><td><code>teegardens_star</code></td></tr><tr><td>TRAPPIST-1</td><td><code>trappist-1</code></td><td><code>trappist_1</code></td></tr><tr><td>Alpha Centauri A</td><td><code>alpha-centauri-a</code></td><td><code>alpha_centauri_a</code></td></tr><tr><td>40 Eridani A</td><td><code>40-eridani-a</code></td><td><code>40_eridani_a</code></td></tr></tbody></table></div>
-<p><b>새 빌더를 작성할 때</b> — <code>from _naming import to_url_slug, to_file_slug, to_filename</code> 으로 import. 함수를 다시 구현하지 말 것. 큐레이터 행동을 통제하는 스킬 문서 (<code>nearstars-add-star</code>, <code>nearstars-phase3</code>) 에도 같은 규칙이 명시돼 있다.</p>
-<hr>
-<h2>JSON Schema</h2>
-<h3>Top-level</h3>
-<pre><code class="lang-json">{
-  &quot;system_name&quot;: &quot;Alpha Centauri A&quot;,
-  &quot;stars&quot;: [ ... ],
-  &quot;planets&quot;: [ ... ],
-  &quot;sources&quot;: [ ... ],
-  &quot;meta&quot;: { ... }
-}</code></pre>
-<p>One JSON file per <b>stellar component</b>, not per system. <code>system_name</code> matches the component name (e.g. <code>Alpha Centauri A</code>, <code>Alpha Centauri B</code>, <code>Proxima Centauri</code> are three separate files). The <code>stars</code> array always holds exactly one entry — the component the file describes. Mutual orbit data for binary/multiple systems lives in <code>binary_orbits.json</code> and is embedded into the representative component file (typically <code>A</code>); sibling components reference it via <code>binary_orbit_ref</code>.</p>
-<p>This choice reflects how downstream Kopernicus/Principia cfg writers consume the data: each <code>CelestialBody</code> (a single star) maps 1:1 to a cfg <code>Body { }</code> node, so a one-component-per-file layout removes any indexing during cfg generation.</p>
-<h3><code>meta</code></h3>
-<pre><code class="lang-json">{
-  &quot;retrieval_date&quot;: &quot;2026-05-16&quot;,
-  &quot;solar_system_epoch_jd&quot;: 2433282.5,
-  &quot;solar_system_epoch_label&quot;: &quot;B1950.0&quot;,
-  &quot;game_epoch_jd_sol&quot;: 2433647.5,
-  &quot;game_epoch_jd_rss&quot;: 2433647.5,
-  &quot;coordinate_origin&quot;: &quot;SSB&quot;,
-  &quot;coordinate_frame&quot;: &quot;ICRF&quot;,
-  &quot;coordinate_units&quot;: &quot;km, km/s&quot;,
-  &quot;notes&quot;: &quot;&quot;
-}</code></pre>
-<p><code>solar_system_epoch_jd</code> is the epoch at which all state vectors are expressed. Both Sol and RSS use <b>JD2433282.5</b> (nominally B1950.0, 1950-01-01 TDB) as the <code>solar_system_epoch</code>. This is the value to match when querying JPL Horizons.</p>
-<p>Note: strictly, Besselian epoch B1950.0 = JD2433282.423. JD2433282.5 is 1950-01-01.0 TT midnight, differing by ~1.85 hours. Both Sol and RSS use 2433282.5 by convention, and JPL Horizons accepts this date directly. The difference is negligible for KSP purposes but worth knowing if cross-checking against software that computes B1950.0 precisely.</p>
-<p><code>game_epoch_jd</code> does not affect the state vectors. Sol and RSS share the same value:</p>
-<ul><li>Sol: <code>JD2433647.5</code></li><li>RSS: <code>JD2433647.5</code></li></ul>
-<p>The coordinate origin is the <b>Solar System Barycentre (SSB)</b>, not the Sun. The Sun itself has a non-zero position in these files (on the order of 10⁵ km from the SSB). All state vectors must be expressed in this same SSB-ICRF frame.</p>
-<hr>
-<h3><code>stars[]</code></h3>
-<p>The <code>stars</code> array always has length 1 — the single component this file describes. (Binary/multiple systems use one file per component; see &quot;Top-level&quot; above.)</p>
-<pre><code class="lang-json">{
-  &quot;name&quot;: &quot;Alpha Centauri A&quot;,
-  &quot;component&quot;: &quot;A&quot;,
-
-  &quot;raw&quot;: {
-    &quot;source&quot;: &quot;Gaia DR3&quot;,
-    &quot;source_id&quot;: &quot;5853498713160606720&quot;,
-    &quot;epoch_jd&quot;: 2457389.0,
-    &quot;epoch_label&quot;: &quot;J2016.0&quot;,
-    &quot;ra_deg&quot;: 219.90085,
-    &quot;dec_deg&quot;: -60.83562,
-    &quot;parallax_mas&quot;: 742.12,
-    &quot;parallax_error_mas&quot;: 1.40,
-    &quot;pmra_mas_yr&quot;: -3678.19,
-    &quot;pmdec_mas_yr&quot;: 481.84,
-    &quot;radial_velocity_km_s&quot;: -22.4,
-    &quot;radial_velocity_source&quot;: &quot;Gaia DR3&quot;,
-
-    &quot;vmag_v&quot;: -0.01,
-    &quot;vmag_source&quot;: &quot;hipparcos_hardcoded&quot;,
-
-    &quot;teff_k&quot;: 5790,
-    &quot;spectype&quot;: &quot;G2 V&quot;,
-
-    &quot;mass_measurements&quot;: [
-      {
-        &quot;value_msun&quot;: 1.1055,
-        &quot;uncertainty_msun&quot;: 0.0039,
-        &quot;method&quot;: &quot;binary_orbit&quot;,
-        &quot;reference&quot;: &quot;Pourbaix et al. 2002&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361:20021249&quot;,
-        &quot;recommended&quot;: true
-      },
-      {
-        &quot;value_msun&quot;: 1.100,
-        &quot;uncertainty_msun&quot;: 0.006,
-        &quot;method&quot;: &quot;evolutionary_model&quot;,
-        &quot;reference&quot;: &quot;Thevenin et al. 2002&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361:20021791&quot;,
-        &quot;recommended&quot;: false
-      }
-    ],
-
-    &quot;radius_measurements&quot;: [
-      {
-        &quot;value_rsun&quot;: 1.2234,
-        &quot;uncertainty_rsun&quot;: 0.0053,
-        &quot;method&quot;: &quot;interferometry&quot;,
-        &quot;reference&quot;: &quot;Kervella et al. 2017&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361/201629505&quot;,
-        &quot;recommended&quot;: true
-      },
-      {
-        &quot;value_rsun&quot;: 1.227,
-        &quot;uncertainty_rsun&quot;: 0.005,
-        &quot;method&quot;: &quot;evolutionary_model&quot;,
-        &quot;reference&quot;: &quot;Thevenin et al. 2002&quot;,
-        &quot;doi&quot;: &quot;10.1051/0004-6361:20021791&quot;,
-        &quot;recommended&quot;: false
-      }
-    ]
-  },
-
-  &quot;derived&quot;: {
-    &quot;epoch_jd&quot;: 2433282.5,
-    &quot;epoch_label&quot;: &quot;B1950.0&quot;,
-    &quot;propagation_method&quot;: &quot;linear&quot;,
-    &quot;distance_pc&quot;: 1.3475,
-    &quot;distance_km&quot;: 4.153e+13,
-    &quot;icrs_x_km&quot;:  2.634e+13,
-    &quot;icrs_y_km&quot;: -3.197e+13,
-    &quot;icrs_z_km&quot;: -1.272e+13,
-    &quot;icrs_vx_km_s&quot;: 1.3204,
-    &quot;icrs_vy_km_s&quot;: -4.4012,
-    &quot;icrs_vz_km_s&quot;:  0.8913,
-    &quot;position_ulp_km&quot;: 5.9e-3,
-    &quot;icrs_x_j2000_km&quot;:  2.557e+13,
-    &quot;icrs_y_j2000_km&quot;: -3.127e+13,
-    &quot;icrs_z_j2000_km&quot;: -1.255e+13,
-    &quot;icrs_vx_j2000_km_s&quot;: 1.3204,
-    &quot;icrs_vy_j2000_km_s&quot;: -4.4012,
-    &quot;icrs_vz_j2000_km_s&quot;:  0.8913
-  },
-
-  &quot;principia&quot;: {
-    &quot;gravitational_parameter_km3_s2&quot;: 146713602439.899,
-    &quot;mean_radius_km&quot;: 851119.4
-  }
-}</code></pre>
-<p>Notes on <code>derived</code>:</p>
-<ul><li>All units follow Principia/Sol convention: <b>km</b> and <b>km/s</b>.</li><li><code>propagation_method: &quot;linear&quot;</code> means positions were propagated using constant space velocity (proper motion + radial velocity). Adequate for stellar perturbers over KSP timescales (decades to centuries).</li><li><code>position_ulp_km</code> is <code>abs(largest_coordinate_km) * 2^-52</code>. For Alpha Centauri (~4e13 km), this is ~0.009 km (9 m) -- acceptable for a gravitational perturber, not for close-range orbital mechanics around the star.</li><li>The coordinate origin is the <b>SSB</b>, not the Sun. The Sun itself sits ~10⁵ km from the SSB in these files.</li></ul>
-<p>Notes on <code>mass_measurements</code> and <code>radius_measurements</code>:</p>
-<ul><li>Every available published value goes in the array, regardless of how many.</li><li><code>recommended: true</code> marks the value used in the <code>principia</code> block. Exactly one entry per array must have <code>recommended: true</code>.</li><li>Priority for <code>recommended</code> is determined by measurement method, not publication date or journal prestige. Method hierarchy:</li></ul>
-<p>Mass:</p>
-<ol><li><code>binary_orbit</code> -- direct dynamical measurement, most reliable<ol><li><code>asteroseismology</code> -- model-dependent but well-constrained<ol><li><code>evolutionary_model</code> -- indirect; use only when nothing better exists<ol><li><code>spectroscopic</code> / <code>spectroscopic_calibration</code> -- spectral fitting based<ol><li><code>unverified</code> -- Curation Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.</li></ol></li></ol></li></ol></li></ol></li></ol>
-<p>Radius:</p>
-<ol><li><code>interferometry</code> -- direct angular diameter measurement<ol><li><code>eclipsing_binary</code> -- direct geometric measurement<ol><li><code>sed_fitting</code> -- bolometric flux + Teff + distance (semi-direct)<ol><li><code>evolutionary_model</code> -- indirect; use only when nothing better exists<ol><li><code>spectroscopic_calibration</code> -- empirical radius-color/spectral-type relations (e.g. Mann et al. 2015 for M dwarfs)<ol><li><code>unverified</code> -- Curation Phase 1 batch 동일 의미.</li></ol></li></ol></li></ol></li></ol></li></ol></li></ol>
-<p>Per-category method whitelists live in <code>scripts/pipeline/schema.py STELLAR_MEASUREMENT_KINDS[*][&quot;methods&quot;]</code> (Phase 2 expansion 2026-05-21 added 6 categories beyond mass/radius: teff/luminosity/age/metallicity/rotation/activity). The union is exposed as <code>STELLAR_ALLOWED_METHODS</code> for backward compat. Any new method must be added to both the canonical KINDS dict and this hierarchy doc.</p>
-<ul><li>If two entries share the same method tier, prefer the one with smaller fractional uncertainty. Document the choice in <code>meta.notes</code>.</li></ul>
-<p>Notes on <code>disk_measurements</code> (Phase 2 expansion 2026-05-27).</p>
-<pre><code class="lang-json">{
-  &quot;belt&quot;: &quot;main_cold&quot;,
-  &quot;inner_radius_au&quot;: 62,
-  &quot;outer_radius_au&quot;: 200,
-  &quot;dust_temperature_k&quot;: 50,
-  &quot;dust_mass_mearth&quot;: 0.013,
-  &quot;morphology&quot;: &quot;cold Kuiper analog with sharp inner edge&quot;,
-  &quot;resolved&quot;: true,
-  &quot;observatory&quot;: &quot;Herschel-PACS&quot;,
-  &quot;inclination_deg&quot;: 6.2,
-  &quot;method&quot;: &quot;resolved_imaging&quot;,
-  &quot;reference&quot;: &quot;Sibthorpe et al. 2010&quot;,
-  &quot;bibcode&quot;: &quot;2010A&amp;A...518L.130S&quot;,
-  &quot;doi&quot;: &quot;10.1051/0004-6361/201014574&quot;,
-  &quot;recommended&quot;: true
-}</code></pre>
-<ul><li>Entry granularity: per (paper × belt). Multi-belt disks (Vega / Fomalhaut / ε Eri etc.) emit one entry per belt sharing the same bibcode.</li><li><code>belt</code> enum is open-ended; recommended values: <code>inner_warm</code>, <code>intermediate</code>, <code>main_cold</code>, <code>single</code>, <code>asteroid_analog</code>, <code>warm</code>, <code>cold</code>. Add new strings if a paper uses one.</li><li><code>resolved=true</code> means an observatory spatially resolved the disk (ALMA / HST / SPHERE / JWST). <code>false</code> means SED-only or photometric-excess detection.</li><li>Disk-only descriptor fields (neither value nor uncertainty): <code>belt</code>, <code>morphology</code>, <code>resolved</code>, <code>observatory</code>, <code>notes</code>. Registered in <code>schema.py STELLAR_MEASUREMENT_KINDS[&quot;disk_measurements&quot;][&quot;extra_keys&quot;]</code>.</li><li>Method tier (canonical for <code>recommended</code> selection): <code>resolved_imaging</code> &gt; <code>sed_fit</code> &gt; <code>photometric_excess</code> &gt; <code>unverified</code>.</li><li>All value keys are nullable. Detection-only papers (e.g. Aumann 1984 IRAS) emit one entry with most geometry fields = null.</li></ul>
-<hr>
-<h3><code>planets[]</code></h3>
-<p>Each confirmed planet is a separate entry.</p>
-<pre><code class="lang-json">{
-  &quot;name&quot;: &quot;Proxima Centauri b&quot;,
-  &quot;host_star&quot;: &quot;Proxima Centauri&quot;,
-
-  &quot;raw&quot;: {
-    &quot;pl_name&quot;: &quot;Proxima Cen b&quot;,
-    &quot;reference&quot;: &quot;Anglada-Escude et al. 2016&quot;,
-    &quot;retrieval_date&quot;: &quot;2026-05-16&quot;,
-    &quot;period_days&quot;: 11.1868,
-    &quot;period_err_days&quot;: 0.0002,
-    &quot;semi_major_axis_au&quot;: 0.04856,
-    &quot;semi_major_axis_err_au&quot;: 0.00030,
-    &quot;eccentricity&quot;: 0.0,
-    &quot;inclination_deg&quot;: null,
-    &quot;inclination_err_deg&quot;: null,
-    &quot;omega_deg&quot;: null,
-    &quot;tperi_bjd&quot;: null,
-    &quot;tperi_err_bjd&quot;: null,
-    &quot;tranmid_bjd&quot;: null,
-    &quot;tranmid_err_bjd&quot;: null,
-    &quot;mass_mearth&quot;: 1.27,
-    &quot;mass_err_mearth&quot;: 0.18,
-    &quot;mass_type&quot;: &quot;Msini&quot;,
-    &quot;radius_rearth&quot;: null,
-    &quot;radius_err_rearth&quot;: null,
-    &quot;discoverymethod&quot;: &quot;Radial Velocity&quot;,
-    &quot;pl_controv_flag&quot;: 0,
-    &quot;pubdate&quot;: &quot;2016-08&quot;,
-    &quot;tepcat&quot;: null
-  },
-
-  &quot;derived&quot;: {
-    &quot;semi_major_axis_m&quot;: 7.265e+09,
-    &quot;eccentricity&quot;: 0.0,
-    &quot;inclination_deg&quot;: null,
-    &quot;longitude_of_ascending_node_deg&quot;: null,
-    &quot;argument_of_periapsis_deg&quot;: null,
-    &quot;mean_anomaly_at_epoch_deg&quot;: null,
-    &quot;orbital_epoch_jd&quot;: null,
-    &quot;mass_kg&quot;: 7.548e+24,
-    &quot;mass_type&quot;: &quot;minimum (M sin i)&quot;,
-    &quot;radius_m&quot;: null
-  }
-}</code></pre>
-<p>The <code>raw</code> block mirrors <code>fetch_planets.py</code> output one-for-one:</p>
-<ul><li>Orbital fields use NASA Exoplanet Archive&#x27;s <code>pscomppars</code> column names (<code>tperi_bjd</code>, <code>tranmid_bjd</code>, <code>omega_deg</code>, etc.). Periastron passage time (<code>tperi_bjd</code>) and transit midpoint (<code>tranmid_bjd</code>) are both stored; the one to use as the mean-anomaly reference depends on detection method.</li><li><code>tepcat</code> is a nested object populated when TEPCat has independently derived mass/radius for a transiting planet. May be <code>null</code>.</li></ul>
-<p>The <code>derived</code> block is unit conversion only (AU → m, M⊕ → kg, R⊕ → m) with a priority chain <code>curated &gt; tepcat &gt; nasa_archive</code>. Missing measurements remain <code>null</code> — default-value assumptions (edge-on inclination, circular eccentricity, mean anomaly at game start) belong in the Kopernicus cfg generation stage, not in the DB. Downstream agents writing the cfg are responsible for choosing and documenting these defaults.</p>
-<h3><code>sources[]</code></h3>
-<p>All papers and catalogues consulted during research go here. This is the complete bibliography for the file.</p>
-<pre><code class="lang-json">[
-  {
-    &quot;title&quot;: &quot;Constraining the difference in convective blueshift between the components of alpha Centauri with precise radial velocities&quot;,
-    &quot;doi&quot;: &quot;10.1051/0004-6361:20021249&quot;,
-    &quot;bibcode&quot;: &quot;2002A&amp;A...394..151P&quot;,
-    &quot;accessed&quot;: &quot;2026-05-16&quot;,
-    &quot;used_for&quot;: [&quot;Alpha Centauri A mass&quot;, &quot;Alpha Centauri B mass&quot;]
-  },
-  {
-    &quot;title&quot;: &quot;Gaia Data Release 3&quot;,
-    &quot;doi&quot;: null,
-    &quot;bibcode&quot;: &quot;2023A&amp;A...674A...1G&quot;,
-    &quot;accessed&quot;: &quot;2026-05-16&quot;,
-    &quot;used_for&quot;: [&quot;Alpha Centauri A astrometry&quot;, &quot;Alpha Centauri B astrometry&quot;]
-  }
-]</code></pre>
-<ul><li><code>doi</code> and <code>bibcode</code>: provide both when available. If one is absent, set it to <code>null</code>.</li><li><code>used_for</code>: note what was taken from the source. Consulted-but-unused entries are fine -- write <code>&quot;used_for&quot;: [&quot;consulted; superseded by Pourbaix et al. 2002&quot;]</code>.</li></ul>
-<hr>
-<p>Notes on <code>null</code> fields:</p>
-<ul><li>Null means data is missing, not zero. The DB never substitutes a default for a missing measurement — that is the Kopernicus cfg writer&#x27;s job.</li><li>Downstream agents must check for nulls and document any assumed default (e.g. <code>inclination = 90 deg</code> for RV-only detections) in the cfg itself.</li></ul>
-<hr>
-<h2>Epoch Handling</h2>
-<h3>Target epoch</h3>
-<p>Both Sol and RSS use <b>JD2433282.5</b> (B1950.0, 1950-01-01 TDB) as the <code>solar_system_epoch</code>. All state vectors in <code>derived</code> must be expressed at this epoch in SSB-ICRF coordinates.</p>
-<p>The <code>game_epoch</code> is separate and does not affect state vectors. Sol and RSS share the same value:</p>
-<ul><li>Sol: <code>JD2433647.5</code></li><li>RSS: <code>JD2433647.5</code></li></ul>
-<p>When writing MM patches, Sol and RSS variants only differ by NEEDS tag (<code>SolSystem</code> vs <code>RSSConfig</code>), not by epoch values.</p>
-<h3>Why propagation is needed</h3>
-<p>Gaia DR3 positions are referenced to <b>J2016.0</b> (JD2457389.0). The target epoch is JD2433282.5. The delta is ~24,000 days (~66 years).</p>
-<p>For Alpha Centauri (space velocity ~25 km/s), the positional shift over 66 years is ~5.2e10 km (~350 AU). Propagation is always required.</p>
-<h3>Linear propagation</h3>
-<p>Constant-velocity (uniform rectilinear) propagation in SSB-ICRF is the standard model used by Gaia and Hipparcos. It is sufficient for stellar perturbers over KSP-relevant timescales.</p>
-<p>The dominant higher-order effect omitted by linear propagation is <b>perspective acceleration</b> — the apparent change in proper motion rate as a star&#x27;s distance changes. For most target stars this is negligible at the perturber accuracy level.</p>
-<p><b>Edge case: Barnard&#x27;s Star</b> (μ ≈ 10,300 mas/yr, ϖ ≈ 548 mas, RV ≈ −110 km/s) accumulates ~0.5 AU of position error over 66 years from perspective acceleration alone. This is still within the perturber-accuracy tolerance for KSP gravitational effects, so the pipeline applies linear propagation like every other star. The known discrepancy is recorded in <code>meta.notes</code> for the <code>barnards_star.json</code> file. If future requirements demand sub-AU accuracy for Barnard&#x27;s Star, fetch a JPL Horizons state vector at JD2433282.5 and override the <code>derived</code> block manually.</p>
-<p>References:</p>
-<ul><li>Butkevich &amp; Lindegren (2014), A&amp;A 570, A62 — <code>doi:10.1051/0004-6361/201424483</code>, <code>arXiv:1407.4664</code> Canonical paper for epoch propagation in the Gaia era. Derives rigorous closed-form expressions for uniform rectilinear motion; used directly in the Gaia pipeline.</li><li>ESA SP-1200 (1997), Vol. 1, Sec. 1.2 (Hipparcos Catalogue, Lindegren et al.) Explicitly states that uniform space motion is valid for most stars over timescales under a century, even at Hipparcos precision.</li></ul>
-<pre><code class="lang-python">def propagate_icrs(x0, y0, z0, vx, vy, vz, jd_from, jd_to):
-    &quot;&quot;&quot;
-    Linear propagation from jd_from to jd_to.
-    Units: km and km/s (matching Principia/Sol convention).
-    See Butkevich &amp; Lindegren (2014) Eq. 4-7 for the full derivation.
-    &quot;&quot;&quot;
-    dt_s = (jd_to - jd_from) * 86400.0
-    return (
-        x0 + vx * dt_s,
-        y0 + vy * dt_s,
-        z0 + vz * dt_s
-    )</code></pre>
-<h3><code>propagation_method</code> values</h3>
-<div class="tbl"><table><thead><tr><th>Value</th><th>Meaning</th><th>Source epoch</th></tr></thead><tbody><tr><td><code>&quot;linear&quot;</code> (Gaia)</td><td>Gaia DR3 → constant space velocity → target epoch</td><td>J2016.0 (JD2457389.0)</td></tr><tr><td><code>&quot;linear&quot;</code> (SIMBAD)</td><td>SIMBAD fallback for Gaia-saturated bright stars → linear propagation</td><td>J2000.0 (JD2451545.0)</td></tr><tr><td><code>&quot;kepler_thiele_innes&quot;</code></td><td>Orbit-bound binary/multiple component → Markley Kepler + Thiele-Innes rotation (Hilditch convention) → ICRS Cartesian</td><td>Catalog epoch of the orbit fit, propagated to target epoch via <code>build_systems.py:solve_orbit_relative</code></td></tr><tr><td><code>&quot;horizons_direct&quot;</code></td><td>JPL Horizons state vectors imported directly at JD2433282.5 — bypasses any propagation</td><td>JD2433282.5 (target epoch)</td></tr></tbody></table></div>
-<p>The SIMBAD fallback path applies to stars without a Gaia DR3 ID — typically bright stars saturated in Gaia (V &lt; ~6) such as Alpha Centauri A and B, Sirius, Procyon, Pollux. <code>fetch_astrometry.py</code> queries SIMBAD&#x27;s <code>basic</code> table, whose astrometry is referenced to J2000.0 (~16 years earlier than Gaia&#x27;s J2016.0). The <code>raw.epoch_jd</code> field records the actual source epoch, so <code>build_systems.py</code> propagates correctly regardless of source.</p>
-<p>Currently <code>&quot;horizons_direct&quot;</code> applies only to Barnard&#x27;s Star. Any future star available in Horizons should be evaluated for the same treatment.</p>
-<h3>Epoch fields summary</h3>
-<div class="tbl"><table><thead><tr><th>Field</th><th>Location</th><th>Content</th></tr></thead><tbody><tr><td><code>raw.epoch_jd</code></td><td>star</td><td>Source epoch — J2016.0 for Gaia, J2000.0 for SIMBAD fallback</td></tr><tr><td><code>derived.epoch_jd</code></td><td>star</td><td>Target epoch (JD2433282.5)</td></tr><tr><td><code>meta.solar_system_epoch_jd</code></td><td>system</td><td>JD2433282.5 (same for Sol and RSS)</td></tr><tr><td><code>meta.game_epoch_jd_sol</code></td><td>system</td><td>JD2433647.5</td></tr><tr><td><code>meta.game_epoch_jd_rss</code></td><td>system</td><td>JD2433647.5</td></tr><tr><td><code>raw.tperi_bjd</code> / <code>raw.tranmid_bjd</code></td><td>planet</td><td>Archive reference epoch (periastron or transit midpoint)</td></tr><tr><td><code>derived.orbital_epoch_jd</code></td><td>planet</td><td>Epoch from curated source if available; else null</td></tr></tbody></table></div>
-<hr>
-<h2>Multiple-System Epoch</h2>
-<blockquote>Full mathematical pipeline + worked examples (α Cen, Sirius): <a href="reference__binary-epoch-pipeline.html"><code>docs/reference/binary-epoch-pipeline.md</code></a>. This section captures only the decisions and schema that affect the DB.</blockquote>
-<h3>Why linear back-propagation fails for multi-star systems</h3>
-<p>For single stars, linear extrapolation of Gaia/SIMBAD astrometry to JD2433282.5 is sufficient (see &quot;Linear propagation&quot; above). For multi-star systems it is <b>wrong</b>, because the components are in mutual orbit — their relative position rotates, not translates.</p>
-<p>Example: Alpha Centauri AB has orbital period 79.762 yr. JD2433282.5 is ~66 yr before Gaia&#x27;s J2016 epoch — almost a full orbit. Linear propagation rotates the A–B vector by 0°, while the real geometry has rotated by ~300°. The resulting cfg has wrong gravitational geometry, which causes Principia&#x27;s N-body integrator to start with spurious eccentricity and energy.</p>
-<p>The fix: each multi-star system stores a fitted Kepler solution; at build time we propagate the components&#x27; shared <b>barycenter</b> linearly, then apply the Kepler-derived (B−A) offset evaluated at JD2433282.5 to place individual components.</p>
-<h3>Pipeline outline</h3>
-<pre><code>barycenter_astrometry  → linear propagation (J2016 / J2000 → JD2433282.5)
-                          → R_bary, V_bary at target epoch
-                                  +
-orbits[].(P,T,e,a,i,ω,Ω)  → Kepler solver (M → E → ν)
-                          → Thiele-Innes rotation → (B−A) in ICRS (N,E,W)
-                                  +
-mass ratio q             → r_A = R_bary − q_B · r_AB
-                          → r_B = R_bary + q_A · r_AB</code></pre>
-<p>For triples, the same pipeline runs in nested form (inner orbit on AB, outer orbit on (AB)–C). See binary-epoch-pipeline.md §6.</p>
-<h3><code>binary_orbits.json</code> schema (new)</h3>
-<p>The legacy schema embedded a single <code>raw</code> block with Kepler elements per system. The new schema separates <b>per-component</b> facts (mass, astrometry source) from <b>per-orbit</b> facts (which two bodies it relates, the Kepler elements, the source paper, grade, phase reliability) by exposing both as arrays. Multiple orbits per system (triples) become natural.</p>
-<pre><code class="lang-json">{
-  &quot;Alpha Centauri&quot;: {
-    &quot;system_id&quot;: &quot;alpha_centauri&quot;,
-    &quot;hierarchy&quot;: &quot;triple&quot;,
-    &quot;components&quot;: [
-      {
-        &quot;name&quot;: &quot;Alpha Centauri A&quot;,
-        &quot;mass_msun&quot;: 1.0788,
-        &quot;mass_source&quot;: &quot;pourbaix_correia_2017&quot;,
-        &quot;astrometry_source&quot;: &quot;mass_weighted_average&quot;,
-        &quot;astrometry_quality&quot;: &quot;barycentric&quot;
-      },
-      { &quot;name&quot;: &quot;Alpha Centauri B&quot;, &quot;mass_msun&quot;: 0.9092, ... },
-      { &quot;name&quot;: &quot;Proxima Cen&quot;,     &quot;mass_msun&quot;: 0.1221, ... }
-    ],
-    &quot;orbits&quot;: [
-      {
-        &quot;orbit_id&quot;: &quot;AB&quot;,
-        &quot;relates&quot;: [&quot;Alpha Centauri A&quot;, &quot;Alpha Centauri B&quot;],
-        &quot;primary&quot;:   &quot;Alpha Centauri A&quot;,
-        &quot;secondary&quot;: &quot;Alpha Centauri B&quot;,
-        &quot;source&quot;:    &quot;akeson_2021&quot;,
-        &quot;doi&quot;:       &quot;10.3847/1538-3881/abfaff&quot;,
-        &quot;equinox&quot;:   &quot;J2000&quot;,
-        &quot;P_yr&quot;:      79.762,
-        &quot;T_jd_tt&quot;:   2435291.6,
-        &quot;e&quot;:         0.51947,
-        &quot;a_arcsec&quot;:  17.4930,
-        &quot;i_deg&quot;:     79.2430,
-        &quot;omega_deg&quot;: 231.519,
-        &quot;Omega_deg&quot;: 205.073,
-        &quot;grade&quot;:           1,
-        &quot;node_resolved&quot;:   true,
-        &quot;phase_reliable&quot;:  true
-      }
-    ]
-  }
-}</code></pre>
-<p>Triple systems list two orbits and use <code>primary_is_barycenter_of</code> on the outer one — see binary-epoch-pipeline.md §6 for the full triple example.</p>
-<h3>Schema field reference</h3>
-<div class="tbl"><table><thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead><tbody><tr><td><code>system_id</code></td><td>yes</td><td>Slug used as filename stem. Lowercase, underscores.</td></tr><tr><td><code>hierarchy</code></td><td>yes</td><td><code>&quot;binary&quot;</code>, <code>&quot;triple&quot;</code>, <code>&quot;binary+cpm&quot;</code> (CPM = common proper motion companion).</td></tr><tr><td><code>components[].name</code></td><td>yes</td><td>Must match <code>target_list.json</code> component names exactly.</td></tr><tr><td><code>components[].mass_msun</code></td><td>yes</td><td>With <code>mass_source</code> (paper bibcode or <code>gaia_dr3_nss</code>).</td></tr><tr><td><code>components[].astrometry_source</code></td><td>yes</td><td>One of <code>gaia_dr3</code> / <code>simbad</code> / <code>mass_weighted_average</code> / <code>gaia_dr3_nss_barycenter</code> / <code>hipparcos_barycenter</code> / <code>single_component:&lt;Name&gt;</code>. Drives where the build pulls the barycenter astrometry from — see &quot;Hybrid storage&quot; note below.</td></tr><tr><td><code>components[].astrometry_quality</code></td><td>yes</td><td><code>barycentric</code> / <code>photocenter_contaminated</code> / <code>single_component</code>. Informational; validate.py uses it for warnings.</td></tr><tr><td><code>barycenter_astrometry</code> (system-level)</td><td>conditional</td><td>Block with <code>ra_deg</code>/<code>dec_deg</code>/<code>parallax_mas</code>/<code>pm_ra_masyr</code>/<code>pm_dec_masyr</code>/<code>radial_velocity_km_s</code>/<code>epoch_jd</code>. <b>Required</b> when any <code>astrometry_source</code> is <code>gaia_dr3_nss_barycenter</code> or <code>hipparcos_barycenter</code> (the published catalog barycenter values that aren&#x27;t derivable from component astrometry). Omitted otherwise — the build computes the barycenter on the fly from <code>astrometry_raw.json</code>.</td></tr><tr><td><code>orbits[].orbit_id</code></td><td>yes</td><td><code>&quot;AB&quot;</code>, <code>&quot;inner&quot;</code>, <code>&quot;outer&quot;</code>. Unique within entry.</td></tr><tr><td><code>orbits[].relates</code></td><td>yes</td><td>Components or barycenters this orbit governs.</td></tr><tr><td><code>orbits[].primary</code> / <code>secondary</code></td><td>yes</td><td>One must be a component or <code>primary_is_barycenter_of</code>.</td></tr><tr><td><code>orbits[].primary_is_barycenter_of</code></td><td>conditional</td><td>For triples&#x27; outer orbit; list of component names forming the inner system.</td></tr><tr><td><code>orbits[].source</code></td><td>yes</td><td><code>&quot;akeson_2021&quot;</code> (paper key) or <code>&quot;orb6:grade=1&quot;</code> or <code>&quot;gaia_dr3_nss:OrbitalAlternative&quot;</code>.</td></tr><tr><td><code>orbits[].P_yr</code> / <code>T_jd_tt</code> / <code>e</code></td><td>yes</td><td>Kepler core. <code>T</code> is time of periastron in JD (TT).</td></tr><tr><td><code>orbits[].a_arcsec</code> or <code>a_au</code></td><td>yes</td><td>Relative semi-major axis. Catalog convention is <code>arcsec</code>; convert via parallax.</td></tr><tr><td><code>orbits[].i_deg</code>/<code>omega_deg</code>/<code>Omega_deg</code></td><td>yes</td><td>Inclination, arg of periastron, longitude of ascending node.</td></tr><tr><td><code>orbits[].A</code>/<code>B</code>/<code>F</code>/<code>G</code> (<code>C</code>/<code>H</code> optional)</td><td>optional</td><td>Thiele-Innes constants (in arcsec) if directly published (Gaia NSS). Substitutes for <code>a</code>/<code>i</code>/<code>omega</code>/<code>Omega</code>.</td></tr><tr><td><code>orbits[].grade</code></td><td>yes</td><td>Orb6 quality grade 1–9. ≤3 means publication-quality.</td></tr><tr><td><code>orbits[].node_resolved</code></td><td>yes</td><td><code>true</code> if (i,ω,Ω) reflects the physically correct line of nodes (RV data available); <code>false</code> if catalog presents the mirror-degenerate solution.</td></tr><tr><td><code>orbits[].phase_reliable</code></td><td>yes</td><td><code>false</code> if <code>grade ≥ 4</code> OR extrapolation &gt; 0.5×P from observed coverage. When false, build still runs but <code>meta.notes</code> records the warning.</td></tr></tbody></table></div>
-<h4><code>_principia_notes</code> meta block</h4>
-<p><code>binary_orbits.json</code> has a top-level <code>_principia_notes</code> key (underscore prefix, skipped by validators). It records the epoch constants used by the build (<code>solar_system_epoch_jd</code>, <code>game_epoch_sol_jd</code>) plus a <code>schema_version</code> string (&quot;YYYY-MM-DD-components-orbits&quot;) that&#x27;s bumped whenever the component/orbit shape changes. Downstream tools (e.g. <code>scripts/pipeline/build_systems.py</code>) can read it for sanity checks but the values are not authoritative — they duplicate constants that live in code.</p>
-<h4>Hybrid astrometry storage</h4>
-<p>The DB does not store derived/computed astrometry values per component. Only published barycentric solutions (Gaia DR3 NSS, Hipparcos multi-star annex) live in a system-level <code>barycenter_astrometry</code> block; the build computes mass-weighted averages on the fly from <code>astrometry_raw.json</code> when <code>astrometry_source = &quot;mass_weighted_average&quot;</code>. See [[project-nearstars-db-principle]].</p>
-<h4>Thiele-Innes convention (Hilditch / Pourbaix)</h4>
-<p><code>build_systems.py</code> applies the Hilditch / Pourbaix convention:</p>
-<pre><code>ΔN = A · x_p + F · y_p     (North)
-ΔE = B · x_p + G · y_p     (East)
-ΔW = C · x_p + H · y_p     (away from observer)</code></pre>
-<p>This convention is the canonical one across all NearStars docs and code; <code>binary-epoch-pipeline.md</code> §2 step 5 and §10 worked example use the same formulas. The form above reproduces the legacy <code>individual_states.b1950</code> values for α Cen and Sirius within &lt; 0.05 %.</p>
-<h3>Barycenter astrometry decision tree (summary)</h3>
-<p>For each multi-star system, the <code>components[].astrometry_source</code> field is selected by the following decision tree. The build refuses to run if any component has <code>astrometry_source: &quot;unset&quot;</code>.</p>
-<pre><code>Gaia DR3 NSS row exists for this system?
-├── YES → astrometry_source = gaia_dr3_nss_barycenter
-│         astrometry_quality = barycentric
-│
-└── NO  → resolved pair (separation &gt; ~1″, both have Gaia 5-param)?
-          ├── YES → astrometry_source = mass_weighted_average
-          │         astrometry_quality = barycentric
-          │         (PM averaging cancels orbital tangent velocity)
-          │
-          └── NO  → Hipparcos multi-star annex (DMSA flag C/O/V/X)?
-                    ├── YES → astrometry_source = hipparcos_barycenter
-                    │         astrometry_quality = barycentric
-                    │
-                    └── NO  → astrometry_source = gaia_dr3 (or simbad if saturated)
-                              astrometry_quality = photocenter_contaminated
-                              (flag, allow but warn)</code></pre>
-<p>See binary-epoch-pipeline.md §8 for the photocenter-wobble error model.</p>
-<h3>Per-system option assessment (best estimate; verify in implementation)</h3>
-<div class="tbl"><table><thead><tr><th>System</th><th>Hierarchy</th><th>Recommended option</th><th>Source paper override</th></tr></thead><tbody><tr><td>Alpha Centauri AB</td><td>binary</td><td>gaia_dr3_nss_barycenter</td><td>Akeson et al. 2021</td></tr><tr><td>Sirius AB</td><td>binary</td><td>hipparcos_barycenter (A saturated; B is WD)</td><td>Bond et al. 2017</td></tr><tr><td>61 Cygni AB</td><td>binary</td><td>mass_weighted_average (wide, both in Gaia)</td><td>Malkov et al. 2012 — <code>phase_reliable: false</code> (P~679 yr, grade ≥3)</td></tr><tr><td>40 Eridani ABC</td><td>triple</td><td>A: gaia_dr3 / B+C close pair: NSS or mass-weighted</td><td>needs research</td></tr><tr><td>Eta Cassiopeiae AB</td><td>binary</td><td>mass_weighted_average</td><td>Tokovinin 2021 — P=480 yr, <code>phase_reliable: false</code> likely</td></tr><tr><td>36 Ophiuchi ABC</td><td>triple</td><td>A,B: mass-weighted on close pair / C: static CPM at fixed offset</td><td>needs research</td></tr></tbody></table></div>
-<p>The actual <code>astrometry_source</code> value is locked in by the implementation session — the table above is a starting point, not a commitment.</p>
-<h3>Phase reliability semantics</h3>
-<p>Set <code>phase_reliable: false</code> when:</p>
-<ul><li>Orb6 grade ≥ 4, OR</li><li>Observed coverage is less than half the period (extrapolation &gt; 0.5 P), OR</li><li>Time of periastron error exceeds 5% of the period</li></ul>
-<p>When <code>phase_reliable: false</code>, the build still runs (output is the best estimate from the available solution) but writes a warning to <code>meta.notes</code> of the affected component files. Downstream Kopernicus cfg can still use the values; users running long Principia simulations should not trust the relative geometry past ~0.5 P.</p>
-<p>For phase-unreliable wide CPM companions (P &gt; 1000 yr, no fitted orbit), use <code>orbit_type: &quot;static_cpm&quot;</code> — see binary-epoch-pipeline.md §6 — which freezes the relative position at the catalog reference epoch.</p>
-<hr>
-<h2>Source Recording Protocol</h2>
-<p>Log every paper and catalogue consulted, even if its values were not used (record why in <code>used_for</code>).</p>
-<p>A SIMBAD bibcode is not a source. Resolve it to the original paper via <code>https://ui.adsabs.harvard.edu/abs/&lt;bibcode&gt;</code> and record the DOI there.</p>
-<p>If two papers at the same method tier conflict, add both to <code>sources[]</code> and to the measurement array, and document the choice in <code>meta.notes</code>.</p>
-<hr>
-<h2>Data Sources</h2>
-<p>All sources below are freely accessible. astroquery covers most of them with a unified Python interface; raw TAP endpoints are listed for direct access or fallback.</p>
-<hr>
-<h3>Nearby Star Systems</h3>
-<p><b>RECONS (Research Consortium on Nearby Stars)</b> Authoritative list of all stellar systems within 10 parsecs (~32.6 ly). Primary reference for confirming a star is within the project&#x27;s 50 ly scope and for catching newly measured distances that update a star&#x27;s status.</p>
-<ul><li>URL: <code>https://www.recons.org</code></li><li>Updated regularly as new parallaxes are measured</li><li>Use when: verifying a candidate star is truly within 50 ly; finding newly discovered nearby systems not yet prominent in other databases</li></ul>
-<hr>
-<h3>Astrometry and Stellar Position</h3>
-<p><b>Gaia DR3</b> The primary source for position, proper motion, parallax, and radial velocity of nearby stars.</p>
-<ul><li>TAP endpoint: <code>https://gea.esac.esa.int/tap-server/tap</code></li><li>astroquery: <code>from astroquery.gaia import Gaia</code></li><li>Table: <code>gaiadr3.gaia_source</code></li><li>Key columns: <code>source_id</code>, <code>ra</code>, <code>dec</code>, <code>parallax</code>, <code>parallax_error</code>, <code>pmra</code>, <code>pmdec</code>, <code>radial_velocity</code></li><li>Epoch: J2016.0 (JD2457389.0)</li><li>Caveat: <code>radial_velocity</code> is null for faint red dwarfs.</li></ul>
-<p><b>Hipparcos</b> Pre-Gaia catalogue. Superseded by Gaia DR3 for all nearby stars, but useful as a cross-check or for stars missing from Gaia due to brightness saturation (V &lt; ~6 mag).</p>
-<ul><li>Access via VizieR: catalogue <code>I/311</code></li><li>TAP endpoint: <code>https://tapvizier.cds.unistra.fr/TAPVizieR/tap</code></li></ul>
-<p><b>JPL Horizons</b> Direct state vectors (position + velocity) in SSB-ICRF for solar system bodies and some nearby stars. Outputs match Principia/Sol units (km, km/s) and epoch (B1950.0 = JD2433282.5) directly.</p>
-<ul><li>Web: <code>https://ssd.jpl.nasa.gov/horizons/</code></li><li>Batch API: <code>https://ssd.jpl.nasa.gov/horizons_batch.cgi</code></li><li>astroquery: <code>from astroquery.jplhorizons import Horizons</code></li><li>Settings: <code>VECTORS</code>, frame <code>ICRF</code>, center <code>@SSB</code>, epoch <code>1950-Jan-01</code></li><li>Coverage: Alpha Centauri, Barnard&#x27;s Star confirmed available. Coverage of other target systems may vary.</li></ul>
-<hr>
-<h3>Stellar Physical Parameters (Mass, Radius, Teff)</h3>
-<p><b>SIMBAD</b> Literature aggregator. Does not store mass/radius as direct columns; queries the <code>mesMass</code> and <code>mesDiameter</code> measurement tables via TAP.</p>
-<ul><li>TAP endpoint: <code>https://simbad.u-strasbg.fr/simbad/sim-tap/sync</code></li><li>astroquery: <code>from astroquery.simbad import Simbad</code></li><li>Use for: mass, radius, spectral type, cross-IDs, RV fallback, bibcode → paper tracing</li></ul>
-<p><b>VizieR</b> Library of published astronomical catalogues. Hosts thousands of stellar parameter tables from individual papers -- the most complete aggregator of literature values.</p>
-<ul><li>TAP endpoint: <code>https://tapvizier.cds.unistra.fr/TAPVizieR/tap</code></li><li>astroquery: <code>from astroquery.vizier import Vizier</code></li><li>Notable hosted catalogues relevant to this project:<ul><li><code>I/355</code> -- Gaia DR3<ul><li><code>I/311</code> -- Hipparcos<ul><li><code>B/pastel/pastel</code> -- PASTEL (see below)<ul><li><code>J/A+A/556/A150</code> -- SWEET-Cat (see below)<ul><li>Individual interferometry papers (CHARA, VLTI/GRAVITY results)</li></ul></li></ul></li></ul></li></ul></li></ul></li></ul>
-<p><b>PASTEL</b> Compilation of spectroscopically-derived stellar atmospheric parameters (Teff, log g, [Fe/H]) from the literature. Useful for finding published Teff values to cross-check evolutionary model mass estimates.</p>
-<ul><li>URL: <code>https://pastel.obs.u-bordeaux1.fr/</code></li><li>Access via VizieR: <code>B/pastel/pastel</code></li><li>Note: does not directly provide mass or radius; provides the spectroscopic parameters used to derive them.</li></ul>
-<p><b>SWEET-Cat</b> Catalogue of atmospheric parameters and masses for planet host stars. Covers most stars with confirmed planets; uniformly derived where possible.</p>
-<ul><li>URL: <code>https://sweetcat.iastro.pt/</code></li><li>Access via VizieR: <code>J/A+A/556/A150</code></li><li>Provides: Teff, log g, [Fe/H], stellar mass</li><li>Caveat: mass from calibration formulae, not direct measurement. Lower priority than binary orbit or interferometry values.</li></ul>
-<hr>
-<h3>Planetary Orbital Elements and Physical Parameters</h3>
-<h4>Investigation Priority Order</h4>
-<p>When researching a planet system, check all sources below in order and use the most precise value available. Do not stop at NASA Archive alone.</p>
-<div class="tbl"><table><thead><tr><th>Priority</th><th>Source</th><th>Best for</th></tr></thead><tbody><tr><td>1</td><td>Individual paper (ADS)</td><td>Most recent / definitive orbital solution</td></tr><tr><td>2</td><td>DACE</td><td>RV orbital elements (T₀, ω, eccentricity detail)</td></tr><tr><td>3</td><td>TEPCat</td><td>Transiting systems — mass + radius from same fit</td></tr><tr><td>4</td><td>exoplanet.eu</td><td>Cross-check; catches recent discoveries before NASA Archive</td></tr><tr><td>5</td><td>NASA Exoplanet Archive</td><td>Baseline; used by pipeline auto-fetch</td></tr></tbody></table></div>
-<p>Record all sources consulted, even if their values were not used. For each planet, the <code>planets_curated.json</code> entry should reflect the best available value with its source DOI.</p>
-<hr>
-<p><b>NASA Exoplanet Archive</b> Most comprehensive planetary database with TAP support. Primary source for orbital elements.</p>
-<ul><li>TAP endpoint: <code>https://exoplanetarchive.ipac.caltech.edu/TAP/sync</code></li><li>astroquery: <code>from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive</code></li><li>Table: <code>ps</code> (Planetary Systems); filter <code>default_flag = 1</code></li><li>Table: <code>pscomppars</code> (composite best parameters per planet)</li><li>Key columns: <code>pl_orbper</code>, <code>pl_orbsmax</code>, <code>pl_orbeccen</code>, <code>pl_orbincl</code>, <code>pl_orblper</code>, <code>pl_bmasse</code>, <code>pl_rade</code>, <code>pl_tranmid</code>, <code>pl_refname</code></li><li>Caveat: <code>default_flag = 1</code> is the archive&#x27;s choice of best parameters, not always the most recent. Check <code>pl_refname</code> and verify against the source paper.</li></ul>
-<p><b>DACE (Data &amp; Analysis Center for Exoplanets)</b> Geneva Observatory&#x27;s RV planet database. More detailed orbital solutions than NASA Archive for RV-detected planets — includes T₀, ω, eccentricity confidence intervals, and full RV time series.</p>
-<ul><li>URL: <code>https://dace.unige.ch/exoplanets/</code></li><li>Particularly strong for: nearby M-dwarf planets, HARPS/ESPRESSO targets</li><li>Use when: NASA Archive orbital elements are sparse or outdated</li></ul>
-<p><b>Extrasolar Planets Encyclopaedia (exoplanet.eu)</b> European catalogue. Often updated faster than NASA Archive for newly announced planets. Useful as a cross-check and for catching recent discoveries not yet in the NASA Archive.</p>
-<ul><li>URL: <code>https://exoplanet.eu</code></li><li>TAP endpoint: <code>http://voparis-tap-planeto.obspm.fr/tap</code></li><li>astroquery: <code>import pyvo; pyvo.dal.TAPService(&quot;http://voparis-tap-planeto.obspm.fr/tap&quot;)</code></li><li>Table: <code>exoplanet.epn_core</code></li><li>Bulk CSV download also available from the website.</li></ul>
-<p><b>TEPCat (Transiting Extrasolar Planet Catalogue)</b> Critical compilation of physical and orbital properties for transiting systems. Independently derived -- not just a mirror of NASA Archive. Particularly useful for transit-measured radii and masses where the derivation methodology is documented.</p>
-<ul><li>URL: <code>https://www.astro.keele.ac.uk/jkt/tepcat/</code></li><li>Machine-readable tables available for bulk download.</li><li>Monthly snapshots archived for reproducibility.</li><li>Provides: stellar mass/radius, planet mass/radius, orbital elements, obliquity, equilibrium temperature.</li></ul>
-<p><b>Open Exoplanet Catalogue</b> Community-maintained GitHub repository. JSON/XML format. Useful as a quick lookup and for systems that may be underrepresented in the larger archives.</p>
-<ul><li>URL: <code>https://github.com/openexoplanetcatalogue/open_exoplanet_catalogue</code></li><li>Access: direct download or <code>git clone</code>.</li></ul>
-<hr>
-<h3>Transit Timing and Ephemeris Data</h3>
-<p><b>NASA Exoplanet Archive Transit and Ephemeris Service</b> Computes transit times for confirmed planets from the archive. Critical for TTV-dominated systems like TRAPPIST-1.</p>
-<ul><li>URL: <code>https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TransitView/nph-visibletbls</code></li></ul>
-<p><b>Exoplanet Transit Database (ETD)</b> Amateur and professional transit observations. Lower precision than peer-reviewed TTV analyses but broad coverage and useful for epoch refinement.</p>
-<ul><li>URL: <code>http://var2.astro.cz/ETD/</code></li></ul>
-<hr>
-<h3>Literature and Paper Access</h3>
-<p><b>NASA ADS (Astrophysics Data System)</b> The authoritative literature database for astronomy. Use for:</p>
-<ul><li>Tracing bibcodes from SIMBAD to full papers</li><li>Finding the most recent orbital analyses for a given system</li><li>Retrieving DOIs for all measurement entries</li></ul>
-<ul><li>URL: <code>https://ui.adsabs.harvard.edu</code></li><li>API: <code>https://api.adsabs.harvard.edu/v1/</code></li></ul>
-<p><b>arXiv (astro-ph.EP, astro-ph.SR)</b> Preprint server. Many orbital analyses and stellar parameter papers appear here before journal publication.</p>
-<ul><li>URL: <code>https://arxiv.org/list/astro-ph.EP/recent</code></li></ul>
-<hr>
-<h3>Archive and Space Mission Data</h3>
-<p><b>MAST (Mikulski Archive for Space Telescopes)</b> Hosts Kepler, K2, TESS, and HST data. Relevant if raw light curves or transit photometry are needed for a specific system.</p>
-<ul><li>URL: <code>https://mast.stsci.edu</code></li><li>astroquery: <code>from astroquery.mast import Observations</code></li></ul>
-<hr>
-<h3>Access Priority Summary</h3>
-<div class="tbl"><table><thead><tr><th>Data type</th><th>Primary</th><th>Secondary</th><th>Cross-check</th></tr></thead><tbody><tr><td>Position, PM, parallax</td><td>Gaia DR3</td><td>Hipparcos (bright stars)</td><td>JPL Horizons</td></tr><tr><td>Radial velocity</td><td>Gaia DR3</td><td>SIMBAD</td><td>Discovery paper</td></tr><tr><td>State vectors (km, km/s)</td><td>Gaia DR3 → convert</td><td>JPL Horizons (direct)</td><td>--</td></tr><tr><td>Stellar mass</td><td>SIMBAD <code>mesMass</code></td><td>SWEET-Cat</td><td>VizieR (paper-specific)</td></tr><tr><td>Stellar radius</td><td>SIMBAD <code>mesDiameter</code></td><td>TEPCat</td><td>VizieR (interferometry papers)</td></tr><tr><td>Orbital elements</td><td>NASA Exoplanet Archive</td><td>exoplanet.eu</td><td>TEPCat</td></tr><tr><td>Planet mass</td><td>NASA Exoplanet Archive</td><td>TEPCat</td><td>Discovery paper</td></tr><tr><td>Planet radius</td><td>NASA Exoplanet Archive</td><td>TEPCat</td><td>Discovery paper</td></tr><tr><td>Transit timing</td><td>NASA Archive ephemeris</td><td>ETD</td><td>Source paper (TTV analysis)</td></tr><tr><td>Paper lookup</td><td>ADS</td><td>arXiv</td><td>--</td></tr></tbody></table></div>
-<hr>
-<h2>Known Issues and Open Decisions</h2>
-<h3>KSP rendering engine limits at interstellar distances</h3>
-<p>Principia will correctly register a distant star as a gravitational perturber regardless of distance. The double-precision position ULP at Alpha Centauri (~4e13 km) is ~9 m -- acceptable for force calculations.</p>
-<p>However, KSP&#x27;s rendering engine is a separate concern. At interstellar distances, floating-point precision in the renderer (not Principia) may cause visual glitches, SOI/map view failures, or engine crashes. This has not been tested at these scales.</p>
-<p><b>This trade-off must be decided before cfg generation begins:</b></p>
-<ul><li>Use real distances -&gt; Principia physics correct, KSP renderer behaviour unknown</li><li>Scale distances down -&gt; KSP renderer stable, Principia physics incorrect</li></ul>
-<p>Record the decision and its rationale in <code>meta.notes</code> for each system file.</p>
-<hr>
-<h2>Out of Scope</h2>
-<p>The following are handled in separate sessions or agents, not here:</p>
-<ul><li>Kopernicus cfg generation</li><li>Principia patch writing (Sol Real variant, Sol Quarter variant, RSS variant)</li><li>Visual and art parameters (atmosphere, terrain, Scatterer, EVE)</li><li>Community vote on which systems to include</li><li>Decision on interstellar distance scaling (see Known Issues above)</li></ul>
-<h2>Related</h2>
-<ul><li><a href="reference__adding_stars.html">adding_stars</a> — operational workflow for adding a new component to the pipeline</li><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — full math + worked examples for multi-star Kepler→ICRS (α Cen AB worked example in §9)</li><li><a href="reference__data-sources.html">data-sources</a> — external catalog citations + attribution policy</li><li><a href="reference__archive_issues.html">archive_issues</a> — upstream catalog defects discovered during cross-validation</li><li><a href="reference__tools.html">tools</a> — project-wide tool index by purpose</li><li><a href="reference__mod-reference.html">mod-reference</a> — KSP mod install reference (downstream consumers)</li><li><a href="reference__mod-release-layout.html">mod-release-layout</a> — mod-release repo conventions</li><li><a href="reference__guideline.html">guideline</a> — project-level scope, phases, distance limits</li><li><a href="reference__principia-cfg-reference.html">principia-cfg-reference</a> — Principia cfg API (downstream of the methodology epoch handling)</li><li><a href="reference__rex-data-comparison.html">rex-data-comparison</a> — REX v0.9.6 vs NearStars (validates methodology choices)</li></ul></div>
-</main>
+<div class="content-wrap">
+  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <article class="markdown-body" id="content"></article>
 </div>
-<script>
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
+</div>
+<script type="text/markdown" id="md-en"># Stellar System Data Research Methodology
+
+This document defines the workflow for building a structured JSON database of
+stellar and planetary data, sourced from public astronomical catalogues.
+The database feeds two downstream consumers: Principia proto files and
+Kopernicus cfg files, written in separate sessions or agents.
+
+## Table of Contents
+
+- [Goal](#goal)
+- [Output Structure](#output-structure)
+- [JSON Schema](#json-schema)
+- [Epoch Handling](#epoch-handling)
+- [Multiple-System Epoch](#multiple-system-epoch)
+- [Source Recording Protocol](#source-recording-protocol)
+- [Data Sources](#data-sources)
+- [Known Issues and Open Decisions](#known-issues-and-open-decisions)
+- [Out of Scope](#out-of-scope)
+- [Related](#related)
+
+---
+
+## Goal
+
+One JSON file per star system. Each file contains:
+- Raw observational values, exactly as received from the source catalogue
+- Derived/converted values ready for Principia and Kopernicus
+- Full provenance: source name, catalogue ID, retrieval date, epoch
+
+The database is the single source of truth. No downstream agent should need
+to query an external catalogue or perform unit conversions independently.
+
+---
+
+## Output Structure
+
+```
+db/
+  target_list.json            # 파이프라인 입력
+  astrometry_raw.json         # 자동 fetch — Gaia DR3 + SIMBAD
+  photometry_raw.json         # 자동 fetch — Gaia DR3
+  stellar_props_raw.json      # 자동 fetch — SIMBAD (Teff, 스펙형, mesDiameter)
+  stellar_props_curated.json  # 수동 입력 — 질량/반지름 정밀 문헌값
+  planets_raw.json            # 자동 fetch — NASA Exoplanet Archive
+  planets_curated.json        # 수동 입력 — 궤도/환경/대기 상세 문헌값
+  binary_orbits.json          # 수동 입력 — 쌍성 궤도
+  systems/
+    alpha_centauri_a.json
+    barnards_star.json
+    tau_cet.json
+    ...                       # 항성 컴포넌트별 1파일
+  backups/                    # 이전 스냅샷 보관 (수동 백업 시점)
+```
+
+파이프라인 실행 순서, 스크립트 설명, 새 별 추가 절차는 [`adding_stars.md`](reference__adding_stars.html) 참조.
+
+---
+
+## Naming canonicalization
+
+호스트/행성 이름 → 슬러그·파일명 변환은 `scripts/pipeline/_naming.py` 한 곳에서만 정의한다. 빌더가 자기 버전의 `to_url_slug` 를 재구현하면 매니페스트 매칭이 깨진다 (commit `e0da593` 의 회복 참조).
+
+**규칙**
+
+1. lowercase
+2. apostrophe (`'`) 제거 — `Barnard's` → `barnards`
+3. non-alphanumeric 연속 → 단일 separator
+4. 양 끝 separator 제거
+
+**Separator 두 종류**
+
+- URL 슬러그 (`-`): `docs/phase2/<slug>.html`, `docs/phase3/<slug>.html`, `reports-manifest.json` 의 매칭 키
+- File 슬러그 (`_`): `db/systems/<slug>.json`
+
+| 호스트 | URL slug | File slug |
+|---|---|---|
+| Barnard's star | `barnards-star` | `barnards_star` |
+| Teegarden's Star | `teegardens-star` | `teegardens_star` |
+| TRAPPIST-1 | `trappist-1` | `trappist_1` |
+| Alpha Centauri A | `alpha-centauri-a` | `alpha_centauri_a` |
+| 40 Eridani A | `40-eridani-a` | `40_eridani_a` |
+
+**새 빌더를 작성할 때** — `from _naming import to_url_slug, to_file_slug, to_filename` 으로 import. 함수를 다시 구현하지 말 것. 큐레이터 행동을 통제하는 스킬 문서 (`nearstars-add-star`, `nearstars-phase3`) 에도 같은 규칙이 명시돼 있다.
+
+---
+
+## JSON Schema
+
+### Top-level
+
+```json
+{
+  "system_name": "Alpha Centauri A",
+  "stars": [ ... ],
+  "planets": [ ... ],
+  "sources": [ ... ],
+  "meta": { ... }
 }
+```
+
+One JSON file per **stellar component**, not per system. `system_name`
+matches the component name (e.g. `Alpha Centauri A`, `Alpha Centauri B`,
+`Proxima Centauri` are three separate files). The `stars` array always
+holds exactly one entry — the component the file describes. Mutual
+orbit data for binary/multiple systems lives in `binary_orbits.json`
+and is embedded into the representative component file (typically `A`);
+sibling components reference it via `binary_orbit_ref`.
+
+This choice reflects how downstream Kopernicus/Principia cfg writers
+consume the data: each `CelestialBody` (a single star) maps 1:1 to a
+cfg `Body { }` node, so a one-component-per-file layout removes any
+indexing during cfg generation.
+
+### `meta`
+
+```json
+{
+  "retrieval_date": "2026-05-16",
+  "solar_system_epoch_jd": 2433282.5,
+  "solar_system_epoch_label": "B1950.0",
+  "game_epoch_jd_sol": 2433647.5,
+  "game_epoch_jd_rss": 2433647.5,
+  "coordinate_origin": "SSB",
+  "coordinate_frame": "ICRF",
+  "coordinate_units": "km, km/s",
+  "notes": ""
+}
+```
+
+`solar_system_epoch_jd` is the epoch at which all state vectors are expressed.
+Both Sol and RSS use **JD2433282.5** (nominally B1950.0, 1950-01-01 TDB) as the
+`solar_system_epoch`. This is the value to match when querying JPL Horizons.
+
+Note: strictly, Besselian epoch B1950.0 = JD2433282.423. JD2433282.5 is
+1950-01-01.0 TT midnight, differing by ~1.85 hours. Both Sol and RSS use
+2433282.5 by convention, and JPL Horizons accepts this date directly.
+The difference is negligible for KSP purposes but worth knowing if
+cross-checking against software that computes B1950.0 precisely.
+
+`game_epoch_jd` does not affect the state vectors. Sol and RSS share the same value:
+- Sol: `JD2433647.5`
+- RSS: `JD2433647.5`
+
+The coordinate origin is the **Solar System Barycentre (SSB)**, not the Sun.
+The Sun itself has a non-zero position in these files (on the order of 10⁵ km
+from the SSB). All state vectors must be expressed in this same SSB-ICRF frame.
+
+---
+
+### `stars[]`
+
+The `stars` array always has length 1 — the single component this file
+describes. (Binary/multiple systems use one file per component; see
+"Top-level" above.)
+
+```json
+{
+  "name": "Alpha Centauri A",
+  "component": "A",
+
+  "raw": {
+    "source": "Gaia DR3",
+    "source_id": "5853498713160606720",
+    "epoch_jd": 2457389.0,
+    "epoch_label": "J2016.0",
+    "ra_deg": 219.90085,
+    "dec_deg": -60.83562,
+    "parallax_mas": 742.12,
+    "parallax_error_mas": 1.40,
+    "pmra_mas_yr": -3678.19,
+    "pmdec_mas_yr": 481.84,
+    "radial_velocity_km_s": -22.4,
+    "radial_velocity_source": "Gaia DR3",
+
+    "vmag_v": -0.01,
+    "vmag_source": "hipparcos_hardcoded",
+
+    "teff_k": 5790,
+    "spectype": "G2 V",
+
+    "mass_measurements": [
+      {
+        "value_msun": 1.1055,
+        "uncertainty_msun": 0.0039,
+        "method": "binary_orbit",
+        "reference": "Pourbaix et al. 2002",
+        "doi": "10.1051/0004-6361:20021249",
+        "recommended": true
+      },
+      {
+        "value_msun": 1.100,
+        "uncertainty_msun": 0.006,
+        "method": "evolutionary_model",
+        "reference": "Thevenin et al. 2002",
+        "doi": "10.1051/0004-6361:20021791",
+        "recommended": false
+      }
+    ],
+
+    "radius_measurements": [
+      {
+        "value_rsun": 1.2234,
+        "uncertainty_rsun": 0.0053,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2017",
+        "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      },
+      {
+        "value_rsun": 1.227,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Thevenin et al. 2002",
+        "doi": "10.1051/0004-6361:20021791",
+        "recommended": false
+      }
+    ]
+  },
+
+  "derived": {
+    "epoch_jd": 2433282.5,
+    "epoch_label": "B1950.0",
+    "propagation_method": "linear",
+    "distance_pc": 1.3475,
+    "distance_km": 4.153e+13,
+    "icrs_x_km":  2.634e+13,
+    "icrs_y_km": -3.197e+13,
+    "icrs_z_km": -1.272e+13,
+    "icrs_vx_km_s": 1.3204,
+    "icrs_vy_km_s": -4.4012,
+    "icrs_vz_km_s":  0.8913,
+    "position_ulp_km": 5.9e-3,
+    "icrs_x_j2000_km":  2.557e+13,
+    "icrs_y_j2000_km": -3.127e+13,
+    "icrs_z_j2000_km": -1.255e+13,
+    "icrs_vx_j2000_km_s": 1.3204,
+    "icrs_vy_j2000_km_s": -4.4012,
+    "icrs_vz_j2000_km_s":  0.8913
+  },
+
+  "principia": {
+    "gravitational_parameter_km3_s2": 146713602439.899,
+    "mean_radius_km": 851119.4
+  }
+}
+```
+
+Notes on `derived`:
+- All units follow Principia/Sol convention: **km** and **km/s**.
+- `propagation_method: "linear"` means positions were propagated using
+  constant space velocity (proper motion + radial velocity). Adequate for
+  stellar perturbers over KSP timescales (decades to centuries).
+- `position_ulp_km` is `abs(largest_coordinate_km) * 2^-52`. For Alpha
+  Centauri (~4e13 km), this is ~0.009 km (9 m) -- acceptable for a
+  gravitational perturber, not for close-range orbital mechanics around
+  the star.
+- The coordinate origin is the **SSB**, not the Sun. The Sun itself sits
+  ~10⁵ km from the SSB in these files.
+
+Notes on `mass_measurements` and `radius_measurements`:
+- Every available published value goes in the array, regardless of how many.
+- `recommended: true` marks the value used in the `principia` block.
+  Exactly one entry per array must have `recommended: true`.
+- Priority for `recommended` is determined by measurement method, not
+  publication date or journal prestige. Method hierarchy:
+
+  Mass:
+  1. `binary_orbit` -- direct dynamical measurement, most reliable
+  2. `asteroseismology` -- model-dependent but well-constrained
+  3. `evolutionary_model` -- indirect; use only when nothing better exists
+  4. `spectroscopic` / `spectroscopic_calibration` -- spectral fitting based
+  99. `unverified` -- Curation Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.
+
+  Radius:
+  1. `interferometry` -- direct angular diameter measurement
+  2. `eclipsing_binary` -- direct geometric measurement
+  3. `sed_fitting` -- bolometric flux + Teff + distance (semi-direct)
+  4. `evolutionary_model` -- indirect; use only when nothing better exists
+  5. `spectroscopic_calibration` -- empirical radius-color/spectral-type
+     relations (e.g. Mann et al. 2015 for M dwarfs)
+  99. `unverified` -- Curation Phase 1 batch 동일 의미.
+
+  Per-category method whitelists live in
+  `scripts/pipeline/schema.py STELLAR_MEASUREMENT_KINDS[*]["methods"]`
+  (Phase 2 expansion 2026-05-21 added 6 categories beyond mass/radius:
+  teff/luminosity/age/metallicity/rotation/activity). The union is
+  exposed as `STELLAR_ALLOWED_METHODS` for backward compat. Any new
+  method must be added to both the canonical KINDS dict and this
+  hierarchy doc.
+
+- If two entries share the same method tier, prefer the one with smaller
+  fractional uncertainty. Document the choice in `meta.notes`.
+
+Notes on `disk_measurements` (Phase 2 expansion 2026-05-27).
+
+```json
+{
+  "belt": "main_cold",
+  "inner_radius_au": 62,
+  "outer_radius_au": 200,
+  "dust_temperature_k": 50,
+  "dust_mass_mearth": 0.013,
+  "morphology": "cold Kuiper analog with sharp inner edge",
+  "resolved": true,
+  "observatory": "Herschel-PACS",
+  "inclination_deg": 6.2,
+  "method": "resolved_imaging",
+  "reference": "Sibthorpe et al. 2010",
+  "bibcode": "2010A&A...518L.130S",
+  "doi": "10.1051/0004-6361/201014574",
+  "recommended": true
+}
+```
+
+- Entry granularity: per (paper × belt). Multi-belt disks (Vega / Fomalhaut / ε Eri etc.) emit one entry per belt sharing the same bibcode.
+- `belt` enum is open-ended; recommended values: `inner_warm`, `intermediate`, `main_cold`, `single`, `asteroid_analog`, `warm`, `cold`. Add new strings if a paper uses one.
+- `resolved=true` means an observatory spatially resolved the disk (ALMA / HST / SPHERE / JWST). `false` means SED-only or photometric-excess detection.
+- Disk-only descriptor fields (neither value nor uncertainty): `belt`, `morphology`, `resolved`, `observatory`, `notes`. Registered in `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]`.
+- Method tier (canonical for `recommended` selection): `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
+- All value keys are nullable. Detection-only papers (e.g. Aumann 1984 IRAS) emit one entry with most geometry fields = null.
+
+---
+
+### `planets[]`
+
+Each confirmed planet is a separate entry.
+
+```json
+{
+  "name": "Proxima Centauri b",
+  "host_star": "Proxima Centauri",
+
+  "raw": {
+    "pl_name": "Proxima Cen b",
+    "reference": "Anglada-Escude et al. 2016",
+    "retrieval_date": "2026-05-16",
+    "period_days": 11.1868,
+    "period_err_days": 0.0002,
+    "semi_major_axis_au": 0.04856,
+    "semi_major_axis_err_au": 0.00030,
+    "eccentricity": 0.0,
+    "inclination_deg": null,
+    "inclination_err_deg": null,
+    "omega_deg": null,
+    "tperi_bjd": null,
+    "tperi_err_bjd": null,
+    "tranmid_bjd": null,
+    "tranmid_err_bjd": null,
+    "mass_mearth": 1.27,
+    "mass_err_mearth": 0.18,
+    "mass_type": "Msini",
+    "radius_rearth": null,
+    "radius_err_rearth": null,
+    "discoverymethod": "Radial Velocity",
+    "pl_controv_flag": 0,
+    "pubdate": "2016-08",
+    "tepcat": null
+  },
+
+  "derived": {
+    "semi_major_axis_m": 7.265e+09,
+    "eccentricity": 0.0,
+    "inclination_deg": null,
+    "longitude_of_ascending_node_deg": null,
+    "argument_of_periapsis_deg": null,
+    "mean_anomaly_at_epoch_deg": null,
+    "orbital_epoch_jd": null,
+    "mass_kg": 7.548e+24,
+    "mass_type": "minimum (M sin i)",
+    "radius_m": null
+  }
+}
+```
+
+The `raw` block mirrors `fetch_planets.py` output one-for-one:
+- Orbital fields use NASA Exoplanet Archive's `pscomppars` column names
+  (`tperi_bjd`, `tranmid_bjd`, `omega_deg`, etc.). Periastron passage time
+  (`tperi_bjd`) and transit midpoint (`tranmid_bjd`) are both stored; the
+  one to use as the mean-anomaly reference depends on detection method.
+- `tepcat` is a nested object populated when TEPCat has independently
+  derived mass/radius for a transiting planet. May be `null`.
+
+The `derived` block is unit conversion only (AU → m, M⊕ → kg, R⊕ → m)
+with a priority chain `curated > tepcat > nasa_archive`. Missing
+measurements remain `null` — default-value assumptions (edge-on
+inclination, circular eccentricity, mean anomaly at game start) belong
+in the Kopernicus cfg generation stage, not in the DB. Downstream agents
+writing the cfg are responsible for choosing and documenting these
+defaults.
+
+### `sources[]`
+
+All papers and catalogues consulted during research go here. This is the
+complete bibliography for the file.
+
+```json
+[
+  {
+    "title": "Constraining the difference in convective blueshift between the components of alpha Centauri with precise radial velocities",
+    "doi": "10.1051/0004-6361:20021249",
+    "bibcode": "2002A&A...394..151P",
+    "accessed": "2026-05-16",
+    "used_for": ["Alpha Centauri A mass", "Alpha Centauri B mass"]
+  },
+  {
+    "title": "Gaia Data Release 3",
+    "doi": null,
+    "bibcode": "2023A&A...674A...1G",
+    "accessed": "2026-05-16",
+    "used_for": ["Alpha Centauri A astrometry", "Alpha Centauri B astrometry"]
+  }
+]
+```
+
+- `doi` and `bibcode`: provide both when available. If one is absent, set it to `null`.
+- `used_for`: note what was taken from the source. Consulted-but-unused entries
+  are fine -- write `"used_for": ["consulted; superseded by Pourbaix et al. 2002"]`.
+
+---
+
+Notes on `null` fields:
+- Null means data is missing, not zero. The DB never substitutes a default
+  for a missing measurement — that is the Kopernicus cfg writer's job.
+- Downstream agents must check for nulls and document any assumed default
+  (e.g. `inclination = 90 deg` for RV-only detections) in the cfg itself.
+
+---
+
+## Epoch Handling
+
+### Target epoch
+
+Both Sol and RSS use **JD2433282.5** (B1950.0, 1950-01-01 TDB) as the
+`solar_system_epoch`. All state vectors in `derived` must be expressed at
+this epoch in SSB-ICRF coordinates.
+
+The `game_epoch` is separate and does not affect state vectors. Sol and RSS share the same value:
+- Sol: `JD2433647.5`
+- RSS: `JD2433647.5`
+
+When writing MM patches, Sol and RSS variants only differ by NEEDS tag
+(`SolSystem` vs `RSSConfig`), not by epoch values.
+
+### Why propagation is needed
+
+Gaia DR3 positions are referenced to **J2016.0** (JD2457389.0).
+The target epoch is JD2433282.5. The delta is ~24,000 days (~66 years).
+
+For Alpha Centauri (space velocity ~25 km/s), the positional shift over
+66 years is ~5.2e10 km (~350 AU). Propagation is always required.
+
+### Linear propagation
+
+Constant-velocity (uniform rectilinear) propagation in SSB-ICRF is the
+standard model used by Gaia and Hipparcos. It is sufficient for stellar
+perturbers over KSP-relevant timescales.
+
+The dominant higher-order effect omitted by linear propagation is
+**perspective acceleration** — the apparent change in proper motion rate
+as a star's distance changes. For most target stars this is negligible
+at the perturber accuracy level.
+
+**Edge case: Barnard's Star** (μ ≈ 10,300 mas/yr, ϖ ≈ 548 mas,
+RV ≈ −110 km/s) accumulates ~0.5 AU of position error over 66 years
+from perspective acceleration alone. This is still within the
+perturber-accuracy tolerance for KSP gravitational effects, so the
+pipeline applies linear propagation like every other star. The known
+discrepancy is recorded in `meta.notes` for the `barnards_star.json`
+file. If future requirements demand sub-AU accuracy for Barnard's Star,
+fetch a JPL Horizons state vector at JD2433282.5 and override the
+`derived` block manually.
+
+References:
+- Butkevich & Lindegren (2014), A&A 570, A62 — `doi:10.1051/0004-6361/201424483`, `arXiv:1407.4664`
+  Canonical paper for epoch propagation in the Gaia era. Derives rigorous
+  closed-form expressions for uniform rectilinear motion; used directly
+  in the Gaia pipeline.
+- ESA SP-1200 (1997), Vol. 1, Sec. 1.2 (Hipparcos Catalogue, Lindegren et al.)
+  Explicitly states that uniform space motion is valid for most stars
+  over timescales under a century, even at Hipparcos precision.
+
+```python
+def propagate_icrs(x0, y0, z0, vx, vy, vz, jd_from, jd_to):
+    """
+    Linear propagation from jd_from to jd_to.
+    Units: km and km/s (matching Principia/Sol convention).
+    See Butkevich & Lindegren (2014) Eq. 4-7 for the full derivation.
+    """
+    dt_s = (jd_to - jd_from) * 86400.0
+    return (
+        x0 + vx * dt_s,
+        y0 + vy * dt_s,
+        z0 + vz * dt_s
+    )
+```
+
+### `propagation_method` values
+
+| Value | Meaning | Source epoch |
+|---|---|---|
+| `"linear"` (Gaia) | Gaia DR3 → constant space velocity → target epoch | J2016.0 (JD2457389.0) |
+| `"linear"` (SIMBAD) | SIMBAD fallback for Gaia-saturated bright stars → linear propagation | J2000.0 (JD2451545.0) |
+| `"kepler_thiele_innes"` | Orbit-bound binary/multiple component → Markley Kepler + Thiele-Innes rotation (Hilditch convention) → ICRS Cartesian | Catalog epoch of the orbit fit, propagated to target epoch via `build_systems.py:solve_orbit_relative` |
+| `"horizons_direct"` | JPL Horizons state vectors imported directly at JD2433282.5 — bypasses any propagation | JD2433282.5 (target epoch) |
+
+The SIMBAD fallback path applies to stars without a Gaia DR3 ID — typically
+bright stars saturated in Gaia (V < ~6) such as Alpha Centauri A and B,
+Sirius, Procyon, Pollux. `fetch_astrometry.py` queries SIMBAD's `basic`
+table, whose astrometry is referenced to J2000.0 (~16 years earlier than
+Gaia's J2016.0). The `raw.epoch_jd` field records the actual source epoch,
+so `build_systems.py` propagates correctly regardless of source.
+
+Currently `"horizons_direct"` applies only to Barnard's Star. Any future
+star available in Horizons should be evaluated for the same treatment.
+
+### Epoch fields summary
+
+| Field | Location | Content |
+|---|---|---|
+| `raw.epoch_jd` | star | Source epoch — J2016.0 for Gaia, J2000.0 for SIMBAD fallback |
+| `derived.epoch_jd` | star | Target epoch (JD2433282.5) |
+| `meta.solar_system_epoch_jd` | system | JD2433282.5 (same for Sol and RSS) |
+| `meta.game_epoch_jd_sol` | system | JD2433647.5 |
+| `meta.game_epoch_jd_rss` | system | JD2433647.5 |
+| `raw.tperi_bjd` / `raw.tranmid_bjd` | planet | Archive reference epoch (periastron or transit midpoint) |
+| `derived.orbital_epoch_jd` | planet | Epoch from curated source if available; else null |
+
+---
+
+## Multiple-System Epoch
+
+> Full mathematical pipeline + worked examples (α Cen, Sirius):
+> [`docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html).
+> This section captures only the decisions and schema that affect the DB.
+
+### Why linear back-propagation fails for multi-star systems
+
+For single stars, linear extrapolation of Gaia/SIMBAD astrometry to JD2433282.5
+is sufficient (see "Linear propagation" above). For multi-star systems it is
+**wrong**, because the components are in mutual orbit — their relative position
+rotates, not translates.
+
+Example: Alpha Centauri AB has orbital period 79.762 yr. JD2433282.5 is ~66 yr
+before Gaia's J2016 epoch — almost a full orbit. Linear propagation rotates
+the A–B vector by 0°, while the real geometry has rotated by ~300°. The
+resulting cfg has wrong gravitational geometry, which causes Principia's
+N-body integrator to start with spurious eccentricity and energy.
+
+The fix: each multi-star system stores a fitted Kepler solution; at build time
+we propagate the components' shared **barycenter** linearly, then apply the
+Kepler-derived (B−A) offset evaluated at JD2433282.5 to place individual
+components.
+
+### Pipeline outline
+
+```
+barycenter_astrometry  → linear propagation (J2016 / J2000 → JD2433282.5)
+                          → R_bary, V_bary at target epoch
+                                  +
+orbits[].(P,T,e,a,i,ω,Ω)  → Kepler solver (M → E → ν)
+                          → Thiele-Innes rotation → (B−A) in ICRS (N,E,W)
+                                  +
+mass ratio q             → r_A = R_bary − q_B · r_AB
+                          → r_B = R_bary + q_A · r_AB
+```
+
+For triples, the same pipeline runs in nested form (inner orbit on AB, outer
+orbit on (AB)–C). See binary-epoch-pipeline.md §6.
+
+### `binary_orbits.json` schema (new)
+
+The legacy schema embedded a single `raw` block with Kepler elements per
+system. The new schema separates **per-component** facts (mass, astrometry
+source) from **per-orbit** facts (which two bodies it relates, the Kepler
+elements, the source paper, grade, phase reliability) by exposing both as
+arrays. Multiple orbits per system (triples) become natural.
+
+```json
+{
+  "Alpha Centauri": {
+    "system_id": "alpha_centauri",
+    "hierarchy": "triple",
+    "components": [
+      {
+        "name": "Alpha Centauri A",
+        "mass_msun": 1.0788,
+        "mass_source": "pourbaix_correia_2017",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
+      },
+      { "name": "Alpha Centauri B", "mass_msun": 0.9092, ... },
+      { "name": "Proxima Cen",     "mass_msun": 0.1221, ... }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": ["Alpha Centauri A", "Alpha Centauri B"],
+        "primary":   "Alpha Centauri A",
+        "secondary": "Alpha Centauri B",
+        "source":    "akeson_2021",
+        "doi":       "10.3847/1538-3881/abfaff",
+        "equinox":   "J2000",
+        "P_yr":      79.762,
+        "T_jd_tt":   2435291.6,
+        "e":         0.51947,
+        "a_arcsec":  17.4930,
+        "i_deg":     79.2430,
+        "omega_deg": 231.519,
+        "Omega_deg": 205.073,
+        "grade":           1,
+        "node_resolved":   true,
+        "phase_reliable":  true
+      }
+    ]
+  }
+}
+```
+
+Triple systems list two orbits and use `primary_is_barycenter_of` on the
+outer one — see binary-epoch-pipeline.md §6 for the full triple example.
+
+### Schema field reference
+
+| Field | Required | Notes |
+|---|---|---|
+| `system_id` | yes | Slug used as filename stem. Lowercase, underscores. |
+| `hierarchy` | yes | `"binary"`, `"triple"`, `"binary+cpm"` (CPM = common proper motion companion). |
+| `components[].name` | yes | Must match `target_list.json` component names exactly. |
+| `components[].mass_msun` | yes | With `mass_source` (paper bibcode or `gaia_dr3_nss`). |
+| `components[].astrometry_source` | yes | One of `gaia_dr3` / `simbad` / `mass_weighted_average` / `gaia_dr3_nss_barycenter` / `hipparcos_barycenter` / `single_component:<Name>`. Drives where the build pulls the barycenter astrometry from — see "Hybrid storage" note below. |
+| `components[].astrometry_quality` | yes | `barycentric` / `photocenter_contaminated` / `single_component`. Informational; validate.py uses it for warnings. |
+| `barycenter_astrometry` (system-level) | conditional | Block with `ra_deg`/`dec_deg`/`parallax_mas`/`pm_ra_masyr`/`pm_dec_masyr`/`radial_velocity_km_s`/`epoch_jd`. **Required** when any `astrometry_source` is `gaia_dr3_nss_barycenter` or `hipparcos_barycenter` (the published catalog barycenter values that aren't derivable from component astrometry). Omitted otherwise — the build computes the barycenter on the fly from `astrometry_raw.json`. |
+| `orbits[].orbit_id` | yes | `"AB"`, `"inner"`, `"outer"`. Unique within entry. |
+| `orbits[].relates` | yes | Components or barycenters this orbit governs. |
+| `orbits[].primary` / `secondary` | yes | One must be a component or `primary_is_barycenter_of`. |
+| `orbits[].primary_is_barycenter_of` | conditional | For triples' outer orbit; list of component names forming the inner system. |
+| `orbits[].source` | yes | `"akeson_2021"` (paper key) or `"orb6:grade=1"` or `"gaia_dr3_nss:OrbitalAlternative"`. |
+| `orbits[].P_yr` / `T_jd_tt` / `e` | yes | Kepler core. `T` is time of periastron in JD (TT). |
+| `orbits[].a_arcsec` or `a_au` | yes | Relative semi-major axis. Catalog convention is `arcsec`; convert via parallax. |
+| `orbits[].i_deg`/`omega_deg`/`Omega_deg` | yes | Inclination, arg of periastron, longitude of ascending node. |
+| `orbits[].A`/`B`/`F`/`G` (`C`/`H` optional) | optional | Thiele-Innes constants (in arcsec) if directly published (Gaia NSS). Substitutes for `a`/`i`/`omega`/`Omega`. |
+| `orbits[].grade` | yes | Orb6 quality grade 1–9. ≤3 means publication-quality. |
+| `orbits[].node_resolved` | yes | `true` if (i,ω,Ω) reflects the physically correct line of nodes (RV data available); `false` if catalog presents the mirror-degenerate solution. |
+| `orbits[].phase_reliable` | yes | `false` if `grade ≥ 4` OR extrapolation > 0.5×P from observed coverage. When false, build still runs but `meta.notes` records the warning. |
+
+#### `_principia_notes` meta block
+
+`binary_orbits.json` has a top-level `_principia_notes` key (underscore
+prefix, skipped by validators). It records the epoch constants used by
+the build (`solar_system_epoch_jd`, `game_epoch_sol_jd`) plus a
+`schema_version` string ("YYYY-MM-DD-components-orbits") that's bumped
+whenever the component/orbit shape changes. Downstream tools (e.g.
+`scripts/pipeline/build_systems.py`) can read it for sanity checks but
+the values are not authoritative — they duplicate constants that live
+in code.
+
+#### Hybrid astrometry storage
+
+The DB does not store derived/computed astrometry values per component.
+Only published barycentric solutions (Gaia DR3 NSS, Hipparcos multi-star
+annex) live in a system-level `barycenter_astrometry` block; the build
+computes mass-weighted averages on the fly from `astrometry_raw.json`
+when `astrometry_source = "mass_weighted_average"`. See
+[[project-nearstars-db-principle]].
+
+#### Thiele-Innes convention (Hilditch / Pourbaix)
+
+`build_systems.py` applies the Hilditch / Pourbaix convention:
+
+```
+ΔN = A · x_p + F · y_p     (North)
+ΔE = B · x_p + G · y_p     (East)
+ΔW = C · x_p + H · y_p     (away from observer)
+```
+
+This convention is the canonical one across all NearStars docs and
+code; `binary-epoch-pipeline.md` §2 step 5 and §10 worked example use
+the same formulas. The form above reproduces the legacy
+`individual_states.b1950` values for α Cen and Sirius within < 0.05 %.
+
+### Barycenter astrometry decision tree (summary)
+
+For each multi-star system, the `components[].astrometry_source` field is
+selected by the following decision tree. The build refuses to run if any
+component has `astrometry_source: "unset"`.
+
+```
+Gaia DR3 NSS row exists for this system?
+├── YES → astrometry_source = gaia_dr3_nss_barycenter
+│         astrometry_quality = barycentric
+│
+└── NO  → resolved pair (separation > ~1″, both have Gaia 5-param)?
+          ├── YES → astrometry_source = mass_weighted_average
+          │         astrometry_quality = barycentric
+          │         (PM averaging cancels orbital tangent velocity)
+          │
+          └── NO  → Hipparcos multi-star annex (DMSA flag C/O/V/X)?
+                    ├── YES → astrometry_source = hipparcos_barycenter
+                    │         astrometry_quality = barycentric
+                    │
+                    └── NO  → astrometry_source = gaia_dr3 (or simbad if saturated)
+                              astrometry_quality = photocenter_contaminated
+                              (flag, allow but warn)
+```
+
+See binary-epoch-pipeline.md §8 for the photocenter-wobble error model.
+
+### Per-system option assessment (best estimate; verify in implementation)
+
+| System | Hierarchy | Recommended option | Source paper override |
+|---|---|---|---|
+| Alpha Centauri AB | binary | gaia_dr3_nss_barycenter | Akeson et al. 2021 |
+| Sirius AB | binary | hipparcos_barycenter (A saturated; B is WD) | Bond et al. 2017 |
+| 61 Cygni AB | binary | mass_weighted_average (wide, both in Gaia) | Malkov et al. 2012 — `phase_reliable: false` (P~679 yr, grade ≥3) |
+| 40 Eridani ABC | triple | A: gaia_dr3 / B+C close pair: NSS or mass-weighted | needs research |
+| Eta Cassiopeiae AB | binary | mass_weighted_average | Tokovinin 2021 — P=480 yr, `phase_reliable: false` likely |
+| 36 Ophiuchi ABC | triple | A,B: mass-weighted on close pair / C: static CPM at fixed offset | needs research |
+
+The actual `astrometry_source` value is locked in by the implementation
+session — the table above is a starting point, not a commitment.
+
+### Phase reliability semantics
+
+Set `phase_reliable: false` when:
+- Orb6 grade ≥ 4, OR
+- Observed coverage is less than half the period (extrapolation > 0.5 P), OR
+- Time of periastron error exceeds 5% of the period
+
+When `phase_reliable: false`, the build still runs (output is the best estimate
+from the available solution) but writes a warning to `meta.notes` of the affected
+component files. Downstream Kopernicus cfg can still use the values; users
+running long Principia simulations should not trust the relative geometry past
+~0.5 P.
+
+For phase-unreliable wide CPM companions (P > 1000 yr, no fitted orbit), use
+`orbit_type: "static_cpm"` — see binary-epoch-pipeline.md §6 — which freezes
+the relative position at the catalog reference epoch.
+
+---
+
+## Source Recording Protocol
+
+Log every paper and catalogue consulted, even if its values were not used
+(record why in `used_for`).
+
+A SIMBAD bibcode is not a source. Resolve it to the original paper via
+`https://ui.adsabs.harvard.edu/abs/<bibcode>` and record the DOI there.
+
+If two papers at the same method tier conflict, add both to `sources[]` and
+to the measurement array, and document the choice in `meta.notes`.
+
+---
+
+## Data Sources
+
+All sources below are freely accessible. astroquery covers most of them
+with a unified Python interface; raw TAP endpoints are listed for direct
+access or fallback.
+
+---
+
+### Nearby Star Systems
+
+**RECONS (Research Consortium on Nearby Stars)**
+Authoritative list of all stellar systems within 10 parsecs (~32.6 ly).
+Primary reference for confirming a star is within the project's 50 ly scope
+and for catching newly measured distances that update a star's status.
+
+- URL: `https://www.recons.org`
+- Updated regularly as new parallaxes are measured
+- Use when: verifying a candidate star is truly within 50 ly; finding
+  newly discovered nearby systems not yet prominent in other databases
+
+---
+
+### Astrometry and Stellar Position
+
+**Gaia DR3**
+The primary source for position, proper motion, parallax, and radial
+velocity of nearby stars.
+
+- TAP endpoint: `https://gea.esac.esa.int/tap-server/tap`
+- astroquery: `from astroquery.gaia import Gaia`
+- Table: `gaiadr3.gaia_source`
+- Key columns: `source_id`, `ra`, `dec`, `parallax`, `parallax_error`,
+  `pmra`, `pmdec`, `radial_velocity`
+- Epoch: J2016.0 (JD2457389.0)
+- Caveat: `radial_velocity` is null for faint red dwarfs.
+
+**Hipparcos**
+Pre-Gaia catalogue. Superseded by Gaia DR3 for all nearby stars, but
+useful as a cross-check or for stars missing from Gaia due to brightness
+saturation (V < ~6 mag).
+
+- Access via VizieR: catalogue `I/311`
+- TAP endpoint: `https://tapvizier.cds.unistra.fr/TAPVizieR/tap`
+
+**JPL Horizons**
+Direct state vectors (position + velocity) in SSB-ICRF for solar system
+bodies and some nearby stars. Outputs match Principia/Sol units (km, km/s)
+and epoch (B1950.0 = JD2433282.5) directly.
+
+- Web: `https://ssd.jpl.nasa.gov/horizons/`
+- Batch API: `https://ssd.jpl.nasa.gov/horizons_batch.cgi`
+- astroquery: `from astroquery.jplhorizons import Horizons`
+- Settings: `VECTORS`, frame `ICRF`, center `@SSB`, epoch `1950-Jan-01`
+- Coverage: Alpha Centauri, Barnard's Star confirmed available.
+  Coverage of other target systems may vary.
+
+---
+
+### Stellar Physical Parameters (Mass, Radius, Teff)
+
+**SIMBAD**
+Literature aggregator. Does not store mass/radius as direct columns;
+queries the `mesMass` and `mesDiameter` measurement tables via TAP.
+
+- TAP endpoint: `https://simbad.u-strasbg.fr/simbad/sim-tap/sync`
+- astroquery: `from astroquery.simbad import Simbad`
+- Use for: mass, radius, spectral type, cross-IDs, RV fallback,
+  bibcode → paper tracing
+
+**VizieR**
+Library of published astronomical catalogues. Hosts thousands of
+stellar parameter tables from individual papers -- the most complete
+aggregator of literature values.
+
+- TAP endpoint: `https://tapvizier.cds.unistra.fr/TAPVizieR/tap`
+- astroquery: `from astroquery.vizier import Vizier`
+- Notable hosted catalogues relevant to this project:
+  - `I/355` -- Gaia DR3
+  - `I/311` -- Hipparcos
+  - `B/pastel/pastel` -- PASTEL (see below)
+  - `J/A+A/556/A150` -- SWEET-Cat (see below)
+  - Individual interferometry papers (CHARA, VLTI/GRAVITY results)
+
+**PASTEL**
+Compilation of spectroscopically-derived stellar atmospheric parameters
+(Teff, log g, [Fe/H]) from the literature. Useful for finding published
+Teff values to cross-check evolutionary model mass estimates.
+
+- URL: `https://pastel.obs.u-bordeaux1.fr/`
+- Access via VizieR: `B/pastel/pastel`
+- Note: does not directly provide mass or radius; provides the
+  spectroscopic parameters used to derive them.
+
+**SWEET-Cat**
+Catalogue of atmospheric parameters and masses for planet host stars.
+Covers most stars with confirmed planets; uniformly derived where possible.
+
+- URL: `https://sweetcat.iastro.pt/`
+- Access via VizieR: `J/A+A/556/A150`
+- Provides: Teff, log g, [Fe/H], stellar mass
+- Caveat: mass from calibration formulae, not direct measurement.
+  Lower priority than binary orbit or interferometry values.
+
+---
+
+### Planetary Orbital Elements and Physical Parameters
+
+#### Investigation Priority Order
+
+When researching a planet system, check all sources below in order and
+use the most precise value available. Do not stop at NASA Archive alone.
+
+| Priority | Source | Best for |
+|---|---|---|
+| 1 | Individual paper (ADS) | Most recent / definitive orbital solution |
+| 2 | DACE | RV orbital elements (T₀, ω, eccentricity detail) |
+| 3 | TEPCat | Transiting systems — mass + radius from same fit |
+| 4 | exoplanet.eu | Cross-check; catches recent discoveries before NASA Archive |
+| 5 | NASA Exoplanet Archive | Baseline; used by pipeline auto-fetch |
+
+Record all sources consulted, even if their values were not used.
+For each planet, the `planets_curated.json` entry should reflect
+the best available value with its source DOI.
+
+---
+
+**NASA Exoplanet Archive**
+Most comprehensive planetary database with TAP support. Primary source
+for orbital elements.
+
+- TAP endpoint: `https://exoplanetarchive.ipac.caltech.edu/TAP/sync`
+- astroquery: `from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive`
+- Table: `ps` (Planetary Systems); filter `default_flag = 1`
+- Table: `pscomppars` (composite best parameters per planet)
+- Key columns: `pl_orbper`, `pl_orbsmax`, `pl_orbeccen`, `pl_orbincl`,
+  `pl_orblper`, `pl_bmasse`, `pl_rade`, `pl_tranmid`, `pl_refname`
+- Caveat: `default_flag = 1` is the archive's choice of best parameters,
+  not always the most recent. Check `pl_refname` and verify against
+  the source paper.
+
+**DACE (Data & Analysis Center for Exoplanets)**
+Geneva Observatory's RV planet database. More detailed orbital solutions
+than NASA Archive for RV-detected planets — includes T₀, ω, eccentricity
+confidence intervals, and full RV time series.
+
+- URL: `https://dace.unige.ch/exoplanets/`
+- Particularly strong for: nearby M-dwarf planets, HARPS/ESPRESSO targets
+- Use when: NASA Archive orbital elements are sparse or outdated
+
+**Extrasolar Planets Encyclopaedia (exoplanet.eu)**
+European catalogue. Often updated faster than NASA Archive for newly
+announced planets. Useful as a cross-check and for catching recent
+discoveries not yet in the NASA Archive.
+
+- URL: `https://exoplanet.eu`
+- TAP endpoint: `http://voparis-tap-planeto.obspm.fr/tap`
+- astroquery: `import pyvo; pyvo.dal.TAPService("http://voparis-tap-planeto.obspm.fr/tap")`
+- Table: `exoplanet.epn_core`
+- Bulk CSV download also available from the website.
+
+**TEPCat (Transiting Extrasolar Planet Catalogue)**
+Critical compilation of physical and orbital properties for transiting
+systems. Independently derived -- not just a mirror of NASA Archive.
+Particularly useful for transit-measured radii and masses where the
+derivation methodology is documented.
+
+- URL: `https://www.astro.keele.ac.uk/jkt/tepcat/`
+- Machine-readable tables available for bulk download.
+- Monthly snapshots archived for reproducibility.
+- Provides: stellar mass/radius, planet mass/radius, orbital elements,
+  obliquity, equilibrium temperature.
+
+**Open Exoplanet Catalogue**
+Community-maintained GitHub repository. JSON/XML format. Useful as a
+quick lookup and for systems that may be underrepresented in the larger
+archives.
+
+- URL: `https://github.com/openexoplanetcatalogue/open_exoplanet_catalogue`
+- Access: direct download or `git clone`.
+
+---
+
+### Transit Timing and Ephemeris Data
+
+**NASA Exoplanet Archive Transit and Ephemeris Service**
+Computes transit times for confirmed planets from the archive.
+Critical for TTV-dominated systems like TRAPPIST-1.
+
+- URL: `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TransitView/nph-visibletbls`
+
+**Exoplanet Transit Database (ETD)**
+Amateur and professional transit observations. Lower precision than
+peer-reviewed TTV analyses but broad coverage and useful for
+epoch refinement.
+
+- URL: `http://var2.astro.cz/ETD/`
+
+---
+
+### Literature and Paper Access
+
+**NASA ADS (Astrophysics Data System)**
+The authoritative literature database for astronomy. Use for:
+- Tracing bibcodes from SIMBAD to full papers
+- Finding the most recent orbital analyses for a given system
+- Retrieving DOIs for all measurement entries
+
+- URL: `https://ui.adsabs.harvard.edu`
+- API: `https://api.adsabs.harvard.edu/v1/`
+
+**arXiv (astro-ph.EP, astro-ph.SR)**
+Preprint server. Many orbital analyses and stellar parameter papers
+appear here before journal publication.
+
+- URL: `https://arxiv.org/list/astro-ph.EP/recent`
+
+---
+
+### Archive and Space Mission Data
+
+**MAST (Mikulski Archive for Space Telescopes)**
+Hosts Kepler, K2, TESS, and HST data. Relevant if raw light curves
+or transit photometry are needed for a specific system.
+
+- URL: `https://mast.stsci.edu`
+- astroquery: `from astroquery.mast import Observations`
+
+---
+
+### Access Priority Summary
+
+| Data type | Primary | Secondary | Cross-check |
+|---|---|---|---|
+| Position, PM, parallax | Gaia DR3 | Hipparcos (bright stars) | JPL Horizons |
+| Radial velocity | Gaia DR3 | SIMBAD | Discovery paper |
+| State vectors (km, km/s) | Gaia DR3 → convert | JPL Horizons (direct) | -- |
+| Stellar mass | SIMBAD `mesMass` | SWEET-Cat | VizieR (paper-specific) |
+| Stellar radius | SIMBAD `mesDiameter` | TEPCat | VizieR (interferometry papers) |
+| Orbital elements | NASA Exoplanet Archive | exoplanet.eu | TEPCat |
+| Planet mass | NASA Exoplanet Archive | TEPCat | Discovery paper |
+| Planet radius | NASA Exoplanet Archive | TEPCat | Discovery paper |
+| Transit timing | NASA Archive ephemeris | ETD | Source paper (TTV analysis) |
+| Paper lookup | ADS | arXiv | -- |
+
+---
+
+## Known Issues and Open Decisions
+
+### KSP rendering engine limits at interstellar distances
+
+Principia will correctly register a distant star as a gravitational perturber
+regardless of distance. The double-precision position ULP at Alpha Centauri
+(~4e13 km) is ~9 m -- acceptable for force calculations.
+
+However, KSP's rendering engine is a separate concern. At interstellar
+distances, floating-point precision in the renderer (not Principia) may cause
+visual glitches, SOI/map view failures, or engine crashes. This has not been
+tested at these scales.
+
+**This trade-off must be decided before cfg generation begins:**
+- Use real distances -> Principia physics correct, KSP renderer behaviour unknown
+- Scale distances down -> KSP renderer stable, Principia physics incorrect
+
+Record the decision and its rationale in `meta.notes` for each system file.
+
+---
+
+## Out of Scope
+
+The following are handled in separate sessions or agents, not here:
+
+- Kopernicus cfg generation
+- Principia patch writing (Sol Real variant, Sol Quarter variant, RSS variant)
+- Visual and art parameters (atmosphere, terrain, Scatterer, EVE)
+- Community vote on which systems to include
+- Decision on interstellar distance scaling (see Known Issues above)
+
+## Related
+
+- [adding_stars](reference__adding_stars.html) — operational workflow for adding a new component to the pipeline
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — full math + worked examples for multi-star Kepler→ICRS (α Cen AB worked example in §9)
+- [data-sources](reference__data-sources.html) — external catalog citations + attribution policy
+- [archive_issues](reference__archive_issues.html) — upstream catalog defects discovered during cross-validation
+- [tools](reference__tools.html) — project-wide tool index by purpose
+- [mod-reference](reference__mod-reference.html) — KSP mod install reference (downstream consumers)
+- [mod-release-layout](reference__mod-release-layout.html) — mod-release repo conventions
+- [guideline](reference__guideline.html) — project-level scope, phases, distance limits
+- [principia-cfg-reference](reference__principia-cfg-reference.html) — Principia cfg API (downstream of the methodology epoch handling)
+- [rex-data-comparison](reference__rex-data-comparison.html) — REX v0.9.6 vs NearStars (validates methodology choices)
+</script>
+<script type="text/markdown" id="md-ko"># 항성계 데이터 조사 방법론
+
+이 문서는 공개 천문 카탈로그를 출처로 삼아 항성 및 행성 데이터의 구조화된 JSON 데이터베이스를
+구축하는 워크플로를 정의합니다.
+데이터베이스는 두 개의 하위 소비자에게 공급됩니다. 각각 별도 세션 또는 에이전트에서 작성되는
+Principia proto 파일과 Kopernicus cfg 파일입니다.
+
+## 목차
+
+- [목표](#목표)
+- [출력 구조](#출력-구조)
+- [명칭 정규화](#명칭-정규화)
+- [JSON 스키마](#json-스키마)
+- [에포크 처리](#에포크-처리)
+- [다중성계 에포크](#다중성계-에포크)
+- [출처 기록 프로토콜](#출처-기록-프로토콜)
+- [데이터 소스](#데이터-소스)
+- [알려진 이슈 및 미결 결정 사항](#알려진-이슈-및-미결-결정-사항)
+- [범위 외 항목](#범위-외-항목)
+- [관련 문서](#관련-문서)
+
+---
+
+## 목표
+
+항성계당 JSON 파일 하나. 각 파일에는 다음이 포함됩니다.
+- 출처 카탈로그로부터 받은 그대로의 원시 관측값
+- Principia 및 Kopernicus에 바로 사용할 수 있도록 변환된 파생값
+- 완전한 출처 정보: 소스명, 카탈로그 ID, 취득일, 에포크
+
+데이터베이스는 유일한 진실의 원천입니다. 하위 에이전트가 외부 카탈로그를 직접 조회하거나
+독립적으로 단위 변환을 수행할 필요가 없어야 합니다.
+
+---
+
+## 출력 구조
+
+```
+db/
+  target_list.json            # 파이프라인 입력
+  astrometry_raw.json         # 자동 fetch — Gaia DR3 + SIMBAD
+  photometry_raw.json         # 자동 fetch — Gaia DR3
+  stellar_props_raw.json      # 자동 fetch — SIMBAD (Teff, 스펙형, mesDiameter)
+  stellar_props_curated.json  # 수동 입력 — 질량/반지름 정밀 문헌값
+  planets_raw.json            # 자동 fetch — NASA Exoplanet Archive
+  planets_curated.json        # 수동 입력 — 궤도/환경/대기 상세 문헌값
+  binary_orbits.json          # 수동 입력 — 쌍성 궤도
+  systems/
+    alpha_centauri_a.json
+    barnards_star.json
+    tau_cet.json
+    ...                       # 항성 컴포넌트별 1파일
+  backups/                    # 이전 스냅샷 보관 (수동 백업 시점)
+```
+
+파이프라인 실행 순서, 스크립트 설명, 새 별 추가 절차는 [`adding_stars.md`](reference__adding_stars.html) 참조.
+
+---
+
+## 명칭 정규화
+
+호스트/행성 이름 → 슬러그·파일명 변환은 `scripts/pipeline/_naming.py` 한 곳에서만 정의한다. 빌더가 자기 버전의 `to_url_slug` 를 재구현하면 매니페스트 매칭이 깨진다 (commit `e0da593` 의 회복 참조).
+
+**규칙**
+
+1. lowercase
+2. apostrophe (`'`) 제거 — `Barnard's` → `barnards`
+3. non-alphanumeric 연속 → 단일 separator
+4. 양 끝 separator 제거
+
+**Separator 두 종류**
+
+- URL 슬러그 (`-`): `docs/phase2/<slug>.html`, `docs/phase3/<slug>.html`, `reports-manifest.json` 의 매칭 키
+- File 슬러그 (`_`): `db/systems/<slug>.json`
+
+| 호스트 | URL slug | File slug |
+|---|---|---|
+| Barnard's star | `barnards-star` | `barnards_star` |
+| Teegarden's Star | `teegardens-star` | `teegardens_star` |
+| TRAPPIST-1 | `trappist-1` | `trappist_1` |
+| Alpha Centauri A | `alpha-centauri-a` | `alpha_centauri_a` |
+| 40 Eridani A | `40-eridani-a` | `40_eridani_a` |
+
+**새 빌더를 작성할 때** — `from _naming import to_url_slug, to_file_slug, to_filename` 으로 import. 함수를 다시 구현하지 말 것. 큐레이터 행동을 통제하는 스킬 문서 (`nearstars-add-star`, `nearstars-phase3`) 에도 같은 규칙이 명시돼 있다.
+
+---
+
+## JSON 스키마
+
+### 최상위 수준
+
+```json
+{
+  "system_name": "Alpha Centauri A",
+  "stars": [ ... ],
+  "planets": [ ... ],
+  "sources": [ ... ],
+  "meta": { ... }
+}
+```
+
+JSON 파일은 시스템 단위가 아닌 **항성 컴포넌트** 단위로 작성합니다. `system_name`은
+컴포넌트 이름과 일치합니다 (예: `Alpha Centauri A`, `Alpha Centauri B`,
+`Proxima Centauri`는 각각 별도 파일). `stars` 배열에는 항상 정확히 하나의 항목이
+담깁니다 — 해당 파일이 기술하는 컴포넌트입니다. 이중성/다중성계의 상호 궤도 데이터는
+`binary_orbits.json`에 저장되며, 대표 컴포넌트 파일(일반적으로 `A`)에 임베드됩니다.
+형제 컴포넌트는 `binary_orbit_ref`를 통해 이를 참조합니다.
+
+이 선택은 하위 Kopernicus/Principia cfg 작성자가 데이터를 소비하는 방식을 반영합니다.
+각 `CelestialBody`(단일 별)가 cfg `Body { }` 노드와 1:1로 대응하기 때문에,
+컴포넌트별 파일 구조를 사용하면 cfg 생성 시 인덱싱이 필요 없습니다.
+
+### `meta`
+
+```json
+{
+  "retrieval_date": "2026-05-16",
+  "solar_system_epoch_jd": 2433282.5,
+  "solar_system_epoch_label": "B1950.0",
+  "game_epoch_jd_sol": 2433647.5,
+  "game_epoch_jd_rss": 2433647.5,
+  "coordinate_origin": "SSB",
+  "coordinate_frame": "ICRF",
+  "coordinate_units": "km, km/s",
+  "notes": ""
+}
+```
+
+`solar_system_epoch_jd`는 모든 상태 벡터가 표현되는 에포크입니다.
+Sol과 RSS 모두 `solar_system_epoch`으로 **JD2433282.5** (명목상 B1950.0, 1950-01-01 TDB)를
+사용합니다. JPL Horizons 조회 시 이 값과 일치시켜야 합니다.
+
+참고: 엄밀히 말하면 Besselian 에포크 B1950.0 = JD2433282.423이며, JD2433282.5는
+1950-01-01.0 TT 자정으로 약 1.85시간 차이가 납니다. Sol과 RSS 모두 관례적으로
+2433282.5를 사용하며, JPL Horizons도 이 날짜를 직접 수락합니다.
+B1950.0을 정밀하게 계산하는 소프트웨어와 교차 검증하는 경우에는 알아둘 만한 차이지만,
+KSP 목적으로는 무시할 수 있는 수준입니다.
+
+`game_epoch_jd`는 상태 벡터에 영향을 주지 않습니다. Sol과 RSS는 동일한 값을 사용합니다.
+- Sol: `JD2433647.5`
+- RSS: `JD2433647.5`
+
+좌표 원점은 태양이 아닌 **태양계 무게중심(SSB)** 입니다.
+태양 자체는 이 파일들에서 SSB로부터 약 10⁵ km 떨어진 위치에 있습니다.
+모든 상태 벡터는 동일한 SSB-ICRF 기준계로 표현되어야 합니다.
+
+---
+
+### `stars[]`
+
+`stars` 배열의 길이는 항상 1입니다 — 해당 파일이 기술하는 단일 컴포넌트입니다.
+(이중성/다중성계는 컴포넌트별로 파일을 분리합니다. 위의 "최상위 수준" 참조.)
+
+```json
+{
+  "name": "Alpha Centauri A",
+  "component": "A",
+
+  "raw": {
+    "source": "Gaia DR3",
+    "source_id": "5853498713160606720",
+    "epoch_jd": 2457389.0,
+    "epoch_label": "J2016.0",
+    "ra_deg": 219.90085,
+    "dec_deg": -60.83562,
+    "parallax_mas": 742.12,
+    "parallax_error_mas": 1.40,
+    "pmra_mas_yr": -3678.19,
+    "pmdec_mas_yr": 481.84,
+    "radial_velocity_km_s": -22.4,
+    "radial_velocity_source": "Gaia DR3",
+
+    "vmag_v": -0.01,
+    "vmag_source": "hipparcos_hardcoded",
+
+    "teff_k": 5790,
+    "spectype": "G2 V",
+
+    "mass_measurements": [
+      {
+        "value_msun": 1.1055,
+        "uncertainty_msun": 0.0039,
+        "method": "binary_orbit",
+        "reference": "Pourbaix et al. 2002",
+        "doi": "10.1051/0004-6361:20021249",
+        "recommended": true
+      },
+      {
+        "value_msun": 1.100,
+        "uncertainty_msun": 0.006,
+        "method": "evolutionary_model",
+        "reference": "Thevenin et al. 2002",
+        "doi": "10.1051/0004-6361:20021791",
+        "recommended": false
+      }
+    ],
+
+    "radius_measurements": [
+      {
+        "value_rsun": 1.2234,
+        "uncertainty_rsun": 0.0053,
+        "method": "interferometry",
+        "reference": "Kervella et al. 2017",
+        "doi": "10.1051/0004-6361/201629505",
+        "recommended": true
+      },
+      {
+        "value_rsun": 1.227,
+        "uncertainty_rsun": 0.005,
+        "method": "evolutionary_model",
+        "reference": "Thevenin et al. 2002",
+        "doi": "10.1051/0004-6361:20021791",
+        "recommended": false
+      }
+    ]
+  },
+
+  "derived": {
+    "epoch_jd": 2433282.5,
+    "epoch_label": "B1950.0",
+    "propagation_method": "linear",
+    "distance_pc": 1.3475,
+    "distance_km": 4.153e+13,
+    "icrs_x_km":  2.634e+13,
+    "icrs_y_km": -3.197e+13,
+    "icrs_z_km": -1.272e+13,
+    "icrs_vx_km_s": 1.3204,
+    "icrs_vy_km_s": -4.4012,
+    "icrs_vz_km_s":  0.8913,
+    "position_ulp_km": 5.9e-3,
+    "icrs_x_j2000_km":  2.557e+13,
+    "icrs_y_j2000_km": -3.127e+13,
+    "icrs_z_j2000_km": -1.255e+13,
+    "icrs_vx_j2000_km_s": 1.3204,
+    "icrs_vy_j2000_km_s": -4.4012,
+    "icrs_vz_j2000_km_s":  0.8913
+  },
+
+  "principia": {
+    "gravitational_parameter_km3_s2": 146713602439.899,
+    "mean_radius_km": 851119.4
+  }
+}
+```
+
+`derived`에 관한 참고사항.
+- 모든 단위는 Principia/Sol 관례를 따릅니다. **km** 및 **km/s**.
+- `propagation_method: "linear"`는 일정한 공간 속도(고유운동 + 시선 속도)로
+  위치를 전파했음을 의미합니다. KSP 시간 규모(수십~수백 년)에서 항성 섭동체에 적합합니다.
+- `position_ulp_km`은 `abs(largest_coordinate_km) * 2^-52`입니다. Alpha
+  Centauri(~4e13 km)의 경우 약 0.009 km (9 m)으로, 중력 섭동체로서는 허용 가능한
+  수준이지만 별 주변의 근거리 궤도 역학에는 부적합합니다.
+- 좌표 원점은 태양이 아닌 **SSB**입니다. 이 파일들에서 태양 자체는 SSB로부터
+  약 10⁵ km 떨어진 위치에 있습니다.
+
+`mass_measurements` 및 `radius_measurements`에 관한 참고사항.
+- 공개된 모든 값을 개수에 관계없이 배열에 넣습니다.
+- `recommended: true`는 `principia` 블록에서 사용하는 값을 표시합니다.
+  각 배열에서 정확히 하나의 항목만 `recommended: true`를 가져야 합니다.
+- `recommended` 우선순위는 출판일이나 저널 권위가 아닌 측정 방법으로 결정됩니다.
+  방법 계층 구조는 다음과 같습니다.
+
+  질량:
+  1. `binary_orbit` — 직접 역학적 측정, 가장 신뢰성 높음
+  2. `asteroseismology` — 모델 의존적이나 잘 제약됨
+  3. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
+  4. `spectroscopic` / `spectroscopic_calibration` — 스펙트럼 피팅 기반
+  99. `unverified` — Curation Phase 1 batch에서 method 검증 안 함; 항상 최하위로 처리. 출처(bibcode)는 정확하나 paper가 실제 어떤 방법을 썼는지는 미검증.
+
+  반지름:
+  1. `interferometry` — 직접 각지름 측정
+  2. `eclipsing_binary` — 직접 기하학적 측정
+  3. `sed_fitting` — 볼로메트릭 플럭스 + Teff + 거리 (준직접적)
+  4. `evolutionary_model` — 간접적; 더 나은 방법이 없을 때만 사용
+  5. `spectroscopic_calibration` — 경험적 반지름-색/분광형 관계 (예. M 왜성의 Mann et al. 2015)
+  99. `unverified` — Curation Phase 1 batch 동일 의미.
+
+  카테고리별 method 화이트리스트는 `scripts/pipeline/schema.py STELLAR_MEASUREMENT_KINDS[*]["methods"]` 에 정의 (2026-05-21 Phase 2 확장으로 mass/radius 외 6개 카테고리 추가됨. teff/luminosity/age/metallicity/rotation/activity). 합집합은 backward compat 용으로 `STELLAR_ALLOWED_METHODS` 에 노출. 신규 method 추가 시 canonical KINDS dict 와 본 hierarchy 문서 양쪽 갱신 필요.
+
+- 두 항목이 동일한 방법 계층을 공유한다면 분수 불확도가 더 작은 것을 선택합니다.
+  선택 근거는 `meta.notes`에 기록합니다.
+
+`disk_measurements` 에 관한 참고사항 (Phase 2 확장 2026-05-27 추가).
+
+```json
+{
+  "belt": "main_cold",
+  "inner_radius_au": 62,
+  "outer_radius_au": 200,
+  "dust_temperature_k": 50,
+  "dust_mass_mearth": 0.013,
+  "morphology": "cold Kuiper analog with sharp inner edge",
+  "resolved": true,
+  "observatory": "Herschel-PACS",
+  "inclination_deg": 6.2,
+  "method": "resolved_imaging",
+  "reference": "Sibthorpe et al. 2010",
+  "bibcode": "2010A&A...518L.130S",
+  "doi": "10.1051/0004-6361/201014574",
+  "recommended": true
+}
+```
+
+- Entry 단위는 (paper × belt) 입니다. 다벨트 원반 (Vega / Fomalhaut / ε Eri 등) 은 같은 bibcode 로 벨트 수만큼의 entry 를 등록합니다.
+- `belt` enum 은 개방형입니다. 권장 값. `inner_warm`, `intermediate`, `main_cold`, `single`, `asteroid_analog`, `warm`, `cold`. 새 paper 가 다른 명명을 쓰면 그대로 추가 가능합니다.
+- `resolved=true` 는 observatory 가 disk 를 공간적으로 분해했음을 의미합니다 (ALMA / HST / SPHERE / JWST). `false` 는 SED-only 또는 광학적 초과 검출만.
+- Disk 전용 보조 필드 (value 도 uncertainty 도 아닌 descriptor). `belt`, `morphology`, `resolved`, `observatory`, `notes`. `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]` 에 등록.
+- Method 계층 (`recommended` 선정의 canonical 순서). `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
+- 모든 value 키는 null 허용입니다. Detection-only paper (예. Aumann 1984 IRAS) 는 대부분의 기하 필드가 null 인 entry 1개를 등록합니다.
+
+---
+
+### `planets[]`
+
+확인된 행성은 각각 별도의 항목으로 등록합니다.
+
+```json
+{
+  "name": "Proxima Centauri b",
+  "host_star": "Proxima Centauri",
+
+  "raw": {
+    "pl_name": "Proxima Cen b",
+    "reference": "Anglada-Escude et al. 2016",
+    "retrieval_date": "2026-05-16",
+    "period_days": 11.1868,
+    "period_err_days": 0.0002,
+    "semi_major_axis_au": 0.04856,
+    "semi_major_axis_err_au": 0.00030,
+    "eccentricity": 0.0,
+    "inclination_deg": null,
+    "inclination_err_deg": null,
+    "omega_deg": null,
+    "tperi_bjd": null,
+    "tperi_err_bjd": null,
+    "tranmid_bjd": null,
+    "tranmid_err_bjd": null,
+    "mass_mearth": 1.27,
+    "mass_err_mearth": 0.18,
+    "mass_type": "Msini",
+    "radius_rearth": null,
+    "radius_err_rearth": null,
+    "discoverymethod": "Radial Velocity",
+    "pl_controv_flag": 0,
+    "pubdate": "2016-08",
+    "tepcat": null
+  },
+
+  "derived": {
+    "semi_major_axis_m": 7.265e+09,
+    "eccentricity": 0.0,
+    "inclination_deg": null,
+    "longitude_of_ascending_node_deg": null,
+    "argument_of_periapsis_deg": null,
+    "mean_anomaly_at_epoch_deg": null,
+    "orbital_epoch_jd": null,
+    "mass_kg": 7.548e+24,
+    "mass_type": "minimum (M sin i)",
+    "radius_m": null
+  }
+}
+```
+
+`raw` 블록은 `fetch_planets.py` 출력을 그대로 반영합니다.
+- 궤도 필드는 NASA Exoplanet Archive의 `pscomppars` 열 이름을 사용합니다
+  (`tperi_bjd`, `tranmid_bjd`, `omega_deg` 등). 근일점 통과 시각(`tperi_bjd`)과
+  트랜짓 중점(`tranmid_bjd`) 모두 저장됩니다. 평균 근점 이각의 기준으로
+  어느 것을 사용할지는 검출 방법에 따라 다릅니다.
+- `tepcat`은 TEPCat이 트랜짓 행성의 질량/반지름을 독립적으로 도출한 경우 채워지는
+  중첩 객체입니다. `null`일 수 있습니다.
+
+`derived` 블록은 단위 변환만 수행합니다(AU → m, M⊕ → kg, R⊕ → m).
+우선순위 체인은 `curated > tepcat > nasa_archive`입니다. 측정값이 없으면
+`null`로 유지합니다 — 기본값 가정(에지온 경사, 원형 이심률, 게임 시작 시 평균 근점 이각)은
+DB가 아닌 Kopernicus cfg 생성 단계에서 처리합니다. cfg를 작성하는 하위 에이전트가
+이러한 기본값을 선택하고 문서화할 책임을 집니다.
+
+### `sources[]`
+
+조사 과정에서 참고한 모든 논문과 카탈로그를 여기에 기록합니다. 파일의 전체 참고문헌 목록입니다.
+
+```json
+[
+  {
+    "title": "Constraining the difference in convective blueshift between the components of alpha Centauri with precise radial velocities",
+    "doi": "10.1051/0004-6361:20021249",
+    "bibcode": "2002A&A...394..151P",
+    "accessed": "2026-05-16",
+    "used_for": ["Alpha Centauri A mass", "Alpha Centauri B mass"]
+  },
+  {
+    "title": "Gaia Data Release 3",
+    "doi": null,
+    "bibcode": "2023A&A...674A...1G",
+    "accessed": "2026-05-16",
+    "used_for": ["Alpha Centauri A astrometry", "Alpha Centauri B astrometry"]
+  }
+]
+```
+
+- `doi`와 `bibcode`는 가능한 경우 둘 다 제공합니다. 하나가 없으면 `null`로 설정합니다.
+- `used_for`에는 해당 출처에서 가져온 내용을 기록합니다. 참고했지만 사용하지 않은 항목도
+  괜찮습니다 — `"used_for": ["consulted; superseded by Pourbaix et al. 2002"]`처럼
+  기록하세요.
+
+---
+
+`null` 필드에 관한 참고사항.
+- null은 데이터 부재를 의미하며, 0이 아닙니다. DB는 누락된 측정값에 대해 기본값을
+  대입하지 않습니다 — 그것은 Kopernicus cfg 작성자의 역할입니다.
+- 하위 에이전트는 null을 확인하고, 가정한 기본값(예: RV 전용 검출에서 `inclination = 90 deg`)을
+  cfg 자체에 문서화해야 합니다.
+
+---
+
+## 에포크 처리
+
+### 대상 에포크
+
+Sol과 RSS 모두 `solar_system_epoch`으로 **JD2433282.5** (B1950.0, 1950-01-01 TDB)를
+사용합니다. `derived`의 모든 상태 벡터는 이 에포크의 SSB-ICRF 좌표로 표현되어야 합니다.
+
+`game_epoch`은 별개이며 상태 벡터에 영향을 주지 않습니다. Sol과 RSS는 동일한 값을 사용합니다.
+- Sol: `JD2433647.5`
+- RSS: `JD2433647.5`
+
+MM 패치 작성 시 Sol과 RSS 변형은 NEEDS 태그(`SolSystem` vs `RSSConfig`)만 다르며, 에포크 값은 동일합니다.
+
+### 전파가 필요한 이유
+
+Gaia DR3 위치는 **J2016.0** (JD2457389.0)을 기준으로 합니다.
+대상 에포크는 JD2433282.5이며, 차이는 약 24,000일(~66년)입니다.
+
+Alpha Centauri(공간 속도 ~25 km/s)의 경우, 66년간의 위치 이동은
+~5.2e10 km(~350 AU)입니다. 따라서 전파는 항상 필요합니다.
+
+### 선형 전파
+
+SSB-ICRF에서의 등속(균일 직선) 전파는 Gaia와 Hipparcos가 사용하는 표준 모델입니다.
+KSP 관련 시간 규모에서 항성 섭동체에 충분합니다.
+
+선형 전파에서 생략되는 주요 고차 효과는 **투시 가속도(perspective acceleration)** 입니다.
+이는 별의 거리가 변함에 따라 나타나는 고유운동 변화율의 겉보기 변화입니다. 대부분의
+대상 별에서는 섭동체 정밀도 수준에서 무시할 수 있습니다.
+
+**예외: Barnard's Star** (μ ≈ 10,300 mas/yr, ϖ ≈ 548 mas,
+RV ≈ −110 km/s)는 투시 가속도만으로 66년간 약 0.5 AU의 위치 오차가 누적됩니다.
+이는 KSP 중력 효과의 섭동체 정밀도 허용 범위 내이므로, 파이프라인은 다른 별들과
+동일하게 선형 전파를 적용합니다. 알려진 불일치는 `barnards_star.json`의 `meta.notes`에
+기록됩니다. 향후 Barnard's Star에 대해 sub-AU 정밀도가 필요하다면,
+JPL Horizons에서 JD2433282.5의 상태 벡터를 직접 가져와 `derived` 블록을
+수동으로 덮어쓰세요.
+
+참고문헌.
+- Butkevich & Lindegren (2014), A&A 570, A62 — `doi:10.1051/0004-6361/201424483`, `arXiv:1407.4664`
+  Gaia 시대의 에포크 전파에 관한 기준 논문. 균일 직선 운동의 엄밀한 폐형식 표현을
+  도출하며, Gaia 파이프라인에서 직접 사용됩니다.
+- ESA SP-1200 (1997), Vol. 1, Sec. 1.2 (Hipparcos Catalogue, Lindegren et al.)
+  Hipparcos 정밀도에서도 1세기 미만의 시간 규모에서 균일 공간 운동이 대부분의
+  별에 유효함을 명시합니다.
+
+```python
+def propagate_icrs(x0, y0, z0, vx, vy, vz, jd_from, jd_to):
+    """
+    Linear propagation from jd_from to jd_to.
+    Units: km and km/s (matching Principia/Sol convention).
+    See Butkevich & Lindegren (2014) Eq. 4-7 for the full derivation.
+    """
+    dt_s = (jd_to - jd_from) * 86400.0
+    return (
+        x0 + vx * dt_s,
+        y0 + vy * dt_s,
+        z0 + vz * dt_s
+    )
+```
+
+### `propagation_method` 값
+
+| 값 | 의미 | 소스 에포크 |
+|---|---|---|
+| `"linear"` (Gaia) | Gaia DR3 → 일정 공간 속도 → 대상 에포크 | J2016.0 (JD2457389.0) |
+| `"linear"` (SIMBAD) | Gaia 포화 밝은 별에 대한 SIMBAD 폴백 → 선형 전파 | J2000.0 (JD2451545.0) |
+| `"kepler_thiele_innes"` | 궤도 결합된 다성계 컴포넌트 → Markley Kepler + Thiele-Innes 회전 (Hilditch 컨벤션) → ICRS 직교 | 궤도 fit 의 카탈로그 에포크. `build_systems.py:solve_orbit_relative` 가 대상 에포크로 전파 |
+| `"horizons_direct"` | JPL Horizons 상태 벡터를 JD2433282.5 에서 직접 import — 전파 안 함 | JD2433282.5 (대상 에포크) |
+
+SIMBAD 폴백 경로는 Gaia DR3 ID가 없는 별, 즉 Gaia에서 포화된 밝은 별(V < ~6)인
+Alpha Centauri A와 B, Sirius, Procyon, Pollux 등에 적용됩니다. `fetch_astrometry.py`는
+SIMBAD의 `basic` 테이블을 조회하며, 해당 천체측정은 J2000.0 기준(Gaia의 J2016.0보다
+약 16년 이전)입니다. `raw.epoch_jd` 필드에 실제 소스 에포크가 기록되므로,
+`build_systems.py`는 소스에 관계없이 올바르게 전파합니다.
+
+현재 `"horizons_direct"`는 Barnard's Star에만 적용됩니다. 향후 Horizons에서 이용 가능한
+별이 있다면 동일한 처리를 평가해야 합니다.
+
+### 에포크 필드 요약
+
+| 필드 | 위치 | 내용 |
+|---|---|---|
+| `raw.epoch_jd` | 별 | 소스 에포크 — Gaia의 경우 J2016.0, SIMBAD 폴백의 경우 J2000.0 |
+| `derived.epoch_jd` | 별 | 대상 에포크 (JD2433282.5) |
+| `meta.solar_system_epoch_jd` | 시스템 | JD2433282.5 (Sol과 RSS 공통) |
+| `meta.game_epoch_jd_sol` | 시스템 | JD2433647.5 |
+| `meta.game_epoch_jd_rss` | 시스템 | JD2433647.5 |
+| `raw.tperi_bjd` / `raw.tranmid_bjd` | 행성 | 아카이브 기준 에포크 (근일점 또는 트랜짓 중점) |
+| `derived.orbital_epoch_jd` | 행성 | 큐레이션 출처의 에포크 (있는 경우). 없으면 null |
+
+---
+
+## 다중성계 에포크
+
+> 수학적 파이프라인 전체와 워크드 예시(α Cen, Sirius)는
+> [`docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html) 참조.
+> 이 섹션은 DB에 영향을 미치는 결정 사항과 스키마만 다룹니다.
+
+### 다중성계에서 선형 역전파가 실패하는 이유
+
+단일 별의 경우, Gaia/SIMBAD 천체측정의 JD2433282.5까지의 선형 외삽으로 충분합니다
+("선형 전파" 참조). 다중성계에서는 컴포넌트들이 상호 궤도 운동 중이기 때문에
+이 방법이 **틀립니다**. 상대 위치가 직선 이동이 아닌 회전을 하기 때문입니다.
+
+예를 들어 Alpha Centauri AB는 궤도 주기가 79.762년입니다. JD2433282.5는 Gaia의
+J2016 에포크보다 ~66년 이전 — 거의 한 바퀴에 해당합니다. 선형 전파는 A–B 벡터를
+0° 회전시키지만, 실제 기하학적 구조는 ~300° 회전했습니다. 그 결과 생성된 cfg는
+잘못된 중력 기하학을 가지게 되고, Principia의 N체 적분기가 가짜 이심률과 에너지로
+시작하게 됩니다.
+
+해법은 다음과 같습니다. 각 다중성계는 피팅된 Kepler 해를 저장하며, 빌드 시
+컴포넌트들의 공통 **무게중심**을 선형으로 전파한 뒤, JD2433282.5에서 평가한
+Kepler 파생 (B−A) 오프셋을 적용하여 개별 컴포넌트를 배치합니다.
+
+### 파이프라인 개요
+
+```
+barycenter_astrometry  → linear propagation (J2016 / J2000 → JD2433282.5)
+                          → R_bary, V_bary at target epoch
+                                  +
+orbits[].(P,T,e,a,i,ω,Ω)  → Kepler solver (M → E → ν)
+                          → Thiele-Innes rotation → (B−A) in ICRS (N,E,W)
+                                  +
+mass ratio q             → r_A = R_bary − q_B · r_AB
+                          → r_B = R_bary + q_A · r_AB
+```
+
+삼중성계의 경우 동일한 파이프라인이 중첩 형태로 실행됩니다(AB 내부 궤도, (AB)–C 외부 궤도).
+binary-epoch-pipeline.md §6 참조.
+
+### `binary_orbits.json` 스키마 (신규)
+
+기존 스키마는 시스템별 단일 `raw` 블록에 Kepler 요소를 임베드했습니다.
+새 스키마는 **컴포넌트별** 사실(질량, 천체측정 소스)과 **궤도별** 사실(관련 두 천체,
+Kepler 요소, 출처 논문, 등급, 위상 신뢰성)을 배열로 분리합니다.
+시스템당 여러 궤도(삼중성계)도 자연스럽게 표현됩니다.
+
+```json
+{
+  "Alpha Centauri": {
+    "system_id": "alpha_centauri",
+    "hierarchy": "triple",
+    "components": [
+      {
+        "name": "Alpha Centauri A",
+        "mass_msun": 1.0788,
+        "mass_source": "pourbaix_correia_2017",
+        "astrometry_source": "mass_weighted_average",
+        "astrometry_quality": "barycentric"
+      },
+      { "name": "Alpha Centauri B", "mass_msun": 0.9092, ... },
+      { "name": "Proxima Cen",     "mass_msun": 0.1221, ... }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": ["Alpha Centauri A", "Alpha Centauri B"],
+        "primary":   "Alpha Centauri A",
+        "secondary": "Alpha Centauri B",
+        "source":    "akeson_2021",
+        "doi":       "10.3847/1538-3881/abfaff",
+        "equinox":   "J2000",
+        "P_yr":      79.762,
+        "T_jd_tt":   2435291.6,
+        "e":         0.51947,
+        "a_arcsec":  17.4930,
+        "i_deg":     79.2430,
+        "omega_deg": 231.519,
+        "Omega_deg": 205.073,
+        "grade":           1,
+        "node_resolved":   true,
+        "phase_reliable":  true
+      }
+    ]
+  }
+}
+```
+
+삼중성계는 두 개의 궤도를 나열하고 외부 궤도에 `primary_is_barycenter_of`를 사용합니다.
+전체 삼중성 예시는 binary-epoch-pipeline.md §6 참조.
+
+### 스키마 필드 참조
+
+| 필드 | 필수 여부 | 참고 |
+|---|---|---|
+| `system_id` | 필수 | 파일명 기반으로 사용하는 슬러그. 소문자, 밑줄 사용. |
+| `hierarchy` | 필수 | `"binary"`, `"triple"`, `"binary+cpm"` (CPM = 공통 고유운동 동반성). |
+| `components[].name` | 필수 | `target_list.json`의 컴포넌트 이름과 정확히 일치해야 함. |
+| `components[].mass_msun` | 필수 | `mass_source`와 함께 기재 (논문 bibcode 또는 `gaia_dr3_nss`). |
+| `components[].astrometry_source` | 필수 | `gaia_dr3` / `simbad` / `mass_weighted_average` / `gaia_dr3_nss_barycenter` / `hipparcos_barycenter` / `single_component:<Name>` 중 하나. 빌드가 무게중심 천체측정을 어디서 가져올지 결정합니다 — 아래 "하이브리드 저장" 참고. |
+| `components[].astrometry_quality` | 필수 | `barycentric` / `photocenter_contaminated` / `single_component`. 정보용. validate.py가 경고에 활용. |
+| `barycenter_astrometry` (시스템 수준) | 조건부 | `ra_deg`/`dec_deg`/`parallax_mas`/`pm_ra_masyr`/`pm_dec_masyr`/`radial_velocity_km_s`/`epoch_jd` 블록. `astrometry_source`가 `gaia_dr3_nss_barycenter` 또는 `hipparcos_barycenter`인 경우 **필수** (컴포넌트 천체측정에서 도출 불가한 공개 카탈로그 무게중심값). 나머지 경우 생략 — 빌드가 `astrometry_raw.json`에서 질량 가중 평균을 실시간 계산. |
+| `orbits[].orbit_id` | 필수 | `"AB"`, `"inner"`, `"outer"`. 항목 내에서 고유. |
+| `orbits[].relates` | 필수 | 이 궤도가 다루는 컴포넌트 또는 무게중심. |
+| `orbits[].primary` / `secondary` | 필수 | 하나는 컴포넌트이거나 `primary_is_barycenter_of`여야 함. |
+| `orbits[].primary_is_barycenter_of` | 조건부 | 삼중성의 외부 궤도용. 내부 시스템을 구성하는 컴포넌트 이름 목록. |
+| `orbits[].source` | 필수 | `"akeson_2021"` (논문 키) 또는 `"orb6:grade=1"` 또는 `"gaia_dr3_nss:OrbitalAlternative"`. |
+| `orbits[].P_yr` / `T_jd_tt` / `e` | 필수 | Kepler 핵심 요소. `T`는 근일점 통과 시각 JD (TT). |
+| `orbits[].a_arcsec` 또는 `a_au` | 필수 | 상대 장반경. 카탈로그 관례는 `arcsec`; 시차로 변환. |
+| `orbits[].i_deg`/`omega_deg`/`Omega_deg` | 필수 | 경사각, 근일점 편각, 승교점 경도. |
+| `orbits[].A`/`B`/`F`/`G` (`C`/`H` 선택) | 선택 | 직접 공개된 경우의 Thiele-Innes 상수 (arcsec). `a`/`i`/`omega`/`Omega` 대체 가능 (Gaia NSS). |
+| `orbits[].grade` | 필수 | Orb6 품질 등급 1–9. ≤3이면 출판 품질. |
+| `orbits[].node_resolved` | 필수 | RV 데이터가 있어 (i,ω,Ω)가 물리적으로 올바른 교점 직선을 반영하면 `true`. 카탈로그가 거울 축퇴 해를 제시하면 `false`. |
+| `orbits[].phase_reliable` | 필수 | `grade ≥ 4`이거나 관측 커버리지 대비 외삽이 0.5×P를 초과하면 `false`. false인 경우에도 빌드는 실행되지만 영향받은 컴포넌트 파일의 `meta.notes`에 경고가 기록됨. |
+
+#### `_principia_notes` 메타 블록
+
+`binary_orbits.json` 의 최상위 `_principia_notes` 키 (언더스코어 접두사이므로 validator 가 스킵). 빌드에서 사용하는 에포크 상수 (`solar_system_epoch_jd`, `game_epoch_sol_jd`) 와 `schema_version` 문자열 ("YYYY-MM-DD-components-orbits") 을 기록합니다. `schema_version` 은 컴포넌트/궤도 shape 가 바뀔 때마다 갱신됩니다. 하위 도구 (예. `scripts/pipeline/build_systems.py`) 가 sanity check 용으로 읽을 수 있지만 권위 있는 값은 아닙니다 — 코드에 있는 상수의 사본일 뿐입니다.
+
+#### 하이브리드 천체측정 저장
+
+DB는 컴포넌트별 파생/계산 천체측정값을 저장하지 않습니다.
+공개 무게중심 해(Gaia DR3 NSS, Hipparcos 다중성계 부록)만 시스템 수준의
+`barycenter_astrometry` 블록에 저장됩니다. `astrometry_source = "mass_weighted_average"`인
+경우 빌드가 `astrometry_raw.json`에서 질량 가중 평균을 실시간 계산합니다.
+[[project-nearstars-db-principle]] 참조.
+
+#### Thiele-Innes 관례 (Hilditch / Pourbaix)
+
+`build_systems.py`는 Hilditch / Pourbaix 관례를 적용합니다.
+
+```
+ΔN = A · x_p + F · y_p     (북)
+ΔE = B · x_p + G · y_p     (동)
+ΔW = C · x_p + H · y_p     (관측자 반대 방향)
+```
+
+이 관례는 NearStars 모든 문서와 코드에서 통일된 표준입니다. `binary-epoch-pipeline.md` §2 step 5 와 §10 워크드 예시도 동일한 공식을 사용합니다. 위 형식이 α Cen 과 Sirius 의 레거시 `individual_states.b1950` 값을 < 0.05 % 이내로 재현합니다.
+
+### 무게중심 천체측정 결정 트리 (요약)
+
+각 다중성계에서 `components[].astrometry_source` 필드는 다음 결정 트리에 따라
+선택됩니다. 컴포넌트 중 `astrometry_source: "unset"`인 항목이 있으면 빌드가 실행을 거부합니다.
+
+```
+Gaia DR3 NSS row exists for this system?
+├── YES → astrometry_source = gaia_dr3_nss_barycenter
+│         astrometry_quality = barycentric
+│
+└── NO  → resolved pair (separation > ~1″, both have Gaia 5-param)?
+          ├── YES → astrometry_source = mass_weighted_average
+          │         astrometry_quality = barycentric
+          │         (PM averaging cancels orbital tangent velocity)
+          │
+          └── NO  → Hipparcos multi-star annex (DMSA flag C/O/V/X)?
+                    ├── YES → astrometry_source = hipparcos_barycenter
+                    │         astrometry_quality = barycentric
+                    │
+                    └── NO  → astrometry_source = gaia_dr3 (or simbad if saturated)
+                              astrometry_quality = photocenter_contaminated
+                              (flag, allow but warn)
+```
+
+광도 중심 흔들림 오차 모델은 binary-epoch-pipeline.md §8 참조.
+
+### 시스템별 옵션 평가 (최선 추정치; 구현 시 검증 필요)
+
+| 시스템 | 계층 구조 | 권장 옵션 | 소스 논문 오버라이드 |
+|---|---|---|---|
+| Alpha Centauri AB | binary | gaia_dr3_nss_barycenter | Akeson et al. 2021 |
+| Sirius AB | binary | hipparcos_barycenter (A saturated; B is WD) | Bond et al. 2017 |
+| 61 Cygni AB | binary | mass_weighted_average (wide, both in Gaia) | Malkov et al. 2012 — `phase_reliable: false` (P~679 yr, grade ≥3) |
+| 40 Eridani ABC | triple | A: gaia_dr3 / B+C close pair: NSS or mass-weighted | 조사 필요 |
+| Eta Cassiopeiae AB | binary | mass_weighted_average | Tokovinin 2021 — P=480 yr, `phase_reliable: false` 가능성 높음 |
+| 36 Ophiuchi ABC | triple | A,B: mass-weighted on close pair / C: static CPM at fixed offset | 조사 필요 |
+
+실제 `astrometry_source` 값은 구현 세션에서 확정됩니다 — 위 표는 출발점이며
+확정값이 아닙니다.
+
+### 위상 신뢰성 의미론
+
+다음 경우에 `phase_reliable: false`로 설정합니다.
+- Orb6 grade ≥ 4, 또는
+- 관측 커버리지가 주기의 절반 미만(외삽 > 0.5 P), 또는
+- 근일점 통과 시각 오차가 주기의 5%를 초과하는 경우
+
+`phase_reliable: false`인 경우 빌드는 계속 실행됩니다(가용 해에서 구한 최선 추정치를
+출력). 그러나 영향받은 컴포넌트 파일의 `meta.notes`에 경고가 기록됩니다. 하위
+Kopernicus cfg는 여전히 값을 사용할 수 있지만, Principia 장기 시뮬레이션 사용자는
+~0.5 P 이후의 상대 기하학을 신뢰해서는 안 됩니다.
+
+위상 불신뢰 광시야 CPM 동반성(P > 1000년, 피팅된 궤도 없음)의 경우,
+`orbit_type: "static_cpm"`을 사용합니다 — binary-epoch-pipeline.md §6 참조 —
+이는 상대 위치를 카탈로그 기준 에포크에 동결합니다.
+
+---
+
+## 출처 기록 프로토콜
+
+참고한 모든 논문과 카탈로그를 기록합니다. 값을 사용하지 않은 경우에도 `used_for`에 이유를
+기재하세요.
+
+SIMBAD bibcode는 출처가 아닙니다. `https://ui.adsabs.harvard.edu/abs/<bibcode>`를 통해
+원본 논문으로 해석하고 거기서 DOI를 기록하세요.
+
+동일 방법 계층의 두 논문이 충돌하면 둘 다 `sources[]`와 측정값 배열에 추가하고,
+선택 근거를 `meta.notes`에 문서화하세요.
+
+---
+
+## 데이터 소스
+
+아래의 모든 소스는 자유롭게 접근 가능합니다. astroquery가 대부분을 통합 Python 인터페이스로
+지원합니다. 직접 접근이나 폴백을 위한 raw TAP 엔드포인트도 나열합니다.
+
+---
+
+### 근처 항성계
+
+**RECONS (Research Consortium on Nearby Stars)**
+10파섹(~32.6광년) 이내의 모든 항성계에 관한 권위 있는 목록.
+별이 프로젝트의 50광년 범위 내에 있음을 확인하고, 별의 상태를 갱신하는 새로 측정된
+거리를 파악하는 데 사용하는 기본 참고 자료.
+
+- URL: `https://www.recons.org`
+- 새 시차가 측정될 때마다 정기 업데이트
+- 사용 시기: 후보 별이 실제로 50광년 이내인지 확인할 때, 다른 데이터베이스에 아직
+  두드러지지 않은 새로 발견된 근처 시스템을 찾을 때
+
+---
+
+### 천체측정 및 항성 위치
+
+**Gaia DR3**
+근처 별의 위치, 고유운동, 시차, 시선 속도의 주요 소스.
+
+- TAP endpoint: `https://gea.esac.esa.int/tap-server/tap`
+- astroquery: `from astroquery.gaia import Gaia`
+- Table: `gaiadr3.gaia_source`
+- Key columns: `source_id`, `ra`, `dec`, `parallax`, `parallax_error`,
+  `pmra`, `pmdec`, `radial_velocity`
+- Epoch: J2016.0 (JD2457389.0)
+- Caveat: `radial_velocity`는 희미한 적색 왜성에서 null.
+
+**Hipparcos**
+Gaia 이전 카탈로그. 근처 별 모두에서 Gaia DR3로 대체됐지만, 밝기 포화(V < ~6 mag)로
+Gaia에 누락된 별의 교차 확인이나 대체 소스로 유용.
+
+- Access via VizieR: catalogue `I/311`
+- TAP endpoint: `https://tapvizier.cds.unistra.fr/TAPVizieR/tap`
+
+**JPL Horizons**
+태양계 천체 및 일부 근처 별의 SSB-ICRF 직접 상태 벡터(위치 + 속도).
+출력값이 Principia/Sol 단위(km, km/s) 및 에포크(B1950.0 = JD2433282.5)와
+직접 일치합니다.
+
+- Web: `https://ssd.jpl.nasa.gov/horizons/`
+- Batch API: `https://ssd.jpl.nasa.gov/horizons_batch.cgi`
+- astroquery: `from astroquery.jplhorizons import Horizons`
+- Settings: `VECTORS`, frame `ICRF`, center `@SSB`, epoch `1950-Jan-01`
+- Coverage: Alpha Centauri, Barnard's Star 확인 가능. 다른 대상 시스템 커버리지는
+  다를 수 있음.
+
+---
+
+### 항성 물리 파라미터 (질량, 반지름, Teff)
+
+**SIMBAD**
+문헌 집성 서비스. 질량/반지름을 직접 열로 저장하지 않고 TAP를 통해
+`mesMass` 및 `mesDiameter` 측정 테이블을 조회합니다.
+
+- TAP endpoint: `https://simbad.u-strasbg.fr/simbad/sim-tap/sync`
+- astroquery: `from astroquery.simbad import Simbad`
+- 사용 용도: 질량, 반지름, 스펙트럼형, 교차 ID, RV 폴백, bibcode → 논문 추적
+
+**VizieR**
+출판된 천문 카탈로그 라이브러리. 개별 논문의 수천 개 항성 파라미터 테이블을 호스팅하며,
+문헌값의 가장 완전한 집성 서비스.
+
+- TAP endpoint: `https://tapvizier.cds.unistra.fr/TAPVizieR/tap`
+- astroquery: `from astroquery.vizier import Vizier`
+- 이 프로젝트와 관련된 주요 호스팅 카탈로그.
+  - `I/355` — Gaia DR3
+  - `I/311` — Hipparcos
+  - `B/pastel/pastel` — PASTEL (아래 참조)
+  - `J/A+A/556/A150` — SWEET-Cat (아래 참조)
+  - 개별 간섭측정 논문 (CHARA, VLTI/GRAVITY 결과)
+
+**PASTEL**
+문헌에서 도출된 항성 대기 파라미터(Teff, log g, [Fe/H])의 편집본. 진화 모델
+질량 추정을 교차 확인하는 공개 Teff 값을 찾는 데 유용.
+
+- URL: `https://pastel.obs.u-bordeaux1.fr/`
+- Access via VizieR: `B/pastel/pastel`
+- 참고: 질량이나 반지름을 직접 제공하지 않으며, 이를 도출하는 데 사용하는
+  분광 파라미터를 제공.
+
+**SWEET-Cat**
+행성 호스트 별의 대기 파라미터 및 질량 카탈로그. 확인된 행성이 있는 대부분의 별을
+다루며, 가능한 경우 균일하게 도출됨.
+
+- URL: `https://sweetcat.iastro.pt/`
+- Access via VizieR: `J/A+A/556/A150`
+- 제공 항목: Teff, log g, [Fe/H], 항성 질량
+- 주의: 질량은 보정 공식에서 도출된 것이며 직접 측정값이 아님.
+  이중성 궤도나 간섭측정 값보다 낮은 우선순위.
+
+---
+
+### 행성 궤도 요소 및 물리 파라미터
+
+#### 조사 우선순위 순서
+
+행성 시스템을 조사할 때 아래 소스를 순서대로 확인하고 가장 정밀한 값을 사용합니다.
+NASA Archive만으로는 충분하지 않습니다.
+
+| 우선순위 | 소스 | 최적 용도 |
+|---|---|---|
+| 1 | Individual paper (ADS) | 가장 최신/확정적인 궤도 해 |
+| 2 | DACE | RV 궤도 요소 (T₀, ω, 이심률 상세) |
+| 3 | TEPCat | 트랜짓 시스템 — 동일 피트에서 질량 + 반지름 |
+| 4 | exoplanet.eu | 교차 확인; NASA Archive보다 최근 발견 조기 포착 |
+| 5 | NASA Exoplanet Archive | 기준값; 파이프라인 자동 fetch에서 사용 |
+
+값을 사용하지 않더라도 참고한 모든 소스를 기록하세요.
+각 행성에 대해 `planets_curated.json` 항목은 출처 DOI와 함께 가용한 최선의 값을
+반영해야 합니다.
+
+---
+
+**NASA Exoplanet Archive**
+TAP 지원을 갖춘 가장 포괄적인 행성 데이터베이스. 궤도 요소의 주요 소스.
+
+- TAP endpoint: `https://exoplanetarchive.ipac.caltech.edu/TAP/sync`
+- astroquery: `from astroquery.ipac.nexsci.nasa_exoplanet_archive import NasaExoplanetArchive`
+- Table: `ps` (Planetary Systems); filter `default_flag = 1`
+- Table: `pscomppars` (composite best parameters per planet)
+- Key columns: `pl_orbper`, `pl_orbsmax`, `pl_orbeccen`, `pl_orbincl`,
+  `pl_orblper`, `pl_bmasse`, `pl_rade`, `pl_tranmid`, `pl_refname`
+- 주의: `default_flag = 1`은 아카이브의 최선 파라미터 선택이며, 항상 최신이 아닐 수
+  있음. `pl_refname`을 확인하고 출처 논문과 대조하세요.
+
+**DACE (Data & Analysis Center for Exoplanets)**
+제네바 천문대의 RV 행성 데이터베이스. RV 검출 행성에 대해 NASA Archive보다
+상세한 궤도 해를 제공합니다 — T₀, ω, 이심률 신뢰 구간, 전체 RV 시계열 포함.
+
+- URL: `https://dace.unige.ch/exoplanets/`
+- 특히 강점: 근처 M 왜성 행성, HARPS/ESPRESSO 대상
+- 사용 시기: NASA Archive 궤도 요소가 희소하거나 구식인 경우
+
+**Extrasolar Planets Encyclopaedia (exoplanet.eu)**
+유럽 카탈로그. 새로 발표된 행성에 대해 NASA Archive보다 빠르게 업데이트됩니다.
+교차 확인 및 NASA Archive에 아직 없는 최근 발견을 파악하는 데 유용.
+
+- URL: `https://exoplanet.eu`
+- TAP endpoint: `http://voparis-tap-planeto.obspm.fr/tap`
+- astroquery: `import pyvo; pyvo.dal.TAPService("http://voparis-tap-planeto.obspm.fr/tap")`
+- Table: `exoplanet.epn_core`
+- 웹사이트에서 벌크 CSV 다운로드도 가능.
+
+**TEPCat (Transiting Extrasolar Planet Catalogue)**
+트랜짓 시스템의 물리적·궤도 특성에 관한 중요 편집본. 독립적으로 도출되었으며
+NASA Archive의 단순 미러가 아닙니다. 도출 방법론이 문서화된 트랜짓 측정 반지름과
+질량에 특히 유용.
+
+- URL: `https://www.astro.keele.ac.uk/jkt/tepcat/`
+- 벌크 다운로드용 기계 가독형 테이블 제공.
+- 재현성을 위한 월간 스냅샷 아카이브.
+- 제공 항목: 항성 질량/반지름, 행성 질량/반지름, 궤도 요소, 자전축 기울기, 평형 온도.
+
+**Open Exoplanet Catalogue**
+커뮤니티 유지 GitHub 리포지토리. JSON/XML 형식. 대형 아카이브에서 충분히 다루지
+않는 시스템의 빠른 조회에 유용.
+
+- URL: `https://github.com/openexoplanetcatalogue/open_exoplanet_catalogue`
+- 접근: 직접 다운로드 또는 `git clone`.
+
+---
+
+### 트랜짓 타이밍 및 역표 데이터
+
+**NASA Exoplanet Archive Transit and Ephemeris Service**
+아카이브의 확인된 행성에 대한 트랜짓 시각 계산. TRAPPIST-1과 같이 TTV가 지배적인
+시스템에 필수.
+
+- URL: `https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TransitView/nph-visibletbls`
+
+**Exoplanet Transit Database (ETD)**
+아마추어 및 전문 트랜짓 관측. 동료 심사 TTV 분석보다 정밀도는 낮지만 광범위한
+커버리지를 제공하며 에포크 정제에 유용.
+
+- URL: `http://var2.astro.cz/ETD/`
+
+---
+
+### 문헌 및 논문 접근
+
+**NASA ADS (Astrophysics Data System)**
+천문학의 권위 있는 문헌 데이터베이스. 다음 용도로 사용.
+- SIMBAD에서 bibcode를 전체 논문으로 추적
+- 특정 시스템의 가장 최근 궤도 분석 찾기
+- 모든 측정 항목의 DOI 취득
+
+- URL: `https://ui.adsabs.harvard.edu`
+- API: `https://api.adsabs.harvard.edu/v1/`
+
+**arXiv (astro-ph.EP, astro-ph.SR)**
+프리프린트 서버. 많은 궤도 분석과 항성 파라미터 논문이 저널 출판 전 여기에 등장.
+
+- URL: `https://arxiv.org/list/astro-ph.EP/recent`
+
+---
+
+### 아카이브 및 우주 임무 데이터
+
+**MAST (Mikulski Archive for Space Telescopes)**
+Kepler, K2, TESS, HST 데이터를 호스팅. 특정 시스템의 raw 광도 곡선이나
+트랜짓 측광이 필요한 경우 관련.
+
+- URL: `https://mast.stsci.edu`
+- astroquery: `from astroquery.mast import Observations`
+
+---
+
+### 접근 우선순위 요약
+
+| 데이터 유형 | 주요 소스 | 보조 소스 | 교차 확인 |
+|---|---|---|---|
+| 위치, PM, 시차 | Gaia DR3 | Hipparcos (밝은 별) | JPL Horizons |
+| 시선 속도 | Gaia DR3 | SIMBAD | 발견 논문 |
+| 상태 벡터 (km, km/s) | Gaia DR3 → 변환 | JPL Horizons (직접) | -- |
+| 항성 질량 | SIMBAD `mesMass` | SWEET-Cat | VizieR (논문별) |
+| 항성 반지름 | SIMBAD `mesDiameter` | TEPCat | VizieR (간섭측정 논문) |
+| 궤도 요소 | NASA Exoplanet Archive | exoplanet.eu | TEPCat |
+| 행성 질량 | NASA Exoplanet Archive | TEPCat | 발견 논문 |
+| 행성 반지름 | NASA Exoplanet Archive | TEPCat | 발견 논문 |
+| 트랜짓 타이밍 | NASA Archive ephemeris | ETD | 출처 논문 (TTV 분석) |
+| 논문 검색 | ADS | arXiv | -- |
+
+---
+
+## 알려진 이슈 및 미결 결정 사항
+
+### 성간 거리에서의 KSP 렌더링 엔진 한계
+
+Principia는 거리에 관계없이 먼 별을 중력 섭동체로 올바르게 등록합니다.
+Alpha Centauri(~4e13 km)에서의 배정밀도 위치 ULP는 약 9 m으로, 힘 계산에
+허용 가능한 수준입니다.
+
+그러나 KSP의 렌더링 엔진은 별개의 문제입니다. 성간 거리에서 렌더러(Principia가 아닌)의
+부동 소수점 정밀도가 시각적 결함, SOI/맵 뷰 실패, 또는 엔진 충돌을 일으킬 수 있습니다.
+이 규모에서는 테스트된 바 없습니다.
+
+**cfg 생성을 시작하기 전에 이 절충안을 결정해야 합니다.**
+- 실제 거리 사용 → Principia 물리 정확, KSP 렌더러 동작 미확인
+- 거리 축소 → KSP 렌더러 안정, Principia 물리 부정확
+
+각 시스템 파일의 `meta.notes`에 결정 사항과 그 근거를 기록하세요.
+
+---
+
+## 범위 외 항목
+
+다음 사항은 여기가 아닌 별도 세션 또는 에이전트에서 처리합니다.
+
+- Kopernicus cfg 생성
+- Principia 패치 작성 (Sol Real 변형, Sol Quarter 변형, RSS 변형)
+- 시각 및 아트 파라미터 (atmosphere, terrain, Scatterer, EVE)
+- 포함할 시스템에 관한 커뮤니티 투표
+- 성간 거리 스케일링 결정 (위의 알려진 이슈 참조)
+
+## 관련 문서
+
+- [adding_stars](reference__adding_stars.html) — 새 컴포넌트를 파이프라인에 추가하는 실무 워크플로
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — 다성계 Kepler→ICRS 전체 수학 + 워크드 예시 (α Cen AB 예시 §9)
+- [data-sources](reference__data-sources.html) — 외부 카탈로그 인용 + attribution 정책
+- [archive_issues](reference__archive_issues.html) — 교차 검증 중 발견된 상위 카탈로그 결함 기록
+- [tools](reference__tools.html) — 목적별 프로젝트 전체 툴 인덱스
+- [mod-reference](reference__mod-reference.html) — KSP 모드 설치 참조 (하위 소비자)
+- [mod-release-layout](reference__mod-release-layout.html) — 모드 배포 repo 관례
+- [guideline](reference__guideline.html) — 프로젝트 범위, 단계, 거리 한계
+- [principia-cfg-reference](reference__principia-cfg-reference.html) — Principia cfg API (방법론 에포크 처리의 하위 소비자)
+- [rex-data-comparison](reference__rex-data-comparison.html) — REX v0.9.6 vs NearStars (방법론 선택의 타당성 검증)
+</script>
+<script>
+const srcs = {};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], { gfm: true, breaks: false });
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
+}
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+});
 </script>
 </body>
 </html>

@@ -5,70 +5,59 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Stellarium vs NearStars binary-orbit pipeline comparison · NearStars docs</title>
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.5.0/github-markdown-light.min.css">
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <style>
-:root { --side-w: 264px }
-body { margin: 0 }
-.layout { display: flex; min-height: 100vh }
-.side { width: var(--side-w); flex: 0 0 var(--side-w); box-sizing: border-box;
-  background: var(--bg-card-alt, #0c1119); border-right: 1px solid var(--bd-soft, #1a2434);
-  padding: 18px 14px; position: sticky; top: 0; align-self: flex-start; height: 100vh;
-  overflow-y: auto; font-size: 12.5px }
-.side .brand { font-weight: 800; letter-spacing: .5px; font-size: 15px; margin: 2px 6px 16px;
-  color: var(--fg-emph, #e6eef7) }
-.side .brand span { color: var(--fg-dim, #6b7d93); font-weight: 600 }
-.side .nav-grp { text-transform: uppercase; font-size: 9.5px; letter-spacing: .7px;
-  color: var(--fg-dim, #6b7d93); margin: 16px 6px 5px; font-weight: 700 }
-.side a { display: block; text-decoration: none; color: var(--fg, #b0c4d8);
-  padding: 5px 8px; border-radius: 5px; line-height: 1.35 }
-.side a:hover { background: var(--bg-input, #131c28); color: var(--fg-emph, #e6eef7) }
-.side a.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7); font-weight: 600 }
-.side a.nav-x { color: var(--fg-dim, #8aa0b6) }
-.docmain { flex: 1; min-width: 0; padding: 30px 42px 80px; max-width: 980px }
-.docmain h1 { font-size: 26px; margin: 0 0 4px }
-.docmain h2 { font-size: 19px; margin: 30px 0 10px; padding-bottom: 5px; border-bottom: 1px solid var(--bd-soft, #1a2434) }
-.docmain h3 { font-size: 15px; margin: 20px 0 8px }
-.docmain h4 { font-size: 13px; margin: 16px 0 6px; color: var(--fg-dim, #8aa0b6) }
-.docmain p, .docmain li { font-size: 14px; line-height: 1.72 }
-.docmain a { color: var(--accent, #5aa0ff) }
-.docmain hr { border: none; border-top: 1px solid var(--bd-soft, #1a2434); margin: 26px 0 }
-.docmain blockquote { margin: 12px 0; padding: 8px 16px; border-left: 3px solid var(--bd-strong, #2a3a50);
-  background: var(--bg-card-alt, #0c1119); color: var(--fg-dim, #9fb3c8); border-radius: 0 5px 5px 0 }
-.docmain pre { background: var(--bg-card-alt, #0c1119); border: 1px solid var(--bd-soft, #1a2434);
-  border-radius: 5px; padding: 12px 14px; overflow-x: auto }
-.docmain pre code { font-size: 12.5px; background: none; padding: 0 }
-.docmain code { background: var(--bg-input, #131c28); padding: 1px 5px; border-radius: 3px;
-  font-family: var(--mono, ui-monospace, monospace); font-size: 12.5px }
-.tbl { overflow-x: auto; margin: 12px 0 }
-.tbl table { border-collapse: collapse; font-size: 13px; width: 100% }
-.tbl th { text-align: left; padding: 7px 11px; background: var(--bg-card-alt, #0c1119);
-  border-bottom: 1px solid var(--bd-strong, #2a3a50); font-size: 11px; text-transform: uppercase;
-  letter-spacing: .4px; color: var(--fg-dim, #8aa0b6) }
-.tbl td { padding: 7px 11px; border-top: 1px solid var(--bd-soft, #1a2434); vertical-align: top; line-height: 1.55 }
-.topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 18px }
-.lang-only { color: var(--fg-dim, #6b7d93); font-size: 11.5px }
-.seg { display: inline-flex; border: 1px solid var(--bd-strong, #2a3a50); border-radius: 6px; overflow: hidden }
-.seg button { background: var(--bg-input, #131c28); color: var(--fg-dim, #8aa0b6); border: none;
-  padding: 4px 12px; cursor: pointer; font-size: 12px; font-family: inherit }
-.seg button.on { background: var(--accent-soft, #16314d); color: var(--fg-emph, #e6eef7) }
-@media (max-width: 760px) {
+:root { --side-w: 256px }
+* { box-sizing: border-box }
+body { margin: 0; background: #fff; color: #1f2328;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", sans-serif }
+.layout { display: flex; align-items: flex-start; min-height: 100vh }
+.side { width: var(--side-w); flex: 0 0 var(--side-w); position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; border-right: 1px solid #d0d7de; background: #f6f8fa; padding: 16px 12px; font-size: 13px }
+.side .brand { display: block; font-weight: 700; font-size: 15px; color: #1f2328;
+  text-decoration: none; margin: 2px 6px 14px }
+.side .brand span { color: #6e7781; font-weight: 600 }
+.side .nav-grp { text-transform: uppercase; font-size: 10px; letter-spacing: .6px; color: #6e7781;
+  margin: 16px 6px 4px; font-weight: 700 }
+.side a { display: block; text-decoration: none; color: #24292f; padding: 5px 8px;
+  border-radius: 6px; line-height: 1.4 }
+.side a:hover { background: #eaeef2 }
+.side a.on { background: #0969da; color: #fff; font-weight: 600 }
+.side a.nav-x { color: #57606a }
+.content-wrap { flex: 1; min-width: 0; padding: 0 16px }
+.topbar { max-width: 980px; margin: 0 auto; padding: 16px 45px 0; display: flex; justify-content: flex-end }
+@media (max-width: 767px) { .topbar { padding: 12px 15px 0 } }
+.seg { display: inline-flex; border: 1px solid #d0d7de; border-radius: 6px; overflow: hidden }
+.seg button { background: #f6f8fa; color: #57606a; border: none; padding: 4px 13px; cursor: pointer;
+  font-size: 13px; font-family: inherit }
+.seg button.on { background: #0969da; color: #fff }
+.lang-only { color: #8c959f; font-size: 12px }
+.markdown-body { box-sizing: border-box; min-width: 200px; max-width: 980px; margin: 0 auto; padding: 24px 45px 60px }
+@media (max-width: 767px) { .markdown-body { padding: 15px } }
+.markdown-body table { display: table; width: 100% }
+.markdown-body blockquote { color: #1f6feb; border-left-color: #1f6feb; background: #f0f6ff;
+  padding: 8px 16px; border-radius: 4px }
+.markdown-body h1 { border-bottom: 2px solid #d0d7de }
+.markdown-body h2 { border-bottom: 1px solid #d0d7de; margin-top: 28px }
+@media (max-width: 767px) {
   .layout { flex-direction: column }
-  .side { width: auto; flex: none; height: auto; position: static; border-right: none;
-    border-bottom: 1px solid var(--bd-soft, #1a2434) }
-  .docmain { padding: 20px 18px 60px }
+  .side { width: auto; flex: none; height: auto; position: static;
+    border-right: none; border-bottom: 1px solid #d0d7de }
 }
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="side">
-<div class="brand">NearStars <span>docs</span></div>
+<a class="brand" href="index.html">NearStars <span>docs</span></a>
 <a class="nav-x" href="../index.html">⌗ System database</a>
 <a class="nav-x" href="../reports.html">▤ Phase 2/3 reports</a>
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
@@ -83,199 +72,726 @@ body { margin: 0 }
 <a class="nav-i on" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
-<main class="docmain">
-<div class="topbar"><div class="seg" id="lang-seg"><button class="on" data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
-<div data-langbody="ko"><h1>Stellarium vs NearStars 다성계 궤도 파이프라인 비교</h1>
-<p><b>NearStars 와의 연관성.</b> 우리 파이프라인 (<a href="reference__binary-epoch-pipeline.html"><code>docs/reference/binary-epoch-pipeline.md</code></a>) 은 ORB6 / Gaia NSS 궤도 요소를 입력으로 받아 <code>JD2433282.5</code> 시점의 ICRF Cartesian 상태 벡터 <code>(x, y, z, vx, vy, vz)</code> 를 km, km·s⁻¹ 단위로 출력하고, Principia 의 <code>principia_initial_state</code> 에 공급한다. Stellarium 은 시각 쌍성 궤도 운동을 propagation 하는, 널리 쓰이는 오픈소스 천문 소프트웨어 중 우리와 가장 가까운 것이다. 둘을 비교하면 NearStars 가 관심 있는 두 가지 질문에 답할 수 있다. (1) 우리 컨벤션 선택(Hilditch, 질량비 분할, Hipparcos <code>f</code>-factor) 이 독립 구현에서도 공유되는가, (2) Stellarium 이 하는 것 중 채택할 만한 것이 있는가, 혹은 그들이 의도적으로 생략한 것 중 우리가 불필요하게 들고 다니는 것이 있는가.</p>
-<p><b>범위.</b> 읽기 전용 연구. 이 레포에 코드 변경 없음.</p>
-<p><b>외부 참조.</b></p>
-<ul><li>Stellarium master at commit <a href="https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01"><code>3efa1406</code></a></li><li>우리 파이프라인: <a href="reference__binary-epoch-pipeline.html"><code>docs/reference/binary-epoch-pipeline.md</code></a></li><li>ORB6 카탈로그: https://www.astro.gsu.edu/wds/orb6.html</li></ul>
-<hr>
-<h2>1. Executive summary</h2>
-<div class="tbl"><table><thead><tr><th>질문</th><th>답</th></tr></thead><tbody><tr><td>두 파이프라인의 컨벤션이 일치하나?</td><td><b>수식은 yes, 출력은 no.</b> Hilditch 회전, 질량비 displacement, Hipparcos <code>f</code>-factor PM propagation 이 동일.</td></tr><tr><td>같은 카탈로그를 소비하나?</td><td><b>No.</b> Stellarium 은 <b>수작업 큐레이션된 15쌍 파일</b>(<code>binary_orbitparam.dat</code>) 사용; 우리는 ORB6 + Gaia NSS 직접 읽음.</td></tr><tr><td>비교 가능한 출력을 만드나?</td><td><b>No.</b> Stellarium 은 천구 위의 <b>unit direction vector</b> 를 렌더링용으로 생성. 우리는 n-body 적분용 <b>3D Cartesian state in km / km·s⁻¹</b> 를 생성. 타겟 use-case 가 다름.</td></tr><tr><td>Stellarium 이 하이어라키컬 삼중성을 다루나?</td><td><b>No.</b> 그들의 궤도 파일에 Proxima Cen, 40 Eri C, 36 Oph C 없음. 각 별의 궤도 결합은 최대 한 쌍 깊이.</td></tr><tr><td>NearStars 가 이걸 기반으로 뭔가 바꿔야 하나?</td><td><b>구조 변경 없음</b>. 일치 자체가 우리 컨벤션 선택의 검증. Stellarium 의 누락 기능 목록(triples, ORB6 ingestion, velocity output) 이 <i>정확히</i> NearStars 의 차별점이므로 우리가 과도설계 아님.</td></tr></tbody></table></div>
-<hr>
-<h2>2. Stellarium 이 실제로 하는 것</h2>
-<p>commit <a href="https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01"><code>3efa1406</code></a> (2026-05 master HEAD) 기준.</p>
-<h3>2.1 카탈로그</h3>
-<p>15개 명명된 쌍이 들어있는 단일 flat 파일.</p>
-<blockquote><a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat"><code>stars/hip_gaia3/binary_orbitparam.dat</code></a></blockquote>
-<p>수록된 쌍. α Cen AB, Sirius AB, 61 Cyg AB, γ Vir AB, Alula Aus AB, Achird AB, ε¹ Lyr AB, ε² Lyr AB, β Mus AB, Dalim AB, ψ Vel AB, ρ Oph AB, ζ Her AB, η Oph AB. 출처가 파일 안에 annotate 되어 있지 않음. 각도 값(periastron epoch, <i>i</i>, Ω) 이 잘 알려진 ORB6 항목과 일치(예. α Cen periastron 2435314.751 = 1955.56) — 거의 확실히 ORB6 에서 수작업 추출, build script 는 없음.</p>
-<p>format spec. <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/guide/app_star_catalogue.tex#L1870-L1926">user guide §app_star_catalogue.tex L1870-L1926</a>.</p>
-<p><code>wds_hip_part.dat</code> 도 있지만 그 파일은 <b>마지막 관측된 PA/separation 스냅샷</b> 을 더 많은 WDS double 에 대해 저장. propagate 하지 않음 — Stellarium 이 그 쌍들을 움직이는 궤도가 아니라 freeze 된 tableau 로 렌더링.</p>
-<h3>2.2 알고리즘</h3>
-<p>쌍성 궤도 코드 전체가 <code>Star.hpp</code> 의 ~180 줄 templated inline 함수 하나.</p>
-<blockquote><a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L265-L449"><code>Star&lt;Derived&gt;::getBinaryOrbit(epoch, v, ra, dec, plx, pmra, pmdec, RV, sep, pa)</code></a></blockquote>
-<p>순서대로 단계.</p>
-<ol><li>HIP 로 <code>binaryorbitstar</code> lookup (<code>StarMgr::getBinaryOrbitData()</code>). 없으면 early-exit (<code>hip == 0</code>).</li><li>Kepler 방정식을 <b>Newton-Raphson</b> 으로 풀음. 허용오차 <code>1e-10</code>, 최대 100 회 반복, 초기값 <code>E₀ = M</code> (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L332-L353">Star.hpp#L332-L353</a>).</li><li>표준 half-angle 로 진편각 계산. <code>ν = 2 atan(√((1+e)/(1−e)) · tan(E/2))</code>.</li><li>Hilditch 형식 회전 행렬 적용 (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373">Star.hpp#L364-L373</a>).</li><li><b>무게중심</b> astrometry 를 <code>data_epoch</code> 에서 target JD 까지 ESA Hipparcos <code>f</code>-factor 가 적용된 full 6-parameter ICRS update 로 propagate. <code>f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)</code> (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L381-L385">Star.hpp#L381-L385</a>).</li><li>질량비 <code>q = M_B/(M_A + M_B)</code> 로 A 와 B 분할 (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L414-L423">Star.hpp#L414-L423</a>).</li><li>무게중심 sphericals 에 <code>Δα·cos δ</code> 와 <code>Δδ</code> 를 더하고, <code>spheToRect</code> 로 다시 Cartesian unit vector 로 변환, <b>normalize</b>, 반환 (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L437-L448">Star.hpp#L437-L448</a>).</li></ol>
-<p>속도(arcsec·yr⁻¹) 는 step 4 에서 위치와 함께 계산되지만 <b>normalize 후 폐기</b>. 렌더러는 방향만 필요.</p>
-<h3>2.3 호출 주기</h3>
-<p>매 프레임. drawing loop 안에서 <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/ZoneArray.cpp#L510-L515"><code>ZoneArray.cpp::draw()</code></a> 및 <code>searchAround</code> / <code>searchWithin</code> 에서 호출되며, 현재 <code>core-&gt;getJDE()</code> 를 에포크로 사용. 캐싱 레이어 없음; HIP-map miss 가 유일한 fast path.</p>
-<hr>
-<h2>3. 비교 cheat-sheet</h2>
-<div class="tbl"><table><thead><tr><th>항목</th><th>Stellarium</th><th>NearStars</th></tr></thead><tbody><tr><td>카탈로그 출처</td><td>Ad-hoc 15-row <code>binary_orbitparam.dat</code> (build script 없음)</td><td>ORB6 + Gaia NSS upstream → <code>db/binary_orbits.json</code></td></tr><tr><td>Kepler 솔버</td><td>Newton iteration, tol <code>1e-10</code>, 최대 100 회</td><td>Markley (non-iterative cubic), PyAstronomy <code>MarkleyKESolver</code></td></tr><tr><td>ω, Ω 컨벤션</td><td>Hilditch (rotation matrix 일치)</td><td>Hilditch / Pourbaix (일치)</td></tr><tr><td>무게중심 PM</td><td>Hipparcos <code>f</code>-factor (full 6-parameter)</td><td>Same</td></tr><tr><td>질량 분할</td><td><code>q = M₂/(M₁+M₂)</code>, ±q · r_rel 로 displace</td><td>동일 공식</td></tr><tr><td>출력 타입</td><td>천구 위 unit direction vector</td><td>km, km·s⁻¹ 단위 full ICRF Cartesian state <code>(x, y, z, vx, vy, vz)</code></td></tr><tr><td>속도 출력</td><td>내부 계산 후 <b>폐기</b></td><td>일급 출력 (Principia 가 필요)</td></tr><tr><td>에포크</td><td><code>core-&gt;getJDE()</code> 가 반환하는 값 (연속)</td><td>고정 단일 스냅샷 <code>JD2433282.5</code> (1950-01-01 TDB)</td></tr><tr><td>호출 주기</td><td>매 프레임, 보이는 모든 쌍성</td><td><code>build_systems.py</code> 실행 시 1회</td></tr><tr><td>하이어라키컬 삼중성 (α Cen ABC, 40 Eri ABC, 36 Oph ABC)</td><td><b>미지원</b> — Proxima / C-component 없음</td><td>Jacobi 분해 (<code>primary_is_barycenter_of</code>)</td></tr></tbody></table></div>
-<hr>
-<h2>4. 두 파이프라인이 일치하는 지점 (그리고 그것이 왜 중요한가)</h2>
-<p>우리 파이프라인의 세 가지 컨벤션 선택 — 문헌에서 대안이 있는 것들 — 모두 Stellarium 의 독립 구현으로 확인됨.</p>
-<ol><li><b>Hilditch 회전 형식.</b> 우리 <a href="reference__binary-epoch-pipeline.html">§7b 회전 행렬</a> 이 Stellarium 의 <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373"><code>Star.hpp#L364-L373</code></a> 과 term-for-term 일치. Aitken 의 옛 부호 컨벤션(2000 년 이전 일부 논문에 아직 보임) 은 Ω 의 기여를 뒤집을 것.</li></ol>
-<ol><li><b>카탈로그 row = 무게중심, photocenter 아님.</b> 두 파이프라인 모두 Hipparcos/Gaia astrometric row 를 무게중심으로 다루고 각 컴포넌트를 바깥쪽으로 displace. 대안은 photocenter + photometric flux ratio 에서 무게중심을 재구성하는 것. Stellarium 은 안 함; 우리도 안 함. 비교적 질량이 비슷한 시각 쌍성(두 카탈로그의 대부분 쌍) 에 대해서는 OK, 질량 차이가 매우 큰 시스템에서는 photocenter 가 primary 근처에 위치 — 알려진 근사이고 향후 정교화 대상이지 현재 버그는 아니다.</li></ol>
-<ol><li><b>Hipparcos <code>f</code>-factor PM propagation.</b> 정확한 <code>f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)</code> 표현이 ESA 표준 형식, 동일하게 사용. μ_r vs μ², squared vs not 같은 typo 가 쉽게 일어나는 곳이라 두 독립 코드베이스에서 같은 형태를 보는 게 강한 sanity check.</li></ol>
-<p>이 일치가 이 연구의 가장 유용한 발견 — <b>NearStars 파이프라인의 수식이 idiosyncratic 하지 않음.</b> 가장 널리 쓰이는 desktop planetarium 이 선택한 컨벤션과 일치.</p>
-<hr>
-<h2>5. 의도적으로 다른 지점</h2>
-<p>분기는 두 시스템 어느 쪽도 버그가 아니며, target use-case 가 다른 결과.</p>
-<h3>5.1 출력: unit vector vs Cartesian state</h3>
-<p>Stellarium 은 별이 지금 <b>하늘 어디에</b> 보이는지가 필요. 방향이면 충분, 거리는 apparent magnitude 와 parallax 에 녹아있음. Cartesian km / km·s⁻¹ 는 낭비.</p>
-<p>NearStars 는 <b>Principia</b> 에 입력. Principia 는 km 단위로 full 3D n-body 시스템을 적분. 무게중심이 아니라 컴포넌트 단위로 적분. 컴포넌트당 absolute Cartesian 좌표 없이는 Principia 에 입력이 없음.</p>
-<h3>5.2 카탈로그 ingestion: 15 쌍 vs full ORB6</h3>
-<p>Stellarium 은 amateur astronomer 가 실제로 가리키는 showcase 쌍을 큐레이션. 15개면 &quot;γ Vir 가 지금 벌어지는 중, 5년 지켜봐&quot; 류에 충분. 평평한 hand-edited 파일이 그걸 제공하는 가장 저렴한 구현.</p>
-<p>NearStars 는 mod 의 ~50 ly Kopernicus footprint 에 들어오는 모든 쌍성이 필요. 수작업 큐레이션은 ~30 개 쌍성 시스템에 안 스케일. 우리는 ORB6 / Gaia NSS ingestion 이 필수, 그들에게는 선택.</p>
-<h3>5.3 호출 주기: 매 프레임 vs 1회</h3>
-<p>Stellarium 은 사용자가 수 세기를 scrub 할 수 있고 쌍성이 swing 하는 것을 기대하므로 매 프레임 재계산.</p>
-<p>NearStars 는 한 순간(<code>JD2433282.5</code>) 을 freeze. 그 다음부터는 Principia 가 forward integration 으로 모든 future state 를 derive. build 단계 이후 궤도 요소가 <i>필요</i> 없음.</p>
-<h3>5.4 하이어라키컬 다중성</h3>
-<p>Stellarium 은 Proxima Centauri 를 <i>자체</i> HIP 카탈로그 astrometry 로 렌더링 — α Cen AB 와 궤도적으로 결합되지 않음. 시각적으로는 &quot;진짜&quot; 하이어라키컬 해와 구분 불가 — Proxima 의 4.24 ly 거리 × 13,000 AU 분리는 하늘에서 ~13′ 로 변환, Stellarium 의 일반적 시각 쌍성 해상도 아래.</p>
-<p>Principia 입장에서는 결합이 <b>무시 불가능</b>. Kervella+ 2017 의 α Cen ABC 궤도해는 Proxima 를 AB 에 ~547,000 yr 주기로 중력 결합, Principia 가 그 섭동을 적분. 그래서 우리의 Jacobi 분해 for triples(40 Eri C 와 36 Oph C 도 같은 케이스) 가 필요.</p>
-<h3>5.5 솔버: Newton vs Markley</h3>
-<p><code>e &lt; 0.9</code> 의 Newton iteration 은 1e-10 까지 ~3–5 회면 수렴. Markley 는 non-iterative 하고 1 회에 ~1e-15 까지 수렴하지만 호출당 더 많은 flop 필요. 둘 다 OK; 선택은 부수적. 우리는 PyAstronomy 가 제공하므로 Markley 사용; Stellarium 은 나머지 Kepler-solving 코드가 Newton 이므로 Newton.</p>
-<hr>
-<h2>6. NearStars 에 시사점</h2>
-<p><b>구조 변경 권장 사항 없음.</b> 비교가 우리 파이프라인을 검증할 뿐, 누락 기능을 드러내지 않음. 구체적으로.</p>
-<ul><li>우리 컨벤션 선택(Hilditch, 질량비 분할, <code>f</code>-factor) 이 독립된 성숙한 코드베이스가 선택한 것과 동일.</li><li>Stellarium 이 <i>결여한</i> 기능들(Cartesian state output, ORB6 ingestion, hierarchical triples, velocity output) 이 <i>정확히</i> NearStars 의 차별점. 과도설계가 아니라 Principia 가 요구하고 Stellarium 은 요구하지 않는 것을 하고 있음.</li></ul>
-<p><b>행동 항목은 아니지만 기록해 둘 minor 제안.</b></p>
-<ul><li><b>몇 쌍을 시각 검사로 cross-validate.</b> Stellarium 과 우리 DB 모두에 있는 α Cen AB, Sirius AB, 61 Cyg AB 선택. 우리 Cartesian 출력에서 sample JD 의 apparent (Δα·cos δ, Δδ) sky offset 을 계산해 Stellarium 의 렌더와 비교. ~10 mas 일치면 우리 컨벤션 end-to-end 확인; 불일치면 sign-error red flag. 본 연구 범위 밖의 향후 검증 작업.</li></ul>
-<ul><li><b><code>binary_orbits.json</code> 출처 문서화.</b> Stellarium 은 타깃 사용자가 체크하지 않으므로 인용 없는 궤도 요소로 넘어감. 우리는 이미 궤도당 <code>bibcode</code> 를 기록 — 옳은 정책이고 유지.</li></ul>
-<ul><li><b>수작업 큐레이션 sanity check 로서의 15쌍 목록.</b> Stellarium 목록의 모든 시스템이 우리 DB 에 있음. 향후 maintainer 가 Stellarium 의 15 에 <i>없는</i> 쌍을 우리 DB 에 추가하면 — OK 이긴 하지만 — &quot;이 쌍이 시각 쌍성 으로 널리 인식되는가, 아니면 궤도가 speculative 한가&quot; 라는 질문이 떠야 함. Stellarium 목록이 &quot;통념&quot; 필터 역할.</li></ul>
-<hr>
-<h2>7. 미해결 질문</h2>
-<ul><li>Stellarium 의 <code>binary_orbitparam.dat</code> 는 그들의 레포에 build script 가 없음. 수작업 ORB6 lookup 으로 유지되는가, 아니면 unpublished derivation script 가 있는가? NearStars 에는 load-bearing 아니지만 호기심.</li><li>Stellarium 이 궤도 속도(arcsec·yr⁻¹) 를 내부 계산 후 폐기. 향후 Stellarium feature 가 그 속도를 노출하면, 우리 <code>vx, vy, vz</code> 출력의 가장 간단한 cross-check (sky-to-3D 변환 modulo). 그쪽 changelog 지켜볼 가치.</li><li>Stellarium 이 ε Lyr 의 quadruple 구조(ε¹ Lyr AB + ε² Lyr AB 는 두 개의 분리된 Kepler 시스템이지만 동시에 wide visual pair) 를 처리하는지 확인 못 함. 15-row 파일은 ε¹ 과 ε² 를 따로 나열하고 둘 사이 link 없음 — 아마 α Cen + Proxima 와 같은 &quot;no hierarchy&quot; 한계.</li></ul>
-<hr>
-<h2>8. Sky-offset 교차 검증 (2026-05-21 실행)</h2>
-<p>§6 의 &quot;minor 제안&quot; 이었던 두 파이프라인 수치 검증 실행. 재실행 가능한 테스트는 <a href="../../scripts/verification/stellarium_crosscheck.py"><code>scripts/verification/stellarium_crosscheck.py</code></a> 참조.</p>
-<h3>8.1 설정</h3>
-<p>두 독립 알고리즘이 secondary 의 sky offset (Δα·cosδ, Δδ) 를 JD 2460310.5 (J2024.0) 에서 계산.</p>
-<ul><li><b>Stellarium-style</b> — <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373"><code>Star.hpp</code> L364-L373</a> 의 직접 <code>r · rotation</code> 형태.</li><li><b>Thiele-Innes</b> — 고전적 Hilditch (2001) A/B/F/G 상수에 이심 anomaly 좌표 <code>x = cosE − e</code>, <code>y = √(1−e²)·sinE</code> 사용.</li></ul>
-<p>각 알고리즘을 <b>두 element 세트</b> 에 독립적으로 적용.</p>
-<ul><li><b>Stellarium 데이터</b> — <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat"><code>stars/hip_gaia3/binary_orbitparam.dat</code></a> 에서 추출 (해당 파일은 각도가 이미 radian).</li><li><b>NearStars 데이터</b> — <code>db/binary_orbits.json</code> 의 α Cen, Sirius, 61 Cyg AB orbit 블록.</li></ul>
-<p>결과 표 (mas).</p>
-<div class="tbl"><table><thead><tr><th>시스템</th><th>Stellarium-style (Stellarium 데이터)</th><th>Stellarium-style (NS 데이터)</th><th>Drift</th></tr></thead><tbody><tr><td>α Cen AB</td><td>Δα·cosδ=+887, Δδ=+8071 (sep 8.12″, PA 6.3°)</td><td>Δα·cosδ=+1234, Δδ=+8537 (sep 8.63″, PA 8.2°)</td><td><b>581 mas</b></td></tr><tr><td>Sirius AB</td><td>Δα·cosδ=+9865, Δδ=+5536 (sep 11.31″, PA 60.7°)</td><td>Δα·cosδ=+9818, Δδ=+5624 (sep 11.31″, PA 60.2°)</td><td><b>99 mas</b></td></tr><tr><td>61 Cyg AB</td><td>Δα·cosδ=+14065, Δδ=−28777 (sep 32.03″, PA 154.0°)</td><td>Δα·cosδ=+16528, Δδ=−23282 (sep 28.55″, PA 144.6°)</td><td><b>6022 mas</b></td></tr></tbody></table></div>
-<h3>8.2 Test 1 — 알고리즘 등가성</h3>
-<p>같은 element 세트에 두 알고리즘을 통과시킨 결과가 <b>0.000000 mas</b> (수치 정밀도, ~1e-15) 까지 일치 — 세 시스템 모두, Stellarium 데이터와 NS 데이터 양쪽 모두. Hilditch 회전 컨벤션, 이심 anomaly 변환, Kepler 솔버가 end-to-end 일관. <b>sign-convention 버그 없음 확인.</b></p>
-<h3>8.3 Test 2 — 데이터 drift</h3>
-<p>Cross-pipeline 차이(같은 알고리즘, 다른 element 출처) 는 알고리즘 오류가 아닌 <b>데이터 revision drift</b> 측정.</p>
-<ul><li><b>Sirius 99 mas.</b> Element 세트가 거의 동일 (둘 다 Bond 2017 era). Drift 는 출판된 <code>T</code> 와 <code>ω</code> 의 불확실성 범위 안. ✓</li><li><b>α Cen 581 mas.</b> 두 파이프라인 모두 Pourbaix 계열 해를 사용하지만 다른 revision (NS. Pourbaix &amp; Correia 2017; Stellarium. <code>T = 2435314.751 = 1955.555</code> 시그니처로 보아 Pourbaix 2002 era). 0.2° Ω, 0.13° ω, 280일 T 차이가 sub-arcsecond drift 로 전파 — periastron 근처 빠르게 움직이는 궤도에서 예상되는 수준. ~</li><li><b>61 Cyg 6022 mas.</b> NS 는 Strand (1952) / Walker (1995) elements with B1950 equinox; Stellarium 은 무관한 더 최근 elements (P=705 yr vs NS 659 yr) with J2000 equinox. B1950→J2000 frame shift 가 Ω 차이의 ~3.4° 를 설명; 나머지는 element revision 차이. 이 쌍은 <b>NS 의 61 Cyg 궤도 elements 갱신</b> 의 가장 명확한 근거 — Strand 1952 는 70 년 stale.</li></ul>
-<h3>8.4 결론</h3>
-<p>§6 에서 명시한 &quot;~10 mas 일치&quot; 타깃은 카탈로그 revision 노이즈(잘 측정된 시스템에서도 sub-arcsec, 부실하게 측정된 것은 수 arcsec) 를 고려할 때 비현실적. 실제로 달성 가능했던 테스트는 알고리즘 등가성이었고, 그것은 <b>수치 정밀도까지 통과</b>. NearStars 파이프라인의 Hilditch 컨벤션, Thiele-Innes 표현, Newton/Markley Kepler 솔버가 Stellarium 의 독립 구현과 일관.</p>
-<p>남은 drift 는 데이터지 수학이 아님. 구체적 action 항목. <code>db/binary_orbits.json</code> 의 61 Cyg 궤도를 post-2000 해로 갱신. 아래 §9 에서 신규 open question 으로 추적.</p>
-<hr>
-<h2>9. 미해결 질문 (갱신)</h2>
-<p>이전 §7 항목 유지. §8 에서 추가된 신규 open question.</p>
-<ul><li><b>61 Cyg 궤도 element refresh.</b> NS 의 Strand (1952) / Walker (1995) elements 는 B1950 equinox, 70+ 년 stale, 그리고 우리 파이프라인의 나머지 J2000 정렬과 frame 불일치. 후보 대체. Hartkopf et al. ORB6 grade-4 solution 또는 Malkov+ 2012. 본 연구 노트에서 구현하지 않고 <code>phase2/</code> 데이터 refresh 작업으로 deferred — 여기서 flag 만.</li></ul>
-<h2>Related</h2>
-<ul><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — 비교 대상이 되는 NearStars 파이프라인 (본 문서가 그 검증 교차 검사).</li><li><a href="reference__methodology.html">methodology</a> — 이 비교가 검증하는 스키마 층.</li><li><a href="../docs/phase3/alpha-centauri-a.md">alpha-centauri-a</a>, <a href="../docs/phase3/alpha-centauri-b.md">alpha-centauri-b</a> — Stellarium 과 NearStars 가 모두 인코딩하는 정전 워크드 예시.</li></ul></div><div data-langbody="en" style="display:none"><h1>Stellarium vs NearStars binary-orbit pipeline comparison</h1>
-<p><b>NearStars connection.</b> Our pipeline (<a href="reference__binary-epoch-pipeline.html"><code>docs/reference/binary-epoch-pipeline.md</code></a>) ingests ORB6 / Gaia NSS orbital elements and outputs ICRF Cartesian state vectors <code>(x, y, z, vx, vy, vz)</code> in km, km·s⁻¹ at <code>JD2433282.5</code>, feeding Principia&#x27;s <code>principia_initial_state</code>. Stellarium is the closest piece of widely-used open-source astronomy software that also propagates visual-binary orbital motion. Comparing the two answers two questions NearStars cares about: (1) are our convention choices (Hilditch, mass- ratio split, Hipparcos <code>f</code>-factor) actually shared by an independent implementation, and (2) is there anything Stellarium does that we should adopt — or anything they intentionally skip that we are needlessly carrying.</p>
-<p><b>Scope.</b> Read-only research. No code changes expected in this repo.</p>
-<p><b>External references.</b></p>
-<ul><li>Stellarium master at commit <a href="https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01"><code>3efa1406</code></a></li><li>Our pipeline: <a href="reference__binary-epoch-pipeline.html"><code>docs/reference/binary-epoch-pipeline.md</code></a></li><li>ORB6 catalog: https://www.astro.gsu.edu/wds/orb6.html</li></ul>
-<hr>
-<h2>1. Executive summary</h2>
-<div class="tbl"><table><thead><tr><th>Question</th><th>Answer</th></tr></thead><tbody><tr><td>Do the two pipelines share convention?</td><td><b>Yes for the math, no for the output.</b> Hilditch rotation, mass-ratio displacement, and Hipparcos <code>f</code>-factor PM propagation are identical.</td></tr><tr><td>Do they consume the same catalog?</td><td><b>No.</b> Stellarium ships a <b>hand-curated 15-pair file</b> (<code>binary_orbitparam.dat</code>); we read ORB6 + Gaia NSS directly.</td></tr><tr><td>Do they produce comparable outputs?</td><td><b>No.</b> Stellarium produces a <b>unit direction vector on the celestial sphere</b> for rendering. We produce a <b>3D Cartesian state in km / km·s⁻¹</b> for n-body integration. Different target use-cases.</td></tr><tr><td>Does Stellarium handle hierarchical triples?</td><td><b>No.</b> No Proxima Cen, no 40 Eri C, no 36 Oph C in their orbit file. Each star&#x27;s orbital coupling is at most one pair deep.</td></tr><tr><td>Should NearStars change anything based on this?</td><td><b>No structural change</b>, but the agreement validates our convention choices. Stellarium&#x27;s missing-feature list (triples, ORB6 ingestion, velocity output) is <i>exactly</i> the NearStars-specific delta — so we are not over-engineering.</td></tr></tbody></table></div>
-<hr>
-<h2>2. What Stellarium actually does</h2>
-<p>Pinned to commit <a href="https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01"><code>3efa1406</code></a> (2026-05 master HEAD).</p>
-<h3>2.1 Catalog</h3>
-<p>A single flat file with 15 named pairs:</p>
-<blockquote><a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat"><code>stars/hip_gaia3/binary_orbitparam.dat</code></a></blockquote>
-<p>Pairs covered: α Cen AB, Sirius AB, 61 Cyg AB, γ Vir AB, Alula Aus AB, Achird AB, ε¹ Lyr AB, ε² Lyr AB, β Mus AB, Dalim AB, ψ Vel AB, ρ Oph AB, ζ Her AB, η Oph AB. Provenance is not annotated in the file itself; the angular values (periastron epoch, <i>i</i>, Ω) match well-known ORB6 entries (e.g. α Cen periastron 2435314.751 = 1955.56), so the table is almost certainly hand-distilled from ORB6, just not via a build script.</p>
-<p>Format spec: <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/guide/app_star_catalogue.tex#L1870-L1926">user guide §app_star_catalogue.tex L1870-L1926</a>.</p>
-<p>There is also <code>wds_hip_part.dat</code>, but that file stores <b>the last observed PA/separation snapshot</b> for many more WDS doubles. It does not propagate — Stellarium renders those pairs as a frozen tableau, not as a moving orbit.</p>
-<h3>2.2 Algorithm</h3>
-<p>The entire binary-orbit code is one ~180-line templated inline function in <code>Star.hpp</code>:</p>
-<blockquote><a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L265-L449"><code>Star&lt;Derived&gt;::getBinaryOrbit(epoch, v, ra, dec, plx, pmra, pmdec, RV, sep, pa)</code></a></blockquote>
-<p>Steps, in order:</p>
-<ol><li>Lookup <code>binaryorbitstar</code> by HIP (<code>StarMgr::getBinaryOrbitData()</code>). Early-exit if not present (<code>hip == 0</code>).</li><li>Solve Kepler&#x27;s equation by <b>Newton-Raphson</b>, tolerance <code>1e-10</code>, max 100 iterations, initial guess <code>E₀ = M</code> (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L332-L353">Star.hpp#L332-L353</a>).</li><li>Compute true anomaly via the standard half-angle: <code>ν = 2 atan(√((1+e)/(1−e)) · tan(E/2))</code>.</li><li>Apply Hilditch-form rotation matrix (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373">Star.hpp#L364-L373</a>).</li><li>Propagate the <b>barycenter</b> astrometry from <code>data_epoch</code> to the target JD using the full 6-parameter ICRS update with the ESA Hipparcos <code>f</code>-factor <code>f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)</code> (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L381-L385">Star.hpp#L381-L385</a>).</li><li>Split into A and B with the mass ratio <code>q = M_B/(M_A + M_B)</code> (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L414-L423">Star.hpp#L414-L423</a>).</li><li>Add <code>Δα·cos δ</code> and <code>Δδ</code> to the barycenter sphericals, re-convert to a Cartesian unit vector via <code>spheToRect</code>, <b>normalize</b>, and return (<a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L437-L448">Star.hpp#L437-L448</a>).</li></ol>
-<p>Velocity (arcsec·yr⁻¹) is computed in step 4 alongside position but is <b>discarded after normalization</b> — the renderer only needs direction.</p>
-<h3>2.3 Cadence</h3>
-<p>Per-frame. Called from inside the drawing loop in <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/ZoneArray.cpp#L510-L515"><code>ZoneArray.cpp::draw()</code></a> and from <code>searchAround</code> / <code>searchWithin</code>, with the current <code>core-&gt;getJDE()</code> as the epoch. No caching layer; the HIP-map miss is the only fast path.</p>
-<hr>
-<h2>3. Comparison cheat-sheet</h2>
-<div class="tbl"><table><thead><tr><th>Aspect</th><th>Stellarium</th><th>NearStars</th></tr></thead><tbody><tr><td>Catalog source</td><td>Ad-hoc 15-row <code>binary_orbitparam.dat</code> (no build script)</td><td>ORB6 + Gaia NSS upstream → <code>db/binary_orbits.json</code></td></tr><tr><td>Kepler solver</td><td>Newton iteration, tol <code>1e-10</code>, max 100 iter</td><td>Markley (non-iterative cubic) via PyAstronomy <code>MarkleyKESolver</code></td></tr><tr><td>ω, Ω convention</td><td>Hilditch (rotation matrix matches)</td><td>Hilditch / Pourbaix (matches)</td></tr><tr><td>Barycenter PM</td><td>Hipparcos <code>f</code>-factor (full 6-parameter)</td><td>Same</td></tr><tr><td>Mass split</td><td><code>q = M₂/(M₁+M₂)</code>, displace ±q · r_rel</td><td>Identical formula</td></tr><tr><td>Output type</td><td>Unit direction vector on celestial sphere</td><td>Full ICRF Cartesian state <code>(x, y, z, vx, vy, vz)</code> in km, km·s⁻¹</td></tr><tr><td>Velocity output</td><td>Computed internally then <b>discarded</b></td><td>First-class output (needed by Principia)</td></tr><tr><td>Epoch</td><td>Whatever <code>core-&gt;getJDE()</code> returns (continuous)</td><td>Single fixed snapshot at <code>JD2433282.5</code> (1950-01-01 TDB)</td></tr><tr><td>Cadence</td><td>Every frame, every visible binary</td><td>One-shot at <code>build_systems.py</code> runtime</td></tr><tr><td>Hierarchical triples (α Cen ABC, 40 Eri ABC, 36 Oph ABC)</td><td><b>Not supported</b> — Proxima / C-components absent</td><td>Jacobi decomposition (<code>primary_is_barycenter_of</code>)</td></tr></tbody></table></div>
-<hr>
-<h2>4. Where the two pipelines agree (and why that matters)</h2>
-<p>Three convention choices in our pipeline that have alternatives in the literature, all confirmed by Stellarium&#x27;s independent implementation:</p>
-<ol><li><b>Hilditch rotation form.</b> Our <a href="reference__binary-epoch-pipeline.html">§7b rotation matrix</a> matches Stellarium&#x27;s <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373"><code>Star.hpp#L364-L373</code></a> term-for-term. Aitken&#x27;s older sign convention (still seen in some pre-2000 papers) would flip Ω&#x27;s contribution.</li></ol>
-<ol><li><b>Catalog row = barycenter, not photocenter.</b> Both pipelines treat the Hipparcos/Gaia astrometric row as the barycenter and displace each component outward. The alternative would be to reconstruct the barycenter from photocenter + photometric flux ratio. Stellarium does not bother; neither do we. This is fine for visual binaries with comparable masses (most pairs in both catalogs) but is a known approximation for very-unequal-mass systems where the photocenter sits near the primary — a deferred refinement, not a current bug.</li></ol>
-<ol><li><b>Hipparcos <code>f</code>-factor PM propagation.</b> The exact `f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)` expression is the ESA-canonical form, used identically. Easy to typo (μ_r vs μ², squared vs not), so seeing the same form in two independent codebases is a strong sanity check.</li></ol>
-<p>These agreements are the most useful finding from this research: <b>the math of NearStars&#x27;s pipeline is not idiosyncratic</b> — it matches the convention chosen by the most widely-used desktop planetarium.</p>
-<hr>
-<h2>5. Where they intentionally diverge</h2>
-<p>The divergences are not bugs in either system; they reflect different target use-cases.</p>
-<h3>5.1 Output: unit vector vs Cartesian state</h3>
-<p>Stellarium needs <b>where on the sky</b> a star appears right now. A direction is sufficient; distance is folded into apparent magnitude and parallax. Cartesian km / km·s⁻¹ would be a waste.</p>
-<p>NearStars feeds <b>Principia</b>, which integrates the full 3D n-body system in km. Components, not the barycenter, are integrated. Without absolute Cartesian coordinates per component, Principia has no input.</p>
-<h3>5.2 Catalog ingestion: 15 pairs vs full ORB6</h3>
-<p>Stellarium curates the showcase pairs amateur astronomers actually point at. 15 is enough for &quot;γ Vir is currently widening, watch it over five years.&quot; A flat hand-edited file is the cheapest implementation that delivers that.</p>
-<p>NearStars needs every binary that ends up in the mod&#x27;s ~50 ly Kopernicus footprint. Manual curation does not scale to ~30 binary systems. ORB6 / Gaia NSS ingestion is therefore mandatory for us, optional for them.</p>
-<h3>5.3 Cadence: per-frame vs one-shot</h3>
-<p>Stellarium recomputes every binary every frame because the user can scrub through centuries of time and expect the binaries to swing.</p>
-<p>NearStars freezes one instant (<code>JD2433282.5</code>) because Principia takes over from that point and integrates everything itself. We do not <i>need</i> the orbital elements after the build step — Principia derives all future state from forward integration.</p>
-<h3>5.4 Hierarchical multiples</h3>
-<p>Stellarium would render Proxima Centauri using <i>its own</i> HIP-catalog astrometry, with no orbital coupling to α Cen AB. Visually, this is indistinguishable from the &quot;true&quot; hierarchical solution — Proxima&#x27;s 13,000 AU separation at 4.24 ly translates to ~13&#x27; on the sky, which is below Stellarium&#x27;s typical visual-binary resolution anyway.</p>
-<p>For Principia, the coupling is <b>not</b> negligible. The Kervella+ 2017 orbital solution for α Cen ABC binds Proxima gravitationally to AB at ~547,000 yr period, and Principia integrates that perturbation. Our Jacobi decomposition for triples (40 Eri C and 36 Oph C are the other cases) is therefore necessary.</p>
-<h3>5.5 Solver: Newton vs Markley</h3>
-<p>Newton iteration with <code>e &lt; 0.9</code> converges in ~3–5 iterations to 1e-10. Markley&#x27;s method is non-iterative and converges to ~1e-15 in one shot but requires more flops per call. Both are fine; the choice is incidental. We use Markley because PyAstronomy ships it; Stellarium uses Newton because the rest of their Kepler-solving code is also Newton.</p>
-<hr>
-<h2>6. Implications for NearStars</h2>
-<p><b>No structural changes recommended.</b> The comparison validates our pipeline rather than revealing a missing feature. Specifically:</p>
-<ul><li>Our convention choices (Hilditch, mass-ratio split, <code>f</code>-factor) are the same ones chosen by an independent mature codebase.</li><li>The features Stellarium <i>lacks</i> (Cartesian state output, ORB6 ingestion, hierarchical triples, velocity output) are <i>exactly</i> the NearStars-specific deltas. We are not over-engineering; we are doing the things Principia requires that Stellarium does not.</li></ul>
-<p><b>Minor suggestions worth noting</b>, not action items:</p>
-<ul><li><b>Cross-validate a few pairs by visual inspection.</b> Pick α Cen AB, Sirius AB, 61 Cyg AB — systems present in both Stellarium and our DB. Compute the apparent (Δα·cos δ, Δδ) sky offsets from our Cartesian output at a sample JD, and compare to what Stellarium renders. Agreement to ~10 mas would confirm our convention end-to-end; disagreement would be a sign-error red flag. This is a future verification task, not part of this research.</li></ul>
-<ul><li><b><code>binary_orbits.json</code> provenance documentation.</b> Stellarium gets away with un-cited orbital elements because their target user does not check. We already record <code>bibcode</code> per orbit; that is the right policy and we should keep it.</li></ul>
-<ul><li><b>The 15-pair list as a manual-curation sanity check.</b> Every system in Stellarium&#x27;s list is in our DB. If a future maintainer adds a pair to our DB that is <i>not</i> in Stellarium&#x27;s 15, that is fine — but it should prompt the question &quot;is this pair widely-recognized as a visual binary, or is the orbit speculative?&quot; Stellarium&#x27;s list is a rough &quot;common knowledge&quot; filter.</li></ul>
-<hr>
-<h2>7. Open questions</h2>
-<ul><li>Stellarium&#x27;s <code>binary_orbitparam.dat</code> has no build script in their repo. Is it maintained by manual ORB6 lookups, or is there an unpublished derivation script? Not load-bearing for NearStars, but curious.</li><li>Stellarium computes orbital velocity (arcsec·yr⁻¹) internally before discarding it. If a future Stellarium feature exposes that velocity, it would be the simplest cross-check for our <code>vx, vy, vz</code> outputs (modulo a sky-to-3D conversion). Worth watching their changelog.</li><li>We could not confirm whether Stellarium handles ε Lyr&#x27;s quadruple structure (ε¹ Lyr AB + ε² Lyr AB are two separate Kepler systems but also a wide visual pair). The 15-row file lists ε¹ and ε² separately with no link between them — probably the same &quot;no hierarchy&quot; limitation as for α Cen + Proxima.</li></ul>
-<hr>
-<h2>8. Sky-offset cross-check (executed 2026-05-21)</h2>
-<p>The §6 &quot;minor suggestion&quot; to numerically validate the two pipelines was executed. See <a href="../scripts/verification/stellarium_crosscheck.py"><code>scripts/verification/stellarium_crosscheck.py</code></a> for the reproducible test.</p>
-<h3>8.1 Setup</h3>
-<p>Two independent algorithms compute the secondary&#x27;s sky offset (Δα·cosδ, Δδ) at JD 2460310.5 (J2024.0).</p>
-<ul><li><b>Stellarium-style</b> — direct <code>r · rotation</code> form from <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373"><code>Star.hpp</code> L364-L373</a>.</li><li><b>Thiele-Innes</b> — classical Hilditch (2001) A/B/F/G constants with eccentric anomaly coordinates <code>x = cosE − e</code>, <code>y = √(1−e²)·sinE</code>.</li></ul>
-<p>Each algorithm is applied to <b>two element sets</b> independently:</p>
-<ul><li><b>Stellarium data</b> — extracted from <a href="https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat"><code>stars/hip_gaia3/binary_orbitparam.dat</code></a> (angles already in radians in that file).</li><li><b>NearStars data</b> — <code>db/binary_orbits.json</code>, AB orbit blocks for α Cen, Sirius, and 61 Cyg.</li></ul>
-<p>Result table (mas).</p>
-<div class="tbl"><table><thead><tr><th>System</th><th>Stellarium-style (Stellarium data)</th><th>Stellarium-style (NS data)</th><th>Drift</th></tr></thead><tbody><tr><td>α Cen AB</td><td>Δα·cosδ=+887, Δδ=+8071 (sep 8.12″, PA 6.3°)</td><td>Δα·cosδ=+1234, Δδ=+8537 (sep 8.63″, PA 8.2°)</td><td><b>581 mas</b></td></tr><tr><td>Sirius AB</td><td>Δα·cosδ=+9865, Δδ=+5536 (sep 11.31″, PA 60.7°)</td><td>Δα·cosδ=+9818, Δδ=+5624 (sep 11.31″, PA 60.2°)</td><td><b>99 mas</b></td></tr><tr><td>61 Cyg AB</td><td>Δα·cosδ=+14065, Δδ=−28777 (sep 32.03″, PA 154.0°)</td><td>Δα·cosδ=+16528, Δδ=−23282 (sep 28.55″, PA 144.6°)</td><td><b>6022 mas</b></td></tr></tbody></table></div>
-<h3>8.2 Test 1 — Algorithm equivalence</h3>
-<p>Both algorithm forms applied to identical element sets produce results agreeing to <b>0.000000 mas</b> (i.e. to numerical precision, ~1e-15) for all three systems with both Stellarium data and NS data. The Hilditch rotation convention, eccentric-anomaly transformation, and Kepler solver are end-to-end consistent. <b>No sign-convention bug detected.</b></p>
-<h3>8.3 Test 2 — Data drift</h3>
-<p>The cross-pipeline difference (same algorithm, different element source) characterises <b>data revision drift</b>, not algorithm error.</p>
-<ul><li><b>Sirius 99 mas.</b> Element sets are nearly identical (both Bond 2017 era). Drift is within published uncertainties on <code>T</code> and <code>ω</code>. ✓</li><li><b>α Cen 581 mas.</b> Both pipelines use Pourbaix-family solutions but different revisions (NS: Pourbaix &amp; Correia 2017; Stellarium: Pourbaix 2002 era based on the <code>T = 2435314.751 = 1955.555</code> signature). The 0.2° Ω, 0.13° ω, and 280-day T differences propagate into a sub-arcsecond drift — expected for an orbit moving rapidly near periastron. ~</li><li><b>61 Cyg 6022 mas.</b> NS uses Strand (1952) / Walker (1995) elements with B1950 equinox; Stellarium uses unrelated more-recent elements (P=705 yr vs NS 659 yr) with J2000 equinox. The B1950→J2000 frame shift accounts for ~3.4° of the Ω disagreement; the remaining drift is element-revision. This pair is the clearest argument for <b>NS updating 61 Cyg orbital elements</b> — Strand 1952 is 70 years stale.</li></ul>
-<h3>8.4 Conclusion</h3>
-<p>The &quot;~10 mas agreement&quot; target stated in §6 was unrealistic given catalog revision noise (sub-arcsec on well-measured systems, multiple arcsec on poorly-measured ones). The achievable test was algorithm equivalence, which <b>passes to numerical precision</b>. The NearStars pipeline&#x27;s Hilditch convention, Thiele-Innes formulation, and Newton/Markley Kepler solvers are consistent with Stellarium&#x27;s independent implementation.</p>
-<p>The remaining drift is data, not math. Concrete actionable: update 61 Cyg orbit in <code>db/binary_orbits.json</code> to a post-2000 solution. Tracked in §9 below as a new open question.</p>
-<hr>
-<h2>9. Open questions (updated)</h2>
-<p>Previous §7 entries remain. New open question from §8:</p>
-<ul><li><b>61 Cyg orbit element refresh.</b> NS&#x27;s Strand (1952) / Walker (1995) elements with B1950 equinox are 70+ years old and frame-mismatched against our otherwise J2000-aligned pipeline. Candidate replacement: Hartkopf et al. ORB6 grade-4 solution or Malkov+ 2012. Defer to a <code>phase2/</code> data-refresh task; flagged here rather than implementing in this research note.</li></ul>
-<h2>Related</h2>
-<ul><li><a href="reference__binary-epoch-pipeline.html">binary-epoch-pipeline</a> — the NearStars pipeline being compared (this is the validation cross-check)</li><li><a href="reference__methodology.html">methodology</a> — the schema layer this comparison validates</li><li><a href="../docs/phase3/alpha-centauri-a.md">alpha-centauri-a</a>, <a href="../docs/phase3/alpha-centauri-b.md">alpha-centauri-b</a> — the canonical worked example whose orbit Stellarium and NearStars both encode</li></ul></div>
-</main>
+<div class="content-wrap">
+  <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
+  <article class="markdown-body" id="content"></article>
 </div>
+</div>
+<script type="text/markdown" id="md-en"># Stellarium vs NearStars binary-orbit pipeline comparison
+
+**NearStars connection.** Our pipeline ([`docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html))
+ingests ORB6 / Gaia NSS orbital elements and outputs ICRF Cartesian state
+vectors `(x, y, z, vx, vy, vz)` in km, km·s⁻¹ at `JD2433282.5`, feeding
+Principia's `principia_initial_state`. Stellarium is the closest piece
+of widely-used open-source astronomy software that also propagates
+visual-binary orbital motion. Comparing the two answers two questions
+NearStars cares about: (1) are our convention choices (Hilditch, mass-
+ratio split, Hipparcos `f`-factor) actually shared by an independent
+implementation, and (2) is there anything Stellarium does that we
+should adopt — or anything they intentionally skip that we are
+needlessly carrying.
+
+**Scope.** Read-only research. No code changes expected in this repo.
+
+**External references.**
+- Stellarium master at commit [`3efa1406`](https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01)
+- Our pipeline: [`docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html)
+- ORB6 catalog: https://www.astro.gsu.edu/wds/orb6.html
+
+---
+
+## 1. Executive summary
+
+| Question | Answer |
+|----------|--------|
+| Do the two pipelines share convention? | **Yes for the math, no for the output.** Hilditch rotation, mass-ratio displacement, and Hipparcos `f`-factor PM propagation are identical. |
+| Do they consume the same catalog? | **No.** Stellarium ships a **hand-curated 15-pair file** (`binary_orbitparam.dat`); we read ORB6 + Gaia NSS directly. |
+| Do they produce comparable outputs? | **No.** Stellarium produces a **unit direction vector on the celestial sphere** for rendering. We produce a **3D Cartesian state in km / km·s⁻¹** for n-body integration. Different target use-cases. |
+| Does Stellarium handle hierarchical triples? | **No.** No Proxima Cen, no 40 Eri C, no 36 Oph C in their orbit file. Each star's orbital coupling is at most one pair deep. |
+| Should NearStars change anything based on this? | **No structural change**, but the agreement validates our convention choices. Stellarium's missing-feature list (triples, ORB6 ingestion, velocity output) is *exactly* the NearStars-specific delta — so we are not over-engineering. |
+
+---
+
+## 2. What Stellarium actually does
+
+Pinned to commit [`3efa1406`](https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01) (2026-05 master HEAD).
+
+### 2.1 Catalog
+
+A single flat file with 15 named pairs:
+
+> [`stars/hip_gaia3/binary_orbitparam.dat`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat)
+
+Pairs covered: α Cen AB, Sirius AB, 61 Cyg AB, γ Vir AB, Alula Aus AB,
+Achird AB, ε¹ Lyr AB, ε² Lyr AB, β Mus AB, Dalim AB, ψ Vel AB,
+ρ Oph AB, ζ Her AB, η Oph AB. Provenance is not annotated in the file
+itself; the angular values (periastron epoch, *i*, Ω) match well-known
+ORB6 entries (e.g. α Cen periastron 2435314.751 = 1955.56), so the
+table is almost certainly hand-distilled from ORB6, just not via a
+build script.
+
+Format spec: [user guide §app_star_catalogue.tex L1870-L1926](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/guide/app_star_catalogue.tex#L1870-L1926).
+
+There is also `wds_hip_part.dat`, but that file stores **the last
+observed PA/separation snapshot** for many more WDS doubles. It does
+not propagate — Stellarium renders those pairs as a frozen tableau,
+not as a moving orbit.
+
+### 2.2 Algorithm
+
+The entire binary-orbit code is one ~180-line templated inline
+function in `Star.hpp`:
+
+> [`Star<Derived>::getBinaryOrbit(epoch, v, ra, dec, plx, pmra, pmdec, RV, sep, pa)`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L265-L449)
+
+Steps, in order:
+
+1. Lookup `binaryorbitstar` by HIP (`StarMgr::getBinaryOrbitData()`).
+   Early-exit if not present (`hip == 0`).
+2. Solve Kepler's equation by **Newton-Raphson**, tolerance `1e-10`,
+   max 100 iterations, initial guess `E₀ = M`
+   ([Star.hpp#L332-L353](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L332-L353)).
+3. Compute true anomaly via the standard half-angle:
+   `ν = 2 atan(√((1+e)/(1−e)) · tan(E/2))`.
+4. Apply Hilditch-form rotation matrix
+   ([Star.hpp#L364-L373](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373)).
+5. Propagate the **barycenter** astrometry from `data_epoch` to the
+   target JD using the full 6-parameter ICRS update with the ESA
+   Hipparcos `f`-factor
+   `f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)`
+   ([Star.hpp#L381-L385](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L381-L385)).
+6. Split into A and B with the mass ratio `q = M_B/(M_A + M_B)`
+   ([Star.hpp#L414-L423](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L414-L423)).
+7. Add `Δα·cos δ` and `Δδ` to the barycenter sphericals, re-convert to
+   a Cartesian unit vector via `spheToRect`, **normalize**, and return
+   ([Star.hpp#L437-L448](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L437-L448)).
+
+Velocity (arcsec·yr⁻¹) is computed in step 4 alongside position but is
+**discarded after normalization** — the renderer only needs direction.
+
+### 2.3 Cadence
+
+Per-frame. Called from inside the drawing loop in
+[`ZoneArray.cpp::draw()`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/ZoneArray.cpp#L510-L515)
+and from `searchAround` / `searchWithin`, with the current
+`core->getJDE()` as the epoch. No caching layer; the HIP-map miss is
+the only fast path.
+
+---
+
+## 3. Comparison cheat-sheet
+
+| Aspect | Stellarium | NearStars |
+|---|---|---|
+| Catalog source | Ad-hoc 15-row `binary_orbitparam.dat` (no build script) | ORB6 + Gaia NSS upstream → `db/binary_orbits.json` |
+| Kepler solver | Newton iteration, tol `1e-10`, max 100 iter | Markley (non-iterative cubic) via PyAstronomy `MarkleyKESolver` |
+| ω, Ω convention | Hilditch (rotation matrix matches) | Hilditch / Pourbaix (matches) |
+| Barycenter PM | Hipparcos `f`-factor (full 6-parameter) | Same |
+| Mass split | `q = M₂/(M₁+M₂)`, displace ±q · r_rel | Identical formula |
+| Output type | Unit direction vector on celestial sphere | Full ICRF Cartesian state `(x, y, z, vx, vy, vz)` in km, km·s⁻¹ |
+| Velocity output | Computed internally then **discarded** | First-class output (needed by Principia) |
+| Epoch | Whatever `core->getJDE()` returns (continuous) | Single fixed snapshot at `JD2433282.5` (1950-01-01 TDB) |
+| Cadence | Every frame, every visible binary | One-shot at `build_systems.py` runtime |
+| Hierarchical triples (α Cen ABC, 40 Eri ABC, 36 Oph ABC) | **Not supported** — Proxima / C-components absent | Jacobi decomposition (`primary_is_barycenter_of`) |
+
+---
+
+## 4. Where the two pipelines agree (and why that matters)
+
+Three convention choices in our pipeline that have alternatives in the
+literature, all confirmed by Stellarium's independent implementation:
+
+1. **Hilditch rotation form.** Our [§7b rotation matrix](reference__binary-epoch-pipeline.html)
+   matches Stellarium's [`Star.hpp#L364-L373`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373)
+   term-for-term. Aitken's older sign convention (still seen in some
+   pre-2000 papers) would flip Ω's contribution.
+
+2. **Catalog row = barycenter, not photocenter.** Both pipelines treat
+   the Hipparcos/Gaia astrometric row as the barycenter and displace
+   each component outward. The alternative would be to reconstruct the
+   barycenter from photocenter + photometric flux ratio. Stellarium
+   does not bother; neither do we. This is fine for visual binaries
+   with comparable masses (most pairs in both catalogs) but is a known
+   approximation for very-unequal-mass systems where the photocenter
+   sits near the primary — a deferred refinement, not a current bug.
+
+3. **Hipparcos `f`-factor PM propagation.** The exact `f = 1/√(1 +
+   2μ_r·t + (μ² + μ_r²)·t²)` expression is the ESA-canonical form, used
+   identically. Easy to typo (μ_r vs μ², squared vs not), so seeing the
+   same form in two independent codebases is a strong sanity check.
+
+These agreements are the most useful finding from this research:
+**the math of NearStars's pipeline is not idiosyncratic** — it matches
+the convention chosen by the most widely-used desktop planetarium.
+
+---
+
+## 5. Where they intentionally diverge
+
+The divergences are not bugs in either system; they reflect different
+target use-cases.
+
+### 5.1 Output: unit vector vs Cartesian state
+
+Stellarium needs **where on the sky** a star appears right now. A
+direction is sufficient; distance is folded into apparent magnitude
+and parallax. Cartesian km / km·s⁻¹ would be a waste.
+
+NearStars feeds **Principia**, which integrates the full 3D n-body
+system in km. Components, not the barycenter, are integrated. Without
+absolute Cartesian coordinates per component, Principia has no input.
+
+### 5.2 Catalog ingestion: 15 pairs vs full ORB6
+
+Stellarium curates the showcase pairs amateur astronomers actually
+point at. 15 is enough for "γ Vir is currently widening, watch it over
+five years." A flat hand-edited file is the cheapest implementation
+that delivers that.
+
+NearStars needs every binary that ends up in the mod's ~50 ly
+Kopernicus footprint. Manual curation does not scale to ~30 binary
+systems. ORB6 / Gaia NSS ingestion is therefore mandatory for us,
+optional for them.
+
+### 5.3 Cadence: per-frame vs one-shot
+
+Stellarium recomputes every binary every frame because the user can
+scrub through centuries of time and expect the binaries to swing.
+
+NearStars freezes one instant (`JD2433282.5`) because Principia takes
+over from that point and integrates everything itself. We do not
+*need* the orbital elements after the build step — Principia derives
+all future state from forward integration.
+
+### 5.4 Hierarchical multiples
+
+Stellarium would render Proxima Centauri using *its own* HIP-catalog
+astrometry, with no orbital coupling to α Cen AB. Visually, this is
+indistinguishable from the "true" hierarchical solution — Proxima's
+13,000 AU separation at 4.24 ly translates to ~13' on the sky, which
+is below Stellarium's typical visual-binary resolution anyway.
+
+For Principia, the coupling is **not** negligible. The Kervella+ 2017
+orbital solution for α Cen ABC binds Proxima gravitationally to AB at
+~547,000 yr period, and Principia integrates that perturbation. Our
+Jacobi decomposition for triples (40 Eri C and 36 Oph C are the other
+cases) is therefore necessary.
+
+### 5.5 Solver: Newton vs Markley
+
+Newton iteration with `e < 0.9` converges in ~3–5 iterations to 1e-10.
+Markley's method is non-iterative and converges to ~1e-15 in one shot
+but requires more flops per call. Both are fine; the choice is
+incidental. We use Markley because PyAstronomy ships it; Stellarium
+uses Newton because the rest of their Kepler-solving code is also
+Newton.
+
+---
+
+## 6. Implications for NearStars
+
+**No structural changes recommended.** The comparison validates our
+pipeline rather than revealing a missing feature. Specifically:
+
+- Our convention choices (Hilditch, mass-ratio split, `f`-factor) are
+  the same ones chosen by an independent mature codebase.
+- The features Stellarium *lacks* (Cartesian state output, ORB6
+  ingestion, hierarchical triples, velocity output) are *exactly* the
+  NearStars-specific deltas. We are not over-engineering; we are doing
+  the things Principia requires that Stellarium does not.
+
+**Minor suggestions worth noting**, not action items:
+
+- **Cross-validate a few pairs by visual inspection.** Pick α Cen AB,
+  Sirius AB, 61 Cyg AB — systems present in both Stellarium and our
+  DB. Compute the apparent (Δα·cos δ, Δδ) sky offsets from our
+  Cartesian output at a sample JD, and compare to what Stellarium
+  renders. Agreement to ~10 mas would confirm our convention end-to-end;
+  disagreement would be a sign-error red flag. This is a future
+  verification task, not part of this research.
+
+- **`binary_orbits.json` provenance documentation.** Stellarium gets
+  away with un-cited orbital elements because their target user does
+  not check. We already record `bibcode` per orbit; that is the right
+  policy and we should keep it.
+
+- **The 15-pair list as a manual-curation sanity check.** Every system
+  in Stellarium's list is in our DB. If a future maintainer adds a
+  pair to our DB that is *not* in Stellarium's 15, that is fine — but
+  it should prompt the question "is this pair widely-recognized as a
+  visual binary, or is the orbit speculative?" Stellarium's list is a
+  rough "common knowledge" filter.
+
+---
+
+## 7. Open questions
+
+- Stellarium's `binary_orbitparam.dat` has no build script in their
+  repo. Is it maintained by manual ORB6 lookups, or is there an
+  unpublished derivation script? Not load-bearing for NearStars, but
+  curious.
+- Stellarium computes orbital velocity (arcsec·yr⁻¹) internally before
+  discarding it. If a future Stellarium feature exposes that velocity,
+  it would be the simplest cross-check for our `vx, vy, vz` outputs
+  (modulo a sky-to-3D conversion). Worth watching their changelog.
+- We could not confirm whether Stellarium handles ε Lyr's quadruple
+  structure (ε¹ Lyr AB + ε² Lyr AB are two separate Kepler systems but
+  also a wide visual pair). The 15-row file lists ε¹ and ε² separately
+  with no link between them — probably the same "no hierarchy"
+  limitation as for α Cen + Proxima.
+
+---
+
+## 8. Sky-offset cross-check (executed 2026-05-21)
+
+The §6 "minor suggestion" to numerically validate the two pipelines was
+executed. See [`scripts/verification/stellarium_crosscheck.py`](../scripts/verification/stellarium_crosscheck.py)
+for the reproducible test.
+
+### 8.1 Setup
+
+Two independent algorithms compute the secondary's sky offset
+(Δα·cosδ, Δδ) at JD 2460310.5 (J2024.0).
+
+- **Stellarium-style** — direct `r · rotation` form from
+  [`Star.hpp` L364-L373](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373).
+- **Thiele-Innes** — classical Hilditch (2001) A/B/F/G constants with
+  eccentric anomaly coordinates `x = cosE − e`, `y = √(1−e²)·sinE`.
+
+Each algorithm is applied to **two element sets** independently:
+
+- **Stellarium data** — extracted from
+  [`stars/hip_gaia3/binary_orbitparam.dat`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat)
+  (angles already in radians in that file).
+- **NearStars data** — `db/binary_orbits.json`, AB orbit blocks for α
+  Cen, Sirius, and 61 Cyg.
+
+Result table (mas).
+
+| System | Stellarium-style (Stellarium data) | Stellarium-style (NS data) | Drift |
+|---|---|---|---|
+| α Cen AB | Δα·cosδ=+887, Δδ=+8071 (sep 8.12″, PA 6.3°) | Δα·cosδ=+1234, Δδ=+8537 (sep 8.63″, PA 8.2°) | **581 mas** |
+| Sirius AB | Δα·cosδ=+9865, Δδ=+5536 (sep 11.31″, PA 60.7°) | Δα·cosδ=+9818, Δδ=+5624 (sep 11.31″, PA 60.2°) | **99 mas** |
+| 61 Cyg AB | Δα·cosδ=+14065, Δδ=−28777 (sep 32.03″, PA 154.0°) | Δα·cosδ=+16528, Δδ=−23282 (sep 28.55″, PA 144.6°) | **6022 mas** |
+
+### 8.2 Test 1 — Algorithm equivalence
+
+Both algorithm forms applied to identical element sets produce results
+agreeing to **0.000000 mas** (i.e. to numerical precision, ~1e-15) for
+all three systems with both Stellarium data and NS data. The Hilditch
+rotation convention, eccentric-anomaly transformation, and Kepler
+solver are end-to-end consistent. **No sign-convention bug detected.**
+
+### 8.3 Test 2 — Data drift
+
+The cross-pipeline difference (same algorithm, different element
+source) characterises **data revision drift**, not algorithm error.
+
+- **Sirius 99 mas.** Element sets are nearly identical (both Bond 2017
+  era). Drift is within published uncertainties on `T` and `ω`. ✓
+- **α Cen 581 mas.** Both pipelines use Pourbaix-family solutions but
+  different revisions (NS: Pourbaix & Correia 2017; Stellarium:
+  Pourbaix 2002 era based on the `T = 2435314.751 = 1955.555`
+  signature). The 0.2° Ω, 0.13° ω, and 280-day T differences propagate
+  into a sub-arcsecond drift — expected for an orbit moving rapidly
+  near periastron. ~
+- **61 Cyg 6022 mas.** NS uses Strand (1952) / Walker (1995) elements
+  with B1950 equinox; Stellarium uses unrelated more-recent elements
+  (P=705 yr vs NS 659 yr) with J2000 equinox. The B1950→J2000 frame
+  shift accounts for ~3.4° of the Ω disagreement; the remaining drift
+  is element-revision. This pair is the clearest argument for **NS
+  updating 61 Cyg orbital elements** — Strand 1952 is 70 years stale.
+
+### 8.4 Conclusion
+
+The "~10 mas agreement" target stated in §6 was unrealistic given
+catalog revision noise (sub-arcsec on well-measured systems, multiple
+arcsec on poorly-measured ones). The achievable test was algorithm
+equivalence, which **passes to numerical precision**. The
+NearStars pipeline's Hilditch convention, Thiele-Innes formulation,
+and Newton/Markley Kepler solvers are consistent with Stellarium's
+independent implementation.
+
+The remaining drift is data, not math. Concrete actionable: update 61
+Cyg orbit in `db/binary_orbits.json` to a post-2000 solution. Tracked
+in §9 below as a new open question.
+
+---
+
+## 9. Open questions (updated)
+
+Previous §7 entries remain. New open question from §8:
+
+- **61 Cyg orbit element refresh.** NS's Strand (1952) / Walker (1995)
+  elements with B1950 equinox are 70+ years old and frame-mismatched
+  against our otherwise J2000-aligned pipeline. Candidate replacement:
+  Hartkopf et al. ORB6 grade-4 solution or Malkov+ 2012. Defer to a
+  `phase2/` data-refresh task; flagged here rather than implementing
+  in this research note.
+
+## Related
+
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — the NearStars pipeline being compared (this is the validation cross-check)
+- [methodology](reference__methodology.html) — the schema layer this comparison validates
+- [alpha-centauri-a](../docs/phase3/alpha-centauri-a.md), [alpha-centauri-b](../docs/phase3/alpha-centauri-b.md) — the canonical worked example whose orbit Stellarium and NearStars both encode
+</script>
+<script type="text/markdown" id="md-ko"># Stellarium vs NearStars 다성계 궤도 파이프라인 비교
+
+**NearStars 와의 연관성.** 우리 파이프라인
+([`docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html))
+은 ORB6 / Gaia NSS 궤도 요소를 입력으로 받아 `JD2433282.5` 시점의 ICRF
+Cartesian 상태 벡터 `(x, y, z, vx, vy, vz)` 를 km, km·s⁻¹ 단위로
+출력하고, Principia 의 `principia_initial_state` 에 공급한다. Stellarium
+은 시각 쌍성 궤도 운동을 propagation 하는, 널리 쓰이는 오픈소스 천문
+소프트웨어 중 우리와 가장 가까운 것이다. 둘을 비교하면 NearStars 가
+관심 있는 두 가지 질문에 답할 수 있다. (1) 우리 컨벤션 선택(Hilditch,
+질량비 분할, Hipparcos `f`-factor) 이 독립 구현에서도 공유되는가, (2)
+Stellarium 이 하는 것 중 채택할 만한 것이 있는가, 혹은 그들이 의도적으로
+생략한 것 중 우리가 불필요하게 들고 다니는 것이 있는가.
+
+**범위.** 읽기 전용 연구. 이 레포에 코드 변경 없음.
+
+**외부 참조.**
+- Stellarium master at commit [`3efa1406`](https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01)
+- 우리 파이프라인: [`docs/reference/binary-epoch-pipeline.md`](reference__binary-epoch-pipeline.html)
+- ORB6 카탈로그: https://www.astro.gsu.edu/wds/orb6.html
+
+---
+
+## 1. Executive summary
+
+| 질문 | 답 |
+|----------|--------|
+| 두 파이프라인의 컨벤션이 일치하나? | **수식은 yes, 출력은 no.** Hilditch 회전, 질량비 displacement, Hipparcos `f`-factor PM propagation 이 동일. |
+| 같은 카탈로그를 소비하나? | **No.** Stellarium 은 **수작업 큐레이션된 15쌍 파일**(`binary_orbitparam.dat`) 사용; 우리는 ORB6 + Gaia NSS 직접 읽음. |
+| 비교 가능한 출력을 만드나? | **No.** Stellarium 은 천구 위의 **unit direction vector** 를 렌더링용으로 생성. 우리는 n-body 적분용 **3D Cartesian state in km / km·s⁻¹** 를 생성. 타겟 use-case 가 다름. |
+| Stellarium 이 하이어라키컬 삼중성을 다루나? | **No.** 그들의 궤도 파일에 Proxima Cen, 40 Eri C, 36 Oph C 없음. 각 별의 궤도 결합은 최대 한 쌍 깊이. |
+| NearStars 가 이걸 기반으로 뭔가 바꿔야 하나? | **구조 변경 없음**. 일치 자체가 우리 컨벤션 선택의 검증. Stellarium 의 누락 기능 목록(triples, ORB6 ingestion, velocity output) 이 *정확히* NearStars 의 차별점이므로 우리가 과도설계 아님. |
+
+---
+
+## 2. Stellarium 이 실제로 하는 것
+
+commit [`3efa1406`](https://github.com/Stellarium/stellarium/tree/3efa1406a135fd6330d515ee8b942a58ffa80f01) (2026-05 master HEAD) 기준.
+
+### 2.1 카탈로그
+
+15개 명명된 쌍이 들어있는 단일 flat 파일.
+
+> [`stars/hip_gaia3/binary_orbitparam.dat`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat)
+
+수록된 쌍. α Cen AB, Sirius AB, 61 Cyg AB, γ Vir AB, Alula Aus AB,
+Achird AB, ε¹ Lyr AB, ε² Lyr AB, β Mus AB, Dalim AB, ψ Vel AB,
+ρ Oph AB, ζ Her AB, η Oph AB. 출처가 파일 안에 annotate 되어 있지 않음.
+각도 값(periastron epoch, *i*, Ω) 이 잘 알려진 ORB6 항목과 일치(예. α
+Cen periastron 2435314.751 = 1955.56) — 거의 확실히 ORB6 에서 수작업
+추출, build script 는 없음.
+
+format spec. [user guide §app_star_catalogue.tex L1870-L1926](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/guide/app_star_catalogue.tex#L1870-L1926).
+
+`wds_hip_part.dat` 도 있지만 그 파일은 **마지막 관측된 PA/separation
+스냅샷** 을 더 많은 WDS double 에 대해 저장. propagate 하지 않음 —
+Stellarium 이 그 쌍들을 움직이는 궤도가 아니라 freeze 된 tableau 로
+렌더링.
+
+### 2.2 알고리즘
+
+쌍성 궤도 코드 전체가 `Star.hpp` 의 ~180 줄 templated inline 함수 하나.
+
+> [`Star<Derived>::getBinaryOrbit(epoch, v, ra, dec, plx, pmra, pmdec, RV, sep, pa)`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L265-L449)
+
+순서대로 단계.
+
+1. HIP 로 `binaryorbitstar` lookup (`StarMgr::getBinaryOrbitData()`).
+   없으면 early-exit (`hip == 0`).
+2. Kepler 방정식을 **Newton-Raphson** 으로 풀음. 허용오차 `1e-10`, 최대
+   100 회 반복, 초기값 `E₀ = M`
+   ([Star.hpp#L332-L353](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L332-L353)).
+3. 표준 half-angle 로 진편각 계산.
+   `ν = 2 atan(√((1+e)/(1−e)) · tan(E/2))`.
+4. Hilditch 형식 회전 행렬 적용
+   ([Star.hpp#L364-L373](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373)).
+5. **무게중심** astrometry 를 `data_epoch` 에서 target JD 까지 ESA
+   Hipparcos `f`-factor 가 적용된 full 6-parameter ICRS update 로
+   propagate.
+   `f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)`
+   ([Star.hpp#L381-L385](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L381-L385)).
+6. 질량비 `q = M_B/(M_A + M_B)` 로 A 와 B 분할
+   ([Star.hpp#L414-L423](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L414-L423)).
+7. 무게중심 sphericals 에 `Δα·cos δ` 와 `Δδ` 를 더하고, `spheToRect` 로
+   다시 Cartesian unit vector 로 변환, **normalize**, 반환
+   ([Star.hpp#L437-L448](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L437-L448)).
+
+속도(arcsec·yr⁻¹) 는 step 4 에서 위치와 함께 계산되지만 **normalize 후
+폐기**. 렌더러는 방향만 필요.
+
+### 2.3 호출 주기
+
+매 프레임. drawing loop 안에서
+[`ZoneArray.cpp::draw()`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/ZoneArray.cpp#L510-L515)
+및 `searchAround` / `searchWithin` 에서 호출되며, 현재 `core->getJDE()`
+를 에포크로 사용. 캐싱 레이어 없음; HIP-map miss 가 유일한 fast path.
+
+---
+
+## 3. 비교 cheat-sheet
+
+| 항목 | Stellarium | NearStars |
+|---|---|---|
+| 카탈로그 출처 | Ad-hoc 15-row `binary_orbitparam.dat` (build script 없음) | ORB6 + Gaia NSS upstream → `db/binary_orbits.json` |
+| Kepler 솔버 | Newton iteration, tol `1e-10`, 최대 100 회 | Markley (non-iterative cubic), PyAstronomy `MarkleyKESolver` |
+| ω, Ω 컨벤션 | Hilditch (rotation matrix 일치) | Hilditch / Pourbaix (일치) |
+| 무게중심 PM | Hipparcos `f`-factor (full 6-parameter) | Same |
+| 질량 분할 | `q = M₂/(M₁+M₂)`, ±q · r_rel 로 displace | 동일 공식 |
+| 출력 타입 | 천구 위 unit direction vector | km, km·s⁻¹ 단위 full ICRF Cartesian state `(x, y, z, vx, vy, vz)` |
+| 속도 출력 | 내부 계산 후 **폐기** | 일급 출력 (Principia 가 필요) |
+| 에포크 | `core->getJDE()` 가 반환하는 값 (연속) | 고정 단일 스냅샷 `JD2433282.5` (1950-01-01 TDB) |
+| 호출 주기 | 매 프레임, 보이는 모든 쌍성 | `build_systems.py` 실행 시 1회 |
+| 하이어라키컬 삼중성 (α Cen ABC, 40 Eri ABC, 36 Oph ABC) | **미지원** — Proxima / C-component 없음 | Jacobi 분해 (`primary_is_barycenter_of`) |
+
+---
+
+## 4. 두 파이프라인이 일치하는 지점 (그리고 그것이 왜 중요한가)
+
+우리 파이프라인의 세 가지 컨벤션 선택 — 문헌에서 대안이 있는 것들 —
+모두 Stellarium 의 독립 구현으로 확인됨.
+
+1. **Hilditch 회전 형식.** 우리
+   [§7b 회전 행렬](reference__binary-epoch-pipeline.html) 이
+   Stellarium 의
+   [`Star.hpp#L364-L373`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373)
+   과 term-for-term 일치. Aitken 의 옛 부호 컨벤션(2000 년 이전 일부
+   논문에 아직 보임) 은 Ω 의 기여를 뒤집을 것.
+
+2. **카탈로그 row = 무게중심, photocenter 아님.** 두 파이프라인 모두
+   Hipparcos/Gaia astrometric row 를 무게중심으로 다루고 각 컴포넌트를
+   바깥쪽으로 displace. 대안은 photocenter + photometric flux ratio 에서
+   무게중심을 재구성하는 것. Stellarium 은 안 함; 우리도 안 함. 비교적
+   질량이 비슷한 시각 쌍성(두 카탈로그의 대부분 쌍) 에 대해서는 OK,
+   질량 차이가 매우 큰 시스템에서는 photocenter 가 primary 근처에 위치
+   — 알려진 근사이고 향후 정교화 대상이지 현재 버그는 아니다.
+
+3. **Hipparcos `f`-factor PM propagation.** 정확한
+   `f = 1/√(1 + 2μ_r·t + (μ² + μ_r²)·t²)` 표현이 ESA 표준 형식, 동일하게
+   사용. μ_r vs μ², squared vs not 같은 typo 가 쉽게 일어나는 곳이라
+   두 독립 코드베이스에서 같은 형태를 보는 게 강한 sanity check.
+
+이 일치가 이 연구의 가장 유용한 발견 — **NearStars 파이프라인의 수식이
+idiosyncratic 하지 않음.** 가장 널리 쓰이는 desktop planetarium 이
+선택한 컨벤션과 일치.
+
+---
+
+## 5. 의도적으로 다른 지점
+
+분기는 두 시스템 어느 쪽도 버그가 아니며, target use-case 가 다른 결과.
+
+### 5.1 출력: unit vector vs Cartesian state
+
+Stellarium 은 별이 지금 **하늘 어디에** 보이는지가 필요. 방향이면 충분,
+거리는 apparent magnitude 와 parallax 에 녹아있음. Cartesian km /
+km·s⁻¹ 는 낭비.
+
+NearStars 는 **Principia** 에 입력. Principia 는 km 단위로 full 3D
+n-body 시스템을 적분. 무게중심이 아니라 컴포넌트 단위로 적분. 컴포넌트당
+absolute Cartesian 좌표 없이는 Principia 에 입력이 없음.
+
+### 5.2 카탈로그 ingestion: 15 쌍 vs full ORB6
+
+Stellarium 은 amateur astronomer 가 실제로 가리키는 showcase 쌍을
+큐레이션. 15개면 "γ Vir 가 지금 벌어지는 중, 5년 지켜봐" 류에 충분. 평평한
+hand-edited 파일이 그걸 제공하는 가장 저렴한 구현.
+
+NearStars 는 mod 의 ~50 ly Kopernicus footprint 에 들어오는 모든
+쌍성이 필요. 수작업 큐레이션은 ~30 개 쌍성 시스템에 안 스케일. 우리는
+ORB6 / Gaia NSS ingestion 이 필수, 그들에게는 선택.
+
+### 5.3 호출 주기: 매 프레임 vs 1회
+
+Stellarium 은 사용자가 수 세기를 scrub 할 수 있고 쌍성이 swing 하는
+것을 기대하므로 매 프레임 재계산.
+
+NearStars 는 한 순간(`JD2433282.5`) 을 freeze. 그 다음부터는 Principia 가
+forward integration 으로 모든 future state 를 derive. build 단계 이후
+궤도 요소가 *필요* 없음.
+
+### 5.4 하이어라키컬 다중성
+
+Stellarium 은 Proxima Centauri 를 *자체* HIP 카탈로그 astrometry 로
+렌더링 — α Cen AB 와 궤도적으로 결합되지 않음. 시각적으로는 "진짜"
+하이어라키컬 해와 구분 불가 — Proxima 의 4.24 ly 거리 × 13,000 AU
+분리는 하늘에서 ~13′ 로 변환, Stellarium 의 일반적 시각 쌍성 해상도
+아래.
+
+Principia 입장에서는 결합이 **무시 불가능**. Kervella+ 2017 의 α Cen ABC
+궤도해는 Proxima 를 AB 에 ~547,000 yr 주기로 중력 결합, Principia 가 그
+섭동을 적분. 그래서 우리의 Jacobi 분해 for triples(40 Eri C 와 36 Oph C
+도 같은 케이스) 가 필요.
+
+### 5.5 솔버: Newton vs Markley
+
+`e < 0.9` 의 Newton iteration 은 1e-10 까지 ~3–5 회면 수렴. Markley 는
+non-iterative 하고 1 회에 ~1e-15 까지 수렴하지만 호출당 더 많은 flop
+필요. 둘 다 OK; 선택은 부수적. 우리는 PyAstronomy 가 제공하므로 Markley
+사용; Stellarium 은 나머지 Kepler-solving 코드가 Newton 이므로 Newton.
+
+---
+
+## 6. NearStars 에 시사점
+
+**구조 변경 권장 사항 없음.** 비교가 우리 파이프라인을 검증할 뿐, 누락
+기능을 드러내지 않음. 구체적으로.
+
+- 우리 컨벤션 선택(Hilditch, 질량비 분할, `f`-factor) 이 독립된 성숙한
+  코드베이스가 선택한 것과 동일.
+- Stellarium 이 *결여한* 기능들(Cartesian state output, ORB6 ingestion,
+  hierarchical triples, velocity output) 이 *정확히* NearStars 의 차별점.
+  과도설계가 아니라 Principia 가 요구하고 Stellarium 은 요구하지 않는
+  것을 하고 있음.
+
+**행동 항목은 아니지만 기록해 둘 minor 제안.**
+
+- **몇 쌍을 시각 검사로 cross-validate.** Stellarium 과 우리 DB 모두에
+  있는 α Cen AB, Sirius AB, 61 Cyg AB 선택. 우리 Cartesian 출력에서 sample
+  JD 의 apparent (Δα·cos δ, Δδ) sky offset 을 계산해 Stellarium 의 렌더와
+  비교. ~10 mas 일치면 우리 컨벤션 end-to-end 확인; 불일치면 sign-error red
+  flag. 본 연구 범위 밖의 향후 검증 작업.
+
+- **`binary_orbits.json` 출처 문서화.** Stellarium 은 타깃 사용자가
+  체크하지 않으므로 인용 없는 궤도 요소로 넘어감. 우리는 이미 궤도당
+  `bibcode` 를 기록 — 옳은 정책이고 유지.
+
+- **수작업 큐레이션 sanity check 로서의 15쌍 목록.** Stellarium 목록의
+  모든 시스템이 우리 DB 에 있음. 향후 maintainer 가 Stellarium 의 15 에
+  *없는* 쌍을 우리 DB 에 추가하면 — OK 이긴 하지만 — "이 쌍이 시각 쌍성
+  으로 널리 인식되는가, 아니면 궤도가 speculative 한가" 라는 질문이
+  떠야 함. Stellarium 목록이 "통념" 필터 역할.
+
+---
+
+## 7. 미해결 질문
+
+- Stellarium 의 `binary_orbitparam.dat` 는 그들의 레포에 build script 가
+  없음. 수작업 ORB6 lookup 으로 유지되는가, 아니면 unpublished derivation
+  script 가 있는가? NearStars 에는 load-bearing 아니지만 호기심.
+- Stellarium 이 궤도 속도(arcsec·yr⁻¹) 를 내부 계산 후 폐기. 향후
+  Stellarium feature 가 그 속도를 노출하면, 우리 `vx, vy, vz` 출력의 가장
+  간단한 cross-check (sky-to-3D 변환 modulo). 그쪽 changelog 지켜볼 가치.
+- Stellarium 이 ε Lyr 의 quadruple 구조(ε¹ Lyr AB + ε² Lyr AB 는 두 개의
+  분리된 Kepler 시스템이지만 동시에 wide visual pair) 를 처리하는지 확인
+  못 함. 15-row 파일은 ε¹ 과 ε² 를 따로 나열하고 둘 사이 link 없음 —
+  아마 α Cen + Proxima 와 같은 "no hierarchy" 한계.
+
+---
+
+## 8. Sky-offset 교차 검증 (2026-05-21 실행)
+
+§6 의 "minor 제안" 이었던 두 파이프라인 수치 검증 실행. 재실행 가능한
+테스트는
+[`scripts/verification/stellarium_crosscheck.py`](../../scripts/verification/stellarium_crosscheck.py)
+참조.
+
+### 8.1 설정
+
+두 독립 알고리즘이 secondary 의 sky offset (Δα·cosδ, Δδ) 를 JD 2460310.5
+(J2024.0) 에서 계산.
+
+- **Stellarium-style** — [`Star.hpp` L364-L373](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/src/core/modules/Star.hpp#L364-L373)
+  의 직접 `r · rotation` 형태.
+- **Thiele-Innes** — 고전적 Hilditch (2001) A/B/F/G 상수에 이심 anomaly
+  좌표 `x = cosE − e`, `y = √(1−e²)·sinE` 사용.
+
+각 알고리즘을 **두 element 세트** 에 독립적으로 적용.
+
+- **Stellarium 데이터** —
+  [`stars/hip_gaia3/binary_orbitparam.dat`](https://github.com/Stellarium/stellarium/blob/3efa1406a135fd6330d515ee8b942a58ffa80f01/stars/hip_gaia3/binary_orbitparam.dat)
+  에서 추출 (해당 파일은 각도가 이미 radian).
+- **NearStars 데이터** — `db/binary_orbits.json` 의 α Cen, Sirius, 61
+  Cyg AB orbit 블록.
+
+결과 표 (mas).
+
+| 시스템 | Stellarium-style (Stellarium 데이터) | Stellarium-style (NS 데이터) | Drift |
+|---|---|---|---|
+| α Cen AB | Δα·cosδ=+887, Δδ=+8071 (sep 8.12″, PA 6.3°) | Δα·cosδ=+1234, Δδ=+8537 (sep 8.63″, PA 8.2°) | **581 mas** |
+| Sirius AB | Δα·cosδ=+9865, Δδ=+5536 (sep 11.31″, PA 60.7°) | Δα·cosδ=+9818, Δδ=+5624 (sep 11.31″, PA 60.2°) | **99 mas** |
+| 61 Cyg AB | Δα·cosδ=+14065, Δδ=−28777 (sep 32.03″, PA 154.0°) | Δα·cosδ=+16528, Δδ=−23282 (sep 28.55″, PA 144.6°) | **6022 mas** |
+
+### 8.2 Test 1 — 알고리즘 등가성
+
+같은 element 세트에 두 알고리즘을 통과시킨 결과가 **0.000000 mas** (수치
+정밀도, ~1e-15) 까지 일치 — 세 시스템 모두, Stellarium 데이터와 NS
+데이터 양쪽 모두. Hilditch 회전 컨벤션, 이심 anomaly 변환, Kepler 솔버가
+end-to-end 일관. **sign-convention 버그 없음 확인.**
+
+### 8.3 Test 2 — 데이터 drift
+
+Cross-pipeline 차이(같은 알고리즘, 다른 element 출처) 는 알고리즘 오류가
+아닌 **데이터 revision drift** 측정.
+
+- **Sirius 99 mas.** Element 세트가 거의 동일 (둘 다 Bond 2017 era).
+  Drift 는 출판된 `T` 와 `ω` 의 불확실성 범위 안. ✓
+- **α Cen 581 mas.** 두 파이프라인 모두 Pourbaix 계열 해를 사용하지만
+  다른 revision (NS. Pourbaix & Correia 2017; Stellarium. `T =
+  2435314.751 = 1955.555` 시그니처로 보아 Pourbaix 2002 era). 0.2° Ω,
+  0.13° ω, 280일 T 차이가 sub-arcsecond drift 로 전파 — periastron 근처
+  빠르게 움직이는 궤도에서 예상되는 수준. ~
+- **61 Cyg 6022 mas.** NS 는 Strand (1952) / Walker (1995) elements with
+  B1950 equinox; Stellarium 은 무관한 더 최근 elements (P=705 yr vs NS
+  659 yr) with J2000 equinox. B1950→J2000 frame shift 가 Ω 차이의 ~3.4°
+  를 설명; 나머지는 element revision 차이. 이 쌍은 **NS 의 61 Cyg 궤도
+  elements 갱신** 의 가장 명확한 근거 — Strand 1952 는 70 년 stale.
+
+### 8.4 결론
+
+§6 에서 명시한 "~10 mas 일치" 타깃은 카탈로그 revision 노이즈(잘 측정된
+시스템에서도 sub-arcsec, 부실하게 측정된 것은 수 arcsec) 를 고려할 때
+비현실적. 실제로 달성 가능했던 테스트는 알고리즘 등가성이었고, 그것은
+**수치 정밀도까지 통과**. NearStars 파이프라인의 Hilditch 컨벤션,
+Thiele-Innes 표현, Newton/Markley Kepler 솔버가 Stellarium 의 독립 구현과
+일관.
+
+남은 drift 는 데이터지 수학이 아님. 구체적 action 항목. `db/binary_orbits.json`
+의 61 Cyg 궤도를 post-2000 해로 갱신. 아래 §9 에서 신규 open question 으로
+추적.
+
+---
+
+## 9. 미해결 질문 (갱신)
+
+이전 §7 항목 유지. §8 에서 추가된 신규 open question.
+
+- **61 Cyg 궤도 element refresh.** NS 의 Strand (1952) / Walker (1995)
+  elements 는 B1950 equinox, 70+ 년 stale, 그리고 우리 파이프라인의
+  나머지 J2000 정렬과 frame 불일치. 후보 대체. Hartkopf et al. ORB6
+  grade-4 solution 또는 Malkov+ 2012. 본 연구 노트에서 구현하지 않고
+  `phase2/` 데이터 refresh 작업으로 deferred — 여기서 flag 만.
+
+## Related
+
+- [binary-epoch-pipeline](reference__binary-epoch-pipeline.html) — 비교 대상이 되는 NearStars 파이프라인 (본 문서가 그 검증 교차 검사).
+- [methodology](reference__methodology.html) — 이 비교가 검증하는 스키마 층.
+- [alpha-centauri-a](../docs/phase3/alpha-centauri-a.md), [alpha-centauri-b](../docs/phase3/alpha-centauri-b.md) — Stellarium 과 NearStars 가 모두 인코딩하는 정전 워크드 예시.
+</script>
 <script>
-const seg = document.getElementById('lang-seg');
-if (seg) {
-  function applyLang(l){
-    document.documentElement.lang = l;
-    document.querySelectorAll('[data-langbody]').forEach(d =>
-      d.style.display = (d.dataset.langbody === l) ? '' : 'none');
-    seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
-  }
-  let lang = localStorage.getItem('nearstars-lang') || 'ko';
-  applyLang(lang);
-  seg.addEventListener('click', e => {
-    const b = e.target.closest('button[data-lang]'); if(!b) return;
-    lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); applyLang(lang);
-  });
+const srcs = {};
+const en = document.getElementById('md-en'); if (en) srcs.en = en.textContent;
+const ko = document.getElementById('md-ko'); if (ko) srcs.ko = ko.textContent;
+const content = document.getElementById('content');
+function render(l) {
+  if (!srcs[l]) l = srcs.ko ? 'ko' : 'en';
+  document.documentElement.lang = l;
+  content.innerHTML = marked.parse(srcs[l], { gfm: true, breaks: false });
+  const seg = document.getElementById('lang-seg');
+  if (seg) seg.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.lang === l));
 }
+let lang = localStorage.getItem('nearstars-lang') || 'ko';
+render(lang);
+const seg = document.getElementById('lang-seg');
+if (seg) seg.addEventListener('click', e => {
+  const b = e.target.closest('button[data-lang]'); if (!b) return;
+  lang = b.dataset.lang; localStorage.setItem('nearstars-lang', lang); render(lang);
+});
 </script>
 </body>
 </html>
