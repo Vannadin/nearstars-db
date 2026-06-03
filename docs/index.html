@@ -1817,7 +1817,9 @@ function applyFilter(rows) {
   return rows.filter(r => {
     if (q && !r.sysName.toLowerCase().includes(q) && !r.starName.toLowerCase().includes(q)) return false;
     if (FILTER.spec && r.spec[0] !== FILTER.spec) return false;
-    if (r.dist == null || r.dist > FILTER.dist) return false;
+    // 이름 검색어가 있으면 거리 필터를 건너뜀 — 명시적으로 찾는 천체는 거리(또는
+    // 시차 결측)와 무관하게 보여준다. 검색어가 없을 때만 'Dist ≤' 슬라이더 적용.
+    if (!q && (r.dist == null || r.dist > FILTER.dist)) return false;
     if (FILTER.hpx && r.np === 0) return false;
     if (FILTER.phase !== 'all') {
       const rep = REPORTS[r.sysName] || {};
