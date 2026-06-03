@@ -91,7 +91,7 @@ the flare color, and the spot-coverage cycle phase.
 | `disk_resolved_imaging` | true | high | HST/STIS (Krist 2005, Schneider 2014); VLT/SPHERE (Boccaletti 2015, 2018) |
 | `disk_imaging_observatory` | HST-STIS + VLT-SPHERE | high | as above |
 | `disk_imaging_inclination_deg` | 89.5 | high | Krist 2005; Schneider 2014; SPHERE confirms i ≈ 89° (within ~1° of edge-on) |
-| `disk_aspect_ratio` | 0.031 (+0.005/−0.004) | medium | Daley 2019 ALMA — edge-on (i = 88.5°) resolved vertical structure: a Gaussian scale height H(r) = h·r with constant aspect ratio h over r ≈ 23–41 AU (implies H ≈ 1.24 AU at the ~40 AU edge). Not consumed by the flat Kopernicus Ring — recorded for completeness + future volumetric/Parallax rendering |
+| `disk_aspect_ratio` | 0.031 (+0.005/−0.004) (H ≈ 1.24 AU ≈ 1.9 × 10⁸ km at the ~40 AU edge) | medium | Daley 2019 ALMA — edge-on (i = 88.5°) resolved vertical structure: a Gaussian scale height H(r) = h·r with constant aspect ratio h over r ≈ 23–41 AU (implies H ≈ 1.24 AU at the ~40 AU edge). Not consumed by the flat Kopernicus Ring — recorded for completeness + future volumetric/Parallax rendering |
 | `disk_planetesimal_belt_inferred` | true | high | Required to supply the dust that wind-pressure then accelerates outward; standard birth-ring model of Strubbe & Chiang 2006 |
 | `visual_companion_event_disk_substructures_animated` | true | low | Tie-break: literature describes substructures as moving 4–10 km/s; cfg picks animated (rather than static texture) because the animation is the visually defining feature of AU Mic's disk — interesting-first applies |
 

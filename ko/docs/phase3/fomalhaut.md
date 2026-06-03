@@ -85,7 +85,7 @@ Kalas et al. 2008 이 HST 가시광 영상에서 보고한 그 유명한
 | `disk_cold_dust_temperature_k` | 65 | high | Stapelfeldt 2004 Spitzer. Acke 2012 Herschel 의 차가운 성분 SED fit |
 | `disk_cold_tint_rgb_hex` | `#d6d8da` (거의 중성 회백색) | medium | 실측. Kalas 2005 HST/ACS + Acke 2012 — 희미하고 저알베도(~0.05–0.1), 큰 입자 → A3V 백색 별에 가까운 거의 중성/회색 산란광 ("파란 Fomalhaut" 은 행성후보지 고리가 아님) |
 | `disk_cold_opacity` | 0.35 | low | Tie-break. 실제로는 광학적으로 얇음 (τ ≈ 10⁻⁴). 가시성 위해 boost |
-| `disk_cold_aspect_ratio` | 0.0175 ± 0.004 | medium | Boley 2012 ALMA — cold 주 고리의 수직 구조. midplane 에서 1.0° ± 0.25 opening angle (지수 분포) 이므로 h = H/r = tan θ ≈ 0.0175. 이 디스크의 유일한 수직 구조 측정입니다 (MacGregor 2017 은 2D 모델로 이것을 인용만 함). 평면 Kopernicus Ring 은 소비하지 않으며, 완전성과 향후 볼류메트릭/Parallax 렌더링용으로 기록합니다 |
+| `disk_cold_aspect_ratio` | 0.0175 ± 0.004 (H ≈ 2.4 AU ≈ 3.6 × 10⁸ km, r ≈ 140 AU) | medium | Boley 2012 ALMA — cold 주 고리의 수직 구조. midplane 에서 1.0° ± 0.25 opening angle (지수 분포) 이므로 h = H/r = tan θ ≈ 0.0175. 이 디스크의 유일한 수직 구조 측정입니다 (MacGregor 2017 은 2D 모델로 이것을 인용만 함). 평면 Kopernicus Ring 은 소비하지 않으며, 완전성과 향후 볼류메트릭/Parallax 렌더링용으로 기록합니다 |
 | `disk_morphology` | 3 벨트 편심 구조. warm 내부 디스크 (~10–78 AU) + intermediate 벨트 (~83–104 AU), ~78 AU gap 으로 분리, + 고전적 편심 cold 주 고리 (133–158 AU, 날카로운 안쪽 가장자리) | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST/MIRI — 완전한 다중 벨트 구조 |
 | `disk_resolved_imaging` | true | high | HST/ACS (Kalas 2005), ALMA (Boley 2012, White 2017), JWST/MIRI (Gáspár 2023) |
 | `disk_imaging_observatory` | HST-ACS + ALMA + JWST-MIRI | high | 위와 동일 |
