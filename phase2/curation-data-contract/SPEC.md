@@ -78,7 +78,8 @@ guard). One entry = (paper × belt).
 - Top-level allowed: `disk_measurements`, `meta_notes`.
 - Value keys (≥1 key must be *present*; the value itself may be `null` for
   detection-only papers like IRAS): `inner_radius_au`, `outer_radius_au`,
-  `dust_temperature_k`, `dust_mass_mearth`, `inclination_deg` (+ `uncertainty_*`).
+  `dust_temperature_k`, `dust_mass_mearth`, `inclination_deg`, `aspect_ratio`
+  (vertical h = H/r, dimensionless; resolved/edge-on disks only) (+ `uncertainty_*`).
 - Required: `method`, `recommended`. Optional: `reference`, `bibcode`, `doi`.
 - Allowed `method`: sed_fit, resolved_imaging, photometric_excess, unverified.
 - Extra keys: `belt`, `morphology`, `resolved`, `observatory`, `notes`.
