@@ -152,6 +152,7 @@ The outer A-BC orbit remains undetermined (Tokovinin MSC 2018 lists ~8000 yr, ~8
 - 2026-05-27: B-C orbit upgraded Heintz 1974 → Mason 2017 (grade 1, phase_reliable=true). Equinox B1950 → J2000.
 - 2026-05-27: Spectral type 40 Eri B updated DA4 → DA2.9 (GBR11). Magnetic null result recorded in meta.notes.
 - 2026-05-27: 40 Eri C rotation period (Kemmer 2025 ≈137 d) deferred — paper not independently verified by survey agent.
+- 2026-06-03: **OVERRIDE — HD 26965 b (40 Eri A b) RE-INCLUDED in planets_curated per user decision** (gameplay/cultural variety: Star Trek Vulcan + PHM Erid). Uses pre-retraction Ma 2018 RV values (8.47 M⊕ m sin i, P 42.245 d, a 0.224 AU, e 0.04). Refutation (Burrows/Lubin 2024 — signal is stellar rotation) is documented in Phase 3 (docs/phase3/40-eridani-a.md, "Refuted planet" section + documented-divergence framing) and flagged in the curated reference note. The earlier "do NOT add" decision (2026-05-27) is superseded. NOTE: the PHM 2026 film's deep-blue atmosphere + rings are FICTION — not added to the DB (real Ma 2018 mass/orbit only); recorded in cultural-context.md only.
 
 ## 2026-05-29 — Tier 2 warm-up restart
 

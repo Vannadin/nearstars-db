@@ -231,11 +231,14 @@ K 왜성 질량 WD + M 왜성 binary 입니다. periastron 에서 B-C
 검출 가능해지지만, ~8000 년의 A-BC 궤도 시간 척도에서는 cfg
 게임 내 epoch 동안 분리각이 기하학적으로 고정된 것으로 다룹니다.
 
-**HD 26965 b 는 렌더링하지 않습니다.** Burrows 2024 반박에 따라,
-"벌컨" 후보는 게임 내 시스템에서 표현되지 않습니다. 아래
-Refutation 섹션이 문화적 cross-reference 차원에서 역사적 검출과
-반박을 문서화합니다. cfg 는 항성 삼중성계만 렌더링하고 A 주위의
-어떤 행성도 그리지 않습니다.
+**HD 26965 b 는 documented divergence 로 포함합니다.** 벌컨 후보는
+Burrows 2024 로 반박됐지만(아래), 프로젝트는 문화적 무게(Star Trek 의
+Vulcan, *Project Hail Mary* 의 Erid)를 고려해 철회 이전 Ma 2018 값
+(M sin i ≈ 8.5 M⊕, P ≈ 42.2 d, a ≈ 0.224 AU)으로 이 행성을 유지하기로
+했습니다. canonical 판독은 "행성 없음"이고 42 일 신호는 별의 자전입니다.
+그래서 아래 Refutation 섹션이 검출과 반박을 문서화하며, 이 천체는 refuted
+disposition 을 답니다. cfg 는 항성 삼중성계에 이 문화적·반박표기 천체를
+더해 렌더링합니다.
 
 ## Canonical alternatives
 

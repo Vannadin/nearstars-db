@@ -244,12 +244,15 @@ brightness from C's emission becomes detectable, but at the
 ~8000 yr A-BC orbit timescale the separation is geometrically
 fixed for the cfg in-game epoch.
 
-**No planet rendering for HD 26965 b.** Per the Burrows 2024
-refutation, the "Vulcan" candidate is not represented in the
-in-game system. The Refutation section below documents the
-historical detection and refutation for cultural cross-reference;
-the cfg renders only the stellar triple, not any planetary body
-around A.
+**HD 26965 b is included as a documented divergence.** Although the
+Vulcan candidate was refuted (Burrows 2024, below), the project elects
+to retain it at its pre-retraction Ma 2018 parameters (M sin i ≈ 8.5
+M⊕, P ≈ 42.2 d, a ≈ 0.224 AU) for its cultural weight (Star Trek's
+Vulcan; Erid in *Project Hail Mary*). The canonical reading is no
+planet — the 42-day signal is stellar rotation — so the Refutation
+section below documents the detection and its refutation, and the body
+carries a refuted disposition. The cfg renders the stellar triple plus
+this culturally-anchored, refutation-flagged body.
 
 ## Canonical alternatives
 

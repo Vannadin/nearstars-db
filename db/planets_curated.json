@@ -6015,5 +6015,29 @@
         "notes": "TENTATIVE / DISPUTED. The 2007 eclipse light curve is real data; the ring system is the best-fit MODEL of that single, never-repeated event. Companion's bound orbit unconfirmed (Mentel 2018: no second eclipse in plates 1890-2018). Mass spans 8-100 M_Jup (photometric ~24 vs ring-stability dynamics 60-100, Rieder & Kenworthy 2016). Retrograde favored. Outer radius ~90 million km, ~200x Saturn's rings; gap at ~0.4 AU attributed to an exomoon (<0.8 M_earth)."
       }
     }
+  ],
+  "40 Eridani A": [
+    {
+      "pl_name": "40 Eridani A b",
+      "orbital": [
+        {
+          "period_days": 42.245,
+          "semi_major_axis_au": 0.224,
+          "eccentricity": 0.04,
+          "method": "rv",
+          "reference": "Ma et al. 2018 (Dharma Planet Survey RV); 42.2-d signal later refuted as stellar rotation/activity (Lubin & Burrows 2024). Re-included per project decision (gameplay/cultural variety: Star Trek Vulcan + PHM Erid); refutation documented in Phase 3.",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 8.47,
+          "mass_type": "msini",
+          "method": "rv",
+          "reference": "Ma et al. 2018 (Dharma Planet Survey) — m sin i; signal refuted Lubin/Burrows 2024",
+          "recommended": true
+        }
+      ]
+    }
   ]
 }

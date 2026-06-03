@@ -235,13 +235,55 @@
       }
     }
   ],
-  "planets": [],
+  "planets": [
+    {
+      "name": "40 Eridani A b",
+      "host_star": "40 Eridani A",
+      "raw": {},
+      "derived": {
+        "semi_major_axis_m": 33509923036.8,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 5.058453400000001e+25,
+        "mass_type": "msini",
+        "radius_m": null,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
+      },
+      "curated": {
+        "pl_name": "40 Eridani A b",
+        "orbital": [
+          {
+            "period_days": 42.245,
+            "semi_major_axis_au": 0.224,
+            "eccentricity": 0.04,
+            "method": "rv",
+            "reference": "Ma et al. 2018 (Dharma Planet Survey RV); 42.2-d signal later refuted as stellar rotation/activity (Lubin & Burrows 2024). Re-included per project decision (gameplay/cultural variety: Star Trek Vulcan + PHM Erid); refutation documented in Phase 3.",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 8.47,
+            "mass_type": "msini",
+            "method": "rv",
+            "reference": "Ma et al. 2018 (Dharma Planet Survey) — m sin i; signal refuted Lubin/Burrows 2024",
+            "recommended": true
+          }
+        ]
+      }
+    }
+  ],
   "sources": [
     {
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-03",
       "used_for": [
         "epoch propagation method"
       ]
@@ -250,16 +292,26 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-03",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "NASA Exoplanet Archive",
+      "doi": null,
+      "bibcode": null,
+      "url": "https://exoplanetarchive.ipac.caltech.edu",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "planet parameters"
       ]
     },
     {
       "title": "Ma et al. 2018",
       "doi": "10.1093/mnras/sty1933",
       "bibcode": "2018MNRAS.480.2411M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-03",
       "used_for": [
         "40 Eridani A mass (empirical_relation)"
       ]
@@ -268,7 +320,7 @@
       "title": "Diaz et al. 2018",
       "doi": "10.3847/1538-3881/aaa896",
       "bibcode": "2018AJ....155..126D",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-03",
       "used_for": [
         "40 Eridani A mass (evolutionary_model)"
       ]
@@ -277,7 +329,7 @@
       "title": "Boyajian et al. 2012",
       "doi": "10.1088/0004-637X/757/2/112",
       "bibcode": "2012ApJ...757..112B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-03",
       "used_for": [
         "40 Eridani A radius (interferometry)"
       ]
@@ -286,14 +338,14 @@
       "title": "Rains et al. 2020",
       "doi": "10.1093/mnras/staa282",
       "bibcode": "2020MNRAS.493.2377R",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-03",
       "used_for": [
         "40 Eridani A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-03",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
