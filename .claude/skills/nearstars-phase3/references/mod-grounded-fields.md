@@ -122,6 +122,7 @@ convention.
 | `disk_morphology` | (`steps` + `texture` path) | prose → texture variant | Single-ring → `steps=128` solid; multi-ring → higher steps + per-belt texture; asymmetric → custom texture; placeholder path under `NearStars-Textures/PluginData/<star>/disk_<belt>.dds` |
 | `disk_planetesimal_belt_inferred` | (asteroid belt cfg, separate from Rings) | bool | If true, optionally emit a sparse `Asteroid` group at the disk midpoint; not part of the `Rings` block |
 | `disk_dust_temperature_k` | (informational, drives `disk_tint_rgb_hex` synth) | — | Phase 3 step uses dust T to pick the hex; cfg writer just uses the hex |
+| `disk_aspect_ratio` (or per-belt `disk_<belt>_aspect_ratio`) | (none — flat Ring) | — | Vertical scale-height ratio h = H/r. Kopernicus `Ring` is a flat annulus with **no thickness parameter**, so this is NOT emitted. Carried in the DB (`disks_curated` `aspect_ratio`) + Phase 3 for completeness + a future volumetric / Parallax disk renderer. Only the few resolved/edge-on disks have it (Fomalhaut cold ring 0.0175, AU Mic 0.031). |
 
 Default Ring fields emitted with fixed values (per `gas-giant.md` § Rings template; not driven by Phase 3 sources):
 

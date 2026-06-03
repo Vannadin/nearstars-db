@@ -88,6 +88,7 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `disk_cold_dust_temperature_k` | 65 | high | Stapelfeldt 2004 Spitzer; Acke 2012 Herschel SED-fit of the cold component |
 | `disk_cold_tint_rgb_hex` | `#d6d8da` (near-neutral grey-white) | medium | MEASURED: Kalas 2005 HST/ACS + Acke 2012 — faint, low-albedo (~0.05–0.1), large grains → near-neutral/gray scattered light close to the A3V white star (the "blue Fomalhaut" is the planet candidate, not the ring) |
 | `disk_cold_opacity` | 0.35 | low | Tie-break: optically thin in reality (τ ≈ 10⁻⁴); boosted for visibility per interesting-first |
+| `disk_cold_aspect_ratio` | 0.0175 ± 0.004 | medium | Boley 2012 ALMA — cold main-ring vertical structure: a 1.0° ± 0.25 opening angle from the midplane (exponential profile), so h = H/r = tan θ ≈ 0.0175. The only vertical-structure measurement of this disk (MacGregor 2017 used a 2D model and only cites it). Not consumed by the flat Kopernicus Ring — recorded for completeness + future volumetric/Parallax rendering |
 | `disk_morphology` | three-belt eccentric architecture: warm inner disk (~10–78 AU) + intermediate belt (~83–104 AU), separated by a gap near ~78 AU, + the classic eccentric cold main ring (133–158 AU, sharp inner edge) | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST/MIRI — full multi-belt architecture |
 | `disk_resolved_imaging` | true | high | HST/ACS (Kalas 2005), ALMA (Boley 2012, White 2017), JWST/MIRI (Gáspár 2023) |
 | `disk_imaging_observatory` | HST-ACS + ALMA + JWST-MIRI | high | as above |
