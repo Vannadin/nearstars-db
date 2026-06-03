@@ -1,0 +1,193 @@
+{
+  "audit_date": "2026-06-03",
+  "method": "agent-team finder (63 reports) + main-thread verification (deterministic + targeted)",
+  "raw_candidates": {
+    "total": 430,
+    "high": 43,
+    "medium": 178,
+    "low": 209
+  },
+  "verification": {
+    "cache_presence_refuted": 120,
+    "cache_presence_upheld": 78
+  },
+  "confirmed": [
+    {
+      "id": "F1a",
+      "report": "barnards-star",
+      "severity": "high",
+      "type": "PHASE2_DESYNC",
+      "issue": "DB has 4 confirmed planets (Basant 2025) but 0 Phase 3 planet reports; host calls them candidates, no Basant cite",
+      "fix": "synthesize Barnard b/c/d/e; update host"
+    },
+    {
+      "id": "F1b",
+      "report": "teegardens-star",
+      "severity": "high",
+      "type": "PHASE2_DESYNC",
+      "issue": "3 DB planets, 0 planet reports",
+      "fix": "synthesize Teegarden b/c/d"
+    },
+    {
+      "id": "F2",
+      "report": "fomalhaut",
+      "severity": "high",
+      "type": "VALUE_MISMATCH+INTERNAL+UNSOURCED",
+      "issue": "intermediate belt 60-110 should be 83-104 AU; ~78 AU gap missing; inner incl 67.5 should be 47.8; prose 40-80 vs table; disk bib empty",
+      "fix": "correct geometry rows + prose; backfill disk bib (Gaspar2023/Kalas2005/Boley2012/White2017/Acke2012)"
+    },
+    {
+      "id": "F3a",
+      "report": "hd-219134-h",
+      "severity": "high",
+      "type": "PHYSICAL_IMPLAUSIBLE",
+      "issue": "surface_gravity 3.8 g_earth; correct ~0.95 (0.34 MJup, 0.95 RJup)",
+      "fix": "3.8 -> 0.95; recheck scale_height/density"
+    },
+    {
+      "id": "F3b",
+      "report": "gj-896-a-b",
+      "severity": "high",
+      "type": "PHYSICAL_IMPLAUSIBLE",
+      "issue": "surface_gravity 58 g_earth; correct ~4.7 (2.26 MJup, 1.1 RJup = 46 m/s2)",
+      "fix": "58 -> ~4.7; recheck downstream"
+    },
+    {
+      "id": "F4",
+      "report": "eps-eri-b",
+      "severity": "high",
+      "type": "VALUE_MISMATCH+DESYNC",
+      "issue": "mass 0.78 MJup/248 Mearth double-deprojected; DB/Llop-Sayson true mass 0.66 MJup/209.77 Mearth",
+      "fix": "0.78->0.66 MJup, 248->210 Mearth"
+    },
+    {
+      "id": "F5",
+      "report": "proxima-cen-b",
+      "severity": "high",
+      "type": "BLOCK_PARITY",
+      "issue": "en=43 ko=41 block mismatch",
+      "fix": "repair ko mirror block structure"
+    },
+    {
+      "id": "F6",
+      "report": [
+        "fomalhaut",
+        "61-vir",
+        "vega",
+        "tau-cet",
+        "hd-69830"
+      ],
+      "severity": "medium",
+      "type": "UNSOURCED_systemic",
+      "issue": "disk geometry rows cite disk papers absent from bib+cache; only Fomalhaut confirmed wrong, others unverified",
+      "fix": "backfill disk bibs then verify vs disks_curated"
+    },
+    {
+      "id": "F7a",
+      "report": "hd-69830",
+      "severity": "medium",
+      "type": "INTERNAL_CONTRADICTION",
+      "issue": "prose 'G8V' vs table/DB 'K0 V' (cfg value correct)",
+      "fix": "prose G8V->K0V"
+    },
+    {
+      "id": "F7b",
+      "report": [
+        "proxima-cen-b",
+        "proxima-cen-d"
+      ],
+      "severity": "low",
+      "type": "PHYSICAL",
+      "issue": "equilibrium_temp ~10% off recompute",
+      "fix": "recompute T_eq from curated L,a"
+    },
+    {
+      "id": "F8",
+      "report": "~16 reports",
+      "severity": "medium",
+      "type": "UNSOURCED_coverage",
+      "issue": "~78 decision rows (mostly atmosphere_present/composition synthesis + uncached recent orbital papers) lack offline-verifiable source",
+      "fix": "backfill bib or downgrade confidence; see triaged json UPHELD"
+    },
+    {
+      "id": "F9",
+      "report": "proxima-cen",
+      "severity": "high",
+      "type": "WRONG_ATTRIBUTION",
+      "issue": "magnetic_dipole 0.6 kG / total 4 kG cited to Reiners 2018 (1711.06576) which has 0 kG measurements (RV/atlas survey)",
+      "fix": "re-source to real magnetography (Reiners&Basri 2008 / Klein 2021) or mark unverified"
+    },
+    {
+      "id": "F10",
+      "report": "proxima-cen-b",
+      "severity": "high",
+      "type": "VALUE_MISMATCH+INTERNAL",
+      "issue": "atmosphere_composition 'CO2 5%' vs Boutle 2017 376 ppm (trace) and report's own prose 376 ppm (~130x)",
+      "fix": "CO2 5% -> ~376 ppm"
+    },
+    {
+      "id": "F11",
+      "report": "proxima-cen-b",
+      "severity": "high",
+      "type": "VALUE_MISMATCH",
+      "issue": "magnetosphere_standoff 1.5 R_p vs Garraffo 2022 '3-11 R_p'",
+      "fix": "1.5 -> 3-11 R_p phase-dependent"
+    },
+    {
+      "id": "F12",
+      "report": [
+        "trappist-1-e",
+        "trappist-1-f"
+      ],
+      "severity": "high",
+      "type": "VALUE_MISMATCH",
+      "issue": "surface_radiation_dose 12000/7000 mSv/yr misderived from Atri 2019 per-event Gy / enhancement factors; mislabeled high confidence",
+      "fix": "re-derive dose; fix confidence"
+    },
+    {
+      "id": "F13",
+      "report": "trappist-1-f",
+      "severity": "medium",
+      "type": "INTERNAL_CONTRADICTION",
+      "issue": "open-water lens (ocean_present true) with substellar 260 K (<273 freezing)",
+      "fix": "reconcile temperature basis or drop open-water"
+    },
+    {
+      "id": "F14",
+      "report": [
+        "au-mic-b",
+        "au-mic-c"
+      ],
+      "severity": "medium",
+      "type": "PHYSICAL_IMPLAUSIBLE+INTERNAL",
+      "issue": "b forces 1:1 at e=0.07; c prose says 1:1 but row says 3:2 at e=0.18",
+      "fix": "pseudo-synchronous per gate; fix au-mic-c prose"
+    },
+    {
+      "id": "F15",
+      "report": "vega",
+      "severity": "high",
+      "type": "INTERNAL_CONTRADICTION",
+      "issue": "age 0.7 Gyr (Decisions, =DB) vs Open-items 'Yoon headline' 0.455 vs intro 0.45; Yoon mislabeled rotating",
+      "fix": "reconcile to 0.7 Gyr Monnier; fix prose+label"
+    },
+    {
+      "id": "F16",
+      "report": "hd-69830",
+      "severity": "high",
+      "type": "INTERNAL+DESYNC",
+      "issue": "disk_mass_mearth 4e-4 matches neither basis 6e-5 nor DB (6e-5 Beichman / 1e-3 Lisse)",
+      "fix": "4e-4 -> 6e-5 or document range"
+    }
+  ],
+  "refuted_false_positives": [
+    "120 cache-presence flags (paper actually present)",
+    "proxima-cen-b/d angular diameter (within 4%)",
+    "hd-219134-h angular diameter & T_eq (correct)",
+    "au-mic-e mass (matches DB Donati 2025)",
+    "alpha-centauri-a age (intentional documented divergence, Open-items erratum)",
+    "trappist-1-f Wolf-2017-1bar + trappist-1-g water_mass_fraction (match conflict-resolution.md canonical examples)"
+  ],
+  "unverified_deferred": [],
+  "deferred_resolved_note": "All 7 previously-deferred items verified 2026-06-03 — all CONFIRMED real (F9-F16), zero false positives."
+}
