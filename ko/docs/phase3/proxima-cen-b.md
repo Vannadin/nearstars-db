@@ -79,7 +79,7 @@ Proxima superflare 동안 잦은 aurora.** 42 cfg 픽. 31 canonical-aligned,
 | `surface_temp_global_mean_k` | 250 | medium | Boutle 2017 — e=0 에서 mean 이 빙점 아래. Del Genio 2019 동적 ocean 이 ~10–20 K 야측 redistribution 추가 |
 | `atmosphere_present` | true | medium | Tie-break. Boutle 2017 + Meadows 2018 + Zuluaga 2018 가 보유를 viable 하게 유지. Atri 2020 + Garraffo 2022 가 escape 선호. 둘 다 관측과 일관. interesting-first 가 interesting-first 룰에 따라 가시 대기 선택 |
 | `atmosphere_surface_pressure_pa` | 100000 (1 bar) | medium | Boutle 2017 의 nominal Earth-like / simplified-N₂ 시나리오 모두 1 bar 에서 돌림 |
-| `atmosphere_composition` | N₂ 95%, CO₂ 5%, H₂O 0.1–1% (substellar 근처 포화), trace O₂ | medium | Boutle 2017 simplified N₂+CO₂. Braam 2024 의 trace species photochemistry |
+| `atmosphere_composition` | N₂ ~99%, CO₂ ~376 ppm (trace), H₂O 0.1–1% (substellar 근처 포화), trace O₂ | medium | Boutle 2017 simplified-N₂ (CO₂ MMR 5.94×10⁻⁴ ≈ 376 ppm). Braam 2024 의 trace species photochemistry |
 | `atmosphere_scale_height_km` | 11 | medium | 유도. T = 260 K, μ = 30, g = 9.0 m/s² 의 kT/μg |
 | `atmosphere_tint_rgb_hex` | `#4a3030` (M5.5V 아래의 깊은 빨강-시프트된 Rayleigh + Mie) | medium | Tie-break. Proxima SED 가 Rayleigh blue 를 크게 reddening. 게임 내 가시 대비를 위해 특정 shade 선택 |
 | `cloud_cover_fraction` | 0.55 | medium | Boutle 2017 + Cohen 2023 wave-driven 구름 변동성 |
@@ -95,7 +95,7 @@ Proxima superflare 동안 잦은 aurora.** 42 cfg 픽. 31 canonical-aligned,
 | `magnetic_field_present` | true (적당) | medium | Tie-break. Zuluaga 2018 하한이 쌍극자 지지. 실제 값에 큰 불확실. interesting-first 가 aurora 시각을 위해 present 선택 |
 | `magnetic_dipole_moment_normalized_earth` | 0.1 | medium | Tie-break. Zuluaga 2018 plausibility 범위 0.01–1.0. 부분 차폐 regime 을 위해 0.1 선택 |
 | `magnetic_dipole_tilt_deg` | 15 | low | Tie-break. 구분되는 aurora-cap 지오메트리. 문헌이 Proxima b 의 쌍극자 tilt 에 침묵 |
-| `magnetosphere_standoff_planet_radii` | 1.5 | high | Garraffo 2022 — super-Alfvénic transit 동안 항성풍 압력이 standoff 를 < 2 R_p 로 압축 |
+| `magnetosphere_standoff_planet_radii` | 3–11 | high | Garraffo 2022 — magnetopause standoff 가 궤도 위상에 따라 3–11 R_p 로 변동 (표면 자기장 0.1 G). super-Alfvénic transit 때 하단으로 압축 |
 | `radiation_belt_present` | false | medium | Garraffo 2022 + Atri 2020 — 무거운 CME 압축이 안정한 갇힌 입자 population 을 막음 |
 | `surface_radiation_dose_msv_yr` | 5000 | medium | Atri 2020 (1910.09871) for 1 bar 대기 차폐 + 약한 B 필드. superflare 동안 10⁵ 까지 spike |
 | `atmospheric_shielding_g_cm2` | 1000 | high | 1 bar 대기 → ~1000 g/cm² 컬럼 |
@@ -148,7 +148,7 @@ hydrology 를 주지만, 범위가 넓습니다. 더 건조한 (0.001) 변형은
 ## Atmosphere synthesis
 
 cfg 는 Boutle 2017 simplified-N₂ 대기를 canonical Proxima b 시나리오로
-채택합니다. 1 bar 표면 압력, 95% N₂, ~5% CO₂, trace H₂O (substellar
+채택합니다. 1 bar 표면 압력, N₂ 우세 (~99%), trace ~376 ppm CO₂, trace H₂O (substellar
 표면 근처 포화, 더 높은 고도와 terminator 쪽으로 dew point 까지 떨어짐).
 trace O₂ (≪ 1%) 가 [OI] 557.7 nm aurora 방출을 지원하기 위해 포함됩니다.
 출처는 photochemical (H₂O 분해 + H escape) 이며 생물학적이 아닙니다.
@@ -395,3 +395,12 @@ skipped` 주석으로 보존됩니다.
 - **자기장 측정.** Zuluaga 2018 가 plausibility 범위만 제공합니다.
   Proxima 항성풍 transit 동안의 라디오 방출을 통한 향후 직접 측정이
   쌍극자 모멘트를 제약할 수 있습니다.
+
+## Related
+
+- [proxima-cen](proxima-cen.md) — host 별 (M5.5Ve 플레어 환경. 대기 유지 문제는 host 의 XUV 이력에서 비롯됨)
+- [proxima-cen-d](proxima-cen-d.md) — 안쪽 형제 행성. USP Mercury-analog (대기 없음 예상) 으로 b 의 대기 유지 시나리오와 대비
+- [trappist-1-e](trappist-1-e.md) — 또 다른 온대 M-dwarf HZ aquaplanet analog. eyeball-Earth 의 substellar-ocean 기하를 공유
+- [methodology](../reference/methodology.md) — Decisions 스키마
+- [mod-reference](../reference/mod-reference.md) — 이 천체의 대기+해양 cfg 를 소비하는 다운스트림 모드
+- [rex-data-comparison](../reference/rex-data-comparison.md) — §6 Proxima 로스터 (REX 는 b + c 철회. NS 는 Faria 2022 이후 b + d)

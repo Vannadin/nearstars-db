@@ -86,7 +86,7 @@ preserved in Open items.
 | `surface_temp_global_mean_k` | 250 | medium | Boutle 2017 — mean below freezing at e=0; Del Genio 2019 dynamic ocean adds ~10–20 K nightside redistribution |
 | `atmosphere_present` | true | medium | Tie-break: Boutle 2017 + Meadows 2018 + Zuluaga 2018 keep retention viable; Atri 2020 + Garraffo 2022 favor escape; both obs-consistent. Interesting-first picks atmosphere visible per the interesting-first rule |
 | `atmosphere_surface_pressure_pa` | 100000 (1 bar) | medium | Boutle 2017 nominal Earth-like / simplified-N₂ scenarios both run at 1 bar |
-| `atmosphere_composition` | N₂ 95%, CO₂ 5%, H₂O 0.1–1% (saturated near substellar), trace O₂ | medium | Boutle 2017 simplified N₂+CO₂; Braam 2024 photochemistry for trace species |
+| `atmosphere_composition` | N₂ ~99%, CO₂ ~376 ppm (trace), H₂O 0.1–1% (saturated near substellar), trace O₂ | medium | Boutle 2017 simplified-N₂ (CO₂ MMR 5.94×10⁻⁴ ≈ 376 ppm); Braam 2024 photochemistry for trace species |
 | `atmosphere_scale_height_km` | 11 | medium | derived: kT/μg with T = 260 K, μ = 30, g = 9.0 m/s² |
 | `atmosphere_tint_rgb_hex` | `#4a3030` (deep red-shifted Rayleigh + Mie under M5.5V) | medium | Tie-break: Rayleigh blue heavily reddened by Proxima SED; specific shade selected for visible contrast in-game |
 | `cloud_cover_fraction` | 0.55 | medium | Boutle 2017 + Cohen 2023 wave-driven cloud variability |
@@ -102,7 +102,7 @@ preserved in Open items.
 | `magnetic_field_present` | true (modest) | medium | Tie-break: Zuluaga 2018 lower-bound supports dipole; large uncertainty in actual value; interesting-first picks present for aurora visual |
 | `magnetic_dipole_moment_normalized_earth` | 0.1 | medium | Tie-break: Zuluaga 2018 plausibility range 0.01–1.0; 0.1 selected for partial-shielding regime |
 | `magnetic_dipole_tilt_deg` | 15 | low | Tie-break: distinct aurora-cap geometry; literature silent on dipole tilt for Proxima b |
-| `magnetosphere_standoff_planet_radii` | 1.5 | high | Garraffo 2022 — stellar wind pressure compresses standoff to < 2 R_p during super-Alfvénic transits |
+| `magnetosphere_standoff_planet_radii` | 3–11 | high | Garraffo 2022 — magnetopause standoff varies 3–11 R_p over the orbital phase (0.1 G surface field), compressing toward the low end during super-Alfvénic transits |
 | `radiation_belt_present` | false | medium | Garraffo 2022 + Atri 2020 — heavy CME compression precludes stable trapped particle population |
 | `surface_radiation_dose_msv_yr` | 5000 | medium | Atri 2020 (1910.09871) for 1 bar atmospheric shielding + weak B-field; spikes to 10⁵ during superflares |
 | `atmospheric_shielding_g_cm2` | 1000 | high | 1 bar atmosphere → ~1000 g/cm² column |
@@ -163,8 +163,9 @@ geometry.
 ## Atmosphere synthesis
 
 The cfg adopts the Boutle 2017 simplified-N₂ atmosphere as the
-canonical Proxima b scenario: 1 bar surface pressure, 95% N₂, ~5%
-CO₂, trace H₂O (saturated near the substellar surface, dropping to
+canonical Proxima b scenario: 1 bar surface pressure, N₂-dominated
+(~99%), trace ~376 ppm CO₂, trace H₂O (saturated near the substellar
+surface, dropping to
 the dew point at higher altitudes and toward the terminator). Trace
 O₂ (≪ 1%) is included to support the [OI] 557.7 nm aurora emission;
 the source is photochemical (H₂O dissociation + escape of H), not

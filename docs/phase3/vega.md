@@ -45,7 +45,7 @@ Vega has no confirmed planets. The deepest RV searches (Hunsch & Schmitt 2019 an
 | `disk_resolved_imaging` | true | high | Holland 1998 SCUBA 850 μm (`1998Natur.392..788H`); Wilner 2002 OVRO 1.3 mm; Su 2013 Spitzer-MIPS; Sibthorpe 2010 Herschel-PACS; Hughes 2012 ALMA |
 | `disk_imaging_observatory` | IRAS (1983) → JCMT-SCUBA (Holland 1998) → Spitzer-MIPS (Su 2013) → Herschel-PACS (Sibthorpe 2010) → ALMA (Hughes 2012) | high | Standard Vega-like heritage chain |
 | `disk_imaging_inclination_deg` | 6.2 (face-on, locked to stellar pole-on geometry) | medium | Sibthorpe 2010 / Su 2013 — disk i ≈ 6° consistent with the stellar spin axis (both belts coplanar) |
-| `disk_planetesimal_belt_inferred` | true | high | Dust lifetime at 110–200 AU ≪ system age 0.45 Gyr; planetesimal replenishment required (Sibthorpe 2010 §5) |
+| `disk_planetesimal_belt_inferred` | true | high | Dust lifetime at 110–200 AU ≪ system age 0.7 Gyr; planetesimal replenishment required (Sibthorpe 2010 §5) |
 
 ## Surface synthesis
 
@@ -145,7 +145,7 @@ The full filtered bib is preserved as a future task. Skipped entries include pho
 ## Open items for follow-up
 
 - **Disk geometry is multi-belt in `disks_curated.json`** (audited 2026-05-29). Vega's warm + cold belts are separate `belt` entries; the Decisions table renders them as per-belt `disk_<belt>_*` fields → one Kopernicus Ring each. Remaining: a grain-size / Mie color synthesis to replace the tie-break per-belt tints.
-- **Age disagreement between Yoon 2010 (0.455 ± 0.013 Gyr) and Monnier 2012 (0.7 ± 0.075 Gyr).** Both papers use rotating-model isochrones but with different boundary conditions; the cfg adopts the Yoon headline. Resolution requires a deeper read of Monnier 2012 §4 and possibly Tetzlaff 2011 kinematic-age cross-check.
+- **Age disagreement between Yoon 2010 (0.455 ± 0.013 Gyr) and Monnier 2012 (0.7 ± 0.075 Gyr).** The cfg adopts the Monnier 0.7 Gyr headline (rotation-aware Geneva tracks); Yoon 0.455 Gyr is kept as the canonical alternative — consistent with the Decisions row. The Yoon rotating-vs-non-rotating characterization is stated inconsistently here (Decisions row vs bibliography) and should be reconciled against the paper. Resolution requires a deeper read of Monnier 2012 §4 and possibly Tetzlaff 2011 kinematic-age cross-check.
 - **Hurt 2021 0.6-day candidate at 0.04 AU.** If a 2026+ follow-up confirms this as a real planet (currently unconfirmed; could be stellar activity), a new Decisions entry `circumstellar_planet_present: true` is required and a planet body cfg should be added.
 - **Su 2013 gap-clearer planets between 14 and 110 AU.** Currently inferred only from the disk morphology. A future direct-imaging confirmation (JWST-NIRCam or extreme-AO) would convert this from inference to confirmed planet bodies, triggering cfg additions.
 - **Conservative-opacity disk variant.** Current cfg uses `disk_opacity` = 0.06 (interesting-first tie-break); the observation-consistent value is τ ~ 10⁻⁴ (essentially invisible). A "realistic" cfg variant with the physically-faithful opacity should be authored as a player-selectable option.

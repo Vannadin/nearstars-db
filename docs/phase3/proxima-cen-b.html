@@ -487,6 +487,17 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_275"></li>
 </ul>
 </section>
+<section>
+<h2 data-i18n="h2_276"></h2>
+<ul class="intro">
+<li data-i18n="li_277"></li>
+<li data-i18n="li_278"></li>
+<li data-i18n="li_279"></li>
+<li data-i18n="li_280"></li>
+<li data-i18n="li_281"></li>
+<li data-i18n="li_282"></li>
+</ul>
+</section>
 </main>
 
 <footer>
@@ -586,9 +597,9 @@ const T = {
   "td_88":"medium",
   "td_89":"Boutle 2017 nominal Earth-like / simplified-N₂ scenarios both run at 1 bar",
   "td_90":"<span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span>",
-  "td_91":"N₂ 95%, CO₂ 5%, H₂O 0.1–1% (saturated near substellar), trace O₂",
+  "td_91":"N₂ ~99%, CO₂ ~376 ppm (trace), H₂O 0.1–1% (saturated near substellar), trace O₂",
   "td_92":"medium",
-  "td_93":"Boutle 2017 simplified N₂+CO₂; Braam 2024 photochemistry for trace species",
+  "td_93":"Boutle 2017 simplified-N₂ (CO₂ MMR 5.94×10⁻⁴ ≈ 376 ppm); Braam 2024 photochemistry for trace species",
   "td_94":"<span class=\"field-tt\" data-ko-tip=\"대기 스케일 높이 (km). 압력이 1/e 로 떨어지는 고도.\" data-en-tip=\"Atmospheric scale height in km — altitude at which pressure drops by 1/e.\"><code>atmosphere_scale_height_km</code></span>",
   "td_95":"11",
   "td_96":"medium",
@@ -650,9 +661,9 @@ const T = {
   "td_152":"low",
   "td_153":"Tie-break: distinct aurora-cap geometry; literature silent on dipole tilt for Proxima b",
   "td_154":"<span class=\"field-tt\" data-ko-tip=\"자기권 standoff 거리 (행성반지름 단위).\" data-en-tip=\"Magnetopause standoff distance in planet radii.\"><code>magnetosphere_standoff_planet_radii</code></span>",
-  "td_155":"1.5",
+  "td_155":"3–11",
   "td_156":"high",
-  "td_157":"Garraffo 2022 — stellar wind pressure compresses standoff to &lt; 2 R_p during super-Alfvénic transits",
+  "td_157":"Garraffo 2022 — magnetopause standoff varies 3–11 R_p over the orbital phase (0.1 G surface field), compressing toward the low end during super-Alfvénic transits",
   "td_158":"<span class=\"field-tt\" data-ko-tip=\"밴 앨런 형 방사선대 존재 여부.\" data-en-tip=\"Van Allen-type trapped radiation belts present (true/false).\"><code>radiation_belt_present</code></span>",
   "td_159":"false",
   "td_160":"medium",
@@ -704,7 +715,7 @@ const T = {
   "p_206":"Shields 2018 (1808.09977) raises the alternative hydrohalite-snowball scenario: if salinity is sufficient and the climate falls into a snowball regime, salt deposits on the ice surface enhance albedo and stabilize the snowball state. This is preserved as an Open-items variant rather than the canonical cfg choice.",
   "p_207":"The water mass fraction sets the depth of the open-water disk and the total subsurface ice reserve. Herath 2021 interior models allow 0.001 to 0.4 by mass, with no direct measurement to distinguish. The cfg&#x27;s 5–10% Earth-analog choice is a tie-break — it gives ~3-5 km mean ocean depth and recognizable Earth-like surface hydrology, but the range is broad. A drier (0.001) variant would shrink the open-water disk; a wetter (0.4) variant approaches Hycean geometry.",
   "h2_208":"Atmosphere synthesis",
-  "p_209":"The cfg adopts the Boutle 2017 simplified-N₂ atmosphere as the canonical Proxima b scenario: 1 bar surface pressure, 95% N₂, ~5% CO₂, trace H₂O (saturated near the substellar surface, dropping to the dew point at higher altitudes and toward the terminator). Trace O₂ (≪ 1%) is included to support the [OI] 557.7 nm aurora emission; the source is photochemical (H₂O dissociation + escape of H), not biological.",
+  "p_209":"The cfg adopts the Boutle 2017 simplified-N₂ atmosphere as the canonical Proxima b scenario: 1 bar surface pressure, N₂-dominated (~99%), trace ~376 ppm CO₂, trace H₂O (saturated near the substellar surface, dropping to the dew point at higher altitudes and toward the terminator). Trace O₂ (≪ 1%) is included to support the [OI] 557.7 nm aurora emission; the source is photochemical (H₂O dissociation + escape of H), not biological.",
   "p_210":"This composition reproduces the canonical surface temperature distribution: T_substellar ≈ 290 K (peak dayside), T_nightside cold- trap minimum ≈ 150 K, T_global_mean ≈ 250 K (Boutle 2017 §3 + Fig. 2). Heat transport from substellar to nightside is dominated by atmospheric circulation under the simplified-N₂ scenario; addition of a dynamic ocean (Del Genio 2019) enhances the redistribution by ~10–20 K and raises nightside temperatures above the bare-N₂ cold-trap floor.",
   "p_211":"Cloud cover is 55% in the cfg — chosen as a midpoint of the Boutle 2017 + Cohen 2023 + Sergeev 2020 range. The cloud morphology is characteristic of tidally-locked synchronous M-dwarf planets: a substellar convective cluster (Sergeev 2020) with high cirrus shield, extra-tropical Rossby wave trains (Cohen 2023, 2211.11887) that produce traveling cloud bands at ±30–60° latitude, and a clearer nightside (Joshi 2020 dark-side inversion analog). The cfg <span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span> field captures all three components in a single string.",
   "p_212":"Photochemistry (Yates 2020, 1912.08743; Braam 2024, 2410.19108) is dominated by O₃ production around the day-night terminator, with the canonical M-dwarf &quot;stratospheric ozone ring&quot; producing a UV signal that may be observable in future transmission spectroscopy (though Proxima b is non-transiting). Scheucher 2020 (2003.02036) adds the cosmic-ray-induced chemistry contribution — important during super-Alfvénic transits when the magnetosphere is heavily compressed.",
@@ -771,6 +782,13 @@ const T = {
   "li_273":"<b>Spin-orbit resonance climate</b>: Braam 2024 (2410.19108) explored non-synchronous spin-orbit resonance climates. SM25&#x27;s zero-eccentricity orbit makes the synchronous case canonical, but a re-analysis with weak eccentricity could change this.",
   "li_274":"<b>Direct imaging</b>: Sanghi 2025 + Beichman 2025 JWST programs may eventually constrain Proxima b&#x27;s reflected-light spectrum. If atmospheric features are detected, the cfg should be re-validated against the new constraints.",
   "li_275":"<b>Magnetic field measurement</b>: Zuluaga 2018 provides only a plausibility range. A future direct measurement via radio emission during a Proxima-wind transit could constrain the dipole moment.",
+  "h2_276":"Related",
+  "li_277":"<a href=\"proxima-cen.md\">proxima-cen</a> — host star (M5.5Ve flare environment; the atmosphere-retention question is downstream of the host&#x27;s XUV history)",
+  "li_278":"<a href=\"proxima-cen-d.md\">proxima-cen-d</a> — inner sibling; USP Mercury-analog (no atmosphere expected) contrasts with b&#x27;s atmosphere-retained scenario",
+  "li_279":"<a href=\"trappist-1-e.md\">trappist-1-e</a> — other temperate M-dwarf HZ aquaplanet analog; the eyeball-Earth substellar-ocean geometry is shared",
+  "li_280":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_281":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream mods consuming this body&#x27;s atmosphere + ocean cfg",
+  "li_282":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §6 Proxima roster (REX had b + c retracted; NS has b + d after Faria 2022)",
   "title":"Proxima Centauri b — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -867,9 +885,9 @@ const T = {
   "td_88":"medium",
   "td_89":"Boutle 2017 의 nominal Earth-like / simplified-N₂ 시나리오 모두 1 bar 에서 돌림",
   "td_90":"<span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span>",
-  "td_91":"N₂ 95%, CO₂ 5%, H₂O 0.1–1% (substellar 근처 포화), trace O₂",
+  "td_91":"N₂ ~99%, CO₂ ~376 ppm (trace), H₂O 0.1–1% (substellar 근처 포화), trace O₂",
   "td_92":"medium",
-  "td_93":"Boutle 2017 simplified N₂+CO₂. Braam 2024 의 trace species photochemistry",
+  "td_93":"Boutle 2017 simplified-N₂ (CO₂ MMR 5.94×10⁻⁴ ≈ 376 ppm). Braam 2024 의 trace species photochemistry",
   "td_94":"<span class=\"field-tt\" data-ko-tip=\"대기 스케일 높이 (km). 압력이 1/e 로 떨어지는 고도.\" data-en-tip=\"Atmospheric scale height in km — altitude at which pressure drops by 1/e.\"><code>atmosphere_scale_height_km</code></span>",
   "td_95":"11",
   "td_96":"medium",
@@ -931,9 +949,9 @@ const T = {
   "td_152":"low",
   "td_153":"Tie-break. 구분되는 aurora-cap 지오메트리. 문헌이 Proxima b 의 쌍극자 tilt 에 침묵",
   "td_154":"<span class=\"field-tt\" data-ko-tip=\"자기권 standoff 거리 (행성반지름 단위).\" data-en-tip=\"Magnetopause standoff distance in planet radii.\"><code>magnetosphere_standoff_planet_radii</code></span>",
-  "td_155":"1.5",
+  "td_155":"3–11",
   "td_156":"high",
-  "td_157":"Garraffo 2022 — super-Alfvénic transit 동안 항성풍 압력이 standoff 를 &lt; 2 R_p 로 압축",
+  "td_157":"Garraffo 2022 — magnetopause standoff 가 궤도 위상에 따라 3–11 R_p 로 변동 (표면 자기장 0.1 G). super-Alfvénic transit 때 하단으로 압축",
   "td_158":"<span class=\"field-tt\" data-ko-tip=\"밴 앨런 형 방사선대 존재 여부.\" data-en-tip=\"Van Allen-type trapped radiation belts present (true/false).\"><code>radiation_belt_present</code></span>",
   "td_159":"false",
   "td_160":"medium",
@@ -985,7 +1003,7 @@ const T = {
   "p_206":"Shields 2018 (1808.09977) 은 대안 hydrohalite-snowball 시나리오를 제시합니다. 염도가 충분하고 기후가 snowball regime 으로 빠지면, ice 표면의 염 deposit 이 albedo 를 강화하고 snowball 상태를 안정화합니다. 이는 canonical cfg 선택 대신 Open items 변형으로 보존됩니다.",
   "p_207":"물 질량 분율이 열린 물 디스크의 깊이와 총 지하 ice 저장을 설정합니다. Herath 2021 내부 모델이 질량 기준 0.001 부터 0.4 까지 허용하며, 직접 측정으로 구분할 방법이 없습니다. cfg 의 5–10% 지구 analog 선택은 tie-break 입니다 — ~3-5 km 평균 ocean 깊이와 알아볼 수 있는 지구형 표면 hydrology 를 주지만, 범위가 넓습니다. 더 건조한 (0.001) 변형은 열린 물 디스크를 줄이고, 더 습한 (0.4) 변형은 Hycean 지오메트리에 접근합니다.",
   "h2_208":"Atmosphere synthesis",
-  "p_209":"cfg 는 Boutle 2017 simplified-N₂ 대기를 canonical Proxima b 시나리오로 채택합니다. 1 bar 표면 압력, 95% N₂, ~5% CO₂, trace H₂O (substellar 표면 근처 포화, 더 높은 고도와 terminator 쪽으로 dew point 까지 떨어짐). trace O₂ (≪ 1%) 가 [OI] 557.7 nm aurora 방출을 지원하기 위해 포함됩니다. 출처는 photochemical (H₂O 분해 + H escape) 이며 생물학적이 아닙니다.",
+  "p_209":"cfg 는 Boutle 2017 simplified-N₂ 대기를 canonical Proxima b 시나리오로 채택합니다. 1 bar 표면 압력, N₂ 우세 (~99%), trace ~376 ppm CO₂, trace H₂O (substellar 표면 근처 포화, 더 높은 고도와 terminator 쪽으로 dew point 까지 떨어짐). trace O₂ (≪ 1%) 가 [OI] 557.7 nm aurora 방출을 지원하기 위해 포함됩니다. 출처는 photochemical (H₂O 분해 + H escape) 이며 생물학적이 아닙니다.",
   "p_210":"이 구성은 canonical 표면 온도 분포를 재현합니다. T_substellar ≈ 290 K (peak dayside), T_nightside cold-trap 최소 ≈ 150 K, T_global_mean ≈ 250 K (Boutle 2017 §3 + Fig. 2). 열 수송이 substellar 에서 야측으로 simplified- N₂ 시나리오에서 대기 순환에 의해 지배되며, 동적 ocean (Del Genio 2019) 추가가 재분배를 ~10–20 K 강화하고 야측 온도를 bare-N₂ cold-trap 바닥 위로 올립니다.",
   "p_211":"구름 덮개는 cfg 에서 55% 입니다 — Boutle 2017 + Cohen 2023 + Sergeev 2020 범위의 중점으로 선택. 구름 morphology 는 조석 고정 동기 M 왜성 행성의 특징적인 형태. substellar convective cluster (Sergeev 2020) 와 높은 cirrus shield, extra-tropical Rossby wave trains (Cohen 2023, 2211.11887) 가 ±30–60° 위도에 traveling 구름 밴드를 만들고, 더 맑은 야측 (Joshi 2020 dark-side inversion analog). cfg <span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span> 필드 가 세 컴포넌트 모두를 하나의 문자열로 잡습니다.",
   "p_212":"Photochemistry (Yates 2020, 1912.08743. Braam 2024, 2410.19108) 는 낮밤 terminator 주변의 O₃ 생성이 지배하며, canonical M 왜성 &quot;stratospheric ozone ring&quot; 이 미래 transmission spectroscopy 에서 관측 가능할 수 있는 UV 신호를 만듭니다 (Proxima b 가 비통과이지만). Scheucher 2020 (2003.02036) 이 우주선 유도 화학 기여를 더합니다 — magnetosphere 가 크게 압축되는 super-Alfvénic transit 동안 중요해집니다.",
@@ -1052,6 +1070,13 @@ const T = {
   "li_273":"<b>Spin-orbit resonance 기후.</b> Braam 2024 (2410.19108) 이 비동기 spin-orbit resonance 기후를 탐색했습니다. SM25 의 0 이심률 궤도가 동기 케이스를 canonical 로 만들지만, 약한 이심률로 재분석하면 바뀔 수 있습니다.",
   "li_274":"<b>직접 촬영.</b> Sanghi 2025 + Beichman 2025 JWST 프로그램이 결국 Proxima b 의 반사광 스펙트럼을 제약할 수 있습니다. 대기 특징이 검출되면 cfg 가 새 제약에 대해 재검증돼야 합니다.",
   "li_275":"<b>자기장 측정.</b> Zuluaga 2018 가 plausibility 범위만 제공합니다. Proxima 항성풍 transit 동안의 라디오 방출을 통한 향후 직접 측정이 쌍극자 모멘트를 제약할 수 있습니다.",
+  "h2_276":"Related",
+  "li_277":"<a href=\"proxima-cen.md\">proxima-cen</a> — host 별 (M5.5Ve 플레어 환경. 대기 유지 문제는 host 의 XUV 이력에서 비롯됨)",
+  "li_278":"<a href=\"proxima-cen-d.md\">proxima-cen-d</a> — 안쪽 형제 행성. USP Mercury-analog (대기 없음 예상) 으로 b 의 대기 유지 시나리오와 대비",
+  "li_279":"<a href=\"trappist-1-e.md\">trappist-1-e</a> — 또 다른 온대 M-dwarf HZ aquaplanet analog. eyeball-Earth 의 substellar-ocean 기하를 공유",
+  "li_280":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마",
+  "li_281":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — 이 천체의 대기+해양 cfg 를 소비하는 다운스트림 모드",
+  "li_282":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §6 Proxima 로스터 (REX 는 b + c 철회. NS 는 Faria 2022 이후 b + d)",
   "title":"Proxima Centauri b — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",
