@@ -70,7 +70,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `magnetic_dipole_tilt_deg` | 11 | medium | Earth-analog 11° (Wang 2025 uses 23.5° but reports tilt sensitivity); tie-break: Earth-like 11° gives recognizable auroral geometry for player |
 | `magnetosphere_standoff_planet_radii` | 5 | high | Wang 2025 Fig. 5 for 0.32 G field — calm regime 5–9 R_e; CME-disrupted ~3 R_e |
 | `radiation_belt_present` | true | medium | B-field ≥ 0.1 Earth + closed magnetosphere in calm regimes — Van-Allen-like belts possible, though heavily disturbed during sub-Alfvénic transits |
-| `surface_radiation_dose_msv_yr` | 12000 | high | Atri 2019 (1910.09871) Table 6 for e at 0.028 AU + 1 bar column + Earth-like B-field; 5000× Earth's 2.4; spikes 10⁶ during hard-spectrum flares |
+| `surface_radiation_dose_msv_yr` | ~120 (order 10²–10³; SPE-rate-dependent) | low | Atri 2019 (1910.09871): a large hard-spectrum SPE deposits ~3.9 mGy at the surface under 1 bar + Earth B-field (Table 4, 1000 g/cm²; ≈2200× GCR background, Table 6). Annual dose = per-event × the (unmeasured) SPE rate — for an active M8V (~100× the solar flare rate) plausibly ~10²–10³ mSv/yr; ~120 at an assumed ~30 major SPEs/yr. The prior 12000 conflated Table 6's dimensionless GCR-enhancement factor with an annual mSv dose |
 | `atmospheric_shielding_g_cm2` | 1000 | high | Phase 3 cfg pressure 1 bar Earth-like → ~1000 g/cm² column |
 | `aurora_present` | true | high | Atm + magnetic field both substantial; Fraschetti 2019 (1902.03732) proton flux 10⁶× Earth → intense precipitation |
 | `aurora_color_primary_hex` | `#4DFF4D` | medium | [OI] 557.7 nm green dominant in N₂/CO₂/O₂ atm — Earth-analog auroral color; interesting-first tie-break: green over UV-only alternative |

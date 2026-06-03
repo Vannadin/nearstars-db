@@ -70,7 +70,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `magnetic_dipole_tilt_deg` | 11 | medium | 지구형 11° (Wang 2025 는 23.5° 를 사용하지만 tilt 민감도를 함께 보고). 타이브레이크. 11° 가 플레이어에게 인식 가능한 오로라 geometry 를 제공 |
 | `magnetosphere_standoff_planet_radii` | 5 | high | Wang 2025 Fig. 5, 0.32 G 자기장 — 평온기 5–9 R_e, CME 교란 시 ~3 R_e |
 | `radiation_belt_present` | true | medium | B-field ≥ 지구의 0.1 + 평온기 폐쇄 자기권 — Van Allen 같은 방사선 벨트가 가능하지만, sub-Alfvénic transit 동안에는 크게 교란됨 |
-| `surface_radiation_dose_msv_yr` | 12000 | high | Atri 2019 (1910.09871) Table 6, e 의 0.028 AU + 1 bar column + 지구형 B-field 조건. 지구의 2.4 mSv/yr 의 5000배, 강한 스펙트럼 플레어 시 10⁶ 까지 스파이크 |
+| `surface_radiation_dose_msv_yr` | ~120 (10²–10³ 차수. SPE 빈도 의존) | low | Atri 2019 (1910.09871). 강한 스펙트럼 SPE 1회가 1 bar + 지구형 B-field 에서 표면에 ~3.9 mGy 침착 (Table 4, 1000 g/cm². GCR 배경의 ≈2200배, Table 6). 연간 dose = 이벤트당 × (미측정) SPE 빈도 — 활동성 M8V(~태양의 100배 플레어율)면 ~10²–10³ mSv/yr, 연 ~30회 가정 시 ~120. 기존 12000 은 Table 6 의 무차원 GCR-enhancement factor 를 연간 mSv 로 오표기한 값 |
 | `atmospheric_shielding_g_cm2` | 1000 | high | Phase 3 cfg 압력 1 bar 지구형 → ~1000 g/cm² column |
 | `aurora_present` | true | high | 대기와 자기장이 모두 충분. Fraschetti 2019 (1902.03732) 양성자 flux 가 지구의 10⁶배 → 강렬한 precipitation |
 | `aurora_color_primary_hex` | `#4DFF4D` | medium | N₂/CO₂/O₂ 대기에서 [OI] 557.7 nm 녹색이 지배 — 지구형 오로라 색. interesting-first 타이브레이크에서 UV-only 대안 대신 녹색 선택 |
