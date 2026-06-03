@@ -44,7 +44,7 @@ Vega 에는 확정된 행성이 없습니다. 가장 깊은 RV 탐색 (Hunsch & 
 | `disk_morphology` | 두 띠. ~14 AU 따뜻한 소행성대 유사 + ~110–200 AU 차가운 카이퍼대 유사 + cleared gap (14→110 AU) = 행성소체 휘젓는 행성 함의 | high | Su 외 2013 두 성분 SED + Spitzer-MIPS 영상. Cleared gap 이 Vega 의 가장 강한 간접 행성 증거 |
 | `disk_resolved_imaging` | true | high | Holland 1998 SCUBA 850 μm (`1998Natur.392..788H`); Wilner 2002 OVRO 1.3 mm; Su 2013 Spitzer-MIPS; Sibthorpe 2010 Herschel-PACS; Hughes 2012 ALMA |
 | `disk_imaging_observatory` | IRAS (1983) → JCMT-SCUBA (Holland 1998) → Spitzer-MIPS (Su 2013) → Herschel-PACS (Sibthorpe 2010) → ALMA (Hughes 2012) | high | Vega-like 표준 관측 사슬 |
-| `disk_imaging_inclination_deg` | 6.2 (정면, 별의 pole-on 기하에 lock) | medium | Sibthorpe 2010 / Su 2013 — 원반 i ≈ 6° 가 별 자전축과 일치 (두 띠 coplanar) |
+| `disk_imaging_inclination_deg` | 6.2 (정면, 별의 pole-on 기하에 lock) | medium | Monnier 2012 의 항성 자전축 경사 i = 6.2° (원반은 coplanar/정면). Sibthorpe 2010 과 Su 2013 은 원반을 정면으로 기술하지만 수치 원반 경사는 보고하지 않으므로, 이 6.2° 는 원반 측정값이 아니라 항성 자전축에서 차용한 값 |
 | `disk_planetesimal_belt_inferred` | true | high | 110–200 AU 의 dust 수명이 0.7 Gyr 시스템 연령보다 훨씬 짧음. 행성소체 보충 필수 (Sibthorpe 2010 §5) |
 
 ## Surface synthesis

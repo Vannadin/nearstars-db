@@ -74,14 +74,14 @@ picks; the stellar layer is re-anchored on the frozen Phase 2 sources
 | `stellar_color_temp_k` | 5370 | high | derived from Teff (Korolik 2023) |
 | `disk_present` | true | high | Greaves 2004 SCUBA 850 μm excess; MacGregor 2016 ALMA Band 6 resolved imaging |
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016 — ALMA resolved fit, inner edge ~6 AU |
-| `disk_outer_radius_au` | 55 | high | MacGregor 2016 — ALMA resolved fit, outer edge ~55 AU |
-| `disk_dust_temperature_k` | 60 | high | MacGregor 2016 SED + Greaves 2004 60–80 K consistent |
+| `disk_outer_radius_au` | 55 | high | Greaves 2004 (55 AU, SCUBA); MacGregor 2016 adopts it as a fixed prior upper bound — ALMA does not constrain the outer edge |
+| `disk_dust_temperature_k` | 60 | high | Greaves 2004 / Lawler 2014 (~60–80 K); MacGregor 2016 assumes a T proportional to r^-0.5 profile and fits no dust temperature |
 | `disk_tint_rgb_hex` | `#ffe4bd` (warm; vivid `#ffc100`) | low | No measured optical color (thermal/mm only). Mie reflectance synthesis: amorphous silicate + organics (Lawler 2014; a_min ~0.31 µm) — organics absorb blue → distinctly warm reflectance (B/I 0.40, the warmest belt); renderer applies the G8.5 V light. Vivid pack: `#ffc100` (amber) |
 | `disk_opacity` | 0.15 | low | Tie-break: physical optical depth is ~10⁻³ from MacGregor 2016 dust mass + ring geometry, but cfg uses 0.15 for in-game visibility against deep-space background; documented as a render-visibility tradeoff |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3 — single broad ring explicitly favored over multi-belt; no resolved inner gap |
 | `disk_resolved_imaging` | true | high | MacGregor 2016 — ALMA Band 6 resolved |
 | `disk_imaging_observatory` | ALMA | high | MacGregor 2016 |
-| `disk_mass_mearth` | 1.2 | medium | MacGregor 2016 fit — ~10–20× Sol KBO dust mass (Sol KBO ≈ 0.01 M⊕ dust) |
+| `disk_mass_mearth` | 1.2 | medium | Greaves 2004 (1.2 M⊕); MacGregor 2016 measures a belt flux density of 1.0 mJy, not a dust mass |
 | `disk_planetesimal_belt_inferred` | true | high | MacGregor 2016 §5 — collisional cascade requires a parent planetesimal body belt to replenish the dust |
 
 ## Surface synthesis

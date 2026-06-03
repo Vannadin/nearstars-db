@@ -44,7 +44,7 @@ Vega has no confirmed planets. The deepest RV searches (Hunsch & Schmitt 2019 an
 | `disk_morphology` | two-belt: warm asteroid-analog at ~14 AU + cold Kuiper-analog at ~110–200 AU + a cleared gap (14→110 AU) implying planetesimal-stirring planets | high | Su et al. 2013 two-component SED + Spitzer-MIPS imaging; the cleared gap is the strongest indirect planet evidence at Vega |
 | `disk_resolved_imaging` | true | high | Holland 1998 SCUBA 850 μm (`1998Natur.392..788H`); Wilner 2002 OVRO 1.3 mm; Su 2013 Spitzer-MIPS; Sibthorpe 2010 Herschel-PACS; Hughes 2012 ALMA |
 | `disk_imaging_observatory` | IRAS (1983) → JCMT-SCUBA (Holland 1998) → Spitzer-MIPS (Su 2013) → Herschel-PACS (Sibthorpe 2010) → ALMA (Hughes 2012) | high | Standard Vega-like heritage chain |
-| `disk_imaging_inclination_deg` | 6.2 (face-on, locked to stellar pole-on geometry) | medium | Sibthorpe 2010 / Su 2013 — disk i ≈ 6° consistent with the stellar spin axis (both belts coplanar) |
+| `disk_imaging_inclination_deg` | 6.2 (face-on, locked to stellar pole-on geometry) | medium | Monnier 2012 stellar spin-axis inclination i = 6.2° (the disk is coplanar/face-on); Sibthorpe 2010 and Su 2013 describe the disk as face-on but report no numeric disk inclination, so the 6.2° value is borrowed from the stellar spin axis, not a disk measurement |
 | `disk_planetesimal_belt_inferred` | true | high | Dust lifetime at 110–200 AU ≪ system age 0.7 Gyr; planetesimal replenishment required (Sibthorpe 2010 §5) |
 
 ## Surface synthesis

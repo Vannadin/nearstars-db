@@ -70,14 +70,14 @@ Teixeira 2009 asteroseismology, Santos 2013, Gomes da Silva 2021) 에
 | `stellar_color_temp_k` | 5370 | high | Teff 유도 (Korolik 2023) |
 | `disk_present` | true | high | Greaves 2004 SCUBA 850 μm 초과. MacGregor 2016 ALMA Band 6 분해 영상 |
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016. ALMA 분해 fit, 안쪽 가장자리 ~6 AU |
-| `disk_outer_radius_au` | 55 | high | MacGregor 2016. ALMA 분해 fit, 바깥쪽 가장자리 ~55 AU |
-| `disk_dust_temperature_k` | 60 | high | MacGregor 2016 SED + Greaves 2004 의 60–80 K 와 일치 |
+| `disk_outer_radius_au` | 55 | high | Greaves 2004 (55 AU, SCUBA). MacGregor 2016 은 이를 고정 prior 상한으로 채택. ALMA 는 바깥쪽 가장자리를 제약하지 않음 |
+| `disk_dust_temperature_k` | 60 | high | Greaves 2004 / Lawler 2014 (~60–80 K). MacGregor 2016 은 T ∝ r^-0.5 프로파일을 가정할 뿐 먼지 온도를 fit 하지 않음 |
 | `disk_tint_rgb_hex` | `#ffe4bd` (따뜻함; vivid `#ffc100`) | low | 측정된 광학 색 없음 (열적/mm 관측만 존재). Mie 반사율 합성. 비정질 규산염 + 유기물 (Lawler 2014; a_min ~0.31 µm) 조성에서 유기물이 청색을 흡수해 뚜렷이 따뜻한 반사율을 만듭니다 (B/I 0.40, 가장 따뜻한 벨트). 렌더러가 그 위에 G8.5 V 별빛을 입힙니다. Vivid 팩. `#ffc100` (호박색) |
 | `disk_opacity` | 0.15 | low | Tie-break. MacGregor 2016 의 먼지 질량 + 고리 기하에서 나오는 물리 광학적 깊이는 ~10⁻³ 이지만, 게임 내에서 우주 배경 대비 가시성을 살리기 위해 cfg 는 0.15 를 사용. 렌더 가시성 trade-off 로 문서화 |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3. multi-belt 보다 단일 넓은 고리를 명시적으로 선호. 분해된 안쪽 갭 없음 |
 | `disk_resolved_imaging` | true | high | MacGregor 2016. ALMA Band 6 분해 |
 | `disk_imaging_observatory` | ALMA | high | MacGregor 2016 |
-| `disk_mass_mearth` | 1.2 | medium | MacGregor 2016 fit. Sol KBO 먼지 대비 ~10–20× (Sol KBO ≈ 0.01 M⊕ 먼지) |
+| `disk_mass_mearth` | 1.2 | medium | Greaves 2004 (1.2 M⊕). MacGregor 2016 은 먼지 질량이 아니라 벨트 플럭스 밀도 1.0 mJy 를 측정 |
 | `disk_planetesimal_belt_inferred` | true | high | MacGregor 2016 §5. 충돌 cascade 가 먼지를 보충하려면 부모 planetesimal 벨트가 필요 |
 
 ## Surface synthesis

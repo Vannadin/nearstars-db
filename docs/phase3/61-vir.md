@@ -23,8 +23,8 @@ joint solution): b a super-Earth at 4.215 d / 5.1 M⊕ Msini, c a warm
 sub-Neptune at 38.021 d / 18.2 M⊕, and d a sub-Neptune at 123.01 d /
 22.9 M⊕. Outside the planet zone, **Herschel/PACS imaging by Wyatt et
 al. 2012 resolves a cold debris belt centred near ≈ 30 AU** with
-outer extent to ≈ 96 AU and dust temperature ~50 K, a textbook KBO
-analogue with a dust mass 6–8× the Sun's Edgeworth–Kuiper belt
+outer extent to ≈ 96 AU and dust temperature ~68 K, a textbook KBO
+analogue with a dust mass comparable to the Sun's Edgeworth–Kuiper belt
 inventory.
 
 **Scenario choice for NearStars: a quiet, slightly cool G6.5V solar
@@ -56,14 +56,14 @@ constrain the optical appearance.
 | `visual_spot_coverage_max` | 0.003 | low | Synthesis: very inactive (log R'HK −5.013), ≤0.3% disk coverage |
 | `disk_present` | true | high | Wyatt et al. 2012 — Herschel/PACS resolved cold ring; SED-confirmed by Tanner 2014, Su 2017 |
 | `disk_inner_radius_au` | 30 | high | Wyatt 2012 — Herschel/PACS resolved geometry; modified-blackbody SED fit places the temperature-weighted radius near 30 AU |
-| `disk_outer_radius_au` | 96 | medium | Wyatt 2012 — resolved outer cutoff at 70/100/160 μm; outer edge slightly less constrained than the inner |
-| `disk_dust_temperature_k` | 50 | high | Wyatt 2012 — modified-blackbody SED fit (range 30–60 K) |
+| `disk_outer_radius_au` | 96 | medium | Wyatt 2012 resolves the disk from ~30 AU out to at least ~100 AU; the 96 AU figure derives from the Tanner 2009 SED |
+| `disk_dust_temperature_k` | 68 | high | Wyatt et al. 2012 — single-temperature blackbody SED fit, 68 K |
 | `disk_tint_rgb_hex` | `#fff0e7` (faint warm; vivid `#ffd7b9`) | low | No measured optical color (thermal/mm only; no spectral features, Wyatt 2012). Mie reflectance synthesis: blowout-size silicate (a_min ~0.44 µm) → warm-leaning reflectance (B/I 0.64); renderer applies the G7 V light. Vivid pack: `#ffd7b9` |
 | `disk_opacity` | 0.10 | low | Tie-break: Herschel τ ~ 10⁻⁵ (optical depth in far-IR) is far below player visibility; cfg picks a renderer-visible value while keeping the ring obviously faint |
 | `disk_morphology` | single cold belt, KBO analog | high | Wyatt 2012 — single broad ring; no warps, gaps, or two-belt structure reported |
 | `disk_resolved_imaging` | true | high | Wyatt 2012 — Herschel/PACS resolved at 70/100/160 μm |
 | `disk_imaging_observatory` | Herschel/PACS (Wyatt 2012) | high | direct citation |
-| `disk_mass_mearth` | 0.07 | medium | Wyatt 2012 — dust mass quoted as ~6–8× Sun's KBO inventory; midpoint adopted, scaled to M⊕ via the standard 5×10⁻³ M⊕ Edgeworth–Kuiper dust reference |
+| `disk_mass_mearth` | 0.07 | low | Wyatt 2012 states the 61 Vir disk mass is comparable to the Kuiper belt; cfg 0.07 M_earth is a within-range mm-grain estimate |
 | `disk_planetesimal_belt_inferred` | true | high | Wyatt 2012 §5 — dust lifetime against PR drag + collisional grinding requires a parent body belt to replenish the observed dust |
 
 ## Surface synthesis
@@ -208,8 +208,8 @@ A's `#fff4e8` cream, 47 UMa, etc.).
   10 AU the ring would form a thin diffuse band along the ecliptic,
   brightest in scattered light when illuminated from the back side
   — analogous to how the Sun's Edgeworth–Kuiper belt would appear
-  to an observer at Neptune's orbit but 6–8× brighter due to the
-  higher dust mass.
+  to an observer at Neptune's orbit but brighter owing to its
+  order-of-magnitude higher optical depth (Wyatt 2012).
 - **Quiet-star animation**: spot rendering is muted — peak coverage
   ≲ 0.3% of the disk, much less dramatic than Sol's solar-maximum
   spotting. No prominent flare or CME visual effects.
@@ -242,7 +242,7 @@ A's `#fff4e8` cream, 47 UMa, etc.).
   424, 1206 (`2012MNRAS.424.1206W`, arXiv:1204.6063). Herschel/PACS
   resolved imaging of the cold debris belt at 70/100/160 μm; single
   broad ring centred near ~30 AU extending to ~96 AU, dust temperature
-  ~50 K, dust mass 6–8× Sun's KBO inventory. Anchors every
+  ~68 K, dust mass comparable to the Sun's KBO inventory. Anchors every
   Circumstellar-disk Decisions row.
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age Estimation
   for Solar-Type Dwarfs Using Activity-Rotation Diagnostics*, ApJ 687,
