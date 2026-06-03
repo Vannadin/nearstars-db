@@ -88,7 +88,7 @@ follow-up 워크스페이스용으로 표시만 해 둡니다. AU Mic 은 넓은
 | `disk_resolved_imaging` | true | high | HST/STIS (Krist 2005, Schneider 2014). VLT/SPHERE (Boccaletti 2015, 2018) |
 | `disk_imaging_observatory` | HST-STIS + VLT-SPHERE | high | 위와 동일 |
 | `disk_imaging_inclination_deg` | 89.5 | high | Krist 2005. Schneider 2014. SPHERE 가 i ≈ 89° 확인 (edge-on 에서 ~1° 안쪽) |
-| `disk_aspect_ratio` | 0.031 (+0.005/−0.004) (H ≈ 1.24 AU ≈ 1.9 × 10⁸ km, ~40 AU 가장자리) | medium | Daley 2019 ALMA — edge-on (i = 88.5°) 해상된 수직 구조. r ≈ 23–41 AU 에서 종횡비 h 가 일정한 Gaussian scale height H(r) = h·r (~40 AU 가장자리에서 H ≈ 1.24 AU 함의). 평면 Kopernicus Ring 은 소비하지 않으며, 완전성과 향후 볼류메트릭/Parallax 렌더링용으로 기록합니다 |
+| `disk_aspect_ratio` | 0.031 (+0.005/−0.004) (H ≈ 1.24 AU, ~40 AU 가장자리) | medium | Daley 2019 ALMA — edge-on (i = 88.5°) 해상된 수직 구조. r ≈ 23–41 AU 에서 종횡비 h 가 일정한 Gaussian scale height H(r) = h·r (~40 AU 가장자리에서 H ≈ 1.24 AU 함의). 평면 Kopernicus Ring 은 소비하지 않으며, 완전성과 향후 볼류메트릭/Parallax 렌더링용으로 기록합니다 |
 | `disk_planetesimal_belt_inferred` | true | high | 풍압이 바깥으로 가속할 먼지를 공급할 부모 벨트가 필요. Strubbe & Chiang 2006 의 표준 birth-ring 모델 |
 | `visual_companion_event_disk_substructures_animated` | true | low | Tie-break. 문헌이 substructure 를 4–10 km/s 로 움직인다고 기술. cfg 는 (정적 텍스처가 아닌) 애니메이션을 채택 — 애니메이션이 AU Mic 원반의 시각적 정체성이므로 interesting-first 적용 |
 
