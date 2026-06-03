@@ -60,3 +60,16 @@ papers:
   status: skipped
   category: manual_followup
   fetch_error: null
+# Disk papers backfilled 2026-06-03 (integrity audit F6) — disk Decisions rows were unsourced in this bib.
+- arxiv_id: astro-ph/0504491
+  ads_bibcode: 2005ApJ...626.1061B
+  title: Beichman et al. 2005 — Spitzer/IRS warm dust (T ~400 K, ~0.8-1.5 AU), L_IR/L* ~2e-4, small-grain mass; drives disk_* rows
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0611452
+  ads_bibcode: 2007ApJ...658..584L
+  title: Lisse et al. 2007 — dust mineralogy (disrupted P/D-type asteroid debris); ar5iv renders no full text
+  status: skipped
+  category: manual_followup
+  fetch_error: null

@@ -45,3 +45,10 @@ papers:
   status: skipped
   category: manual_followup
   fetch_error: null
+# Disk paper backfilled 2026-06-03 (integrity audit F6) — disk Decisions rows were unsourced in this bib.
+- arxiv_id: '1206.2370'
+  ads_bibcode: 2012MNRAS.424.1206W
+  title: Wyatt et al. 2012 — Herschel/PACS resolved cold debris ring (inner ~30, outer ~96 AU, T_dust ~50 K, dust mass); drives all disk_* rows
+  status: fetched
+  category: deep_read
+  fetch_error: null

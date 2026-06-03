@@ -41,3 +41,16 @@ papers:
   status: skipped
   category: manual_followup
   fetch_error: null
+# Disk papers backfilled 2026-06-03 (integrity audit F6) — disk Decisions rows were unsourced in this bib.
+- arxiv_id: '1301.1331'
+  ads_bibcode: 2013ApJ...763..118S
+  title: Su et al. 2013 — Spitzer two-belt geometry; warm asteroid analog ~14 AU + cold belt inner ~110 AU (corrects the prior wrong arXiv 1211.7298 in the report bib, which is an ALICE particle-physics paper)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1005.3543'
+  ads_bibcode: 2010A&A...518L.130S
+  title: Sibthorpe et al. 2010 — Herschel resolved Vega disc; face-on inclination ~6 deg
+  status: fetched
+  category: deep_read
+  fetch_error: null

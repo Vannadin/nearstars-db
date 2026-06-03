@@ -78,3 +78,16 @@ papers:
   status: fetched
   category: deep_read
   fetch_error: null
+# Disk papers backfilled 2026-06-03 (integrity audit F6) — disk Decisions rows were unsourced in this bib.
+- arxiv_id: '1607.02513'
+  ads_bibcode: 2016ApJ...828..113M
+  title: MacGregor et al. 2016 — ALMA 1.3mm resolved tau Cet belt; inner edge ~6 AU, outer ~55 AU, T_dust, dust mass; drives disk_* rows
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2004MNRAS.351L..54G
+  title: Greaves et al. 2004 — SCUBA 850um first detection of the tau Cet disk (no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
