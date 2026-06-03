@@ -1,17 +1,18 @@
 <!-- ε Eridani b Phase 3 synthesis: cfg-ready decisions and reasoning -->
 # ε Eridani b — Phase 3 Synthesis
 
-ε Eridani b is a ~0.78 M_Jup gas giant orbiting the young active K2V
+ε Eridani b is a ~0.66 M_Jup gas giant orbiting the young active K2V
 dwarf ε Eridani at a = 3.53 ± 0.03 AU with a 2671 ± 17 d (7.32 yr)
 period and low eccentricity e = 0.07. After two decades of contested
 radial-velocity history (Hatzes 2000 discovery; Benedict 2006 HST FGS
 attempt; intermittent activity-induced spurious-signal rebuttals),
 the planet was finally confirmed by direct imaging at L′ and Ms band
 (Mawet 2019, Keck/NIRC2 vortex coronagraph) and refined by combined
-RV + Hipparcos/Gaia astrometry (Llop-Sayson 2021). The astrometric
-inclination is degenerate with the disk plane (Roettenbacher 2022) —
-i ≈ 34° matches the Booth 2017 ALMA-resolved disk inclination,
-favoring a coplanar system. No transmission or thermal-emission
+RV + Hipparcos/Gaia astrometry (Llop-Sayson 2021). Llop-Sayson 2021's
+most-probable inclination is i = 78.81°, indicating the planet is
+likely inclined ~2σ from the 34° main-ring plane (Booth 2017
+ALMA-resolved disk); a coplanar ~32° solution is allowed at ~1σ but
+not favored. No transmission or thermal-emission
 spectrum exists yet; the planet's atmospheric composition,
 rotation, and any moon population are unconstrained.
 
@@ -24,9 +25,9 @@ with ammonia-ice cloud bands rendered in warm cream under K2V
 illumination, a faint photochemical haze layer from CH₄ photolysis
 under elevated K-dwarf UV, no ring, and Jupiter-scaled magnetosphere
 driving H-Balmer α aurorae visible from a Hill-sphere observer.**
-35 cfg picks; 13 canonical-aligned, 21 tie-break (jovian-analog
+35 cfg picks; **14 canonical-aligned, 21 tie-break** (jovian-analog
 defaults under K2V illumination — no spectrum or thermal map yet),
-1 documented divergence (inclination 34° vs DB-stored 78.8°).
+0 documented divergence.
 
 ## Decisions
 
@@ -42,21 +43,21 @@ strong support, low = aesthetic choice within the allowed window.
 | `argument_of_periastron_deg` | −19.15 | high | Llop-Sayson 2021 (DB Phase 2) |
 | `sidereal_period_days` | 2671 ± 17 | high | Llop-Sayson 2021 — refined RV + astrometry fit; consistent with Mawet 2019 direct imaging epoch |
 | `semi_major_axis_au` | 3.53 ± 0.03 | high | Llop-Sayson 2021 |
-| `inclination_deg` | 34 | medium | Roettenbacher 2022 + disk plane coplanarity (Booth 2017 disk i = 34 ± 2°). Documented divergence: see Canonical alternatives. DB stores 78.81 ± 29.34° from Llop-Sayson RV-only fit; the huge uncertainty (±29°) includes 34° within ~1.5σ |
-| `mass_mjup` | 0.78 ± 0.12 | high | Llop-Sayson 2021 — deprojected from M sin i ≈ 0.66 M_Jup using disk-aligned i = 34° |
-| `mass_mearth` | 248 | high | derived from 0.78 M_Jup × 317.8 |
-| `radius_rjup` | 1.05 | low | Tie-break: no transit. Burrows 2003 / Fortney 2007 evolutionary tracks for 0.78 M_Jup at 0.44 Gyr predict 1.03–1.12 R_Jup with solar metallicity; cfg picks 1.05 as mid-range. Mawet 2019 Ms-band non-detection sets an upper limit excluding hot-start inflated radii > 1.3 R_Jup |
-| `surface_gravity_g_earth` | 1.8 | medium | derived: g = G M / R² with M = 0.78 M_Jup, R = 1.05 R_Jup → 17.5 m/s² = 1.79 g⊕ (dimensionless g_Earth units, as e.g. TRAPPIST-1 d = 0.624) |
-| `density_g_cc` | 0.85 | medium | derived: 0.78 M_Jup / (1.05 R_Jup)³ × ρ_Jup; consistent with mature solar-composition jovian |
+| `inclination_deg` | 78.81 (+29.34/−22.41) | high | Llop-Sayson 2021 most-probable (RV + Hipparcos/Gaia astrometry); = DB. The disk-coplanar i ≈ 34° (Booth 2017 ring; Benedict 2006 30°) is ~1–2σ from this and is kept as a noted alternative in Open items |
+| `mass_mjup` | 0.66 (+0.12/−0.09) | high | Llop-Sayson 2021 — true mass from joint RV + Hipparcos/Gaia astrometry + imaging (inclination-marginalized; = DB Phase 2) |
+| `mass_mearth` | 210 | high | = 0.66 M_Jup × 317.8 ≈ 210 (DB 209.8) |
+| `radius_rjup` | 1.05 | low | Tie-break: no transit. Burrows 2003 / Fortney 2007 evolutionary tracks for 0.66 M_Jup at 0.44 Gyr predict 1.03–1.12 R_Jup with solar metallicity; cfg picks 1.05 as mid-range. Mawet 2019 Ms-band non-detection sets an upper limit excluding hot-start inflated radii > 1.3 R_Jup |
+| `surface_gravity_g_earth` | 1.5 | medium | derived: g = G M / R² with M = 0.66 M_Jup, R = 1.05 R_Jup → 14.8 m/s² = 1.5 g⊕ |
+| `density_g_cc` | 0.76 | medium | derived: 0.66 M_Jup / (1.05 R_Jup)³ × ρ_Jup ≈ 0.76 g/cc |
 | `insolation_s_earth` | 0.026 | high | derived: S = L_star / a² = 0.32 L☉ (Baines & Armstrong 2012, recommended) / (3.53 AU)² = 0.0257 S⊕ |
 | `equilibrium_temp_k_a0` | 111 | high | derived: T_eq = 278 K × (L/a²)^0.25 = 278 × 0.0257^0.25 |
 | `equilibrium_temp_k_a03` | 102 | high | derived; Earth-analog A = 0.3 |
 | `bond_albedo` | 0.34 | low | Tie-break: Saturn-analog 0.342 (Hanel 1983; Li 2018) picked over Jupiter's 0.503 because cooler T_eq ≈ 111 K skews cloud chemistry toward thicker ammonia-ice deck more like Saturn than Jupiter; Uranus 0.300 also bracketed |
-| `intrinsic_luminosity_w_m2` | 0.5 | low | Tie-break: Burrows 2003 cooling track for 0.78 M_Jup at 0.44 Gyr predicts internal T ~ 100 K; cfg picks conservative 0.5 W/m² intrinsic flux (well below Jupiter's 5.4 W/m²; consistent with the older + lower-mass + less-inflated state) |
+| `intrinsic_luminosity_w_m2` | 0.5 | low | Tie-break: Burrows 2003 cooling track for 0.66 M_Jup at 0.44 Gyr predicts internal T ~ 100 K; cfg picks conservative 0.5 W/m² intrinsic flux (well below Jupiter's 5.4 W/m²; consistent with the older + lower-mass + less-inflated state) |
 | `atmosphere_present` | true | high | gas giant by definition; H₂/He bulk inferred from M-R consistency with solar composition |
 | `atmosphere_reference_pressure_pa` | 100 000 | medium | gas giant has no solid surface; cfg-reference 1 bar level for cloud-deck rendering, conventional jovian KSP atmosphere altitude origin |
 | `atmosphere_composition` | H₂ ~89%, He ~10%, CH₄ ~0.2%, NH₃ ~0.02%, H₂O ~0.01% (deep), trace CO and HCN from photochemistry | low | Tie-break: no spectrum. Solar-composition jovian default per Lodders 2003 protosolar abundance, with Jupiter/Saturn-like volatile inventory and condensation chemistry truncated at T = 111 K equilibrium |
-| `atmosphere_scale_height_km` | 23 | medium | derived: H = kT / (μ m_H g) with T = 111 K, μ = 2.3, g = 17.5 m/s² ≈ 23 km |
+| `atmosphere_scale_height_km` | 27 | medium | derived: H = kT / (μ m_H g) with T = 111 K, μ = 2.3, g = 14.8 m/s² ≈ 27 km |
 | `atmosphere_tint_rgb_hex` | `#d8c098` (warm-cream limb haze under K2V illumination) | low | Tie-break: ammonia-ice atmosphere is intrinsically near-white; K2V 5039 K SED shifts perception warmer than Sun-illuminated Jupiter |
 | `cloud_cover_fraction` | 0.85 | medium | jovian-analog: zonal banding nearly complete coverage with belt/zone contrast; cfg picks 0.85 to allow distinct dark belts vs bright zones rather than uniform overcast |
 | `cloud_morphology` | zonal bands with ammonia-ice cloud deck at ≈ 0.5–1 bar level; possible water-cloud deck below at ≈ 5 bar (inaccessible to visible imaging); faint photochemical haze layer above 100 mbar from CH₄ photolysis under K2V UV | low | Tie-break: no GCM; cfg adopts Saturn-analog band structure with ε Eri's elevated K-dwarf UV driving a slightly more prominent stratospheric haze layer than Saturn |
@@ -68,8 +69,8 @@ strong support, low = aesthetic choice within the allowed window.
 | `ring_present` | false | medium | Mawet 2019 Ms-band high-contrast imaging would detect a Saturn-bright ring system at the 3.5 AU separation; no ring component detected. cfg defaults to "no ring" |
 | `ring_observed` | false | high | Mawet 2019 Ms-band direct imaging detection without ring component |
 | `rotation_period_hours` | 10 | low | Tie-break: no rotation measurement. Jupiter-analog 9.93 h (Jupiter has fastest jovian rotation in the Solar System); cfg picks 10 h as round-number Jupiter-like value rather than slower Saturn-like (10.7 h) or Uranus-like (17.2 h) because mass-scaling and the angular-momentum budget at 3.5 AU favor Jupiter-class rapid rotation |
-| `magnetic_field_strength_microtesla_equator` | 400 | medium | scaled jovian dynamo: Jupiter's surface field ≈ 430 μT (equator); for 0.78 M_Jup with vigorous convection and Jupiter-like rotation, cfg picks 400 μT — below Jupiter by ~7% reflecting slightly weaker convective drive at lower mass |
-| `magnetic_dipole_moment_normalized_earth` | 15600 | medium | scaling: Jupiter dipole moment ≈ 20 000 × Earth; ε Eri b at 0.78 M_Jup ≈ 15 600 × Earth by linear-mass scaling (0.78 × 20 000) |
+| `magnetic_field_strength_microtesla_equator` | 400 | medium | scaled jovian dynamo: Jupiter's surface field ≈ 430 μT (equator); for 0.66 M_Jup with vigorous convection and Jupiter-like rotation, cfg picks 400 μT — below Jupiter by ~7% reflecting slightly weaker convective drive at lower mass |
+| `magnetic_dipole_moment_normalized_earth` | 13200 | medium | 0.66 × 20 000 ≈ 13 200 × Earth by linear-mass scaling |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: Jupiter 9.6°, Saturn 0°, Neptune 47°. cfg picks Jupiter-analog 10° for visible auroral oval offset; Saturn-aligned 0° would be visually uninteresting |
 | `aurora_present` | true | medium | ε Eri's stellar wind ≈ 30× solar mass-loss rate (Wood 2002) + cycle-active corona drives strong incident plasma flux at 3.5 AU; combined with jovian magnetospheric capture this produces auroral emission analogous to Jupiter's but with elevated driver |
 | `aurora_color_primary_hex` | `#c84080` (H-Balmer α 656 nm red-pink dominant in H₂-rich jovian atmosphere) | low | Tie-break: Jupiter UV aurora is brightest in Lyα + H₂ Lyman/Werner bands but the visible-band component is H-Balmer α; under K2V illumination context the visible-band aurora reads as red-pink |
@@ -163,7 +164,7 @@ H₂O ≈ 100 ppm (depleted above the deeper water cloud deck), trace
 CO ~ 1 ppb and HCN ~ 0.1 ppb from CH₄ + N₂ photochemistry. These
 volatile abundances are entirely tie-break defaults — no spectrum
 constrains them — but the cfg picks Jupiter-analog values because
-the 0.78 M_Jup mass and protosolar metallicity context favor a
+the 0.66 M_Jup mass and protosolar metallicity context favor a
 Jupiter-class disk-accretion formation history.
 
 **Photochemistry signature.** ε Eri's elevated FUV (Lyα, France 2018
@@ -181,8 +182,8 @@ diagnostic future detection channel; cfg encodes the haze presence
 without committing to a specific optical depth.
 
 **Sky appearance from a Hill-sphere observer.** The Hill sphere
-radius for 0.78 M_Jup at 3.53 AU around 0.82 M☉ is r_H ≈
-0.237 AU = 472 R_planet — large enough to host substantial moon
+radius for 0.66 M_Jup at 3.53 AU around 0.82 M☉ is r_H ≈
+**0.224 AU = 447 R_planet** — large enough to host substantial moon
 populations. From an observer on a hypothetical large moon at, say,
 20 R_planet (Io-analog distance scaled to ε Eri b's larger radius),
 the planet subtends ≈ 5.7° in the sky — nearly 12× the lunar
@@ -210,7 +211,7 @@ near-IR spectra (the technique Snellen 2014 applied to β Pictoris b
 to measure v sin i = 25 km/s) require high-contrast spectroscopic
 imaging at < 0.5 arcsec separation — ε Eri b's angular separation is
 ≈ 1.1 arcsec from the host, accessible to current instruments but
-the small mass (0.78 M_Jup) and faint thermal emission have so far
+the small mass (0.66 M_Jup) and faint thermal emission have so far
 prevented a rotation measurement.
 
 **Tidal damping argument.** At 3.5 AU around a 0.82 M☉ host, the
@@ -222,7 +223,7 @@ locked. The cfg encodes `tidally_locked = false`.
 **Rotation period choice.** Among observed gas giants, rotation
 period scales weakly with mass: Jupiter (1.0 M_Jup) ≈ 9.93 h, Saturn
 (0.3 M_Jup) ≈ 10.7 h, Uranus (0.046 M_Jup) ≈ 17.2 h, Neptune (0.054
-M_Jup) ≈ 16.1 h. For ε Eri b at 0.78 M_Jup, the angular-momentum
+M_Jup) ≈ 16.1 h. For ε Eri b at 0.66 M_Jup, the angular-momentum
 budget inherited from disk accretion at 3.5 AU favors Jupiter-class
 rapid rotation. The cfg picks `rotation_period_hours = 10` as a
 round Jupiter-analog value — within-window tie-break, not
@@ -245,7 +246,7 @@ or axis-tilt cfg) = 25° from orbital normal.
 convection and a Jupiter-class rotation period (10 h) sustains a
 strong dipolar field. Scaling from Jupiter (surface equatorial field
 ≈ 430 μT, dipole moment ≈ 2 × 10⁴ × Earth) by linear mass gives ε
-Eri b ≈ 400 μT and ≈ 1.56 × 10⁴ × Earth — both adopted in the cfg.
+Eri b ≈ 400 μT and ≈ 1.32 × 10⁴ × Earth — both adopted in the cfg.
 The dipole tilt is set to Jupiter-analog 10° for visually distinct
 auroral oval rendering. The Jupiter-analog rotation + magnetic field
 combination places ε Eri b firmly in the "strong magnetosphere"
@@ -299,19 +300,11 @@ Combining surface (cloud-deck) and atmosphere decisions:
   at the 3.5 AU separation; non-detection sets `ring_present = false`
   with medium confidence (a Jupiter-faint ring is below the Mawet
   detection threshold and not excluded).
-- **Hill-sphere context.** r_H ≈ 0.237 AU = 472 R_planet. Large
+- **Hill-sphere context.** r_H ≈ 0.224 AU = 447 R_planet. Large
   enough to host a substantial moon population; cfg does not commit
   to specific moons (out of scope for this Phase 3) but the
   Hill-sphere extent itself is a visual landmark when rendered as a
   faint sphere of influence boundary.
-
-## Canonical alternatives
-
-### Diverged cfg picks
-
-| Field | Gameplay (in cfg) | Canonical alternative | Why diverged |
-|---|---|---|---|
-| `inclination_deg` | 34° (Roettenbacher 2022 + disk-plane coplanarity reading; matches Booth 2017 ALMA disk inclination) | 78.81° ± 29.34° (Llop-Sayson 2021 RV-only fit, stored verbatim in DB Phase 2) | The Llop-Sayson value has very large uncertainty (±29°) and is essentially unconstrained by RV alone — the prior on inclination was nearly uniform. Roettenbacher 2022's combined astrometric + disk-plane reading favors 34° at the same level of statistical support, and Booth 2017's resolved disk inclination of 34 ± 2° provides an independent coplanarity argument. cfg picks the coplanar 34° because it is consistent with the host Phase 3's `disk_imaging_inclination_deg` adoption and produces a physically self-consistent system architecture. The DB-stored 78.81° is preserved verbatim for traceability but will be updated when Phase 2 of `eps_eri_b` is refreshed. |
 
 ## Bibliography
 
@@ -339,12 +332,13 @@ Combining surface (cloud-deck) and atmosphere decisions:
   ε Eri c with planet mass > 0.3 M_Jup beyond 30 AU; constrains
   thermal-emission upper limit excluding hot-start inflated jovian
   models. **Cornerstone observational paper.**
-- **Llop-Sayson J. et al. 2021** — *Constraints on the Nature of ε
-  Eri b from a Combined Analysis of Radial Velocities and
-  Astrometry*, AJ 162, 181 (`2021AJ....162..181L`).
+- **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
+  of ε Eridani b with Radial Velocities, Hipparcos IAD-Gaia DR2
+  Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
+  AJ 162, 181 (`2021AJ....162..181L`).
   Joint RV + Hipparcos/Gaia astrometric fit;
-  M sin i ≈ 0.66 M_Jup; deprojected mass 0.78 ± 0.12 M_Jup using
-  disk-aligned i = 34°; a = 3.5 AU. **Cornerstone observational
+  true mass M_b = 0.66 (+0.12/−0.09) M_Jup, i = 78.81°
+  (+29.34/−22.41), a = 3.48 AU. **Cornerstone observational
   paper.**
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
   Detection of ε Eridani b*, AJ 163, 19 (`2022AJ....163...19R`,
@@ -375,7 +369,7 @@ Combining surface (cloud-deck) and atmosphere decisions:
 - **Burrows A. et al. 2003** — *Beyond the T dwarfs* and related
   cool-jovian evolutionary tracks (`2003ApJ...596..587B`). Mass-
   radius-age tracks for 0.5–1.5 M_Jup planets; used to estimate ε
-  Eri b's radius and intrinsic luminosity from 0.78 M_Jup, 0.44 Gyr.
+  Eri b's radius and intrinsic luminosity from 0.66 M_Jup, 0.44 Gyr.
 - **Fortney J. J. et al. 2007** — *Planetary Radii across Five
   Orders of Magnitude in Mass and Stellar Insolation* (`2007ApJ
   ...659.1661F`). Confirms Burrows tracks across the relevant mass-
@@ -497,12 +491,12 @@ a dedicated b-bibliography fetch is a follow-up pass.
   if the planet's thermal contrast can be extracted. Currently the
   10 h rotation period is a within-window tie-break; a measured
   period would shift Confidence from low to high.
-- **Inclination-DB consistency**: the cfg adopts i = 34° (coplanar
-  with disk; Roettenbacher 2022 + Booth 2017) while the DB Phase 2
-  still stores i = 78.81° ± 29.34° (Llop-Sayson 2021 RV-only). A
-  future Phase 2 refresh should update the DB to the coplanar value
-  or carry both as alternative measurements.
-- **Moon system Phase 3**: Hill-sphere radius ~0.237 AU is large
+- **Inclination-DB consistency**: the cfg adopts the Llop-Sayson/DB
+  value i = 78.81° (RV + Hipparcos/Gaia astrometry, inclination-
+  marginalized). The disk-coplanar i ≈ 34° (Booth 2017 ring;
+  Benedict 2006 30°) is allowed at ~1σ and is preserved here as the
+  alternative scenario a future Phase 2 could carry.
+- **Moon system Phase 3**: Hill-sphere radius ~0.224 AU is large
   enough to host a substantial moon population. A future Phase 3
   follow-up could speculate on icy/rocky moons in the 5–50 R_planet
   range, anchored on (a) the protoplanetary-disk circumplanetary-
