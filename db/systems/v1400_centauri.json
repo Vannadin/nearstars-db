@@ -117,7 +117,17 @@
     {
       "name": "J1407b",
       "host_star": "V1400 Centauri",
-      "raw": {},
+      "raw": {
+        "pl_name": "J1407b",
+        "discoverymethod": "theoretical",
+        "period_days": null,
+        "semi_major_axis_au": 5.0,
+        "eccentricity": 0.7,
+        "inclination_deg": null,
+        "mass_mearth": 7627,
+        "radius_rearth": null,
+        "reference": "Kenworthy & Mamajek 2015 (ring-eclipse model; period ~13-17 yr unconfirmed)"
+      },
       "derived": {
         "semi_major_axis_m": 747989353500.0,
         "eccentricity": 0.7,

@@ -239,7 +239,17 @@
     {
       "name": "40 Eridani A b",
       "host_star": "40 Eridani A",
-      "raw": {},
+      "raw": {
+        "pl_name": "40 Eridani A b",
+        "discoverymethod": "rv",
+        "period_days": 42.245,
+        "semi_major_axis_au": 0.224,
+        "eccentricity": 0.04,
+        "inclination_deg": null,
+        "mass_mearth": 8.47,
+        "radius_rearth": null,
+        "reference": "Ma et al. 2018 (Dharma Planet Survey RV); 42.2-d signal later refuted as stellar rotation/activity (Lubin & Burrows 2024). Re-included per project decision (gameplay/cultural variety: Star Trek Vulcan + PHM Erid); refutation documented in Phase 3."
+      },
       "derived": {
         "semi_major_axis_m": 33509923036.8,
         "eccentricity": 0.04,

@@ -771,15 +771,31 @@ for target in target_list:
             planets_block.append(planet_entry)
             seen_planet_names.add(pl["pl_name"].strip())
 
-        # curated-only 행성 (NASA Archive raw 에 없는) 도 emit — J1407b 처럼
-        # Archive 미등재 (잠정/비표준) 천체. raw 는 빈 dict, derived 는 curated 기반.
+        # curated-only 행성 (NASA Archive raw 에 없는) 도 emit — J1407b·40 Eri A b·
+        # tau Cet e 처럼 Archive 미등재 (잠정/비표준/철회) 천체. raw 는 fetch 된 게
+        # 없으므로, 뷰어 행성 표(raw 값을 읽음)가 빈 칸으로 보이지 않도록 curated
+        # 의 recommended 값으로 raw 를 합성한다 (provenance 는 reference 에 보존).
         for cname, c in curated_by_name.items():
             if cname in seen_planet_names:
                 continue
+            c_orb = _pick_recommended(c.get("orbital"))
+            c_phy = _pick_recommended(c.get("physical"))
+            synth_raw = {
+                "pl_name":            c["pl_name"],
+                "discoverymethod":    c_orb.get("method") or c_phy.get("method"),
+                "period_days":        c_orb.get("period_days"),
+                "semi_major_axis_au": c_orb.get("semi_major_axis_au"),
+                "eccentricity":       c_orb.get("eccentricity"),
+                "inclination_deg":    c_orb.get("inclination_deg"),
+                "mass_mearth":        c_phy.get("true_mass_mearth") or c_phy.get("mass_mearth"),
+                "radius_rearth":      c_phy.get("radius_rearth"),
+                "reference":          (c_orb.get("reference") or c_phy.get("reference")
+                                       or c_orb.get("source") or c_phy.get("source")),
+            }
             planets_block.append({
                 "name":      c["pl_name"],
                 "host_star": star_name,
-                "raw":       {},
+                "raw":       synth_raw,
                 "derived":   build_planet_derived({}, curated=c),
                 "curated":   c,
             })

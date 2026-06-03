@@ -461,7 +461,17 @@
     {
       "name": "tau Cet e",
       "host_star": "tau Cet",
-      "raw": {},
+      "raw": {
+        "pl_name": "tau Cet e",
+        "discoverymethod": "rv",
+        "period_days": 162.87,
+        "semi_major_axis_au": 0.538,
+        "eccentricity": 0.18,
+        "inclination_deg": null,
+        "mass_mearth": 3.93,
+        "radius_rearth": null,
+        "reference": "Feng et al. 2017 RV; signal reclassified False Positive (NEA 2026-04-09, Figueira 2025 ESPRESSO non-detection — stellar activity). Re-included per project decision (PHM Adrian cultural weight); disposition documented in Phase 3."
+      },
       "derived": {
         "semi_major_axis_m": 80483654436.6,
         "eccentricity": 0.18,
