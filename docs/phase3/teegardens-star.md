@@ -52,9 +52,8 @@ Teegarden's Star hosts a **compact system of temperate Earth-mass
 planets**: b and c (each ~1.1 M⊕ minimum mass, P = 4.91 d and 11.4 d;
 Zechmeister et al. 2019) — the first Earth-mass planets found around
 an ultracool dwarf by radial velocity — plus a third planet d
-(0.82 M⊕, P = 26.13 d; Dreizler et al. 2024). These planets are out
-of scope for this stellar synthesis and are flagged for a follow-up
-workspace.
+(0.82 M⊕, P = 26.13 d; Dreizler et al. 2024). Each is characterized
+in its own per-planet Phase 3 synthesis (`teegardens-star-b/c/d`).
 
 **Scenario choice for NearStars: an ancient, deeply red, very quiet
 M7 V ultracool dwarf — the brightest of its spectral class, the
