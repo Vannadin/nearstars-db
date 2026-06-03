@@ -250,10 +250,11 @@ it does not).
   but constructs an environment that diverges from the
   habitable-Earth-analog framing — see the "Weir's Adrian" bullet
   below. The 2025 ESPRESSO refutation post-dates the novel by
-  four years. NearStars does not render Adrian in-game because
-  the underlying body does not exist; this Phase 3 markdown is
-  the cultural cross-reference home, paired with
-  `docs/reference/cultural-context.md § Tau Ceti`.
+  four years. **Per a project decision, NearStars now includes e as a
+  documented divergence** — it is rendered using this depicted reading
+  despite the refuted signal (canonical = no planet); this Phase 3
+  markdown is the synthesis + cultural cross-reference home, paired
+  with `docs/reference/cultural-context.md § Tau Ceti`.
 - **Weir's Adrian — diverges from the historical Earth-analog
   rendering above.** *Project Hail Mary* does not depict Adrian
   as an Earth-analog blue-green ocean world. The novel's stated

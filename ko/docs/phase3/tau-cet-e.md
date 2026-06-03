@@ -222,9 +222,10 @@ cfg 천체가 만들어지지 않으므로 cfg 와 무관.
   소설은 Feng 2017 의 궤도 파라미터 (P ≈ 168 d, a ≈ 0.55 AU,
   M sin i = 3.93 M⊕) 를 채택하지만 거주가능 Earth-analog 프레이밍
   과는 다른 환경을 구축 — 아래 "Weir's Adrian" 글머리표 참조. 2025
-  ESPRESSO 철회는 소설보다 4 년 늦습니다. 근거 천체가 존재하지
-  않으므로 NearStars 는 인게임에서 Adrian 을 렌더링하지 않습니다.
-  이 Phase 3 마크다운이 `docs/reference/cultural-context.md
+  ESPRESSO 철회는 소설보다 4 년 늦습니다. **프로젝트 결정에 따라
+  NearStars 는 이제 e 를 documented divergence 로 포함**하며 — 철회된
+  신호에도 불구하고 이 묘사 판독으로 렌더링합니다 (canonical = 행성 없음).
+  이 Phase 3 마크다운이 합성 + `docs/reference/cultural-context.md
   § Tau Ceti` 와 짝을 이룬 문화적 교차참조 홈입니다.
 - **Weir 의 Adrian — 위의 역사적 Earth-analog 렌더링과 다름.**
   *Project Hail Mary* 는 Adrian 을 Earth-analog 푸른 해양 세계로

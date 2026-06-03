@@ -2,7 +2,8 @@
   "40 Eridani A": {
     "phase2": "phase2/40-eridani-a.html",
     "phase3": {
-      "★": "phase3/40-eridani-a.html"
+      "★": "phase3/40-eridani-a.html",
+      "b": "phase3/40-eridani-a-b.html"
     }
   },
   "40 Eridani B": {
