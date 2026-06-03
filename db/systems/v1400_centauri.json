@@ -1,0 +1,224 @@
+{
+  "system_name": "V1400 Centauri",
+  "stars": [
+    {
+      "name": "V1400 Centauri",
+      "component": null,
+      "raw": {
+        "source": "gaia_dr3",
+        "source_id": "6117085769513415168",
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 211.9495737432168,
+        "dec_deg": -39.76197328370095,
+        "parallax_mas": 7.235051329299362,
+        "parallax_error_mas": 0.013994177,
+        "pmra_mas_yr": -23.10753476233394,
+        "pmdec_mas_yr": -21.047559616770737,
+        "radial_velocity_km_s": 5.6473436,
+        "radial_velocity_source": "gaia_dr3",
+        "vmag_v": 12.31,
+        "vmag_source": "Mamajek et al. 2012",
+        "teff_k": 4500,
+        "spectype": "K5 IV(e) Li",
+        "mass_measurements": [
+          {
+            "value_msun": 0.9,
+            "method": "evolutionary_model",
+            "reference": "Mamajek et al. 2012",
+            "bibcode": "2012AJ....143...72M",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.99,
+            "uncertainty_rsun": 0.11,
+            "method": "evolutionary_model",
+            "reference": "Kenworthy & Mamajek 2015",
+            "bibcode": "2015ApJ...800..126K",
+            "recommended": true
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 4500,
+            "uncertainty_k": 200,
+            "method": "low_res_spectroscopy",
+            "reference": "Mamajek et al. 2012",
+            "bibcode": "2012AJ....143...72M",
+            "recommended": true
+          }
+        ],
+        "luminosity_measurements": [],
+        "age_measurements": [
+          {
+            "value_gyr": 0.016,
+            "method": "isochrone",
+            "reference": "Mamajek et al. 2012 (Sco-Cen UCL membership)",
+            "bibcode": "2012AJ....143...72M",
+            "recommended": true
+          }
+        ],
+        "metallicity_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 3.2,
+            "method": "photometric_variability",
+            "reference": "Mamajek et al. 2012",
+            "bibcode": "2012AJ....143...72M",
+            "recommended": true
+          }
+        ],
+        "activity_measurements": [
+          {
+            "value_x_ray_log_lx_lbol": -3.4,
+            "method": "x_ray",
+            "reference": "Mamajek et al. 2012 (near-saturation, fast rotator)",
+            "bibcode": "2012AJ....143...72M",
+            "recommended": true
+          }
+        ],
+        "stellarium_id": null
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 138.21602010622354,
+        "distance_km": 4264900746446833.0,
+        "icrs_x_km": -2781814441296690.0,
+        "icrs_y_km": -1734905372540534.5,
+        "icrs_z_km": -2727799444877000.5,
+        "icrs_vx_km_s": -4.211088829133652,
+        "icrs_vy_km_s": 15.217036293349848,
+        "icrs_vz_km_s": -14.212947488466988,
+        "position_ulp_km": 0.6176868885924702,
+        "icrs_x_j2000_km": -2781821085889531.5,
+        "icrs_y_j2000_km": -1734881361883308.0,
+        "icrs_z_j2000_km": -2727821871202583.5,
+        "icrs_vx_j2000_km_s": -4.211088829133652,
+        "icrs_vy_j2000_km_s": 15.217036293349848,
+        "icrs_vz_j2000_km_s": -14.212947488466988,
+        "luminosity_lsun": null,
+        "age_gyr": 0.016,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": 3.2,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 119441196016.2,
+        "mean_radius_km": 688743.0
+      }
+    }
+  ],
+  "planets": [
+    {
+      "name": "J1407b",
+      "host_star": "V1400 Centauri",
+      "raw": {},
+      "derived": {
+        "semi_major_axis_m": 747989353500.0,
+        "eccentricity": 0.7,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 4.55499694e+28,
+        "mass_type": "ring_model_estimate",
+        "radius_m": null,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
+      },
+      "curated": {
+        "pl_name": "J1407b",
+        "orbital": [
+          {
+            "semi_major_axis_au": 5.0,
+            "eccentricity": 0.7,
+            "method": "theoretical",
+            "reference": "Kenworthy & Mamajek 2015 (ring-eclipse model; period ~13-17 yr unconfirmed)",
+            "bibcode": "2015ApJ...800..126K",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 7627,
+            "mass_type": "ring_model_estimate",
+            "method": "theoretical",
+            "reference": "Kenworthy & Mamajek 2015 (~24 M_Jup photometric; range 8->100 M_Jup)",
+            "bibcode": "2015ApJ...800..126K",
+            "recommended": true
+          }
+        ],
+        "rings": {
+          "outer_radius_au": 0.6,
+          "ring_count": 37,
+          "total_mass_mearth": 1.0,
+          "gap_radius_au": 0.4,
+          "inclination_deg": 70.0,
+          "orientation_deg": 166.1,
+          "prograde": false,
+          "eclipse_duration_days": 56,
+          "exomoon_mass_mearth_upper": 0.8,
+          "method": "eclipse_modeling",
+          "reference": "Kenworthy & Mamajek 2015",
+          "bibcode": "2015ApJ...800..126K",
+          "notes": "TENTATIVE / DISPUTED. The 2007 eclipse light curve is real data; the ring system is the best-fit MODEL of that single, never-repeated event. Companion's bound orbit unconfirmed (Mentel 2018: no second eclipse in plates 1890-2018). Mass spans 8-100 M_Jup (photometric ~24 vs ring-stability dynamics 60-100, Rieder & Kenworthy 2016). Retrograde favored. Outer radius ~90 million km, ~200x Saturn's rings; gap at ~0.4 AU attributed to an exomoon (<0.8 M_earth)."
+        }
+      }
+    }
+  ],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "Gaia Data Release 3",
+      "doi": "10.1051/0004-6361/202243940",
+      "bibcode": "2023A&A...674A...1G",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Mamajek et al. 2012",
+      "doi": null,
+      "bibcode": "2012AJ....143...72M",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "V1400 Centauri mass (evolutionary_model)"
+      ]
+    },
+    {
+      "title": "Kenworthy & Mamajek 2015",
+      "doi": null,
+      "bibcode": "2015ApJ...800..126K",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "V1400 Centauri radius (evolutionary_model)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-06-03",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433647.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": "Young (~16 Myr) pre-main-sequence K5 member of Upper Centaurus-Lupus (Sco-Cen). Gaia DR3 distance 138.2 pc (~451 ly) — far beyond the 50 ly Kopernicus cap; added as a beyond-implementation-range data / Phase-3 entry (intentional exception), NOT a KSP target body. Host of J1407b, the largest known (candidate) ring system. Teff uncertainty asymmetric (+100/-200 K); post-Gaia isochrone analyses favor a slightly older ~20 Myr age and Teff ~4343 K."
+  }
+}

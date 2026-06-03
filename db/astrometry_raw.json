@@ -2718,5 +2718,41 @@
     "rv_error_km_s": null,
     "radial_velocity_source": null,
     "sibling_backfill": "parallax/rv from Procyon A"
+  },
+  "V1400 Centauri": {
+    "source": "gaia_dr3",
+    "source_id": "6117085769513415168",
+    "epoch_jd": 2457389.0,
+    "epoch_label": "J2016.0",
+    "ra_deg": 211.9495737432168,
+    "ra_error_mas": 0.011489079,
+    "dec_deg": -39.76197328370095,
+    "dec_error_mas": 0.012223409,
+    "parallax_mas": 7.235051329299362,
+    "parallax_error_mas": 0.013994177,
+    "pmra_mas_yr": -23.10753476233394,
+    "pmra_error_mas_yr": 0.015499176,
+    "pmdec_mas_yr": -21.047559616770737,
+    "pmdec_error_mas_yr": 0.016855817,
+    "radial_velocity_km_s": 5.6473436,
+    "rv_error_km_s": 2.921378
+  },
+  "PSR J0108-1431": {
+    "source": "vlbi",
+    "source_id": null,
+    "epoch_jd": 2451545.0,
+    "epoch_label": "J2000.0",
+    "ra_deg": 17.034583,
+    "ra_error_mas": null,
+    "dec_deg": -14.530556,
+    "dec_error_mas": null,
+    "parallax_mas": 4.17,
+    "parallax_error_mas": 1.42,
+    "pmra_mas_yr": 75.05,
+    "pmra_error_mas_yr": 2.26,
+    "pmdec_mas_yr": -152.54,
+    "pmdec_error_mas_yr": 1.65,
+    "radial_velocity_km_s": null,
+    "rv_error_km_s": null
   }
 }

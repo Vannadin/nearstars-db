@@ -910,5 +910,11 @@
     "bp_rp": 0.5976,
     "vmag_v": 12.3916,
     "vmag_source": "gaia_dr3_converted"
+  },
+  "V1400 Centauri": {
+    "g_mag": 11.927564,
+    "bp_rp": 1.4844313,
+    "vmag_v": 12.31,
+    "vmag_source": "Mamajek et al. 2012"
   }
 }

@@ -1995,5 +1995,25 @@
     "stellarium_ids": {
       "Van Maanen's Star": null
     }
+  },
+  {
+    "system": "V1400 Centauri",
+    "components": [
+      "V1400 Centauri"
+    ],
+    "gaia_source_ids": [
+      "6117085769513415168"
+    ],
+    "hip_ids": [],
+    "binary": false
+  },
+  {
+    "system": "PSR J0108-1431",
+    "components": [
+      "PSR J0108-1431"
+    ],
+    "gaia_source_ids": [],
+    "hip_ids": [],
+    "binary": false
   }
 ]

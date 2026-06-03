@@ -1,0 +1,126 @@
+{
+  "system_name": "PSR J0108-1431",
+  "stars": [
+    {
+      "name": "PSR J0108-1431",
+      "component": null,
+      "raw": {
+        "source": "vlbi",
+        "source_id": null,
+        "epoch_jd": 2451545.0,
+        "epoch_label": "J2000.0",
+        "ra_deg": 17.034583,
+        "dec_deg": -14.530556,
+        "parallax_mas": 4.17,
+        "parallax_error_mas": 1.42,
+        "pmra_mas_yr": 75.05,
+        "pmdec_mas_yr": -152.54,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "vlbi (RV 없음 → 0으로 처리)",
+        "vmag_v": null,
+        "vmag_source": null,
+        "teff_k": null,
+        "spectype": "neutron star (radio pulsar)",
+        "mass_measurements": [
+          {
+            "value_msun": 1.4,
+            "method": "assumed_canonical",
+            "reference": "canonical neutron-star mass (not measured)",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 1.724e-05,
+            "method": "assumed_canonical",
+            "reference": "canonical neutron-star radius ~12 km (not measured)",
+            "recommended": true
+          }
+        ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
+        "stellarium_id": null
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "linear",
+        "distance_pc": 239.80815347721824,
+        "distance_km": 7399706430434053.0,
+        "icrs_x_km": 6848869113164281.0,
+        "icrs_y_km": 2098289748543351.5,
+        "icrs_z_km": -1856293983047441.2,
+        "icrs_vx_km_s": -66.59221793077815,
+        "icrs_vy_km_s": 68.82862764903582,
+        "icrs_vz_km_s": -167.86136831027622,
+        "position_ulp_km": 1.5207544364158123,
+        "icrs_x_j2000_km": 6848764038635452.0,
+        "icrs_y_j2000_km": 2098398351858346.2,
+        "icrs_z_j2000_km": -1856558848143270.8,
+        "icrs_vx_j2000_km_s": -66.59221793077815,
+        "icrs_vy_j2000_km_s": 68.82862764903582,
+        "icrs_vz_j2000_km_s": -167.86136831027622,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 185797416025.2,
+        "mean_radius_km": 12.0
+      },
+      "compact_object": {
+        "object_type": "neutron_star",
+        "subclass": "rotation_powered_radio_pulsar",
+        "spin_period_s": 0.8075646822,
+        "spin_period_derivative": 7.7e-17,
+        "characteristic_age_myr": 168,
+        "surface_b_field_gauss": 250000000000.0,
+        "spin_down_luminosity_erg_s": 5.8e+30,
+        "xray_kt_kev": 0.11,
+        "xray_luminosity_erg_s": 2e+28,
+        "reference": "Pavlov et al. 2009; Posselt et al. 2012",
+        "bibcode": "2009ApJ...691..458P",
+        "notes": "Distance disputed: raw VLBI parallax 4.17 mas -> 240 pc (Deller 2009), Lutz-Kelker-corrected best ~210 pc (Verbiest 2012); legacy DM ~130 pc superseded. Pdot/tau/B from Pavlov 2009 (ATNF timing differs ~2x). X-ray kT: XMM 0.11 keV (Posselt 2012) vs Chandra 0.28 keV (Pavlov 2009). M/R canonical, not measured."
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-06-03",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-06-03",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433647.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": "Nearest known radio pulsar (Cetus), ~210-240 pc (~685 ly) — far beyond the 50 ly Kopernicus cap; beyond-implementation-range data / Phase-3 entry (intentional exception), NOT a KSP target. Ordinary (non-recycled), old (~168 Myr characteristic age), faint, near the radio death line. Astrometry from VLBI (Deller et al. 2009), not Gaia — optically far below Gaia's limit. Solitary: no planets (IR companion search to ~5000 AU, Posselt 2008/09)."
+  }
+}

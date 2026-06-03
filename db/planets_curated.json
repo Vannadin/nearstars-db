@@ -5975,5 +5975,45 @@
         "doi": "10.1051/0004-6361/201834890"
       }
     }
+  ],
+  "V1400 Centauri": [
+    {
+      "pl_name": "J1407b",
+      "orbital": [
+        {
+          "semi_major_axis_au": 5.0,
+          "eccentricity": 0.7,
+          "method": "theoretical",
+          "reference": "Kenworthy & Mamajek 2015 (ring-eclipse model; period ~13-17 yr unconfirmed)",
+          "bibcode": "2015ApJ...800..126K",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 7627,
+          "mass_type": "ring_model_estimate",
+          "method": "theoretical",
+          "reference": "Kenworthy & Mamajek 2015 (~24 M_Jup photometric; range 8->100 M_Jup)",
+          "bibcode": "2015ApJ...800..126K",
+          "recommended": true
+        }
+      ],
+      "rings": {
+        "outer_radius_au": 0.6,
+        "ring_count": 37,
+        "total_mass_mearth": 1.0,
+        "gap_radius_au": 0.4,
+        "inclination_deg": 70.0,
+        "orientation_deg": 166.1,
+        "prograde": false,
+        "eclipse_duration_days": 56,
+        "exomoon_mass_mearth_upper": 0.8,
+        "method": "eclipse_modeling",
+        "reference": "Kenworthy & Mamajek 2015",
+        "bibcode": "2015ApJ...800..126K",
+        "notes": "TENTATIVE / DISPUTED. The 2007 eclipse light curve is real data; the ring system is the best-fit MODEL of that single, never-repeated event. Companion's bound orbit unconfirmed (Mentel 2018: no second eclipse in plates 1890-2018). Mass spans 8-100 M_Jup (photometric ~24 vs ring-stability dynamics 60-100, Rieder & Kenworthy 2016). Retrograde favored. Outer radius ~90 million km, ~200x Saturn's rings; gap at ~0.4 AU attributed to an exomoon (<0.8 M_earth)."
+      }
+    }
   ]
 }
