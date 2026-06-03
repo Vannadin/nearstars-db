@@ -1759,6 +1759,18 @@ applyStaticLabels();
 
 fetch('data.json').then(r => r.json()).then(data => {
   DB = data;
+  // 거리 슬라이더 max 를 데이터의 실제 최대 거리로 동적 설정 — beyond-50ly 이색
+  // 천체(예: V1400 Cen 138 pc, PSR J0108 240 pc)도 슬라이더를 끝까지 밀면 보이게.
+  // 기본값(FILTER.dist=30 pc)은 그대로라 평소 ≤50 ly 카탈로그 뷰는 불변.
+  const _distEl = document.getElementById('dist');
+  if (_distEl) {
+    const maxPc = DB.reduce((m, s) => {
+      const plx = s.stars && s.stars[0] && s.stars[0].raw.parallax_mas;
+      const d = plx ? 1000 / plx : 0;
+      return d > m ? d : m;
+    }, 30);
+    _distEl.max = Math.ceil(maxPc);
+  }
   bindFilters();
   bindSort();
   renderAll();
