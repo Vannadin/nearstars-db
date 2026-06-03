@@ -36,7 +36,7 @@ unseen shepherd body. ALMA millimeter imaging (Boley 2012; White
 2017) refined the geometry, confirming the eccentricity, narrow
 width (Δa/a ≈ 0.13), and inclination i ≈ 65–67°. JWST/MIRI imaging
 by Gáspár et al. 2023 resolved an **inner asteroid-belt analog** at
-~10 AU and an **intermediate belt** at ~40–80 AU, completing a
+~10 AU and an **intermediate belt** at ~83–104 AU (separated from the broad inner disk by a gap near ~78 AU), completing a
 three-belt architecture analogous to Sol's asteroid belt + Kuiper
 belt + scattered disk, but scaled up by both temperature and mass.
 The famous "**Fomalhaut b**" point source reported by Kalas et al.
@@ -76,11 +76,11 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `disk_present` | true | high | Kalas et al. 2005 HST/ACS resolved coronagraphy |
 | `disk_belts` | warm, intermediate, cold | high | Gáspár et al. 2023 JWST/MIRI resolves a three-belt architecture: inner warm + intermediate + the classic eccentric cold main ring (Kalas 2005 / Boley 2012 / White 2017) |
 | `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 (`2023NatAs...7..790G`) JWST/MIRI — inner warm belt inner edge |
-| `disk_warm_outer_radius_au` | 90 | high | Gáspár et al. 2023 — inner warm belt outer extent |
+| `disk_warm_outer_radius_au` | 78 | high | Gáspár et al. 2023 — broad inner/warm disk extends out to the ~78 AU gap that separates it from the intermediate belt |
 | `disk_warm_tint_rgb_hex` | `#ffffff` (neutral; vivid `#fefeff`) | low | No measured optical color (thermal/interferometric only). Mie reflectance synthesis: carbonaceous grains, dark but large → neutral reflectance (B/I 1.00); renderer applies the A4 V blue-white light → pale blue-white in-game. Vivid pack: `#fefeff` |
 | `disk_warm_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
-| `disk_intermediate_inner_radius_au` | 60 | high | Gáspár et al. 2023 JWST/MIRI — intermediate belt inner edge |
-| `disk_intermediate_outer_radius_au` | 110 | high | Gáspár et al. 2023 — intermediate belt outer edge |
+| `disk_intermediate_inner_radius_au` | 83 | high | Gáspár et al. 2023 JWST/MIRI — intermediate belt inner semi-major axis (e ≈ 0.31) |
+| `disk_intermediate_outer_radius_au` | 104 | high | Gáspár et al. 2023 — intermediate belt outer semi-major axis (e ≈ 0.265) |
 | `disk_intermediate_tint_rgb_hex` | `#fff9f6` (near-neutral; vivid `#ffece4`) | low | No measured optical color (mid-IR only). Mie reflectance synthesis: silicate grains, large vs optical λ → near-neutral reflectance (B/I 0.76); renderer applies the A4 V light. Vivid pack: `#ffece4` |
 | `disk_intermediate_opacity` | 0.25 | low | Tie-break: faint intermediate dust, boosted for visibility |
 | `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — main ring inner edge after eccentric-orbit deprojection |
@@ -88,10 +88,10 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `disk_cold_dust_temperature_k` | 65 | high | Stapelfeldt 2004 Spitzer; Acke 2012 Herschel SED-fit of the cold component |
 | `disk_cold_tint_rgb_hex` | `#d6d8da` (near-neutral grey-white) | medium | MEASURED: Kalas 2005 HST/ACS + Acke 2012 — faint, low-albedo (~0.05–0.1), large grains → near-neutral/gray scattered light close to the A3V white star (the "blue Fomalhaut" is the planet candidate, not the ring) |
 | `disk_cold_opacity` | 0.35 | low | Tie-break: optically thin in reality (τ ≈ 10⁻⁴); boosted for visibility per interesting-first |
-| `disk_morphology` | three-belt eccentric architecture: warm inner belt (~10–90 AU) + intermediate belt (~60–110 AU) + the classic eccentric cold main ring (133–158 AU, sharp inner edge) | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST/MIRI — full multi-belt architecture |
+| `disk_morphology` | three-belt eccentric architecture: warm inner disk (~10–78 AU) + intermediate belt (~83–104 AU), separated by a gap near ~78 AU, + the classic eccentric cold main ring (133–158 AU, sharp inner edge) | high | Kalas 2005 + Boley 2012 + Gáspár 2023 JWST/MIRI — full multi-belt architecture |
 | `disk_resolved_imaging` | true | high | HST/ACS (Kalas 2005), ALMA (Boley 2012, White 2017), JWST/MIRI (Gáspár 2023) |
 | `disk_imaging_observatory` | HST-ACS + ALMA + JWST-MIRI | high | as above |
-| `disk_imaging_inclination_deg` | 65.6 ± 0.4 (cold ring); ~67.5 (inner belts, Gáspár 2023) | high | Le Bouquin 2009 / Boley 2012 ALMA for the cold ring; Gáspár 2023 for the inner belts |
+| `disk_imaging_inclination_deg` | 65.6 ± 0.4 (cold ring); ~47.8 (inner disk, Gáspár 2023 — strongly misaligned with the cold ring) | high | Le Bouquin 2009 / Boley 2012 ALMA for the cold ring; Gáspár 2023 for the inner disk (i ≈ 47.8° vs the 64.4° outer ring — the headline JWST misalignment result) |
 | `disk_mass_mearth` | 0.015 (cold main ring, mm-cm grains) to 4–10 (planetesimal reservoir) | medium | Holland 2017 SCUBA-2 + ALMA; lower bound from imaged grains, upper bound from collisional cascade modeling |
 | `disk_planetesimal_belt_inferred` | true | high | Sharp inner edge of the cold ring (Kalas 2005) requires shepherding bodies; collisional-cascade replenishment requires a parent planetesimal population (Wyatt 2008, applied by Boley 2012) |
 
@@ -251,7 +251,7 @@ same `Rings {}` block. The `disk_cold_opacity = 0.35` is a tie-break
 boost from the physical optical depth (~10⁻⁴) to ensure the ring
 reads as visible in-game rather than as a numerical artifact.
 
-The **intermediate belt at 40–80 AU** (Gáspár 2023 JWST) is rendered
+The **intermediate belt at 83–104 AU** (Gáspár 2023 JWST) is rendered
 as a fainter secondary ring with the same dust tint at half opacity,
 producing a Saturn-like double-ring structure but at a vastly
 larger scale. The **inner warm asteroid-belt analog at ~10 AU**
@@ -329,7 +329,8 @@ alignment phenomena on human timescales.
   inner Fomalhaut disk using JWST/MIRI*, Nature Astronomy 7, 790
   (`2023NatAs...7..790G`, arXiv:2305.03789). JWST/MIRI imaging at
   15.5 µm + 23 µm resolves a previously-unknown **intermediate belt
-  at ~40–80 AU** and confirms an **inner warm asteroid-belt analog
+  at ~83–104 AU** (separated from the inner disk by a ~78 AU gap;
+  inner disk inclined ~47.8° vs the 64.4° outer ring) and confirms an **inner warm asteroid-belt analog
   at ~10 AU**; no point source at the Fomalhaut-b epoch position,
   consistent with the dust-cloud interpretation.
 - **Boley A. C. et al. 2012** — *Constraining the planetary system

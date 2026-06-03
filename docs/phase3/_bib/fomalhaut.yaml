@@ -41,3 +41,34 @@ papers:
   status: skipped
   category: manual_followup
   fetch_error: null
+- arxiv_id: '2305.03789'
+  ads_bibcode: 2023NatAs...7..790G
+  title: Gáspár et al. 2023 — JWST/MIRI inner disk; intermediate belt 83-104 AU, gap ~78 AU, inner-disk i 47.8 (misaligned
+    vs 64.4 outer ring)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1204.0007'
+  ads_bibcode: 2012ApJ...750L..21B
+  title: Boley et al. 2012 — ALMA main ring e 0.11, inner 133 / outer 158 AU, width Δa/a 0.13
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1705.10670'
+  ads_bibcode: 2017ApJ...842...80W
+  title: White et al. 2017 — ALMA Cycle 4 outer ring; inclination 65.6 ± 0.4
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1204.5037'
+  ads_bibcode: 2012A&A...540A.125A
+  title: Acke et al. 2012 — Herschel/PACS cold ring SED, T_dust 65 K
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: null
+  ads_bibcode: 2005Natur.435.1067K
+  title: Kalas et al. 2005 — HST/ACS first resolved eccentric main ring at 133 AU, e 0.11, sharp inner edge (Nature, no arXiv)
+  status: skipped
+  category: manual_followup
+  fetch_error: null
