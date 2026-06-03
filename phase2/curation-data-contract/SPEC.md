@@ -179,7 +179,7 @@ measured input; P3-synth = synthesized (no measurement possible for exoplanets).
 | Orbit & spin | tidally_locked, obliquity_deg, eccentricity, argument_of_periastron_deg, sidereal_period_days, semi_major_axis_au, inclination_deg | planet `orbital` / `binary_orbits` | Kopernicus / Principia |
 | Physical (planet) | mass_mearth, radius_rearth, surface_gravity_g_earth, density_g_cc, insolation_s_earth, equilibrium_temp_k (A=0 / A=0.3), bond_albedo, water_mass_fraction | planet `physical`+`environment` | Kopernicus |
 | Surface | day/nightside_surface_temp_k, dayside_brightness_temp_k_*, surface_tint_rgb_hex_primary/accent, surface_morphology, surface_ice_caps, ocean_present/extent/tint | P3-synth | Kopernicus/PQS |
-| Atmosphere | atmosphere_present, surface_pressure_pa, composition, scale_height_km, tint_rgb_hex, cloud_cover_fraction/morphology/tint | planet `atmosphere` | Kopernicus |
+| Atmosphere | atmosphere_present, surface_pressure_pa (or reference_pressure_pa for gas giants — no solid surface, 1 bar cloud-deck reference), composition, scale_height_km, tint_rgb_hex, cloud_cover_fraction/morphology/tint | planet `atmosphere` | Kopernicus |
 | Atmosphere optics | sunset_color_hex, mie_scattering_aerosol_anisotropy_g | P3-synth | Scatterer (local emitter) |
 | Interior heating | tidal_heating_w_m2, induction_heating_w_m2, radiogenic_heat_w_m2 | paper/synth | Kopernicus |
 | Magnetic field | magnetic_field_strength_microtesla_equator, magnetic_dipole_moment_normalized_earth, magnetic_dipole_tilt_deg | P3-synth (dynamo scaling) | Kerbalism |
