@@ -45,14 +45,17 @@ floor. Despite its quiescence the star does produce rare flares: a
 strong far-UV flare was caught in 2019 (HST), confirming that even
 this inactive an old M dwarf retains an episodic flaring corona.
 
-Barnard's Star hosts **sub-Earth planet candidates** detected by the
-ESPRESSO radial-velocity campaign (González Hernández et al. 2024):
-a candidate "Barnard b" at P ≈ 3.15 d with M sin i ≈ 0.37 M⊕ plus
-three lower-significance candidates, all rocky sub-Earths well inside
-the habitable zone. (The earlier Ribas et al. 2018 "Barnard b"
-super-Earth at P ≈ 233 d was subsequently retracted — Lubin et al.
-2021 — and is not the same object.) These planets are out of scope
-for this stellar synthesis and are flagged for a follow-up workspace.
+Barnard's Star hosts a **compact system of four confirmed
+sub-Earths**: "Barnard b" (P ≈ 3.15 d, M sin i ≈ 0.30 M⊕) and
+siblings c, d, and e (P ≈ 4.12, 2.34, 6.74 d; M sin i 0.19–0.34 M⊕),
+all rocky sub-Earths well inside the habitable zone. They were
+detected by the ESPRESSO campaign (González Hernández et al. 2024)
+and confirmed with independent MAROON-X data by Basant et al. 2025,
+which promoted candidates c, d, and e to bona-fide planets. (The
+earlier Ribas et al. 2018 "Barnard b" super-Earth at P ≈ 233 d was
+subsequently retracted — Lubin et al. 2021 — and is not the same
+object.) Each is characterized in its own per-planet Phase 3
+synthesis (`barnards-star-b/c/d/e`).
 
 **Scenario choice for NearStars: an ancient, deeply red, extremely
 quiet M4 V dwarf — the nearest single star — slowly rotating on a

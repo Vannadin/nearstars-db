@@ -41,14 +41,16 @@ et al. 2019, 광도 측정) 인데, 이는 수 Gyr 의 자기 braking 이 별을
 강한 원자외선 flare 가 포착됐는데 (HST), 이렇게 비활동적이고 늙은 M
 왜성조차 간헐적 flare 코로나를 유지함을 확인해 줍니다.
 
-바너드 별은 ESPRESSO 시선속도 캠페인이 검출한 **sub-Earth 행성
-후보** 를 거느립니다 (González Hernández et al. 2024). P ≈ 3.15 d,
-M sin i ≈ 0.37 M⊕ 의 후보 "Barnard b" 와 유의성이 더 낮은 후보 셋
-이며, 모두 거주 가능 영역 훨씬 안쪽의 암석질 sub-Earth 입니다. (앞선
-Ribas et al. 2018 의 "Barnard b" super-Earth, P ≈ 233 d 는 이후
-철회됐고 — Lubin et al. 2021 — 같은 천체가 아닙니다.) 이 행성들은
-이 항성 합성의 범위 밖이며 follow-up 워크스페이스용으로 표시만 해
-둡니다.
+바너드 별은 **확정된 sub-Earth 네 개로 이루어진 조밀한 시스템** 을
+거느립니다. "Barnard b" (P ≈ 3.15 d, M sin i ≈ 0.30 M⊕) 와 형제
+행성 c·d·e (P ≈ 4.12, 2.34, 6.74 d. M sin i 0.19–0.34 M⊕) 로, 모두
+거주 가능 영역 훨씬 안쪽의 암석질 sub-Earth 입니다. ESPRESSO 캠페인이
+검출했고 (González Hernández et al. 2024), Basant et al. 2025 가
+독립적인 MAROON-X 데이터로 확정하며 후보였던 c·d·e 를 정식 행성으로
+승격시켰습니다. (앞선 Ribas et al. 2018 의 "Barnard b" super-Earth,
+P ≈ 233 d 는 이후 철회됐고 — Lubin et al. 2021 — 같은 천체가
+아닙니다.) 각각은 개별 Phase 3 합성 (`barnards-star-b/c/d/e`) 에서
+다룹니다.
 
 **NearStars 시나리오 선택. 고대의, 깊은 붉은빛의, 극단적으로 조용한
 M4 V 왜성으로 — 가장 가까운 단독성 — 145 일 주기로 느리게 자전하며
