@@ -20,8 +20,9 @@ GP fit gives 83.2 ± 1.6) is slow for an M dwarf, consistent with old
 age. As an old, slow rotator it is only moderately-to-weakly active by
 the quiescent chromospheric measure — log R'HK ≈ −5.65 ± 0.17
 (Suárez Mascareño et al. 2016 Ca II H&K) — yet it still flares
-frequently, with Hα often in emission and kG-level surface magnetic
-fields measured by Reiners et al. 2018 from CARMENES Zeeman analysis.
+frequently, with Hα often in emission and a moderate ~0.6 kG mean
+surface field (Reiners & Basri 2008; Reiners 2022 CARMENES) plus a
+~0.2 kG mostly-poloidal large-scale field (Klein 2021 SPIRou ZDI).
 The X-ray, FUV, and UV outputs cycle on a ~7-year timescale (Wargelin
 2024) and flare frequently — Vida 2019 TESS observations resolved
 several flares per day above the photometric noise (Vida's 72 events over
@@ -41,7 +42,7 @@ attribution) — comparable to α Cen AB but with substantial
 uncertainty.
 
 **Scenario choice for NearStars: a low-mass, deeply red M5.5Ve flare
-star with a ~83-day rotation, kG-class magnetic dipole, 7-year
+star with a ~83-day rotation, moderate ~0.6 kG mean surface field (sub-kG large-scale dipole), 7-year
 activity cycle, and frequent superflares. Visual styling emphasizes
 the strong red continuum, frequent Hα flare brightening, and the
 visible glow from a hypothetical close-in planet.** 18 cfg picks;
@@ -64,8 +65,8 @@ specific flare hex tint).
 | `activity_cycle_years` | 7 | medium | Wargelin 2024 X-ray + UV + optical cycle |
 | `x_ray_log_lx_cgs_quiescent` | 27.0 | medium | Damonte 2026 XMM time-resolved spectra |
 | `x_ray_log_lx_cgs_flare_peak` | 28.5 | medium | Fuhrmeister 2022 simultaneous X-ray + FUV peak |
-| `magnetic_dipole_strength_kG` | 0.6 | high | Reiners 2018 CARMENES Zeeman (dipole component) |
-| `magnetic_total_field_kG_rms` | 4 | high | Reiners 2018 (Zeeman RMS) |
+| `magnetic_dipole_strength_kG` | 0.135 | high | Klein et al. 2021 — SPIRou ZDI large-scale dipole component (135 G; large-scale field ~200 G, mostly poloidal) |
+| `magnetic_total_field_kG_rms` | 0.6 | high | Reiners & Basri 2008 / Reiners 2022 — mean (small-scale) surface field Bf ≈ 0.6 kG; "moderate", consistent with the long ~83 d rotation |
 | `flare_rate_per_day_total` | 1.49 | high | Vida 2019 TESS — 72 events in ≈ 50 d (energy range 10²⁹–10³² erg) |
 | `flare_rate_superflare_per_year` | 3 (≥ 10³³ erg); 0.5 (≥ 10³⁴ erg) | high | Vida 2019 TESS — explicit numbers in §4 from cumulative flare frequency distribution |
 | `orbital_role_around_acen_ab` | bound at ~13 000 AU; P ≈ 547 000 yr | medium | Kervella 2017 astrometric tracking; Feng & Jones 2018 capture analysis |
@@ -99,9 +100,10 @@ than in earlier-type stars.
 ## Atmosphere synthesis
 
 Proxima's chromosphere and corona dominate its observable energy
-output. Reiners et al. 2018 (CARMENES) measured a Zeeman-broadened
-mean magnetic field of ~4 kG (RMS over the disk) with a roughly
-0.6-kG dipole component, providing the magnetic forcing that drives
+output. Reiners & Basri 2008 and Reiners 2022 (CARMENES) measured a
+moderate mean surface field Bf ≈ 0.6 kG, and Klein 2021 (SPIRou ZDI)
+recovered a ~0.2 kG mostly-poloidal large-scale field with a ~0.135 kG
+dipole component, providing the magnetic forcing that drives
 the elevated UV / X-ray emission. The quiescent X-ray luminosity is
 log L_X ≈ 27.0 cgs (Damonte 2026), rising by an order of magnitude
 during flares (Fuhrmeister 2022).
@@ -212,10 +214,15 @@ planetary atmosphere.
   orbiting Proxima Centauri*, A&A 658, A115 (`2022A&A...658A.115F`,
   arXiv:2202.05188). Proxima d candidate at P = 5.122 d, Msini =
   0.26 M⊕.
-- **Reiners A. et al. 2018** — *CARMENES search for exoplanets around
-  M dwarfs. High-resolution optical and near-infrared spectra of
-  324 dwarfs* (`2018A&A...612A..49R`, arXiv:1711.06576). Zeeman
-  analysis; Proxima magnetic field components.
+- **Reiners & Basri 2008 / Reiners et al. 2022 / Klein et al. 2021** —
+  Proxima magnetic field. Reiners & Basri 2008 (`2008A&A...489L..45R`,
+  arXiv:0808.2986) and Reiners 2022 (`2022A&A...662A..41R`,
+  arXiv:2204.00342, CARMENES) give a moderate mean surface field
+  Bf ≈ 0.6 kG; Klein 2021 (`2021MNRAS.500.1844K`, arXiv:2010.14311,
+  SPIRou ZDI) recovers a ~0.2 kG mostly-poloidal large-scale field with
+  a ~0.135 kG dipole. (Supersedes the earlier mis-citation to the
+  Reiners 2018 CARMENES spectral atlas `1711.06576`, which carries no
+  Proxima field measurement.)
 - **Vida K. et al. 2019** — *Flaring Activity of Proxima Centauri from
   TESS Observations*, ApJ 884, 160 (`2019ApJ...884..160V`,
   arXiv:1907.12580). Flare statistics, QPO super-flare, 5 super-flares
