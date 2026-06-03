@@ -169,6 +169,12 @@
       "h": "phase3/trappist-1-h.html"
     }
   },
+  "V1400 Centauri": {
+    "phase2": "phase2/v1400-centauri.html",
+    "phase3": {
+      "★": "phase3/v1400-centauri.html"
+    }
+  },
   "Vega": {
     "phase2": "phase2/vega.html",
     "phase3": {
@@ -182,6 +188,12 @@
       "b": "phase3/yz-cet-b.html",
       "c": "phase3/yz-cet-c.html",
       "d": "phase3/yz-cet-d.html"
+    }
+  },
+  "PSR J0108-1431": {
+    "phase2": null,
+    "phase3": {
+      "★": "phase3/psr-j0108-1431.html"
     }
   }
 }
