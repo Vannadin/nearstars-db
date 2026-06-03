@@ -1571,6 +1571,28 @@
   ],
   "tau Cet": [
     {
+      "pl_name": "tau Cet e",
+      "orbital": [
+        {
+          "period_days": 162.87,
+          "semi_major_axis_au": 0.538,
+          "eccentricity": 0.18,
+          "method": "rv",
+          "reference": "Feng et al. 2017 RV; signal reclassified False Positive (NEA 2026-04-09, Figueira 2025 ESPRESSO non-detection — stellar activity). Re-included per project decision (PHM Adrian cultural weight); disposition documented in Phase 3.",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 3.93,
+          "mass_type": "msini",
+          "method": "rv",
+          "reference": "Feng et al. 2017 — m sin i; signal refuted (Figueira 2025)",
+          "recommended": true
+        }
+      ]
+    },
+    {
       "pl_name": "tau Cet f",
       "orbital": {
         "semi_major_axis_au": 1.334,

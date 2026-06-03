@@ -1,5 +1,5 @@
-<!-- tau Cet e Phase 3 synthesis: historical / refuted detection, cfg-ready record kept for archive only -->
-# τ Ceti e — Phase 3 Synthesis (Historical / Refuted)
+<!-- tau Cet e Phase 3 synthesis: refuted (False Positive) detection re-included as a documented divergence per project decision -->
+# τ Ceti e — Phase 3 Synthesis (Refuted — included as documented divergence)
 
 τ Ceti e was originally one of four RV planet candidates announced
 by Feng et al. 2017 (`2017AJ....154..135F`, arXiv:1708.02051) around
@@ -17,13 +17,16 @@ non-detection of the 162-day signal. Cretignier et al. 2021
 (`2021A&A...653A..43C`) had earlier reached the same negative
 conclusion with the YARARA stellar-activity post-processing applied
 to HARPS data; ESPRESSO is the instrument-level confirmation that
-the original signal is stellar activity, not a planet. e is
-**not** present in `db/systems/tau_cet.json::planets[]`.
+the original signal is stellar activity, not a planet. Per a project
+decision, e is **re-included** in `db/systems/tau_cet.json::planets[]`
+at its pre-retraction Feng 2017 values as a refuted-flagged documented
+divergence (PHM Adrian cultural weight).
 
-**This Phase 3 synthesis exists as a historical / cultural record,
-not as a cfg-emitted body.** No KSP planet is built from these
-Decisions; every row carries Confidence=low because the underlying
-signal is now considered an artifact. The synthesis preserves the
+**This Phase 3 synthesis is a documented divergence — e is included
+per project decision despite the False Positive disposition.** The cfg
+adopts the pre-retraction Feng 2017 parameters; every row carries
+Confidence=low because the underlying signal is now considered an
+artifact, and the canonical reading is no planet. The synthesis preserves the
 Feng 2017 picture for cultural cross-reference (the planet was the
 real-world model for "Adrian" in Andy Weir's *Project Hail Mary*,
 2021), for the rex-data-comparison §6 curation thread, and as a

@@ -1,5 +1,5 @@
-<!-- τ Ceti e Phase 3 합성. 역사적 / 철회된 검출. 아카이브용 cfg-ready 기록만 유지 -->
-# τ Ceti e — Phase 3 Synthesis (Historical / Refuted)
+<!-- τ Ceti e Phase 3 합성. 철회된(False Positive) 검출을 프로젝트 결정에 따라 documented divergence 로 재등재 -->
+# τ Ceti e — Phase 3 Synthesis (Refuted — included as documented divergence)
 
 τ Ceti e 는 본래 Feng et al. 2017 (`2017AJ....154..135F`,
 arXiv:1708.02051) 이 metal-poor G8V τ Ceti 주위에서 발표한 네 개
@@ -16,13 +16,14 @@ doi:10.1051/0004-6361/202553869) 의 ESPRESSO sub-10 cm/s RV 정밀도가
 162 일 신호를 검출하지 못한 결과를 인용. Cretignier et al. 2021
 (`2021A&A...653A..43C`) 은 그보다 앞서 HARPS 데이터에 YARARA 항성-활동
 후처리를 적용해 같은 부정적 결론에 도달했고, ESPRESSO 는 원래 신호가
-행성이 아니라 항성 활동임을 기기 차원에서 확정했습니다. e 는
-`db/systems/tau_cet.json::planets[]` 에 **없습니다**.
+행성이 아니라 항성 활동임을 기기 차원에서 확정했습니다. 프로젝트 결정에
+따라 e 는 철회 이전 Feng 2017 값으로 `db/systems/tau_cet.json::planets[]`
+에 **재등재**되며, 반박표기 documented divergence 입니다 (PHM Adrian 문화적 무게).
 
-**이 Phase 3 합성은 cfg 로 방출되는 천체가 아니라 역사적 / 문화적
-기록으로 존재합니다.** 이 Decisions 로부터 어떤 KSP 행성도 만들어지지
-않으며, 모든 행은 Confidence=low 입니다 — 근거 신호 자체가 이제는
-아티팩트로 간주되기 때문입니다. 합성은 문화적 교차참조를 위해 Feng
+**이 Phase 3 합성은 documented divergence 입니다 — False Positive 처분에도
+불구하고 프로젝트 결정으로 e 를 포함합니다.** cfg 는 철회 이전 Feng 2017
+파라미터를 채택하며, 모든 행은 Confidence=low 입니다 — 근거 신호 자체가
+이제는 아티팩트로 간주되고 canonical 판독은 "행성 없음"이기 때문입니다. 합성은 문화적 교차참조를 위해 Feng
 2017 의 그림을 보존합니다 (이 행성은 Andy Weir 의 *Project Hail Mary*
 (2021) 에 등장하는 "Adrian" 의 실세계 모델이었습니다). rex-data-comparison
 §6 의 큐레이션 thread 와, 한때 확정으로 다뤄지던 검출이 False Positive
