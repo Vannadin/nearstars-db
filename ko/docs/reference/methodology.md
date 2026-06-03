@@ -307,6 +307,7 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
 - Disk 전용 보조 필드 (value 도 uncertainty 도 아닌 descriptor). `belt`, `morphology`, `resolved`, `observatory`, `notes`. `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]` 에 등록.
 - Method 계층 (`recommended` 선정의 canonical 순서). `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
 - 모든 value 키는 null 허용입니다. Detection-only paper (예. Aumann 1984 IRAS) 는 대부분의 기하 필드가 null 인 entry 1개를 등록합니다.
+- `aspect_ratio` (h = H/r, 무차원) 는 수직 scale-height 대 반경 비율을 담습니다. 수직 구조가 *측정된* 원반(해상 또는 edge-on)만 갖습니다. 본질적으로 희소합니다. 현재 Fomalhaut (Boley 2012, midplane opening angle 1.0° ± 0.25 에서 h = tan θ 로 h ≈ 0.0175) 와 AU Mic (Daley 2019, edge-on ALMA, h = 0.031) 둘뿐입니다. `recommended` 플래그가 아니라 non-null 로 선택합니다(대부분의 원반이 비우는 필드라서). Kopernicus Ring 은 평면 고리라 이 값을 소비하지 않습니다. `aspect_ratio` 는 DB 완전성과 향후 볼류메트릭 / Parallax 렌더러용으로 큐레이션합니다. 절대 합성하지 않습니다 — face-on 이거나 미해상 원반은 비워 둡니다.
 
 ---
 

@@ -388,6 +388,7 @@ STELLAR_MEASUREMENT_KINDS = {
             "dust_temperature_k",
             "dust_mass_mearth",
             "inclination_deg",
+            "aspect_ratio",       # 수직 종횡비 h = H/r (무차원). 해상/edge-on 원반만.
         },
         "methods": {
             "sed_fit",            # Spitzer/Herschel SED 두 성분 fit

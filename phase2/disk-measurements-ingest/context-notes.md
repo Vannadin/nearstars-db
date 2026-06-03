@@ -58,6 +58,34 @@ If validate.py fails for any star, that star is fixed before commit; no partial 
 - τ Ceti e curation question (separate from disk_measurements)
 - kopernicus-cfg emitter to read this new array (Step 2)
 
+## 2026-06-03 — vertical thickness (`aspect_ratio`) extension
+
+Resumed the stalled 2026-06-02 thickness session. Pending decision (field design
+for vertical structure) resolved with the user: **Option A — `aspect_ratio`
+(h = H/r, dimensionless)**, chosen over absolute `scale_height_au` + ref radius (B)
+and `opening_angle_deg` (C). Reasons: literature reports h directly (verbatim, zero
+derivation surface), scale-free → cross-host comparable, single field, render
+opening angle = arctan(h) is trivial.
+
+Schema: added `aspect_ratio` to `schema.py` `disk_measurements.value_keys` (enables
+`uncertainty_aspect_ratio`). Documented in `methodology.md` (+ ko). **SPEC §B not
+touched** — another session has an uncommitted atmosphere-row diff in SPEC.md, so a
+`git add` would capture it; SPEC §B value-key list is a follow-up.
+
+Verified values (paper-read, not memory — the MacGregor-2017 memory was WRONG):
+- **Fomalhaut** h ≈ 0.0175 ± 0.004 — Boley 2012 (`1204.0007`, `2012ApJ...750L..21B`)
+  reports a 1.0° ± 0.25 midplane opening angle (exponential vertical profile);
+  h = tan θ. MacGregor 2017 (`1705.05867`) does NOT measure vertical structure (2D
+  model, only cites Boley) — corrected a false attribution.
+- **AU Mic** h = 0.031 (+0.005/−0.004) — Daley 2019 (`1904.00027`,
+  `2019ApJ...875...87D`, DOI 10.3847/1538-4357/ab1074), edge-on ALMA i=88.5°, Gaussian
+  H(r)=hr constant over r~23-41 AU; new entry (inclination left null so Schneider 2014
+  stays recommended geometry). Cached at `docs/phase3/_papers/1904.00027.md`.
+
+Only these two of the 8 disk hosts have a measured vertical structure (the rest are
+face-on or unresolved → `aspect_ratio` absent, never synthesized). Propagated via
+build_systems → build_site (single-writer disk zone; serialized in one session).
+
 ## Related
 
 - [plan](plan.md)

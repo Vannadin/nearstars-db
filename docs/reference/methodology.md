@@ -318,6 +318,7 @@ Notes on `disk_measurements` (Phase 2 expansion 2026-05-27).
 - Disk-only descriptor fields (neither value nor uncertainty): `belt`, `morphology`, `resolved`, `observatory`, `notes`. Registered in `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]`.
 - Method tier (canonical for `recommended` selection): `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
 - All value keys are nullable. Detection-only papers (e.g. Aumann 1984 IRAS) emit one entry with most geometry fields = null.
+- `aspect_ratio` (h = H/r, dimensionless) holds the vertical scale-height-to-radius ratio, for the few disks with a *measured* vertical structure (resolved or edge-on only). Sparse by nature — currently Fomalhaut (Boley 2012, h ≈ 0.0175 derived from a 1.0° ± 0.25 midplane opening angle, h = tan θ) and AU Mic (Daley 2019, h = 0.031, edge-on ALMA). Selected by non-null (it is the field most disks lack), not by the `recommended` flag. Kopernicus Ring is a flat ring and does not consume it; `aspect_ratio` is curated for DB completeness + future volumetric / Parallax renderers. Never synthesize it — a face-on or unresolved disk leaves it absent.
 
 ---
 

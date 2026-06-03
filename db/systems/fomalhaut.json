@@ -115,10 +115,12 @@
             "dust_temperature_k": null,
             "dust_mass_mearth": null,
             "inclination_deg": null,
-            "morphology": "narrow eccentric ring, width Delta_a/a~0.13, e=0.11+/-0.01",
+            "aspect_ratio": 0.0175,
+            "uncertainty_aspect_ratio": 0.004,
+            "morphology": "narrow eccentric ring, width Delta_a/a~0.13, e=0.11+/-0.01; vertical opening angle 1.0+/-0.25 deg from midplane (exponential scale height)",
             "resolved": true,
             "observatory": "ALMA",
-            "notes": "ALMA Cycle 0 millimeter imaging; constrains shepherd planet mass to < 3 M_Jup; refines geometry of the main ring",
+            "notes": "ALMA Cycle 0 millimeter imaging; constrains shepherd planet mass to < 3 M_Jup; refines geometry of the main ring. aspect_ratio h=H/r=0.0175 derived from the reported vertical opening angle 1.0+/-0.25 deg from the midplane (h=tan(theta)); the only vertical-structure measurement for this disk (MacGregor 2017 used a 2D model and only cites this).",
             "method": "resolved_imaging",
             "reference": "Boley et al. 2012",
             "bibcode": "2012ApJ...750L..21B",
@@ -268,7 +270,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "epoch propagation method"
       ]
@@ -277,7 +279,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -286,7 +288,7 @@
       "title": "Mamajek 2012",
       "doi": "10.1088/2041-8205/754/2/L20",
       "bibcode": "2012ApJ...754L..20M",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut mass (evolutionary_model)"
       ]
@@ -295,7 +297,7 @@
       "title": "Kalas et al. 2005",
       "doi": "10.1038/nature03601",
       "bibcode": "2005Natur.435.1067K",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut disk main_cold (resolved_imaging)"
       ]
@@ -304,7 +306,7 @@
       "title": "Boley et al. 2012",
       "doi": "10.1088/2041-8205/750/1/L21",
       "bibcode": "2012ApJ...750L..21B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut disk main_cold (resolved_imaging)"
       ]
@@ -313,7 +315,7 @@
       "title": "White et al. 2017",
       "doi": "10.3847/1538-4357/aa74cb",
       "bibcode": "2017ApJ...842...80W",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut disk main_cold (resolved_imaging)"
       ]
@@ -322,7 +324,7 @@
       "title": "Gaspar et al. 2023",
       "doi": "10.1038/s41550-023-01962-6",
       "bibcode": "2023NatAs...7..790G",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut disk inner_warm (resolved_imaging)"
       ]
@@ -331,7 +333,7 @@
       "title": "Acke et al. 2012",
       "doi": "10.1051/0004-6361/201118581",
       "bibcode": "2012A&A...540A.125A",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut disk main_cold (sed_fit)"
       ]
@@ -340,14 +342,14 @@
       "title": "Holland et al. 2017",
       "doi": "10.1093/mnras/stx1378",
       "bibcode": "2017MNRAS.470.3606H",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-03",
       "used_for": [
         "Fomalhaut disk main_cold (photometric_excess)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-30",
+    "retrieval_date": "2026-06-03",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
