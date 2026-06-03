@@ -62,7 +62,11 @@
   "Barnard's star": {
     "phase2": "phase2/barnards-star.html",
     "phase3": {
-      "★": "phase3/barnards-star.html"
+      "★": "phase3/barnards-star.html",
+      "b": "phase3/barnards-star-b.html",
+      "c": "phase3/barnards-star-c.html",
+      "d": "phase3/barnards-star-d.html",
+      "e": "phase3/barnards-star-e.html"
     }
   },
   "Delta Pavonis": {
@@ -147,7 +151,10 @@
   "Teegarden's Star": {
     "phase2": "phase2/teegardens-star.html",
     "phase3": {
-      "★": "phase3/teegardens-star.html"
+      "★": "phase3/teegardens-star.html",
+      "b": "phase3/teegardens-star-b.html",
+      "c": "phase3/teegardens-star-c.html",
+      "d": "phase3/teegardens-star-d.html"
     }
   },
   "TRAPPIST-1": {
