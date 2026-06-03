@@ -757,6 +757,7 @@ for target in target_list:
         curated_by_name = {c["pl_name"].strip(): c for c in curated_list}
 
         planets_block = []
+        seen_planet_names = set()
         for pl in planet_list:
             pl_curated = curated_by_name.get(pl["pl_name"].strip())
             planet_entry = {
@@ -768,6 +769,20 @@ for target in target_list:
             if pl_curated:
                 planet_entry["curated"] = pl_curated
             planets_block.append(planet_entry)
+            seen_planet_names.add(pl["pl_name"].strip())
+
+        # curated-only 행성 (NASA Archive raw 에 없는) 도 emit — J1407b 처럼
+        # Archive 미등재 (잠정/비표준) 천체. raw 는 빈 dict, derived 는 curated 기반.
+        for cname, c in curated_by_name.items():
+            if cname in seen_planet_names:
+                continue
+            planets_block.append({
+                "name":      c["pl_name"],
+                "host_star": star_name,
+                "raw":       {},
+                "derived":   build_planet_derived({}, curated=c),
+                "curated":   c,
+            })
 
         # ── 소스 목록 ──
         astro_src = SRC_GAIA if astro.get("source") == "gaia_dr3" else SRC_SIMBAD
@@ -920,15 +935,22 @@ for target in target_list:
                     f"Principia N-body simulation will correct dynamically.")
             notes = (notes + " " + warn).strip()
 
+        star_obj = {
+            "name":      star_name,
+            "component": component,
+            "raw":       raw_block,
+            "derived":   derived_block,
+            "principia": principia_block,
+        }
+        # 컴팩트 천체 고유 물리 (compact_object) 는 일반 stellar 측정으로 표현 불가 —
+        # curated 에 있으면 그대로 실어 보냄 (PSR J0108−1431).
+        co = curated.get("compact_object")
+        if co:
+            star_obj["compact_object"] = co
+
         doc = {
             "system_name": star_name,
-            "stars": [{
-                "name":      star_name,
-                "component": component,
-                "raw":       raw_block,
-                "derived":   derived_block,
-                "principia": principia_block,
-            }],
+            "stars": [star_obj],
             "planets": planets_block,
             "sources": sources,
             "meta": {

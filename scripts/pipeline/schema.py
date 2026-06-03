@@ -300,6 +300,9 @@ STELLAR_MEASUREMENT_KINDS = {
             "binary_orbit", "asteroseismology", "evolutionary_model",
             "spectroscopic", "spectroscopic_calibration",
             "empirical_relation",
+            # compact remnants (neutron star/pulsar) carry no measured mass —
+            # the canonical 1.4 M☉ is an assumption, flagged honestly (notes).
+            "assumed_canonical",
             "unverified",
         },
         "extra_keys": set(_SOURCE_CONTROL_FIELDS),
@@ -313,6 +316,8 @@ STELLAR_MEASUREMENT_KINDS = {
             "interferometry", "eclipsing_binary", "sed_fitting",
             "evolutionary_model", "spectroscopic_calibration",
             "asteroseismology",
+            # compact remnants: canonical ~12 km NS radius is assumed, not measured.
+            "assumed_canonical",
             "unverified",
         },
         # interferometric measurements often carry paper-level metadata
@@ -416,7 +421,25 @@ STELLAR_CURATED_TOPLEVEL_ALLOWED = {
     # 형식: [{"title", "doi", "bibcode", "used_for": [str, ...]}, ...]
     # tau Cet 의 Di Folco 2007 (angular diameter source for Teixeira radius) 가 사례.
     "sources_extra",
+    # 컴팩트 천체 (중성자별/펄서·백색왜성) 고유 물리 — 일반 stellar 측정 종류로
+    # 표현 불가한 자전·자기장·X선 등. 단일 dict + provenance. PSR J0108−1431 사례.
+    "compact_object",
 } | (set(STELLAR_MEASUREMENT_KINDS.keys()) - {DISK_KIND})
+
+# 컴팩트 천체 블록 (stellar_props_curated[<star>].compact_object). 일반 별엔 없음.
+COMPACT_OBJECT_ALLOWED = {
+    "object_type",                 # neutron_star | white_dwarf | black_hole
+    "subclass",                    # 자유 서술, 예: rotation_powered_radio_pulsar
+    "spin_period_s", "uncertainty_spin_period_s",
+    "spin_period_derivative",      # 무차원 s/s
+    "characteristic_age_myr",
+    "surface_b_field_gauss",
+    "spin_down_luminosity_erg_s",
+    "xray_kt_kev",                 # 열적 blackbody fit 온도
+    "xray_luminosity_erg_s",
+    "reference", "bibcode", "doi", "notes",
+}
+COMPACT_OBJECT_TYPES = {"neutron_star", "white_dwarf", "black_hole"}
 
 STELLAR_MEASUREMENT_BASE_REQUIRED = {"method", "recommended"}
 STELLAR_MEASUREMENT_COMMON_OPTIONAL = {"reference", "bibcode", "doi"}
@@ -517,6 +540,29 @@ def validate_stellar_props_curated(records):
                     f"stellar_props_curated[{star}].{mk}: recommended:true 가 {n_recommended}개 "
                     f"(정확히 0 또는 1개)"
                 )
+
+        # compact_object 블록 검증 (있을 때만).
+        co = rec.get("compact_object")
+        if co is not None:
+            if not isinstance(co, dict):
+                errors.append(f"stellar_props_curated[{star}].compact_object: dict 아님")
+            else:
+                cunk = set(co.keys()) - COMPACT_OBJECT_ALLOWED
+                if cunk:
+                    errors.append(
+                        f"stellar_props_curated[{star}].compact_object: 알 수 없는 키 {sorted(cunk)}"
+                    )
+                otype = co.get("object_type")
+                if otype not in COMPACT_OBJECT_TYPES:
+                    errors.append(
+                        f"stellar_props_curated[{star}].compact_object: object_type "
+                        f"'{otype}' 미지원 (허용: {sorted(COMPACT_OBJECT_TYPES)})"
+                    )
+                if not (PLANET_PROVENANCE_KEYS & set(co.keys())):
+                    errors.append(
+                        f"stellar_props_curated[{star}].compact_object: "
+                        f"source/reference/bibcode/doi 중 하나 필요"
+                    )
     return errors
 
 
@@ -657,6 +703,20 @@ PLANET_ATMOSPHERE_ALLOWED = PLANET_BLOCK_COMMON | {
     "temperature_isothermal_k", "uncertainty_temperature_isothermal_k",
     "mean_molecular_weight_amu", "uncertainty_mean_molecular_weight_amu",
 }
+# circumplanetary 고리 (동반체 주위) — circumstellar disk_measurements 와 별개.
+# J1407b (Kenworthy & Mamajek 2015) 가 유일 사례. 잠정/모델 의존 상태는 notes 에.
+PLANET_RINGS_ALLOWED = PLANET_BLOCK_COMMON | {
+    "outer_radius_au", "uncertainty_outer_radius_au",
+    "ring_count",                  # 모델된 distinct 고리 수
+    "total_mass_mearth", "uncertainty_total_mass_mearth",
+    "gap_radius_au",               # 외위성이 깎았다고 추정되는 틈 위치
+    "inclination_deg", "uncertainty_inclination_deg",
+    "orientation_deg",
+    "prograde",                    # bool; 미상이면 null
+    "eclipse_duration_days",       # 모성 식 지속 (관측된 raw 신호)
+    "exomoon_mass_mearth_upper",   # 틈을 깎는 외위성 질량 상한
+    "notes",
+}
 
 # Phase 2 method 화이트리스트 — 블록별로 다른 검출/관측 방식.
 
@@ -692,12 +752,19 @@ PLANET_ATMOSPHERE_METHODS = {
     "unverified",
 }
 
+PLANET_RINGS_METHODS = {
+    "eclipse_modeling",             # 모성 광도곡선 식 → 고리 구조 fit (KM2015)
+    "resolved_imaging",
+    "unverified",
+}
+
 # 블록 검증 메타데이터 — validate_planets_curated 가 iterate.
 PLANET_BLOCKS = {
     "orbital":     {"allowed": PLANET_ORBITAL_ALLOWED,     "methods": PLANET_ALLOWED_METHODS},
     "physical":    {"allowed": PLANET_PHYSICAL_ALLOWED,    "methods": PLANET_ALLOWED_METHODS},
     "environment": {"allowed": PLANET_ENVIRONMENT_ALLOWED, "methods": PLANET_ENVIRONMENT_METHODS},
     "atmosphere":  {"allowed": PLANET_ATMOSPHERE_ALLOWED,  "methods": PLANET_ATMOSPHERE_METHODS},
+    "rings":       {"allowed": PLANET_RINGS_ALLOWED,       "methods": PLANET_RINGS_METHODS},
 }
 PLANET_CURATED_OPTIONAL = set(PLANET_BLOCKS.keys())
 
