@@ -137,12 +137,12 @@ c 등가 정밀도의 He I 10830 Å 검출이 시도된 적 없습니다. 현재
 
 0.51 M☉ 주위 0.119 AU 의 18.86-d sub-Neptune 에 대한 조석 감쇠는
 ~10⁶–10⁷ 년 시간 척도로 진행됩니다 (Goldreich & Soter 1966, Neptune-
-like Q ≈ 10⁴). 22-Myr 시스템 나이에 걸쳐 c 는 1:1 spin-orbit 동기화
-에 완전히 잠겨 있을 가능성이 큽니다. 다만 감쇠 시간 척도는 b 보다
-시스템 나이에 더 가깝습니다. 이심률 0.18 (Mallorquin 2024) 은
-spin 상태가 원리적으로 더 높은 차수의 공명 (Mercury 처럼 3:2) 으로
-정착할 수 있을 만큼 충분히 높습니다. 다만 puffy 행성에 대한 지배적
-조석 감쇠가 1:1 을 선호하고 cfg 는 동기화 상태를 채택합니다. 이 글
+like Q ≈ 10⁴). 22-Myr 시스템 나이에 걸쳐 c 는 조석적으로 진화했습니다
+(감쇠 ≪ 나이, 다만 b 보다 시스템 나이에 더 가까움). 이심률 0.18
+(Mallorquin 2024) 에서 spin 은 순수 1:1 이 아니라 의사 동기
+(super-synchronous) 상태로 정착하며, Mercury 식 3:2 공명도 충분히 가능합니다.
+cfg 는 의사 동기 상태를 채택하고 (`tidally_locked = false`), 3:2 변형은
+Open items 에 보존됩니다. 이 글
 작성 시점까지 c 에 대한 spin–orbit 각도 측정 (Rossiter–McLaughlin)
 은 출판되지 않았습니다.
 

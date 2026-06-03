@@ -144,8 +144,9 @@ super-flare 이벤트 동안 (10³¹ erg 위 5.6/일. Tristan 2023 의 가끔
 
 0.51 M☉ 주위 0.07 AU 의 8.46-d Neptune 급 행성에 대한 조석 감쇠는
 ~10⁵–10⁶ 년 시간 척도로 진행됩니다 (Goldreich & Soter 1966, Neptune-
-like Q ≈ 10⁴). 22-Myr 시스템 나이에 걸쳐 b 는 1:1 spin-orbit
-동기화에 완전히 잠겨 있습니다. Hirano 2020 의 Rossiter–McLaughlin
+like Q ≈ 10⁴). 22-Myr 시스템 나이에 걸쳐 b 는 거의 동기에 가까운
+의사 동기 (pseudo-synchronous) spin 으로 조석 잠금됩니다 — e = 0.07 에서
+평형 자전은 ~2% 만 super-synchronous 라 사실상 1:1 로 렌더링됩니다. Hirano 2020 의 Rossiter–McLaughlin
 측정 (λ = −2.96 +10.3/-10.6°) 은 b 의 궤도면이 AU Mic 의 항성 자전축
 과 정렬됨을 확인하며, 그것이 다시 가장자리 정면 disk 평면 (Krist
 2005. Schneider 2014) 과 정렬됩니다. 시스템은 ~5° 수준에서 coplanar

@@ -155,7 +155,9 @@ is briefly ionized to depths normally shielded by the bulk envelope.
 Tidal damping of an 8.46-day Neptune-class planet at 0.07 AU around
 0.51 M☉ proceeds on a timescale of ~10⁵–10⁶ years (Goldreich & Soter
 1966 with Neptune-like Q ≈ 10⁴); over the 22-Myr system age, b is
-fully locked into 1:1 spin-orbit synchronization. The Hirano 2020
+tidally locked into a near-synchronous, pseudo-synchronous spin — at
+e = 0.07 the equilibrium rotation is only ~2% super-synchronous, so it
+renders as effectively 1:1. The Hirano 2020
 Rossiter–McLaughlin measurement (λ = −2.96 +10.3/-10.6°) confirms that
 b's orbital plane is aligned with AU Mic's stellar rotation axis,
 which in turn aligns with the edge-on disk plane (Krist 2005;

@@ -150,12 +150,12 @@ lower significance.
 Tidal damping of an 18.86-day sub-Neptune at 0.119 AU around
 0.51 M☉ proceeds on a timescale of ~10⁶–10⁷ years (Goldreich & Soter
 1966 with Neptune-like Q ≈ 10⁴); over the 22-Myr system age, c is
-likely fully locked into 1:1 spin-orbit synchronization, though the
-damping timescale is closer to the system age than for b. Eccentricity
-0.18 (Mallorquin 2024) is high enough that the spin state could in
-principle settle into a higher-order resonance (3:2 like Mercury);
-however, the dominant tidal damping for puffy planets favors 1:1,
-and the cfg adopts the synchronous state. No spin–orbit angle
+tidally evolved (damping ≪ age, though closer to the age than for b).
+At eccentricity 0.18 (Mallorquin 2024) the spin does not settle into
+pure 1:1 but into a pseudo-synchronous (super-synchronous) state, with
+a Mercury-like 3:2 resonance a real possibility; the cfg adopts the
+pseudo-synchronous state (`tidally_locked = false`), and the 3:2
+variant is preserved in Open items. No spin–orbit angle
 measurement (Rossiter–McLaughlin) has been published for c at this
 writing.
 
