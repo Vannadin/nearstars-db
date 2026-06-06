@@ -9,10 +9,11 @@ candidate super-Earth / mini-Neptune:
   m sin i = 5.8 +/- 1.9 M_earth, P = 5.21(+0.26/-0.22) yr (~1900 d),
   a = 1.48 +/- 0.08 AU, circular orbit assumed, T_eq ~ 39 K.
 
-Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) suggests
-a true mass ~7 M_earth. Existence remains UNCONFIRMED — later analyses cast
-doubt (the Namu Wiki article itself notes a 2022 study questioning it). Treated
-as a documented candidate, the same pattern as tau Cet e / 40 Eri A b.
+A Gaia-Hipparcos proper-motion anomaly (Kervella 2020, as cited by Damasso 2020)
+is compatible with a true mass ~10-20 M_earth. Existence remains UNCONFIRMED —
+Damasso states follow-up is required to confirm its planetary origin, and later
+analyses dispute the signal (the Namu Wiki article notes this too). Treated as a
+documented candidate, the same pattern as tau Cet e / 40 Eri A b.
 
 NO RINGS: the popular "Proxima c may have rings" claim rests on Gratton et al.
 2020's SPHERE imaging counterpart, which was itself disputed/unconfirmed. Per the
@@ -34,16 +35,17 @@ pc = json.load(open("db/planets_curated.json"))
 
 ORB_REF = (
     "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; "
-    "P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed. "
-    "Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) "
-    "suggests true mass ~7 M_earth. CANDIDATE — existence unconfirmed; later "
-    "analyses (e.g. 2022) cast doubt. Re-included as a documented candidate "
-    "(never ingested into raw)."
+    "P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed "
+    "(e_c fixed 0; eccentric model not favored). Gaia-Hipparcos proper-motion "
+    "anomaly is compatible with a true mass ~10-20 M_earth (Kervella 2020, as "
+    "cited by Damasso 2020). CANDIDATE — Damasso states follow-up is required to "
+    "confirm its planetary origin; later analyses dispute the signal. Re-included "
+    "as a documented candidate (never ingested into raw)."
 )
 PHY_REF = (
     "Damasso et al. 2020 — m sin i = 5.8 +/- 1.9 M_earth (RV minimum mass), "
-    "T_eq ~ 39 K. Astrometric true mass ~7 M_earth (Benedict & McArthur 2020; "
-    "Kervella et al. 2020)."
+    "T_eq ~ 39 K. Consistent with a Gaia-Hipparcos proper-motion-anomaly true "
+    "mass ~10-20 M_earth (Kervella 2020, as cited by Damasso 2020)."
 )
 
 entry = {

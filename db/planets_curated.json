@@ -1938,7 +1938,7 @@
           "uncertainty_semi_major_axis_au": 0.08,
           "eccentricity": 0.0,
           "method": "rv",
-          "reference": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed. Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) suggests true mass ~7 M_earth. CANDIDATE — existence unconfirmed; later analyses (e.g. 2022) cast doubt. Re-included as a documented candidate (never ingested into raw).",
+          "reference": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed (e_c fixed 0; eccentric model not favored). Gaia-Hipparcos proper-motion anomaly is compatible with a true mass ~10-20 M_earth (Kervella 2020, as cited by Damasso 2020). CANDIDATE — Damasso states follow-up is required to confirm its planetary origin; later analyses dispute the signal. Re-included as a documented candidate (never ingested into raw).",
           "bibcode": "2020SciA....6.7467D",
           "doi": "10.1126/sciadv.aax7467",
           "recommended": true
@@ -1950,7 +1950,7 @@
           "uncertainty_mearth": 1.9,
           "mass_type": "msini",
           "method": "rv",
-          "reference": "Damasso et al. 2020 — m sin i = 5.8 +/- 1.9 M_earth (RV minimum mass), T_eq ~ 39 K. Astrometric true mass ~7 M_earth (Benedict & McArthur 2020; Kervella et al. 2020).",
+          "reference": "Damasso et al. 2020 — m sin i = 5.8 +/- 1.9 M_earth (RV minimum mass), T_eq ~ 39 K. Consistent with a Gaia-Hipparcos proper-motion-anomaly true mass ~10-20 M_earth (Kervella 2020, as cited by Damasso 2020).",
           "bibcode": "2020SciA....6.7467D",
           "doi": "10.1126/sciadv.aax7467",
           "recommended": true
