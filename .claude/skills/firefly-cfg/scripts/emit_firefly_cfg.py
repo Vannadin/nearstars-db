@@ -69,22 +69,24 @@ PALETTES = {
     # ice_giant must precede gas_giant — both match H2+He, but ice_giant
     # additionally requires CH4 or NH3 trace (the ice-giant photochemistry
     # signature). Order in PALETTES is iteration order; first match wins.
+    # Follows Firefly's shipped Neptune.cfg verbatim (mod-original colors).
     "ice_giant": {
         "_match": lambda dom, others: dom == "H2" and "He" in others
                                        and ("CH4" in others or "NH3" in others),
-        "trail_primary":   (141, 91, 191, 3.0),    # purple — Uranus/Neptune signature
-        "trail_secondary": (115, 70, 165, 1.5),    # darker purple
-        "trail_tertiary":  (220, 140, 80, 2.0),    # orange-amber (CH4 photolysis byproduct hue)
-        "wrap_layer":      (191, 70, 130, 2.0),    # magenta-pink rim (Firefly Neptune)
-        "shockwave":       (74, 50, 191, 3.0),     # deep blue-violet
+        "trail_primary":   (141, 91, 191, 2.5),
+        "trail_secondary": (90, 8, 191, 3.0),
+        "trail_tertiary":  (191, 138, 68, 2.0),    # amber inner streak (NH3)
+        "wrap_layer":      (191, 19, 110, 2.0),    # magenta rim
+        "shockwave":       (64, 41, 191, 3.0),
     },
+    # Follows Firefly's shipped Jupiter.cfg verbatim (mod-original colors).
     "gas_giant": {
         "_match": lambda dom, others: dom == "H2" and "He" in others,
-        "trail_primary":   (191, 99, 110, 3.0),
-        "trail_secondary": (191, 80, 80, 1.5),
-        "trail_tertiary":  (255, 180, 90, 2.0),
-        "wrap_layer":      (255, 200, 100, 2.0),
-        "shockwave":       (255, 180, 90, 3.0),
+        "trail_primary":   (136, 98, 191, 2.5),
+        "trail_secondary": (36, 7, 191, 3.5),
+        "trail_tertiary":  (128, 27, 191, 2.0),
+        "wrap_layer":      (143, 25, 191, 2.8),
+        "shockwave":       (11, 29, 191, 3.0),
     },
     "methane": {
         "_match": lambda dom, others: dom == "CH4",
@@ -120,9 +122,14 @@ PALETTE_FALLBACK = "earth_like"
 # Values: (R, G, B, intensity).
 STREAK_PALETTE = {
     "CO2": (96, 191, 159, 2.0),
-    "CH4": (100, 191, 130, 2.0),
+    "CH4": (86, 93, 191, 2.0),     # CH 431nm / CN violet 388nm — blue streak in N2-rich
+                                   # atmo (Titan); carbon binds N→CN, not C2 Swan green
+    "NH3": (191, 138, 68, 2.0),    # NH2 alpha-band 597-666nm red-orange (ice-giant ammonia)
     "H2O": (191, 130, 130, 2.0),
-    "He":  (255, 200, 100, 2.0),
+    "He":  (255, 200, 100, 2.0),    # D3 587nm yellow — brightest He line. Deliberate
+                                   # correction of Firefly's scarlet He (191 21 21), which
+                                   # weights only the weaker 667/706nm red lines. See
+                                   # composition-color.md §5.
     "SO2": (150, 200, 180, 2.0),
     "H2S": (150, 200, 180, 2.0),
     "Na":  (255, 200, 60, 2.5),
@@ -131,8 +138,28 @@ STREAK_PALETTE = {
     "Mg":  (100, 191, 100, 2.0),
     "CN":  (130, 80, 191, 2.0),    # tholin haze
     "O2":  (180, 180, 255, 2.0),   # uncommon as secondary but possible
-    "N2":  (74, 90, 191, 2.0),
+    "N2":  (191, 138, 68, 2.0),    # N2 1st Positive red-orange (cooler inner/streak);
+                                   # shock front keeps N2+ 391nm blue (Venus-class)
     "Ar":  (160, 107, 255, 2.0),
+}
+
+# Streak selection priority — "strongest visible emitter wins"
+# (composition-color.md §4). Lower number = stronger → picked first when
+# several secondaries qualify. Without this, an ordinary He (or O2) that
+# merely appears first in the composition string shadows a notable NH3 / CO2
+# (e.g. eps Ind A b's 11σ NH3, or TRAPPIST-1 e's CO2 worked example).
+# Species not listed fall to a neutral middle rank.
+STREAK_PRIORITY = {
+    "Na": 0, "K": 1,            # alkali resonance lines — brightest in the visible
+    "CN": 2,                    # tholin-haze violet
+    "CO2": 3, "CH4": 4,         # CN / Swan band emitters
+    "NH3": 5,                   # NH2 alpha-band
+    "N2": 6,                    # N2 1st Positive
+    "SO2": 7, "H2S": 7,         # sulfur bands
+    "Fe": 8, "Mg": 8,           # rock-ablation vapor
+    "H2O": 9,                   # weak Halpha
+    "He": 10,                   # D3 — ordinary gas-giant secondary
+    "O2": 11, "Ar": 12,         # weak / noble-gas trace
 }
 
 # Default ATMOFX_BODY values per atmofx-body.md
@@ -431,7 +458,12 @@ def process_slug(slug: str, element_db: dict, outcome: EmitOutcome,
         outcome.skipped_no_atm.append(slug)
         return None
 
-    pressure_raw = dec.get("atmosphere_surface_pressure_pa") or dec.get("atmosphere_pressure_pa")
+    # Gas giants have no solid surface, so Phase 3 records their cfg-reference
+    # level under atmosphere_reference_pressure_pa (typically 1 bar = 100000 Pa,
+    # the cloud-deck render reference) instead of *_surface_pressure_pa.
+    pressure_raw = (dec.get("atmosphere_surface_pressure_pa")
+                    or dec.get("atmosphere_pressure_pa")
+                    or dec.get("atmosphere_reference_pressure_pa"))
     if not pressure_raw:
         outcome.warnings.append(f"{slug}: atmosphere_present=true but no pressure field; skipping")
         outcome.skipped_no_atm.append(slug)
@@ -462,13 +494,16 @@ def process_slug(slug: str, element_db: dict, outcome: EmitOutcome,
             f"{slug}: dominant species {dominant} doesn't match any palette; falling back to {PALETTE_FALLBACK}"
         )
 
-    # Streak species: first secondary (0.5–10%) that's in our streak palette
+    # Streak species: among all qualifying secondaries (0.5–10% by volume, or
+    # unquantified trace), pick the STRONGEST visible emitter per the
+    # composition-color.md §4 priority — not merely the first in document order.
     streak_rgb = palette["trail_primary"]  # default fallback
+    candidates = []  # (priority, rgb_tuple)
     for sp, pct in species[1:]:
         if pct is None or 0.5 <= pct <= 10.0:
+            rgb = None
             if sp in STREAK_PALETTE:
-                streak_rgb = STREAK_PALETTE[sp]
-                break
+                rgb = STREAK_PALETTE[sp]
             elif sp in element_db:
                 # v2 schema: prefer reentry_plasma regime (matches Firefly physics);
                 # fall back to atomic_flame if no reentry data
@@ -476,8 +511,12 @@ def process_slug(slug: str, element_db: dict, outcome: EmitOutcome,
                 pick = regimes.get("reentry_plasma") or regimes.get("atomic_flame")
                 if pick and pick.get("status") == "visible" and pick.get("hex"):
                     hx = pick["hex"].lstrip("#")
-                    streak_rgb = (int(hx[0:2], 16), int(hx[2:4], 16), int(hx[4:6], 16), 2.0)
-                    break
+                    rgb = (int(hx[0:2], 16), int(hx[2:4], 16), int(hx[4:6], 16), 2.0)
+            if rgb is not None:
+                candidates.append((STREAK_PRIORITY.get(sp, 8), rgb))
+    if candidates:
+        candidates.sort(key=lambda c: c[0])
+        streak_rgb = candidates[0][1]
 
     # Temperature for particle_threshold
     temp_k = None

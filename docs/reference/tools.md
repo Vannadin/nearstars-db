@@ -155,6 +155,9 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/refs/validate_element_colors.py` — schema check for the DB.
 - `scripts/refs/render_element_colors_doc.py` — re-render the companion doc (en + ko mirror).
 - `docs/reference/element-plasma-colors.md` — companion view (generated, do not hand-edit).
+- `scripts/refs/build_plasma_temperature_colors.py` — temperature-resolved plasma color table per composition (1000K steps). Blackbody continuum (Planck→CIE 1931, exact) + curated reentry emission hue blended by a temperature weight. Reference/physics tool, not a cfg input. Run `--sanity` for checks.
+- `db/refs/plasma_temperature_colors.yaml` — generated output: `_blackbody` color-temperature table (1000–20000K) + per-composition combined color vs T (1000–15000K).
+- `scripts/refs/render_color_visualizer.py` — render `docs/firefly-colors.html` (periodic table, molecular emitters, bulk/streak palettes, plasma-vs-temperature grid). Reads the plasma/element/molecular DBs + emitter constants.
 
 **References (in skill).** Five node-type files (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (atmosphere → reentry palette via bulk-gas plasma table), `phase3-mapping` (Phase 3 row → Firefly field), `pitfalls`.
 

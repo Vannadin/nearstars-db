@@ -131,10 +131,12 @@ in Titan-like, He in gas giant, H2O steam fraction, etc.), pick from
 | Secondary species present | Streak color (composition-color §4) |
 |---|---|
 | CO2 1–10% | `96 191 159 2.5` (green) or `116 96 191 2.5` (violet) |
-| CH4 trace | `100 191 130 2.5` (green-cyan) |
+| CH4 trace (in N2 atmo) | `86 93 191 2` (blue-violet, CN) |
 | H2O steam fraction | `191 130 130 2` (pink-rose) |
 | He in H2 giant | `255 200 100 2` (yellow) |
+| NH3 (ice-giant ammonia) | `191 138 68 2` (amber, NH2) |
 | SO2 / H2S Venus class | `150 200 180 2` (pale blue-green) |
+| N2 (in CO2 atmo, Venus-class) | `191 138 68 2` (yellow-orange, N2 1+) |
 | Atmospheric Na vapor (lava worlds) | `255 200 60 3` (bright yellow) |
 | K vapor | `180 100 191 2.5` (violet) |
 | Organic CN haze | `130 80 191 2.5` (violet) |

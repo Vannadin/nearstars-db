@@ -125,7 +125,7 @@ goes 1.4 for dim glow up to 3 for hot trails.
 |---|---|---|---|
 | N2 + O2 (Earth-like) | N2+ 391 nm violet + N2 1NG 670 nm red + O 630 nm red | `191 99 72` (warm) for trail; `74 90 191` (cool blue-violet) for shockwave | Matches Firefly stock `Kerbin.cfg`. Real Earth reentry photos show this orange-pink-violet mix. |
 | CO2 (Mars/Venus) | CN violet (388 nm) + C2 Swan green (516 nm) + CO 4th positive UV | `83 92 191` trail (blue), `96 191 159` shockwave (green) | Matches Firefly stock `Eve.cfg`. Mars EDL camera footage confirms green-blue plasma. |
-| H2 + He (gas giant) | Balmer Hα 656 nm (pink-red) + He D3 587 nm (yellow) | `191 99 110` trail (rose), `255 180 90` shockwave (gold) | Physics-correct option. Firefly stock `Jool.cfg` uses deep blue instead — that's a stylized choice. |
+| H2 + He (gas giant) | Firefly renders deep blue-purple (higher Balmer + molecular continuum) | `136 98 191` trail (blue-purple), `11 29 191` shockwave (deep blue) | Follows Firefly Jupiter.cfg (mod-original). See §5. |
 | CH4 (Titan, ice giants minor) | CH band 431 nm + Swan green | `100 191 130` (green-cyan) | Sparse data; extrapolated from CH4 combustion spectra. |
 | H2O (steam atmospheres) | H Balmer + OH 308 nm UV | `191 130 130` (pink-rose) | Almost pure Hα emission visible-band. |
 | Pure H2 (cold sub-Neptune) | Pure Balmer red-pink | `230 80 100` (deep pink) | Brown-dwarf-style auroras are this color. |
@@ -142,10 +142,12 @@ bulk-gas trail palette unchanged.
 | Secondary species | Spectral signature in reentry plasma | RGB hint | Notes |
 |---|---|---|---|
 | CO2 (in N2/O2 atmosphere) | CN violet 388 nm + C2 Swan 516 nm + CO bands | `96 191 159` (green) or `116 96 191` (violet) | Earth-class atmosphere with 1–10% CO2 → green-violet streaks |
-| CH4 (in N2 atmosphere) | CN violet + C2 Swan green + Hα red | `100 191 130` (green-cyan) | Titan-class chemistry |
+| CH4 (in N2 atmosphere) | CN violet 388 nm dominant (carbon binds N→CN, not C2 Swan) | `86 93 191` (blue-violet) | Titan-class: 95% N2 forces carbon into CN, so the streak reads blue not green. Matches Firefly Titan.cfg. |
 | H2O (steam secondary) | Hα 656 nm + OH UV | `191 130 130` (pink-rose) | Water-rich N2 or CO2 atmosphere |
-| He (in H2-rich gas giant) | D3 587 nm | `255 200 100` (yellow-peach) | Standard gas-giant secondary |
+| He (in H2-rich gas giant) | D3 587 nm (brightest He line) | `255 200 100` (yellow-peach) | **Deliberate correction** of Firefly's scarlet He — Firefly weights only the weaker 667/706 nm red lines. See §5. |
+| NH3 (ice-giant ammonia) | NH2 alpha-band 597–666 nm (comet-red) | `191 138 68` (amber) | Ammonia in H2/He ice giants. Matches Firefly Neptune/Uranus inner streak. |
 | SO2 / H2S (Venus-class) | Atomic S + SO2 bands | `150 200 180` (pale blue-green) | Trace sulfur compounds |
+| N2 (in CO2 atmosphere, Venus-class) | N2 1st Positive 580–770 nm (red-orange) | `191 138 68` (yellow-orange) | Cooler inner/streak layer; N2+ 391 blue stays on shockwave. Matches Firefly Venus.cfg. |
 | **Na (atmospheric vapor)** | D-line 589 nm | `255 200 60` (bright yellow) | Lava worlds / sub-Neptune atmospheric alkali. Strongest streak emitter in the visible. |
 | **K (alkali)** | 404 nm + 770 nm | `180 100 191` (violet) | Alkali vapor on hot rocky worlds |
 | Fe (rock ablation / vapor) | Multi-line blue-violet + visible Fe I | `191 191 100` (gold) | High-T worlds where rock vaporizes |
@@ -175,6 +177,25 @@ exotic compositions, the documented-divergence rule
 (`feedback_phase3_documented_divergence`) applies: pick the
 interesting option, log it in Canonical alternatives, and preserve
 the physics-correct variant.
+
+**2026-05-31 mod-original alignment.** Reentry-plasma color is
+underdetermined — a continuous multi-band spectrum, temperature-layered
+(shock front = ionic lines, cooler inner layer = neutral molecular
+bands), with sparse real-world reference data. Rather than hand-pick a
+representative band per species independently, NearStars adopts
+**Firefly's shipped colors as the canonical palette** for cross-mod
+visual consistency: `gas_giant` = Jupiter.cfg (blue-purple), `ice_giant`
+= Neptune.cfg (purple + amber NH3 inner streak), `earth_like` =
+Default/Kerbin, `co2` = Eve. Streak species follow Firefly too:
+CH4→blue (Titan — CN violet / CH 431 nm), N2→orange (Venus — N2 1st
+Positive), NH3→amber (Neptune — NH2 alpha-band).
+
+**One deliberate exception — He.** The He streak stays D3 587 nm yellow
+(`255 200 100`) rather than Firefly's scarlet (`191 21 21`). Firefly's
+red weights only the weaker He 667/706 nm lines and drops D3, which is
+the brightest helium line in the visible. The rule: where Firefly's own
+choice is spectroscopically defensible we follow it; where it
+demonstrably omits the dominant line, we correct it.
 
 ## Practical workflow
 

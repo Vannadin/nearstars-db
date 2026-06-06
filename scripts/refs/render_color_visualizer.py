@@ -34,6 +34,7 @@ from emit_firefly_cfg import (  # noqa: E402
 
 ELEMENT_DB = ROOT / "db" / "refs" / "element_plasma_colors.yaml"
 MOLECULAR_DB = ROOT / "db" / "refs" / "molecular_plasma_colors.yaml"
+PLASMA_TEMP_DB = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
 PHASE3_DIR = ROOT / "docs" / "phase3"
 OUT = ROOT / "docs" / "firefly-colors.html"
 
@@ -180,7 +181,8 @@ PALETTE_DESCRIPTORS = {
     "ice_giant":   ("H2 + He + CH4 / NH3 (Uranus / Neptune)",
                     "H2 + He + CH4 / NH3 (Uranus / Neptune)"),
     "gas_giant":   ("H2 + He (Jupiter / Saturn)",     "H2 + He (Jupiter / Saturn)"),
-    "methane":     ("CH4 (Titan)",                    "CH4 (타이탄)"),
+    "methane":     ("CH4-dominant (hypothetical — Titan is N2-bulk)",
+                    "CH4 우점 (가상 — 타이탄은 N2 벌크)"),
     "steam":       ("H2O (Steam atmosphere)",         "H2O (수증기 대기)"),
     "pure_h2":     ("Pure H2 (Cold sub-Neptune)",     "순수 H2 (차가운 sub-Neptune)"),
 }
@@ -399,9 +401,10 @@ def render_reentry_scenes_section() -> str:
 
 STREAK_USECASE_EN = {
     "CO2": "CN/Swan band in N2/O2 atmosphere",
-    "CH4": "Titan-class secondary",
+    "CH4": "Titan-class CH4 → CN violet (blue, N2-rich)",
+    "NH3": "Ice-giant ammonia → NH2 alpha-band (amber)",
     "H2O": "Steam admixture",
-    "He":  "Gas-giant secondary",
+    "He":  "Gas-giant He → D3 587nm yellow (corrects Firefly scarlet)",
     "SO2": "Venus-class trace sulfur",
     "H2S": "Reducing atmosphere sulfur",
     "Na":  "Lava world / sub-Neptune alkali",
@@ -410,15 +413,16 @@ STREAK_USECASE_EN = {
     "Mg":  "Meteor-class rock vapor",
     "CN":  "Tholin haze chemistry",
     "O2":  "Oxygenic photochemistry trace",
-    "N2":  "Reducing trace nitrogen",
+    "N2":  "Venus-class N2 → N2 1st Positive (orange)",
     "Ar":  "Noble-gas trace",
 }
 
 STREAK_USECASE_KO = {
     "CO2": "N2/O2 대기 안의 CN/Swan 밴드",
-    "CH4": "타이탄 계열 2차 종",
+    "CH4": "타이탄 계열 CH4 → CN violet (청자, N2 우점)",
+    "NH3": "아이스자이언트 암모니아 → NH2 알파밴드 (호박)",
     "H2O": "수증기 혼합",
-    "He":  "가스 자이언트 2차",
+    "He":  "가스자이언트 He → D3 587nm 노랑 (Firefly 진홍 교정)",
     "SO2": "Venus 계열 황 화합물",
     "H2S": "환원성 대기 황",
     "Na":  "용암 행성 / sub-Neptune 알칼리",
@@ -427,7 +431,7 @@ STREAK_USECASE_KO = {
     "Mg":  "유성 계열 암석 증기",
     "CN":  "Tholin haze 광화학",
     "O2":  "산소성 광화학 미량",
-    "N2":  "환원 미량 질소",
+    "N2":  "Venus 계열 N2 → N2 1st Positive (주황)",
     "Ar":  "비활성 기체 trace",
 }
 
@@ -456,6 +460,50 @@ def render_streak_table() -> str:
         + "".join(rows) +
         '</tbody></table>'
     )
+
+
+# ── Plasma color vs temperature (composition × 1000K grid) ──
+
+def render_plasma_temp_grid() -> str:
+    data = yaml.safe_load(PLASMA_TEMP_DB.read_text(encoding="utf-8"))
+    cell = ("display:inline-block;width:34px;height:26px;font-size:9px;"
+            "text-align:center;line-height:26px")
+    head = "display:inline-block;width:34px;font-size:9px;text-align:center;color:#888"
+    lab = "flex:0 0 150px;font-size:12px"
+    row = "display:flex;align-items:center;margin:2px 0"
+
+    bb = data["_blackbody"]
+    bb_cells = "".join(
+        f'<div style="{cell};background:{e["hex"]};color:{text_on(e["hex"])}" '
+        f'title="{t}K · {e["hex"]} · {e.get("note","")}">{t // 1000}k</div>'
+        for t, e in bb.items()
+    )
+    bb_row = (f'<div style="{row}"><div style="{lab}" data-i18n="bt_blackbody"></div>'
+              f'<div>{bb_cells}</div></div>')
+
+    comp_keys = [k for k in data if not k.startswith("_")]
+    temps = sorted(data[comp_keys[0]]["colors"].keys())
+    header = (f'<div style="{row}"><div style="{lab}"></div><div>'
+              + "".join(f'<div style="{head}">{t // 1000}k</div>' for t in temps)
+              + "</div></div>")
+    rows = [header]
+    for k in comp_keys:
+        blk = data[k]
+        cells = ""
+        for t in temps:
+            c = blk["colors"][t]
+            hx = c["combined_hex"]
+            tip = (f'{t}K · combined {hx} · continuum {c["continuum_hex"]} '
+                   f'+ emission {c["emission_hex"]} (w={c["emission_weight"]})')
+            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
+                      f'title="{tip}"></div>')
+        rows.append(f'<div style="{row}"><div style="{lab}" data-i18n="ptc_{k}"></div>'
+                    f'<div>{cells}</div></div>')
+
+    return (f'<div style="margin-bottom:8px">{bb_row}</div>'
+            f'<p class="muted" data-i18n="plasma_temp_caption" '
+            f'style="font-size:12px;margin:4px 0 8px"></p>'
+            + "".join(rows))
 
 
 # ── Emitted body cards (same logic as before; uses atomic_flame for element streak) ──
@@ -562,6 +610,15 @@ def build_t(palettes):
         "h_scenes": "Reentry scene previews",
         "h_bulk": "Bulk-gas reentry palettes (Firefly emitter)",
         "h_streak": "Secondary-species streak palette",
+        "h_plasma_temp": "Plasma color vs temperature (1000K steps)",
+        "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = combined per composition: low T thermal glow → high T plasma emission. MODEL: emission hue is the curated reentry signature, blended by a temperature weight — not an ab-initio Saha/Boltzmann calc. Hover for breakdown.",
+        "bt_blackbody": "Blackbody (thermal)",
+        "ptc_air": "N2/O2 (Earth-like)",
+        "ptc_co2": "CO2 (Mars/Venus)",
+        "ptc_h2_he": "H2/He (gas giant)",
+        "ptc_ch4": "CH4 (Titan-class)",
+        "ptc_h2o": "H2O (steam)",
+        "ptc_nh3": "NH3 (ice-giant)",
         "h_bodies": "Currently emitted bodies",
         "regime_label": "Regime:",
         "regime_atomic_flame": "Flame test (~2000K)",
@@ -590,6 +647,15 @@ def build_t(palettes):
         "h_scenes": "재진입 장면 미리보기",
         "h_bulk": "Bulk-gas 재진입 팔레트 (Firefly emitter)",
         "h_streak": "2차 종 streak 팔레트",
+        "h_plasma_temp": "온도별 플라스마 색 (1000K 간격)",
+        "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 합성색으로, 저온은 열복사 글로우 고온은 플라스마 방출색. 모델 주의 — 방출 hue는 큐레이션된 재진입 시그니처를 온도 가중으로 블렌드한 것이지 ab-initio Saha/Boltzmann 계산이 아닙니다. 셀에 마우스를 올리면 분해가 보입니다.",
+        "bt_blackbody": "흑체 (열복사)",
+        "ptc_air": "N2/O2 (지구형)",
+        "ptc_co2": "CO2 (화성/금성)",
+        "ptc_h2_he": "H2/He (가스자이언트)",
+        "ptc_ch4": "CH4 (타이탄형)",
+        "ptc_h2o": "H2O (수증기)",
+        "ptc_nh3": "NH3 (아이스자이언트)",
         "h_bodies": "현재 emit 된 행성들",
         "regime_label": "영역:",
         "regime_atomic_flame": "불꽃 (~2000K)",
@@ -867,6 +933,11 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 </section>
 
 <section>
+<h2 data-i18n="h_plasma_temp"></h2>
+{plasma_temp_grid}
+</section>
+
+<section>
 <h2 data-i18n="h_bodies"></h2>
 {bodies_section}
 </section>
@@ -1014,6 +1085,7 @@ def main() -> int:
     reentry_scenes_section = render_reentry_scenes_section()
     palettes_section = render_palettes_section()
     streak_table = render_streak_table()
+    plasma_temp_grid = render_plasma_temp_grid()
 
     body_results = []
     for slug in sorted(p.stem for p in PHASE3_DIR.glob("*.md")):
@@ -1035,6 +1107,7 @@ def main() -> int:
         reentry_scenes_section=reentry_scenes_section,
         palettes_section=palettes_section,
         streak_table=streak_table,
+        plasma_temp_grid=plasma_temp_grid,
         bodies_section=bodies_section,
         t_json=t_json,
         element_json=element_json,

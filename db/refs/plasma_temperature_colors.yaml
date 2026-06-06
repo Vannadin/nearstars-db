@@ -1,0 +1,1177 @@
+# Plasma emission color vs temperature (1000K steps), per bulk composition.
+#
+# MODEL — not ab-initio. Read before trusting:
+#   continuum: blackbody thermal color, Planck -> CIE 1931 (Wyman 2013
+#     analytic CMF) -> sRGB. EXACT. Also standalone under `_blackbody`.
+#   emission: characteristic high-T plasma hue, from the curated
+#     reentry_plasma emission_bands in *_plasma_colors.yaml via mix_lines
+#     (same method as all project plasma colors).
+#   combined = (1-w)*continuum + w*emission, w(T) ramps 0->1 over
+#     3000-9000K (dissociation->ionization). The weight-vs-T and the
+#     fixed emission hue are MODELING CHOICES — a full Saha/Boltzmann
+#     level-population calc (needs per-line upper-state energies +
+#     Einstein A) is a documented future upgrade.
+#
+# Colors are hue at full brightness (max-channel normalized), not
+# absolute luminance. Range: _blackbody 1000-20000K, compositions
+# 1000-15000K, 1000K steps.
+_blackbody:
+  1000:
+    temp_k: 1000
+    hex: '#ff3000'
+    rgb:
+    - 255
+    - 48
+    - 0
+    chromaticity_xy:
+    - 0.6419
+    - 0.3554
+    note: deep red — ember / lava glow
+  2000:
+    temp_k: 2000
+    hex: '#ff8d15'
+    rgb:
+    - 255
+    - 141
+    - 21
+    chromaticity_xy:
+    - 0.5241
+    - 0.4159
+    note: warm orange — lava / cool-star surface
+  3000:
+    temp_k: 3000
+    hex: '#ffb96e'
+    rgb:
+    - 255
+    - 185
+    - 110
+    chromaticity_xy:
+    - 0.4358
+    - 0.4052
+    note: warm orange — lava / cool-star surface
+  4000:
+    temp_k: 4000
+    hex: '#ffd4a6'
+    rgb:
+    - 255
+    - 212
+    - 166
+    chromaticity_xy:
+    - 0.3798
+    - 0.3774
+    note: warm white — K/G-star tint
+  5000:
+    temp_k: 5000
+    hex: '#ffe7d0'
+    rgb:
+    - 255
+    - 231
+    - 208
+    chromaticity_xy:
+    - 0.3448
+    - 0.352
+    note: warm white — K/G-star tint
+  6000:
+    temp_k: 6000
+    hex: '#fff4f1'
+    rgb:
+    - 255
+    - 244
+    - 241
+    chromaticity_xy:
+    - 0.3219
+    - 0.332
+    note: near white — Sun-like
+  7000:
+    temp_k: 7000
+    hex: '#f4f2ff'
+    rgb:
+    - 244
+    - 242
+    - 255
+    chromaticity_xy:
+    - 0.3063
+    - 0.3167
+    note: near white — Sun-like
+  8000:
+    temp_k: 8000
+    hex: '#e3e7ff'
+    rgb:
+    - 227
+    - 231
+    - 255
+    chromaticity_xy:
+    - 0.2951
+    - 0.3049
+    note: blue-white — A-star / hot reentry
+  9000:
+    temp_k: 9000
+    hex: '#d6dfff'
+    rgb:
+    - 214
+    - 223
+    - 255
+    chromaticity_xy:
+    - 0.2869
+    - 0.2957
+    note: blue-white — A-star / hot reentry
+  10000:
+    temp_k: 10000
+    hex: '#cdd9ff'
+    rgb:
+    - 205
+    - 217
+    - 255
+    chromaticity_xy:
+    - 0.2807
+    - 0.2884
+    note: blue-white — A-star / hot reentry
+  11000:
+    temp_k: 11000
+    hex: '#c6d4ff'
+    rgb:
+    - 198
+    - 212
+    - 255
+    chromaticity_xy:
+    - 0.2758
+    - 0.2825
+    note: blue-white — A-star / hot reentry
+  12000:
+    temp_k: 12000
+    hex: '#c0d1ff'
+    rgb:
+    - 192
+    - 209
+    - 255
+    chromaticity_xy:
+    - 0.2718
+    - 0.2777
+    note: blue — hot star
+  13000:
+    temp_k: 13000
+    hex: '#bcceff'
+    rgb:
+    - 188
+    - 206
+    - 255
+    chromaticity_xy:
+    - 0.2687
+    - 0.2736
+    note: blue — hot star
+  14000:
+    temp_k: 14000
+    hex: '#b8cbff'
+    rgb:
+    - 184
+    - 203
+    - 255
+    chromaticity_xy:
+    - 0.266
+    - 0.2702
+    note: blue — hot star
+  15000:
+    temp_k: 15000
+    hex: '#b5c9ff'
+    rgb:
+    - 181
+    - 201
+    - 255
+    chromaticity_xy:
+    - 0.2638
+    - 0.2674
+    note: blue — hot star
+  16000:
+    temp_k: 16000
+    hex: '#b2c7ff'
+    rgb:
+    - 178
+    - 199
+    - 255
+    chromaticity_xy:
+    - 0.2619
+    - 0.2649
+    note: blue — hot star
+  17000:
+    temp_k: 17000
+    hex: '#b0c5ff'
+    rgb:
+    - 176
+    - 197
+    - 255
+    chromaticity_xy:
+    - 0.2603
+    - 0.2627
+    note: blue — hot star
+  18000:
+    temp_k: 18000
+    hex: '#aec4ff'
+    rgb:
+    - 174
+    - 196
+    - 255
+    chromaticity_xy:
+    - 0.2589
+    - 0.2608
+    note: blue — hot star
+  19000:
+    temp_k: 19000
+    hex: '#acc3ff'
+    rgb:
+    - 172
+    - 195
+    - 255
+    chromaticity_xy:
+    - 0.2577
+    - 0.2592
+    note: blue — hot star
+  20000:
+    temp_k: 20000
+    hex: '#abc2ff'
+    rgb:
+    - 171
+    - 194
+    - 255
+    chromaticity_xy:
+    - 0.2566
+    - 0.2577
+    note: blue — hot star
+air:
+  label_en: N2 / O2 (Earth-like)
+  label_ko: N2 / O2 (지구형)
+  active_emitters:
+  - N2
+  colors:
+    1000:
+      temp_k: 1000
+      continuum_hex: '#ff3000'
+      emission_hex: '#5060c0'
+      emission_weight: 0.0
+      combined_hex: '#ff3000'
+      rgb:
+      - 255
+      - 48
+      - 0
+    2000:
+      temp_k: 2000
+      continuum_hex: '#ff8d15'
+      emission_hex: '#5060c0'
+      emission_weight: 0.0
+      combined_hex: '#ff8d15'
+      rgb:
+      - 255
+      - 141
+      - 21
+    3000:
+      temp_k: 3000
+      continuum_hex: '#ffb96e'
+      emission_hex: '#5060c0'
+      emission_weight: 0.0
+      combined_hex: '#ffb96e'
+      rgb:
+      - 255
+      - 185
+      - 110
+    4000:
+      temp_k: 4000
+      continuum_hex: '#ffd4a6'
+      emission_hex: '#5060c0'
+      emission_weight: 0.17
+      combined_hex: '#e2c1aa'
+      rgb:
+      - 226
+      - 193
+      - 170
+    5000:
+      temp_k: 5000
+      continuum_hex: '#ffe7d0'
+      emission_hex: '#5060c0'
+      emission_weight: 0.33
+      combined_hex: '#c5bacb'
+      rgb:
+      - 197
+      - 186
+      - 203
+    6000:
+      temp_k: 6000
+      continuum_hex: '#fff4f1'
+      emission_hex: '#5060c0'
+      emission_weight: 0.5
+      combined_hex: '#a7aad8'
+      rgb:
+      - 167
+      - 170
+      - 216
+    7000:
+      temp_k: 7000
+      continuum_hex: '#f4f2ff'
+      emission_hex: '#5060c0'
+      emission_weight: 0.67
+      combined_hex: '#8791d5'
+      rgb:
+      - 135
+      - 145
+      - 213
+    8000:
+      temp_k: 8000
+      continuum_hex: '#e3e7ff'
+      emission_hex: '#5060c0'
+      emission_weight: 0.83
+      combined_hex: '#6877ca'
+      rgb:
+      - 104
+      - 119
+      - 202
+    9000:
+      temp_k: 9000
+      continuum_hex: '#d6dfff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+    10000:
+      temp_k: 10000
+      continuum_hex: '#cdd9ff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+    11000:
+      temp_k: 11000
+      continuum_hex: '#c6d4ff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+    12000:
+      temp_k: 12000
+      continuum_hex: '#c0d1ff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+    13000:
+      temp_k: 13000
+      continuum_hex: '#bcceff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+    14000:
+      temp_k: 14000
+      continuum_hex: '#b8cbff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+    15000:
+      temp_k: 15000
+      continuum_hex: '#b5c9ff'
+      emission_hex: '#5060c0'
+      emission_weight: 1.0
+      combined_hex: '#5060c0'
+      rgb:
+      - 80
+      - 96
+      - 192
+co2:
+  label_en: CO2 (Mars / Venus)
+  label_ko: CO2 (화성 / 금성)
+  active_emitters:
+  - CN
+  - C2
+  colors:
+    1000:
+      temp_k: 1000
+      continuum_hex: '#ff3000'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.0
+      combined_hex: '#ff3000'
+      rgb:
+      - 255
+      - 48
+      - 0
+    2000:
+      temp_k: 2000
+      continuum_hex: '#ff8d15'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.0
+      combined_hex: '#ff8d15'
+      rgb:
+      - 255
+      - 141
+      - 21
+    3000:
+      temp_k: 3000
+      continuum_hex: '#ffb96e'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.0
+      combined_hex: '#ffb96e'
+      rgb:
+      - 255
+      - 185
+      - 110
+    4000:
+      temp_k: 4000
+      continuum_hex: '#ffd4a6'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.17
+      combined_hex: '#e6cca7'
+      rgb:
+      - 230
+      - 204
+      - 167
+    5000:
+      temp_k: 5000
+      continuum_hex: '#ffe7d0'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.33
+      combined_hex: '#ccd1c5'
+      rgb:
+      - 204
+      - 209
+      - 197
+    6000:
+      temp_k: 6000
+      continuum_hex: '#fff4f1'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.5
+      combined_hex: '#b3ccd0'
+      rgb:
+      - 179
+      - 204
+      - 208
+    7000:
+      temp_k: 7000
+      continuum_hex: '#f4f2ff'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.67
+      combined_hex: '#96beca'
+      rgb:
+      - 150
+      - 190
+      - 202
+    8000:
+      temp_k: 8000
+      continuum_hex: '#e3e7ff'
+      emission_hex: '#68a4b0'
+      emission_weight: 0.83
+      combined_hex: '#7cafbd'
+      rgb:
+      - 124
+      - 175
+      - 189
+    9000:
+      temp_k: 9000
+      continuum_hex: '#d6dfff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+    10000:
+      temp_k: 10000
+      continuum_hex: '#cdd9ff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+    11000:
+      temp_k: 11000
+      continuum_hex: '#c6d4ff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+    12000:
+      temp_k: 12000
+      continuum_hex: '#c0d1ff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+    13000:
+      temp_k: 13000
+      continuum_hex: '#bcceff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+    14000:
+      temp_k: 14000
+      continuum_hex: '#b8cbff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+    15000:
+      temp_k: 15000
+      continuum_hex: '#b5c9ff'
+      emission_hex: '#68a4b0'
+      emission_weight: 1.0
+      combined_hex: '#68a4b0'
+      rgb:
+      - 104
+      - 164
+      - 176
+h2_he:
+  label_en: H2 / He (gas giant)
+  label_ko: H2 / He (가스자이언트)
+  active_emitters:
+  - H2
+  colors:
+    1000:
+      temp_k: 1000
+      continuum_hex: '#ff3000'
+      emission_hex: '#ffc142'
+      emission_weight: 0.0
+      combined_hex: '#ff3000'
+      rgb:
+      - 255
+      - 48
+      - 0
+    2000:
+      temp_k: 2000
+      continuum_hex: '#ff8d15'
+      emission_hex: '#ffc142'
+      emission_weight: 0.0
+      combined_hex: '#ff8d15'
+      rgb:
+      - 255
+      - 141
+      - 21
+    3000:
+      temp_k: 3000
+      continuum_hex: '#ffb96e'
+      emission_hex: '#ffc142'
+      emission_weight: 0.0
+      combined_hex: '#ffb96e'
+      rgb:
+      - 255
+      - 185
+      - 110
+    4000:
+      temp_k: 4000
+      continuum_hex: '#ffd4a6'
+      emission_hex: '#ffc142'
+      emission_weight: 0.17
+      combined_hex: '#ffd195'
+      rgb:
+      - 255
+      - 209
+      - 149
+    5000:
+      temp_k: 5000
+      continuum_hex: '#ffe7d0'
+      emission_hex: '#ffc142'
+      emission_weight: 0.33
+      combined_hex: '#ffdaa1'
+      rgb:
+      - 255
+      - 218
+      - 161
+    6000:
+      temp_k: 6000
+      continuum_hex: '#fff4f1'
+      emission_hex: '#ffc142'
+      emission_weight: 0.5
+      combined_hex: '#ffda99'
+      rgb:
+      - 255
+      - 218
+      - 153
+    7000:
+      temp_k: 7000
+      continuum_hex: '#f4f2ff'
+      emission_hex: '#ffc142'
+      emission_weight: 0.67
+      combined_hex: '#fbd181'
+      rgb:
+      - 251
+      - 209
+      - 129
+    8000:
+      temp_k: 8000
+      continuum_hex: '#e3e7ff'
+      emission_hex: '#ffc142'
+      emission_weight: 0.83
+      combined_hex: '#fac762'
+      rgb:
+      - 250
+      - 199
+      - 98
+    9000:
+      temp_k: 9000
+      continuum_hex: '#d6dfff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    10000:
+      temp_k: 10000
+      continuum_hex: '#cdd9ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    11000:
+      temp_k: 11000
+      continuum_hex: '#c6d4ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    12000:
+      temp_k: 12000
+      continuum_hex: '#c0d1ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    13000:
+      temp_k: 13000
+      continuum_hex: '#bcceff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    14000:
+      temp_k: 14000
+      continuum_hex: '#b8cbff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    15000:
+      temp_k: 15000
+      continuum_hex: '#b5c9ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+ch4:
+  label_en: CH4 (Titan-class)
+  label_ko: CH4 (타이탄형)
+  active_emitters:
+  - CH
+  - C2
+  - CN
+  colors:
+    1000:
+      temp_k: 1000
+      continuum_hex: '#ff3000'
+      emission_hex: '#596dca'
+      emission_weight: 0.0
+      combined_hex: '#ff3000'
+      rgb:
+      - 255
+      - 48
+      - 0
+    2000:
+      temp_k: 2000
+      continuum_hex: '#ff8d15'
+      emission_hex: '#596dca'
+      emission_weight: 0.0
+      combined_hex: '#ff8d15'
+      rgb:
+      - 255
+      - 141
+      - 21
+    3000:
+      temp_k: 3000
+      continuum_hex: '#ffb96e'
+      emission_hex: '#596dca'
+      emission_weight: 0.0
+      combined_hex: '#ffb96e'
+      rgb:
+      - 255
+      - 185
+      - 110
+    4000:
+      temp_k: 4000
+      continuum_hex: '#ffd4a6'
+      emission_hex: '#596dca'
+      emission_weight: 0.17
+      combined_hex: '#e3c3ac'
+      rgb:
+      - 227
+      - 195
+      - 172
+    5000:
+      temp_k: 5000
+      continuum_hex: '#ffe7d0'
+      emission_hex: '#596dca'
+      emission_weight: 0.33
+      combined_hex: '#c8bece'
+      rgb:
+      - 200
+      - 190
+      - 206
+    6000:
+      temp_k: 6000
+      continuum_hex: '#fff4f1'
+      emission_hex: '#596dca'
+      emission_weight: 0.5
+      combined_hex: '#acb1de'
+      rgb:
+      - 172
+      - 177
+      - 222
+    7000:
+      temp_k: 7000
+      continuum_hex: '#f4f2ff'
+      emission_hex: '#596dca'
+      emission_weight: 0.67
+      combined_hex: '#8c9adc'
+      rgb:
+      - 140
+      - 154
+      - 220
+    8000:
+      temp_k: 8000
+      continuum_hex: '#e3e7ff'
+      emission_hex: '#596dca'
+      emission_weight: 0.83
+      combined_hex: '#7082d3'
+      rgb:
+      - 112
+      - 130
+      - 211
+    9000:
+      temp_k: 9000
+      continuum_hex: '#d6dfff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+    10000:
+      temp_k: 10000
+      continuum_hex: '#cdd9ff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+    11000:
+      temp_k: 11000
+      continuum_hex: '#c6d4ff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+    12000:
+      temp_k: 12000
+      continuum_hex: '#c0d1ff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+    13000:
+      temp_k: 13000
+      continuum_hex: '#bcceff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+    14000:
+      temp_k: 14000
+      continuum_hex: '#b8cbff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+    15000:
+      temp_k: 15000
+      continuum_hex: '#b5c9ff'
+      emission_hex: '#596dca'
+      emission_weight: 1.0
+      combined_hex: '#596dca'
+      rgb:
+      - 89
+      - 109
+      - 202
+h2o:
+  label_en: H2O (steam)
+  label_ko: H2O (수증기)
+  active_emitters:
+  - H2
+  colors:
+    1000:
+      temp_k: 1000
+      continuum_hex: '#ff3000'
+      emission_hex: '#ffc142'
+      emission_weight: 0.0
+      combined_hex: '#ff3000'
+      rgb:
+      - 255
+      - 48
+      - 0
+    2000:
+      temp_k: 2000
+      continuum_hex: '#ff8d15'
+      emission_hex: '#ffc142'
+      emission_weight: 0.0
+      combined_hex: '#ff8d15'
+      rgb:
+      - 255
+      - 141
+      - 21
+    3000:
+      temp_k: 3000
+      continuum_hex: '#ffb96e'
+      emission_hex: '#ffc142'
+      emission_weight: 0.0
+      combined_hex: '#ffb96e'
+      rgb:
+      - 255
+      - 185
+      - 110
+    4000:
+      temp_k: 4000
+      continuum_hex: '#ffd4a6'
+      emission_hex: '#ffc142'
+      emission_weight: 0.17
+      combined_hex: '#ffd195'
+      rgb:
+      - 255
+      - 209
+      - 149
+    5000:
+      temp_k: 5000
+      continuum_hex: '#ffe7d0'
+      emission_hex: '#ffc142'
+      emission_weight: 0.33
+      combined_hex: '#ffdaa1'
+      rgb:
+      - 255
+      - 218
+      - 161
+    6000:
+      temp_k: 6000
+      continuum_hex: '#fff4f1'
+      emission_hex: '#ffc142'
+      emission_weight: 0.5
+      combined_hex: '#ffda99'
+      rgb:
+      - 255
+      - 218
+      - 153
+    7000:
+      temp_k: 7000
+      continuum_hex: '#f4f2ff'
+      emission_hex: '#ffc142'
+      emission_weight: 0.67
+      combined_hex: '#fbd181'
+      rgb:
+      - 251
+      - 209
+      - 129
+    8000:
+      temp_k: 8000
+      continuum_hex: '#e3e7ff'
+      emission_hex: '#ffc142'
+      emission_weight: 0.83
+      combined_hex: '#fac762'
+      rgb:
+      - 250
+      - 199
+      - 98
+    9000:
+      temp_k: 9000
+      continuum_hex: '#d6dfff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    10000:
+      temp_k: 10000
+      continuum_hex: '#cdd9ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    11000:
+      temp_k: 11000
+      continuum_hex: '#c6d4ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    12000:
+      temp_k: 12000
+      continuum_hex: '#c0d1ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    13000:
+      temp_k: 13000
+      continuum_hex: '#bcceff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    14000:
+      temp_k: 14000
+      continuum_hex: '#b8cbff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+    15000:
+      temp_k: 15000
+      continuum_hex: '#b5c9ff'
+      emission_hex: '#ffc142'
+      emission_weight: 1.0
+      combined_hex: '#ffc142'
+      rgb:
+      - 255
+      - 193
+      - 66
+nh3:
+  label_en: NH3 (ice-giant ammonia)
+  label_ko: NH3 (아이스자이언트 암모니아)
+  active_emitters:
+  - NH
+  colors:
+    1000:
+      temp_k: 1000
+      continuum_hex: '#ff3000'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.0
+      combined_hex: '#ff3000'
+      rgb:
+      - 255
+      - 48
+      - 0
+    2000:
+      temp_k: 2000
+      continuum_hex: '#ff8d15'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.0
+      combined_hex: '#ff8d15'
+      rgb:
+      - 255
+      - 141
+      - 21
+    3000:
+      temp_k: 3000
+      continuum_hex: '#ffb96e'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.0
+      combined_hex: '#ffb96e'
+      rgb:
+      - 255
+      - 185
+      - 110
+    4000:
+      temp_k: 4000
+      continuum_hex: '#ffd4a6'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.17
+      combined_hex: '#ffcfaa'
+      rgb:
+      - 255
+      - 207
+      - 170
+    5000:
+      temp_k: 5000
+      continuum_hex: '#ffe7d0'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.33
+      combined_hex: '#ffd6cb'
+      rgb:
+      - 255
+      - 214
+      - 203
+    6000:
+      temp_k: 6000
+      continuum_hex: '#fff4f1'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.5
+      combined_hex: '#ffd4d8'
+      rgb:
+      - 255
+      - 212
+      - 216
+    7000:
+      temp_k: 7000
+      continuum_hex: '#f4f2ff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.67
+      combined_hex: '#fbc9d5'
+      rgb:
+      - 251
+      - 201
+      - 213
+    8000:
+      temp_k: 8000
+      continuum_hex: '#e3e7ff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 0.83
+      combined_hex: '#fabdca'
+      rgb:
+      - 250
+      - 189
+      - 202
+    9000:
+      temp_k: 9000
+      continuum_hex: '#d6dfff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192
+    10000:
+      temp_k: 10000
+      continuum_hex: '#cdd9ff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192
+    11000:
+      temp_k: 11000
+      continuum_hex: '#c6d4ff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192
+    12000:
+      temp_k: 12000
+      continuum_hex: '#c0d1ff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192
+    13000:
+      temp_k: 13000
+      continuum_hex: '#bcceff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192
+    14000:
+      temp_k: 14000
+      continuum_hex: '#b8cbff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192
+    15000:
+      temp_k: 15000
+      continuum_hex: '#b5c9ff'
+      emission_hex: '#ffb5c0'
+      emission_weight: 1.0
+      combined_hex: '#ffb5c0'
+      rgb:
+      - 255
+      - 181
+      - 192

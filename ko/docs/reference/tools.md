@@ -155,6 +155,9 @@
 - `scripts/refs/validate_element_colors.py` — DB 스키마 점검.
 - `scripts/refs/render_element_colors_doc.py` — companion doc 재렌더 (en + ko 미러).
 - `docs/reference/element-plasma-colors.md` — 사람용 view (생성물, 직접 편집 금지).
+- `scripts/refs/build_plasma_temperature_colors.py` — 조성별 온도분해 플라스마 색표(1000K 간격). 흑체 연속복사(Planck→CIE 1931, 정확) + 큐레이션 재진입 방출 hue 를 온도 가중으로 블렌드. cfg 입력이 아니라 레퍼런스/물리 도구. `--sanity` 로 검증 출력.
+- `db/refs/plasma_temperature_colors.yaml` — 생성물: `_blackbody` 색온도표(1000–20000K) + 조성별 온도(1000–15000K) 합성색.
+- `scripts/refs/render_color_visualizer.py` — `docs/firefly-colors.html` 렌더(주기율표, 분자 emitter, bulk/streak 팔레트, 온도별 플라스마 그리드). 플라스마/원소/분자 DB + emitter 상수를 읽음.
 
 **스킬 내 references.** 다섯 개 노드 타입 (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (대기 조성 → 재진입 팔레트, bulk-gas 플라즈마 표 기반), `phase3-mapping` (Phase 3 행 → Firefly 필드 매핑), `pitfalls`.
 
