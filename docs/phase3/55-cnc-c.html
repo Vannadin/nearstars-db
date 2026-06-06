@@ -239,66 +239,64 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <td data-i18n="td_98"></td>
 <td data-i18n="td_99"></td>
 </tr>
+<tr>
+<td data-i18n="td_100"></td>
+<td data-i18n="td_101"></td>
+<td data-i18n="td_102"></td>
+<td data-i18n="td_103"></td>
+</tr>
 </tbody></table></div>
-</section>
-<section>
-<h2 data-i18n="h2_100"></h2>
-<p class="intro" data-i18n="p_101"></p>
-<p class="intro" data-i18n="p_102"></p>
-<p class="intro" data-i18n="p_103"></p>
 </section>
 <section>
 <h2 data-i18n="h2_104"></h2>
 <p class="intro" data-i18n="p_105"></p>
-<ul class="intro">
-<li data-i18n="li_106"></li>
-<li data-i18n="li_107"></li>
-<li data-i18n="li_108"></li>
-</ul>
+<p class="intro" data-i18n="p_106"></p>
+<p class="intro" data-i18n="p_107"></p>
 </section>
 <section>
-<h2 data-i18n="h2_109"></h2>
-<p class="intro" data-i18n="p_110"></p>
-<p class="intro" data-i18n="p_111"></p>
-<p class="intro" data-i18n="p_112"></p>
+<h2 data-i18n="h2_108"></h2>
+<p class="intro" data-i18n="p_109"></p>
+<ul class="intro">
+<li data-i18n="li_110"></li>
+<li data-i18n="li_111"></li>
+<li data-i18n="li_112"></li>
+</ul>
 </section>
 <section>
 <h2 data-i18n="h2_113"></h2>
-<ul class="intro">
-<li data-i18n="li_114"></li>
-<li data-i18n="li_115"></li>
-<li data-i18n="li_116"></li>
-<li data-i18n="li_117"></li>
-<li data-i18n="li_118"></li>
-<li data-i18n="li_119"></li>
-</ul>
+<p class="intro" data-i18n="p_114"></p>
+<p class="intro" data-i18n="p_115"></p>
+<p class="intro" data-i18n="p_116"></p>
 </section>
 <section>
-<h2 data-i18n="h2_120"></h2>
-<h3 data-i18n="h3_121"></h3>
+<h2 data-i18n="h2_117"></h2>
 <ul class="intro">
+<li data-i18n="li_118"></li>
+<li data-i18n="li_119"></li>
+<li data-i18n="li_120"></li>
+<li data-i18n="li_121"></li>
 <li data-i18n="li_122"></li>
 <li data-i18n="li_123"></li>
 </ul>
-<h3 data-i18n="h3_124"></h3>
-<ul class="intro">
-<li data-i18n="li_125"></li>
-<li data-i18n="li_126"></li>
-</ul>
-<h3 data-i18n="h3_127"></h3>
-<ul class="intro">
-<li data-i18n="li_128"></li>
-</ul>
-<h3 data-i18n="h3_129"></h3>
-<p class="intro" data-i18n="p_130"></p>
 </section>
 <section>
-<h2 data-i18n="h2_131"></h2>
+<h2 data-i18n="h2_124"></h2>
+<h3 data-i18n="h3_125"></h3>
+<ul class="intro">
+<li data-i18n="li_126"></li>
+<li data-i18n="li_127"></li>
+</ul>
+<h3 data-i18n="h3_128"></h3>
+<ul class="intro">
+<li data-i18n="li_129"></li>
+<li data-i18n="li_130"></li>
+</ul>
+<h3 data-i18n="h3_131"></h3>
 <ul class="intro">
 <li data-i18n="li_132"></li>
-<li data-i18n="li_133"></li>
-<li data-i18n="li_134"></li>
 </ul>
+<h3 data-i18n="h3_133"></h3>
+<p class="intro" data-i18n="p_134"></p>
 </section>
 <section>
 <h2 data-i18n="h2_135"></h2>
@@ -306,7 +304,15 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_136"></li>
 <li data-i18n="li_137"></li>
 <li data-i18n="li_138"></li>
-<li data-i18n="li_139"></li>
+</ul>
+</section>
+<section>
+<h2 data-i18n="h2_139"></h2>
+<ul class="intro">
+<li data-i18n="li_140"></li>
+<li data-i18n="li_141"></li>
+<li data-i18n="li_142"></li>
+<li data-i18n="li_143"></li>
 </ul>
 </section>
 </main>
@@ -389,74 +395,78 @@ const T = {
   "td_69":"true",
   "td_70":"high",
   "td_71":"gas giant — H/He envelope",
-  "td_72":"<span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span>",
-  "td_73":"H₂/He with alkali metals, sulfide/silicate condensate clouds",
+  "td_72":"<code>atmosphere_reference_pressure_pa</code>",
+  "td_73":"100000",
   "td_74":"medium",
-  "td_75":"warm-Saturn chemistry at ~490 K; super-metal-rich host favors enriched metallicity",
-  "td_76":"<span class=\"field-tt\" data-ko-tip=\"구름 피복률 (0–1).\" data-en-tip=\"Cloud cover fraction (0–1).\"><code>cloud_cover_fraction</code></span>",
-  "td_77":"0.9",
+  "td_75":"gas giant — no solid surface; 1 bar cfg reference for cloud-deck rendering",
+  "td_76":"<span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span>",
+  "td_77":"H₂/He with alkali metals, sulfide/silicate condensate clouds",
   "td_78":"medium",
-  "td_79":"banded gas-giant cloud decks",
-  "td_80":"<span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span>",
-  "td_81":"zonal banding; sulfide/alkali-salt cloud decks, warmer than Saturn&#x27;s ammonia clouds but cooler than 55 Cnc b&#x27;s silicates",
+  "td_79":"warm-Saturn chemistry at ~490 K; super-metal-rich host favors enriched metallicity",
+  "td_80":"<span class=\"field-tt\" data-ko-tip=\"구름 피복률 (0–1).\" data-en-tip=\"Cloud cover fraction (0–1).\"><code>cloud_cover_fraction</code></span>",
+  "td_81":"0.9",
   "td_82":"medium",
-  "td_83":"~490 K — between the silicate clouds of b and the NH₃ clouds of Solar System giants",
-  "td_84":"<span class=\"field-tt\" data-ko-tip=\"구름 색조 hex.\" data-en-tip=\"Cloud tint as a hex color.\"><code>cloud_tint_rgb_hex</code></span>",
-  "td_85":"<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code> (warm muted tan)",
-  "td_86":"low",
-  "td_87":"Tie-break: warm-Saturn condensate palette, softer/paler than b&#x27;s hotter silicate tan",
-  "td_88":"<span class=\"field-tt\" data-ko-tip=\"대기 limb (가장자리) 색조 hex.\" data-en-tip=\"Atmospheric limb tint as a hex color.\"><code>atmosphere_tint_rgb_hex</code></span>",
-  "td_89":"<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code> (pale warm limb haze)",
+  "td_83":"banded gas-giant cloud decks",
+  "td_84":"<span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span>",
+  "td_85":"zonal banding; sulfide/alkali-salt cloud decks, warmer than Saturn&#x27;s ammonia clouds but cooler than 55 Cnc b&#x27;s silicates",
+  "td_86":"medium",
+  "td_87":"~490 K — between the silicate clouds of b and the NH₃ clouds of Solar System giants",
+  "td_88":"<span class=\"field-tt\" data-ko-tip=\"구름 색조 hex.\" data-en-tip=\"Cloud tint as a hex color.\"><code>cloud_tint_rgb_hex</code></span>",
+  "td_89":"<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code> (warm muted tan)",
   "td_90":"low",
-  "td_91":"Tie-break: ~490 K Saturn-class limb",
-  "td_92":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
-  "td_93":"2.04",
-  "td_94":"high",
-  "td_95":"derived: 2·R★/a = 2·0.943 R☉ / 0.247 AU",
-  "td_96":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
-  "td_97":"5196",
+  "td_91":"Tie-break: warm-Saturn condensate palette, softer/paler than b&#x27;s hotter silicate tan",
+  "td_92":"<span class=\"field-tt\" data-ko-tip=\"대기 limb (가장자리) 색조 hex.\" data-en-tip=\"Atmospheric limb tint as a hex color.\"><code>atmosphere_tint_rgb_hex</code></span>",
+  "td_93":"<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code> (pale warm limb haze)",
+  "td_94":"low",
+  "td_95":"Tie-break: ~490 K Saturn-class limb",
+  "td_96":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
+  "td_97":"2.04",
   "td_98":"high",
-  "td_99":"von Braun 2011 stellar Teff",
-  "h2_100":"Surface synthesis",
-  "p_101":"55 Cnc c is a Saturn-mass gas giant with no surface; this section covers the cloud-top &quot;surface&quot;. At T_eq ≈ 489 K it is a <b>warm Saturn-class</b> world — cooler than the inner hot Jupiter b (708 K) but still far too warm for ammonia/water-ice clouds. The visible condensates at this temperature are alkali-metal salts (Na₂S, KCl) and sulfides, sitting deeper and at higher temperatures than the ammonia clouds of the Solar System giants.",
-  "p_102":"The cloud-top palette is a warm muted tan (<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>) — softer and paler than the hotter silicate-tan of 55 Cnc b, reflecting the cooler condensate chemistry. The super-solar host metallicity ([Fe/H] ≈ +0.32) again argues for an enriched atmosphere with stronger alkali absorption and deeper cloud colors. Under the 5196 K yellow-orange host light, the planet reads as a warm, gently banded tan giant.",
-  "p_103":"Morphology: zonal banding with somewhat lower contrast than the hotter b (cooler atmospheres tend toward subtler banding). The cfg renders Saturn-analog banding warmed and muted to the planet&#x27;s palette.",
-  "h2_104":"Atmosphere synthesis",
-  "p_105":"55 Cnc c has a deep H₂/He envelope. At ~490 K the visible-altitude condensates are alkali-metal salts and sulfides; gaseous Na/K produce optical absorption. The super-metal-rich host suggests an enriched metallicity, deepening the cloud colors.",
-  "li_106":"<b>Pressure / structure.</b> A continuous H₂/He atmosphere with a condensate cloud deck at the alkali/sulfide level; no discrete surface.",
-  "li_107":"<b>Composition.</b> H₂/He primary with Na/K and sulfide/silicate condensates; likely enhanced heavy-element abundance from the super-solar host.",
-  "li_108":"<b>Sky appearance.</b> From the upper atmosphere the sky would be a pale warm tan, hazed by alkali/sulfide clouds, with the host star (2.0° angular diameter) prominent but no longer overwhelmingly dominant as it is for the inner planets.",
-  "h2_109":"Rotation &amp; spin synthesis",
-  "p_110":"At 0.247 AU on a 44.4-day orbit, 55 Cnc c is not tidally locked — the gas-giant tidal-locking timescale at this distance far exceeds the ~10 Gyr system age. The orbit is mildly eccentric (e = 0.088, though with a large uncertainty; Moutou 2025). No rotation period has been measured.",
-  "p_111":"<b>KSP implementation note.</b> The cfg adopts a fast Jovian rotation (~10–11 h order, Saturn-analog) for visual banding. This is a tie-break; flag as unconstrained.",
-  "p_112":"<b>Mild seasons.</b> The e ≈ 0.088 eccentricity gives a modest periastron-to-apastron insolation swing (T_eq from ~470 K at apastron to ~510 K at periastron), but with negligible obliquity there are no axial seasons.",
-  "h2_113":"Visual styling",
-  "li_114":"<b>Global appearance.</b> A warm muted-tan Saturn-class banded giant at 0.247 AU — the second of the system&#x27;s four giants, between the hotter inner b and the temperate f.",
-  "li_115":"<b>Cloud decks.</b> Zonal banding in warm tans (<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>), softer and paler than b, with gentle light-zone / dark-belt alternation.",
-  "li_116":"<b>Limb / haze.</b> A pale warm limb haze (<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code>).",
-  "li_117":"<b>Star in sky.</b> 55 Cnc A subtends 2.04° — about 4× the Sun&#x27;s angular size from Earth — a prominent warm-orange disk.",
-  "li_118":"<b>Sister planets in sky.</b> Planet b (inward at 0.118 AU) and planet f (outward at 0.80 AU) appear as warm points; the lava super-Earth e is lost near the star.",
-  "li_119":"<b>No rings (default).</b> At ~490 K, c is too warm for a stable ice ring; no ring is rendered (the cold giant d is the system&#x27;s ring-candidate body).",
-  "h2_120":"Bibliography",
-  "h3_121":"Read (visual-informative, drove decisions above)",
-  "li_122":"<b>Moutou C. et al. 2025/2026</b> — <i>Characterizing planetary systems with SPIRou…</i>, A&amp;A 705, A190 (<code>2026A&amp;A...705A.190M</code>, arXiv:2510.11523). Latest RV refit: planet c P = 44.3936 d, a = 0.247 AU, e = 0.088, M sin i = 56.6 ± 2.2 M⊕. <b>Phase 2 recommended orbit + mass.</b> Postdates the model cutoff — value-checked against the cached text.",
-  "li_123":"<b>von Braun K. et al. 2011</b> — <code>2011ApJ...740...49V</code>, arXiv:1107.1936. Host L = 0.582 L☉ → the T_eq derivation.",
-  "h3_124":"Read (context / methodology, not decision-driving)",
-  "li_125":"<b>Bourrier V. et al. 2018</b> — <code>2018A&amp;A...619A...1B</code>, arXiv:1807.04301. Refit: c at a = 0.2373 AU, e = 0.03, M sin i = 51.2 M⊕ — documented-alternative orbit/mass (superseded by Moutou 2025).",
-  "li_126":"<b>McArthur B. E. et al. 2004</b> — <code>2004ApJ...614L..81M</code>. Discovery paper; historical context.",
-  "h3_127":"Read (instrument-only, not visual-informative)",
-  "li_128":"(none specific to c beyond the system-level papers above.)",
-  "h3_129":"Not read — no arXiv preprint or low-priority (~15 papers)",
-  "p_130":"Early RV-refinement papers (Fischer 2008) and dynamical-stability proceedings. Full filtered bib in <code>docs/phase3/_bib/55-cnc.yaml</code>.",
-  "h2_131":"Open items for follow-up",
-  "li_132":"<b>Radius.</b> No measured radius (non-transiting); ~0.8 R_Jup is estimate-only. An inclination/true-mass constraint would allow a radius refinement.",
-  "li_133":"<b>Eccentricity.</b> e = 0.088 carries a large uncertainty (±0.23 in the curated entry); a tighter RV solution would firm up the mild-seasons treatment.",
-  "li_134":"<b>Atmospheric metallicity.</b> Enriched composition expected from the super-metal-rich host; a future emission/transmission constraint would refine the cloud color.",
-  "h2_135":"Related",
-  "li_136":"<a href=\"55-cnc.md\">55-cnc</a> — host star (K0 IV-V, L = 0.582 L☉)",
-  "li_137":"<a href=\"55-cnc-b.md\">55-cnc-b</a> — inner neighbor (hotter Jovian)",
-  "li_138":"<a href=\"55-cnc-f.md\">55-cnc-f</a> — outer neighbor (temperate, HZ-grazing giant)",
-  "li_139":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema and Msini convention",
+  "td_99":"derived: 2·R★/a = 2·0.943 R☉ / 0.247 AU",
+  "td_100":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
+  "td_101":"5196",
+  "td_102":"high",
+  "td_103":"von Braun 2011 stellar Teff",
+  "h2_104":"Surface synthesis",
+  "p_105":"55 Cnc c is a Saturn-mass gas giant with no surface; this section covers the cloud-top &quot;surface&quot;. At T_eq ≈ 489 K it is a <b>warm Saturn-class</b> world — cooler than the inner hot Jupiter b (708 K) but still far too warm for ammonia/water-ice clouds. The visible condensates at this temperature are alkali-metal salts (Na₂S, KCl) and sulfides, sitting deeper and at higher temperatures than the ammonia clouds of the Solar System giants.",
+  "p_106":"The cloud-top palette is a warm muted tan (<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>) — softer and paler than the hotter silicate-tan of 55 Cnc b, reflecting the cooler condensate chemistry. The super-solar host metallicity ([Fe/H] ≈ +0.32) again argues for an enriched atmosphere with stronger alkali absorption and deeper cloud colors. Under the 5196 K yellow-orange host light, the planet reads as a warm, gently banded tan giant.",
+  "p_107":"Morphology: zonal banding with somewhat lower contrast than the hotter b (cooler atmospheres tend toward subtler banding). The cfg renders Saturn-analog banding warmed and muted to the planet&#x27;s palette.",
+  "h2_108":"Atmosphere synthesis",
+  "p_109":"55 Cnc c has a deep H₂/He envelope. At ~490 K the visible-altitude condensates are alkali-metal salts and sulfides; gaseous Na/K produce optical absorption. The super-metal-rich host suggests an enriched metallicity, deepening the cloud colors.",
+  "li_110":"<b>Pressure / structure.</b> A continuous H₂/He atmosphere with a condensate cloud deck at the alkali/sulfide level; no discrete surface.",
+  "li_111":"<b>Composition.</b> H₂/He primary with Na/K and sulfide/silicate condensates; likely enhanced heavy-element abundance from the super-solar host.",
+  "li_112":"<b>Sky appearance.</b> From the upper atmosphere the sky would be a pale warm tan, hazed by alkali/sulfide clouds, with the host star (2.0° angular diameter) prominent but no longer overwhelmingly dominant as it is for the inner planets.",
+  "h2_113":"Rotation &amp; spin synthesis",
+  "p_114":"At 0.247 AU on a 44.4-day orbit, 55 Cnc c is not tidally locked — the gas-giant tidal-locking timescale at this distance far exceeds the ~10 Gyr system age. The orbit is mildly eccentric (e = 0.088, though with a large uncertainty; Moutou 2025). No rotation period has been measured.",
+  "p_115":"<b>KSP implementation note.</b> The cfg adopts a fast Jovian rotation (~10–11 h order, Saturn-analog) for visual banding. This is a tie-break; flag as unconstrained.",
+  "p_116":"<b>Mild seasons.</b> The e ≈ 0.088 eccentricity gives a modest periastron-to-apastron insolation swing (T_eq from ~470 K at apastron to ~510 K at periastron), but with negligible obliquity there are no axial seasons.",
+  "h2_117":"Visual styling",
+  "li_118":"<b>Global appearance.</b> A warm muted-tan Saturn-class banded giant at 0.247 AU — the second of the system&#x27;s four giants, between the hotter inner b and the temperate f.",
+  "li_119":"<b>Cloud decks.</b> Zonal banding in warm tans (<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>), softer and paler than b, with gentle light-zone / dark-belt alternation.",
+  "li_120":"<b>Limb / haze.</b> A pale warm limb haze (<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code>).",
+  "li_121":"<b>Star in sky.</b> 55 Cnc A subtends 2.04° — about 4× the Sun&#x27;s angular size from Earth — a prominent warm-orange disk.",
+  "li_122":"<b>Sister planets in sky.</b> Planet b (inward at 0.118 AU) and planet f (outward at 0.80 AU) appear as warm points; the lava super-Earth e is lost near the star.",
+  "li_123":"<b>No rings (default).</b> At ~490 K, c is too warm for a stable ice ring; no ring is rendered (the cold giant d is the system&#x27;s ring-candidate body).",
+  "h2_124":"Bibliography",
+  "h3_125":"Read (visual-informative, drove decisions above)",
+  "li_126":"<b>Moutou C. et al. 2025/2026</b> — <i>Characterizing planetary systems with SPIRou…</i>, A&amp;A 705, A190 (<code>2026A&amp;A...705A.190M</code>, arXiv:2510.11523). Latest RV refit: planet c P = 44.3936 d, a = 0.247 AU, e = 0.088, M sin i = 56.6 ± 2.2 M⊕. <b>Phase 2 recommended orbit + mass.</b> Postdates the model cutoff — value-checked against the cached text.",
+  "li_127":"<b>von Braun K. et al. 2011</b> — <code>2011ApJ...740...49V</code>, arXiv:1107.1936. Host L = 0.582 L☉ → the T_eq derivation.",
+  "h3_128":"Read (context / methodology, not decision-driving)",
+  "li_129":"<b>Bourrier V. et al. 2018</b> — <code>2018A&amp;A...619A...1B</code>, arXiv:1807.04301. Refit: c at a = 0.2373 AU, e = 0.03, M sin i = 51.2 M⊕ — documented-alternative orbit/mass (superseded by Moutou 2025).",
+  "li_130":"<b>McArthur B. E. et al. 2004</b> — <code>2004ApJ...614L..81M</code>. Discovery paper; historical context.",
+  "h3_131":"Read (instrument-only, not visual-informative)",
+  "li_132":"(none specific to c beyond the system-level papers above.)",
+  "h3_133":"Not read — no arXiv preprint or low-priority (~15 papers)",
+  "p_134":"Early RV-refinement papers (Fischer 2008) and dynamical-stability proceedings. Full filtered bib in <code>docs/phase3/_bib/55-cnc.yaml</code>.",
+  "h2_135":"Open items for follow-up",
+  "li_136":"<b>Radius.</b> No measured radius (non-transiting); ~0.8 R_Jup is estimate-only. An inclination/true-mass constraint would allow a radius refinement.",
+  "li_137":"<b>Eccentricity.</b> e = 0.088 carries a large uncertainty (±0.23 in the curated entry); a tighter RV solution would firm up the mild-seasons treatment.",
+  "li_138":"<b>Atmospheric metallicity.</b> Enriched composition expected from the super-metal-rich host; a future emission/transmission constraint would refine the cloud color.",
+  "h2_139":"Related",
+  "li_140":"<a href=\"55-cnc.md\">55-cnc</a> — host star (K0 IV-V, L = 0.582 L☉)",
+  "li_141":"<a href=\"55-cnc-b.md\">55-cnc-b</a> — inner neighbor (hotter Jovian)",
+  "li_142":"<a href=\"55-cnc-f.md\">55-cnc-f</a> — outer neighbor (temperate, HZ-grazing giant)",
+  "li_143":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema and Msini convention",
   "title":"55 Cnc c — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -534,74 +544,78 @@ const T = {
   "td_69":"true",
   "td_70":"high",
   "td_71":"거대 가스 행성 — H/He 외피",
-  "td_72":"<span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span>",
-  "td_73":"알칼리 금속을 가진 H₂/He, 황화물/규산염 응결 구름",
+  "td_72":"<code>atmosphere_reference_pressure_pa</code>",
+  "td_73":"100000",
   "td_74":"medium",
-  "td_75":"~490 K 따뜻-토성형 화학. 초금속 풍부 모성은 풍부한 금속도를 선호",
-  "td_76":"<span class=\"field-tt\" data-ko-tip=\"구름 피복률 (0–1).\" data-en-tip=\"Cloud cover fraction (0–1).\"><code>cloud_cover_fraction</code></span>",
-  "td_77":"0.9",
+  "td_75":"거대 가스 행성 — 고체 표면 없음. 구름층 렌더링용 1 bar cfg 기준압",
+  "td_76":"<span class=\"field-tt\" data-ko-tip=\"대기 조성 (주 성분과 분압 비율).\" data-en-tip=\"Atmospheric composition — main species and partial pressures.\"><code>atmosphere_composition</code></span>",
+  "td_77":"알칼리 금속을 가진 H₂/He, 황화물/규산염 응결 구름",
   "td_78":"medium",
-  "td_79":"띠 모양 거대 가스 행성 구름 덱",
-  "td_80":"<span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span>",
-  "td_81":"띠 모양. 토성의 암모니아 구름보다 따뜻하나 55 Cnc b 의 규산염보다 차가운 황화물/알칼리-염 구름 덱",
+  "td_79":"~490 K 따뜻-토성형 화학. 초금속 풍부 모성은 풍부한 금속도를 선호",
+  "td_80":"<span class=\"field-tt\" data-ko-tip=\"구름 피복률 (0–1).\" data-en-tip=\"Cloud cover fraction (0–1).\"><code>cloud_cover_fraction</code></span>",
+  "td_81":"0.9",
   "td_82":"medium",
-  "td_83":"~490 K — b 의 규산염 구름과 태양계 거대 행성의 NH₃ 구름 사이",
-  "td_84":"<span class=\"field-tt\" data-ko-tip=\"구름 색조 hex.\" data-en-tip=\"Cloud tint as a hex color.\"><code>cloud_tint_rgb_hex</code></span>",
-  "td_85":"<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>(따뜻하고 차분한 황갈)",
-  "td_86":"low",
-  "td_87":"Tie-break: 따뜻-토성형 응결물 팔레트, b 의 더 뜨거운 규산염 황갈보다 부드럽고 옅음",
-  "td_88":"<span class=\"field-tt\" data-ko-tip=\"대기 limb (가장자리) 색조 hex.\" data-en-tip=\"Atmospheric limb tint as a hex color.\"><code>atmosphere_tint_rgb_hex</code></span>",
-  "td_89":"<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code>(옅고 따뜻한 림 헤이즈)",
+  "td_83":"띠 모양 거대 가스 행성 구름 덱",
+  "td_84":"<span class=\"field-tt\" data-ko-tip=\"구름 형태 (위도/경도 패턴 서술).\" data-en-tip=\"Cloud morphology — latitude/longitude patterns.\"><code>cloud_morphology</code></span>",
+  "td_85":"띠 모양. 토성의 암모니아 구름보다 따뜻하나 55 Cnc b 의 규산염보다 차가운 황화물/알칼리-염 구름 덱",
+  "td_86":"medium",
+  "td_87":"~490 K — b 의 규산염 구름과 태양계 거대 행성의 NH₃ 구름 사이",
+  "td_88":"<span class=\"field-tt\" data-ko-tip=\"구름 색조 hex.\" data-en-tip=\"Cloud tint as a hex color.\"><code>cloud_tint_rgb_hex</code></span>",
+  "td_89":"<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>(따뜻하고 차분한 황갈)",
   "td_90":"low",
-  "td_91":"Tie-break: ~490 K 토성급 림",
-  "td_92":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
-  "td_93":"2.04",
-  "td_94":"high",
-  "td_95":"유도: 2·R★/a = 2·0.943 R☉ / 0.247 AU",
-  "td_96":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
-  "td_97":"5196",
+  "td_91":"Tie-break: 따뜻-토성형 응결물 팔레트, b 의 더 뜨거운 규산염 황갈보다 부드럽고 옅음",
+  "td_92":"<span class=\"field-tt\" data-ko-tip=\"대기 limb (가장자리) 색조 hex.\" data-en-tip=\"Atmospheric limb tint as a hex color.\"><code>atmosphere_tint_rgb_hex</code></span>",
+  "td_93":"<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code>(옅고 따뜻한 림 헤이즈)",
+  "td_94":"low",
+  "td_95":"Tie-break: ~490 K 토성급 림",
+  "td_96":"<span class=\"field-tt\" data-ko-tip=\"하늘에서 모항성의 시직경 (도). 지구에서 본 태양 ≈ 0.53°.\" data-en-tip=\"Host star angular diameter as seen from the planet (degrees). Sun-from-Earth ≈ 0.53°.\"><code>star_apparent_angular_diameter_deg</code></span>",
+  "td_97":"2.04",
   "td_98":"high",
-  "td_99":"von Braun 2011 항성 Teff",
-  "h2_100":"Surface synthesis",
-  "p_101":"55 Cnc c 는 표면 없는 토성-질량 거대 가스 행성이라, 이 섹션은 구름 꼭대기 &quot;표면&quot;을 다룹니다. T_eq ≈ 489 K 에서 그것은 <b>따뜻한 토성급</b> 세계입니다— 안쪽 뜨거운 목성 b(708 K)보다 차갑지만 여전히 암모니아/물-얼음 구름에는 너무 따뜻합니다. 이 온도의 가시 응결물은 알칼리-금속염(Na₂S, KCl)과 황화물로, 태양계 거대 행성의 암모니아 구름보다 깊고 높은 온도에 자리합니다.",
-  "p_102":"구름 꼭대기 팔레트는 따뜻하고 차분한 황갈(<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>)입니다—더 차가운 응결 화학을 반영해 55 Cnc b 의 더 뜨거운 규산염-황갈보다 부드럽고 옅습니다. 초태양 모성 금속도([Fe/H] ≈ +0.32)는 다시 더 강한 알칼리 흡수와 더 짙은 구름 색을 가진 풍부한 대기를 시사합니다. 5196 K 노랑-주황 모성 빛 아래 행성은 따뜻하고 부드럽게 띠진 황갈 거대 행성으로 읽힙니다.",
-  "p_103":"형태: 더 뜨거운 b 보다 다소 낮은 대비의 띠 모양(차가운 대기는 더 미묘한 띠로 향함). cfg 는 행성 팔레트로 따뜻하게·차분하게 한 토성-유사체 띠 모양을 렌더링합니다.",
-  "h2_104":"Atmosphere synthesis",
-  "p_105":"55 Cnc c 는 심층 H₂/He 외피를 가집니다. ~490 K 에서 가시-고도 응결물은 알칼리-금속염과 황화물이며, 기체상 Na/K 가 광학 흡수를 만듭니다. 초금속 풍부 모성은 풍부한 금속도를 시사하여 구름 색을 짙게 합니다.",
-  "li_106":"<b>압력 / 구조.</b> 알칼리/황화물 준위의 응결 구름 덱을 가진 연속 H₂/He 대기. 별개 표면 없음.",
-  "li_107":"<b>조성.</b> H₂/He 주체에 Na/K 와 황화물/규산염 응결물. 초태양 모성에서 향상된 중원소 풍부도 가능성.",
-  "li_108":"<b>하늘 외관.</b> 상층 대기에서 하늘은 옅은 따뜻 황갈로, 알칼리/황화물 구름으로 흐려지며, 모성(각지름 2.0°)이 두드러지나 안쪽 행성들에서처럼 압도적으로 지배하지는 않습니다.",
-  "h2_109":"Rotation &amp; spin synthesis",
-  "p_110":"0.247 AU 에서 44.4일 궤도로, 55 Cnc c 는 조석 고정되지 않습니다—이 거리의 거대 가스 행성 조석 고정 시간 척도가 ~10 Gyr 계 나이를 한참 초과합니다. 궤도는 약하게 이심(e = 0.088, 큰 불확실성 동반. Moutou 2025)입니다. 자전 주기는 측정되지 않았습니다.",
-  "p_111":"<b>KSP 구현 노트.</b> cfg 는 시각적 띠 모양을 위해 빠른 목성형 자전(~10–11시간 자릿수, 토성 유사체)을 채택합니다. 이는 tie-break 이며 미제약으로 플래그합니다.",
-  "p_112":"<b>약한 계절.</b> e ≈ 0.088 이심은 적당한 근점-원점 일사 변동(원점 ~470 K 에서 근점 ~510 K 의 T_eq)을 주지만, 무시할 만한 자전축 경사라 축 계절은 없습니다.",
-  "h2_113":"Visual styling",
-  "li_114":"<b>전체 외관.</b> 0.247 AU 의 따뜻하고 차분한-황갈 토성급 띠 거대 행성—이 계 네 거대 행성 중 둘째로, 더 뜨거운 안쪽 b 와 온대 f 사이입니다.",
-  "li_115":"<b>구름 덱.</b> 따뜻한 황갈(<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>)의 띠 모양으로, b 보다 부드럽고 옅으며, 밝은-존 / 어두운-벨트가 부드럽게 번갈음.",
-  "li_116":"<b>림 / 헤이즈.</b> 옅고 따뜻한 림 헤이즈(<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code>).",
-  "li_117":"<b>하늘의 별.</b> 55 Cnc A 는 2.04° 를 차지—지구에서 본 태양 각지름의 약 4 배—두드러진 따뜻-주황 디스크.",
-  "li_118":"<b>하늘의 자매 행성.</b> 행성 b(0.118 AU 안쪽)와 행성 f(0.80 AU 바깥)가 따뜻한 점으로 나타나며, 용암 초지구 e 는 별 근처에 묻힘.",
-  "li_119":"<b>고리 없음(기본).</b> ~490 K 에서 c 는 안정한 얼음 고리에는 너무 따뜻함. 고리는 렌더링 안 함(차가운 거대 행성 d 가 계의 고리-후보 천체).",
-  "h2_120":"Bibliography",
-  "h3_121":"Read (visual-informative, drove decisions above)",
-  "li_122":"<b>Moutou C. et al. 2025/2026</b> — <i>Characterizing planetary systems with SPIRou…</i>, A&amp;A 705, A190 (<code>2026A&amp;A...705A.190M</code>, arXiv:2510.11523). 최신 RV 재피팅: 행성 c P = 44.3936 d, a = 0.247 AU, e = 0.088, M sin i = 56.6 ± 2.2 M⊕. <b>Phase 2 추천 궤도 + 질량.</b> 모델 컷오프 이후 출판 — 캐시 텍스트에 대조 확인.",
-  "li_123":"<b>von Braun K. et al. 2011</b> — <code>2011ApJ...740...49V</code>, arXiv:1107.1936. 모성 L = 0.582 L☉ → T_eq 유도.",
-  "h3_124":"Read (context / methodology, not decision-driving)",
-  "li_125":"<b>Bourrier V. et al. 2018</b> — <code>2018A&amp;A...619A...1B</code>, arXiv:1807.04301. 재피팅: c 가 a = 0.2373 AU, e = 0.03, M sin i = 51.2 M⊕ — 기록된-대안 궤도/질량(Moutou 2025 로 대체).",
-  "li_126":"<b>McArthur B. E. et al. 2004</b> — <code>2004ApJ...614L..81M</code>. 발견 논문. 역사적 맥락.",
-  "h3_127":"Read (instrument-only, not visual-informative)",
-  "li_128":"(위 계-수준 논문 외에 c 에 특정한 항목 없음.)",
-  "h3_129":"Not read — no arXiv preprint or low-priority (~15 papers)",
-  "p_130":"초기 RV 정제 논문(Fischer 2008)과 동역학-안정성 자료. 완전한 필터링 bib 는 <code>docs/phase3/_bib/55-cnc.yaml</code>.",
-  "h2_131":"Open items for follow-up",
-  "li_132":"<b>반지름.</b> 측정 반지름 없음(비통과). ~0.8 R_Jup 은 추정-전용입니다. 경사/진질량 제약이 반지름 정제를 가능케 할 것입니다.",
-  "li_133":"<b>이심.</b> e = 0.088 은 큰 불확실성을 동반합니다(큐레이션 항목에서 ±0.23). 더 정밀한 RV 해가 약한-계절 처리를 굳힐 것입니다.",
-  "li_134":"<b>대기 금속도.</b> 초금속 풍부 모성에서 풍부한 조성이 예상됩니다. 미래 방출/투과 제약이 구름 색을 다듬을 것입니다.",
-  "h2_135":"Related",
-  "li_136":"<a href=\"55-cnc.md\">55-cnc</a> — 모성(K0 IV-V, L = 0.582 L☉)",
-  "li_137":"<a href=\"55-cnc-b.md\">55-cnc-b</a> — 안쪽 이웃(더 뜨거운 목성형)",
-  "li_138":"<a href=\"55-cnc-f.md\">55-cnc-f</a> — 바깥쪽 이웃(온대, HZ-스치는 거대 행성)",
-  "li_139":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마와 Msini 관례",
+  "td_99":"유도: 2·R★/a = 2·0.943 R☉ / 0.247 AU",
+  "td_100":"<span class=\"field-tt\" data-ko-tip=\"모항성 색온도 (K). 태양 ≈ 5778, M dwarf ≈ 2500-3500.\" data-en-tip=\"Host star illumination color temperature (K). Sun ≈ 5778, M dwarfs ≈ 2500–3500.\"><code>stellar_illumination_color_temp_k</code></span>",
+  "td_101":"5196",
+  "td_102":"high",
+  "td_103":"von Braun 2011 항성 Teff",
+  "h2_104":"Surface synthesis",
+  "p_105":"55 Cnc c 는 표면 없는 토성-질량 거대 가스 행성이라, 이 섹션은 구름 꼭대기 &quot;표면&quot;을 다룹니다. T_eq ≈ 489 K 에서 그것은 <b>따뜻한 토성급</b> 세계입니다— 안쪽 뜨거운 목성 b(708 K)보다 차갑지만 여전히 암모니아/물-얼음 구름에는 너무 따뜻합니다. 이 온도의 가시 응결물은 알칼리-금속염(Na₂S, KCl)과 황화물로, 태양계 거대 행성의 암모니아 구름보다 깊고 높은 온도에 자리합니다.",
+  "p_106":"구름 꼭대기 팔레트는 따뜻하고 차분한 황갈(<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>)입니다—더 차가운 응결 화학을 반영해 55 Cnc b 의 더 뜨거운 규산염-황갈보다 부드럽고 옅습니다. 초태양 모성 금속도([Fe/H] ≈ +0.32)는 다시 더 강한 알칼리 흡수와 더 짙은 구름 색을 가진 풍부한 대기를 시사합니다. 5196 K 노랑-주황 모성 빛 아래 행성은 따뜻하고 부드럽게 띠진 황갈 거대 행성으로 읽힙니다.",
+  "p_107":"형태: 더 뜨거운 b 보다 다소 낮은 대비의 띠 모양(차가운 대기는 더 미묘한 띠로 향함). cfg 는 행성 팔레트로 따뜻하게·차분하게 한 토성-유사체 띠 모양을 렌더링합니다.",
+  "h2_108":"Atmosphere synthesis",
+  "p_109":"55 Cnc c 는 심층 H₂/He 외피를 가집니다. ~490 K 에서 가시-고도 응결물은 알칼리-금속염과 황화물이며, 기체상 Na/K 가 광학 흡수를 만듭니다. 초금속 풍부 모성은 풍부한 금속도를 시사하여 구름 색을 짙게 합니다.",
+  "li_110":"<b>압력 / 구조.</b> 알칼리/황화물 준위의 응결 구름 덱을 가진 연속 H₂/He 대기. 별개 표면 없음.",
+  "li_111":"<b>조성.</b> H₂/He 주체에 Na/K 와 황화물/규산염 응결물. 초태양 모성에서 향상된 중원소 풍부도 가능성.",
+  "li_112":"<b>하늘 외관.</b> 상층 대기에서 하늘은 옅은 따뜻 황갈로, 알칼리/황화물 구름으로 흐려지며, 모성(각지름 2.0°)이 두드러지나 안쪽 행성들에서처럼 압도적으로 지배하지는 않습니다.",
+  "h2_113":"Rotation &amp; spin synthesis",
+  "p_114":"0.247 AU 에서 44.4일 궤도로, 55 Cnc c 는 조석 고정되지 않습니다—이 거리의 거대 가스 행성 조석 고정 시간 척도가 ~10 Gyr 계 나이를 한참 초과합니다. 궤도는 약하게 이심(e = 0.088, 큰 불확실성 동반. Moutou 2025)입니다. 자전 주기는 측정되지 않았습니다.",
+  "p_115":"<b>KSP 구현 노트.</b> cfg 는 시각적 띠 모양을 위해 빠른 목성형 자전(~10–11시간 자릿수, 토성 유사체)을 채택합니다. 이는 tie-break 이며 미제약으로 플래그합니다.",
+  "p_116":"<b>약한 계절.</b> e ≈ 0.088 이심은 적당한 근점-원점 일사 변동(원점 ~470 K 에서 근점 ~510 K 의 T_eq)을 주지만, 무시할 만한 자전축 경사라 축 계절은 없습니다.",
+  "h2_117":"Visual styling",
+  "li_118":"<b>전체 외관.</b> 0.247 AU 의 따뜻하고 차분한-황갈 토성급 띠 거대 행성—이 계 네 거대 행성 중 둘째로, 더 뜨거운 안쪽 b 와 온대 f 사이입니다.",
+  "li_119":"<b>구름 덱.</b> 따뜻한 황갈(<span class=\"hex-chip\" style=\"background:#d4b890\"></span><code>#d4b890</code>)의 띠 모양으로, b 보다 부드럽고 옅으며, 밝은-존 / 어두운-벨트가 부드럽게 번갈음.",
+  "li_120":"<b>림 / 헤이즈.</b> 옅고 따뜻한 림 헤이즈(<span class=\"hex-chip\" style=\"background:#e0c8a0\"></span><code>#e0c8a0</code>).",
+  "li_121":"<b>하늘의 별.</b> 55 Cnc A 는 2.04° 를 차지—지구에서 본 태양 각지름의 약 4 배—두드러진 따뜻-주황 디스크.",
+  "li_122":"<b>하늘의 자매 행성.</b> 행성 b(0.118 AU 안쪽)와 행성 f(0.80 AU 바깥)가 따뜻한 점으로 나타나며, 용암 초지구 e 는 별 근처에 묻힘.",
+  "li_123":"<b>고리 없음(기본).</b> ~490 K 에서 c 는 안정한 얼음 고리에는 너무 따뜻함. 고리는 렌더링 안 함(차가운 거대 행성 d 가 계의 고리-후보 천체).",
+  "h2_124":"Bibliography",
+  "h3_125":"Read (visual-informative, drove decisions above)",
+  "li_126":"<b>Moutou C. et al. 2025/2026</b> — <i>Characterizing planetary systems with SPIRou…</i>, A&amp;A 705, A190 (<code>2026A&amp;A...705A.190M</code>, arXiv:2510.11523). 최신 RV 재피팅: 행성 c P = 44.3936 d, a = 0.247 AU, e = 0.088, M sin i = 56.6 ± 2.2 M⊕. <b>Phase 2 추천 궤도 + 질량.</b> 모델 컷오프 이후 출판 — 캐시 텍스트에 대조 확인.",
+  "li_127":"<b>von Braun K. et al. 2011</b> — <code>2011ApJ...740...49V</code>, arXiv:1107.1936. 모성 L = 0.582 L☉ → T_eq 유도.",
+  "h3_128":"Read (context / methodology, not decision-driving)",
+  "li_129":"<b>Bourrier V. et al. 2018</b> — <code>2018A&amp;A...619A...1B</code>, arXiv:1807.04301. 재피팅: c 가 a = 0.2373 AU, e = 0.03, M sin i = 51.2 M⊕ — 기록된-대안 궤도/질량(Moutou 2025 로 대체).",
+  "li_130":"<b>McArthur B. E. et al. 2004</b> — <code>2004ApJ...614L..81M</code>. 발견 논문. 역사적 맥락.",
+  "h3_131":"Read (instrument-only, not visual-informative)",
+  "li_132":"(위 계-수준 논문 외에 c 에 특정한 항목 없음.)",
+  "h3_133":"Not read — no arXiv preprint or low-priority (~15 papers)",
+  "p_134":"초기 RV 정제 논문(Fischer 2008)과 동역학-안정성 자료. 완전한 필터링 bib 는 <code>docs/phase3/_bib/55-cnc.yaml</code>.",
+  "h2_135":"Open items for follow-up",
+  "li_136":"<b>반지름.</b> 측정 반지름 없음(비통과). ~0.8 R_Jup 은 추정-전용입니다. 경사/진질량 제약이 반지름 정제를 가능케 할 것입니다.",
+  "li_137":"<b>이심.</b> e = 0.088 은 큰 불확실성을 동반합니다(큐레이션 항목에서 ±0.23). 더 정밀한 RV 해가 약한-계절 처리를 굳힐 것입니다.",
+  "li_138":"<b>대기 금속도.</b> 초금속 풍부 모성에서 풍부한 조성이 예상됩니다. 미래 방출/투과 제약이 구름 색을 다듬을 것입니다.",
+  "h2_139":"Related",
+  "li_140":"<a href=\"55-cnc.md\">55-cnc</a> — 모성(K0 IV-V, L = 0.582 L☉)",
+  "li_141":"<a href=\"55-cnc-b.md\">55-cnc-b</a> — 안쪽 이웃(더 뜨거운 목성형)",
+  "li_142":"<a href=\"55-cnc-f.md\">55-cnc-f</a> — 바깥쪽 이웃(온대, HZ-스치는 거대 행성)",
+  "li_143":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마와 Msini 관례",
   "title":"55 Cnc c — Phase 3 합성",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

@@ -42,6 +42,7 @@ cfg 가 둘 다 플래그합니다. f 자체가 거대 가스 행성이라, 그 
 | `insolation_s_earth` | 0.9 | high | 유도 = L / a² = 0.582 / 0.802²(≈ 지구형) |
 | `bond_albedo` | 0.3 | low | Tie-break: 구름 낀 온대 거대 행성, 목성/토성형 알베도 |
 | `atmosphere_present` | true | high | 가스/얼음 거대 행성 — H/He 외피 |
+| `atmosphere_reference_pressure_pa` | 100000 | medium | 거대 가스 행성 — 고체 표면 없음. 구름층 렌더링용 1 bar cfg 기준압 |
 | `atmosphere_composition` | NH₃ / NH₄SH / 가능한 H₂O-얼음 구름 덱을 가진 H₂/He | medium | ~270 K — 암모니아와 (더 깊은) 물-얼음 응결물에 충분히 차가움, 태양계 거대 행성처럼 |
 | `cloud_cover_fraction` | 0.9 | medium | 띠 모양 거대 가스 행성 구름 덱 |
 | `cloud_morphology` | 띠 모양. 암모니아 + 암모늄-하이드로설파이드 구름 덱(목성/토성 유사체)에 더 깊은 물 구름 가능 | medium | ~270 K 는 NH₃-구름 영역 — 흰 암모니아 구름에 충분히 차가운 유일한 안쪽 55 Cnc 거대 행성 |

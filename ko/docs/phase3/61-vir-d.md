@@ -51,7 +51,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `dayside_brightness_temp_k_at_clouds` | 340 | medium | T_eq 에서 적당한 재분배와 1 bar 구름-top 기준으로 유도 |
 | `nightside_brightness_temp_k_at_clouds` | 285 | medium | 더 깊은 외피의 Pseudo-synchronous 열재분배가 적당한 day-night 대비를 줌 (차가운 sub-Neptune 의 Showman 2009 / Lewis 2014 GCM 영역) |
 | `atmosphere_present` | true | high | 23 M⊕ × 0.48 AU 의 G 왜성 주위 H/He 외피 보유는 분명 (Owen & Wu 2017 광증발 valley. d 는 손실 경계 한참 바깥) |
-| `atmosphere_surface_pressure_pa` | (표면 없음. 외피 연속) | high | 가스 행성 — 표면 없음. 구름-top 기준 ~1 bar = 10⁵ Pa |
+| `atmosphere_reference_pressure_pa` | 100000 | high | 가스 행성 — 고체 표면 없음. 구름층 렌더링 기준 ~1 bar = 10⁵ Pa |
 | `atmosphere_composition` | H₂ ~74%, He ~24%, H₂O ~0.5%, CH₄ ~0.2%, NH₃ ~0.1%, CO, CO₂ 미량, 광화학 haze | medium | 표준 sub-Neptune 원시 조성 (Madhusudhan 2012. Moses 2013). c 보다 더 높은 응결성 풍부도. d 의 더 차가운 온도가 깊이-혼합된 휘발성을 가시 데크까지 도달하게 허용 |
 | `atmosphere_scale_height_km` | 165 | medium | 유도. kT/μg. T≈351 K, μ=2.4 (H/He 우세), g=0.92 g⊕ = 9.0 m/s² |
 | `atmosphere_tint_rgb_hex` | `#b8c4d4` (옅은 청-회 limb haze) | low | Tie-break. 태양빛 노란 조명 아래 H/He Rayleigh 산란이 청색에서 피크. 더 차가운 T_eq 가 c 보다 광화학 haze 감쇠가 적어 limb 는 더 두드러진 Rayleigh-청 색조를 보임 |

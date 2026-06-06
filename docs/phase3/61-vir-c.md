@@ -50,7 +50,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `dayside_brightness_temp_k_at_clouds` | 460 | medium | Derived from T_eq with mild redistribution and 1-bar cloud-top reference |
 | `nightside_brightness_temp_k_at_clouds` | 380 | medium | Pseudo-synchronous heat redistribution gives moderate day–night contrast (Showman 2009 GCM regime for warm sub-Neptunes) |
 | `atmosphere_present` | true | high | H/He envelope retention at 18 M⊕ × 0.22 AU around a G-dwarf is well-established (Owen & Wu 2017 photoevaporation valley: c sits well to the right of the loss boundary) |
-| `atmosphere_surface_pressure_pa` | (no surface; envelope continuous) | high | gas planet — no surface; cloud-top reference at ~1 bar = 10⁵ Pa |
+| `atmosphere_reference_pressure_pa` | 100000 | high | gas planet — no solid surface; cloud-top reference at ~1 bar = 10⁵ Pa |
 | `atmosphere_composition` | H₂ ~75%, He ~24%, H₂O ~0.3%, CH₄ ~0.1%, NH₃ ~0.05%, traces of CO, CO₂, photochemical hazes | medium | Standard sub-Neptune primordial composition (Madhusudhan 2012; Moses 2013); H/He primary with trace volatiles |
 | `atmosphere_scale_height_km` | 220 | medium | derived: kT/μg with T≈478 K, μ=2.4 (H/He dominated), g=0.90 g⊕ = 8.8 m/s² |
 | `atmosphere_tint_rgb_hex` | `#a8b8cc` (pale steel-blue limb haze) | low | Tie-break: H/He Rayleigh scattering peaks in blue under solar-yellow illumination, but photochemical hazes (Morley 2015) attenuate the blue and add an orange-brown undertone; cfg picks a muted steel-blue as the canonical hazy-sub-Neptune limb tint |

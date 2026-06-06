@@ -55,7 +55,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `dayside_brightness_temp_k_at_clouds` | 340 | medium | Derived from T_eq with moderate redistribution and 1-bar cloud-top reference |
 | `nightside_brightness_temp_k_at_clouds` | 285 | medium | Pseudo-synchronous heat redistribution with deeper envelope gives moderate day-night contrast (Showman 2009 / Lewis 2014 GCM regime for cool sub-Neptunes) |
 | `atmosphere_present` | true | high | H/He envelope retention at 23 M⊕ × 0.48 AU around a G-dwarf is unambiguous (Owen & Wu 2017 photoevaporation valley: d is far outside the loss boundary) |
-| `atmosphere_surface_pressure_pa` | (no surface; envelope continuous) | high | gas planet — no surface; cloud-top reference at ~1 bar = 10⁵ Pa |
+| `atmosphere_reference_pressure_pa` | 100000 | high | gas planet — no solid surface; cloud-top reference at ~1 bar = 10⁵ Pa |
 | `atmosphere_composition` | H₂ ~74%, He ~24%, H₂O ~0.5%, CH₄ ~0.2%, NH₃ ~0.1%, traces of CO, CO₂, photochemical hazes | medium | Standard sub-Neptune primordial composition (Madhusudhan 2012; Moses 2013); higher condensable abundances than c because d's cooler temperature allows deeper-mixed volatiles to reach the visible deck |
 | `atmosphere_scale_height_km` | 165 | medium | derived: kT/μg with T≈351 K, μ=2.4 (H/He dominated), g=0.92 g⊕ = 9.0 m/s² |
 | `atmosphere_tint_rgb_hex` | `#b8c4d4` (pale blue-grey limb haze) | low | Tie-break: H/He Rayleigh scattering peaks in blue under solar-yellow illumination; the cooler T_eq means less photochemical haze attenuation than c, so the limb shows a more pronounced Rayleigh-blue tint |

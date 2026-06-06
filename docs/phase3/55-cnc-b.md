@@ -39,6 +39,7 @@ estimate-only standard Jovian value; the cfg flags both accordingly.
 | `insolation_s_earth` | 41.8 | high | derived = L / a² = 0.582 / 0.118² |
 | `bond_albedo` | 0.3 | low | Tie-break: cloudy warm Jovian, Jupiter-like albedo |
 | `atmosphere_present` | true | high | gas giant — H/He envelope |
+| `atmosphere_reference_pressure_pa` | 100000 | medium | gas giant — no solid surface; 1 bar cfg reference for cloud-deck rendering |
 | `atmosphere_composition` | H₂/He with alkali metals (Na, K), silicate/sulfide condensate clouds | medium | warm-Jovian chemistry at ~700 K; super-metal-rich host favors enriched metallicity |
 | `cloud_cover_fraction` | 0.9 | medium | banded gas-giant cloud decks |
 | `cloud_morphology` | zonal banding; warm silicate/alkali-sulfide cloud decks, deeper and warmer than Jupiter's ammonia clouds | medium | 700 K class — too warm for NH₃ ice, condensates are silicates/sulfides/alkali salts |

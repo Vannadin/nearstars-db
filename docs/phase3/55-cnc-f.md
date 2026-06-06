@@ -46,6 +46,7 @@ moons.
 | `insolation_s_earth` | 0.9 | high | derived = L / a² = 0.582 / 0.802² (≈ Earth-like) |
 | `bond_albedo` | 0.3 | low | Tie-break: cloudy temperate giant, Jupiter/Saturn-like albedo |
 | `atmosphere_present` | true | high | gas/ice giant — H/He envelope |
+| `atmosphere_reference_pressure_pa` | 100000 | medium | gas giant — no solid surface; 1 bar cfg reference for cloud-deck rendering |
 | `atmosphere_composition` | H₂/He with NH₃ / NH₄SH / possible H₂O-ice cloud decks | medium | ~270 K — cold enough for ammonia and (deeper) water-ice condensates, like the Solar System giants |
 | `cloud_cover_fraction` | 0.9 | medium | banded gas-giant cloud decks |
 | `cloud_morphology` | zonal banding; ammonia + ammonium-hydrosulfide cloud decks (Jupiter/Saturn-analog) with possible deeper water clouds | medium | ~270 K is in the NH₃-cloud regime — the only inner 55 Cnc giant cold enough for white ammonia clouds |

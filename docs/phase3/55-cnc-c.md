@@ -37,6 +37,7 @@ flags both accordingly.
 | `insolation_s_earth` | 9.5 | high | derived = L / a² = 0.582 / 0.247² |
 | `bond_albedo` | 0.3 | low | Tie-break: cloudy warm Saturn-class, Jupiter/Saturn-like albedo |
 | `atmosphere_present` | true | high | gas giant — H/He envelope |
+| `atmosphere_reference_pressure_pa` | 100000 | medium | gas giant — no solid surface; 1 bar cfg reference for cloud-deck rendering |
 | `atmosphere_composition` | H₂/He with alkali metals, sulfide/silicate condensate clouds | medium | warm-Saturn chemistry at ~490 K; super-metal-rich host favors enriched metallicity |
 | `cloud_cover_fraction` | 0.9 | medium | banded gas-giant cloud decks |
 | `cloud_morphology` | zonal banding; sulfide/alkali-salt cloud decks, warmer than Saturn's ammonia clouds but cooler than 55 Cnc b's silicates | medium | ~490 K — between the silicate clouds of b and the NH₃ clouds of Solar System giants |

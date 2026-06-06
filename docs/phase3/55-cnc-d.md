@@ -45,6 +45,7 @@ observation.
 | `insolation_s_earth` | 0.019 | high | derived = L / a² = 0.582 / 5.6² |
 | `bond_albedo` | 0.3 | low | Tie-break: ammonia-clouded cold Jovian, Jupiter-like albedo |
 | `atmosphere_present` | true | high | gas giant — H/He envelope |
+| `atmosphere_reference_pressure_pa` | 100000 | medium | gas giant — no solid surface; 1 bar cfg reference for cloud-deck rendering |
 | `atmosphere_composition` | H₂/He with NH₃ + deeper NH₄SH / H₂O cloud decks; possible CH₄ tint | medium | ~100 K — cold Jovian, ammonia-cloud regime; CH₄ absorption possible at this temperature |
 | `cloud_cover_fraction` | 0.95 | medium | deep banded gas-giant cloud decks |
 | `cloud_morphology` | zonal banding; deep NH₃ + NH₄SH cloud decks (Jupiter/Saturn-analog), high-contrast belts and zones | medium | ~100 K — fully in the ammonia-cloud regime of the cold Solar System giants |

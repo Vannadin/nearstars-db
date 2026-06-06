@@ -46,7 +46,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `dayside_brightness_temp_k_at_clouds` | 460 | medium | T_eq 에서 약한 재분배와 1 bar 구름-top 기준으로 유도 |
 | `nightside_brightness_temp_k_at_clouds` | 380 | medium | Pseudo-synchronous 열재분배가 적당한 day-night 대비를 줌 (따뜻한 sub-Neptune 의 Showman 2009 GCM 영역) |
 | `atmosphere_present` | true | high | 18 M⊕ × 0.22 AU 의 G 왜성 주위 H/He 외피 보유는 잘 확립 (Owen & Wu 2017 광증발 valley. c 는 손실 경계 한참 오른쪽) |
-| `atmosphere_surface_pressure_pa` | (표면 없음. 외피 연속) | high | 가스 행성 — 표면 없음. 구름-top 기준 ~1 bar = 10⁵ Pa |
+| `atmosphere_reference_pressure_pa` | 100000 | high | 가스 행성 — 고체 표면 없음. 구름층 렌더링 기준 ~1 bar = 10⁵ Pa |
 | `atmosphere_composition` | H₂ ~75%, He ~24%, H₂O ~0.3%, CH₄ ~0.1%, NH₃ ~0.05%, CO, CO₂ 미량, 광화학 haze | medium | 표준 sub-Neptune 원시 조성 (Madhusudhan 2012. Moses 2013). H/He 일차 + 미량 휘발성 |
 | `atmosphere_scale_height_km` | 220 | medium | 유도. kT/μg. T≈478 K, μ=2.4 (H/He 우세), g=0.90 g⊕ = 8.8 m/s² |
 | `atmosphere_tint_rgb_hex` | `#a8b8cc` (옅은 강철빛 limb haze) | low | Tie-break. 태양빛 노란 조명 아래 H/He Rayleigh 산란이 청색에서 피크지만 광화학 haze (Morley 2015) 가 청색을 감쇠시키고 주황-갈색 underton 을 추가. cfg 는 haze 가 낀 sub-Neptune 의 표준 limb 색조로 muted 강철-청 채택 |
