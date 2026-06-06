@@ -444,6 +444,64 @@
           }
         ]
       }
+    },
+    {
+      "name": "Proxima Cen c",
+      "host_star": "Proxima Cen",
+      "raw": {
+        "pl_name": "Proxima Cen c",
+        "discoverymethod": "rv",
+        "period_days": 1900.0,
+        "semi_major_axis_au": 1.48,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "mass_mearth": 5.8,
+        "radius_rearth": null,
+        "reference": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed. Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) suggests true mass ~7 M_earth. CANDIDATE — existence unconfirmed; later analyses (e.g. 2022) cast doubt. Re-included as a documented candidate (never ingested into raw)."
+      },
+      "derived": {
+        "semi_major_axis_m": 221404848636.0,
+        "eccentricity": 0.0,
+        "inclination_deg": null,
+        "longitude_of_ascending_node_deg": null,
+        "argument_of_periapsis_deg": null,
+        "mean_anomaly_at_epoch_deg": null,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.463876e+25,
+        "mass_type": "msini",
+        "radius_m": null,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
+      },
+      "curated": {
+        "pl_name": "Proxima Cen c",
+        "orbital": [
+          {
+            "period_days": 1900.0,
+            "uncertainty_period_days": 96.0,
+            "semi_major_axis_au": 1.48,
+            "uncertainty_semi_major_axis_au": 0.08,
+            "eccentricity": 0.0,
+            "method": "rv",
+            "reference": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed. Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) suggests true mass ~7 M_earth. CANDIDATE — existence unconfirmed; later analyses (e.g. 2022) cast doubt. Re-included as a documented candidate (never ingested into raw).",
+            "bibcode": "2020SciA....6.7467D",
+            "doi": "10.1126/sciadv.aax7467",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 5.8,
+            "uncertainty_mearth": 1.9,
+            "mass_type": "msini",
+            "method": "rv",
+            "reference": "Damasso et al. 2020 — m sin i = 5.8 +/- 1.9 M_earth (RV minimum mass), T_eq ~ 39 K. Astrometric true mass ~7 M_earth (Benedict & McArthur 2020; Kervella et al. 2020).",
+            "bibcode": "2020SciA....6.7467D",
+            "doi": "10.1126/sciadv.aax7467",
+            "recommended": true
+          }
+        ]
+      }
     }
   ],
   "sources": [
@@ -451,7 +509,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "epoch propagation method"
       ]
@@ -460,7 +518,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -469,7 +527,7 @@
       "title": "Suárez Mascareño et al. 2025",
       "doi": "10.1051/0004-6361/202554723",
       "bibcode": "2025A&A...700A..11S",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "Proxima Cen mass (evolutionary_model)"
       ]
@@ -478,7 +536,7 @@
       "title": "Mann et al. 2019",
       "doi": "10.3847/1538-4357/aaf3bc",
       "bibcode": "2019ApJ...871...63M",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "Proxima Cen mass (spectroscopic_calibration)"
       ]
@@ -487,7 +545,7 @@
       "title": "Anglada-Escudé et al. 2016",
       "doi": "10.1038/nature19106",
       "bibcode": "2016Natur.536..437A",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "Proxima Cen mass (spectroscopic_calibration)"
       ]
@@ -496,7 +554,7 @@
       "title": "Demory et al. 2009",
       "doi": "10.1051/0004-6361/200911976",
       "bibcode": "2009A&A...505..205D",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "Proxima Cen radius (interferometry)"
       ]
@@ -505,7 +563,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "Proxima Cen radius (sed_fitting)"
       ]
@@ -514,14 +572,23 @@
       "title": "Faria et al. 2022",
       "doi": "10.1051/0004-6361/202142337",
       "bibcode": "2022A&A...658A.115F",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-06",
       "used_for": [
         "planet Proxima Cen d orbital"
+      ]
+    },
+    {
+      "title": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed. Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) suggests true mass ~7 M_earth. CANDIDATE — existence unconfirmed; later analyses (e.g. 2022) cast doubt. Re-included as a documented candidate (never ingested into raw).",
+      "doi": "10.1126/sciadv.aax7467",
+      "bibcode": "2020SciA....6.7467D",
+      "accessed": "2026-06-06",
+      "used_for": [
+        "planet Proxima Cen c orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-30",
+    "retrieval_date": "2026-06-06",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

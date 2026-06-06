@@ -1927,6 +1927,35 @@
           "recommended": true
         }
       ]
+    },
+    {
+      "pl_name": "Proxima Cen c",
+      "orbital": [
+        {
+          "period_days": 1900.0,
+          "uncertainty_period_days": 96.0,
+          "semi_major_axis_au": 1.48,
+          "uncertainty_semi_major_axis_au": 0.08,
+          "eccentricity": 0.0,
+          "method": "rv",
+          "reference": "Damasso et al. 2020 (Sci. Adv. 6, eaax7467) — RV candidate; P=5.21(+0.26/-0.22) yr (~1900 d), a=1.48+/-0.08 AU, circular orbit assumed. Astrometric follow-up (Kervella et al. 2020; Benedict & McArthur 2020) suggests true mass ~7 M_earth. CANDIDATE — existence unconfirmed; later analyses (e.g. 2022) cast doubt. Re-included as a documented candidate (never ingested into raw).",
+          "bibcode": "2020SciA....6.7467D",
+          "doi": "10.1126/sciadv.aax7467",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 5.8,
+          "uncertainty_mearth": 1.9,
+          "mass_type": "msini",
+          "method": "rv",
+          "reference": "Damasso et al. 2020 — m sin i = 5.8 +/- 1.9 M_earth (RV minimum mass), T_eq ~ 39 K. Astrometric true mass ~7 M_earth (Benedict & McArthur 2020; Kervella et al. 2020).",
+          "bibcode": "2020SciA....6.7467D",
+          "doi": "10.1126/sciadv.aax7467",
+          "recommended": true
+        }
+      ]
     }
   ],
   "ups And": [
@@ -6057,6 +6086,35 @@
           "mass_type": "msini",
           "method": "rv",
           "reference": "Ma et al. 2018 (Dharma Planet Survey) — m sin i; signal refuted Lubin/Burrows 2024",
+          "recommended": true
+        }
+      ]
+    }
+  ],
+  "Alpha Centauri A": [
+    {
+      "pl_name": "Alpha Centauri A b",
+      "orbital": [
+        {
+          "period_days": 912.0,
+          "semi_major_axis_au": 1.9,
+          "eccentricity": 0.4,
+          "method": "direct_imaging",
+          "reference": "Beichman et al. 2025 (arXiv:2508.03814, 'Worlds Next Door I') + Sanghi & Beichman et al. 2025 (arXiv:2508.03812, 'II') — JWST/MIRI 15.5um direct-imaging candidate 'S1', sep 1.5\" (~2 AU), detected Aug 2024, not recovered Feb/Apr 2025. Dynamically stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) or ~130deg (retrograde) wrt alpha Cen AB plane; representative P=2.5 yr / a~1.9 AU used here. CANDIDATE — would be 'alpha Cen Ab' if confirmed; possibly the counterpart of VLT/NEAR C1 (Wagner et al. 2021).",
+          "bibcode": "2025ApJ...989L..22B",
+          "doi": "10.3847/2041-8213/adf53f",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 120.0,
+          "mass_type": "imaging_photometric_estimate",
+          "radius_rearth": 11.8,
+          "method": "direct_imaging",
+          "reference": "Beichman et al. 2025 / Sanghi & Beichman et al. 2025 — photometric + orbit-constrained mass 90-150 M_earth (Saturn-class), radius ~1-1.1 R_Jup (~11.2-12.3 R_earth), T ~ 225 K, consistent with RV upper limits (Zhao et al. 2018). Single-roll detection; planet candidate, unconfirmed.",
+          "bibcode": "2025ApJ...989L..22B",
+          "doi": "10.3847/2041-8213/adf53f",
           "recommended": true
         }
       ]

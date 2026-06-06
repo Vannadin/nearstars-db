@@ -161,6 +161,45 @@ update the derived block's teff_k.
 Phase 3 synthesis should use ~2900 K for surface visual color
 temperature, not 3498 K.
 
+## 2026-06-06: candidate planets added (Proxima c, Alpha Cen A b "S1")
+
+User noticed the Alpha Cen system looked planet-light vs. what they read
+on Namu Wiki. Audit found two genuine gaps, both added as documented
+candidates (same pattern as tau Cet e / 40 Eri A b). Scripts:
+`phase3/_survey/add_proxima_c.py`, `add_alphacen_a_b.py`.
+
+**Proxima Cen c** — never ingested into raw (pipeline pulled only b & d).
+Candidate RV super-Earth, Damasso et al. 2020 (Sci. Adv. 6, eaax7467):
+m sin i 5.8±1.9 M⊕, P 5.21 yr (~1900 d), a 1.48±0.08 AU, circular orbit
+assumed, T_eq ~39 K. Astrometric true mass ~7 M⊕ (Benedict & McArthur
+2020; Kervella 2020). Existence unconfirmed; later analyses cast doubt
+(Namu Wiki notes this too). Recommended physical = Damasso m sin i
+(matches the discovery-RV precedent for divergence entries).
+
+- **No arXiv preprint** for Damasso 2020 (Science Advances). The standard
+  `fetch_arxiv_texts.py` (ar5iv) cannot retrieve it, so the full text was
+  cached manually from open-access PMC6962037 to
+  `docs/phase3/_papers/2020SciA_6_7467D.md`, keeping the recommended values
+  value-checkable against frozen text.
+- **No rings.** The popular "Proxima c may have rings" line traces to
+  Gratton et al. 2020's SPHERE imaging counterpart, which was itself
+  disputed/unconfirmed. Per the ring-fabrication guardrail, no `rings`
+  block was added — speculation kept out of the structured DB.
+
+**Alpha Cen A b** — candidate "S1" from JWST/MIRI direct imaging,
+Beichman et al. 2025 (arXiv:2508.03814 = 2025ApJ...989L..22B) + Sanghi &
+Beichman et al. 2025 (2508.03812 = ...L..23S). Both already cached. Single
+Aug-2024 roll detection at 1.5″ (~2 AU), not recovered Feb/Apr 2025; mass
+90–150 M⊕ (Saturn-class), radius ~1–1.1 R_Jup, T~225 K, e~0.4, P 2–3 yr.
+Representative orbital values used: P 2.5 yr (912 d), a 1.9 AU (Kepler-
+consistent with M_A=1.0788 M☉). `inclination_deg` omitted — the quoted
+~50°/130° is the *mutual* inclination wrt the AB plane, not line-of-sight.
+This candidate is NOT on Namu Wiki; surfaced from the 2025 papers.
+
+Both verified: `validate.py` FAIL 0, schema/canonical OK, emitted as
+curated-only planets (synth-raw path), data.json rebuilt. Phase 3
+synthesis of either planet is a separate follow-up.
+
 ## Related
 
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to
