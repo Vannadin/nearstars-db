@@ -6096,11 +6096,11 @@
       "pl_name": "Alpha Centauri A b",
       "orbital": [
         {
-          "period_days": 912.0,
-          "semi_major_axis_au": 1.9,
+          "period_days": 705.0,
+          "semi_major_axis_au": 1.6,
           "eccentricity": 0.4,
           "method": "direct_imaging",
-          "reference": "Beichman et al. 2025 (arXiv:2508.03814, 'Worlds Next Door I') + Sanghi & Beichman et al. 2025 (arXiv:2508.03812, 'II') — JWST/MIRI 15.5um direct-imaging candidate 'S1', sep 1.5\" (~2 AU), detected Aug 2024, not recovered Feb/Apr 2025. Dynamically stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) or ~130deg (retrograde) wrt alpha Cen AB plane; representative P=2.5 yr / a~1.9 AU used here. CANDIDATE — would be 'alpha Cen Ab' if confirmed; possibly the counterpart of VLT/NEAR C1 (Wagner et al. 2021).",
+          "reference": "Beichman et al. 2025 (arXiv:2508.03814, 'Worlds Next Door I') + Sanghi & Beichman et al. 2025 (arXiv:2508.03812, 'II') — JWST/MIRI 15.5um direct-imaging candidate 'S1', sep 1.5\" (~2 AU), detected Aug 2024, not recovered Feb/Apr 2025. Dynamically stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) or ~130deg (retrograde) wrt alpha Cen AB plane. Authors favor the a<2 AU family (a~1.6 AU, T_eq~225 K, better fits F1550C); a>2 AU family (a~2.1 AU, T_eq~195 K) allowed but disfavored. Representative a~1.6 AU / P~1.93 yr used here. CANDIDATE — would be 'alpha Cen Ab' if confirmed; possibly the counterpart of VLT/NEAR C1 (Wagner et al. 2021).",
           "bibcode": "2025ApJ...989L..22B",
           "doi": "10.3847/2041-8213/adf53f",
           "recommended": true

@@ -19,11 +19,16 @@ CANDIDATE — a single-roll detection; the authors explicitly call it a planet
 candidate that "would be alpha Cen Ab" only if confirmed. Recorded with that
 status in the reference note (same documented-candidate pattern as Proxima c).
 
-Representative orbital values used: P = 2.5 yr (912 d), a ~ 1.9 AU (Kepler-
-consistent with P and M_A = 1.0788 M_sun), e = 0.4. Line-of-sight inclination is
-NOT the quoted mutual inclination, so inclination_deg is omitted (mutual value
-kept in prose only). Both papers are cached at docs/phase3/_papers/2508.03814.md
-and 2508.03812.md.
+Representative orbital values used: a ~ 1.6 AU, P ~ 1.93 yr (705 d), e = 0.4.
+The authors FAVOR the a < 2 AU family (a ~ 1.6 AU, T_eq ~ 225 K) because the
+higher temperature better fits the F1550C brightness (Beichman 2025 sec 5.3);
+the a > 2 AU family (a ~ 2.1 AU, T_eq ~ 195 K) is allowed but disfavored. a/P
+are Kepler-consistent with M_A ~ 1.10 M_sun. (Earlier revisions used a ~ 1.9 AU,
+a midpoint that leaned toward the disfavored a > 2 family — reconciled to the
+favored family 2026-06-06 so the in-game orbit matches the Phase 3 synthesis.)
+Line-of-sight inclination is NOT the quoted mutual inclination, so
+inclination_deg is omitted (mutual value kept in prose only). Both papers are
+cached at docs/phase3/_papers/2508.03814.md and 2508.03812.md.
 """
 
 import json
@@ -40,7 +45,9 @@ ORB_REF = (
     "imaging candidate 'S1', sep 1.5\" (~2 AU), detected Aug 2024, not recovered "
     "Feb/Apr 2025. Dynamically stable orbit families P=2-3 yr, e~0.4, mutual "
     "inclination ~50deg (prograde) or ~130deg (retrograde) wrt alpha Cen AB "
-    "plane; representative P=2.5 yr / a~1.9 AU used here. CANDIDATE — would be "
+    "plane. Authors favor the a<2 AU family (a~1.6 AU, T_eq~225 K, better fits "
+    "F1550C); a>2 AU family (a~2.1 AU, T_eq~195 K) allowed but disfavored. "
+    "Representative a~1.6 AU / P~1.93 yr used here. CANDIDATE — would be "
     "'alpha Cen Ab' if confirmed; possibly the counterpart of VLT/NEAR C1 "
     "(Wagner et al. 2021)."
 )
@@ -54,8 +61,8 @@ PHY_REF = (
 entry = {
     "pl_name": "Alpha Centauri A b",
     "orbital": [{
-        "period_days": 912.0,
-        "semi_major_axis_au": 1.9,
+        "period_days": 705.0,
+        "semi_major_axis_au": 1.6,
         "eccentricity": 0.4,
         "method": "direct_imaging",
         "reference": ORB_REF,

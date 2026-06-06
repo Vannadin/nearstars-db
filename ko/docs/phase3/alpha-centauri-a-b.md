@@ -58,7 +58,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 |---|---|---|---|
 | `tidally_locked` | false | high | 1.1 M☉ 별 주위 ~1.6 AU 궤도. 조석 시간이 5.3 Gyr 나이를 훨씬 초과하므로 spin-orbit 결합 없음 |
 | `eccentricity` | 0.4 | medium | Beichman et al. 2025. 안정한 궤도 패밀리들이 네 해 전반에 걸쳐 e ≈ 0.33–0.46 으로 모임. 대표값 0.4 |
-| `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3. **a < 2 AU 패밀리가 선호됨** (더 높은 T_eq 가 F1550C 에 맞음). a ≈ 1.58–1.68 AU. DB Phase 2 대표값 (1.9 AU) 은 a > 2 패밀리 쪽으로 기움 — Open items 참조 (DB 정오) |
+| `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3. **a < 2 AU 패밀리가 선호됨** (더 높은 T_eq 가 F1550C 에 맞음). a ≈ 1.58–1.68 AU. Phase 2 DB 대표값을 1.9 AU 에서 1.6 AU (P 705 d) 로 조정해 이 선호 패밀리에 맞췄으므로, 인게임 궤도가 합성을 따름 |
 | `sidereal_period_yr` | ~2.0 | medium | Beichman et al. 2025. 2–3 년 범위. 선호되는 a ≈ 1.6 AU / 1.1 M☉ 에 대해 ~2 년 |
 | `mutual_inclination_deg` | 50 | medium | Beichman et al. 2025 (Table 4). α Cen AB 궤도면 (i_AB = 79.24°) 에 대한 경사. 순행 패밀리 ≈ 49–70°, 대표값 50°. 깨끗하고 물리적으로 의미 있는 경사 |
 | `inclination_deg` | ~55 (bimodal, weak) | low | Tie-break. 시선 방향 경사는 bimodal (≈ 55° 또는 ≈ 124°, 패밀리 의존. Beichman Table 4) 이라 단일하고 깨끗한 값이 아님. cfg 는 순행 ~55° 를 대표 궤도 기울기로 사용 |
@@ -68,7 +68,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `radius_rearth` | 11.2 | low | = 1.0 R_Jup |
 | `surface_gravity_g_earth` | ~0.96 | low | 유도. g = M/R² = 120/11.2² ≈ 0.96 g⊕ (log g ≈ 2.97 cgs). 논문이 가정한 log g 2.75–3.0 과 일관 |
 | `density_g_cc` | ~0.5 | low | 유도. 120 M⊕ 가 1.0 R_Jup 구에 들어가면 ≈ 0.47 g/cc. 저밀도 토성급 거대 행성 (참고: 토성 0.69) |
-| `insolation_s_earth` | 0.59 | medium | 유도. S = L/a² = 1.521 L☉ / (1.6 AU)² ≈ 0.59 S⊕ (a = 1.9 AU 면 ≈ 0.42 S⊕). 외곽 거주 가능 영역 (EEID ≈ 1.23 AU) 너머. 온화한 세계가 아니라 차가운 거대 행성 |
+| `insolation_s_earth` | 0.59 | medium | 유도. S = L/a² = 1.521 L☉ / (1.6 AU)² ≈ 0.59 S⊕ (비선호 a ≈ 2.1 AU 패밀리면 ≈ 0.34 S⊕). 외곽 거주 가능 영역 (EEID ≈ 1.23 AU) 너머. 온화한 세계가 아니라 차가운 거대 행성 |
 | `equilibrium_temp_k` | 225 | medium | Beichman et al. 2025. 선호되는 a < 2 AU 패밀리에 대해 A_B = 0.3, f = 1 의 플럭스 평균 T_eq (a > 2 AU 면 ~195 K). 재계산: a = 1.6 AU 에서 278.3 × (L/a²)^0.25 × 0.7^0.25 ≈ 224 K 로 일관 |
 | `effective_temp_k` | ~225 | medium | Beichman et al. 2025. 내부열 무시 가능 (T_int < 110 K, 목성/토성 아날로그). 복사 온도 ≈ 평형 온도로, 자체발광하는 ε Indi A b 와 다름 |
 | `bond_albedo` | 0.30 | medium | Beichman et al. 2025. T_eq 유도를 위해 뜨거운 목성형과 태양계 거대 행성 사이의 중간값으로 가정 |
@@ -225,8 +225,8 @@ cfg 는 **고리 두른** 해석을 렌더합니다. Beichman et al. 2025 §5.3 
 논문 내부의 두 번째 분기점은 **궤도 패밀리**입니다. cfg 는 선호되는
 a < 2 AU 패밀리 (a ≈ 1.6 AU, T_eq ≈ 225 K) 를 씁니다. a > 2 AU 패밀리
 (a ≈ 2.1 AU, T_eq ≈ 195 K) 는 허용되지만 비선호입니다 (더 낮은 T_eq 가
-F1550C 밝기에 덜 맞음). DB Phase 2 대표값 (1.9 AU) 은 그 사이에
-자리합니다 — Open items 참조.
+F1550C 밝기에 덜 맞음). Phase 2 DB 궤도는 이제 선호되는 a ≈ 1.6 AU
+패밀리로 설정돼 있습니다 (이전 1.9 AU 중간값에서 조정함).
 
 ## Bibliography
 
@@ -273,11 +273,11 @@ F1550C 밝기에 덜 맞음). DB Phase 2 대표값 (1.9 AU) 은 그 사이에
   확인을 위해서는 검출 가능 이격 범위로 돌아온 행성을 포착하는 JWST
   에포크 (다음 유리한 에포크에서 궤도의 ~52% 가 재검출 예측) 나 독립적인
   촬영 검출이 필요합니다. 반증되면 엔트리는 재분류되어야 합니다.
-- **DB 장반경 정오.** Phase 2 DB 궤도는 a = 1.9 AU (P = 2.5 년) 를 쓰며,
-  이는 **비선호** a > 2 AU 패밀리 쪽으로 기웁니다. 이 합성은 저자들이
-  선호하는 a ≈ 1.6 AU (T_eq ≈ 225 K) 를 씁니다. DB 대표값을 1.6 AU
-  쪽으로 조정하거나, 패밀리 모호성을 주석으로 다는 것을 권장합니다
-  (`alpha-centauri-a.md` 의 α Cen A 나이 정오와 같은 패턴).
+- **DB 장반경 (해결됨).** Phase 2 DB 궤도는 원래 a = 1.9 AU (P = 2.5 년)
+  를 썼는데, 이는 **비선호** a > 2 AU 패밀리 쪽으로 기우는 중간값이었습니다.
+  저자들이 선호하는 a ≈ 1.6 AU / P 705 d (T_eq ≈ 225 K) 로 조정해 인게임
+  궤도가 이 합성과 일치하도록 했습니다. a > 2 AU 패밀리 (a ≈ 2.1 AU) 는
+  비선호 대안으로 본문에만 남겨 둡니다.
 - **고리 대 팽창 반지름.** 고리 (`ring_present = true`) 와 고리 없는
   1.1 R_Jup 거대 행성은 동등한 논문 해석입니다
   (`## Canonical alternatives`). 분해된 영상이나 NIRCam 4–5 µm 측정

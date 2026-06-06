@@ -60,7 +60,7 @@ conditional on its existence and on the favored orbit family.
 |---|---|---|---|
 | `tidally_locked` | false | high | ~1.6 AU orbit around a 1.1 M☉ star — tidal timescale ≫ the 5.3 Gyr age; no spin–orbit coupling |
 | `eccentricity` | 0.4 | medium | Beichman et al. 2025 — stable orbit families cluster e ≈ 0.33–0.46 across the four solutions; representative 0.4 |
-| `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3 — the **a < 2 AU family is favored** (higher T_eq fits F1550C); a ≈ 1.58–1.68 AU. The DB Phase 2 representative (1.9 AU) leans toward the a > 2 family — see Open items (DB erratum) |
+| `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3 — the **a < 2 AU family is favored** (higher T_eq fits F1550C); a ≈ 1.58–1.68 AU. The Phase 2 DB representative was reconciled from 1.9 AU to 1.6 AU (P 705 d) to match this favored family, so the in-game orbit tracks the synthesis |
 | `sidereal_period_yr` | ~2.0 | medium | Beichman et al. 2025 — 2–3 yr range; ~2 yr for the favored a ≈ 1.6 AU / 1.1 M☉ |
 | `mutual_inclination_deg` | 50 | medium | Beichman et al. 2025 (Table 4) — inclination relative to the α Cen AB orbital plane (i_AB = 79.24°); prograde family ≈ 49–70°, representative 50°. The clean, physically meaningful inclination |
 | `inclination_deg` | ~55 (bimodal, weak) | low | Tie-break: the sky-plane inclination is bimodal (≈ 55° or ≈ 124°, family-dependent; Beichman Table 4) — not a single clean value. cfg uses the prograde ~55° as a representative orbit tilt |
@@ -70,7 +70,7 @@ conditional on its existence and on the favored orbit family.
 | `radius_rearth` | 11.2 | low | = 1.0 R_Jup |
 | `surface_gravity_g_earth` | ~0.96 | low | derived: g = M/R² = 120/11.2² ≈ 0.96 g⊕ (log g ≈ 2.97 cgs) — consistent with the paper's assumed log g 2.75–3.0 |
 | `density_g_cc` | ~0.5 | low | derived: 120 M⊕ in a 1.0 R_Jup sphere ≈ 0.47 g/cc — a low-density Saturn-class giant (cf. Saturn 0.69) |
-| `insolation_s_earth` | 0.59 | medium | derived: S = L/a² = 1.521 L☉ / (1.6 AU)² ≈ 0.59 S⊕ (at a = 1.9 AU, ≈ 0.42 S⊕). Beyond the outer HZ (EEID ≈ 1.23 AU) — a cold giant, not a temperate world |
+| `insolation_s_earth` | 0.59 | medium | derived: S = L/a² = 1.521 L☉ / (1.6 AU)² ≈ 0.59 S⊕ (the disfavored a ≈ 2.1 AU family gives ≈ 0.34 S⊕). Beyond the outer HZ (EEID ≈ 1.23 AU) — a cold giant, not a temperate world |
 | `equilibrium_temp_k` | 225 | medium | Beichman et al. 2025 — flux-averaged T_eq with A_B = 0.3, f = 1, for the favored a < 2 AU family (a > 2 AU gives ~195 K). Recompute: 278.3 × (L/a²)^0.25 × 0.7^0.25 ≈ 224 K at a = 1.6 AU — consistent |
 | `effective_temp_k` | ~225 | medium | Beichman et al. 2025 — internal heat negligible (T_int < 110 K, Jupiter/Saturn analog); the radiating temperature ≈ the equilibrium temperature, unlike the self-luminous ε Indi A b |
 | `bond_albedo` | 0.30 | medium | Beichman et al. 2025 — assumed intermediate between hot Jupiters and Solar-System giants for the T_eq derivation |
@@ -230,8 +230,8 @@ co-equal ring-free interpretation of the same F1550C brightness.
 A second within-paper fork is the **orbit family**: the cfg uses the
 favored a < 2 AU family (a ≈ 1.6 AU, T_eq ≈ 225 K). The a > 2 AU family
 (a ≈ 2.1 AU, T_eq ≈ 195 K) is allowed but disfavored (lower T_eq fits the
-F1550C brightness less well). The DB Phase 2 representative (1.9 AU) sits
-between them — see Open items.
+F1550C brightness less well). The Phase 2 DB orbital is now set to the
+favored a ≈ 1.6 AU family (reconciled from an earlier 1.9 AU midpoint).
 
 ## Bibliography
 
@@ -280,12 +280,12 @@ between them — see Open items.
   detectable separation range (~52% of orbits predict recovery on the next
   favourable epoch) or an independent imaging detection. If refuted, the
   entry should be reclassified.
-- **DB semi-major-axis erratum.** The Phase 2 DB orbital uses a = 1.9 AU
-  (P = 2.5 yr), which leans toward the **disfavored** a > 2 AU family. This
-  synthesis uses the authors' favored a ≈ 1.6 AU (T_eq ≈ 225 K). Recommend
-  reconciling the DB representative toward 1.6 AU, or annotating it with the
-  family ambiguity (same pattern as the α Cen A age erratum in
-  `alpha-centauri-a.md`).
+- **DB semi-major-axis (resolved).** The Phase 2 DB orbital originally used
+  a = 1.9 AU (P = 2.5 yr), a midpoint that leaned toward the **disfavored**
+  a > 2 AU family. It was reconciled to the authors' favored a ≈ 1.6 AU /
+  P 705 d (T_eq ≈ 225 K) so the in-game orbit matches this synthesis; the
+  a > 2 AU family (a ≈ 2.1 AU) is retained only in prose as the disfavored
+  alternative.
 - **Ring vs inflated radius.** The ring (`ring_present = true`) and the
   ring-free 1.1 R_Jup giant are co-equal paper readings
   (`## Canonical alternatives`). A resolved image or a NIRCam 4–5 µm
