@@ -1,0 +1,90 @@
+{
+  "system": "YZ Cet",
+  "star": {
+    "name": "YZ Cet",
+    "mass_msun": 0.13676491279105302
+  },
+  "planets": [
+    {
+      "name": "YZ Cet b",
+      "mass_msun": 2.10191460692235e-06,
+      "mass_kind": "msini",
+      "a_au": 0.01634,
+      "e": 0.06,
+      "inc_rad": 0.0,
+      "omega_rad": 3.4382986264288293,
+      "Omega_rad": 5.305658970563565,
+      "M_rad": 0.0
+    },
+    {
+      "name": "YZ Cet c",
+      "mass_msun": 3.423118074130684e-06,
+      "mass_kind": "msini",
+      "a_au": 0.02156,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 0.5235987755982988,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 0.0
+    },
+    {
+      "name": "YZ Cet d",
+      "mass_msun": 3.2729813164933736e-06,
+      "mass_kind": "msini",
+      "a_au": 0.02851,
+      "e": 0.07,
+      "inc_rad": 0.0,
+      "omega_rad": 3.490658503988659,
+      "Omega_rad": 2.642529177293657,
+      "M_rad": 0.0
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 43.437084913253784,
+    "dt_yr": 0.00011296110440901624,
+    "innermost_period_yr": 0.005648055220450812,
+    "energy_relative_error": 1.2525897467978974e-09,
+    "megno_final": 8.023923213060058
+  },
+  "per_body": {
+    "YZ Cet b": {
+      "a_min": 0.01632801717613011,
+      "a_max": 0.016352587130902752,
+      "e_min": 0.045183174659333775,
+      "e_max": 0.10202743438385682
+    },
+    "YZ Cet c": {
+      "a_min": 0.02155300744052314,
+      "a_max": 0.021590893325304648,
+      "e_min": 0.001431429846876301,
+      "e_max": 0.04058083528655022
+    },
+    "YZ Cet d": {
+      "a_min": 0.028469180034797627,
+      "a_max": 0.028520094893421277,
+      "e_min": 0.03354554668161452,
+      "e_max": 0.07518315743972091
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "YZ Cet b": {
+        "flags": [],
+        "status": "stable"
+      },
+      "YZ Cet c": {
+        "flags": [],
+        "status": "stable"
+      },
+      "YZ Cet d": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "chaotic_but_hill_stable",
+    "lyapunov_time_yr": 3320.095441561964,
+    "is_chaotic": true
+  }
+}

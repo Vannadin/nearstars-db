@@ -36,20 +36,26 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _planet_mass_msun(planet: dict) -> tuple[float, str]:
     """Return (mass_msun, mass_kind). mass_kind ∈ {true, msini}."""
-    phys = planet.get("curated", {}).get("physical", [])
-    rec = next((p for p in phys if p.get("recommended")), None)
-    if rec is None and phys:
-        rec = phys[-1]
+    # physical may be a list of measurements or a single collapsed dict in
+    # db/systems (mirror _planet_orbital's list/dict handling below).
+    phys = planet.get("curated", {}).get("physical")
+    if isinstance(phys, list):
+        rec = next((p for p in phys if p.get("recommended")), phys[-1] if phys else None)
+    elif isinstance(phys, dict):
+        rec = phys
+    else:
+        rec = None
     if rec is None:
         raise ValueError(f"No physical entry for {planet['name']}")
-    if "true_mass_mearth" in rec:
+    if rec.get("true_mass_mearth") is not None:
         return mearth_to_msun(rec["true_mass_mearth"]), "true"
-    if "mass_mearth" in rec:
+    if rec.get("mass_mearth") is not None:
         return mearth_to_msun(rec["mass_mearth"]), rec.get("mass_type", "msini").lower()
     raise ValueError(f"No mass on recommended physical for {planet['name']}")
 
 
-def _planet_orbital(planet: dict, rng: "random.Random | None" = None) -> dict[str, float]:
+def _planet_orbital(planet: dict, star_m_msun: float | None = None,
+                    rng: "random.Random | None" = None) -> dict[str, float]:
     """Return semi-major axis (AU), eccentricity, inclination (rad), omega, Omega, M (rad).
 
     Phases that are null in the DB get a deterministic random fill — required because
@@ -71,7 +77,14 @@ def _planet_orbital(planet: dict, rng: "random.Random | None" = None) -> dict[st
 
     a_au = rec.get("semi_major_axis_au") or raw.get("semi_major_axis_au")
     if a_au is None:
-        raise ValueError(f"No semi-major axis for {planet['name']}")
+        # TTV/RV planets may record only a period (e.g. AU Mic d, e). Derive a
+        # exactly via Kepler III in (AU, yr, Msun) units: a³ = M · P_yr².
+        period_days = rec.get("period_days") or raw.get("period_days")
+        if period_days is not None and star_m_msun is not None:
+            p_yr = period_days / 365.25
+            a_au = (star_m_msun * p_yr * p_yr) ** (1.0 / 3.0)
+        else:
+            raise ValueError(f"No semi-major axis or period for {planet['name']}")
 
     e = rec.get("eccentricity")
     if e is None:
@@ -125,7 +138,7 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.
     primary = sim.particles[star_name]
     for p in d.get("planets", []):
         m_msun, kind = _planet_mass_msun(p)
-        orb = _planet_orbital(p, rng=rng)
+        orb = _planet_orbital(p, star_m_msun=star_m_msun, rng=rng)
         sim.add(
             primary=primary,
             m=m_msun,

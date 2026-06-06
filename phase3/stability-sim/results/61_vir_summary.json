@@ -1,0 +1,90 @@
+{
+  "system": "61 Vir",
+  "star": {
+    "name": "61 Vir",
+    "mass_msun": 0.9297614685356879
+  },
+  "planets": [
+    {
+      "name": "61 Vir b",
+      "mass_msun": 1.5313949279005694e-05,
+      "mass_kind": "msini",
+      "a_au": 0.050201,
+      "e": 0.12,
+      "inc_rad": 0.0,
+      "omega_rad": 1.8325957145940461,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 5.305658970563565
+    },
+    {
+      "name": "61 Vir c",
+      "mass_msun": 5.4649779779981096e-05,
+      "mass_kind": "msini",
+      "a_au": 0.2175,
+      "e": 0.14,
+      "inc_rad": 0.0,
+      "omega_rad": 5.951572749300664,
+      "Omega_rad": 1.6268219212234332,
+      "M_rad": 2.642529177293657
+    },
+    {
+      "name": "61 Vir d",
+      "mass_msun": 6.87626349978883e-05,
+      "mass_kind": "msini",
+      "a_au": 0.476,
+      "e": 0.35,
+      "inc_rad": 0.0,
+      "omega_rad": 5.480333851262195,
+      "Omega_rad": 2.544276222803882,
+      "M_rad": 3.2124338172355777
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 20.210171937942505,
+    "dt_yr": 0.00023330335190619483,
+    "innermost_period_yr": 0.011665167595309741,
+    "energy_relative_error": 3.7792471130572736e-10,
+    "megno_final": 1.961952620679224
+  },
+  "per_body": {
+    "61 Vir b": {
+      "a_min": 0.0501997029697211,
+      "a_max": 0.050202320463366285,
+      "e_min": 0.1206796174097416,
+      "e_max": 0.39181532558031756
+    },
+    "61 Vir c": {
+      "a_min": 0.2174663726269075,
+      "a_max": 0.21756302479063178,
+      "e_min": 0.12244572510489712,
+      "e_max": 0.3653271494616607
+    },
+    "61 Vir d": {
+      "a_min": 0.4756756206515526,
+      "a_max": 0.47618843087519364,
+      "e_min": 0.24157653371717316,
+      "e_max": 0.34935657485273386
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "61 Vir b": {
+        "flags": [],
+        "status": "stable"
+      },
+      "61 Vir c": {
+        "flags": [],
+        "status": "stable"
+      },
+      "61 Vir d": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "stable",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

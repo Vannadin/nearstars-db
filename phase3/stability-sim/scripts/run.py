@@ -28,6 +28,16 @@ SYSTEMS = {
     "trappist_1": ("planetary", PROJECT_ROOT / "db/systems/trappist_1.json"),
     "proxima_cen": ("planetary", PROJECT_ROOT / "db/systems/proxima_cen.json"),
     "alpha_centauri": ("binary", PROJECT_ROOT / "db/systems"),
+    # Single-star multi-planet Phase 3 systems (generic planetary loader).
+    "55_cnc": ("planetary", PROJECT_ROOT / "db/systems/55_cnc.json"),
+    "61_vir": ("planetary", PROJECT_ROOT / "db/systems/61_vir.json"),
+    "au_mic": ("planetary", PROJECT_ROOT / "db/systems/au_mic.json"),
+    "barnards_star": ("planetary", PROJECT_ROOT / "db/systems/barnards_star.json"),
+    "hd_219134": ("planetary", PROJECT_ROOT / "db/systems/hd_219134.json"),
+    "hd_69830": ("planetary", PROJECT_ROOT / "db/systems/hd_69830.json"),
+    "tau_cet": ("planetary", PROJECT_ROOT / "db/systems/tau_cet.json"),
+    "teegardens_star": ("planetary", PROJECT_ROOT / "db/systems/teegardens_star.json"),
+    "yz_cet": ("planetary", PROJECT_ROOT / "db/systems/yz_cet.json"),
 }
 
 

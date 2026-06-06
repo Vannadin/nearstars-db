@@ -1,0 +1,111 @@
+{
+  "system": "tau Cet",
+  "star": {
+    "name": "tau Cet",
+    "mass_msun": 0.7827991718961759
+  },
+  "planets": [
+    {
+      "name": "tau Cet g",
+      "mass_msun": 5.254786517305875e-06,
+      "mass_kind": "msini",
+      "a_au": 0.133,
+      "e": 0.06,
+      "inc_rad": 0.0,
+      "omega_rad": 6.900002118126903,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 5.305658970563565
+    },
+    {
+      "name": "tau Cet h",
+      "mass_msun": 5.495005329525573e-06,
+      "mass_kind": "msini",
+      "a_au": 0.243,
+      "e": 0.23,
+      "inc_rad": 0.0,
+      "omega_rad": 0.13002702927357757,
+      "Omega_rad": 1.6268219212234332,
+      "M_rad": 2.642529177293657
+    },
+    {
+      "name": "tau Cet f",
+      "mass_msun": 1.1800749150292621e-05,
+      "mass_kind": "msini",
+      "a_au": 1.334,
+      "e": 0.16,
+      "inc_rad": 0.0,
+      "omega_rad": 2.0900317792632097,
+      "Omega_rad": 2.544276222803882,
+      "M_rad": 3.2124338172355777
+    },
+    {
+      "name": "tau Cet e",
+      "mass_msun": 1.1800749150292621e-05,
+      "mass_kind": "msini",
+      "a_au": 0.538,
+      "e": 0.18,
+      "inc_rad": 0.0,
+      "omega_rad": 4.924751778411374,
+      "Omega_rad": 2.994546979776625,
+      "M_rad": 1.9057700639797035
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 5.83066987991333,
+    "dt_yr": 0.0010964541624497977,
+    "innermost_period_yr": 0.05482270812248989,
+    "energy_relative_error": 8.151101999937619e-10,
+    "megno_final": 2.0011569265384437
+  },
+  "per_body": {
+    "tau Cet g": {
+      "a_min": 0.13299302430742146,
+      "a_max": 0.1330050873200945,
+      "e_min": 0.06101305615709733,
+      "e_max": 0.24390400245096475
+    },
+    "tau Cet h": {
+      "a_min": 0.24297208352670358,
+      "a_max": 0.2430209341436894,
+      "e_min": 0.0441739053144698,
+      "e_max": 0.22974387389846512
+    },
+    "tau Cet f": {
+      "a_min": 1.333864620472387,
+      "a_max": 1.3343444157039503,
+      "e_min": 0.1568316333495958,
+      "e_max": 0.15999249097355722
+    },
+    "tau Cet e": {
+      "a_min": 0.5379450597431995,
+      "a_max": 0.5380346557636398,
+      "e_min": 0.1800264263711714,
+      "e_max": 0.19279529869434583
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "tau Cet g": {
+        "flags": [],
+        "status": "stable"
+      },
+      "tau Cet h": {
+        "flags": [],
+        "status": "stable"
+      },
+      "tau Cet f": {
+        "flags": [],
+        "status": "stable"
+      },
+      "tau Cet e": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "stable",
+    "lyapunov_time_yr": 17287182.31920271,
+    "is_chaotic": false
+  }
+}

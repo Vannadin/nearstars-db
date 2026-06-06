@@ -1,0 +1,90 @@
+{
+  "system": "Teegarden's Star",
+  "star": {
+    "name": "Teegarden's Star",
+    "mass_msun": 0.08897717279535076
+  },
+  "planets": [
+    {
+      "name": "Teegarden's Star b",
+      "mass_msun": 3.483172777185608e-06,
+      "mass_kind": "msini",
+      "a_au": 0.0259,
+      "e": 0.03,
+      "inc_rad": 0.0,
+      "omega_rad": 5.899212871740834,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 5.305658970563565
+    },
+    {
+      "name": "Teegarden's Star c",
+      "mass_msun": 3.152871910383525e-06,
+      "mass_kind": "msini",
+      "a_au": 0.0455,
+      "e": 0.04,
+      "inc_rad": 0.0,
+      "omega_rad": 5.253441048502932,
+      "Omega_rad": 1.6268219212234332,
+      "M_rad": 2.642529177293657
+    },
+    {
+      "name": "Teegarden's Star d",
+      "mass_msun": 2.462242825251896e-06,
+      "mass_kind": "msini",
+      "a_au": 0.0791,
+      "e": 0.07,
+      "inc_rad": 0.0,
+      "omega_rad": 6.021385919380437,
+      "Omega_rad": 2.544276222803882,
+      "M_rad": 3.2124338172355777
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 16.90897297859192,
+    "dt_yr": 0.0002794785896478396,
+    "innermost_period_yr": 0.013973929482391982,
+    "energy_relative_error": 2.3309792044207905e-08,
+    "megno_final": 1.9999607548893334
+  },
+  "per_body": {
+    "Teegarden's Star b": {
+      "a_min": 0.025898184463297506,
+      "a_max": 0.025901048940484575,
+      "e_min": 0.014859842445016274,
+      "e_max": 0.09106916416946534
+    },
+    "Teegarden's Star c": {
+      "a_min": 0.04548662191772551,
+      "a_max": 0.045503989587081226,
+      "e_min": 0.003043898273318956,
+      "e_max": 0.07915462189202692
+    },
+    "Teegarden's Star d": {
+      "a_min": 0.07908680264377894,
+      "a_max": 0.0791350645116888,
+      "e_min": 0.010399273706534644,
+      "e_max": 0.07583605006618939
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Teegarden's Star b": {
+        "flags": [],
+        "status": "stable"
+      },
+      "Teegarden's Star c": {
+        "flags": [],
+        "status": "stable"
+      },
+      "Teegarden's Star d": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "stable",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

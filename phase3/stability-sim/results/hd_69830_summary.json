@@ -1,0 +1,90 @@
+{
+  "system": "HD 69830",
+  "star": {
+    "name": "HD 69830",
+    "mass_msun": 0.8627786530605361
+  },
+  "planets": [
+    {
+      "name": "HD 69830 b",
+      "mass_msun": 3.062789855801139e-05,
+      "mass_kind": "msini",
+      "a_au": 0.0785,
+      "e": 0.1,
+      "inc_rad": 0.0,
+      "omega_rad": 5.934119456780721,
+      "Omega_rad": 5.305658970563565,
+      "M_rad": 0.0
+    },
+    {
+      "name": "HD 69830 c",
+      "mass_msun": 3.543227480240533e-05,
+      "mass_kind": "msini",
+      "a_au": 0.186,
+      "e": 0.13,
+      "inc_rad": 0.0,
+      "omega_rad": 3.857177646907468,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 0.0
+    },
+    {
+      "name": "HD 69830 d",
+      "mass_msun": 5.4349506264706485e-05,
+      "mass_kind": "msini",
+      "a_au": 0.63,
+      "e": 0.07,
+      "inc_rad": 0.0,
+      "omega_rad": 3.9095375244672983,
+      "Omega_rad": 2.642529177293657,
+      "M_rad": 0.0
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "elapsed_sec": 10.11596393585205,
+    "dt_yr": 0.0004735796011643664,
+    "innermost_period_yr": 0.02367898005821832,
+    "energy_relative_error": 4.998369708366128e-10,
+    "megno_final": 1.9975776164307864
+  },
+  "per_body": {
+    "HD 69830 b": {
+      "a_min": 0.07849881130773638,
+      "a_max": 0.0785025159947894,
+      "e_min": 0.08285835673856252,
+      "e_max": 0.20029503362211892
+    },
+    "HD 69830 c": {
+      "a_min": 0.18599461438139808,
+      "a_max": 0.18605493684460714,
+      "e_min": 0.015548018778988888,
+      "e_max": 0.1426136474485678
+    },
+    "HD 69830 d": {
+      "a_min": 0.6298065844065678,
+      "a_max": 0.63030058474329,
+      "e_min": 0.06467176666335407,
+      "e_max": 0.07136523124028797
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "HD 69830 b": {
+        "flags": [],
+        "status": "stable"
+      },
+      "HD 69830 c": {
+        "flags": [],
+        "status": "stable"
+      },
+      "HD 69830 d": {
+        "flags": [],
+        "status": "stable"
+      }
+    },
+    "overall": "stable",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}
