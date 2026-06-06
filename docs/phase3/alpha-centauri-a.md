@@ -30,8 +30,9 @@ rotation period from photometric variability is 22 ± 3 days (DeWarf
 log R'HK = −4.95 — quiet, but with a Sun-like coronal cycle of roughly
 19 years detected in X-rays by Robrade 2016. There is no confirmed
 planet around α Cen A; Beichman & Sanghi 2025 reported a candidate
-giant point source in MIRI direct-imaging at ≈ 1.5 AU separation,
-which remains unconfirmed at the time of this synthesis.
+giant point source ("S1") in MIRI direct-imaging at ≈ 1.5 AU
+separation, which remains unconfirmed but is now cataloged as a
+documented candidate with its own synthesis (see α Centauri A b).
 
 **Scenario choice for NearStars: a quiet, Sun-like G2V star slightly
 brighter and warmer than Sol, viewed in close visual proximity to its
