@@ -41,7 +41,8 @@
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
     "phase3": {
-      "★": "phase3/alpha-centauri-a.html"
+      "★": "phase3/alpha-centauri-a.html",
+      "b": "phase3/alpha-centauri-a-b.html"
     }
   },
   "Alpha Centauri B": {
@@ -136,6 +137,7 @@
     "phase3": {
       "★": "phase3/proxima-cen.html",
       "b": "phase3/proxima-cen-b.html",
+      "c": "phase3/proxima-cen-c.html",
       "d": "phase3/proxima-cen-d.html"
     }
   },

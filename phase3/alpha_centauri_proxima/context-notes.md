@@ -580,3 +580,82 @@ strength 범위 (Zuluaga 2018 의 광범위한 plausibility window 내 선택).
 ## Related
 
 - [system-alpha-cen entity pages](../../docs/phase3/alpha-centauri-a.md) — parent topic this workspace contributes to
+
+---
+
+# 2026-06-06 — Continuation: Proxima c + Alpha Cen A b (2 new candidate planets)
+
+Phase 2 curated in commit b035284 (msini/orbit for both). This pass adds
+the two missing **planet-level** Phase 3 reports. Structural base:
+`docs/phase3/eps-ind-a-b.md` (cold gas-giant field set — both are
+envelope-dominated, no solid surface).
+
+Deep-read sources (all cached, no live network):
+- Proxima c: `2020SciA_6_7467D.md` (Damasso 2020, the only primary; arXiv-less).
+  Disputers in cache: NIRPS 2025 `2507.21751`, Artigau 2022 (via NIRPS), ESPRESSO
+  baseline-too-short non-tests (`2005.12114`, `2202.05188`).
+- Alpha Cen A b: `2508.03814` (Beichman I) + `2508.03812` (Sanghi & Beichman II).
+
+## Recomputed derived numbers (verified against curated L, a)
+
+- Proxima c: L=0.001567, a=1.48 → S = 7.2e-4 S⊕; T_eq(A=0)=45.5 K, (A=0.3)=41.6 K
+  (Damasso headline T_eq = 39 +16/-18 K — consistent). True mass ~14 M⊕ (mid 10-20,
+  Kervella 2020 PMa via Damasso); msini 5.8 M⊕. Neptune-analog radius ~3.8 R⊕,
+  g~1.0 g⊕, ρ~1.4 g/cc. Star ang. diam from c ≈ 0.051°.
+- Alpha Cen A b: L=1.521, a=1.6 (authors favor a<2 family) → S=0.59 S⊕;
+  T_eq(A=0.3)=224 K ≈ Beichman 225 K. [DB representative a=1.9 → T_eq 205 K; the
+  1.9/2.5yr leans a>2 family. Reconcile DB toward 1.6 AU — Open item, alpha-cen-a.md
+  age-erratum precedent.] Mass 120 M⊕ (=0.38 M_Jup; range 90-150); ring-model
+  R=1.0 R_Jup=11.2 R⊕, g~0.96 g⊕ (log g 2.97 ✓ paper 2.75-3.0), ρ~0.47 g/cc.
+  Star ang. diam from b ≈ 0.41°.
+
+## Ring decision — Alpha Cen A b (guardrail check PASSED)
+
+Beichman §5.3 explicitly offers a **ring model** as a co-equal interpretation of
+the F1550C brightness: a smaller (~1 R_Jup, ~120 M⊕) planet + optically thick
+circumplanetary ring, cross-section ~64,000 km ≈ 0.9 R_Jup (half Saturn's ring
+extent), Roche zone 1.4-2.5 R_p, ring T 209-257 K, **A_B=0.1 (asteroid-like →
+DARK rocky ring, not bright icy)**. This is PAPER-GROUNDED (passes the
+ring-fabrication guardrail — search-and-verify found a real source). cfg picks
+the ringed reading (interesting-first + distinctive), ring-free 1.1 R_Jup
+inflated giant as Canonical alternative.
+
+Contrast: Proxima c ring story = circumstellar dust-ring debate (Anglada 2017 /
+MacGregor 2018) + Gratton 2020 disputed SPHERE counterpart. NO planet-specific
+ring evidence → ring_present = false (guardrail holds).
+
+## Step 9.0 row classification
+
+### Proxima c (~24 rows) — cold Neptune-class ice giant, CONTESTED candidate
+- canonical-aligned: tidally_locked(false), eccentricity(0, Damasso-fixed),
+  semi_major_axis(1.48), period(1900d), insolation, equilibrium_temp,
+  ring_present(false), ring_observed(false), star_apparent_angular_diameter,
+  stellar_illumination_color_temp.  (~10)
+- tie-break (interesting-first, lit silent): mass-reading(~14 M⊕ ice-giant true mass
+  over msini 5.8), radius, density, surf-grav, atmosphere_present, ref_pressure,
+  atmosphere_composition(CH4 Neptune-class), atmosphere/cloud tint(deep blue),
+  cloud cover/morph, rotation(~16h Neptune), obliquity(~28° Neptune),
+  magnetic_field, aurora_present(tentative, flare-star-driven, low). (~13)
+- documented-divergence: 0 formal rows, BUT mass/nature fork → `## Canonical
+  alternatives` row for the rocky-super-Earth (5.8 M⊕, thin/no envelope) reading.
+- Overall framing: CONTESTED — NIRPS 2025 + Artigau 2022 fail to recover; included
+  as documented candidate (tau Cet e / 40 Eri A b pattern). Confidence skews low.
+
+### Alpha Cen A b (~26 rows) — temperate Saturn-class gas giant WITH rings, single-roll candidate
+- canonical-aligned: tidally_locked(false), eccentricity(0.4), semi_major_axis(1.6,
+  favored family), period(~2yr), mass(120 M⊕), insolation, equilibrium_temp(225),
+  bond_albedo(0.3 Beichman), atmosphere_present, atmosphere_composition(enhanced
+  [M/H], H2O clouds), star_apparent_angular_diameter, stellar_illumination_color_temp,
+  mutual_inclination(prograde 50°). (~13)
+- tie-break: radius(1.0 R_Jup ring-reading), density, surf-grav, ref_pressure,
+  atmosphere/cloud tint(pale water-cloud giant), cloud cover/morph, rotation(~10h),
+  obliquity(~27°, ring plane), magnetic_field, aurora_present(weak/false, quiet
+  G2V wind), ring geometry rows. (~12)
+- documented-divergence: ring_present(true) — `## Canonical alternatives` row for
+  the ring-free 1.1 R_Jup inflated-giant reading (co-equal in Beichman §5.3).
+- Open-items DB erratum: semi_major_axis representative 1.9 → reconcile to 1.6 AU.
+
+Both reports: heavy tie-break ratio is expected — candidate planets with only
+orbit+msini measured. interesting-first picks all physically gated (Neptune-analog
+for the cold ice giant; water-cloud temperate giant + paper-grounded ring for the
+Saturn-class). No lava, no fabricated features.
