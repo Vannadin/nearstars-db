@@ -518,7 +518,13 @@ def derive_body_palette(slug: str, db: dict):
         return None
     if not parse_present(dec["atmosphere_present"]):
         return None
-    pressure_raw = dec.get("atmosphere_surface_pressure_pa") or dec.get("atmosphere_pressure_pa")
+    # Gas/ice giants have no solid surface, so Phase 3 records their cfg-reference
+    # level under atmosphere_reference_pressure_pa instead of *_surface_pressure_pa.
+    # Mirror emit_firefly_cfg.py's lookup so the visualizer shows the same bodies
+    # the cfg writer actually emits.
+    pressure_raw = (dec.get("atmosphere_surface_pressure_pa")
+                    or dec.get("atmosphere_pressure_pa")
+                    or dec.get("atmosphere_reference_pressure_pa"))
     if not pressure_raw:
         return None
     pressure_pa = parse_pressure_pa(pressure_raw)
