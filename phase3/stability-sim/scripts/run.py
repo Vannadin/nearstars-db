@@ -54,9 +54,15 @@ def build(system: str, hyp_path: Path | None):
     return sim, meta
 
 
-def configure_integrator(sim: rebound.Simulation, meta: dict):
-    """Set WHFast + MEGNO with dt = P_innermost / 50."""
-    sim.integrator = "whfast"
+def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = "whfast"):
+    """Set the integrator with dt = P_innermost / 50.
+
+    MEGNO needs variational equations (WHFast / IAS15). TRACE does not support
+    them, so it is skipped there and the verdict falls back to a/e-drift bounds
+    + energy error — which is exactly what's wanted for close-encounter /
+    high-e cases TRACE is chosen for.
+    """
+    sim.integrator = integrator
     # innermost orbit period — particles[1:] excludes the central body
     periods = []
     for p in sim.particles[1:]:
@@ -64,12 +70,17 @@ def configure_integrator(sim: rebound.Simulation, meta: dict):
             periods.append(2 * math.pi * math.sqrt(p.a**3 / (sim.G * sim.particles[0].m)))
     p_min = min(periods) if periods else 1.0
     sim.dt = p_min / 50.0
-    sim.init_megno(seed=42)
+    megno_enabled = integrator != "trace"
+    if megno_enabled:
+        sim.init_megno(seed=42)
+    meta["megno_enabled"] = megno_enabled
+    meta["integrator"] = integrator
     return p_min
 
 
-def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snapshots: int):
-    p_min = configure_integrator(sim, meta)
+def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snapshots: int,
+                    integrator: str = "whfast"):
+    p_min = configure_integrator(sim, meta, integrator)
     e0 = sim.energy()
     bodies = [meta["star"]["name"]] + [p["name"] for p in meta["planets"]]
     bodies += [h["name"] for h in meta.get("hypotheticals", [])]
@@ -108,10 +119,11 @@ def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snap
     elapsed = time.time() - t0
     e1 = sim.energy()
     de = abs((e1 - e0) / e0) if e0 != 0 else float("nan")
-    megno = sim.megno()
+    megno = sim.megno() if meta.get("megno_enabled", True) else None
 
     return {
         "elapsed_sec": elapsed,
+        "integrator": meta.get("integrator", "whfast"),
         "dt_yr": sim.dt,
         "innermost_period_yr": p_min,
         "energy_relative_error": de,
@@ -153,8 +165,8 @@ def verdict(report: dict, t_end_yr: float) -> dict:
                 b["status"] = "flagged"
 
     megno = report["megno_final"]
-    chaos = megno > 5
-    lyap_yr = 2.0 * t_end_yr / (megno - 2.0) if megno > 2.0 else float("inf")
+    chaos = (megno is not None) and (megno > 5)
+    lyap_yr = 2.0 * t_end_yr / (megno - 2.0) if (megno is not None and megno > 2.0) else float("inf")
 
     if dyn_unstable:
         overall = "unstable"
@@ -212,7 +224,10 @@ def print_report(meta: dict, report: dict, judgment: dict):
     print(f"  dt = {report['dt_yr']*365.25:.4f} d   (P_inner = {report['innermost_period_yr']*365.25:.3f} d)")
     print(f"  elapsed: {report['elapsed_sec']:.1f} s")
     print(f"  |ΔE/E|  = {report['energy_relative_error']:.2e}")
-    print(f"  MEGNO   = {report['megno_final']:.3f}  (≈2 → regular)")
+    if report["megno_final"] is not None:
+        print(f"  MEGNO   = {report['megno_final']:.3f}  (≈2 → regular)")
+    else:
+        print(f"  MEGNO   = n/a  ({report.get('integrator','?')}: no variational eqs → a/e-drift verdict)")
     if judgment["is_chaotic"]:
         print(f"  Lyapunov ≈ {judgment['lyapunov_time_yr']:.1f} yr  (formal chaos detected)")
     print(f"  verdict: {judgment['overall'].upper()}")
@@ -235,10 +250,14 @@ def main():
     ap.add_argument("--hypotheticals", type=Path, default=None,
                     help="Path to a hypotheticals JSON (optional)")
     ap.add_argument("--out-dir", type=Path, default=ROOT / "results")
+    ap.add_argument("--integrator", choices=["whfast", "trace", "ias15"], default="whfast",
+                    help="whfast (default, fast symplectic + MEGNO); trace "
+                         "(accurate through close encounters / high-e, no MEGNO); "
+                         "ias15 (adaptive high-order gold standard + MEGNO, slow)")
     args = ap.parse_args()
 
     sim, meta = build(args.system, args.hypotheticals)
-    report = run_integration(sim, meta, args.years, args.snapshots)
+    report = run_integration(sim, meta, args.years, args.snapshots, args.integrator)
     judgment = verdict(report, args.years)
     print_report(meta, report, judgment)
     paths = save_results(args.system, meta, report, judgment, args.out_dir.resolve())
