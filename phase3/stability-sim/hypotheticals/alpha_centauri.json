@@ -1,0 +1,17 @@
+{
+  "_comment": "Hypothetical habitable moon test for Alpha Centauri A b (the real-life Polyphemus candidate, Beichman 2025). Pandora is the fictional Na'vi homeworld from Avatar (James Cameron) — canonically the 5th moon of the gas giant Polyphemus in Alpha Centauri A's habitable zone. This tests whether an Avatar-Pandora-mass moon stays Hill-bound around the HZ-stable Polyphemus orbit (run with --acen-a-au 1.4 --acen-e 0.05 --acen-incl-deg 0).",
+  "system": "alpha_centauri",
+  "bodies": [
+    {
+      "name": "Pandora",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 225000,
+      "eccentricity": 0.0,
+      "inclination_deg": 0.0,
+      "mass_kg": 2.687e24,
+      "radius_km": 4778,
+      "_design_note": "Avatar canon: mass ~0.45 M_earth, radius ~0.75 R_earth, 0.8 g. Pandora is tidally locked to Polyphemus, so its ~27 h day = its orbital period; Kepler back-out around a 120 M_earth planet gives a = 225,000 km. That puts Polyphemus ~36 deg across Pandora's sky (the films' dramatic skyline) at ~0.02 R_Hill (R_Hill ~1e7 km at 1.4 AU around 1.1 M_sun) -> deep inside the Domingos+2006 ~0.5 R_Hill limit, very stable. inclination_deg is relative to the planet's orbital plane (Pandora orbits in Polyphemus's equatorial plane; canon axial tilt 29 deg)."
+    }
+  ]
+}

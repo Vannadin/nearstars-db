@@ -303,12 +303,25 @@ def add_hypotheticals(sim: rebound.Simulation, meta: dict, hyp_path: Path) -> li
             body["_hill_fraction_initial"] = None
             body["_r_hill_km"] = None
 
+        # Moons are specified relative to their PARENT's orbital plane, not the
+        # sim reference frame. Offset by the parent's orbital inc/Omega so an
+        # inclination_deg=0 moon is coplanar with its planet's orbit. This
+        # matters when the planet's orbit is itself inclined (e.g. the alpha Cen
+        # binary plane sits ~79 deg from the sim reference) — otherwise a "flat"
+        # moon would be wildly inclined to its planet's orbit and spuriously
+        # Kozai-pumped by the star. (Planetary-loader planets sit near the
+        # reference plane, so this is a no-op there.)
+        base_inc, base_Omega = 0.0, 0.0
+        if body.get("type") == "moon":
+            po = parent.orbit(primary=sim.particles[meta["star"]["name"]])
+            base_inc, base_Omega = po.inc, po.Omega
         sim.add(
             primary=parent,
             m=m_msun,
             a=a_au,
             e=body.get("eccentricity", 0.0),
-            inc=math.radians(body.get("inclination_deg", 0.0)),
+            inc=base_inc + math.radians(body.get("inclination_deg", 0.0)),
+            Omega=base_Omega,
             name=body["name"],
         )
         added.append(
