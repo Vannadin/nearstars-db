@@ -62,10 +62,10 @@ conditional on its existence and on the favored orbit family.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `tidally_locked` | false | high | ~1.6 AU orbit around a 1.1 M☉ star — tidal timescale ≫ the 5.3 Gyr age; no spin–orbit coupling |
-| `eccentricity` | 0.1 | medium | NearStars stability-selected (median of the HZ-stable range 0–0.22 from a REBOUND/TRACE scan). The Beichman-observed e ≈ 0.4 (families 0.33–0.46) is Kozai-unstable at the observed inclination — see Canonical alternatives |
+| `eccentricity` | 0.1 | medium | NearStars stability-selected (median of the HZ-stable range 0–0.18 from a REBOUND/IAS15 scan). The Beichman-observed e ≈ 0.4 (families 0.33–0.46) is Kozai-unstable at the observed inclination — see Canonical alternatives |
 | `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3 — the **a < 2 AU family is favored** (higher T_eq fits F1550C); a ≈ 1.58–1.68 AU. The Phase 2 DB representative was reconciled from 1.9 AU to 1.6 AU (P 705 d) to match this favored family, so the in-game orbit tracks the synthesis |
 | `sidereal_period_yr` | ~2.0 | medium | Beichman et al. 2025 — 2–3 yr range; ~2 yr for the favored a ≈ 1.6 AU / 1.1 M☉ |
-| `mutual_inclination_deg` | 16 | medium | NearStars stability-selected (median of the HZ-stable range 0–33°). Beichman Table 4 gives the OBSERVED ≈50° (prograde) / ≈130° (retrograde) wrt the α Cen AB plane (i_AB = 79.24°), but ≳35° is Kozai-unstable — see Canonical alternatives |
+| `mutual_inclination_deg` | 16 | medium | NearStars stability-selected (median of the HZ-stable range 0–35° from a REBOUND/IAS15 scan). Beichman Table 4 gives the OBSERVED ≈50° (prograde) / ≈130° (retrograde) wrt the α Cen AB plane (i_AB = 79.24°), but ≳35° drives the orbit out of the HZ and ≳45° is Kozai-unstable — see Canonical alternatives |
 | `inclination_deg` | unset | low | The constrained quantity is the mutual inclination to the AB plane (row above); the sky-plane inclination is bimodal/weak (Beichman Table 4). cfg-frame inclination left as an open item |
 | `mass_mearth` | 120 | medium | Beichman et al. 2025 — Saturn-class, 90–150 M⊕ (Saturn = 95); ring-model solution ~120 M⊕. Atmosphere fits restricted to log g 2.5–3.0 to respect RV limits (Zhao 2018: M sin i < 100 M⊕ for P ≲ 1000 d) |
 | `mass_mjup` | 0.38 | medium | = 120 M⊕ / 317.8 |
@@ -230,7 +230,7 @@ co-equal ring-free interpretation of the same F1550C brightness.
 | cfg pick | Canonical alternative | Why cfg diverges |
 |---|---|---|
 | `ring_present = true`, `radius_rjup = 1.0` (smaller planet + optically thick dark ring) | **Ring-free inflated giant: `radius_rjup ≈ 1.1–1.15`, no ring** — the atmosphere-only best fit (Beichman §5.2). The larger radius alone supplies the cross-section that produces the F1550C brightness | Both are explicitly offered by Beichman as fitting the data equally; §5.3 notes 1.1 R_Jup is "more commonly observed for hotter planets" and is only plausible for a mature giant if rapidly rotating / pole-on, which motivates the ring alternative. The cfg picks the ring for visual distinctiveness (interesting-first), since it is paper-grounded and the more striking render. Users preferring the conservative reading should set `ring_present = false` and `radius_rjup = 1.1` |
-| `eccentricity = 0.1`, `mutual_inclination = 16°` (stability-selected) | **Observed (Beichman): e ≈ 0.4, mutual inclination ≈ 50°** — the favored imaging-fit orbit | The observed orbit is Kozai-Lidov **unstable**: eccentric KL pumps e → ~0.998 within a few kyr, periastron crashes to ~1 stellar radius (tidal disruption; REBOUND/TRACE, see `STABILITY_REPORT.md`). NearStars takes the median of the HZ-stable range instead. A second canonical reading — Avatar's 1.2 AU — is also unstable (secular resonance, e → 0.64) |
+| `eccentricity = 0.1`, `mutual_inclination = 16°` (stability-selected) | **Observed (Beichman): e ≈ 0.4, mutual inclination ≈ 50°** — the favored imaging-fit orbit | The observed orbit is Kozai-Lidov **unstable**: eccentric KL pumps e past 0.95 within ~30 kyr, periastron then crashing below the stellar radius over ~10⁵ yr (tidal disruption; REBOUND/IAS15, see `STABILITY_REPORT.md`). NearStars takes the median of the HZ-stable range instead. The Avatar canon 1.2 AU is a separate reading — dynamically stable but interior to α Cen A's HZ (too warm), so 1.6 AU is the nearest robust HZ orbit |
 
 A second within-paper fork is the **orbit family**: the cfg uses the
 favored a < 2 AU family (a ≈ 1.6 AU, T_eq ≈ 225 K). The a > 2 AU family
@@ -254,15 +254,15 @@ exactly such habitable-zone moons.
 This is naming/lore context only, kept separate from the measured science
 above. But the dynamical question it raises is real and is answered in
 `phase3/stability-sim`: can a Pandora-class habitable moon survive here? A
-REBOUND/TRACE scan shows the observed eccentric/inclined orbit is
+REBOUND/IAS15 scan shows the observed eccentric/inclined orbit is
 Kozai-unstable (see Canonical alternatives), while the stability-selected
 orbit this synthesis uses (a = 1.6 AU, e = 0.1, mutual inclination ≈ 16°)
 keeps Polyphemus in the HZ over 10⁵ yr and hosts a Hill-stable Pandora-mass
 moon (0.45 M⊕) at ~225 000 km — a ~27 h tidally-locked day with Polyphemus
 spanning ~36° of its sky. The Avatar setup is dynamically viable, just not
 on the favored *observed* orbit. The Avatar canon places Polyphemus at
-1.2 AU, but that distance is unusable here (a secular resonance pumps
-e → 0.64); 1.6 AU is the nearest robust HZ orbit.
+1.2 AU; that orbit is dynamically stable but sits interior to α Cen A's
+habitable zone (too warm), so 1.6 AU is the nearest robust HZ orbit.
 
 ## Bibliography
 
@@ -319,16 +319,16 @@ e → 0.64); 1.6 AU is the nearest robust HZ orbit.
   alternative.
 - **Dynamical stability (Kozai-Lidov) — resolved.** The orbit is now
   **stability-selected** (e = 0.1, mutual i ≈ 16°), the median of the
-  HZ-stable range from a REBOUND/TRACE scan (`phase3/stability-sim`, see
+  HZ-stable range from a REBOUND/IAS15 scan (`phase3/stability-sim`, see
   `STABILITY_REPORT.md`): it keeps the planet in α Cen A's habitable zone
-  (1.37–1.84 AU) over 10⁵ yr and hosts a Hill-stable Pandora-mass moon. The
-  Beichman-observed e ≈ 0.4 / mutual i ≈ 50° orbit is **Kozai-Lidov
-  unstable** (eccentric KL pumps e → ~0.998 within a few kyr, periastron
-  crashes to ~one stellar radius — tidal disruption) and is retained only as
-  the unstable canonical alternative. The one remaining open item is the
-  cfg-frame inclination: the constrained quantity is the mutual inclination
-  to the AB plane (≈16°), which still needs converting to the system-frame
-  value for the cfg.
+  (orbit 1.345–1.854 AU, e_max 0.157, MEGNO 2.000) over 10⁵ yr and hosts a
+  Hill-stable Pandora-mass moon. The Beichman-observed e ≈ 0.4 / mutual
+  i ≈ 50° orbit is **Kozai-Lidov unstable** (eccentric KL pumps e past 0.95
+  within ~30 kyr, periastron then crashing below the stellar radius over
+  ~10⁵ yr — tidal disruption) and is retained only as the unstable canonical
+  alternative. The one remaining open item is the cfg-frame inclination: the
+  constrained quantity is the mutual inclination to the AB plane (≈16°), which
+  still needs converting to the system-frame value for the cfg.
 - **Ring vs inflated radius.** The ring (`ring_present = true`) and the
   ring-free 1.1 R_Jup giant are co-equal paper readings
   (`## Canonical alternatives`). A resolved image or a NIRCam 4–5 µm

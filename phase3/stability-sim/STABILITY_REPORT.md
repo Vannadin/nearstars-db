@@ -3,7 +3,9 @@
 **Generated:** 2026-06-07
 **Integrator policy:** REBOUND 5.0 **WHFast + MEGNO** as the fast first-pass
 screen; **TRACE** (Lu, Hernandez & Rein 2024) re-verification for any system
-WHFast flags chaotic or unstable. **IAS15** available for spot-checks.
+WHFast flags chaotic or unstable. **IAS15** for spot-checks — and as the
+*canonical* integrator for α Cen, whose forcing is secular (a far, massive,
+eccentric companion) rather than close-encounter, where TRACE is inaccurate.
 **Horizon:** 10,000 yr (Principia play window).
 **Phase initialisation:** `raw.omega_deg` from DB where available; Ω and M
 randomised with a deterministic seed (`phase_seed=0`).
@@ -39,6 +41,12 @@ inaccurate during close encounters — it can report a *spurious* ejection
 no MEGNO. So WHFast supplies the chaos flag and TRACE supplies the
 trustworthy a/e outcome for the flagged systems; the canonical result for a
 flagged system uses TRACE, with its WHFast MEGNO carried in the table below.
+**The exception is α Cen**, where the perturbation is *secular* (the far,
+massive, eccentric companion B) not a close encounter — TRACE is built for the
+latter and is inaccurate here (|ΔE/E| ≈ 3.6×10⁻³, with a spurious semi-major-axis
+drift), so the canonical α Cen integrator is **IAS15** (|ΔE/E| ≈ 1×10⁻¹³,
+MEGNO ≈ 2). It is adaptive, so it also sidesteps the fixed-step dt that a
+companion-corrupted Jacobi `p.a` got wrong before this was caught.
 
 ## Verdict summary (12 systems)
 
@@ -58,16 +66,16 @@ from the canonical integrator in the last column.
 | Barnard's Star | 4 | 248 | 0.106 · calm | 8.3×10⁻⁴ | **chaotic, bounded** | TRACE |
 | YZ Cet | 3 | 8.024 | 0.103 · calm | 2.0×10⁻³ | **chaotic, bounded** | TRACE |
 | AU Mic | 4 | 6249 | **0.63 · hot** | 3.5 (b's a triples) | **chaotic, hot but bounded** | TRACE |
-| α Cen A b (in AB binary) | planet + 2 stars | n/a (trace) | **0.998 · extreme** | 1.3 | **UNSTABLE** in favored family (3 of 4 families stable) | trace |
+| α Cen A b (in AB binary) | planet + 2 stars | n/a (disrupts) | **>0.95 · extreme** | disrupts ~30 kyr | **UNSTABLE** in both prograde families (2 of 4 stable) | ias15 |
 
 Eleven of the twelve are stable or chaotic-but-bounded under the accurate
 integrator: seven regular (MEGNO ≈ 2), three formally chaotic but tightly
 bounded (TRAPPIST-1, Barnard, YZ Cet — tight inner M-dwarf chains, consistent
 with the literature), and AU Mic dynamically hot but bounded. The only
 instability is the S-type candidate **α Cen A b** in its *favored* prograde
-inner family (e → 0.99 by Kozai-Lidov at i_mut ≈ 50°) — but a sweep shows 3 of
-its 4 proposed orbit families survive (below). The α Cen AB binary itself is
-stable (B: e = 0.514–0.519, a-drift < 0.6%).
+inner family (e → 0.95+ by Kozai-Lidov at i_mut ≈ 50°) — and a sweep shows 2 of
+its 4 proposed orbit families survive (both retrograde; below). The α Cen AB
+binary itself is stable (B: e = 0.514–0.519, a-drift < 0.6%).
 
 On the **eccentricity** axis (last-column tier), most survivors are *calm*
 (e_max < 0.3, Solar-System-like), but **61 Vir (0.39) and AU Mic (0.63) are
@@ -106,55 +114,62 @@ would refine it.
 The binary loader now injects the S-type candidate **α Cen A b** (a ≈ 1.6 AU,
 e ≈ 0.4, m ≈ 120 M⊕) around star A, placed at the same node as B so its mutual
 inclination to the AB plane is **50°** by default (Beichman 2025, prograde) —
-inside the Kozai-Lidov window (39.2°–140.8°). Integrated with TRACE (the
-near-equal binary masses break WHFast's small-perturber assumption).
+inside the Kozai-Lidov window (39.2°–140.8°). Integrated with **IAS15** (the
+forcing is secular from the far companion, not a close encounter, so TRACE is
+inaccurate here — see the policy note above).
 
 At the favored value the planet is **dynamically unstable**: the eccentric
 companion drives **eccentric Kozai-Lidov (octupole)** oscillations that pump
-its eccentricity to **e ≈ 0.998 within a few thousand years** — periastron
-a(1−e) ≈ 0.005 AU, barely above α Cen A's radius (0.0057 AU) → tidal
-disruption. The AB binary itself is unaffected (B: a 23.57–23.70 AU, e
+its eccentricity **past 0.95 within ~30 kyr** (the first big EKL spike),
+dropping periastron a(1−e) below **0.08 AU**; over the following Kozai cycles e
+climbs toward unity and periastron falls below α Cen A's radius (0.0057 AU) →
+tidal disruption on a **~10⁴–10⁵ yr** timescale. (An earlier TRACE pass, also
+hurt by a since-fixed dt bug, wrongly read this as "e → 0.998 within a few
+thousand years.") The AB binary itself is unaffected (B: a 23.57–23.70 AU, e
 0.514–0.519). But this is **inclination-dependent**, so the loader takes
 `--acen-incl-deg` (and `--acen-a-au` / `--acen-e`) for the Beichman orbit
 families and a mutual-inclination sweep.
 
-### Mutual-inclination sweep (a = 1.6 AU, TRACE, 10⁴ yr)
+### Mutual-inclination sweep (a = 1.6 AU, e = 0.4, IAS15, 10⁵ yr)
 
 | i_mut | e_max | verdict | | i_mut | e_max | verdict |
 |---|---|---|---|---|---|---|
-| 0° (coplanar) | 0.68 | stable | | 90° | flip (e≫1) | **unstable** |
-| 20° | 0.61 | stable | | 115° | 0.86 | stable |
-| 35° | 0.99 | **unstable** | | 130° | 0.79 | stable |
-| 50° | 1.00 | **unstable** | | 145° | 0.60 | stable |
-| 65° | 0.99 | **unstable** | | 160° | 0.56 | stable |
+| 0° (coplanar) | 0.48 | stable (hot) | | 90° | 0.99 (flip) | **unstable** (~1.3 kyr) |
+| 20° | 0.49 | stable (hot) | | 110° | 0.93 | **unstable** |
+| 35° | 0.53 | stable (hot) | | 115° | 0.89 | stable (hot) |
+| 40° | 0.54 | stable (hot) | | 130° | 0.68 | stable (hot) |
+| 50° | 0.95 | **unstable** (~32 kyr) | | 145° | 0.55 | stable (hot) |
+| 65° | 0.86 | stable (hot) | | 160° | 0.57 | stable (hot) |
 
-**Stable inclination band: i_mut ≲ 30° (prograde) or ≳ 110° (retrograde); the
-~30°–100° band is Kozai-unstable.** The band is **asymmetric about 90°** —
-the prograde side destabilizes earlier (~30°, below the 39° quadrupole
-threshold) because octupole EKL + the already-eccentric (e = 0.4) planet +
-eccentric companion conspire; the retrograde side (≥110°) survives (e_max
-0.56–0.86, bounded), the textbook prograde/retrograde octupole asymmetry. Note
-that even coplanar the planet is *hot* (e_max 0.68) — the massive eccentric
-companion keeps it stirred at all inclinations.
+**Stable inclination band: i_mut ≲ 45° (prograde) or ≳ 115° (retrograde); the
+~45°–110° band is Kozai-unstable, peaking at 90° (orbit flip — disrupts in
+~1.3 kyr).** The band is **asymmetric about 90°** — the retrograde side survives
+even at high e_max (0.55–0.89, bounded), the textbook prograde/retrograde
+octupole asymmetry. The prograde cliff sits at ~45°, just *above* the 39.2°
+quadrupole Kozai threshold, as theory expects. (An earlier TRACE pass put it at
+~30°, below threshold — a now-corrected dt-bug + integrator artifact.) Note that
+even coplanar the planet is *hot* (e_max 0.48) — the massive eccentric companion
+keeps it stirred at all inclinations.
 
-### Beichman's four proposed orbit families — 3 of 4 survive
+### Beichman's four proposed orbit families — 2 of 4 survive
 
 | Family | a, i_mut | e_max | verdict |
 |---|---|---|---|
-| prograde, a<2 (**favored**) | 1.6 AU, 50–70° | ≈1.0 | **UNSTABLE** |
-| retrograde, a<2 | 1.6 AU, ~120° | 0.79 | stable |
-| prograde, a>2 | 2.1 AU, ~50° | 0.88 | stable (marginal) |
-| retrograde, a>2 | 2.1 AU, ~120° | 0.88 | stable (marginal) |
+| prograde, a<2 (**favored**) | 1.6 AU, ~50° | disrupts (~32 kyr) | **UNSTABLE** |
+| retrograde, a<2 | 1.6 AU, ~120° | 0.83 | stable (hot) |
+| prograde, a>2 | 2.1 AU, ~50° | disrupts (~20 kyr) | **UNSTABLE** |
+| retrograde, a>2 | 2.1 AU, ~120° | 0.84 | stable (hot) |
 
-So the accurate statement is **not** "α Cen A b is unstable" but: **the
-Beichman-*favored* prograde inner family (a ≈ 1.6 AU, i_mut 50–70°) is
-Kozai-unstable, while the other three proposed families — retrograde inner,
-and both outer (a ≈ 2.1 AU) families — keep the planet bounded over 10⁴ yr.**
-If α Cen A b is real, its survival hinges on which family it actually occupies.
+So the accurate statement is **not** "α Cen A b is unstable" but, sharpened by
+IAS15: **both prograde families (~50°, a ≈ 1.6 and 2.1 AU) are Kozai-unstable,
+while both retrograde families (~120°) keep the planet bounded (hot, e ≈ 0.83)
+over 10⁵ yr.** If α Cen A b is real, its survival hinges on retrograde geometry.
+(The earlier TRACE pass wrongly kept the wide prograde family marginally stable;
+IAS15 disrupts it, so 2 survive, not 3.)
 
 **Follow-up:** tidal damping (absent from the point-mass sim) would set where a
 high-e/inclined orbit circularizes rather than disrupts, and a finer grid near
-the 30° and 110° boundaries would sharpen the stable band.
+the 45° and 112° boundaries would sharpen the stable band.
 
 ### Polyphemus & Pandora (Avatar) — a HZ-stable orbit that hosts a moon
 
@@ -163,21 +178,25 @@ whose moon **Pandora** is the Na'vi homeworld (Beichman 2025 / NPR 2025 /
 *Seeking the Worlds of Avatar*, Astrobiology 2025). Asking whether a habitable
 Pandora could actually survive here drove a fine-tuning scan:
 
-- **The Avatar canon distance (1.2 AU) is unusable** — a secular resonance near
-  1.2–1.3 AU pumps e to ~0.64 even from a circular start, throwing Polyphemus
-  out of the HZ.
-- **The HZ-stable zone is a ≈ 1.4–1.6 AU.** The DB/Phase-3 orbit takes the
-  median of the stable range — e 0–0.22 → **e = 0.1**, mutual inclination
-  0–33° → **≈ 16°** — at a = 1.6 AU (the observed semi-major axis): HZ-stable
-  over 10⁵ yr (orbit 1.37–1.84 AU, e_max 0.15).
+- **The Avatar canon distance (1.2 AU) is interior to the HZ** — at 1.2 AU the
+  orbit is *dynamically* stable (e_max ≈ 0.14, MEGNO 2.0) but its periastron
+  (~1.03 AU) sits inside α Cen A's conservative inner HZ edge (1.18 AU): too
+  warm, not a stability failure. (An earlier TRACE pass mis-reported a secular
+  resonance pumping e → 0.64 here; IAS15 finds no such pump.)
+- **The HZ-stable zone is a ≈ 1.40–1.75 AU.** The DB/Phase-3 orbit takes the
+  median of the stable range — e 0–0.18 → **e = 0.1**, mutual inclination
+  0–35° → **≈ 16°** — at a = 1.6 AU (the observed semi-major axis): HZ-stable
+  over 10⁵ yr (IAS15, MEGNO 2.000, orbit 1.345–1.854 AU, e_max 0.157).
 - **Pandora is Hill-stable.** A 0.45 M⊕ moon at 225 000 km (Kepler back-out of
   Pandora's ~27 h tidally-locked day; Polyphemus spans ~36° of its sky) sits at
   ~0.02 R_Hill on a near-circular orbit (e ≈ 0, bound) — deep inside the
-  Domingos+2006 limit. The full Avatar hierarchy (α Cen A → Polyphemus →
-  Pandora, perturbed by α Cen B) is dynamically viable on the stability-selected
-  orbit, though not on the Kozai-unstable observed one. Test:
-  `hypotheticals/alpha_centauri.json`, run with
-  `--acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16`.
+  Domingos+2006 limit. With the dt fix the moon's 1.12-day orbit is now properly
+  resolved (dt 0.022 d, |ΔE/E| 3.6×10⁻¹⁰; the old dt of 50 d left it unresolved).
+  The full Avatar hierarchy (α Cen A → Polyphemus → Pandora, perturbed by α Cen
+  B) is dynamically viable on the stability-selected orbit, though not on the
+  Kozai-unstable observed one. Test: `hypotheticals/alpha_centauri.json`, run
+  with `--acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16` (moon: `--integrator
+  trace`; planet boundaries: `--integrator ias15`).
 
 ## Hypothetical moons — demonstration
 
@@ -209,6 +228,13 @@ tracked. (A deliberately-unstable demo; output in `results/with_moons/`.)
 # Gold-standard spot-check (adaptive high-order, + MEGNO, slow)
 .venv/bin/python phase3/stability-sim/scripts/run.py --system au_mic --integrator ias15
 
+# alpha Cen — canonical IAS15 (secular forcing; TRACE inaccurate here)
+.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri \
+    --integrator ias15 --years 100000 --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16
+
+# alpha Cen — full boundary re-derivation (inner/outer edge, e/i bounds, families)
+.venv/bin/python phase3/stability-sim/scripts/acen_boundary_scan.py
+
 # With hypothetical moons / extra planets
 .venv/bin/python phase3/stability-sim/scripts/run.py \
     --system trappist_1 --years 1000 \
@@ -227,20 +253,23 @@ single-star `db/systems/<system>.json`.
    MEGNO is the chaos early-warning, not a fail condition — three systems are
    chaotic yet ship-safe (bounded). Under TRACE there is no MEGNO; the a/e
    verdict carries it.
-2. **Integrator choice matters at close encounters.** WHFast (and, in-game,
-   Principia's fixed-step celestial ephemeris) lose accuracy during
-   planet–planet close encounters; TRACE/IAS15 are the ground truth there.
-   The canonical result for a flagged system uses TRACE.
+2. **Integrator choice matters at close encounters — and for secular forcing.**
+   WHFast (and, in-game, Principia's fixed-step celestial ephemeris) lose
+   accuracy during planet–planet close encounters; TRACE/IAS15 are the ground
+   truth there, and the canonical result for a close-encounter-flagged system
+   uses TRACE. **But TRACE is *not* the right tool for α Cen**, where the
+   instability is secular (Kozai-Lidov from the far companion), not a close
+   encounter: there TRACE drifts (|ΔE/E| ≈ 3.6×10⁻³) and IAS15 is canonical.
 3. **Msini + coplanar.** Masses are DB-recommended (often Msini, a lower
    bound); inclinations default to coplanar. Real higher masses / mutual
    inclinations could be less stable, so a PASS is necessary, not sufficient.
    A Monte-Carlo-over-uncertainties pass is the natural upgrade.
 4. **AU Mic d/e** semi-major axes are Kepler-derived from period (no curated
    a); candidates, uncertain masses, young system.
-5. **α Cen A b** is integrated at a fixed 50° mutual inclination (the
-   Beichman-favored prograde value); its Kozai instability is
-   inclination-dependent — a coplanar orbit would be stable, so the verdict is
-   conditional on that inclination.
+5. **α Cen A b** is integrated (IAS15) at the Beichman-favored 50° prograde
+   mutual inclination; its Kozai instability is inclination-dependent — the
+   prograde cliff is ~45°, so a low-inclination or retrograde orbit is stable.
+   The verdict is conditional on that inclination.
 6. **10⁴ yr is short** for true secular evolution; for the chaotic-but-bounded
    and hot cases a 10⁶-yr or SPOCK-style long-term-probability follow-up would
    strengthen the claim.

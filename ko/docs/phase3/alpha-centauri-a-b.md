@@ -60,10 +60,10 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `tidally_locked` | false | high | 1.1 M☉ 별 주위 ~1.6 AU 궤도. 조석 시간이 5.3 Gyr 나이를 훨씬 초과하므로 spin-orbit 결합 없음 |
-| `eccentricity` | 0.1 | medium | NearStars 안정성 선택값 (REBOUND/TRACE 스캔에서 나온 HZ-안정 범위 0–0.22 의 중앙값). Beichman 이 관측한 e ≈ 0.4 (패밀리 0.33–0.46) 는 관측된 경사에서 Kozai-불안정 — Canonical alternatives 참조 |
+| `eccentricity` | 0.1 | medium | NearStars 안정성 선택값 (REBOUND/IAS15 스캔에서 나온 HZ-안정 범위 0–0.18 의 중앙값). Beichman 이 관측한 e ≈ 0.4 (패밀리 0.33–0.46) 는 관측된 경사에서 Kozai-불안정 — Canonical alternatives 참조 |
 | `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3. **a < 2 AU 패밀리가 선호됨** (더 높은 T_eq 가 F1550C 에 맞음). a ≈ 1.58–1.68 AU. Phase 2 DB 대표값을 1.9 AU 에서 1.6 AU (P 705 d) 로 조정해 이 선호 패밀리에 맞췄으므로, 인게임 궤도가 합성을 따름 |
 | `sidereal_period_yr` | ~2.0 | medium | Beichman et al. 2025. 2–3 년 범위. 선호되는 a ≈ 1.6 AU / 1.1 M☉ 에 대해 ~2 년 |
-| `mutual_inclination_deg` | 16 | medium | NearStars 안정성 선택값 (HZ-안정 범위 0–33° 의 중앙값). Beichman Table 4 는 α Cen AB 면 (i_AB = 79.24°) 에 대해 관측된 ≈50° (순행) / ≈130° (역행) 을 주지만, ≳35° 는 Kozai-불안정 — Canonical alternatives 참조 |
+| `mutual_inclination_deg` | 16 | medium | NearStars 안정성 선택값 (REBOUND/IAS15 스캔에서 나온 HZ-안정 범위 0–35° 의 중앙값). Beichman Table 4 는 α Cen AB 면 (i_AB = 79.24°) 에 대해 관측된 ≈50° (순행) / ≈130° (역행) 을 주지만, ≳35° 는 궤도를 HZ 밖으로 밀어내고 ≳45° 부터 Kozai-불안정 — Canonical alternatives 참조 |
 | `inclination_deg` | unset | low | 제약된 양은 AB 면에 대한 상호 경사 (위 행) 이며, 시선 방향 경사는 bimodal/weak 입니다 (Beichman Table 4). cfg-frame 경사는 open item 으로 남겨 둠 |
 | `mass_mearth` | 120 | medium | Beichman et al. 2025. 토성급 90–150 M⊕ (토성 = 95). 고리 모델 해 ~120 M⊕. RV 한계 (Zhao 2018: P ≲ 1000 d 에서 M sin i < 100 M⊕) 를 존중하기 위해 대기 피팅을 log g 2.5–3.0 으로 제한 |
 | `mass_mjup` | 0.38 | medium | = 120 M⊕ / 317.8 |
@@ -225,7 +225,7 @@ cfg 는 **고리 두른** 해석을 렌더합니다. Beichman et al. 2025 §5.3 
 | cfg pick | Canonical alternative | Why cfg diverges |
 |---|---|---|
 | `ring_present = true`, `radius_rjup = 1.0` (더 작은 행성 + 광학적으로 두꺼운 어두운 고리) | **고리 없는 팽창 거대 행성: `radius_rjup ≈ 1.1–1.15`, 고리 없음** — 대기 전용 최적 피팅 (Beichman §5.2). 더 큰 반지름 단독으로 F1550C 밝기를 만드는 단면적을 공급 | 둘 다 Beichman 이 데이터에 동등하게 맞는다고 명시적으로 제시. §5.3 은 1.1 R_Jup 이 "더 뜨거운 행성에서 더 흔히 관측된다"고 언급하며, 성숙한 거대 행성에서는 빠르게 자전 / pole-on 인 경우에만 그럴듯하다고 보아 고리 대안의 동기가 됨. cfg 는 시각적 독특함 (interesting-first) 을 위해 고리를 선택하는데, 논문에 근거하며 더 인상적인 렌더이기 때문. 보수적 해석을 선호하는 사용자는 `ring_present = false` 와 `radius_rjup = 1.1` 로 설정 |
-| `eccentricity = 0.1`, `mutual_inclination = 16°` (안정성 선택값) | **관측값 (Beichman): e ≈ 0.4, 상호 경사 ≈ 50°** — 선호되는 영상-피팅 궤도 | 관측 궤도는 Kozai-Lidov **불안정**입니다. eccentric KL 이 수천 년 안에 e → ~0.998 로 끌어올려 근일점이 별 반경 ~1 수준으로 추락합니다 (조석 파괴. REBOUND/TRACE, `STABILITY_REPORT.md` 참조). NearStars 는 대신 HZ-안정 범위의 중앙값을 택합니다. 두 번째 canonical 해석 — 아바타의 1.2 AU — 역시 불안정합니다 (장주기 공명, e → 0.64) |
+| `eccentricity = 0.1`, `mutual_inclination = 16°` (안정성 선택값) | **관측값 (Beichman): e ≈ 0.4, 상호 경사 ≈ 50°** — 선호되는 영상-피팅 궤도 | 관측 궤도는 Kozai-Lidov **불안정**입니다. eccentric KL 이 ~30 kyr 안에 e 를 0.95 너머로 끌어올리고, 이후 ~10⁵년에 걸쳐 근일점이 별 반경 아래로 추락합니다 (조석 파괴. REBOUND/IAS15, `STABILITY_REPORT.md` 참조). NearStars 는 대신 HZ-안정 범위의 중앙값을 택합니다. 아바타 정전의 1.2 AU 는 별개의 해석으로, 동역학적으로는 안정하지만 α Cen A 의 HZ 안쪽 (너무 뜨거움) 에 있어 1.6 AU 가 가장 가까운 견고한 HZ 궤도입니다 |
 
 논문 내부의 두 번째 분기점은 **궤도 패밀리**입니다. cfg 는 선호되는
 a < 2 AU 패밀리 (a ≈ 1.6 AU, T_eq ≈ 225 K) 를 씁니다. a > 2 AU 패밀리
@@ -248,15 +248,15 @@ al. 2025 가 S1 을 보고했을 때 NPR 과 Live Science 는 이를 "현실 속
 이것은 명명/설정 컨텍스트일 뿐이며, 위의 측정된 과학과는 분리해 둡니다.
 하지만 이것이 제기하는 역학적 질문은 진짜이고 `phase3/stability-sim`
 에서 답합니다. 판도라급 거주 가능 위성이 여기서 살아남을 수 있을까요?
-REBOUND/TRACE 스캔 결과 관측된 이심/경사 궤도는 Kozai-불안정이지만
+REBOUND/IAS15 스캔 결과 관측된 이심/경사 궤도는 Kozai-불안정이지만
 (Canonical alternatives 참조), 이 합성이 사용하는 안정성 선택 궤도
 (a = 1.6 AU, e = 0.1, 상호 경사 ≈ 16°) 는 폴리페무스를 10⁵ 년에 걸쳐
 HZ 안에 유지하며 ~225 000 km 에 Hill-안정한 판도라질량 위성 (0.45 M⊕)
 을 거느립니다 — 폴리페무스가 하늘의 ~36° 를 가리는 ~27 h 조석 고정된
 하루입니다. 아바타 설정은 역학적으로 성립하며, 다만 선호되는 *관측*
-궤도에서는 아닙니다. 아바타 설정은 폴리페무스를 1.2 AU 에 두지만, 그
-거리는 여기서 쓸 수 없습니다 (장주기 공명이 e → 0.64 로 끌어올림).
-1.6 AU 가 가장 가까운 견고한 HZ 궤도입니다.
+궤도에서는 아닙니다. 아바타 정전은 폴리페무스를 1.2 AU 에 두는데, 그
+궤도는 동역학적으로는 안정하지만 α Cen A 의 거주 가능 영역 안쪽 (너무
+뜨거움) 에 자리해, 1.6 AU 가 가장 가까운 견고한 HZ 궤도입니다.
 
 ## Bibliography
 
@@ -309,12 +309,13 @@ HZ 안에 유지하며 ~225 000 km 에 Hill-안정한 판도라질량 위성 (0.
   궤도가 이 합성과 일치하도록 했습니다. a > 2 AU 패밀리 (a ≈ 2.1 AU) 는
   비선호 대안으로 본문에만 남겨 둡니다.
 - **동역학 안정성 (Kozai-Lidov) — 해결됨.** 궤도는 이제 **안정성 선택값**
-  (e = 0.1, 상호 i ≈ 16°) 으로, REBOUND/TRACE 스캔에서 나온 HZ-안정 범위의
+  (e = 0.1, 상호 i ≈ 16°) 으로, REBOUND/IAS15 스캔에서 나온 HZ-안정 범위의
   중앙값입니다 (`phase3/stability-sim`, `STABILITY_REPORT.md` 참고). 이 궤도는
-  행성을 α Cen A 의 거주 가능 영역 (1.37–1.84 AU) 안에 10⁵ 년에 걸쳐 유지하며
-  Hill-안정한 판도라질량 위성을 거느립니다. Beichman 이 관측한 e ≈ 0.4 / 상호
-  i ≈ 50° 궤도는 **Kozai-Lidov 불안정** (eccentric KL 이 수천 년 안에 e → ~0.998
-  로 끌어올려 근일점이 별 반경 ~1 수준까지 추락 — 조석 파괴) 이며, 불안정한
+  행성을 α Cen A 의 거주 가능 영역 (궤도 1.345–1.854 AU, e_max 0.157, MEGNO 2.000)
+  안에 10⁵ 년에 걸쳐 유지하며 Hill-안정한 판도라질량 위성을 거느립니다. Beichman 이
+  관측한 e ≈ 0.4 / 상호 i ≈ 50° 궤도는 **Kozai-Lidov 불안정** (eccentric KL 이
+  ~30 kyr 안에 e 를 0.95 너머로 끌어올리고, 이후 ~10⁵년에 걸쳐 근일점이 별 반경
+  아래로 추락 — 조석 파괴) 이며, 불안정한
   canonical alternative 로만 남겨 둡니다. 남은 open item 하나는 cfg-frame 경사
   입니다. 제약된 양은 AB 면에 대한 상호 경사 (≈16°) 이며, 이를 cfg 용
   system-frame 값으로 변환하는 작업이 아직 필요합니다.

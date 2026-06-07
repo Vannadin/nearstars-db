@@ -15,16 +15,20 @@ We treat the JWST/MIRI direct-imaging candidate α Cen A b (Beichman et al. 2025
 Saturn-class, ~1.6 AU, in α Centauri A's habitable zone) as the real-life
 *Polyphemus* of *Avatar* and ask whether its canonical moon Pandora could be
 dynamically stable. Using REBOUND with a hybrid integrator policy (WHFast +
-MEGNO as a screen; TRACE for close-encounter fidelity), we find: (1) the
+MEGNO as a screen; TRACE for close-encounter fidelity; **IAS15 as the canonical
+integrator for α Cen, whose forcing is secular from a massive distant companion
+rather than close-encounter — TRACE is inaccurate there**), we find: (1) the
 **observed favored orbit (e≈0.4, mutual inclination ≈50° to the α Cen AB
-plane) is eccentric-Kozai-Lidov unstable** — eccentricity is pumped to ~0.998
-within a few kyr, dropping periastron to ≈1 stellar radius (tidal disruption);
-(2) of Beichman's four proposed orbit families, **three survive** 10⁴ yr (the
-retrograde inner and both wide families), only the favored prograde-inner one
-disrupts; (3) the **habitable-zone-stable region** is a≈1.4–1.6 AU with mutual
-inclination ≲30° and eccentricity ≲0.2, asymmetric about 90° (octupole EKL);
-(4) the *Avatar* canon distance of 1.2 AU is **unusable** (a secular resonance
-pumps e→0.64); and (5) on a stability-selected orbit (a=1.6 AU, e=0.1, mutual
+plane) is eccentric-Kozai-Lidov unstable** — eccentricity is pumped past 0.95
+within ~30 kyr, dropping periastron below 0.08 AU and crashing toward the star
+over ~10⁵ yr (tidal disruption); (2) of Beichman's four proposed orbit families,
+**two survive** 10⁵ yr (both retrograde, bounded but hot at e_max≈0.83); both
+prograde families (~50°, a≈1.6 and a≈2.1 AU) disrupt; (3) the
+**habitable-zone-stable region** is a≈1.4–1.75 AU with mutual inclination ≲35°
+and eccentricity ≲0.18, asymmetric about 90° (octupole EKL); (4) the *Avatar*
+canon distance of 1.2 AU is **interior to α Cen A's habitable zone** —
+dynamically stable (e_max≈0.14) but too warm, not a stability failure;
+and (5) on a stability-selected orbit (a=1.6 AU, e=0.1, mutual
 i≈16° — the median of the stable range), Polyphemus stays in the HZ over 10⁵ yr
 and a **0.45 M⊕ Pandora-mass moon is Hill-stable** at 225,000 km. The complete
 α Cen A → Polyphemus → Pandora hierarchy (perturbed by α Cen B) is dynamically
@@ -70,7 +74,16 @@ Selectable via `run.py --integrator {whfast,trace,ias15}` (added this session).
 **Policy:** WHFast screens all systems (gives the MEGNO chaos flag); any system
 it flags chaotic/unstable is re-verified with TRACE, whose accurate a/e is the
 canonical result. This matters because WHFast over-reports instability in
-close-encounter regimes (see §3, AU Mic).
+close-encounter regimes (see §3, AU Mic). **Exception — α Cen:** here the
+perturbation is *secular* (Kozai-Lidov forcing from the massive, eccentric, far
+companion B at 23.5 AU), not a close encounter. TRACE is built for the latter
+and is inaccurate on this problem — at the observed e=0.4/i=50° orbit it shows
+|ΔE/E|≈3.6×10⁻³ and a spurious semi-major-axis drift (a swinging 0.81–2.05 AU),
+while IAS15 holds a essentially fixed at |ΔE/E|≈1×10⁻¹³ with MEGNO≈2. **The
+canonical α Cen results below are therefore IAS15, not TRACE.** (Earlier α Cen
+runs in this session used TRACE and were additionally corrupted by a dt bug — the
+innermost-period computation used the default barycentric semi-major axis 3.75 AU
+instead of the A-relative 1.6 AU, making dt 3.6× too large; fixed this session.)
 
 ### 2.2 Three diagnostics (independent axes)
 
@@ -127,62 +140,80 @@ period-only data; a is Kepler-derived.)
 ## 4. α Cen A b dynamics
 
 All runs at a=1.6 AU (the observed favored semi-major axis) unless noted;
-TRACE; mutual inclination is measured to the α Cen AB plane; HZ taken as
-1.18–2.05 AU (conservative; α Cen A L=1.521 L☉, EEID 1.23 AU).
+**IAS15** (the secular forcing here makes TRACE inaccurate — see §2.1), 10⁵ yr;
+mutual inclination is measured to the α Cen AB plane; HZ taken as 1.18–2.05 AU
+(conservative; α Cen A L=1.521 L☉, EEID 1.23 AU). Periastron q and apastron Q
+are read from the timeseries; "disrupts" = e first exceeds 0.95 (near-radial,
+periastron then collapsing toward the star).
 
 ### 4.1 The observed orbit is Kozai-Lidov unstable
 
 At the favored e≈0.4, mutual i≈50°, eccentric Kozai-Lidov (octupole, driven by
-the e_B=0.52 companion) pumps the planet to **e_max = 0.998** within a few kyr.
-From the timeseries, the minimum periastron is **0.0036 AU** (t≈7150 yr) —
-*below* α Cen A's radius (0.0057 AU): the planet plunges into the star
-(disruption). Apastron reaches 3.68 AU. The AB binary itself is unaffected.
+the e_B=0.52 companion) pumps the planet's eccentricity past **0.95 within
+~30 kyr** (IAS15; the first big EKL spike), dropping periastron below **0.08 AU**.
+Over the following Kozai cycles e climbs toward unity (the audit's IAS15 run
+reaches ~0.9997 by ~10⁵ yr), at which point periastron falls below α Cen A's
+radius (0.0057 AU) — tidal disruption. So the disruption timescale is **~10⁴–10⁵
+yr, not "a few kyr"** (the earlier "e→0.998 within a few kyr" was a TRACE +
+dt-bug artifact). The AB binary itself is unaffected.
 
-### 4.2 Orbit-family scan — 3 of Beichman's 4 survive
+### 4.2 Orbit-family scan — 2 of Beichman's 4 survive
 
 | Family | a, i_mut | e_max | verdict |
 |---|---|---|---|
-| prograde, a<2 (favored) | 1.6 AU, 50–70° | ≈1.0 | **UNSTABLE** |
-| retrograde, a<2 | 1.6 AU, ~120° | 0.79 | stable |
-| prograde, a>2 | 2.1 AU, ~50° | 0.88 | stable (marginal) |
-| retrograde, a>2 | 2.1 AU, ~120° | 0.88 | stable (marginal) |
+| prograde, a<2 (favored) | 1.6 AU, ~50° | disrupts (~32 kyr) | **UNSTABLE** |
+| retrograde, a<2 | 1.6 AU, ~120° | 0.83 | stable (hot) |
+| prograde, a>2 | 2.1 AU, ~50° | disrupts (~20 kyr) | **UNSTABLE** |
+| retrograde, a>2 | 2.1 AU, ~120° | 0.84 | stable (hot) |
 
-So "α Cen A b is unstable" is wrong — only the *favored* inner-prograde family
-disrupts; the retrograde and wide families keep the planet bound (though hot,
-e~0.8). Survival is family-conditional.
+So "α Cen A b is unstable" is too blunt, but the corrected (IAS15) picture is
+sharper than the earlier TRACE pass: **both prograde families (~50°) disrupt —
+not just the favored inner one** — while **both retrograde families (~120°)
+survive**, bounded but hot (e~0.83). Survival is conditional on retrograde
+geometry, the textbook prograde/retrograde octupole asymmetry. (The earlier TRACE
+run wrongly kept the wide prograde family "stable, marginal"; IAS15 disrupts it.)
 
 ### 4.3 Mutual-inclination sweep — the stable band
 
-Sweeping i_mut at a=1.6, e=0.4: stable at i ≲ 30° (prograde) and ≳ 110°
-(retrograde); the ~30–100° band is Kozai-unstable, peaking at i=90° (orbit
-flip, e≫1). The band is **asymmetric about 90°** — the prograde side
-destabilizes earlier (~30°, below the 39° quadrupole threshold) via octupole
-EKL + the already-eccentric planet + eccentric companion; retrograde survives.
-Even coplanar (i=0) the planet is hot (e_max 0.68) — the massive eccentric
-companion stirs it at all inclinations.
+Sweeping i_mut at a=1.6, e=0.4 (IAS15, 10⁵ yr): stable at i ≲ 45° (prograde) and
+≳ 115° (retrograde); the ~45–110° band is Kozai-unstable, peaking at i=90° (orbit
+flip — disrupts in ~1.3 kyr). The band is **asymmetric about 90°** — the
+retrograde side survives even at high e_max (0.55–0.88, bounded), the textbook
+octupole asymmetry. The prograde cliff at ~45° sits just *above* the 39.2°
+quadrupole Kozai threshold, as theory expects (the earlier TRACE pass put it at
+~30°, *below* threshold — a now-corrected artifact). Even coplanar (i=0) the
+planet is hot (e_max 0.48) — the massive eccentric companion stirs it at all
+inclinations.
 
 ### 4.4 Habitable-zone-stable region
 
-Requiring the orbit to stay entirely within the HZ (q≥1.18, Q≤2.05) over 10⁵ yr:
-**a ≈ 1.4–1.6 AU, e_init ≲ 0.2, i_mut ≲ 30°.** a≤1.3 is excluded — a secular
-resonance at ~1.2–1.3 AU pumps e to 0.6–0.7 even from a circular start (a=1.2:
-e_max 0.64; a=1.3 e=0.05: 0.71). a=1.6 has the widest, cleanest HZ-stable region
-(it balances the inner/outer HZ edges, allowing the most eccentricity).
+Requiring the orbit to stay entirely within the HZ (q≥1.18, Q≤2.05) over 10⁵ yr
+(IAS15): **a ≈ 1.40–1.75 AU, e_init ≲ 0.18, i_mut ≲ 35°.** The inner edge is
+*geometric*, not dynamical — at e=0.1 the periastron a(1−e_max) clears the inner
+HZ (1.18 AU) only for a≳1.40 (a=1.38 → q 1.169; a=1.40 → q 1.187). Orbits interior
+to that (a=1.2–1.3) are **dynamically stable** (e_max≈0.14, MEGNO 2.0) — they are
+simply *inside* α Cen A's HZ (too warm), not destabilized. (The earlier claim of
+a secular resonance pumping e→0.6–0.7 at 1.2–1.3 AU was a TRACE + dt-bug artifact;
+IAS15 finds no such pump.) The outer HZ edge (apastron ≤ 2.05) is crossed near
+a≈1.75. a=1.6 sits comfortably central.
 
 ### 4.5 The boundary toward the observed orbit
 
-How close to observed (e=0.4, i=50°) can one get while remaining stable?
-- **Stay in the HZ**: up to **e≈0.2, i≈30°** (e=0.2,i=30 → q1.19–Q2.03).
-- **Survive (eccentric, leaves HZ)**: the observed **e=0.4 survives if i≤40°**;
-  at i=42° it disrupts. At the observed i=50° survival is a chaotic knife-edge
-  (e=0.1 survives, 0.12 disrupts, 0.15 survives, 0.2 disrupts).
-The observed orbit sits ~2° past the inclination cliff at e=0.4.
+How close to observed (e=0.4, i=50°) can one get while remaining stable (IAS15)?
+- **Stay in the HZ**: up to **e≈0.18, i≈35°** (at a=1.6; beyond these the
+  periastron drops below the inner HZ edge or Kozai kicks in).
+- **Survive (eccentric, may leave HZ)**: at the observed **e=0.4 the prograde
+  cliff is ~45°** — i=40° stays bounded (e_max 0.54), i=50° disrupts (~32 kyr).
+  At the adopted low e=0.1, survival extends slightly further (i=45° bounded at
+  e_max 0.77; i=50° disrupts ~55 kyr).
+The observed e=0.4/i=50° orbit sits just past the ~45° prograde Kozai cliff.
 
 ### 4.6 Adopted orbit — median of the stable range
 
-Taking the median of the HZ-stable ranges at a=1.6 (e: 0–0.22 → **0.1**;
-i_mut: 0–33° → **16°**): verified HZ-stable over 10⁵ yr (e_max 0.148, orbit
-1.37–1.84 AU). This is the orbit now in the DB (recommended) and the Phase 3
+Taking the median of the HZ-stable ranges at a=1.6 (e: 0–0.18 → **0.1**;
+i_mut: 0–35° → **16°**): verified HZ-stable over 10⁵ yr (IAS15, MEGNO 2.000,
+e_max 0.157, orbit 1.345–1.854 AU). This is the orbit now in the DB (recommended)
+and the Phase 3
 report; the observed e≈0.4/i≈50° is retained as a `recommended:false`,
 Kozai-unstable canonical alternative.
 
@@ -190,10 +221,13 @@ Kozai-unstable canonical alternative.
 
 Pandora's ~27 h tidally-locked day → orbital period → Kepler back-out gives
 **a_moon = 225,000 km** around the 120 M⊕ Polyphemus (Polyphemus spans ~36° of
-Pandora's sky — the films' skyline). At the adopted orbit, the full hierarchy
-(α Cen A + Polyphemus + Pandora + α Cen B) gives: Pandora a constant (Δa/a
-7×10⁻⁵), **e ≈ 0 (max 3×10⁻⁴), Hill fraction 0.02, bound** — deep inside the
-0.5 r_H limit. A habitable Pandora-class moon is dynamically viable.
+Pandora's sky — the films' skyline). With the dt fix, the integrator now resolves
+the moon's 1.12-day (≈27 h) orbit — dt = 0.022 d, |ΔE/E| = 3.6×10⁻¹⁰ (TRACE; the
+earlier buggy dt of 50 d left the moon orbit wholly unresolved). At the adopted
+orbit, the full hierarchy (α Cen A + Polyphemus + Pandora + α Cen B) gives:
+Pandora a constant (Δa/a ≈ 1×10⁻⁵), **e ≈ 0 (max ~1×10⁻⁴), Hill fraction 0.02,
+bound** — deep inside the 0.5 r_H limit. A habitable Pandora-class moon is
+dynamically viable.
 
 ---
 
@@ -201,6 +235,13 @@ Pandora's sky — the films' skyline). At the adopted orbit, the full hierarchy
 
 - `run.py --integrator {whfast,trace,ias15}` — integrator selection; MEGNO
   gated off under TRACE with an a/e-drift verdict fallback.
+- **dt-bug fix in `configure_integrator`** (audit follow-up): the innermost
+  period now uses each body's semi-major axis *relative to its true primary*
+  (star A for planets/companion, the parent planet for moons) rather than the
+  default Jacobi `p.a`, which for the α Cen planet returned the A+B barycentric
+  3.75 AU (dt 3.6× too large) and for the moon returned ~1.6 AU (the 1.12-day
+  moon orbit left wholly unresolved). All α Cen boundary numbers were re-derived
+  with IAS15 after the fix (`acen_boundary_scan.py`).
 - Eccentricity tier (`ecc_class` calm/hot/extreme) in the verdict + report.
 - Registry extended from 3 to 12 systems (generic planetary loader).
 - `load.py` fixes: (a) `physical` may be a single dict not just a list; (b)
@@ -216,13 +257,17 @@ Pandora's sky — the films' skyline). At the adopted orbit, the full hierarchy
 ## 6. Reproducibility
 
 ```bash
-# screen (WHFast + MEGNO)
-.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri --integrator trace --years 100000 \
-    --acen-a-au 1.6 --acen-e 0.4 --acen-incl-deg 50    # observed: UNSTABLE (e->0.998)
-.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri --integrator trace --years 100000 \
-    --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16    # adopted: HZ-stable
-# Pandora moon (full hierarchy)
-.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri --integrator trace --years 1000 \
+# Planet runs use IAS15 (secular forcing; TRACE inaccurate here — see §2.1)
+.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri --integrator ias15 --years 100000 \
+    --acen-a-au 1.6 --acen-e 0.4 --acen-incl-deg 50    # observed: UNSTABLE (e>0.95 by ~30 kyr)
+.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri --integrator ias15 --years 100000 \
+    --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16    # adopted: HZ-stable (MEGNO 2.0, e_max 0.16)
+# Full boundary re-derivation (inner/outer edge, e/i bounds, canon 1.2, families)
+.venv/bin/python phase3/stability-sim/scripts/acen_boundary_scan.py
+# Pandora moon (full hierarchy) — TRACE handles the close planet-moon pair; the
+# moon's clean Keplerian sub-orbit doesn't need IAS15 (the IAS15 rule is for the
+# planet's secular high-e evolution, not the deeply Hill-bound moon).
+.venv/bin/python phase3/stability-sim/scripts/run.py --system alpha_centauri --integrator trace --years 100 \
     --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16 \
     --hypotheticals phase3/stability-sim/hypotheticals/alpha_centauri.json
 ```

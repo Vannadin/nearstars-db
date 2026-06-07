@@ -64,11 +64,23 @@ def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = 
     high-e cases TRACE is chosen for.
     """
     sim.integrator = integrator
-    # innermost orbit period — particles[1:] excludes the central body
+    # innermost orbit period — computed relative to each body's TRUE primary.
+    # The default Jacobi `p.a` is wrong for the alpha Cen planet: with the
+    # near-equal companion B at index 1, Jacobi makes the planet's primary the
+    # A+B barycenter, returning ~3.75 AU instead of the A-relative 1.6 AU — so
+    # dt came out 3.59x too large and corrupted the fixed-step (WHFast/TRACE)
+    # high-e runs. Planets and companion B orbit star A; moons orbit their parent.
+    star = sim.particles[0]
     periods = []
-    for p in sim.particles[1:]:
-        if p.a > 0 and p.a < 1e6:
-            periods.append(2 * math.pi * math.sqrt(p.a**3 / (sim.G * sim.particles[0].m)))
+    for pm in meta["planets"]:
+        orb = sim.particles[pm["name"]].orbit(primary=star)
+        if 0 < orb.a < 1e6:
+            periods.append(2 * math.pi * math.sqrt(orb.a**3 / (sim.G * star.m)))
+    for h in meta.get("hypotheticals", []):
+        primary = sim.particles[h["parent"]]
+        orb = sim.particles[h["name"]].orbit(primary=primary)
+        if 0 < orb.a < 1e6:
+            periods.append(2 * math.pi * math.sqrt(orb.a**3 / (sim.G * primary.m)))
     p_min = min(periods) if periods else 1.0
     sim.dt = p_min / 50.0
     megno_enabled = integrator != "trace"
