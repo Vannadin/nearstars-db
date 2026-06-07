@@ -167,8 +167,14 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.
     return sim, meta
 
 
-def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
+def build_alpha_cen_ab(db_root: Path, mutual_incl_deg: float = 50.0,
+                       a_override: float | None = None,
+                       e_override: float | None = None) -> tuple[rebound.Simulation, dict]:
     """α Cen AB binary, plus the S-type candidate α Cen A b around A if curated.
+
+    `mutual_incl_deg` / `a_override` / `e_override` parameterize the planet for
+    the Beichman orbit-family scan and the mutual-inclination sweep (default =
+    the favored prograde a<2 representative: a/e from the DB, i_mut = 50°).
 
     The AB binary itself (Proxima outer orbit ignored — irrelevant on 10⁴ yr)
     is trivially stable; the interesting case is the inner planet, which sits
@@ -226,13 +232,15 @@ def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
     if planet is not None:
         m_p, kind = _planet_mass_msun(planet)
         orb = _planet_orbital(planet, star_m_msun=m_a)
-        i_mut_deg = 50.0
+        a_p = a_override if a_override is not None else orb["a"]
+        e_p = e_override if e_override is not None else orb["e"]
+        i_mut_deg = mutual_incl_deg
         i_planet = i_ab - math.radians(i_mut_deg)
         sim.add(
             primary=sim.particles[0],
             m=m_p,
-            a=orb["a"],
-            e=orb["e"],
+            a=a_p,
+            e=e_p,
             inc=i_planet,
             Omega=Omega_ab,
             omega=orb["omega"],
@@ -243,8 +251,8 @@ def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
             "name": "Alpha Centauri A b",
             "mass_msun": m_p,
             "mass_kind": kind,
-            "a_au": orb["a"],
-            "e": orb["e"],
+            "a_au": a_p,
+            "e": e_p,
             "inc_rad": i_planet,
             "mutual_incl_deg": i_mut_deg,
         })

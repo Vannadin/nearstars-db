@@ -41,12 +41,13 @@ SYSTEMS = {
 }
 
 
-def build(system: str, hyp_path: Path | None):
+def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_e=None):
     kind, src = SYSTEMS[system]
     if kind == "planetary":
         sim, meta = build_planetary_system(src)
     else:
-        sim, meta = build_alpha_cen_ab(src)
+        sim, meta = build_alpha_cen_ab(src, mutual_incl_deg=acen_incl,
+                                       a_override=acen_a, e_override=acen_e)
     hypos = []
     if hyp_path is not None:
         hypos = add_hypotheticals(sim, meta, hyp_path)
@@ -255,9 +256,19 @@ def main():
                     help="whfast (default, fast symplectic + MEGNO); trace "
                          "(accurate through close encounters / high-e, no MEGNO); "
                          "ias15 (adaptive high-order gold standard + MEGNO, slow)")
+    ap.add_argument("--acen-incl-deg", type=float, default=50.0,
+                    help="alpha_centauri only: A b mutual inclination to the AB plane "
+                         "(deg). 50 = Beichman prograde; ~120 = retrograde. For the "
+                         "Kozai inclination sweep.")
+    ap.add_argument("--acen-a-au", type=float, default=None,
+                    help="alpha_centauri only: override A b semi-major axis (AU); "
+                         "default = DB value (1.6). Use 2.1 for the a>2 family.")
+    ap.add_argument("--acen-e", type=float, default=None,
+                    help="alpha_centauri only: override A b eccentricity; default = DB (0.4)")
     args = ap.parse_args()
 
-    sim, meta = build(args.system, args.hypotheticals)
+    sim, meta = build(args.system, args.hypotheticals,
+                      acen_incl=args.acen_incl_deg, acen_a=args.acen_a_au, acen_e=args.acen_e)
     report = run_integration(sim, meta, args.years, args.snapshots, args.integrator)
     judgment = verdict(report, args.years)
     print_report(meta, report, judgment)

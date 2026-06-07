@@ -50,15 +50,16 @@ from the canonical integrator in the last column.
 | Barnard's Star | 4 | 248 | 0.106 | 8.3×10⁻⁴ | **chaotic, bounded** | TRACE |
 | YZ Cet | 3 | 8.024 | 0.103 | 2.0×10⁻³ | **chaotic, bounded** | TRACE |
 | AU Mic | 4 | 6249 | 0.63 | 3.5 (b's a triples) | **chaotic, hot but bounded** | TRACE |
-| α Cen A b (in AB binary) | planet + 2 stars | n/a (trace) | 0.998 | 1.3 | **UNSTABLE — Kozai-Lidov** | trace |
+| α Cen A b (in AB binary) | planet + 2 stars | n/a (trace) | 0.998 | 1.3 | **UNSTABLE** in favored family (3 of 4 families stable) | trace |
 
 Eleven of the twelve are stable or chaotic-but-bounded under the accurate
 integrator: seven regular (MEGNO ≈ 2), three formally chaotic but tightly
 bounded (TRAPPIST-1, Barnard, YZ Cet — tight inner M-dwarf chains, consistent
-with the literature), and AU Mic dynamically hot but bounded. **The lone
-genuine instability is the S-type candidate α Cen A b**, driven to e → 0.99 by
-Kozai-Lidov at its 50° mutual inclination (below). The α Cen AB binary itself
-is stable (B: e = 0.514–0.519, a-drift < 0.6%).
+with the literature), and AU Mic dynamically hot but bounded. The only
+instability is the S-type candidate **α Cen A b** in its *favored* prograde
+inner family (e → 0.99 by Kozai-Lidov at i_mut ≈ 50°) — but a sweep shows 3 of
+its 4 proposed orbit families survive (below). The α Cen AB binary itself is
+stable (B: e = 0.514–0.519, a-drift < 0.6%).
 
 ## AU Mic — the case that justifies the hybrid policy
 
@@ -85,40 +86,60 @@ configuration* as marginal/chaotic, not a confirmed instability. The orbit
 crossings mean longer-baseline (10⁶ yr) or Monte-Carlo-over-mass follow-up
 would refine it.
 
-## α Centauri A b — Kozai-Lidov unstable at the 50° mutual inclination
+## α Centauri A b — Kozai-Lidov unstable only in the favored prograde family
 
 The binary loader now injects the S-type candidate **α Cen A b** (a ≈ 1.6 AU,
 e ≈ 0.4, m ≈ 120 M⊕) around star A, placed at the same node as B so its mutual
-inclination to the AB plane is exactly **50°** (Beichman 2025, prograde) —
+inclination to the AB plane is **50°** by default (Beichman 2025, prograde) —
 inside the Kozai-Lidov window (39.2°–140.8°). Integrated with TRACE (the
 near-equal binary masses break WHFast's small-perturber assumption).
 
-**Result — the planet is dynamically unstable:**
+At the favored value the planet is **dynamically unstable**: the eccentric
+companion drives **eccentric Kozai-Lidov (octupole)** oscillations that pump
+its eccentricity to **e ≈ 0.998 within a few thousand years** — periastron
+a(1−e) ≈ 0.005 AU, barely above α Cen A's radius (0.0057 AU) → tidal
+disruption. The AB binary itself is unaffected (B: a 23.57–23.70 AU, e
+0.514–0.519). But this is **inclination-dependent**, so the loader takes
+`--acen-incl-deg` (and `--acen-a-au` / `--acen-e`) for the Beichman orbit
+families and a mutual-inclination sweep.
 
-| Body | a range (AU) | e range | status |
-|------|--------------|---------|--------|
-| α Cen B | 23.57–23.70 | 0.514–0.519 | stable (binary unaffected) |
-| α Cen A b | 1.04–2.37 | 0.081 → **0.998** | **unstable** |
+### Mutual-inclination sweep (a = 1.6 AU, TRACE, 10⁴ yr)
 
-The eccentric companion drives **eccentric Kozai-Lidov (octupole)**
-oscillations that pump the planet's eccentricity to **e ≈ 0.998 within a few
-thousand years** — a periastron of a(1−e) ≈ 0.005 AU, barely above α Cen A's
-radius (0.0057 AU). The planet would be tidally disrupted / circularized;
-as a 1.6 AU world it does **not survive** the inclined configuration.
+| i_mut | e_max | verdict | | i_mut | e_max | verdict |
+|---|---|---|---|---|---|---|
+| 0° (coplanar) | 0.68 | stable | | 90° | flip (e≫1) | **unstable** |
+| 20° | 0.61 | stable | | 115° | 0.86 | stable |
+| 35° | 0.99 | **unstable** | | 130° | 0.79 | stable |
+| 50° | 1.00 | **unstable** | | 145° | 0.60 | stable |
+| 65° | 0.99 | **unstable** | | 160° | 0.56 | stable |
 
-**This is conditional on the inclination, and that's the point.** A
-**coplanar** α Cen A b at 1.6 AU is well inside the literature's ~3 AU S-type
-stability limit and would be stable — α Cen A planets are only unstable when
-*inclined* into the Kozai window. So the verdict is: *if* α Cen A b is real
-*and* near the Beichman-favored prograde 50° mutual inclination, it is
-Kozai-unstable; a low-inclination orbit would survive. The retrograde ~130°
-family is also in the window. (Energy error rises to |ΔE/E| ≈ 8×10⁻⁴ during
-the deep near-stellar periastra; the e ≥ 0.9 verdict is robust regardless.)
+**Stable inclination band: i_mut ≲ 30° (prograde) or ≳ 110° (retrograde); the
+~30°–100° band is Kozai-unstable.** The band is **asymmetric about 90°** —
+the prograde side destabilizes earlier (~30°, below the 39° quadrupole
+threshold) because octupole EKL + the already-eccentric (e = 0.4) planet +
+eccentric companion conspire; the retrograde side (≥110°) survives (e_max
+0.56–0.86, bounded), the textbook prograde/retrograde octupole asymmetry. Note
+that even coplanar the planet is *hot* (e_max 0.68) — the massive eccentric
+companion keeps it stirred at all inclinations.
 
-**Follow-up:** a mutual-inclination sweep (coplanar → 90°) would map the exact
-Kozai-stable inclination band for this system, and tidal damping (absent from
-the point-mass sim) would set where an inclined planet circularizes rather
-than disrupts.
+### Beichman's four proposed orbit families — 3 of 4 survive
+
+| Family | a, i_mut | e_max | verdict |
+|---|---|---|---|
+| prograde, a<2 (**favored**) | 1.6 AU, 50–70° | ≈1.0 | **UNSTABLE** |
+| retrograde, a<2 | 1.6 AU, ~120° | 0.79 | stable |
+| prograde, a>2 | 2.1 AU, ~50° | 0.88 | stable (marginal) |
+| retrograde, a>2 | 2.1 AU, ~120° | 0.88 | stable (marginal) |
+
+So the accurate statement is **not** "α Cen A b is unstable" but: **the
+Beichman-*favored* prograde inner family (a ≈ 1.6 AU, i_mut 50–70°) is
+Kozai-unstable, while the other three proposed families — retrograde inner,
+and both outer (a ≈ 2.1 AU) families — keep the planet bounded over 10⁴ yr.**
+If α Cen A b is real, its survival hinges on which family it actually occupies.
+
+**Follow-up:** tidal damping (absent from the point-mass sim) would set where a
+high-e/inclined orbit circularizes rather than disrupts, and a finer grid near
+the 30° and 110° boundaries would sharpen the stable band.
 
 ## How to use
 
