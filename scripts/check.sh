@@ -41,9 +41,11 @@ if [ $fail -eq 0 ]; then echo "  [PASS] 컨벤션 점검 통과"; fi
 
 echo ""
 echo "── 5. 경로 마이그레이션 잔여물 점검 ──"
-# 이 스크립트 자체는 패턴을 정의하는 파일이므로 self-match 제외.
-patterns="alpha-cen-proxima-system|trappist-1-system|docs/wiki|llm-wiki|skills-lock"
-hits=$(git grep -lE "$patterns" -- ':!scripts/check.sh' 2>/dev/null || true)
+# 이 스크립트 자체(패턴 정의)와 sprawl-audit 문서(이 패턴들을 인용·논의하는
+# 자기참조 감사 기록)는 제외. `docs/wiki` 는 이제 build_docs.py 가 정상 생성하는
+# 라이브 렌더 경로라 패턴에서 뺀다(옛 flat 위키 경로 가드는 LLM-위키 롤백으로 무의미).
+patterns="alpha-cen-proxima-system|trappist-1-system|llm-wiki|skills-lock"
+hits=$(git grep -lE "$patterns" -- ':!scripts/check.sh' ':!plans/doc-tool-sprawl-audit.md' ':!ko/plans/doc-tool-sprawl-audit.md' 2>/dev/null || true)
 dup_skill=$(git grep -lE "\.agents/skills/(firefly-cfg|nearstars-phase3|find-skills|kopernicus-cfg|nearstars-add-star)/" -- ':!scripts/check.sh' 2>/dev/null || true)
 if [ -n "$hits" ] || [ -n "$dup_skill" ]; then
   [ -n "$hits" ] && { echo "  옛 경로 잔존:"; echo "$hits" | sed 's/^/    /'; }
