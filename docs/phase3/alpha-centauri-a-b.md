@@ -39,12 +39,15 @@ invention), and because a ringed giant around the nearest Sun-like star is
 the more distinctive render, the cfg adopts it.
 
 **Scenario choice for NearStars: a temperate (~225 K) Saturn-class gas
-giant on an eccentric (e ≈ 0.4) ~1.6 AU orbit around the G2V solar twin
-α Centauri A, girdled by a dark, optically thick rocky ring — a single-roll
-JWST candidate, set in the close eccentric α Cen AB binary at a mutual
-inclination of ~50°.** The orbit family, mass, temperature, and
-water-cloud atmosphere are the paper's favored solution and are
-canonical-aligned; the ring (vs a ring-free 1.1 R_Jup inflated giant), the
+giant on a stability-selected near-circular (e ≈ 0.1) ~1.6 AU orbit around
+the G2V solar twin α Centauri A, girdled by a dark, optically thick rocky
+ring — a single-roll JWST candidate, set in the close eccentric α Cen AB
+binary at a mutual inclination of ~16° (the observed ~50° is
+Kozai-unstable).** The mass, temperature, and water-cloud atmosphere are
+the paper's favored solution and are canonical-aligned, while the orbit's
+eccentricity and inclination are NearStars stability-selected (the observed
+e ≈ 0.4 / i ≈ 50° orbit is Kozai-unstable, see `## Canonical
+alternatives`); the ring (vs a ring-free 1.1 R_Jup inflated giant), the
 pale cloud tint, rotation, and obliquity are tie-breaks. The ring-free
 reading is preserved in `## Canonical alternatives`.
 
@@ -59,11 +62,11 @@ conditional on its existence and on the favored orbit family.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `tidally_locked` | false | high | ~1.6 AU orbit around a 1.1 M☉ star — tidal timescale ≫ the 5.3 Gyr age; no spin–orbit coupling |
-| `eccentricity` | 0.4 | medium | Beichman et al. 2025 — stable orbit families cluster e ≈ 0.33–0.46 across the four solutions; representative 0.4 |
+| `eccentricity` | 0.1 | medium | NearStars stability-selected (median of the HZ-stable range 0–0.22 from a REBOUND/TRACE scan). The Beichman-observed e ≈ 0.4 (families 0.33–0.46) is Kozai-unstable at the observed inclination — see Canonical alternatives |
 | `semi_major_axis_au` | 1.6 | medium | Beichman et al. 2025 §5.3 — the **a < 2 AU family is favored** (higher T_eq fits F1550C); a ≈ 1.58–1.68 AU. The Phase 2 DB representative was reconciled from 1.9 AU to 1.6 AU (P 705 d) to match this favored family, so the in-game orbit tracks the synthesis |
 | `sidereal_period_yr` | ~2.0 | medium | Beichman et al. 2025 — 2–3 yr range; ~2 yr for the favored a ≈ 1.6 AU / 1.1 M☉ |
-| `mutual_inclination_deg` | 50 | medium | Beichman et al. 2025 (Table 4) — inclination relative to the α Cen AB orbital plane (i_AB = 79.24°); prograde family ≈ 49–70°, representative 50°. The clean, physically meaningful inclination |
-| `inclination_deg` | ~55 (bimodal, weak) | low | Tie-break: the sky-plane inclination is bimodal (≈ 55° or ≈ 124°, family-dependent; Beichman Table 4) — not a single clean value. cfg uses the prograde ~55° as a representative orbit tilt |
+| `mutual_inclination_deg` | 16 | medium | NearStars stability-selected (median of the HZ-stable range 0–33°). Beichman Table 4 gives the OBSERVED ≈50° (prograde) / ≈130° (retrograde) wrt the α Cen AB plane (i_AB = 79.24°), but ≳35° is Kozai-unstable — see Canonical alternatives |
+| `inclination_deg` | unset | low | The constrained quantity is the mutual inclination to the AB plane (row above); the sky-plane inclination is bimodal/weak (Beichman Table 4). cfg-frame inclination left as an open item |
 | `mass_mearth` | 120 | medium | Beichman et al. 2025 — Saturn-class, 90–150 M⊕ (Saturn = 95); ring-model solution ~120 M⊕. Atmosphere fits restricted to log g 2.5–3.0 to respect RV limits (Zhao 2018: M sin i < 100 M⊕ for P ≲ 1000 d) |
 | `mass_mjup` | 0.38 | medium | = 120 M⊕ / 317.8 |
 | `radius_rjup` | 1.0 | low | Tie-break: the **ring-model** radius (Beichman §5.3); the ring-free atmosphere fit gives ~1.1–1.15 R_Jup (inflated for a 5 Gyr giant). cfg adopts 1.0 R_Jup with the ring carrying the extra cross-section |
@@ -91,7 +94,7 @@ conditional on its existence and on the favored orbit family.
 | `ring_observed` | false | high | The ring is a **model interpretation** of the F1550C brightness, not resolved; S1 is an unresolved point source |
 | `magnetic_field_strength_microtesla_equator` | 500 | low | Tie-break: Saturn-analog dynamo (~500 µT-class) for a Saturn-mass giant; no measurement |
 | `aurora_present` | false | medium | The quiet G2V wind (log R'HK = −4.95) at 1.6 AU is a weak plasma driver; like the other quiet-host giants, no strong aurora expected. cfg renders none |
-| `star_apparent_angular_diameter_deg` | 0.41 | high | derived: 2 R_star / a = 2 × 1.2234 R☉ / 1.6 AU ≈ 0.41° — slightly smaller than the Sun from Earth (0.53°). Varies over the eccentric orbit: ~0.68° at periastron (0.96 AU), ~0.29° at apastron (2.24 AU) |
+| `star_apparent_angular_diameter_deg` | 0.41 | high | derived: 2 R_star / a = 2 × 1.2234 R☉ / 1.6 AU ≈ 0.41° — slightly smaller than the Sun from Earth (0.53°). Varies over the orbit: ~0.45° at periastron (1.44 AU), ~0.37° at apastron (1.76 AU) |
 | `stellar_illumination_color_temp_k` | 5847 | high | inherited from host Phase 3 (`docs/phase3/alpha-centauri-a.md`) — G2V, near-white warm sunlight |
 | `companion_stars_in_sky` | α Cen B (K1V) at 11.2–35.6 AU; Proxima (M5.5Ve) at ~13 000 AU | high | Akeson et al. 2021 / Kervella 2017 — the eccentric K-dwarf companion is a brilliant second "sun"; Proxima a faint red point |
 
@@ -117,9 +120,10 @@ modest belt–zone contrast, brighter and more uniform than Jupiter.
 Because internal heat is negligible (T_int < 110 K; Beichman §5.1), the
 appearance is **insolation-set** — unlike the self-luminous super-Jupiter
 ε Indi A b, α Cen A b glows only as warm as its starlight makes it. The
-e ≈ 0.4 orbit swings the planet from ~0.96 AU (periastron) to ~2.24 AU
-(apastron), a ~4× insolation range, so the cloud deck likely brightens and
-the banding sharpens near periastron — a seasonal cycle on a ~2-yr period.
+e ≈ 0.1 orbit swings the planet from ~1.44 AU (periastron) to ~1.76 AU
+(apastron), a mild ~1.5× insolation range, so the cloud deck likely
+brightens and the banding sharpens slightly near periastron — a gentle
+seasonal cycle on a ~2-yr period.
 
 The defining visual is the **ring**. Adopting Beichman §5.3, α Cen A b
 carries a dark, optically thick rocky ring in its Roche zone (1.4–2.5
@@ -151,7 +155,7 @@ less so).
 **Sky appearance from a cloud-top / moon observer.** From the cloud tops
 the sky is a bright pale-white overcast, lit by a near-Sun-like star.
 α Cen A subtends ~0.41° at 1.6 AU — a touch smaller than our Sun, swinging
-from ~0.68° at periastron to ~0.29° at apastron — a warm-white G2V disk
+from ~0.45° at periastron to ~0.37° at apastron — a warm-white G2V disk
 (`#fff4e8`) delivering ~0.6 Earth's insolation. The dark ring would arc
 across the sky as a dusty band, edge-lit by the star. The system's
 spectacle is the **companion**: α Cen B, a K1V star, orbits the AB
@@ -210,8 +214,8 @@ candidate gas giant around a solar twin:
   girdle, not Saturn's brilliant ice. Inclined to the 27° obliquity.
 - **Limb.** A pale, bright water-cloud limb; thin and near-white.
 - **Nightside.** Dark and cool; no significant aurora (quiet G2V wind).
-- **Star in sky.** α Cen A subtends ~0.41° (periastron ~0.68°, apastron
-  ~0.29°) — a warm-white G2V (`#fff4e8`) near-Sun, ~0.6 Earth's insolation.
+- **Star in sky.** α Cen A subtends ~0.41° (periastron ~0.45°, apastron
+  ~0.37°) — a warm-white G2V (`#fff4e8`) near-Sun, ~0.6 Earth's insolation.
 - **Companion suns.** α Cen B (K1V) sweeps from 11.2 to 35.6 AU on its
   e ≈ 0.52 orbit — a brilliant orange second sun, intense at periastron;
   far beyond, Proxima (M5.5Ve) is a faint red point at ~13 000 AU. The
@@ -226,12 +230,39 @@ co-equal ring-free interpretation of the same F1550C brightness.
 | cfg pick | Canonical alternative | Why cfg diverges |
 |---|---|---|
 | `ring_present = true`, `radius_rjup = 1.0` (smaller planet + optically thick dark ring) | **Ring-free inflated giant: `radius_rjup ≈ 1.1–1.15`, no ring** — the atmosphere-only best fit (Beichman §5.2). The larger radius alone supplies the cross-section that produces the F1550C brightness | Both are explicitly offered by Beichman as fitting the data equally; §5.3 notes 1.1 R_Jup is "more commonly observed for hotter planets" and is only plausible for a mature giant if rapidly rotating / pole-on, which motivates the ring alternative. The cfg picks the ring for visual distinctiveness (interesting-first), since it is paper-grounded and the more striking render. Users preferring the conservative reading should set `ring_present = false` and `radius_rjup = 1.1` |
+| `eccentricity = 0.1`, `mutual_inclination = 16°` (stability-selected) | **Observed (Beichman): e ≈ 0.4, mutual inclination ≈ 50°** — the favored imaging-fit orbit | The observed orbit is Kozai-Lidov **unstable**: eccentric KL pumps e → ~0.998 within a few kyr, periastron crashes to ~1 stellar radius (tidal disruption; REBOUND/TRACE, see `STABILITY_REPORT.md`). NearStars takes the median of the HZ-stable range instead. A second canonical reading — Avatar's 1.2 AU — is also unstable (secular resonance, e → 0.64) |
 
 A second within-paper fork is the **orbit family**: the cfg uses the
 favored a < 2 AU family (a ≈ 1.6 AU, T_eq ≈ 225 K). The a > 2 AU family
 (a ≈ 2.1 AU, T_eq ≈ 195 K) is allowed but disfavored (lower T_eq fits the
 F1550C brightness less well). The Phase 2 DB orbital is now set to the
 favored a ≈ 1.6 AU family (reconciled from an earlier 1.9 AU midpoint).
+
+## Cultural context — Avatar's Polyphemus and Pandora
+
+α Centauri A b is the real-world candidate that the science press and a
+2025 follow-up identified with **Polyphemus**, the gas giant of James
+Cameron's *Avatar*. In the films' canon Polyphemus is a Saturn-class gas
+giant orbiting **Alpha Centauri A** in its habitable zone, with fourteen
+moons — the fifth, **Pandora**, is the Na'vi homeworld. The match is close:
+a Saturn-class (90–150 M⊕) gas giant, no measured ring, in α Cen A's HZ, at
+the nearest Sun-like star. When Beichman et al. 2025 reported S1, NPR and
+Live Science called it "a real-life Pandora," and a 2025 astrobiology paper
+— *Seeking the Worlds of Avatar* — assessed the prospects for detecting
+exactly such habitable-zone moons.
+
+This is naming/lore context only, kept separate from the measured science
+above. But the dynamical question it raises is real and is answered in
+`phase3/stability-sim`: can a Pandora-class habitable moon survive here? A
+REBOUND/TRACE scan shows the observed eccentric/inclined orbit is
+Kozai-unstable (see Canonical alternatives), while the stability-selected
+orbit this synthesis uses (a = 1.6 AU, e = 0.1, mutual inclination ≈ 16°)
+keeps Polyphemus in the HZ over 10⁵ yr and hosts a Hill-stable Pandora-mass
+moon (0.45 M⊕) at ~225 000 km — a ~27 h tidally-locked day with Polyphemus
+spanning ~36° of its sky. The Avatar setup is dynamically viable, just not
+on the favored *observed* orbit. The Avatar canon places Polyphemus at
+1.2 AU, but that distance is unusable here (a secular resonance pumps
+e → 0.64); 1.6 AU is the nearest robust HZ orbit.
 
 ## Bibliography
 
@@ -286,17 +317,18 @@ favored a ≈ 1.6 AU family (reconciled from an earlier 1.9 AU midpoint).
   P 705 d (T_eq ≈ 225 K) so the in-game orbit matches this synthesis; the
   a > 2 AU family (a ≈ 2.1 AU) is retained only in prose as the disfavored
   alternative.
-- **Dynamical stability (Kozai-Lidov) — conditional on the orbit family.** A
-  REBOUND/TRACE stability run (`phase3/stability-sim`, see `STABILITY_REPORT.md`)
-  finds the favored prograde a ≈ 1.6 AU family at mutual inclination ~50° to
-  the AB plane is **Kozai-Lidov unstable**: eccentric KL pumps e to ~0.998
-  within a few thousand years, crashing the periastron to ~one stellar radius
-  (tidal disruption). The visual / atmosphere synthesis here assumes that
-  favored configuration, so it is conditional — a mutual-inclination sweep
-  shows 3 of Beichman's 4 families survive (retrograde inner, and both
-  a ≈ 2.1 AU families keep e_max ≲ 0.88), with a stable band at i_mut ≲ 30° or
-  ≳ 110°. If A b is real, whether it survives — and thus whether this body
-  ships at all — hinges on which family it actually occupies.
+- **Dynamical stability (Kozai-Lidov) — resolved.** The orbit is now
+  **stability-selected** (e = 0.1, mutual i ≈ 16°), the median of the
+  HZ-stable range from a REBOUND/TRACE scan (`phase3/stability-sim`, see
+  `STABILITY_REPORT.md`): it keeps the planet in α Cen A's habitable zone
+  (1.37–1.84 AU) over 10⁵ yr and hosts a Hill-stable Pandora-mass moon. The
+  Beichman-observed e ≈ 0.4 / mutual i ≈ 50° orbit is **Kozai-Lidov
+  unstable** (eccentric KL pumps e → ~0.998 within a few kyr, periastron
+  crashes to ~one stellar radius — tidal disruption) and is retained only as
+  the unstable canonical alternative. The one remaining open item is the
+  cfg-frame inclination: the constrained quantity is the mutual inclination
+  to the AB plane (≈16°), which still needs converting to the system-frame
+  value for the cfg.
 - **Ring vs inflated radius.** The ring (`ring_present = true`) and the
   ring-free 1.1 R_Jup giant are co-equal paper readings
   (`## Canonical alternatives`). A resolved image or a NIRCam 4–5 µm
