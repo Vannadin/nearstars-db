@@ -141,6 +141,24 @@ If α Cen A b is real, its survival hinges on which family it actually occupies.
 high-e/inclined orbit circularizes rather than disrupts, and a finer grid near
 the 30° and 110° boundaries would sharpen the stable band.
 
+## Hypothetical moons — demonstration
+
+The sim also resolves moons (extra bodies via `hypotheticals/<system>.json`).
+With `hypotheticals/trappist_1.json` containing two test moons:
+
+| Moon | Parent | a (km) | Hill frac | Outcome |
+|------|--------|--------|-----------|---------|
+| TRAPPIST-1 e moon (safe) | e | 20,000 | 0.23 | bound, stable |
+| TRAPPIST-1 g moon (risky) | g | 110,000 | 0.64 → ∞ | **ejected within 1000 yr**, e → 358,283 |
+
+The risky moon at 0.64 R_Hill exceeds the Domingos et al. 2006 prograde
+stability limit (~0.5 R_Hill) and is ejected; its escape also perturbs
+TRAPPIST-1 g (e_max grows from 0.013 to 0.028) — a small but real cascade
+visible in the integration. This confirms the tool resolves the **full
+star–planets–moons hierarchy** in one N-body sim: stellar tide on the moon,
+mutual planet perturbations, and the moon's gravity back on its parent are all
+tracked. (A deliberately-unstable demo; output in `results/with_moons/`.)
+
 ## How to use
 
 ```bash
