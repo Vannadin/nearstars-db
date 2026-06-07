@@ -1,5 +1,5 @@
 {
-  "system": "Alpha Centauri AB",
+  "system": "Alpha Centauri AB + A b",
   "star": {
     "name": "Alpha Centauri A",
     "mass_msun": 1.1055
@@ -12,23 +12,38 @@
       "a_au": 23.675416374710288,
       "e": 0.5179,
       "inc_rad": 1.3823880340421086
+    },
+    {
+      "name": "Alpha Centauri A b",
+      "mass_msun": 0.0003603282183295457,
+      "mass_kind": "imaging_photometric_estimate",
+      "a_au": 1.6,
+      "e": 0.4,
+      "inc_rad": 0.5097234080449439,
+      "mutual_incl_deg": 50.0
     }
   ],
   "hypotheticals": [],
   "integration": {
-    "integrator": "whfast",
-    "elapsed_sec": 0.0019910335540771484,
-    "dt_yr": 2.1913172770189884,
-    "innermost_period_yr": 109.56586385094941,
-    "energy_relative_error": 3.814484081498828e-12,
-    "megno_final": 2.000601944928591
+    "integrator": "trace",
+    "elapsed_sec": 0.33193016052246094,
+    "dt_yr": 0.13802017959023316,
+    "innermost_period_yr": 6.9010089795116585,
+    "energy_relative_error": 0.0008319410717107756,
+    "megno_final": null
   },
   "per_body": {
     "Alpha Centauri B": {
-      "a_min": 23.67541637470878,
-      "a_max": 23.675416374938543,
-      "e_min": 0.5178999999998255,
-      "e_max": 0.5179000000018187
+      "a_min": 23.565916178629234,
+      "a_max": 23.697908737192613,
+      "e_min": 0.5139905943341742,
+      "e_max": 0.51859161973658
+    },
+    "Alpha Centauri A b": {
+      "a_min": 1.0410870654169515,
+      "a_max": 2.3736418131418384,
+      "e_min": 0.08113382114460373,
+      "e_max": 0.9977326331716256
     }
   },
   "hill_track": {},
@@ -37,10 +52,16 @@
       "Alpha Centauri B": {
         "flags": [],
         "status": "stable"
+      },
+      "Alpha Centauri A b": {
+        "flags": [
+          "e_max=0.998 \u2265 0.9 (orbit nearly unbound)"
+        ],
+        "status": "unstable"
       }
     },
-    "overall": "stable",
-    "lyapunov_time_yr": 33225630.867619105,
+    "overall": "unstable",
+    "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }
 }

@@ -50,12 +50,15 @@ from the canonical integrator in the last column.
 | Barnard's Star | 4 | 248 | 0.106 | 8.3×10⁻⁴ | **chaotic, bounded** | TRACE |
 | YZ Cet | 3 | 8.024 | 0.103 | 2.0×10⁻³ | **chaotic, bounded** | TRACE |
 | AU Mic | 4 | 6249 | 0.63 | 3.5 (b's a triples) | **chaotic, hot but bounded** | TRACE |
-| α Centauri AB | 2 stars (no planet) | 2.001 | 0.518 | — | **stable (regular)** | whfast |
+| α Cen A b (in AB binary) | planet + 2 stars | n/a (trace) | 0.998 | 1.3 | **UNSTABLE — Kozai-Lidov** | trace |
 
-**No system ejects a body within 10,000 yr under the accurate integrator.**
-Eight are regular (MEGNO ≈ 2). Three are formally chaotic but stay tightly
+Eleven of the twelve are stable or chaotic-but-bounded under the accurate
+integrator: seven regular (MEGNO ≈ 2), three formally chaotic but tightly
 bounded (TRAPPIST-1, Barnard, YZ Cet — tight inner M-dwarf chains, consistent
-with the literature). AU Mic is the one borderline case (see below).
+with the literature), and AU Mic dynamically hot but bounded. **The lone
+genuine instability is the S-type candidate α Cen A b**, driven to e → 0.99 by
+Kozai-Lidov at its 50° mutual inclination (below). The α Cen AB binary itself
+is stable (B: e = 0.514–0.519, a-drift < 0.6%).
 
 ## AU Mic — the case that justifies the hybrid policy
 
@@ -82,16 +85,40 @@ configuration* as marginal/chaotic, not a confirmed instability. The orbit
 crossings mean longer-baseline (10⁶ yr) or Monte-Carlo-over-mass follow-up
 would refine it.
 
-## α Centauri A b — not yet tested
+## α Centauri A b — Kozai-Lidov unstable at the 50° mutual inclination
 
-The `alpha_centauri` run is the **AB binary only** (verdict tracks α Cen B's
-orbit). The S-type candidate **α Cen A b** (a ≈ 1.6 AU, e ≈ 0.4, mutual
-i ≈ 50° to the AB plane) is **not injected** by the current binary loader.
-Because the mutual inclination is above the Kozai-Lidov critical angle, that
-planet is expected to undergo large vZKL eccentricity oscillations — a
-genuinely interesting S-type test that needs a loader extension (inject the
-planet around A at the relative inclination, integrate with TRACE over ~10⁵ yr
-to resolve several Kozai cycles). Tracked as follow-up.
+The binary loader now injects the S-type candidate **α Cen A b** (a ≈ 1.6 AU,
+e ≈ 0.4, m ≈ 120 M⊕) around star A, placed at the same node as B so its mutual
+inclination to the AB plane is exactly **50°** (Beichman 2025, prograde) —
+inside the Kozai-Lidov window (39.2°–140.8°). Integrated with TRACE (the
+near-equal binary masses break WHFast's small-perturber assumption).
+
+**Result — the planet is dynamically unstable:**
+
+| Body | a range (AU) | e range | status |
+|------|--------------|---------|--------|
+| α Cen B | 23.57–23.70 | 0.514–0.519 | stable (binary unaffected) |
+| α Cen A b | 1.04–2.37 | 0.081 → **0.998** | **unstable** |
+
+The eccentric companion drives **eccentric Kozai-Lidov (octupole)**
+oscillations that pump the planet's eccentricity to **e ≈ 0.998 within a few
+thousand years** — a periastron of a(1−e) ≈ 0.005 AU, barely above α Cen A's
+radius (0.0057 AU). The planet would be tidally disrupted / circularized;
+as a 1.6 AU world it does **not survive** the inclined configuration.
+
+**This is conditional on the inclination, and that's the point.** A
+**coplanar** α Cen A b at 1.6 AU is well inside the literature's ~3 AU S-type
+stability limit and would be stable — α Cen A planets are only unstable when
+*inclined* into the Kozai window. So the verdict is: *if* α Cen A b is real
+*and* near the Beichman-favored prograde 50° mutual inclination, it is
+Kozai-unstable; a low-inclination orbit would survive. The retrograde ~130°
+family is also in the window. (Energy error rises to |ΔE/E| ≈ 8×10⁻⁴ during
+the deep near-stellar periastra; the e ≥ 0.9 verdict is robust regardless.)
+
+**Follow-up:** a mutual-inclination sweep (coplanar → 90°) would map the exact
+Kozai-stable inclination band for this system, and tidal damping (absent from
+the point-mass sim) would set where an inclined planet circularizes rather
+than disrupts.
 
 ## How to use
 
@@ -133,7 +160,10 @@ single-star `db/systems/<system>.json`.
    A Monte-Carlo-over-uncertainties pass is the natural upgrade.
 4. **AU Mic d/e** semi-major axes are Kepler-derived from period (no curated
    a); candidates, uncertain masses, young system.
-5. **α Cen A b** is not yet in the stability sim (binary-loader limitation).
+5. **α Cen A b** is integrated at a fixed 50° mutual inclination (the
+   Beichman-favored prograde value); its Kozai instability is
+   inclination-dependent — a coplanar orbit would be stable, so the verdict is
+   conditional on that inclination.
 6. **10⁴ yr is short** for true secular evolution; for the chaotic-but-bounded
    and hot cases a 10⁶-yr or SPOCK-style long-term-probability follow-up would
    strengthen the claim.

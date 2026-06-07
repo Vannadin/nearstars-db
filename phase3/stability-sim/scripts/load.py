@@ -168,7 +168,15 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.
 
 
 def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
-    """α Cen AB inner binary only (Proxima outer orbit ignored — irrelevant on 10⁴ yr)."""
+    """α Cen AB binary, plus the S-type candidate α Cen A b around A if curated.
+
+    The AB binary itself (Proxima outer orbit ignored — irrelevant on 10⁴ yr)
+    is trivially stable; the interesting case is the inner planet, which sits
+    at a mutual inclination ~50° to the AB plane (Beichman 2025) — inside the
+    Kozai-Lidov window, so its eccentricity is expected to oscillate. The
+    near-equal binary masses break WHFast's small-perturber assumption, so run
+    this system with --integrator trace (or ias15).
+    """
     a_path = db_root / "alpha_centauri_a.json"
     d_a = _load_json(a_path)
     binary = d_a["binary_orbit"]
@@ -181,6 +189,9 @@ def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
     dist_pc = 1000.0 / plx_mas
     a_au = orbit_ab["a_arcsec"] * dist_pc
 
+    i_ab = math.radians(orbit_ab["i_deg"])
+    Omega_ab = math.radians(orbit_ab["Omega_deg"])
+
     sim = rebound.Simulation()
     sim.units = ("AU", "yr", "Msun")
     sim.add(m=m_a, name="Alpha Centauri A")
@@ -189,26 +200,59 @@ def build_alpha_cen_ab(db_root: Path) -> tuple[rebound.Simulation, dict]:
         m=m_b,
         a=a_au,
         e=orbit_ab["e"],
-        inc=math.radians(orbit_ab["i_deg"]),
-        Omega=math.radians(orbit_ab["Omega_deg"]),
+        inc=i_ab,
+        Omega=Omega_ab,
         omega=math.radians(orbit_ab["omega_deg"]),
         M=0.0,
         name="Alpha Centauri B",
     )
 
+    planets_meta = [
+        {
+            "name": "Alpha Centauri B",
+            "mass_msun": m_b,
+            "mass_kind": "true",
+            "a_au": a_au,
+            "e": orbit_ab["e"],
+            "inc_rad": i_ab,
+        }
+    ]
+
+    # S-type candidate around A. Place it at the same node as B so the mutual
+    # inclination is exactly |i_B - i_planet| = 50° (Beichman 2025, prograde) —
+    # inside the Kozai-Lidov window (39.2°–140.8°) → expect e oscillations.
+    planet = next((p for p in d_a.get("planets", [])
+                   if p.get("name") == "Alpha Centauri A b"), None)
+    if planet is not None:
+        m_p, kind = _planet_mass_msun(planet)
+        orb = _planet_orbital(planet, star_m_msun=m_a)
+        i_mut_deg = 50.0
+        i_planet = i_ab - math.radians(i_mut_deg)
+        sim.add(
+            primary=sim.particles[0],
+            m=m_p,
+            a=orb["a"],
+            e=orb["e"],
+            inc=i_planet,
+            Omega=Omega_ab,
+            omega=orb["omega"],
+            M=orb["M"],
+            name="Alpha Centauri A b",
+        )
+        planets_meta.append({
+            "name": "Alpha Centauri A b",
+            "mass_msun": m_p,
+            "mass_kind": kind,
+            "a_au": orb["a"],
+            "e": orb["e"],
+            "inc_rad": i_planet,
+            "mutual_incl_deg": i_mut_deg,
+        })
+
     meta = {
-        "system": "Alpha Centauri AB",
+        "system": "Alpha Centauri AB" + (" + A b" if planet is not None else ""),
         "star": {"name": "Alpha Centauri A", "mass_msun": m_a},
-        "planets": [
-            {
-                "name": "Alpha Centauri B",
-                "mass_msun": m_b,
-                "mass_kind": "true",
-                "a_au": a_au,
-                "e": orbit_ab["e"],
-                "inc_rad": math.radians(orbit_ab["i_deg"]),
-            }
-        ],
+        "planets": planets_meta,
     }
     return sim, meta
 
