@@ -156,6 +156,29 @@ If α Cen A b is real, its survival hinges on which family it actually occupies.
 high-e/inclined orbit circularizes rather than disrupts, and a finer grid near
 the 30° and 110° boundaries would sharpen the stable band.
 
+### Polyphemus & Pandora (Avatar) — a HZ-stable orbit that hosts a moon
+
+α Cen A b is the real-life candidate for **Polyphemus**, the *Avatar* gas giant
+whose moon **Pandora** is the Na'vi homeworld (Beichman 2025 / NPR 2025 /
+*Seeking the Worlds of Avatar*, Astrobiology 2025). Asking whether a habitable
+Pandora could actually survive here drove a fine-tuning scan:
+
+- **The Avatar canon distance (1.2 AU) is unusable** — a secular resonance near
+  1.2–1.3 AU pumps e to ~0.64 even from a circular start, throwing Polyphemus
+  out of the HZ.
+- **The HZ-stable zone is a ≈ 1.4–1.6 AU.** The DB/Phase-3 orbit takes the
+  median of the stable range — e 0–0.22 → **e = 0.1**, mutual inclination
+  0–33° → **≈ 16°** — at a = 1.6 AU (the observed semi-major axis): HZ-stable
+  over 10⁵ yr (orbit 1.37–1.84 AU, e_max 0.15).
+- **Pandora is Hill-stable.** A 0.45 M⊕ moon at 225 000 km (Kepler back-out of
+  Pandora's ~27 h tidally-locked day; Polyphemus spans ~36° of its sky) sits at
+  ~0.02 R_Hill on a near-circular orbit (e ≈ 0, bound) — deep inside the
+  Domingos+2006 limit. The full Avatar hierarchy (α Cen A → Polyphemus →
+  Pandora, perturbed by α Cen B) is dynamically viable on the stability-selected
+  orbit, though not on the Kozai-unstable observed one. Test:
+  `hypotheticals/alpha_centauri.json`, run with
+  `--acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16`.
+
 ## Hypothetical moons — demonstration
 
 The sim also resolves moons (extra bodies via `hypotheticals/<system>.json`).
