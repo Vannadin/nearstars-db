@@ -74,7 +74,8 @@
   ],
   "hypotheticals": [],
   "integration": {
-    "elapsed_sec": 52.918965101242065,
+    "integrator": "whfast",
+    "elapsed_sec": 51.623132944107056,
     "dt_yr": 0.000179012898586513,
     "innermost_period_yr": 0.00895064492932565,
     "energy_relative_error": 5.960907935916408e-10,

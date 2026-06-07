@@ -1,72 +1,109 @@
 # Phase 3 Stability Report — 10,000 yr N-body Integration
 
-**Generated:** 2026-05-22
-**Integrator:** REBOUND 5.0 WHFast + MEGNO
-**Horizon:** 10,000 yr (Principia play window)
-**Phase initialisation:** raw.omega_deg from DB where available, Ω and M randomised with deterministic seed (`phase_seed=0`).
+**Generated:** 2026-06-07
+**Integrator policy:** REBOUND 5.0 **WHFast + MEGNO** as the fast first-pass
+screen; **TRACE** (Lu, Hernandez & Rein 2024) re-verification for any system
+WHFast flags chaotic or unstable. **IAS15** available for spot-checks.
+**Horizon:** 10,000 yr (Principia play window).
+**Phase initialisation:** `raw.omega_deg` from DB where available; Ω and M
+randomised with a deterministic seed (`phase_seed=0`).
 
-## Verdict summary
+## Two diagnostics, two questions
 
-| System            | Bodies         | MEGNO      | dynamic verdict             | Lyapunov time |
-|-------------------|----------------|------------|------------------------------|---------------|
-| TRAPPIST-1        | 7 planets      | 1265       | chaotic but Hill-stable     | ≈16 yr        |
-| Proxima Cen       | 2 planets      | 2.000      | stable (regular)            | ∞             |
-| α Centauri AB     | 2 stars        | 2.001      | stable (regular)            | ∞             |
+The verdict separates *what actually happened* from *chaos risk* — they are
+not the same and are read together:
 
-**All three systems** survive the 10,000-year window with no escapes and bounded eccentricities. TRAPPIST-1 shows formal chaos (Lyapunov-positive trajectory divergence) but the resonant chain keeps every planet Hill-bounded — consistent with Tamayo et al. 2017 / Agol et al. 2021.
+- **a/e-drift bounds** (per-body a_min/a_max, e_min/e_max) — the **actual
+  outcome**: did a body eject (a balloons) or its orbit go unbound/crossing
+  (e → 1)? This is the **final pass/fail** for shipping a system (the
+  game-relevant question is "does a planet escape or collide"). Thresholds:
+  `e_max ≥ 0.9` or `a_max/a_min ≥ 10×` → unstable. Its accuracy depends on
+  the integrator.
+- **MEGNO** — the **chaos early-warning**: time-averaged divergence of nearby
+  orbits. ⟨Y⟩ → 2 = regular; growing = chaotic. Flags long-term sensitivity
+  *before* any large excursion, but **chaos ≠ instability** (a chaotic system
+  can stay bounded for Gyr — e.g. TRAPPIST-1). Needs variational equations, so
+  it is **unavailable under TRACE**.
 
-## TRAPPIST-1 — 7 planets
+**Why the hybrid policy:** WHFast is fast and gives MEGNO, but it is
+inaccurate during close encounters — it can report a *spurious* ejection
+(see AU Mic). TRACE integrates close encounters accurately (≈IAS15) but has
+no MEGNO. So WHFast supplies the chaos flag and TRACE supplies the
+trustworthy a/e outcome for the flagged systems; the canonical result for a
+flagged system uses TRACE, with its WHFast MEGNO carried in the table below.
 
-| Body | a range (AU) | Δa/a | e range | status |
-|------|--------------|------|---------|--------|
-| b | 0.01153–0.01154 | 9.4×10⁻⁴ | 0.0004–0.0105 | stable |
-| c | 0.01579–0.01581 | 1.2×10⁻³ | 0.0003–0.0114 | stable |
-| d | 0.02223–0.02229 | 2.6×10⁻³ | 0.0007–0.0238 | stable |
-| e | 0.02920–0.02929 | 3.1×10⁻³ | 0.0002–0.0188 | stable |
-| f | 0.03845–0.03855 | 2.6×10⁻³ | 0.0016–0.0158 | stable |
-| g | 0.04678–0.04689 | 2.5×10⁻³ | 0.0004–0.0130 | stable |
-| h | 0.06175–0.06214 | 6.3×10⁻³ | 0.0007–0.0169 | stable |
+## Verdict summary (12 systems)
 
-- |ΔE/E| = 1.8×10⁻⁸ — excellent energy conservation.
-- MEGNO = 1265 at t=10⁴ yr → Lyapunov time ≈ 16 yr. Formal chaos.
-- No body escapes; e_max < 0.025 for all seven; a-drift < 0.7% everywhere.
-- **Game-play implication:** the canonical Agol+2021 configuration is safe to ship as-is. Players' 10⁴-yr Principia warp will not destabilise the chain.
+`MEGNO` is the WHFast screen value (chaos indicator). `e_max` / `Δa/a` are
+from the canonical integrator in the last column.
 
-## Proxima Cen — 2 planets
+| System | Bodies | MEGNO (WHFast) | e_max | max Δa/a | verdict | canonical |
+|---|---|---|---|---|---|---|
+| Proxima Cen | 3 (b/c/d) | 2.000 | <0.001 | 8×10⁻⁴ | **stable (regular)** | whfast |
+| 55 Cnc | 5 | 1.961 | 0.12 | 3.3×10⁻² | **stable (regular)** | whfast |
+| 61 Vir | 3 | 1.962 | 0.39 | 1.1×10⁻³ | **stable (regular)** | whfast |
+| HD 219134 | 6 | 2.000 | 0.068 | 2.8×10⁻³ | **stable (regular)** | whfast |
+| HD 69830 | 3 | 1.998 | 0.20 | 7.8×10⁻⁴ | **stable (regular)** | whfast |
+| tau Cet | 4 | 2.001 | 0.24 | 3.6×10⁻⁴ | **stable (regular)** | whfast |
+| Teegarden's Star | 3 | 2.000 | 0.091 | 6.1×10⁻⁴ | **stable (regular)** | whfast |
+| TRAPPIST-1 | 7 | 1265 | 0.021 | 5.9×10⁻³ | **chaotic, bounded** | TRACE |
+| Barnard's Star | 4 | 248 | 0.106 | 8.3×10⁻⁴ | **chaotic, bounded** | TRACE |
+| YZ Cet | 3 | 8.024 | 0.103 | 2.0×10⁻³ | **chaotic, bounded** | TRACE |
+| AU Mic | 4 | 6249 | 0.63 | 3.5 (b's a triples) | **chaotic, hot but bounded** | TRACE |
+| α Centauri AB | 2 stars (no planet) | 2.001 | 0.518 | — | **stable (regular)** | whfast |
 
-| Body | a range (AU) | Δa/a | e range | status |
-|------|--------------|------|---------|--------|
-| d | 0.02881–0.02881 | 6.0×10⁻⁵ | 0–0.0004 | stable |
-| b | 0.04848–0.04848 | 4.5×10⁻⁵ | 0–0.0001 | stable |
+**No system ejects a body within 10,000 yr under the accurate integrator.**
+Eight are regular (MEGNO ≈ 2). Three are formally chaotic but stay tightly
+bounded (TRAPPIST-1, Barnard, YZ Cet — tight inner M-dwarf chains, consistent
+with the literature). AU Mic is the one borderline case (see below).
 
-- Mass type is **Msini** (RV-only detection). Real masses may be larger if inclinations are small; for the recommended values from Suárez Mascareño 2025 the system is regular and well-separated.
-- |ΔE/E| = 3.4×10⁻⁹. MEGNO = 2.000 — textbook regular.
-- Wide mutual separation (P_b/P_d ≈ 2.18, non-resonant) and tiny eccentricities → no risk in any reasonable horizon.
+## AU Mic — the case that justifies the hybrid policy
 
-## α Centauri AB — binary star (no planets)
+WHFast and TRACE *disagree* on AU Mic, and TRACE is right:
 
-- Pourbaix & Correia 2017 elements: P=79.91 yr, e=0.518.
-- 125 orbital cycles integrated. MEGNO = 2.001, |ΔE/E| = 3.8×10⁻¹².
-- Trivially stable (2-body system). Proxima outer orbit (P=547 kyr) excluded — phase unreliable per DB, and only 1.8% of one orbit elapses in 10⁴ yr.
+| integrator | AU Mic d | verdict |
+|---|---|---|
+| WHFast | a → **7.09 AU** (Δa/a = 84×), e → **0.99** | **unstable (ejection)** |
+| TRACE | a ∈ [0.089, **0.354**] AU, e ≤ **0.63** | **stable (bounded)** |
 
-## Hypothetical moons — demonstration
+WHFast's "ejection to 7 AU" is a **close-encounter artifact** — the 4-planet
+candidate config produces orbit crossings that WHFast cannot integrate
+accurately, so it flings d out. TRACE (accurate through close encounters)
+shows the system is **dynamically hot** — b's a triples, eccentricities reach
+~0.6, orbits cross — but **no body actually ejects** in 10⁴ yr. MEGNO = 6249
+(Lyapunov ≈ 3.2 yr) correctly diagnosed strong chaos; the chaos is real, the
+ejection was not.
 
-With `hypotheticals/trappist_1.json` containing two moons:
+**Caveat on AU Mic:** planets d (P = 12.74 d) and e (P = 33.11 d) are
+**unconfirmed TTV candidates** with no curated semi-major axis — a is derived
+from the measured period via Kepler III. The system is ~22 Myr old and the
+candidate masses are uncertain. So this flags *the candidate 4-planet
+configuration* as marginal/chaotic, not a confirmed instability. The orbit
+crossings mean longer-baseline (10⁶ yr) or Monte-Carlo-over-mass follow-up
+would refine it.
 
-| Moon                       | Parent | a (km) | Hill frac | Outcome |
-|----------------------------|--------|--------|-----------|---------|
-| TRAPPIST-1 e moon (safe)   | e | 20,000  | 0.23 | bound, stable |
-| TRAPPIST-1 g moon (risky)  | g | 110,000 | 0.64 → ∞ | **ejected within 1000 yr**, e → 358,283 |
+## α Centauri A b — not yet tested
 
-The risky moon at 0.64 R_Hill exceeds the Domingos et al. 2006 prograde stability limit (~0.5 R_Hill) and is ejected from the system. Its escape also perturbs TRAPPIST-1 g (e_max grows from 0.013 to 0.028) — a small but real cascade visible in the integration.
-
-This confirms the tool resolves the **full star–planets–moons hierarchy** in a single N-body sim: solar tide on the moon, mutual planet perturbations on the moon, and the moon's gravity back on its parent are all tracked.
+The `alpha_centauri` run is the **AB binary only** (verdict tracks α Cen B's
+orbit). The S-type candidate **α Cen A b** (a ≈ 1.6 AU, e ≈ 0.4, mutual
+i ≈ 50° to the AB plane) is **not injected** by the current binary loader.
+Because the mutual inclination is above the Kozai-Lidov critical angle, that
+planet is expected to undergo large vZKL eccentricity oscillations — a
+genuinely interesting S-type test that needs a loader extension (inject the
+planet around A at the relative inclination, integrate with TRACE over ~10⁵ yr
+to resolve several Kozai cycles). Tracked as follow-up.
 
 ## How to use
 
 ```bash
-# Baseline system stability
+# Fast first-pass screen (WHFast + MEGNO)
 .venv/bin/python phase3/stability-sim/scripts/run.py --system trappist_1 --years 10000
+
+# Accurate re-verification of a flagged system (close encounters / high-e)
+.venv/bin/python phase3/stability-sim/scripts/run.py --system au_mic --integrator trace
+
+# Gold-standard spot-check (adaptive high-order, + MEGNO, slow)
+.venv/bin/python phase3/stability-sim/scripts/run.py --system au_mic --integrator ias15
 
 # With hypothetical moons / extra planets
 .venv/bin/python phase3/stability-sim/scripts/run.py \
@@ -75,36 +112,44 @@ This confirms the tool resolves the **full star–planets–moons hierarchy** in
     --out-dir phase3/stability-sim/results/with_moons
 ```
 
-Add bodies by editing `hypotheticals/<system>.json`:
-```json
-{
-  "system": "<system_key>",
-  "bodies": [
-    {"name": "...", "parent": "<star or planet name>", "type": "moon|planet",
-     "semi_major_axis_km": ..., "eccentricity": 0, "inclination_deg": 0,
-     "mass_kg": ..., "radius_km": ...}
-  ]
-}
-```
-
-Pre-flight Hill-sphere check refuses moons placed outside R_Hill and warns above 0.5 R_Hill.
+Registered systems: `trappist_1`, `proxima_cen`, `alpha_centauri`, `55_cnc`,
+`61_vir`, `au_mic`, `barnards_star`, `hd_219134`, `hd_69830`, `tau_cet`,
+`teegardens_star`, `yz_cet`. The generic planetary loader reads any
+single-star `db/systems/<system>.json`.
 
 ## Caveats
 
-1. **TRAPPIST-1 eccentricities** come from `raw.eccentricity` (per-planet discovery-paper fits, ≈0.005–0.01). The Agol+2021 joint TTV fit gives tighter constraints (mostly < 0.01 with correlated phases). Using those would slightly reduce the measured chaos.
-2. **Initial orbital phases** for null DB fields are randomised. The exact Lyapunov number depends weakly on this seed; the qualitative verdict (chaotic vs regular) does not.
-3. **Msini masses** for Proxima planets: stability is robust at the published values, but a true-mass sensitivity sweep is left for follow-up.
-4. **Energy error** balloons during ejection events (e.g. the risky moon case reaches |ΔE/E|=1.7×10⁻³). For unstable scenarios, re-run with IAS15 if a precise post-ejection trajectory is needed.
-5. **10⁴ yr is short** for true secular evolution of α Cen ABP (outer orbit P = 547 kyr). A 10⁶-yr follow-up could confirm long-term Proxima binding — left for follow-up.
+1. **MEGNO vs a/e.** Pass/fail is the a/e outcome (does a body escape).
+   MEGNO is the chaos early-warning, not a fail condition — three systems are
+   chaotic yet ship-safe (bounded). Under TRACE there is no MEGNO; the a/e
+   verdict carries it.
+2. **Integrator choice matters at close encounters.** WHFast (and, in-game,
+   Principia's fixed-step celestial ephemeris) lose accuracy during
+   planet–planet close encounters; TRACE/IAS15 are the ground truth there.
+   The canonical result for a flagged system uses TRACE.
+3. **Msini + coplanar.** Masses are DB-recommended (often Msini, a lower
+   bound); inclinations default to coplanar. Real higher masses / mutual
+   inclinations could be less stable, so a PASS is necessary, not sufficient.
+   A Monte-Carlo-over-uncertainties pass is the natural upgrade.
+4. **AU Mic d/e** semi-major axes are Kepler-derived from period (no curated
+   a); candidates, uncertain masses, young system.
+5. **α Cen A b** is not yet in the stability sim (binary-loader limitation).
+6. **10⁴ yr is short** for true secular evolution; for the chaotic-but-bounded
+   and hot cases a 10⁶-yr or SPOCK-style long-term-probability follow-up would
+   strengthen the claim.
 
 ## Files
 
-- `scripts/load.py` — DB JSON → REBOUND loader.
-- `scripts/run.py` — Main entry, runs WHFast + MEGNO, writes summary.
-- `hypotheticals/*.json` — Per-system extra-body specs.
-- `results/*_summary.json` — Per-system numerical summary + verdict.
-- `results/*_timeseries.csv` — Sampled (t, body, a, e) for plotting.
+- `scripts/load.py` — DB JSON → REBOUND loader (handles list/dict `physical`;
+  derives a from period when no curated semi-major axis).
+- `scripts/run.py` — main entry; `--integrator {whfast,trace,ias15}`, WHFast +
+  MEGNO by default, writes summary + timeseries.
+- `hypotheticals/*.json` — per-system extra-body specs (moons / extra planets).
+- `results/*_summary.json` — per-system numerical summary + verdict (the
+  `integrator` field records which integrator produced it).
+- `results/*_timeseries.csv` — sampled (t, body, a, e) for plotting.
 
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
+- [principia-cfg-reference](../../docs/reference/principia-cfg-reference.md) — Principia's own integrators (Quinlan-Tremaine 1990 order-12 ephemeris); this sim is the pre-flight screen for that engine

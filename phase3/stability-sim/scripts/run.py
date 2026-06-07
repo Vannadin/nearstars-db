@@ -196,6 +196,7 @@ def save_results(system: str, meta: dict, report: dict, judgment: dict, out_dir:
         "planets": meta["planets"],
         "hypotheticals": meta["hypotheticals"],
         "integration": {
+            "integrator": report.get("integrator", "whfast"),
             "elapsed_sec": report["elapsed_sec"],
             "dt_yr": report["dt_yr"],
             "innermost_period_yr": report["innermost_period_yr"],
