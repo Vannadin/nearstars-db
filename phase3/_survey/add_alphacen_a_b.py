@@ -19,16 +19,22 @@ CANDIDATE — a single-roll detection; the authors explicitly call it a planet
 candidate that "would be alpha Cen Ab" only if confirmed. Recorded with that
 status in the reference note (same documented-candidate pattern as Proxima c).
 
-Representative orbital values used: a ~ 1.6 AU, P ~ 1.93 yr (705 d), e = 0.4.
-The authors FAVOR the a < 2 AU family (a ~ 1.6 AU, T_eq ~ 225 K) because the
-higher temperature better fits the F1550C brightness (Beichman 2025 sec 5.3);
-the a > 2 AU family (a ~ 2.1 AU, T_eq ~ 195 K) is allowed but disfavored. a/P
-are Kepler-consistent with M_A ~ 1.10 M_sun. (Earlier revisions used a ~ 1.9 AU,
-a midpoint that leaned toward the disfavored a > 2 family — reconciled to the
-favored family 2026-06-06 so the in-game orbit matches the Phase 3 synthesis.)
-Line-of-sight inclination is NOT the quoted mutual inclination, so
-inclination_deg is omitted (mutual value kept in prose only). Both papers are
-cached at docs/phase3/_papers/2508.03814.md and 2508.03812.md.
+Two orbital entries:
+  [0] OBSERVED (Beichman, recommended:false) — a~1.6 AU, e~0.4, mutual incl
+      ~50deg. This favored family is dynamically UNSTABLE (eccentric Kozai-Lidov
+      pumps e->~1 within a few kyr; REBOUND/TRACE), so it is not recommended.
+  [1] NEARSTARS stability-selected (recommended:true) — a=1.6 AU (=observed),
+      e=0.1, mutual incl ~16deg = the MEDIAN of the HZ-stable range (e 0-0.22,
+      i 0-33deg) from a TRACE scan. HZ-stable over 1e5 yr and hosts a Hill-stable
+      Pandora-class moon. This is Avatar's 'Polyphemus' — the Saturn-class gas
+      giant in alpha Cen A's habitable zone whose moon Pandora is the Na'vi
+      homeworld (Beichman 2025 / NPR 2025 / 'Seeking the Worlds of Avatar'
+      Astrobiology 2025). The canon 1.2 AU is unusable (secular resonance pumps
+      e->0.64), so 1.6 AU is the nearest robust HZ orbit.
+inclination_deg is left unset on both (the constrained quantity is mutual
+inclination to the AB plane, a different frame; kept in prose). a/P are
+Kepler-consistent with M_A ~ 1.10 M_sun. Papers cached at
+docs/phase3/_papers/2508.03814.md and 2508.03812.md.
 """
 
 import json
@@ -39,37 +45,62 @@ import schema  # noqa: E402
 
 pc = json.load(open("db/planets_curated.json"))
 
-ORB_REF = (
-    "Beichman et al. 2025 (arXiv:2508.03814, 'Worlds Next Door I') + Sanghi & "
-    "Beichman et al. 2025 (arXiv:2508.03812, 'II') — JWST/MIRI 15.5um direct-"
-    "imaging candidate 'S1', sep 1.5\" (~2 AU), detected Aug 2024, not recovered "
-    "Feb/Apr 2025. Dynamically stable orbit families P=2-3 yr, e~0.4, mutual "
-    "inclination ~50deg (prograde) or ~130deg (retrograde) wrt alpha Cen AB "
-    "plane. Authors favor the a<2 AU family (a~1.6 AU, T_eq~225 K, better fits "
-    "F1550C); a>2 AU family (a~2.1 AU, T_eq~195 K) allowed but disfavored. "
-    "Representative a~1.6 AU / P~1.93 yr used here. CANDIDATE — would be "
-    "'alpha Cen Ab' if confirmed; possibly the counterpart of VLT/NEAR C1 "
-    "(Wagner et al. 2021)."
+ORB_REF_OBS = (
+    "OBSERVED (Beichman et al. 2025, arXiv:2508.03814 'Worlds Next Door I' + "
+    "Sanghi & Beichman, arXiv:2508.03812 'II') — JWST/MIRI 15.5um direct-imaging "
+    "candidate 'S1', sep 1.5\" (~2 AU), Aug 2024, not recovered Feb/Apr 2025. "
+    "Stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) "
+    "/ ~130deg (retrograde) wrt alpha Cen AB plane; authors favor a<2 AU "
+    "(a~1.6 AU). recommended:false — this favored orbit is DYNAMICALLY UNSTABLE: "
+    "eccentric Kozai-Lidov at i_mut~50deg pumps e->~1 within a few kyr "
+    "(REBOUND/TRACE; see Phase 3 Canonical alternatives + "
+    "phase3/stability-sim/STABILITY_REPORT.md). Possibly the counterpart of "
+    "VLT/NEAR C1 (Wagner et al. 2021)."
+)
+ORB_REF_NS = (
+    "NEARSTARS stability-selected orbit (recommended). The observed favored "
+    "family is Kozai-unstable, so NearStars adopts the median of the HZ-stable "
+    "range from a TRACE eccentricity/inclination scan: a=1.6 AU (= observed), "
+    "e=0.1 (HZ-stable range 0-0.22), mutual inclination ~16deg (range 0-33deg). "
+    "Verified HZ-stable over 1e5 yr (e_max 0.15, orbit stays 1.37-1.84 AU within "
+    "alpha Cen A's HZ) and hosts a Hill-stable Pandora-class moon. This is the "
+    "real-life 'Polyphemus' of Avatar (Saturn-class gas giant in alpha Cen A's "
+    "habitable zone; cf. Beichman 2025 / NPR 2025 / 'Seeking the Worlds of "
+    "Avatar', Astrobiology 2025). a/e set here; the mutual inclination is "
+    "documented in prose (cfg-frame inclination is an open item)."
 )
 PHY_REF = (
     "Beichman et al. 2025 / Sanghi & Beichman et al. 2025 — photometric + orbit-"
     "constrained mass 90-150 M_earth (Saturn-class), radius ~1-1.1 R_Jup "
     "(~11.2-12.3 R_earth), T ~ 225 K, consistent with RV upper limits "
-    "(Zhao et al. 2018). Single-roll detection; planet candidate, unconfirmed."
+    "(Zhao et al. 2018). Single-roll detection; planet candidate, unconfirmed. "
+    "Matches Avatar's Polyphemus ('slightly smaller and denser than Jupiter')."
 )
 
 entry = {
     "pl_name": "Alpha Centauri A b",
-    "orbital": [{
-        "period_days": 705.0,
-        "semi_major_axis_au": 1.6,
-        "eccentricity": 0.4,
-        "method": "direct_imaging",
-        "reference": ORB_REF,
-        "bibcode": "2025ApJ...989L..22B",
-        "doi": "10.3847/2041-8213/adf53f",
-        "recommended": True,
-    }],
+    "orbital": [
+        {
+            "period_days": 705.0,
+            "semi_major_axis_au": 1.6,
+            "eccentricity": 0.4,
+            "method": "direct_imaging",
+            "reference": ORB_REF_OBS,
+            "bibcode": "2025ApJ...989L..22B",
+            "doi": "10.3847/2041-8213/adf53f",
+            "recommended": False,
+        },
+        {
+            "period_days": 705.0,
+            "semi_major_axis_au": 1.6,
+            "eccentricity": 0.1,
+            "method": "predicted",
+            "reference": ORB_REF_NS,
+            "bibcode": "2025ApJ...989L..22B",
+            "doi": "10.3847/2041-8213/adf53f",
+            "recommended": True,
+        },
+    ],
     "physical": [{
         "mass_mearth": 120.0,
         "mass_type": "imaging_photometric_estimate",

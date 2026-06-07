@@ -6100,7 +6100,17 @@
           "semi_major_axis_au": 1.6,
           "eccentricity": 0.4,
           "method": "direct_imaging",
-          "reference": "Beichman et al. 2025 (arXiv:2508.03814, 'Worlds Next Door I') + Sanghi & Beichman et al. 2025 (arXiv:2508.03812, 'II') — JWST/MIRI 15.5um direct-imaging candidate 'S1', sep 1.5\" (~2 AU), detected Aug 2024, not recovered Feb/Apr 2025. Dynamically stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) or ~130deg (retrograde) wrt alpha Cen AB plane. Authors favor the a<2 AU family (a~1.6 AU, T_eq~225 K, better fits F1550C); a>2 AU family (a~2.1 AU, T_eq~195 K) allowed but disfavored. Representative a~1.6 AU / P~1.93 yr used here. CANDIDATE — would be 'alpha Cen Ab' if confirmed; possibly the counterpart of VLT/NEAR C1 (Wagner et al. 2021).",
+          "reference": "OBSERVED (Beichman et al. 2025, arXiv:2508.03814 'Worlds Next Door I' + Sanghi & Beichman, arXiv:2508.03812 'II') — JWST/MIRI 15.5um direct-imaging candidate 'S1', sep 1.5\" (~2 AU), Aug 2024, not recovered Feb/Apr 2025. Stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) / ~130deg (retrograde) wrt alpha Cen AB plane; authors favor a<2 AU (a~1.6 AU). recommended:false — this favored orbit is DYNAMICALLY UNSTABLE: eccentric Kozai-Lidov at i_mut~50deg pumps e->~1 within a few kyr (REBOUND/TRACE; see Phase 3 Canonical alternatives + phase3/stability-sim/STABILITY_REPORT.md). Possibly the counterpart of VLT/NEAR C1 (Wagner et al. 2021).",
+          "bibcode": "2025ApJ...989L..22B",
+          "doi": "10.3847/2041-8213/adf53f",
+          "recommended": false
+        },
+        {
+          "period_days": 705.0,
+          "semi_major_axis_au": 1.6,
+          "eccentricity": 0.1,
+          "method": "predicted",
+          "reference": "NEARSTARS stability-selected orbit (recommended). The observed favored family is Kozai-unstable, so NearStars adopts the median of the HZ-stable range from a TRACE eccentricity/inclination scan: a=1.6 AU (= observed), e=0.1 (HZ-stable range 0-0.22), mutual inclination ~16deg (range 0-33deg). Verified HZ-stable over 1e5 yr (e_max 0.15, orbit stays 1.37-1.84 AU within alpha Cen A's HZ) and hosts a Hill-stable Pandora-class moon. This is the real-life 'Polyphemus' of Avatar (Saturn-class gas giant in alpha Cen A's habitable zone; cf. Beichman 2025 / NPR 2025 / 'Seeking the Worlds of Avatar', Astrobiology 2025). a/e set here; the mutual inclination is documented in prose (cfg-frame inclination is an open item).",
           "bibcode": "2025ApJ...989L..22B",
           "doi": "10.3847/2041-8213/adf53f",
           "recommended": true
@@ -6112,7 +6122,7 @@
           "mass_type": "imaging_photometric_estimate",
           "radius_rearth": 11.8,
           "method": "direct_imaging",
-          "reference": "Beichman et al. 2025 / Sanghi & Beichman et al. 2025 — photometric + orbit-constrained mass 90-150 M_earth (Saturn-class), radius ~1-1.1 R_Jup (~11.2-12.3 R_earth), T ~ 225 K, consistent with RV upper limits (Zhao et al. 2018). Single-roll detection; planet candidate, unconfirmed.",
+          "reference": "Beichman et al. 2025 / Sanghi & Beichman et al. 2025 — photometric + orbit-constrained mass 90-150 M_earth (Saturn-class), radius ~1-1.1 R_Jup (~11.2-12.3 R_earth), T ~ 225 K, consistent with RV upper limits (Zhao et al. 2018). Single-roll detection; planet candidate, unconfirmed. Matches Avatar's Polyphemus ('slightly smaller and denser than Jupiter').",
           "bibcode": "2025ApJ...989L..22B",
           "doi": "10.3847/2041-8213/adf53f",
           "recommended": true
