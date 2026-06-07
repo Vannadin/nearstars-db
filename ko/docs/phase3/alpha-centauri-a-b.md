@@ -278,6 +278,15 @@ F1550C 밝기에 덜 맞음). Phase 2 DB 궤도는 이제 선호되는 a ≈ 1.6
   저자들이 선호하는 a ≈ 1.6 AU / P 705 d (T_eq ≈ 225 K) 로 조정해 인게임
   궤도가 이 합성과 일치하도록 했습니다. a > 2 AU 패밀리 (a ≈ 2.1 AU) 는
   비선호 대안으로 본문에만 남겨 둡니다.
+- **동역학 안정성 (Kozai-Lidov) — 궤도 패밀리에 따라 달라짐.** REBOUND/TRACE
+  안정성 시뮬 (`phase3/stability-sim`, `STABILITY_REPORT.md` 참고) 결과, AB
+  면에 대해 상호경사 ~50° 인 favored prograde a ≈ 1.6 AU 패밀리는 **Kozai-Lidov
+  불안정**입니다. eccentric KL 이 수천 년 안에 e 를 ~0.998 까지 끌어올려
+  근일점이 별 반경 수준까지 추락합니다 (조석 파괴). 여기 시각 / 대기 합성은
+  그 favored 구성을 전제하므로 조건부입니다. 상호경사 스윕 결과 Beichman 4개
+  패밀리 중 3개는 생존하며 (retrograde 내측 + a ≈ 2.1 AU 양쪽 모두 e_max ≲ 0.88),
+  안정 경사대는 i_mut ≲ 30° 또는 ≳ 110° 입니다. A b 가 실재한다면 생존 여부 —
+  나아가 이 천체를 실제로 넣을지 — 는 어느 패밀리에 속하는지에 달려 있습니다.
 - **고리 대 팽창 반지름.** 고리 (`ring_present = true`) 와 고리 없는
   1.1 R_Jup 거대 행성은 동등한 논문 해석입니다
   (`## Canonical alternatives`). 분해된 영상이나 NIRCam 4–5 µm 측정

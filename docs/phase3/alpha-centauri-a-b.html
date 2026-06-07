@@ -399,17 +399,18 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_202"></li>
 <li data-i18n="li_203"></li>
 <li data-i18n="li_204"></li>
+<li data-i18n="li_205"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_205"></h2>
+<h2 data-i18n="h2_206"></h2>
 <ul class="intro">
-<li data-i18n="li_206"></li>
 <li data-i18n="li_207"></li>
 <li data-i18n="li_208"></li>
 <li data-i18n="li_209"></li>
 <li data-i18n="li_210"></li>
 <li data-i18n="li_211"></li>
+<li data-i18n="li_212"></li>
 </ul>
 </section>
 </main>
@@ -622,16 +623,17 @@ const T = {
   "h2_199":"Open items for follow-up",
   "li_200":"<b>Existence / recovery.</b> S1 is a single-roll detection not recovered in 2025. Confirmation needs a JWST epoch catching it back in the detectable separation range (~52% of orbits predict recovery on the next favourable epoch) or an independent imaging detection. If refuted, the entry should be reclassified.",
   "li_201":"<b>DB semi-major-axis (resolved).</b> The Phase 2 DB orbital originally used a = 1.9 AU (P = 2.5 yr), a midpoint that leaned toward the <b>disfavored</b> a &gt; 2 AU family. It was reconciled to the authors&#x27; favored a ≈ 1.6 AU / P 705 d (T_eq ≈ 225 K) so the in-game orbit matches this synthesis; the a &gt; 2 AU family (a ≈ 2.1 AU) is retained only in prose as the disfavored alternative.",
-  "li_202":"<b>Ring vs inflated radius.</b> The ring (<code>ring_present = true</code>) and the ring-free 1.1 R_Jup giant are co-equal paper readings (<code>## Canonical alternatives</code>). A resolved image or a NIRCam 4–5 µm measurement (which would separate the clear vs cloudy/ringed models) would decide it.",
-  "li_203":"<b>Atmosphere ingest.</b> α Cen A b has no Phase 2 atmosphere block in the DB (orbital + physical only). When the schema is extended, the Beichman 2025 metal-rich water-cloud best fit should be ingested as <code>atmosphere_measurements</code> matching the cfg picks here.",
-  "li_204":"<b>Rotation / obliquity.</b> Both are within-window tie-breaks (10 h, 27°), unconstrained by any measurement.",
-  "h2_205":"Related",
-  "li_206":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — host star Phase 3 synthesis; provides the G2V Teff / L / R / mass / age, the binary-event geometry, and the illumination-color-temperature reference. (Its intro notes the candidate as &quot;unconfirmed&quot; — predates this planet-level synthesis.)",
-  "li_207":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — the K1V companion, the brilliant second sun in α Cen A b&#x27;s sky",
-  "li_208":"<a href=\"proxima-cen-c.md\">proxima-cen-c</a> — the other new candidate in this triple; contrast Proxima c&#x27;s cold ice giant against α Cen A b&#x27;s temperate ringed Saturn-class giant",
-  "li_209":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — comparison giant around a nearby dwarf; contrast ε Indi A b&#x27;s massive, self-luminous super-Jupiter against α Cen A b&#x27;s lower-mass, insolation-set, ringed temperate giant",
-  "li_210":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
-  "li_211":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream Kopernicus / EVE / Scatterer cfg writers consuming this giant&#x27;s atmosphere + ring decisions",
+  "li_202":"<b>Dynamical stability (Kozai-Lidov) — conditional on the orbit family.</b> A REBOUND/TRACE stability run (<code>phase3/stability-sim</code>, see <code>STABILITY_REPORT.md</code>) finds the favored prograde a ≈ 1.6 AU family at mutual inclination ~50° to the AB plane is <b>Kozai-Lidov unstable</b>: eccentric KL pumps e to ~0.998 within a few thousand years, crashing the periastron to ~one stellar radius (tidal disruption). The visual / atmosphere synthesis here assumes that favored configuration, so it is conditional — a mutual-inclination sweep shows 3 of Beichman&#x27;s 4 families survive (retrograde inner, and both a ≈ 2.1 AU families keep e_max ≲ 0.88), with a stable band at i_mut ≲ 30° or ≳ 110°. If A b is real, whether it survives — and thus whether this body ships at all — hinges on which family it actually occupies.",
+  "li_203":"<b>Ring vs inflated radius.</b> The ring (<code>ring_present = true</code>) and the ring-free 1.1 R_Jup giant are co-equal paper readings (<code>## Canonical alternatives</code>). A resolved image or a NIRCam 4–5 µm measurement (which would separate the clear vs cloudy/ringed models) would decide it.",
+  "li_204":"<b>Atmosphere ingest.</b> α Cen A b has no Phase 2 atmosphere block in the DB (orbital + physical only). When the schema is extended, the Beichman 2025 metal-rich water-cloud best fit should be ingested as <code>atmosphere_measurements</code> matching the cfg picks here.",
+  "li_205":"<b>Rotation / obliquity.</b> Both are within-window tie-breaks (10 h, 27°), unconstrained by any measurement.",
+  "h2_206":"Related",
+  "li_207":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — host star Phase 3 synthesis; provides the G2V Teff / L / R / mass / age, the binary-event geometry, and the illumination-color-temperature reference. (Its intro notes the candidate as &quot;unconfirmed&quot; — predates this planet-level synthesis.)",
+  "li_208":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — the K1V companion, the brilliant second sun in α Cen A b&#x27;s sky",
+  "li_209":"<a href=\"proxima-cen-c.md\">proxima-cen-c</a> — the other new candidate in this triple; contrast Proxima c&#x27;s cold ice giant against α Cen A b&#x27;s temperate ringed Saturn-class giant",
+  "li_210":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — comparison giant around a nearby dwarf; contrast ε Indi A b&#x27;s massive, self-luminous super-Jupiter against α Cen A b&#x27;s lower-mass, insolation-set, ringed temperate giant",
+  "li_211":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_212":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — downstream Kopernicus / EVE / Scatterer cfg writers consuming this giant&#x27;s atmosphere + ring decisions",
   "title":"α Centauri A b — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -839,16 +841,17 @@ const T = {
   "h2_199":"Open items for follow-up",
   "li_200":"<b>존재 / 재검출.</b> S1 은 2025년에 재검출되지 않은 단일-관측 검출입니다. 확인을 위해서는 검출 가능 이격 범위로 돌아온 행성을 포착하는 JWST 에포크 (다음 유리한 에포크에서 궤도의 ~52% 가 재검출 예측) 나 독립적인 촬영 검출이 필요합니다. 반증되면 엔트리는 재분류되어야 합니다.",
   "li_201":"<b>DB 장반경 (해결됨).</b> Phase 2 DB 궤도는 원래 a = 1.9 AU (P = 2.5 년) 를 썼는데, 이는 <b>비선호</b> a &gt; 2 AU 패밀리 쪽으로 기우는 중간값이었습니다. 저자들이 선호하는 a ≈ 1.6 AU / P 705 d (T_eq ≈ 225 K) 로 조정해 인게임 궤도가 이 합성과 일치하도록 했습니다. a &gt; 2 AU 패밀리 (a ≈ 2.1 AU) 는 비선호 대안으로 본문에만 남겨 둡니다.",
-  "li_202":"<b>고리 대 팽창 반지름.</b> 고리 (<code>ring_present = true</code>) 와 고리 없는 1.1 R_Jup 거대 행성은 동등한 논문 해석입니다 (<code>## Canonical alternatives</code>). 분해된 영상이나 NIRCam 4–5 µm 측정 (맑은 모델 대 흐린/고리 모델을 분리) 이 이를 판가름할 것입니다.",
-  "li_203":"<b>대기 ingest.</b> α Cen A b 는 DB 에 Phase 2 대기 블록이 없습니다 (궤도 + 물리량만). 스키마가 확장되면 Beichman 2025 금속이 풍부한 물-구름 최적 피팅을 여기 cfg pick 에 맞춰 <code>atmosphere_measurements</code> 로 ingest 해야 합니다.",
-  "li_204":"<b>자전 / obliquity.</b> 둘 다 범위 내 tie-break (10 h, 27°) 이며, 어떤 측정으로도 제약되지 않습니다.",
-  "h2_205":"Related",
-  "li_206":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — 호스트 별 Phase 3 합성. G2V Teff / L / R / 질량 / 나이, 쌍성 이벤트 기하, 조명-색온도 기준을 제공. (그 인트로는 후보를 &quot;확인되지 않음&quot;으로 언급 — 이 행성 수준 합성보다 앞섬.)",
-  "li_207":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — K1V 동반성. α Cen A b 의 하늘에서 눈부신 두 번째 태양",
-  "li_208":"<a href=\"proxima-cen-c.md\">proxima-cen-c</a> — 이 삼중계의 또 다른 새 후보. Proxima c 의 차가운 얼음 거대 행성을 α Cen A b 의 온화한 고리 두른 토성급 거대 행성과 대조",
-  "li_209":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — 가까운 왜성 주위의 비교 거대 행성. ε Indi A b 의 무거운 자체발광 슈퍼-목성을 α Cen A b 의 더 가벼운, 일사로 결정되는, 고리 두른 온화한 거대 행성과 대조",
-  "li_210":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마",
-  "li_211":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — 이 거대 행성의 대기 + 고리 결정을 소비하는 하류 Kopernicus / EVE / Scatterer cfg 작성기",
+  "li_202":"<b>동역학 안정성 (Kozai-Lidov) — 궤도 패밀리에 따라 달라짐.</b> REBOUND/TRACE 안정성 시뮬 (<code>phase3/stability-sim</code>, <code>STABILITY_REPORT.md</code> 참고) 결과, AB 면에 대해 상호경사 ~50° 인 favored prograde a ≈ 1.6 AU 패밀리는 <b>Kozai-Lidov 불안정</b>입니다. eccentric KL 이 수천 년 안에 e 를 ~0.998 까지 끌어올려 근일점이 별 반경 수준까지 추락합니다 (조석 파괴). 여기 시각 / 대기 합성은 그 favored 구성을 전제하므로 조건부입니다. 상호경사 스윕 결과 Beichman 4개 패밀리 중 3개는 생존하며 (retrograde 내측 + a ≈ 2.1 AU 양쪽 모두 e_max ≲ 0.88), 안정 경사대는 i_mut ≲ 30° 또는 ≳ 110° 입니다. A b 가 실재한다면 생존 여부 — 나아가 이 천체를 실제로 넣을지 — 는 어느 패밀리에 속하는지에 달려 있습니다.",
+  "li_203":"<b>고리 대 팽창 반지름.</b> 고리 (<code>ring_present = true</code>) 와 고리 없는 1.1 R_Jup 거대 행성은 동등한 논문 해석입니다 (<code>## Canonical alternatives</code>). 분해된 영상이나 NIRCam 4–5 µm 측정 (맑은 모델 대 흐린/고리 모델을 분리) 이 이를 판가름할 것입니다.",
+  "li_204":"<b>대기 ingest.</b> α Cen A b 는 DB 에 Phase 2 대기 블록이 없습니다 (궤도 + 물리량만). 스키마가 확장되면 Beichman 2025 금속이 풍부한 물-구름 최적 피팅을 여기 cfg pick 에 맞춰 <code>atmosphere_measurements</code> 로 ingest 해야 합니다.",
+  "li_205":"<b>자전 / obliquity.</b> 둘 다 범위 내 tie-break (10 h, 27°) 이며, 어떤 측정으로도 제약되지 않습니다.",
+  "h2_206":"Related",
+  "li_207":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — 호스트 별 Phase 3 합성. G2V Teff / L / R / 질량 / 나이, 쌍성 이벤트 기하, 조명-색온도 기준을 제공. (그 인트로는 후보를 &quot;확인되지 않음&quot;으로 언급 — 이 행성 수준 합성보다 앞섬.)",
+  "li_208":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — K1V 동반성. α Cen A b 의 하늘에서 눈부신 두 번째 태양",
+  "li_209":"<a href=\"proxima-cen-c.md\">proxima-cen-c</a> — 이 삼중계의 또 다른 새 후보. Proxima c 의 차가운 얼음 거대 행성을 α Cen A b 의 온화한 고리 두른 토성급 거대 행성과 대조",
+  "li_210":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — 가까운 왜성 주위의 비교 거대 행성. ε Indi A b 의 무거운 자체발광 슈퍼-목성을 α Cen A b 의 더 가벼운, 일사로 결정되는, 고리 두른 온화한 거대 행성과 대조",
+  "li_211":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마",
+  "li_212":"<a href=\"../reference/mod-reference.md\">mod-reference</a> — 이 거대 행성의 대기 + 고리 결정을 소비하는 하류 Kopernicus / EVE / Scatterer cfg 작성기",
   "title":"α Centauri A b — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

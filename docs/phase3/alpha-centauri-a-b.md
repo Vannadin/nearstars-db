@@ -286,6 +286,17 @@ favored a ≈ 1.6 AU family (reconciled from an earlier 1.9 AU midpoint).
   P 705 d (T_eq ≈ 225 K) so the in-game orbit matches this synthesis; the
   a > 2 AU family (a ≈ 2.1 AU) is retained only in prose as the disfavored
   alternative.
+- **Dynamical stability (Kozai-Lidov) — conditional on the orbit family.** A
+  REBOUND/TRACE stability run (`phase3/stability-sim`, see `STABILITY_REPORT.md`)
+  finds the favored prograde a ≈ 1.6 AU family at mutual inclination ~50° to
+  the AB plane is **Kozai-Lidov unstable**: eccentric KL pumps e to ~0.998
+  within a few thousand years, crashing the periastron to ~one stellar radius
+  (tidal disruption). The visual / atmosphere synthesis here assumes that
+  favored configuration, so it is conditional — a mutual-inclination sweep
+  shows 3 of Beichman's 4 families survive (retrograde inner, and both
+  a ≈ 2.1 AU families keep e_max ≲ 0.88), with a stable band at i_mut ≲ 30° or
+  ≳ 110°. If A b is real, whether it survives — and thus whether this body
+  ships at all — hinges on which family it actually occupies.
 - **Ring vs inflated radius.** The ring (`ring_present = true`) and the
   ring-free 1.1 R_Jup giant are co-equal paper readings
   (`## Canonical alternatives`). A resolved image or a NIRCam 4–5 µm
