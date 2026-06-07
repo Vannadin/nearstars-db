@@ -8,10 +8,10 @@ WHFast flags chaotic or unstable. **IAS15** available for spot-checks.
 **Phase initialisation:** `raw.omega_deg` from DB where available; Ω and M
 randomised with a deterministic seed (`phase_seed=0`).
 
-## Two diagnostics, two questions
+## Three diagnostics — survival, chaos, eccentricity
 
-The verdict separates *what actually happened* from *chaos risk* — they are
-not the same and are read together:
+The verdict separates *what actually happened* from *chaos risk* from *how
+eccentric the orbit got* — three distinct axes, read together:
 
 - **a/e-drift bounds** (per-body a_min/a_max, e_min/e_max) — the **actual
   outcome**: did a body eject (a balloons) or its orbit go unbound/crossing
@@ -24,6 +24,14 @@ not the same and are read together:
   *before* any large excursion, but **chaos ≠ instability** (a chaotic system
   can stay bounded for Gyr — e.g. TRAPPIST-1). Needs variational equations, so
   it is **unavailable under TRACE**.
+- **Eccentricity tier** (`ecc_class`, from e_max) — *how* eccentric the orbit
+  becomes, a separate axis from survival: **calm** (e_max < 0.3,
+  Solar-System-like), **hot** (0.3–0.9, bound but violently eccentric — extreme
+  seasons, deep periastron passes), **extreme** (≥ 0.9 = the near-unbound /
+  disruption threshold, which is also the `unstable` cut). **Key point:
+  "stable" only means e stayed below 0.9 — it does NOT mean calm.** A planet
+  can be "stable" yet on an e ≈ 0.8 orbit (α Cen A b's surviving families, or
+  AU Mic).
 
 **Why the hybrid policy:** WHFast is fast and gives MEGNO, but it is
 inaccurate during close encounters — it can report a *spurious* ejection
@@ -37,20 +45,20 @@ flagged system uses TRACE, with its WHFast MEGNO carried in the table below.
 `MEGNO` is the WHFast screen value (chaos indicator). `e_max` / `Δa/a` are
 from the canonical integrator in the last column.
 
-| System | Bodies | MEGNO (WHFast) | e_max | max Δa/a | verdict | canonical |
+| System | Bodies | MEGNO (WHFast) | e_max (tier) | max Δa/a | verdict | canonical |
 |---|---|---|---|---|---|---|
-| Proxima Cen | 3 (b/c/d) | 2.000 | <0.001 | 8×10⁻⁴ | **stable (regular)** | whfast |
-| 55 Cnc | 5 | 1.961 | 0.12 | 3.3×10⁻² | **stable (regular)** | whfast |
-| 61 Vir | 3 | 1.962 | 0.39 | 1.1×10⁻³ | **stable (regular)** | whfast |
-| HD 219134 | 6 | 2.000 | 0.068 | 2.8×10⁻³ | **stable (regular)** | whfast |
-| HD 69830 | 3 | 1.998 | 0.20 | 7.8×10⁻⁴ | **stable (regular)** | whfast |
-| tau Cet | 4 | 2.001 | 0.24 | 3.6×10⁻⁴ | **stable (regular)** | whfast |
-| Teegarden's Star | 3 | 2.000 | 0.091 | 6.1×10⁻⁴ | **stable (regular)** | whfast |
-| TRAPPIST-1 | 7 | 1265 | 0.021 | 5.9×10⁻³ | **chaotic, bounded** | TRACE |
-| Barnard's Star | 4 | 248 | 0.106 | 8.3×10⁻⁴ | **chaotic, bounded** | TRACE |
-| YZ Cet | 3 | 8.024 | 0.103 | 2.0×10⁻³ | **chaotic, bounded** | TRACE |
-| AU Mic | 4 | 6249 | 0.63 | 3.5 (b's a triples) | **chaotic, hot but bounded** | TRACE |
-| α Cen A b (in AB binary) | planet + 2 stars | n/a (trace) | 0.998 | 1.3 | **UNSTABLE** in favored family (3 of 4 families stable) | trace |
+| Proxima Cen | 3 (b/c/d) | 2.000 | <0.001 · calm | 8×10⁻⁴ | **stable (regular)** | whfast |
+| 55 Cnc | 5 | 1.961 | 0.12 · calm | 3.3×10⁻² | **stable (regular)** | whfast |
+| 61 Vir | 3 | 1.962 | **0.39 · hot** | 1.1×10⁻³ | **stable (regular)** | whfast |
+| HD 219134 | 6 | 2.000 | 0.068 · calm | 2.8×10⁻³ | **stable (regular)** | whfast |
+| HD 69830 | 3 | 1.998 | 0.20 · calm | 7.8×10⁻⁴ | **stable (regular)** | whfast |
+| tau Cet | 4 | 2.001 | 0.24 · calm | 3.6×10⁻⁴ | **stable (regular)** | whfast |
+| Teegarden's Star | 3 | 2.000 | 0.091 · calm | 6.1×10⁻⁴ | **stable (regular)** | whfast |
+| TRAPPIST-1 | 7 | 1265 | 0.021 · calm | 5.9×10⁻³ | **chaotic, bounded** | TRACE |
+| Barnard's Star | 4 | 248 | 0.106 · calm | 8.3×10⁻⁴ | **chaotic, bounded** | TRACE |
+| YZ Cet | 3 | 8.024 | 0.103 · calm | 2.0×10⁻³ | **chaotic, bounded** | TRACE |
+| AU Mic | 4 | 6249 | **0.63 · hot** | 3.5 (b's a triples) | **chaotic, hot but bounded** | TRACE |
+| α Cen A b (in AB binary) | planet + 2 stars | n/a (trace) | **0.998 · extreme** | 1.3 | **UNSTABLE** in favored family (3 of 4 families stable) | trace |
 
 Eleven of the twelve are stable or chaotic-but-bounded under the accurate
 integrator: seven regular (MEGNO ≈ 2), three formally chaotic but tightly
@@ -60,6 +68,13 @@ instability is the S-type candidate **α Cen A b** in its *favored* prograde
 inner family (e → 0.99 by Kozai-Lidov at i_mut ≈ 50°) — but a sweep shows 3 of
 its 4 proposed orbit families survive (below). The α Cen AB binary itself is
 stable (B: e = 0.514–0.519, a-drift < 0.6%).
+
+On the **eccentricity** axis (last-column tier), most survivors are *calm*
+(e_max < 0.3, Solar-System-like), but **61 Vir (0.39) and AU Mic (0.63) are
+*hot*** — bound but on notably eccentric orbits. So "stable" in the verdict
+column is not the same as "calm": a system can pass the survival test while
+still being eccentrically stirred (most extreme: α Cen A b's surviving
+families at e ≈ 0.79–0.88, in the α Cen section below).
 
 ## AU Mic — the case that justifies the hybrid policy
 

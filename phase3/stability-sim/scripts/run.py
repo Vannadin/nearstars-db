@@ -150,7 +150,12 @@ def verdict(report: dict, t_end_yr: float) -> dict:
         if s["a_min"] > 0 and s["a_max"] > 10 * s["a_min"]:
             flags.append(f"a_max/a_min = {s['a_max']/s['a_min']:.1f}× ≥ 10")
         status = "unstable" if flags else "stable"
-        judgments[body] = {"flags": flags, "status": status}
+        # Eccentricity tier — a separate axis from dynamical survival. "stable"
+        # only means e stayed below the 0.9 near-unbound threshold; it does NOT
+        # mean the orbit is calm. calm < 0.3, hot 0.3-0.9, extreme >= 0.9.
+        ec = "extreme" if s["e_max"] >= 0.9 else ("hot" if s["e_max"] >= 0.3 else "calm")
+        judgments[body] = {"flags": flags, "status": status,
+                           "ecc_class": ec, "e_max": s["e_max"]}
         if flags:
             dyn_unstable = True
 
@@ -178,9 +183,14 @@ def verdict(report: dict, t_end_yr: float) -> dict:
     else:
         overall = "stable"
 
+    rank = {"calm": 0, "hot": 1, "extreme": 2}
+    ecc_class_max = max((j.get("ecc_class", "calm") for j in judgments.values()),
+                        key=lambda c: rank.get(c, 0), default="calm")
+
     return {
         "per_body": judgments,
         "overall": overall,
+        "ecc_class_max": ecc_class_max,
         "lyapunov_time_yr": lyap_yr,
         "is_chaotic": chaos,
     }
@@ -232,12 +242,12 @@ def print_report(meta: dict, report: dict, judgment: dict):
         print(f"  MEGNO   = n/a  ({report.get('integrator','?')}: no variational eqs → a/e-drift verdict)")
     if judgment["is_chaotic"]:
         print(f"  Lyapunov ≈ {judgment['lyapunov_time_yr']:.1f} yr  (formal chaos detected)")
-    print(f"  verdict: {judgment['overall'].upper()}")
+    print(f"  verdict: {judgment['overall'].upper()}   (hottest eccentricity: {judgment.get('ecc_class_max', '?')})")
     print()
     for name, s in report["per_body"].items():
         j = judgment["per_body"].get(name, {"flags": [], "status": "stable"})
         a_drift = (s["a_max"] - s["a_min"]) / s["a_min"] if s["a_min"] > 0 else float("nan")
-        print(f"  {name:25s}  a∈[{s['a_min']:.5f},{s['a_max']:.5f}] AU  Δa/a={a_drift:.2e}  e∈[{s['e_min']:.4f},{s['e_max']:.4f}]  → {j['status']}")
+        print(f"  {name:25s}  a∈[{s['a_min']:.5f},{s['a_max']:.5f}] AU  Δa/a={a_drift:.2e}  e∈[{s['e_min']:.4f},{s['e_max']:.4f}]  → {j['status']} [{j.get('ecc_class', '?')}]")
         for fl in j["flags"]:
             print(f"      ⚠ {fl}")
     for moon, h in report["hill_track"].items():
