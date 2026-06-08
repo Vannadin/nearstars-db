@@ -6,7 +6,7 @@ Usage:
 
 Scope:
     Root .md files (AGENTS.md, README.md, CLAUDE.md, NOTICE, etc.),
-    docs/, ko/docs/, plans/, ko/plans/, phase2/, phase3/,
+    docs/, ko/docs/, plans/, ko/plans/, phase2/, phase3/, phase4/,
     .claude/skills/, .agents/skills/
 
 Skips:
@@ -45,6 +45,7 @@ def tracked_md_files(repo_root: Path) -> list[Path]:
         'plans/**/*.md',
         'phase2/**/*.md',
         'phase3/**/*.md',
+        'phase4/**/*.md',
         '.claude/skills/**/*.md',
         '.agents/skills/**/*.md',
     ]
