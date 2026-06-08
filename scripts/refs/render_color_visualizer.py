@@ -31,6 +31,7 @@ from emit_firefly_cfg import (  # noqa: E402
     PALETTES, STREAK_PALETTE, DEFAULTS_HEX_RGB,
     parse_present, parse_pressure_pa, parse_composition,
     extract_decisions, pick_palette, pressure_to_strength,
+    engine_palette, escape_velocity_kms,
     PRESSURE_THRESHOLD_PA, slug_to_kopernicus_name, planet_letter_uppercase,
 )
 
@@ -472,7 +473,15 @@ def derive_body_palette(slug: str, db: dict):
     species = parse_composition(comp_raw) or [("N2", 78), ("O2", 21)]
     species_set = {s for s, _ in species}
     dominant = species[0][0]
-    palette_name, palette = pick_palette(dominant, species_set)
+    # Mirror emit_firefly_cfg.process_slug: engine-computed palette primary,
+    # hand-tuned PALETTES only as fallback. (Without this the preview showed the
+    # fallback, NOT what the cfg writer actually emits.)
+    velocity = escape_velocity_kms(dec) or 7.8
+    ep = engine_palette(species, velocity)
+    if ep is not None:
+        palette, palette_name = ep, f"engine:{dominant}@{velocity:.1f}km/s"
+    else:
+        palette_name, palette = pick_palette(dominant, species_set)
 
     streak_rgb = palette["trail_primary"]
     streak_sp = None
@@ -551,8 +560,8 @@ def build_t(palettes):
         "intro_2": "Drag the temperature slider — every element and molecule is colored by its computed LTE plasma emission at that temperature. Watch the molecular → atomic → ionic march. Hover a cell for detail; dim cells have no computed color at that temperature.",
         "h_periodic": "Periodic table — atomic emission",
         "h_molecular": "Molecular emitters",
-        "h_bulk": "Bulk-gas reentry palettes (Firefly emitter)",
-        "h_streak": "Secondary-species streak palette",
+        "h_bulk": "Bulk-gas fallback palettes (hand-tuned, not computed)",
+        "h_streak": "Secondary-species streak palette (curated)",
         "h_plasma_temp": "Plasma color vs temperature (1000K steps)",
         "h_element_temp": "Reentry plasma color per element vs temperature (1000K steps)",
         "h_firefly_stock": "Firefly stock cfg colors (reference)",
@@ -568,7 +577,7 @@ def build_t(palettes):
         "ptc_ch4": "CH4 (Titan-class)",
         "ptc_h2o": "H2O (steam)",
         "ptc_nh3": "NH3 (ice-giant)",
-        "h_bodies": "Currently emitted bodies",
+        "h_bodies": "Currently emitted bodies (engine-derived)",
         "temp_label": "Temperature:",
         "th_streak_species": "Species",
         "th_streak_color":   "Color",
@@ -589,8 +598,8 @@ def build_t(palettes):
         "intro_2": "온도 슬라이더를 움직이면 각 원소·분자가 그 온도의 LTE 플라스마 발광색으로 칠해집니다. 분자 → 원자 → 이온 행진을 볼 수 있습니다. 셀에 올리면 상세가 보이고, 흐린 셀은 그 온도의 계산 색이 없는 것입니다.",
         "h_periodic": "주기율표 — 원자 emission",
         "h_molecular": "분자 emitter",
-        "h_bulk": "Bulk-gas 재진입 팔레트 (Firefly emitter)",
-        "h_streak": "2차 종 streak 팔레트",
+        "h_bulk": "Bulk-gas 폴백 팔레트 (손튜닝, 비계산)",
+        "h_streak": "2차 종 streak 팔레트 (큐레이트)",
         "h_plasma_temp": "온도별 플라스마 색 (1000K 간격)",
         "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (1000K 간격)",
         "h_firefly_stock": "Firefly 기본 cfg 색상 (레퍼런스)",
@@ -606,7 +615,7 @@ def build_t(palettes):
         "ptc_ch4": "CH4 (타이탄형)",
         "ptc_h2o": "H2O (수증기)",
         "ptc_nh3": "NH3 (아이스자이언트)",
-        "h_bodies": "현재 emit 된 행성들",
+        "h_bodies": "현재 emit된 행성들 (엔진 산출)",
         "temp_label": "온도:",
         "th_streak_species": "종",
         "th_streak_color":   "색",
@@ -643,6 +652,8 @@ TEMPLATE = """<!DOCTYPE html>
   margin: 1rem 0; padding: 0.5rem 0.75rem;
   background: var(--bg-card); border: 1px solid var(--bd-mid);
   border-radius: 4px;
+  position: sticky; top: 0; z-index: 20;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.45);
 }}
 .regime-bar .label {{ color: var(--fg-muted); font-size: 0.9rem }}
 #temp-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
