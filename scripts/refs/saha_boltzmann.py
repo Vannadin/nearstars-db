@@ -53,8 +53,9 @@ MU_OVER_ME = 1823.2       # (amu / m_e), to scale SAHA for molecular dissociatio
 P_REF = 1.01325e6         # reference pressure [dyn/cm²] = 1 atm
 
 # ── calibration (single balance constant; see module docstring) ──
-# Optically-thin LTE emission: j(λ) = thermal_continuum + GAIN·line/band emission.
-#   thermal = (n_heavy/N_REF)·Planck_shape  — incandescent glow of the bulk gas,
+# Optically-thin LTE emission: j(λ) = incandescence stand-in + GAIN·line/band emission.
+#   The first term is a phenomenological incandescence stand-in (n_heavy/N_REF)·Planck_shape,
+#     NOT a real thin-gas continuum (a thin gas emits free-free/free-bound, not Planck);
 #     ∝ density (∝1/T at fixed P) so it fades as the gas heats and rarefies.
 #   GAIN sets the one thermal:emission balance point; the *shape* and T-evolution
 #   of each term are first-principles (Saha/Boltzmann/dissociation).

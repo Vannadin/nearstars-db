@@ -8,8 +8,8 @@ runs the saha_boltzmann engine (Saha + Boltzmann + dissociation, mixed at the
 SPECTRUM level, then CIE), and prints the color vs temperature. This is the
 correct way to get a mixed-atmosphere color — you mix spectra, never colors.
 
-Supported emitting elements: H, He, C, N, O (the engine's atomic DB). Other
-elements (Ar, S, ...) are reported and dropped (no atomic data); the rest is
+Supported emitting elements: H, He, C, N, O, S (the engine's atomic DB). Other
+elements (Ar, Ne, ...) are reported and dropped (no atomic data); the rest is
 renormalized. Atomic-only + LTE — same model + caveats as the per-composition
 table (see plasma-color-methodology-review.md).
 
@@ -23,8 +23,6 @@ import argparse
 import re
 import sys
 from pathlib import Path
-
-import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import cie_color                       # noqa: E402
