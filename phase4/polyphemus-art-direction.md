@@ -46,6 +46,26 @@ the dark ring fill the daylit sky. The art-direction has to read at *that* scale
 *(Proposed direction; the binding calls — how deep the blue goes, the storm's
 placement/size — are left in "Open creative questions" below for the user to set.)*
 
+## Aurora (atmospheric emission)
+
+If Polyphemus has aurorae (magnetospheric, or driven by a moon plasma torus),
+their colour is **set by the H₂/He atmosphere, not chosen** — so unlike the band
+hue it is composition-locked, not a divergence option. Hydrogen dominates →
+**rose-pink to magenta with a violet edge**, never Earth's green (there is no
+atomic oxygen):
+
+- Red base — H Balmer-α (656 nm) + H₂ Fulcher-α bands.
+- Violet-blue — H Balmer-β/γ (486 / 434 nm) + H₂ Werner bands.
+- He may add a faint D3 yellow (587.6 nm); CH₄ absorbs (auroral haze) rather than
+  emits; water and metals are condensed out at auroral altitude → no contribution.
+- Most auroral power is in the UV (H Lyman-α, H₂ Lyman/Werner), so the visible
+  aurora is relatively faint for its total output.
+
+Art-direction note: a polar **rose-magenta** aurora deliberately contrasts with
+Pandora's **cyan/blue bioluminescence** — planet pink, moon teal. Exact sRGB
+(H Balmer / H₂ bands / He D3) to be pulled from `db/refs/element_plasma_colors.yaml`
+and `molecular_plasma_colors.yaml` when Phase 4 emits.
+
 ## 고증 window (from the Phase 3 atmosphere + dynamics synthesis)
 
 The Phase 3 baseline ([`../docs/phase3/alpha-centauri-a-b.md`](../docs/phase3/alpha-centauri-a-b.md))
