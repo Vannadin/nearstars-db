@@ -41,12 +41,15 @@
 - [x] commit
 
 ## Phase E — viewer temperature slider
-- [ ] render_color_visualizer: regime-bar → temperature slider
-- [ ] applyRegime() → applyTemp(T): color .el-cell AND .mol-cell from temp tables
-- [ ] cells without temp data → dimmed "no data"
-- [ ] i18n: drop regime_* keys, add slider label; update intro
-- [ ] rebuild docs/firefly-colors.html
-- [ ] commit
+- [x] render_color_visualizer: regime-bar → temperature slider (1000-15000K, 1000 step)
+- [x] applyRegime() → applyTemp(T): colors .el-cell (ELEMENT_TEMP) AND .mol-cell
+      (MOLECULE_TEMP); build_element_data/build_molecular_data replaced by temp builders
+- [x] cells without temp data → dimmed "no data" chip; molecules show dropped-atoms note
+- [x] i18n: dropped regime_* keys, added temp_label; intro_1/intro_2 rewritten
+- [x] removed unused LTE_PLASMA_DB + stale docstring/comments
+- [x] rebuilt docs/firefly-colors.html (slider + ELEMENT_TEMP 75 + MOLECULE_TEMP 30, regime 0)
+- [x] check.sh green
+- [x] commit
 
 ## Phase F — register + verify
 - [ ] tools.md (+ ko mirror): new script + YAML

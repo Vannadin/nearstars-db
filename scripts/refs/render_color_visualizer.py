@@ -1,15 +1,17 @@
-# db/refs/element_plasma_colors.yaml + molecular_plasma_colors.yaml + emitter PALETTES 를 단일 HTML 시각화로 렌더 (regime toggle)
-"""Render docs/firefly-colors.html — multi-regime visualization.
+# 플라스마/재진입 색 레퍼런스를 단일 HTML로 렌더 (온도 슬라이더 + 조성/오로라 그리드)
+"""Render docs/firefly-colors.html — plasma & reentry color reference.
 
 Sections:
-  1. Regime toggle: atomic_flame | reentry_plasma | aurora
-  2. Periodic table — 118 cells colored per active regime
-  3. Molecular panel — diatomic + polyatomic species per active regime
+  1. Temperature slider: colors the periodic table + molecular panel by their
+     computed LTE plasma emission at the selected temperature (1000-15000K)
+  2. Periodic table — 118 cells, 75 with computed temperature colors
+  3. Molecular panel — 30 diatomic/polyatomic species, computed vs temperature
   4. Bulk-gas reentry palettes from emit_firefly_cfg.py PALETTES (always shown)
-  5. Currently-emitted bodies (always shown)
+  5. Composition / element / aurora grids; currently-emitted bodies
 
-All regime data is embedded as JSON; JavaScript swaps cell colors when
-the user toggles regime. No server round-trip.
+Temperature color tables (element_temperature_colors.yaml +
+molecular_temperature_colors.yaml) are embedded as JSON; JavaScript swaps cell
+colors as the slider moves. No server round-trip.
 
 Run after any DB update or palette change.
 """
@@ -35,8 +37,8 @@ from emit_firefly_cfg import (  # noqa: E402
 ELEMENT_DB = ROOT / "db" / "refs" / "element_plasma_colors.yaml"
 MOLECULAR_DB = ROOT / "db" / "refs" / "molecular_plasma_colors.yaml"
 PLASMA_TEMP_DB = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
-LTE_PLASMA_DB = ROOT / "db" / "refs" / "lte_plasma_colors.yaml"
 ELEMENT_TEMP_DB = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
+MOL_TEMP_DB = ROOT / "db" / "refs" / "molecular_temperature_colors.yaml"
 AURORA_COLORS_DB = ROOT / "db" / "refs" / "aurora_colors.yaml"
 PHASE3_DIR = ROOT / "docs" / "phase3"
 OUT = ROOT / "docs" / "firefly-colors.html"
@@ -76,74 +78,38 @@ def rgb_intensity_to_hex(rgb_i: tuple) -> str:
     return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
 
 
-# ── Build element data for JS ──────────────────────────────────────
+# ── Build element data for JS (temperature table) ──────────────────
 
-def build_element_data(db: dict, lte: dict | None = None) -> dict:
-    """Per-element regime data, suitable for JSON embedding. `lte` is the
-    computed lte_plasma_colors.yaml, merged in as the `lte_plasma` regime."""
-    lte = lte or {}
+def build_element_temp_data(etc: dict) -> dict:
+    """Per-element temperature colors for the slider:
+    {sym: {z, name, colors: {T: {hex, ion}}}}."""
     data = {}
-    for sym, e in db.items():
-        entry = {
-            "z": e["atomic_number"],
-            "name": e["name"],
-            "regimes": {},
-        }
-        for regime_name in ("atomic_flame", "reentry_plasma", "aurora", "phosphor_emission"):
-            r = e["regimes"].get(regime_name)
-            if r is None:
-                entry["regimes"][regime_name] = None
-                continue
-            entry["regimes"][regime_name] = {
-                "status": r["status"],
-                "hex": r.get("hex"),
-                "hex_basis": r.get("hex_basis"),
-                "basis": r.get("basis", ""),
-                "source": r.get("source", ""),
-            }
-        lr = lte.get(sym)
-        entry["regimes"]["lte_plasma"] = None if lr is None else {
-            "status": lr["status"],
-            "hex": lr.get("hex"),
-            "hex_basis": "computed",
-            "basis": lr.get("basis", ""),
-            "source": "computed from NIST ASD neutral lines"
-                      + (f" — {lr['confidence']} confidence" if lr.get("confidence") else ""),
-        }
-        data[sym] = entry
+    for sym, e in etc.get("elements", {}).items():
+        colors = {str(T): {"hex": c["hex"], "ion": c.get("ionization_fraction", 0)}
+                  for T, c in e.get("colors", {}).items()}
+        data[sym] = {"z": e.get("z"), "name": e.get("name"), "colors": colors}
     return data
 
 
-# ── Build molecular data for JS ────────────────────────────────────
+# ── Build molecular data for JS (temperature table) ────────────────
 
-def build_molecular_data(mdb: dict) -> dict:
+def build_molecule_temp_data(mtc: dict) -> dict:
+    """Per-molecule temperature colors for the slider:
+    {formula: {atoms, dropped?, note?, colors: {T: {hex, dom}}}}."""
     data = {}
-    for formula, m in mdb.items():
-        entry = {
-            "formula": m["formula"],
-            "atoms": m["atoms"],
-            "mass_amu": m["mass_amu"],
-            "regimes": {},
-        }
-        for regime_name in ("reentry_plasma", "aurora"):
-            r = m["regimes"].get(regime_name)
-            if r is None:
-                entry["regimes"][regime_name] = None
-                continue
-            entry["regimes"][regime_name] = {
-                "status": r["status"],
-                "hex": r.get("hex"),
-                "hex_basis": r.get("hex_basis"),
-                "basis": r.get("basis", ""),
-                "source": r.get("source", ""),
-                "dissociation_products": r.get("dissociation_products"),
-                "upgrade_when": r.get("upgrade_when"),
-            }
+    for formula, m in mtc.get("molecules", {}).items():
+        colors = {str(T): {"hex": c["hex"], "dom": c.get("dominant", "")}
+                  for T, c in m.get("colors", {}).items()}
+        entry = {"atoms": m.get("atoms"), "colors": colors}
+        if m.get("dropped"):
+            entry["dropped"] = m["dropped"]
+        if m.get("note"):
+            entry["note"] = m["note"]
         data[formula] = entry
     return data
 
 
-# ── Periodic table (cells without colors; JS fills per regime) ────
+# ── Periodic table (cells without colors; JS fills per slider temperature) ────
 
 def render_periodic_table(db: dict, layout: dict) -> str:
     cells = []
@@ -581,8 +547,8 @@ def render_body_card(body: dict) -> str:
 def build_t(palettes):
     t_en = {
         "title": "Plasma & reentry color reference",
-        "intro_1": "Multi-regime element/molecular plasma colors. Source of truth: <code>db/refs/element_plasma_colors.yaml</code>, <code>db/refs/molecular_plasma_colors.yaml</code>, and <code>.claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py</code> constants.",
-        "intro_2": "Toggle regime to see how the same element shifts color between flame test, reentry plasma, and aurora. Hover any cell for spectroscopic basis.",
+        "intro_1": "First-principles LTE plasma emission colors (Saha–Boltzmann → CIE). The periodic table &amp; molecular panel are driven by the temperature slider — <code>db/refs/element_temperature_colors.yaml</code> + <code>db/refs/molecular_temperature_colors.yaml</code>. Lower sections: composition grids, the Firefly emitter palettes, and aurora.",
+        "intro_2": "Drag the temperature slider — every element and molecule is colored by its computed LTE plasma emission at that temperature. Watch the molecular → atomic → ionic march. Hover a cell for detail; dim cells have no computed color at that temperature.",
         "h_periodic": "Periodic table — atomic emission",
         "h_molecular": "Molecular emitters",
         "h_bulk": "Bulk-gas reentry palettes (Firefly emitter)",
@@ -593,7 +559,7 @@ def build_t(palettes):
         "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
         "h_aurora": "Aurora color vs altitude/density (non-LTE)",
         "aurora_caption": "Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Computed from measured A-values + quenching coefficients; cell label = dominant emitter. This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
-        "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — see the periodic table's computed regime. Hover for ionization fraction.",
+        "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — same coverage as the periodic table above. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
         "bt_blackbody": "Blackbody (thermal)",
         "ptc_air": "N2/O2 (Earth-like)",
@@ -603,12 +569,7 @@ def build_t(palettes):
         "ptc_h2o": "H2O (steam)",
         "ptc_nh3": "NH3 (ice-giant)",
         "h_bodies": "Currently emitted bodies",
-        "regime_label": "Regime:",
-        "regime_atomic_flame": "Flame test (~2000K)",
-        "regime_reentry_plasma": "Reentry plasma (~10000K)",
-        "regime_aurora": "Aurora (low density)",
-        "regime_phosphor_emission": "Phosphor (Ln3+ in matrix)",
-        "regime_lte_plasma": "Atomic emission (computed)",
+        "temp_label": "Temperature:",
         "th_streak_species": "Species",
         "th_streak_color":   "Color",
         "th_streak_rgb":     "RGB · intensity",
@@ -624,8 +585,8 @@ def build_t(palettes):
     }
     t_ko = {
         "title": "플라즈마 & 재진입 색 레퍼런스",
-        "intro_1": "온도 영역별 원소/분자 플라즈마 색. 정본 데이터: <code>db/refs/element_plasma_colors.yaml</code>, <code>db/refs/molecular_plasma_colors.yaml</code>, <code>.claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py</code> 상수.",
-        "intro_2": "Regime 을 전환하면 같은 원소가 불꽃 / 재진입 / 오로라 영역에서 어떻게 색이 바뀌는지 비교할 수 있습니다. 셀에 마우스를 올리면 분광학적 근거가 보입니다.",
+        "intro_1": "1차원리 LTE 플라스마 발광색 (Saha–Boltzmann → CIE). 주기율표와 분자 패널은 온도 슬라이더로 구동됩니다 — <code>db/refs/element_temperature_colors.yaml</code> + <code>db/refs/molecular_temperature_colors.yaml</code>. 아래 섹션은 조성 그리드, Firefly emitter 팔레트, 오로라입니다.",
+        "intro_2": "온도 슬라이더를 움직이면 각 원소·분자가 그 온도의 LTE 플라스마 발광색으로 칠해집니다. 분자 → 원자 → 이온 행진을 볼 수 있습니다. 셀에 올리면 상세가 보이고, 흐린 셀은 그 온도의 계산 색이 없는 것입니다.",
         "h_periodic": "주기율표 — 원자 emission",
         "h_molecular": "분자 emitter",
         "h_bulk": "Bulk-gas 재진입 팔레트 (Firefly emitter)",
@@ -636,7 +597,7 @@ def build_t(palettes):
         "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
         "h_aurora": "고도/밀도별 오로라 색 (비-LTE)",
         "aurora_caption": "오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도). CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종. LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
-        "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 주기율표 계산 regime 참조. 셀에 올리면 이온화 분율이 보입니다.",
+        "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 위 주기율표와 같은 커버리지입니다. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
         "ptc_air": "N2/O2 (지구형)",
@@ -646,12 +607,7 @@ def build_t(palettes):
         "ptc_h2o": "H2O (수증기)",
         "ptc_nh3": "NH3 (아이스자이언트)",
         "h_bodies": "현재 emit 된 행성들",
-        "regime_label": "영역:",
-        "regime_atomic_flame": "불꽃 (~2000K)",
-        "regime_reentry_plasma": "재진입 plasma (~10000K)",
-        "regime_aurora": "오로라 (저밀도)",
-        "regime_phosphor_emission": "Phosphor (Ln3+ 고체)",
-        "regime_lte_plasma": "원자 방출 (계산)",
+        "temp_label": "온도:",
         "th_streak_species": "종",
         "th_streak_color":   "색",
         "th_streak_rgb":     "RGB · 강도",
@@ -689,6 +645,9 @@ TEMPLATE = """<!DOCTYPE html>
   border-radius: 4px;
 }}
 .regime-bar .label {{ color: var(--fg-muted); font-size: 0.9rem }}
+#temp-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
+.temp-readout {{ font-family: var(--mono); font-size: 0.95rem; color: var(--fg-emph);
+  min-width: 5.5em; text-align: right; }}
 
 .periodic-table {{
   display: grid;
@@ -830,14 +789,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <p class="intro" data-i18n="intro_2"></p>
 
 <div class="regime-bar">
-  <span class="label" data-i18n="regime_label"></span>
-  <div class="seg" id="regime-seg">
-    <button class="on" data-regime="atomic_flame" data-i18n="regime_atomic_flame"></button>
-    <button data-regime="reentry_plasma" data-i18n="regime_reentry_plasma"></button>
-    <button data-regime="aurora" data-i18n="regime_aurora"></button>
-    <button data-regime="phosphor_emission" data-i18n="regime_phosphor_emission"></button>
-    <button data-regime="lte_plasma" data-i18n="regime_lte_plasma"></button>
-  </div>
+  <span class="label" data-i18n="temp_label"></span>
+  <input type="range" id="temp-slider" min="1000" max="15000" step="1000" value="4000">
+  <span id="temp-readout" class="temp-readout">4000 K</span>
 </div>
 
 <section>
@@ -883,11 +837,11 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 
 <script>
 const T = {t_json};
-const ELEMENTS = {element_json};
-const MOLECULES = {molecule_json};
+const ELEMENT_TEMP = {element_temp_json};
+const MOLECULE_TEMP = {molecule_temp_json};
 
 let lang = localStorage.getItem('nearstars-lang') || 'ko';
-let regime = localStorage.getItem('nearstars-regime') || 'atomic_flame';
+let temp = parseInt(localStorage.getItem('nearstars-temp') || '4000', 10);
 
 function luminance(hex) {{
   const r = parseInt(hex.substr(1,2),16)/255;
@@ -898,82 +852,51 @@ function luminance(hex) {{
 }}
 function textOn(hex) {{ return luminance(hex) > 0.4 ? '#000' : '#fff'; }}
 
-function applyRegime() {{
+function applyTemp(t) {{
+  const key = String(t);
   document.querySelectorAll('.el-cell').forEach(cell => {{
     const sym = cell.dataset.sym;
-    const data = ELEMENTS[sym];
-    const r = data.regimes[regime];
+    const data = ELEMENT_TEMP[sym];
     cell.classList.remove('visible');
     cell.style.background = '';
     cell.style.color = '';
     const chip = cell.querySelector('.chip');
     chip.textContent = '';
-    if (r && r.status === 'visible' && r.hex) {{
+    const c = data && data.colors ? data.colors[key] : null;
+    if (c) {{
       cell.classList.add('visible');
-      cell.style.background = r.hex;
-      cell.style.color = textOn(r.hex);
-      cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) — ${{r.basis}}`;
+      cell.style.background = c.hex;
+      cell.style.color = textOn(c.hex);
+      cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) @ ${{t}}K — ionz ${{Math.round((c.ion||0)*100)}}%`;
     }} else {{
-      const status = r ? r.status : 'no_data';
-      const label = ({{
-        'visible': '', 'no_flame_color': 'no flame', 'not_visible_to_humans': 'UV/IR',
-        'too_radioactive': 'radioactive', 'too_short': 'synthetic',
-        'no_data': 'no data', 'not_emitter': 'no emit',
-        'no_measured_spectra': 'no spectra',
-      }})[status] || status;
-      chip.textContent = label;
-      cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) — ${{r ? r.basis : 'no data for this regime'}}`;
+      chip.textContent = 'no data';
+      cell.title = data ? `${{data.name}} (${{sym}}, Z=${{data.z}}) — no computed temperature color`
+                        : `${{sym}} — no data`;
     }}
   }});
 
   document.querySelectorAll('.mol-cell').forEach(cell => {{
     const formula = cell.dataset.formula;
-    const mol = MOLECULES[formula];
-    if (!mol) return;
-    // Molecular only has reentry_plasma + aurora regimes — other regimes n/a
-    if (regime === 'atomic_flame' || regime === 'phosphor_emission') {{
-      cell.classList.remove('visible', 'research-pending');
-      cell.style.background = '';
-      cell.style.color = '';
-      const status = cell.querySelector('.mol-status');
-      const label = regime === 'atomic_flame' ? 'atomic regime n/a' : 'phosphor regime n/a';
-      status.textContent = label;
-      cell.title = `${{formula}} — molecular emitters don't have a ${{regime}} regime`;
-      return;
-    }}
-    const r = mol.regimes[regime];
+    const mol = MOLECULE_TEMP[formula];
     const status = cell.querySelector('.mol-status');
     cell.classList.remove('visible', 'research-pending');
     cell.style.background = '';
     cell.style.color = '';
-    if (r && r.status === 'visible' && r.hex) {{
+    const c = mol && mol.colors ? mol.colors[key] : null;
+    if (c) {{
       cell.classList.add('visible');
-      cell.style.background = r.hex;
-      cell.style.color = textOn(r.hex);
-      status.textContent = '';
-      cell.title = `${{formula}} (${{mol.atoms}}-atom) — ${{r.basis}}`;
+      cell.style.background = c.hex;
+      cell.style.color = textOn(c.hex);
+      status.textContent = c.dom || '';
+      const drop = (mol.dropped && mol.dropped.length) ? ` · no data for ${{mol.dropped.join('/')}}` : '';
+      cell.title = `${{formula}} (${{mol.atoms}}-atom) @ ${{t}}K — ${{c.dom}}${{drop}}`;
     }} else {{
-      let lbl = '';
-      let tipExtra = '';
-      if (r && r.status === 'not_emitter') {{
-        lbl = r.dissociation_products ? '→ ' + r.dissociation_products.join('+') : 'no emit';
-      }} else if (r && r.status === 'not_visible_to_humans') {{
-        lbl = 'UV/IR';
-      }} else if (r && r.status === 'no_data') {{
-        lbl = 'research pending';
-        cell.classList.add('research-pending');
-        if (r.upgrade_when) tipExtra = `\\nupgrade when: ${{r.upgrade_when}}`;
-      }} else {{
-        lbl = r ? r.status : 'no data';
-      }}
-      status.textContent = lbl;
-      cell.title = `${{formula}} (${{mol.atoms}}-atom) — ${{r ? r.basis : 'no data'}}${{tipExtra}}`;
+      status.textContent = 'no data';
+      cell.title = `${{formula}} — ${{mol && mol.note ? mol.note : 'no computed temperature color'}}`;
     }}
   }});
 
-  document.querySelectorAll('#regime-seg button').forEach(b => {{
-    b.classList.toggle('on', b.dataset.regime === regime);
-  }});
+  document.getElementById('temp-readout').textContent = t + ' K';
 }}
 
 function applyLang() {{
@@ -995,16 +918,16 @@ document.getElementById('lang-seg').addEventListener('click', e => {{
   applyLang();
 }});
 
-document.getElementById('regime-seg').addEventListener('click', e => {{
-  const btn = e.target.closest('button[data-regime]');
-  if (!btn) return;
-  regime = btn.dataset.regime;
-  localStorage.setItem('nearstars-regime', regime);
-  applyRegime();
+const tempSlider = document.getElementById('temp-slider');
+tempSlider.value = temp;
+tempSlider.addEventListener('input', e => {{
+  temp = parseInt(e.target.value, 10);
+  localStorage.setItem('nearstars-temp', temp);
+  applyTemp(temp);
 }});
 
 applyLang();
-applyRegime();
+applyTemp(temp);
 </script>
 </body>
 </html>
@@ -1016,8 +939,6 @@ def main() -> int:
         db = yaml.safe_load(f)
     with open(MOLECULAR_DB, encoding="utf-8") as f:
         mdb = yaml.safe_load(f)
-    lte = yaml.safe_load(LTE_PLASMA_DB.read_text(encoding="utf-8")) if LTE_PLASMA_DB.exists() else {}
-
     layout = build_layout()
     periodic = render_periodic_table(db, layout)
     molecular = render_molecular_panel(mdb)
@@ -1035,12 +956,14 @@ def main() -> int:
             body_results.append(res)
     bodies_section = "\n".join(render_body_card(b) for b in body_results)
 
-    element_data = build_element_data(db, lte)
-    molecule_data = build_molecular_data(mdb)
+    etc = yaml.safe_load(ELEMENT_TEMP_DB.read_text(encoding="utf-8"))
+    mtc = yaml.safe_load(MOL_TEMP_DB.read_text(encoding="utf-8"))
+    element_temp_data = build_element_temp_data(etc)
+    molecule_temp_data = build_molecule_temp_data(mtc)
     t_en, t_ko = build_t(PALETTES)
     t_json = json.dumps({"en": t_en, "ko": t_ko}, ensure_ascii=False)
-    element_json = json.dumps(element_data, ensure_ascii=False)
-    molecule_json = json.dumps(molecule_data, ensure_ascii=False)
+    element_temp_json = json.dumps(element_temp_data, ensure_ascii=False)
+    molecule_temp_json = json.dumps(molecule_temp_data, ensure_ascii=False)
 
     html_out = TEMPLATE.format(
         periodic_table=periodic,
@@ -1053,8 +976,8 @@ def main() -> int:
         aurora_grid=aurora_grid,
         bodies_section=bodies_section,
         t_json=t_json,
-        element_json=element_json,
-        molecule_json=molecule_json,
+        element_temp_json=element_temp_json,
+        molecule_temp_json=molecule_temp_json,
     )
     OUT.write_text(html_out, encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)} "
