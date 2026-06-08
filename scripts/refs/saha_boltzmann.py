@@ -83,6 +83,7 @@ ELEMENTS = {
     "C":  ("C_I", "C_II"),
     "N":  ("N_I", "N_II"),
     "O":  ("O_I", "O_II"),
+    "S":  ("S_I", "S_II"),
 }
 
 

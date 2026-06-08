@@ -53,6 +53,8 @@ SPECIES = [
     ("N_II",  "N II",  "N",  1, 29.600210),
     ("O_I",   "O I",   "O",  0, 13.618055),
     ("O_II",  "O II",  "O",  1, 35.121120),
+    ("S_I",   "S I",   "S",  0, 10.360010),
+    ("S_II",  "S II",  "S",  1, 23.337880),
 ]
 
 LINES_URL = ("https://physics.nist.gov/cgi-bin/ASD/lines1.pl?spectra={spec}"
