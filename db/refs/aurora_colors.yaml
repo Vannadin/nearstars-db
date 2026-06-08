@@ -38,47 +38,47 @@ earth:
     10:
       log_n: 10
       altitude_hint: ~180km
-      hex: '#efff42'
+      hex: '#f0ff42'
       rgb:
-      - 239
+      - 240
       - 255
       - 66
       dominant: O_1S
     11:
       log_n: 11
       altitude_hint: ~140km
-      hex: '#ffe17d'
+      hex: '#ffd36e'
       rgb:
       - 255
-      - 225
-      - 125
+      - 211
+      - 110
       dominant: N2_1P
     12:
       log_n: 12
       altitude_hint: ~115km
-      hex: '#ff789b'
+      hex: '#ff7b7f'
       rgb:
       - 255
-      - 120
-      - 155
+      - 123
+      - 127
       dominant: N2_1P
     13:
       log_n: 13
       altitude_hint: ~100km
-      hex: '#ff00a7'
+      hex: '#ff2783'
       rgb:
       - 255
-      - 0
-      - 167
+      - 39
+      - 131
       dominant: N2_1P
     14:
       log_n: 14
       altitude_hint: ~90km
-      hex: '#ff00a7'
+      hex: '#ff6055'
       rgb:
       - 255
-      - 0
-      - 167
+      - 96
+      - 85
       dominant: N2_1P
 venus_mars:
   label: Venus/Mars (CO2)

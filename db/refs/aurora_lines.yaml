@@ -16,6 +16,17 @@
 #   O(1D)+N2 ~2.0e-11, +O2 ~2.9e-11, +O ~8e-12, +CO2 ~7.5e-11
 #   O(1S)+O2 ~4.0e-12, +O ~2e-13, +N2 ~1e-13, +CO2 ~3e-13
 # yield = relative electron-impact / dissociative-recombination production.
+#
+# Airglow / meteoric-metal additions (~80-105 km layer, "other elements"):
+#   Na D 589.0/589.6 — Slipher 1929; sodium nightglow from the meteoric Na layer
+#     (chemiluminescence Na+O3 at night, resonance fluorescence by day).
+#   OH Meinel (H+O3 ~87km) — strongest discrete nightglow emission, broad red/IR;
+#     representative visible band heads (envelope), not individual rovibronic lines.
+#   O I 777.4 — O+ radiative recombination (F-region), bright-aurora deep red.
+#   Li 670.8 / K 766.5,769.9 / Ca+ 393.4,396.8 — meteoric metal resonance layers
+#     (Plane et al. 2015, "The Mesosphere and Metals", Chem. Rev.). Mg/Fe are
+#     UV (<300nm) so excluded from the visible model. Mars hosts a metal layer too
+#     (MAVEN), so venus_mars carries a trace Na as well.
 
 emitters:
   O_1D:                       # red (the high-altitude auroral red)
@@ -62,3 +73,34 @@ emitters:
     forbidden: false
     yield: 0.4
     lines: [{nm: 367.0, A: 1.0}, {nm: 423.0, A: 0.5}]
+  # ── airglow / meteoric-metal layer (~80-105 km) — "other elements" ──
+  Na_D:                       # sodium nightglow 589nm — meteoric Na layer ~90km (yellow)
+    source: Na                #   Slipher 1929; Na D from meteoric ablation + Na+O3 chemiluminescence
+    forbidden: false
+    yield: 30.0
+    lines: [{nm: 589.0, A: 1.0}, {nm: 589.6, A: 0.5}]    # D2:D1 = 2:1 (spin-orbit weights)
+  OH_Meinel:                  # OH Meinel nightglow (H+O3, ~87km) — broad deep-red envelope
+    source: O2                #   tied to the O2/O3 layer; representative visible Meinel band heads
+    forbidden: false
+    yield: 2.0
+    lines: [{nm: 687.0, A: 0.6}, {nm: 720.0, A: 1.0}, {nm: 731.0, A: 0.8}]
+  O_777:                      # OI 777.4 — O+ radiative recombination, bright aurora (deep red)
+    source: O
+    forbidden: false
+    yield: 0.12
+    lines: [{nm: 777.4, A: 1.0}]
+  Li_red:                     # meteoric Li 670.8nm resonance (red, minor layer)
+    source: Li
+    forbidden: false
+    yield: 18.0
+    lines: [{nm: 670.8, A: 1.0}]
+  K_red:                      # meteoric K 766.5/769.9nm resonance (deep-red edge, minor)
+    source: K
+    forbidden: false
+    yield: 18.0
+    lines: [{nm: 766.5, A: 1.0}, {nm: 769.9, A: 0.5}]
+  Ca_II:                      # meteoric Ca+ 393.4/396.8nm (H&K, violet, twilight resonance)
+    source: Ca
+    forbidden: false
+    yield: 18.0
+    lines: [{nm: 393.4, A: 1.0}, {nm: 396.8, A: 0.5}]

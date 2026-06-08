@@ -49,13 +49,19 @@ WIDTH_NM = 2.5
 # Per-atmosphere composition. Earth: density-dependent anchors (log10 n, comp),
 # interpolated. Others: single fixed comp (one anchor).
 ATMOSPHERES = {
+    # Earth: high alt O-rich thermosphere → low alt N2-rich; the densest rows reach
+    # the ~80-105 km airglow / meteoric-metal layer (Na yellow + OH red + metals).
     "earth": {"label": "Earth (N2/O2)", "anchors": [
         (7,  {"O": 0.92, "N2": 0.07, "O2": 0.01}),
         (10, {"O": 0.55, "N2": 0.36, "O2": 0.09}),
-        (13, {"O": 0.05, "N2": 0.77, "O2": 0.18})]},
+        (13, {"O": 0.05, "N2": 0.76, "O2": 0.18, "Na": 0.006}),
+        (14, {"O": 0.02, "N2": 0.66, "O2": 0.28, "Na": 0.02,
+              "Li": 0.003, "K": 0.008, "Ca": 0.004})]},
     "venus_mars": {"label": "Venus/Mars (CO2)", "anchors": [
         (7, {"O": 0.5, "CO2": 0.45, "N2": 0.05}),
         (13, {"O": 0.05, "CO2": 0.92, "N2": 0.03})]},
+    # (Mars hosts a meteoric metal layer too — MAVEN — but its visible emission is
+    #  faint/UV-dominant, so the metal airglow is modeled only for Earth below.)
     "gas_giant": {"label": "Gas giant (H2/He)", "anchors": [
         (7, {"H": 0.9, "He": 0.1})]},
 }
@@ -77,7 +83,7 @@ def comp_at(anchors, ln):
 
 def aurora_spectrum(emitters, comp, n):
     contribs = []                       # (nm, strength)
-    diag = {}
+    diag = {}                           # per-emitter production (for the dominant label)
     for name, e in emitters.items():
         x = comp.get(e["source"], 0.0)
         if x <= 0:
