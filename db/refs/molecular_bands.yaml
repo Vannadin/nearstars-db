@@ -19,6 +19,9 @@
 # Band systems:
 #   molecule, charge (0 neutral / 1 cation), T_e_cm (upper state), g_upper,
 #   A_eff (relative band transition probability), heads [{nm, rel}].
+#   nlte (optional): true = electron-impact-pumped (the N2 family); in the
+#     2-temperature non-LTE mode these are excited at the electron temperature
+#     T_elec, not the gas T — this is what lights up the reentry blue-violet.
 
 molecules:
   N2:
@@ -66,6 +69,7 @@ molecules:
 band_systems:
   N2_1P:        # First Positive B3Pg->A3Su+ : red/orange afterglow
     molecule: N2
+    nlte: true
     charge: 0
     T_e_cm: 59619.0
     g_upper: 6
@@ -77,6 +81,7 @@ band_systems:
       - {nm: 762.0, rel: 0.6}
   N2_2P:        # Second Positive C3Pu->B3Pg : violet
     molecule: N2
+    nlte: true
     charge: 0
     T_e_cm: 89136.9
     g_upper: 6
@@ -87,6 +92,7 @@ band_systems:
       - {nm: 405.9, rel: 0.5}
   N2p_1NG:      # N2+ First Negative B2Su+->X2Sg+ : the blue-violet reentry signature
     molecule: N2
+    nlte: true
     charge: 1
     T_e_cm: 25461.1
     g_upper: 2

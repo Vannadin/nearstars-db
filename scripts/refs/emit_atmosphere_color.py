@@ -76,6 +76,9 @@ def select_bands(elems: dict, mol_db: dict) -> list:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("composition", help='e.g. "CO2:0.95,N2:0.05"')
+    ap.add_argument("--t-elec", type=float, default=None, dest="t_elec",
+                    help="electron temp [K] for 2-temperature non-LTE (lights N2-family blue); "
+                         "default = LTE. For velocity-driven reentry use reentry_color.py")
     ap.add_argument("--html", action="store_true", help="write /tmp/atmosphere_color.html + open")
     args = ap.parse_args()
 
@@ -95,7 +98,7 @@ def main() -> int:
     print("    T        color    dominant")
     cells = []
     for T in TEMPS:
-        inten, diag = sb.slab_spectrum_custom(elems, bands, T, atomic, mol_db)
+        inten, diag = sb.slab_spectrum_custom(elems, bands, T, atomic, mol_db, t_elec=args.t_elec)
         hexv = cie_color.spectrum_to_hex(inten)
         cells.append((T, hexv))
         dom = ("thermal" if diag["emission_fraction"] < 0.10 else

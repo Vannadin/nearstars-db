@@ -65,6 +65,8 @@ BAND_WIDTH_NM = 5.0       # molecular-band display half-width [nm]
 
 ION_U = {"H": 1.0, "He": 2.0}   # ion partition fns where no level list (H II, He II)
 U_ION_MOL = 2.0                 # crude U(cation)/U(neutral) for molecular ionization
+FREEZE_T = 6000.0               # non-LTE: dissociation freeze temp (chemical non-
+                                # equilibrium — molecules survive behind the shock)
 
 # Composition → element mole fractions (by nuclei, fully dissociated).
 COMPOSITIONS = {
@@ -171,10 +173,19 @@ def slab_spectrum(comp_key: str, T: float, atomic: dict, mol_db: dict):
                                 T, atomic, mol_db)
 
 
-def slab_spectrum_custom(elems: dict, band_list: list, T: float, atomic: dict, mol_db: dict):
+def slab_spectrum_custom(elems: dict, band_list: list, T: float, atomic: dict,
+                         mol_db: dict, t_elec: float | None = None):
     """Return (intensity over cie_color.LAMBDAS, diagnostics) for an ARBITRARY
     element-fraction dict + list of active molecular band-system names. Elements
-    must be in ELEMENTS (H, He, C, N, O)."""
+    must be in ELEMENTS (H, He, C, N, O, S).
+
+    t_elec: optional electron/electronic-excitation temperature for the
+    two-temperature (Park) NON-LTE mode. Band systems tagged `nlte: true`
+    (the N2 family — electron-impact-pumped) are excited at t_elec instead of
+    the gas T, lighting up the reentry blue-violet (N2+ 1NG 391nm). Default
+    t_elec=T = strict LTE (no change to any existing output)."""
+    if t_elec is None:
+        t_elec = T
     kt_cm = K_CM * T
     n_heavy = P_REF / (K_ERG * T)
     n_e = solve_ne(elems, atomic, T, n_heavy)
@@ -206,9 +217,14 @@ def slab_spectrum_custom(elems: dict, band_list: list, T: float, atomic: dict, m
     for sysname in band_list:
         bs = mol_db["band_systems"][sysname]
         mol = mol_db["molecules"][bs["molecule"]]
-        n_mol = molecule_density(mol, atomic, elems, n_heavy, T)
-        if bs["charge"] == 1:                    # cation: ionize the molecule
-            S_ion = U_ION_MOL * SAHA * T ** 1.5 * math.exp(-mol["ion_chi_eV"] / (K_EV * T))
+        T_exc = t_elec if bs.get("nlte") else T   # 2-T: electron temp for nlte bands
+        # non-LTE reentry: the radiating zone is chemically frozen (molecules not
+        # yet dissociated) behind the shock — cap the dissociation temperature so
+        # N2 survives to be electron-excited into the visible blue.
+        T_diss = min(T, FREEZE_T) if (bs.get("nlte") and t_elec > T) else T
+        n_mol = molecule_density(mol, atomic, elems, n_heavy, T_diss)
+        if bs["charge"] == 1:                    # cation: ionize the molecule (at T_exc)
+            S_ion = U_ION_MOL * SAHA * T_exc ** 1.5 * math.exp(-mol["ion_chi_eV"] / (K_EV * T_exc))
             n_mol = n_mol * S_ion / (n_e + S_ion)
         if n_mol <= 0:
             continue
@@ -219,7 +235,7 @@ def slab_spectrum_custom(elems: dict, band_list: list, T: float, atomic: dict, m
             lim_tot = elems.get(lim_el, 0.0) * n_heavy
             if lim_tot > 0:
                 mol_frac = max(mol_frac, ff.count(lim_el) * n_mol / lim_tot)
-        band_pop = n_mol * bs["g_upper"] * math.exp(-bs["T_e_cm"] / kt_cm)
+        band_pop = n_mol * bs["g_upper"] * math.exp(-bs["T_e_cm"] / (K_CM * T_exc))
         for h in bs["heads"]:
             s = (band_pop / n_heavy) * bs["A_eff"] * h["rel"] * (1e7 / h["nm"])
             if s > 0:
