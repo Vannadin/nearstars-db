@@ -471,24 +471,30 @@ def render_aurora_emitters() -> str:
         nm_list = ", ".join(f'{ln["nm"]:g}' for ln in lines)
         typ_key = "ae_forbidden" if e.get("forbidden") else "ae_allowed"
         catalog = ' <span class="muted">· catalog</span>' if e.get("catalog_only") else ""
+        forb = 1 if e.get("forbidden") else 0
+        atot = e.get("A_total", "")                      # for the φ(n) survival curve
+        ksum = sum(e["quench"].values()) if e.get("quench") else ""
         if hexv:
             sw = (f'<span class="swatch-inline" style="background:{hexv};'
                   f'color:{text_on(hexv)}">{hexv}</span>')
         else:
             sw = f'<span class="swatch-inline" style="background:#1b1b1b;color:#888">{band}</span>'
         rows.append(
-            f'<tr><td>{sw}</td><td class="sp">{html.escape(name)}</td>'
+            f'<tr data-forbidden="{forb}" data-atot="{atot}" data-ksum="{ksum}">'
+            f'<td>{sw}</td><td class="sp">{html.escape(name)}</td>'
             f'<td>{html.escape(str(e["source"]))}</td>'
             f'<td class="rgbi">{nm_list}</td>'
             f'<td>{band}{catalog}</td>'
-            f'<td data-i18n="{typ_key}"></td></tr>'
+            f'<td data-i18n="{typ_key}"></td>'
+            f'<td class="ae-surv rgbi"></td></tr>'
         )
     return (
         '<p class="muted" data-i18n="aurora_emitters_caption" style="font-size:12px;margin:4px 0 8px"></p>'
-        '<table class="streak-table"><thead><tr>'
+        '<table class="streak-table" id="aurora-emitters"><thead><tr>'
         '<th data-i18n="th_ae_color"></th><th data-i18n="th_ae_emitter"></th>'
         '<th data-i18n="th_ae_source"></th><th data-i18n="th_ae_lines"></th>'
         '<th data-i18n="th_ae_band"></th><th data-i18n="th_ae_type"></th>'
+        '<th data-i18n="th_ae_survival"></th>'
         '</tr></thead><tbody>' + "".join(rows) + '</tbody></table>'
     )
 
@@ -616,9 +622,10 @@ def build_t(palettes):
         "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
         "h_aurora": "Aurora color vs altitude/density (non-LTE)",
         "h_aurora_emitters": "Aurora / airglow emitter catalog",
-        "aurora_emitters_caption": "Every non-LTE emitter in the model — forbidden lines, allowed bands, the meteoric-metal layer, plus UV / near-IR lines (catalog only, outside the visible grid) kept for a future spectral visualization. Swatch = the emitter's own CIE color (visible only); FUV/UV/NIR show a band badge.",
+        "aurora_emitters_caption": "Every non-LTE emitter in the model — forbidden lines, allowed bands, the meteoric-metal layer, plus UV / near-IR lines (catalog only, outside the visible grid) kept for a future spectral visualization. Swatch = the emitter's own CIE color (visible only); FUV/UV/NIR show a band badge. The 'survival' column + swatch dimming track the density slider — forbidden metastables (O¹D/O¹S) quench at high density while allowed lines stay 100%.",
         "th_ae_color": "Color", "th_ae_emitter": "Emitter", "th_ae_source": "Source",
         "th_ae_lines": "Lines (nm)", "th_ae_band": "Band", "th_ae_type": "Type",
+        "th_ae_survival": "Survival @ density",
         "ae_forbidden": "forbidden/metastable", "ae_allowed": "allowed",
         "density_label": "Density (≈ altitude):",
         "aurora_caption": "Drag the density slider to scrub altitude. Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude), warming at the densest rows toward the ~80-105km airglow / meteoric-metal layer (Na 589nm yellow + OH Meinel red + traces of Li/K/Ca⁺). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Other emitters in the catalog: O I 777nm (bright-aurora deep red). Computed from measured A-values + quenching coefficients; cell label = dominant emitter (by production). This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
@@ -660,9 +667,10 @@ def build_t(palettes):
         "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
         "h_aurora": "고도/밀도별 오로라 색 (비-LTE)",
         "h_aurora_emitters": "오로라 / airglow 발광종 카탈로그",
-        "aurora_emitters_caption": "모델의 모든 비-LTE 발광종 — 금지선, 허용 밴드, 유성기원 금속층, 그리고 UV / 근적외 라인(카탈로그 전용, 가시 그리드 밖)까지. 나중 스펙트럼 시각화용으로 보존합니다. 스와치 = 발광종 자체의 CIE 색(가시영역만), FUV/UV/NIR은 대역 배지.",
+        "aurora_emitters_caption": "모델의 모든 비-LTE 발광종 — 금지선, 허용 밴드, 유성기원 금속층, 그리고 UV / 근적외 라인(카탈로그 전용, 가시 그리드 밖)까지. 나중 스펙트럼 시각화용으로 보존합니다. 스와치 = 발광종 자체의 CIE 색(가시영역만), FUV/UV/NIR은 대역 배지. '밀도별 생존율' 컬럼과 스와치 디밍은 밀도 슬라이더에 연동됩니다 — 금지 준안정선(O¹D/O¹S)은 고밀도에서 quench되고 허용선은 100% 유지합니다.",
         "th_ae_color": "색", "th_ae_emitter": "발광종", "th_ae_source": "소스",
         "th_ae_lines": "라인 (nm)", "th_ae_band": "대역", "th_ae_type": "종류",
+        "th_ae_survival": "밀도별 생존율",
         "ae_forbidden": "금지/준안정", "ae_allowed": "허용",
         "density_label": "밀도 (≈ 고도):",
         "aurora_caption": "밀도 슬라이더를 움직여 고도를 훑어보세요. 오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
@@ -1001,6 +1009,26 @@ function applyDensity(n) {{
   }});
   const alt = AURORA.earth.colors[key].alt;
   document.getElementById('density-readout').textContent = '1e' + n + ' cm⁻³ · ' + alt;
+  // catalog: fade forbidden metastables by their survival φ(n) = A/(A + Σk·n)
+  const nlin = Math.pow(10, n);
+  document.querySelectorAll('#aurora-emitters tbody tr').forEach(tr => {{
+    const forb = tr.dataset.forbidden === '1';
+    const atot = parseFloat(tr.dataset.atot);
+    const ksum = parseFloat(tr.dataset.ksum);
+    const surv = tr.querySelector('.ae-surv');
+    const sw = tr.querySelector('.swatch-inline');
+    if (forb && atot && ksum) {{
+      const phi = atot / (atot + ksum * nlin);
+      surv.textContent = phi >= 0.01 ? Math.round(phi * 100) + '%' : (phi * 100).toFixed(1) + '%';
+      if (sw) sw.style.opacity = Math.max(0.12, phi).toFixed(2);
+    }} else if (forb) {{
+      surv.textContent = '—';
+      if (sw) sw.style.opacity = 1;
+    }} else {{
+      surv.textContent = '100%';
+      if (sw) sw.style.opacity = 1;
+    }}
+  }});
 }}
 
 function applyLang() {{
