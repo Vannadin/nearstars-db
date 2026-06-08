@@ -164,8 +164,16 @@ def molecule_density(mol: dict, atomic: dict, elems: dict, n_heavy: float, T: fl
 # ── spectrum synthesis ──
 
 def slab_spectrum(comp_key: str, T: float, atomic: dict, mol_db: dict):
-    """Return (intensity over cie_color.LAMBDAS, diagnostics)."""
-    elems = COMPOSITIONS[comp_key]
+    """Named-composition wrapper around slab_spectrum_custom."""
+    return slab_spectrum_custom(COMPOSITIONS[comp_key],
+                                mol_db["composition_bands"].get(comp_key, []),
+                                T, atomic, mol_db)
+
+
+def slab_spectrum_custom(elems: dict, band_list: list, T: float, atomic: dict, mol_db: dict):
+    """Return (intensity over cie_color.LAMBDAS, diagnostics) for an ARBITRARY
+    element-fraction dict + list of active molecular band-system names. Elements
+    must be in ELEMENTS (H, He, C, N, O)."""
     kt_cm = K_CM * T
     n_heavy = P_REF / (K_ERG * T)
     n_e = solve_ne(elems, atomic, T, n_heavy)
@@ -194,7 +202,7 @@ def slab_spectrum(comp_key: str, T: float, atomic: dict, mol_db: dict):
 
     # molecular bands
     mol_frac = 0.0
-    for sysname in mol_db["composition_bands"].get(comp_key, []):
+    for sysname in band_list:
         bs = mol_db["band_systems"][sysname]
         mol = mol_db["molecules"][bs["molecule"]]
         n_mol = molecule_density(mol, atomic, elems, n_heavy, T)
