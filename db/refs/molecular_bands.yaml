@@ -81,6 +81,39 @@ molecules:
     sigma: 1
     g_elec: 1
     forms_from: [C, O]
+  # metal oxides — visible at LOW T (M-dwarf/red-giant regime), dissociate at high T
+  TiO:
+    D0_eV: 6.87
+    mu_amu: 11.99
+    omega_e: 1009.18
+    B_e: 0.5354
+    sigma: 1
+    g_elec: 6
+    forms_from: [Ti, O]
+  VO:
+    D0_eV: 6.44
+    mu_amu: 12.17
+    omega_e: 1011.30
+    B_e: 0.5482
+    sigma: 1
+    g_elec: 4
+    forms_from: [V, O]
+  FeO:
+    D0_eV: 4.20
+    mu_amu: 12.44
+    omega_e: 970.00
+    B_e: 0.5051
+    sigma: 1
+    g_elec: 10
+    forms_from: [Fe, O]
+  MgO:
+    D0_eV: 3.53
+    mu_amu: 9.65
+    omega_e: 785.06
+    B_e: 0.5743
+    sigma: 1
+    g_elec: 1
+    forms_from: [Mg, O]
 
 band_systems:
   N2_1P:        # First Positive B3Pg->A3Su+ : red/orange afterglow
@@ -175,6 +208,49 @@ band_systems:
       - {nm: 519.8, rel: 0.8}
       - {nm: 561.0, rel: 0.5}
       - {nm: 607.9, rel: 0.3}
+  TiO_gamma:    # A3Phi-X3Delta (gamma) : the red TiO of M-dwarfs (gamma 0-0 heads 705.4/708.9 nm)
+    molecule: TiO
+    charge: 0
+    T_e_cm: 14176.0
+    g_upper: 6
+    A_eff: 1.0e+7
+    heads:
+      - {nm: 705.4, rel: 1.0}
+      - {nm: 708.9, rel: 0.8}
+      - {nm: 673.4, rel: 0.6}
+      - {nm: 714.7, rel: 0.5}
+  VO_CX:        # C4Sigma- - X4Sigma- : VO visible 0-0 ~574 nm yellow-green (B-X is NIR)
+    molecule: VO
+    charge: 0
+    T_e_cm: 17420.0
+    g_upper: 4
+    A_eff: 5.0e+6
+    heads:
+      - {nm: 574.0, rel: 1.0}
+      - {nm: 561.0, rel: 0.7}
+      - {nm: 591.0, rel: 0.6}
+      - {nm: 545.0, rel: 0.4}
+  FeO_orange:   # D5Delta-X5Delta orange "arc" bands 580-626 nm (airglow, meteors, Fe LIBS)
+    molecule: FeO
+    charge: 0
+    T_e_cm: 16367.0
+    g_upper: 10
+    A_eff: 2.0e+6
+    heads:
+      - {nm: 611.0, rel: 1.0}
+      - {nm: 595.0, rel: 0.8}
+      - {nm: 582.0, rel: 0.6}
+      - {nm: 626.0, rel: 0.5}
+  MgO_green:    # B1Sigma+ - X1Sigma+ green system ~500 nm (Te ~20000 cm-1)
+    molecule: MgO
+    charge: 0
+    T_e_cm: 20000.0
+    g_upper: 1
+    A_eff: 3.0e+6
+    heads:
+      - {nm: 500.0, rel: 1.0}
+      - {nm: 520.6, rel: 0.7}
+      - {nm: 480.9, rel: 0.5}
 
 # Which band systems are active in each bulk composition (idealized pure
 # composition; trace-species notes in docs). co2 forms C2 (and CO, mostly UV);

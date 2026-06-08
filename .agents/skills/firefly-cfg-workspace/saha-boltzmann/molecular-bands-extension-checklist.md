@@ -22,9 +22,15 @@
 - [x] commit
 
 ## Phase C — metal-oxide band systems (Tier 2)
-- [ ] TiO (red), VO (orange-red), FeO (orange), MgO (green) → molecular_bands.yaml
-- [ ] verify low-T molecular color → high-T dissociation→atomic march per oxide
-- [ ] commit
+- [x] TiO γ A3Φ-X3Δ (705.4/708.9 nm red), VO C4Σ-X4Σ (574 nm yellow-green),
+      FeO orange D5Δ-X5Δ (611 nm), MgO B1Σ-X1Σ (500 nm green) → molecular_bands.yaml
+      Sources: TiO heads — Ti-isotope/MNRAS (arXiv 2110.01908, 1612.08298); VO C-X 0-0
+      ~17400 cm-1 — ExoMol XVIII (arXiv 1609.06120); FeO orange D-X 580-626 nm —
+      Odin/OSIRIS airglow (Evans 2010 GRL) + Fe LIBS; MgO B1Σ ~20000 cm-1 — ExoMol XXXII
+      (arXiv 1904.12155). Ground-state constants D0/ωe/Be: Huber & Herzberg.
+- [x] verified march: TiO orange-red→Ti cyan→ion; VO yellow→V violet; FeO orange→Fe violet;
+      MgO green (500nm band + Mg b 518 atomic)→ion. Bulk plasma_temperature unchanged.
+- [x] commit
 
 ## Phase D — molecular temperature table
 - [ ] build_molecular_temperature_colors.py (each molecule = 1.0 composition over grid)
