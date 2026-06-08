@@ -13,11 +13,13 @@ neutral ionizes, lines fade, the thermal continuum (blue-white) takes over.
 SCOPE / APPROXIMATIONS (documented):
   - Atomic only — no molecular bands (a lone element; molecular reentry colors
     live in the per-composition table). LTE.
-  - Neutral-line emission only; first-ion line emission is NOT included (we lack
-    X II line data for most elements), so very-high-T colors trend to the thermal
-    continuum rather than showing ion lines. Saha still depletes the neutral.
-  - Ion partition function approximated U_ion ≈ U_neutral in the Saha balance.
-  - Only elements with NIST A-values are temperature-resolvable (~73); complex
+  - Neutral + first-ion (X II) line emission, weighted by the Saha neutral/ion
+    fractions; the ion partition function comes from the X II levels where
+    available (~57 elements), else U_ion ≈ U_neutral. Second ionization is
+    neglected, so colors above first-ion saturation may still trend continuum-ward.
+  - No free-free/free-bound continuum; the low-T "incandescence" is a Planck
+    stand-in scaled by density (a known simplification, not a thin-gas continuum).
+  - Only elements with NIST A-values are temperature-resolvable (~75); complex
     spectra without A (Zr, Nb, lanthanides, actinides) are omitted here — see
     the single-temperature lte_plasma regime for those.
 
@@ -83,17 +85,27 @@ def neutral_fraction(S: float, n_heavy: float) -> float:
     return max(0.0, (n_heavy - n_ion) / n_heavy)
 
 
-def element_color(lines: list[dict], levels: list[dict], chi_ev: float, T: float):
-    """(hex, ionization_fraction) for a pure neutral element at temperature T."""
+def element_color(neu_lines, neu_levels, ion_lines, ion_levels, chi_ev, T):
+    """(hex, ionization_fraction) for a pure element at temperature T.
+
+    Neutral + first-ion line emission, weighted by the Saha neutral/ion fractions;
+    proper ion partition function from the X II levels when available."""
     n_heavy = P_REF / (K_ERG * T)
-    U = partition_fn(levels, T)
-    S = 2.0 * SAHA * T ** 1.5 * math.exp(-chi_ev / (K_EV * T))   # U_ion ≈ U_neutral
+    U = partition_fn(neu_levels, T)
+    U_ion = partition_fn(ion_levels, T) if ion_levels else U
+    S = 2.0 * (U_ion / U) * SAHA * T ** 1.5 * math.exp(-chi_ev / (K_EV * T))
     f_neu = neutral_fraction(S, n_heavy)
+    f_ion = 1.0 - f_neu
     kt_cm = K_CM * T
 
     contribs = []
-    for ln in lines:
+    for ln in neu_lines:
         n_up = f_neu * ln["g_upper"] * math.exp(-ln["E_upper_cm"] / kt_cm) / U
+        s = n_up * ln["A_ki"] * (1e7 / ln["nm"])
+        if s > 0:
+            contribs.append((ln["nm"], s))
+    for ln in ion_lines:
+        n_up = f_ion * ln["g_upper"] * math.exp(-ln["E_upper_cm"] / kt_cm) / U_ion
         s = n_up * ln["A_ki"] * (1e7 / ln["nm"])
         if s > 0:
             contribs.append((ln["nm"], s))
@@ -109,7 +121,7 @@ def element_color(lines: list[dict], levels: list[dict], chi_ev: float, T: float
             if -6 < d < 6:
                 emis += s / (LINE_WIDTH_NM * 2.5066) * math.exp(-0.5 * d * d)
         inten.append(therm_w * planck[i] / pk + GAIN * emis)
-    return cie_color.spectrum_to_hex(inten), round(1.0 - f_neu, 4)
+    return cie_color.spectrum_to_hex(inten), round(f_ion, 4)
 
 
 def _bb_note(T: int) -> str:
@@ -140,16 +152,21 @@ def build(sanity: bool = False) -> dict:
     skipped = []
     for z, sym, name in elements:
         chi = IONIZATION_EV.get(sym)
-        lp = CACHE / f"lines_{sym.lower()}.txt"
-        vp = CACHE / f"levels_{sym.lower()}.txt"
+        k = sym.lower()
+        lp = CACHE / f"lines_{k}.txt"
+        vp = CACHE / f"levels_{k}.txt"
         lines = BA.parse_lines(lp.read_text(encoding="utf-8")) if lp.exists() else []
         levels = BA.parse_levels(vp.read_text(encoding="utf-8")) if vp.exists() else []
         if not lines or chi is None:
             skipped.append(sym)
             continue
+        ilp = CACHE / f"lines_{k}_ii.txt"
+        ivp = CACHE / f"levels_{k}_ii.txt"
+        ion_lines = BA.parse_lines(ilp.read_text(encoding="utf-8")) if ilp.exists() else []
+        ion_levels = BA.parse_levels(ivp.read_text(encoding="utf-8")) if ivp.exists() else []
         rows = {}
         for T in TEMPS:
-            hexv, ionf = element_color(lines, levels, chi, T)
+            hexv, ionf = element_color(lines, levels, ion_lines, ion_levels, chi, T)
             rgb = cie_color.hex_to_rgb(hexv)
             rows[T] = {"temp_k": T, "hex": hexv,
                        "rgb": [round(c * 255) for c in rgb],
@@ -166,10 +183,11 @@ HEADER = """\
 # single-element analog of plasma_temperature_colors.yaml. Built by
 # scripts/refs/build_element_temperature_colors.py from the saha_boltzmann engine.
 #
-# Model: thermal continuum (Planck->CIE, exact in _blackbody) + neutral atomic
-# line emission (NIST A-values, Boltzmann), neutral fraction Saha-depleted with T.
-# ATOMIC ONLY (no molecular bands), neutral lines only (no ion-line emission for
-# most elements), LTE. Only elements with NIST A-values are resolvable.
+# Model: incandescence stand-in (density·Planck->CIE; _blackbody is exact) +
+# neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann),
+# weighted by Saha neutral/ion fractions. ATOMIC ONLY (no molecular bands), no
+# free-free/free-bound continuum, 2nd ionization neglected, LTE. Only elements
+# with NIST A-values are resolvable (~75).
 # Colors are hue at full brightness (max-channel normalized).
 """
 
