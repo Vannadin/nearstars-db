@@ -33,10 +33,12 @@
 - [x] commit
 
 ## Phase D — molecular temperature table
-- [ ] build_molecular_temperature_colors.py (each molecule = 1.0 composition over grid)
-- [ ] db/refs/molecular_temperature_colors.yaml (mirror element_temperature_colors shape)
-- [ ] wire reproducibility into validate_plasma_temp.py
-- [ ] commit
+- [x] build_molecular_temperature_colors.py (each molecule = 1.0 composition over grid;
+      build()/render() split so the validator can enforce reproducibility)
+- [x] db/refs/molecular_temperature_colors.yaml (30 molecules x 15 temps; `dropped` flags
+      unsupported atoms Cl/F/Si; `bands` lists active systems)
+- [x] validate_plasma_temp.py: validate_molecules() — structure + reproducibility (offline)
+- [x] commit
 
 ## Phase E — viewer temperature slider
 - [ ] render_color_visualizer: regime-bar → temperature slider

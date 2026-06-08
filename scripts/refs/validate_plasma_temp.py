@@ -18,12 +18,15 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_plasma_temperature_colors as B  # noqa: E402
+import build_molecular_temperature_colors as M  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 YAML = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
 ELEM_YAML = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
+MOL_YAML = ROOT / "db" / "refs" / "molecular_temperature_colors.yaml"
 HEX = re.compile(r"^#[0-9a-f]{6}$")
 DOMINANT = {"thermal incandescence", "molecular bands", "ionic lines", "atomic lines"}
+MOL_DOMINANT = {"thermal", "molecular bands", "ionic", "atomic lines"}
 
 
 def _hex_ok(h) -> bool:
@@ -108,15 +111,50 @@ def validate_elements() -> list[str]:
     return errs
 
 
+def validate_molecules() -> list[str]:
+    """Structure + reproducibility of molecular_temperature_colors.yaml. Its build
+    reads only local YAML (no NIST fetch), so reproducibility IS enforced."""
+    errs: list[str] = []
+    if not MOL_YAML.exists():
+        return ["molecular_temperature_colors.yaml missing"]
+    data = yaml.safe_load(MOL_YAML.read_text(encoding="utf-8"))
+    mols = data.get("molecules", {})
+    if not mols:
+        return ["molecular_temperature_colors.yaml: no molecules"]
+    for formula, e in mols.items():
+        colors = e.get("colors", {})
+        if not colors:
+            # legitimate only when no engine-supported atoms
+            if not e.get("note"):
+                errs.append(f"{formula}: no colors and no note")
+            continue
+        for T, c in colors.items():
+            if not _hex_ok(c.get("hex")):
+                errs.append(f"{formula} {T}K bad hex {c.get('hex')!r}")
+            if not _rgb_ok(c.get("rgb")):
+                errs.append(f"{formula} {T}K bad rgb")
+            for f in ("ionization_fraction", "molecular_fraction"):
+                v = c.get(f)
+                if not isinstance(v, (int, float)) or not (0.0 <= v <= 1.0):
+                    errs.append(f"{formula} {T}K {f}={v} out of [0,1]")
+            if c.get("dominant") not in MOL_DOMINANT:
+                errs.append(f"{formula} {T}K bad dominant {c.get('dominant')!r}")
+    if M.render(M.build()) != MOL_YAML.read_text(encoding="utf-8"):
+        errs.append("not reproducible — rebuild differs "
+                    "(run build_molecular_temperature_colors.py)")
+    return errs
+
+
 def main() -> int:
-    errs = validate() + validate_elements()
+    errs = validate() + validate_elements() + validate_molecules()
     if errs:
         print(f"[FAIL] plasma color tables — {len(errs)} issue(s):")
         for e in errs[:20]:
             print(f"  - {e}")
         return 1
     print("[PASS] plasma_temperature_colors.yaml (reproducible) + "
-          "element_temperature_colors.yaml (structure) OK")
+          "element_temperature_colors.yaml (structure) + "
+          "molecular_temperature_colors.yaml (reproducible) OK")
     return 0
 
 
