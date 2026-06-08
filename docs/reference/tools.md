@@ -155,8 +155,12 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/refs/validate_element_colors.py` — schema check for the DB.
 - `scripts/refs/render_element_colors_doc.py` — re-render the companion doc (en + ko mirror).
 - `docs/reference/element-plasma-colors.md` — companion view (generated, do not hand-edit).
-- `scripts/refs/build_plasma_temperature_colors.py` — temperature-resolved plasma color table per composition (1000K steps). Blackbody continuum (Planck→CIE 1931, exact) + curated reentry emission hue blended by a temperature weight. Reference/physics tool, not a cfg input. Run `--sanity` for checks.
-- `db/refs/plasma_temperature_colors.yaml` — generated output: `_blackbody` color-temperature table (1000–20000K) + per-composition combined color vs T (1000–15000K).
+- `scripts/refs/cie_color.py` — shared colorimetry: Planck blackbody + CIE 1931 CMF (Wyman 2013) + XYZ→sRGB hue + spectrum→hex. Used by the engine and the temperature-color builder.
+- `scripts/refs/build_atomic_lines.py` + `db/refs/atomic_lines.yaml` — atomic line/level/ionization data (H I, He I, C I/II, N I/II, O I/II) from the NIST ASD (lines1.pl + energy1.pl). Cache-first (`/tmp/nist`); `--refresh` re-fetches live. Input to the LTE engine.
+- `db/refs/molecular_bands.yaml` — molecular band systems (N2 1P/2P, N2+ 1NG, C2 Swan, CH/NH/OH) + Huber-Herzberg constants for dissociation equilibrium. Input to the LTE engine.
+- `scripts/refs/saha_boltzmann.py` — first-principles LTE plasma-emission color engine: thermal continuum + atomic lines + molecular bands, with Saha ionization, Boltzmann excitation, and dissociation all computed. Run directly for the self-test + color march. Note the documented LTE caveat (air's reentry blue-violet is non-LTE; not reproduced).
+- `scripts/refs/build_plasma_temperature_colors.py` — drives the engine to emit the temperature-resolved plasma color table per composition (1000K steps). `_blackbody` continuum is exact (Planck→CIE 1931); compositions are LTE-engine colors. Reference/physics tool, not a cfg input. Run `--sanity` for a color march.
+- `db/refs/plasma_temperature_colors.yaml` — generated output: `_blackbody` color-temperature table (1000–20000K) + per-composition color vs T (1000–15000K) with ionization/molecular/emission fractions + dominant regime.
 - `scripts/refs/render_color_visualizer.py` — render `docs/firefly-colors.html` (periodic table, molecular emitters, bulk/streak palettes, plasma-vs-temperature grid). Reads the plasma/element/molecular DBs + emitter constants.
 
 **References (in skill).** Five node-type files (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (atmosphere → reentry palette via bulk-gas plasma table), `phase3-mapping` (Phase 3 row → Firefly field), `pitfalls`.

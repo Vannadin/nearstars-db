@@ -6,6 +6,7 @@ fail=0
 
 echo "── 1. 스키마 검증 (db/systems/*.json + curated) ──"
 python3 scripts/pipeline/validate.py || fail=1
+python3 scripts/refs/validate_plasma_temp.py || fail=1
 
 echo ""
 echo "── 2. 영한 미러 상태 (missing = 실패, stale = 경고) ──"

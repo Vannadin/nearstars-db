@@ -155,8 +155,12 @@
 - `scripts/refs/validate_element_colors.py` — DB 스키마 점검.
 - `scripts/refs/render_element_colors_doc.py` — companion doc 재렌더 (en + ko 미러).
 - `docs/reference/element-plasma-colors.md` — 사람용 view (생성물, 직접 편집 금지).
-- `scripts/refs/build_plasma_temperature_colors.py` — 조성별 온도분해 플라스마 색표(1000K 간격). 흑체 연속복사(Planck→CIE 1931, 정확) + 큐레이션 재진입 방출 hue 를 온도 가중으로 블렌드. cfg 입력이 아니라 레퍼런스/물리 도구. `--sanity` 로 검증 출력.
-- `db/refs/plasma_temperature_colors.yaml` — 생성물: `_blackbody` 색온도표(1000–20000K) + 조성별 온도(1000–15000K) 합성색.
+- `scripts/refs/cie_color.py` — 공용 색측정 모듈. Planck 흑체 + CIE 1931 등색함수(Wyman 2013) + XYZ→sRGB hue + 스펙트럼→hex. 엔진과 온도-색 빌더가 함께 씀.
+- `scripts/refs/build_atomic_lines.py` + `db/refs/atomic_lines.yaml` — 원자 라인·준위·이온화 데이터(H I, He I, C I/II, N I/II, O I/II)를 NIST ASD(lines1.pl + energy1.pl)에서 받아 생성. 캐시 우선(`/tmp/nist`), `--refresh`로 실시간 재페치. LTE 엔진 입력.
+- `db/refs/molecular_bands.yaml` — 분자 밴드 시스템(N2 1P/2P, N2+ 1NG, C2 Swan, CH/NH/OH) + 해리 평형용 Huber-Herzberg 상수. LTE 엔진 입력.
+- `scripts/refs/saha_boltzmann.py` — 1차원리 LTE 플라스마 발광색 엔진. 열복사 연속 + 원자선 + 분자 밴드를 합치고 Saha 이온화·Boltzmann 들뜸·해리를 모두 계산. 직접 실행하면 자체검증 + 색 행렬 출력. LTE 한계 주의(공기 재진입 청보라는 비-LTE라 재현 안 됨, 문서화됨).
+- `scripts/refs/build_plasma_temperature_colors.py` — 엔진을 돌려 조성별 온도분해 플라스마 색표(1000K 간격) 생성. `_blackbody` 연속복사는 정확(Planck→CIE 1931), 조성색은 LTE 엔진 산출. cfg 입력이 아니라 레퍼런스/물리 도구. `--sanity`로 색 행렬 출력.
+- `db/refs/plasma_temperature_colors.yaml` — 생성물: `_blackbody` 색온도표(1000–20000K) + 조성별 온도(1000–15000K) 색에 이온화·분자·방출 분율 + 우세 영역 라벨 포함.
 - `scripts/refs/render_color_visualizer.py` — `docs/firefly-colors.html` 렌더(주기율표, 분자 emitter, bulk/streak 팔레트, 온도별 플라스마 그리드). 플라스마/원소/분자 DB + emitter 상수를 읽음.
 
 **스킬 내 references.** 다섯 개 노드 타입 (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (대기 조성 → 재진입 팔레트, bulk-gas 플라즈마 표 기반), `phase3-mapping` (Phase 3 행 → Firefly 필드 매핑), `pitfalls`.

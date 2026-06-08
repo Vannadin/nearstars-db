@@ -34,22 +34,30 @@ Started 2026-06-08. See [plan](plan.md).
   emission_fraction/dominant; emission_weight/continuum_hex/emission_hex dropped
 - [x] `--sanity` march physically sensible (C₂ green, Balmer pink, N₂ dissoc)
 
-## Stage 5 — Render + validate + verify
-- [ ] `render_color_visualizer.py`: tooltip uses new diagnostics; caption +
-  i18n (en/ko) state the LTE-slab assumption list (drop "not ab-initio")
-- [ ] `scripts/refs/validate_plasma_temp.py`: hex format, grid completeness,
-  build reproducibility, fractions ∈ [0,1]
-- [ ] Wire validate into `scripts/check.sh`
-- [ ] Regenerate `docs/firefly-colors.html`
-- [ ] Verify rendered colors vs anchors + existing curated reentry hexes
-  (air→blue-violet, co2→green/violet, h2_he→pink-red; sanity, not equality)
-- [ ] `./scripts/check.sh` clean
+## Stage 5 — Render + validate + verify (DONE)
+- [x] `render_color_visualizer.py`: tooltip uses new diagnostics; caption +
+  i18n (en/ko) state the LTE model + non-LTE caveat (dropped "not ab-initio")
+- [x] `scripts/refs/validate_plasma_temp.py`: hex, grid completeness, fractions
+  ∈ [0,1], dominant enum, build reproducibility (rebuild == bytes)
+- [x] Wired into `scripts/check.sh` gate 1
+- [x] Regenerated `docs/firefly-colors.html`
+- [x] Verified colors physically: co2 C₂-Swan green, h2_he Balmer pink, N₂
+  dissociation curve, air thermal→atomic→ionic (blue is non-LTE, documented)
+- [x] `./scripts/check.sh` clean (FAIL 0)
 
-## Stage 6 — Docs + commit
-- [ ] YAML header + script docstrings rewritten (assumption list)
-- [ ] `docs/reference/tools.md` (+ ko) — register new scripts/DBs
-- [ ] context-notes appended with all derivations + decisions
-- [ ] Semantic commit per stage
+## Stage 6 — Docs + commit (DONE)
+- [x] YAML header + script docstrings state the LTE model + caveat
+- [x] `docs/reference/tools.md` (+ ko) — registered cie_color, build_atomic_lines,
+  atomic_lines.yaml, molecular_bands.yaml, saha_boltzmann, validate
+- [x] context-notes appended (final model, calibration, non-LTE finding)
+- [x] Semantic commits per stage (7a0c413 data foundation, 8663305 engine)
+
+## Outcome
+Hand-tuned w(T) blend replaced by a first-principles LTE engine. The temperature
+axis now means something different per composition (computed from ionization /
+excitation / dissociation), not a uniform ramp. Honest finding surfaced: air's
+reentry blue is non-LTE and absent in LTE — documented divergence, Firefly cfg
+keeps the observation-based curated blue.
 
 ## Related
 - [plan](plan.md) · [context-notes](context-notes.md)

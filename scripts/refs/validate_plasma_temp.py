@@ -1,0 +1,97 @@
+# plasma_temperature_colors.yaml 의 구조·값범위·hex형식·빌드 재현성을 검증
+"""Validate db/refs/plasma_temperature_colors.yaml.
+
+Checks: the _blackbody + composition grids are complete over their temperature
+ranges; every hex is 6-digit lowercase; every rgb is 3 ints in 0-255; the
+physics fractions are in [0,1]; `dominant` is one of the known regimes; and the
+file is reproducible (re-running the builder yields the same bytes).
+
+Exit non-zero on any failure (suitable for check.sh).
+"""
+from __future__ import annotations
+
+import re
+import sys
+from pathlib import Path
+
+import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import build_plasma_temperature_colors as B  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[2]
+YAML = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
+HEX = re.compile(r"^#[0-9a-f]{6}$")
+DOMINANT = {"thermal incandescence", "molecular bands", "ionic lines", "atomic lines"}
+
+
+def _hex_ok(h) -> bool:
+    return isinstance(h, str) and bool(HEX.match(h))
+
+
+def _rgb_ok(rgb) -> bool:
+    return (isinstance(rgb, list) and len(rgb) == 3
+            and all(isinstance(c, int) and 0 <= c <= 255 for c in rgb))
+
+
+def validate() -> list[str]:
+    errs: list[str] = []
+    data = yaml.safe_load(YAML.read_text(encoding="utf-8"))
+
+    bb = data.get("_blackbody", {})
+    for T in B.BB_TEMPS:
+        cell = bb.get(T)
+        if not cell:
+            errs.append(f"_blackbody missing {T}K")
+            continue
+        if not _hex_ok(cell.get("hex")):
+            errs.append(f"_blackbody {T}K bad hex {cell.get('hex')!r}")
+        if not _rgb_ok(cell.get("rgb")):
+            errs.append(f"_blackbody {T}K bad rgb")
+
+    for key in B.LABELS:
+        comp = data.get(key)
+        if not comp:
+            errs.append(f"composition {key} missing")
+            continue
+        if not comp.get("label_en") or not comp.get("label_ko"):
+            errs.append(f"{key} missing label")
+        colors = comp.get("colors", {})
+        for T in B.COMP_TEMPS:
+            c = colors.get(T)
+            if not c:
+                errs.append(f"{key} missing {T}K")
+                continue
+            if not _hex_ok(c.get("combined_hex")):
+                errs.append(f"{key} {T}K bad hex {c.get('combined_hex')!r}")
+            if not _rgb_ok(c.get("rgb")):
+                errs.append(f"{key} {T}K bad rgb")
+            for f in ("ionization_fraction", "molecular_fraction", "emission_fraction"):
+                v = c.get(f)
+                if not isinstance(v, (int, float)) or not (0.0 <= v <= 1.0):
+                    errs.append(f"{key} {T}K {f}={v} out of [0,1]")
+            if c.get("dominant") not in DOMINANT:
+                errs.append(f"{key} {T}K bad dominant {c.get('dominant')!r}")
+
+    # reproducibility: rebuilding yields identical bytes
+    rebuilt = B.HEADER + yaml.dump(B.build(), Dumper=B.NoAliasDumper,
+                                   sort_keys=False, allow_unicode=True,
+                                   default_flow_style=False)
+    if rebuilt != YAML.read_text(encoding="utf-8"):
+        errs.append("not reproducible — rebuild differs (run build_plasma_temperature_colors.py)")
+    return errs
+
+
+def main() -> int:
+    errs = validate()
+    if errs:
+        print(f"[FAIL] plasma_temperature_colors.yaml — {len(errs)} issue(s):")
+        for e in errs[:20]:
+            print(f"  - {e}")
+        return 1
+    print("[PASS] plasma_temperature_colors.yaml — structure, ranges, reproducibility OK")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
