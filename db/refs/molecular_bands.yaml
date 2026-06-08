@@ -65,6 +65,22 @@ molecules:
     sigma: 1
     g_elec: 4
     forms_from: [O, H]
+  CN:
+    D0_eV: 7.74
+    mu_amu: 6.4644
+    omega_e: 2068.59
+    B_e: 1.8997
+    sigma: 1
+    g_elec: 2
+    forms_from: [C, N]
+  CO:
+    D0_eV: 11.16
+    mu_amu: 6.8562
+    omega_e: 2169.81
+    B_e: 1.9313
+    sigma: 1
+    g_elec: 1
+    forms_from: [C, O]
 
 band_systems:
   N2_1P:        # First Positive B3Pg->A3Su+ : red/orange afterglow
@@ -137,6 +153,28 @@ band_systems:
     A_eff: 1.0e+6
     heads:
       - {nm: 308.0, rel: 1.0}
+  CN_violet:    # B2Su+->X2Su+ : iconic CN violet 388/421nm (CO2/Mars EDL, comets, C+N flames)
+    molecule: CN
+    charge: 0
+    T_e_cm: 25752.0
+    g_upper: 2
+    A_eff: 1.0e+7
+    heads:
+      - {nm: 388.3, rel: 1.0}
+      - {nm: 387.1, rel: 0.8}
+      - {nm: 421.6, rel: 0.5}
+  CO_Angstrom:  # B1Su+->A1P (Angstrom) : blue-green; upper state ~10.8eV so faint in LTE
+    molecule: CO
+    charge: 0
+    T_e_cm: 86916.0
+    g_upper: 1
+    A_eff: 5.0e+6
+    heads:
+      - {nm: 451.1, rel: 0.7}
+      - {nm: 483.5, rel: 1.0}
+      - {nm: 519.8, rel: 0.8}
+      - {nm: 561.0, rel: 0.5}
+      - {nm: 607.9, rel: 0.3}
 
 # Which band systems are active in each bulk composition (idealized pure
 # composition; trace-species notes in docs). co2 forms C2 (and CO, mostly UV);
