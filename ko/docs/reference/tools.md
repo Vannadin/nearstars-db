@@ -161,6 +161,7 @@
 - `scripts/refs/saha_boltzmann.py` — 1차원리 LTE 플라스마 발광색 엔진. 열복사 연속 + 원자선 + 분자 밴드를 합치고 Saha 이온화·Boltzmann 들뜸·해리를 모두 계산. 직접 실행하면 자체검증 + 색 행렬 출력. LTE 한계 주의(공기 재진입 청보라는 비-LTE라 재현 안 됨, 문서화됨).
 - `scripts/refs/build_plasma_temperature_colors.py` — 엔진을 돌려 조성별 온도분해 플라스마 색표(1000K 간격) 생성. `_blackbody` 연속복사는 정확(Planck→CIE 1931), 조성색은 LTE 엔진 산출. cfg 입력이 아니라 레퍼런스/물리 도구. `--sanity`로 색 행렬 출력.
 - `db/refs/plasma_temperature_colors.yaml` — 생성물: `_blackbody` 색온도표(1000–20000K) + 조성별 온도(1000–15000K) 색에 이온화·분자·방출 분율 + 우세 영역 라벨 포함.
+- `scripts/refs/build_element_temperature_colors.py` + `db/refs/element_temperature_colors.yaml` — 원소별 재진입 플라스마 색을 온도별(1000K 간격)로. 조성별 표의 원소 버전. 열복사 연속 + 중성 원자선 발광(Boltzmann), 온도 상승 시 Saha 이온화로 중성 분율 고갈. 원자 전용·중성선만, NIST A계수 있는 75개 원소(나머지 제외). `validate_plasma_temp.py`가 구조 검증.
 - `scripts/refs/build_lte_plasma_colors.py` + `db/refs/lte_plasma_colors.yaml` — 원소별 계산 원자 발광색(주기율표 `lte_plasma` regime). A계수 있는 ~73개는 3500K Boltzmann(Na 노랑·Cu 초록), A 없는 복잡 스펙트럼(Zr·Nb·란타넘·악티늄)은 NIST 관측 세기 상위 N개로 채우고 저신뢰 플래그. 98/118 채움, At + 초중원소는 측정 스펙트럼 없음(null). curl 캐시 우선, **부하 시 NIST가 응답을 잘라서 순차·저동시성으로 받아야 함**. 이건 원자색이라 분자 불꽃색(CaOH·SrOH)과 다름 — 큐레이션 불꽃 regime 참조.
 - `scripts/refs/render_color_visualizer.py` — `docs/firefly-colors.html` 렌더(주기율표, 분자 emitter, bulk/streak 팔레트, 온도별 플라스마 그리드). 플라스마/원소/분자/lte DB + emitter 상수를 읽음. 주기율표 regime: 불꽃 | 재진입 | 오로라 | phosphor | 원자방출(계산).
 

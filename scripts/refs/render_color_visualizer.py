@@ -36,6 +36,7 @@ ELEMENT_DB = ROOT / "db" / "refs" / "element_plasma_colors.yaml"
 MOLECULAR_DB = ROOT / "db" / "refs" / "molecular_plasma_colors.yaml"
 PLASMA_TEMP_DB = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
 LTE_PLASMA_DB = ROOT / "db" / "refs" / "lte_plasma_colors.yaml"
+ELEMENT_TEMP_DB = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
 PHASE3_DIR = ROOT / "docs" / "phase3"
 OUT = ROOT / "docs" / "firefly-colors.html"
 
@@ -519,6 +520,50 @@ def render_plasma_temp_grid() -> str:
             + "".join(rows))
 
 
+# ── Per-element plasma color vs temperature (element × 1000K grid) ──
+
+def render_element_temp_grid() -> str:
+    if not ELEMENT_TEMP_DB.exists():
+        return ""
+    data = yaml.safe_load(ELEMENT_TEMP_DB.read_text(encoding="utf-8"))
+    cell = ("display:inline-block;width:30px;height:20px;font-size:8px;"
+            "text-align:center;line-height:20px")
+    head = "display:inline-block;width:30px;font-size:8px;text-align:center;color:#888"
+    lab = "flex:0 0 84px;font-size:11px"
+    row = "display:flex;align-items:center;margin:1px 0"
+
+    elems = data["elements"]
+    temps = sorted(next(iter(elems.values()))["colors"].keys())
+    bb = data["_blackbody"]
+    bb_cells = "".join(
+        f'<div style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
+        f'title="{t}K · {bb[t]["hex"]} · {bb[t].get("note","")}">{t // 1000}</div>'
+        for t in temps)
+    bb_row = (f'<div style="{row}"><div style="{lab}" data-i18n="bt_blackbody"></div>'
+              f'<div>{bb_cells}</div></div>')
+    header = (f'<div style="{row}"><div style="{lab}"></div><div>'
+              + "".join(f'<div style="{head}">{t // 1000}k</div>' for t in temps)
+              + "</div></div>")
+
+    rows = [header]
+    for sym in sorted(elems, key=lambda s: elems[s]["z"]):
+        e = elems[sym]
+        cells = ""
+        for t in temps:
+            c = e["colors"][t]
+            hx = c["hex"]
+            tip = f'{e["name"]} ({sym}) · {t}K · {hx} · ionized {c["ionization_fraction"]}'
+            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
+                      f'title="{tip}"></div>')
+        rows.append(f'<div style="{row}"><div style="{lab}">{e["z"]} {sym}</div>'
+                    f'<div>{cells}</div></div>')
+
+    return (f'<div style="margin-bottom:6px">{bb_row}</div>'
+            f'<p class="muted" data-i18n="element_temp_caption" '
+            f'style="font-size:12px;margin:4px 0 8px"></p>'
+            + "".join(rows))
+
+
 # ── Emitted body cards (same logic as before; uses atomic_flame for element streak) ──
 
 def derive_body_palette(slug: str, db: dict):
@@ -630,6 +675,8 @@ def build_t(palettes):
         "h_bulk": "Bulk-gas reentry palettes (Firefly emitter)",
         "h_streak": "Secondary-species streak palette",
         "h_plasma_temp": "Plasma color vs temperature (1000K steps)",
+        "h_element_temp": "Reentry plasma color per element vs temperature (1000K steps)",
+        "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: thermal continuum (top strip = blackbody, exact) + neutral atomic line emission (NIST A-values, Boltzmann), with the neutral fraction Saha-depleted as it ionizes. Low T thermal glow → mid T the element's characteristic lines (Cu green, Ca violet, Na yellow) → high T ionizes and fades to continuum. ATOMIC only (no molecular bands); neutral-line emission only (ion lines not included). 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) are omitted — see the periodic table's computed regime. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
         "bt_blackbody": "Blackbody (thermal)",
         "ptc_air": "N2/O2 (Earth-like)",
@@ -668,6 +715,8 @@ def build_t(palettes):
         "h_bulk": "Bulk-gas 재진입 팔레트 (Firefly emitter)",
         "h_streak": "2차 종 streak 팔레트",
         "h_plasma_temp": "온도별 플라스마 색 (1000K 간격)",
+        "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (1000K 간격)",
+        "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 열복사 연속(위 띠 = 흑체, 정확) + 중성 원자선 발광(NIST A계수, Boltzmann)이고, 온도가 오르며 Saha 이온화로 중성 분율이 줄어듭니다. 저온 열복사 글로우 → 중온 그 원소 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 연속복사로 수렴. 원자 전용(분자 밴드 없음), 중성선만(이온선 미포함). NIST A계수 있는 75개 원소이고, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 주기율표 계산 regime 참조. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
         "ptc_air": "N2/O2 (지구형)",
@@ -957,6 +1006,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <section>
 <h2 data-i18n="h_plasma_temp"></h2>
 {plasma_temp_grid}
+
+<h2 data-i18n="h_element_temp"></h2>
+{element_temp_grid}
 </section>
 
 <section>
@@ -1110,6 +1162,7 @@ def main() -> int:
     palettes_section = render_palettes_section()
     streak_table = render_streak_table()
     plasma_temp_grid = render_plasma_temp_grid()
+    element_temp_grid = render_element_temp_grid()
 
     body_results = []
     for slug in sorted(p.stem for p in PHASE3_DIR.glob("*.md")):
@@ -1132,6 +1185,7 @@ def main() -> int:
         palettes_section=palettes_section,
         streak_table=streak_table,
         plasma_temp_grid=plasma_temp_grid,
+        element_temp_grid=element_temp_grid,
         bodies_section=bodies_section,
         t_json=t_json,
         element_json=element_json,

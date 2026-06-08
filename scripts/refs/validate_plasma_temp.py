@@ -21,6 +21,7 @@ import build_plasma_temperature_colors as B  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 YAML = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
+ELEM_YAML = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
 HEX = re.compile(r"^#[0-9a-f]{6}$")
 DOMINANT = {"thermal incandescence", "molecular bands", "ionic lines", "atomic lines"}
 
@@ -82,14 +83,40 @@ def validate() -> list[str]:
     return errs
 
 
+def validate_elements() -> list[str]:
+    """Structural check of element_temperature_colors.yaml (no rebuild — its build
+    needs the NIST line cache, so reproducibility isn't enforced in check.sh)."""
+    errs: list[str] = []
+    if not ELEM_YAML.exists():
+        return ["element_temperature_colors.yaml missing"]
+    data = yaml.safe_load(ELEM_YAML.read_text(encoding="utf-8"))
+    elems = data.get("elements", {})
+    if not elems:
+        return ["element_temperature_colors.yaml: no elements"]
+    for sym, e in elems.items():
+        colors = e.get("colors", {})
+        if not colors:
+            errs.append(f"{sym}: no colors"); continue
+        for T, c in colors.items():
+            if not _hex_ok(c.get("hex")):
+                errs.append(f"{sym} {T}K bad hex {c.get('hex')!r}")
+            if not _rgb_ok(c.get("rgb")):
+                errs.append(f"{sym} {T}K bad rgb")
+            v = c.get("ionization_fraction")
+            if not isinstance(v, (int, float)) or not (0.0 <= v <= 1.0):
+                errs.append(f"{sym} {T}K ionization_fraction={v} out of [0,1]")
+    return errs
+
+
 def main() -> int:
-    errs = validate()
+    errs = validate() + validate_elements()
     if errs:
-        print(f"[FAIL] plasma_temperature_colors.yaml — {len(errs)} issue(s):")
+        print(f"[FAIL] plasma color tables — {len(errs)} issue(s):")
         for e in errs[:20]:
             print(f"  - {e}")
         return 1
-    print("[PASS] plasma_temperature_colors.yaml — structure, ranges, reproducibility OK")
+    print("[PASS] plasma_temperature_colors.yaml (reproducible) + "
+          "element_temperature_colors.yaml (structure) OK")
     return 0
 
 

@@ -1,0 +1,9391 @@
+# Per-element plasma emission color vs temperature (1000K steps) — the
+# single-element analog of plasma_temperature_colors.yaml. Built by
+# scripts/refs/build_element_temperature_colors.py from the saha_boltzmann engine.
+#
+# Model: thermal continuum (Planck->CIE, exact in _blackbody) + neutral atomic
+# line emission (NIST A-values, Boltzmann), neutral fraction Saha-depleted with T.
+# ATOMIC ONLY (no molecular bands), neutral lines only (no ion-line emission for
+# most elements), LTE. Only elements with NIST A-values are resolvable.
+# Colors are hue at full brightness (max-channel normalized).
+_blackbody:
+  1000:
+    temp_k: 1000
+    hex: '#ff3000'
+    note: deep red — ember
+  2000:
+    temp_k: 2000
+    hex: '#ff8d15'
+    note: orange — lava
+  3000:
+    temp_k: 3000
+    hex: '#ffb96e'
+    note: orange — lava
+  4000:
+    temp_k: 4000
+    hex: '#ffd4a6'
+    note: warm white
+  5000:
+    temp_k: 5000
+    hex: '#ffe7d0'
+    note: warm white
+  6000:
+    temp_k: 6000
+    hex: '#fff4f1'
+    note: near white
+  7000:
+    temp_k: 7000
+    hex: '#f4f2ff'
+    note: near white
+  8000:
+    temp_k: 8000
+    hex: '#e3e7ff'
+    note: blue-white
+  9000:
+    temp_k: 9000
+    hex: '#d6dfff'
+    note: blue-white
+  10000:
+    temp_k: 10000
+    hex: '#cdd9ff'
+    note: blue-white
+  11000:
+    temp_k: 11000
+    hex: '#c6d4ff'
+    note: blue-white
+  12000:
+    temp_k: 12000
+    hex: '#c0d1ff'
+    note: blue
+  13000:
+    temp_k: 13000
+    hex: '#bcceff'
+    note: blue
+  14000:
+    temp_k: 14000
+    hex: '#b8cbff'
+    note: blue
+  15000:
+    temp_k: 15000
+    hex: '#b5c9ff'
+    note: blue
+  16000:
+    temp_k: 16000
+    hex: '#b2c7ff'
+    note: blue
+  17000:
+    temp_k: 17000
+    hex: '#b0c5ff'
+    note: blue
+  18000:
+    temp_k: 18000
+    hex: '#aec4ff'
+    note: blue
+  19000:
+    temp_k: 19000
+    hex: '#acc3ff'
+    note: blue
+  20000:
+    temp_k: 20000
+    hex: '#abc2ff'
+    note: blue
+elements:
+  H:
+    z: 1
+    name: Hydrogen
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0001
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0007
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0032
+      9000:
+        temp_k: 9000
+        hex: '#dedbff'
+        rgb:
+        - 222
+        - 219
+        - 255
+        ionization_fraction: 0.011
+      10000:
+        temp_k: 10000
+        hex: '#eec4ff'
+        rgb:
+        - 238
+        - 196
+        - 255
+        ionization_fraction: 0.0299
+      11000:
+        temp_k: 11000
+        hex: '#ff90f2'
+        rgb:
+        - 255
+        - 144
+        - 242
+        ionization_fraction: 0.0677
+      12000:
+        temp_k: 12000
+        hex: '#ff60e4'
+        rgb:
+        - 255
+        - 96
+        - 228
+        ionization_fraction: 0.1324
+      13000:
+        temp_k: 13000
+        hex: '#ff47e3'
+        rgb:
+        - 255
+        - 71
+        - 227
+        ionization_fraction: 0.2287
+      14000:
+        temp_k: 14000
+        hex: '#ff3de6'
+        rgb:
+        - 255
+        - 61
+        - 230
+        ionization_fraction: 0.3542
+      15000:
+        temp_k: 15000
+        hex: '#ff3aeb'
+        rgb:
+        - 255
+        - 58
+        - 235
+        ionization_fraction: 0.4965
+  He:
+    z: 2
+    name: Helium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0
+      9000:
+        temp_k: 9000
+        hex: '#d6dfff'
+        rgb:
+        - 214
+        - 223
+        - 255
+        ionization_fraction: 0.0
+      10000:
+        temp_k: 10000
+        hex: '#cdd9ff'
+        rgb:
+        - 205
+        - 217
+        - 255
+        ionization_fraction: 0.0001
+      11000:
+        temp_k: 11000
+        hex: '#c6d4ff'
+        rgb:
+        - 198
+        - 212
+        - 255
+        ionization_fraction: 0.0002
+      12000:
+        temp_k: 12000
+        hex: '#c0d1ff'
+        rgb:
+        - 192
+        - 209
+        - 255
+        ionization_fraction: 0.0007
+      13000:
+        temp_k: 13000
+        hex: '#bdceff'
+        rgb:
+        - 189
+        - 206
+        - 255
+        ionization_fraction: 0.0019
+      14000:
+        temp_k: 14000
+        hex: '#bdcbff'
+        rgb:
+        - 189
+        - 203
+        - 255
+        ionization_fraction: 0.0046
+      15000:
+        temp_k: 15000
+        hex: '#c8caff'
+        rgb:
+        - 200
+        - 202
+        - 255
+        ionization_fraction: 0.0099
+  Li:
+    z: 3
+    name: Lithium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff7706'
+        rgb:
+        - 255
+        - 119
+        - 6
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ff2011'
+        rgb:
+        - 255
+        - 32
+        - 17
+        ionization_fraction: 0.0005
+      4000:
+        temp_k: 4000
+        hex: '#ff0000'
+        rgb:
+        - 255
+        - 0
+        - 0
+        ionization_fraction: 0.0103
+      5000:
+        temp_k: 5000
+        hex: '#ff0018'
+        rgb:
+        - 255
+        - 0
+        - 24
+        ionization_fraction: 0.0633
+      6000:
+        temp_k: 6000
+        hex: '#ff0031'
+        rgb:
+        - 255
+        - 0
+        - 49
+        ionization_fraction: 0.2074
+      7000:
+        temp_k: 7000
+        hex: '#ff0042'
+        rgb:
+        - 255
+        - 0
+        - 66
+        ionization_fraction: 0.4437
+      8000:
+        temp_k: 8000
+        hex: '#ff004f'
+        rgb:
+        - 255
+        - 0
+        - 79
+        ionization_fraction: 0.6873
+      9000:
+        temp_k: 9000
+        hex: '#ff0058'
+        rgb:
+        - 255
+        - 0
+        - 88
+        ionization_fraction: 0.8504
+      10000:
+        temp_k: 10000
+        hex: '#ff0060'
+        rgb:
+        - 255
+        - 0
+        - 96
+        ionization_fraction: 0.9312
+      11000:
+        temp_k: 11000
+        hex: '#ff0066'
+        rgb:
+        - 255
+        - 0
+        - 102
+        ionization_fraction: 0.9669
+      12000:
+        temp_k: 12000
+        hex: '#ff006b'
+        rgb:
+        - 255
+        - 0
+        - 107
+        ionization_fraction: 0.9829
+      13000:
+        temp_k: 13000
+        hex: '#ff006f'
+        rgb:
+        - 255
+        - 0
+        - 111
+        ionization_fraction: 0.9905
+      14000:
+        temp_k: 14000
+        hex: '#ff0073'
+        rgb:
+        - 255
+        - 0
+        - 115
+        ionization_fraction: 0.9943
+      15000:
+        temp_k: 15000
+        hex: '#ff0076'
+        rgb:
+        - 255
+        - 0
+        - 118
+        ionization_fraction: 0.9965
+  Be:
+    z: 4
+    name: Beryllium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d1'
+        rgb:
+        - 255
+        - 231
+        - 209
+        ionization_fraction: 0.0007
+      6000:
+        temp_k: 6000
+        hex: '#fff2ff'
+        rgb:
+        - 255
+        - 242
+        - 255
+        ionization_fraction: 0.0052
+      7000:
+        temp_k: 7000
+        hex: '#a89aff'
+        rgb:
+        - 168
+        - 154
+        - 255
+        ionization_fraction: 0.0226
+      8000:
+        temp_k: 8000
+        hex: '#6129ff'
+        rgb:
+        - 97
+        - 41
+        - 255
+        ionization_fraction: 0.0685
+      9000:
+        temp_k: 9000
+        hex: '#4700ff'
+        rgb:
+        - 71
+        - 0
+        - 255
+        ionization_fraction: 0.1599
+      10000:
+        temp_k: 10000
+        hex: '#4100ff'
+        rgb:
+        - 65
+        - 0
+        - 255
+        ionization_fraction: 0.303
+      11000:
+        temp_k: 11000
+        hex: '#4000ff'
+        rgb:
+        - 64
+        - 0
+        - 255
+        ionization_fraction: 0.4814
+      12000:
+        temp_k: 12000
+        hex: '#4000ff'
+        rgb:
+        - 64
+        - 0
+        - 255
+        ionization_fraction: 0.6573
+      13000:
+        temp_k: 13000
+        hex: '#4100ff'
+        rgb:
+        - 65
+        - 0
+        - 255
+        ionization_fraction: 0.7949
+      14000:
+        temp_k: 14000
+        hex: '#4200ff'
+        rgb:
+        - 66
+        - 0
+        - 255
+        ionization_fraction: 0.8838
+      15000:
+        temp_k: 15000
+        hex: '#4300ff'
+        rgb:
+        - 67
+        - 0
+        - 255
+        ionization_fraction: 0.9347
+  B:
+    z: 5
+    name: Boron
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0002
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0022
+      6000:
+        temp_k: 6000
+        hex: '#fff4f0'
+        rgb:
+        - 255
+        - 244
+        - 240
+        ionization_fraction: 0.0139
+      7000:
+        temp_k: 7000
+        hex: '#f7f3ff'
+        rgb:
+        - 247
+        - 243
+        - 255
+        ionization_fraction: 0.0521
+      8000:
+        temp_k: 8000
+        hex: '#f6eaff'
+        rgb:
+        - 246
+        - 234
+        - 255
+        ionization_fraction: 0.1386
+      9000:
+        temp_k: 9000
+        hex: '#ffd2e6'
+        rgb:
+        - 255
+        - 210
+        - 230
+        ionization_fraction: 0.2855
+      10000:
+        temp_k: 10000
+        hex: '#ffafb9'
+        rgb:
+        - 255
+        - 175
+        - 185
+        ionization_fraction: 0.4761
+      11000:
+        temp_k: 11000
+        hex: '#ff989a'
+        rgb:
+        - 255
+        - 152
+        - 154
+        ionization_fraction: 0.6647
+      12000:
+        temp_k: 12000
+        hex: '#ff8e8c'
+        rgb:
+        - 255
+        - 142
+        - 140
+        ionization_fraction: 0.8079
+      13000:
+        temp_k: 13000
+        hex: '#ff8a88'
+        rgb:
+        - 255
+        - 138
+        - 136
+        ionization_fraction: 0.8957
+      14000:
+        temp_k: 14000
+        hex: '#ff8a8b'
+        rgb:
+        - 255
+        - 138
+        - 139
+        ionization_fraction: 0.9434
+      15000:
+        temp_k: 15000
+        hex: '#ff8b90'
+        rgb:
+        - 255
+        - 139
+        - 144
+        ionization_fraction: 0.9683
+  C:
+    z: 6
+    name: Carbon
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0001
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0008
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0046
+      8000:
+        temp_k: 8000
+        hex: '#e3e8ff'
+        rgb:
+        - 227
+        - 232
+        - 255
+        ionization_fraction: 0.0173
+      9000:
+        temp_k: 9000
+        hex: '#d6e1ff'
+        rgb:
+        - 214
+        - 225
+        - 255
+        ionization_fraction: 0.0488
+      10000:
+        temp_k: 10000
+        hex: '#cfdeff'
+        rgb:
+        - 207
+        - 222
+        - 255
+        ionization_fraction: 0.1112
+      11000:
+        temp_k: 11000
+        hex: '#cfe3ff'
+        rgb:
+        - 207
+        - 227
+        - 255
+        ionization_fraction: 0.2134
+      12000:
+        temp_k: 12000
+        hex: '#d6efff'
+        rgb:
+        - 214
+        - 239
+        - 255
+        ionization_fraction: 0.3538
+      13000:
+        temp_k: 13000
+        hex: '#e1fbff'
+        rgb:
+        - 225
+        - 251
+        - 255
+        ionization_fraction: 0.515
+      14000:
+        temp_k: 14000
+        hex: '#e5fffa'
+        rgb:
+        - 229
+        - 255
+        - 250
+        ionization_fraction: 0.6687
+      15000:
+        temp_k: 15000
+        hex: '#e7fff5'
+        rgb:
+        - 231
+        - 255
+        - 245
+        ionization_fraction: 0.7907
+  N:
+    z: 7
+    name: Nitrogen
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0003
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0016
+      9000:
+        temp_k: 9000
+        hex: '#d6dfff'
+        rgb:
+        - 214
+        - 223
+        - 255
+        ionization_fraction: 0.006
+      10000:
+        temp_k: 10000
+        hex: '#ced9ff'
+        rgb:
+        - 206
+        - 217
+        - 255
+        ionization_fraction: 0.0175
+      11000:
+        temp_k: 11000
+        hex: '#ccd4ff'
+        rgb:
+        - 204
+        - 212
+        - 255
+        ionization_fraction: 0.0419
+      12000:
+        temp_k: 12000
+        hex: '#d4cfff'
+        rgb:
+        - 212
+        - 207
+        - 255
+        ionization_fraction: 0.0864
+      13000:
+        temp_k: 13000
+        hex: '#e8caff'
+        rgb:
+        - 232
+        - 202
+        - 255
+        ionization_fraction: 0.1574
+      14000:
+        temp_k: 14000
+        hex: '#ffc4ff'
+        rgb:
+        - 255
+        - 196
+        - 255
+        ionization_fraction: 0.2577
+      15000:
+        temp_k: 15000
+        hex: '#ffb2f0'
+        rgb:
+        - 255
+        - 178
+        - 240
+        ionization_fraction: 0.3827
+  O:
+    z: 8
+    name: Oxygen
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0001
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0007
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0031
+      9000:
+        temp_k: 9000
+        hex: '#d7e0ff'
+        rgb:
+        - 215
+        - 224
+        - 255
+        ionization_fraction: 0.0109
+      10000:
+        temp_k: 10000
+        hex: '#d1daff'
+        rgb:
+        - 209
+        - 218
+        - 255
+        ionization_fraction: 0.0296
+      11000:
+        temp_k: 11000
+        hex: '#d8d8ff'
+        rgb:
+        - 216
+        - 216
+        - 255
+        ionization_fraction: 0.067
+      12000:
+        temp_k: 12000
+        hex: '#f5deff'
+        rgb:
+        - 245
+        - 222
+        - 255
+        ionization_fraction: 0.1312
+      13000:
+        temp_k: 13000
+        hex: '#ffcada'
+        rgb:
+        - 255
+        - 202
+        - 218
+        ionization_fraction: 0.227
+      14000:
+        temp_k: 14000
+        hex: '#ffb6b3'
+        rgb:
+        - 255
+        - 182
+        - 179
+        ionization_fraction: 0.3519
+      15000:
+        temp_k: 15000
+        hex: '#ffac9a'
+        rgb:
+        - 255
+        - 172
+        - 154
+        ionization_fraction: 0.4939
+  F:
+    z: 9
+    name: Fluorine
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0002
+      9000:
+        temp_k: 9000
+        hex: '#d6dfff'
+        rgb:
+        - 214
+        - 223
+        - 255
+        ionization_fraction: 0.0009
+      10000:
+        temp_k: 10000
+        hex: '#ced9ff'
+        rgb:
+        - 206
+        - 217
+        - 255
+        ionization_fraction: 0.0033
+      11000:
+        temp_k: 11000
+        hex: '#cbd4ff'
+        rgb:
+        - 203
+        - 212
+        - 255
+        ionization_fraction: 0.0093
+      12000:
+        temp_k: 12000
+        hex: '#d4d0ff'
+        rgb:
+        - 212
+        - 208
+        - 255
+        ionization_fraction: 0.0221
+      13000:
+        temp_k: 13000
+        hex: '#f7caff'
+        rgb:
+        - 247
+        - 202
+        - 255
+        ionization_fraction: 0.0461
+      14000:
+        temp_k: 14000
+        hex: '#ff99cc'
+        rgb:
+        - 255
+        - 153
+        - 204
+        ionization_fraction: 0.0863
+      15000:
+        temp_k: 15000
+        hex: '#ff6597'
+        rgb:
+        - 255
+        - 101
+        - 151
+        ionization_fraction: 0.1471
+  Ne:
+    z: 10
+    name: Neon
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0
+      9000:
+        temp_k: 9000
+        hex: '#d6dfff'
+        rgb:
+        - 214
+        - 223
+        - 255
+        ionization_fraction: 0.0001
+      10000:
+        temp_k: 10000
+        hex: '#cdd9ff'
+        rgb:
+        - 205
+        - 217
+        - 255
+        ionization_fraction: 0.0003
+      11000:
+        temp_k: 11000
+        hex: '#c8d5ff'
+        rgb:
+        - 200
+        - 213
+        - 255
+        ionization_fraction: 0.001
+      12000:
+        temp_k: 12000
+        hex: '#cdd1ff'
+        rgb:
+        - 205
+        - 209
+        - 255
+        ionization_fraction: 0.003
+      13000:
+        temp_k: 13000
+        hex: '#f2cfff'
+        rgb:
+        - 242
+        - 207
+        - 255
+        ionization_fraction: 0.0074
+      14000:
+        temp_k: 14000
+        hex: '#ff9ebf'
+        rgb:
+        - 255
+        - 158
+        - 191
+        ionization_fraction: 0.0161
+      15000:
+        temp_k: 15000
+        hex: '#ff6e7a'
+        rgb:
+        - 255
+        - 110
+        - 122
+        ionization_fraction: 0.0316
+  Na:
+    z: 11
+    name: Sodium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8600'
+        rgb:
+        - 255
+        - 134
+        - 0
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ff8300'
+        rgb:
+        - 255
+        - 131
+        - 0
+        ionization_fraction: 0.0009
+      4000:
+        temp_k: 4000
+        hex: '#ff8200'
+        rgb:
+        - 255
+        - 130
+        - 0
+        ionization_fraction: 0.0148
+      5000:
+        temp_k: 5000
+        hex: '#ff8200'
+        rgb:
+        - 255
+        - 130
+        - 0
+        ionization_fraction: 0.0839
+      6000:
+        temp_k: 6000
+        hex: '#ff8200'
+        rgb:
+        - 255
+        - 130
+        - 0
+        ionization_fraction: 0.2565
+      7000:
+        temp_k: 7000
+        hex: '#ff8300'
+        rgb:
+        - 255
+        - 131
+        - 0
+        ionization_fraction: 0.5124
+      8000:
+        temp_k: 8000
+        hex: '#ff8300'
+        rgb:
+        - 255
+        - 131
+        - 0
+        ionization_fraction: 0.7453
+      9000:
+        temp_k: 9000
+        hex: '#ff8400'
+        rgb:
+        - 255
+        - 132
+        - 0
+        ionization_fraction: 0.8835
+      10000:
+        temp_k: 10000
+        hex: '#ff8500'
+        rgb:
+        - 255
+        - 133
+        - 0
+        ionization_fraction: 0.947
+      11000:
+        temp_k: 11000
+        hex: '#ff8600'
+        rgb:
+        - 255
+        - 134
+        - 0
+        ionization_fraction: 0.9743
+      12000:
+        temp_k: 12000
+        hex: '#ff8700'
+        rgb:
+        - 255
+        - 135
+        - 0
+        ionization_fraction: 0.9865
+      13000:
+        temp_k: 13000
+        hex: '#ff8800'
+        rgb:
+        - 255
+        - 136
+        - 0
+        ionization_fraction: 0.9924
+      14000:
+        temp_k: 14000
+        hex: '#ff8900'
+        rgb:
+        - 255
+        - 137
+        - 0
+        ionization_fraction: 0.9954
+      15000:
+        temp_k: 15000
+        hex: '#ff8a00'
+        rgb:
+        - 255
+        - 138
+        - 0
+        ionization_fraction: 0.9971
+  Mg:
+    z: 12
+    name: Magnesium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffe3a9'
+        rgb:
+        - 255
+        - 227
+        - 169
+        ionization_fraction: 0.0004
+      5000:
+        temp_k: 5000
+        hex: '#00ff8d'
+        rgb:
+        - 0
+        - 255
+        - 141
+        ionization_fraction: 0.0048
+      6000:
+        temp_k: 6000
+        hex: '#00ff4b'
+        rgb:
+        - 0
+        - 255
+        - 75
+        ionization_fraction: 0.026
+      7000:
+        temp_k: 7000
+        hex: '#00ff40'
+        rgb:
+        - 0
+        - 255
+        - 64
+        ionization_fraction: 0.0877
+      8000:
+        temp_k: 8000
+        hex: '#00ff48'
+        rgb:
+        - 0
+        - 255
+        - 72
+        ionization_fraction: 0.2127
+      9000:
+        temp_k: 9000
+        hex: '#00ff54'
+        rgb:
+        - 0
+        - 255
+        - 84
+        ionization_fraction: 0.3987
+      10000:
+        temp_k: 10000
+        hex: '#00ff5f'
+        rgb:
+        - 0
+        - 255
+        - 95
+        ionization_fraction: 0.6042
+      11000:
+        temp_k: 11000
+        hex: '#00ff69'
+        rgb:
+        - 0
+        - 255
+        - 105
+        ionization_fraction: 0.7724
+      12000:
+        temp_k: 12000
+        hex: '#00ff72'
+        rgb:
+        - 0
+        - 255
+        - 114
+        ionization_fraction: 0.879
+      13000:
+        temp_k: 13000
+        hex: '#00ff7a'
+        rgb:
+        - 0
+        - 255
+        - 122
+        ionization_fraction: 0.9363
+      14000:
+        temp_k: 14000
+        hex: '#00ff81'
+        rgb:
+        - 0
+        - 255
+        - 129
+        ionization_fraction: 0.9655
+      15000:
+        temp_k: 15000
+        hex: '#00ff88'
+        rgb:
+        - 0
+        - 255
+        - 136
+        ionization_fraction: 0.9804
+  Al:
+    z: 13
+    name: Aluminum
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb970'
+        rgb:
+        - 255
+        - 185
+        - 112
+        ionization_fraction: 0.0002
+      4000:
+        temp_k: 4000
+        hex: '#ffd4c1'
+        rgb:
+        - 255
+        - 212
+        - 193
+        ionization_fraction: 0.0044
+      5000:
+        temp_k: 5000
+        hex: '#c4b0ff'
+        rgb:
+        - 196
+        - 176
+        - 255
+        ionization_fraction: 0.0323
+      6000:
+        temp_k: 6000
+        hex: '#6a62ff'
+        rgb:
+        - 106
+        - 98
+        - 255
+        ionization_fraction: 0.1228
+      7000:
+        temp_k: 7000
+        hex: '#312dff'
+        rgb:
+        - 49
+        - 45
+        - 255
+        ionization_fraction: 0.3035
+      8000:
+        temp_k: 8000
+        hex: '#0000ff'
+        rgb:
+        - 0
+        - 0
+        - 255
+        ionization_fraction: 0.5411
+      9000:
+        temp_k: 9000
+        hex: '#0000ff'
+        rgb:
+        - 0
+        - 0
+        - 255
+        ionization_fraction: 0.7499
+      10000:
+        temp_k: 10000
+        hex: '#0000ff'
+        rgb:
+        - 0
+        - 0
+        - 255
+        ionization_fraction: 0.8782
+      11000:
+        temp_k: 11000
+        hex: '#171bff'
+        rgb:
+        - 23
+        - 27
+        - 255
+        ionization_fraction: 0.9413
+      12000:
+        temp_k: 12000
+        hex: '#2a30ff'
+        rgb:
+        - 42
+        - 48
+        - 255
+        ionization_fraction: 0.9704
+      13000:
+        temp_k: 13000
+        hex: '#3940ff'
+        rgb:
+        - 57
+        - 64
+        - 255
+        ionization_fraction: 0.984
+      14000:
+        temp_k: 14000
+        hex: '#464fff'
+        rgb:
+        - 70
+        - 79
+        - 255
+        ionization_fraction: 0.9908
+      15000:
+        temp_k: 15000
+        hex: '#525cff'
+        rgb:
+        - 82
+        - 92
+        - 255
+        ionization_fraction: 0.9944
+  Si:
+    z: 14
+    name: Silicon
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0002
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0027
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.016
+      7000:
+        temp_k: 7000
+        hex: '#f4f3ff'
+        rgb:
+        - 244
+        - 243
+        - 255
+        ionization_fraction: 0.0586
+      8000:
+        temp_k: 8000
+        hex: '#e9efff'
+        rgb:
+        - 233
+        - 239
+        - 255
+        ionization_fraction: 0.1528
+      9000:
+        temp_k: 9000
+        hex: '#effbff'
+        rgb:
+        - 239
+        - 251
+        - 255
+        ionization_fraction: 0.3086
+      10000:
+        temp_k: 10000
+        hex: '#f1fff4'
+        rgb:
+        - 241
+        - 255
+        - 244
+        ionization_fraction: 0.5042
+      11000:
+        temp_k: 11000
+        hex: '#f0ffea'
+        rgb:
+        - 240
+        - 255
+        - 234
+        ionization_fraction: 0.6902
+      12000:
+        temp_k: 12000
+        hex: '#efffe6'
+        rgb:
+        - 239
+        - 255
+        - 230
+        ionization_fraction: 0.8257
+      13000:
+        temp_k: 13000
+        hex: '#eeffe5'
+        rgb:
+        - 238
+        - 255
+        - 229
+        ionization_fraction: 0.9063
+      14000:
+        temp_k: 14000
+        hex: '#edffe7'
+        rgb:
+        - 237
+        - 255
+        - 231
+        ionization_fraction: 0.9492
+      15000:
+        temp_k: 15000
+        hex: '#ecffea'
+        rgb:
+        - 236
+        - 255
+        - 234
+        ionization_fraction: 0.9715
+  P:
+    z: 15
+    name: Phosphorus
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0002
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0017
+      7000:
+        temp_k: 7000
+        hex: '#f3f4ff'
+        rgb:
+        - 243
+        - 244
+        - 255
+        ionization_fraction: 0.0087
+      8000:
+        temp_k: 8000
+        hex: '#ddf1ff'
+        rgb:
+        - 221
+        - 241
+        - 255
+        ionization_fraction: 0.0301
+      9000:
+        temp_k: 9000
+        hex: '#affff3'
+        rgb:
+        - 175
+        - 255
+        - 243
+        ionization_fraction: 0.079
+      10000:
+        temp_k: 10000
+        hex: '#00ffbc'
+        rgb:
+        - 0
+        - 255
+        - 188
+        ionization_fraction: 0.1684
+      11000:
+        temp_k: 11000
+        hex: '#00ff88'
+        rgb:
+        - 0
+        - 255
+        - 136
+        ionization_fraction: 0.3022
+      12000:
+        temp_k: 12000
+        hex: '#00ff65'
+        rgb:
+        - 0
+        - 255
+        - 101
+        ionization_fraction: 0.467
+      13000:
+        temp_k: 13000
+        hex: '#00ff51'
+        rgb:
+        - 0
+        - 255
+        - 81
+        ionization_fraction: 0.6328
+      14000:
+        temp_k: 14000
+        hex: '#00ff47'
+        rgb:
+        - 0
+        - 255
+        - 71
+        ionization_fraction: 0.7691
+      15000:
+        temp_k: 15000
+        hex: '#00ff45'
+        rgb:
+        - 0
+        - 255
+        - 69
+        ionization_fraction: 0.8629
+  S:
+    z: 16
+    name: Sulfur
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0002
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0019
+      7000:
+        temp_k: 7000
+        hex: '#f4f3ff'
+        rgb:
+        - 244
+        - 243
+        - 255
+        ionization_fraction: 0.0096
+      8000:
+        temp_k: 8000
+        hex: '#e6e9ff'
+        rgb:
+        - 230
+        - 233
+        - 255
+        ionization_fraction: 0.0329
+      9000:
+        temp_k: 9000
+        hex: '#ede6ff'
+        rgb:
+        - 237
+        - 230
+        - 255
+        ionization_fraction: 0.0855
+      10000:
+        temp_k: 10000
+        hex: '#ffdde7'
+        rgb:
+        - 255
+        - 221
+        - 231
+        ionization_fraction: 0.1801
+      11000:
+        temp_k: 11000
+        hex: '#ffc2b3'
+        rgb:
+        - 255
+        - 194
+        - 179
+        ionization_fraction: 0.3192
+      12000:
+        temp_k: 12000
+        hex: '#ffb58f'
+        rgb:
+        - 255
+        - 181
+        - 143
+        ionization_fraction: 0.4871
+      13000:
+        temp_k: 13000
+        hex: '#ffaf7b'
+        rgb:
+        - 255
+        - 175
+        - 123
+        ionization_fraction: 0.6519
+      14000:
+        temp_k: 14000
+        hex: '#ffac70'
+        rgb:
+        - 255
+        - 172
+        - 112
+        ionization_fraction: 0.784
+      15000:
+        temp_k: 15000
+        hex: '#ffab6b'
+        rgb:
+        - 255
+        - 171
+        - 107
+        ionization_fraction: 0.8729
+  Cl:
+    z: 17
+    name: Chlorine
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0002
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0011
+      8000:
+        temp_k: 8000
+        hex: '#e2e7ff'
+        rgb:
+        - 226
+        - 231
+        - 255
+        ionization_fraction: 0.005
+      9000:
+        temp_k: 9000
+        hex: '#d5deff'
+        rgb:
+        - 213
+        - 222
+        - 255
+        ionization_fraction: 0.0165
+      10000:
+        temp_k: 10000
+        hex: '#c7d1ff'
+        rgb:
+        - 199
+        - 209
+        - 255
+        ionization_fraction: 0.0428
+      11000:
+        temp_k: 11000
+        hex: '#b2b9ff'
+        rgb:
+        - 178
+        - 185
+        - 255
+        ionization_fraction: 0.0931
+      12000:
+        temp_k: 12000
+        hex: '#9694ff'
+        rgb:
+        - 150
+        - 148
+        - 255
+        ionization_fraction: 0.175
+      13000:
+        temp_k: 13000
+        hex: '#7c6aff'
+        rgb:
+        - 124
+        - 106
+        - 255
+        ionization_fraction: 0.2906
+      14000:
+        temp_k: 14000
+        hex: '#6a44ff'
+        rgb:
+        - 106
+        - 68
+        - 255
+        ionization_fraction: 0.4315
+      15000:
+        temp_k: 15000
+        hex: '#5f21ff'
+        rgb:
+        - 95
+        - 33
+        - 255
+        ionization_fraction: 0.5791
+  Ar:
+    z: 18
+    name: Argon
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0001
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0007
+      9000:
+        temp_k: 9000
+        hex: '#d6dfff'
+        rgb:
+        - 214
+        - 223
+        - 255
+        ionization_fraction: 0.0027
+      10000:
+        temp_k: 10000
+        hex: '#cedaff'
+        rgb:
+        - 206
+        - 218
+        - 255
+        ionization_fraction: 0.0086
+      11000:
+        temp_k: 11000
+        hex: '#ccd7ff'
+        rgb:
+        - 204
+        - 215
+        - 255
+        ionization_fraction: 0.0222
+      12000:
+        temp_k: 12000
+        hex: '#daddff'
+        rgb:
+        - 218
+        - 221
+        - 255
+        ionization_fraction: 0.0487
+      13000:
+        temp_k: 13000
+        hex: '#fef1ff'
+        rgb:
+        - 254
+        - 241
+        - 255
+        ionization_fraction: 0.0944
+      14000:
+        temp_k: 14000
+        hex: '#ffe5d7'
+        rgb:
+        - 255
+        - 229
+        - 215
+        ionization_fraction: 0.1645
+      15000:
+        temp_k: 15000
+        hex: '#ffdfbe'
+        rgb:
+        - 255
+        - 223
+        - 190
+        ionization_fraction: 0.2607
+  K:
+    z: 19
+    name: Potassium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0041
+      4000:
+        temp_k: 4000
+        hex: '#ffdba9'
+        rgb:
+        - 255
+        - 219
+        - 169
+        ionization_fraction: 0.0464
+      5000:
+        temp_k: 5000
+        hex: '#eeffc4'
+        rgb:
+        - 238
+        - 255
+        - 196
+        ionization_fraction: 0.1982
+      6000:
+        temp_k: 6000
+        hex: '#c0ffae'
+        rgb:
+        - 192
+        - 255
+        - 174
+        ionization_fraction: 0.469
+      7000:
+        temp_k: 7000
+        hex: '#a9ffa3'
+        rgb:
+        - 169
+        - 255
+        - 163
+        ionization_fraction: 0.7337
+      8000:
+        temp_k: 8000
+        hex: '#9effa2'
+        rgb:
+        - 158
+        - 255
+        - 162
+        ionization_fraction: 0.8867
+      9000:
+        temp_k: 9000
+        hex: '#99ffa7'
+        rgb:
+        - 153
+        - 255
+        - 167
+        ionization_fraction: 0.9517
+      10000:
+        temp_k: 10000
+        hex: '#98ffb0'
+        rgb:
+        - 152
+        - 255
+        - 176
+        ionization_fraction: 0.9776
+      11000:
+        temp_k: 11000
+        hex: '#99ffbb'
+        rgb:
+        - 153
+        - 255
+        - 187
+        ionization_fraction: 0.9886
+      12000:
+        temp_k: 12000
+        hex: '#9cffc8'
+        rgb:
+        - 156
+        - 255
+        - 200
+        ionization_fraction: 0.9937
+      13000:
+        temp_k: 13000
+        hex: '#a0ffd4'
+        rgb:
+        - 160
+        - 255
+        - 212
+        ionization_fraction: 0.9962
+      14000:
+        temp_k: 14000
+        hex: '#a4ffe0'
+        rgb:
+        - 164
+        - 255
+        - 224
+        ionization_fraction: 0.9976
+      15000:
+        temp_k: 15000
+        hex: '#a9ffeb'
+        rgb:
+        - 169
+        - 255
+        - 235
+        ionization_fraction: 0.9984
+  Ca:
+    z: 20
+    name: Calcium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8c35'
+        rgb:
+        - 255
+        - 140
+        - 53
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#a300ff'
+        rgb:
+        - 163
+        - 0
+        - 255
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#8200ff'
+        rgb:
+        - 130
+        - 0
+        - 255
+        ionization_fraction: 0.0036
+      5000:
+        temp_k: 5000
+        hex: '#8c00ff'
+        rgb:
+        - 140
+        - 0
+        - 255
+        ionization_fraction: 0.0279
+      6000:
+        temp_k: 6000
+        hex: '#9700ff'
+        rgb:
+        - 151
+        - 0
+        - 255
+        ionization_fraction: 0.1095
+      7000:
+        temp_k: 7000
+        hex: '#9e00ff'
+        rgb:
+        - 158
+        - 0
+        - 255
+        ionization_fraction: 0.2781
+      8000:
+        temp_k: 8000
+        hex: '#a300ff'
+        rgb:
+        - 163
+        - 0
+        - 255
+        ionization_fraction: 0.51
+      9000:
+        temp_k: 9000
+        hex: '#a601ff'
+        rgb:
+        - 166
+        - 1
+        - 255
+        ionization_fraction: 0.7248
+      10000:
+        temp_k: 10000
+        hex: '#a827ff'
+        rgb:
+        - 168
+        - 39
+        - 255
+        ionization_fraction: 0.8635
+      11000:
+        temp_k: 11000
+        hex: '#a936ff'
+        rgb:
+        - 169
+        - 54
+        - 255
+        ionization_fraction: 0.934
+      12000:
+        temp_k: 12000
+        hex: '#aa40ff'
+        rgb:
+        - 170
+        - 64
+        - 255
+        ionization_fraction: 0.9668
+      13000:
+        temp_k: 13000
+        hex: '#aa47ff'
+        rgb:
+        - 170
+        - 71
+        - 255
+        ionization_fraction: 0.9822
+      14000:
+        temp_k: 14000
+        hex: '#aa4cff'
+        rgb:
+        - 170
+        - 76
+        - 255
+        ionization_fraction: 0.9898
+      15000:
+        temp_k: 15000
+        hex: '#aa50ff'
+        rgb:
+        - 170
+        - 80
+        - 255
+        ionization_fraction: 0.9938
+  Sc:
+    z: 21
+    name: Scandium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8a15'
+        rgb:
+        - 255
+        - 138
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ff8f69'
+        rgb:
+        - 255
+        - 143
+        - 105
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#ffdbae'
+        rgb:
+        - 255
+        - 219
+        - 174
+        ionization_fraction: 0.0019
+      5000:
+        temp_k: 5000
+        hex: '#bbffb8'
+        rgb:
+        - 187
+        - 255
+        - 184
+        ionization_fraction: 0.0167
+      6000:
+        temp_k: 6000
+        hex: '#82ffb2'
+        rgb:
+        - 130
+        - 255
+        - 178
+        ionization_fraction: 0.0724
+      7000:
+        temp_k: 7000
+        hex: '#5dffb1'
+        rgb:
+        - 93
+        - 255
+        - 177
+        ionization_fraction: 0.2017
+      8000:
+        temp_k: 8000
+        hex: '#3effb2'
+        rgb:
+        - 62
+        - 255
+        - 178
+        ionization_fraction: 0.4058
+      9000:
+        temp_k: 9000
+        hex: '#19ffb3'
+        rgb:
+        - 25
+        - 255
+        - 179
+        ionization_fraction: 0.6298
+      10000:
+        temp_k: 10000
+        hex: '#00ffb5'
+        rgb:
+        - 0
+        - 255
+        - 181
+        ionization_fraction: 0.802
+      11000:
+        temp_k: 11000
+        hex: '#00ffb7'
+        rgb:
+        - 0
+        - 255
+        - 183
+        ionization_fraction: 0.9014
+      12000:
+        temp_k: 12000
+        hex: '#00ffb9'
+        rgb:
+        - 0
+        - 255
+        - 185
+        ionization_fraction: 0.9504
+      13000:
+        temp_k: 13000
+        hex: '#00ffbb'
+        rgb:
+        - 0
+        - 255
+        - 187
+        ionization_fraction: 0.9739
+      14000:
+        temp_k: 14000
+        hex: '#00ffbd'
+        rgb:
+        - 0
+        - 255
+        - 189
+        ionization_fraction: 0.9854
+      15000:
+        temp_k: 15000
+        hex: '#00ffbf'
+        rgb:
+        - 0
+        - 255
+        - 191
+        ionization_fraction: 0.9913
+  Ti:
+    z: 22
+    name: Titanium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8f19'
+        rgb:
+        - 255
+        - 143
+        - 25
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#c9ffbf'
+        rgb:
+        - 201
+        - 255
+        - 191
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#00ebff'
+        rgb:
+        - 0
+        - 235
+        - 255
+        ionization_fraction: 0.0013
+      5000:
+        temp_k: 5000
+        hex: '#00c7ff'
+        rgb:
+        - 0
+        - 199
+        - 255
+        ionization_fraction: 0.0123
+      6000:
+        temp_k: 6000
+        hex: '#00b5ff'
+        rgb:
+        - 0
+        - 181
+        - 255
+        ionization_fraction: 0.0564
+      7000:
+        temp_k: 7000
+        hex: '#00aaff'
+        rgb:
+        - 0
+        - 170
+        - 255
+        ionization_fraction: 0.1653
+      8000:
+        temp_k: 8000
+        hex: '#00a4ff'
+        rgb:
+        - 0
+        - 164
+        - 255
+        ionization_fraction: 0.3498
+      9000:
+        temp_k: 9000
+        hex: '#009fff'
+        rgb:
+        - 0
+        - 159
+        - 255
+        ionization_fraction: 0.5708
+      10000:
+        temp_k: 10000
+        hex: '#009cff'
+        rgb:
+        - 0
+        - 156
+        - 255
+        ionization_fraction: 0.7585
+      11000:
+        temp_k: 11000
+        hex: '#009aff'
+        rgb:
+        - 0
+        - 154
+        - 255
+        ionization_fraction: 0.8764
+      12000:
+        temp_k: 12000
+        hex: '#0099ff'
+        rgb:
+        - 0
+        - 153
+        - 255
+        ionization_fraction: 0.9376
+      13000:
+        temp_k: 13000
+        hex: '#0098ff'
+        rgb:
+        - 0
+        - 152
+        - 255
+        ionization_fraction: 0.9673
+      14000:
+        temp_k: 14000
+        hex: '#0097ff'
+        rgb:
+        - 0
+        - 151
+        - 255
+        ionization_fraction: 0.9819
+      15000:
+        temp_k: 15000
+        hex: '#0097ff'
+        rgb:
+        - 0
+        - 151
+        - 255
+        ionization_fraction: 0.9894
+  V:
+    z: 23
+    name: Vanadium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8c24'
+        rgb:
+        - 255
+        - 140
+        - 36
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#f683ff'
+        rgb:
+        - 246
+        - 131
+        - 255
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#9c00ff'
+        rgb:
+        - 156
+        - 0
+        - 255
+        ionization_fraction: 0.0015
+      5000:
+        temp_k: 5000
+        hex: '#8f00ff'
+        rgb:
+        - 143
+        - 0
+        - 255
+        ionization_fraction: 0.0135
+      6000:
+        temp_k: 6000
+        hex: '#8a00ff'
+        rgb:
+        - 138
+        - 0
+        - 255
+        ionization_fraction: 0.0609
+      7000:
+        temp_k: 7000
+        hex: '#8800ff'
+        rgb:
+        - 136
+        - 0
+        - 255
+        ionization_fraction: 0.1758
+      8000:
+        temp_k: 8000
+        hex: '#8500ff'
+        rgb:
+        - 133
+        - 0
+        - 255
+        ionization_fraction: 0.3664
+      9000:
+        temp_k: 9000
+        hex: '#8400ff'
+        rgb:
+        - 132
+        - 0
+        - 255
+        ionization_fraction: 0.5889
+      10000:
+        temp_k: 10000
+        hex: '#8200ff'
+        rgb:
+        - 130
+        - 0
+        - 255
+        ionization_fraction: 0.7724
+      11000:
+        temp_k: 11000
+        hex: '#8100ff'
+        rgb:
+        - 129
+        - 0
+        - 255
+        ionization_fraction: 0.8845
+      12000:
+        temp_k: 12000
+        hex: '#8000ff'
+        rgb:
+        - 128
+        - 0
+        - 255
+        ionization_fraction: 0.9418
+      13000:
+        temp_k: 13000
+        hex: '#7f07ff'
+        rgb:
+        - 127
+        - 7
+        - 255
+        ionization_fraction: 0.9694
+      14000:
+        temp_k: 14000
+        hex: '#7f11ff'
+        rgb:
+        - 127
+        - 17
+        - 255
+        ionization_fraction: 0.983
+      15000:
+        temp_k: 15000
+        hex: '#7e18ff'
+        rgb:
+        - 126
+        - 24
+        - 255
+        ionization_fraction: 0.99
+  Cr:
+    z: 24
+    name: Chromium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d20'
+        rgb:
+        - 255
+        - 141
+        - 32
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ebbbff'
+        rgb:
+        - 235
+        - 187
+        - 255
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#0086ff'
+        rgb:
+        - 0
+        - 134
+        - 255
+        ionization_fraction: 0.0014
+      5000:
+        temp_k: 5000
+        hex: '#008fff'
+        rgb:
+        - 0
+        - 143
+        - 255
+        ionization_fraction: 0.0132
+      6000:
+        temp_k: 6000
+        hex: '#0098ff'
+        rgb:
+        - 0
+        - 152
+        - 255
+        ionization_fraction: 0.0598
+      7000:
+        temp_k: 7000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.1731
+      8000:
+        temp_k: 8000
+        hex: '#009fff'
+        rgb:
+        - 0
+        - 159
+        - 255
+        ionization_fraction: 0.3621
+      9000:
+        temp_k: 9000
+        hex: '#009eff'
+        rgb:
+        - 0
+        - 158
+        - 255
+        ionization_fraction: 0.5843
+      10000:
+        temp_k: 10000
+        hex: '#009cff'
+        rgb:
+        - 0
+        - 156
+        - 255
+        ionization_fraction: 0.7689
+      11000:
+        temp_k: 11000
+        hex: '#0099ff'
+        rgb:
+        - 0
+        - 153
+        - 255
+        ionization_fraction: 0.8825
+      12000:
+        temp_k: 12000
+        hex: '#0096ff'
+        rgb:
+        - 0
+        - 150
+        - 255
+        ionization_fraction: 0.9407
+      13000:
+        temp_k: 13000
+        hex: '#0092ff'
+        rgb:
+        - 0
+        - 146
+        - 255
+        ionization_fraction: 0.9689
+      14000:
+        temp_k: 14000
+        hex: '#008fff'
+        rgb:
+        - 0
+        - 143
+        - 255
+        ionization_fraction: 0.9827
+      15000:
+        temp_k: 15000
+        hex: '#008cff'
+        rgb:
+        - 0
+        - 140
+        - 255
+        ionization_fraction: 0.9899
+  Mn:
+    z: 25
+    name: Manganese
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb975'
+        rgb:
+        - 255
+        - 185
+        - 117
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffcbee'
+        rgb:
+        - 255
+        - 203
+        - 238
+        ionization_fraction: 0.0005
+      5000:
+        temp_k: 5000
+        hex: '#855dff'
+        rgb:
+        - 133
+        - 93
+        - 255
+        ionization_fraction: 0.0061
+      6000:
+        temp_k: 6000
+        hex: '#582bff'
+        rgb:
+        - 88
+        - 43
+        - 255
+        ionization_fraction: 0.0318
+      7000:
+        temp_k: 7000
+        hex: '#4e1aff'
+        rgb:
+        - 78
+        - 26
+        - 255
+        ionization_fraction: 0.1037
+      8000:
+        temp_k: 8000
+        hex: '#4c0bff'
+        rgb:
+        - 76
+        - 11
+        - 255
+        ionization_fraction: 0.2432
+      9000:
+        temp_k: 9000
+        hex: '#4b00ff'
+        rgb:
+        - 75
+        - 0
+        - 255
+        ionization_fraction: 0.4408
+      10000:
+        temp_k: 10000
+        hex: '#4b00ff'
+        rgb:
+        - 75
+        - 0
+        - 255
+        ionization_fraction: 0.6461
+      11000:
+        temp_k: 11000
+        hex: '#4c00ff'
+        rgb:
+        - 76
+        - 0
+        - 255
+        ionization_fraction: 0.8032
+      12000:
+        temp_k: 12000
+        hex: '#4c00ff'
+        rgb:
+        - 76
+        - 0
+        - 255
+        ionization_fraction: 0.8973
+      13000:
+        temp_k: 13000
+        hex: '#4c00ff'
+        rgb:
+        - 76
+        - 0
+        - 255
+        ionization_fraction: 0.9462
+      14000:
+        temp_k: 14000
+        hex: '#4d00ff'
+        rgb:
+        - 77
+        - 0
+        - 255
+        ionization_fraction: 0.9707
+      15000:
+        temp_k: 15000
+        hex: '#4d00ff'
+        rgb:
+        - 77
+        - 0
+        - 255
+        ionization_fraction: 0.9832
+  Fe:
+    z: 26
+    name: Iron
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffba70'
+        rgb:
+        - 255
+        - 186
+        - 112
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffe5d8'
+        rgb:
+        - 255
+        - 229
+        - 216
+        ionization_fraction: 0.0003
+      5000:
+        temp_k: 5000
+        hex: '#7c9aff'
+        rgb:
+        - 124
+        - 154
+        - 255
+        ionization_fraction: 0.0035
+      6000:
+        temp_k: 6000
+        hex: '#3b71ff'
+        rgb:
+        - 59
+        - 113
+        - 255
+        ionization_fraction: 0.0204
+      7000:
+        temp_k: 7000
+        hex: '#2a6bff'
+        rgb:
+        - 42
+        - 107
+        - 255
+        ionization_fraction: 0.0716
+      8000:
+        temp_k: 8000
+        hex: '#2170ff'
+        rgb:
+        - 33
+        - 112
+        - 255
+        ionization_fraction: 0.1802
+      9000:
+        temp_k: 9000
+        hex: '#1578ff'
+        rgb:
+        - 21
+        - 120
+        - 255
+        ionization_fraction: 0.3512
+      10000:
+        temp_k: 10000
+        hex: '#007fff'
+        rgb:
+        - 0
+        - 127
+        - 255
+        ionization_fraction: 0.5533
+      11000:
+        temp_k: 11000
+        hex: '#0087ff'
+        rgb:
+        - 0
+        - 135
+        - 255
+        ionization_fraction: 0.7322
+      12000:
+        temp_k: 12000
+        hex: '#008dff'
+        rgb:
+        - 0
+        - 141
+        - 255
+        ionization_fraction: 0.8537
+      13000:
+        temp_k: 13000
+        hex: '#0093ff'
+        rgb:
+        - 0
+        - 147
+        - 255
+        ionization_fraction: 0.9224
+      14000:
+        temp_k: 14000
+        hex: '#0098ff'
+        rgb:
+        - 0
+        - 152
+        - 255
+        ionization_fraction: 0.958
+      15000:
+        temp_k: 15000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.9763
+  Co:
+    z: 27
+    name: Cobalt
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4ab'
+        rgb:
+        - 255
+        - 212
+        - 171
+        ionization_fraction: 0.0003
+      5000:
+        temp_k: 5000
+        hex: '#ffebf7'
+        rgb:
+        - 255
+        - 235
+        - 247
+        ionization_fraction: 0.0036
+      6000:
+        temp_k: 6000
+        hex: '#b0c3ff'
+        rgb:
+        - 176
+        - 195
+        - 255
+        ionization_fraction: 0.0208
+      7000:
+        temp_k: 7000
+        hex: '#78c0ff'
+        rgb:
+        - 120
+        - 192
+        - 255
+        ionization_fraction: 0.0728
+      8000:
+        temp_k: 8000
+        hex: '#4dd2ff'
+        rgb:
+        - 77
+        - 210
+        - 255
+        ionization_fraction: 0.1827
+      9000:
+        temp_k: 9000
+        hex: '#00e8ff'
+        rgb:
+        - 0
+        - 232
+        - 255
+        ionization_fraction: 0.3549
+      10000:
+        temp_k: 10000
+        hex: '#00feff'
+        rgb:
+        - 0
+        - 254
+        - 255
+        ionization_fraction: 0.5574
+      11000:
+        temp_k: 11000
+        hex: '#00ffed'
+        rgb:
+        - 0
+        - 255
+        - 237
+        ionization_fraction: 0.7356
+      12000:
+        temp_k: 12000
+        hex: '#00ffdf'
+        rgb:
+        - 0
+        - 255
+        - 223
+        ionization_fraction: 0.8559
+      13000:
+        temp_k: 13000
+        hex: '#00ffd3'
+        rgb:
+        - 0
+        - 255
+        - 211
+        ionization_fraction: 0.9236
+      14000:
+        temp_k: 14000
+        hex: '#00ffc9'
+        rgb:
+        - 0
+        - 255
+        - 201
+        ionization_fraction: 0.9586
+      15000:
+        temp_k: 15000
+        hex: '#00ffc2'
+        rgb:
+        - 0
+        - 255
+        - 194
+        ionization_fraction: 0.9766
+  Ni:
+    z: 28
+    name: Nickel
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd5a6'
+        rgb:
+        - 255
+        - 213
+        - 166
+        ionization_fraction: 0.0004
+      5000:
+        temp_k: 5000
+        hex: '#fff8dd'
+        rgb:
+        - 255
+        - 248
+        - 221
+        ionization_fraction: 0.0048
+      6000:
+        temp_k: 6000
+        hex: '#96fff8'
+        rgb:
+        - 150
+        - 255
+        - 248
+        ionization_fraction: 0.0261
+      7000:
+        temp_k: 7000
+        hex: '#00f5ff'
+        rgb:
+        - 0
+        - 245
+        - 255
+        ionization_fraction: 0.0881
+      8000:
+        temp_k: 8000
+        hex: '#00ebff'
+        rgb:
+        - 0
+        - 235
+        - 255
+        ionization_fraction: 0.2135
+      9000:
+        temp_k: 9000
+        hex: '#00e5ff'
+        rgb:
+        - 0
+        - 229
+        - 255
+        ionization_fraction: 0.3999
+      10000:
+        temp_k: 10000
+        hex: '#00e2ff'
+        rgb:
+        - 0
+        - 226
+        - 255
+        ionization_fraction: 0.6054
+      11000:
+        temp_k: 11000
+        hex: '#00e0ff'
+        rgb:
+        - 0
+        - 224
+        - 255
+        ionization_fraction: 0.7733
+      12000:
+        temp_k: 12000
+        hex: '#00dfff'
+        rgb:
+        - 0
+        - 223
+        - 255
+        ionization_fraction: 0.8795
+      13000:
+        temp_k: 13000
+        hex: '#00deff'
+        rgb:
+        - 0
+        - 222
+        - 255
+        ionization_fraction: 0.9366
+      14000:
+        temp_k: 14000
+        hex: '#00ddff'
+        rgb:
+        - 0
+        - 221
+        - 255
+        ionization_fraction: 0.9656
+      15000:
+        temp_k: 15000
+        hex: '#00dcff'
+        rgb:
+        - 0
+        - 220
+        - 255
+        ionization_fraction: 0.9804
+  Cu:
+    z: 29
+    name: Copper
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffdba6'
+        rgb:
+        - 255
+        - 219
+        - 166
+        ionization_fraction: 0.0004
+      5000:
+        temp_k: 5000
+        hex: '#d1ffb6'
+        rgb:
+        - 209
+        - 255
+        - 182
+        ionization_fraction: 0.0043
+      6000:
+        temp_k: 6000
+        hex: '#00ff7c'
+        rgb:
+        - 0
+        - 255
+        - 124
+        ionization_fraction: 0.0241
+      7000:
+        temp_k: 7000
+        hex: '#00ff65'
+        rgb:
+        - 0
+        - 255
+        - 101
+        ionization_fraction: 0.0823
+      8000:
+        temp_k: 8000
+        hex: '#00ff6e'
+        rgb:
+        - 0
+        - 255
+        - 110
+        ionization_fraction: 0.202
+      9000:
+        temp_k: 9000
+        hex: '#00ff7e'
+        rgb:
+        - 0
+        - 255
+        - 126
+        ionization_fraction: 0.3835
+      10000:
+        temp_k: 10000
+        hex: '#00ff8d'
+        rgb:
+        - 0
+        - 255
+        - 141
+        ionization_fraction: 0.5883
+      11000:
+        temp_k: 11000
+        hex: '#00ff9a'
+        rgb:
+        - 0
+        - 255
+        - 154
+        ionization_fraction: 0.7602
+      12000:
+        temp_k: 12000
+        hex: '#00ffa6'
+        rgb:
+        - 0
+        - 255
+        - 166
+        ionization_fraction: 0.8715
+      13000:
+        temp_k: 13000
+        hex: '#00ffb1'
+        rgb:
+        - 0
+        - 255
+        - 177
+        ionization_fraction: 0.9322
+      14000:
+        temp_k: 14000
+        hex: '#00ffba'
+        rgb:
+        - 0
+        - 255
+        - 186
+        ionization_fraction: 0.9633
+      15000:
+        temp_k: 15000
+        hex: '#00ffc2'
+        rgb:
+        - 0
+        - 255
+        - 194
+        ionization_fraction: 0.9792
+  Zn:
+    z: 30
+    name: Zinc
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe6d0'
+        rgb:
+        - 255
+        - 230
+        - 208
+        ionization_fraction: 0.0006
+      6000:
+        temp_k: 6000
+        hex: '#ffece9'
+        rgb:
+        - 255
+        - 236
+        - 233
+        ionization_fraction: 0.0048
+      7000:
+        temp_k: 7000
+        hex: '#ffb9ca'
+        rgb:
+        - 255
+        - 185
+        - 202
+        ionization_fraction: 0.0213
+      8000:
+        temp_k: 8000
+        hex: '#ff4d76'
+        rgb:
+        - 255
+        - 77
+        - 118
+        ionization_fraction: 0.0652
+      9000:
+        temp_k: 9000
+        hex: '#ff003d'
+        rgb:
+        - 255
+        - 0
+        - 61
+        ionization_fraction: 0.1533
+      10000:
+        temp_k: 10000
+        hex: '#ff001e'
+        rgb:
+        - 255
+        - 0
+        - 30
+        ionization_fraction: 0.2929
+      11000:
+        temp_k: 11000
+        hex: '#ff0009'
+        rgb:
+        - 255
+        - 0
+        - 9
+        ionization_fraction: 0.4692
+      12000:
+        temp_k: 12000
+        hex: '#ff0000'
+        rgb:
+        - 255
+        - 0
+        - 0
+        ionization_fraction: 0.6458
+      13000:
+        temp_k: 13000
+        hex: '#ff0000'
+        rgb:
+        - 255
+        - 0
+        - 0
+        ionization_fraction: 0.7863
+      14000:
+        temp_k: 14000
+        hex: '#ff0000'
+        rgb:
+        - 255
+        - 0
+        - 0
+        ionization_fraction: 0.8783
+      15000:
+        temp_k: 15000
+        hex: '#ff0000'
+        rgb:
+        - 255
+        - 0
+        - 0
+        ionization_fraction: 0.9314
+  Ga:
+    z: 31
+    name: Gallium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d16'
+        rgb:
+        - 255
+        - 141
+        - 22
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb48c'
+        rgb:
+        - 255
+        - 180
+        - 140
+        ionization_fraction: 0.0002
+      4000:
+        temp_k: 4000
+        hex: '#cd74ff'
+        rgb:
+        - 205
+        - 116
+        - 255
+        ionization_fraction: 0.0043
+      5000:
+        temp_k: 5000
+        hex: '#8c00ff'
+        rgb:
+        - 140
+        - 0
+        - 255
+        ionization_fraction: 0.0318
+      6000:
+        temp_k: 6000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.1214
+      7000:
+        temp_k: 7000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.3008
+      8000:
+        temp_k: 8000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.5379
+      9000:
+        temp_k: 9000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.7474
+      10000:
+        temp_k: 10000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.8767
+      11000:
+        temp_k: 11000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.9406
+      12000:
+        temp_k: 12000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.97
+      13000:
+        temp_k: 13000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.9838
+      14000:
+        temp_k: 14000
+        hex: '#7d00ff'
+        rgb:
+        - 125
+        - 0
+        - 255
+        ionization_fraction: 0.9907
+      15000:
+        temp_k: 15000
+        hex: '#7d00ff'
+        rgb:
+        - 125
+        - 0
+        - 255
+        ionization_fraction: 0.9943
+  Ge:
+    z: 32
+    name: Germanium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a7'
+        rgb:
+        - 255
+        - 212
+        - 167
+        ionization_fraction: 0.0003
+      5000:
+        temp_k: 5000
+        hex: '#ffe6e2'
+        rgb:
+        - 255
+        - 230
+        - 226
+        ionization_fraction: 0.0036
+      6000:
+        temp_k: 6000
+        hex: '#c0b0ff'
+        rgb:
+        - 192
+        - 176
+        - 255
+        ionization_fraction: 0.0204
+      7000:
+        temp_k: 7000
+        hex: '#755cff'
+        rgb:
+        - 117
+        - 92
+        - 255
+        ionization_fraction: 0.0717
+      8000:
+        temp_k: 8000
+        hex: '#5000ff'
+        rgb:
+        - 80
+        - 0
+        - 255
+        ionization_fraction: 0.1805
+      9000:
+        temp_k: 9000
+        hex: '#4100ff'
+        rgb:
+        - 65
+        - 0
+        - 255
+        ionization_fraction: 0.3515
+      10000:
+        temp_k: 10000
+        hex: '#3d00ff'
+        rgb:
+        - 61
+        - 0
+        - 255
+        ionization_fraction: 0.5537
+      11000:
+        temp_k: 11000
+        hex: '#3c00ff'
+        rgb:
+        - 60
+        - 0
+        - 255
+        ionization_fraction: 0.7325
+      12000:
+        temp_k: 12000
+        hex: '#3e00ff'
+        rgb:
+        - 62
+        - 0
+        - 255
+        ionization_fraction: 0.8539
+      13000:
+        temp_k: 13000
+        hex: '#3f00ff'
+        rgb:
+        - 63
+        - 0
+        - 255
+        ionization_fraction: 0.9225
+      14000:
+        temp_k: 14000
+        hex: '#4200ff'
+        rgb:
+        - 66
+        - 0
+        - 255
+        ionization_fraction: 0.958
+      15000:
+        temp_k: 15000
+        hex: '#4400ff'
+        rgb:
+        - 68
+        - 0
+        - 255
+        ionization_fraction: 0.9763
+  Br:
+    z: 35
+    name: Bromine
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0005
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0029
+      8000:
+        temp_k: 8000
+        hex: '#e2e7ff'
+        rgb:
+        - 226
+        - 231
+        - 255
+        ionization_fraction: 0.0116
+      9000:
+        temp_k: 9000
+        hex: '#d5dbff'
+        rgb:
+        - 213
+        - 219
+        - 255
+        ionization_fraction: 0.0344
+      10000:
+        temp_k: 10000
+        hex: '#c9c8ff'
+        rgb:
+        - 201
+        - 200
+        - 255
+        ionization_fraction: 0.082
+      11000:
+        temp_k: 11000
+        hex: '#bca7ff'
+        rgb:
+        - 188
+        - 167
+        - 255
+        ionization_fraction: 0.1643
+      12000:
+        temp_k: 12000
+        hex: '#b17cff'
+        rgb:
+        - 177
+        - 124
+        - 255
+        ionization_fraction: 0.2848
+      13000:
+        temp_k: 13000
+        hex: '#a851ff'
+        rgb:
+        - 168
+        - 81
+        - 255
+        ionization_fraction: 0.4343
+      14000:
+        temp_k: 14000
+        hex: '#a327ff'
+        rgb:
+        - 163
+        - 39
+        - 255
+        ionization_fraction: 0.5907
+      15000:
+        temp_k: 15000
+        hex: '#9f00ff'
+        rgb:
+        - 159
+        - 0
+        - 255
+        ionization_fraction: 0.7278
+  Kr:
+    z: 36
+    name: Krypton
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0001
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0005
+      8000:
+        temp_k: 8000
+        hex: '#e3e7ff'
+        rgb:
+        - 227
+        - 231
+        - 255
+        ionization_fraction: 0.0024
+      9000:
+        temp_k: 9000
+        hex: '#d8dfff'
+        rgb:
+        - 216
+        - 223
+        - 255
+        ionization_fraction: 0.0085
+      10000:
+        temp_k: 10000
+        hex: '#d7d4ff'
+        rgb:
+        - 215
+        - 212
+        - 255
+        ionization_fraction: 0.0238
+      11000:
+        temp_k: 11000
+        hex: '#edc1ff'
+        rgb:
+        - 237
+        - 193
+        - 255
+        ionization_fraction: 0.0551
+      12000:
+        temp_k: 12000
+        hex: '#ff92e9'
+        rgb:
+        - 255
+        - 146
+        - 233
+        ionization_fraction: 0.1104
+      13000:
+        temp_k: 13000
+        hex: '#ff63cf'
+        rgb:
+        - 255
+        - 99
+        - 207
+        ionization_fraction: 0.1953
+      14000:
+        temp_k: 14000
+        hex: '#ff44c2'
+        rgb:
+        - 255
+        - 68
+        - 194
+        ionization_fraction: 0.31
+      15000:
+        temp_k: 15000
+        hex: '#ff31bc'
+        rgb:
+        - 255
+        - 49
+        - 188
+        ionization_fraction: 0.4458
+  Rb:
+    z: 37
+    name: Rubidium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d16'
+        rgb:
+        - 255
+        - 141
+        - 22
+        ionization_fraction: 0.0001
+      3000:
+        temp_k: 3000
+        hex: '#ffb676'
+        rgb:
+        - 255
+        - 182
+        - 118
+        ionization_fraction: 0.0056
+      4000:
+        temp_k: 4000
+        hex: '#ffa6c0'
+        rgb:
+        - 255
+        - 166
+        - 192
+        ionization_fraction: 0.0585
+      5000:
+        temp_k: 5000
+        hex: '#ff46cc'
+        rgb:
+        - 255
+        - 70
+        - 204
+        ionization_fraction: 0.2343
+      6000:
+        temp_k: 6000
+        hex: '#ff00be'
+        rgb:
+        - 255
+        - 0
+        - 190
+        ionization_fraction: 0.5217
+      7000:
+        temp_k: 7000
+        hex: '#ff00b2'
+        rgb:
+        - 255
+        - 0
+        - 178
+        ionization_fraction: 0.7741
+      8000:
+        temp_k: 8000
+        hex: '#ff00ac'
+        rgb:
+        - 255
+        - 0
+        - 172
+        ionization_fraction: 0.9066
+      9000:
+        temp_k: 9000
+        hex: '#ff00aa'
+        rgb:
+        - 255
+        - 0
+        - 170
+        ionization_fraction: 0.9602
+      10000:
+        temp_k: 10000
+        hex: '#ff00ac'
+        rgb:
+        - 255
+        - 0
+        - 172
+        ionization_fraction: 0.9814
+      11000:
+        temp_k: 11000
+        hex: '#ff24b0'
+        rgb:
+        - 255
+        - 36
+        - 176
+        ionization_fraction: 0.9904
+      12000:
+        temp_k: 12000
+        hex: '#ff41b6'
+        rgb:
+        - 255
+        - 65
+        - 182
+        ionization_fraction: 0.9946
+      13000:
+        temp_k: 13000
+        hex: '#ff56bf'
+        rgb:
+        - 255
+        - 86
+        - 191
+        ionization_fraction: 0.9967
+      14000:
+        temp_k: 14000
+        hex: '#ff68c8'
+        rgb:
+        - 255
+        - 104
+        - 200
+        ionization_fraction: 0.9979
+      15000:
+        temp_k: 15000
+        hex: '#ff77d3'
+        rgb:
+        - 255
+        - 119
+        - 211
+        ionization_fraction: 0.9986
+  Sr:
+    z: 38
+    name: Strontium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8b7c'
+        rgb:
+        - 255
+        - 139
+        - 124
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#3600ff'
+        rgb:
+        - 54
+        - 0
+        - 255
+        ionization_fraction: 0.0003
+      4000:
+        temp_k: 4000
+        hex: '#0000ff'
+        rgb:
+        - 0
+        - 0
+        - 255
+        ionization_fraction: 0.0066
+      5000:
+        temp_k: 5000
+        hex: '#0000ff'
+        rgb:
+        - 0
+        - 0
+        - 255
+        ionization_fraction: 0.0449
+      6000:
+        temp_k: 6000
+        hex: '#0039ff'
+        rgb:
+        - 0
+        - 57
+        - 255
+        ionization_fraction: 0.1593
+      7000:
+        temp_k: 7000
+        hex: '#0058ff'
+        rgb:
+        - 0
+        - 88
+        - 255
+        ionization_fraction: 0.3679
+      8000:
+        temp_k: 8000
+        hex: '#006fff'
+        rgb:
+        - 0
+        - 111
+        - 255
+        ionization_fraction: 0.6134
+      9000:
+        temp_k: 9000
+        hex: '#0082ff'
+        rgb:
+        - 0
+        - 130
+        - 255
+        ionization_fraction: 0.8029
+      10000:
+        temp_k: 10000
+        hex: '#0091ff'
+        rgb:
+        - 0
+        - 145
+        - 255
+        ionization_fraction: 0.9072
+      11000:
+        temp_k: 11000
+        hex: '#009eff'
+        rgb:
+        - 0
+        - 158
+        - 255
+        ionization_fraction: 0.9555
+      12000:
+        temp_k: 12000
+        hex: '#00a9ff'
+        rgb:
+        - 0
+        - 169
+        - 255
+        ionization_fraction: 0.9773
+      13000:
+        temp_k: 13000
+        hex: '#00b2ff'
+        rgb:
+        - 0
+        - 178
+        - 255
+        ionization_fraction: 0.9876
+      14000:
+        temp_k: 14000
+        hex: '#00baff'
+        rgb:
+        - 0
+        - 186
+        - 255
+        ionization_fraction: 0.9928
+      15000:
+        temp_k: 15000
+        hex: '#00c1ff'
+        rgb:
+        - 0
+        - 193
+        - 255
+        ionization_fraction: 0.9955
+  Y:
+    z: 39
+    name: Yttrium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8824'
+        rgb:
+        - 255
+        - 136
+        - 36
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ff67ca'
+        rgb:
+        - 255
+        - 103
+        - 202
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#c75fff'
+        rgb:
+        - 199
+        - 95
+        - 255
+        ionization_fraction: 0.0031
+      5000:
+        temp_k: 5000
+        hex: '#9b7eff'
+        rgb:
+        - 155
+        - 126
+        - 255
+        ionization_fraction: 0.0248
+      6000:
+        temp_k: 6000
+        hex: '#8393ff'
+        rgb:
+        - 131
+        - 147
+        - 255
+        ionization_fraction: 0.0995
+      7000:
+        temp_k: 7000
+        hex: '#74a1ff'
+        rgb:
+        - 116
+        - 161
+        - 255
+        ionization_fraction: 0.2585
+      8000:
+        temp_k: 8000
+        hex: '#69aaff'
+        rgb:
+        - 105
+        - 170
+        - 255
+        ionization_fraction: 0.4849
+      9000:
+        temp_k: 9000
+        hex: '#61afff'
+        rgb:
+        - 97
+        - 175
+        - 255
+        ionization_fraction: 0.7035
+      10000:
+        temp_k: 10000
+        hex: '#5bb3ff'
+        rgb:
+        - 91
+        - 179
+        - 255
+        ionization_fraction: 0.8506
+      11000:
+        temp_k: 11000
+        hex: '#57b6ff'
+        rgb:
+        - 87
+        - 182
+        - 255
+        ionization_fraction: 0.9274
+      12000:
+        temp_k: 12000
+        hex: '#53b8ff'
+        rgb:
+        - 83
+        - 184
+        - 255
+        ionization_fraction: 0.9635
+      13000:
+        temp_k: 13000
+        hex: '#4fb9ff'
+        rgb:
+        - 79
+        - 185
+        - 255
+        ionization_fraction: 0.9805
+      14000:
+        temp_k: 14000
+        hex: '#4dbaff'
+        rgb:
+        - 77
+        - 186
+        - 255
+        ionization_fraction: 0.9889
+      15000:
+        temp_k: 15000
+        hex: '#4bbbff'
+        rgb:
+        - 75
+        - 187
+        - 255
+        ionization_fraction: 0.9933
+  Mo:
+    z: 42
+    name: Molybdenum
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffe872'
+        rgb:
+        - 255
+        - 232
+        - 114
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#aeff88'
+        rgb:
+        - 174
+        - 255
+        - 136
+        ionization_fraction: 0.0009
+      5000:
+        temp_k: 5000
+        hex: '#a3ffb4'
+        rgb:
+        - 163
+        - 255
+        - 180
+        ionization_fraction: 0.009
+      6000:
+        temp_k: 6000
+        hex: '#9effdc'
+        rgb:
+        - 158
+        - 255
+        - 220
+        ionization_fraction: 0.044
+      7000:
+        temp_k: 7000
+        hex: '#99fffb'
+        rgb:
+        - 153
+        - 255
+        - 251
+        ionization_fraction: 0.1352
+      8000:
+        temp_k: 8000
+        hex: '#87edff'
+        rgb:
+        - 135
+        - 237
+        - 255
+        ionization_fraction: 0.2997
+      9000:
+        temp_k: 9000
+        hex: '#79deff'
+        rgb:
+        - 121
+        - 222
+        - 255
+        ionization_fraction: 0.5129
+      10000:
+        temp_k: 10000
+        hex: '#6ed4ff'
+        rgb:
+        - 110
+        - 212
+        - 255
+        ionization_fraction: 0.7114
+      11000:
+        temp_k: 11000
+        hex: '#65cdff'
+        rgb:
+        - 101
+        - 205
+        - 255
+        ionization_fraction: 0.8474
+      12000:
+        temp_k: 12000
+        hex: '#5ec7ff'
+        rgb:
+        - 94
+        - 199
+        - 255
+        ionization_fraction: 0.922
+      13000:
+        temp_k: 13000
+        hex: '#59c3ff'
+        rgb:
+        - 89
+        - 195
+        - 255
+        ionization_fraction: 0.9592
+      14000:
+        temp_k: 14000
+        hex: '#54c0ff'
+        rgb:
+        - 84
+        - 192
+        - 255
+        ionization_fraction: 0.9776
+      15000:
+        temp_k: 15000
+        hex: '#50bdff'
+        rgb:
+        - 80
+        - 189
+        - 255
+        ionization_fraction: 0.987
+  Tc:
+    z: 43
+    name: Technetium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d1f'
+        rgb:
+        - 255
+        - 141
+        - 31
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffa2e7'
+        rgb:
+        - 255
+        - 162
+        - 231
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#8300ff'
+        rgb:
+        - 131
+        - 0
+        - 255
+        ionization_fraction: 0.0007
+      5000:
+        temp_k: 5000
+        hex: '#6500ff'
+        rgb:
+        - 101
+        - 0
+        - 255
+        ionization_fraction: 0.0073
+      6000:
+        temp_k: 6000
+        hex: '#5d00ff'
+        rgb:
+        - 93
+        - 0
+        - 255
+        ionization_fraction: 0.0368
+      7000:
+        temp_k: 7000
+        hex: '#5800ff'
+        rgb:
+        - 88
+        - 0
+        - 255
+        ionization_fraction: 0.1169
+      8000:
+        temp_k: 8000
+        hex: '#5400ff'
+        rgb:
+        - 84
+        - 0
+        - 255
+        ionization_fraction: 0.2675
+      9000:
+        temp_k: 9000
+        hex: '#5100ff'
+        rgb:
+        - 81
+        - 0
+        - 255
+        ionization_fraction: 0.4727
+      10000:
+        temp_k: 10000
+        hex: '#4e00ff'
+        rgb:
+        - 78
+        - 0
+        - 255
+        ionization_fraction: 0.676
+      11000:
+        temp_k: 11000
+        hex: '#4c00ff'
+        rgb:
+        - 76
+        - 0
+        - 255
+        ionization_fraction: 0.824
+      12000:
+        temp_k: 12000
+        hex: '#4a00ff'
+        rgb:
+        - 74
+        - 0
+        - 255
+        ionization_fraction: 0.9091
+      13000:
+        temp_k: 13000
+        hex: '#4800ff'
+        rgb:
+        - 72
+        - 0
+        - 255
+        ionization_fraction: 0.9525
+      14000:
+        temp_k: 14000
+        hex: '#4600ff'
+        rgb:
+        - 70
+        - 0
+        - 255
+        ionization_fraction: 0.974
+      15000:
+        temp_k: 15000
+        hex: '#4400ff'
+        rgb:
+        - 68
+        - 0
+        - 255
+        ionization_fraction: 0.9851
+  Ru:
+    z: 44
+    name: Ruthenium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96f'
+        rgb:
+        - 255
+        - 185
+        - 111
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd2bb'
+        rgb:
+        - 255
+        - 210
+        - 187
+        ionization_fraction: 0.0006
+      5000:
+        temp_k: 5000
+        hex: '#d3a9ff'
+        rgb:
+        - 211
+        - 169
+        - 255
+        ionization_fraction: 0.0066
+      6000:
+        temp_k: 6000
+        hex: '#8b3eff'
+        rgb:
+        - 139
+        - 62
+        - 255
+        ionization_fraction: 0.0341
+      7000:
+        temp_k: 7000
+        hex: '#7000ff'
+        rgb:
+        - 112
+        - 0
+        - 255
+        ionization_fraction: 0.1098
+      8000:
+        temp_k: 8000
+        hex: '#6800ff'
+        rgb:
+        - 104
+        - 0
+        - 255
+        ionization_fraction: 0.2545
+      9000:
+        temp_k: 9000
+        hex: '#6600ff'
+        rgb:
+        - 102
+        - 0
+        - 255
+        ionization_fraction: 0.4558
+      10000:
+        temp_k: 10000
+        hex: '#6600ff'
+        rgb:
+        - 102
+        - 0
+        - 255
+        ionization_fraction: 0.6603
+      11000:
+        temp_k: 11000
+        hex: '#6700ff'
+        rgb:
+        - 103
+        - 0
+        - 255
+        ionization_fraction: 0.8133
+      12000:
+        temp_k: 12000
+        hex: '#6800ff'
+        rgb:
+        - 104
+        - 0
+        - 255
+        ionization_fraction: 0.903
+      13000:
+        temp_k: 13000
+        hex: '#6900ff'
+        rgb:
+        - 105
+        - 0
+        - 255
+        ionization_fraction: 0.9493
+      14000:
+        temp_k: 14000
+        hex: '#6b00ff'
+        rgb:
+        - 107
+        - 0
+        - 255
+        ionization_fraction: 0.9723
+      15000:
+        temp_k: 15000
+        hex: '#6c00ff'
+        rgb:
+        - 108
+        - 0
+        - 255
+        ionization_fraction: 0.9841
+  Rh:
+    z: 45
+    name: Rhodium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb974'
+        rgb:
+        - 255
+        - 185
+        - 116
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffcae8'
+        rgb:
+        - 255
+        - 202
+        - 232
+        ionization_fraction: 0.0005
+      5000:
+        temp_k: 5000
+        hex: '#9f61ff'
+        rgb:
+        - 159
+        - 97
+        - 255
+        ionization_fraction: 0.0059
+      6000:
+        temp_k: 6000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.0311
+      7000:
+        temp_k: 7000
+        hex: '#7300ff'
+        rgb:
+        - 115
+        - 0
+        - 255
+        ionization_fraction: 0.1016
+      8000:
+        temp_k: 8000
+        hex: '#7100ff'
+        rgb:
+        - 113
+        - 0
+        - 255
+        ionization_fraction: 0.2394
+      9000:
+        temp_k: 9000
+        hex: '#7000ff'
+        rgb:
+        - 112
+        - 0
+        - 255
+        ionization_fraction: 0.4357
+      10000:
+        temp_k: 10000
+        hex: '#6f00ff'
+        rgb:
+        - 111
+        - 0
+        - 255
+        ionization_fraction: 0.6412
+      11000:
+        temp_k: 11000
+        hex: '#6f00ff'
+        rgb:
+        - 111
+        - 0
+        - 255
+        ionization_fraction: 0.7997
+      12000:
+        temp_k: 12000
+        hex: '#6e00ff'
+        rgb:
+        - 110
+        - 0
+        - 255
+        ionization_fraction: 0.8952
+      13000:
+        temp_k: 13000
+        hex: '#6e00ff'
+        rgb:
+        - 110
+        - 0
+        - 255
+        ionization_fraction: 0.9451
+      14000:
+        temp_k: 14000
+        hex: '#6e00ff'
+        rgb:
+        - 110
+        - 0
+        - 255
+        ionization_fraction: 0.9701
+      15000:
+        temp_k: 15000
+        hex: '#6f00ff'
+        rgb:
+        - 111
+        - 0
+        - 255
+        ionization_fraction: 0.9829
+  Pd:
+    z: 46
+    name: Palladium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0001
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d1'
+        rgb:
+        - 255
+        - 231
+        - 209
+        ionization_fraction: 0.0021
+      6000:
+        temp_k: 6000
+        hex: '#fff6f4'
+        rgb:
+        - 255
+        - 246
+        - 244
+        ionization_fraction: 0.0134
+      7000:
+        temp_k: 7000
+        hex: '#e8edff'
+        rgb:
+        - 232
+        - 237
+        - 255
+        ionization_fraction: 0.0505
+      8000:
+        temp_k: 8000
+        hex: '#c8dcff'
+        rgb:
+        - 200
+        - 220
+        - 255
+        ionization_fraction: 0.135
+      9000:
+        temp_k: 9000
+        hex: '#a8ceff'
+        rgb:
+        - 168
+        - 206
+        - 255
+        ionization_fraction: 0.2796
+      10000:
+        temp_k: 10000
+        hex: '#8fc4ff'
+        rgb:
+        - 143
+        - 196
+        - 255
+        ionization_fraction: 0.4687
+      11000:
+        temp_k: 11000
+        hex: '#84c0ff'
+        rgb:
+        - 132
+        - 192
+        - 255
+        ionization_fraction: 0.6578
+      12000:
+        temp_k: 12000
+        hex: '#86bfff'
+        rgb:
+        - 134
+        - 191
+        - 255
+        ionization_fraction: 0.803
+      13000:
+        temp_k: 13000
+        hex: '#8ec0ff'
+        rgb:
+        - 142
+        - 192
+        - 255
+        ionization_fraction: 0.8927
+      14000:
+        temp_k: 14000
+        hex: '#96c1ff'
+        rgb:
+        - 150
+        - 193
+        - 255
+        ionization_fraction: 0.9417
+      15000:
+        temp_k: 15000
+        hex: '#9cc1ff'
+        rgb:
+        - 156
+        - 193
+        - 255
+        ionization_fraction: 0.9674
+  Ag:
+    z: 47
+    name: Silver
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd6a6'
+        rgb:
+        - 255
+        - 214
+        - 166
+        ionization_fraction: 0.0004
+      5000:
+        temp_k: 5000
+        hex: '#e9ffc4'
+        rgb:
+        - 233
+        - 255
+        - 196
+        ionization_fraction: 0.0052
+      6000:
+        temp_k: 6000
+        hex: '#00ff58'
+        rgb:
+        - 0
+        - 255
+        - 88
+        ionization_fraction: 0.0278
+      7000:
+        temp_k: 7000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.0927
+      8000:
+        temp_k: 8000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.2224
+      9000:
+        temp_k: 9000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.4124
+      10000:
+        temp_k: 10000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.6181
+      11000:
+        temp_k: 11000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.7829
+      12000:
+        temp_k: 12000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.8853
+      13000:
+        temp_k: 13000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9398
+      14000:
+        temp_k: 14000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9673
+      15000:
+        temp_k: 15000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9814
+  Cd:
+    z: 48
+    name: Cadmium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd5a6'
+        rgb:
+        - 255
+        - 213
+        - 166
+        ionization_fraction: 0.0001
+      5000:
+        temp_k: 5000
+        hex: '#ffefda'
+        rgb:
+        - 255
+        - 239
+        - 218
+        ionization_fraction: 0.001
+      6000:
+        temp_k: 6000
+        hex: '#96fcff'
+        rgb:
+        - 150
+        - 252
+        - 255
+        ionization_fraction: 0.0071
+      7000:
+        temp_k: 7000
+        hex: '#00f4ff'
+        rgb:
+        - 0
+        - 244
+        - 255
+        ionization_fraction: 0.0296
+      8000:
+        temp_k: 8000
+        hex: '#00f2ff'
+        rgb:
+        - 0
+        - 242
+        - 255
+        ionization_fraction: 0.0862
+      9000:
+        temp_k: 9000
+        hex: '#00f1ff'
+        rgb:
+        - 0
+        - 241
+        - 255
+        ionization_fraction: 0.1936
+      10000:
+        temp_k: 10000
+        hex: '#00efff'
+        rgb:
+        - 0
+        - 239
+        - 255
+        ionization_fraction: 0.3533
+      11000:
+        temp_k: 11000
+        hex: '#00eeff'
+        rgb:
+        - 0
+        - 238
+        - 255
+        ionization_fraction: 0.5396
+      12000:
+        temp_k: 12000
+        hex: '#00edff'
+        rgb:
+        - 0
+        - 237
+        - 255
+        ionization_fraction: 0.7095
+      13000:
+        temp_k: 13000
+        hex: '#00ecff'
+        rgb:
+        - 0
+        - 236
+        - 255
+        ionization_fraction: 0.8324
+      14000:
+        temp_k: 14000
+        hex: '#00ebff'
+        rgb:
+        - 0
+        - 235
+        - 255
+        ionization_fraction: 0.9068
+      15000:
+        temp_k: 15000
+        hex: '#00e9ff'
+        rgb:
+        - 0
+        - 233
+        - 255
+        ionization_fraction: 0.9479
+  In:
+    z: 49
+    name: Indium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d1b'
+        rgb:
+        - 255
+        - 141
+        - 27
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffaadb'
+        rgb:
+        - 255
+        - 170
+        - 219
+        ionization_fraction: 0.0002
+      4000:
+        temp_k: 4000
+        hex: '#7c00ff'
+        rgb:
+        - 124
+        - 0
+        - 255
+        ionization_fraction: 0.0058
+      5000:
+        temp_k: 5000
+        hex: '#5e00ff'
+        rgb:
+        - 94
+        - 0
+        - 255
+        ionization_fraction: 0.0405
+      6000:
+        temp_k: 6000
+        hex: '#5800ff'
+        rgb:
+        - 88
+        - 0
+        - 255
+        ionization_fraction: 0.147
+      7000:
+        temp_k: 7000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.3468
+      8000:
+        temp_k: 8000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.5908
+      9000:
+        temp_k: 9000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.7871
+      10000:
+        temp_k: 10000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.8988
+      11000:
+        temp_k: 11000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.9515
+      12000:
+        temp_k: 12000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.9753
+      13000:
+        temp_k: 13000
+        hex: '#5700ff'
+        rgb:
+        - 87
+        - 0
+        - 255
+        ionization_fraction: 0.9866
+      14000:
+        temp_k: 14000
+        hex: '#5800ff'
+        rgb:
+        - 88
+        - 0
+        - 255
+        ionization_fraction: 0.9922
+      15000:
+        temp_k: 15000
+        hex: '#5800ff'
+        rgb:
+        - 88
+        - 0
+        - 255
+        ionization_fraction: 0.9952
+  Sn:
+    z: 50
+    name: Tin
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a8'
+        rgb:
+        - 255
+        - 212
+        - 168
+        ionization_fraction: 0.0006
+      5000:
+        temp_k: 5000
+        hex: '#ffe5ed'
+        rgb:
+        - 255
+        - 229
+        - 237
+        ionization_fraction: 0.0068
+      6000:
+        temp_k: 6000
+        hex: '#b7a0ff'
+        rgb:
+        - 183
+        - 160
+        - 255
+        ionization_fraction: 0.0347
+      7000:
+        temp_k: 7000
+        hex: '#8d61ff'
+        rgb:
+        - 141
+        - 97
+        - 255
+        ionization_fraction: 0.1112
+      8000:
+        temp_k: 8000
+        hex: '#853eff'
+        rgb:
+        - 133
+        - 62
+        - 255
+        ionization_fraction: 0.2571
+      9000:
+        temp_k: 9000
+        hex: '#872aff'
+        rgb:
+        - 135
+        - 42
+        - 255
+        ionization_fraction: 0.4594
+      10000:
+        temp_k: 10000
+        hex: '#8d1dff'
+        rgb:
+        - 141
+        - 29
+        - 255
+        ionization_fraction: 0.6636
+      11000:
+        temp_k: 11000
+        hex: '#9315ff'
+        rgb:
+        - 147
+        - 21
+        - 255
+        ionization_fraction: 0.8155
+      12000:
+        temp_k: 12000
+        hex: '#9912ff'
+        rgb:
+        - 153
+        - 18
+        - 255
+        ionization_fraction: 0.9043
+      13000:
+        temp_k: 13000
+        hex: '#9e14ff'
+        rgb:
+        - 158
+        - 20
+        - 255
+        ionization_fraction: 0.95
+      14000:
+        temp_k: 14000
+        hex: '#a318ff'
+        rgb:
+        - 163
+        - 24
+        - 255
+        ionization_fraction: 0.9727
+      15000:
+        temp_k: 15000
+        hex: '#a81eff'
+        rgb:
+        - 168
+        - 30
+        - 255
+        ionization_fraction: 0.9843
+  I:
+    z: 53
+    name: Iodine
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0002
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0017
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0089
+      8000:
+        temp_k: 8000
+        hex: '#e4e8ff'
+        rgb:
+        - 228
+        - 232
+        - 255
+        ionization_fraction: 0.0309
+      9000:
+        temp_k: 9000
+        hex: '#dfe0ff'
+        rgb:
+        - 223
+        - 224
+        - 255
+        ionization_fraction: 0.0808
+      10000:
+        temp_k: 10000
+        hex: '#eeddff'
+        rgb:
+        - 238
+        - 221
+        - 255
+        ionization_fraction: 0.1717
+      11000:
+        temp_k: 11000
+        hex: '#ffc9e9'
+        rgb:
+        - 255
+        - 201
+        - 233
+        ionization_fraction: 0.307
+      12000:
+        temp_k: 12000
+        hex: '#ffa8c0'
+        rgb:
+        - 255
+        - 168
+        - 192
+        ionization_fraction: 0.4726
+      13000:
+        temp_k: 13000
+        hex: '#ff91a5'
+        rgb:
+        - 255
+        - 145
+        - 165
+        ionization_fraction: 0.6382
+      14000:
+        temp_k: 14000
+        hex: '#ff8596'
+        rgb:
+        - 255
+        - 133
+        - 150
+        ionization_fraction: 0.7733
+      15000:
+        temp_k: 15000
+        hex: '#ff7f91'
+        rgb:
+        - 255
+        - 127
+        - 145
+        ionization_fraction: 0.8658
+  Xe:
+    z: 54
+    name: Xenon
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0
+      6000:
+        temp_k: 6000
+        hex: '#fff4f1'
+        rgb:
+        - 255
+        - 244
+        - 241
+        ionization_fraction: 0.0003
+      7000:
+        temp_k: 7000
+        hex: '#f4f2ff'
+        rgb:
+        - 244
+        - 242
+        - 255
+        ionization_fraction: 0.0022
+      8000:
+        temp_k: 8000
+        hex: '#e1e6ff'
+        rgb:
+        - 225
+        - 230
+        - 255
+        ionization_fraction: 0.0092
+      9000:
+        temp_k: 9000
+        hex: '#cdd6ff'
+        rgb:
+        - 205
+        - 214
+        - 255
+        ionization_fraction: 0.0281
+      10000:
+        temp_k: 10000
+        hex: '#aeb9ff'
+        rgb:
+        - 174
+        - 185
+        - 255
+        ionization_fraction: 0.0687
+      11000:
+        temp_k: 11000
+        hex: '#8a94ff'
+        rgb:
+        - 138
+        - 148
+        - 255
+        ionization_fraction: 0.141
+      12000:
+        temp_k: 12000
+        hex: '#737aff'
+        rgb:
+        - 115
+        - 122
+        - 255
+        ionization_fraction: 0.2502
+      13000:
+        temp_k: 13000
+        hex: '#6b6cff'
+        rgb:
+        - 107
+        - 108
+        - 255
+        ionization_fraction: 0.3913
+      14000:
+        temp_k: 14000
+        hex: '#6967ff'
+        rgb:
+        - 105
+        - 103
+        - 255
+        ionization_fraction: 0.5459
+      15000:
+        temp_k: 15000
+        hex: '#6b65ff'
+        rgb:
+        - 107
+        - 101
+        - 255
+        ionization_fraction: 0.6887
+  Cs:
+    z: 55
+    name: Cesium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d18'
+        rgb:
+        - 255
+        - 141
+        - 24
+        ionization_fraction: 0.0001
+      3000:
+        temp_k: 3000
+        hex: '#ffb794'
+        rgb:
+        - 255
+        - 183
+        - 148
+        ionization_fraction: 0.0096
+      4000:
+        temp_k: 4000
+        hex: '#c592ff'
+        rgb:
+        - 197
+        - 146
+        - 255
+        ionization_fraction: 0.0869
+      5000:
+        temp_k: 5000
+        hex: '#7740ff'
+        rgb:
+        - 119
+        - 64
+        - 255
+        ionization_fraction: 0.3091
+      6000:
+        temp_k: 6000
+        hex: '#600fff'
+        rgb:
+        - 96
+        - 15
+        - 255
+        ionization_fraction: 0.6152
+      7000:
+        temp_k: 7000
+        hex: '#5d13ff'
+        rgb:
+        - 93
+        - 19
+        - 255
+        ionization_fraction: 0.8354
+      8000:
+        temp_k: 8000
+        hex: '#622fff'
+        rgb:
+        - 98
+        - 47
+        - 255
+        ionization_fraction: 0.9342
+      9000:
+        temp_k: 9000
+        hex: '#6a46ff'
+        rgb:
+        - 106
+        - 70
+        - 255
+        ionization_fraction: 0.9717
+      10000:
+        temp_k: 10000
+        hex: '#725bff'
+        rgb:
+        - 114
+        - 91
+        - 255
+        ionization_fraction: 0.9864
+      11000:
+        temp_k: 11000
+        hex: '#7b6cff'
+        rgb:
+        - 123
+        - 108
+        - 255
+        ionization_fraction: 0.9928
+      12000:
+        temp_k: 12000
+        hex: '#837bff'
+        rgb:
+        - 131
+        - 123
+        - 255
+        ionization_fraction: 0.9959
+      13000:
+        temp_k: 13000
+        hex: '#8987ff'
+        rgb:
+        - 137
+        - 135
+        - 255
+        ionization_fraction: 0.9975
+      14000:
+        temp_k: 14000
+        hex: '#8e91ff'
+        rgb:
+        - 142
+        - 145
+        - 255
+        ionization_fraction: 0.9984
+      15000:
+        temp_k: 15000
+        hex: '#9399ff'
+        rgb:
+        - 147
+        - 153
+        - 255
+        ionization_fraction: 0.9989
+  Ba:
+    z: 56
+    name: Barium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ebff00'
+        rgb:
+        - 235
+        - 255
+        - 0
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#82ff00'
+        rgb:
+        - 130
+        - 255
+        - 0
+        ionization_fraction: 0.0008
+      4000:
+        temp_k: 4000
+        hex: '#b2ff00'
+        rgb:
+        - 178
+        - 255
+        - 0
+        ionization_fraction: 0.0133
+      5000:
+        temp_k: 5000
+        hex: '#dfff00'
+        rgb:
+        - 223
+        - 255
+        - 0
+        ionization_fraction: 0.0774
+      6000:
+        temp_k: 6000
+        hex: '#fffa5f'
+        rgb:
+        - 255
+        - 250
+        - 95
+        ionization_fraction: 0.2415
+      7000:
+        temp_k: 7000
+        hex: '#ffe083'
+        rgb:
+        - 255
+        - 224
+        - 131
+        ionization_fraction: 0.4922
+      8000:
+        temp_k: 8000
+        hex: '#ffce9a'
+        rgb:
+        - 255
+        - 206
+        - 154
+        ionization_fraction: 0.729
+      9000:
+        temp_k: 9000
+        hex: '#ffc2ac'
+        rgb:
+        - 255
+        - 194
+        - 172
+        ionization_fraction: 0.8746
+      10000:
+        temp_k: 10000
+        hex: '#ffb8b9'
+        rgb:
+        - 255
+        - 184
+        - 185
+        ionization_fraction: 0.9428
+      11000:
+        temp_k: 11000
+        hex: '#ffb1c5'
+        rgb:
+        - 255
+        - 177
+        - 197
+        ionization_fraction: 0.9723
+      12000:
+        temp_k: 12000
+        hex: '#ffabce'
+        rgb:
+        - 255
+        - 171
+        - 206
+        ionization_fraction: 0.9855
+      13000:
+        temp_k: 13000
+        hex: '#ffa7d6'
+        rgb:
+        - 255
+        - 167
+        - 214
+        ionization_fraction: 0.9919
+      14000:
+        temp_k: 14000
+        hex: '#ffa3dd'
+        rgb:
+        - 255
+        - 163
+        - 221
+        ionization_fraction: 0.9951
+      15000:
+        temp_k: 15000
+        hex: '#ff9fe3'
+        rgb:
+        - 255
+        - 159
+        - 227
+        ionization_fraction: 0.9969
+  La:
+    z: 57
+    name: Lanthanum
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ffa000'
+        rgb:
+        - 255
+        - 160
+        - 0
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#fff44c'
+        rgb:
+        - 255
+        - 244
+        - 76
+        ionization_fraction: 0.0004
+      4000:
+        temp_k: 4000
+        hex: '#f1ff79'
+        rgb:
+        - 241
+        - 255
+        - 121
+        ionization_fraction: 0.0079
+      5000:
+        temp_k: 5000
+        hex: '#e5ff95'
+        rgb:
+        - 229
+        - 255
+        - 149
+        ionization_fraction: 0.0514
+      6000:
+        temp_k: 6000
+        hex: '#deffa9'
+        rgb:
+        - 222
+        - 255
+        - 169
+        ionization_fraction: 0.1767
+      7000:
+        temp_k: 7000
+        hex: '#d9ffb8'
+        rgb:
+        - 217
+        - 255
+        - 184
+        ionization_fraction: 0.3965
+      8000:
+        temp_k: 8000
+        hex: '#d6ffc4'
+        rgb:
+        - 214
+        - 255
+        - 196
+        ionization_fraction: 0.6426
+      9000:
+        temp_k: 9000
+        hex: '#d4ffce'
+        rgb:
+        - 212
+        - 255
+        - 206
+        ionization_fraction: 0.8224
+      10000:
+        temp_k: 10000
+        hex: '#d2ffd6'
+        rgb:
+        - 210
+        - 255
+        - 214
+        ionization_fraction: 0.9173
+      11000:
+        temp_k: 11000
+        hex: '#d1ffdd'
+        rgb:
+        - 209
+        - 255
+        - 221
+        ionization_fraction: 0.9603
+      12000:
+        temp_k: 12000
+        hex: '#d0ffe3'
+        rgb:
+        - 208
+        - 255
+        - 227
+        ionization_fraction: 0.9797
+      13000:
+        temp_k: 13000
+        hex: '#cfffe8'
+        rgb:
+        - 207
+        - 255
+        - 232
+        ionization_fraction: 0.9888
+      14000:
+        temp_k: 14000
+        hex: '#ceffed'
+        rgb:
+        - 206
+        - 255
+        - 237
+        ionization_fraction: 0.9934
+      15000:
+        temp_k: 15000
+        hex: '#cefff1'
+        rgb:
+        - 206
+        - 255
+        - 241
+        ionization_fraction: 0.9959
+  Ce:
+    z: 58
+    name: Cerium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff9112'
+        rgb:
+        - 255
+        - 145
+        - 18
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffe727'
+        rgb:
+        - 255
+        - 231
+        - 39
+        ionization_fraction: 0.0004
+      4000:
+        temp_k: 4000
+        hex: '#efff00'
+        rgb:
+        - 239
+        - 255
+        - 0
+        ionization_fraction: 0.0083
+      5000:
+        temp_k: 5000
+        hex: '#deff00'
+        rgb:
+        - 222
+        - 255
+        - 0
+        ionization_fraction: 0.0536
+      6000:
+        temp_k: 6000
+        hex: '#d5ff00'
+        rgb:
+        - 213
+        - 255
+        - 0
+        ionization_fraction: 0.1827
+      7000:
+        temp_k: 7000
+        hex: '#cfff00'
+        rgb:
+        - 207
+        - 255
+        - 0
+        ionization_fraction: 0.4059
+      8000:
+        temp_k: 8000
+        hex: '#caff00'
+        rgb:
+        - 202
+        - 255
+        - 0
+        ionization_fraction: 0.6519
+      9000:
+        temp_k: 9000
+        hex: '#c7ff00'
+        rgb:
+        - 199
+        - 255
+        - 0
+        ionization_fraction: 0.8285
+      10000:
+        temp_k: 10000
+        hex: '#c4ff00'
+        rgb:
+        - 196
+        - 255
+        - 0
+        ionization_fraction: 0.9203
+      11000:
+        temp_k: 11000
+        hex: '#c2ff00'
+        rgb:
+        - 194
+        - 255
+        - 0
+        ionization_fraction: 0.9618
+      12000:
+        temp_k: 12000
+        hex: '#c0ff00'
+        rgb:
+        - 192
+        - 255
+        - 0
+        ionization_fraction: 0.9804
+      13000:
+        temp_k: 13000
+        hex: '#bfff00'
+        rgb:
+        - 191
+        - 255
+        - 0
+        ionization_fraction: 0.9892
+      14000:
+        temp_k: 14000
+        hex: '#beff00'
+        rgb:
+        - 190
+        - 255
+        - 0
+        ionization_fraction: 0.9936
+      15000:
+        temp_k: 15000
+        hex: '#bdff00'
+        rgb:
+        - 189
+        - 255
+        - 0
+        ionization_fraction: 0.996
+  Nd:
+    z: 60
+    name: Neodymium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff9546'
+        rgb:
+        - 255
+        - 149
+        - 70
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#00c0ff'
+        rgb:
+        - 0
+        - 192
+        - 255
+        ionization_fraction: 0.0004
+      4000:
+        temp_k: 4000
+        hex: '#00aaff'
+        rgb:
+        - 0
+        - 170
+        - 255
+        ionization_fraction: 0.0085
+      5000:
+        temp_k: 5000
+        hex: '#00a4ff'
+        rgb:
+        - 0
+        - 164
+        - 255
+        ionization_fraction: 0.0545
+      6000:
+        temp_k: 6000
+        hex: '#00a1ff'
+        rgb:
+        - 0
+        - 161
+        - 255
+        ionization_fraction: 0.1849
+      7000:
+        temp_k: 7000
+        hex: '#00a0ff'
+        rgb:
+        - 0
+        - 160
+        - 255
+        ionization_fraction: 0.4095
+      8000:
+        temp_k: 8000
+        hex: '#009fff'
+        rgb:
+        - 0
+        - 159
+        - 255
+        ionization_fraction: 0.6553
+      9000:
+        temp_k: 9000
+        hex: '#009eff'
+        rgb:
+        - 0
+        - 158
+        - 255
+        ionization_fraction: 0.8306
+      10000:
+        temp_k: 10000
+        hex: '#009eff'
+        rgb:
+        - 0
+        - 158
+        - 255
+        ionization_fraction: 0.9214
+      11000:
+        temp_k: 11000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.9623
+      12000:
+        temp_k: 12000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.9806
+      13000:
+        temp_k: 13000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.9893
+      14000:
+        temp_k: 14000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.9937
+      15000:
+        temp_k: 15000
+        hex: '#009dff'
+        rgb:
+        - 0
+        - 157
+        - 255
+        ionization_fraction: 0.9961
+  Sm:
+    z: 62
+    name: Samarium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d21'
+        rgb:
+        - 255
+        - 141
+        - 33
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#f4c2ff'
+        rgb:
+        - 244
+        - 194
+        - 255
+        ionization_fraction: 0.0003
+      4000:
+        temp_k: 4000
+        hex: '#005cff'
+        rgb:
+        - 0
+        - 92
+        - 255
+        ionization_fraction: 0.0072
+      5000:
+        temp_k: 5000
+        hex: '#0040ff'
+        rgb:
+        - 0
+        - 64
+        - 255
+        ionization_fraction: 0.0476
+      6000:
+        temp_k: 6000
+        hex: '#0035ff'
+        rgb:
+        - 0
+        - 53
+        - 255
+        ionization_fraction: 0.1667
+      7000:
+        temp_k: 7000
+        hex: '#002eff'
+        rgb:
+        - 0
+        - 46
+        - 255
+        ionization_fraction: 0.3801
+      8000:
+        temp_k: 8000
+        hex: '#0029ff'
+        rgb:
+        - 0
+        - 41
+        - 255
+        ionization_fraction: 0.626
+      9000:
+        temp_k: 9000
+        hex: '#0025ff'
+        rgb:
+        - 0
+        - 37
+        - 255
+        ionization_fraction: 0.8115
+      10000:
+        temp_k: 10000
+        hex: '#0022ff'
+        rgb:
+        - 0
+        - 34
+        - 255
+        ionization_fraction: 0.9117
+      11000:
+        temp_k: 11000
+        hex: '#0020ff'
+        rgb:
+        - 0
+        - 32
+        - 255
+        ionization_fraction: 0.9577
+      12000:
+        temp_k: 12000
+        hex: '#001eff'
+        rgb:
+        - 0
+        - 30
+        - 255
+        ionization_fraction: 0.9784
+      13000:
+        temp_k: 13000
+        hex: '#001dff'
+        rgb:
+        - 0
+        - 29
+        - 255
+        ionization_fraction: 0.9881
+      14000:
+        temp_k: 14000
+        hex: '#001cff'
+        rgb:
+        - 0
+        - 28
+        - 255
+        ionization_fraction: 0.993
+      15000:
+        temp_k: 15000
+        hex: '#001cff'
+        rgb:
+        - 0
+        - 28
+        - 255
+        ionization_fraction: 0.9957
+  Eu:
+    z: 63
+    name: Europium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8c6e'
+        rgb:
+        - 255
+        - 140
+        - 110
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#5b1dff'
+        rgb:
+        - 91
+        - 29
+        - 255
+        ionization_fraction: 0.0003
+      4000:
+        temp_k: 4000
+        hex: '#3f09ff'
+        rgb:
+        - 63
+        - 9
+        - 255
+        ionization_fraction: 0.0069
+      5000:
+        temp_k: 5000
+        hex: '#4b34ff'
+        rgb:
+        - 75
+        - 52
+        - 255
+        ionization_fraction: 0.0462
+      6000:
+        temp_k: 6000
+        hex: '#5950ff'
+        rgb:
+        - 89
+        - 80
+        - 255
+        ionization_fraction: 0.1629
+      7000:
+        temp_k: 7000
+        hex: '#6666ff'
+        rgb:
+        - 102
+        - 102
+        - 255
+        ionization_fraction: 0.3739
+      8000:
+        temp_k: 8000
+        hex: '#7177ff'
+        rgb:
+        - 113
+        - 119
+        - 255
+        ionization_fraction: 0.6196
+      9000:
+        temp_k: 9000
+        hex: '#7986ff'
+        rgb:
+        - 121
+        - 134
+        - 255
+        ionization_fraction: 0.8072
+      10000:
+        temp_k: 10000
+        hex: '#8193ff'
+        rgb:
+        - 129
+        - 147
+        - 255
+        ionization_fraction: 0.9095
+      11000:
+        temp_k: 11000
+        hex: '#879eff'
+        rgb:
+        - 135
+        - 158
+        - 255
+        ionization_fraction: 0.9566
+      12000:
+        temp_k: 12000
+        hex: '#8da8ff'
+        rgb:
+        - 141
+        - 168
+        - 255
+        ionization_fraction: 0.9778
+      13000:
+        temp_k: 13000
+        hex: '#91b0ff'
+        rgb:
+        - 145
+        - 176
+        - 255
+        ionization_fraction: 0.9879
+      14000:
+        temp_k: 14000
+        hex: '#95b7ff'
+        rgb:
+        - 149
+        - 183
+        - 255
+        ionization_fraction: 0.9929
+      15000:
+        temp_k: 15000
+        hex: '#99bdff'
+        rgb:
+        - 153
+        - 189
+        - 255
+        ionization_fraction: 0.9956
+  Gd:
+    z: 64
+    name: Gadolinium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d22'
+        rgb:
+        - 255
+        - 141
+        - 34
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#fa94ff'
+        rgb:
+        - 250
+        - 148
+        - 255
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#7e00ff'
+        rgb:
+        - 126
+        - 0
+        - 255
+        ionization_fraction: 0.0034
+      5000:
+        temp_k: 5000
+        hex: '#6d00ff'
+        rgb:
+        - 109
+        - 0
+        - 255
+        ionization_fraction: 0.0268
+      6000:
+        temp_k: 6000
+        hex: '#6a00ff'
+        rgb:
+        - 106
+        - 0
+        - 255
+        ionization_fraction: 0.1058
+      7000:
+        temp_k: 7000
+        hex: '#6900ff'
+        rgb:
+        - 105
+        - 0
+        - 255
+        ionization_fraction: 0.271
+      8000:
+        temp_k: 8000
+        hex: '#6900ff'
+        rgb:
+        - 105
+        - 0
+        - 255
+        ionization_fraction: 0.501
+      9000:
+        temp_k: 9000
+        hex: '#6900ff'
+        rgb:
+        - 105
+        - 0
+        - 255
+        ionization_fraction: 0.7173
+      10000:
+        temp_k: 10000
+        hex: '#6a00ff'
+        rgb:
+        - 106
+        - 0
+        - 255
+        ionization_fraction: 0.859
+      11000:
+        temp_k: 11000
+        hex: '#6a00ff'
+        rgb:
+        - 106
+        - 0
+        - 255
+        ionization_fraction: 0.9317
+      12000:
+        temp_k: 12000
+        hex: '#6a00ff'
+        rgb:
+        - 106
+        - 0
+        - 255
+        ionization_fraction: 0.9656
+      13000:
+        temp_k: 13000
+        hex: '#6a00ff'
+        rgb:
+        - 106
+        - 0
+        - 255
+        ionization_fraction: 0.9816
+      14000:
+        temp_k: 14000
+        hex: '#6a00ff'
+        rgb:
+        - 106
+        - 0
+        - 255
+        ionization_fraction: 0.9895
+      15000:
+        temp_k: 15000
+        hex: '#6b00ff'
+        rgb:
+        - 107
+        - 0
+        - 255
+        ionization_fraction: 0.9937
+  Dy:
+    z: 66
+    name: Dysprosium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8c2e'
+        rgb:
+        - 255
+        - 140
+        - 46
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#d955ff'
+        rgb:
+        - 217
+        - 85
+        - 255
+        ionization_fraction: 0.0002
+      4000:
+        temp_k: 4000
+        hex: '#8f00ff'
+        rgb:
+        - 143
+        - 0
+        - 255
+        ionization_fraction: 0.0047
+      5000:
+        temp_k: 5000
+        hex: '#8000ff'
+        rgb:
+        - 128
+        - 0
+        - 255
+        ionization_fraction: 0.0341
+      6000:
+        temp_k: 6000
+        hex: '#7a00ff'
+        rgb:
+        - 122
+        - 0
+        - 255
+        ionization_fraction: 0.1282
+      7000:
+        temp_k: 7000
+        hex: '#7700ff'
+        rgb:
+        - 119
+        - 0
+        - 255
+        ionization_fraction: 0.3133
+      8000:
+        temp_k: 8000
+        hex: '#7600ff'
+        rgb:
+        - 118
+        - 0
+        - 255
+        ionization_fraction: 0.5528
+      9000:
+        temp_k: 9000
+        hex: '#7500ff'
+        rgb:
+        - 117
+        - 0
+        - 255
+        ionization_fraction: 0.7589
+      10000:
+        temp_k: 10000
+        hex: '#7400ff'
+        rgb:
+        - 116
+        - 0
+        - 255
+        ionization_fraction: 0.8833
+      11000:
+        temp_k: 11000
+        hex: '#7300ff'
+        rgb:
+        - 115
+        - 0
+        - 255
+        ionization_fraction: 0.9439
+      12000:
+        temp_k: 12000
+        hex: '#7300ff'
+        rgb:
+        - 115
+        - 0
+        - 255
+        ionization_fraction: 0.9716
+      13000:
+        temp_k: 13000
+        hex: '#7300ff'
+        rgb:
+        - 115
+        - 0
+        - 255
+        ionization_fraction: 0.9847
+      14000:
+        temp_k: 14000
+        hex: '#7300ff'
+        rgb:
+        - 115
+        - 0
+        - 255
+        ionization_fraction: 0.9912
+      15000:
+        temp_k: 15000
+        hex: '#7300ff'
+        rgb:
+        - 115
+        - 0
+        - 255
+        ionization_fraction: 0.9946
+  Ho:
+    z: 67
+    name: Holmium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d1e'
+        rgb:
+        - 255
+        - 141
+        - 30
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ff8fdf'
+        rgb:
+        - 255
+        - 143
+        - 223
+        ionization_fraction: 0.0002
+      4000:
+        temp_k: 4000
+        hex: '#a600ff'
+        rgb:
+        - 166
+        - 0
+        - 255
+        ionization_fraction: 0.0041
+      5000:
+        temp_k: 5000
+        hex: '#8e00ff'
+        rgb:
+        - 142
+        - 0
+        - 255
+        ionization_fraction: 0.031
+      6000:
+        temp_k: 6000
+        hex: '#8700ff'
+        rgb:
+        - 135
+        - 0
+        - 255
+        ionization_fraction: 0.1189
+      7000:
+        temp_k: 7000
+        hex: '#8300ff'
+        rgb:
+        - 131
+        - 0
+        - 255
+        ionization_fraction: 0.2961
+      8000:
+        temp_k: 8000
+        hex: '#8200ff'
+        rgb:
+        - 130
+        - 0
+        - 255
+        ionization_fraction: 0.5323
+      9000:
+        temp_k: 9000
+        hex: '#8000ff'
+        rgb:
+        - 128
+        - 0
+        - 255
+        ionization_fraction: 0.7429
+      10000:
+        temp_k: 10000
+        hex: '#8000ff'
+        rgb:
+        - 128
+        - 0
+        - 255
+        ionization_fraction: 0.8741
+      11000:
+        temp_k: 11000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.9393
+      12000:
+        temp_k: 12000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.9694
+      13000:
+        temp_k: 13000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.9835
+      14000:
+        temp_k: 14000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.9905
+      15000:
+        temp_k: 15000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.9942
+  Er:
+    z: 68
+    name: Erbium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8c1b'
+        rgb:
+        - 255
+        - 140
+        - 27
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ff99a9'
+        rgb:
+        - 255
+        - 153
+        - 169
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#de4fff'
+        rgb:
+        - 222
+        - 79
+        - 255
+        ionization_fraction: 0.0037
+      5000:
+        temp_k: 5000
+        hex: '#b000ff'
+        rgb:
+        - 176
+        - 0
+        - 255
+        ionization_fraction: 0.0281
+      6000:
+        temp_k: 6000
+        hex: '#9c00ff'
+        rgb:
+        - 156
+        - 0
+        - 255
+        ionization_fraction: 0.11
+      7000:
+        temp_k: 7000
+        hex: '#9100ff'
+        rgb:
+        - 145
+        - 0
+        - 255
+        ionization_fraction: 0.279
+      8000:
+        temp_k: 8000
+        hex: '#8b00ff'
+        rgb:
+        - 139
+        - 0
+        - 255
+        ionization_fraction: 0.5112
+      9000:
+        temp_k: 9000
+        hex: '#8600ff'
+        rgb:
+        - 134
+        - 0
+        - 255
+        ionization_fraction: 0.7258
+      10000:
+        temp_k: 10000
+        hex: '#8300ff'
+        rgb:
+        - 131
+        - 0
+        - 255
+        ionization_fraction: 0.8641
+      11000:
+        temp_k: 11000
+        hex: '#8100ff'
+        rgb:
+        - 129
+        - 0
+        - 255
+        ionization_fraction: 0.9343
+      12000:
+        temp_k: 12000
+        hex: '#8000ff'
+        rgb:
+        - 128
+        - 0
+        - 255
+        ionization_fraction: 0.9669
+      13000:
+        temp_k: 13000
+        hex: '#7f00ff'
+        rgb:
+        - 127
+        - 0
+        - 255
+        ionization_fraction: 0.9822
+      14000:
+        temp_k: 14000
+        hex: '#7e00ff'
+        rgb:
+        - 126
+        - 0
+        - 255
+        ionization_fraction: 0.9899
+      15000:
+        temp_k: 15000
+        hex: '#7d00ff'
+        rgb:
+        - 125
+        - 0
+        - 255
+        ionization_fraction: 0.9939
+  Tm:
+    z: 69
+    name: Thulium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff901d'
+        rgb:
+        - 255
+        - 144
+        - 29
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffd7de'
+        rgb:
+        - 255
+        - 215
+        - 222
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#a48eff'
+        rgb:
+        - 164
+        - 142
+        - 255
+        ionization_fraction: 0.0033
+      5000:
+        temp_k: 5000
+        hex: '#8766ff'
+        rgb:
+        - 135
+        - 102
+        - 255
+        ionization_fraction: 0.0257
+      6000:
+        temp_k: 6000
+        hex: '#7755ff'
+        rgb:
+        - 119
+        - 85
+        - 255
+        ionization_fraction: 0.1026
+      7000:
+        temp_k: 7000
+        hex: '#6b51ff'
+        rgb:
+        - 107
+        - 81
+        - 255
+        ionization_fraction: 0.2646
+      8000:
+        temp_k: 8000
+        hex: '#5f51ff'
+        rgb:
+        - 95
+        - 81
+        - 255
+        ionization_fraction: 0.4928
+      9000:
+        temp_k: 9000
+        hex: '#5455ff'
+        rgb:
+        - 84
+        - 85
+        - 255
+        ionization_fraction: 0.7103
+      10000:
+        temp_k: 10000
+        hex: '#4958ff'
+        rgb:
+        - 73
+        - 88
+        - 255
+        ionization_fraction: 0.8548
+      11000:
+        temp_k: 11000
+        hex: '#3f5cff'
+        rgb:
+        - 63
+        - 92
+        - 255
+        ionization_fraction: 0.9295
+      12000:
+        temp_k: 12000
+        hex: '#345fff'
+        rgb:
+        - 52
+        - 95
+        - 255
+        ionization_fraction: 0.9645
+      13000:
+        temp_k: 13000
+        hex: '#2862ff'
+        rgb:
+        - 40
+        - 98
+        - 255
+        ionization_fraction: 0.981
+      14000:
+        temp_k: 14000
+        hex: '#1b65ff'
+        rgb:
+        - 27
+        - 101
+        - 255
+        ionization_fraction: 0.9892
+      15000:
+        temp_k: 15000
+        hex: '#0767ff'
+        rgb:
+        - 7
+        - 103
+        - 255
+        ionization_fraction: 0.9935
+  Yb:
+    z: 70
+    name: Ytterbium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff9014'
+        rgb:
+        - 255
+        - 144
+        - 20
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffef84'
+        rgb:
+        - 255
+        - 239
+        - 132
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#acffd5'
+        rgb:
+        - 172
+        - 255
+        - 213
+        ionization_fraction: 0.003
+      5000:
+        temp_k: 5000
+        hex: '#83e6ff'
+        rgb:
+        - 131
+        - 230
+        - 255
+        ionization_fraction: 0.0238
+      6000:
+        temp_k: 6000
+        hex: '#6cbeff'
+        rgb:
+        - 108
+        - 190
+        - 255
+        ionization_fraction: 0.0962
+      7000:
+        temp_k: 7000
+        hex: '#62a5ff'
+        rgb:
+        - 98
+        - 165
+        - 255
+        ionization_fraction: 0.2519
+      8000:
+        temp_k: 8000
+        hex: '#5d94ff'
+        rgb:
+        - 93
+        - 148
+        - 255
+        ionization_fraction: 0.4761
+      9000:
+        temp_k: 9000
+        hex: '#5a87ff'
+        rgb:
+        - 90
+        - 135
+        - 255
+        ionization_fraction: 0.6958
+      10000:
+        temp_k: 10000
+        hex: '#587eff'
+        rgb:
+        - 88
+        - 126
+        - 255
+        ionization_fraction: 0.8458
+      11000:
+        temp_k: 11000
+        hex: '#5877ff'
+        rgb:
+        - 88
+        - 119
+        - 255
+        ionization_fraction: 0.9249
+      12000:
+        temp_k: 12000
+        hex: '#5973ff'
+        rgb:
+        - 89
+        - 115
+        - 255
+        ionization_fraction: 0.9622
+      13000:
+        temp_k: 13000
+        hex: '#5b70ff'
+        rgb:
+        - 91
+        - 112
+        - 255
+        ionization_fraction: 0.9799
+      14000:
+        temp_k: 14000
+        hex: '#5d70ff'
+        rgb:
+        - 93
+        - 112
+        - 255
+        ionization_fraction: 0.9886
+      15000:
+        temp_k: 15000
+        hex: '#6171ff'
+        rgb:
+        - 97
+        - 113
+        - 255
+        ionization_fraction: 0.9931
+  Lu:
+    z: 71
+    name: Lutetium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8f1d'
+        rgb:
+        - 255
+        - 143
+        - 29
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffdcbf'
+        rgb:
+        - 255
+        - 220
+        - 191
+        ionization_fraction: 0.0005
+      4000:
+        temp_k: 4000
+        hex: '#c4d8ff'
+        rgb:
+        - 196
+        - 216
+        - 255
+        ionization_fraction: 0.0098
+      5000:
+        temp_k: 5000
+        hex: '#acc1ff'
+        rgb:
+        - 172
+        - 193
+        - 255
+        ionization_fraction: 0.0609
+      6000:
+        temp_k: 6000
+        hex: '#a8b6ff'
+        rgb:
+        - 168
+        - 182
+        - 255
+        ionization_fraction: 0.2014
+      7000:
+        temp_k: 7000
+        hex: '#a8afff'
+        rgb:
+        - 168
+        - 175
+        - 255
+        ionization_fraction: 0.4348
+      8000:
+        temp_k: 8000
+        hex: '#a9a9ff'
+        rgb:
+        - 169
+        - 169
+        - 255
+        ionization_fraction: 0.6792
+      9000:
+        temp_k: 9000
+        hex: '#a9a4ff'
+        rgb:
+        - 169
+        - 164
+        - 255
+        ionization_fraction: 0.8455
+      10000:
+        temp_k: 10000
+        hex: '#aaa0ff'
+        rgb:
+        - 170
+        - 160
+        - 255
+        ionization_fraction: 0.9288
+      11000:
+        temp_k: 11000
+        hex: '#aa9dff'
+        rgb:
+        - 170
+        - 157
+        - 255
+        ionization_fraction: 0.9658
+      12000:
+        temp_k: 12000
+        hex: '#aa9aff'
+        rgb:
+        - 170
+        - 154
+        - 255
+        ionization_fraction: 0.9823
+      13000:
+        temp_k: 13000
+        hex: '#ab98ff'
+        rgb:
+        - 171
+        - 152
+        - 255
+        ionization_fraction: 0.9902
+      14000:
+        temp_k: 14000
+        hex: '#ab96ff'
+        rgb:
+        - 171
+        - 150
+        - 255
+        ionization_fraction: 0.9942
+      15000:
+        temp_k: 15000
+        hex: '#ab95ff'
+        rgb:
+        - 171
+        - 149
+        - 255
+        ionization_fraction: 0.9964
+  Hf:
+    z: 72
+    name: Hafnium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8e16'
+        rgb:
+        - 255
+        - 142
+        - 22
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffc382'
+        rgb:
+        - 255
+        - 195
+        - 130
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#dce0ff'
+        rgb:
+        - 220
+        - 224
+        - 255
+        ionization_fraction: 0.0013
+      5000:
+        temp_k: 5000
+        hex: '#77a3ff'
+        rgb:
+        - 119
+        - 163
+        - 255
+        ionization_fraction: 0.0123
+      6000:
+        temp_k: 6000
+        hex: '#548aff'
+        rgb:
+        - 84
+        - 138
+        - 255
+        ionization_fraction: 0.0566
+      7000:
+        temp_k: 7000
+        hex: '#467eff'
+        rgb:
+        - 70
+        - 126
+        - 255
+        ionization_fraction: 0.1657
+      8000:
+        temp_k: 8000
+        hex: '#3f77ff'
+        rgb:
+        - 63
+        - 119
+        - 255
+        ionization_fraction: 0.3504
+      9000:
+        temp_k: 9000
+        hex: '#3c72ff'
+        rgb:
+        - 60
+        - 114
+        - 255
+        ionization_fraction: 0.5715
+      10000:
+        temp_k: 10000
+        hex: '#3a6fff'
+        rgb:
+        - 58
+        - 111
+        - 255
+        ionization_fraction: 0.759
+      11000:
+        temp_k: 11000
+        hex: '#396dff'
+        rgb:
+        - 57
+        - 109
+        - 255
+        ionization_fraction: 0.8767
+      12000:
+        temp_k: 12000
+        hex: '#386bff'
+        rgb:
+        - 56
+        - 107
+        - 255
+        ionization_fraction: 0.9377
+      13000:
+        temp_k: 13000
+        hex: '#396bff'
+        rgb:
+        - 57
+        - 107
+        - 255
+        ionization_fraction: 0.9673
+      14000:
+        temp_k: 14000
+        hex: '#3a6aff'
+        rgb:
+        - 58
+        - 106
+        - 255
+        ionization_fraction: 0.9819
+      15000:
+        temp_k: 15000
+        hex: '#3c6bff'
+        rgb:
+        - 60
+        - 107
+        - 255
+        ionization_fraction: 0.9894
+  Ta:
+    z: 73
+    name: Tantalum
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d16'
+        rgb:
+        - 255
+        - 141
+        - 22
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffc07e'
+        rgb:
+        - 255
+        - 192
+        - 126
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffe2e3'
+        rgb:
+        - 255
+        - 226
+        - 227
+        ionization_fraction: 0.0005
+      5000:
+        temp_k: 5000
+        hex: '#e8cdff'
+        rgb:
+        - 232
+        - 205
+        - 255
+        ionization_fraction: 0.0053
+      6000:
+        temp_k: 6000
+        hex: '#debdff'
+        rgb:
+        - 222
+        - 189
+        - 255
+        ionization_fraction: 0.0285
+      7000:
+        temp_k: 7000
+        hex: '#dab6ff'
+        rgb:
+        - 218
+        - 182
+        - 255
+        ionization_fraction: 0.0946
+      8000:
+        temp_k: 8000
+        hex: '#d7b3ff'
+        rgb:
+        - 215
+        - 179
+        - 255
+        ionization_fraction: 0.226
+      9000:
+        temp_k: 9000
+        hex: '#d4b2ff'
+        rgb:
+        - 212
+        - 178
+        - 255
+        ionization_fraction: 0.4175
+      10000:
+        temp_k: 10000
+        hex: '#d2b1ff'
+        rgb:
+        - 210
+        - 177
+        - 255
+        ionization_fraction: 0.6232
+      11000:
+        temp_k: 11000
+        hex: '#d1b0ff'
+        rgb:
+        - 209
+        - 176
+        - 255
+        ionization_fraction: 0.7867
+      12000:
+        temp_k: 12000
+        hex: '#cfb0ff'
+        rgb:
+        - 207
+        - 176
+        - 255
+        ionization_fraction: 0.8875
+      13000:
+        temp_k: 13000
+        hex: '#ceb0ff'
+        rgb:
+        - 206
+        - 176
+        - 255
+        ionization_fraction: 0.941
+      14000:
+        temp_k: 14000
+        hex: '#cdb0ff'
+        rgb:
+        - 205
+        - 176
+        - 255
+        ionization_fraction: 0.9679
+      15000:
+        temp_k: 15000
+        hex: '#ccb0ff'
+        rgb:
+        - 204
+        - 176
+        - 255
+        ionization_fraction: 0.9817
+  W:
+    z: 74
+    name: Tungsten
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d17'
+        rgb:
+        - 255
+        - 141
+        - 23
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffc28c'
+        rgb:
+        - 255
+        - 194
+        - 140
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#b5c7ff'
+        rgb:
+        - 181
+        - 199
+        - 255
+        ionization_fraction: 0.0003
+      5000:
+        temp_k: 5000
+        hex: '#3687ff'
+        rgb:
+        - 54
+        - 135
+        - 255
+        ionization_fraction: 0.0037
+      6000:
+        temp_k: 6000
+        hex: '#006cff'
+        rgb:
+        - 0
+        - 108
+        - 255
+        ionization_fraction: 0.0211
+      7000:
+        temp_k: 7000
+        hex: '#0e5eff'
+        rgb:
+        - 14
+        - 94
+        - 255
+        ionization_fraction: 0.0738
+      8000:
+        temp_k: 8000
+        hex: '#2655ff'
+        rgb:
+        - 38
+        - 85
+        - 255
+        ionization_fraction: 0.1847
+      9000:
+        temp_k: 9000
+        hex: '#324eff'
+        rgb:
+        - 50
+        - 78
+        - 255
+        ionization_fraction: 0.358
+      10000:
+        temp_k: 10000
+        hex: '#3a49ff'
+        rgb:
+        - 58
+        - 73
+        - 255
+        ionization_fraction: 0.5608
+      11000:
+        temp_k: 11000
+        hex: '#3f45ff'
+        rgb:
+        - 63
+        - 69
+        - 255
+        ionization_fraction: 0.7383
+      12000:
+        temp_k: 12000
+        hex: '#4342ff'
+        rgb:
+        - 67
+        - 66
+        - 255
+        ionization_fraction: 0.8577
+      13000:
+        temp_k: 13000
+        hex: '#4640ff'
+        rgb:
+        - 70
+        - 64
+        - 255
+        ionization_fraction: 0.9246
+      14000:
+        temp_k: 14000
+        hex: '#483eff'
+        rgb:
+        - 72
+        - 62
+        - 255
+        ionization_fraction: 0.9592
+      15000:
+        temp_k: 15000
+        hex: '#4a3cff'
+        rgb:
+        - 74
+        - 60
+        - 255
+        ionization_fraction: 0.9769
+  Ir:
+    z: 77
+    name: Iridium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96f'
+        rgb:
+        - 255
+        - 185
+        - 111
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd6bc'
+        rgb:
+        - 255
+        - 214
+        - 188
+        ionization_fraction: 0.0001
+      5000:
+        temp_k: 5000
+        hex: '#a7b3ff'
+        rgb:
+        - 167
+        - 179
+        - 255
+        ionization_fraction: 0.001
+      6000:
+        temp_k: 6000
+        hex: '#0085ff'
+        rgb:
+        - 0
+        - 133
+        - 255
+        ionization_fraction: 0.0073
+      7000:
+        temp_k: 7000
+        hex: '#0082ff'
+        rgb:
+        - 0
+        - 130
+        - 255
+        ionization_fraction: 0.0303
+      8000:
+        temp_k: 8000
+        hex: '#0087ff'
+        rgb:
+        - 0
+        - 135
+        - 255
+        ionization_fraction: 0.0878
+      9000:
+        temp_k: 9000
+        hex: '#008cff'
+        rgb:
+        - 0
+        - 140
+        - 255
+        ionization_fraction: 0.1967
+      10000:
+        temp_k: 10000
+        hex: '#008fff'
+        rgb:
+        - 0
+        - 143
+        - 255
+        ionization_fraction: 0.3576
+      11000:
+        temp_k: 11000
+        hex: '#0092ff'
+        rgb:
+        - 0
+        - 146
+        - 255
+        ionization_fraction: 0.5445
+      12000:
+        temp_k: 12000
+        hex: '#0095ff'
+        rgb:
+        - 0
+        - 149
+        - 255
+        ionization_fraction: 0.7137
+      13000:
+        temp_k: 13000
+        hex: '#0097ff'
+        rgb:
+        - 0
+        - 151
+        - 255
+        ionization_fraction: 0.8353
+      14000:
+        temp_k: 14000
+        hex: '#0098ff'
+        rgb:
+        - 0
+        - 152
+        - 255
+        ionization_fraction: 0.9086
+      15000:
+        temp_k: 15000
+        hex: '#009aff'
+        rgb:
+        - 0
+        - 154
+        - 255
+        ionization_fraction: 0.9489
+  Pt:
+    z: 78
+    name: Platinum
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0001
+      5000:
+        temp_k: 5000
+        hex: '#ffe8d4'
+        rgb:
+        - 255
+        - 232
+        - 212
+        ionization_fraction: 0.001
+      6000:
+        temp_k: 6000
+        hex: '#fffffe'
+        rgb:
+        - 255
+        - 255
+        - 254
+        ionization_fraction: 0.0074
+      7000:
+        temp_k: 7000
+        hex: '#d7ffea'
+        rgb:
+        - 215
+        - 255
+        - 234
+        ionization_fraction: 0.0305
+      8000:
+        temp_k: 8000
+        hex: '#b8ffbc'
+        rgb:
+        - 184
+        - 255
+        - 188
+        ionization_fraction: 0.0883
+      9000:
+        temp_k: 9000
+        hex: '#a9ff97'
+        rgb:
+        - 169
+        - 255
+        - 151
+        ionization_fraction: 0.1976
+      10000:
+        temp_k: 10000
+        hex: '#a1ff7c'
+        rgb:
+        - 161
+        - 255
+        - 124
+        ionization_fraction: 0.3589
+      11000:
+        temp_k: 11000
+        hex: '#9cff67'
+        rgb:
+        - 156
+        - 255
+        - 103
+        ionization_fraction: 0.5459
+      12000:
+        temp_k: 12000
+        hex: '#98ff57'
+        rgb:
+        - 152
+        - 255
+        - 87
+        ionization_fraction: 0.7149
+      13000:
+        temp_k: 13000
+        hex: '#96ff49'
+        rgb:
+        - 150
+        - 255
+        - 73
+        ionization_fraction: 0.8361
+      14000:
+        temp_k: 14000
+        hex: '#94ff3e'
+        rgb:
+        - 148
+        - 255
+        - 62
+        ionization_fraction: 0.9091
+      15000:
+        temp_k: 15000
+        hex: '#92ff35'
+        rgb:
+        - 146
+        - 255
+        - 53
+        ionization_fraction: 0.9491
+  Au:
+    z: 79
+    name: Gold
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a5'
+        rgb:
+        - 255
+        - 212
+        - 165
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe1cb'
+        rgb:
+        - 255
+        - 225
+        - 203
+        ionization_fraction: 0.0008
+      6000:
+        temp_k: 6000
+        hex: '#ffd2d3'
+        rgb:
+        - 255
+        - 210
+        - 211
+        ionization_fraction: 0.0057
+      7000:
+        temp_k: 7000
+        hex: '#ffacc7'
+        rgb:
+        - 255
+        - 172
+        - 199
+        ionization_fraction: 0.0245
+      8000:
+        temp_k: 8000
+        hex: '#ff9dd6'
+        rgb:
+        - 255
+        - 157
+        - 214
+        ionization_fraction: 0.0733
+      9000:
+        temp_k: 9000
+        hex: '#ffa9fb'
+        rgb:
+        - 255
+        - 169
+        - 251
+        ionization_fraction: 0.1692
+      10000:
+        temp_k: 10000
+        hex: '#dea4ff'
+        rgb:
+        - 222
+        - 164
+        - 255
+        ionization_fraction: 0.3173
+      11000:
+        temp_k: 11000
+        hex: '#c2a0ff'
+        rgb:
+        - 194
+        - 160
+        - 255
+        ionization_fraction: 0.4984
+      12000:
+        temp_k: 12000
+        hex: '#ac9cff'
+        rgb:
+        - 172
+        - 156
+        - 255
+        ionization_fraction: 0.673
+      13000:
+        temp_k: 13000
+        hex: '#9a9aff'
+        rgb:
+        - 154
+        - 154
+        - 255
+        ionization_fraction: 0.8065
+      14000:
+        temp_k: 14000
+        hex: '#8c98ff'
+        rgb:
+        - 140
+        - 152
+        - 255
+        ionization_fraction: 0.891
+      15000:
+        temp_k: 15000
+        hex: '#8097ff'
+        rgb:
+        - 128
+        - 151
+        - 255
+        ionization_fraction: 0.9388
+  Hg:
+    z: 80
+    name: Mercury
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd4a6'
+        rgb:
+        - 255
+        - 212
+        - 166
+        ionization_fraction: 0.0
+      5000:
+        temp_k: 5000
+        hex: '#ffe7d0'
+        rgb:
+        - 255
+        - 231
+        - 208
+        ionization_fraction: 0.0002
+      6000:
+        temp_k: 6000
+        hex: '#fff8fa'
+        rgb:
+        - 255
+        - 248
+        - 250
+        ionization_fraction: 0.0018
+      7000:
+        temp_k: 7000
+        hex: '#c2ddff'
+        rgb:
+        - 194
+        - 221
+        - 255
+        ionization_fraction: 0.009
+      8000:
+        temp_k: 8000
+        hex: '#96cdff'
+        rgb:
+        - 150
+        - 205
+        - 255
+        ionization_fraction: 0.0311
+      9000:
+        temp_k: 9000
+        hex: '#93ccff'
+        rgb:
+        - 147
+        - 204
+        - 255
+        ionization_fraction: 0.0815
+      10000:
+        temp_k: 10000
+        hex: '#99ceff'
+        rgb:
+        - 153
+        - 206
+        - 255
+        ionization_fraction: 0.1728
+      11000:
+        temp_k: 11000
+        hex: '#a0d0ff'
+        rgb:
+        - 160
+        - 208
+        - 255
+        ionization_fraction: 0.3087
+      12000:
+        temp_k: 12000
+        hex: '#a6d2ff'
+        rgb:
+        - 166
+        - 210
+        - 255
+        ionization_fraction: 0.4747
+      13000:
+        temp_k: 13000
+        hex: '#acd3ff'
+        rgb:
+        - 172
+        - 211
+        - 255
+        ionization_fraction: 0.6402
+      14000:
+        temp_k: 14000
+        hex: '#b1d5ff'
+        rgb:
+        - 177
+        - 213
+        - 255
+        ionization_fraction: 0.7749
+      15000:
+        temp_k: 15000
+        hex: '#b5d6ff'
+        rgb:
+        - 181
+        - 214
+        - 255
+        ionization_fraction: 0.8668
+  Tl:
+    z: 81
+    name: Thallium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffdc6c'
+        rgb:
+        - 255
+        - 220
+        - 108
+        ionization_fraction: 0.0001
+      4000:
+        temp_k: 4000
+        hex: '#00ff24'
+        rgb:
+        - 0
+        - 255
+        - 36
+        ionization_fraction: 0.0037
+      5000:
+        temp_k: 5000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.0281
+      6000:
+        temp_k: 6000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.11
+      7000:
+        temp_k: 7000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.279
+      8000:
+        temp_k: 8000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.5112
+      9000:
+        temp_k: 9000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.7258
+      10000:
+        temp_k: 10000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.8641
+      11000:
+        temp_k: 11000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9343
+      12000:
+        temp_k: 12000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9669
+      13000:
+        temp_k: 13000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9822
+      14000:
+        temp_k: 14000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9899
+      15000:
+        temp_k: 15000
+        hex: '#00ff00'
+        rgb:
+        - 0
+        - 255
+        - 0
+        ionization_fraction: 0.9939
+  Pb:
+    z: 82
+    name: Lead
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd2af'
+        rgb:
+        - 255
+        - 210
+        - 175
+        ionization_fraction: 0.0005
+      5000:
+        temp_k: 5000
+        hex: '#eac0ff'
+        rgb:
+        - 234
+        - 192
+        - 255
+        ionization_fraction: 0.0062
+      6000:
+        temp_k: 6000
+        hex: '#945dff'
+        rgb:
+        - 148
+        - 93
+        - 255
+        ionization_fraction: 0.0323
+      7000:
+        temp_k: 7000
+        hex: '#6b32ff'
+        rgb:
+        - 107
+        - 50
+        - 255
+        ionization_fraction: 0.105
+      8000:
+        temp_k: 8000
+        hex: '#503cff'
+        rgb:
+        - 80
+        - 60
+        - 255
+        ionization_fraction: 0.2457
+      9000:
+        temp_k: 9000
+        hex: '#3550ff'
+        rgb:
+        - 53
+        - 80
+        - 255
+        ionization_fraction: 0.4443
+      10000:
+        temp_k: 10000
+        hex: '#0061ff'
+        rgb:
+        - 0
+        - 97
+        - 255
+        ionization_fraction: 0.6494
+      11000:
+        temp_k: 11000
+        hex: '#006eff'
+        rgb:
+        - 0
+        - 110
+        - 255
+        ionization_fraction: 0.8056
+      12000:
+        temp_k: 12000
+        hex: '#007aff'
+        rgb:
+        - 0
+        - 122
+        - 255
+        ionization_fraction: 0.8986
+      13000:
+        temp_k: 13000
+        hex: '#0083ff'
+        rgb:
+        - 0
+        - 131
+        - 255
+        ionization_fraction: 0.9469
+      14000:
+        temp_k: 14000
+        hex: '#008bff'
+        rgb:
+        - 0
+        - 139
+        - 255
+        ionization_fraction: 0.9711
+      15000:
+        temp_k: 15000
+        hex: '#0092ff'
+        rgb:
+        - 0
+        - 146
+        - 255
+        ionization_fraction: 0.9834
+  Bi:
+    z: 83
+    name: Bismuth
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8d15'
+        rgb:
+        - 255
+        - 141
+        - 21
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#ffb96e'
+        rgb:
+        - 255
+        - 185
+        - 110
+        ionization_fraction: 0.0
+      4000:
+        temp_k: 4000
+        hex: '#ffd5ab'
+        rgb:
+        - 255
+        - 213
+        - 171
+        ionization_fraction: 0.0007
+      5000:
+        temp_k: 5000
+        hex: '#feedff'
+        rgb:
+        - 254
+        - 237
+        - 255
+        ionization_fraction: 0.0072
+      6000:
+        temp_k: 6000
+        hex: '#899dff'
+        rgb:
+        - 137
+        - 157
+        - 255
+        ionization_fraction: 0.0366
+      7000:
+        temp_k: 7000
+        hex: '#1b68ff'
+        rgb:
+        - 27
+        - 104
+        - 255
+        ionization_fraction: 0.1164
+      8000:
+        temp_k: 8000
+        hex: '#004cff'
+        rgb:
+        - 0
+        - 76
+        - 255
+        ionization_fraction: 0.2665
+      9000:
+        temp_k: 9000
+        hex: '#003fff'
+        rgb:
+        - 0
+        - 63
+        - 255
+        ionization_fraction: 0.4715
+      10000:
+        temp_k: 10000
+        hex: '#0037ff'
+        rgb:
+        - 0
+        - 55
+        - 255
+        ionization_fraction: 0.6748
+      11000:
+        temp_k: 11000
+        hex: '#0033ff'
+        rgb:
+        - 0
+        - 51
+        - 255
+        ionization_fraction: 0.8232
+      12000:
+        temp_k: 12000
+        hex: '#0032ff'
+        rgb:
+        - 0
+        - 50
+        - 255
+        ionization_fraction: 0.9087
+      13000:
+        temp_k: 13000
+        hex: '#1d33ff'
+        rgb:
+        - 29
+        - 51
+        - 255
+        ionization_fraction: 0.9522
+      14000:
+        temp_k: 14000
+        hex: '#3136ff'
+        rgb:
+        - 49
+        - 54
+        - 255
+        ionization_fraction: 0.9739
+      15000:
+        temp_k: 15000
+        hex: '#3e3bff'
+        rgb:
+        - 62
+        - 59
+        - 255
+        ionization_fraction: 0.985
+  Fr:
+    z: 87
+    name: Francium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff8e15'
+        rgb:
+        - 255
+        - 142
+        - 21
+        ionization_fraction: 0.0001
+      3000:
+        temp_k: 3000
+        hex: '#ffba7f'
+        rgb:
+        - 255
+        - 186
+        - 127
+        ionization_fraction: 0.0068
+      4000:
+        temp_k: 4000
+        hex: '#ffb9d5'
+        rgb:
+        - 255
+        - 185
+        - 213
+        ionization_fraction: 0.0677
+      5000:
+        temp_k: 5000
+        hex: '#ffacd8'
+        rgb:
+        - 255
+        - 172
+        - 216
+        ionization_fraction: 0.2599
+      6000:
+        temp_k: 6000
+        hex: '#ffb0c5'
+        rgb:
+        - 255
+        - 176
+        - 197
+        ionization_fraction: 0.5559
+      7000:
+        temp_k: 7000
+        hex: '#ffb6b5'
+        rgb:
+        - 255
+        - 182
+        - 181
+        ionization_fraction: 0.798
+      8000:
+        temp_k: 8000
+        hex: '#ffbdaa'
+        rgb:
+        - 255
+        - 189
+        - 170
+        ionization_fraction: 0.9177
+      9000:
+        temp_k: 9000
+        hex: '#ffc2a3'
+        rgb:
+        - 255
+        - 194
+        - 163
+        ionization_fraction: 0.9649
+      10000:
+        temp_k: 10000
+        hex: '#ffc69f'
+        rgb:
+        - 255
+        - 198
+        - 159
+        ionization_fraction: 0.9834
+      11000:
+        temp_k: 11000
+        hex: '#ffca9e'
+        rgb:
+        - 255
+        - 202
+        - 158
+        ionization_fraction: 0.9914
+      12000:
+        temp_k: 12000
+        hex: '#ffce9f'
+        rgb:
+        - 255
+        - 206
+        - 159
+        ionization_fraction: 0.9951
+      13000:
+        temp_k: 13000
+        hex: '#ffd1a1'
+        rgb:
+        - 255
+        - 209
+        - 161
+        ionization_fraction: 0.997
+      14000:
+        temp_k: 14000
+        hex: '#ffd4a5'
+        rgb:
+        - 255
+        - 212
+        - 165
+        ionization_fraction: 0.9981
+      15000:
+        temp_k: 15000
+        hex: '#ffd7ab'
+        rgb:
+        - 255
+        - 215
+        - 171
+        ionization_fraction: 0.9987
+  Ra:
+    z: 88
+    name: Radium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff9c6c'
+        rgb:
+        - 255
+        - 156
+        - 108
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#00a8ff'
+        rgb:
+        - 0
+        - 168
+        - 255
+        ionization_fraction: 0.0007
+      4000:
+        temp_k: 4000
+        hex: '#00a8ff'
+        rgb:
+        - 0
+        - 168
+        - 255
+        ionization_fraction: 0.0121
+      5000:
+        temp_k: 5000
+        hex: '#00b3ff'
+        rgb:
+        - 0
+        - 179
+        - 255
+        ionization_fraction: 0.0719
+      6000:
+        temp_k: 6000
+        hex: '#00c2ff'
+        rgb:
+        - 0
+        - 194
+        - 255
+        ionization_fraction: 0.2285
+      7000:
+        temp_k: 7000
+        hex: '#00d2ff'
+        rgb:
+        - 0
+        - 210
+        - 255
+        ionization_fraction: 0.4742
+      8000:
+        temp_k: 8000
+        hex: '#00e2ff'
+        rgb:
+        - 0
+        - 226
+        - 255
+        ionization_fraction: 0.714
+      9000:
+        temp_k: 9000
+        hex: '#00f1ff'
+        rgb:
+        - 0
+        - 241
+        - 255
+        ionization_fraction: 0.8661
+      10000:
+        temp_k: 10000
+        hex: '#0dffff'
+        rgb:
+        - 13
+        - 255
+        - 255
+        ionization_fraction: 0.9388
+      11000:
+        temp_k: 11000
+        hex: '#4afff3'
+        rgb:
+        - 74
+        - 255
+        - 243
+        ionization_fraction: 0.9705
+      12000:
+        temp_k: 12000
+        hex: '#60ffe8'
+        rgb:
+        - 96
+        - 255
+        - 232
+        ionization_fraction: 0.9846
+      13000:
+        temp_k: 13000
+        hex: '#6fffdf'
+        rgb:
+        - 111
+        - 255
+        - 223
+        ionization_fraction: 0.9914
+      14000:
+        temp_k: 14000
+        hex: '#79ffd8'
+        rgb:
+        - 121
+        - 255
+        - 216
+        ionization_fraction: 0.9948
+      15000:
+        temp_k: 15000
+        hex: '#80ffd1'
+        rgb:
+        - 128
+        - 255
+        - 209
+        ionization_fraction: 0.9967
+  Ac:
+    z: 89
+    name: Actinium
+    colors:
+      1000:
+        temp_k: 1000
+        hex: '#ff3000'
+        rgb:
+        - 255
+        - 48
+        - 0
+        ionization_fraction: 0.0
+      2000:
+        temp_k: 2000
+        hex: '#ff9634'
+        rgb:
+        - 255
+        - 150
+        - 52
+        ionization_fraction: 0.0
+      3000:
+        temp_k: 3000
+        hex: '#9dcfff'
+        rgb:
+        - 157
+        - 207
+        - 255
+        ionization_fraction: 0.0005
+      4000:
+        temp_k: 4000
+        hex: '#4897ff'
+        rgb:
+        - 72
+        - 151
+        - 255
+        ionization_fraction: 0.0105
+      5000:
+        temp_k: 5000
+        hex: '#3883ff'
+        rgb:
+        - 56
+        - 131
+        - 255
+        ionization_fraction: 0.0641
+      6000:
+        temp_k: 6000
+        hex: '#3378ff'
+        rgb:
+        - 51
+        - 120
+        - 255
+        ionization_fraction: 0.2095
+      7000:
+        temp_k: 7000
+        hex: '#3173ff'
+        rgb:
+        - 49
+        - 115
+        - 255
+        ionization_fraction: 0.4469
+      8000:
+        temp_k: 8000
+        hex: '#2f70ff'
+        rgb:
+        - 47
+        - 112
+        - 255
+        ionization_fraction: 0.6901
+      9000:
+        temp_k: 9000
+        hex: '#2e6eff'
+        rgb:
+        - 46
+        - 110
+        - 255
+        ionization_fraction: 0.8521
+      10000:
+        temp_k: 10000
+        hex: '#2d6cff'
+        rgb:
+        - 45
+        - 108
+        - 255
+        ionization_fraction: 0.9321
+      11000:
+        temp_k: 11000
+        hex: '#2c6bff'
+        rgb:
+        - 44
+        - 107
+        - 255
+        ionization_fraction: 0.9673
+      12000:
+        temp_k: 12000
+        hex: '#2b6bff'
+        rgb:
+        - 43
+        - 107
+        - 255
+        ionization_fraction: 0.9831
+      13000:
+        temp_k: 13000
+        hex: '#2b6aff'
+        rgb:
+        - 43
+        - 106
+        - 255
+        ionization_fraction: 0.9906
+      14000:
+        temp_k: 14000
+        hex: '#2a6aff'
+        rgb:
+        - 42
+        - 106
+        - 255
+        ionization_fraction: 0.9944
+      15000:
+        temp_k: 15000
+        hex: '#2a69ff'
+        rgb:
+        - 42
+        - 105
+        - 255
+        ionization_fraction: 0.9965
