@@ -418,34 +418,25 @@ def render_firefly_stock() -> str:
 # ── Aurora color vs density/altitude (non-LTE, quenching) ──
 
 def render_aurora_grid() -> str:
+    """Density-slider skeleton: one cell per atmosphere, JS-colored at the selected
+    density (≈ altitude). The AURORA color data is embedded as JSON in main()."""
     if not AURORA_COLORS_DB.exists():
         return ""
     data = yaml.safe_load(AURORA_COLORS_DB.read_text(encoding="utf-8"))
-    cell = ("display:inline-block;width:60px;height:30px;font-size:8px;text-align:center;"
-            "line-height:1.1;border-radius:3px;margin:1px;padding-top:3px")
-    lab = "flex:0 0 150px;font-size:12px"
-    row = "display:flex;align-items:center;margin:2px 0"
-    logns = sorted({int(k) for blk in data.values() for k in blk["colors"]})
-    first = next(iter(data.values()))["colors"]
-    header = (f'<div style="{row}"><div style="{lab}">↑ high alt &nbsp; low alt ↓</div><div>'
-              + "".join(f'<div style="display:inline-block;width:60px;font-size:8px;text-align:center;'
-                        f'color:#888;margin:1px">{first[ln]["altitude_hint"]}<br>1e{ln}</div>'
-                        for ln in logns if ln in first) + '</div></div>')
-    rows = [header]
-    for key, blk in data.items():
-        cells = ""
-        for ln in logns:
-            c = blk["colors"].get(ln)
-            if not c:
-                cells += f'<div style="{cell}"></div>'; continue
-            hx = c["hex"]
-            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
-                      f'title="{blk["label"]} · {c["altitude_hint"]} (n=1e{ln}) · {hx} · {c["dominant"]}">'
-                      f'{c["dominant"].replace("_"," ")}</div>')
-        rows.append(f'<div style="{row}"><div style="{lab}">{html.escape(blk["label"])}</div>'
-                    f'<div>{cells}</div></div>')
-    return ('<p class="muted" data-i18n="aurora_caption" style="font-size:12px;margin:4px 0 8px"></p>'
-            + "".join(rows))
+    cells = "".join(
+        f'<div class="aurora-cell" data-atm="{key}">'
+        f'<span class="aurora-atm">{html.escape(blk["label"])}</span>'
+        f'<span class="aurora-dom"></span><span class="aurora-hex"></span></div>'
+        for key, blk in data.items()
+    )
+    return (
+        '<p class="muted" data-i18n="aurora_caption" style="font-size:12px;margin:4px 0 8px"></p>'
+        '<div class="regime-bar" id="aurora-bar">'
+        '<span class="label" data-i18n="density_label"></span>'
+        '<input type="range" id="density-slider" min="7" max="14" step="1" value="11">'
+        '<span id="density-readout" class="temp-readout"></span></div>'
+        f'<div class="aurora-panel" id="aurora-panel">{cells}</div>'
+    )
 
 
 # ── Aurora emitter catalog (per-emitter table: lines, band, color) ──
@@ -629,7 +620,8 @@ def build_t(palettes):
         "th_ae_color": "Color", "th_ae_emitter": "Emitter", "th_ae_source": "Source",
         "th_ae_lines": "Lines (nm)", "th_ae_band": "Band", "th_ae_type": "Type",
         "ae_forbidden": "forbidden/metastable", "ae_allowed": "allowed",
-        "aurora_caption": "Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude), warming at the densest rows toward the ~80-105km airglow / meteoric-metal layer (Na 589nm yellow + OH Meinel red + traces of Li/K/Ca⁺). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Other emitters in the catalog: O I 777nm (bright-aurora deep red). Computed from measured A-values + quenching coefficients; cell label = dominant emitter (by production). This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
+        "density_label": "Density (≈ altitude):",
+        "aurora_caption": "Drag the density slider to scrub altitude. Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude), warming at the densest rows toward the ~80-105km airglow / meteoric-metal layer (Na 589nm yellow + OH Meinel red + traces of Li/K/Ca⁺). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Other emitters in the catalog: O I 777nm (bright-aurora deep red). Computed from measured A-values + quenching coefficients; cell label = dominant emitter (by production). This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
         "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — same coverage as the periodic table above. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
         "bt_blackbody": "Blackbody (thermal)",
@@ -672,7 +664,8 @@ def build_t(palettes):
         "th_ae_color": "색", "th_ae_emitter": "발광종", "th_ae_source": "소스",
         "th_ae_lines": "라인 (nm)", "th_ae_band": "대역", "th_ae_type": "종류",
         "ae_forbidden": "금지/준안정", "ae_allowed": "허용",
-        "aurora_caption": "오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
+        "density_label": "밀도 (≈ 고도):",
+        "aurora_caption": "밀도 슬라이더를 움직여 고도를 훑어보세요. 오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
         "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 위 주기율표와 같은 커버리지입니다. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
@@ -731,6 +724,15 @@ html, body {{ overflow-x: clip; }}
 #temp-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
 .temp-readout {{ font-family: var(--mono); font-size: 0.95rem; color: var(--fg-emph);
   min-width: 5.5em; text-align: right; }}
+#aurora-bar {{ position: static; box-shadow: none; }}   /* local, not sticky */
+#density-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
+.aurora-panel {{ display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }}
+.aurora-cell {{ flex: 1 1 200px; min-height: 64px; border-radius: 6px; padding: 0.55rem 0.8rem;
+  display: flex; flex-direction: column; justify-content: center; gap: 2px;
+  border: 1px solid var(--bd-mid); transition: background 0.15s ease, color 0.15s ease; }}
+.aurora-cell .aurora-atm {{ font-size: 0.9rem; font-weight: 600 }}
+.aurora-cell .aurora-dom {{ font-family: var(--mono); font-size: 0.8rem; opacity: 0.95 }}
+.aurora-cell .aurora-hex {{ font-family: var(--mono); font-size: 0.72rem; opacity: 0.7 }}
 
 .periodic-table {{
   display: grid;
@@ -925,9 +927,11 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 const T = {t_json};
 const ELEMENT_TEMP = {element_temp_json};
 const MOLECULE_TEMP = {molecule_temp_json};
+const AURORA = {aurora_json};
 
 let lang = localStorage.getItem('nearstars-lang') || 'ko';
 let temp = parseInt(localStorage.getItem('nearstars-temp') || '4000', 10);
+let density = parseInt(localStorage.getItem('nearstars-density') || '11', 10);
 
 function luminance(hex) {{
   const r = parseInt(hex.substr(1,2),16)/255;
@@ -985,6 +989,20 @@ function applyTemp(t) {{
   document.getElementById('temp-readout').textContent = t + ' K';
 }}
 
+function applyDensity(n) {{
+  const key = String(n);
+  document.querySelectorAll('.aurora-cell').forEach(cell => {{
+    const c = AURORA[cell.dataset.atm].colors[key];
+    if (!c) return;
+    cell.style.background = c.hex;
+    cell.style.color = textOn(c.hex);
+    cell.querySelector('.aurora-dom').textContent = c.dom.replace(/_/g, ' ');
+    cell.querySelector('.aurora-hex').textContent = c.hex;
+  }});
+  const alt = AURORA.earth.colors[key].alt;
+  document.getElementById('density-readout').textContent = '1e' + n + ' cm⁻³ · ' + alt;
+}}
+
 function applyLang() {{
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => {{
@@ -1012,8 +1030,17 @@ tempSlider.addEventListener('input', e => {{
   applyTemp(temp);
 }});
 
+const densitySlider = document.getElementById('density-slider');
+densitySlider.value = density;
+densitySlider.addEventListener('input', e => {{
+  density = parseInt(e.target.value, 10);
+  localStorage.setItem('nearstars-density', density);
+  applyDensity(density);
+}});
+
 applyLang();
 applyTemp(temp);
+applyDensity(density);
 </script>
 </body>
 </html>
@@ -1051,6 +1078,13 @@ def main() -> int:
     t_json = json.dumps({"en": t_en, "ko": t_ko}, ensure_ascii=False)
     element_temp_json = json.dumps(element_temp_data, ensure_ascii=False)
     molecule_temp_json = json.dumps(molecule_temp_data, ensure_ascii=False)
+    aurora_raw = (yaml.safe_load(AURORA_COLORS_DB.read_text(encoding="utf-8"))
+                  if AURORA_COLORS_DB.exists() else {})
+    aurora_data = {k: {"colors": {str(ln): {"hex": c["hex"], "dom": c["dominant"],
+                                            "alt": c["altitude_hint"]}
+                                  for ln, c in v["colors"].items()}}
+                   for k, v in aurora_raw.items()}
+    aurora_json = json.dumps(aurora_data, ensure_ascii=False)
 
     html_out = TEMPLATE.format(
         periodic_table=periodic,
@@ -1066,6 +1100,7 @@ def main() -> int:
         t_json=t_json,
         element_temp_json=element_temp_json,
         molecule_temp_json=molecule_temp_json,
+        aurora_json=aurora_json,
     )
     OUT.write_text(html_out, encoding="utf-8")
     print(f"wrote {OUT.relative_to(ROOT)} "
