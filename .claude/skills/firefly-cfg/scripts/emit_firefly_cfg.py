@@ -11,11 +11,16 @@ Writes:
   dist/NearStars-Configs/Patches/Firefly/<KopernicusName>.cfg  — one per atm body
   dist/NearStars-Configs/Patches/Firefly/NearStarsPlanetPack.cfg
 
-Per [[composition-color]] §3, the bulk-gas color palette is determined by
-the DOMINANT atmospheric species in the Phase 3 Decisions table. The
-emitter holds the palette table inline (a small finite set of physics-
-grounded palettes) — see PALETTES below. Element-level streak colors
-come from the shared `element_plasma_colors.yaml` DB.
+The 5 bulk-gas color slots (shockwave / wrap_layer / trail_primary/secondary/
+tertiary) are COMPUTED by the LTE Saha-Boltzmann plasma engine
+(`scripts/refs/saha_boltzmann.py`) from the atmosphere composition + the
+planet's entry velocity (≈ escape velocity from Phase 3 mass/radius). The 9
+Firefly Color slots form a temperature ladder — shockwave = bow shock (peak T,
+non-LTE for N2-family blue), wrap = envelope, trail = wake (cooling), glow =
+hull (material default). The hardcoded PALETTES below are now a FALLBACK for
+compositions the engine can't resolve. Element-level streak colors come from
+`element_plasma_colors.yaml`. See [[composition-color]] + plasma-color-
+methodology-review.md.
 
 Usage:
     python3 .claude/skills/firefly-cfg/scripts/emit_firefly_cfg.py
@@ -167,6 +172,89 @@ DEFAULTS_HEX_RGB = {
     "glow":     (191, 80, 50, 1.4),
     "glow_hot": (191, 90, 65, 2.5),
 }
+
+# ─────────────────────────────────────────────────────────────────────
+# Engine-computed bulk-gas colors — the 5 plasma slots derived from the
+# composition + the planet's entry velocity, instead of hardcoded palettes.
+#
+# Firefly cfg semantics (verified against M1rageDev/Firefly source):
+#   each Color slot → a shader global (AtmoFxModule.cs:322-333):
+#     shockwave→_ShockwaveColor (bow shock, hottest), wrap_layer→_LayerColor
+#     (plasma envelope), trail_primary/secondary/tertiary→_Primary/_Secondary/
+#     _TertiaryColor (wake, inner→outer cooling), glow/glow_hot→_Glow/_HotGlow
+#     (hull surface, material-driven), *_streak→secondary-species accents.
+#   HDR value = (R/255, G/255, B/255) × 2^intensity  (Utils.cs SDRI_To_HDR).
+# So the 9 slots are a TEMPERATURE LADDER: shock (peak, non-LTE) → wrap (hot) →
+# trail (cooling) → hull blackbody. The engine fills the 5 gas slots' HUE from
+# the LTE/2-T plasma model at that ladder of temperatures; intensity stays at the
+# Firefly-shipped per-slot values (the mod author's brightness balance).
+# ─────────────────────────────────────────────────────────────────────
+sys.path.insert(0, str(ROOT / "scripts" / "refs"))
+try:
+    import saha_boltzmann as _sb          # noqa: E402
+    import cie_color as _cie              # noqa: E402
+    import reentry_color as _rc           # noqa: E402
+    import emit_atmosphere_color as _eac  # noqa: E402
+    _ENGINE_OK = True
+except Exception:                          # engine unavailable → keep hardcoded palettes
+    _ENGINE_OK = False
+
+# per-slot HDR intensity (Firefly shipped balance) + temperature-ladder fraction
+# of the peak (shock) gas temperature; shock+wrap also get the non-LTE T_elec.
+_SLOT = {  # slot: (intensity, T_fraction, use_nlte)
+    "shockwave":       (3.0, 1.00, True),
+    "wrap_layer":      (2.0, 0.85, True),
+    "trail_primary":   (3.0, 0.60, False),
+    "trail_secondary": (1.5, 0.45, False),
+    "trail_tertiary":  (2.0, 0.35, False),
+}
+_ENGINE_DBS = None
+
+
+def _num_lead(s: str) -> float | None:
+    m = re.search(r"-?\d+\.?\d*(?:[eE][-+]?\d+)?", (s or "").replace(",", ""))
+    return float(m.group()) if m else None
+
+
+def escape_velocity_kms(dec: dict) -> float | None:
+    """Entry velocity ≈ escape velocity from the Phase 3 Decisions mass + radius.
+    v_esc = 11.186·sqrt(M/R) [km/s] (Earth units). Falls through mass/radius in
+    Earth, then Jupiter units, then surface gravity + radius."""
+    me, re_ = _num_lead(dec.get("mass_mearth", "")), _num_lead(dec.get("radius_rearth", ""))
+    if me and re_ and re_ > 0:
+        return 11.186 * (me / re_) ** 0.5
+    mj, rj = _num_lead(dec.get("mass_mjup", "")), _num_lead(dec.get("radius_rjup", ""))
+    if mj and rj and rj > 0:
+        return 11.186 * (mj * 317.83 / (rj * 11.209)) ** 0.5
+    g, re2 = _num_lead(dec.get("surface_gravity_g_earth", "")), _num_lead(dec.get("radius_rearth", ""))
+    if g and re2 and re2 > 0:
+        return 11.186 * (g * re2) ** 0.5   # v=sqrt(2gR), Earth sqrt(2·1·1)=11.186
+    return None
+
+
+def engine_palette(species: list, velocity: float):
+    """Physics-derived 5-slot palette {slot:(R,G,B,intensity)} from composition +
+    entry velocity, or None if the engine can't resolve the composition."""
+    if not _ENGINE_OK:
+        return None
+    global _ENGINE_DBS
+    if _ENGINE_DBS is None:
+        _ENGINE_DBS = _sb.load_dbs()
+    atomic, mol_db = _ENGINE_DBS
+    comp_str = ",".join(f"{s}:{(pct if pct else 1.0)}" for s, pct in species)
+    elems, _dropped, _mols = _eac.composition_to_atoms(comp_str)
+    if not elems:
+        return None
+    bands = _eac.select_bands(elems, mol_db)
+    t_gas, t_elec = _rc.velocity_to_temps(velocity)
+    out = {}
+    for slot, (inten, frac, nlte) in _SLOT.items():
+        T = max(1000, min(15000, round(t_gas * frac / 500) * 500))
+        spec, _d = _sb.slab_spectrum_custom(elems, bands, T, atomic, mol_db,
+                                            t_elec=(t_elec if nlte else None))
+        r, g, b = _cie.hex_to_rgb(_cie.spectrum_to_hex(spec))
+        out[slot] = (round(r * 255), round(g * 255), round(b * 255), inten)
+    return out
 
 # ─────────────────────────────────────────────────────────────────────
 # Parsing helpers
@@ -488,11 +576,19 @@ def process_slug(slug: str, element_db: dict, outcome: EmitOutcome,
 
     species_set = {s for s, _ in species}
     dominant = species[0][0]
-    palette_name, palette = pick_palette(dominant, species_set)
-    if palette_name == PALETTE_FALLBACK and not PALETTES[PALETTE_FALLBACK]["_match"](dominant, species_set):
-        outcome.warnings.append(
-            f"{slug}: dominant species {dominant} doesn't match any palette; falling back to {PALETTE_FALLBACK}"
-        )
+
+    # Bulk-gas colors: prefer the physics engine (composition + entry velocity
+    # → temperature ladder + non-LTE shock); fall back to the hardcoded
+    # composition palette only if the engine can't resolve the composition.
+    velocity = escape_velocity_kms(dec) or 7.8
+    ep = engine_palette(species, velocity)
+    if ep is not None:
+        palette, palette_name = ep, f"engine:{dominant}@{velocity:.1f}km/s"
+    else:
+        palette_name, palette = pick_palette(dominant, species_set)
+        if palette_name == PALETTE_FALLBACK and not PALETTES[PALETTE_FALLBACK]["_match"](dominant, species_set):
+            outcome.warnings.append(
+                f"{slug}: engine + palette unmatched for {dominant}; fell back to {PALETTE_FALLBACK}")
 
     # Streak species: among all qualifying secondaries (0.5–10% by volume, or
     # unquantified trace), pick the STRONGEST visible emitter per the

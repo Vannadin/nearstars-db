@@ -99,9 +99,13 @@ For each Phase 3 markdown (`docs/phase3/<slug>.md`):
    - 2–20 bar → strength 1.1
    - 20–50 bar → strength 1.2
    - 50+ bar → strength 1.3
-3. **Composition → bulk-gas palette.** Match the dominant species
-   against the palette set in [composition-color](references/composition-color.md)
-   §3 (Earth-like / CO2 / Gas-giant / CH4 / Steam / Pure-H2).
+3. **Composition + entry velocity → engine colors.** The 5 bulk-gas slots are
+   COMPUTED by the LTE Saha-Boltzmann engine (`scripts/refs/saha_boltzmann.py`)
+   from the composition + entry velocity (≈ escape velocity from Phase 3
+   mass/radius). The 9 slots are a temperature ladder (shockwave = peak/non-LTE
+   blue for N2 air, wrap = envelope, trail = cooling wake, glow = hull default).
+   The hardcoded [composition-color](references/composition-color.md) §3 PALETTES
+   are now a FALLBACK when the engine can't resolve the composition.
 4. **Secondary species → streak.** First 0.5–10% volume secondary that
    matches the streak palette ([composition-color §4](references/composition-color.md))
    or `db/refs/element_plasma_colors.yaml`. Falls back to
