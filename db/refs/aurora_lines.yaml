@@ -5,8 +5,14 @@
 # density, NOT by temperature. Model: line intensity ∝ x_source·n·yield·φ,
 #   φ_forbidden = A_line / (A_total + Σ_q k_q·x_q·n),   φ_allowed = 1.
 #
-# Sources: O(1D) τ=114s, O(1S) τ=0.84s (Slanger/Copeland; rocket airglow).
-# Quenching k [cm^3/s], standard aeronomy values (Rees 1989; JGR Space Physics):
+# Sources (lifetimes + quenching are standard aeronomy values, cross-checked
+# against these reviews — not freshly extracted from a single measurement):
+#   Lifetimes O(1D) τ~114s, O(1S) τ~0.84s — Slanger & Copeland, "Energetic Oxygen
+#     in the Upper Atmosphere and the Laboratory" (review); rocket airglow
+#     O(1S)/O(1D) quantum-yield studies (Planet. Space Sci.).
+#   Quenching k [cm^3/s] — Rees 1989 "Physics and Chemistry of the Upper
+#     Atmosphere"; Sobral et al. 1993 JGR 98 (O(1D)+O(3P)); O(1S) 75-115 km
+#     quenching profile (Planet. Space Sci. 1973):
 #   O(1D)+N2 ~2.0e-11, +O2 ~2.9e-11, +O ~8e-12, +CO2 ~7.5e-11
 #   O(1S)+O2 ~4.0e-12, +O ~2e-13, +N2 ~1e-13, +CO2 ~3e-13
 # yield = relative electron-impact / dissociative-recombination production.

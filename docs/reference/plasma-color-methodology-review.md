@@ -115,6 +115,34 @@ Shirley 2013 (JCGT) analytic CMF; flame-test molecular bands CaO/SrO (RSC /
 LibreTexts). ADS is astrophysics/planetary-centric — color science and analytical
 chemistry are under-indexed there (use Semantic Scholar / Crossref for those).
 
+## Further literature — non-LTE reentry & aurora (researched)
+
+Beyond the LTE-verification sources above, the non-LTE work (the reentry blue,
+the 2-temperature mode, and the aurora table) drew on:
+
+**Non-LTE reentry / collisional-radiative implementation.** ADS:
+`2025PhPl..32j3512A` (3-temperature collisional-radiative air plasma),
+`2026arXiv260411856Z` (RAPRAL line-by-line + ray-tracing), `2011PhDT` (Monte
+Carlo hypersonic radiation), `2001PhDT` (ionizational non-equilibrium recombining
+air), `1994ntrs.rept23568C` (non-equilibrium reentry radiation). The N₂⁺ 1NG blue
+is electron-impact (Park two-temperature) — the basis of saha_boltzmann's `t_elec`
+mode.
+
+**CR data availability** (verified, correcting an earlier overstatement — data
+exists for major atmospheres): LXCat electron-scattering cross-section database
+(Pitchford et al. 2017, *Plasma Processes & Polymers*) covers 42 species incl.
+N₂/O₂/CO₂/CH₄/H₂/CO/NO/SO₂; CoRaM-AIR two-temperature CR (829 electronic states);
+Mars/Titan/Jupiter entry CR models exist. Sparse only for exotic exoplanet
+compositions. HITRAN/HITEMP for molecular line lists.
+
+**Aurora (forbidden-line + quenching).** Mechanisms: `1960JChPh..32..607Y`
+(auroral green OI 557.7 in N₂ afterglows), `1989RSPSA.424....1S` (O(¹S) airglow
+mechanism), `1990AdSpR..10e..31F` (Venus nightglow O ¹D/¹S from dissociative
+recombination + soft-electron precipitation). Lifetimes/quenching: Slanger &
+Copeland (energetic-oxygen review), Sobral et al. 1993 JGR 98 (O(¹D)+O(³P)),
+Rees 1989 (standard aeronomy). Quenching coefficients are standard textbook
+values cross-checked against these, not freshly extracted.
+
 ## Related
 - [tools.md](tools.md) — the build scripts + DBs
 - engine: `scripts/refs/saha_boltzmann.py`, `build_element_temperature_colors.py`
