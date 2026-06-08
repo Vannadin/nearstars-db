@@ -564,6 +564,55 @@ def render_element_temp_grid() -> str:
             + "".join(rows))
 
 
+# ── Firefly stock cfg colors (reference) ──
+# Extracted from Firefly (M1rageDev/Firefly, GPL-3.0) GameData/Firefly/Configs/
+# Default.cfg + Stock/*.cfg. The 9 ATMOFX_BODY Color slots [R G B intensity].
+FIREFLY_STOCK = {
+    "Default": {"glow":[191,80,50,1.4],"glow_hot":[191,90,65,2.5],"trail_primary":[191,99,72,3.0],
+        "trail_secondary":[191,70,42,1.5],"trail_tertiary":[74,80,191,2.0],"trail_streak":[74,80,191,2.0],
+        "wrap_layer":[69,69,191,2.0],"wrap_streak":[191,99,72,3.0],"shockwave":[74,90,191,3.0]},
+    "Kerbin (N2/O2)": {"glow":[191,80,50,1.4],"glow_hot":[191,90,65,2.5],"trail_primary":[191,99,72,3.0],
+        "trail_secondary":[191,70,42,1.5],"trail_tertiary":[74,80,191,2.0],"trail_streak":[74,80,191,2.0],
+        "wrap_layer":[69,69,191,2.0],"wrap_streak":[191,99,72,3.0],"shockwave":[74,90,191,3.0]},
+    "Eve (CO2)": {"glow":[191,80,50,1.4],"glow_hot":[191,90,65,2.5],"trail_primary":[83,92,191,2.0],
+        "trail_secondary":[52,102,191,2.0],"trail_tertiary":[122,191,170,2.0],"trail_streak":[122,191,170,2.0],
+        "wrap_layer":[125,185,191,2.0],"wrap_streak":[70,95,191,1.5],"shockwave":[96,191,159,3.0]},
+    "Duna (CO2 thin)": {"glow":[191,80,50,1.4],"glow_hot":[191,90,65,2.5],"trail_primary":[76,116,191,2.5],
+        "trail_secondary":[151,130,191,1.8],"trail_tertiary":[191,124,73,2.0],"trail_streak":[191,124,73,2.0],
+        "wrap_layer":[191,124,73,2.0],"wrap_streak":[76,116,191,2.5],"shockwave":[34,41,191,3.0]},
+    "Jool (H2/He)": {"glow":[191,80,50,1.4],"glow_hot":[191,90,65,2.5],"trail_primary":[32,20,191,1.4],
+        "trail_secondary":[191,6,6,3.0],"trail_tertiary":[191,191,88,1.7],"trail_streak":[191,191,88,1.7],
+        "wrap_layer":[69,69,191,2.0],"wrap_streak":[32,20,191,1.4],"shockwave":[140,191,161,1.0]},
+}
+FIREFLY_SLOTS = [
+    ("shockwave", "bow shock"), ("wrap_layer", "envelope"), ("wrap_streak", "envelope streak"),
+    ("trail_primary", "trail (inner)"), ("trail_secondary", "trail (mid)"), ("trail_tertiary", "trail (outer)"),
+    ("trail_streak", "trail streak"), ("glow_hot", "hull (hot)"), ("glow", "hull"),
+]
+
+
+def render_firefly_stock() -> str:
+    cell = ("display:inline-block;width:62px;height:40px;font-size:8px;text-align:center;"
+            "line-height:1.1;border-radius:3px;margin:1px;vertical-align:top;padding-top:2px")
+    lab = "flex:0 0 120px;font-size:12px"
+    row = "display:flex;align-items:flex-start;margin:3px 0"
+    head = ('<div style="' + row + '"><div style="' + lab + '"></div><div>'
+            + "".join(f'<div style="display:inline-block;width:62px;font-size:8px;text-align:center;'
+                      f'color:#888;margin:1px">{slot}<br>{region}</div>' for slot, region in FIREFLY_SLOTS)
+            + '</div></div>')
+    rows = [head]
+    for body, cols in FIREFLY_STOCK.items():
+        cells = ""
+        for slot, _ in FIREFLY_SLOTS:
+            r, g, b, inten = cols[slot]
+            hx = f"#{r:02x}{g:02x}{b:02x}"
+            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
+                      f'title="{body} · {slot} = {r} {g} {b} (×{inten})">{r} {g} {b}<br>×{inten}</div>')
+        rows.append(f'<div style="{row}"><div style="{lab}">{html.escape(body)}</div><div>{cells}</div></div>')
+    return ('<p class="muted" data-i18n="firefly_stock_caption" style="font-size:12px;margin:4px 0 8px"></p>'
+            + "".join(rows))
+
+
 # ── Emitted body cards (same logic as before; uses atomic_flame for element streak) ──
 
 def derive_body_palette(slug: str, db: dict):
@@ -676,6 +725,8 @@ def build_t(palettes):
         "h_streak": "Secondary-species streak palette",
         "h_plasma_temp": "Plasma color vs temperature (1000K steps)",
         "h_element_temp": "Reentry plasma color per element vs temperature (1000K steps)",
+        "h_firefly_stock": "Firefly stock cfg colors (reference)",
+        "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
         "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — see the periodic table's computed regime. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
         "bt_blackbody": "Blackbody (thermal)",
@@ -716,6 +767,8 @@ def build_t(palettes):
         "h_streak": "2차 종 streak 팔레트",
         "h_plasma_temp": "온도별 플라스마 색 (1000K 간격)",
         "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (1000K 간격)",
+        "h_firefly_stock": "Firefly 기본 cfg 색상 (레퍼런스)",
+        "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
         "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 주기율표 계산 regime 참조. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
@@ -1009,6 +1062,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 
 <h2 data-i18n="h_element_temp"></h2>
 {element_temp_grid}
+
+<h2 data-i18n="h_firefly_stock"></h2>
+{firefly_stock_grid}
 </section>
 
 <section>
@@ -1163,6 +1219,7 @@ def main() -> int:
     streak_table = render_streak_table()
     plasma_temp_grid = render_plasma_temp_grid()
     element_temp_grid = render_element_temp_grid()
+    firefly_stock_grid = render_firefly_stock()
 
     body_results = []
     for slug in sorted(p.stem for p in PHASE3_DIR.glob("*.md")):
@@ -1186,6 +1243,7 @@ def main() -> int:
         streak_table=streak_table,
         plasma_temp_grid=plasma_temp_grid,
         element_temp_grid=element_temp_grid,
+        firefly_stock_grid=firefly_stock_grid,
         bodies_section=bodies_section,
         t_json=t_json,
         element_json=element_json,
