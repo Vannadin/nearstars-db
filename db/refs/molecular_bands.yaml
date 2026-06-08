@@ -1,0 +1,144 @@
+# 분자 밴드 시스템 + 해리/이온화 상수 (Saha/Boltzmann 엔진의 밴드=유효선 입력)
+# Molecular band systems + dissociation/ionization constants for the LTE engine.
+#
+# Band emission is modeled band-as-effective-line: each band system contributes
+# emission at its visible band heads, with the upper electronic state populated
+# by Boltzmann exp(-T_e/kT) and the parent molecule's abundance set by
+# dissociation equilibrium (law of mass action with D0 + partition functions).
+# So bands fade as the molecule dissociates and atomic lines take over — the
+# molecular→atomic color march is computed, not hand-set.
+#
+# Molecular constants: Huber & Herzberg / NIST diatomic constants.
+#   D0_eV   dissociation energy, ground state
+#   mu_amu  reduced mass
+#   omega_e, B_e  vibrational / rotational constants (cm^-1) for U_vib, U_rot
+#   sigma   symmetry number (2 homonuclear, 1 heteronuclear)
+#   g_elec  ground-state electronic degeneracy
+#   forms_from  the two atoms (homonuclear if identical)
+#   ion_chi_eV  molecular ionization energy (only where a cation band is used)
+# Band systems:
+#   molecule, charge (0 neutral / 1 cation), T_e_cm (upper state), g_upper,
+#   A_eff (relative band transition probability), heads [{nm, rel}].
+
+molecules:
+  N2:
+    D0_eV: 9.7540
+    mu_amu: 7.0015
+    omega_e: 2358.57
+    B_e: 1.99824
+    sigma: 2
+    g_elec: 1
+    forms_from: [N, N]
+    ion_chi_eV: 15.581
+  C2:
+    D0_eV: 6.371
+    mu_amu: 6.0055
+    omega_e: 1854.71
+    B_e: 1.8198
+    sigma: 2
+    g_elec: 1
+    forms_from: [C, C]
+  CH:
+    D0_eV: 3.465
+    mu_amu: 0.9298
+    omega_e: 2858.5
+    B_e: 14.457
+    sigma: 1
+    g_elec: 4
+    forms_from: [C, H]
+  NH:
+    D0_eV: 3.47
+    mu_amu: 0.9400
+    omega_e: 3282.3
+    B_e: 16.699
+    sigma: 1
+    g_elec: 3
+    forms_from: [N, H]
+  OH:
+    D0_eV: 4.392
+    mu_amu: 0.9482
+    omega_e: 3737.76
+    B_e: 18.910
+    sigma: 1
+    g_elec: 4
+    forms_from: [O, H]
+
+band_systems:
+  N2_1P:        # First Positive B3Pg->A3Su+ : red/orange afterglow
+    molecule: N2
+    charge: 0
+    T_e_cm: 59619.0
+    g_upper: 6
+    A_eff: 7.0e+4
+    heads:
+      - {nm: 646.0, rel: 1.0}
+      - {nm: 580.0, rel: 0.5}
+      - {nm: 675.0, rel: 0.7}
+      - {nm: 762.0, rel: 0.6}
+  N2_2P:        # Second Positive C3Pu->B3Pg : violet
+    molecule: N2
+    charge: 0
+    T_e_cm: 89136.9
+    g_upper: 6
+    A_eff: 2.0e+7
+    heads:
+      - {nm: 357.7, rel: 0.9}
+      - {nm: 380.5, rel: 0.7}
+      - {nm: 405.9, rel: 0.5}
+  N2p_1NG:      # N2+ First Negative B2Su+->X2Sg+ : the blue-violet reentry signature
+    molecule: N2
+    charge: 1
+    T_e_cm: 25461.1
+    g_upper: 2
+    A_eff: 1.5e+7
+    heads:
+      - {nm: 391.4, rel: 1.0}
+      - {nm: 427.8, rel: 0.6}
+      - {nm: 470.9, rel: 0.3}
+  C2_Swan:      # Swan d3Pg->a3Pu : bright green of carbon plasma
+    molecule: C2
+    charge: 0
+    T_e_cm: 20022.5
+    g_upper: 6
+    A_eff: 1.0e+7
+    heads:
+      - {nm: 516.5, rel: 1.0}
+      - {nm: 473.7, rel: 0.6}
+      - {nm: 563.5, rel: 0.5}
+      - {nm: 438.2, rel: 0.3}
+  CH_A:         # A2D->X2P 431nm G-band + B-X 389 : blue-violet of hydrocarbon plasma
+    molecule: CH
+    charge: 0
+    T_e_cm: 23189.8
+    g_upper: 4
+    A_eff: 2.0e+6
+    heads:
+      - {nm: 431.4, rel: 1.0}
+      - {nm: 388.9, rel: 0.4}
+  NH_A:         # A3P->X3S 336nm : near-UV edge (minimal visible)
+    molecule: NH
+    charge: 0
+    T_e_cm: 29807.4
+    g_upper: 6
+    A_eff: 1.0e+6
+    heads:
+      - {nm: 336.0, rel: 1.0}
+  OH_A:         # A2S+->X2P 308nm : UV (minimal visible)
+    molecule: OH
+    charge: 0
+    T_e_cm: 32684.0
+    g_upper: 2
+    A_eff: 1.0e+6
+    heads:
+      - {nm: 308.0, rel: 1.0}
+
+# Which band systems are active in each bulk composition (idealized pure
+# composition; trace-species notes in docs). co2 forms C2 (and CO, mostly UV);
+# CN-violet appears only with trace N2 (e.g. Mars) — documented, not modeled here.
+composition_bands:
+  air:   [N2_1P, N2_2P, N2p_1NG]
+  co2:   [C2_Swan]
+  ch4:   [CH_A, C2_Swan]
+  h2o:   [OH_A]
+  nh3:   [NH_A]
+  h2_he: []

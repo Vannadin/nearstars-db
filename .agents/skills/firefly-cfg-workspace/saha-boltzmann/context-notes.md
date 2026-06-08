@@ -82,6 +82,45 @@ atomic lines → `atomic_lines.yaml`, molecular band systems → `molecular_band
 line in the engine. Then joint calibration of the 2 slab knobs against anchors
 (low-T ember, mid-T reentry bands, high-T ionic), wire into the builder.
 
+## Final model + calibration (2026-06-08)
+
+Abandoned the strict slab `I=B(1−e^{−τ})` with Kirchhoff κ=j/B — `planck_rel`'s
+tiny absolute scale (~1e-14 in nm^-5) made j/B blow up (τ~1e26). Switched to an
+**optically-thin LTE emission** model, which gives correct hues in both limits
+after max-channel normalization and is numerically robust:
+
+    j(λ) = (n_heavy/N_REF)·Planck_shape(λ,T)  +  GAIN · Σ emission(λ)
+    color = CIE(j)
+
+- thermal term ∝ density·Planck = incandescent glow of the bulk gas; ∝1/T at
+  fixed P, so it fades as the gas heats/rarefies. Low-T ⇒ blackbody hue. ✓
+- emission = atomic lines (n_upper·A·hν) + molecular bands; grows with excitation.
+- ONE tuned constant: `GAIN=3e-6` (thermal:emission balance). `N_REF=2e18`,
+  P=1 atm, line width 1.2 nm, band width 5 nm. Everything else first-principles.
+
+Self-tests: slab@1500K == blackbody exactly; isolated 550nm ⇒ green.
+
+**Result colors (validated against physical expectation):**
+- co2: ember→ #00ffe1 C₂ Swan green @4000K (mol=0.59, emis=0.79) → blue/white →
+  ionic. ch4 similar (CH+C₂). H Balmer pink-magenta for h2_he @≥12000K.
+- N₂ dissociation curve correct: air mol 1.0 @≤3000K → 0.82 @6000K → 0.13 @8000K.
+
+**Key documented divergence — air reentry blue is NON-LTE.** N₂ 1P (B³Πg, 7.4 eV)
+and 2P (C³Πu, 11 eV) upper states are far too high to populate thermally
+(exp(−7.4eV/kT)~1e-17 at 5000K), so LTE air glows thermal→atomic(O I 777 red,
+N I red/IR)→ionic(pale violet/pink), NOT the iconic blue-violet. That blue is
+electron-impact (non-LTE) excitation of N₂⁺ 1NG — correctly absent here. C₂ Swan
+(d³Πg, 2.5 eV) IS thermally accessible, so the carbon-plasma green is real LTE.
+Firefly reentry cfg keeps the observation-based curated blue for air (cite this
+divergence); this table is the first-principles reference.
+
+**co2 CN-violet caveat:** pure C+O has no nitrogen → C₂ Swan only. The Mars-EDL
+CN-violet needs trace N₂ — documented in molecular_bands.yaml, not modeled.
+
+State: engine + atomic_lines.yaml + molecular_bands.yaml + rebuilt
+plasma_temperature_colors.yaml + visualizer caption/tooltip all done; check.sh
+green. Remaining: tools.md registration (+ko), optional validate script.
+
 ## Open questions
 - Continuum: is free-free alone enough for hue, or is bound-free needed below
   the Balmer/Paschen edges? Decide empirically vs curated hexes.

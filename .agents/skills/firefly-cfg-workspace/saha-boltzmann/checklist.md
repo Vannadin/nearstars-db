@@ -20,21 +20,19 @@ Started 2026-06-08. See [plan](plan.md).
 - [x] Anchors verified: Hα 6.47e7, O I 777 triplet 3.69e7, He D3 587.6/7.07e7,
   C II 426.7/2.34e8, ionization energies, ground terms
 
-## Stage 3 — Molecular band data (delegate → verify)
-- [ ] `db/refs/molecular_bands.yaml` schema: system → {species, band_heads_nm,
-  T_e_cm, eff_strength, dissociation_eV, note}
-- [ ] N₂ 1P + 2P, N₂⁺ 1NG, CN violet, C₂ Swan, CH (431nm), NH (336nm), OH (306nm), H₂
-- [ ] Verify: CN violet head 388.3; C₂ Swan 516.5; N₂⁺ 1NG 391.4;
-  D(N₂)=9.79eV, D(O₂)=5.12eV, D(H₂)=4.48eV, D(CO)=11.16eV
+## Stage 3 — Molecular band data (DONE — curated from Huber-Herzberg myself)
+- [x] `db/refs/molecular_bands.yaml`: molecules (D0, μ, ω_e, B_e, σ, g_elec) +
+  band_systems (T_e, g_upper, A_eff, heads) + composition_bands map
+- [x] N₂ 1P + 2P, N₂⁺ 1NG, C₂ Swan, CH A, NH A, OH A (CN deferred — needs trace N)
+- [x] dissociation equilibrium (law of mass action) in engine; N₂ curve verified
 
-## Stage 4 — Wire compositions
-- [ ] Composition → constituent species map (air→N,O; co2→C,O(+CO,CN,C2);
-  h2_he→H,He; ch4→C,H(+CH,C2,CN); h2o→H,O(+OH); nh3→N,H(+NH))
-- [ ] Replace `build()` per-composition loop to call `slab_spectrum(T)`
-- [ ] YAML: keep `combined_hex`/`rgb`/`temp_k`; add `ionization_fraction`,
-  `molecular_fraction`, `tau_peak`, `dominant_species`; drop `emission_weight`
-- [ ] `_blackbody` table unchanged (still exact)
-- [ ] `--sanity` prints physically sensible march per composition
+## Stage 4 — Wire compositions (DONE)
+- [x] Composition → element fractions in saha_boltzmann.COMPOSITIONS; bands via
+  molecular_bands.composition_bands
+- [x] `build()` calls `slab_spectrum(T)`; `_blackbody` unchanged (exact)
+- [x] YAML: combined_hex/rgb/temp_k + ionization_fraction/molecular_fraction/
+  emission_fraction/dominant; emission_weight/continuum_hex/emission_hex dropped
+- [x] `--sanity` march physically sensible (C₂ green, Balmer pink, N₂ dissoc)
 
 ## Stage 5 — Render + validate + verify
 - [ ] `render_color_visualizer.py`: tooltip uses new diagnostics; caption +

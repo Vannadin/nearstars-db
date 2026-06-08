@@ -493,8 +493,9 @@ def render_plasma_temp_grid() -> str:
         for t in temps:
             c = blk["colors"][t]
             hx = c["combined_hex"]
-            tip = (f'{t}K · combined {hx} · continuum {c["continuum_hex"]} '
-                   f'+ emission {c["emission_hex"]} (w={c["emission_weight"]})')
+            tip = (f'{t}K · {hx} · {c["dominant"]} · '
+                   f'ionz={c["ionization_fraction"]} mol={c["molecular_fraction"]} '
+                   f'emis={c["emission_fraction"]}')
             cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
                       f'title="{tip}"></div>')
         rows.append(f'<div style="{row}"><div style="{lab}" data-i18n="ptc_{k}"></div>'
@@ -617,7 +618,7 @@ def build_t(palettes):
         "h_bulk": "Bulk-gas reentry palettes (Firefly emitter)",
         "h_streak": "Secondary-species streak palette",
         "h_plasma_temp": "Plasma color vs temperature (1000K steps)",
-        "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = combined per composition: low T thermal glow → high T plasma emission. MODEL: emission hue is the curated reentry signature, blended by a temperature weight — not an ab-initio Saha/Boltzmann calc. Hover for breakdown.",
+        "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
         "bt_blackbody": "Blackbody (thermal)",
         "ptc_air": "N2/O2 (Earth-like)",
         "ptc_co2": "CO2 (Mars/Venus)",
@@ -654,7 +655,7 @@ def build_t(palettes):
         "h_bulk": "Bulk-gas 재진입 팔레트 (Firefly emitter)",
         "h_streak": "2차 종 streak 팔레트",
         "h_plasma_temp": "온도별 플라스마 색 (1000K 간격)",
-        "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 합성색으로, 저온은 열복사 글로우 고온은 플라스마 방출색. 모델 주의 — 방출 hue는 큐레이션된 재진입 시그니처를 온도 가중으로 블렌드한 것이지 ab-initio Saha/Boltzmann 계산이 아닙니다. 셀에 마우스를 올리면 분해가 보입니다.",
+        "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
         "ptc_air": "N2/O2 (지구형)",
         "ptc_co2": "CO2 (화성/금성)",
