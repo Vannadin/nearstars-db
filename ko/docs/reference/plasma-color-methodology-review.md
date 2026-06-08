@@ -52,6 +52,20 @@ ADS: `2010AcSpB..65...86C`, `2014AcSpB..96...61M`, `2023ApPhB.129..136L`, `2021A
 
 **오로라(금지선 + quenching).** 메커니즘: `1960JChPh..32..607Y`(N₂ 잔광의 오로라 녹색 OI 557.7), `1989RSPSA.424....1S`(O(¹S) airglow 메커니즘), `1990AdSpR..10e..31F`(금성 야광 O ¹D/¹S, 해리재결합 + 연전자 강하). 수명/quenching: Slanger & Copeland(energetic-oxygen 리뷰), Sobral et al. 1993 JGR 98(O(¹D)+O(³P)), Rees 1989(표준 aeronomy). quenching 계수는 표준 교과서값을 이들에 대조 — 단일 측정에서 새로 추출한 건 아님.
 
+## 분자 밴드 커버리지 (패널 확장)
+
+분자 패널 전체를 온도별로 칠하려고(6개 벌크 재진입 조성뿐 아니라) 엔진의 밴드
+DB를 기존 N2/N2+/C2/CH/NH/OH에서 확장했다. **CN** violet(B²Σ⁺–X²Σ⁺, 388/421 nm),
+**CO** Ångström(B¹Σ⁺–A¹Π 청록, 상위준위가 높아 LTE에선 희미), 그리고 금속산화물
+**TiO**(γ A³Φ–X³Δ 빨강, 705 nm), **VO**(C⁴Σ⁻–X⁴Σ⁻ ~574 nm), **FeO**(주황
+D⁵Δ–X⁵Δ, 580–626 nm), **MgO**(B¹Σ⁺–X¹Σ⁺ 초록 ~500 nm)을 추가했고, Mg/Ti/V/Fe를
+원자 DB에 넣어 각 산화물이 저온 밴드 → 해리 → 금속 원자 → 이온 행진을 제대로
+보이게 했다. 바닥상태 상수는 Huber & Herzberg, 밴드 헤드·항값은 출처가 있다(TiO
+`2110.01908`/`1612.08298`, VO ExoMol XVIII `1609.06120`, FeO Evans 2010 GRL
+Odin/OSIRIS airglow, MgO ExoMol XXXII `1904.12155`). 가시 밴드가 UV 우세이거나
+불확실한 종(O2·NO·S2·SO·SiO·HCl·HF)은 일부러 모델링하지 않았다 — 조작된 밴드
+헤드 대신 원자/열복사 색으로 폴백한다.
+
 ## 관련
 - [tools.md](tools.md) — 빌드 스크립트 + DB
 - 엔진: `scripts/refs/saha_boltzmann.py`, `build_element_temperature_colors.py`

@@ -143,6 +143,22 @@ Copeland (energetic-oxygen review), Sobral et al. 1993 JGR 98 (O(¹D)+O(³P)),
 Rees 1989 (standard aeronomy). Quenching coefficients are standard textbook
 values cross-checked against these, not freshly extracted.
 
+## Molecular band coverage (panel extension)
+
+To color the full molecular panel vs temperature (not just the 6 bulk reentry
+compositions), the engine's band DB was extended beyond the original
+N2/N2+/C2/CH/NH/OH: **CN** violet (B²Σ⁺–X²Σ⁺, 388/421 nm), **CO** Ångström
+(B¹Σ⁺–A¹Π blue-green; high upper state → faint in LTE), and the metal oxides
+**TiO** (γ A³Φ–X³Δ red, 705 nm), **VO** (C⁴Σ⁻–X⁴Σ⁻ ~574 nm), **FeO** (orange
+D⁵Δ–X⁵Δ, 580–626 nm), **MgO** (B¹Σ⁺–X¹Σ⁺ green ~500 nm) — with Mg/Ti/V/Fe added
+to the atomic DB so each oxide shows the correct low-T band → dissociation →
+metal-atomic → ionic march. Ground-state constants are Huber & Herzberg; band
+heads / term values are sourced (TiO `2110.01908`/`1612.08298`; VO ExoMol XVIII
+`1609.06120`; FeO Evans 2010 GRL Odin/OSIRIS airglow; MgO ExoMol XXXII
+`1904.12155`). Species whose visible bands are UV-dominant or uncertain (O2, NO,
+S2, SO, SiO, HCl, HF) were deliberately NOT modeled — they fall back to
+atomic/thermal color rather than fabricated band heads.
+
 ## Related
 - [tools.md](tools.md) — the build scripts + DBs
 - engine: `scripts/refs/saha_boltzmann.py`, `build_element_temperature_colors.py`

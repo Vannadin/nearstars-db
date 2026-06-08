@@ -52,7 +52,13 @@
 - [x] commit
 
 ## Phase F — register + verify
-- [ ] tools.md (+ ko mirror): new script + YAML
-- [ ] methodology-review: note molecular band extension + sources
-- [ ] ./scripts/check.sh green
-- [ ] commit
+- [x] tools.md (+ ko mirror): build_molecular_temperature_colors + YAML; updated
+      atomic_lines (18 species), molecular_bands (CN/CO/oxides), element_temp (X II),
+      emit_atmosphere_color (H/He/C/N/O/S/Mg/Ti/V/Fe), render (slider)
+- [x] methodology-review (+ ko): "Molecular band coverage (panel extension)" + sources
+- [x] ./scripts/check.sh green (mirrors OK, no broken links)
+- [x] commit
+
+## DONE — all phases complete. The molecular panel joins the temperature slider,
+## with CN/CO + metal-oxide bands physically sourced. Ready to package for sharing
+## (color DB + attribution) when the user gives the go-ahead.
