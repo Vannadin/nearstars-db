@@ -85,6 +85,8 @@ def aurora_spectrum(emitters, comp, n):
     contribs = []                       # (nm, strength)
     diag = {}                           # per-emitter production (for the dominant label)
     for name, e in emitters.items():
+        if e.get("catalog_only"):       # UV/NIR — outside the visible grid (table only)
+            continue
         x = comp.get(e["source"], 0.0)
         if x <= 0:
             continue

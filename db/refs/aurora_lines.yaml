@@ -104,3 +104,67 @@ emitters:
     forbidden: false
     yield: 18.0
     lines: [{nm: 393.4, A: 1.0}, {nm: 396.8, A: 0.5}]
+
+  # ── UV / near-IR emitters — OUTSIDE the visible color grid (catalog_only: true,
+  #    skipped by build_aurora_colors), cataloged here for a future spectral
+  #    visualization. Standard aeronomy wavelengths (Rees 1989; Chamberlain). ──
+  O_FUV:                      # OI 130.4 (triplet) + 135.6nm — major FUV auroral oxygen
+    source: O
+    catalog_only: true
+    forbidden: false
+    yield: 2.0
+    lines: [{nm: 130.4, A: 1.0}, {nm: 135.6, A: 0.6}]
+  H_Lyman_a:                  # H Lyman-α 121.6nm — proton aurora (FUV)
+    source: H
+    catalog_only: true
+    forbidden: false
+    yield: 1.0
+    lines: [{nm: 121.6, A: 1.0}]
+  N2_LBH:                     # N2 Lyman-Birge-Hopfield a1Pg-X1Sg 140-200nm (FUV aurora)
+    source: N2
+    catalog_only: true
+    forbidden: true           # a1Pg is metastable; quench not modeled (catalog only)
+    yield: 0.8
+    lines: [{nm: 146.0, A: 0.7}, {nm: 160.0, A: 1.0}, {nm: 180.0, A: 0.6}]
+  CO_Cameron:                 # CO Cameron a3P-X1S 200-260nm — Mars/Venus dayglow (UV)
+    source: CO2               #   CO from CO2 dissociation
+    catalog_only: true
+    forbidden: true
+    yield: 0.5
+    lines: [{nm: 206.0, A: 1.0}, {nm: 219.0, A: 0.7}, {nm: 245.0, A: 0.5}]
+  Mg_II_UV:                   # Mg+ 279.6/280.3nm — meteoric Mg+ (most abundant metal ion), UV
+    source: Mg
+    catalog_only: true
+    forbidden: false
+    yield: 30.0
+    lines: [{nm: 279.6, A: 1.0}, {nm: 280.3, A: 0.5}]
+  Mg_I_UV:                    # Mg 285.2nm — neutral meteoric Mg, UV
+    source: Mg
+    catalog_only: true
+    forbidden: false
+    yield: 10.0
+    lines: [{nm: 285.2, A: 1.0}]
+  Fe_violet:                  # meteoric Fe 372.0/386.0nm — near-UV/violet ("mesospheric ghost")
+    source: Fe
+    catalog_only: true
+    forbidden: false
+    yield: 12.0
+    lines: [{nm: 372.0, A: 1.0}, {nm: 386.0, A: 0.7}]
+  O_844:                      # OI 844.6nm — auroral oxygen (near-IR)
+    source: O
+    catalog_only: true
+    forbidden: false
+    yield: 0.1
+    lines: [{nm: 844.6, A: 1.0}]
+  O2_atm:                     # O2 Atmospheric band b1Sg-X3Sg 761.9/864.5nm — airglow (NIR)
+    source: O2
+    catalog_only: true
+    forbidden: true           # b1Sg metastable (~12s); quench not modeled (catalog only)
+    yield: 1.5
+    lines: [{nm: 761.9, A: 1.0}, {nm: 864.5, A: 0.4}]
+  N2p_Meinel:                 # N2+ Meinel A2Pu-X2Sg 600-1100nm — auroral near-IR
+    source: N2
+    catalog_only: true
+    forbidden: false
+    yield: 0.4
+    lines: [{nm: 787.0, A: 1.0}, {nm: 918.0, A: 0.6}]

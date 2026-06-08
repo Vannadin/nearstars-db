@@ -26,6 +26,8 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "scripts" / "refs"))
+import cie_color                        # noqa: E402  (aurora emitter swatches)
 sys.path.insert(0, str(ROOT / ".claude/skills/firefly-cfg/scripts"))
 from emit_firefly_cfg import (  # noqa: E402
     PALETTES, STREAK_PALETTE, DEFAULTS_HEX_RGB,
@@ -41,6 +43,7 @@ PLASMA_TEMP_DB = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
 ELEMENT_TEMP_DB = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
 MOL_TEMP_DB = ROOT / "db" / "refs" / "molecular_temperature_colors.yaml"
 AURORA_COLORS_DB = ROOT / "db" / "refs" / "aurora_colors.yaml"
+AURORA_LINES_DB = ROOT / "db" / "refs" / "aurora_lines.yaml"
 PHASE3_DIR = ROOT / "docs" / "phase3"
 OUT = ROOT / "docs" / "firefly-colors.html"
 
@@ -445,6 +448,60 @@ def render_aurora_grid() -> str:
             + "".join(rows))
 
 
+# ── Aurora emitter catalog (per-emitter table: lines, band, color) ──
+
+def _aurora_emitter_color(lines: list):
+    """A-weighted CIE color from an emitter's own lines; None if no visible content."""
+    inten = []
+    for lam in cie_color.LAMBDAS:
+        j = 0.0
+        for ln in lines:
+            d = (lam - ln["nm"]) / 2.5
+            if -6 < d < 6:
+                j += ln["A"] * 2.718 ** (-0.5 * d * d)
+        inten.append(j)
+    return cie_color.spectrum_to_hex(inten) if max(inten) > 0 else None
+
+
+def _aurora_band(lines: list) -> str:
+    nm = max(lines, key=lambda l: l["A"])["nm"]      # brightest line
+    return "FUV" if nm < 200 else "UV" if nm < 380 else "vis" if nm <= 750 else "NIR"
+
+
+def render_aurora_emitters() -> str:
+    if not AURORA_LINES_DB.exists():
+        return ""
+    data = yaml.safe_load(AURORA_LINES_DB.read_text(encoding="utf-8"))["emitters"]
+    rows = []
+    for name, e in data.items():
+        lines = e["lines"]
+        band = _aurora_band(lines)
+        hexv = _aurora_emitter_color(lines) if band == "vis" else None
+        nm_list = ", ".join(f'{ln["nm"]:g}' for ln in lines)
+        typ_key = "ae_forbidden" if e.get("forbidden") else "ae_allowed"
+        catalog = ' <span class="muted">· catalog</span>' if e.get("catalog_only") else ""
+        if hexv:
+            sw = (f'<span class="swatch-inline" style="background:{hexv};'
+                  f'color:{text_on(hexv)}">{hexv}</span>')
+        else:
+            sw = f'<span class="swatch-inline" style="background:#1b1b1b;color:#888">{band}</span>'
+        rows.append(
+            f'<tr><td>{sw}</td><td class="sp">{html.escape(name)}</td>'
+            f'<td>{html.escape(str(e["source"]))}</td>'
+            f'<td class="rgbi">{nm_list}</td>'
+            f'<td>{band}{catalog}</td>'
+            f'<td data-i18n="{typ_key}"></td></tr>'
+        )
+    return (
+        '<p class="muted" data-i18n="aurora_emitters_caption" style="font-size:12px;margin:4px 0 8px"></p>'
+        '<table class="streak-table"><thead><tr>'
+        '<th data-i18n="th_ae_color"></th><th data-i18n="th_ae_emitter"></th>'
+        '<th data-i18n="th_ae_source"></th><th data-i18n="th_ae_lines"></th>'
+        '<th data-i18n="th_ae_band"></th><th data-i18n="th_ae_type"></th>'
+        '</tr></thead><tbody>' + "".join(rows) + '</tbody></table>'
+    )
+
+
 # ── Emitted body cards (same logic as before; uses atomic_flame for element streak) ──
 
 def derive_body_palette(slug: str, db: dict):
@@ -567,6 +624,11 @@ def build_t(palettes):
         "h_firefly_stock": "Firefly stock cfg colors (reference)",
         "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
         "h_aurora": "Aurora color vs altitude/density (non-LTE)",
+        "h_aurora_emitters": "Aurora / airglow emitter catalog",
+        "aurora_emitters_caption": "Every non-LTE emitter in the model — forbidden lines, allowed bands, the meteoric-metal layer, plus UV / near-IR lines (catalog only, outside the visible grid) kept for a future spectral visualization. Swatch = the emitter's own CIE color (visible only); FUV/UV/NIR show a band badge.",
+        "th_ae_color": "Color", "th_ae_emitter": "Emitter", "th_ae_source": "Source",
+        "th_ae_lines": "Lines (nm)", "th_ae_band": "Band", "th_ae_type": "Type",
+        "ae_forbidden": "forbidden/metastable", "ae_allowed": "allowed",
         "aurora_caption": "Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude), warming at the densest rows toward the ~80-105km airglow / meteoric-metal layer (Na 589nm yellow + OH Meinel red + traces of Li/K/Ca⁺). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Other emitters in the catalog: O I 777nm (bright-aurora deep red). Computed from measured A-values + quenching coefficients; cell label = dominant emitter (by production). This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
         "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — same coverage as the periodic table above. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
@@ -605,6 +667,11 @@ def build_t(palettes):
         "h_firefly_stock": "Firefly 기본 cfg 색상 (레퍼런스)",
         "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
         "h_aurora": "고도/밀도별 오로라 색 (비-LTE)",
+        "h_aurora_emitters": "오로라 / airglow 발광종 카탈로그",
+        "aurora_emitters_caption": "모델의 모든 비-LTE 발광종 — 금지선, 허용 밴드, 유성기원 금속층, 그리고 UV / 근적외 라인(카탈로그 전용, 가시 그리드 밖)까지. 나중 스펙트럼 시각화용으로 보존합니다. 스와치 = 발광종 자체의 CIE 색(가시영역만), FUV/UV/NIR은 대역 배지.",
+        "th_ae_color": "색", "th_ae_emitter": "발광종", "th_ae_source": "소스",
+        "th_ae_lines": "라인 (nm)", "th_ae_band": "대역", "th_ae_type": "종류",
+        "ae_forbidden": "금지/준안정", "ae_allowed": "허용",
         "aurora_caption": "오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
         "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 위 주기율표와 같은 커버리지입니다. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
@@ -842,6 +909,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 
 <h2 data-i18n="h_aurora"></h2>
 {aurora_grid}
+
+<h2 data-i18n="h_aurora_emitters"></h2>
+{aurora_emitters}
 </section>
 
 <section>
@@ -964,6 +1034,7 @@ def main() -> int:
     element_temp_grid = render_element_temp_grid()
     firefly_stock_grid = render_firefly_stock()
     aurora_grid = render_aurora_grid()
+    aurora_emitters = render_aurora_emitters()
 
     body_results = []
     for slug in sorted(p.stem for p in PHASE3_DIR.glob("*.md")):
@@ -990,6 +1061,7 @@ def main() -> int:
         element_temp_grid=element_temp_grid,
         firefly_stock_grid=firefly_stock_grid,
         aurora_grid=aurora_grid,
+        aurora_emitters=aurora_emitters,
         bodies_section=bodies_section,
         t_json=t_json,
         element_temp_json=element_temp_json,
