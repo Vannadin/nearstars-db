@@ -1,0 +1,1043 @@
+# Computed LTE atomic plasma-emission color per element — the periodic table's
+# `lte_plasma` regime. Built by scripts/refs/build_lte_plasma_colors.py from NIST
+# ASD neutral lines via the saha_boltzmann/cie_color machinery. Optically-thin
+# neutral emission at 3500K (the element's spectral fingerprint).
+#
+# status: visible (hex + confidence + dominant_nm) | no_measured_spectra (null).
+# confidence=low: dominant emission line sits where the eye barely responds
+#   (alkali IR resonance lines) so the perceived color is edge-sensitive.
+# This is the ATOMIC color; where the classic flame color is molecular (CaOH,
+# SrOH) it differs from the curated flame regime — that is expected.
+H:
+  z: 1
+  status: visible
+  hex: '#ff0051'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 656.3
+  n_lines: 108
+  basis: LTE Boltzmann from 108 NIST lines (A-values) at 3500K; dominant 656.3nm
+He:
+  z: 2
+  status: visible
+  hex: '#ff8b19'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 587.6
+  n_lines: 101
+  basis: LTE Boltzmann from 101 NIST lines (A-values) at 3500K; dominant 587.6nm
+Li:
+  z: 3
+  status: visible
+  hex: '#ff0000'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 670.8
+  n_lines: 41
+  basis: LTE Boltzmann from 41 NIST lines (A-values) at 3500K; dominant 670.8nm
+Be:
+  z: 4
+  status: visible
+  hex: '#3200ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 825.4
+  n_lines: 72
+  basis: LTE Boltzmann from 72 NIST lines (A-values) at 3500K; dominant 825.4nm (dominant
+    line near the visibility edge)
+B:
+  z: 5
+  status: visible
+  hex: '#ff9000'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 821.2
+  n_lines: 47
+  basis: LTE Boltzmann from 47 NIST lines (A-values) at 3500K; dominant 821.2nm (dominant
+    line near the visibility edge)
+C:
+  z: 6
+  status: visible
+  hex: '#005cff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 462.2
+  n_lines: 188
+  basis: LTE Boltzmann from 188 NIST lines (A-values) at 3500K; dominant 462.2nm
+N:
+  z: 7
+  status: visible
+  hex: '#00ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 519.8
+  n_lines: 230
+  basis: LTE Boltzmann from 230 NIST lines (A-values) at 3500K; dominant 519.8nm
+O:
+  z: 8
+  status: visible
+  hex: '#ff0000'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 630.0
+  n_lines: 177
+  basis: LTE Boltzmann from 177 NIST lines (A-values) at 3500K; dominant 630.0nm
+F:
+  z: 9
+  status: visible
+  hex: '#ff0000'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 685.6
+  n_lines: 61
+  basis: LTE Boltzmann from 61 NIST lines (A-values) at 3500K; dominant 685.6nm (dominant
+    line near the visibility edge)
+Ne:
+  z: 10
+  status: visible
+  hex: '#ff0000'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 640.2
+  n_lines: 211
+  basis: LTE Boltzmann from 211 NIST lines (A-values) at 3500K; dominant 640.2nm
+Na:
+  z: 11
+  status: visible
+  hex: '#ff8200'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 589.0
+  n_lines: 116
+  basis: LTE Boltzmann from 116 NIST lines (A-values) at 3500K; dominant 589.0nm
+Mg:
+  z: 12
+  status: visible
+  hex: '#00ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 518.4
+  n_lines: 113
+  basis: LTE Boltzmann from 113 NIST lines (A-values) at 3500K; dominant 518.4nm
+Al:
+  z: 13
+  status: visible
+  hex: '#0000ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 396.2
+  n_lines: 27
+  basis: LTE Boltzmann from 27 NIST lines (A-values) at 3500K; dominant 396.2nm (dominant
+    line near the visibility edge)
+Si:
+  z: 14
+  status: visible
+  hex: '#0031ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 390.6
+  n_lines: 77
+  basis: LTE Boltzmann from 77 NIST lines (A-values) at 3500K; dominant 390.6nm (dominant
+    line near the visibility edge)
+P:
+  z: 15
+  status: visible
+  hex: '#00ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 533.2
+  n_lines: 59
+  basis: LTE Boltzmann from 59 NIST lines (A-values) at 3500K; dominant 533.2nm
+S:
+  z: 16
+  status: visible
+  hex: '#3000ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 772.5
+  n_lines: 158
+  basis: LTE Boltzmann from 158 NIST lines (A-values) at 3500K; dominant 772.5nm (dominant
+    line near the visibility edge)
+Cl:
+  z: 17
+  status: visible
+  hex: '#4700ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 821.2
+  n_lines: 67
+  basis: LTE Boltzmann from 67 NIST lines (A-values) at 3500K; dominant 821.2nm (dominant
+    line near the visibility edge)
+Ar:
+  z: 18
+  status: visible
+  hex: '#ff84de'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 811.5
+  n_lines: 298
+  basis: LTE Boltzmann from 298 NIST lines (A-values) at 3500K; dominant 811.5nm (dominant
+    line near the visibility edge)
+K:
+  z: 19
+  status: visible
+  hex: '#ccffc1'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 766.5
+  n_lines: 65
+  basis: LTE Boltzmann from 65 NIST lines (A-values) at 3500K; dominant 766.5nm (dominant
+    line near the visibility edge)
+Ca:
+  z: 20
+  status: visible
+  hex: '#7900ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 422.7
+  n_lines: 93
+  basis: LTE Boltzmann from 93 NIST lines (A-values) at 3500K; dominant 422.7nm
+Sc:
+  z: 21
+  status: visible
+  hex: '#ff9a8a'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 391.2
+  n_lines: 176
+  basis: LTE Boltzmann from 176 NIST lines (A-values) at 3500K; dominant 391.2nm (dominant
+    line near the visibility edge)
+Ti:
+  z: 22
+  status: visible
+  hex: '#00fffd'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 399.9
+  n_lines: 329
+  basis: LTE Boltzmann from 329 NIST lines (A-values) at 3500K; dominant 399.9nm
+V:
+  z: 23
+  status: visible
+  hex: '#9900ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 437.9
+  n_lines: 812
+  basis: LTE Boltzmann from 812 NIST lines (A-values) at 3500K; dominant 437.9nm
+Cr:
+  z: 24
+  status: visible
+  hex: '#006cff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 425.4
+  n_lines: 414
+  basis: LTE Boltzmann from 414 NIST lines (A-values) at 3500K; dominant 425.4nm
+Mn:
+  z: 25
+  status: visible
+  hex: '#6700ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 403.1
+  n_lines: 332
+  basis: LTE Boltzmann from 332 NIST lines (A-values) at 3500K; dominant 403.1nm
+Fe:
+  z: 26
+  status: visible
+  hex: '#00c3ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 372.0
+  n_lines: 1543
+  basis: LTE Boltzmann from 1543 NIST lines (A-values) at 3500K; dominant 372.0nm
+    (dominant line near the visibility edge)
+Co:
+  z: 27
+  status: visible
+  hex: '#795aff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 387.3
+  n_lines: 172
+  basis: LTE Boltzmann from 172 NIST lines (A-values) at 3500K; dominant 387.3nm (dominant
+    line near the visibility edge)
+Ni:
+  z: 28
+  status: visible
+  hex: '#83ff80'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 361.9
+  n_lines: 288
+  basis: LTE Boltzmann from 288 NIST lines (A-values) at 3500K; dominant 361.9nm (dominant
+    line near the visibility edge)
+Cu:
+  z: 29
+  status: visible
+  hex: '#00ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 510.6
+  n_lines: 18
+  basis: LTE Boltzmann from 18 NIST lines (A-values) at 3500K; dominant 510.6nm
+Zn:
+  z: 30
+  status: visible
+  hex: '#ff0000'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 636.2
+  n_lines: 1
+  basis: LTE Boltzmann from 1 NIST lines (A-values) at 3500K; dominant 636.2nm
+Ga:
+  z: 31
+  status: visible
+  hex: '#7b00ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 417.2
+  n_lines: 2
+  basis: LTE Boltzmann from 2 NIST lines (A-values) at 3500K; dominant 417.2nm
+Ge:
+  z: 32
+  status: visible
+  hex: '#0000ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 468.6
+  n_lines: 2
+  basis: LTE Boltzmann from 2 NIST lines (A-values) at 3500K; dominant 468.6nm
+As:
+  z: 33
+  status: visible
+  hex: '#00ff00'
+  method: intensity
+  confidence: low
+  dominant_nm: 545.1
+  n_lines: 6
+  basis: top-6 NIST observed intensities (no A-values for this spectrum); dominant
+    545.1nm
+Se:
+  z: 34
+  status: visible
+  hex: '#4146ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 473.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    473.1nm
+Br:
+  z: 35
+  status: visible
+  hex: '#ff00ad'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 827.2
+  n_lines: 22
+  basis: LTE Boltzmann from 22 NIST lines (A-values) at 3500K; dominant 827.2nm (dominant
+    line near the visibility edge)
+Kr:
+  z: 36
+  status: visible
+  hex: '#ffacc5'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 811.3
+  n_lines: 111
+  basis: LTE Boltzmann from 111 NIST lines (A-values) at 3500K; dominant 811.3nm (dominant
+    line near the visibility edge)
+Rb:
+  z: 37
+  status: visible
+  hex: '#fd00ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 780.0
+  n_lines: 13
+  basis: LTE Boltzmann from 13 NIST lines (A-values) at 3500K; dominant 780.0nm (dominant
+    line near the visibility edge)
+Sr:
+  z: 38
+  status: visible
+  hex: '#0000ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 460.7
+  n_lines: 66
+  basis: LTE Boltzmann from 66 NIST lines (A-values) at 3500K; dominant 460.7nm
+Y:
+  z: 39
+  status: visible
+  hex: '#e221ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 410.2
+  n_lines: 165
+  basis: LTE Boltzmann from 165 NIST lines (A-values) at 3500K; dominant 410.2nm
+Zr:
+  z: 40
+  status: visible
+  hex: '#0000ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 360.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    360.1nm (dominant line near the visibility edge)
+Nb:
+  z: 41
+  status: visible
+  hex: '#8100ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 405.9
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    405.9nm
+Mo:
+  z: 42
+  status: visible
+  hex: '#a3ff6b'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 379.8
+  n_lines: 453
+  basis: LTE Boltzmann from 453 NIST lines (A-values) at 3500K; dominant 379.8nm (dominant
+    line near the visibility edge)
+Tc:
+  z: 43
+  status: visible
+  hex: '#6200ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 429.7
+  n_lines: 9
+  basis: LTE Boltzmann from 9 NIST lines (A-values) at 3500K; dominant 429.7nm
+Ru:
+  z: 44
+  status: visible
+  hex: '#4800ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 372.8
+  n_lines: 6
+  basis: LTE Boltzmann from 6 NIST lines (A-values) at 3500K; dominant 372.8nm (dominant
+    line near the visibility edge)
+Rh:
+  z: 45
+  status: visible
+  hex: '#7200ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 369.2
+  n_lines: 73
+  basis: LTE Boltzmann from 73 NIST lines (A-values) at 3500K; dominant 369.2nm (dominant
+    line near the visibility edge)
+Pd:
+  z: 46
+  status: visible
+  hex: '#0077ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 361.0
+  n_lines: 1
+  basis: LTE Boltzmann from 1 NIST lines (A-values) at 3500K; dominant 361.0nm (dominant
+    line near the visibility edge)
+Ag:
+  z: 47
+  status: visible
+  hex: '#00ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 546.5
+  n_lines: 3
+  basis: LTE Boltzmann from 3 NIST lines (A-values) at 3500K; dominant 546.5nm
+Cd:
+  z: 48
+  status: visible
+  hex: '#00f8ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 508.6
+  n_lines: 8
+  basis: LTE Boltzmann from 8 NIST lines (A-values) at 3500K; dominant 508.6nm
+In:
+  z: 49
+  status: visible
+  hex: '#5600ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 451.1
+  n_lines: 2
+  basis: LTE Boltzmann from 2 NIST lines (A-values) at 3500K; dominant 451.1nm
+Sn:
+  z: 50
+  status: visible
+  hex: '#7f7aff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 380.1
+  n_lines: 9
+  basis: LTE Boltzmann from 9 NIST lines (A-values) at 3500K; dominant 380.1nm (dominant
+    line near the visibility edge)
+Sb:
+  z: 51
+  status: visible
+  hex: '#d1ff00'
+  method: intensity
+  confidence: low
+  dominant_nm: 363.8
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    363.8nm (dominant line near the visibility edge)
+Te:
+  z: 52
+  status: visible
+  hex: '#ff0000'
+  method: intensity
+  confidence: low
+  dominant_nm: 806.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    806.1nm (dominant line near the visibility edge)
+I:
+  z: 53
+  status: visible
+  hex: '#ff9400'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 804.4
+  n_lines: 31
+  basis: LTE Boltzmann from 31 NIST lines (A-values) at 3500K; dominant 804.4nm (dominant
+    line near the visibility edge)
+Xe:
+  z: 54
+  status: visible
+  hex: '#004aff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 823.2
+  n_lines: 84
+  basis: LTE Boltzmann from 84 NIST lines (A-values) at 3500K; dominant 823.2nm (dominant
+    line near the visibility edge)
+Cs:
+  z: 55
+  status: visible
+  hex: '#3500ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 455.5
+  n_lines: 7
+  basis: LTE Boltzmann from 7 NIST lines (A-values) at 3500K; dominant 455.5nm
+Ba:
+  z: 56
+  status: visible
+  hex: '#97ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 553.5
+  n_lines: 72
+  basis: LTE Boltzmann from 72 NIST lines (A-values) at 3500K; dominant 553.5nm
+La:
+  z: 57
+  status: visible
+  hex: '#f9ff64'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 550.1
+  n_lines: 272
+  basis: LTE Boltzmann from 272 NIST lines (A-values) at 3500K; dominant 550.1nm
+Ce:
+  z: 58
+  status: visible
+  hex: '#f8ff00'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 567.0
+  n_lines: 67
+  basis: LTE Boltzmann from 67 NIST lines (A-values) at 3500K; dominant 567.0nm
+Pr:
+  z: 59
+  status: visible
+  hex: '#00dbff'
+  method: intensity
+  confidence: low
+  dominant_nm: 495.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    495.1nm
+Nd:
+  z: 60
+  status: visible
+  hex: '#00a9ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 492.5
+  n_lines: 9
+  basis: LTE Boltzmann from 9 NIST lines (A-values) at 3500K; dominant 492.5nm
+Pm:
+  z: 61
+  status: visible
+  hex: '#b653ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 652.0
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    652.0nm
+Sm:
+  z: 62
+  status: visible
+  hex: '#0041ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 484.2
+  n_lines: 7
+  basis: LTE Boltzmann from 7 NIST lines (A-values) at 3500K; dominant 484.2nm
+Eu:
+  z: 63
+  status: visible
+  hex: '#3700ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 459.4
+  n_lines: 106
+  basis: LTE Boltzmann from 106 NIST lines (A-values) at 3500K; dominant 459.4nm
+Gd:
+  z: 64
+  status: visible
+  hex: '#6700ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 422.6
+  n_lines: 16
+  basis: LTE Boltzmann from 16 NIST lines (A-values) at 3500K; dominant 422.6nm
+Tb:
+  z: 65
+  status: visible
+  hex: '#6200ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 432.6
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    432.6nm
+Dy:
+  z: 66
+  status: visible
+  hex: '#9600ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 421.2
+  n_lines: 67
+  basis: LTE Boltzmann from 67 NIST lines (A-values) at 3500K; dominant 421.2nm
+Ho:
+  z: 67
+  status: visible
+  hex: '#a600ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 410.4
+  n_lines: 12
+  basis: LTE Boltzmann from 12 NIST lines (A-values) at 3500K; dominant 410.4nm
+Er:
+  z: 68
+  status: visible
+  hex: '#e700ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 400.8
+  n_lines: 11
+  basis: LTE Boltzmann from 11 NIST lines (A-values) at 3500K; dominant 400.8nm
+Tm:
+  z: 69
+  status: visible
+  hex: '#a89fff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 410.6
+  n_lines: 340
+  basis: LTE Boltzmann from 340 NIST lines (A-values) at 3500K; dominant 410.6nm
+Yb:
+  z: 70
+  status: visible
+  hex: '#72ffaf'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 398.8
+  n_lines: 2
+  basis: LTE Boltzmann from 2 NIST lines (A-values) at 3500K; dominant 398.8nm
+Lu:
+  z: 71
+  status: visible
+  hex: '#b3d9ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 451.9
+  n_lines: 27
+  basis: LTE Boltzmann from 27 NIST lines (A-values) at 3500K; dominant 451.9nm
+Hf:
+  z: 72
+  status: visible
+  hex: '#6dcaff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 368.2
+  n_lines: 119
+  basis: LTE Boltzmann from 119 NIST lines (A-values) at 3500K; dominant 368.2nm (dominant
+    line near the visibility edge)
+Ta:
+  z: 73
+  status: visible
+  hex: '#cfe1ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 540.3
+  n_lines: 175
+  basis: LTE Boltzmann from 175 NIST lines (A-values) at 3500K; dominant 540.3nm
+W:
+  z: 74
+  status: visible
+  hex: '#0097ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 400.9
+  n_lines: 347
+  basis: LTE Boltzmann from 347 NIST lines (A-values) at 3500K; dominant 400.9nm
+Re:
+  z: 75
+  status: visible
+  hex: '#00acff'
+  method: intensity
+  confidence: low
+  dominant_nm: 372.6
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    372.6nm (dominant line near the visibility edge)
+Os:
+  z: 76
+  status: visible
+  hex: '#6a00ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 426.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    426.1nm
+Ir:
+  z: 77
+  status: visible
+  hex: '#001eff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 380.0
+  n_lines: 24
+  basis: LTE Boltzmann from 24 NIST lines (A-values) at 3500K; dominant 380.0nm (dominant
+    line near the visibility edge)
+Pt:
+  z: 78
+  status: visible
+  hex: '#adb4ff'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 362.8
+  n_lines: 46
+  basis: LTE Boltzmann from 46 NIST lines (A-values) at 3500K; dominant 362.8nm (dominant
+    line near the visibility edge)
+Au:
+  z: 79
+  status: visible
+  hex: '#ff0000'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 627.8
+  n_lines: 9
+  basis: LTE Boltzmann from 9 NIST lines (A-values) at 3500K; dominant 627.8nm
+Hg:
+  z: 80
+  status: visible
+  hex: '#3ab9ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 435.8
+  n_lines: 20
+  basis: LTE Boltzmann from 20 NIST lines (A-values) at 3500K; dominant 435.8nm
+Tl:
+  z: 81
+  status: visible
+  hex: '#00ff00'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 377.6
+  n_lines: 2
+  basis: LTE Boltzmann from 2 NIST lines (A-values) at 3500K; dominant 377.6nm (dominant
+    line near the visibility edge)
+Pb:
+  z: 82
+  status: visible
+  hex: '#7c00ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 405.8
+  n_lines: 11
+  basis: LTE Boltzmann from 11 NIST lines (A-values) at 3500K; dominant 405.8nm
+Bi:
+  z: 83
+  status: visible
+  hex: '#0043ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 472.3
+  n_lines: 6
+  basis: LTE Boltzmann from 6 NIST lines (A-values) at 3500K; dominant 472.3nm
+Po:
+  z: 84
+  status: visible
+  hex: '#4d83ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 417.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    417.1nm
+At:
+  z: 85
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Rn:
+  z: 86
+  status: visible
+  hex: '#6500ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 745.0
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    745.0nm (dominant line near the visibility edge)
+Fr:
+  z: 87
+  status: visible
+  hex: '#ffa8fc'
+  method: boltzmann
+  confidence: low
+  dominant_nm: 718.0
+  n_lines: 112
+  basis: LTE Boltzmann from 112 NIST lines (A-values) at 3500K; dominant 718.0nm (dominant
+    line near the visibility edge)
+Ra:
+  z: 88
+  status: visible
+  hex: '#00a3ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 482.6
+  n_lines: 16
+  basis: LTE Boltzmann from 16 NIST lines (A-values) at 3500K; dominant 482.6nm
+Ac:
+  z: 89
+  status: visible
+  hex: '#47a6ff'
+  method: boltzmann
+  confidence: high
+  dominant_nm: 525.8
+  n_lines: 74
+  basis: LTE Boltzmann from 74 NIST lines (A-values) at 3500K; dominant 525.8nm
+Th:
+  z: 90
+  status: visible
+  hex: '#ff8c00'
+  method: intensity
+  confidence: low
+  dominant_nm: 576.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    576.1nm
+Pa:
+  z: 91
+  status: visible
+  hex: '#b818ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 363.7
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    363.7nm (dominant line near the visibility edge)
+U:
+  z: 92
+  status: visible
+  hex: '#6700ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 381.2
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    381.2nm (dominant line near the visibility edge)
+Np:
+  z: 93
+  status: visible
+  hex: '#00ff1e'
+  method: intensity
+  confidence: low
+  dominant_nm: 697.2
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    697.2nm (dominant line near the visibility edge)
+Pu:
+  z: 94
+  status: visible
+  hex: '#005aff'
+  method: intensity
+  confidence: low
+  dominant_nm: 372.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    372.1nm (dominant line near the visibility edge)
+Am:
+  z: 95
+  status: visible
+  hex: '#ff37e6'
+  method: intensity
+  confidence: low
+  dominant_nm: 605.5
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    605.5nm
+Cm:
+  z: 96
+  status: visible
+  hex: '#005fff'
+  method: intensity
+  confidence: low
+  dominant_nm: 360.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    360.1nm (dominant line near the visibility edge)
+Bk:
+  z: 97
+  status: visible
+  hex: '#006bff'
+  method: intensity
+  confidence: low
+  dominant_nm: 360.1
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    360.1nm (dominant line near the visibility edge)
+Cf:
+  z: 98
+  status: visible
+  hex: '#6700ff'
+  method: intensity
+  confidence: low
+  dominant_nm: 360.5
+  n_lines: 8
+  basis: top-8 NIST observed intensities (no A-values for this spectrum); dominant
+    360.5nm (dominant line near the visibility edge)
+Es:
+  z: 99
+  status: visible
+  hex: '#00ff00'
+  method: intensity
+  confidence: low
+  dominant_nm: 516.2
+  n_lines: 3
+  basis: top-3 NIST observed intensities (no A-values for this spectrum); dominant
+    516.2nm
+Fm:
+  z: 100
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Md:
+  z: 101
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+'No':
+  z: 102
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Lr:
+  z: 103
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Rf:
+  z: 104
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Db:
+  z: 105
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Sg:
+  z: 106
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Bh:
+  z: 107
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Hs:
+  z: 108
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Mt:
+  z: 109
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Ds:
+  z: 110
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Rg:
+  z: 111
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Cn:
+  z: 112
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Nh:
+  z: 113
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Fl:
+  z: 114
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Mc:
+  z: 115
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Lv:
+  z: 116
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Ts:
+  z: 117
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity
+Og:
+  z: 118
+  status: no_measured_spectra
+  hex: null
+  basis: no NIST neutral visible lines with A-values or intensity

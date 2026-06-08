@@ -35,6 +35,7 @@ from emit_firefly_cfg import (  # noqa: E402
 ELEMENT_DB = ROOT / "db" / "refs" / "element_plasma_colors.yaml"
 MOLECULAR_DB = ROOT / "db" / "refs" / "molecular_plasma_colors.yaml"
 PLASMA_TEMP_DB = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
+LTE_PLASMA_DB = ROOT / "db" / "refs" / "lte_plasma_colors.yaml"
 PHASE3_DIR = ROOT / "docs" / "phase3"
 OUT = ROOT / "docs" / "firefly-colors.html"
 
@@ -75,8 +76,10 @@ def rgb_intensity_to_hex(rgb_i: tuple) -> str:
 
 # ── Build element data for JS ──────────────────────────────────────
 
-def build_element_data(db: dict) -> dict:
-    """Per-element regime data, suitable for JSON embedding."""
+def build_element_data(db: dict, lte: dict | None = None) -> dict:
+    """Per-element regime data, suitable for JSON embedding. `lte` is the
+    computed lte_plasma_colors.yaml, merged in as the `lte_plasma` regime."""
+    lte = lte or {}
     data = {}
     for sym, e in db.items():
         entry = {
@@ -96,6 +99,15 @@ def build_element_data(db: dict) -> dict:
                 "basis": r.get("basis", ""),
                 "source": r.get("source", ""),
             }
+        lr = lte.get(sym)
+        entry["regimes"]["lte_plasma"] = None if lr is None else {
+            "status": lr["status"],
+            "hex": lr.get("hex"),
+            "hex_basis": "computed",
+            "basis": lr.get("basis", ""),
+            "source": "computed from NIST ASD neutral lines"
+                      + (f" — {lr['confidence']} confidence" if lr.get("confidence") else ""),
+        }
         data[sym] = entry
     return data
 
@@ -632,6 +644,7 @@ def build_t(palettes):
         "regime_reentry_plasma": "Reentry plasma (~10000K)",
         "regime_aurora": "Aurora (low density)",
         "regime_phosphor_emission": "Phosphor (Ln3+ in matrix)",
+        "regime_lte_plasma": "Atomic emission (computed)",
         "th_streak_species": "Species",
         "th_streak_color":   "Color",
         "th_streak_rgb":     "RGB · intensity",
@@ -669,6 +682,7 @@ def build_t(palettes):
         "regime_reentry_plasma": "재진입 plasma (~10000K)",
         "regime_aurora": "오로라 (저밀도)",
         "regime_phosphor_emission": "Phosphor (Ln3+ 고체)",
+        "regime_lte_plasma": "원자 방출 (계산)",
         "th_streak_species": "종",
         "th_streak_color":   "색",
         "th_streak_rgb":     "RGB · 강도",
@@ -911,6 +925,7 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
     <button data-regime="reentry_plasma" data-i18n="regime_reentry_plasma"></button>
     <button data-regime="aurora" data-i18n="regime_aurora"></button>
     <button data-regime="phosphor_emission" data-i18n="regime_phosphor_emission"></button>
+    <button data-regime="lte_plasma" data-i18n="regime_lte_plasma"></button>
   </div>
 </div>
 
@@ -989,6 +1004,7 @@ function applyRegime() {{
         'visible': '', 'no_flame_color': 'no flame', 'not_visible_to_humans': 'UV/IR',
         'too_radioactive': 'radioactive', 'too_short': 'synthetic',
         'no_data': 'no data', 'not_emitter': 'no emit',
+        'no_measured_spectra': 'no spectra',
       }})[status] || status;
       chip.textContent = label;
       cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) — ${{r ? r.basis : 'no data for this regime'}}`;
@@ -1085,6 +1101,7 @@ def main() -> int:
         db = yaml.safe_load(f)
     with open(MOLECULAR_DB, encoding="utf-8") as f:
         mdb = yaml.safe_load(f)
+    lte = yaml.safe_load(LTE_PLASMA_DB.read_text(encoding="utf-8")) if LTE_PLASMA_DB.exists() else {}
 
     layout = build_layout()
     periodic = render_periodic_table(db, layout)
@@ -1101,7 +1118,7 @@ def main() -> int:
             body_results.append(res)
     bodies_section = "\n".join(render_body_card(b) for b in body_results)
 
-    element_data = build_element_data(db)
+    element_data = build_element_data(db, lte)
     molecule_data = build_molecular_data(mdb)
     t_en, t_ko = build_t(PALETTES)
     t_json = json.dumps({"en": t_en, "ko": t_ko}, ensure_ascii=False)

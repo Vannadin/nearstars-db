@@ -121,6 +121,36 @@ State: engine + atomic_lines.yaml + molecular_bands.yaml + rebuilt
 plasma_temperature_colors.yaml + visualizer caption/tooltip all done; check.sh
 green. Remaining: tools.md registration (+ko), optional validate script.
 
+## Periodic-table fill — computed `lte_plasma` regime (2026-06-08)
+
+User asked to fill the periodic table. Did it the honest way: compute each
+element's atomic emission color from NIST neutral lines (no fabrication), as a
+new 5th regime `lte_plasma` ("Atomic emission (computed)") alongside the curated
+flame/reentry/aurora/phosphor regimes (curated untouched). `build_lte_plasma_colors.py`
+→ `db/refs/lte_plasma_colors.yaml`, merged into the visualizer by symbol.
+
+Method (hybrid): Boltzmann at 3500K from A-values where NIST has them (~73 elems,
+familiar colors — Na yellow, Cu green, Li red, Ba green); top-N NIST observed
+intensities as fallback for A-less complex spectra (Zr, Nb, lanthanides,
+actinides), flagged confidence=low. 98/118 filled; At + 19 superheavies have no
+measured spectra → null (honest). 51 flagged low (intensity method or
+visibility-edge dominant line: K/Rb/Cs IR resonance, Fe deep-violet 372nm).
+
+**Hard-won lessons:**
+- NIST ASD **truncates responses under concurrent load** — a 10-worker parallel
+  fetch silently cut files mid-stream (Cu chopped at 425nm → green triplet
+  missing → wrong violet). Fix: sequential / ≤3 concurrency + completeness
+  validation (parse must yield lines) + retry. Cache dir `/tmp/nist_clean`.
+- YAML parses the element symbol **`No` (Nobelium) as boolean False** — coerce.
+- `_num` must regex-parse scientific notation; `3.69e+07` truncates at `+` with
+  naive char-walk (only negative-exponent forbidden lines survived → all strong
+  lines dropped).
+- Atomic ≠ flame where the flame is molecular: Ca→violet(422), Sr→blue(461) are
+  the true ATOMIC colors; CaOH/SrOH give the familiar brick-red/crimson. Same
+  LTE-vs-observed split as air's non-LTE reentry blue. Documented, not "fixed".
+- Reference T matters: Cu is green at ≤3500K (4p→4s 510-521 dominate) but flips
+  violet at 4000K+ (higher 402/406 lines overtake by A). Chose 3500K.
+
 ## Open questions
 - Continuum: is free-free alone enough for hue, or is bound-free needed below
   the Balmer/Paschen edges? Decide empirically vs curated hexes.
