@@ -1,0 +1,232 @@
+# Aurora color vs density (altitude proxy), per atmosphere — NON-LTE.
+# Built by scripts/refs/build_aurora_colors.py from aurora_lines.yaml.
+# Color is set by quenching of metastable forbidden lines (O 1D red, 1S green)
+# + N2 bands, NOT by temperature. Axis = number density [cm^-3] (high altitude =
+# low n → low altitude = high n). Earth shows the red(high)→green(mid)→pink(low)
+# stratification. See plasma-color-methodology-review.md for the (separate) LTE
+# reentry engine; aurora is the non-LTE counterpart and feeds aurora/EVE, not Firefly.
+earth:
+  label: Earth (N2/O2)
+  colors:
+    7:
+      log_n: 7
+      altitude_hint: ~350km
+      hex: '#ff9d00'
+      rgb:
+      - 255
+      - 157
+      - 0
+      dominant: O_1D
+    8:
+      log_n: 8
+      altitude_hint: ~300km
+      hex: '#ffa100'
+      rgb:
+      - 255
+      - 161
+      - 0
+      dominant: O_1D
+    9:
+      log_n: 9
+      altitude_hint: ~250km
+      hex: '#ffd100'
+      rgb:
+      - 255
+      - 209
+      - 0
+      dominant: O_1S
+    10:
+      log_n: 10
+      altitude_hint: ~180km
+      hex: '#efff42'
+      rgb:
+      - 239
+      - 255
+      - 66
+      dominant: O_1S
+    11:
+      log_n: 11
+      altitude_hint: ~140km
+      hex: '#ffe17d'
+      rgb:
+      - 255
+      - 225
+      - 125
+      dominant: N2_1P
+    12:
+      log_n: 12
+      altitude_hint: ~115km
+      hex: '#ff789b'
+      rgb:
+      - 255
+      - 120
+      - 155
+      dominant: N2_1P
+    13:
+      log_n: 13
+      altitude_hint: ~100km
+      hex: '#ff00a7'
+      rgb:
+      - 255
+      - 0
+      - 167
+      dominant: N2_1P
+    14:
+      log_n: 14
+      altitude_hint: ~90km
+      hex: '#ff00a7'
+      rgb:
+      - 255
+      - 0
+      - 167
+      dominant: N2_1P
+venus_mars:
+  label: Venus/Mars (CO2)
+  colors:
+    7:
+      log_n: 7
+      altitude_hint: ~350km
+      hex: '#ff9d00'
+      rgb:
+      - 255
+      - 157
+      - 0
+      dominant: O_1D
+    8:
+      log_n: 8
+      altitude_hint: ~300km
+      hex: '#ffb814'
+      rgb:
+      - 255
+      - 184
+      - 20
+      dominant: O_1D
+    9:
+      log_n: 9
+      altitude_hint: ~250km
+      hex: '#dcff50'
+      rgb:
+      - 220
+      - 255
+      - 80
+      dominant: O_1S
+    10:
+      log_n: 10
+      altitude_hint: ~180km
+      hex: '#adff72'
+      rgb:
+      - 173
+      - 255
+      - 114
+      dominant: O_1S
+    11:
+      log_n: 11
+      altitude_hint: ~140km
+      hex: '#b2ff9c'
+      rgb:
+      - 178
+      - 255
+      - 156
+      dominant: O_1S
+    12:
+      log_n: 12
+      altitude_hint: ~115km
+      hex: '#d5fff5'
+      rgb:
+      - 213
+      - 255
+      - 245
+      dominant: CO2p_UV
+    13:
+      log_n: 13
+      altitude_hint: ~100km
+      hex: '#a703ff'
+      rgb:
+      - 167
+      - 3
+      - 255
+      dominant: CO2p_UV
+    14:
+      log_n: 14
+      altitude_hint: ~90km
+      hex: '#a000ff'
+      rgb:
+      - 160
+      - 0
+      - 255
+      dominant: CO2p_UV
+gas_giant:
+  label: Gas giant (H2/He)
+  colors:
+    7:
+      log_n: 7
+      altitude_hint: ~350km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    8:
+      log_n: 8
+      altitude_hint: ~300km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    9:
+      log_n: 9
+      altitude_hint: ~250km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    10:
+      log_n: 10
+      altitude_hint: ~180km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    11:
+      log_n: 11
+      altitude_hint: ~140km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    12:
+      log_n: 12
+      altitude_hint: ~115km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    13:
+      log_n: 13
+      altitude_hint: ~100km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer
+    14:
+      log_n: 14
+      altitude_hint: ~90km
+      hex: '#ff55d4'
+      rgb:
+      - 255
+      - 85
+      - 212
+      dominant: H_Balmer

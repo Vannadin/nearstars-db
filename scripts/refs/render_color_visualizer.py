@@ -37,6 +37,7 @@ MOLECULAR_DB = ROOT / "db" / "refs" / "molecular_plasma_colors.yaml"
 PLASMA_TEMP_DB = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
 LTE_PLASMA_DB = ROOT / "db" / "refs" / "lte_plasma_colors.yaml"
 ELEMENT_TEMP_DB = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
+AURORA_COLORS_DB = ROOT / "db" / "refs" / "aurora_colors.yaml"
 PHASE3_DIR = ROOT / "docs" / "phase3"
 OUT = ROOT / "docs" / "firefly-colors.html"
 
@@ -613,6 +614,39 @@ def render_firefly_stock() -> str:
             + "".join(rows))
 
 
+# ── Aurora color vs density/altitude (non-LTE, quenching) ──
+
+def render_aurora_grid() -> str:
+    if not AURORA_COLORS_DB.exists():
+        return ""
+    data = yaml.safe_load(AURORA_COLORS_DB.read_text(encoding="utf-8"))
+    cell = ("display:inline-block;width:60px;height:30px;font-size:8px;text-align:center;"
+            "line-height:1.1;border-radius:3px;margin:1px;padding-top:3px")
+    lab = "flex:0 0 150px;font-size:12px"
+    row = "display:flex;align-items:center;margin:2px 0"
+    logns = sorted({int(k) for blk in data.values() for k in blk["colors"]})
+    first = next(iter(data.values()))["colors"]
+    header = (f'<div style="{row}"><div style="{lab}">↑ high alt &nbsp; low alt ↓</div><div>'
+              + "".join(f'<div style="display:inline-block;width:60px;font-size:8px;text-align:center;'
+                        f'color:#888;margin:1px">{first[ln]["altitude_hint"]}<br>1e{ln}</div>'
+                        for ln in logns if ln in first) + '</div></div>')
+    rows = [header]
+    for key, blk in data.items():
+        cells = ""
+        for ln in logns:
+            c = blk["colors"].get(ln)
+            if not c:
+                cells += f'<div style="{cell}"></div>'; continue
+            hx = c["hex"]
+            cells += (f'<div style="{cell};background:{hx};color:{text_on(hx)}" '
+                      f'title="{blk["label"]} · {c["altitude_hint"]} (n=1e{ln}) · {hx} · {c["dominant"]}">'
+                      f'{c["dominant"].replace("_"," ")}</div>')
+        rows.append(f'<div style="{row}"><div style="{lab}">{html.escape(blk["label"])}</div>'
+                    f'<div>{cells}</div></div>')
+    return ('<p class="muted" data-i18n="aurora_caption" style="font-size:12px;margin:4px 0 8px"></p>'
+            + "".join(rows))
+
+
 # ── Emitted body cards (same logic as before; uses atomic_flame for element streak) ──
 
 def derive_body_palette(slug: str, db: dict):
@@ -727,6 +761,8 @@ def build_t(palettes):
         "h_element_temp": "Reentry plasma color per element vs temperature (1000K steps)",
         "h_firefly_stock": "Firefly stock cfg colors (reference)",
         "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
+        "h_aurora": "Aurora color vs altitude/density (non-LTE)",
+        "aurora_caption": "Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Computed from measured A-values + quenching coefficients; cell label = dominant emitter. This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
         "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — see the periodic table's computed regime. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
         "bt_blackbody": "Blackbody (thermal)",
@@ -769,6 +805,8 @@ def build_t(palettes):
         "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (1000K 간격)",
         "h_firefly_stock": "Firefly 기본 cfg 색상 (레퍼런스)",
         "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
+        "h_aurora": "고도/밀도별 오로라 색 (비-LTE)",
+        "aurora_caption": "오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도). CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종. LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
         "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 주기율표 계산 regime 참조. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
         "bt_blackbody": "흑체 (열복사)",
@@ -1065,6 +1103,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 
 <h2 data-i18n="h_firefly_stock"></h2>
 {firefly_stock_grid}
+
+<h2 data-i18n="h_aurora"></h2>
+{aurora_grid}
 </section>
 
 <section>
@@ -1220,6 +1261,7 @@ def main() -> int:
     plasma_temp_grid = render_plasma_temp_grid()
     element_temp_grid = render_element_temp_grid()
     firefly_stock_grid = render_firefly_stock()
+    aurora_grid = render_aurora_grid()
 
     body_results = []
     for slug in sorted(p.stem for p in PHASE3_DIR.glob("*.md")):
@@ -1244,6 +1286,7 @@ def main() -> int:
         plasma_temp_grid=plasma_temp_grid,
         element_temp_grid=element_temp_grid,
         firefly_stock_grid=firefly_stock_grid,
+        aurora_grid=aurora_grid,
         bodies_section=bodies_section,
         t_json=t_json,
         element_json=element_json,

@@ -1,0 +1,58 @@
+# 오로라 발광종 — 금지선/밴드 + 밀도 의존 quenching 계수 (비-LTE 오로라 색 엔진 입력)
+# Auroral emitters: forbidden/metastable lines + allowed bands, with collisional
+# quenching rate coefficients. Aurora is NON-LTE (electron-impact excitation,
+# low density), so color is set by which lines SURVIVE quenching at a given
+# density, NOT by temperature. Model: line intensity ∝ x_source·n·yield·φ,
+#   φ_forbidden = A_line / (A_total + Σ_q k_q·x_q·n),   φ_allowed = 1.
+#
+# Sources: O(1D) τ=114s, O(1S) τ=0.84s (Slanger/Copeland; rocket airglow).
+# Quenching k [cm^3/s], standard aeronomy values (Rees 1989; JGR Space Physics):
+#   O(1D)+N2 ~2.0e-11, +O2 ~2.9e-11, +O ~8e-12, +CO2 ~7.5e-11
+#   O(1S)+O2 ~4.0e-12, +O ~2e-13, +N2 ~1e-13, +CO2 ~3e-13
+# yield = relative electron-impact / dissociative-recombination production.
+
+emitters:
+  O_1D:                       # red (the high-altitude auroral red)
+    source: O
+    forbidden: true
+    A_total: 8.9e-3
+    yield: 3.0
+    lines: [{nm: 630.0, A: 5.6e-3}, {nm: 636.4, A: 1.8e-3}]
+    quench: {N2: 2.0e-11, O2: 2.9e-11, O: 8.0e-12, CO2: 7.5e-11}
+  O_1S:                       # green (557.7 — the classic auroral green)
+    source: O
+    forbidden: true
+    A_total: 1.19
+    yield: 1.6
+    lines: [{nm: 557.7, A: 1.06}]
+    quench: {N2: 1.0e-13, O2: 4.0e-12, O: 2.0e-13, CO2: 3.0e-13}
+  N2_1P:                      # First Positive — red/pink lower border (allowed, fast)
+    source: N2
+    forbidden: false
+    yield: 1.3
+    lines: [{nm: 650.0, A: 1.0}, {nm: 670.0, A: 1.0}, {nm: 686.0, A: 0.7}]
+  N2p_1NG:                    # N2+ First Negative — blue-violet tops (needs hard e-/sunlit)
+    source: N2
+    forbidden: false
+    yield: 0.5
+    lines: [{nm: 391.4, A: 1.0}, {nm: 427.8, A: 0.5}, {nm: 470.9, A: 0.25}]
+  N2_2P:                      # Second Positive — violet (allowed)
+    source: N2
+    forbidden: false
+    yield: 0.3
+    lines: [{nm: 357.7, A: 0.9}, {nm: 380.5, A: 0.7}, {nm: 405.9, A: 0.5}]
+  H_Balmer:                   # gas-giant aurora (Jupiter/Saturn): H red/pink
+    source: H
+    forbidden: false
+    yield: 1.0
+    lines: [{nm: 656.3, A: 1.0}, {nm: 486.1, A: 0.3}, {nm: 434.0, A: 0.12}]
+  He_D3:                      # He-rich aurora accent
+    source: He
+    forbidden: false
+    yield: 0.5
+    lines: [{nm: 587.6, A: 1.0}, {nm: 667.8, A: 0.3}]
+  CO2p_UV:                    # CO2+ (Mars/Venus aurora) — mostly UV/violet edge
+    source: CO2
+    forbidden: false
+    yield: 0.4
+    lines: [{nm: 367.0, A: 1.0}, {nm: 423.0, A: 0.5}]
