@@ -12,10 +12,14 @@
 - [x] commit
 
 ## Phase B — metal atoms via NIST (main thread; subagents can't fetch)
-- [ ] Ti, V, Fe, Mg: fetch NIST lines1/energy1 (neutral + first ion), cache /tmp/nist
-- [ ] add to atomic_lines.yaml (build_atomic_lines.py species list)
-- [ ] saha_boltzmann ELEMENTS + ionization energies (chi)
-- [ ] commit
+- [x] Ti, V, Fe, Mg: fetched NIST lines1/energy1 (neutral + first ion), cache /tmp/nist
+      (Fe_I had a STALE truncated cache from 15:17 — only 360-362nm; deleted + refetched
+       → 80 of 1543 visible. Lesson: verify cache freshness, not just line count.)
+- [x] added to atomic_lines.yaml (build_atomic_lines.py SPECIES) → 18 species
+- [x] saha_boltzmann ELEMENTS + chi (NIST recommended ionization energies)
+- [x] element_temperature_colors.yaml UNCHANGED (it has its own 75-element NIST coverage,
+      independent of the engine's atomic_lines.yaml set — no regression)
+- [x] commit
 
 ## Phase C — metal-oxide band systems (Tier 2)
 - [ ] TiO (red), VO (orange-red), FeO (orange), MgO (green) → molecular_bands.yaml

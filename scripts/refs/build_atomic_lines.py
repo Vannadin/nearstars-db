@@ -55,6 +55,17 @@ SPECIES = [
     ("O_II",  "O II",  "O",  1, 35.121120),
     ("S_I",   "S I",   "S",  0, 10.360010),
     ("S_II",  "S II",  "S",  1, 23.337880),
+    # transition metals + Mg — for metal-oxide bands (TiO/VO/FeO/MgO) and their
+    # high-T dissociation→atomic march. Complex spectra; the top-80 brightness
+    # filter keeps the dominant visible lines.
+    ("Mg_I",  "Mg I",  "Mg", 0, 7.646236),
+    ("Mg_II", "Mg II", "Mg", 1, 15.035271),
+    ("Ti_I",  "Ti I",  "Ti", 0, 6.828120),
+    ("Ti_II", "Ti II", "Ti", 1, 13.575500),
+    ("V_I",   "V I",   "V",  0, 6.746190),
+    ("V_II",  "V II",  "V",  1, 14.634000),
+    ("Fe_I",  "Fe I",  "Fe", 0, 7.902468),
+    ("Fe_II", "Fe II", "Fe", 1, 16.199200),
 ]
 
 LINES_URL = ("https://physics.nist.gov/cgi-bin/ASD/lines1.pl?spectra={spec}"

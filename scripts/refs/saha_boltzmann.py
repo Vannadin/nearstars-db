@@ -87,6 +87,10 @@ ELEMENTS = {
     "N":  ("N_I", "N_II"),
     "O":  ("O_I", "O_II"),
     "S":  ("S_I", "S_II"),
+    "Mg": ("Mg_I", "Mg_II"),
+    "Ti": ("Ti_I", "Ti_II"),
+    "V":  ("V_I", "V_II"),
+    "Fe": ("Fe_I", "Fe_II"),
 }
 
 

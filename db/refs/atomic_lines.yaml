@@ -6278,3 +6278,4686 @@ S_II:
     g_upper: 2
     g_lower: 2
     term: 2S*
+Mg_I:
+  species: Mg I
+  element: Mg
+  ion_stage: 0
+  ionization_energy_eV: 7.646236
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 1
+    term: 1S
+  - E_cm: 21850.405
+    g: 1
+    term: 3P*
+  - E_cm: 21870.464
+    g: 3
+    term: 3P*
+  - E_cm: 21911.178
+    g: 5
+    term: 3P*
+  - E_cm: 35051.264
+    g: 3
+    term: 1P*
+  - E_cm: 41197.403
+    g: 3
+    term: 3S
+  - E_cm: 43503.333
+    g: 1
+    term: 1S
+  - E_cm: 46403.065
+    g: 5
+    term: 1D
+  - E_cm: 47841.119
+    g: 1
+    term: 3P*
+  - E_cm: 47844.414
+    g: 3
+    term: 3P*
+  - E_cm: 47851.162
+    g: 5
+    term: 3P*
+  - E_cm: 47957.027
+    g: 5
+    term: 3D
+  - E_cm: 47957.045
+    g: 7
+    term: 3D
+  - E_cm: 47957.058
+    g: 3
+    term: 3D
+  - E_cm: 49346.729
+    g: 3
+    term: 1P*
+  - E_cm: 51872.526
+    g: 3
+    term: 3S
+  - E_cm: 52556.206
+    g: 1
+    term: 1S
+  - E_cm: 53134.642
+    g: 5
+    term: 1D
+  - E_cm: 54192.256
+    g: 7
+    term: 3D
+  - E_cm: 54192.294
+    g: 5
+    term: 3D
+  - E_cm: 54192.335
+    g: 3
+    term: 3D
+  - E_cm: 54248.809
+    g: 1
+    term: 3P*
+  - E_cm: 54250.086
+    g: 3
+    term: 3P*
+  - E_cm: 54252.726
+    g: 5
+    term: 3P*
+  - E_cm: 54676.438
+    g: 7
+    term: 1F*
+  lines:
+  - nm: 362.763
+    A_ki: 5620000.0
+    E_upper_cm: 80693.01
+    E_lower_cm: 53134.642
+    g_upper: 5
+    g_lower: 5
+    term: 1D*
+  - nm: 382.935
+    A_ki: 89900000.0
+    E_upper_cm: 47957.058
+    E_lower_cm: 21850.405
+    g_upper: 3
+    g_lower: 1
+    term: 3D
+  - nm: 383.23
+    A_ki: 121000000.0
+    E_upper_cm: 47957.027
+    E_lower_cm: 21870.464
+    g_upper: 5
+    g_lower: 3
+    term: 3D
+  - nm: 383.23
+    A_ki: 67400000.0
+    E_upper_cm: 47957.058
+    E_lower_cm: 21870.464
+    g_upper: 3
+    g_lower: 3
+    term: 3D
+  - nm: 383.829
+    A_ki: 161000000.0
+    E_upper_cm: 47957.045
+    E_lower_cm: 21911.178
+    g_upper: 7
+    g_lower: 5
+    term: 3D
+  - nm: 383.829
+    A_ki: 40300000.0
+    E_upper_cm: 47957.027
+    E_lower_cm: 21911.178
+    g_upper: 5
+    g_lower: 5
+    term: 3D
+  - nm: 383.829
+    A_ki: 4480000.0
+    E_upper_cm: 47957.058
+    E_lower_cm: 21911.178
+    g_upper: 3
+    g_lower: 5
+    term: 3D
+  - nm: 389.024
+    A_ki: 131000000.0
+    E_upper_cm: 83511.25
+    E_lower_cm: 57812.77
+    g_upper: 3
+    g_lower: 1
+    term: 3D*
+  - nm: 389.191
+    A_ki: 177000000.0
+    E_upper_cm: 83520.47
+    E_lower_cm: 57833.4
+    g_upper: 5
+    g_lower: 3
+    term: 3D*
+  - nm: 389.33
+    A_ki: 98100000.0
+    E_upper_cm: 83511.25
+    E_lower_cm: 57833.4
+    g_upper: 3
+    g_lower: 3
+    term: 3D*
+  - nm: 389.557
+    A_ki: 235000000.0
+    E_upper_cm: 83536.84
+    E_lower_cm: 57873.94
+    g_upper: 7
+    g_lower: 5
+    term: 3D*
+  - nm: 389.812
+    A_ki: 58800000.0
+    E_upper_cm: 83520.47
+    E_lower_cm: 57873.94
+    g_upper: 5
+    g_lower: 5
+    term: 3D*
+  - nm: 389.946
+    A_ki: 6520000.0
+    E_upper_cm: 83511.25
+    E_lower_cm: 57873.94
+    g_upper: 3
+    g_lower: 5
+    term: 3D*
+  - nm: 393.84
+    A_ki: 5470000.0
+    E_upper_cm: 60435.099
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 398.675
+    A_ki: 7300000.0
+    E_upper_cm: 60127.239
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 405.751
+    A_ki: 10200000.0
+    E_upper_cm: 59689.991
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 416.727
+    A_ki: 13800000.0
+    E_upper_cm: 59041.019
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 435.191
+    A_ki: 18400000.0
+    E_upper_cm: 58023.246
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 470.299
+    A_ki: 21900000.0
+    E_upper_cm: 56308.381
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 473.003
+    A_ki: 1340000.0
+    E_upper_cm: 56186.873
+    E_lower_cm: 35051.264
+    g_upper: 1
+    g_lower: 3
+    term: 1S
+  - nm: 516.732
+    A_ki: 11300000.0
+    E_upper_cm: 41197.403
+    E_lower_cm: 21850.405
+    g_upper: 3
+    g_lower: 1
+    term: 3S
+  - nm: 517.268
+    A_ki: 33700000.0
+    E_upper_cm: 41197.403
+    E_lower_cm: 21870.464
+    g_upper: 3
+    g_lower: 3
+    term: 3S
+  - nm: 518.36
+    A_ki: 56100000.0
+    E_upper_cm: 41197.403
+    E_lower_cm: 21911.178
+    g_upper: 3
+    g_lower: 5
+    term: 3S
+  - nm: 552.84
+    A_ki: 13900000.0
+    E_upper_cm: 53134.642
+    E_lower_cm: 35051.264
+    g_upper: 5
+    g_lower: 3
+    term: 1D
+  - nm: 571.109
+    A_ki: 3860000.0
+    E_upper_cm: 52556.206
+    E_lower_cm: 35051.264
+    g_upper: 1
+    g_lower: 3
+    term: 1S
+  - nm: 631.872
+    A_ki: 263000.0
+    E_upper_cm: 57019.025
+    E_lower_cm: 41197.403
+    g_upper: 5
+    g_lower: 3
+    term: 3P*
+  - nm: 631.924
+    A_ki: 264000.0
+    E_upper_cm: 57017.724
+    E_lower_cm: 41197.403
+    g_upper: 3
+    g_lower: 3
+    term: 3P*
+  - nm: 706.041
+    A_ki: 851000.0
+    E_upper_cm: 60562.637
+    E_lower_cm: 46403.065
+    g_upper: 7
+    g_lower: 5
+    term: 1F*
+  - nm: 719.317
+    A_ki: 1180000.0
+    E_upper_cm: 60301.283
+    E_lower_cm: 46403.065
+    g_upper: 7
+    g_lower: 5
+    term: 1F*
+  - nm: 738.769
+    A_ki: 1740000.0
+    E_upper_cm: 59935.37
+    E_lower_cm: 46403.065
+    g_upper: 7
+    g_lower: 5
+    term: 1F*
+  - nm: 765.76
+    A_ki: 1230000.0
+    E_upper_cm: 54252.726
+    E_lower_cm: 41197.403
+    g_upper: 5
+    g_lower: 3
+    term: 3P*
+  - nm: 765.915
+    A_ki: 1230000.0
+    E_upper_cm: 54250.086
+    E_lower_cm: 41197.403
+    g_upper: 3
+    g_lower: 3
+    term: 3P*
+  - nm: 765.99
+    A_ki: 1230000.0
+    E_upper_cm: 54248.809
+    E_lower_cm: 41197.403
+    g_upper: 1
+    g_lower: 3
+    term: 3P*
+  - nm: 769.155
+    A_ki: 2660000.0
+    E_upper_cm: 59400.763
+    E_lower_cm: 46403.065
+    g_upper: 7
+    g_lower: 5
+    term: 1F*
+  - nm: 787.543
+    A_ki: 254000.0
+    E_upper_cm: 60535.34
+    E_lower_cm: 47841.119
+    g_upper: 3
+    g_lower: 1
+    term: 3D
+  - nm: 787.748
+    A_ki: 343000.0
+    E_upper_cm: 60535.34
+    E_lower_cm: 47844.414
+    g_upper: 5
+    g_lower: 3
+    term: 3D
+  - nm: 788.167
+    A_ki: 456000.0
+    E_upper_cm: 60535.34
+    E_lower_cm: 47851.162
+    g_upper: 7
+    g_lower: 5
+    term: 3D
+  - nm: 793.081
+    A_ki: 538000.0
+    E_upper_cm: 60562.637
+    E_lower_cm: 47957.045
+    g_upper: 9
+    g_lower: 7
+    term: 3F*
+  - nm: 793.081
+    A_ki: 478000.0
+    E_upper_cm: 60562.637
+    E_lower_cm: 47957.027
+    g_upper: 7
+    g_lower: 5
+    term: 3F*
+  - nm: 793.081
+    A_ki: 452000.0
+    E_upper_cm: 60562.637
+    E_lower_cm: 47957.058
+    g_upper: 5
+    g_lower: 3
+    term: 3F*
+  - nm: 804.773
+    A_ki: 353000.0
+    E_upper_cm: 60263.583
+    E_lower_cm: 47841.119
+    g_upper: 3
+    g_lower: 1
+    term: 3D
+  - nm: 804.985
+    A_ki: 478000.0
+    E_upper_cm: 60263.583
+    E_lower_cm: 47844.414
+    g_upper: 5
+    g_lower: 3
+    term: 3D
+  - nm: 804.986
+    A_ki: 265000.0
+    E_upper_cm: 60263.583
+    E_lower_cm: 47844.414
+    g_upper: 3
+    g_lower: 3
+    term: 3D
+  - nm: 805.423
+    A_ki: 636000.0
+    E_upper_cm: 60263.583
+    E_lower_cm: 47851.162
+    g_upper: 7
+    g_lower: 5
+    term: 3D
+  - nm: 805.423
+    A_ki: 159000.0
+    E_upper_cm: 60263.583
+    E_lower_cm: 47851.162
+    g_upper: 5
+    g_lower: 5
+    term: 3D
+  - nm: 809.872
+    A_ki: 768000.0
+    E_upper_cm: 60301.283
+    E_lower_cm: 47957.045
+    g_upper: 9
+    g_lower: 7
+    term: 3F*
+  - nm: 809.872
+    A_ki: 682000.0
+    E_upper_cm: 60301.283
+    E_lower_cm: 47957.027
+    g_upper: 7
+    g_lower: 5
+    term: 3F*
+  - nm: 809.872
+    A_ki: 646000.0
+    E_upper_cm: 60301.283
+    E_lower_cm: 47957.058
+    g_upper: 5
+    g_lower: 3
+    term: 3F*
+  - nm: 820.984
+    A_ki: 181000.0
+    E_upper_cm: 58580.23
+    E_lower_cm: 46403.065
+    g_upper: 3
+    g_lower: 5
+    term: 1P*
+  - nm: 821.303
+    A_ki: 4380000.0
+    E_upper_cm: 58575.477
+    E_lower_cm: 46403.065
+    g_upper: 7
+    g_lower: 5
+    term: 1F*
+Mg_II:
+  species: Mg II
+  element: Mg
+  ion_stage: 1
+  ionization_energy_eV: 15.035271
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 2
+    term: 2S
+  - E_cm: 35669.31
+    g: 2
+    term: 2P*
+  - E_cm: 35760.88
+    g: 4
+    term: 2P*
+  - E_cm: 69804.95
+    g: 2
+    term: 2S
+  - E_cm: 71490.19
+    g: 6
+    term: 2D
+  - E_cm: 71491.06
+    g: 4
+    term: 2D
+  - E_cm: 80619.5
+    g: 2
+    term: 2P*
+  - E_cm: 80650.02
+    g: 4
+    term: 2P*
+  - E_cm: 92790.51
+    g: 2
+    term: 2S
+  - E_cm: 93310.59
+    g: 6
+    term: 2D
+  - E_cm: 93311.11
+    g: 4
+    term: 2D
+  - E_cm: 93799.63
+    g: 6
+    term: 2F*
+  - E_cm: 93799.75
+    g: 8
+    term: 2F*
+  - E_cm: 97455.12
+    g: 2
+    term: 2P*
+  - E_cm: 97468.92
+    g: 4
+    term: 2P*
+  - E_cm: 103196.75
+    g: 2
+    term: 2S
+  - E_cm: 103419.7
+    g: 6
+    term: 2D
+  - E_cm: 103420.0
+    g: 4
+    term: 2D
+  - E_cm: 103689.86
+    g: 6
+    term: 2F*
+  - E_cm: 103689.92
+    g: 8
+    term: 2F*
+  - E_cm: 103705.66
+    g: 8
+    term: 2G
+  - E_cm: 103705.66
+    g: 10
+    term: 2G
+  - E_cm: 105622.34
+    g: 2
+    term: 2P*
+  - E_cm: 105629.72
+    g: 4
+    term: 2P*
+  - E_cm: 108784.33
+    g: 2
+    term: 2S
+  lines:
+  - nm: 361.378
+    A_ki: 179000.0
+    E_upper_cm: 97468.92
+    E_lower_cm: 69804.95
+    g_upper: 4
+    g_lower: 2
+    term: 2P*
+  - nm: 384.821
+    A_ki: 2960000.0
+    E_upper_cm: 97468.92
+    E_lower_cm: 71490.19
+    g_upper: 4
+    g_lower: 6
+    term: 2P*
+  - nm: 384.834
+    A_ki: 329000.0
+    E_upper_cm: 97468.92
+    E_lower_cm: 71491.06
+    g_upper: 4
+    g_lower: 4
+    term: 2P*
+  - nm: 385.038
+    A_ki: 3240000.0
+    E_upper_cm: 97455.12
+    E_lower_cm: 71491.06
+    g_upper: 2
+    g_lower: 4
+    term: 2P*
+  - nm: 438.464
+    A_ki: 14500000.0
+    E_upper_cm: 103420.0
+    E_lower_cm: 80619.5
+    g_upper: 4
+    g_lower: 2
+    term: 2D
+  - nm: 439.051
+    A_ki: 2880000.0
+    E_upper_cm: 103420.0
+    E_lower_cm: 80650.02
+    g_upper: 4
+    g_lower: 4
+    term: 2D
+  - nm: 439.056
+    A_ki: 17300000.0
+    E_upper_cm: 103419.7
+    E_lower_cm: 80650.02
+    g_upper: 6
+    g_lower: 4
+    term: 2D
+  - nm: 442.799
+    A_ki: 10500000.0
+    E_upper_cm: 103196.75
+    E_lower_cm: 80619.5
+    g_upper: 2
+    g_lower: 2
+    term: 2S
+  - nm: 443.399
+    A_ki: 21000000.0
+    E_upper_cm: 103196.75
+    E_lower_cm: 80650.02
+    g_upper: 2
+    g_lower: 4
+    term: 2S
+  - nm: 443.649
+    A_ki: 6380000.0
+    E_upper_cm: 115844.6
+    E_lower_cm: 93310.59
+    g_upper: 8
+    g_lower: 6
+    term: 2F*
+  - nm: 443.66
+    A_ki: 5950000.0
+    E_upper_cm: 115844.6
+    E_lower_cm: 93311.11
+    g_upper: 6
+    g_lower: 4
+    term: 2F*
+  - nm: 448.113
+    A_ki: 233000000.0
+    E_upper_cm: 93799.75
+    E_lower_cm: 71490.19
+    g_upper: 8
+    g_lower: 6
+    term: 2F*
+  - nm: 448.115
+    A_ki: 15500000.0
+    E_upper_cm: 93799.63
+    E_lower_cm: 71490.19
+    g_upper: 6
+    g_lower: 6
+    term: 2F*
+  - nm: 448.133
+    A_ki: 217000000.0
+    E_upper_cm: 93799.63
+    E_lower_cm: 71491.06
+    g_upper: 6
+    g_lower: 4
+    term: 2F*
+  - nm: 473.959
+    A_ki: 8090000.0
+    E_upper_cm: 114403.55
+    E_lower_cm: 93310.59
+    g_upper: 8
+    g_lower: 6
+    term: 2F*
+  - nm: 473.971
+    A_ki: 7550000.0
+    E_upper_cm: 114403.55
+    E_lower_cm: 93311.11
+    g_upper: 6
+    g_lower: 4
+    term: 2F*
+  - nm: 526.422
+    A_ki: 12700000.0
+    E_upper_cm: 112301.47
+    E_lower_cm: 93310.59
+    g_upper: 8
+    g_lower: 6
+    term: 2F*
+  - nm: 526.422
+    A_ki: 847000.0
+    E_upper_cm: 112301.47
+    E_lower_cm: 93310.59
+    g_upper: 6
+    g_lower: 6
+    term: 2F*
+  - nm: 526.437
+    A_ki: 11900000.0
+    E_upper_cm: 112301.47
+    E_lower_cm: 93311.11
+    g_upper: 6
+    g_lower: 4
+    term: 2F*
+  - nm: 545.537
+    A_ki: 1220000.0
+    E_upper_cm: 115794.39
+    E_lower_cm: 97468.92
+    g_upper: 6
+    g_lower: 4
+    term: 2D
+  - nm: 546.414
+    A_ki: 2220000.0
+    E_upper_cm: 115764.99
+    E_lower_cm: 97468.92
+    g_upper: 2
+    g_lower: 4
+    term: 2S
+  - nm: 591.643
+    A_ki: 642000.0
+    E_upper_cm: 110207.99
+    E_lower_cm: 93310.59
+    g_upper: 4
+    g_lower: 6
+    term: 2P*
+  - nm: 592.337
+    A_ki: 1400000.0
+    E_upper_cm: 114332.74
+    E_lower_cm: 97455.12
+    g_upper: 4
+    g_lower: 2
+    term: 2D
+  - nm: 592.823
+    A_ki: 1660000.0
+    E_upper_cm: 114332.68
+    E_lower_cm: 97468.92
+    g_upper: 6
+    g_lower: 4
+    term: 2D
+  - nm: 594.35
+    A_ki: 2710000.0
+    E_upper_cm: 114289.36
+    E_lower_cm: 97468.92
+    g_upper: 2
+    g_lower: 4
+    term: 2S
+  - nm: 634.674
+    A_ki: 22000000.0
+    E_upper_cm: 109062.35
+    E_lower_cm: 93310.59
+    g_upper: 8
+    g_lower: 6
+    term: 2F*
+  - nm: 634.675
+    A_ki: 1470000.0
+    E_upper_cm: 109062.32
+    E_lower_cm: 93310.59
+    g_upper: 6
+    g_lower: 6
+    term: 2F*
+  - nm: 634.696
+    A_ki: 20500000.0
+    E_upper_cm: 109062.32
+    E_lower_cm: 93311.11
+    g_upper: 6
+    g_lower: 4
+    term: 2F*
+  - nm: 662.044
+    A_ki: 461000.0
+    E_upper_cm: 108900.2
+    E_lower_cm: 93799.63
+    g_upper: 4
+    g_lower: 6
+    term: 2D
+  - nm: 662.057
+    A_ki: 437000.0
+    E_upper_cm: 108900.02
+    E_lower_cm: 93799.75
+    g_upper: 6
+    g_lower: 8
+    term: 2D
+  - nm: 678.145
+    A_ki: 2490000.0
+    E_upper_cm: 112197.17
+    E_lower_cm: 97455.12
+    g_upper: 4
+    g_lower: 2
+    term: 2D
+  - nm: 678.785
+    A_ki: 2960000.0
+    E_upper_cm: 112197.05
+    E_lower_cm: 97468.92
+    g_upper: 6
+    g_lower: 4
+    term: 2D
+  - nm: 681.286
+    A_ki: 2110000.0
+    E_upper_cm: 112129.2
+    E_lower_cm: 97455.12
+    g_upper: 2
+    g_lower: 2
+    term: 2S
+  - nm: 681.927
+    A_ki: 4210000.0
+    E_upper_cm: 112129.2
+    E_lower_cm: 97468.92
+    g_upper: 2
+    g_lower: 4
+    term: 2S
+  - nm: 787.705
+    A_ki: 65800000.0
+    E_upper_cm: 93311.11
+    E_lower_cm: 80619.5
+    g_upper: 4
+    g_lower: 2
+    term: 2D
+  - nm: 789.604
+    A_ki: 13100000.0
+    E_upper_cm: 93311.11
+    E_lower_cm: 80650.02
+    g_upper: 4
+    g_lower: 4
+    term: 2D
+  - nm: 789.637
+    A_ki: 78600000.0
+    E_upper_cm: 93310.59
+    E_lower_cm: 80650.02
+    g_upper: 6
+    g_lower: 4
+    term: 2D
+  - nm: 804.614
+    A_ki: 3670000.0
+    E_upper_cm: 115844.6
+    E_lower_cm: 103419.7
+    g_upper: 8
+    g_lower: 6
+    term: 2F*
+  - nm: 804.634
+    A_ki: 3420000.0
+    E_upper_cm: 115844.6
+    E_lower_cm: 103420.0
+    g_upper: 6
+    g_lower: 4
+    term: 2F*
+  - nm: 811.522
+    A_ki: 1220000.0
+    E_upper_cm: 105629.72
+    E_lower_cm: 93310.59
+    g_upper: 4
+    g_lower: 6
+    term: 2P*
+  - nm: 812.043
+    A_ki: 1340000.0
+    E_upper_cm: 105622.34
+    E_lower_cm: 93311.11
+    g_upper: 2
+    g_lower: 4
+    term: 2P*
+  - nm: 821.399
+    A_ki: 26500000.0
+    E_upper_cm: 92790.51
+    E_lower_cm: 80619.5
+    g_upper: 2
+    g_lower: 2
+    term: 2S
+  - nm: 823.464
+    A_ki: 52900000.0
+    E_upper_cm: 92790.51
+    E_lower_cm: 80650.02
+    g_upper: 2
+    g_lower: 4
+    term: 2S
+Ti_I:
+  species: Ti I
+  element: Ti
+  ion_stage: 0
+  ionization_energy_eV: 6.82812
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 5
+    term: a 3F
+  - E_cm: 170.133
+    g: 7
+    term: a 3F
+  - E_cm: 386.874
+    g: 9
+    term: a 3F
+  - E_cm: 6556.833
+    g: 3
+    term: a 5F
+  - E_cm: 6598.765
+    g: 5
+    term: a 5F
+  - E_cm: 6661.006
+    g: 7
+    term: a 5F
+  - E_cm: 6742.756
+    g: 9
+    term: a 5F
+  - E_cm: 6842.962
+    g: 11
+    term: a 5F
+  - E_cm: 7255.355
+    g: 5
+    term: a 1D
+  - E_cm: 8436.618
+    g: 1
+    term: a 3P
+  - E_cm: 8492.422
+    g: 3
+    term: a 3P
+  - E_cm: 8602.344
+    g: 5
+    term: a 3P
+  - E_cm: 11531.761
+    g: 5
+    term: b 3F
+  - E_cm: 11639.811
+    g: 7
+    term: b 3F
+  - E_cm: 11776.812
+    g: 9
+    term: b 3F
+  - E_cm: 12118.393
+    g: 9
+    term: a 1G
+  - E_cm: 13981.773
+    g: 3
+    term: a 5P
+  - E_cm: 14028.436
+    g: 5
+    term: a 5P
+  - E_cm: 14105.634
+    g: 7
+    term: a 5P
+  - E_cm: 15108.111
+    g: 7
+    term: a 3G
+  - E_cm: 15156.802
+    g: 9
+    term: a 3G
+  - E_cm: 15220.393
+    g: 11
+    term: a 3G
+  - E_cm: 15877.081
+    g: 5
+    term: z 5G*
+  - E_cm: 15975.631
+    g: 7
+    term: z 5G*
+  - E_cm: 16106.076
+    g: 9
+    term: z 5G*
+  lines:
+  - nm: 363.546
+    A_ki: 90900000.0
+    E_upper_cm: 27498.982
+    E_lower_cm: 0.0
+    g_upper: 7
+    g_lower: 5
+    term: y 3G*
+  - nm: 364.267
+    A_ki: 89500000.0
+    E_upper_cm: 27614.679
+    E_lower_cm: 170.1328
+    g_upper: 9
+    g_lower: 7
+    term: y 3G*
+  - nm: 365.349
+    A_ki: 86900000.0
+    E_upper_cm: 27750.135
+    E_lower_cm: 386.874
+    g_upper: 11
+    g_lower: 9
+    term: y 3G*
+  - nm: 372.457
+    A_ki: 91000000.0
+    E_upper_cm: 38959.507
+    E_lower_cm: 12118.393
+    g_upper: 9
+    g_lower: 9
+    term: x 1G*
+  - nm: 372.515
+    A_ki: 73000000.0
+    E_upper_cm: 35439.251
+    E_lower_cm: 8602.3441
+    g_upper: 3
+    g_lower: 5
+    term: y 3S*
+  - nm: 372.981
+    A_ki: 49300000.0
+    E_upper_cm: 26803.42
+    E_lower_cm: 0.0
+    g_upper: 5
+    g_lower: 5
+    term: x 3F*
+  - nm: 374.106
+    A_ki: 48100000.0
+    E_upper_cm: 26892.936
+    E_lower_cm: 170.1328
+    g_upper: 7
+    g_lower: 7
+    term: x 3F*
+  - nm: 375.286
+    A_ki: 58100000.0
+    E_upper_cm: 27025.659
+    E_lower_cm: 386.874
+    g_upper: 9
+    g_lower: 9
+    term: x 3F*
+  - nm: 378.604
+    A_ki: 140000000.0
+    E_upper_cm: 33660.652
+    E_lower_cm: 7255.355
+    g_upper: 3
+    g_lower: 5
+    term: z 1P*
+  - nm: 378.88
+    A_ki: 14400000.0
+    E_upper_cm: 26772.968
+    E_lower_cm: 386.874
+    g_upper: 11
+    g_lower: 9
+    term: y 5G*
+  - nm: 385.814
+    A_ki: 63300000.0
+    E_upper_cm: 42017.9751
+    E_lower_cm: 16106.076
+    g_upper: 11
+    g_lower: 9
+    term: e 5H
+  - nm: 386.644
+    A_ki: 65900000.0
+    E_upper_cm: 42123.7378
+    E_lower_cm: 16267.48
+    g_upper: 13
+    g_lower: 11
+    term: e 5H
+  - nm: 386.84
+    A_ki: 71000000.0
+    E_upper_cm: 41818.8088
+    E_lower_cm: 15975.631
+    g_upper: 9
+    g_lower: 7
+    term: e 5G
+  - nm: 388.215
+    A_ki: 73800000.0
+    E_upper_cm: 42019.1293
+    E_lower_cm: 16267.48
+    g_upper: 13
+    g_lower: 11
+    term: e 5G
+  - nm: 388.232
+    A_ki: 57500000.0
+    E_upper_cm: 42017.9751
+    E_lower_cm: 16267.48
+    g_upper: 11
+    g_lower: 11
+    term: e 5H
+  - nm: 388.289
+    A_ki: 149000000.0
+    E_upper_cm: 42205.377
+    E_lower_cm: 16458.671
+    g_upper: 15
+    g_lower: 13
+    term: e 5H
+  - nm: 389.524
+    A_ki: 54100000.0
+    E_upper_cm: 42123.7378
+    E_lower_cm: 16458.671
+    g_upper: 13
+    g_lower: 13
+    term: e 5H
+  - nm: 392.453
+    A_ki: 8100000.0
+    E_upper_cm: 25643.701
+    E_lower_cm: 170.1328
+    g_upper: 7
+    g_lower: 7
+    term: y 3D*
+  - nm: 394.867
+    A_ki: 56000000.0
+    E_upper_cm: 25317.814
+    E_lower_cm: 0.0
+    g_upper: 3
+    g_lower: 5
+    term: y 3D*
+  - nm: 395.633
+    A_ki: 34600000.0
+    E_upper_cm: 25438.908
+    E_lower_cm: 170.1328
+    g_upper: 5
+    g_lower: 7
+    term: y 3D*
+  - nm: 395.82
+    A_ki: 48800000.0
+    E_upper_cm: 25643.701
+    E_lower_cm: 386.874
+    g_upper: 7
+    g_lower: 9
+    term: y 3D*
+  - nm: 398.176
+    A_ki: 44200000.0
+    E_upper_cm: 25107.411
+    E_lower_cm: 0.0
+    g_upper: 5
+    g_lower: 5
+    term: y 3F*
+  - nm: 398.976
+    A_ki: 44800000.0
+    E_upper_cm: 25227.222
+    E_lower_cm: 170.1328
+    g_upper: 7
+    g_lower: 7
+    term: y 3F*
+  - nm: 399.864
+    A_ki: 48100000.0
+    E_upper_cm: 25388.331
+    E_lower_cm: 386.874
+    g_upper: 9
+    g_lower: 9
+    term: y 3F*
+  - nm: 403.051
+    A_ki: 50800000.0
+    E_upper_cm: 42019.1293
+    E_lower_cm: 17215.39
+    g_upper: 13
+    g_lower: 11
+    term: e 5G
+  - nm: 428.74
+    A_ki: 14600000.0
+    E_upper_cm: 30060.34
+    E_lower_cm: 6742.756
+    g_upper: 9
+    g_lower: 9
+    term: x 5D*
+  - nm: 428.907
+    A_ki: 30000000.0
+    E_upper_cm: 29907.286
+    E_lower_cm: 6598.765
+    g_upper: 5
+    g_lower: 5
+    term: x 5D*
+  - nm: 429.093
+    A_ki: 45000000.0
+    E_upper_cm: 29855.255
+    E_lower_cm: 6556.833
+    g_upper: 3
+    g_lower: 3
+    term: x 5D*
+  - nm: 429.575
+    A_ki: 130000000.0
+    E_upper_cm: 29829.112
+    E_lower_cm: 6556.833
+    g_upper: 1
+    g_lower: 3
+    term: x 5D*
+  - nm: 441.727
+    A_ki: 36000000.0
+    E_upper_cm: 37852.437
+    E_lower_cm: 15220.393
+    g_upper: 9
+    g_lower: 11
+    term: u 3F*
+  - nm: 444.914
+    A_ki: 97000000.0
+    E_upper_cm: 37690.327
+    E_lower_cm: 15220.393
+    g_upper: 11
+    g_lower: 11
+    term: v 3G*
+  - nm: 445.089
+    A_ki: 96000000.0
+    E_upper_cm: 37617.894
+    E_lower_cm: 15156.802
+    g_upper: 9
+    g_lower: 9
+    term: v 3G*
+  - nm: 445.331
+    A_ki: 59800000.0
+    E_upper_cm: 33980.653
+    E_lower_cm: 11531.761
+    g_upper: 5
+    g_lower: 5
+    term: v 3F*
+  - nm: 445.37
+    A_ki: 47000000.0
+    E_upper_cm: 37555.058
+    E_lower_cm: 15108.111
+    g_upper: 7
+    g_lower: 7
+    term: v 3G*
+  - nm: 445.532
+    A_ki: 48000000.0
+    E_upper_cm: 34078.606
+    E_lower_cm: 11639.8109
+    g_upper: 7
+    g_lower: 7
+    term: v 3F*
+  - nm: 445.743
+    A_ki: 56000000.0
+    E_upper_cm: 34204.985
+    E_lower_cm: 11776.812
+    g_upper: 9
+    g_lower: 9
+    term: v 3F*
+  - nm: 448.126
+    A_ki: 57000000.0
+    E_upper_cm: 36414.531
+    E_lower_cm: 14105.634
+    g_upper: 7
+    g_lower: 7
+    term: y 5P*
+  - nm: 451.273
+    A_ki: 9860000.0
+    E_upper_cm: 28896.059
+    E_lower_cm: 6742.756
+    g_upper: 11
+    g_lower: 9
+    term: y 5F*
+  - nm: 451.802
+    A_ki: 17200000.0
+    E_upper_cm: 28788.38
+    E_lower_cm: 6661.006
+    g_upper: 9
+    g_lower: 7
+    term: y 5F*
+  - nm: 452.28
+    A_ki: 19000000.0
+    E_upper_cm: 28702.778
+    E_lower_cm: 6598.765
+    g_upper: 7
+    g_lower: 5
+    term: y 5F*
+  - nm: 452.731
+    A_ki: 22000000.0
+    E_upper_cm: 28638.841
+    E_lower_cm: 6556.833
+    g_upper: 5
+    g_lower: 3
+    term: y 5F*
+  - nm: 453.324
+    A_ki: 88300000.0
+    E_upper_cm: 28896.059
+    E_lower_cm: 6842.962
+    g_upper: 11
+    g_lower: 11
+    term: y 5F*
+  - nm: 453.478
+    A_ki: 68700000.0
+    E_upper_cm: 28788.38
+    E_lower_cm: 6742.756
+    g_upper: 9
+    g_lower: 9
+    term: y 5F*
+  - nm: 454.469
+    A_ki: 33000000.0
+    E_upper_cm: 28596.313
+    E_lower_cm: 6598.765
+    g_upper: 3
+    g_lower: 5
+    term: y 5F*
+  - nm: 454.876
+    A_ki: 28500000.0
+    E_upper_cm: 28638.841
+    E_lower_cm: 6661.006
+    g_upper: 5
+    g_lower: 7
+    term: y 5F*
+  - nm: 455.245
+    A_ki: 21000000.0
+    E_upper_cm: 28702.778
+    E_lower_cm: 6742.756
+    g_upper: 7
+    g_lower: 9
+    term: y 5F*
+  - nm: 455.548
+    A_ki: 11600000.0
+    E_upper_cm: 28788.38
+    E_lower_cm: 6842.962
+    g_upper: 9
+    g_lower: 11
+    term: y 5F*
+  - nm: 461.727
+    A_ki: 85100000.0
+    E_upper_cm: 35757.394
+    E_lower_cm: 14105.634
+    g_upper: 9
+    g_lower: 7
+    term: w 5D*
+  - nm: 462.31
+    A_ki: 57400000.0
+    E_upper_cm: 35652.9
+    E_lower_cm: 14028.436
+    g_upper: 7
+    g_lower: 5
+    term: w 5D*
+  - nm: 474.279
+    A_ki: 53000000.0
+    E_upper_cm: 39115.957
+    E_lower_cm: 18037.213
+    g_upper: 9
+    g_lower: 9
+    term: x 3H*
+  - nm: 475.812
+    A_ki: 71300000.0
+    E_upper_cm: 39152.103
+    E_lower_cm: 18141.265
+    g_upper: 11
+    g_lower: 11
+    term: x 3H*
+  - nm: 475.927
+    A_ki: 74000000.0
+    E_upper_cm: 39198.323
+    E_lower_cm: 18192.57
+    g_upper: 13
+    g_lower: 13
+    term: x 3H*
+  - nm: 480.541
+    A_ki: 58000000.0
+    E_upper_cm: 39715.439
+    E_lower_cm: 18911.394
+    g_upper: 7
+    g_lower: 5
+    term: s 3D*
+  - nm: 484.087
+    A_ki: 17600000.0
+    E_upper_cm: 27907.013
+    E_lower_cm: 7255.355
+    g_upper: 5
+    g_lower: 5
+    term: y 1D*
+  - nm: 485.601
+    A_ki: 52000000.0
+    E_upper_cm: 38779.856
+    E_lower_cm: 18192.57
+    g_upper: 15
+    g_lower: 13
+    term: z 3I*
+  - nm: 488.508
+    A_ki: 49000000.0
+    E_upper_cm: 35685.174
+    E_lower_cm: 15220.393
+    g_upper: 13
+    g_lower: 11
+    term: y 3H*
+  - nm: 491.361
+    A_ki: 44400000.0
+    E_upper_cm: 35454.052
+    E_lower_cm: 15108.111
+    g_upper: 9
+    g_lower: 7
+    term: y 3H*
+  - nm: 492.834
+    A_ki: 62000000.0
+    E_upper_cm: 37654.69
+    E_lower_cm: 17369.529
+    g_upper: 5
+    g_lower: 3
+    term: u 3F*
+  - nm: 498.173
+    A_ki: 66000000.0
+    E_upper_cm: 26910.709
+    E_lower_cm: 6842.962
+    g_upper: 13
+    g_lower: 11
+    term: y 5G*
+  - nm: 499.107
+    A_ki: 58400000.0
+    E_upper_cm: 26772.968
+    E_lower_cm: 6742.756
+    g_upper: 11
+    g_lower: 9
+    term: y 5G*
+  - nm: 499.95
+    A_ki: 52700000.0
+    E_upper_cm: 26657.416
+    E_lower_cm: 6661.006
+    g_upper: 9
+    g_lower: 7
+    term: y 5G*
+  - nm: 500.099
+    A_ki: 36500000.0
+    E_upper_cm: 36096.542
+    E_lower_cm: 16106.076
+    g_upper: 7
+    g_lower: 9
+    term: e 5F
+  - nm: 500.721
+    A_ki: 49200000.0
+    E_upper_cm: 26564.4
+    E_lower_cm: 6598.765
+    g_upper: 7
+    g_lower: 5
+    term: y 5G*
+  - nm: 501.328
+    A_ki: 38600000.0
+    E_upper_cm: 36208.929
+    E_lower_cm: 16267.48
+    g_upper: 9
+    g_lower: 11
+    term: e 5F
+  - nm: 501.428
+    A_ki: 68000000.0
+    E_upper_cm: 26494.33
+    E_lower_cm: 6556.833
+    g_upper: 5
+    g_lower: 3
+    term: y 5G*
+  - nm: 501.616
+    A_ki: 6430000.0
+    E_upper_cm: 26772.968
+    E_lower_cm: 6842.962
+    g_upper: 11
+    g_lower: 11
+    term: y 5G*
+  - nm: 502.002
+    A_ki: 11300000.0
+    E_upper_cm: 26657.416
+    E_lower_cm: 6742.756
+    g_upper: 9
+    g_lower: 9
+    term: y 5G*
+  - nm: 502.287
+    A_ki: 13900000.0
+    E_upper_cm: 26564.4
+    E_lower_cm: 6661.006
+    g_upper: 7
+    g_lower: 7
+    term: y 5G*
+  - nm: 502.484
+    A_ki: 13200000.0
+    E_upper_cm: 26494.33
+    E_lower_cm: 6598.765
+    g_upper: 5
+    g_lower: 5
+    term: y 5G*
+  - nm: 502.557
+    A_ki: 42600000.0
+    E_upper_cm: 36351.365
+    E_lower_cm: 16458.671
+    g_upper: 11
+    g_lower: 13
+    term: e 5F
+  - nm: 503.646
+    A_ki: 39400000.0
+    E_upper_cm: 31489.476
+    E_lower_cm: 11639.8109
+    g_upper: 9
+    g_lower: 7
+    term: w 3G*
+  - nm: 503.84
+    A_ki: 38700000.0
+    E_upper_cm: 31373.807
+    E_lower_cm: 11531.761
+    g_upper: 7
+    g_lower: 5
+    term: w 3G*
+  - nm: 506.465
+    A_ki: 4370000.0
+    E_upper_cm: 20126.062
+    E_lower_cm: 386.874
+    g_upper: 7
+    g_lower: 9
+    term: z 3D*
+  - nm: 519.297
+    A_ki: 3860000.0
+    E_upper_cm: 19421.58
+    E_lower_cm: 170.1328
+    g_upper: 7
+    g_lower: 7
+    term: z 3F*
+  - nm: 521.038
+    A_ki: 3890000.0
+    E_upper_cm: 19573.974
+    E_lower_cm: 386.874
+    g_upper: 9
+    g_lower: 9
+    term: z 3F*
+  - nm: 522.431
+    A_ki: 30000000.0
+    E_upper_cm: 36351.365
+    E_lower_cm: 17215.39
+    g_upper: 11
+    g_lower: 11
+    term: e 5F
+  - nm: 578.598
+    A_ki: 61000000.0
+    E_upper_cm: 44051.3351
+    E_lower_cm: 26772.968
+    g_upper: 13
+    g_lower: 11
+    term: f 5H
+  - nm: 580.426
+    A_ki: 68000000.0
+    E_upper_cm: 44134.658
+    E_lower_cm: 26910.709
+    g_upper: 15
+    g_lower: 13
+    term: f 5H
+  - nm: 625.81
+    A_ki: 8360000.0
+    E_upper_cm: 27614.679
+    E_lower_cm: 11639.8109
+    g_upper: 9
+    g_lower: 7
+    term: y 3G*
+  - nm: 625.87
+    A_ki: 8900000.0
+    E_upper_cm: 27750.135
+    E_lower_cm: 11776.812
+    g_upper: 11
+    g_lower: 9
+    term: y 3G*
+Ti_II:
+  species: Ti II
+  element: Ti
+  ion_stage: 1
+  ionization_energy_eV: 13.5755
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 4
+    term: a 4F
+  - E_cm: 94.114
+    g: 6
+    term: a 4F
+  - E_cm: 225.704
+    g: 8
+    term: a 4F
+  - E_cm: 393.446
+    g: 10
+    term: a 4F
+  - E_cm: 907.967
+    g: 4
+    term: b 4F
+  - E_cm: 983.916
+    g: 6
+    term: b 4F
+  - E_cm: 1087.356
+    g: 8
+    term: b 4F
+  - E_cm: 1215.833
+    g: 10
+    term: b 4F
+  - E_cm: 4628.657
+    g: 6
+    term: a 2F
+  - E_cm: 4897.718
+    g: 8
+    term: a 2F
+  - E_cm: 8710.567
+    g: 4
+    term: a 2D
+  - E_cm: 8744.341
+    g: 6
+    term: a 2D
+  - E_cm: 8997.787
+    g: 8
+    term: a 2G
+  - E_cm: 9118.285
+    g: 10
+    term: a 2G
+  - E_cm: 9363.743
+    g: 2
+    term: a 4P
+  - E_cm: 9395.802
+    g: 4
+    term: a 4P
+  - E_cm: 9518.152
+    g: 6
+    term: a 4P
+  - E_cm: 9851.014
+    g: 2
+    term: a 2P
+  - E_cm: 9872.899
+    g: 2
+    term: b 4P
+  - E_cm: 9930.777
+    g: 4
+    term: b 4P
+  - E_cm: 9975.999
+    g: 4
+    term: a 2P
+  - E_cm: 10024.801
+    g: 6
+    term: b 4P
+  - E_cm: 12628.845
+    g: 4
+    term: b 2D2
+  - E_cm: 12677.105
+    g: 10
+    term: a 2H
+  - E_cm: 12758.26
+    g: 6
+    term: b 2D2
+  lines:
+  - nm: 362.483
+    A_ki: 29000000.0
+    E_upper_cm: 37430.6814
+    E_lower_cm: 9851.0145
+    g_upper: 2
+    g_lower: 2
+    term: z 2S*
+  - nm: 364.133
+    A_ki: 49000000.0
+    E_upper_cm: 37430.6814
+    E_lower_cm: 9975.9994
+    g_upper: 2
+    g_lower: 4
+    term: z 2S*
+  - nm: 365.976
+    A_ki: 18400000.0
+    E_upper_cm: 40074.6707
+    E_lower_cm: 12758.2597
+    g_upper: 8
+    g_lower: 6
+    term: y 2F*
+  - nm: 366.223
+    A_ki: 24500000.0
+    E_upper_cm: 39926.8192
+    E_lower_cm: 12628.8455
+    g_upper: 6
+    g_lower: 4
+    term: y 2F*
+  - nm: 367.968
+    A_ki: 2890000.0
+    E_upper_cm: 39926.8192
+    E_lower_cm: 12758.2597
+    g_upper: 6
+    g_lower: 6
+    term: y 2F*
+  - nm: 370.622
+    A_ki: 28200000.0
+    E_upper_cm: 39602.8645
+    E_lower_cm: 12628.8455
+    g_upper: 4
+    g_lower: 4
+    term: y 2D*
+  - nm: 372.164
+    A_ki: 3900000.0
+    E_upper_cm: 31490.9177
+    E_lower_cm: 4628.6571
+    g_upper: 8
+    g_lower: 6
+    term: z 2F*
+  - nm: 374.164
+    A_ki: 68000000.0
+    E_upper_cm: 39476.9244
+    E_lower_cm: 12758.2597
+    g_upper: 6
+    g_lower: 6
+    term: y 2D*
+  - nm: 374.8
+    A_ki: 23100000.0
+    E_upper_cm: 47625.0485
+    E_lower_cm: 20951.7551
+    g_upper: 6
+    g_lower: 6
+    term: x 2F*
+  - nm: 375.769
+    A_ki: 45000000.0
+    E_upper_cm: 39233.4153
+    E_lower_cm: 12628.8455
+    g_upper: 4
+    g_lower: 4
+    term: z 2P*
+  - nm: 375.929
+    A_ki: 94000000.0
+    E_upper_cm: 31490.9177
+    E_lower_cm: 4897.7179
+    g_upper: 8
+    g_lower: 8
+    term: z 2F*
+  - nm: 376.132
+    A_ki: 120000000.0
+    E_upper_cm: 31207.5111
+    E_lower_cm: 4628.6571
+    g_upper: 6
+    g_lower: 6
+    term: z 2F*
+  - nm: 376.187
+    A_ki: 22100000.0
+    E_upper_cm: 47466.7479
+    E_lower_cm: 20891.7898
+    g_upper: 8
+    g_lower: 8
+    term: x 2F*
+  - nm: 377.037
+    A_ki: 3130000.0
+    E_upper_cm: 47466.7479
+    E_lower_cm: 20951.7551
+    g_upper: 8
+    g_lower: 6
+    term: x 2F*
+  - nm: 377.605
+    A_ki: 6580000.0
+    E_upper_cm: 39233.4153
+    E_lower_cm: 12758.2597
+    g_upper: 4
+    g_lower: 6
+    term: z 2P*
+  - nm: 381.339
+    A_ki: 844000.0
+    E_upper_cm: 31113.6764
+    E_lower_cm: 4897.7179
+    g_upper: 8
+    g_lower: 8
+    term: z 4F*
+  - nm: 381.458
+    A_ki: 2840000.0
+    E_upper_cm: 30836.425
+    E_lower_cm: 4628.6571
+    g_upper: 4
+    g_lower: 6
+    term: z 4F*
+  - nm: 383.608
+    A_ki: 983000.0
+    E_upper_cm: 30958.5846
+    E_lower_cm: 4897.7179
+    g_upper: 6
+    g_lower: 8
+    term: z 4F*
+  - nm: 388.228
+    A_ki: 545000.0
+    E_upper_cm: 34748.5062
+    E_lower_cm: 8997.7874
+    g_upper: 10
+    g_lower: 8
+    term: z 2G*
+  - nm: 390.054
+    A_ki: 27600000.0
+    E_upper_cm: 34748.5062
+    E_lower_cm: 9118.2849
+    g_upper: 10
+    g_lower: 10
+    term: z 2G*
+  - nm: 391.346
+    A_ki: 20900000.0
+    E_upper_cm: 34543.3799
+    E_lower_cm: 8997.7874
+    g_upper: 8
+    g_lower: 8
+    term: z 2G*
+  - nm: 393.201
+    A_ki: 1230000.0
+    E_upper_cm: 34543.3799
+    E_lower_cm: 9118.2849
+    g_upper: 8
+    g_lower: 10
+    term: z 2G*
+  - nm: 401.238
+    A_ki: 997000.0
+    E_upper_cm: 29544.454
+    E_lower_cm: 4628.6571
+    g_upper: 6
+    g_lower: 6
+    term: z 4G*
+  - nm: 402.513
+    A_ki: 372000.0
+    E_upper_cm: 29734.6206
+    E_lower_cm: 4897.7179
+    g_upper: 8
+    g_lower: 8
+    term: z 4G*
+  - nm: 402.834
+    A_ki: 5640000.0
+    E_upper_cm: 40074.6707
+    E_lower_cm: 15257.5527
+    g_upper: 8
+    g_lower: 10
+    term: y 2F*
+  - nm: 405.382
+    A_ki: 5050000.0
+    E_upper_cm: 39926.8192
+    E_lower_cm: 15265.7001
+    g_upper: 6
+    g_lower: 8
+    term: y 2F*
+  - nm: 416.153
+    A_ki: 390000.0
+    E_upper_cm: 32767.1961
+    E_lower_cm: 8744.3406
+    g_upper: 8
+    g_lower: 6
+    term: z 4D*
+  - nm: 416.364
+    A_ki: 47700000.0
+    E_upper_cm: 44902.4455
+    E_lower_cm: 20891.7898
+    g_upper: 6
+    g_lower: 8
+    term: x 2D*
+  - nm: 417.19
+    A_ki: 49000000.0
+    E_upper_cm: 44914.8733
+    E_lower_cm: 20951.7551
+    g_upper: 4
+    g_lower: 6
+    term: x 2D*
+  - nm: 417.353
+    A_ki: 835000.0
+    E_upper_cm: 32698.1022
+    E_lower_cm: 8744.3406
+    g_upper: 6
+    g_lower: 6
+    term: z 4D*
+  - nm: 417.407
+    A_ki: 3510000.0
+    E_upper_cm: 44902.4455
+    E_lower_cm: 20951.7551
+    g_upper: 6
+    g_lower: 6
+    term: x 2D*
+  - nm: 428.787
+    A_ki: 580000.0
+    E_upper_cm: 32025.5915
+    E_lower_cm: 8710.5675
+    g_upper: 6
+    g_lower: 4
+    term: z 2D*
+  - nm: 429.021
+    A_ki: 8560000.0
+    E_upper_cm: 32698.1022
+    E_lower_cm: 9395.802
+    g_upper: 6
+    g_lower: 4
+    term: z 4D*
+  - nm: 429.409
+    A_ki: 4700000.0
+    E_upper_cm: 32025.5915
+    E_lower_cm: 8744.3406
+    g_upper: 6
+    g_lower: 6
+    term: z 2D*
+  - nm: 430.004
+    A_ki: 16300000.0
+    E_upper_cm: 32767.1961
+    E_lower_cm: 9518.1516
+    g_upper: 8
+    g_lower: 6
+    term: z 4D*
+  - nm: 430.192
+    A_ki: 6410000.0
+    E_upper_cm: 32602.6265
+    E_lower_cm: 9363.7425
+    g_upper: 4
+    g_lower: 2
+    term: z 4D*
+  - nm: 430.787
+    A_ki: 7690000.0
+    E_upper_cm: 32602.6265
+    E_lower_cm: 9395.802
+    g_upper: 4
+    g_lower: 4
+    term: z 4D*
+  - nm: 431.286
+    A_ki: 4700000.0
+    E_upper_cm: 32698.1022
+    E_lower_cm: 9518.1516
+    g_upper: 6
+    g_lower: 6
+    term: z 4D*
+  - nm: 431.497
+    A_ki: 14100000.0
+    E_upper_cm: 32532.3542
+    E_lower_cm: 9363.7425
+    g_upper: 2
+    g_lower: 2
+    term: z 4D*
+  - nm: 431.679
+    A_ki: 4740000.0
+    E_upper_cm: 39674.7616
+    E_lower_cm: 16515.9359
+    g_upper: 2
+    g_lower: 2
+    term: z 2P*
+  - nm: 432.095
+    A_ki: 2810000.0
+    E_upper_cm: 32532.3542
+    E_lower_cm: 9395.802
+    g_upper: 2
+    g_lower: 4
+    term: z 4D*
+  - nm: 433.07
+    A_ki: 976000.0
+    E_upper_cm: 32602.6265
+    E_lower_cm: 9518.1516
+    g_upper: 4
+    g_lower: 6
+    term: z 4D*
+  - nm: 433.791
+    A_ki: 6600000.0
+    E_upper_cm: 31756.6406
+    E_lower_cm: 8710.5675
+    g_upper: 4
+    g_lower: 4
+    term: z 2D*
+  - nm: 434.428
+    A_ki: 720000.0
+    E_upper_cm: 31756.6406
+    E_lower_cm: 8744.3406
+    g_upper: 4
+    g_lower: 6
+    term: z 2D*
+  - nm: 436.765
+    A_ki: 4800000.0
+    E_upper_cm: 43780.9533
+    E_lower_cm: 20891.7898
+    g_upper: 10
+    g_lower: 8
+    term: y 2G*
+  - nm: 437.482
+    A_ki: 1410000.0
+    E_upper_cm: 39476.9244
+    E_lower_cm: 16625.2441
+    g_upper: 6
+    g_lower: 4
+    term: y 2D*
+  - nm: 438.685
+    A_ki: 4790000.0
+    E_upper_cm: 43740.7678
+    E_lower_cm: 20951.7551
+    g_upper: 8
+    g_lower: 6
+    term: y 2G*
+  - nm: 439.406
+    A_ki: 1420000.0
+    E_upper_cm: 32602.6265
+    E_lower_cm: 9851.0145
+    g_upper: 4
+    g_lower: 2
+    term: z 4D*
+  - nm: 439.503
+    A_ki: 9400000.0
+    E_upper_cm: 31490.9177
+    E_lower_cm: 8744.3406
+    g_upper: 8
+    g_lower: 6
+    term: z 2F*
+  - nm: 439.584
+    A_ki: 509000.0
+    E_upper_cm: 32767.1961
+    E_lower_cm: 10024.8009
+    g_upper: 8
+    g_lower: 6
+    term: z 4D*
+  - nm: 439.977
+    A_ki: 3740000.0
+    E_upper_cm: 32698.1022
+    E_lower_cm: 9975.9994
+    g_upper: 6
+    g_lower: 4
+    term: z 4D*
+  - nm: 441.107
+    A_ki: 12300000.0
+    E_upper_cm: 47625.0485
+    E_lower_cm: 24961.191
+    g_upper: 6
+    g_lower: 4
+    term: x 2F*
+  - nm: 441.771
+    A_ki: 2100000.0
+    E_upper_cm: 32025.5915
+    E_lower_cm: 9395.802
+    g_upper: 6
+    g_lower: 4
+    term: z 2D*
+  - nm: 441.833
+    A_ki: 926000.0
+    E_upper_cm: 32602.6265
+    E_lower_cm: 9975.9994
+    g_upper: 4
+    g_lower: 4
+    term: z 4D*
+  - nm: 444.38
+    A_ki: 10800000.0
+    E_upper_cm: 31207.5111
+    E_lower_cm: 8710.5675
+    g_upper: 6
+    g_lower: 4
+    term: z 2F*
+  - nm: 444.455
+    A_ki: 390000.0
+    E_upper_cm: 31490.9177
+    E_lower_cm: 8997.7874
+    g_upper: 8
+    g_lower: 8
+    term: z 2F*
+  - nm: 445.048
+    A_ki: 1700000.0
+    E_upper_cm: 31207.5111
+    E_lower_cm: 8744.3406
+    g_upper: 6
+    g_lower: 6
+    term: z 2F*
+  - nm: 446.445
+    A_ki: 700000.0
+    E_upper_cm: 31756.6406
+    E_lower_cm: 9363.7425
+    g_upper: 4
+    g_lower: 2
+    term: z 2D*
+  - nm: 446.849
+    A_ki: 10000000.0
+    E_upper_cm: 31490.9177
+    E_lower_cm: 9118.2849
+    g_upper: 8
+    g_lower: 10
+    term: z 2F*
+  - nm: 448.832
+    A_ki: 12800000.0
+    E_upper_cm: 47466.7479
+    E_lower_cm: 25192.965
+    g_upper: 8
+    g_lower: 6
+    term: x 2F*
+  - nm: 450.127
+    A_ki: 9370000.0
+    E_upper_cm: 31207.5111
+    E_lower_cm: 8997.7874
+    g_upper: 6
+    g_lower: 8
+    term: z 2F*
+  - nm: 452.948
+    A_ki: 748000.0
+    E_upper_cm: 34748.5062
+    E_lower_cm: 12677.105
+    g_upper: 10
+    g_lower: 10
+    term: z 2G*
+  - nm: 453.396
+    A_ki: 9200000.0
+    E_upper_cm: 32025.5915
+    E_lower_cm: 9975.9994
+    g_upper: 6
+    g_lower: 4
+    term: z 2D*
+  - nm: 454.962
+    A_ki: 25300000.0
+    E_upper_cm: 34748.5062
+    E_lower_cm: 12774.8168
+    g_upper: 10
+    g_lower: 12
+    term: z 2G*
+  - nm: 456.376
+    A_ki: 8800000.0
+    E_upper_cm: 31756.6406
+    E_lower_cm: 9851.0145
+    g_upper: 4
+    g_lower: 2
+    term: z 2D*
+  - nm: 457.197
+    A_ki: 19200000.0
+    E_upper_cm: 34543.3799
+    E_lower_cm: 12677.105
+    g_upper: 8
+    g_lower: 10
+    term: z 2G*
+  - nm: 458.995
+    A_ki: 1300000.0
+    E_upper_cm: 31756.6406
+    E_lower_cm: 9975.9994
+    g_upper: 4
+    g_lower: 4
+    term: z 2D*
+  - nm: 477.998
+    A_ki: 6200000.0
+    E_upper_cm: 37430.6814
+    E_lower_cm: 16515.9359
+    g_upper: 2
+    g_lower: 2
+    term: z 2S*
+  - nm: 480.509
+    A_ki: 11000000.0
+    E_upper_cm: 37430.6814
+    E_lower_cm: 16625.2441
+    g_upper: 2
+    g_lower: 4
+    term: z 2S*
+  - nm: 487.401
+    A_ki: 22000000.0
+    E_upper_cm: 45472.4518
+    E_lower_cm: 24961.191
+    g_upper: 2
+    g_lower: 4
+    term: y 2P*
+  - nm: 491.12
+    A_ki: 17000000.0
+    E_upper_cm: 45548.9273
+    E_lower_cm: 25192.965
+    g_upper: 4
+    g_lower: 6
+    term: y 2P*
+  - nm: 507.229
+    A_ki: 3750000.0
+    E_upper_cm: 44902.4455
+    E_lower_cm: 25192.965
+    g_upper: 6
+    g_lower: 6
+    term: x 2D*
+  - nm: 512.916
+    A_ki: 1460000.0
+    E_upper_cm: 34748.5062
+    E_lower_cm: 15257.5527
+    g_upper: 10
+    g_lower: 10
+    term: z 2G*
+  - nm: 515.407
+    A_ki: 500000.0
+    E_upper_cm: 32025.5915
+    E_lower_cm: 12628.8455
+    g_upper: 6
+    g_lower: 4
+    term: z 2D*
+  - nm: 518.59
+    A_ki: 1010000.0
+    E_upper_cm: 34543.3799
+    E_lower_cm: 15265.7001
+    g_upper: 8
+    g_lower: 8
+    term: z 2G*
+  - nm: 518.869
+    A_ki: 2500000.0
+    E_upper_cm: 32025.5915
+    E_lower_cm: 12758.2597
+    g_upper: 6
+    g_lower: 6
+    term: z 2D*
+  - nm: 521.153
+    A_ki: 2100000.0
+    E_upper_cm: 40074.6707
+    E_lower_cm: 20891.7898
+    g_upper: 8
+    g_lower: 8
+    term: y 2F*
+  - nm: 522.654
+    A_ki: 3100000.0
+    E_upper_cm: 31756.6406
+    E_lower_cm: 12628.8455
+    g_upper: 4
+    g_lower: 4
+    term: z 2D*
+  - nm: 533.679
+    A_ki: 580000.0
+    E_upper_cm: 31490.9177
+    E_lower_cm: 12758.2597
+    g_upper: 8
+    g_lower: 6
+    term: z 2F*
+  - nm: 538.102
+    A_ki: 460000.0
+    E_upper_cm: 31207.5111
+    E_lower_cm: 12628.8455
+    g_upper: 6
+    g_lower: 4
+    term: z 2F*
+V_I:
+  species: V I
+  element: V
+  ion_stage: 0
+  ionization_energy_eV: 6.74619
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 4
+    term: a 4F
+  - E_cm: 137.383
+    g: 6
+    term: a 4F
+  - E_cm: 323.432
+    g: 8
+    term: a 4F
+  - E_cm: 552.955
+    g: 10
+    term: a 4F
+  - E_cm: 2112.282
+    g: 2
+    term: a 6D
+  - E_cm: 2153.221
+    g: 4
+    term: a 6D
+  - E_cm: 2220.156
+    g: 6
+    term: a 6D
+  - E_cm: 2311.369
+    g: 8
+    term: a 6D
+  - E_cm: 2424.809
+    g: 10
+    term: a 6D
+  - E_cm: 8413.009
+    g: 2
+    term: a 4D
+  - E_cm: 8476.234
+    g: 4
+    term: a 4D
+  - E_cm: 8578.542
+    g: 6
+    term: a 4D
+  - E_cm: 8715.747
+    g: 8
+    term: a 4D
+  - E_cm: 9544.635
+    g: 2
+    term: a 4P
+  - E_cm: 9637.039
+    g: 4
+    term: a 4P
+  - E_cm: 9824.626
+    g: 6
+    term: a 4P
+  - E_cm: 10892.52
+    g: 8
+    term: a 2G
+  - E_cm: 11100.596
+    g: 10
+    term: a 2G
+  - E_cm: 13801.551
+    g: 4
+    term: a 2P
+  - E_cm: 13810.91
+    g: 2
+    term: a 2P
+  - E_cm: 14514.756
+    g: 4
+    term: 2D2
+  - E_cm: 14548.816
+    g: 6
+    term: 2D2
+  - E_cm: 14909.958
+    g: 8
+    term: a 4H
+  - E_cm: 14949.359
+    g: 10
+    term: a 4H
+  - E_cm: 15000.937
+    g: 12
+    term: a 4H
+  lines:
+  - nm: 364.471
+    A_ki: 78000000.0
+    E_upper_cm: 38529.83
+    E_lower_cm: 11100.596
+    g_upper: 10
+    g_lower: 10
+    term: u 2G*
+  - nm: 366.774
+    A_ki: 146000000.0
+    E_upper_cm: 43706.874
+    E_lower_cm: 16449.875
+    g_upper: 8
+    g_lower: 6
+    term: e 6H
+  - nm: 367.34
+    A_ki: 151000000.0
+    E_upper_cm: 43787.604
+    E_lower_cm: 16572.638
+    g_upper: 10
+    g_lower: 8
+    term: e 6H
+  - nm: 367.668
+    A_ki: 110000000.0
+    E_upper_cm: 44327.214
+    E_lower_cm: 17136.538
+    g_upper: 14
+    g_lower: 14
+    term: f 6G
+  - nm: 368.011
+    A_ki: 154000000.0
+    E_upper_cm: 43894.149
+    E_lower_cm: 16728.803
+    g_upper: 12
+    g_lower: 10
+    term: e 6H
+  - nm: 368.748
+    A_ki: 160000000.0
+    E_upper_cm: 44028.264
+    E_lower_cm: 16917.21
+    g_upper: 14
+    g_lower: 12
+    term: e 6H
+  - nm: 368.807
+    A_ki: 32000000.0
+    E_upper_cm: 29418.119
+    E_lower_cm: 2311.369
+    g_upper: 8
+    g_lower: 8
+    term: y 6P*
+  - nm: 369.028
+    A_ki: 44000000.0
+    E_upper_cm: 29202.79
+    E_lower_cm: 2112.282
+    g_upper: 4
+    g_lower: 2
+    term: y 6P*
+  - nm: 369.222
+    A_ki: 55000000.0
+    E_upper_cm: 29296.43
+    E_lower_cm: 2220.156
+    g_upper: 6
+    g_lower: 6
+    term: y 6P*
+  - nm: 369.534
+    A_ki: 175000000.0
+    E_upper_cm: 44189.954
+    E_lower_cm: 17136.538
+    g_upper: 16
+    g_lower: 14
+    term: e 6H
+  - nm: 369.586
+    A_ki: 62000000.0
+    E_upper_cm: 29202.79
+    E_lower_cm: 2153.221
+    g_upper: 4
+    g_lower: 4
+    term: y 6P*
+  - nm: 370.357
+    A_ki: 112000000.0
+    E_upper_cm: 29418.119
+    E_lower_cm: 2424.809
+    g_upper: 8
+    g_lower: 10
+    term: y 6P*
+  - nm: 370.47
+    A_ki: 77000000.0
+    E_upper_cm: 29296.43
+    E_lower_cm: 2311.369
+    g_upper: 6
+    g_lower: 8
+    term: y 6P*
+  - nm: 370.503
+    A_ki: 41800000.0
+    E_upper_cm: 29202.79
+    E_lower_cm: 2220.156
+    g_upper: 4
+    g_lower: 6
+    term: y 6P*
+  - nm: 379.495
+    A_ki: 20300000.0
+    E_upper_cm: 28768.142
+    E_lower_cm: 2424.809
+    g_upper: 10
+    g_lower: 10
+    term: x 6D*
+  - nm: 381.824
+    A_ki: 67000000.0
+    E_upper_cm: 26182.637
+    E_lower_cm: 0.0
+    g_upper: 2
+    g_lower: 4
+    term: y 4D*
+  - nm: 382.856
+    A_ki: 52000000.0
+    E_upper_cm: 26249.476
+    E_lower_cm: 137.383
+    g_upper: 4
+    g_lower: 6
+    term: y 4D*
+  - nm: 384.043
+    A_ki: 40000000.0
+    E_upper_cm: 34747.128
+    E_lower_cm: 8715.747
+    g_upper: 8
+    g_lower: 8
+    term: v 4D*
+  - nm: 384.075
+    A_ki: 52000000.0
+    E_upper_cm: 26352.634
+    E_lower_cm: 323.432
+    g_upper: 6
+    g_lower: 8
+    term: y 4D*
+  - nm: 385.536
+    A_ki: 33900000.0
+    E_upper_cm: 25930.544
+    E_lower_cm: 0.0
+    g_upper: 4
+    g_lower: 4
+    term: y 4F*
+  - nm: 385.584
+    A_ki: 57000000.0
+    E_upper_cm: 26480.286
+    E_lower_cm: 552.955
+    g_upper: 8
+    g_lower: 10
+    term: y 4D*
+  - nm: 386.486
+    A_ki: 27000000.0
+    E_upper_cm: 26004.234
+    E_lower_cm: 137.383
+    g_upper: 6
+    g_lower: 6
+    term: y 4F*
+  - nm: 387.507
+    A_ki: 22700000.0
+    E_upper_cm: 26122.094
+    E_lower_cm: 323.432
+    g_upper: 8
+    g_lower: 8
+    term: y 4F*
+  - nm: 390.225
+    A_ki: 26100000.0
+    E_upper_cm: 26171.918
+    E_lower_cm: 552.955
+    g_upper: 10
+    g_lower: 10
+    term: y 4F*
+  - nm: 399.06
+    A_ki: 87000000.0
+    E_upper_cm: 40001.19
+    E_lower_cm: 14949.359
+    g_upper: 8
+    g_lower: 10
+    term: u 4G*
+  - nm: 399.279
+    A_ki: 86000000.0
+    E_upper_cm: 40038.97
+    E_lower_cm: 15000.937
+    g_upper: 10
+    g_lower: 12
+    term: u 4G*
+  - nm: 399.872
+    A_ki: 98000000.0
+    E_upper_cm: 40063.874
+    E_lower_cm: 15062.959
+    g_upper: 12
+    g_lower: 14
+    term: u 4G*
+  - nm: 405.135
+    A_ki: 110000000.0
+    E_upper_cm: 41918.255
+    E_lower_cm: 17242.07
+    g_upper: 12
+    g_lower: 12
+    term: t 4G*
+  - nm: 409.057
+    A_ki: 54000000.0
+    E_upper_cm: 33155.331
+    E_lower_cm: 8715.747
+    g_upper: 10
+    g_lower: 8
+    term: w 4F*
+  - nm: 409.268
+    A_ki: 22400000.0
+    E_upper_cm: 26738.323
+    E_lower_cm: 2311.369
+    g_upper: 10
+    g_lower: 8
+    term: y 6D*
+  - nm: 409.548
+    A_ki: 42000000.0
+    E_upper_cm: 32988.845
+    E_lower_cm: 8578.542
+    g_upper: 8
+    g_lower: 6
+    term: w 4F*
+  - nm: 409.978
+    A_ki: 39100000.0
+    E_upper_cm: 26604.807
+    E_lower_cm: 2220.156
+    g_upper: 8
+    g_lower: 6
+    term: y 6D*
+  - nm: 410.477
+    A_ki: 170000000.0
+    E_upper_cm: 40125.879
+    E_lower_cm: 15770.789
+    g_upper: 8
+    g_lower: 10
+    term: s 4D*
+  - nm: 410.516
+    A_ki: 48100000.0
+    E_upper_cm: 26505.953
+    E_lower_cm: 2153.221
+    g_upper: 6
+    g_lower: 4
+    term: y 6D*
+  - nm: 410.976
+    A_ki: 46400000.0
+    E_upper_cm: 26437.754
+    E_lower_cm: 2112.282
+    g_upper: 4
+    g_lower: 2
+    term: y 6D*
+  - nm: 411.178
+    A_ki: 100000000.0
+    E_upper_cm: 26738.323
+    E_lower_cm: 2424.809
+    g_upper: 10
+    g_lower: 10
+    term: y 6D*
+  - nm: 411.518
+    A_ki: 56000000.0
+    E_upper_cm: 26604.807
+    E_lower_cm: 2311.369
+    g_upper: 8
+    g_lower: 8
+    term: y 6D*
+  - nm: 411.647
+    A_ki: 21500000.0
+    E_upper_cm: 26505.953
+    E_lower_cm: 2220.156
+    g_upper: 6
+    g_lower: 6
+    term: y 6D*
+  - nm: 412.35
+    A_ki: 94000000.0
+    E_upper_cm: 26397.633
+    E_lower_cm: 2153.221
+    g_upper: 2
+    g_lower: 4
+    term: y 6D*
+  - nm: 412.806
+    A_ki: 72000000.0
+    E_upper_cm: 26437.754
+    E_lower_cm: 2220.156
+    g_upper: 4
+    g_lower: 6
+    term: y 6D*
+  - nm: 413.199
+    A_ki: 52000000.0
+    E_upper_cm: 26505.953
+    E_lower_cm: 2311.369
+    g_upper: 6
+    g_lower: 8
+    term: y 6D*
+  - nm: 413.448
+    A_ki: 28600000.0
+    E_upper_cm: 26604.807
+    E_lower_cm: 2424.809
+    g_upper: 8
+    g_lower: 10
+    term: y 6D*
+  - nm: 423.246
+    A_ki: 69000000.0
+    E_upper_cm: 39391.079
+    E_lower_cm: 15770.789
+    g_upper: 10
+    g_lower: 10
+    term: u 4F*
+  - nm: 426.864
+    A_ki: 94000000.0
+    E_upper_cm: 38483.045
+    E_lower_cm: 15062.959
+    g_upper: 14
+    g_lower: 14
+    term: x 4H*
+  - nm: 427.155
+    A_ki: 81000000.0
+    E_upper_cm: 38405.067
+    E_lower_cm: 15000.937
+    g_upper: 12
+    g_lower: 12
+    term: x 4H*
+  - nm: 427.695
+    A_ki: 75000000.0
+    E_upper_cm: 38323.924
+    E_lower_cm: 14949.359
+    g_upper: 10
+    g_lower: 10
+    term: x 4H*
+  - nm: 428.404
+    A_ki: 86000000.0
+    E_upper_cm: 38245.829
+    E_lower_cm: 14909.958
+    g_upper: 8
+    g_lower: 8
+    term: x 4H*
+  - nm: 429.181
+    A_ki: 66000000.0
+    E_upper_cm: 40535.729
+    E_lower_cm: 17242.07
+    g_upper: 14
+    g_lower: 12
+    term: w 4H*
+  - nm: 429.61
+    A_ki: 63000000.0
+    E_upper_cm: 40452.466
+    E_lower_cm: 17182.073
+    g_upper: 12
+    g_lower: 10
+    term: w 4H*
+  - nm: 437.923
+    A_ki: 115000000.0
+    E_upper_cm: 25253.457
+    E_lower_cm: 2424.809
+    g_upper: 12
+    g_lower: 10
+    term: y 6F*
+  - nm: 438.471
+    A_ki: 92000000.0
+    E_upper_cm: 25111.473
+    E_lower_cm: 2311.369
+    g_upper: 10
+    g_lower: 8
+    term: y 6F*
+  - nm: 438.998
+    A_ki: 70000000.0
+    E_upper_cm: 24992.909
+    E_lower_cm: 2220.156
+    g_upper: 8
+    g_lower: 6
+    term: y 6F*
+  - nm: 439.522
+    A_ki: 52000000.0
+    E_upper_cm: 24898.804
+    E_lower_cm: 2153.221
+    g_upper: 6
+    g_lower: 4
+    term: y 6F*
+  - nm: 440.057
+    A_ki: 34700000.0
+    E_upper_cm: 24830.221
+    E_lower_cm: 2112.282
+    g_upper: 4
+    g_lower: 2
+    term: y 6F*
+  - nm: 440.664
+    A_ki: 19400000.0
+    E_upper_cm: 25111.473
+    E_lower_cm: 2424.809
+    g_upper: 10
+    g_lower: 10
+    term: y 6F*
+  - nm: 440.763
+    A_ki: 37600000.0
+    E_upper_cm: 24992.909
+    E_lower_cm: 2311.369
+    g_upper: 8
+    g_lower: 8
+    term: y 6F*
+  - nm: 440.82
+    A_ki: 51000000.0
+    E_upper_cm: 24898.804
+    E_lower_cm: 2220.156
+    g_upper: 6
+    g_lower: 6
+    term: y 6F*
+  - nm: 440.849
+    A_ki: 80000000.0
+    E_upper_cm: 24789.401
+    E_lower_cm: 2112.282
+    g_upper: 2
+    g_lower: 2
+    term: y 6F*
+  - nm: 440.851
+    A_ki: 60000000.0
+    E_upper_cm: 24830.221
+    E_lower_cm: 2153.221
+    g_upper: 4
+    g_lower: 4
+    term: y 6F*
+  - nm: 444.168
+    A_ki: 13500000.0
+    E_upper_cm: 24727.841
+    E_lower_cm: 2220.156
+    g_upper: 6
+    g_lower: 6
+    term: z 6P*
+  - nm: 445.201
+    A_ki: 81000000.0
+    E_upper_cm: 37518.445
+    E_lower_cm: 15062.959
+    g_upper: 16
+    g_lower: 14
+    term: z 4I*
+  - nm: 445.975
+    A_ki: 17600000.0
+    E_upper_cm: 24727.841
+    E_lower_cm: 2311.369
+    g_upper: 6
+    g_lower: 8
+    term: z 6P*
+  - nm: 446.029
+    A_ki: 26100000.0
+    E_upper_cm: 24838.578
+    E_lower_cm: 2424.809
+    g_upper: 8
+    g_lower: 10
+    term: z 6P*
+  - nm: 446.236
+    A_ki: 79000000.0
+    E_upper_cm: 37404.329
+    E_lower_cm: 15000.937
+    g_upper: 14
+    g_lower: 12
+    term: z 4I*
+  - nm: 446.97
+    A_ki: 62000000.0
+    E_upper_cm: 37315.932
+    E_lower_cm: 14949.359
+    g_upper: 12
+    g_lower: 10
+    term: z 4I*
+  - nm: 448.889
+    A_ki: 50000000.0
+    E_upper_cm: 37180.946
+    E_lower_cm: 14909.958
+    g_upper: 10
+    g_lower: 8
+    term: y 2H*
+  - nm: 454.539
+    A_ki: 64000000.0
+    E_upper_cm: 37764.923
+    E_lower_cm: 15770.789
+    g_upper: 12
+    g_lower: 10
+    term: v 4G*
+  - nm: 454.964
+    A_ki: 93000000.0
+    E_upper_cm: 44452.993
+    E_lower_cm: 22479.403
+    g_upper: 14
+    g_lower: 14
+    term: 2I*
+  - nm: 456.071
+    A_ki: 58000000.0
+    E_upper_cm: 37644.487
+    E_lower_cm: 15724.229
+    g_upper: 10
+    g_lower: 8
+    term: v 4G*
+  - nm: 458.637
+    A_ki: 5200000.0
+    E_upper_cm: 22121.079
+    E_lower_cm: 323.432
+    g_upper: 10
+    g_lower: 8
+    term: z 4G*
+  - nm: 459.412
+    A_ki: 5700000.0
+    E_upper_cm: 22313.832
+    E_lower_cm: 552.955
+    g_upper: 12
+    g_lower: 10
+    term: z 4G*
+  - nm: 480.752
+    A_ki: 49000000.0
+    E_upper_cm: 37931.46
+    E_lower_cm: 17136.538
+    g_upper: 12
+    g_lower: 14
+    term: e 6F
+  - nm: 487.549
+    A_ki: 7400000.0
+    E_upper_cm: 20828.481
+    E_lower_cm: 323.432
+    g_upper: 6
+    g_lower: 8
+    term: z 4D*
+  - nm: 488.156
+    A_ki: 7800000.0
+    E_upper_cm: 21032.503
+    E_lower_cm: 552.955
+    g_upper: 8
+    g_lower: 10
+    term: z 4D*
+  - nm: 569.852
+    A_ki: 19500000.0
+    E_upper_cm: 26122.094
+    E_lower_cm: 8578.542
+    g_upper: 8
+    g_lower: 6
+    term: y 4F*
+  - nm: 570.357
+    A_ki: 21100000.0
+    E_upper_cm: 26004.234
+    E_lower_cm: 8476.234
+    g_upper: 6
+    g_lower: 4
+    term: y 4F*
+  - nm: 572.705
+    A_ki: 19400000.0
+    E_upper_cm: 26171.918
+    E_lower_cm: 8715.747
+    g_upper: 10
+    g_lower: 8
+    term: y 4F*
+  - nm: 584.625
+    A_ki: 82000000.0
+    E_upper_cm: 42353.693
+    E_lower_cm: 25253.457
+    g_upper: 14
+    g_lower: 12
+    term: e 6G
+  - nm: 609.021
+    A_ki: 25700000.0
+    E_upper_cm: 25131.002
+    E_lower_cm: 8715.747
+    g_upper: 6
+    g_lower: 8
+    term: z 4P*
+  - nm: 611.953
+    A_ki: 19700000.0
+    E_upper_cm: 24915.151
+    E_lower_cm: 8578.542
+    g_upper: 4
+    g_lower: 6
+    term: z 4P*
+V_II:
+  species: V II
+  element: V
+  ion_stage: 1
+  ionization_energy_eV: 14.634
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 1
+    term: a 5D
+  - E_cm: 36.102
+    g: 3
+    term: a 5D
+  - E_cm: 106.642
+    g: 5
+    term: a 5D
+  - E_cm: 208.79
+    g: 7
+    term: a 5D
+  - E_cm: 339.126
+    g: 9
+    term: a 5D
+  - E_cm: 2605.04
+    g: 3
+    term: a 5F
+  - E_cm: 2687.209
+    g: 5
+    term: a 5F
+  - E_cm: 2808.959
+    g: 7
+    term: a 5F
+  - E_cm: 2968.388
+    g: 9
+    term: a 5F
+  - E_cm: 3162.967
+    g: 11
+    term: a 5F
+  - E_cm: 8640.364
+    g: 5
+    term: a 3F
+  - E_cm: 8842.051
+    g: 7
+    term: a 3F
+  - E_cm: 9097.889
+    g: 9
+    term: a 3F
+  - E_cm: 11295.511
+    g: 1
+    term: a 3P2
+  - E_cm: 11514.784
+    g: 3
+    term: a 3P2
+  - E_cm: 11908.259
+    g: 5
+    term: a 3P2
+  - E_cm: 12545.102
+    g: 9
+    term: a 3H
+  - E_cm: 12621.486
+    g: 11
+    term: a 3H
+  - E_cm: 12706.08
+    g: 13
+    term: a 3H
+  - E_cm: 13490.884
+    g: 5
+    term: b 3F2
+  - E_cm: 13511.799
+    g: 3
+    term: a 5P
+  - E_cm: 13542.646
+    g: 7
+    term: b 3F2
+  - E_cm: 13594.726
+    g: 5
+    term: a 5P
+  - E_cm: 13608.939
+    g: 9
+    term: b 3F2
+  - E_cm: 13741.639
+    g: 7
+    term: a 5P
+  lines:
+  - nm: 361.893
+    A_ki: 47000000.0
+    E_upper_cm: 49898.2618
+    E_lower_cm: 22273.6366
+    g_upper: 5
+    g_lower: 3
+    term: z 1D*
+  - nm: 362.048
+    A_ki: 17000000.0
+    E_upper_cm: 52803.796
+    E_lower_cm: 25191.0356
+    g_upper: 3
+    g_lower: 5
+    term: z 1P*
+  - nm: 362.121
+    A_ki: 22500000.0
+    E_upper_cm: 46740.01
+    E_lower_cm: 19132.792
+    g_upper: 5
+    g_lower: 5
+    term: z 3P*
+  - nm: 362.561
+    A_ki: 5300000.0
+    E_upper_cm: 46740.01
+    E_lower_cm: 19166.315
+    g_upper: 5
+    g_lower: 3
+    term: z 3P*
+  - nm: 362.771
+    A_ki: 9400000.0
+    E_upper_cm: 46690.4958
+    E_lower_cm: 19132.792
+    g_upper: 3
+    g_lower: 5
+    term: y 5D*
+  - nm: 364.591
+    A_ki: 18000000.0
+    E_upper_cm: 46586.481
+    E_lower_cm: 19166.315
+    g_upper: 1
+    g_lower: 3
+    term: y 5D*
+  - nm: 366.137
+    A_ki: 31000000.0
+    E_upper_cm: 54144.1912
+    E_lower_cm: 26839.749
+    g_upper: 9
+    g_lower: 7
+    term: y 1G*
+  - nm: 366.942
+    A_ki: 19000000.0
+    E_upper_cm: 47607.8215
+    E_lower_cm: 20363.337
+    g_upper: 13
+    g_lower: 13
+    term: z 3H*
+  - nm: 367.468
+    A_ki: 8800000.0
+    E_upper_cm: 47108.0794
+    E_lower_cm: 19902.609
+    g_upper: 3
+    g_lower: 1
+    term: z 3P*
+  - nm: 370.012
+    A_ki: 12500000.0
+    E_upper_cm: 47108.0794
+    E_lower_cm: 20089.6495
+    g_upper: 3
+    g_lower: 3
+    term: z 3P*
+  - nm: 370.034
+    A_ki: 16600000.0
+    E_upper_cm: 47297.115
+    E_lower_cm: 20280.2493
+    g_upper: 11
+    g_lower: 11
+    term: z 3H*
+  - nm: 370.097
+    A_ki: 4500000.0
+    E_upper_cm: 47101.932
+    E_lower_cm: 20089.6495
+    g_upper: 5
+    g_lower: 3
+    term: y 5D*
+  - nm: 370.382
+    A_ki: 540000.0
+    E_upper_cm: 39612.9643
+    E_lower_cm: 12621.4857
+    g_upper: 11
+    g_lower: 11
+    term: z 3G*
+  - nm: 370.933
+    A_ki: 6000000.0
+    E_upper_cm: 47108.0794
+    E_lower_cm: 20156.67
+    g_upper: 3
+    g_lower: 1
+    term: z 3P*
+  - nm: 371.112
+    A_ki: 42000000.0
+    E_upper_cm: 47028.034
+    E_lower_cm: 20089.6495
+    g_upper: 1
+    g_lower: 3
+    term: z 3P*
+  - nm: 371.546
+    A_ki: 26200000.0
+    E_upper_cm: 39612.9643
+    E_lower_cm: 12706.0798
+    g_upper: 11
+    g_lower: 13
+    term: z 3G*
+  - nm: 371.815
+    A_ki: 2360000.0
+    E_upper_cm: 40430.0878
+    E_lower_cm: 13542.6461
+    g_upper: 9
+    g_lower: 7
+    term: z 3F*
+  - nm: 372.213
+    A_ki: 580000.0
+    E_upper_cm: 39403.7873
+    E_lower_cm: 12545.1024
+    g_upper: 9
+    g_lower: 9
+    term: z 3G*
+  - nm: 372.734
+    A_ki: 31600000.0
+    E_upper_cm: 40430.0878
+    E_lower_cm: 13608.9393
+    g_upper: 9
+    g_lower: 9
+    term: z 3F*
+  - nm: 372.834
+    A_ki: 15500000.0
+    E_upper_cm: 47056.321
+    E_lower_cm: 20242.385
+    g_upper: 9
+    g_lower: 9
+    term: z 3H*
+  - nm: 373.197
+    A_ki: 7800000.0
+    E_upper_cm: 46690.4958
+    E_lower_cm: 19902.609
+    g_upper: 3
+    g_lower: 1
+    term: y 5D*
+  - nm: 373.275
+    A_ki: 25800000.0
+    E_upper_cm: 39403.7873
+    E_lower_cm: 12621.4857
+    g_upper: 9
+    g_lower: 11
+    term: z 3G*
+  - nm: 373.516
+    A_ki: 12700000.0
+    E_upper_cm: 47108.0794
+    E_lower_cm: 20343.0477
+    g_upper: 3
+    g_lower: 5
+    term: z 3P*
+  - nm: 373.601
+    A_ki: 9200000.0
+    E_upper_cm: 47101.932
+    E_lower_cm: 20343.0477
+    g_upper: 5
+    g_lower: 5
+    term: y 5D*
+  - nm: 374.36
+    A_ki: 2800000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 13490.8843
+    g_upper: 7
+    g_lower: 5
+    term: z 3F*
+  - nm: 374.58
+    A_ki: 27300000.0
+    E_upper_cm: 39234.0877
+    E_lower_cm: 12545.1024
+    g_upper: 7
+    g_lower: 9
+    term: z 3G*
+  - nm: 375.087
+    A_ki: 26900000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 13542.6461
+    g_upper: 7
+    g_lower: 7
+    term: z 3F*
+  - nm: 375.123
+    A_ki: 14000000.0
+    E_upper_cm: 46740.01
+    E_lower_cm: 20089.6495
+    g_upper: 5
+    g_lower: 3
+    term: z 3P*
+  - nm: 376.022
+    A_ki: 4800000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 13608.9393
+    g_upper: 7
+    g_lower: 9
+    term: z 3F*
+  - nm: 376.77
+    A_ki: 6000000.0
+    E_upper_cm: 46690.4958
+    E_lower_cm: 20156.67
+    g_upper: 3
+    g_lower: 1
+    term: y 5D*
+  - nm: 377.097
+    A_ki: 32000000.0
+    E_upper_cm: 40001.7556
+    E_lower_cm: 13490.8843
+    g_upper: 5
+    g_lower: 5
+    term: z 3F*
+  - nm: 377.296
+    A_ki: 38000000.0
+    E_upper_cm: 46586.481
+    E_lower_cm: 20089.6495
+    g_upper: 1
+    g_lower: 3
+    term: y 5D*
+  - nm: 377.834
+    A_ki: 6500000.0
+    E_upper_cm: 40001.7556
+    E_lower_cm: 13542.6461
+    g_upper: 5
+    g_lower: 7
+    term: z 3F*
+  - nm: 378.724
+    A_ki: 21000000.0
+    E_upper_cm: 46740.01
+    E_lower_cm: 20343.0477
+    g_upper: 5
+    g_lower: 5
+    term: z 3P*
+  - nm: 379.436
+    A_ki: 9500000.0
+    E_upper_cm: 46690.4958
+    E_lower_cm: 20343.0477
+    g_upper: 3
+    g_lower: 5
+    term: y 5D*
+  - nm: 381.538
+    A_ki: 26000000.0
+    E_upper_cm: 49593.4096
+    E_lower_cm: 23391.1513
+    g_upper: 11
+    g_lower: 11
+    term: z 1H*
+  - nm: 382.697
+    A_ki: 6500000.0
+    E_upper_cm: 46740.01
+    E_lower_cm: 20617.0735
+    g_upper: 5
+    g_lower: 5
+    term: z 3P*
+  - nm: 384.733
+    A_ki: 97000000.0
+    E_upper_cm: 48258.3
+    E_lower_cm: 22273.6366
+    g_upper: 1
+    g_lower: 3
+    term: z 1S*
+  - nm: 386.378
+    A_ki: 3100000.0
+    E_upper_cm: 40430.0878
+    E_lower_cm: 14556.0689
+    g_upper: 9
+    g_lower: 9
+    term: z 3F*
+  - nm: 386.672
+    A_ki: 2800000.0
+    E_upper_cm: 37369.1542
+    E_lower_cm: 11514.7845
+    g_upper: 5
+    g_lower: 3
+    term: z 5D*
+  - nm: 387.565
+    A_ki: 620000.0
+    E_upper_cm: 39403.7873
+    E_lower_cm: 13608.9393
+    g_upper: 9
+    g_lower: 9
+    term: z 3G*
+  - nm: 387.871
+    A_ki: 13400000.0
+    E_upper_cm: 40430.0878
+    E_lower_cm: 14655.6082
+    g_upper: 9
+    g_lower: 11
+    term: z 3F*
+  - nm: 388.484
+    A_ki: 2650000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 14461.7495
+    g_upper: 7
+    g_lower: 7
+    term: z 3F*
+  - nm: 389.614
+    A_ki: 5600000.0
+    E_upper_cm: 36954.6872
+    E_lower_cm: 11295.511
+    g_upper: 3
+    g_lower: 1
+    term: z 5F*
+  - nm: 389.913
+    A_ki: 10600000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 14556.0689
+    g_upper: 7
+    g_lower: 9
+    term: z 3F*
+  - nm: 390.325
+    A_ki: 7800000.0
+    E_upper_cm: 37520.6639
+    E_lower_cm: 11908.2593
+    g_upper: 7
+    g_lower: 5
+    term: z 5D*
+  - nm: 391.432
+    A_ki: 9200000.0
+    E_upper_cm: 40001.7556
+    E_lower_cm: 14461.7495
+    g_upper: 5
+    g_lower: 7
+    term: z 3F*
+  - nm: 391.64
+    A_ki: 7300000.0
+    E_upper_cm: 37041.1798
+    E_lower_cm: 11514.7845
+    g_upper: 5
+    g_lower: 3
+    term: z 3D*
+  - nm: 392.648
+    A_ki: 940000.0
+    E_upper_cm: 37369.1542
+    E_lower_cm: 11908.2593
+    g_upper: 5
+    g_lower: 5
+    term: z 5D*
+  - nm: 392.972
+    A_ki: 3700000.0
+    E_upper_cm: 36954.6872
+    E_lower_cm: 11514.7845
+    g_upper: 3
+    g_lower: 3
+    term: z 5F*
+  - nm: 395.196
+    A_ki: 11400000.0
+    E_upper_cm: 37205.0213
+    E_lower_cm: 11908.2593
+    g_upper: 7
+    g_lower: 5
+    term: z 3D*
+  - nm: 396.809
+    A_ki: 6500000.0
+    E_upper_cm: 36489.4382
+    E_lower_cm: 11295.511
+    g_upper: 3
+    g_lower: 1
+    term: z 3D*
+  - nm: 397.363
+    A_ki: 7300000.0
+    E_upper_cm: 36673.5838
+    E_lower_cm: 11514.7845
+    g_upper: 5
+    g_lower: 3
+    term: z 5F*
+  - nm: 397.772
+    A_ki: 2300000.0
+    E_upper_cm: 37041.1798
+    E_lower_cm: 11908.2593
+    g_upper: 5
+    g_lower: 5
+    term: z 3D*
+  - nm: 399.711
+    A_ki: 3700000.0
+    E_upper_cm: 36919.2647
+    E_lower_cm: 11908.2593
+    g_upper: 7
+    g_lower: 5
+    term: z 5F*
+  - nm: 400.293
+    A_ki: 4500000.0
+    E_upper_cm: 36489.4382
+    E_lower_cm: 11514.7845
+    g_upper: 3
+    g_lower: 3
+    term: z 3D*
+  - nm: 400.57
+    A_ki: 13500000.0
+    E_upper_cm: 39612.9643
+    E_lower_cm: 14655.6082
+    g_upper: 11
+    g_lower: 11
+    term: z 3G*
+  - nm: 400.816
+    A_ki: 670000.0
+    E_upper_cm: 39403.7873
+    E_lower_cm: 14461.7495
+    g_upper: 9
+    g_lower: 7
+    term: z 3G*
+  - nm: 401.728
+    A_ki: 5400000.0
+    E_upper_cm: 55499.369
+    E_lower_cm: 30613.91
+    g_upper: 11
+    g_lower: 9
+    term: y 1H*
+  - nm: 402.338
+    A_ki: 11100000.0
+    E_upper_cm: 39403.7873
+    E_lower_cm: 14556.0689
+    g_upper: 9
+    g_lower: 9
+    term: z 3G*
+  - nm: 403.562
+    A_ki: 11300000.0
+    E_upper_cm: 39234.0877
+    E_lower_cm: 14461.7495
+    g_upper: 7
+    g_lower: 7
+    term: z 3G*
+  - nm: 403.676
+    A_ki: 2180000.0
+    E_upper_cm: 36673.5838
+    E_lower_cm: 11908.2593
+    g_upper: 5
+    g_lower: 5
+    term: z 5F*
+  - nm: 404.626
+    A_ki: 7500000.0
+    E_upper_cm: 49898.2618
+    E_lower_cm: 25191.0356
+    g_upper: 5
+    g_lower: 5
+    term: z 1D*
+  - nm: 405.357
+    A_ki: 19200000.0
+    E_upper_cm: 55304.3869
+    E_lower_cm: 30641.7674
+    g_upper: 9
+    g_lower: 7
+    term: x 3G*
+  - nm: 406.506
+    A_ki: 15100000.0
+    E_upper_cm: 55206.8615
+    E_lower_cm: 30613.91
+    g_upper: 11
+    g_lower: 9
+    term: x 3G*
+  - nm: 417.838
+    A_ki: 1500000.0
+    E_upper_cm: 37520.6639
+    E_lower_cm: 13594.726
+    g_upper: 7
+    g_lower: 5
+    term: z 5D*
+  - nm: 418.343
+    A_ki: 3700000.0
+    E_upper_cm: 40430.0878
+    E_lower_cm: 16532.9841
+    g_upper: 9
+    g_lower: 11
+    term: z 3F*
+  - nm: 420.235
+    A_ki: 1700000.0
+    E_upper_cm: 37531.1324
+    E_lower_cm: 13741.6394
+    g_upper: 9
+    g_lower: 7
+    term: z 5D*
+  - nm: 420.508
+    A_ki: 3500000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 16421.5292
+    g_upper: 7
+    g_lower: 9
+    term: z 3F*
+  - nm: 422.521
+    A_ki: 3700000.0
+    E_upper_cm: 40001.7556
+    E_lower_cm: 16340.9837
+    g_upper: 5
+    g_lower: 7
+    term: z 3F*
+  - nm: 423.202
+    A_ki: 24100000.0
+    E_upper_cm: 55663.385
+    E_lower_cm: 32040.641
+    g_upper: 3
+    g_lower: 5
+    term: y 3S*
+  - nm: 425.438
+    A_ki: 1590000.0
+    E_upper_cm: 37041.1798
+    E_lower_cm: 13542.6461
+    g_upper: 5
+    g_lower: 7
+    term: z 3D*
+  - nm: 427.886
+    A_ki: 20000000.0
+    E_upper_cm: 55663.385
+    E_lower_cm: 32299.266
+    g_upper: 3
+    g_lower: 3
+    term: y 3S*
+  - nm: 431.235
+    A_ki: 2270000.0
+    E_upper_cm: 36673.5838
+    E_lower_cm: 13490.8843
+    g_upper: 5
+    g_lower: 5
+    term: z 5F*
+  - nm: 452.848
+    A_ki: 3200000.0
+    E_upper_cm: 40430.0878
+    E_lower_cm: 18353.83
+    g_upper: 9
+    g_lower: 7
+    term: z 3F*
+  - nm: 453.216
+    A_ki: 10800000.0
+    E_upper_cm: 52700.067
+    E_lower_cm: 30641.7674
+    g_upper: 5
+    g_lower: 7
+    term: x 3D*
+  - nm: 455.844
+    A_ki: 12100000.0
+    E_upper_cm: 52604.222
+    E_lower_cm: 30673.089
+    g_upper: 3
+    g_lower: 5
+    term: x 3D*
+  - nm: 456.458
+    A_ki: 2800000.0
+    E_upper_cm: 40195.5675
+    E_lower_cm: 18293.8723
+    g_upper: 7
+    g_lower: 5
+    term: z 3F*
+  - nm: 460.017
+    A_ki: 2800000.0
+    E_upper_cm: 40001.7556
+    E_lower_cm: 18269.515
+    g_upper: 5
+    g_lower: 3
+    term: z 3F*
+  - nm: 488.34
+    A_ki: 6200000.0
+    E_upper_cm: 51085.7739
+    E_lower_cm: 30613.91
+    g_upper: 7
+    g_lower: 9
+    term: y 3D*
+Fe_I:
+  species: Fe I
+  element: Fe
+  ion_stage: 0
+  ionization_energy_eV: 7.902468
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 9
+    term: a 5D
+  - E_cm: 415.933
+    g: 7
+    term: a 5D
+  - E_cm: 704.007
+    g: 5
+    term: a 5D
+  - E_cm: 888.132
+    g: 3
+    term: a 5D
+  - E_cm: 978.074
+    g: 1
+    term: a 5D
+  - E_cm: 6928.268
+    g: 11
+    term: a 5F
+  - E_cm: 7376.764
+    g: 9
+    term: a 5F
+  - E_cm: 7728.06
+    g: 7
+    term: a 5F
+  - E_cm: 7985.785
+    g: 5
+    term: a 5F
+  - E_cm: 8154.714
+    g: 3
+    term: a 5F
+  - E_cm: 11976.239
+    g: 9
+    term: a 3F
+  - E_cm: 12560.934
+    g: 7
+    term: a 3F
+  - E_cm: 12968.554
+    g: 5
+    term: a 3F
+  - E_cm: 17550.181
+    g: 7
+    term: a 5P
+  - E_cm: 17726.988
+    g: 5
+    term: a 5P
+  - E_cm: 17927.382
+    g: 3
+    term: a 5P
+  - E_cm: 18378.186
+    g: 5
+    term: a 3P2
+  - E_cm: 19350.891
+    g: 11
+    term: z 7D*
+  - E_cm: 19390.168
+    g: 13
+    term: a 3H
+  - E_cm: 19552.478
+    g: 3
+    term: a 3P2
+  - E_cm: 19562.439
+    g: 9
+    term: z 7D*
+  - E_cm: 19621.006
+    g: 11
+    term: a 3H
+  - E_cm: 19757.032
+    g: 7
+    term: z 7D*
+  - E_cm: 19788.251
+    g: 9
+    term: a 3H
+  - E_cm: 19912.495
+    g: 5
+    term: z 7D*
+  lines:
+  - nm: 360.545
+    A_ki: 46600000.0
+    E_upper_cm: 49726.99
+    E_lower_cm: 21999.13
+    g_upper: 9
+    g_lower: 9
+    term: y 3H*
+  - nm: 360.668
+    A_ki: 82900000.0
+    E_upper_cm: 49434.163
+    E_lower_cm: 21715.732
+    g_upper: 13
+    g_lower: 11
+    term: y 3H*
+  - nm: 360.886
+    A_ki: 81300000.0
+    E_upper_cm: 35856.402
+    E_lower_cm: 8154.714
+    g_upper: 5
+    g_lower: 3
+    term: z 5G*
+  - nm: 361.016
+    A_ki: 59000000.0
+    E_upper_cm: 50342.129
+    E_lower_cm: 22650.416
+    g_upper: 13
+    g_lower: 13
+    term: e 7F
+  - nm: 361.877
+    A_ki: 72200000.0
+    E_upper_cm: 35611.625
+    E_lower_cm: 7985.785
+    g_upper: 7
+    g_lower: 5
+    term: z 5G*
+  - nm: 362.146
+    A_ki: 44500000.0
+    E_upper_cm: 49604.427
+    E_lower_cm: 21999.13
+    g_upper: 11
+    g_lower: 9
+    term: y 3H*
+  - nm: 363.146
+    A_ki: 51700000.0
+    E_upper_cm: 35257.324
+    E_lower_cm: 7728.06
+    g_upper: 9
+    g_lower: 7
+    term: z 5G*
+  - nm: 364.784
+    A_ki: 29100000.0
+    E_upper_cm: 34782.421
+    E_lower_cm: 7376.764
+    g_upper: 11
+    g_lower: 9
+    term: z 5G*
+  - nm: 365.147
+    A_ki: 58300000.0
+    E_upper_cm: 49627.884
+    E_lower_cm: 22249.429
+    g_upper: 9
+    g_lower: 7
+    term: v 3G*
+  - nm: 368.746
+    A_ki: 8000000.0
+    E_upper_cm: 34039.516
+    E_lower_cm: 6928.268
+    g_upper: 9
+    g_lower: 11
+    term: y 5F*
+  - nm: 369.401
+    A_ki: 83500000.0
+    E_upper_cm: 51570.097
+    E_lower_cm: 24506.917
+    g_upper: 7
+    g_lower: 5
+    term: e 7S
+  - nm: 370.109
+    A_ki: 63500000.0
+    E_upper_cm: 51192.273
+    E_lower_cm: 24180.862
+    g_upper: 9
+    g_lower: 7
+    term: e 7F
+  - nm: 370.557
+    A_ki: 3210000.0
+    E_upper_cm: 27394.691
+    E_lower_cm: 415.933
+    g_upper: 7
+    g_lower: 7
+    term: z 5F*
+  - nm: 370.925
+    A_ki: 15600000.0
+    E_upper_cm: 34328.752
+    E_lower_cm: 7376.764
+    g_upper: 7
+    g_lower: 9
+    term: y 5F*
+  - nm: 371.993
+    A_ki: 16200000.0
+    E_upper_cm: 26874.55
+    E_lower_cm: 0.0
+    g_upper: 11
+    g_lower: 9
+    term: z 5F*
+  - nm: 372.256
+    A_ki: 4970000.0
+    E_upper_cm: 27559.583
+    E_lower_cm: 704.007
+    g_upper: 5
+    g_lower: 5
+    term: z 5F*
+  - nm: 372.762
+    A_ki: 22400000.0
+    E_upper_cm: 34547.211
+    E_lower_cm: 7728.06
+    g_upper: 5
+    g_lower: 7
+    term: y 5F*
+  - nm: 373.332
+    A_ki: 6480000.0
+    E_upper_cm: 27666.348
+    E_lower_cm: 888.132
+    g_upper: 3
+    g_lower: 3
+    term: z 5F*
+  - nm: 373.486
+    A_ki: 90100000.0
+    E_upper_cm: 33695.397
+    E_lower_cm: 6928.268
+    g_upper: 11
+    g_lower: 11
+    term: y 5F*
+  - nm: 373.713
+    A_ki: 14100000.0
+    E_upper_cm: 27166.82
+    E_lower_cm: 415.933
+    g_upper: 9
+    g_lower: 7
+    term: z 5F*
+  - nm: 374.336
+    A_ki: 26000000.0
+    E_upper_cm: 34692.148
+    E_lower_cm: 7985.785
+    g_upper: 3
+    g_lower: 5
+    term: y 5F*
+  - nm: 374.556
+    A_ki: 11500000.0
+    E_upper_cm: 27394.691
+    E_lower_cm: 704.007
+    g_upper: 7
+    g_lower: 5
+    term: z 5F*
+  - nm: 374.59
+    A_ki: 7320000.0
+    E_upper_cm: 27666.348
+    E_lower_cm: 978.074
+    g_upper: 3
+    g_lower: 1
+    term: z 5F*
+  - nm: 374.826
+    A_ki: 9150000.0
+    E_upper_cm: 27559.583
+    E_lower_cm: 888.132
+    g_upper: 5
+    g_lower: 3
+    term: z 5F*
+  - nm: 374.949
+    A_ki: 76300000.0
+    E_upper_cm: 34039.516
+    E_lower_cm: 7376.764
+    g_upper: 9
+    g_lower: 9
+    term: y 5F*
+  - nm: 375.823
+    A_ki: 63400000.0
+    E_upper_cm: 34328.752
+    E_lower_cm: 7728.06
+    g_upper: 7
+    g_lower: 7
+    term: y 5F*
+  - nm: 376.379
+    A_ki: 54400000.0
+    E_upper_cm: 34547.211
+    E_lower_cm: 7985.785
+    g_upper: 5
+    g_lower: 5
+    term: y 5F*
+  - nm: 376.554
+    A_ki: 95100000.0
+    E_upper_cm: 52654.992
+    E_lower_cm: 26105.908
+    g_upper: 15
+    g_lower: 13
+    term: y 3I*
+  - nm: 376.719
+    A_ki: 63900000.0
+    E_upper_cm: 34692.148
+    E_lower_cm: 8154.714
+    g_upper: 3
+    g_lower: 3
+    term: y 5F*
+  - nm: 378.788
+    A_ki: 12900000.0
+    E_upper_cm: 34547.211
+    E_lower_cm: 8154.714
+    g_upper: 5
+    g_lower: 3
+    term: y 5F*
+  - nm: 379.5
+    A_ki: 11500000.0
+    E_upper_cm: 34328.752
+    E_lower_cm: 7985.785
+    g_upper: 7
+    g_lower: 5
+    term: y 5F*
+  - nm: 379.955
+    A_ki: 7310000.0
+    E_upper_cm: 34039.516
+    E_lower_cm: 7728.06
+    g_upper: 9
+    g_lower: 7
+    term: y 5F*
+  - nm: 380.534
+    A_ki: 86000000.0
+    E_upper_cm: 52898.998
+    E_lower_cm: 26627.609
+    g_upper: 11
+    g_lower: 9
+    term: y 3I*
+  - nm: 381.584
+    A_ki: 112000000.0
+    E_upper_cm: 38175.355
+    E_lower_cm: 11976.239
+    g_upper: 7
+    g_lower: 9
+    term: y 3D*
+  - nm: 382.042
+    A_ki: 66700000.0
+    E_upper_cm: 33095.941
+    E_lower_cm: 6928.268
+    g_upper: 9
+    g_lower: 11
+    term: y 5D*
+  - nm: 382.118
+    A_ki: 55400000.0
+    E_upper_cm: 52513.56
+    E_lower_cm: 26351.04
+    g_upper: 13
+    g_lower: 11
+    term: y 3I*
+  - nm: 382.444
+    A_ki: 2830000.0
+    E_upper_cm: 26140.179
+    E_lower_cm: 0.0
+    g_upper: 7
+    g_lower: 9
+    term: z 5D*
+  - nm: 382.588
+    A_ki: 59700000.0
+    E_upper_cm: 33507.123
+    E_lower_cm: 7376.764
+    g_upper: 7
+    g_lower: 9
+    term: y 5D*
+  - nm: 382.782
+    A_ki: 105000000.0
+    E_upper_cm: 38678.039
+    E_lower_cm: 12560.934
+    g_upper: 5
+    g_lower: 7
+    term: y 3D*
+  - nm: 383.422
+    A_ki: 45200000.0
+    E_upper_cm: 33801.572
+    E_lower_cm: 7728.06
+    g_upper: 5
+    g_lower: 7
+    term: y 5D*
+  - nm: 384.044
+    A_ki: 47000000.0
+    E_upper_cm: 34017.103
+    E_lower_cm: 7985.785
+    g_upper: 3
+    g_lower: 5
+    term: y 5D*
+  - nm: 384.105
+    A_ki: 136000000.0
+    E_upper_cm: 38995.736
+    E_lower_cm: 12968.554
+    g_upper: 3
+    g_lower: 5
+    term: y 3D*
+  - nm: 384.997
+    A_ki: 60500000.0
+    E_upper_cm: 34121.603
+    E_lower_cm: 8154.714
+    g_upper: 1
+    g_lower: 3
+    term: y 5D*
+  - nm: 385.637
+    A_ki: 4640000.0
+    E_upper_cm: 26339.696
+    E_lower_cm: 415.933
+    g_upper: 5
+    g_lower: 7
+    term: z 5D*
+  - nm: 385.991
+    A_ki: 9690000.0
+    E_upper_cm: 25899.989
+    E_lower_cm: 0.0
+    g_upper: 9
+    g_lower: 9
+    term: z 5D*
+  - nm: 386.552
+    A_ki: 15500000.0
+    E_upper_cm: 34017.103
+    E_lower_cm: 8154.714
+    g_upper: 3
+    g_lower: 3
+    term: y 5D*
+  - nm: 387.25
+    A_ki: 10500000.0
+    E_upper_cm: 33801.572
+    E_lower_cm: 7985.785
+    g_upper: 5
+    g_lower: 5
+    term: y 5D*
+  - nm: 387.802
+    A_ki: 7720000.0
+    E_upper_cm: 33507.123
+    E_lower_cm: 7728.06
+    g_upper: 7
+    g_lower: 7
+    term: y 5D*
+  - nm: 387.857
+    A_ki: 6170000.0
+    E_upper_cm: 26479.381
+    E_lower_cm: 704.007
+    g_upper: 3
+    g_lower: 5
+    term: z 5D*
+  - nm: 388.628
+    A_ki: 5290000.0
+    E_upper_cm: 26140.179
+    E_lower_cm: 415.933
+    g_upper: 7
+    g_lower: 7
+    term: z 5D*
+  - nm: 388.851
+    A_ki: 25000000.0
+    E_upper_cm: 38678.039
+    E_lower_cm: 12968.554
+    g_upper: 5
+    g_lower: 5
+    term: y 3D*
+  - nm: 390.295
+    A_ki: 21400000.0
+    E_upper_cm: 38175.355
+    E_lower_cm: 12560.934
+    g_upper: 7
+    g_lower: 7
+    term: y 3D*
+  - nm: 396.926
+    A_ki: 22600000.0
+    E_upper_cm: 37162.746
+    E_lower_cm: 11976.239
+    g_upper: 7
+    g_lower: 9
+    term: y 3F*
+  - nm: 400.524
+    A_ki: 20400000.0
+    E_upper_cm: 37521.161
+    E_lower_cm: 12560.934
+    g_upper: 5
+    g_lower: 7
+    term: y 3F*
+  - nm: 404.581
+    A_ki: 86200000.0
+    E_upper_cm: 36686.176
+    E_lower_cm: 11976.239
+    g_upper: 9
+    g_lower: 9
+    term: y 3F*
+  - nm: 406.359
+    A_ki: 66500000.0
+    E_upper_cm: 37162.746
+    E_lower_cm: 12560.934
+    g_upper: 7
+    g_lower: 7
+    term: y 3F*
+  - nm: 407.174
+    A_ki: 76400000.0
+    E_upper_cm: 37521.161
+    E_lower_cm: 12968.554
+    g_upper: 5
+    g_lower: 5
+    term: y 3F*
+  - nm: 413.206
+    A_ki: 11800000.0
+    E_upper_cm: 37162.746
+    E_lower_cm: 12968.554
+    g_upper: 7
+    g_lower: 5
+    term: y 3F*
+  - nm: 414.387
+    A_ki: 13300000.0
+    E_upper_cm: 36686.176
+    E_lower_cm: 12560.934
+    g_upper: 9
+    g_lower: 7
+    term: y 3F*
+  - nm: 419.909
+    A_ki: 49200000.0
+    E_upper_cm: 48382.603
+    E_lower_cm: 24574.655
+    g_upper: 11
+    g_lower: 9
+    term: z 1H*
+  - nm: 420.203
+    A_ki: 8220000.0
+    E_upper_cm: 35767.564
+    E_lower_cm: 11976.239
+    g_upper: 9
+    g_lower: 9
+    term: z 3G*
+  - nm: 422.743
+    A_ki: 52900000.0
+    E_upper_cm: 50522.944
+    E_lower_cm: 26874.55
+    g_upper: 13
+    g_lower: 11
+    term: e 5G
+  - nm: 423.594
+    A_ki: 18800000.0
+    E_upper_cm: 43163.326
+    E_lower_cm: 19562.439
+    g_upper: 9
+    g_lower: 9
+    term: e 7D
+  - nm: 425.079
+    A_ki: 10200000.0
+    E_upper_cm: 36079.372
+    E_lower_cm: 12560.934
+    g_upper: 7
+    g_lower: 7
+    term: z 3G*
+  - nm: 426.047
+    A_ki: 39900000.0
+    E_upper_cm: 42815.855
+    E_lower_cm: 19350.891
+    g_upper: 11
+    g_lower: 11
+    term: e 7D
+  - nm: 427.115
+    A_ki: 18200000.0
+    E_upper_cm: 43163.326
+    E_lower_cm: 19757.032
+    g_upper: 9
+    g_lower: 7
+    term: e 7D
+  - nm: 427.176
+    A_ki: 22800000.0
+    E_upper_cm: 35379.208
+    E_lower_cm: 11976.239
+    g_upper: 11
+    g_lower: 9
+    term: z 3G*
+  - nm: 430.79
+    A_ki: 33800000.0
+    E_upper_cm: 35767.564
+    E_lower_cm: 12560.934
+    g_upper: 9
+    g_lower: 7
+    term: z 3G*
+  - nm: 432.576
+    A_ki: 51600000.0
+    E_upper_cm: 36079.372
+    E_lower_cm: 12968.554
+    g_upper: 7
+    g_lower: 5
+    term: z 3G*
+  - nm: 438.354
+    A_ki: 50000000.0
+    E_upper_cm: 34782.421
+    E_lower_cm: 11976.239
+    g_upper: 11
+    g_lower: 9
+    term: z 5G*
+  - nm: 440.475
+    A_ki: 27500000.0
+    E_upper_cm: 35257.324
+    E_lower_cm: 12560.934
+    g_upper: 9
+    g_lower: 7
+    term: z 5G*
+  - nm: 441.512
+    A_ki: 11900000.0
+    E_upper_cm: 35611.625
+    E_lower_cm: 12968.554
+    g_upper: 7
+    g_lower: 5
+    term: z 5G*
+  - nm: 489.149
+    A_ki: 30800000.0
+    E_upper_cm: 43434.627
+    E_lower_cm: 22996.674
+    g_upper: 7
+    g_lower: 9
+    term: e 7D
+  - nm: 492.05
+    A_ki: 35800000.0
+    E_upper_cm: 43163.326
+    E_lower_cm: 22845.869
+    g_upper: 9
+    g_lower: 11
+    term: e 7D
+  - nm: 495.76
+    A_ki: 42200000.0
+    E_upper_cm: 42815.855
+    E_lower_cm: 22650.416
+    g_upper: 11
+    g_lower: 13
+    term: e 7D
+  - nm: 523.294
+    A_ki: 19400000.0
+    E_upper_cm: 42815.855
+    E_lower_cm: 23711.456
+    g_upper: 11
+    g_lower: 9
+    term: e 7D
+  - nm: 536.996
+    A_ki: 72200000.0
+    E_upper_cm: 53874.257
+    E_lower_cm: 35257.324
+    g_upper: 11
+    g_lower: 9
+    term: e 5H
+  - nm: 538.337
+    A_ki: 78100000.0
+    E_upper_cm: 53352.989
+    E_lower_cm: 34782.421
+    g_upper: 13
+    g_lower: 11
+    term: e 5H
+  - nm: 541.52
+    A_ki: 76700000.0
+    E_upper_cm: 53840.62
+    E_lower_cm: 35379.208
+    g_upper: 13
+    g_lower: 11
+    term: e 3H
+  - nm: 561.564
+    A_ki: 26400000.0
+    E_upper_cm: 44677.006
+    E_lower_cm: 26874.55
+    g_upper: 9
+    g_lower: 11
+    term: e 5D
+Fe_II:
+  species: Fe II
+  element: Fe
+  ion_stage: 1
+  ionization_energy_eV: 16.1992
+  source: NIST ASD (lines1.pl + energy1.pl, format=3); ionization energy from NIST
+    recommended tables
+  partition_levels:
+  - E_cm: 0.0
+    g: 10
+    term: a 6D
+  - E_cm: 384.787
+    g: 8
+    term: a 6D
+  - E_cm: 667.683
+    g: 6
+    term: a 6D
+  - E_cm: 862.612
+    g: 4
+    term: a 6D
+  - E_cm: 977.05
+    g: 2
+    term: a 6D
+  - E_cm: 1872.6
+    g: 10
+    term: a 4F
+  - E_cm: 2430.137
+    g: 8
+    term: a 4F
+  - E_cm: 2837.981
+    g: 6
+    term: a 4F
+  - E_cm: 3117.488
+    g: 4
+    term: a 4F
+  - E_cm: 7955.319
+    g: 8
+    term: a 4D
+  - E_cm: 8391.955
+    g: 6
+    term: a 4D
+  - E_cm: 8680.471
+    g: 4
+    term: a 4D
+  - E_cm: 8846.784
+    g: 2
+    term: a 4D
+  - E_cm: 13474.447
+    g: 6
+    term: a 4P
+  - E_cm: 13673.204
+    g: 4
+    term: a 4P
+  - E_cm: 13904.86
+    g: 2
+    term: a 4P
+  - E_cm: 15844.648
+    g: 10
+    term: a 2G
+  - E_cm: 16369.41
+    g: 8
+    term: a 2G
+  - E_cm: 18360.64
+    g: 4
+    term: a 2P
+  - E_cm: 18886.773
+    g: 2
+    term: a 2P
+  - E_cm: 20340.246
+    g: 12
+    term: a 2H
+  - E_cm: 20516.953
+    g: 6
+    term: a 2D2
+  - E_cm: 20805.763
+    g: 10
+    term: a 2H
+  - E_cm: 20830.553
+    g: 6
+    term: b 4P
+  - E_cm: 21251.583
+    g: 14
+    term: a 4H
+  lines:
+  - nm: 361.487
+    A_ki: 420000.0
+    E_upper_cm: 61156.827
+    E_lower_cm: 33501.2957
+    g_upper: 8
+    g_lower: 8
+    term: z 4H*
+  - nm: 362.127
+    A_ki: 2200000.0
+    E_upper_cm: 64834.069
+    E_lower_cm: 37227.277
+    g_upper: 4
+    g_lower: 2
+    term: z 2P*
+  - nm: 362.489
+    A_ki: 2400000.0
+    E_upper_cm: 64806.494
+    E_lower_cm: 37227.277
+    g_upper: 2
+    g_lower: 2
+    term: z 2P*
+  - nm: 374.849
+    A_ki: 3400000.0
+    E_upper_cm: 64834.069
+    E_lower_cm: 38164.22
+    g_upper: 4
+    g_lower: 6
+    term: z 2P*
+  - nm: 375.946
+    A_ki: 3200000.0
+    E_upper_cm: 64806.494
+    E_lower_cm: 38214.503
+    g_upper: 2
+    g_lower: 4
+    term: z 2P*
+  - nm: 382.708
+    A_ki: 250000.0
+    E_upper_cm: 64286.354
+    E_lower_cm: 38164.22
+    g_upper: 8
+    g_lower: 6
+    term: z 2F*
+  - nm: 390.604
+    A_ki: 1100000.0
+    E_upper_cm: 70523.694
+    E_lower_cm: 44929.532
+    g_upper: 8
+    g_lower: 6
+    term: x 2G*
+  - nm: 402.455
+    A_ki: 250000.0
+    E_upper_cm: 61093.406
+    E_lower_cm: 36252.931
+    g_upper: 6
+    g_lower: 6
+    term: z 2D*
+  - nm: 417.345
+    A_ki: 440000.0
+    E_upper_cm: 44784.7859
+    E_lower_cm: 20830.5534
+    g_upper: 6
+    g_lower: 6
+    term: z 4D*
+  - nm: 417.885
+    A_ki: 170000.0
+    E_upper_cm: 44753.8179
+    E_lower_cm: 20830.5534
+    g_upper: 8
+    g_lower: 6
+    term: z 4F*
+  - nm: 423.316
+    A_ki: 720000.0
+    E_upper_cm: 44446.9051
+    E_lower_cm: 20830.5534
+    g_upper: 8
+    g_lower: 6
+    term: z 4D*
+  - nm: 430.317
+    A_ki: 220000.0
+    E_upper_cm: 45044.1916
+    E_lower_cm: 21812.0454
+    g_upper: 4
+    g_lower: 4
+    term: z 4D*
+  - nm: 435.176
+    A_ki: 490000.0
+    E_upper_cm: 44784.7859
+    E_lower_cm: 21812.0454
+    g_upper: 6
+    g_lower: 4
+    term: z 4D*
+  - nm: 438.538
+    A_ki: 450000.0
+    E_upper_cm: 45206.4704
+    E_lower_cm: 22409.8178
+    g_upper: 2
+    g_lower: 2
+    term: z 4D*
+  - nm: 441.682
+    A_ki: 210000.0
+    E_upper_cm: 45044.1916
+    E_lower_cm: 22409.8178
+    g_upper: 4
+    g_lower: 2
+    term: z 4D*
+  - nm: 449.14
+    A_ki: 190000.0
+    E_upper_cm: 45289.8248
+    E_lower_cm: 23031.2829
+    g_upper: 4
+    g_lower: 4
+    term: z 4F*
+  - nm: 451.533
+    A_ki: 240000.0
+    E_upper_cm: 45079.9019
+    E_lower_cm: 22939.3512
+    g_upper: 6
+    g_lower: 6
+    term: z 4F*
+  - nm: 452.022
+    A_ki: 100000.0
+    E_upper_cm: 44753.8179
+    E_lower_cm: 22637.195
+    g_upper: 8
+    g_lower: 10
+    term: z 4F*
+  - nm: 452.263
+    A_ki: 840000.0
+    E_upper_cm: 45044.1916
+    E_lower_cm: 22939.3512
+    g_upper: 4
+    g_lower: 6
+    term: z 4D*
+  - nm: 453.417
+    A_ki: 23000.0
+    E_upper_cm: 45079.9019
+    E_lower_cm: 23031.2829
+    g_upper: 6
+    g_lower: 4
+    term: z 4F*
+  - nm: 454.947
+    A_ki: 1000000.0
+    E_upper_cm: 44784.7859
+    E_lower_cm: 22810.3459
+    g_upper: 6
+    g_lower: 8
+    term: z 4D*
+  - nm: 455.589
+    A_ki: 230000.0
+    E_upper_cm: 44753.8179
+    E_lower_cm: 22810.3459
+    g_upper: 8
+    g_lower: 8
+    term: z 4F*
+  - nm: 457.633
+    A_ki: 64000.0
+    E_upper_cm: 44784.7859
+    E_lower_cm: 22939.3512
+    g_upper: 6
+    g_lower: 6
+    term: z 4D*
+  - nm: 458.284
+    A_ki: 34000.0
+    E_upper_cm: 44753.8179
+    E_lower_cm: 22939.3512
+    g_upper: 8
+    g_lower: 6
+    term: z 4F*
+  - nm: 458.383
+    A_ki: 720000.0
+    E_upper_cm: 44446.9051
+    E_lower_cm: 22637.195
+    g_upper: 8
+    g_lower: 10
+    term: z 4D*
+  - nm: 462.051
+    A_ki: 25000.0
+    E_upper_cm: 44446.9051
+    E_lower_cm: 22810.3459
+    g_upper: 8
+    g_lower: 8
+    term: z 4D*
+  - nm: 462.933
+    A_ki: 170000.0
+    E_upper_cm: 44232.5398
+    E_lower_cm: 22637.195
+    g_upper: 10
+    g_lower: 10
+    term: z 4F*
+  - nm: 463.532
+    A_ki: 1000000.0
+    E_upper_cm: 69606.567
+    E_lower_cm: 48039.109
+    g_upper: 8
+    g_lower: 6
+    term: y 2F*
+  - nm: 466.674
+    A_ki: 13000.0
+    E_upper_cm: 44232.5398
+    E_lower_cm: 22810.3459
+    g_upper: 10
+    g_lower: 8
+    term: z 4F*
+  - nm: 473.144
+    A_ki: 28000.0
+    E_upper_cm: 44446.9051
+    E_lower_cm: 23317.6351
+    g_upper: 8
+    g_lower: 6
+    term: z 4D*
+  - nm: 492.392
+    A_ki: 4300000.0
+    E_upper_cm: 43620.9842
+    E_lower_cm: 23317.6351
+    g_upper: 4
+    g_lower: 6
+    term: z 6P*
+  - nm: 500.195
+    A_ki: 157000000.0
+    E_upper_cm: 102840.32
+    E_lower_cm: 82853.704
+    g_upper: 14
+    g_lower: 12
+    term: 2[6]*
+  - nm: 500.419
+    A_ki: 71000000.0
+    E_upper_cm: 102831.393
+    E_lower_cm: 82853.704
+    g_upper: 12
+    g_lower: 12
+    term: 2[5]*
+  - nm: 501.844
+    A_ki: 2000000.0
+    E_upper_cm: 43238.6066
+    E_lower_cm: 23317.6351
+    g_upper: 6
+    g_lower: 6
+    term: z 6P*
+  - nm: 503.063
+    A_ki: 71000000.0
+    E_upper_cm: 102851.394
+    E_lower_cm: 82978.717
+    g_upper: 10
+    g_lower: 10
+    term: 2[5]*
+  - nm: 503.57
+    A_ki: 94000000.0
+    E_upper_cm: 102831.393
+    E_lower_cm: 82978.717
+    g_upper: 12
+    g_lower: 10
+    term: 2[5]*
+  - nm: 510.073
+    A_ki: 111000000.0
+    E_upper_cm: 103325.974
+    E_lower_cm: 83726.416
+    g_upper: 12
+    g_lower: 10
+    term: 2[5]*
+  - nm: 514.946
+    A_ki: 90000000.0
+    E_upper_cm: 103680.689
+    E_lower_cm: 84266.594
+    g_upper: 10
+    g_lower: 8
+    term: 2[5]*
+  - nm: 516.903
+    A_ki: 4200000.0
+    E_upper_cm: 42658.2444
+    E_lower_cm: 23317.6351
+    g_upper: 8
+    g_lower: 6
+    term: z 6P*
+  - nm: 519.757
+    A_ki: 550000.0
+    E_upper_cm: 45289.8248
+    E_lower_cm: 26055.412
+    g_upper: 4
+    g_lower: 6
+    term: z 4F*
+  - nm: 521.686
+    A_ki: 96000000.0
+    E_upper_cm: 103691.094
+    E_lower_cm: 84527.806
+    g_upper: 12
+    g_lower: 10
+    term: 2[5]*
+  - nm: 521.686
+    A_ki: 74000000.0
+    E_upper_cm: 103874.04
+    E_lower_cm: 84710.749
+    g_upper: 10
+    g_lower: 8
+    term: 2[4]*
+  - nm: 522.749
+    A_ki: 122000000.0
+    E_upper_cm: 103421.213
+    E_lower_cm: 84296.881
+    g_upper: 14
+    g_lower: 12
+    term: 2[6]*
+  - nm: 523.462
+    A_ki: 250000.0
+    E_upper_cm: 45079.9019
+    E_lower_cm: 25981.6451
+    g_upper: 6
+    g_lower: 8
+    term: z 4F*
+  - nm: 524.796
+    A_ki: 143000000.0
+    E_upper_cm: 103988.001
+    E_lower_cm: 84938.265
+    g_upper: 6
+    g_lower: 4
+    term: 2[3]*
+  - nm: 525.123
+    A_ki: 80000000.0
+    E_upper_cm: 103882.74
+    E_lower_cm: 84844.866
+    g_upper: 8
+    g_lower: 6
+    term: 2[4]*
+  - nm: 526.025
+    A_ki: 185000000.0
+    E_upper_cm: 103040.37
+    E_lower_cm: 84035.172
+    g_upper: 16
+    g_lower: 14
+    term: 2[7]*
+  - nm: 526.48
+    A_ki: 35000.0
+    E_upper_cm: 45044.1916
+    E_lower_cm: 26055.412
+    g_upper: 4
+    g_lower: 6
+    term: z 4D*
+  - nm: 527.6
+    A_ki: 380000.0
+    E_upper_cm: 44753.8179
+    E_lower_cm: 25805.327
+    g_upper: 8
+    g_lower: 10
+    term: z 4F*
+  - nm: 528.409
+    A_ki: 19000.0
+    E_upper_cm: 42237.0575
+    E_lower_cm: 23317.6351
+    g_upper: 8
+    g_lower: 6
+    term: z 6F*
+  - nm: 529.166
+    A_ki: 69000000.0
+    E_upper_cm: 103420.207
+    E_lower_cm: 84527.806
+    g_upper: 12
+    g_lower: 10
+    term: 2[6]*
+  - nm: 531.621
+    A_ki: 36900000.0
+    E_upper_cm: 102840.32
+    E_lower_cm: 84035.172
+    g_upper: 14
+    g_lower: 14
+    term: 2[6]*
+  - nm: 531.661
+    A_ki: 390000.0
+    E_upper_cm: 44232.5398
+    E_lower_cm: 25428.7893
+    g_upper: 10
+    g_lower: 12
+    term: z 4F*
+  - nm: 532.554
+    A_ki: 16000.0
+    E_upper_cm: 44753.8179
+    E_lower_cm: 25981.6451
+    g_upper: 8
+    g_lower: 8
+    term: z 4F*
+  - nm: 533.959
+    A_ki: 55000000.0
+    E_upper_cm: 103019.688
+    E_lower_cm: 84296.881
+    g_upper: 14
+    g_lower: 12
+    term: 2[7]*
+  - nm: 538.706
+    A_ki: 52000000.0
+    E_upper_cm: 103421.213
+    E_lower_cm: 84863.382
+    g_upper: 14
+    g_lower: 12
+    term: 2[6]*
+  - nm: 540.206
+    A_ki: 56000000.0
+    E_upper_cm: 103691.094
+    E_lower_cm: 85184.773
+    g_upper: 12
+    g_lower: 10
+    term: 2[5]*
+  - nm: 542.999
+    A_ki: 60000000.0
+    E_upper_cm: 103874.04
+    E_lower_cm: 85462.907
+    g_upper: 10
+    g_lower: 8
+    term: 2[4]*
+  - nm: 548.231
+    A_ki: 48000000.0
+    E_upper_cm: 103420.207
+    E_lower_cm: 85184.773
+    g_upper: 12
+    g_lower: 10
+    term: 2[6]*
+  - nm: 550.62
+    A_ki: 114000000.0
+    E_upper_cm: 103019.688
+    E_lower_cm: 84863.382
+    g_upper: 14
+    g_lower: 12
+    term: 2[7]*
+  - nm: 553.484
+    A_ki: 30000.0
+    E_upper_cm: 44232.5398
+    E_lower_cm: 26170.181
+    g_upper: 10
+    g_lower: 12
+    term: z 4F*
+  - nm: 596.171
+    A_ki: 74000000.0
+    E_upper_cm: 102893.426
+    E_lower_cm: 86124.348
+    g_upper: 12
+    g_lower: 10
+    term: 2[6]*
+  - nm: 614.773
+    A_ki: 130000.0
+    E_upper_cm: 47626.11
+    E_lower_cm: 31364.4554
+    g_upper: 2
+    g_lower: 4
+    term: z 4P*
+  - nm: 614.923
+    A_ki: 130000.0
+    E_upper_cm: 47626.11
+    E_lower_cm: 31368.453
+    g_upper: 2
+    g_lower: 2
+    term: z 4P*
+  - nm: 624.756
+    A_ki: 160000.0
+    E_upper_cm: 47389.809
+    E_lower_cm: 31387.9788
+    g_upper: 4
+    g_lower: 6
+    term: z 4P*
+  - nm: 643.268
+    A_ki: 8500.0
+    E_upper_cm: 38858.9696
+    E_lower_cm: 23317.6351
+    g_upper: 6
+    g_lower: 6
+    term: z 6D*
+  - nm: 645.638
+    A_ki: 170000.0
+    E_upper_cm: 46967.4751
+    E_lower_cm: 31483.1979
+    g_upper: 6
+    g_lower: 8
+    term: z 4P*
+  - nm: 651.608
+    A_ki: 8300.0
+    E_upper_cm: 38660.0537
+    E_lower_cm: 23317.6351
+    g_upper: 8
+    g_lower: 6
+    term: z 6D*
+  - nm: 656.538
+    A_ki: 61000000.0
+    E_upper_cm: 103950.602
+    E_lower_cm: 88723.398
+    g_upper: 10
+    g_lower: 10
+    term: 6F
+  - nm: 657.142
+    A_ki: 69000000.0
+    E_upper_cm: 103936.602
+    E_lower_cm: 88723.398
+    g_upper: 12
+    g_lower: 10
+    term: 6F
+  - nm: 687.073
+    A_ki: 70000000.0
+    E_upper_cm: 104593.292
+    E_lower_cm: 90042.804
+    g_upper: 12
+    g_lower: 10
+    term: 6G
+  - nm: 690.565
+    A_ki: 85000000.0
+    E_upper_cm: 104863.432
+    E_lower_cm: 90386.533
+    g_upper: 12
+    g_lower: 10
+    term: 4G
+  - nm: 692.203
+    A_ki: 89000000.0
+    E_upper_cm: 104366.802
+    E_lower_cm: 89924.15
+    g_upper: 14
+    g_lower: 12
+    term: 6G
+  - nm: 746.241
+    A_ki: 27000.0
+    E_upper_cm: 44784.7859
+    E_lower_cm: 31387.9788
+    g_upper: 6
+    g_lower: 6
+    term: z 4D*
+  - nm: 749.563
+    A_ki: 19600000.0
+    E_upper_cm: 91575.149
+    E_lower_cm: 78237.709
+    g_upper: 6
+    g_lower: 8
+    term: w 6P*
+  - nm: 751.318
+    A_ki: 29100000.0
+    E_upper_cm: 91167.936
+    E_lower_cm: 77861.65
+    g_upper: 8
+    g_lower: 10
+    term: w 6P*
+  - nm: 766.09
+    A_ki: 16800000.0
+    E_upper_cm: 91575.149
+    E_lower_cm: 78525.442
+    g_upper: 6
+    g_lower: 6
+    term: w 6P*
+  - nm: 771.172
+    A_ki: 49000.0
+    E_upper_cm: 44446.9051
+    E_lower_cm: 31483.1979
+    g_upper: 8
+    g_lower: 8
+    term: z 4D*
+  - nm: 822.899
+    A_ki: 16100000.0
+    E_upper_cm: 90386.533
+    E_lower_cm: 78237.709
+    g_upper: 10
+    g_lower: 8
+    term: 6F*
+  - nm: 828.788
+    A_ki: 45000000.0
+    E_upper_cm: 89924.15
+    E_lower_cm: 77861.65
+    g_upper: 12
+    g_lower: 10
+    term: 6F*
