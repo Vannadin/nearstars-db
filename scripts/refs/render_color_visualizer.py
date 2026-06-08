@@ -647,6 +647,11 @@ TEMPLATE = """<!DOCTYPE html>
 <title data-i18n="title"></title>
 <link rel="stylesheet" href="style.css">
 <style>
+/* The shared style.css sets `html, body {{ overflow-x: hidden }}`, which makes
+   body a scroll container and breaks position:sticky on the temperature bar.
+   `overflow-x: clip` clips horizontally WITHOUT creating a scroll container,
+   so the sticky bar pins to the viewport again. Scoped to this page. */
+html, body {{ overflow-x: clip; }}
 .regime-bar {{
   display: flex; align-items: center; gap: 0.75rem;
   margin: 1rem 0; padding: 0.5rem 0.75rem;
