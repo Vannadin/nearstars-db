@@ -277,7 +277,7 @@ def render_streak_table() -> str:
     )
 
 
-# ── Plasma color vs temperature (composition × 1000K grid) ──
+# ── Plasma color vs temperature (composition × 500K grid) ──
 
 def render_plasma_temp_grid() -> str:
     data = yaml.safe_load(PLASMA_TEMP_DB.read_text(encoding="utf-8"))
@@ -290,7 +290,8 @@ def render_plasma_temp_grid() -> str:
     bb = data["_blackbody"]
     bb_cells = "".join(
         f'<div style="{cell};background:{e["hex"]};color:{text_on(e["hex"])}" '
-        f'title="{t}K · {e["hex"]} · {e.get("note","")}">{t // 1000}k</div>'
+        f'title="{t}K · {e["hex"]} · {e.get("note","")}">'
+        f'{(str(t//1000)+"k") if t % 1000 == 0 else ""}</div>'
         for t, e in bb.items()
     )
     bb_row = (f'<div style="{row}"><div style="{lab}" data-i18n="bt_blackbody"></div>'
@@ -299,7 +300,8 @@ def render_plasma_temp_grid() -> str:
     comp_keys = [k for k in data if not k.startswith("_")]
     temps = sorted(data[comp_keys[0]]["colors"].keys())
     header = (f'<div style="{row}"><div style="{lab}"></div><div>'
-              + "".join(f'<div style="{head}">{t // 1000}k</div>' for t in temps)
+              + "".join(f'<div style="{head}">{(str(t//1000)+"k") if t % 1000 == 0 else ""}</div>'
+                        for t in temps)
               + "</div></div>")
     rows = [header]
     for k in comp_keys:
@@ -316,13 +318,14 @@ def render_plasma_temp_grid() -> str:
         rows.append(f'<div style="{row}"><div style="{lab}" data-i18n="ptc_{k}"></div>'
                     f'<div>{cells}</div></div>')
 
-    return (f'<div style="margin-bottom:8px">{bb_row}</div>'
-            f'<p class="muted" data-i18n="plasma_temp_caption" '
+    return (f'<p class="muted" data-i18n="plasma_temp_caption" '
             f'style="font-size:12px;margin:4px 0 8px"></p>'
-            + "".join(rows))
+            f'<div style="overflow-x:auto">'
+            f'<div style="margin-bottom:8px">{bb_row}</div>'
+            + "".join(rows) + '</div>')
 
 
-# ── Per-element plasma color vs temperature (element × 1000K grid) ──
+# ── Per-element plasma color vs temperature (element × 500K grid) ──
 
 def render_element_temp_grid() -> str:
     if not ELEMENT_TEMP_DB.exists():
@@ -339,12 +342,14 @@ def render_element_temp_grid() -> str:
     bb = data["_blackbody"]
     bb_cells = "".join(
         f'<div style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
-        f'title="{t}K · {bb[t]["hex"]} · {bb[t].get("note","")}">{t // 1000}</div>'
+        f'title="{t}K · {bb[t]["hex"]} · {bb[t].get("note","")}">'
+        f'{(t//1000) if t % 1000 == 0 else ""}</div>'
         for t in temps)
     bb_row = (f'<div style="{row}"><div style="{lab}" data-i18n="bt_blackbody"></div>'
               f'<div>{bb_cells}</div></div>')
     header = (f'<div style="{row}"><div style="{lab}"></div><div>'
-              + "".join(f'<div style="{head}">{t // 1000}k</div>' for t in temps)
+              + "".join(f'<div style="{head}">{(str(t//1000)+"k") if t % 1000 == 0 else ""}</div>'
+                        for t in temps)
               + "</div></div>")
 
     rows = [header]
@@ -360,10 +365,11 @@ def render_element_temp_grid() -> str:
         rows.append(f'<div style="{row}"><div style="{lab}">{e["z"]} {sym}</div>'
                     f'<div>{cells}</div></div>')
 
-    return (f'<div style="margin-bottom:6px">{bb_row}</div>'
-            f'<p class="muted" data-i18n="element_temp_caption" '
+    return (f'<p class="muted" data-i18n="element_temp_caption" '
             f'style="font-size:12px;margin:4px 0 8px"></p>'
-            + "".join(rows))
+            f'<div style="overflow-x:auto">'
+            f'<div style="margin-bottom:6px">{bb_row}</div>'
+            + "".join(rows) + '</div>')
 
 
 # ── Firefly stock cfg colors (reference) ──
@@ -616,8 +622,8 @@ def build_t(palettes):
         "h_molecular": "Molecular emitters",
         "h_bulk": "Bulk-gas fallback palettes (hand-tuned, not computed)",
         "h_streak": "Secondary-species streak palette (curated)",
-        "h_plasma_temp": "Plasma color vs temperature (1000K steps)",
-        "h_element_temp": "Reentry plasma color per element vs temperature (1000K steps)",
+        "h_plasma_temp": "Plasma color vs temperature (500K steps)",
+        "h_element_temp": "Reentry plasma color per element vs temperature (500K steps)",
         "h_firefly_stock": "Firefly stock cfg colors (reference)",
         "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
         "h_aurora": "Aurora color vs altitude/density (non-LTE)",
@@ -665,8 +671,8 @@ def build_t(palettes):
         "h_molecular": "분자 emitter",
         "h_bulk": "Bulk-gas 폴백 팔레트 (손튜닝, 비계산)",
         "h_streak": "2차 종 streak 팔레트 (큐레이트)",
-        "h_plasma_temp": "온도별 플라스마 색 (1000K 간격)",
-        "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (1000K 간격)",
+        "h_plasma_temp": "온도별 플라스마 색 (500K 간격)",
+        "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (500K 간격)",
         "h_firefly_stock": "Firefly 기본 cfg 색상 (레퍼런스)",
         "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
         "h_aurora": "고도/밀도별 오로라 색 (비-LTE)",
@@ -894,7 +900,7 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <div class="slider-scope">
 <div class="regime-bar">
   <span class="label" data-i18n="temp_label"></span>
-  <input type="range" id="temp-slider" min="1000" max="15000" step="1000" value="4000">
+  <input type="range" id="temp-slider" min="1000" max="15000" step="500" value="4000">
   <span id="temp-readout" class="temp-readout">4000 K</span>
 </div>
 

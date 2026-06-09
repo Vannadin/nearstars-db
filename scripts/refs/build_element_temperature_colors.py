@@ -1,5 +1,5 @@
-# 원소별 재진입 플라스마 발광색을 온도(1000K 간격)의 함수로 산출해 db/refs/element_temperature_colors.yaml 생성
-"""Per-element plasma emission color vs temperature (1000K steps).
+# 원소별 재진입 플라스마 발광색을 온도(500K 간격)의 함수로 산출해 db/refs/element_temperature_colors.yaml 생성
+"""Per-element plasma emission color vs temperature (500K steps).
 
 The single-element analog of plasma_temperature_colors.yaml (which is per bulk
 composition). Same LTE model as saha_boltzmann, run for one neutral element:
@@ -52,8 +52,8 @@ ELEMENT_DB = ROOT / "db" / "refs" / "element_plasma_colors.yaml"
 OUT = ROOT / "db" / "refs" / "element_temperature_colors.yaml"
 CACHE = Path("/tmp/nist_clean")
 
-TEMPS = list(range(1000, 15001, 1000))
-BB_TEMPS = list(range(1000, 20001, 1000))
+TEMPS = list(range(1000, 15001, 500))
+BB_TEMPS = list(range(1000, 20001, 500))
 
 # First ionization energies [eV] (NIST recommended). Elements absent here are
 # skipped (no Saha → would over-emit neutral lines at high T).
@@ -179,7 +179,7 @@ def build(sanity: bool = False) -> dict:
 
 
 HEADER = """\
-# Per-element plasma emission color vs temperature (1000K steps) — the
+# Per-element plasma emission color vs temperature (500K steps) — the
 # single-element analog of plasma_temperature_colors.yaml. Built by
 # scripts/refs/build_element_temperature_colors.py from the saha_boltzmann engine.
 #

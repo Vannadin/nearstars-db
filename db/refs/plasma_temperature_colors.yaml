@@ -1,4 +1,4 @@
-# Plasma emission color vs temperature (1000K steps), per bulk composition.
+# Plasma emission color vs temperature (500K steps), per bulk composition.
 #
 # FIRST-PRINCIPLES LTE — built by scripts/refs/build_plasma_temperature_colors.py
 # from the saha_boltzmann.py engine. Read the engine docstring for the model.
@@ -28,6 +28,17 @@ _blackbody:
     - 0.6419
     - 0.3554
     note: deep red — ember / lava glow
+  1500:
+    temp_k: 1500
+    hex: '#ff6b00'
+    rgb:
+    - 255
+    - 107
+    - 0
+    chromaticity_xy:
+    - 0.5811
+    - 0.3977
+    note: deep red — ember / lava glow
   2000:
     temp_k: 2000
     hex: '#ff8d15'
@@ -38,6 +49,17 @@ _blackbody:
     chromaticity_xy:
     - 0.5241
     - 0.4159
+    note: warm orange — lava / cool-star surface
+  2500:
+    temp_k: 2500
+    hex: '#ffa64a'
+    rgb:
+    - 255
+    - 166
+    - 74
+    chromaticity_xy:
+    - 0.4753
+    - 0.4153
     note: warm orange — lava / cool-star surface
   3000:
     temp_k: 3000
@@ -50,6 +72,17 @@ _blackbody:
     - 0.4358
     - 0.4052
     note: warm orange — lava / cool-star surface
+  3500:
+    temp_k: 3500
+    hex: '#ffc88c'
+    rgb:
+    - 255
+    - 200
+    - 140
+    chromaticity_xy:
+    - 0.4045
+    - 0.3915
+    note: warm white — K/G-star tint
   4000:
     temp_k: 4000
     hex: '#ffd4a6'
@@ -60,6 +93,17 @@ _blackbody:
     chromaticity_xy:
     - 0.3798
     - 0.3774
+    note: warm white — K/G-star tint
+  4500:
+    temp_k: 4500
+    hex: '#ffdebc'
+    rgb:
+    - 255
+    - 222
+    - 188
+    chromaticity_xy:
+    - 0.3603
+    - 0.364
     note: warm white — K/G-star tint
   5000:
     temp_k: 5000
@@ -72,6 +116,17 @@ _blackbody:
     - 0.3448
     - 0.352
     note: warm white — K/G-star tint
+  5500:
+    temp_k: 5500
+    hex: '#ffeee1'
+    rgb:
+    - 255
+    - 238
+    - 225
+    chromaticity_xy:
+    - 0.3322
+    - 0.3414
+    note: near white — Sun-like
   6000:
     temp_k: 6000
     hex: '#fff4f1'
@@ -82,6 +137,17 @@ _blackbody:
     chromaticity_xy:
     - 0.3219
     - 0.332
+    note: near white — Sun-like
+  6500:
+    temp_k: 6500
+    hex: '#fff9fe'
+    rgb:
+    - 255
+    - 249
+    - 254
+    chromaticity_xy:
+    - 0.3134
+    - 0.3239
     note: near white — Sun-like
   7000:
     temp_k: 7000
@@ -94,6 +160,17 @@ _blackbody:
     - 0.3063
     - 0.3167
     note: near white — Sun-like
+  7500:
+    temp_k: 7500
+    hex: '#ebedff'
+    rgb:
+    - 235
+    - 237
+    - 255
+    chromaticity_xy:
+    - 0.3003
+    - 0.3104
+    note: blue-white — A-star / hot reentry
   8000:
     temp_k: 8000
     hex: '#e3e7ff'
@@ -104,6 +181,17 @@ _blackbody:
     chromaticity_xy:
     - 0.2951
     - 0.3049
+    note: blue-white — A-star / hot reentry
+  8500:
+    temp_k: 8500
+    hex: '#dce3ff'
+    rgb:
+    - 220
+    - 227
+    - 255
+    chromaticity_xy:
+    - 0.2907
+    - 0.3
     note: blue-white — A-star / hot reentry
   9000:
     temp_k: 9000
@@ -116,6 +204,17 @@ _blackbody:
     - 0.2869
     - 0.2957
     note: blue-white — A-star / hot reentry
+  9500:
+    temp_k: 9500
+    hex: '#d1dcff'
+    rgb:
+    - 209
+    - 220
+    - 255
+    chromaticity_xy:
+    - 0.2836
+    - 0.2919
+    note: blue-white — A-star / hot reentry
   10000:
     temp_k: 10000
     hex: '#cdd9ff'
@@ -126,6 +225,17 @@ _blackbody:
     chromaticity_xy:
     - 0.2807
     - 0.2884
+    note: blue-white — A-star / hot reentry
+  10500:
+    temp_k: 10500
+    hex: '#c9d7ff'
+    rgb:
+    - 201
+    - 215
+    - 255
+    chromaticity_xy:
+    - 0.2781
+    - 0.2853
     note: blue-white — A-star / hot reentry
   11000:
     temp_k: 11000
@@ -138,6 +248,17 @@ _blackbody:
     - 0.2758
     - 0.2825
     note: blue-white — A-star / hot reentry
+  11500:
+    temp_k: 11500
+    hex: '#c3d2ff'
+    rgb:
+    - 195
+    - 210
+    - 255
+    chromaticity_xy:
+    - 0.2737
+    - 0.28
+    note: blue — hot star
   12000:
     temp_k: 12000
     hex: '#c0d1ff'
@@ -148,6 +269,17 @@ _blackbody:
     chromaticity_xy:
     - 0.2718
     - 0.2777
+    note: blue — hot star
+  12500:
+    temp_k: 12500
+    hex: '#becfff'
+    rgb:
+    - 190
+    - 207
+    - 255
+    chromaticity_xy:
+    - 0.2702
+    - 0.2756
     note: blue — hot star
   13000:
     temp_k: 13000
@@ -160,6 +292,17 @@ _blackbody:
     - 0.2687
     - 0.2736
     note: blue — hot star
+  13500:
+    temp_k: 13500
+    hex: '#baccff'
+    rgb:
+    - 186
+    - 204
+    - 255
+    chromaticity_xy:
+    - 0.2673
+    - 0.2719
+    note: blue — hot star
   14000:
     temp_k: 14000
     hex: '#b8cbff'
@@ -170,6 +313,17 @@ _blackbody:
     chromaticity_xy:
     - 0.266
     - 0.2702
+    note: blue — hot star
+  14500:
+    temp_k: 14500
+    hex: '#b6caff'
+    rgb:
+    - 182
+    - 202
+    - 255
+    chromaticity_xy:
+    - 0.2649
+    - 0.2687
     note: blue — hot star
   15000:
     temp_k: 15000
@@ -182,6 +336,17 @@ _blackbody:
     - 0.2638
     - 0.2674
     note: blue — hot star
+  15500:
+    temp_k: 15500
+    hex: '#b3c8ff'
+    rgb:
+    - 179
+    - 200
+    - 255
+    chromaticity_xy:
+    - 0.2628
+    - 0.2661
+    note: blue — hot star
   16000:
     temp_k: 16000
     hex: '#b2c7ff'
@@ -192,6 +357,17 @@ _blackbody:
     chromaticity_xy:
     - 0.2619
     - 0.2649
+    note: blue — hot star
+  16500:
+    temp_k: 16500
+    hex: '#b1c6ff'
+    rgb:
+    - 177
+    - 198
+    - 255
+    chromaticity_xy:
+    - 0.2611
+    - 0.2638
     note: blue — hot star
   17000:
     temp_k: 17000
@@ -204,6 +380,17 @@ _blackbody:
     - 0.2603
     - 0.2627
     note: blue — hot star
+  17500:
+    temp_k: 17500
+    hex: '#afc5ff'
+    rgb:
+    - 175
+    - 197
+    - 255
+    chromaticity_xy:
+    - 0.2596
+    - 0.2617
+    note: blue — hot star
   18000:
     temp_k: 18000
     hex: '#aec4ff'
@@ -215,6 +402,17 @@ _blackbody:
     - 0.2589
     - 0.2608
     note: blue — hot star
+  18500:
+    temp_k: 18500
+    hex: '#adc3ff'
+    rgb:
+    - 173
+    - 195
+    - 255
+    chromaticity_xy:
+    - 0.2582
+    - 0.26
+    note: blue — hot star
   19000:
     temp_k: 19000
     hex: '#acc3ff'
@@ -225,6 +423,17 @@ _blackbody:
     chromaticity_xy:
     - 0.2577
     - 0.2592
+    note: blue — hot star
+  19500:
+    temp_k: 19500
+    hex: '#acc2ff'
+    rgb:
+    - 172
+    - 194
+    - 255
+    chromaticity_xy:
+    - 0.2571
+    - 0.2584
     note: blue — hot star
   20000:
     temp_k: 20000
@@ -258,6 +467,17 @@ air:
       molecular_fraction: 1.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    1500:
+      temp_k: 1500
+      combined_hex: '#ff6b00'
+      rgb:
+      - 255
+      - 107
+      - 0
+      ionization_fraction: 0.0
+      molecular_fraction: 1.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     2000:
       temp_k: 2000
       combined_hex: '#ff8d15'
@@ -265,6 +485,17 @@ air:
       - 255
       - 141
       - 21
+      ionization_fraction: 0.0
+      molecular_fraction: 1.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    2500:
+      temp_k: 2500
+      combined_hex: '#ffa64a'
+      rgb:
+      - 255
+      - 166
+      - 74
       ionization_fraction: 0.0
       molecular_fraction: 1.0
       emission_fraction: 0.0
@@ -280,6 +511,17 @@ air:
       molecular_fraction: 1.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    3500:
+      temp_k: 3500
+      combined_hex: '#ffc88c'
+      rgb:
+      - 255
+      - 200
+      - 140
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9998
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     4000:
       temp_k: 4000
       combined_hex: '#ffd4a6'
@@ -289,6 +531,17 @@ air:
       - 166
       ionization_fraction: 0.0
       molecular_fraction: 0.9986
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    4500:
+      temp_k: 4500
+      combined_hex: '#ffdebc'
+      rgb:
+      - 255
+      - 222
+      - 188
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9927
       emission_fraction: 0.0
       dominant: thermal incandescence
     5000:
@@ -302,6 +555,17 @@ air:
       molecular_fraction: 0.9735
       emission_fraction: 0.0
       dominant: thermal incandescence
+    5500:
+      temp_k: 5500
+      combined_hex: '#ffeee1'
+      rgb:
+      - 255
+      - 238
+      - 225
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9243
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     6000:
       temp_k: 6000
       combined_hex: '#fff4f1'
@@ -312,6 +576,17 @@ air:
       ionization_fraction: 0.0001
       molecular_fraction: 0.8243
       emission_fraction: 0.0
+      dominant: thermal incandescence
+    6500:
+      temp_k: 6500
+      combined_hex: '#fff9fe'
+      rgb:
+      - 255
+      - 249
+      - 254
+      ionization_fraction: 0.0002
+      molecular_fraction: 0.6612
+      emission_fraction: 0.0001
       dominant: thermal incandescence
     7000:
       temp_k: 7000
@@ -324,6 +599,17 @@ air:
       molecular_fraction: 0.4549
       emission_fraction: 0.0003
       dominant: thermal incandescence
+    7500:
+      temp_k: 7500
+      combined_hex: '#eaecff'
+      rgb:
+      - 234
+      - 236
+      - 255
+      ionization_fraction: 0.0011
+      molecular_fraction: 0.2619
+      emission_fraction: 0.0005
+      dominant: thermal incandescence
     8000:
       temp_k: 8000
       combined_hex: '#e2e7ff'
@@ -334,6 +620,17 @@ air:
       ionization_fraction: 0.0023
       molecular_fraction: 0.1306
       emission_fraction: 0.0008
+      dominant: thermal incandescence
+    8500:
+      temp_k: 8500
+      combined_hex: '#dbe2ff'
+      rgb:
+      - 219
+      - 226
+      - 255
+      ionization_fraction: 0.0046
+      molecular_fraction: 0.0612
+      emission_fraction: 0.0012
       dominant: thermal incandescence
     9000:
       temp_k: 9000
@@ -346,6 +643,17 @@ air:
       molecular_fraction: 0.0289
       emission_fraction: 0.0022
       dominant: thermal incandescence
+    9500:
+      temp_k: 9500
+      combined_hex: '#d0daff'
+      rgb:
+      - 208
+      - 218
+      - 255
+      ionization_fraction: 0.0145
+      molecular_fraction: 0.0142
+      emission_fraction: 0.0043
+      dominant: thermal incandescence
     10000:
       temp_k: 10000
       combined_hex: '#cdd7ff'
@@ -356,6 +664,17 @@ air:
       ionization_fraction: 0.0237
       molecular_fraction: 0.0073
       emission_fraction: 0.009
+      dominant: thermal incandescence
+    10500:
+      temp_k: 10500
+      combined_hex: '#cbd4ff'
+      rgb:
+      - 203
+      - 212
+      - 255
+      ionization_fraction: 0.0371
+      molecular_fraction: 0.004
+      emission_fraction: 0.0188
       dominant: thermal incandescence
     11000:
       temp_k: 11000
@@ -368,6 +687,17 @@ air:
       molecular_fraction: 0.0023
       emission_fraction: 0.0372
       dominant: thermal incandescence
+    11500:
+      temp_k: 11500
+      combined_hex: '#cfcfff'
+      rgb:
+      - 207
+      - 207
+      - 255
+      ionization_fraction: 0.08
+      molecular_fraction: 0.0013
+      emission_fraction: 0.0688
+      dominant: thermal incandescence
     12000:
       temp_k: 12000
       combined_hex: '#d7ccff'
@@ -378,6 +708,17 @@ air:
       ionization_fraction: 0.1114
       molecular_fraction: 0.0008
       emission_fraction: 0.1179
+      dominant: atomic lines
+    12500:
+      temp_k: 12500
+      combined_hex: '#e3caff'
+      rgb:
+      - 227
+      - 202
+      - 255
+      ionization_fraction: 0.1504
+      molecular_fraction: 0.0005
+      emission_fraction: 0.1862
       dominant: atomic lines
     13000:
       temp_k: 13000
@@ -390,6 +731,17 @@ air:
       molecular_fraction: 0.0003
       emission_fraction: 0.2709
       dominant: atomic lines
+    13500:
+      temp_k: 13500
+      combined_hex: '#ffc5fc'
+      rgb:
+      - 255
+      - 197
+      - 252
+      ionization_fraction: 0.2513
+      molecular_fraction: 0.0002
+      emission_fraction: 0.3646
+      dominant: ionic lines
     14000:
       temp_k: 14000
       combined_hex: '#ffb8ec'
@@ -400,6 +752,17 @@ air:
       ionization_fraction: 0.3121
       molecular_fraction: 0.0002
       emission_fraction: 0.458
+      dominant: ionic lines
+    14500:
+      temp_k: 14500
+      combined_hex: '#ffaddf'
+      rgb:
+      - 255
+      - 173
+      - 223
+      ionization_fraction: 0.378
+      molecular_fraction: 0.0001
+      emission_fraction: 0.5433
       dominant: ionic lines
     15000:
       temp_k: 15000
@@ -431,6 +794,17 @@ co2:
       molecular_fraction: 1.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    1500:
+      temp_k: 1500
+      combined_hex: '#ff6b00'
+      rgb:
+      - 255
+      - 107
+      - 0
+      ionization_fraction: 0.0
+      molecular_fraction: 1.0
+      emission_fraction: 0.0003
+      dominant: thermal incandescence
     2000:
       temp_k: 2000
       combined_hex: '#ff9020'
@@ -442,6 +816,17 @@ co2:
       molecular_fraction: 1.0
       emission_fraction: 0.0153
       dominant: thermal incandescence
+    2500:
+      temp_k: 2500
+      combined_hex: '#ffbe71'
+      rgb:
+      - 255
+      - 190
+      - 113
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9983
+      emission_fraction: 0.1392
+      dominant: molecular bands
     3000:
       temp_k: 3000
       combined_hex: '#d8ffc8'
@@ -452,6 +837,17 @@ co2:
       ionization_fraction: 0.0
       molecular_fraction: 0.979
       emission_fraction: 0.4349
+      dominant: molecular bands
+    3500:
+      temp_k: 3500
+      combined_hex: '#58ffdb'
+      rgb:
+      - 88
+      - 255
+      - 219
+      ionization_fraction: 0.0
+      molecular_fraction: 0.8757
+      emission_fraction: 0.6839
       dominant: molecular bands
     4000:
       temp_k: 4000
@@ -464,6 +860,17 @@ co2:
       molecular_fraction: 0.5927
       emission_fraction: 0.7855
       dominant: molecular bands
+    4500:
+      temp_k: 4500
+      combined_hex: '#00ffe3'
+      rgb:
+      - 0
+      - 255
+      - 227
+      ionization_fraction: 0.0
+      molecular_fraction: 0.2384
+      emission_fraction: 0.7649
+      dominant: molecular bands
     5000:
       temp_k: 5000
       combined_hex: '#50ffe5'
@@ -474,6 +881,17 @@ co2:
       ionization_fraction: 0.0
       molecular_fraction: 0.0633
       emission_fraction: 0.6342
+      dominant: atomic lines
+    5500:
+      temp_k: 5500
+      combined_hex: '#97ffeb'
+      rgb:
+      - 151
+      - 255
+      - 235
+      ionization_fraction: 0.0001
+      molecular_fraction: 0.0166
+      emission_fraction: 0.4592
       dominant: atomic lines
     6000:
       temp_k: 6000
@@ -486,6 +904,17 @@ co2:
       molecular_fraction: 0.0051
       emission_fraction: 0.3141
       dominant: atomic lines
+    6500:
+      temp_k: 6500
+      combined_hex: '#d2fffc'
+      rgb:
+      - 210
+      - 255
+      - 252
+      ionization_fraction: 0.0009
+      molecular_fraction: 0.0018
+      emission_fraction: 0.2163
+      dominant: atomic lines
     7000:
       temp_k: 7000
       combined_hex: '#d8faff'
@@ -496,6 +925,17 @@ co2:
       ionization_fraction: 0.0021
       molecular_fraction: 0.0008
       emission_fraction: 0.1545
+      dominant: atomic lines
+    7500:
+      temp_k: 7500
+      combined_hex: '#d7f2ff'
+      rgb:
+      - 215
+      - 242
+      - 255
+      ionization_fraction: 0.0043
+      molecular_fraction: 0.0004
+      emission_fraction: 0.1155
       dominant: atomic lines
     8000:
       temp_k: 8000
@@ -508,6 +948,17 @@ co2:
       molecular_fraction: 0.0002
       emission_fraction: 0.0907
       dominant: thermal incandescence
+    8500:
+      temp_k: 8500
+      combined_hex: '#d1e7ff'
+      rgb:
+      - 209
+      - 231
+      - 255
+      ionization_fraction: 0.0138
+      molecular_fraction: 0.0001
+      emission_fraction: 0.0748
+      dominant: thermal incandescence
     9000:
       temp_k: 9000
       combined_hex: '#cee3ff'
@@ -518,6 +969,17 @@ co2:
       ionization_fraction: 0.0224
       molecular_fraction: 0.0001
       emission_fraction: 0.0658
+      dominant: thermal incandescence
+    9500:
+      temp_k: 9500
+      combined_hex: '#cce0ff'
+      rgb:
+      - 204
+      - 224
+      - 255
+      ionization_fraction: 0.0346
+      molecular_fraction: 0.0
+      emission_fraction: 0.0648
       dominant: thermal incandescence
     10000:
       temp_k: 10000
@@ -530,6 +992,17 @@ co2:
       molecular_fraction: 0.0
       emission_fraction: 0.0744
       dominant: thermal incandescence
+    10500:
+      temp_k: 10500
+      combined_hex: '#ccddff'
+      rgb:
+      - 204
+      - 221
+      - 255
+      ionization_fraction: 0.0723
+      molecular_fraction: 0.0
+      emission_fraction: 0.0987
+      dominant: thermal incandescence
     11000:
       temp_k: 11000
       combined_hex: '#d0ddff'
@@ -540,6 +1013,17 @@ co2:
       ionization_fraction: 0.0987
       molecular_fraction: 0.0
       emission_fraction: 0.1419
+      dominant: atomic lines
+    11500:
+      temp_k: 11500
+      combined_hex: '#d9dfff'
+      rgb:
+      - 217
+      - 223
+      - 255
+      ionization_fraction: 0.1302
+      molecular_fraction: 0.0
+      emission_fraction: 0.206
       dominant: atomic lines
     12000:
       temp_k: 12000
@@ -552,6 +1036,17 @@ co2:
       molecular_fraction: 0.0
       emission_fraction: 0.2889
       dominant: atomic lines
+    12500:
+      temp_k: 12500
+      combined_hex: '#fbeaff'
+      rgb:
+      - 251
+      - 234
+      - 255
+      ionization_fraction: 0.2084
+      molecular_fraction: 0.0
+      emission_fraction: 0.3836
+      dominant: ionic lines
     13000:
       temp_k: 13000
       combined_hex: '#ffdfec'
@@ -563,6 +1058,17 @@ co2:
       molecular_fraction: 0.0
       emission_fraction: 0.4807
       dominant: ionic lines
+    13500:
+      temp_k: 13500
+      combined_hex: '#ffd3d6'
+      rgb:
+      - 255
+      - 211
+      - 214
+      ionization_fraction: 0.305
+      molecular_fraction: 0.0
+      emission_fraction: 0.5715
+      dominant: ionic lines
     14000:
       temp_k: 14000
       combined_hex: '#ffc8c3'
@@ -573,6 +1079,17 @@ co2:
       ionization_fraction: 0.3594
       molecular_fraction: 0.0
       emission_fraction: 0.6503
+      dominant: ionic lines
+    14500:
+      temp_k: 14500
+      combined_hex: '#ffbfb4'
+      rgb:
+      - 255
+      - 191
+      - 180
+      ionization_fraction: 0.4171
+      molecular_fraction: 0.0
+      emission_fraction: 0.7148
       dominant: ionic lines
     15000:
       temp_k: 15000
@@ -603,6 +1120,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    1500:
+      temp_k: 1500
+      combined_hex: '#ff6b00'
+      rgb:
+      - 255
+      - 107
+      - 0
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     2000:
       temp_k: 2000
       combined_hex: '#ff8d15'
@@ -610,6 +1138,17 @@ h2_he:
       - 255
       - 141
       - 21
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    2500:
+      temp_k: 2500
+      combined_hex: '#ffa64a'
+      rgb:
+      - 255
+      - 166
+      - 74
       ionization_fraction: 0.0
       molecular_fraction: 0.0
       emission_fraction: 0.0
@@ -625,6 +1164,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    3500:
+      temp_k: 3500
+      combined_hex: '#ffc88c'
+      rgb:
+      - 255
+      - 200
+      - 140
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     4000:
       temp_k: 4000
       combined_hex: '#ffd4a6'
@@ -632,6 +1182,17 @@ h2_he:
       - 255
       - 212
       - 166
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    4500:
+      temp_k: 4500
+      combined_hex: '#ffdebc'
+      rgb:
+      - 255
+      - 222
+      - 188
       ionization_fraction: 0.0
       molecular_fraction: 0.0
       emission_fraction: 0.0
@@ -647,6 +1208,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    5500:
+      temp_k: 5500
+      combined_hex: '#ffeee1'
+      rgb:
+      - 255
+      - 238
+      - 225
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     6000:
       temp_k: 6000
       combined_hex: '#fff4f1'
@@ -655,6 +1227,17 @@ h2_he:
       - 244
       - 241
       ionization_fraction: 0.0001
+      molecular_fraction: 0.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    6500:
+      temp_k: 6500
+      combined_hex: '#fff9fe'
+      rgb:
+      - 255
+      - 249
+      - 254
+      ionization_fraction: 0.0002
       molecular_fraction: 0.0
       emission_fraction: 0.0
       dominant: thermal incandescence
@@ -669,6 +1252,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.0002
       dominant: thermal incandescence
+    7500:
+      temp_k: 7500
+      combined_hex: '#ebecff'
+      rgb:
+      - 235
+      - 236
+      - 255
+      ionization_fraction: 0.001
+      molecular_fraction: 0.0
+      emission_fraction: 0.0007
+      dominant: thermal incandescence
     8000:
       temp_k: 8000
       combined_hex: '#e3e7ff'
@@ -679,6 +1273,17 @@ h2_he:
       ionization_fraction: 0.0022
       molecular_fraction: 0.0
       emission_fraction: 0.0027
+      dominant: thermal incandescence
+    8500:
+      temp_k: 8500
+      combined_hex: '#dee2ff'
+      rgb:
+      - 222
+      - 226
+      - 255
+      ionization_fraction: 0.0042
+      molecular_fraction: 0.0
+      emission_fraction: 0.009
       dominant: thermal incandescence
     9000:
       temp_k: 9000
@@ -691,6 +1296,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.0258
       dominant: thermal incandescence
+    9500:
+      temp_k: 9500
+      combined_hex: '#e1d3ff'
+      rgb:
+      - 225
+      - 211
+      - 255
+      ionization_fraction: 0.0127
+      molecular_fraction: 0.0
+      emission_fraction: 0.0646
+      dominant: thermal incandescence
     10000:
       temp_k: 10000
       combined_hex: '#ecc5ff'
@@ -701,6 +1317,17 @@ h2_he:
       ionization_fraction: 0.0204
       molecular_fraction: 0.0
       emission_fraction: 0.1404
+      dominant: atomic lines
+    10500:
+      temp_k: 10500
+      combined_hex: '#fcb2ff'
+      rgb:
+      - 252
+      - 178
+      - 255
+      ionization_fraction: 0.0313
+      molecular_fraction: 0.0
+      emission_fraction: 0.2619
       dominant: atomic lines
     11000:
       temp_k: 11000
@@ -713,6 +1340,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.4171
       dominant: atomic lines
+    11500:
+      temp_k: 11500
+      combined_hex: '#ff77ea'
+      rgb:
+      - 255
+      - 119
+      - 234
+      ionization_fraction: 0.0661
+      molecular_fraction: 0.0
+      emission_fraction: 0.5743
+      dominant: atomic lines
     12000:
       temp_k: 12000
       combined_hex: '#ff61e5'
@@ -723,6 +1361,17 @@ h2_he:
       ionization_fraction: 0.0914
       molecular_fraction: 0.0
       emission_fraction: 0.7055
+      dominant: atomic lines
+    12500:
+      temp_k: 12500
+      combined_hex: '#ff52e3'
+      rgb:
+      - 255
+      - 82
+      - 227
+      ionization_fraction: 0.1227
+      molecular_fraction: 0.0
+      emission_fraction: 0.8009
       dominant: atomic lines
     13000:
       temp_k: 13000
@@ -735,6 +1384,17 @@ h2_he:
       molecular_fraction: 0.0
       emission_fraction: 0.8651
       dominant: atomic lines
+    13500:
+      temp_k: 13500
+      combined_hex: '#ff41e5'
+      rgb:
+      - 255
+      - 65
+      - 229
+      ionization_fraction: 0.2042
+      molecular_fraction: 0.0
+      emission_fraction: 0.907
+      dominant: ionic lines
     14000:
       temp_k: 14000
       combined_hex: '#ff3de6'
@@ -745,6 +1405,17 @@ h2_he:
       ionization_fraction: 0.2539
       molecular_fraction: 0.0
       emission_fraction: 0.934
+      dominant: ionic lines
+    14500:
+      temp_k: 14500
+      combined_hex: '#ff3be8'
+      rgb:
+      - 255
+      - 59
+      - 232
+      ionization_fraction: 0.3084
+      molecular_fraction: 0.0
+      emission_fraction: 0.9516
       dominant: ionic lines
     15000:
       temp_k: 15000
@@ -777,6 +1448,17 @@ ch4:
       molecular_fraction: 1.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    1500:
+      temp_k: 1500
+      combined_hex: '#ff6b00'
+      rgb:
+      - 255
+      - 107
+      - 0
+      ionization_fraction: 0.0
+      molecular_fraction: 1.0
+      emission_fraction: 0.0002
+      dominant: thermal incandescence
     2000:
       temp_k: 2000
       combined_hex: '#ff8f1d'
@@ -787,6 +1469,17 @@ ch4:
       ionization_fraction: 0.0
       molecular_fraction: 1.0
       emission_fraction: 0.0093
+      dominant: thermal incandescence
+    2500:
+      temp_k: 2500
+      combined_hex: '#ffb564'
+      rgb:
+      - 255
+      - 181
+      - 100
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9979
+      emission_fraction: 0.0885
       dominant: thermal incandescence
     3000:
       temp_k: 3000
@@ -799,6 +1492,17 @@ ch4:
       molecular_fraction: 0.973
       emission_fraction: 0.3149
       dominant: molecular bands
+    3500:
+      temp_k: 3500
+      combined_hex: '#9bffd8'
+      rgb:
+      - 155
+      - 255
+      - 216
+      ionization_fraction: 0.0
+      molecular_fraction: 0.8427
+      emission_fraction: 0.5557
+      dominant: molecular bands
     4000:
       temp_k: 4000
       combined_hex: '#5cffdf'
@@ -810,6 +1514,17 @@ ch4:
       molecular_fraction: 0.5117
       emission_fraction: 0.655
       dominant: molecular bands
+    4500:
+      temp_k: 4500
+      combined_hex: '#77ffe2'
+      rgb:
+      - 119
+      - 255
+      - 226
+      ionization_fraction: 0.0
+      molecular_fraction: 0.1701
+      emission_fraction: 0.5823
+      dominant: atomic lines
     5000:
       temp_k: 5000
       combined_hex: '#b3ffe6'
@@ -820,6 +1535,17 @@ ch4:
       ionization_fraction: 0.0
       molecular_fraction: 0.0399
       emission_fraction: 0.3966
+      dominant: atomic lines
+    5500:
+      temp_k: 5500
+      combined_hex: '#d8ffef'
+      rgb:
+      - 216
+      - 255
+      - 239
+      ionization_fraction: 0.0001
+      molecular_fraction: 0.0101
+      emission_fraction: 0.2369
       dominant: atomic lines
     6000:
       temp_k: 6000
@@ -832,6 +1558,17 @@ ch4:
       molecular_fraction: 0.0031
       emission_fraction: 0.1423
       dominant: atomic lines
+    6500:
+      temp_k: 6500
+      combined_hex: '#eefcff'
+      rgb:
+      - 238
+      - 252
+      - 255
+      ionization_fraction: 0.0007
+      molecular_fraction: 0.0011
+      emission_fraction: 0.0908
+      dominant: thermal incandescence
     7000:
       temp_k: 7000
       combined_hex: '#e9f4ff'
@@ -842,6 +1579,17 @@ ch4:
       ionization_fraction: 0.0017
       molecular_fraction: 0.0005
       emission_fraction: 0.0621
+      dominant: thermal incandescence
+    7500:
+      temp_k: 7500
+      combined_hex: '#e3edff'
+      rgb:
+      - 227
+      - 237
+      - 255
+      ionization_fraction: 0.0034
+      molecular_fraction: 0.0003
+      emission_fraction: 0.0457
       dominant: thermal incandescence
     8000:
       temp_k: 8000
@@ -854,6 +1602,17 @@ ch4:
       molecular_fraction: 0.0002
       emission_fraction: 0.0372
       dominant: thermal incandescence
+    8500:
+      temp_k: 8500
+      combined_hex: '#d9e2ff'
+      rgb:
+      - 217
+      - 226
+      - 255
+      ionization_fraction: 0.011
+      molecular_fraction: 0.0001
+      emission_fraction: 0.0362
+      dominant: thermal incandescence
     9000:
       temp_k: 9000
       combined_hex: '#d8dcff'
@@ -864,6 +1623,17 @@ ch4:
       ionization_fraction: 0.018
       molecular_fraction: 0.0001
       emission_fraction: 0.047
+      dominant: thermal incandescence
+    9500:
+      temp_k: 9500
+      combined_hex: '#dcd4ff'
+      rgb:
+      - 220
+      - 212
+      - 255
+      ionization_fraction: 0.028
+      molecular_fraction: 0.0001
+      emission_fraction: 0.0798
       dominant: thermal incandescence
     10000:
       temp_k: 10000
@@ -876,6 +1646,17 @@ ch4:
       molecular_fraction: 0.0001
       emission_fraction: 0.1482
       dominant: atomic lines
+    10500:
+      temp_k: 10500
+      combined_hex: '#f6b7ff'
+      rgb:
+      - 246
+      - 183
+      - 255
+      ionization_fraction: 0.0593
+      molecular_fraction: 0.0
+      emission_fraction: 0.2611
+      dominant: atomic lines
     11000:
       temp_k: 11000
       combined_hex: '#ff9df8'
@@ -886,6 +1667,17 @@ ch4:
       ionization_fraction: 0.0815
       molecular_fraction: 0.0
       emission_fraction: 0.409
+      dominant: atomic lines
+    11500:
+      temp_k: 11500
+      combined_hex: '#ff80ed'
+      rgb:
+      - 255
+      - 128
+      - 237
+      ionization_fraction: 0.1087
+      molecular_fraction: 0.0
+      emission_fraction: 0.5628
       dominant: atomic lines
     12000:
       temp_k: 12000
@@ -898,6 +1690,17 @@ ch4:
       molecular_fraction: 0.0
       emission_fraction: 0.6942
       dominant: atomic lines
+    12500:
+      temp_k: 12500
+      combined_hex: '#ff5ae5'
+      rgb:
+      - 255
+      - 90
+      - 229
+      ionization_fraction: 0.1788
+      molecular_fraction: 0.0
+      emission_fraction: 0.7918
+      dominant: atomic lines
     13000:
       temp_k: 13000
       combined_hex: '#ff4fe4'
@@ -909,6 +1712,17 @@ ch4:
       molecular_fraction: 0.0
       emission_fraction: 0.8584
       dominant: ionic lines
+    13500:
+      temp_k: 13500
+      combined_hex: '#ff47e5'
+      rgb:
+      - 255
+      - 71
+      - 229
+      ionization_fraction: 0.2703
+      molecular_fraction: 0.0
+      emission_fraction: 0.9021
+      dominant: ionic lines
     14000:
       temp_k: 14000
       combined_hex: '#ff42e7'
@@ -919,6 +1733,17 @@ ch4:
       ionization_fraction: 0.3236
       molecular_fraction: 0.0
       emission_fraction: 0.9305
+      dominant: ionic lines
+    14500:
+      temp_k: 14500
+      combined_hex: '#ff3fe9'
+      rgb:
+      - 255
+      - 63
+      - 233
+      ionization_fraction: 0.381
+      molecular_fraction: 0.0
+      emission_fraction: 0.9491
       dominant: ionic lines
     15000:
       temp_k: 15000
@@ -950,6 +1775,17 @@ h2o:
       molecular_fraction: 1.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    1500:
+      temp_k: 1500
+      combined_hex: '#ff6b00'
+      rgb:
+      - 255
+      - 107
+      - 0
+      ionization_fraction: 0.0
+      molecular_fraction: 1.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     2000:
       temp_k: 2000
       combined_hex: '#ff8d15'
@@ -959,6 +1795,17 @@ h2o:
       - 21
       ionization_fraction: 0.0
       molecular_fraction: 1.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    2500:
+      temp_k: 2500
+      combined_hex: '#ffa64a'
+      rgb:
+      - 255
+      - 166
+      - 74
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9987
       emission_fraction: 0.0
       dominant: thermal incandescence
     3000:
@@ -972,6 +1819,17 @@ h2o:
       molecular_fraction: 0.9561
       emission_fraction: 0.0
       dominant: thermal incandescence
+    3500:
+      temp_k: 3500
+      combined_hex: '#ffc88c'
+      rgb:
+      - 255
+      - 200
+      - 140
+      ionization_fraction: 0.0
+      molecular_fraction: 0.672
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     4000:
       temp_k: 4000
       combined_hex: '#ffd4a6'
@@ -981,6 +1839,17 @@ h2o:
       - 166
       ionization_fraction: 0.0
       molecular_fraction: 0.2718
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    4500:
+      temp_k: 4500
+      combined_hex: '#ffdebc'
+      rgb:
+      - 255
+      - 222
+      - 188
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0817
       emission_fraction: 0.0
       dominant: thermal incandescence
     5000:
@@ -994,6 +1863,17 @@ h2o:
       molecular_fraction: 0.0258
       emission_fraction: 0.0
       dominant: thermal incandescence
+    5500:
+      temp_k: 5500
+      combined_hex: '#ffeee1'
+      rgb:
+      - 255
+      - 238
+      - 225
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0095
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     6000:
       temp_k: 6000
       combined_hex: '#fff4f1'
@@ -1003,6 +1883,17 @@ h2o:
       - 241
       ionization_fraction: 0.0001
       molecular_fraction: 0.0041
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    6500:
+      temp_k: 6500
+      combined_hex: '#fff9fe'
+      rgb:
+      - 255
+      - 249
+      - 254
+      ionization_fraction: 0.0002
+      molecular_fraction: 0.002
       emission_fraction: 0.0
       dominant: thermal incandescence
     7000:
@@ -1016,6 +1907,17 @@ h2o:
       molecular_fraction: 0.0011
       emission_fraction: 0.0001
       dominant: thermal incandescence
+    7500:
+      temp_k: 7500
+      combined_hex: '#ebecff'
+      rgb:
+      - 235
+      - 236
+      - 255
+      ionization_fraction: 0.0011
+      molecular_fraction: 0.0006
+      emission_fraction: 0.0005
+      dominant: thermal incandescence
     8000:
       temp_k: 8000
       combined_hex: '#e3e7ff'
@@ -1026,6 +1928,17 @@ h2o:
       ionization_fraction: 0.0022
       molecular_fraction: 0.0004
       emission_fraction: 0.0021
+      dominant: thermal incandescence
+    8500:
+      temp_k: 8500
+      combined_hex: '#dee2ff'
+      rgb:
+      - 222
+      - 226
+      - 255
+      ionization_fraction: 0.0042
+      molecular_fraction: 0.0002
+      emission_fraction: 0.0068
       dominant: thermal incandescence
     9000:
       temp_k: 9000
@@ -1038,6 +1951,17 @@ h2o:
       molecular_fraction: 0.0002
       emission_fraction: 0.0197
       dominant: thermal incandescence
+    9500:
+      temp_k: 9500
+      combined_hex: '#ded5ff'
+      rgb:
+      - 222
+      - 213
+      - 255
+      ionization_fraction: 0.0129
+      molecular_fraction: 0.0001
+      emission_fraction: 0.0499
+      dominant: thermal incandescence
     10000:
       temp_k: 10000
       combined_hex: '#e7caff'
@@ -1048,6 +1972,17 @@ h2o:
       ionization_fraction: 0.0208
       molecular_fraction: 0.0001
       emission_fraction: 0.1106
+      dominant: atomic lines
+    10500:
+      temp_k: 10500
+      combined_hex: '#f5baff'
+      rgb:
+      - 245
+      - 186
+      - 255
+      ionization_fraction: 0.0321
+      molecular_fraction: 0.0001
+      emission_fraction: 0.2129
       dominant: atomic lines
     11000:
       temp_k: 11000
@@ -1060,6 +1995,17 @@ h2o:
       molecular_fraction: 0.0001
       emission_fraction: 0.3534
       dominant: atomic lines
+    11500:
+      temp_k: 11500
+      combined_hex: '#ff85ee'
+      rgb:
+      - 255
+      - 133
+      - 238
+      ionization_fraction: 0.0679
+      molecular_fraction: 0.0
+      emission_fraction: 0.508
+      dominant: atomic lines
     12000:
       temp_k: 12000
       combined_hex: '#ff6fe6'
@@ -1070,6 +2016,17 @@ h2o:
       ionization_fraction: 0.094
       molecular_fraction: 0.0
       emission_fraction: 0.6474
+      dominant: atomic lines
+    12500:
+      temp_k: 12500
+      combined_hex: '#ff5ee3'
+      rgb:
+      - 255
+      - 94
+      - 227
+      ionization_fraction: 0.1265
+      molecular_fraction: 0.0
+      emission_fraction: 0.7555
       dominant: atomic lines
     13000:
       temp_k: 13000
@@ -1082,6 +2039,17 @@ h2o:
       molecular_fraction: 0.0
       emission_fraction: 0.8317
       dominant: atomic lines
+    13500:
+      temp_k: 13500
+      combined_hex: '#ff4be3'
+      rgb:
+      - 255
+      - 75
+      - 227
+      ionization_fraction: 0.2117
+      molecular_fraction: 0.0
+      emission_fraction: 0.8828
+      dominant: ionic lines
     14000:
       temp_k: 14000
       combined_hex: '#ff46e4'
@@ -1092,6 +2060,17 @@ h2o:
       ionization_fraction: 0.2641
       molecular_fraction: 0.0
       emission_fraction: 0.9165
+      dominant: ionic lines
+    14500:
+      temp_k: 14500
+      combined_hex: '#ff44e5'
+      rgb:
+      - 255
+      - 68
+      - 229
+      ionization_fraction: 0.322
+      molecular_fraction: 0.0
+      emission_fraction: 0.9387
       dominant: ionic lines
     15000:
       temp_k: 15000
@@ -1123,6 +2102,17 @@ nh3:
       molecular_fraction: 1.0
       emission_fraction: 0.0
       dominant: thermal incandescence
+    1500:
+      temp_k: 1500
+      combined_hex: '#ff6b00'
+      rgb:
+      - 255
+      - 107
+      - 0
+      ionization_fraction: 0.0
+      molecular_fraction: 1.0
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     2000:
       temp_k: 2000
       combined_hex: '#ff8d15'
@@ -1132,6 +2122,17 @@ nh3:
       - 21
       ionization_fraction: 0.0
       molecular_fraction: 0.9996
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    2500:
+      temp_k: 2500
+      combined_hex: '#ffa64a'
+      rgb:
+      - 255
+      - 166
+      - 74
+      ionization_fraction: 0.0
+      molecular_fraction: 0.9694
       emission_fraction: 0.0
       dominant: thermal incandescence
     3000:
@@ -1145,6 +2146,17 @@ nh3:
       molecular_fraction: 0.6687
       emission_fraction: 0.0
       dominant: thermal incandescence
+    3500:
+      temp_k: 3500
+      combined_hex: '#ffc88c'
+      rgb:
+      - 255
+      - 200
+      - 140
+      ionization_fraction: 0.0
+      molecular_fraction: 0.2303
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     4000:
       temp_k: 4000
       combined_hex: '#ffd4a6'
@@ -1154,6 +2166,17 @@ nh3:
       - 166
       ionization_fraction: 0.0
       molecular_fraction: 0.0618
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    4500:
+      temp_k: 4500
+      combined_hex: '#ffdebc'
+      rgb:
+      - 255
+      - 222
+      - 188
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0191
       emission_fraction: 0.0
       dominant: thermal incandescence
     5000:
@@ -1167,6 +2190,17 @@ nh3:
       molecular_fraction: 0.0072
       emission_fraction: 0.0
       dominant: thermal incandescence
+    5500:
+      temp_k: 5500
+      combined_hex: '#ffeee1'
+      rgb:
+      - 255
+      - 238
+      - 225
+      ionization_fraction: 0.0
+      molecular_fraction: 0.0032
+      emission_fraction: 0.0
+      dominant: thermal incandescence
     6000:
       temp_k: 6000
       combined_hex: '#fff4f1'
@@ -1176,6 +2210,17 @@ nh3:
       - 241
       ionization_fraction: 0.0001
       molecular_fraction: 0.0016
+      emission_fraction: 0.0
+      dominant: thermal incandescence
+    6500:
+      temp_k: 6500
+      combined_hex: '#fff9fe'
+      rgb:
+      - 255
+      - 249
+      - 254
+      ionization_fraction: 0.0002
+      molecular_fraction: 0.0009
       emission_fraction: 0.0
       dominant: thermal incandescence
     7000:
@@ -1189,6 +2234,17 @@ nh3:
       molecular_fraction: 0.0005
       emission_fraction: 0.0001
       dominant: thermal incandescence
+    7500:
+      temp_k: 7500
+      combined_hex: '#ebecff'
+      rgb:
+      - 235
+      - 236
+      - 255
+      ionization_fraction: 0.0011
+      molecular_fraction: 0.0003
+      emission_fraction: 0.0006
+      dominant: thermal incandescence
     8000:
       temp_k: 8000
       combined_hex: '#e3e7ff'
@@ -1199,6 +2255,17 @@ nh3:
       ionization_fraction: 0.0023
       molecular_fraction: 0.0002
       emission_fraction: 0.0022
+      dominant: thermal incandescence
+    8500:
+      temp_k: 8500
+      combined_hex: '#dee2ff'
+      rgb:
+      - 222
+      - 226
+      - 255
+      ionization_fraction: 0.0044
+      molecular_fraction: 0.0002
+      emission_fraction: 0.0074
       dominant: thermal incandescence
     9000:
       temp_k: 9000
@@ -1211,6 +2278,17 @@ nh3:
       molecular_fraction: 0.0001
       emission_fraction: 0.0213
       dominant: thermal incandescence
+    9500:
+      temp_k: 9500
+      combined_hex: '#dfd4ff'
+      rgb:
+      - 223
+      - 212
+      - 255
+      ionization_fraction: 0.0137
+      molecular_fraction: 0.0001
+      emission_fraction: 0.0538
+      dominant: thermal incandescence
     10000:
       temp_k: 10000
       combined_hex: '#e8c8ff'
@@ -1221,6 +2299,17 @@ nh3:
       ionization_fraction: 0.0221
       molecular_fraction: 0.0001
       emission_fraction: 0.1187
+      dominant: atomic lines
+    10500:
+      temp_k: 10500
+      combined_hex: '#f6b7ff'
+      rgb:
+      - 246
+      - 183
+      - 255
+      ionization_fraction: 0.0342
+      molecular_fraction: 0.0
+      emission_fraction: 0.2266
       dominant: atomic lines
     11000:
       temp_k: 11000
@@ -1233,6 +2322,17 @@ nh3:
       molecular_fraction: 0.0
       emission_fraction: 0.3719
       dominant: atomic lines
+    11500:
+      temp_k: 11500
+      combined_hex: '#ff80ed'
+      rgb:
+      - 255
+      - 128
+      - 237
+      ionization_fraction: 0.0729
+      molecular_fraction: 0.0
+      emission_fraction: 0.5282
+      dominant: atomic lines
     12000:
       temp_k: 12000
       combined_hex: '#ff69e7'
@@ -1243,6 +2343,17 @@ nh3:
       ionization_fraction: 0.101
       molecular_fraction: 0.0
       emission_fraction: 0.6659
+      dominant: atomic lines
+    12500:
+      temp_k: 12500
+      combined_hex: '#ff58e5'
+      rgb:
+      - 255
+      - 88
+      - 229
+      ionization_fraction: 0.1359
+      molecular_fraction: 0.0
+      emission_fraction: 0.7706
       dominant: atomic lines
     13000:
       temp_k: 13000
@@ -1255,6 +2366,17 @@ nh3:
       molecular_fraction: 0.0
       emission_fraction: 0.8433
       dominant: atomic lines
+    13500:
+      temp_k: 13500
+      combined_hex: '#ff45e5'
+      rgb:
+      - 255
+      - 69
+      - 229
+      ionization_fraction: 0.2265
+      molecular_fraction: 0.0
+      emission_fraction: 0.8915
+      dominant: ionic lines
     14000:
       temp_k: 14000
       combined_hex: '#ff40e6'
@@ -1265,6 +2387,17 @@ nh3:
       ionization_fraction: 0.2815
       molecular_fraction: 0.0
       emission_fraction: 0.923
+      dominant: ionic lines
+    14500:
+      temp_k: 14500
+      combined_hex: '#ff3de8'
+      rgb:
+      - 255
+      - 61
+      - 232
+      ionization_fraction: 0.3417
+      molecular_fraction: 0.0
+      emission_fraction: 0.9437
       dominant: ionic lines
     15000:
       temp_k: 15000

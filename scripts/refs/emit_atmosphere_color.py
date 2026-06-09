@@ -29,7 +29,7 @@ import cie_color                       # noqa: E402
 import saha_boltzmann as sb            # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-TEMPS = list(range(1000, 15001, 1000))
+TEMPS = list(range(1000, 15001, 500))
 SUPPORTED = set(sb.ELEMENTS)           # H, He, C, N, O
 _FORMULA = re.compile(r"([A-Z][a-z]?)(\d*)")
 

@@ -38,8 +38,8 @@ from cie_color import rgb_to_hex       # noqa: E402
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "db" / "refs" / "plasma_temperature_colors.yaml"
 
-BB_TEMPS = list(range(1000, 20001, 1000))
-COMP_TEMPS = list(range(1000, 15001, 1000))
+BB_TEMPS = list(range(1000, 20001, 500))
+COMP_TEMPS = list(range(1000, 15001, 500))
 
 LABELS = {
     "air":   ("N2 / O2 (Earth-like)", "N2 / O2 (지구형)"),
@@ -123,7 +123,7 @@ def build() -> dict:
 
 
 HEADER = """\
-# Plasma emission color vs temperature (1000K steps), per bulk composition.
+# Plasma emission color vs temperature (500K steps), per bulk composition.
 #
 # FIRST-PRINCIPLES LTE — built by scripts/refs/build_plasma_temperature_colors.py
 # from the saha_boltzmann.py engine. Read the engine docstring for the model.
