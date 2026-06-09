@@ -5872,5 +5872,87 @@
       "notes": "Distance disputed: raw VLBI parallax 4.17 mas -> 240 pc (Deller 2009), Lutz-Kelker-corrected best ~210 pc (Verbiest 2012); legacy DM ~130 pc superseded. Pdot/tau/B from Pavlov 2009 (ATNF timing differs ~2x). X-ray kT: XMM 0.11 keV (Posselt 2012) vs Chandra 0.28 keV (Pavlov 2009). M/R canonical, not measured."
     },
     "meta_notes": "Nearest known radio pulsar (Cetus), ~210-240 pc (~685 ly) — far beyond the 50 ly Kopernicus cap; beyond-implementation-range data / Phase-3 entry (intentional exception), NOT a KSP target. Ordinary (non-recycled), old (~168 Myr characteristic age), faint, near the radio death line. Astrometry from VLBI (Deller et al. 2009), not Gaia — optically far below Gaia's limit. Solitary: no planets (IR companion search to ~5000 AU, Posselt 2008/09)."
+  },
+  "Luhman 16 A": {
+    "teff_k": 1310,
+    "spectype": "L7.5",
+    "mass_measurements": [
+      {
+        "value_msun": 0.032,
+        "uncertainty_msun": 0.0003,
+        "method": "binary_orbit",
+        "reference": "Lazorenko & Sahlmann 2018",
+        "bibcode": "2018A&A...618A.111L",
+        "doi": "10.1051/0004-6361/201833626",
+        "recommended": true
+      }
+    ]
+  },
+  "Luhman 16 B": {
+    "teff_k": 1280,
+    "spectype": "T0.5",
+    "mass_measurements": [
+      {
+        "value_msun": 0.0273,
+        "uncertainty_msun": 0.0003,
+        "method": "binary_orbit",
+        "reference": "Lazorenko & Sahlmann 2018",
+        "bibcode": "2018A&A...618A.111L",
+        "doi": "10.1051/0004-6361/201833626",
+        "recommended": true
+      }
+    ]
+  },
+  "eps Ind Ba": {
+    "teff_k": 1320,
+    "spectype": "T1.5",
+    "mass_measurements": [
+      {
+        "value_msun": 0.0639,
+        "uncertainty_msun": 0.0003,
+        "method": "binary_orbit",
+        "reference": "Chen et al. 2022",
+        "bibcode": "2022AJ....163..288C",
+        "doi": "10.3847/1538-3881/ac66d2",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.0805,
+        "uncertainty_rsun": 0.0005,
+        "method": "evolutionary_model",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": true
+      }
+    ]
+  },
+  "eps Ind Bb": {
+    "teff_k": 910,
+    "spectype": "T6",
+    "mass_measurements": [
+      {
+        "value_msun": 0.0508,
+        "uncertainty_msun": 0.0003,
+        "method": "binary_orbit",
+        "reference": "Chen et al. 2022",
+        "bibcode": "2022AJ....163..288C",
+        "doi": "10.3847/1538-3881/ac66d2",
+        "recommended": true
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.0825,
+        "uncertainty_rsun": 0.0005,
+        "method": "evolutionary_model",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": true
+      }
+    ]
   }
 }

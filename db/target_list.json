@@ -2005,7 +2005,10 @@
       "6117085769513415168"
     ],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "V1400 Centauri": null
+    }
   },
   {
     "system": "PSR J0108-1431",
@@ -2014,6 +2017,43 @@
     ],
     "gaia_source_ids": [],
     "hip_ids": [],
-    "binary": false
+    "binary": false,
+    "stellarium_ids": {
+      "PSR J0108-1431": null
+    }
+  },
+  {
+    "system": "Luhman 16",
+    "components": [
+      "Luhman 16 A",
+      "Luhman 16 B"
+    ],
+    "gaia_source_ids": [
+      "5353626573555863424",
+      null
+    ],
+    "hip_ids": [],
+    "binary": true,
+    "stellarium_ids": {
+      "Luhman 16 A": null,
+      "Luhman 16 B": null
+    }
+  },
+  {
+    "system": "eps Ind B",
+    "components": [
+      "eps Ind Ba",
+      "eps Ind Bb"
+    ],
+    "gaia_source_ids": [
+      "6412596012146801152",
+      null
+    ],
+    "hip_ids": [],
+    "binary": true,
+    "stellarium_ids": {
+      "eps Ind Ba": null,
+      "eps Ind Bb": null
+    }
   }
 ]

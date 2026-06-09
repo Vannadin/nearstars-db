@@ -10,6 +10,37 @@ SIMBAD_TAP = "https://simbad.u-strasbg.fr/simbad/sim-tap/sync"
 JD_GAIA   = 2457389.0   # J2016.0
 JD_J2000  = 2451545.0   # J2000.0
 
+# ── 수동 astrometry override ────────────────────────────────────────────────
+# Gaia DR3 가 5-parameter 해를 못 주는 천체 (빠르고 흐린 갈색왜성 쌍, Gaia 미탐재
+# 컴포넌트) 의 명시적 천체측정. HIPPARCOS_V(측광)·SIMBAD 폴백과 같은 패턴 —
+# Gaia/SIMBAD 가 데이터를 못 줄 때의 출처-기반 보강. 형제 컴포넌트는 같은 거리/
+# 고유운동을 공유하므로 시스템 값을 부여하고, AU 규모 상대 위치는 binary_orbit 가
+# 결정한다 (build 의 kepler_thiele_innes 경로). results[name] 을 통째로 대체.
+MANUAL_ASTROMETRY = {
+    # Luhman 16 AB — Gaia DR3 5353626573555863424 는 2-param 해만 (parallax/PM null)
+    # for this fast (~2.8"/yr), faint, ~1.5" blended pair. Position = Gaia DR3 ICRS;
+    # parallax/PM = Lazorenko & Sahlmann 2018 (A&A 618 A111; arXiv 1808.07835).
+    "Luhman 16 A": {
+        "ra_deg": 162.3084022291181, "dec_deg": -53.3180447534979,
+        "parallax_mas": 501.557, "pmra_mas_yr": -2767.502, "pmdec_mas_yr": 356.856,
+        "radial_velocity_km_s": None,
+        "ref": "Lazorenko & Sahlmann 2018 (parallax/PM) + Gaia DR3 (position)",
+    },
+    "Luhman 16 B": {
+        "ra_deg": 162.3084022291181, "dec_deg": -53.3180447534979,
+        "parallax_mas": 501.557, "pmra_mas_yr": -2767.502, "pmdec_mas_yr": 356.856,
+        "radial_velocity_km_s": None,
+        "ref": "sibling of Luhman 16 A (Lazorenko & Sahlmann 2018); relative position from binary_orbit",
+    },
+    # eps Ind Bb — Gaia 미탐재 (Ba+Bb ~0.7" 미분해). Ba 의 Gaia DR3 값을 형제로 공유.
+    "eps Ind Bb": {
+        "ra_deg": 331.07645259656397, "dec_deg": -56.79381206688221,
+        "parallax_mas": 270.6580324694526, "pmra_mas_yr": 3981.97666296105,
+        "pmdec_mas_yr": -2466.8318147663504, "radial_velocity_km_s": None,
+        "ref": "sibling of eps Ind Ba (Gaia DR3 6412596012146801152); relative position from binary_orbit",
+    },
+}
+
 
 def tap_post(endpoint, query, timeout=60):
     data = urllib.parse.urlencode(
@@ -186,6 +217,32 @@ for entry in target_list:
         # source 표기 명시
         r["sibling_backfill"] = f"parallax/rv from {primary}"
         print(f"  sibling backfill: {c} ← {primary} (plx={plx})")
+
+# ── 수동 override 적용 (Gaia/SIMBAD/backfill 보다 우선) ───────────────────────
+print("\n수동 astrometry override:")
+for name, m in MANUAL_ASTROMETRY.items():
+    if name not in star_to_gaia:
+        continue  # target_list 에 없는 이름은 무시
+    results[name] = {
+        "source":                "manual",
+        "source_id":             None,
+        "epoch_jd":              JD_GAIA,
+        "epoch_label":           "J2016.0",
+        "ra_deg":                m["ra_deg"],
+        "ra_error_mas":          None,
+        "dec_deg":               m["dec_deg"],
+        "dec_error_mas":         None,
+        "parallax_mas":          m["parallax_mas"],
+        "parallax_error_mas":    None,
+        "pmra_mas_yr":           m["pmra_mas_yr"],
+        "pmra_error_mas_yr":     None,
+        "pmdec_mas_yr":          m["pmdec_mas_yr"],
+        "pmdec_error_mas_yr":    None,
+        "radial_velocity_km_s":  m.get("radial_velocity_km_s"),
+        "rv_error_km_s":         None,
+        "manual_ref":            m["ref"],
+    }
+    print(f"  {name}: plx={m['parallax_mas']} mas ({m['ref']})")
 
 # ── 저장 ──────────────────────────────────────────────────────────────────────
 missing_total = [n for n in star_to_gaia if n not in results]

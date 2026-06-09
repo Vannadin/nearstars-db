@@ -30,7 +30,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["Alpha Centauri A", "Alpha Centauri B"],
+        "relates": [
+          "Alpha Centauri A",
+          "Alpha Centauri B"
+        ],
         "primary": "Alpha Centauri A",
         "secondary": "Alpha Centauri B",
         "source": "Pourbaix & Correia (2017) / Kervella et al. (2016)",
@@ -57,15 +60,21 @@
       },
       {
         "orbit_id": "AB-Proxima",
-        "relates": ["Alpha Centauri AB (barycenter)", "Proxima Cen"],
-        "primary_is_barycenter_of": ["Alpha Centauri A", "Alpha Centauri B"],
+        "relates": [
+          "Alpha Centauri AB (barycenter)",
+          "Proxima Cen"
+        ],
+        "primary_is_barycenter_of": [
+          "Alpha Centauri A",
+          "Alpha Centauri B"
+        ],
         "secondary": "Proxima Cen",
         "source": "Kervella, Thévenin & Lovis (2017)",
         "doi": "10.1051/0004-6361/201629930",
         "bibcode": "2017A&A...598L...7K",
         "equinox": "J2000",
         "P_yr": 547000,
-        "e": 0.50,
+        "e": 0.5,
         "a_au": 8700,
         "i_deg": 107.6,
         "omega_deg": 72.3,
@@ -77,7 +86,6 @@
       }
     ]
   },
-
   "Sirius": {
     "system_id": "sirius",
     "hierarchy": "binary",
@@ -102,7 +110,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["Sirius A", "Sirius B"],
+        "relates": [
+          "Sirius A",
+          "Sirius B"
+        ],
         "primary": "Sirius A",
         "secondary": "Sirius B",
         "source": "Bond et al. (2017)",
@@ -129,7 +140,6 @@
       }
     ]
   },
-
   "61 Cygni": {
     "system_id": "61_cygni",
     "hierarchy": "binary",
@@ -153,7 +163,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["61 Cygni A", "61 Cygni B"],
+        "relates": [
+          "61 Cygni A",
+          "61 Cygni B"
+        ],
         "primary": "61 Cygni A",
         "secondary": "61 Cygni B",
         "source": "Strand (1952) / Walker (1995) via ORB6",
@@ -180,7 +193,6 @@
       }
     ]
   },
-
   "40 Eridani": {
     "system_id": "40_eridani",
     "hierarchy": "triple",
@@ -212,7 +224,10 @@
     "orbits": [
       {
         "orbit_id": "BC",
-        "relates": ["40 Eridani B", "40 Eridani C"],
+        "relates": [
+          "40 Eridani B",
+          "40 Eridani C"
+        ],
         "primary": "40 Eridani B",
         "secondary": "40 Eridani C",
         "source": "Mason, Hartkopf & Miles (2017)",
@@ -223,10 +238,10 @@
         "P_yr_err": 0.68,
         "T_jd_tt": 2395929.775,
         "T_yr": 1847.7338,
-        "e": 0.4300,
+        "e": 0.43,
         "e_err": 0.0027,
-        "a_arcsec": 6.930,
-        "a_arcsec_err": 0.050,
+        "a_arcsec": 6.93,
+        "a_arcsec_err": 0.05,
         "i_deg": 107.56,
         "i_err_deg": 0.29,
         "omega_deg": 318.4,
@@ -240,7 +255,6 @@
       }
     ]
   },
-
   "Eta Cassiopeiae": {
     "system_id": "eta_cassiopeiae",
     "hierarchy": "binary",
@@ -264,7 +278,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["Eta Cassiopeiae A", "Eta Cassiopeiae B"],
+        "relates": [
+          "Eta Cassiopeiae A",
+          "Eta Cassiopeiae B"
+        ],
         "primary": "Eta Cassiopeiae A",
         "secondary": "Eta Cassiopeiae B",
         "source": "Tokovinin (2021) / ORB6 recent",
@@ -291,7 +308,6 @@
       }
     ]
   },
-
   "36 Ophiuchi": {
     "system_id": "36_ophiuchi",
     "hierarchy": "triple",
@@ -323,7 +339,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["36 Ophiuchi A", "36 Ophiuchi B"],
+        "relates": [
+          "36 Ophiuchi A",
+          "36 Ophiuchi B"
+        ],
         "primary": "36 Ophiuchi A",
         "secondary": "36 Ophiuchi B",
         "source": "Heintz (1990) via ORB6",
@@ -350,7 +369,6 @@
       }
     ]
   },
-
   "Procyon": {
     "system_id": "procyon",
     "hierarchy": "binary",
@@ -375,7 +393,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["Procyon A", "Procyon B"],
+        "relates": [
+          "Procyon A",
+          "Procyon B"
+        ],
         "primary": "Procyon A",
         "secondary": "Procyon B",
         "source": "Bond et al. (2015) HST astrometry",
@@ -383,10 +404,10 @@
         "bibcode": "2015ApJ...813..106B",
         "equinox": "J2000",
         "P_yr": 40.84,
-        "P_yr_err": 0.10,
+        "P_yr_err": 0.1,
         "T_jd_tt": 2439904.5,
         "T_yr": 1968.13,
-        "e": 0.4060,
+        "e": 0.406,
         "e_err": 0.0031,
         "a_arcsec": 4.299,
         "a_arcsec_err": 0.012,
@@ -395,7 +416,7 @@
         "omega_deg": 269.5,
         "omega_err_deg": 0.8,
         "Omega_deg": 96.97,
-        "Omega_err_deg": 0.30,
+        "Omega_err_deg": 0.3,
         "grade": 1,
         "node_resolved": true,
         "phase_reliable": true,
@@ -403,7 +424,6 @@
       }
     ]
   },
-
   "70 Ophiuchi": {
     "system_id": "70_ophiuchi",
     "hierarchy": "binary",
@@ -427,7 +447,10 @@
     "orbits": [
       {
         "orbit_id": "AB",
-        "relates": ["70 Ophiuchi A", "70 Ophiuchi B"],
+        "relates": [
+          "70 Ophiuchi A",
+          "70 Ophiuchi B"
+        ],
         "primary": "70 Ophiuchi A",
         "secondary": "70 Ophiuchi B",
         "source": "Eggenberger et al. (2008)",
@@ -440,7 +463,7 @@
         "T_yr": 2027.31,
         "e": 0.4992,
         "e_err": 0.0005,
-        "a_arcsec": 4.5470,
+        "a_arcsec": 4.547,
         "a_arcsec_err": 0.0064,
         "i_deg": 122.92,
         "i_err_deg": 0.06,
@@ -455,7 +478,112 @@
       }
     ]
   },
-
+  "Luhman 16": {
+    "system_id": "luhman_16",
+    "hierarchy": "binary",
+    "components": [
+      {
+        "name": "Luhman 16 A",
+        "mass_msun": 0.032,
+        "mass_source": "lazorenko_sahlmann_2018",
+        "astrometry_source": "single_component:Luhman 16 A",
+        "astrometry_quality": "photocenter_contaminated",
+        "astrometry_note": "Gaia DR3 5353626573555863424 yielded only a 2-parameter solution (null parallax/PM) for this fast (~2.8 arcsec/yr), faint, ~1.5-arcsec blended pair, so both components use a MANUAL_ASTROMETRY override (fetch_astrometry.py): Gaia DR3 ICRS position + L&S2018 parallax 501.557 mas / PM. Barycenter approximated by Luhman 16 A (single_component); A-B split via the L&S2018 relative orbit + mass ratio (same approximation as Sirius)."
+      },
+      {
+        "name": "Luhman 16 B",
+        "mass_msun": 0.0273,
+        "mass_source": "lazorenko_sahlmann_2018",
+        "astrometry_source": "single_component:Luhman 16 A",
+        "astrometry_quality": "photocenter_contaminated"
+      }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": [
+          "Luhman 16 A",
+          "Luhman 16 B"
+        ],
+        "primary": "Luhman 16 A",
+        "secondary": "Luhman 16 B",
+        "source": "Lazorenko & Sahlmann (2018)",
+        "doi": "10.1051/0004-6361/201833626",
+        "bibcode": "2018A&A...618A.111L",
+        "equinox": "J2000",
+        "P_yr": 27.54,
+        "P_yr_err": 0.4,
+        "T_jd_tt": 2458039.1,
+        "T_yr": 2017.78,
+        "e": 0.343,
+        "e_err": 0.005,
+        "a_au": 3.557,
+        "i_deg": 100.26,
+        "i_err_deg": 0.05,
+        "omega_deg": 128.1,
+        "omega_err_deg": 1.5,
+        "Omega_deg": 139.67,
+        "Omega_err_deg": 0.05,
+        "grade": 1,
+        "node_resolved": true,
+        "phase_reliable": true,
+        "note": "L&S2018 'final' solution (FORS2+HST+GeMS+Gaia, incl. 1984 ESO-R plate). Relative-orbit a=1784 mas=3.557 AU; Kepler-consistent Mtot=62.06 MJup. i,Omega in L&S clockwise convention (=180-i,270-Omega vs Bedin2017/Garcia2017). Bedin2024 alternate (a=3.426AU,P=25.5yr,e=0.326,Mtot=64.7MJup) not locally cacheable (ar5iv empty); masses agree within ~5%."
+      }
+    ]
+  },
+  "eps Ind B": {
+    "system_id": "eps_ind_b",
+    "hierarchy": "binary",
+    "components": [
+      {
+        "name": "eps Ind Ba",
+        "mass_msun": 0.0639,
+        "mass_source": "chen_2022",
+        "astrometry_source": "single_component:eps Ind Ba",
+        "astrometry_quality": "photocenter_contaminated",
+        "astrometry_note": "Gaia DR3 6412596012146801152 is the single catalogued source for the ~0.7-arcsec Ba+Bb pair; used as the system anchor. Wide common-proper-motion companion to eps Ind A (1459 AU, Scholz 2003); the A-B orbit is not modeled (period >5e4 yr, negligible at epoch -- cf. Proxima/Alpha Cen grouping note)."
+      },
+      {
+        "name": "eps Ind Bb",
+        "mass_msun": 0.0508,
+        "mass_source": "chen_2022",
+        "astrometry_source": "single_component:eps Ind Ba",
+        "astrometry_quality": "photocenter_contaminated"
+      }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "BaBb",
+        "relates": [
+          "eps Ind Ba",
+          "eps Ind Bb"
+        ],
+        "primary": "eps Ind Ba",
+        "secondary": "eps Ind Bb",
+        "source": "Chen et al. (2022)",
+        "doi": "10.3847/1538-3881/ac66d2",
+        "bibcode": "2022AJ....163..288C",
+        "equinox": "J2000",
+        "P_yr": 11.0197,
+        "P_yr_err": 0.0076,
+        "T_jd_tt": 2455197.5,
+        "T_yr": 2010.0,
+        "e": 0.54042,
+        "e_err": 0.00063,
+        "a_au": 2.4058,
+        "i_deg": 77.082,
+        "i_err_deg": 0.032,
+        "omega_deg": 328.27,
+        "omega_err_deg": 0.12,
+        "Omega_deg": 147.959,
+        "Omega_err_deg": 0.023,
+        "grade": 2,
+        "node_resolved": true,
+        "phase_reliable": false,
+        "note": "Chen2022 Table 4 (orvara MCMC; ~full-period NACO+FORS2 coverage, reduced chi2=1.00). All shape/size/orientation elements from Chen2022. T0 (time of periastron) is NOT tabulated in the paper (corner-plot only) -> phase_reliable=false and T_jd_tt is a placeholder (=ref epoch 2010.0). Orbit phase at the build epoch is unreliable; Principia integrates forward. Masses Chen2022 66.92/53.25 MJup; revision history: Dieterich2018 75.0/70.1 (higher), Cardoso2012."
+      }
+    ]
+  },
   "_principia_notes": {
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0 (1950-Jan-01)",

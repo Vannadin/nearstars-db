@@ -1,0 +1,142 @@
+{
+  "system_name": "eps Ind Bb",
+  "stars": [
+    {
+      "name": "eps Ind Bb",
+      "component": null,
+      "raw": {
+        "source": "manual",
+        "source_id": null,
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 331.07645259656397,
+        "dec_deg": -56.79381206688221,
+        "parallax_mas": 270.6580324694526,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": 3981.97666296105,
+        "pmdec_mas_yr": -2466.8318147663504,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "manual (RV 없음 → 0으로 처리)",
+        "vmag_v": null,
+        "vmag_source": null,
+        "teff_k": 910,
+        "spectype": "T6",
+        "mass_measurements": [
+          {
+            "value_msun": 0.0508,
+            "uncertainty_msun": 0.0003,
+            "method": "binary_orbit",
+            "reference": "Chen et al. 2022",
+            "bibcode": "2022AJ....163..288C",
+            "doi": "10.3847/1538-3881/ac66d2",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.0825,
+            "uncertainty_rsun": 0.0005,
+            "method": "evolutionary_model",
+            "reference": "King et al. 2010",
+            "bibcode": "2010A&A...510A..99K",
+            "doi": "10.1051/0004-6361/200912981",
+            "recommended": true
+          }
+        ],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
+        "stellarium_id": null
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "kepler_thiele_innes",
+        "distance_pc": 3.6946991407427134,
+        "distance_km": 114006503089438.52,
+        "icrs_x_km": 54643945965654.055,
+        "icrs_y_km": -30360544343825.656,
+        "icrs_z_km": -95340531334015.1,
+        "icrs_vx_km_s": 1.453619309527954,
+        "icrs_vy_km_s": 79.01012030983124,
+        "icrs_vz_km_s": -20.08988133792028,
+        "position_ulp_km": 0.02116985061340395,
+        "icrs_x_j2000_km": 54647116468444.41,
+        "icrs_y_j2000_km": -30236357354811.766,
+        "icrs_z_j2000_km": -95378029381476.8,
+        "icrs_vx_j2000_km_s": 3.9108833460195807,
+        "icrs_vy_j2000_km_s": 75.41238327652577,
+        "icrs_vz_j2000_km_s": -25.705698877763854,
+        "orbit_id": "BaBb",
+        "orbit_role": "secondary",
+        "mass_ratio_q": 0.5571054925893636,
+        "barycenter_method": "single_component(eps Ind Ba)",
+        "phase_reliable": false,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 6741791952.914,
+        "mean_radius_km": 57395.2
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Chen et al. 2022",
+      "doi": "10.3847/1538-3881/ac66d2",
+      "bibcode": "2022AJ....163..288C",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "eps Ind Bb mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "King et al. 2010",
+      "doi": "10.1051/0004-6361/200912981",
+      "bibcode": "2010A&A...510A..99K",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "eps Ind Bb radius (evolutionary_model)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-06-09",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433647.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": "Binary orbit BaBb flagged phase_reliable=false — relative geometry of components may differ from real configuration at JD2433282.5. Principia N-body simulation will correct dynamically."
+  },
+  "binary_orbit_ref": "eps_ind_ba.json"
+}

@@ -1,0 +1,39 @@
+host: Luhman 16
+slug: luhman-16
+generated_at: '2026-06-09'
+note: 'Brown-dwarf binary (WISE J104915.57-531906.1 AB), nearest BD system. Anchor papers pinned by arxiv_id for the convergent
+  _papers cache (value-check for DB add-star, Phase 1). Bedin 2024 = primary (mass+orbit+parallax, self-consistent); L&S 2018
+  + Garcia 2017 = documented alternates.
+
+  '
+papers:
+- arxiv_id: '2403.08865'
+  ads_bibcode: 2024AN....34530158B
+  title: Bedin et al. 2024 - HST astrometry II; masses, relative orbit, parallax (PRIMARY)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1808.07835'
+  ads_bibcode: 2018A&A...618A.111L
+  title: Lazorenko & Sahlmann 2018 - astrometric orbit + masses (alternate, longer baseline)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1708.02714'
+  ads_bibcode: 2017ApJ...846...97G
+  title: Garcia et al. 2017 - model-independent individual masses (alternate)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1406.1518'
+  ads_bibcode: 2014ApJ...790...90F
+  title: Faherty et al. 2014 - Teff(A,B) from bolometric luminosity
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1303.2401'
+  ads_bibcode: 2013ApJ...767L...1L
+  title: Luhman 2013 - discovery, spectral types, first parallax
+  status: fetched
+  category: skim
+  fetch_error: null

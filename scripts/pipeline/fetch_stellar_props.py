@@ -75,6 +75,11 @@ SIMBAD_ALIASES = {
     "COCONUTS-2 A":               "COCONUTS-2A",
     "eps Ind A":                  "GJ 845 A",
     "WISEP J121756.91+162640.2 A":"WISE J121756.90+162640.8",
+    # Brown-dwarf binaries: SIMBAD only catalogs the unresolved pair, so the
+    # primary aliases to the system entry and the secondary (B/Bb) has no SIMBAD
+    # record -> curated-only (expected WARN; teff/spectype/mass come from curated).
+    "Luhman 16 A":                "Luhman 16",
+    "eps Ind Ba":                 "eps Ind B",
     # 50ly 이내 유명 비-호스트
     "Arcturus":                   "alf Boo",
     "Capella":                    "alf Aur",

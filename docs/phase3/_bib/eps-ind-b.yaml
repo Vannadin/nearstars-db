@@ -1,0 +1,34 @@
+host: Epsilon Indi B
+slug: eps-ind-b
+generated_at: '2026-06-09'
+note: 'T-dwarf binary (eps Ind Ba + Bb), common-proper-motion companion to eps Ind A. Anchor papers pinned by arxiv_id for
+  the convergent _papers cache (value-check for DB add-star, Phase 1). Chen 2022 = primary (mass+orbit+parallax); King 2010
+  = Teff/radii (evolutionary); Dieterich 2018 / Cardoso 2012 = documented mass-revision history. Scholz 2003 (discovery) has
+  no arXiv.
+
+  '
+papers:
+- arxiv_id: '2205.08077'
+  ads_bibcode: 2022AJ....163..288C
+  title: Chen et al. 2022 - dynamical masses, relative orbit, parallax (PRIMARY)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0911.3143'
+  ads_bibcode: 2010A&A...510A..99K
+  title: King et al. 2010 - Teff, luminosity, evolutionary radii, spectral types
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1807.09880'
+  ads_bibcode: 2018ApJ...865...28D
+  title: Dieterich et al. 2018 - dynamical masses (alternate, higher; revision history)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: astro-ph/0309256
+  ads_bibcode: 2004A&A...413.1029M
+  title: McCaughrean et al. 2004 - discovery of Ba/Bb binarity, first parameters
+  status: fetched
+  category: skim
+  fetch_error: null

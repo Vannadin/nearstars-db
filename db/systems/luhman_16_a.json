@@ -1,0 +1,175 @@
+{
+  "system_name": "Luhman 16 A",
+  "stars": [
+    {
+      "name": "Luhman 16 A",
+      "component": "A",
+      "raw": {
+        "source": "manual",
+        "source_id": null,
+        "epoch_jd": 2457389.0,
+        "epoch_label": "J2016.0",
+        "ra_deg": 162.3084022291181,
+        "dec_deg": -53.3180447534979,
+        "parallax_mas": 501.557,
+        "parallax_error_mas": null,
+        "pmra_mas_yr": -2767.502,
+        "pmdec_mas_yr": 356.856,
+        "radial_velocity_km_s": 0.0,
+        "radial_velocity_source": "manual (RV 없음 → 0으로 처리)",
+        "vmag_v": null,
+        "vmag_source": null,
+        "teff_k": 1310,
+        "spectype": "L7.5",
+        "mass_measurements": [
+          {
+            "value_msun": 0.032,
+            "uncertainty_msun": 0.0003,
+            "method": "binary_orbit",
+            "reference": "Lazorenko & Sahlmann 2018",
+            "bibcode": "2018A&A...618A.111L",
+            "doi": "10.1051/0004-6361/201833626",
+            "recommended": true
+          }
+        ],
+        "radius_measurements": [],
+        "teff_measurements": [],
+        "luminosity_measurements": [],
+        "age_measurements": [],
+        "metallicity_measurements": [],
+        "rotation_measurements": [],
+        "activity_measurements": [],
+        "stellarium_id": null
+      },
+      "derived": {
+        "epoch_jd": 2433282.5,
+        "epoch_label": "B1950.0",
+        "propagation_method": "kepler_thiele_innes",
+        "distance_pc": 1.9937913337865885,
+        "distance_km": 61521972208363.16,
+        "icrs_x_km": -35024852915651.867,
+        "icrs_y_km": 11115138492465.006,
+        "icrs_z_km": -49342651825281.94,
+        "icrs_vx_km_s": 5.850539026306006,
+        "icrs_vy_km_s": 26.56884701697282,
+        "icrs_vz_km_s": 3.51070201093367,
+        "position_ulp_km": 0.010956269630498103,
+        "icrs_x_j2000_km": -35016358360877.387,
+        "icrs_y_j2000_km": 11155616577546.785,
+        "icrs_z_j2000_km": -49339609335268.016,
+        "icrs_vx_j2000_km_s": 4.595071078446195,
+        "icrs_vy_j2000_km_s": 27.20724469730682,
+        "icrs_vz_j2000_km_s": 2.761557973911523,
+        "orbit_id": "AB",
+        "orbit_role": "primary",
+        "mass_ratio_q": 0.46037099494097805,
+        "barycenter_method": "single_component(Luhman 16 A)",
+        "phase_reliable": true,
+        "luminosity_lsun": null,
+        "age_gyr": null,
+        "metallicity_fe_h_dex": null,
+        "rotation_period_days": null,
+        "activity_log_rhk": null,
+        "activity_h_alpha_ew_angstrom": null
+      },
+      "principia": {
+        "gravitational_parameter_km3_s2": 4246798080.576,
+        "mean_radius_km": null
+      }
+    }
+  ],
+  "planets": [],
+  "sources": [
+    {
+      "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
+      "doi": "10.1051/0004-6361/201424483",
+      "bibcode": "2014A&A...570A..62B",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "epoch propagation method"
+      ]
+    },
+    {
+      "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
+      "doi": "10.1051/aas:2000332",
+      "bibcode": "2000A&AS..143....9W",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
+      ]
+    },
+    {
+      "title": "Lazorenko & Sahlmann 2018",
+      "doi": "10.1051/0004-6361/201833626",
+      "bibcode": "2018A&A...618A.111L",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "Luhman 16 A mass (binary_orbit)"
+      ]
+    }
+  ],
+  "meta": {
+    "retrieval_date": "2026-06-09",
+    "solar_system_epoch_jd": 2433282.5,
+    "solar_system_epoch_label": "B1950.0",
+    "game_epoch_jd_sol": 2433647.5,
+    "game_epoch_jd_rss": 2433647.5,
+    "coordinate_origin": "SSB",
+    "coordinate_frame": "ICRF",
+    "coordinate_units": "km, km/s",
+    "notes": ""
+  },
+  "binary_orbit": {
+    "system_id": "luhman_16",
+    "hierarchy": "binary",
+    "components": [
+      {
+        "name": "Luhman 16 A",
+        "mass_msun": 0.032,
+        "mass_source": "lazorenko_sahlmann_2018",
+        "astrometry_source": "single_component:Luhman 16 A",
+        "astrometry_quality": "photocenter_contaminated",
+        "astrometry_note": "Gaia DR3 5353626573555863424 yielded only a 2-parameter solution (null parallax/PM) for this fast (~2.8 arcsec/yr), faint, ~1.5-arcsec blended pair, so both components use a MANUAL_ASTROMETRY override (fetch_astrometry.py): Gaia DR3 ICRS position + L&S2018 parallax 501.557 mas / PM. Barycenter approximated by Luhman 16 A (single_component); A-B split via the L&S2018 relative orbit + mass ratio (same approximation as Sirius)."
+      },
+      {
+        "name": "Luhman 16 B",
+        "mass_msun": 0.0273,
+        "mass_source": "lazorenko_sahlmann_2018",
+        "astrometry_source": "single_component:Luhman 16 A",
+        "astrometry_quality": "photocenter_contaminated"
+      }
+    ],
+    "orbits": [
+      {
+        "orbit_id": "AB",
+        "relates": [
+          "Luhman 16 A",
+          "Luhman 16 B"
+        ],
+        "primary": "Luhman 16 A",
+        "secondary": "Luhman 16 B",
+        "source": "Lazorenko & Sahlmann (2018)",
+        "doi": "10.1051/0004-6361/201833626",
+        "bibcode": "2018A&A...618A.111L",
+        "equinox": "J2000",
+        "P_yr": 27.54,
+        "P_yr_err": 0.4,
+        "T_jd_tt": 2458039.1,
+        "T_yr": 2017.78,
+        "e": 0.343,
+        "e_err": 0.005,
+        "a_au": 3.557,
+        "i_deg": 100.26,
+        "i_err_deg": 0.05,
+        "omega_deg": 128.1,
+        "omega_err_deg": 1.5,
+        "Omega_deg": 139.67,
+        "Omega_err_deg": 0.05,
+        "grade": 1,
+        "node_resolved": true,
+        "phase_reliable": true,
+        "note": "L&S2018 'final' solution (FORS2+HST+GeMS+Gaia, incl. 1984 ESO-R plate). Relative-orbit a=1784 mas=3.557 AU; Kepler-consistent Mtot=62.06 MJup. i,Omega in L&S clockwise convention (=180-i,270-Omega vs Bedin2017/Garcia2017). Bedin2024 alternate (a=3.426AU,P=25.5yr,e=0.326,Mtot=64.7MJup) not locally cacheable (ar5iv empty); masses agree within ~5%."
+      }
+    ]
+  }
+}
