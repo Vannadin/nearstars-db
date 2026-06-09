@@ -456,6 +456,21 @@ SOL_BODIES = [
      "firefly": {"shockwave": (191, 99, 62), "wrap_layer": (191, 127, 52),
                  "trail_primary": (191, 99, 63), "trail_secondary": (191, 70, 33),
                  "trail_tertiary": (86, 93, 191)}},
+    {"name": "Saturn", "label": "H2/He", "v": 35.5, "ff_note": "Firefly copies Jupiter",
+     "species": [("H2", 96.3), ("He", 3.25)],
+     "firefly": {"shockwave": (11, 29, 191), "wrap_layer": (143, 25, 191),
+                 "trail_primary": (136, 98, 191), "trail_secondary": (36, 7, 191),
+                 "trail_tertiary": (128, 27, 191)}},
+    {"name": "Uranus", "label": "H2/He/CH4", "v": 21.3, "ff_note": "Firefly copies Neptune",
+     "species": [("H2", 83), ("He", 15), ("CH4", 2.3)],
+     "firefly": {"shockwave": (64, 41, 191), "wrap_layer": (191, 19, 110),
+                 "trail_primary": (141, 91, 191), "trail_secondary": (90, 8, 191),
+                 "trail_tertiary": (191, 138, 68)}},
+    {"name": "Neptune", "label": "H2/He/CH4", "v": 23.5,
+     "species": [("H2", 80), ("He", 19), ("CH4", 1.5)],
+     "firefly": {"shockwave": (64, 41, 191), "wrap_layer": (191, 19, 110),
+                 "trail_primary": (141, 91, 191), "trail_secondary": (90, 8, 191),
+                 "trail_tertiary": (191, 138, 68)}},
 ]
 
 
@@ -480,7 +495,8 @@ def render_sol_comparison() -> str:
                     f'<div class="sol-sws">{sw}</div></div>')
         cards.append(
             f'<div class="sol-card"><h4>{b["name"]} '
-            f'<span class="muted">{b["label"]} · {b["v"]:g} km/s</span></h4>'
+            f'<span class="muted">{b["label"]} · {b["v"]:g} km/s'
+            f'{(" · " + b["ff_note"]) if b.get("ff_note") else ""}</span></h4>'
             + swrow(lambda s: ours.get(s), "sol_ours")
             + swrow(lambda s: b["firefly"].get(s), "sol_firefly")
             + '</div>'
