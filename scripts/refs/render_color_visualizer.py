@@ -281,24 +281,25 @@ def render_streak_table() -> str:
 
 def render_plasma_temp_grid() -> str:
     data = yaml.safe_load(PLASMA_TEMP_DB.read_text(encoding="utf-8"))
-    cell = ("display:inline-block;width:34px;height:26px;font-size:9px;"
+    cell = ("display:inline-block;vertical-align:top;width:34px;height:26px;font-size:9px;"
             "text-align:center;line-height:26px")
-    head = "display:inline-block;width:34px;font-size:9px;text-align:center;color:#888"
+    head = "display:inline-block;vertical-align:top;width:34px;font-size:9px;text-align:center;color:#888"
     lab = "flex:0 0 150px;font-size:12px"
-    row = "display:flex;align-items:center;margin:2px 0"
+    row = "display:flex;align-items:center;margin:2px 0;white-space:nowrap"
 
-    bb = data["_blackbody"]
+    comp_keys = [k for k in data if not k.startswith("_")]
+    temps = sorted(data[comp_keys[0]]["colors"].keys())
+
+    bb = data["_blackbody"]                       # cap the strip to the data range
     bb_cells = "".join(
-        f'<div style="{cell};background:{e["hex"]};color:{text_on(e["hex"])}" '
-        f'title="{t}K · {e["hex"]} · {e.get("note","")}">'
+        f'<div style="{cell};background:{bb[t]["hex"]};color:{text_on(bb[t]["hex"])}" '
+        f'title="{t}K · {bb[t]["hex"]} · {bb[t].get("note","")}">'
         f'{(str(t//1000)+"k") if t % 1000 == 0 else ""}</div>'
-        for t, e in bb.items()
+        for t in temps
     )
     bb_row = (f'<div style="{row}"><div style="{lab}" data-i18n="bt_blackbody"></div>'
               f'<div>{bb_cells}</div></div>')
 
-    comp_keys = [k for k in data if not k.startswith("_")]
-    temps = sorted(data[comp_keys[0]]["colors"].keys())
     header = (f'<div style="{row}"><div style="{lab}"></div><div>'
               + "".join(f'<div style="{head}">{(str(t//1000)+"k") if t % 1000 == 0 else ""}</div>'
                         for t in temps)
@@ -331,11 +332,11 @@ def render_element_temp_grid() -> str:
     if not ELEMENT_TEMP_DB.exists():
         return ""
     data = yaml.safe_load(ELEMENT_TEMP_DB.read_text(encoding="utf-8"))
-    cell = ("display:inline-block;width:30px;height:20px;font-size:8px;"
+    cell = ("display:inline-block;vertical-align:top;width:30px;height:20px;font-size:8px;"
             "text-align:center;line-height:20px")
-    head = "display:inline-block;width:30px;font-size:8px;text-align:center;color:#888"
+    head = "display:inline-block;vertical-align:top;width:30px;font-size:8px;text-align:center;color:#888"
     lab = "flex:0 0 84px;font-size:11px"
-    row = "display:flex;align-items:center;margin:1px 0"
+    row = "display:flex;align-items:center;margin:1px 0;white-space:nowrap"
 
     elems = data["elements"]
     temps = sorted(next(iter(elems.values()))["colors"].keys())
