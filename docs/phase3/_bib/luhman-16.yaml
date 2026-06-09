@@ -37,3 +37,27 @@ papers:
   status: fetched
   category: skim
   fetch_error: null
+- arxiv_id: '1304.0481'
+  ads_bibcode: 2013A&A...555L...5G
+  title: Gillon et al. 2013 - first variability, P_rot(B)=4.87 hr (rotation primary)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2101.02253'
+  ads_bibcode: 2021ApJ...906...64A
+  title: Apai et al. 2021 - TESS rotation B=5.28 hr, A~6.94 hr tentative
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1401.8145'
+  ads_bibcode: 2014Natur.505..654C
+  title: Crossfield et al. 2014 - Doppler surface map, v sin i, adopts B=4.9 hr
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1510.08099'
+  ads_bibcode: 2015A&A...584A.104M
+  title: Mancini et al. 2015 - B=5.1 hr, A~8 hr tentative
+  status: fetched
+  category: deep_read
+  fetch_error: null

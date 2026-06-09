@@ -30,14 +30,85 @@
             "bibcode": "2018A&A...618A.111L",
             "doi": "10.1051/0004-6361/201833626",
             "recommended": true
+          },
+          {
+            "value_msun": 0.0281,
+            "uncertainty_msun": 0.0002,
+            "method": "binary_orbit",
+            "reference": "Bedin et al. 2024",
+            "bibcode": "2024AN....34530158B",
+            "doi": "10.1002/asna.20230158",
+            "recommended": false
+          },
+          {
+            "value_msun": 0.0266,
+            "uncertainty_msun": 0.001,
+            "method": "binary_orbit",
+            "reference": "Garcia et al. 2017",
+            "bibcode": "2017ApJ...846...97G",
+            "doi": "10.3847/1538-4357/aa844f",
+            "recommended": false
           }
         ],
-        "radius_measurements": [],
-        "teff_measurements": [],
-        "luminosity_measurements": [],
-        "age_measurements": [],
+        "radius_measurements": [
+          {
+            "value_rsun": 0.09,
+            "uncertainty_rsun": 0.01,
+            "method": "evolutionary_model",
+            "reference": "Faherty et al. 2014",
+            "bibcode": "2014ApJ...790...90F",
+            "doi": "10.1088/0004-637X/790/2/90",
+            "arxiv": "1406.1518",
+            "recommended": true,
+            "notes": "Assumed 0.9 R_Jup (= 0.090 Rsun, Faherty 2014 / Vrba 2004 prescription); no measured radius. Standard field-BD radius assumption, not a measurement."
+          }
+        ],
+        "teff_measurements": [
+          {
+            "value_k": 1280,
+            "uncertainty_k": 75,
+            "method": "sed_fitting",
+            "reference": "Faherty et al. 2014",
+            "bibcode": "2014ApJ...790...90F",
+            "doi": "10.1088/0004-637X/790/2/90",
+            "recommended": true
+          }
+        ],
+        "luminosity_measurements": [
+          {
+            "value_lsun": 1.95e-05,
+            "uncertainty_lsun": 4.5e-06,
+            "method": "bolometric_flux",
+            "reference": "Faherty et al. 2014",
+            "bibcode": "2014ApJ...790...90F",
+            "doi": "10.1088/0004-637X/790/2/90",
+            "recommended": true
+          }
+        ],
+        "age_measurements": [
+          {
+            "value_gyr": 1.5,
+            "uncertainty_gyr": 1.5,
+            "method": "unverified",
+            "reference": "Faherty et al. 2014",
+            "bibcode": "2014ApJ...790...90F",
+            "doi": "10.1088/0004-637X/790/2/90",
+            "recommended": true
+          }
+        ],
         "metallicity_measurements": [],
-        "rotation_measurements": [],
+        "rotation_measurements": [
+          {
+            "value_days": 0.2029,
+            "uncertainty_days": 0.0004,
+            "method": "photometric_variability",
+            "reference": "Gillon et al. 2013",
+            "bibcode": "2013A&A...555L...5G",
+            "doi": "10.1051/0004-6361/201321620",
+            "recommended": true,
+            "notes": "P_rot = 4.87 +/- 0.01 hr (Gillon 2013, first detection of BD weather variability; 1304.0481.md:7,39), peak-to-peak amplitude ~11%, attributed to the cooler T-dwarf component. Multi-peaked / epoch-dependent (high-speed jets): Apai 2021 TESS recovers a dominant 5.28 hr over ~100 rotations (2101.02253.md:89); true rotation ~4.9-5.3 hr. Mancini 2015 = 5.1 hr."
+          }
+        ],
         "activity_measurements": [],
         "stellarium_id": null
       },
@@ -65,16 +136,16 @@
         "mass_ratio_q": 0.5396290050590219,
         "barycenter_method": "single_component(Luhman 16 A)",
         "phase_reliable": true,
-        "luminosity_lsun": null,
-        "age_gyr": null,
+        "luminosity_lsun": 1.95e-05,
+        "age_gyr": 1.5,
         "metallicity_fe_h_dex": null,
-        "rotation_period_days": null,
+        "rotation_period_days": 0.2029,
         "activity_log_rhk": null,
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
         "gravitational_parameter_km3_s2": 3623049612.491,
-        "mean_radius_km": null
+        "mean_radius_km": 62613.0
       }
     }
   ],
@@ -105,6 +176,33 @@
       "accessed": "2026-06-09",
       "used_for": [
         "Luhman 16 B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Bedin et al. 2024",
+      "doi": "10.1002/asna.20230158",
+      "bibcode": "2024AN....34530158B",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "Luhman 16 B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Garcia et al. 2017",
+      "doi": "10.3847/1538-4357/aa844f",
+      "bibcode": "2017ApJ...846...97G",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "Luhman 16 B mass (binary_orbit)"
+      ]
+    },
+    {
+      "title": "Faherty et al. 2014",
+      "doi": "10.1088/0004-637X/790/2/90",
+      "bibcode": "2014ApJ...790...90F",
+      "accessed": "2026-06-09",
+      "used_for": [
+        "Luhman 16 B radius (evolutionary_model)"
       ]
     }
   ],
