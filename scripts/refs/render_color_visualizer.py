@@ -422,6 +422,75 @@ def render_firefly_stock() -> str:
             + "".join(rows))
 
 
+# ── Sol planets: our engine vs Firefly's hand-tuned cfg (side-by-side) ──
+
+SOL_SLOTS = ["shockwave", "wrap_layer", "trail_primary", "trail_secondary", "trail_tertiary"]
+SOL_SLOT_LABEL = {"shockwave": "shock", "wrap_layer": "wrap",
+                  "trail_primary": "t1", "trail_secondary": "t2", "trail_tertiary": "t3"}
+
+# composition + entry velocity (≈ v_esc, km/s) + Firefly's RSS cfg colors
+# (verbatim from firefly-repo GameData/Firefly/Configs/RSS/*.cfg).
+SOL_BODIES = [
+    {"name": "Earth", "label": "N2/O2", "v": 11.2,
+     "species": [("N2", 78), ("O2", 21), ("Ar", 1)],
+     "firefly": {"shockwave": (74, 90, 191), "wrap_layer": (69, 69, 191),
+                 "trail_primary": (191, 99, 72), "trail_secondary": (191, 70, 42),
+                 "trail_tertiary": (74, 80, 191)}},
+    {"name": "Venus", "label": "CO2", "v": 10.36,
+     "species": [("CO2", 96.5), ("N2", 3.5)],
+     "firefly": {"shockwave": (40, 61, 191), "wrap_layer": (41, 72, 191),
+                 "trail_primary": (83, 92, 191), "trail_secondary": (40, 61, 191),
+                 "trail_tertiary": (167, 191, 157)}},
+    {"name": "Mars", "label": "CO2 (thin)", "v": 5.03,
+     "species": [("CO2", 95), ("N2", 2.7), ("Ar", 1.6)],
+     "firefly": {"shockwave": (34, 41, 191), "wrap_layer": (191, 124, 73),
+                 "trail_primary": (76, 116, 191), "trail_secondary": (151, 130, 191),
+                 "trail_tertiary": (191, 124, 73)}},
+    {"name": "Jupiter", "label": "H2/He", "v": 59.5,
+     "species": [("H2", 90), ("He", 10)],
+     "firefly": {"shockwave": (11, 29, 191), "wrap_layer": (143, 25, 191),
+                 "trail_primary": (136, 98, 191), "trail_secondary": (36, 7, 191),
+                 "trail_tertiary": (128, 27, 191)}},
+    {"name": "Titan", "label": "N2/CH4", "v": 2.64,
+     "species": [("N2", 95), ("CH4", 5)],
+     "firefly": {"shockwave": (191, 99, 62), "wrap_layer": (191, 127, 52),
+                 "trail_primary": (191, 99, 63), "trail_secondary": (191, 70, 33),
+                 "trail_tertiary": (86, 93, 191)}},
+]
+
+
+def _hex3(rgb) -> str:
+    return "#%02x%02x%02x" % (int(rgb[0]), int(rgb[1]), int(rgb[2]))
+
+
+def render_sol_comparison() -> str:
+    cards = []
+    for b in SOL_BODIES:
+        ours = engine_palette(b["species"], b["v"]) or {}
+
+        def swrow(getcol, src_key):
+            sw = ""
+            for slot in SOL_SLOTS:
+                c = getcol(slot)
+                hx = _hex3(c) if c else "#1b1b1b"
+                fg = text_on(hx) if c else "#888"
+                sw += (f'<div class="sol-sw" style="background:{hx};color:{fg}" '
+                       f'title="{slot} {hx}">{SOL_SLOT_LABEL[slot]}</div>')
+            return (f'<div class="sol-row"><span class="sol-src" data-i18n="{src_key}"></span>'
+                    f'<div class="sol-sws">{sw}</div></div>')
+        cards.append(
+            f'<div class="sol-card"><h4>{b["name"]} '
+            f'<span class="muted">{b["label"]} · {b["v"]:g} km/s</span></h4>'
+            + swrow(lambda s: ours.get(s), "sol_ours")
+            + swrow(lambda s: b["firefly"].get(s), "sol_firefly")
+            + '</div>'
+        )
+    return (
+        '<p class="muted" data-i18n="sol_comparison_caption" style="font-size:12px;margin:4px 0 8px"></p>'
+        f'<div class="sol-grid">{"".join(cards)}</div>'
+    )
+
+
 # ── Aurora color vs density/altitude (non-LTE, quenching) ──
 
 def render_aurora_grid() -> str:
@@ -626,6 +695,9 @@ def build_t(palettes):
         "h_plasma_temp": "Plasma color vs temperature (500K steps)",
         "h_element_temp": "Reentry plasma color per element vs temperature (500K steps)",
         "h_firefly_stock": "Firefly stock cfg colors (reference)",
+        "h_sol_comparison": "Sol planets — our engine vs Firefly stock",
+        "sol_comparison_caption": "Our LTE engine's reentry colors for the real Sol planets (computed from composition + escape velocity) vs Firefly's hand-tuned RSS cfg, slot by slot. shock = shockwave, wrap = wrap_layer, t1/t2/t3 = trail primary/secondary/tertiary. Hover any swatch for its hex.",
+        "sol_ours": "ours", "sol_firefly": "Firefly",
         "firefly_stock_caption": "The 9 ATMOFX_BODY Color slots in Firefly's shipped Default + Stock configs (M1rageDev/Firefly, GPL-3.0), R G B (×HDR intensity). Slots group by region: shockwave = bow shock (hottest), wrap_* = plasma envelope, trail_* = wake (inner→outer cooling), glow* = hull surface heating (material, not gas). Note the pattern: warm glow/hull + a cool blue/green shockwave & wrap — i.e. a temperature ladder. *_streak = secondary-species accents.",
         "h_aurora": "Aurora color vs altitude/density (non-LTE)",
         "h_aurora_emitters": "Aurora / airglow emitter catalog",
@@ -675,6 +747,9 @@ def build_t(palettes):
         "h_plasma_temp": "온도별 플라스마 색 (500K 간격)",
         "h_element_temp": "원소별 재진입 플라스마 색 — 온도별 (500K 간격)",
         "h_firefly_stock": "Firefly 기본 cfg 색상 (레퍼런스)",
+        "h_sol_comparison": "태양계 행성 — 우리 엔진 vs Firefly 기본",
+        "sol_comparison_caption": "실제 태양계 행성의 재진입 색을 우리 LTE 엔진(조성 + 탈출속도로 계산)으로 낸 것과 Firefly의 손튜닝 RSS cfg를 슬롯별로 비교합니다. shock = shockwave, wrap = wrap_layer, t1/t2/t3 = trail primary/secondary/tertiary. 스와치에 올리면 hex가 보입니다.",
+        "sol_ours": "우리", "sol_firefly": "Firefly",
         "firefly_stock_caption": "Firefly 기본(Default) + 스톡 cfg(M1rageDev/Firefly, GPL-3.0)의 ATMOFX_BODY 9개 Color 슬롯, R G B (×HDR 강도). 슬롯은 부위별로 묶입니다. shockwave = 활충격(최고온), wrap_* = 플라스마 envelope, trail_* = 후류(안→밖 냉각), glow* = 동체 표면 가열(가스 아닌 재료). 패턴을 보세요 — 따뜻한 glow/동체 + 차가운 청록 shockwave·wrap, 즉 온도 사다리. *_streak = 2차 종 악센트.",
         "h_aurora": "고도/밀도별 오로라 색 (비-LTE)",
         "h_aurora_emitters": "오로라 / airglow 발광종 카탈로그",
@@ -865,6 +940,18 @@ html, body {{ overflow-x: clip; }}
 .body-card .body-meta {{ font-size: 0.85rem; color: var(--fg-muted); margin: 0.25rem 0 }}
 .body-card code {{ font-family: var(--mono); color: var(--fg-primary) }}
 
+.sol-grid {{ display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 0.8rem; margin: 0.5rem 0 1rem; }}
+.sol-card {{ background: var(--bg-card); border: 1px solid var(--bd-mid);
+  border-radius: 6px; padding: 0.7rem 0.9rem; }}
+.sol-card h4 {{ margin: 0 0 0.5rem 0; font-size: 0.95rem; color: var(--fg-emph); }}
+.sol-card h4 .muted {{ font-weight: normal; font-size: 0.78rem; }}
+.sol-row {{ display: flex; align-items: center; gap: 0.5rem; margin: 3px 0; }}
+.sol-src {{ flex: 0 0 52px; font-size: 0.72rem; color: var(--fg-muted); }}
+.sol-sws {{ display: flex; gap: 3px; flex: 1; }}
+.sol-sw {{ flex: 1; min-width: 0; text-align: center; font-size: 9px;
+  line-height: 22px; height: 22px; border-radius: 3px; font-family: var(--mono); }}
+
 .lang-toggle {{ margin-left: auto }}
 .crumb a {{ color: var(--accent); text-decoration: none }}
 .crumb a:hover {{ color: var(--accent-hover); text-decoration: underline }}
@@ -921,6 +1008,18 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 </section>
 </div>
 
+<!-- Group A: LTE temperature reference grids -->
+<section>
+<h2 data-i18n="h_plasma_temp"></h2>
+{plasma_temp_grid}
+</section>
+
+<section>
+<h2 data-i18n="h_element_temp"></h2>
+{element_temp_grid}
+</section>
+
+<!-- Group B: reentry → Firefly application -->
 <section>
 <h2 data-i18n="h_bulk"></h2>
 {palettes_section}
@@ -932,28 +1031,30 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 </section>
 
 <section>
-<h2 data-i18n="h_plasma_temp"></h2>
-{plasma_temp_grid}
+<h2 data-i18n="h_sol_comparison"></h2>
+{sol_comparison}
+</section>
 
-<h2 data-i18n="h_element_temp"></h2>
-{element_temp_grid}
-
+<section>
 <h2 data-i18n="h_firefly_stock"></h2>
 {firefly_stock_grid}
-
-<div class="slider-scope">
-<h2 data-i18n="h_aurora"></h2>
-{aurora_grid}
-
-<h2 data-i18n="h_aurora_emitters"></h2>
-{aurora_emitters}
-</div>
 </section>
 
 <section>
 <h2 data-i18n="h_bodies"></h2>
 <div class="body-grid">
 {bodies_section}
+</div>
+</section>
+
+<!-- Group C: aurora (non-LTE, density axis) -->
+<section>
+<div class="slider-scope">
+<h2 data-i18n="h_aurora"></h2>
+{aurora_grid}
+
+<h2 data-i18n="h_aurora_emitters"></h2>
+{aurora_emitters}
 </div>
 </section>
 
@@ -1124,6 +1225,7 @@ def main() -> int:
     firefly_stock_grid = render_firefly_stock()
     aurora_grid = render_aurora_grid()
     aurora_emitters = render_aurora_emitters()
+    sol_comparison = render_sol_comparison()
 
     body_results = []
     for slug in sorted(p.stem for p in PHASE3_DIR.glob("*.md")):
@@ -1158,6 +1260,7 @@ def main() -> int:
         firefly_stock_grid=firefly_stock_grid,
         aurora_grid=aurora_grid,
         aurora_emitters=aurora_emitters,
+        sol_comparison=sol_comparison,
         bodies_section=bodies_section,
         t_json=t_json,
         element_temp_json=element_temp_json,
