@@ -628,6 +628,10 @@ def build_t(palettes):
         "th_ae_survival": "Survival @ density",
         "ae_forbidden": "forbidden/metastable", "ae_allowed": "allowed",
         "density_label": "Density (≈ altitude):",
+        "tip_ionz": "ionz", "tip_nodata": "no data", "tip_nocolor": "no computed temperature color",
+        "tip_atom": "-atom", "tip_nodatafor": "no data for",
+        "dom_thermal": "thermal", "dom_molecular": "molecular bands",
+        "dom_atomic": "atomic lines", "dom_ionic": "ionic",
         "aurora_caption": "Drag the density slider to scrub altitude. Aurora is NON-LTE — color is set by quenching of metastable forbidden lines, NOT temperature, so the axis is density (≈ altitude). Earth shows the real stratification: red (O ¹D 630nm, high altitude where the 114s metastable survives) → green (O ¹S 557.7nm, mid) → pink (N₂ 1st-positive bands, dense low altitude), warming at the densest rows toward the ~80-105km airglow / meteoric-metal layer (Na 589nm yellow + OH Meinel red + traces of Li/K/Ca⁺). CO₂ atmospheres quench red hard (CO₂ is a strong quencher); gas giants glow H-Balmer pink. Other emitters in the catalog: O I 777nm (bright-aurora deep red). Computed from measured A-values + quenching coefficients; cell label = dominant emitter (by production). This is the non-LTE counterpart to the (LTE) reentry tables; aurora feeds aurora/EVE, not Firefly.",
         "element_temp_caption": "Per-element analog of the table above. Each row is a pure element's LTE plasma color at each temperature: an incandescence stand-in (top strip = blackbody, exact) + neutral AND first-ion (X II) atomic line emission (NIST A-values, Boltzmann), weighted by the Saha neutral/ion fractions. Low T thermal glow → mid T the element's neutral lines (Cu green, Ca violet, Na yellow) → high T ionizes and ion lines take over (e.g. Ba II violet). ATOMIC only (no molecular bands); no free-free/bound continuum; 2nd ionization neglected. 75 elements with NIST A-values; complex spectra without A (Zr, lanthanides, actinides) omitted — same coverage as the periodic table above. Hover for ionization fraction.",
         "plasma_temp_caption": "Top strip = blackbody thermal color (Planck→CIE, exact). Grid = first-principles LTE isothermal-slab color per composition — thermal continuum + atomic lines (NIST A-values) + molecular bands, with ionization (Saha), excitation (Boltzmann) and dissociation all computed. No tuned weight. LTE caveat — high-lying bands (N2 1P/2P, 7–11 eV) are thermally faint, so air's observed reentry blue-violet (a non-LTE electron-impact effect) does not appear, while C2 Swan green and H Balmer pink do. Hover for the dominant regime + ionization/molecular/emission fractions.",
@@ -673,6 +677,10 @@ def build_t(palettes):
         "th_ae_survival": "밀도별 생존율",
         "ae_forbidden": "금지/준안정", "ae_allowed": "허용",
         "density_label": "밀도 (≈ 고도):",
+        "tip_ionz": "이온화", "tip_nodata": "데이터 없음", "tip_nocolor": "계산된 온도 색 없음",
+        "tip_atom": "원자", "tip_nodatafor": "데이터 없음:",
+        "dom_thermal": "열복사", "dom_molecular": "분자 밴드",
+        "dom_atomic": "원자선", "dom_ionic": "이온",
         "aurora_caption": "밀도 슬라이더를 움직여 고도를 훑어보세요. 오로라는 비-LTE — 색은 온도가 아니라 준안정 금지선의 quenching이 정하므로 축은 밀도(≈고도)입니다. 지구는 실제 층리를 재현합니다. 적색(O ¹D 630nm, 114초 준안정이 살아남는 고고도) → 녹색(O ¹S 557.7nm, 중간) → 분홍(N₂ 1차 양성대, 조밀한 저고도), 가장 조밀한 행에선 ~80-105km airglow/유성기원 금속층(Na 589nm 노랑 + OH Meinel 적색 + Li/K/Ca⁺ 미량)으로 따뜻해집니다. CO₂ 대기는 적색을 강하게 quench(CO₂가 강한 소광체), 가스자이언트는 H-Balmer 핑크. 카탈로그의 다른 발광종: O I 777nm(밝은 오로라 심적색). 측정 A계수 + quenching 계수로 계산, 셀 라벨 = 우세 발광종(생산량 기준). LTE 재진입 표의 비-LTE 짝이며, 오로라는 Firefly가 아니라 aurora/EVE로 갑니다.",
         "element_temp_caption": "위 표의 원소별 버전입니다. 각 행은 순수 원소의 LTE 플라스마 색을 온도별로 보여줍니다. 백열 대용 항(위 띠 = 흑체, 정확) + 중성 및 1차이온(X II) 원자선 발광(NIST A계수, Boltzmann)을 Saha 중성/이온 분율로 가중합니다. 저온 열복사 글로우 → 중온 중성 고유선(Cu 초록, Ca 보라, Na 노랑) → 고온 이온화되며 이온선이 우세(예: Ba II 보라). 원자 전용(분자 밴드 없음), 자유-자유/속박 연속 없음, 2차 이온화 무시. NIST A계수 있는 75개 원소, A 없는 복잡 스펙트럼(Zr·란타넘·악티늄)은 제외 — 위 주기율표와 같은 커버리지입니다. 셀에 올리면 이온화 분율이 보입니다.",
         "plasma_temp_caption": "위 띠 = 흑체 열복사 색(Planck→CIE, 정확). 그리드 = 조성별 1차원리 LTE 등온 슬랩 색입니다. 열복사 연속 + 원자선(NIST A계수) + 분자 밴드를 합치고, 이온화(Saha)·들뜸(Boltzmann)·해리를 모두 계산합니다. 손맛 가중치는 없습니다. LTE 한계 — 상위준위가 높은 밴드(N₂ 1P/2P, 7~11 eV)는 열적으로 거의 안 채워져서 공기의 관측된 재진입 청보라(비-LTE 전자충돌 효과)는 여기 안 나오고, C₂ Swan 초록과 H Balmer 핑크는 나옵니다. 셀에 마우스를 올리면 우세 영역과 이온화·분자·방출 분율이 보입니다.",
@@ -955,6 +963,10 @@ function luminance(hex) {{
   return 0.2126*chan(r) + 0.7152*chan(g) + 0.0722*chan(b);
 }}
 function textOn(hex) {{ return luminance(hex) > 0.4 ? '#000' : '#fff'; }}
+function domL(d) {{
+  return ({{'thermal': T[lang].dom_thermal, 'molecular bands': T[lang].dom_molecular,
+            'atomic lines': T[lang].dom_atomic, 'ionic': T[lang].dom_ionic}})[d] || d;
+}}
 
 function applyTemp(t) {{
   const key = String(t);
@@ -971,11 +983,11 @@ function applyTemp(t) {{
       cell.classList.add('visible');
       cell.style.background = c.hex;
       cell.style.color = textOn(c.hex);
-      cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) @ ${{t}}K — ionz ${{Math.round((c.ion||0)*100)}}%`;
+      cell.title = `${{data.name}} (${{sym}}, Z=${{data.z}}) @ ${{t}}K — ${{T[lang].tip_ionz}} ${{Math.round((c.ion||0)*100)}}%`;
     }} else {{
-      chip.textContent = 'no data';
-      cell.title = data ? `${{data.name}} (${{sym}}, Z=${{data.z}}) — no computed temperature color`
-                        : `${{sym}} — no data`;
+      chip.textContent = T[lang].tip_nodata;
+      cell.title = data ? `${{data.name}} (${{sym}}, Z=${{data.z}}) — ${{T[lang].tip_nocolor}}`
+                        : `${{sym}} — ${{T[lang].tip_nodata}}`;
     }}
   }});
 
@@ -991,12 +1003,12 @@ function applyTemp(t) {{
       cell.classList.add('visible');
       cell.style.background = c.hex;
       cell.style.color = textOn(c.hex);
-      status.textContent = c.dom || '';
-      const drop = (mol.dropped && mol.dropped.length) ? ` · no data for ${{mol.dropped.join('/')}}` : '';
-      cell.title = `${{formula}} (${{mol.atoms}}-atom) @ ${{t}}K — ${{c.dom}}${{drop}}`;
+      status.textContent = domL(c.dom) || '';
+      const drop = (mol.dropped && mol.dropped.length) ? ` · ${{T[lang].tip_nodatafor}} ${{mol.dropped.join('/')}}` : '';
+      cell.title = `${{formula}} (${{mol.atoms}}${{T[lang].tip_atom}}) @ ${{t}}K — ${{domL(c.dom)}}${{drop}}`;
     }} else {{
-      status.textContent = 'no data';
-      cell.title = `${{formula}} — ${{mol && mol.note ? mol.note : 'no computed temperature color'}}`;
+      status.textContent = T[lang].tip_nodata;
+      cell.title = `${{formula}} — ${{mol && mol.note ? mol.note : T[lang].tip_nocolor}}`;
     }}
   }});
 
@@ -1054,6 +1066,8 @@ document.getElementById('lang-seg').addEventListener('click', e => {{
   lang = btn.dataset.lang;
   localStorage.setItem('nearstars-lang', lang);
   applyLang();
+  applyTemp(temp);        // re-localize the JS-set tooltips + cell labels
+  applyDensity(density);
 }});
 
 const tempSlider = document.getElementById('temp-slider');
