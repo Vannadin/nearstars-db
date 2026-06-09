@@ -851,9 +851,14 @@ html, body {{ overflow-x: clip; }}
 .streak-table td.rgbi {{ font-family: var(--mono); font-size: 12px; color: var(--fg-muted) }}
 .swatch-inline {{ display: inline-block; padding: 2px 8px; border-radius: 3px; font-family: var(--mono); font-size: 12px }}
 
+.body-grid {{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem; margin: 1rem 0;
+}}
 .body-card {{
   background: var(--bg-card); border: 1px solid var(--bd-mid);
-  border-radius: 4px; padding: 1rem; margin-bottom: 1rem;
+  border-radius: 4px; padding: 1rem;
 }}
 .body-card h3 {{ margin: 0 0 0.25rem 0; font-size: 1rem; color: var(--fg-emph) }}
 .body-card .body-slug {{ font-size: 0.8rem; color: var(--fg-dim); font-weight: normal }}
@@ -947,7 +952,9 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 
 <section>
 <h2 data-i18n="h_bodies"></h2>
+<div class="body-grid">
 {bodies_section}
+</div>
 </section>
 
 </main>
