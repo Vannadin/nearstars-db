@@ -732,8 +732,10 @@ html, body {{ overflow-x: clip; }}
 #temp-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
 .temp-readout {{ font-family: var(--mono); font-size: 0.95rem; color: var(--fg-emph);
   min-width: 5.5em; text-align: right; }}
-#aurora-bar {{ position: static; box-shadow: none; }}   /* local, not sticky */
 #density-slider {{ flex: 1; max-width: 460px; cursor: pointer; accent-color: var(--accent); }}
+/* Each slider sticks only within its own section: the .slider-scope wrapper is the
+   containing block, so the bar pins while that scope scrolls and leaves with it. */
+.slider-scope {{ position: relative; }}
 .aurora-panel {{ display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 0.5rem 0 1rem; }}
 .aurora-cell {{ flex: 1 1 200px; min-height: 64px; border-radius: 6px; padding: 0.55rem 0.8rem;
   display: flex; flex-direction: column; justify-content: center; gap: 2px;
@@ -881,6 +883,7 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <p class="intro" data-i18n="intro_1"></p>
 <p class="intro" data-i18n="intro_2"></p>
 
+<div class="slider-scope">
 <div class="regime-bar">
   <span class="label" data-i18n="temp_label"></span>
   <input type="range" id="temp-slider" min="1000" max="15000" step="1000" value="4000">
@@ -896,6 +899,7 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <h2 data-i18n="h_molecular"></h2>
 {molecular_panel}
 </section>
+</div>
 
 <section>
 <h2 data-i18n="h_bulk"></h2>
@@ -917,11 +921,13 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 <h2 data-i18n="h_firefly_stock"></h2>
 {firefly_stock_grid}
 
+<div class="slider-scope">
 <h2 data-i18n="h_aurora"></h2>
 {aurora_grid}
 
 <h2 data-i18n="h_aurora_emitters"></h2>
 {aurora_emitters}
+</div>
 </section>
 
 <section>
