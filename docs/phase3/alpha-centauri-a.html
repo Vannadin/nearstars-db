@@ -263,22 +263,69 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 </section>
 <section>
 <h2 data-i18n="h2_117"></h2>
+<p class="intro" data-i18n="p_118"></p>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_119"></th>
+<th data-i18n="th_120"></th>
+<th data-i18n="th_121"></th>
+<th data-i18n="th_122"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_123"></td>
+<td data-i18n="td_124"></td>
+<td data-i18n="td_125"></td>
+<td data-i18n="td_126"></td>
+</tr>
+<tr>
+<td data-i18n="td_127"></td>
+<td data-i18n="td_128"></td>
+<td data-i18n="td_129"></td>
+<td data-i18n="td_130"></td>
+</tr>
+<tr>
+<td data-i18n="td_131"></td>
+<td data-i18n="td_132"></td>
+<td data-i18n="td_133"></td>
+<td data-i18n="td_134"></td>
+</tr>
+<tr>
+<td data-i18n="td_135"></td>
+<td data-i18n="td_136"></td>
+<td data-i18n="td_137"></td>
+<td data-i18n="td_138"></td>
+</tr>
+<tr>
+<td data-i18n="td_139"></td>
+<td data-i18n="td_140"></td>
+<td data-i18n="td_141"></td>
+<td data-i18n="td_142"></td>
+</tr>
+<tr>
+<td data-i18n="td_143"></td>
+<td data-i18n="td_144"></td>
+<td data-i18n="td_145"></td>
+<td data-i18n="td_146"></td>
+</tr>
+</tbody></table></div>
+</section>
+<section>
+<h2 data-i18n="h2_147"></h2>
 <ul class="intro">
-<li data-i18n="li_118"></li>
-<li data-i18n="li_119"></li>
-<li data-i18n="li_120"></li>
-<li data-i18n="li_121"></li>
+<li data-i18n="li_148"></li>
+<li data-i18n="li_149"></li>
+<li data-i18n="li_150"></li>
+<li data-i18n="li_151"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_122"></h2>
+<h2 data-i18n="h2_152"></h2>
 <ul class="intro">
-<li data-i18n="li_123"></li>
-<li data-i18n="li_124"></li>
-<li data-i18n="li_125"></li>
-<li data-i18n="li_126"></li>
-<li data-i18n="li_127"></li>
-<li data-i18n="li_128"></li>
+<li data-i18n="li_153"></li>
+<li data-i18n="li_154"></li>
+<li data-i18n="li_155"></li>
+<li data-i18n="li_156"></li>
+<li data-i18n="li_157"></li>
+<li data-i18n="li_158"></li>
 </ul>
 </section>
 </main>
@@ -406,18 +453,48 @@ const T = {
   "li_114":"<b>Spada F. et al. 2019</b> — <i>Entropy calibration of the radii of cool stars: α Cen A and B</i> (arXiv:1909.00701). Validates the Kervella 2017 + Joyce 2018 picture against entropy-based predictions.",
   "h3_115":"Not read — no arXiv preprint or low-priority (~50 papers)",
   "p_116":"Conference abstracts (EPSC/AGU/DPS), interstellar-propulsion proposals (Heller 2017 photon sails, Forgan 2018 Project Lyra), and SETI / laser-emission searches (Marcy 2022, Tusay 2022, Saide 2023) contribute no cfg-decisive content. The full filtered bib is preserved in <code>docs/phase3/_bib/alpha-centauri-a.yaml</code> with <code>status: skipped</code> annotations.",
-  "h2_117":"Open items for follow-up",
-  "li_118":"<b>DB erratum, <code>age_measurements</code> recommended entry for Joyce &amp; Chaboyer 2018</b>: DB stores <code>value_gyr = 4.81 ± 0.5</code>; paper headline is <b>5.3 ± 0.3 Gyr</b>. The 4.81 number likely transcribed an intermediate fit (the paper presents multiple physics configurations); fix the DB attribution to the paper headline.",
-  "li_119":"<b>Beichman/Sanghi 2025 &quot;S1&quot; giant-planet candidate</b>: if a 2026 follow-up confirms the point source as a bound companion at ~1.5 AU, a new Decisions entry <code>circumstellar_planet_present: true</code> is needed and the cfg <code>has_companion_b</code> (currently absent) should be added.",
-  "li_120":"<b>Higher-fidelity granulation pattern</b>: STAGGER simulations predict subtle limb-to-center contrast variations not modeled in the cfg <code>limb_darkening_alpha_h</code> scalar; a future cfg variant could capture the 3D structure for very close fly-by sequences.",
-  "li_121":"<b>Cycle phase at game epoch (J2000.0)</b>: the 19-yr X-ray cycle and the chromospheric activity cycle are not phase-locked in the current cfg. A phase synchronization based on Robrade 2016 cycle start epochs would let activity-driven CME flux track real-time in-game progression.",
-  "h2_122":"Related",
-  "li_123":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — binary partner; 79.91-yr visual orbit, K1V companion",
-  "li_124":"<a href=\"proxima-cen.md\">proxima-cen</a> — wide CPM companion at ~13,000 AU, M5.5Ve flare star (capture vs coeval origin uncertain — Feng &amp; Jones 2018)",
-  "li_125":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB is the <b>canonical worked example</b> for the Kepler→ICRS pipeline (§9 of that doc)",
-  "li_126":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
-  "li_127":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3–4 covers α Cen stellar parameters + §5 the AB↔Proxima topology gap REX couldn&#x27;t model",
-  "li_128":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — α Cen orbit convention cross-check vs Stellarium (Hilditch/Pourbaix match confirmed)",
+  "h2_117":"Stellar wind / astrosphere",
+  "p_118":"α Cen A and B orbit inside a <b>single shared astrosphere</b> — one wind cavity around the close (a ≈ 24 AU) pair (Wood 2001). The combined wind Ṁ ≈ 2 Ṁ⊙ inflates that cavity to a nose standoff of <b>~176 AU</b> (≈ 1.5× the Sun&#x27;s heliopause), set against the ~25 km/s inflow the system sees from the <b>G cloud</b> (Wood 2005 uses the G-cloud, not LIC, flow vector for α Cen — so the LIC-frame astrometric value, ~19 km/s, is not used here). The coronal X-ray output may cycle on a tentative ~19 yr swing, but A has been mired in a Maunder-minimum-like low state since ~2005 (Ayres 2014), so this is one incompletely sampled swing rather than a confirmed cycle. Particle-radiation harshness is solar-like. Astrosphere fields are recorded here as the AB-system representative; B carries only its own cycle.",
+  "th_119":"Field",
+  "th_120":"Value",
+  "th_121":"Confidence",
+  "th_122":"Basis",
+  "td_123":"<code>solar_cycle_yr</code>",
+  "td_124":"19.1 (tentative)",
+  "td_125":"low",
+  "td_126":"Ayres 2014 X-ray; single over-long swing out of a Maunder-low, not a repeated cycle",
+  "td_127":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_128":"2 (A+B combined)",
+  "td_129":"high",
+  "td_130":"Wood 2001 — shared astrosphere, HST Lyα",
+  "td_131":"<code>local_ism_inflow_speed_kms</code>",
+  "td_132":"~25",
+  "td_133":"medium",
+  "td_134":"Wood 2005 (G-cloud vector for α Cen)",
+  "td_135":"<code>astrosphere_standoff_au</code>",
+  "td_136":"~176",
+  "td_137":"medium",
+  "td_138":"120·√(Ṁ_rel)·(V_⊙/V_ISM); A+B shared cavity",
+  "td_139":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_140":"~1.0",
+  "td_141":"low",
+  "td_142":"solar-like activity — interesting-first, Sun-anchored",
+  "td_143":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_144":"~187 / +22",
+  "td_145":"low",
+  "td_146":"6D astrometry vs LIC; AB-barycenter, approximate (orbital motion + G-cloud shift it ~10–20°); <b>plugin-only</b>",
+  "h2_147":"Open items for follow-up",
+  "li_148":"<b>DB erratum, <code>age_measurements</code> recommended entry for Joyce &amp; Chaboyer 2018</b>: DB stores <code>value_gyr = 4.81 ± 0.5</code>; paper headline is <b>5.3 ± 0.3 Gyr</b>. The 4.81 number likely transcribed an intermediate fit (the paper presents multiple physics configurations); fix the DB attribution to the paper headline.",
+  "li_149":"<b>Beichman/Sanghi 2025 &quot;S1&quot; giant-planet candidate</b>: if a 2026 follow-up confirms the point source as a bound companion at ~1.5 AU, a new Decisions entry <code>circumstellar_planet_present: true</code> is needed and the cfg <code>has_companion_b</code> (currently absent) should be added.",
+  "li_150":"<b>Higher-fidelity granulation pattern</b>: STAGGER simulations predict subtle limb-to-center contrast variations not modeled in the cfg <code>limb_darkening_alpha_h</code> scalar; a future cfg variant could capture the 3D structure for very close fly-by sequences.",
+  "li_151":"<b>Cycle phase at game epoch (J2000.0)</b>: the 19-yr X-ray cycle and the chromospheric activity cycle are not phase-locked in the current cfg. A phase synchronization based on Robrade 2016 cycle start epochs would let activity-driven CME flux track real-time in-game progression.",
+  "h2_152":"Related",
+  "li_153":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — binary partner; 79.91-yr visual orbit, K1V companion",
+  "li_154":"<a href=\"proxima-cen.md\">proxima-cen</a> — wide CPM companion at ~13,000 AU, M5.5Ve flare star (capture vs coeval origin uncertain — Feng &amp; Jones 2018)",
+  "li_155":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB is the <b>canonical worked example</b> for the Kepler→ICRS pipeline (§9 of that doc)",
+  "li_156":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
+  "li_157":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3–4 covers α Cen stellar parameters + §5 the AB↔Proxima topology gap REX couldn&#x27;t model",
+  "li_158":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — α Cen orbit convention cross-check vs Stellarium (Hilditch/Pourbaix match confirmed)",
   "title":"α Centauri A — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -540,18 +617,48 @@ const T = {
   "li_114":"<b>Spada F. et al. 2019</b> — <i>Entropy calibration of the radii of cool stars: α Cen A and B</i> (arXiv:1909.00701). Kervella 2017 + Joyce 2018 의 그림을 엔트로피 기반 예측으로 검증.",
   "h3_115":"Not read — no arXiv preprint or low-priority (~50 papers)",
   "p_116":"학회 abstract (EPSC/AGU/DPS), 항성 간 추진 제안 (Heller 2017 photon sail, Forgan 2018 Project Lyra), SETI / 레이저 방출 탐색 (Marcy 2022, Tusay 2022, Saide 2023) 등은 cfg 결정에 영향이 없습니다. 전체 필터된 bib 는 <code>docs/phase3/_bib/alpha-centauri-a.yaml</code> 에 <code>status: skipped</code> 주석으로 보존됩니다.",
-  "h2_117":"Open items for follow-up",
-  "li_118":"<b>DB erratum, Joyce &amp; Chaboyer 2018 의 <code>age_measurements</code> recommended entry.</b> DB 는 <code>value_gyr = 4.81 ± 0.5</code> 를 저장하지만 논문 표제값은 <b>5.3 ± 0.3 Gyr</b> 입니다. 4.81 숫자는 중간 단계 fit (논문이 여러 물리 configuration 을 제시) 을 옮긴 것으로 보입니다. DB attribution 을 논문 표제값으로 정정해야 합니다.",
-  "li_119":"<b>Beichman/Sanghi 2025 &quot;S1&quot; 거대 행성 후보.</b> 2026 년 follow-up 에서 ~1.5 AU 에 묶인 동반자가 확정되면 새로운 Decisions 항목 <code>circumstellar_planet_present: true</code> 가 필요하며, cfg <code>has_companion_b</code> (현재 없음) 가 추가되어야 합니다.",
-  "li_120":"<b>고정밀도 granulation 패턴.</b> STAGGER 시뮬레이션은 cfg 스칼라 <code>limb_darkening_alpha_h</code> 가 모델링하지 않는 미세한 limb-to-center 대비 변동을 예측합니다. 매우 가까운 fly-by 시퀀스를 위해 3D 구조를 잡는 cfg 변형을 후속에 만들 수 있습니다.",
-  "li_121":"<b>게임 epoch (J2000.0) 의 사이클 위상.</b> 19 년 X 선 사이클과 색채권 활동 사이클은 현재 cfg 에서 위상 동기화돼 있지 않습니다. Robrade 2016 사이클 시작 epoch 를 기준으로 위상을 맞추면, 활동 driven CME 플럭스가 실시간 게임 진행과 함께 추적될 수 있습니다.",
-  "h2_122":"Related",
-  "li_123":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — 79.91 년 주기 시각이중성 짝, K1V 동반성.",
-  "li_124":"<a href=\"proxima-cen.md\">proxima-cen</a> — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성 (M5.5Ve 플레어성). capture 대 coeval 기원 미해결 (Feng &amp; Jones 2018).",
-  "li_125":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB 는 Kepler→ICRS 파이프라인의 <b>정전 워크드 예시</b>입니다 (§9).",
-  "li_126":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 표 스키마의 원본.",
-  "li_127":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3–4 가 α Cen 항성 파라미터, §5 가 REX 가 모델하지 못한 AB↔Proxima 토폴로지 갭을 다룹니다.",
-  "li_128":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — Stellarium 과의 α Cen 궤도 컨벤션 교차 검증 (Hilditch/Pourbaix 일치 확인).",
+  "h2_117":"Stellar wind / astrosphere",
+  "p_118":"α Cen A 와 B 는 <b>하나의 공유 astrosphere</b> 안에서 공전합니다. 가까운 (a ≈ 24 AU) 쌍을 감싸는 단일 항성풍 공동이 그것입니다 (Wood 2001). 결합 항성풍 Ṁ ≈ 2 Ṁ⊙ 가 이 공동을 부풀려 nose standoff 가 <b>~176 AU</b> (태양 heliopause 의 약 1.5 배) 에 이르며, 시스템이 <b>G 구름</b> 에서 받는 ~25 km/s 의 inflow 와 균형을 이룹니다 (Wood 2005 는 α Cen 에 LIC 가 아닌 G-cloud flow 벡터를 쓰므로, LIC-frame 천체측정값 ~19 km/s 는 여기서 쓰지 않습니다). 코로나 X 선 출력은 잠정적인 ~19 년 주기로 변동할 수 있지만, A 는 ~2005 년 이래 Maunder-minimum 같은 저활동 상태에 잠겨 있어 (Ayres 2014) 이는 확인된 사이클이 아니라 불완전하게 샘플링된 한 번의 변동입니다. 입자 방사선 가혹도는 태양형입니다. astrosphere 필드는 AB 시스템 대표값 으로 여기에 기록하며, B 는 자기 사이클만 따로 들고 있습니다.",
+  "th_119":"Field",
+  "th_120":"Value",
+  "th_121":"Confidence",
+  "th_122":"Basis",
+  "td_123":"<code>solar_cycle_yr</code>",
+  "td_124":"19.1 (tentative)",
+  "td_125":"low",
+  "td_126":"Ayres 2014 X 선. Maunder-low 에서 나온 단 한 번의 지나치게 긴 변동, 반복 사이클 아님",
+  "td_127":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_128":"2 (A+B combined)",
+  "td_129":"high",
+  "td_130":"Wood 2001 — 공유 astrosphere, HST Lyα",
+  "td_131":"<code>local_ism_inflow_speed_kms</code>",
+  "td_132":"~25",
+  "td_133":"medium",
+  "td_134":"Wood 2005 (α Cen 에 G-cloud 벡터)",
+  "td_135":"<code>astrosphere_standoff_au</code>",
+  "td_136":"~176",
+  "td_137":"medium",
+  "td_138":"120·√(Ṁ_rel)·(V_⊙/V_ISM). A+B 공유 공동",
+  "td_139":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_140":"~1.0",
+  "td_141":"low",
+  "td_142":"태양형 활동 — interesting-first, 태양 기준 anchor",
+  "td_143":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_144":"~187 / +22",
+  "td_145":"low",
+  "td_146":"6D 천체측정 vs LIC. AB-barycenter, 근사값 (궤도 운동 + G-cloud 가 ~10–20° 이동시킴). <b>plugin-only</b>",
+  "h2_147":"Open items for follow-up",
+  "li_148":"<b>DB erratum, Joyce &amp; Chaboyer 2018 의 <code>age_measurements</code> recommended entry.</b> DB 는 <code>value_gyr = 4.81 ± 0.5</code> 를 저장하지만 논문 표제값은 <b>5.3 ± 0.3 Gyr</b> 입니다. 4.81 숫자는 중간 단계 fit (논문이 여러 물리 configuration 을 제시) 을 옮긴 것으로 보입니다. DB attribution 을 논문 표제값으로 정정해야 합니다.",
+  "li_149":"<b>Beichman/Sanghi 2025 &quot;S1&quot; 거대 행성 후보.</b> 2026 년 follow-up 에서 ~1.5 AU 에 묶인 동반자가 확정되면 새로운 Decisions 항목 <code>circumstellar_planet_present: true</code> 가 필요하며, cfg <code>has_companion_b</code> (현재 없음) 가 추가되어야 합니다.",
+  "li_150":"<b>고정밀도 granulation 패턴.</b> STAGGER 시뮬레이션은 cfg 스칼라 <code>limb_darkening_alpha_h</code> 가 모델링하지 않는 미세한 limb-to-center 대비 변동을 예측합니다. 매우 가까운 fly-by 시퀀스를 위해 3D 구조를 잡는 cfg 변형을 후속에 만들 수 있습니다.",
+  "li_151":"<b>게임 epoch (J2000.0) 의 사이클 위상.</b> 19 년 X 선 사이클과 색채권 활동 사이클은 현재 cfg 에서 위상 동기화돼 있지 않습니다. Robrade 2016 사이클 시작 epoch 를 기준으로 위상을 맞추면, 활동 driven CME 플럭스가 실시간 게임 진행과 함께 추적될 수 있습니다.",
+  "h2_152":"Related",
+  "li_153":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — 79.91 년 주기 시각이중성 짝, K1V 동반성.",
+  "li_154":"<a href=\"proxima-cen.md\">proxima-cen</a> — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성 (M5.5Ve 플레어성). capture 대 coeval 기원 미해결 (Feng &amp; Jones 2018).",
+  "li_155":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB 는 Kepler→ICRS 파이프라인의 <b>정전 워크드 예시</b>입니다 (§9).",
+  "li_156":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 표 스키마의 원본.",
+  "li_157":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3–4 가 α Cen 항성 파라미터, §5 가 REX 가 모델하지 못한 AB↔Proxima 토폴로지 갭을 다룹니다.",
+  "li_158":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — Stellarium 과의 α Cen 궤도 컨벤션 교차 검증 (Hilditch/Pourbaix 일치 확인).",
   "title":"α Centauri A — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

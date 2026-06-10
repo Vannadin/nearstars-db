@@ -418,6 +418,25 @@ baseline 에 의해 superseded 된 Mt. Wilson HK 플레이트-아카이브
 탐색 제안 논문들 (Ma 2018 follow-up 제안 포함). 이들은 bib
 YAML 이 빌드되면 `status: skipped` 로 필터됩니다.
 
+## Stellar wind / astrosphere
+
+40 Eri A 는 빠르게 움직이는 K 왜성입니다 (국부 ISM 대비 V_ISM ≈
+127 km/s). 따라서 ram pressure 가 astrosphere 를 강하게 압축할
+테지만, 항성풍 Ṁ 이 **미측정** 이라 (Wood 의 HST Lyα 탐색에서 40
+Eri 는 검출 가능한 astrosphere 가 없음) standoff 거리는 미구속
+상태로 둡니다. 잘 정립된 **8.7 년 Ca II 활성도 사이클** 을 가집니다
+(Laliotis 2023. 역사적으로는 ~10 년, Baliunas 1995). 적당히
+활동적인 노년 K 왜성으로서 입자 환경은 태양보다 약간 아래입니다.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 8.70 | high | Laliotis 2023 S-index (역사적으로 ~10.1 yr, Baliunas 1995) |
+| `stellar_wind_mass_loss_solar` | (unconstrained) | — | Wood 샘플에 없음. 검출 가능한 astrosphere 없음 |
+| `local_ism_inflow_speed_kms` | ~127 | medium | 6D 측성 대 LIC (높은 우주 속도) |
+| `astrosphere_standoff_au` | (unconstrained) | low | 항성풍 측정이 필요 (Ṁ 미상) |
+| `stellar_radiation_surface_relative_sun` | ~0.8 | low | 적당히 활동적인 노년 K — interesting-first, 태양 부근 |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~281 / −41 | low | 6D 측성 대 LIC. **plugin-only** |
+
 ## Open items for follow-up
 
 - **Jenkins 2011 + Henry 1996 row-level log R'HK 검증.**

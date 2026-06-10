@@ -330,6 +330,25 @@ Hernández 2024 planet section, and any 2025+ follow-up) are deferred
 to the planet Phase 3 follow-up workspace. The full filtered
 bibliography is preserved in `docs/phase3/_bib/barnards-star.yaml`.
 
+## Stellar wind / astrosphere
+
+Barnard's Star has the **smallest astrosphere** of the set. As the
+highest-proper-motion star known it plows through the local ISM at ~120 km/s, so
+even though its wind is weak (Ṁ ≤ 0.2 Ṁ⊙, Wood 2021) the ram pressure compresses
+the wind cavity to a standoff of only **≲11 AU**. It is an old, magnetically
+quiet M4 dwarf with no detected activity cycle, so its particle-radiation
+environment is well below solar.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
+| `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry vs LIC (extreme space velocity) |
+| `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | high V_ISM compresses the cavity |
+| `stellar_radiation_surface_relative_sun` | ~0.3 | low | old, quiet, inactive M4 — interesting-first below solar |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry vs LIC; **plugin-only** |
+
+(No `solar_cycle_yr`: no activity cycle has been detected for this very quiet star.)
+
 ## Open items for follow-up
 
 - **Sub-Earth planet candidate Phase 3 follow-up workspace.** The

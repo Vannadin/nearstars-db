@@ -265,6 +265,25 @@ Demory 2009 의 VLTI/VINCI 별별 간섭계 표는 ar5iv 본문이 아니라 Viz
 Chen 2022 활동 나이로 대체되어 역사적 맥락으로만 보존됩니다. 읽을
 잔해-원반 논문은 없습니다 (보고된 바 없음).
 
+## Stellar wind / astrosphere
+
+ε Ind A 는 교과서적인 **compact astrosphere** 입니다. 적당한
+항성풍 (Ṁ = 0.5 Ṁ⊙) 이 빠른 ~68 km/s ISM 유입과 부딪치며 겨우
+**~32 AU** 에서 standoff 합니다 — Wood 2005 가 이를 명시적으로
+compact 라 부르며, 우리의 6D-측성 V_ISM (69 km/s) 이 Wood 의
+68 km/s 를 재현해 방법을 검증합니다. **5.65 년** 주기로
+사이클링합니다 (Laliotis 2023. Lovis 2011 의 4.71 년과 일치).
+다소 활동적인 노년 K 왜성으로, 입자 환경은 대략 태양 수준입니다.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 5.65 | high | Laliotis 2023 S-index (Lovis 2011 의 4.71 yr 과 1.5σ 안에서 일치) |
+| `stellar_wind_mass_loss_solar` | 0.5 | high | Wood 2005 astrospheric Lyα (compact astrosphere) |
+| `local_ism_inflow_speed_kms` | 68 | high | Wood 2005. 6D-측성 계산값 (69) 이 확인 |
+| `astrosphere_standoff_au` | ~32 (compact) | high | 120·√0.5·(25.4/68). Wood 의 서술과 일치 |
+| `stellar_radiation_surface_relative_sun` | ~1.0 | low | 활동적인 노년 K (R'HK −4.72) — interesting-first, 태양 부근 |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~110 / +2 | low | 6D 측성 대 LIC. **plugin-only** |
+
 ## Open items for follow-up
 
 - **행성 Phase 3 합성.** ε Indi A b 는 별도 Phase 3 문서 (`eps-ind-a-b.md`)

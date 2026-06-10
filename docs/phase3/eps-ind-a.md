@@ -300,6 +300,24 @@ Phase 2 alternative. Older rotation/age estimates (Saar & Osten 1997
 and the Chen 2022 activity age, and are retained only as historical
 context. No debris-disk papers exist to read (none reported).
 
+## Stellar wind / astrosphere
+
+ε Ind A is the textbook **compact astrosphere**: a moderate wind (Ṁ = 0.5 Ṁ⊙)
+running into a fast ~68 km/s ISM inflow stands off at only **~32 AU** — Wood 2005
+explicitly calls it compact, and our 6D-astrometry V_ISM (69 km/s) reproduces
+Wood's 68 km/s, validating the method. It cycles on **5.65 yr** (Laliotis 2023;
+matching Lovis 2011's 4.71 yr). An active-ish old K dwarf, roughly solar in
+particle environment.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 5.65 | high | Laliotis 2023 S-index (matches Lovis 2011 4.71 yr to 1.5σ) |
+| `stellar_wind_mass_loss_solar` | 0.5 | high | Wood 2005 astrospheric Lyα (compact astrosphere) |
+| `local_ism_inflow_speed_kms` | 68 | high | Wood 2005; 6D-astrometry calc (69) confirms |
+| `astrosphere_standoff_au` | ~32 (compact) | high | 120·√0.5·(25.4/68); matches Wood's description |
+| `stellar_radiation_surface_relative_sun` | ~1.0 | low | active old K (R'HK −4.72) — interesting-first near solar |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~110 / +2 | low | 6D astrometry vs LIC; **plugin-only** |
+
 ## Open items for follow-up
 
 - **Planet Phase 3 synthesis.** ε Indi A b is produced as a separate

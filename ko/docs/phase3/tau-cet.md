@@ -342,6 +342,23 @@ SETI / 레이저 방출 탐색 (Tarter 1981 Project Ozma followup, Tellis
 전체 필터링된 bib 는 `docs/phase3/_bib/tau-cet.yaml` 에 `status:
 skipped` annotation 으로 보존됩니다.
 
+## Stellar wind / astrosphere
+
+τ Cet 은 약한 항성풍 (Ṁ ≤ 0.1 Ṁ⊙, Wood 2021) 을 가지며 적당한 ~50 km/s
+의 ISM inflow 를 받아, **≲19 AU** 에서 막아내는 작은 astrosphere 를
+만듭니다. 알려진 태양형 별 중 자기적으로 가장 조용한 축에 들며 — ~50 yr
+모니터링에 걸쳐 **확실히 평탄하고 활동 사이클이 없습니다** (Baum 2022).
+그 결과 태양보다 다소 낮은, 안정적인 (사이클 없는) 입자 환경입니다.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | none (flat) | high | Baum 2022 — ~50 yr 에 걸쳐 사이클 없음. 안정적이고 사이클 없는 항성풍 |
+| `stellar_wind_mass_loss_solar` | ≤ 0.1 (upper limit) | medium | Wood 2021 astrospheric Lyα |
+| `local_ism_inflow_speed_kms` | ~50 | medium | 6D astrometry 대 LIC |
+| `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | Ṁ 상한 + V_ISM 에서 |
+| `stellar_radiation_surface_relative_sun` | ~0.5 | low | 매우 비활동적이고 평탄함 — interesting-first 로 태양 아래 |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~282 / +8 | low | 6D astrometry 대 LIC. **plugin-only** |
+
 ## Open items for follow-up
 
 - **Phase 2 disk_measurements + 행성 측정치 재수집.** DB Phase 2 는

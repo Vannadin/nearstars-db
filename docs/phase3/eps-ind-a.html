@@ -269,24 +269,71 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 </section>
 <section>
 <h2 data-i18n="h2_119"></h2>
+<p class="intro" data-i18n="p_120"></p>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_121"></th>
+<th data-i18n="th_122"></th>
+<th data-i18n="th_123"></th>
+<th data-i18n="th_124"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_125"></td>
+<td data-i18n="td_126"></td>
+<td data-i18n="td_127"></td>
+<td data-i18n="td_128"></td>
+</tr>
+<tr>
+<td data-i18n="td_129"></td>
+<td data-i18n="td_130"></td>
+<td data-i18n="td_131"></td>
+<td data-i18n="td_132"></td>
+</tr>
+<tr>
+<td data-i18n="td_133"></td>
+<td data-i18n="td_134"></td>
+<td data-i18n="td_135"></td>
+<td data-i18n="td_136"></td>
+</tr>
+<tr>
+<td data-i18n="td_137"></td>
+<td data-i18n="td_138"></td>
+<td data-i18n="td_139"></td>
+<td data-i18n="td_140"></td>
+</tr>
+<tr>
+<td data-i18n="td_141"></td>
+<td data-i18n="td_142"></td>
+<td data-i18n="td_143"></td>
+<td data-i18n="td_144"></td>
+</tr>
+<tr>
+<td data-i18n="td_145"></td>
+<td data-i18n="td_146"></td>
+<td data-i18n="td_147"></td>
+<td data-i18n="td_148"></td>
+</tr>
+</tbody></table></div>
+</section>
+<section>
+<h2 data-i18n="h2_149"></h2>
 <ul class="intro">
-<li data-i18n="li_120"></li>
-<li data-i18n="li_121"></li>
-<li data-i18n="li_122"></li>
-<li data-i18n="li_123"></li>
-<li data-i18n="li_124"></li>
-<li data-i18n="li_125"></li>
+<li data-i18n="li_150"></li>
+<li data-i18n="li_151"></li>
+<li data-i18n="li_152"></li>
+<li data-i18n="li_153"></li>
+<li data-i18n="li_154"></li>
+<li data-i18n="li_155"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_126"></h2>
+<h2 data-i18n="h2_156"></h2>
 <ul class="intro">
-<li data-i18n="li_127"></li>
-<li data-i18n="li_128"></li>
-<li data-i18n="li_129"></li>
-<li data-i18n="li_130"></li>
-<li data-i18n="li_131"></li>
-<li data-i18n="li_132"></li>
+<li data-i18n="li_157"></li>
+<li data-i18n="li_158"></li>
+<li data-i18n="li_159"></li>
+<li data-i18n="li_160"></li>
+<li data-i18n="li_161"></li>
+<li data-i18n="li_162"></li>
 </ul>
 </section>
 </main>
@@ -416,20 +463,50 @@ const T = {
   "li_116":"The asteroseismic methodology of Lundkvist 2024 (HARPS/UVES RV time series, weighted power spectra, ν_max envelope fitting) and the astrometric methodology of Chen 2022 (NACO relative + FORS2 absolute astrometry, orvara-style orbit fits) are the instrument backbone of the mass and age determinations but contribute no direct visual field beyond the values already used above.",
   "h3_117":"Not read — no arXiv preprint or low-priority (~handful)",
   "p_118":"The Demory 2009 VLTI/VINCI per-star interferometric table lives in VizieR (J/A+A/505/205) rather than an ar5iv body and was marked manual_followup in the bibliography; its mass value is carried as a Phase 2 alternative. Older rotation/age estimates (Saar &amp; Osten 1997 ~22 d, Lachaume 1999 ~20 d) are superseded by the Feng 2018 ~35 d period and the Chen 2022 activity age, and are retained only as historical context. No debris-disk papers exist to read (none reported).",
-  "h2_119":"Open items for follow-up",
-  "li_120":"<b>Planet Phase 3 synthesis.</b> ε Indi A b is produced as a separate Phase 3 doc (<code>eps-ind-a-b.md</code>), anchored on Matthews 2024/2026. It is the nearest directly-imaged cold super-Jupiter and the system&#x27;s headline feature.",
-  "li_121":"<b>Brown-dwarf pair ε Indi B (pending DB addition).</b> Ba (T1–1.5, 66.9 M_Jup) + Bb (T6, 53.3 M_Jup) at ~1459 AU (Chen 2022) are not yet NearStars bodies. Adding them — with the Chen 2022 dynamical masses and the Ba–Bb mutual orbit — would let the cfg render the full ε Indi hierarchical triple. They are mentioned in this synthesis but no DB or Phase 3 doc is created for them here.",
-  "li_122":"<b>Age.</b> No Phase 2 age array. The ~3.5 Gyr Chen 2022 activity age is a literature-direct value carried at medium confidence; if a future curation adds a gyrochronology, asteroseismic, or kinematic age, the cfg age should be replaced. The 0.39–5 Gyr literature spread (Lundkvist 2024) is the residual uncertainty.",
-  "li_123":"<b>Rotation period uncertainty.</b> Feng 2018 reports &quot;~35 d&quot; with no formal σ and via an RV-activity-index (not photometric) method. A TESS or dedicated photometric rotation measurement would tighten the value and the gyrochronological age cross-check.",
-  "li_124":"<b>Metallicity.</b> Skipped per project policy; literature ≈ −0.17 (Lundkvist 2024). If a future cfg needs a metallicity-reddening tweak the value is available, but the color effect is sub-perceptible at fixed Teff.",
-  "li_125":"<b>Activity-cycle visualization fidelity.</b> The ~7.1 yr Sun-like cycle (Lundkvist 2024) is a tie-break visual choice for slow brightening / spot-coverage modulation; refine the cycle-phase anchoring to the game epoch once a renderer can show it.",
-  "h2_126":"Related",
-  "li_127":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
-  "li_128":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — the nearest directly-imaged cold super-Jupiter (~7.6 M_Jup, ~20.9 AU); JWST ammonia + water-ice clouds",
-  "li_129":"<a href=\"eps-eri.md\">eps-eri</a> — comparison nearby K dwarf (K2 V) with a confirmed jovian and a resolved triple-ring disk; contrast ε Eri&#x27;s loud activity + disk against ε Indi A&#x27;s quiet, disk-free photosphere",
-  "li_130":"<a href=\"40-eridani-a.md\">40-eridani-a</a> — comparison nearby K dwarf (K0.5 V) in a triple system; warmer and similarly quiet",
-  "li_131":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — comparison K1 V dwarf with measured asteroseismology; ε Indi A&#x27;s ν_max is the higher of the two",
-  "li_132":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — REX has a basic stellar entry for ε Indi A; the cold super-Jupiter and the brown-dwarf-pair hierarchy are NearStars additions",
+  "h2_119":"Stellar wind / astrosphere",
+  "p_120":"ε Ind A is the textbook <b>compact astrosphere</b>: a moderate wind (Ṁ = 0.5 Ṁ⊙) running into a fast ~68 km/s ISM inflow stands off at only <b>~32 AU</b> — Wood 2005 explicitly calls it compact, and our 6D-astrometry V_ISM (69 km/s) reproduces Wood&#x27;s 68 km/s, validating the method. It cycles on <b>5.65 yr</b> (Laliotis 2023; matching Lovis 2011&#x27;s 4.71 yr). An active-ish old K dwarf, roughly solar in particle environment.",
+  "th_121":"Field",
+  "th_122":"Value",
+  "th_123":"Confidence",
+  "th_124":"Basis",
+  "td_125":"<code>solar_cycle_yr</code>",
+  "td_126":"5.65",
+  "td_127":"high",
+  "td_128":"Laliotis 2023 S-index (matches Lovis 2011 4.71 yr to 1.5σ)",
+  "td_129":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_130":"0.5",
+  "td_131":"high",
+  "td_132":"Wood 2005 astrospheric Lyα (compact astrosphere)",
+  "td_133":"<code>local_ism_inflow_speed_kms</code>",
+  "td_134":"68",
+  "td_135":"high",
+  "td_136":"Wood 2005; 6D-astrometry calc (69) confirms",
+  "td_137":"<code>astrosphere_standoff_au</code>",
+  "td_138":"~32 (compact)",
+  "td_139":"high",
+  "td_140":"120·√0.5·(25.4/68); matches Wood&#x27;s description",
+  "td_141":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_142":"~1.0",
+  "td_143":"low",
+  "td_144":"active old K (R&#x27;HK −4.72) — interesting-first near solar",
+  "td_145":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_146":"~110 / +2",
+  "td_147":"low",
+  "td_148":"6D astrometry vs LIC; <b>plugin-only</b>",
+  "h2_149":"Open items for follow-up",
+  "li_150":"<b>Planet Phase 3 synthesis.</b> ε Indi A b is produced as a separate Phase 3 doc (<code>eps-ind-a-b.md</code>), anchored on Matthews 2024/2026. It is the nearest directly-imaged cold super-Jupiter and the system&#x27;s headline feature.",
+  "li_151":"<b>Brown-dwarf pair ε Indi B (pending DB addition).</b> Ba (T1–1.5, 66.9 M_Jup) + Bb (T6, 53.3 M_Jup) at ~1459 AU (Chen 2022) are not yet NearStars bodies. Adding them — with the Chen 2022 dynamical masses and the Ba–Bb mutual orbit — would let the cfg render the full ε Indi hierarchical triple. They are mentioned in this synthesis but no DB or Phase 3 doc is created for them here.",
+  "li_152":"<b>Age.</b> No Phase 2 age array. The ~3.5 Gyr Chen 2022 activity age is a literature-direct value carried at medium confidence; if a future curation adds a gyrochronology, asteroseismic, or kinematic age, the cfg age should be replaced. The 0.39–5 Gyr literature spread (Lundkvist 2024) is the residual uncertainty.",
+  "li_153":"<b>Rotation period uncertainty.</b> Feng 2018 reports &quot;~35 d&quot; with no formal σ and via an RV-activity-index (not photometric) method. A TESS or dedicated photometric rotation measurement would tighten the value and the gyrochronological age cross-check.",
+  "li_154":"<b>Metallicity.</b> Skipped per project policy; literature ≈ −0.17 (Lundkvist 2024). If a future cfg needs a metallicity-reddening tweak the value is available, but the color effect is sub-perceptible at fixed Teff.",
+  "li_155":"<b>Activity-cycle visualization fidelity.</b> The ~7.1 yr Sun-like cycle (Lundkvist 2024) is a tie-break visual choice for slow brightening / spot-coverage modulation; refine the cycle-phase anchoring to the game epoch once a renderer can show it.",
+  "h2_156":"Related",
+  "li_157":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
+  "li_158":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — the nearest directly-imaged cold super-Jupiter (~7.6 M_Jup, ~20.9 AU); JWST ammonia + water-ice clouds",
+  "li_159":"<a href=\"eps-eri.md\">eps-eri</a> — comparison nearby K dwarf (K2 V) with a confirmed jovian and a resolved triple-ring disk; contrast ε Eri&#x27;s loud activity + disk against ε Indi A&#x27;s quiet, disk-free photosphere",
+  "li_160":"<a href=\"40-eridani-a.md\">40-eridani-a</a> — comparison nearby K dwarf (K0.5 V) in a triple system; warmer and similarly quiet",
+  "li_161":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — comparison K1 V dwarf with measured asteroseismology; ε Indi A&#x27;s ν_max is the higher of the two",
+  "li_162":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — REX has a basic stellar entry for ε Indi A; the cold super-Jupiter and the brown-dwarf-pair hierarchy are NearStars additions",
   "title":"ε Indi A — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -554,20 +631,50 @@ const T = {
   "li_116":"Lundkvist 2024 의 측성지진 방법론 (HARPS/UVES RV 시계열, 가중 파워 스펙트럼, ν_max 엔벨로프 피팅) 과 Chen 2022 의 측성 방법론 (NACO 상대 + FORS2 절대 측성, orvara 식 궤도 피팅) 은 질량과 나이 결정의 기기적 골격이지만, 위에서 이미 쓴 값 이상의 직접 시각 필드를 주지는 않습니다.",
   "h3_117":"Not read — no arXiv preprint or low-priority (~handful)",
   "p_118":"Demory 2009 의 VLTI/VINCI 별별 간섭계 표는 ar5iv 본문이 아니라 VizieR (J/A+A/505/205) 에 있어 bibliography 에서 manual_followup 으로 표시됐고, 그 질량값은 Phase 2 대안으로 보존됩니다. 더 오래된 자전/나이 추정 (Saar &amp; Osten 1997 ~22 d, Lachaume 1999 ~20 d) 은 Feng 2018 ~35 d 주기와 Chen 2022 활동 나이로 대체되어 역사적 맥락으로만 보존됩니다. 읽을 잔해-원반 논문은 없습니다 (보고된 바 없음).",
-  "h2_119":"Open items for follow-up",
-  "li_120":"<b>행성 Phase 3 합성.</b> ε Indi A b 는 별도 Phase 3 문서 (<code>eps-ind-a-b.md</code>) 로 만들며, Matthews 2024/2026 위에 정박합니다. 가장 가까운 직접 촬영 차가운 슈퍼목성이자 시스템의 헤드라인 특징입니다.",
-  "li_121":"<b>갈색왜성 쌍 ε Indi B (DB 추가 대기).</b> Ba (T1–1.5, 66.9 M_Jup) + Bb (T6, 53.3 M_Jup), ~1459 AU (Chen 2022) 는 아직 NearStars 바디가 아닙니다. 이들을 — Chen 2022 역학 질량과 Ba–Bb 상호 궤도와 함께 — 추가하면 cfg 가 전체 ε Indi 계층적 삼중성계를 렌더링할 수 있습니다. 이 합성에서 언급하되 여기서 DB 나 Phase 3 문서를 만들지는 않습니다.",
-  "li_122":"<b>나이.</b> Phase 2 나이 배열 없음. ~3.5 Gyr Chen 2022 활동 나이는 medium 신뢰도의 literature-direct 값입니다. 미래 큐레이션이 자이로크로놀로지, 측성지진, 운동학 나이를 추가하면 cfg 나이를 교체해야 합니다. 0.39–5 Gyr 문헌 분포 (Lundkvist 2024) 가 잔여 불확실성입니다.",
-  "li_123":"<b>자전 주기 불확실도.</b> Feng 2018 은 &quot;~35 d&quot; 를 형식 σ 없이, RV-활동지표 (비측광) 방법으로 보고합니다. TESS 나 전용 측광 자전 측정이 있으면 값과 자이로크로놀로지 나이 교차검증을 다듬을 수 있습니다.",
-  "li_124":"<b>금속도.</b> 프로젝트 정책에 따라 스킵. 문헌 ≈ −0.17 (Lundkvist 2024). 미래 cfg 가 금속도-적화 보정을 필요로 하면 값은 있으나, 고정 Teff 에서 색 효과는 sub-perception 입니다.",
-  "li_125":"<b>활동-주기 시각화 충실도.</b> ~7.1 yr 태양형 주기 (Lundkvist 2024) 는 느린 밝아짐 / spot-coverage 변조의 tie-break 시각 선택입니다. 렌더러가 표현 가능해지면 주기-위상을 게임 epoch 에 맞춰 다듬습니다.",
-  "h2_126":"Related",
-  "li_127":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 표의 스키마 출처",
-  "li_128":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — 가장 가까운 직접 촬영 차가운 슈퍼목성 (~7.6 M_Jup, ~20.9 AU). JWST 암모니아 + 물-얼음 구름",
-  "li_129":"<a href=\"eps-eri.md\">eps-eri</a> — 비교용 가까운 K 왜성 (K2 V). 확인된 거대 행성과 분해된 삼중-고리 원반을 가짐. ε Eri 의 시끄러운 활동 + 원반을 ε Indi A 의 조용하고 원반 없는 광구와 대비",
-  "li_130":"<a href=\"40-eridani-a.md\">40-eridani-a</a> — 비교용 가까운 K 왜성 (K0.5 V). 삼중성계 안에 있고 더 따뜻하며 비슷하게 조용함",
-  "li_131":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — 비교용 K1 V 왜성으로 측성지진이 측정됨. ε Indi A 의 ν_max 가 둘 중 더 높음",
-  "li_132":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — REX 는 ε Indi A 의 기본 항성 엔트리만 가짐. 차가운 슈퍼목성과 갈색왜성-쌍 계층은 NearStars 추가분",
+  "h2_119":"Stellar wind / astrosphere",
+  "p_120":"ε Ind A 는 교과서적인 <b>compact astrosphere</b> 입니다. 적당한 항성풍 (Ṁ = 0.5 Ṁ⊙) 이 빠른 ~68 km/s ISM 유입과 부딪치며 겨우 <b>~32 AU</b> 에서 standoff 합니다 — Wood 2005 가 이를 명시적으로 compact 라 부르며, 우리의 6D-측성 V_ISM (69 km/s) 이 Wood 의 68 km/s 를 재현해 방법을 검증합니다. <b>5.65 년</b> 주기로 사이클링합니다 (Laliotis 2023. Lovis 2011 의 4.71 년과 일치). 다소 활동적인 노년 K 왜성으로, 입자 환경은 대략 태양 수준입니다.",
+  "th_121":"Field",
+  "th_122":"Value",
+  "th_123":"Confidence",
+  "th_124":"Basis",
+  "td_125":"<code>solar_cycle_yr</code>",
+  "td_126":"5.65",
+  "td_127":"high",
+  "td_128":"Laliotis 2023 S-index (Lovis 2011 의 4.71 yr 과 1.5σ 안에서 일치)",
+  "td_129":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_130":"0.5",
+  "td_131":"high",
+  "td_132":"Wood 2005 astrospheric Lyα (compact astrosphere)",
+  "td_133":"<code>local_ism_inflow_speed_kms</code>",
+  "td_134":"68",
+  "td_135":"high",
+  "td_136":"Wood 2005. 6D-측성 계산값 (69) 이 확인",
+  "td_137":"<code>astrosphere_standoff_au</code>",
+  "td_138":"~32 (compact)",
+  "td_139":"high",
+  "td_140":"120·√0.5·(25.4/68). Wood 의 서술과 일치",
+  "td_141":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_142":"~1.0",
+  "td_143":"low",
+  "td_144":"활동적인 노년 K (R&#x27;HK −4.72) — interesting-first, 태양 부근",
+  "td_145":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_146":"~110 / +2",
+  "td_147":"low",
+  "td_148":"6D 측성 대 LIC. <b>plugin-only</b>",
+  "h2_149":"Open items for follow-up",
+  "li_150":"<b>행성 Phase 3 합성.</b> ε Indi A b 는 별도 Phase 3 문서 (<code>eps-ind-a-b.md</code>) 로 만들며, Matthews 2024/2026 위에 정박합니다. 가장 가까운 직접 촬영 차가운 슈퍼목성이자 시스템의 헤드라인 특징입니다.",
+  "li_151":"<b>갈색왜성 쌍 ε Indi B (DB 추가 대기).</b> Ba (T1–1.5, 66.9 M_Jup) + Bb (T6, 53.3 M_Jup), ~1459 AU (Chen 2022) 는 아직 NearStars 바디가 아닙니다. 이들을 — Chen 2022 역학 질량과 Ba–Bb 상호 궤도와 함께 — 추가하면 cfg 가 전체 ε Indi 계층적 삼중성계를 렌더링할 수 있습니다. 이 합성에서 언급하되 여기서 DB 나 Phase 3 문서를 만들지는 않습니다.",
+  "li_152":"<b>나이.</b> Phase 2 나이 배열 없음. ~3.5 Gyr Chen 2022 활동 나이는 medium 신뢰도의 literature-direct 값입니다. 미래 큐레이션이 자이로크로놀로지, 측성지진, 운동학 나이를 추가하면 cfg 나이를 교체해야 합니다. 0.39–5 Gyr 문헌 분포 (Lundkvist 2024) 가 잔여 불확실성입니다.",
+  "li_153":"<b>자전 주기 불확실도.</b> Feng 2018 은 &quot;~35 d&quot; 를 형식 σ 없이, RV-활동지표 (비측광) 방법으로 보고합니다. TESS 나 전용 측광 자전 측정이 있으면 값과 자이로크로놀로지 나이 교차검증을 다듬을 수 있습니다.",
+  "li_154":"<b>금속도.</b> 프로젝트 정책에 따라 스킵. 문헌 ≈ −0.17 (Lundkvist 2024). 미래 cfg 가 금속도-적화 보정을 필요로 하면 값은 있으나, 고정 Teff 에서 색 효과는 sub-perception 입니다.",
+  "li_155":"<b>활동-주기 시각화 충실도.</b> ~7.1 yr 태양형 주기 (Lundkvist 2024) 는 느린 밝아짐 / spot-coverage 변조의 tie-break 시각 선택입니다. 렌더러가 표현 가능해지면 주기-위상을 게임 epoch 에 맞춰 다듬습니다.",
+  "h2_156":"Related",
+  "li_157":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 표의 스키마 출처",
+  "li_158":"<a href=\"eps-ind-a-b.md\">eps-ind-a-b</a> — 가장 가까운 직접 촬영 차가운 슈퍼목성 (~7.6 M_Jup, ~20.9 AU). JWST 암모니아 + 물-얼음 구름",
+  "li_159":"<a href=\"eps-eri.md\">eps-eri</a> — 비교용 가까운 K 왜성 (K2 V). 확인된 거대 행성과 분해된 삼중-고리 원반을 가짐. ε Eri 의 시끄러운 활동 + 원반을 ε Indi A 의 조용하고 원반 없는 광구와 대비",
+  "li_160":"<a href=\"40-eridani-a.md\">40-eridani-a</a> — 비교용 가까운 K 왜성 (K0.5 V). 삼중성계 안에 있고 더 따뜻하며 비슷하게 조용함",
+  "li_161":"<a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — 비교용 K1 V 왜성으로 측성지진이 측정됨. ε Indi A 의 ν_max 가 둘 중 더 높음",
+  "li_162":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — REX 는 ε Indi A 의 기본 항성 엔트리만 가짐. 차가운 슈퍼목성과 갈색왜성-쌍 계층은 NearStars 추가분",
   "title":"ε Indi A — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

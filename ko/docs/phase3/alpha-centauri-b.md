@@ -210,6 +210,21 @@ AU 분리의 동반자 A 는 원일점에서 V = −5.0, 근일점에서 V = −
   없으며, `docs/phase3/_bib/alpha-centauri-b.yaml` 에 `status: skipped`
   주석으로 보존됩니다.
 
+## Stellar wind / astrosphere
+
+α Cen B 는 **단일 α Cen AB astrosphere 를 공유합니다**. 항성풍 공동,
+standoff (~176 AU), inflow 속도, apex 방향은 시스템 대표값으로 α Cen A
+쪽에 기록돼 있습니다 (결합 Ṁ ≈ 2 Ṁ⊙, Wood 2001). B 가 자기 몫으로 들고
+있는 것은 깔끔하고 잘 정의된 **~8.8 년 활동 사이클** 로, 61 Cyg A 다음
+으로 알려진 가장 깨끗한 항성 X 선 사이클입니다 (DeWarf 2010 multi-band.
+Ayres 2014 X 선 단독은 8.2 년). 입자 방사선 가혹도는 태양형입니다.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 8.84 | medium | DeWarf 2010 (multi-band X 선–NUV). X 선 단독 8.2±0.2 yr (Ayres 2014) |
+| `stellar_radiation_surface_relative_sun` | ~1.0 | low | 태양형 활동 — interesting-first, 태양 기준 anchor |
+| `astrosphere` | shares the α Cen AB cavity | — | Wood 2001 — Ṁ / standoff / apex 는 α Cen A 참고 |
+
 ## Open items for follow-up
 
 - **독립적인 경사 측정.** Lisogorskyi 2019 와 Thompson 2017 가 겹치되

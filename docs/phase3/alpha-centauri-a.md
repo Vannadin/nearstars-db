@@ -262,6 +262,29 @@ contribute no cfg-decisive content. The full filtered bib is
 preserved in `docs/phase3/_bib/alpha-centauri-a.yaml` with
 `status: skipped` annotations.
 
+## Stellar wind / astrosphere
+
+α Cen A and B orbit inside a **single shared astrosphere** — one wind cavity
+around the close (a ≈ 24 AU) pair (Wood 2001). The combined wind Ṁ ≈ 2 Ṁ⊙
+inflates that cavity to a nose standoff of **~176 AU** (≈ 1.5× the Sun's
+heliopause), set against the ~25 km/s inflow the system sees from the **G
+cloud** (Wood 2005 uses the G-cloud, not LIC, flow vector for α Cen — so the
+LIC-frame astrometric value, ~19 km/s, is not used here). The coronal X-ray
+output may cycle on a tentative ~19 yr swing, but A has been mired in a
+Maunder-minimum-like low state since ~2005 (Ayres 2014), so this is one
+incompletely sampled swing rather than a confirmed cycle. Particle-radiation
+harshness is solar-like. Astrosphere fields are recorded here as the AB-system
+representative; B carries only its own cycle.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 19.1 (tentative) | low | Ayres 2014 X-ray; single over-long swing out of a Maunder-low, not a repeated cycle |
+| `stellar_wind_mass_loss_solar` | 2 (A+B combined) | high | Wood 2001 — shared astrosphere, HST Lyα |
+| `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (G-cloud vector for α Cen) |
+| `astrosphere_standoff_au` | ~176 | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM); A+B shared cavity |
+| `stellar_radiation_surface_relative_sun` | ~1.0 | low | solar-like activity — interesting-first, Sun-anchored |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~187 / +22 | low | 6D astrometry vs LIC; AB-barycenter, approximate (orbital motion + G-cloud shift it ~10–20°); **plugin-only** |
+
 ## Open items for follow-up
 
 - **DB erratum, `age_measurements` recommended entry for Joyce &

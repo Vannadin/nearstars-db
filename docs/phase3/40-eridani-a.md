@@ -445,6 +445,25 @@ targeting 40 Eri A pre-Burrows (Ma 2018 follow-up proposals).
 These are filtered to `status: skipped` in the bib YAML when
 that is built.
 
+## Stellar wind / astrosphere
+
+40 Eri A is a fast-moving K dwarf (V_ISM ≈ 127 km/s relative to the local ISM),
+so ram pressure would strongly compress its astrosphere — but its wind Ṁ is
+**unmeasured** (40 Eri has no detectable astrosphere in Wood's HST Lyα search),
+so the standoff distance is left unconstrained. It carries a well-established
+**8.7 yr Ca II activity cycle** (Laliotis 2023; historically ~10 yr, Baliunas
+1995). As a moderately active old K dwarf its particle environment is a little
+below solar.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 8.70 | high | Laliotis 2023 S-index (historically ~10.1 yr, Baliunas 1995) |
+| `stellar_wind_mass_loss_solar` | (unconstrained) | — | not in Wood's sample; no detectable astrosphere |
+| `local_ism_inflow_speed_kms` | ~127 | medium | 6D astrometry vs LIC (high space velocity) |
+| `astrosphere_standoff_au` | (unconstrained) | low | requires a wind measurement (Ṁ unknown) |
+| `stellar_radiation_surface_relative_sun` | ~0.8 | low | moderately active old K — interesting-first, near solar |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~281 / −41 | low | 6D astrometry vs LIC; **plugin-only** |
+
 ## Open items for follow-up
 
 - **Jenkins 2011 + Henry 1996 row-level log R'HK verification.**

@@ -269,23 +269,52 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 </section>
 <section>
 <h2 data-i18n="h2_121"></h2>
+<p class="intro" data-i18n="p_122"></p>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_123"></th>
+<th data-i18n="th_124"></th>
+<th data-i18n="th_125"></th>
+<th data-i18n="th_126"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_127"></td>
+<td data-i18n="td_128"></td>
+<td data-i18n="td_129"></td>
+<td data-i18n="td_130"></td>
+</tr>
+<tr>
+<td data-i18n="td_131"></td>
+<td data-i18n="td_132"></td>
+<td data-i18n="td_133"></td>
+<td data-i18n="td_134"></td>
+</tr>
+<tr>
+<td data-i18n="td_135"></td>
+<td data-i18n="td_136"></td>
+<td data-i18n="td_137"></td>
+<td data-i18n="td_138"></td>
+</tr>
+</tbody></table></div>
+</section>
+<section>
+<h2 data-i18n="h2_139"></h2>
 <ul class="intro">
-<li data-i18n="li_122"></li>
-<li data-i18n="li_123"></li>
-<li data-i18n="li_124"></li>
-<li data-i18n="li_125"></li>
-<li data-i18n="li_126"></li>
+<li data-i18n="li_140"></li>
+<li data-i18n="li_141"></li>
+<li data-i18n="li_142"></li>
+<li data-i18n="li_143"></li>
+<li data-i18n="li_144"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_127"></h2>
+<h2 data-i18n="h2_145"></h2>
 <ul class="intro">
-<li data-i18n="li_128"></li>
-<li data-i18n="li_129"></li>
-<li data-i18n="li_130"></li>
-<li data-i18n="li_131"></li>
-<li data-i18n="li_132"></li>
-<li data-i18n="li_133"></li>
+<li data-i18n="li_146"></li>
+<li data-i18n="li_147"></li>
+<li data-i18n="li_148"></li>
+<li data-i18n="li_149"></li>
+<li data-i18n="li_150"></li>
+<li data-i18n="li_151"></li>
 </ul>
 </section>
 </main>
@@ -417,19 +446,37 @@ const T = {
   "h3_118":"Not read — no arXiv preprint or low-priority (~40 papers)",
   "li_119":"<b>Dumusque X. et al. 2012</b> — <i>An Earth-mass planet orbiting α Centauri B</i>, Nature 491, 207 (<code>2012Natur.491..207D</code>, no arXiv). Original RV-jitter-driven retracted detection; superseded by Rajpaul 2016 and Plavchan 2015.",
   "li_120":"Conference proceedings, interstellar-propulsion proposals, and SETI searches contribute no cfg-decisive content; preserved in <code>docs/phase3/_bib/alpha-centauri-b.yaml</code> with <code>status: skipped</code>.",
-  "h2_121":"Open items for follow-up",
-  "li_122":"<b>Independent inclination measurement</b>: Lisogorskyi 2019 and Thompson 2017 give overlapping but loose constraints (i = 30–70°). An asteroseismic rotational splitting analysis or interferometric spot mapping could tighten this.",
-  "li_123":"<b>Cycle phase relationship</b>: Robrade 2016 §4 shows that B&#x27;s chromospheric and coronal cycles are ~π/2 out of phase. The cfg currently stores only the chromospheric cycle as the master phase; a coronal-cycle phase offset variant is a future cfg refinement.",
-  "li_124":"<b>Possible long-period planets</b>: Rajpaul 2016 rules out the Dumusque 2012 short-period claim but does not exhaustively constrain longer-period (months to years) planets in B&#x27;s HZ. The Beichman &amp; Sanghi 2025 MIRI direct-imaging campaign on α Cen A has parallel data on B; a confirmed companion at the 1+ AU range would require a new <code>has_planet_*</code> Decisions row.",
-  "li_125":"<b>High-spatial-resolution photosphere</b>: 3D STAGGER granulation patterns for B (Bigot 2006) are not in the cfg&#x27;s scalar <code>limb_darkening_alpha_h</code>; a cfg variant capturing the 3D granulation could support extreme close-up flybys.",
-  "li_126":"<b>Surface tint synthesized at superseded Teff</b>: the <span class=\"hex-chip\" style=\"background:#ffcfa0\"></span><code>#ffcfa0</code> photospheric tint was derived at the old 5236 K Teff before the correction to Porto de Mello 2008&#x27;s actual 5316 K. The 80 K shift at ~5300 K is below the 8-bit RGB perceptual threshold, so the hex is left unchanged; a re-synthesis is unnecessary but noted for provenance.",
-  "h2_127":"Related",
-  "li_128":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — binary partner; G2V primary, shares all dynamical solutions (Pourbaix &amp; Boffin 2016)",
-  "li_129":"<a href=\"proxima-cen.md\">proxima-cen</a> — wide CPM companion at ~13,000 AU",
-  "li_130":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB worked example (§9)",
-  "li_131":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
-  "li_132":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — α Cen B parameters comparison",
-  "li_133":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — visual-orbit cross-check",
+  "h2_121":"Stellar wind / astrosphere",
+  "p_122":"α Cen B <b>shares the single α Cen AB astrosphere</b> — the wind cavity, standoff (~176 AU), inflow speed, and apex direction are recorded on α Cen A as the system representative (combined Ṁ ≈ 2 Ṁ⊙, Wood 2001). What B carries on its own is a clean, well-defined <b>~8.8 yr activity cycle</b> — the cleanest stellar X-ray cycle known after 61 Cyg A (DeWarf 2010 multi-band; Ayres 2014 X-ray-only gives 8.2 yr). Particle-radiation harshness is solar-like.",
+  "th_123":"Field",
+  "th_124":"Value",
+  "th_125":"Confidence",
+  "th_126":"Basis",
+  "td_127":"<code>solar_cycle_yr</code>",
+  "td_128":"8.84",
+  "td_129":"medium",
+  "td_130":"DeWarf 2010 (multi-band X-ray–NUV); X-ray-only 8.2±0.2 yr (Ayres 2014)",
+  "td_131":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_132":"~1.0",
+  "td_133":"low",
+  "td_134":"solar-like activity — interesting-first, Sun-anchored",
+  "td_135":"<code>astrosphere</code>",
+  "td_136":"shares the α Cen AB cavity",
+  "td_137":"—",
+  "td_138":"Wood 2001 — see α Cen A for Ṁ / standoff / apex",
+  "h2_139":"Open items for follow-up",
+  "li_140":"<b>Independent inclination measurement</b>: Lisogorskyi 2019 and Thompson 2017 give overlapping but loose constraints (i = 30–70°). An asteroseismic rotational splitting analysis or interferometric spot mapping could tighten this.",
+  "li_141":"<b>Cycle phase relationship</b>: Robrade 2016 §4 shows that B&#x27;s chromospheric and coronal cycles are ~π/2 out of phase. The cfg currently stores only the chromospheric cycle as the master phase; a coronal-cycle phase offset variant is a future cfg refinement.",
+  "li_142":"<b>Possible long-period planets</b>: Rajpaul 2016 rules out the Dumusque 2012 short-period claim but does not exhaustively constrain longer-period (months to years) planets in B&#x27;s HZ. The Beichman &amp; Sanghi 2025 MIRI direct-imaging campaign on α Cen A has parallel data on B; a confirmed companion at the 1+ AU range would require a new <code>has_planet_*</code> Decisions row.",
+  "li_143":"<b>High-spatial-resolution photosphere</b>: 3D STAGGER granulation patterns for B (Bigot 2006) are not in the cfg&#x27;s scalar <code>limb_darkening_alpha_h</code>; a cfg variant capturing the 3D granulation could support extreme close-up flybys.",
+  "li_144":"<b>Surface tint synthesized at superseded Teff</b>: the <span class=\"hex-chip\" style=\"background:#ffcfa0\"></span><code>#ffcfa0</code> photospheric tint was derived at the old 5236 K Teff before the correction to Porto de Mello 2008&#x27;s actual 5316 K. The 80 K shift at ~5300 K is below the 8-bit RGB perceptual threshold, so the hex is left unchanged; a re-synthesis is unnecessary but noted for provenance.",
+  "h2_145":"Related",
+  "li_146":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — binary partner; G2V primary, shares all dynamical solutions (Pourbaix &amp; Boffin 2016)",
+  "li_147":"<a href=\"proxima-cen.md\">proxima-cen</a> — wide CPM companion at ~13,000 AU",
+  "li_148":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB worked example (§9)",
+  "li_149":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions schema",
+  "li_150":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — α Cen B parameters comparison",
+  "li_151":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — visual-orbit cross-check",
   "title":"α Centauri B — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -556,19 +603,37 @@ const T = {
   "h3_118":"Not read — no arXiv preprint or low-priority (~40 papers)",
   "li_119":"<b>Dumusque X. et al. 2012</b> — <i>An Earth-mass planet orbiting α Centauri B</i>, Nature 491, 207 (<code>2012Natur.491..207D</code>, no arXiv). 원래의 RV-jitter 기반 철회된 검출. Rajpaul 2016, Plavchan 2015 로 대체.",
   "li_120":"학회 abstract, 항성 간 추진 제안, SETI 탐색은 cfg 결정에 영향이 없으며, <code>docs/phase3/_bib/alpha-centauri-b.yaml</code> 에 <code>status: skipped</code> 주석으로 보존됩니다.",
-  "h2_121":"Open items for follow-up",
-  "li_122":"<b>독립적인 경사 측정.</b> Lisogorskyi 2019 와 Thompson 2017 가 겹치되 느슨한 제약 (i = 30–70°) 을 줍니다. asteroseismic 회전 splitting 분석 이나 간섭계 흑점 매핑이 이 값을 타이트하게 할 수 있습니다.",
-  "li_123":"<b>사이클 위상 관계.</b> Robrade 2016 §4 는 B 의 색채권과 코로나 사이클이 ~π/2 만큼 위상이 어긋남을 보입니다. cfg 는 현재 색채권 사이클만 master 위상으로 저장하며, 코로나 사이클 위상 오프셋 변형은 후속 cfg 정련 사항입니다.",
-  "li_124":"<b>가능한 장주기 행성.</b> Rajpaul 2016 가 Dumusque 2012 의 단주기 주장을 배제하지만 B 의 HZ 의 더 긴 주기 (수개월~수년) 행성은 충분히 제약하지 않습니다. α Cen A 의 Beichman &amp; Sanghi 2025 MIRI 직접 촬영 캠페인이 B 에서도 병행 데이터를 갖고 있으며, 1+ AU 범위의 동반자가 확인되면 새 <code>has_planet_*</code> Decisions 행이 필요합니다.",
-  "li_125":"<b>고공간 분해능 광구.</b> B 의 3D STAGGER granulation 패턴 (Bigot 2006) 은 cfg 스칼라 <code>limb_darkening_alpha_h</code> 에 들어 있지 않습니다. 3D granulation 을 잡는 cfg 변형이 극단적인 close-up fly-by 를 지원할 수 있습니다.",
-  "li_126":"<b>이전 Teff 로 합성된 표면 색조.</b> <span class=\"hex-chip\" style=\"background:#ffcfa0\"></span><code>#ffcfa0</code> 광구 색조는 Porto de Mello 2008 의 실제값 5316 K 로 정정되기 전, 옛 5236 K Teff 에서 유도됐습니다. ~5300 K 에서 80 K 차이는 8-bit RGB 인지 임계값 아래라 hex 는 그대로 두며, 재합성은 불필요하지만 출처 추적을 위해 남겨 둡니다.",
-  "h2_127":"Related",
-  "li_128":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — 이중성 짝. G2V 주성, 모든 역학 해 (Pourbaix &amp; Boffin 2016) 를 공유합니다.",
-  "li_129":"<a href=\"proxima-cen.md\">proxima-cen</a> — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성.",
-  "li_130":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB 워크드 예시 (§9).",
-  "li_131":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마.",
-  "li_132":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — α Cen B 파라미터 비교.",
-  "li_133":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — 시각이중성 궤도 교차 검증.",
+  "h2_121":"Stellar wind / astrosphere",
+  "p_122":"α Cen B 는 <b>단일 α Cen AB astrosphere 를 공유합니다</b>. 항성풍 공동, standoff (~176 AU), inflow 속도, apex 방향은 시스템 대표값으로 α Cen A 쪽에 기록돼 있습니다 (결합 Ṁ ≈ 2 Ṁ⊙, Wood 2001). B 가 자기 몫으로 들고 있는 것은 깔끔하고 잘 정의된 <b>~8.8 년 활동 사이클</b> 로, 61 Cyg A 다음 으로 알려진 가장 깨끗한 항성 X 선 사이클입니다 (DeWarf 2010 multi-band. Ayres 2014 X 선 단독은 8.2 년). 입자 방사선 가혹도는 태양형입니다.",
+  "th_123":"Field",
+  "th_124":"Value",
+  "th_125":"Confidence",
+  "th_126":"Basis",
+  "td_127":"<code>solar_cycle_yr</code>",
+  "td_128":"8.84",
+  "td_129":"medium",
+  "td_130":"DeWarf 2010 (multi-band X 선–NUV). X 선 단독 8.2±0.2 yr (Ayres 2014)",
+  "td_131":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_132":"~1.0",
+  "td_133":"low",
+  "td_134":"태양형 활동 — interesting-first, 태양 기준 anchor",
+  "td_135":"<code>astrosphere</code>",
+  "td_136":"shares the α Cen AB cavity",
+  "td_137":"—",
+  "td_138":"Wood 2001 — Ṁ / standoff / apex 는 α Cen A 참고",
+  "h2_139":"Open items for follow-up",
+  "li_140":"<b>독립적인 경사 측정.</b> Lisogorskyi 2019 와 Thompson 2017 가 겹치되 느슨한 제약 (i = 30–70°) 을 줍니다. asteroseismic 회전 splitting 분석 이나 간섭계 흑점 매핑이 이 값을 타이트하게 할 수 있습니다.",
+  "li_141":"<b>사이클 위상 관계.</b> Robrade 2016 §4 는 B 의 색채권과 코로나 사이클이 ~π/2 만큼 위상이 어긋남을 보입니다. cfg 는 현재 색채권 사이클만 master 위상으로 저장하며, 코로나 사이클 위상 오프셋 변형은 후속 cfg 정련 사항입니다.",
+  "li_142":"<b>가능한 장주기 행성.</b> Rajpaul 2016 가 Dumusque 2012 의 단주기 주장을 배제하지만 B 의 HZ 의 더 긴 주기 (수개월~수년) 행성은 충분히 제약하지 않습니다. α Cen A 의 Beichman &amp; Sanghi 2025 MIRI 직접 촬영 캠페인이 B 에서도 병행 데이터를 갖고 있으며, 1+ AU 범위의 동반자가 확인되면 새 <code>has_planet_*</code> Decisions 행이 필요합니다.",
+  "li_143":"<b>고공간 분해능 광구.</b> B 의 3D STAGGER granulation 패턴 (Bigot 2006) 은 cfg 스칼라 <code>limb_darkening_alpha_h</code> 에 들어 있지 않습니다. 3D granulation 을 잡는 cfg 변형이 극단적인 close-up fly-by 를 지원할 수 있습니다.",
+  "li_144":"<b>이전 Teff 로 합성된 표면 색조.</b> <span class=\"hex-chip\" style=\"background:#ffcfa0\"></span><code>#ffcfa0</code> 광구 색조는 Porto de Mello 2008 의 실제값 5316 K 로 정정되기 전, 옛 5236 K Teff 에서 유도됐습니다. ~5300 K 에서 80 K 차이는 8-bit RGB 인지 임계값 아래라 hex 는 그대로 두며, 재합성은 불필요하지만 출처 추적을 위해 남겨 둡니다.",
+  "h2_145":"Related",
+  "li_146":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — 이중성 짝. G2V 주성, 모든 역학 해 (Pourbaix &amp; Boffin 2016) 를 공유합니다.",
+  "li_147":"<a href=\"proxima-cen.md\">proxima-cen</a> — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성.",
+  "li_148":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — α Cen AB 워크드 예시 (§9).",
+  "li_149":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 스키마.",
+  "li_150":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — α Cen B 파라미터 비교.",
+  "li_151":"<a href=\"../../plans/stellarium-binary-orbit-comparison.md\">stellarium-binary-orbit-comparison</a> — 시각이중성 궤도 교차 검증.",
   "title":"α Centauri B — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

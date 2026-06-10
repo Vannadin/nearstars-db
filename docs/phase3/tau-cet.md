@@ -373,6 +373,23 @@ cfg-decisive content for the host star. The full filtered bib is
 preserved in `docs/phase3/_bib/tau-cet.yaml` with `status: skipped`
 annotations.
 
+## Stellar wind / astrosphere
+
+τ Cet has a weak wind (Ṁ ≤ 0.1 Ṁ⊙, Wood 2021) and sees a moderate ~50 km/s ISM
+inflow, giving a small astrosphere standing off at **≲19 AU**. It is among the
+most magnetically quiet Sun-like stars known — **definitively flat, with no
+activity cycle** over ~50 yr of monitoring (Baum 2022). The result is a steady
+(uncycled) particle environment somewhat below solar.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | none (flat) | high | Baum 2022 — no cycle over ~50 yr; steady, uncycled wind |
+| `stellar_wind_mass_loss_solar` | ≤ 0.1 (upper limit) | medium | Wood 2021 astrospheric Lyα |
+| `local_ism_inflow_speed_kms` | ~50 | medium | 6D astrometry vs LIC |
+| `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | from the Ṁ upper limit + V_ISM |
+| `stellar_radiation_surface_relative_sun` | ~0.5 | low | very inactive, flat — interesting-first below solar |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~282 / +8 | low | 6D astrometry vs LIC; **plugin-only** |
+
 ## Open items for follow-up
 
 - **Phase 2 disk_measurements + planet measurements re-ingest.**

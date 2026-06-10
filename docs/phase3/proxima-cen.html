@@ -290,20 +290,67 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 </section>
 <section>
 <h2 data-i18n="h2_134"></h2>
+<p class="intro" data-i18n="p_135"></p>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_136"></th>
+<th data-i18n="th_137"></th>
+<th data-i18n="th_138"></th>
+<th data-i18n="th_139"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_140"></td>
+<td data-i18n="td_141"></td>
+<td data-i18n="td_142"></td>
+<td data-i18n="td_143"></td>
+</tr>
+<tr>
+<td data-i18n="td_144"></td>
+<td data-i18n="td_145"></td>
+<td data-i18n="td_146"></td>
+<td data-i18n="td_147"></td>
+</tr>
+<tr>
+<td data-i18n="td_148"></td>
+<td data-i18n="td_149"></td>
+<td data-i18n="td_150"></td>
+<td data-i18n="td_151"></td>
+</tr>
+<tr>
+<td data-i18n="td_152"></td>
+<td data-i18n="td_153"></td>
+<td data-i18n="td_154"></td>
+<td data-i18n="td_155"></td>
+</tr>
+<tr>
+<td data-i18n="td_156"></td>
+<td data-i18n="td_157"></td>
+<td data-i18n="td_158"></td>
+<td data-i18n="td_159"></td>
+</tr>
+<tr>
+<td data-i18n="td_160"></td>
+<td data-i18n="td_161"></td>
+<td data-i18n="td_162"></td>
+<td data-i18n="td_163"></td>
+</tr>
+</tbody></table></div>
+</section>
+<section>
+<h2 data-i18n="h2_164"></h2>
 <ul class="intro">
-<li data-i18n="li_135"></li>
-<li data-i18n="li_136"></li>
-<li data-i18n="li_137"></li>
+<li data-i18n="li_165"></li>
+<li data-i18n="li_166"></li>
+<li data-i18n="li_167"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_138"></h2>
+<h2 data-i18n="h2_168"></h2>
 <ul class="intro">
-<li data-i18n="li_139"></li>
-<li data-i18n="li_140"></li>
-<li data-i18n="li_141"></li>
-<li data-i18n="li_142"></li>
-<li data-i18n="li_143"></li>
+<li data-i18n="li_169"></li>
+<li data-i18n="li_170"></li>
+<li data-i18n="li_171"></li>
+<li data-i18n="li_172"></li>
+<li data-i18n="li_173"></li>
 </ul>
 </section>
 </main>
@@ -448,16 +495,46 @@ const T = {
   "h3_131":"Not read — no arXiv preprint or low-priority (~150 papers)",
   "li_132":"<b>DeWarf-equivalent for Proxima rotation/cycle</b>: not needed (Suárez Mascareño 2020 + Wargelin 2024 cover the same observable base with current precision).",
   "li_133":"Conference proceedings, SETI / laser-communication targeting, interstellar-mission proposals; preserved in <code>docs/phase3/_bib/proxima-cen.yaml</code> with <code>status: skipped</code>.",
-  "h2_134":"Open items for follow-up",
-  "li_135":"<b>Proxima c (sub-Neptune at 5.2 AU candidate)</b>: Damasso 2020 + Benedict 2020 reported astrometric + RV evidence for a third planet, but the 3σ confidence threshold has not been reached as of 2026 follow-up. If confirmed, a new <code>has_planet_c</code> Decisions row is needed; current cfg leaves the planet out.",
-  "li_136":"<b>Active region latitude distribution</b>: Suárez Mascareño 2020 §4 inclination i ≈ 35° but does not resolve spot latitudes. A future Doppler-imaging campaign could constrain whether Proxima&#x27;s active regions are predominantly equatorial (like the Sun) or polar (like some young rapid rotators).",
-  "li_137":"<b>Capture vs. coeval origin</b>: Feng &amp; Jones 2018 cannot distinguish; the implication for age (4.85 Gyr coeval vs. potentially much younger if captured from a star-forming region encounter) propagates into the cfg <code>age_gyr</code> confidence. A future Gaia DR4 astrometric solution might tighten the encounter dynamics.",
-  "h2_138":"Related",
-  "li_139":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a>, <a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — wide CPM companions at ~13,000 AU (P ≈ 547 kyr; Kervella 2017). Capture-vs-coeval origin remains unresolved (Feng &amp; Jones 2018).",
-  "li_140":"<a href=\"proxima-cen-b.md\">proxima-cen-b</a>, <a href=\"proxima-cen-d.md\">proxima-cen-d</a> — confirmed planetary system; b is the HZ rocky world, d the USP sub-Earth",
-  "li_141":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — Proxima&#x27;s outer orbit around AB barycenter is the canonical hierarchical/static-CPM example (§6)",
-  "li_142":"<a href=\"../reference/methodology.md\">methodology</a> — DB schema source",
-  "li_143":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3 Proxima T_eff is the notable Phase 3 → REX disagreement (3498 K vs 3042 K, NS uses Suárez Mascareño 2025)",
+  "h2_134":"Stellar wind / astrosphere",
+  "p_135":"Proxima has a <b>compact astrosphere</b> — its weak wind (Ṁ ≤ 0.2 Ṁ⊙ upper limit, Wood 2001) stands off the local ISM at only <b>≲55 AU</b>. The crucial point for a radiation layer: although Proxima looks quiescent by the chromospheric measure (log R&#x27;HK underrepresents M-dwarf activity), it is a violent <b>flare star</b>, so its crew-relevant particle radiation is far HARSHER than the Sun&#x27;s — flare-dominated, not wind-dominated. Its activity cycles on ~7 yr (Wargelin 2017). It shares the same local interstellar flow as α Cen (V_ISM ≈ 25 km/s).",
+  "th_136":"Field",
+  "th_137":"Value",
+  "th_138":"Confidence",
+  "th_139":"Basis",
+  "td_140":"<code>solar_cycle_yr</code>",
+  "td_141":"7",
+  "td_142":"medium",
+  "td_143":"Wargelin 2017 (ASAS V-band + X-ray/UV)",
+  "td_144":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_145":"≤ 0.2 (upper limit)",
+  "td_146":"medium",
+  "td_147":"Wood 2001 astrospheric Lyα",
+  "td_148":"<code>local_ism_inflow_speed_kms</code>",
+  "td_149":"~25",
+  "td_150":"medium",
+  "td_151":"Wood 2005 (LIC; same flow as α Cen)",
+  "td_152":"<code>astrosphere_standoff_au</code>",
+  "td_153":"≲ 55 (upper bound)",
+  "td_154":"medium",
+  "td_155":"from the Ṁ upper limit",
+  "td_156":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_157":"~5",
+  "td_158":"low",
+  "td_159":"flare-dominated; R&#x27;HK hides M-dwarf flares — interesting-first boost above solar",
+  "td_160":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_161":"~185 / +42",
+  "td_162":"low",
+  "td_163":"6D astrometry vs LIC; <b>plugin-only</b>",
+  "h2_164":"Open items for follow-up",
+  "li_165":"<b>Proxima c (sub-Neptune at 5.2 AU candidate)</b>: Damasso 2020 + Benedict 2020 reported astrometric + RV evidence for a third planet, but the 3σ confidence threshold has not been reached as of 2026 follow-up. If confirmed, a new <code>has_planet_c</code> Decisions row is needed; current cfg leaves the planet out.",
+  "li_166":"<b>Active region latitude distribution</b>: Suárez Mascareño 2020 §4 inclination i ≈ 35° but does not resolve spot latitudes. A future Doppler-imaging campaign could constrain whether Proxima&#x27;s active regions are predominantly equatorial (like the Sun) or polar (like some young rapid rotators).",
+  "li_167":"<b>Capture vs. coeval origin</b>: Feng &amp; Jones 2018 cannot distinguish; the implication for age (4.85 Gyr coeval vs. potentially much younger if captured from a star-forming region encounter) propagates into the cfg <code>age_gyr</code> confidence. A future Gaia DR4 astrometric solution might tighten the encounter dynamics.",
+  "h2_168":"Related",
+  "li_169":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a>, <a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — wide CPM companions at ~13,000 AU (P ≈ 547 kyr; Kervella 2017). Capture-vs-coeval origin remains unresolved (Feng &amp; Jones 2018).",
+  "li_170":"<a href=\"proxima-cen-b.md\">proxima-cen-b</a>, <a href=\"proxima-cen-d.md\">proxima-cen-d</a> — confirmed planetary system; b is the HZ rocky world, d the USP sub-Earth",
+  "li_171":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — Proxima&#x27;s outer orbit around AB barycenter is the canonical hierarchical/static-CPM example (§6)",
+  "li_172":"<a href=\"../reference/methodology.md\">methodology</a> — DB schema source",
+  "li_173":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3 Proxima T_eff is the notable Phase 3 → REX disagreement (3498 K vs 3042 K, NS uses Suárez Mascareño 2025)",
   "title":"Proxima Centauri — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -597,16 +674,46 @@ const T = {
   "h3_131":"Not read — no arXiv preprint or low-priority (~150 papers)",
   "li_132":"<b>Proxima 회전/사이클의 DeWarf-equivalent.</b> 불필요 (Suárez Mascareño 2020 + Wargelin 2024 가 현재 정밀도로 같은 관측 base 를 커버).",
   "li_133":"학회 abstract, SETI / 레이저 통신 타겟팅, 항성 간 미션 제안 등은 <code>docs/phase3/_bib/proxima-cen.yaml</code> 에 <code>status: skipped</code> 주석으로 보존됩니다.",
-  "h2_134":"Open items for follow-up",
-  "li_135":"<b>Proxima c (5.2 AU 의 sub-Neptune 후보).</b> Damasso 2020 + Benedict 2020 이 세 번째 행성에 대한 astrometric + RV 증거를 보고했지만, 3σ 신뢰도 임계치를 아직 넘지 못했습니다. 확정되면 새 <code>has_planet_c</code> Decisions 행이 필요하며, 현재 cfg 는 행성을 빼놓고 갑니다.",
-  "li_136":"<b>활동 영역 위도 분포.</b> Suárez Mascareño 2020 §4 의 경사 i ≈ 35° 는 흑점 위도를 분해하지 않습니다. 향후 Doppler-imaging 캠페인이 Proxima 의 활동 영역이 주로 적도형 (태양처럼) 인지 극형 (일부 빠른 자전성처럼) 인지를 제약할 수 있습니다.",
-  "li_137":"<b>포획 vs. 공동 형성 기원.</b> Feng &amp; Jones 2018 가 구분하지 못합니다. 나이에 대한 함의 (4.85 Gyr 공동 형성 vs. 별 형성 영역 조우에서 포획됐다면 잠재적으로 훨씬 어림) 가 cfg <code>age_gyr</code> 신뢰도로 전파됩니다. 향후 Gaia DR4 astrometric 해가 조우 역학을 더 타이트하게 할 수 있습니다.",
-  "h2_138":"Related",
-  "li_139":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a>, <a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성 (P ≈ 547 kyr; Kervella 2017). capture 대 coeval 기원은 여전히 미해결 (Feng &amp; Jones 2018).",
-  "li_140":"<a href=\"proxima-cen-b.md\">proxima-cen-b</a>, <a href=\"proxima-cen-d.md\">proxima-cen-d</a> — 확인된 행성계. b 는 HZ 암석 행성, d 는 USP sub-Earth.",
-  "li_141":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — Proxima 가 AB 무게중심을 도는 외곽 궤도는 hierarchical/static-CPM 의 정전 예시입니다 (§6).",
-  "li_142":"<a href=\"../reference/methodology.md\">methodology</a> — DB 스키마 원본.",
-  "li_143":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3 Proxima T_eff 는 Phase 3 → REX 의 주요 불일치 지점 (3498 K 대 3042 K, NS 는 Suárez Mascareño 2025 사용).",
+  "h2_134":"Stellar wind / astrosphere",
+  "p_135":"Proxima 는 <b>조밀한 astrosphere</b> 를 가집니다 — 약한 항성풍 (Ṁ ≤ 0.2 Ṁ⊙ 상한, Wood 2001) 이 국소 ISM 을 겨우 <b>≲55 AU</b> 에서 막아냅니다. 방사선 레이어에서 결정적인 점은 이것입니다. Proxima 는 색채권 지표로 보면 정적으로 보이지만 (log R&#x27;HK 가 M 왜성 활동도를 과소 대변함), 사실 격렬한 <b>flare star</b> 라서 승무원에게 영향을 주는 입자 방사선은 태양보다 훨씬 더 가혹합니다 — 항성풍이 아니라 flare 가 지배합니다. 활동도는 ~7 yr 주기로 순환하고 (Wargelin 2017), α Cen 과 같은 국소 성간 흐름을 공유합니다 (V_ISM ≈ 25 km/s).",
+  "th_136":"Field",
+  "th_137":"Value",
+  "th_138":"Confidence",
+  "th_139":"Basis",
+  "td_140":"<code>solar_cycle_yr</code>",
+  "td_141":"7",
+  "td_142":"medium",
+  "td_143":"Wargelin 2017 (ASAS V-band + X-ray/UV)",
+  "td_144":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_145":"≤ 0.2 (upper limit)",
+  "td_146":"medium",
+  "td_147":"Wood 2001 astrospheric Lyα",
+  "td_148":"<code>local_ism_inflow_speed_kms</code>",
+  "td_149":"~25",
+  "td_150":"medium",
+  "td_151":"Wood 2005 (LIC. α Cen 과 같은 흐름)",
+  "td_152":"<code>astrosphere_standoff_au</code>",
+  "td_153":"≲ 55 (upper bound)",
+  "td_154":"medium",
+  "td_155":"Ṁ 상한에서",
+  "td_156":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_157":"~5",
+  "td_158":"low",
+  "td_159":"flare 지배. R&#x27;HK 가 M 왜성 flare 를 가림 — interesting-first 로 태양 위로 boost",
+  "td_160":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_161":"~185 / +42",
+  "td_162":"low",
+  "td_163":"6D astrometry 대 LIC. <b>plugin-only</b>",
+  "h2_164":"Open items for follow-up",
+  "li_165":"<b>Proxima c (5.2 AU 의 sub-Neptune 후보).</b> Damasso 2020 + Benedict 2020 이 세 번째 행성에 대한 astrometric + RV 증거를 보고했지만, 3σ 신뢰도 임계치를 아직 넘지 못했습니다. 확정되면 새 <code>has_planet_c</code> Decisions 행이 필요하며, 현재 cfg 는 행성을 빼놓고 갑니다.",
+  "li_166":"<b>활동 영역 위도 분포.</b> Suárez Mascareño 2020 §4 의 경사 i ≈ 35° 는 흑점 위도를 분해하지 않습니다. 향후 Doppler-imaging 캠페인이 Proxima 의 활동 영역이 주로 적도형 (태양처럼) 인지 극형 (일부 빠른 자전성처럼) 인지를 제약할 수 있습니다.",
+  "li_167":"<b>포획 vs. 공동 형성 기원.</b> Feng &amp; Jones 2018 가 구분하지 못합니다. 나이에 대한 함의 (4.85 Gyr 공동 형성 vs. 별 형성 영역 조우에서 포획됐다면 잠재적으로 훨씬 어림) 가 cfg <code>age_gyr</code> 신뢰도로 전파됩니다. 향후 Gaia DR4 astrometric 해가 조우 역학을 더 타이트하게 할 수 있습니다.",
+  "h2_168":"Related",
+  "li_169":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a>, <a href=\"alpha-centauri-b.md\">alpha-centauri-b</a> — 약 13 000 AU 거리의 광폭 공통 고유운동 동반성 (P ≈ 547 kyr; Kervella 2017). capture 대 coeval 기원은 여전히 미해결 (Feng &amp; Jones 2018).",
+  "li_170":"<a href=\"proxima-cen-b.md\">proxima-cen-b</a>, <a href=\"proxima-cen-d.md\">proxima-cen-d</a> — 확인된 행성계. b 는 HZ 암석 행성, d 는 USP sub-Earth.",
+  "li_171":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — Proxima 가 AB 무게중심을 도는 외곽 궤도는 hierarchical/static-CPM 의 정전 예시입니다 (§6).",
+  "li_172":"<a href=\"../reference/methodology.md\">methodology</a> — DB 스키마 원본.",
+  "li_173":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — §3 Proxima T_eff 는 Phase 3 → REX 의 주요 불일치 지점 (3498 K 대 3042 K, NS 는 Suárez Mascareño 2025 사용).",
   "title":"Proxima Centauri — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

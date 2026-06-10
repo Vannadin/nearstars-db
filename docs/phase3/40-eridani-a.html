@@ -287,23 +287,70 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 </section>
 <section>
 <h2 data-i18n="h2_134"></h2>
+<p class="intro" data-i18n="p_135"></p>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_136"></th>
+<th data-i18n="th_137"></th>
+<th data-i18n="th_138"></th>
+<th data-i18n="th_139"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_140"></td>
+<td data-i18n="td_141"></td>
+<td data-i18n="td_142"></td>
+<td data-i18n="td_143"></td>
+</tr>
+<tr>
+<td data-i18n="td_144"></td>
+<td data-i18n="td_145"></td>
+<td data-i18n="td_146"></td>
+<td data-i18n="td_147"></td>
+</tr>
+<tr>
+<td data-i18n="td_148"></td>
+<td data-i18n="td_149"></td>
+<td data-i18n="td_150"></td>
+<td data-i18n="td_151"></td>
+</tr>
+<tr>
+<td data-i18n="td_152"></td>
+<td data-i18n="td_153"></td>
+<td data-i18n="td_154"></td>
+<td data-i18n="td_155"></td>
+</tr>
+<tr>
+<td data-i18n="td_156"></td>
+<td data-i18n="td_157"></td>
+<td data-i18n="td_158"></td>
+<td data-i18n="td_159"></td>
+</tr>
+<tr>
+<td data-i18n="td_160"></td>
+<td data-i18n="td_161"></td>
+<td data-i18n="td_162"></td>
+<td data-i18n="td_163"></td>
+</tr>
+</tbody></table></div>
+</section>
+<section>
+<h2 data-i18n="h2_164"></h2>
 <ul class="intro">
-<li data-i18n="li_135"></li>
-<li data-i18n="li_136"></li>
-<li data-i18n="li_137"></li>
-<li data-i18n="li_138"></li>
-<li data-i18n="li_139"></li>
-<li data-i18n="li_140"></li>
+<li data-i18n="li_165"></li>
+<li data-i18n="li_166"></li>
+<li data-i18n="li_167"></li>
+<li data-i18n="li_168"></li>
+<li data-i18n="li_169"></li>
+<li data-i18n="li_170"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_141"></h2>
+<h2 data-i18n="h2_171"></h2>
 <ul class="intro">
-<li data-i18n="li_142"></li>
-<li data-i18n="li_143"></li>
-<li data-i18n="li_144"></li>
-<li data-i18n="li_145"></li>
-<li data-i18n="li_146"></li>
+<li data-i18n="li_172"></li>
+<li data-i18n="li_173"></li>
+<li data-i18n="li_174"></li>
+<li data-i18n="li_175"></li>
+<li data-i18n="li_176"></li>
 </ul>
 </section>
 </main>
@@ -448,19 +495,49 @@ const T = {
   "li_131":"<b>Soto M. G. &amp; Jenkins J. S. 2018</b> — SPECIES atmospheric pipeline used by Diaz 2018 for parameter derivation.",
   "h3_132":"Not read — superseded or low-priority",
   "p_133":"Pre-2010 K-dwarf isochrone surveys (Valenti &amp; Fischer 2005 SPOCS, Holmberg et al. 2009 Geneva-Copenhagen); generic nearest-50-pc K-dwarf rotation surveys without 40 Eri A entries; Mt. Wilson HK plate-archive papers superseded by the Burrows 2024 NEID baseline. SETI / exoplanet-search proposal papers targeting 40 Eri A pre-Burrows (Ma 2018 follow-up proposals). These are filtered to <code>status: skipped</code> in the bib YAML when that is built.",
-  "h2_134":"Open items for follow-up",
-  "li_135":"<b>Jenkins 2011 + Henry 1996 row-level log R&#x27;HK verification.</b> The chromospheric activity values −4.99 (Jenkins) and −4.94 (Henry) were carried over from the 2026-05-27 prep notes; in this session the CDS table row for HD 26965 was not directly fetched. Re-verify against the CDS Table 4 of Jenkins 2011 (full table) and the equivalent in Henry 1996 in a future curation pass — both are widely quoted in downstream papers and the values are likely correct but should be paper-Table confirmed.",
-  "li_136":"<b>Bensby 2014 row-level [Fe/H] verification.</b> Same caveat as above: the value −0.31 ± 0.10 is from the prep notes; the Table A1 row for HD 26965 was not directly fetched in this session.",
-  "li_137":"<b>Burrows 2024 rotation-period uncertainty.</b> Paper reports &quot;∼42 days&quot; without a formal σ. The pre-Burrows 37-d Saar &amp; Osten reading and 38-d Diaz 2018 HARPS S-index reading are inconsistent with 42 d at face value. A Gaussian-process RV + light-curve joint analysis (per the Aigrain 2015 framework, or comparable to the methodology of Damasso 2020 for Proxima) would settle whether the 42-d signal is genuinely the surface rotation period or a longer-lived active-band signature with an underlying differential-rotation rate.",
-  "li_138":"<b>Age divergence resolution by asteroseismology.</b> A fundamental cross-check of the Ma 2018 ~7 Gyr vs Bond 2017 ~1.8 Gyr ages would require asteroseismic detection of p-mode oscillations on 40 Eri A. The K0.5 V spectral type puts ν_max near 4000 µHz which is at the edge of feasibility for current precision-RV time-series capabilities, but a dedicated NEID or ESPRESSO multi-night campaign comparable to Bouchy &amp; Carrier 2001 / de Meulenaer 2010 (α Cen A) would be decisive.",
-  "li_139":"<b>40 Eri A x-ray cycle characterization.</b> No long-baseline XMM-Newton or Chandra monitoring campaign published for A; the activity log R&#x27;HK = −4.99 and P_rot 42 d imply a Sun-like cycle is plausible but unconstrained. A dedicated cycle search (the same template as Robrade 2016 for α Cen A) would be cfg-decisive for activity-cycle visual rendering.",
-  "li_140":"<b>A-BC outer orbit fitting.</b> The ~8000 yr orbit is currently unfitted (Tokovinin MSC 2018). Decades-long Gaia astrometric monitoring should eventually tighten the A-BC parameters; if fitted, this would change <code>db/binary_orbits.json</code> to include an A-BC entry and the Phase 3 visual styling section&#x27;s &quot;B-C pair as single point ~83″ away&quot; claim becomes time-variable.",
-  "h2_141":"Related",
-  "li_142":"<a href=\"40-eridani-b.md\">40-eridani-b</a> — DA2.9 white-dwarf companion; Bond 2017 IFMR is the anchor for the system age divergence documented above",
-  "li_143":"<a href=\"40-eridani-c.md\">40-eridani-c</a> — M4.5 Ve flare star (DY Eri); paired with B on a 230-yr orbit",
-  "li_144":"<a href=\"tau-cet-e.md\">tau-cet-e</a> — sibling refuted-planet Phase 3 markdown; structural precedent for the Refuted planet section",
-  "li_145":"<a href=\"../reference/methodology.md\">methodology</a> — Phase 2/3 schema",
-  "li_146":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — 40 Eri B refutation comparison (rex carried HD 26965 b which NearStars correctly excludes)",
+  "h2_134":"Stellar wind / astrosphere",
+  "p_135":"40 Eri A is a fast-moving K dwarf (V_ISM ≈ 127 km/s relative to the local ISM), so ram pressure would strongly compress its astrosphere — but its wind Ṁ is <b>unmeasured</b> (40 Eri has no detectable astrosphere in Wood&#x27;s HST Lyα search), so the standoff distance is left unconstrained. It carries a well-established <b>8.7 yr Ca II activity cycle</b> (Laliotis 2023; historically ~10 yr, Baliunas 1995). As a moderately active old K dwarf its particle environment is a little below solar.",
+  "th_136":"Field",
+  "th_137":"Value",
+  "th_138":"Confidence",
+  "th_139":"Basis",
+  "td_140":"<code>solar_cycle_yr</code>",
+  "td_141":"8.70",
+  "td_142":"high",
+  "td_143":"Laliotis 2023 S-index (historically ~10.1 yr, Baliunas 1995)",
+  "td_144":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_145":"(unconstrained)",
+  "td_146":"—",
+  "td_147":"not in Wood&#x27;s sample; no detectable astrosphere",
+  "td_148":"<code>local_ism_inflow_speed_kms</code>",
+  "td_149":"~127",
+  "td_150":"medium",
+  "td_151":"6D astrometry vs LIC (high space velocity)",
+  "td_152":"<code>astrosphere_standoff_au</code>",
+  "td_153":"(unconstrained)",
+  "td_154":"low",
+  "td_155":"requires a wind measurement (Ṁ unknown)",
+  "td_156":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_157":"~0.8",
+  "td_158":"low",
+  "td_159":"moderately active old K — interesting-first, near solar",
+  "td_160":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_161":"~281 / −41",
+  "td_162":"low",
+  "td_163":"6D astrometry vs LIC; <b>plugin-only</b>",
+  "h2_164":"Open items for follow-up",
+  "li_165":"<b>Jenkins 2011 + Henry 1996 row-level log R&#x27;HK verification.</b> The chromospheric activity values −4.99 (Jenkins) and −4.94 (Henry) were carried over from the 2026-05-27 prep notes; in this session the CDS table row for HD 26965 was not directly fetched. Re-verify against the CDS Table 4 of Jenkins 2011 (full table) and the equivalent in Henry 1996 in a future curation pass — both are widely quoted in downstream papers and the values are likely correct but should be paper-Table confirmed.",
+  "li_166":"<b>Bensby 2014 row-level [Fe/H] verification.</b> Same caveat as above: the value −0.31 ± 0.10 is from the prep notes; the Table A1 row for HD 26965 was not directly fetched in this session.",
+  "li_167":"<b>Burrows 2024 rotation-period uncertainty.</b> Paper reports &quot;∼42 days&quot; without a formal σ. The pre-Burrows 37-d Saar &amp; Osten reading and 38-d Diaz 2018 HARPS S-index reading are inconsistent with 42 d at face value. A Gaussian-process RV + light-curve joint analysis (per the Aigrain 2015 framework, or comparable to the methodology of Damasso 2020 for Proxima) would settle whether the 42-d signal is genuinely the surface rotation period or a longer-lived active-band signature with an underlying differential-rotation rate.",
+  "li_168":"<b>Age divergence resolution by asteroseismology.</b> A fundamental cross-check of the Ma 2018 ~7 Gyr vs Bond 2017 ~1.8 Gyr ages would require asteroseismic detection of p-mode oscillations on 40 Eri A. The K0.5 V spectral type puts ν_max near 4000 µHz which is at the edge of feasibility for current precision-RV time-series capabilities, but a dedicated NEID or ESPRESSO multi-night campaign comparable to Bouchy &amp; Carrier 2001 / de Meulenaer 2010 (α Cen A) would be decisive.",
+  "li_169":"<b>40 Eri A x-ray cycle characterization.</b> No long-baseline XMM-Newton or Chandra monitoring campaign published for A; the activity log R&#x27;HK = −4.99 and P_rot 42 d imply a Sun-like cycle is plausible but unconstrained. A dedicated cycle search (the same template as Robrade 2016 for α Cen A) would be cfg-decisive for activity-cycle visual rendering.",
+  "li_170":"<b>A-BC outer orbit fitting.</b> The ~8000 yr orbit is currently unfitted (Tokovinin MSC 2018). Decades-long Gaia astrometric monitoring should eventually tighten the A-BC parameters; if fitted, this would change <code>db/binary_orbits.json</code> to include an A-BC entry and the Phase 3 visual styling section&#x27;s &quot;B-C pair as single point ~83″ away&quot; claim becomes time-variable.",
+  "h2_171":"Related",
+  "li_172":"<a href=\"40-eridani-b.md\">40-eridani-b</a> — DA2.9 white-dwarf companion; Bond 2017 IFMR is the anchor for the system age divergence documented above",
+  "li_173":"<a href=\"40-eridani-c.md\">40-eridani-c</a> — M4.5 Ve flare star (DY Eri); paired with B on a 230-yr orbit",
+  "li_174":"<a href=\"tau-cet-e.md\">tau-cet-e</a> — sibling refuted-planet Phase 3 markdown; structural precedent for the Refuted planet section",
+  "li_175":"<a href=\"../reference/methodology.md\">methodology</a> — Phase 2/3 schema",
+  "li_176":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — 40 Eri B refutation comparison (rex carried HD 26965 b which NearStars correctly excludes)",
   "title":"40 Eridani A — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -600,19 +677,49 @@ const T = {
   "li_131":"<b>Soto M. G. &amp; Jenkins J. S. 2018</b> — Diaz 2018 이 파라미터 유도에 사용한 SPECIES atmospheric 파이프라인.",
   "h3_132":"Not read — superseded 또는 low-priority",
   "p_133":"2010 년 이전의 K 왜성 isochrone 서베이 (Valenti &amp; Fischer 2005 SPOCS, Holmberg 등 2009 Geneva-Copenhagen); 40 Eri A 항목이 없는 일반 nearest-50-pc K 왜성 자전 서베이; Burrows 2024 NEID baseline 에 의해 superseded 된 Mt. Wilson HK 플레이트-아카이브 논문들. pre-Burrows 시기 40 Eri A 를 대상으로 한 SETI / 외계행성 탐색 제안 논문들 (Ma 2018 follow-up 제안 포함). 이들은 bib YAML 이 빌드되면 <code>status: skipped</code> 로 필터됩니다.",
-  "h2_134":"Open items for follow-up",
-  "li_135":"<b>Jenkins 2011 + Henry 1996 row-level log R&#x27;HK 검증.</b> 색층권 활성도 값 −4.99 (Jenkins) 와 −4.94 (Henry) 는 2026-05-27 prep notes 에서 이월된 값입니다. 이번 세션에서는 HD 26965 에 대한 CDS table row 를 직접 fetch 하지 못했습니다. 향후 큐레이션 패스에서 Jenkins 2011 의 CDS Table 4 (전체 표) 와 Henry 1996 의 동등 표에 대해 row 단위로 재검증해야 합니다. 두 값 모두 downstream paper 에서 광범위하게 quote 되고 있고 정확할 가능성이 크지만 paper-Table 수준의 확인이 필요합니다.",
-  "li_136":"<b>Bensby 2014 row-level [Fe/H] 검증.</b> 위와 동일한 caveat: −0.31 ± 0.10 값은 prep notes 출처이며, HD 26965 의 Table A1 row 는 이번 세션에서 직접 fetch 하지 못했습니다.",
-  "li_137":"<b>Burrows 2024 자전 주기 불확실도.</b> Paper 는 formal σ 없이 &quot;∼42 days&quot; 로만 보고합니다. pre-Burrows 의 37 일 Saar &amp; Osten reading 과 38 일 Diaz 2018 HARPS S-index reading 은 표면적 으로 42 일과 일관적이지 않습니다. Gaussian process 기반 RV + 광도곡선 joint 분석 (Aigrain 2015 프레임워크나 Damasso 2020 Proxima 방법론과 비슷한 접근) 이라면 42 일 신호가 실제 표면 자전 주기인지, 아니면 차등 자전 기반 활성대의 더 오래 사는 signature 인지를 매듭지을 수 있습니다.",
-  "li_138":"<b>Asteroseismology 로 age divergence 해결.</b> Ma 2018 의 ~7 Gyr 대 Bond 2017 의 ~1.8 Gyr 나이의 fundamental cross-check 는 40 Eri A 에서 p-mode 진동의 asteroseismic 검출을 요구 합니다. K0.5 V 분광형은 ν_max 를 ~4000 µHz 근처에 두는데, 이는 현재 정밀 RV 시계열 capability 의 가장자리에 있습니다. 그러나 Bouchy &amp; Carrier 2001 / de Meulenaer 2010 (α Cen A) 에 견줄 만한 NEID 또는 ESPRESSO 다중-야간 전용 캠페인이라면 결정적일 것입니다.",
-  "li_139":"<b>40 Eri A X-ray 사이클 특성화.</b> A 에 대한 장기 baseline 의 XMM-Newton 이나 Chandra 모니터링 캠페인이 출간되지 않았습니다. 활성도 log R&#x27;HK = −4.99 와 P_rot 42 일은 태양형 사이클의 존재 가능성을 시사하지만 미구속 상태입니다. 전용 사이클 탐색 (α Cen A 의 Robrade 2016 와 동일한 템플릿) 은 활성-사이클 시각 렌더링에 cfg-decisive 입니다.",
-  "li_140":"<b>A-BC 외측 궤도 적합.</b> ~8000 년 궤도는 현재 미적합 상태 (Tokovinin MSC 2018) 입니다. 십수년 단위의 Gaia 측성 모니터링 이 결국 A-BC 파라미터를 좁힐 것입니다. 적합되면 <code>db/binary_orbits.json</code> 에 A-BC entry 가 추가되고, 위 Phase 3 visual styling 섹션의 &quot;B-C 쌍이 ~83″ 떨어진 한 점 광원&quot; 진술은 시간 변동값이 됩니다.",
-  "h2_141":"Related",
-  "li_142":"<a href=\"40-eridani-b.md\">40-eridani-b</a> — DA2.9 백색왜성 동반성. 위에서 문서화된 시스템 나이 divergence 의 anchor 가 Bond 2017 IFMR 입니다.",
-  "li_143":"<a href=\"40-eridani-c.md\">40-eridani-c</a> — M4.5 Ve 플레어 스타 (DY Eri). B 와 230 년 주기로 페어를 이룹니다.",
-  "li_144":"<a href=\"tau-cet-e.md\">tau-cet-e</a> — sibling refuted-planet Phase 3 markdown. 위의 Refuted planet 섹션의 구조적 선례.",
-  "li_145":"<a href=\"../reference/methodology.md\">methodology</a> — Phase 2/3 schema",
-  "li_146":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — 40 Eri B 반박 비교 (rex 는 HD 26965 b 를 carry 했지만 NearStars 는 올바르게 제외함)",
+  "h2_134":"Stellar wind / astrosphere",
+  "p_135":"40 Eri A 는 빠르게 움직이는 K 왜성입니다 (국부 ISM 대비 V_ISM ≈ 127 km/s). 따라서 ram pressure 가 astrosphere 를 강하게 압축할 테지만, 항성풍 Ṁ 이 <b>미측정</b> 이라 (Wood 의 HST Lyα 탐색에서 40 Eri 는 검출 가능한 astrosphere 가 없음) standoff 거리는 미구속 상태로 둡니다. 잘 정립된 <b>8.7 년 Ca II 활성도 사이클</b> 을 가집니다 (Laliotis 2023. 역사적으로는 ~10 년, Baliunas 1995). 적당히 활동적인 노년 K 왜성으로서 입자 환경은 태양보다 약간 아래입니다.",
+  "th_136":"Field",
+  "th_137":"Value",
+  "th_138":"Confidence",
+  "th_139":"Basis",
+  "td_140":"<code>solar_cycle_yr</code>",
+  "td_141":"8.70",
+  "td_142":"high",
+  "td_143":"Laliotis 2023 S-index (역사적으로 ~10.1 yr, Baliunas 1995)",
+  "td_144":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_145":"(unconstrained)",
+  "td_146":"—",
+  "td_147":"Wood 샘플에 없음. 검출 가능한 astrosphere 없음",
+  "td_148":"<code>local_ism_inflow_speed_kms</code>",
+  "td_149":"~127",
+  "td_150":"medium",
+  "td_151":"6D 측성 대 LIC (높은 우주 속도)",
+  "td_152":"<code>astrosphere_standoff_au</code>",
+  "td_153":"(unconstrained)",
+  "td_154":"low",
+  "td_155":"항성풍 측정이 필요 (Ṁ 미상)",
+  "td_156":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_157":"~0.8",
+  "td_158":"low",
+  "td_159":"적당히 활동적인 노년 K — interesting-first, 태양 부근",
+  "td_160":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_161":"~281 / −41",
+  "td_162":"low",
+  "td_163":"6D 측성 대 LIC. <b>plugin-only</b>",
+  "h2_164":"Open items for follow-up",
+  "li_165":"<b>Jenkins 2011 + Henry 1996 row-level log R&#x27;HK 검증.</b> 색층권 활성도 값 −4.99 (Jenkins) 와 −4.94 (Henry) 는 2026-05-27 prep notes 에서 이월된 값입니다. 이번 세션에서는 HD 26965 에 대한 CDS table row 를 직접 fetch 하지 못했습니다. 향후 큐레이션 패스에서 Jenkins 2011 의 CDS Table 4 (전체 표) 와 Henry 1996 의 동등 표에 대해 row 단위로 재검증해야 합니다. 두 값 모두 downstream paper 에서 광범위하게 quote 되고 있고 정확할 가능성이 크지만 paper-Table 수준의 확인이 필요합니다.",
+  "li_166":"<b>Bensby 2014 row-level [Fe/H] 검증.</b> 위와 동일한 caveat: −0.31 ± 0.10 값은 prep notes 출처이며, HD 26965 의 Table A1 row 는 이번 세션에서 직접 fetch 하지 못했습니다.",
+  "li_167":"<b>Burrows 2024 자전 주기 불확실도.</b> Paper 는 formal σ 없이 &quot;∼42 days&quot; 로만 보고합니다. pre-Burrows 의 37 일 Saar &amp; Osten reading 과 38 일 Diaz 2018 HARPS S-index reading 은 표면적 으로 42 일과 일관적이지 않습니다. Gaussian process 기반 RV + 광도곡선 joint 분석 (Aigrain 2015 프레임워크나 Damasso 2020 Proxima 방법론과 비슷한 접근) 이라면 42 일 신호가 실제 표면 자전 주기인지, 아니면 차등 자전 기반 활성대의 더 오래 사는 signature 인지를 매듭지을 수 있습니다.",
+  "li_168":"<b>Asteroseismology 로 age divergence 해결.</b> Ma 2018 의 ~7 Gyr 대 Bond 2017 의 ~1.8 Gyr 나이의 fundamental cross-check 는 40 Eri A 에서 p-mode 진동의 asteroseismic 검출을 요구 합니다. K0.5 V 분광형은 ν_max 를 ~4000 µHz 근처에 두는데, 이는 현재 정밀 RV 시계열 capability 의 가장자리에 있습니다. 그러나 Bouchy &amp; Carrier 2001 / de Meulenaer 2010 (α Cen A) 에 견줄 만한 NEID 또는 ESPRESSO 다중-야간 전용 캠페인이라면 결정적일 것입니다.",
+  "li_169":"<b>40 Eri A X-ray 사이클 특성화.</b> A 에 대한 장기 baseline 의 XMM-Newton 이나 Chandra 모니터링 캠페인이 출간되지 않았습니다. 활성도 log R&#x27;HK = −4.99 와 P_rot 42 일은 태양형 사이클의 존재 가능성을 시사하지만 미구속 상태입니다. 전용 사이클 탐색 (α Cen A 의 Robrade 2016 와 동일한 템플릿) 은 활성-사이클 시각 렌더링에 cfg-decisive 입니다.",
+  "li_170":"<b>A-BC 외측 궤도 적합.</b> ~8000 년 궤도는 현재 미적합 상태 (Tokovinin MSC 2018) 입니다. 십수년 단위의 Gaia 측성 모니터링 이 결국 A-BC 파라미터를 좁힐 것입니다. 적합되면 <code>db/binary_orbits.json</code> 에 A-BC entry 가 추가되고, 위 Phase 3 visual styling 섹션의 &quot;B-C 쌍이 ~83″ 떨어진 한 점 광원&quot; 진술은 시간 변동값이 됩니다.",
+  "h2_171":"Related",
+  "li_172":"<a href=\"40-eridani-b.md\">40-eridani-b</a> — DA2.9 백색왜성 동반성. 위에서 문서화된 시스템 나이 divergence 의 anchor 가 Bond 2017 IFMR 입니다.",
+  "li_173":"<a href=\"40-eridani-c.md\">40-eridani-c</a> — M4.5 Ve 플레어 스타 (DY Eri). B 와 230 년 주기로 페어를 이룹니다.",
+  "li_174":"<a href=\"tau-cet-e.md\">tau-cet-e</a> — sibling refuted-planet Phase 3 markdown. 위의 Refuted planet 섹션의 구조적 선례.",
+  "li_175":"<a href=\"../reference/methodology.md\">methodology</a> — Phase 2/3 schema",
+  "li_176":"<a href=\"../reference/rex-data-comparison.md\">rex-data-comparison</a> — 40 Eri B 반박 비교 (rex 는 HD 26965 b 를 carry 했지만 NearStars 는 올바르게 제외함)",
   "title":"40 에리다니 A — Phase 3 합성",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

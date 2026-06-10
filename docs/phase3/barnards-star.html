@@ -268,20 +268,62 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 </section>
 <section>
 <h2 data-i18n="h2_117"></h2>
+<p class="intro" data-i18n="p_118"></p>
+<div class="card"><table class="dt"><thead><tr>
+<th data-i18n="th_119"></th>
+<th data-i18n="th_120"></th>
+<th data-i18n="th_121"></th>
+<th data-i18n="th_122"></th>
+</tr></thead><tbody>
+<tr>
+<td data-i18n="td_123"></td>
+<td data-i18n="td_124"></td>
+<td data-i18n="td_125"></td>
+<td data-i18n="td_126"></td>
+</tr>
+<tr>
+<td data-i18n="td_127"></td>
+<td data-i18n="td_128"></td>
+<td data-i18n="td_129"></td>
+<td data-i18n="td_130"></td>
+</tr>
+<tr>
+<td data-i18n="td_131"></td>
+<td data-i18n="td_132"></td>
+<td data-i18n="td_133"></td>
+<td data-i18n="td_134"></td>
+</tr>
+<tr>
+<td data-i18n="td_135"></td>
+<td data-i18n="td_136"></td>
+<td data-i18n="td_137"></td>
+<td data-i18n="td_138"></td>
+</tr>
+<tr>
+<td data-i18n="td_139"></td>
+<td data-i18n="td_140"></td>
+<td data-i18n="td_141"></td>
+<td data-i18n="td_142"></td>
+</tr>
+</tbody></table></div>
+<p class="intro" data-i18n="p_143"></p>
+</section>
+<section>
+<h2 data-i18n="h2_144"></h2>
 <ul class="intro">
-<li data-i18n="li_118"></li>
-<li data-i18n="li_119"></li>
-<li data-i18n="li_120"></li>
-<li data-i18n="li_121"></li>
-<li data-i18n="li_122"></li>
+<li data-i18n="li_145"></li>
+<li data-i18n="li_146"></li>
+<li data-i18n="li_147"></li>
+<li data-i18n="li_148"></li>
+<li data-i18n="li_149"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_123"></h2>
+<h2 data-i18n="h2_150"></h2>
 <ul class="intro">
-<li data-i18n="li_124"></li>
-<li data-i18n="li_125"></li>
-<li data-i18n="li_126"></li>
+<li data-i18n="li_151"></li>
+<li data-i18n="li_152"></li>
+<li data-i18n="li_153"></li>
 </ul>
 </section>
 </main>
@@ -409,16 +451,43 @@ const T = {
   "li_114":"<b>Barnard E. E. 1916</b> — <i>A small star with large proper motion</i>, AJ 29, 181. The discovery of the 10.3 arcsec/yr proper motion that gives the star its name; source for the proper-motion Decisions row.",
   "h3_115":"Not read — superseded or low-priority",
   "p_116":"The retracted Ribas 2018 233-day super-Earth follow-up literature (Lubin et al. 2021 retraction and downstream re-analyses), generic nearby-M-dwarf rotation surveys without a dedicated Barnard&#x27;s Star entry, the 2019 HST far-UV flare paper (context only — not a cfg-decisive measurement in the frozen Phase 2 layer), and interstellar-precursor mission proposals (Barnard&#x27;s Star is a long-standing flyby target) contribute no cfg-decisive content for the stellar synthesis. The planet-candidate papers (González Hernández 2024 planet section, and any 2025+ follow-up) are deferred to the planet Phase 3 follow-up workspace. The full filtered bibliography is preserved in <code>docs/phase3/_bib/barnards-star.yaml</code>.",
-  "h2_117":"Open items for follow-up",
-  "li_118":"<b>Sub-Earth planet candidate Phase 3 follow-up workspace.</b> The González Hernández 2024 ESPRESSO campaign reports a sub-Earth candidate Barnard b (P ≈ 3.15 d, M sin i ≈ 0.37 M⊕) plus three lower-significance candidates. These are out of scope for the stellar synthesis; a dedicated follow-up should produce planet Phase 3 syntheses once the candidates&#x27; Phase 2 measurements are curated. The retracted Ribas 2018 233-day candidate should be recorded as refuted, mirroring the tau Cet e / 40 Eri A b treatment.",
-  "li_119":"<b>Metallicity divergence resolution.</b> The ~0.4 dex spread between the NIR (Jahandar −0.39), VIS (Schweitzer −0.15), and Marfil (−0.57) determinations is a genuine systematic. A future curation pass could ingest additional NIR abundance analyses (e.g. further SPIRou or CRIRES+ work) to tighten the cool-M-dwarf metallicity and confirm whether the NIR-favored value is converging.",
-  "li_120":"<b>Activity-cycle period refinement.</b> The ~10 yr cycle (Toledo-Padrón 2019) is resolved at order-of-magnitude precision from a single long-baseline campaign. Continued monitoring would refine the period and amplitude and confirm whether it is a stable Sun-like cycle or a quasi-periodic modulation, which would sharpen the cfg <code>activity_cycle_years</code> rendering.",
-  "li_121":"<b>Flare-rate characterization.</b> The 2019 HST far-UV flare confirms episodic flaring, but no quantitative flare-frequency distribution is in the frozen Phase 2 layer. A TESS / HST flare census would let a future cfg attach a <code>flare_rate_per_day</code> and <code>flare_energy_log_erg_max</code> to the otherwise quiescent rendering.",
-  "li_122":"<b>Rotation-axis inclination.</b> Unconstrained; the near-zero rotational velocity makes spin-related visual effects negligible, so this is low-priority, but a measured inclination would let the faint spot modulation be rendered with correct foreshortening.",
-  "h2_123":"Related",
-  "li_124":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
-  "li_125":"<a href=\"proxima-cen.md\">proxima-cen</a> — comparison M dwarf (M5.5 Ve, ~4.85 Gyr); contrast Proxima&#x27;s higher activity with Barnard&#x27;s near-floor quiescence",
-  "li_126":"<a href=\"au-mic.md\">au-mic</a> — comparison M dwarf (young, active M1 Ve); the activity/age opposite extreme to Barnard&#x27;s old quiet M4 V",
+  "h2_117":"Stellar wind / astrosphere",
+  "p_118":"Barnard&#x27;s Star has the <b>smallest astrosphere</b> of the set. As the highest-proper-motion star known it plows through the local ISM at ~120 km/s, so even though its wind is weak (Ṁ ≤ 0.2 Ṁ⊙, Wood 2021) the ram pressure compresses the wind cavity to a standoff of only <b>≲11 AU</b>. It is an old, magnetically quiet M4 dwarf with no detected activity cycle, so its particle-radiation environment is well below solar.",
+  "th_119":"Field",
+  "th_120":"Value",
+  "th_121":"Confidence",
+  "th_122":"Basis",
+  "td_123":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_124":"≤ 0.2 (upper limit)",
+  "td_125":"medium",
+  "td_126":"Wood 2021 astrospheric Lyα",
+  "td_127":"<code>local_ism_inflow_speed_kms</code>",
+  "td_128":"~120",
+  "td_129":"medium",
+  "td_130":"6D astrometry vs LIC (extreme space velocity)",
+  "td_131":"<code>astrosphere_standoff_au</code>",
+  "td_132":"≲ 11 (upper bound)",
+  "td_133":"medium",
+  "td_134":"high V_ISM compresses the cavity",
+  "td_135":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_136":"~0.3",
+  "td_137":"low",
+  "td_138":"old, quiet, inactive M4 — interesting-first below solar",
+  "td_139":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_140":"~97 / +37",
+  "td_141":"low",
+  "td_142":"6D astrometry vs LIC; <b>plugin-only</b>",
+  "p_143":"(No <code>solar_cycle_yr</code>: no activity cycle has been detected for this very quiet star.)",
+  "h2_144":"Open items for follow-up",
+  "li_145":"<b>Sub-Earth planet candidate Phase 3 follow-up workspace.</b> The González Hernández 2024 ESPRESSO campaign reports a sub-Earth candidate Barnard b (P ≈ 3.15 d, M sin i ≈ 0.37 M⊕) plus three lower-significance candidates. These are out of scope for the stellar synthesis; a dedicated follow-up should produce planet Phase 3 syntheses once the candidates&#x27; Phase 2 measurements are curated. The retracted Ribas 2018 233-day candidate should be recorded as refuted, mirroring the tau Cet e / 40 Eri A b treatment.",
+  "li_146":"<b>Metallicity divergence resolution.</b> The ~0.4 dex spread between the NIR (Jahandar −0.39), VIS (Schweitzer −0.15), and Marfil (−0.57) determinations is a genuine systematic. A future curation pass could ingest additional NIR abundance analyses (e.g. further SPIRou or CRIRES+ work) to tighten the cool-M-dwarf metallicity and confirm whether the NIR-favored value is converging.",
+  "li_147":"<b>Activity-cycle period refinement.</b> The ~10 yr cycle (Toledo-Padrón 2019) is resolved at order-of-magnitude precision from a single long-baseline campaign. Continued monitoring would refine the period and amplitude and confirm whether it is a stable Sun-like cycle or a quasi-periodic modulation, which would sharpen the cfg <code>activity_cycle_years</code> rendering.",
+  "li_148":"<b>Flare-rate characterization.</b> The 2019 HST far-UV flare confirms episodic flaring, but no quantitative flare-frequency distribution is in the frozen Phase 2 layer. A TESS / HST flare census would let a future cfg attach a <code>flare_rate_per_day</code> and <code>flare_energy_log_erg_max</code> to the otherwise quiescent rendering.",
+  "li_149":"<b>Rotation-axis inclination.</b> Unconstrained; the near-zero rotational velocity makes spin-related visual effects negligible, so this is low-priority, but a measured inclination would let the faint spot modulation be rendered with correct foreshortening.",
+  "h2_150":"Related",
+  "li_151":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
+  "li_152":"<a href=\"proxima-cen.md\">proxima-cen</a> — comparison M dwarf (M5.5 Ve, ~4.85 Gyr); contrast Proxima&#x27;s higher activity with Barnard&#x27;s near-floor quiescence",
+  "li_153":"<a href=\"au-mic.md\">au-mic</a> — comparison M dwarf (young, active M1 Ve); the activity/age opposite extreme to Barnard&#x27;s old quiet M4 V",
   "title":"Barnard&#x27;s Star — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -541,16 +610,43 @@ const T = {
   "li_114":"<b>Barnard E. E. 1916</b> — <i>A small star with large proper motion</i>, AJ 29, 181. 별 이름의 유래인 10.3 arcsec/yr 고유운동의 발견. proper-motion Decisions 행의 출처.",
   "h3_115":"Not read — superseded or low-priority",
   "p_116":"철회된 Ribas 2018 233 일 super-Earth 후속 문헌 (Lubin et al. 2021 철회와 하류 재분석), 전용 바너드 별 엔트리가 없는 일반 근방-M-왜성 자전 서베이, 2019 HST 원자외선 flare 논문 (맥락 정보뿐 — frozen Phase 2 레이어에서 cfg-결정적 측정이 아님), 그리고 성간 전구 미션 제안 (바너드 별은 오래된 flyby 표적) 은 항성 합성에 cfg-결정적인 내용을 더하지 않습니다. 행성 후보 논문 (González Hernández 2024 의 행성 부분과 2025+ 후속) 은 행성 Phase 3 follow-up 워크스페이스로 미룹니다. 전체 필터링된 bib 는 <code>docs/phase3/_bib/barnards-star.yaml</code> 에 보존됩니다.",
-  "h2_117":"Open items for follow-up",
-  "li_118":"<b>sub-Earth 행성 후보 Phase 3 follow-up 워크스페이스.</b> González Hernández 2024 ESPRESSO 캠페인은 sub-Earth 후보 Barnard b (P ≈ 3.15 d, M sin i ≈ 0.37 M⊕) 와 유의성이 더 낮은 후보 셋을 보고합니다. 이들은 항성 합성의 범위 밖입니다. 후보들의 Phase 2 측정이 큐레이션되면 전용 follow-up 이 행성 Phase 3 합성을 만들어야 합니다. 철회된 Ribas 2018 233 일 후보는 tau Cet e / 40 Eri A b 처리를 본떠 refuted 로 기록해야 합니다.",
-  "li_119":"<b>금속도 divergence 해소.</b> NIR (Jahandar −0.39), VIS (Schweitzer −0.15), Marfil (−0.57) 측정 간 ~0.4 dex 폭은 실제 계통 차이입니다. 미래의 큐레이션 패스가 추가 NIR abundance 분석 (예: 추가 SPIRou 또는 CRIRES+ 작업) 을 ingest 해 차가운 M 왜성 금속도를 좁히고 NIR 선호 값이 수렴하는지 확인할 수 있습니다.",
-  "li_120":"<b>활동 사이클 주기 정밀화.</b> ~10 yr 사이클 (Toledo-Padrón 2019) 은 단일 장기 캠페인에서 자릿수 정밀도로 분해됐습니다. 지속적 모니터링이 주기와 진폭을 정밀화하고 그것이 안정적인 태양형 사이클인지 준주기 변조인지 확인하면, cfg <code>activity_cycle_years</code> 렌더링이 날카로워집니다.",
-  "li_121":"<b>flare 율 특성화.</b> 2019 HST 원자외선 flare 는 간헐적 flare 를 확인하지만, frozen Phase 2 레이어에는 정량적 flare 빈도 분포가 없습니다. TESS / HST flare 센서스가 있으면 미래 cfg 가 그밖에는 정적인 렌더링에 <code>flare_rate_per_day</code> 와 <code>flare_energy_log_erg_max</code> 를 붙일 수 있습니다.",
-  "li_122":"<b>자전축 경사.</b> 제약되지 않음. 자전 속도가 거의 0 이라 spin 관련 시각 효과가 무시할 만하므로 우선순위는 낮지만, 측정된 경사가 있으면 희미한 흑점 변조를 올바른 foreshortening 으로 렌더링할 수 있습니다.",
-  "h2_123":"Related",
-  "li_124":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 테이블의 스키마 출처",
-  "li_125":"<a href=\"proxima-cen.md\">proxima-cen</a> — 비교 M 왜성 (M5.5 Ve, ~4.85 Gyr). Proxima 의 더 높은 활동도와 바너드의 바닥 근처 정적 상태를 대비",
-  "li_126":"<a href=\"au-mic.md\">au-mic</a> — 비교 M 왜성 (어리고 활동적인 M1 Ve). 바너드의 늙고 조용한 M4 V 와 활동/나이의 정반대 극단",
+  "h2_117":"Stellar wind / astrosphere",
+  "p_118":"바너드 별은 이 세트에서 <b>가장 작은 astrosphere</b> 를 가집니다. 알려진 별 중 고유운동이 가장 크기에 ~120 km/s 로 국소 ISM 을 헤치고 나아가는데, 항성풍이 약함에도 (Ṁ ≤ 0.2 Ṁ⊙, Wood 2021) ram pressure 가 항성풍 공동을 겨우 <b>≲11 AU</b> 의 standoff 로 압축합니다. 검출된 활동 사이클이 없는, 나이가 많고 자기적으로 조용한 M4 왜성이라 입자 방사선 환경은 태양보다 한참 아래입니다.",
+  "th_119":"Field",
+  "th_120":"Value",
+  "th_121":"Confidence",
+  "th_122":"Basis",
+  "td_123":"<code>stellar_wind_mass_loss_solar</code>",
+  "td_124":"≤ 0.2 (upper limit)",
+  "td_125":"medium",
+  "td_126":"Wood 2021 astrospheric Lyα",
+  "td_127":"<code>local_ism_inflow_speed_kms</code>",
+  "td_128":"~120",
+  "td_129":"medium",
+  "td_130":"6D astrometry 대 LIC (극단적 공간속도)",
+  "td_131":"<code>astrosphere_standoff_au</code>",
+  "td_132":"≲ 11 (upper bound)",
+  "td_133":"medium",
+  "td_134":"높은 V_ISM 이 공동을 압축",
+  "td_135":"<code>stellar_radiation_surface_relative_sun</code>",
+  "td_136":"~0.3",
+  "td_137":"low",
+  "td_138":"나이 많고 조용한 비활동성 M4 — interesting-first 로 태양 아래",
+  "td_139":"<code>astrosphere_apex_ra_deg</code> / <code>_dec_deg</code>",
+  "td_140":"~97 / +37",
+  "td_141":"low",
+  "td_142":"6D astrometry 대 LIC. <b>plugin-only</b>",
+  "p_143":"(<code>solar_cycle_yr</code> 없음. 이 매우 조용한 별에서는 활동 사이클이 검출되지 않았습니다.)",
+  "h2_144":"Open items for follow-up",
+  "li_145":"<b>sub-Earth 행성 후보 Phase 3 follow-up 워크스페이스.</b> González Hernández 2024 ESPRESSO 캠페인은 sub-Earth 후보 Barnard b (P ≈ 3.15 d, M sin i ≈ 0.37 M⊕) 와 유의성이 더 낮은 후보 셋을 보고합니다. 이들은 항성 합성의 범위 밖입니다. 후보들의 Phase 2 측정이 큐레이션되면 전용 follow-up 이 행성 Phase 3 합성을 만들어야 합니다. 철회된 Ribas 2018 233 일 후보는 tau Cet e / 40 Eri A b 처리를 본떠 refuted 로 기록해야 합니다.",
+  "li_146":"<b>금속도 divergence 해소.</b> NIR (Jahandar −0.39), VIS (Schweitzer −0.15), Marfil (−0.57) 측정 간 ~0.4 dex 폭은 실제 계통 차이입니다. 미래의 큐레이션 패스가 추가 NIR abundance 분석 (예: 추가 SPIRou 또는 CRIRES+ 작업) 을 ingest 해 차가운 M 왜성 금속도를 좁히고 NIR 선호 값이 수렴하는지 확인할 수 있습니다.",
+  "li_147":"<b>활동 사이클 주기 정밀화.</b> ~10 yr 사이클 (Toledo-Padrón 2019) 은 단일 장기 캠페인에서 자릿수 정밀도로 분해됐습니다. 지속적 모니터링이 주기와 진폭을 정밀화하고 그것이 안정적인 태양형 사이클인지 준주기 변조인지 확인하면, cfg <code>activity_cycle_years</code> 렌더링이 날카로워집니다.",
+  "li_148":"<b>flare 율 특성화.</b> 2019 HST 원자외선 flare 는 간헐적 flare 를 확인하지만, frozen Phase 2 레이어에는 정량적 flare 빈도 분포가 없습니다. TESS / HST flare 센서스가 있으면 미래 cfg 가 그밖에는 정적인 렌더링에 <code>flare_rate_per_day</code> 와 <code>flare_energy_log_erg_max</code> 를 붙일 수 있습니다.",
+  "li_149":"<b>자전축 경사.</b> 제약되지 않음. 자전 속도가 거의 0 이라 spin 관련 시각 효과가 무시할 만하므로 우선순위는 낮지만, 측정된 경사가 있으면 희미한 흑점 변조를 올바른 foreshortening 으로 렌더링할 수 있습니다.",
+  "h2_150":"Related",
+  "li_151":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 테이블의 스키마 출처",
+  "li_152":"<a href=\"proxima-cen.md\">proxima-cen</a> — 비교 M 왜성 (M5.5 Ve, ~4.85 Gyr). Proxima 의 더 높은 활동도와 바너드의 바닥 근처 정적 상태를 대비",
+  "li_153":"<a href=\"au-mic.md\">au-mic</a> — 비교 M 왜성 (어리고 활동적인 M1 Ve). 바너드의 늙고 조용한 M4 V 와 활동/나이의 정반대 극단",
   "title":"Barnard&#x27;s Star — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

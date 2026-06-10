@@ -237,6 +237,21 @@ items.
   searches contribute no cfg-decisive content; preserved in
   `docs/phase3/_bib/alpha-centauri-b.yaml` with `status: skipped`.
 
+## Stellar wind / astrosphere
+
+α Cen B **shares the single α Cen AB astrosphere** — the wind cavity, standoff
+(~176 AU), inflow speed, and apex direction are recorded on α Cen A as the
+system representative (combined Ṁ ≈ 2 Ṁ⊙, Wood 2001). What B carries on its own
+is a clean, well-defined **~8.8 yr activity cycle** — the cleanest stellar X-ray
+cycle known after 61 Cyg A (DeWarf 2010 multi-band; Ayres 2014 X-ray-only gives
+8.2 yr). Particle-radiation harshness is solar-like.
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 8.84 | medium | DeWarf 2010 (multi-band X-ray–NUV); X-ray-only 8.2±0.2 yr (Ayres 2014) |
+| `stellar_radiation_surface_relative_sun` | ~1.0 | low | solar-like activity — interesting-first, Sun-anchored |
+| `astrosphere` | shares the α Cen AB cavity | — | Wood 2001 — see α Cen A for Ṁ / standoff / apex |
+
 ## Open items for follow-up
 
 - **Independent inclination measurement**: Lisogorskyi 2019 and

@@ -266,6 +266,25 @@ planetary atmosphere.
   interstellar-mission proposals; preserved in
   `docs/phase3/_bib/proxima-cen.yaml` with `status: skipped`.
 
+## Stellar wind / astrosphere
+
+Proxima has a **compact astrosphere** — its weak wind (Ṁ ≤ 0.2 Ṁ⊙ upper limit,
+Wood 2001) stands off the local ISM at only **≲55 AU**. The crucial point for a
+radiation layer: although Proxima looks quiescent by the chromospheric measure
+(log R'HK underrepresents M-dwarf activity), it is a violent **flare star**, so
+its crew-relevant particle radiation is far HARSHER than the Sun's —
+flare-dominated, not wind-dominated. Its activity cycles on ~7 yr (Wargelin
+2017). It shares the same local interstellar flow as α Cen (V_ISM ≈ 25 km/s).
+
+| Field | Value | Confidence | Basis |
+|---|---|---|---|
+| `solar_cycle_yr` | 7 | medium | Wargelin 2017 (ASAS V-band + X-ray/UV) |
+| `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2001 astrospheric Lyα |
+| `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (LIC; same flow as α Cen) |
+| `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | from the Ṁ upper limit |
+| `stellar_radiation_surface_relative_sun` | ~5 | low | flare-dominated; R'HK hides M-dwarf flares — interesting-first boost above solar |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | ~185 / +42 | low | 6D astrometry vs LIC; **plugin-only** |
+
 ## Open items for follow-up
 
 - **Proxima c (sub-Neptune at 5.2 AU candidate)**: Damasso 2020 +
