@@ -383,6 +383,35 @@ STELLAR_MEASUREMENT_KINDS = {
             "unverified",
         },
     },
+    "mass_loss_measurements": {
+        # 항성풍 질량손실률, 태양 단위 (Mdot_sun ~ 2e-14 Msun/yr). 거의 항상
+        # UPPER LIMIT (astrospheric Lya 는 검출 가능한 astrosphere 필요) — 비검출은
+        # extra `limit: upper`. 대부분의 M왜성 / A형 별은 미제약 (entry 생략).
+        # 거품 크기(astrosphere)·dose 산출의 입력. [[project-nearstars-stellar-wind-kerbalism]].
+        "value_keys": {"value_mdot_solar"},
+        "methods": {
+            "astrospheric_lyman_alpha",   # Wood et al. HST Lya astrosphere fit
+            "model",                      # MHD wind model (Garraffo/Vidotto 류)
+            "unverified",
+        },
+        "extra_keys": {"limit", "notes"},   # limit: upper|lower (비검출/하한)
+    },
+    "magnetic_field_measurements": {
+        # 항성 자기장. value_b_surface_g = Zeeman 광폭(Stokes I) 평균 <B> (소규모,
+        # 활동성 M왜성은 kG); value_b_largescale_g = ZDI 대규모 정렬장 (항성풍 구동).
+        # 한 entry 는 보통 둘 중 하나만 보유. M왜성 <B> 는 curated rotation 주기에서
+        # 추정 가능 (Reiners 2022) → method=estimated_from_rotation. radio 오로라
+        # 하한은 extra `limit: lower` (예: Luhman 16 B>=2.5 kG).
+        "value_keys": {"value_b_surface_g", "value_b_largescale_g"},
+        "methods": {
+            "zeeman_broadening",          # Stokes I 평균장 <B>
+            "zdi",                        # Zeeman-Doppler Imaging 대규모장
+            "estimated_from_rotation",    # Reiners 2022 P_rot -> <B> 스케일링
+            "radio_aurora",               # 사이클로트론 방출 -> B 하한 (갈색왜성)
+            "unverified",
+        },
+        "extra_keys": {"limit", "notes"},
+    },
     "disk_measurements": {
         # 한 entry = (paper × belt). Multi-belt 별 (Vega/Fomalhaut/eps Eri) 은
         # 같은 bibcode 로 여러 entry. 일부 paper (Aumann 1984 IRAS) 는 detection

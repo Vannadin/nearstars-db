@@ -558,6 +558,10 @@ for target in target_list:
         metallicity_meas = curated.get("metallicity_measurements", [])
         rotation_meas    = curated.get("rotation_measurements", [])
         activity_meas    = curated.get("activity_measurements", [])
+        # 항성풍/자기장 (2026-06-10): sparse stellar 카테고리 — disk 처럼 데이터
+        # 있는 별만 emit (conditional). [[project-nearstars-stellar-wind-kerbalism]].
+        mass_loss_meas   = curated.get("mass_loss_measurements", [])
+        bfield_meas      = curated.get("magnetic_field_measurements", [])
         # disk_measurements 는 별도 source 파일 (db/disks_curated.json) 에서 로드.
         # 'present in disks_curated' 자체가 vetted 상태를 의미하므로 빈 리스트도
         # 가능. host_in_disks_curated 플래그로 emit 결정.
@@ -580,6 +584,8 @@ for target in target_list:
         metallicity_meas_out = _strip_build_control(metallicity_meas)
         rotation_meas_out    = _strip_build_control(rotation_meas)
         activity_meas_out    = _strip_build_control(activity_meas)
+        mass_loss_meas_out   = _strip_build_control(mass_loss_meas)
+        bfield_meas_out      = _strip_build_control(bfield_meas)
         disk_meas_out        = _strip_build_control(disk_meas)
 
         # Recommended resolved single values (array → recommended:true → value_*)
@@ -589,6 +595,8 @@ for target in target_list:
         rec_met_arr  = _pick_recommended(metallicity_meas)
         rec_rot_arr  = _pick_recommended(rotation_meas)
         rec_act_arr  = _pick_recommended(activity_meas)
+        rec_mdot_arr   = _pick_recommended(mass_loss_meas)
+        rec_bfield_arr = _pick_recommended(bfield_meas)
 
         # teff_k: 우선순위 — Phase 2 array → curated 단일값 → raw stellar_props
         teff_k      = rec_teff_arr.get("value_k") or curated.get("teff_k") or props.get("teff_k")
@@ -664,6 +672,12 @@ for target in target_list:
             "activity_measurements":   activity_meas_out,
             "stellarium_id":           stellarium_ids_map.get(star_name),
         }
+        # 항성풍/자기장: sparse → 데이터 있는 별만 raw 에 노출 (disk 패턴). 미제약
+        # 별은 키 부재 → system 파일 churn 없음.
+        if mass_loss_meas:
+            raw_block["mass_loss_measurements"] = mass_loss_meas_out
+        if bfield_meas:
+            raw_block["magnetic_field_measurements"] = bfield_meas_out
         # disk_measurements 는 disks_curated 에 host entry 가 있는 별에만 emit
         # (빈 리스트도 'vetted no disk' 의미로 보존). 키 부재 = unvetted.
         # 위치는 stellarium_id 직전 — pop/reinsert 로 순서 유지.
@@ -681,6 +695,16 @@ for target in target_list:
             "activity_log_rhk":             rec_act_arr.get("value_log_rhk"),
             "activity_h_alpha_ew_angstrom": rec_act_arr.get("value_h_alpha_ew_angstrom"),
         }
+        # 항성풍/자기장: 값 있을 때만 derived 에 추가 (대부분 별 미제약 → null churn 방지).
+        _mdot = rec_mdot_arr.get("value_mdot_solar")
+        if _mdot is not None:
+            stellar_props_resolved["mass_loss_solar"] = _mdot
+        _b_surf = rec_bfield_arr.get("value_b_surface_g")
+        if _b_surf is not None:
+            stellar_props_resolved["b_surface_g"] = _b_surf
+        _b_large = rec_bfield_arr.get("value_b_largescale_g")
+        if _b_large is not None:
+            stellar_props_resolved["b_largescale_g"] = _b_large
 
         # ── derived 블록 (B1950, J2000 모두 포함) ──
         # 다성계 컴포넌트가 fitted orbit에 포함되면 Kepler+T-I로 산출된 상태를 사용.
