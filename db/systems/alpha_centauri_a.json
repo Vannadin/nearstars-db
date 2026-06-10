@@ -215,7 +215,17 @@
             "recommended": false
           }
         ],
-        "stellarium_id": "RigilKent"
+        "stellarium_id": "RigilKent",
+        "mass_loss_measurements": [
+          {
+            "value_mdot_solar": 2.0,
+            "method": "astrospheric_lyman_alpha",
+            "reference": "Wood et al. 2001",
+            "bibcode": "2001ApJ...547L..49W",
+            "recommended": true,
+            "notes": "System (A+B) value: the two stars share one astrosphere (a~24 AU); 2 Mdot_sun is the combined wind from the HST Lya astrosphere best-fit (Wood 2001). Recorded on A as system representative."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -246,7 +256,8 @@
         "metallicity_fe_h_dex": 0.24,
         "rotation_period_days": 22.0,
         "activity_log_rhk": -4.95,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "mass_loss_solar": 2.0
       },
       "principia": {
         "gravitational_parameter_km3_s2": 146713602439.899,
@@ -327,7 +338,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "epoch propagation method"
       ]
@@ -336,7 +347,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -345,7 +356,7 @@
       "title": "Kervella et al. 2016",
       "doi": "10.1051/0004-6361/201629201",
       "bibcode": "2016A&A...594A.107K",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"
       ]
@@ -354,7 +365,7 @@
       "title": "Pourbaix & Boffin 2016",
       "doi": "10.1051/0004-6361/201527859",
       "bibcode": "2016A&A...586A..90P",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "Alpha Centauri A mass (binary_orbit)"
       ]
@@ -363,7 +374,7 @@
       "title": "Joyce & Chaboyer 2018",
       "doi": "10.3847/1538-4357/aad464",
       "bibcode": "2018ApJ...864...99J",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "Alpha Centauri A mass (evolutionary_model)"
       ]
@@ -372,7 +383,7 @@
       "title": "Bazot et al. 2007",
       "doi": "10.1051/0004-6361:20065694",
       "bibcode": "2007A&A...470..295B",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "Alpha Centauri A mass (asteroseismology)"
       ]
@@ -381,7 +392,7 @@
       "title": "Kervella et al. 2017",
       "doi": "10.1051/0004-6361/201629505",
       "bibcode": "2017A&A...597A.137K",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "Alpha Centauri A radius (interferometry)"
       ]
@@ -390,7 +401,7 @@
       "title": "Kervella et al. 2003",
       "doi": "10.1051/0004-6361:20030570",
       "bibcode": "2003A&A...404.1087K",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "Alpha Centauri A radius (interferometry)"
       ]
@@ -399,14 +410,14 @@
       "title": "OBSERVED (Beichman et al. 2025, arXiv:2508.03814 'Worlds Next Door I' + Sanghi & Beichman, arXiv:2508.03812 'II') — JWST/MIRI 15.5um direct-imaging candidate 'S1', sep 1.5\" (~2 AU), Aug 2024, not recovered Feb/Apr 2025. Stable orbit families P=2-3 yr, e~0.4, mutual inclination ~50deg (prograde) / ~130deg (retrograde) wrt alpha Cen AB plane; authors favor a<2 AU (a~1.6 AU). recommended:false — this favored orbit is DYNAMICALLY UNSTABLE: eccentric Kozai-Lidov at i_mut~50deg pumps e->~1 within a few kyr (REBOUND/TRACE; see Phase 3 Canonical alternatives + phase3/stability-sim/STABILITY_REPORT.md). Possibly the counterpart of VLT/NEAR C1 (Wagner et al. 2021).",
       "doi": "10.3847/2041-8213/adf53f",
       "bibcode": "2025ApJ...989L..22B",
-      "accessed": "2026-06-07",
+      "accessed": "2026-06-10",
       "used_for": [
         "planet Alpha Centauri A b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-07",
+    "retrieval_date": "2026-06-10",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

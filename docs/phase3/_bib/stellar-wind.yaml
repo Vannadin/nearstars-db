@@ -1,0 +1,44 @@
+host: _stellar-wind-magnetic-field
+slug: stellar-wind
+generated_at: '2026-06-10'
+note: 'Cross-star anchor bibliography for the mass_loss + magnetic_field categories (Kerbalism stellar-wind layer). Pinned
+  by arxiv_id for cache-grep value-check before committing recommended values. See [[project-nearstars-stellar-wind-kerbalism]].
+
+  '
+papers:
+- arxiv_id: '2105.00019'
+  ads_bibcode: 2021ApJ...915...37W
+  title: Wood et al. 2021 - M dwarf wind mass-loss (Proxima/Barnard upper limits, astrospheric Lya)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0011153
+  ads_bibcode: 2001ApJ...547L..49W
+  title: Wood et al. 2001 - alpha Cen + Proxima mass-loss (HST Lya astrosphere)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '0808.2986'
+  ads_bibcode: 2008ApJ...684.1390R
+  title: Reiners & Basri 2008 - Proxima surface magnetic field <B> (Zeeman)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2010.14311'
+  ads_bibcode: 2021MNRAS.500.1844K
+  title: Klein et al. 2021 - Proxima large-scale field (ZDI)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2204.00342'
+  ads_bibcode: 2022A&A...662A..41R
+  title: Reiners et al. 2022 - M dwarf <B> vs rotation calibration (CARMENES)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1706.04617'
+  ads_bibcode: 2017ApJ...843L..33G
+  title: Garraffo et al. 2017 - TRAPPIST-1 wind/magnetic environment (model B)
+  status: fetched
+  category: skim
+  fetch_error: null

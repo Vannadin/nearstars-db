@@ -160,7 +160,18 @@
             "recommended": true
           }
         ],
-        "stellarium_id": "Barnard'sStar"
+        "stellarium_id": "Barnard'sStar",
+        "mass_loss_measurements": [
+          {
+            "value_mdot_solar": 0.2,
+            "method": "astrospheric_lyman_alpha",
+            "reference": "Wood et al. 2021",
+            "bibcode": "2021ApJ...915...37W",
+            "recommended": true,
+            "limit": "upper",
+            "notes": "Upper limit (GJ 699, astrospheric non-detection), Wood 2021 Table 3."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -186,7 +197,8 @@
         "metallicity_fe_h_dex": -0.39,
         "rotation_period_days": 145,
         "activity_log_rhk": -5.82,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "mass_loss_solar": 0.2
       },
       "principia": {
         "gravitational_parameter_km3_s2": 21499415282.916,
@@ -461,7 +473,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-10",
       "used_for": [
         "epoch propagation method"
       ]
@@ -470,7 +482,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-10",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -479,7 +491,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-10",
       "used_for": [
         "Barnard's star mass (spectroscopic_calibration)"
       ]
@@ -488,7 +500,7 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-10",
       "used_for": [
         "Barnard's star mass (empirical_relation)"
       ]
@@ -497,14 +509,14 @@
       "title": "Basant et al. 2025",
       "doi": "10.3847/2041-8213/adb8d5",
       "bibcode": "2025ApJ...982L...1B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-10",
       "used_for": [
         "planet Barnard d orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-30",
+    "retrieval_date": "2026-06-10",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

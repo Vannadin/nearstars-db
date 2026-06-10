@@ -935,6 +935,16 @@
         "doi": "10.1086/117796",
         "recommended": false
       }
+    ],
+    "mass_loss_measurements": [
+      {
+        "value_mdot_solar": 2.0,
+        "method": "astrospheric_lyman_alpha",
+        "reference": "Wood et al. 2001",
+        "bibcode": "2001ApJ...547L..49W",
+        "recommended": true,
+        "notes": "System (A+B) value: the two stars share one astrosphere (a~24 AU); 2 Mdot_sun is the combined wind from the HST Lya astrosphere best-fit (Wood 2001). Recorded on A as system representative."
+      }
     ]
   },
   "Alpha Centauri B": {
@@ -1242,6 +1252,17 @@
         "reference": "Ribas et al. 2018",
         "bibcode": "2018Natur.563..365R",
         "recommended": true
+      }
+    ],
+    "mass_loss_measurements": [
+      {
+        "value_mdot_solar": 0.2,
+        "method": "astrospheric_lyman_alpha",
+        "reference": "Wood et al. 2021",
+        "bibcode": "2021ApJ...915...37W",
+        "recommended": true,
+        "limit": "upper",
+        "notes": "Upper limit (GJ 699, astrospheric non-detection), Wood 2021 Table 3."
       }
     ]
   },
@@ -2121,6 +2142,17 @@
         "bibcode": "2008ApJ...687.1264M",
         "recommended": false
       }
+    ],
+    "mass_loss_measurements": [
+      {
+        "value_mdot_solar": 0.1,
+        "method": "astrospheric_lyman_alpha",
+        "reference": "Wood et al. 2021",
+        "bibcode": "2021ApJ...915...37W",
+        "recommended": true,
+        "limit": "upper",
+        "notes": "Upper limit, Wood 2021 Table 3 (one of the weakest winds inferred)."
+      }
     ]
   },
   "GJ 357": {
@@ -2354,6 +2386,35 @@
         "bibcode": "2016MNRAS.459.3565S",
         "doi": "10.1093/mnras/stw1059",
         "recommended": true
+      }
+    ],
+    "mass_loss_measurements": [
+      {
+        "value_mdot_solar": 0.2,
+        "method": "astrospheric_lyman_alpha",
+        "reference": "Wood et al. 2001",
+        "bibcode": "2001ApJ...547L..49W",
+        "recommended": true,
+        "limit": "upper",
+        "notes": "Upper limit (astrospheric non-detection), Wood 2001; reaffirmed Wood 2021 (2105.00019) Table 3."
+      }
+    ],
+    "magnetic_field_measurements": [
+      {
+        "value_b_surface_g": 600,
+        "method": "zeeman_broadening",
+        "reference": "Reiners & Basri 2008",
+        "bibcode": "2008ApJ...684.1390R",
+        "recommended": true,
+        "notes": "Surface mean field Bf ~600 G from FeH Zeeman broadening; 450-750 G (3 sigma). 'Moderate' flux for a flare star."
+      },
+      {
+        "value_b_largescale_g": 200,
+        "method": "zdi",
+        "reference": "Klein et al. 2021",
+        "bibcode": "2021MNRAS.500.1844K",
+        "recommended": false,
+        "notes": "Large-scale (ZDI) field ~200 G, mainly poloidal; dipole 135 G tilted 51 deg to spin axis; ~3x smaller than the Zeeman <B>. This is the wind-driving field. P_rot 89.8 d, 7-yr activity cycle."
       }
     ]
   },
