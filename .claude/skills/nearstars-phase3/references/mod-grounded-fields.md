@@ -36,6 +36,53 @@ Source priority order:
    Driscoll & Olson 2011)
 4. Confidence=low aesthetic guess per interesting-first rule
 
+## Kerbalism stellar wind / astrosphere fields (star body)
+
+The section above is the *planetary* side (the planet's own magnetosphere,
+belts, surface dose). This is the *stellar* side — the star itself as a
+`RadiationBody`: the dose source and the heliosphere that shields galactic
+cosmic rays. Derived from the Phase 2 stellar measurements
+(`mass_loss_measurements`, `activity_cycle_measurements`,
+`magnetic_field_measurements`) + luminosity + 6D astrometry. Consumed by the
+(future) kerbalism-cfg writer and the heliotail Harmony plugin. See
+[[project-nearstars-stellar-wind-kerbalism]] for the reverse-engineered
+mechanism.
+
+**Kerbalism stellar model (grounded in `Radiation.cs`).** A star carries
+`radiation_surface` (rad/h, inverse-square wind/cosmic dose), `solar_cycle`
+(s), and a heliopause pause (large `pause_radius`, *negative* `radiation_pause`
+= a GCR shield). No belts on stars. Sun (ROKerbalism) baseline:
+`radiation_surface` 46.5, `solar_cycle` 11 yr, `pause_radius` 1000 R☉. The
+nose–tail axis is `gsm.x_axis` (body→reference); a self-referencing star
+collapses to a fixed world axis, so a per-star tail is **plugin-only** (patch
+`Radiation.Gsm_space`).
+
+| Field | Unit | Sun anchor | Derivation |
+|---|---|---|---|
+| `solar_cycle_yr` | yr | 11 | = `activity_cycle_yr` (Phase 2) directly. flat star → omit / very long (no modulation) |
+| `astrosphere_standoff_au` | AU | ~120 | `120 · sqrt(Ṁ_rel) · (V_ISM,⊙ / V_ISM,star)` (ram-pressure balance, assuming v_wind = 400 km/s and common LIC density). Ṁ upper limit → standoff upper bound |
+| `local_ism_inflow_speed_kms` | km/s | ~26 | V_ISM = \|v_star − v_LIC\|. Wood Table 1 where measured; else from 6D astrometry. Sets standoff + is the apex speed |
+| `stellar_wind_speed_kms` | km/s | ~400 | assumed 400 (Wood) unless measured |
+| `stellar_radiation_surface_relative_sun` | × Sun (1.0 ≡ 46.5 rad/h) | 1.0 | SEP/flare-driven crew dose ∝ activity. Inactive old dwarf ≲1; flare star (Proxima) ≫1. **R'HK underrepresents M-dwarf flares** — use flare/X-ray for M, R'HK for FGK. Confidence low–medium |
+| `astrosphere_apex_ra_deg` / `_dec_deg` | deg | (nose ~ Sco/Oph) | upwind = −(v_star − v_LIC) from 6D astrometry; tail = opposite. **PLUGIN-ONLY** (stock cfg = sphere). >5 pc → LSR-relative fallback |
+
+Source priority:
+1. Wood astrospheric Lyα paper (gives Ṁ + V_ISM + θ at once): α Cen / Proxima
+   (Wood 2001/2005), ε Ind (Wood 2005), Barnard / τ Cet (Wood 2021 limits).
+2. V_ISM + apex computed from the star's 6D astrometry vs the LIC flow vector
+   (Lallement & Bertin 1992, ~26 km/s).
+3. Ṁ from `mass_loss_measurements`; cycle from `activity_cycle_measurements`.
+4. `radiation_surface` from activity level (interesting-first, Sun-anchored).
+
+Worked example (ε Ind A): Ṁ = 0.5, V_ISM = 68 km/s → standoff =
+120·√0.5·(26/68) ≈ 32 AU — a compact astrosphere, matching Wood's own
+description. (α Cen: √2·(26/25) ≈ 1.5× solar ≈ 176 AU.)
+
+Plugin note: `solar_cycle_yr`, `astrosphere_standoff_au`, and
+`radiation_surface` are all stock-cfg-able (RadiationBody + a heliopause
+pause). Only the **apex direction** needs the Harmony plugin — same pattern as
+[[project-nearstars-flux-tube-plugin]] (custom C# for cfg-impossible aims).
+
 ## EVE aurora fields
 
 EVE's aurora layer needs a position (latitude band), color, and
