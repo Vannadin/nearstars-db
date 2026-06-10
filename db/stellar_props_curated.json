@@ -945,6 +945,16 @@
         "recommended": true,
         "notes": "System (A+B) value: the two stars share one astrosphere (a~24 AU); 2 Mdot_sun is the combined wind from the HST Lya astrosphere best-fit (Wood 2001). Recorded on A as system representative."
       }
+    ],
+    "activity_cycle_measurements": [
+      {
+        "value_cycle_period_yr": 19.1,
+        "method": "x_ray_cycle",
+        "reference": "Ayres 2014",
+        "bibcode": "2014AJ....147...59A",
+        "recommended": true,
+        "notes": "TENTATIVE: 19.1+-0.7 yr if the single over-long X-ray swing is read as a cycle (Chandra/ROSAT/XMM, 30+ yr). A fell into a Maunder-minimum-like coronal low state from ~2005 and was only climbing out by 2014 -> one incompletely sampled swing, not a repeated cycle. Robrade 2012 give 12-15 yr for the blended-A X-rays."
+      }
     ]
   },
   "Alpha Centauri B": {
@@ -1107,6 +1117,16 @@
         "bibcode": "2010ApJ...722..343D",
         "doi": "10.1088/0004-637X/722/1/343",
         "recommended": true
+      }
+    ],
+    "activity_cycle_measurements": [
+      {
+        "value_cycle_period_yr": 8.84,
+        "method": "x_ray_cycle",
+        "reference": "DeWarf, Datin & Guinan 2010",
+        "bibcode": "2010ApJ...722..343D",
+        "recommended": true,
+        "notes": "Multi-band X-ray-through-NUV flux cycle P_cyc=8.84+-0.4 yr; X-ray-only gives 8.2+-0.2 yr (Ayres 2014; Robrade 2012). Min-to-peak X-ray contrast ~4.5 (half the solar amplitude). Cleanest stellar X-ray cycle besides 61 Cyg A (~7 yr). P_rot 36.2+-1.4 d."
       }
     ]
   },
@@ -1926,6 +1946,16 @@
         "recommended": true,
         "notes": "HST Lya astrospheric absorption fit; compact astrosphere (Wood 2005 Table 1). ~factor-2 systematic uncertainty (ISM properties, assumed wind speed). K5V, 3.6 pc."
       }
+    ],
+    "activity_cycle_measurements": [
+      {
+        "value_cycle_period_yr": 5.65,
+        "method": "ca_hk_cycle",
+        "reference": "Laliotis et al. 2023",
+        "bibcode": "2023AJ....165..176L",
+        "recommended": true,
+        "notes": "S-index cycle P=2063+-160 d (5.65+-0.44 yr), matching Lovis et al. 2011's 1719 d (4.71 yr) magnetic cycle to within 1.5 sigma. Low-amplitude cycle on an inactive old K4-5V dwarf (log R'HK ~ -4.8). P_rot 32.87 d (Laliotis 2023)."
+      }
     ]
   },
   "COCONUTS-2 A": {
@@ -2002,7 +2032,7 @@
         "recommended": false
       }
     ],
-    "meta_notes": "Stellar Phase 2 curated 2026-05-29 under curation-data-contract (Tier 1 inversion fix). Radius = Korolik 2023 CHARA/MIRC-X interferometry (theta_LD 2.019 +/- 0.012 mas -> R 0.793 +/- 0.004 Rsun, recommended). Mass = Teixeira 2009 asteroseismology 0.783 +/- 0.012 Msun (mean density + interferometric radius; cache-verified); Korolik 2023 g*R^2 mass 0.69 +/- 0.09 (spectroscopic logg) is the alternative. Luminosity = Teixeira 2009 0.488 +/- 0.010 Lsun (M_V + bolometric correction). Teff = Korolik 2023 interferometric 5370 +/- 20 K (theta_LD + Boyajian 2013 Fbol); Korolik Table 1 adopts the spectroscopic 5320 +/- 40 K (Santos 2013 gives 5310 +/- 17). [Fe/H] = Santos 2013 -0.52 +/- 0.01 (very metal-poor; Bruntt 2010 -0.18 is an alpha-enhanced outlier). Activity = Gomes da Silva 2021 AMBRE-HARPS log R'HK -4.977 (very inactive; long-term declining trend + ~11 yr cycle); Mamajek 2008 -4.958 corroborates. Rotation: NO direct photometric period exists; Korolik 2023 gyrochronology gives 46 +/- 4 d (recorded method=unverified), Baliunas 1996 Ca II HK ~34 d. AGE IS A DOCUMENTED DIVERGENCE: isochrone ~10 Gyr (Di Folco 2004, adopted by Korolik 2023) recommended as consistent with the very low activity + slow rotation, vs activity-age 5.8 Gyr (Mamajek 2008); Korolik quotes a literature range 4.4-12.4 Gyr. Gomes da Silva 2021 isochrone age (0.028 Gyr) is a metal-poor-star fit failure, rejected. Suarez Mascareno 2015/2016 do NOT contain tau Cet (verified). --- PLANETS: Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md.",
+    "meta_notes": "Stellar Phase 2 curated 2026-05-29 under curation-data-contract (Tier 1 inversion fix). Radius = Korolik 2023 CHARA/MIRC-X interferometry (theta_LD 2.019 +/- 0.012 mas -> R 0.793 +/- 0.004 Rsun, recommended). Mass = Teixeira 2009 asteroseismology 0.783 +/- 0.012 Msun (mean density + interferometric radius; cache-verified); Korolik 2023 g*R^2 mass 0.69 +/- 0.09 (spectroscopic logg) is the alternative. Luminosity = Teixeira 2009 0.488 +/- 0.010 Lsun (M_V + bolometric correction). Teff = Korolik 2023 interferometric 5370 +/- 20 K (theta_LD + Boyajian 2013 Fbol); Korolik Table 1 adopts the spectroscopic 5320 +/- 40 K (Santos 2013 gives 5310 +/- 17). [Fe/H] = Santos 2013 -0.52 +/- 0.01 (very metal-poor; Bruntt 2010 -0.18 is an alpha-enhanced outlier). Activity = Gomes da Silva 2021 AMBRE-HARPS log R'HK -4.977 (very inactive; long-term declining trend, NO organized magnetic cycle -- definitively flat over ~50 yr of Mt Wilson + CPS HK monitoring (Baum et al. 2022, 2022AJ....163..183B; flat-activity Maunder-minimum analog); an earlier tentative ~11 yr cycle from Gray & Baliunas 1994 is superseded -> no activity_cycle entry); Mamajek 2008 -4.958 corroborates. Rotation: NO direct photometric period exists; Korolik 2023 gyrochronology gives 46 +/- 4 d (recorded method=unverified), Baliunas 1996 Ca II HK ~34 d. AGE IS A DOCUMENTED DIVERGENCE: isochrone ~10 Gyr (Di Folco 2004, adopted by Korolik 2023) recommended as consistent with the very low activity + slow rotation, vs activity-age 5.8 Gyr (Mamajek 2008); Korolik quotes a literature range 4.4-12.4 Gyr. Gomes da Silva 2021 isochrone age (0.028 Gyr) is a metal-poor-star fit failure, rejected. Suarez Mascareno 2015/2016 do NOT contain tau Cet (verified). --- PLANETS: Tau Cet e (Feng 2017 candidate) was reclassified to 'False Positive Planet' by NASA Exoplanet Archive on 2026-04-09, citing Figueira et al. 2025 ESPRESSO sub-10 cm/s RV non-detection (A&A 700, A174, 10.1051/0004-6361/202553869). DB retrieval 2026-05-22 correctly inherited e's absence. Figueira 2025 also reports that f/g/h are at or below ESPRESSO's detection floor; NEA still carries f/g/h as pl_controv_flag=1 (not False Positive), but the system is on retraction watch. Cultural reference: Tau Cet e = 'Adrian' in Andy Weir's Project Hail Mary (2021); see docs/reference/cultural-context.md.",
     "radius_measurements": [
       {
         "value_rsun": 0.793,
@@ -2445,6 +2475,16 @@
         "bibcode": "2021MNRAS.500.1844K",
         "recommended": false,
         "notes": "Large-scale (ZDI) field ~200 G, mainly poloidal; dipole 135 G tilted 51 deg to spin axis; ~3x smaller than the Zeeman <B>. This is the wind-driving field. P_rot 89.8 d, 7-yr activity cycle."
+      }
+    ],
+    "activity_cycle_measurements": [
+      {
+        "value_cycle_period_yr": 7.0,
+        "method": "photometric_cycle",
+        "reference": "Wargelin et al. 2017",
+        "bibcode": "2017MNRAS.464.3281W",
+        "recommended": true,
+        "notes": "Strong evidence for a ~7 yr cycle from 15 yr ASAS V-band photometry + Swift/archival X-ray-UV (anti-correlated with optical). Independent fits 6.9+-0.5 yr (Jason 2007), 6.8+-0.3 yr (Suarez Mascareno 2016), ~8 yr (Savanov 2012). Notable: a cycle in a fully-convective M5.5 dwarf. P_rot 83 d."
       }
     ]
   },
@@ -5739,6 +5779,16 @@
         "bibcode": "2014MNRAS.444.3517M",
         "recommended": true,
         "notes": "Mean surface longitudinal field B_l=+1.3+-0.2 G from single-epoch LSD Stokes V (BCool snapshot); definite detection (FAP 8e-12), null N_l=+0.2+-0.2 G consistent with zero. B_l is a signed disk-averaged projection -> a lower bound on the true large-scale field. K0.5V."
+      }
+    ],
+    "activity_cycle_measurements": [
+      {
+        "value_cycle_period_yr": 8.7,
+        "method": "ca_hk_cycle",
+        "reference": "Laliotis et al. 2023",
+        "bibcode": "2023AJ....165..176L",
+        "recommended": true,
+        "notes": "S-index cycle P=3177+-84 d (8.70+-0.23 yr), an update to the long-published ~10 yr cycle: Baliunas 1995 10.1+-0.1 yr (Mt Wilson HK), Frick 2004 10.4 yr, Lovis 2011 9.18 yr, Olah 2016 10 yr, Boro Saikia 2018 10.23+-0.07 yr. Firm, repeatedly recovered 1995-2023. K0.5V."
       }
     ]
   },

@@ -383,6 +383,20 @@ STELLAR_MEASUREMENT_KINDS = {
             "unverified",
         },
     },
+    "activity_cycle_measurements": {
+        # 자기 활동 주기 (태양 11년 사이클 아날로그), 연(yr) 단위. Kerbalism
+        # solar_cycle 입력. Ca II H&K S-index 주기 (Mount Wilson/HARPS) / 코로나
+        # X-ray 주기 / 장기 측광 주기. flat(주기 없음) 별은 entry 생략 +
+        # meta_notes 기록 (null-is-null). [[project-nearstars-stellar-wind-kerbalism]].
+        "value_keys": {"value_cycle_period_yr"},
+        "methods": {
+            "ca_hk_cycle",        # Ca II H&K S-index 주기 (Baliunas/Mount Wilson, HARPS)
+            "x_ray_cycle",        # 코로나 X-ray 주기 (Ayres/Robrade)
+            "photometric_cycle",  # 장기 측광 주기 (ASAS 류)
+            "unverified",
+        },
+        "extra_keys": {"limit", "notes"},   # tentative/잠정은 notes 에 명시
+    },
     "mass_loss_measurements": {
         # 항성풍 질량손실률, 태양 단위 (Mdot_sun ~ 2e-14 Msun/yr). 거의 항상
         # UPPER LIMIT (astrospheric Lya 는 검출 가능한 astrosphere 필요) — 비검출은

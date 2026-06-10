@@ -211,6 +211,16 @@
             "recommended": true,
             "notes": "Mean surface longitudinal field B_l=+1.3+-0.2 G from single-epoch LSD Stokes V (BCool snapshot); definite detection (FAP 8e-12), null N_l=+0.2+-0.2 G consistent with zero. B_l is a signed disk-averaged projection -> a lower bound on the true large-scale field. K0.5V."
           }
+        ],
+        "activity_cycle_measurements": [
+          {
+            "value_cycle_period_yr": 8.7,
+            "method": "ca_hk_cycle",
+            "reference": "Laliotis et al. 2023",
+            "bibcode": "2023AJ....165..176L",
+            "recommended": true,
+            "notes": "S-index cycle P=3177+-84 d (8.70+-0.23 yr), an update to the long-published ~10 yr cycle: Baliunas 1995 10.1+-0.1 yr (Mt Wilson HK), Frick 2004 10.4 yr, Lovis 2011 9.18 yr, Olah 2016 10 yr, Boro Saikia 2018 10.23+-0.07 yr. Firm, repeatedly recovered 1995-2023. K0.5V."
+          }
         ]
       },
       "derived": {
@@ -238,7 +248,8 @@
         "rotation_period_days": 42,
         "activity_log_rhk": -4.99,
         "activity_h_alpha_ew_angstrom": null,
-        "b_largescale_g": 1.3
+        "b_largescale_g": 1.3,
+        "activity_cycle_yr": 8.7
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103515703214.04,

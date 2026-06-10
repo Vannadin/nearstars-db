@@ -110,6 +110,16 @@
             "recommended": true,
             "notes": "HST Lya astrospheric absorption fit; compact astrosphere (Wood 2005 Table 1). ~factor-2 systematic uncertainty (ISM properties, assumed wind speed). K5V, 3.6 pc."
           }
+        ],
+        "activity_cycle_measurements": [
+          {
+            "value_cycle_period_yr": 5.65,
+            "method": "ca_hk_cycle",
+            "reference": "Laliotis et al. 2023",
+            "bibcode": "2023AJ....165..176L",
+            "recommended": true,
+            "notes": "S-index cycle P=2063+-160 d (5.65+-0.44 yr), matching Lovis et al. 2011's 1719 d (4.71 yr) magnetic cycle to within 1.5 sigma. Low-amplitude cycle on an inactive old K4-5V dwarf (log R'HK ~ -4.8). P_rot 32.87 d (Laliotis 2023)."
+          }
         ]
       },
       "derived": {
@@ -137,7 +147,8 @@
         "rotation_period_days": 35.0,
         "activity_log_rhk": -4.72,
         "activity_h_alpha_ew_angstrom": null,
-        "mass_loss_solar": 0.5
+        "mass_loss_solar": 0.5,
+        "activity_cycle_yr": 5.65
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103781128094.076,

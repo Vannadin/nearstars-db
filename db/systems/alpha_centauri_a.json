@@ -225,6 +225,16 @@
             "recommended": true,
             "notes": "System (A+B) value: the two stars share one astrosphere (a~24 AU); 2 Mdot_sun is the combined wind from the HST Lya astrosphere best-fit (Wood 2001). Recorded on A as system representative."
           }
+        ],
+        "activity_cycle_measurements": [
+          {
+            "value_cycle_period_yr": 19.1,
+            "method": "x_ray_cycle",
+            "reference": "Ayres 2014",
+            "bibcode": "2014AJ....147...59A",
+            "recommended": true,
+            "notes": "TENTATIVE: 19.1+-0.7 yr if the single over-long X-ray swing is read as a cycle (Chandra/ROSAT/XMM, 30+ yr). A fell into a Maunder-minimum-like coronal low state from ~2005 and was only climbing out by 2014 -> one incompletely sampled swing, not a repeated cycle. Robrade 2012 give 12-15 yr for the blended-A X-rays."
+          }
         ]
       },
       "derived": {
@@ -257,7 +267,8 @@
         "rotation_period_days": 22.0,
         "activity_log_rhk": -4.95,
         "activity_h_alpha_ew_angstrom": null,
-        "mass_loss_solar": 2.0
+        "mass_loss_solar": 2.0,
+        "activity_cycle_yr": 19.1
       },
       "principia": {
         "gravitational_parameter_km3_s2": 146713602439.899,

@@ -66,3 +66,27 @@ papers:
   status: fetched
   category: deep_read
   fetch_error: null
+- arxiv_id: '1401.0847'
+  ads_bibcode: 2014AJ....147...59A
+  title: Ayres 2014 - The Ups and Downs of alpha Cen (X-ray cycles A 19.2 yr tentative, B 8.1 yr)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1009.1652'
+  ads_bibcode: 2010ApJ...722..343D
+  title: DeWarf Datin Guinan 2010 - alpha Cen B multi-band activity cycle 8.84 yr
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1610.03447'
+  ads_bibcode: 2017MNRAS.464.3281W
+  title: Wargelin et al. 2017 - Proxima Cen 7-yr stellar cycle (ASAS V-band + X-ray/UV)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2302.10310'
+  ads_bibcode: 2023AJ....165..176L
+  title: Laliotis et al. 2023 - HK/S-index cycle compilation (40 Eri A 8.70 yr, eps Ind A 5.65 yr)
+  status: fetched
+  category: deep_read
+  fetch_error: null
