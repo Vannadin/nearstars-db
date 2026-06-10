@@ -42,3 +42,27 @@ papers:
   status: fetched
   category: skim
   fetch_error: null
+- arxiv_id: '2509.12310'
+  ads_bibcode: 2025ApJ...tau.Cet.ZDI
+  title: Chiti et al. 2025 - tau Cet large-scale field (ZDI, weakest in a Sun-like star)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1310.6507'
+  ads_bibcode: 2013arXiv1310.6507M
+  title: Marsden et al. 2013 - BCool survey (PRELIMINARY proceedings, no per-star table)
+  status: fetched
+  category: skim
+  fetch_error: null
+- arxiv_id: '1311.3374'
+  ads_bibcode: 2014MNRAS.444.3517M
+  title: Marsden et al. 2014 - BCool magnetic snapshot survey (MNRAS 444, 3517; full per-star B_l table)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0506401
+  ads_bibcode: 2005ApJ...628L.143W
+  title: Wood et al. 2005 - New astrospheric Lya mass-loss measurements (eps Ind / 40 Eri check)
+  status: fetched
+  category: deep_read
+  fetch_error: null

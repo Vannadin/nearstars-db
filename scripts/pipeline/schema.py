@@ -405,7 +405,8 @@ STELLAR_MEASUREMENT_KINDS = {
         "value_keys": {"value_b_surface_g", "value_b_largescale_g"},
         "methods": {
             "zeeman_broadening",          # Stokes I 평균장 <B>
-            "zdi",                        # Zeeman-Doppler Imaging 대규모장
+            "zdi",                        # Zeeman-Doppler Imaging 대규모장 (맵)
+            "spectropolarimetry_bl",      # Stokes V LSD 단일 종방향장 B_l (BCool 류)
             "estimated_from_rotation",    # Reiners 2022 P_rot -> <B> 스케일링
             "radio_aurora",               # 사이클로트론 방출 -> B 하한 (갈색왜성)
             "unverified",

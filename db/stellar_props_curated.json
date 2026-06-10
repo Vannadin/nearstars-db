@@ -1264,6 +1264,16 @@
         "limit": "upper",
         "notes": "Upper limit (GJ 699, astrospheric non-detection), Wood 2021 Table 3."
       }
+    ],
+    "magnetic_field_measurements": [
+      {
+        "value_b_surface_g": 430,
+        "method": "zeeman_broadening",
+        "reference": "Reiners et al. 2022",
+        "bibcode": "2022A&A...662A..41R",
+        "recommended": true,
+        "notes": "Mean unsigned surface field <B>=430+-80 G from multi-line Zeeman broadening (CARMENES; Table B.1 via VizieR J/A+A/662/A41). Quiet old M4 dwarf; comparable to but below Proxima's 600 G."
+      }
     ]
   },
   "GJ 667 C": {
@@ -1906,6 +1916,16 @@
         "doi": "10.3847/1538-3881/ac66d2",
         "recommended": true
       }
+    ],
+    "mass_loss_measurements": [
+      {
+        "value_mdot_solar": 0.5,
+        "method": "astrospheric_lyman_alpha",
+        "reference": "Wood et al. 2005",
+        "bibcode": "2005ApJ...628L.143W",
+        "recommended": true,
+        "notes": "HST Lya astrospheric absorption fit; compact astrosphere (Wood 2005 Table 1). ~factor-2 systematic uncertainty (ISM properties, assumed wind speed). K5V, 3.6 pc."
+      }
     ]
   },
   "COCONUTS-2 A": {
@@ -2152,6 +2172,16 @@
         "recommended": true,
         "limit": "upper",
         "notes": "Upper limit, Wood 2021 Table 3 (one of the weakest winds inferred)."
+      }
+    ],
+    "magnetic_field_measurements": [
+      {
+        "value_b_largescale_g": 0.17,
+        "method": "zdi",
+        "reference": "Chiti et al. 2025",
+        "bibcode": "2025arXiv250912310C",
+        "recommended": true,
+        "notes": "ZDI surface-averaged large-scale field modulus <B>=0.17 G; dipole B_dip=0.31 G (~92% of poloidal energy, highly axisymmetric); mean longitudinal <Bz>=-0.26+-0.04 G. CFHT/ESPaDOnS, 6 epochs. Weakest large-scale field yet detected in a Sun-like star (weakened-magnetic-braking regime), ~order of magnitude below the ~2 G standard-braking prediction."
       }
     ]
   },
@@ -5699,6 +5729,16 @@
         "bibcode": "1996AJ....111..439H",
         "doi": "10.1086/117796",
         "recommended": false
+      }
+    ],
+    "magnetic_field_measurements": [
+      {
+        "value_b_largescale_g": 1.3,
+        "method": "spectropolarimetry_bl",
+        "reference": "Marsden et al. 2014",
+        "bibcode": "2014MNRAS.444.3517M",
+        "recommended": true,
+        "notes": "Mean surface longitudinal field B_l=+1.3+-0.2 G from single-epoch LSD Stokes V (BCool snapshot); definite detection (FAP 8e-12), null N_l=+0.2+-0.2 G consistent with zero. B_l is a signed disk-averaged projection -> a lower bound on the true large-scale field. K0.5V."
       }
     ]
   },

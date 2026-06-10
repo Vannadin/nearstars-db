@@ -192,6 +192,16 @@
             "notes": "Upper limit, Wood 2021 Table 3 (one of the weakest winds inferred)."
           }
         ],
+        "magnetic_field_measurements": [
+          {
+            "value_b_largescale_g": 0.17,
+            "method": "zdi",
+            "reference": "Chiti et al. 2025",
+            "bibcode": "2025arXiv250912310C",
+            "recommended": true,
+            "notes": "ZDI surface-averaged large-scale field modulus <B>=0.17 G; dipole B_dip=0.31 G (~92% of poloidal energy, highly axisymmetric); mean longitudinal <Bz>=-0.26+-0.04 G. CFHT/ESPaDOnS, 6 epochs. Weakest large-scale field yet detected in a Sun-like star (weakened-magnetic-braking regime), ~order of magnitude below the ~2 G standard-braking prediction."
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "single",
@@ -266,7 +276,8 @@
         "rotation_period_days": 46,
         "activity_log_rhk": -4.977,
         "activity_h_alpha_ew_angstrom": null,
-        "mass_loss_solar": 0.1
+        "mass_loss_solar": 0.1,
+        "b_largescale_g": 0.17
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103913840534.094,

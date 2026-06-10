@@ -100,7 +100,17 @@
             "recommended": true
           }
         ],
-        "stellarium_id": null
+        "stellarium_id": null,
+        "mass_loss_measurements": [
+          {
+            "value_mdot_solar": 0.5,
+            "method": "astrospheric_lyman_alpha",
+            "reference": "Wood et al. 2005",
+            "bibcode": "2005ApJ...628L.143W",
+            "recommended": true,
+            "notes": "HST Lya astrospheric absorption fit; compact astrosphere (Wood 2005 Table 1). ~factor-2 systematic uncertainty (ISM properties, assumed wind speed). K5V, 3.6 pc."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -126,7 +136,8 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 35.0,
         "activity_log_rhk": -4.72,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "mass_loss_solar": 0.5
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103781128094.076,
@@ -273,7 +284,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "epoch propagation method"
       ]
@@ -282,7 +293,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -291,7 +302,7 @@
       "title": "Lundkvist et al. 2024",
       "doi": "10.3847/1538-4357/ad25f2",
       "bibcode": "2024ApJ...964..110L",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "eps Ind A mass (asteroseismology)"
       ]
@@ -300,7 +311,7 @@
       "title": "Demory et al. 2009",
       "doi": "10.1051/0004-6361/200911976",
       "bibcode": "2009A&A...505..205D",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "eps Ind A mass (empirical_relation)"
       ]
@@ -309,7 +320,7 @@
       "title": "Matthews et al. 2026",
       "doi": "10.3847/2041-8213/ae5823",
       "bibcode": null,
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "planet eps Ind A b orbital"
       ]
@@ -318,7 +329,7 @@
       "title": "Feng et al. 2019",
       "doi": "10.1093/mnras/stz2912",
       "bibcode": "2019MNRAS.490.5002F",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "planet eps Ind A b orbital"
       ]
@@ -327,14 +338,14 @@
       "title": "Feng et al. 2018",
       "doi": null,
       "bibcode": "2018arXiv180308163F",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-10",
       "used_for": [
         "planet eps Ind A b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-31",
+    "retrieval_date": "2026-06-10",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

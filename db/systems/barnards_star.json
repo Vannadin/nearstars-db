@@ -171,6 +171,16 @@
             "limit": "upper",
             "notes": "Upper limit (GJ 699, astrospheric non-detection), Wood 2021 Table 3."
           }
+        ],
+        "magnetic_field_measurements": [
+          {
+            "value_b_surface_g": 430,
+            "method": "zeeman_broadening",
+            "reference": "Reiners et al. 2022",
+            "bibcode": "2022A&A...662A..41R",
+            "recommended": true,
+            "notes": "Mean unsigned surface field <B>=430+-80 G from multi-line Zeeman broadening (CARMENES; Table B.1 via VizieR J/A+A/662/A41). Quiet old M4 dwarf; comparable to but below Proxima's 600 G."
+          }
         ]
       },
       "derived": {
@@ -198,7 +208,8 @@
         "rotation_period_days": 145,
         "activity_log_rhk": -5.82,
         "activity_h_alpha_ew_angstrom": null,
-        "mass_loss_solar": 0.2
+        "mass_loss_solar": 0.2,
+        "b_surface_g": 430
       },
       "principia": {
         "gravitational_parameter_km3_s2": 21499415282.916,
