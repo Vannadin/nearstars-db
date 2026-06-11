@@ -256,7 +256,7 @@ A 는 ~2005 년 이래 Maunder-minimum 같은 저활동 상태에 잠겨 있어 
 | `stellar_wind_mass_loss_solar` | 2 (A+B combined) | high | Wood 2001 — 공유 astrosphere, HST Lyα |
 | `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (α Cen 에 G-cloud 벡터) |
 | `astrosphere_standoff_au` | ~176 | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM). A+B 공유 공동 |
-| `stellar_radiation_surface_relative_sun` | ~1.0 | low | 태양형 활동 — interesting-first, 태양 기준 anchor |
+| `stellar_radiation_surface_relative_sun` | ~0.8 | medium | 측정: log L_X 26.78 (R&S 2016 XMM 2003, 0.2–2 keV) 대 태양 사이클 평균 26.9 (R_X,⊙ −6.7). 2005–2013 Maunder식 저점은 한참 아래로 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~187 / +22 | low | 6D 천체측정 vs LIC. AB-barycenter, 근사값 (궤도 운동 + G-cloud 가 ~10–20° 이동시킴). **plugin-only** |
 
 ## Open items for follow-up

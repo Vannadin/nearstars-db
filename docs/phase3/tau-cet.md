@@ -387,7 +387,7 @@ activity cycle** over ~50 yr of monitoring (Baum 2022). The result is a steady
 | `stellar_wind_mass_loss_solar` | ≤ 0.1 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~50 | medium | 6D astrometry vs LIC |
 | `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | from the Ṁ upper limit + V_ISM |
-| `stellar_radiation_surface_relative_sun` | ~0.5 | low | very inactive, flat — interesting-first below solar |
+| `stellar_radiation_surface_relative_sun` | ~0.6 | medium | measured: log L_X 26.69 (S&L 2004 NEXXUS) vs solar cycle-mean 26.9; flat star, no cycle modulation |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~282 / +8 | low | 6D astrometry vs LIC; **plugin-only** |
 
 ## Open items for follow-up

@@ -303,8 +303,9 @@ Phase 2 레이어에서 cfg-결정적 측정이 아님), 그리고 성간 전구
 별 중 고유운동이 가장 크기에 ~120 km/s 로 국소 ISM 을 헤치고 나아가는데,
 항성풍이 약함에도 (Ṁ ≤ 0.2 Ṁ⊙, Wood 2021) ram pressure 가 항성풍 공동을
 겨우 **≲11 AU** 의 standoff 로 압축합니다. 검출된 활동 사이클이 없는,
-나이가 많고 자기적으로 조용한 M4 왜성이라 입자 방사선 환경은 태양보다
-한참 아래입니다.
+나이가 많고 자기적으로 조용한 M4 왜성으로 — 정온 코로나가 태양 X-ray
+출력의 3% 에 불과하다고 이제 측정으로 확인됐습니다 (France 2020,
+Chandra). 다만 X-ray+UV flare 는 여전히 하루 몇 차례씩 뚫고 나옵니다.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
@@ -312,7 +313,7 @@ Phase 2 레이어에서 cfg-결정적 측정이 아님), 그리고 성간 전구
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry 대 LIC (극단적 공간속도) |
 | `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | 높은 V_ISM 이 공동을 압축 |
-| `stellar_radiation_surface_relative_sun` | ~0.3 | low | 나이 많고 조용한 비활동성 M4 — interesting-first 로 태양 아래 |
+| `stellar_radiation_surface_relative_sun` | ~0.1 | medium | 측정: log L_X 25.3 (France 2020 Chandra) = 정온 기준 태양의 0.03×. 하루 ~6회의 X-ray+UV flare 가 시간평균 선량을 끌어올림. 정온-만 canonical 대안: ~0.03 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry 대 LIC. **plugin-only** |
 
 ## Open items for follow-up

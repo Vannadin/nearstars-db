@@ -425,8 +425,10 @@ YAML 이 빌드되면 `status: skipped` 로 필터됩니다.
 테지만, 항성풍 Ṁ 이 **미측정** 이라 (Wood 의 HST Lyα 탐색에서 40
 Eri 는 검출 가능한 astrosphere 가 없음) standoff 거리는 미구속
 상태로 둡니다. 잘 정립된 **8.7 년 Ca II 활성도 사이클** 을 가집니다
-(Laliotis 2023. 역사적으로는 ~10 년, Baliunas 1995). 적당히
-활동적인 노년 K 왜성으로서 입자 환경은 태양보다 약간 아래입니다.
+(Laliotis 2023. 역사적으로는 ~10 년, Baliunas 1995). 측정된 X-ray
+출력 (NEXXUS log L_X 27.2–27.5) 은 입자 환경을 **정온 태양의 2–4×**
+에 올려놓습니다 — 차분한 Ca II 활동도가 시사하던 것보다 활기찬
+별입니다.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
@@ -434,7 +436,7 @@ Eri 는 검출 가능한 astrosphere 가 없음) standoff 거리는 미구속
 | `stellar_wind_mass_loss_solar` | (unconstrained) | — | Wood 샘플에 없음. 검출 가능한 astrosphere 없음 |
 | `local_ism_inflow_speed_kms` | ~127 | medium | 6D 측성 대 LIC (높은 우주 속도) |
 | `astrosphere_standoff_au` | (unconstrained) | — | 항성풍 측정이 필요 (Ṁ 미상) |
-| `stellar_radiation_surface_relative_sun` | ~0.8 | low | 적당히 활동적인 노년 K — interesting-first, 태양 부근 |
+| `stellar_radiation_surface_relative_sun` | ~3 | medium | 측정: log L_X 27.17–27.52 (S&L 2004 NEXXUS HRI/PSPC) = 태양 사이클 평균 26.9 의 2–4× — 옛 활동도 추정에서 상향 수정 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~281 / −41 | low | 6D 측성 대 LIC. **plugin-only** |
 
 ## Open items for follow-up

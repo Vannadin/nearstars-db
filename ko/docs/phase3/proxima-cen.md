@@ -253,7 +253,7 @@ Proxima 는 **조밀한 astrosphere** 를 가집니다 — 약한 항성풍 (Ṁ
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2001 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (LIC. α Cen 과 같은 흐름) |
 | `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | Ṁ 상한에서 |
-| `stellar_radiation_surface_relative_sun` | ~5 | low | flare 지배. R'HK 가 M 왜성 flare 를 가림 — interesting-first 로 태양 위로 boost |
+| `stellar_radiation_surface_relative_sun` | ~5 | medium | 정온 L_X 가 태양의 0.3–2× 로 측정됨 (Wargelin R_X −4.4; NEXXUS 27.22). 그 위에 flare 가중 boost (5-mmag flare ~63회/일, U-band ~1.4회/시간). 정온-만 canonical 대안: ~0.3 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~185 / +42 | low | 6D astrometry 대 LIC. **plugin-only** |
 
 ## Open items for follow-up

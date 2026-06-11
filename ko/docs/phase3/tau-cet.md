@@ -356,7 +356,7 @@ skipped` annotation 으로 보존됩니다.
 | `stellar_wind_mass_loss_solar` | ≤ 0.1 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~50 | medium | 6D astrometry 대 LIC |
 | `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | Ṁ 상한 + V_ISM 에서 |
-| `stellar_radiation_surface_relative_sun` | ~0.5 | low | 매우 비활동적이고 평탄함 — interesting-first 로 태양 아래 |
+| `stellar_radiation_surface_relative_sun` | ~0.6 | medium | 측정: log L_X 26.69 (S&L 2004 NEXXUS) 대 태양 사이클 평균 26.9. 평탄한 별이라 사이클 변조 없음 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~282 / +8 | low | 6D astrometry 대 LIC. **plugin-only** |
 
 ## Open items for follow-up

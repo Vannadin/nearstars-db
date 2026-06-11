@@ -282,7 +282,7 @@ flare-dominated, not wind-dominated. Its activity cycles on ~7 yr (Wargelin
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2001 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (LIC; same flow as α Cen) |
 | `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | from the Ṁ upper limit |
-| `stellar_radiation_surface_relative_sun` | ~5 | low | flare-dominated; R'HK hides M-dwarf flares — interesting-first boost above solar |
+| `stellar_radiation_surface_relative_sun` | ~5 | medium | quiescent L_X now measured at 0.3–2× solar (Wargelin R_X −4.4; NEXXUS 27.22); flare-weighted boost on top (5-mmag flares ~63/day, U-band ~1.4/hr). Quiescent-only canonical alternative: ~0.3 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~185 / +42 | low | 6D astrometry vs LIC; **plugin-only** |
 
 ## Open items for follow-up

@@ -452,8 +452,9 @@ so ram pressure would strongly compress its astrosphere — but its wind Ṁ is
 **unmeasured** (40 Eri has no detectable astrosphere in Wood's HST Lyα search),
 so the standoff distance is left unconstrained. It carries a well-established
 **8.7 yr Ca II activity cycle** (Laliotis 2023; historically ~10 yr, Baliunas
-1995). As a moderately active old K dwarf its particle environment is a little
-below solar.
+1995). Its measured X-ray output (NEXXUS log L_X 27.2–27.5) puts the particle
+environment at **2–4× the quiescent Sun** — livelier than its sedate Ca II
+activity had suggested.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
@@ -461,7 +462,7 @@ below solar.
 | `stellar_wind_mass_loss_solar` | (unconstrained) | — | not in Wood's sample; no detectable astrosphere |
 | `local_ism_inflow_speed_kms` | ~127 | medium | 6D astrometry vs LIC (high space velocity) |
 | `astrosphere_standoff_au` | (unconstrained) | — | requires a wind measurement (Ṁ unknown) |
-| `stellar_radiation_surface_relative_sun` | ~0.8 | low | moderately active old K — interesting-first, near solar |
+| `stellar_radiation_surface_relative_sun` | ~3 | medium | measured: log L_X 27.17–27.52 (S&L 2004 NEXXUS HRI/PSPC) = 2–4× solar cycle-mean 26.9 — upward revision from the old activity guess |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~281 / −41 | low | 6D astrometry vs LIC; **plugin-only** |
 
 ## Open items for follow-up

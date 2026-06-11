@@ -336,8 +336,9 @@ Barnard's Star has the **smallest astrosphere** of the set. As the
 highest-proper-motion star known it plows through the local ISM at ~120 km/s, so
 even though its wind is weak (Ṁ ≤ 0.2 Ṁ⊙, Wood 2021) the ram pressure compresses
 the wind cavity to a standoff of only **≲11 AU**. It is an old, magnetically
-quiet M4 dwarf with no detected activity cycle, so its particle-radiation
-environment is well below solar.
+quiet M4 dwarf with no detected activity cycle, and its quiescent corona is
+now measured at just 3% of the Sun's X-ray output (France 2020, Chandra) —
+though X-ray+UV flares still punch through several times a day.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
@@ -345,7 +346,7 @@ environment is well below solar.
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry vs LIC (extreme space velocity) |
 | `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | high V_ISM compresses the cavity |
-| `stellar_radiation_surface_relative_sun` | ~0.3 | low | old, quiet, inactive M4 — interesting-first below solar |
+| `stellar_radiation_surface_relative_sun` | ~0.1 | medium | measured: log L_X 25.3 (France 2020 Chandra) = 0.03× solar quiescent; ~6 X-ray+UV flares/day lift the time-averaged dose. Quiescent-only canonical alternative: ~0.03 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry vs LIC; **plugin-only** |
 
 ## Open items for follow-up

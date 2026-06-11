@@ -63,7 +63,7 @@ collapses to a fixed world axis, so a per-star tail is **plugin-only** (patch
 | `astrosphere_standoff_au` | AU | ~120 | `120 · sqrt(Ṁ_rel) · (V_ISM,⊙ / V_ISM,star)` (ram-pressure balance, assuming v_wind = 400 km/s and common LIC density). Ṁ upper limit → standoff upper bound |
 | `local_ism_inflow_speed_kms` | km/s | ~26 | V_ISM = \|v_star − v_LIC\|. Wood Table 1 where measured; else from 6D astrometry. Sets standoff + is the apex speed |
 | `stellar_wind_speed_kms` | km/s | ~400 | assumed 400 (Wood) unless measured |
-| `stellar_radiation_surface_relative_sun` | × Sun (1.0 ≡ 46.5 rad/h) | 1.0 | SEP/flare-driven crew dose ∝ activity. Inactive old dwarf ≲1; flare star (Proxima) ≫1. **R'HK underrepresents M-dwarf flares** — use flare/X-ray for M, R'HK for FGK. Confidence low–medium |
+| `stellar_radiation_surface_relative_sun` | × Sun (1.0 ≡ 46.5 rad/h) | 1.0 | anchor = measured quiescent L_X ratio: 10^(log L_X − 26.9), solar cycle-mean log L_X,⊙ ≈ 26.9 / R_X,⊙ = −6.7 0.2–2 keV (Wargelin 2017 Table 3 ← Judge 2003; cached). Flare stars get a flare-weighted boost ABOVE the quiescent ratio (note the quiescent-only value as canonical alternative). Band-match caveat: XMM 0.2–2 / Chandra 0.3–10 / RASS 0.1–2.4 keV vs the solar anchor → keep confidence ≤ medium. **R'HK underrepresents M-dwarf flares** — use flare/X-ray for M, R'HK for FGK. DB input: `xray_measurements` (Phase 2) |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | deg | (nose ~ Sco/Oph) | upwind = −(v_star − v_LIC) from 6D astrometry; tail = opposite. **PLUGIN-ONLY** (stock cfg = sphere). >5 pc → LSR-relative fallback |
 
 **Decisions-table presentation rule.** Every field above gets a row in each

@@ -249,7 +249,7 @@ cycle known after 61 Cyg A (DeWarf 2010 multi-band; Ayres 2014 X-ray-only gives
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `solar_cycle_yr` | 8.84 | medium | DeWarf 2010 (multi-band X-ray–NUV); X-ray-only 8.2±0.2 yr (Ayres 2014) |
-| `stellar_radiation_surface_relative_sun` | ~1.0 | low | solar-like activity — interesting-first, Sun-anchored |
+| `stellar_radiation_surface_relative_sun` | ~1.4 | medium | measured: log L_X 27.04 (DeWarf 2010 ROSAT-96 cycle mean) vs solar 26.9; the 8.8-yr cycle swings it ~0.4–5× |
 | `astrosphere` | shares the α Cen AB cavity | — | Wood 2001 — see α Cen A for Ṁ / standoff / apex |
 
 ## Open items for follow-up

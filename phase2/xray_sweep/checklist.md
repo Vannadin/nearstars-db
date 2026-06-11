@@ -21,16 +21,16 @@ stops being activity-vibes (confidence low) and becomes L_X-anchored.
 - [x] eps Ind A — Wood 2005 Table 1 (rec) + Chen 2022 R_X alt
 - [x] new pins appended to docs/phase3/_bib/stellar-wind.yaml + fetched (France 2020; R&S16 already cached, pinned for traceability)
 - [x] curated written via canonical writer; build_systems + validate FAIL 0
-- [ ] commit (curation, one axis × all hosts, 8ed58a1 pattern)
+- [x] commit (curation, one axis × all hosts, 8ed58a1 pattern) — ebbc8c6
 
 ## ③ Phase 3 update (7 hosts)
-- [ ] radiation_surface rows: value re-checked vs measured L_X ratio, confidence raised, basis cites measurement
-- [ ] narrative sentence updated where the picture changes
-- [ ] mod-grounded-fields.md derivation row updated (L_X anchor formula)
-- [ ] ko mirrors + rebuilt HTML + reports index
-- [ ] check.sh all green
+- [x] radiation_surface rows: value re-checked vs measured L_X ratio, confidence low→medium, basis cites measurement. Revisions: αCen A 1.0→0.8, αCen B 1.0→1.4, Proxima 5 (kept, now bracketed, quiescent alt ~0.3), Barnard 0.3→0.1 (quiescent alt ~0.03), tau Cet 0.5→0.6, 40 Eri A 0.8→**3**, eps Ind A 1.0→**3**
+- [x] narrative sentence updated where the picture changes (Barnard, 40 Eri A, eps Ind A)
+- [x] mod-grounded-fields.md derivation row updated (L_X anchor: solar cycle-mean log 26.9 / R_X,⊙ −6.7, Wargelin Table 3 ← Judge 2003; flare-weighted boost; band caveat)
+- [x] ko mirrors + rebuilt HTML + reports index
+- [x] check.sh all green
 - [ ] commit (phase3)
 
 ## Gates
-- [ ] every committed value greps in docs/phase3/_papers/ cache (no live cite)
-- [ ] agent drafts value-checked in main thread before write
+- [x] every committed value greps in docs/phase3/_papers/ cache (no live cite) — incl. the solar anchor
+- [x] agent drafts value-checked in main thread before write (see context-notes value-check log)

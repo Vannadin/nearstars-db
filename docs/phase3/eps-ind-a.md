@@ -306,8 +306,10 @@ context. No debris-disk papers exist to read (none reported).
 running into a fast ~68 km/s ISM inflow stands off at only **~32 AU** — Wood 2005
 explicitly calls it compact, and our 6D-astrometry V_ISM (69 km/s) reproduces
 Wood's 68 km/s, validating the method. It cycles on **5.65 yr** (Laliotis 2023;
-matching Lovis 2011's 4.71 yr). An active-ish old K dwarf, roughly solar in
-particle environment.
+matching Lovis 2011's 4.71 yr). An active-ish old K dwarf whose measured
+X-ray output runs **~3× the quiescent Sun** (Wood 2005 RASS log L_X 27.39;
+Chen 2022's R_X −5.62 agrees) — a punchier particle environment than its
+sedate age suggests.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
@@ -315,7 +317,7 @@ particle environment.
 | `stellar_wind_mass_loss_solar` | 0.5 | high | Wood 2005 astrospheric Lyα (compact astrosphere) |
 | `local_ism_inflow_speed_kms` | 68 | high | Wood 2005; 6D-astrometry calc (69) confirms |
 | `astrosphere_standoff_au` | ~32 (compact) | high | 120·√0.5·(25.4/68); matches Wood's description |
-| `stellar_radiation_surface_relative_sun` | ~1.0 | low | active old K (R'HK −4.72) — interesting-first near solar |
+| `stellar_radiation_surface_relative_sun` | ~3 | medium | measured: log L_X 27.39 (Wood 2005 RASS) ≈ 3× solar cycle-mean 26.9; Chen 2022 R_X −5.62 independently implies the same |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~110 / +2 | low | 6D astrometry vs LIC; **plugin-only** |
 
 ## Open items for follow-up
