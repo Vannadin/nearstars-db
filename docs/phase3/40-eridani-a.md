@@ -460,7 +460,7 @@ below solar.
 | `solar_cycle_yr` | 8.70 | high | Laliotis 2023 S-index (historically ~10.1 yr, Baliunas 1995) |
 | `stellar_wind_mass_loss_solar` | (unconstrained) | — | not in Wood's sample; no detectable astrosphere |
 | `local_ism_inflow_speed_kms` | ~127 | medium | 6D astrometry vs LIC (high space velocity) |
-| `astrosphere_standoff_au` | (unconstrained) | low | requires a wind measurement (Ṁ unknown) |
+| `astrosphere_standoff_au` | (unconstrained) | — | requires a wind measurement (Ṁ unknown) |
 | `stellar_radiation_surface_relative_sun` | ~0.8 | low | moderately active old K — interesting-first, near solar |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~281 / −41 | low | 6D astrometry vs LIC; **plugin-only** |
 

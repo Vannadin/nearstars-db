@@ -433,7 +433,7 @@ Eri 는 검출 가능한 astrosphere 가 없음) standoff 거리는 미구속
 | `solar_cycle_yr` | 8.70 | high | Laliotis 2023 S-index (역사적으로 ~10.1 yr, Baliunas 1995) |
 | `stellar_wind_mass_loss_solar` | (unconstrained) | — | Wood 샘플에 없음. 검출 가능한 astrosphere 없음 |
 | `local_ism_inflow_speed_kms` | ~127 | medium | 6D 측성 대 LIC (높은 우주 속도) |
-| `astrosphere_standoff_au` | (unconstrained) | low | 항성풍 측정이 필요 (Ṁ 미상) |
+| `astrosphere_standoff_au` | (unconstrained) | — | 항성풍 측정이 필요 (Ṁ 미상) |
 | `stellar_radiation_surface_relative_sun` | ~0.8 | low | 적당히 활동적인 노년 K — interesting-first, 태양 부근 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~281 / −41 | low | 6D 측성 대 LIC. **plugin-only** |
 

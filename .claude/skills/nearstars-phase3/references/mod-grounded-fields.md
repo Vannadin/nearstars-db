@@ -66,6 +66,16 @@ collapses to a fixed world axis, so a per-star tail is **plugin-only** (patch
 | `stellar_radiation_surface_relative_sun` | × Sun (1.0 ≡ 46.5 rad/h) | 1.0 | SEP/flare-driven crew dose ∝ activity. Inactive old dwarf ≲1; flare star (Proxima) ≫1. **R'HK underrepresents M-dwarf flares** — use flare/X-ray for M, R'HK for FGK. Confidence low–medium |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | deg | (nose ~ Sco/Oph) | upwind = −(v_star − v_LIC) from 6D astrometry; tail = opposite. **PLUGIN-ONLY** (stock cfg = sphere). >5 pc → LSR-relative fallback |
 
+**Decisions-table presentation rule.** Every field above gets a row in each
+host's Decisions table — never drop a row. The status lives in the value
+cell: a *measured absence* is `none (...)` with a real confidence (τ Cet's
+~50-yr flat record → `none (flat)`, high; a mere non-detection → `none (not
+detected)`, low); a field with *no measurement at all* is `(unconstrained)`
+with confidence `—`. "Omit" in the `solar_cycle_yr` derivation refers to the
+emitted cfg axis, not the report row. One exception: a companion that shares
+the representative's astrosphere (α Cen B) collapses the wind fields into a
+single delegating `astrosphere` row, per the binary-layout principle.
+
 Source priority:
 1. Wood astrospheric Lyα paper (gives Ṁ + V_ISM + θ at once): α Cen / Proxima
    (Wood 2001/2005), ε Ind (Wood 2005), Barnard / τ Cet (Wood 2021 limits).

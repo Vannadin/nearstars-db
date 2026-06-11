@@ -308,13 +308,12 @@ Phase 2 레이어에서 cfg-결정적 측정이 아님), 그리고 성간 전구
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
+| `solar_cycle_yr` | none (not detected) | low | 나이 많고 자기적으로 조용한 M4 — 발표된 사이클 검출 없음, Phase 2 측정 없음 |
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry 대 LIC (극단적 공간속도) |
 | `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | 높은 V_ISM 이 공동을 압축 |
 | `stellar_radiation_surface_relative_sun` | ~0.3 | low | 나이 많고 조용한 비활동성 M4 — interesting-first 로 태양 아래 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry 대 LIC. **plugin-only** |
-
-(`solar_cycle_yr` 없음. 이 매우 조용한 별에서는 활동 사이클이 검출되지 않았습니다.)
 
 ## Open items for follow-up
 

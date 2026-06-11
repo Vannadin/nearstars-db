@@ -341,13 +341,12 @@ environment is well below solar.
 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
+| `solar_cycle_yr` | none (not detected) | low | old, magnetically quiet M4 — no published cycle detection, no Phase 2 measurement |
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry vs LIC (extreme space velocity) |
 | `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | high V_ISM compresses the cavity |
 | `stellar_radiation_surface_relative_sun` | ~0.3 | low | old, quiet, inactive M4 — interesting-first below solar |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry vs LIC; **plugin-only** |
-
-(No `solar_cycle_yr`: no activity cycle has been detected for this very quiet star.)
 
 ## Open items for follow-up
 
