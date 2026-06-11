@@ -190,6 +190,25 @@
             "recommended": true,
             "notes": "Multi-band X-ray-through-NUV flux cycle P_cyc=8.84+-0.4 yr; X-ray-only gives 8.2+-0.2 yr (Ayres 2014; Robrade 2012). Min-to-peak X-ray contrast ~4.5 (half the solar amplitude). Cleanest stellar X-ray cycle besides 61 Cyg A (~7 yr). P_rot 36.2+-1.4 d."
           }
+        ],
+        "xray_measurements": [
+          {
+            "value_log_lx_ergs": 27.04,
+            "uncertainty_log_lx_ergs": 0.1,
+            "method": "x_ray_photometry",
+            "reference": "DeWarf, Datin & Guinan 2010",
+            "bibcode": "2010ApJ...722..343D",
+            "recommended": true,
+            "notes": "Published as L_X = 1.1(+-0.26)e27 erg/s - mean of 27 ROSAT pointings 1996 Aug/Sep, converted to 0.2-2.0 keV (Ayres 2009 ECFs); log form + dex uncertainty are ours. Adopted as the cycle-mean quiescent anchor."
+          },
+          {
+            "value_log_lx_ergs": 27.6,
+            "method": "x_ray_photometry",
+            "reference": "Robrade & Schmitt 2016",
+            "bibcode": "2016A&A...596A..52R",
+            "recommended": false,
+            "notes": "Published as L_X ~ 4e27 erg/s (XMM 2012, 0.2-2.0 keV) - brightest quasi-quiescent state in >30 yr (cycle maximum). X-ray cycle P_act ~ 8-9 yr, amplitude L_Xmax/L_Xmin ~ 6-9."
+          }
         ]
       },
       "derived": {
@@ -222,7 +241,8 @@
         "rotation_period_days": 41.0,
         "activity_log_rhk": -4.85,
         "activity_h_alpha_ew_angstrom": null,
-        "activity_cycle_yr": 8.84
+        "activity_cycle_yr": 8.84,
+        "xray_log_lx_ergs": 27.04
       },
       "principia": {
         "gravitational_parameter_km3_s2": 124391370028.871,
@@ -236,7 +256,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "epoch propagation method"
       ]
@@ -245,7 +265,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -254,7 +274,7 @@
       "title": "Kervella et al. 2016",
       "doi": "10.1051/0004-6361/201629201",
       "bibcode": "2016A&A...594A.107K",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Alpha Centauri B mass (binary_orbit)"
       ]
@@ -263,7 +283,7 @@
       "title": "Pourbaix & Boffin 2016",
       "doi": "10.1051/0004-6361/201527859",
       "bibcode": "2016A&A...586A..90P",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Alpha Centauri B mass (binary_orbit)"
       ]
@@ -272,7 +292,7 @@
       "title": "Joyce & Chaboyer 2018",
       "doi": "10.3847/1538-4357/aad464",
       "bibcode": "2018ApJ...864...99J",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Alpha Centauri B mass (evolutionary_model)"
       ]
@@ -281,7 +301,7 @@
       "title": "Kervella et al. 2017",
       "doi": "10.1051/0004-6361/201629505",
       "bibcode": "2017A&A...597A.137K",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Alpha Centauri B radius (interferometry)"
       ]
@@ -290,7 +310,7 @@
       "title": "Bigot et al. 2006",
       "doi": "10.1051/0004-6361:20053187",
       "bibcode": "2006A&A...446..635B",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Alpha Centauri B radius (interferometry)"
       ]
@@ -299,14 +319,14 @@
       "title": "Kervella et al. 2003",
       "doi": "10.1051/0004-6361:20030570",
       "bibcode": "2003A&A...404.1087K",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Alpha Centauri B radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-10",
+    "retrieval_date": "2026-06-11",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

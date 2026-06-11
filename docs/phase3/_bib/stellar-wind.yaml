@@ -6,6 +6,18 @@ note: 'Cross-star anchor bibliography for the mass_loss + magnetic_field categor
 
   '
 papers:
+- arxiv_id: '2009.01259'
+  ads_bibcode: 2020AJ....160..237F
+  title: France et al. 2020 - Barnard high-energy environment (Chandra L_X + FUV flare rate; xray axis anchor)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '1612.06570'
+  ads_bibcode: 2016A&A...596A..52R
+  title: Robrade & Schmitt 2016 - alpha Cen AB XMM long-term X-ray (L_X cycles; xray axis anchor; already cached)
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '2105.00019'
   ads_bibcode: 2021ApJ...915...37W
   title: Wood et al. 2021 - M dwarf wind mass-loss (Proxima/Barnard upper limits, astrospheric Lya)

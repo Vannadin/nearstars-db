@@ -120,6 +120,24 @@
             "recommended": true,
             "notes": "S-index cycle P=2063+-160 d (5.65+-0.44 yr), matching Lovis et al. 2011's 1719 d (4.71 yr) magnetic cycle to within 1.5 sigma. Low-amplitude cycle on an inactive old K4-5V dwarf (log R'HK ~ -4.8). P_rot 32.87 d (Laliotis 2023)."
           }
+        ],
+        "xray_measurements": [
+          {
+            "value_log_lx_ergs": 27.39,
+            "method": "x_ray_photometry",
+            "reference": "Wood et al. 2005",
+            "bibcode": "2005ApJ...628L.143W",
+            "recommended": true,
+            "notes": "Table 1 ROSAT All-Sky Survey value (tabulation sourced from Wood+ 2005 ApJS 'Paper 2'). Approximately solar-cycle-mean L_X in the RASS band."
+          },
+          {
+            "value_log_rx": -5.62,
+            "method": "x_ray_photometry",
+            "reference": "Chen et al. 2022",
+            "bibcode": "2022AJ....163..288C",
+            "recommended": false,
+            "notes": "R_X = -5.62 adopted from the ROSAT BSC (Voges 1999) as the age-indicator input. Consistent with Wood's 27.39 (implies log L_X ~ 27.3 at L_bol 0.239 Lsun)."
+          }
         ]
       },
       "derived": {
@@ -148,7 +166,8 @@
         "activity_log_rhk": -4.72,
         "activity_h_alpha_ew_angstrom": null,
         "mass_loss_solar": 0.5,
-        "activity_cycle_yr": 5.65
+        "activity_cycle_yr": 5.65,
+        "xray_log_lx_ergs": 27.39
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103781128094.076,
@@ -295,7 +314,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "epoch propagation method"
       ]
@@ -304,7 +323,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -313,7 +332,7 @@
       "title": "Lundkvist et al. 2024",
       "doi": "10.3847/1538-4357/ad25f2",
       "bibcode": "2024ApJ...964..110L",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "eps Ind A mass (asteroseismology)"
       ]
@@ -322,7 +341,7 @@
       "title": "Demory et al. 2009",
       "doi": "10.1051/0004-6361/200911976",
       "bibcode": "2009A&A...505..205D",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "eps Ind A mass (empirical_relation)"
       ]
@@ -331,7 +350,7 @@
       "title": "Matthews et al. 2026",
       "doi": "10.3847/2041-8213/ae5823",
       "bibcode": null,
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "planet eps Ind A b orbital"
       ]
@@ -340,7 +359,7 @@
       "title": "Feng et al. 2019",
       "doi": "10.1093/mnras/stz2912",
       "bibcode": "2019MNRAS.490.5002F",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "planet eps Ind A b orbital"
       ]
@@ -349,14 +368,14 @@
       "title": "Feng et al. 2018",
       "doi": null,
       "bibcode": "2018arXiv180308163F",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "planet eps Ind A b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-10",
+    "retrieval_date": "2026-06-11",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

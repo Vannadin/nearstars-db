@@ -181,6 +181,36 @@
             "recommended": true,
             "notes": "Mean unsigned surface field <B>=430+-80 G from multi-line Zeeman broadening (CARMENES; Table B.1 via VizieR J/A+A/662/A41). Quiet old M4 dwarf; comparable to but below Proxima's 600 G."
           }
+        ],
+        "xray_measurements": [
+          {
+            "value_log_lx_ergs": 25.3,
+            "value_log_rx": -5.8,
+            "method": "x_ray_photometry",
+            "reference": "France et al. 2020",
+            "bibcode": "2020AJ....160..237F",
+            "recommended": true,
+            "notes": "Chandra quiescent F_X ~ 4.8e-14 erg/cm2/s (0.3-10 keV) -> log L_X = 25.3; published L_X/L_bol = 1.6e-6 (log -5.8 is ours). Extremely faint corona, but X-ray+UV flares reach ~6/day incident on the planets (Sun: ~4 C/M/X flares/day), each seen ~100x higher energy at the planet's orbit."
+          },
+          {
+            "value_log_lx_ergs": 25.85,
+            "method": "x_ray_photometry",
+            "reference": "Schmitt & Liefke 2004",
+            "bibcode": "2004A&A...417..651S",
+            "recommended": false,
+            "notes": "NEXXUS 2 RASS survey mode (VizieR J/A+A/417/651, Gl 699; pointed PSPC 25.74). Tabulated in Wood 2021 Table 3."
+          },
+          {
+            "value_log_lx_ergs": 25.53,
+            "uncertainty_log_lx_ergs": 0.54,
+            "value_log_rx": -5.57,
+            "uncertainty_log_rx": 0.65,
+            "method": "unverified",
+            "reference": "Engle & Guinan 2023",
+            "bibcode": "2024ApJ...960...62E",
+            "recommended": false,
+            "notes": "Time-averaged compilation <L_X> ('Living with a Red Dwarf'; X-ray sources France 2020 + ROSAT). method=unverified because it is a multi-mission mean, not a single photometric measurement."
+          }
         ]
       },
       "derived": {
@@ -209,7 +239,9 @@
         "activity_log_rhk": -5.82,
         "activity_h_alpha_ew_angstrom": null,
         "mass_loss_solar": 0.2,
-        "b_surface_g": 430
+        "b_surface_g": 430,
+        "xray_log_lx_ergs": 25.3,
+        "xray_log_rx": -5.8
       },
       "principia": {
         "gravitational_parameter_km3_s2": 21499415282.916,
@@ -484,7 +516,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "epoch propagation method"
       ]
@@ -493,7 +525,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -502,7 +534,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Barnard's star mass (spectroscopic_calibration)"
       ]
@@ -511,7 +543,7 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "Barnard's star mass (empirical_relation)"
       ]
@@ -520,14 +552,14 @@
       "title": "Basant et al. 2025",
       "doi": "10.3847/2041-8213/adb8d5",
       "bibcode": "2025ApJ...982L...1B",
-      "accessed": "2026-06-10",
+      "accessed": "2026-06-11",
       "used_for": [
         "planet Barnard d orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-10",
+    "retrieval_date": "2026-06-11",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
