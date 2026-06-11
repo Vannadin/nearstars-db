@@ -66,10 +66,14 @@ body { margin: 0; background: #fff; color: #1f2328;
 <a class="nav-i on" href="reference__methodology.html">Stellar System Data Research Methodology</a>
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
+<a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__plasma-color-methodology-review.html">Plasma-color methodology review</a>
 <a class="nav-i" href="reference__principia-cfg-reference.html">Principia CFG Technical Reference</a>
 <a class="nav-i" href="reference__rex-data-comparison.html">REX vs NearStars Data Comparison</a>
+<a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
 <a class="nav-i" href="reference__tools.html">Tools — NearStars</a>
 <div class="nav-grp">Plans</div>
+<a class="nav-i" href="plans__doc-tool-sprawl-audit.html">Doc / tool sprawl audit — findings + lifecycle-gate plan</a>
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
 </nav>
@@ -398,6 +402,7 @@ Notes on `disk_measurements` (Phase 2 expansion 2026-05-27).
 - Disk-only descriptor fields (neither value nor uncertainty): `belt`, `morphology`, `resolved`, `observatory`, `notes`. Registered in `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]`.
 - Method tier (canonical for `recommended` selection): `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
 - All value keys are nullable. Detection-only papers (e.g. Aumann 1984 IRAS) emit one entry with most geometry fields = null.
+- `aspect_ratio` (h = H/r, dimensionless) holds the vertical scale-height-to-radius ratio, for the few disks with a *measured* vertical structure (resolved or edge-on only). Sparse by nature — currently Fomalhaut (Boley 2012, h ≈ 0.0175 derived from a 1.0° ± 0.25 midplane opening angle, h = tan θ) and AU Mic (Daley 2019, h = 0.031, edge-on ALMA). Selected by non-null (it is the field most disks lack), not by the `recommended` flag. Kopernicus Ring is a flat ring and does not consume it; `aspect_ratio` is curated for DB completeness + future volumetric / Parallax renderers. Never synthesize it — a face-on or unresolved disk leaves it absent.
 
 ---
 
@@ -1430,6 +1435,7 @@ KSP 목적으로는 무시할 수 있는 수준입니다.
 - Disk 전용 보조 필드 (value 도 uncertainty 도 아닌 descriptor). `belt`, `morphology`, `resolved`, `observatory`, `notes`. `schema.py STELLAR_MEASUREMENT_KINDS["disk_measurements"]["extra_keys"]` 에 등록.
 - Method 계층 (`recommended` 선정의 canonical 순서). `resolved_imaging` > `sed_fit` > `photometric_excess` > `unverified`.
 - 모든 value 키는 null 허용입니다. Detection-only paper (예. Aumann 1984 IRAS) 는 대부분의 기하 필드가 null 인 entry 1개를 등록합니다.
+- `aspect_ratio` (h = H/r, 무차원) 는 수직 scale-height 대 반경 비율을 담습니다. 수직 구조가 *측정된* 원반(해상 또는 edge-on)만 갖습니다. 본질적으로 희소합니다. 현재 Fomalhaut (Boley 2012, midplane opening angle 1.0° ± 0.25 에서 h = tan θ 로 h ≈ 0.0175) 와 AU Mic (Daley 2019, edge-on ALMA, h = 0.031) 둘뿐입니다. `recommended` 플래그가 아니라 non-null 로 선택합니다(대부분의 원반이 비우는 필드라서). Kopernicus Ring 은 평면 고리라 이 값을 소비하지 않습니다. `aspect_ratio` 는 DB 완전성과 향후 볼류메트릭 / Parallax 렌더러용으로 큐레이션합니다. 절대 합성하지 않습니다 — face-on 이거나 미해상 원반은 비워 둡니다.
 
 ---
 

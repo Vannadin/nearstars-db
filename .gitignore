@@ -63,6 +63,11 @@ docs/phase3/_papers/
 .agents/skills/volumetrics-cfg/
 .agents/skills/raymarched-*/
 
+# Decided 2026-06-11: the Firefly upstream-contribution brief stays local
+# until the user decides to actually send it (outreach draft, not repo doc).
+.agents/skills/firefly-cfg-workspace/firefly-contribution-brief.md
+.agents/skills/firefly-cfg-workspace/firefly-contribution-brief.ko.md
+
 
 
 
