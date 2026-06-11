@@ -427,6 +427,19 @@ STELLAR_MEASUREMENT_KINDS = {
         },
         "extra_keys": {"limit", "notes"},
     },
+    "xray_measurements": {
+        # 정온(quiescent) 코로나 X-ray 광도. value_log_lx_ergs = log10 L_X (erg/s,
+        # 밴드는 notes 에 — 기본 ROSAT 0.1–2.4 keV); value_log_rx = log10 (L_X/L_bol).
+        # 논문이 보고한 형태 그대로 저장 (무단 변환 금지). 플레어 rate 는 별도
+        # 카테고리 없음 — notes + Phase 3 basis 로만 (소비처가 scalar 하나뿐).
+        # Kerbalism radiation_surface 의 측정 앵커. [[project-nearstars-stellar-wind-kerbalism]].
+        "value_keys": {"value_log_lx_ergs", "value_log_rx"},
+        "methods": {
+            "x_ray_photometry",   # imaging X-ray 플럭스 (ROSAT/XMM/Chandra, survey/pointed 불문 — 기기는 notes)
+            "unverified",
+        },
+        "extra_keys": {"limit", "notes"},
+    },
     "disk_measurements": {
         # 한 entry = (paper × belt). Multi-belt 별 (Vega/Fomalhaut/eps Eri) 은
         # 같은 bibcode 로 여러 entry. 일부 paper (Aumann 1984 IRAS) 는 detection
