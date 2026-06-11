@@ -29,7 +29,7 @@ stops being activity-vibes (confidence low) and becomes L_X-anchored.
 - [x] mod-grounded-fields.md derivation row updated (L_X anchor: solar cycle-mean log 26.9 / R_X,⊙ −6.7, Wargelin Table 3 ← Judge 2003; flare-weighted boost; band caveat)
 - [x] ko mirrors + rebuilt HTML + reports index
 - [x] check.sh all green
-- [ ] commit (phase3)
+- [x] commit (phase3) — 4b63137
 
 ## Gates
 - [x] every committed value greps in docs/phase3/_papers/ cache (no live cite) — incl. the solar anchor
