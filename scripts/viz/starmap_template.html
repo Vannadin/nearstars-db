@@ -540,7 +540,7 @@ function flyTo(c){
   const dist=Math.max(cl.sysScale*3.2, 0.4);
   const dir=new THREE.Vector3(0.35,0.5,1).normalize();
   fly={from:camera.position.clone(),to:dir.multiplyScalar(dist),tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
-  document.getElementById('info').classList.remove('show');
+  // keep the info panel open so its details + "Stability sim" button stay available
 }
 
 /* ── stability animation (REBOUND time-series → morphing orbit) ─────────── */
