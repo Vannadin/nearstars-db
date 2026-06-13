@@ -421,15 +421,23 @@ DATA.clusters.forEach(c=>{
     });
   });
 
-  // debris disk rings (Fomalhaut, AU Mic, …) around the primary, AU scale
+  // debris disk rings (Fomalhaut, AU Mic, …) around the primary, AU scale.
+  // eccentric belts: confocal in/out ellipses (star at the focus → offset ring),
+  // tilted by inclination. e & inc from the curated data (Kalas/ALMA/JWST).
   const diskMeshes=[];
   if(c.disks){
     const dcol=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.55);
     c.disks.forEach(b=>{
-      sysScale=Math.max(sysScale, b.outer_au*1.1);
-      const ring=new THREE.Mesh(new THREE.RingGeometry(b.inner_au,b.outer_au,120,2),
-        new THREE.MeshBasicMaterial({color:dcol,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
-      ring.rotation.x = -Math.PI/2 + (b.inc_deg||0)*DEG;   // inc 0 = face-on, 90 = edge-on
+      const e=b.e||0, inc=b.inc_deg||0;
+      sysScale=Math.max(sysScale, b.outer_au*(1+e)*1.1);
+      const N=140, pos=[], idx=[];
+      for(let k=0;k<=N;k++){ const nu=k/N*2*Math.PI;
+        const pi=orbitPoint(b.inner_au,e,inc,0,0,nu), po=orbitPoint(b.outer_au,e,inc,0,0,nu);
+        pos.push(pi.x,pi.y,pi.z, po.x,po.y,po.z); }
+      for(let k=0;k<N;k++){ const a=k*2; idx.push(a,a+1,a+2, a+1,a+3,a+2); }
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setIndex(idx);
+      const ring=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:dcol,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
       ring.visible=false; node.add(ring); diskMeshes.push(ring);
     });
   }
