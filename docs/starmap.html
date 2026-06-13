@@ -121,6 +121,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div id="brand">NearStars<span class="sub" data-i18n="subtitle">근방 항성계 3D 지도</span></div>
   <div class="spacer"></div>
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
+  <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
   <button class="btn" id="toggleLang">EN</button>
 </div>
@@ -169,7 +170,7 @@ const SPEC = {O:'#b2c4ff',B:'#9eb8ff',A:'#cfdcff',F:'#f3f7c2',G:'#ffe28a',K:'#ff
 
 /* ── i18n ─────────────────────────────────────────────────────────────── */
 const STR = {
-  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',beyond:'50광년 밖',backToMap:'지도로',
+  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',beyond:'50광년 밖',backToMap:'지도로',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'크기 ≈ 광도(미측정은 분광형 추정). 좌표계 = ICRS, 원점 = 태양. 색은 흑체 근사.',
     distFilter:'거리 필터',components:'구성원',planets:'행성',enterSystem:'시스템 보기 →',
@@ -178,7 +179,7 @@ const STR = {
     sysOf:'시스템',ly:'광년',pc:'pc',planetsUnit:'개',
     sysHint:'드래그 = 회전 · 휠 = 줌 · 궤도/별 크기는 가시성 위해 과장됨',
     away:'떨어짐'},
-  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',beyond:'Beyond 50 ly',backToMap:'Back to map',
+  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',beyond:'Beyond 50 ly',backToMap:'Back to map',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Size ≈ luminosity (estimated from class where unmeasured). Frame = ICRS, origin = Sol. Colour is a blackbody approx.',
     distFilter:'Distance filter',components:'Components',planets:'Planets',enterSystem:'View system →',
@@ -258,8 +259,11 @@ const ringLabels = [];
   ringLabels.push({r, world:new THREE.Vector3(r,0,0), el:mkLabel(r+' ly','label ring')});
 });
 
+/* vertical drop lines (stem to the ICRS reference plane) */
+const stemGroup = new THREE.Group(); mapGroup.add(stemGroup);
+
 /* markers */
-const markers = [];   // {data, sprite, ring, labelEl}
+const markers = [];   // {data, sprite, ring, stem, labelEl}
 function mkLabel(txt, cls){
   const el=document.createElement('div'); el.className=cls||'label'; el.textContent=txt;
   document.getElementById('labels').appendChild(el); return el;
@@ -278,10 +282,23 @@ DATA.clusters.forEach(c=>{
     transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending});
   const ring=new THREE.Sprite(ringMat); ring.scale.setScalar(sz*2.2);
   sp.add(ring);
+  // vertical drop line to the reference plane (y=0), tinted by star colour
+  let stem=null;
+  if(!c.is_sol){
+    const sv=toScene(c.pos);
+    const sg=new THREE.BufferGeometry().setFromPoints([sv.clone(), new THREE.Vector3(sv.x,0,sv.z)]);
+    const col=new THREE.Color(c.rep_rgb).lerp(new THREE.Color('#0b0e16'),0.5);
+    stem=new THREE.Line(sg, new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.42}));
+    // small foot marker where it meets the plane
+    const foot=new THREE.Mesh(new THREE.SphereGeometry(0.07,8,8),
+      new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.6}));
+    foot.position.set(sv.x,0,sv.z); stem.add(foot);
+    stemGroup.add(stem);
+  }
   let labelEl=null;
   if(c.is_sol){ labelEl=mkLabel('Sol','label sun'); }
   else if(c.is_confirmed_set){ labelEl=mkLabel(c.label,'label confirmed'); }
-  markers.push({data:c, sprite:sp, ring, labelEl, sz});
+  markers.push({data:c, sprite:sp, ring, stem, labelEl, sz});
 });
 
 /* legend chips */
@@ -361,8 +378,10 @@ function renderInfo(c){
 }
 
 /* ── toggles / filter ─────────────────────────────────────────────────── */
-let showFar=false, showAllLabels=false, distLimit=50;
+let showFar=false, showAllLabels=false, showStems=true, distLimit=50;
 const btnFar=document.getElementById('toggleFar'), btnLabels=document.getElementById('toggleLabels');
+const btnStems=document.getElementById('toggleStems');
+btnStems.onclick=()=>{ showStems=!showStems; btnStems.classList.toggle('on',showStems); applyFilter(); };
 btnFar.onclick=()=>{ showFar=!showFar; btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); if(showFar){s.value=800;distLimit=800;} else {s.value=50;distLimit=50;}
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter(); };
@@ -376,6 +395,7 @@ function applyFilter(){
     const c=m.data;
     const vis = c.is_sol || (c.distance_ly<=distLimit && (showFar || !c.beyond_50ly));
     m.sprite.visible=vis;
+    if(m.stem) m.stem.visible = vis && showStems;
     if(m.labelEl) m.labelEl.style.display = vis?'':'none';
   });
 }
