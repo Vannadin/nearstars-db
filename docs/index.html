@@ -36,6 +36,8 @@ input[type=checkbox]{accent-color:#4a88b8}
 .lang-tg{background:none;border:1px solid #243040;color:#4a6888;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;font-family:inherit;transition:color .12s,background .12s,border-color .12s}
 .lang-tg:hover{color:#8aaac8}
 .lang-tg.on{background:#1a2e42;color:#8aaad0;border-color:#2a4863}
+.map3d-link{text-decoration:none;color:#8aaad0;border:1px solid #2a4863;background:#13243a;padding:4px 11px;border-radius:6px;font-size:12px;white-space:nowrap;transition:background .12s,color .12s,border-color .12s}
+.map3d-link:hover{background:#1a3656;color:#bcd6f0;border-color:#3a5e88}
 
 /* ── 사용법 modal ─────────────────────────────────────────────────────── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:40px 20px;-webkit-overflow-scrolling:touch}
@@ -636,6 +638,7 @@ input[type=checkbox]{accent-color:#4a88b8}
 
 <header>
   <h1>NearStars <span>DB</span></h1>
+  <a href="starmap.html" class="map3d-link" data-i18n="map3d">3D 지도 ↗</a>
   <div class="filters">
     <input type="text" id="q" data-i18n-placeholder="search" placeholder="Search system or star…" autocomplete="off">
     <div class="fg">
@@ -767,6 +770,7 @@ const T = {
     spec: 'Spec', specAll: 'All',
     dist: 'Dist ≤',
     hasPlanets: 'Has planets',
+    map3d: '3D Map ↗',
     sort: 'Sort',
     columns: { sysName: 'System', starName: 'Primary star', spec: 'Spec',
                dist: 'Distance', teff: 'Teff', mass: 'Mass', rad: 'Radius', np: 'Planets' },
@@ -858,6 +862,7 @@ const T = {
     spec: '분광형', specAll: '전체',
     dist: '거리 ≤',
     hasPlanets: '행성 있음',
+    map3d: '3D 지도 ↗',
     sort: '정렬',
     columns: { sysName: '시스템', starName: '대표 항성', spec: '분광형',
                dist: '거리', teff: '유효온도', mass: '질량', rad: '반지름', np: '행성' },
