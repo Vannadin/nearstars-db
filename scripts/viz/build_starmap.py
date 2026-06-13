@@ -31,7 +31,16 @@ OUT_HTML = os.path.join(ROOT, "docs", "starmap.html")
 
 KM_PER_LY = 9.460730472580800e12
 PC_TO_LY = 3.2615637769
+AU_PER_LY = 63241.077
+M_PER_AU = 1.495978707e11
 CLUSTER_LY = 0.4  # validated: sits in the empty 0.22–1.08 ly gap
+
+# nominal main-sequence radius (R_sun) by spectral class — fallback when the
+# DB has no measured radius (used only for the real-size render proxy).
+_MS_RADIUS_PROXY = {
+    "O": 8.0, "B": 3.5, "A": 1.7, "F": 1.3, "G": 1.0,
+    "K": 0.7, "M": 0.3, "X": 0.1,  # X folds WD(~0.01)/BD(~0.1)/pulsar
+}
 
 CONFIRMED_SLUGS = {
     "alpha_centauri", "barnards_star", "tau_cet", "40_eridani",
@@ -146,15 +155,26 @@ def planet_orbital(p):
     if ecc is not None and not (0 <= ecc < 1):  # -1 sentinel = unknown
         ecc = None
 
+    a_au = pick(orb.get("semi_major_axis_au"), raw.get("semi_major_axis_au"))
+    if a_au is None and der.get("semi_major_axis_m"):
+        a_au = der["semi_major_axis_m"] / M_PER_AU
+
+    def ang(*vals):
+        v = pick(*vals)
+        return None if v in (None, -1.0) else v
+
     return {
         "name": p.get("name"),
         "host_star": p.get("host_star"),
-        "semi_major_axis_au": pick(orb.get("semi_major_axis_au"),
-                                    raw.get("semi_major_axis_au")),
-        "eccentricity": ecc,
-        "inclination_deg": pick(orb.get("inclination_deg"),
-                                raw.get("inclination_deg"),
-                                der.get("inclination_deg")),
+        "a_au": a_au,
+        "e": ecc,
+        # full Keplerian orientation — used where present, defaulted in the viewer
+        "i_deg": ang(orb.get("inclination_deg"), raw.get("inclination_deg"),
+                     der.get("inclination_deg")),
+        "Omega_deg": ang(der.get("longitude_of_ascending_node_deg")),
+        "omega_deg": ang(der.get("argument_of_periapsis_deg"),
+                         raw.get("argument_of_periapsis_deg")),
+        "M_deg": ang(der.get("mean_anomaly_at_epoch_deg")),
         "period_days": pick(orb.get("period_days"), raw.get("period_days")),
         "radius_rearth": pick(phys.get("radius_rearth"), raw.get("radius_rearth")),
         "mass_mearth": pick(phys.get("mass_mearth"), raw.get("mass_mearth")),
@@ -193,8 +213,10 @@ def load_records():
             "luminosity_lsun": lum,
             "radius_rsun": radius_rsun,
             "distance_pc": der.get("distance_pc"),
+            "epoch_jd": der.get("epoch_jd"),
             "pos_ly": [None if v is None else v / KM_PER_LY for v in (x, y, z)],
             "has_full_orbit": "binary_orbit" in d,
+            "binary_orbit": d.get("binary_orbit"),
             "ref": d.get("binary_orbit_ref"),
             "planets": [planet_orbital(p) for p in d.get("planets", [])],
         })
@@ -268,17 +290,54 @@ def build_cluster_obj(members):
     dist_pc = rep["distance_pc"]
     dist_ly = round(dist_pc * PC_TO_LY, 3) if dist_pc else None
 
+    # binary-orbit block (present on at most one member) for component placement
+    bo = next((m["binary_orbit"] for m in members if m.get("binary_orbit")), None)
+
+    def orbit_for(name):
+        """Relative binary orbit with this star as secondary about the rep."""
+        if not bo:
+            return None
+        for o in bo.get("orbits", []):
+            if o.get("secondary") == name and o.get("primary") == rep["name"]:
+                a_au = o.get("a_au")
+                if a_au is None and o.get("a_arcsec") and dist_pc:
+                    a_au = o["a_arcsec"] * dist_pc
+                if a_au is None:
+                    return None
+                return {
+                    "a_au": a_au, "e": o.get("e", 0.0),
+                    "i_deg": o.get("i_deg"), "omega_deg": o.get("omega_deg"),
+                    "Omega_deg": o.get("Omega_deg"),
+                    "P_yr": o.get("P_yr"), "T_jd": o.get("T_jd_tt"),
+                }
+        return None
+
     components = []
     planets = []
     for m in sorted(members, key=keyfn):
+        is_primary = m["file"] == rep["file"]
+        off_au = [round((m["pos_ly"][k] - rep["pos_ly"][k]) * AU_PER_LY, 5)
+                  for k in range(3)]
+        mag = math.sqrt(sum(c * c for c in off_au))
+        orbit = None if is_primary else orbit_for(m["name"])
+        if is_primary:
+            kind = "primary"
+        elif mag > 1.0:
+            kind = "astrometric"          # real wide pair (e.g. Proxima)
+        elif orbit:
+            kind = "orbit"                # real relative orbit about the rep
+        else:
+            kind = "schematic"            # laid out by the viewer (not to scale)
         components.append({
             "name": m["name"], "spectype": m["spectype"],
             "spec_class": m["spec_class"], "teff_k": m["teff_k"],
             "rgb": m["rgb"], "vmag_v": m["vmag_v"],
             "luminosity_lsun": m["luminosity_lsun"],
-            "radius_rsun": m["radius_rsun"],
+            "radius_rsun": m["radius_rsun"] or _MS_RADIUS_PROXY.get(m["spec_class"], 0.3),
+            "radius_measured": m["radius_rsun"] is not None,
             "distance_pc": round(dist_pc, 4) if dist_pc else None,
-            "is_primary": m["file"] == rep["file"],
+            "is_primary": is_primary,
+            "offset_au": off_au, "placement": kind, "orbit": orbit,
         })
         for p in m["planets"]:
             pp = dict(p)
@@ -300,6 +359,7 @@ def build_cluster_obj(members):
         "beyond_50ly": (dist_ly is not None and dist_ly > 50),
         "rep_rgb": rep["rgb"],
         "rep_radius": marker_radius(rep["luminosity_lsun"], rep["spec_class"]),
+        "epoch_jd": rep.get("epoch_jd"),
         "n_planets": len(planets),
         "components": components,
         "planets": planets,
@@ -308,35 +368,38 @@ def build_cluster_obj(members):
 
 # ── Solar System (canonical hardcoded elements; not DB-derived) ────────────
 def solar_system_cluster():
-    # a(AU), e, i(deg to ecliptic), period(d), radius(R_earth), Teq(K)
+    # name, a(AU), e, i, Omega, omega, M0(J2000, deg), period(d), R_earth, Teq, colour
+    # full J2000 elements (referenced to the ecliptic) so the orbits render
+    # correctly inclined & oriented — a calibration showcase.
     P = [
-        ("Mercury", 0.387, 0.2056, 7.00, 87.97, 0.383, 440, "#9c9088"),
-        ("Venus", 0.723, 0.0068, 3.39, 224.70, 0.949, 737, "#d9b38c"),
-        ("Earth", 1.000, 0.0167, 0.00, 365.26, 1.000, 255, "#5b8fd6"),
-        ("Mars", 1.524, 0.0934, 1.85, 686.98, 0.532, 210, "#c1502e"),
-        ("Jupiter", 5.203, 0.0484, 1.30, 4332.59, 11.21, 110, "#d8b89a"),
-        ("Saturn", 9.537, 0.0539, 2.49, 10759.22, 9.45, 81, "#e3d9b0"),
-        ("Uranus", 19.191, 0.0473, 0.77, 30688.5, 4.01, 58, "#b5e3e0"),
-        ("Neptune", 30.069, 0.0086, 1.77, 60182.0, 3.88, 47, "#5b7fd6"),
+        ("Mercury", 0.38710, 0.2056, 7.005, 48.331, 29.125, 174.796, 87.97, 0.383, 440, "#9c9088"),
+        ("Venus", 0.72333, 0.0068, 3.395, 76.680, 54.853, 50.115, 224.70, 0.949, 737, "#d9b38c"),
+        ("Earth", 1.00000, 0.0167, 0.000, 348.739, 114.208, 357.517, 365.26, 1.000, 255, "#5b8fd6"),
+        ("Mars", 1.52371, 0.0934, 1.850, 49.558, 286.502, 19.373, 686.98, 0.532, 210, "#c1502e"),
+        ("Jupiter", 5.20288, 0.0489, 1.303, 100.464, 273.867, 20.020, 4332.59, 11.21, 110, "#d8b89a"),
+        ("Saturn", 9.53667, 0.0565, 2.485, 113.665, 339.392, 317.020, 10759.22, 9.45, 81, "#e3d9b0"),
+        ("Uranus", 19.18916, 0.0457, 0.773, 74.006, 96.999, 142.239, 30688.5, 4.01, 58, "#b5e3e0"),
+        ("Neptune", 30.06992, 0.0113, 1.770, 131.784, 276.336, 256.228, 60182.0, 3.88, 47, "#5b7fd6"),
     ]
     planets = [{
-        "name": n, "host_star": "Sun",
-        "semi_major_axis_au": a, "eccentricity": e, "inclination_deg": inc,
-        "period_days": per, "radius_rearth": rad, "mass_mearth": None,
-        "teq_k": teq, "rgb": col,
-    } for (n, a, e, inc, per, rad, teq, col) in P]
+        "name": n, "host_star": "Sun", "a_au": a, "e": e, "i_deg": i,
+        "Omega_deg": Om, "omega_deg": om, "M_deg": M, "period_days": per,
+        "radius_rearth": rad, "mass_mearth": None, "teq_k": teq, "rgb": col,
+    } for (n, a, e, i, Om, om, M, per, rad, teq, col) in P]
     return {
         "id": "sol", "label": "Solar System", "label_ko": "태양계",
         "pos": [0.0, 0.0, 0.0],
         "distance_pc": 0.0, "distance_ly": 0.0,
         "is_confirmed_set": False, "is_sol": True, "beyond_50ly": False,
         "rep_rgb": teff_to_rgb(5772), "rep_radius": marker_radius(1.0, "G"),
+        "epoch_jd": 2451545.0,
         "n_planets": len(planets),
         "components": [{
             "name": "Sun", "spectype": "G2 V", "spec_class": "G",
             "teff_k": 5772, "rgb": teff_to_rgb(5772), "vmag_v": -26.74,
-            "luminosity_lsun": 1.0, "radius_rsun": 1.0,
+            "luminosity_lsun": 1.0, "radius_rsun": 1.0, "radius_measured": True,
             "distance_pc": 0.0, "is_primary": True,
+            "offset_au": [0.0, 0.0, 0.0], "placement": "primary", "orbit": None,
         }],
         "planets": planets,
     }
@@ -409,8 +472,8 @@ def self_check(payload):
                 errs.append(f"{c['label']} bad pos {c['pos']}")
                 break
         for p in c["planets"]:
-            a = p.get("semi_major_axis_au")
-            e = p.get("eccentricity")
+            a = p.get("a_au")
+            e = p.get("e")
             if a is not None and a <= 0:
                 errs.append(f"{p['name']} a<=0")
             if e is not None and not (0 <= e < 1):

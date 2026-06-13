@@ -30,4 +30,13 @@ Decisions made during the work and the reasoning behind them. Append continuousl
 - v2 design tokens inlined from `~/Desktop/NearStars Design System/colors_and_type.v2.css` (glass surfaces, spectral palette O/B/A/F/G/K/M/X, Geist fonts). Spectral palette maps to the legend chips.
 
 ## Out of scope (v1)
-- per-component sub-markers, search box, travel-time readout, proper-motion animation, HZ rings, moons. Planet orbits ARE in v1 (user requested).
+- search box, travel-time readout, proper-motion animation, HZ rings, moons.
+
+## v2 — continuous zoom + real-size + correct orbits (user follow-ups)
+Three follow-up requests reshaped the viewer:
+1. **No mode switch — continuous zoom to planets.** Dropped the map/system two-mode split. Single scene with a **floating origin** (`originLy`, rebased to `controls.target` once it drifts > 4000 AU) + `logarithmicDepthBuffer` + tiny near plane (1e-5 AU) + `zoomToCursor`. Scene unit = 1 AU; ly coords × 63241. This spans the ~9-order ly→Earth-radius range without float32 jitter, because the focused system's local coords stay tiny after rebase. Star glow sprites are constant screen size and fade out as you approach (`t` from sysScale-relative distance), revealing the real bodies.
+2. **Real sizes.** Stars = `radius_rsun × R_SUN_AU` (0.00465 AU), planets = `radius_rearth × R_EARTH_AU` (4.26e-5 AU). Sub-pixel by design → hence crosshairs.
+3. **Crosshairs.** HTML `.xhair` pool, drawn for every body of the active (zoomed-in) cluster, coloured by the body, with a name label. Pooled + only the active cluster's bodies → cheap.
+4. **Correct orbits (all elements).** `orbitPoint(a,e,i,Ω,ω,ν)` builds the ellipse with the star at the focus and the perifocal→ICRS 3-1-3 rotation `Rz(Ω)Rx(i)Rz(ω)`; planet placed at true anomaly from M (Kepler-solved) or golden-angle index when M absent. Verified: circular→r=a in-plane, e=0.5→peri 0.5/apo 1.5, i=90°→edge-on ±1. Builder now emits a/e/i/Ω/ω/M per planet (coverage: a 222, e 202, ω 140, i 72, M 96, **Ω only 2/227** → defaults to 0, documented).
+5. **Multi-star placement is REAL.** The per-component ICRS coords already encode the epoch separation (α Cen B sits 14.4 AU from A, Proxima 13942 AU) — NOT barycentric-identical as first feared (earlier %.3e print hid it). So components are placed at their measured `offset_au`; planets orbit their actual `host_star`. `placement` counts: 143 primary + 15 astrometric, 0 schematic. The `orbit` field (binary_orbit elements) is emitted as a fallback but currently unused.
+Solar System uses real J2000 elements (incl. Ω/ω/M) as a calibration showcase.
