@@ -53,7 +53,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "trace",
-    "elapsed_sec": 33.14594388008118,
+    "elapsed_sec": 51.96153807640076,
     "dt_yr": 0.00012810709019437624,
     "innermost_period_yr": 0.006405354509718812,
     "energy_relative_error": 1.864961447391286e-09,
@@ -90,22 +90,31 @@
     "per_body": {
       "Barnard d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.09842022305171662
       },
       "Barnard b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07911052879650708
       },
       "Barnard c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.0794140449742342
       },
       "Barnard e": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.10585441080951373
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

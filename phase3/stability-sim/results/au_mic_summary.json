@@ -53,7 +53,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "trace",
-    "elapsed_sec": 8.17200779914856,
+    "elapsed_sec": 12.729610919952393,
     "dt_yr": 0.0005239091193889016,
     "innermost_period_yr": 0.02619545596944508,
     "energy_relative_error": 1.1720396683616024e-05,
@@ -90,22 +90,31 @@
     "per_body": {
       "AU Mic b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.5921826023615837
       },
       "AU Mic c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.4349318067663517
       },
       "AU Mic e": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.266335746360702
       },
       "AU Mic d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.6323227449395579
       }
     },
     "overall": "stable",
+    "ecc_class_max": "hot",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

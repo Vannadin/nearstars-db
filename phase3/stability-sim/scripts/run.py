@@ -113,12 +113,14 @@ def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snap
             primary = sim.particles[primary_name]
             orb = p.orbit(primary=primary)
             a, e = orb.a, orb.e
+            # position relative to the primary (AU) — for the 3D orbit-evolution viz
+            x, y, z = p.x - primary.x, p.y - primary.y, p.z - primary.z
             s = summary[name]
             s["a_min"] = min(s["a_min"], a)
             s["a_max"] = max(s["a_max"], a)
             s["e_min"] = min(s["e_min"], e)
             s["e_max"] = max(s["e_max"], e)
-            rows.append((t, name, a, e))
+            rows.append((t, name, a, e, round(x, 6), round(y, 6), round(z, 6)))
 
             if name in hill_track:
                 parent_meta = next((pp for pp in meta["planets"] if pp["name"] == primary_name), None)
@@ -235,7 +237,7 @@ def save_results(system: str, meta: dict, report: dict, judgment: dict, out_dir:
 
     with ts_path.open("w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["t_yr", "body", "a_au", "e"])
+        w.writerow(["t_yr", "body", "a_au", "e", "x_au", "y_au", "z_au"])
         w.writerows(report["rows"])
 
     return summary_path, ts_path

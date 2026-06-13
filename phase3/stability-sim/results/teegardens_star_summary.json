@@ -42,7 +42,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 16.89393186569214,
+    "elapsed_sec": 25.800873041152954,
     "dt_yr": 0.0002794785896478396,
     "innermost_period_yr": 0.013973929482391982,
     "energy_relative_error": 2.3309792044207905e-08,
@@ -73,18 +73,25 @@
     "per_body": {
       "Teegarden's Star b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.09106916416946534
       },
       "Teegarden's Star c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07915462189202692
       },
       "Teegarden's Star d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07583605006618939
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

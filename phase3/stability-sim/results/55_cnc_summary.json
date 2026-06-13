@@ -64,7 +64,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 184.77728414535522,
+    "elapsed_sec": 284.5641689300537,
     "dt_yr": 4.0183771151455034e-05,
     "innermost_period_yr": 0.0020091885575727517,
     "energy_relative_error": 8.158757186449076e-10,
@@ -107,26 +107,37 @@
     "per_body": {
       "55 Cnc e": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.08144736855449011
       },
       "55 Cnc b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.04256556361861039
       },
       "55 Cnc c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.09222808404416122
       },
       "55 Cnc f": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06821293875596932
       },
       "55 Cnc d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.12041979903047106
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

@@ -53,7 +53,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 5.822375774383545,
+    "elapsed_sec": 8.906837940216064,
     "dt_yr": 0.0010964541624497977,
     "innermost_period_yr": 0.05482270812248989,
     "energy_relative_error": 8.151101999937619e-10,
@@ -90,22 +90,31 @@
     "per_body": {
       "tau Cet g": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.24390400245096475
       },
       "tau Cet h": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.22974387389846512
       },
       "tau Cet f": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.15999249097355722
       },
       "tau Cet e": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.19279529869434583
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": 17287182.31920271,
     "is_chaotic": false
   }

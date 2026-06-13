@@ -199,8 +199,9 @@ _STABILITY = None
 
 
 def load_stability():
-    """Map planet body name → downsampled [[t_yr, a_au, e]…] from the REBOUND
-    stability-sim time series, for the in-viewer orbit-evolution animation."""
+    """Map planet body name → downsampled [[t_yr, a_au, e, x_au, y_au, z_au]…]
+    from the REBOUND stability-sim time series. Positions (relative to the host)
+    drive the in-viewer 3D orbit-evolution animation; a/e feed the readout."""
     global _STABILITY
     if _STABILITY is not None:
         return _STABILITY
@@ -209,13 +210,16 @@ def load_stability():
     for f in glob.glob(os.path.join(res, "*_timeseries.csv")):
         rows = {}
         for r in csv.DictReader(open(f, encoding="utf-8")):
-            rows.setdefault(r["body"], []).append(
-                (float(r["t_yr"]), float(r["a_au"]), float(r["e"])))
+            rows.setdefault(r["body"], []).append((
+                float(r["t_yr"]), float(r["a_au"]), float(r["e"]),
+                float(r.get("x_au", 0) or 0), float(r.get("y_au", 0) or 0),
+                float(r.get("z_au", 0) or 0)))
         for body, series in rows.items():
             series.sort()
             step = max(1, len(series) // 110)
-            out[body] = [[int(t), round(a, 4), round(e, 4)]
-                         for (t, a, e) in series[::step]]
+            out[body] = [[int(t), round(a, 4), round(e, 4),
+                          round(x, 5), round(y, 5), round(z, 5)]
+                         for (t, a, e, x, y, z) in series[::step]]
     _STABILITY = out
     return out
 

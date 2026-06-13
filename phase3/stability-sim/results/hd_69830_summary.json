@@ -42,7 +42,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 10.100729703903198,
+    "elapsed_sec": 15.338606119155884,
     "dt_yr": 0.0004735796011643664,
     "innermost_period_yr": 0.02367898005821832,
     "energy_relative_error": 4.998369708366128e-10,
@@ -73,18 +73,25 @@
     "per_body": {
       "HD 69830 b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.20029503362211892
       },
       "HD 69830 c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.1426136474485678
       },
       "HD 69830 d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07136523124028797
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

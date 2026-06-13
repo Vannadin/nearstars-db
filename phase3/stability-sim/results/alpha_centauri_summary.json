@@ -25,25 +25,25 @@
   ],
   "hypotheticals": [],
   "integration": {
-    "integrator": "trace",
-    "elapsed_sec": 0.33193016052246094,
-    "dt_yr": 0.13802017959023316,
-    "innermost_period_yr": 6.9010089795116585,
-    "energy_relative_error": 0.0008319410717107756,
-    "megno_final": null
+    "integrator": "ias15",
+    "elapsed_sec": 14.340057849884033,
+    "dt_yr": 0.11612082837275518,
+    "innermost_period_yr": 1.924902793575299,
+    "energy_relative_error": 3.612853951489863e-06,
+    "megno_final": 33.281851389524014
   },
   "per_body": {
     "Alpha Centauri B": {
-      "a_min": 23.565916178629234,
-      "a_max": 23.697908737192613,
-      "e_min": 0.5139905943341742,
-      "e_max": 0.51859161973658
+      "a_min": 23.53614698708244,
+      "a_max": 23.740869023746534,
+      "e_min": 0.5129501034607579,
+      "e_max": 0.5198539188114976
     },
     "Alpha Centauri A b": {
-      "a_min": 1.0410870654169515,
-      "a_max": 2.3736418131418384,
-      "e_min": 0.08113382114460373,
-      "e_max": 0.9977326331716256
+      "a_min": 1.5931566740645617,
+      "a_max": 1.60515602560664,
+      "e_min": 0.15079808147339407,
+      "e_max": 0.9999649996610083
     }
   },
   "hill_track": {},
@@ -51,17 +51,22 @@
     "per_body": {
       "Alpha Centauri B": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.5198539188114976
       },
       "Alpha Centauri A b": {
         "flags": [
-          "e_max=0.998 \u2265 0.9 (orbit nearly unbound)"
+          "e_max=1.000 \u2265 0.9 (orbit nearly unbound)"
         ],
-        "status": "unstable"
+        "status": "unstable",
+        "ecc_class": "extreme",
+        "e_max": 0.9999649996610083
       }
     },
     "overall": "unstable",
-    "lyapunov_time_yr": Infinity,
-    "is_chaotic": false
+    "ecc_class_max": "extreme",
+    "lyapunov_time_yr": 3196.7417386775587,
+    "is_chaotic": true
   }
 }

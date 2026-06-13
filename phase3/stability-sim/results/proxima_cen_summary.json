@@ -42,7 +42,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 14.941778898239136,
+    "elapsed_sec": 23.669831037521362,
     "dt_yr": 0.00027993097424427077,
     "innermost_period_yr": 0.013996548712213537,
     "energy_relative_error": 3.0799407529968185e-09,
@@ -73,18 +73,25 @@
     "per_body": {
       "Proxima Cen d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.00039252215212871676
       },
       "Proxima Cen b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 7.896278095769079e-05
       },
       "Proxima Cen c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.0006532749132528479
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": 519687489.6495973,
     "is_chaotic": false
   }

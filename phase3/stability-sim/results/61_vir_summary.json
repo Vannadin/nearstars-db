@@ -42,7 +42,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 22.016458988189697,
+    "elapsed_sec": 31.022716999053955,
     "dt_yr": 0.00023330335190619483,
     "innermost_period_yr": 0.011665167595309741,
     "energy_relative_error": 3.7792471130572736e-10,
@@ -73,18 +73,25 @@
     "per_body": {
       "61 Vir b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.39181532558031756
       },
       "61 Vir c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.3653271494616607
       },
       "61 Vir d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.34935657485273386
       }
     },
     "overall": "stable",
+    "ecc_class_max": "hot",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

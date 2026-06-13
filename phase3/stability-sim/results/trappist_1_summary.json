@@ -86,7 +86,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "trace",
-    "elapsed_sec": 92.83124899864197,
+    "elapsed_sec": 143.86013102531433,
     "dt_yr": 8.274932218463892e-05,
     "innermost_period_yr": 0.004137466109231946,
     "energy_relative_error": 1.1393151451394613e-08,
@@ -141,34 +141,49 @@
     "per_body": {
       "TRAPPIST-1 b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.014846800678975328
       },
       "TRAPPIST-1 c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.01513757565977146
       },
       "TRAPPIST-1 d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.02305031744142933
       },
       "TRAPPIST-1 e": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.02051725580094286
       },
       "TRAPPIST-1 f": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.016426172316501564
       },
       "TRAPPIST-1 g": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.011691527720775988
       },
       "TRAPPIST-1 h": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.02105803764357621
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

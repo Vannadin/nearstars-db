@@ -75,7 +75,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 51.623132944107056,
+    "elapsed_sec": 78.5733711719513,
     "dt_yr": 0.000179012898586513,
     "innermost_period_yr": 0.00895064492932565,
     "energy_relative_error": 5.960907935916408e-10,
@@ -124,30 +124,43 @@
     "per_body": {
       "HD 219134 b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06789423580136192
       },
       "HD 219134 c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06165188246863077
       },
       "HD 219134 f": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.011887442512586145
       },
       "HD 219134 d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.008410680730887979
       },
       "HD 219134 g": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.005255347616477465
       },
       "HD 219134 h": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06171344350964518
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }

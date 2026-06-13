@@ -316,13 +316,13 @@ DATA.clusters.forEach(c=>{
   // line+mesh (to hide during playback) and make a morphing anim line+mesh.
   function regStab(p,line,mesh,hostVec){
     if(!p.stability) return;
-    const al=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({color:0x7aa8ff,transparent:true,opacity:.95}));
+    const al=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.95}));
     al.visible=false; al.frustumCulled=false; node.add(al);
     const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
     am.scale.setScalar(pr); am.visible=false; node.add(am);
     stabPlanets.push({name:p.name,data:p.stability,line,mesh,animLine:al,animMesh:am,
-      host:hostVec.clone(),iDeg:p.i_deg,OmDeg:p.Omega_deg,omDeg:p.omega_deg});
+      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff'});
   }
   let sysScale=0.6;
 
@@ -574,27 +574,26 @@ document.getElementById('stabClose').onclick=closeStability;
 stabPlayBtn.onclick=()=>{ stabPlaying=!stabPlaying; stabPlayBtn.textContent=stabPlaying?'⏸':'▶'; };
 stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; stabPlaying=false; stabPlayBtn.textContent='▶'; };
 
+const _bgC=new THREE.Color('#0a0d15');
 function updateStability(){
   if(!stabActive) return;
   if(stabPlaying){ stabIdx+=0.5; if(stabIdx>=stabN-1) stabIdx=0; }
-  const i=Math.floor(stabIdx), f=stabIdx-i;
+  const i=Math.floor(stabIdx);
   let maxE=-1,maxA=0,maxName='',tt=0;
   stabRecs.forEach(r=>{
-    const d=r.data, ii=Math.min(i,d.length-1), jj=Math.min(ii+1,d.length-1), ff=(ii===i?f:0);
-    const tv=d[ii][0]+(d[jj][0]-d[ii][0])*ff;
-    const a=d[ii][1]+(d[jj][1]-d[ii][1])*ff;
-    const e=Math.min(0.999,d[ii][2]+(d[jj][2]-d[ii][2])*ff);
-    tt=tv;
+    const d=r.data, n=d.length, ii=Math.min(i,n-1);
     if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
-    const seg=170,pos=[];
-    for(let k=0;k<=seg;k++){const nu=k/seg*2*Math.PI;const pt=orbitPoint(a,e,r.iDeg,r.OmDeg,r.omDeg,nu);
-      pos.push(r.host.x+pt.x,r.host.y+pt.y,r.host.z+pt.z);}
+    // real 3D path traced so far (host-relative positions; M:(x,y,z)→(x,z,y))
+    const pos=[],col=[],base=new THREE.Color(r.rgb);
+    for(let k=0;k<=ii;k++){const q=d[k];
+      pos.push(r.host.x+q[3], r.host.y+q[5], r.host.z+q[4]);
+      const cc=_bgC.clone().lerp(base, k/Math.max(1,ii)); col.push(cc.r,cc.g,cc.b);}
     r.animLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
-    r.animLine.material.color.setHex(e>0.85?0xff5a3c:(e>0.55?0xe0b070:0x7aa8ff));
+    r.animLine.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
     r.animLine.visible=true;
-    const ph=(stabIdx*0.4)%(2*Math.PI), pp=orbitPoint(a,e,r.iDeg,r.OmDeg,r.omDeg,ph);
-    r.animMesh.position.set(r.host.x+pp.x,r.host.y+pp.y,r.host.z+pp.z); r.animMesh.visible=true;
-    if(e>maxE){maxE=e;maxA=a;maxName=r.name;}
+    const cur=d[ii];
+    r.animMesh.position.set(r.host.x+cur[3], r.host.y+cur[5], r.host.z+cur[4]); r.animMesh.visible=true;
+    tt=cur[0]; if(cur[2]>maxE){maxE=cur[2];maxA=cur[1];maxName=r.name;}
   });
   stabSlider.value=stabIdx;
   const q=maxA*(1-maxE), nm=stabRecs.length>1?(maxName+' '):'';

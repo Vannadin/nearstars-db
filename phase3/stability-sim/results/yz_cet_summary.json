@@ -42,7 +42,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "trace",
-    "elapsed_sec": 27.912824153900146,
+    "elapsed_sec": 42.42157173156738,
     "dt_yr": 0.00011296110440901624,
     "innermost_period_yr": 0.005648055220450812,
     "energy_relative_error": 5.045405389445839e-09,
@@ -73,18 +73,25 @@
     "per_body": {
       "YZ Cet b": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.10264130583405447
       },
       "YZ Cet c": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.04049948175956539
       },
       "YZ Cet d": {
         "flags": [],
-        "status": "stable"
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.0746000594750833
       }
     },
     "overall": "stable",
+    "ecc_class_max": "calm",
     "lyapunov_time_yr": Infinity,
     "is_chaotic": false
   }
