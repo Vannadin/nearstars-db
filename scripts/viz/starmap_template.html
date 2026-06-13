@@ -142,6 +142,10 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <script type="module">
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
 const DATA = JSON.parse(document.getElementById('starmap-data').textContent);
 const SPEC = {O:'#b2c4ff',B:'#9eb8ff',A:'#cfdcff',F:'#f3f7c2',G:'#ffe28a',K:'#ffb47a',M:'#ff8a76',X:'#a3b0c8'};
@@ -182,6 +186,8 @@ const stage=document.getElementById('stage');
 const renderer=new THREE.WebGLRenderer({antialias:true,logarithmicDepthBuffer:true});
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(innerWidth,innerHeight);
+renderer.toneMapping=THREE.ACESFilmicToneMapping;   // HDR → filmic, so bright cores bloom naturally
+renderer.toneMappingExposure=1.0;
 stage.appendChild(renderer.domElement);
 
 const scene=new THREE.Scene();
@@ -194,6 +200,15 @@ controls.enableDamping=true; controls.dampingFactor=0.08;
 controls.zoomToCursor=true; controls.minDistance=1e-4; controls.maxDistance=1.2e8;
 scene.add(new THREE.AmbientLight(0xffffff,1.0));
 
+// post-processing: selective-ish bloom (only the HDR-bright star cores cross
+// the threshold; dim grid/orbit lines stay crisp; HTML crosshairs are unaffected)
+const composer=new EffectComposer(renderer);   // HalfFloat targets → additive cores exceed 1.0
+composer.addPass(new RenderPass(scene,camera));
+const bloom=new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),
+  0.9 /*strength*/, 0.6 /*radius*/, 0.32 /*threshold*/);
+composer.addPass(bloom);
+composer.addPass(new OutputPass());
+
 /* floating origin (in light-years). scene = M(P_ly - originLy)*U, M:(x,y,z)->(x,z,y) */
 const originLy=new THREE.Vector3(0,0,0);
 const U=AU_PER_LY;
@@ -201,15 +216,16 @@ function lyToScene(P){ return new THREE.Vector3((P.x-originLy.x),(P.z-originLy.z
 function sceneToLyDelta(v){ return new THREE.Vector3(v.x/U, v.z/U, v.y/U); } // inverse of M, /U
 const REBASE_AU=4000; // keep the look-at point near scene origin for float32 precision
 
-/* glow texture */
-function glowTexture(){
-  const s=128,c=document.createElement('canvas');c.width=c.height=s;
+/* soft gaussian glow texture (smooth falloff, no hard edge) */
+function glowTexture(k){
+  const s=256,c=document.createElement('canvas');c.width=c.height=s;
   const g=c.getContext('2d'),grd=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
-  grd.addColorStop(0,'rgba(255,255,255,1)');grd.addColorStop(.25,'rgba(255,255,255,.65)');
-  grd.addColorStop(.55,'rgba(255,255,255,.18)');grd.addColorStop(1,'rgba(255,255,255,0)');
-  g.fillStyle=grd;g.fillRect(0,0,s,s);return new THREE.CanvasTexture(c);
+  for(let i=0;i<=32;i++){const r=i/32;const a=Math.exp(-r*r*k);grd.addColorStop(r,`rgba(255,255,255,${a})`);}
+  g.fillStyle=grd;g.fillRect(0,0,s,s);
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
 }
-const GLOW=glowTexture();
+const GLOW=glowTexture(8.5);    // wide soft halo
+const CORE=glowTexture(26);     // tight bright core
 
 /* backdrop starfield (follows camera, sits at infinity) */
 const backdrop=(function(){
@@ -266,10 +282,15 @@ DATA.clusters.forEach(c=>{
   node.position.copy(lyToScene(new THREE.Vector3(c.pos[0],c.pos[1],c.pos[2])));
   scene.add(node);
 
-  // map-scale glow marker (rep colour) at cluster origin
+  // map-scale marker: coloured soft halo + hot white-ish core (core is bright
+  // enough to cross the bloom threshold → soft photographic glow)
   const glow=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:new THREE.Color(c.rep_rgb),
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   glow.userData.cluster=c; node.add(glow); glowSprites.push(glow);
+  const coreCol=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.7);
+  const core=new THREE.Sprite(new THREE.SpriteMaterial({map:CORE,color:coreCol,
+    transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
+  node.add(core);
 
   const bodies=[]; const orbitsLines=[];
   let sysScale=0.6;
@@ -362,7 +383,7 @@ DATA.clusters.forEach(c=>{
   if(c.is_sol) labelEl=mkLabel('Sol','label sun');
   else if(c.is_confirmed_set) labelEl=mkLabel(c.label,'label confirmed');
 
-  clusters.push({data:c,node,glow,sysScale,bodies,stem,labelEl,orbitsLines,motion});
+  clusters.push({data:c,node,glow,core,sysScale,bodies,stem,labelEl,orbitsLines,motion});
 });
 
 /* legend */
@@ -552,9 +573,11 @@ function updateScene(){
     const full=cl.sysScale*7, enter=cl.sysScale*45;
     const t=Math.max(0,Math.min(1,(dist-full)/(enter-full))); // 1 = far (map), 0 = inside system
     // glow: constant screen size, fade out as we enter the system
-    cl.glow.material.opacity=t;
+    cl.glow.material.opacity=t*0.85;
     const gsz=(cl.data.is_sol?1.6:cl.data.rep_radius*1.5)*0.03*dist;
     cl.glow.scale.setScalar(gsz);
+    cl.core.material.opacity=t;
+    cl.core.scale.setScalar(gsz*0.42);
     const active=t<0.999; cl._active=active;
     // real bodies + orbits visible only when active
     cl.orbitsLines.forEach(l=>l.visible=active&&showOrbits);
@@ -623,9 +646,10 @@ function tick(){
   }
   controls.update();
   updateScene();
-  renderer.render(scene,camera);
+  composer.render();
 }
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); composer.setSize(innerWidth,innerHeight);});
 setTimeout(()=>{document.getElementById('hint').style.opacity='0';},7000);
 
 ensureLabels(); applyFilter(); applyLang(); tick();
