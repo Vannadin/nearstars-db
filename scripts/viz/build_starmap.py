@@ -351,9 +351,11 @@ def nbody_trajectories(members, rep):
     attached member whose catalog velocity is unbound (e.g. 40 Eri A vs the B–C
     pair) cannot contaminate the bound pair's orbit. Returns {name:[[x,y,z]_AU…]}
     in the ICRS frame relative to the rep's current position (index 0 = now);
-    unbound singletons get no trajectory. None if no bound group exists."""
+    unbound singletons get no trajectory. Returns (traj_or_None, spans) where
+    spans[name] is the integration time span (yr) — used for planet epicycles."""
     G = 4 * math.pi ** 2            # AU^3 / (Msun yr^2)
     KMS_TO_AUYR = 0.21094502
+    spans = {}
     dyn = []
     for m in members:
         if m["mass_msun"] is None or any(v is None for v in m["vel_kms"]):
@@ -364,7 +366,7 @@ def nbody_trajectories(members, rep):
             "v": [c * KMS_TO_AUYR for c in m["vel_kms"]],       # AU/yr
         })
     if len(dyn) < 2:
-        return None
+        return None, spans
 
     # bound graph via pairwise two-body specific energy
     n = len(dyn)
@@ -411,6 +413,7 @@ def nbody_trajectories(members, rep):
         rec = max(1, N // 150)
         for b in P:
             traj[b["name"]] = []
+            spans[b["name"]] = span
         acc = _accel(P, G)
         for step in range(N + 1):
             if step % rec == 0:
@@ -429,7 +432,38 @@ def nbody_trajectories(members, rep):
             p0 = traj[b["name"]][0]
             if any(math.dist(p, p0) > 8 * sep_min for p in traj[b["name"]]):
                 del traj[b["name"]]
-    return traj or None
+                spans.pop(b["name"], None)
+    return (traj or None), spans
+
+
+def planet_epicycle(planet, host_pts, span_host):
+    """Real-space path of a planet orbiting a *moving* host: host N-body position
+    (interpolated from its trajectory) + the planet's Keplerian offset, sampled
+    over ~8 planet periods → a drifting coil. Returns [[x,y,z]_AU…] ICRS rel rep,
+    index 0 = now. None if the planet lacks a/period."""
+    a = planet.get("a_au")
+    per_d = planet.get("period_days")
+    if not a or not per_d or per_d <= 0:
+        return None
+    e = planet.get("e") or 0.0
+    P_pl = per_d / 365.25
+    nmot = 2 * math.pi / P_pl
+    M0 = math.radians(planet.get("M_deg") or 0)
+    window = min(span_host, 2.6 * P_pl)   # ~2-3 loops: shows host drift without tangling
+    N = len(host_pts)
+    norm = lambda x: (x % (2 * math.pi) + 2 * math.pi) % (2 * math.pi)
+    K = max(160, min(2400, int(window / P_pl * 48)))
+    out = []
+    for j in range(K + 1):                       # j=0 now, increasing = older
+        t = -window * (j / K)
+        f = (-t / span_host) * (N - 1) if span_host > 0 else 0.0
+        i0 = int(f); i1 = min(i0 + 1, N - 1); fr = f - i0
+        h = [host_pts[i0][k] + (host_pts[i1][k] - host_pts[i0][k]) * fr for k in range(3)]
+        nu = _mean_to_true(norm(M0 + nmot * t), e)
+        ox, oy, oz = _orbit_point(a, e, planet.get("i_deg"), planet.get("Omega_deg"),
+                                  planet.get("omega_deg"), nu)
+        out.append([round(h[0] + ox, 5), round(h[1] + oy, 5), round(h[2] + oz, 5)])
+    return out
 
 
 def _strip_component(name):
@@ -481,7 +515,7 @@ def build_cluster_obj(members):
         return None
 
     # real N-body past trajectories for multi-star systems (from stored 6D state)
-    traj = nbody_trajectories(members, rep) if len(members) > 1 else None
+    traj, spans = (nbody_trajectories(members, rep) if len(members) > 1 else (None, {}))
 
     components = []
     planets = []
@@ -519,6 +553,11 @@ def build_cluster_obj(members):
             pp = dict(p)
             pp["rgb"] = (teff_to_rgb(p["teq_k"]) if p.get("teq_k")
                          else "#ccd2de")
+            # planet around a moving host (binary N-body) → real-space epicycle
+            if traj and m["name"] in traj:
+                epi = planet_epicycle(p, traj[m["name"]], spans[m["name"]])
+                if epi:
+                    pp["epicycle"] = epi
             planets.append(pp)
 
     return {
