@@ -18,32 +18,32 @@
       "mass_msun": 0.0003603282183295457,
       "mass_kind": "imaging_photometric_estimate",
       "a_au": 1.6,
-      "e": 0.4,
-      "inc_rad": 0.5097234080449439,
-      "mutual_incl_deg": 50.0
+      "e": 0.1,
+      "inc_rad": 1.103135353723016,
+      "mutual_incl_deg": 16.0
     }
   ],
   "hypotheticals": [],
   "integration": {
     "integrator": "ias15",
-    "elapsed_sec": 14.340057849884033,
-    "dt_yr": 0.11612082837275518,
-    "innermost_period_yr": 1.924902793575299,
-    "energy_relative_error": 3.612853951489863e-06,
-    "megno_final": 33.281851389524014
+    "elapsed_sec": 173.80298590660095,
+    "dt_yr": 0.055900500835488635,
+    "innermost_period_yr": 1.924902793575301,
+    "energy_relative_error": 8.123285414709866e-11,
+    "megno_final": 2.0016477337258096
   },
   "per_body": {
     "Alpha Centauri B": {
-      "a_min": 23.53614698708244,
-      "a_max": 23.740869023746534,
-      "e_min": 0.5129501034607579,
-      "e_max": 0.5198539188114976
+      "a_min": 23.51858535620833,
+      "a_max": 23.683893544600146,
+      "e_min": 0.5144675635125568,
+      "e_max": 0.5180376960472154
     },
     "Alpha Centauri A b": {
-      "a_min": 1.5931566740645617,
-      "a_max": 1.60515602560664,
-      "e_min": 0.15079808147339407,
-      "e_max": 0.9999649996610083
+      "a_min": 1.5905535715614563,
+      "a_max": 1.6025460613834894,
+      "e_min": 0.04914840246207267,
+      "e_max": 0.1582925691874648
     }
   },
   "hill_track": {},
@@ -53,20 +53,18 @@
         "flags": [],
         "status": "stable",
         "ecc_class": "hot",
-        "e_max": 0.5198539188114976
+        "e_max": 0.5180376960472154
       },
       "Alpha Centauri A b": {
-        "flags": [
-          "e_max=1.000 \u2265 0.9 (orbit nearly unbound)"
-        ],
-        "status": "unstable",
-        "ecc_class": "extreme",
-        "e_max": 0.9999649996610083
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.1582925691874648
       }
     },
-    "overall": "unstable",
-    "ecc_class_max": "extreme",
-    "lyapunov_time_yr": 3196.7417386775587,
-    "is_chaotic": true
+    "overall": "stable",
+    "ecc_class_max": "hot",
+    "lyapunov_time_yr": 1213788349.824116,
+    "is_chaotic": false
   }
 }
