@@ -198,16 +198,10 @@ def load_manifest():
 _STABILITY = None
 
 
-def load_stability():
-    """Map planet body name → downsampled [[t_yr, a_au, e, x_au, y_au, z_au]…]
-    from the REBOUND stability-sim time series. Positions (relative to the host)
-    drive the in-viewer 3D orbit-evolution animation; a/e feed the readout."""
-    global _STABILITY
-    if _STABILITY is not None:
-        return _STABILITY
+def _load_stab_dir(directory):
+    """body name → downsampled [[t,a,e,x,y,z]…] for every *_timeseries.csv in dir."""
     out = {}
-    res = os.path.join(ROOT, "phase3", "stability-sim", "results")
-    for f in glob.glob(os.path.join(res, "*_timeseries.csv")):
+    for f in glob.glob(os.path.join(directory, "*_timeseries.csv")):
         rows = {}
         for r in csv.DictReader(open(f, encoding="utf-8")):
             rows.setdefault(r["body"], []).append((
@@ -220,6 +214,28 @@ def load_stability():
             out[body] = [[int(t), round(a, 4), round(e, 4),
                           round(x, 5), round(y, 5), round(z, 5)]
                          for (t, a, e, x, y, z) in series[::step]]
+    return out
+
+
+def load_stability():
+    """Map planet body name → list of orbit *variants* for the in-viewer 3D
+    orbit-evolution animation. Main results (results/) are the system's run; an
+    optional results/_observed/ counterpart (e.g. α Cen A b's pre-adjustment
+    observed orbit) becomes a second toggleable variant. Each variant is
+    {id, data:[[t,a,e,x,y,z]…]}; id ∈ {adopted, observed, sim} drives the
+    explanatory note in the viewer."""
+    global _STABILITY
+    if _STABILITY is not None:
+        return _STABILITY
+    res = os.path.join(ROOT, "phase3", "stability-sim", "results")
+    main = _load_stab_dir(res)
+    obs = _load_stab_dir(os.path.join(res, "_observed"))
+    out = {}
+    for body, data in main.items():
+        # if there's an observed counterpart, the main run IS the adopted orbit
+        out[body] = [{"id": "adopted" if body in obs else "sim", "data": data}]
+        if body in obs:
+            out[body].append({"id": "observed", "data": obs[body]})
     _STABILITY = out
     return out
 

@@ -93,8 +93,11 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabPanel.show{display:block}
 #stabPanel .sx{position:absolute;top:9px;right:12px;color:var(--fg4);cursor:pointer;font-size:16px;line-height:1}
 #stabPanel .sx:hover{color:var(--fg1)}
-#stabPanel .st{font-size:11px;color:var(--fg3);margin-bottom:9px;padding-right:18px}
+#stabPanel .st{font-size:11px;color:var(--fg3);margin-bottom:7px;padding-right:18px}
 #stabPanel .st b{color:var(--fg1)}
+#stabPanel .svar{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+#stabVariant{font-family:var(--sans);font-size:11px;color:var(--accent);background:var(--surf1);border:1px solid var(--accent-glow);border-radius:var(--r-chip);padding:3px 11px;cursor:pointer;flex-shrink:0}
+#stabNote{font-size:11px;color:var(--fg4);line-height:1.4}
 #stabPanel .sctl{display:flex;align-items:center;gap:11px}
 #stabPlay{font-family:var(--sans);font-size:13px;color:var(--accent);background:var(--surf1);border:1px solid var(--accent-glow);border-radius:6px;padding:4px 0;cursor:pointer;width:40px;flex-shrink:0}
 #stabSlider{flex:1;accent-color:var(--accent);cursor:pointer}
@@ -150,6 +153,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="stabPanel">
   <div class="sx" id="stabClose">×</div>
   <div class="st" id="stabTitle"></div>
+  <div class="svar"><button id="stabVariant" style="display:none"></button><span id="stabNote"></span></div>
   <div class="sctl"><button id="stabPlay">⏸</button><input type="range" id="stabSlider" min="0" max="100" value="0" step="1"></div>
   <div class="srd" id="stabReadout"></div>
 </div>
@@ -200,6 +204,10 @@ function applyLang(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n; if(STR[lang][k]!==undefined) el.textContent=STR[lang][k];});
   document.getElementById('toggleLang').textContent = lang==='ko'?'EN':'한';
   if(selected) renderInfo(selected);
+  if(typeof stabActive!=='undefined' && stabActive && stabSelCl){
+    stabTitleEl.innerHTML=`<b>${(lang==='ko'&&stabSelCl.label_ko)?stabSelCl.label_ko:stabSelCl.label}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
+    stabRefresh();
+  }
 }
 const t=k=>STR[lang][k];
 
@@ -321,7 +329,7 @@ DATA.clusters.forEach(c=>{
     const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
     am.scale.setScalar(pr); am.visible=false; node.add(am);
-    stabPlanets.push({name:p.name,data:p.stability,line,mesh,animLine:al,animMesh:am,
+    stabPlanets.push({name:p.name,variants:p.stability,line,mesh,animLine:al,animMesh:am,
       host:hostVec.clone(),rgb:p.rgb||'#7aa8ff'});
   }
   let sysScale=0.6;
@@ -544,23 +552,40 @@ function flyTo(c){
 }
 
 /* ── stability animation (REBOUND time-series → morphing orbit) ─────────── */
-let stabActive=false, stabRecs=[], stabIdx=0, stabPlaying=true, stabN=0;
+// orbit-variant labels + explanatory notes (real data vs game-adjusted)
+const VAR_INFO={
+  adopted: {ko:{n:'채택 궤도',d:'게임 구현을 위해 안정화 조정한 궤도'}, en:{n:'Adopted',d:'orbit adjusted/stabilised for the game build'}},
+  observed:{ko:{n:'관측 궤도',d:'실제 측정 데이터 기반 (보정 전)'},     en:{n:'Observed',d:'based on real measured data (pre-adjustment)'}},
+  sim:     {ko:{n:'시뮬',d:'시뮬레이션 궤도'},                          en:{n:'Sim',d:'simulated orbit'}},
+};
+let stabActive=false, stabRecs=[], stabIdx=0, stabPlaying=true, stabN=0, stabVar=0, stabSelCl=null;
 const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getElementById('stabPlay'),
       stabSlider=document.getElementById('stabSlider'), stabReadout=document.getElementById('stabReadout'),
-      stabTitleEl=document.getElementById('stabTitle');
+      stabTitleEl=document.getElementById('stabTitle'), stabVarBtn=document.getElementById('stabVariant'),
+      stabNoteEl=document.getElementById('stabNote');
+const recData=r=>r.variants[Math.min(stabVar,r.variants.length-1)].data;  // current variant's series
+function stabRefresh(){   // apply the current variant: title chip, note, length, framing
+  const nv=Math.max(...stabRecs.map(r=>r.variants.length));
+  stabVarBtn.style.display = nv>1 ? '' : 'none';
+  const id=stabRecs[0].variants[Math.min(stabVar,stabRecs[0].variants.length-1)].id;
+  const inf=VAR_INFO[id]?VAR_INFO[id][lang]:null;
+  if(inf){ stabVarBtn.textContent=inf.n+(nv>1?' ⇄':''); stabNoteEl.textContent=inf.d; }
+  stabN=Math.max(...stabRecs.map(r=>recData(r).length));
+  stabSlider.max=stabN-1; if(stabIdx>stabN-1) stabIdx=stabN-1;
+  let ext=1; stabRecs.forEach(r=>recData(r).forEach(d=>{ext=Math.max(ext,d[1]*(1+d[2]));}));
+  stabRecs._ext=ext;
+}
 function openStability(c){
   const cl=clusters.find(x=>x.data===c); if(!cl||!cl.stabPlanets.length) return;
-  stabRecs=cl.stabPlanets; stabN=Math.max(...stabRecs.map(r=>r.data.length));
-  stabIdx=0; stabPlaying=true; stabActive=true; stabPlayBtn.textContent='⏸';
-  stabSlider.max=stabN-1; stabSlider.value=0;
-  stabTitleEl.innerHTML=`<b>${(lang==='ko'&&c.label_ko)?c.label_ko:c.label}</b> · ${t('stabObs')}`;
+  stabRecs=cl.stabPlanets; stabSelCl=c; stabVar=0; stabIdx=0; stabPlaying=true; stabActive=true;
+  stabPlayBtn.textContent='⏸';
+  stabTitleEl.innerHTML=`<b>${(lang==='ko'&&c.label_ko)?c.label_ko:c.label}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
+  stabRefresh();
   stabPanel.classList.add('show');
-  // frame the host star + its orbit (not the whole wide cluster)
-  let ext=1; stabRecs.forEach(r=>r.data.forEach(d=>{ext=Math.max(ext,d[1]*(1+d[2]));}));
   const center=stabRecs[0].host.clone();
   originLy.set(c.pos[0],c.pos[1],c.pos[2]); recomputeNodes();
   const dir=new THREE.Vector3(0.4,0.5,1).normalize();
-  fly={from:camera.position.clone(),to:center.clone().add(dir.multiplyScalar(ext*4)),
+  fly={from:camera.position.clone(),to:center.clone().add(dir.multiplyScalar(stabRecs._ext*4)),
        tFrom:controls.target.clone(),tTo:center.clone(),k:0};
   document.getElementById('info').classList.remove('show');
 }
@@ -573,6 +598,8 @@ document.getElementById('infoStab').onclick=()=>{ if(selected) openStability(sel
 document.getElementById('stabClose').onclick=closeStability;
 stabPlayBtn.onclick=()=>{ stabPlaying=!stabPlaying; stabPlayBtn.textContent=stabPlaying?'⏸':'▶'; };
 stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; stabPlaying=false; stabPlayBtn.textContent='▶'; };
+stabVarBtn.onclick=()=>{ const nv=Math.max(...stabRecs.map(r=>r.variants.length));
+  stabVar=(stabVar+1)%nv; stabIdx=0; stabRefresh(); };
 
 const _bgC=new THREE.Color('#0a0d15');
 function updateStability(){
@@ -581,7 +608,7 @@ function updateStability(){
   const i=Math.floor(stabIdx);
   let maxE=-1,maxA=0,maxName='',tt=0;
   stabRecs.forEach(r=>{
-    const d=r.data, n=d.length, ii=Math.min(i,n-1);
+    const d=recData(r), n=d.length, ii=Math.min(i,n-1);
     if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
     // real 3D path traced so far (host-relative positions; M:(x,y,z)→(x,z,y))
     const pos=[],col=[],base=new THREE.Color(r.rgb);
