@@ -183,7 +183,19 @@ def planet_orbital(p):
 
 
 # ── load + per-star record ─────────────────────────────────────────────────
+def load_manifest():
+    """Map system_name → curation phase (3 if phase3, 2 if phase2, else 1)."""
+    path = os.path.join(ROOT, "docs", "reports-manifest.json")
+    phase = {}
+    if os.path.exists(path):
+        man = json.load(open(path, encoding="utf-8"))
+        for name, rec in man.items():
+            phase[name] = 3 if rec.get("phase3") else (2 if rec.get("phase2") else 1)
+    return phase
+
+
 def load_records():
+    manifest = load_manifest()
     recs = []
     for f in sorted(glob.glob(os.path.join(SYS_DIR, "*.json"))):
         d = json.load(open(f, encoding="utf-8"))
@@ -214,6 +226,8 @@ def load_records():
             "radius_rsun": radius_rsun,
             "distance_pc": der.get("distance_pc"),
             "epoch_jd": der.get("epoch_jd"),
+            "phase": manifest.get(star.get("name"),
+                                  manifest.get(d.get("system_name"), 1)),
             "pos_ly": [None if v is None else v / KM_PER_LY for v in (x, y, z)],
             "has_full_orbit": "binary_orbit" in d,
             "binary_orbit": d.get("binary_orbit"),
@@ -337,6 +351,7 @@ def build_cluster_obj(members):
             "radius_measured": m["radius_rsun"] is not None,
             "distance_pc": round(dist_pc, 4) if dist_pc else None,
             "is_primary": is_primary,
+            "phase": m.get("phase", 1),
             "offset_au": off_au, "placement": kind, "orbit": orbit,
         })
         for p in m["planets"]:
@@ -359,6 +374,7 @@ def build_cluster_obj(members):
         "beyond_50ly": (dist_ly is not None and dist_ly > 50),
         "rep_rgb": rep["rgb"],
         "rep_radius": marker_radius(rep["luminosity_lsun"], rep["spec_class"]),
+        "max_phase": max((m.get("phase", 1) for m in members), default=1),
         "epoch_jd": rep.get("epoch_jd"),
         "n_planets": len(planets),
         "components": components,
@@ -392,13 +408,13 @@ def solar_system_cluster():
         "distance_pc": 0.0, "distance_ly": 0.0,
         "is_confirmed_set": False, "is_sol": True, "beyond_50ly": False,
         "rep_rgb": teff_to_rgb(5772), "rep_radius": marker_radius(1.0, "G"),
-        "epoch_jd": 2451545.0,
+        "max_phase": 3, "epoch_jd": 2451545.0,
         "n_planets": len(planets),
         "components": [{
             "name": "Sun", "spectype": "G2 V", "spec_class": "G",
             "teff_k": 5772, "rgb": teff_to_rgb(5772), "vmag_v": -26.74,
             "luminosity_lsun": 1.0, "radius_rsun": 1.0, "radius_measured": True,
-            "distance_pc": 0.0, "is_primary": True,
+            "distance_pc": 0.0, "is_primary": True, "phase": 3,
             "offset_au": [0.0, 0.0, 0.0], "placement": "primary", "orbit": None,
         }],
         "planets": planets,

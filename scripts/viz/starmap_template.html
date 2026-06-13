@@ -38,6 +38,9 @@ canvas{display:block}
 #legend .h{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--fg4)}
 #legend .chips{display:flex;gap:5px;flex-wrap:wrap}
 .chip{font-family:var(--mono);font-size:11px;font-weight:500;padding:2px 9px;border-radius:var(--r-chip);color:#06070a}
+.pchip{font-family:var(--mono);font-size:11px;padding:2px 9px;border-radius:var(--r-chip);cursor:pointer;
+  border:1px solid var(--bd2);color:var(--fg3);user-select:none;transition:.14s}
+.pchip.on{background:var(--accent);border-color:var(--accent);color:#06070a;font-weight:600}
 #legend .note{font-size:10.5px;color:var(--fg4);line-height:1.45}
 #filter{position:fixed;right:18px;bottom:18px;z-index:15;width:240px;background:var(--pop);border:1px solid var(--bd1);
   border-radius:var(--r-card);padding:12px 15px;backdrop-filter:blur(14px)}
@@ -99,6 +102,8 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="legend">
   <div class="h" data-i18n="legendTitle">분광형 (색 = 표면온도)</div>
   <div class="chips" id="chips"></div>
+  <div class="h" data-i18n="phaseTitle" style="margin-top:4px">큐레이션 단계</div>
+  <div class="chips" id="phaseChips"></div>
   <div class="note" data-i18n="legendNote">별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.</div>
 </div>
 
@@ -117,7 +122,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div class="nofly" id="infoNoFly" data-i18n="noPlanets">알려진 행성 없음</div>
 </div>
 
-<div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌(커서 방향) · 클릭 = 정보 · 더블클릭 = 포커스 · 별로 줌인하면 행성이 보입니다</div>
+<div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스</div>
 
 <script type="application/json" id="starmap-data">/*__DATA__*/</script>
 
@@ -146,14 +151,14 @@ const STR = {
   ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',beyond:'50광년 밖',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
-    distFilter:'거리 필터',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
-    hint:'드래그 = 회전 · 휠 = 줌(커서 방향) · 클릭 = 정보 · 더블클릭 = 포커스 · 별로 줌인하면 행성이 보입니다',
+    distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
+    hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
     ly:'광년',pc:'pc'},
   en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
-    distFilter:'Distance filter',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
-    hint:'drag = rotate · wheel = zoom (to cursor) · click = info · double-click = focus · zoom into a star to see its planets',
+    distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
+    hint:'drag = rotate · wheel = zoom · WASD/arrows = move (R·F up/down) · click = info · double-click = focus',
     ly:'ly',pc:'pc'}
 };
 let lang='ko';
@@ -262,10 +267,33 @@ DATA.clusters.forEach(c=>{
   const bodies=[]; const orbitsLines=[];
   let sysScale=0.6;
 
-  // components (real-size stars at their astrometric offsets)
+  // components (real-size stars). Close pairs follow their measured
+  // gravitational (Keplerian) relative orbit about the primary; wide pairs
+  // (long period, no phase) sit at their measured astrometric offset.
   c.components.forEach((m,ci)=>{
     const off=m.offset_au; // ICRS AU
-    const cpos=new THREE.Vector3(off[0],off[2],off[1]); // → scene (x,z,y), AU
+    let cpos;
+    const o=m.orbit;
+    if(o && o.a_au){
+      let M0=0;
+      if(o.T_jd!=null && o.P_yr && c.epoch_jd!=null) M0=2*Math.PI*((c.epoch_jd-o.T_jd)/365.25)/o.P_yr;
+      const e=o.e||0, norm=x=>((x%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
+      cpos=orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg, meanToTrue(norm(M0),e));
+      // full relative-orbit ellipse (faint) — the gravitational path
+      const ep=[];
+      for(let k=0;k<=240;k++){const v=k/240*2*Math.PI; ep.push(orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg,v));}
+      const ell=new THREE.Line(new THREE.BufferGeometry().setFromPoints(ep),
+        new THREE.LineBasicMaterial({color:0x5a6a88,transparent:true,opacity:.38}));
+      node.add(ell); orbitsLines.push(ell);
+      // past trajectory — the arc swept over the last ~125° of mean anomaly, ending now
+      const tp=[],span=2.2;
+      for(let k=0;k<=90;k++){const mm=M0-span+span*(k/90); tp.push(orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg, meanToTrue(norm(mm),e)));}
+      const trail=new THREE.Line(new THREE.BufferGeometry().setFromPoints(tp),
+        new THREE.LineBasicMaterial({color:new THREE.Color(m.rgb),transparent:true,opacity:.8}));
+      node.add(trail); orbitsLines.push(trail);
+    } else {
+      cpos=new THREE.Vector3(off[0],off[2],off[1]); // → scene (x,z,y), AU (measured)
+    }
     sysScale=Math.max(sysScale, cpos.length());
     const cg=new THREE.Group(); cg.position.copy(cpos); node.add(cg);
     const rr=Math.max((m.radius_rsun||0.3)*R_SUN_AU, R_SUN_AU*0.08);
@@ -318,6 +346,17 @@ DATA.clusters.forEach(c=>{
 /* legend */
 const chips=document.getElementById('chips');
 Object.entries(SPEC).forEach(([k,v])=>{const d=document.createElement('span');d.className='chip';d.textContent=k;d.style.background=v;chips.appendChild(d);});
+
+/* phase filter chips (curation Phase 1–3) */
+const phaseOn={1:true,2:true,3:true};
+const phaseCount={1:0,2:0,3:0};
+clusters.forEach(cl=>{ if(!cl.data.is_sol) phaseCount[cl.data.max_phase]=(phaseCount[cl.data.max_phase]||0)+1; });
+const phaseChips=document.getElementById('phaseChips');
+[1,2,3].forEach(ph=>{
+  const d=document.createElement('span'); d.className='pchip on'; d.textContent='P'+ph+' ('+(phaseCount[ph]||0)+')';
+  d.onclick=()=>{ phaseOn[ph]=!phaseOn[ph]; d.classList.toggle('on',phaseOn[ph]); applyFilter(); };
+  phaseChips.appendChild(d);
+});
 
 /* ── floating-origin rebase ───────────────────────────────────────────── */
 function recomputeNodes(){
@@ -424,7 +463,7 @@ const slider=document.getElementById('distSlider');
 slider.oninput=()=>{distLimit=+slider.value;document.getElementById('distVal').textContent=distLimit+' ly';applyFilter();};
 btnOrbits.classList.add('on');
 
-function clusterVisible(c){ return c.is_sol || (c.distance_ly<=distLimit && (showFar||!c.beyond_50ly)); }
+function clusterVisible(c){ return c.is_sol || (c.distance_ly<=distLimit && (showFar||!c.beyond_50ly) && phaseOn[c.max_phase]); }
 function applyFilter(){
   clusters.forEach(cl=>{
     const vis=clusterVisible(cl.data);
@@ -503,9 +542,33 @@ function updateScene(){
     r.el.style.display=(r.r<=distLimit&&s.on)?'':'none'; if(s.on){r.el.style.left=s.x+'px';r.el.style.top=s.y+'px';} });
 }
 
+/* ── keyboard fly (WASD + arrows) ─────────────────────────────────────── */
+const keys={};
+const MOVE=new Set(['KeyW','KeyA','KeyS','KeyD','KeyR','KeyF','Space','ShiftLeft',
+  'ArrowUp','ArrowDown','ArrowLeft','ArrowRight']);
+addEventListener('keydown',e=>{ if(e.target.tagName==='INPUT') return; if(MOVE.has(e.code)){keys[e.code]=true; e.preventDefault();} });
+addEventListener('keyup',e=>{ keys[e.code]=false; });
+const _f=new THREE.Vector3(),_r=new THREE.Vector3(),_mv=new THREE.Vector3();
+function applyKeys(){
+  _mv.set(0,0,0);
+  camera.getWorldDirection(_f);
+  _r.crossVectors(_f,camera.up).normalize();
+  if(keys.KeyW||keys.ArrowUp) _mv.add(_f);
+  if(keys.KeyS||keys.ArrowDown) _mv.addScaledVector(_f,-1);
+  if(keys.KeyD||keys.ArrowRight) _mv.add(_r);
+  if(keys.KeyA||keys.ArrowLeft) _mv.addScaledVector(_r,-1);
+  if(keys.KeyR||keys.Space) _mv.add(camera.up);
+  if(keys.KeyF||keys.ShiftLeft) _mv.addScaledVector(camera.up,-1);
+  if(_mv.lengthSq()===0) return;
+  _mv.normalize().multiplyScalar(controls.getDistance()*0.03); // speed scales with zoom
+  camera.position.add(_mv); controls.target.add(_mv);
+  fly=null; // a keypress cancels an in-progress fly
+}
+
 /* ── render loop ──────────────────────────────────────────────────────── */
 function tick(){
   requestAnimationFrame(tick);
+  applyKeys();
   if(fly){ fly.k=Math.min(1,fly.k+0.04);
     const e=1-Math.pow(1-fly.k,3);
     camera.position.lerpVectors(fly.from,fly.to,e);
