@@ -210,9 +210,12 @@ def load_records():
         sclass = spec_class(raw.get("spectype"))
         lum = der.get("luminosity_lsun")
         radius_rsun = _recommended(raw.get("radius_measurements"), "value_rsun")
+        mass_msun = _recommended(raw.get("mass_measurements"), "value_msun")
         x = der.get("icrs_x_km")
         y = der.get("icrs_y_km")
         z = der.get("icrs_z_km")
+        vel_kms = (der.get("icrs_vx_km_s"), der.get("icrs_vy_km_s"),
+                   der.get("icrs_vz_km_s"))
         recs.append({
             "file": base,
             "name": star.get("name"),
@@ -224,6 +227,8 @@ def load_records():
             "vmag_v": raw.get("vmag_v"),
             "luminosity_lsun": lum,
             "radius_rsun": radius_rsun,
+            "mass_msun": mass_msun,
+            "vel_kms": vel_kms,
             "distance_pc": der.get("distance_pc"),
             "epoch_jd": der.get("epoch_jd"),
             "phase": manifest.get(star.get("name"),
@@ -278,6 +283,80 @@ def cluster(recs):
     return list(groups.values())
 
 
+def nbody_trajectories(members, rep):
+    """Backward N-body integration of a multi-star system from its stored 6D
+    state (real positions + velocities + masses). Returns {name: [[x,y,z]_AU…]}
+    in the ICRS frame relative to the rep's *current* position, or None if any
+    member lacks mass/velocity. Each body's path ends (index 0) at 'now'."""
+    G = 4 * math.pi ** 2            # AU^3 / (Msun yr^2)
+    KMS_TO_AUYR = 0.21094502
+    bodies = []
+    for m in members:
+        if m["mass_msun"] is None or any(v is None for v in m["vel_kms"]):
+            return None
+        bodies.append({
+            "name": m["name"], "M": m["mass_msun"],
+            "p": [c * AU_PER_LY for c in m["pos_ly"]],          # AU
+            "v": [c * KMS_TO_AUYR for c in m["vel_kms"]],       # AU/yr
+        })
+    Mtot = sum(b["M"] for b in bodies)
+    com = [sum(b["M"] * b["p"][k] for b in bodies) / Mtot for k in range(3)]
+    cov = [sum(b["M"] * b["v"][k] for b in bodies) / Mtot for k in range(3)]
+    for b in bodies:
+        b["p"] = [b["p"][k] - com[k] for k in range(3)]
+        b["v"] = [b["v"][k] - cov[k] for k in range(3)]
+    rep0 = list(next(b for b in bodies if b["name"] == rep["name"])["p"])
+
+    sep_min = 1e18
+    for i in range(len(bodies)):
+        for j in range(i + 1, len(bodies)):
+            d = math.dist(bodies[i]["p"], bodies[j]["p"])
+            sep_min = min(sep_min, d)
+    P_est = math.sqrt(max(sep_min, 1e-3) ** 3 / max(Mtot, 1e-3))  # years (Kepler)
+    span = min(max(1.4 * P_est, 15.0), 4000.0)
+    N = 4000
+    dt = -span / N                  # integrate backward
+    rec_every = max(1, N // 150)
+
+    def accel(bs):
+        a = [[0.0, 0.0, 0.0] for _ in bs]
+        for i in range(len(bs)):
+            for j in range(len(bs)):
+                if i == j:
+                    continue
+                dx = [bs[j]["p"][k] - bs[i]["p"][k] for k in range(3)]
+                r = math.sqrt(sum(c * c for c in dx)) + 1e-6
+                f = G * bs[j]["M"] / r ** 3
+                for k in range(3):
+                    a[i][k] += f * dx[k]
+        return a
+
+    traj = {b["name"]: [] for b in bodies}
+    acc = accel(bodies)
+    for step in range(N + 1):
+        if step % rec_every == 0:
+            for b in bodies:
+                traj[b["name"]].append([round(b["p"][k] - rep0[k], 4) for k in range(3)])
+        for bi, b in enumerate(bodies):           # velocity Verlet
+            for k in range(3):
+                b["p"][k] += b["v"][k] * dt + 0.5 * acc[bi][k] * dt * dt
+        acc2 = accel(bodies)
+        for bi, b in enumerate(bodies):
+            for k in range(3):
+                b["v"][k] += 0.5 * (acc[bi][k] + acc2[bi][k]) * dt
+        acc = acc2
+
+    # reject unphysical runs: catalog space-velocities aren't always clean
+    # orbital states, so a member can come out unbound (e.g. 40 Eri A vs BC).
+    # If any body wanders > 5× the tightest separation, the velocities don't
+    # describe a bound orbit → fall back to the Keplerian element draw.
+    for name, pts in traj.items():
+        p0 = pts[0]
+        if any(math.dist(p, p0) > 5 * sep_min for p in pts):
+            return None
+    return traj
+
+
 def _strip_component(name):
     """'Alpha Centauri A' → 'Alpha Centauri'; leave singletons intact."""
     if not name:
@@ -326,6 +405,9 @@ def build_cluster_obj(members):
                 }
         return None
 
+    # real N-body past trajectories for multi-star systems (from stored 6D state)
+    traj = nbody_trajectories(members, rep) if len(members) > 1 else None
+
     components = []
     planets = []
     for m in sorted(members, key=keyfn):
@@ -353,6 +435,7 @@ def build_cluster_obj(members):
             "is_primary": is_primary,
             "phase": m.get("phase", 1),
             "offset_au": off_au, "placement": kind, "orbit": orbit,
+            "trajectory": (traj or {}).get(m["name"]),
         })
         for p in m["planets"]:
             pp = dict(p)

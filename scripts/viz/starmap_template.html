@@ -273,24 +273,29 @@ DATA.clusters.forEach(c=>{
   c.components.forEach((m,ci)=>{
     const off=m.offset_au; // ICRS AU
     let cpos;
-    const o=m.orbit;
-    if(o && o.a_au){
+    const tj=m.trajectory, o=m.orbit;
+    if(tj && tj.length){
+      // real N-body past trajectory (from stored 6D state); body sits at "now"=tj[0]
+      cpos=new THREE.Vector3(tj[0][0],tj[0][2],tj[0][1]);
+      const positions=[],colors=[],bg=new THREE.Color('#0a0d15'),col=new THREE.Color(m.rgb);
+      for(let k=tj.length-1;k>=0;k--){const p=tj[k]; positions.push(p[0],p[2],p[1]); // oldest→now
+        const cc=bg.clone().lerp(col,(tj.length-1-k)/(tj.length-1)); colors.push(cc.r,cc.g,cc.b);}
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.Float32BufferAttribute(positions,3));
+      g.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));
+      const trail=new THREE.Line(g,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.9}));
+      node.add(trail); orbitsLines.push(trail);
+    } else if(o && o.a_au){
+      // Keplerian relative-orbit fallback (elements present, N-body rejected/absent)
       let M0=0;
       if(o.T_jd!=null && o.P_yr && c.epoch_jd!=null) M0=2*Math.PI*((c.epoch_jd-o.T_jd)/365.25)/o.P_yr;
       const e=o.e||0, norm=x=>((x%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
       cpos=orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg, meanToTrue(norm(M0),e));
-      // full relative-orbit ellipse (faint) — the gravitational path
       const ep=[];
       for(let k=0;k<=240;k++){const v=k/240*2*Math.PI; ep.push(orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg,v));}
       const ell=new THREE.Line(new THREE.BufferGeometry().setFromPoints(ep),
-        new THREE.LineBasicMaterial({color:0x5a6a88,transparent:true,opacity:.38}));
+        new THREE.LineBasicMaterial({color:0x5a6a88,transparent:true,opacity:.4}));
       node.add(ell); orbitsLines.push(ell);
-      // past trajectory — the arc swept over the last ~125° of mean anomaly, ending now
-      const tp=[],span=2.2;
-      for(let k=0;k<=90;k++){const mm=M0-span+span*(k/90); tp.push(orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg, meanToTrue(norm(mm),e)));}
-      const trail=new THREE.Line(new THREE.BufferGeometry().setFromPoints(tp),
-        new THREE.LineBasicMaterial({color:new THREE.Color(m.rgb),transparent:true,opacity:.8}));
-      node.add(trail); orbitsLines.push(trail);
     } else {
       cpos=new THREE.Vector3(off[0],off[2],off[1]); // → scene (x,z,y), AU (measured)
     }
@@ -560,7 +565,7 @@ function applyKeys(){
   if(keys.KeyR||keys.Space) _mv.add(camera.up);
   if(keys.KeyF||keys.ShiftLeft) _mv.addScaledVector(camera.up,-1);
   if(_mv.lengthSq()===0) return;
-  _mv.normalize().multiplyScalar(controls.getDistance()*0.03); // speed scales with zoom
+  _mv.normalize().multiplyScalar(controls.getDistance()*0.005); // speed scales with zoom
   camera.position.add(_mv); controls.target.add(_mv);
   fly=null; // a keypress cancels an in-progress fly
 }
