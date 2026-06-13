@@ -16,6 +16,7 @@
 | 8 | Firefly cfg | Phase 3 대기 합성 → Firefly 재진입 효과 cfg | `firefly-cfg` 스킬 |
 | 9 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
 | 10 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 11 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
 
 ## 검증 & QA — 인덱스
 
@@ -196,6 +197,22 @@
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
 - `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도. 수동 실행 전용.
+
+## 11. 3D 성도 뷰어
+
+**목적.** `db/systems/*.json` 을 브라우저용 인터랙티브 3D 지도로 만든다. 카탈로그가 공간상 *어디에* 있는지 보고, 시스템을 골라 줌인하면 그 행성들까지 본다.
+
+**트리거.** "DB 3D로 시각화", "성도 만들어줘", 새 별·행성을 한 묶음 추가한 뒤.
+
+**파일.**
+- `scripts/viz/build_starmap.py` — `db/systems/` 를 읽어 중력적으로 구분되는 위치마다 마커 하나로 컴포넌트를 묶고(union-find 0.4 ly, `binary_orbit_ref` 로 가드), Teff 에서 흑체 RGB·광년 ICRS 좌표·광도 기반 마커 크기를 베이크한다. 태양계(canonical 하드코딩 요소)를 원점에 주입한 뒤 자기완결 뷰어를 emit. `--self-check` 는 파일을 쓰지 않고 카운트만 검증.
+- `scripts/viz/starmap_template.html` — Three.js 뷰어 템플릿(CDN importmap). 빌더가 임베드 JSON 페이로드를 끼워 넣는다.
+
+**출력.** `docs/starmap.html` — 단일 자기완결 파일, GitHub Pages 호스팅 가능. 광년 스케일 맵 뷰(원점에 태양, ICRS 거리 링, 분광형 범례, 거리 필터, 50광년 밖 토글), 클릭하면 정보 패널, 더블클릭하면 AU 스케일 시스템 뷰로 들어가 행성 궤도를 본다. 한/영 UI 토글.
+
+**서빙.** `cd docs && python3 -m http.server` 후 `http://localhost:8000/starmap.html` 열기 (CDN 모듈은 `file://` 가 아니라 http 필요).
+
+**참고.** 색은 지각적 흑체 근사(보정된 SED 아님), 마커 크기는 광도 proxy(물리 반경 아닌 빌보드). 표 형태 DB 브라우저인 `docs/index.html`(2번 툴)과 별개로, 이쪽은 공간 배치를 본다.
 
 ## 스킬 디렉터리 배치
 

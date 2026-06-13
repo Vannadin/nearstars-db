@@ -16,6 +16,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
 | 9 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
 | 10 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 11 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
 
 ## Verification & QA — index
 
@@ -196,6 +197,22 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
 - `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness. Manual invocation only.
+
+## 11. 3D star map viewer
+
+**Purpose.** Turn `db/systems/*.json` into an interactive 3D star map for the browser — see *where* the catalog sits in space, then zoom into any system to see its planets.
+
+**Trigger.** "Visualize the DB in 3D", "성도 만들어줘", after a batch of new stars/planets.
+
+**Files.**
+- `scripts/viz/build_starmap.py` — reads `db/systems/`, clusters components into one marker per gravitationally-distinct location (union-find @ 0.4 ly, guarded by `binary_orbit_ref`), bakes blackbody RGB from Teff + light-year ICRS coordinates + luminosity-proxy marker sizes, injects the Solar System (canonical hardcoded elements) at the origin, and emits the self-contained viewer. `--self-check` validates counts without writing.
+- `scripts/viz/starmap_template.html` — the Three.js viewer template (CDN importmap); builder substitutes the embedded JSON payload.
+
+**Output.** `docs/starmap.html` — single self-contained file, GitHub-Pages hostable. Map view in light-years (Sol at origin, ICRS range rings, spectral legend, distance filter, beyond-50 ly toggle); click for an info panel, double-click to enter an AU-scale per-system view with planet orbits. KO/EN UI toggle.
+
+**Serve.** `cd docs && python3 -m http.server` then open `http://localhost:8000/starmap.html` (CDN modules need http, not `file://`).
+
+**Note.** Colour = perceptual blackbody approximation (not a calibrated SED); marker size = luminosity proxy (billboard, not physical radius). Independent of the `docs/index.html` DB browser (tool 2) — that one is the tabular viewer, this is the spatial one.
 
 ## Skills directory layout
 
