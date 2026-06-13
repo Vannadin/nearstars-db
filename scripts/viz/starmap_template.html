@@ -117,7 +117,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div class="nofly" id="infoNoFly" data-i18n="noPlanets">알려진 행성 없음</div>
 </div>
 
-<div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌(커서 방향) · 클릭 = 정보 · 별로 줌인하면 행성이 보입니다</div>
+<div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌(커서 방향) · 클릭 = 정보 · 더블클릭 = 포커스 · 별로 줌인하면 행성이 보입니다</div>
 
 <script type="application/json" id="starmap-data">/*__DATA__*/</script>
 
@@ -147,13 +147,13 @@ const STR = {
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
-    hint:'드래그 = 회전 · 휠 = 줌(커서 방향) · 클릭 = 정보 · 별로 줌인하면 행성이 보입니다',
+    hint:'드래그 = 회전 · 휠 = 줌(커서 방향) · 클릭 = 정보 · 더블클릭 = 포커스 · 별로 줌인하면 행성이 보입니다',
     ly:'광년',pc:'pc'},
   en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
-    hint:'drag = rotate · wheel = zoom (to cursor) · click = info · zoom into a star to see its planets',
+    hint:'drag = rotate · wheel = zoom (to cursor) · click = info · double-click = focus · zoom into a star to see its planets',
     ly:'ly',pc:'pc'}
 };
 let lang='ko';
@@ -272,7 +272,7 @@ DATA.clusters.forEach(c=>{
     const star=new THREE.Mesh(new THREE.SphereGeometry(1,24,16),
       new THREE.MeshBasicMaterial({color:new THREE.Color(m.rgb)}));
     star.scale.setScalar(rr); cg.add(star);
-    bodies.push({kind:'star',name:m.name,obj:cg,rgb:m.rgb});
+    bodies.push({kind:'star',name:m.name,obj:cg,rgb:m.rgb,r:rr});
 
     // planets hosted by this component
     c.planets.filter(p=>p.host_star===m.name && p.a_au).forEach((p,pi)=>{
@@ -292,7 +292,7 @@ DATA.clusters.forEach(c=>{
       const pm=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),
         new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
       pm.scale.setScalar(pr); pm.position.copy(pp); cg.add(pm);
-      bodies.push({kind:'planet',name:p.name,obj:pm,rgb:p.rgb||'#ccd2de'});
+      bodies.push({kind:'planet',name:p.name,obj:pm,rgb:p.rgb||'#ccd2de',r:pr});
     });
   });
 
@@ -320,13 +320,16 @@ const chips=document.getElementById('chips');
 Object.entries(SPEC).forEach(([k,v])=>{const d=document.createElement('span');d.className='chip';d.textContent=k;d.style.background=v;chips.appendChild(d);});
 
 /* ── floating-origin rebase ───────────────────────────────────────────── */
+function recomputeNodes(){
+  clusters.forEach(c=> c.node.position.copy(lyToScene(new THREE.Vector3(c.data.pos[0],c.data.pos[1],c.data.pos[2]))));
+  ringGroup.position.copy(lyToScene(new THREE.Vector3(0,0,0)));
+}
 function rebaseToTarget(){
   const tgt=controls.target.clone();
   if(tgt.length()<REBASE_AU) return;
   originLy.add(sceneToLyDelta(tgt));
   camera.position.sub(tgt); controls.target.set(0,0,0);
-  clusters.forEach(c=> c.node.position.copy(lyToScene(new THREE.Vector3(c.data.pos[0],c.data.pos[1],c.data.pos[2]))));
-  ringGroup.position.copy(lyToScene(new THREE.Vector3(0,0,0)));
+  recomputeNodes();
 }
 
 /* ── interaction: click = info, fly here ──────────────────────────────── */
@@ -340,6 +343,20 @@ function pick(e){
 renderer.domElement.addEventListener('pointermove',e=>{ hoverCl=pick(e); renderer.domElement.style.cursor=hoverCl?'pointer':'default'; });
 let hoverCl=null;
 renderer.domElement.addEventListener('click',e=>{ const c=pick(e); if(c){selected=c; renderInfo(c); document.getElementById('info').classList.add('show');} });
+// double-click: focus the nearest body when zoomed in, else fly to the system
+function pickBody(e){
+  let best=null,bd=34*34;
+  clusters.forEach(cl=>{ if(!cl._active) return;
+    cl.bodies.forEach(b=>{ if(!b._shown) return;
+      const dx=b._sx-e.clientX, dy=b._sy-e.clientY, d=dx*dx+dy*dy;
+      if(d<bd){bd=d;best=b;} });
+  });
+  return best;
+}
+renderer.domElement.addEventListener('dblclick',e=>{
+  const b=pickBody(e); if(b){ focusBody(b); return; }
+  const c=pick(e); if(c){ flyTo(c); }
+});
 document.getElementById('infoClose').onclick=()=>{document.getElementById('info').classList.remove('show'); selected=null;};
 document.getElementById('infoEnter').onclick=()=>{ if(selected) flyTo(selected); };
 
@@ -374,13 +391,22 @@ let fly=null;
 function flyTo(c){
   const cl=clusters.find(x=>x.data===c); if(!cl) return;
   // rebase origin onto the cluster so local coords are tiny & precise
-  originLy.set(c.pos[0],c.pos[1],c.pos[2]);
-  clusters.forEach(x=> x.node.position.copy(lyToScene(new THREE.Vector3(x.data.pos[0],x.data.pos[1],x.data.pos[2]))));
-  ringGroup.position.copy(lyToScene(new THREE.Vector3(0,0,0)));
+  originLy.set(c.pos[0],c.pos[1],c.pos[2]); recomputeNodes();
   const dist=Math.max(cl.sysScale*3.2, 0.4);
   const dir=new THREE.Vector3(0.35,0.5,1).normalize();
   fly={from:camera.position.clone(),to:dir.multiplyScalar(dist),tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
   document.getElementById('info').classList.remove('show');
+}
+
+/* focus the camera on a single body (rebase origin onto it, dolly close) */
+function focusBody(b){
+  b.obj.getWorldPosition(wp); const ws=wp.clone();          // body scene pos now
+  originLy.add(sceneToLyDelta(ws));                          // origin → body
+  camera.position.sub(ws); controls.target.sub(ws);         // keep view continuous
+  recomputeNodes();                                         // body now at ~origin
+  const dist=Math.max((b.r||R_EARTH_AU)*(b.kind==='star'?70:160), 5e-4);
+  const dir=new THREE.Vector3(0.4,0.45,1).normalize();
+  fly={from:camera.position.clone(),to:dir.multiplyScalar(dist),tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
 }
 
 /* ── toggles / filter ─────────────────────────────────────────────────── */
@@ -444,13 +470,14 @@ function updateScene(){
     cl.glow.material.opacity=t;
     const gsz=(cl.data.is_sol?1.6:cl.data.rep_radius*1.5)*0.03*dist;
     cl.glow.scale.setScalar(gsz);
-    const active=t<0.999;
+    const active=t<0.999; cl._active=active;
     // real bodies + orbits visible only when active
     cl.orbitsLines.forEach(l=>l.visible=active&&showOrbits);
     cl.bodies.forEach(b=>{ if(b.kind==='star') b.obj.visible=true; else b.obj.visible=active; });
     // crosshairs for active cluster bodies
     if(active){
       cl.bodies.forEach(b=>{
+        b._shown=false;
         b.obj.getWorldPosition(wp);
         const s=projectToScreen(wp);
         if(!s.on||s.x<-40||s.x>innerWidth+40||s.y<-40||s.y>innerHeight+40) return;
@@ -459,8 +486,9 @@ function updateScene(){
         el.style.setProperty('--xc', b.rgb);
         el.style.left=s.x+'px'; el.style.top=s.y+'px'; el.style.display='';
         const lbl=el.firstElementChild.nextElementSibling; lbl.textContent=b.name;
+        b._sx=s.x; b._sy=s.y; b._shown=true;
       });
-    }
+    } else { cl.bodies.forEach(b=>b._shown=false); }
     // cluster name label (map scale)
     if(cl.labelEl){
       if(!active){ const s=projectToScreen(cl.node.position);

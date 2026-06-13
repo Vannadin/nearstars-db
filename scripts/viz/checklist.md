@@ -34,6 +34,17 @@ Builder: `scripts/viz/build_starmap.py` → `docs/starmap.html` (self-contained,
 - [x] Manual: `python3 -m http.server` in docs/, open, click α Cen → fly-in, Sol → 8 planets
 - [x] Run `scripts/check.sh` — no NEW regressions (one pre-existing gate-5 FAIL on docs/wiki/plans__doc-tool-sprawl-audit.html, unrelated; documented in project memory)
 
+## v2 — continuous zoom + real size + correct orbits (user follow-ups)
+- [x] Drop lines from stars to the ICRS plane (+ toggle)
+- [x] Continuous zoom (floating origin + log depth + zoom-to-cursor), no mode switch
+- [x] Real-size bodies (R_sun / R_earth) + HTML crosshairs when zoomed
+- [x] Correct Keplerian orbits (a/e/i/Ω/ω/M, focus at star) — math verified
+- [x] Multi-star: components at measured ICRS epoch separation, planets around real host
+- [x] Solar System with real J2000 elements (calibration showcase)
+- [x] Re-verify: self-check + JS syntax + DOM/i18n + orbit-math sanity
+
 ## Commits (semantic)
-- [x] builder + template + emitted viewer + Sol data (one feature unit)
-- [ ] docs/index.html link — SKIPPED for v1 (index.html is a 2442-line generated app; linking is out of scope, starmap.html is directly reachable)
+- [x] builder + template + emitted viewer + Sol data
+- [x] drop lines
+- [x] continuous-zoom rewrite (real size, crosshairs, Keplerian orbits, multi-star)
+- [ ] docs/index.html link — SKIPPED (index.html is a 2442-line generated app; starmap.html is directly reachable)
