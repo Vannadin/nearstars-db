@@ -26,7 +26,7 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "ias15",
-    "elapsed_sec": 14.340057849884033,
+    "elapsed_sec": 9.592286109924316,
     "dt_yr": 0.11612082837275518,
     "innermost_period_yr": 1.924902793575299,
     "energy_relative_error": 3.612853951489863e-06,
@@ -36,14 +36,14 @@
     "Alpha Centauri B": {
       "a_min": 23.53614698708244,
       "a_max": 23.740869023746534,
-      "e_min": 0.5129501034607579,
-      "e_max": 0.5198539188114976
+      "e_min": 0.5146971706549631,
+      "e_max": 0.5191769417143685
     },
     "Alpha Centauri A b": {
-      "a_min": 1.5931566740645617,
-      "a_max": 1.60515602560664,
-      "e_min": 0.15079808147339407,
-      "e_max": 0.9999649996610083
+      "a_min": 1.5956953861651655,
+      "a_max": 1.6044267354188069,
+      "e_min": 0.1543102183764905,
+      "e_max": 0.9990948153902747
     }
   },
   "hill_track": {},
@@ -53,15 +53,15 @@
         "flags": [],
         "status": "stable",
         "ecc_class": "hot",
-        "e_max": 0.5198539188114976
+        "e_max": 0.5191769417143685
       },
       "Alpha Centauri A b": {
         "flags": [
-          "e_max=1.000 \u2265 0.9 (orbit nearly unbound)"
+          "e_max=0.999 \u2265 0.9 (orbit nearly unbound)"
         ],
         "status": "unstable",
         "ecc_class": "extreme",
-        "e_max": 0.9999649996610083
+        "e_max": 0.9990948153902747
       }
     },
     "overall": "unstable",

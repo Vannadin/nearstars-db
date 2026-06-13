@@ -608,18 +608,21 @@ function updateStability(){
   const i=Math.floor(stabIdx);
   let maxE=-1,maxA=0,maxName='',tt=0;
   stabRecs.forEach(r=>{
-    const d=recData(r), n=d.length, ii=Math.min(i,n-1);
+    const d=recData(r), n=d.length, ii=Math.min(i,n-1), cur=d[ii];
+    const a=cur[1], e=Math.min(0.999,cur[2]), iD=cur[3], OmD=cur[4], omD=cur[5];
     if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
-    // real 3D path traced so far (host-relative positions; M:(x,y,z)→(x,z,y))
-    const pos=[],col=[],base=new THREE.Color(r.rgb);
-    for(let k=0;k<=ii;k++){const q=d[k];
-      pos.push(r.host.x+q[3], r.host.y+q[5], r.host.z+q[4]);
-      const cc=_bgC.clone().lerp(base, k/Math.max(1,ii)); col.push(cc.r,cc.g,cc.b);}
+    // smooth analytic ellipse at this epoch's elements (precesses/tilts/pumps
+    // over time); host at focus. e-tinted (blue→amber→red).
+    const seg=180,pos=[],col=[];
+    const ec=e>0.85?new THREE.Color(0xff5a3c):(e>0.55?new THREE.Color(0xe0b070):new THREE.Color(r.rgb));
+    for(let k=0;k<=seg;k++){const nu=k/seg*2*Math.PI; const p=orbitPoint(a,e,iD,OmD,omD,nu);
+      pos.push(r.host.x+p.x, r.host.y+p.y, r.host.z+p.z); col.push(ec.r,ec.g,ec.b);}
     r.animLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
     r.animLine.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
     r.animLine.visible=true;
-    const cur=d[ii];
-    r.animMesh.position.set(r.host.x+cur[3], r.host.y+cur[5], r.host.z+cur[4]); r.animMesh.visible=true;
+    // planet at its true anomaly
+    const pp=orbitPoint(a,e,iD,OmD,omD, cur[6]*DEG);
+    r.animMesh.position.set(r.host.x+pp.x, r.host.y+pp.y, r.host.z+pp.z); r.animMesh.visible=true;
     tt=cur[0]; if(cur[2]>maxE){maxE=cur[2];maxA=cur[1];maxName=r.name;}
   });
   stabSlider.value=stabIdx;

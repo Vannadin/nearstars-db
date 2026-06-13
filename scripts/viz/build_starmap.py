@@ -199,21 +199,23 @@ _STABILITY = None
 
 
 def _load_stab_dir(directory):
-    """body name → downsampled [[t,a,e,x,y,z]…] for every *_timeseries.csv in dir."""
+    """body name → downsampled [[t,a,e,inc,Omega,omega,f]…] (deg) for every
+    *_timeseries.csv in dir. Instantaneous elements let the viewer draw a smooth
+    analytic ellipse per epoch (positions alone under-sample → polygon)."""
     out = {}
     for f in glob.glob(os.path.join(directory, "*_timeseries.csv")):
         rows = {}
         for r in csv.DictReader(open(f, encoding="utf-8")):
+            g = lambda k: float(r.get(k, 0) or 0)
             rows.setdefault(r["body"], []).append((
                 float(r["t_yr"]), float(r["a_au"]), float(r["e"]),
-                float(r.get("x_au", 0) or 0), float(r.get("y_au", 0) or 0),
-                float(r.get("z_au", 0) or 0)))
+                g("inc_deg"), g("Omega_deg"), g("omega_deg"), g("f_deg")))
         for body, series in rows.items():
             series.sort()
             step = max(1, len(series) // 110)
             out[body] = [[int(t), round(a, 4), round(e, 4),
-                          round(x, 5), round(y, 5), round(z, 5)]
-                         for (t, a, e, x, y, z) in series[::step]]
+                          round(i, 3), round(Om, 3), round(om, 3), round(fa, 3)]
+                         for (t, a, e, i, Om, om, fa) in series[::step]]
     return out
 
 
