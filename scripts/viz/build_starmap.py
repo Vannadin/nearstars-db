@@ -242,6 +242,46 @@ def load_stability():
     return out
 
 
+_DISKS = None
+
+
+def load_disks():
+    """System name → list of debris-ring belts {inner_au, outer_au, inc_deg}
+    (recommended belts with at least one radius) for the disk visualization."""
+    global _DISKS
+    if _DISKS is not None:
+        return _DISKS
+    path = os.path.join(ROOT, "db", "disks_curated.json")
+    out = {}
+    if os.path.exists(path):
+        d = json.load(open(path, encoding="utf-8"))
+        for sysname, rec in d.items():
+            belts = []
+            for b in rec.get("disk_measurements", []):
+                if not b.get("recommended"):
+                    continue
+                ri, ro = b.get("inner_radius_au"), b.get("outer_radius_au")
+                if ri is None and ro is None:
+                    continue
+                if ri is None:
+                    ri = round(ro * 0.7, 2)
+                if ro is None:
+                    ro = round(ri * 1.3, 2)
+                belts.append({"inner_au": ri, "outer_au": ro,
+                              "inc_deg": b.get("inclination_deg") or 0,
+                              "belt": b.get("belt")})
+            # dedupe identical rings
+            seen, uniq = set(), []
+            for b in belts:
+                k = (b["inner_au"], b["outer_au"])
+                if k not in seen:
+                    seen.add(k); uniq.append(b)
+            if uniq:
+                out[sysname] = uniq
+    _DISKS = out
+    return out
+
+
 def load_records():
     manifest = load_manifest()
     recs = []
@@ -628,6 +668,9 @@ def build_cluster_obj(members):
         "max_phase": max((m.get("phase", 1) for m in members), default=1),
         "epoch_jd": rep.get("epoch_jd"),
         "vel": [round(v, 4) if v is not None else None for v in rep["vel_kms"]],
+        "disks": next((load_disks()[k] for k in load_disks()
+                       if k == label or any(k == m["system_name"] or m["name"] == k
+                                            for m in members)), None),
         "n_planets": len(planets),
         "components": components,
         "planets": planets,

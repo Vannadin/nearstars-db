@@ -109,6 +109,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <body>
 <div id="stage"></div>
 <div id="labels"></div>
+<div id="hoverLabel" class="label" style="display:none"></div>
 
 <div id="topbar">
   <a href="index.html" class="btn" id="backDb" title="NearStars DB">← DB</a>
@@ -420,6 +421,19 @@ DATA.clusters.forEach(c=>{
     });
   });
 
+  // debris disk rings (Fomalhaut, AU Mic, …) around the primary, AU scale
+  const diskMeshes=[];
+  if(c.disks){
+    const dcol=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.55);
+    c.disks.forEach(b=>{
+      sysScale=Math.max(sysScale, b.outer_au*1.1);
+      const ring=new THREE.Mesh(new THREE.RingGeometry(b.inner_au,b.outer_au,120,2),
+        new THREE.MeshBasicMaterial({color:dcol,transparent:true,opacity:.16,side:THREE.DoubleSide,depthWrite:false}));
+      ring.rotation.x = -Math.PI/2 + (b.inc_deg||0)*DEG;   // inc 0 = face-on, 90 = edge-on
+      ring.visible=false; node.add(ring); diskMeshes.push(ring);
+    });
+  }
+
   // vertical drop line to the ICRS plane
   let stem=null;
   if(!c.is_sol){
@@ -446,7 +460,7 @@ DATA.clusters.forEach(c=>{
   if(c.is_sol) labelEl=mkLabel('Sol','label sun');
   else if(c.is_confirmed_set) labelEl=mkLabel(c.label,'label confirmed');
 
-  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets});
+  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets,diskMeshes});
 });
 
 /* legend */
@@ -487,6 +501,7 @@ function pick(e){
 }
 renderer.domElement.addEventListener('pointermove',e=>{ hoverCl=pick(e); renderer.domElement.style.cursor=hoverCl?'pointer':'default'; });
 let hoverCl=null;
+const hoverLabel=document.getElementById('hoverLabel');
 renderer.domElement.addEventListener('click',e=>{
   const b=pickBody(e);
   if(b){ selBody=b; return; }                 // zoomed in: select the body (highlighted crosshair)
@@ -735,6 +750,7 @@ function updateScene(){
     const active=t<0.999; cl._active=active;
     // real bodies + orbits visible only when active
     cl.orbitsLines.forEach(l=>l.visible=active&&showOrbits);
+    if(cl.diskMeshes) cl.diskMeshes.forEach(m=>m.visible=active);
     cl.bodies.forEach(b=>{ if(b.kind==='star'){ b.obj.visible=true; if(b.glow) b.glow.material.opacity=(1-t)*0.9; } else b.obj.visible=active; });
     // crosshairs for active cluster bodies
     if(active){
@@ -763,6 +779,16 @@ function updateScene(){
   // ring labels
   ringLabels.forEach(r=>{ const w=r.local.clone().add(ringGroup.position); const s=projectToScreen(w);
     r.el.style.display=(r.r<=distLimit&&s.on)?'':'none'; if(s.on){r.el.style.left=s.x+'px';r.el.style.top=s.y+'px';} });
+  // hovered star name — shown even when its persistent label is off
+  if(hoverCl){
+    const hcl=clusters.find(x=>x.data===hoverCl);
+    if(hcl && hcl.node.visible && !hcl.labelWanted){
+      const s=projectToScreen(hcl.node.position);
+      if(s.on){ hoverLabel.textContent=(lang==='ko'&&hoverCl.label_ko)?hoverCl.label_ko:hoverCl.label;
+        hoverLabel.style.left=s.x+'px'; hoverLabel.style.top=s.y+'px'; hoverLabel.style.display=''; }
+      else hoverLabel.style.display='none';
+    } else hoverLabel.style.display='none';
+  } else hoverLabel.style.display='none';
   updateStability();   // morph the simulated orbit (overrides normal orbit visibility)
 }
 
