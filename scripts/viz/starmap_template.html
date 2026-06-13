@@ -81,7 +81,25 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 .xhair::after{top:auto;bottom:-9px}
 .xhair .lbl{position:absolute;left:11px;top:-7px;white-space:nowrap;font-size:11px;color:var(--fg2);text-shadow:0 1px 3px #000}
 .xhair.star .lbl{color:var(--fg1);font-weight:500}
+/* selected body — larger accent crosshair with corner brackets */
+.xhair.sel i{left:-12px;top:-12px;width:24px;height:24px;border-color:var(--accent);border-width:1.5px;opacity:1;box-shadow:0 0 12px var(--accent-glow),inset 0 0 6px var(--accent-glow)}
+.xhair.sel::before,.xhair.sel::after{height:9px;background:var(--accent);opacity:1;width:1.5px}
+.xhair.sel::before{top:-15px} .xhair.sel::after{bottom:-15px}
+.xhair.sel .lbl{left:17px;color:var(--accent);font-weight:600;font-size:11.5px}
 #hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);z-index:14;font-size:11px;color:var(--fg4);text-align:center;pointer-events:none;transition:opacity .4s}
+#stabPanel{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:19;display:none;min-width:380px;
+  background:var(--pop);border:1px solid var(--bd1);border-radius:var(--r-card);padding:13px 16px 12px;
+  backdrop-filter:blur(16px);box-shadow:0 12px 48px -8px rgba(0,0,0,.7)}
+#stabPanel.show{display:block}
+#stabPanel .sx{position:absolute;top:9px;right:12px;color:var(--fg4);cursor:pointer;font-size:16px;line-height:1}
+#stabPanel .sx:hover{color:var(--fg1)}
+#stabPanel .st{font-size:11px;color:var(--fg3);margin-bottom:9px;padding-right:18px}
+#stabPanel .st b{color:var(--fg1)}
+#stabPanel .sctl{display:flex;align-items:center;gap:11px}
+#stabPlay{font-family:var(--sans);font-size:13px;color:var(--accent);background:var(--surf1);border:1px solid var(--accent-glow);border-radius:6px;padding:4px 0;cursor:pointer;width:40px;flex-shrink:0}
+#stabSlider{flex:1;accent-color:var(--accent);cursor:pointer}
+#stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2)}
+#stabPanel .srd .warn{color:#ff5a3c;font-weight:600}
 .hidden{display:none!important}
 </style>
 </head>
@@ -125,7 +143,15 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div class="sec" id="infoCompSec"><div class="t" data-i18n="components">구성원</div><div id="infoComps"></div></div>
   <div class="sec" id="infoPlSec"><div class="t" data-i18n="planets">행성</div><div id="infoPls"></div></div>
   <button class="btn enter" id="infoEnter" data-i18n="flyHere">여기로 날아가기 →</button>
+  <button class="btn enter" id="infoStab" style="display:none" data-i18n="stabBtn">안정성 시뮬 ▶</button>
   <div class="nofly" id="infoNoFly" data-i18n="noPlanets">알려진 행성 없음</div>
+</div>
+
+<div id="stabPanel">
+  <div class="sx" id="stabClose">×</div>
+  <div class="st" id="stabTitle"></div>
+  <div class="sctl"><button id="stabPlay">⏸</button><input type="range" id="stabSlider" min="0" max="100" value="0" step="1"></div>
+  <div class="srd" id="stabReadout"></div>
 </div>
 
 <div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스</div>
@@ -160,13 +186,13 @@ const STR = {
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
-    ly:'광년',pc:'pc'},
+    ly:'광년',pc:'pc',yr:'년',stabBtn:'안정성 시뮬 ▶',disrupt:'파괴 위험',stabObs:'관측 궤도(불안정)'},
   en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
     hint:'drag = rotate · wheel = zoom · WASD/arrows = move (R·F up/down) · click = info · double-click = focus',
-    ly:'ly',pc:'pc'}
+    ly:'ly',pc:'pc',yr:'yr',stabBtn:'Stability sim ▶',disrupt:'disruption risk',stabObs:'observed orbit (unstable)'}
 };
 let lang='ko';
 function applyLang(){
@@ -285,7 +311,19 @@ DATA.clusters.forEach(c=>{
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   node.add(outer);
 
-  const bodies=[]; const orbitsLines=[];
+  const bodies=[]; const orbitsLines=[]; const stabPlanets=[];
+  // register a planet that has a stability time-series: keep refs to its normal
+  // line+mesh (to hide during playback) and make a morphing anim line+mesh.
+  function regStab(p,line,mesh,hostVec){
+    if(!p.stability) return;
+    const al=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({color:0x7aa8ff,transparent:true,opacity:.95}));
+    al.visible=false; al.frustumCulled=false; node.add(al);
+    const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
+    const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
+    am.scale.setScalar(pr); am.visible=false; node.add(am);
+    stabPlanets.push({name:p.name,data:p.stability,line,mesh,animLine:al,animMesh:am,
+      host:hostVec.clone(),iDeg:p.i_deg,OmDeg:p.Omega_deg,omDeg:p.omega_deg});
+  }
   let sysScale=0.6;
 
   // components (real-size stars). Close pairs follow their measured
@@ -352,6 +390,7 @@ DATA.clusters.forEach(c=>{
         const pm2=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
         pm2.scale.setScalar(pr2); pm2.position.set(e0[0],e0[2],e0[1]); node.add(pm2);
         bodies.push({kind:'planet',name:p.name,obj:pm2,rgb:p.rgb||'#ccd2de',r:pr2});
+        regStab(p,eline,pm2,cpos);
         return;
       }
       // orbit line
@@ -369,6 +408,7 @@ DATA.clusters.forEach(c=>{
         new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
       pm.scale.setScalar(pr); pm.position.copy(pp); cg.add(pm);
       bodies.push({kind:'planet',name:p.name,obj:pm,rgb:p.rgb||'#ccd2de',r:pr});
+      regStab(p,line,pm,cpos);
     });
   });
 
@@ -398,7 +438,7 @@ DATA.clusters.forEach(c=>{
   if(c.is_sol) labelEl=mkLabel('Sol','label sun');
   else if(c.is_confirmed_set) labelEl=mkLabel(c.label,'label confirmed');
 
-  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion});
+  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets});
 });
 
 /* legend */
@@ -430,7 +470,7 @@ function rebaseToTarget(){
 }
 
 /* ── interaction: click = info, fly here ──────────────────────────────── */
-const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(); let selected=null;
+const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(); let selected=null, selBody=null;
 function pick(e){
   mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
   ray.setFromCamera(mouse,camera);
@@ -439,7 +479,13 @@ function pick(e){
 }
 renderer.domElement.addEventListener('pointermove',e=>{ hoverCl=pick(e); renderer.domElement.style.cursor=hoverCl?'pointer':'default'; });
 let hoverCl=null;
-renderer.domElement.addEventListener('click',e=>{ const c=pick(e); if(c){selected=c; renderInfo(c); document.getElementById('info').classList.add('show');} });
+renderer.domElement.addEventListener('click',e=>{
+  const b=pickBody(e);
+  if(b){ selBody=b; return; }                 // zoomed in: select the body (highlighted crosshair)
+  const c=pick(e);
+  if(c){ selected=c; renderInfo(c); document.getElementById('info').classList.add('show');
+    const cl=clusters.find(x=>x.data===c); selBody=cl?cl.bodies.find(x=>x.kind==='star'):null; }
+});
 // double-click: focus the nearest body when zoomed in, else fly to the system
 function pickBody(e){
   let best=null,bd=34*34;
@@ -481,6 +527,8 @@ function renderInfo(c){
   });
   document.getElementById('infoEnter').style.display=c.planets.length?'flex':'none';
   document.getElementById('infoNoFly').style.display=c.planets.length?'none':'block';
+  const cl=clusters.find(x=>x.data===c);
+  document.getElementById('infoStab').style.display=(cl&&cl.stabPlanets.length)?'flex':'none';
 }
 
 /* smooth fly to a cluster (rebase origin there, dolly to system scale) */
@@ -495,8 +543,68 @@ function flyTo(c){
   document.getElementById('info').classList.remove('show');
 }
 
+/* ── stability animation (REBOUND time-series → morphing orbit) ─────────── */
+let stabActive=false, stabRecs=[], stabIdx=0, stabPlaying=true, stabN=0;
+const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getElementById('stabPlay'),
+      stabSlider=document.getElementById('stabSlider'), stabReadout=document.getElementById('stabReadout'),
+      stabTitleEl=document.getElementById('stabTitle');
+function openStability(c){
+  const cl=clusters.find(x=>x.data===c); if(!cl||!cl.stabPlanets.length) return;
+  stabRecs=cl.stabPlanets; stabN=Math.max(...stabRecs.map(r=>r.data.length));
+  stabIdx=0; stabPlaying=true; stabActive=true; stabPlayBtn.textContent='⏸';
+  stabSlider.max=stabN-1; stabSlider.value=0;
+  stabTitleEl.innerHTML=`<b>${(lang==='ko'&&c.label_ko)?c.label_ko:c.label}</b> · ${t('stabObs')}`;
+  stabPanel.classList.add('show');
+  // frame the host star + its orbit (not the whole wide cluster)
+  let ext=1; stabRecs.forEach(r=>r.data.forEach(d=>{ext=Math.max(ext,d[1]*(1+d[2]));}));
+  const center=stabRecs[0].host.clone();
+  originLy.set(c.pos[0],c.pos[1],c.pos[2]); recomputeNodes();
+  const dir=new THREE.Vector3(0.4,0.5,1).normalize();
+  fly={from:camera.position.clone(),to:center.clone().add(dir.multiplyScalar(ext*4)),
+       tFrom:controls.target.clone(),tTo:center.clone(),k:0};
+  document.getElementById('info').classList.remove('show');
+}
+function closeStability(){
+  stabActive=false; stabPanel.classList.remove('show');
+  stabRecs.forEach(r=>{ r.animLine.visible=false; r.animMesh.visible=false; });
+  stabRecs=[];
+}
+document.getElementById('infoStab').onclick=()=>{ if(selected) openStability(selected); };
+document.getElementById('stabClose').onclick=closeStability;
+stabPlayBtn.onclick=()=>{ stabPlaying=!stabPlaying; stabPlayBtn.textContent=stabPlaying?'⏸':'▶'; };
+stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; stabPlaying=false; stabPlayBtn.textContent='▶'; };
+
+function updateStability(){
+  if(!stabActive) return;
+  if(stabPlaying){ stabIdx+=0.5; if(stabIdx>=stabN-1) stabIdx=0; }
+  const i=Math.floor(stabIdx), f=stabIdx-i;
+  let maxE=-1,maxA=0,maxName='',tt=0;
+  stabRecs.forEach(r=>{
+    const d=r.data, ii=Math.min(i,d.length-1), jj=Math.min(ii+1,d.length-1), ff=(ii===i?f:0);
+    const tv=d[ii][0]+(d[jj][0]-d[ii][0])*ff;
+    const a=d[ii][1]+(d[jj][1]-d[ii][1])*ff;
+    const e=Math.min(0.999,d[ii][2]+(d[jj][2]-d[ii][2])*ff);
+    tt=tv;
+    if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
+    const seg=170,pos=[];
+    for(let k=0;k<=seg;k++){const nu=k/seg*2*Math.PI;const pt=orbitPoint(a,e,r.iDeg,r.OmDeg,r.omDeg,nu);
+      pos.push(r.host.x+pt.x,r.host.y+pt.y,r.host.z+pt.z);}
+    r.animLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    r.animLine.material.color.setHex(e>0.85?0xff5a3c:(e>0.55?0xe0b070:0x7aa8ff));
+    r.animLine.visible=true;
+    const ph=(stabIdx*0.4)%(2*Math.PI), pp=orbitPoint(a,e,r.iDeg,r.OmDeg,r.omDeg,ph);
+    r.animMesh.position.set(r.host.x+pp.x,r.host.y+pp.y,r.host.z+pp.z); r.animMesh.visible=true;
+    if(e>maxE){maxE=e;maxA=a;maxName=r.name;}
+  });
+  stabSlider.value=stabIdx;
+  const q=maxA*(1-maxE), nm=stabRecs.length>1?(maxName+' '):'';
+  stabReadout.innerHTML=`t = ${Math.round(tt).toLocaleString()} ${t('yr')} · ${nm}e = ${maxE.toFixed(3)} · q = ${q.toFixed(2)} AU`
+    + (q<0.08?` · <span class="warn">⚠ ${t('disrupt')}</span>`:'');
+}
+
 /* focus the camera on a single body (rebase origin onto it, dolly close) */
 function focusBody(b){
+  selBody=b;                                                // highlight the focused body
   b.obj.getWorldPosition(wp); const ws=wp.clone();          // body scene pos now
   originLy.add(sceneToLyDelta(ws));                          // origin → body
   camera.position.sub(ws); controls.target.sub(ws);         // keep view continuous
@@ -551,14 +659,15 @@ function applyFilter(){
     cl.node.visible=vis;
     if(cl.stem) cl.stem.visible=vis&&showStems;
     if(cl.motion) cl.motion.line.visible=vis&&showMotion;
-    if(cl.labelEl) cl.labelEl.style.display=vis?'':'none';
+    if(cl.labelEl && !cl.labelWanted) cl.labelEl.style.display='none';
   });
 }
 function ensureLabels(){
   clusters.forEach(cl=>{
     const need=showAllLabels||cl.data.is_sol||cl.data.is_confirmed_set;
     if(need&&!cl.labelEl) cl.labelEl=mkLabel(cl.data.label, cl.data.is_sol?'label sun':(cl.data.is_confirmed_set?'label confirmed':'label'));
-    if(cl.labelEl) cl.labelEl.style.display=need?'':'none';
+    cl.labelWanted=need;                 // single source of truth; updateScene honors it
+    if(cl.labelEl && !need) cl.labelEl.style.display='none';
   });
   applyFilter();
 }
@@ -606,16 +715,16 @@ function updateScene(){
         const s=projectToScreen(wp);
         if(!s.on||s.x<-40||s.x>innerWidth+40||s.y<-40||s.y>innerHeight+40) return;
         const el=getXhair();
-        el.className='xhair'+(b.kind==='star'?' star':'');
+        el.className='xhair'+(b.kind==='star'?' star':'')+(b===selBody?' sel':'');
         el.style.setProperty('--xc', b.rgb);
         el.style.left=s.x+'px'; el.style.top=s.y+'px'; el.style.display='';
         const lbl=el.firstElementChild.nextElementSibling; lbl.textContent=b.name;
         b._sx=s.x; b._sy=s.y; b._shown=true;
       });
     } else { cl.bodies.forEach(b=>b._shown=false); }
-    // cluster name label (map scale)
+    // cluster name label (map scale) — only when wanted (fixes all-labels toggle-off)
     if(cl.labelEl){
-      if(!active){ const s=projectToScreen(cl.node.position);
+      if(cl.labelWanted && !active){ const s=projectToScreen(cl.node.position);
         if(s.on){cl.labelEl.style.display='';cl.labelEl.style.left=s.x+'px';cl.labelEl.style.top=s.y+'px';}
         else cl.labelEl.style.display='none';
       } else cl.labelEl.style.display='none';
@@ -625,6 +734,7 @@ function updateScene(){
   // ring labels
   ringLabels.forEach(r=>{ const w=r.local.clone().add(ringGroup.position); const s=projectToScreen(w);
     r.el.style.display=(r.r<=distLimit&&s.on)?'':'none'; if(s.on){r.el.style.left=s.x+'px';r.el.style.top=s.y+'px';} });
+  updateStability();   // morph the simulated orbit (overrides normal orbit visibility)
 }
 
 /* ── keyboard fly (WASD + arrows) ─────────────────────────────────────── */

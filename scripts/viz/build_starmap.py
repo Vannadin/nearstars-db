@@ -20,6 +20,7 @@ import glob
 import math
 import os
 import sys
+import csv
 import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "pipeline"))
@@ -192,6 +193,31 @@ def load_manifest():
         for name, rec in man.items():
             phase[name] = 3 if rec.get("phase3") else (2 if rec.get("phase2") else 1)
     return phase
+
+
+_STABILITY = None
+
+
+def load_stability():
+    """Map planet body name → downsampled [[t_yr, a_au, e]…] from the REBOUND
+    stability-sim time series, for the in-viewer orbit-evolution animation."""
+    global _STABILITY
+    if _STABILITY is not None:
+        return _STABILITY
+    out = {}
+    res = os.path.join(ROOT, "phase3", "stability-sim", "results")
+    for f in glob.glob(os.path.join(res, "*_timeseries.csv")):
+        rows = {}
+        for r in csv.DictReader(open(f, encoding="utf-8")):
+            rows.setdefault(r["body"], []).append(
+                (float(r["t_yr"]), float(r["a_au"]), float(r["e"])))
+        for body, series in rows.items():
+            series.sort()
+            step = max(1, len(series) // 110)
+            out[body] = [[int(t), round(a, 4), round(e, 4)]
+                         for (t, a, e) in series[::step]]
+    _STABILITY = out
+    return out
 
 
 def load_records():
@@ -558,6 +584,9 @@ def build_cluster_obj(members):
                 epi = planet_epicycle(p, traj[m["name"]], spans[m["name"]])
                 if epi:
                     pp["epicycle"] = epi
+            stab = load_stability().get(p["name"])
+            if stab:
+                pp["stability"] = stab
             planets.append(pp)
 
     return {
