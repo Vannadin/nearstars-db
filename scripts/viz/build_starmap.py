@@ -459,6 +459,7 @@ def build_cluster_obj(members):
         "rep_radius": marker_radius(rep["luminosity_lsun"], rep["spec_class"]),
         "max_phase": max((m.get("phase", 1) for m in members), default=1),
         "epoch_jd": rep.get("epoch_jd"),
+        "vel": [round(v, 4) if v is not None else None for v in rep["vel_kms"]],
         "n_planets": len(planets),
         "components": components,
         "planets": planets,
@@ -491,7 +492,7 @@ def solar_system_cluster():
         "distance_pc": 0.0, "distance_ly": 0.0,
         "is_confirmed_set": False, "is_sol": True, "beyond_50ly": False,
         "rep_rgb": teff_to_rgb(5772), "rep_radius": marker_radius(1.0, "G"),
-        "max_phase": 3, "epoch_jd": 2451545.0,
+        "max_phase": 3, "epoch_jd": 2451545.0, "vel": [0.0, 0.0, 0.0],
         "n_planets": len(planets),
         "components": [{
             "name": "Sun", "spectype": "G2 V", "spec_class": "G",

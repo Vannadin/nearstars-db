@@ -95,6 +95,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
   <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
   <button class="btn" id="toggleOrbits"><span class="dot"></span><span data-i18n="orbits">궤도</span></button>
+  <button class="btn" id="toggleMotion"><span class="dot"></span><span data-i18n="motion">공간 운동</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
   <button class="btn" id="toggleLang">EN</button>
 </div>
@@ -110,6 +111,10 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="filter">
   <div class="row"><span class="lbl" data-i18n="distFilter">거리 필터</span><span class="val" id="distVal">50 ly</span></div>
   <input type="range" id="distSlider" min="4" max="800" value="50" step="1">
+  <div id="motionRow" style="display:none">
+    <div class="row" style="margin-top:11px"><span class="lbl" data-i18n="lookback">룩백 시간</span><span class="val" id="lbVal">50 kyr</span></div>
+    <input type="range" id="lbSlider" min="5" max="500" value="50" step="5">
+  </div>
 </div>
 
 <div id="info">
@@ -144,17 +149,18 @@ const SPEC = {O:'#b2c4ff',B:'#9eb8ff',A:'#cfdcff',F:'#f3f7c2',G:'#ffe28a',K:'#ff
 const AU_PER_LY = 63241.077;      // scene unit = 1 AU
 const R_SUN_AU  = 0.00465047;
 const R_EARTH_AU= 4.26352e-5;
+const KMS_TO_LYYR = 3.33670e-6;   // 1 km/s in light-years per year
 const DEG = Math.PI/180;
 
 /* ── i18n ─────────────────────────────────────────────────────────────── */
 const STR = {
-  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',beyond:'50광년 밖',
+  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
     ly:'광년',pc:'pc'},
-  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',beyond:'Beyond 50 ly',
+  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
@@ -341,11 +347,21 @@ DATA.clusters.forEach(c=>{
     node.add(stem);
   }
 
+  // space-motion trail (heliocentric linear drift through space; built on demand)
+  let motion=null;
+  if(!c.is_sol && c.vel && c.vel[0]!=null){
+    const vly=new THREE.Vector3(c.vel[0],c.vel[1],c.vel[2]).multiplyScalar(KMS_TO_LYYR); // ICRS ly/yr
+    const ml=new THREE.Line(new THREE.BufferGeometry(),
+      new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.85}));
+    ml.visible=false; ml.frustumCulled=false; node.add(ml);
+    motion={line:ml, vly, rgb:c.rep_rgb};
+  }
+
   let labelEl=null;
   if(c.is_sol) labelEl=mkLabel('Sol','label sun');
   else if(c.is_confirmed_set) labelEl=mkLabel(c.label,'label confirmed');
 
-  clusters.push({data:c,node,glow,sysScale,bodies,stem,labelEl,orbitsLines});
+  clusters.push({data:c,node,glow,sysScale,bodies,stem,labelEl,orbitsLines,motion});
 });
 
 /* legend */
@@ -454,19 +470,42 @@ function focusBody(b){
 }
 
 /* ── toggles / filter ─────────────────────────────────────────────────── */
-let showAllLabels=false, showStems=true, showOrbits=true, showFar=false, distLimit=50;
+let showAllLabels=false, showStems=true, showOrbits=true, showFar=false, distLimit=50,
+    showMotion=false, lookbackKyr=50;
 const btnLabels=document.getElementById('toggleLabels'), btnStems=document.getElementById('toggleStems'),
-      btnOrbits=document.getElementById('toggleOrbits'), btnFar=document.getElementById('toggleFar');
+      btnOrbits=document.getElementById('toggleOrbits'), btnFar=document.getElementById('toggleFar'),
+      btnMotion=document.getElementById('toggleMotion');
 btnLabels.onclick=()=>{showAllLabels=!showAllLabels;btnLabels.classList.toggle('on',showAllLabels);ensureLabels();};
 btnStems.onclick=()=>{showStems=!showStems;btnStems.classList.toggle('on',showStems);applyFilter();};
 btnOrbits.onclick=()=>{showOrbits=!showOrbits;btnOrbits.classList.toggle('on',showOrbits);};
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter();};
+btnMotion.onclick=()=>{ showMotion=!showMotion; btnMotion.classList.toggle('on',showMotion);
+  document.getElementById('motionRow').style.display=showMotion?'':'none';
+  if(showMotion) rebuildMotion(); applyFilter(); };
 document.getElementById('toggleLang').onclick=()=>{lang=lang==='ko'?'en':'ko';applyLang();};
 const slider=document.getElementById('distSlider');
 slider.oninput=()=>{distLimit=+slider.value;document.getElementById('distVal').textContent=distLimit+' ly';applyFilter();};
+const lb=document.getElementById('lbSlider');
+lb.oninput=()=>{lookbackKyr=+lb.value;document.getElementById('lbVal').textContent=lookbackKyr+' kyr';rebuildMotion();};
 btnOrbits.classList.add('on');
+
+/* space-motion trails: linear heliocentric drift over the look-back time */
+function rebuildMotion(){
+  const spanYr=lookbackKyr*1000, bg=new THREE.Color('#0a0d15');
+  clusters.forEach(cl=>{ const mo=cl.motion; if(!mo) return;
+    const dly=mo.vly.clone().multiplyScalar(spanYr);                 // ICRS ly over span
+    const end=new THREE.Vector3(-dly.x,-dly.z,-dly.y).multiplyScalar(U); // past endpoint (scene-AU)
+    const N=24,pos=[],col=[],c=new THREE.Color(mo.rgb);
+    for(let k=0;k<=N;k++){const f=k/N;                               // f:0 oldest → 1 now
+      pos.push(end.x*(1-f),end.y*(1-f),end.z*(1-f));
+      const cc=bg.clone().lerp(c,f); col.push(cc.r,cc.g,cc.b);}
+    const g=mo.line.geometry;
+    g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+    g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+  });
+}
 
 function clusterVisible(c){ return c.is_sol || (c.distance_ly<=distLimit && (showFar||!c.beyond_50ly) && phaseOn[c.max_phase]); }
 function applyFilter(){
@@ -474,6 +513,7 @@ function applyFilter(){
     const vis=clusterVisible(cl.data);
     cl.node.visible=vis;
     if(cl.stem) cl.stem.visible=vis&&showStems;
+    if(cl.motion) cl.motion.line.visible=vis&&showMotion;
     if(cl.labelEl) cl.labelEl.style.display=vis?'':'none';
   });
 }
