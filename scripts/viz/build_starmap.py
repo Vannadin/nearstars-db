@@ -283,78 +283,153 @@ def cluster(recs):
     return list(groups.values())
 
 
+def _mean_to_true(M, e):
+    E = M
+    for _ in range(12):
+        E = E - (E - e * math.sin(E) - M) / (1 - e * math.cos(E))
+    return 2 * math.atan2(math.sqrt(1 + e) * math.sin(E / 2),
+                          math.sqrt(1 - e) * math.cos(E / 2))
+
+
+def _orbit_point(a, e, i_deg, Om_deg, om_deg, nu):
+    """Keplerian orbit point → ICRS (x,y,z) AU (perifocal→ICRS 3-1-3 rotation).
+    Output ordering matches the viewer's M:(x,y,z)→(x,z,y) scene mapping."""
+    i = math.radians(i_deg or 0); Om = math.radians(Om_deg or 0); om = math.radians(om_deg or 0)
+    r = a * (1 - e * e) / (1 + e * math.cos(nu))
+    xp = r * math.cos(nu); yp = r * math.sin(nu)
+    X = xp * math.cos(om) - yp * math.sin(om)
+    Y = xp * math.sin(om) + yp * math.cos(om)
+    Y2 = Y * math.cos(i); Z2 = Y * math.sin(i)
+    X3 = X * math.cos(Om) - Y2 * math.sin(Om)
+    Y3 = X * math.sin(Om) + Y2 * math.cos(Om)
+    return (X3, Y3, Z2)
+
+
+def kepler_trajectory(orbit, epoch_jd):
+    """Two-body (= N-body for N=2) past trajectory of a secondary about its
+    primary from published orbital elements. Used when the catalog 6D state
+    doesn't give a bound pair but an orbital solution exists (e.g. 36 Oph A–B).
+    Returns [[x,y,z]_AU…] ICRS, index 0 = now, going back ~0.9 of an orbit."""
+    a = orbit.get("a_au")
+    if not a:
+        return None
+    e = orbit.get("e") or 0.0
+    P, T = orbit.get("P_yr"), orbit.get("T_jd")
+    M0 = 0.0
+    if T is not None and P and epoch_jd is not None:
+        M0 = 2 * math.pi * ((epoch_jd - T) / 365.25) / P
+    norm = lambda x: (x % (2 * math.pi) + 2 * math.pi) % (2 * math.pi)
+    K, sweep = 150, 2 * math.pi * 0.9
+    pts = []
+    for k in range(K + 1):                    # k=0 now, increasing k = older
+        nu = _mean_to_true(norm(M0 - sweep * (k / K)), e)
+        x, y, z = _orbit_point(a, e, orbit.get("i_deg"), orbit.get("Omega_deg"),
+                               orbit.get("omega_deg"), nu)
+        pts.append([round(x, 4), round(y, 4), round(z, 4)])
+    return pts
+
+
+def _accel(bs, G):
+    a = [[0.0, 0.0, 0.0] for _ in bs]
+    for i in range(len(bs)):
+        for j in range(len(bs)):
+            if i == j:
+                continue
+            dx = [bs[j]["p"][k] - bs[i]["p"][k] for k in range(3)]
+            r = math.sqrt(sum(c * c for c in dx)) + 1e-6
+            f = G * bs[j]["M"] / r ** 3
+            for k in range(3):
+                a[i][k] += f * dx[k]
+    return a
+
+
 def nbody_trajectories(members, rep):
-    """Backward N-body integration of a multi-star system from its stored 6D
-    state (real positions + velocities + masses). Returns {name: [[x,y,z]_AU…]}
-    in the ICRS frame relative to the rep's *current* position, or None if any
-    member lacks mass/velocity. Each body's path ends (index 0) at 'now'."""
+    """Backward N-body trajectories for a multi-star system from its stored 6D
+    state (real positions + velocities + masses). Components are split into
+    gravitationally **bound subgroups** (pairwise specific energy < 0); each
+    bound group of ≥2 is integrated in its own barycentric frame, so a loosely
+    attached member whose catalog velocity is unbound (e.g. 40 Eri A vs the B–C
+    pair) cannot contaminate the bound pair's orbit. Returns {name:[[x,y,z]_AU…]}
+    in the ICRS frame relative to the rep's current position (index 0 = now);
+    unbound singletons get no trajectory. None if no bound group exists."""
     G = 4 * math.pi ** 2            # AU^3 / (Msun yr^2)
     KMS_TO_AUYR = 0.21094502
-    bodies = []
+    dyn = []
     for m in members:
         if m["mass_msun"] is None or any(v is None for v in m["vel_kms"]):
-            return None
-        bodies.append({
+            continue
+        dyn.append({
             "name": m["name"], "M": m["mass_msun"],
             "p": [c * AU_PER_LY for c in m["pos_ly"]],          # AU
             "v": [c * KMS_TO_AUYR for c in m["vel_kms"]],       # AU/yr
         })
-    Mtot = sum(b["M"] for b in bodies)
-    com = [sum(b["M"] * b["p"][k] for b in bodies) / Mtot for k in range(3)]
-    cov = [sum(b["M"] * b["v"][k] for b in bodies) / Mtot for k in range(3)]
-    for b in bodies:
-        b["p"] = [b["p"][k] - com[k] for k in range(3)]
-        b["v"] = [b["v"][k] - cov[k] for k in range(3)]
-    rep0 = list(next(b for b in bodies if b["name"] == rep["name"])["p"])
+    if len(dyn) < 2:
+        return None
 
-    sep_min = 1e18
-    for i in range(len(bodies)):
-        for j in range(i + 1, len(bodies)):
-            d = math.dist(bodies[i]["p"], bodies[j]["p"])
-            sep_min = min(sep_min, d)
-    P_est = math.sqrt(max(sep_min, 1e-3) ** 3 / max(Mtot, 1e-3))  # years (Kepler)
-    span = min(max(1.4 * P_est, 15.0), 4000.0)
-    N = 4000
-    dt = -span / N                  # integrate backward
-    rec_every = max(1, N // 150)
+    # bound graph via pairwise two-body specific energy
+    n = len(dyn)
+    par = list(range(n))
 
-    def accel(bs):
-        a = [[0.0, 0.0, 0.0] for _ in bs]
-        for i in range(len(bs)):
-            for j in range(len(bs)):
-                if i == j:
-                    continue
-                dx = [bs[j]["p"][k] - bs[i]["p"][k] for k in range(3)]
-                r = math.sqrt(sum(c * c for c in dx)) + 1e-6
-                f = G * bs[j]["M"] / r ** 3
+    def find(i):
+        while par[i] != i:
+            par[i] = par[par[i]]
+            i = par[i]
+        return i
+
+    for i in range(n):
+        for j in range(i + 1, n):
+            dr = [dyn[i]["p"][k] - dyn[j]["p"][k] for k in range(3)]
+            dv = [dyn[i]["v"][k] - dyn[j]["v"][k] for k in range(3)]
+            r = math.sqrt(sum(c * c for c in dr))
+            v2 = sum(c * c for c in dv)
+            E = 0.5 * v2 - G * (dyn[i]["M"] + dyn[j]["M"]) / max(r, 1e-6)
+            if E < 0:
+                par[find(i)] = find(j)
+    groups = {}
+    for i in range(n):
+        groups.setdefault(find(i), []).append(i)
+
+    repos = [c * AU_PER_LY for c in rep["pos_ly"]]   # rep current pos (AU)
+    traj = {}
+    for g in groups.values():
+        if len(g) < 2:
+            continue                                  # unbound singleton → static
+        grp = [dyn[i] for i in g]
+        Mtot = sum(b["M"] for b in grp)
+        com = [sum(b["M"] * b["p"][k] for b in grp) / Mtot for k in range(3)]
+        cov = [sum(b["M"] * b["v"][k] for b in grp) / Mtot for k in range(3)]
+        P = [{"name": b["name"], "M": b["M"],
+              "p": [b["p"][k] - com[k] for k in range(3)],
+              "v": [b["v"][k] - cov[k] for k in range(3)]} for b in grp]
+        const = [com[k] - repos[k] for k in range(3)]  # re-anchor to rep current
+        sep_min = min(math.dist(P[a]["p"], P[b]["p"])
+                      for a in range(len(P)) for b in range(a + 1, len(P)))
+        P_est = math.sqrt(max(sep_min, 1e-3) ** 3 / max(Mtot, 1e-3))   # yr (Kepler)
+        span = min(max(1.4 * P_est, 15.0), 20000.0)
+        N = 4000
+        dt = -span / N
+        rec = max(1, N // 150)
+        for b in P:
+            traj[b["name"]] = []
+        acc = _accel(P, G)
+        for step in range(N + 1):
+            if step % rec == 0:
+                for b in P:
+                    traj[b["name"]].append([round(b["p"][k] + const[k], 4) for k in range(3)])
+            for bi, b in enumerate(P):
                 for k in range(3):
-                    a[i][k] += f * dx[k]
-        return a
-
-    traj = {b["name"]: [] for b in bodies}
-    acc = accel(bodies)
-    for step in range(N + 1):
-        if step % rec_every == 0:
-            for b in bodies:
-                traj[b["name"]].append([round(b["p"][k] - rep0[k], 4) for k in range(3)])
-        for bi, b in enumerate(bodies):           # velocity Verlet
-            for k in range(3):
-                b["p"][k] += b["v"][k] * dt + 0.5 * acc[bi][k] * dt * dt
-        acc2 = accel(bodies)
-        for bi, b in enumerate(bodies):
-            for k in range(3):
-                b["v"][k] += 0.5 * (acc[bi][k] + acc2[bi][k]) * dt
-        acc = acc2
-
-    # reject unphysical runs: catalog space-velocities aren't always clean
-    # orbital states, so a member can come out unbound (e.g. 40 Eri A vs BC).
-    # If any body wanders > 5× the tightest separation, the velocities don't
-    # describe a bound orbit → fall back to the Keplerian element draw.
-    for name, pts in traj.items():
-        p0 = pts[0]
-        if any(math.dist(p, p0) > 5 * sep_min for p in pts):
-            return None
-    return traj
+                    b["p"][k] += b["v"][k] * dt + 0.5 * acc[bi][k] * dt * dt
+            acc2 = _accel(P, G)
+            for bi, b in enumerate(P):
+                for k in range(3):
+                    b["v"][k] += 0.5 * (acc[bi][k] + acc2[bi][k]) * dt
+            acc = acc2
+        # light safety: drop a body that still wanders absurdly (chaotic triple)
+        for b in P:
+            p0 = traj[b["name"]][0]
+            if any(math.dist(p, p0) > 8 * sep_min for p in traj[b["name"]]):
+                del traj[b["name"]]
+    return traj or None
 
 
 def _strip_component(name):
@@ -432,10 +507,13 @@ def build_cluster_obj(members):
             "radius_rsun": m["radius_rsun"] or _MS_RADIUS_PROXY.get(m["spec_class"], 0.3),
             "radius_measured": m["radius_rsun"] is not None,
             "distance_pc": round(dist_pc, 4) if dist_pc else None,
+            # N-body trajectory where the catalog state gives a bound pair;
+            # else a 2-body Keplerian path from published elements; else none.
             "is_primary": is_primary,
             "phase": m.get("phase", 1),
             "offset_au": off_au, "placement": kind, "orbit": orbit,
-            "trajectory": (traj or {}).get(m["name"]),
+            "trajectory": (traj or {}).get(m["name"])
+            or (kepler_trajectory(orbit, rep.get("epoch_jd")) if orbit else None),
         })
         for p in m["planets"]:
             pp = dict(p)
