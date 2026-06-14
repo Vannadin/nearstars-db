@@ -63,6 +63,9 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 .comp:first-of-type,.pl:first-of-type{border-top:none}
 .comp .pill{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:1px 8px;border-radius:var(--r-chip);color:#06070a;flex-shrink:0}
 .comp .nm{font-size:13px;color:var(--fg1)} .pl .nm{font-size:12.5px;color:var(--fg2)}
+.comp.clickable{cursor:pointer;margin:0 -6px;padding-left:6px;padding-right:6px;border-radius:7px;transition:.14s}
+.comp.clickable:hover{background:var(--surf1)} .comp.clickable:hover .nm{color:var(--accent)}
+.comp.clickable .nm::after{content:' →';color:var(--fg4);font-size:11px}
 .comp .meta,.pl .meta{font-family:var(--mono);font-size:10.5px;color:var(--fg4);margin-left:auto;text-align:right}
 .pl .swatch{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 #info .enter{margin-top:16px;width:100%;justify-content:center}
@@ -104,6 +107,13 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2)}
 #stabPanel .srd .warn{color:#ff5a3c;font-weight:600}
 .hidden{display:none!important}
+#zoomctl{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:16;display:flex;flex-direction:column;
+  align-items:center;gap:7px;background:var(--pop);border:1px solid var(--bd1);border-radius:999px;
+  padding:10px 7px;backdrop-filter:blur(14px);box-shadow:0 10px 36px -14px rgba(0,0,0,.6)}
+#zoomctl .zb{width:22px;height:22px;border:none;background:var(--surf1);color:var(--fg2);border-radius:50%;
+  font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+#zoomctl .zb:hover{background:var(--surf2);color:var(--fg1)}
+#zoomSlider{writing-mode:vertical-lr;direction:rtl;width:6px;height:150px;accent-color:var(--accent);cursor:pointer}
 #stage,canvas{touch-action:none} /* let OrbitControls own pinch/drag, not the browser */
 /* ── mobile / touch layout ─────────────────────────────────────────────── */
 @media (max-width:640px){
@@ -184,6 +194,12 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 </div>
 
 <div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스</div>
+
+<div id="zoomctl">
+  <button class="zb" id="zoomIn" title="Zoom in">+</button>
+  <input type="range" id="zoomSlider" min="0" max="1000" value="500">
+  <button class="zb" id="zoomOut" title="Zoom out">−</button>
+</div>
 
 <script type="application/json" id="starmap-data">/*__DATA__*/</script>
 
@@ -689,12 +705,18 @@ function renderInfo(c){
   document.getElementById('infoName').textContent=(lang==='ko'&&c.label_ko)?c.label_ko:c.label;
   document.getElementById('infoDist').textContent=c.is_sol?'—':`${fmt(c.distance_ly,2)} ${t('ly')} · ${fmt(c.distance_pc,2)} ${t('pc')}`;
   const cc=document.getElementById('infoComps');cc.innerHTML='';
+  const cl=clusters.find(x=>x.data===c);
   c.components.forEach(m=>{
     const row=document.createElement('div');row.className='comp';
     const pill=document.createElement('span');pill.className='pill';pill.textContent=m.spec_class;pill.style.background=SPEC[m.spec_class]||SPEC.X;
     const nm=document.createElement('span');nm.className='nm';nm.textContent=m.name;
     const meta=document.createElement('span');meta.className='meta';meta.textContent=(m.spectype||'—')+(m.teff_k?(' · '+m.teff_k+'K'):'');
-    row.append(pill,nm,meta);cc.appendChild(row);
+    row.append(pill,nm,meta);
+    // click a component → fly to that star (reaches wide members like Proxima Cen,
+    // which sit thousands of AU from the primary and can't be double-tapped at map scale)
+    const body=cl&&cl.bodies.find(b=>b.kind==='star'&&b.name===m.name);
+    if(body){ row.classList.add('clickable'); row.title=t('flyHere'); row.onclick=()=>flyToBody(body); }
+    cc.appendChild(row);
   });
   const ps=document.getElementById('infoPls');ps.innerHTML='';
   document.getElementById('infoPlSec').style.display=c.planets.length?'block':'none';
@@ -708,7 +730,6 @@ function renderInfo(c){
   });
   document.getElementById('infoEnter').style.display=c.planets.length?'flex':'none';
   document.getElementById('infoNoFly').style.display=c.planets.length?'none':'block';
-  const cl=clusters.find(x=>x.data===c);
   document.getElementById('infoStab').style.display=(cl&&cl.stabPlanets.length)?'flex':'none';
 }
 
@@ -837,6 +858,34 @@ function focusBody(b){
   const dir=new THREE.Vector3(0.4,0.45,1).normalize();
   fly={from:camera.position.clone(),to:dir.multiplyScalar(dist),tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
 }
+// fly to a specific component star, even one thousands of AU from the primary
+// (e.g. Proxima Cen in the Alpha Centauri cluster). Rebase onto it, then start a
+// controlled short zoom (teleport just outside) so the jump from map scale is clean.
+function flyToBody(b){
+  selBody=b;
+  b.obj.getWorldPosition(wp); const ws=wp.clone();
+  originLy.add(sceneToLyDelta(ws)); recomputeNodes();        // origin → body (now at ~0)
+  const dist=Math.max((b.r||R_EARTH_AU)*120, 5e-4);
+  const dir=new THREE.Vector3(0.4,0.45,1).normalize();
+  camera.position.copy(dir).multiplyScalar(dist*9); controls.target.set(0,0,0); // start just outside
+  fly={from:camera.position.clone(),to:dir.clone().multiplyScalar(dist),tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
+}
+
+/* ── zoom slider (log distance) — top = zoomed in, bottom = zoomed out ─── */
+const zoomSlider=document.getElementById('zoomSlider');
+const _LZMIN=Math.log(controls.minDistance), _LZMAX=Math.log(controls.maxDistance);
+const distToZoom=d=>Math.max(0,Math.min(1000,Math.round((1-(Math.log(d)-_LZMIN)/(_LZMAX-_LZMIN))*1000)));
+const zoomToDist=v=>Math.exp(_LZMIN+(1-v/1000)*(_LZMAX-_LZMIN));
+function applyZoom(d){
+  fly=null;                                                  // cancel any fly-in
+  const dir=camera.position.clone().sub(controls.target);
+  if(dir.lengthSq()<1e-12) dir.set(0,0,1);
+  dir.normalize().multiplyScalar(Math.max(controls.minDistance,Math.min(controls.maxDistance,d)));
+  camera.position.copy(controls.target).add(dir); controls.update();
+}
+zoomSlider.oninput=()=>applyZoom(zoomToDist(+zoomSlider.value));
+document.getElementById('zoomIn').onclick =()=>applyZoom(controls.getDistance()*0.6);
+document.getElementById('zoomOut').onclick=()=>applyZoom(controls.getDistance()/0.6);
 
 /* ── toggles / filter ─────────────────────────────────────────────────── */
 let showAllLabels=false, showStems=true, showOrbits=true, showFar=false, distLimit=50,
@@ -1006,6 +1055,7 @@ function tick(){
     if(fly.k>=1) fly=null;
   }
   controls.update();
+  if(document.activeElement!==zoomSlider) zoomSlider.value=distToZoom(controls.getDistance());
   updateScene();
   renderer.render(scene,camera);
 }
