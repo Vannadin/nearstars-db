@@ -815,6 +815,9 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
 }
 function openStability(c){
   const cl=clusters.find(x=>x.data===c); if(!cl||!cl.stabPlanets.length) return;
+  // hide any currently-animating orbit first — re-opening for a different host
+  // (Alpha Cen A b ↔ Proxima) otherwise leaves the previous group's meshes drawn.
+  if(stabActive) stabRecs.forEach(r=>{ r.animLine.visible=false; r.animMesh.visible=false; });
   // A cluster can host planets around widely separated stars (e.g. Alpha Centauri
   // A b and Proxima's planets ~13,900 AU apart). Group by host star and show one
   // host's system at a time — the one currently selected, else nearest the camera.
@@ -978,7 +981,7 @@ function rebuildMotion(){
   });
 }
 
-function clusterVisible(c){ return c.is_sol || (c.distance_ly<=distLimit && (showFar||!c.beyond_50ly) && phaseOn[c.max_phase]); }
+function clusterVisible(c){ return c.is_sol || (c.distance_ly!=null && c.distance_ly<=distLimit && (showFar||!c.beyond_50ly) && phaseOn[c.max_phase]); }
 function applyFilter(){
   clusters.forEach(cl=>{
     const vis=clusterVisible(cl.data);

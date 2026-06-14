@@ -115,7 +115,7 @@
       "derived": {
         "semi_major_axis_m": 3112630536.400155,
         "eccentricity": 0.207,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 234.0,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -131,7 +131,7 @@
         "orbital": {
           "semi_major_axis_au": 0.02080665,
           "eccentricity": 0.207,
-          "inclination_deg": 53.06,
+          "inclination_deg": 59.0,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 234.0,
           "epoch_jd": 2450602.093,
@@ -181,7 +181,7 @@
       "derived": {
         "semi_major_axis_m": 19386388064.013,
         "eccentricity": 0.25591,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 48.76,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -197,7 +197,7 @@
         "orbital": {
           "semi_major_axis_au": 0.12959,
           "eccentricity": 0.25591,
-          "inclination_deg": 53.06,
+          "inclination_deg": 59.0,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 48.76,
           "epoch_jd": 2450602.093,
@@ -247,7 +247,7 @@
       "derived": {
         "semi_major_axis_m": 31163779630.6119,
         "eccentricity": 0.0324,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 50.3,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -263,7 +263,7 @@
         "orbital": {
           "semi_major_axis_au": 0.208317,
           "eccentricity": 0.0324,
-          "inclination_deg": 53.06,
+          "inclination_deg": 59.0,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 50.3,
           "epoch_jd": 2450602.093,
@@ -313,7 +313,7 @@
       "derived": {
         "semi_major_axis_m": 50010568175.009995,
         "eccentricity": 0.055,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 239.0,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -329,7 +329,7 @@
         "orbital": {
           "semi_major_axis_au": 0.3343,
           "eccentricity": 0.055,
-          "inclination_deg": 53.06,
+          "inclination_deg": 59.0,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 239.0,
           "epoch_jd": 2450602.093,

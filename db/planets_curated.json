@@ -3845,7 +3845,7 @@
       "orbital": {
         "semi_major_axis_au": 0.208317,
         "eccentricity": 0.0324,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 50.3,
         "epoch_jd": 2450602.093,
@@ -3868,7 +3868,7 @@
       "orbital": {
         "semi_major_axis_au": 0.12959,
         "eccentricity": 0.25591,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 48.76,
         "epoch_jd": 2450602.093,
@@ -3891,7 +3891,7 @@
       "orbital": {
         "semi_major_axis_au": 0.02080665,
         "eccentricity": 0.207,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 234.0,
         "epoch_jd": 2450602.093,
@@ -3914,7 +3914,7 @@
       "orbital": {
         "semi_major_axis_au": 0.3343,
         "eccentricity": 0.055,
-        "inclination_deg": 53.06,
+        "inclination_deg": 59.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 239.0,
         "epoch_jd": 2450602.093,
@@ -4857,7 +4857,7 @@
       "pl_name": "eps Eri b",
       "orbital": {
         "semi_major_axis_au": 3.53,
-        "eccentricity": 0.07,
+        "eccentricity": 0.06,
         "inclination_deg": 40.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": -19.15,
@@ -4869,7 +4869,7 @@
       },
       "physical": {
         "true_mass_mearth": 317.8,
-        "uncertainty_mearth": 38.13940884,
+        "uncertainty_mearth": 31.8,
         "mass_type": "true mass",
         "source": "Thompson et al. 2025 (arXiv:2502.20561)",
         "bibcode": null,
