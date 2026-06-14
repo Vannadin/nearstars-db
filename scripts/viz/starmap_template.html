@@ -449,19 +449,25 @@ DATA.clusters.forEach(c=>{
   if(c.disks && c.disks.length){
     const main=c.disks.reduce((x,y)=>(y.outer_au>x.outer_au?y:x));
     dplane={inc:main.inc_deg||0, pa:main.pa_deg||0};
-  } else {
-    // no disk: borrow the mean plane of any planets here that DO have a measured
-    // inclination. Transiting + RV multi-planet systems (e.g. HD 219134 b/c transit
-    // at i≈86°, d–h are RV with i unknown) are near-coplanar, so the RV siblings
-    // should share the transit plane instead of defaulting to face-on — which left
-    // them rendered ~90° from their transiting siblings.
-    const meas=c.planets.filter(p=>p.i_deg!=null);
+  }
+  // Fallback plane for a planet whose i/Ω are unmeasured (RV-only), in order:
+  //   1) the mean plane of its OWN HOST's planets that DO have a measured i —
+  //      a transiting + RV system (e.g. HD 219134 b/c transit at i≈86°, d–h are
+  //      RV) is near-coplanar, so the RV siblings share the transit plane instead
+  //      of defaulting to face-on (which left them ~90° off their siblings);
+  //   2) else the disk plane (coplanar with the debris disk);
+  //   3) else face-on.
+  // Per-HOST (not cluster-wide) so a wide companion's planets — e.g. 55 Cnc B b/c,
+  // ~1000 AU from A — don't borrow the primary's unrelated transit plane.
+  const hostPlane=hostName=>{
+    const meas=c.planets.filter(p=>p.host_star===hostName && p.i_deg!=null);
     if(meas.length){
       const mi=meas.reduce((s,p)=>s+p.i_deg,0)/meas.length;
       const mO=meas.filter(p=>p.Omega_deg!=null);
-      dplane={inc:mi, pa: mO.length? mO.reduce((s,p)=>s+p.Omega_deg,0)/mO.length : null};
+      return {inc:mi, pa: mO.length? mO.reduce((s,p)=>s+p.Omega_deg,0)/mO.length : (dplane?dplane.pa:null)};
     }
-  }
+    return dplane;
+  };
 
   // components (real-size stars). Close pairs follow their measured
   // gravitational (Keplerian) relative orbit about the primary; wide pairs
@@ -514,6 +520,7 @@ DATA.clusters.forEach(c=>{
     bodies.push({kind:'star',name:m.name,obj:cg,rgb:m.rgb,r:rr,glow:sg});
 
     // planets hosted by this component
+    const hpl=hostPlane(m.name);   // fallback plane for this host's RV (i-unknown) planets
     c.planets.filter(p=>p.host_star===m.name && p.a_au).forEach((p,pi)=>{
       const a=p.a_au, e=(p.e!=null?p.e:0);
       sysScale=Math.max(sysScale, cpos.length()+a*(1+e));
@@ -538,8 +545,8 @@ DATA.clusters.forEach(c=>{
       // local frame (no external line of sight). Unmeasured i/Ω fall back to the
       // system's disk plane (coplanar assumption) so orbits aren't left face-on
       // beside an inclined disk. pb=null → fall back to orbitPoint.
-      const ri = p.i_deg!=null?p.i_deg:(dplane?dplane.inc:null);
-      const rOm = p.Omega_deg!=null?p.Omega_deg:(dplane?dplane.pa:null);
+      const ri = p.i_deg!=null?p.i_deg:(hpl?hpl.inc:null);
+      const rOm = p.Omega_deg!=null?p.Omega_deg:(hpl?hpl.pa:null);
       const pb=c.is_sol?null:skyBasis(c.pos,ri,rOm,p.omega_deg);
       const opt=nu=>pb?ellipsePoint(pb,a,e,nu):orbitPoint(a,e,ri,rOm,p.omega_deg,nu);
       const seg=220,pts=[];
