@@ -48,3 +48,18 @@ Builder: `scripts/viz/build_starmap.py` → `docs/starmap.html` (self-contained,
 - [x] drop lines
 - [x] continuous-zoom rewrite (real size, crosshairs, Keplerian orbits, multi-star)
 - [ ] docs/index.html link — SKIPPED (index.html is a 2442-line generated app; starmap.html is directly reachable)
+
+## v3 — in-flight improvements (2026-06-15)
+- [x] **1. HD 219134 b/c ~perpendicular to siblings.** Fixed: no-disk fallback plane =
+      mean plane of the cluster's measured-i planets (template ~line 446).
+- [~] **2. AU Mic stability diverges.** Diagnosed: b,d → e≈9.2/16.9 (unbound); d ~7 mutual
+      Hill radii from b, ejects on the FIRST snapshot → likely real over-packing of the
+      speculative 4-planet (b,c+cand d,e) config (energy err 0.5%). Finer-dt re-run to
+      confirm real vs numerical: STAB_DT_DIV=4 TRACE 1 Myr running (run.py knob). Barnard
+      dt/4 running in parallel as the matched diagnostic.
+- [x] **3. Apoapsis/periapsis + inclination charts** — drawStabChart(): q–Q band + inc vs t,
+      cursor tracks slider; 📈 toggle in the stability panel.
+- [x] **4. Focus planet from right-panel row** — planet rows wired to flyToBody().
+- [x] **5. #info covers #zoomctl** — zoomctl shifts left (desktop) / up (mobile) when info open.
+- [x] Rebuilt; check.sh green (gate-5 known false positive only); JS syntax OK.
+- [ ] When dt/4 runs finish: pick up CSVs, rebuild viewer, commit results.

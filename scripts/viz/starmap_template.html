@@ -63,9 +63,10 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 .comp:first-of-type,.pl:first-of-type{border-top:none}
 .comp .pill{font-family:var(--mono);font-size:10.5px;font-weight:600;padding:1px 8px;border-radius:var(--r-chip);color:#06070a;flex-shrink:0}
 .comp .nm{font-size:13px;color:var(--fg1)} .pl .nm{font-size:12.5px;color:var(--fg2)}
-.comp.clickable{cursor:pointer;margin:0 -6px;padding-left:6px;padding-right:6px;border-radius:7px;transition:.14s}
-.comp.clickable:hover{background:var(--surf1)} .comp.clickable:hover .nm{color:var(--accent)}
-.comp.clickable .nm::after{content:' →';color:var(--fg4);font-size:11px}
+.comp.clickable,.pl.clickable{cursor:pointer;margin:0 -6px;padding-left:6px;padding-right:6px;border-radius:7px;transition:.14s}
+.comp.clickable:hover,.pl.clickable:hover{background:var(--surf1)}
+.comp.clickable:hover .nm,.pl.clickable:hover .nm{color:var(--accent)}
+.comp.clickable .nm::after,.pl.clickable .nm::after{content:' →';color:var(--fg4);font-size:11px}
 .comp .meta,.pl .meta{font-family:var(--mono);font-size:10.5px;color:var(--fg4);margin-left:auto;text-align:right}
 .pl .swatch{width:9px;height:9px;border-radius:50%;flex-shrink:0}
 .p3{margin-left:8px;flex-shrink:0;font-family:var(--mono);font-size:9.5px;color:var(--accent);text-decoration:none;
@@ -109,6 +110,9 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabSlider{flex:1;accent-color:var(--accent);cursor:pointer}
 #stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2)}
 #stabPanel .srd .warn{color:#ff5a3c;font-weight:600}
+#stabChartBtn{font-size:13px;background:var(--surf1);border:1px solid var(--bd1);border-radius:6px;padding:4px 7px;cursor:pointer;flex-shrink:0;line-height:1}
+#stabChartBtn.on{border-color:var(--accent-glow);background:rgba(122,168,255,.12)}
+#stabChart{display:block;width:100%;margin-top:10px;border-top:1px solid var(--bd1);padding-top:9px}
 .hidden{display:none!important}
 #zoomctl{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:16;display:flex;flex-direction:column;
   align-items:center;gap:7px;background:var(--pop);border:1px solid var(--bd1);border-radius:999px;
@@ -117,6 +121,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 #zoomctl .zb:hover{background:var(--surf2);color:var(--fg1)}
 #zoomSlider{writing-mode:vertical-lr;direction:rtl;width:6px;height:150px;accent-color:var(--accent);cursor:pointer}
+#info.show ~ #zoomctl{right:350px} /* keep the zoom dock clear of the open detail panel (#info is 320px @ right:18px) */
 #stage,canvas{touch-action:none} /* let OrbitControls own pinch/drag, not the browser */
 /* ── mobile / touch layout ─────────────────────────────────────────────── */
 @media (max-width:640px){
@@ -139,6 +144,8 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
     padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
   #stabPanel.show{transform:none}
   #hint{bottom:auto;top:56px;font-size:10.5px;max-width:92vw;white-space:normal;line-height:1.4}
+  /* on mobile #info is a bottom sheet — lift the zoom dock above it, back to the right edge */
+  #info.show ~ #zoomctl{right:10px;top:auto;bottom:calc(64% + 14px);transform:none}
 }
 @keyframes sheet{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 </style>
@@ -192,8 +199,9 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div class="sx" id="stabClose">×</div>
   <div class="st" id="stabTitle"></div>
   <div class="svar"><button id="stabVariant" style="display:none"></button><span id="stabNote"></span></div>
-  <div class="sctl"><button id="stabPlay">⏸</button><input type="range" id="stabSlider" min="0" max="100" value="0" step="1"></div>
+  <div class="sctl"><button id="stabPlay">⏸</button><input type="range" id="stabSlider" min="0" max="100" value="0" step="1"><button id="stabChartBtn" title="charts">📈</button></div>
   <div class="srd" id="stabReadout"></div>
+  <canvas id="stabChart" style="display:none"></canvas>
 </div>
 
 <div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스</div>
@@ -441,6 +449,18 @@ DATA.clusters.forEach(c=>{
   if(c.disks && c.disks.length){
     const main=c.disks.reduce((x,y)=>(y.outer_au>x.outer_au?y:x));
     dplane={inc:main.inc_deg||0, pa:main.pa_deg||0};
+  } else {
+    // no disk: borrow the mean plane of any planets here that DO have a measured
+    // inclination. Transiting + RV multi-planet systems (e.g. HD 219134 b/c transit
+    // at i≈86°, d–h are RV with i unknown) are near-coplanar, so the RV siblings
+    // should share the transit plane instead of defaulting to face-on — which left
+    // them rendered ~90° from their transiting siblings.
+    const meas=c.planets.filter(p=>p.i_deg!=null);
+    if(meas.length){
+      const mi=meas.reduce((s,p)=>s+p.i_deg,0)/meas.length;
+      const mO=meas.filter(p=>p.Omega_deg!=null);
+      dplane={inc:mi, pa: mO.length? mO.reduce((s,p)=>s+p.Omega_deg,0)/mO.length : null};
+    }
   }
 
   // components (real-size stars). Close pairs follow their measured
@@ -761,6 +781,9 @@ function renderInfo(c){
     if(p.radius_rearth)b.push(fmt(p.radius_rearth,1)+' R⊕'); if(p.a_au)b.push(fmt(p.a_au,2)+' AU');
     meta.textContent=b.join(' · ');row.append(sw,nm,meta);
     if(p.phase3) row.append(mkP3(p.phase3));
+    // click a planet row → fly to that planet (rebases onto it like a component)
+    const pbody=cl&&cl.bodies.find(x=>x.kind==='planet'&&x.name===p.name);
+    if(pbody){ row.classList.add('clickable'); row.title=t('flyHere'); row.onclick=()=>flyToBody(pbody); }
     ps.appendChild(row);
   });
   document.getElementById('infoEnter').style.display=c.planets.length?'flex':'none';
@@ -800,7 +823,9 @@ let stabActive=false, stabRecs=[], stabIdx=0, stabPlaying=true, stabN=0, stabVar
 const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getElementById('stabPlay'),
       stabSlider=document.getElementById('stabSlider'), stabReadout=document.getElementById('stabReadout'),
       stabTitleEl=document.getElementById('stabTitle'), stabVarBtn=document.getElementById('stabVariant'),
-      stabNoteEl=document.getElementById('stabNote');
+      stabNoteEl=document.getElementById('stabNote'),
+      stabChart=document.getElementById('stabChart'), stabChartBtn=document.getElementById('stabChartBtn');
+let stabShowChart=false;
 const recData=r=>r.variants[Math.min(stabVar,r.variants.length-1)].data;  // current variant's series
 function stabRefresh(){   // apply the current variant: title chip, note, length, framing
   const nv=Math.max(...stabRecs.map(r=>r.variants.length));
@@ -855,7 +880,9 @@ document.getElementById('stabClose').onclick=closeStability;
 stabPlayBtn.onclick=()=>{ stabPlaying=!stabPlaying; stabPlayBtn.textContent=stabPlaying?'⏸':'▶'; };
 stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; stabPlaying=false; stabPlayBtn.textContent='▶'; };
 stabVarBtn.onclick=()=>{ const nv=Math.max(...stabRecs.map(r=>r.variants.length));
-  stabVar=(stabVar+1)%nv; stabIdx=0; stabRefresh(); };
+  stabVar=(stabVar+1)%nv; stabIdx=0; stabRefresh(); if(stabShowChart) drawStabChart(); };
+stabChartBtn.onclick=()=>{ stabShowChart=!stabShowChart; stabChart.style.display=stabShowChart?'block':'none';
+  stabChartBtn.classList.toggle('on',stabShowChart); if(stabShowChart) drawStabChart(); };
 
 const _bgC=new THREE.Color('#0a0d15');
 const _lerp=(a,b,t)=>a+(b-a)*t;
@@ -901,6 +928,68 @@ function updateStability(){
   const q=maxA*(1-maxE), nm=stabRecs.length>1?(maxName+' '):'';
   stabReadout.innerHTML=`t = ${Math.round(tt).toLocaleString()} ${t('yr')} · ${nm}e = ${maxE.toFixed(3)} · q = ${q.toFixed(2)} AU`
     + (q<0.08?` · <span class="warn">⚠ ${t('disrupt')}</span>`:'');
+  if(stabShowChart) drawStabChart(tt);
+}
+
+/* periapsis/apoapsis + inclination vs time, straight from the integration
+   snapshots (d=[t,a,e,inc,Ω,ω,f]). Two stacked panels share the time axis; a
+   cursor marks the current animation epoch. Ejections (e≥1) clip at the top of
+   the radius panel — the runaway band is the instability signal. */
+function drawStabChart(curT){
+  if(!stabActive||!stabShowChart||!stabRecs.length) return;
+  const recs=stabRecs.map(r=>({d:recData(r),rgb:r.rgb||'#7aa8ff',name:r.name}));
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=158;
+  if(stabChart.width!==Math.round(W*dpr)){ stabChart.width=Math.round(W*dpr); stabChart.height=Math.round(H*dpr); stabChart.style.height=H+'px'; }
+  const g=stabChart.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+  const padL=36,padR=10,padT=14,labT=12,gap=22, ph=(H-padT-gap-labT-12)/2;
+  const y0r=padT, y0i=padT+ph+gap;
+  const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0]));
+  // radius scale: cap at 3.2× the largest starting apoapsis so a stable system
+  // fills the panel; ejected planets shoot past the cap (clipped).
+  let initQ=0; recs.forEach(o=>{ initQ=Math.max(initQ,o.d[0][1]*(1+o.d[0][2])); });
+  let maxQ=0; recs.forEach(o=>o.d.forEach(s=>{ const QQ=s[1]*(1+Math.min(s[2],3)); if(isFinite(QQ)&&QQ>0)maxQ=Math.max(maxQ,QQ); }));
+  const yMaxR=Math.min(maxQ,(initQ||1)*3.2)||1;
+  let maxI=1; recs.forEach(o=>o.d.forEach(s=>{ if(isFinite(s[3]))maxI=Math.max(maxI,s[3]); }));
+  maxI=Math.max(5,Math.ceil(maxI/5)*5);
+  const xT=t=>padL+(t/tMax)*(W-padL-padR);
+  const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
+  const yI=v=>y0i+ph-(Math.min(v,maxI)/maxI)*ph;
+  const axis='#5a6580', txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
+  g.font='9px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
+  // frames + axis labels
+  [[y0r,'q–Q (AU)',yMaxR],[y0i,'i (°)',maxI]].forEach(([y0,lbl,vmax])=>{
+    g.strokeStyle='rgba(120,135,165,.25)'; g.lineWidth=1;
+    g.strokeRect(padL,y0,W-padL-padR,ph);
+    g.fillStyle=txt; g.textAlign='right';
+    g.fillText(vmax.toFixed(vmax<10?1:0),padL-4,y0+5);
+    g.fillText('0',padL-4,y0+ph-5);
+    g.save(); g.translate(10,y0+ph/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText(lbl,0,0); g.restore();
+  });
+  g.textAlign='center'; g.fillStyle=txt;
+  const tlab=tMax>=1e6?(tMax/1e6)+' Myr':tMax>=1e3?Math.round(tMax/1e3)+' kyr':Math.round(tMax)+' yr';
+  g.fillText('0',padL,y0i+ph+9); g.fillText(tlab,W-padR,y0i+ph+9);
+  // series
+  const line=(o,acc,yfn,w,al)=>{ g.beginPath(); o.d.forEach((s,k)=>{ const x=xT(s[0]),y=yfn(acc(s)); k?g.lineTo(x,y):g.moveTo(x,y); });
+    g.globalAlpha=al; g.strokeStyle=o.rgb; g.lineWidth=w; g.stroke(); g.globalAlpha=1; };
+  recs.forEach(o=>{
+    // periapsis–apoapsis band
+    g.beginPath();
+    o.d.forEach((s,k)=>{ const x=xT(s[0]),y=yR(s[1]*(1+s[2])); k?g.lineTo(x,y):g.moveTo(x,y); });
+    for(let k=o.d.length-1;k>=0;k--){ const s=o.d[k]; g.lineTo(xT(s[0]),yR(s[1]*(1-s[2]))); }
+    g.closePath(); g.globalAlpha=.12; g.fillStyle=o.rgb; g.fill(); g.globalAlpha=1;
+    line(o,s=>s[1]*(1+s[2]),yR,1.3,.95);   // apoapsis
+    line(o,s=>s[1]*(1-s[2]),yR,1,.6);       // periapsis
+    line(o,s=>s[3],yI,1.3,.95);             // inclination
+  });
+  // cursor
+  if(curT!=null){ const cx=xT(Math.min(curT,tMax));
+    g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=1; g.setLineDash([3,3]);
+    g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0i+ph); g.stroke(); g.setLineDash([]); }
+  // planet legend (multi-planet only)
+  if(recs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle';
+    recs.forEach(o=>{ g.fillStyle=o.rgb; g.fillRect(lx,y0r-9,7,3); g.fillStyle=txt;
+      const nm=o.name.split(' ').pop(); g.fillText(nm,lx+10,y0r-7); lx+=10+g.measureText(nm).width+12; }); }
 }
 
 /* focus the camera on a single body (rebase origin onto it, dolly close) */
