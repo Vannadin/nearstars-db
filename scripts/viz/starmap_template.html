@@ -321,6 +321,33 @@ function orbitPhase(el){ // mean anomaly (rad) from M or 0
   if(el.M_deg!=null) return el.M_deg*DEG;
   return null;
 }
+// Sky-true orbital plane. Exoplanet/disk elements are measured against the PLANE
+// OF SKY (⟂ to the Sol→star line of sight): i=0 face-on, i=90 edge-on; Ω = PA of
+// ascending node (North→East); ω = argument of periapsis. Build the orthonormal
+// orbit frame in ICRS (right-handed — avoids the scene reflection's sign traps),
+// then map each axis to scene (x,z,y). Returns {p,q}: in-plane unit vectors with
+// p = periapsis direction, q ⟂ p (toward ν=90°). pos = ICRS [X,Y,Z] (ly).
+function skyBasis(pos, iDeg, OmDeg, omDeg){
+  const s=new THREE.Vector3(pos[0],pos[1],pos[2]);
+  if(s.lengthSq()<1e-12) return null;       // Sol itself: no external line of sight
+  s.normalize();
+  let E=new THREE.Vector3().crossVectors(new THREE.Vector3(0,0,1), s); // east (incr RA)
+  if(E.lengthSq()<1e-9) E.set(1,0,0); else E.normalize();              // star on the pole
+  const N=new THREE.Vector3().crossVectors(s,E);                       // north (incr Dec)
+  const i=(iDeg||0)*DEG, Om=(OmDeg||0)*DEG, om=(omDeg||0)*DEG;
+  const node=N.clone().multiplyScalar(Math.cos(Om)).addScaledVector(E,Math.sin(Om));
+  const n=s.clone().multiplyScalar(Math.cos(i))
+    .addScaledVector(new THREE.Vector3().crossVectors(node,s), Math.sin(i)); // orbit normal
+  const w=new THREE.Vector3().crossVectors(n,node);                   // in-plane ⟂ node
+  const peri=node.clone().multiplyScalar(Math.cos(om)).addScaledVector(w,Math.sin(om));
+  const q=new THREE.Vector3().crossVectors(n,peri);
+  const toScene=v=>new THREE.Vector3(v.x,v.z,v.y);                    // ICRS → scene
+  return {p:toScene(peri), q:toScene(q)};
+}
+function ellipsePoint(basis,a,e,nu){ // point on the sky-true ellipse (focus at star)
+  const r=a*(1-e*e)/(1+e*Math.cos(nu));
+  return basis.p.clone().multiplyScalar(r*Math.cos(nu)).addScaledVector(basis.q, r*Math.sin(nu));
+}
 
 /* ── build per-cluster nodes ──────────────────────────────────────────── */
 const clusters=[];   // {data, node, glow, sysScale, bodies:[{kind,name,obj,rgb}], stem, labelEl, orbitsLines:[]}
@@ -357,7 +384,7 @@ DATA.clusters.forEach(c=>{
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
     am.scale.setScalar(pr); am.visible=false; node.add(am);
     stabPlanets.push({name:p.name,variants:p.stability,line,mesh,animLine:al,animMesh:am,
-      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff'});
+      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos});
   }
   let sysScale=0.6;
 
@@ -428,16 +455,19 @@ DATA.clusters.forEach(c=>{
         regStab(p,eline,pm2,cpos);
         return;
       }
-      // orbit line
+      // orbit line — sky-true plane (i,Ω,ω vs the plane of sky); Sol keeps the
+      // local frame (no external line of sight). pb=null → fall back to orbitPoint.
+      const pb=c.is_sol?null:skyBasis(c.pos,p.i_deg,p.Omega_deg,p.omega_deg);
+      const opt=nu=>pb?ellipsePoint(pb,a,e,nu):orbitPoint(a,e,p.i_deg,p.Omega_deg,p.omega_deg,nu);
       const seg=220,pts=[];
-      for(let k=0;k<=seg;k++){const nu=k/seg*Math.PI*2; pts.push(orbitPoint(a,e,p.i_deg,p.Omega_deg,p.omega_deg,nu));}
+      for(let k=0;k<=seg;k++){pts.push(opt(k/seg*Math.PI*2));}
       const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
         new THREE.LineBasicMaterial({color:0x4a5a78,transparent:true,opacity:.75}));
       cg.add(line); orbitsLines.push(line);
       // planet at its phase (true anomaly from M, else spread by index)
       let mean=orbitPhase(p); if(mean==null) mean=pi*2.399963;
       const nu=meanToTrue(mean, e);
-      const pp=orbitPoint(a,e,p.i_deg,p.Omega_deg,p.omega_deg,nu);
+      const pp=opt(nu);
       const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
       const pm=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),
         new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
@@ -456,23 +486,12 @@ DATA.clusters.forEach(c=>{
   if(c.disks){
     const base=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.55);
     const dcol=base.clone().lerp(new THREE.Color(0xffd6a3),0.35); // warm dust tone
-    // sky-true orientation: disk inclination is measured from OUR line of sight
-    // (i=0 face-on, i=90 edge-on as seen from Sol). Build the disk plane in a
-    // frame anchored to the Sol→star direction so the viewer reproduces the real
-    // Earth-view geometry (e.g. Fomalhaut as a 65.6° ellipse, not an edge-on line).
-    const los=new THREE.Vector3(c.pos[0],c.pos[2],c.pos[1]); // ICRS→scene, Sol→star
-    if(los.lengthSq()<1e-9) los.set(0,0,1); else los.normalize();
-    let up=new THREE.Vector3(0,1,0); // ICRS north (+Z) in scene
-    if(Math.abs(los.dot(up))>0.99) up.set(1,0,0);
-    const north=up.clone().addScaledVector(los,-up.dot(los)).normalize(); // sky north (PA=0 nodes)
-    // per-belt in-plane basis (uHat = line of nodes, mHat = minor axis) at inclination i
-    const beltBasis=(incDeg)=>{
-      const i=(incDeg||0)*DEG, u=north.clone();
-      const nrm=los.clone().multiplyScalar(Math.cos(i))
-        .addScaledVector(new THREE.Vector3().crossVectors(u,los), Math.sin(i));
-      const m=new THREE.Vector3().crossVectors(nrm,u).normalize();
-      return {u,m};
-    };
+    // sky-true orientation: the disk inclination is measured from OUR line of
+    // sight (i=0 face-on, i=90 edge-on as seen from Sol). Same skyBasis as the
+    // planet orbits, so a disk and its planets share one frame (e.g. Fomalhaut as
+    // a 65.6° ellipse, not an edge-on line). PA=0 → node along sky north; ω=0 → the
+    // belt's major axis is the node line, so {p,q} == {major, minor}.
+    const beltBasis=(incDeg)=>{ const b=skyBasis(c.pos,incDeg,0,0); return {u:b.p,m:b.q}; };
     const ribbon=(aMid,hw,e,uHat,mHat,seg)=>{ // → {inner:[],outer:[]} constant-width edges
       const inner=[],outer=[],C=new THREE.Vector3(),dir=new THREE.Vector3();
       for(let k=0;k<=seg;k++){ const nu=k/seg*2*Math.PI;
@@ -749,16 +768,19 @@ function updateStability(){
     const fAn=_alerp(c0[6],c1[6],f);
     if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
     // smooth analytic ellipse at this epoch's elements (precesses/tilts/pumps
-    // over time); host at focus. e-tinted (blue→amber→red).
+    // over time); host at focus. e-tinted (blue→amber→red). Sky-true plane via
+    // skyBasis (same frame as the static planet orbits); Sol falls back to local.
+    const pb=r.pos?skyBasis(r.pos,iD,OmD,omD):null;
+    const opt=nu=>pb?ellipsePoint(pb,a,e,nu):orbitPoint(a,e,iD,OmD,omD,nu);
     const seg=180,pos=[],col=[];
     const ec=e>0.85?new THREE.Color(0xff5a3c):(e>0.55?new THREE.Color(0xe0b070):new THREE.Color(r.rgb));
-    for(let k=0;k<=seg;k++){const nu=k/seg*2*Math.PI; const p=orbitPoint(a,e,iD,OmD,omD,nu);
+    for(let k=0;k<=seg;k++){const p=opt(k/seg*2*Math.PI);
       pos.push(r.host.x+p.x, r.host.y+p.y, r.host.z+p.z); col.push(ec.r,ec.g,ec.b);}
     r.animLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
     r.animLine.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
     r.animLine.visible=true;
     // planet at its true anomaly
-    const pp=orbitPoint(a,e,iD,OmD,omD, fAn*DEG);
+    const pp=opt(fAn*DEG);
     r.animMesh.position.set(r.host.x+pp.x, r.host.y+pp.y, r.host.z+pp.z); r.animMesh.visible=true;
     tt=_lerp(c0[0],c1[0],f); if(e>maxE){maxE=e;maxA=a;maxName=r.name;}
   });
