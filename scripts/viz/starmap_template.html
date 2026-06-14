@@ -104,6 +104,30 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2)}
 #stabPanel .srd .warn{color:#ff5a3c;font-weight:600}
 .hidden{display:none!important}
+#stage,canvas{touch-action:none} /* let OrbitControls own pinch/drag, not the browser */
+/* ── mobile / touch layout ─────────────────────────────────────────────── */
+@media (max-width:640px){
+  #topbar{height:48px;gap:7px;padding:0 10px;overflow-x:auto;overflow-y:hidden;flex-wrap:nowrap;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #topbar::-webkit-scrollbar{display:none}
+  #topbar>*{flex-shrink:0}
+  #brand{font-size:13px} #brand .sub{display:none} .spacer{display:none}
+  .btn{padding:8px 11px}
+  #legend{left:10px;bottom:10px;max-width:46vw;padding:9px 10px;gap:6px;border-radius:11px}
+  #legend .note{display:none}
+  #legend .h{font-size:9px} .chip,.pchip{font-size:10px;padding:2px 7px}
+  #filter{right:10px;left:auto;bottom:10px;width:46vw;padding:9px 10px;border-radius:11px}
+  #filter .lbl{font-size:9px} #filter .val{font-size:11px}
+  #info{top:auto;bottom:0;left:0;right:0;width:100%;max-height:64%;border-radius:16px 16px 0 0;
+    padding:16px 16px calc(16px + env(safe-area-inset-bottom));border-left:none;border-right:none;border-bottom:none}
+  #info.show{animation:sheet .28s cubic-bezier(.32,.72,0,1)}
+  #info h2{font-size:17px} #info .enter{padding:11px 11px}
+  #stabPanel{left:0;right:0;bottom:0;width:100%;min-width:0;transform:none;border-radius:16px 16px 0 0;
+    padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+  #stabPanel.show{transform:none}
+  #hint{bottom:auto;top:56px;font-size:10.5px;max-width:92vw;white-space:normal;line-height:1.4}
+}
+@keyframes sheet{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 </style>
 </head>
 <body>
@@ -191,12 +215,14 @@ const STR = {
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
+    hintTouch:'한 손가락 = 회전 · 두 손가락 = 줌·이동 · 탭 = 정보 · 더블탭 = 들어가기',
     ly:'광년',pc:'pc',yr:'년',stabBtn:'안정성 시뮬 ▶',disrupt:'파괴 위험',stabObs:'관측 궤도(불안정)'},
   en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
     hint:'drag = rotate · wheel = zoom · WASD/arrows = move (R·F up/down) · click = info · double-click = focus',
+    hintTouch:'1 finger = rotate · 2 fingers = zoom/pan · tap = info · double-tap = enter',
     ly:'ly',pc:'pc',yr:'yr',stabBtn:'Stability sim ▶',disrupt:'disruption risk',stabObs:'observed orbit (unstable)'}
 };
 let lang='ko';
@@ -586,6 +612,20 @@ renderer.domElement.addEventListener('dblclick',e=>{
 });
 document.getElementById('infoClose').onclick=()=>{document.getElementById('info').classList.remove('show'); selected=null;};
 document.getElementById('infoEnter').onclick=()=>{ if(selected) flyTo(selected); };
+// touch: tap = select (native click), double-tap = focus/enter (parity with dblclick)
+const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window;
+if(isTouch){
+  document.getElementById('hint').dataset.i18n='hintTouch';
+  let lastTap=0, lx=0, ly=0;
+  renderer.domElement.addEventListener('pointerup',e=>{
+    if(e.pointerType!=='touch') return;
+    const now=performance.now();
+    if(now-lastTap<320 && Math.hypot(e.clientX-lx, e.clientY-ly)<28){
+      const b=pickBody(e); if(b){ focusBody(b); } else { const c=pick(e); if(c) flyTo(c); }
+      lastTap=0;
+    } else { lastTap=now; lx=e.clientX; ly=e.clientY; }
+  });
+}
 
 function fmt(x,d=2){return x==null?'—':(+x).toFixed(d);}
 function renderInfo(c){
