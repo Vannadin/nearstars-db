@@ -700,7 +700,7 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
   const inf=VAR_INFO[id]?VAR_INFO[id][lang]:null;
   if(inf){ stabVarBtn.textContent=inf.n+(nv>1?' ⇄':''); stabNoteEl.textContent=inf.d; }
   stabN=Math.max(...stabRecs.map(r=>recData(r).length));
-  stabSlider.max=stabN-1; if(stabIdx>stabN-1) stabIdx=stabN-1;
+  stabSlider.max=stabN-1; stabSlider.step='any'; if(stabIdx>stabN-1) stabIdx=stabN-1;
   let ext=1; stabRecs.forEach(r=>recData(r).forEach(d=>{ext=Math.max(ext,d[1]*(1+d[2]));}));
   stabRecs._ext=ext;
 }
@@ -731,14 +731,22 @@ stabVarBtn.onclick=()=>{ const nv=Math.max(...stabRecs.map(r=>r.variants.length)
   stabVar=(stabVar+1)%nv; stabIdx=0; stabRefresh(); };
 
 const _bgC=new THREE.Color('#0a0d15');
+const _lerp=(a,b,t)=>a+(b-a)*t;
+const _alerp=(a,b,t)=>{ let d=((b-a)%360+540)%360-180; return a+d*t; }; // shortest-path (deg)
 function updateStability(){
   if(!stabActive) return;
   if(stabPlaying){ stabIdx+=0.5; if(stabIdx>=stabN-1) stabIdx=0; }
-  const i=Math.floor(stabIdx);
   let maxE=-1,maxA=0,maxName='',tt=0;
   stabRecs.forEach(r=>{
-    const d=recData(r), n=d.length, ii=Math.min(i,n-1), cur=d[ii];
-    const a=cur[1], e=Math.min(0.999,cur[2]), iD=cur[3], OmD=cur[4], omD=cur[5];
+    const d=recData(r), n=d.length;
+    // interpolate orbital elements between the recorded snapshots (5000 yr apart)
+    // so the animation is continuous, not stepped — secular change is captured at
+    // that cadence; in-between frames are a smooth lerp of (a,e,i,Ω,ω,f).
+    const i0=Math.min(Math.floor(stabIdx),n-1), i1=Math.min(i0+1,n-1), f=stabIdx-i0;
+    const c0=d[i0], c1=d[i1];
+    const a=_lerp(c0[1],c1[1],f), e=Math.min(0.999,_lerp(c0[2],c1[2],f));
+    const iD=_alerp(c0[3],c1[3],f), OmD=_alerp(c0[4],c1[4],f), omD=_alerp(c0[5],c1[5],f);
+    const fAn=_alerp(c0[6],c1[6],f);
     if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
     // smooth analytic ellipse at this epoch's elements (precesses/tilts/pumps
     // over time); host at focus. e-tinted (blue→amber→red).
@@ -750,9 +758,9 @@ function updateStability(){
     r.animLine.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
     r.animLine.visible=true;
     // planet at its true anomaly
-    const pp=orbitPoint(a,e,iD,OmD,omD, cur[6]*DEG);
+    const pp=orbitPoint(a,e,iD,OmD,omD, fAn*DEG);
     r.animMesh.position.set(r.host.x+pp.x, r.host.y+pp.y, r.host.z+pp.z); r.animMesh.visible=true;
-    tt=cur[0]; if(cur[2]>maxE){maxE=cur[2];maxA=cur[1];maxName=r.name;}
+    tt=_lerp(c0[0],c1[0],f); if(e>maxE){maxE=e;maxA=a;maxName=r.name;}
   });
   stabSlider.value=stabIdx;
   const q=maxA*(1-maxE), nm=stabRecs.length>1?(maxName+' '):'';
