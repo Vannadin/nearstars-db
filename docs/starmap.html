@@ -796,11 +796,15 @@ function openStability(c){
   stabTitleEl.innerHTML=`<b>${hl}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
   stabRefresh();
   stabPanel.classList.add('show');
-  const center=stabRecs[0].host.clone();
-  originLy.set(c.pos[0],c.pos[1],c.pos[2]); recomputeNodes();
+  // frame on the host star via a CONTINUOUS rebase (subtract the body's world pos),
+  // not originLy.set(cluster) — the latter teleported the view to the cluster primary
+  // first, which made Proxima's sim "jump to Alpha Centauri".
+  const hostBody=cl.bodies.find(b=>b.kind==='star'&&b.name===host);
+  if(hostBody){ hostBody.obj.getWorldPosition(wp); const ws=wp.clone();
+    originLy.add(sceneToLyDelta(ws)); camera.position.sub(ws); controls.target.sub(ws); recomputeNodes(); }
   const dir=new THREE.Vector3(0.4,0.5,1).normalize();
-  fly={from:camera.position.clone(),to:center.clone().add(dir.multiplyScalar(stabRecs._ext*4)),
-       tFrom:controls.target.clone(),tTo:center.clone(),k:0};
+  fly={from:camera.position.clone(),to:dir.clone().multiplyScalar(stabRecs._ext*4),
+       tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
   document.getElementById('info').classList.remove('show');
 }
 function closeStability(){
