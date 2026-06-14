@@ -9,9 +9,10 @@ CSV="$ROOT/phase3/stability-sim/results/barnards_star_timeseries.csv"
 LOG="$ROOT/phase3/stability-sim/run_barnard.log"
 cd "$ROOT" || exit 1
 {
-  echo "=== Barnard TRACE 200 kyr — start $(date '+%Y-%m-%d %H:%M') ==="
-  caffeinate -i "$PY" phase3/stability-sim/scripts/run.py \
-     --years 200000 --snapshots 200 --system barnards_star --integrator trace
+  echo "=== Barnard TRACE 200 kyr — start/resume $(date '+%Y-%m-%d %H:%M') ==="
+  # resumable: checkpoints each snapshot to barnard_ckpt.bin. Interrupt (Ctrl-C /
+  # sleep) and re-run this same command to continue from where it stopped.
+  caffeinate -i "$PY" phase3/stability-sim/run_barnard_resume.py
   echo "=== sim exit ($(date '+%H:%M')); checking completion ==="
   if tail -1 "$CSV" | grep -q '^200000'; then
      echo "reached 1 Myr — rebuilding viewer"
