@@ -419,7 +419,7 @@ DATA.clusters.forEach(c=>{
     const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
     am.scale.setScalar(pr); am.visible=false; node.add(am);
-    stabPlanets.push({name:p.name,variants:p.stability,line,mesh,animLine:al,animMesh:am,
+    stabPlanets.push({name:p.name,hostName:p.host_star,variants:p.stability,line,mesh,animLine:al,animMesh:am,
       host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos,
       // common-plane reference inclination: load.py subtracts 90° from a known
       // transit inclination (→ coplanar set ≈0), and uses 0 when i is unknown.
@@ -780,9 +780,20 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
 }
 function openStability(c){
   const cl=clusters.find(x=>x.data===c); if(!cl||!cl.stabPlanets.length) return;
-  stabRecs=cl.stabPlanets; stabSelCl=c; stabVar=0; stabIdx=0; stabPlaying=true; stabActive=true;
+  // A cluster can host planets around widely separated stars (e.g. Alpha Centauri
+  // A b and Proxima's planets ~13,900 AU apart). Group by host star and show one
+  // host's system at a time — the one currently selected, else nearest the camera.
+  const groups={}; cl.stabPlanets.forEach(r=>{ (groups[r.hostName]=groups[r.hostName]||[]).push(r); });
+  const names=Object.keys(groups);
+  let host=names[0];
+  if(selBody && groups[selBody.name]) host=selBody.name;
+  else if(names.length>1){ // nearest host to the current look-at point
+    let best=Infinity; names.forEach(n=>{ const w=cl.node.position.clone().add(groups[n][0].host);
+      const d=w.distanceTo(controls.target); if(d<best){best=d;host=n;} }); }
+  stabRecs=groups[host]; stabSelCl=c; stabVar=0; stabIdx=0; stabPlaying=true; stabActive=true;
   stabPlayBtn.textContent='⏸';
-  stabTitleEl.innerHTML=`<b>${(lang==='ko'&&c.label_ko)?c.label_ko:c.label}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
+  const hl=(lang==='ko'&&c.label_ko&&names.length===1)?c.label_ko:host;
+  stabTitleEl.innerHTML=`<b>${hl}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
   stabRefresh();
   stabPanel.classList.add('show');
   const center=stabRecs[0].host.clone();
