@@ -6,6 +6,7 @@ import argparse
 import csv
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -86,7 +87,9 @@ def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = 
         if 0 < orb.a < 1e6:
             periods.append(2 * math.pi * math.sqrt(orb.a**3 / (sim.G * primary.m)))
     p_min = min(periods) if periods else 1.0
-    sim.dt = p_min / 50.0
+    # dt = P_inner/50 by default; STAB_DT_DIV finer-steps a packed config to test
+    # whether an ejection is real or a fixed-step resolution artifact (e.g. AU Mic).
+    sim.dt = p_min / (50.0 * float(os.environ.get("STAB_DT_DIV", "1")))
     megno_enabled = integrator != "trace"
     if megno_enabled:
         sim.init_megno(seed=42)
