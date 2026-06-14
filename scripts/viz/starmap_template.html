@@ -421,33 +421,77 @@ DATA.clusters.forEach(c=>{
     });
   });
 
-  // debris disk rings (Fomalhaut, AU Mic, …) around the primary, AU scale.
-  // eccentric belts: confocal in/out ellipses (star at the focus → offset ring),
-  // tilted by inclination. e & inc from the curated data (Kalas/ALMA/JWST).
+  // debris disk belts (Fomalhaut, AU Mic, …) around the primary, AU scale.
+  // each belt = constant-width ribbon following an ellipse with the star at the
+  // focus (so low-e belts read as near-concentric, the offset grows with e),
+  // tilted by inclination. inner/outer radii, e, inc & kind from curated data
+  // (Kalas/ALMA/JWST). kind: 'disk' broad fill, 'belt'/'ring' crisp outlines.
   const diskMeshes=[];
   if(c.disks){
-    const dcol=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.55);
-    c.disks.forEach(b=>{
-      // belt = centreline ellipse (a_mid, e, star at focus); real e is subtle
-      // (main ring 0.11 ≈ near-circular like the NASA art; intermediate 0.3
-      // visibly offset per JWST). Draw a crisp ring outline + a faint dusty fill.
-      const e=b.e||0, inc=b.inc_deg||0;
-      const aMid=(b.inner_au+b.outer_au)/2, hw=(b.outer_au-b.inner_au)/2;
-      sysScale=Math.max(sysScale, (aMid*(1+e)+hw)*1.1);
-      const cl=[]; for(let k=0;k<=180;k++){ cl.push(orbitPoint(aMid,e,inc,0,0,k/180*2*Math.PI)); }
-      const line=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(cl),
-        new THREE.LineBasicMaterial({color:dcol,transparent:true,opacity:.5}));
-      line.visible=false; node.add(line); diskMeshes.push(line);
-      const N=160, pos=[], idx=[], dir=new THREE.Vector3();
-      for(let k=0;k<=N;k++){ const nu=k/N*2*Math.PI;
-        const C=orbitPoint(aMid,e,inc,0,0,nu); dir.copy(C).normalize();
-        pos.push(C.x-dir.x*hw, C.y-dir.y*hw, C.z-dir.z*hw,
-                 C.x+dir.x*hw, C.y+dir.y*hw, C.z+dir.z*hw); }
-      for(let k=0;k<N;k++){ const a=k*2; idx.push(a,a+1,a+2, a+1,a+3,a+2); }
+    const base=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.55);
+    const dcol=base.clone().lerp(new THREE.Color(0xffd6a3),0.35); // warm dust tone
+    // sky-true orientation: disk inclination is measured from OUR line of sight
+    // (i=0 face-on, i=90 edge-on as seen from Sol). Build the disk plane in a
+    // frame anchored to the Sol→star direction so the viewer reproduces the real
+    // Earth-view geometry (e.g. Fomalhaut as a 65.6° ellipse, not an edge-on line).
+    const los=new THREE.Vector3(c.pos[0],c.pos[2],c.pos[1]); // ICRS→scene, Sol→star
+    if(los.lengthSq()<1e-9) los.set(0,0,1); else los.normalize();
+    let up=new THREE.Vector3(0,1,0); // ICRS north (+Z) in scene
+    if(Math.abs(los.dot(up))>0.99) up.set(1,0,0);
+    const north=up.clone().addScaledVector(los,-up.dot(los)).normalize(); // sky north (PA=0 nodes)
+    // per-belt in-plane basis (uHat = line of nodes, mHat = minor axis) at inclination i
+    const beltBasis=(incDeg)=>{
+      const i=(incDeg||0)*DEG, u=north.clone();
+      const nrm=los.clone().multiplyScalar(Math.cos(i))
+        .addScaledVector(new THREE.Vector3().crossVectors(u,los), Math.sin(i));
+      const m=new THREE.Vector3().crossVectors(nrm,u).normalize();
+      return {u,m};
+    };
+    const ribbon=(aMid,hw,e,uHat,mHat,seg)=>{ // → {inner:[],outer:[]} constant-width edges
+      const inner=[],outer=[],C=new THREE.Vector3(),dir=new THREE.Vector3();
+      for(let k=0;k<=seg;k++){ const nu=k/seg*2*Math.PI;
+        const r=aMid*(1-e*e)/(1+e*Math.cos(nu));
+        C.copy(uHat).multiplyScalar(r*Math.cos(nu)).addScaledVector(mHat,r*Math.sin(nu));
+        dir.copy(C).normalize();
+        inner.push(C.clone().addScaledVector(dir,-hw));
+        outer.push(C.clone().addScaledVector(dir, hw)); }
+      return {inner,outer};
+    };
+    // glowing surface band; additive so belts read as luminous faces (like the
+    // thermal-IR JWST image), not just wireframe outlines. grad fades inner→outer.
+    const fillBand=(inner,outer,op,grad)=>{
+      const pos=[],col=[],idx=[],n=inner.length-1;
+      const ci=dcol, co=dcol.clone().multiplyScalar(grad?0.3:1);
+      for(let k=0;k<=n;k++){
+        pos.push(inner[k].x,inner[k].y,inner[k].z, outer[k].x,outer[k].y,outer[k].z);
+        col.push(ci.r,ci.g,ci.b, co.r,co.g,co.b); }
+      for(let k=0;k<n;k++){ const a=k*2; idx.push(a,a+1,a+2, a+1,a+3,a+2); }
       const g=new THREE.BufferGeometry();
-      g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setIndex(idx);
-      const fill=new THREE.Mesh(g,new THREE.MeshBasicMaterial({color:dcol,transparent:true,opacity:.06,side:THREE.DoubleSide,depthWrite:false}));
-      fill.visible=false; node.add(fill); diskMeshes.push(fill);
+      g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+      g.setAttribute('color',new THREE.Float32BufferAttribute(col,3)); g.setIndex(idx);
+      const m=new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:op,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));
+      m.visible=false; node.add(m); diskMeshes.push(m);
+    };
+    c.disks.forEach(b=>{
+      const e=b.e||0, inc=b.inc_deg||0, kind=b.kind||'belt';
+      const {u,m}=beltBasis(inc);
+      const aMid=(b.inner_au+b.outer_au)/2, hw=(b.outer_au-b.inner_au)/2;
+      sysScale=Math.max(sysScale, (aMid*(1+e)+hw)*1.15);
+      const {inner,outer}=ribbon(aMid,hw,e,u,m,200);
+      fillBand(inner,outer, kind==='disk'?0.18 : kind==='ring'?0.26 : 0.22, kind==='disk');
+      if(kind!=='disk'){ // faint edge outlines accent the gaps; surface carries the look
+        const op=kind==='ring'?0.6:0.4;
+        [inner,outer].forEach(edge=>{
+          const line=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(edge),
+            new THREE.LineBasicMaterial({color:dcol,transparent:true,opacity:op}));
+          line.visible=false; node.add(line); diskMeshes.push(line);
+        });
+      }
+      if(kind==='ring'){ // radiation-pressure small-grain halo (Kalas et al. 2005)
+        const haloMid=b.outer_au*1.2, haloHw=b.outer_au*0.2;
+        const h=ribbon(haloMid,haloHw,e,u,m,160);
+        fillBand(h.inner,h.outer,0.05,true);
+      }
     });
   }
 
@@ -578,7 +622,16 @@ function flyTo(c){
   // rebase origin onto the cluster so local coords are tiny & precise
   originLy.set(c.pos[0],c.pos[1],c.pos[2]); recomputeNodes();
   const dist=Math.max(cl.sysScale*3.2, 0.4);
-  const dir=new THREE.Vector3(0.35,0.5,1).normalize();
+  // disk systems: approach from the Sol→star line of sight so the fly-in lands on
+  // the real Earth-view geometry (e.g. Fomalhaut's inclined ellipse, not edge-on).
+  let dir;
+  if(c.disks&&c.disks.length){
+    const los=new THREE.Vector3(c.pos[0],c.pos[2],c.pos[1]);
+    if(los.lengthSq()<1e-9) los.set(0,0,1); else los.normalize();
+    dir=los.clone().negate().addScaledVector(new THREE.Vector3(0,1,0),0.35).normalize();
+  } else {
+    dir=new THREE.Vector3(0.35,0.5,1).normalize();
+  }
   fly={from:camera.position.clone(),to:dir.multiplyScalar(dist),tFrom:controls.target.clone(),tTo:new THREE.Vector3(0,0,0),k:0};
   // keep the info panel open so its details + "Stability sim" button stay available
 }

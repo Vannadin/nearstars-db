@@ -35,9 +35,10 @@ with a sharp inner edge implying gravitational sculpting by an
 unseen shepherd body. ALMA millimeter imaging (Boley 2012; White
 2017) refined the geometry, confirming the eccentricity, narrow
 width (Δa/a ≈ 0.13), and inclination i ≈ 65–67°. JWST/MIRI imaging
-by Gáspár et al. 2023 resolved an **inner asteroid-belt analog** at
-~10 AU and an **intermediate belt** at ~83–104 AU (separated from the broad inner disk by a gap near ~78 AU), completing a
-three-belt architecture analogous to Sol's asteroid belt + Kuiper
+by Gáspár et al. 2023 resolved a **broad inner disk** (~10–78 AU,
+inclined ~47.8° and misaligned with the outer ring) and an
+**intermediate belt** at ~83–104 AU (separated by a gap near ~78 AU),
+completing a three-belt architecture analogous to Sol's asteroid belt + Kuiper
 belt + scattered disk, but scaled up by both temperature and mass.
 The famous "**Fomalhaut b**" point source reported by Kalas et al.
 2008 in HST optical imaging has since been re-interpreted as an
@@ -255,11 +256,11 @@ reads as visible in-game rather than as a numerical artifact.
 The **intermediate belt at 83–104 AU** (Gáspár 2023 JWST) is rendered
 as a fainter secondary ring with the same dust tint at half opacity,
 producing a Saturn-like double-ring structure but at a vastly
-larger scale. The **inner warm asteroid-belt analog at ~10 AU**
-(also Gáspár 2023) is too small to render as a ring at most camera
-distances and is instead represented as a low-density particle field
-in the cfg — close enough to the star that its scattered light
-contributes to the inner-system zodiacal glow.
+larger scale. The **broad inner disk (~10–78 AU, inclined ~47.8°)**
+(Gáspár 2023) is rendered as a wide, faint low-density ring — visibly
+tilted relative to the outer belts, which is the headline JWST
+misalignment result — with its inner edge close enough to the star
+that its scattered light contributes to the inner-system zodiacal glow.
 
 The **two stellar companions** appear as fixed point sources in the
 in-game sky. TW Piscis Austrini at 0.91 ly projected separation
@@ -331,8 +332,9 @@ alignment phenomena on human timescales.
   (`2023NatAs...7..790G`, arXiv:2305.03789). JWST/MIRI imaging at
   15.5 µm + 23 µm resolves a previously-unknown **intermediate belt
   at ~83–104 AU** (separated from the inner disk by a ~78 AU gap;
-  inner disk inclined ~47.8° vs the 64.4° outer ring) and confirms an **inner warm asteroid-belt analog
-  at ~10 AU**; no point source at the Fomalhaut-b epoch position,
+  inner disk inclined ~47.8° vs the 64.4° outer ring) and revises the
+  pre-JWST warm "asteroid-belt analog" into a **broad inner disk
+  (~10–78 AU)**; no point source at the Fomalhaut-b epoch position,
   consistent with the dust-cloud interpretation.
 - **Boley A. C. et al. 2012** — *Constraining the planetary system
   of Fomalhaut using high-resolution ALMA observations*, ApJ 750,

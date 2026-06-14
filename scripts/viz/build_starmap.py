@@ -267,10 +267,20 @@ def load_disks():
                     ri = round(ro * 0.7, 2)
                 if ro is None:
                     ro = round(ri * 1.3, 2)
+                name = b.get("belt") or ""
+                # render kind: broad inner disks fill, narrow belts/rings draw as
+                # crisp outlines. width/name heuristic (Fomalhaut inner_warm is the
+                # only genuinely broad component in the curated set).
+                if name == "inner_warm" or (ro - ri) > 0.6 * ri:
+                    kind = "disk"
+                elif name == "main_cold":
+                    kind = "ring"
+                else:
+                    kind = "belt"
                 belts.append({"inner_au": ri, "outer_au": ro,
                               "inc_deg": b.get("inclination_deg") or 0,
                               "e": b.get("eccentricity") or 0,
-                              "belt": b.get("belt")})
+                              "belt": name, "kind": kind})
             # dedupe identical rings
             seen, uniq = set(), []
             for b in belts:
