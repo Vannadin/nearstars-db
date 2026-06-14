@@ -749,6 +749,8 @@ def solar_system_cluster():
         "name": n, "host_star": "Sun", "a_au": a, "e": e, "i_deg": i,
         "Omega_deg": Om, "omega_deg": om, "M_deg": M, "period_days": per,
         "radius_rearth": rad, "mass_mearth": None, "teq_k": teq, "rgb": col,
+        "phase3": (manifest_raw().get("Sun", {}).get("phase3") or {}).get(n),
+        "stability": load_stability().get(n),   # solar_system REBOUND run, if present
     } for (n, a, e, i, Om, om, M, per, rad, teq, col) in P]
     return {
         "id": "sol", "label": "Solar System", "label_ko": "태양계",

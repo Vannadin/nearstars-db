@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from load import (  # noqa: E402
     build_alpha_cen_ab,
     build_planetary_system,
+    build_solar_system,
     add_hypotheticals,
     hill_radius,
     KM_PER_AU,
@@ -38,6 +39,7 @@ SYSTEMS = {
     "tau_cet": ("planetary", PROJECT_ROOT / "db/systems/tau_cet.json"),
     "teegardens_star": ("planetary", PROJECT_ROOT / "db/systems/teegardens_star.json"),
     "yz_cet": ("planetary", PROJECT_ROOT / "db/systems/yz_cet.json"),
+    "solar_system": ("solar", None),   # Sun + 8 planets (J2000), real-mass benchmark
 }
 
 
@@ -45,6 +47,8 @@ def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_
     kind, src = SYSTEMS[system]
     if kind == "planetary":
         sim, meta = build_planetary_system(src)
+    elif kind == "solar":
+        sim, meta = build_solar_system()
     else:
         sim, meta = build_alpha_cen_ab(src, mutual_incl_deg=acen_incl,
                                        a_override=acen_a, e_override=acen_e)

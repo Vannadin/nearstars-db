@@ -167,6 +167,44 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.
     return sim, meta
 
 
+# Solar System — full J2000 ecliptic elements + real masses (M_sun). Names match
+# the viewer's hard-coded Sol cluster so the stability data attaches. Inclinations
+# are kept as-is (ecliptic, already near-coplanar) — NOT the -90 deg transit hack.
+_SOLAR_SYSTEM = [
+    # name, mass_msun, a(AU), e, i(deg), Omega(deg), omega(deg), M0(deg, J2000)
+    ("Mercury", 1.66012e-7, 0.38710, 0.2056, 7.005, 48.331, 29.125, 174.796),
+    ("Venus",   2.44781e-6, 0.72333, 0.0068, 3.395, 76.680, 54.853, 50.115),
+    ("Earth",   3.04043e-6, 1.00000, 0.0167, 0.000, 348.739, 114.208, 357.517),  # Earth+Moon
+    ("Mars",    3.22716e-7, 1.52371, 0.0934, 1.850, 49.558, 286.502, 19.373),
+    ("Jupiter", 9.54792e-4, 5.20288, 0.0489, 1.303, 100.464, 273.867, 20.020),
+    ("Saturn",  2.85886e-4, 9.53667, 0.0565, 2.485, 113.665, 339.392, 317.020),
+    ("Uranus",  4.36624e-5, 19.18916, 0.0457, 0.773, 74.006, 96.999, 142.239),
+    ("Neptune", 5.15139e-5, 30.06992, 0.0113, 1.770, 131.784, 276.336, 256.228),
+]
+
+
+def build_solar_system() -> tuple[rebound.Simulation, dict]:
+    """Sun + 8 planets REBOUND sim from J2000 ecliptic elements (real masses).
+    The Solar System is the benchmark: real (non-zero) eccentricities so the run
+    shows genuine secular/Milankovitch oscillation, not a circular-init flat line."""
+    sim = rebound.Simulation()
+    sim.units = ("AU", "yr", "Msun")
+    sim.add(m=1.0, name="Sun")
+    meta = {"system": "Solar System",
+            "star": {"name": "Sun", "mass_msun": 1.0},
+            "planets": [], "phase_seed": 0}
+    primary = sim.particles["Sun"]
+    for name, m, a, e, i, Om, om, M in _SOLAR_SYSTEM:
+        sim.add(primary=primary, m=m, a=a, e=e,
+                inc=math.radians(i), Omega=math.radians(Om),
+                omega=math.radians(om), M=math.radians(M), name=name)
+        meta["planets"].append({"name": name, "mass_msun": m, "mass_kind": "known",
+                                "a_au": a, "e": e, "inc_rad": math.radians(i),
+                                "omega_rad": math.radians(om), "Omega_rad": math.radians(Om),
+                                "M_rad": math.radians(M)})
+    return sim, meta
+
+
 def build_alpha_cen_ab(db_root: Path, mutual_incl_deg: float = 50.0,
                        a_override: float | None = None,
                        e_override: float | None = None) -> tuple[rebound.Simulation, dict]:

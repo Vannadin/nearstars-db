@@ -1,0 +1,213 @@
+{
+  "system": "Solar System",
+  "star": {
+    "name": "Sun",
+    "mass_msun": 1.0
+  },
+  "planets": [
+    {
+      "name": "Mercury",
+      "mass_msun": 1.66012e-07,
+      "mass_kind": "known",
+      "a_au": 0.3871,
+      "e": 0.2056,
+      "inc_rad": 0.12226031410220278,
+      "omega_rad": 0.5083271446433485,
+      "Omega_rad": 0.8435350807813795,
+      "M_rad": 3.0507657193160083
+    },
+    {
+      "name": "Venus",
+      "mass_msun": 2.44781e-06,
+      "mass_kind": "known",
+      "a_au": 0.72333,
+      "e": 0.0068,
+      "inc_rad": 0.059253928105207486,
+      "omega_rad": 0.9573654545964496,
+      "Omega_rad": 1.3383184704292521,
+      "M_rad": 0.8746717546369583
+    },
+    {
+      "name": "Earth",
+      "mass_msun": 3.04043e-06,
+      "mass_kind": "known",
+      "a_au": 1.0,
+      "e": 0.0167,
+      "inc_rad": 0.0,
+      "omega_rad": 1.9933056321176839,
+      "Omega_rad": 6.086643780112505,
+      "M_rad": 6.239848781852567
+    },
+    {
+      "name": "Mars",
+      "mass_msun": 3.22716e-07,
+      "mass_kind": "known",
+      "a_au": 1.52371,
+      "e": 0.0934,
+      "inc_rad": 0.0322885911618951,
+      "omega_rad": 5.000403213548794,
+      "Omega_rad": 0.8649502707033498,
+      "M_rad": 0.3381226359888615
+    },
+    {
+      "name": "Jupiter",
+      "mass_msun": 0.000954792,
+      "mass_kind": "known",
+      "a_au": 5.20288,
+      "e": 0.0489,
+      "inc_rad": 0.022741640153486113,
+      "omega_rad": 4.7798808625593106,
+      "Omega_rad": 1.7534275797235832,
+      "M_rad": 0.3494149162492648
+    },
+    {
+      "name": "Saturn",
+      "mass_msun": 0.000285886,
+      "mass_kind": "known",
+      "a_au": 9.53667,
+      "e": 0.0565,
+      "inc_rad": 0.04337143191205909,
+      "omega_rad": 5.923507854928594,
+      "Omega_rad": 1.9838284942793547,
+      "M_rad": 5.533042794672423
+    },
+    {
+      "name": "Uranus",
+      "mass_msun": 4.36624e-05,
+      "mass_kind": "known",
+      "a_au": 19.18916,
+      "e": 0.0457,
+      "inc_rad": 0.013491395117916168,
+      "omega_rad": 1.6929519211419797,
+      "Omega_rad": 1.2916483662309235,
+      "M_rad": 2.4825388747442143
+    },
+    {
+      "name": "Neptune",
+      "mass_msun": 5.15139e-05,
+      "mass_kind": "known",
+      "a_au": 30.06992,
+      "e": 0.0113,
+      "inc_rad": 0.030892327760299633,
+      "omega_rad": 4.822973041791051,
+      "Omega_rad": 2.300064701448207,
+      "M_rad": 4.472022235800031
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "whfast",
+    "elapsed_sec": 406.1969358921051,
+    "dt_yr": 0.0048169590567237455,
+    "innermost_period_yr": 0.24084795283618726,
+    "energy_relative_error": 1.1613774859625144e-09,
+    "megno_final": 1.9951872916136457
+  },
+  "per_body": {
+    "Mercury": {
+      "a_min": 0.38709866656928377,
+      "a_max": 0.38710245699101575,
+      "e_min": 0.09587872310971426,
+      "e_max": 0.20754511479725313
+    },
+    "Venus": {
+      "a_min": 0.7233224795778097,
+      "a_max": 0.7233520459218504,
+      "e_min": 0.0027118290451444956,
+      "e_max": 0.05728740569733016
+    },
+    "Earth": {
+      "a_min": 0.9999760044036896,
+      "a_max": 1.000029036803518,
+      "e_min": 0.001011505168595063,
+      "e_max": 0.052697283061971176
+    },
+    "Mars": {
+      "a_min": 1.5236013019479788,
+      "a_max": 1.5238613878871636,
+      "e_min": 0.031088468390809296,
+      "e_max": 0.12484117386175837
+    },
+    "Jupiter": {
+      "a_min": 5.2001727774469035,
+      "a_max": 5.203674644386767,
+      "e_min": 0.023588546066102476,
+      "e_max": 0.06117374440668714
+    },
+    "Saturn": {
+      "a_min": 9.46922483139117,
+      "a_max": 9.543347156089052,
+      "e_min": 0.012210099464601559,
+      "e_max": 0.09004554324360768
+    },
+    "Uranus": {
+      "a_min": 19.072002473304803,
+      "a_max": 19.2871385404343,
+      "e_min": 0.007272069323340908,
+      "e_max": 0.07636867699580162
+    },
+    "Neptune": {
+      "a_min": 29.882057446167444,
+      "a_max": 30.26513687968661,
+      "e_min": 0.001383019557230684,
+      "e_max": 0.022041950423263342
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Mercury": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.20754511479725313
+      },
+      "Venus": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.05728740569733016
+      },
+      "Earth": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.052697283061971176
+      },
+      "Mars": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.12484117386175837
+      },
+      "Jupiter": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06117374440668714
+      },
+      "Saturn": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.09004554324360768
+      },
+      "Uranus": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07636867699580162
+      },
+      "Neptune": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.022041950423263342
+      }
+    },
+    "overall": "stable",
+    "ecc_class_max": "calm",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}
