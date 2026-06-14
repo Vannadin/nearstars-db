@@ -115,7 +115,7 @@
       "derived": {
         "semi_major_axis_m": 3112630536.400155,
         "eccentricity": 0.207,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 234.0,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -131,13 +131,13 @@
         "orbital": {
           "semi_major_axis_au": 0.02080665,
           "eccentricity": 0.207,
-          "inclination_deg": 59.0,
+          "inclination_deg": 53.06,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 234.0,
           "epoch_jd": 2450602.093,
           "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Rivera et al. 2010",
-          "bibcode": "2010ApJ...719..890R",
+          "source": "Millholland et al. 2018",
+          "bibcode": "2018AJ....155..106M",
           "doi": "10.1088/0004-637x/719/1/890"
         },
         "physical": {
@@ -181,7 +181,7 @@
       "derived": {
         "semi_major_axis_m": 19386388064.013,
         "eccentricity": 0.25591,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 48.76,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -197,13 +197,13 @@
         "orbital": {
           "semi_major_axis_au": 0.12959,
           "eccentricity": 0.25591,
-          "inclination_deg": 59.0,
+          "inclination_deg": 53.06,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 48.76,
           "epoch_jd": 2450602.093,
           "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Rivera et al. 2010",
-          "bibcode": "2010ApJ...719..890R",
+          "source": "Millholland et al. 2018",
+          "bibcode": "2018AJ....155..106M",
           "doi": "10.1088/0004-637x/719/1/890"
         },
         "physical": {
@@ -247,7 +247,7 @@
       "derived": {
         "semi_major_axis_m": 31163779630.6119,
         "eccentricity": 0.0324,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 50.3,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -263,13 +263,13 @@
         "orbital": {
           "semi_major_axis_au": 0.208317,
           "eccentricity": 0.0324,
-          "inclination_deg": 59.0,
+          "inclination_deg": 53.06,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 50.3,
           "epoch_jd": 2450602.093,
           "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Rivera et al. 2010",
-          "bibcode": "2010ApJ...719..890R",
+          "source": "Millholland et al. 2018",
+          "bibcode": "2018AJ....155..106M",
           "doi": "10.1088/0004-637x/719/1/890"
         },
         "physical": {
@@ -313,7 +313,7 @@
       "derived": {
         "semi_major_axis_m": 50010568175.009995,
         "eccentricity": 0.055,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 239.0,
         "mean_anomaly_at_epoch_deg": 0.0,
@@ -329,13 +329,13 @@
         "orbital": {
           "semi_major_axis_au": 0.3343,
           "eccentricity": 0.055,
-          "inclination_deg": 59.0,
+          "inclination_deg": 53.06,
           "longitude_of_ascending_node_deg": null,
           "argument_of_periapsis_deg": 239.0,
           "epoch_jd": 2450602.093,
           "mean_anomaly_at_epoch_deg": 0.0,
-          "source": "Rivera et al. 2010",
-          "bibcode": "2010ApJ...719..890R",
+          "source": "Millholland et al. 2018",
+          "bibcode": "2018AJ....155..106M",
           "doi": "10.1088/0004-637x/719/1/890"
         },
         "physical": {
@@ -354,7 +354,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "epoch propagation method"
       ]
@@ -363,7 +363,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -372,14 +372,14 @@
       "title": "Rivera et al. 2010",
       "doi": "10.1088/0004-637x/719/1/890",
       "bibcode": "2010ApJ...719..890R",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "GJ 876 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-14",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

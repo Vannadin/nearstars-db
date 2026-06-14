@@ -3066,7 +3066,7 @@
       "orbital": {
         "semi_major_axis_au": 0.0712,
         "eccentricity": 0.012,
-        "inclination_deg": 80.0,
+        "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
@@ -3088,7 +3088,7 @@
       "orbital": {
         "semi_major_axis_au": 0.1052,
         "eccentricity": 0.044,
-        "inclination_deg": 74.0,
+        "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "epoch_jd": null,
         "mean_anomaly_at_epoch_deg": null,
@@ -3845,13 +3845,13 @@
       "orbital": {
         "semi_major_axis_au": 0.208317,
         "eccentricity": 0.0324,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 50.3,
         "epoch_jd": 2450602.093,
         "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Rivera et al. 2010",
-        "bibcode": "2010ApJ...719..890R",
+        "source": "Millholland et al. 2018",
+        "bibcode": "2018AJ....155..106M",
         "doi": "10.1088/0004-637x/719/1/890"
       },
       "physical": {
@@ -3868,13 +3868,13 @@
       "orbital": {
         "semi_major_axis_au": 0.12959,
         "eccentricity": 0.25591,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 48.76,
         "epoch_jd": 2450602.093,
         "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Rivera et al. 2010",
-        "bibcode": "2010ApJ...719..890R",
+        "source": "Millholland et al. 2018",
+        "bibcode": "2018AJ....155..106M",
         "doi": "10.1088/0004-637x/719/1/890"
       },
       "physical": {
@@ -3891,13 +3891,13 @@
       "orbital": {
         "semi_major_axis_au": 0.02080665,
         "eccentricity": 0.207,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 234.0,
         "epoch_jd": 2450602.093,
         "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Rivera et al. 2010",
-        "bibcode": "2010ApJ...719..890R",
+        "source": "Millholland et al. 2018",
+        "bibcode": "2018AJ....155..106M",
         "doi": "10.1088/0004-637x/719/1/890"
       },
       "physical": {
@@ -3914,13 +3914,13 @@
       "orbital": {
         "semi_major_axis_au": 0.3343,
         "eccentricity": 0.055,
-        "inclination_deg": 59.0,
+        "inclination_deg": 53.06,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 239.0,
         "epoch_jd": 2450602.093,
         "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Rivera et al. 2010",
-        "bibcode": "2010ApJ...719..890R",
+        "source": "Millholland et al. 2018",
+        "bibcode": "2018AJ....155..106M",
         "doi": "10.1088/0004-637x/719/1/890"
       },
       "physical": {
@@ -4858,21 +4858,21 @@
       "orbital": {
         "semi_major_axis_au": 3.53,
         "eccentricity": 0.07,
-        "inclination_deg": 78.81,
+        "inclination_deg": 40.0,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": -19.15,
         "epoch_jd": 2460054.0,
         "mean_anomaly_at_epoch_deg": 0.0,
-        "source": "Llop Sayson et al. 2021",
-        "bibcode": "2021AJ....162..181L",
+        "source": "Thompson et al. 2025 (arXiv:2502.20561)",
+        "bibcode": null,
         "doi": null
       },
       "physical": {
-        "true_mass_mearth": 209.76674862,
+        "true_mass_mearth": 317.8,
         "uncertainty_mearth": 38.13940884,
         "mass_type": "true mass",
-        "source": "Llop Sayson et al. 2021",
-        "bibcode": "2021AJ....162..181L",
+        "source": "Thompson et al. 2025 (arXiv:2502.20561)",
+        "bibcode": null,
         "doi": null
       }
     }

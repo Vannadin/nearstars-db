@@ -128,22 +128,15 @@ def planet_orbital(p):
     raw = p.get("raw", {})
     der = p.get("derived", {})
     cur = p.get("curated", {})
-    orb = {}
-    if isinstance(cur.get("orbital"), list):
-        for row in cur["orbital"]:
-            if row.get("recommended"):
-                orb = row
-                break
-        if not orb and cur["orbital"]:
-            orb = cur["orbital"][0]
-    phys = {}
-    if isinstance(cur.get("physical"), list):
-        for row in cur["physical"]:
-            if row.get("recommended"):
-                phys = row
-                break
-        if not phys and cur["physical"]:
-            phys = cur["physical"][0]
+    # curated orbital/physical may be a list (array form) OR a dict (db/systems stores
+    # the single curated row as a dict) — handle both, else curated overrides silently
+    # fall through to raw (this hid the eps Eri b 40deg / GJ 876 53deg corrections).
+    def _row(block):
+        if isinstance(block, list):
+            return next((r for r in block if r.get("recommended")), block[0] if block else {})
+        return block if isinstance(block, dict) else {}
+    orb = _row(cur.get("orbital"))
+    phys = _row(cur.get("physical"))
 
     def pick(*vals):
         for v in vals:

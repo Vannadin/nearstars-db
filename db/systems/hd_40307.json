@@ -96,7 +96,7 @@
         "semi_major_axis_au": 0.0468,
         "semi_major_axis_err_au": 0.0024,
         "eccentricity": 0.2,
-        "inclination_deg": 0.2022,
+        "inclination_deg": null,
         "inclination_err_deg": null,
         "omega_deg": 194.8,
         "tperi_bjd": null,
@@ -115,7 +115,7 @@
       "derived": {
         "semi_major_axis_m": 7001180348.76,
         "eccentricity": 0.2,
-        "inclination_deg": 0.2022,
+        "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 194.8,
         "mean_anomaly_at_epoch_deg": null,
@@ -161,7 +161,7 @@
         "semi_major_axis_au": 0.0799,
         "semi_major_axis_err_au": 0.004,
         "eccentricity": 0.06,
-        "inclination_deg": 0.2109,
+        "inclination_deg": null,
         "inclination_err_deg": null,
         "omega_deg": 234.9,
         "tperi_bjd": null,
@@ -180,7 +180,7 @@
       "derived": {
         "semi_major_axis_m": 11952869868.93,
         "eccentricity": 0.06,
-        "inclination_deg": 0.2109,
+        "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 234.9,
         "mean_anomaly_at_epoch_deg": null,
@@ -226,7 +226,7 @@
         "semi_major_axis_au": 0.1321,
         "semi_major_axis_err_au": 0.0066,
         "eccentricity": 0.07,
-        "inclination_deg": 0.2855,
+        "inclination_deg": null,
         "inclination_err_deg": null,
         "omega_deg": 17.2,
         "tperi_bjd": null,
@@ -245,7 +245,7 @@
       "derived": {
         "semi_major_axis_m": 19761878719.469997,
         "eccentricity": 0.07,
-        "inclination_deg": 0.2855,
+        "inclination_deg": null,
         "longitude_of_ascending_node_deg": null,
         "argument_of_periapsis_deg": 17.2,
         "mean_anomaly_at_epoch_deg": null,
@@ -415,7 +415,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "epoch propagation method"
       ]
@@ -424,7 +424,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -433,7 +433,7 @@
       "title": "Tuomi et al. 2013",
       "doi": null,
       "bibcode": "2013A&A...549A..48T",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "HD 40307 mass (unverified)"
       ]
@@ -442,14 +442,14 @@
       "title": "Stassun et al. 2019",
       "doi": null,
       "bibcode": "2019AJ....158..138S",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-14",
       "used_for": [
         "HD 40307 radius (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-14",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

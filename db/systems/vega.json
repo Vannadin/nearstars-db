@@ -182,37 +182,36 @@
           },
           {
             "belt": "warm",
-            "inner_radius_au": 14,
-            "uncertainty_inner_radius_au": 2,
-            "outer_radius_au": null,
+            "inner_radius_au": 5,
+            "outer_radius_au": 60,
             "dust_temperature_k": 170,
             "dust_mass_mearth": 0.0003,
-            "morphology": "warm asteroid-analog inner belt at 14 AU; two-component SED + Spitzer-MIPS imaging",
+            "morphology": "continuous warm inner disk (PR-drag-fed), inner edge ~3-5 AU out to a shallow gap near ~60 AU; NOT a discrete 14 AU asteroid belt (the pre-JWST Su 2013 two-temperature model is superseded). Near pole-on (i~7 deg), T ~130-170 K.",
             "resolved": true,
-            "observatory": "Spitzer-MIPS",
-            "inclination_deg": 6.2,
-            "method": "sed_fit",
-            "reference": "Su et al. 2013",
-            "bibcode": "2013ApJ...763..118S",
+            "observatory": "JWST-MIRI",
+            "inclination_deg": 7,
+            "method": "resolved_imaging",
+            "reference": "Su et al. 2024",
+            "bibcode": "2024ApJ...977..277S",
             "recommended": true,
-            "notes": "Canonical warm-belt fit (Spitzer-IRS + Herschel-PACS two-component SED)"
+            "notes": "JWST/MIRI imaging (Su et al. 2024, arXiv:2410.23636) resolves the inner emission as a smooth continuous disk fed by PR drag, not the discrete ~14 AU warm belt of the Su 2013 SED model. Near pole-on (i~7-11 deg disk, 6.2 deg stellar); PA unconstrained (too face-on). Shallow gap at ~60 AU possibly shepherded by a <6 M_earth planet."
           },
           {
             "belt": "cold",
-            "inner_radius_au": 110,
-            "uncertainty_inner_radius_au": 9,
-            "outer_radius_au": null,
+            "inner_radius_au": 80,
+            "outer_radius_au": 170,
             "dust_temperature_k": 50,
             "dust_mass_mearth": 0.013,
-            "morphology": "cold Kuiper-analog outer belt with inner edge at ~110 AU (audit 2026-05-29: was 62 AU; Su 2013 reports ~110 AU); wide cleared gap from the 14 AU warm belt implies planetesimal-stirring planets",
+            "eccentricity": 0,
+            "morphology": "broad cold Kuiper-analog outer belt, semi-major-axis edges ~80-170 AU (peak surface brightness ~92 AU), steep inner edge near 80 AU; truly circular (e<=0.002, no star-center offset). T ~50 K.",
             "resolved": true,
-            "observatory": "Spitzer-MIPS",
-            "inclination_deg": 6.2,
-            "method": "sed_fit",
-            "reference": "Su et al. 2013",
-            "bibcode": "2013ApJ...763..118S",
+            "observatory": "JWST-MIRI + ALMA",
+            "inclination_deg": 7,
+            "method": "resolved_imaging",
+            "reference": "Su et al. 2024",
+            "bibcode": "2024ApJ...977..277S",
             "recommended": true,
-            "notes": "Canonical cold-belt inner edge (two-component SED fit); outer edge taken from Sibthorpe 2010"
+            "notes": "JWST/MIRI (Su et al. 2024) + ALMA (Matra et al. 2020, 2020ApJ...898..146M) resolve a broad circular cold belt ~80-170 AU, revising the Su 2013 SED inner edge (110 AU) and Sibthorpe 2010 (70-200 AU). Eccentricity <=0.002 (measured circular). Near pole-on (i~7-11 deg); PA unconstrained."
           },
           {
             "belt": "cold",
@@ -288,7 +287,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "epoch propagation method"
       ]
@@ -297,7 +296,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -306,7 +305,7 @@
       "title": "Monnier et al. 2012",
       "doi": "10.1088/2041-8205/761/1/L3",
       "bibcode": "2012ApJ...761L...3M",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega mass (evolutionary_model)"
       ]
@@ -315,7 +314,7 @@
       "title": "Yoon et al. 2010 (rotating model from interferometry)",
       "doi": "10.1088/0004-637X/708/1/71",
       "bibcode": "2010ApJ...708...71Y",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega mass (evolutionary_model)"
       ]
@@ -324,7 +323,7 @@
       "title": "Aumann et al. 1984",
       "doi": null,
       "bibcode": "1984ApJ...278L..23A",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega disk single (photometric_excess)"
       ]
@@ -333,7 +332,7 @@
       "title": "Holland et al. 1998",
       "doi": null,
       "bibcode": "1998Natur.392..788H",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -342,25 +341,25 @@
       "title": "Wilner et al. 2002",
       "doi": null,
       "bibcode": "2002ApJ...569L.115W",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
     },
     {
-      "title": "Su et al. 2013",
+      "title": "Su et al. 2024",
       "doi": null,
-      "bibcode": "2013ApJ...763..118S",
-      "accessed": "2026-05-30",
+      "bibcode": "2024ApJ...977..277S",
+      "accessed": "2026-06-14",
       "used_for": [
-        "Vega disk warm (sed_fit)"
+        "Vega disk warm (resolved_imaging)"
       ]
     },
     {
       "title": "Sibthorpe et al. 2010",
       "doi": null,
       "bibcode": "2010A&A...518L.130S",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -369,14 +368,14 @@
       "title": "Hughes et al. 2012",
       "doi": null,
       "bibcode": "2012ApJ...750...82H",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-14",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-30",
+    "retrieval_date": "2026-06-14",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
