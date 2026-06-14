@@ -68,6 +68,9 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 .comp.clickable .nm::after{content:' →';color:var(--fg4);font-size:11px}
 .comp .meta,.pl .meta{font-family:var(--mono);font-size:10.5px;color:var(--fg4);margin-left:auto;text-align:right}
 .pl .swatch{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.p3{margin-left:8px;flex-shrink:0;font-family:var(--mono);font-size:9.5px;color:var(--accent);text-decoration:none;
+  border:1px solid var(--accent-glow);border-radius:var(--r-chip);padding:1px 6px;opacity:.85;transition:.14s}
+.p3:hover{opacity:1;background:rgba(122,168,255,.12)}
 #info .enter{margin-top:16px;width:100%;justify-content:center}
 #info .nofly{margin-top:14px;font-size:11px;color:var(--fg4);text-align:center}
 #labels{position:fixed;inset:0;z-index:10;pointer-events:none;overflow:hidden}
@@ -229,14 +232,14 @@ const STR = {
   ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
-    distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',
+    distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',phase3:'Phase 3 보고서 열기',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
     hintTouch:'한 손가락 = 회전 · 두 손가락 = 줌·이동 · 탭 = 정보 · 더블탭 = 들어가기',
     ly:'광년',pc:'pc',yr:'년',stabBtn:'안정성 시뮬 ▶',disrupt:'파괴 위험',stabObs:'관측 궤도(불안정)'},
   en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
-    distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',
+    distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',phase3:'Open Phase 3 report',
     hint:'drag = rotate · wheel = zoom · WASD/arrows = move (R·F up/down) · click = info · double-click = focus',
     hintTouch:'1 finger = rotate · 2 fingers = zoom/pan · tap = info · double-tap = enter',
     ly:'ly',pc:'pc',yr:'yr',stabBtn:'Stability sim ▶',disrupt:'disruption risk',stabObs:'observed orbit (unstable)'}
@@ -423,12 +426,22 @@ DATA.clusters.forEach(c=>{
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
     am.scale.setScalar(pr); am.visible=false; grp.add(am);
     stabPlanets.push({name:p.name,hostName:p.host_star,variants:p.stability,line,mesh,animLine:al,animMesh:am,
-      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos,
+      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos, plane:dplane,
       // common-plane reference inclination: load.py subtracts 90° from a known
       // transit inclination (→ coplanar set ≈0), and uses 0 when i is unknown.
       iRef:(p.i_deg!=null?90:0)});
   }
   let sysScale=0.6;
+  // representative disk plane (inc, PA) for this system. Planets and a debris disk
+  // are observed coplanar (the disk traces the system's invariable plane — e.g. AU
+  // Mic's planets transit *because* they lie in its edge-on disk), so a planet with
+  // an unmeasured inclination or node is drawn in this plane rather than defaulting
+  // to face-on/Ω=0, which otherwise leaves orbit and disk wildly misaligned.
+  let dplane=null;
+  if(c.disks && c.disks.length){
+    const main=c.disks.reduce((x,y)=>(y.outer_au>x.outer_au?y:x));
+    dplane={inc:main.inc_deg||0, pa:main.pa_deg||0};
+  }
 
   // components (real-size stars). Close pairs follow their measured
   // gravitational (Keplerian) relative orbit about the primary; wide pairs
@@ -502,9 +515,13 @@ DATA.clusters.forEach(c=>{
         return;
       }
       // orbit line — sky-true plane (i,Ω,ω vs the plane of sky); Sol keeps the
-      // local frame (no external line of sight). pb=null → fall back to orbitPoint.
-      const pb=c.is_sol?null:skyBasis(c.pos,p.i_deg,p.Omega_deg,p.omega_deg);
-      const opt=nu=>pb?ellipsePoint(pb,a,e,nu):orbitPoint(a,e,p.i_deg,p.Omega_deg,p.omega_deg,nu);
+      // local frame (no external line of sight). Unmeasured i/Ω fall back to the
+      // system's disk plane (coplanar assumption) so orbits aren't left face-on
+      // beside an inclined disk. pb=null → fall back to orbitPoint.
+      const ri = p.i_deg!=null?p.i_deg:(dplane?dplane.inc:null);
+      const rOm = p.Omega_deg!=null?p.Omega_deg:(dplane?dplane.pa:null);
+      const pb=c.is_sol?null:skyBasis(c.pos,ri,rOm,p.omega_deg);
+      const opt=nu=>pb?ellipsePoint(pb,a,e,nu):orbitPoint(a,e,ri,rOm,p.omega_deg,nu);
       const seg=220,pts=[];
       for(let k=0;k<=seg;k++){pts.push(opt(k/seg*Math.PI*2));}
       const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
@@ -715,6 +732,10 @@ function fmt(x,d=2){return x==null?'—':(+x).toFixed(d);}
 function renderInfo(c){
   document.getElementById('infoName').textContent=(lang==='ko'&&c.label_ko)?c.label_ko:c.label;
   document.getElementById('infoDist').textContent=c.is_sol?'—':`${fmt(c.distance_ly,2)} ${t('ly')} · ${fmt(c.distance_pc,2)} ${t('pc')}`;
+  // "Phase 3 ↗" link → the curated Phase 3 report page for that star/planet
+  const mkP3=url=>{ const a=document.createElement('a'); a.className='p3'; a.href=url;
+    a.target='_blank'; a.rel='noopener'; a.textContent='P3 ↗'; a.title=t('phase3');
+    a.onclick=e=>e.stopPropagation(); return a; };
   const cc=document.getElementById('infoComps');cc.innerHTML='';
   const cl=clusters.find(x=>x.data===c);
   c.components.forEach(m=>{
@@ -723,6 +744,7 @@ function renderInfo(c){
     const nm=document.createElement('span');nm.className='nm';nm.textContent=m.name;
     const meta=document.createElement('span');meta.className='meta';meta.textContent=(m.spectype||'—')+(m.teff_k?(' · '+m.teff_k+'K'):'');
     row.append(pill,nm,meta);
+    if(m.phase3) row.append(mkP3(m.phase3));
     // click a component → fly to that star (reaches wide members like Proxima Cen,
     // which sit thousands of AU from the primary and can't be double-tapped at map scale)
     const body=cl&&cl.bodies.find(b=>b.kind==='star'&&b.name===m.name);
@@ -737,7 +759,9 @@ function renderInfo(c){
     const nm=document.createElement('span');nm.className='nm';nm.textContent=p.name;
     const meta=document.createElement('span');meta.className='meta';const b=[];
     if(p.radius_rearth)b.push(fmt(p.radius_rearth,1)+' R⊕'); if(p.a_au)b.push(fmt(p.a_au,2)+' AU');
-    meta.textContent=b.join(' · ');row.append(sw,nm,meta);ps.appendChild(row);
+    meta.textContent=b.join(' · ');row.append(sw,nm,meta);
+    if(p.phase3) row.append(mkP3(p.phase3));
+    ps.appendChild(row);
   });
   document.getElementById('infoEnter').style.display=c.planets.length?'flex':'none';
   document.getElementById('infoNoFly').style.display=c.planets.length?'none':'block';
@@ -853,7 +877,10 @@ function updateStability(){
     // skyBasis (same frame as the static planet orbits); Sol falls back to local.
     // reference = the system's true common plane (sim elements are relative to it);
     // simOrbitPoint rotates the sim-frame ellipse onto it. Sol → local orbitPoint.
-    const rb=r.pos?skyBasis(r.pos,r.iRef,0,0):null;
+    // common-plane reference: the system's disk plane if it has one (planets are
+    // coplanar with the disk), else the load.py iRef convention. Sol → local.
+    const rb=r.plane?skyBasis(r.pos,r.plane.inc,r.plane.pa,0)
+                    :(r.pos?skyBasis(r.pos,r.iRef,0,0):null);
     const opt=nu=>rb?simOrbitPoint(rb,a,e,iD,OmD,omD,nu):orbitPoint(a,e,iD,OmD,omD,nu);
     const seg=180,pos=[],col=[];
     const ec=e>0.85?new THREE.Color(0xff5a3c):(e>0.55?new THREE.Color(0xe0b070):new THREE.Color(r.rgb));
