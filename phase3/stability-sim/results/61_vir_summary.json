@@ -42,30 +42,30 @@
   "hypotheticals": [],
   "integration": {
     "integrator": "whfast",
-    "elapsed_sec": 31.022716999053955,
+    "elapsed_sec": 2780.043648958206,
     "dt_yr": 0.00023330335190619483,
     "innermost_period_yr": 0.011665167595309741,
-    "energy_relative_error": 3.7792471130572736e-10,
-    "megno_final": 1.961952620679224
+    "energy_relative_error": 1.3952185696090692e-07,
+    "megno_final": 6.57437986714128
   },
   "per_body": {
     "61 Vir b": {
-      "a_min": 0.0501997029697211,
-      "a_max": 0.050202320463366285,
-      "e_min": 0.1206796174097416,
-      "e_max": 0.39181532558031756
+      "a_min": 0.0501996288711652,
+      "a_max": 0.05020249077273145,
+      "e_min": 0.020719953659546042,
+      "e_max": 0.3963995863840857
     },
     "61 Vir c": {
-      "a_min": 0.2174663726269075,
-      "a_max": 0.21756302479063178,
-      "e_min": 0.12244572510489712,
-      "e_max": 0.3653271494616607
+      "a_min": 0.21747276344222916,
+      "a_max": 0.21756408732833415,
+      "e_min": 0.11888441972692189,
+      "e_max": 0.36588601876183585
     },
     "61 Vir d": {
-      "a_min": 0.4756756206515526,
-      "a_max": 0.47618843087519364,
-      "e_min": 0.24157653371717316,
-      "e_max": 0.34935657485273386
+      "a_min": 0.47570137206411045,
+      "a_max": 0.4762111042394205,
+      "e_min": 0.2356395425833664,
+      "e_max": 0.35508578710885863
     }
   },
   "hill_track": {},
@@ -75,24 +75,24 @@
         "flags": [],
         "status": "stable",
         "ecc_class": "hot",
-        "e_max": 0.39181532558031756
+        "e_max": 0.3963995863840857
       },
       "61 Vir c": {
         "flags": [],
         "status": "stable",
         "ecc_class": "hot",
-        "e_max": 0.3653271494616607
+        "e_max": 0.36588601876183585
       },
       "61 Vir d": {
         "flags": [],
         "status": "stable",
         "ecc_class": "hot",
-        "e_max": 0.34935657485273386
+        "e_max": 0.35508578710885863
       }
     },
-    "overall": "stable",
+    "overall": "chaotic_but_hill_stable",
     "ecc_class_max": "hot",
-    "lyapunov_time_yr": Infinity,
-    "is_chaotic": false
+    "lyapunov_time_yr": 437217.73400727275,
+    "is_chaotic": true
   }
 }
