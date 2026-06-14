@@ -589,11 +589,15 @@ function pick(e){
 renderer.domElement.addEventListener('pointermove',e=>{ hoverCl=pick(e); renderer.domElement.style.cursor=hoverCl?'pointer':'default'; });
 let hoverCl=null;
 const hoverLabel=document.getElementById('hoverLabel');
+function openInfo(c){ selected=c; renderInfo(c); document.getElementById('info').classList.add('show'); }
 renderer.domElement.addEventListener('click',e=>{
   const b=pickBody(e);
-  if(b){ selBody=b; return; }                 // zoomed in: select the body (highlighted crosshair)
+  if(b){ selBody=b;                            // zoomed in: highlight the body…
+    const cl=clusters.find(x=>x.bodies.includes(b));
+    if(cl) openInfo(cl.data);                  // …and (re)open the system info so it can always come back
+    return; }
   const c=pick(e);
-  if(c){ selected=c; renderInfo(c); document.getElementById('info').classList.add('show');
+  if(c){ openInfo(c);
     const cl=clusters.find(x=>x.data===c); selBody=cl?cl.bodies.find(x=>x.kind==='star'):null; }
 });
 // double-click: focus the nearest body when zoomed in, else fly to the system
