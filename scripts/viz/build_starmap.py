@@ -280,6 +280,8 @@ def load_disks():
                 belts.append({"inner_au": ri, "outer_au": ro,
                               "inc_deg": b.get("inclination_deg") or 0,
                               "e": b.get("eccentricity") or 0,
+                              "pa_deg": b.get("position_angle_deg") or 0,
+                              "argp_deg": b.get("argument_of_periapsis_deg") or 0,
                               "belt": name, "kind": kind})
             # dedupe identical rings
             seen, uniq = set(), []

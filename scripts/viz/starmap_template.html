@@ -513,12 +513,12 @@ DATA.clusters.forEach(c=>{
   if(c.disks){
     const base=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.55);
     const dcol=base.clone().lerp(new THREE.Color(0xffd6a3),0.35); // warm dust tone
-    // sky-true orientation: the disk inclination is measured from OUR line of
-    // sight (i=0 face-on, i=90 edge-on as seen from Sol). Same skyBasis as the
-    // planet orbits, so a disk and its planets share one frame (e.g. Fomalhaut as
-    // a 65.6° ellipse, not an edge-on line). PA=0 → node along sky north; ω=0 → the
-    // belt's major axis is the node line, so {p,q} == {major, minor}.
-    const beltBasis=(incDeg)=>{ const b=skyBasis(c.pos,incDeg,0,0); return {u:b.p,m:b.q}; };
+    // sky-true orientation: inclination from OUR line of sight (i=0 face-on,
+    // i=90 edge-on), PA = position angle of the node, argp = argument of periapsis.
+    // Per-belt PA/argp give the real apsidal/nodal MISALIGNMENT (Fomalhaut's
+    // headline result), so the eccentric belts' radial swings clear each other in
+    // 3D instead of stacking in one sector. {p,q} = {major(periapsis), minor}.
+    const beltBasis=(incDeg,paDeg,argpDeg)=>{ const b=skyBasis(c.pos,incDeg,paDeg,argpDeg); return {u:b.p,m:b.q}; };
     const ribbon=(aMid,hw,e,uHat,mHat,seg)=>{ // → {inner:[],outer:[]} constant-width edges
       const inner=[],outer=[],C=new THREE.Vector3(),dir=new THREE.Vector3();
       for(let k=0;k<=seg;k++){ const nu=k/seg*2*Math.PI;
@@ -545,8 +545,15 @@ DATA.clusters.forEach(c=>{
       m.visible=false; node.add(m); diskMeshes.push(m);
     };
     c.disks.forEach(b=>{
-      const e=b.e||0, inc=b.inc_deg||0, kind=b.kind||'belt';
-      const {u,m}=beltBasis(inc);
+      const inc=b.inc_deg||0, kind=b.kind||'belt';
+      // Render eccentricity only for the iconic main ring (mild, e=0.11). The other
+      // belts are drawn as concentric semi-major-axis bands so the two real gaps stay
+      // visible from any angle: distinct debris belts are separated by inclination
+      // (different planes) and/or cleared gaps — they don't physically interpenetrate,
+      // and a full eccentric swing with the (unpublished) apsidal angles would falsely
+      // merge them. Plane misalignment is still shown via per-belt inclination/PA.
+      const e=(kind==='ring')?(b.e||0):0;
+      const {u,m}=beltBasis(inc,b.pa_deg||0,b.argp_deg||0);
       const aMid=(b.inner_au+b.outer_au)/2, hw=(b.outer_au-b.inner_au)/2;
       sysScale=Math.max(sysScale, (aMid*(1+e)+hw)*1.15);
       const {inner,outer}=ribbon(aMid,hw,e,u,m,200);

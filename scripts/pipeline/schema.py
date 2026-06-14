@@ -452,6 +452,8 @@ STELLAR_MEASUREMENT_KINDS = {
             "inclination_deg",
             "aspect_ratio",       # 수직 종횡비 h = H/r (무차원). 해상/edge-on 원반만.
             "eccentricity",       # 편심 고리 (Fomalhaut 주 고리 0.11 / 중간 belt ~0.3 등)
+            "position_angle_deg", # 천구상 위치각 (승교점 line, North→East). belt별 미정렬용.
+            "argument_of_periapsis_deg",  # 편심 고리 근점 방향 (궤도면 내, 승교점 기준)
         },
         "methods": {
             "sed_fit",            # Spitzer/Herschel SED 두 성분 fit
