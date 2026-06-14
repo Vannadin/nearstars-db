@@ -342,11 +342,31 @@ function skyBasis(pos, iDeg, OmDeg, omDeg){
   const peri=node.clone().multiplyScalar(Math.cos(om)).addScaledVector(w,Math.sin(om));
   const q=new THREE.Vector3().crossVectors(n,peri);
   const toScene=v=>new THREE.Vector3(v.x,v.z,v.y);                    // ICRS → scene
-  return {p:toScene(peri), q:toScene(q)};
+  return {p:toScene(peri), q:toScene(q), n:toScene(n)};
 }
 function ellipsePoint(basis,a,e,nu){ // point on the sky-true ellipse (focus at star)
   const r=a*(1-e*e)/(1+e*Math.cos(nu));
   return basis.p.clone().multiplyScalar(r*Math.cos(nu)).addScaledVector(basis.q, r*Math.sin(nu));
+}
+// Perifocal→reference-frame cartesian (a.u.) from elements, reference plane = xy,
+// reference x = +X (Ω measured from there). Used for the stability sim, whose
+// REBOUND elements live in the system's near-coplanar frame (load.py subtracts 90°
+// from transit inclinations), NOT the plane of sky. Returns {x,y,z} (unmapped).
+function elemCart(a,e,iDeg,OmDeg,omDeg,nu){
+  const r=a*(1-e*e)/(1+e*Math.cos(nu));
+  const xp=r*Math.cos(nu), yp=r*Math.sin(nu);
+  const i=(iDeg||0)*DEG, Om=(OmDeg||0)*DEG, om=(omDeg||0)*DEG;
+  const X=xp*Math.cos(om)-yp*Math.sin(om), Y=xp*Math.sin(om)+yp*Math.cos(om);
+  const Y2=Y*Math.cos(i), Z2=Y*Math.sin(i);
+  return {x:X*Math.cos(Om)-Y2*Math.sin(Om), y:X*Math.sin(Om)+Y2*Math.cos(Om), z:Z2};
+}
+// Place a sim orbit: build the cartesian in the sim's coplanar frame, then project
+// onto the system's true common-plane triad (ref = skyBasis at the reference
+// inclination), so the orbit sits sky-true AND stays stable when Ω/ω are degenerate
+// near coplanarity (the cartesian is well-defined even when the angles are not).
+function simOrbitPoint(ref,a,e,iDeg,OmDeg,omDeg,nu){
+  const c=elemCart(a,e,iDeg,OmDeg,omDeg,nu);
+  return ref.p.clone().multiplyScalar(c.x).addScaledVector(ref.q,c.y).addScaledVector(ref.n,c.z);
 }
 
 /* ── build per-cluster nodes ──────────────────────────────────────────── */
@@ -384,7 +404,10 @@ DATA.clusters.forEach(c=>{
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
     am.scale.setScalar(pr); am.visible=false; node.add(am);
     stabPlanets.push({name:p.name,variants:p.stability,line,mesh,animLine:al,animMesh:am,
-      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos});
+      host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos,
+      // common-plane reference inclination: load.py subtracts 90° from a known
+      // transit inclination (→ coplanar set ≈0), and uses 0 when i is unknown.
+      iRef:(p.i_deg!=null?90:0)});
   }
   let sysScale=0.6;
 
@@ -408,12 +431,16 @@ DATA.clusters.forEach(c=>{
       node.add(trail); orbitsLines.push(trail);
     } else if(o && o.a_au){
       // Keplerian relative-orbit fallback (elements present, N-body rejected/absent)
+      // — sky-true via skyBasis (Campbell elements are plane-of-sky), matching the
+      // builder's kepler_trajectory orientation.
       let M0=0;
       if(o.T_jd!=null && o.P_yr && c.epoch_jd!=null) M0=2*Math.PI*((c.epoch_jd-o.T_jd)/365.25)/o.P_yr;
       const e=o.e||0, norm=x=>((x%(2*Math.PI))+2*Math.PI)%(2*Math.PI);
-      cpos=orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg, meanToTrue(norm(M0),e));
+      const ob=skyBasis(c.pos,o.i_deg,o.Omega_deg,o.omega_deg);
+      const opt=nu=>ob?ellipsePoint(ob,o.a_au,e,nu):orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg,nu);
+      cpos=opt(meanToTrue(norm(M0),e));
       const ep=[];
-      for(let k=0;k<=240;k++){const v=k/240*2*Math.PI; ep.push(orbitPoint(o.a_au,e,o.i_deg,o.Omega_deg,o.omega_deg,v));}
+      for(let k=0;k<=240;k++){ep.push(opt(k/240*2*Math.PI));}
       const ell=new THREE.Line(new THREE.BufferGeometry().setFromPoints(ep),
         new THREE.LineBasicMaterial({color:0x5a6a88,transparent:true,opacity:.4}));
       node.add(ell); orbitsLines.push(ell);
@@ -770,8 +797,10 @@ function updateStability(){
     // smooth analytic ellipse at this epoch's elements (precesses/tilts/pumps
     // over time); host at focus. e-tinted (blue→amber→red). Sky-true plane via
     // skyBasis (same frame as the static planet orbits); Sol falls back to local.
-    const pb=r.pos?skyBasis(r.pos,iD,OmD,omD):null;
-    const opt=nu=>pb?ellipsePoint(pb,a,e,nu):orbitPoint(a,e,iD,OmD,omD,nu);
+    // reference = the system's true common plane (sim elements are relative to it);
+    // simOrbitPoint rotates the sim-frame ellipse onto it. Sol → local orbitPoint.
+    const rb=r.pos?skyBasis(r.pos,r.iRef,0,0):null;
+    const opt=nu=>rb?simOrbitPoint(rb,a,e,iD,OmD,omD,nu):orbitPoint(a,e,iD,OmD,omD,nu);
     const seg=180,pos=[],col=[];
     const ec=e>0.85?new THREE.Color(0xff5a3c):(e>0.55?new THREE.Color(0xe0b070):new THREE.Color(r.rgb));
     for(let k=0;k<=seg;k++){const p=opt(k/seg*2*Math.PI);

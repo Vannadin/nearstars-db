@@ -390,24 +390,50 @@ def _mean_to_true(M, e):
                           math.sqrt(1 - e) * math.cos(E / 2))
 
 
-def _orbit_point(a, e, i_deg, Om_deg, om_deg, nu):
-    """Keplerian orbit point → ICRS (x,y,z) AU (perifocal→ICRS 3-1-3 rotation).
-    Output ordering matches the viewer's M:(x,y,z)→(x,z,y) scene mapping."""
+def _v_cross(a, b):
+    return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
+
+
+def _v_norm(a):
+    m = math.sqrt(sum(c * c for c in a))
+    return [c / m for c in a] if m > 1e-12 else None
+
+
+def _sky_triad(pos, i_deg, Om_deg, om_deg):
+    """ICRS orbital triad (peri, q) for *sky-plane* elements at a star whose ICRS
+    direction is `pos` (Sol = origin). Mirror of the viewer's skyBasis: i is the
+    inclination from the plane of sky (0 face-on / 90 edge-on as seen from Sol),
+    Omega = PA of the ascending node (North→East), omega = argument of periapsis.
+    Built right-handed in ICRS; the viewer maps (x,y,z)→(x,z,y)."""
+    s = _v_norm(pos) or [0.0, 0.0, 1.0]          # degenerate (Sol): no line of sight
+    E = _v_norm(_v_cross([0, 0, 1], s)) or [1.0, 0.0, 0.0]   # east (incr RA)
+    N = _v_cross(s, E)                                       # north (incr Dec)
     i = math.radians(i_deg or 0); Om = math.radians(Om_deg or 0); om = math.radians(om_deg or 0)
+    node = [N[k] * math.cos(Om) + E[k] * math.sin(Om) for k in range(3)]
+    ns = _v_cross(node, s)
+    n = [s[k] * math.cos(i) + ns[k] * math.sin(i) for k in range(3)]   # orbit normal
+    w = _v_cross(n, node)
+    peri = [node[k] * math.cos(om) + w[k] * math.sin(om) for k in range(3)]
+    q = _v_cross(n, peri)
+    return peri, q
+
+
+def _orbit_point(pos, a, e, i_deg, Om_deg, om_deg, nu):
+    """Keplerian orbit point → ICRS (x,y,z) AU, oriented sky-true for a star at
+    ICRS direction `pos` (so a binary's measured i/Omega/omega — Campbell elements
+    relative to the plane of sky — land in the real ICRS orientation, not a generic
+    grid frame). Output ordering matches the viewer's M:(x,y,z)→(x,z,y) mapping."""
+    peri, q = _sky_triad(pos, i_deg, Om_deg, om_deg)
     r = a * (1 - e * e) / (1 + e * math.cos(nu))
-    xp = r * math.cos(nu); yp = r * math.sin(nu)
-    X = xp * math.cos(om) - yp * math.sin(om)
-    Y = xp * math.sin(om) + yp * math.cos(om)
-    Y2 = Y * math.cos(i); Z2 = Y * math.sin(i)
-    X3 = X * math.cos(Om) - Y2 * math.sin(Om)
-    Y3 = X * math.sin(Om) + Y2 * math.cos(Om)
-    return (X3, Y3, Z2)
+    cx, sx = r * math.cos(nu), r * math.sin(nu)
+    return tuple(peri[k] * cx + q[k] * sx for k in range(3))
 
 
-def kepler_trajectory(orbit, epoch_jd):
+def kepler_trajectory(orbit, epoch_jd, star_pos):
     """Two-body (= N-body for N=2) past trajectory of a secondary about its
     primary from published orbital elements. Used when the catalog 6D state
     doesn't give a bound pair but an orbital solution exists (e.g. 36 Oph A–B).
+    star_pos = the system's ICRS direction (for sky-true orientation).
     Returns [[x,y,z]_AU…] ICRS, index 0 = now, going back ~0.9 of an orbit."""
     a = orbit.get("a_au")
     if not a:
@@ -422,8 +448,8 @@ def kepler_trajectory(orbit, epoch_jd):
     pts = []
     for k in range(K + 1):                    # k=0 now, increasing k = older
         nu = _mean_to_true(norm(M0 - sweep * (k / K)), e)
-        x, y, z = _orbit_point(a, e, orbit.get("i_deg"), orbit.get("Omega_deg"),
-                               orbit.get("omega_deg"), nu)
+        x, y, z = _orbit_point(star_pos, a, e, orbit.get("i_deg"),
+                               orbit.get("Omega_deg"), orbit.get("omega_deg"), nu)
         pts.append([round(x, 4), round(y, 4), round(z, 4)])
     return pts
 
@@ -535,11 +561,12 @@ def nbody_trajectories(members, rep):
     return (traj or None), spans
 
 
-def planet_epicycle(planet, host_pts, span_host):
+def planet_epicycle(planet, host_pts, span_host, star_pos):
     """Real-space path of a planet orbiting a *moving* host: host N-body position
     (interpolated from its trajectory) + the planet's Keplerian offset, sampled
-    over ~8 planet periods → a drifting coil. Returns [[x,y,z]_AU…] ICRS rel rep,
-    index 0 = now. None if the planet lacks a/period."""
+    over ~8 planet periods → a drifting coil. star_pos = system ICRS direction
+    (sky-true orientation). Returns [[x,y,z]_AU…] ICRS rel rep, index 0 = now.
+    None if the planet lacks a/period."""
     a = planet.get("a_au")
     per_d = planet.get("period_days")
     if not a or not per_d or per_d <= 0:
@@ -559,8 +586,8 @@ def planet_epicycle(planet, host_pts, span_host):
         i0 = int(f); i1 = min(i0 + 1, N - 1); fr = f - i0
         h = [host_pts[i0][k] + (host_pts[i1][k] - host_pts[i0][k]) * fr for k in range(3)]
         nu = _mean_to_true(norm(M0 + nmot * t), e)
-        ox, oy, oz = _orbit_point(a, e, planet.get("i_deg"), planet.get("Omega_deg"),
-                                  planet.get("omega_deg"), nu)
+        ox, oy, oz = _orbit_point(star_pos, a, e, planet.get("i_deg"),
+                                  planet.get("Omega_deg"), planet.get("omega_deg"), nu)
         out.append([round(h[0] + ox, 5), round(h[1] + oy, 5), round(h[2] + oz, 5)])
     return out
 
@@ -646,7 +673,7 @@ def build_cluster_obj(members):
             "phase": m.get("phase", 1),
             "offset_au": off_au, "placement": kind, "orbit": orbit,
             "trajectory": (traj or {}).get(m["name"])
-            or (kepler_trajectory(orbit, rep.get("epoch_jd")) if orbit else None),
+            or (kepler_trajectory(orbit, rep.get("epoch_jd"), rep["pos_ly"]) if orbit else None),
         })
         for p in m["planets"]:
             pp = dict(p)
@@ -654,7 +681,7 @@ def build_cluster_obj(members):
                          else "#ccd2de")
             # planet around a moving host (binary N-body) → real-space epicycle
             if traj and m["name"] in traj:
-                epi = planet_epicycle(p, traj[m["name"]], spans[m["name"]])
+                epi = planet_epicycle(p, traj[m["name"]], spans[m["name"]], rep["pos_ly"])
                 if epi:
                     pp["epicycle"] = epi
             stab = load_stability().get(p["name"])
