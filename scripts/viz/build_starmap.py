@@ -184,14 +184,23 @@ def planet_orbital(p):
 
 
 # ── load + per-star record ─────────────────────────────────────────────────
+_MANIFEST_RAW = None
+
+
+def manifest_raw():
+    """Raw docs/reports-manifest.json: star name → {phase2, phase3:{'★':url, 'b':url…}}."""
+    global _MANIFEST_RAW
+    if _MANIFEST_RAW is None:
+        path = os.path.join(ROOT, "docs", "reports-manifest.json")
+        _MANIFEST_RAW = json.load(open(path, encoding="utf-8")) if os.path.exists(path) else {}
+    return _MANIFEST_RAW
+
+
 def load_manifest():
     """Map system_name → curation phase (3 if phase3, 2 if phase2, else 1)."""
-    path = os.path.join(ROOT, "docs", "reports-manifest.json")
     phase = {}
-    if os.path.exists(path):
-        man = json.load(open(path, encoding="utf-8"))
-        for name, rec in man.items():
-            phase[name] = 3 if rec.get("phase3") else (2 if rec.get("phase2") else 1)
+    for name, rec in manifest_raw().items():
+        phase[name] = 3 if rec.get("phase3") else (2 if rec.get("phase2") else 1)
     return phase
 
 
@@ -673,14 +682,18 @@ def build_cluster_obj(members):
             # else a 2-body Keplerian path from published elements; else none.
             "is_primary": is_primary,
             "phase": m.get("phase", 1),
+            # Phase 3 report page for this star (manifest '★' host entry), if any
+            "phase3": (manifest_raw().get(m["name"], {}).get("phase3") or {}).get("★"),
             "offset_au": off_au, "placement": kind, "orbit": orbit,
             "trajectory": (traj or {}).get(m["name"])
             or (kepler_trajectory(orbit, rep.get("epoch_jd"), rep["pos_ly"]) if orbit else None),
         })
+        _p3h = manifest_raw().get(m["name"], {}).get("phase3") or {}
         for p in m["planets"]:
             pp = dict(p)
             pp["rgb"] = (teff_to_rgb(p["teq_k"]) if p.get("teq_k")
                          else "#ccd2de")
+            pp["phase3"] = _p3h.get(p["name"].split()[-1])   # planet-letter page, if any
             # planet around a moving host (binary N-body) → real-space epicycle
             if traj and m["name"] in traj:
                 epi = planet_epicycle(p, traj[m["name"]], spans[m["name"]], rep["pos_ly"])
