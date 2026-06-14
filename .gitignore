@@ -74,3 +74,4 @@ docs/phase3/_papers/
 # Ignore Smart Environment folder
 .smart-envphase3/stability-sim/run_1myr.log
 phase3/stability-sim/log_*.log
+phase3/stability-sim/run_barnard.log
