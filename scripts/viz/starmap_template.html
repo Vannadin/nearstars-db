@@ -412,13 +412,16 @@ DATA.clusters.forEach(c=>{
   const bodies=[]; const orbitsLines=[]; const stabPlanets=[];
   // register a planet that has a stability time-series: keep refs to its normal
   // line+mesh (to hide during playback) and make a morphing anim line+mesh.
-  function regStab(p,line,mesh,hostVec){
+  function regStab(p,line,mesh,hostVec,grp){
     if(!p.stability) return;
+    // anim line/mesh are children of the HOST group (grp) so their vertices are tiny
+    // (offset from the host, ~AU), not host-absolute (~13,900 AU for Proxima) — that
+    // float32 quantization is what made the orbits render jagged.
     const al=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.95}));
-    al.visible=false; al.frustumCulled=false; node.add(al);
+    al.visible=false; al.frustumCulled=false; grp.add(al);
     const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
-    am.scale.setScalar(pr); am.visible=false; node.add(am);
+    am.scale.setScalar(pr); am.visible=false; grp.add(am);
     stabPlanets.push({name:p.name,hostName:p.host_star,variants:p.stability,line,mesh,animLine:al,animMesh:am,
       host:hostVec.clone(),rgb:p.rgb||'#7aa8ff',pos:c.is_sol?null:c.pos,
       // common-plane reference inclination: load.py subtracts 90° from a known
@@ -495,7 +498,7 @@ DATA.clusters.forEach(c=>{
         const pm2=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
         pm2.scale.setScalar(pr2); pm2.position.set(e0[0],e0[2],e0[1]); node.add(pm2);
         bodies.push({kind:'planet',name:p.name,obj:pm2,rgb:p.rgb||'#ccd2de',r:pr2});
-        regStab(p,eline,pm2,cpos);
+        regStab(p,eline,pm2,cpos,cg);
         return;
       }
       // orbit line — sky-true plane (i,Ω,ω vs the plane of sky); Sol keeps the
@@ -516,7 +519,7 @@ DATA.clusters.forEach(c=>{
         new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
       pm.scale.setScalar(pr); pm.position.copy(pp); cg.add(pm);
       bodies.push({kind:'planet',name:p.name,obj:pm,rgb:p.rgb||'#ccd2de',r:pr});
-      regStab(p,line,pm,cpos);
+      regStab(p,line,pm,cpos,cg);
     });
   });
 
@@ -659,16 +662,19 @@ renderer.domElement.addEventListener('pointermove',e=>{ hoverCl=pick(e); rendere
 let hoverCl=null;
 const hoverLabel=document.getElementById('hoverLabel');
 function openInfo(c){ selected=c; renderInfo(c); document.getElementById('info').classList.add('show'); }
-renderer.domElement.addEventListener('click',e=>{
+function selectAt(e){            // tap/click = select body or cluster, open info
   const b=pickBody(e);
-  if(b){ selBody=b;                            // zoomed in: highlight the body…
-    const cl=clusters.find(x=>x.bodies.includes(b));
-    if(cl) openInfo(cl.data);                  // …and (re)open the system info so it can always come back
-    return; }
+  if(b){ selBody=b; const cl=clusters.find(x=>x.bodies.includes(b)); if(cl) openInfo(cl.data); return; }
   const c=pick(e);
-  if(c){ openInfo(c);
-    const cl=clusters.find(x=>x.data===c); selBody=cl?cl.bodies.find(x=>x.kind==='star'):null; }
-});
+  if(c){ openInfo(c); const cl=clusters.find(x=>x.data===c); selBody=cl?cl.bodies.find(x=>x.kind==='star'):null; }
+}
+function focusAt(e){            // double-tap/double-click = focus body, else fly to system
+  const b=pickBody(e); if(b){ focusBody(b); return; }
+  const c=pick(e); if(c) flyTo(c);
+}
+let _lastPtr='mouse';
+renderer.domElement.addEventListener('pointerdown',e=>{ _lastPtr=e.pointerType||'mouse'; });
+renderer.domElement.addEventListener('click',e=>{ if(_lastPtr==='touch') return; selectAt(e); }); // touch handled in pointerup
 // double-click: focus the nearest body when zoomed in, else fly to the system
 function pickBody(e){
   let best=null,bd=34*34;
@@ -679,24 +685,29 @@ function pickBody(e){
   });
   return best;
 }
-renderer.domElement.addEventListener('dblclick',e=>{
-  const b=pickBody(e); if(b){ focusBody(b); return; }
-  const c=pick(e); if(c){ flyTo(c); }
-});
+renderer.domElement.addEventListener('dblclick',e=>{ if(_lastPtr!=='mouse') return; focusAt(e); });
 document.getElementById('infoClose').onclick=()=>{document.getElementById('info').classList.remove('show'); selected=null;};
 document.getElementById('infoEnter').onclick=()=>{ if(selected) flyTo(selected); };
-// touch: tap = select (native click), double-tap = focus/enter (parity with dblclick)
+// touch: defer the single-tap (select/info) so a second tap can pre-empt it as a
+// double-tap (focus). Without the delay the info sheet popped up on the first tap and
+// covered the spot, blocking the second tap of the double-tap.
 const isTouch = matchMedia('(pointer:coarse)').matches || 'ontouchstart' in window;
 if(isTouch){
   document.getElementById('hint').dataset.i18n='hintTouch';
-  let lastTap=0, lx=0, ly=0;
+  let lastTap=0, lx=0, ly=0, tapTimer=null, dragStart=null;
+  renderer.domElement.addEventListener('pointerdown',e=>{ if(e.pointerType==='touch') dragStart={x:e.clientX,y:e.clientY}; });
   renderer.domElement.addEventListener('pointerup',e=>{
     if(e.pointerType!=='touch') return;
-    const now=performance.now();
-    if(now-lastTap<320 && Math.hypot(e.clientX-lx, e.clientY-ly)<28){
-      const b=pickBody(e); if(b){ focusBody(b); } else { const c=pick(e); if(c) flyTo(c); }
-      lastTap=0;
-    } else { lastTap=now; lx=e.clientX; ly=e.clientY; }
+    if(dragStart && Math.hypot(e.clientX-dragStart.x, e.clientY-dragStart.y)>14) return; // was a drag, not a tap
+    const now=performance.now(), ex=e.clientX, ey=e.clientY, ev={clientX:ex,clientY:ey};
+    if(now-lastTap<320 && Math.hypot(ex-lx,ey-ly)<32){           // double tap → focus, cancel pending single
+      if(tapTimer){ clearTimeout(tapTimer); tapTimer=null; }
+      lastTap=0; focusAt(ev);
+    } else {                                                     // first tap → defer the select/info
+      lastTap=now; lx=ex; ly=ey;
+      if(tapTimer) clearTimeout(tapTimer);
+      tapTimer=setTimeout(()=>{ tapTimer=null; selectAt(ev); }, 300);
+    }
   });
 }
 
@@ -847,13 +858,13 @@ function updateStability(){
     const seg=180,pos=[],col=[];
     const ec=e>0.85?new THREE.Color(0xff5a3c):(e>0.55?new THREE.Color(0xe0b070):new THREE.Color(r.rgb));
     for(let k=0;k<=seg;k++){const p=opt(k/seg*2*Math.PI);
-      pos.push(r.host.x+p.x, r.host.y+p.y, r.host.z+p.z); col.push(ec.r,ec.g,ec.b);}
+      pos.push(p.x, p.y, p.z); col.push(ec.r,ec.g,ec.b);}   // host-local (animLine is a child of the host group)
     r.animLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
     r.animLine.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
     r.animLine.visible=true;
     // planet at its true anomaly
     const pp=opt(fAn*DEG);
-    r.animMesh.position.set(r.host.x+pp.x, r.host.y+pp.y, r.host.z+pp.z); r.animMesh.visible=true;
+    r.animMesh.position.set(pp.x, pp.y, pp.z); r.animMesh.visible=true;
     tt=_lerp(c0[0],c1[0],f); if(e>maxE){maxE=e;maxA=a;maxName=r.name;}
   });
   stabSlider.value=stabIdx;
