@@ -153,11 +153,13 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   #info.show{animation:sheet .28s cubic-bezier(.32,.72,0,1)}
   #info h2{font-size:17px} #info .enter{padding:11px 11px}
   #stabPanel{left:0;right:0;bottom:0;width:100%;min-width:0;transform:none;border-radius:16px 16px 0 0;
-    padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
+    max-height:82%;overflow-y:auto;padding:12px 14px calc(12px + env(safe-area-inset-bottom))}
   #stabPanel.show{transform:none}
   #hint{bottom:auto;top:56px;font-size:10.5px;max-width:92vw;white-space:normal;line-height:1.4}
   /* on mobile #info is a bottom sheet — lift the zoom dock above it, back to the right edge */
   #info.show ~ #zoomctl{right:10px;top:auto;bottom:calc(64% + 14px);transform:none}
+  /* expand-modal: use almost the full screen on a phone */
+  #stabModal .card{width:94vw;height:88vh;padding:12px 12px 14px}
 }
 @keyframes sheet{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 </style>
