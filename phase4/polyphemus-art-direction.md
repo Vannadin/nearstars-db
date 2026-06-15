@@ -87,6 +87,42 @@ mechanism + ice-giant saturation reasoning in
 [`../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md`](../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md)
 context and `docs/reference/color-materials.md`.
 
+## Pandora — surface climate over the orbit (estimate, 2026-06-15)
+
+Polyphemus (and its moon Pandora) ride an eccentric heliocentric orbit (a = 1.6 AU,
+e = 0.1 → periapsis 1.44 AU, apoapsis 1.76 AU around α Cen A). Insolation from A
+swings **1.49×** over the 705-day orbit (α Cen B adds <1%). The periapsis↔apoapsis
+temperature difference is **fundamentally ~10% of the absolute temperature**
+(ΔT/T = 0.25·ΔS/S, independent of greenhouse/albedo).
+
+**Pure radiative equilibrium (physics, no greenhouse):** ~244 K (periapsis) to ~213 K
+(apoapsis) for Bond albedo 0.2–0.3, full redistribution → i.e. −30 to −60 °C. Cold,
+because Polyphemus sits beyond α Cen A's outer HZ edge (consistent with the Phase 3
+T_eq ≈ 225 K). A habitable Pandora therefore *requires* a strong greenhouse + tidal
+heating raising the mean ~70 K — that warming term is **art-direction (fictional),
+not derived.**
+
+**Habitable scenario (target mean set as art-direction):** the seasonal (orbital)
+swing scales as ~10% of the mean. For a temperate-to-tropical mean of ~288–295 K:
+- bare equilibrium swing ≈ 29 K;
+- with realistic atmospheric thermal inertia (~0.7 damping) ≈ **20 K** (e.g. 305↔285 K
+  at a 295 K mean);
+- with a deep ocean / strong inertia ≈ 14–15 K.
+
+The **27-hour day governs the day↔night swing, NOT this seasonal swing** — a fast day +
+thick atmosphere mixes longitudes so the diurnal range is only a few K (and justifies
+the full-redistribution assumption); small daily ripples sit on top of the great season.
+Convection/atmosphere both redistributes heat and provides the inertia that damps the
+season; because the 705-day orbit is *slow*, damping is only partial (the surface largely
+tracks equilibrium). Additional moon-specific terms raise the floor and slightly reduce
+the relative season: tidal heating (constant internal), planetshine + Polyphemus thermal
+IR, and a brief cooling dip each ~27 h orbit when Pandora crosses Polyphemus's shadow.
+
+**Bottom line:** a tropical (~290 K) Pandora has a realistic **~15–25 K (best ~20 K)
+periapsis-warmer "great season"** over each 705-day (~2 Earth-year) orbit — comparable
+to a strong continental seasonal cycle, livable. This is a supporting reason the e = 0.1
+orbit is fine to keep (a noticeable but habitable season, not a climate breaker).
+
 ## Mapping to cfg (for the eventual Phase 4 emit)
 
 - `atmosphere_tint` / `cloud_tint` — ivory zones, slate/steel-blue belts (rather
