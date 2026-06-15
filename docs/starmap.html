@@ -256,6 +256,7 @@ const R_SUN_AU  = 0.00465047;
 const R_EARTH_AU= 4.26352e-5;
 const KMS_TO_LYYR = 3.33670e-6;   // 1 km/s in light-years per year
 const DEG = Math.PI/180;
+const SEG_STAB = 180;             // stability-orbit ellipse segments (buffers preallocated to SEG_STAB+1)
 
 /* ── i18n ─────────────────────────────────────────────────────────────── */
 const STR = {
@@ -469,6 +470,10 @@ DATA.clusters.forEach(c=>{
     // (offset from the host, ~AU), not host-absolute (~13,900 AU for Proxima) — that
     // float32 quantization is what made the orbits render jagged.
     const al=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:.95}));
+    // preallocate position/colour buffers once and rewrite them in place each frame
+    // (updateStability) — avoids a per-frame Float32BufferAttribute allocation + GC.
+    al.geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(3*(SEG_STAB+1)),3));
+    al.geometry.setAttribute('color',new THREE.BufferAttribute(new Float32Array(3*(SEG_STAB+1)),3));
     al.visible=false; al.frustumCulled=false; grp.add(al);
     const pr=Math.max((p.radius_rearth||1)*R_EARTH_AU, R_EARTH_AU*0.6);
     const am=new THREE.Mesh(new THREE.SphereGeometry(1,16,12),new THREE.MeshBasicMaterial({color:new THREE.Color(p.rgb||'#ccd2de')}));
@@ -918,6 +923,10 @@ const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getEl
       stabExpandBtn=document.getElementById('stabExpand'), stabModal=document.getElementById('stabModal'),
       stabBigCanvas=document.getElementById('stabBigCanvas'), stabModalTitle=document.getElementById('stabModalTitle');
 let stabShowChart=false, stabModalOpen=false;
+let _stabLastIdx=-1, _stabLastVar=-1, _stabForce=true;   // skip per-frame recompute when paused & unchanged
+const _stabMark=()=>{ _stabForce=true; };                // force one recompute (open / variant / lang change)
+// e-tint colours reused each frame (avoid `new THREE.Color` per rec per frame)
+const _ecHi=new THREE.Color(0xff5a3c), _ecMid=new THREE.Color(0xe0b070);
 // current variant's series for a planet, or null if it has no data under the
 // selected variant (e.g. a candidate planet has no 'confirmed' run) → it's hidden.
 const recData=r=>{ const v=r.variants.find(x=>x.id===stabVarIds[stabVar]); return v?v.data:null; };
@@ -936,6 +945,7 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
   stabSlider.max=stabN-1; stabSlider.step='any'; if(stabIdx>stabN-1) stabIdx=stabN-1;
   let ext=1; stabRecs.forEach(r=>{ const d=recData(r); if(d) d.forEach(s=>{ext=Math.max(ext,s[1]*(1+s[2]));}); });
   stabRecs._ext=ext;
+  _stabMark();   // open / variant / lang change → force one recompute even if paused
 }
 function openStability(c){
   const cl=clusters.find(x=>x.data===c); if(!cl||!cl.stabPlanets.length) return;
@@ -1001,6 +1011,10 @@ const _alerp=(a,b,t)=>{ let d=((b-a)%360+540)%360-180; return a+d*t; }; // short
 function updateStability(){
   if(!stabActive) return;
   if(stabPlaying){ stabIdx+=0.5; if(stabIdx>=stabN-1) stabIdx=0; }
+  // paused and nothing moved → the orbit shape and chart are unchanged; skip the
+  // whole recompute/repaint (a paused sim then costs nothing per frame).
+  if(!(_stabForce || stabPlaying || stabIdx!==_stabLastIdx || stabVar!==_stabLastVar)) return;
+  _stabForce=false; _stabLastIdx=stabIdx; _stabLastVar=stabVar;
   let maxE=-1,maxA=0,maxName='',tt=0;
   stabRecs.forEach(r=>{
     const d=recData(r);
@@ -1025,12 +1039,13 @@ function updateStability(){
     const rb=r.plane?skyBasis(r.pos,r.plane.inc,r.plane.pa,0)
                     :(r.pos?skyBasis(r.pos,r.iRef,0,0):null);
     const opt=nu=>rb?simOrbitPoint(rb,a,e,iD,OmD,omD,nu):orbitPoint(a,e,iD,OmD,omD,nu);
-    const seg=180,pos=[],col=[];
-    const ec=e>0.85?new THREE.Color(0xff5a3c):(e>0.55?new THREE.Color(0xe0b070):new THREE.Color(r.rgb));
-    for(let k=0;k<=seg;k++){const p=opt(k/seg*2*Math.PI);
-      pos.push(p.x, p.y, p.z); col.push(ec.r,ec.g,ec.b);}   // host-local (animLine is a child of the host group)
-    r.animLine.geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
-    r.animLine.geometry.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+    const ec=e>0.85?_ecHi:(e>0.55?_ecMid:(r._rgbC||(r._rgbC=new THREE.Color(r.rgb))));  // reused, no per-frame alloc
+    const pa=r.animLine.geometry.attributes.position.array;   // rewrite preallocated buffers in place
+    const ca=r.animLine.geometry.attributes.color.array;
+    for(let k=0;k<=SEG_STAB;k++){const p=opt(k/SEG_STAB*2*Math.PI), j=k*3;
+      pa[j]=p.x; pa[j+1]=p.y; pa[j+2]=p.z; ca[j]=ec.r; ca[j+1]=ec.g; ca[j+2]=ec.b;}
+    r.animLine.geometry.attributes.position.needsUpdate=true;
+    r.animLine.geometry.attributes.color.needsUpdate=true;
     r.animLine.visible=true;
     // planet at its true anomaly
     const pp=opt(fAn*DEG);
