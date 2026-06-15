@@ -38,3 +38,10 @@ flagged as an open item.
 - [`orbit-optimizations.md`](orbit-optimizations.md) — running log. First entry:
   α Cen A b (stability-selected a 1.6 / e 0.1 / mutual i 16°; cfg-frame sky
   inclination is the open Phase 4 item).
+
+## Policies
+
+- [`synthetic-orbit-noise.md`](synthetic-orbit-noise.md) — de-perfecting default
+  orbital elements (0 / 90 / e=0) with seeded, physically-bounded noise; never
+  touches measurements, stability-gated. The transit-preserving inclination bound is
+  the headline guardrail.
