@@ -18,8 +18,15 @@ as natural — **without ever touching a real measurement**.
    frozen. (The DB already records method/source — that is the gate.)
 2. **DB invariant.** Noise is applied in the Phase-4 / cfg-emit layer, never written
    back to `db/`. The measured DB stays the source of truth; the build is reproducible.
-3. **Seeded & deterministic.** amplitude·direction = f(seed, body name) — no RNG that
-   changes between builds. Re-running yields the identical config.
+3. **Re-rollable, never baked.** The noise is a re-rollable *realization*, not a single
+   fixed value frozen into the spec or DB. It's drawn from a seed: a given seed
+   reproduces a given build (a committed release stays deterministic, so diffs/freshness
+   checks still hold), but **the seed is a free knob** — bump / re-roll it and every
+   noised element lands on a *different* valid value inside the same guardrails (and must
+   re-pass the stability gate). So the values vary roll-to-roll; they are never locked to
+   one set. (The seed is recorded with the build for reproducibility; re-rolling = change
+   the recorded seed. If a future build wants fresh noise every run instead, the
+   build-freshness check must exempt the noised emit — tradeoff noted.)
 4. **Physically bounded** (below). Noise must stay inside the Phase-3 defensible
    window AND inside any observational constraint the body still has to satisfy.
 5. **Stability-gated.** After perturbing a multi-body system, run the stability sim
