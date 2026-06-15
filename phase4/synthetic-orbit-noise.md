@@ -18,15 +18,17 @@ as natural — **without ever touching a real measurement**.
    frozen. (The DB already records method/source — that is the gate.)
 2. **DB invariant.** Noise is applied in the Phase-4 / cfg-emit layer, never written
    back to `db/`. The measured DB stays the source of truth; the build is reproducible.
-3. **Re-rollable, never baked.** The noise is a re-rollable *realization*, not a single
-   fixed value frozen into the spec or DB. It's drawn from a seed: a given seed
-   reproduces a given build (a committed release stays deterministic, so diffs/freshness
-   checks still hold), but **the seed is a free knob** — bump / re-roll it and every
-   noised element lands on a *different* valid value inside the same guardrails (and must
-   re-pass the stability gate). So the values vary roll-to-roll; they are never locked to
-   one set. (The seed is recorded with the build for reproducibility; re-rolling = change
-   the recorded seed. If a future build wants fresh noise every run instead, the
-   build-freshness check must exempt the noised emit — tradeoff noted.)
+3. **Re-rollable per star system, never baked.** The noise is a re-rollable
+   *realization*, not a single fixed value frozen into the spec or DB. It's drawn from a
+   **per-system seed** — the seed key is the star system, so each system is an
+   independent roll (systems differ from one another) and **re-rolling is scoped to one
+   system**: bumping a system's seed gives that system a different valid realization
+   (inside the same guardrails, re-passing the stability gate) while every other system
+   stays untouched. A given set of per-system seeds reproduces a given build (releases
+   stay deterministic / diffs + freshness hold); re-rolling = bump that one system's
+   seed. So values vary system-to-system and roll-to-roll, never locked to one set.
+   (If a future build wants fresh noise every run, the build-freshness check must exempt
+   the noised emit — tradeoff noted.)
 4. **Physically bounded** (below). Noise must stay inside the Phase-3 defensible
    window AND inside any observational constraint the body still has to satisfy.
 5. **Stability-gated.** After perturbing a multi-body system, run the stability sim
