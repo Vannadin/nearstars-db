@@ -105,6 +105,29 @@ def merge(yaml_data: dict) -> tuple[dict, dict]:
     return stellar, planets
 
 
+def _data_categories(entry: dict) -> set:
+    """측정-데이터 카테고리 키 (whole-entry replacement 에서 silently 사라지면
+    안 되는 것). *_measurements + compact_object. narrative 필드(meta_notes 등)는
+    이미 _STELLAR_PRESERVE_IF_ABSENT 로 보존되므로 제외."""
+    return {k for k in entry if k.endswith("_measurements")} | (
+        {"compact_object"} if "compact_object" in entry else set())
+
+
+def category_drops(yaml_data: dict) -> dict:
+    """호스트별로, apply 가 (YAML 에 없어서) JSON 에서 삭제하게 될 데이터
+    카테고리. stellar-wind 류 직접-JSON 큐레이션이 stale YAML 로 wipe 되는
+    사고를 막는 가드. {host: [categories]} (drop 없으면 빈 dict)."""
+    with open(STELLAR, encoding="utf-8") as f:
+        stellar = json.load(f)
+    drops = {}
+    for host, entry in (yaml_data.get("stellar") or {}).items():
+        existing = stellar.get(host) or {}
+        lost = _data_categories(existing) - _data_categories(dict(entry))
+        if lost:
+            drops[host] = sorted(lost)
+    return drops
+
+
 def _serialize(d: dict) -> str:
     return canonical_json(d)
 
@@ -122,9 +145,28 @@ def main() -> int:
     ap.add_argument("slug", help="phase2/<slug>/measurements.yaml")
     ap.add_argument("--check", action="store_true",
                     help="Compute merged result but don't write; exit 1 if it would change anything")
+    ap.add_argument("--force", action="store_true",
+                    help="Override the data-loss guard (apply even if it drops JSON-only categories)")
     args = ap.parse_args()
 
     data = load_yaml(args.slug)
+
+    # ── data-loss guard ──────────────────────────────────────────────────
+    # whole-entry replacement 이 YAML 에 없는 측정 카테고리를 조용히 삭제하는 것을
+    # 막음. stellar-wind/inclination 처럼 JSON 직접 큐레이션된 카테고리가 stale
+    # YAML 로 wipe 되는 사고 방지 (apply_phase2 의 알려진 footgun).
+    drops = category_drops(data)
+    if drops:
+        lines = "\n".join(f"    {h}: {cats}" for h, cats in drops.items())
+        msg = (f"[GUARD] {args.slug}: YAML 이 JSON 에만 있는 카테고리를 삭제하려 합니다 "
+               f"(stale YAML?):\n{lines}\n"
+               f"    → 이 카테고리를 YAML 에 추가하거나, 의도된 삭제면 --force 로 강행.")
+        print(msg)
+        if not args.check and not args.force:
+            return 2                       # block the write; --check is read-only (warn only)
+        if args.force:
+            print("    --force: 가드 무시하고 진행.")
+
     new_stellar, new_planets = merge(data)
 
     stellar_changed = _serialize(new_stellar) != STELLAR.read_text(encoding="utf-8")
