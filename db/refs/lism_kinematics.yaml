@@ -1,0 +1,113 @@
+# 55광년 이내 국부 성간물질(LISM) 운동학 앵커 — 성간풍 속도장 + astrosphere 실측 census
+#
+# Feeds the viewer's heliosphere/astrotail orientation and the interstellar-wind map layer.
+# v_rel = v_star(heliocentric) - v_ISM(heliocentric); tail = -v_rel, nose = +v_rel.
+# Every value is pinned to a bibcode. Independently verified 2026-06-16 (6/6 core values match).
+#
+# CONVENTIONS (read before use):
+#  - clouds[].(l_deg,b_deg) is the DOWNWIND direction (where the gas flows TOWARD),
+#    Galactic, with v0_kms > 0. Heliocentric (solar rest) frame. Upwind/source apex is
+#    the antipode (l-180 mod 360, -b). This is Redfield & Linsky 2008's convention.
+#  - insitu_he is the in-situ IBEX He inflow given in ECLIPTIC inflow coords (flows toward),
+#    a heliospheric measurement distinct from the spectroscopic LIC cloud vector. Mind the
+#    frame/convention difference vs the cloud vectors when combining.
+#  - astrospheres[].v_ism_stellar_kms is in the STELLAR rest frame (ISM-vs-star flow speed
+#    an astrosphere constrains) -- NOT heliocentric. Use it for cloud assignment and for
+#    wind strength (mdot), NOT as a heliocentric field anchor. The cloud vectors are the field.
+#
+# MODEL (hybrid): assign each star to its LISM cloud (by sky region, or by the explicit
+# Wood cloud tag where measured), use that cloud's heliocentric vector as v_ISM; IDW-blend
+# neighbouring cloud vectors for a smooth field. Reality is piecewise (clouds with sharp
+# boundaries) -- the smooth field is a labelled approximation. 3D cloud depths are weakly
+# constrained (sky direction is solid; near_pc is an UPPER LIMIT on the near edge, not a
+# position). Subsonic v_rel -> no sharp bow shock/tail (idealization for slow movers).
+
+meta:
+  range_ly: 55
+  frame: heliocentric
+  cloud_direction_convention: downwind_galactic   # (l_deg,b_deg) = where gas flows toward
+  verified: 2026-06-16
+  primary_sources:
+    clouds: "2008ApJ...673..283R"        # Redfield & Linsky 2008, ApJ 673, 283, Tables 16 & 18
+    astrospheres: "2021ApJ...915...37W"  # Wood et al. 2021, ApJ 915, 37, Tables 2 & 3
+    astrospheres_xray: "2024NatAs...8..596K"  # Kislyakova et al. 2024 (X-ray charge-exchange)
+    insitu_he: "2015ApJS..220...28B"     # Bzowski/McComas et al. 2015 (IBEX He inflow)
+
+# In-situ interstellar-neutral He inflow at the Sun (heliospheric, ecliptic inflow coords).
+insitu_he:
+  speed_kms: 25.8
+  ecliptic_lambda_deg: 255.8   # flows toward (inflow); upwind apex = antipode
+  ecliptic_beta_deg: 5.16
+  temp_k: 7440
+  source: "2015ApJS..220...28B"
+
+# Representative LIC/G average R&L offer as the nearest thing to a "bulk" vector (parameter
+# mean, not a true vector mean -- ~0.5 deg off in b from the Cartesian midpoint).
+licg_mean:
+  v0_kms: 26.74
+  l_deg: 185.7
+  b_deg: -16.95
+  note: "(LIC+G)/2 parameter average, R&L 2008 Table 16; use only as a coarse fallback."
+  source: "2008ApJ...673..283R"
+
+# 15 warm clouds within ~15 pc. v0_kms toward Galactic (l_deg,b_deg) [downwind, heliocentric].
+# region_l/region_b = cloud-center Galactic direction (Table 18). near_pc = nearest star with
+# the cloud's absorption (upper limit on near edge). n = # sightlines, chi2 = reduced chi^2
+# of the rigid-vector fit (>3 = poor fit, flag). All values: R&L 2008 Tables 16 & 18.
+clouds:
+  - {name: LIC,    v0_kms: 23.84, l_deg: 187.0, b_deg: -13.5,  region_l: 170, region_b: -10, near_pc: 2.6,  n: 79, chi2: 2.2}
+  - {name: G,      v0_kms: 29.6,  l_deg: 184.5, b_deg: -20.6,  region_l: 315, region_b: 0,   near_pc: 1.3,  n: 21, chi2: 1.3}
+  - {name: Blue,   v0_kms: 13.89, l_deg: 205.5, b_deg: -21.7,  region_l: 250, region_b: -30, near_pc: 2.6,  n: 10, chi2: 2.4}
+  - {name: Aql,    v0_kms: 58.6,  l_deg: 187.0, b_deg: -50.8,  region_l: 40,  region_b: -5,  near_pc: 3.5,  n: 9,  chi2: 2.6}
+  - {name: Eri,    v0_kms: 24.1,  l_deg: 196.7, b_deg: -17.7,  region_l: 70,  region_b: -20, near_pc: 3.5,  n: 8,  chi2: 0.3}
+  - {name: Aur,    v0_kms: 25.22, l_deg: 212.0, b_deg: -16.4,  region_l: 210, region_b: 10,  near_pc: 3.5,  n: 9,  chi2: 2.1}
+  - {name: Hyades, v0_kms: 14.69, l_deg: 164.2, b_deg: -42.8,  region_l: 180, region_b: -20, near_pc: 5.0,  n: 14, chi2: 1.3}
+  - {name: Mic,    v0_kms: 28.45, l_deg: 203.0, b_deg: -3.3,   region_l: 40,  region_b: 15,  near_pc: 5.1,  n: 15, chi2: 0.5}
+  - {name: Oph,    v0_kms: 32.25, l_deg: 217.7, b_deg: 0.8,    region_l: 45,  region_b: 25,  near_pc: 5.1,  n: 6,  chi2: 3.9}  # poor fit
+  - {name: Gem,    v0_kms: 36.3,  l_deg: 207.2, b_deg: -1.2,   region_l: 300, region_b: 40,  near_pc: 6.7,  n: 10, chi2: 1.7}
+  - {name: NGP,    v0_kms: 37.0,  l_deg: 189.8, b_deg: -5.4,   region_l: 5,   region_b: 75,  near_pc: 8.5,  n: 15, chi2: 3.8}  # poor fit
+  - {name: Leo,    v0_kms: 23.5,  l_deg: 191.3, b_deg: -8.9,   region_l: 270, region_b: 55,  near_pc: 11.1, n: 7,  chi2: 1.5}
+  - {name: Dor,    v0_kms: 52.94, l_deg: 157.3, b_deg: -47.93, region_l: 270, region_b: -50, near_pc: 11.7, n: 4,  chi2: 0.8}  # only 4 sightlines
+  - {name: Vel,    v0_kms: 45.2,  l_deg: 195.4, b_deg: -19.1,  region_l: 300, region_b: -45, near_pc: 14.9, n: 7,  chi2: 0.8}
+  - {name: Cet,    v0_kms: 60.0,  l_deg: 197.11, b_deg: -8.72, region_l: 290, region_b: -40, near_pc: 15.5, n: 5,  chi2: 8.9}  # worst fit; extreme v
+
+# Measured astrospheres within 55 ly. v_ism_stellar_kms = ISM-vs-star flow (STELLAR frame);
+# theta_deg = angle of ISM upwind to our sightline; mdot_solar = mass-loss (x Sun, 2e-14 Msun/yr);
+# cloud = LISM cloud the absorption is assigned to (default LIC unless noted, Wood Table 2);
+# status = detection / limit (non-detection upper limit) / nondet. Wood et al. 2021 Table 3.
+astrospheres:
+  - {star: "Alpha Centauri", d_pc: 1.35, v_ism_stellar_kms: 25,  theta_deg: 79,  mdot_solar: 2.0,  cloud: LIC, status: detection}
+  - {star: "Proxima Cen",    d_pc: 1.30, v_ism_stellar_kms: 25,  theta_deg: 79,  mdot_solar: 0.2,  cloud: LIC, status: limit}
+  - {star: "Barnard's star", d_pc: 1.83, v_ism_stellar_kms: 121, theta_deg: 43,  mdot_solar: 0.2,  cloud: LIC, status: limit}
+  - {star: "Lalande 21185",  d_pc: 2.55, v_ism_stellar_kms: 110, theta_deg: 36,  mdot_solar: 0.1,  cloud: LIC, status: limit}
+  - {star: "GJ 887",         d_pc: 3.29, v_ism_stellar_kms: 85,  theta_deg: 99,  mdot_solar: 0.5,  cloud: LIC, status: detection}
+  - {star: "eps Eri",        d_pc: 3.22, v_ism_stellar_kms: 27,  theta_deg: 76,  mdot_solar: 30,   cloud: LIC, status: detection}
+  - {star: "61 Cyg A",       d_pc: 3.48, v_ism_stellar_kms: 86,  theta_deg: 46,  mdot_solar: 0.5,  cloud: LIC, status: detection}
+  - {star: "eps Ind",        d_pc: 3.63, v_ism_stellar_kms: 68,  theta_deg: 64,  mdot_solar: 0.5,  cloud: LIC, status: detection}
+  - {star: "tau Cet",        d_pc: 3.65, v_ism_stellar_kms: 56,  theta_deg: 59,  mdot_solar: 0.1,  cloud: LIC, status: limit}
+  - {star: "GJ 15 AB",       d_pc: 3.56, v_ism_stellar_kms: 28,  theta_deg: 95,  mdot_solar: 10,   cloud: LIC, status: detection}
+  - {star: "GJ 273",         d_pc: 3.80, v_ism_stellar_kms: 75,  theta_deg: 89,  mdot_solar: 0.2,  cloud: Aur, status: limit}
+  - {star: "GJ 860 AB",      d_pc: 4.01, v_ism_stellar_kms: 47,  theta_deg: 55,  mdot_solar: 0.15, cloud: Eri, status: detection}
+  - {star: "AD Leo",         d_pc: 4.97, v_ism_stellar_kms: 13,  theta_deg: 114, mdot_solar: null, cloud: LIC, status: nondet}
+  - {star: "EV Lac",         d_pc: 5.05, v_ism_stellar_kms: 45,  theta_deg: 84,  mdot_solar: 1,    cloud: LIC, status: detection}
+  - {star: "70 Oph AB",      d_pc: 5.09, v_ism_stellar_kms: 37,  theta_deg: 120, mdot_solar: 100,  cloud: LIC, status: detection}
+  - {star: "GJ 588",         d_pc: 5.92, v_ism_stellar_kms: 47,  theta_deg: 139, mdot_solar: null, cloud: G,   status: limit}
+  - {star: "36 Oph AB",      d_pc: 5.99, v_ism_stellar_kms: 40,  theta_deg: 134, mdot_solar: 15,   cloud: LIC, status: detection}
+  - {star: "YZ CMi",         d_pc: 5.99, v_ism_stellar_kms: 20,  theta_deg: 114, mdot_solar: 30,   cloud: LIC, status: detection}
+  - {star: "GJ 205",         d_pc: 5.70, v_ism_stellar_kms: 70,  theta_deg: 79,  mdot_solar: 0.3,  cloud: null, status: detection}
+  - {star: "delta Pav",      d_pc: 6.11, v_ism_stellar_kms: 29,  theta_deg: 72,  mdot_solar: 10,   cloud: LIC, status: detection}
+  - {star: "GJ 644 ABC",     d_pc: 6.20, v_ism_stellar_kms: 53,  theta_deg: 136, mdot_solar: null, cloud: Mic, status: limit}
+  - {star: "GJ 338 AB",      d_pc: 6.33, v_ism_stellar_kms: 29,  theta_deg: 88,  mdot_solar: 0.5,  cloud: LIC, status: detection}
+  - {star: "HD 219134",      d_pc: 6.55, v_ism_stellar_kms: 49,  theta_deg: 60,  mdot_solar: 0.5,  cloud: LIC, status: detection}  # GJ 892
+  - {star: "xi Boo AB",      d_pc: 6.70, v_ism_stellar_kms: 32,  theta_deg: 131, mdot_solar: 5,    cloud: LIC, status: detection}
+  - {star: "61 Vir",         d_pc: 8.53, v_ism_stellar_kms: 51,  theta_deg: 98,  mdot_solar: 0.3,  cloud: LIC, status: detection}
+  - {star: "delta Eri",      d_pc: 9.04, v_ism_stellar_kms: 37,  theta_deg: 41,  mdot_solar: 4,    cloud: LIC, status: detection}
+  - {star: "pi1 UMa",        d_pc: 14.4, v_ism_stellar_kms: 43,  theta_deg: 34,  mdot_solar: 0.5,  cloud: LIC, status: detection}
+
+# X-ray-detected astrospheres (soft X-ray charge-exchange; independent of the Lyalpha method).
+# mdot_solar runs SYSTEMATICALLY HIGHER than the Lyalpha values for the same stars -- a method
+# tension, kept separate rather than merged into the table above. Kislyakova et al. 2024.
+astrospheres_xray:
+  - {star: "70 Ophiuchi", mdot_solar: 66.5, source: "2024NatAs...8..596K"}
+  - {star: "eps Eri",     mdot_solar: 15.6, source: "2024NatAs...8..596K"}
+  - {star: "61 Cygni",    mdot_solar: 9.6,  source: "2024NatAs...8..596K"}
