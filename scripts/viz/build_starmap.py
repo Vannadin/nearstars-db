@@ -381,9 +381,14 @@ def load_lism():
 _THETA0 = math.radians(20.0)   # IDW angular-smoothing scale
 
 
+_LIC_LOCAL_PC = 4.0   # the LIC envelops the Sun (~few pc); it dominates the inner region
+
+
 def _ism_velocity(pos_ly):
-    """Heliocentric ISM velocity (km/s, ICRS) at a position, IDW-blended over the warm-cloud
-    vectors by angular distance on the sky. At the Sun: the in-situ IBEX He inflow vector."""
+    """Heliocentric ISM velocity (km/s, ICRS) at a position. The LIC envelops the Sun, so
+    it dominates nearby (matching Wood et al.'s within-7-pc LIC default); farther out the
+    field blends, by angular distance on the sky, into the other R&L warm clouds. At the
+    Sun itself: the in-situ IBEX He inflow vector."""
     L = load_lism()
     n = math.sqrt(sum(c * c for c in pos_ly))
     if n < 1e-9:
@@ -392,14 +397,17 @@ def _ism_velocity(pos_ly):
     wsum, v, best = 0.0, [0.0, 0.0, 0.0], (-1.0, None)
     for cl in L["clouds"]:
         dot = max(-1.0, min(1.0, sum(d[k] * cl["center"][k] for k in range(3))))
-        th = math.acos(dot)
-        w = 1.0 / (th * th + _THETA0 * _THETA0)
+        w = 1.0 / (math.acos(dot) ** 2 + _THETA0 * _THETA0)
         wsum += w
         for k in range(3):
             v[k] += w * cl["vel"][k]
         if w > best[0]:
             best = (w, cl["name"])
-    return tuple(c / wsum for c in v), best[1]
+    vdir = [c / wsum for c in v]
+    lic = L["clouds"][0]["vel"]                          # LIC is first in the dataset
+    wl = math.exp(-(n / PC_TO_LY) / _LIC_LOCAL_PC)       # local LIC weight (1 near Sun → 0 far)
+    blend = tuple(vdir[k] * (1 - wl) + lic[k] * wl for k in range(3))
+    return blend, ("LIC" if wl > 0.5 else best[1])
 
 
 def wind_for(pos_ly, vel_kms):

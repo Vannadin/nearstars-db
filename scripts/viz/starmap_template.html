@@ -369,18 +369,21 @@ const _th0=(LISM?LISM.theta0_deg:20)*DEG;
 const CLOUD_COL={LIC:'#4fd0ff',G:'#ff9e3d',Blue:'#5b7bff',Aql:'#52e07a',Eri:'#ff5a5a',
   Aur:'#ffd23d',Hyades:'#ff6ad5',Mic:'#3ad6c0',Oph:'#ff8ab0',Gem:'#a6e22e',NGP:'#b07bff',
   Leo:'#e0c24a',Dor:'#ff8a5a',Vel:'#7ec8ff',Cet:'#ff7060'};
+const _LIC_LOCAL_PC=4.0, _LY_PER_PC=3.26156;   // LIC envelops the Sun → dominates nearby
 function ismSample(dx,dy,dz){
   if(!LISM) return null;
   const n=Math.hypot(dx,dy,dz)||1, d=[dx/n,dy/n,dz/n];
   let wsum=0, v=[0,0,0], best=-1, cloud='LIC';
   for(const cl of LISM.clouds){
     const dot=Math.max(-1,Math.min(1,d[0]*cl.c[0]+d[1]*cl.c[1]+d[2]*cl.c[2]));
-    const th=Math.acos(dot), w=1/(th*th+_th0*_th0); wsum+=w;
+    const w=1/(Math.acos(dot)**2+_th0*_th0); wsum+=w;
     v[0]+=w*cl.v[0]; v[1]+=w*cl.v[1]; v[2]+=w*cl.v[2];
     if(w>best){best=w; cloud=cl.n;}
   }
-  const sp=Math.hypot(v[0],v[1],v[2])/wsum;
-  return {dir:new THREE.Vector3(v[0],v[2],v[1]).normalize(), speed:sp, cloud};  // ICRS→scene (x,z,y)
+  const lic=LISM.clouds[0].v, wl=Math.exp(-(n/_LY_PER_PC)/_LIC_LOCAL_PC);   // local LIC weight
+  const vb=[v[0]/wsum*(1-wl)+lic[0]*wl, v[1]/wsum*(1-wl)+lic[1]*wl, v[2]/wsum*(1-wl)+lic[2]*wl];
+  return {dir:new THREE.Vector3(vb[0],vb[2],vb[1]).normalize(), speed:Math.hypot(...vb),
+          cloud: wl>0.5?'LIC':cloud};   // ICRS→scene (x,z,y)
 }
 
 /* backdrop starfield (follows camera, sits at infinity) */
