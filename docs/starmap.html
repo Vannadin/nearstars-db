@@ -565,14 +565,28 @@ DATA.clusters.forEach(c=>{
     // measurement gets a neutral vertical axis.
     { const apl=hostPlane(m.name);                              // {inc,pa} of the system plane, or null
       const measured = (m.spin_i_deg!=null || m.spin_pa_deg!=null);
-      const iUse  = m.spin_i_deg!=null  ? m.spin_i_deg  : (apl?apl.inc:null);   // measured i★ → else plane tilt
-      // axis PA (of the projected spin axis): measured value if present; else the
-      // system plane normal's PA, which sits 90° from the disk's node PA (apl.pa).
-      const paUse = m.spin_pa_deg!=null ? m.spin_pa_deg : (apl?apl.pa-90:0);
       let axN;
       if(c.is_sol){ axN=new THREE.Vector3(0,1,0); }
-      else if(iUse!=null){ axN=spinAxisDir(c.pos,iUse,paUse); }
-      else { axN=new THREE.Vector3(0,1,0); }
+      else if(m.spin_pa_deg!=null){
+        // measured axis PA (Vega, Fomalhaut) — tilt = measured i★ if present, else the disk tilt.
+        axN=spinAxisDir(c.pos, m.spin_i_deg!=null?m.spin_i_deg:(apl?apl.inc:0), m.spin_pa_deg);
+      } else if(m.spin_i_deg!=null && apl){
+        // measured i★, no PA: keep the disk/plane normal's azimuth (assume the spin
+        // shares the disk's node direction) but RE-TILT to the measured i★. Done with
+        // the real normal vector so there's no PA-sign guess. A genuine spin–disk
+        // misalignment (e.g. tau Cet: spin 7° vs disk 35°) then shows as a real angle.
+        const n=skyBasis(c.pos,apl.inc,apl.pa,0).n;
+        const los=new THREE.Vector3(c.pos[0],c.pos[2],c.pos[1]);
+        if(los.lengthSq()<1e-12) los.set(0,1,0); else los.normalize();
+        const np=n.clone().addScaledVector(los,-n.dot(los));        // sky-plane part (azimuth dir)
+        if(np.lengthSq()<1e-9) np.copy(n); else np.normalize();
+        const ia=m.spin_i_deg*DEG;
+        axN=los.multiplyScalar(Math.cos(ia)).addScaledVector(np,Math.sin(ia));
+      } else if(m.spin_i_deg!=null){
+        axN=spinAxisDir(c.pos, m.spin_i_deg, 0);                    // measured tilt only; azimuth unknown
+      } else if(apl){
+        axN=skyBasis(c.pos,apl.inc,apl.pa,0).n.clone();             // no measurement → plane normal (alignment)
+      } else { axN=new THREE.Vector3(0,1,0); }
       const aL=rr*3.2;
       const axLine=new THREE.Line(
         new THREE.BufferGeometry().setFromPoints([axN.clone().multiplyScalar(-aL), axN.clone().multiplyScalar(aL)]),
