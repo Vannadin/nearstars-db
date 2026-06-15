@@ -1006,33 +1006,41 @@ function paintStab(cv,W,H,curT){
   const dpr=Math.min(2,window.devicePixelRatio||1);
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
   const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
-  const padL=big?58:38, padR=big?20:12, padT=big?26:18, labT=big?22:14, gap=big?52:30;
-  const ph=(H-padT-gap-labT-12)/2;
-  const y0r=padT, y0i=padT+ph+gap;
+  const padL=big?58:38, padR=big?20:12, padT=big?26:18, labT=big?22:14, gap=big?44:24;
+  const NP=3, ph=(H-padT-(NP-1)*gap-labT-12)/NP;     // three stacked panels: radius, e, inclination
+  const y0r=padT, y0e=padT+ph+gap, y0i=padT+2*(ph+gap);
   const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0]));
   let initQ=0; recs.forEach(o=>{ initQ=Math.max(initQ,o.d[0][1]*(1+o.d[0][2])); });
   let maxQ=0; recs.forEach(o=>o.d.forEach(s=>{ const QQ=s[1]*(1+Math.min(s[2],3)); if(isFinite(QQ)&&QQ>0)maxQ=Math.max(maxQ,QQ); }));
   const yMaxR=Math.min(maxQ,(initQ||1)*3.2)||1;
+  let eMax=0; recs.forEach(o=>o.d.forEach(s=>{ if(isFinite(s[2]))eMax=Math.max(eMax,s[2]); }));
+  const eCap=eMax>1?1.05:Math.max(0.05,eMax*1.15);     // bound systems auto-zoom; ejection clips past e=1
   let maxI=1; recs.forEach(o=>o.d.forEach(s=>{ if(isFinite(s[3]))maxI=Math.max(maxI,s[3]); }));
   maxI=Math.max(5,Math.ceil(maxI/5)*5);
   const xT=t=>padL+(t/tMax)*(W-padL-padR);
   const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
+  const yE=v=>y0e+ph-(Math.min(Math.max(v,0),eCap)/eCap)*ph;
   const yI=v=>y0i+ph-(Math.min(v,maxI)/maxI)*ph;
   const txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
+  const nf=v=>v.toFixed(v<1?2:v<10?1:0);
   g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
   // frames + axis labels (a few gridlines on the big chart for readable scale)
-  [[y0r,'q–Q (AU)',yMaxR],[y0i,'i (°)',maxI]].forEach(([y0,lbl,vmax])=>{
+  [[y0r,'q–Q (AU)',yMaxR],[y0e,'e',eCap],[y0i,'i (°)',maxI]].forEach(([y0,lbl,vmax])=>{
     if(big){ g.strokeStyle='rgba(120,135,165,.12)'; g.lineWidth=1; g.fillStyle=txt; g.textAlign='right';
       for(let t=1;t<4;t++){ const yy=y0+ph*t/4, vv=vmax*(1-t/4);
         g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
-        g.fillText(vv.toFixed(vv<10?2:0),padL-6,yy); } }
+        g.fillText(nf(vv),padL-6,yy); } }
     g.strokeStyle='rgba(120,135,165,.3)'; g.lineWidth=1;
     g.strokeRect(padL,y0,W-padL-padR,ph);
     g.fillStyle=txt; g.textAlign='right';
-    g.fillText(vmax.toFixed(vmax<10?1:0),padL-6,y0+5);
+    g.fillText(nf(vmax),padL-6,y0+5);
     g.fillText('0',padL-6,y0+ph-5);
     g.save(); g.translate(big?16:10,y0+ph/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText(lbl,0,0); g.restore();
   });
+  // e=1 unbound threshold marker (only when the panel reaches it — i.e. ejection)
+  if(eCap>=1){ const y1=yE(1); g.strokeStyle='rgba(255,90,60,.5)'; g.lineWidth=1; g.setLineDash([4,3]);
+    g.beginPath(); g.moveTo(padL,y1); g.lineTo(W-padR,y1); g.stroke(); g.setLineDash([]);
+    g.fillStyle='rgba(255,120,90,.9)'; g.textAlign='left'; g.fillText('e=1',padL+4,y1-(big?7:5)); }
   g.textAlign='center'; g.fillStyle=txt;
   const tlab=tMax>=1e6?(tMax/1e6)+' Myr':tMax>=1e3?Math.round(tMax/1e3)+' kyr':Math.round(tMax)+' yr';
   g.fillText('0',padL,y0i+ph+labT-4); g.fillText(tlab,W-padR,y0i+ph+labT-4);
@@ -1050,6 +1058,7 @@ function paintStab(cv,W,H,curT){
   recs.forEach(o=>{
     line(o,s=>s[1]*(1+s[2]),yR,lw);          // apoapsis (solid)
     line(o,s=>s[1]*(1-s[2]),yR,lwq,[3,2]);   // periapsis (dashed)
+    line(o,s=>s[2],yE,lw);                    // eccentricity
     line(o,s=>s[3],yI,lw);                    // inclination
   });
   if(curT!=null){ const cx=xT(Math.min(curT,tMax));
@@ -1074,7 +1083,7 @@ function paintStab(cv,W,H,curT){
 }
 function drawStabChart(){   // inline mini-chart
   if(!stabActive||!stabShowChart||!stabRecs.length) return;
-  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=212;
+  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=300;   // three stacked panels
   if(stabChart.style.height!==H+'px') stabChart.style.height=H+'px';
   paintStab(stabChart,W,H,stabT);
 }
