@@ -572,12 +572,19 @@ DATA.clusters.forEach(c=>{
     // spin axis. MEASURED stellar inclination i★ (and PA, for Vega/Fomalhaut) is used
     // where it exists — sky-true via skyBasis; rendered gold. Otherwise the axis falls
     // back to the system plane normal (spin–orbit-alignment ASSUMPTION) and is rendered
-    // a dim blue. Sol uses the ecliptic normal. A star with neither plane nor
-    // measurement gets a neutral vertical axis.
+    // a dim blue. Sol uses the real 7.25° solar obliquity to the ecliptic (measured →
+    // gold). A star with neither plane nor measurement gets a neutral vertical axis.
     { const apl=hostPlane(m.name);                              // {inc,pa} of the system plane, or null
-      const measured = (m.spin_i_deg!=null || m.spin_pa_deg!=null);
+      const measured = c.is_sol || (m.spin_i_deg!=null || m.spin_pa_deg!=null);
       let axN;
-      if(c.is_sol){ axN=new THREE.Vector3(0,1,0); }
+      if(c.is_sol){
+        // solar rotation axis: 7.25° from the ecliptic normal toward the ascending node
+        // of the solar equator (Ω=75.76°, J2000). Same element convention as orbitPoint
+        // (Sol planet orbits use ecliptic-referenced elements), mapped ICRS→scene (x,z,y):
+        // n_scene = (sin i·sin Ω, cos i, −sin i·cos Ω); i=0 → (0,1,0).
+        const si=Math.sin(7.25*DEG), Om=75.76*DEG;
+        axN=new THREE.Vector3(si*Math.sin(Om), Math.cos(7.25*DEG), -si*Math.cos(Om));
+      }
       else if(m.spin_pa_deg!=null){
         // measured axis PA (Vega, Fomalhaut) — tilt = measured i★ if present, else the disk tilt.
         axN=spinAxisDir(c.pos, m.spin_i_deg!=null?m.spin_i_deg:(apl?apl.inc:0), m.spin_pa_deg);
