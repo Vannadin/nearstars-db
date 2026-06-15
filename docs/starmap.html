@@ -110,9 +110,21 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabSlider{flex:1;accent-color:var(--accent);cursor:pointer}
 #stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #stabPanel .srd .warn{color:#ff5a3c;font-weight:600}
-#stabChartBtn{font-size:13px;background:var(--surf1);border:1px solid var(--bd1);border-radius:6px;padding:4px 7px;cursor:pointer;flex-shrink:0;line-height:1}
+#stabChartBtn,#stabExpand{font-size:13px;background:var(--surf1);border:1px solid var(--bd1);border-radius:6px;padding:4px 7px;cursor:pointer;flex-shrink:0;line-height:1}
 #stabChartBtn.on{border-color:var(--accent-glow);background:rgba(122,168,255,.12)}
+#stabExpand:hover{border-color:var(--accent-glow);color:var(--fg1)}
 #stabChart{display:block;width:100%;margin-top:10px;border-top:1px solid var(--bd1);padding-top:9px}
+/* expand-to-modal: large readable charts over a dimmed backdrop */
+#stabModal{position:fixed;inset:0;z-index:40;display:none;align-items:center;justify-content:center;
+  background:rgba(4,6,11,.72);backdrop-filter:blur(6px)}
+#stabModal.show{display:flex}
+#stabModal .card{width:86vw;height:84vh;max-width:1100px;background:var(--pop);border:1px solid var(--bd1);
+  border-radius:var(--r-card);padding:16px 20px 18px;display:flex;flex-direction:column;box-shadow:0 24px 80px -12px rgba(0,0,0,.8)}
+#stabModal .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+#stabModal .mh span:first-child{font-size:14px;color:var(--fg1)}
+#stabModal .mx{cursor:pointer;color:var(--fg4);font-size:24px;line-height:1}
+#stabModal .mx:hover{color:var(--fg1)}
+#stabBigCanvas{flex:1;width:100%;min-height:0}
 .hidden{display:none!important}
 #zoomctl{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:16;display:flex;flex-direction:column;
   align-items:center;gap:7px;background:var(--pop);border:1px solid var(--bd1);border-radius:999px;
@@ -199,9 +211,16 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div class="sx" id="stabClose">×</div>
   <div class="st" id="stabTitle"></div>
   <div class="svar"><button id="stabVariant" style="display:none"></button><span id="stabNote"></span></div>
-  <div class="sctl"><button id="stabPlay">⏸</button><input type="range" id="stabSlider" min="0" max="100" value="0" step="1"><button id="stabChartBtn" title="charts">📈</button></div>
+  <div class="sctl"><button id="stabPlay">⏸</button><input type="range" id="stabSlider" min="0" max="100" value="0" step="1"><button id="stabChartBtn" title="charts">📈</button><button id="stabExpand" title="expand charts">⤢</button></div>
   <div class="srd" id="stabReadout"></div>
   <canvas id="stabChart" style="display:none"></canvas>
+</div>
+
+<div id="stabModal">
+  <div class="card">
+    <div class="mh"><span id="stabModalTitle"></span><span class="mx" id="stabModalClose">×</span></div>
+    <canvas id="stabBigCanvas"></canvas>
+  </div>
 </div>
 
 <div id="hint" data-i18n="hint">드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스</div>
@@ -840,8 +859,10 @@ const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getEl
       stabSlider=document.getElementById('stabSlider'), stabReadout=document.getElementById('stabReadout'),
       stabTitleEl=document.getElementById('stabTitle'), stabVarBtn=document.getElementById('stabVariant'),
       stabNoteEl=document.getElementById('stabNote'),
-      stabChart=document.getElementById('stabChart'), stabChartBtn=document.getElementById('stabChartBtn');
-let stabShowChart=false;
+      stabChart=document.getElementById('stabChart'), stabChartBtn=document.getElementById('stabChartBtn'),
+      stabExpandBtn=document.getElementById('stabExpand'), stabModal=document.getElementById('stabModal'),
+      stabBigCanvas=document.getElementById('stabBigCanvas'), stabModalTitle=document.getElementById('stabModalTitle');
+let stabShowChart=false, stabModalOpen=false;
 // current variant's series for a planet, or null if it has no data under the
 // selected variant (e.g. a candidate planet has no 'confirmed' run) → it's hidden.
 const recData=r=>{ const v=r.variants.find(x=>x.id===stabVarIds[stabVar]); return v?v.data:null; };
@@ -897,7 +918,7 @@ function openStability(c){
   document.getElementById('info').classList.remove('show');
 }
 function closeStability(){
-  stabActive=false; stabPanel.classList.remove('show');
+  stabActive=false; stabPanel.classList.remove('show'); closeStabModal();
   stabRecs.forEach(r=>{ r.animLine.visible=false; r.animMesh.visible=false; });
   stabRecs=[];
 }
@@ -909,6 +930,15 @@ stabVarBtn.onclick=()=>{ if(stabVarIds.length<2) return;
   stabVar=(stabVar+1)%stabVarIds.length; stabIdx=0; stabRefresh(); if(stabShowChart) drawStabChart(); };
 stabChartBtn.onclick=()=>{ stabShowChart=!stabShowChart; stabChart.style.display=stabShowChart?'block':'none';
   stabChartBtn.classList.toggle('on',stabShowChart); if(stabShowChart) drawStabChart(); };
+function openStabModal(){ if(!stabActive||!stabRecs.length) return;
+  stabModalOpen=true; stabModal.classList.add('show');
+  stabModalTitle.textContent=(stabTitleEl.textContent||'').trim();
+  requestAnimationFrame(drawBigChart); }            // canvas needs layout before first paint
+function closeStabModal(){ stabModalOpen=false; stabModal.classList.remove('show'); }
+stabExpandBtn.onclick=openStabModal;
+document.getElementById('stabModalClose').onclick=closeStabModal;
+stabModal.onclick=e=>{ if(e.target===stabModal) closeStabModal(); };   // click backdrop to close
+window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&stabModalOpen) closeStabModal(); });
 
 const _bgC=new THREE.Color('#0a0d15');
 const _lerp=(a,b,t)=>a+(b-a)*t;
@@ -956,26 +986,28 @@ function updateStability(){
   const q=maxA*(1-maxE), nm=stabRecs.length>1?(maxName+' '):'';
   stabReadout.innerHTML=`t = ${Math.round(tt).toLocaleString()} ${t('yr')} · ${nm}e = ${maxE.toFixed(3)} · q = ${q.toFixed(2)} AU`
     + (q<0.08?` · <span class="warn">⚠ ${t('disrupt')}</span>`:'');
-  if(stabShowChart) drawStabChart(tt);
+  stabT=tt;
+  if(stabShowChart) drawStabChart();
+  if(stabModalOpen) drawBigChart();
 }
 
 /* periapsis/apoapsis + inclination vs time, straight from the integration
    snapshots (d=[t,a,e,inc,Ω,ω,f]). Two stacked panels share the time axis; a
    cursor marks the current animation epoch. Ejections (e≥1) clip at the top of
-   the radius panel — the runaway band is the instability signal. */
-function drawStabChart(curT){
-  if(!stabActive||!stabShowChart||!stabRecs.length) return;
+   the radius panel — the runaway band is the instability signal. Renders to any
+   canvas/size so the inline mini-chart and the expand-modal share one painter. */
+let stabT=0;                                  // last animation epoch (for repaint on toggle/expand)
+function paintStab(cv,W,H,curT){
   const recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
-  if(!recs.length) return;
+  if(!recs.length||W<40||H<40) return;
+  const big=H>320, fs=big?13:9, lw=big?2.4:1.7, lwq=big?1.6:1.1;
   const dpr=Math.min(2,window.devicePixelRatio||1);
-  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=212;
-  if(stabChart.width!==Math.round(W*dpr)){ stabChart.width=Math.round(W*dpr); stabChart.height=Math.round(H*dpr); stabChart.style.height=H+'px'; }
-  const g=stabChart.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
-  const padL=38,padR=12,padT=18,labT=14,gap=30, ph=(H-padT-gap-labT-12)/2;
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+  const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+  const padL=big?58:38, padR=big?20:12, padT=big?26:18, labT=big?22:14, gap=big?52:30;
+  const ph=(H-padT-gap-labT-12)/2;
   const y0r=padT, y0i=padT+ph+gap;
   const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0]));
-  // radius scale: cap at 3.2× the largest starting apoapsis so a stable system
-  // fills the panel; ejected planets shoot past the cap (clipped).
   let initQ=0; recs.forEach(o=>{ initQ=Math.max(initQ,o.d[0][1]*(1+o.d[0][2])); });
   let maxQ=0; recs.forEach(o=>o.d.forEach(s=>{ const QQ=s[1]*(1+Math.min(s[2],3)); if(isFinite(QQ)&&QQ>0)maxQ=Math.max(maxQ,QQ); }));
   const yMaxR=Math.min(maxQ,(initQ||1)*3.2)||1;
@@ -984,25 +1016,27 @@ function drawStabChart(curT){
   const xT=t=>padL+(t/tMax)*(W-padL-padR);
   const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
   const yI=v=>y0i+ph-(Math.min(v,maxI)/maxI)*ph;
-  const axis='#5a6580', txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
-  g.font='9px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
-  // frames + axis labels
+  const txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
+  g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
+  // frames + axis labels (a few gridlines on the big chart for readable scale)
   [[y0r,'q–Q (AU)',yMaxR],[y0i,'i (°)',maxI]].forEach(([y0,lbl,vmax])=>{
-    g.strokeStyle='rgba(120,135,165,.25)'; g.lineWidth=1;
+    if(big){ g.strokeStyle='rgba(120,135,165,.12)'; g.lineWidth=1; g.fillStyle=txt; g.textAlign='right';
+      for(let t=1;t<4;t++){ const yy=y0+ph*t/4, vv=vmax*(1-t/4);
+        g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
+        g.fillText(vv.toFixed(vv<10?2:0),padL-6,yy); } }
+    g.strokeStyle='rgba(120,135,165,.3)'; g.lineWidth=1;
     g.strokeRect(padL,y0,W-padL-padR,ph);
     g.fillStyle=txt; g.textAlign='right';
-    g.fillText(vmax.toFixed(vmax<10?1:0),padL-4,y0+5);
-    g.fillText('0',padL-4,y0+ph-5);
-    g.save(); g.translate(10,y0+ph/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText(lbl,0,0); g.restore();
+    g.fillText(vmax.toFixed(vmax<10?1:0),padL-6,y0+5);
+    g.fillText('0',padL-6,y0+ph-5);
+    g.save(); g.translate(big?16:10,y0+ph/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText(lbl,0,0); g.restore();
   });
   g.textAlign='center'; g.fillStyle=txt;
   const tlab=tMax>=1e6?(tMax/1e6)+' Myr':tMax>=1e3?Math.round(tMax/1e3)+' kyr':Math.round(tMax)+' yr';
-  g.fillText('0',padL,y0i+ph+9); g.fillText(tlab,W-padR,y0i+ph+9);
-  // series — apoapsis (solid) + periapsis (dashed), no fill, so a multi-planet
-  // chart stays readable; inclination panel = one line per planet. Same colour
-  // per planet across all three lines (matches the legend + the 3D marker).
-  // smooth polyline: quadratic curve through snapshot midpoints (the raw points
-  // are only ~200 across a tall panel, so straight segments read as jagged).
+  g.fillText('0',padL,y0i+ph+labT-4); g.fillText(tlab,W-padR,y0i+ph+labT-4);
+  // smooth polyline: quadratic curve through snapshot midpoints (raw points are
+  // only ~200, so straight segments read as jagged). apoapsis solid / periapsis
+  // dashed / inclination solid, one colour per planet (matches legend + 3D marker).
   const line=(o,acc,yfn,w,dash)=>{
     const pts=o.d.map(s=>[xT(s[0]),yfn(acc(s))]);
     if(!pts.length) return;
@@ -1012,18 +1046,26 @@ function drawStabChart(curT){
     const last=pts[pts.length-1]; g.lineTo(last[0],last[1]);
     g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.lineJoin='round'; g.stroke(); g.setLineDash([]); };
   recs.forEach(o=>{
-    line(o,s=>s[1]*(1+s[2]),yR,1.7);        // apoapsis (solid)
-    line(o,s=>s[1]*(1-s[2]),yR,1.1,[3,2]);  // periapsis (dashed)
-    line(o,s=>s[3],yI,1.7);                  // inclination
+    line(o,s=>s[1]*(1+s[2]),yR,lw);          // apoapsis (solid)
+    line(o,s=>s[1]*(1-s[2]),yR,lwq,[3,2]);   // periapsis (dashed)
+    line(o,s=>s[3],yI,lw);                    // inclination
   });
-  // cursor
   if(curT!=null){ const cx=xT(Math.min(curT,tMax));
     g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=1; g.setLineDash([3,3]);
     g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0i+ph); g.stroke(); g.setLineDash([]); }
-  // planet legend (multi-planet only)
-  if(recs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle';
-    recs.forEach(o=>{ g.fillStyle=o.rgb; g.fillRect(lx,y0r-9,7,3); g.fillStyle=txt;
-      const nm=o.name.split(' ').pop(); g.fillText(nm,lx+10,y0r-7); lx+=10+g.measureText(nm).width+12; }); }
+  if(recs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle'; const sw=big?10:7;
+    recs.forEach(o=>{ g.fillStyle=o.rgb; g.fillRect(lx,y0r-(big?13:9),sw,big?4:3); g.fillStyle=txt;
+      const nm=o.name.split(' ').pop(); g.fillText(nm,lx+sw+4,y0r-(big?10:7)); lx+=sw+6+g.measureText(nm).width+12; }); }
+}
+function drawStabChart(){   // inline mini-chart
+  if(!stabActive||!stabShowChart||!stabRecs.length) return;
+  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=212;
+  if(stabChart.style.height!==H+'px') stabChart.style.height=H+'px';
+  paintStab(stabChart,W,H,stabT);
+}
+function drawBigChart(){    // expand-modal chart
+  if(!stabModalOpen||!stabRecs.length) return;
+  paintStab(stabBigCanvas,stabBigCanvas.clientWidth,stabBigCanvas.clientHeight,stabT);
 }
 
 /* focus the camera on a single body (rebase origin onto it, dolly close) */
