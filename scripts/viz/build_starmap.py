@@ -940,7 +940,14 @@ def build_payload():
         "marker_size_model": "luminosity^0.2 when measured (24/157), else spectral-class MS proxy; billboard proxy, not physical radius",
         "sol_data": "Solar System = canonical textbook elements, hardcoded (not db-derived)",
     }
-    return {"meta": meta, "clusters": clusters}
+    L = load_lism()
+    lism = {  # cloud field for the viewer's ISM-wind grid (sample any direction via IDW)
+        "clouds": [{"v": [round(x, 3) for x in cl["vel"]],
+                    "c": [round(x, 4) for x in cl["center"]]} for cl in L["clouds"]],
+        "he": [round(x, 3) for x in L["he_vel"]],
+        "theta0_deg": round(math.degrees(_THETA0), 1),
+    }
+    return {"meta": meta, "clusters": clusters, "lism": lism}
 
 
 # ── self-check ─────────────────────────────────────────────────────────────

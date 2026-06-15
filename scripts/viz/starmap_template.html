@@ -360,6 +360,23 @@ function makeHeliosphere(grade, wind, noseScene, R0){
   const pts=new THREE.Points(g,m); pts.frustumCulled=false; return pts;
 }
 
+/* interstellar-wind field: IDW over the LISM cloud vectors by angular distance on the
+   sky (same model as the builder). Sample any ICRS direction → v_ISM (scene) + speed. */
+const LISM=DATA.lism;
+const _th0=(LISM?LISM.theta0_deg:20)*DEG;
+function ismSample(dx,dy,dz){
+  if(!LISM) return null;
+  const n=Math.hypot(dx,dy,dz)||1, d=[dx/n,dy/n,dz/n];
+  let wsum=0, v=[0,0,0];
+  for(const cl of LISM.clouds){
+    const dot=Math.max(-1,Math.min(1,d[0]*cl.c[0]+d[1]*cl.c[1]+d[2]*cl.c[2]));
+    const th=Math.acos(dot), w=1/(th*th+_th0*_th0); wsum+=w;
+    v[0]+=w*cl.v[0]; v[1]+=w*cl.v[1]; v[2]+=w*cl.v[2];
+  }
+  const sp=Math.hypot(v[0],v[1],v[2])/wsum;
+  return {dir:new THREE.Vector3(v[0],v[2],v[1]).normalize(), speed:sp};  // ICRS→scene (x,z,y)
+}
+
 /* backdrop starfield (follows camera, sits at infinity) */
 const backdrop=(function(){
   const n=1500,pos=new Float32Array(n*3);
@@ -382,6 +399,21 @@ const ringLabels=[];
 });
 
 function mkLabel(txt,cls){const el=document.createElement('div');el.className=cls||'label';el.textContent=txt;document.getElementById('labels').appendChild(el);return el;}
+
+/* ISM-wind vector field: arrows on a lattice over the ICRS x–y reference plane (same
+   plane as the rings). Each node samples the LISM cloud field for its sky direction. */
+const windGroup=new THREE.Group(); windGroup.visible=false; scene.add(windGroup);
+(function buildWindField(){
+  if(!LISM) return;
+  const STEP=10, MAX=50;                         // ly
+  for(let gx=-MAX; gx<=MAX; gx+=STEP) for(let gy=-MAX; gy<=MAX; gy+=STEP){
+    const r=Math.hypot(gx,gy); if(r<3||r>MAX+0.1) continue;     // skip Sol + outside the 50 ly circle
+    const s=ismSample(gx,gy,0); if(!s) continue;
+    const a=new THREE.ArrowHelper(s.dir,new THREE.Vector3(gx*U,0,gy*U),1.4*U,0x6fd6e0,0.45*U,0.28*U);
+    a.traverse(o=>{if(o.material){o.material.transparent=true;o.material.opacity=0.7;o.frustumCulled=false;}});
+    windGroup.add(a);
+  }
+})();
 
 /* ── Kepler: element set → position (AU) in the host-local scene frame ─── */
 function meanToTrue(M,e){
@@ -789,21 +821,11 @@ DATA.clusters.forEach(c=>{
     motion={line:ml, vly, rgb:c.rep_rgb};
   }
 
-  // interstellar-wind map arrow (map view): local LISM flow direction (c.wind.ism,
-  // ICRS → scene), length fixed in ly-scale. The field is the R&L-2008 cloud flow.
-  let windArrow=null;
-  if(c.wind && c.wind.ism){
-    const w=c.wind.ism, dir=new THREE.Vector3(w[0],w[2],w[1]).normalize();   // ICRS → scene
-    windArrow=new THREE.ArrowHelper(dir,new THREE.Vector3(0,0,0),1.1*U,0x6fd6e0,0.34*U,0.2*U);
-    windArrow.visible=false; windArrow.traverse(o=>{if(o.material){o.material.transparent=true;o.material.opacity=0.75;o.frustumCulled=false;}});
-    node.add(windArrow);
-  }
-
   let labelEl=null;
   if(c.is_sol) labelEl=mkLabel('Sol','label sun');
   else if(c.is_confirmed_set) labelEl=mkLabel(c.label,'label confirmed');
 
-  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets,diskMeshes,axisLines,helioObjs,windArrow});
+  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets,diskMeshes,axisLines,helioObjs});
 });
 
 /* legend */
@@ -825,6 +847,7 @@ const phaseChips=document.getElementById('phaseChips');
 function recomputeNodes(){
   clusters.forEach(c=> c.node.position.copy(lyToScene(new THREE.Vector3(c.data.pos[0],c.data.pos[1],c.data.pos[2]))));
   ringGroup.position.copy(lyToScene(new THREE.Vector3(0,0,0)));
+  windGroup.position.copy(lyToScene(new THREE.Vector3(0,0,0)));
 }
 function rebaseToTarget(){
   const tgt=controls.target.clone();
@@ -1281,7 +1304,7 @@ btnStems.onclick=()=>{showStems=!showStems;btnStems.classList.toggle('on',showSt
 btnOrbits.onclick=()=>{showOrbits=!showOrbits;btnOrbits.classList.toggle('on',showOrbits);};
 btnAxes.onclick=()=>{showAxes=!showAxes;btnAxes.classList.toggle('on',showAxes);};
 btnHelio.onclick=()=>{showHelio=!showHelio;btnHelio.classList.toggle('on',showHelio);};
-btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);};
+btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);windGroup.visible=showWind;};
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter();};
@@ -1367,7 +1390,6 @@ function updateScene(){
     cl.orbitsLines.forEach(l=>l.visible=active&&showOrbits);
     if(cl.axisLines) cl.axisLines.forEach(l=>l.visible=active&&showAxes);
     if(cl.helioObjs) cl.helioObjs.forEach(h=>h.visible=active&&showHelio);   // bubbles: system view
-    if(cl.windArrow) cl.windArrow.visible=(!active)&&showWind;               // arrows: map view
     if(cl.diskMeshes) cl.diskMeshes.forEach(m=>m.visible=active);
     cl.bodies.forEach(b=>{ if(b.kind==='star'){ b.obj.visible=true; if(b.glow) b.glow.material.opacity=(1-t)*0.9; } else b.obj.visible=active; });
     // crosshairs for active cluster bodies
