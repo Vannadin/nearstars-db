@@ -1001,9 +1001,16 @@ function drawStabChart(curT){
   // series — apoapsis (solid) + periapsis (dashed), no fill, so a multi-planet
   // chart stays readable; inclination panel = one line per planet. Same colour
   // per planet across all three lines (matches the legend + the 3D marker).
-  const line=(o,acc,yfn,w,dash)=>{ g.beginPath();
-    o.d.forEach((s,k)=>{ const x=xT(s[0]),y=yfn(acc(s)); k?g.lineTo(x,y):g.moveTo(x,y); });
-    g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.stroke(); g.setLineDash([]); };
+  // smooth polyline: quadratic curve through snapshot midpoints (the raw points
+  // are only ~200 across a tall panel, so straight segments read as jagged).
+  const line=(o,acc,yfn,w,dash)=>{
+    const pts=o.d.map(s=>[xT(s[0]),yfn(acc(s))]);
+    if(!pts.length) return;
+    g.beginPath(); g.moveTo(pts[0][0],pts[0][1]);
+    for(let k=1;k<pts.length-1;k++){ const mx=(pts[k][0]+pts[k+1][0])/2, my=(pts[k][1]+pts[k+1][1])/2;
+      g.quadraticCurveTo(pts[k][0],pts[k][1],mx,my); }
+    const last=pts[pts.length-1]; g.lineTo(last[0],last[1]);
+    g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.lineJoin='round'; g.stroke(); g.setLineDash([]); };
   recs.forEach(o=>{
     line(o,s=>s[1]*(1+s[2]),yR,1.7);        // apoapsis (solid)
     line(o,s=>s[1]*(1-s[2]),yR,1.1,[3,2]);  // periapsis (dashed)
