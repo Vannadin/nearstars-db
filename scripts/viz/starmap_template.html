@@ -1055,6 +1055,19 @@ function paintStab(cv,W,H,curT){
   if(curT!=null){ const cx=xT(Math.min(curT,tMax));
     g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=1; g.setLineDash([3,3]);
     g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0i+ph); g.stroke(); g.setLineDash([]); }
+  // line-style key inside the radius panel: solid = apoapsis Q, dashed = periapsis q
+  { const ko=lang==='ko', a1=(ko?'원일점':'apo')+' (Q)', a2=(ko?'근일점':'peri')+' (q)';
+    g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle'; g.textAlign='left';
+    const seg=big?20:13, gp=big?6:4, gap2=big?20:13;
+    const w1=seg+gp+g.measureText(a1).width, w2=seg+gp+g.measureText(a2).width;
+    const ky=y0r+(big?14:10); let kx=W-padR-(w1+gap2+w2)-6;
+    g.fillStyle='rgba(10,13,21,.66)'; g.fillRect(kx-6,ky-(big?10:8),w1+gap2+w2+12,big?20:16);
+    g.strokeStyle=txt; g.lineWidth=big?2:1.6; g.setLineDash([]);
+    g.beginPath(); g.moveTo(kx,ky); g.lineTo(kx+seg,ky); g.stroke();
+    g.fillStyle=txt; g.fillText(a1,kx+seg+gp,ky);
+    const dx=kx+w1+gap2; g.setLineDash([3,2]); g.lineWidth=big?1.4:1.1;
+    g.beginPath(); g.moveTo(dx,ky); g.lineTo(dx+seg,ky); g.stroke(); g.setLineDash([]);
+    g.fillStyle=txt; g.fillText(a2,dx+seg+gp,ky); }
   if(recs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle'; const sw=big?10:7;
     recs.forEach(o=>{ g.fillStyle=o.rgb; g.fillRect(lx,y0r-(big?13:9),sw,big?4:3); g.fillStyle=txt;
       const nm=o.name.split(' ').pop(); g.fillText(nm,lx+sw+4,y0r-(big?10:7)); lx+=sw+6+g.measureText(nm).width+12; }); }
