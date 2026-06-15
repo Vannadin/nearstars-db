@@ -176,7 +176,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <button class="btn" id="toggleLabels"><span class="dot"></span><span data-i18n="allLabels">모든 라벨</span></button>
   <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
   <button class="btn" id="toggleOrbits"><span class="dot"></span><span data-i18n="orbits">궤도</span></button>
-  <button class="btn on" id="toggleAxes" title="별의 자전축 (공전면 수직 가정 — 측정값 아님)"><span class="dot"></span><span data-i18n="spinAxes">자전축</span></button>
+  <button class="btn on" id="toggleAxes" title="별 자전축 — 금색: 측정된 i★(일부 PA), 청색: 공전면 정렬 가정"><span class="dot"></span><span data-i18n="spinAxes">자전축</span></button>
   <button class="btn" id="toggleMotion"><span class="dot"></span><span data-i18n="motion">공간 운동</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
   <button class="btn" id="toggleLang">EN</button>
@@ -540,18 +540,23 @@ DATA.clusters.forEach(c=>{
       transparent:true,opacity:0,depthWrite:false,blending:THREE.AdditiveBlending}));
     sg.scale.setScalar(rr*11); cg.add(sg);
     bodies.push({kind:'star',name:m.name,obj:cg,rgb:m.rgb,r:rr,glow:sg});
-    // spin axis — no measured stellar obliquity in the data, so default to the
-    // system plane normal (spin–orbit alignment); Sol uses the ecliptic normal,
-    // and a star with no known plane gets a neutral vertical axis. Sky-true via
-    // skyBasis (same frame as the orbits/disk), drawn through the poles.
-    { let axN;
+    // spin axis. MEASURED stellar inclination i★ (and PA, for Vega/Fomalhaut) is used
+    // where it exists — sky-true via skyBasis; rendered gold. Otherwise the axis falls
+    // back to the system plane normal (spin–orbit-alignment ASSUMPTION) and is rendered
+    // a dim blue. Sol uses the ecliptic normal. A star with neither plane nor
+    // measurement gets a neutral vertical axis.
+    { const apl=hostPlane(m.name);                              // {inc,pa} of the system plane, or null
+      const measured = (m.spin_i_deg!=null || m.spin_pa_deg!=null);
+      const iUse  = m.spin_i_deg!=null  ? m.spin_i_deg  : (apl?apl.inc:null);   // measured i★ → else plane i
+      const paUse = m.spin_pa_deg!=null ? m.spin_pa_deg : (apl?apl.pa:null);    // measured PA → else plane PA
+      let axN;
       if(c.is_sol){ axN=new THREE.Vector3(0,1,0); }
-      else { const apl=hostPlane(m.name);
-        axN = apl ? skyBasis(c.pos,apl.inc,apl.pa,0).n.clone() : new THREE.Vector3(0,1,0); }
+      else if(iUse!=null){ axN=skyBasis(c.pos,iUse,paUse,0).n.clone(); }
+      else { axN=new THREE.Vector3(0,1,0); }
       const aL=rr*3.2;
       const axLine=new THREE.Line(
         new THREE.BufferGeometry().setFromPoints([axN.clone().multiplyScalar(-aL), axN.clone().multiplyScalar(aL)]),
-        new THREE.LineBasicMaterial({color:0xcfe0ff,transparent:true,opacity:.85}));
+        new THREE.LineBasicMaterial({color: measured?0xffd27a:0x9fb6d6, transparent:true, opacity: measured?0.95:0.7}));
       axLine.frustumCulled=false; cg.add(axLine); axisLines.push(axLine); }
 
     // planets hosted by this component

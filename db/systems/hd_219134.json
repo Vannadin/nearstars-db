@@ -130,7 +130,18 @@
             "recommended": true
           }
         ],
-        "stellarium_id": "HD219134"
+        "stellarium_id": "HD219134",
+        "inclination_measurements": [
+          {
+            "value_deg": 77,
+            "uncertainty_deg": 8,
+            "method": "zeeman_doppler",
+            "reference": "Folsom et al. 2018",
+            "bibcode": "2018A&A...619A.130F",
+            "recommended": true,
+            "notes": "ZDI (Narval)."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -156,7 +167,8 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 22.83,
         "activity_log_rhk": -4.89,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 77
       },
       "principia": {
         "gravitational_parameter_km3_s2": 92367858252.528,
@@ -686,7 +698,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -695,7 +707,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -704,7 +716,7 @@
       "title": "Ligi et al. 2019",
       "doi": "10.1051/0004-6361/201936259",
       "bibcode": "2019A&A...631A..92L",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 219134 mass (unverified)"
       ]
@@ -713,7 +725,7 @@
       "title": "Motalebi et al. 2015",
       "doi": "10.1051/0004-6361/201526822",
       "bibcode": "2015A&A...584A..72M",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 219134 mass (evolutionary_model)"
       ]
@@ -722,7 +734,7 @@
       "title": "Vogt et al. 2015",
       "doi": "10.1088/0004-637X/814/1/12",
       "bibcode": "2015ApJ...814...12V",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 219134 radius (evolutionary_model)"
       ]
@@ -731,14 +743,14 @@
       "title": "Gillon et al. 2017",
       "doi": "10.1038/s41550-017-0056",
       "bibcode": "2017NatAs...1E..56G",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "planet HD 219134 b physical"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-31",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

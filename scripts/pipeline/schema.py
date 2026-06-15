@@ -370,6 +370,24 @@ STELLAR_MEASUREMENT_KINDS = {
         # grade/method 단서를 적는 narrative 필드 (radius_measurements 와 동일).
         "extra_keys": {"notes"},
     },
+    "inclination_measurements": {
+        # 항성 자전축의 3D 방향. value_deg = i★ (시선방향 대비 자전축 경사: 0=pole-on,
+        # 90=equator-on). position_angle_deg = 투영 자전축의 천구 위치각(North→East),
+        # 간섭계로만 얻어짐(Vega·Fomalhaut). 자전주기/v sin i 와 별개의 양이며, 대부분
+        # 별은 미측정 → 3D 성도 뷰어는 측정값 있으면 그걸로, 없으면 자전-공전 정렬 가정.
+        # tier(direct/derived)는 method 로 구분: 간섭계/별진동 = direct, vsini역산/ZDI/
+        # 활동모델 = derived. value_deg 가 null 이고 PA 만 있는 entry 도 허용(Fomalhaut).
+        "value_keys": {"value_deg"},
+        "methods": {
+            "interferometry", "spectro_astrometry", "asteroseismology",
+            "zeeman_doppler", "vsini_inversion", "activity_modeling",
+            "lightcurve_modeling", "disk_proxy",
+            "unverified",
+        },
+        "extra_keys": {
+            "position_angle_deg", "position_angle_uncertainty_deg", "notes",
+        },
+    },
     "activity_measurements": {
         # 여러 지표 중 하나만 있으면 됨 (paper 마다 다름)
         "value_keys": {

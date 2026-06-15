@@ -500,6 +500,19 @@
         "bibcode": "2010A&A...523A..41P",
         "recommended": true
       }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 6.2,
+        "uncertainty_deg": 0.4,
+        "position_angle_deg": -58,
+        "position_angle_uncertainty_deg": 6,
+        "method": "interferometry",
+        "reference": "Monnier et al. 2012",
+        "bibcode": "2012ApJ...761L...3M",
+        "recommended": true,
+        "notes": "CHARA/MIRC gravity-darkening imaging; near pole-on. Projected spin-axis PA is North->East."
+      }
     ]
   },
   "Altair": {
@@ -601,6 +614,18 @@
         "reference": "Mamajek 2012",
         "bibcode": "2012ApJ...754L..20M",
         "recommended": true
+      }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": null,
+        "position_angle_deg": 65,
+        "position_angle_uncertainty_deg": 3,
+        "method": "spectro_astrometry",
+        "reference": "Le Bouquin et al. 2009",
+        "bibcode": "2009A&A...498L..41L",
+        "recommended": true,
+        "notes": "VLTI/AMBER Br-gamma spectro-astrometry: projected spin-axis PA only; i_star unconstrained (>15 deg floor). PA ~ debris-ring PA."
       }
     ]
   },
@@ -1157,6 +1182,17 @@
         "recommended": false,
         "notes": "Published as L_X ~ 4e27 erg/s (XMM 2012, 0.2-2.0 keV) - brightest quasi-quiescent state in >30 yr (cycle maximum). X-ray cycle P_act ~ 8-9 yr, amplitude L_Xmax/L_Xmin ~ 6-9."
       }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 45,
+        "uncertainty_deg": 19,
+        "method": "activity_modeling",
+        "reference": "Dumusque 2014",
+        "bibcode": "2014ApJ...796..133D",
+        "recommended": true,
+        "notes": "SOAP activity/RV modeling; i_star = 45 (+9/-19)."
+      }
     ]
   },
   "Barnard's star": {
@@ -1402,6 +1438,16 @@
         "doi": "10.3847/1538-3881/ac7c66",
         "recommended": true,
         "notes": "Fast rotator (P_rot = 1.061 d), consistent with an active M3.5Ve flare dwarf. Curiel 2022 quotes this from prior literature (not its own measurement); the underlying determination is the Morin et al. 2008 spectropolarimetric/ZDI study of EQ Peg A. method=unverified because the value enters Curiel only as a literature compilation cite. No uncertainty published. Verbatim (2208.14553.md:27): \"GJ 896A, is an M3.5 star with an estimated mass of 0.39 M_sun, a radius of 0.35 R_sun, a rotation period of 1.061 days, and a rotational inclination angle of 60 deg\"."
+      }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 60,
+        "method": "zeeman_doppler",
+        "reference": "Morin et al. 2008",
+        "bibcode": "2008MNRAS.390..567M",
+        "recommended": true,
+        "notes": "ZDI of M dwarfs (via Curiel et al. 2022); no formal uncertainty published."
       }
     ]
   },
@@ -2300,6 +2346,17 @@
         "recommended": true,
         "notes": "NEXXUS 2 RASS survey mode (VizieR J/A+A/417/651, Gl 71; pointed HRI 26.54). Tabulated in Wood 2021 Table 3. Single-epoch RASS without flare screening, but the star is flat-activity (Baum 2022) - effectively quiescent."
       }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 7,
+        "uncertainty_deg": 7,
+        "method": "interferometry",
+        "reference": "Korolik et al. 2023",
+        "bibcode": "2023AJ....166..123K",
+        "recommended": true,
+        "notes": "CHARA/MIRC-X radius + v sin i; near pole-on. The debris disk (~35 deg) is misaligned with the spin axis."
+      }
     ]
   },
   "GJ 357": {
@@ -2590,6 +2647,17 @@
         "bibcode": "2004A&A...417..651S",
         "recommended": false,
         "notes": "NEXXUS 2 RASS survey mode (VizieR J/A+A/417/651, Gl 551; pointed PSPC 26.81, HRI 27.74 - epoch/flare-state spread). Same value quoted as log L_X = 27.2 by Reiners & Basri 2008 (attributing Huensch 1999)."
+      }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 47,
+        "uncertainty_deg": 7,
+        "method": "zeeman_doppler",
+        "reference": "Klein, Donati et al. 2021",
+        "bibcode": "2020MNRAS.500.1844K",
+        "recommended": true,
+        "notes": "ZDI (Stokes V)."
       }
     ]
   },
@@ -2972,6 +3040,17 @@
         "bibcode": "2000MNRAS.319.1147T",
         "recommended": true
       }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 90,
+        "uncertainty_deg": 20,
+        "method": "vsini_inversion",
+        "reference": "Watson et al. 2011",
+        "bibcode": "2011MNRAS.413L..71W",
+        "recommended": true,
+        "notes": "v sin i + P_rot + R inversion; ~edge-on (+0/-20). Consistent with the edge-on debris disk."
+      }
     ]
   },
   "Gliese 12": {
@@ -3282,6 +3361,17 @@
         "bibcode": "2016ApJ...821...74J",
         "doi": "10.3847/0004-637X/821/2/74",
         "recommended": true
+      }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 77,
+        "uncertainty_deg": 8,
+        "method": "zeeman_doppler",
+        "reference": "Folsom et al. 2018",
+        "bibcode": "2018A&A...619A.130F",
+        "recommended": true,
+        "notes": "ZDI (Narval)."
       }
     ]
   },
@@ -4523,6 +4613,17 @@
         "bibcode": "2005ApJS..159..141V",
         "recommended": false
       }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 13,
+        "uncertainty_deg": 27,
+        "method": "vsini_inversion",
+        "reference": "Simpson et al. 2010",
+        "bibcode": "2010MNRAS.408.1666S",
+        "recommended": true,
+        "notes": "v sin i + P_rot + R inversion; near pole-on but weak (+27/-13)."
+      }
     ]
   },
   "TOI-540": {
@@ -4845,6 +4946,17 @@
         "bibcode": "2020A&A...636A..49C",
         "recommended": false
       }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 30,
+        "uncertainty_deg": 3,
+        "method": "lightcurve_modeling",
+        "reference": "Croll et al. 2006",
+        "bibcode": "2006ApJ...648..607C",
+        "recommended": true,
+        "notes": "MOST spot-latitude/light-curve modeling. Literature trap: NOT 79 deg."
+      }
     ]
   },
   "GJ 179": {
@@ -5134,6 +5246,17 @@
         "bibcode": "2017A&A...605L..11A",
         "doi": "10.1051/0004-6361/201731581",
         "recommended": true
+      }
+    ],
+    "inclination_measurements": [
+      {
+        "value_deg": 60,
+        "uncertainty_deg": 5,
+        "method": "zeeman_doppler",
+        "reference": "arXiv:2511.21853 (2025)",
+        "doi": "10.3847/1538-4357/ae2619",
+        "recommended": true,
+        "notes": "ZDI/SPI chi^2 grid. Author attribution unverified -> cited by arXiv/DOI."
       }
     ]
   },
@@ -6110,7 +6233,18 @@
         "recommended": true
       }
     ],
-    "meta_notes": "Young (~16 Myr) pre-main-sequence K5 member of Upper Centaurus-Lupus (Sco-Cen). Gaia DR3 distance 138.2 pc (~451 ly) — far beyond the 50 ly Kopernicus cap; added as a beyond-implementation-range data / Phase-3 entry (intentional exception), NOT a KSP target body. Host of J1407b, the largest known (candidate) ring system. Teff uncertainty asymmetric (+100/-200 K); post-Gaia isochrone analyses favor a slightly older ~20 Myr age and Teff ~4343 K."
+    "meta_notes": "Young (~16 Myr) pre-main-sequence K5 member of Upper Centaurus-Lupus (Sco-Cen). Gaia DR3 distance 138.2 pc (~451 ly) — far beyond the 50 ly Kopernicus cap; added as a beyond-implementation-range data / Phase-3 entry (intentional exception), NOT a KSP target body. Host of J1407b, the largest known (candidate) ring system. Teff uncertainty asymmetric (+100/-200 K); post-Gaia isochrone analyses favor a slightly older ~20 Myr age and Teff ~4343 K.",
+    "inclination_measurements": [
+      {
+        "value_deg": 68,
+        "uncertainty_deg": 10,
+        "method": "vsini_inversion",
+        "reference": "Mamajek et al. 2012",
+        "bibcode": "2012AJ....143...72M",
+        "recommended": true,
+        "notes": "v sin i + P_rot + R inversion (J1407 / 1RXS J160929 host)."
+      }
+    ]
   },
   "PSR J0108-1431": {
     "spectype": "neutron star (radio pulsar)",

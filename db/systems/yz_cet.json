@@ -161,7 +161,18 @@
             "recommended": true
           }
         ],
-        "stellarium_id": null
+        "stellarium_id": null,
+        "inclination_measurements": [
+          {
+            "value_deg": 60,
+            "uncertainty_deg": 5,
+            "method": "zeeman_doppler",
+            "reference": "arXiv:2511.21853 (2025)",
+            "doi": "10.3847/1538-4357/ae2619",
+            "recommended": true,
+            "notes": "ZDI/SPI chi^2 grid. Author attribution unverified -> cited by arXiv/DOI."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -187,7 +198,8 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 68.4,
         "activity_log_rhk": -4.71,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 60
       },
       "principia": {
         "gravitational_parameter_km3_s2": 18155061794.462,
@@ -500,7 +512,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -509,7 +521,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -518,7 +530,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -527,7 +539,7 @@
       "title": "Cifuentes et al. 2020",
       "doi": "10.1051/0004-6361/202038295",
       "bibcode": "2020A&A...642A.115C",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -536,7 +548,7 @@
       "title": "Astudillo-Defru et al. 2017",
       "doi": "10.1051/0004-6361/201731581",
       "bibcode": "2017A&A...605L..11A",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -545,14 +557,14 @@
       "title": "Stock et al. 2020",
       "doi": "10.1051/0004-6361/201936732",
       "bibcode": "2020A&A...636A.119S",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "planet YZ Cet b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-31",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

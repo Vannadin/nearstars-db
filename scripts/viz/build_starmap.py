@@ -351,6 +351,8 @@ def load_records():
             "luminosity_lsun": lum,
             "radius_rsun": radius_rsun,
             "mass_msun": mass_msun,
+            "spin_i_deg": der.get("spin_inclination_deg"),       # measured spin-axis i★ (else null → viewer assumes spin–orbit alignment)
+            "spin_pa_deg": der.get("spin_position_angle_deg"),   # measured projected spin-axis PA (Vega, Fomalhaut only)
             "vel_kms": vel_kms,
             "distance_pc": der.get("distance_pc"),
             "epoch_jd": der.get("epoch_jd"),
@@ -690,6 +692,7 @@ def build_cluster_obj(members):
             "luminosity_lsun": m["luminosity_lsun"],
             "radius_rsun": m["radius_rsun"] or _MS_RADIUS_PROXY.get(m["spec_class"], 0.3),
             "radius_measured": m["radius_rsun"] is not None,
+            "spin_i_deg": m.get("spin_i_deg"), "spin_pa_deg": m.get("spin_pa_deg"),
             "distance_pc": round(dist_pc, 4) if dist_pc else None,
             # N-body trajectory where the catalog state gives a bound pair;
             # else a 2-body Keplerian path from published elements; else none.

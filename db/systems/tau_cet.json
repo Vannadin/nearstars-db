@@ -212,6 +212,17 @@
             "notes": "NEXXUS 2 RASS survey mode (VizieR J/A+A/417/651, Gl 71; pointed HRI 26.54). Tabulated in Wood 2021 Table 3. Single-epoch RASS without flare screening, but the star is flat-activity (Baum 2022) - effectively quiescent."
           }
         ],
+        "inclination_measurements": [
+          {
+            "value_deg": 7,
+            "uncertainty_deg": 7,
+            "method": "interferometry",
+            "reference": "Korolik et al. 2023",
+            "bibcode": "2023AJ....166..123K",
+            "recommended": true,
+            "notes": "CHARA/MIRC-X radius + v sin i; near pole-on. The debris disk (~35 deg) is misaligned with the spin axis."
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "single",
@@ -291,7 +302,8 @@
         "activity_h_alpha_ew_angstrom": null,
         "mass_loss_solar": 0.1,
         "b_largescale_g": 0.17,
-        "xray_log_lx_ergs": 26.69
+        "xray_log_lx_ergs": 26.69,
+        "spin_inclination_deg": 7
       },
       "principia": {
         "gravitational_parameter_km3_s2": 103913840534.094,
@@ -552,7 +564,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -561,7 +573,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -570,7 +582,7 @@
       "title": "Teixeira et al. 2009",
       "doi": "10.1051/0004-6361:200810746",
       "bibcode": "2009A&A...494..237T",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "tau Cet mass (asteroseismology)"
       ]
@@ -579,7 +591,7 @@
       "title": "Korolik et al. 2023",
       "doi": "10.3847/1538-3881/ace911",
       "bibcode": "2023AJ....166..123K",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "tau Cet mass (spectroscopic)"
       ]
@@ -588,7 +600,7 @@
       "title": "MacGregor et al. 2016",
       "doi": "10.3847/0004-637X/828/2/113",
       "bibcode": "2016ApJ...828..113M",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "tau Cet disk single (resolved_imaging)"
       ]
@@ -597,7 +609,7 @@
       "title": "Greaves et al. 2004",
       "doi": "10.1111/j.1365-2966.2004.07957.x",
       "bibcode": "2004MNRAS.351L..54G",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "tau Cet disk single (photometric_excess)"
       ]
@@ -606,7 +618,7 @@
       "title": "Lawler et al. 2014",
       "doi": null,
       "bibcode": "2014MNRAS.444.2665L",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "tau Cet disk single (sed_fit)"
       ]
@@ -615,7 +627,7 @@
       "title": "Di Folco et al. 2007: CHARA/FLUOR angular diameter of tau Ceti",
       "doi": "10.1051/0004-6361:20077625",
       "bibcode": "2007A&A...474..243D",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
@@ -624,14 +636,14 @@
       "title": "Feng et al. 2017",
       "doi": "10.3847/1538-3881/aa83b4",
       "bibcode": "2017AJ....154..135F",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "planet tau Cet g orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-14",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

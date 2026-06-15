@@ -131,6 +131,19 @@
           }
         ],
         "activity_measurements": [],
+        "inclination_measurements": [
+          {
+            "value_deg": 6.2,
+            "uncertainty_deg": 0.4,
+            "position_angle_deg": -58,
+            "position_angle_uncertainty_deg": 6,
+            "method": "interferometry",
+            "reference": "Monnier et al. 2012",
+            "bibcode": "2012ApJ...761L...3M",
+            "recommended": true,
+            "notes": "CHARA/MIRC gravity-darkening imaging; near pole-on. Projected spin-axis PA is North->East."
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "single",
@@ -273,7 +286,9 @@
         "metallicity_fe_h_dex": -0.5,
         "rotation_period_days": 0.71,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 6.2,
+        "spin_position_angle_deg": -58
       },
       "principia": {
         "gravitational_parameter_km3_s2": 285331746038.7,
@@ -287,7 +302,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -296,7 +311,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -305,7 +320,7 @@
       "title": "Monnier et al. 2012",
       "doi": "10.1088/2041-8205/761/1/L3",
       "bibcode": "2012ApJ...761L...3M",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega mass (evolutionary_model)"
       ]
@@ -314,7 +329,7 @@
       "title": "Yoon et al. 2010 (rotating model from interferometry)",
       "doi": "10.1088/0004-637X/708/1/71",
       "bibcode": "2010ApJ...708...71Y",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega mass (evolutionary_model)"
       ]
@@ -323,7 +338,7 @@
       "title": "Aumann et al. 1984",
       "doi": null,
       "bibcode": "1984ApJ...278L..23A",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega disk single (photometric_excess)"
       ]
@@ -332,7 +347,7 @@
       "title": "Holland et al. 1998",
       "doi": null,
       "bibcode": "1998Natur.392..788H",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -341,7 +356,7 @@
       "title": "Wilner et al. 2002",
       "doi": null,
       "bibcode": "2002ApJ...569L.115W",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -350,7 +365,7 @@
       "title": "Su et al. 2024",
       "doi": null,
       "bibcode": "2024ApJ...977..277S",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega disk warm (resolved_imaging)"
       ]
@@ -359,7 +374,7 @@
       "title": "Sibthorpe et al. 2010",
       "doi": null,
       "bibcode": "2010A&A...518L.130S",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
@@ -368,14 +383,14 @@
       "title": "Hughes et al. 2012",
       "doi": null,
       "bibcode": "2012ApJ...750...82H",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "Vega disk cold (resolved_imaging)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-14",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

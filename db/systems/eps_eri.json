@@ -187,6 +187,17 @@
             "recommended": false
           }
         ],
+        "inclination_measurements": [
+          {
+            "value_deg": 30,
+            "uncertainty_deg": 3,
+            "method": "lightcurve_modeling",
+            "reference": "Croll et al. 2006",
+            "bibcode": "2006ApJ...648..607C",
+            "recommended": true,
+            "notes": "MOST spot-latitude/light-curve modeling. Literature trap: NOT 79 deg."
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "main_cold",
@@ -380,7 +391,8 @@
         "metallicity_fe_h_dex": -0.13,
         "rotation_period_days": 11.45,
         "activity_log_rhk": -4.496,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 30
       },
       "principia": {
         "gravitational_parameter_km3_s2": 108824200814.76,
@@ -461,7 +473,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -470,7 +482,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -480,7 +492,7 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "planet parameters"
       ]
@@ -489,7 +501,7 @@
       "title": "Baines & Armstrong 2012",
       "doi": "10.1088/0004-637X/744/2/138",
       "bibcode": "2012ApJ...744..138B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri mass (evolutionary_model)"
       ]
@@ -498,7 +510,7 @@
       "title": "Valenti & Fischer 2005",
       "doi": null,
       "bibcode": "2005ApJS..159..141V",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri mass (evolutionary_model)"
       ]
@@ -507,7 +519,7 @@
       "title": "Gomes da Silva et al. 2021",
       "doi": null,
       "bibcode": "2021A&A...646A..77G",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri mass (evolutionary_model)"
       ]
@@ -516,7 +528,7 @@
       "title": "Greaves et al. 1998",
       "doi": null,
       "bibcode": "1998ApJ...506L.133G",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri disk main_cold (resolved_imaging)"
       ]
@@ -525,7 +537,7 @@
       "title": "Backman et al. 2009",
       "doi": null,
       "bibcode": "2009ApJ...690.1522B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
@@ -534,7 +546,7 @@
       "title": "Booth et al. 2023",
       "doi": "10.1093/mnras/stad938",
       "bibcode": "2023MNRAS.521.6180B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri disk main_cold (resolved_imaging)"
       ]
@@ -543,7 +555,7 @@
       "title": "Booth et al. 2017",
       "doi": null,
       "bibcode": "2017MNRAS.469.3200B",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
@@ -552,7 +564,7 @@
       "title": "Greaves et al. 2014",
       "doi": null,
       "bibcode": "2014ApJ...791L..11G",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri disk intermediate (sed_fit)"
       ]
@@ -561,14 +573,14 @@
       "title": "Su et al. 2017",
       "doi": null,
       "bibcode": "2017AJ....153..226S",
-      "accessed": "2026-06-14",
+      "accessed": "2026-06-15",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-14",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

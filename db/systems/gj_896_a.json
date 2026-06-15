@@ -59,7 +59,17 @@
           }
         ],
         "activity_measurements": [],
-        "stellarium_id": "BD+195116A"
+        "stellarium_id": "BD+195116A",
+        "inclination_measurements": [
+          {
+            "value_deg": 60,
+            "method": "zeeman_doppler",
+            "reference": "Morin et al. 2008",
+            "bibcode": "2008MNRAS.390..567M",
+            "recommended": true,
+            "notes": "ZDI of M dwarfs (via Curiel et al. 2022); no formal uncertainty published."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -85,7 +95,8 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 1.061,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 60
       },
       "principia": {
         "gravitational_parameter_km3_s2": 57861296723.448,
@@ -200,7 +211,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -209,7 +220,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -218,14 +229,14 @@
       "title": "Curiel et al. 2022",
       "doi": "10.3847/1538-3881/ac7c66",
       "bibcode": "2022AJ....164...93C",
-      "accessed": "2026-05-31",
+      "accessed": "2026-06-15",
       "used_for": [
         "GJ 896 A mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-31",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

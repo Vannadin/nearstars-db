@@ -79,7 +79,18 @@
             "recommended": true
           }
         ],
-        "stellarium_id": null
+        "stellarium_id": null,
+        "inclination_measurements": [
+          {
+            "value_deg": 68,
+            "uncertainty_deg": 10,
+            "method": "vsini_inversion",
+            "reference": "Mamajek et al. 2012",
+            "bibcode": "2012AJ....143...72M",
+            "recommended": true,
+            "notes": "v sin i + P_rot + R inversion (J1407 / 1RXS J160929 host)."
+          }
+        ]
       },
       "derived": {
         "epoch_jd": 2433282.5,
@@ -105,7 +116,8 @@
         "metallicity_fe_h_dex": null,
         "rotation_period_days": 3.2,
         "activity_log_rhk": null,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 68
       },
       "principia": {
         "gravitational_parameter_km3_s2": 119441196016.2,
@@ -187,7 +199,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -196,7 +208,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -205,7 +217,7 @@
       "title": "Mamajek et al. 2012",
       "doi": null,
       "bibcode": "2012AJ....143...72M",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "V1400 Centauri mass (evolutionary_model)"
       ]
@@ -214,14 +226,14 @@
       "title": "Kenworthy & Mamajek 2015",
       "doi": null,
       "bibcode": "2015ApJ...800..126K",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "V1400 Centauri radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-03",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

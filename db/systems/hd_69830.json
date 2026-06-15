@@ -164,6 +164,17 @@
             "recommended": false
           }
         ],
+        "inclination_measurements": [
+          {
+            "value_deg": 13,
+            "uncertainty_deg": 27,
+            "method": "vsini_inversion",
+            "reference": "Simpson et al. 2010",
+            "bibcode": "2010MNRAS.408.1666S",
+            "recommended": true,
+            "notes": "v sin i + P_rot + R inversion; near pole-on but weak (+27/-13)."
+          }
+        ],
         "disk_measurements": [
           {
             "belt": "warm",
@@ -261,7 +272,8 @@
         "metallicity_fe_h_dex": -0.04,
         "rotation_period_days": 35.1,
         "activity_log_rhk": -4.999,
-        "activity_h_alpha_ew_angstrom": null
+        "activity_h_alpha_ew_angstrom": null,
+        "spin_inclination_deg": 13
       },
       "principia": {
         "gravitational_parameter_km3_s2": 114530835735.534,
@@ -468,7 +480,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "epoch propagation method"
       ]
@@ -477,7 +489,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -486,7 +498,7 @@
       "title": "Tanner et al. 2015",
       "doi": "10.1088/0004-637X/800/2/115",
       "bibcode": "2015ApJ...800..115T",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 69830 mass (evolutionary_model)"
       ]
@@ -495,7 +507,7 @@
       "title": "Sousa et al. 2008",
       "doi": null,
       "bibcode": "2008A&A...487..373S",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 69830 mass (evolutionary_model)"
       ]
@@ -504,7 +516,7 @@
       "title": "Beichman et al. 2005",
       "doi": "10.1086/430059",
       "bibcode": "2005ApJ...626.1061B",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 69830 disk warm (sed_fit)"
       ]
@@ -513,7 +525,7 @@
       "title": "Smith, Wyatt & Haniff 2009",
       "doi": "10.1051/0004-6361/200912330",
       "bibcode": "2009A&A...503..265S",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 69830 disk warm (unverified)"
       ]
@@ -522,7 +534,7 @@
       "title": "Lisse et al. 2007",
       "doi": "10.1086/510999",
       "bibcode": "2007ApJ...658..584L",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 69830 disk warm (sed_fit)"
       ]
@@ -531,7 +543,7 @@
       "title": "Wyatt et al. 2007",
       "doi": "10.1086/518404",
       "bibcode": "2007ApJ...663..365W",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "HD 69830 disk warm (unverified)"
       ]
@@ -540,14 +552,14 @@
       "title": "Lovis et al. 2006",
       "doi": "10.1038/nature04828",
       "bibcode": "2006Natur.441..305L",
-      "accessed": "2026-06-03",
+      "accessed": "2026-06-15",
       "used_for": [
         "planet HD 69830 b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-03",
+    "retrieval_date": "2026-06-15",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
