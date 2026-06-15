@@ -22,6 +22,7 @@ import os
 import sys
 import csv
 import datetime
+import yaml
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "pipeline"))
 from _naming import to_file_slug  # noqa: E402
@@ -331,6 +332,115 @@ def load_disks():
     return out
 
 
+# ── Local interstellar wind field (heliosphere / astrotail orientation) ────
+# v_rel = v_star(heliocentric) - v_ISM(heliocentric); nose = +v_rel (faces the wind),
+# tail = -v_rel. v_ISM is the LISM warm-cloud field (db/refs/lism_kinematics.yaml),
+# IDW-blended over cloud vectors by angular distance on the sky (the hybrid model).
+# Galactic -> ICRS rotation (r_icrs = _GAL2ICRS @ r_gal); standard J2000 matrix.
+_GAL2ICRS = (
+    (-0.0548755604, 0.4941094279, -0.8676661490),
+    (-0.8734370902, -0.4448296300, -0.1980763734),
+    (-0.4838350155, 0.7469822445, 0.4559837762),
+)
+
+
+def _gal_to_icrs(l_deg, b_deg):
+    l, b = math.radians(l_deg), math.radians(b_deg)
+    g = (math.cos(b) * math.cos(l), math.cos(b) * math.sin(l), math.sin(b))
+    return tuple(sum(_GAL2ICRS[i][j] * g[j] for j in range(3)) for i in range(3))
+
+
+def _ecl_to_icrs(lam_deg, beta_deg):
+    lam, beta = math.radians(lam_deg), math.radians(beta_deg)
+    x, y, z = math.cos(beta) * math.cos(lam), math.cos(beta) * math.sin(lam), math.sin(beta)
+    eps = math.radians(23.4393)
+    return (x, y * math.cos(eps) - z * math.sin(eps), y * math.sin(eps) + z * math.cos(eps))
+
+
+_LISM = None
+
+
+def load_lism():
+    global _LISM
+    if _LISM is not None:
+        return _LISM
+    f = os.path.join(ROOT, "db", "refs", "lism_kinematics.yaml")
+    data = yaml.safe_load(open(f, encoding="utf-8"))
+    clouds = []
+    for c in data["clouds"]:
+        d = _gal_to_icrs(c["l_deg"], c["b_deg"])          # downwind unit vector (ICRS)
+        clouds.append({"name": c["name"],
+                       "vel": tuple(c["v0_kms"] * k for k in d),     # ISM velocity vector
+                       "center": _gal_to_icrs(c["region_l"], c["region_b"])})
+    he = data["insitu_he"]
+    hd = _ecl_to_icrs(he["ecliptic_lambda_deg"], he["ecliptic_beta_deg"])
+    _LISM = {"clouds": clouds, "he_vel": tuple(he["speed_kms"] * k for k in hd)}
+    return _LISM
+
+
+_THETA0 = math.radians(20.0)   # IDW angular-smoothing scale
+
+
+def _ism_velocity(pos_ly):
+    """Heliocentric ISM velocity (km/s, ICRS) at a position, IDW-blended over the warm-cloud
+    vectors by angular distance on the sky. At the Sun: the in-situ IBEX He inflow vector."""
+    L = load_lism()
+    n = math.sqrt(sum(c * c for c in pos_ly))
+    if n < 1e-9:
+        return L["he_vel"], "LIC"
+    d = [c / n for c in pos_ly]
+    wsum, v, best = 0.0, [0.0, 0.0, 0.0], (-1.0, None)
+    for cl in L["clouds"]:
+        dot = max(-1.0, min(1.0, sum(d[k] * cl["center"][k] for k in range(3))))
+        th = math.acos(dot)
+        w = 1.0 / (th * th + _THETA0 * _THETA0)
+        wsum += w
+        for k in range(3):
+            v[k] += w * cl["vel"][k]
+        if w > best[0]:
+            best = (w, cl["name"])
+    return tuple(c / wsum for c in v), best[1]
+
+
+def wind_for(pos_ly, vel_kms):
+    """Per-star interstellar-wind descriptor for the viewer: nose (unit ICRS = +v_rel,
+    faces the wind; tail = -nose), v_rel magnitude (km/s), dominant LISM cloud. None if
+    the catalog velocity is unknown."""
+    if any(v is None for v in vel_kms):
+        return None
+    v_ism, cloud = _ism_velocity(pos_ly)
+    vrel = [vel_kms[k] - v_ism[k] for k in range(3)]
+    mag = math.sqrt(sum(c * c for c in vrel))
+    if mag < 1e-6:
+        return None
+    im = math.sqrt(sum(c * c for c in v_ism)) or 1.0
+    return {"nose": [round(c / mag, 4) for c in vrel],     # +v_rel (heliosphere faces it)
+            "vrel_kms": round(mag, 1), "cloud": cloud,
+            "ism": [round(c / im, 4) for c in v_ism],      # v_ISM flow-toward (map field)
+            "ism_kms": round(im, 1)}
+
+
+# Per-star heliosphere radiation grade = Phase-3 stellar-wind synthesis conclusion
+# (radiation_surface re-anchored to measured X-ray Lx): medium for most, high (3x) for the
+# two most active hosts. Source: phase3/stellar_wind_synthesis/. Not a db/ field yet, so
+# pinned here until the kerbalism-cfg writer formalizes radiation_surface in the pipeline.
+HELIO_GRADE = {
+    "Alpha Centauri A": "medium", "Alpha Centauri B": "medium",
+    "Barnard's star": "medium", "Proxima Cen": "medium", "tau Cet": "medium",
+    "eps Ind A": "high", "40 Eridani A": "high",
+}
+
+
+def heliosphere_for(m):
+    """Star-level heliosphere bubble descriptor (colour grade + wind-driven size), or None.
+    Orientation comes from the cluster's wind.nose."""
+    grade = HELIO_GRADE.get(m["name"])
+    if not grade:
+        return None
+    wind = m.get("mass_loss_solar")
+    return {"grade": grade, "wind": round(wind, 3) if wind is not None else None}
+
+
 def load_records():
     manifest = load_manifest()
     recs = []
@@ -367,6 +477,7 @@ def load_records():
             "mass_msun": mass_msun,
             "spin_i_deg": der.get("spin_inclination_deg"),       # measured spin-axis i★ (else null → viewer assumes spin–orbit alignment)
             "spin_pa_deg": der.get("spin_position_angle_deg"),   # measured projected spin-axis PA (Vega, Fomalhaut only)
+            "mass_loss_solar": der.get("mass_loss_solar"),       # stellar wind (× solar) → heliosphere bubble size
             "vel_kms": vel_kms,
             "distance_pc": der.get("distance_pc"),
             "epoch_jd": der.get("epoch_jd"),
@@ -707,6 +818,7 @@ def build_cluster_obj(members):
             "radius_rsun": m["radius_rsun"] or _MS_RADIUS_PROXY.get(m["spec_class"], 0.3),
             "radius_measured": m["radius_rsun"] is not None,
             "spin_i_deg": m.get("spin_i_deg"), "spin_pa_deg": m.get("spin_pa_deg"),
+            "heliosphere": heliosphere_for(m),   # stellar-wind bubble (7 hosts) — colour+size
             "distance_pc": round(dist_pc, 4) if dist_pc else None,
             # N-body trajectory where the catalog state gives a bound pair;
             # else a 2-body Keplerian path from published elements; else none.
@@ -751,6 +863,9 @@ def build_cluster_obj(members):
         "max_phase": max((m.get("phase", 1) for m in members), default=1),
         "epoch_jd": rep.get("epoch_jd"),
         "vel": [round(v, 4) if v is not None else None for v in rep["vel_kms"]],
+        # interstellar-wind vector at this star (heliosphere nose/tail + map arrow); ≤55 ly
+        "wind": (wind_for(rep["pos_ly"], rep["vel_kms"])
+                 if (dist_ly is not None and dist_ly <= 55) else None),
         "disks": next((load_disks()[k] for k in load_disks()
                        if k == label or any(k == m["system_name"] or m["name"] == k
                                             for m in members)), None),
@@ -789,12 +904,15 @@ def solar_system_cluster():
         "is_confirmed_set": False, "is_sol": True, "beyond_50ly": False,
         "rep_rgb": teff_to_rgb(5772), "rep_radius": marker_radius(1.0, "G"),
         "max_phase": 3, "epoch_jd": 2451545.0, "vel": [0.0, 0.0, 0.0],
+        # Sun's heliosphere: nose faces the in-situ He inflow (upwind), v_rel = -v_ISM.
+        "wind": wind_for([0.0, 0.0, 0.0], [0.0, 0.0, 0.0]),
         "n_planets": len(planets),
         "components": [{
             "name": "Sun", "spectype": "G2 V", "spec_class": "G",
             "teff_k": 5772, "rgb": teff_to_rgb(5772), "vmag_v": -26.74,
             "luminosity_lsun": 1.0, "radius_rsun": 1.0, "radius_measured": True,
             "distance_pc": 0.0, "is_primary": True, "phase": 3,
+            "heliosphere": {"grade": "medium", "wind": 1.0},   # the reference heliosphere
             "offset_au": [0.0, 0.0, 0.0], "placement": "primary", "orbit": None,
         }],
         "planets": planets,

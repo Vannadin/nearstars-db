@@ -177,6 +177,8 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <button class="btn on" id="toggleStems"><span class="dot"></span><span data-i18n="dropLines">수직선</span></button>
   <button class="btn" id="toggleOrbits"><span class="dot"></span><span data-i18n="orbits">궤도</span></button>
   <button class="btn on" id="toggleAxes" title="별 자전축 — 금색: 측정된 i★(일부 PA), 청색: 공전면 정렬 가정"><span class="dot"></span><span data-i18n="spinAxes">자전축</span></button>
+  <button class="btn" id="toggleHelio" title="항성권(heliosphere) — 항성풍 거품 + 성간풍 꼬리. 색=방사선 등급(노랑 medium·빨강 high), 크기=항성풍. 시스템 뷰에서. 모식적 스케일."><span class="dot"></span><span data-i18n="helio">항성권</span></button>
+  <button class="btn" id="toggleWind" title="성간풍 벡터 지도 — 별 위치의 국부 성간물질(LISM) 흐름. R&L 2008 구름 장 보간."><span class="dot"></span><span data-i18n="windMap">성간풍</span></button>
   <button class="btn" id="toggleMotion"><span class="dot"></span><span data-i18n="motion">공간 운동</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
   <button class="btn" id="toggleLang">EN</button>
@@ -266,14 +268,14 @@ const SEG_STAB = 180;             // stability-orbit ellipse segments (buffers p
 
 /* ── i18n ─────────────────────────────────────────────────────────────── */
 const STR = {
-  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',spinAxes:'자전축',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
+  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',spinAxes:'자전축',helio:'항성권',windMap:'성간풍',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',phase3:'Phase 3 보고서 열기',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
     hintTouch:'한 손가락 = 회전 · 두 손가락 = 줌·이동 · 탭 = 정보 · 더블탭 = 들어가기',
     ly:'광년',pc:'pc',yr:'년',stabBtn:'안정성 시뮬 ▶',disrupt:'파괴 위험',stabObs:'관측 궤도(불안정)'},
-  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',spinAxes:'Spin axes',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
+  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',spinAxes:'Spin axes',helio:'Heliosphere',windMap:'ISM wind',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',phase3:'Open Phase 3 report',
@@ -330,6 +332,33 @@ function glowTexture(k){
 }
 const GLOW=glowTexture(6.5);    // wide soft halo
 const CORE=glowTexture(15);     // brighter core (kept soft so bloom stays round)
+const DOT=glowTexture(3.0);     // soft round point sprite (heliosphere speckle)
+
+/* ── heliosphere / interstellar-wind layers ───────────────────────────────
+   Speckled teardrop astrosphere (Kerbalism look): blunt nose faces the wind
+   (+v_rel = wind.nose), long tail downwind. Colour = radiation grade, size ∝
+   stellar wind. Schematic scale (the real astrosphere dwarfs the planets). */
+const HELIO_COL={low:0x46e0cf, medium:0xffd24a, high:0xff5a3c};
+function makeHeliosphere(grade, wind, noseScene, R0){
+  const N=2200, axis=noseScene.clone().normalize();
+  let u=new THREE.Vector3(0,1,0); if(Math.abs(axis.y)>0.9) u.set(1,0,0);
+  u.crossVectors(axis,u).normalize();
+  const v=new THREE.Vector3().crossVectors(axis,u).normalize();
+  const Rn=R0*(0.9+0.5*Math.sqrt(wind||1));         // nose standoff, wind-modulated
+  const pos=new Float32Array(N*3);
+  for(let i=0;i<N;i++){
+    const ct=2*Math.random()-1, th=Math.acos(ct), st=Math.sin(th), ph=2*Math.PI*Math.random();
+    let r=Rn*Math.pow(2/(1+ct+1e-3),0.6);           // Shue-like: small nose, balloons to tail
+    r=Math.min(r,Rn*5.5)*(0.9+0.18*Math.random());  // clamp tail + shell-thickness speckle
+    pos[i*3]  =axis.x*ct*r + (u.x*Math.cos(ph)+v.x*Math.sin(ph))*st*r;
+    pos[i*3+1]=axis.y*ct*r + (u.y*Math.cos(ph)+v.y*Math.sin(ph))*st*r;
+    pos[i*3+2]=axis.z*ct*r + (u.z*Math.cos(ph)+v.z*Math.sin(ph))*st*r;
+  }
+  const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  const m=new THREE.PointsMaterial({map:DOT,color:HELIO_COL[grade]||0xffd24a,size:Rn*0.07,
+    sizeAttenuation:true,transparent:true,opacity:0.55,depthWrite:false,blending:THREE.AdditiveBlending});
+  const pts=new THREE.Points(g,m); pts.frustumCulled=false; return pts;
+}
 
 /* backdrop starfield (follows camera, sits at infinity) */
 const backdrop=(function(){
@@ -467,7 +496,9 @@ DATA.clusters.forEach(c=>{
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   node.add(outer);
 
-  const bodies=[]; const orbitsLines=[]; const stabPlanets=[]; const axisLines=[];
+  const bodies=[]; const orbitsLines=[]; const stabPlanets=[]; const axisLines=[]; const helioObjs=[];
+  // host outer extent (AU) → heliosphere base scale (so the bubble frames with the system)
+  const pExt=Math.max(0.4,(c.planets||[]).reduce((m,p)=>Math.max(m,(p.a_au||0)*(1+(p.e||0))),0)*1.3);
   // register a planet that has a stability time-series: keep refs to its normal
   // line+mesh (to hide during playback) and make a morphing anim line+mesh.
   function regStab(p,line,mesh,hostVec,grp){
@@ -611,6 +642,13 @@ DATA.clusters.forEach(c=>{
         new THREE.LineBasicMaterial({color: measured?0xffd27a:0x9fb6d6, transparent:true, opacity: measured?0.95:0.7}));
       axLine.frustumCulled=false; cg.add(axLine); axisLines.push(axLine); }
 
+    // heliosphere bubble (stellar-wind hosts): speckled teardrop oriented by the
+    // interstellar-wind direction (c.wind.nose, ICRS → scene), centred on the star.
+    if(m.heliosphere && c.wind && c.wind.nose){
+      const w=c.wind.nose, nose=new THREE.Vector3(w[0],w[2],w[1]);   // ICRS → scene (x,z,y)
+      const hs=makeHeliosphere(m.heliosphere.grade, m.heliosphere.wind, nose, pExt);
+      hs.visible=false; cg.add(hs); helioObjs.push(hs); }
+
     // planets hosted by this component
     const hpl=hostPlane(m.name);   // fallback plane for this host's RV (i-unknown) planets
     c.planets.filter(p=>p.host_star===m.name && p.a_au).forEach((p,pi)=>{
@@ -751,11 +789,21 @@ DATA.clusters.forEach(c=>{
     motion={line:ml, vly, rgb:c.rep_rgb};
   }
 
+  // interstellar-wind map arrow (map view): local LISM flow direction (c.wind.ism,
+  // ICRS → scene), length fixed in ly-scale. The field is the R&L-2008 cloud flow.
+  let windArrow=null;
+  if(c.wind && c.wind.ism){
+    const w=c.wind.ism, dir=new THREE.Vector3(w[0],w[2],w[1]).normalize();   // ICRS → scene
+    windArrow=new THREE.ArrowHelper(dir,new THREE.Vector3(0,0,0),1.1*U,0x6fd6e0,0.34*U,0.2*U);
+    windArrow.visible=false; windArrow.traverse(o=>{if(o.material){o.material.transparent=true;o.material.opacity=0.75;o.frustumCulled=false;}});
+    node.add(windArrow);
+  }
+
   let labelEl=null;
   if(c.is_sol) labelEl=mkLabel('Sol','label sun');
   else if(c.is_confirmed_set) labelEl=mkLabel(c.label,'label confirmed');
 
-  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets,diskMeshes,axisLines});
+  clusters.push({data:c,node,glow,core,outer,sysScale,bodies,stem,labelEl,orbitsLines,motion,stabPlanets,diskMeshes,axisLines,helioObjs,windArrow});
 });
 
 /* legend */
@@ -1223,14 +1271,17 @@ document.getElementById('zoomOut').onclick=()=>applyZoom(controls.getDistance()/
 
 /* ── toggles / filter ─────────────────────────────────────────────────── */
 let showAllLabels=false, showStems=true, showOrbits=true, showFar=false, distLimit=50,
-    showMotion=false, lookbackKyr=50, showAxes=true;
+    showMotion=false, lookbackKyr=50, showAxes=true, showHelio=false, showWind=false;
 const btnLabels=document.getElementById('toggleLabels'), btnStems=document.getElementById('toggleStems'),
       btnOrbits=document.getElementById('toggleOrbits'), btnFar=document.getElementById('toggleFar'),
-      btnMotion=document.getElementById('toggleMotion'), btnAxes=document.getElementById('toggleAxes');
+      btnMotion=document.getElementById('toggleMotion'), btnAxes=document.getElementById('toggleAxes'),
+      btnHelio=document.getElementById('toggleHelio'), btnWind=document.getElementById('toggleWind');
 btnLabels.onclick=()=>{showAllLabels=!showAllLabels;btnLabels.classList.toggle('on',showAllLabels);ensureLabels();};
 btnStems.onclick=()=>{showStems=!showStems;btnStems.classList.toggle('on',showStems);applyFilter();};
 btnOrbits.onclick=()=>{showOrbits=!showOrbits;btnOrbits.classList.toggle('on',showOrbits);};
 btnAxes.onclick=()=>{showAxes=!showAxes;btnAxes.classList.toggle('on',showAxes);};
+btnHelio.onclick=()=>{showHelio=!showHelio;btnHelio.classList.toggle('on',showHelio);};
+btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);};
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter();};
@@ -1315,6 +1366,8 @@ function updateScene(){
     // real bodies + orbits visible only when active
     cl.orbitsLines.forEach(l=>l.visible=active&&showOrbits);
     if(cl.axisLines) cl.axisLines.forEach(l=>l.visible=active&&showAxes);
+    if(cl.helioObjs) cl.helioObjs.forEach(h=>h.visible=active&&showHelio);   // bubbles: system view
+    if(cl.windArrow) cl.windArrow.visible=(!active)&&showWind;               // arrows: map view
     if(cl.diskMeshes) cl.diskMeshes.forEach(m=>m.visible=active);
     cl.bodies.forEach(b=>{ if(b.kind==='star'){ b.obj.visible=true; if(b.glow) b.glow.material.opacity=(1-t)*0.9; } else b.obj.visible=active; });
     // crosshairs for active cluster bodies
