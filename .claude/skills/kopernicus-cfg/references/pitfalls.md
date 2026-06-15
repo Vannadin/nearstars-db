@@ -15,3 +15,4 @@
 | Body loads but has no terrain | `Template.removeAllPQSMods = True` without a replacement `PQS {}` block | Add a `PQS {}` block or set `removeAllPQSMods = False` |
 | `NEEDS[]` patch silently skipped | Mod name in `NEEDS[]` doesn't match MM's registered name | Check the mod's own `FOR[X]` pass name; it must match exactly |
 | Planet too bright / too dark | `albedoBrightness` in PQS Material too high/low | Tune `albedoBrightness` (1.0 = neutral); also check `ScaledVersion.Material.color` |
+| Body silently loses its atmosphere | `temperatureEccentricityBiasCurve` on a circular orbit → `(ApR−PeR)=0` → divide-by-zero | Only emit that curve when orbital eccentricity is above a threshold (e ≳ 0.02–0.05); never on default-circular bodies. See `atmosphere.md` "Temperature over the orbit" |
