@@ -413,17 +413,27 @@ const windGroup=new THREE.Group(); windGroup.visible=false; scene.add(windGroup)
 const _windClouds=new Set();
 (function buildWindField(){
   if(!LISM) return;
-  const STEP=14, MAX=50;                          // ly (3D lattice)
+  // dense 3D lattice as ONE LineSegments (1 draw call) so density scales cheaply.
+  const STEP=8, MAX=50, L=3.6*U, HB=1.2*U;        // ly spacing, range, shaft & barb length
+  const pos=[], col=[], up=new THREE.Vector3(0,1,0), perp=new THREE.Vector3();
+  const push=(a,b,c)=>{ pos.push(a.x,a.y,a.z,b.x,b.y,b.z); col.push(c.r,c.g,c.b,c.r,c.g,c.b); };
   for(let gx=-MAX; gx<=MAX; gx+=STEP) for(let gy=-MAX; gy<=MAX; gy+=STEP) for(let gz=-MAX; gz<=MAX; gz+=STEP){
     const r=Math.hypot(gx,gy,gz); if(r<6||r>MAX+0.1) continue;  // skip Sol + outside the 50 ly sphere
     const s=ismSample(gx,gy,gz); if(!s) continue;
     _windClouds.add(s.cloud);
-    const col=CLOUD_COL[s.cloud]||'#6fd6e0';
-    const o=new THREE.Vector3(gx*U,gz*U,gy*U);    // ICRS(x,y,z)→scene(x,z,y)
-    const a=new THREE.ArrowHelper(s.dir,o,1.5*U,col,0.5*U,0.3*U);
-    a.traverse(x=>{if(x.material){x.material.transparent=true;x.material.opacity=0.78;x.frustumCulled=false;}});
-    windGroup.add(a);
+    const c=new THREE.Color(CLOUD_COL[s.cloud]||'#6fd6e0');
+    const base=new THREE.Vector3(gx*U,gz*U,gy*U), tip=base.clone().addScaledVector(s.dir,L);
+    perp.crossVectors(s.dir,up); if(perp.lengthSq()<1e-6) perp.set(1,0,0); perp.normalize();
+    const back=tip.clone().addScaledVector(s.dir,-HB);
+    push(base,tip,c);
+    push(tip, back.clone().addScaledVector(perp, HB*0.45), c);
+    push(tip, back.clone().addScaledVector(perp,-HB*0.45), c);
   }
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  g.setAttribute('color',new THREE.Float32BufferAttribute(col,3));
+  const ls=new THREE.LineSegments(g,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,opacity:0.8}));
+  ls.frustumCulled=false; windGroup.add(ls);
 })();
 // cloud-colour legend (shown with the ISM-wind toggle)
 const windLegendEl=document.createElement('div'); windLegendEl.id='windLegend';
