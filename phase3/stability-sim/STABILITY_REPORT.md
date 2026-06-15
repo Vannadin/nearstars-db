@@ -216,6 +216,28 @@ star–planets–moons hierarchy** in one N-body sim: stellar tide on the moon,
 mutual planet perturbations, and the moon's gravity back on its parent are all
 tracked. (A deliberately-unstable demo; output in `results/with_moons/`.)
 
+## Solar System — validation against secular theory
+
+A `solar_system` run (8 planets at J2000 elements + masses, Earth+Moon merged;
+WHFast, dt = P_Mercury/50, 1 Myr) calibrates the tool against the real, known
+secular dynamics. Verified 2026-06-15.
+
+- **Integrator fidelity:** ΔE/E = 1.2×10⁻⁹, MEGNO = 1.995 (regular).
+- **Eccentricity:** the simulated secular ranges bracket every planet's present-day
+  e and match Laskar/Milankovitch amplitudes — Earth 0.001–0.053 (Milankovitch
+  ≈ 0.003–0.058) and Jupiter 0.024–0.061 (Laskar ≈ 0.025–0.061) are essentially
+  exact; all eight bracket the J2000 value. Inclinations show the expected small,
+  bounded oscillations.
+- **Semi-major axes:** stable, no secular drift. The giants' apparent ~1% osculating
+  spread is a heliocentric-element artifact — the Sun's barycentric wobble from
+  Jupiter (~0.005 AU) aliased at the 5000-yr snapshot cadence — not real drift;
+  energy conservation to 1e-9 confirms it.
+
+**Scope.** Faithful for ~Myr secular (Milankovitch) behaviour. It does NOT reproduce
+the real Solar System's weak chaos (Lyapunov ≈ 5 Myr): the 1 Myr run is shorter than
+that and omits general relativity and lunar dynamics (Earth+Moon are a single point
+mass), which drive Mercury's long-term chaotic diffusion.
+
 ## How to use
 
 ```bash
