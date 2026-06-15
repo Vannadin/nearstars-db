@@ -248,6 +248,12 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const DATA = JSON.parse(document.getElementById('starmap-data').textContent);
+// stability series ship without the per-row time column (uniform spacing); rebuild
+// t from each variant's t0/t_end so downstream code sees the original [t,a,e,i,Ω,ω,f].
+DATA.clusters.forEach(c=>(c.planets||[]).forEach(p=>(p.stability||[]).forEach(v=>{
+  if(v.t_end==null||!v.data) return; const n=v.data.length, sp=n>1?(v.t_end-v.t0):0;
+  v.data=v.data.map((r,j)=>[n>1?v.t0+sp*j/(n-1):v.t_end, ...r]);
+})));
 const SPEC = {O:'#b2c4ff',B:'#9eb8ff',A:'#cfdcff',F:'#f3f7c2',G:'#ffe28a',K:'#ffb47a',M:'#ff8a76',X:'#a3b0c8'};
 
 /* ── units ────────────────────────────────────────────────────────────── */
@@ -1010,7 +1016,7 @@ const _lerp=(a,b,t)=>a+(b-a)*t;
 const _alerp=(a,b,t)=>{ let d=((b-a)%360+540)%360-180; return a+d*t; }; // shortest-path (deg)
 function updateStability(){
   if(!stabActive) return;
-  if(stabPlaying){ stabIdx+=0.5; if(stabIdx>=stabN-1) stabIdx=0; }
+  if(stabPlaying){ stabIdx+=0.25; if(stabIdx>=stabN-1) stabIdx=0; }  // ~100 snapshots/variant: 0.25 keeps loop duration (4 interp frames/snapshot)
   // paused and nothing moved → the orbit shape and chart are unchanged; skip the
   // whole recompute/repaint (a paused sim then costs nothing per frame).
   if(!(_stabForce || stabPlaying || stabIdx!==_stabLastIdx || stabVar!==_stabLastVar)) return;

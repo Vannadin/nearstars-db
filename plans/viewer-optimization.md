@@ -1,7 +1,21 @@
 # 3D Star-Map Viewer — recap + optimization plan
 
 Hand-off doc for a clean session. Self-contained: it recaps what the viewer does and
-lays out a prioritized optimization plan to execute + verify. Nothing here is done yet.
+lays out a prioritized optimization plan to execute + verify.
+
+## Status (2026-06-16)
+- **P1 — payload — DONE.** Stability series downsampled to ≤100 snapshots/variant
+  (`math.ceil(len/100)`), per-row time column dropped (uniform spacing → viewer rebuilds
+  `t` from per-variant `t0`/`t_end` once at load, so all downstream indexing is unchanged),
+  rounding tightened (e 3dp, angles 2dp), binary/Kepler trajectories downsampled (~154→~110
+  pts). Playback increment 0.5→0.25 to keep loop duration constant at half the snapshots.
+  Result: **payload 793.5→436.5 KB (−45%), file 882→526 KB (−40%)**; stability 553.6→215.4,
+  trajectory 74.0→53.8. Kept the ≥100-snapshot floor deliberately (secular detail), so
+  payload lands ~436 not ~400 — held the guardrail over the approximate target.
+- **P2 — per-frame cost — DONE** (prior, commit `4d2fda0`): buffer reuse + dirty-skip when paused.
+- **P3 — object hygiene:** assessed — no runtime geometry/material churn (all THREE objects
+  created once), no leaks; no action needed.
+- **P4 — maintainability:** deferred (optional, no behavior change).
 
 Files: `scripts/viz/build_starmap.py` (builder, reads `db/systems/*.json`) +
 `scripts/viz/starmap_template.html` (the viewer; 1377 lines inline JS) →

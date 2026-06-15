@@ -216,11 +216,23 @@ def _load_stab_dir(directory):
                 g("inc_deg"), g("Omega_deg"), g("omega_deg"), g("f_deg")))
         for body, series in rows.items():
             series.sort()
-            step = max(1, len(series) // 110)
-            out[body] = {"system": stem, "data": [
-                [int(t), round(a, 4), round(e, 4),
-                 round(i, 3), round(Om, 3), round(om, 3), round(fa, 3)]
-                for (t, a, e, i, Om, om, fa) in series[::step]]}
+            step = max(1, math.ceil(len(series) / 100))   # cap ~100 snapshots/variant
+            sampled = series[::step]
+            # the per-row time column is dropped (uniform spacing → the viewer rebuilds
+            # t from t0/t_end). Assert uniformity so a non-uniform run fails loudly
+            # instead of mis-rendering the time axis.
+            ts = [s[0] for s in sampled]
+            if len(ts) > 2:
+                d0 = ts[1] - ts[0]
+                assert all(abs((ts[k + 1] - ts[k]) - d0) <= 0.5 * abs(d0) + 1e-6
+                           for k in range(len(ts) - 1)), \
+                    f"non-uniform snapshot spacing in {stem}/{body}"
+            out[body] = {"system": stem,
+                         "t0": int(round(ts[0])), "t_end": int(round(ts[-1])),
+                         "data": [
+                             [round(a, 4), round(e, 3),
+                              round(i, 2), round(Om, 2), round(om, 2), round(fa, 2)]
+                             for (t, a, e, i, Om, om, fa) in sampled]}
     return out
 
 
@@ -255,10 +267,12 @@ def load_stability():
         variants = []
         if body in main:
             main_id = "confirmed" if subset else ("adopted" if body in obs else "sim")
-            variants.append({"id": main_id, "data": main[body]["data"]})
+            variants.append({"id": main_id, "data": main[body]["data"],
+                             "t0": main[body]["t0"], "t_end": main[body]["t_end"]})
         if body in obs:
             variants.append({"id": "candidates" if subset else "observed",
-                             "data": obs[body]["data"]})
+                             "data": obs[body]["data"],
+                             "t0": obs[body]["t0"], "t_end": obs[body]["t_end"]})
         out[body] = variants
     _STABILITY = out
     return out
@@ -470,7 +484,7 @@ def kepler_trajectory(orbit, epoch_jd, star_pos):
     if T is not None and P and epoch_jd is not None:
         M0 = 2 * math.pi * ((epoch_jd - T) / 365.25) / P
     norm = lambda x: (x % (2 * math.pi) + 2 * math.pi) % (2 * math.pi)
-    K, sweep = 150, 2 * math.pi * 0.9
+    K, sweep = 110, 2 * math.pi * 0.9
     pts = []
     for k in range(K + 1):                    # k=0 now, increasing k = older
         nu = _mean_to_true(norm(M0 - sweep * (k / K)), e)
@@ -561,7 +575,7 @@ def nbody_trajectories(members, rep):
         span = min(max(1.4 * P_est, 15.0), 20000.0)
         N = 4000
         dt = -span / N
-        rec = max(1, N // 150)
+        rec = max(1, N // 110)
         for b in P:
             traj[b["name"]] = []
             spans[b["name"]] = span
