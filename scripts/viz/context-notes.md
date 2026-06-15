@@ -80,3 +80,21 @@ The first stability animation morphed an ellipse from a/e with **fixed orientati
 User: "모든 다중성계는 nbody 기반으로". Reworked `nbody_trajectories` to split components into **gravitationally bound subgroups** (pairwise specific energy E<0) and integrate each ≥2 group in its *own* barycentric frame. This stops a loosely-attached member whose catalog velocity is unbound (40 Eri A at ~30 km/s vs the B–C pair, which is itself bound at 3.7 km/s) from contaminating the bound pair — previously the whole system was rejected. Result: the bound pairs of 40 Eri (B–C) and eps Ind (Ba–Bb) now integrate as real N-body, where before both fell back entirely.
 - **Element fallback** (`kepler_trajectory`): when the catalog state gives no bound pair but a published `binary_orbit` solution exists, the secondary's past path is sampled from the elements (2-body = N-body for N=2). This brings in 36 Oph A–B (e=0.92).
 - **Data-limited remainder (honest, not fabricated):** 55 Cnc B is a wide common-proper-motion companion with *no* orbital solution → static. Loose outer members with neither a bound catalog velocity nor an outer-orbit solution stay static: Proxima (marginally bound, P≈547 kyr), 40 Eri A↔BC, eps Ind A↔B, 36 Oph C. These need orbital data the DB intentionally doesn't have (would be fabrication). Every other multi-star component is now N-body/gravitational. Coverage logged in the build.
+
+## v7 — confirmed/candidates stability variants (Barnard, AU Mic)
+Barnard and AU Mic eject candidate planets within 1 Myr, and the ejection SURVIVES a
+dt/4 finer-step re-run (STAB_DT_DIV=4 in run.py) → it's a real dynamical instability,
+not a fixed-step artifact. Barnard b/c stay ~bound; outer candidates d/e go unbound
+(e≫1). AU Mic's whole 4-planet (b,c + cand d,e) config goes extreme (d→16.8 AU).
+Decision (user): show BOTH — a stable confirmed-only subset and the full candidate set.
+- `run_subset.py <system> <keep,…>` removes the dropped planets from the built sim
+  (rebound 5.0 `sim.remove(name)`) and writes the confirmed subset to results/.
+- The full (unstable) run lives in results/_observed/ → variant id **candidates**;
+  the confirmed subset in results/ → variant id **confirmed**.
+- `load_stability` now keys variants per-system (`_SUBSET_SYSTEMS`) and unions bodies
+  across main+_observed (Barnard c/d/e exist only under 'candidates'). The viewer
+  toggles variants by **id** (VAR_ORDER) and hides any planet with no data for the
+  selected variant. Default shows the stable 'confirmed' variant first.
+- BACKLOG (user-requested): search candidate element space for a dynamically STABLE
+  full-set configuration, like the α Cen A b inclination/a/e sweep — would replace the
+  confirmed-subset 'confirmed' variant with a stabilised full 4-planet 'adopted' one.

@@ -94,7 +94,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 .xhair.sel::before{top:-15px} .xhair.sel::after{bottom:-15px}
 .xhair.sel .lbl{left:17px;color:var(--accent);font-weight:600;font-size:11.5px}
 #hint{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);z-index:14;font-size:11px;color:var(--fg4);text-align:center;pointer-events:none;transition:opacity .4s}
-#stabPanel{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:19;display:none;min-width:380px;
+#stabPanel{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:19;display:none;width:460px;
   background:var(--pop);border:1px solid var(--bd1);border-radius:var(--r-card);padding:13px 16px 12px;
   backdrop-filter:blur(16px);box-shadow:0 12px 48px -8px rgba(0,0,0,.7)}
 #stabPanel.show{display:block}
@@ -108,7 +108,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabPanel .sctl{display:flex;align-items:center;gap:11px}
 #stabPlay{font-family:var(--sans);font-size:13px;color:var(--accent);background:var(--surf1);border:1px solid var(--accent-glow);border-radius:6px;padding:4px 0;cursor:pointer;width:40px;flex-shrink:0}
 #stabSlider{flex:1;accent-color:var(--accent);cursor:pointer}
-#stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2)}
+#stabPanel .srd{margin-top:9px;font-family:var(--mono);font-size:12px;color:var(--fg2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #stabPanel .srd .warn{color:#ff5a3c;font-weight:600}
 #stabChartBtn{font-size:13px;background:var(--surf1);border:1px solid var(--bd1);border-radius:6px;padding:4px 7px;cursor:pointer;flex-shrink:0;line-height:1}
 #stabChartBtn.on{border-color:var(--accent-glow);background:rgba(122,168,255,.12)}
@@ -822,27 +822,43 @@ function flyTo(c){
 /* ── stability animation (REBOUND time-series → morphing orbit) ─────────── */
 // orbit-variant labels + explanatory notes (real data vs game-adjusted)
 const VAR_INFO={
-  adopted: {ko:{n:'채택 궤도',d:'게임 구현을 위해 안정화 조정한 궤도'}, en:{n:'Adopted',d:'orbit adjusted/stabilised for the game build'}},
-  observed:{ko:{n:'관측 궤도',d:'실제 측정 데이터 기반 (보정 전)'},     en:{n:'Observed',d:'based on real measured data (pre-adjustment)'}},
-  sim:     {ko:{n:'시뮬',d:'시뮬레이션 궤도'},                          en:{n:'Sim',d:'simulated orbit'}},
+  adopted:   {ko:{n:'채택 궤도',d:'게임 구현을 위해 안정화 조정한 궤도'}, en:{n:'Adopted',d:'orbit adjusted/stabilised for the game build'}},
+  observed:  {ko:{n:'관측 궤도',d:'실제 측정 데이터 기반 (보정 전)'},     en:{n:'Observed',d:'based on real measured data (pre-adjustment)'}},
+  confirmed: {ko:{n:'확정 행성',d:'확정 행성만 — 1 Myr 동안 안정'},        en:{n:'Confirmed',d:'confirmed planets only — stable over 1 Myr'}},
+  candidates:{ko:{n:'전체 후보',d:'후보 포함 전체 — 1 Myr 내 이탈(불안정)'}, en:{n:'All candidates',d:'incl. candidates — ejects within 1 Myr (unstable)'}},
+  sim:       {ko:{n:'시뮬',d:'시뮬레이션 궤도'},                          en:{n:'Sim',d:'simulated orbit'}},
 };
-let stabActive=false, stabRecs=[], stabIdx=0, stabPlaying=true, stabN=0, stabVar=0, stabSelCl=null;
+// variant display order (stable/adjusted shown first, alternate second)
+const VAR_ORDER=['confirmed','adopted','sim','observed','candidates'];
+// distinct per-planet identity colours — most planets share a near-white Teq
+// fallback (#ccd2de), so the chart lines were indistinguishable. Assigned by the
+// planet's index within its host group (stable across variant toggles) and reused
+// for the planet's 3D marker so the chart legend matches the moving body.
+const STAB_PAL=['#5b9cff','#ff7a4d','#3fd07a','#e8c84a','#c879ff','#ff5d8f','#4ad6d6','#b0d04a','#ff9f55','#9a8cff'];
+let stabActive=false, stabRecs=[], stabIdx=0, stabPlaying=true, stabN=0, stabVar=0, stabSelCl=null, stabVarIds=[];
 const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getElementById('stabPlay'),
       stabSlider=document.getElementById('stabSlider'), stabReadout=document.getElementById('stabReadout'),
       stabTitleEl=document.getElementById('stabTitle'), stabVarBtn=document.getElementById('stabVariant'),
       stabNoteEl=document.getElementById('stabNote'),
       stabChart=document.getElementById('stabChart'), stabChartBtn=document.getElementById('stabChartBtn');
 let stabShowChart=false;
-const recData=r=>r.variants[Math.min(stabVar,r.variants.length-1)].data;  // current variant's series
+// current variant's series for a planet, or null if it has no data under the
+// selected variant (e.g. a candidate planet has no 'confirmed' run) → it's hidden.
+const recData=r=>{ const v=r.variants.find(x=>x.id===stabVarIds[stabVar]); return v?v.data:null; };
 function stabRefresh(){   // apply the current variant: title chip, note, length, framing
-  const nv=Math.max(...stabRecs.map(r=>r.variants.length));
+  // union of variant ids across this host's planets, in display order
+  const ids=new Set(); stabRecs.forEach(r=>r.variants.forEach(v=>ids.add(v.id)));
+  stabVarIds=VAR_ORDER.filter(x=>ids.has(x)); ids.forEach(x=>{ if(!stabVarIds.includes(x)) stabVarIds.push(x); });
+  if(stabVar>=stabVarIds.length) stabVar=0;
+  const nv=stabVarIds.length;
   stabVarBtn.style.display = nv>1 ? '' : 'none';
-  const id=stabRecs[0].variants[Math.min(stabVar,stabRecs[0].variants.length-1)].id;
+  const id=stabVarIds[stabVar];
   const inf=VAR_INFO[id]?VAR_INFO[id][lang]:null;
   if(inf){ stabVarBtn.textContent=inf.n+(nv>1?' ⇄':''); stabNoteEl.textContent=inf.d; }
-  stabN=Math.max(...stabRecs.map(r=>recData(r).length));
+  const lens=stabRecs.map(recData).filter(Boolean).map(d=>d.length);
+  stabN=lens.length?Math.max(...lens):1;
   stabSlider.max=stabN-1; stabSlider.step='any'; if(stabIdx>stabN-1) stabIdx=stabN-1;
-  let ext=1; stabRecs.forEach(r=>recData(r).forEach(d=>{ext=Math.max(ext,d[1]*(1+d[2]));}));
+  let ext=1; stabRecs.forEach(r=>{ const d=recData(r); if(d) d.forEach(s=>{ext=Math.max(ext,s[1]*(1+s[2]));}); });
   stabRecs._ext=ext;
 }
 function openStability(c){
@@ -861,6 +877,9 @@ function openStability(c){
     let best=Infinity; names.forEach(n=>{ const w=cl.node.position.clone().add(groups[n][0].host);
       const d=w.distanceTo(controls.target); if(d<best){best=d;host=n;} }); }
   stabRecs=groups[host]; stabSelCl=c; stabVar=0; stabIdx=0; stabPlaying=true; stabActive=true;
+  // distinct identity colour per planet in this group (chart legend ↔ 3D marker)
+  stabRecs.forEach((r,i)=>{ r.ccol=STAB_PAL[i%STAB_PAL.length];
+    if(r.animMesh) r.animMesh.material.color.set(r.ccol); });
   stabPlayBtn.textContent='⏸';
   const hl=(lang==='ko'&&c.label_ko&&names.length===1)?c.label_ko:host;
   stabTitleEl.innerHTML=`<b>${hl}</b> · ${lang==='ko'?'궤도 진화':'orbit evolution'}`;
@@ -886,8 +905,8 @@ document.getElementById('infoStab').onclick=()=>{ if(selected) openStability(sel
 document.getElementById('stabClose').onclick=closeStability;
 stabPlayBtn.onclick=()=>{ stabPlaying=!stabPlaying; stabPlayBtn.textContent=stabPlaying?'⏸':'▶'; };
 stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; stabPlaying=false; stabPlayBtn.textContent='▶'; };
-stabVarBtn.onclick=()=>{ const nv=Math.max(...stabRecs.map(r=>r.variants.length));
-  stabVar=(stabVar+1)%nv; stabIdx=0; stabRefresh(); if(stabShowChart) drawStabChart(); };
+stabVarBtn.onclick=()=>{ if(stabVarIds.length<2) return;
+  stabVar=(stabVar+1)%stabVarIds.length; stabIdx=0; stabRefresh(); if(stabShowChart) drawStabChart(); };
 stabChartBtn.onclick=()=>{ stabShowChart=!stabShowChart; stabChart.style.display=stabShowChart?'block':'none';
   stabChartBtn.classList.toggle('on',stabShowChart); if(stabShowChart) drawStabChart(); };
 
@@ -899,7 +918,9 @@ function updateStability(){
   if(stabPlaying){ stabIdx+=0.5; if(stabIdx>=stabN-1) stabIdx=0; }
   let maxE=-1,maxA=0,maxName='',tt=0;
   stabRecs.forEach(r=>{
-    const d=recData(r), n=d.length;
+    const d=recData(r);
+    if(!d){ if(r.animLine) r.animLine.visible=false; if(r.animMesh) r.animMesh.visible=false; return; }  // not in this variant
+    const n=d.length;
     // interpolate orbital elements between the recorded snapshots (5000 yr apart)
     // so the animation is continuous, not stepped — secular change is captured at
     // that cadence; in-between frames are a smooth lerp of (a,e,i,Ω,ω,f).
@@ -944,12 +965,13 @@ function updateStability(){
    the radius panel — the runaway band is the instability signal. */
 function drawStabChart(curT){
   if(!stabActive||!stabShowChart||!stabRecs.length) return;
-  const recs=stabRecs.map(r=>({d:recData(r),rgb:r.rgb||'#7aa8ff',name:r.name}));
+  const recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
+  if(!recs.length) return;
   const dpr=Math.min(2,window.devicePixelRatio||1);
-  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=158;
+  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=212;
   if(stabChart.width!==Math.round(W*dpr)){ stabChart.width=Math.round(W*dpr); stabChart.height=Math.round(H*dpr); stabChart.style.height=H+'px'; }
   const g=stabChart.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
-  const padL=36,padR=10,padT=14,labT=12,gap=22, ph=(H-padT-gap-labT-12)/2;
+  const padL=38,padR=12,padT=18,labT=14,gap=30, ph=(H-padT-gap-labT-12)/2;
   const y0r=padT, y0i=padT+ph+gap;
   const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0]));
   // radius scale: cap at 3.2× the largest starting apoapsis so a stable system
@@ -976,18 +998,16 @@ function drawStabChart(curT){
   g.textAlign='center'; g.fillStyle=txt;
   const tlab=tMax>=1e6?(tMax/1e6)+' Myr':tMax>=1e3?Math.round(tMax/1e3)+' kyr':Math.round(tMax)+' yr';
   g.fillText('0',padL,y0i+ph+9); g.fillText(tlab,W-padR,y0i+ph+9);
-  // series
-  const line=(o,acc,yfn,w,al)=>{ g.beginPath(); o.d.forEach((s,k)=>{ const x=xT(s[0]),y=yfn(acc(s)); k?g.lineTo(x,y):g.moveTo(x,y); });
-    g.globalAlpha=al; g.strokeStyle=o.rgb; g.lineWidth=w; g.stroke(); g.globalAlpha=1; };
+  // series — apoapsis (solid) + periapsis (dashed), no fill, so a multi-planet
+  // chart stays readable; inclination panel = one line per planet. Same colour
+  // per planet across all three lines (matches the legend + the 3D marker).
+  const line=(o,acc,yfn,w,dash)=>{ g.beginPath();
+    o.d.forEach((s,k)=>{ const x=xT(s[0]),y=yfn(acc(s)); k?g.lineTo(x,y):g.moveTo(x,y); });
+    g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.stroke(); g.setLineDash([]); };
   recs.forEach(o=>{
-    // periapsis–apoapsis band
-    g.beginPath();
-    o.d.forEach((s,k)=>{ const x=xT(s[0]),y=yR(s[1]*(1+s[2])); k?g.lineTo(x,y):g.moveTo(x,y); });
-    for(let k=o.d.length-1;k>=0;k--){ const s=o.d[k]; g.lineTo(xT(s[0]),yR(s[1]*(1-s[2]))); }
-    g.closePath(); g.globalAlpha=.12; g.fillStyle=o.rgb; g.fill(); g.globalAlpha=1;
-    line(o,s=>s[1]*(1+s[2]),yR,1.3,.95);   // apoapsis
-    line(o,s=>s[1]*(1-s[2]),yR,1,.6);       // periapsis
-    line(o,s=>s[3],yI,1.3,.95);             // inclination
+    line(o,s=>s[1]*(1+s[2]),yR,1.7);        // apoapsis (solid)
+    line(o,s=>s[1]*(1-s[2]),yR,1.1,[3,2]);  // periapsis (dashed)
+    line(o,s=>s[3],yI,1.7);                  // inclination
   });
   // cursor
   if(curT!=null){ const cx=xT(Math.min(curT,tMax));

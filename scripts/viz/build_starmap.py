@@ -201,11 +201,13 @@ _STABILITY = None
 
 
 def _load_stab_dir(directory):
-    """body name → downsampled [[t,a,e,inc,Omega,omega,f]…] (deg) for every
-    *_timeseries.csv in dir. Instantaneous elements let the viewer draw a smooth
-    analytic ellipse per epoch (positions alone under-sample → polygon)."""
+    """body name → {"system": <file stem>, "data": [[t,a,e,inc,Omega,omega,f]…]}
+    (deg) for every *_timeseries.csv in dir. Instantaneous elements let the viewer
+    draw a smooth analytic ellipse per epoch (positions alone under-sample →
+    polygon). The system stem lets load_stability label variants per system."""
     out = {}
     for f in glob.glob(os.path.join(directory, "*_timeseries.csv")):
+        stem = os.path.basename(f)[:-len("_timeseries.csv")]
         rows = {}
         for r in csv.DictReader(open(f, encoding="utf-8")):
             g = lambda k: float(r.get(k, 0) or 0)
@@ -215,19 +217,31 @@ def _load_stab_dir(directory):
         for body, series in rows.items():
             series.sort()
             step = max(1, len(series) // 110)
-            out[body] = [[int(t), round(a, 4), round(e, 4),
-                          round(i, 3), round(Om, 3), round(om, 3), round(fa, 3)]
-                         for (t, a, e, i, Om, om, fa) in series[::step]]
+            out[body] = {"system": stem, "data": [
+                [int(t), round(a, 4), round(e, 4),
+                 round(i, 3), round(Om, 3), round(om, 3), round(fa, 3)]
+                for (t, a, e, i, Om, om, fa) in series[::step]]}
     return out
+
+
+# systems whose results/ run is the CONFIRMED-planet subset (dynamically stable)
+# and whose results/_observed/ run is the FULL candidate set (unstable — ejects
+# within 1 Myr). The full candidate config is real (detected) but dynamically
+# disfavoured, so the viewer defaults to the stable confirmed subset and offers
+# the full set as a toggle. Everything else uses the adopted/observed semantics.
+_SUBSET_SYSTEMS = {"barnards_star", "au_mic"}
 
 
 def load_stability():
     """Map planet body name → list of orbit *variants* for the in-viewer 3D
     orbit-evolution animation. Main results (results/) are the system's run; an
-    optional results/_observed/ counterpart (e.g. α Cen A b's pre-adjustment
-    observed orbit) becomes a second toggleable variant. Each variant is
-    {id, data:[[t,a,e,x,y,z]…]}; id ∈ {adopted, observed, sim} drives the
-    explanatory note in the viewer."""
+    optional results/_observed/ counterpart becomes a second toggleable variant.
+    Each variant is {id, data:[[t,a,e,inc,Ω,ω,f]…]}; id drives the viewer label:
+      adopted/observed  — game-adjusted vs pre-adjustment measured (e.g. α Cen A b)
+      confirmed/candidates — confirmed-only (stable) vs full candidate set (unstable)
+      sim               — a single plain run.
+    A body may appear in only one variant (e.g. Barnard c/d/e exist only in the
+    full 'candidates' run); the viewer hides it under variants it has no data for."""
     global _STABILITY
     if _STABILITY is not None:
         return _STABILITY
@@ -235,11 +249,17 @@ def load_stability():
     main = _load_stab_dir(res)
     obs = _load_stab_dir(os.path.join(res, "_observed"))
     out = {}
-    for body, data in main.items():
-        # if there's an observed counterpart, the main run IS the adopted orbit
-        out[body] = [{"id": "adopted" if body in obs else "sim", "data": data}]
+    for body in set(main) | set(obs):
+        system = (main.get(body) or obs.get(body))["system"]
+        subset = system in _SUBSET_SYSTEMS
+        variants = []
+        if body in main:
+            main_id = "confirmed" if subset else ("adopted" if body in obs else "sim")
+            variants.append({"id": main_id, "data": main[body]["data"]})
         if body in obs:
-            out[body].append({"id": "observed", "data": obs[body]})
+            variants.append({"id": "candidates" if subset else "observed",
+                             "data": obs[body]["data"]})
+        out[body] = variants
     _STABILITY = out
     return out
 

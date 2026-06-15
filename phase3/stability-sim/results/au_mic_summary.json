@@ -26,100 +26,50 @@
       "omega_rad": 1.270599695451872,
       "Omega_rad": 4.7623679680665845,
       "M_rad": 0.3001966313430247
-    },
-    {
-      "name": "AU Mic e",
-      "mass_msun": 6.335771172294513e-05,
-      "mass_kind": "true",
-      "a_au": 0.16015192777634352,
-      "e": 0.0,
-      "inc_rad": 0.0,
-      "omega_rad": 2.642529177293657,
-      "Omega_rad": 3.2124338172355777,
-      "M_rad": 1.6268219212234332
-    },
-    {
-      "name": "AU Mic d",
-      "mass_msun": 3.1618801158417633e-06,
-      "mass_kind": "true",
-      "a_au": 0.08470593509724933,
-      "e": 0.00305,
-      "inc_rad": -0.01190105110349905,
-      "omega_rad": 2.8063044323061703,
-      "Omega_rad": 4.924751778411374,
-      "M_rad": 2.544276222803882
     }
   ],
   "hypotheticals": [],
   "integration": {
-    "integrator": "trace",
-    "elapsed_sec": 986.6995787620544,
+    "integrator": "whfast",
+    "elapsed_sec": 1172.7866089344025,
     "dt_yr": 0.0005239091193889016,
     "innermost_period_yr": 0.02619545596944508,
-    "energy_relative_error": 0.005016678863364422,
-    "megno_final": null
+    "energy_relative_error": 1.576895572077262e-07,
+    "megno_final": 4.486351506548727
   },
   "per_body": {
     "AU Mic b": {
-      "a_min": -289.18437574591013,
-      "a_max": 0.3950410736284829,
-      "e_min": 0.05785061583475833,
-      "e_max": 9.159690803811975
+      "a_min": 0.0699834302990165,
+      "a_max": 0.07003439959879393,
+      "e_min": 0.011477410133785747,
+      "e_max": 0.24858058991314444
     },
     "AU Mic c": {
-      "a_min": 0.06770795469244581,
-      "a_max": 0.3936036550605016,
-      "e_min": 0.02275829204576727,
-      "e_max": 0.7069571346264638
-    },
-    "AU Mic e": {
-      "a_min": 0.05920523351617736,
-      "a_max": 0.16710656023381595,
-      "e_min": 0.008988542449160038,
-      "e_max": 0.6316621153814258
-    },
-    "AU Mic d": {
-      "a_min": -171.36440728607263,
-      "a_max": 239.75732377224696,
-      "e_min": 0.12416072201533938,
-      "e_max": 16.904811070353308
+      "a_min": 0.11891308445763253,
+      "a_max": 0.11901607685288484,
+      "e_min": 0.07090272560608071,
+      "e_max": 0.18573182219065051
     }
   },
   "hill_track": {},
   "judgment": {
     "per_body": {
       "AU Mic b": {
-        "flags": [
-          "e_max=9.160 \u2265 0.9 (orbit nearly unbound)"
-        ],
-        "status": "unstable",
-        "ecc_class": "extreme",
-        "e_max": 9.159690803811975
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.24858058991314444
       },
       "AU Mic c": {
         "flags": [],
         "status": "stable",
-        "ecc_class": "hot",
-        "e_max": 0.7069571346264638
-      },
-      "AU Mic e": {
-        "flags": [],
-        "status": "stable",
-        "ecc_class": "hot",
-        "e_max": 0.6316621153814258
-      },
-      "AU Mic d": {
-        "flags": [
-          "e_max=16.905 \u2265 0.9 (orbit nearly unbound)"
-        ],
-        "status": "unstable",
-        "ecc_class": "extreme",
-        "e_max": 16.904811070353308
+        "ecc_class": "calm",
+        "e_max": 0.18573182219065051
       }
     },
-    "overall": "unstable",
-    "ecc_class_max": "extreme",
-    "lyapunov_time_yr": Infinity,
+    "overall": "stable",
+    "ecc_class_max": "calm",
+    "lyapunov_time_yr": 804391.4928087438,
     "is_chaotic": false
   }
 }

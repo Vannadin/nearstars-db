@@ -52,14 +52,16 @@ Builder: `scripts/viz/build_starmap.py` → `docs/starmap.html` (self-contained,
 ## v3 — in-flight improvements (2026-06-15)
 - [x] **1. HD 219134 b/c ~perpendicular to siblings.** Fixed: no-disk fallback plane =
       mean plane of the cluster's measured-i planets (template ~line 446).
-- [~] **2. AU Mic stability diverges.** Diagnosed: b,d → e≈9.2/16.9 (unbound); d ~7 mutual
-      Hill radii from b, ejects on the FIRST snapshot → likely real over-packing of the
-      speculative 4-planet (b,c+cand d,e) config (energy err 0.5%). Finer-dt re-run to
-      confirm real vs numerical: STAB_DT_DIV=4 TRACE 1 Myr running (run.py knob). Barnard
-      dt/4 running in parallel as the matched diagnostic.
-- [x] **3. Apoapsis/periapsis + inclination charts** — drawStabChart(): q–Q band + inc vs t,
-      cursor tracks slider; 📈 toggle in the stability panel.
+- [x] **2. AU Mic + Barnard stability diverges → REAL (not numerical).** dt/4 (STAB_DT_DIV=4)
+      re-run still ejects → genuine over-packing of the speculative candidate configs.
+      Resolution (user): two variants — `confirmed` (stable subset: Barnard b / AU Mic b,c,
+      run via run_subset.py → results/) + `candidates` (full set, ejects → results/_observed/).
+      Viewer defaults to the stable variant, toggle to the full one. Backlog: search a stable
+      full-set solution like the α Cen A b sweep.
+- [x] **3. Apoapsis/periapsis + inclination charts** — drawStabChart(): q (dashed) / Q (solid)
+      + inc vs t, cursor tracks slider; 📈 toggle. Refined: distinct per-planet colours
+      (STAB_PAL, also on the 3D marker), fixed 460px panel (no width jitter on the ⚠ flag),
+      taller chart + no band fill (less dense).
 - [x] **4. Focus planet from right-panel row** — planet rows wired to flyToBody().
 - [x] **5. #info covers #zoomctl** — zoomctl shifts left (desktop) / up (mobile) when info open.
-- [x] Rebuilt; check.sh green (gate-5 known false positive only); JS syntax OK.
-- [ ] When dt/4 runs finish: pick up CSVs, rebuild viewer, commit results.
+- [x] Rebuilt; check.sh green (gate-5 known false positive only); JS syntax OK; variants verified.

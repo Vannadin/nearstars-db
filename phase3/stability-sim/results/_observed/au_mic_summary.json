@@ -1,0 +1,132 @@
+{
+  "system": "AU Mic",
+  "star": {
+    "name": "AU Mic",
+    "mass_msun": 0.4998717572772515
+  },
+  "planets": [
+    {
+      "name": "AU Mic b",
+      "mass_msun": 2.6994589023188466e-05,
+      "mass_kind": "true",
+      "a_au": 0.07,
+      "e": 0.07,
+      "inc_rad": -0.028099800957108696,
+      "omega_rad": -0.9075712110370514,
+      "Omega_rad": 5.305658970563565,
+      "M_rad": 2.478367537831948
+    },
+    {
+      "name": "AU Mic c",
+      "mass_msun": 4.341955030871026e-05,
+      "mass_kind": "true",
+      "a_au": 0.119,
+      "e": 0.18,
+      "inc_rad": -0.009424777960769489,
+      "omega_rad": 1.270599695451872,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 0.3001966313430247
+    },
+    {
+      "name": "AU Mic e",
+      "mass_msun": 6.335771172294513e-05,
+      "mass_kind": "true",
+      "a_au": 0.16015192777634352,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 2.642529177293657,
+      "Omega_rad": 3.2124338172355777,
+      "M_rad": 1.6268219212234332
+    },
+    {
+      "name": "AU Mic d",
+      "mass_msun": 3.1618801158417633e-06,
+      "mass_kind": "true",
+      "a_au": 0.08470593509724933,
+      "e": 0.00305,
+      "inc_rad": -0.01190105110349905,
+      "omega_rad": 2.8063044323061703,
+      "Omega_rad": 4.924751778411374,
+      "M_rad": 2.544276222803882
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "trace",
+    "elapsed_sec": 4936.550719022751,
+    "dt_yr": 0.0001309772798472254,
+    "innermost_period_yr": 0.02619545596944508,
+    "energy_relative_error": 0.0019835808390788264,
+    "megno_final": null
+  },
+  "per_body": {
+    "AU Mic b": {
+      "a_min": 0.04703316557051125,
+      "a_max": 4.562555304706021,
+      "e_min": 0.043478033856030454,
+      "e_max": 0.9932834369539346
+    },
+    "AU Mic c": {
+      "a_min": 0.11115440204482194,
+      "a_max": 1.2653085852977353,
+      "e_min": 0.07864431236672509,
+      "e_max": 0.9198932617436364
+    },
+    "AU Mic e": {
+      "a_min": 0.05551794527885607,
+      "a_max": 0.21370562862542591,
+      "e_min": 0.04427578357261284,
+      "e_max": 0.9228301751667234
+    },
+    "AU Mic d": {
+      "a_min": 0.056240125807862584,
+      "a_max": 16.779047657831335,
+      "e_min": 0.26658895228940116,
+      "e_max": 0.9995224987969344
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "AU Mic b": {
+        "flags": [
+          "e_max=0.993 \u2265 0.9 (orbit nearly unbound)",
+          "a_max/a_min = 97.0\u00d7 \u2265 10"
+        ],
+        "status": "unstable",
+        "ecc_class": "extreme",
+        "e_max": 0.9932834369539346
+      },
+      "AU Mic c": {
+        "flags": [
+          "e_max=0.920 \u2265 0.9 (orbit nearly unbound)",
+          "a_max/a_min = 11.4\u00d7 \u2265 10"
+        ],
+        "status": "unstable",
+        "ecc_class": "extreme",
+        "e_max": 0.9198932617436364
+      },
+      "AU Mic e": {
+        "flags": [
+          "e_max=0.923 \u2265 0.9 (orbit nearly unbound)"
+        ],
+        "status": "unstable",
+        "ecc_class": "extreme",
+        "e_max": 0.9228301751667234
+      },
+      "AU Mic d": {
+        "flags": [
+          "e_max=1.000 \u2265 0.9 (orbit nearly unbound)",
+          "a_max/a_min = 298.3\u00d7 \u2265 10"
+        ],
+        "status": "unstable",
+        "ecc_class": "extreme",
+        "e_max": 0.9995224987969344
+      }
+    },
+    "overall": "unstable",
+    "ecc_class_max": "extreme",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

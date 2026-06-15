@@ -44,6 +44,7 @@ if os.path.exists(ARCHIVE):                                # ── resume ─�
 else:                                                      # ── fresh ──
     sim, meta = R.build("barnards_star", None)
     R.configure_integrator(sim, meta, "trace")
+    sim.dt /= float(os.environ.get("BARNARD_DT_DIV", "1"))   # 1/4 step test: does the ~300 kyr ejection survive a finer dt?
     with open(CSV, "w", newline="") as f:
         csv.writer(f).writerow(HEADER)
     sim.save_to_file(ARCHIVE)
