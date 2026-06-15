@@ -942,7 +942,7 @@ def build_payload():
     }
     L = load_lism()
     lism = {  # cloud field for the viewer's ISM-wind grid (sample any direction via IDW)
-        "clouds": [{"v": [round(x, 3) for x in cl["vel"]],
+        "clouds": [{"n": cl["name"], "v": [round(x, 3) for x in cl["vel"]],
                     "c": [round(x, 4) for x in cl["center"]]} for cl in L["clouds"]],
         "he": [round(x, 3) for x in L["he_vel"]],
         "theta0_deg": round(math.degrees(_THETA0), 1),

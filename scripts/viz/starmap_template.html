@@ -364,17 +364,23 @@ function makeHeliosphere(grade, wind, noseScene, R0){
    sky (same model as the builder). Sample any ICRS direction → v_ISM (scene) + speed. */
 const LISM=DATA.lism;
 const _th0=(LISM?LISM.theta0_deg:20)*DEG;
+// distinct colour per LISM cloud (so the grid distinguishes membership — the directions
+// barely differ, the local complex flows coherently, so colour carries the structure).
+const CLOUD_COL={LIC:'#4fd0ff',G:'#ff9e3d',Blue:'#5b7bff',Aql:'#52e07a',Eri:'#ff5a5a',
+  Aur:'#ffd23d',Hyades:'#ff6ad5',Mic:'#3ad6c0',Oph:'#ff8ab0',Gem:'#a6e22e',NGP:'#b07bff',
+  Leo:'#e0c24a',Dor:'#ff8a5a',Vel:'#7ec8ff',Cet:'#ff7060'};
 function ismSample(dx,dy,dz){
   if(!LISM) return null;
   const n=Math.hypot(dx,dy,dz)||1, d=[dx/n,dy/n,dz/n];
-  let wsum=0, v=[0,0,0];
+  let wsum=0, v=[0,0,0], best=-1, cloud='LIC';
   for(const cl of LISM.clouds){
     const dot=Math.max(-1,Math.min(1,d[0]*cl.c[0]+d[1]*cl.c[1]+d[2]*cl.c[2]));
     const th=Math.acos(dot), w=1/(th*th+_th0*_th0); wsum+=w;
     v[0]+=w*cl.v[0]; v[1]+=w*cl.v[1]; v[2]+=w*cl.v[2];
+    if(w>best){best=w; cloud=cl.n;}
   }
   const sp=Math.hypot(v[0],v[1],v[2])/wsum;
-  return {dir:new THREE.Vector3(v[0],v[2],v[1]).normalize(), speed:sp};  // ICRS→scene (x,z,y)
+  return {dir:new THREE.Vector3(v[0],v[2],v[1]).normalize(), speed:sp, cloud};  // ICRS→scene (x,z,y)
 }
 
 /* backdrop starfield (follows camera, sits at infinity) */
@@ -400,20 +406,35 @@ const ringLabels=[];
 
 function mkLabel(txt,cls){const el=document.createElement('div');el.className=cls||'label';el.textContent=txt;document.getElementById('labels').appendChild(el);return el;}
 
-/* ISM-wind vector field: arrows on a lattice over the ICRS x–y reference plane (same
-   plane as the rings). Each node samples the LISM cloud field for its sky direction. */
+/* ISM-wind vector field: a 3D lattice of arrows within 50 ly, each sampling the LISM
+   cloud field for its sky direction. Coloured by dominant cloud (the flow directions
+   barely differ — colour carries the cloud structure). */
 const windGroup=new THREE.Group(); windGroup.visible=false; scene.add(windGroup);
+const _windClouds=new Set();
 (function buildWindField(){
   if(!LISM) return;
-  const STEP=10, MAX=50;                         // ly
-  for(let gx=-MAX; gx<=MAX; gx+=STEP) for(let gy=-MAX; gy<=MAX; gy+=STEP){
-    const r=Math.hypot(gx,gy); if(r<3||r>MAX+0.1) continue;     // skip Sol + outside the 50 ly circle
-    const s=ismSample(gx,gy,0); if(!s) continue;
-    const a=new THREE.ArrowHelper(s.dir,new THREE.Vector3(gx*U,0,gy*U),1.4*U,0x6fd6e0,0.45*U,0.28*U);
-    a.traverse(o=>{if(o.material){o.material.transparent=true;o.material.opacity=0.7;o.frustumCulled=false;}});
+  const STEP=14, MAX=50;                          // ly (3D lattice)
+  for(let gx=-MAX; gx<=MAX; gx+=STEP) for(let gy=-MAX; gy<=MAX; gy+=STEP) for(let gz=-MAX; gz<=MAX; gz+=STEP){
+    const r=Math.hypot(gx,gy,gz); if(r<6||r>MAX+0.1) continue;  // skip Sol + outside the 50 ly sphere
+    const s=ismSample(gx,gy,gz); if(!s) continue;
+    _windClouds.add(s.cloud);
+    const col=CLOUD_COL[s.cloud]||'#6fd6e0';
+    const o=new THREE.Vector3(gx*U,gz*U,gy*U);    // ICRS(x,y,z)→scene(x,z,y)
+    const a=new THREE.ArrowHelper(s.dir,o,1.5*U,col,0.5*U,0.3*U);
+    a.traverse(x=>{if(x.material){x.material.transparent=true;x.material.opacity=0.78;x.frustumCulled=false;}});
     windGroup.add(a);
   }
 })();
+// cloud-colour legend (shown with the ISM-wind toggle)
+const windLegendEl=document.createElement('div'); windLegendEl.id='windLegend';
+windLegendEl.style.cssText='position:fixed;right:14px;bottom:14px;background:rgba(10,13,21,.82);border:1px solid #1c2333;border-radius:8px;padding:9px 11px;font:11px ui-monospace,Menlo,monospace;color:#c7d0e0;display:none;z-index:20';
+if(LISM){
+  let h='<div style="color:#8a93a8;margin-bottom:5px">성간운 · LISM cloud</div>';
+  LISM.clouds.filter(cl=>_windClouds.has(cl.n)).forEach(cl=>{
+    h+=`<div style="display:flex;align-items:center;gap:7px;margin:2px 0"><span style="width:11px;height:11px;border-radius:2px;background:${CLOUD_COL[cl.n]||'#6fd6e0'}"></span>${cl.n}</div>`; });
+  windLegendEl.innerHTML=h;
+}
+document.body.appendChild(windLegendEl);
 
 /* ── Kepler: element set → position (AU) in the host-local scene frame ─── */
 function meanToTrue(M,e){
@@ -1304,7 +1325,7 @@ btnStems.onclick=()=>{showStems=!showStems;btnStems.classList.toggle('on',showSt
 btnOrbits.onclick=()=>{showOrbits=!showOrbits;btnOrbits.classList.toggle('on',showOrbits);};
 btnAxes.onclick=()=>{showAxes=!showAxes;btnAxes.classList.toggle('on',showAxes);};
 btnHelio.onclick=()=>{showHelio=!showHelio;btnHelio.classList.toggle('on',showHelio);};
-btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);windGroup.visible=showWind;};
+btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);windGroup.visible=showWind;windLegendEl.style.display=showWind?'block':'none';};
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter();};
