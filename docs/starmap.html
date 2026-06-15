@@ -393,6 +393,24 @@ function skyBasis(pos, iDeg, OmDeg, omDeg){
   const toScene=v=>new THREE.Vector3(v.x,v.z,v.y);                    // ICRS → scene
   return {p:toScene(peri), q:toScene(q), n:toScene(n)};
 }
+
+// Spin-axis direction (scene space) from i★ (tilt to the line of sight: 0=pole-on,
+// 90=equator-on) and the AXIS position angle (PA of the projected spin axis,
+// North→East). Distinct from skyBasis, which takes the orbital NODE PA (Ω) — the
+// projected axis sits 90° from the node line, so a measured spin-axis PA (Vega,
+// Fomalhaut) must go in here directly, NOT into skyBasis's Ω slot.
+function spinAxisDir(pos, iDeg, paDeg){
+  const s=new THREE.Vector3(pos[0],pos[1],pos[2]);
+  if(s.lengthSq()<1e-12) return new THREE.Vector3(0,1,0);
+  s.normalize();
+  let E=new THREE.Vector3().crossVectors(new THREE.Vector3(0,0,1), s);
+  if(E.lengthSq()<1e-9) E.set(1,0,0); else E.normalize();
+  const N=new THREE.Vector3().crossVectors(s,E);
+  const i=(iDeg||0)*DEG, pa=(paDeg||0)*DEG;
+  const skydir=N.clone().multiplyScalar(Math.cos(pa)).addScaledVector(E,Math.sin(pa)); // projected axis, N→E
+  const a=s.clone().multiplyScalar(Math.cos(i)).addScaledVector(skydir,Math.sin(i));   // tilt i from LOS
+  return new THREE.Vector3(a.x,a.z,a.y);  // ICRS → scene
+}
 function ellipsePoint(basis,a,e,nu){ // point on the sky-true ellipse (focus at star)
   const r=a*(1-e*e)/(1+e*Math.cos(nu));
   return basis.p.clone().multiplyScalar(r*Math.cos(nu)).addScaledVector(basis.q, r*Math.sin(nu));
@@ -547,11 +565,13 @@ DATA.clusters.forEach(c=>{
     // measurement gets a neutral vertical axis.
     { const apl=hostPlane(m.name);                              // {inc,pa} of the system plane, or null
       const measured = (m.spin_i_deg!=null || m.spin_pa_deg!=null);
-      const iUse  = m.spin_i_deg!=null  ? m.spin_i_deg  : (apl?apl.inc:null);   // measured i★ → else plane i
-      const paUse = m.spin_pa_deg!=null ? m.spin_pa_deg : (apl?apl.pa:null);    // measured PA → else plane PA
+      const iUse  = m.spin_i_deg!=null  ? m.spin_i_deg  : (apl?apl.inc:null);   // measured i★ → else plane tilt
+      // axis PA (of the projected spin axis): measured value if present; else the
+      // system plane normal's PA, which sits 90° from the disk's node PA (apl.pa).
+      const paUse = m.spin_pa_deg!=null ? m.spin_pa_deg : (apl?apl.pa-90:0);
       let axN;
       if(c.is_sol){ axN=new THREE.Vector3(0,1,0); }
-      else if(iUse!=null){ axN=skyBasis(c.pos,iUse,paUse,0).n.clone(); }
+      else if(iUse!=null){ axN=spinAxisDir(c.pos,iUse,paUse); }
       else { axN=new THREE.Vector3(0,1,0); }
       const aL=rr*3.2;
       const axLine=new THREE.Line(
