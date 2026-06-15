@@ -27,3 +27,14 @@ so the eventual Phase 4 gate has the analysis pre-staged rather than re-derived.
 
 - [`polyphemus-art-direction.md`](polyphemus-art-direction.md) — α Centauri A b
   (the real-life *Avatar* Polyphemus): a banded ivory + blue gas-giant look.
+
+## Orbit-optimization records
+
+When an orbit is **optimized** with the stability sim (the observed/maximal orbit
+is dynamically untenable, so a defensible stable orbit is selected), the process +
+conclusion are logged for the Phase 4 gate — with any unresolved cfg-frame quantity
+flagged as an open item.
+
+- [`orbit-optimizations.md`](orbit-optimizations.md) — running log. First entry:
+  α Cen A b (stability-selected a 1.6 / e 0.1 / mutual i 16°; cfg-frame sky
+  inclination is the open Phase 4 item).
