@@ -87,6 +87,44 @@ mechanism + ice-giant saturation reasoning in
 [`../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md`](../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md)
 context and `docs/reference/color-materials.md`.
 
+## Pandora canon reference (Avatar) — researched 2026-06-15
+
+Canonical parameters from the official guidebook (*Avatar: A Confidential Report…*),
+Pandorapedia, and the James Cameron's Avatar Wiki. Tier: [CANON] = film/official,
+[WIKI] = guidebook-derived fan-wiki.
+
+- **System:** Pandora orbits a gas giant (**Polyphemus**) of **α Centauri A**, a G-type
+  yellow dwarf. [CANON]
+- **Polyphemus:** Saturn-class gas giant, **helium-rich** (~72% H / 24% He), a giant
+  **eye-shaped vortex storm** bigger than Jupiter's Great Red Spot, **no rings** [CANON],
+  **14 moons** (Pandora is the 5th). Mass "more massive than Saturn" (no number).
+- **Pandora day = 27 h** [CANON/WIKI] — matches our assumption.
+- **Gravity 0.8 g**, **mass 0.72 M⊕**, **diameter 11,447 km** (~0.90 R⊕) [CANON/WIKI].
+  (0.72 M⊕ at that radius → ~0.89 g, a minor canon self-inconsistency vs the stated 0.8 g.)
+- **Atmosphere:** O₂ ~21% but unbreathable due to **CO₂ >18%, H₂S >1%, xenon 5.5%**;
+  pressure ~1.1 atm, density ~1.2× Earth. [CANON]
+- **Climate:** tropical/hot, **warm via a dense greenhouse + explicit tidal heating**
+  (canon states the warmth is *not* from proximity to the star) → high volcanism, fast
+  continental drift. [CANON] — directly supports our greenhouse + tidal-heating model.
+- **Strong magnetosphere + "flux vortices"** (field-overlap funnels, levitating
+  unobtanium) [CANON] — supports the NearStars flux-tube plugin / internal-heating idea.
+- **Frequent ("almost daily") eclipses** as Polyphemus blocks the sun. [CANON]
+
+### Observation-vs-canon divergences (Phase 4 gate decisions, 2026-06-15)
+α Cen A b is a **real JWST candidate** (Beichman 2025), so where the real observation and
+the Avatar canon disagree, NearStars takes the **observation** (the mod's first purpose is
+reproducing real bodies) and records the divergence:
+
+- **Polyphemus distance — KEEP 1.6 AU (observation).** Canon states 1.2 AU; we use 1.6 AU
+  = Beichman's favored a < 2 AU family from the temperature fit. (Canon's 1.2 AU would be
+  warmer, T_eq ≈ 259 K vs our 225 K — but 1.6 AU is the measured-favored value.)
+- **Polyphemus ring — KEEP the ring (observation).** Canon says Polyphemus has no rings;
+  our thin ring comes from Beichman §5.3's ring-model radius fit. Observation wins.
+- **Pandora mass — ADOPT canon 0.72 M⊕** (was 0.45). Pandora is fictional, so canon is the
+  authority for it. Updated in `hypotheticals/alpha_centauri.json`; **re-verified Hill-stable**
+  (0.02 R_Hill, bound=True — moon mass is negligible vs the 120 M⊕ planet).
+- **Polyphemus mass** (~120 M⊕) is consistent with canon's "more massive than Saturn" (≳95 M⊕).
+
 ## Pandora — surface climate over the orbit (estimate, 2026-06-15)
 
 Polyphemus (and its moon Pandora) ride an eccentric heliocentric orbit (a = 1.6 AU,

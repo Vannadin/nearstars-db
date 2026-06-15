@@ -9,9 +9,9 @@
       "semi_major_axis_km": 225000,
       "eccentricity": 0.0,
       "inclination_deg": 0.0,
-      "mass_kg": 2.687e24,
-      "radius_km": 4778,
-      "_design_note": "Avatar canon: mass ~0.45 M_earth, radius ~0.75 R_earth, 0.8 g. Pandora is tidally locked to Polyphemus, so its ~27 h day = its orbital period; Kepler back-out around a 120 M_earth planet gives a = 225,000 km. That puts Polyphemus ~36 deg across Pandora's sky (the films' dramatic skyline) at ~0.02 R_Hill (R_Hill ~1.1e7 km at 1.6 AU around 1.1 M_sun) -> deep inside the Domingos+2006 ~0.5 R_Hill limit, very stable. inclination_deg is relative to the planet's orbital plane (Pandora orbits in Polyphemus's equatorial plane; canon axial tilt 29 deg)."
+      "mass_kg": 4.300e24,
+      "radius_km": 5724,
+      "_design_note": "Avatar canon (updated 2026-06-15 from fan-wiki/guidebook research): mass 0.72 M_earth (4.30e24 kg), diameter 11,447 km (radius 5724 km, ~0.90 R_earth). Canon also states 0.8 g, which is mildly inconsistent with 0.72 M_earth at this radius (-> ~0.89 g); we honor the cited mass + diameter. Pandora is tidally locked to Polyphemus, so its ~27 h day = its orbital period; Kepler back-out around a 120 M_earth planet gives a = 225,000 km. That puts Polyphemus ~36 deg across Pandora's sky (the films' dramatic skyline) at ~0.02 R_Hill (R_Hill ~1.1e7 km at 1.6 AU around 1.1 M_sun) -> deep inside the Domingos+2006 ~0.5 R_Hill limit, very stable. Moon mass is negligible vs the 120 M_earth planet, so the 0.45->0.72 update does not change Hill stability. inclination_deg is relative to the planet's orbital plane (Pandora orbits in Polyphemus's equatorial plane; canon axial tilt 29 deg)."
     }
   ]
 }
