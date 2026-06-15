@@ -1006,9 +1006,9 @@ function paintStab(cv,W,H,curT){
   const dpr=Math.min(2,window.devicePixelRatio||1);
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
   const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
-  const padL=big?58:38, padR=big?20:12, padT=big?26:18, labT=big?22:14, gap=big?44:24;
-  const NP=3, ph=(H-padT-(NP-1)*gap-labT-12)/NP;     // three stacked panels: radius, e, inclination
-  const y0r=padT, y0e=padT+ph+gap, y0i=padT+2*(ph+gap);
+  const padL=big?58:38, padR=big?48:32, padT=big?26:18, labT=big?22:14, gap=big?44:26;
+  const NP=2, ph=(H-padT-(NP-1)*gap-labT-12)/NP;     // two panels: radius, then inclination(left)+e(right)
+  const y0r=padT, y0c=padT+ph+gap;
   const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0]));
   let initQ=0; recs.forEach(o=>{ initQ=Math.max(initQ,o.d[0][1]*(1+o.d[0][2])); });
   let maxQ=0; recs.forEach(o=>o.d.forEach(s=>{ const QQ=s[1]*(1+Math.min(s[2],3)); if(isFinite(QQ)&&QQ>0)maxQ=Math.max(maxQ,QQ); }));
@@ -1019,34 +1019,39 @@ function paintStab(cv,W,H,curT){
   maxI=Math.max(5,Math.ceil(maxI/5)*5);
   const xT=t=>padL+(t/tMax)*(W-padL-padR);
   const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
-  const yE=v=>y0e+ph-(Math.min(Math.max(v,0),eCap)/eCap)*ph;
-  const yI=v=>y0i+ph-(Math.min(v,maxI)/maxI)*ph;
+  const yI=v=>y0c+ph-(Math.min(v,maxI)/maxI)*ph;        // combined panel, LEFT scale (inclination)
+  const yE=v=>y0c+ph-(Math.min(Math.max(v,0),eCap)/eCap)*ph;  // combined panel, RIGHT scale (eccentricity)
   const txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
   const nf=v=>v.toFixed(v<1?2:v<10?1:0);
   g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
-  // frames + axis labels (a few gridlines on the big chart for readable scale)
-  [[y0r,'q–Q (AU)',yMaxR],[y0e,'e',eCap],[y0i,'i (°)',maxI]].forEach(([y0,lbl,vmax])=>{
-    if(big){ g.strokeStyle='rgba(120,135,165,.12)'; g.lineWidth=1; g.fillStyle=txt; g.textAlign='right';
-      for(let t=1;t<4;t++){ const yy=y0+ph*t/4, vv=vmax*(1-t/4);
-        g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
-        g.fillText(nf(vv),padL-6,yy); } }
-    g.strokeStyle='rgba(120,135,165,.3)'; g.lineWidth=1;
-    g.strokeRect(padL,y0,W-padL-padR,ph);
-    g.fillStyle=txt; g.textAlign='right';
-    g.fillText(nf(vmax),padL-6,y0+5);
-    g.fillText('0',padL-6,y0+ph-5);
-    g.save(); g.translate(big?16:10,y0+ph/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillText(lbl,0,0); g.restore();
-  });
-  // e=1 unbound threshold marker (only when the panel reaches it — i.e. ejection)
+  const rot=(x,y0,lbl,col)=>{ g.save(); g.translate(x,y0+ph/2); g.rotate(-Math.PI/2); g.textAlign='center'; g.fillStyle=col||txt; g.fillText(lbl,0,0); g.restore(); };
+  // radius panel
+  if(big){ g.strokeStyle='rgba(120,135,165,.12)'; g.lineWidth=1; g.fillStyle=txt; g.textAlign='right';
+    for(let t=1;t<4;t++){ const yy=y0r+ph*t/4; g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
+      g.fillText(nf(yMaxR*(1-t/4)),padL-6,yy); } }
+  g.strokeStyle='rgba(120,135,165,.3)'; g.lineWidth=1; g.strokeRect(padL,y0r,W-padL-padR,ph);
+  g.fillStyle=txt; g.textAlign='right'; g.fillText(nf(yMaxR),padL-6,y0r+5); g.fillText('0',padL-6,y0r+ph-5);
+  rot(big?16:10,y0r,'q–Q (AU)');
+  // combined panel: LEFT axis = inclination (i °), RIGHT axis = eccentricity (e)
+  const eClr='#ff9f55';                                // eccentricity tint for its axis/labels
+  g.strokeStyle='rgba(120,135,165,.3)'; g.lineWidth=1; g.strokeRect(padL,y0c,W-padL-padR,ph);
+  if(big){ g.strokeStyle='rgba(120,135,165,.12)'; g.lineWidth=1;
+    for(let t=1;t<4;t++){ const yy=y0c+ph*t/4; g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
+      g.fillStyle=txt; g.textAlign='right'; g.fillText(nf(maxI*(1-t/4)),padL-6,yy);
+      g.fillStyle=eClr; g.textAlign='left'; g.fillText(nf(eCap*(1-t/4)),W-padR+6,yy); } }
+  g.fillStyle=txt; g.textAlign='right'; g.fillText(nf(maxI),padL-6,y0c+5); g.fillText('0',padL-6,y0c+ph-5);
+  rot(big?16:10,y0c,'i (°)');
+  g.fillStyle=eClr; g.textAlign='left'; g.fillText(nf(eCap),W-padR+6,y0c+5); g.fillText('0',W-padR+6,y0c+ph-5);
+  rot(W-(big?14:9),y0c,'e',eClr);
+  // e=1 unbound threshold marker (right scale) — only when e reaches it (ejection)
   if(eCap>=1){ const y1=yE(1); g.strokeStyle='rgba(255,90,60,.5)'; g.lineWidth=1; g.setLineDash([4,3]);
     g.beginPath(); g.moveTo(padL,y1); g.lineTo(W-padR,y1); g.stroke(); g.setLineDash([]);
     g.fillStyle='rgba(255,120,90,.9)'; g.textAlign='left'; g.fillText('e=1',padL+4,y1-(big?7:5)); }
   g.textAlign='center'; g.fillStyle=txt;
   const tlab=tMax>=1e6?(tMax/1e6)+' Myr':tMax>=1e3?Math.round(tMax/1e3)+' kyr':Math.round(tMax)+' yr';
-  g.fillText('0',padL,y0i+ph+labT-4); g.fillText(tlab,W-padR,y0i+ph+labT-4);
+  g.fillText('0',padL,y0c+ph+labT-4); g.fillText(tlab,W-padR,y0c+ph+labT-4);
   // smooth polyline: quadratic curve through snapshot midpoints (raw points are
-  // only ~200, so straight segments read as jagged). apoapsis solid / periapsis
-  // dashed / inclination solid, one colour per planet (matches legend + 3D marker).
+  // only ~200, so straight segments read as jagged). One colour per planet.
   const line=(o,acc,yfn,w,dash)=>{
     const pts=o.d.map(s=>[xT(s[0]),yfn(acc(s))]);
     if(!pts.length) return;
@@ -1056,34 +1061,37 @@ function paintStab(cv,W,H,curT){
     const last=pts[pts.length-1]; g.lineTo(last[0],last[1]);
     g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.lineJoin='round'; g.stroke(); g.setLineDash([]); };
   recs.forEach(o=>{
-    line(o,s=>s[1]*(1+s[2]),yR,lw);          // apoapsis (solid)
+    line(o,s=>s[1]*(1+s[2]),yR,lw);          // apoapsis (solid, left radius scale)
     line(o,s=>s[1]*(1-s[2]),yR,lwq,[3,2]);   // periapsis (dashed)
-    line(o,s=>s[2],yE,lw);                    // eccentricity
-    line(o,s=>s[3],yI,lw);                    // inclination
+    line(o,s=>s[3],yI,lw);                    // inclination (solid, left scale)
+    line(o,s=>s[2],yE,lwq,[3,2]);            // eccentricity (dashed, right scale)
   });
   if(curT!=null){ const cx=xT(Math.min(curT,tMax));
     g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=1; g.setLineDash([3,3]);
-    g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0i+ph); g.stroke(); g.setLineDash([]); }
-  // line-style key inside the radius panel: solid = apoapsis Q, dashed = periapsis q
-  { const ko=lang==='ko', a1=(ko?'원일점':'apo')+' (Q)', a2=(ko?'근일점':'peri')+' (q)';
+    g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0c+ph); g.stroke(); g.setLineDash([]); }
+  // per-panel line-style key (solid/dashed differ by panel; the labels disambiguate)
+  const keyBox=(y0,solidLbl,dashLbl)=>{
     g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle'; g.textAlign='left';
-    const seg=big?20:13, gp=big?6:4, gap2=big?20:13;
-    const w1=seg+gp+g.measureText(a1).width, w2=seg+gp+g.measureText(a2).width;
-    const ky=y0r+(big?14:10); let kx=W-padR-(w1+gap2+w2)-6;
+    const seg=big?20:13, gp=big?6:4, gap2=big?18:11;
+    const w1=seg+gp+g.measureText(solidLbl).width, w2=seg+gp+g.measureText(dashLbl).width;
+    const ky=y0+(big?14:10), kx=W-padR-(w1+gap2+w2)-6;
     g.fillStyle='rgba(10,13,21,.66)'; g.fillRect(kx-6,ky-(big?10:8),w1+gap2+w2+12,big?20:16);
     g.strokeStyle=txt; g.lineWidth=big?2:1.6; g.setLineDash([]);
     g.beginPath(); g.moveTo(kx,ky); g.lineTo(kx+seg,ky); g.stroke();
-    g.fillStyle=txt; g.fillText(a1,kx+seg+gp,ky);
+    g.fillStyle=txt; g.fillText(solidLbl,kx+seg+gp,ky);
     const dx=kx+w1+gap2; g.setLineDash([3,2]); g.lineWidth=big?1.4:1.1;
     g.beginPath(); g.moveTo(dx,ky); g.lineTo(dx+seg,ky); g.stroke(); g.setLineDash([]);
-    g.fillStyle=txt; g.fillText(a2,dx+seg+gp,ky); }
+    g.fillStyle=txt; g.fillText(dashLbl,dx+seg+gp,ky); };
+  const ko=lang==='ko';
+  keyBox(y0r,(ko?'원일점':'apo')+' (Q)',(ko?'근일점':'peri')+' (q)');
+  keyBox(y0c,(ko?'경사각':'incl')+' (i)',(ko?'이심률':'ecc')+' (e)');
   if(recs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle'; const sw=big?10:7;
     recs.forEach(o=>{ g.fillStyle=o.rgb; g.fillRect(lx,y0r-(big?13:9),sw,big?4:3); g.fillStyle=txt;
       const nm=o.name.split(' ').pop(); g.fillText(nm,lx+sw+4,y0r-(big?10:7)); lx+=sw+6+g.measureText(nm).width+12; }); }
 }
 function drawStabChart(){   // inline mini-chart
   if(!stabActive||!stabShowChart||!stabRecs.length) return;
-  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=300;   // three stacked panels
+  const W=stabChart.clientWidth||(stabPanel.clientWidth-32), H=230;   // two panels (radius, incl+e)
   if(stabChart.style.height!==H+'px') stabChart.style.height=H+'px';
   paintStab(stabChart,W,H,stabT);
 }
