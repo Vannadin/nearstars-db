@@ -110,6 +110,17 @@ def marker_radius(luminosity, sclass):
     return round(0.55 * max(0.4, min(4.0, L ** 0.2)), 4)
 
 
+def teff_class(teff):
+    """Spectral class from Teff (for field stars lacking a spectral-type string)."""
+    if not teff:
+        return "X"
+    for lim, c in [(30000, "O"), (10000, "B"), (7500, "A"), (6000, "F"),
+                   (5200, "G"), (3700, "K"), (2400, "M")]:
+        if teff >= lim:
+            return c
+    return "X"   # L/T/Y brown dwarfs
+
+
 # ── measurement helpers ────────────────────────────────────────────────────
 def _recommended(measurements, value_key):
     """Pick recommended row's value from a *_measurements list, else first."""
@@ -927,6 +938,43 @@ def solar_system_cluster():
     }
 
 
+def field_clusters():
+    """All stars within 50 ly (db/nearby_field.json) as lightweight marker clusters —
+    rendered like curated markers but with NO spin axis / heliosphere / motion / planets
+    (uncurated). is_field flags the viewer to skip those overlays."""
+    p = os.path.join(ROOT, "db", "nearby_field.json")
+    if not os.path.exists(p):
+        return []
+    out = []
+    for i, s in enumerate(json.load(open(p, encoding="utf-8"))["stars"]):
+        dpc = 1000.0 / s["parallax_mas"]
+        dly = dpc * PC_TO_LY
+        ra, dec = math.radians(s["ra"]), math.radians(s["dec"])
+        pos = [round(dly * math.cos(dec) * math.cos(ra), 4),
+               round(dly * math.cos(dec) * math.sin(ra), 4),
+               round(dly * math.sin(dec), 4)]
+        teff = s.get("teff_k")
+        cls = spec_class(s["spectype"]) if s.get("spectype") else teff_class(teff)
+        rgb = teff_to_rgb(teff) if teff else "#9aa3b4"
+        rr = marker_radius(None, cls)
+        # slim shape: only the keys the viewer reads for a planetless primary marker;
+        # absent keys read as undefined (treated like null/false by the viewer).
+        out.append({
+            "id": f"field-{i}", "label": s["name"], "pos": pos,
+            "distance_pc": round(dpc, 3), "distance_ly": round(dly, 3),
+            "is_field": True, "beyond_50ly": dly > 50,
+            "rep_rgb": rgb, "rep_radius": rr,
+            "components": [{
+                "name": s["name"], "spectype": s.get("spectype"), "spec_class": cls,
+                "teff_k": teff, "rgb": rgb, "vmag_v": s.get("gmag"),
+                "radius_rsun": _MS_RADIUS_PROXY.get(cls, 0.3),
+                "is_primary": True, "offset_au": [0.0, 0.0, 0.0],
+            }],
+            "planets": [],
+        })
+    return out
+
+
 def build_payload():
     recs = load_records()
     groups = cluster(recs)
@@ -936,6 +984,7 @@ def build_payload():
     clusters.insert(0, sol)
 
     n_planets_db = sum(len(r["planets"]) for r in recs)
+    field = field_clusters()        # all stars within 50 ly (uncurated marker layer)
     meta = {
         "generated": datetime.date.today().isoformat(),
         "n_files": len(recs),
@@ -947,6 +996,8 @@ def build_payload():
         "coordinate_frame": "ICRS Cartesian, origin = SSB (Sol≈0,0,0), units = light-years",
         "marker_size_model": "luminosity^0.2 when measured (24/157), else spectral-class MS proxy; billboard proxy, not physical radius",
         "sol_data": "Solar System = canonical textbook elements, hardcoded (not db-derived)",
+        "n_field": len(field),
+        "field_data": "all stars within 50 ly (Gaia DR3 + SIMBAD); uncurated markers, no spin/wind/motion/planets",
     }
     L = load_lism()
     lism = {  # cloud field for the viewer's ISM-wind grid (sample any direction via IDW)
@@ -955,7 +1006,7 @@ def build_payload():
         "he": [round(x, 3) for x in L["he_vel"]],
         "theta0_deg": round(math.degrees(_THETA0), 1),
     }
-    return {"meta": meta, "clusters": clusters, "lism": lism}
+    return {"meta": meta, "clusters": clusters, "lism": lism, "field": field}
 
 
 # ── self-check ─────────────────────────────────────────────────────────────

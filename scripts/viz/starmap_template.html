@@ -179,6 +179,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <button class="btn on" id="toggleAxes" title="별 자전축 — 금색: 측정된 i★(일부 PA), 청색: 공전면 정렬 가정"><span class="dot"></span><span data-i18n="spinAxes">자전축</span></button>
   <button class="btn" id="toggleHelio" title="항성권(heliosphere) — 항성풍 거품 + 성간풍 꼬리. 색=방사선 등급(노랑 medium·빨강 high), 크기=항성풍. 시스템 뷰에서. 모식적 스케일."><span class="dot"></span><span data-i18n="helio">항성권</span></button>
   <button class="btn" id="toggleWind" title="성간풍 벡터 지도 — 별 위치의 국부 성간물질(LISM) 흐름. R&L 2008 구름 장 보간."><span class="dot"></span><span data-i18n="windMap">성간풍</span></button>
+  <button class="btn" id="toggleField" title="50광년 이내 모든 별(Gaia DR3 + SIMBAD) — 큐레이션 마커와 동일하게, 단 자전축·항성풍·운동·행성 없음. 밀도 보기용."><span class="dot"></span><span data-i18n="allStars">모든 별</span></button>
   <button class="btn" id="toggleMotion"><span class="dot"></span><span data-i18n="motion">공간 운동</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
   <button class="btn" id="toggleLang">EN</button>
@@ -268,14 +269,14 @@ const SEG_STAB = 180;             // stability-orbit ellipse segments (buffers p
 
 /* ── i18n ─────────────────────────────────────────────────────────────── */
 const STR = {
-  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',spinAxes:'자전축',helio:'항성권',windMap:'성간풍',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
+  ko:{subtitle:'근방 항성계 3D 지도',allLabels:'모든 라벨',dropLines:'수직선',orbits:'궤도',spinAxes:'자전축',helio:'항성권',windMap:'성간풍',allStars:'모든 별',motion:'공간 운동',lookback:'룩백 시간',beyond:'50광년 밖',
     legendTitle:'분광형 (색 = 표면온도)',
     legendNote:'별을 향해 그대로 줌인하면 실제 크기의 행성이 나타납니다(크로스헤어 표시). 크기·궤도는 실측, 색은 흑체 근사. 좌표계 = ICRS, 원점 = 태양.',
     distFilter:'거리 필터',phaseTitle:'큐레이션 단계',components:'구성원',planets:'행성',flyHere:'여기로 날아가기 →',noPlanets:'알려진 행성 없음',phase3:'Phase 3 보고서 열기',
     hint:'드래그 = 회전 · 휠 = 줌 · WASD/화살표 = 이동(R·F 상하) · 클릭 = 정보 · 더블클릭 = 포커스',
     hintTouch:'한 손가락 = 회전 · 두 손가락 = 줌·이동 · 탭 = 정보 · 더블탭 = 들어가기',
     ly:'광년',pc:'pc',yr:'년',stabBtn:'안정성 시뮬 ▶',disrupt:'파괴 위험',stabObs:'관측 궤도(불안정)'},
-  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',spinAxes:'Spin axes',helio:'Heliosphere',windMap:'ISM wind',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
+  en:{subtitle:'3D map of nearby star systems',allLabels:'All labels',dropLines:'Drop lines',orbits:'Orbits',spinAxes:'Spin axes',helio:'Heliosphere',windMap:'ISM wind',allStars:'All stars',motion:'Space motion',lookback:'Look-back',beyond:'Beyond 50 ly',
     legendTitle:'Spectral type (colour = surface temp)',
     legendNote:'Zoom straight into a star and its real-size planets appear (marked with crosshairs). Sizes & orbits are to scale; colour is a blackbody approx. Frame = ICRS, origin = Sol.',
     distFilter:'Distance filter',phaseTitle:'Curation phase',components:'Components',planets:'Planets',flyHere:'Fly here →',noPlanets:'No known planets',phase3:'Open Phase 3 report',
@@ -541,7 +542,9 @@ function simOrbitPoint(ref,a,e,iDeg,OmDeg,omDeg,nu){
 /* ── build per-cluster nodes ──────────────────────────────────────────── */
 const clusters=[];   // {data, node, glow, sysScale, bodies:[{kind,name,obj,rgb}], stem, labelEl, orbitsLines:[]}
 const glowSprites=[];
-DATA.clusters.forEach(c=>{
+// curated systems + the uncurated 50-ly field stars (rendered the same; is_field gates
+// out spin axis / heliosphere / motion / planets, which they don't have).
+(DATA.field ? DATA.clusters.concat(DATA.field) : DATA.clusters).forEach(c=>{
   const node=new THREE.Group();
   node.position.copy(lyToScene(new THREE.Vector3(c.pos[0],c.pos[1],c.pos[2])));
   scene.add(node);
@@ -671,7 +674,7 @@ DATA.clusters.forEach(c=>{
     // back to the system plane normal (spin–orbit-alignment ASSUMPTION) and is rendered
     // a dim blue. Sol uses the real 7.25° solar obliquity to the ecliptic (measured →
     // gold). A star with neither plane nor measurement gets a neutral vertical axis.
-    { const apl=hostPlane(m.name);                              // {inc,pa} of the system plane, or null
+    if(!c.is_field){ const apl=hostPlane(m.name);              // {inc,pa} of the system plane, or null
       const measured = c.is_sol || (m.spin_i_deg!=null || m.spin_pa_deg!=null);
       let axN;
       if(c.is_sol){
@@ -1328,17 +1331,19 @@ document.getElementById('zoomOut').onclick=()=>applyZoom(controls.getDistance()/
 
 /* ── toggles / filter ─────────────────────────────────────────────────── */
 let showAllLabels=false, showStems=true, showOrbits=true, showFar=false, distLimit=50,
-    showMotion=false, lookbackKyr=50, showAxes=true, showHelio=false, showWind=false;
+    showMotion=false, lookbackKyr=50, showAxes=true, showHelio=false, showWind=false, showField=false;
 const btnLabels=document.getElementById('toggleLabels'), btnStems=document.getElementById('toggleStems'),
       btnOrbits=document.getElementById('toggleOrbits'), btnFar=document.getElementById('toggleFar'),
       btnMotion=document.getElementById('toggleMotion'), btnAxes=document.getElementById('toggleAxes'),
-      btnHelio=document.getElementById('toggleHelio'), btnWind=document.getElementById('toggleWind');
+      btnHelio=document.getElementById('toggleHelio'), btnWind=document.getElementById('toggleWind'),
+      btnField=document.getElementById('toggleField');
 btnLabels.onclick=()=>{showAllLabels=!showAllLabels;btnLabels.classList.toggle('on',showAllLabels);ensureLabels();};
 btnStems.onclick=()=>{showStems=!showStems;btnStems.classList.toggle('on',showStems);applyFilter();};
 btnOrbits.onclick=()=>{showOrbits=!showOrbits;btnOrbits.classList.toggle('on',showOrbits);};
 btnAxes.onclick=()=>{showAxes=!showAxes;btnAxes.classList.toggle('on',showAxes);};
 btnHelio.onclick=()=>{showHelio=!showHelio;btnHelio.classList.toggle('on',showHelio);};
 btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);windGroup.visible=showWind;windLegendEl.style.display=showWind?'block':'none';};
+btnField.onclick=()=>{showField=!showField;btnField.classList.toggle('on',showField);applyFilter();ensureLabels();};
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter();};
@@ -1368,7 +1373,12 @@ function rebuildMotion(){
   });
 }
 
-function clusterVisible(c){ return c.is_sol || (c.distance_ly!=null && c.distance_ly<=distLimit && (showFar||!c.beyond_50ly) && phaseOn[c.max_phase]); }
+function clusterVisible(c){
+  if(c.is_sol) return true;
+  const inRange = c.distance_ly!=null && c.distance_ly<=distLimit && (showFar||!c.beyond_50ly);
+  if(c.is_field) return showField && inRange;            // uncurated field: gated by its own toggle
+  return inRange && phaseOn[c.max_phase];
+}
 function applyFilter(){
   clusters.forEach(cl=>{
     const vis=clusterVisible(cl.data);
