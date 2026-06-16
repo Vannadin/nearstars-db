@@ -626,10 +626,12 @@ for target in target_list:
 
         # RV 결정
         rv = astro.get("radial_velocity_km_s")
-        rv_source = astro.get("source", "unknown")
         if rv is None:
             rv = 0.0
-            rv_source += " (RV 없음 → 0으로 처리)"
+            rv_source = astro.get("source", "unknown") + " (RV 없음 → 0으로 처리)"
+        else:
+            # prefer a dedicated RV source (manual override) over the overall astrometry source
+            rv_source = astro.get("radial_velocity_source") or astro.get("source", "unknown")
 
         # ── 에포크 전파 ──
         source_epoch_jd = astro.get("epoch_jd", JD_GAIA)

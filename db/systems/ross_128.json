@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.030185517,
         "pmra_mas_yr": 607.2990766811824,
         "pmdec_mas_yr": -1223.0283548879977,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": -30.66,
+        "radial_velocity_source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)",
         "vmag_v": 11.1705,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3232,
@@ -57,19 +57,19 @@
         "propagation_method": "linear",
         "distance_pc": 3.374897355164646,
         "distance_km": 104138451086648.17,
-        "icrs_x_km": -103977981257004.34,
-        "icrs_y_km": 5582918717147.539,
-        "icrs_z_km": 1493150163908.8557,
-        "icrs_vx_km_s": -0.7915487718042951,
-        "icrs_vy_km_s": -9.68748312053143,
-        "icrs_vz_km_s": -19.564839848508385,
-        "position_ulp_km": 0.02308774976911384,
-        "icrs_x_j2000_km": -103979230225980.39,
-        "icrs_y_j2000_km": 5567633031281.314,
-        "icrs_z_j2000_km": 1462279194408.6912,
-        "icrs_vx_j2000_km_s": -0.7915487718042951,
-        "icrs_vy_j2000_km_s": -9.68748312053143,
-        "icrs_vz_j2000_km_s": -19.564839848508385,
+        "icrs_x_km": -104041742563382.92,
+        "icrs_y_km": 5586329843659.238,
+        "icrs_z_km": 1494040789816.5269,
+        "icrs_vx_km_s": 29.82169176852596,
+        "icrs_vy_km_s": -11.325241854584482,
+        "icrs_vz_km_s": -19.992449423837662,
+        "position_ulp_km": 0.023101907623198175,
+        "icrs_x_j2000_km": -103994687512375.2,
+        "icrs_y_j2000_km": 5568459971041.727,
+        "icrs_z_j2000_km": 1462495103719.6418,
+        "icrs_vx_j2000_km_s": 29.82169176852596,
+        "icrs_vy_j2000_km_s": -11.325241854584482,
+        "icrs_vz_j2000_km_s": -19.992449423837662,
         "luminosity_lsun": null,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
@@ -154,7 +154,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -163,7 +163,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -172,14 +172,14 @@
       "title": "Bonfils et al. 2018",
       "doi": "10.1051/0004-6361/201731973",
       "bibcode": "2018A&A...613A..25B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "Ross 128 mass (unverified)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

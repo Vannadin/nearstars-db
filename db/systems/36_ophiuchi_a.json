@@ -37,19 +37,19 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.952271867918357,
         "distance_km": 183667918617752.34,
-        "icrs_x_km": -31765748471791.305,
-        "icrs_y_km": -161084007273719.3,
-        "icrs_z_km": -82172013752375.48,
-        "icrs_vx_km_s": -10.842594363331092,
-        "icrs_vy_km_s": 16.983749708142973,
-        "icrs_vz_km_s": -30.37492264021746,
-        "position_ulp_km": 0.035767834754833874,
-        "icrs_x_j2000_km": -31782513203842.203,
-        "icrs_y_j2000_km": -161057501339312.34,
-        "icrs_z_j2000_km": -82218118216680.66,
-        "icrs_vx_j2000_km_s": -10.781554007260977,
-        "icrs_vy_j2000_km_s": 17.19885187757721,
-        "icrs_vz_j2000_km_s": -29.93850831460955,
+        "icrs_x_km": -31765730560286.445,
+        "icrs_y_km": -161083916522118.53,
+        "icrs_z_km": -82171967414726.06,
+        "icrs_vx_km_s": -10.85119408058569,
+        "icrs_vy_km_s": 16.940177818826783,
+        "icrs_vz_km_s": -30.397170390272866,
+        "position_ulp_km": 0.03576781460393053,
+        "icrs_x_j2000_km": -31782508861659.21,
+        "icrs_y_j2000_km": -161057479338924.28,
+        "icrs_z_j2000_km": -82218106983311.1,
+        "icrs_vx_j2000_km_s": -10.790153724515577,
+        "icrs_vy_j2000_km_s": 17.155279988261018,
+        "icrs_vz_j2000_km_s": -29.960756064664956,
         "orbit_id": "AB",
         "orbit_role": "primary",
         "mass_ratio_q": 0.49673202614379086,
@@ -74,7 +74,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -83,14 +83,14 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

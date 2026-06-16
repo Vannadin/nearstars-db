@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.13549915,
         "pmra_mas_yr": -974.758145249517,
         "pmdec_mas_yr": 20.875840089774208,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": 16.376,
+        "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)",
         "vmag_v": 3.7358,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5039,
@@ -373,19 +373,19 @@
         "propagation_method": "linear",
         "distance_pc": 3.219810408490127,
         "distance_km": 99352967941293.64,
-        "icrs_x_km": 58642072940488.95,
-        "icrs_y_km": 78520997483315.95,
-        "icrs_z_km": -16327076741441.375,
-        "icrs_vx_km_s": 11.949137009619637,
-        "icrs_vy_km_s": -8.86453002813413,
-        "icrs_vz_km_s": 0.3143050372590638,
-        "position_ulp_km": 0.01743516386450227,
-        "icrs_x_j2000_km": 58660927244793.695,
-        "icrs_y_j2000_km": 78507010318675.16,
-        "icrs_z_j2000_km": -16326580805809.184,
-        "icrs_vx_j2000_km_s": 11.949137009619637,
-        "icrs_vy_j2000_km_s": -8.86453002813413,
-        "icrs_vz_j2000_km_s": 0.3143050372590638,
+        "icrs_x_km": 58621932522652.3,
+        "icrs_y_km": 78494047496000.97,
+        "icrs_z_km": -16321471866746.768,
+        "icrs_vx_km_s": 21.619005631122306,
+        "icrs_vy_km_s": 4.074766405563084,
+        "icrs_vz_km_s": -2.376721652275762,
+        "position_ulp_km": 0.017429179765216178,
+        "icrs_x_j2000_km": 58656044719257.54,
+        "icrs_y_j2000_km": 78500476988416.98,
+        "icrs_z_j2000_km": -16325222048307.46,
+        "icrs_vx_j2000_km_s": 21.619005631122306,
+        "icrs_vy_j2000_km_s": 4.074766405563084,
+        "icrs_vz_j2000_km_s": -2.376721652275762,
         "luminosity_lsun": 0.32,
         "age_gyr": 0.44,
         "metallicity_fe_h_dex": -0.13,
@@ -473,7 +473,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -482,7 +482,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -492,7 +492,7 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "planet parameters"
       ]
@@ -501,7 +501,7 @@
       "title": "Baines & Armstrong 2012",
       "doi": "10.1088/0004-637X/744/2/138",
       "bibcode": "2012ApJ...744..138B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri mass (evolutionary_model)"
       ]
@@ -510,7 +510,7 @@
       "title": "Valenti & Fischer 2005",
       "doi": null,
       "bibcode": "2005ApJS..159..141V",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri mass (evolutionary_model)"
       ]
@@ -519,7 +519,7 @@
       "title": "Gomes da Silva et al. 2021",
       "doi": null,
       "bibcode": "2021A&A...646A..77G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri mass (evolutionary_model)"
       ]
@@ -528,7 +528,7 @@
       "title": "Greaves et al. 1998",
       "doi": null,
       "bibcode": "1998ApJ...506L.133G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri disk main_cold (resolved_imaging)"
       ]
@@ -537,7 +537,7 @@
       "title": "Backman et al. 2009",
       "doi": null,
       "bibcode": "2009ApJ...690.1522B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
@@ -546,7 +546,7 @@
       "title": "Booth et al. 2023",
       "doi": "10.1093/mnras/stad938",
       "bibcode": "2023MNRAS.521.6180B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri disk main_cold (resolved_imaging)"
       ]
@@ -555,7 +555,7 @@
       "title": "Booth et al. 2017",
       "doi": null,
       "bibcode": "2017MNRAS.469.3200B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
@@ -564,7 +564,7 @@
       "title": "Greaves et al. 2014",
       "doi": null,
       "bibcode": "2014ApJ...791L..11G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri disk intermediate (sed_fit)"
       ]
@@ -573,14 +573,14 @@
       "title": "Su et al. 2017",
       "doi": null,
       "bibcode": "2017AJ....153..226S",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Eri disk asteroid_analog (sed_fit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-15",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

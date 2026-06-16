@@ -42,6 +42,36 @@ MANUAL_ASTROMETRY = {
 }
 
 
+# ── 수동 RV override ────────────────────────────────────────────────────────
+# Gaia DR3 가 RV 를 안 주는 (밝거나·흐리거나·변광·축퇴성) 별의 시선속도를 출처-기반으로
+# 보강. position/PM/parallax 는 Gaia 그대로 두고 RV 만 채운다 (MANUAL_ASTROMETRY 와 달리
+# 전체 교체가 아님). RV 누락이면 공간속도가 접선 성분만 되어 운동·heliosphere 방향이
+# 틀어지므로 보강. {name: {"rv": km/s, "err": km/s|None, "source": "..."}}.
+MANUAL_RV = {
+    "eps Eri":           {"rv": 16.376,  "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
+    "tau Cet":           {"rv": -16.597, "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
+    "Delta Pavonis":     {"rv": -21.543, "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
+    "Beta Hydri":        {"rv": 23.085,  "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
+    "gam Cep":           {"rv": -43.668, "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S); SB1 + planet host, systemic"},
+    "Eta Cassiopeiae A": {"rv": 8.404,   "err": 0.1,  "source": "Soubiran et al. 2018 (2018A&A...616A...7S)"},
+    "Mu Herculis A":     {"rv": -17.78,  "err": 0.03, "source": "Gaia DR2 RVS (2018A&A...615A..31D)"},
+    "36 Ophiuchi B":     {"rv": 0.10,    "err": 0.13, "source": "Gaia DR2 (2018A&A...619A..81H)"},
+    "Ross 128":          {"rv": -30.66,  "err": 0.5,  "source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)"},
+    "Wolf 359":          {"rv": 19.57,   "err": 1.0,  "source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)"},
+    "YZ Cet":            {"rv": 28.27,   "err": 0.5,  "source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)"},
+    "Teegarden's Star":  {"rv": 68.375,  "err": None, "source": "Zechmeister et al. 2019 CARMENES gamma (2019A&A...627A..49Z)"},
+    "TRAPPIST-1":        {"rv": -56.3,   "err": None, "source": "Reiners & Basri 2009 (2009ApJ...705.1416R)"},
+    "eps Ind Ba":        {"rv": -40.4,   "err": 0.9,  "source": "King et al. 2010 system RV (2010A&A...510A..99K)"},
+    "eps Ind Bb":        {"rv": -40.4,   "err": 0.9,  "source": "King et al. 2010 system RV (2010A&A...510A..99K)"},
+    "Luhman 16 A":       {"rv": 23.1,    "err": 1.1,  "source": "Kniazev et al. 2013 (2013ApJ...770..124K)"},
+    "Luhman 16 B":       {"rv": 19.5,    "err": 1.2,  "source": "Kniazev et al. 2013 (2013ApJ...770..124K)"},
+    "Sirius B":          {"rv": -5.50,   "err": 0.4,  "source": "Gontcharov 2006 PCRV, Sirius A system (2006AstL...32..759G)"},
+    "40 Eridani B":      {"rv": -42.27,  "err": 0.1,  "source": "Gaia DR2, 40 Eri A system (2018A&A...616A...7S)"},
+    "Van Maanen's Star": {"rv": -12.0,   "err": 7.0,  "source": "Lindegren & Dravins 2021 astrometric RV, grav-redshift-free (2021A&A...652A..45L)"},
+    # PSR J0108-1431: pulsar — no spectroscopic RV exists; left null (stays 0).
+}
+
+
 def tap_post(endpoint, query, timeout=60):
     data = urllib.parse.urlencode(
         {"REQUEST": "doQuery", "LANG": "ADQL", "FORMAT": "json", "QUERY": query}
@@ -243,6 +273,18 @@ for name, m in MANUAL_ASTROMETRY.items():
         "manual_ref":            m["ref"],
     }
     print(f"  {name}: plx={m['parallax_mas']} mas ({m['ref']})")
+
+# ── 수동 RV override 적용 (Gaia/SIMBAD RV 가 없을 때만 보강) ──────────────────
+print("\n수동 RV override:")
+for name, m in MANUAL_RV.items():
+    r = results.get(name)
+    if not r:
+        continue
+    if r.get("radial_velocity_km_s") is None:
+        r["radial_velocity_km_s"] = m["rv"]
+        r["rv_error_km_s"] = m.get("err")
+        r["radial_velocity_source"] = m["source"]
+        print(f"  {name}: RV={m['rv']} km/s ({m['source']})")
 
 # ── 저장 ──────────────────────────────────────────────────────────────────────
 missing_total = [n for n in star_to_gaia if n not in results]

@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.09342672,
         "pmra_mas_yr": 3429.0828268077694,
         "pmdec_mas_yr": -3805.54112273733,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": 68.375,
+        "radial_velocity_source": "Zechmeister et al. 2019 CARMENES gamma (2019A&A...627A..49Z)",
         "vmag_v": 15.3227,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 2904,
@@ -141,19 +141,19 @@
         "propagation_method": "linear",
         "distance_pc": 3.831587320084787,
         "distance_km": 118230430951108.08,
-        "icrs_x_km": 82444063289045.56,
-        "icrs_y_km": 77430761867263.7,
-        "icrs_z_km": 34437274911570.31,
-        "icrs_vx_km_s": -28.090481254110603,
-        "icrs_vy_km_s": 59.096243062962095,
-        "icrs_vz_km_s": -66.14939512892471,
-        "position_ulp_km": 0.0183062594614304,
-        "icrs_x_j2000_km": 82399739880484.33,
-        "icrs_y_j2000_km": 77524008647267.89,
-        "icrs_z_j2000_km": 34332899103984.28,
-        "icrs_vx_j2000_km_s": -28.090481254110603,
-        "icrs_vy_j2000_km_s": 59.096243062962095,
-        "icrs_vz_j2000_km_s": -66.14939512892471,
+        "icrs_x_km": 82344827792201.67,
+        "icrs_y_km": 77337346286454.78,
+        "icrs_z_km": 34395960293346.055,
+        "icrs_vx_km_s": 19.554717810403186,
+        "icrs_vy_km_s": 103.94716924284114,
+        "icrs_vz_km_s": -46.313315579026366,
+        "position_ulp_km": 0.01828422475473916,
+        "icrs_x_j2000_km": 82375682790340.36,
+        "icrs_y_j2000_km": 77501362445859.67,
+        "icrs_z_j2000_km": 34322883438960.223,
+        "icrs_vx_j2000_km_s": 19.554717810403186,
+        "icrs_vy_j2000_km_s": 103.94716924284114,
+        "icrs_vz_j2000_km_s": -46.313315579026366,
         "luminosity_lsun": 0.00073,
         "age_gyr": 7,
         "metallicity_fe_h_dex": -0.19,
@@ -369,7 +369,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -378,7 +378,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -387,7 +387,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-16",
       "used_for": [
         "Teegarden's Star mass (spectroscopic_calibration)"
       ]
@@ -396,14 +396,14 @@
       "title": "Dreizler et al. 2024",
       "doi": "10.1051/0004-6361/202348033",
       "bibcode": "2024A&A...684A.117D",
-      "accessed": "2026-05-30",
+      "accessed": "2026-06-16",
       "used_for": [
         "Teegarden's Star mass (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-30",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

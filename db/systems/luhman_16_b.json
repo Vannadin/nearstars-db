@@ -15,8 +15,8 @@
         "parallax_error_mas": null,
         "pmra_mas_yr": -2767.502,
         "pmdec_mas_yr": 356.856,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "manual (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": 19.5,
+        "radial_velocity_source": "Kniazev et al. 2013 (2013ApJ...770..124K)",
         "vmag_v": null,
         "vmag_source": null,
         "teff_k": 1280,
@@ -118,19 +118,19 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 1.9937913337865885,
         "distance_km": 61521972208363.16,
-        "icrs_x_km": -35024313015679.574,
-        "icrs_y_km": 11114693243658.373,
-        "icrs_z_km": -49342522730961.04,
-        "icrs_vx_km_s": 4.811072132074749,
-        "icrs_vy_km_s": 24.772792648745725,
-        "icrs_vz_km_s": 0.2614374545967122,
-        "position_ulp_km": 0.01095624096580062,
-        "icrs_x_j2000_km": -35015857962948.68,
-        "icrs_y_j2000_km": 11155474768931.02,
-        "icrs_z_j2000_km": -49339183355158.29,
-        "icrs_vx_j2000_km_s": 6.282682913448885,
-        "icrs_vy_j2000_km_s": 24.024487675460453,
-        "icrs_vz_j2000_km_s": 1.139555007150145,
+        "icrs_x_km": -34996931082170.527,
+        "icrs_y_km": 11105958978211.96,
+        "icrs_z_km": -49303938072640.79,
+        "icrs_vx_km_s": -8.335611406600135,
+        "icrs_vy_km_s": 28.96631038294213,
+        "icrs_vz_km_s": -18.263926804896684,
+        "position_ulp_km": 0.010947673450587734,
+        "icrs_x_j2000_km": -35009219918461.637,
+        "icrs_y_j2000_km": 11153357371247.041,
+        "icrs_z_j2000_km": -49329829498595.8,
+        "icrs_vx_j2000_km_s": -6.864000625225999,
+        "icrs_vy_j2000_km_s": 28.218005409656858,
+        "icrs_vz_j2000_km_s": -17.38580925234325,
         "orbit_id": "AB",
         "orbit_role": "secondary",
         "mass_ratio_q": 0.5396290050590219,
@@ -155,7 +155,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -164,7 +164,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -173,7 +173,7 @@
       "title": "Lazorenko & Sahlmann 2018",
       "doi": "10.1051/0004-6361/201833626",
       "bibcode": "2018A&A...618A.111L",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "Luhman 16 B mass (binary_orbit)"
       ]
@@ -182,7 +182,7 @@
       "title": "Bedin et al. 2024",
       "doi": "10.1002/asna.20230158",
       "bibcode": "2024AN....34530158B",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "Luhman 16 B mass (binary_orbit)"
       ]
@@ -191,7 +191,7 @@
       "title": "Garcia et al. 2017",
       "doi": "10.3847/1538-4357/aa844f",
       "bibcode": "2017ApJ...846...97G",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "Luhman 16 B mass (binary_orbit)"
       ]
@@ -200,14 +200,14 @@
       "title": "Faherty et al. 2014",
       "doi": "10.1088/0004-637X/790/2/90",
       "bibcode": "2014ApJ...790...90F",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "Luhman 16 B radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-09",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

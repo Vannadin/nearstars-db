@@ -15,8 +15,8 @@
         "parallax_error_mas": null,
         "pmra_mas_yr": 3981.97666296105,
         "pmdec_mas_yr": -2466.8318147663504,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "manual (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": -40.4,
+        "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)",
         "vmag_v": null,
         "vmag_source": null,
         "teff_k": 910,
@@ -57,19 +57,19 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 3.6946991407427134,
         "distance_km": 114006503089438.52,
-        "icrs_x_km": 54643945965654.055,
-        "icrs_y_km": -30360544343825.656,
-        "icrs_z_km": -95340531334015.1,
-        "icrs_vx_km_s": 1.453619309527954,
-        "icrs_vy_km_s": 79.01012030983124,
-        "icrs_vz_km_s": -20.08988133792028,
-        "position_ulp_km": 0.02116985061340395,
-        "icrs_x_j2000_km": 54647116468444.41,
-        "icrs_y_j2000_km": -30236357354811.766,
-        "icrs_z_j2000_km": -95378029381476.8,
-        "icrs_vx_j2000_km_s": 3.9108833460195807,
-        "icrs_vy_j2000_km_s": 75.41238327652577,
-        "icrs_vz_j2000_km_s": -25.705698877763854,
+        "icrs_x_km": 54684280326860.88,
+        "icrs_y_km": -30382831740454.32,
+        "icrs_z_km": -95410936045190.22,
+        "icrs_vx_km_s": -17.91181674872739,
+        "icrs_vy_km_s": 89.71080184793935,
+        "icrs_vz_km_s": 13.713007605091914,
+        "position_ulp_km": 0.02118548359968169,
+        "icrs_x_j2000_km": 54656894495403.64,
+        "icrs_y_j2000_km": -30241760360055.08,
+        "icrs_z_j2000_km": -95395097190246.53,
+        "icrs_vx_j2000_km_s": -15.454552712235763,
+        "icrs_vy_j2000_km_s": 86.11306481463389,
+        "icrs_vz_j2000_km_s": 8.097190065248338,
         "orbit_id": "BaBb",
         "orbit_role": "secondary",
         "mass_ratio_q": 0.5571054925893636,
@@ -94,7 +94,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -103,7 +103,7 @@
       "title": "SIMBAD Astronomical Database (Wenger et al. 2000)",
       "doi": "10.1051/aas:2000332",
       "bibcode": "2000A&AS..143....9W",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, rv)"
       ]
@@ -112,7 +112,7 @@
       "title": "Chen et al. 2022",
       "doi": "10.3847/1538-3881/ac66d2",
       "bibcode": "2022AJ....163..288C",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Ind Bb mass (binary_orbit)"
       ]
@@ -121,14 +121,14 @@
       "title": "King et al. 2010",
       "doi": "10.1051/0004-6361/200912981",
       "bibcode": "2010A&A...510A..99K",
-      "accessed": "2026-06-09",
+      "accessed": "2026-06-16",
       "used_for": [
         "eps Ind Bb radius (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-09",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

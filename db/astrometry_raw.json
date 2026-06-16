@@ -32,8 +32,9 @@
     "pmra_error_mas_yr": 0.04133712,
     "pmdec_mas_yr": 637.5466339679103,
     "pmdec_error_mas_yr": 0.051560108,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 28.27,
+    "rv_error_km_s": 0.5,
+    "radial_velocity_source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)"
   },
   "tau Cet": {
     "source": "gaia_dr3",
@@ -50,8 +51,9 @@
     "pmra_error_mas_yr": 0.18087587,
     "pmdec_mas_yr": 854.9631570589582,
     "pmdec_error_mas_yr": 0.08807259,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -16.597,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)"
   },
   "GJ 180": {
     "source": "gaia_dr3",
@@ -212,8 +214,9 @@
     "pmra_error_mas_yr": 0.08676905,
     "pmdec_mas_yr": -479.0375409528857,
     "pmdec_error_mas_yr": 0.07048742,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -56.3,
+    "rv_error_km_s": null,
+    "radial_velocity_source": "Reiners & Basri 2009 (2009ApJ...705.1416R)"
   },
   "Ross 128": {
     "source": "gaia_dr3",
@@ -230,8 +233,9 @@
     "pmra_error_mas_yr": 0.03432964,
     "pmdec_mas_yr": -1223.0283548879977,
     "pmdec_error_mas_yr": 0.022648253,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -30.66,
+    "rv_error_km_s": 0.5,
+    "radial_velocity_source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)"
   },
   "V1400 Centauri": {
     "source": "gaia_dr3",
@@ -320,8 +324,9 @@
     "pmra_error_mas_yr": 0.08130645,
     "pmdec_mas_yr": -2699.214987679166,
     "pmdec_error_mas_yr": 0.06910815,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 19.57,
+    "rv_error_km_s": 1.0,
+    "radial_velocity_source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)"
   },
   "HD 211970": {
     "source": "gaia_dr3",
@@ -590,8 +595,9 @@
     "pmra_error_mas_yr": 0.6016568,
     "pmdec_mas_yr": -2466.8318147663504,
     "pmdec_error_mas_yr": 0.6256827,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -40.4,
+    "rv_error_km_s": 0.9,
+    "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)"
   },
   "GJ 3512": {
     "source": "gaia_dr3",
@@ -734,8 +740,9 @@
     "pmra_error_mas_yr": 0.07212469,
     "pmdec_mas_yr": -1130.2369049548956,
     "pmdec_error_mas_yr": 0.10327922,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -21.543,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)"
   },
   "G 261-6": {
     "source": "gaia_dr3",
@@ -788,8 +795,9 @@
     "pmra_error_mas_yr": 0.087942876,
     "pmdec_mas_yr": -3805.54112273733,
     "pmdec_error_mas_yr": 0.08326042,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 68.375,
+    "rv_error_km_s": null,
+    "radial_velocity_source": "Zechmeister et al. 2019 CARMENES gamma (2019A&A...627A..49Z)"
   },
   "GJ 1289": {
     "source": "gaia_dr3",
@@ -914,8 +922,9 @@
     "pmra_error_mas_yr": 0.14331752,
     "pmdec_mas_yr": 171.15860250258777,
     "pmdec_error_mas_yr": 0.14084655,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -43.668,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S); SB1 + planet host, systemic"
   },
   "LHS 1140": {
     "source": "gaia_dr3",
@@ -968,8 +977,9 @@
     "pmra_error_mas_yr": 0.2779457,
     "pmdec_mas_yr": -914.5196209016666,
     "pmdec_error_mas_yr": 0.33150372,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -5.5,
+    "rv_error_km_s": 0.4,
+    "radial_velocity_source": "Gontcharov 2006 PCRV, Sirius A system (2006AstL...32..759G)"
   },
   "LTT 1445 A": {
     "source": "gaia_dr3",
@@ -1022,8 +1032,9 @@
     "pmra_error_mas_yr": 0.11067274,
     "pmdec_mas_yr": -1141.1676949906755,
     "pmdec_error_mas_yr": 0.07299198,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 0.1,
+    "rv_error_km_s": 0.13,
+    "radial_velocity_source": "Gaia DR2 (2018A&A...619A..81H)"
   },
   "Gl 378": {
     "source": "gaia_dr3",
@@ -1400,8 +1411,9 @@
     "pmra_error_mas_yr": 0.1266705,
     "pmdec_mas_yr": -551.1334202185512,
     "pmdec_error_mas_yr": 0.1531009,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 8.404,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)"
   },
   "40 Eridani B": {
     "source": "gaia_dr3",
@@ -1418,8 +1430,9 @@
     "pmra_error_mas_yr": 0.047661513,
     "pmdec_mas_yr": -3338.9552892508973,
     "pmdec_error_mas_yr": 0.038766496,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -42.27,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Gaia DR2, 40 Eri A system (2018A&A...616A...7S)"
   },
   "eps Eri": {
     "source": "gaia_dr3",
@@ -1436,8 +1449,9 @@
     "pmra_error_mas_yr": 0.15972257,
     "pmdec_mas_yr": 20.875840089774208,
     "pmdec_error_mas_yr": 0.120366044,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 16.376,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)"
   },
   "GJ 1148": {
     "source": "gaia_dr3",
@@ -1634,8 +1648,9 @@
     "pmra_error_mas_yr": 0.3665861,
     "pmdec_mas_yr": 326.44454180123256,
     "pmdec_error_mas_yr": 0.40407667,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": 23.085,
+    "rv_error_km_s": 0.1,
+    "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)"
   },
   "Kapteyn": {
     "source": "gaia_dr3",
@@ -1976,8 +1991,9 @@
     "pmra_error_mas_yr": 0.14742194,
     "pmdec_mas_yr": -773.1790550724331,
     "pmdec_error_mas_yr": 0.15877306,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -17.78,
+    "rv_error_km_s": 0.03,
+    "radial_velocity_source": "Gaia DR2 RVS (2018A&A...615A..31D)"
   },
   "HD 190007": {
     "source": "gaia_dr3",
@@ -2174,8 +2190,9 @@
     "pmra_error_mas_yr": 0.022946512,
     "pmdec_mas_yr": -2711.8825044849837,
     "pmdec_error_mas_yr": 0.019384578,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null
+    "radial_velocity_km_s": -12.0,
+    "rv_error_km_s": 7.0,
+    "radial_velocity_source": "Lindegren & Dravins 2021 astrometric RV, grav-redshift-free (2021A&A...652A..45L)"
   },
   "GJ 414 A": {
     "source": "gaia_dr3",
@@ -2246,9 +2263,10 @@
     "pmra_error_mas_yr": null,
     "pmdec_mas_yr": 356.856,
     "pmdec_error_mas_yr": null,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null,
-    "manual_ref": "Lazorenko & Sahlmann 2018 (parallax/PM) + Gaia DR3 (position)"
+    "radial_velocity_km_s": 23.1,
+    "rv_error_km_s": 1.1,
+    "manual_ref": "Lazorenko & Sahlmann 2018 (parallax/PM) + Gaia DR3 (position)",
+    "radial_velocity_source": "Kniazev et al. 2013 (2013ApJ...770..124K)"
   },
   "HD 40307": {
     "source": "gaia_dr3",
@@ -2807,9 +2825,10 @@
     "pmra_error_mas_yr": null,
     "pmdec_mas_yr": 356.856,
     "pmdec_error_mas_yr": null,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null,
-    "manual_ref": "sibling of Luhman 16 A (Lazorenko & Sahlmann 2018); relative position from binary_orbit"
+    "radial_velocity_km_s": 19.5,
+    "rv_error_km_s": 1.2,
+    "manual_ref": "sibling of Luhman 16 A (Lazorenko & Sahlmann 2018); relative position from binary_orbit",
+    "radial_velocity_source": "Kniazev et al. 2013 (2013ApJ...770..124K)"
   },
   "eps Ind Bb": {
     "source": "manual",
@@ -2826,8 +2845,9 @@
     "pmra_error_mas_yr": null,
     "pmdec_mas_yr": -2466.8318147663504,
     "pmdec_error_mas_yr": null,
-    "radial_velocity_km_s": null,
-    "rv_error_km_s": null,
-    "manual_ref": "sibling of eps Ind Ba (Gaia DR3 6412596012146801152); relative position from binary_orbit"
+    "radial_velocity_km_s": -40.4,
+    "rv_error_km_s": 0.9,
+    "manual_ref": "sibling of eps Ind Ba (Gaia DR3 6412596012146801152); relative position from binary_orbit",
+    "radial_velocity_source": "King et al. 2010 system RV (2010A&A...510A..99K)"
   }
 }

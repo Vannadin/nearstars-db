@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.05120331,
         "pmra_mas_yr": -2236.168749069785,
         "pmdec_mas_yr": -3338.9552892508973,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": -42.27,
+        "radial_velocity_source": "Gaia DR2, 40 Eri A system (2018A&A...616A...7S)",
         "vmag_v": 9.58,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 17200,
@@ -87,19 +87,19 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.007735116119533,
         "distance_km": 154522559818552.72,
-        "icrs_x_km": 67480076495391.305,
-        "icrs_y_km": 137573580931729.23,
-        "icrs_z_km": -20476397770350.55,
-        "icrs_vx_km_s": 37.608256143662786,
-        "icrs_vy_km_s": -42.556753013892816,
-        "icrs_vz_km_s": -78.33022203093057,
-        "position_ulp_km": 0.03054747142610764,
-        "icrs_x_j2000_km": 67539931241264.92,
-        "icrs_y_j2000_km": 137506340621411.03,
-        "icrs_z_j2000_km": -20599070838958.22,
-        "icrs_vx_j2000_km_s": 38.23086588321153,
-        "icrs_vy_j2000_km_s": -42.08922080547905,
-        "icrs_vz_j2000_km_s": -77.39408536120455,
+        "icrs_x_km": 67508450047437.62,
+        "icrs_y_km": 137631321904477.06,
+        "icrs_z_km": -20485065369721.12,
+        "icrs_vx_km_s": 23.98547419155236,
+        "icrs_vy_km_s": -70.27949566390292,
+        "icrs_vz_km_s": -74.16871218257505,
+        "position_ulp_km": 0.030560292497589417,
+        "icrs_x_j2000_km": 67546809678124.63,
+        "icrs_y_j2000_km": 137520338432986.25,
+        "icrs_z_j2000_km": -20601172075169.27,
+        "icrs_vx_j2000_km_s": 24.6080839311011,
+        "icrs_vy_j2000_km_s": -69.81196345548915,
+        "icrs_vz_j2000_km_s": -73.23257551284902,
         "orbit_id": "BC",
         "orbit_role": "primary",
         "mass_ratio_q": 0.26264316046840824,
@@ -124,7 +124,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -133,7 +133,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -142,14 +142,14 @@
       "title": "Bond et al. 2017",
       "doi": "10.3847/1538-4357/aa8a63",
       "bibcode": "2017ApJ...848...16B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "40 Eridani B mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.03366602,
         "pmra_mas_yr": 1205.074450317742,
         "pmdec_mas_yr": 637.5466339679103,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": 28.27,
+        "radial_velocity_source": "Fouque et al. 2018 SPIRou (2018MNRAS.475.1960F)",
         "vmag_v": 12.1558,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 3100,
@@ -180,19 +180,19 @@
         "propagation_method": "linear",
         "distance_pc": 3.71668036033956,
         "distance_km": 114684772654676.72,
-        "icrs_x_km": 104236084869419.11,
-        "icrs_y_km": 34090045099892.484,
-        "icrs_z_km": -33545596104156.836,
-        "icrs_vx_km_s": -3.487623004420228,
-        "icrs_vy_km_s": 21.199398539960285,
-        "icrs_vz_km_s": 10.742214996354571,
-        "position_ulp_km": 0.0231450602837622,
-        "icrs_x_j2000_km": 104230581818832.9,
-        "icrs_y_j2000_km": 34123495206860.715,
-        "icrs_z_j2000_km": -33528646177958.387,
-        "icrs_vx_j2000_km_s": -3.487623004420228,
-        "icrs_vy_j2000_km_s": 21.199398539960285,
-        "icrs_vz_j2000_km_s": 10.742214996354571,
+        "icrs_x_km": 104182572303272.6,
+        "icrs_y_km": 34072520114192.945,
+        "icrs_z_km": -33528384802800.81,
+        "icrs_vx_km_s": 22.204966316865104,
+        "icrs_vy_km_s": 29.613539233696745,
+        "icrs_vz_km_s": 2.4786812272105845,
+        "position_ulp_km": 0.023133178107153672,
+        "icrs_x_j2000_km": 104217609075524.66,
+        "icrs_y_j2000_km": 34119246725479.01,
+        "icrs_z_j2000_km": -33524473741266.016,
+        "icrs_vx_j2000_km_s": 22.204966316865104,
+        "icrs_vy_j2000_km_s": 29.613539233696745,
+        "icrs_vz_j2000_km_s": 2.4786812272105845,
         "luminosity_lsun": 0.0022,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
@@ -512,7 +512,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -521,7 +521,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -530,7 +530,7 @@
       "title": "Schweitzer et al. 2019",
       "doi": "10.1051/0004-6361/201834965",
       "bibcode": "2019A&A...625A..68S",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -539,7 +539,7 @@
       "title": "Cifuentes et al. 2020",
       "doi": "10.1051/0004-6361/202038295",
       "bibcode": "2020A&A...642A.115C",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -548,7 +548,7 @@
       "title": "Astudillo-Defru et al. 2017",
       "doi": "10.1051/0004-6361/201731581",
       "bibcode": "2017A&A...605L..11A",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "YZ Cet mass (spectroscopic_calibration)"
       ]
@@ -557,14 +557,14 @@
       "title": "Stock et al. 2020",
       "doi": "10.1051/0004-6361/201936732",
       "bibcode": "2020A&A...636A.119S",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "planet YZ Cet b orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-15",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

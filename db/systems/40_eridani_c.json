@@ -97,19 +97,19 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.013747228688032,
         "distance_km": 154708074228252.88,
-        "icrs_x_km": 67483391989295.69,
-        "icrs_y_km": 137578662460248.44,
-        "icrs_z_km": -20472232257739.953,
-        "icrs_vx_km_s": 38.97276200432646,
-        "icrs_vy_km_s": -45.37332696958245,
-        "icrs_vz_km_s": -75.06397335441638,
-        "position_ulp_km": 0.0305485997521001,
-        "icrs_x_j2000_km": 67543444901444.55,
-        "icrs_y_j2000_km": 137507323882203.94,
-        "icrs_z_j2000_km": -20593264413053.03,
-        "icrs_vx_j2000_km_s": 37.224817953560034,
-        "icrs_vy_j2000_km_s": -46.685899019661285,
-        "icrs_vz_j2000_km_s": -77.69212774811072,
+        "icrs_x_km": 67511765541342.0,
+        "icrs_y_km": 137636403432996.27,
+        "icrs_z_km": -20480899857110.523,
+        "icrs_vx_km_s": 25.349980052216033,
+        "icrs_vy_km_s": -73.09606961959254,
+        "icrs_vz_km_s": -70.90246350606085,
+        "position_ulp_km": 0.03056142082358188,
+        "icrs_x_j2000_km": 67550323338304.26,
+        "icrs_y_j2000_km": 137521321693779.16,
+        "icrs_z_j2000_km": -20595365649264.082,
+        "icrs_vx_j2000_km_s": 23.6020360014496,
+        "icrs_vy_j2000_km_s": -74.40864166967138,
+        "icrs_vz_j2000_km_s": -73.5306178997552,
         "orbit_id": "BC",
         "orbit_role": "secondary",
         "mass_ratio_q": 0.7373568395315918,
@@ -134,7 +134,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -143,7 +143,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -152,7 +152,7 @@
       "title": "Mason, Hartkopf & Miles 2017",
       "doi": "10.3847/1538-3881/aa803e",
       "bibcode": "2017AJ....154..200M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "40 Eridani C mass (binary_orbit)"
       ]
@@ -161,14 +161,14 @@
       "title": "Mann et al. 2015",
       "doi": "10.1088/0004-637X/804/1/64",
       "bibcode": "2015ApJ...804...64M",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "40 Eridani C radius (spectroscopic_calibration)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

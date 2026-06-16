@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.12218077,
         "pmra_mas_yr": 1211.7606270999615,
         "pmdec_mas_yr": -1130.2369049548956,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": -21.543,
+        "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)",
         "vmag_v": 3.5856,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5571,
@@ -165,19 +165,19 @@
         "propagation_method": "linear",
         "distance_pc": 6.099256325704463,
         "distance_km": 188203385079934.3,
-        "icrs_x_km": 40457732763782.31,
-        "icrs_y_km": -64395086265023.15,
-        "icrs_z_km": -172153910318155.16,
-        "icrs_vx_km_s": 13.719709653526445,
-        "icrs_vy_km_s": 43.96727152648562,
-        "icrs_vz_km_s": -13.194164170938494,
-        "position_ulp_km": 0.03822584700289403,
-        "icrs_x_j2000_km": 40479380819250.414,
-        "icrs_y_j2000_km": -64325711186626.94,
-        "icrs_z_j2000_km": -172174729125917.22,
-        "icrs_vx_j2000_km_s": 13.719709653526445,
-        "icrs_vy_j2000_km_s": 43.96727152648562,
-        "icrs_vz_j2000_km_s": -13.194164170938494,
+        "icrs_x_km": 40467385153100.51,
+        "icrs_y_km": -64410416942279.23,
+        "icrs_z_km": -172194960290224.44,
+        "icrs_vx_km_s": 9.085379951552522,
+        "icrs_vy_km_s": 51.32787527101813,
+        "icrs_vz_km_s": 6.5148527941304675,
+        "position_ulp_km": 0.03823496192772434,
+        "icrs_x_j2000_km": 40481720792418.47,
+        "icrs_y_j2000_km": -64329427714446.59,
+        "icrs_z_j2000_km": -172184680634297.62,
+        "icrs_vx_j2000_km_s": 9.085379951552522,
+        "icrs_vy_j2000_km_s": 51.32787527101813,
+        "icrs_vz_j2000_km_s": 6.5148527941304675,
         "luminosity_lsun": 1.24,
         "age_gyr": 9.3,
         "metallicity_fe_h_dex": 0.36,
@@ -197,7 +197,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -206,7 +206,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -215,7 +215,7 @@
       "title": "Bruntt et al. 2010",
       "doi": null,
       "bibcode": "2010MNRAS.405.1907B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "Delta Pavonis mass (asteroseismology)"
       ]
@@ -224,7 +224,7 @@
       "title": "Bensby et al. 2014",
       "doi": null,
       "bibcode": "2014A&A...562A..71B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "Delta Pavonis mass (evolutionary_model)"
       ]
@@ -233,14 +233,14 @@
       "title": "Rains et al. 2020",
       "doi": "10.1093/mnras/staa282",
       "bibcode": "2020MNRAS.493.2377R",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "Delta Pavonis radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

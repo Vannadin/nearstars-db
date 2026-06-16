@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.17013045,
         "pmra_mas_yr": -1721.7277944720731,
         "pmdec_mas_yr": 854.9631570589582,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": -16.597,
+        "radial_velocity_source": "Soubiran et al. 2018 (2018A&A...616A...7S)",
         "vmag_v": 3.5342,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 5370,
@@ -281,19 +281,19 @@
         "propagation_method": "linear",
         "distance_pc": 3.6521709611425766,
         "distance_km": 112694220585700.86,
-        "icrs_x_km": 97355045426143.92,
-        "icrs_y_km": 47571356849160.44,
-        "icrs_z_km": -30966971049848.098,
-        "icrs_vx_km_s": 16.7233022405222,
-        "icrs_vy_km_s": -25.007544719835593,
-        "icrs_vz_km_s": 14.233293728719648,
-        "position_ulp_km": 0.021617162599106603,
-        "icrs_x_j2000_km": 97381432790283.2,
-        "icrs_y_j2000_km": 47531897944497.9,
-        "icrs_z_j2000_km": -30944512620339.426,
-        "icrs_vx_j2000_km_s": 16.7233022405222,
-        "icrs_vy_j2000_km_s": -25.007544719835593,
-        "icrs_vz_j2000_km_s": 14.233293728719648,
+        "icrs_x_km": 97384919171075.9,
+        "icrs_y_km": 47585933092928.945,
+        "icrs_z_km": -30976460884052.34,
+        "icrs_vx_km_s": 2.380243865691382,
+        "icrs_vy_km_s": -32.00592794006511,
+        "icrs_vz_km_s": 18.78957705606063,
+        "position_ulp_km": 0.021623795902997657,
+        "icrs_x_j2000_km": 97388674910266.7,
+        "icrs_y_j2000_km": 47535431579350.875,
+        "icrs_z_j2000_km": -30946813186207.12,
+        "icrs_vx_j2000_km_s": 2.380243865691382,
+        "icrs_vy_j2000_km_s": -32.00592794006511,
+        "icrs_vz_j2000_km_s": 18.78957705606063,
         "luminosity_lsun": 0.488,
         "age_gyr": 10.0,
         "metallicity_fe_h_dex": -0.52,
@@ -564,7 +564,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -573,7 +573,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -582,7 +582,7 @@
       "title": "Teixeira et al. 2009",
       "doi": "10.1051/0004-6361:200810746",
       "bibcode": "2009A&A...494..237T",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "tau Cet mass (asteroseismology)"
       ]
@@ -591,7 +591,7 @@
       "title": "Korolik et al. 2023",
       "doi": "10.3847/1538-3881/ace911",
       "bibcode": "2023AJ....166..123K",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "tau Cet mass (spectroscopic)"
       ]
@@ -600,7 +600,7 @@
       "title": "MacGregor et al. 2016",
       "doi": "10.3847/0004-637X/828/2/113",
       "bibcode": "2016ApJ...828..113M",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "tau Cet disk single (resolved_imaging)"
       ]
@@ -609,7 +609,7 @@
       "title": "Greaves et al. 2004",
       "doi": "10.1111/j.1365-2966.2004.07957.x",
       "bibcode": "2004MNRAS.351L..54G",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "tau Cet disk single (photometric_excess)"
       ]
@@ -618,7 +618,7 @@
       "title": "Lawler et al. 2014",
       "doi": null,
       "bibcode": "2014MNRAS.444.2665L",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "tau Cet disk single (sed_fit)"
       ]
@@ -627,7 +627,7 @@
       "title": "Di Folco et al. 2007: CHARA/FLUOR angular diameter of tau Ceti",
       "doi": "10.1051/0004-6361:20077625",
       "bibcode": "2007A&A...474..243D",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "angular diameter source for Teixeira 2009 radius (theta_LD = 2.015 +/- 0.011 mas)"
       ]
@@ -636,14 +636,14 @@
       "title": "Feng et al. 2017",
       "doi": "10.3847/1538-3881/aa83b4",
       "bibcode": "2017AJ....154..135F",
-      "accessed": "2026-06-15",
+      "accessed": "2026-06-16",
       "used_for": [
         "planet tau Cet g orbital"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-15",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

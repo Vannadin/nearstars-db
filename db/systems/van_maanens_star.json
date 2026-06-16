@@ -15,8 +15,8 @@
         "parallax_error_mas": 0.018272836,
         "pmra_mas_yr": 1231.3994653791733,
         "pmdec_mas_yr": -2711.8825044849837,
-        "radial_velocity_km_s": 0.0,
-        "radial_velocity_source": "gaia_dr3 (RV 없음 → 0으로 처리)",
+        "radial_velocity_km_s": -12.0,
+        "radial_velocity_source": "Lindegren & Dravins 2021 astrometric RV, grav-redshift-free (2021A&A...652A..45L)",
         "vmag_v": 12.3916,
         "vmag_source": "gaia_dr3_converted",
         "teff_k": 6168,
@@ -57,19 +57,19 @@
         "propagation_method": "linear",
         "distance_pc": 4.314436111908938,
         "distance_km": 133129587872926.05,
-        "icrs_x_km": 129503602617990.42,
-        "icrs_y_km": 28174946287235.945,
-        "icrs_z_km": 12589383415790.445,
-        "icrs_vx_km_s": -0.2859426256027167,
-        "icrs_vy_km_s": 25.714188804555555,
-        "icrs_vz_km_s": -55.220637152721146,
-        "position_ulp_km": 0.028755576279679933,
-        "icrs_x_j2000_km": 129503151434840.34,
-        "icrs_y_j2000_km": 28215520191466.88,
-        "icrs_z_j2000_km": 12502251876839.91,
-        "icrs_vx_j2000_km_s": -0.2859426256027167,
-        "icrs_vy_j2000_km_s": 25.714188804555555,
-        "icrs_vz_j2000_km_s": -55.220637152721146,
+        "icrs_x_km": 129527915386439.08,
+        "icrs_y_km": 28180245879061.145,
+        "icrs_z_km": 12591725341827.564,
+        "icrs_vx_km_s": -11.959050831707403,
+        "icrs_vy_km_s": 23.169735302504733,
+        "icrs_vz_km_s": -56.345048636330574,
+        "position_ulp_km": 0.02876097479874475,
+        "icrs_x_j2000_km": 129509045439312.73,
+        "icrs_y_j2000_km": 28216804941000.26,
+        "icrs_z_j2000_km": 12502819616485.271,
+        "icrs_vx_j2000_km_s": -11.959050831707403,
+        "icrs_vy_j2000_km_s": 23.169735302504733,
+        "icrs_vz_j2000_km_s": -56.345048636330574,
         "luminosity_lsun": null,
         "age_gyr": null,
         "metallicity_fe_h_dex": null,
@@ -89,7 +89,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "epoch propagation method"
       ]
@@ -98,7 +98,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -107,14 +107,14 @@
       "title": "Holberg et al. 2008 (WD mass-radius)",
       "doi": "10.1088/0004-6256/135/4/1225",
       "bibcode": "2008AJ....135.1225H",
-      "accessed": "2026-05-29",
+      "accessed": "2026-06-16",
       "used_for": [
         "Van Maanen's Star mass (evolutionary_model)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-05-29",
+    "retrieval_date": "2026-06-16",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,
