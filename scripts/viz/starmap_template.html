@@ -124,6 +124,15 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #stabModal .mh span:first-child{font-size:14px;color:var(--fg1)}
 #stabModal .mx{cursor:pointer;color:var(--fg4);font-size:24px;line-height:1}
 #stabModal .mx:hover{color:var(--fg1)}
+#helpModal{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:rgba(4,6,12,.66)}
+#helpModal.show{display:flex}
+#helpModal .card{width:min(580px,93vw);max-height:85vh;overflow:auto;background:var(--pop);border:1px solid var(--bd1);border-radius:14px;padding:18px 22px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#helpModal .mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+#helpModal h3{margin:15px 0 5px;font-size:11px;text-transform:uppercase;letter-spacing:.09em;color:#8a93a8}
+#helpModal .row{display:flex;gap:10px;font-size:12.5px;line-height:1.5;margin:3px 0}
+#helpModal .row .k{color:var(--fg1);font-weight:600;flex:0 0 92px}
+#helpModal .row .v{color:#aeb7c8}
+#helpModal .mx{cursor:pointer;color:var(--fg4);font-size:24px;line-height:1}#helpModal .mx:hover{color:var(--fg1)}
 #stabBigCanvas{flex:1;width:100%;min-height:0}
 .hidden{display:none!important}
 #zoomctl{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:16;display:flex;flex-direction:column;
@@ -182,6 +191,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <button class="btn" id="toggleField" title="50광년 이내 모든 별(Gaia DR3 + SIMBAD) — 큐레이션 마커와 동일하게, 단 자전축·항성풍·운동·행성 없음. 밀도 보기용."><span class="dot"></span><span data-i18n="allStars">모든 별</span></button>
   <button class="btn" id="toggleMotion"><span class="dot"></span><span data-i18n="motion">공간 운동</span></button>
   <button class="btn" id="toggleFar"><span class="dot"></span><span data-i18n="beyond">50광년 밖</span></button>
+  <button class="btn" id="toggleHelp" title="사용법 / Help">?</button>
   <button class="btn" id="toggleLang">EN</button>
 </div>
 
@@ -226,6 +236,13 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   <div class="card">
     <div class="mh"><span id="stabModalTitle"></span><span class="mx" id="stabModalClose">×</span></div>
     <canvas id="stabBigCanvas"></canvas>
+  </div>
+</div>
+
+<div id="helpModal">
+  <div class="card">
+    <div class="mh"><span id="helpTitle" style="font-size:15px;color:var(--fg1);font-weight:600"></span><span class="mx" id="helpClose">×</span></div>
+    <div id="helpBody"></div>
   </div>
 </div>
 
@@ -285,8 +302,40 @@ const STR = {
     ly:'ly',pc:'pc',yr:'yr',stabBtn:'Stability sim ▶',disrupt:'disruption risk',stabObs:'observed orbit (unstable)'}
 };
 let lang='ko';
+const HELP={
+  ko:{title:'사용법', sections:[
+    {h:'보기', items:[['맵 ↔ 시스템','별로 가까이 줌인하면 시스템 뷰(행성 궤도·실제 크기), 멀어지면 광년 스케일 성도.']]},
+    {h:'조작', items:[['회전','드래그'],['줌','마우스 휠'],['이동','WASD / 화살표 (R·F 상하)'],['정보','클릭'],['들어가기','더블클릭 — 그 별로 날아가기']]},
+    {h:'레이어 (상단 토글)', items:[
+      ['모든 라벨','별 이름 상시 표시 (기본은 호버 시만)'],['수직선','ICRS 평면까지 수직선 — 높이 단서'],
+      ['궤도','행성 궤도 (시스템 뷰)'],['자전축','별 자전축 — 금색=측정 i★, 청색=공전면 정렬 가정'],
+      ['항성권','항성풍 거품 + 성간풍 꼬리 (색=방사선 등급, 시스템 뷰)'],['성간풍','50광년 국부 성간물질 흐름 격자 (구름별 색)'],
+      ['모든 별','50광년 안 모든 별 마커 — 밀도 보기 (미큐레이션)'],['공간 운동','고유운동 궤적 (룩백 시간 슬라이더)'],['50광년 밖','펄서 등 먼 천체 표시']]},
+    {h:'필터', items:[['거리','슬라이더로 거리 제한'],['P1/P2/P3','큐레이션 단계별 표시 토글']]},
+    {h:'참고', items:[['색','표면온도 (흑체 근사, 보정 SED 아님)'],['크기','광도 근사 (실측 반경 아님)'],
+      ['좌표','ICRS, 원점 = 태양'],['"모든 별"','미큐레이션 — 자전축·항성권·운동·행성 없음']]},
+  ]},
+  en:{title:'How to use', sections:[
+    {h:'Views', items:[['Map ↔ system','Zoom into a star for the system view (planet orbits, true sizes); zoom out for the light-year map.']]},
+    {h:'Controls', items:[['Rotate','drag'],['Zoom','mouse wheel'],['Move','WASD / arrows (R·F up/down)'],['Info','click'],['Enter','double-click — fly to that star']]},
+    {h:'Layers (top toggles)', items:[
+      ['All labels','always-on star names (default: hover only)'],['Drop lines','vertical line to the ICRS plane — height cue'],
+      ['Orbits','planet orbits (system view)'],['Spin axes','stellar spin axis — gold = measured i★, blue = spin–orbit assumption'],
+      ['Heliosphere','stellar-wind bubble + ISM tail (colour = radiation grade, system view)'],['ISM wind','local interstellar-medium flow grid within 50 ly (coloured by cloud)'],
+      ['All stars','every star within 50 ly as markers — density view (uncurated)'],['Space motion','proper-motion trails (look-back slider)'],['Beyond 50 ly','show distant objects (pulsars etc.)']]},
+    {h:'Filters', items:[['Distance','slider limits range'],['P1/P2/P3','toggle by curation phase']]},
+    {h:'Notes', items:[['Colour','surface temperature (blackbody approx, not a calibrated SED)'],['Size','luminosity proxy (not a measured radius)'],
+      ['Frame','ICRS, origin = Sol'],['"All stars"','uncurated — no spin axis / heliosphere / motion / planets']]},
+  ]},
+};
+function renderHelp(){
+  const h=HELP[lang]; document.getElementById('helpTitle').textContent=h.title;
+  document.getElementById('helpBody').innerHTML=h.sections.map(s=>
+    `<h3>${s.h}</h3>`+s.items.map(([k,v])=>`<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')).join('');
+}
 function applyLang(){
   document.documentElement.lang=lang;
+  renderHelp();
   document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.dataset.i18n; if(STR[lang][k]!==undefined) el.textContent=STR[lang][k];});
   document.getElementById('toggleLang').textContent = lang==='ko'?'EN':'한';
   if(selected) renderInfo(selected);
@@ -1345,6 +1394,11 @@ btnAxes.onclick=()=>{showAxes=!showAxes;btnAxes.classList.toggle('on',showAxes);
 btnHelio.onclick=()=>{showHelio=!showHelio;btnHelio.classList.toggle('on',showHelio);};
 btnWind.onclick=()=>{showWind=!showWind;btnWind.classList.toggle('on',showWind);windGroup.visible=showWind;windLegendEl.style.display=showWind?'block':'none';};
 btnField.onclick=()=>{showField=!showField;btnField.classList.toggle('on',showField);applyFilter();ensureLabels();};
+const helpModal=document.getElementById('helpModal');
+document.getElementById('toggleHelp').onclick=()=>{renderHelp();helpModal.classList.add('show');};
+document.getElementById('helpClose').onclick=()=>helpModal.classList.remove('show');
+helpModal.onclick=e=>{ if(e.target===helpModal) helpModal.classList.remove('show'); };
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') helpModal.classList.remove('show'); });
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
   document.getElementById('distVal').textContent=distLimit+' ly'; applyFilter();};
