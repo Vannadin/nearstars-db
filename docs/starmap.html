@@ -413,7 +413,9 @@ function makeHeliosphere(grade, wind, noseScene, R0){
 /* interstellar-wind field: IDW over the LISM cloud vectors by angular distance on the
    sky (same model as the builder). Sample any ICRS direction → v_ISM (scene) + speed. */
 const LISM=DATA.lism;
-const _th0=(LISM?LISM.theta0_deg:20)*DEG;
+// grid presentation uses a SHARPER IDW than the heliosphere model (builder, 20°) so the
+// cloud regions read as distinct in colour + speed; grid-only (ismSample), no model impact.
+const _th0=12*DEG;
 // distinct colour per LISM cloud (so the grid distinguishes membership — the directions
 // barely differ, the local complex flows coherently, so colour carries the structure).
 const CLOUD_COL={LIC:'#4fd0ff',G:'#ff9e3d',Blue:'#5b7bff',Aql:'#52e07a',Eri:'#ff5a5a',
@@ -467,7 +469,7 @@ const _windClouds=new Set();
 (function buildWindField(){
   if(!LISM) return;
   // dense 3D lattice as ONE LineSegments (1 draw call) so density scales cheaply.
-  const STEP=8, MAX=50, L=3.6*U, HB=1.2*U;        // ly spacing, range, shaft & barb length
+  const STEP=8, MAX=50;                            // ly spacing, range
   const pos=[], col=[], up=new THREE.Vector3(0,1,0), perp=new THREE.Vector3();
   const push=(a,b,c)=>{ pos.push(a.x,a.y,a.z,b.x,b.y,b.z); col.push(c.r,c.g,c.b,c.r,c.g,c.b); };
   for(let gx=-MAX; gx<=MAX; gx+=STEP) for(let gy=-MAX; gy<=MAX; gy+=STEP) for(let gz=-MAX; gz<=MAX; gz+=STEP){
@@ -475,6 +477,7 @@ const _windClouds=new Set();
     const s=ismSample(gx,gy,gz); if(!s) continue;
     _windClouds.add(s.cloud);
     const c=new THREE.Color(CLOUD_COL[s.cloud]||'#6fd6e0');
+    const L=Math.max(1.0, s.speed*0.11)*U, HB=L*0.32;          // length ∝ ISM speed (14–60 km/s)
     const base=new THREE.Vector3(gx*U,gz*U,gy*U), tip=base.clone().addScaledVector(s.dir,L);
     perp.crossVectors(s.dir,up); if(perp.lengthSq()<1e-6) perp.set(1,0,0); perp.normalize();
     const back=tip.clone().addScaledVector(s.dir,-HB);
