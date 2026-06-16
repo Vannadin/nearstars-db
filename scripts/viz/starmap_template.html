@@ -836,9 +836,10 @@ const glowSprites=[];
     });
   }
 
-  // vertical drop line to the ICRS plane
+  // vertical drop line to the ICRS plane (skip for uncurated field stars — ~2000 stems
+  // would clutter; drop lines stay on the curated systems only)
   let stem=null;
-  if(!c.is_sol){
+  if(!c.is_sol && !c.is_field){
     const yEnd=-c.pos[2]*U; // scene-y of the plane below the cluster (local)
     const sg=new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,yEnd,0)]);
     const col=new THREE.Color(c.rep_rgb).lerp(new THREE.Color('#0b0e16'),0.5);
