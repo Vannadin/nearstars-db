@@ -607,8 +607,6 @@ const glowSprites=[];
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   glow.userData.cluster=c; node.add(glow); glowSprites.push(glow);
   const coreCol=new THREE.Color(c.rep_rgb).lerp(new THREE.Color(0xffffff),0.35);
-  // apparent brightness ∝ distance falloff (farther from Sol → dimmer)
-  c._appBright = c.is_sol ? 1 : Math.max(0.12, Math.min(1, Math.pow(8/Math.max(c.distance_ly,1), 0.85)));
   const core=new THREE.Sprite(new THREE.SpriteMaterial({map:CORE,color:coreCol,
     transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));
   node.add(core);
@@ -1481,12 +1479,13 @@ function updateScene(){
     const full=cl.sysScale*7, enter=cl.sysScale*45;
     const t=Math.max(0,Math.min(1,(dist-full)/(enter-full))); // 1 = far (map), 0 = inside system
     // glow: round sprite layers (core + halo + wide faint outer), constant
-    // screen size, fading with zoom (t) and with distance from Sol (_appBright).
-    const ab=cl.data._appBright;
-    const gsz=(cl.data.is_sol?1.2:cl.data.rep_radius*1.5)*0.03*dist;
-    cl.glow.material.opacity=t*ab*0.85;  cl.glow.scale.setScalar(gsz);
-    cl.core.material.opacity=t*ab;       cl.core.scale.setScalar(gsz*0.32);
-    cl.outer.material.opacity=t*ab*0.22; cl.outer.scale.setScalar(gsz*2.2);
+    // screen size, fading only with zoom (t). Brightness is uniform — no Sol-distance
+    // dimming (the camera isn't anchored at Sol in a free 3D view).
+    const ab=1;
+    const gsz=(cl.data.is_sol?1.2:cl.data.rep_radius*1.5)*0.01575*dist;   // tuned: tight + dim
+    cl.glow.material.opacity=t*ab*0.5;   cl.glow.scale.setScalar(gsz);
+    cl.core.material.opacity=t*ab*0.5;   cl.core.scale.setScalar(gsz*0.34);
+    cl.outer.material.opacity=t*ab*0.2;  cl.outer.scale.setScalar(gsz*1.7);
     const active=t<0.999; cl._active=active;
     // real bodies + orbits visible only when active
     cl.orbitsLines.forEach(l=>l.visible=active&&showOrbits);
