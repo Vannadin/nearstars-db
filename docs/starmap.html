@@ -477,7 +477,7 @@ const _windClouds=new Set();
     const s=ismSample(gx,gy,gz); if(!s) continue;
     _windClouds.add(s.cloud);
     const c=new THREE.Color(CLOUD_COL[s.cloud]||'#6fd6e0');
-    const L=Math.max(1.0, s.speed*0.11)*U, HB=L*0.32;          // length ∝ ISM speed (14–60 km/s)
+    const L=Math.max(0.8, (s.speed-12)*0.24)*U, HB=L*0.3;      // length emphasises ISM speed spread (∝ speed−12, exaggerated for visibility)
     const base=new THREE.Vector3(gx*U,gz*U,gy*U), tip=base.clone().addScaledVector(s.dir,L);
     perp.crossVectors(s.dir,up); if(perp.lengthSq()<1e-6) perp.set(1,0,0); perp.normalize();
     const back=tip.clone().addScaledVector(s.dir,-HB);
