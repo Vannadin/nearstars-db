@@ -1,0 +1,171 @@
+{
+  "system": "Barnard's star",
+  "method": "coplanar inclination -> true-mass (M = Msini/sin i), 1e4 yr WHFast+MEGNO, phase_seed=0",
+  "years": 10000.0,
+  "disrupt_e": 0.95,
+  "i_crit_deg": 20,
+  "note": "first failing inclination (highest i that does not survive); true masses must lie ABOVE this i to keep the system stable",
+  "grid": [
+    {
+      "incl_deg": 90,
+      "mass_factor": 1.0,
+      "max_mass_mearth": 0.3350000000000001,
+      "sys_e_max": 0.10658311607012454,
+      "per_body_e_max": {
+        "Barnard d": 0.09967909803630333,
+        "Barnard b": 0.07833408119072152,
+        "Barnard c": 0.08179183732788486,
+        "Barnard e": 0.10658311607012454
+      },
+      "megno": 248.4381419055702,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 60,
+      "mass_factor": 1.1547005383792517,
+      "max_mass_mearth": 0.38682468035704937,
+      "sys_e_max": 0.10556330902790283,
+      "per_body_e_max": {
+        "Barnard d": 0.10079193389548843,
+        "Barnard b": 0.07736496962111389,
+        "Barnard c": 0.08026014661115577,
+        "Barnard e": 0.10556330902790283
+      },
+      "megno": 348.7940983000597,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 40,
+      "mass_factor": 1.5557238268604126,
+      "max_mass_mearth": 0.5211674819982383,
+      "sys_e_max": 0.10652222928135215,
+      "per_body_e_max": {
+        "Barnard d": 0.0971218432613297,
+        "Barnard b": 0.08752995271626159,
+        "Barnard c": 0.07645997380296657,
+        "Barnard e": 0.10652222928135215
+      },
+      "megno": 977.1661943844204,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 30,
+      "mass_factor": 2.0000000000000004,
+      "max_mass_mearth": 0.6700000000000003,
+      "sys_e_max": 0.1053357718849117,
+      "per_body_e_max": {
+        "Barnard d": 0.1053357718849117,
+        "Barnard b": 0.09298523073318034,
+        "Barnard c": 0.08037697324844935,
+        "Barnard e": 0.10428964570536958
+      },
+      "megno": 3569.628256816479,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 20,
+      "mass_factor": 2.9238044001630876,
+      "max_mass_mearth": 0.9794744740546346,
+      "sys_e_max": 0.955694736383117,
+      "per_body_e_max": {
+        "Barnard d": 0.8461612164084787,
+        "Barnard b": 0.955694736383117,
+        "Barnard c": 0.4467069646744684,
+        "Barnard e": 0.4130848299812516
+      },
+      "megno": NaN,
+      "survives": false,
+      "disrupt_t": 8475.0,
+      "disrupt_body": "Barnard b"
+    },
+    {
+      "incl_deg": 15,
+      "mass_factor": 3.8637033051562737,
+      "max_mass_mearth": 1.2943406072273518,
+      "sys_e_max": 0.9999735294495531,
+      "per_body_e_max": {
+        "Barnard d": 0.9999735294495531,
+        "Barnard b": 0.49748932118508216,
+        "Barnard c": 0.36046473362134407,
+        "Barnard e": 0.551883279613883
+      },
+      "megno": NaN,
+      "survives": false,
+      "disrupt_t": 7775.0,
+      "disrupt_body": "Barnard d"
+    },
+    {
+      "incl_deg": 12,
+      "mass_factor": 4.809734344744131,
+      "max_mass_mearth": 1.611261005489284,
+      "sys_e_max": 384.7836866634338,
+      "per_body_e_max": {
+        "Barnard d": 384.7836866634338,
+        "Barnard b": 0.47894452971110035,
+        "Barnard c": 0.6220360257826569,
+        "Barnard e": 0.4054299404242646
+      },
+      "megno": NaN,
+      "survives": false,
+      "disrupt_t": 1200.0,
+      "disrupt_body": "Barnard d"
+    },
+    {
+      "incl_deg": 10,
+      "mass_factor": 5.758770483143634,
+      "max_mass_mearth": 1.9291881118531178,
+      "sys_e_max": 0.9704868778458347,
+      "per_body_e_max": {
+        "Barnard d": 0.6456072277321753,
+        "Barnard b": 0.9704868778458347,
+        "Barnard c": 0.3412307687565252,
+        "Barnard e": 0.21503623563561702
+      },
+      "megno": NaN,
+      "survives": false,
+      "disrupt_t": 625.0,
+      "disrupt_body": "Barnard b"
+    },
+    {
+      "incl_deg": 8,
+      "mass_factor": 7.185296534327719,
+      "max_mass_mearth": 2.407074338999786,
+      "sys_e_max": 2.6148383327161375,
+      "per_body_e_max": {
+        "Barnard d": 0.5494377893182691,
+        "Barnard b": 2.6148383327161375,
+        "Barnard c": 0.7932498115016113,
+        "Barnard e": 0.18469964360704924
+      },
+      "megno": NaN,
+      "survives": false,
+      "disrupt_t": 1350.0,
+      "disrupt_body": "Barnard b"
+    },
+    {
+      "incl_deg": 6,
+      "mass_factor": 9.566772233505626,
+      "max_mass_mearth": 3.2048686982243852,
+      "sys_e_max": 38.28846696446985,
+      "per_body_e_max": {
+        "Barnard d": 38.28846696446985,
+        "Barnard b": 0.028818811113338345,
+        "Barnard c": 0.0837904471930329,
+        "Barnard e": 0.04246103750333195
+      },
+      "megno": NaN,
+      "survives": false,
+      "disrupt_t": 50.0,
+      "disrupt_body": "Barnard d"
+    }
+  ],
+  "elapsed_sec": 480.22935819625854
+}

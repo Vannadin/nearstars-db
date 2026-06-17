@@ -198,6 +198,54 @@ Pandora could actually survive here drove a fine-tuning scan:
   with `--acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16` (moon: `--integrator
   trace`; planet boundaries: `--integrator ias15`).
 
+## Barnard's Star — Msini → true-mass dynamical bound (coplanar inclination scan)
+
+All four Barnard planets (d, b, c, e; 0.0188–0.0381 AU, sub-Earth) are RV
+detections, so the DB masses are minima M·sin i. The true mass is M = M·sin i / sin i;
+assuming the system is **coplanar** (one shared inclination i), lowering i scales every
+planet's mass by 1/sin(i), strengthening the mutual perturbations. Walking i down finds
+the inclination — equivalently the true-mass multiplier — at which the packed chain can
+no longer survive the 10⁴-yr window. (`scripts/barnard_inclination_scan.py`,
+phase_seed=0.)
+
+| i (coplanar) | mass ×1/sin i | heaviest planet | e_max | TRACE outcome |
+|---|---|---|---|---|
+| 90° (nominal) | ×1.00 | 0.34 M⊕ | 0.11 | survives |
+| 30° | ×2.00 | 0.67 M⊕ | 0.11 | survives |
+| 20° | ×2.92 | 0.98 M⊕ | 0.11 | survives |
+| **19° (boundary)** | **≈×3.1** | **≈1.0 M⊕** | — | **threshold** |
+| 18° | ×3.24 | 1.08 M⊕ | 1.06 | **disrupts (b @ 5775 yr)** |
+| ≤15° | ≥×3.9 | ≥1.3 M⊕ | →1 | disrupts faster |
+
+**Result: i_crit ≈ 19° (bracket 18–20°).** The system is stable for true masses up to
+≈3× the minimum (heaviest planet ≲ 1 M⊕); only a near-face-on geometry destabilizes it.
+For randomly oriented orbits the prior probability of i < 19° is 1 − cos 19° ≈ **5.5 %**,
+so dynamics exclude only ~5 % of orientations — a real but weak bound that **does not
+exclude the nominal (edge-on) system**. The nominal verdict stands: chaotic
+(Lyapunov ≈ 81 yr) but Hill-stable.
+
+**Literature cross-check.** Both discovery papers ran their own stability analysis
+(SPOCK + REBOUND, 10⁹ orbits of the 2.34 d planet) and reached the same ×3 ceiling:
+González Hernández et al. 2024 state the m = 3·M·sin i case "would mean an orbital
+inclination of i = 19.5°… in both cases [1× and 3×] the result is the same," and Basant
+et al. 2025 find the four-planet system "stable for planet masses up to three times the
+[Table-3] values… inclinations ranging from 20 to 90 degrees." Our i_crit ≈ 19° / ×3 from
+a 10⁴-yr WHFast→TRACE screen reproduces their ~19.5–20° / ×3 from a 6-Myr ML-classifier
+ensemble — an independent cross-validation in the spirit of the TRAPPIST-1 vs Agol+2021
+check. Caveat: Basant warns stability is strongly eccentricity-sensitive (< 80 % stable
+if any planet has e > 0.02); this scan adopts the DB's β-prior eccentricities
+(0.03–0.08), so the exact boundary is conditional on that choice — the papers favor
+e < 0.02.
+
+**Methodology note — WHFast artifact caught by TRACE.** The WHFast first-pass screen
+reported i=20° disrupting (Barnard b ejecting @ 8475 yr, e_max 0.96). TRACE re-verifies
+i=20° as *stable* (e_max 0.11): the WHFast "ejection" was a spurious fixed-step
+close-encounter artifact (the AU Mic failure mode). The boundary above is the TRACE
+result. This is exactly why the suite's policy re-verifies every WHFast-flagged case.
+Caveat: single phase realization (seed=0); a multi-seed survival-fraction refinement
+near i_crit would sharpen the ~1° bracket, which sits at the precision floor of a
+single-seed chaotic scan.
+
 ## Hypothetical moons — demonstration
 
 The sim also resolves moons (extra bodies via `hypotheticals/<system>.json`).
@@ -256,6 +304,9 @@ mass), which drive Mercury's long-term chaotic diffusion.
 
 # alpha Cen — full boundary re-derivation (inner/outer edge, e/i bounds, families)
 .venv/bin/python phase3/stability-sim/scripts/acen_boundary_scan.py
+
+# Barnard — Msini->true-mass coplanar inclination boundary (TRACE re-verify the WHFast screen)
+.venv/bin/python phase3/stability-sim/scripts/barnard_inclination_scan.py --integrator trace
 
 # With hypothetical moons / extra planets
 .venv/bin/python phase3/stability-sim/scripts/run.py \

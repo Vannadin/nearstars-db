@@ -1,0 +1,92 @@
+{
+  "system": "Barnard's star",
+  "method": "coplanar inclination -> true-mass (M = Msini/sin i), 10000 yr trace, phase_seed=0",
+  "integrator": "trace",
+  "years": 10000.0,
+  "disrupt_e": 0.95,
+  "i_crit_deg": null,
+  "note": "first failing inclination (highest i that does not survive); true masses must lie ABOVE this i to keep the system stable",
+  "grid": [
+    {
+      "incl_deg": 30.0,
+      "mass_factor": 2.0000000000000004,
+      "max_mass_mearth": 0.6700000000000003,
+      "sys_e_max": 0.10483050275802805,
+      "per_body_e_max": {
+        "Barnard d": 0.09858793030223466,
+        "Barnard b": 0.08588860599159291,
+        "Barnard c": 0.07863436557382937,
+        "Barnard e": 0.10483050275802805
+      },
+      "megno": NaN,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 27.0,
+      "mass_factor": 2.2026892645852665,
+      "max_mass_mearth": 0.7379009036360644,
+      "sys_e_max": 0.10532113497447869,
+      "per_body_e_max": {
+        "Barnard d": 0.10320804729115289,
+        "Barnard b": 0.08743247975883077,
+        "Barnard c": 0.08348430219775899,
+        "Barnard e": 0.10532113497447869
+      },
+      "megno": NaN,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 25.0,
+      "mass_factor": 2.3662015831524985,
+      "max_mass_mearth": 0.792677530356087,
+      "sys_e_max": 0.10629400452361713,
+      "per_body_e_max": {
+        "Barnard d": 0.10056026844012435,
+        "Barnard b": 0.08133683267377256,
+        "Barnard c": 0.08097041764650202,
+        "Barnard e": 0.10629400452361713
+      },
+      "megno": NaN,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 22.0,
+      "mass_factor": 2.6694671625540143,
+      "max_mass_mearth": 0.8942714994555949,
+      "sys_e_max": 0.10755066949502046,
+      "per_body_e_max": {
+        "Barnard d": 0.10110583934934081,
+        "Barnard b": 0.07820600759761563,
+        "Barnard c": 0.08236797047286579,
+        "Barnard e": 0.10755066949502046
+      },
+      "megno": NaN,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    },
+    {
+      "incl_deg": 20.0,
+      "mass_factor": 2.9238044001630876,
+      "max_mass_mearth": 0.9794744740546346,
+      "sys_e_max": 0.1082683487650373,
+      "per_body_e_max": {
+        "Barnard d": 0.10171130150472982,
+        "Barnard b": 0.0797068442930393,
+        "Barnard c": 0.07755597850657504,
+        "Barnard e": 0.1082683487650373
+      },
+      "megno": NaN,
+      "survives": true,
+      "disrupt_t": null,
+      "disrupt_body": null
+    }
+  ],
+  "elapsed_sec": 263.44166016578674
+}
