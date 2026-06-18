@@ -98,3 +98,26 @@ Decision (user): show BOTH — a stable confirmed-only subset and the full candi
 - BACKLOG (user-requested): search candidate element space for a dynamically STABLE
   full-set configuration, like the α Cen A b inclination/a/e sweep — would replace the
   confirmed-subset 'confirmed' variant with a stabilised full 4-planet 'adopted' one.
+
+## v12 — stability expand-modal plan view + guided tour (2026-06-18)
+Expand-modal (⤢) is now two panes: **top-down orbit plan** (left) + the time-series
+charts (right) — the live analogue of the matplotlib orbit/eccentricity figure.
+- `paintOrbitTopDown` draws each planet's analytic ellipse from interpolated (a,e,ω) at
+  the current epoch (host at focus); animates with the slider. `paintStab` gained a
+  time-window (x-zoom) + per-planet isolation filter.
+- Controls: modal play/pause + slider (synced to inline); default speed halved
+  (0.125/frame). RIGHT graph zoom = time axis (＋/－ & wheel, anchored on cursor);
+  **click a planet chip → isolate it, y-axes auto-rescale to it** (the per-planet
+  y-zoom the user asked for). LEFT plan = click a legend row → fit to that orbit
+  (inner orbits become visible). Focus (`stabOrbitFocus`) is shared by both panes.
+- **Star picking** rewritten: screen-space nearest glow within ~20 px (like pickBody),
+  not a raycast of the now-small glow quad — small/distant stars are clickable again.
+- `build_starmap` excludes `*_i<NN>_timeseries.csv` mass-variant runs from the
+  body-keyed stability loader (else `barnards_star_i60` clobbers the canonical run).
+- **Guided tour** (coachmarks): `TOUR[]` of bilingual steps; `tourShow` runs each
+  step's `before()` (auto-fly to Barnard → open stability → open expand-modal) then
+  `tourRender()` paints text + spotlight (render split out so the in-card EN/한 button
+  re-renders without replaying actions). First-visit auto-start (localStorage
+  `ns_tour_done`) + replay from ? help. Overlay z60 blocks scene during the tour.
+- node --check on the extracted module script is the syntax gate (one bad edit blanks
+  the whole viewer). matplotlib + pyyaml added to `.venv` for plot_orbits.py / build.

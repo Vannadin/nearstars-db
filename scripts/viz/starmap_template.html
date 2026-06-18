@@ -133,6 +133,25 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #helpModal .row .k{color:var(--fg1);font-weight:600;flex:0 0 92px}
 #helpModal .row .v{color:#aeb7c8}
 #helpModal .mx{cursor:pointer;color:var(--fg4);font-size:24px;line-height:1}#helpModal .mx:hover{color:var(--fg1)}
+/* guided tour (coachmarks) */
+#tourOv{position:fixed;inset:0;z-index:60;display:none}
+#tourOv.show{display:block}
+#tourSpot{position:absolute;border-radius:10px;border:1.5px solid var(--accent-glow);box-shadow:0 0 0 9999px rgba(4,6,11,.72);transition:left .35s ease,top .35s ease,width .35s ease,height .35s ease;pointer-events:none}
+#tourSpot.hide{display:none}
+#tourCard{position:absolute;width:min(330px,86vw);background:var(--pop);border:1px solid var(--bd1);border-radius:12px;padding:14px 17px;box-shadow:0 18px 50px rgba(0,0,0,.6);font-size:13px;line-height:1.55;color:var(--fg2);transition:left .3s ease,top .3s ease}
+#tourCard h4{margin:3px 0 6px;font-size:15px;color:var(--fg1)}
+#tourStep{font-size:10.5px;letter-spacing:.09em;color:var(--fg4);text-transform:uppercase}
+#tourCard .thead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+#tourLang{font-size:11px;background:var(--surf1);border:1px solid var(--bd1);border-radius:6px;padding:2px 9px;cursor:pointer;color:var(--fg3)}
+#tourLang:hover{border-color:var(--accent-glow);color:var(--fg1)}
+#tourCard .nav{display:flex;align-items:center;justify-content:space-between;margin-top:14px;gap:10px}
+#tourCard .nav>div{display:flex;gap:8px}
+#tourCard .nav button{font-size:12.5px;background:var(--surf1);border:1px solid var(--bd1);border-radius:7px;padding:5px 12px;cursor:pointer;color:var(--fg2)}
+#tourCard .nav button:hover{border-color:var(--accent-glow)}
+#tourNext{background:var(--accent)!important;border-color:transparent!important;color:#0a0d15!important;font-weight:600}
+#tourSkip{background:none!important;border:none!important;color:var(--fg4)!important;padding:5px 4px!important}
+#tourReplay{font-size:12px;background:var(--surf1);border:1px solid var(--bd1);border-radius:7px;padding:3px 10px;cursor:pointer;color:var(--fg2)}
+#tourReplay:hover{border-color:var(--accent-glow)}
 #stabModalBody{flex:1;display:flex;gap:14px;min-height:0}
 #stabModalBody canvas{flex:1;min-width:0;min-height:0}
 #stabOrbitCanvas{background:#06070a;border:1px solid var(--bd1);border-radius:8px}
@@ -259,8 +278,18 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 
 <div id="helpModal">
   <div class="card">
-    <div class="mh"><span id="helpTitle" style="font-size:15px;color:var(--fg1);font-weight:600"></span><span class="mx" id="helpClose">×</span></div>
+    <div class="mh"><span id="helpTitle" style="font-size:15px;color:var(--fg1);font-weight:600"></span><span style="display:flex;gap:10px;align-items:center"><button id="tourReplay"></button><span class="mx" id="helpClose">×</span></span></div>
     <div id="helpBody"></div>
+  </div>
+</div>
+
+<div id="tourOv">
+  <div id="tourSpot"></div>
+  <div id="tourCard">
+    <div class="thead"><div id="tourStep"></div><button id="tourLang">EN</button></div>
+    <h4 id="tourTitle"></h4>
+    <div id="tourBody"></div>
+    <div class="nav"><button id="tourSkip"></button><div><button id="tourPrev"></button><button id="tourNext"></button></div></div>
   </div>
 </div>
 
@@ -348,6 +377,7 @@ const HELP={
 };
 function renderHelp(){
   const h=HELP[lang]; document.getElementById('helpTitle').textContent=h.title;
+  const tr=document.getElementById('tourReplay'); if(tr) tr.textContent=lang==='ko'?'▶ 둘러보기':'▶ Tour';
   document.getElementById('helpBody').innerHTML=h.sections.map(s=>
     `<h3>${s.h}</h3>`+s.items.map(([k,v])=>`<div class="row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')).join('');
 }
@@ -1534,6 +1564,85 @@ const helpModal=document.getElementById('helpModal');
 document.getElementById('toggleHelp').onclick=()=>{renderHelp();helpModal.classList.add('show');};
 document.getElementById('helpClose').onclick=()=>helpModal.classList.remove('show');
 helpModal.onclick=e=>{ if(e.target===helpModal) helpModal.classList.remove('show'); };
+
+/* ── guided tour (coachmarks) — spotlights a control, explains it, auto-drives
+   the camera/panels through a worked example, bilingual. First visit auto-runs;
+   replay from the ? help modal. ─────────────────────────────────────────────── */
+const tourFind=re=>clusters.find(c=>re.test(c.data.label||'')&&c.stabPlanets&&c.stabPlanets.length)
+                   ||clusters.find(c=>re.test(c.data.label||''));
+const TOUR=[
+  {center:true, ko:{t:'NearStars 3D 지도',b:'태양을 원점으로 한, 가까운 항성계들의 3D 지도예요. 잠깐 둘러볼까요?'},
+                en:{t:'NearStars 3D map',b:'A 3D map of nearby star systems, with the Sun at the origin. Quick tour?'}},
+  {center:true, ko:{t:'화면 조작',b:'드래그 = 회전, 스크롤 = 줌, 우클릭 드래그 = 이동. 별을 향해 그냥 줌인하면 그 항성계로 들어가요.'},
+                en:{t:'Controls',b:'Drag = rotate, scroll = zoom, right-drag = pan. Zoom straight into a star to enter its system.'}},
+  {sel:'#topbar', ko:{t:'레이어 토글',b:'궤도·자전축·항성권·성간풍·모든 별·공간 운동·50광년 밖을 켜고 끌 수 있어요.'},
+                  en:{t:'Layer toggles',b:'Toggle orbits, spin axes, heliosphere, ISM wind, all stars, space motion, and beyond-50 ly.'}},
+  {center:true, before:()=>{const c=tourFind(/barnard/i); if(c) flyTo(c.data);},
+    ko:{t:'별 선택',b:'별을 클릭하면 정보 카드가 떠요. 예시로 바너드 별로 날아갈게요…'},
+    en:{t:'Select a star',b:'Click a star to open its info card. Flying to Barnard’s Star as an example…'}},
+  {center:true, before:()=>{const b=document.getElementById('toggleOrbits'); if(b&&!b.classList.contains('on')) b.click();},
+    ko:{t:'시스템 뷰',b:'별로 줌인하면 실제 크기의 행성과 궤도가 나타나요. 궤도 레이어를 켰어요.'},
+    en:{t:'System view',b:'Zooming into a star reveals its true-size planets and orbits. Orbits layer is now on.'}},
+  {sel:'#stabPanel', before:()=>{const c=tourFind(/barnard/i); if(c) openStability(c.data);},
+    ko:{t:'안정성 시뮬',b:'다행성계는 N체 적분으로 궤도 안정성을 검증해요. 패널을 열었어요 — 재생/슬라이더로 시간을 움직여요.'},
+    en:{t:'Stability sim',b:'Multi-planet systems are checked with N-body integration. Panel opened — play/scrub to move through time.'}},
+  {sel:'#stabExpand', ko:{t:'확대 보기 열기',b:'⤢ 버튼으로 크게 볼 수 있어요. 눌러서 확대 모달을 열게요.'},
+                      en:{t:'Expand',b:'The ⤢ button opens a larger view. Opening the expand modal…'}},
+  {center:true, before:()=>{ if(typeof openStabModal==='function') openStabModal(); },
+    ko:{t:'확대 모달',b:'왼쪽 = top-down 궤도(행성 클릭 → 그 궤도로 줌), 오른쪽 = 시간축 그래프(행성 칩 클릭 → 그 행성만 Y축 확대, −/+·휠 = 시간축 줌).'},
+    en:{t:'Expand modal',b:'Left = top-down orbits (click a planet → zoom to it). Right = time-series (click a chip → isolate that planet; ＋/－ & wheel = time zoom).'}},
+  {sel:'#toggleHelp', before:()=>{ if(stabModalOpen) closeStabModal(); },
+    ko:{t:'도움말 · 언어',b:'? 로 사용법을 보고, EN/한 으로 언어를 바꿔요. 이 투어도 ? 에서 다시 볼 수 있어요.'},
+    en:{t:'Help · language',b:'? shows the reference; EN/한 switches language. You can replay this tour from ?.'}},
+  {center:true, ko:{t:'끝! 🌌',b:'이제 직접 둘러보세요. 언제든 ? → 둘러보기로 다시 볼 수 있어요.'},
+                en:{t:'Done! 🌌',b:'Explore on your own now. Replay anytime from ? → Tour.'}},
+];
+const tourOv=document.getElementById('tourOv'), tourSpot=document.getElementById('tourSpot'), tourCard=document.getElementById('tourCard');
+const tourNextBtn=document.getElementById('tourNext'), tourPrevBtn=document.getElementById('tourPrev'), tourSkipBtn=document.getElementById('tourSkip'), tourLangBtn=document.getElementById('tourLang');
+let tourI=-1;
+function placeTour(s){
+  const el=(s.sel&&!s.center)?document.querySelector(s.sel):null;
+  const r=el?el.getBoundingClientRect():null;
+  if(r&&r.width&&r.height){
+    const pad=8; tourSpot.classList.remove('hide');
+    tourSpot.style.left=(r.left-pad)+'px'; tourSpot.style.top=(r.top-pad)+'px';
+    tourSpot.style.width=(r.width+2*pad)+'px'; tourSpot.style.height=(r.height+2*pad)+'px';
+    const cw=tourCard.offsetWidth, ch=tourCard.offsetHeight;
+    tourCard.style.left=Math.min(Math.max(8,r.left),innerWidth-cw-8)+'px';
+    tourCard.style.top=((r.bottom+12+ch<innerHeight)?r.bottom+12:Math.max(8,r.top-12-ch))+'px';
+  } else {
+    tourSpot.classList.add('hide');
+    tourCard.style.left=Math.round((innerWidth-tourCard.offsetWidth)/2)+'px';
+    tourCard.style.top=Math.round(innerHeight-tourCard.offsetHeight-44)+'px';
+  }
+}
+function tourRender(){   // text + position for the current step (no side effects → safe on language switch)
+  const s=TOUR[tourI]; if(!s) return;
+  const L=s[lang]||s.ko;
+  document.getElementById('tourStep').textContent=(lang==='ko'?'단계':'Step')+` ${tourI+1} / ${TOUR.length}`;
+  document.getElementById('tourTitle').textContent=L.t;
+  document.getElementById('tourBody').textContent=L.b;
+  tourPrevBtn.style.visibility=tourI?'visible':'hidden';
+  tourNextBtn.textContent = tourI===TOUR.length-1 ? (lang==='ko'?'완료':'Done') : (lang==='ko'?'다음 ›':'Next ›');
+  tourSkipBtn.textContent = lang==='ko'?'건너뛰기':'Skip';
+  tourLangBtn.textContent = lang==='ko'?'EN':'한';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>placeTour(s)));   // let any opened panel lay out first
+}
+function tourShow(i){
+  tourI=i; const s=TOUR[i]; if(!s) return tourEnd();
+  if(s.before){ try{ s.before(); }catch(e){} }
+  tourRender();
+}
+function tourStart(){ tourOv.classList.add('show'); tourShow(0); }
+function tourEnd(){ tourOv.classList.remove('show'); try{ localStorage.setItem('ns_tour_done','1'); }catch(e){} }
+tourNextBtn.onclick=()=>{ if(tourI>=TOUR.length-1) return tourEnd(); tourShow(tourI+1); };
+tourPrevBtn.onclick=()=>{ if(tourI>0) tourShow(tourI-1); };
+tourSkipBtn.onclick=tourEnd;
+tourLangBtn.onclick=()=>{ lang=lang==='ko'?'en':'ko'; applyLang(); tourRender(); };   // switch language mid-tour without replaying actions
+document.getElementById('tourReplay').onclick=()=>{ helpModal.classList.remove('show'); tourStart(); };
+window.addEventListener('resize',()=>{ if(tourOv.classList.contains('show')&&TOUR[tourI]) placeTour(TOUR[tourI]); });
+window.addEventListener('keydown',e=>{ if(e.key==='Escape'&&tourOv.classList.contains('show')) tourEnd(); });
+try{ if(!localStorage.getItem('ns_tour_done')) setTimeout(tourStart,900); }catch(e){}
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') helpModal.classList.remove('show'); });
 btnFar.onclick=()=>{showFar=!showFar;btnFar.classList.toggle('on',showFar);
   const s=document.getElementById('distSlider'); s.value=showFar?800:50; distLimit=+s.value;
