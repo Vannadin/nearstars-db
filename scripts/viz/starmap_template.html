@@ -133,7 +133,14 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 #helpModal .row .k{color:var(--fg1);font-weight:600;flex:0 0 92px}
 #helpModal .row .v{color:#aeb7c8}
 #helpModal .mx{cursor:pointer;color:var(--fg4);font-size:24px;line-height:1}#helpModal .mx:hover{color:var(--fg1)}
-#stabBigCanvas{flex:1;width:100%;min-height:0}
+#stabModalBody{flex:1;display:flex;gap:14px;min-height:0}
+#stabModalBody canvas{flex:1;min-width:0;min-height:0}
+#stabOrbitCanvas{background:#06070a;border:1px solid var(--bd1);border-radius:8px}
+#stabModalCtl{display:flex;align-items:center;gap:11px;margin-top:11px}
+#stabModalCtl button{font-size:13px;background:var(--surf1);border:1px solid var(--bd1);border-radius:6px;padding:4px 10px;cursor:pointer;line-height:1;color:var(--fg2)}
+#stabModalCtl button:hover{border-color:var(--accent-glow)}
+#stabModalCtl .zl{font-size:13px;color:var(--fg4);margin-left:6px}
+#stabSlider2{flex:1;accent-color:var(--accent);cursor:pointer}
 .hidden{display:none!important}
 #zoomctl{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:16;display:flex;flex-direction:column;
   align-items:center;gap:7px;background:var(--pop);border:1px solid var(--bd1);border-radius:999px;
@@ -169,6 +176,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   #info.show ~ #zoomctl{right:10px;top:auto;bottom:calc(64% + 14px);transform:none}
   /* expand-modal: use almost the full screen on a phone */
   #stabModal .card{width:94vw;height:88vh;padding:12px 12px 14px}
+  #stabModalBody{flex-direction:column}   /* stack top-down orbits over charts on narrow screens */
 }
 @keyframes sheet{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 </style>
@@ -235,7 +243,17 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
 <div id="stabModal">
   <div class="card">
     <div class="mh"><span id="stabModalTitle"></span><span class="mx" id="stabModalClose">×</span></div>
-    <canvas id="stabBigCanvas"></canvas>
+    <div id="stabModalBody">
+      <canvas id="stabOrbitCanvas"></canvas>
+      <canvas id="stabBigCanvas"></canvas>
+    </div>
+    <div id="stabModalCtl">
+      <button id="stabPlay2" title="play / pause">⏸</button>
+      <input type="range" id="stabSlider2" min="0" max="100" value="0" step="any">
+      <span class="zl">🔍</span>
+      <button id="stabZoomOut" title="zoom out">−</button>
+      <button id="stabZoomIn" title="zoom in">+</button>
+    </div>
   </div>
 </div>
 
@@ -947,11 +965,22 @@ function rebaseToTarget(){
 
 /* ── interaction: click = info, fly here ──────────────────────────────── */
 const ray=new THREE.Raycaster(); const mouse=new THREE.Vector2(); let selected=null, selBody=null;
+const _pickV=new THREE.Vector3();
+// screen-space nearest-glow pick: forgiving pixel radius, independent of the
+// (now small) glow-quad size — like pickBody. Raycasting the sprite quad made
+// tightly-glowing/distant stars near-impossible to click.
+const PICK_PX=20;
 function pick(e){
-  mouse.x=(e.clientX/innerWidth)*2-1; mouse.y=-(e.clientY/innerHeight)*2+1;
-  ray.setFromCamera(mouse,camera);
-  const hits=ray.intersectObjects(glowSprites.filter(g=>g.visible && g.material.opacity>0.05),false);
-  return hits.length?hits[0].object.userData.cluster:null;
+  let best=null, bd=PICK_PX*PICK_PX;
+  for(const g of glowSprites){
+    if(!g.visible || g.material.opacity<=0.05) continue;
+    g.getWorldPosition(_pickV); _pickV.project(camera);
+    if(_pickV.z>1) continue;                                   // behind the camera
+    const sx=(_pickV.x*0.5+0.5)*innerWidth, sy=(-_pickV.y*0.5+0.5)*innerHeight;
+    const dx=sx-e.clientX, dy=sy-e.clientY, d=dx*dx+dy*dy;
+    if(d<bd){ bd=d; best=g.userData.cluster; }
+  }
+  return best;
 }
 renderer.domElement.addEventListener('pointermove',e=>{ hoverCl=pick(e); renderer.domElement.style.cursor=hoverCl?'pointer':'default'; });
 let hoverCl=null;
@@ -1093,7 +1122,12 @@ const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getEl
       stabNoteEl=document.getElementById('stabNote'),
       stabChart=document.getElementById('stabChart'), stabChartBtn=document.getElementById('stabChartBtn'),
       stabExpandBtn=document.getElementById('stabExpand'), stabModal=document.getElementById('stabModal'),
-      stabBigCanvas=document.getElementById('stabBigCanvas'), stabModalTitle=document.getElementById('stabModalTitle');
+      stabBigCanvas=document.getElementById('stabBigCanvas'), stabModalTitle=document.getElementById('stabModalTitle'),
+      stabOrbitCanvas=document.getElementById('stabOrbitCanvas'),
+      stabPlay2=document.getElementById('stabPlay2'), stabSlider2=document.getElementById('stabSlider2'),
+      stabZoomIn=document.getElementById('stabZoomIn'), stabZoomOut=document.getElementById('stabZoomOut');
+let stabOrbitZoom=1, stabChartZoom=1, stabChartCenter=0.5, _stabTmax=1;
+let stabOrbitFocus=null, _stabOrbitLegend=[], _stabChartLegend=[];   // legend-click focus (orbit panel + right chart)
 let stabShowChart=false, stabModalOpen=false;
 let _stabLastIdx=-1, _stabLastVar=-1, _stabForce=true;   // skip per-frame recompute when paused & unchanged
 const _stabMark=()=>{ _stabForce=true; };                // force one recompute (open / variant / lang change)
@@ -1115,6 +1149,7 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
   const lens=stabRecs.map(recData).filter(Boolean).map(d=>d.length);
   stabN=lens.length?Math.max(...lens):1;
   stabSlider.max=stabN-1; stabSlider.step='any'; if(stabIdx>stabN-1) stabIdx=stabN-1;
+  stabSlider2.max=stabN-1; stabSlider2.step='any';
   let ext=1; stabRecs.forEach(r=>{ const d=recData(r); if(d) d.forEach(s=>{ext=Math.max(ext,s[1]*(1+s[2]));}); });
   stabRecs._ext=ext;
   _stabMark();   // open / variant / lang change → force one recompute even if paused
@@ -1161,17 +1196,45 @@ function closeStability(){
 }
 document.getElementById('infoStab').onclick=()=>{ if(selected) openStability(selected); };
 document.getElementById('stabClose').onclick=closeStability;
-stabPlayBtn.onclick=()=>{ stabPlaying=!stabPlaying; stabPlayBtn.textContent=stabPlaying?'⏸':'▶'; };
-stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; stabPlaying=false; stabPlayBtn.textContent='▶'; };
+// play/pause is shared between the inline panel and the expand-modal; keep both glyphs in sync
+function setStabPlaying(v){ stabPlaying=v; const gl=v?'⏸':'▶'; stabPlayBtn.textContent=gl; stabPlay2.textContent=gl; }
+stabPlayBtn.onclick=()=>setStabPlaying(!stabPlaying);
+stabPlay2.onclick=()=>setStabPlaying(!stabPlaying);
+stabSlider.oninput=()=>{ stabIdx=+stabSlider.value; setStabPlaying(false); };
+stabSlider2.oninput=()=>{ stabIdx=+stabSlider2.value; setStabPlaying(false); };
+// zoom: the ＋/－ buttons + wheel on the chart zoom the time axis (anchored on the
+// playback cursor); wheel on the orbit panel zooms the plan view.
+// zoom acts on the RIGHT graph (time axis), anchored on the playback cursor —
+// via the ＋/－ buttons or the wheel over the chart. The left orbit panel is not
+// wheel-zoomed; click a legend row there to fit the view to that planet's orbit.
+function chartZoom(f){ stabChartCenter=_stabTmax?Math.min(1,Math.max(0,stabT/_stabTmax)):0.5;
+  stabChartZoom=Math.min(40,Math.max(1,stabChartZoom*f)); if(stabModalOpen) drawBigChart(); }
+stabZoomIn.onclick=()=>chartZoom(1.5);
+stabZoomOut.onclick=()=>chartZoom(1/1.5);
+stabBigCanvas.addEventListener('wheel',e=>{ e.preventDefault(); chartZoom(e.deltaY<0?1.15:1/1.15); },{passive:false});
+// click a planet chip on the right graph to isolate it (y-axes rescale to it); "all" or the active chip = restore
+stabBigCanvas.style.cursor='pointer';
+stabBigCanvas.addEventListener('click',e=>{
+  const hit=_stabChartLegend.find(L=>e.offsetX>=L.x0&&e.offsetX<=L.x1&&e.offsetY>=L.y0&&e.offsetY<=L.y1);
+  if(!hit) return;
+  stabOrbitFocus = (hit.name==='*ALL*'||hit.name===stabOrbitFocus) ? null : hit.name;
+  if(stabModalOpen) drawBigChart(); });
+// click a legend row → fit the view to that planet's orbit; click it again or empty space → full system
+stabOrbitCanvas.style.cursor='pointer';
+stabOrbitCanvas.addEventListener('click',e=>{
+  const hit=_stabOrbitLegend.find(L=>e.offsetX>=L.x0&&e.offsetX<=L.x1&&e.offsetY>=L.y0&&e.offsetY<=L.y1);
+  stabOrbitFocus = hit ? (hit.name===stabOrbitFocus?null:hit.name) : null; stabOrbitZoom=1;
+  if(stabModalOpen) drawBigChart(); });
 stabVarBtn.onclick=()=>{ if(stabVarIds.length<2) return;
   stabVar=(stabVar+1)%stabVarIds.length; stabIdx=0; stabRefresh(); if(stabShowChart) drawStabChart(); };
 stabChartBtn.onclick=()=>{ stabShowChart=!stabShowChart; stabChart.style.display=stabShowChart?'block':'none';
   stabChartBtn.classList.toggle('on',stabShowChart); if(stabShowChart) drawStabChart(); };
 function openStabModal(){ if(!stabActive||!stabRecs.length) return;
-  stabModalOpen=true; stabModal.classList.add('show');
+  stabModalOpen=true; stabModal.classList.add('show'); stabOrbitZoom=1; stabChartZoom=1; stabChartCenter=0.5; stabOrbitFocus=null;
+  stabPlay2.textContent=stabPlaying?'⏸':'▶';
   stabModalTitle.textContent=(stabTitleEl.textContent||'').trim();
   requestAnimationFrame(drawBigChart); }            // canvas needs layout before first paint
-function closeStabModal(){ stabModalOpen=false; stabModal.classList.remove('show'); }
+function closeStabModal(){ stabModalOpen=false; stabModal.classList.remove('show'); stabOrbitFocus=null; }
 stabExpandBtn.onclick=openStabModal;
 document.getElementById('stabModalClose').onclick=closeStabModal;
 stabModal.onclick=e=>{ if(e.target===stabModal) closeStabModal(); };   // click backdrop to close
@@ -1182,7 +1245,7 @@ const _lerp=(a,b,t)=>a+(b-a)*t;
 const _alerp=(a,b,t)=>{ let d=((b-a)%360+540)%360-180; return a+d*t; }; // shortest-path (deg)
 function updateStability(){
   if(!stabActive) return;
-  if(stabPlaying){ stabIdx+=0.25; if(stabIdx>=stabN-1) stabIdx=0; }  // ~100 snapshots/variant: 0.25 keeps loop duration (4 interp frames/snapshot)
+  if(stabPlaying){ stabIdx+=0.125; if(stabIdx>=stabN-1) stabIdx=0; }  // ~100 snapshots/variant: 0.125 = 8 interp frames/snapshot (half speed)
   // paused and nothing moved → the orbit shape and chart are unchanged; skip the
   // whole recompute/repaint (a paused sim then costs nothing per frame).
   if(!(_stabForce || stabPlaying || stabIdx!==_stabLastIdx || stabVar!==_stabLastVar)) return;
@@ -1224,7 +1287,7 @@ function updateStability(){
     r.animMesh.position.set(pp.x, pp.y, pp.z); r.animMesh.visible=true;
     tt=_lerp(c0[0],c1[0],f); if(e>maxE){maxE=e;maxA=a;maxName=r.name;}
   });
-  stabSlider.value=stabIdx;
+  stabSlider.value=stabIdx; stabSlider2.value=stabIdx;
   const q=maxA*(1-maxE), nm=stabRecs.length>1?(maxName+' '):'';
   stabReadout.innerHTML=`t = ${Math.round(tt).toLocaleString()} ${t('yr')} · ${nm}e = ${maxE.toFixed(3)} · q = ${q.toFixed(2)} AU`
     + (q<0.08?` · <span class="warn">⚠ ${t('disrupt')}</span>`:'');
@@ -1240,7 +1303,11 @@ function updateStability(){
    canvas/size so the inline mini-chart and the expand-modal share one painter. */
 let stabT=0;                                  // last animation epoch (for repaint on toggle/expand)
 function paintStab(cv,W,H,curT){
-  const recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
+  let recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
+  const allRecs=recs;   // full set for the clickable legend (before focus isolation)
+  // a focused planet (clicked in the legend) isolates its curves here too, and the
+  // y-axes auto-rescale to its own range → an effective per-planet y-zoom.
+  if(stabOrbitFocus){ const f=recs.filter(o=>o.name===stabOrbitFocus); if(f.length) recs=f; }
   if(!recs.length||W<40||H<40) return;
   const big=H>320, fs=big?13:9, lw=big?2.4:1.7, lwq=big?1.6:1.1;
   const dpr=Math.min(2,window.devicePixelRatio||1);
@@ -1249,7 +1316,10 @@ function paintStab(cv,W,H,curT){
   const padL=big?58:38, padR=big?48:32, padT=big?26:18, labT=big?22:14, gap=big?44:26;
   const NP=2, ph=(H-padT-(NP-1)*gap-labT-12)/NP;     // two panels: radius, then inclination(left)+e(right)
   const y0r=padT, y0c=padT+ph+gap;
-  const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0]));
+  const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0])); _stabTmax=tMax;
+  // visible time window — full span at zoom 1; ＋/－ narrows it around the cursor
+  const zw=1/Math.max(1,stabChartZoom);
+  const tv0=Math.min(Math.max(0,stabChartCenter-zw/2),1-zw), tView0=tMax*tv0, tView1=tMax*(tv0+zw);
   let initQ=0; recs.forEach(o=>{ initQ=Math.max(initQ,o.d[0][1]*(1+o.d[0][2])); });
   let maxQ=0; recs.forEach(o=>o.d.forEach(s=>{ const QQ=s[1]*(1+Math.min(s[2],3)); if(isFinite(QQ)&&QQ>0)maxQ=Math.max(maxQ,QQ); }));
   const yMaxR=Math.min(maxQ,(initQ||1)*3.2)||1;
@@ -1257,7 +1327,7 @@ function paintStab(cv,W,H,curT){
   const eCap=eMax>1?1.05:Math.max(0.05,eMax*1.15);     // bound systems auto-zoom; ejection clips past e=1
   let maxI=1; recs.forEach(o=>o.d.forEach(s=>{ if(isFinite(s[3]))maxI=Math.max(maxI,s[3]); }));
   maxI=Math.max(5,Math.ceil(maxI/5)*5);
-  const xT=t=>padL+(t/tMax)*(W-padL-padR);
+  const xT=t=>padL+((t-tView0)/(tView1-tView0))*(W-padL-padR);
   const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
   const yI=v=>y0c+ph-(Math.min(v,maxI)/maxI)*ph;        // combined panel, LEFT scale (inclination)
   const yE=v=>y0c+ph-(Math.min(Math.max(v,0),eCap)/eCap)*ph;  // combined panel, RIGHT scale (eccentricity)
@@ -1288,8 +1358,9 @@ function paintStab(cv,W,H,curT){
     g.beginPath(); g.moveTo(padL,y1); g.lineTo(W-padR,y1); g.stroke(); g.setLineDash([]);
     g.fillStyle='rgba(255,120,90,.9)'; g.textAlign='left'; g.fillText('e=1',padL+4,y1-(big?7:5)); }
   g.textAlign='center'; g.fillStyle=txt;
-  const tlab=tMax>=1e6?(tMax/1e6)+' Myr':tMax>=1e3?Math.round(tMax/1e3)+' kyr':Math.round(tMax)+' yr';
-  g.fillText('0',padL,y0c+ph+labT-4); g.fillText(tlab,W-padR,y0c+ph+labT-4);
+  const tfmt=v=>v>=1e6?(v/1e6).toFixed(2)+' Myr':v>=1e3?(v/1e3).toFixed(v<1e4?2:0)+' kyr':Math.round(v)+' yr';
+  g.fillText(tfmt(tView0),padL,y0c+ph+labT-4); g.fillText(tfmt(tView1),W-padR,y0c+ph+labT-4);
+  if(stabChartZoom>1){ g.fillStyle=eClr; g.fillText('🔍'+stabChartZoom.toFixed(1)+'×',(padL+W-padR)/2,y0c+ph+labT-4); g.fillStyle=txt; }
   // smooth polyline: quadratic curve through snapshot midpoints (raw points are
   // only ~200, so straight segments read as jagged). One colour per planet.
   const line=(o,acc,yfn,w,dash)=>{
@@ -1300,13 +1371,15 @@ function paintStab(cv,W,H,curT){
       g.quadraticCurveTo(pts[k][0],pts[k][1],mx,my); }
     const last=pts[pts.length-1]; g.lineTo(last[0],last[1]);
     g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.lineJoin='round'; g.stroke(); g.setLineDash([]); };
+  g.save(); g.beginPath(); g.rect(padL,padT-3,W-padL-padR,(y0c+ph)-(padT-3)); g.clip();   // clip x-overflow when time-zoomed
   recs.forEach(o=>{
     line(o,s=>s[1]*(1+s[2]),yR,lw);          // apoapsis (solid, left radius scale)
     line(o,s=>s[1]*(1-s[2]),yR,lwq,[3,2]);   // periapsis (dashed)
     line(o,s=>s[3],yI,lw);                    // inclination (solid, left scale)
     line(o,s=>s[2],yE,lwq,[3,2]);            // eccentricity (dashed, right scale)
   });
-  if(curT!=null){ const cx=xT(Math.min(curT,tMax));
+  g.restore();
+  if(curT!=null && curT>=tView0 && curT<=tView1){ const cx=xT(curT);
     g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=1; g.setLineDash([3,3]);
     g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0c+ph); g.stroke(); g.setLineDash([]); }
   // per-panel line-style key (solid/dashed differ by panel; the labels disambiguate)
@@ -1325,9 +1398,17 @@ function paintStab(cv,W,H,curT){
   const ko=lang==='ko';
   keyBox(y0r,(ko?'원일점':'apo')+' (Q)',(ko?'근일점':'peri')+' (q)');
   keyBox(y0c,(ko?'경사각':'incl')+' (i)',(ko?'이심률':'ecc')+' (e)');
-  if(recs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle'; const sw=big?10:7;
-    recs.forEach(o=>{ g.fillStyle=o.rgb; g.fillRect(lx,y0r-(big?13:9),sw,big?4:3); g.fillStyle=txt;
-      const nm=o.name.split(' ').pop(); g.fillText(nm,lx+sw+4,y0r-(big?10:7)); lx+=sw+6+g.measureText(nm).width+12; }); }
+  // clickable planet legend (big modal canvas only): click a chip to isolate that
+  // planet (y-axes rescale to it); click "all" / the active chip again to restore.
+  const isBig=(cv===stabBigCanvas); if(isBig) _stabChartLegend=[];
+  if(allRecs.length>1){ let lx=padL+4; g.textAlign='left'; g.textBaseline='middle'; const sw=big?10:7; const ly0=y0r-(big?13:9);
+    const chip=(name,col,nm,on)=>{ const tw=g.measureText(nm).width, x0=lx-3, w=sw+6+tw+6;
+      if(on){ g.fillStyle='rgba(122,168,255,.16)'; g.fillRect(x0,ly0-(big?9:7),w,big?16:13); }
+      g.fillStyle=col; g.fillRect(lx,ly0,sw,big?4:3); g.fillStyle=on?'#cdd6ea':txt; g.fillText(nm,lx+sw+4,y0r-(big?10:7));
+      if(isBig) _stabChartLegend.push({name,x0,y0:ly0-(big?9:7),x1:x0+w,y1:ly0+(big?9:7)}); lx+=w+8; };
+    allRecs.forEach(o=>chip(o.name,o.rgb,o.name.split(' ').pop(),o.name===stabOrbitFocus));
+    if(stabOrbitFocus) chip('*ALL*','#8a93a8',ko?'전체':'all',false);
+  }
 }
 function drawStabChart(){   // inline mini-chart
   if(!stabActive||!stabShowChart||!stabRecs.length) return;
@@ -1335,8 +1416,62 @@ function drawStabChart(){   // inline mini-chart
   if(stabChart.style.height!==H+'px') stabChart.style.height=H+'px';
   paintStab(stabChart,W,H,stabT);
 }
-function drawBigChart(){    // expand-modal chart
+/* top-down (face-on) orbit view at the current animation epoch — host at the
+   focus, one analytic ellipse per planet from its interpolated (a,e,ω); the
+   planet sits at its true anomaly ν. Inclination/node are dropped (this is the
+   2D plan view); the shape precesses & the eccentricity pumps as the slider
+   runs, mirroring the live 3D orbits and the right-hand time-series charts. */
+function paintOrbitTopDown(cv,W,H,idx){
+  if(W<40||H<40) return;
+  const dpr=Math.min(2,window.devicePixelRatio||1);
+  if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
+  const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+  const recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
+  if(!recs.length) return;
+  // interpolate (a,e,ω,ν) for each planet at the float index, like updateStability
+  const sample=d=>{ const n=d.length, i0=Math.min(Math.floor(idx),n-1), i1=Math.min(i0+1,n-1), f=idx-i0;
+    const c0=d[i0],c1=d[i1]; return {a:_lerp(c0[1],c1[1],f), e:Math.min(0.999,_lerp(c0[2],c1[2],f)),
+      om:_alerp(c0[5],c1[5],f), nu:_alerp(c0[6],c1[6],f)}; };
+  const sm=recs.map(o=>({...o,...sample(o.d)}));
+  if(stabOrbitFocus && !sm.some(o=>o.name===stabOrbitFocus)) stabOrbitFocus=null;   // focus body gone (variant change)
+  // fit to the focused planet's apoapsis (click a legend row), else the outermost
+  const foc=stabOrbitFocus?sm.find(o=>o.name===stabOrbitFocus):null;
+  let R=foc?foc.a*(1+foc.e):0; if(!foc) sm.forEach(o=>{ R=Math.max(R,o.a*(1+o.e)); }); R=R||1;
+  const cx=W/2, cy=H/2, pad=22, scale=(Math.min(W,H)/2-pad)/R*stabOrbitZoom;
+  const txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
+  // faint scale ring at the fit radius + AU label
+  g.strokeStyle='rgba(120,135,165,.18)'; g.lineWidth=1;
+  g.beginPath(); g.arc(cx,cy,R*scale,0,2*Math.PI); g.stroke();
+  g.fillStyle=txt; g.font='11px ui-monospace,SFMono-Regular,Menlo,monospace';
+  g.textAlign='left'; g.textBaseline='bottom'; g.fillText(R.toFixed(R<0.1?4:3)+' AU',cx+4,cy-R*scale-2);
+  const SEG=200, DR=Math.PI/180;
+  sm.forEach(o=>{
+    g.beginPath();
+    for(let k=0;k<=SEG;k++){ const nu=k/SEG*2*Math.PI;
+      const r=o.a*(1-o.e*o.e)/(1+o.e*Math.cos(nu)), ang=(o.om*DR)+nu;
+      const x=cx+r*Math.cos(ang)*scale, y=cy-r*Math.sin(ang)*scale;
+      k?g.lineTo(x,y):g.moveTo(x,y); }
+    g.closePath(); g.strokeStyle=o.rgb; g.lineWidth=1.7; g.stroke();
+    // planet at its true anomaly
+    const r=o.a*(1-o.e*o.e)/(1+o.e*Math.cos(o.nu*DR)), ang=(o.om+o.nu)*DR;
+    g.beginPath(); g.arc(cx+r*Math.cos(ang)*scale, cy-r*Math.sin(ang)*scale, 3.4, 0, 2*Math.PI);
+    g.fillStyle=o.rgb; g.fill(); });
+  // host star at the focus
+  g.beginPath(); g.arc(cx,cy,5,0,2*Math.PI); g.fillStyle='#ffb02e'; g.fill();
+  // clickable legend — click a row to fit the view to that planet's orbit (toggle off / click empty space = full)
+  _stabOrbitLegend=[]; let ly=14; g.textAlign='left'; g.textBaseline='middle'; g.font='11px ui-monospace,SFMono-Regular,Menlo,monospace';
+  sm.forEach(o=>{ const short=o.name.split(' ').pop(), on=o.name===stabOrbitFocus;
+    const wRow=18+g.measureText(short).width;
+    if(on){ g.fillStyle='rgba(122,168,255,.16)'; g.fillRect(7,ly-8,wRow+8,16); }
+    g.fillStyle=o.rgb; g.fillRect(10,ly-3,12,3.5);
+    g.fillStyle=on?'#cdd6ea':txt; g.fillText(short,26,ly);
+    _stabOrbitLegend.push({name:o.name, x0:7, y0:ly-8, x1:7+wRow+8, y1:ly+8}); ly+=16; });
+  g.fillStyle=txt; g.textBaseline='bottom'; g.textAlign='left';
+  g.fillText(stabOrbitFocus?(lang==='ko'?'↺ 빈 곳 클릭=전체':'↺ click empty = full'):(lang==='ko'?'행성 클릭=그 궤도로 줌':'click a planet = zoom to orbit'), 10, H-8);
+}
+function drawBigChart(){    // expand-modal: top-down orbits (left) + time-series charts (right)
   if(!stabModalOpen||!stabRecs.length) return;
+  paintOrbitTopDown(stabOrbitCanvas,stabOrbitCanvas.clientWidth,stabOrbitCanvas.clientHeight,stabIdx);
   paintStab(stabBigCanvas,stabBigCanvas.clientWidth,stabBigCanvas.clientHeight,stabT);
 }
 

@@ -19,6 +19,7 @@ import json
 import glob
 import math
 import os
+import re
 import sys
 import csv
 import datetime
@@ -220,6 +221,10 @@ def _load_stab_dir(directory):
     out = {}
     for f in glob.glob(os.path.join(directory, "*_timeseries.csv")):
         stem = os.path.basename(f)[:-len("_timeseries.csv")]
+        # skip mass-variant analysis runs (e.g. barnards_star_i60): same body names
+        # as the canonical run, so they would clobber it in this body-keyed map.
+        if re.search(r"_i\d+$", stem):
+            continue
         rows = {}
         for r in csv.DictReader(open(f, encoding="utf-8")):
             g = lambda k: float(r.get(k, 0) or 0)
