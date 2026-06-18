@@ -246,6 +246,17 @@ Caveat: single phase realization (seed=0); a multi-seed survival-fraction refine
 near i_crit would sharpen the ~1° bracket, which sits at the precision floor of a
 single-seed chaotic scan.
 
+**Fixed-step (Principia-fidelity) eccentricity finding.** Principia integrates bodies
+with a *fixed-step* symmetric multistep (QUINLAN_TREMAINE_1990_ORDER_12, 10 min) — the
+same class as WHFast, which "fails catastrophically if not converged." A fixed-step
+WHFast **1 Myr** run at the DB's β-prior eccentricities (0.03–0.08) blew up numerically
+(|dE/E| = 6.2, e → 10²–10³, MEGNO 6.7×10⁴) — those eccentricities are fixed-step-fragile.
+Re-run at the favored low-e (e = 0.015, `run.py --ecc 0.015`): **clean over 1 Myr** —
+|dE/E| = 9.5×10⁻⁹, MEGNO 8.2, every planet e_max ≤ 0.031, calm. (TRACE keeps the system
+bounded at β-prior too — the blow-up is fixed-step numerics, not physics.) The low-e
+adoption for in-game stability is a **Phase 4 candidate** (staged, DB unchanged):
+`phase4/orbit-optimizations.md`.
+
 ## Hypothetical moons — demonstration
 
 The sim also resolves moons (extra bodies via `hypotheticals/<system>.json`).

@@ -55,7 +55,8 @@ def _planet_mass_msun(planet: dict) -> tuple[float, str]:
 
 
 def _planet_orbital(planet: dict, star_m_msun: float | None = None,
-                    rng: "random.Random | None" = None) -> dict[str, float]:
+                    rng: "random.Random | None" = None,
+                    ecc_override: float | None = None) -> dict[str, float]:
     """Return semi-major axis (AU), eccentricity, inclination (rad), omega, Omega, M (rad).
 
     Phases that are null in the DB get a deterministic random fill — required because
@@ -89,6 +90,8 @@ def _planet_orbital(planet: dict, star_m_msun: float | None = None,
     e = rec.get("eccentricity")
     if e is None:
         e = raw.get("eccentricity", 0.0) or 0.0
+    if ecc_override is not None:
+        e = ecc_override   # downstream adopted-config override (DB keeps the measured value)
 
     inc = rec.get("inclination_deg") or raw.get("inclination_deg")
     inc_rad = 0.0 if inc is None else math.radians(inc - 90.0)
@@ -113,7 +116,8 @@ def _planet_orbital(planet: dict, star_m_msun: float | None = None,
     }
 
 
-def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.Simulation, dict]:
+def build_planetary_system(db_path: Path, phase_seed: int = 0,
+                           ecc_override: float | None = None) -> tuple[rebound.Simulation, dict]:
     """Build a single-star + N-planet REBOUND simulation."""
     import random
     rng = random.Random(phase_seed)
@@ -138,7 +142,7 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0) -> tuple[rebound.
     primary = sim.particles[star_name]
     for p in d.get("planets", []):
         m_msun, kind = _planet_mass_msun(p)
-        orb = _planet_orbital(p, star_m_msun=star_m_msun, rng=rng)
+        orb = _planet_orbital(p, star_m_msun=star_m_msun, rng=rng, ecc_override=ecc_override)
         sim.add(
             primary=primary,
             m=m_msun,

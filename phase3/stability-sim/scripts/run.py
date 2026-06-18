@@ -44,10 +44,10 @@ SYSTEMS = {
 }
 
 
-def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_e=None):
+def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_e=None, ecc=None):
     kind, src = SYSTEMS[system]
     if kind == "planetary":
-        sim, meta = build_planetary_system(src)
+        sim, meta = build_planetary_system(src, ecc_override=ecc)
     elif kind == "solar":
         sim, meta = build_solar_system()
     else:
@@ -314,10 +314,19 @@ def main():
                          "(RV minimum mass M·sin i → true mass at coplanar inclination i). "
                          "60 = isotropic-prior median (×1.155). Output is written to "
                          "{system}_i{deg}_* so the canonical edge-on summary is preserved.")
+    ap.add_argument("--ecc", type=float, default=None,
+                    help="planetary systems only: override EVERY planet's eccentricity "
+                         "(adopted-config downstream override; the DB keeps the measured "
+                         "value). E.g. 0.015 = Barnard's favored low-e (<0.02) stable reading.")
     args = ap.parse_args()
 
     sim, meta = build(args.system, args.hypotheticals,
-                      acen_incl=args.acen_incl_deg, acen_a=args.acen_a_au, acen_e=args.acen_e)
+                      acen_incl=args.acen_incl_deg, acen_a=args.acen_a_au, acen_e=args.acen_e,
+                      ecc=args.ecc)
+    if args.ecc is not None:
+        for pm in meta["planets"]:
+            pm["e"] = args.ecc
+        meta["system"] += f" (e={args.ecc:g})"
 
     out_label = args.system
     if args.mass_incl_deg is not None:

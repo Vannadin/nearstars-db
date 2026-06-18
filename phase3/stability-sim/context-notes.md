@@ -157,7 +157,24 @@ well below the ×3 boundary.
 (Paper note: this would have fed Pillar 3 of `plans/paper-scoping.md`, now PARKED — kept
 as ordinary stability-suite work, no paper framing.)
 
+## 2026-06-18 — fixed-step eccentricity finding + `--ecc` override
+
+**`--ecc` override added** (run.py/load.py): set every planet's eccentricity at run
+time (DB unchanged) — a downstream adopted-config knob like `--mass-incl-deg` / acen's
+`--acen-e`. Threaded through `build → build_planetary_system → _planet_orbital`.
+
+**Finding — β-prior is fixed-step-fragile; low-e is the playable config.** Principia
+integrates bodies fixed-step (Quinlan–Tremaine 10 min). WHFast (same class) at the DB
+β-prior e (0.03–0.08) blew up over **1 Myr** (|dE/E|=6.2, e→10²–10³). At low-e
+(`--ecc 0.015`, Basant favored <0.02) WHFast 1 Myr is **clean** (|dE/E|=9.5e-9, MEGNO
+8.2, e_max≤0.031, calm). TRACE keeps β-prior bounded → the blow-up is fixed-step
+numerics, not physics. + 10 Gyr survival argues for the low-e architecture.
+→ staged as a **Phase 4 candidate** (`phase4/orbit-optimizations.md`); DB/viewer/cfg
+untouched. Run artifact: `results/_phase4_lowe/` (not committed; reproducible via the
+documented `--ecc` command).
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
 - [paper scoping note](../../plans/paper-scoping.md) — Pillar 3 consumer of this work
+- [Phase 4 orbit-optimizations log](../../phase4/orbit-optimizations.md) — Barnard low-e candidate

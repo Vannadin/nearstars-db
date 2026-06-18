@@ -49,10 +49,51 @@ before the final cfg emit. `a` and `e` emit directly today.
 
 ---
 
+## Barnard's Star — eccentricity for fixed-step (Principia) stability · 2026-06-18
+
+**Why optimized — engine-driven, not physics.** The 4-planet system (b, c, d, e;
+Basant et al. 2025) is *physically* chaotic-but-Hill-stable at nominal mass: TRACE
+(adaptive) holds it bounded over the 10⁴-yr play window, calm. The problem is the
+**game engine**: Principia integrates bodies with a **fixed-step** symmetric
+multistep (QUINLAN_TREMAINE_1990_ORDER_12, default 10 min) — same class as WHFast,
+and symmetric multistep "fails catastrophically if not converged." A fixed-step
+WHFast 1 Myr at the DB's β-prior eccentricities (0.03–0.08) **blew up numerically**
+(|dE/E| = 6.2, e → 10²–10³, MEGNO 6.7×10⁴) — i.e. those eccentricities are
+fixed-step-fragile and risk an *artificial* in-game ejection over long play.
+
+**Process.** Re-run at the low-eccentricity reading. Basant §3.4: e > 0.02 → <80%
+stable; e ≈ 0 → stable over 10⁹ orbits; the paper *favours* e < 0.02. Adopt e = 0.015
+(within the favoured window) via `run.py --ecc 0.015` (DB unchanged). WHFast 1 Myr:
+**clean and bounded** — |dE/E| = 9.5×10⁻⁹, MEGNO 8.2 (Lyapunov ~3×10⁵ yr), every
+planet e_max ≤ 0.031, a fixed to Δa/a ~10⁻⁴. Independent support: the system has
+**survived ~10 Gyr** (8.5±1.5, Ribas 2018) → the long-lived real architecture is the
+stable low-e one, not the fixed-step-fragile β-prior tail.
+
+**Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** Adopt **e = 0.015**
+(all four) as the cfg-frame eccentricity. SPEC class A+B (window-selection + engine);
+gate `pass-in-window` (inside Basant favoured < 0.02; stability-sim evidence above;
+10 Gyr survival). Per `phase4/SPEC.md`.
+
+**Reflected in.**
+- Process + numbers: `phase3/stability-sim/STABILITY_REPORT.md` (β-prior blow-up vs
+  low-e clean); run artifact `results/_phase4_lowe/` (reproduce: `run.py --ecc 0.015
+  --years 1000000 --integrator whfast`).
+- NOT in the DB (Phase 2 keeps the β-prior measurement) and NOT emitted — this is a
+  staged Phase 4 candidate.
+
+**OPEN ITEM (Phase 4 gate).** Confirm e = 0.015 is the value to freeze (vs e = 0.01 /
+exactly-circular); when Phase 4 activates, write it to `phase4/barnards_star.yaml`.
+
+---
+
 ## Backlog
 
-- Barnard's Star / AU Mic — the full candidate configs are dynamically unstable
-  (eject within 1 Myr, confirmed at dt/4). A **stable full-set solution search**
-  (element-space scan like α Cen A b) is open; until then the viewer shows the
+- **Barnard's Star** — physical stability is fine (TRACE, nominal mass, 10⁴ yr); the
+  remaining item is the *fixed-step* eccentricity choice above (low-e candidate staged).
+  The earlier "full candidate config ejects within 1 Myr" note referred to the
+  confirmed/candidates-variant era + a fixed-step run — re-read as a fixed-step
+  fragility, not a physical ejection.
+- **AU Mic** — full candidate config dynamically unstable (ejects within 1 Myr,
+  confirmed at dt/4); stable full-set element-space search still open. Viewer shows the
   confirmed-only stable subset + the full unstable set as variants. See
   `phase3/stability-sim/STABILITY_REPORT.md`.
