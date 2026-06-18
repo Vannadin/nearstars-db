@@ -137,6 +137,23 @@ re-confirmed with IAS15 before it goes in a report or paper.
   e-sensitivity (<80% stable if any e>0.02); we used the DB β-prior e (0.03–0.08), papers
   favor e<0.02 — so the exact boundary is conditional on the adopted eccentricities.
 
+**Decision (2026-06-18) — adopt the median true mass (×1.155, i=60°)**: for downstream
+game/cfg use the planets get their *median* true mass, not the bare RV minimum. M·sin i
+is a minimum; for isotropic orbital orientation the median inclination is 60° (cos i
+uniform → median cos i = 0.5), so the median true mass = M·sin i / sin 60° = ×1.155. NB
+this is NOT the arithmetic midpoint of [×1, ×3]: ×3 is the instability boundary, not a
+physical maximum (true max → ∞ as i→0), and the mass-factor distribution is sharply
+skewed toward edge-on — P(true mass ≤ ×f) = √(1−1/f²), so ×2 is the ~87th percentile,
+not the median. Median masses: d 0.304, b 0.345, c 0.387, e 0.223 M⊕. Verdict at this
+mass: identical to nominal — chaotic (MEGNO 349, Lyapunov ~58 yr) but Hill-stable, calm,
+well below the ×3 boundary.
+- **This is a downstream (cfg/Phase-3) assumption, NOT a DB edit.** The DB keeps M·sin i
+  (strictly measurement; no assumed defaults — see project_nearstars_db_principle). The
+  ×1.155 lives wherever the cfg mass is finally assigned.
+- Reproducible via `run.py --mass-incl-deg 60` (general flag for any RV planetary system;
+  writes `{system}_i{deg}_*` so the canonical edge-on summary is preserved). Output:
+  `results/barnards_star_i60_summary.json` + `_timeseries.csv`.
+
 (Paper note: this would have fed Pillar 3 of `plans/paper-scoping.md`, now PARKED — kept
 as ordinary stability-suite work, no paper framing.)
 

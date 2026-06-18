@@ -299,14 +299,32 @@ def main():
                          "default = DB value (1.6). Use 2.1 for the a>2 family.")
     ap.add_argument("--acen-e", type=float, default=None,
                     help="alpha_centauri only: override A b eccentricity; default = DB (0.4)")
+    ap.add_argument("--mass-incl-deg", type=float, default=None,
+                    help="planetary systems only: scale every planet mass by 1/sin(i) "
+                         "(RV minimum mass M·sin i → true mass at coplanar inclination i). "
+                         "60 = isotropic-prior median (×1.155). Output is written to "
+                         "{system}_i{deg}_* so the canonical edge-on summary is preserved.")
     args = ap.parse_args()
 
     sim, meta = build(args.system, args.hypotheticals,
                       acen_incl=args.acen_incl_deg, acen_a=args.acen_a_au, acen_e=args.acen_e)
+
+    out_label = args.system
+    if args.mass_incl_deg is not None:
+        if SYSTEMS[args.system][0] != "planetary":
+            ap.error("--mass-incl-deg applies only to planetary (single-star RV) systems")
+        factor = 1.0 / math.sin(math.radians(args.mass_incl_deg))
+        for pm in meta["planets"]:
+            sim.particles[pm["name"]].m *= factor
+            pm["mass_msun"] *= factor
+            pm["mass_kind"] = f"true (i={args.mass_incl_deg:g}°, ×{factor:.3f})"
+        meta["system"] += f" (true mass @ i={args.mass_incl_deg:g}°)"
+        out_label = f"{args.system}_i{int(round(args.mass_incl_deg))}"
+
     report = run_integration(sim, meta, args.years, args.snapshots, args.integrator)
     judgment = verdict(report, args.years)
     print_report(meta, report, judgment)
-    paths = save_results(args.system, meta, report, judgment, args.out_dir.resolve())
+    paths = save_results(out_label, meta, report, judgment, args.out_dir.resolve())
     for p in paths:
         try:
             print(f"  → wrote {p.relative_to(PROJECT_ROOT)}")
