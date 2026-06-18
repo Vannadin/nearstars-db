@@ -1285,14 +1285,18 @@ function updateStability(){
     const d=recData(r);
     if(!d){ if(r.animLine) r.animLine.visible=false; if(r.animMesh) r.animMesh.visible=false; return; }  // not in this variant
     const n=d.length;
-    // interpolate orbital elements between the recorded snapshots (5000 yr apart)
-    // so the animation is continuous, not stepped — secular change is captured at
-    // that cadence; in-between frames are a smooth lerp of (a,e,i,Ω,ω,f).
+    // interpolate the SECULAR elements between snapshots (5000 yr apart) for a
+    // continuous animation — a smooth lerp of (a,e,i,Ω,ω). The true anomaly is NOT
+    // interpolated (see fAn below); it is swept forward synthetically.
     const i0=Math.min(Math.floor(stabIdx),n-1), i1=Math.min(i0+1,n-1), f=stabIdx-i0;
     const c0=d[i0], c1=d[i1];
     const a=_lerp(c0[1],c1[1],f), e=Math.min(0.999,_lerp(c0[2],c1[2],f));
     const iD=_alerp(c0[3],c1[3],f), OmD=_alerp(c0[4],c1[4],f), omD=_alerp(c0[5],c1[5],f);
-    const fAn=_alerp(c0[6],c1[6],f);
+    // the recorded true anomaly is undersampled (period ~days vs ~5000 yr snapshots),
+    // so interpolating it makes the planet jitter forward/back. Drive the marker with a
+    // steady forward sweep instead — inner planets faster (Kepler) — an honest on-orbit
+    // indicator (its instantaneous phase isn't resolved at this cadence anyway).
+    const fAn=(d[0][6]||0)+stabIdx*14*Math.pow((stabRecs._ext||a)/Math.max(a,1e-4),1.5);
     if(r.line) r.line.visible=false; if(r.mesh) r.mesh.visible=false;
     // smooth analytic ellipse at this epoch's elements (precesses/tilts/pumps
     // over time); host at focus. e-tinted (blue→amber→red). Sky-true plane via
@@ -1458,10 +1462,13 @@ function paintOrbitTopDown(cv,W,H,idx){
   const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
   const recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
   if(!recs.length) return;
-  // interpolate (a,e,ω,ν) for each planet at the float index, like updateStability
+  // interpolate (a,e,ω) at the float index; ν is a steady forward sweep (not the
+  // undersampled snapshot true anomaly), matching updateStability so the 2D dot and
+  // the 3D marker stay in phase.
   const sample=d=>{ const n=d.length, i0=Math.min(Math.floor(idx),n-1), i1=Math.min(i0+1,n-1), f=idx-i0;
-    const c0=d[i0],c1=d[i1]; return {a:_lerp(c0[1],c1[1],f), e:Math.min(0.999,_lerp(c0[2],c1[2],f)),
-      om:_alerp(c0[5],c1[5],f), nu:_alerp(c0[6],c1[6],f)}; };
+    const c0=d[i0],c1=d[i1], a=_lerp(c0[1],c1[1],f);
+    return {a, e:Math.min(0.999,_lerp(c0[2],c1[2],f)), om:_alerp(c0[5],c1[5],f),
+      nu:(d[0][6]||0)+idx*14*Math.pow((stabRecs._ext||a)/Math.max(a,1e-4),1.5)}; };
   const sm=recs.map(o=>({...o,...sample(o.d)}));
   if(stabOrbitFocus && !sm.some(o=>o.name===stabOrbitFocus)) stabOrbitFocus=null;   // focus body gone (variant change)
   // fit to the focused planet's apoapsis (click a legend row), else the outermost
