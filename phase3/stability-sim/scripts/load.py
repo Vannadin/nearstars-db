@@ -55,8 +55,7 @@ def _planet_mass_msun(planet: dict) -> tuple[float, str]:
 
 
 def _planet_orbital(planet: dict, star_m_msun: float | None = None,
-                    rng: "random.Random | None" = None,
-                    ecc_override: float | None = None) -> dict[str, float]:
+                    rng: "random.Random | None" = None) -> dict[str, float]:
     """Return semi-major axis (AU), eccentricity, inclination (rad), omega, Omega, M (rad).
 
     Phases that are null in the DB get a deterministic random fill — required because
@@ -90,8 +89,6 @@ def _planet_orbital(planet: dict, star_m_msun: float | None = None,
     e = rec.get("eccentricity")
     if e is None:
         e = raw.get("eccentricity", 0.0) or 0.0
-    if ecc_override is not None:
-        e = ecc_override   # downstream adopted-config override (DB keeps the measured value)
 
     inc = rec.get("inclination_deg") or raw.get("inclination_deg")
     inc_rad = 0.0 if inc is None else math.radians(inc - 90.0)
@@ -116,9 +113,41 @@ def _planet_orbital(planet: dict, star_m_msun: float | None = None,
     }
 
 
+# Generic per-body element override. A rule is (body, field, op, value): body is a
+# planet name or "*" (all planets); op ∈ {"set","scale"}; fields are NATURAL units so
+# any element is controllable without bespoke flags. Applied in build_planetary_system.
+_OVERRIDE_FIELDS = ("e", "a_au", "inc_deg", "omega_deg", "Omega_deg", "M_deg", "mass_mearth")
+
+
+def _planet_natural(orb: dict, m_msun: float) -> dict[str, float]:
+    """Natural-unit view of a planet for overrides (deg / AU / M⊕), reversible below."""
+    return {"e": orb["e"], "a_au": orb["a"],
+            "inc_deg": math.degrees(orb["inc"]), "omega_deg": math.degrees(orb["omega"]),
+            "Omega_deg": math.degrees(orb["Omega"]), "M_deg": math.degrees(orb["M"]),
+            "mass_mearth": m_msun * MSUN_KG / MEARTH_KG}
+
+
+def _apply_overrides(name: str, nat: dict, overrides) -> None:
+    """Apply matching set/scale rules to a planet's natural-unit dict, in order."""
+    for body, field, op, val in (overrides or []):
+        if body != "*" and body != name:
+            continue
+        if op == "set":
+            nat[field] = val
+        elif op == "scale":
+            nat[field] = nat[field] * val
+        else:
+            raise ValueError(f"unknown override op '{op}'")
+
+
 def build_planetary_system(db_path: Path, phase_seed: int = 0,
-                           ecc_override: float | None = None) -> tuple[rebound.Simulation, dict]:
-    """Build a single-star + N-planet REBOUND simulation."""
+                           overrides=None) -> tuple[rebound.Simulation, dict]:
+    """Build a single-star + N-planet REBOUND simulation.
+
+    `overrides`: list of (body, field, op, value) rules (see _apply_overrides) — a
+    generic downstream knob to set/scale any element of any planet at run time. The
+    curated DB is never touched; overrides live only in this in-memory build.
+    """
     import random
     rng = random.Random(phase_seed)
 
@@ -127,6 +156,14 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0,
     star_name = star["name"]
     star_mu = star["principia"]["gravitational_parameter_km3_s2"]
     star_m_msun = mu_km3s2_to_msun(star_mu)
+
+    # validate override rules up front (catch typos regardless of which body matches)
+    planet_names = {p["name"] for p in d.get("planets", [])}
+    for body, field, op, _ in (overrides or []):
+        if field not in _OVERRIDE_FIELDS:
+            raise ValueError(f"unknown override field '{field}'; allowed: {', '.join(_OVERRIDE_FIELDS)}")
+        if body != "*" and body not in planet_names:
+            raise ValueError(f"override body '{body}' not in {db_path.stem} planets: {sorted(planet_names)}")
 
     sim = rebound.Simulation()
     sim.units = ("AU", "yr", "Msun")
@@ -142,29 +179,26 @@ def build_planetary_system(db_path: Path, phase_seed: int = 0,
     primary = sim.particles[star_name]
     for p in d.get("planets", []):
         m_msun, kind = _planet_mass_msun(p)
-        orb = _planet_orbital(p, star_m_msun=star_m_msun, rng=rng, ecc_override=ecc_override)
-        sim.add(
-            primary=primary,
-            m=m_msun,
-            a=orb["a"],
-            e=orb["e"],
-            inc=orb["inc"],
-            omega=orb["omega"],
-            Omega=orb["Omega"],
-            M=orb["M"],
-            name=p["name"],
-        )
+        orb = _planet_orbital(p, star_m_msun=star_m_msun, rng=rng)
+        nat = _planet_natural(orb, m_msun)
+        _apply_overrides(p["name"], nat, overrides)
+        m_msun = nat["mass_mearth"] * MEARTH_KG / MSUN_KG
+        a, e = nat["a_au"], nat["e"]
+        inc, omega = math.radians(nat["inc_deg"]), math.radians(nat["omega_deg"])
+        Omega, M = math.radians(nat["Omega_deg"]), math.radians(nat["M_deg"])
+        sim.add(primary=primary, m=m_msun, a=a, e=e, inc=inc, omega=omega, Omega=Omega,
+                M=M, name=p["name"])
         meta["planets"].append(
             {
                 "name": p["name"],
                 "mass_msun": m_msun,
                 "mass_kind": kind,
-                "a_au": orb["a"],
-                "e": orb["e"],
-                "inc_rad": orb["inc"],
-                "omega_rad": orb["omega"],
-                "Omega_rad": orb["Omega"],
-                "M_rad": orb["M"],
+                "a_au": a,
+                "e": e,
+                "inc_rad": inc,
+                "omega_rad": omega,
+                "Omega_rad": Omega,
+                "M_rad": M,
             }
         )
 

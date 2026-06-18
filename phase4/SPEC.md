@@ -116,7 +116,7 @@ phase4/<system>.yaml     (Phase 4 gated overrides + fiction bodies)         ─�
 
 - Writers apply Phase 4 overrides **last**, on top of the DB/Phase-3 values; absent a
   Phase 4 record, the Phase 3 value passes through unchanged.
-- The transient stability-sim flags (`run.py --ecc`, `--mass-incl-deg`) are
+- The transient stability-sim flags (`run.py --set/--scale`, `--mass-incl-deg`) are
   **experiments**, not the source of truth — the chosen value is persisted into
   `phase4/<system>.yaml`, which the writers read.
 - **check.sh gate (to add):** every `field` a writer emits from Phase 4 must be

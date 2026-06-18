@@ -63,7 +63,7 @@ fixed-step-fragile and risk an *artificial* in-game ejection over long play.
 
 **Process.** Re-run at the low-eccentricity reading. Basant §3.4: e > 0.02 → <80%
 stable; e ≈ 0 → stable over 10⁹ orbits; the paper *favours* e < 0.02. Adopt e = 0.015
-(within the favoured window) via `run.py --ecc 0.015` (DB unchanged). WHFast 1 Myr:
+(within the favoured window) via `run.py --set '*.e=0.015'` (DB unchanged). WHFast 1 Myr:
 **clean and bounded** — |dE/E| = 9.5×10⁻⁹, MEGNO 8.2 (Lyapunov ~3×10⁵ yr), every
 planet e_max ≤ 0.031, a fixed to Δa/a ~10⁻⁴. Independent support: the system has
 **survived ~10 Gyr** (8.5±1.5, Ribas 2018) → the long-lived real architecture is the
@@ -76,7 +76,7 @@ gate `pass-in-window` (inside Basant favoured < 0.02; stability-sim evidence abo
 
 **Reflected in.**
 - Process + numbers: `phase3/stability-sim/STABILITY_REPORT.md` (β-prior blow-up vs
-  low-e clean); run artifact `results/_phase4_lowe/` (reproduce: `run.py --ecc 0.015
+  low-e clean); run artifact `results/_phase4_lowe/` (reproduce: `run.py --set '*.e=0.015'
   --years 1000000 --integrator whfast`).
 - NOT in the DB (Phase 2 keeps the β-prior measurement) and NOT emitted — this is a
   staged Phase 4 candidate.

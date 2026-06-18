@@ -251,7 +251,7 @@ with a *fixed-step* symmetric multistep (QUINLAN_TREMAINE_1990_ORDER_12, 10 min)
 same class as WHFast, which "fails catastrophically if not converged." A fixed-step
 WHFast **1 Myr** run at the DB's β-prior eccentricities (0.03–0.08) blew up numerically
 (|dE/E| = 6.2, e → 10²–10³, MEGNO 6.7×10⁴) — those eccentricities are fixed-step-fragile.
-Re-run at the favored low-e (e = 0.015, `run.py --ecc 0.015`): **clean over 1 Myr** —
+Re-run at the favored low-e (e = 0.015, `run.py --set '*.e=0.015'`): **clean over 1 Myr** —
 |dE/E| = 9.5×10⁻⁹, MEGNO 8.2, every planet e_max ≤ 0.031, calm. (TRACE keeps the system
 bounded at β-prior too — the blow-up is fixed-step numerics, not physics.) The low-e
 adoption for in-game stability is a **Phase 4 candidate** (staged, DB unchanged):

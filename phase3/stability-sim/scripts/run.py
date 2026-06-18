@@ -44,10 +44,11 @@ SYSTEMS = {
 }
 
 
-def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_e=None, ecc=None):
+def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_e=None,
+          overrides=None):
     kind, src = SYSTEMS[system]
     if kind == "planetary":
-        sim, meta = build_planetary_system(src, ecc_override=ecc)
+        sim, meta = build_planetary_system(src, overrides=overrides)
     elif kind == "solar":
         sim, meta = build_solar_system()
     else:
@@ -314,19 +315,37 @@ def main():
                          "(RV minimum mass M·sin i → true mass at coplanar inclination i). "
                          "60 = isotropic-prior median (×1.155). Output is written to "
                          "{system}_i{deg}_* so the canonical edge-on summary is preserved.")
-    ap.add_argument("--ecc", type=float, default=None,
-                    help="planetary systems only: override EVERY planet's eccentricity "
-                         "(adopted-config downstream override; the DB keeps the measured "
-                         "value). E.g. 0.015 = Barnard's favored low-e (<0.02) stable reading.")
+    # --set/--scale share one ordered list (dest=overrides) so rules apply strictly
+    # left-to-right as written — any sequence of set/scale on any body is expressible.
+    class _OverrideAction(argparse.Action):
+        def __call__(self, parser, ns, value, option_string=None):
+            op = "set" if option_string == "--set" else "scale"
+            if "=" not in value or "." not in value.rsplit("=", 1)[0]:
+                parser.error(f"{option_string} expects BODY.FIELD=NUM, got '{value}'")
+            lhs, num = value.rsplit("=", 1)
+            body, field = lhs.rsplit(".", 1)
+            try:
+                val = float(num)
+            except ValueError:
+                parser.error(f"{option_string} value must be a number, got '{num}' in '{value}'")
+            getattr(ns, "overrides").append((body.strip(), field.strip(), op, val))
+    ap.add_argument("--set", action=_OverrideAction, dest="overrides", default=[], metavar="BODY.FIELD=VALUE",
+                    help="planetary systems only: set an element of a planet (repeatable, applied "
+                         "in command-line order). BODY = planet name or '*' (all); FIELD ∈ e|a_au|"
+                         "inc_deg|omega_deg|Omega_deg|M_deg|mass_mearth. E.g. --set '*.e=0.015' or "
+                         "--set 'Barnard c.e=0.04'. DB unchanged (run-time override).")
+    ap.add_argument("--scale", action=_OverrideAction, dest="overrides", metavar="BODY.FIELD=FACTOR",
+                    help="like --set but multiplies (repeatable, command-line order). "
+                         "E.g. --scale '*.e=0.5', --scale '*.mass_mearth=1.155'.")
     args = ap.parse_args()
+    overrides = args.overrides
 
     sim, meta = build(args.system, args.hypotheticals,
                       acen_incl=args.acen_incl_deg, acen_a=args.acen_a_au, acen_e=args.acen_e,
-                      ecc=args.ecc)
-    if args.ecc is not None:
-        for pm in meta["planets"]:
-            pm["e"] = args.ecc
-        meta["system"] += f" (e={args.ecc:g})"
+                      overrides=overrides)
+    if overrides:
+        meta["system"] += " [" + "; ".join(
+            f"{b}.{f}{'=' if op=='set' else '×'}{v:g}" for b, f, op, v in overrides) + "]"
 
     out_label = args.system
     if args.mass_incl_deg is not None:

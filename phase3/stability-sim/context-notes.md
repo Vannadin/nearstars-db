@@ -171,7 +171,18 @@ integrates bodies fixed-step (Quinlan–Tremaine 10 min). WHFast (same class) at
 numerics, not physics. + 10 Gyr survival argues for the low-e architecture.
 → staged as a **Phase 4 candidate** (`phase4/orbit-optimizations.md`); DB/viewer/cfg
 untouched. Run artifact: `results/_phase4_lowe/` (not committed; reproducible via the
-documented `--ecc` command).
+documented override command).
+
+## 2026-06-19 — generalized the element override (--ecc/--ecc-scale → --set/--scale)
+
+The one-off `--ecc` / `--ecc-scale` flags were ad-hoc. Replaced with a single general
+mechanism: repeatable **`--set BODY.FIELD=VALUE`** / **`--scale BODY.FIELD=FACTOR`**,
+applied strictly in command-line order. BODY = planet name or `*`; FIELD ∈ e | a_au |
+inc_deg | omega_deg | Omega_deg | M_deg | mass_mearth (natural units, converted to sim
+units in `build_planetary_system`). Any element of any planet is now controllable
+without bespoke flags; fields/bodies are validated up front. DB still untouched
+(run-time only). `--ecc 0.015` → `--set '*.e=0.015'`; `--ecc-scale 0.5` → `--scale
+'*.e=0.5'`. `--mass-incl-deg` kept (semantic 1/sin i + output-naming sugar).
 
 ## Related
 
