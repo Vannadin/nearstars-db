@@ -69,10 +69,28 @@ planet e_max ≤ 0.031, a fixed to Δa/a ~10⁻⁴. Independent support: the sys
 **survived ~10 Gyr** (8.5±1.5, Ribas 2018) → the long-lived real architecture is the
 stable low-e one, not the fixed-step-fragile β-prior tail.
 
-**Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** Adopt **e = 0.015**
-(all four) as the cfg-frame eccentricity. SPEC class A+B (window-selection + engine);
-gate `pass-in-window` (inside Basant favoured < 0.02; stability-sim evidence above;
-10 Gyr survival). Per `phase4/SPEC.md`.
+**Eccentricity-reduction scan (2026-06-19).** How much reduction is actually needed?
+WHFast 1 Myr at several scalings of the β-prior (c is the worst case, shown):
+
+| config | c | \|dE/E\| | MEGNO | e_max | 1 Myr |
+|---|---|---|---|---|---|
+| β-prior | 0.08 | 6.2 (blow-up) | 6.7×10⁴ | →10³ | ✗ |
+| ×2/3 | 0.053 | 2.3×10⁻⁸ | 4,092 | ≤0.071 | ✅ |
+| ×0.5 | 0.040 | 1.4×10⁻⁷ | 336 | ≤0.053 | ✅ |
+| set 0.015 | 0.015 | 9.5×10⁻⁹ | 8.2 | ≤0.031 | ✅ |
+
+The blow-up/stable boundary sits between c ≈ 0.053 and 0.08 — only a **modest** reduction
+is needed (β-prior ×2/3 already survives). But MEGNO climbs steeply with e (8 → 336 →
+4,092 → blow-up), so lower e buys chaos *margin*. So the Phase 4 choice is a **band**
+(c ≲ 0.05 is fixed-step-stable), trading measurement fidelity (×2/3, closest to the
+β-prior that still works, thin margin) against safety (e = 0.015, large margin).
+Scan runs: `results/_phase4_{e23,halfe,lowe}/`.
+
+**Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** Adopt a value in the
+**c ≲ 0.05 stable band**; default proposal **e = 0.015** (max margin, inside Basant
+favoured < 0.02), with **×2/3 (e_c ≈ 0.053)** as the measurement-faithful alternative.
+SPEC class A+B (window-selection + engine); gate `pass-in-window` (Basant favoured /
+measured-band + stability-sim evidence above; 10 Gyr survival). Per `phase4/SPEC.md`.
 
 **Reflected in.**
 - Process + numbers: `phase3/stability-sim/STABILITY_REPORT.md` (β-prior blow-up vs

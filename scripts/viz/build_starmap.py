@@ -277,9 +277,28 @@ def load_stability():
     res = os.path.join(ROOT, "phase3", "stability-sim", "results")
     main = _load_stab_dir(res)
     obs = _load_stab_dir(os.path.join(res, "_observed"))
+    # Staged Phase 4 candidate runs auto-discovered from results/_phase4_<suffix>/ —
+    # each becomes a toggleable variant id 'p4_<suffix>' with a label read from the run's
+    # own override annotation (summary "system" field, e.g. "… [*.e×0.5]"). NOT canonical.
+    p4 = []   # (suffix, label, bodies-dict)
+    for d in sorted(glob.glob(os.path.join(res, "_phase4_*"))):
+        suffix = os.path.basename(d)[len("_phase4_"):]
+        bodies = _load_stab_dir(d)
+        if not bodies:
+            continue
+        label = suffix
+        summ = sorted(glob.glob(os.path.join(d, "*_summary.json")))
+        if summ:
+            sysname = json.load(open(summ[0], encoding="utf-8")).get("system", "")
+            m = re.search(r"[\(\[]([^\)\]]*)[\)\]]\s*$", sysname)
+            if m:
+                label = m.group(1)
+        p4.append((suffix, label, bodies))
+    p4_bodies = set().union(*[set(b) for _, _, b in p4]) if p4 else set()
     out = {}
-    for body in set(main) | set(obs):
-        system = (main.get(body) or obs.get(body))["system"]
+    for body in set(main) | set(obs) | p4_bodies:
+        system = next((src.get(body)["system"] for src in [main, obs] + [b for _, _, b in p4]
+                       if body in src), None)
         subset = system in _SUBSET_SYSTEMS
         variants = []
         if body in main:
@@ -290,6 +309,11 @@ def load_stability():
             variants.append({"id": "candidates" if subset else "observed",
                              "data": obs[body]["data"],
                              "t0": obs[body]["t0"], "t_end": obs[body]["t_end"]})
+        for suffix, label, bodies in p4:
+            if body in bodies:
+                variants.append({"id": "p4_" + suffix, "label": "Phase 4: " + label,
+                                 "data": bodies[body]["data"],
+                                 "t0": bodies[body]["t0"], "t_end": bodies[body]["t_end"]})
         out[body] = variants
     _STABILITY = out
     return out

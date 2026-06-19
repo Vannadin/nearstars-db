@@ -1138,7 +1138,7 @@ const VAR_INFO={
   candidates:{ko:{n:'전체 후보',d:'후보 포함 전체 — 1 Myr 내 이탈(불안정)'}, en:{n:'All candidates',d:'incl. candidates — ejects within 1 Myr (unstable)'}},
   sim:       {ko:{n:'시뮬',d:'시뮬레이션 궤도'},                          en:{n:'Sim',d:'simulated orbit'}},
 };
-// variant display order (stable/adjusted shown first, alternate second)
+// known-variant display order; dynamic Phase 4 candidate ids ('p4_*') are appended after
 const VAR_ORDER=['confirmed','adopted','sim','observed','candidates'];
 // distinct per-planet identity colours — most planets share a near-white Teq
 // fallback (#ccd2de), so the chart lines were indistinguishable. Assigned by the
@@ -1174,7 +1174,11 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
   const nv=stabVarIds.length;
   stabVarBtn.style.display = nv>1 ? '' : 'none';
   const id=stabVarIds[stabVar];
-  const inf=VAR_INFO[id]?VAR_INFO[id][lang]:null;
+  let inf=VAR_INFO[id]?VAR_INFO[id][lang]:null;
+  if(!inf){   // dynamic variant (e.g. Phase 4 'p4_*'): label carried on the variant itself
+    for(const r of stabRecs){ const v=r.variants.find(x=>x.id===id && x.label);
+      if(v){ inf={n:v.label, d:(lang==='ko'?'Phase 4 후보 (게임용 art-direction, 미확정)':'Phase 4 candidate (game art-direction, not finalised)')}; break; } }
+  }
   if(inf){ stabVarBtn.textContent=inf.n+(nv>1?' ⇄':''); stabNoteEl.textContent=inf.d; }
   const lens=stabRecs.map(recData).filter(Boolean).map(d=>d.length);
   stabN=lens.length?Math.max(...lens):1;
