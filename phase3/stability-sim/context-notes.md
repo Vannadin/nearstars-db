@@ -260,6 +260,29 @@ it. The currently-gated layout (Hades 135k gap, e frozen) is unchanged pending t
 confirmation; the 3:2-locked anti-aligned config is now the leading candidate to supersede
 it (would also bump Hades a 135k→131k and set the moon's epoch mean anomaly ≈180°).
 
+**3:2-lock 1000-yr confirmation — PASSES (`results/_moons_3to2lock/`, variant
+`hypotheticals/_acen_3to2lock.json`).** Hades 131k / M0=180°, 1000 yr IAS15:
+CHAOTIC_BUT_HILL_STABLE, all 5 bound and calm. The 3:2 libration **persists** — φ-coverage
+261° over the full run, first-half 257° vs last-half 261° (no drift, the lock holds), and
+Hades's eccentricity is resonance-maintained at **mean 0.086, max 0.124** (≈1.5–2× the
+non-resonant 0.056). So the lock is real and durable, and it physically sustains the canon
+tidal heating **without moving Pandora** (observation-first intact). It is a wide-amplitude
+(~130°) libration on a chaotic-but-bound trajectory — ship-safe, same class as the gap
+config. → Recommended to supersede the 135k gap as the gated moon config (Hades a 135k→131k,
+epoch mean anomaly ≈180°), pending the owner's call (and a combined re-check if larger
+inclinations are also adopted — the lock was confirmed coplanar).
+
+**Inclination-spread scan (`scripts/inclination_scan.py` → `results/_moons_inclination_scan.md`).**
+Art-direction wants larger inclinations so the moons spread over different sky latitudes
+from Pandora. Scanned a spread s (Dante 0.5s, Hades 1.0s, Pandora 0, Cassandra/Chaos
+retrograde-tilted), 300 yr each. Result: **stable (bound) up to s≈30°; ejects at s=40°** —
+the limit is the **Kozai-Lidov critical inclination (~39°)** for the most-inclined moon
+(Hades at 1.0s): at 40° the host star pumps Hades's e to ejection. So inclinations can be
+pushed generously (Hades ≤~30°) for the visual spread; the comfortable sweet spot is
+**s≈15–20°** (clear spread, MEGNO ~90, Chaos's e pumped to ~0.2). NOTE: scanned on the
+coplanar 135k gap base — combining a large spread with the 3:2 lock needs its own re-check
+(inclination can detune a resonance).
+
 Masses/radii for Dante/Hades/Cassandra/Chaos are invented (only Pandora's mass + diameter
 and Cassandra's >6500 km diameter are canon). Poly-L4/L5 are **not** moons — they are
 Polyphemus's *heliocentric* L4/L5 co-orbital planetoids (separate star-centred Trojan

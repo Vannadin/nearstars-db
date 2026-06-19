@@ -142,6 +142,16 @@ decisions:
         물리적으로 지지 + Pandora 불변(관측우선 유지). 단 넓은진폭(~130°)·약카오스·300yr이라
         장기(1000yr+) 확인 필요. 현 게이트값(135k gap, e동결)은 확인 전까지 유지; 3:2-락(131k,
         epoch M0≈180°)이 이를 대체할 선두 후보.
+      lock_confirm_1000yr: >
+        통과 (results/_moons_3to2lock). Hades 131k/M0=180° 1000yr: CHAOTIC_BUT_HILL_STABLE,
+        5위성 bound·calm. libration **지속** (coverage 261°, 전반257/후반261 = 안 깨짐).
+        Hades e 평균0.086·최대0.124로 공명 유지 = 조석가열 자기일관, Pandora 불변. → 135k gap을
+        대체할 게이트 후보로 권장(소유자 확정 + 큰경사 동시채택 시 조합 재검 필요, 락은 coplanar서 확인).
+      inclination_scan: >
+        [4a 큰경사 의향 검증] results/_moons_inclination_scan.md: spread s(Dante 0.5s/Hades 1.0s/
+        Pandora 0/Cass·Chaos 역행틸트) s≈30°까지 bound, s=40° 이젝션 — 한계는 코자이 임계각(~39°,
+        최대경사 Hades). 시각분산 스윗스팟 s≈15–20°(또렷+마진). 단 coplanar 135k 기준 — 3:2락과
+        큰경사 조합은 별도 재검(경사가 공명 detune 가능).
     moons:                         # a/e는 게이트 통과한 설계값; 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
       - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 0.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(~94k 밖), 화산 moonlet (Metis/Adrastea급). e작음." }
       - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 2.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열>900K = 유지된 e(Io식), 교차 아님. Dante와 3:2~5:3 사이." }
