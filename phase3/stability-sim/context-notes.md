@@ -325,6 +325,23 @@ estimated from its ~10 h rotation + low density (Darwin–Radau); (b) set Polyph
 `reference_radius` in the emitted Principia cfg (Phase 4 emit); (c) re-run the co-tilt +
 3:2-lock experiments with J2 on for the faithful answer.
 
+**UPDATE — the J2 gap is a PREREQUISITE, not just a fidelity nicety (dependency inverted).**
+Confirmed Principia applies the geopotential to the **celestial–celestial** integration, not
+only to vessels: `geopotential_tolerance` lives in the *ephemeris* numerics blueprint (the
+celestial integrator's "drop negligible harmonics" threshold), and Principia's whole point is
+reproducing real body-body effects (e.g. lunar precession). So the natural moons
+(Pandora/Dante/Hades) **do** feel Polyphemus's J2 in-game → J2 is an **input** to the moon
+dynamics, and the point-mass results above (3:2-lock, co-tilt, inclination, resonance scans)
+are **provisional / pre-J2**, to be re-confirmed with J2 on before any moon orbit is final.
+Documented reference of the real values: `docs/reference/principia-geopotential-data.md` (+ko).
+
+**Polyphemus J2 computed (working value).** Giant-calibrated q = ω²R³/GM: Polyphemus
+q ≈ 0.22 (vs Jupiter 0.089 / Saturn 0.155 — 2×+, from its low GM at 120 M⊕ + fast ~10 h
+spin). With J2/q ∈ [0.105 Saturn, 0.165 Jupiter] → **J2 ≈ 0.022–0.038, central ≈ 0.028**
+(~1.7× Saturn), J4 ≈ −0.001. Frozen in `phase4/alpha_centauri.yaml` (bulk.geopotential_j2).
+This is the value to inject in step (a). Order of finalization is now: **J2 first → reboundx
+into the sim → re-run moon experiments → finalize moon orbits.**
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
