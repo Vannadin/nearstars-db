@@ -125,9 +125,16 @@ decisions:
         바너드/TRAPPIST-1과 같은 등급(갇힘, 게임 안전). results/_moons_alpha_centauri.
       resonance_scan: >
         Hades 반장축 125k→172.5k 스캔(results/_moons_resonance_scan.md): 안전대는 저반장축
-        빈틈(127.5k–135k, MEGNO 2). 강공명은 역효과 — 2:1(Dante)=157.5k는 Pandora 5:3과 중첩돼
-        이젝션, 140k–170k 전체가 카오스→이젝션(질량 큰 Pandora가 강공명 교란). 135k는 정규 섬에
-        정확히 위치(132.5k 카오스 / 140k 펌핑 사이) → 공명-인지 검증 통과.
+        빈틈(127.5k–135k). 강공명은 역효과 — 2:1(Dante)=157.5k는 Pandora 5:3과 중첩돼
+        이젝션, 140k–170k 전체가 카오스→이젝션(질량 큰 Pandora가 강공명 교란).
+      resonance_lock: >
+        공명각 libration 연구(results/_moons_resonance_lock.md, 300yr·1500샘플): 내측 쌍에
+        공명 락 **불가**(소거법 확정). 3:2는 정확값(131k)에 놔도 공명각 순환(coverage 358°, 캡처
+        실패) — Pandora secular 교란이 약공명을 씻음. 2:1(167k)은 Pandora 5:3·3:2 사이서 이젝션.
+        e_max가 128~135k 전 구간 ~0.056 동일 = 공명 펌핑 전무. 따라서 135k 빈틈은 취향이 아니라
+        유일한 안정 안. 함의: Hades e가 공명 유지 안 됨 → 현실 조석이면 가열 감쇠. canon ">900K"는
+        고정-Pandora계에서 비자기일관(라플라스 해법은 관측우선이 차단). e=0.056은 "주어진 값"으로
+        채택하는 documented limitation.
     moons:                         # a/e는 게이트 통과한 설계값; 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
       - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 0.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(~94k 밖), 화산 moonlet (Metis/Adrastea급). e작음." }
       - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 2.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열>900K = 유지된 e(Io식), 교차 아님. Dante와 3:2~5:3 사이." }

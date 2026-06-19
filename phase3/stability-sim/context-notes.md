@@ -229,6 +229,21 @@ raw imaging 1.05/0.40 — coupled to keeping the ring (small radius only works b
 ring carries the extra cross-section). Mass ~120 M⊕ in both ring/ring-free solutions; only
 the radius differs (1.0 vs 1.1–1.15).
 
+**Resonance-lock study (`scripts/resonance_lock_study.py` → `results/_moons_resonance_lock.md`).**
+Tested whether the (fiction-free) Dante-Hades pair can be put in a *locked* MMR that
+dodges the fixed Pandora — computing the resonant argument φ over 300 yr / 1500 samples to
+tell libration (locked) from circulation (not locked). Result: **no lock is achievable.**
+The 3:2 (even at the exact period ratio, Hades 131k) **circulates** (φ-coverage 358°,
+capture fails — Pandora's secular forcing washes out the weak first-order resonance), and
+the 2:1 (Hades 167k) **ejects** (caught between Pandora's 5:3 and 3:2). Hades e_max is
+~0.056 across the whole 128–135k band, independent of position → zero resonant pumping.
+So the off-resonance gap (135k) is the *only* stable option, not a preference. Physical
+caveat recorded in `phase4/alpha_centauri.yaml`: with no resonance maintaining e, real
+tides would damp Hades's eccentricity and the canon >900 K heating would fade — it is not
+self-consistent in a fixed-Pandora (observation-first) system; the Laplace-chain fix is
+barred by keeping Pandora at the observed 225k. e=0.056 is adopted as a given (documented
+limitation), not a dynamically sustained value.
+
 Masses/radii for Dante/Hades/Cassandra/Chaos are invented (only Pandora's mass + diameter
 and Cassandra's >6500 km diameter are canon). Poly-L4/L5 are **not** moons — they are
 Polyphemus's *heliocentric* L4/L5 co-orbital planetoids (separate star-centred Trojan
