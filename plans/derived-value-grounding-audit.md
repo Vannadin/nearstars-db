@@ -16,6 +16,33 @@ cfg-emitted (Kerbalism writer deferred), so those are provenance-only.
 
 ---
 
+## How to attack — method-gap vs value-fix
+
+Most findings are **method gaps** (no grounded method was ever defined → each body was
+improvised), NOT independent per-body errors. Fix the method **once**, then re-derive the
+affected bodies uniformly. Fixing the 7 giant B-fields one-by-one would just reproduce the
+improvisation that caused this. Only a few items are genuine per-cell value fixes.
+
+| Finding | Type | Fix shape |
+|---|---|---|
+| 1a giant B-fields + phantom-cite | **method gap** (no grounded giant-dynamo method, cf. rocky's RM22) | define + cache Christensen 2009 energy-flux scaling → re-derive 7 giants uniformly |
+| 1b disk blends | **method gap** (code uses linear n,k average) | one code fix (Maxwell-Garnett) → eps Eri + tau Cet auto-correct |
+| flare boost | **method gap** (no flare→dose relation) | define relation/policy → apply to 2 hosts |
+| Dohnanyi q / grain ρ | **method gap** (uncited code constants) | cite once in the code |
+| astrosphere v_wind=400 | doc/traceability | surface the assumption at each host |
+| HD 69830 c/d confidence | **value fix** | 2 cells → low |
+| Barnard dipoles | **value fix** | add anchor or "analogy" note, 4 cells |
+| tau-cet label / code comment | value / hygiene | text cleanup |
+
+**Division of labor.** The **method grounding** (read the relation paper, cache it, calibrate
+against the real giants — the J2 template) is the judgment core *and* the phantom-citation
+risk zone, so it is done on the main thread / tightly verified, never blind-delegated.
+**Mechanical application** (per-body recompute), **code fixes**, and **value cleanups** are
+delegated to subagents and then **verified by deterministic recompute + confirming every
+cited paper actually resolves in `_papers/` cache** (the phantom-citation guard).
+
+---
+
 ## The phantom-citation pattern (the most important systemic finding)
 
 Some derived values name a real paper that is **absent from the `_papers/` cache
