@@ -217,6 +217,18 @@ here; the eccentricity that heats Hades is sustained secularly in a regular gap,
 protective resonance. 135k sits squarely in a regular island (flanked by chaos at 132.5k
 and e-pumping from 140k) → the off-resonance gap placement is the resonance-aware optimum.
 
+**Follow-ups (2026-06-19, user).** (1) No unnamed moons — named 5 only (all fictional
+anyway). (2) Canon says the two outermost moons orbit **retrograde**, so Cassandra/Chaos
+set to inclination 178°/175°; 100-yr re-run = STABLE (retrograde is Hill-stable to a larger
+radius, ~0.7 vs 0.5, so it only helps); 1000-yr re-confirm running. (3) The Laplace 1:2:4
+chain was **rejected** under observation-first: it needed Polyphemus inflated 120→168 M⊕
+to keep Pandora's 27 h lock at the 4:1 distance (252k) — bending the observed planet to a
+film moon layout. So Pandora a stays 225,000 km. (4) Corrected the Polyphemus radius in
+`phase4/alpha_centauri.yaml`: cfg-ready is the **ring-model 1.0 R_Jup** (ρ~0.47), not the
+raw imaging 1.05/0.40 — coupled to keeping the ring (small radius only works because the
+ring carries the extra cross-section). Mass ~120 M⊕ in both ring/ring-free solutions; only
+the radius differs (1.0 vs 1.1–1.15).
+
 Masses/radii for Dante/Hades/Cassandra/Chaos are invented (only Pandora's mass + diameter
 and Cassandra's >6500 km diameter are canon). Poly-L4/L5 are **not** moons — they are
 Polyphemus's *heliocentric* L4/L5 co-orbital planetoids (separate star-centred Trojan
