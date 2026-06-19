@@ -113,11 +113,15 @@ decisions:
           verdict: pass-in-window
           evidence: "0.02 R_Hill, bound=True (120 M⊕ 행성 대비 달 질량 무시 가능). hypotheticals/alpha_centauri.json."
       - note: >
-          14위성 이름·물리 = James Cameron's Avatar: The Game(2009, Ubisoft) 출처 [GAME] —
-          팬 추정 아님(2026-06-19 provenance 교정). Cassandra(2번째 큰 달)/Hades(타원궤도로 Dante
-          근접→조석가열>900K)/Dante(최내곽, Roche 가장자리 공전)/Chaos(Miranda형 균열, 절벽 15–30km)/
-          Poly-L4·L5(트로이) + ~7 무명. 트로이 달은 물리적 viable(질량비 ≈0.006 ≪ 0.04).
-          전체 14위성 안정 배치 체크(Roche → ~0.5 R_Hill ≈ 5.7e6 km zone)는 미실행 — 구현 여부 별개.
+          14위성 = 명명 5 + 무명 9 (2026-06-19 교정: Poly-L4/L5는 14에 미포함, 별도 공궤도 planetoid).
+          이름·물리 출처 = James Cameron's Avatar: The Game [GAME] (위키가 non-canon 데이터마이닝으로 표기 —
+          라이선스 authored 출처지만 영화 canon 미승인, soft canon 취급). Dante(최내곽, Roche 가장자리,
+          상시 화산)/Hades(2번째, 타원궤도 Dante 근접→T>900K)/Pandora(5번째, 지름 11,447km, 0.72 M⊕,
+          0.8g, 자전축 29°)/(6번째 무명, 탄소순환 N-O 대기)/Cassandra(2번째 큰 달, 지름>6500km, N-H 대기,
+          출처는 Lightstorm Izzo 2024 패널)/Chaos(Cassandra 바깥, Miranda형 균열 절벽 15–30km). 최외곽
+          2위성 역행. planetoid: Poly-L4(337km, L4 60°선행)·Poly-L5(611km, L5 60°후행). 위성 a/P/e는
+          전부 미기재(Pandora만 질량·밀도). 트로이/공궤도 물리 viable(질량비≈0.006). 전체 안정 배치
+          체크(Roche → ~0.5 R_Hill ≈ 5.7e6 km)는 미실행 — 구현 여부 별개.
         status: open
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──

@@ -160,21 +160,58 @@ Game** (2009, Ubisoft) — a licensed, Cameron-involved expanded-canon title. So
 real source tier ([GAME], below [CANON] film/official but above [WIKI] fan-derived), and
 several moons carry usable physical detail, not just names.
 
-**The 14 moons** (Greek-mythology names, coined by humans; source: *Avatar: The Game*):
+**The 14 moons = 5 named + 9 unnamed** (corrected 2026-06-19). Earlier I miscounted
+Poly-L4/L5 into the 14 and the unnamed as ~7; the wiki is explicit: the fourteen are the
+5 named (Dante, Hades, Pandora, Cassandra, Chaos) **+ 9 unnamed**, and **Poly-L4/L5 are
+co-orbital *planetoids*, not moons** (counted separately).
 
-| # | name | note [GAME] |
-|---|---|---|
-| 5 | **Pandora** | Na'vi homeworld; **largest** moon; 0.72 M⊕, r 5724 km, a ≈ 225,000 km (our estimate) |
-| – | **Cassandra** | **2nd-largest** moon (Pandora's sister) |
-| innermost | **Dante** | the **innermost** moon — orbits at the **Roche edge** (as close as possible without tidal breakup) |
-| – | **Hades** | **elliptical** orbit that grazes Dante → **tidal heating > 900 K** (627 °C) |
-| – | **Chaos** | a **fractured Miranda-like** moon, cliffs **15–30 km** high |
-| – | **Poly-L4 / Poly-L5** | Lagrange-point (Trojan) moons |
-| – | ~7 unnamed | |
+### Per-moon data collected from the wiki (2026-06-19)
 
-These physics hooks (Roche-edge Dante, tidal-heated Hades, fractured Chaos) are
-gameplay-rich *and* now sourced — good implementation candidates if the 14-moon set is
-built. The Dante "Roche edge" claim also directly informs the Roche-limit ring analysis.
+Only fields the wiki actually states; "—" = not stated. All [GAME] (*Avatar: The Game*,
+datamined) unless noted. **No moon has a stated semi-major axis, period, or eccentricity
+except via ordering** — only Pandora has mass/density. Order from the Polyphemus + Alpha
+Centauri System pages:
+
+| moon | order | diameter | other stated data |
+|---|---|---|---|
+| **Dante** | innermost (1st) | — | perpetual volcanism + moonquakes from Polyphemus's tidal forces; orbits as close as possible without tidal breakup (Roche edge) |
+| **Hades** | 2nd | — | elliptical orbit grazing Dante → **T > 900 K** (627 °C); faint red glow; "near-fusion" (the ACS page says *full* fusion and inverts the Dante/Hades attribution — pages conflict) |
+| (unnamed) | 3rd, 4th | — | — |
+| **Pandora** | **5th** | **11,447 km** | mass 0.72 M⊕, gravity 0.8 g, density 1.2 ρ⊕, surface P 1.1 atm (0.9 at sea level), day 27 h, **axial tilt 29°**, atm N₂/O₂/CO₂ >18%/Xe 5.5%/CH₄/H₂S >1%, orbits *between* Polyphemus's two radiation belts, Fe core + unobtanium-strengthened dipole [Survival Guide + Game] |
+| (unnamed) | 6th | — | also a **N–O atmosphere from a carbon-cycle biosphere** (the only other life-bearing moon noted) |
+| **Cassandra** | outer | **> 6,500 km** | **2nd-largest** moon; N–H atmosphere + few % CO₂ → carbon-cycle life possible. Source: **Lightstorm's Joshua Izzo, OmatiCon 2024 panel** (semi-official, newer than the game) |
+| **Chaos** | beyond Cassandra | — | **fractured Miranda-like**; cliffs **15–30 km**; cliffs likely from past tidal heating |
+
+Co-orbital **planetoids** (NOT among the 14 moons):
+
+| body | position | diameter | note |
+|---|---|---|---|
+| **Poly-L4** | L4, 60° ahead | **337 km** | planetoid; noted as orbiting retrograde vs the moons |
+| **Poly-L5** | L5, 60° behind | **611 km** | planetoid (the larger of the pair); retrograde |
+
+**The two outermost moons orbit retrograde** (opposite the rest), per the Polyphemus page.
+
+**Host Polyphemus (for context):** diameter **123,900 km** (infobox) / ~119,000 km (prose
+"74,000 mi, slightly smaller than Saturn"); rotation **10.1–10.6 h** (core/B-field 9.7 h);
+atmosphere **H₂ >72% / He >24% / 4%** (CH₄, NH₃, H₂S, H₂O + trace acetylene/CO/ethane/
+germane/phosphine/propane); metallic-hydrogen transition ~2 Mbar/~6000 K; molten iron
+core; **no rings**; originally named "Crius." Innermost moonlets get **>4,500 rem/day**
+(Io 3,200); Pandora sits just outside the main belts.
+
+**Note for the appearance gate.** The game's stated Polyphemus atmosphere — NH₃, H₂S, CH₄,
+H₂O all present — is chemically consistent with the white/gold/blue banding target: NH₃/H₂O
+→ white clouds, H₂S / NH₄SH chromophores → gold/yellow, CH₄ → blue belts. Fiction-canon
+([GAME]), but it *lines up* with the Phase 4a colour direction.
+
+**Physics hooks** (Roche-edge Dante, tidal-heated Hades, fractured Chaos) are gameplay-rich
+*and* sourced — good implementation candidates if the moon set is built. The Dante
+"Roche edge" claim directly feeds the Roche-limit ring analysis.
+
+**Canonicity caveat.** The Avatar Wiki flags the moon detail pages (Dante/Hades/Chaos/
+Poly-L4/L5) as datamined *Avatar: The Game* content with a **non-canon disclaimer** — so
+[GAME] = a real, licensed, *authored* source (not fan invention), but Lightstorm has not
+ratified it as film canon. Cassandra's data traces to a 2024 Lightstorm panel (more
+current). Treat as **soft canon** for art-direction; observation wins where they conflict.
 
 **Canon ↔ observation tensions (to resolve IF implemented):**
 1. **Density** — canon "denser than Jupiter"; the real α Cen A b imaging estimate is
