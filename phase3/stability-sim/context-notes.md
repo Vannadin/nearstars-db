@@ -290,6 +290,41 @@ sim). The 9 unnamed moonlets are deferred. Gated layout frozen in
 `../../phase4/alpha_centauri.yaml` (satellites axis); bodies in
 `hypotheticals/alpha_centauri.json`.
 
+## 2026-06-19 — PLAN (not yet run): inner-pair co-tilt + J2 fidelity
+
+**Co-tilt experiment (user idea).** To get both the self-consistent heating (3:2 lock) AND
+a visual sky-latitude spread, tilt Dante+Hades *together* (same inclination + shared node →
+mutual inclination 0) instead of independently (which creates mutual inclination and detunes
+the 3:2). Setup: fix the 3:2-lock config (Dante 100k, Hades 131k, Hades M0=180°, Pandora
+225k equatorial, Cassandra/Chaos retrograde); scan a common tilt θ = 0–35° applied to both
+inner moons. Measure (4 axes): 3:2 φ-libration persistence, bound/MEGNO, Hades e (still
+pumped to ~0.09?), and **Dante–Hades mutual inclination over time** (the prime detune risk
+— differential nodal precession from different a). Decision tree: lock survives to θ≈20–30°
+→ adopt both; only small θ → heating-vs-spread trade-off; θ-independent break → pick one.
+Hard ceiling is Kozai (~39°). Tool: add a "co-tilt mode" to inclination_scan.py + φ/mutual-
+incl tracking; loader already takes phase/inclination (would add per-body node Ω for
+generality).
+
+**J2 oblateness — fidelity gap (the key caveat).** Our REBOUND moon sims use POINT masses
+(no J2). For moons J2 is a *first-order* term (dominant nodal precession + it anchors close-
+in moons to the planet's equatorial = local Laplace plane), unlike the wide planet orbits
+where J2 is negligible. Consequences: (1) our moon results are CONSERVATIVE for the co-tilt
+lock — real J2 co-precesses the inner pair and suppresses the mutual-inclination drift that
+would detune the 3:2, so the lock is likely *more* robust in-game; (2) J2 forces inner moons
+toward the equatorial plane, so large inner tilts are physically resisted (big visual tilt is
+more natural for OUTER moons); (3) J2 nodal precession slowly rotates the sky configuration
+in-game.
+
+**Principia supports it (confirmed, docs/reference/principia-cfg-reference.md).**
+`principia_gravity_model` takes `j2` (unnormalized zonal harmonic, requires `reference_radius`)
+OR a full `geopotential_row` (degree/order Cnm/Snm), mutually exclusive. So Principia models
+oblateness in-game — the J2 anchor our sim omits IS present in the game (same sim↔game
+fidelity theme as the Barnard fixed-step finding). Actions next session: (a) add J2 to the
+moon sim via REBOUNDx `gravitational_harmonics` (`pip install reboundx`), Polyphemus J2
+estimated from its ~10 h rotation + low density (Darwin–Radau); (b) set Polyphemus `j2` +
+`reference_radius` in the emitted Principia cfg (Phase 4 emit); (c) re-run the co-tilt +
+3:2-lock experiments with J2 on for the faithful answer.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
