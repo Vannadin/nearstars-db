@@ -398,6 +398,10 @@ def add_hypotheticals(sim: rebound.Simulation, meta: dict, hyp_path: Path) -> li
             e=body.get("eccentricity", 0.0),
             inc=base_inc + math.radians(body.get("inclination_deg", 0.0)),
             Omega=base_Omega,
+            # Optional initial phase (defaults 0 = at pericenter, longitude 0 —
+            # the prior fixed-seed behaviour). Set per-body to scan phases.
+            omega=math.radians(body.get("arg_periapsis_deg", 0.0)),
+            M=math.radians(body.get("mean_anomaly_deg", 0.0)),
             name=body["name"],
         )
         added.append(
