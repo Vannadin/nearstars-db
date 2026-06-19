@@ -114,11 +114,15 @@ viewer's Phase 4 variants).
 **Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** The whole **c ≲ 0.072
 band** survives fixed-step 1 Myr, but only **c ≲ 0.06** gives comfortable chaos margin
 (MEGNO ≲ few×10³); 0.064–0.072 survives yet sits near the edge (MEGNO ~10⁴, seed-fuzzy).
-Default proposal **e = 0.015** (calmest, inside Basant favoured < 0.02). Measurement-
-faithful end: ×0.75–0.9 (c 0.06–0.072) — closest to β-prior that holds, but the higher
-the e the thinner the margin. Pick within the band per art-direction at Phase 4.
 SPEC class A+B (window-selection + engine); gate `pass-in-window` (Basant favoured /
 measured-band + stability-sim evidence above; 10 Gyr survival). Per `phase4/SPEC.md`.
+
+**ADOPTED (2026-06-19): β-prior × 0.8 (c ≈ 0.064) at the median mass** — the
+closest-to-observed eccentricity verified stable over fixed-step 1 Myr at the adopted
+median true mass (owner's choice: prioritise observational fidelity). Frozen in
+`phase4/barnards_star.yaml` (staged). Caveat: near the chaotic edge (MEGNO ~1.4×10⁴),
+thin margin — ×0.5–0.75 are calmer fallbacks if a robustness issue surfaces. (×0.85–0.9
+at median mass were not run, so a *closer* stable value may exist but is unverified.)
 
 **Reflected in.**
 - Process + numbers: `phase3/stability-sim/STABILITY_REPORT.md` (β-prior blow-up vs
