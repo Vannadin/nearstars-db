@@ -447,6 +447,7 @@ Sol-Configs는 `:FOR[SolSystem]`으로 자체 `Real_Sol-GravityModel.cfg`, `Real
 
 ## Related
 
+- [principia-geopotential-data](principia-geopotential-data.md) — Principia 가 천체별로 싣고 있는 **실제 지오포텐셜 값**(태양·거대행성·지구/화성/달)을 verbatim 으로, proto↔cfg 매핑 + Polyphemus 같은 가스자이언트 작성법까지.
 - [methodology](methodology.md) — Principia 의 gravitational_parameter, mass, radius 에 공급되는 DB 측 스키마.
 - [binary-epoch-pipeline](binary-epoch-pipeline.md) — 해당 문서 §9–11 이 만들어 내는 Cartesian 상태 벡터가 여기 `principia_initial_state` 의 body 블록에 공급됩니다.
 - [mod-reference](mod-reference.md) — Principia 설치와 의존성 티어.
