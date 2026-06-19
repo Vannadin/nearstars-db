@@ -244,6 +244,22 @@ self-consistent in a fixed-Pandora (observation-first) system; the Laplace-chain
 barred by keeping Pandora at the observed 225k. e=0.056 is adopted as a given (documented
 limitation), not a dynamically sustained value.
 
+**Phase scan overturns the "no-lock, phase-robust" claim (`scripts/phase_scan.py` →
+`results/_moons_phase_scan.md`).** The lock study used a single fixed seed (all moons at
+M=0). Capture is phase-sensitive, so this scanned Hades's initial mean anomaly across the
+full circle at the exact 3:2 (131k). Result: **at M0 ≈ 180° (Hades starting anti-aligned /
+at apoapsis) the 3:2 DOES librate** (φ-coverage 258° vs 358° elsewhere), and it is the
+*calmest* phase (MEGNO 8.1 vs 60–550 for the others) **with Hades e pumped to ~0.122 —
+about double the non-resonant 0.056.** That higher, resonance-maintained eccentricity is
+exactly what would physically sustain the canon tidal heating, and it needs no change to
+Pandora (observation-first intact). So the earlier "no lock available" was an artifact of
+the M=0 seed. CAVEATS: it is a wide-amplitude libration (~130°, near the resonance edge)
+on a mildly chaotic trajectory (MEGNO 8) over only 300 yr — a longer (1000+ yr) run at
+Hades 131k / M0≈180° is needed to confirm the lock persists and stays bound before adopting
+it. The currently-gated layout (Hades 135k gap, e frozen) is unchanged pending that
+confirmation; the 3:2-locked anti-aligned config is now the leading candidate to supersede
+it (would also bump Hades a 135k→131k and set the moon's epoch mean anomaly ≈180°).
+
 Masses/radii for Dante/Hades/Cassandra/Chaos are invented (only Pandora's mass + diameter
 and Cassandra's >6500 km diameter are canon). Poly-L4/L5 are **not** moons — they are
 Polyphemus's *heliocentric* L4/L5 co-orbital planetoids (separate star-centred Trojan

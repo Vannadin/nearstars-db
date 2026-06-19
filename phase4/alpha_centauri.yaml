@@ -135,6 +135,13 @@ decisions:
         유일한 안정 안. 함의: Hades e가 공명 유지 안 됨 → 현실 조석이면 가열 감쇠. canon ">900K"는
         고정-Pandora계에서 비자기일관(라플라스 해법은 관측우선이 차단). e=0.056은 "주어진 값"으로
         채택하는 documented limitation.
+      phase_scan_update: >
+        위상 스캔(results/_moons_phase_scan.md)이 위 "락 불가"를 뒤집음 — 단일시드(M0=0)
+        artifact였음. Hades 초기 평균근점이각 M0≈180°(Dante 반대편)에서 3:2가 **실제 libration**
+        (coverage 258°), 스캔 중 최저 MEGNO 8.1, **Hades e ~0.122로 ~2배 펌핑** = 조석가열을
+        물리적으로 지지 + Pandora 불변(관측우선 유지). 단 넓은진폭(~130°)·약카오스·300yr이라
+        장기(1000yr+) 확인 필요. 현 게이트값(135k gap, e동결)은 확인 전까지 유지; 3:2-락(131k,
+        epoch M0≈180°)이 이를 대체할 선두 후보.
     moons:                         # a/e는 게이트 통과한 설계값; 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
       - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 0.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(~94k 밖), 화산 moonlet (Metis/Adrastea급). e작음." }
       - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 2.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열>900K = 유지된 e(Io식), 교차 아님. Dante와 3:2~5:3 사이." }
