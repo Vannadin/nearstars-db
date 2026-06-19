@@ -285,6 +285,38 @@ relation), so it is a *derived* emit field (like a unit conversion), auto-comput
   Io/Europa/Ganymede) — predictable, not unmeasurable. Rotation = orbital period (known).
   Form: full cos/sin degree 2 (`geopotential_row` degree 2: order 0 = C̄₂₀, order 2 = C̄₂₂).
 
+### Deriving J₂ for an added giant — the Radau–Darwin method (literature-grounded)
+
+A fictional giant has no measured J₂, so per the derived-value rule we ground the
+**method** (not a fake measurement). Use the first-order **Radau–Darwin relation**
+(Helled, Anderson, Schubert & Stevenson 2011, eq. 3, arXiv:1109.1627; orig. Zharkov &
+Trubitsyn 1978 / Murray & Dermott 1999 §4.4):
+
+```
+NMoI = C/(M R²) = (2/3)·[1 − (2/5)·√(5m/(m + 3·J₂) − 1)]      m = ω²·R̄³/(G·M)  (MEAN radius)
+inverted →  J₂ = (m/3)·[5/(s²+1) − 1],   s = (5/2)·(1 − (3/2)·NMoI)
+```
+
+The one free input is the **normalized moment of inertia** NMoI = C/MR² (central
+condensation). Bound it from the measured giants — Jupiter ≈ 0.264, Saturn ≈ 0.21, ice
+giants ≈ 0.22–0.24 (Helled+2011/2020 [arXiv:2007.10783]; Fortney+2018 [arXiv:1609.06324];
+homogeneous sphere = 0.40). A lower-mass / lower-density giant is *less* centrally
+condensed than Saturn → slightly higher NMoI.
+
+**Always calibrate the implementation on the real giants first** (the rule's verify step):
+the same relation reproduces Jupiter's J₂ to **−0.0 %** (m 0.0834, NMoI 0.2648) and Saturn's
+to **−10 %** (m 0.140, NMoI 0.220). The Saturn residual is the **first-order truncation
+error**, which grows with m — so for a fast rotator (large m) the RD value is a slight
+*under*-estimate of the true J₂.
+
+**Worked — Polyphemus** (M = 120 M⊕, R_eq = 1.0 R_Jup, P_rot ≈ 10.1–10.6 h, NMoI ≈ 0.23
+[0.21–0.26]): iterating the figure (f = 3⁄2·J₂ + 1⁄2·m → mean radius → m) gives m ≈ 0.19,
+flattening ≈ 0.13, and **J₂ ≈ 0.023** (central). m ≈ 0.19 > Saturn's 0.14, so first-order
+truncation under-predicts by ~10–20 % → true ≈ **0.025–0.026**. Range **0.017–0.033**
+(dominated by the NMoI assumption). Calibration J₂ for the giants from Iess et al. 2018
+(Jupiter) / Durante et al. 2017 (Saturn). State the NMoI assumption + range whenever this
+value is used.
+
 ### Higher-degree from the heightmap (optional, terrain stage)
 
 The lumpy **degree-3+** field can be derived from a body's **heightmap** once terrain exists

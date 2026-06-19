@@ -61,11 +61,17 @@ decisions:
     axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드 + 위성 동역학 입력
     status: open                   # 작업값 계산됨, reboundx-검증 위성 재실행 후 확정
     driver: physical               # 자전+밀도에서 도출(아트디렉션 아님)
-    value: "J2 ≈ 0.028 (범위 0.022–0.038); J4 ≈ -0.001; reference_radius = 1.0 R_Jup"
+    value: "J2 ≈ 0.023 (1차 RD, 절단보정 ~0.025–0.026); 범위 0.017–0.033; J4 ≈ -0.001; reference_radius = 1.0 R_Jup"
     derivation: >
-      거대행성에 보정한 q=ω²R³/GM 방식. 폴리페무스 q≈0.22(자전 10.1–10.6h, M 120 M⊕, R 1.0 R_Jup)
-      — 목성 0.089·토성 0.155의 2배+ (저질량 GM↓). J2/q는 토성 0.105~목성 0.165 → J2 0.022–0.038,
-      central ~0.028 (토성 0.0163의 ~1.7배). 폭=내부구조(MoI/Love) 불확실. 가스자이언트라 zonal only.
+      **논문 근거 (derived-value 규칙)**. Radau–Darwin 관계식 — Helled, Anderson, Schubert, Stevenson
+      2011 eq.3 (arXiv:1109.1627), NMoI=(2/3)[1-(2/5)√(5m/(m+3J2)-1)], m=ω²R̄³/GM(평균반경).
+      구조 가정 NMoI=C/MR²=0.23 (범위 0.21–0.26): 거대행성 실측(목성 0.265, 토성 ~0.21, 빙왕성 ~0.22–0.24;
+      Helled+2011/2020 arXiv:2007.10783, Fortney+2018 arXiv:1609.06324)에서 0.4 M_Jup·저밀도(0.47)는
+      토성보다 덜 응축→NMoI 약간 높음. 폴리페무스 m≈0.19(평균반경, f≈0.13 자기일관 반복). →
+      J2≈0.023(central). **calibration 검증**: 같은 식이 목성 J2 -0.0%, 토성 -10.3% 재현(알려진 1차
+      오차). m≈0.19가 토성(0.14)보다 커 1차 절단이 과소예측 → 실제 ~10–20%↑(보정 ~0.025–0.026).
+      불확실성 폭은 NMoI 가정이 지배. 가스자이언트=축대칭→zonal only(j2[+j4]). 입력 calibration J2:
+      목성=Iess2018, 토성=Durante2017.
     blocks: >
       **의존성 역전** — Principia는 J2를 천체간 연산에도 적용(geopotential_tolerance가 ephemeris
       numerics에 있음) → 폴리페무스 J2가 위성(Pandora·Dante·Hades) 동역학의 *입력*. 따라서 이 J2
