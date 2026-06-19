@@ -455,6 +455,7 @@ Sol-Configs ships its own `Real_Sol-GravityModel.cfg`, `Real_Sol-InitialState.cf
 
 ## Related
 
+- [principia-geopotential-data](principia-geopotential-data.md) — the **real geopotential values** Principia ships for each Solar System body (Sun, giants, Earth/Mars/Moon), verbatim, with the proto↔cfg mapping + how to write a gas giant like Polyphemus
 - [methodology](methodology.md) — DB-side schema that feeds gravitational_parameter, mass, radius into Principia
 - [binary-epoch-pipeline](binary-epoch-pipeline.md) — the Cartesian state vectors produced by §9–11 of that doc feed `principia_initial_state` body blocks here
 - [mod-reference](mod-reference.md) — Principia install and dependency tier
