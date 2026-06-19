@@ -113,9 +113,11 @@ decisions:
           verdict: pass-in-window
           evidence: "0.02 R_Hill, bound=True (120 M⊕ 행성 대비 달 질량 무시 가능). hypotheticals/alpha_centauri.json."
       - note: >
-          canon 14위성(Cassandra/Hades/Dante/Chaos/Poly-L4·L5 트로이 + ~7 무명). 트로이 달은
-          물리적으로 viable(질량비 ≈0.006 ≪ 0.04). 전체 14위성 안정 배치 체크(Roche → ~0.5 R_Hill
-          ≈ 5.7e6 km zone)는 미실행 — 구현 여부는 별개 결정.
+          14위성 이름·물리 = James Cameron's Avatar: The Game(2009, Ubisoft) 출처 [GAME] —
+          팬 추정 아님(2026-06-19 provenance 교정). Cassandra(2번째 큰 달)/Hades(타원궤도로 Dante
+          근접→조석가열>900K)/Dante(최내곽, Roche 가장자리 공전)/Chaos(Miranda형 균열, 절벽 15–30km)/
+          Poly-L4·L5(트로이) + ~7 무명. 트로이 달은 물리적 viable(질량비 ≈0.006 ≪ 0.04).
+          전체 14위성 안정 배치 체크(Roche → ~0.5 R_Hill ≈ 5.7e6 km zone)는 미실행 — 구현 여부 별개.
         status: open
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──

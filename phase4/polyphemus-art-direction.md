@@ -154,17 +154,27 @@ file is a staged Phase 4 draft, nothing gated/emitted).
 the 4th planet = the 2nd of the 3 gas giants.** Canon: "slightly smaller and denser
 than Jupiter, **no rings**, **14 moons**."
 
-**The 14 moons** (Greek-mythology names, coined by humans):
+**Provenance [GAME] — corrected 2026-06-19.** The moon **names and their physical
+descriptions** are *not* fan-speculation: they come from **James Cameron's Avatar: The
+Game** (2009, Ubisoft) — a licensed, Cameron-involved expanded-canon title. So this is a
+real source tier ([GAME], below [CANON] film/official but above [WIKI] fan-derived), and
+several moons carry usable physical detail, not just names.
 
-| # | name | note |
+**The 14 moons** (Greek-mythology names, coined by humans; source: *Avatar: The Game*):
+
+| # | name | note [GAME] |
 |---|---|---|
-| 5 | **Pandora** | Na'vi homeworld; 0.72 M⊕, r 5724 km, a ≈ 225,000 km (our estimate) |
-| – | **Cassandra** | Pandora's sister moon |
-| – | **Hades** | |
-| – | **Dante** | |
-| – | **Chaos** | |
+| 5 | **Pandora** | Na'vi homeworld; **largest** moon; 0.72 M⊕, r 5724 km, a ≈ 225,000 km (our estimate) |
+| – | **Cassandra** | **2nd-largest** moon (Pandora's sister) |
+| innermost | **Dante** | the **innermost** moon — orbits at the **Roche edge** (as close as possible without tidal breakup) |
+| – | **Hades** | **elliptical** orbit that grazes Dante → **tidal heating > 900 K** (627 °C) |
+| – | **Chaos** | a **fractured Miranda-like** moon, cliffs **15–30 km** high |
 | – | **Poly-L4 / Poly-L5** | Lagrange-point (Trojan) moons |
 | – | ~7 unnamed | |
+
+These physics hooks (Roche-edge Dante, tidal-heated Hades, fractured Chaos) are
+gameplay-rich *and* now sourced — good implementation candidates if the 14-moon set is
+built. The Dante "Roche edge" claim also directly informs the Roche-limit ring analysis.
 
 **Canon ↔ observation tensions (to resolve IF implemented):**
 1. **Density** — canon "denser than Jupiter"; the real α Cen A b imaging estimate is
@@ -177,7 +187,11 @@ than Jupiter, **no rings**, **14 moons**."
 co-orbitals of Pandora is dynamically sound. A full 14-moon stable-placement check
 (Roche limit → ~0.5 R_Hill ≈ 5.7×10⁶ km zone) is **not yet run** — separate task.
 
-Sources: [Avatar Wiki — Polyphemus](https://james-camerons-avatar.fandom.com/wiki/Polyphemus),
+Underlying source: **James Cameron's Avatar: The Game** (2009, Ubisoft) — the origin of
+the moon names + physics. Accessible via Avatar Wiki:
+[Polyphemus](https://james-camerons-avatar.fandom.com/wiki/Polyphemus),
+[Cassandra](https://james-camerons-avatar.fandom.com/wiki/Cassandra),
+[Hades](https://james-camerons-avatar.fandom.com/wiki/Hades),
 [Pandora](https://james-camerons-avatar.fandom.com/wiki/Pandora),
 [Alpha Centauri System](https://james-camerons-avatar.fandom.com/wiki/Alpha_Centauri_System).
 
