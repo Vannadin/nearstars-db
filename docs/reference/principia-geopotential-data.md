@@ -254,18 +254,50 @@ solid mantles are lumpy and not axisymmetric):
 
 ---
 
-## Implication for NearStars (Polyphemus and any added giant)
+## Applying to NearStars bodies
 
-A gas giant is a **fast-rotating fluid → smooth and axisymmetric**, so it takes the
-**zonal `j:` form like Jupiter/Saturn**, NOT the Earth-style tesseral mess:
-- Only even zonals: **J₂** (dominant), optionally **J₄** (negative, ~4 % of J₂ like the
-  giants), **J₆**. No order > 0 terms.
-- Must supply `reference_radius` (the equatorial radius the J's are scaled to).
-- Reference scale: Jupiter J₂ = 0.0147, Saturn J₂ = 0.0163. **Polyphemus** spins fast
-  (~10 h) and is low-density (~0.47 g/cc, below Saturn's 0.69) → more oblate → expect
-  **J₂ ≳ Saturn's, ≈ 0.018–0.025** (to be computed properly from rotation + density via
-  the Darwin–Radau relation). KSP cfg: `reference_radius = <R_eq> ; j2 = <value>` (the
-  simple scalar form is adequate; add `geopotential_row` J₄/J₆ only if wanted).
+### Why it matters — artificial satellites (the primary driver)
+
+J₂ is the **dominant non-Keplerian perturbation on low artificial satellites**: it drives
+nodal regression + apsidal precession (∝ (R/a)²·cos i). Principia integrates vessels
+(massless test particles) in the **full geopotential**, so a player's satellites precess
+realistically in-game — sun-synchronous, frozen, and Molniya orbits all exploit exactly
+this. So geopotential is a **first-order gameplay effect for any body players orbit craft
+around** (≈ all of them), not just bodies with natural moons. (It is negligible for the
+body's *own* heliocentric orbit; the impact is on whatever orbits **it**.)
+
+### J₂ — a derived emit (set it broadly, near-zero manual cost)
+
+J₂ follows deterministically from rotation + density + mass + radius (the **Darwin–Radau**
+relation), so it is a *derived* emit field (like a unit conversion), auto-computed per body
+— **not** an art-direction decision. By body type:
+
+- **Gas giant / fast free rotator** (Polyphemus) → zonal **J₂** (+ optional **J₄** ≈ −4 %
+  of J₂, **J₆**), no tesseral. Large: Jupiter 0.0147, Saturn 0.0163; Polyphemus (~10 h spin,
+  0.47 g/cc, below Saturn's 0.69) → **J₂ ≈ 0.018–0.025**. Form: scalar `j2` (+ optional
+  `geopotential_row` J₄/J₆), `reference_radius` = equatorial radius.
+- **Free-rotating rocky** (rare — fast non-locked) → small zonal **J₂** (slow spin → tiny);
+  tesseral (longitude lumps) is unmeasurable for an exoplanet → omit (J₂ only) or synthesize
+  (class C). Form: scalar `j2`.
+- **Tidally-locked rocky** (much of the roster — TRAPPIST-1, Proxima b …) → **NOT
+  axisymmetric**: the permanent star-facing tidal bulge makes it triaxial, so degree 2 carries
+  **J₂ (C̄₂₀) AND a real C̄₂₂ ≈ 0.3·J₂** (hydrostatic ratio J₂ = 10/3·C₂₂, verified on
+  Io/Europa/Ganymede) — predictable, not unmeasurable. Rotation = orbital period (known).
+  Form: full cos/sin degree 2 (`geopotential_row` degree 2: order 0 = C̄₂₀, order 2 = C̄₂₂).
+
+### Higher-degree from the heightmap (optional, terrain stage)
+
+The lumpy **degree-3+** field can be derived from a body's **heightmap** once terrain exists
+(Kopernicus PQS / Parallax): treat the topography as a crustal-density mass layer, apply
+isostatic (Airy) compensation, take its spherical-harmonic transform → C̄ₙₘ/S̄ₙₘ **consistent
+with the visible mountains/basins** (self-consistent gravity ↔ terrain). Caveats: needs an
+assumed crustal density + compensation factor (raw topography *overstates* gravity — large
+features float on low-density roots); for a fictional body these are synthesis-grade choices.
+**Impact is tiny** — J₂ dominates satellite precession by 2–3 orders of magnitude; topography
+terms (~10⁻⁵ and down) matter only for very low orbits / surface gravimetry. So this is a
+self-consistency nicety, sequenced **after** terrain authoring, low priority. **NB the
+heightmap does NOT give J₂** — J₂ is the rotational figure (Darwin–Radau), and the heightmap
+is measured relative to that datum, so it carries no information about it.
 
 ## Related
 - [`principia-cfg-reference.md`](principia-cfg-reference.md) — the cfg *schema* (node syntax, units, J2/geopotential fields)
