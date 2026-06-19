@@ -125,6 +125,42 @@ reproducing real bodies) and records the divergence:
   (0.02 R_Hill, bound=True — moon mass is negligible vs the 120 M⊕ planet).
 - **Polyphemus mass** (~120 M⊕) is consistent with canon's "more massive than Saturn" (≳95 M⊕).
 
+## Polyphemus system & moons (Avatar canon) — researched 2026-06-19
+
+Recorded as reference only — **whether/how to implement is a separate decision** (this
+file is a staged Phase 4 draft, nothing gated/emitted).
+
+**α Centauri A system (canon):** 2 rocky inner planets + 3 gas giants. **Polyphemus =
+the 4th planet = the 2nd of the 3 gas giants.** Canon: "slightly smaller and denser
+than Jupiter, **no rings**, **14 moons**."
+
+**The 14 moons** (Greek-mythology names, coined by humans):
+
+| # | name | note |
+|---|---|---|
+| 5 | **Pandora** | Na'vi homeworld; 0.72 M⊕, r 5724 km, a ≈ 225,000 km (our estimate) |
+| – | **Cassandra** | Pandora's sister moon |
+| – | **Hades** | |
+| – | **Dante** | |
+| – | **Chaos** | |
+| – | **Poly-L4 / Poly-L5** | Lagrange-point (Trojan) moons |
+| – | ~7 unnamed | |
+
+**Canon ↔ observation tensions (to resolve IF implemented):**
+1. **Density** — canon "denser than Jupiter"; the real α Cen A b imaging estimate is
+   1.05 R_Jup, **0.40 g/cc** (much *less* dense). cfg must pick one.
+2. **Rings** — canon "no rings"; our art-direction keeps a thin observation-based
+   Roche-zone ring. (Ring placement = the Roche-limit analysis, not yet done.)
+
+**Dynamics note (Trojan moons are real-physics-viable).** Pandora/Polyphemus mass ratio
+≈ 0.006 ≪ 0.04 → Pandora's L4/L5 are stable for Trojan companions, so Poly-L4/L5 as
+co-orbitals of Pandora is dynamically sound. A full 14-moon stable-placement check
+(Roche limit → ~0.5 R_Hill ≈ 5.7×10⁶ km zone) is **not yet run** — separate task.
+
+Sources: [Avatar Wiki — Polyphemus](https://james-camerons-avatar.fandom.com/wiki/Polyphemus),
+[Pandora](https://james-camerons-avatar.fandom.com/wiki/Pandora),
+[Alpha Centauri System](https://james-camerons-avatar.fandom.com/wiki/Alpha_Centauri_System).
+
 ## Pandora — surface climate over the orbit (estimate, 2026-06-15)
 
 Polyphemus (and its moon Pandora) ride an eccentric heliocentric orbit (a = 1.6 AU,
