@@ -57,6 +57,17 @@ decisions:
         직전 커밋의 1.05 R_Jup/0.40은 raw 이미징 추정치를 잘못 옮긴 것 → cfg-ready는 1.0/~0.47.
         canon "목성보다 밀도 큼"(ρ>1.33, →220 M⊕↑)은 미채택(관측 우선).
 
+  - body: Alpha Centauri A b
+    axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드
+    status: open
+    driver: physical               # 자전+밀도에서 도출(아트디렉션 아님)
+    note: >
+      가스자이언트라 축대칭 → 단순 zonal j2(필요시 j4) 사용(지구식 cos/sin 불필요).
+      자전 ~10h + 저밀도(0.47 g/cc)라 토성(0.0163)보다 클 듯 → J2 ≈ 0.018–0.025 예상,
+      Darwin–Radau로 정확히 산출 예정. reference_radius = 적도반경(1.0 R_Jup). 값 = docs/reference/
+      principia-geopotential-data.md 패턴. **게임 내 위성 동역학에 직접 영향**(우리 REBOUND 시뮬은
+      J2 미포함 → 검증 시 reboundx로 보강 필요, context-notes 참조).
+
   # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
   - body: Alpha Centauri A b
     axis: appearance.banding

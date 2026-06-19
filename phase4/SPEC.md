@@ -53,7 +53,7 @@ problem: the decomposition is fixed up front.
 | group | axes |
 |---|---|
 | `orbit` | `semi_major_axis_au`, `eccentricity`, `inclination_deg` |
-| `bulk` | `mass`, `radius` |
+| `bulk` | `mass`, `radius`, `geopotential_j2` (oblateness — for rotating bodies; Principia `j2` + `reference_radius`) |
 | `atmosphere` | `composition`, `pressure`, `temperature` |
 | `appearance` | `banding` (base colour / bands), `clouds`, `haze`, `aurora`, `rings`, `surface` |
 | `satellites` | art-directed / fiction moons (class D), as a list |
