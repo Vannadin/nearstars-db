@@ -292,7 +292,7 @@ def load_stability():
             sysname = json.load(open(summ[0], encoding="utf-8")).get("system", "")
             m = re.search(r"[\(\[]([^\)\]]*)[\)\]]\s*$", sysname)
             if m:
-                label = m.group(1)
+                label = m.group(1).replace("*.", "").replace("_mearth", "")
         p4.append((suffix, label, bodies))
     p4_bodies = set().union(*[set(b) for _, _, b in p4]) if p4 else set()
     out = {}

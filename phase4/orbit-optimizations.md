@@ -90,7 +90,26 @@ phase-seed-sensitive — single-seed runs, the boundary is fuzzy. Lower e buys r
 margin (MEGNO drops to ~10² at ×0.5, ~8 at e=0.015). So the Phase 4 choice is a **band**
 (c ≲ 0.06 gives comfortable margin; 0.06–0.072 survives but near the edge), trading
 measurement fidelity (×0.9, closest to β-prior that still works) against chaos margin
-(e = 0.015, the calmest). Scan runs: `results/_phase4_{e09,e08,e34,e23,halfe,lowe}/`.
+(e = 0.015, the calmest). Scan runs (nominal Msini mass): archived under
+`results/_archive/_phase4_*/` (kept for reference, not shown in the viewer).
+
+**Median-mass (×1.155) re-run.** The scan above used the *minimum* mass (M·sin i,
+edge-on). Re-run at the isotropic-prior median true mass (×1.155) — the actual adopted
+mass — to check the boundary at the real config:
+
+| config (c) | nominal MEGNO | median-mass MEGNO | median 1 Myr |
+|---|---|---|---|
+| ×0.5 (0.040) | 336 | 4,240 | ✅ |
+| ×2/3 (0.053) | 4,092 | 7,825 | ✅ |
+| ×0.75 (0.060) | 1,569 | 15,264 | ✅ |
+| ×0.8 (0.064) | 10,563 | 13,936 | ✅ |
+
+All four stay clean (|dE/E| ~10⁻⁸, e_max ≤ 0.085) over 1 Myr, so the ~15 % heavier
+median mass **does not break the stability verdict** up to c ≈ 0.064 — but it makes the
+system markedly **more chaotic** (MEGNO up several-fold; ×0.75 jumps 1.6×10³ → 1.5×10⁴),
+i.e. it eats chaos margin. Takeaway: at the adopted median mass, favour the **lower end
+of the band** for margin. Median runs: `results/_phase4_m60_e{05,23,34,08}/` (the
+viewer's Phase 4 variants).
 
 **Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** The whole **c ≲ 0.072
 band** survives fixed-step 1 Myr, but only **c ≲ 0.06** gives comfortable chaos margin

@@ -1,0 +1,121 @@
+{
+  "system": "Barnard's star [*.mass_mearth\u00d71.1547; *.e\u00d70.8]",
+  "star": {
+    "name": "Barnard's star",
+    "mass_msun": 0.1619584493578295
+  },
+  "planets": [
+    {
+      "name": "Barnard d",
+      "mass_msun": 9.118889278704022e-07,
+      "mass_kind": "msini",
+      "a_au": 0.0188,
+      "e": 0.032,
+      "inc_rad": 0.0,
+      "omega_rad": -0.9040805525330626,
+      "Omega_rad": 5.305658970563565,
+      "M_rad": 0.0
+    },
+    {
+      "name": "Barnard b",
+      "mass_msun": 1.03671022598194e-06,
+      "mass_kind": "msini",
+      "a_au": 0.0229,
+      "e": 0.024,
+      "inc_rad": 0.0,
+      "omega_rad": 0.06632251157578452,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 0.0
+    },
+    {
+      "name": "Barnard c",
+      "mass_msun": 1.1615315240934782e-06,
+      "mass_kind": "msini",
+      "a_au": 0.0274,
+      "e": 0.064,
+      "inc_rad": 0.0,
+      "omega_rad": 1.5847589608108512,
+      "Omega_rad": 2.642529177293657,
+      "M_rad": 0.0
+    },
+    {
+      "name": "Barnard e",
+      "mass_msun": 6.691808482090784e-07,
+      "mass_kind": "msini",
+      "a_au": 0.0381,
+      "e": 0.032,
+      "inc_rad": 0.0,
+      "omega_rad": -0.4799655442984406,
+      "Omega_rad": 1.6268219212234332,
+      "M_rad": 0.0
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "whfast",
+    "elapsed_sec": 5703.452380895615,
+    "dt_yr": 0.00012810709019437624,
+    "innermost_period_yr": 0.006405354509718812,
+    "energy_relative_error": 6.5087666282747404e-09,
+    "megno_final": 13936.096534402162
+  },
+  "per_body": {
+    "Barnard d": {
+      "a_min": 0.01879264009650101,
+      "a_max": 0.01880534229211665,
+      "e_min": 0.0016449246091217572,
+      "e_max": 0.07799158550617412
+    },
+    "Barnard b": {
+      "a_min": 0.022893693880363615,
+      "a_max": 0.022913433104258366,
+      "e_min": 0.0013605240527573177,
+      "e_max": 0.0648626516885171
+    },
+    "Barnard c": {
+      "a_min": 0.02738725118241882,
+      "a_max": 0.02740390263225399,
+      "e_min": 0.0020987612435023877,
+      "e_max": 0.06583390753781003
+    },
+    "Barnard e": {
+      "a_min": 0.03810063421746327,
+      "a_max": 0.03810983327988877,
+      "e_min": 0.02714916055773418,
+      "e_max": 0.08546178491447877
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Barnard d": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.07799158550617412
+      },
+      "Barnard b": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.0648626516885171
+      },
+      "Barnard c": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.06583390753781003
+      },
+      "Barnard e": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.08546178491447877
+      }
+    },
+    "overall": "chaotic_but_hill_stable",
+    "ecc_class_max": "calm",
+    "lyapunov_time_yr": 143.53280781873164,
+    "is_chaotic": true
+  }
+}
