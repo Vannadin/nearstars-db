@@ -63,6 +63,24 @@ R_Jup giant at 225,000 km), so the banded cream-and-blue body, its storm, and
 the dark ring fill the daylit sky. The art-direction has to read at *that* scale
 — a near-filling skyline — not just as a distant disk.
 
+**Sibling moons in Pandora's sky (memo, 2026-06-19).** The inner moons are clearly
+visible from Pandora and shuttle across Polyphemus's huge disk (computed in stability-sim):
+- **Dante** — apparent diameter 0.32–0.83° (vs Earth's Moon 0.52°), swings ≤26° from
+  Polyphemus's centre, transit/occult cycle ~11 h; volcanic moonlet (orange lava flecks).
+- **Hades** — 0.24–0.95°, swings ≤37°, cycle ~23 h; tidal-heated >900 K → a **faint red
+  ember** even on its night side.
+Because both orbit inside Pandora (225k), they never leave Polyphemus's vicinity — they
+glide across its banded face and duck behind its limb. Great surface-view material: the
+giant + two moons (one red-glowing, one volcanic) eclipsing each other every few hours.
+
+**Art-direction intent — larger orbital inclinations (memo).** The current moon set is
+near-coplanar (stability-optimised), so from Pandora they all track the *same* line across
+Polyphemus. For a prettier visual spread (moons at different sky latitudes, not stacked on
+one band), the owner wants **somewhat larger mutual inclinations.** This is a Phase 4a
+target needing a **4b stability re-check**: modest inclinations are fine for moons deep in
+the Hill sphere, but how large before Kozai/stability degradation needs a scan (next
+session, alongside the M0≈180° 3:2-lock confirmation).
+
 *(Proposed direction; the binding calls — how deep the blue goes, the storm's
 placement/size — are left in "Open creative questions" below for the user to set.)*
 

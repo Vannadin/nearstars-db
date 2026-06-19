@@ -159,6 +159,11 @@ decisions:
       - "최외곽 2위성 역행(canon): 반영(Cassandra·Chaos inc 178/175). 100yr STABLE 확인."
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
+      - >
+        [4a 의향] 시각적 배치를 위해 궤도경사각 더 크게(현재 near-coplanar라 판도라 하늘서 한 줄로
+        겹침 → 위성별 sky 위도 분산). 4b 안정성 재검 필요(Hill 구 깊이면 적당 경사 OK, 어디까지가
+        Kozai/안정 한계인지 스캔). 다음 세션 M0≈180° 3:2-락 확인과 함께. polyphemus-art-direction.md 참조.
+      - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Hades 붉은 잉걸불). 표면뷰 아트디렉션 입력."
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──
   #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.
