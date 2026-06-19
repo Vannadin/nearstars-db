@@ -267,6 +267,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
       <canvas id="stabBigCanvas"></canvas>
     </div>
     <div id="stabModalCtl">
+      <button id="stabVariant2" title="cycle variant" style="display:none"></button>
       <button id="stabPlay2" title="play / pause">⏸</button>
       <input type="range" id="stabSlider2" min="0" max="100" value="0" step="any">
       <span class="zl">🔍</span>
@@ -1155,7 +1156,8 @@ const stabPanel=document.getElementById('stabPanel'), stabPlayBtn=document.getEl
       stabBigCanvas=document.getElementById('stabBigCanvas'), stabModalTitle=document.getElementById('stabModalTitle'),
       stabOrbitCanvas=document.getElementById('stabOrbitCanvas'),
       stabPlay2=document.getElementById('stabPlay2'), stabSlider2=document.getElementById('stabSlider2'),
-      stabZoomIn=document.getElementById('stabZoomIn'), stabZoomOut=document.getElementById('stabZoomOut');
+      stabZoomIn=document.getElementById('stabZoomIn'), stabZoomOut=document.getElementById('stabZoomOut'),
+      stabVar2btn=document.getElementById('stabVariant2');
 let stabOrbitZoom=1, stabChartZoom=1, stabChartCenter=0.5, _stabTmax=1;
 let stabOrbitFocus=null, _stabOrbitLegend=[], _stabChartLegend=[];   // legend-click focus (orbit panel + right chart)
 let stabShowChart=false, stabModalOpen=false;
@@ -1173,13 +1175,14 @@ function stabRefresh(){   // apply the current variant: title chip, note, length
   if(stabVar>=stabVarIds.length) stabVar=0;
   const nv=stabVarIds.length;
   stabVarBtn.style.display = nv>1 ? '' : 'none';
+  stabVar2btn.style.display = nv>1 ? '' : 'none';   // mirror in the expand-modal control bar
   const id=stabVarIds[stabVar];
   let inf=VAR_INFO[id]?VAR_INFO[id][lang]:null;
   if(!inf){   // dynamic variant (e.g. Phase 4 'p4_*'): label carried on the variant itself
     for(const r of stabRecs){ const v=r.variants.find(x=>x.id===id && x.label);
       if(v){ inf={n:v.label, d:(lang==='ko'?'Phase 4 후보 (게임용 art-direction, 미확정)':'Phase 4 candidate (game art-direction, not finalised)')}; break; } }
   }
-  if(inf){ stabVarBtn.textContent=inf.n+(nv>1?' ⇄':''); stabNoteEl.textContent=inf.d; }
+  if(inf){ stabVarBtn.textContent=inf.n+(nv>1?' ⇄':''); stabVar2btn.textContent=inf.n+(nv>1?' ⇄':''); stabNoteEl.textContent=inf.d; }
   const lens=stabRecs.map(recData).filter(Boolean).map(d=>d.length);
   stabN=lens.length?Math.max(...lens):1;
   stabSlider.max=stabN-1; stabSlider.step='any'; if(stabIdx>stabN-1) stabIdx=stabN-1;
@@ -1259,8 +1262,11 @@ stabOrbitCanvas.addEventListener('click',e=>{
   const hit=_stabOrbitLegend.find(L=>e.offsetX>=L.x0&&e.offsetX<=L.x1&&e.offsetY>=L.y0&&e.offsetY<=L.y1);
   stabOrbitFocus = hit ? (hit.name===stabOrbitFocus?null:hit.name) : null; stabOrbitZoom=1;
   if(stabModalOpen) drawBigChart(); });
-stabVarBtn.onclick=()=>{ if(stabVarIds.length<2) return;
-  stabVar=(stabVar+1)%stabVarIds.length; stabIdx=0; stabRefresh(); if(stabShowChart) drawStabChart(); };
+function cycleStabVariant(){ if(stabVarIds.length<2) return;
+  stabVar=(stabVar+1)%stabVarIds.length; stabIdx=0; stabRefresh();
+  if(stabShowChart) drawStabChart(); if(stabModalOpen) drawBigChart(); }
+stabVarBtn.onclick=cycleStabVariant;
+stabVar2btn.onclick=cycleStabVariant;
 stabChartBtn.onclick=()=>{ stabShowChart=!stabShowChart; stabChart.style.display=stabShowChart?'block':'none';
   stabChartBtn.classList.toggle('on',stabShowChart); if(stabShowChart) drawStabChart(); };
 function openStabModal(){ if(!stabActive||!stabRecs.length) return;
