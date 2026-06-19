@@ -75,20 +75,23 @@ WHFast 1 Myr at several scalings of the β-prior (c is the worst case, shown):
 | config | c | \|dE/E\| | MEGNO | e_max | 1 Myr |
 |---|---|---|---|---|---|
 | β-prior | 0.08 | 6.2 (blow-up) | 6.7×10⁴ | →10³ | ✗ |
+| ×3/4 | 0.060 | 1.0×10⁻⁸ | 1,569 | ≤0.079 | ✅ |
 | ×2/3 | 0.053 | 2.3×10⁻⁸ | 4,092 | ≤0.071 | ✅ |
 | ×0.5 | 0.040 | 1.4×10⁻⁷ | 336 | ≤0.053 | ✅ |
 | set 0.015 | 0.015 | 9.5×10⁻⁹ | 8.2 | ≤0.031 | ✅ |
 
-The blow-up/stable boundary sits between c ≈ 0.053 and 0.08 — only a **modest** reduction
-is needed (β-prior ×2/3 already survives). But MEGNO climbs steeply with e (8 → 336 →
-4,092 → blow-up), so lower e buys chaos *margin*. So the Phase 4 choice is a **band**
-(c ≲ 0.05 is fixed-step-stable), trading measurement fidelity (×2/3, closest to the
-β-prior that still works, thin margin) against safety (e = 0.015, large margin).
-Scan runs: `results/_phase4_{e23,halfe,lowe}/`.
+The blow-up/stable boundary sits between c ≈ **0.06 and 0.08** — even ×3/4 (only a 25%
+reduction) survives, so the β-prior eccentricities are *just* past the fixed-step edge;
+the needed correction is small. MEGNO stays large but bounded across the survivors
+(chaotic, not unstable). So the Phase 4 choice is a **band** (c ≲ 0.06 is fixed-step-
+stable), trading measurement fidelity (×3/4, closest to the β-prior that still works)
+against chaos margin (e = 0.015, the calmest). Scan runs:
+`results/_phase4_{e34,e23,halfe,lowe}/`.
 
 **Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** Adopt a value in the
-**c ≲ 0.05 stable band**; default proposal **e = 0.015** (max margin, inside Basant
-favoured < 0.02), with **×2/3 (e_c ≈ 0.053)** as the measurement-faithful alternative.
+**c ≲ 0.06 stable band**; default proposal **e = 0.015** (calmest, inside Basant
+favoured < 0.02), with **×3/4 (e_c ≈ 0.06)** as the most measurement-faithful option
+that still survives fixed-step 1 Myr.
 SPEC class A+B (window-selection + engine); gate `pass-in-window` (Basant favoured /
 measured-band + stability-sim evidence above; 10 Gyr survival). Per `phase4/SPEC.md`.
 
