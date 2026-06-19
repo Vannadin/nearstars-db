@@ -169,7 +169,7 @@ integrates bodies fixed-step (Quinlan–Tremaine 10 min). WHFast (same class) at
 (`--ecc 0.015`, Basant favored <0.02) WHFast 1 Myr is **clean** (|dE/E|=9.5e-9, MEGNO
 8.2, e_max≤0.031, calm). TRACE keeps β-prior bounded → the blow-up is fixed-step
 numerics, not physics. + 10 Gyr survival argues for the low-e architecture.
-→ staged as a **Phase 4 candidate** (`phase4/orbit-optimizations.md`); DB/viewer/cfg
+→ staged as a **Phase 4 candidate** (`phase4/barnards_star.yaml`); DB/viewer/cfg
 untouched. Run artifact: `results/_phase4_lowe/` (not committed; reproducible via the
 documented override command).
 
@@ -188,4 +188,4 @@ without bespoke flags; fields/bodies are validated up front. DB still untouched
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
 - [paper scoping note](../../plans/paper-scoping.md) — Pillar 3 consumer of this work
-- [Phase 4 orbit-optimizations log](../../phase4/orbit-optimizations.md) — Barnard low-e candidate
+- [Phase 4 Barnard decision board](../../phase4/barnards_star.yaml) — Barnard low-e candidate (process + scan tables now in STABILITY_REPORT.md)

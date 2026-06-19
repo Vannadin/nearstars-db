@@ -1,9 +1,12 @@
 <!-- 폴리페무스(α Cen A b) 비주얼 art-direction Phase 4 초안 — 사용자 창작 영역, 미게이팅 -->
 # Phase 4 Draft — Polyphemus (α Cen A b) Visual Art Direction
 
-**Status:** DRAFT · user art-direction · NOT gated, NOT in the DB. Phase 4 is
-not yet implemented (see [`README.md`](README.md)); this records the creative
-target and the 고증 analysis so it can be activated when Phase 4 is built.
+**Status:** DRAFT · **Phase 4a creative input** · NOT gated, NOT in the DB. Phase 4 is
+not yet implemented (see [`README.md`](README.md)); this records the creative target and
+the 고증 analysis so it can be activated when Phase 4 is built. The per-axis **gated
+conclusions** (orbit / banding / haze / aurora / rings / Pandora) live in the decision
+board [`alpha_centauri.yaml`](alpha_centauri.yaml) — this `.md` is the 4a scratch that
+feeds it, not the record of record.
 
 This is the **user's creative domain**. The science doc stays separate and
 untouched — the Phase 3 synthesis below is quoted only as the window this

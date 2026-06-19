@@ -1,0 +1,127 @@
+# α Centauri Phase 4 결정 보드 — A b(Polyphemus) 중심. (body × axis) 행별 상태. DB 불변, staging 기록
+# 4a 창작 초안 = polyphemus-art-direction.md, 궤도 과정 = STABILITY_REPORT / ALPHA_CEN_AB_DYNAMICS_STUDY
+system: alpha_centauri
+status: staged
+updated: 2026-06-19
+
+decisions:
+  # ── 궤도 (Kozai-안정 최적화 완료) ──────────────────────────────
+  - body: Alpha Centauri A b      # Polyphemus
+    axis: orbit.semi_major_axis_au
+    status: gated
+    op: set
+    value: 1.6
+    driver: window-selection
+    phase3_default: "1.6 AU (Beichman 선호 a<2 AU 패밀리; 대표값 1.9→1.6 정합)"
+    gate:
+      criterion: [stability]
+      verdict: pass-in-window
+      evidence: "안정창 중앙. HZ-안정 1e5 yr 검증(궤도 1.37–1.84 AU 유지)."
+    refs: ["2025AJ....Beichman"]
+
+  - body: Alpha Centauri A b
+    axis: orbit.eccentricity
+    status: gated
+    op: set
+    value: 0.1
+    driver: window-selection
+    phase3_default: "안정창 중앙 e=0.1 (관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존)"
+    gate:
+      criterion: [stability]
+      verdict: pass-in-window
+      evidence: "e≈0–0.18 안정창 중앙. 관측 e≈0.4는 KL-불안정(30 kyr 내 e→0.95, IAS15)."
+
+  - body: Alpha Centauri A b
+    axis: orbit.inclination_deg
+    status: open                  # ← 미결: 상호경사 → cfg sky-frame 변환 필요
+    note: >
+      제약된 양은 AB면에 대한 *상호* 경사 16°(안정창 중앙). cfg sky-frame inclination_deg는
+      미설정. emit 전 변환 필요: i_AB=79.24°, sky-plane 해는 bimodal prograde/retrograde
+      (Beichman Table 4). a/e는 지금 emit 가능.
+
+  # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
+  - body: Alpha Centauri A b
+    axis: bulk.radius
+    status: open                  # ← 미결: 밀도 충돌
+    note: >
+      Avatar canon "목성보다 밀도 큼" vs 관측 추정 1.05 R_Jup·0.40 g/cc(훨씬 *덜* 밀함).
+      cfg가 둘 중 하나 택해야 함(관측 우선이 모드 원칙).
+
+  # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
+  - body: Alpha Centauri A b
+    axis: appearance.banding
+    status: art-directed          # 흰/금/파랑 3색 띠 ("푸른 목성")
+    target: "흰 zone(물구름) + 금 haze + 파랑 belt(메탄 흡수)의 3색 띠, 신호용 대형 소용돌이 폭풍 1개"
+    driver: visual
+    gate:
+      criterion: [visual-checklist]
+      verdict: partial            # 흰 zone·muted-blue belt = in-window; deep-cobalt belt = documented-divergence
+      evidence: >
+        Phase 3 기본 = 창백한 물구름 흰 자이언트 + faint banding(Class I/II). 흰 zone·대비 강화·
+        muted slate/steel-blue belt = in-window. fully-saturated Neptune-cobalt = divergence
+        (225K에선 메탄 기체, 깊은 메탄-블루 메커니즘은 더 차가운 천체 필요).
+      open: "금/노랑 haze 띠는 Phase 3 창에서 미검증 → appearance.haze 행 참조."
+
+  - body: Alpha Centauri A b
+    axis: appearance.haze
+    status: art-directed          # 광화학 크로모포어 금/노랑 (토성-금 메커니즘)
+    target: "광화학 크로모포어+haze로 금/노랑 띠 (S/P/NH4SH/탄화수소 톨린)"
+    driver: visual
+    gate:
+      criterion: [visual-checklist]
+      verdict: null               # ← 4b 미실행: ~250–350K warm-read 가정이 Phase 3 225K와 정합하는지 확인 필요
+      open: "Phase 3 대기합성과 대조 미완 (warm Class I/II 가정 vs Teq 225K)."
+
+  - body: Alpha Centauri A b
+    axis: appearance.aurora
+    status: art-directed          # 조성-고정 (선택 아님)
+    target: "극 rose-magenta 오로라 (Pandora의 cyan 생물발광과 의도적 대비: 행성 핑크, 달 청록)"
+    driver: visual
+    gate:
+      criterion: [composition-lock]
+      verdict: pass-in-window
+      evidence: >
+        H2/He 대기가 색을 *고정*(선택 아님): H Balmer-α 적색 + H2 Fulcher / Balmer-β/γ 보라.
+        원자 산소 없어 지구식 녹색 불가. 대부분 출력은 UV(가시 오로라는 희미).
+      emit_note: "sRGB는 emit 시 element_plasma_colors.yaml / molecular_plasma_colors.yaml에서 추출."
+
+  - body: Alpha Centauri A b
+    axis: appearance.rings
+    status: art-directed          # 관측 기반 얇은 Roche-zone 고리 (canon "고리 없음"과 충돌, 관측 우선)
+    target: "디스크를 가로지르는 얇고 어두운 framing line (토성급 아님)"
+    driver: visual + observation
+    gate:
+      criterion: [stability, visual-checklist]
+      verdict: documented-divergence
+      divergence_note: "Avatar canon = 고리 없음; Beichman §5.3 ring-model 반경 fit 채택(관측 우선)."
+      open: "고리 위치 = 로슈 한계 분석 미실행 (별개 작업)."
+
+  # ── 위성 (class D, 픽션 바디) ─────────────────────────────────
+  - body: Alpha Centauri A b
+    axis: satellites
+    status: art-directed
+    target: "판도라(Avatar 거주가능 달) + canon 14위성 세트"
+    driver: fiction                # SPEC class D
+    bodies:
+      - name: Pandora              # canon 5번째 위성
+        status: gated
+        mass_mearth: 0.72          # canon 채택(픽션 바디는 canon이 권위)
+        radius_km: 5724
+        a_km: 225000               # 우리 추정
+        gate:
+          criterion: [hill-stability]
+          verdict: pass-in-window
+          evidence: "0.02 R_Hill, bound=True (120 M⊕ 행성 대비 달 질량 무시 가능). hypotheticals/alpha_centauri.json."
+      - note: >
+          canon 14위성(Cassandra/Hades/Dante/Chaos/Poly-L4·L5 트로이 + ~7 무명). 트로이 달은
+          물리적으로 viable(질량비 ≈0.006 ≪ 0.04). 전체 14위성 안정 배치 체크(Roche → ~0.5 R_Hill
+          ≈ 5.7e6 km zone)는 미실행 — 구현 여부는 별개 결정.
+        status: open
+
+  # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──
+  #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.
+
+process: "phase3/stability-sim/STABILITY_REPORT.md + ALPHA_CEN_AB_DYNAMICS_STUDY.md (Kozai 스캔)"
+art_direction: "phase4/polyphemus-art-direction.md (4a 창작 초안 + 고증 window 분석)"
+phase2_db: "unchanged"
+viewer_variant: "adopted(안정) ⇄ observed(Kozai-불안정) stability variants"

@@ -1,15 +1,18 @@
-# 바너드 별 Phase 4 채택 결정 (엔진 안정성 art-direction) — DB(측정 β-prior·Msini)는 불변, staging 기록
+# 바너드 별 Phase 4 결정 보드 — (body × axis) 행별 상태. DB(측정 β-prior·Msini)는 불변, staging 기록
 system: barnards_star
 status: staged          # Phase 4 미활성(validator/emitter 없음) — 활성 시 emit할 채택값을 기록해 둠
 adopted: 2026-06-19
 
+# 보드 = (body × axis) 행. 손댄 축만 행으로 둠. 나머지 궤도/대기/외형 축은 passthrough(Phase 3 기본값).
 decisions:
-  - body: "*"           # 행성 4개 공통
-    field: mass_mearth
+  - body: "*"                 # 행성 4개 공통
+    axis: bulk.mass
+    status: gated
     op: scale
-    value: 1.1547       # Msini(최소질량) → 등방 prior 중앙 경사각 60°의 진질량
+    value: 1.1547             # Msini(최소질량) → 등방 prior 중앙 경사각 60°의 진질량
     per_planet_result_mearth: { "Barnard d": 0.304, "Barnard b": 0.345, "Barnard c": 0.387, "Barnard e": 0.223 }
     driver: window-selection
+    phase3_default: "M·sin i (RV 최소질량)"
     rationale: "RV Msini는 최소값. 무작위 방향 궤도의 중앙 경사각 60° → ×1/sin60 = ×1.1547이 통계적 중앙 진질량."
     gate:
       criterion: [dynamical-ceiling]
@@ -17,11 +20,13 @@ decisions:
       evidence: "×3 진질량 불안정 천장(i_crit≈19°)보다 한참 아래 — 안정 범위 안."
 
   - body: "*"
-    field: e
+    axis: orbit.eccentricity
+    status: gated
     op: scale
-    value: 0.8          # β-prior × 0.8 → c≈0.064
+    value: 0.8               # β-prior × 0.8 → c≈0.064
     per_planet_result: { "Barnard d": 0.032, "Barnard b": 0.024, "Barnard c": 0.064, "Barnard e": 0.032 }
     driver: engine + window-selection
+    phase3_default: "β-prior (c≈0.08)"
     rationale: >
       관측(β-prior)에 가장 가까우면서 채택 중앙질량에서 고정 스텝(Principia) 1 Myr를
       견디는 이심률. 측정 β-prior(c 0.08)는 고정 스텝 적분을 인공 폭발시킴(|dE/E|=6.2).
@@ -33,8 +38,10 @@ decisions:
         측정 β-prior보다 낮고 RV 이심률 불확정 범위 안.
       caveat: "카오스 가장자리(MEGNO ~1.4e4) — 마진 얇음. 더 안전하려면 e ≤ ×0.75(calmer)."
     refs: ["2025ApJ...982L...1B"]
+    alternatives_considered: "×0.5 / ×2/3 / ×0.75 (calmer, 관측에선 더 멂) — STABILITY_REPORT 이심률 스캔표"
 
+# 그 외 모든 축(orbit.a/inclination, radius, atmosphere.*, appearance.*) = passthrough (Phase 3 기본값).
 reproduce: "run.py --system barnards_star --scale '*.mass_mearth=1.1547' --scale '*.e=0.8' --integrator whfast --years 1000000"
+process: "phase3/stability-sim/STABILITY_REPORT.md (β-prior blow-up vs low-e clean + 이심률/중앙질량 스캔표)"
 phase2_db: "unchanged (β-prior eccentricity, Msini mass)"
 viewer_variant: "results/_phase4_m60_e08 (label: Phase 4: mass×1.1547; e×0.8)"
-alternatives_considered: "e ×0.5 / ×2/3 / ×0.75 (calmer, but further from observed) — see phase4/orbit-optimizations.md"

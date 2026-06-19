@@ -255,7 +255,43 @@ Re-run at the favored low-e (e = 0.015, `run.py --set '*.e=0.015'`): **clean ove
 |dE/E| = 9.5×10⁻⁹, MEGNO 8.2, every planet e_max ≤ 0.031, calm. (TRACE keeps the system
 bounded at β-prior too — the blow-up is fixed-step numerics, not physics.) The low-e
 adoption for in-game stability is a **Phase 4 candidate** (staged, DB unchanged):
-`phase4/orbit-optimizations.md`.
+`phase4/barnards_star.yaml`.
+
+**Eccentricity-reduction scan.** How much reduction is actually needed? WHFast 1 Myr at
+several scalings of the β-prior (c, the worst-case planet, shown):
+
+| config | c | \|dE/E\| | MEGNO | e_max | 1 Myr |
+|---|---|---|---|---|---|
+| β-prior | 0.080 | 6.2 (blow-up) | 6.7×10⁴ | →10³ | ✗ |
+| ×0.9 | 0.072 | 2.4×10⁻⁸ | 11,016 | ≤0.096 | ✅ |
+| ×0.8 | 0.064 | 7.5×10⁻⁹ | 10,563 | ≤0.085 | ✅ |
+| ×3/4 | 0.060 | 1.0×10⁻⁸ | 1,569 | ≤0.079 | ✅ |
+| ×2/3 | 0.053 | 2.3×10⁻⁸ | 4,092 | ≤0.071 | ✅ |
+| ×0.5 | 0.040 | 1.4×10⁻⁷ | 336 | ≤0.053 | ✅ |
+| set 0.015 | 0.015 | 9.5×10⁻⁹ | 8.2 | ≤0.031 | ✅ |
+
+The blow-up/stable boundary sits between c ≈ **0.072 and 0.08** — even ×0.9 survives, so
+the β-prior at c = 0.08 sits *right at* the fixed-step edge and just tips over. The
+needed correction is tiny. **Caveat:** the near-edge survivors (×0.8/×0.9) run MEGNO
+~10⁴ (strongly chaotic), so the tipping point is phase-seed-sensitive; lower e buys real
+chaos margin (MEGNO ~10² at ×0.5, ~8 at e=0.015). Scan runs used the *minimum* mass
+(M·sin i, edge-on); archived under `results/_archive/_phase4_*/`.
+
+**Median-mass (×1.155) re-run** — at the actually adopted isotropic-prior median true mass:
+
+| config (c) | nominal MEGNO | median-mass MEGNO | median 1 Myr |
+|---|---|---|---|
+| ×0.5 (0.040) | 336 | 4,240 | ✅ |
+| ×2/3 (0.053) | 4,092 | 7,825 | ✅ |
+| ×0.75 (0.060) | 1,569 | 15,264 | ✅ |
+| ×0.8 (0.064) | 10,563 | 13,936 | ✅ |
+
+All four stay clean (|dE/E| ~10⁻⁸, e_max ≤ 0.085) over 1 Myr, so the ~15 % heavier median
+mass **does not break the stability verdict** up to c ≈ 0.064 — but it makes the system
+markedly **more chaotic** (MEGNO up several-fold). Takeaway: at the adopted median mass,
+favour the **lower end of the band** for margin. Median runs: `results/_phase4_m60_e{05,23,34,08}/`
+(the viewer's Phase 4 variants). The adopted choice (β-prior × 0.8 = c ≈ 0.064, the
+closest-to-observed stable value) is frozen in `phase4/barnards_star.yaml`.
 
 ## Hypothetical moons — demonstration
 
