@@ -74,24 +74,30 @@ WHFast 1 Myr at several scalings of the β-prior (c is the worst case, shown):
 
 | config | c | \|dE/E\| | MEGNO | e_max | 1 Myr |
 |---|---|---|---|---|---|
-| β-prior | 0.08 | 6.2 (blow-up) | 6.7×10⁴ | →10³ | ✗ |
+| β-prior | 0.080 | 6.2 (blow-up) | 6.7×10⁴ | →10³ | ✗ |
+| ×0.9 | 0.072 | 2.4×10⁻⁸ | 11,016 | ≤0.096 | ✅ |
+| ×0.8 | 0.064 | 7.5×10⁻⁹ | 10,563 | ≤0.085 | ✅ |
 | ×3/4 | 0.060 | 1.0×10⁻⁸ | 1,569 | ≤0.079 | ✅ |
 | ×2/3 | 0.053 | 2.3×10⁻⁸ | 4,092 | ≤0.071 | ✅ |
 | ×0.5 | 0.040 | 1.4×10⁻⁷ | 336 | ≤0.053 | ✅ |
 | set 0.015 | 0.015 | 9.5×10⁻⁹ | 8.2 | ≤0.031 | ✅ |
 
-The blow-up/stable boundary sits between c ≈ **0.06 and 0.08** — even ×3/4 (only a 25%
-reduction) survives, so the β-prior eccentricities are *just* past the fixed-step edge;
-the needed correction is small. MEGNO stays large but bounded across the survivors
-(chaotic, not unstable). So the Phase 4 choice is a **band** (c ≲ 0.06 is fixed-step-
-stable), trading measurement fidelity (×3/4, closest to the β-prior that still works)
-against chaos margin (e = 0.015, the calmest). Scan runs:
-`results/_phase4_{e34,e23,halfe,lowe}/`.
+The blow-up/stable boundary sits between c ≈ **0.072 and 0.08** — even ×0.9 (a 10%
+reduction) survives, so the β-prior at c = 0.08 sits *right at* the fixed-step edge and
+just tips over. The needed correction is tiny. **Caveat:** the near-edge survivors
+(×0.8/×0.9) run MEGNO ~10⁴ (strongly chaotic), so the exact tipping point is
+phase-seed-sensitive — single-seed runs, the boundary is fuzzy. Lower e buys real chaos
+margin (MEGNO drops to ~10² at ×0.5, ~8 at e=0.015). So the Phase 4 choice is a **band**
+(c ≲ 0.06 gives comfortable margin; 0.06–0.072 survives but near the edge), trading
+measurement fidelity (×0.9, closest to β-prior that still works) against chaos margin
+(e = 0.015, the calmest). Scan runs: `results/_phase4_{e09,e08,e34,e23,halfe,lowe}/`.
 
-**Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** Adopt a value in the
-**c ≲ 0.06 stable band**; default proposal **e = 0.015** (calmest, inside Basant
-favoured < 0.02), with **×3/4 (e_c ≈ 0.06)** as the most measurement-faithful option
-that still survives fixed-step 1 Myr.
+**Conclusion (Phase 4 CANDIDATE — staged, not gated/emitted).** The whole **c ≲ 0.072
+band** survives fixed-step 1 Myr, but only **c ≲ 0.06** gives comfortable chaos margin
+(MEGNO ≲ few×10³); 0.064–0.072 survives yet sits near the edge (MEGNO ~10⁴, seed-fuzzy).
+Default proposal **e = 0.015** (calmest, inside Basant favoured < 0.02). Measurement-
+faithful end: ×0.75–0.9 (c 0.06–0.072) — closest to β-prior that holds, but the higher
+the e the thinner the margin. Pick within the band per art-direction at Phase 4.
 SPEC class A+B (window-selection + engine); gate `pass-in-window` (Basant favoured /
 measured-band + stability-sim evidence above; 10 Gyr survival). Per `phase4/SPEC.md`.
 
