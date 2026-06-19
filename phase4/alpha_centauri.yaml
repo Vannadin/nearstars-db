@@ -42,10 +42,16 @@ decisions:
   # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
   - body: Alpha Centauri A b
     axis: bulk.radius
-    status: open                  # ← 미결: 밀도 충돌
-    note: >
-      Avatar canon "목성보다 밀도 큼" vs 관측 추정 1.05 R_Jup·0.40 g/cc(훨씬 *덜* 밀함).
-      cfg가 둘 중 하나 택해야 함(관측 우선이 모드 원칙).
+    status: gated                 # 관측 우선으로 밀도 충돌 해소 (2026-06-19)
+    value: "1.05 R_Jup (~75,000 km), ρ 0.40 g/cc"
+    driver: window-selection
+    phase3_default: "관측 1.05 R_Jup / 0.40 g/cc"
+    gate:
+      criterion: [error-bar]
+      verdict: documented-divergence
+      divergence_note: >
+        Avatar canon "목성보다 밀도 큼"(→220 M⊕↑, ρ>1.33) 기각. 관측 1.05 R_Jup·0.40 g/cc
+        채택(질량 120 M⊕와 자기일관). 모드 원칙 = 관측 우선. canon density는 미채택 divergence.
 
   # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
   - body: Alpha Centauri A b
@@ -124,6 +130,12 @@ decisions:
       - { name: Pandora,   order: 5, a_km: 225000, e: 0.0,  inc_deg: 0.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 조석고정 27h→a 도출. 거주가능." }
       - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 1.0, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기." }
       - { name: Chaos,     order: "beyond Cassandra", a_km: 1500000, e: 0.10, inc_deg: 5.0, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 0.5 R_Hill 한참 안." }
+    rejected:
+      - >
+        라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동
+        펌핑해 자기일관시키는 매력적 안이나, Pandora를 252k로 옮기려면 폴리페무스 질량을 관측
+        120 M⊕ → 168 M⊕로 부풀려야 함(영화 위성배치에 관측 행성을 맞추는 격). 관측 우선 원칙으로
+        기각(2026-06-19). 따라서 Pandora a=225,000은 관측질량+27h로 사실상 고정, 빈틈 배치 유지.
     deferred:
       - "무명 9위성 (캐논 14 = 명명5+무명9): 차차 — 소형 moonlet 플레이스홀더로 추가 예정."
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
