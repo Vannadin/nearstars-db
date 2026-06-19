@@ -26,6 +26,24 @@ format**, the **decision record schema**, and the **cfg connection**.
 
 ---
 
+## 0. Two sub-stages — 4a (art-direction) and 4b (gate)
+
+Phase 4 splits into two roles, by who acts:
+
+- **Phase 4a — art-direction (owner / creative).** The owner states the desired look or
+  config freely: the visual target, the bodies/moons/rings to include, the orbit or
+  composition choices. No gating here — it is the creative *input*. Artifacts: the
+  `phase4/*-art-direction.md` drafts and stated targets.
+- **Phase 4b — gate (agent).** The agent takes a 4a target and **checks it against
+  Phase 2 (measurements) + Phase 3 (synthesis window)**: is it `pass-in-window` or a
+  `documented-divergence` (§2)? It produces the verdict, the evidence, and the
+  cfg-ready value. Artifacts: the `phase4/<system>.yaml` decision records (§3).
+
+So 4a says *what we want*; 4b says *whether it's defensible and how to emit it*. The
+gate criteria, record schema, and cfg wiring below are all the **4b** machinery.
+
+---
+
 ## 1. Decision taxonomy — what Phase 4 decides
 
 | Class | Driver | Example |

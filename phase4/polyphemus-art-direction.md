@@ -23,19 +23,36 @@ giant whose moon Pandora is the Na'vi homeworld. DB / Phase 3 facts:
 
 ## Creative target (the art-direction)
 
-A **banded gas giant where Saturn-ivory and Neptune-blue coexist as stripes** —
-the *Avatar* Polyphemus look. The intended read is a *luminous, pale* giant (it
-is a bright Class I/II world, not a dark one) carrying a strong banded character:
+A **banded "blue Jupiter" carrying white, gold, and blue stripes** — the *Avatar*
+Polyphemus look. The intended read is a *luminous, pale* giant (a bright, warm
+Class I/II world, not a dark one) with a strong three-tone banded character:
 
-- **Ivory / cream zones** (upwelling bands) — warm, soft, pale cloud tops; the
-  dominant tone across the disk.
-- **Blue belts** (downwelling, cloud-cleared bands) — cooler stripes showing
-  through to deeper, clearer air; a few read as sharper, deeper blue against the
-  cream so the banding has rhythm rather than a uniform gradient.
+- **White zones** (upwelling bands) — clean reflective cloud tops (ammonia / water);
+  the bright base tone.
+- **Gold / yellow bands** — clouds tinted by **photochemical chromophores + haze**
+  (S / P / NH₄SH / hydrocarbon tholins), the Saturn-gold / Jupiter-tan mechanism.
+- **Blue belts** (downwelling, cloud-cleared bands) — clearer air revealing
+  **methane red-absorption + Rayleigh** below; the Uranus/Neptune mechanism. A few
+  read as sharper, deeper blue so the banding has rhythm, not a uniform gradient.
 - **A signature storm** — one large cyclonic vortex (a Jupiter Great-Red-Spot
   homage, as in the films), the planet's focal landmark, set in a belt.
 - **The Roche-zone ring** (from the Phase 3 synthesis) as a thin, dark framing
   line across the disk — narrow and unobtrusive, not a Saturn-scale ring system.
+
+**Colour physics (three coexisting mechanisms, all banded by the zonal jets):**
+
+| band | colour | mechanism | analogue |
+|---|---|---|---|
+| zone | white | clean NH₃ / H₂O cloud | Jupiter zones |
+| haze | gold/yellow | photochemical chromophore + haze | Saturn gold |
+| belt | blue | cleared → CH₄ absorption + Rayleigh | Uranus/Neptune |
+
+Self-consistent at **~250–350 K** (warm Class I/II): water-cloud white zones, a
+photochemical gold haze, and methane-blue in the cleared belts — and that warm
+temperature also fits a habitable Pandora. Key assumptions (art-direction within
+the physical window): enough methane to colour the cleared belts, and a
+Saturn-gold (not Jupiter-red) chromophore. This is the **Phase 4a** creative target;
+the **Phase 4b** gate must check it against the Phase 3 atmosphere synthesis (below).
 
 **From Pandora's sky.** This is the view the moon is famous for: from Pandora's
 surface Polyphemus spans **~36°** of the sky (computed in stability-sim — a 1
