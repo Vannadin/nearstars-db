@@ -131,6 +131,39 @@ curated file, so the gate catches it before commit.
 
 ---
 
+## Derived astrophysical values — method-grounding rule
+
+Some cfg-bound values are not *measured* but *derived* (computed from curated
+inputs). For any **non-trivial astrophysical derivation — one where a naive
+estimate can be materially wrong because a model or structural assumption drives
+the result** — ground the derivation in the literature, do not ship a
+back-of-envelope as if authoritative. Examples: oblateness / J2, tidal heating
+rate, atmospheric escape, greenhouse-inclusive equilibrium temperature, interior
+structure / Love numbers, spin evolution.
+
+- **Ground the *method*, not a fake measurement.** A fictional body (e.g.
+  Polyphemus) has no measured value to cite. The grounding is (1) the derivation
+  **relation / method paper** (e.g. Darwin–Radau / theory of figures, or an
+  interior-model J2 paper) applied to our inputs, plus (2) citing the **input and
+  calibration sources** (e.g. the giants' real J2 from Iess 2018 / Durante 2017).
+- **Textbook closed-form is its own grounding.** Roche limit, Hill radius, Kepler,
+  angular size, unit conversions — the standard formula *is* the citation; do not
+  demand a paper per arithmetic. The rule targets model-dependent derivations, not
+  every calculation.
+- **Use the existing machinery.** Pin the method/calibration paper by `bibcode` +
+  `arxiv_id`, cache via `fetch_arxiv_texts.py`, read the cached text (never live
+  re-search) — the same convergence discipline as for measured values.
+- **State the assumption + uncertainty.** Record which model/assumption was used
+  and the resulting spread (a single number with no stated structural assumption
+  is a back-of-envelope, not a grounded derivation).
+
+Anchor: **Polyphemus J2** is currently a giant-calibrated `q = ω²R³/GM` estimate
+(~0.028, range 0.022–0.038, the internal-structure spread hand-waved) — flagged for
+re-grounding via the Darwin–Radau / theory-of-figures literature before it is
+treated as final (`phase4/alpha_centauri.yaml` bulk.geopotential_j2).
+
+---
+
 ## Phase 3 — required output + workflow
 
 **Precondition:** Phase 2 done for every body (SKILL Step 1 pre-flight). If only
