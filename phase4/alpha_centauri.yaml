@@ -58,15 +58,19 @@ decisions:
         canon "목성보다 밀도 큼"(ρ>1.33, →220 M⊕↑)은 미채택(관측 우선).
 
   - body: Alpha Centauri A b
-    axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드
-    status: open
+    axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드 + 위성 동역학 입력
+    status: open                   # 작업값 계산됨, reboundx-검증 위성 재실행 후 확정
     driver: physical               # 자전+밀도에서 도출(아트디렉션 아님)
-    note: >
-      가스자이언트라 축대칭 → 단순 zonal j2(필요시 j4) 사용(지구식 cos/sin 불필요).
-      자전 ~10h + 저밀도(0.47 g/cc)라 토성(0.0163)보다 클 듯 → J2 ≈ 0.018–0.025 예상,
-      Darwin–Radau로 정확히 산출 예정. reference_radius = 적도반경(1.0 R_Jup). 값 = docs/reference/
-      principia-geopotential-data.md 패턴. **게임 내 위성 동역학에 직접 영향**(우리 REBOUND 시뮬은
-      J2 미포함 → 검증 시 reboundx로 보강 필요, context-notes 참조).
+    value: "J2 ≈ 0.028 (범위 0.022–0.038); J4 ≈ -0.001; reference_radius = 1.0 R_Jup"
+    derivation: >
+      거대행성에 보정한 q=ω²R³/GM 방식. 폴리페무스 q≈0.22(자전 10.1–10.6h, M 120 M⊕, R 1.0 R_Jup)
+      — 목성 0.089·토성 0.155의 2배+ (저질량 GM↓). J2/q는 토성 0.105~목성 0.165 → J2 0.022–0.038,
+      central ~0.028 (토성 0.0163의 ~1.7배). 폭=내부구조(MoI/Love) 불확실. 가스자이언트라 zonal only.
+    blocks: >
+      **의존성 역전** — Principia는 J2를 천체간 연산에도 적용(geopotential_tolerance가 ephemeris
+      numerics에 있음) → 폴리페무스 J2가 위성(Pandora·Dante·Hades) 동역학의 *입력*. 따라서 이 J2
+      확정이 위성 궤도 확정의 선행조건. 현 점질량 위성 결과는 J2-적용 전 잠정.
+    next: "reboundx gravitational_harmonics로 J2 주입 → 3:2-락·동시틸트·경사 실험 재실행 → 위성 확정."
 
   # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
   - body: Alpha Centauri A b
