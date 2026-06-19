@@ -96,33 +96,38 @@ decisions:
       divergence_note: "Avatar canon = 고리 없음; Beichman §5.3 ring-model 반경 fit 채택(관측 우선)."
       open: "고리 위치 = 로슈 한계 분석 미실행 (별개 작업)."
 
-  # ── 위성 (class D, 픽션 바디) ─────────────────────────────────
+  # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
+  # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
+  # Roche 내측·0.5 R_Hill 외측·카논 순서 제약으로 설계 후 IAS15로 안정 검증.
+  # 핵심 발견: 카논의 "Hades가 Dante에 그레이징"을 e=0.30 직역하면 100yr 내 이젝션 →
+  # 조석가열은 궤도교차 아닌 유지된 e(Io 강제e=0.0041) → e=0.05 + 작은 moonlet로 교정.
   - body: Alpha Centauri A b
     axis: satellites
-    status: art-directed
-    target: "판도라(Avatar 거주가능 달) + canon 14위성 세트"
-    driver: fiction                # SPEC class D
-    bodies:
-      - name: Pandora              # canon 5번째 위성
-        status: gated
-        mass_mearth: 0.72          # canon 채택(픽션 바디는 canon이 권위)
-        radius_km: 5724
-        a_km: 225000               # 우리 추정
-        gate:
-          criterion: [hill-stability]
-          verdict: pass-in-window
-          evidence: "0.02 R_Hill, bound=True (120 M⊕ 행성 대비 달 질량 무시 가능). hypotheticals/alpha_centauri.json."
-      - note: >
-          14위성 = 명명 5 + 무명 9 (2026-06-19 교정: Poly-L4/L5는 14에 미포함, 별도 공궤도 planetoid).
-          이름·물리 출처 = James Cameron's Avatar: The Game [GAME] (위키가 non-canon 데이터마이닝으로 표기 —
-          라이선스 authored 출처지만 영화 canon 미승인, soft canon 취급). Dante(최내곽, Roche 가장자리,
-          상시 화산)/Hades(2번째, 타원궤도 Dante 근접→T>900K)/Pandora(5번째, 지름 11,447km, 0.72 M⊕,
-          0.8g, 자전축 29°)/(6번째 무명, 탄소순환 N-O 대기)/Cassandra(2번째 큰 달, 지름>6500km, N-H 대기,
-          출처는 Lightstorm Izzo 2024 패널)/Chaos(Cassandra 바깥, Miranda형 균열 절벽 15–30km). 최외곽
-          2위성 역행. planetoid: Poly-L4(337km, L4 60°선행)·Poly-L5(611km, L5 60°후행). 위성 a/P/e는
-          전부 미기재(Pandora만 질량·밀도). 트로이/공궤도 물리 viable(질량비≈0.006). 전체 안정 배치
-          체크(Roche → ~0.5 R_Hill ≈ 5.7e6 km)는 미실행 — 구현 여부 별개.
-        status: open
+    status: gated                  # IAS15 1000yr CHAOTIC_BUT_HILL_STABLE — 5위성 bound·calm
+    driver: fiction                # SPEC class D (+ orbit는 stability-optimization)
+    target: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos)"
+    gate:
+      criterion: [stability, hill-stability, resonance]
+      verdict: pass-in-window
+      evidence: >
+        IAS15 1000yr (α Cen A·B 두 별 포함 N-body): CHAOTIC_BUT_HILL_STABLE — 5위성 전부
+        Hill-bound·calm, 이젝션 0, Hades e 0.035–0.053 유지, Dante e≤0.014, Pandora 0.02 R_Hill.
+        바너드/TRAPPIST-1과 같은 등급(갇힘, 게임 안전). results/_moons_alpha_centauri.
+      resonance_scan: >
+        Hades 반장축 125k→172.5k 스캔(results/_moons_resonance_scan.md): 안전대는 저반장축
+        빈틈(127.5k–135k, MEGNO 2). 강공명은 역효과 — 2:1(Dante)=157.5k는 Pandora 5:3과 중첩돼
+        이젝션, 140k–170k 전체가 카오스→이젝션(질량 큰 Pandora가 강공명 교란). 135k는 정규 섬에
+        정확히 위치(132.5k 카오스 / 140k 펌핑 사이) → 공명-인지 검증 통과.
+    moons:                         # a/e는 게이트 통과한 설계값; 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
+      - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 0.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(~94k 밖), 화산 moonlet (Metis/Adrastea급). e작음." }
+      - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 2.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열>900K = 유지된 e(Io식), 교차 아님. Dante와 3:2~5:3 사이." }
+      - { name: Pandora,   order: 5, a_km: 225000, e: 0.0,  inc_deg: 0.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 조석고정 27h→a 도출. 거주가능." }
+      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 1.0, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기." }
+      - { name: Chaos,     order: "beyond Cassandra", a_km: 1500000, e: 0.10, inc_deg: 5.0, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 0.5 R_Hill 한참 안." }
+    deferred:
+      - "무명 9위성 (캐논 14 = 명명5+무명9): 차차 — 소형 moonlet 플레이스홀더로 추가 예정."
+      - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
+      - "최외곽 2위성 역행(canon): 미반영."
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──
   #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.

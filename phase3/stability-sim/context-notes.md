@@ -184,6 +184,46 @@ without bespoke flags; fields/bodies are validated up front. DB still untouched
 (run-time only). `--ecc 0.015` → `--set '*.e=0.015'`; `--ecc-scale 0.5` → `--scale
 '*.e=0.5'`. `--mass-incl-deg` kept (semantic 1/sin i + output-naming sugar).
 
+## 2026-06-19 — Polyphemus named-moon orbits (Avatar: The Game), stability-designed
+
+Set up the orbits of Polyphemus's 5 *named* moons (Dante, Hades, Pandora, Cassandra,
+Chaos) from *Avatar: The Game* canon. The wiki gives **no a/e/period** for any moon
+(only Pandora is Kepler-derivable from its tidal-lock 27 h day → a = 225,000 km), so the
+elements are **designed** under physical bounds (Roche inner edge ~94,000 km, 0.5 R_Hill
+prograde outer ~5e6 km, canon radial ordering) and verified with IAS15.
+
+**Finding — the canonical Hades-grazes-Dante orbit is dynamically lethal.** Canon: Hades
+(2nd moon) has an elliptical orbit "bringing it close to Dante" (innermost), tidal-heating
+it >900 K. Taken literally (Hades e=0.30, periapsis crossing Dante's apoapsis) → Hades
+**ejects within 100 yr** (scatters off Dante, e→2.6e4, Hill-frac 3.4; IAS15). Even e=0.13
+with comparable-mass moons mutually pumps Dante to e=0.28 and still ejects (Lyapunov 0.2
+yr — violently chaotic inner pair). **Fix (physical):** tidal heating comes from a
+*maintained* eccentricity (Io's forced e is only 0.0041 yet it is the most volcanic body
+known), not orbit crossing. So Dante/Hades made small inner **moonlets** (8e21 / 5e21 kg,
+like Jupiter's Metis/Adrastea coexisting with Io) at e=0.01 / 0.05, Hades a=135,000 km
+(period ratio 1.57 to Dante, between 3:2 and 5:3). Result: **MEGNO 1.944 (regular,
+non-chaotic), |dE/E|=0, all 5 moons Hill-bound and calm over 100 yr** (Hades holds
+e≈0.05, ample for >900 K). **1000-yr confirmation: CHAOTIC_BUT_HILL_STABLE** (MEGNO 15.5,
+Lyapunov 148 yr — weak chaos, but all 5 moons stay bound and calm, Hades holds e≈0.05, no
+ejection; same ship-safe class as Barnard/TRAPPIST-1). `results/_moons_alpha_centauri`.
+
+**Resonance scan** (`scripts/resonance_scan.py` → `results/_moons_resonance_scan.md`):
+stepped Hades a 125k→172.5k (Dante/Pandora fixed, IAS15 40 yr) to map the resonance
+landscape. The safe zone is the **low-a gaps (127.5k–135k, MEGNO≈2)**; strong resonances
+*backfire* — Hades:Dante 2:1 (157.5k) sits in an **ejection** zone because it overlaps
+Pandora's 5:3, and the whole 140k–170k band is chaotic→ejecting (massive Pandora disrupts
+every strong MMR via resonance overlap). So a Galilean-style 2:1 chain is NOT available
+here; the eccentricity that heats Hades is sustained secularly in a regular gap, not by a
+protective resonance. 135k sits squarely in a regular island (flanked by chaos at 132.5k
+and e-pumping from 140k) → the off-resonance gap placement is the resonance-aware optimum.
+
+Masses/radii for Dante/Hades/Cassandra/Chaos are invented (only Pandora's mass + diameter
+and Cassandra's >6500 km diameter are canon). Poly-L4/L5 are **not** moons — they are
+Polyphemus's *heliocentric* L4/L5 co-orbital planetoids (separate star-centred Trojan
+sim). The 9 unnamed moonlets are deferred. Gated layout frozen in
+`../../phase4/alpha_centauri.yaml` (satellites axis); bodies in
+`hypotheticals/alpha_centauri.json`.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
