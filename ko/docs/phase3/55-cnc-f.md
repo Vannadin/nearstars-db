@@ -34,7 +34,7 @@ cfg 가 둘 다 플래그합니다. f 자체가 거대 가스 행성이라, 그 
 | `mass_mearth` | 48.5(M sin i) | high | Moutou 2025 — RV 최소 질량(Phase 2 추천. Bourrier 2018 47.8) |
 | `mass_type` | Msini | high | Moutou 2025 — 시선속도 최소 질량. 비통과 |
 | `mass_mjup` | 0.15(M sin i) | high | 유도 = 48.5 / 317.8 |
-| `radius_rjup` | ~0.7(추정 전용) | low | 측정 반지름 없음(비통과). ~0.15 M_Jup, ~270 K 의 준-토성 추정 |
+| `radius_rjup` | ~0.7(추정 전용) | low | 측정 반지름 없음(비통과). ~0.15 M_Jup, ~270 K 의 준-토성 추정. Fortney, Marley & Barnes 2007 (`astro-ph/0612671`) 의 따뜻한 거대행성 질량-반지름-일사 트랙에서 읽음 |
 | `equilibrium_temp_k` (A=0) | 271 | high | 유도: 278.3·0.582^0.25/√0.802 |
 | `equilibrium_temp_k` (A=0.3) | 248 | high | 유도, 목성형 알베도 |
 | `equilibrium_temp_k_periastron` (A=0) | 280 | high | a(1−e) = 0.752 AU 에서 유도 |

@@ -61,7 +61,7 @@ rocky surface).
 | `magnetic_field_present` | false (low mass + cold + slow rotation) | low | likely no active dynamo; small fossil field possible |
 | `induction_heating_w_m2` | 0.001–0.01 | medium | Grayver 2022 — lowest in system due to distance + small mass |
 | `tidal_heating_w_m2` | 0.00001–0.0001 | medium | Bolmont 2020 — negligible at h |
-| `radiogenic_heat_w_m2` | 0.025 | medium | scaled by mass; slightly less than Earth-analog |
+| `radiogenic_heat_w_m2` | 0.025 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled (slightly below Earth-analog for this low-mass body). Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `magnetic_field_strength_microtesla_equator` | 0.5 | low | Sub-Mars mass (0.33 M⊕) → dynamo likely shut off; Mars-analog crustal remnant field |
 | `magnetic_dipole_moment_normalized_earth` | 0.005 | medium | 2208.06523 thermal evolution + RM22 — low-mass planets reach dynamo shutoff early (<1 Gyr) |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: 10° offset; potentially crustal anomaly-dominated like Mars (no clear dipole axis) |

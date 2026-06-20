@@ -31,7 +31,7 @@ flags both accordingly.
 | `mass_mearth` | 56.6 (M sin i) | high | Moutou 2025 — RV minimum mass (Phase 2 recommended; Bourrier 2018 51.2) |
 | `mass_type` | Msini | high | Moutou 2025 — radial-velocity minimum mass; non-transiting |
 | `mass_mjup` | 0.18 (M sin i) | high | derived = 56.6 / 317.8 |
-| `radius_rjup` | ~0.8 (estimate only) | low | No measured radius (non-transiting); Saturn-class estimate at ~0.18 M_Jup, ~490 K |
+| `radius_rjup` | ~0.8 (estimate only) | low | No measured radius (non-transiting); Saturn-class estimate at ~0.18 M_Jup, ~490 K, read off the warm-giant mass-radius-insolation tracks of Fortney, Marley & Barnes 2007 (`astro-ph/0612671`) |
 | `equilibrium_temp_k` (A=0) | 489 | high | derived: 278.3·0.582^0.25/√0.247 |
 | `equilibrium_temp_k` (A=0.3) | 447 | high | derived, Jovian-analog albedo |
 | `insolation_s_earth` | 9.5 | high | derived = L / a² = 0.582 / 0.247² |

@@ -50,7 +50,7 @@ divergence 로서 합성되며, 주황색 K0.5 V 주성 아래 녹슨 현무암 
 | `surface_gravity_g_earth` | ~2.35 | low | 유도 8.47/1.9² (≈ Erid 의 2.09 g) |
 | `equilibrium_temp_k` (A=0.3) | 430 | low | 유도. (A=0) 470 |
 | `insolation_s_earth` | ~8.1 | low | 유도 0.408 L☉ / (0.224 AU)² — 뜨거움, HZ 안쪽 가장자리보다 훨씬 안쪽 |
-| `surface_temp_k` | ~450–500 | low | tie-break: 기본 Teq + 적당한 온실효과. Erid lore 는 표면을 210 °C ≈ 483 K 로 둠 |
+| `surface_temp_k` | ~450–500 | low | 픽션 유래. 물리적 추정이 아니라 아시모프의 *럭키 스타* "Erid" lore (표면 210 °C ≈ 483 K) 를 이미 반증된 천체에 입힌 아트 디렉션적 장식임. 이 값을 뒷받침하는 물리적 온실 계산이나 논문은 없으며, 분위기용으로만 다룸 |
 | `bond_albedo` | 0.20 | low | tie-break: 어두운 헤이즈 / 현무암 |
 | `tidally_locked` | false | low | a = 0.224 AU, 0.78 M☉ 주위 → 조석 고정 시간 척도가 긺. interesting-first 는 자전체를 택함 (Erid 의 빠른 자전) |
 | `rotation_period_h` | ~5–10 (fast) | low | tie-break + Erid lore (5.1 h 빠른 자전체 → 강한 다이나모). 철회된 천체에는 의미 없음 |

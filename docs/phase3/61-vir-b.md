@@ -60,7 +60,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_tint_rgb_hex_accent` | `#c84a18` (substellar magma ocean glow) | low | Tie-break: substellar partial-melt region at ~1450 K radiates in red-orange (Wien peak at 2 μm but visible tail prominent); interesting-first picks a visible lava-glow accent over a uniformly dark surface |
 | `surface_morphology` | substellar magma ocean ~1500 km radius; basaltic cooled plains in mid-latitudes; volatile-stripped nightside regolith | medium | Tie-break: Léger 2009 CoRoT-7b magma-ocean template; substellar isotherm at silicate solidus gives ~30° magma-pond radius |
 | `tidal_heating_w_m2` | 0.1–1 | medium | Bolmont 2020 scaling for e=0.12 at 4.2 d period; eccentricity contribution is non-trivial but modest at this mass; supplements but does not dominate the insolation budget |
-| `radiogenic_heat_w_m2` | 0.05 | medium | Earth-analog at 5 M⊕ × 6 Gyr decay; consistent with a partially molten interior |
+| `radiogenic_heat_w_m2` | 0.05 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled to ~5 M⊕ and consistent with a partially molten interior. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `star_apparent_angular_diameter_deg` | 1.02 | high | derived: 2 × R★ / a × (180/π); 0.963 R☉ at 0.0502 AU |
 | `stellar_illumination_color_temp_k` | 5552 | high | host Teff |
 

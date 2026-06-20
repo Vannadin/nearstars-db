@@ -56,7 +56,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `surface_tint_rgb_hex_accent` | `#c84a18` (substellar 마그마-바다 glow) | low | Tie-break. ~1450 K 의 substellar 부분 용융 영역이 적-주황으로 복사 (Wien 피크 2 μm 이지만 가시광 꼬리 두드러짐). interesting-first 가 균일한 어두운 표면 대신 가시 lava-glow accent 채택 |
 | `surface_morphology` | substellar 마그마 바다 ~1500 km 반경. 중위도 식은 basalt 평원. 휘발성 제거된 야간 regolith | medium | Tie-break. Léger 2009 CoRoT-7b 마그마-바다 템플릿. 규산염 solidus 의 substellar isotherm 에서 ~30° 마그마-pond 반경 |
 | `tidal_heating_w_m2` | 0.1–1 | medium | 4.2 일 주기에서 e=0.12 에 대한 Bolmont 2020 스케일링. 이심률 기여는 이 질량에서 적당하지만 자명하지 않음. 일사 예산을 보충하지만 지배하지는 않음 |
-| `radiogenic_heat_w_m2` | 0.05 | medium | 5 M⊕ × 6 Gyr 붕괴의 지구 아날로그. 부분 용융 내부와 일관 |
+| `radiogenic_heat_w_m2` | 0.05 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 ~5 M⊕로 질량 스케일했으며 부분 용융 내부와 일관됨. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `star_apparent_angular_diameter_deg` | 1.02 | high | 유도. 2 × R★ / a × (180/π). 0.0502 AU 의 0.963 R☉ |
 | `stellar_illumination_color_temp_k` | 5552 | high | 호스트 Teff |
 

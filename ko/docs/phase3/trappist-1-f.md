@@ -64,7 +64,7 @@ Wolf 2017, Turbet 2018, Fauchez 2019 는 모두 f 가 모델링된 모든 CO₂ 
 | `magnetic_field_present` | true (약함, ~0.05× 지구) | low | 작은 질량 + 차가운 내부 + 느린 자전 |
 | `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 (1710.08761) — 총 induction heating 1.1×10¹⁸ W ≈ f 표면 기준 0.0012 W/m². molten-mantle 임계값 미만 |
 | `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic. F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. 하한은 0 (불확실성이 0 까지 걸침). 이전 Bolmont 2020 scaled 추정 대비 30배 높음 |
-| `radiogenic_heat_w_m2` | 0.04 | medium | 지구 analog mantle radiogenics × 1 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 (2203.01065) scaling. 1.04 M⊕ 는 활성 dynamo 를 지지하나 느린 자전 (9.2 d) 으로 multipolar 영역, ~0.3× 지구 |
 | `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 (1706.04617) f 의 0.3 G 테스트 케이스. 활성 dynamo 를 지지 |
 | `magnetic_dipole_tilt_deg` | 12 | low | 동률 처리. 12° 오프셋이 두드러진 auroral cap 를 만듦 |

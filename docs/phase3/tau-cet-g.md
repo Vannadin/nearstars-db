@@ -67,7 +67,7 @@ in picking the visually distinctive bare-rock outcome.
 | `magnetic_field_strength_microtesla_equator` | 0.5 | low | Tie-break: Mercury-analog crustal-remnant only (Mercury's surface field ≈ 0.4 μT) |
 | `tidal_heating_w_m2` | 0.01–0.1 | medium | e = 0.06 at a = 0.133 AU around a 0.78 M☉ host; Bolmont 2020-style scaling gives modest tidal flux but well below Io |
 | `induction_heating_w_m2` | < 0.001 | medium | Host magnetic field too weak; quiet G dwarf magnetic torque negligible |
-| `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics scaled by mass |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `aurora_present` | false | high | No atmosphere; no aurora possible |
 | `star_apparent_angular_diameter_deg` | 3.17 | high | derived: 2 × R★ / a × (180/π); 6× the Sun seen from Earth |
 | `stellar_illumination_color_temp_k` | 5370 | high | host Teff (Pavlenko 2012) |

@@ -63,7 +63,7 @@ Venus-analog 해석 대안은 cfg variant 로 보존. 이 합성은
 | `magnetic_field_strength_microtesla_equator` | 0.5 | low | Tie-break. 수성-analog 외피-잔재만 (수성 표면 자기장 ≈ 0.4 μT) |
 | `tidal_heating_w_m2` | 0.01–0.1 | medium | 0.78 M☉ 호스트 주위 a = 0.133 AU 에서 e = 0.06. Bolmont 2020 스타일 스케일링은 적당한 조석 플럭스를 주지만 Io 한참 아래 |
 | `induction_heating_w_m2` | < 0.001 | medium | 호스트 자기장 너무 약함. 조용한 G 왜성 자기 토크 무시 가능 |
-| `radiogenic_heat_w_m2` | 0.04 | medium | 지구형 맨틀 방사성을 질량으로 스케일 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `aurora_present` | false | high | 대기 없음. 오로라 불가능 |
 | `star_apparent_angular_diameter_deg` | 3.17 | high | derived. 2 × R★ / a × (180/π). 지구에서 본 태양의 6× |
 | `stellar_illumination_color_temp_k` | 5370 | high | 호스트 Teff (Pavlenko 2012) |

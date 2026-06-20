@@ -61,7 +61,7 @@ insolation 환경에 놓였을 때 휘발성 물질이 대부분 손실되거나
 | `magnetic_field_present` | false (저질량 + 저온 + 느린 자전) | low | 활동성 다이나모 없을 가능성, 작은 화석 자기장은 여지 있음 |
 | `induction_heating_w_m2` | 0.001–0.01 | medium | Grayver 2022 — 거리와 작은 질량 때문에 시스템에서 가장 낮음 |
 | `tidal_heating_w_m2` | 0.00001–0.0001 | medium | Bolmont 2020 — h 에서는 무시할 만함 |
-| `radiogenic_heat_w_m2` | 0.025 | medium | 질량으로 스케일링, Earth-analog 보다 약간 낮음 |
+| `radiogenic_heat_w_m2` | 0.025 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일(이 저질량 바디에서는 지구형보다 약간 낮음). 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `magnetic_field_strength_microtesla_equator` | 0.5 | low | sub-Mars 질량(0.33 M⊕) 이라 다이나모가 거의 꺼졌을 가능성. Mars 와 유사한 지각 잔류 자기장만 남음 |
 | `magnetic_dipole_moment_normalized_earth` | 0.005 | medium | 2208.06523 의 thermal evolution + RM22. 저질량 행성은 1 Gyr 이내에 다이나모 셧다운에 도달 |
 | `magnetic_dipole_tilt_deg` | 10 | low | tie-break 으로 10° offset. Mars 처럼 명확한 dipole 축 없이 지각 이상(crustal anomaly) 지배 가능성 |

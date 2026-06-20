@@ -38,7 +38,7 @@ moons.
 | `mass_mearth` | 48.5 (M sin i) | high | Moutou 2025 — RV minimum mass (Phase 2 recommended; Bourrier 2018 47.8) |
 | `mass_type` | Msini | high | Moutou 2025 — radial-velocity minimum mass; non-transiting |
 | `mass_mjup` | 0.15 (M sin i) | high | derived = 48.5 / 317.8 |
-| `radius_rjup` | ~0.7 (estimate only) | low | No measured radius (non-transiting); sub-Saturn estimate at ~0.15 M_Jup, ~270 K |
+| `radius_rjup` | ~0.7 (estimate only) | low | No measured radius (non-transiting); sub-Saturn estimate at ~0.15 M_Jup, ~270 K, read off the warm-giant mass-radius-insolation tracks of Fortney, Marley & Barnes 2007 (`astro-ph/0612671`) |
 | `equilibrium_temp_k` (A=0) | 271 | high | derived: 278.3·0.582^0.25/√0.802 |
 | `equilibrium_temp_k` (A=0.3) | 248 | high | derived, Jovian-analog albedo |
 | `equilibrium_temp_k_periastron` (A=0) | 280 | high | derived at a(1−e) = 0.752 AU |

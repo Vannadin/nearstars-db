@@ -75,7 +75,7 @@ False Positive reclassification.
 | `magnetic_field_strength_microtesla_equator` | 30 | low | Tie-break: RM22 scaling for the assumed parameters; comparable to Earth's |
 | `tidal_heating_w_m2` | 0.001–0.01 | low | e = 0.18 at 0.538 AU; modest tidal flux in the historical scenario |
 | `induction_heating_w_m2` | < 0.001 | low | Quiet host (log L_X ≤ 26.5); negligible induction |
-| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog mantle radiogenics scaled by mass |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `aurora_present` | true (modest) | low | Modest field + atmosphere in the historical scenario; faint diffuse aurora possible |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break: [OI] 557.7 nm green if any O₂; N₂ Vegard-Kaplan blue-green otherwise |
 | `aurora_intensity_kR_typical` | 1 | low | Quiet host — auroral excitation rate well below Earth's |
@@ -203,7 +203,7 @@ and seasonal hemispheric weather patterns.
 
 **Magnetic dynamo expectation (historical).** A 4–5 M⊕ rocky body
 with multi-week rotation could plausibly sustain a moderate dynamo.
-RM22 (Reiners-Christensen) scaling gives a surface field of ~30 μT
+RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`) scaling gives a surface field of ~30 μT
 (comparable to Earth's 25–65 μT). Not relevant to cfg because no
 cfg body is built.
 

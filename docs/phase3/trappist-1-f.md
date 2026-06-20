@@ -65,7 +65,7 @@ preserved as the documented cfg variant.
 | `magnetic_field_present` | true (weak, ~0.05× Earth) | low | small mass + cold interior + slow rotation |
 | `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 (1710.08761) — total induction heating 1.1×10¹⁸ W ≈ 0.0012 W/m² normalized to f's surface; below molten-mantle threshold |
 | `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. Lower bound is 0 (uncertainty spans to zero). Current value is 30× higher than the previous Bolmont 2020-scaled estimate |
-| `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics × 1 |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 (2203.01065) scaling; 1.04 M⊕ supports active dynamo but slow rotation (9.2 d) → multipolar regime, ~0.3× Earth |
 | `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 (1706.04617) test case for f at 0.3 G; supports active dynamo |
 | `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset gives distinctive auroral cap |

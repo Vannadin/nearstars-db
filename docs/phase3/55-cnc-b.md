@@ -33,7 +33,7 @@ estimate-only standard Jovian value; the cfg flags both accordingly.
 | `mass_mearth` | 276 (M sin i) | high | Moutou 2025 — RV minimum mass (Phase 2 recommended; Bourrier 2018 255.4) |
 | `mass_type` | Msini | high | Moutou 2025 — radial-velocity minimum mass; non-transiting |
 | `mass_mjup` | 0.87 (M sin i) | high | derived = 276 / 317.8 |
-| `radius_rjup` | ~1.0 (estimate only) | low | No measured radius (non-transiting); standard warm-Jovian estimate at ~0.9 M_Jup, ~700 K |
+| `radius_rjup` | ~1.0 (estimate only) | low | No measured radius (non-transiting); standard warm-Jovian estimate at ~0.9 M_Jup, ~700 K, read off the warm-giant mass-radius-insolation tracks of Fortney, Marley & Barnes 2007 (`astro-ph/0612671`) |
 | `equilibrium_temp_k` (A=0) | 708 | high | derived: 278.3·0.582^0.25/√0.118 |
 | `equilibrium_temp_k` (A=0.3) | 647 | high | derived, Jovian-analog albedo |
 | `insolation_s_earth` | 41.8 | high | derived = L / a² = 0.582 / 0.118² |

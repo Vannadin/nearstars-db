@@ -66,10 +66,10 @@ preserved as a cfg variant in the Open items.
 | `surface_tint_rgb_hex_accent` | `#a89a88` (exposed weathered bedrock at impact-crater rims and ridge tops) | low | Tie-break: limited bedrock exposure under thick global ice — accent only |
 | `surface_morphology` | global glacial ice with pressure ridges, fractures, and possible cryovolcanic plumes near tidally stressed regions | low | Pierrehumbert 2011 snowball ice-dynamics template; no observational constraint |
 | `magnetic_field_present` | true (modest) | low | Super-Earth mass + non-tidally-locked slow rotation may support a sustained dynamo; not directly constrained |
-| `magnetic_field_strength_microtesla_equator` | 25 | low | Tie-break: RM22 (Reiners-Christensen scaling) for a 4–5 M⊕ rocky body with multi-week rotation gives ~0.5× Earth |
+| `magnetic_field_strength_microtesla_equator` | 25 | low | Tie-break: RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`) for a 4–5 M⊕ rocky body with multi-week rotation gives ~0.5× Earth |
 | `tidal_heating_w_m2` | 0.001–0.01 | medium | e = 0.16 is non-trivial but a = 1.334 AU is far; integrated tidal flux modest |
 | `induction_heating_w_m2` | < 0.001 | medium | Host stellar magnetic field too weak (Boro Saikia 2018 ZDI) at this distance to drive significant induction heating |
-| `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics; metal-poor host should mean slightly lower ²³²Th / ²³⁸U budget but the difference is within uncertainty |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed (a metal-poor host would lower the ²³²Th/²³⁸U budget, but this is not quantified here) |
 | `aurora_present` | true (faint) | low | Modest magnetic field + thin atmosphere → diffuse aurora possible; host XUV too weak for bright aurora |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break: [OI] 557.7 nm green if trace O₂ from photolysis; N₂ Vegard-Kaplan blue-green otherwise |
 | `aurora_intensity_kR_typical` | 1 | low | Quiet host — proton flux at f's distance is well below Earth's, giving aurora intensity ~10× weaker than Earth's typical 10 kR |

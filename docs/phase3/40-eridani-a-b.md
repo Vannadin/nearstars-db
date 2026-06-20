@@ -56,7 +56,7 @@ reading remains no planet.
 | `surface_gravity_g_earth` | ~2.35 | low | derived 8.47/1.9² (≈ Erid's 2.09 g) |
 | `equilibrium_temp_k` (A=0.3) | 430 | low | derived; (A=0) 470 |
 | `insolation_s_earth` | ~8.1 | low | derived 0.408 L☉ / (0.224 AU)² — hot, well inside the HZ inner edge |
-| `surface_temp_k` | ~450–500 | low | tie-break: base Teq + modest greenhouse; Erid lore puts the surface at 210 °C ≈ 483 K |
+| `surface_temp_k` | ~450–500 | low | Fiction-derived: this is not a physical estimate but an art-direction nod to Asimov's *Lucky Starr* "Erid" lore, which puts the surface at 210 °C ≈ 483 K, applied to an already-refuted body. No physical greenhouse calculation or paper backs this value; treated as flavor only |
 | `bond_albedo` | 0.20 | low | tie-break: dark hazy / basaltic |
 | `tidally_locked` | false | low | a = 0.224 AU around 0.78 M☉ → lock timescale long; interesting-first picks a rotator (Erid's fast spin) |
 | `rotation_period_h` | ~5–10 (fast) | low | tie-break + Erid lore (5.1 h fast rotator → strong dynamo); moot for a refuted body |

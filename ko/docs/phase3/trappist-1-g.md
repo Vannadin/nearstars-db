@@ -61,7 +61,7 @@ g 의 일사량으로는 표면 액체 물을 유지할 수 없으며, Wolf 2017
 | `tidal_heating_w_m2` | 2×10⁻⁷–0.001 | medium | Hay & Matsuyama 2019. 이심률 강제의 Maxwell rheology 표면 flux 는 ~2×10⁻⁷ W/m², Andrade rheology 는 다소 큼. g 만 유일하게 planet-planet tides (대부분 f) 에서 2–20% 를 받음 |
 | `xuv_flux_at_planet_F_earth` | ~120 (현재) | high | Berardo 2025 (2506.12140). 개정된 L_XUV = 1.83×10²⁸ erg/s 로 2017 추정치보다 30배 높음 |
 | `stellar_microflare_cadence_min` | 45 | high | Berardo 2025. 10²⁹ erg microflare 가 ~45 분마다, 10³⁰ erg flare 가 6 시간마다 (JWST) |
-| `radiogenic_heat_w_m2` | 0.04 | medium | 지구-analog mantle radiogenics |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `magnetic_field_strength_microtesla_equator` | 10 | low | RM22 (2203.01065) 스케일링. 1.32 M⊕ (시스템 최대 질량) 가 활성 dynamo 를 뒷받침 |
 | `magnetic_dipole_moment_normalized_earth` | 0.35 | medium | RM22 + 2208.06523 (지구급 core 가 dynamo 수명을 늘림). 내부 hydrosphere convection 도 기여할 수 있음 |
 | `magnetic_dipole_tilt_deg` | 12 | low | tie-break. 12° 오프셋으로 독특한 오로라 cap 을 만듬 |

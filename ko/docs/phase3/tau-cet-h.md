@@ -64,7 +64,7 @@ G8V 조명 아래 특징 없는 노랑-크림 구름-정상 팔레트의 Venus-a
 | `magnetic_field_strength_microtesla_equator` | 0.1 | low | Tie-break. 태양풍 상호작용에서 오는 유도 자기 모멘트만. Venus analog |
 | `tidal_heating_w_m2` | 0.05–0.5 | medium | a = 0.243 AU 에서 e = 0.23 은 유의함. Bolmont 2020 스케일링은 상승된 조석 플럭스를 주지만 Io (~2 W/m²) 한참 아래 — Venus-analog 화산 활동 가능 |
 | `induction_heating_w_m2` | < 0.001 | medium | 조용한 호스트 자기장. induction 무시 가능 |
-| `radiogenic_heat_w_m2` | 0.04 | medium | 지구형 맨틀 방사성을 질량으로 스케일 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `aurora_present` | false | high | 전구 자기장 없음 → 유도 전용 태양풍 상호작용. auroral 오발 없음 (Venus-analog) |
 | `star_apparent_angular_diameter_deg` | 1.74 | high | derived. 2 × R★ / a × (180/π). 지구에서 본 태양의 3.3× |
 | `stellar_illumination_color_temp_k` | 5370 | high | 호스트 Teff (Pavlenko 2012) |

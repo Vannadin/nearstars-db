@@ -71,7 +71,7 @@ doi:10.1051/0004-6361/202553869) 의 ESPRESSO sub-10 cm/s RV 정밀도가
 | `magnetic_field_strength_microtesla_equator` | 30 | low | Tie-break. 가정 파라미터에 RM22 스케일링. 지구와 유사한 값 |
 | `tidal_heating_w_m2` | 0.001–0.01 | low | 0.538 AU 에서 e = 0.18. 역사적 시나리오에서 적당한 조석 플럭스 |
 | `induction_heating_w_m2` | < 0.001 | low | 조용한 호스트 (log L_X ≤ 26.5). induction 무시 가능 |
-| `radiogenic_heat_w_m2` | 0.04 | low | 질량으로 스케일된 지구형 맨틀 방사성 |
+| `radiogenic_heat_w_m2` | 0.04 | low | 지구형 BSE(bulk-silicate-Earth) 방사성 열류속(현재값 ~0.04 W/m²)을 질량으로 스케일. 방법은 Wang et al. 2020 (`2020A&A...644A..19W`)의 외계행성 방사성 열 프레임워크를 따름. 다만 Eu→Th/U 호스트 원소비 보정은 호스트별 원소비를 큐레이션하지 않아 적용하지 않았고, 대신 지구형 원소비를 가정함 |
 | `aurora_present` | true (적당함) | low | 역사적 시나리오의 적당한 자기장 + 대기. 희미한 확산 오로라 가능 |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | Tie-break. 어떤 O₂ 라도 있다면 [OI] 557.7 nm 녹색. 없다면 N₂ Vegard-Kaplan 청록 |
 | `aurora_intensity_kR_typical` | 1 | low | 조용한 호스트 — 오로라 여기율이 지구의 그것보다 한참 아래 |
@@ -183,7 +183,7 @@ pseudo-synchronous 자전 주기 ~116 d 를 줍니다 — 길지만 고정되지
 구동했을 것입니다.
 
 **자기 dynamo 기대치 (역사적).** 다주 자전을 가진 4–5 M⊕ 암석체는
-적당한 dynamo 를 지지할 수 있습니다. RM22 (Reiners-Christensen)
+적당한 dynamo 를 지지할 수 있습니다. RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`)
 스케일링은 표면 자기장 ~30 μT (지구의 25–65 μT 와 유사) 를 줍니다.
 cfg 천체가 만들어지지 않으므로 cfg 와 무관.
 

@@ -60,7 +60,7 @@ liquid-water layer maintained by basal melting from radiogenic heat.
 | `tidal_heating_w_m2` | 2×10⁻⁷–0.001 | medium | Hay & Matsuyama 2019 — eccentricity-forced Maxwell-body surface flux ~2×10⁻⁷ W/m², Andrade rheology somewhat higher; g uniquely receives 2–20% from planet-planet tides (mostly f) |
 | `xuv_flux_at_planet_F_earth` | ~120 (current) | high | Berardo 2025 (2506.12140) — revised L_XUV = 1.83×10²⁸ erg/s, 30× higher than 2017 estimates |
 | `stellar_microflare_cadence_min` | 45 | high | Berardo 2025 — 10²⁹ erg microflares every ~45 min; 10³⁰ erg flares every 6 hours (JWST) |
-| `radiogenic_heat_w_m2` | 0.04 | medium | Earth-analog mantle radiogenics |
+| `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `magnetic_field_strength_microtesla_equator` | 10 | low | RM22 (2203.01065) scaling; 1.32 M⊕ (largest in system) supports active dynamo |
 | `magnetic_dipole_moment_normalized_earth` | 0.35 | medium | RM22 + 2208.06523 (Earth-class core extends dynamo lifetime) — interior hydrosphere convection may also contribute |
 | `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset for distinctive auroral cap |
