@@ -418,8 +418,8 @@ the Ma 2018 picture to preserve.
   projected, period ~ 8000 yr). Anchors the cfg decision to
   treat A as an independent stellar body rather than as a
   resolved binary partner.
-- **Saar S. H. & Osten R. A. 1997** — *Lithium, X-ray activity,
-  and rotation in an HR diagram of solar-type field stars*,
+- **Saar S. H. & Osten R. A. 1997** — *Rotation, turbulence and
+  evidence for magnetic fields in southern dwarfs*,
   MNRAS 284, 803. Reports 40 Eri A P_rot ≈ 37.10 d from
   ROSAT-correlated coronal activity. Cited as pre-Burrows
   rotation alternative; see Open items.

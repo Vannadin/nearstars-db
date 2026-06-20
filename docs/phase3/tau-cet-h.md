@@ -314,7 +314,7 @@ interaction.
 - **User-input discrepancy.** The user request described a τ Cet h
   at P = 4562 d / a = 5.0 AU. The DB authoritative h is at
   P = 49.41 d / a = 0.243 AU. The 4562-d signal is plausibly a
-  Feng 2018 §3.4 long-period candidate or a later (Lubin 2024)
+  Feng 2018 §3.4 long-period candidate or a later RV-reanalysis
   candidate not yet ingested. This Phase 3 synthesis treats the
   DB h (49.4 d). If the long-period candidate is later promoted to
   Phase 2 / Phase 3, a separate cfg variant or a re-named entry

@@ -326,7 +326,7 @@ cfg 천체가 만들어지지 않으므로 cfg 와 무관.
 
 - **처분은 확정됨.** f / g / h (이들은 `pl_controv_flag = 1` 로
   남아 있고 retraction watch 위에 있음 — 자매 Phase 3 합성의 open
-  Lubin 2024 / 미래-ESPRESSO 질문을 참조) 와 달리, e 의 처분은
+  Figueira 2025 / 미래-ESPRESSO 질문을 참조) 와 달리, e 의 처분은
   최종입니다 — NEA 2026-04-09 의 False Positive Planet. e 를 다시
   승격할 후속은 예상되지 않습니다.
 - **Cultural-context 교차참조가 canonical 홈.** 미래의 어떤 "Adrian"

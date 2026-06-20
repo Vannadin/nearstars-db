@@ -15,7 +15,7 @@ this host. The planet is **disputed** in NEA (`pl_controv_flag = 1`)
 — RV-only, no transit, no direct imaging, no JWST follow-up.
 Feng 2018 (`2018A&A...613A..76F`) re-examined the system and the
 636-d signal remained stable but at a SNR that some subsequent
-analyses (Lubin 2024, Tuomi 2013 earlier 5-planet retraction history)
+analyses (Figueira 2025, Tuomi 2013 earlier 5-planet retraction history)
 treat as marginal.
 
 **Scenario choice for NearStars: a cold thin-atmosphere snowball
@@ -320,7 +320,7 @@ visual cfg.
 - **Controversial flag (`pl_controv_flag = 1`).** All three Feng
   2017 planets are flagged disputed in NEA. The cfg treats them
   as present and synthesizes accordingly, but a Phase 2 / Phase 3
-  follow-up should monitor whether Lubin 2024 or a future ESPRESSO
+  follow-up should monitor whether Figueira 2025 or a further ESPRESSO
   RV reanalysis confirms or retracts the 636-d signal. If
   retracted, this Phase 3 markdown should be archived not deleted.
 - **True mass.** Msini = 3.93 ± 1.05 M⊕ is the measured quantity;
@@ -341,7 +341,7 @@ visual cfg.
   and a ≈ 5.0 AU (near the asteroid-analog belt inner edge). The
   DB authoritative h is at P = 49.41 d / a = 0.243 AU. The 4562 d
   candidate is plausibly a Feng 2018 §3.4 long-period signal or a
-  later (Lubin 2024) candidate that the DB has not ingested. The
+  later RV-reanalysis candidate that the DB has not ingested. The
   curation question is logged in `db/systems/tau_cet.json` Open
   items; this Phase 3 synthesis treats f as the *outermost*
   current-DB planet at 1.33 AU, consistent with the DB.

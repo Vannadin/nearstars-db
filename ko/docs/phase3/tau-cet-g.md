@@ -276,7 +276,7 @@ dynamo 는 부분적으로 녹은 코어에 의해 비정상적으로 유지됨.
 ## Open items for follow-up
 
 - **Controversial 플래그 (`pl_controv_flag = 1`).** f 와 마찬가지로
-  Lubin 2024 또는 미래 ESPRESSO RV 재분석에 의한 철회 모니터링.
+  Figueira 2025 또는 추가 ESPRESSO RV 재분석에 의한 철회 모니터링.
 - **실제 질량.** Msini = 1.75 ± 0.25 M⊕. 실제 질량은 미지의 i 에
   의존. cfg 는 원반에서 i ≈ 35° 채택 → 실제 질량 ≈ 3.0 M⊕.
 - **반지름은 가정 값, 측정 아님.** mass-radius 관계에서 R = 1.18 R⊕.

@@ -13,7 +13,7 @@ f 의 평형 온도는 202 K (A=0) 또는 184 K (A=0.3) 이며, 이 호스트에
 NEA 에서 **disputed** (`pl_controv_flag = 1`) 로 표시됩니다 — RV 단독,
 transit 없음, 직접 영상 없음, JWST 후속 관측 없음. Feng 2018
 (`2018A&A...613A..76F`) 가 시스템을 재검토했을 때 636 일 신호 자체는
-안정적이었지만, 일부 후속 분석 (Lubin 2024, 그리고 그 이전 Tuomi
+안정적이었지만, 일부 후속 분석 (Figueira 2025, 그리고 그 이전 Tuomi
 2013 의 5-행성 주장 철회 이력) 은 SNR 을 마지널한 수준으로 봅니다.
 
 **NearStars 시나리오 선택. 매장 가능 해양 위에 전구적 H₂O 얼음 외피를
@@ -288,7 +288,7 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
 - **Controversial 플래그 (`pl_controv_flag = 1`).** Feng 2017 세
   행성 모두 NEA 에서 disputed 로 플래그됩니다. cfg 는 이들을 존재
   하는 것으로 다루고 그에 맞게 합성하지만, Phase 2 / Phase 3
-  후속이 Lubin 2024 나 미래 ESPRESSO RV 재분석이 636 d 신호를
+  후속이 Figueira 2025 나 추가 ESPRESSO RV 재분석이 636 d 신호를
   확인할지 철회할지 모니터링해야 합니다. 철회되면 이 Phase 3
   마크다운은 삭제가 아니라 archive 되어야 합니다.
 - **실제 질량.** Msini = 3.93 ± 1.05 M⊕ 가 측정량입니다. 실제
@@ -306,7 +306,7 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
   요청은 τ Cet h 를 P = 4562 d, a ≈ 5.0 AU (소행성-analog 벨트
   안쪽 가장자리 근처) 로 묘사했습니다. DB 의 권위 있는 h 는
   P = 49.41 d / a = 0.243 AU. 4562 d 후보는 Feng 2018 §3.4 의
-  장주기 신호 또는 이후 (Lubin 2024) 후보 중 DB 가 ingest 하지
+  장주기 신호 또는 이후 RV 재분석 후보 중 DB 가 ingest 하지
   않은 것일 가능성. 큐레이션 질문은 `db/systems/tau_cet.json` 의
   Open item 에 로깅됨. 이 Phase 3 합성은 f 를 1.33 AU 의 *가장
   바깥쪽* 현재-DB 행성으로 다루며 DB 와 일치.

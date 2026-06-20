@@ -393,8 +393,8 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
   없음으로 등재 (투영 a ~ 400 AU, P ~ 8000 yr). A 를 resolved
   binary 파트너가 아닌 독립 항성으로 다루는 cfg 결정의 anchor
   입니다.
-- **Saar S. H. & Osten R. A. 1997** — *Lithium, X-ray activity,
-  and rotation in an HR diagram of solar-type field stars*,
+- **Saar S. H. & Osten R. A. 1997** — *Rotation, turbulence and
+  evidence for magnetic fields in southern dwarfs*,
   MNRAS 284, 803. ROSAT 상관 코로나 활성도로부터 40 Eri A
   P_rot ≈ 37.10 일 보고. pre-Burrows 자전 alternative 로 인용 —
   Open items 참조.

@@ -316,7 +316,7 @@ remnant field at ~0.5 μT.
 ## Open items for follow-up
 
 - **Controversial flag (`pl_controv_flag = 1`).** As for f, monitor
-  for retraction by Lubin 2024 or future ESPRESSO RV reanalysis.
+  for retraction by Figueira 2025 or a further ESPRESSO RV reanalysis.
 - **True mass.** Msini = 1.75 ± 0.25 M⊕; true mass depends on
   unknown i. Cfg adopts i ≈ 35° from disk → true mass ≈ 3.0 M⊕.
 - **Radius is assumed, not measured.** R = 1.18 R⊕ from mass–

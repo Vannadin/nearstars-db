@@ -367,7 +367,7 @@ it does not).
 
 - **Disposition is settled.** Unlike f / g / h (which remain
   `pl_controv_flag = 1` and are on retraction watch — see those
-  Phase 3 syntheses for the open Lubin 2024 / future-ESPRESSO
+  Phase 3 syntheses for the open Figueira 2025 / future-ESPRESSO
   question), e's disposition is final: False Positive Planet
   per NEA 2026-04-09. No further follow-up is expected to
   re-promote e.

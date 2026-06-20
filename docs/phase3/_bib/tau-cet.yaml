@@ -60,11 +60,19 @@ papers:
   status: skipped
   category: manual_followup
   fetch_error: null
-- arxiv_id: null
+- arxiv_id: '1306.2974'
   ads_bibcode: 2013ApJ...771...40B
-  title: Boyajian et al. 2013 — bolometric flux Fbol 112.6e-8 (Teff/L basis for Korolik; VizieR J/ApJ/771/40)
-  status: skipped
-  category: manual_followup
+  title: Boyajian et al. 2013 — Stellar Diameters and Temperatures III; bolometric flux Fbol 112.6e-8 (Teff/L basis for Korolik).
+    Has arXiv full text (per-star Fbol in paper table); also VizieR J/ApJ/771/40
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2507.07514'
+  ads_bibcode: 2025A&A...700A.174F
+  title: Figueira et al. 2025 — ESPRESSO RV (10 cm/s); e is a False Positive (stellar activity) + tightened f/g/h limits (the
+    real Tau Ceti retraction reference; cited in tau-cet-e/f/g/h)
+  status: fetched
+  category: deep_read
   fetch_error: null
 - arxiv_id: null
   ads_bibcode: 1996ApJ...457L..99B
@@ -78,10 +86,10 @@ papers:
   status: fetched
   category: deep_read
   fetch_error: null
-# Disk papers backfilled 2026-06-03 (integrity audit F6) — disk Decisions rows were unsourced in this bib.
 - arxiv_id: '1607.02513'
   ads_bibcode: 2016ApJ...828..113M
-  title: MacGregor et al. 2016 — ALMA 1.3mm resolved tau Cet belt; inner edge ~6 AU, outer ~55 AU, T_dust, dust mass; drives disk_* rows
+  title: MacGregor et al. 2016 — ALMA 1.3mm resolved tau Cet belt; inner edge ~6 AU, outer ~55 AU, T_dust, dust mass; drives
+    disk_* rows
   status: fetched
   category: deep_read
   fetch_error: null
