@@ -77,9 +77,9 @@ divergences.
 | `surface_tint_rgb_hex_accent` | `#7a4530` (terminator ridge basalt) | low | Tie-break: limited thermal emission; bedrock tones at the terminator |
 | `surface_morphology` | impact-cratered basaltic terrain; no substellar partial-melt; antistellar cold-trap | medium | Tie-break: Mercury-analog at slightly lower equilibrium temperature than d |
 | `magnetic_field_present` | true (weak, induced) | low | Tie-break: induction-driven field; small core |
-| `magnetic_dipole_moment_normalized_earth` | 0.0005 | low | Tie-break: Mercury-class very small dipole |
+| `magnetic_dipole_moment_normalized_earth` | 0.0005 | low | Tie-break: Mercury-class very small dipole (Mercury analogy, not dynamo-modeled) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field |
-| `surface_radiation_dose_msv_yr` | 7000 | low | Atri 2020 scaling (context-cite, not in cache): airless + 6.8 S⊕ XUV × France 2020 flare duty cycle |
+| `surface_radiation_dose_msv_yr` | 7000 | low | Atri 2020 (`1910.09871`) stellar-proton-event→dose scaling: airless + 6.8 S⊕ XUV × France 2020 (`2009.01259`) flare duty cycle |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | no atmosphere |
 | `star_apparent_angular_diameter_deg` | 4.35 | high | derived: 2 R★ / a × (180/π) = 2 × 0.187 R☉ / 0.0229 AU |

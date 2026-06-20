@@ -312,7 +312,7 @@ Chandra). 다만 X-ray+UV flare 는 여전히 하루 몇 차례씩 뚫고 나옵
 | `solar_cycle_yr` | none (not detected) | low | 나이 많고 자기적으로 조용한 M4 — 발표된 사이클 검출 없음, Phase 2 측정 없음 |
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry 대 LIC (극단적 공간속도) |
-| `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | 높은 V_ISM 이 공동을 압축 |
+| `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM). 높은 V_ISM 이 공동을 압축한다. Sun 과 같은 항성풍 속도(V_⊙ ≈ 400 km/s, Wood et al. 2002/2005 의 고정속도 가정)를 전제하며, 별마다 달라지는 것은 Ṁ 과 V_ISM 뿐이다 |
 | `stellar_radiation_surface_relative_sun` | ~0.1 | medium | 측정: log L_X 25.3 (France 2020 Chandra) = 정온 기준 태양의 0.03×. 하루 ~6회의 X-ray+UV flare 가 시간평균 선량을 끌어올림. 정온-만 canonical 대안: ~0.03 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry 대 LIC. **plugin-only** |
 

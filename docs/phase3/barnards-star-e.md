@@ -78,7 +78,7 @@ No documented divergences.
 | `surface_tint_rgb_hex_accent` | `#6a4030` (terminator/highlands; subtle warmer accent) | low | Tie-break: bedrock tones |
 | `surface_morphology` | basaltic plains; possible relict aqueous-weathering features from earlier wet phase; antistellar cold-trap | medium | Tie-break: Venus / hot-Mars analog with possibility of aqueous geomorphology from earlier (cooler) phase |
 | `magnetic_field_present` | true (weak) | low | Tie-break: smaller core → weaker dynamo; magnetic shielding limited |
-| `magnetic_dipole_moment_normalized_earth` | 0.0003 | low | Tie-break: smallest of the four planets |
+| `magnetic_dipole_moment_normalized_earth` | 0.0003 | low | Tie-break: smallest of the four planets (Mercury analogy, not dynamo-modeled) |
 | `radiation_belt_present` | false | medium | thin atmosphere + weak B-field → marginal trapped population at most |
 | `surface_radiation_dose_msv_yr` | 3000 | low | Atri 2020 scaling (context-cite, not in cache): thin atmospheric shielding (~10 g/cm²) + 2.45 S⊕ XUV × France 2020 duty cycle |
 | `atmospheric_shielding_g_cm2` | 10 | medium | derived: 0.01 bar column on 0.47 g surface |

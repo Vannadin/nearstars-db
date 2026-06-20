@@ -77,7 +77,7 @@ weight-advantaged canonical reading to diverge from.
 | `surface_tint_rgb_hex_accent` | `#9c5532` (warmer substellar regolith + slightly elevated thermal emission) | medium | Tie-break: hottest substellar zone reads warmer/oranger; bare hot rock, no magma at 483 K |
 | `surface_morphology` | impact-cratered basalt, warmer bare-rock substellar zone; antistellar cold-trap regolith | medium | Tie-break: Mercury analog + 10 S⊕ thermal forcing (no melt at 483 K) |
 | `magnetic_field_present` | true (weak, induced) | low | Tie-break: small iron core + Barnard wind → induction-driven field; Mercury analog |
-| `magnetic_dipole_moment_normalized_earth` | 0.0005 | low | Tie-break: Mercury-class very small core dipole |
+| `magnetic_dipole_moment_normalized_earth` | 0.0005 | low | Tie-break: Mercury-class very small core dipole (Mercury analogy, not dynamo-modeled) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field → no trapped population |
 | `surface_radiation_dose_msv_yr` | 10000 | low | Context-cite scaling (Atri 2020-class airless dose + inner-system XUV); no Barnard-specific surface-dose paper in cache — order-of-magnitude only |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |

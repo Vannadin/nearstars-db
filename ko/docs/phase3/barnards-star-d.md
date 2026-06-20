@@ -73,7 +73,7 @@ reading 자체가 없습니다.
 | `surface_tint_rgb_hex_accent` | `#9c5532` (더 따뜻한 substellar regolith + 약간 상승한 열복사) | medium | Tie-break. 가장 뜨거운 substellar 영역이 더 따뜻하게·오렌지로 읽힘. 483 K 에서는 마그마 없는 뜨거운 노출 암석 |
 | `surface_morphology` | impact 크레이터 basalt, 더 따뜻한 노출 암석 substellar 영역. antistellar cold-trap regolith | medium | Tie-break. Mercury analog + 10 S⊕ 열 강제 (483 K 에서 용융 없음) |
 | `magnetic_field_present` | true (약함, 유도) | low | Tie-break. 작은 철 코어 + Barnard 바람 → 유도-구동 장. Mercury analog |
-| `magnetic_dipole_moment_normalized_earth` | 0.0005 | low | Tie-break. Mercury 류 매우 작은 코어 쌍극자 |
+| `magnetic_dipole_moment_normalized_earth` | 0.0005 | low | Tie-break. Mercury 류 매우 작은 코어 쌍극자 (Mercury 유추, 다이너모 모델링 아님) |
 | `radiation_belt_present` | false | high | 대기 없음 + 무시 가능 B-field → trapped 집단 없음 |
 | `surface_radiation_dose_msv_yr` | 10000 | low | Context-cite 스케일링 (Atri 2020 류 무대기 dose + 내부 시스템 XUV). 캐시에 Barnard 특화 표면-dose 논문 없음 — 자릿수 추정만 |
 | `atmospheric_shielding_g_cm2` | 0 | high | 무대기 |

@@ -281,7 +281,7 @@ flare-dominated, not wind-dominated. Its activity cycles on ~7 yr (Wargelin
 | `solar_cycle_yr` | 7 | medium | Wargelin 2017 (ASAS V-band + X-ray/UV) |
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2001 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (LIC; same flow as α Cen) |
-| `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | from the Ṁ upper limit |
+| `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM) from the Ṁ upper limit. Assumes a Sun-like wind speed (V_⊙ ≈ 400 km/s, fixed-velocity assumption of Wood et al. 2002/2005); only Ṁ and V_ISM vary per star |
 | `stellar_radiation_surface_relative_sun` | ~5 | medium | quiescent L_X now measured at 0.3–2× solar (Wargelin R_X −4.4; NEXXUS 27.22); flare-weighted boost on top (5-mmag flares ~63/day, U-band ~1.4/hr). Quiescent-only canonical alternative: ~0.3 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~185 / +42 | low | 6D astrometry vs LIC; **plugin-only** |
 

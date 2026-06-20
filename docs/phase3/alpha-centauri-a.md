@@ -281,7 +281,7 @@ representative; B carries only its own cycle.
 | `solar_cycle_yr` | 19.1 (tentative) | low | Ayres 2014 X-ray; single over-long swing out of a Maunder-low, not a repeated cycle |
 | `stellar_wind_mass_loss_solar` | 2 (A+B combined) | high | Wood 2001 — shared astrosphere, HST Lyα |
 | `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (G-cloud vector for α Cen) |
-| `astrosphere_standoff_au` | ~176 | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM); A+B shared cavity |
+| `astrosphere_standoff_au` | ~176 | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM); A+B shared cavity. Assumes a Sun-like wind speed (V_⊙ ≈ 400 km/s, fixed-velocity assumption of Wood et al. 2002/2005); only Ṁ and V_ISM vary per star |
 | `stellar_radiation_surface_relative_sun` | ~0.8 | medium | measured: log L_X 26.78 (R&S 2016 XMM 2003, 0.2–2 keV) vs solar cycle-mean 26.9 (R_X,⊙ −6.7); the 2005–2013 Maunder-like low dips well below |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~187 / +22 | low | 6D astrometry vs LIC; AB-barycenter, approximate (orbital motion + G-cloud shift it ~10–20°); **plugin-only** |
 

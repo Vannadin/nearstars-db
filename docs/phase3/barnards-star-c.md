@@ -74,7 +74,7 @@ between hot d/b and cooler e.** 32 cfg picks; 16 canonical-aligned,
 | `surface_tint_rgb_hex_accent` | `#6e3d2c` (terminator/highlands bedrock) | low | Tie-break: limited thermal emission at this insolation |
 | `surface_morphology` | impact-cratered basaltic plains; possible relict volcanic terrains; antistellar cold-trap | medium | Tie-break: Mercury-analog + slightly lower thermal forcing than b/d |
 | `magnetic_field_present` | true (weak, induced) | low | Tie-break: induction-driven |
-| `magnetic_dipole_moment_normalized_earth` | 0.001 | low | Tie-break: slightly larger than smaller siblings because c is most massive |
+| `magnetic_dipole_moment_normalized_earth` | 0.001 | low | Tie-break: slightly larger than smaller siblings because c is most massive (Mercury analogy, not dynamo-modeled) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field |
 | `surface_radiation_dose_msv_yr` | 5000 | medium | Atri 2020 scaling: airless + 4.7 S⊕ XUV × France 2020 duty cycle |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |

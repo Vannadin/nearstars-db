@@ -345,7 +345,7 @@ though X-ray+UV flares still punch through several times a day.
 | `solar_cycle_yr` | none (not detected) | low | old, magnetically quiet M4 — no published cycle detection, no Phase 2 measurement |
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~120 | medium | 6D astrometry vs LIC (extreme space velocity) |
-| `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | high V_ISM compresses the cavity |
+| `astrosphere_standoff_au` | ≲ 11 (upper bound) | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM); high V_ISM compresses the cavity. Assumes a Sun-like wind speed (V_⊙ ≈ 400 km/s, fixed-velocity assumption of Wood et al. 2002/2005); only Ṁ and V_ISM vary per star |
 | `stellar_radiation_surface_relative_sun` | ~0.1 | medium | measured: log L_X 25.3 (France 2020 Chandra) = 0.03× solar quiescent; ~6 X-ray+UV flares/day lift the time-averaged dose. Quiescent-only canonical alternative: ~0.03 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~97 / +37 | low | 6D astrometry vs LIC; **plugin-only** |
 

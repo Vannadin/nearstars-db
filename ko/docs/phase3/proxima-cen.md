@@ -252,7 +252,7 @@ Proxima 는 **조밀한 astrosphere** 를 가집니다 — 약한 항성풍 (Ṁ
 | `solar_cycle_yr` | 7 | medium | Wargelin 2017 (ASAS V-band + X-ray/UV) |
 | `stellar_wind_mass_loss_solar` | ≤ 0.2 (upper limit) | medium | Wood 2001 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~25 | medium | Wood 2005 (LIC. α Cen 과 같은 흐름) |
-| `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | Ṁ 상한에서 |
+| `astrosphere_standoff_au` | ≲ 55 (upper bound) | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM), Ṁ 상한에서. 태양과 같은 항성풍 속도 (V_⊙ ≈ 400 km/s, Wood et al. 2002/2005 의 고정 속도 가정) 를 전제하며, 별마다 Ṁ 과 V_ISM 만 달라집니다 |
 | `stellar_radiation_surface_relative_sun` | ~5 | medium | 정온 L_X 가 태양의 0.3–2× 로 측정됨 (Wargelin R_X −4.4; NEXXUS 27.22). 그 위에 flare 가중 boost (5-mmag flare ~63회/일, U-band ~1.4회/시간). 정온-만 canonical 대안: ~0.3 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~185 / +42 | low | 6D astrometry 대 LIC. **plugin-only** |
 
