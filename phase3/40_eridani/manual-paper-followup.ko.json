@@ -1,0 +1,10 @@
+{
+  "_comment": "manual-paper-followup.md 의 Why it matters 컬럼 한글 번역. build_manual_fetch.py 가 사이드카로 읽어서 ko 뷰에 표시.",
+  "tier_a": {
+    "2021AJ....162...53M": "B–C 시각 궤도(P 233.2 yr, e 0.414)와 동역학 질량(B 0.558, C 0.198 M☉)을 갱신해 현재 채택 중인 Mason/Bond 2017 값을 supersede 하며, ±σ 밖이다. `db/binary_orbits.json` + Principia n-body 에 들어간다. arXiv 없음(IOP 페이월).",
+    "1997MNRAS.284..803S": "채택값 ~42 d(Burrows 2024)와 충돌하는 ~37 d 자전주기의 출처. `rotation_period_days` 의 37–42 d 스프레드를 판단하려면 본문이 필요하다. Pre-arXiv(OUP).",
+    "1974AJ.....79..819H": "Mason 2017/2021 이 동역학 질량합을 40 Eri C 질량(0.198–0.204 M☉)으로 분할할 때 쓰는 B–C 질량비를 담고 있다. 이 비를 검증하면 C 의 cfg 질량으로 곧장 전파된다. Pre-arXiv.",
+    "2011A&A...531A...8J": "채택 활동도 log R'HK = −4.99 가 CDS/VizieR Table 4 에만 있다(arXiv preprint 1103.0584 는 per-star 테이블을 누락). 채택값 검증에 수동 VizieR 조회가 필요하다."
+  },
+  "tier_b": {}
+}
