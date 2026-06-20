@@ -23,13 +23,22 @@
         "spectype": "DA2.9",
         "mass_measurements": [
           {
+            "value_msun": 0.558,
+            "uncertainty_msun": 0.012,
+            "method": "binary_orbit",
+            "reference": "Mason et al. 2021",
+            "bibcode": "2021AJ....162...53M",
+            "doi": "10.3847/1538-3881/abfaa2",
+            "recommended": true
+          },
+          {
             "value_msun": 0.573,
             "uncertainty_msun": 0.018,
             "method": "binary_orbit",
             "reference": "Bond et al. 2017",
             "bibcode": "2017ApJ...848...16B",
             "doi": "10.3847/1538-4357/aa8a63",
-            "recommended": true
+            "recommended": false
           }
         ],
         "radius_measurements": [
@@ -87,22 +96,22 @@
         "propagation_method": "kepler_thiele_innes",
         "distance_pc": 5.007735116119533,
         "distance_km": 154522559818552.72,
-        "icrs_x_km": 67508450047437.62,
-        "icrs_y_km": 137631321904477.06,
-        "icrs_z_km": -20485065369721.12,
-        "icrs_vx_km_s": 23.98547419155236,
-        "icrs_vy_km_s": -70.27949566390292,
-        "icrs_vz_km_s": -74.16871218257505,
-        "position_ulp_km": 0.030560292497589417,
-        "icrs_x_j2000_km": 67546809678124.63,
-        "icrs_y_j2000_km": 137520338432986.25,
-        "icrs_z_j2000_km": -20601172075169.27,
-        "icrs_vx_j2000_km_s": 24.6080839311011,
-        "icrs_vy_j2000_km_s": -69.81196345548915,
-        "icrs_vz_j2000_km_s": -73.23257551284902,
+        "icrs_x_km": 67508412959698.93,
+        "icrs_y_km": 137631244029074.0,
+        "icrs_z_km": -20485050219274.82,
+        "icrs_vx_km_s": 23.989370489321654,
+        "icrs_vy_km_s": -70.29578084721192,
+        "icrs_vz_km_s": -74.15121042773606,
+        "position_ulp_km": 0.03056027520577631,
+        "icrs_x_j2000_km": 67546761689720.11,
+        "icrs_y_j2000_km": 137520249406518.25,
+        "icrs_z_j2000_km": -20601158272338.12,
+        "icrs_vx_j2000_km_s": 24.585733087823236,
+        "icrs_vy_j2000_km_s": -69.84446253234648,
+        "icrs_vz_j2000_km_s": -73.24229429217455,
         "orbit_id": "BC",
         "orbit_role": "primary",
-        "mass_ratio_q": 0.26264316046840824,
+        "mass_ratio_q": 0.2619047619047619,
         "barycenter_method": "mass_weighted_average(40 Eridani B,40 Eridani C)",
         "phase_reliable": true,
         "luminosity_lsun": 0.01349,
@@ -113,7 +122,7 @@
         "activity_h_alpha_ew_angstrom": null
       },
       "principia": {
-        "gravitational_parameter_km3_s2": 76044228130.314,
+        "gravitational_parameter_km3_s2": 74053541530.044,
         "mean_radius_km": 9099.8
       }
     }
@@ -124,7 +133,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-06-20",
       "used_for": [
         "epoch propagation method"
       ]
@@ -133,23 +142,32 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-16",
+      "accessed": "2026-06-20",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
+      ]
+    },
+    {
+      "title": "Mason et al. 2021",
+      "doi": "10.3847/1538-3881/abfaa2",
+      "bibcode": "2021AJ....162...53M",
+      "accessed": "2026-06-20",
+      "used_for": [
+        "40 Eridani B mass (binary_orbit)"
       ]
     },
     {
       "title": "Bond et al. 2017",
       "doi": "10.3847/1538-4357/aa8a63",
       "bibcode": "2017ApJ...848...16B",
-      "accessed": "2026-06-16",
+      "accessed": "2026-06-20",
       "used_for": [
         "40 Eridani B mass (binary_orbit)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-16",
+    "retrieval_date": "2026-06-20",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

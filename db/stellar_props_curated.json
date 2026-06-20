@@ -6046,13 +6046,22 @@
     "spectype_reference": "Gianninas, Bergeron & Ruiz 2011",
     "mass_measurements": [
       {
+        "value_msun": 0.558,
+        "uncertainty_msun": 0.012,
+        "method": "binary_orbit",
+        "reference": "Mason et al. 2021",
+        "bibcode": "2021AJ....162...53M",
+        "doi": "10.3847/1538-3881/abfaa2",
+        "recommended": true
+      },
+      {
         "value_msun": 0.573,
         "uncertainty_msun": 0.018,
         "method": "binary_orbit",
         "reference": "Bond et al. 2017",
         "bibcode": "2017ApJ...848...16B",
         "doi": "10.3847/1538-4357/aa8a63",
-        "recommended": true
+        "recommended": false
       }
     ],
     "radius_measurements": [
@@ -6107,13 +6116,22 @@
     "spectype": "M4.5 Ve",
     "mass_measurements": [
       {
+        "value_msun": 0.198,
+        "uncertainty_msun": 0.0042,
+        "method": "binary_orbit",
+        "reference": "Mason et al. 2021",
+        "bibcode": "2021AJ....162...53M",
+        "doi": "10.3847/1538-3881/abfaa2",
+        "recommended": true
+      },
+      {
         "value_msun": 0.2041,
         "uncertainty_msun": 0.0064,
         "method": "binary_orbit",
         "reference": "Mason, Hartkopf & Miles 2017",
         "bibcode": "2017AJ....154..200M",
         "doi": "10.3847/1538-3881/aa803e",
-        "recommended": true
+        "recommended": false
       }
     ],
     "radius_measurements": [

@@ -14,7 +14,7 @@ DY Eri variable-star designation reflects sustained Hα emission and
 photometric flaring rather than a single-epoch eruption.
 
 The Phase 2 anchors verified 2026-05-29 fix C tightly: a binary-orbit
-dynamical mass M = 0.2041 ± 0.0064 M☉ (Mason 2017), Mann et al. 2015
+dynamical mass M = 0.198 ± 0.0042 M☉ (Mason 2021), Mann et al. 2015
 spectroscopic Table 5 radius R = 0.274 ± 0.011 R☉ and effective
 temperature T_eff = 3167 ± 61 K, Cifuentes 2020 CARMENES bolometric
 luminosity L = (6.51 ± 0.13) × 10⁻³ L☉, Mann 2015 [Fe/H] = -0.21 ± 0.08,
@@ -41,7 +41,7 @@ from a hypothetical C-orbiting observer.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | M4.5 Ve | high | Gray & Garrison community canonical; SIMBAD M4.5Ve. Mann 2015 Table 5 lists M4.7 (within MK scatter); the e suffix marks chromospheric emission consistent with DY Eri flare activity |
-| `mass_msun` | 0.2041 ± 0.0064 | high | Mason, Hartkopf & Miles 2017 §3 — BC binary dynamical fit, P = 230.09 yr, mass sum 0.776 ± 0.024 M☉ split via Heintz 1974 mass ratio + van Leeuwen 2007 parallax |
+| `mass_msun` | 0.198 ± 0.0042 | high | Mason et al. 2021 (`2021AJ....162...53M`) — dynamical mass from the Izmailov 2019 BC orbit (P = 233.20 yr, e = 0.4141) + Gaia eDR3 parallax; supersedes the prior Mason 2017 value (0.2041, tied to the old 230.09-yr orbit and a Heintz 1974 mass-ratio split). Mason 2021 now gives M_C directly, so the Heintz ratio is no longer needed |
 | `radius_rsun` | 0.274 ± 0.011 | high | Mann et al. 2015 Table 5 'Gl 166 C' row — M_K-band radius relation calibrated against interferometric M-dwarf sample + BT-Settl atmosphere model fit |
 | `teff_k` | 3167 ± 61 | high | Mann et al. 2015 Table 5 — low-resolution SNIFS optical + SpeX NIR spectra fit to BT-Settl atmosphere grid |
 | `luminosity_lsun` | 6.51e-3 ± 0.13e-3 | high | Cifuentes et al. 2020 CARMENES catalog row Karmn J04153-076 (VizieR J/A+A/642/A115); multi-band SED integration with Gaia DR2 distance |

@@ -12,7 +12,7 @@ BC 짝은 다시 K0.5 V 주성 40 Eri A 주위를 약 83″ 의 각분리로 돕
 폭발이 아니라 지속적인 Hα 방출과 광도 플레어 활동을 반영합니다.
 
 2026-05-29 에 검증된 Phase 2 앵커는 C 를 다음과 같이 단단히 묶습니다.
-이중성 역학질량 M = 0.2041 ± 0.0064 M☉ (Mason 2017), Mann et al. 2015
+이중성 역학질량 M = 0.198 ± 0.0042 M☉ (Mason 2021), Mann et al. 2015
 분광 Table 5 반지름 R = 0.274 ± 0.011 R☉ 와 유효 온도 T_eff = 3167 ± 61
 K, Cifuentes 2020 CARMENES 볼로메트릭 광도 L = (6.51 ± 0.13) × 10⁻³ L☉,
 Mann 2015 [Fe/H] = -0.21 ± 0.08, 그리고 Bond et al. 2017 의 WD 전구체
@@ -36,7 +36,7 @@ cfg 박자로 H-알파 플레어를 애니메이트합니다.** 큐레이션된 
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | M4.5 Ve | high | Gray & Garrison 커뮤니티 canonical. SIMBAD M4.5Ve. Mann 2015 Table 5 는 M4.7 (MK 산포 범위 내). e 접미는 DY Eri 플레어 활동과 일관된 색채권 방출을 표시 |
-| `mass_msun` | 0.2041 ± 0.0064 | high | Mason, Hartkopf & Miles 2017 §3. BC 이중성 역학 fit, P = 230.09 yr, 총질량 0.776 ± 0.024 M☉ 를 Heintz 1974 질량비 + van Leeuwen 2007 시차로 분할 |
+| `mass_msun` | 0.198 ± 0.0042 | high | Mason et al. 2021 (`2021AJ....162...53M`). Izmailov 2019 BC 궤도 (P = 233.20 yr, e = 0.4141) + Gaia eDR3 시차에서 유도한 역학 질량. 이전 Mason 2017 값 (0.2041, 옛 230.09-yr 궤도 + Heintz 1974 질량비 분할에 묶임) 을 대체. Mason 2021 이 M_C 를 직접 주므로 Heintz 질량비는 더 이상 필요 없음 |
 | `radius_rsun` | 0.274 ± 0.011 | high | Mann et al. 2015 Table 5 'Gl 166 C' 행. 간섭계 M 왜성 샘플로 보정된 M_K 밴드 반지름 관계 + BT-Settl 대기 모델 fit |
 | `teff_k` | 3167 ± 61 | high | Mann et al. 2015 Table 5. 저분해 SNIFS 광학 + SpeX NIR 스펙트럼을 BT-Settl 대기 그리드에 fit |
 | `luminosity_lsun` | 6.51e-3 ± 0.13e-3 | high | Cifuentes et al. 2020 CARMENES 카탈로그 Karmn J04153-076 행 (VizieR J/A+A/642/A115). Gaia DR2 거리 기반 다중 밴드 SED 적분 |

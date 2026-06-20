@@ -6,10 +6,13 @@ two non-host components of the 40 Eri triple system at 5.01 pc — the
 second-nearest white dwarf to the Sun after Sirius B and visually the
 **closest** white dwarf to a naked-eye-bright companion (V = 9.53 at
 83″ from the K0.5 V primary 40 Eri A). With M dwarf 40 Eri C it forms
-a 230.09-year visual binary (Mason, Hartkopf & Miles 2017) whose
-HST/FGS-anchored dynamical solution gives the cleanest precision-mass
-measurement for any nearby field white dwarf: **M = 0.573 ± 0.018 M☉**
-(Bond et al. 2017). Combined with SED-fit R = 0.01308 ± 0.00020 R☉,
+a 233.20-year visual binary (Mason et al. 2021, orbit from Izmailov
+2019). The adopted dynamical mass is **M = 0.558 ± 0.012 M☉** (Mason
+et al. 2021, from the orbit + Gaia eDR3 parallax); Bond et al. 2017's
+HST/FGS-anchored **0.573 ± 0.018 M☉** — the cleanest precision-mass
+measurement for any nearby field white dwarf — is the documented
+alternative and still anchors the WD radius/cooling/progenitor below.
+Combined with SED-fit R = 0.01308 ± 0.00020 R☉,
 log g = 7.957 ± 0.020, and Teff = 17,200 ± 110 K, 40 Eri B sits on
 the CO-core, mass-radius relation almost exactly where standard
 theory predicts.
@@ -42,7 +45,7 @@ divergences, so no `## Canonical alternatives` section.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | DA2.9 | high | Gianninas, Bergeron & Ruiz 2011 (GBR11) — DA spectral-temperature subclass survey |
-| `mass_msun` | 0.573 ± 0.018 | high | Bond et al. 2017 — HST/FGS astrometry of BC pair + Mason 2017 visual orbit |
+| `mass_msun` | 0.558 ± 0.012 | medium | Mason et al. 2021 (`2021AJ....162...53M`) — dynamical mass from the Izmailov 2019 BC orbit + Gaia eDR3 parallax (self-consistent with the adopted binary_orbits BC elements P=233.20 yr, e=0.4141). DOCUMENTED ALTERNATIVE: Bond et al. 2017 HST/FGS gives 0.573 ± 0.018 (a dedicated WD astrometric / gravitational-redshift mass, ~1.3σ higher); the WD radius, cooling age, and progenitor/IFMR characterization in this doc derive from Bond's 0.573 and are retained as the WD-physics package |
 | `radius_rsun` | 0.01308 ± 0.00020 | high | Bond et al. 2017 — SED-fit from BVRI + ubvy + JHK + Hipparcos parallax + atmosphere Teff |
 | `teff_k` | 17200 ± 110 | high | Bond et al. 2017 — Balmer-line atmosphere fit (Tremblay & Bergeron 2009 grid) |
 | `luminosity_lsun` | 0.01349 ± 0.00054 | high | Bond et al. 2017 — bolometric flux integration |

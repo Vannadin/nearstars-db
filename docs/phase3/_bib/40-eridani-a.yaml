@@ -6,6 +6,13 @@ note: 'A-lite retrofit bibliography. 40 Eri A Phase 3 was synthesized without a 
 
   '
 papers:
+- arxiv_id: null
+  ads_bibcode: 2021AJ....162...53M
+  doi: 10.3847/1538-3881/abfaa2
+  title: 'Mason et al. 2021 — USNO Orbit Catalog XXIV; 40 Eri BC orbit (Izmailov 2019: P=233.20 yr, e=0.4141) + dynamical masses M_B=0.558, M_C=0.198 from Gaia eDR3. No arXiv (IOP); manually fetched + integrated 2026-06-20 into binary_orbits + stellar_props + 40-eridani-b/c'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '1807.07098'
   ads_bibcode: 2018MNRAS.480.2411M
   title: Ma et al. 2018 — mass (Torres relation) + isochrone age anchor

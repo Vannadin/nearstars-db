@@ -5,10 +5,13 @@
 삼중계에서 호스트가 아닌 두 동반자 중 더 밝은 쪽으로, Sirius B 다음
 가는 두 번째로 가까운 백색왜성입니다. K0.5 V 주성 40 Eri A 로부터
 83″ 떨어진 V = 9.53 의 천체로, 맨눈으로 보이는 별과 시각적으로 가장
-가까운 백색왜성이기도 합니다. M 왜성 40 Eri C 와 함께 230.09 년 주기의
-시각 이중성을 이루며 (Mason, Hartkopf & Miles 2017), HST/FGS 에 정박한
-이 시스템의 역학 해는 가까운 들녘 백색왜성 중 가장 정밀한 질량 측정을
-제공합니다. **M = 0.573 ± 0.018 M☉** (Bond et al. 2017). 여기에
+가까운 백색왜성이기도 합니다. M 왜성 40 Eri C 와 함께 233.20 년 주기의
+시각 이중성을 이룹니다 (Mason et al. 2021, 궤도는 Izmailov 2019 에서).
+채택한 역학 질량은 **M = 0.558 ± 0.012 M☉** 입니다 (Mason et al. 2021,
+궤도 + Gaia eDR3 시차에서 유도). Bond et al. 2017 의 HST/FGS 에 정박한
+**0.573 ± 0.018 M☉** — 가까운 들녘 백색왜성 중 가장 정밀한 질량 측정 —
+은 documented alternative 로, 아래의 WD 반지름/냉각/전구체를 여전히
+정박시킵니다. 여기에
 SED-fit 으로 R = 0.01308 ± 0.00020 R☉, log g = 7.957 ± 0.020,
 Teff = 17,200 ± 110 K 를 묶으면 40 Eri B 는 CO-core 질량-반지름 관계
 위에서 표준 이론이 예측하는 위치와 거의 정확히 일치합니다.
@@ -37,7 +40,7 @@ alternatives` 섹션도 없습니다.
 | Field | Value | Confidence | Basis |
 |---|---|---|---|
 | `spectral_type` | DA2.9 | high | Gianninas, Bergeron & Ruiz 2011 (GBR11). DA 분광-온도 부분류 서베이 |
-| `mass_msun` | 0.573 ± 0.018 | high | Bond et al. 2017. BC 페어의 HST/FGS astrometry + Mason 2017 시각 궤도 |
+| `mass_msun` | 0.558 ± 0.012 | medium | Mason et al. 2021 (`2021AJ....162...53M`). Izmailov 2019 BC 궤도 + Gaia eDR3 시차에서 유도한 역학 질량 (채택한 binary_orbits BC 요소 P=233.20 yr, e=0.4141 과 자기-일관). DOCUMENTED ALTERNATIVE: Bond et al. 2017 HST/FGS 는 0.573 ± 0.018 을 줌 (전용 WD astrometric / 중력 적색편이 질량, ~1.3σ 더 높음). 이 문서의 WD 반지름·냉각 나이·전구체/IFMR 특성은 Bond 의 0.573 에서 유도되며 WD-physics 패키지로 유지됨 |
 | `radius_rsun` | 0.01308 ± 0.00020 | high | Bond et al. 2017. BVRI + ubvy + JHK + Hipparcos 시차 + 대기 Teff 결합 SED fit |
 | `teff_k` | 17200 ± 110 | high | Bond et al. 2017. Balmer-line 대기 fit (Tremblay & Bergeron 2009 grid) |
 | `luminosity_lsun` | 0.01349 ± 0.00054 | high | Bond et al. 2017. 볼로메트릭 플럭스 적분 |
