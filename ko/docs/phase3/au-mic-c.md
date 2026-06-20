@@ -54,7 +54,7 @@ sub-Neptune 과 물 풍부 암석 행성 사이의 질량-반지름 "골짜기" 
 | `cloud_tint_rgb_hex` | `#b0987a` | low | Tie-break. M1V 의 붉은빛 하 muted 크림. b 의 더 밝은 구름과 시각적 차별화를 위해 선택 |
 | `surface_morphology` | n/a — 구름 데크 반지름에서 보이는 단단한 표면 없음. 더 깊은 내부는 물 풍부 mantle + 암석/철 코어일 가능성 | medium | 밀도와 질량-반지름 위치가 c 를 sub-Neptune envelope 영역 안쪽에 놓음 |
 | `magnetic_field_present` | true | medium | sub-Neptune H 풍부 envelope 이 적당한 dynamo 를 유지 (얼음 거대 행성 analog) |
-| `magnetic_field_strength_microtesla_equator` | 50 | low | 자릿수 수준의 **얼음 거대 행성 analog** (Neptune/Uranus ~0.1–0.5 G. Connerney 1991). envelope 가 작아 b 아래로 스케일. Christensen 2009 / Reiners & Christensen 2010 에너지플럭스 스케일링의 검증 영역 (≥0.3 M_Jup) 아래에 있다 (He 분리, Stevenson 1980) → 추정이지 측정이 아니다. (논문 캐시에 없는 Yadav & Thorngren 2017 인용을 대체.) docs/reference/planetary-dynamo-scaling.md 참고 |
+| `magnetic_field_strength_microtesla_equator` | 50 | low | 자릿수 수준의 **얼음 거대 행성 analog** (Neptune/Uranus ~0.1–0.5 G. Connerney 1991). envelope 가 작아 b 아래로 스케일. 에너지플럭스 스케일링 (Christensen 2009. 이를 inflate 된 외계행성에 적용한 것이 Yadav & Thorngren 2017 `1709.05676`) 은 hot Jupiter 에서 검증된 방법인데, AU Mic c (0.046 M_Jup) 는 그 영역 아래 — He 분리 때문에 표면 자기장을 정량화할 수 없는 구간 (Stevenson 1980) 이다 → 추정이지 측정이 아니다. docs/reference/planetary-dynamo-scaling.md 참고 |
 | `atmospheric_escape_rate_g_s` | 1e8 | medium | Lecavelier des Etangs 2007 (`astro-ph/0609744`) 을 따른 에너지 한정 탈출. b 의 Allart-2023 기반 ~1e10 g/s 값에서 c 의 더 깊은 중력 우물과 낮은 일사를 반영해 축소 |
 | `aurora_present` | true | low | H 풍부 상층 대기 + AU Mic 항성풍 → H Balmer-α 예상. 다만 대기 질량이 작아 b 보다 약함 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm 지배. b 와 같은 색 계열이지만 더 옅음 |

@@ -135,5 +135,10 @@ Notes:
   **1007.1514**). 거대 행성 + 갈색왜성에 대한 적용. 이 방법이 calibrate 된
   진화 트랙과 표로 제시된 dipole 값. `docs/phase3/_papers/1007.1514.md` 에
   **캐시됨** (au-mic / eps-eri / gj-896-a / eps-ind-a 참고문헌에 핀).
+- **Yadav & Thorngren 2017**, ApJL 849, L12 (`2017ApJ...849L..12Y`, arXiv
+  **1709.05676**, cached) — Christensen 2009 에너지플럭스 스케일링을 inflate 된
+  **hot Jupiter** 에 적용한다 (Thorngren & Fortney 의 반지름-inflation 광도 사용).
+  이 방법을 외계행성에 가장 직접적으로 적용한 사례. AU Mic 행성들에는 hot Jupiter
+  영역 아래로 내려가는 하향 외삽으로 사용했다 (sub-Saturn He 분리 caveat 포함).
 - **Rodríguez-Mozos & Moya 2022** (RM22), `2203.01065` — 암석 행성 자기장
   스케일링 (cached). 거대 행성이 아니라 AU Mic d 에 사용.

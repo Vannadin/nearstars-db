@@ -30,9 +30,12 @@ cited arXiv ID confirmed in `_papers/`).
   internal luminosity, not linear mass: **ε Eri b 400→660 µT** (young → stronger than
   Jupiter, sign was backwards), **ε Ind A b 1000→3200 µT**, **GJ 896 A b 900→2000 µT**
   (+ dipole rows, key spelling normalized). **AU Mic b/c/e** are below the ≥0.3 M_J
-  domain → regrounded as honest ice-giant (Neptune/Uranus) analogs, **phantom Yadav &
-  Thorngren 2017 removed**. **AU Mic d** (rocky) → RM22 `2203.01065`, removing the
-  giant-paper miscite. Skill `mod-grounded-fields.md` now routes by body class.
+  domain → regrounded as honest ice-giant (Neptune/Uranus) analogs. **AU Mic d**
+  (rocky) → RM22 `2203.01065`, removing the giant-paper miscite. Skill
+  `mod-grounded-fields.md` now routes by body class. (Correction 2026-06-20: the
+  Yadav & Thorngren 2017 citation on b/c/e was NOT a phantom — it is real,
+  arXiv `1709.05676`, now cached and re-cited with an honest sub-Neptune scope
+  note; see the corrected phantom-pattern section below.)
 - **1b disk blends (method gap).** `disk_color_mie.py` `ice_sil`/`sil_org` now use
   **Maxwell-Garnett** effective-medium mixing on ε=(n+ik)² (volume fractions from
   50/50 mass + bulk densities), replacing the invented linear n,k average. Emitted
@@ -105,16 +108,25 @@ cited paper actually resolves in `_papers/` cache** (the phantom-citation guard)
 
 ---
 
-## The phantom-citation pattern (the most important systemic finding)
+## The "phantom-citation pattern" — CORRECTED 2026-06-20: it was a false alarm
 
-Some derived values name a real paper that is **absent from the `_papers/` cache
-and the bib YAMLs** — laundering a back-of-envelope guess as grounded. This is
-*worse* than an honest "no citation, low-confidence" label, and it also violates
-the convergence rule (cite by `bibcode` + `arxiv_id` + cache). Confirmed cases:
-**Yadav & Thorngren 2017** (no arXiv/bibcode, already flagged uncacheable by the
-2026-06-03 audit) cited by au-mic-b/c/e; **Reiners & Christensen 2010** cited by
-eps-eri-b and au-mic-d but not in this repo's cache. Fix = cache the real paper, or
-rewrite the basis honestly.
+> **Correction.** This section originally called two citations "phantom"
+> (fabricated). That was WRONG — both papers are **real**, just uncached and (in
+> one case) applied out of its mass regime. The audit committed the very error it
+> was guarding against: conflating "we don't have it cached / couldn't find it"
+> with "it doesn't exist." Verified 2026-06-20:
+> - **Yadav & Thorngren 2017** = "Estimating the magnetic field strength in hot
+>   Jupiters", ApJL 849, L12, **arXiv `1709.05676`** (`2017ApJ...849L..12Y`) —
+>   a real, on-point paper applying Christensen 2009 energy-flux scaling to
+>   inflated exoplanets. Now **cached**. The au-mic-b/c/e issue was a *scope*
+>   stretch (hot-Jupiter scaling extrapolated to sub-Neptunes), not fabrication.
+> - **Reiners & Christensen 2010** = arXiv `1007.1514` — real (now cached). The
+>   au-mic-d issue was a *domain* error (a giant/BD paper cited for a rocky
+>   planet), not fabrication.
+>
+> The genuine, narrower finding: **citations that are uncached and/or applied
+> outside their validated regime.** Fix = cache the real paper + state the scope
+> honestly. No fabricated reference was actually found in the corpus.
 
 ---
 
@@ -124,13 +136,13 @@ rewrite the basis honestly.
 
 | Body | Value | Problem | Verdict |
 |---|---|---|---|
-| ε Eri b | 400 µT, dipole 13200× | linear-mass "scaled jovian"; cites Reiners&Christensen 2010 **not in cache** + physics contradicts (real dynamo scaling is energy-flux, not linear-mass) | AD-HOC + phantom-cite |
+| ε Eri b | 400 µT, dipole 13200× | linear-mass "scaled jovian"; physics contradicts (real dynamo scaling is energy-flux, not linear-mass); Reiners&Christensen 2010 (real, was uncached) | AD-HOC physics error |
 | GJ 896 A b | 900 µT | "scaled jovian, ~2× Jupiter" — **no citation** | AD-HOC |
 | ε Ind A b | 1000 µT | "~2× Jupiter by mass/convection" — no citation (self-labels "aesthetic, no measurement" → partially mitigated) | AD-HOC (flagged) |
-| AU Mic b | 100 µT | cites **Yadav & Thorngren 2017** (phantom — not in cache) | phantom-cite |
-| AU Mic c | 50 µT | same phantom Yadav & Thorngren 2017 | phantom-cite |
-| AU Mic d | 5 µT | cites **Reiners & Christensen 2010** (phantom — not in this report's biblio/cache) | phantom-cite |
-| AU Mic e | 30 µT | same phantom Yadav & Thorngren 2017 | phantom-cite |
+| AU Mic b | 100 µT | cites Yadav & Thorngren 2017 (**real**, `1709.05676`; was uncached + hot-Jupiter scaling stretched to a sub-Neptune) | uncached + out-of-regime |
+| AU Mic c | 50 µT | same Yadav & Thorngren 2017 (real, uncached, out-of-regime) | uncached + out-of-regime |
+| AU Mic d | 5 µT | cites Reiners & Christensen 2010 (**real**, `1007.1514`; giant/BD paper miscited for a rocky planet) | domain miscite |
+| AU Mic e | 30 µT | same Yadav & Thorngren 2017 (real, uncached, out-of-regime) | uncached + out-of-regime |
 
 **Fix:** ground on a real, cached dynamo scaling — **Christensen, Holzwarth & Reiners
 2009** (energy-flux scaling, `2009Natur.457..167C`) or Reiners & Christensen 2010

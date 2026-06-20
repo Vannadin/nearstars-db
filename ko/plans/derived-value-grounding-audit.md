@@ -26,9 +26,11 @@ ko 미러는 위임 후 검증했다(결정론적 재계산 + 인용된 모든 a
   행으로 검증했다. **진짜 자이언트** 3개를 선형 질량이 아니라 내부 광도 기반으로 재도출했다.
   **ε Eri b 400→660 µT**(젊으므로 목성보다 강함 — 부호가 거꾸로였다), **ε Ind A b 1000→3200 µT**,
   **GJ 896 A b 900→2000 µT**(+ dipole 행, 키 철자 정규화). **AU Mic b/c/e**는 ≥0.3 M_J 영역
-  아래라 → 솔직한 ice-giant(해왕성/천왕성) analog로 재근거화하고, **phantom인 Yadav &
-  Thorngren 2017을 제거**했다. **AU Mic d**(암석형) → RM22 `2203.01065`로 바꿔 자이언트 논문
-  오인용을 제거했다. 스킬 `mod-grounded-fields.md`는 이제 바디 클래스별로 라우팅한다.
+  아래라 → 솔직한 ice-giant(해왕성/천왕성) analog로 재근거화했다. **AU Mic d**(암석형) →
+  RM22 `2203.01065`로 바꿔 자이언트 논문 오인용을 제거했다. 스킬 `mod-grounded-fields.md`는
+  이제 바디 클래스별로 라우팅한다. (2026-06-20 정정. b/c/e의 Yadav & Thorngren 2017 인용은
+  phantom이 아니었다 — 실재하는 논문이며, arXiv `1709.05676`로 이제 캐시했고 솔직한
+  sub-Neptune 범위 주석과 함께 다시 인용했다. 아래 정정된 phantom-pattern 섹션 참고.)
 - **1b 디스크 blend (method gap).** `disk_color_mie.py`의 `ice_sil`/`sil_org`가 이제
   ε=(n+ik)²에 대한 **Maxwell-Garnett** effective-medium 혼합을 쓴다(부피 분율은 50/50 질량 +
   bulk 밀도에서). 지어낸 선형 n,k 평균을 대체했다. 방출된 tint를 갱신했다.
@@ -97,14 +99,24 @@ data.json / docs-wiki 오탐을 빼면 clean이다.
 
 ---
 
-## The phantom-citation pattern (the most important systemic finding)
+## The "phantom-citation pattern" — 2026-06-20 정정. 오경보였다
 
-일부 도출값은 실제 논문 이름을 대지만 그 논문이 **`_papers/` 캐시와 bib YAML에 부재한다** —
-back-of-envelope 추측을 grounded인 양 세탁하는 셈이다. 이는 솔직한 "no citation,
-low-confidence" 표기보다 *더 나쁘고*, convergence 규칙(`bibcode` + `arxiv_id` + 캐시로 인용)도
-위반한다. 확인된 사례. **Yadav & Thorngren 2017**(arXiv/bibcode 없음, 2026-06-03 감사에서 이미
-uncacheable로 플래그됨)이 au-mic-b/c/e에서 인용됨. **Reiners & Christensen 2010**이 eps-eri-b와
-au-mic-d에서 인용됐으나 이 repo 캐시엔 없음. 수정 = 실제 논문을 캐시하거나, 근거를 솔직하게 다시 쓴다.
+> **정정.** 이 섹션은 원래 두 인용을 "phantom"(날조)이라 불렀다. 그것은 틀렸다 — 두 논문은
+> 모두 **실재하며**, 단지 캐시되지 않았을 뿐이고 (한 건은) 질량 영역 밖에 적용됐을 뿐이다.
+> 감사가 스스로 경계하던 바로 그 오류를 범했다. "우리 캐시에 없다 / 못 찾았다"를 "존재하지
+> 않는다"와 혼동한 것이다. 2026-06-20 검증.
+> - **Yadav & Thorngren 2017** = "Estimating the magnetic field strength in hot
+>   Jupiters", ApJL 849, L12, **arXiv `1709.05676`** (`2017ApJ...849L..12Y`) —
+>   Christensen 2009 에너지플럭스 스케일링을 inflate 된 외계행성에 적용한, 실재하고
+>   주제에 딱 맞는 논문이다. 이제 **캐시됨**. au-mic-b/c/e의 문제는 *범위* 확장(hot
+>   Jupiter 스케일링을 sub-Neptune까지 외삽)이었지 날조가 아니었다.
+> - **Reiners & Christensen 2010** = arXiv `1007.1514` — 실재한다(이제 캐시됨).
+>   au-mic-d의 문제는 *도메인* 오류(거대 행성/갈색왜성 논문을 암석 행성에 인용)였지
+>   날조가 아니었다.
+>
+> 진짜이자 더 좁은 발견. **캐시되지 않았거나 검증된 영역 밖에 적용된 인용.** 수정 =
+> 실제 논문을 캐시하고 + 범위를 솔직하게 명시한다. 코퍼스에서 실제로 날조된 참조는
+> 하나도 발견되지 않았다.
 
 ---
 
@@ -114,13 +126,13 @@ au-mic-d에서 인용됐으나 이 repo 캐시엔 없음. 수정 = 실제 논문
 
 | Body | Value | Problem | Verdict |
 |---|---|---|---|
-| ε Eri b | 400 µT, dipole 13200× | linear-mass "scaled jovian"; cites Reiners&Christensen 2010 **not in cache** + physics contradicts (real dynamo scaling is energy-flux, not linear-mass) | AD-HOC + phantom-cite |
+| ε Eri b | 400 µT, dipole 13200× | linear-mass "scaled jovian"; physics contradicts (real dynamo scaling is energy-flux, not linear-mass); Reiners&Christensen 2010 (real, was uncached) | AD-HOC physics error |
 | GJ 896 A b | 900 µT | "scaled jovian, ~2× Jupiter" — **no citation** | AD-HOC |
 | ε Ind A b | 1000 µT | "~2× Jupiter by mass/convection" — no citation (self-labels "aesthetic, no measurement" → partially mitigated) | AD-HOC (flagged) |
-| AU Mic b | 100 µT | cites **Yadav & Thorngren 2017** (phantom — not in cache) | phantom-cite |
-| AU Mic c | 50 µT | same phantom Yadav & Thorngren 2017 | phantom-cite |
-| AU Mic d | 5 µT | cites **Reiners & Christensen 2010** (phantom — not in this report's biblio/cache) | phantom-cite |
-| AU Mic e | 30 µT | same phantom Yadav & Thorngren 2017 | phantom-cite |
+| AU Mic b | 100 µT | cites Yadav & Thorngren 2017 (**real**, `1709.05676`; was uncached + hot-Jupiter scaling stretched to a sub-Neptune) | uncached + out-of-regime |
+| AU Mic c | 50 µT | same Yadav & Thorngren 2017 (real, uncached, out-of-regime) | uncached + out-of-regime |
+| AU Mic d | 5 µT | cites Reiners & Christensen 2010 (**real**, `1007.1514`; giant/BD paper miscited for a rocky planet) | domain miscite |
+| AU Mic e | 30 µT | same Yadav & Thorngren 2017 (real, uncached, out-of-regime) | uncached + out-of-regime |
 
 **수정.** 실제로 캐시된 dynamo 스케일링에 근거를 둔다 — **Christensen, Holzwarth & Reiners
 2009**(에너지-플럭스 스케일링, `2009Natur.457..167C`) 또는 Reiners & Christensen 2010(제대로

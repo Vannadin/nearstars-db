@@ -18,6 +18,13 @@ papers:
   status: fetched
   category: deep_read
   fetch_error: null
+- arxiv_id: '1709.05676'
+  ads_bibcode: 2017ApJ...849L..12Y
+  title: Yadav & Thorngren 2017 — estimating the magnetic field strength in hot Jupiters via Christensen 2009 energy-flux
+    scaling (METHOD paper; applied by the AU Mic planets, extrapolated below its hot-Jupiter regime)
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: astro-ph/0609744
   ads_bibcode: 2007A&A...461.1185L
   title: Lecavelier des Etangs 2007 — a diagram for the evaporation status of extrasolar planets (METHOD paper for energy-limited

@@ -137,5 +137,11 @@ giants) each carry real uncertainty, and the dipole moment scales as R³.
   and tabulated dipole values this method is calibrated against. **Cached** in
   `docs/phase3/_papers/1007.1514.md` (pinned in the au-mic / eps-eri / gj-896-a /
   eps-ind-a bibliographies).
+- **Yadav & Thorngren 2017**, ApJL 849, L12 (`2017ApJ...849L..12Y`, arXiv
+  **1709.05676**, cached) — applies the Christensen 2009 energy-flux scaling to
+  inflated **hot Jupiters** (using Thorngren & Fortney radius-inflation luminosities).
+  The most direct exoplanet application of the method; used for the AU Mic planets as
+  a downward extrapolation below its hot-Jupiter regime (with the sub-Saturn
+  He-separation caveat).
 - **Rodríguez-Mozos & Moya 2022** (RM22), `2203.01065` — rocky-planet field scaling
   (cached). Used for AU Mic d, not the giants.
