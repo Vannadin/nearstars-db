@@ -40,7 +40,7 @@ distinctive, observation-grounded visual.
 | `radius_rsun` | 0.090 | medium | Faherty 2014 — assumed 0.9 R_Jup (Vrba 2004 prescription); no measured radius exists for any L/T dwarf |
 | `teff_k` | 1280 ± 75 | high | Faherty 2014 — derived from bolometric luminosity |
 | `luminosity_lsun` | 1.9e-05 | high | Faherty 2014 — log L/L☉ = −4.71 ± 0.10 (bolometric flux) |
-| `age_gyr` | 1.5 (range 0.1–3) | low | Faherty 2014 — shared system age, Li I + no low-gravity features |
+| `age_gyr` | 0.5 | medium | Shared system age — Luhman 16AB are kinematic members of the Oceanus moving group (~500 Myr, Gagné et al. 2023); de Regt et al. 2026 (`2602.03409`) corroborate via ¹²C/¹³C = 74 (present-day ISM, recent inheritance). Supersedes the Faherty 2014 field age (1.5 Gyr, range 0.1–3) |
 | `rotation_period_days` | 0.203 (= 4.87 hr) | high | Gillon 2013 — photometric variability; first BD weather detection |
 | `visual_surface_tint_hex_primary` | `#662200` | medium | Tie-break: 1280 K blackbody hue #FF5600 (cie_color.py) dimmed to ember + dusty-silicate/alkali reddening |
 | `stellar_color_temp_k` | 1280 | high | = teff_k; drives Kopernicus emission/illumination color (deep red) |

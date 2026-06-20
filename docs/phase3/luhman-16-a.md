@@ -39,12 +39,12 @@ measurements; the single tie-break is the surface tint hex, computed from the
 | `radius_rsun` | 0.090 | medium | Faherty 2014 — assumed 0.9 R_Jup (Vrba 2004 prescription); no measured radius exists for any L/T dwarf |
 | `teff_k` | 1310 ± 30 | high | Faherty 2014 — derived from bolometric luminosity |
 | `luminosity_lsun` | 2.1e-05 | high | Faherty 2014 — log L/L☉ = −4.67 ± 0.04 (bolometric flux) |
-| `age_gyr` | 1.5 (range 0.1–3) | low | Faherty 2014 — Li I detection + lack of low-gravity features; field age, not a point |
+| `age_gyr` | 0.5 | medium | Luhman 16AB are kinematic members of the Oceanus moving group (age ~500 Myr, Gagné et al. 2023); de Regt et al. 2026 (`2602.03409`) corroborate via ¹²C/¹³C = 74 (matching the present-day ISM, below the Solar value → recent inheritance). Supersedes the Faherty 2014 field age (1.5 Gyr, range 0.1–3) |
 | `rotation_period_days` | 0.289 (≈ 6.94 hr) | low | Apai 2021 — TESS periodogram, *tentatively* attributed to A; disputed (~5–8 hr) |
 | `visual_surface_tint_hex_primary` | `#662400` | medium | Tie-break: 1310 K blackbody hue #FF5900 (cie_color.py) dimmed to ember + dusty-silicate/alkali reddening |
 | `stellar_color_temp_k` | 1310 | high | = teff_k; drives Kopernicus emission/illumination color (deep red) |
-| `variability_amplitude_pct` | < 4.5 | medium | Buenzli 2015 — A is low-amplitude / near-featureless (first detection only 2015) |
-| `cloud_morphology` | thick, near-uniform silicate + iron condensate decks; minimal weather | medium | Faherty 2014 (thick clouds, L side of transition); Crossfield 2014 (A unmapped — quiet) |
+| `variability_amplitude_pct` | < 4.5 (ground-based); wavelength-dependent in JWST | medium | Buenzli 2015 ground-based low-amplitude; Biller et al. 2025 (`2505.00794`) JWST reveals wavelength-dependent multi-layer variability in A (not featureless) — amplitude varies by pressure level |
+| `cloud_morphology` | patchy silicate + iron condensate clouds with hot spots; multi-layer wavelength-dependent weather (subtler than B) | medium | Biller et al. 2024/2025 (`2505.00794`) JWST: patchy clouds (deep 1–2.5 µm layer) + high-altitude hot spots + small-grain silicates (8.5–11 µm) in A — revises the earlier "near-uniform / quiet" reading (Crossfield 2014 left A unmapped). Cloud-band polarimetry (Millar-Blanchaer 2020, manual-fetch queue) further supports longitudinal banding |
 
 ## Surface synthesis
 

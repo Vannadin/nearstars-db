@@ -7,6 +7,24 @@ note: 'Brown-dwarf binary (WISE J104915.57-531906.1 AB), nearest BD system. Anch
 
   '
 papers:
+- arxiv_id: '2602.03409'
+  ads_bibcode: 2026arXiv260203409D
+  title: 'de Regt et al. 2026 (ESO SupJup IX) - CRIRES+ isotopes; 12C/13C=74 both comps + Oceanus moving group membership -> age ~500 Myr (supersedes Faherty field age); C/O ratios'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2505.00794'
+  ads_bibcode: 2025arXiv250500794B
+  title: 'Biller et al. 2025 (JWST Weather Report II) - MIRI+NIRSpec variability; patchy clouds + hot spots at distinct pressure levels in A and B, small-grain silicates in A (cloud-morphology basis)'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2407.09194'
+  ads_bibcode: 2024arXiv240709194B
+  title: 'Biller et al. 2024 (JWST Weather Report I) - first-epoch JWST NIRSpec+MIRI monitoring of WISE 1049AB (companion to Biller 2025; ar5iv body unrendered, cited by title)'
+  status: fetched
+  category: skim
+  fetch_error: null
 - arxiv_id: '2403.08865'
   ads_bibcode: 2024AN....34530158B
   title: Bedin et al. 2024 - HST astrometry II; masses, relative orbit, parallax (PRIMARY)

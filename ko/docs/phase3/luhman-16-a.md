@@ -35,12 +35,12 @@ A는 측광적으로 조용한, 이 쌍에서 차분한 쪽입니다.
 | `radius_rsun` | 0.090 | 중간 | Faherty 2014 — 0.9 R_Jup 가정(Vrba 2004 처방); L/T 왜성 중 측정된 반지름은 없음 |
 | `teff_k` | 1310 ± 30 | 높음 | Faherty 2014 — 복사광도에서 유도 |
 | `luminosity_lsun` | 2.1e-05 | 높음 | Faherty 2014 — log L/L☉ = −4.67 ± 0.04 (복사 플럭스) |
-| `age_gyr` | 1.5 (범위 0.1–3) | 낮음 | Faherty 2014 — Li I 검출 + 저중력 특징 부재; 단일 점이 아닌 장(field) 나이 |
+| `age_gyr` | 0.5 | 중간 | Luhman 16AB는 Oceanus 운동성단의 운동학적 구성원(나이 ~500 Myr, Gagné et al. 2023); de Regt et al. 2026 (`2602.03409`)이 ¹²C/¹³C = 74로 이를 뒷받침(현재 성간물질 값과 일치하며 태양값보다 낮음 → 최근에 물려받은 조성). Faherty 2014의 장(field) 나이(1.5 Gyr, 범위 0.1–3)를 대체 |
 | `rotation_period_days` | 0.289 (≈ 6.94 hr) | 낮음 | Apai 2021 — TESS periodogram, *잠정적으로* A에 귀속; 이견 있음(~5–8 hr) |
 | `visual_surface_tint_hex_primary` | `#662400` | 중간 | Tie-break: 1310 K 흑체 색상 #FF5900 (cie_color.py)을 잉걸불로 어둡게 + 먼지 규산염/알칼리 적색 보정 |
 | `stellar_color_temp_k` | 1310 | 높음 | = teff_k; Kopernicus 발광/조명 색(짙은 적색)을 결정 |
-| `variability_amplitude_pct` | < 4.5 | 중간 | Buenzli 2015 — A는 저진폭 / 거의 무특징(첫 검출이 2015년) |
-| `cloud_morphology` | 두껍고 거의 균일한 규산염 + 철 응결물 층; 날씨 변화는 미미 | 중간 | Faherty 2014 (두꺼운 구름, 전이의 L쪽); Crossfield 2014 (A는 매핑 안 됨 — 조용함) |
+| `variability_amplitude_pct` | < 4.5 (지상 관측); JWST에서는 파장 의존적 | 중간 | Buenzli 2015 지상 관측 저진폭; Biller et al. 2025 (`2505.00794`) JWST는 A에서 파장 의존적 다층 변광을 드러냄(무특징 아님) — 진폭이 압력 층마다 달라짐 |
+| `cloud_morphology` | 군데군데 뚫린 규산염 + 철 응결물 구름 + 핫스팟; 파장 의존적 다층 날씨(B보다는 미묘함) | 중간 | Biller et al. 2024/2025 (`2505.00794`) JWST: A에서 군데군데 뚫린 구름(깊은 1–2.5 µm 층) + 고고도 핫스팟 + 작은 입자 규산염(8.5–11 µm) — 기존의 "거의 균일 / 조용함" 해석(Crossfield 2014은 A를 매핑하지 못함)을 수정. 구름 띠 편광 관측(Millar-Blanchaer 2020, 수동 페치 대기열)도 경도 방향 띠 구조를 추가로 뒷받침 |
 
 ## 표면 합성
 
