@@ -399,14 +399,16 @@ html[lang="en"] .field-tt:hover::after { content: attr(data-en-tip) }
 <li data-i18n="li_210"></li>
 <li data-i18n="li_211"></li>
 <li data-i18n="li_212"></li>
+<li data-i18n="li_213"></li>
+<li data-i18n="li_214"></li>
 </ul>
 </section>
 <section>
-<h2 data-i18n="h2_213"></h2>
+<h2 data-i18n="h2_215"></h2>
 <ul class="intro">
-<li data-i18n="li_214"></li>
-<li data-i18n="li_215"></li>
 <li data-i18n="li_216"></li>
+<li data-i18n="li_217"></li>
+<li data-i18n="li_218"></li>
 </ul>
 </section>
 </main>
@@ -500,9 +502,9 @@ const T = {
   "td_80":"high",
   "td_81":"Gáspár et al. 2023 — broad inner/warm disk extends out to the ~78 AU gap that separates it from the intermediate belt",
   "td_82":"<code>disk_warm_tint_rgb_hex</code>",
-  "td_83":"<span class=\"hex-chip\" style=\"background:#ffffff\"></span><code>#ffffff</code> (neutral; vivid <span class=\"hex-chip\" style=\"background:#fefeff\"></span><code>#fefeff</code>)",
+  "td_83":"<span class=\"hex-chip\" style=\"background:#fff4e5\"></span><code>#fff4e5</code> (pale cream; vivid <span class=\"hex-chip\" style=\"background:#ffe0b0\"></span><code>#ffe0b0</code>)",
   "td_84":"low",
-  "td_85":"No measured optical color (thermal/interferometric only). Mie reflectance synthesis: carbonaceous grains, dark but large → neutral reflectance (B/I 1.00); renderer applies the A4 V blue-white light → pale blue-white in-game. Vivid pack: <span class=\"hex-chip\" style=\"background:#fefeff\"></span><code>#fefeff</code>",
+  "td_85":"No measured optical color (thermal/interferometric only). Mie reflectance synthesis on <b>icy grains</b> (ice + silicate, ~50–80% water ice by volume): the warm dust is PR-drag fragments of the outer belt, not in-situ carbon (Sommer et al. 2025 <code>2503.18127</code>) → same icy composition as the cold ring, large blowout grains → faintly warm reflectance (B/I 0.68); renderer applies the A4 V blue-white light. Vivid pack: <span class=\"hex-chip\" style=\"background:#ffe0b0\"></span><code>#ffe0b0</code>",
   "td_86":"<code>disk_warm_opacity</code>",
   "td_87":"0.30",
   "td_88":"low",
@@ -516,9 +518,9 @@ const T = {
   "td_96":"high",
   "td_97":"Gáspár et al. 2023 — intermediate belt outer semi-major axis (e ≈ 0.265)",
   "td_98":"<code>disk_intermediate_tint_rgb_hex</code>",
-  "td_99":"<span class=\"hex-chip\" style=\"background:#fff9f6\"></span><code>#fff9f6</code> (near-neutral; vivid <span class=\"hex-chip\" style=\"background:#ffece4\"></span><code>#ffece4</code>)",
+  "td_99":"<span class=\"hex-chip\" style=\"background:#fff4e5\"></span><code>#fff4e5</code> (pale cream; vivid <span class=\"hex-chip\" style=\"background:#ffe2b1\"></span><code>#ffe2b1</code>)",
   "td_100":"low",
-  "td_101":"No measured optical color (mid-IR only). Mie reflectance synthesis: silicate grains, large vs optical λ → near-neutral reflectance (B/I 0.76); renderer applies the A4 V light. Vivid pack: <span class=\"hex-chip\" style=\"background:#ffece4\"></span><code>#ffece4</code>",
+  "td_101":"No measured optical color (mid-IR only; ALMA mm non-detection, 3σ &lt; 396 µJy, Chittidi 2025 <code>2509.02825</code>). Mie reflectance synthesis on <b>icy grains</b> (PR-drag fragments of the outer belt, ~50–80% water ice; Sommer et al. 2025 <code>2503.18127</code>, &quot;possibly intermediate&quot;) → same icy composition as the warm + cold belts → faintly warm reflectance (B/I 0.68); renderer applies the A4 V light. Vivid pack: <span class=\"hex-chip\" style=\"background:#ffe2b1\"></span><code>#ffe2b1</code>",
   "td_102":"<code>disk_intermediate_opacity</code>",
   "td_103":"0.25",
   "td_104":"low",
@@ -626,14 +628,16 @@ const T = {
   "p_206":"Conference abstracts (AAS / DPS / EPSC), interferometric methods papers (CHARA / PTI commissioning), and follow-up dust-grain mineralogy work (Spitzer IRS spectra) contribute no cfg-decisive content beyond what Di Folco 2004 + Boley 2012 + Gáspár 2023 already establish. SETI / radio-emission monitoring of the &quot;Fomalhaut b&quot; position (Tusay 2022, Saide 2023) is also skipped. Filtered bib preserved in <code>docs/phase3/_bib/fomalhaut.yaml</code> with <code>status: skipped</code> annotations.",
   "h2_207":"Open items for follow-up",
   "li_208":"<b>TW Piscis Austrini (HD 216803, K4V) and LP 876-10 (M4V) as separate NS DB entries</b>: The two wide common-proper-motion companions are not currently in the 152-system NearStars shortlist. Mamajek 2012/2013 establish them as gravitationally associated, co-eval (440 Myr) Castor-moving-group members at projected separations of 0.91 ly and 5.7 ly. If added as separate DB entries, the in-game player could fly between all three on real interstellar trajectories. Flag as Phase 2 DB expansion candidate.",
-  "li_209":"<b>Disk geometry is multi-belt in <code>disks_curated.json</code></b> (audited 2026-05-29): Fomalhaut&#x27;s warm + intermediate + cold belts are separate <code>belt</code> entries, and the Decisions table renders them as per-belt <code>disk_&lt;belt&gt;_*</code> fields → one Kopernicus Ring each. Remaining: a grain-size / Mie color synthesis to replace the tie-break per-belt tints.",
-  "li_210":"<b>&quot;Fomalhaut b S1&quot; candidate revisit</b>: If a 2026+ JWST/MIRI or ground-based ELT follow-up reverses the Gáspár &amp; Rieke 2020 dust- cloud interpretation and re-establishes a bound planet at ~115 AU, a new Decisions entry <code>circumstellar_planet_present: true</code> (with the candidate &quot;S1&quot; naming) would be needed and the cfg should document the divergence from the current consensus. Until then, no planet is included.",
-  "li_211":"<b>Phase 2 <code>teff_measurements</code> and <code>metallicity_measurements</code> population</b>: DB has <code>teff_k = 8689</code> as a SIMBAD compilation scalar with no provenance entry; Saffe 2008 metallicity is also not in DB. Both should be added with paper-cited Phase 2 entries.",
-  "li_212":"<b>Gravity-darkening map</b>: No resolved interferometric gravity- darkening map of Fomalhaut exists (unlike Vega, Altair, Regulus). CHARA/MIRC or VLTI/GRAVITY observation of the von-Zeipel pole-to-equator temperature gradient would let the cfg replace the current uniform-disk tint with a latitudinal gradient (<code>visual_gravity_darkening_delta_t_k</code> field, currently absent).",
-  "h2_213":"Related",
-  "li_214":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
-  "li_215":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — canonical stellar-synthesis template, G2V comparison",
-  "li_216":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — wide-companion CPM treatment relevant if TW PsA / LP 876-10 are later promoted to NS DB",
+  "li_209":"<b>Disk geometry is multi-belt in <code>disks_curated.json</code></b> (audited 2026-05-29): Fomalhaut&#x27;s warm + intermediate + cold belts are separate <code>belt</code> entries, and the Decisions table renders them as per-belt <code>disk_&lt;belt&gt;_*</code> fields → one Kopernicus Ring each. The per-belt Mie color synthesis is now done: all three belts share the same icy (ice + silicate, ~50–80% water ice) composition — the warm + intermediate dust are PR-drag fragments of the outer belt (Sommer et al. 2025 <code>2503.18127</code>), so all three synthesize to the same <span class=\"hex-chip\" style=\"background:#fff4e5\"></span><code>#fff4e5</code> pale-cream reflectance.",
+  "li_210":"<b>2025 ALMA cold-ring refinements (documentation only — not emitted)</b>: the cold ring&#x27;s single eccentricity (e ≈ 0.11) is now resolved into a <i>negative eccentricity gradient</i> e_f ∝ a^(−1.75±0.16) (Lovell et al. 2025 <code>2509.02884</code>) plus an apsidal asymmetry — the SE ansa is 4 AU wider and the NW ansa 21 % brighter (Chittidi et al. 2025 <code>2509.02825</code>). The Kopernicus Ring is circular/flat, so no cfg value changes; recorded for future eccentric/volumetric rendering.",
+  "li_211":"<b>&quot;Great Dust Cloud&quot; is a background galaxy</b> (Kennedy 2023; confirmed by a 230.25 GHz spectral line in Chittidi et al. 2025 <code>2509.02825</code>) — it is correctly NOT rendered as a Fomalhaut disk feature.",
+  "li_212":"<b>&quot;Fomalhaut b S1&quot; candidate revisit</b>: If a 2026+ JWST/MIRI or ground-based ELT follow-up reverses the Gáspár &amp; Rieke 2020 dust- cloud interpretation and re-establishes a bound planet at ~115 AU, a new Decisions entry <code>circumstellar_planet_present: true</code> (with the candidate &quot;S1&quot; naming) would be needed and the cfg should document the divergence from the current consensus. Until then, no planet is included.",
+  "li_213":"<b>Phase 2 <code>teff_measurements</code> and <code>metallicity_measurements</code> population</b>: DB has <code>teff_k = 8689</code> as a SIMBAD compilation scalar with no provenance entry; Saffe 2008 metallicity is also not in DB. Both should be added with paper-cited Phase 2 entries.",
+  "li_214":"<b>Gravity-darkening map</b>: No resolved interferometric gravity- darkening map of Fomalhaut exists (unlike Vega, Altair, Regulus). CHARA/MIRC or VLTI/GRAVITY observation of the von-Zeipel pole-to-equator temperature gradient would let the cfg replace the current uniform-disk tint with a latitudinal gradient (<code>visual_gravity_darkening_delta_t_k</code> field, currently absent).",
+  "h2_215":"Related",
+  "li_216":"<a href=\"../reference/methodology.md\">methodology</a> — schema source for the Decisions table",
+  "li_217":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — canonical stellar-synthesis template, G2V comparison",
+  "li_218":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — wide-companion CPM treatment relevant if TW PsA / LP 876-10 are later promoted to NS DB",
   "title":"Fomalhaut — Phase 3 Synthesis",
   "back_db": "← Back to database",
   "reports_index": "Reports index",
@@ -722,9 +726,9 @@ const T = {
   "td_80":"high",
   "td_81":"Gáspár 외 2023 — 넓은 안쪽/warm 디스크가 intermediate 벨트와 분리되는 ~78 AU gap 까지 뻗음",
   "td_82":"<code>disk_warm_tint_rgb_hex</code>",
-  "td_83":"<span class=\"hex-chip\" style=\"background:#ffffff\"></span><code>#ffffff</code> (중성. vivid <span class=\"hex-chip\" style=\"background:#fefeff\"></span><code>#fefeff</code>)",
+  "td_83":"<span class=\"hex-chip\" style=\"background:#fff4e5\"></span><code>#fff4e5</code> (옅은 크림색. vivid <span class=\"hex-chip\" style=\"background:#ffe0b0\"></span><code>#ffe0b0</code>)",
   "td_84":"low",
-  "td_85":"광학 색 측정값 없음 (열복사/간섭계 자료만). Mie 반사율 합성. 탄소질 입자는 어둡지만 입자가 커서 중성 반사율 (B/I 1.00). 렌더러가 A4 V 청백색 별빛을 위에 입히면 게임 내에서 옅은 청백색. vivid 팩. <span class=\"hex-chip\" style=\"background:#fefeff\"></span><code>#fefeff</code>",
+  "td_85":"광학 색 측정값 없음 (열복사/간섭계 자료만). <b>얼음 입자</b> (얼음 + 규산염, 부피 기준 물 얼음 ~50–80%) 에 대한 Mie 반사율 합성. warm 먼지는 외곽 벨트에서 PR-drag 로 떨어져 나온 파편이지 그 자리에서 생긴 탄소질이 아니므로 (Sommer 외 2025 <code>2503.18127</code>) cold 고리와 동일한 얼음 조성이고, blowout 크기의 큰 입자라 살짝 따뜻한 반사율 (B/I 0.68). 렌더러가 A4 V 청백색 별빛을 위에 입힘. vivid 팩. <span class=\"hex-chip\" style=\"background:#ffe0b0\"></span><code>#ffe0b0</code>",
   "td_86":"<code>disk_warm_opacity</code>",
   "td_87":"0.30",
   "td_88":"low",
@@ -738,9 +742,9 @@ const T = {
   "td_96":"high",
   "td_97":"Gáspár 외 2023 — intermediate 벨트 바깥쪽 긴반지름 (e ≈ 0.265)",
   "td_98":"<code>disk_intermediate_tint_rgb_hex</code>",
-  "td_99":"<span class=\"hex-chip\" style=\"background:#fff9f6\"></span><code>#fff9f6</code> (거의 중성. vivid <span class=\"hex-chip\" style=\"background:#ffece4\"></span><code>#ffece4</code>)",
+  "td_99":"<span class=\"hex-chip\" style=\"background:#fff4e5\"></span><code>#fff4e5</code> (옅은 크림색. vivid <span class=\"hex-chip\" style=\"background:#ffe2b1\"></span><code>#ffe2b1</code>)",
   "td_100":"low",
-  "td_101":"광학 색 측정값 없음 (중적외선만). Mie 반사율 합성. 규산염 입자가 광학 파장 대비 커서 거의 중성 반사율 (B/I 0.76). 렌더러가 A4 V 별빛을 위에 입힘. vivid 팩. <span class=\"hex-chip\" style=\"background:#ffece4\"></span><code>#ffece4</code>",
+  "td_101":"광학 색 측정값 없음 (중적외선만. ALMA mm 미검출, 3σ &lt; 396 µJy, Chittidi 2025 <code>2509.02825</code>). <b>얼음 입자</b> (외곽 벨트에서 떨어져 나온 PR-drag 파편, 물 얼음 ~50–80%. Sommer 외 2025 <code>2503.18127</code>, &quot;possibly intermediate&quot;) 에 대한 Mie 반사율 합성. warm + cold 벨트와 동일한 얼음 조성이라 살짝 따뜻한 반사율 (B/I 0.68). 렌더러가 A4 V 별빛을 위에 입힘. vivid 팩. <span class=\"hex-chip\" style=\"background:#ffe2b1\"></span><code>#ffe2b1</code>",
   "td_102":"<code>disk_intermediate_opacity</code>",
   "td_103":"0.25",
   "td_104":"low",
@@ -848,14 +852,16 @@ const T = {
   "p_206":"학회 초록 (AAS / DPS / EPSC), 간섭계 방법 논문 (CHARA / PTI commissioning), 후속 먼지 입자 광물학 작업 (Spitzer IRS 분광) 은 Di Folco 2004 + Boley 2012 + Gáspár 2023 가 이미 확립한 내용을 넘어서는 cfg-결정적 기여를 하지 않습니다. &quot;Fomalhaut b&quot; 위치의 SETI / 전파 방출 모니터링 (Tusay 2022, Saide 2023) 도 제외합니다. 필터링된 bib 는 <code>docs/phase3/_bib/fomalhaut.yaml</code> 에 <code>status: skipped</code> annotation 으로 보존됩니다.",
   "h2_207":"Open items for follow-up",
   "li_208":"<b>TW Piscis Austrini (HD 216803, K4V) 와 LP 876-10 (M4V) 의 별도 NS DB 엔트리화.</b> 광폭 공통 고유운동 동반성 두 개는 현재 152 시스템 NearStars 쇼트리스트에 들어 있지 않습니다. Mamajek 2012/2013 은 두 별이 중력적으로 연합돼 있고 같은 나이 (440 Myr) 의 Castor 운동성단 멤버임을 0.91 ly 와 5.7 ly 투영 분리에서 확립합니다. 별도 DB 엔트리로 추가되면 게임 내 플레이어가 실제 성간 궤적을 따라 세 별 사이를 비행할 수 있게 됩니다. Phase 2 DB 확장 후보로 플래그.",
-  "li_209":"<b>disk 지오메트리가 <code>disks_curated.json</code> 에 multi-belt 로 기록됨</b> (2026-05-29 감사). Fomalhaut 의 warm + intermediate + cold 벨트가 별도 <code>belt</code> 항목이며, Decisions 표가 belt별 <code>disk_&lt;belt&gt;_*</code> 필드로 렌더 → belt당 Kopernicus Ring 하나씩. 남은 것은 tie-break per-belt tint 를 대체할 grain-size / Mie 색 합성.",
-  "li_210":"<b>&quot;Fomalhaut b S1&quot; 후보 재방문.</b> 2026+ 의 JWST/MIRI 또는 지상 ELT follow-up 이 Gáspár &amp; Rieke 2020 의 먼지 구름 해석을 뒤집고 ~115 AU 의 묶인 행성을 다시 확립한다면, 새 Decisions 엔트리 <code>circumstellar_planet_present: true</code> (후보명 &quot;S1&quot;) 가 필요해지며 cfg 는 현재 컨센서스로부터의 divergence 를 문서화해야 합니다. 그 전에는 어떤 행성도 포함하지 않습니다.",
-  "li_211":"<b>Phase 2 <code>teff_measurements</code> 와 <code>metallicity_measurements</code> 채움.</b> DB 는 <code>teff_k = 8689</code> 를 출처 엔트리 없이 SIMBAD 컴파일레이션 스칼라로 갖고 있고 Saffe 2008 금속도도 DB 에 없습 니다. 둘 다 논문 인용된 Phase 2 엔트리로 추가해야 합니다.",
-  "li_212":"<b>중력 어두워짐 지도.</b> Fomalhaut 의 분해된 간섭계 중력 어두워짐 지도는 존재하지 않습니다 (Vega, Altair, Regulus 와 달리). CHARA/MIRC 또는 VLTI/GRAVITY 가 von-Zeipel 극-적도 온도 구배를 관측하면 cfg 가 현재의 uniform-disk 색조를 위도 구배로 바꿀 수 있게 됩니다 (<code>visual_gravity_darkening_delta_t_k</code> 필드, 현재 부재).",
-  "h2_213":"Related",
-  "li_214":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 테이블의 스키마 출처",
-  "li_215":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — canonical 항성 합성 템플릿. G2V 비교 대상",
-  "li_216":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — TW PsA / LP 876-10 이 향후 NS DB 로 격상될 경우 관련될 광폭 동반성 CPM 처리",
+  "li_209":"<b>disk 지오메트리가 <code>disks_curated.json</code> 에 multi-belt 로 기록됨</b> (2026-05-29 감사). Fomalhaut 의 warm + intermediate + cold 벨트가 별도 <code>belt</code> 항목이며, Decisions 표가 belt별 <code>disk_&lt;belt&gt;_*</code> 필드로 렌더 → belt당 Kopernicus Ring 하나씩. belt별 Mie 색 합성은 이제 완료됐습니다. 세 벨트 모두 동일한 얼음 (얼음 + 규산염, 물 얼음 ~50–80%) 조성을 공유합니다 — warm + intermediate 먼지가 외곽 벨트에서 PR-drag 로 떨어져 나온 파편이므로 (Sommer 외 2025 <code>2503.18127</code>) 셋 다 동일한 <span class=\"hex-chip\" style=\"background:#fff4e5\"></span><code>#fff4e5</code> 옅은 크림색 반사율로 합성됩니다.",
+  "li_210":"<b>2025 ALMA cold 고리 정밀화 (문서화만 — emit 안 함).</b> cold 고리의 단일 이심률 (e ≈ 0.11) 이 이제 <i>음의 이심률 구배</i> e_f ∝ a^(−1.75±0.16) (Lovell 외 2025 <code>2509.02884</code>) 로 분해되고, 여기에 apsidal 비대칭이 더해집니다 — SE ansa 가 4 AU 더 넓고 NW ansa 가 21 % 더 밝습니다 (Chittidi 외 2025 <code>2509.02825</code>). Kopernicus Ring 은 원형/평면이라 cfg 값은 바뀌지 않으며, 향후 편심/볼류메트릭 렌더링을 위해 기록만 해 둡니다.",
+  "li_211":"<b>&quot;Great Dust Cloud&quot; 는 배경 은하.</b> (Kennedy 2023. Chittidi 외 2025 <code>2509.02825</code> 의 230.25 GHz 스펙트럼 선으로 확인) — Fomalhaut 디스크 feature 로 렌더링되지 않는 것이 맞습니다.",
+  "li_212":"<b>&quot;Fomalhaut b S1&quot; 후보 재방문.</b> 2026+ 의 JWST/MIRI 또는 지상 ELT follow-up 이 Gáspár &amp; Rieke 2020 의 먼지 구름 해석을 뒤집고 ~115 AU 의 묶인 행성을 다시 확립한다면, 새 Decisions 엔트리 <code>circumstellar_planet_present: true</code> (후보명 &quot;S1&quot;) 가 필요해지며 cfg 는 현재 컨센서스로부터의 divergence 를 문서화해야 합니다. 그 전에는 어떤 행성도 포함하지 않습니다.",
+  "li_213":"<b>Phase 2 <code>teff_measurements</code> 와 <code>metallicity_measurements</code> 채움.</b> DB 는 <code>teff_k = 8689</code> 를 출처 엔트리 없이 SIMBAD 컴파일레이션 스칼라로 갖고 있고 Saffe 2008 금속도도 DB 에 없습 니다. 둘 다 논문 인용된 Phase 2 엔트리로 추가해야 합니다.",
+  "li_214":"<b>중력 어두워짐 지도.</b> Fomalhaut 의 분해된 간섭계 중력 어두워짐 지도는 존재하지 않습니다 (Vega, Altair, Regulus 와 달리). CHARA/MIRC 또는 VLTI/GRAVITY 가 von-Zeipel 극-적도 온도 구배를 관측하면 cfg 가 현재의 uniform-disk 색조를 위도 구배로 바꿀 수 있게 됩니다 (<code>visual_gravity_darkening_delta_t_k</code> 필드, 현재 부재).",
+  "h2_215":"Related",
+  "li_216":"<a href=\"../reference/methodology.md\">methodology</a> — Decisions 테이블의 스키마 출처",
+  "li_217":"<a href=\"alpha-centauri-a.md\">alpha-centauri-a</a> — canonical 항성 합성 템플릿. G2V 비교 대상",
+  "li_218":"<a href=\"../reference/binary-epoch-pipeline.md\">binary-epoch-pipeline</a> — TW PsA / LP 876-10 이 향후 NS DB 로 격상될 경우 관련될 광폭 동반성 CPM 처리",
   "title":"Fomalhaut — Phase 3 Synthesis",
   "back_db": "← 데이터베이스로",
   "reports_index": "보고서 인덱스",

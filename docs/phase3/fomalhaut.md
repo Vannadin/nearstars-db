@@ -78,11 +78,11 @@ white-blue) and the disk RGB tint (dust temperature → optical color).
 | `disk_belts` | warm, intermediate, cold | high | Gáspár et al. 2023 JWST/MIRI resolves a three-belt architecture: inner warm + intermediate + the classic eccentric cold main ring (Kalas 2005 / Boley 2012 / White 2017) |
 | `disk_warm_inner_radius_au` | 10 | high | Gáspár et al. 2023 (`2023NatAs...7..790G`) JWST/MIRI — inner warm belt inner edge |
 | `disk_warm_outer_radius_au` | 78 | high | Gáspár et al. 2023 — broad inner/warm disk extends out to the ~78 AU gap that separates it from the intermediate belt |
-| `disk_warm_tint_rgb_hex` | `#ffffff` (neutral; vivid `#fefeff`) | low | No measured optical color (thermal/interferometric only). Mie reflectance synthesis: carbonaceous grains, dark but large → neutral reflectance (B/I 1.00); renderer applies the A4 V blue-white light → pale blue-white in-game. Vivid pack: `#fefeff` |
+| `disk_warm_tint_rgb_hex` | `#fff4e5` (pale cream; vivid `#ffe0b0`) | low | No measured optical color (thermal/interferometric only). Mie reflectance synthesis on **icy grains** (ice + silicate, ~50–80% water ice by volume): the warm dust is PR-drag fragments of the outer belt, not in-situ carbon (Sommer et al. 2025 `2503.18127`) → same icy composition as the cold ring, large blowout grains → faintly warm reflectance (B/I 0.68); renderer applies the A4 V blue-white light. Vivid pack: `#ffe0b0` |
 | `disk_warm_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_intermediate_inner_radius_au` | 83 | high | Gáspár et al. 2023 JWST/MIRI — intermediate belt inner semi-major axis (e ≈ 0.31) |
 | `disk_intermediate_outer_radius_au` | 104 | high | Gáspár et al. 2023 — intermediate belt outer semi-major axis (e ≈ 0.265) |
-| `disk_intermediate_tint_rgb_hex` | `#fff9f6` (near-neutral; vivid `#ffece4`) | low | No measured optical color (mid-IR only). Mie reflectance synthesis: silicate grains, large vs optical λ → near-neutral reflectance (B/I 0.76); renderer applies the A4 V light. Vivid pack: `#ffece4` |
+| `disk_intermediate_tint_rgb_hex` | `#fff4e5` (pale cream; vivid `#ffe2b1`) | low | No measured optical color (mid-IR only; ALMA mm non-detection, 3σ < 396 µJy, Chittidi 2025 `2509.02825`). Mie reflectance synthesis on **icy grains** (PR-drag fragments of the outer belt, ~50–80% water ice; Sommer et al. 2025 `2503.18127`, "possibly intermediate") → same icy composition as the warm + cold belts → faintly warm reflectance (B/I 0.68); renderer applies the A4 V light. Vivid pack: `#ffe2b1` |
 | `disk_intermediate_opacity` | 0.25 | low | Tie-break: faint intermediate dust, boosted for visibility |
 | `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — main ring inner edge after eccentric-orbit deprojection |
 | `disk_cold_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — main ring outer edge |
@@ -436,9 +436,22 @@ Filtered bib preserved in `docs/phase3/_bib/fomalhaut.yaml` with
 - **Disk geometry is multi-belt in `disks_curated.json`** (audited
   2026-05-29): Fomalhaut's warm + intermediate + cold belts are
   separate `belt` entries, and the Decisions table renders them as
-  per-belt `disk_<belt>_*` fields → one Kopernicus Ring each.
-  Remaining: a grain-size / Mie color synthesis to replace the
-  tie-break per-belt tints.
+  per-belt `disk_<belt>_*` fields → one Kopernicus Ring each. The
+  per-belt Mie color synthesis is now done: all three belts share
+  the same icy (ice + silicate, ~50–80% water ice) composition —
+  the warm + intermediate dust are PR-drag fragments of the outer
+  belt (Sommer et al. 2025 `2503.18127`), so all three synthesize to
+  the same `#fff4e5` pale-cream reflectance.
+- **2025 ALMA cold-ring refinements (documentation only — not
+  emitted)**: the cold ring's single eccentricity (e ≈ 0.11) is now
+  resolved into a *negative eccentricity gradient* e_f ∝ a^(−1.75±0.16)
+  (Lovell et al. 2025 `2509.02884`) plus an apsidal asymmetry — the SE
+  ansa is 4 AU wider and the NW ansa 21 % brighter (Chittidi et al.
+  2025 `2509.02825`). The Kopernicus Ring is circular/flat, so no cfg
+  value changes; recorded for future eccentric/volumetric rendering.
+- **"Great Dust Cloud" is a background galaxy** (Kennedy 2023; confirmed
+  by a 230.25 GHz spectral line in Chittidi et al. 2025 `2509.02825`) —
+  it is correctly NOT rendered as a Fomalhaut disk feature.
 - **"Fomalhaut b S1" candidate revisit**: If a 2026+ JWST/MIRI or
   ground-based ELT follow-up reverses the Gáspár & Rieke 2020 dust-
   cloud interpretation and re-establishes a bound planet at ~115 AU,

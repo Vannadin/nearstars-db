@@ -205,8 +205,10 @@ def a_blow(L, M, rho=2.5):
 #            15/135 um grains; Su 2017 (2017AJ....153..226S); NO scattered light
 #            (HST/STIS non-detection, arXiv:2408.06973, omega<0.487).
 #   Fomalhaut: cold main ring MEASURED neutral/grey (Kalas 2005 2005Natur.435.1067K,
-#            Acke 2012 cometary fluffy aggregates); inner hot = carbon (sublimation);
-#            intermediate thermal-only.
+#            Acke 2012 cometary fluffy aggregates). Inner warm + intermediate dust =
+#            PR-drag fragments of the same outer belt, ~50-80% water ice by volume
+#            (Sommer 2025 2503.18127) -> icy ice_sil, NOT carbon/silicate; same
+#            composition as the cold ring, hence the same synthesized color.
 #   Vega: featureless silicate, large blowout grains (Su 2013 2013ApJ...763..118S);
 #            thermal/mm only.
 #   AU Mic: MEASURED BLUE (Krist 2005 2005AJ....129.1008K, B/I~1.6; Fitzgerald 2007
@@ -223,8 +225,8 @@ BELTS = [
     ("eps Eri asteroid ~3AU",     2.0,  1000, 3.5, "astrosil", 0.32, 0.82, 5039),
     ("eps Eri intermediate ~20AU", None, 1000, 3.5, "astrosil", 0.32, 0.82, 5039),
     ("eps Eri cold ~64AU",        15.0, 1000, 3.5, "ice_sil",  0.32, 0.82, 5039),
-    ("Fomalhaut inner warm",      None, 100,  3.5, "carbon",  16.63, 1.92, 8590),
-    ("Fomalhaut intermediate",    None, 1000, 3.5, "astrosil",16.63, 1.92, 8590),
+    ("Fomalhaut inner warm",      None, 100,  3.5, "ice_sil", 16.63, 1.92, 8590),
+    ("Fomalhaut intermediate",    None, 1000, 3.5, "ice_sil", 16.63, 1.92, 8590),
     ("Vega warm ~14AU",           None, 1000, 3.5, "astrosil", 47.2, 2.15, 9360),
     ("Vega cold ~110AU",          None, 1000, 3.5, "astrosil", 47.2, 2.15, 9360),
     ("HD 69830 warm ~1AU",        None, 100,  3.5, "olivine",  0.622, 0.863, 5394),

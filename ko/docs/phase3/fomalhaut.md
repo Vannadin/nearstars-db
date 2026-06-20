@@ -74,11 +74,11 @@ Kalas et al. 2008 이 HST 가시광 영상에서 보고한 그 유명한
 | `disk_belts` | warm, intermediate, cold | high | Gáspár 외 2023 JWST/MIRI 가 3 벨트 구조를 분해. 안쪽 warm + intermediate + 고전적 편심 cold 주 고리 (Kalas 2005 / Boley 2012 / White 2017) |
 | `disk_warm_inner_radius_au` | 10 | high | Gáspár 외 2023 (`2023NatAs...7..790G`) JWST/MIRI — 안쪽 warm 벨트 안쪽 가장자리 |
 | `disk_warm_outer_radius_au` | 78 | high | Gáspár 외 2023 — 넓은 안쪽/warm 디스크가 intermediate 벨트와 분리되는 ~78 AU gap 까지 뻗음 |
-| `disk_warm_tint_rgb_hex` | `#ffffff` (중성. vivid `#fefeff`) | low | 광학 색 측정값 없음 (열복사/간섭계 자료만). Mie 반사율 합성. 탄소질 입자는 어둡지만 입자가 커서 중성 반사율 (B/I 1.00). 렌더러가 A4 V 청백색 별빛을 위에 입히면 게임 내에서 옅은 청백색. vivid 팩. `#fefeff` |
+| `disk_warm_tint_rgb_hex` | `#fff4e5` (옅은 크림색. vivid `#ffe0b0`) | low | 광학 색 측정값 없음 (열복사/간섭계 자료만). **얼음 입자** (얼음 + 규산염, 부피 기준 물 얼음 ~50–80%) 에 대한 Mie 반사율 합성. warm 먼지는 외곽 벨트에서 PR-drag 로 떨어져 나온 파편이지 그 자리에서 생긴 탄소질이 아니므로 (Sommer 외 2025 `2503.18127`) cold 고리와 동일한 얼음 조성이고, blowout 크기의 큰 입자라 살짝 따뜻한 반사율 (B/I 0.68). 렌더러가 A4 V 청백색 별빛을 위에 입힘. vivid 팩. `#ffe0b0` |
 | `disk_warm_opacity` | 0.30 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
 | `disk_intermediate_inner_radius_au` | 83 | high | Gáspár 외 2023 JWST/MIRI — intermediate 벨트 안쪽 긴반지름 (e ≈ 0.31) |
 | `disk_intermediate_outer_radius_au` | 104 | high | Gáspár 외 2023 — intermediate 벨트 바깥쪽 긴반지름 (e ≈ 0.265) |
-| `disk_intermediate_tint_rgb_hex` | `#fff9f6` (거의 중성. vivid `#ffece4`) | low | 광학 색 측정값 없음 (중적외선만). Mie 반사율 합성. 규산염 입자가 광학 파장 대비 커서 거의 중성 반사율 (B/I 0.76). 렌더러가 A4 V 별빛을 위에 입힘. vivid 팩. `#ffece4` |
+| `disk_intermediate_tint_rgb_hex` | `#fff4e5` (옅은 크림색. vivid `#ffe2b1`) | low | 광학 색 측정값 없음 (중적외선만. ALMA mm 미검출, 3σ < 396 µJy, Chittidi 2025 `2509.02825`). **얼음 입자** (외곽 벨트에서 떨어져 나온 PR-drag 파편, 물 얼음 ~50–80%. Sommer 외 2025 `2503.18127`, "possibly intermediate") 에 대한 Mie 반사율 합성. warm + cold 벨트와 동일한 얼음 조성이라 살짝 따뜻한 반사율 (B/I 0.68). 렌더러가 A4 V 별빛을 위에 입힘. vivid 팩. `#ffe2b1` |
 | `disk_intermediate_opacity` | 0.25 | low | Tie-break. 희미한 intermediate 먼지, 가시성 위해 boost |
 | `disk_cold_inner_radius_au` | 133 | high | Boley 2012 / White 2017 ALMA — 편심 궤도 보정 후 주 고리 안쪽 가장자리 |
 | `disk_cold_outer_radius_au` | 158 | high | Boley 2012 / White 2017 ALMA — 주 고리 바깥쪽 가장자리 |
@@ -411,8 +411,22 @@ skipped` annotation 으로 보존됩니다.
 - **disk 지오메트리가 `disks_curated.json` 에 multi-belt 로 기록됨**
   (2026-05-29 감사). Fomalhaut 의 warm + intermediate + cold 벨트가
   별도 `belt` 항목이며, Decisions 표가 belt별 `disk_<belt>_*` 필드로
-  렌더 → belt당 Kopernicus Ring 하나씩. 남은 것은 tie-break per-belt
-  tint 를 대체할 grain-size / Mie 색 합성.
+  렌더 → belt당 Kopernicus Ring 하나씩. belt별 Mie 색 합성은 이제
+  완료됐습니다. 세 벨트 모두 동일한 얼음 (얼음 + 규산염, 물 얼음
+  ~50–80%) 조성을 공유합니다 — warm + intermediate 먼지가 외곽
+  벨트에서 PR-drag 로 떨어져 나온 파편이므로 (Sommer 외 2025
+  `2503.18127`) 셋 다 동일한 `#fff4e5` 옅은 크림색 반사율로
+  합성됩니다.
+- **2025 ALMA cold 고리 정밀화 (문서화만 — emit 안 함).** cold
+  고리의 단일 이심률 (e ≈ 0.11) 이 이제 *음의 이심률 구배*
+  e_f ∝ a^(−1.75±0.16) (Lovell 외 2025 `2509.02884`) 로 분해되고,
+  여기에 apsidal 비대칭이 더해집니다 — SE ansa 가 4 AU 더 넓고
+  NW ansa 가 21 % 더 밝습니다 (Chittidi 외 2025 `2509.02825`).
+  Kopernicus Ring 은 원형/평면이라 cfg 값은 바뀌지 않으며, 향후
+  편심/볼류메트릭 렌더링을 위해 기록만 해 둡니다.
+- **"Great Dust Cloud" 는 배경 은하.** (Kennedy 2023. Chittidi 외
+  2025 `2509.02825` 의 230.25 GHz 스펙트럼 선으로 확인) — Fomalhaut
+  디스크 feature 로 렌더링되지 않는 것이 맞습니다.
 - **"Fomalhaut b S1" 후보 재방문.** 2026+ 의 JWST/MIRI 또는 지상
   ELT follow-up 이 Gáspár & Rieke 2020 의 먼지 구름 해석을 뒤집고
   ~115 AU 의 묶인 행성을 다시 확립한다면, 새 Decisions 엔트리

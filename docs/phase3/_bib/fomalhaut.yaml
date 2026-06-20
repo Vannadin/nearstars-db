@@ -11,6 +11,24 @@ note: 'Phase 2 anchor bibliography for Fomalhaut (alpha PsA, HD 216956, A3/A4 V;
   only v sin i ~93 km/s (Royer 2007), NO measured period for the A-star (the 10.3 d is the K-dwarf companion) -- not recorded.
   NO log R''HK (A star); no standalone X-ray detection of the A primary.'
 papers:
+- arxiv_id: '2503.18127'
+  ads_bibcode: 2025arXiv250318127S
+  title: 'Sommer et al. 2025 — inner+intermediate dust = PR-drag fragments of the outer belt, ~50-80% water ice by volume (icy composition basis for warm/intermediate disk tints); planet mass limits'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2509.02884'
+  ads_bibcode: 2025arXiv250902884L
+  title: 'Lovell et al. 2025 — ALMA negative eccentricity gradient e_f ~ a^-1.75 in the cold ring (documentation; e not emitted)'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2509.02825'
+  ads_bibcode: 2025arXiv250902825C
+  title: 'Chittidi et al. 2025 — ALMA apsidal width/brightness asymmetry (SE 4 AU wider, NW ansa 21% brighter); intermediate-belt mm non-detection (<396 uJy); Great Dust Cloud = background galaxy'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '1206.6353'
   ads_bibcode: 2012ApJ...754L..20M
   title: Mamajek 2012 — fundamental params + age 440 Myr (PRIMARY ANCHOR mass/R/Teff/L/age)
