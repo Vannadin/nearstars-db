@@ -17,6 +17,7 @@ Phase 3 session and the affected synthesis can be revised.
 | 1997MNRAS.284..803S | 1997 | A | Rotation, turbulence and evidence for magnetic fields in southern dwarfs | Source of the ~37 d rotation period that conflicts with the adopted ~42 d (Burrows 2024); full text needed to weigh the 37–42 d spread for `rotation_period_days`. Pre-arXiv (OUP). |
 | 1974AJ.....79..819H | 1974 | C | Astrometric study of four visual binaries | Holds the B–C mass ratio that Mason 2017/2021 use to split the dynamical mass-sum into 40 Eri C's mass (0.198–0.204 M☉); verifying it propagates straight to C's cfg mass. Pre-arXiv. |
 | 2011A&A...531A...8J | 2011 | A | Chromospheric activities and kinematics for solar type dwarfs and subgiants | The recommended activity value log R'HK = −4.99 lives in the CDS/VizieR Table 4 only — the arXiv preprint (1103.0584) omits the per-star table. Manual VizieR lookup needed to verify the adopted number. |
+| 2409.10679 | 2025 | A (+ b) | SPORES-HWO. II. Companion Mass Limits and Updated Planet Properties for 120 Future Exoplanet Imaging Targets | Reportedly (§D.6) gives 40 Eri A rotation P = 42.322 ± 0.015 d — a formal σ vs our σ-less ~42 d (`rotation_period_days`) — plus an independent 666-RV confirmation of the b refutation. Has arXiv (2409.10679) but ar5iv fails to render it (stub) and the value is appendix-only, so the number could NOT be auto-verified — fetch §D.6 to confirm. |
 
 ## Tier B — useful context
 
