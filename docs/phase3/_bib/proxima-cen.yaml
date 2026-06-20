@@ -5,6 +5,12 @@ sources:
   ads: queried (150 hits)
   arxiv: queried (43 hits)
 papers:
+- arxiv_id: '2605.22925'
+  ads_bibcode: 2026arXiv260522925Z
+  title: 'Zapatero Osorio et al. 2026 — ESPRESSO star–planet interaction; flares phase-locked to Proxima d (>=99.8%) -> SPI polar field ~16 G (3-280 G, order-of-magnitude), first for a terrestrial exoplanet; Prot 84.9 d'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - &id001
   arxiv_id: '2404.17972'
   ads_bibcode: 2024MNRAS.531.1471D

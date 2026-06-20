@@ -54,10 +54,10 @@ divergence 는 없습니다 — Proxima d 는 너무 최근에 발견되어 cano
 | `surface_tint_rgb_hex_primary` | `#5a3a2a` (빨강 별 아래 iron-oxidized basalt regolith) | medium | Tie-break. Mercury 표면 색조 × M 왜성 SED. interesting-first 가 중립 회색보다 따뜻한 흙 톤 선택 |
 | `surface_tint_rgb_hex_accent` | `#6a4632` (substellar 햇볕에 구워진 basalt) | low | Mercury-analog substellar regolith reddening. 용융 없음 (substellar ~460 K ≪ silicate solidus ~1300 K) |
 | `surface_morphology` | impact-cratered basalt 지형. substellar 햇볕에 구워진 basalt. antistellar volatile cold-trap regolith | medium | Tie-break. Mercury analog + ~1.9 S⊕ 일조량 driven 주간 열 기울기 (용융 없음) |
-| `magnetic_field_present` | true (약한, 유도된) | low | 제약되지 않은 Mercury-analog 유도 모멘트. 측정된 적 없고 렌더되는 aurora 도 없음 (airless) |
-| `magnetic_dipole_moment_normalized_earth` | 0.001 | low | 제약되지 않은 Mercury-analog 유도 모멘트. 측정된 적 없고 렌더되는 aurora 도 없음 (airless) |
+| `magnetic_field_present` | true (intrinsic, SPI-indicated) | medium | Zapatero Osorio et al. 2026 (`2605.22925`) 이 Proxima d 에 위상 고정된 플레어를 ≥99.8% 유의도로 검출 — 지구형 외계행성에 대한 최초의 별-행성 상호작용(SPI) 자기장 추정이다. 기존의 제약 없던 Mercury-analog 추측을 대체한다. 여전히 airless → 렌더되는 aurora 없음 |
+| `magnetic_dipole_moment_normalized_earth` | 4 | low | Zapatero Osorio 2026 (`2605.22925`) 의 SPI 유도 극지방 자기장 ~16 G (중앙값, Mars-size) 로부터. 지구(극지방 0.6 G) 대비 M ∝ B_pol·R³ → Mars 반지름이면 지구의 ~4배. **차수 수준만 유효** — 논문의 3–280 G 범위 × 반지름 불확실성은 지구의 ~0.5–70배에 걸치며, 논문 스스로 이 자기장이 "차수 수준에서만 신뢰할 수 있다"고 밝힌다. 기존 Mercury-analog 0.001 을 대체한다 |
 | `radiation_belt_present` | false | high | 대기 없음 + 무시할 만한 B 필드 → 갇힌 입자 population 없음 |
-| `surface_radiation_dose_msv_yr` | 10⁵ | low | 측정값이 아니라 차수 수준의 추정. Atri 2020 (1910.09871) 은 SEP→dose *프레임워크* 를 제공하지만, 보고하는 값은 event 당 Gray + 무차원 enhancement-over-GCR 계수이지 연간 mSv/yr 가 아니다. 여기 적힌 연간값은 변환(무대기 dose × flare 빈도)이므로, 물리적 구동은 강해도 신뢰도는 low |
+| `surface_radiation_dose_msv_yr` | 10⁵ | low | 측정값이 아니라 차수 수준의 추정. Atri 2020 (1910.09871) 은 SEP→dose *프레임워크* 를 제공하지만, 보고하는 값은 event 당 Gray + 무차원 enhancement-over-GCR 계수이지 연간 mSv/yr 가 아니다. 여기 적힌 연간값은 변환(무대기 dose × flare 빈도)이므로, 물리적 구동은 강해도 신뢰도는 low. 다만 SPI 로 시사되는 ~16 G 자기장(Zapatero Osorio 2026)이 SEP 를 부분적으로 편향시킬 수 있으므로 → 자기 차폐가 없다고 가정한 이 값은 상한값이다 |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | 자극할 대기 없음 |
 | `flare_dose_event_msv` | 10⁴ | high | Atri 2020 + Vida 2019 superflare 통합 양성자 도즈, d 거리 |

@@ -60,7 +60,7 @@ specific flare hex tint).
 | `luminosity_lsun` | 0.001567 | high | derived from R, Teff |
 | `metallicity_fe_h_dex` | +0.21 | medium | Passegger 2019 H-band |
 | `age_gyr` | 4.85 | medium | dynamics + activity proxy; Feng & Jones 2018 capture vs. coeval ambiguity |
-| `rotation_period_days` | 83.5 ± 0.5 | high | Benedict et al. 1998 (HST photometric); modern SM corroborates ~83 d (SM2020 adopts 83.2; SM2025 GP 83.2 ± 1.6) |
+| `rotation_period_days` | 83.5 ± 0.5 | high | Benedict et al. 1998 (HST photometric); modern SM corroborates ~83 d (SM2020 adopts 83.2; SM2025 GP 83.2 ± 1.6); Zapatero Osorio 2026 (`2605.22925`) ESPRESSO photospheric 84.9 ± 0.6 d, consistent within ~2σ. Value retained |
 | `activity_log_rhk` | −5.65 ± 0.17 | high | Suárez Mascareño et al. 2016 (Ca II H&K; SM2020 recalibrates to −4.98) — old slow rotator, low/moderate quiescent activity |
 | `activity_cycle_years` | 7 | medium | Wargelin 2024 X-ray + UV + optical cycle |
 | `x_ray_log_lx_cgs_quiescent` | 27.0 | medium | Damonte 2026 XMM time-resolved spectra |

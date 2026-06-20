@@ -52,7 +52,7 @@ flare hex 색상).
 | `luminosity_lsun` | 0.001567 | high | R, Teff 로 유도 |
 | `metallicity_fe_h_dex` | +0.21 | medium | Passegger 2019 H 밴드 |
 | `age_gyr` | 4.85 | medium | 역학 + 활동 proxy. Feng & Jones 2018 capture vs. coeval 모호 |
-| `rotation_period_days` | 83.5 ± 0.5 | high | Benedict et al. 1998 (HST 광도). 최근 SM 도 ~83 일을 뒷받침 (SM2020 은 83.2 채택. SM2025 GP 83.2 ± 1.6) |
+| `rotation_period_days` | 83.5 ± 0.5 | high | Benedict et al. 1998 (HST 광도). 최근 SM 도 ~83 일을 뒷받침 (SM2020 은 83.2 채택. SM2025 GP 83.2 ± 1.6). Zapatero Osorio 2026 (`2605.22925`) 의 ESPRESSO 광구 측정값은 84.9 ± 0.6 일로 ~2σ 이내에서 일치. 기존 값 유지 |
 | `activity_log_rhk` | −5.65 ± 0.17 | high | Suárez Mascareño 외 2016 (Ca II H&K. SM2020 은 −4.98 로 재보정) — 오래되고 느린 자전성, 정상상태 활동도 낮음에서 중간 |
 | `activity_cycle_years` | 7 | medium | Wargelin 2024 X 선 + UV + 광학 사이클 |
 | `x_ray_log_lx_cgs_quiescent` | 27.0 | medium | Damonte 2026 XMM 시간 분해 스펙트라 |
