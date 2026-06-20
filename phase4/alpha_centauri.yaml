@@ -188,16 +188,22 @@ decisions:
         s=40° 이젝션(코자이 ~39°, 최대경사 Hades). **J2 적용(TRACE 300yr)**: J2가 안쪽 위성을
         적도면에 앵커링해 코자이 펌핑 억제 → **s=40°까지 bound**(한계가 안쪽 Hades→외측 역행
         Chaos로 이동, e_max 0.88 @s40). 시각분산 스윗스팟 J2서 s≈25–30°까지 가능.
+      spread_adopted: >
+        **[2026-06-20 채택] s=25° 분산 확정** (results/_moons_j2/spread25). 1000yr TRACE+J2:
+        STABLE, |dE/E| 8.2e-9, 5위성 전부 bound·calm, **전 위성 근일점 > 폴리페무스 표면**
+        (Dante q 96.8k > 71.5k, 나머지 여유). 채택 경사: Dante 12.5°/Hades 25°/Pandora 0°(적도
+        고정)/Cassandra 162.5°/Chaos 150°(역행 보존). 내측 e는 분산 줘도 낮음(Dante 0.03·Hades
+        0.05, J2 적도앵커 덕). moons 표 inc_deg + hypotheticals/alpha_centauri.json 반영 완료.
       cotilt_scan: >
         [동시틸트, J2] results/_moons_cotilt_scan.md (TRACE 300yr): 락이 J2로 죽은 뒤라 동시틸트의
         "락+분산" 목적은 성립 안 함. θ=0°(완전 동일평면)은 이탈, θ=10–30°는 bound지만 φ 전부 순환
         (락 없음), 차등 승교점 세차로 Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
-    moons:                         # a/e는 게이트 통과한 설계값; 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
-      - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 0.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(~94k 밖), 화산 moonlet (Metis/Adrastea급). e작음." }
-      - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 2.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열>900K = 유지된 e(Io식), 교차 아님. Dante와 3:2~5:3 사이." }
-      - { name: Pandora,   order: 5, a_km: 225000, e: 0.0,  inc_deg: 0.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 조석고정 27h→a 도출. 거주가능." }
-      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 178.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon: 최외곽 2위성)." }
-      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 175.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon). 역행이라 0.7 R_Hill까지 안정." }
+    moons:                         # a/e/inc는 게이트 통과한 설계값(inc=s=25 분산); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
+      - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 12.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(유체 98.3k 밖, q 96.8k>표면), 화산 moonlet. inc=0.5×s." }
+      - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 25.0, mass_kg: 5.0e21, radius_km: 750,  note: "off-resonance 갭(J2가 3:2락 죽임). e≈0.05 adopted given. inc=1.0×s(스프레드 최대)." }
+      - { name: Pandora,   order: 5, a_km: 225000, e: 0.0,  inc_deg: 0.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 조석고정 27h→a 도출. 거주가능. 적도면 기준(inc 0 고정)." }
+      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 162.5, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon)=180−0.7s, 평면서 ~17.5° 틸트." }
+      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 150.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon)=180−1.2s, ~30° 틸트. 역행이라 0.7 R_Hill까지 안정." }
     rejected:
       - >
         라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동
@@ -213,13 +219,21 @@ decisions:
       - >
         [2026-06-20] 큰경사 의향(4a) 검증 — J2가 코자이를 억제해 경사 한계 상승(s=40°까지 bound).
         시각분산 s≈25–30°까지 가능, 한계는 외측 Chaos. inclination_scan 참조.
+      - >
+        [2026-06-20] 경사 분산 **s=25° 채택 확정** (사용자 결정 "경사 분산 실제로 주면 좋겠어").
+        1000yr J2 + 근일점-충돌 체크 통과. moons 표·게이트 설정에 반영. spread_adopted 참조.
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
       - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Hades 붉은 잉걸불). 표면뷰 아트디렉션 입력."
       - >
-        [경사 emit 미정] J2 검증으로 s≈25–30° 분산이 안정함은 확인됐으나, moons inc_deg 표는 아직
-        near-coplanar(0.5~2°) 그대로. 큰경사 시각분산을 실제 채택할지(채택 시 어느 s) = 아트디렉션
-        결정 후 moons inc_deg 갱신. 폴리페무스 j2+reference_radius emit cfg 설정도 emit 단계에서.
+        [폴리페무스 j2+reference_radius emit cfg 설정] emit 단계에서 (J2≈0.023, reference_radius
+        1.0 R_Jup; bulk.geopotential_j2 참조).
+      - >
+        [별건 실험 — 역행 Cassandra:Pandora 공명] 내측 공명은 J2가 전부 죽였으나(resonance_j2),
+        J2는 (R_p/a)²라 Cassandra(600k)서 ~20배 약함 → 외측 역행 공명은 J2 무관. 역행 MMR은
+        순행보다 넓게 안정(Morais&Namouni 2013)이고, Pandora overlap도 역행이면 피할 여지. 목적=
+        조석가열 구제 아님(외측이라 조석~0) → "거주 모천체+외곽 역행위성 한 리듬" 새 feature 탐색.
+        설계: Cassandra a를 Pandora와 역행 2:1/3:1/4:1 위치로 쓸며 libration+안정 확인. 미실행.
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──
   #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.

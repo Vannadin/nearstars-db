@@ -1,5 +1,5 @@
 {
-  "_comment": "Polyphemus (Alpha Centauri A b) named-moon system from Avatar: The Game [GAME, soft-canon]. Run: run.py --system alpha_centauri --hypotheticals hypotheticals/alpha_centauri.json --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16 --integrator ias15 --years 1000. The wiki gives NO semi-major axis/period/eccentricity for any moon (only Pandora is Kepler-derivable from its tidal-lock 27h day); orbital elements below are DESIGNED to satisfy the canon ordering + physical bounds (Roche inner edge, 0.5 R_Hill prograde outer limit) and verified for dynamical stability. Masses/radii for Dante/Hades/Cassandra/Chaos are also invented (only Pandora and Cassandra's >6500 km diameter are canon) — class C/D Phase 4 art-direction, staged, DB unchanged.",
+  "_comment": "Polyphemus (Alpha Centauri A b) named-moon system from Avatar: The Game [GAME, soft-canon]. Run: run.py --system alpha_centauri --hypotheticals hypotheticals/alpha_centauri.json --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16 --integrator ias15 --years 1000. The wiki gives NO semi-major axis/period/eccentricity for any moon (only Pandora is Kepler-derivable from its tidal-lock 27h day); orbital elements below are DESIGNED to satisfy the canon ordering + physical bounds (Roche inner edge, 0.5 R_Hill prograde outer limit) and verified for dynamical stability. Masses/radii for Dante/Hades/Cassandra/Chaos are also invented (only Pandora and Cassandra's >6500 km diameter are canon) — class C/D Phase 4 art-direction, staged, DB unchanged. INCLINATIONS carry the adopted s=25 sky-latitude spread (2026-06-20): Dante 12.5/Hades 25/Pandora 0/Cassandra 162.5/Chaos 150 deg — confirmed stable + all periapses clear the planet over 1000 yr with J2 (TRACE, results/_moons_j2/spread25).",
   "system": "alpha_centauri",
   "bodies": [
     {
@@ -8,7 +8,7 @@
       "type": "moon",
       "semi_major_axis_km": 100000,
       "eccentricity": 0.01,
-      "inclination_deg": 0.5,
+      "inclination_deg": 12.5,
       "mass_kg": 8.0e21,
       "radius_km": 900,
       "_design_note": "Canon [GAME]: innermost moon, orbits 'as close as possible without being torn apart' (Roche edge) with perpetual volcanism + moonquakes from Polyphemus tidal forces. a=100,000 km sits just outside the ~94,000 km fluid Roche limit (rocky rho=3) -> the canonical Roche-edge placement. STABILITY: a heavy (7e22) Dante mutually pumps Hades into a crossing ejection; reduced to a small inner MOONLET (8e21 kg, r 900 km) like Jupiter's inner moonlets (Metis/Adrastea) that coexist with Io — so it no longer pumps Hades. Roche-edge tides keep it volcanic regardless of size. e=0.01, mass/radius INVENTED."
@@ -19,7 +19,7 @@
       "type": "moon",
       "semi_major_axis_km": 135000,
       "eccentricity": 0.05,
-      "inclination_deg": 2.0,
+      "inclination_deg": 25.0,
       "mass_kg": 5.0e21,
       "radius_km": 750,
       "_design_note": "Canon [GAME]: 2nd moon on an ELLIPTICAL orbit that 'brought it close to Dante', tidal-heated to T>900 K. STABILITY FINDING: the literal grazing orbit (e=0.30, periapsis crossing Dante) ejects within 100 yr; even e=0.13 with heavy moons mutually pumps to a crossing ejection (Lyapunov 0.2 yr). Tidal heating comes from a *maintained* eccentricity (Io's forced e is only 0.0041, yet it is the most volcanic body known), so e=0.05 amply sustains >900 K without crossing. Made a small moonlet (5e21 kg, r 750 km) at a=135,000 km (period ratio 1.57 to Dante, between the 3:2 and 5:3 resonances). periapsis 128,250 km clears Dante's apoapsis; apoapsis 141,750 km clears massive Pandora. mass/radius INVENTED."
@@ -41,10 +41,10 @@
       "type": "moon",
       "semi_major_axis_km": 600000,
       "eccentricity": 0.05,
-      "inclination_deg": 178.0,
+      "inclination_deg": 162.5,
       "mass_kg": 9.0e23,
       "radius_km": 3400,
-      "_design_note": "Canon [GAME / Lightstorm 2024 panel]: the 2nd-largest moon (after Pandora), diameter >6500 km, with a N-H atmosphere + few % CO2 (possible carbon-cycle life). radius 3400 km (diameter 6800 km, satisfies >6500) at Pandora-like rho 5470 kg/m3 -> mass 9.0e23 kg. RETROGRADE: canon says the two outermost moons orbit opposite the rest, so inclination_deg=178 (~2 deg from the plane, retrograde). Retrograde moons are Hill-stable to a LARGER radius (~0.7 R_Hill vs 0.5 prograde), so this only helps. a/e/inc INVENTED (retrograde sense is canon)."
+      "_design_note": "Canon [GAME / Lightstorm 2024 panel]: the 2nd-largest moon (after Pandora), diameter >6500 km, with a N-H atmosphere + few % CO2 (possible carbon-cycle life). radius 3400 km (diameter 6800 km, satisfies >6500) at Pandora-like rho 5470 kg/m3 -> mass 9.0e23 kg. RETROGRADE: canon says the two outermost moons orbit opposite the rest, inclination_deg=162.5 (retrograde — >90deg — tilted ~17.5deg off the pure-retrograde plane for the s=25 sky-latitude spread; canon retrograde sense preserved). Retrograde moons are Hill-stable to a LARGER radius (~0.7 R_Hill vs 0.5 prograde), so this only helps. a/e/inc INVENTED (retrograde sense is canon)."
     },
     {
       "name": "Chaos",
@@ -52,10 +52,10 @@
       "type": "moon",
       "semi_major_axis_km": 1500000,
       "eccentricity": 0.10,
-      "inclination_deg": 175.0,
+      "inclination_deg": 150.0,
       "mass_kg": 5.4e20,
       "radius_km": 400,
-      "_design_note": "Canon [GAME]: orbits beyond Cassandra (the outermost named moon); a fractured Miranda-like moon with 15-30 km cliffs (likely past tidal heating). Small (Miranda r=236 km); r 400 km at fractured rho~2 g/cc -> 5.4e20 kg. RETROGRADE: one of the two outermost moons that canon says orbit opposite the rest -> inclination_deg=175 (~5 deg from plane, retrograde). a=1.5e6 km, e=0.10 INVENTED; still well inside even the prograde 0.5 R_Hill (~5.1e6 km). The 9 unnamed moonlets + the heliocentric Poly-L4/L5 co-orbital planetoids are NOT in this run (deferred)."
+      "_design_note": "Canon [GAME]: orbits beyond Cassandra (the outermost named moon); a fractured Miranda-like moon with 15-30 km cliffs (likely past tidal heating). Small (Miranda r=236 km); r 400 km at fractured rho~2 g/cc -> 5.4e20 kg. RETROGRADE: one of the two outermost moons that canon says orbit opposite the rest -> inclination_deg=150 (retrograde — >90deg — tilted ~30deg off the pure-retrograde plane for the s=25 spread; canon retrograde sense preserved). a=1.5e6 km, e=0.10 INVENTED; still well inside even the prograde 0.5 R_Hill (~5.1e6 km). The 9 unnamed moonlets + the heliocentric Poly-L4/L5 co-orbital planetoids are NOT in this run (deferred)."
     }
   ]
 }
