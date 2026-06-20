@@ -398,6 +398,22 @@ Co-tilt (`results/_moons_cotilt_scan.md`): with the lock gone, tilted inner pair
 10–30°) stay bound but circulate; differential nodal precession drifts their mutual
 inclination to ~60° → co-tilt does NOT keep Dante/Hades coplanar.
 
+**Can ANY resonance survive J2? No (`results/_moons_resonance_j2_scan.md`,
+`scripts/resonance_j2_scan.py`, TRACE 600 yr, Hades M0=180°).** Swept the Dante:Hades
+resonances that dodge Pandora — 5:4 (116k), 4:3 (121k), 3:2 (129/131/133k), gap (135k) —
+with J2 on. Result: **no lock survives.** Sitting on an exact resonance EJECTS (131k 3:2
+and 121k 4:3 both eject — J2 precession destabilizes the resonance); off-resonance
+positions (129/133/135k) are bound but **circulate** (φ-cov >355°, no libration) = same
+class as the gap. The 5:4 (116k) pumps Hades e to 0.44+ but its periapsis then dips
+INSIDE Polyphemus (q ≈ 47,000 km < R_p 71,492 km) → planet collision, non-viable (the
+Hill-based "bound" verdict misses this — periapsis-vs-planet-radius is an unchecked
+collision mode, follow-up). So the documented limitation is confirmed by sweeping the
+whole resonance space: no self-consistent resonant tidal-heating config exists under J2.
+Small bonus: J2's secular forcing alone holds Hades e ≈ 0.12 at the gap (133–135k, M0=180)
+— higher than the point-mass 0.056, so the heating plausibility is mildly improved even
+without a lock. (Moving Dante is boxed in: Roche floor ~98k leaves ~2k inward; the Pandora
+resonance wall at Hades ~140k caps the 3:2 outward move at Dante ~107k.)
+
 **Still point-mass-vs-J2 open / not done:** an IAS15+J2 gold-standard spot-check of the
 lock ejection (TRACE is trustworthy here + we're dropping the lock, so skipped — ~3 h
 cost); J2-sensitivity across the 0.017–0.033 range (central 0.023 is decisive; the gap is
