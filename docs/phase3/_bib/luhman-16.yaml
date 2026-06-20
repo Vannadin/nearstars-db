@@ -7,6 +7,13 @@ note: 'Brown-dwarf binary (WISE J104915.57-531906.1 AB), nearest BD system. Anch
 
   '
 papers:
+- arxiv_id: null
+  ads_bibcode: 2020ApJ...894...42M
+  doi: 10.3847/1538-4357/ab6ef2
+  title: 'Millar-Blanchaer et al. 2020 — H-band VLT/NaCo polarimetry (p_A=0.031%); Luhman 16A requires constant longitudinal cloud bands (oblateness ruled out). No arXiv (IOP); manually fetched + integrated 2026-06-20 into luhman-16-a cloud_morphology'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '2602.03409'
   ads_bibcode: 2026arXiv260203409D
   title: 'de Regt et al. 2026 (ESO SupJup IX) - CRIRES+ isotopes; 12C/13C=74 both comps + Oceanus moving group membership -> age ~500 Myr (supersedes Faherty field age); C/O ratios'
