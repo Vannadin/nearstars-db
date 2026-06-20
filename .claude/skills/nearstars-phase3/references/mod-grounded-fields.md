@@ -18,8 +18,8 @@ goes in the Phase 3 Decisions table; the cfg writer reads from there.
 
 | Field | Unit | Range typical | Notes |
 |---|---|---|---|
-| `magnetic_field_strength_microtesla_equator` | μT | 0–60 | Earth ≈ 30 μT at equator; M-dwarf tidal-lock planets usually 0–10 μT |
-| `magnetic_dipole_moment_normalized_earth` | × Earth | 0–1 (rarely > 1) | Earth = 1.0. Dynamo-killed planets = 0. Rocky tidally-locked typically 0.01–0.3 |
+| `magnetic_field_strength_microtesla_equator` | μT | 0–60 (rocky) | Earth ≈ 30 μT at equator; M-dwarf tidal-lock planets usually 0–10 μT. **Gas giants are off this scale: 400–3000+ μT** — derive via energy-flux dynamo scaling, not this rocky range (see below) |
+| `magnetic_dipole_moment_normalized_earth` | × Earth | 0–1 rocky / 10⁴–10⁵ giant | Earth = 1.0. Dynamo-killed planets = 0. Rocky tidally-locked typically 0.01–0.3. Jupiter ≈ 20 000; young/massive giants reach 10⁵ |
 | `magnetic_dipole_tilt_deg` | deg | 0–30 | Earth ≈ 11°. For tidally locked, no strong constraint — pick 5–15° for interesting auroral offset |
 | `radiation_belt_present` | bool | true/false | Earth has van Allen belts; field strength < ~0.1× Earth probably can't sustain belts |
 | `radiation_inner_belt_radius_planet_radii` | R_p | 1.2–2.0 | Earth inner belt ≈ 1.2–3 R_⊕ |
@@ -32,8 +32,17 @@ Source priority order:
    for TRAPPIST-1 only)
 2. System-wide MHD / SEP paper (Dong 2018 — 1705.05535; Cohen 2024
    if available)
-3. Scaling relation from theory (Reiners 2010 dynamo scaling,
-   Driscoll & Olson 2011)
+3. Scaling relation from theory — **pick by body class**:
+   - **Gas giant / brown dwarf** → energy-flux dynamo scaling
+     (Christensen et al. 2009 `2009Natur.457..167C`; Reiners &
+     Christensen 2010 arXiv `1007.1514`, cached). Worked method +
+     calibrated formula + domain caveats in
+     [docs/reference/planetary-dynamo-scaling.md]. Do NOT scale Jupiter
+     by mass — energy flux (luminosity), so young giants are stronger.
+   - **Rocky** → RM22 (Rodríguez-Mozos & Moya 2022 `2203.01065`) +
+     tidal-locking penalty + Garraffo 2017; Driscoll & Olson 2011.
+   - **Sub-Neptune / Neptune-mass** is BELOW the validated giant domain
+     (He separation) — use a Neptune/Uranus analog, flag low-conf.
 4. Confidence=low aesthetic guess per interesting-first rule
 
 ## Kerbalism stellar wind / astrosphere fields (star body)

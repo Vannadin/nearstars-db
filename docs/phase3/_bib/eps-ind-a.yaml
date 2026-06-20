@@ -8,8 +8,15 @@ note: 'Phase 2 bibliography for eps Ind A (GJ 845 A = HD 209100 = HIP 108870), K
 
   '
 papers:
+- arxiv_id: '1007.1514'
+  ads_bibcode: 2010A&A...522A..13R
+  title: Reiners & Christensen 2010 — energy-flux dynamo scaling; magnetic-field evolution tracks for brown dwarfs + giant
+    planets (METHOD paper for planetary B-field grounding)
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '1803.08163'
-  ads_bibcode: 2018arXiv180308163F   # arXiv-only preprint (Feng, Tuomi, Jones); ADS has no refereed-journal bibcode. RV result superseded/published via Feng 2019 MNRAS.
+  ads_bibcode: 2018arXiv180308163F
   title: Feng et al. 2018 — discovery RV, closest Jovian exoplanet in eps Ind triple system
   status: fetched
   category: deep_read
@@ -27,7 +34,7 @@ papers:
   category: deep_read
   fetch_error: null
 - arxiv_id: '2603.08780'
-  ads_bibcode: null   # ApJL 2026, DOI 10.3847/2041-8213/ae5823; exact ADS volume/page UNVERIFIED (sources disagree 984/L30 vs 1002/L5). arXiv id is the load-bearing pin.
+  ads_bibcode: null
   doi: 10.3847/2041-8213/ae5823
   title: Matthews et al. 2026 — 2nd-epoch JWST/MIRI, best mass 7.6 MJ + orbit (recommended anchor)
   status: fetched

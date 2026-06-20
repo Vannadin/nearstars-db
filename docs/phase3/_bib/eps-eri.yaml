@@ -9,6 +9,13 @@ note: 'Phase 2 anchor bibliography for eps Eri (HD 22049, K2 V) — Tier 1 stell
   isochrone (Baines ~1, VF2005 ~2.6 Gyr); the young range is physically preferred for this active K dwarf. Boyajian et al.
   2012 does NOT contain eps Eri (verified) — not cited.'
 papers:
+- arxiv_id: '1007.1514'
+  ads_bibcode: 2010A&A...522A..13R
+  title: Reiners & Christensen 2010 — energy-flux dynamo scaling; magnetic-field evolution tracks for brown dwarfs + giant
+    planets (METHOD paper for planetary B-field grounding)
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '1112.0447'
   ads_bibcode: 2012ApJ...744..138B
   title: Baines & Armstrong 2012 — CHARA/NPOI interferometry, R/Teff/L/mass (ANCHOR); arXiv id is the erratum 2012ApJ...748...72B

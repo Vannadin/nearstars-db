@@ -73,7 +73,8 @@ Kopernicus / 대기 cfg-ready 값. `Confidence`. high = 직접 측정되거나
 | `rotation_period_hours` | 10 | low | Tie-break. 자전 측정 없음. 더 느린 토성/천왕성 값 대신 목성형 ~10 h 채택. 질량 큰 거대 행성의 각운동량 예산은 빠른 자전을 선호. within-window, 제약 안 됨 |
 | `ring_present` | false | medium | 어떤 JWST/MIRI epoch 에서도 고리 미관측 (Matthews 2024, 2026). cfg 기본값은 고리 없음. 얼음 고리는 선택적 cfg 변종으로 보존 — Open items 참조 |
 | `ring_observed` | false | high | Matthews et al. 2024/2026 JWST/MIRI 영상은 분해된 고리 성분 없이 행성을 밝은 점광원으로 보임 |
-| `magnetic_field_strength_microtesla_equator` | 1000 | low | Tie-break. 격렬한 내부 대류와 빠른 자전을 가진 7.6 M_Jup 거대 행성은 강한 다이나모로 스케일 — 질량/대류 스케일링으로 목성의 ~430 µT 의 대략 2 배. 미적, 측정 없음 |
+| `magnetic_field_strength_microtesla_equator` | 3200 | low | 에너지플럭스 다이나모 스케일링 (Christensen et al. 2009 `2009Natur.457..167C`. Reiners & Christensen 2010 `1007.1514`). B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → 7.6 M_Jup, ~3.5 Gyr 에서 B_eq ≈ 3200 µT (범위 2600–3700). 갈색왜성 경계에 가까워 나이가 많아도 자기장이 강하게 유지된다 (질량 지수가 1–5 M_J calibration 위로 외삽됨 → 추가 ~25% 계통오차). 이전의 임시 "Jupiter 2배" 를 대체. docs/reference/planetary-dynamo-scaling.md 참고 |
+| `magnetic_dipole_moment_normalized_earth` | 200000 | low | 3200 µT × (1.12 R_Jup)³ 를 Jupiter (적도 4.5 G, Earth 의 20 000배) 와 비교 → 에너지플럭스 스케일링 (`1007.1514`) 으로 ≈ 2×10⁵ × Earth. R³ 에 민감 → 신뢰도 낮음 |
 | `aurora_present` | false | medium | 호스트의 조용한 항성풍 (log R'HK = −4.72) 이 20.9 AU 에 매우 약한 플라스마 구동을 전달. 활동적-호스트 jovian 과 달리 강한 오로라 기대 안 됨. cfg 는 렌더 안 함 |
 | `companion_to_brown_dwarf_pair` | ε Indi B (Ba T1–1.5 66.9 M_Jup + Bb T6 53.3 M_Jup), ~1459 AU | high | Chen et al. 2022 — 계층적 삼중성계의 넓은 갈색왜성-쌍 성분. 행성의 호스트는 아니지만 그 하늘의 일부 |
 | `star_apparent_angular_diameter_deg` | 0.018 | high | 유도. 2 R_star / a = 2 × 0.713 R☉ / 20.9 AU × (180/π) ≈ 1.1 arcmin ≈ 0.018°. 지구에서 본 태양 각크기의 약 1/30 |

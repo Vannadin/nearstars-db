@@ -69,8 +69,8 @@ strong support, low = aesthetic choice within the allowed window.
 | `ring_present` | false | medium | Mawet 2019 Ms-band high-contrast imaging would detect a Saturn-bright ring system at the 3.5 AU separation; no ring component detected. cfg defaults to "no ring" |
 | `ring_observed` | false | high | Mawet 2019 Ms-band direct imaging detection without ring component |
 | `rotation_period_hours` | 10 | low | Tie-break: no rotation measurement. Jupiter-analog 9.93 h (Jupiter has fastest jovian rotation in the Solar System); cfg picks 10 h as round-number Jupiter-like value rather than slower Saturn-like (10.7 h) or Uranus-like (17.2 h) because mass-scaling and the angular-momentum budget at 3.5 AU favor Jupiter-class rapid rotation |
-| `magnetic_field_strength_microtesla_equator` | 400 | medium | scaled jovian dynamo: Jupiter's surface field ≈ 430 μT (equator); for 0.66 M_Jup with vigorous convection and Jupiter-like rotation, cfg picks 400 μT — below Jupiter by ~7% reflecting slightly weaker convective drive at lower mass |
-| `magnetic_dipole_moment_normalized_earth` | 13200 | medium | 0.66 × 20 000 ≈ 13 200 × Earth by linear-mass scaling |
+| `magnetic_field_strength_microtesla_equator` | 660 | medium | Energy-flux dynamo scaling (Christensen et al. 2009 `2009Natur.457..167C`; Reiners & Christensen 2010 `1007.1514`, Table 4.3 + 1 M_J cooling track): B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93 → for 0.66 M_Jup at 0.44 Gyr (young, gyrochronology), B_eq ≈ 660 µT (range 540–810). A young giant EXCEEDS Jupiter despite lower mass because the dynamo is powered by internal luminosity, not mass — the prior "scaled-down jovian, ~7% below Jupiter" had the youth effect backwards. See docs/reference/planetary-dynamo-scaling.md |
+| `magnetic_dipole_moment_normalized_earth` | 34000 | low | 660 µT × (1.05 R_Jup)³ vs Jupiter (4.5 G equatorial, 20 000× Earth) → ≈ 34 000 × Earth via energy-flux scaling (`1007.1514`); supersedes the linear-mass 0.66 × 20 000 = 13 200. R³-sensitive → low conf |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: Jupiter 9.6°, Saturn 0°, Neptune 47°. cfg picks Jupiter-analog 10° for visible auroral oval offset; Saturn-aligned 0° would be visually uninteresting |
 | `aurora_present` | true | medium | ε Eri's stellar wind ≈ 30× solar mass-loss rate (Wood 2002) + cycle-active corona drives strong incident plasma flux at 3.5 AU; combined with jovian magnetospheric capture this produces auroral emission analogous to Jupiter's but with elevated driver |
 | `aurora_color_primary_hex` | `#c84080` (H-Balmer α 656 nm red-pink dominant in H₂-rich jovian atmosphere) | low | Tie-break: Jupiter UV aurora is brightest in Lyα + H₂ Lyman/Werner bands but the visible-band component is H-Balmer α; under K2V illumination context the visible-band aurora reads as red-pink |
@@ -243,10 +243,15 @@ Kopernicus `rotationPeriod = 36000`. Obliquity (`initialRotation`
 or axis-tilt cfg) = 25° from orbital normal.
 
 **Magnetic dynamo expectation.** A H₂/He envelope with vigorous
-convection and a Jupiter-class rotation period (10 h) sustains a
-strong dipolar field. Scaling from Jupiter (surface equatorial field
-≈ 430 μT, dipole moment ≈ 2 × 10⁴ × Earth) by linear mass gives ε
-Eri b ≈ 400 μT and ≈ 1.32 × 10⁴ × Earth — both adopted in the cfg.
+convection sustains a strong dipolar field. The field is set by the
+**energy flux** (internal cooling luminosity), not by mass or rotation
+rate (Christensen et al. 2009; Reiners & Christensen 2010, `1007.1514`):
+B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93. At 0.66 M_Jup and a
+young 0.44 Gyr, ε Eri b's field ≈ 660 μT equatorial (≈ 3.4 × 10⁴ × Earth
+dipole), *above* Jupiter despite the lower mass — because youth means a
+hotter, more luminous interior. (The earlier linear-mass "≈ 400 μT,
+below Jupiter" had the youth effect backwards; see
+docs/reference/planetary-dynamo-scaling.md.)
 The dipole tilt is set to Jupiter-analog 10° for visually distinct
 auroral oval rendering. The Jupiter-analog rotation + magnetic field
 combination places ε Eri b firmly in the "strong magnetosphere"
@@ -412,9 +417,11 @@ Combining surface (cloud-deck) and atmosphere decisions:
   extension to K dwarfs (`2018ApJS..239...16F`). FUV / Lyα fluxes
   for ε Eri; drives the photochemistry-strength estimate.
 - **Reiners A. & Christensen U. R. 2010** — *A magnetic field
-  evolution scenario for brown dwarfs and giant planets* (`2010
-  A&A...522A..13R`). Dynamo scaling for jovians; consistent with
-  the cfg's 400 μT pick from Jupiter scaling.
+  evolution scenario for brown dwarfs and giant planets*
+  (`2010A&A...522A..13R`, arXiv:1007.1514, cached). Energy-flux dynamo
+  scaling for jovians; the grounding for the cfg's 660 μT field (a young
+  giant is stronger than Jupiter, not weaker). Built on the scaling law
+  of Christensen, Holzwarth & Reiners 2009 (`2009Natur.457..167C`).
 - **Metcalfe T. S. et al. 2013** — *Magnetic Activity Cycles in the
   Exoplanet Host Star ε Eridani*, ApJ 763, L26
   (`2013ApJ...763L..26M`, arXiv:1212.5343). First report of the
