@@ -48,7 +48,7 @@ canvas{display:block}
 #filter .lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--fg4)}
 #filter .val{font-family:var(--mono);font-size:12px;color:var(--accent)}
 input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
-#info{position:fixed;top:64px;right:18px;width:320px;max-height:calc(100% - 150px);z-index:18;overflow-y:auto;
+#info{position:fixed;top:64px;right:66px;width:320px;max-height:calc(100% - 150px);z-index:18;overflow-y:auto;
   background:var(--pop);border:1px solid var(--bd1);border-radius:var(--r-card);padding:18px 18px 16px;
   backdrop-filter:blur(16px);box-shadow:0 24px 80px -28px rgba(0,0,0,.7);display:none}
 #info.show{display:block;animation:pop .26s cubic-bezier(.32,.72,0,1)}
@@ -168,7 +168,7 @@ input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer}
   font-size:15px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
 #zoomctl .zb:hover{background:var(--surf2);color:var(--fg1)}
 #zoomSlider{writing-mode:vertical-lr;direction:rtl;width:6px;height:150px;accent-color:var(--accent);cursor:pointer}
-#info.show ~ #zoomctl{right:350px} /* keep the zoom dock clear of the open detail panel (#info is 320px @ right:18px) */
+/* zoom dock stays pinned at the right edge; #info opens inward of it (right:66px) so they never collide */
 #stage,canvas{touch-action:none} /* let OrbitControls own pinch/drag, not the browser */
 /* ── mobile / touch layout ─────────────────────────────────────────────── */
 @media (max-width:640px){
@@ -1694,13 +1694,16 @@ function clusterVisible(c){
   if(c.is_sol) return true;
   const inRange = c.distance_ly!=null && c.distance_ly<=distLimit && (showFar||!c.beyond_50ly);
   if(c.is_field) return showField && inRange;            // uncurated field: gated by its own toggle
-  return inRange && phaseOn[c.max_phase];
+  // "모든 별" on → keep curated markers visible even with their phase chip off
+  // (they're not in the field layer, so they'd otherwise vanish); the drop line
+  // still follows the phase chip so deselecting a phase only sheds its stems.
+  return inRange && (phaseOn[c.max_phase] || showField);
 }
 function applyFilter(){
   clusters.forEach(cl=>{
     const vis=clusterVisible(cl.data);
     cl.node.visible=vis;
-    if(cl.stem) cl.stem.visible=vis&&showStems;
+    if(cl.stem) cl.stem.visible=vis&&showStems&&phaseOn[cl.data.max_phase];
     if(cl.motion) cl.motion.line.visible=vis&&showMotion;
     if(cl.labelEl && !cl.labelWanted) cl.labelEl.style.display='none';
   });
@@ -1730,7 +1733,10 @@ function projectToScreen(v){ proj.copy(v).project(camera);
   return {x:(proj.x*.5+.5)*innerWidth, y:(-proj.y*.5+.5)*innerHeight, on:proj.z<1}; }
 
 function updateScene(){
-  rebaseToTarget();
+  // skip the floating-origin rebase mid-fly: it would shift the coordinate frame
+  // out from under fly.{from,to,tFrom,tTo} (stored in the pre-shift frame), which
+  // made a sim launched from the far map view land in empty space.
+  if(!fly) rebaseToTarget();
   backdrop.position.copy(camera.position);
   xused=0;
   const camPos=camera.position;
