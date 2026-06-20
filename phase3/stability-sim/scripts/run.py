@@ -25,6 +25,7 @@ from load import (  # noqa: E402
     hill_radius,
     KM_PER_AU,
 )
+from j2 import add_j2, R_JUP_KM  # noqa: E402
 
 SYSTEMS = {
     "trappist_1": ("planetary", PROJECT_ROOT / "db/systems/trappist_1.json"),
@@ -61,13 +62,19 @@ def build(system: str, hyp_path: Path | None, acen_incl=50.0, acen_a=None, acen_
     return sim, meta
 
 
-def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = "whfast"):
-    """Set the integrator with dt = P_innermost / 50.
+def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = "whfast",
+                         dt_minutes: float | None = None):
+    """Set the integrator with dt = P_innermost / 50 (or a fixed dt_minutes).
 
-    MEGNO needs variational equations (WHFast / IAS15). TRACE does not support
-    them, so it is skipped there and the verdict falls back to a/e-drift bounds
-    + energy error — which is exactly what's wanted for close-encounter /
-    high-e cases TRACE is chosen for.
+    MEGNO needs variational equations (WHFast / IAS15). TRACE and LEAPFROG do not
+    support them here, so it is skipped and the verdict falls back to a/e-drift
+    bounds + energy error.
+
+    `dt_minutes` forces a fixed step (overrides the P/50 default) — used by the
+    Principia-fidelity pass: LEAPFROG at Principia's 10 min ephemeris step is a
+    conservative (2nd-order) absolute-coordinate proxy for Principia's fixed-step
+    QUINLAN_TREMAINE_1990_ORDER_12, which WHFast's Jacobi coordinates cannot mimic
+    for a hierarchical moon-around-planet-around-star system.
     """
     sim.integrator = integrator
     # innermost orbit period — computed relative to each body's TRUE primary.
@@ -90,8 +97,11 @@ def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = 
     p_min = min(periods) if periods else 1.0
     # dt = P_inner/50 by default; STAB_DT_DIV finer-steps a packed config to test
     # whether an ejection is real or a fixed-step resolution artifact (e.g. AU Mic).
-    sim.dt = p_min / (50.0 * float(os.environ.get("STAB_DT_DIV", "1")))
-    megno_enabled = integrator != "trace"
+    if dt_minutes is not None:
+        sim.dt = dt_minutes / (60.0 * 24.0 * 365.25)
+    else:
+        sim.dt = p_min / (50.0 * float(os.environ.get("STAB_DT_DIV", "1")))
+    megno_enabled = integrator not in ("trace", "leapfrog")
     if megno_enabled:
         sim.init_megno(seed=42)
     meta["megno_enabled"] = megno_enabled
@@ -100,8 +110,8 @@ def configure_integrator(sim: rebound.Simulation, meta: dict, integrator: str = 
 
 
 def run_integration(sim: rebound.Simulation, meta: dict, t_end_yr: float, n_snapshots: int,
-                    integrator: str = "whfast"):
-    p_min = configure_integrator(sim, meta, integrator)
+                    integrator: str = "whfast", dt_minutes: float | None = None):
+    p_min = configure_integrator(sim, meta, integrator, dt_minutes=dt_minutes)
     e0 = sim.energy()
     bodies = [meta["star"]["name"]] + [p["name"] for p in meta["planets"]]
     bodies += [h["name"] for h in meta.get("hypotheticals", [])]
@@ -253,6 +263,8 @@ def save_results(system: str, meta: dict, report: dict, judgment: dict, out_dir:
         "hill_track": report["hill_track"],
         "judgment": judgment,
     }
+    if "j2" in meta:
+        summary_payload["j2"] = {k: v for k, v in meta["j2"].items() if k != "_force_ref"}
     with summary_path.open("w") as f:
         json.dump(summary_payload, f, indent=2)
 
@@ -268,6 +280,9 @@ def print_report(meta: dict, report: dict, judgment: dict):
     print(f"\n=== {meta['system']} ===")
     print(f"  star mass: {meta['star']['mass_msun']:.4f} Msun")
     print(f"  bodies: {len(meta['planets'])} planet(s), {len(meta['hypotheticals'])} hypothetical(s)")
+    if "j2" in meta:
+        j = meta["j2"]
+        print(f"  J2: {j['J2']:g} on {j['body']} (R_eq={j['r_eq_au']*KM_PER_AU:,.0f} km)")
     print(f"  dt = {report['dt_yr']*365.25:.4f} d   (P_inner = {report['innermost_period_yr']*365.25:.3f} d)")
     print(f"  elapsed: {report['elapsed_sec']:.1f} s")
     print(f"  |ΔE/E|  = {report['energy_relative_error']:.2e}")
@@ -297,10 +312,15 @@ def main():
     ap.add_argument("--hypotheticals", type=Path, default=None,
                     help="Path to a hypotheticals JSON (optional)")
     ap.add_argument("--out-dir", type=Path, default=ROOT / "results")
-    ap.add_argument("--integrator", choices=["whfast", "trace", "ias15"], default="whfast",
+    ap.add_argument("--integrator", choices=["whfast", "trace", "ias15", "leapfrog"], default="whfast",
                     help="whfast (default, fast symplectic + MEGNO); trace "
                          "(accurate through close encounters / high-e, no MEGNO); "
-                         "ias15 (adaptive high-order gold standard + MEGNO, slow)")
+                         "ias15 (adaptive high-order gold standard + MEGNO, slow); "
+                         "leapfrog (fixed-step symplectic in absolute coords — the "
+                         "Principia-fidelity proxy, pair with --dt-minutes 10)")
+    ap.add_argument("--dt-minutes", type=float, default=None,
+                    help="force a fixed timestep in minutes (overrides P/50). Use 10 with "
+                         "--integrator leapfrog to mimic Principia's 10 min ephemeris step.")
     ap.add_argument("--acen-incl-deg", type=float, default=50.0,
                     help="alpha_centauri only: A b mutual inclination to the AB plane "
                          "(deg). 50 = Beichman prograde; ~120 = retrograde. For the "
@@ -310,6 +330,15 @@ def main():
                          "default = DB value (1.6). Use 2.1 for the a>2 family.")
     ap.add_argument("--acen-e", type=float, default=None,
                     help="alpha_centauri only: override A b eccentricity; default = DB (0.4)")
+    ap.add_argument("--j2", type=float, default=None,
+                    help="inject a J2 oblateness perturbation on --j2-body acting on its "
+                         "moons (e.g. 0.023 for Polyphemus). Uses rebound additional_forces, "
+                         "not reboundx. Symmetry axis = body's orbit-normal (zero obliquity).")
+    ap.add_argument("--j2-body", type=str, default="Alpha Centauri A b",
+                    help="name of the oblate body carrying --j2 (default: the alpha Cen A b "
+                         "planet 'Polyphemus').")
+    ap.add_argument("--j2-radius-rjup", type=float, default=1.0,
+                    help="equatorial radius of the J2 body in Jupiter radii (default 1.0).")
     ap.add_argument("--mass-incl-deg", type=float, default=None,
                     help="planetary systems only: scale every planet mass by 1/sin(i) "
                          "(RV minimum mass M·sin i → true mass at coplanar inclination i). "
@@ -343,6 +372,10 @@ def main():
     sim, meta = build(args.system, args.hypotheticals,
                       acen_incl=args.acen_incl_deg, acen_a=args.acen_a_au, acen_e=args.acen_e,
                       overrides=overrides)
+    if args.j2 is not None:
+        r_eq_au = args.j2_radius_rjup * R_JUP_KM / KM_PER_AU
+        add_j2(sim, meta, args.j2_body, args.j2, r_eq_au)
+        meta["system"] += f" [J2({args.j2_body})={args.j2:g}]"
     if overrides:
         meta["system"] += " [" + "; ".join(
             f"{b}.{f}{'=' if op=='set' else '×'}{v:g}" for b, f, op, v in overrides) + "]"
@@ -359,7 +392,8 @@ def main():
         meta["system"] += f" (true mass @ i={args.mass_incl_deg:g}°)"
         out_label = f"{args.system}_i{int(round(args.mass_incl_deg))}"
 
-    report = run_integration(sim, meta, args.years, args.snapshots, args.integrator)
+    report = run_integration(sim, meta, args.years, args.snapshots, args.integrator,
+                             dt_minutes=args.dt_minutes)
     judgment = verdict(report, args.years)
     print_report(meta, report, judgment)
     paths = save_results(out_label, meta, report, judgment, args.out_dir.resolve())

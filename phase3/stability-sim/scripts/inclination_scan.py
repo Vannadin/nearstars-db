@@ -12,6 +12,7 @@ Base = the gated coplanar config (Hades 135k). Runs concurrently.
   .venv/bin/python phase3/stability-sim/scripts/inclination_scan.py
 """
 import json
+import os
 import subprocess
 import tempfile
 import shutil
@@ -25,6 +26,12 @@ RUN = ROOT / "scripts/run.py"
 BASE = ROOT / "hypotheticals/alpha_centauri.json"
 YEARS = 300
 SNAPS = 800
+# Set STAB_J2=0.023 to inject Polyphemus's J2 (forwarded to run.py --j2).
+# With J2 the per-step Python force makes IAS15 (~12 force-calls/step) impractical,
+# so J2 runs use TRACE (~1-2 calls/step, ~11x faster, handles the binary; no MEGNO).
+J2 = os.environ.get("STAB_J2")
+J2_ARGS = ["--j2", J2] if J2 else []
+INTEG = "trace" if J2 else "ias15"
 WORKERS = 4                 # leave a core for the parallel long-confirm run
 SPREADS = [3, 6, 10, 15, 20, 25, 30, 40]   # degrees
 
@@ -45,8 +52,8 @@ def one(tmp, base, s):
     subprocess.run(
         [str(PY), str(RUN), "--system", "alpha_centauri", "--hypotheticals", str(jp),
          "--acen-a-au", "1.6", "--acen-e", "0.1", "--acen-incl-deg", "16",
-         "--integrator", "ias15", "--years", str(YEARS), "--snapshots", str(SNAPS),
-         "--out", str(od)],
+         "--integrator", INTEG, "--years", str(YEARS), "--snapshots", str(SNAPS),
+         *J2_ARGS, "--out", str(od)],
         cwd=REPO, capture_output=True,
     )
     s_j = json.load(open(od / "alpha_centauri_summary.json"))
@@ -56,7 +63,8 @@ def one(tmp, base, s):
     emap = {n: s_j["per_body"][n]["e_max"] for n in hill}
     worst = max(emap, key=emap.get)
     res = (s, s_j["integration"]["megno_final"], allbound, worst, emap[worst])
-    print(f"  spread={s:3d}°  megno={res[1]:9.1f}  all_bound={allbound}  "
+    mg = f"{res[1]:9.1f}" if res[1] is not None else "    n/a  "
+    print(f"  spread={s:3d}°  megno={mg}  all_bound={allbound}  "
           f"worst e_max={emap[worst]:.3f} ({worst})", flush=True)
     return res
 
@@ -70,7 +78,8 @@ def main():
     finally:
         out = ROOT / "results" / "_moons_inclination_scan.md"
         with out.open("w") as f:
-            f.write(f"# Inclination-spread scan (IAS15 {YEARS} yr)\n\n")
+            f.write(f"# Inclination-spread scan ({INTEG.upper()} {YEARS} yr"
+                    f"{', J2='+J2 if J2 else ', point-mass'})\n\n")
             f.write("Spread `s` (deg): Dante 0.5s, Hades 1.0s, Pandora 0 (canon "
                     "equatorial), Cassandra 180−0.7s, Chaos 180−1.2s (retrograde). "
                     "Tests how large a visual sky-latitude spread stays dynamically "
@@ -78,7 +87,8 @@ def main():
             f.write("| spread s | MEGNO | all bound | worst moon e_max |\n")
             f.write("|---|---|---|---|\n")
             for (s, m, ab, worst, we) in rows:
-                f.write(f"| {s}° | {m:,.1f} | {'✅' if ab else '✗ EJECT'} | "
+                mg = f"{m:,.1f}" if m is not None else "n/a"
+                f.write(f"| {s}° | {mg} | {'✅' if ab else '✗ EJECT'} | "
                         f"{we:.3f} ({worst}) |\n")
         shutil.rmtree(tmp, ignore_errors=True)
         print(f"\n→ wrote {out}")
