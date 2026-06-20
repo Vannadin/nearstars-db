@@ -2,7 +2,7 @@
 # 4a 창작 초안 = polyphemus-art-direction.md, 궤도 과정 = STABILITY_REPORT / ALPHA_CEN_AB_DYNAMICS_STUDY
 system: alpha_centauri
 status: staged
-updated: 2026-06-19
+updated: 2026-06-20
 
 decisions:
   # ── 궤도 (Kozai-안정 최적화 완료) ──────────────────────────────
@@ -59,7 +59,7 @@ decisions:
 
   - body: Alpha Centauri A b
     axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드 + 위성 동역학 입력
-    status: open                   # 작업값 계산됨, reboundx-검증 위성 재실행 후 확정
+    status: gated                  # 2026-06-20 확정 — J2 위성 시뮬 완료(자체구현 j2.py로 주입·검증)
     driver: physical               # 자전+밀도에서 도출(아트디렉션 아님)
     value: "J2 ≈ 0.023 (1차 RD, 절단보정 ~0.025–0.026); 범위 0.017–0.033; J4 ≈ -0.001; reference_radius = 1.0 R_Jup"
     derivation: >
@@ -72,11 +72,13 @@ decisions:
       오차). m≈0.19가 토성(0.14)보다 커 1차 절단이 과소예측 → 실제 ~10–20%↑(보정 ~0.025–0.026).
       불확실성 폭은 NMoI 가정이 지배. 가스자이언트=축대칭→zonal only(j2[+j4]). 입력 calibration J2:
       목성=Iess2018, 토성=Durante2017.
-    blocks: >
-      **의존성 역전** — Principia는 J2를 천체간 연산에도 적용(geopotential_tolerance가 ephemeris
-      numerics에 있음) → 폴리페무스 J2가 위성(Pandora·Dante·Hades) 동역학의 *입력*. 따라서 이 J2
-      확정이 위성 궤도 확정의 선행조건. 현 점질량 위성 결과는 J2-적용 전 잠정.
-    next: "reboundx gravitational_harmonics로 J2 주입 → 3:2-락·동시틸트·경사 실험 재실행 → 위성 확정."
+    resolved: >
+      **선행조건 해소 (2026-06-20).** J2=0.023을 위성 시뮬에 주입 완료 — reboundx가 rebound 5.x
+      비호환이라 자체 구현(scripts/j2.py, rebound additional_forces, M&D 벡터형, 해석 세차율과
+      <0.1% 검증). 이 J2가 위성 궤도 결정을 실제로 뒤집음(satellites axis 참조): off-resonance
+      135k 갭은 J2에도 안정, 3:2-락은 J2 detuning으로 Hades 이탈. emit 값 불변(J2≈0.023,
+      reference_radius 1.0 R_Jup).
+    note: "Principia가 천체간 연산에도 J2 적용 → 위성 동역학의 입력이었고, 그 입력이 결정적이었음."
 
   # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
   - body: Alpha Centauri A b
@@ -134,7 +136,7 @@ decisions:
   # 조석가열은 궤도교차 아닌 유지된 e(Io 강제e=0.0041) → e=0.05 + 작은 moonlet로 교정.
   - body: Alpha Centauri A b
     axis: satellites
-    status: gated                  # IAS15 1000yr CHAOTIC_BUT_HILL_STABLE — 5위성 bound·calm
+    status: gated                  # 135k 갭 = J2 적용 후에도 안정 (TRACE+leapfrog 일치). 3:2-락은 J2로 탈락.
     driver: fiction                # SPEC class D (+ orbit는 stability-optimization)
     target: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos)"
     gate:
@@ -164,15 +166,32 @@ decisions:
         장기(1000yr+) 확인 필요. 현 게이트값(135k gap, e동결)은 확인 전까지 유지; 3:2-락(131k,
         epoch M0≈180°)이 이를 대체할 선두 후보.
       lock_confirm_1000yr: >
-        통과 (results/_moons_3to2lock). Hades 131k/M0=180° 1000yr: CHAOTIC_BUT_HILL_STABLE,
-        5위성 bound·calm. libration **지속** (coverage 261°, 전반257/후반261 = 안 깨짐).
-        Hades e 평균0.086·최대0.124로 공명 유지 = 조석가열 자기일관, Pandora 불변. → 135k gap을
-        대체할 게이트 후보로 권장(소유자 확정 + 큰경사 동시채택 시 조합 재검 필요, 락은 coplanar서 확인).
+        [점질량 한정, J2로 철회됨 — j2_confirm 참조] 점질량 1000yr(results/_moons_3to2lock)에선
+        통과였음 — Hades 131k/M0=180° libration 지속(coverage 261°), Hades e 0.086–0.124로 공명
+        유지. 당시 135k gap을 대체할 게이트 후보로 권장했으나, **J2 적용 후 락이 이탈해 권고 철회**.
+      j2_confirm: >
+        **[2026-06-20 J2 재검증 — 결정적] results/_moons_j2/.** Principia가 천체간에 적용하는
+        폴리페무스 J2(=0.023)를 위성 시뮬에 주입(자체구현 scripts/j2.py, 해석 세차율과 <0.1% 검증).
+        결과가 점질량 권고를 **뒤집음**:
+        • **135k 갭 = J2에도 STABLE** (TRACE 1000yr, 5위성 bound·calm, Hades e 0.02–0.05).
+        • **3:2-락(131k/M0=180°) = J2로 UNSTABLE** — Hades t≈510yr 이탈. J2의 근점/승교점 세차가
+          가장자리(~130° 폭) libration을 detune→순환→e 펌핑→이탈. 락이 주던 자기일관 조석가열
+          근거가 사라짐 → Hades e≈0.05는 다시 "주어진 값"(documented limitation)으로 복귀.
+        • **결정: 135k 갭 유지, 3:2-락 채택 철회.**
+        **충실도(Principia 프록시 = leapfrog 고정 10분, 절대좌표):** 갭은 leapfrog서도 STABLE
+        (|dE/E|1.5e-10) — 정밀(TRACE)·Principia급 일치 → 채택 레이아웃은 게임서도 견고. 락은
+        적분기 민감(leapfrog는 유지, TRACE는 이탈 — 저차수가 섬세한 공명이탈을 놓침; Principia 12차는
+        TRACE에 가까움) → 칼날 설정 회피 근거 추가. WHFast는 Jacobi라 위성-행성-별 계층 표현 불가라
+        프록시 부적격(위성 런이 늘 IAS15/TRACE였던 이유).
       inclination_scan: >
-        [4a 큰경사 의향 검증] results/_moons_inclination_scan.md: spread s(Dante 0.5s/Hades 1.0s/
-        Pandora 0/Cass·Chaos 역행틸트) s≈30°까지 bound, s=40° 이젝션 — 한계는 코자이 임계각(~39°,
-        최대경사 Hades). 시각분산 스윗스팟 s≈15–20°(또렷+마진). 단 coplanar 135k 기준 — 3:2락과
-        큰경사 조합은 별도 재검(경사가 공명 detune 가능).
+        [4a 큰경사 의향 검증] results/_moons_inclination_scan.md. **점질량**: s≈30°까지 bound,
+        s=40° 이젝션(코자이 ~39°, 최대경사 Hades). **J2 적용(TRACE 300yr)**: J2가 안쪽 위성을
+        적도면에 앵커링해 코자이 펌핑 억제 → **s=40°까지 bound**(한계가 안쪽 Hades→외측 역행
+        Chaos로 이동, e_max 0.88 @s40). 시각분산 스윗스팟 J2서 s≈25–30°까지 가능.
+      cotilt_scan: >
+        [동시틸트, J2] results/_moons_cotilt_scan.md (TRACE 300yr): 락이 J2로 죽은 뒤라 동시틸트의
+        "락+분산" 목적은 성립 안 함. θ=0°(완전 동일평면)은 이탈, θ=10–30°는 bound지만 φ 전부 순환
+        (락 없음), 차등 승교점 세차로 Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
     moons:                         # a/e는 게이트 통과한 설계값; 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
       - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 0.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(~94k 밖), 화산 moonlet (Metis/Adrastea급). e작음." }
       - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 2.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열>900K = 유지된 e(Io식), 교차 아님. Dante와 3:2~5:3 사이." }
@@ -188,17 +207,19 @@ decisions:
     decided:
       - "무명 9위성: 추가 안 함(사용자 2026-06-19). 명명 5위성만 — 어차피 전부 창작이므로."
       - "최외곽 2위성 역행(canon): 반영(Cassandra·Chaos inc 178/175). 100yr STABLE 확인."
+      - >
+        [2026-06-20] J2 충실도 해소 — 폴리페무스 J2(0.023)를 위성 시뮬에 주입(자체구현 j2.py).
+        135k 갭 = J2에도 안정(TRACE+leapfrog 일치), 3:2-락 = J2로 이탈해 철회. j2_confirm 참조.
+      - >
+        [2026-06-20] 큰경사 의향(4a) 검증 — J2가 코자이를 억제해 경사 한계 상승(s=40°까지 bound).
+        시각분산 s≈25–30°까지 가능, 한계는 외측 Chaos. inclination_scan 참조.
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
-      - >
-        [4a 의향] 시각적 배치를 위해 궤도경사각 더 크게(현재 near-coplanar라 판도라 하늘서 한 줄로
-        겹침 → 위성별 sky 위도 분산). 4b 안정성 재검 필요(Hill 구 깊이면 적당 경사 OK, 어디까지가
-        Kozai/안정 한계인지 스캔). 다음 세션 M0≈180° 3:2-락 확인과 함께. polyphemus-art-direction.md 참조.
       - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Hades 붉은 잉걸불). 표면뷰 아트디렉션 입력."
       - >
-        [J2 충실도] 위성 시뮬은 점질량(J2 없음)이나 Principia는 j2/geopotential 지원(게임 내 적용).
-        위성엔 J2가 1차항 → 우리 결과는 보수적(하한). 다음: reboundx로 J2 넣어 재검 + 폴리페무스
-        j2+reference_radius emit cfg 설정. 큰 시각 틸트는 외측 위성이 자연스러움. 상세=context-notes.
+        [경사 emit 미정] J2 검증으로 s≈25–30° 분산이 안정함은 확인됐으나, moons inc_deg 표는 아직
+        near-coplanar(0.5~2°) 그대로. 큰경사 시각분산을 실제 채택할지(채택 시 어느 s) = 아트디렉션
+        결정 후 moons inc_deg 갱신. 폴리페무스 j2+reference_radius emit cfg 설정도 emit 단계에서.
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──
   #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.

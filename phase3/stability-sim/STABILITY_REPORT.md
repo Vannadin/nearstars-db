@@ -198,6 +198,52 @@ Pandora could actually survive here drove a fine-tuning scan:
   with `--acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16` (moon: `--integrator
   trace`; planet boundaries: `--integrator ias15`).
 
+### Polyphemus moons with J₂ — the oblateness reverses the moon-orbit choice
+
+The point-mass moon runs omit Polyphemus's J₂. But Principia applies the
+geopotential to the **celestial–celestial** integration, so the moons feel
+Polyphemus's oblateness in-game — J₂ is an *input* to the moon dynamics, not a
+fidelity afterthought (`bulk.geopotential_j2 ≈ 0.023`, Radau–Darwin / Helled+2011,
+`reference_radius` 1.0 R_Jup). J₂ is injected via `run.py --j2 0.023` (a custom
+`scripts/j2.py` REBOUND `additional_forces` term — reboundx is incompatible with
+rebound 5.x; validated to <0.1 % against the analytic apsidal/nodal precession
+rates at i = 0/30/60°). The Python force makes IAS15 (~12 force-calls/step)
+impractical, so J₂ runs use TRACE (~11× faster, handles the binary).
+
+| config | point-mass (prior) | **with J₂ (in-game)** |
+|---|---|---|
+| **135k gap** (off-resonance) | stable | **STABLE** — 5 moons bound/calm, Hades e 0.02–0.05 (TRACE 1000 yr) |
+| **3:2 lock** (131k, M0=180°) | stable, libration held → *was the leading candidate* | **UNSTABLE** — Hades ejects at t ≈ 510 yr (TRACE 1000 yr) |
+
+**J₂ detunes the marginal 3:2 lock.** The lock was always a wide-amplitude
+(~130°) libration on the resonance edge; J₂'s added apsidal/nodal precession
+pushes it over the edge → circulation → Hades's eccentricity pumps to ejection
+(~510 yr, inside the play horizon). So the off-resonance 135k gap — not the
+3:2 lock — is the moon layout to ship. **This reverses the point-mass
+recommendation** (which had the lock superseding the gap to self-consistently
+sustain Hades's tidal-heating eccentricity). With the lock dead under J₂, Hades's
+e ≈ 0.05 reverts to an *adopted given* (documented limitation), not a
+resonance-maintained value.
+
+**Principia-fidelity pass (LEAPFROG, fixed 10 min = Principia's ephemeris step,
+absolute coordinates).** A conservative 2nd-order proxy for Principia's
+QUINLAN_TREMAINE order-12 (WHFast's Jacobi coordinates can't represent the
+moon→planet→star hierarchy). The **gap config is STABLE under leapfrog too**
+(|ΔE/E| 1.5×10⁻¹⁰) — accurate (TRACE) and Principia-class agree, so the adopted
+layout is robustly game-faithful. The **lock is integrator-sensitive** (leapfrog
+keeps Hades; TRACE ejects it): its ejection is a delicate resonant effect that
+low-order fixed-step misses — itself a reason to avoid a knife-edge config.
+
+**Inclinations are *more* generous with J₂ (`results/_moons_inclination_scan.md`,
+TRACE 300 yr).** J₂ anchors the inner moons to the equatorial plane, resisting
+the star's Kozai pumping: the spread now stays bound to **s = 40°** (point-mass
+ejected there), the limiter shifting from inner Hades to the outer retrograde
+Chaos (e_max 0.88 at s = 40°). The visual sky-latitude spread can be pushed to
+s ≈ 25–30°. The inner-pair **co-tilt** (`results/_moons_cotilt_scan.md`): with the
+lock gone under J₂, tilted inner pairs (θ 10–30°) stay bound but circulate (no
+lock to preserve), and differential nodal precession drifts their mutual
+inclination to ~60° — co-tilting does not keep Dante/Hades coplanar.
+
 ## Barnard's Star — Msini → true-mass dynamical bound (coplanar inclination scan)
 
 All four Barnard planets (d, b, c, e; 0.0188–0.0381 AU, sub-Earth) are RV
@@ -398,8 +444,10 @@ single-star `db/systems/<system>.json`.
 
 - `scripts/load.py` — DB JSON → REBOUND loader (handles list/dict `physical`;
   derives a from period when no curated semi-major axis).
-- `scripts/run.py` — main entry; `--integrator {whfast,trace,ias15}`, WHFast +
-  MEGNO by default, writes summary + timeseries.
+- `scripts/run.py` — main entry; `--integrator {whfast,trace,ias15,leapfrog}`,
+  WHFast + MEGNO by default; `--j2 VALUE` (oblateness via `scripts/j2.py`),
+  `--dt-minutes` (fixed step, e.g. 10 with leapfrog = Principia-fidelity proxy);
+  writes summary + timeseries.
 - `hypotheticals/*.json` — per-system extra-body specs (moons / extra planets).
 - `results/*_summary.json` — per-system numerical summary + verdict (the
   `integrator` field records which integrator produced it).

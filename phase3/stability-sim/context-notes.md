@@ -342,8 +342,72 @@ spin). With J2/q ∈ [0.105 Saturn, 0.165 Jupiter] → **J2 ≈ 0.022–0.038, c
 This is the value to inject in step (a). Order of finalization is now: **J2 first → reboundx
 into the sim → re-run moon experiments → finalize moon orbits.**
 
+## 2026-06-20 — J2 injected into the moon sims; it REVERSES the moon-orbit choice
+
+**J2 force, self-implemented (reboundx dead-end).** `pip install reboundx` force-
+downgraded rebound 5.0.0 → 4.6.0 (reboundx 4.6.2 pins rebound 4.x), which broke the
+whole codebase (rebound 5's named-particle API: `sim.add(name=...)`). reboundx has no
+rebound-5 release. Rather than revert the codebase to 4.x, dropped reboundx and wrote
+J2 as a rebound `additional_forces` term: `scripts/j2.py` (Murray & Dermott vectorial
+J2 accel about an arbitrary spin axis = the body's orbit-normal by default; back-
+reaction on the planet for momentum conservation). **Validated** to <0.1 % against the
+analytic secular apsidal (ϖ̇) and nodal (Ω̇) precession rates at i = 0/30/60° (the i=0
+Ω̇=0 check passes too). J2 = 0.023 (the gated `bulk.geopotential_j2`, Helled+2011 RD),
+R_eq = 1.0 R_Jup. Wired into run.py as `--j2 / --j2-body / --j2-radius-rjup`; scan
+scripts forward it via `STAB_J2` env.
+
+**Performance: the Python force callback is the bottleneck → TRACE not IAS15.** The
+`additional_forces` closure is called every step, and IAS15 evaluates forces ~12×/step
+→ 1000 yr went from ~5 min (point-mass) to ~3 h. TRACE calls forces ~1–2×/step (~11×
+faster, ~16 min/1000 yr) and handles the near-equal A–B binary; it loses MEGNO, but the
+moon verdict rests on Hill-fraction + a/e drift, not MEGNO. Scan scripts auto-switch to
+TRACE when `STAB_J2` is set. (NB: TRACE returns `megno_final=None` → fixed the scans'
+`{megno:.1f}` formatting to handle None, which had silently emptied their result tables.)
+
+**THE RESULT — J2 reverses the recommendation (`results/_moons_j2/`).**
+- **135k gap (off-resonance, the currently-gated layout): STABLE with J2** (TRACE 1000
+  yr, all 5 moons bound/calm, Hades e 0.02–0.05, |ΔE/E| 8.7e-9).
+- **3:2 lock (131k, M0=180°, the prior leading candidate): UNSTABLE with J2** — Hades
+  ejects at t ≈ 510 yr (TRACE 1000 yr, e→2.6e4, Hill-frac→unbound). J2's apsidal/nodal
+  precession detunes the marginal (~130° wide, resonance-edge) libration → circulation →
+  e-pump to ejection. The lock was attractive because it self-consistently pumped Hades's
+  e (~0.12) for the canon tidal heating; **J2 kills that**, so Hades e ≈ 0.05 reverts to an
+  *adopted given* (documented limitation), as it was before the phase-scan lock discovery.
+- **Decision: keep the 135k gap, retract the 3:2-lock adoption.**
+
+**Principia-fidelity pass (new `--integrator leapfrog --dt-minutes 10`).** Leapfrog =
+fixed-step symplectic in ABSOLUTE coordinates → a faithful structural proxy for
+Principia's fixed-step QUINLAN_TREMAINE_1990_ORDER_12 (10 min ephemeris step), which
+WHFast's Jacobi coordinates cannot mimic for a moon→planet→star hierarchy (this is *why*
+the moon runs were always IAS15/TRACE, never WHFast — the binary AND the hierarchy break
+WHFast). Note our default base step P_inner/50 ≈ 9.6 min already ≈ Principia's 10 min.
+Results: **gap STABLE under leapfrog too** (|ΔE/E| 1.5e-10) — accurate (TRACE) and
+Principia-class agree → the adopted layout is robustly game-faithful. **Lock is
+integrator-sensitive**: leapfrog (2nd order) keeps Hades, TRACE ejects it — the ejection
+is a delicate resonant effect a low-order fixed step misses (Principia's order-12 is
+closer to TRACE). Integrator-sensitivity is itself a reason to avoid the knife-edge lock.
+Caveat: leapfrog-10min is a *conservative* proxy — "leapfrog stable" does NOT prove
+"Principia stable" for a knife-edge config; it only confirms robustness for the gap
+(where all three integrators agree).
+
+**Inclinations — J2 raises the ceiling (`results/_moons_inclination_scan.md`, TRACE 300
+yr).** J2 anchors inner moons to the equatorial plane vs the star's Kozai pump: bound now
+to s = 40° (point-mass ejected at 40°), limiter shifted from inner Hades to outer
+retrograde Chaos (e_max 0.88 @ s=40). Visual sky-latitude spread can go to s ≈ 25–30°.
+Co-tilt (`results/_moons_cotilt_scan.md`): with the lock gone, tilted inner pairs (θ
+10–30°) stay bound but circulate; differential nodal precession drifts their mutual
+inclination to ~60° → co-tilt does NOT keep Dante/Hades coplanar.
+
+**Still point-mass-vs-J2 open / not done:** an IAS15+J2 gold-standard spot-check of the
+lock ejection (TRACE is trustworthy here + we're dropping the lock, so skipped — ~3 h
+cost); J2-sensitivity across the 0.017–0.033 range (central 0.023 is decisive; the gap is
+off-resonance so insensitive, the lock is dead at central so a bound-test sweep wouldn't
+rescue it). Desktop (7900X/WSL2) staged in another session for future heavy sweeps —
+`DESKTOP_WSL_SETUP.md`.
+
 ## Related
 
 - [phase3 procedure (skill)](../../.claude/skills/nearstars-phase3/SKILL.md) — parent topic this workspace contributes to
 - [paper scoping note](../../plans/paper-scoping.md) — Pillar 3 consumer of this work
 - [Phase 4 Barnard decision board](../../phase4/barnards_star.yaml) — Barnard low-e candidate (process + scan tables now in STABILITY_REPORT.md)
+- [Phase 4 α Cen decision board](../../phase4/alpha_centauri.yaml) — satellites + bulk.geopotential_j2 axes consume this J2 result
