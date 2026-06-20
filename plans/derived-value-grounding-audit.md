@@ -16,6 +16,68 @@ cfg-emitted (Kerbalism writer deferred), so those are provenance-only.
 
 ---
 
+## Resolution — RESOLVED 2026-06-20
+
+All tiers fixed in one pass. Method grounding done on the main thread; mechanical
+application + ko mirrors delegated and verified (deterministic recompute + every
+cited arXiv ID confirmed in `_papers/`).
+
+- **1a giants (method gap).** Cached **Reiners & Christensen 2010** (`1007.1514`,
+  energy-flux dynamo scaling, built on Christensen et al. 2009 `2009Natur.457..167C`).
+  Wrote the reusable worked method `docs/reference/planetary-dynamo-scaling.md` (+ko):
+  `B_dip^pol = 9 G·(age/4.5 Gyr)^−0.33·(M/M_Jup)^0.93`, validated against the paper's
+  own Jupiter (9 G) and ε Eri b (19 G) rows. Re-derived the three **true giants** off
+  internal luminosity, not linear mass: **ε Eri b 400→660 µT** (young → stronger than
+  Jupiter, sign was backwards), **ε Ind A b 1000→3200 µT**, **GJ 896 A b 900→2000 µT**
+  (+ dipole rows, key spelling normalized). **AU Mic b/c/e** are below the ≥0.3 M_J
+  domain → regrounded as honest ice-giant (Neptune/Uranus) analogs, **phantom Yadav &
+  Thorngren 2017 removed**. **AU Mic d** (rocky) → RM22 `2203.01065`, removing the
+  giant-paper miscite. Skill `mod-grounded-fields.md` now routes by body class.
+- **1b disk blends (method gap).** `disk_color_mie.py` `ice_sil`/`sil_org` now use
+  **Maxwell-Garnett** effective-medium mixing on ε=(n+ik)² (volume fractions from
+  50/50 mass + bulk densities), replacing the invented linear n,k average. Emitted
+  tints updated: ε Eri cold `#fffcfc→#fff5ef`, τ Cet `#ffe4bd→#ffe2bb`. AU Mic-blue /
+  Fomalhaut-grey validations still hold.
+- **Tier 2.** Barnard dose: Atri (`1910.09871`) + France (`2009.01259`) pinned (both
+  were actually cached; dropped the false "not in cache"). HD 69830 c/d B-field
+  confidence medium/high→**low**. Barnard b/c/d/e dipoles tagged "Mercury analogy, not
+  dynamo-modeled". astrosphere v_wind=400 km/s + Wood 2002/2005 noted at each
+  point-of-use. Dohnanyi 1969 (`1969JGR....74.2531D`) cited for q=3.5; ρ=2.5 flagged.
+- **Tier 3.** τ Cet e/f "RM22 (Reiners-Christensen)" de-conflated → "RM22
+  (Rodríguez-Mozos & Moya 2022, `2203.01065`)".
+
+All ko mirrors synced, HTML rebuilt, `check.sh` clean except pre-existing
+data.json / docs-wiki false-positives unrelated to this work.
+
+### Re-sweep follow-up — RESOLVED 2026-06-20
+
+After the above, an independent clean-agent re-sweep (looking for method gaps
+*beyond* B-fields/disk) + a two-prior adversarial check of every newly-added
+citation. Citation check: both agents (one assuming real, one assuming phantom)
+independently confirmed all cited papers are real and every arXiv-ID/bibcode
+resolves to the claimed paper — no fabrication. Four further method gaps the
+original sweep missed were then grounded:
+
+- **Radiogenic heat (`radiogenic_heat_w_m2`, ~10 bodies)** — was Earth-analog
+  mass-scaled with no cite (a SPEC "paper/synth" field → contract violation).
+  Grounded on Wang et al. 2020 (`2020A&A...644A..19W`, Eu→Th/U radiogenic
+  diagnosis) with explicit Earth-analog framing (host abundances not curated);
+  confidence → low. tau-cet-e/f/g/h, 61-vir-b, hd-219134-b/c, trappist-1-f/g/h.
+- **Day-night / greenhouse temp deltas (~8 bodies)** — specific K offsets above
+  T_eq now cite the heat-recirculation parameterization of Cowan & Agol 2011
+  (`1001.0012`). hd-69830-b/c/d, au-mic-b/c/d/e (au-mic-b's wrong "Plavchan §6"
+  greenhouse attribution removed). 40-eri-a-b greenhouse flagged as Asimov-lore
+  fiction-derived (refuted body), no paper attached.
+- **Energy-limited escape (au-mic c/e)** — now cite Lecavelier des Etangs 2007
+  (`astro-ph/0609744`, cached), scaled from b's Allart-2023-anchored value.
+- **Gas-giant radii (55 Cnc b/c/d/f)** — now cite Fortney, Marley & Barnes 2007
+  (`astro-ph/0612671`) warm-giant mass-radius-insolation tracks.
+
+Corpus is otherwise clean (tidal heating, mass-radius, stability, stellar wind
+all already grounded). Values unchanged; only method citations + confidence added.
+
+---
+
 ## How to attack — method-gap vs value-fix
 
 Most findings are **method gaps** (no grounded method was ever defined → each body was
