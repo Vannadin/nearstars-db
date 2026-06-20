@@ -70,7 +70,7 @@ Wolf 2017, Turbet 2018, Fauchez 2019 는 모두 f 가 모델링된 모든 CO₂ 
 | `magnetic_dipole_tilt_deg` | 12 | low | 동률 처리. 12° 오프셋이 두드러진 auroral cap 를 만듦 |
 | `magnetosphere_standoff_planet_radii` | 3.5 | high | Garraffo 2017 Fig. 4 하단 패널 — super-Alfvénic 조건의 f 에서 3–4 R_p |
 | `radiation_belt_present` | true | medium | B-field 가 marginal 하게 충분. 외곽 행성이라 stellar wind 압축이 b/c 보다 덜 가혹 |
-| `surface_radiation_dose_msv_yr` | ~70 (10²–10³ 차수. SPE 빈도 의존) | low | Atri 2019 (1910.09871). 강한 스펙트럼 SPE 1회가 1 bar + 지구형 B-field 에서 표면에 ~2.25 mGy (Table 4, 1000 g/cm². GCR 배경의 ≈1260배). 연간 = 이벤트당 × (미측정) SPE 빈도 ~10²–10³ mSv/yr, 연 ~30회 가정 시 ~70. 기존 7000 은 Table 6 의 30 g/cm² enhancement factor 를 mSv/yr 로 오표기 |
+| `surface_radiation_dose_msv_yr` | ~70 (10²–10³ 차수. SPE 빈도 의존) | low | Atri 2019 (1910.09871). 강한 스펙트럼 SPE 1회가 1 bar + 지구형 B-field 에서 표면에 ~2.25 mGy (Table 4, 1000 g/cm². GCR 배경의 ≈1260배). 연간 = 이벤트당 × 플레어 빈도이며, 이 빈도는 이제 Vasilyev et al. 2026 (`2605.05468`, JWST+K2 플레어 빈도 분포) 이 정량화함. β = 0.753, E_TESS > 10³² erg 플레어가 ~25 일마다 (이전 추정 대비 ~10배). 이 빈도에서 ~70 mSv/yr, 정직한 범위는 여전히 10²–10³ 차수. 기존 7000 은 Table 6 의 30 g/cm² enhancement factor 를 mSv/yr 로 오표기 |
 | `atmospheric_shielding_g_cm2` | 1000 | medium | Phase 3 cfg 압력 1 bar CO₂ → ~1000 g/cm² 기둥 |
 | `aurora_present` | true | high | 대기 + B-field 모두 존재. 지구보다 얇은 CO₂-rich 대기는 Mars-analog 오로라를 만듦 |
 | `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack–Barker 밴드 적색 ~580–620 nm (Mars-analog). 동률 처리: 가시 영역의 적색을 UV 일변도보다 우선 |

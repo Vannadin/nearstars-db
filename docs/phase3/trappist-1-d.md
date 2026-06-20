@@ -89,7 +89,7 @@ Mercury / Moon mare analog (broadband visible albedo ≈ 0.05–0.12,
 Hapke-corrected) is the closest Solar System reference. We pick
 `#2a2018` (dark gray-brown) with `#5a3220` iron-oxide patch tint.
 
-**Tidal heating refinement.** Dobos 2019 (1902.03867) gives F_int(d) = 0.26 +0.14/-0.21 W/m² with mantle T_eq ≈ 1645 K (above rock solidus, supporting up to 35% melt by volume). The flux is just below the runaway-greenhouse critical value (273 W/m², per the same paper); with Bond albedo ≥ 0.3, d sits in the safe (non-runaway) regime. The cfg's current A_B = 0.10 would technically put d into runaway if a substantial volatile reservoir existed — but the JWST-constrained near-airless interpretation (Piaulet 2025) resolves this tension by leaving essentially no water to run away.
+**Tidal heating refinement.** Dobos 2019 (1902.03867) gives F_int(d) = 0.26 +0.14/-0.21 W/m² with mantle T_eq ≈ 1645 K (above rock solidus, supporting up to 35% melt by volume). The newer re-derivation of Bolmont et al. 2026 (`2601.03408`, Table 3 — k₂ + internal-structure + Agol 2021 eccentricities) raises this to 0.39–2.60 W/m² (core-size dependent) and finds d tidal-DOMINATED, consistent with d's magma-relict morphology. The flux is just below the runaway-greenhouse critical value (273 W/m², per the same paper); with Bond albedo ≥ 0.3, d sits in the safe (non-runaway) regime. The cfg's current A_B = 0.10 would technically put d into runaway if a substantial volatile reservoir existed — but the JWST-constrained near-airless interpretation (Piaulet 2025) resolves this tension by leaving essentially no water to run away.
 
 **Iron oxide patches.** Photochemistry on long-tidally-locked terrestrial
 worlds tends to produce surface oxidation in regions accessible to

@@ -6,6 +6,12 @@ sources:
   arxiv: queried (9 hits)
   citation_expansion: 9 seeds, +407 new, 470 refs fetched
 papers:
+- arxiv_id: '2601.03408'
+  ads_bibcode: 2026arXiv260103408B
+  title: 'Bolmont et al. 2026 — tidal heating of the TRAPPIST-1 planets via k2 + internal structure; d 0.39-2.60 W/m2 (tidal-dominated), updates Dobos 2019 0.26'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - &id001
   arxiv_id: '2508.08416'
   ads_bibcode: 2025ApJ...989..181P

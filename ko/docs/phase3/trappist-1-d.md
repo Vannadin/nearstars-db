@@ -87,7 +87,7 @@ primary, `#5a3220` 산화철 patch tint 를 accent 로 선택.
 
 **조석 가열 정교화.** Dobos 2019 (1902.03867) 가 Maxwell viscoelastic
 모델로 F_int(d) = 0.26 +0.14/-0.21 W/m², mantle T_eq ≈ 1645 K (암석
-solidus 위, 부피 기준 최대 35% melt 지지) 제시. 이 flux 는 같은 논문의
+solidus 위, 부피 기준 최대 35% melt 지지) 제시. Bolmont et al. 2026 (`2601.03408`, Table 3 — k₂ + 내부 구조 + Agol 2021 이심률) 의 새로운 재유도는 이 값을 0.39–2.60 W/m² (핵 크기 의존) 로 상향하며, d 가 조석 가열 지배적이고 d 의 magma-relict 형태와 일관됨을 보임. 이 flux 는 같은 논문의
 runaway-greenhouse 임계값(273 W/m²) 바로 아래; Bond albedo ≥ 0.3 이면
 d 는 안전한 (non-runaway) 영역에 위치. 현재 cfg 의 A_B = 0.10 은
 substantial volatile 저장고가 있을 경우 기술적으로는 d 를 runaway 로

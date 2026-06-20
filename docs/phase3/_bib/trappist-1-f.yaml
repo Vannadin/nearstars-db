@@ -6,6 +6,12 @@ sources:
   arxiv: queried (5 hits)
   citation_expansion: 6 seeds, +284 new, 300 refs fetched
 papers:
+- arxiv_id: '2605.05468'
+  ads_bibcode: 2026arXiv260505468V
+  title: 'Vasilyev et al. 2026 — TRAPPIST-1 flare-frequency distribution (JWST+K2); beta=0.753, E>1e32 erg every 25 d (10x prior); quantifies the SPE rate behind surface_radiation_dose'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - &id001
   arxiv_id: '2504.16201'
   ads_bibcode: 2025ApJ...986....2R

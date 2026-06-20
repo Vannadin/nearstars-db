@@ -64,13 +64,13 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `surface_morphology` | substellar 의 ~35° 이내 해양, 그 외에는 sea-ice + 빙하 지형, 얼음 경계에 침수 + 노출 지형 | medium | Hu 2014 / Pierrehumbert 2011 조석 고정 aquaplanet 템플릿 |
 | `magnetic_field_present` | true (modest, 지구의 ~0.1배) | low | 작은 질량 + 느린 자전 → 약한 고유 자기장. 직접 제약은 없음 |
 | `induction_heating_w_m2` | 0.01–0.1 | medium | Grayver 2022 — b/c 보다 e 에서 훨씬 낮음 |
-| `tidal_heating_w_m2` | 0.001–0.01 | medium | Bolmont 2020 — e 에서 최소 |
+| `tidal_heating_w_m2` | 0.13–0.51 | medium | Bolmont et al. 2026 (`2601.03408`) Table 3 — degree-2 Love number k₂ + 내부 구조 (핵 크기) + Agol 2021 이심률을 이용한 재유도. 보수적 최소값으로 핵 크기 전 범위에서 0.13–0.51 W/m² (불확실성까지 포함하면 ~1.4 까지). e 는 조석 가열이 지배적이며 지구 지열 flux 의 ~1.5–6배 → "화산 활동이나 판 구조 운동과 양립 가능" (그들의 §5). 같은 저자의 Bolmont 2020 "e 에서 최소" (0.001–0.01) 를 대체 |
 | `magnetic_field_strength_microtesla_equator` | 30 | medium | Wang 2025 (2504.16662) 의 e MHD 시뮬레이션이 0.32 G ≈ 지구 강도를 채택. Garraffo 2017 테스트 케이스도 0.3 G. Documented divergence — 아래 Canonical alternatives 참조. RM22 다이나모 스케일링은 조석 고정 저질량 행성에 약 2 μT 를 도출하나, cfg 는 시각적 자기권을 위해 Wang 의 지구 수준 가정을 채택합니다. |
 | `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Wang 2025 의 지구형 가정. 거주 가능 시나리오 렌더링에서 보수적인 값 |
 | `magnetic_dipole_tilt_deg` | 11 | medium | 지구형 11° (Wang 2025 는 23.5° 를 사용하지만 tilt 민감도를 함께 보고). 타이브레이크. 11° 가 플레이어에게 인식 가능한 오로라 geometry 를 제공 |
 | `magnetosphere_standoff_planet_radii` | 5 | high | Wang 2025 Fig. 5, 0.32 G 자기장 — 평온기 5–9 R_e, CME 교란 시 ~3 R_e |
 | `radiation_belt_present` | true | medium | B-field ≥ 지구의 0.1 + 평온기 폐쇄 자기권 — Van Allen 같은 방사선 벨트가 가능하지만, sub-Alfvénic transit 동안에는 크게 교란됨 |
-| `surface_radiation_dose_msv_yr` | ~120 (10²–10³ 차수. SPE 빈도 의존) | low | Atri 2019 (1910.09871). 강한 스펙트럼 SPE 1회가 1 bar + 지구형 B-field 에서 표면에 ~3.9 mGy 침착 (Table 4, 1000 g/cm². GCR 배경의 ≈2200배, Table 6). 연간 dose = 이벤트당 × (미측정) SPE 빈도 — 활동성 M8V(~태양의 100배 플레어율)면 ~10²–10³ mSv/yr, 연 ~30회 가정 시 ~120. 기존 12000 은 Table 6 의 무차원 GCR-enhancement factor 를 연간 mSv 로 오표기한 값 |
+| `surface_radiation_dose_msv_yr` | ~120 (10²–10³ 차수. SPE 빈도 의존) | low | Atri 2019 (1910.09871). 강한 스펙트럼 SPE 1회가 1 bar + 지구형 B-field 에서 표면에 ~3.9 mGy 침착 (Table 4, 1000 g/cm². GCR 배경의 ≈2200배, Table 6). 연간 dose = 이벤트당 × 플레어 빈도이며, 이 빈도는 이제 Vasilyev et al. 2026 (`2605.05468`, JWST+K2 플레어 빈도 분포) 이 정량화함. 단일 거듭제곱 법칙 β = 0.753, E_TESS > 10³² erg 플레어가 ~25 일마다 1회 (이전 추정 대비 ~10배 잦음). 이 빈도에서 ~120 mSv/yr, 정직한 범위는 여전히 10²–10³ 차수. 기존 12000 은 Table 6 의 무차원 GCR-enhancement factor 를 연간 mSv 로 오표기한 값 |
 | `atmospheric_shielding_g_cm2` | 1000 | high | Phase 3 cfg 압력 1 bar 지구형 → ~1000 g/cm² column |
 | `aurora_present` | true | high | 대기와 자기장이 모두 충분. Fraschetti 2019 (1902.03732) 양성자 flux 가 지구의 10⁶배 → 강렬한 precipitation |
 | `aurora_color_primary_hex` | `#4DFF4D` | medium | N₂/CO₂/O₂ 대기에서 [OI] 557.7 nm 녹색이 지배 — 지구형 오로라 색. interesting-first 타이브레이크에서 UV-only 대안 대신 녹색 선택 |

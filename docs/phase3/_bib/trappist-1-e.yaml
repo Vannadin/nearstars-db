@@ -6,6 +6,18 @@ sources:
   arxiv: queried (26 hits)
   citation_expansion: 28 seeds, +991 new, 1471 refs fetched
 papers:
+- arxiv_id: '2601.03408'
+  ads_bibcode: 2026arXiv260103408B
+  title: 'Bolmont et al. 2026 — tidal heating of the TRAPPIST-1 planets via k2 + internal structure; e 0.13-0.51 W/m2 (tidal-dominated, volcanism-capable), supersedes Bolmont 2020 minimal'
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: '2605.05468'
+  ads_bibcode: 2026arXiv260505468V
+  title: 'Vasilyev et al. 2026 — TRAPPIST-1 flare-frequency distribution (JWST+K2); single power law beta=0.753, E>1e32 erg every 25 d (10x prior); quantifies the SPE rate behind surface_radiation_dose'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - &id001
   arxiv_id: '2512.07695'
   ads_bibcode: 2026AJ....171..105A
