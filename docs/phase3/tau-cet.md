@@ -76,7 +76,7 @@ picks; the stellar layer is re-anchored on the frozen Phase 2 sources
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016 — ALMA resolved fit, inner edge ~6 AU |
 | `disk_outer_radius_au` | 55 | high | Greaves 2004 (55 AU, SCUBA); MacGregor 2016 adopts it as a fixed prior upper bound — ALMA does not constrain the outer edge |
 | `disk_dust_temperature_k` | 60 | high | Greaves 2004 / Lawler 2014 (~60–80 K); MacGregor 2016 assumes a T proportional to r^-0.5 profile and fits no dust temperature |
-| `disk_tint_rgb_hex` | `#ffe4bd` (warm; vivid `#ffc100`) | low | No measured optical color (thermal/mm only). Mie reflectance synthesis: amorphous silicate + organics (Lawler 2014; a_min ~0.31 µm) — organics absorb blue → distinctly warm reflectance (B/I 0.40, the warmest belt); renderer applies the G8.5 V light. Vivid pack: `#ffc100` (amber) |
+| `disk_tint_rgb_hex` | `#ffe2bb` (warm; vivid `#ffbc00`) | low | No measured optical color (thermal/mm only). Mie reflectance synthesis: amorphous silicate + organics (Lawler 2014; a_min ~0.31 µm), the silicate+organic optical constants mixed with Maxwell-Garnett effective-medium theory — organics absorb blue → distinctly warm reflectance (B/I 0.39, the warmest belt); renderer applies the G8.5 V light. Vivid pack: `#ffbc00` (amber) |
 | `disk_opacity` | 0.15 | low | Tie-break: physical optical depth is ~10⁻³ from MacGregor 2016 dust mass + ring geometry, but cfg uses 0.15 for in-game visibility against deep-space background; documented as a render-visibility tradeoff |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3 — single broad ring explicitly favored over multi-belt; no resolved inner gap |
 | `disk_resolved_imaging` | true | high | MacGregor 2016 — ALMA Band 6 resolved |
@@ -253,7 +253,7 @@ ring extending from ~6 AU (inner edge) to ~55 AU (outer edge),
 with a peak surface density around 30 AU and a total dust mass of
 roughly 1.2 M⊕ — about 10–20× the dust inventory of our own
 Kuiper Belt. NearStars renders this as a faint, broad, dimly
-warm annulus around τ Ceti, encoded with the reflectance hex `#ffe4bd`
+warm annulus around τ Ceti, encoded with the reflectance hex `#ffe2bb`
 (vivid pack `#ffc100` amber — its silicate+organic grains are the
 warmest-reflectance belt in the catalog, B/I 0.40) and
 in-game opacity 0.15 (physical optical depth is ~10⁻³, but the
@@ -386,7 +386,7 @@ activity cycle** over ~50 yr of monitoring (Baum 2022). The result is a steady
 | `solar_cycle_yr` | none (flat) | high | Baum 2022 — no cycle over ~50 yr; steady, uncycled wind |
 | `stellar_wind_mass_loss_solar` | ≤ 0.1 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~50 | medium | 6D astrometry vs LIC |
-| `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | from the Ṁ upper limit + V_ISM |
+| `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM) from the Ṁ upper limit + V_ISM. Assumes a Sun-like wind speed (V_⊙ ≈ 400 km/s, fixed-velocity assumption of Wood et al. 2002/2005); only Ṁ and V_ISM vary per star |
 | `stellar_radiation_surface_relative_sun` | ~0.6 | medium | measured: log L_X 26.69 (S&L 2004 NEXXUS) vs solar cycle-mean 26.9; flat star, no cycle modulation |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~282 / +8 | low | 6D astrometry vs LIC; **plugin-only** |
 

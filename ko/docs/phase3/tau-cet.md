@@ -72,7 +72,7 @@ Teixeira 2009 asteroseismology, Santos 2013, Gomes da Silva 2021) 에
 | `disk_inner_radius_au` | 6 | high | MacGregor 2016. ALMA 분해 fit, 안쪽 가장자리 ~6 AU |
 | `disk_outer_radius_au` | 55 | high | Greaves 2004 (55 AU, SCUBA). MacGregor 2016 은 이를 고정 prior 상한으로 채택. ALMA 는 바깥쪽 가장자리를 제약하지 않음 |
 | `disk_dust_temperature_k` | 60 | high | Greaves 2004 / Lawler 2014 (~60–80 K). MacGregor 2016 은 T ∝ r^-0.5 프로파일을 가정할 뿐 먼지 온도를 fit 하지 않음 |
-| `disk_tint_rgb_hex` | `#ffe4bd` (따뜻함; vivid `#ffc100`) | low | 측정된 광학 색 없음 (열적/mm 관측만 존재). Mie 반사율 합성. 비정질 규산염 + 유기물 (Lawler 2014; a_min ~0.31 µm) 조성에서 유기물이 청색을 흡수해 뚜렷이 따뜻한 반사율을 만듭니다 (B/I 0.40, 가장 따뜻한 벨트). 렌더러가 그 위에 G8.5 V 별빛을 입힙니다. Vivid 팩. `#ffc100` (호박색) |
+| `disk_tint_rgb_hex` | `#ffe2bb` (따뜻함; vivid `#ffbc00`) | low | 측정된 광학 색 없음 (열적/mm 관측만 존재). Mie 반사율 합성. 비정질 규산염 + 유기물 (Lawler 2014; a_min ~0.31 µm) 의 규산염+유기물 광학 상수를 Maxwell-Garnett 유효매질 이론으로 혼합하면 유기물이 청색을 흡수해 뚜렷이 따뜻한 반사율을 만듭니다 (B/I 0.39, 가장 따뜻한 벨트). 렌더러가 그 위에 G8.5 V 별빛을 입힙니다. Vivid 팩. `#ffbc00` (호박색) |
 | `disk_opacity` | 0.15 | low | Tie-break. MacGregor 2016 의 먼지 질량 + 고리 기하에서 나오는 물리 광학적 깊이는 ~10⁻³ 이지만, 게임 내에서 우주 배경 대비 가시성을 살리기 위해 cfg 는 0.15 를 사용. 렌더 가시성 trade-off 로 문서화 |
 | `disk_morphology` | "broad single ring, metal-poor analog of Kuiper Belt" | high | MacGregor 2016 §3. multi-belt 보다 단일 넓은 고리를 명시적으로 선호. 분해된 안쪽 갭 없음 |
 | `disk_resolved_imaging` | true | high | MacGregor 2016. ALMA Band 6 분해 |
@@ -230,7 +230,7 @@ Band 6 영상 (MacGregor 2016) 은 약 6 AU (안쪽 가장자리) 부터 ~55 AU
 근처에 표면 밀도 피크가 있고 총 먼지 질량은 약 1.2 M⊕ — 우리
 카이퍼 벨트 먼지 인벤토리의 ~10–20 배입니다. NearStars 는 이를
 τ Ceti 주위의 희미하고 넓고 어둑한 따뜻한 환대로 렌더링하며,
-반사율 hex `#ffe4bd` (vivid 팩 `#ffc100` 호박색 — 규산염+유기물
+반사율 hex `#ffe2bb` (vivid 팩 `#ffc100` 호박색 — 규산염+유기물
 입자라 카탈로그에서 가장 따뜻한-반사율 벨트, B/I 0.40) 와 게임 내
 opacity 0.15 로 인코딩합니다 (물리 광학적
 깊이는 ~10⁻³ 이지만, cfg 는 깊은 우주 배경 대비 벨트가 알아볼 수
@@ -355,7 +355,7 @@ skipped` annotation 으로 보존됩니다.
 | `solar_cycle_yr` | none (flat) | high | Baum 2022 — ~50 yr 에 걸쳐 사이클 없음. 안정적이고 사이클 없는 항성풍 |
 | `stellar_wind_mass_loss_solar` | ≤ 0.1 (upper limit) | medium | Wood 2021 astrospheric Lyα |
 | `local_ism_inflow_speed_kms` | ~50 | medium | 6D astrometry 대 LIC |
-| `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | Ṁ 상한 + V_ISM 에서 |
+| `astrosphere_standoff_au` | ≲ 19 (upper bound) | medium | 120·√(Ṁ_rel)·(V_⊙/V_ISM), Ṁ 상한 + V_ISM 에서. 태양과 같은 항성풍 속도 (V_⊙ ≈ 400 km/s, Wood et al. 2002/2005 의 고정 속도 가정) 를 전제하며, 별마다 Ṁ 과 V_ISM 만 달라집니다 |
 | `stellar_radiation_surface_relative_sun` | ~0.6 | medium | 측정: log L_X 26.69 (S&L 2004 NEXXUS) 대 태양 사이클 평균 26.9. 평탄한 별이라 사이클 변조 없음 |
 | `astrosphere_apex_ra_deg` / `_dec_deg` | ~282 / +8 | low | 6D astrometry 대 LIC. **plugin-only** |
 

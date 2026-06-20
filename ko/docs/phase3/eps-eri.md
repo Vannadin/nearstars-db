@@ -78,7 +78,7 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 | `disk_intermediate_opacity` | 0.20 | low | Tie-break. 희미한 중간 dust, 가시성 위해 boost |
 | `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — 좁고 이심(e ≈ 0.07) 차가운 링이 64.4 ± 0.5 AU 에서 분해 (Booth 2017 Herschel 확인) |
 | `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves 차가운 링 SED |
-| `disk_cold_tint_rgb_hex` | `#fffcfc` (거의 중성. vivid `#fff7f6`) | low | 측정된 광학 색 없음 (sub-mm/mm 만). Mie 반사율 합성. 큰 얼음/규산염 grain (a ~15–135 µm, Backman 2009) → 중성 반사율 (B/I 0.85). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid 팩 `#fff7f6` |
+| `disk_cold_tint_rgb_hex` | `#fff5ef` (옅은 따뜻함. vivid `#ffe3d0`) | low | 측정된 광학 색 없음 (sub-mm/mm 만). Mie 반사율 합성. 큰 얼음/규산염 grain (a ~15–135 µm, Backman 2009) 의 얼음+규산염 광학 상수를 Maxwell-Garnett 유효매질 이론으로 혼합 → 약간 따뜻한 반사율 (B/I 0.70). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid 팩 `#ffe3d0` |
 | `disk_cold_opacity` | 0.30 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
 | `disk_morphology` | three-belt. ~3 AU 안쪽 asteroid analog + ~20 AU 중간 성분 + ~64 AU 차가운 Kuiper analog 링 (좁고 이심 e ≈ 0.07) | medium | Su 2017 Genie 모델 + Booth 2017 / Greaves 2014 다중 belt 분해. intermediate 가 가장 덜 분해됨 |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA. Booth 2017 Herschel/SPIRE. Su 2017 Spitzer/MIPS. 여러 파장에서 차가운 링이 분해됨 |
@@ -244,7 +244,7 @@ Rosenthal 2021 (R 0.759) 과 5180 K 분광 Teff 를 썼습니다. ε Eri 를
 ~3 AU 의 안쪽 asteroid belt analog 가 가장 따뜻하고 가장 광학적으로
 얇으며, 옅은 따뜻한 색조의 dust 산란 층으로 렌더링됩니다. 태양
 배경과 구별되는 정도라 "여기는 만약 암석 행성이 있었다면 자리잡았을
-지점" 으로 시각적으로 식별됩니다. belt별 cfg 색조 (`disk_<belt>_tint_rgb_hex`, ≈ `#fff4ea`–`#fffcfc`)
+지점" 으로 시각적으로 식별됩니다. belt별 cfg 색조 (`disk_<belt>_tint_rgb_hex`, ≈ `#fff4ea`–`#fff5ef`)
 는 옅은 따뜻-크림색, Confidence=low 입니다. eps Eri 벨트는 sub-mm/mm
 로만 분해돼 광학 산란광 색이 존재하지 않으므로, Mie 반사율 합성
 (disk_color_mie.py) 이 규산염/얼음 grain 의 거의 중성인 반사율을

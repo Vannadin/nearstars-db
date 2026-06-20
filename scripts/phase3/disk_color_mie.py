@@ -132,7 +132,8 @@ WL = np.linspace(380, 780, 41)  # optical band, nm
 #   ice       — water ice, Warren & Brandt 2008 (2008JGRD..11314220W)
 #   olivine   — Mg-rich crystalline forsterite, Jäger et al. 2003 (2003A&A...408..193J)
 #   tholin    — Titan organic tholin, Khare et al. 1984 (1984Icar...60..127K)
-# ice_sil / sil_org are 50/50 mass-ish blends (eps Eri cold ring / tau Cet).
+# ice_sil / sil_org are two-component grains mixed with Maxwell-Garnett
+# effective-medium theory (see _BLENDS below), NOT a linear n,k average.
 _WLS = np.array([400.0, 500.0, 600.0, 700.0, 800.0])
 _NK = {
     "astrosil": ([1.70, 1.69, 1.69, 1.69, 1.69], [0.031, 0.017, 0.010, 0.006, 0.004]),
@@ -140,15 +141,41 @@ _NK = {
     "ice":      ([1.32, 1.31, 1.31, 1.31, 1.31], [1e-9, 2e-9, 1e-8, 3e-8, 6e-8]),
     "olivine":  ([1.65, 1.64, 1.64, 1.63, 1.63], [3e-4, 1.5e-4, 1e-4, 8e-5, 7e-5]),
     "tholin":   ([1.66, 1.65, 1.64, 1.63, 1.63], [0.27, 0.065, 0.022, 0.010, 0.006]),
-    "ice_sil":  ([1.51, 1.50, 1.50, 1.50, 1.50], [0.015, 0.009, 0.005, 0.003, 0.002]),
-    "sil_org":  ([1.68, 1.67, 1.66, 1.66, 1.65], [0.15, 0.04, 0.016, 0.008, 0.005]),
 }
 
-def _m_lambda(comp):
+# Two-component grains via Maxwell-Garnett: spherical inclusions of volume
+# fraction f embedded in a host matrix, mixing the dielectric function
+# eps = (n + ik)^2 (NOT a linear n,k average, which is unphysical). The
+# inclusion volume fraction is derived from a 50/50 MASS split and bulk
+# densities (ice 1.0, silicate 3.3, organic/tholin 1.3 g/cc), with the
+# majority-volume component as the host:
+#   ice_sil  — eps Eri cold ring: silicate cores (f=0.23 by vol) in an ice mantle
+#   sil_org  — tau Cet broad belt: silicate inclusions (f=0.28) in an organic host
+# (50/50 mass -> f_sil = (0.5/rho_sil) / (0.5/rho_sil + 0.5/rho_host).)
+# MG is valid for f well below the percolation threshold (~0.3), satisfied here.
+_BLENDS = {
+    "ice_sil": ("ice",    "astrosil", 0.23),
+    "sil_org": ("tholin", "astrosil", 0.28),
+}
+
+def _maxwell_garnett(eps_h, eps_i, f):
+    """Effective dielectric of inclusions (eps_i, volume fraction f) in host eps_h."""
+    num = eps_i + 2 * eps_h + 2 * f * (eps_i - eps_h)
+    den = eps_i + 2 * eps_h - f * (eps_i - eps_h)
+    return eps_h * num / den
+
+def _m_single(comp):
     n_s, k_s = _NK[comp]
     n = np.interp(WL, _WLS, n_s)
     k = np.interp(WL, _WLS, k_s)
     return n + 1j * k
+
+def _m_lambda(comp):
+    if comp in _BLENDS:
+        host, incl, f = _BLENDS[comp]
+        eps = _maxwell_garnett(_m_single(host) ** 2, _m_single(incl) ** 2, f)
+        return np.sqrt(eps)  # principal root -> n>0, k>0 for these materials
+    return _m_single(comp)
 
 def belt_color(a_min, a_max, q, comp, teff):
     """Size-distribution-integrated Qsca(lambda) with wavelength-dependent n,k.
@@ -167,6 +194,7 @@ def belt_color(a_min, a_max, q, comp, teff):
 
 def a_blow(L, M, rho=2.5):
     # radiation-pressure blowout radius [µm]; ~0.5*(L/Lsun)/(M/Msun)*(2.5/rho)
+    # rho=2.5 g/cc is a representative grain-density assumption (not a measurement).
     return 0.5 * (L / M) * (2.5 / rho)
 
 
@@ -188,6 +216,8 @@ def a_blow(L, M, rho=2.5):
 #   61 Vir: no spectral features (Wyatt 2012 2012MNRAS.424.1206W); thermal/mm only.
 #   tau Cet: amorphous silicate + organics (Lawler 2014 2014MNRAS.444.2665L);
 #            thermal/mm only.
+# q = 3.5 is the standard collisional-cascade size-distribution exponent
+# (Dohnanyi 1969, 1969JGR....74.2531D).
 # (belt, a_min_um or None->a_blow, a_max_um, q, comp, starL, starM, Teff)
 BELTS = [
     ("eps Eri asteroid ~3AU",     2.0,  1000, 3.5, "astrosil", 0.32, 0.82, 5039),

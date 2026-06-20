@@ -82,7 +82,7 @@ star + disk + jovian point of light).
 | `disk_intermediate_opacity` | 0.20 | low | Tie-break: faint intermediate dust, boosted for visibility |
 | `disk_cold_inner_radius_au` | 64.4 | high | MacGregor 2015 ALMA — narrow eccentric (e ≈ 0.07) cold ring resolved at 64.4 ± 0.5 AU (Booth 2017 Herschel confirms) |
 | `disk_cold_dust_temperature_k` | 35 | high | MacGregor 2015 / Greaves cold-ring SED |
-| `disk_cold_tint_rgb_hex` | `#fffcfc` (near-neutral; vivid `#fff7f6`) | low | No measured optical color (sub-mm/mm only). Mie reflectance synthesis: large icy/silicate grains (a ~15–135 µm, Backman 2009) → neutral reflectance (B/I 0.85); renderer applies the K2V light. Vivid pack: `#fff7f6` |
+| `disk_cold_tint_rgb_hex` | `#fff5ef` (pale warm; vivid `#ffe3d0`) | low | No measured optical color (sub-mm/mm only). Mie reflectance synthesis: large icy/silicate grains (a ~15–135 µm, Backman 2009), the ice+silicate optical constants mixed with Maxwell-Garnett effective-medium theory → mildly warm reflectance (B/I 0.70); renderer applies the K2V light. Vivid pack: `#ffe3d0` |
 | `disk_cold_opacity` | 0.30 | low | Tie-break: optically thin in reality; boosted for visibility |
 | `disk_morphology` | three-belt: inner asteroid analog at ~3 AU + intermediate population at ~20 AU + cold Kuiper-analog ring at ~64 AU (narrow, eccentric e ≈ 0.07) | medium | Su 2017 Genie model + Booth 2017 / Greaves 2014 multi-belt decomposition; intermediate is the least-resolved layer |
 | `disk_resolved_imaging` | true | high | MacGregor 2015 ALMA; Booth 2017 Herschel/SPIRE; Su 2017 Spitzer/MIPS — cold ring resolved at multiple wavelengths |
@@ -265,7 +265,7 @@ inner asteroid-belt analog at ~3 AU is the warmest and most
 optically thin; rendered as a faint warm-tinted dust scattering
 layer, distinct enough from the solar background to be visually
 identifiable as "this is where the rocky planets would be if there
-were any". The per-belt cfg tints (`disk_<belt>_tint_rgb_hex`, ≈ `#fff4ea`–`#fffcfc`)
+were any". The per-belt cfg tints (`disk_<belt>_tint_rgb_hex`, ≈ `#fff4ea`–`#fff5ef`)
 are pale warm-cream, Confidence=low — eps Eri's belts are resolved
 only in sub-mm/mm, so no optical scattered-light color exists; the Mie
 synthesis (disk_color_mie.py) gives a near-neutral reflectance off the
