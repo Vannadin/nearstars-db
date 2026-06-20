@@ -104,7 +104,7 @@ preserved in Open items.
 | `magnetic_dipole_tilt_deg` | 15 | low | Tie-break: distinct aurora-cap geometry; literature silent on dipole tilt for Proxima b |
 | `magnetosphere_standoff_planet_radii` | 3–11 | high | Garraffo 2022 — magnetopause standoff varies 3–11 R_p over the orbital phase (0.1 G surface field), compressing toward the low end during super-Alfvénic transits |
 | `radiation_belt_present` | false | medium | Garraffo 2022 + Atri 2020 — heavy CME compression precludes stable trapped particle population |
-| `surface_radiation_dose_msv_yr` | 5000 | medium | Atri 2020 (1910.09871) for 1 bar atmospheric shielding + weak B-field; spikes to 10⁵ during superflares |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 (1910.09871) SEP→dose framework for 1 bar atmospheric shielding + weak B-field; spikes to 10⁵ during superflares. Atri reports Gray-per-event + enhancement factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
 | `atmospheric_shielding_g_cm2` | 1000 | high | 1 bar atmosphere → ~1000 g/cm² column |
 | `aurora_present` | true | high | Atm + B-field both present; Garraffo 2022 + Vida 2019 frequent superflare cadence drives intense precipitation |
 | `aurora_color_primary_hex` | `#4DFF4D` ([OI] 557.7 nm green) | medium | Tie-break: N₂/CO₂/O₂ trace atmosphere chemistry; green oxygen line dominant per Earth-analog spectroscopy |

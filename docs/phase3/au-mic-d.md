@@ -75,7 +75,7 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `surface_ice_caps` | nightside frost cap at hemispheric anti-substellar position; sublimation-driven volatile cycle | medium | tidally-locked terminator condensation; thin atmosphere allows volatile transport day to night |
 | `magnetic_field_present` | true (weak) | low | Earth-mass rocky planet with active interior; dynamo possible despite slow rotation |
 | `magnetic_field_strength_microtesla_equator` | 5 | low | Earth-mass rocky planet → **rocky** dynamo scaling RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`, cached) + slow-rotation penalty (Garraffo 2017): a weak field despite an active young core. (Replaces a citation to Reiners & Christensen 2010, which is a giant/brown-dwarf dynamo paper inapplicable to a rocky planet.) |
-| `surface_radiation_dose_msv_yr` | 5000 | medium | thin atmospheric column (~100 g/cm²) + weak magnetic field → high surface dose under AU Mic super-flares; Atri 2019 framework |
+| `surface_radiation_dose_msv_yr` | 5000 | low | thin atmospheric column (~100 g/cm²) + weak magnetic field → high surface dose under AU Mic super-flares. Atri 2019 (1910.09871) gives the SEP→dose framework (Gray-per-event + enhancement factors, not annual mSv/yr), so the yearly value here is a conversion estimate → low |
 | `aurora_present` | true | medium | thin atmosphere + weak B-field + intense stellar wind → visible aurora; Mars-analog CO₂⁺ emission |
 | `aurora_color_primary_hex` | `#ff6b6b` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm; Mars-analog visible aurora |
 | `aurora_emission_species_primary` | CO₂⁺ doublet + CO Cameron bands + O 297.2 nm | medium | thin CO₂ atmosphere chemistry; MAVEN Mars-aurora analog |

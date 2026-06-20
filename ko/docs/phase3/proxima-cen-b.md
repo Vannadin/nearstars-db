@@ -97,7 +97,7 @@ Proxima superflare 동안 잦은 aurora.** 42 cfg 픽. 31 canonical-aligned,
 | `magnetic_dipole_tilt_deg` | 15 | low | Tie-break. 구분되는 aurora-cap 지오메트리. 문헌이 Proxima b 의 쌍극자 tilt 에 침묵 |
 | `magnetosphere_standoff_planet_radii` | 3–11 | high | Garraffo 2022 — magnetopause standoff 가 궤도 위상에 따라 3–11 R_p 로 변동 (표면 자기장 0.1 G). super-Alfvénic transit 때 하단으로 압축 |
 | `radiation_belt_present` | false | medium | Garraffo 2022 + Atri 2020 — 무거운 CME 압축이 안정한 갇힌 입자 population 을 막음 |
-| `surface_radiation_dose_msv_yr` | 5000 | medium | Atri 2020 (1910.09871) for 1 bar 대기 차폐 + 약한 B 필드. superflare 동안 10⁵ 까지 spike |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 (1910.09871) SEP→dose 프레임워크, 1 bar 대기 차폐 + 약한 B 필드. superflare 동안 10⁵ 까지 spike. Atri 가 보고하는 값은 event 당 Gray + enhancement 계수이지 연간 mSv/yr 가 아니므로, 이 연간값은 변환 추정 → low |
 | `atmospheric_shielding_g_cm2` | 1000 | high | 1 bar 대기 → ~1000 g/cm² 컬럼 |
 | `aurora_present` | true | high | 대기 + B 필드 모두 존재. Garraffo 2022 + Vida 2019 의 잦은 superflare cadence 가 강렬한 강수를 구동 |
 | `aurora_color_primary_hex` | `#4DFF4D` ([OI] 557.7 nm 녹색) | medium | Tie-break. N₂/CO₂/O₂ trace 대기 화학. 지구 analog 분광에 따라 녹색 산소 선이 dominant |

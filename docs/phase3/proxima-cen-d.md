@@ -60,7 +60,7 @@ discovered for a canonical climate model to exist.
 | `magnetic_field_present` | true (weak, induced) | low | unconstrained Mercury-analog induced moment; not measured, no rendered aurora (airless) |
 | `magnetic_dipole_moment_normalized_earth` | 0.001 | low | unconstrained Mercury-analog induced moment; not measured, no rendered aurora (airless) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field → no trapped particle population |
-| `surface_radiation_dose_msv_yr` | 10⁵ | high | Atri 2020 (1910.09871) scaling with no atmospheric shield; flare/cosmic-proton-driven |
+| `surface_radiation_dose_msv_yr` | 10⁵ | low | Order-of-magnitude estimate, not a measured rate. Atri 2020 (1910.09871) provides the SEP→dose *framework* but reports Gray-per-event + dimensionless enhancement-over-GCR factors, NOT annual mSv/yr; the yearly figure here is a conversion (airless dose × flare frequency), so confidence is low despite the strong physical driver |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | no atmosphere to excite |
 | `flare_dose_event_msv` | 10⁴ | high | Atri 2020 + Vida 2019 superflare integrated proton dose at d's distance |

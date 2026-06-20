@@ -67,7 +67,7 @@ insolation 환경에 놓였을 때 휘발성 물질이 대부분 손실되거나
 | `magnetic_dipole_tilt_deg` | 10 | low | tie-break 으로 10° offset. Mars 처럼 명확한 dipole 축 없이 지각 이상(crustal anomaly) 지배 가능성 |
 | `magnetosphere_standoff_planet_radii` | 1.2 | medium | 전역 자기권 사실상 없음. Venus/Mars 와 같은 induced magnetosphere 만 존재하고 ionopause 의 standoff 는 R_planet 근방 |
 | `radiation_belt_present` | false | high | 자기장이 지구의 0.1 배 미만이라 Van-Allen 형 trapped 영역 자체가 없음 |
-| `surface_radiation_dose_msv_yr` | 4000 | medium | Atri 2019 (1910.09871) 의 스케일링을 0.062 AU 의 h 에 적용. shielding 이 약해 GCR 배경이 지배 |
+| `surface_radiation_dose_msv_yr` | 4000 | low | Atri 2019 (1910.09871) 의 스케일링을 0.062 AU 의 h 에 적용. shielding 이 약해 GCR 배경이 지배. Atri 가 보고하는 값은 event 당 Gray + 무차원 enhancement-over-GCR 계수이지 연간 mSv/yr 가 아니므로, 이 연간값은 변환 추정 → low |
 | `atmospheric_shielding_g_cm2` | 5 | medium | Phase 3 cfg 의 0.005 bar 압력 → 약 5 g/cm² column |
 | `aurora_present` | true | medium | 대기 + 지각/induced 자기장 → patchy 한 Mars 형 discrete aurora |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | N₂ Vegard-Kaplan bands + 미량 O 가 있으면 [NI] 520 nm green. tie-break 으로 UV-only 가 아닌 visible green 채택 |

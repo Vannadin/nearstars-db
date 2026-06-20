@@ -67,7 +67,7 @@ g 의 일사량으로는 표면 액체 물을 유지할 수 없으며, Wolf 2017
 | `magnetic_dipole_tilt_deg` | 12 | low | tie-break. 12° 오프셋으로 독특한 오로라 cap 을 만듬 |
 | `magnetosphere_standoff_planet_radii` | 4 | medium | Garraffo 2017 Fig. 4. 외곽 행성은 b/c 보다 덜 압축되어 g 궤도에서 4–5 R_p 가 그럴듯 |
 | `radiation_belt_present` | true | medium | 자기장 충분 + 외곽 행성의 항성풍 압력 완화 |
-| `surface_radiation_dose_msv_yr` | 5000 | high | Atri 2019 (1910.09871) Table 6. 0.045 AU 의 g + 50 g/cm² shielding + 자기장 기준 |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2019 (1910.09871) Table 6. 0.045 AU 의 g + 50 g/cm² shielding + 자기장 기준. 주의: Atri Table 6 은 무차원 enhancement-over-GCR 계수(및 event 당 Gray)이지 연간 mSv/yr dose 가 아니다. 여기 적힌 연간값은 변환이므로 신뢰도 low |
 | `atmospheric_shielding_g_cm2` | 50 | medium | Phase 3 cfg 압력 0.05 bar → 약 50 g/cm² column |
 | `aurora_present` | true | high | 대기 + 자기장 모두 우호적. CO₂ 지배 발광 |
 | `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack 600 nm 적색 (Mars-analog snowball 대기). tie-break. UV-only 보다 가시 적색 우선 |

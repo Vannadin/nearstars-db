@@ -57,7 +57,7 @@ divergence 는 없습니다 — Proxima d 는 너무 최근에 발견되어 cano
 | `magnetic_field_present` | true (약한, 유도된) | low | 제약되지 않은 Mercury-analog 유도 모멘트. 측정된 적 없고 렌더되는 aurora 도 없음 (airless) |
 | `magnetic_dipole_moment_normalized_earth` | 0.001 | low | 제약되지 않은 Mercury-analog 유도 모멘트. 측정된 적 없고 렌더되는 aurora 도 없음 (airless) |
 | `radiation_belt_present` | false | high | 대기 없음 + 무시할 만한 B 필드 → 갇힌 입자 population 없음 |
-| `surface_radiation_dose_msv_yr` | 10⁵ | high | Atri 2020 (1910.09871) 스케일링, 대기 차폐 없음. flare/우주선 양성자 구동 |
+| `surface_radiation_dose_msv_yr` | 10⁵ | low | 측정값이 아니라 차수 수준의 추정. Atri 2020 (1910.09871) 은 SEP→dose *프레임워크* 를 제공하지만, 보고하는 값은 event 당 Gray + 무차원 enhancement-over-GCR 계수이지 연간 mSv/yr 가 아니다. 여기 적힌 연간값은 변환(무대기 dose × flare 빈도)이므로, 물리적 구동은 강해도 신뢰도는 low |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | 자극할 대기 없음 |
 | `flare_dose_event_msv` | 10⁴ | high | Atri 2020 + Vida 2019 superflare 통합 양성자 도즈, d 거리 |

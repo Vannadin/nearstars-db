@@ -67,7 +67,7 @@ rocky surface).
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: 10° offset; potentially crustal anomaly-dominated like Mars (no clear dipole axis) |
 | `magnetosphere_standoff_planet_radii` | 1.2 | medium | Essentially no global magnetosphere; induced magnetosphere only (Venus/Mars-analog); standoff at ionopause ≈ R_planet |
 | `radiation_belt_present` | false | high | B-field <0.1 Earth → no Van-Allen-like trapped regions |
-| `surface_radiation_dose_msv_yr` | 4000 | medium | Atri 2019 (1910.09871) scaling for h at 0.062 AU; GCR background dominates with weak shielding |
+| `surface_radiation_dose_msv_yr` | 4000 | low | Atri 2019 (1910.09871) scaling for h at 0.062 AU; GCR background dominates with weak shielding. Atri reports Gray-per-event + dimensionless enhancement-over-GCR factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
 | `atmospheric_shielding_g_cm2` | 5 | medium | Phase 3 cfg pressure 0.005 bar → ~5 g/cm² column |
 | `aurora_present` | true | medium | Atm + crustal/induced magnetic field → patchy Mars-like discrete aurora |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | N₂ Vegard-Kaplan bands + [NI] 520 nm green if trace O; tie-break: visible green over UV-only |

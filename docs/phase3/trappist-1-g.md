@@ -66,7 +66,7 @@ liquid-water layer maintained by basal melting from radiogenic heat.
 | `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset for distinctive auroral cap |
 | `magnetosphere_standoff_planet_radii` | 4 | medium | Garraffo 2017 Fig. 4 — outer planets less compressed than b/c; 4–5 R_p plausible at g's orbit |
 | `radiation_belt_present` | true | medium | B-field sufficient + outer-planet wind less crushing |
-| `surface_radiation_dose_msv_yr` | 5000 | high | Atri 2019 (1910.09871) Table 6 for g at 0.045 AU + 50 g/cm² shielding + B-field |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2019 (1910.09871) Table 6 for g at 0.045 AU + 50 g/cm² shielding + B-field. NOTE Atri Table 6 is a dimensionless enhancement-over-GCR factor (and Gray-per-event), NOT an annual mSv/yr dose; the yearly value here is a conversion, so confidence is low |
 | `atmospheric_shielding_g_cm2` | 50 | medium | Phase 3 cfg pressure 0.05 bar → ~50 g/cm² column |
 | `aurora_present` | true | high | Atm + B-field both supportive; CO₂-dominated emission |
 | `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack 600 nm red (Mars-analog snowball atmosphere); tie-break: red visible over UV-only |

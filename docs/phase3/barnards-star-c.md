@@ -76,7 +76,7 @@ between hot d/b and cooler e.** 32 cfg picks; 16 canonical-aligned,
 | `magnetic_field_present` | true (weak, induced) | low | Tie-break: induction-driven |
 | `magnetic_dipole_moment_normalized_earth` | 0.001 | low | Tie-break: slightly larger than smaller siblings because c is most massive (Mercury analogy, not dynamo-modeled) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field |
-| `surface_radiation_dose_msv_yr` | 5000 | medium | Atri 2020 scaling: airless + 4.7 S⊕ XUV × France 2020 duty cycle |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 (1910.09871) SEP→dose framework (airless + 4.7 S⊕ XUV) × France 2020 (2009.01259) flare duty cycle. Atri reports Gray-per-event + enhancement factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | no atmosphere |
 | `star_apparent_angular_diameter_deg` | 3.64 | high | derived: 2 R★ / a × (180/π) |
