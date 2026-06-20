@@ -407,14 +407,20 @@ def build_i18n(systems: list) -> str:
 
 
 def collect_bib_manual(repo: Path) -> list:
-    """Auto-track manual-fetch papers from the curated Phase 2/3 bibliographies.
+    """Auto-track papers needing manual fetch from the curated Phase 2/3 bibs.
 
-    Reads docs/phase3/_bib/*.yaml and collects entries flagged
-    status=manual_followup/skipped (papers that can't be auto-fetched but bear
-    on the synthesis). Auto-harvested mega-bibs (where >=50% of entries are
-    un-fetched) and _system-* files are skipped, so only the genuine
-    curation-relevant manual papers surface. Self-updating: as curation adds
-    such an entry to any anchor bib, it appears here on the next build.
+    Reads docs/phase3/_bib/*.yaml and collects entries the auto-fetcher cannot
+    deliver:
+      - status=manual_followup / skipped, or category=manual_followup
+        (no arXiv preprint / paywalled / VizieR-only — needs the human), AND
+      - status=failed (a real arXiv paper the fetcher could not render, e.g.
+        ar5iv could-not-process — these also need a manual fetch).
+
+    The mega-bib guard (auto-harvested bibs where >=50% of entries are
+    un-fetched) only suppresses the bulk *pending* auto-harvest noise; the
+    manual/failed entries above are ALWAYS surfaced even inside a mega-bib, so
+    a curation-relevant paper never silently disappears. _system-* files are
+    skipped. Self-updating on each build.
     """
     bib_dir = repo / 'docs' / 'phase3' / '_bib'
     out = []
@@ -428,13 +434,25 @@ def collect_bib_manual(repo: Path) -> list:
         papers = doc.get('papers') or []
         if not papers:
             continue
+
+        # Two distinct classes need a human fetch:
+        #   manual = curation-relevant, no auto path (no preprint / paywall /
+        #            VizieR-only). Suppressed inside auto-harvested mega-bibs
+        #            (>=50% un-fetched) where these are bulk harvest noise.
+        #   failed = a REAL arXiv paper the auto-fetcher could not render
+        #            (e.g. ar5iv could-not-process). ALWAYS surfaced, even in a
+        #            mega-bib, because each one is a genuine pending fetch — this
+        #            is the class the old tracker silently dropped.
         manual = [p for p in papers
                   if p.get('status') in ('manual_followup', 'skipped')
                   or p.get('category') == 'manual_followup']
-        if not manual or len(manual) / len(papers) >= 0.5:
-            continue  # nothing to track, or an auto-harvested mega-bib
+        failed = [p for p in papers if p.get('status') == 'failed']
+        is_mega = len(manual) / len(papers) >= 0.5
+        keep = (failed if is_mega else manual + failed)
+        if not keep:
+            continue
         rows = []
-        for p in manual:
+        for p in keep:
             bib = (p.get('ads_bibcode') or '').strip()
             yr = bib[:4] if bib[:4].isdigit() else ''
             rows.append({
@@ -442,13 +460,18 @@ def collect_bib_manual(repo: Path) -> list:
                 'arxiv': (p.get('arxiv_id') or '').strip(),
                 'title': p.get('title') or '',
                 'year': yr,
+                'reason': 'failed' if p.get('status') == 'failed' else 'no-preprint',
             })
         out.append({'host': doc.get('host') or f.stem, 'papers': rows})
     return out
 
 
 def render_bib_auto(bib_systems: list) -> str:
-    """One card per system, listing its bibliography manual-fetch entries."""
+    """One card per system, listing its bibliography manual-fetch entries.
+
+    A 'failed' reason renders a small pill so an ar5iv-unrenderable real paper
+    is visibly distinct from a no-preprint / paywalled one.
+    """
     if not bib_systems:
         return ''
     cards = []
@@ -458,6 +481,8 @@ def render_bib_auto(bib_systems: list) -> str:
             '<td class="bib" data-label="Bibcode">'
             + (f'<a href="{html.escape(ADS_BASE + p["bibcode"] + "/abstract")}" target="_blank" rel="noopener">{html.escape(p["bibcode"])}</a>'
                if p['bibcode'] else html.escape(p['arxiv'] or '—'))
+            + (' <span class="tier-pill tier-A" title="real arXiv paper the auto-fetcher could not render (ar5iv) — fetch manually">failed</span>'
+               if p.get('reason') == 'failed' else '')
             + '</td>'
             f'<td class="year" data-label="Year">{html.escape(p["year"])}</td>'
             f'<td class="title" data-label="Title">{inline_md(p["title"])}</td>'
