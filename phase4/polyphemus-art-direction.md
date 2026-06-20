@@ -261,9 +261,12 @@ temperature difference is **fundamentally ~10% of the absolute temperature**
 **Pure radiative equilibrium (physics, no greenhouse):** ~244 K (periapsis) to ~213 K
 (apoapsis) for Bond albedo 0.2–0.3, full redistribution → i.e. −30 to −60 °C. Cold,
 because Polyphemus sits beyond α Cen A's outer HZ edge (consistent with the Phase 3
-T_eq ≈ 225 K). A habitable Pandora therefore *requires* a strong greenhouse + tidal
-heating raising the mean ~70 K — that warming term is **art-direction (fictional),
-not derived.**
+T_eq ≈ 225 K). A habitable Pandora therefore *requires* ~70 K of extra warming. **That
+warming is GREENHOUSE, not tidal** — see the tidal-heating analysis (2026-06-21) below,
+which shows tidal heating is a knife-edge that more likely sterilizes than gently warms.
+The dense CO₂ greenhouse (canon: ~1.2× Earth pressure, CO₂-rich) is the physically sound,
+canon-aligned warmer; the ~70 K lift is art-direction (the greenhouse strength is not
+derived, but the *mechanism* is correct).
 
 **Habitable scenario (target mean set as art-direction):** the seasonal (orbital)
 swing scales as ~10% of the mean. For a temperate-to-tropical mean of ~288–295 K:
@@ -285,6 +288,68 @@ IR, and a brief cooling dip each ~27 h orbit when Pandora crosses Polyphemus's s
 periapsis-warmer "great season"** over each 705-day (~2 Earth-year) orbit — comparable
 to a strong continental seasonal cycle, livable. This is a supporting reason the e = 0.1
 orbit is fine to keep (a noticeable but habitable season, not a climate breaker).
+
+## Pandora — tidal heating & the day-lock, reconsidered (2026-06-21)
+
+A deeper look (driven by the J2 moon work) overturns the loose "tidal heating helps
+warm Pandora" framing. **Tidal heating is not a free gentle warmer here — it is a
+knife-edge that, at fiducial dissipation, sterilizes Pandora into a tidal Venus.**
+
+**The forced eccentricity is intrinsic and unavoidable (sim-confirmed).** Pandora is set
+e = 0, but the N-body sim (TRACE, J2 on) pumps it to a sustained **e ≈ 0.0045–0.0051**.
+Source isolation: Pandora *alone* (siblings removed) still reaches e ≈ 0.0045 → the pump
+is α Cen A/B's secular forcing on the moon (the same mechanism that gives Earth's Moon a
+solar-forced e term), **not** Polyphemus's heliocentric eccentricity. Confirmed:
+e is identical (0.00514) at Polyphemus e_helio = 0.03 / 0.05 / 0.10 → **lowering
+Polyphemus's eccentricity does NOT help** (tested and rejected). Sibling moons add only
+~15 % (alone 0.00445 → full 5-moon 0.00514). So there is **no orbital knob** that reduces
+Pandora's forced e. (Forced e from the committed `results/_moons_j2/spread25`; the e_helio
+and source-isolation checks were diagnostic runs — reproduce via `run.py … --acen-e {0.03,0.05}`
+and reduced-moon hypotheticals — not committed.)
+
+**At that e, tidal heating depends entirely on Pandora's interior dissipation k₂/Q** (the
+only free parameter, since e, M_Polyphemus, R_Pandora, a are all fixed). Heating scales
+∝ (k₂/Q)·e²·M_p^2.5·R_m^5·a^−7.5. Calibrated off Io (k₂/Q = 0.016 ⇒ 100 TW):
+
+| body (real k₂/Q) | k₂/Q | → Pandora tidal flux | verdict |
+|---|---|---|---|
+| Moon | 0.0006 | 45 W/m² | habitable |
+| Earth, solid body tide only | 0.0011 | 76 W/m² | habitable |
+| **Mars** (Phobos decay) | **0.0019** | **134 W/m²** | habitable (just) |
+| — threshold — | **0.0022** | **155 W/m²** | runaway edge |
+| Venus | 0.0029 | 210 W/m² | tidal Venus |
+| Io (molten) | 0.016 | 1139 W/m² | tidal Venus |
+| **Earth, effective (ocean tides)** | 0.025 | 1780 W/m² | tidal Venus |
+
+(Runaway-greenhouse ceiling ≈ 295 W/m²; stellar absorbed ≈ 140 W/m² → tidal budget ≈ 155.
+Io's *own* surface tidal flux is only 2.4 W/m² — Pandora is bigger and deeper in the well.)
+
+**The threshold (k₂/Q < 0.0022) sits exactly at Mars.** So a habitable Pandora is *not*
+exotic — it just has to be a cold, rigid, **Mars/Moon-like** body (solid body tide), not
+molten (Io), not large-liquid-cored (Venus/Mercury), and not ocean-tide-dominated (Earth's
+*effective* k₂/Q is anomalously high because its basins are near-resonant with the lunar
+tide). The body (solid) tide alone clears the bar; a strongly dissipative ocean is the risk.
+
+**The sharp internal tension:** canon attributes Pandora's *volcanism + fast tectonics* to
+tidal heating — but vigorous tidal geology needs **high** dissipation (low Q, Io-side),
+which is exactly the regime that sterilizes the climate. **At e ≈ 0.005 you cannot have
+both vigorous tidal volcanism and a temperate climate.** Adopted resolution: take the
+**habitable** branch (high-Q, Mars/Moon-like, k₂/Q ≈ 0.0015 → tidal flux ≈ 100 W/m²),
+keep Pandora temperate, and **downgrade canon's "Io-grade tidal volcanism" to modest
+tectonics (documented divergence)**. Caveat: a runaway feedback (any partial melt → Q
+drops → more heat → more melt) means the assumption is "starts cold and stays high-Q."
+
+**The day = orbit lock is unavoidable — a is forced to 225,000 km.** Pandora's 27 h day
+comes from tidal locking (day = orbital period → a = 225,000 km via Kepler). Idea tested:
+put Pandora on a *wider* orbit (weaker e-tide) but give it a free 27 h *spin* instead of
+locking. **Rejected on physics:** a non-synchronous moon suffers the *spin* tide (the bulge
+sweeps the whole body, amplitude O(1) vs the e-tide's ~e), which is **~4000× larger** than
+the e-tide — e.g. at a = 360,000 km the e-tide is 32 W/m² but the spin tide is 1.2×10⁵ W/m²
+(instant melt) — and tides **despin it to synchronous in < 1 Myr**, so the free spin doesn't
+persist (the day reverts to the long orbital period). Escaping the spin tide needs a ≳ 2×10⁶
+km, where Polyphemus shrinks to a dot in the sky (losing the iconic Avatar visual). So day
+and orbit can't be decoupled — every close moon is synchronous for this reason. **a stays
+225,000 km; the only viable lever is the high-Q interior assumption.**
 
 ## Mapping to cfg (for the eventual Phase 4 emit)
 
