@@ -56,9 +56,9 @@ papers:
   fetch_error: null
 - arxiv_id: null
   ads_bibcode: 2004A&A...426..601D
-  title: Di Folco et al. 2004 — VLTI/VINCI + isochrone age ~10 Gyr (RECOMMENDED age; no arXiv, value via Korolik cache)
-  status: skipped
-  category: manual_followup
+  title: 'Di Folco et al. 2004 — VLTI/VINCI + isochrone age (RECOMMENDED age); no arXiv. Manually fetched + verified 2026-06-20: CESAM age 10 Gyr (Table 5), range 4.4-12 Gyr (Table 4) — confirms the adopted ~10 Gyr, no longer cache-only'
+  status: fetched
+  category: deep_read
   fetch_error: null
 - arxiv_id: '1306.2974'
   ads_bibcode: 2013ApJ...771...40B
@@ -95,7 +95,7 @@ papers:
   fetch_error: null
 - arxiv_id: null
   ads_bibcode: 2004MNRAS.351L..54G
-  title: Greaves et al. 2004 — SCUBA 850um first detection of the tau Cet disk (no arXiv)
-  status: skipped
-  category: manual_followup
+  title: 'Greaves et al. 2004 — SCUBA 850um first detection of the tau Cet disk; no arXiv. Manually fetched + verified 2026-06-20: dust mass 1.2 M_earth, T=60 K, outer radius 55 AU — all confirm the adopted disk values, no change'
+  status: fetched
+  category: deep_read
   fetch_error: null

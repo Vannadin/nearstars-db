@@ -12,7 +12,7 @@ be revised.
 
 | Bibcode | Year | Planet | Title | Why it matters |
 |---|---|---|---|---|
-| 2020ApJ...894...42M | 2020 | A, B | Detection of Polarization due to Cloud Bands in the Nearby Luhman 16 Brown Dwarf Binary | First direct detection of longitudinal cloud BANDS on Luhman 16 A (H-band VLT/NaCo polarimetry, p_A 0.031%). Could overturn the current "near-uniform / minimal weather" `cloud_morphology` decision for A. No usable arXiv (IOP only). |
+| 2020ApJ...894...42M | 2020 | A, B | Detection of Polarization due to Cloud Bands in the Nearby Luhman 16 Brown Dwarf Binary | ✅ INTEGRATED 2026-06-20 — A constant longitudinal cloud bands added to cloud_morphology. First direct detection of longitudinal cloud BANDS on Luhman 16 A (H-band VLT/NaCo polarimetry, p_A 0.031%). Could overturn the current "near-uniform / minimal weather" `cloud_morphology` decision for A. No usable arXiv (IOP only). |
 
 ## Tier B — useful context
 

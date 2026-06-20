@@ -1,8 +1,8 @@
 {
   "_comment": "manual-paper-followup.md 의 Why it matters 컬럼 한글 번역. build_manual_fetch.py 가 사이드카로 읽어서 ko 뷰에 표시.",
   "tier_a": {
-    "2004MNRAS.351L..54G": "디스크 질량(1.2 M⊕)·먼지 온도(60 K)·외곽 반경(55 AU) 행의 유일한 출처. MacGregor 2016 은 먼지 질량이나 외곽 경계를 측정하지 않는다. 본문에 SCUBA flux→mass 도출이 있다. arXiv 없음(MNRAS Letter).",
-    "2004A&A...426..601D": "채택된 ~10 Gyr 등시선 나이 앵커. 현재 Korolik 2023 캐시로만 보유한다. 본문에 10 vs 5.8 Gyr 의 documented divergence 를 뒷받침하는 나이 피팅이 있다. arXiv 없음."
+    "2004MNRAS.351L..54G": "✅ fetch + 확인 2026-06-20 — 디스크 1.2 M⊕ / 60 K / 55 AU 모두 검증, 변경 없음. 디스크 질량(1.2 M⊕)·먼지 온도(60 K)·외곽 반경(55 AU) 행의 유일한 출처. MacGregor 2016 은 먼지 질량이나 외곽 경계를 측정하지 않는다. 본문에 SCUBA flux→mass 도출이 있다. arXiv 없음(MNRAS Letter).",
+    "2004A&A...426..601D": "✅ fetch + 확인 2026-06-20 — CESAM 나이 10 Gyr (범위 4.4–12) 검증, 변경 없음. 채택된 ~10 Gyr 등시선 나이 앵커. 현재 Korolik 2023 캐시로만 보유한다. 본문에 10 vs 5.8 Gyr 의 documented divergence 를 뒷받침하는 나이 피팅이 있다. arXiv 없음."
   },
   "tier_b": {}
 }

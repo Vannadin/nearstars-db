@@ -1,7 +1,7 @@
 {
   "_comment": "manual-paper-followup.md 의 Why it matters 컬럼 한글 번역. build_manual_fetch.py 가 사이드카로 읽어서 ko 뷰에 표시.",
   "tier_a": {
-    "2020ApJ...894...42M": "Luhman 16 A 에서 종방향 구름 띠(cloud band)를 처음으로 직접 검출(H-band VLT/NaCo 편광, p_A 0.031%). A 의 현재 `cloud_morphology` 결정(거의 균일·약한 날씨)을 뒤집을 수 있다. 쓸 만한 arXiv 없음(IOP 전용)."
+    "2020ApJ...894...42M": "✅ 반영 완료 2026-06-20 — A 의 constant longitudinal cloud bands 를 cloud_morphology 에 추가. Luhman 16 A 에서 종방향 구름 띠(cloud band)를 처음으로 직접 검출(H-band VLT/NaCo 편광, p_A 0.031%). A 의 현재 `cloud_morphology` 결정(거의 균일·약한 날씨)을 뒤집을 수 있다. 쓸 만한 arXiv 없음(IOP 전용)."
   },
   "tier_b": {}
 }
