@@ -58,8 +58,8 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `equilibrium_temp_k` (A=0) | 478 | high | derived |
 | `equilibrium_temp_k` (A=0.1) | 466 | high | derived; modest dark-basalt albedo |
 | `bond_albedo` | 0.10 | medium | dark basaltic surface with partial dust covering; M-dwarf SED reduces effective albedo |
-| `dayside_surface_temp_k` | 530 | medium | thin atmosphere → limited day-night redistribution; dayside slightly above T_eq |
-| `nightside_surface_temp_k` | 250 | medium | weak atmosphere transport; thermal inertia of basaltic surface |
+| `dayside_surface_temp_k` | 530 | medium | thin atmosphere → limited day-night redistribution; dayside slightly above T_eq. Estimated from the day-night heat-recirculation (+ internal-heat) parameterization of Cowan & Agol 2011 (`1001.0012`) in the weak-recirculation limit |
+| `nightside_surface_temp_k` | 250 | medium | weak atmosphere transport; thermal inertia of basaltic surface. Estimated from the Cowan & Agol 2011 (`1001.0012`) heat-recirculation (+ internal-heat) parameterization |
 | `atmosphere_present` | true (thin secondary CO₂) | medium | Documented divergence: see Canonical alternatives. Outgassing from active interior (Driscoll & Barnes 2015 tidal-heating-driven volcanism scaling for young rocky planets) replenishes a thin secondary atmosphere despite AU Mic XUV bombardment |
 | `atmosphere_surface_pressure_pa` | 10000 | medium | Documented divergence: see Canonical alternatives. ~0.1 bar CO₂ from outgassing balance vs. escape; conservative variant is 0 (airless) |
 | `atmosphere_composition` | CO₂ ~85%, N₂ ~10%, SO₂ ~3%, H₂O trace; outgassing-replenished | medium | volcanic-outgassing composition under reducing-to-oxidizing transition; trace SO₂ from volcanic plumes |
@@ -74,7 +74,7 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `surface_morphology` | dark basaltic plains with iron-oxide reddening; localized cooling-lava patches at substellar; nightside cold-trap with surface ice + frost lag | medium | tidally-heated young rocky planet (Driscoll & Barnes 2015 framework); volcanic resurfacing on Myr timescales |
 | `surface_ice_caps` | nightside frost cap at hemispheric anti-substellar position; sublimation-driven volatile cycle | medium | tidally-locked terminator condensation; thin atmosphere allows volatile transport day to night |
 | `magnetic_field_present` | true (weak) | low | Earth-mass rocky planet with active interior; dynamo possible despite slow rotation |
-| `magnetic_field_strength_microtesla_equator` | 5 | low | weak dynamo from slow rotation (12.74 d locked) but active core; Reiners & Christensen 2010 scaling |
+| `magnetic_field_strength_microtesla_equator` | 5 | low | Earth-mass rocky planet → **rocky** dynamo scaling RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`, cached) + slow-rotation penalty (Garraffo 2017): a weak field despite an active young core. (Replaces a citation to Reiners & Christensen 2010, which is a giant/brown-dwarf dynamo paper inapplicable to a rocky planet.) |
 | `surface_radiation_dose_msv_yr` | 5000 | medium | thin atmospheric column (~100 g/cm²) + weak magnetic field → high surface dose under AU Mic super-flares; Atri 2019 framework |
 | `aurora_present` | true | medium | thin atmosphere + weak B-field + intense stellar wind → visible aurora; Mars-analog CO₂⁺ emission |
 | `aurora_color_primary_hex` | `#ff6b6b` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm; Mars-analog visible aurora |

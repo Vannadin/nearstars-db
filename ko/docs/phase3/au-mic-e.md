@@ -52,8 +52,8 @@ divergence 없음 (여기서의 모든 선택은 제약 없는 윈도우 안의 
 | `equilibrium_temp_k` (A=0) | 381 | low | 유도. 거리가 더 멀어 b/c/d 보다 상당히 차가움 |
 | `equilibrium_temp_k` (A=0.1) | 371 | low | 유도. 적당한 sub-Neptune 알베도 |
 | `bond_albedo` | 0.10 | low | sub-Neptune 유사 낮은 알베도. 측정 없음 |
-| `dayside_surface_temp_k` | 410 | low | 얇은 envelope 이 AU Mic c 의 주야 재분배 패턴을 상속. 주간 측면이 T_eq 보다 살짝 높음 |
-| `nightside_surface_temp_k` | 320 | low | 적당한 재분배. 야간 측면이 T_eq 보다 조금 낮음 |
+| `dayside_surface_temp_k` | 410 | low | 얇은 envelope 이 AU Mic c 의 주야 재분배 패턴을 상속. 주간 측면이 T_eq 보다 살짝 높음. Cowan & Agol 2011 (`1001.0012`) 의 주야 열재순환(+ 내부열) 매개변수화를 약(弱)재순환 극한에서 적용해 추정함 |
+| `nightside_surface_temp_k` | 320 | low | 적당한 재분배. 야간 측면이 T_eq 보다 조금 낮음. Cowan & Agol 2011 (`1001.0012`) 의 열재순환(+ 내부열) 매개변수화로 추정함 |
 | `atmosphere_present` | true (얇은 H/He envelope 가정) | low | 0.16 AU 의 21 M⊕ 질량은 M-왜성 XUV 하에서 작은 H/He envelope 이 22 Myr 동안 살아남을 수 있는 영역 (Owen & Wu 2017). 직접 검출 없음 |
 | `atmosphere_surface_pressure_pa` | 1.0e6 | low | 얇은 H/He envelope 의 구름 데크 압력. AU Mic c 와 동일 analog |
 | `atmosphere_composition` | H₂ ~80%, He ~15%, H₂O ~2%, CH₄ + NH₃ + CO 미량. 가능한 광화학 haze | low | AU Mic c sub-Neptune analog 에서 상속. 직접 측정 없음 |
@@ -63,9 +63,9 @@ divergence 없음 (여기서의 모든 선택은 제약 없는 윈도우 안의 
 | `cloud_morphology` | 적도 superrotation 을 동반한 띠상 zonal 구름 구조. 자전 주기가 더 느리고 온도가 더 낮아 c 의 띠보다 약함. 저위도에서 가능한 H₂O/NH₃ 얼음 구름 응결 | low | Showman 2009 을 더 차가운 sub-Neptune 으로 스케일. 따뜻한 sub-Neptune 에 대한 canonical 해석. 관측 없이는 구체 형태 불확실 |
 | `cloud_tint_rgb_hex` | `#a08868` | low | Tie-break. 온도가 낮아 고고도 구름 밝기가 줄어 c 의 `#b0987a` 보다 살짝 어두움. c 와 시각적 차별화를 위해 선택 |
 | `surface_morphology` | n/a — 구름 데크 반지름에서 보이는 단단한 표면 없음. 내부는 물 풍부 mantle + 암석/철 코어 (혹은 envelope 가 없다면 암석 천체) 가능성 | low | density placeholder. 반지름 가정을 조건 |
-| `magnetic_field_present` | true | low | H 풍부 envelope 의 sub-Neptune 은 적당한 dynamo 유지. Yadav & Thorngren 2017 스케일링 — 다만 느린 33-d 자전이 dynamo 를 약화 |
-| `magnetic_field_strength_microtesla_equator` | 30 | low | Tie-break. 1:1 lock 의 느린 자전 때문에 c (50 μT) 보다 약함. 측정 없음 |
-| `atmospheric_escape_rate_g_s` | 1e7 | low | AU Mic 에서 더 멀어 c 보다 작음. 0.16 AU 의 AU Mic XUV 에 대한 에너지 한정 추정 |
+| `magnetic_field_present` | true | low | sub-Neptune H 풍부 envelope 이 적당한 dynamo 를 유지 (얼음 거대 행성 analog). 다만 느린 33-d 자전이 그것을 약화시킨다 |
+| `magnetic_field_strength_microtesla_equator` | 30 | low | 자릿수 수준의 **얼음 거대 행성 analog** (Neptune/Uranus ~0.1–0.5 G. Connerney 1991). 1:1 lock 의 느린 자전 때문에 c (50 µT) 아래. Christensen 2009 / Reiners & Christensen 2010 에너지플럭스 스케일링의 검증 영역 (≥0.3 M_Jup) 아래에 있다 (He 분리, Stevenson 1980) → 추정이지 측정이 아니다. (논문 캐시에 없는 Yadav & Thorngren 2017 인용을 대체.) docs/reference/planetary-dynamo-scaling.md 참고 |
+| `atmospheric_escape_rate_g_s` | 1e7 | low | Lecavelier des Etangs 2007 (`astro-ph/0609744`) 을 따른 에너지 한정 탈출. b 의 Allart-2023 기반 ~1e10 g/s 값에서 e 의 중력 우물과 0.16 AU 에서의 낮은 일사를 반영해 축소 |
 | `aurora_present` | true | low | H 풍부 상층 대기 + AU Mic 항성풍 → H Balmer-α 예상. 다만 거리가 더 멀고 대기 질량이 작아 b/c 보다 약함 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm 지배. b/c 와 같은 색 계열이지만 더 옅음 |
 | `star_apparent_angular_diameter_deg` | 2.9 | low | 유도. 2 × 0.862 R☉ / 0.161 AU × (180/π) ≈ 2.9° |

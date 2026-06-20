@@ -11,6 +11,20 @@ note: 'Phase 2 anchor bibliography for AU Mic (HD 197481, M1 Ve, ~22 Myr Beta Pi
   saturation, log Lx/Lbol ~ -3); strong field <B> 2.61 kG (Donati 2023). NEXXUS (Schmitt & Liefke 2004) does NOT contain AU
   Mic (G/K sample) -- not used.'
 papers:
+- arxiv_id: '1007.1514'
+  ads_bibcode: 2010A&A...522A..13R
+  title: Reiners & Christensen 2010 — energy-flux dynamo scaling; magnetic-field evolution tracks for brown dwarfs + giant
+    planets (METHOD paper for planetary B-field grounding)
+  status: fetched
+  category: deep_read
+  fetch_error: null
+- arxiv_id: astro-ph/0609744
+  ads_bibcode: 2007A&A...461.1185L
+  title: Lecavelier des Etangs 2007 — a diagram for the evaporation status of extrasolar planets (METHOD paper for energy-limited
+    atmospheric escape)
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '2006.13248'
   ads_bibcode: 2020Natur.582..497P
   title: Plavchan et al. 2020 — TESS planet b discovery; M 0.50, R 0.75, Teff 3700, Prot 4.863 (RECOMMENDED mass+rotation)

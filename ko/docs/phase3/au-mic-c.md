@@ -42,8 +42,8 @@ sub-Neptune 과 물 풍부 암석 행성 사이의 질량-반지름 "골짜기" 
 | `equilibrium_temp_k` (A=0) | 454 | high | 유도. TEPCat 의 albedo 0 아닌 값 보고 428 K 와 일관 |
 | `equilibrium_temp_k` (A=0.1) | 442 | high | 유도. 적당한 sub-Neptune albedo |
 | `bond_albedo` | 0.10 | medium | sub-Neptune 유사 낮은 albedo. 구름 데크 반사율 |
-| `dayside_surface_temp_k` | 500 | medium | b 보다 얇은 envelope → 주야 재분배가 적음. 주간이 T_eq 보다 살짝 높음 |
-| `nightside_surface_temp_k` | 380 | medium | 얇은 H/He envelope 의 적당한 재분배 |
+| `dayside_surface_temp_k` | 500 | medium | b 보다 얇은 envelope → 주야 재분배가 적음. 주간이 T_eq 보다 살짝 높음. Cowan & Agol 2011 (`1001.0012`) 의 주야 열재순환(+ 내부열) 매개변수화를 약(弱)재순환 극한에서 적용해 추정함 |
+| `nightside_surface_temp_k` | 380 | medium | 얇은 H/He envelope 의 적당한 재분배. Cowan & Agol 2011 (`1001.0012`) 의 열재순환(+ 내부열) 매개변수화로 추정함 |
 | `atmosphere_present` | true (얇은 H/He envelope) | medium | 밀도가 envelope 질량 ~5% 와 일관. Lopez & Fortney 2014 스케일링. 아직 직접 대기 검출 없음 |
 | `atmosphere_surface_pressure_pa` | 1.0e6 | medium | 얇은 envelope 의 구름 데크 압력. sub-Neptune analog. Owen & Wu 2017 광증발 골짜기 프레임워크 |
 | `atmosphere_composition` | H₂ ~80%, He ~15%, H₂O ~2%, CH₄ + NH₃ + CO 미량. 가능한 광화학 haze | medium | sub-Neptune analog. water-world variant 라면 H₂O 가 더 높을 수 있음 (5–10%) |
@@ -53,9 +53,9 @@ sub-Neptune 과 물 풍부 암석 행성 사이의 질량-반지름 "골짜기" 
 | `cloud_morphology` | 적도 superrotation 의 띠상 zonal 구름 구조. b 보다 덜 두드러짐. terminator 에서의 H₂O/NH₃ 얼음 구름 응결 가능 | medium | Showman 2009 을 sub-Neptune 온도 + 자전으로 스케일. 따뜻한 sub-Neptune 에 대한 canonical |
 | `cloud_tint_rgb_hex` | `#b0987a` | low | Tie-break. M1V 의 붉은빛 하 muted 크림. b 의 더 밝은 구름과 시각적 차별화를 위해 선택 |
 | `surface_morphology` | n/a — 구름 데크 반지름에서 보이는 단단한 표면 없음. 더 깊은 내부는 물 풍부 mantle + 암석/철 코어일 가능성 | medium | 밀도와 질량-반지름 위치가 c 를 sub-Neptune envelope 영역 안쪽에 놓음 |
-| `magnetic_field_present` | true | medium | H 풍부 envelope 의 sub-Neptune 이 적당한 dynamo 유지. Yadav & Thorngren 2017 스케일링 |
-| `magnetic_field_strength_microtesla_equator` | 50 | low | Tie-break. dynamo 스케일링 자릿수. envelope 질량이 작아 b 보다 낮음. 측정 없음 |
-| `atmospheric_escape_rate_g_s` | 1e8 | medium | 중력 우물이 깊고 일사가 낮아 b 보다 작음. AU Mic XUV + c 의 파라미터에서 에너지 한정 추정 |
+| `magnetic_field_present` | true | medium | sub-Neptune H 풍부 envelope 이 적당한 dynamo 를 유지 (얼음 거대 행성 analog) |
+| `magnetic_field_strength_microtesla_equator` | 50 | low | 자릿수 수준의 **얼음 거대 행성 analog** (Neptune/Uranus ~0.1–0.5 G. Connerney 1991). envelope 가 작아 b 아래로 스케일. Christensen 2009 / Reiners & Christensen 2010 에너지플럭스 스케일링의 검증 영역 (≥0.3 M_Jup) 아래에 있다 (He 분리, Stevenson 1980) → 추정이지 측정이 아니다. (논문 캐시에 없는 Yadav & Thorngren 2017 인용을 대체.) docs/reference/planetary-dynamo-scaling.md 참고 |
+| `atmospheric_escape_rate_g_s` | 1e8 | medium | Lecavelier des Etangs 2007 (`astro-ph/0609744`) 을 따른 에너지 한정 탈출. b 의 Allart-2023 기반 ~1e10 g/s 값에서 c 의 더 깊은 중력 우물과 낮은 일사를 반영해 축소 |
 | `aurora_present` | true | low | H 풍부 상층 대기 + AU Mic 항성풍 → H Balmer-α 예상. 다만 대기 질량이 작아 b 보다 약함 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm 지배. b 와 같은 색 계열이지만 더 옅음 |
 | `star_apparent_angular_diameter_deg` | 3.9 | high | 유도. 2 × 0.862 R☉ / 0.119 AU × (180/π) ≈ 3.9° |

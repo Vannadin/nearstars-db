@@ -46,8 +46,8 @@ tint hex). No documented divergences.
 | `equilibrium_temp_k` (A=0) | 454 | high | derived; consistent with TEPCat 428 K reported with non-zero albedo |
 | `equilibrium_temp_k` (A=0.1) | 442 | high | derived; modest sub-Neptune albedo |
 | `bond_albedo` | 0.10 | medium | sub-Neptune analog low albedo; cloud-deck reflectance |
-| `dayside_surface_temp_k` | 500 | medium | thinner envelope than b → less day-night redistribution; dayside slightly above T_eq |
-| `nightside_surface_temp_k` | 380 | medium | modest redistribution with thin H/He envelope |
+| `dayside_surface_temp_k` | 500 | medium | thinner envelope than b → less day-night redistribution; dayside slightly above T_eq. Estimated from the day-night heat-recirculation (+ internal-heat) parameterization of Cowan & Agol 2011 (`1001.0012`) in the weak-recirculation limit |
+| `nightside_surface_temp_k` | 380 | medium | modest redistribution with thin H/He envelope. Estimated from the Cowan & Agol 2011 (`1001.0012`) heat-recirculation (+ internal-heat) parameterization |
 | `atmosphere_present` | true (thin H/He envelope) | medium | density consistent with envelope mass ~5%; Lopez & Fortney 2014 scaling; no direct atmospheric detection yet |
 | `atmosphere_surface_pressure_pa` | 1.0e6 | medium | cloud-deck pressure for thin envelope; sub-Neptune analog; Owen & Wu 2017 photoevaporation valley framework |
 | `atmosphere_composition` | H₂ ~80%, He ~15%, H₂O ~2%, CH₄ + NH₃ + CO trace; potential photochemical haze | medium | sub-Neptune analog; if water-world variant, H₂O could be higher (5–10%) |
@@ -57,9 +57,9 @@ tint hex). No documented divergences.
 | `cloud_morphology` | banded zonal cloud structure with equatorial superrotation, less pronounced than b; potential H₂O/NH₃ ice cloud condensation at terminator | medium | Showman 2009 scaled to sub-Neptune temperature + rotation; canonical for warm sub-Neptunes |
 | `cloud_tint_rgb_hex` | `#b0987a` | low | Tie-break: muted cream under M1V red light; chosen for visual differentiation from b's brighter clouds |
 | `surface_morphology` | n/a — no solid surface visible at cloud-deck radius; deeper interior likely water-rich mantle + rocky/iron core | medium | density and mass-radius position place c just inside the sub-Neptune envelope regime |
-| `magnetic_field_present` | true | medium | sub-Neptune with H-rich envelope sustains modest dynamo; Yadav & Thorngren 2017 scaling |
-| `magnetic_field_strength_microtesla_equator` | 50 | low | Tie-break: dynamo scaling order-of-magnitude; lower than b because of smaller envelope mass; not measured |
-| `atmospheric_escape_rate_g_s` | 1e8 | medium | lower than b because of greater gravity well + lower insolation; energy-limited estimate from AU Mic XUV + c's parameters |
+| `magnetic_field_present` | true | medium | Sub-Neptune H-rich envelope sustains a modest dynamo (ice-giant analog) |
+| `magnetic_field_strength_microtesla_equator` | 50 | low | Order-of-magnitude **ice-giant analog** (Neptune/Uranus ~0.1–0.5 G; Connerney 1991), scaled below b for the smaller envelope. BELOW the ≥0.3 M_Jup validated domain of the Christensen 2009 / Reiners & Christensen 2010 energy-flux scaling (He separation, Stevenson 1980) → estimate, not measured. (Replaces a citation to Yadav & Thorngren 2017, not in the paper cache.) See docs/reference/planetary-dynamo-scaling.md |
+| `atmospheric_escape_rate_g_s` | 1e8 | medium | Energy-limited escape after Lecavelier des Etangs 2007 (`astro-ph/0609744`), scaled down from b's Allart-2023-anchored ~1e10 g/s by c's deeper gravity well and lower insolation |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b due to smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b but fainter |
 | `star_apparent_angular_diameter_deg` | 3.9 | high | derived: 2 × 0.862 R☉ / 0.119 AU × (180/π) ≈ 3.9° |

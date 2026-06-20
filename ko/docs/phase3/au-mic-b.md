@@ -47,8 +47,8 @@ canonical-aligned. 세 개는 tie-break (대기 색 hex, 구름 색 hex, 띠
 | `equilibrium_temp_k` (A=0) | 593 | high | 유도. TEPCat 의 albedo 0 아닌 값 보고 556 K 와 일관 |
 | `equilibrium_temp_k` (A=0.1) | 577 | high | 유도. 적당한 가스 자이언트 albedo |
 | `bond_albedo` | 0.10 | medium | Neptune-analog 가스 자이언트의 낮은 albedo. Cale 2021 §4 논의 |
-| `dayside_surface_temp_k` | 700 | medium | super-rotation + ~20% 온실 → 두꺼운 H/He envelope 의 주간이 T_eq 보다 뜨거움. Plavchan 2020 §6 |
-| `nightside_surface_temp_k` | 450 | medium | 두꺼운 대기에서 상당한 주야 재분배 예상. 아직 Spitzer phase curve 없음 |
+| `dayside_surface_temp_k` | 700 | medium | super-rotation + 온실 → 두꺼운 H/He envelope 의 주간이 T_eq 보다 뜨거움. 주야 오프셋은 Cowan & Agol 2011 (`1001.0012`) 의 열재순환(+ 내부열) 매개변수화를 강(强)재순환 극한에서 적용해 추정함 (이전의 Plavchan 2020 §6 인용을 대체함. 그 논문은 XUV/탈출을 다루지 온실 재분배를 다루지 않음) |
+| `nightside_surface_temp_k` | 450 | medium | 두꺼운 대기에서 상당한 주야 재분배 예상. 아직 Spitzer phase curve 없음. Cowan & Agol 2011 (`1001.0012`) 의 열재순환(+ 내부열) 매개변수화로 추정함 |
 | `atmosphere_present` | true | high | Allart 2023 He I 10830 검출. bulk 밀도가 질량 ≥ 30% H/He 를 요구 |
 | `atmosphere_surface_pressure_pa` | 1.0e7 | medium | hot-Neptune envelope 질량 ~30% → τ = 1 구름 데크에서 ~10⁷ Pa. Lopez & Fortney 2014 질량-반지름 envelope 질량 분율 보정 |
 | `atmosphere_composition` | H₂ ~85%, He ~15%, 태양 풍부도의 미량 H₂O / CH₄ / NH₃ / CO. 상층의 광화학 haze | medium | Allart 2023 He 검출. 높은 질량 손실 탈출. Lavie 2017 차가운 Neptune 광화학 analog |
@@ -58,8 +58,8 @@ canonical-aligned. 세 개는 tie-break (대기 색 hex, 구름 색 hex, 띠
 | `cloud_morphology` | 밝은 zone 과 어두운 belt 의 Jupiter-band-analog 띠상 구름 구조. 적도 superrotation jet. M-왜성 일사 하의 옅은 극 hood | low | Tie-break. interesting-first. puffy Neptune 의 GCM 급 시뮬레이션 (Showman 2009, Lewis 2010 hot-Jupiter analog 를 Neptune 온도에 적응) 이 띠 구조를 선호. cfg 는 시각적 흥미를 위해 균일 haze 가 아닌 띠 해석 선택 |
 | `cloud_tint_rgb_hex` | `#c0a880` | low | Tie-break. M1V 의 붉은 조명 하 H₂O/NH₃ 구름 입자의 따뜻한 크림. terminator 대비를 위해 균일 크림 대신 선택 |
 | `surface_morphology` | n/a — 단단한 표면 없음. 끝까지 가스 자이언트 envelope | high | 밀도와 질량-반지름 위치가 암석 표면을 배제 |
-| `magnetic_field_present` | true | low | H 풍부 envelope 의 hot Neptune 은 dynamo 유지. sub-Saturn 에 대한 Yadav & Thorngren 2017 스케일링 |
-| `magnetic_field_strength_microtesla_equator` | 100 | low | Tie-break. inflated Neptune 에 대한 Yadav 2017 dynamo 스케일링의 자릿수 추정. 측정 없음 |
+| `magnetic_field_present` | true | low | Neptune-질량 H 풍부 envelope 이 dynamo 를 유지 (Neptune/Uranus 도 그렇다) |
+| `magnetic_field_strength_microtesla_equator` | 100 | low | 근거 있는 도출이 아니라 자릿수 수준의 **얼음 거대 행성 analog**. Neptune/Uranus 는 약하고 비-dipolar 가 강한 ~0.1–0.5 G (10–50 µT. Connerney 1991, Ness 1986) 의 자기장을 가진다. AU Mic 의 젊음 (22 Myr) 이 내부를 inflate 시키고 내부 flux 를 높이므로 cfg 는 ~100 µT 를 채택한다. 다만 이 0.028 M_Jup sub-Neptune 은 Christensen 2009 / Reiners & Christensen 2010 에너지플럭스 다이나모 스케일링의 검증 영역 (≥0.3 M_Jup) 아래에 있다. sub-Saturn 내부의 He 분리가 표면 자기장을 정량화 불가능하게 만들기 때문에 (Stevenson 1980), 이것은 추정이지 측정이 아니다. (논문 캐시에 없는 Yadav & Thorngren 2017 인용을 대체.) docs/reference/planetary-dynamo-scaling.md 참고 |
 | `atmospheric_escape_rate_g_s` | 1e10 | medium | Allart 2023 He I 흡수가 AU Mic XUV 하 에너지 한정 탈출에서 질량 손실 ~10⁹–10¹⁰ g/s 를 함의. Plavchan 2020 §6 이 비슷한 값을 추정. Cale 2021 §5 |
 | `aurora_present` | true | low | 강한 항성풍 + H 풍부 상층 대기 → H Balmer-α + H₂ Lyman + Werner 밴드 예상 |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break. H-α 656.3 nm + Lyman-α downconvert 가 분홍-빨강 지배색을 줌. interesting-first 가 옅은 UV-only 렌더링 대신 밝은 분홍을 선택 |

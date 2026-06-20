@@ -57,8 +57,8 @@ inheritance from AU Mic c's better-constrained parameters).
 | `equilibrium_temp_k` (A=0) | 381 | low | derived; substantially cooler than b/c/d because of greater distance |
 | `equilibrium_temp_k` (A=0.1) | 371 | low | derived; modest sub-Neptune albedo |
 | `bond_albedo` | 0.10 | low | sub-Neptune analog low albedo; no measurement |
-| `dayside_surface_temp_k` | 410 | low | thin envelope inheriting AU Mic c's day-night redistribution pattern; dayside slightly above T_eq |
-| `nightside_surface_temp_k` | 320 | low | modest redistribution; nightside marginally below T_eq |
+| `dayside_surface_temp_k` | 410 | low | thin envelope inheriting AU Mic c's day-night redistribution pattern; dayside slightly above T_eq. Estimated from the day-night heat-recirculation (+ internal-heat) parameterization of Cowan & Agol 2011 (`1001.0012`) in the weak-recirculation limit |
+| `nightside_surface_temp_k` | 320 | low | modest redistribution; nightside marginally below T_eq. Estimated from the Cowan & Agol 2011 (`1001.0012`) heat-recirculation (+ internal-heat) parameterization |
 | `atmosphere_present` | true (assumed thin H/He envelope) | low | mass 21 M⊕ at 0.16 AU under M-dwarf XUV is in the regime where a small H/He envelope can survive over 22 Myr (Owen & Wu 2017); no direct detection |
 | `atmosphere_surface_pressure_pa` | 1.0e6 | low | cloud-deck pressure for a thin H/He envelope; same analog as AU Mic c |
 | `atmosphere_composition` | H₂ ~80%, He ~15%, H₂O ~2%, CH₄ + NH₃ + CO trace; potential photochemical haze | low | inherited from AU Mic c sub-Neptune analog; no direct measurement |
@@ -68,9 +68,9 @@ inheritance from AU Mic c's better-constrained parameters).
 | `cloud_morphology` | banded zonal cloud structure with equatorial superrotation; weaker than c's banding because of cooler temperature and slower rotation; potential H₂O/NH₃ ice cloud condensation at low latitudes | low | Showman 2009 scaled to cooler sub-Neptune; canonical reading for warm sub-Neptunes; specific morphology uncertain without observations |
 | `cloud_tint_rgb_hex` | `#a08868` | low | Tie-break: slightly darker than c's `#b0987a` because of cooler temperature reducing high-cloud brightness; chosen for visual differentiation from c |
 | `surface_morphology` | n/a — no solid surface visible at cloud-deck radius; interior likely water-rich mantle + rocky/iron core (or rocky world if envelope is absent) | low | density placeholder; conditional on the radius assumption |
-| `magnetic_field_present` | true | low | sub-Neptune with H-rich envelope sustains modest dynamo; Yadav & Thorngren 2017 scaling — but the slow 33-d rotation would weaken the dynamo |
-| `magnetic_field_strength_microtesla_equator` | 30 | low | Tie-break: weaker than c (50 μT) because of slower rotation in 1:1 lock; not measured |
-| `atmospheric_escape_rate_g_s` | 1e7 | low | lower than c because of greater distance from AU Mic; energy-limited estimate with AU Mic XUV at 0.16 AU |
+| `magnetic_field_present` | true | low | Sub-Neptune H-rich envelope sustains a modest dynamo (ice-giant analog); the slow 33-d rotation would weaken it |
+| `magnetic_field_strength_microtesla_equator` | 30 | low | Order-of-magnitude **ice-giant analog** (Neptune/Uranus ~0.1–0.5 G; Connerney 1991), below c (50 µT) for the slower rotation in 1:1 lock. BELOW the ≥0.3 M_Jup validated domain of the Christensen 2009 / Reiners & Christensen 2010 energy-flux scaling (He separation, Stevenson 1980) → estimate, not measured. (Replaces a citation to Yadav & Thorngren 2017, not in the paper cache.) See docs/reference/planetary-dynamo-scaling.md |
+| `atmospheric_escape_rate_g_s` | 1e7 | low | Energy-limited escape after Lecavelier des Etangs 2007 (`astro-ph/0609744`), scaled down from b's Allart-2023-anchored ~1e10 g/s by e's gravity well and lower insolation at 0.16 AU |
 | `aurora_present` | true | low | H-rich upper atmosphere + AU Mic stellar wind → H Balmer-α expected, but weaker than b/c because of greater distance and smaller atmospheric mass |
 | `aurora_color_primary_hex` | `#ff6e8c` | low | Tie-break: H-α 656.3 nm dominant; same color family as b/c but fainter |
 | `star_apparent_angular_diameter_deg` | 2.9 | low | derived: 2 × 0.862 R☉ / 0.161 AU × (180/π) ≈ 2.9° |
