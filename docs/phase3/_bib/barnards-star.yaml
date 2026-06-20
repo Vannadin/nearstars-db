@@ -10,6 +10,12 @@ note: 'Phase 2 anchor bibliography for Barnard''s star (GJ 699, M4.0 Ve) — Tie
   8.5±1.5 Gyr. MISATTRIBUTION FIXED: prior DB radius cited Rains 2021 (southern TESS sample, wrong star);
   replaced with Schweitzer 2019 interferometric anchor.'
 papers:
+- arxiv_id: '2508.04569'
+  ads_bibcode: 2025arXiv250804569C
+  title: 'Cristofari et al. 2025 — SPIRou small-scale field <B>=0.51±0.08 kG + Prot 141±12 d (independent near-IR confirmation of Reiners 2022 430 G; SUPPORTING, no value change)'
+  status: fetched
+  category: deep_read
+  fetch_error: null
 - arxiv_id: '2410.00569'
   ads_bibcode: 2024A&A...690A..79G
   title: González Hernández et al. 2024 — ESPRESSO master spectrum, Teff 3195±28 K, SteParSyn (RECOMMENDED Teff)
