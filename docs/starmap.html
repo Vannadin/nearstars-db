@@ -720,7 +720,7 @@ const glowSprites=[];
       const mr=Math.max((mo.radius_km||300)/6371*R_EARTH_AU, R_EARTH_AU*0.45);
       const mm=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:col}));
       mm.scale.setScalar(mr); cg.add(mm);   // not in `bodies` → no xhair-label clutter at the planet
-      MOON_SYS.push({mesh:mm, line, center:ctr.clone(), a, e, i:iD, Om, om,
+      MOON_SYS.push({mesh:mm, line, center:ctr.clone(), a, e, i:iD, Om, om, rgb:mo.rgb||'#cfd2de', name:mo.name,
         M0:(mo.M_deg||0)*DEG, omega:MOON_RATE*Math.pow(Math.max(a,1e-5),-1.5),
         stab:mo.stability||null});   // secular a/e track for the stability mode
     });
@@ -1384,12 +1384,12 @@ function updateStability(){
    the radius panel — the runaway band is the instability signal. Renders to any
    canvas/size so the inline mini-chart and the expand-modal share one painter. */
 let stabT=0;                                  // last animation epoch (for repaint on toggle/expand)
-function paintStab(cv,W,H,curT){
-  let recs=stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
+function paintStab(cv,W,H,curT,recsIn){
+  let recs=recsIn||stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
   const allRecs=recs;   // full set for the clickable legend (before focus isolation)
   // a focused planet (clicked in the legend) isolates its curves here too, and the
   // y-axes auto-rescale to its own range → an effective per-planet y-zoom.
-  if(stabOrbitFocus){ const f=recs.filter(o=>o.name===stabOrbitFocus); if(f.length) recs=f; }
+  if(!recsIn && stabOrbitFocus){ const f=recs.filter(o=>o.name===stabOrbitFocus); if(f.length) recs=f; }
   if(!recs.length||W<40||H<40) return;
   const big=H>320, fs=big?13:9, lw=big?2.4:1.7, lwq=big?1.6:1.1;
   const dpr=Math.min(2,window.devicePixelRatio||1);
@@ -1869,9 +1869,28 @@ moonCtl.innerHTML='<button id="mPlay" style="width:30px;height:30px;border-radiu
  +'<span id="mLbl" style="color:#8893a6">moon system</span>'
  +'<span id="mSpd" style="display:flex;gap:4px"></span>'
  +'<button id="mStab" title="1000-yr stability run" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer">안정성</button>'
+ +'<button id="mChartBtn" title="charts" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer;display:none">📈</button>'
  +'<span id="mYr" style="color:#8893a6;font-variant-numeric:tabular-nums;min-width:62px;text-align:right"></span>';
 document.body.appendChild(moonCtl);
-const _mPlayBtn=moonCtl.querySelector('#mPlay'), _mStab=moonCtl.querySelector('#mStab'), _mYr=moonCtl.querySelector('#mYr');
+// stability charts (reuses paintStab): q–Q / inclination / eccentricity over the 1000-yr run
+const moonChart=document.createElement('canvas');
+moonChart.style.cssText='position:fixed;left:50%;bottom:62px;transform:translateX(-50%);z-index:50;width:min(440px,92vw);display:none;background:#0d1018f2;border:1px solid #1c2433;border-radius:10px;backdrop-filter:blur(6px)';
+document.body.appendChild(moonChart);
+let moonChartOn=false, moonYr=null;
+const _mPlayBtn=moonCtl.querySelector('#mPlay'), _mStab=moonCtl.querySelector('#mStab'),
+      _mYr=moonCtl.querySelector('#mYr'), _mChartBtn=moonCtl.querySelector('#mChartBtn');
+_mChartBtn.onclick=()=>{ moonChartOn=!moonChartOn; _mChartBtn.classList.toggle('on',moonChartOn);
+  _mChartBtn.style.borderColor=moonChartOn?'#7aa2ff':'#1c2433'; if(!moonChartOn) moonChart.style.display='none'; };
+function drawMoonChart(){
+  if(!(moonStab&&moonChartOn)){ moonChart.style.display='none'; return; }
+  const recs=MOON_SYS.filter(m=>m.stab&&m._near).map(m=>{ const d=m.stab.data,t0=m.stab.t0,t1=m.stab.t_end,n=d.length;
+    return {rgb:m.rgb,name:m.name,d:d.map((s,j)=>[t0+(t1-t0)*j/Math.max(n-1,1),s[0],s[1],s[2],s[3],s[4],s[5]])}; });
+  if(!recs.length){ moonChart.style.display='none'; return; }
+  moonChart.style.display='block';
+  const W=moonChart.clientWidth||300, H=210;
+  if(moonChart.style.height!==H+'px') moonChart.style.height=H+'px';
+  paintStab(moonChart,W,H,moonYr,recs);
+}
 _mPlayBtn.onclick=()=>{moonPlay=!moonPlay;_mPlayBtn.textContent=moonPlay?'❚❚':'▶';};
 _mStab.onclick=()=>{ moonStab=!moonStab; moonT=0;
   _mStab.style.color=moonStab?'#e8edf6':'#8893a6'; _mStab.style.borderColor=moonStab?'#7aa2ff':'#1c2433';
@@ -1895,11 +1914,15 @@ function updateMoons(){
     }
     const nu=meanToTrue(m.M0+m.omega*moonT, e);
     m.mesh.position.copy(m.center).add(orbitPoint(a,e,m.i,m.Om,m.om,nu));
-    if(!near){ m.mesh.getWorldPosition(wp); if(wp.distanceTo(camera.position)<0.25) near=true; }
+    m.mesh.getWorldPosition(wp); m._near=wp.distanceTo(camera.position)<0.3; if(m._near) near=true;
   }
+  moonYr=yr;
   const show=MOON_SYS.length && near;
   moonCtl.style.display=show?'flex':'none';
-  if(show){ _mLblSet(); _mYr.textContent=(moonStab&&yr!=null)?(Math.round(yr).toLocaleString()+(lang==='ko'?' 년':' yr')):''; }
+  if(show){ _mLblSet();
+    _mChartBtn.style.display=moonStab?'inline-block':'none';
+    _mYr.textContent=(moonStab&&yr!=null)?(Math.round(yr).toLocaleString()+(lang==='ko'?' 년':' yr')):''; }
+  drawMoonChart();
 }
 function _mLblSet(){ moonCtl.querySelector('#mLbl').textContent=(lang==='ko'?(moonStab?'위성 안정성':'위성계'):(moonStab?'moon stability':'moon system')); }
 
