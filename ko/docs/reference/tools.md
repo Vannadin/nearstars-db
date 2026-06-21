@@ -104,6 +104,7 @@
 **파일.**
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO 메인 엔트리
+- `phase3/stability-sim/scripts/ring_clearing.py` — 위성 주변 고리 청소·간극 측정용 테스트 입자 시뮬. 공급 위성의 반장축을 둘러싸는 무질량 입자 원반을 깔고 적분한 뒤 어느 반경이 살아남는지 보고합니다(위성이 간극을 여는지, 묻힌 채 도는지). 폴리페무스의 Chaos 공급 E고리가 연속임을 확인하는 데 썼습니다(Chaos 질량비 μ≈7.5e-7 로 간극을 못 비움 — `results/_ring_clearing.log`).
 - `phase3/stability-sim/hypotheticals/<system>.json` — 추가 바디 스펙
 
 **스택.** `.venv/` 의 REBOUND 5.0, AU / yr / Msun 단위, 기본 horizon 10⁴ 년.
@@ -213,6 +214,8 @@
 **서빙.** `cd docs && python3 -m http.server` 후 `http://localhost:8000/starmap.html` 열기 (CDN 모듈은 `file://` 가 아니라 http 필요).
 
 **참고.** 색은 지각적 흑체 근사(보정된 SED 아님), 마커 크기는 광도 proxy(물리 반경 아닌 빌보드). 표 형태 DB 브라우저인 `docs/index.html`(2번 툴)과 별개로, 이쪽은 공간 배치를 본다.
+
+**관련 — 폴리페무스 위성계 뷰어.** `phase4/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 Chaos 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다.
 
 ## 스킬 디렉터리 배치
 

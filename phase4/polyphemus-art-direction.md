@@ -83,9 +83,9 @@ session, alongside the M0≈180° 3:2-lock confirmation).
 
 **RESOLVED (2026-06-21).** Final inner inclinations ~10° (Dante 9° / Hades 11° / Pandora
 10°, nodes auto-aligned to Polyphemus's orbital plane = a coherent warp), outer moons
-near-coplanar retrograde within ±3° of 180° (Cassandra 178° / Chaos 177°); stability
-re-checked over 1000 yr with J2 (`results/_final32b`, STABLE). See the FINAL moon roster
-section below.
+near-coplanar retrograde within ±4° of 180° (Cassandra 176° / Chaos 179°); stability
+re-checked over 1000 yr with J2 (`results/_final32b`, `results/_finalv2`, STABLE). See the
+FINAL moon roster section below.
 
 *(Proposed direction; the binding calls — how deep the blue goes, the storm's
 placement/size — are left in "Open creative questions" below for the user to set.)*
@@ -142,6 +142,9 @@ Pandorapedia, and the James Cameron's Avatar Wiki. Tier: [CANON] = film/official
 - **Polyphemus:** Saturn-class gas giant, **helium-rich** (~72% H / 24% He), a giant
   **eye-shaped vortex storm** bigger than Jupiter's Great Red Spot, **no rings** [CANON],
   **14 moons** (Pandora is the 5th). Mass "more massive than Saturn" (no number).
+  (NearStars adds a deliberate *faint* Chaos-fed E-ring as an art-direction divergence,
+  motivated by Beichman 2025 §5.3 — a barely-visible wisp that honors the canon "no rings"
+  while remaining physically motivated; see the Ring section below.)
 - **Pandora day = 27 h** [CANON/WIKI] (we adopt 32 h — see final roster).
 - **Gravity 0.8 g**, **mass 0.72 M⊕**, **diameter 11,447 km** (~0.90 R⊕) [CANON/WIKI].
   (0.72 M⊕ at that radius → ~0.89 g, a minor canon self-inconsistency vs the stated 0.8 g.)
@@ -267,8 +270,8 @@ This supersedes the earlier s = 25° spread; the gated record lives in
 | **Dante** | 110,000 | 1.54 R_p | 0.01 | 9° | no | 8.0×10²¹ | 900 | innermost volcanic moonlet (rigid-Roche-safe) |
 | **Hades** | 148,000 | 2.07 R_p | 0.05 | 11° | no | 5.0×10²¹ | 750 | tidal-heated > 900 K, faint red ember |
 | **Pandora** | 252,393 | — | 0.0 | 10° | no | 4.30×10²⁴ | 5724 | Na'vi homeworld, 32 h tidal-locked day |
-| **Cassandra** | 600,000 | — | 0.05 | 178° | **yes** | 9.0×10²³ | 3400 | 2nd-largest moon, N–H atmosphere |
-| **Chaos** | 1,500,000 | — | 0.10 | 177° | **yes** | 5.4×10²⁰ | 400 | fractured Miranda-like body |
+| **Cassandra** | 600,000 | — | 0.05 | 176° | **yes** | 9.0×10²³ | 3400 | 2nd-largest moon, N–H atmosphere; inner ring shepherd (viewer 184° normalized) |
+| **Chaos** | 1,500,000 | — | 0.10 | 179° | **yes** | 5.4×10²⁰ | 400 | fractured Miranda-like body; E-ring feeder, embedded in the ring (viewer 181° normalized) |
 
 - **32 h day, not the canon 27 h.** 27 h was marginal for surface oceans; the wider 32 h
   orbit (a = 252,393 km) lowers the e-tide so the tidal-heat budget stays sub-runaway and
@@ -276,8 +279,10 @@ This supersedes the earlier s = 25° spread; the gated record lives in
 - **Node alignment + inclinations.** Inner prograde moons sit at ~10° (Dante 9 / Hades 11 /
   Pandora 10) relative to Polyphemus's orbital plane, with nodes auto-aligned to that plane
   (a shared line of nodes = a coherent warp, not a random scatter). Outer moons are
-  near-coplanar **retrograde** within ±3° of 180° (Cassandra 178° / Chaos 177°, canon
-  retrograde sense preserved).
+  near-coplanar **retrograde** within ±4° of 180° (Cassandra 176° / Chaos 179°, canon
+  retrograde sense preserved; the viewer art-direction set 184° / 181°, normalized to the
+  canonical 0–180° range = the same planes). Re-confirmed STABLE over 1000 yr with J2
+  (`results/_finalv2`): all 5 moons Hill-bound and calm, Pandora e ≤ 0.0075.
 - **Dante 100k→110k, Hades 135k→148k.** Both pushed outward to restore the Dante–Hades gap
   (period ratio 1.56 ≈ the prior 1.57). The intermediate run with Dante at 110k but Hades
   still at 135k ejected Hades (gap too small) — hence Hades at 148k.
@@ -290,6 +295,51 @@ This supersedes the earlier s = 25° spread; the gated record lives in
 - **Stability verdict.** Both candidate A (Dante 100k / Hades 135k, `results/_final32a`) and
   candidate B (Dante 110k / Hades 148k, `results/_final32b`) passed 1000 yr with J2; B was
   chosen. All 5 moons Hill-bound and calm, 0 ejections, Pandora e ≤ 0.0072 (ocean-safe).
+
+## Ring — faint Chaos-fed E-ring (2026-06-21)
+
+The ring is **finalized** (verified by simulation 2026-06-21): a faint, continuous,
+**Chaos-fed E-ring** — a Saturn E-ring analog — **not** a prominent dense ring.
+
+**Spec.**
+- **Source:** Chaos (the small fractured outermost moon, r 400 km, escape velocity
+  ~0.42 km/s ≈ Enceladus-class) feeds the ring, exactly as Enceladus feeds Saturn's E ring.
+- **Inner shepherd:** Cassandra (600,000 km) bounds the ring's inner edge (~800,000 km,
+  just outside Cassandra's clearing zone).
+- **Extent:** ~800,000 km out past Chaos (1,500,000 km) to ~2,500,000 km. **Chaos is
+  embedded in the ring** (like Enceladus in the E ring).
+- **Brightness:** optically thin, **τ ≈ 9×10⁻⁵**. Tuned so the ring carries **~+0.05 R_Jup**
+  of the JWST 15.5 µm brightness — effective cross-section ≈ equiv-disk **23,000 km** ≈ **13%
+  of Beichman's half-Saturn ring** — letting the planet stay at 1.05 R_Jup while matching the
+  observed flux of an ~1.10 R_Jup body. The brightness lives primarily on the planet body;
+  the ring is a +0.05 R_Jup decorative / secondary contribution.
+
+**No gap — continuous, Chaos embedded.** A test-particle simulation
+(`phase3/stability-sim/scripts/ring_clearing.py`, 2000 yr, `results/_ring_clearing.log`)
+showed Chaos is far too small (mass ratio μ ≈ 7.5×10⁻⁷) to clear any gap — even particles
+at Chaos's own semi-major axis survived. So the ring is **continuous with Chaos embedded**,
+and the earlier "two-ringlet / Hill-zone gap" idea is **rejected on dynamical grounds**: a
+feeder moon *fills* a ring, it does not empty it (cf. Enceladus and Saturn's E ring).
+
+**Brightness adds in quadrature.** Apparent brightness ∝ area ∝ R², so "+0.05 R_Jup of
+apparent radius" requires an equiv-disk of ~0.32 R_Jup (≈ 23,000 km), **not** 0.05 R_Jup —
+the small radius bump corresponds to a much larger physical cross-section.
+
+**Literature grounding — Beichman et al. 2025 (arXiv:2508.03814) §5.3 "Planet Ring System
+Models".** Beichman invoke a circumplanetary ring to explain the candidate's 15.5 µm flux
+with a smaller planet. Their **preferred** model is an **optically-thick ring inside the
+Roche zone** (~half Saturn's cross-section, equiv-disk **64,000 km**). Our faint outer
+E-ring is instead their **optically-thin dust alternative** (Kennedy et al. 2011
+irregular-satellite grinding), which they noted is harder to fit but plausible. We adopt the
+**faint** version because Avatar **canon says Polyphemus has no rings** — a barely-visible
+wisp honors that while still being physically motivated.
+
+**Kopernicus — circular is faithful.** Kopernicus rings must be circular concentric annuli
+(no eccentricity). A diffuse E-ring is **axisymmetric in steady state anyway** (apsidal
+precession randomizes the source orbits; the source eccentricity becomes radial breadth), so
+a circular annulus is a faithful representation. (We also confirmed Chaos can be circularized
+to e = 0.02 if ever desired — STABLE, `results/_chaos_lowe` — but it is unnecessary since
+there is no gap and the eccentricity is absorbed into the ring's radial breadth.)
 
 ## Pandora — surface climate over the orbit (estimate, 2026-06-15)
 

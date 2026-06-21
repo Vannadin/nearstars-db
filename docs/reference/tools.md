@@ -104,6 +104,7 @@ Correctness checks live across several functional groups. This index gathers the
 **Files.**
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO main entry
+- `phase3/stability-sim/scripts/ring_clearing.py` — test-particle ring-clearing / gap measurement around a moon: seed a disk of massless particles bracketing a feeder moon's semi-major axis, integrate, and report which radii survive (does the moon open a gap or stay embedded?). Used to confirm Polyphemus's Chaos-fed E-ring is continuous (Chaos μ≈7.5e-7 too small to clear a gap — `results/_ring_clearing.log`).
 - `phase3/stability-sim/hypotheticals/<system>.json` — extra-body spec
 
 **Stack.** REBOUND 5.0 in `.venv/`, AU / yr / Msun units, 10⁴ yr default horizon.
@@ -213,6 +214,8 @@ Correctness checks live across several functional groups. This index gathers the
 **Serve.** `cd docs && python3 -m http.server` then open `http://localhost:8000/starmap.html` (CDN modules need http, not `file://`).
 
 **Note.** Colour = perceptual blackbody approximation (not a calibrated SED); marker size = luminosity proxy (billboard, not physical radius). Independent of the `docs/index.html` DB browser (tool 2) — that one is the tabular viewer, this is the spatial one.
+
+**Related — Polyphemus moon-system viewer.** `phase4/polyphemus-moon-viewer.html` is a standalone interactive 3D viewer for the α Cen A b (Polyphemus) moon system + ring design — the 5 named moons (Dante / Hades / Pandora / Cassandra / Chaos), their inclinations / nodes, and the faint Chaos-fed E-ring. A Phase 4 art-direction aid, separate from the catalog-wide star map; it visualizes the gated roster recorded in `phase4/alpha_centauri.yaml`.
 
 ## Skills directory layout
 

@@ -120,7 +120,7 @@ decisions:
 
   - body: Alpha Centauri A b
     axis: appearance.rings
-    status: art-directed          # 관측 기반 얇은 Roche-zone 고리 (canon "고리 없음"과 충돌, 관측 우선)
+    status: superseded            # → rings 결정으로 대체(2026-06-21). 얇은 Roche-zone 밀집고리 개념 폐기, 흐릿한 연속 E고리 채택.
     target: "디스크를 가로지르는 얇고 어두운 framing line (토성급 아님)"
     driver: visual + observation
     gate:
@@ -128,6 +128,34 @@ decisions:
       verdict: documented-divergence
       divergence_note: "Avatar canon = 고리 없음; Beichman §5.3 ring-model 반경 fit 채택(관측 우선)."
       open: "고리 위치 = 로슈 한계 분석 미실행 (별개 작업)."
+
+  - body: Alpha Centauri A b
+    axis: rings                    # 고리 최종 확정 (2026-06-21 시뮬 검증). appearance.rings 대체.
+    status: gated
+    driver: visual + observation
+    target: >
+      흐릿한 연속 Chaos-fed E고리(토성 E링 아날로그) 채택. canon "고리 없음"을 존중하는
+      거의 안 보이는 wisp 수준. Chaos가 공급, Cassandra가 안쪽 양치기, 대략 800k~2.5M km
+      범위에 Chaos(1.5M km)가 고리에 묻힘. 밝기 +0.05 R_Jup(τ≈9e-5, 등가원반 ~23k km =
+      Beichman 토성½ 단면의 13%)이라 행성은 1.05 R_Jup 유지하며 ~1.10 R_Jup 관측 플럭스 정합.
+    gate:
+      criterion: [stability, visual-checklist]
+      verdict: pass-in-window
+      evidence: >
+        간극 없음 — 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서
+        Chaos는 질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존).
+        따라서 고리는 Chaos가 묻힌 연속 구조이고, 옛 "두 고리/Hill 간극" 안은 동역학적으로 기각
+        (공급 위성은 고리를 채우지 비우지 않음 — 엔셀라두스↔토성 E링). 밝기는 면적∝R²로 직교
+        합산이라 "겉보기 +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당(0.05가 아님).
+      grounding: >
+        Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring System Models". 그들의 선호 모델은
+        Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고, 우리 흐릿한
+        E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
+        밝기는 주로 행성 본체에 싣고 고리는 +0.05 R_Jup 보조 기여로 둠.
+      kopernicus_note: >
+        Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가). 확산 E고리는 정상상태에서
+        축대칭이라(근점 세차가 무작위화, 공급원 이심률은 반경 폭으로 흡수) 원형 annulus가 충실.
+        Chaos 원형화(e=0.02)도 STABLE(results/_chaos_lowe)이나 간극이 없어 무의미하므로 불필요.
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
@@ -224,8 +252,8 @@ decisions:
       - { name: Dante,     order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
       - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열 >900K(2.07 R_p). Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
       - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 거주가능. 조석고정 32h일(canon 27h 대신 채택, 해양 robustness)→a 도출. 폴리페무스는 하늘서 여전히 ~32° 차지. 노드 공통 정렬." }
-      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 178.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, 180에서 ±3° 안쪽 거의 동일평면." }
-      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 177.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, 180에서 ±3° 안쪽. 역행이라 0.7 R_Hill까지 안정." }
+      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
+      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원이자 고리에 묻힘." }
     rejected:
       - >
         라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동
