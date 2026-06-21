@@ -1405,7 +1405,10 @@ function paintStab(cv,W,H,curT,recsIn,opts){
   const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0])); _stabTmax=tMax;
   // visible time window — full span at zoom 1; ＋/－ narrows it around the cursor
   const zw=1/Math.max(1,stabChartZoom);
-  const tv0=Math.min(Math.max(0,stabChartCenter-zw/2),1-zw), tView0=tMax*tv0, tView1=tMax*(tv0+zw);
+  const tv0=Math.min(Math.max(0,stabChartCenter-zw/2),1-zw);
+  let tView0=tMax*tv0, tView1=tMax*(tv0+zw);
+  if(opts&&opts.tWin){ const w=Math.min(opts.tWin,tMax), c=(curT!=null?curT:0);   // short window sliding with the playhead
+    tView0=Math.max(0,Math.min(c-w/2,tMax-w)); tView1=tView0+w; }
   let initQ=0; recs.forEach(o=>{ initQ=Math.max(initQ,o.d[0][1]*(1+o.d[0][2])); });
   let maxQ=0; recs.forEach(o=>o.d.forEach(s=>{ const QQ=s[1]*(1+Math.min(s[2],3)); if(isFinite(QQ)&&QQ>0)maxQ=Math.max(maxQ,QQ); }));
   const yMaxR=Math.min(maxQ,(initQ||1)*3.2)||1;
@@ -1417,10 +1420,15 @@ function paintStab(cv,W,H,curT,recsIn,opts){
   const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
   const yI=v=>y0c+ph-(Math.min(v,maxI)/maxI)*ph;        // combined panel, LEFT scale (inclination)
   const yE=v=>y0c+ph-(Math.min(Math.max(v,0),eCap)/eCap)*ph;  // combined panel, RIGHT scale (eccentricity)
-  // ω-precession panel scale: cumulative ω in turns (s[5]/360), signed (pro/retrograde)
-  let wLo=0,wHi=0; if(showW) recs.forEach(o=>o.d.forEach(s=>{const w=s[5]/360; if(isFinite(w)){wLo=Math.min(wLo,w);wHi=Math.max(wHi,w);}}));
-  const wPad=Math.max(1,(wHi-wLo)*0.08); wLo-=wPad; wHi+=wPad; const wSpan=Math.max(1,wHi-wLo);
+  // ω panel: short-window shows WRAPPED ω (0–360°, real wave); full-span shows CUMULATIVE turns (rate)
+  const wWrap=!!(opts&&opts.omegaWrapped);
+  let wLo=0,wHi=0;
+  if(showW){ if(wWrap){ wLo=0; wHi=360; }
+    else { recs.forEach(o=>o.d.forEach(s=>{const w=s[5]/360; if(isFinite(w)){wLo=Math.min(wLo,w);wHi=Math.max(wHi,w);}}));
+      const wPad=Math.max(1,(wHi-wLo)*0.08); wLo-=wPad; wHi+=wPad; } }
+  const wSpan=Math.max(1e-6,wHi-wLo);
   const yW=v=>y0w+ph-((v-wLo)/wSpan)*ph;
+  const wAcc=s=>wWrap?s[5]:s[5]/360;
   const txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
   const nf=v=>v.toFixed(v<1?2:v<10?1:0);
   g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
@@ -1450,7 +1458,7 @@ function paintStab(cv,W,H,curT,recsIn,opts){
       for(let t=1;t<4;t++){ const yy=y0w+ph*t/4; g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
         g.fillText(nf(wHi-(wHi-wLo)*t/4),padL-6,yy); } }
     g.fillStyle=txt; g.textAlign='right'; g.fillText(nf(wHi),padL-6,y0w+5); g.fillText(nf(wLo),padL-6,y0w+ph-5);
-    rot(big?16:10,y0w,(lang==='ko'?'ω 세차':'ω prec.')+' (turns)');
+    rot(big?16:10,y0w, wWrap?'ω (°)':((lang==='ko'?'ω 세차':'ω prec.')+' (turns)'));
     if(wLo<0&&wHi>0){ const yz=yW(0); g.strokeStyle='rgba(120,135,165,.45)'; g.setLineDash([4,3]); g.lineWidth=1;
       g.beginPath(); g.moveTo(padL,yz); g.lineTo(W-padR,yz); g.stroke(); g.setLineDash([]); }
   }
@@ -1478,7 +1486,7 @@ function paintStab(cv,W,H,curT,recsIn,opts){
     line(o,s=>s[1]*(1-s[2]),yR,lwq,[3,2]);   // periapsis (dashed)
     line(o,s=>s[3],yI,lw);                    // inclination (solid, left scale)
     line(o,s=>s[2],yE,lwq,[3,2]);            // eccentricity (dashed, right scale)
-    if(showW) line(o,s=>s[5]/360,yW,lw);     // ω cumulative precession (turns)
+    if(showW) line(o,wAcc,yW,lw);            // ω: wrapped (°) in short-window, else cumulative (turns)
   });
   g.restore();
   if(curT!=null && curT>=tView0 && curT<=tView1){ const cx=xT(curT);
@@ -1894,6 +1902,7 @@ moonCtl.innerHTML='<button id="mPlay" style="width:30px;height:30px;border-radiu
  +'<button id="mStab" title="1000-yr stability run" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer">안정성</button>'
  +'<button id="mChartBtn" title="charts" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer;display:none">📈</button>'
  +'<button id="mChartBig" title="expand" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer;display:none">⤢</button>'
+ +'<button id="mShortWin" title="short window (wrapped ω)" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer;display:none">구간</button>'
  +'<span id="mYr" style="color:#8893a6;font-variant-numeric:tabular-nums;min-width:62px;text-align:right"></span>';
 document.body.appendChild(moonCtl);
 // stability charts (reuses paintStab): q–Q / inclination / eccentricity over the 1000-yr run
@@ -1903,7 +1912,7 @@ document.body.appendChild(moonChart);
 const moonTop=document.createElement('canvas');   // top-down (face-on) orbit view, big mode
 moonTop.style.cssText='position:fixed;z-index:50;display:none;background:#0d1018f2;border:1px solid #1c2433;border-radius:10px;backdrop-filter:blur(6px)';
 document.body.appendChild(moonTop);
-let moonChartOn=false, moonChartBig=false, moonYr=null, moonFocus=null, _moonOrbitLegend=[];
+let moonChartOn=false, moonChartBig=false, moonShortWin=false, moonYr=null, moonFocus=null, _moonOrbitLegend=[];
 moonTop.addEventListener('click',e=>{ const r=moonTop.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
   const hit=_moonOrbitLegend.find(b=>x>=b.x0&&x<=b.x1&&y>=b.y0&&y<=b.y1);
   moonFocus = hit ? (moonFocus===hit.name?null:hit.name) : null; });   // click legend = isolate; empty = all
@@ -1913,6 +1922,8 @@ const _mPlayBtn=moonCtl.querySelector('#mPlay'), _mStab=moonCtl.querySelector('#
 _mChartBtn.onclick=()=>{ moonChartOn=!moonChartOn;
   _mChartBtn.style.borderColor=moonChartOn?'#7aa2ff':'#1c2433'; if(!moonChartOn) moonChart.style.display='none'; };
 _mChartBig.onclick=()=>{ moonChartBig=!moonChartBig; _mChartBig.style.borderColor=moonChartBig?'#7aa2ff':'#1c2433'; };
+const _mShortWin=moonCtl.querySelector('#mShortWin');
+_mShortWin.onclick=()=>{ moonShortWin=!moonShortWin; _mShortWin.style.color=moonShortWin?'#e8edf6':'#8893a6'; _mShortWin.style.borderColor=moonShortWin?'#7aa2ff':'#1c2433'; };
 function drawMoonChart(){
   if(!(moonStab&&moonChartOn)){ moonChart.style.display='none'; moonTop.style.display='none'; return; }
   // raw recs: ω is wrapped 0–360 (index 5) — used by the top-down view (per-step <180° → _alerp precesses smoothly)
@@ -1924,7 +1935,8 @@ function drawMoonChart(){
   const cumRecs=rawRecs.map(o=>{ let cum=0,prev=null;
     return {rgb:o.rgb,name:o.name,d:o.d.map(s=>{ if(prev!=null) cum+=((s[5]-prev)%360+540)%360-180; prev=s[5];
       return [s[0],s[1],s[2],s[3],s[4],cum,s[6]]; })}; });
-  const chartRecs = moonFocus ? cumRecs.filter(o=>o.name===moonFocus) : cumRecs;   // legend isolates
+  const chartSrc = moonShortWin ? rawRecs : cumRecs;   // short window = wrapped ω wave; else cumulative rate
+  const chartRecs = moonFocus ? chartSrc.filter(o=>o.name===moonFocus) : chartSrc;   // legend isolates
   moonChart.style.display='block';
   if(moonChartBig){
     moonTop.style.display='block'; moonTop.style.left='3vw'; moonTop.style.bottom='74px';
@@ -1939,7 +1951,7 @@ function drawMoonChart(){
   moonChart.style.bottom = moonChartBig ? '74px' : '62px';
   const W=moonChart.clientWidth||300, H=moonChartBig?Math.min(560,Math.round(innerHeight*0.6)):270;  // 3 panels (q–Q, i+e, ω); H>320 → "big" style
   if(moonChart.style.height!==H+'px') moonChart.style.height=H+'px';
-  paintStab(moonChart,W,H,moonYr,chartRecs,{omega:true});
+  paintStab(moonChart,W,H,moonYr,chartRecs,{omega:true, omegaWrapped:moonShortWin, tWin:moonShortWin?60:0});
 }
 _mPlayBtn.onclick=()=>{moonPlay=!moonPlay;_mPlayBtn.textContent=moonPlay?'❚❚':'▶';};
 _mStab.onclick=()=>{ moonStab=!moonStab; moonT=0;
@@ -1972,6 +1984,7 @@ function updateMoons(){
   if(show){ _mLblSet();
     _mChartBtn.style.display=moonStab?'inline-block':'none';
     _mChartBig.style.display=(moonStab&&moonChartOn)?'inline-block':'none';
+    _mShortWin.style.display=(moonStab&&moonChartOn)?'inline-block':'none';
     _mYr.textContent=(moonStab&&yr!=null)?(Math.round(yr).toLocaleString()+(lang==='ko'?' 년':' yr')):''; }
   drawMoonChart();
 }
