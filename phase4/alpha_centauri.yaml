@@ -189,30 +189,53 @@ decisions:
         적도면에 앵커링해 코자이 펌핑 억제 → **s=40°까지 bound**(한계가 안쪽 Hades→외측 역행
         Chaos로 이동, e_max 0.88 @s40). 시각분산 스윗스팟 J2서 s≈25–30°까지 가능.
       spread_adopted: >
+        **[2026-06-21 SUPERSEDED → final_2026_06_21 참조]**
         **[2026-06-20 채택] s=25° 분산 확정** (results/_moons_j2/spread25). 1000yr TRACE+J2:
         STABLE, |dE/E| 8.2e-9, 5위성 전부 bound·calm, **전 위성 근일점 > 폴리페무스 표면**
         (Dante q 96.8k > 71.5k, 나머지 여유). 채택 경사: Dante 12.5°/Hades 25°/Pandora 0°(적도
         고정)/Cassandra 162.5°/Chaos 150°(역행 보존). 내측 e는 분산 줘도 낮음(Dante 0.03·Hades
         0.05, J2 적도앵커 덕). moons 표 inc_deg + hypotheticals/alpha_centauri.json 반영 완료.
+      final_2026_06_21: >
+        **[2026-06-21 최종 확정] results/_final32b — 1000yr TRACE+J2(0.023) STABLE.**
+        s=25 분산을 폐기하고 다음 로스터로 확정.
+        • **Pandora 32h일 채택**(canon 27h 대신) — 27h는 표면 해양에 marginal했고, 더 넓은
+        32h 궤도가 e-조석을 낮춰 조석가열 예산을 sub-runaway로 유지해 해양이 안전해짐. a=252,393km.
+        폴리페무스는 하늘서 여전히 ~32° 차지(아이코닉 비주얼 유지).
+        • **내측 순행 경사 ~10°**(Dante 9°/Hades 11°/Pandora 10°, 폴리페무스 궤도면 기준) —
+        노드를 부모 궤도면에 자동 정렬(공통 승교점선 = 무작위 산란이 아니라 정연한 warp).
+        • **외측 역행 거의 동일평면**(Cassandra 178°/Chaos 177°, 180에서 ±3° 안쪽, canon 역행 보존).
+        • **Dante 100k→110k, Hades 135k→148k**(둘 다 바깥으로 밀어 Dante–Hades 갭 복원, 주기비
+        1.56 ≈ 직전 1.57). 중간 시도(Dante 110k인데 Hades 135k 유지)는 갭 부족으로 Hades 이탈 →
+        Hades 148k 채택 근거. 위상분산용 평균근점이각(Dante 35/Hades 140/Pandora 250/Cassandra
+        300/Chaos 60°).
+        • **로슈 정정**: 옛 문서의 유체 로슈 "~94,000km"(ρ=3 가정)는 틀림. Dante 실제 밀도
+        ~2620 kg/m³ → 유체 로슈 ~98,900km, 강체 로슈 ~48,500km. 900km 고체 암석체는 강체 한계
+        지배라 Dante(110k, 직전 100k도)는 늘 안전(강체 한계의 2배+ 밖). 폴리페무스 저평균밀도
+        (~468 kg/m³, 1 R_Jup에 120 M⊕)가 로슈를 행성 가까이 끌어 내측 위성이 ~1.4–2 R_p를
+        스쳐도 물리적(cf. 목성 Metis/Adrastea ~1.8 R_Jup).
+        • **검증**: 후보 A(Dante 100k/Hades 135k, results/_final32a)·후보 B(Dante 110k/Hades
+        148k, results/_final32b) 둘 다 1000yr J2 통과, B 채택. 5위성 전부 Hill-bound·calm,
+        이젝션 0, Pandora e≤0.0072(해양 안전).
       cotilt_scan: >
         [동시틸트, J2] results/_moons_cotilt_scan.md (TRACE 300yr): 락이 J2로 죽은 뒤라 동시틸트의
         "락+분산" 목적은 성립 안 함. θ=0°(완전 동일평면)은 이탈, θ=10–30°는 bound지만 φ 전부 순환
         (락 없음), 차등 승교점 세차로 Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
-    moons:                         # a/e/inc는 게이트 통과한 설계값(inc=s=25 분산); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
-      - { name: Dante,     order: 1, a_km: 100000, e: 0.01, inc_deg: 12.5, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽, Roche 가장자리(유체 98.3k 밖, q 96.8k>표면), 화산 moonlet. inc=0.5×s." }
-      - { name: Hades,     order: 2, a_km: 135000, e: 0.05, inc_deg: 25.0, mass_kg: 5.0e21, radius_km: 750,  note: "off-resonance 갭(J2가 3:2락 죽임). e≈0.05 adopted given. inc=1.0×s(스프레드 최대)." }
-      - { name: Pandora,   order: 5, a_km: 225000, e: 0.0,  inc_deg: 0.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 조석고정 27h→a 도출. 거주가능. 적도면 기준(inc 0 고정)." }
-      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 162.5, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon)=180−0.7s, 평면서 ~17.5° 틸트." }
-      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 150.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon)=180−1.2s, ~30° 틸트. 역행이라 0.7 R_Hill까지 안정." }
+    moons:                         # a/e/inc는 게이트 통과한 설계값(final_2026_06_21: 내측 ~10°·노드 공통정렬, 외측 역행 178/177); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
+      - { name: Dante,     order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
+      - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열 >900K(2.07 R_p). Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
+      - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 거주가능. 조석고정 32h일(canon 27h 대신 채택, 해양 robustness)→a 도출. 폴리페무스는 하늘서 여전히 ~32° 차지. 노드 공통 정렬." }
+      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 178.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, 180에서 ±3° 안쪽 거의 동일평면." }
+      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 177.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, 180에서 ±3° 안쪽. 역행이라 0.7 R_Hill까지 안정." }
     rejected:
       - >
         라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동
         펌핑해 자기일관시키는 매력적 안이나, Pandora를 252k로 옮기려면 폴리페무스 질량을 관측
         120 M⊕ → 168 M⊕로 부풀려야 함(영화 위성배치에 관측 행성을 맞추는 격). 관측 우선 원칙으로
-        기각(2026-06-19). 따라서 Pandora a=225,000은 관측질량+27h로 사실상 고정, 빈틈 배치 유지.
+        기각(2026-06-19). 따라서 Pandora a는 관측질량+조석고정일로 사실상 고정, 빈틈 배치 유지
+        (a는 이후 32h일 채택으로 252,393k 확정 — final_2026_06_21 참조).
     decided:
       - "무명 9위성: 추가 안 함(사용자 2026-06-19). 명명 5위성만 — 어차피 전부 창작이므로."
-      - "최외곽 2위성 역행(canon): 반영(Cassandra·Chaos inc 178/175). 100yr STABLE 확인."
+      - "최외곽 2위성 역행(canon). 반영(Cassandra·Chaos inc 178/177, final_2026_06_21). 1000yr STABLE 확인."
       - >
         [2026-06-20] J2 충실도 해소 — 폴리페무스 J2(0.023)를 위성 시뮬에 주입(자체구현 j2.py).
         135k 갭 = J2에도 안정(TRACE+leapfrog 일치), 3:2-락 = J2로 이탈해 철회. j2_confirm 참조.

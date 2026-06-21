@@ -58,18 +58,18 @@ Saturn-gold (not Jupiter-red) chromophore. This is the **Phase 4a** creative tar
 the **Phase 4b** gate must check it against the Phase 3 atmosphere synthesis (below).
 
 **From Pandora's sky.** This is the view the moon is famous for: from Pandora's
-surface Polyphemus spans **~36°** of the sky (computed in stability-sim — a 1
-R_Jup giant at 225,000 km), so the banded cream-and-blue body, its storm, and
+surface Polyphemus spans **~32°** of the sky (computed in stability-sim — a 1
+R_Jup giant at 252,393 km), so the banded cream-and-blue body, its storm, and
 the dark ring fill the daylit sky. The art-direction has to read at *that* scale
 — a near-filling skyline — not just as a distant disk.
 
 **Sibling moons in Pandora's sky (memo, 2026-06-19).** The inner moons are clearly
 visible from Pandora and shuttle across Polyphemus's huge disk (computed in stability-sim):
-- **Dante** — apparent diameter 0.32–0.83° (vs Earth's Moon 0.52°), swings ≤26° from
-  Polyphemus's centre, transit/occult cycle ~11 h; volcanic moonlet (orange lava flecks).
-- **Hades** — 0.24–0.95°, swings ≤37°, cycle ~23 h; tidal-heated >900 K → a **faint red
+- **Dante** — apparent diameter 0.28–0.72° (vs Earth's Moon 0.52°), swings ≤26° from
+  Polyphemus's centre (approx, pending recompute), transit/occult cycle ~11 h (approx, pending recompute); volcanic moonlet (orange lava flecks).
+- **Hades** — 0.21–0.82°, swings ≤37° (approx, pending recompute), cycle ~23 h (approx, pending recompute); tidal-heated >900 K → a **faint red
   ember** even on its night side.
-Because both orbit inside Pandora (225k), they never leave Polyphemus's vicinity — they
+Because both orbit inside Pandora (252,393 km), they never leave Polyphemus's vicinity — they
 glide across its banded face and duck behind its limb. Great surface-view material: the
 giant + two moons (one red-glowing, one volcanic) eclipsing each other every few hours.
 
@@ -80,6 +80,12 @@ one band), the owner wants **somewhat larger mutual inclinations.** This is a Ph
 target needing a **4b stability re-check**: modest inclinations are fine for moons deep in
 the Hill sphere, but how large before Kozai/stability degradation needs a scan (next
 session, alongside the M0≈180° 3:2-lock confirmation).
+
+**RESOLVED (2026-06-21).** Final inner inclinations ~10° (Dante 9° / Hades 11° / Pandora
+10°, nodes auto-aligned to Polyphemus's orbital plane = a coherent warp), outer moons
+near-coplanar retrograde within ±3° of 180° (Cassandra 178° / Chaos 177°); stability
+re-checked over 1000 yr with J2 (`results/_final32b`, STABLE). See the FINAL moon roster
+section below.
 
 *(Proposed direction; the binding calls — how deep the blue goes, the storm's
 placement/size — are left in "Open creative questions" below for the user to set.)*
@@ -136,7 +142,7 @@ Pandorapedia, and the James Cameron's Avatar Wiki. Tier: [CANON] = film/official
 - **Polyphemus:** Saturn-class gas giant, **helium-rich** (~72% H / 24% He), a giant
   **eye-shaped vortex storm** bigger than Jupiter's Great Red Spot, **no rings** [CANON],
   **14 moons** (Pandora is the 5th). Mass "more massive than Saturn" (no number).
-- **Pandora day = 27 h** [CANON/WIKI] — matches our assumption.
+- **Pandora day = 27 h** [CANON/WIKI] (we adopt 32 h — see final roster).
 - **Gravity 0.8 g**, **mass 0.72 M⊕**, **diameter 11,447 km** (~0.90 R⊕) [CANON/WIKI].
   (0.72 M⊕ at that radius → ~0.89 g, a minor canon self-inconsistency vs the stated 0.8 g.)
 - **Atmosphere:** O₂ ~21% but unbreathable due to **CO₂ >18%, H₂S >1%, xenon 5.5%**;
@@ -250,6 +256,41 @@ the moon names + physics. Accessible via Avatar Wiki:
 [Pandora](https://james-camerons-avatar.fandom.com/wiki/Pandora),
 [Alpha Centauri System](https://james-camerons-avatar.fandom.com/wiki/Alpha_Centauri_System).
 
+## FINAL moon roster (2026-06-21)
+
+Finalized and verified STABLE over 1000 yr with J2 = 0.023 (TRACE, `results/_final32b`).
+This supersedes the earlier s = 25° spread; the gated record lives in
+[`alpha_centauri.yaml`](alpha_centauri.yaml) (`final_2026_06_21`).
+
+| moon | a_km | R_p mult. | e | inc | retrograde | mass (kg) | radius (km) | role |
+|---|---|---|---|---|---|---|---|---|
+| **Dante** | 110,000 | 1.54 R_p | 0.01 | 9° | no | 8.0×10²¹ | 900 | innermost volcanic moonlet (rigid-Roche-safe) |
+| **Hades** | 148,000 | 2.07 R_p | 0.05 | 11° | no | 5.0×10²¹ | 750 | tidal-heated > 900 K, faint red ember |
+| **Pandora** | 252,393 | — | 0.0 | 10° | no | 4.30×10²⁴ | 5724 | Na'vi homeworld, 32 h tidal-locked day |
+| **Cassandra** | 600,000 | — | 0.05 | 178° | **yes** | 9.0×10²³ | 3400 | 2nd-largest moon, N–H atmosphere |
+| **Chaos** | 1,500,000 | — | 0.10 | 177° | **yes** | 5.4×10²⁰ | 400 | fractured Miranda-like body |
+
+- **32 h day, not the canon 27 h.** 27 h was marginal for surface oceans; the wider 32 h
+  orbit (a = 252,393 km) lowers the e-tide so the tidal-heat budget stays sub-runaway and
+  oceans are safe. Polyphemus still spans ~32° across Pandora's sky.
+- **Node alignment + inclinations.** Inner prograde moons sit at ~10° (Dante 9 / Hades 11 /
+  Pandora 10) relative to Polyphemus's orbital plane, with nodes auto-aligned to that plane
+  (a shared line of nodes = a coherent warp, not a random scatter). Outer moons are
+  near-coplanar **retrograde** within ±3° of 180° (Cassandra 178° / Chaos 177°, canon
+  retrograde sense preserved).
+- **Dante 100k→110k, Hades 135k→148k.** Both pushed outward to restore the Dante–Hades gap
+  (period ratio 1.56 ≈ the prior 1.57). The intermediate run with Dante at 110k but Hades
+  still at 135k ejected Hades (gap too small) — hence Hades at 148k.
+- **Roche correction.** With Dante's actual density ~2620 kg/m³ the **fluid** Roche limit is
+  ~98,900 km and the **rigid** Roche limit is ~48,500 km (the old "~94,000 km" assumed
+  ρ = 3). A solid 900 km rocky body is governed by the **rigid** limit, so Dante (110,000 km,
+  also safe at the prior 100,000 km) is always 2×+ outside it. Polyphemus's low mean density
+  (~468 kg/m³, 120 M⊕ at 1 R_Jup) pulls the Roche limit close to the planet, so inner moons
+  skimming ~1.4–2 R_p are physical (cf. Jupiter's Metis/Adrastea at ~1.8 R_Jup).
+- **Stability verdict.** Both candidate A (Dante 100k / Hades 135k, `results/_final32a`) and
+  candidate B (Dante 110k / Hades 148k, `results/_final32b`) passed 1000 yr with J2; B was
+  chosen. All 5 moons Hill-bound and calm, 0 ejections, Pandora e ≤ 0.0072 (ocean-safe).
+
 ## Pandora — surface climate over the orbit (estimate, 2026-06-15)
 
 Polyphemus (and its moon Pandora) ride an eccentric heliocentric orbit (a = 1.6 AU,
@@ -339,9 +380,12 @@ keep Pandora temperate, and **downgrade canon's "Io-grade tidal volcanism" to mo
 tectonics (documented divergence)**. Caveat: a runaway feedback (any partial melt → Q
 drops → more heat → more melt) means the assumption is "starts cold and stays high-Q."
 
-**The day = orbit lock is unavoidable — a is forced to 225,000 km.** Pandora's 27 h day
-comes from tidal locking (day = orbital period → a = 225,000 km via Kepler). Idea tested:
-put Pandora on a *wider* orbit (weaker e-tide) but give it a free 27 h *spin* instead of
+**The day = orbit lock is unavoidable — a is forced to 252,393 km.** Pandora's day
+comes from tidal locking (day = orbital period → a via Kepler); the day was set to **32 h**
+(not the canon 27 h) for ocean robustness, which fixes a = 252,393 km. The lock still holds —
+only the chosen period/a changed (a wider orbit lowers the e-tide so the tidal-heat budget
+stays sub-runaway and surface oceans are safe). Idea tested:
+put Pandora on a *wider* orbit (weaker e-tide) but give it a free *spin* instead of
 locking. **Rejected on physics:** a non-synchronous moon suffers the *spin* tide (the bulge
 sweeps the whole body, amplitude O(1) vs the e-tide's ~e), which is **~4000× larger** than
 the e-tide — e.g. at a = 360,000 km the e-tide is 32 W/m² but the spin tide is 1.2×10⁵ W/m²
@@ -349,7 +393,7 @@ the e-tide — e.g. at a = 360,000 km the e-tide is 32 W/m² but the spin tide i
 persist (the day reverts to the long orbital period). Escaping the spin tide needs a ≳ 2×10⁶
 km, where Polyphemus shrinks to a dot in the sky (losing the iconic Avatar visual). So day
 and orbit can't be decoupled — every close moon is synchronous for this reason. **a stays
-225,000 km; the only viable lever is the high-Q interior assumption.**
+252,393 km (the 32 h-day lock); the only viable lever is the high-Q interior assumption.**
 
 ## Mapping to cfg (for the eventual Phase 4 emit)
 
