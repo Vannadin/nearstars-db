@@ -1915,17 +1915,22 @@ _mChartBtn.onclick=()=>{ moonChartOn=!moonChartOn;
 _mChartBig.onclick=()=>{ moonChartBig=!moonChartBig; _mChartBig.style.borderColor=moonChartBig?'#7aa2ff':'#1c2433'; };
 function drawMoonChart(){
   if(!(moonStab&&moonChartOn)){ moonChart.style.display='none'; moonTop.style.display='none'; return; }
-  const allRecs=MOON_SYS.filter(m=>m.stab&&m._near).map(m=>{ const d=m.stab.data,t0=m.stab.t0,t1=m.stab.t_end,n=d.length;
+  // raw recs: ω is wrapped 0–360 (index 5) — used by the top-down view (per-step <180° → _alerp precesses smoothly)
+  const rawRecs=MOON_SYS.filter(m=>m.stab&&m._near).map(m=>{ const d=m.stab.data,t0=m.stab.t0,t1=m.stab.t_end,n=d.length;
     return {rgb:m.rgb,name:m.name,d:d.map((s,j)=>[t0+(t1-t0)*j/Math.max(n-1,1),s[0],s[1],s[2],s[3],s[4],s[5]])}; });
-  if(!allRecs.length){ moonChart.style.display='none'; moonTop.style.display='none'; return; }
-  const nS=allRecs[0].d.length, idx=(moonT*4)%nS;                  // run scrub (matches the playhead)
-  const chartRecs = moonFocus ? allRecs.filter(o=>o.name===moonFocus) : allRecs;   // legend isolates
+  if(!rawRecs.length){ moonChart.style.display='none'; moonTop.style.display='none'; return; }
+  const nS=rawRecs[0].d.length, idx=(moonT*4)%nS;                  // run scrub (matches the playhead)
+  // chart recs: unwrap ω → CUMULATIVE turns (slope = precession rate) for the ω panel (full-span legible)
+  const cumRecs=rawRecs.map(o=>{ let cum=0,prev=null;
+    return {rgb:o.rgb,name:o.name,d:o.d.map(s=>{ if(prev!=null) cum+=((s[5]-prev)%360+540)%360-180; prev=s[5];
+      return [s[0],s[1],s[2],s[3],s[4],cum,s[6]]; })}; });
+  const chartRecs = moonFocus ? cumRecs.filter(o=>o.name===moonFocus) : cumRecs;   // legend isolates
   moonChart.style.display='block';
   if(moonChartBig){
     moonTop.style.display='block'; moonTop.style.left='3vw'; moonTop.style.bottom='74px';
     const tv=Math.min(360,Math.round(innerWidth*0.40),Math.round(innerHeight*0.5));
     moonTop.style.width=tv+'px'; moonTop.style.height=tv+'px';
-    _moonOrbitLegend=paintOrbitTopDown(moonTop,tv,tv,idx,allRecs,moonFocus,1);   // top-view shows precession (cumulative ω → smooth)
+    _moonOrbitLegend=paintOrbitTopDown(moonTop,tv,tv,idx,rawRecs,moonFocus,1);   // wrapped ω + fine cadence → orbit precesses smoothly
     moonChart.style.left='auto'; moonChart.style.right='3vw'; moonChart.style.transform='none'; moonChart.style.width='min(560px,52vw)';
   } else {
     moonTop.style.display='none';

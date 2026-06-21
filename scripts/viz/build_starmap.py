@@ -213,7 +213,7 @@ def load_manifest():
 _STABILITY = None
 
 
-def _load_stab_dir(directory):
+def _load_stab_dir(directory, cap=100):
     """body name → {"system": <file stem>, "data": [[t,a,e,inc,Omega,omega,f]…]}
     (deg) for every *_timeseries.csv in dir. Instantaneous elements let the viewer
     draw a smooth analytic ellipse per epoch (positions alone under-sample →
@@ -233,7 +233,7 @@ def _load_stab_dir(directory):
                 g("inc_deg"), g("Omega_deg"), g("omega_deg"), g("f_deg")))
         for body, series in rows.items():
             series.sort()
-            step = max(1, math.ceil(len(series) / 100))   # cap ~100 snapshots/variant
+            step = max(1, math.ceil(len(series) / cap))   # cap snapshots/variant (~100 default)
             sampled = series[::step]
             # the per-row time column is dropped (uniform spacing → the viewer rebuilds
             # t from t0/t_end). Assert uniformity so a non-uniform run fails loudly
@@ -342,31 +342,11 @@ def load_moon_stability():
         return _MOONSTAB
     out = {}
     res = os.path.join(ROOT, "phase3", "stability-sim", "results")
+    # carry moons at fine cadence (cap 1000 ≈ 1 yr): the top-down view's per-step ω
+    # interpolation needs <180°/step, and a short-window wrapped-ω read needs the detail.
+    # ω is RAW wrapped here; the chart panel unwraps it in JS for a clean cumulative curve.
     for d in sorted(glob.glob(os.path.join(res, "*_moons"))):
-        for f in sorted(glob.glob(os.path.join(d, "*_timeseries.csv"))):
-            rows = {}
-            for r in csv.DictReader(open(f, encoding="utf-8")):
-                g = lambda k: float(r.get(k, 0) or 0)
-                rows.setdefault(r["body"], []).append((
-                    float(r["t_yr"]), float(r["a_au"]), float(r["e"]),
-                    g("inc_deg"), g("Omega_deg"), g("omega_deg"), g("f_deg")))
-            for body, series in rows.items():
-                series.sort()
-                # unwrap ω → CUMULATIVE deg (apsidal precession curve; slope = rate). Done on
-                # the full-res series (per-step <180° → unwrap valid) BEFORE downsampling, so the
-                # smooth cumulative survives the ~100-sample cap without aliasing (raw wrapped ω
-                # precesses ~30–76 turns/run = un-plottable directly).
-                cum, prev, cuml = 0.0, None, []
-                for s in series:
-                    if prev is not None:
-                        cum += ((s[5] - prev) % 360 + 540) % 360 - 180
-                    cuml.append(cum); prev = s[5]
-                n = len(series); step = max(1, math.ceil(n / 100)); idx = list(range(0, n, step))
-                ts = [series[k][0] for k in idx]
-                out[body] = {"t0": int(round(ts[0])), "t_end": int(round(ts[-1])),
-                             "data": [[round(series[k][1], 4), round(series[k][2], 3),
-                                       round(series[k][3], 2), round(series[k][4], 2),
-                                       round(cuml[k], 1), round(series[k][5], 2)] for k in idx]}
+        out.update(_load_stab_dir(d, cap=1000))
     _MOONSTAB = out
     return out
 
