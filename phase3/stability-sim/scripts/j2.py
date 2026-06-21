@@ -23,12 +23,17 @@ def _index_of(sim: rebound.Simulation, name: str) -> int:
 
 
 def add_j2(sim: rebound.Simulation, meta: dict, body_name: str, j2: float,
-           r_eq_au: float, axis: tuple[float, float, float] | None = None):
+           r_eq_au: float, axis: tuple[float, float, float] | None = None,
+           obliquity_deg: float = 0.0):
     """Register a J2 oblateness force for `body_name` acting on its moons.
 
     The J2 symmetry (spin) axis defaults to the body's orbit-normal — i.e. zero
     obliquity, the bulge plane coincides with the moons' reference plane (moons
     are added relative to the parent's orbital plane in load.add_hypotheticals).
+    `obliquity_deg` tilts the spin axis by that angle about the body's orbital
+    node line (so the equatorial plane = orbital plane inclined by the obliquity);
+    a moon set to inclination_deg = obliquity_deg then sits exactly in the tilted
+    equatorial plane (its natural Laplace plane if it is inside the Laplace radius).
     Pass `axis` to override with an explicit spin direction in the sim frame.
 
     Applied to real particles only; MEGNO's variational particles do not feel J2,
@@ -39,7 +44,9 @@ def add_j2(sim: rebound.Simulation, meta: dict, body_name: str, j2: float,
     star = sim.particles[meta["star"]["name"]]
     if axis is None:
         o = sim.particles[body_name].orbit(primary=star)
-        axis = _orbit_normal(o.inc, o.Omega)
+        # tilt the spin axis by the obliquity about the orbital node = orbit normal
+        # taken at inclination (o.inc + obliquity); zero obliquity → plain orbit normal.
+        axis = _orbit_normal(o.inc + math.radians(obliquity_deg), o.Omega)
     norm = math.sqrt(sum(c * c for c in axis))
     ax, ay, az = (c / norm for c in axis)
 

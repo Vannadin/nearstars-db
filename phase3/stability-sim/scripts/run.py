@@ -339,6 +339,10 @@ def main():
                          "planet 'Polyphemus').")
     ap.add_argument("--j2-radius-rjup", type=float, default=1.0,
                     help="equatorial radius of the J2 body in Jupiter radii (default 1.0).")
+    ap.add_argument("--j2-obliquity-deg", type=float, default=0.0,
+                    help="tilt the J2 body's spin axis by this obliquity (deg) about its "
+                         "orbital node; a moon at inclination_deg=obliquity then sits in the "
+                         "tilted equatorial (Laplace) plane.")
     ap.add_argument("--mass-incl-deg", type=float, default=None,
                     help="planetary systems only: scale every planet mass by 1/sin(i) "
                          "(RV minimum mass M·sin i → true mass at coplanar inclination i). "
@@ -374,8 +378,11 @@ def main():
                       overrides=overrides)
     if args.j2 is not None:
         r_eq_au = args.j2_radius_rjup * R_JUP_KM / KM_PER_AU
-        add_j2(sim, meta, args.j2_body, args.j2, r_eq_au)
-        meta["system"] += f" [J2({args.j2_body})={args.j2:g}]"
+        add_j2(sim, meta, args.j2_body, args.j2, r_eq_au,
+               obliquity_deg=args.j2_obliquity_deg)
+        meta["system"] += f" [J2({args.j2_body})={args.j2:g}"
+        meta["system"] += (f", obliq={args.j2_obliquity_deg:g}°]"
+                           if args.j2_obliquity_deg else "]")
     if overrides:
         meta["system"] += " [" + "; ".join(
             f"{b}.{f}{'=' if op=='set' else '×'}{v:g}" for b, f, op, v in overrides) + "]"
