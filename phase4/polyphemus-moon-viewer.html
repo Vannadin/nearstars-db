@@ -1,0 +1,412 @@
+<!doctype html>
+<!-- Polyphemus(α Cen A b) 위성계 Three.js 3D 뷰어: 적도팽대 타원체 + 궤도경사각/노드 조절 + 재생 + Pandora 시점 + 삼중성계. starmap.html과 동일한 three@0.160 importmap 스택. -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Polyphemus 위성계 3D 뷰어</title>
+<style>
+  :root{ --bg:#05060a; --panel:#0d1018e6; --line:#1c2433; --ink:#e8edf6; --dim:#8893a6;
+    --cyan:#39d6e0; --magenta:#e85cc8; --acc:#7aa2ff; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:-apple-system,"Apple SD Gothic Neo","Pretendard",Segoe UI,Roboto,sans-serif;-webkit-text-size-adjust:100%}
+  #stage{position:fixed;inset:0}
+  canvas{display:block;touch-action:none}
+  #labels{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden}
+  .lbl{position:absolute;transform:translate(-50%,-150%);font-size:11px;white-space:nowrap;
+    color:#cfd8e8;text-shadow:0 0 4px #000,0 0 4px #000;will-change:transform}
+  .lbl b{color:#fff}
+
+  #topbar{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:10px 14px;background:linear-gradient(#05060af2,#05060a00);z-index:5;pointer-events:none}
+  #topbar>*{pointer-events:auto}
+  #title{font-weight:600;font-size:15px}#title small{color:var(--dim);font-weight:400;margin-left:6px;font-size:12px}
+  .modebtns{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .modebtns button{background:#0d1018;color:var(--dim);border:0;padding:7px 13px;font-size:12.5px;cursor:pointer;font-family:inherit}
+  .modebtns button.on{background:var(--acc);color:#05060a;font-weight:600}
+
+  #panel{position:fixed;top:54px;right:12px;width:300px;max-height:calc(100% - 130px);overflow-y:auto;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;z-index:4;backdrop-filter:blur(8px);font-size:13px}
+  .grp{margin-bottom:14px}
+  .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin-bottom:8px;font-weight:600}
+  .moonrow{border:1px solid var(--line);border-radius:9px;padding:9px 10px;margin-bottom:8px}
+  .moonrow .mh{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+  .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+  .moonrow .nm{font-weight:600;font-size:13px}.moonrow .tag{font-size:10.5px;color:var(--dim);margin-left:auto}
+  .ctrl{margin:6px 0}.ctrl label{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-bottom:3px}
+  .ctrl label b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--line);border-radius:3px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid #05060a}
+  input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid #05060a}
+  .btnrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+  .btnrow button{flex:1;min-width:62px;background:#141a26;color:var(--ink);border:1px solid var(--line);border-radius:7px;padding:7px 4px;font-size:12px;cursor:pointer;font-family:inherit}
+  .btnrow button:hover{border-color:var(--acc)}
+  .ck{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--dim);cursor:pointer;margin:5px 0}.ck input{accent-color:var(--acc)}
+  .note{font-size:11px;line-height:1.55;color:var(--dim)}
+
+  #transport{position:fixed;left:12px;bottom:12px;right:324px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:10px 14px;z-index:4;backdrop-filter:blur(8px)}
+  .tline{display:flex;align-items:center;gap:12px}
+  .play{width:38px;height:38px;flex:0 0 auto;border-radius:50%;background:var(--acc);color:#05060a;border:0;cursor:pointer;font-size:15px}
+  .tinfo{font-size:12px;color:var(--dim);font-variant-numeric:tabular-nums;white-space:nowrap}.tinfo b{color:var(--ink)}
+  #tscrub{flex:1}
+  .speedsel{display:flex;gap:4px}
+  .speedsel button{background:#141a26;border:1px solid var(--line);color:var(--dim);border-radius:6px;padding:4px 7px;font-size:11px;cursor:pointer;font-family:inherit}
+  .speedsel button.on{color:var(--ink);border-color:var(--acc)}
+  #panToggle{position:fixed;top:54px;right:12px;z-index:6;background:var(--panel);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 10px;font-size:12px;cursor:pointer;display:none}
+  #legend{position:fixed;left:12px;top:54px;z-index:3;background:#0d1018b3;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.7;backdrop-filter:blur(6px)}
+  #legend .li{display:flex;align-items:center;gap:7px;color:var(--dim)}#legend .li b{color:var(--ink)}
+  #legend .sw{width:14px;height:3px;border-radius:2px;flex:0 0 auto}
+  @media(max-width:820px){#panel{width:268px;top:90px;right:8px}#panel.collapsed{display:none}
+    #transport{right:8px;left:8px;bottom:8px}#panToggle{display:block;top:auto;bottom:64px;right:8px}#legend{display:none}}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="labels"></div>
+
+<div id="topbar">
+  <div id="title">Polyphemus 위성계 <small>α Cen A b · Avatar</small></div>
+  <div class="modebtns">
+    <button id="mMoon" class="on">위성계</button>
+    <button id="mPan">Pandora 시점</button>
+    <button id="mStar">삼중성계</button>
+  </div>
+</div>
+<button id="panToggle">⚙ 패널</button>
+<div id="legend"></div>
+<div id="panel"></div>
+<div id="transport">
+  <div class="tline">
+    <button class="play" id="playBtn">▶</button>
+    <input type="range" id="tscrub" min="0" max="1000" value="0" step="0.1">
+    <div class="speedsel" id="speedSel"></div>
+    <div class="tinfo" id="tInfo"></div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ============ 데이터: 확정 로스터 + 실제 궤도 ============ */
+const DEG=Math.PI/180, AU_KM=149597870.7, RJUP_KM=71492, RSUN_KM=696000;
+const G=6.674e-11, ME_KG=5.972e24, MSUN_KG=1.989e30;
+const POLY={ radiusKm:1.0*RJUP_KM, massMe:120, j2:0.023, flat:0.08, oblqDeg:0 }; // flat: 적도팽대 편평도(J2=0.023 정합), 자전축=공전면 법선(시뮬 obliquity 0)
+const POLY_KG=POLY.massMe*ME_KG;
+
+const MOONS=[
+  {id:"dante",   name:"Dante",   a:110000, e:0.01,inc:9,  node:89, M0:35, r:900, color:"#ff8a5c", retro:false, role:"화산(Roche)"},
+  {id:"hades",   name:"Hades",   a:148000, e:0.05,inc:11, node:91, M0:140,r:750, color:"#ffb454", retro:false, role:"조석가열 >900K"},
+  {id:"pandora", name:"Pandora", a:252393, e:0.0, inc:10, node:90, M0:250,r:5724,color:"#39d6e0", retro:false, role:"나비족 모행성·32h"},
+  {id:"cassandra",name:"Cassandra",a:600000,e:0.05,inc:178,node:92, M0:300,r:3400,color:"#e85cc8",retro:true, role:"N–H 대기(역행)"},
+  {id:"chaos",   name:"Chaos",   a:1500000,e:0.10,inc:177,node:88, M0:60, r:400, color:"#c77dff",retro:true, role:"파쇄 위성(역행)"},
+];
+MOONS.forEach(m=>{ m.incC=m.inc; m.nodeC=m.node; m.period_h=2*Math.PI/Math.sqrt(G*POLY_KG/Math.pow(m.a*1000,3))/3600; });
+
+const STARS={
+  A:{name:"α Cen A",color:"#fff2cc"}, B:{name:"α Cen B",color:"#ffb066"}, P:{name:"Proxima",color:"#ff5a4a"},
+};
+const AB={a_au:17.57*1.3409,e:0.5179,inc:79.205,node:204.85,peri:231.65,P_yr:79.91};
+const PLANET_ORBIT={a_au:1.6,e:0.1,inc:16,node:0,peri:0,P_yr:Math.sqrt(1.6**3/1.1055)};
+const PROX={inc:107.6,node:126.0,shownAu:60};
+// 태양 방향(위성 장면에서 고정). α Cen A 방향, B는 약간 오프셋된 둘째 태양.
+const SUN_DIR=new THREE.Vector3(1,0.18,0.35).normalize();
+const SUN_DIR_B=new THREE.Vector3(0.92,0.12,0.55).normalize();
+
+/* ============ 케플러 ============ */
+function solveKepler(M,e){ M=((M+Math.PI)%(2*Math.PI))-Math.PI; let E=e<0.8?M:Math.PI;
+  for(let i=0;i<60;i++){const d=(E-e*Math.sin(E)-M)/(1-e*Math.cos(E));E-=d;if(Math.abs(d)<1e-11)break;} return E; }
+// 요소(rad)+M → 수학프레임 위치(z=기준면 법선). 반환은 Three 좌표(y=법선)로 매핑된 Vector3.
+function orbitVec(a,e,inc,node,peri,M,scale){
+  const E=solveKepler(M,e), xv=a*(Math.cos(E)-e), yv=a*Math.sqrt(1-e*e)*Math.sin(E);
+  const cO=Math.cos(node),sO=Math.sin(node),ci=Math.cos(inc),si=Math.sin(inc),cw=Math.cos(peri),sw=Math.sin(peri);
+  const x=(cO*cw-sO*sw*ci)*xv+(-cO*sw-sO*cw*ci)*yv;
+  const y=(sO*cw+cO*sw*ci)*xv+(-sO*sw+cO*cw*ci)*yv;
+  const z=(sw*si)*xv+(cw*si)*yv;
+  return new THREE.Vector3(x*scale, z*scale, y*scale); // Three.Y = 기준면 법선
+}
+
+/* ============ Three 기본 ============ */
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true,logarithmicDepthBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight); stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene(); scene.background=new THREE.Color('#06070d');
+const camera=new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.05, 5e6);
+const controls=new OrbitControls(camera, renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08;
+const ambient=new THREE.AmbientLight(0xffffff,0.28); scene.add(ambient);
+const sun=new THREE.DirectionalLight(0xfff4e0,1.5); scene.add(sun);
+const starfield=makeStarfield(); scene.add(starfield);
+
+window.addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+
+function makeStarfield(){
+  const n=1400, g=new THREE.BufferGeometry(), pos=new Float32Array(n*3);
+  // 결정적 분포(Math.random 회피 불필요하나 일관성 위해 의사난수)
+  let s=12345; const rnd=()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff;};
+  for(let i=0;i<n;i++){ const u=rnd()*2-1,th=rnd()*2*Math.PI,r=4e5,rr=Math.sqrt(1-u*u);
+    pos[i*3]=r*rr*Math.cos(th);pos[i*3+1]=r*u;pos[i*3+2]=r*rr*Math.sin(th); }
+  g.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  return new THREE.Points(g,new THREE.PointsMaterial({color:0x9fb0d0,size:900,sizeAttenuation:true,transparent:true,opacity:.8}));
+}
+
+// 글로우 스프라이트 텍스처
+function glowTex(){ const s=128,c=document.createElement('canvas');c.width=c.height=s;
+  const g=c.getContext('2d'),grd=g.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
+  grd.addColorStop(0,'rgba(255,255,255,1)');grd.addColorStop(.25,'rgba(255,255,255,.6)');grd.addColorStop(1,'rgba(255,255,255,0)');
+  g.fillStyle=grd;g.fillRect(0,0,s,s); const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t; }
+const GLOW=glowTex();
+
+// Polyphemus 띠무늬 텍스처
+function bandTex(){ const w=512,h=256,c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');
+  const base=g.createLinearGradient(0,0,0,h);
+  base.addColorStop(0,'#7a5638');base.addColorStop(.5,'#caa078');base.addColorStop(1,'#6e4f38');
+  g.fillStyle=base;g.fillRect(0,0,w,h);
+  const bands=[['#d8b488',.10],['#9c7450',.16],['#e0c79c',.07],['#8a6646',.13],['#c8a070',.09],['#7c5a3c',.14],['#d8b488',.08]];
+  let y=18; for(const[col,frac]of bands){const bh=h*frac;g.fillStyle=col;g.globalAlpha=.85;g.fillRect(0,y,w,bh);
+    g.globalAlpha=.25;g.fillStyle='#3a2a1c';g.fillRect(0,y,w,2);y+=bh;}
+  g.globalAlpha=1;
+  // 폭풍(붉은 점)
+  g.fillStyle='#b04a3a';g.beginPath();g.ellipse(w*0.62,h*0.60,30,15,0,0,7);g.fill();
+  g.fillStyle='#d06a55';g.beginPath();g.ellipse(w*0.62,h*0.60,18,8,0,0,7);g.fill();
+  const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t; }
+const BANDS=bandTex();
+
+/* ============ 라벨(DOM 오버레이) ============ */
+const labelBox=document.getElementById('labels'); let labels=[];
+function clearLabels(){labels.forEach(l=>l.el.remove());labels=[];}
+function addLabel(obj,text,color){const el=document.createElement('div');el.className='lbl';el.innerHTML=text;el.style.color=color||'#cfd8e8';labelBox.appendChild(el);labels.push({obj,el});}
+const _v=new THREE.Vector3();
+function updateLabels(){ for(const l of labels){ l.obj.getWorldPosition(_v); _v.project(camera);
+  if(_v.z>1||_v.z<-1){l.el.style.display='none';continue;} l.el.style.display='';
+  l.el.style.left=(_v.x*0.5+0.5)*innerWidth+'px'; l.el.style.top=(-_v.y*0.5+0.5)*innerHeight+'px'; } }
+
+/* ============ 장면 빌드 ============ */
+let MODE='moon';                 // moon | pandora | star
+let groupMoon=null, groupStar=null, moonObjs={};
+const KM_U=1/1000;               // 위성 장면: 1유닛 = 1000 km
+const AU_U=10;                   // 별 장면: 1유닛 = 0.1 AU
+
+function disposeGroup(g){ if(!g)return; scene.remove(g);
+  g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());}}); }
+
+function sunSprite(dir,colorHex,coreScale,glowScale){
+  const grp=new THREE.Group(); grp.position.copy(dir.clone().normalize().multiplyScalar(280000));
+  const core=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:new THREE.Color(colorHex),transparent:true,opacity:1,blending:THREE.AdditiveBlending,depthWrite:false}));
+  core.scale.setScalar(coreScale); grp.add(core);
+  const halo=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:new THREE.Color(colorHex),transparent:true,opacity:.5,blending:THREE.AdditiveBlending,depthWrite:false}));
+  halo.scale.setScalar(glowScale); grp.add(halo); return grp;
+}
+
+function buildMoonScene(){
+  disposeGroup(groupMoon); groupMoon=new THREE.Group(); moonObjs={}; scene.add(groupMoon);
+  const grid=new THREE.PolarGridHelper((1700000)*KM_U,8,6,64,0x2a3650,0x18202e);
+  grid.material.opacity=0.35;grid.material.transparent=true;grid.userData.kind='grid';groupMoon.add(grid);
+  // Polyphemus 적도팽대 타원체
+  const Req=POLY.radiusKm*KM_U;
+  const planet=new THREE.Mesh(new THREE.SphereGeometry(Req,72,48),
+    new THREE.MeshStandardMaterial({map:BANDS,roughness:1,metalness:0}));
+  planet.scale.set(1,1-POLY.flat,1); planet.rotation.z=POLY.oblqDeg*DEG;
+  groupMoon.add(planet); moonObjs.planet=planet;
+  const eq=new THREE.Mesh(new THREE.RingGeometry(Req*1.02,Req*1.05,96),
+    new THREE.MeshBasicMaterial({color:0xffe6b0,side:THREE.DoubleSide,transparent:true,opacity:0.16}));
+  eq.rotation.x=Math.PI/2; planet.add(eq);
+  // 위성 + 궤도
+  MOONS.forEach(m=>{
+    const mesh=new THREE.Mesh(new THREE.SphereGeometry(Math.max(m.r*KM_U,2.5),24,18),
+      new THREE.MeshStandardMaterial({color:new THREE.Color(m.color),roughness:1,emissive:new THREE.Color(m.color).multiplyScalar(0.05)}));
+    groupMoon.add(mesh);
+    const line=makeOrbitLine(m,KM_U); groupMoon.add(line);
+    moonObjs[m.id]={mesh,line};
+    if(m.id==='pandora'){ const halo=new THREE.Mesh(new THREE.RingGeometry(m.r*KM_U*1.3,m.r*KM_U*1.7,40),
+      new THREE.MeshBasicMaterial({color:0x39d6e0,side:THREE.DoubleSide,transparent:true,opacity:0.6})); mesh.add(halo); }
+  });
+  // 두 태양(원거리 밝은 점) — Pandora 시점에서 하늘에 보임
+  moonObjs.sunA=sunSprite(SUN_DIR,'#fff2cc',2000,5200); groupMoon.add(moonObjs.sunA);
+  moonObjs.sunB=sunSprite(SUN_DIR_B,'#ffb066',850,2400); groupMoon.add(moonObjs.sunB);
+}
+function makeOrbitLine(m,scale){
+  const pts=[]; for(let i=0;i<=160;i++){const M=i/160*2*Math.PI; pts.push(orbitVec(m.a,m.e,m.incC*DEG,m.nodeC*DEG,0,M,scale));}
+  return new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({color:new THREE.Color(m.color),transparent:true,opacity:m.id==='pandora'?0.9:0.45}));
+}
+function rebuildOrbit(m){ const o=moonObjs[m.id]; if(!o)return; o.line.geometry.dispose();
+  const pts=[]; for(let i=0;i<=160;i++){const M=i/160*2*Math.PI;pts.push(orbitVec(m.a,m.e,m.incC*DEG,m.nodeC*DEG,0,M,KM_U));}
+  o.line.geometry=new THREE.BufferGeometry().setFromPoints(pts); }
+
+function buildStarScene(){
+  disposeGroup(groupStar); groupStar=new THREE.Group(); scene.add(groupStar);
+  const grid=new THREE.PolarGridHelper(40*AU_U,8,6,64,0x2a3650,0x18202e);
+  grid.material.opacity=0.3;grid.material.transparent=true;grid.userData.kind='grid';groupStar.add(grid);
+  const A=star3D(2.2,STARS.A.color); groupStar.add(A.group);
+  const pl=new THREE.Line(orbitGeom(PLANET_ORBIT,AU_U),new THREE.LineBasicMaterial({color:0xb98a5e,transparent:true,opacity:.5}));groupStar.add(pl);
+  const poly=new THREE.Mesh(new THREE.SphereGeometry(0.5,16,12),new THREE.MeshBasicMaterial({color:0xd8a878}));groupStar.add(poly);
+  const abLine=new THREE.Line(orbitGeom(AB,AU_U),new THREE.LineBasicMaterial({color:0xffb066,transparent:true,opacity:.6}));groupStar.add(abLine);
+  const B=star3D(1.7,STARS.B.color);groupStar.add(B.group);
+  const proxPos=orbitVec(PROX.shownAu,0,PROX.inc*DEG,PROX.node*DEG,0,0,AU_U);
+  const P=star3D(0.8,STARS.P.color);P.group.position.copy(proxPos);groupStar.add(P.group);
+  const dash=new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(),proxPos]),
+    new THREE.LineDashedMaterial({color:0xff5a4a,transparent:true,opacity:.4,dashSize:4,gapSize:5}));dash.computeLineDistances();groupStar.add(dash);
+  groupStar.userData={Acore:A.core,B,poly,Pcore:P.core};
+}
+function star3D(r,colorHex){ const group=new THREE.Group();
+  const core=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),new THREE.MeshBasicMaterial({color:new THREE.Color(colorHex)}));group.add(core);
+  const g=new THREE.Sprite(new THREE.SpriteMaterial({map:GLOW,color:new THREE.Color(colorHex),transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false}));
+  g.scale.setScalar(r*7);group.add(g); return {group,core}; }
+function orbitGeom(orb,scale){ const pts=[]; for(let i=0;i<=200;i++){const M=i/200*2*Math.PI;
+  pts.push(orbitVec(orb.a_au,orb.e,orb.inc*DEG,orb.node*DEG,(orb.peri||0)*DEG,M,scale));} return new THREE.BufferGeometry().setFromPoints(pts); }
+
+/* ============ 라벨 등록(모드별) ============ */
+function addMoonLabels(){ addLabel(moonObjs.planet,'<b>Polyphemus</b>','#e8c79c');
+  MOONS.forEach(m=>addLabel(moonObjs[m.id].mesh, m.id==='pandora'?'<b>Pandora</b>':m.name, m.color));
+  addLabel(moonObjs.sunA,'α Cen A',STARS.A.color); addLabel(moonObjs.sunB,'α Cen B',STARS.B.color); }
+function addStarLabels(){ const u=groupStar.userData;
+  addLabel(u.Acore,'<b>α Cen A</b>',STARS.A.color); addLabel(u.B.core,'α Cen B',STARS.B.color);
+  addLabel(u.poly,'Polyphemus','#d8a878'); addLabel(u.Pcore,'Proxima (8700 AU·축소)',STARS.P.color); }
+
+/* ============ 시간/위치 ============ */
+let playing=false, speed=1, simTime=0; // moon: hours, star: years
+const MOON_SPAN_H=24*40, STAR_SPAN_YR=AB.P_yr;
+function moonPosAt(m,tH){ const n=Math.sqrt(G*POLY_KG/Math.pow(m.a*1000,3)); const M=m.M0*DEG+n*tH*3600;
+  return orbitVec(m.a,m.e,m.incC*DEG,m.nodeC*DEG,0,M,KM_U); }
+const _origin=new THREE.Vector3(0,0,0);
+function updatePositions(){
+  if(MODE==='star'){ if(!groupStar)return; const u=groupStar.userData;
+    u.B.group.position.copy(orbitVec(AB.a_au,AB.e,AB.inc*DEG,AB.node*DEG,AB.peri*DEG,(2*Math.PI/AB.P_yr)*simTime,AU_U));
+    u.poly.position.copy(orbitVec(PLANET_ORBIT.a_au,PLANET_ORBIT.e,PLANET_ORBIT.inc*DEG,0,0,(2*Math.PI/PLANET_ORBIT.P_yr)*simTime,AU_U));
+    return; }
+  if(!groupMoon)return;
+  MOONS.forEach(m=>moonObjs[m.id].mesh.position.copy(moonPosAt(m,simTime)));
+  moonObjs.planet.rotation.y=(simTime/10)%(2*Math.PI);
+  if(MODE==='pandora') pandoraView();
+}
+// Pandora 지표 1인칭 시점: 위치는 Pandora를 따라가고(조석고정 → Polyphemus가 yaw=pitch=0 정면),
+// 드래그 yaw/pitch 로 하늘을 둘러본다. 휠은 FOV(망원 확대).
+let panYaw=0, panPitch=0, panFov=55;
+const _fwd=new THREE.Vector3(),_right=new THREE.Vector3(),_pup=new THREE.Vector3(),_dir=new THREE.Vector3(),_tmp=new THREE.Vector3();
+const WORLD_UP=new THREE.Vector3(0,1,0);
+function pandoraView(){
+  const pan=moonObjs.pandora.mesh.position;
+  _fwd.copy(_origin).sub(pan).normalize();              // Polyphemus 방향
+  _right.crossVectors(_fwd,WORLD_UP); if(_right.lengthSq()<1e-6)_right.set(1,0,0); _right.normalize();
+  _pup.crossVectors(_right,_fwd).normalize();
+  const cy=Math.cos(panYaw),sy=Math.sin(panYaw),cp=Math.cos(panPitch),sp=Math.sin(panPitch);
+  _dir.copy(_fwd).multiplyScalar(cy*cp).addScaledVector(_right,sy*cp).addScaledVector(_pup,sp);
+  camera.position.copy(pan); camera.up.copy(_pup); camera.lookAt(_tmp.copy(pan).add(_dir));
+  if(camera.fov!==panFov){camera.fov=panFov;camera.updateProjectionMatrix();}
+}
+
+/* ============ 모드 적용 ============ */
+function applyMode(){
+  if(groupMoon)groupMoon.visible=(MODE!=='star');
+  if(groupStar)groupStar.visible=(MODE==='star');
+  if(moonObjs.pandora)moonObjs.pandora.mesh.visible=(MODE!=='pandora');
+  ambient.intensity=(MODE==='star')?0.85:0.28;
+  if(MODE!=='pandora' && camera.fov!==55){camera.fov=55;camera.up.set(0,1,0);camera.updateProjectionMatrix();}
+  if(MODE==='moon'){ controls.enabled=true; controls.target.set(0,0,0); camera.position.set(900,650,1200);
+    controls.minDistance=120;controls.maxDistance=12000; sun.position.copy(SUN_DIR).multiplyScalar(50000); }
+  else if(MODE==='pandora'){ controls.enabled=false; panYaw=0;panPitch=0;panFov=55; sun.position.copy(SUN_DIR).multiplyScalar(50000); }
+  else{ controls.enabled=true; controls.target.set(0,0,0); camera.position.set(160,120,260);
+    controls.minDistance=20;controls.maxDistance=4000; sun.position.set(0,0,0); }
+  controls.update();
+}
+
+/* ============ UI ============ */
+function buildPanel(){ const p=document.getElementById('panel');
+  if(MODE==='star'){ p.innerHTML=
+    `<div class="grp"><h3>삼중성계</h3>
+      <div class="moonrow"><div class="mh"><span class="dot" style="background:#fff2cc"></span><span class="nm">α Cen A</span><span class="tag">1.11 M☉·G2V</span></div><div class="note">Polyphemus 모항성. 행성 1.6 AU S-type.</div></div>
+      <div class="moonrow"><div class="mh"><span class="dot" style="background:#ffb066"></span><span class="nm">α Cen B</span><span class="tag">0.91 M☉·K1V</span></div><div class="note">a≈23.6 AU·e0.52·i79.2°·79.9년. 근점 11.4 AU.</div></div>
+      <div class="moonrow"><div class="mh"><span class="dot" style="background:#ff5a4a"></span><span class="nm">Proxima</span><span class="tag">0.12 M☉·M5.5V</span></div><div class="note">실제 8700 AU(54.7만년) — 방향만 유지·축소표시.</div></div></div>
+     <div class="grp"><div class="note">재생은 AB 79.9년 주기. 위성계 시간과 별개입니다.</div></div>`;
+    return; }
+  let html=`<div class="grp"><h3>위성 궤도경사각 · 노드(경사 위상)</h3>`;
+  MOONS.forEach(m=>{ html+=`<div class="moonrow">
+    <div class="mh"><span class="dot" style="background:${m.color}"></span><span class="nm">${m.name}</span><span class="tag">${m.retro?'역행':'순행'}·${m.period_h.toFixed(1)}h</span></div>
+    <div class="ctrl"><label>궤도경사각 <b id="inc_${m.id}">${m.incC.toFixed(0)}°</b></label><input type="range" min="0" max="180" step="1" value="${m.incC}" data-moon="${m.id}" data-k="inc"></div>
+    <div class="ctrl"><label>노드 Ω <b id="node_${m.id}">${m.nodeC.toFixed(0)}°</b></label><input type="range" min="0" max="360" step="1" value="${m.nodeC}" data-moon="${m.id}" data-k="node"></div></div>`; });
+  html+=`</div><div class="grp"><h3>표시</h3>
+      <label class="ck"><input type="checkbox" id="ckOrbit" checked> 궤도선</label>
+      <label class="ck"><input type="checkbox" id="ckGrid" checked> 기준면 격자</label>
+      <label class="ck"><input type="checkbox" id="ckLabel" checked> 이름표</label>
+      <div class="btnrow"><button id="btnReset">경사각 초기화</button><button id="btnView">시점 리셋</button></div></div>
+     <div class="grp"><div class="note">기준면=Polyphemus 공전면. 경사각=이 면 대비 기울기, 노드 Ω=기우는 방향. 역행(Cassandra·Chaos)은 90° 초과. 행성은 J2=0.023 정합 적도팽대(편평도 ${POLY.flat}).</div></div>`;
+  p.innerHTML=html;
+  p.querySelectorAll('input[type=range]').forEach(s=>s.addEventListener('input',e=>{
+    const m=MOONS.find(x=>x.id===e.target.dataset.moon),k=e.target.dataset.k,v=+e.target.value;
+    if(k==='inc'){m.incC=v;document.getElementById('inc_'+m.id).textContent=v.toFixed(0)+'°';}
+    else{m.nodeC=v;document.getElementById('node_'+m.id).textContent=v.toFixed(0)+'°';}
+    rebuildOrbit(m); }));
+  bindCk('ckOrbit',v=>Object.values(moonObjs).forEach(o=>{if(o&&o.line)o.line.visible=v;}));
+  bindCk('ckGrid',v=>groupMoon.children.forEach(c=>{if(c.userData.kind==='grid')c.visible=v;}));
+  bindCk('ckLabel',v=>{labelBox.style.display=v?'':'none';});
+  document.getElementById('btnReset').onclick=()=>{MOONS.forEach(m=>{m.incC=m.inc;m.nodeC=m.node;rebuildOrbit(m);});buildPanel();};
+  document.getElementById('btnView').onclick=()=>applyMode();
+}
+function bindCk(id,fn){const el=document.getElementById(id);if(el)el.addEventListener('change',e=>fn(e.target.checked));}
+function buildLegend(){ const l=document.getElementById('legend');
+  if(MODE==='star') l.innerHTML=`<div class="li"><span class="sw" style="background:#fff2cc"></span><b>α Cen A</b></div><div class="li"><span class="sw" style="background:#ffb066"></span>α Cen B</div><div class="li"><span class="sw" style="background:#ff5a4a"></span>Proxima</div><div class="li" style="margin-top:4px;color:#5a6478">드래그 회전·휠 확대</div>`;
+  else if(MODE==='pandora') l.innerHTML=`<div class="li"><span class="sw" style="background:#e8c79c"></span><b>Polyphemus</b> 하늘 지배</div><div class="li"><span class="sw" style="background:#fff2cc"></span>두 태양</div><div class="li" style="margin-top:4px;color:#5a6478">드래그 둘러보기·휠 확대</div>`;
+  else l.innerHTML=`<div class="li"><span class="sw" style="background:#39d6e0"></span><b>Pandora</b></div><div class="li"><span class="sw" style="background:#ff8a5c"></span>순행</div><div class="li"><span class="sw" style="background:#e85cc8"></span>역행</div><div class="li" style="margin-top:4px;color:#5a6478">드래그 회전·휠 확대</div>`;
+}
+function updateInfo(){ const el=document.getElementById('tInfo');
+  if(MODE==='star') el.innerHTML=`<b>${(simTime%AB.P_yr).toFixed(1)}</b> / ${AB.P_yr} 년`;
+  else{ const pPer=MOONS.find(m=>m.id==='pandora').period_h; el.innerHTML=`<b>${(simTime/24).toFixed(2)}</b> 일 · Pandora <b>${(simTime/pPer).toFixed(2)}</b>회전`; } }
+function syncScrub(){ const s=document.getElementById('tscrub');
+  if(MODE==='star'){s.max=STAR_SPAN_YR;s.value=((simTime%STAR_SPAN_YR)+STAR_SPAN_YR)%STAR_SPAN_YR;}
+  else{s.max=MOON_SPAN_H;s.value=((simTime%MOON_SPAN_H)+MOON_SPAN_H)%MOON_SPAN_H;} }
+
+/* ============ 모드 전환 ============ */
+function setMode(v){ if(v===MODE)return; MODE=v; simTime=0; playing=false;
+  document.getElementById('playBtn').textContent='▶';
+  ['mMoon','mPan','mStar'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById({moon:'mMoon',pandora:'mPan',star:'mStar'}[v]).classList.add('on');
+  document.getElementById('title').innerHTML = v==='star'?`삼중성계 <small>Alpha Centauri AB + Proxima</small>`
+    : v==='pandora'?`Pandora 시점 <small>지상에서 본 하늘</small>`:`Polyphemus 위성계 <small>α Cen A b · Avatar</small>`;
+  clearLabels();
+  if(v==='star'){ if(!groupStar)buildStarScene(); addStarLabels(); }
+  else{ if(!groupMoon)buildMoonScene(); addMoonLabels(); }
+  applyMode(); buildPanel(); buildLegend(); syncScrub();
+}
+
+/* ============ 입력 ============ */
+document.getElementById('playBtn').onclick=function(){playing=!playing;this.textContent=playing?'❚❚':'▶';};
+const SPEEDS=[0.25,1,4,16];
+(function buildSpeed(){const c=document.getElementById('speedSel');
+  function render(){c.innerHTML=SPEEDS.map(s=>`<button data-s="${s}" class="${s===speed?'on':''}">${s}×</button>`).join('');
+    c.querySelectorAll('button').forEach(b=>b.onclick=()=>{speed=+b.dataset.s;render();});} render();})();
+document.getElementById('tscrub').addEventListener('input',e=>{playing=false;document.getElementById('playBtn').textContent='▶';simTime=+e.target.value;});
+document.getElementById('mMoon').onclick=()=>setMode('moon');
+document.getElementById('mPan').onclick=()=>setMode('pandora');
+document.getElementById('mStar').onclick=()=>setMode('star');
+document.getElementById('panToggle').onclick=()=>document.getElementById('panel').classList.toggle('collapsed');
+// Pandora 시점 전용 1인칭 둘러보기(OrbitControls는 이 모드에서 비활성)
+let pDrag=false,plx=0,ply=0;
+const cvEl=renderer.domElement;
+cvEl.addEventListener('pointerdown',e=>{if(MODE!=='pandora')return;pDrag=true;plx=e.clientX;ply=e.clientY;cvEl.setPointerCapture(e.pointerId);});
+cvEl.addEventListener('pointermove',e=>{if(!pDrag||MODE!=='pandora')return;
+  panYaw+=(e.clientX-plx)*0.004; panPitch=Math.max(-1.45,Math.min(1.45,panPitch-(e.clientY-ply)*0.004));
+  plx=e.clientX;ply=e.clientY;});
+cvEl.addEventListener('pointerup',()=>{pDrag=false;});
+cvEl.addEventListener('wheel',e=>{if(MODE!=='pandora')return;e.preventDefault();panFov=Math.max(12,Math.min(80,panFov+e.deltaY*0.03));},{passive:false});
+
+/* ============ 루프 ============ */
+let last=null;
+function tick(ts){ requestAnimationFrame(tick); if(last==null)last=ts; const dt=Math.min((ts-last)/1000,0.1);last=ts;
+  if(playing){ simTime += (MODE==='star'?2:6)*speed*dt; syncScrub(); }
+  updatePositions(); if(controls.enabled)controls.update(); updateLabels(); updateInfo();
+  renderer.render(scene,camera); }
+buildMoonScene(); addMoonLabels(); applyMode(); buildPanel(); buildLegend(); syncScrub();
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
