@@ -1,5 +1,5 @@
 {
-  "_comment": "Polyphemus (Alpha Centauri A b) named-moon system from Avatar: The Game [GAME, soft-canon]. FINAL design-of-record (2026-06-21), supersedes the s=25 spread / 27h Pandora. Run: run.py --system alpha_centauri --hypotheticals hypotheticals/alpha_centauri.json --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16 --j2 0.023 --integrator trace --years 1000. Verified STABLE over 1000 yr with J2 (TRACE, results/_final32b): all 5 moons Hill-bound & calm, 0 ejections, Pandora e<=0.0072 (ocean-safe). DESIGN: non-resonant; nodes auto-aligned to the parent orbital plane by load.add_hypotheticals (shared line of nodes = coherent warp). Inner prograde inclinations ~10deg (Dante 9 / Hades 11 / Pandora 10) relative to Polyphemus's orbital plane; Cassandra/Chaos near-coplanar RETROGRADE within +-3deg of 180 (178/177, canon retrograde sense). Pandora a=252,393 km => 32 h tidal-lock day (chosen over canon 27h for ocean robustness; Polyphemus ~31deg across Pandora's sky). Dante 110,000 km (1.54 R_p) and Hades 148,000 km (2.07 R_p): Dante sits outside even the fluid Roche limit (~98,900 km at rho 2620) and far outside the rigid Roche limit (~48,500 km, the relevant one for a solid 900-km body); Hades moved out to 148k to restore the Dante-Hades gap (period ratio 1.56). mean_anomaly_deg varied per moon for visual phase spread. Masses/radii INVENTED except Pandora (0.72 M_earth, 11,447 km) and Cassandra's >6500 km diameter (canon). Class C/D Phase 4 art-direction, staged, DB unchanged. The 9 unnamed moonlets + Poly-L4/L5 co-orbitals are NOT in this run (deferred).",
+  "_comment": "Polyphemus (Alpha Centauri A b) named-moon system from Avatar: The Game [GAME, soft-canon]. FINAL design-of-record (2026-06-21), supersedes the s=25 spread / 27h Pandora. Run: run.py --system alpha_centauri --hypotheticals hypotheticals/alpha_centauri.json --acen-a-au 1.6 --acen-e 0.1 --acen-incl-deg 16 --j2 0.023 --integrator trace --years 1000. Verified STABLE over 1000 yr with J2 (TRACE, results/_final32b): all 5 moons Hill-bound & calm, 0 ejections, Pandora e<=0.0072 (ocean-safe). DESIGN: non-resonant; nodes auto-aligned to the parent orbital plane by load.add_hypotheticals (shared line of nodes = coherent warp). Inner prograde inclinations ~10deg (Dante 9 / Hades 11 / Pandora 10) relative to Polyphemus's orbital plane; Cassandra/Chaos near-coplanar RETROGRADE within ~4deg of 180 (176/179; viewer art-direction 184/181 normalized, canon retrograde sense). Pandora a=252,393 km => 32 h tidal-lock day (chosen over canon 27h for ocean robustness; Polyphemus ~31deg across Pandora's sky). Dante 110,000 km (1.54 R_p) and Hades 148,000 km (2.07 R_p): Dante sits outside even the fluid Roche limit (~98,900 km at rho 2620) and far outside the rigid Roche limit (~48,500 km, the relevant one for a solid 900-km body); Hades moved out to 148k to restore the Dante-Hades gap (period ratio 1.56). mean_anomaly_deg varied per moon for visual phase spread. Masses/radii INVENTED except Pandora (0.72 M_earth, 11,447 km) and Cassandra's >6500 km diameter (canon). Class C/D Phase 4 art-direction, staged, DB unchanged. The 9 unnamed moonlets + Poly-L4/L5 co-orbitals are NOT in this run (deferred). [2026-06-21 final-v2: ring added as a faint Chaos-fed E-ring (see decision board); inc re-confirmed STABLE 1000yr J2 in results/_finalv2.]",
   "system": "alpha_centauri",
   "bodies": [
     {
@@ -41,7 +41,7 @@
       "type": "moon",
       "semi_major_axis_km": 600000,
       "eccentricity": 0.05,
-      "inclination_deg": 178.0,
+      "inclination_deg": 176.0,
       "mean_anomaly_deg": 300.0,
       "mass_kg": 9e+23,
       "radius_km": 3400
@@ -52,7 +52,7 @@
       "type": "moon",
       "semi_major_axis_km": 1500000,
       "eccentricity": 0.1,
-      "inclination_deg": 177.0,
+      "inclination_deg": 179.0,
       "mean_anomaly_deg": 60.0,
       "mass_kg": 5.4e+20,
       "radius_km": 400
