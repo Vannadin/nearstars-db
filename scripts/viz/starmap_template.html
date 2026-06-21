@@ -648,7 +648,10 @@ const clusters=[];   // {data, node, glow, sysScale, bodies:[{kind,name,obj,rgb}
 // stability clock); inner moons faster per Kepler (ω ∝ a^-1.5). One play control.
 const MOON_SYS=[];   // {mesh, center(cg-local Vector3), a,e,i,Om,om, M0, omega}
 let moonT=0, moonPlay=true, moonSpeed=1, moonStab=false;   // moonStab: scrub the 1000-yr REBOUND run (secular a/e)
-const MOON_RATE=2.5e-5;   // rad/s per a^-1.5 → innermost moon ~5 s/rev; Kepler ratios exact
+// ω ∝ a^-0.5 (range compressed to ~4× so all moons are watchable at once; inner still
+// faster, order preserved — NOT literal Kepler periods, which span ~58×; the true
+// periods/secular evolution live in the stability charts). Dante ~10 s/rev → Chaos ~38 s.
+const MOON_RATE=0.017;
 function moonOrbitPts(ctr,a,e,iD,Om,om){ const p=[]; for(let k=0;k<=96;k++) p.push(ctr.clone().add(orbitPoint(a,e,iD,Om,om,k/96*2*Math.PI))); return p; }
 const glowSprites=[];
 // curated systems + the uncurated 50-ly field stars (rendered the same; is_field gates
@@ -721,7 +724,7 @@ const glowSprites=[];
       const mm=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:col}));
       mm.scale.setScalar(mr); cg.add(mm);   // not in `bodies` → no xhair-label clutter at the planet
       MOON_SYS.push({mesh:mm, line, center:ctr.clone(), a, e, i:iD, Om, om, rgb:mo.rgb||'#cfd2de', name:mo.name,
-        M0:(mo.M_deg||0)*DEG, omega:MOON_RATE*Math.pow(Math.max(a,1e-5),-1.5),
+        M0:(mo.M_deg||0)*DEG, omega:MOON_RATE*Math.pow(Math.max(a,1e-5),-0.5),
         stab:mo.stability||null});   // secular a/e track for the stability mode
     });
   }
@@ -1870,24 +1873,29 @@ moonCtl.innerHTML='<button id="mPlay" style="width:30px;height:30px;border-radiu
  +'<span id="mSpd" style="display:flex;gap:4px"></span>'
  +'<button id="mStab" title="1000-yr stability run" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer">안정성</button>'
  +'<button id="mChartBtn" title="charts" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer;display:none">📈</button>'
+ +'<button id="mChartBig" title="expand" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 7px;font-size:12px;cursor:pointer;display:none">⤢</button>'
  +'<span id="mYr" style="color:#8893a6;font-variant-numeric:tabular-nums;min-width:62px;text-align:right"></span>';
 document.body.appendChild(moonCtl);
 // stability charts (reuses paintStab): q–Q / inclination / eccentricity over the 1000-yr run
 const moonChart=document.createElement('canvas');
 moonChart.style.cssText='position:fixed;left:50%;bottom:62px;transform:translateX(-50%);z-index:50;width:min(440px,92vw);display:none;background:#0d1018f2;border:1px solid #1c2433;border-radius:10px;backdrop-filter:blur(6px)';
 document.body.appendChild(moonChart);
-let moonChartOn=false, moonYr=null;
+let moonChartOn=false, moonChartBig=false, moonYr=null;
 const _mPlayBtn=moonCtl.querySelector('#mPlay'), _mStab=moonCtl.querySelector('#mStab'),
-      _mYr=moonCtl.querySelector('#mYr'), _mChartBtn=moonCtl.querySelector('#mChartBtn');
-_mChartBtn.onclick=()=>{ moonChartOn=!moonChartOn; _mChartBtn.classList.toggle('on',moonChartOn);
+      _mYr=moonCtl.querySelector('#mYr'), _mChartBtn=moonCtl.querySelector('#mChartBtn'),
+      _mChartBig=moonCtl.querySelector('#mChartBig');
+_mChartBtn.onclick=()=>{ moonChartOn=!moonChartOn;
   _mChartBtn.style.borderColor=moonChartOn?'#7aa2ff':'#1c2433'; if(!moonChartOn) moonChart.style.display='none'; };
+_mChartBig.onclick=()=>{ moonChartBig=!moonChartBig; _mChartBig.style.borderColor=moonChartBig?'#7aa2ff':'#1c2433'; };
 function drawMoonChart(){
   if(!(moonStab&&moonChartOn)){ moonChart.style.display='none'; return; }
   const recs=MOON_SYS.filter(m=>m.stab&&m._near).map(m=>{ const d=m.stab.data,t0=m.stab.t0,t1=m.stab.t_end,n=d.length;
     return {rgb:m.rgb,name:m.name,d:d.map((s,j)=>[t0+(t1-t0)*j/Math.max(n-1,1),s[0],s[1],s[2],s[3],s[4],s[5]])}; });
   if(!recs.length){ moonChart.style.display='none'; return; }
   moonChart.style.display='block';
-  const W=moonChart.clientWidth||300, H=210;
+  moonChart.style.width  = moonChartBig ? 'min(900px,94vw)' : 'min(440px,92vw)';
+  moonChart.style.bottom = moonChartBig ? '74px' : '62px';
+  const W=moonChart.clientWidth||300, H=moonChartBig?Math.min(560,Math.round(innerHeight*0.66)):210;  // H>320 → paintStab "big" style
   if(moonChart.style.height!==H+'px') moonChart.style.height=H+'px';
   paintStab(moonChart,W,H,moonYr,recs);
 }
@@ -1921,6 +1929,7 @@ function updateMoons(){
   moonCtl.style.display=show?'flex':'none';
   if(show){ _mLblSet();
     _mChartBtn.style.display=moonStab?'inline-block':'none';
+    _mChartBig.style.display=(moonStab&&moonChartOn)?'inline-block':'none';
     _mYr.textContent=(moonStab&&yr!=null)?(Math.round(yr).toLocaleString()+(lang==='ko'?' 년':' yr')):''; }
   drawMoonChart();
 }
