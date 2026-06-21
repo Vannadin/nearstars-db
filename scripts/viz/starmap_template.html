@@ -642,6 +642,13 @@ function simOrbitPoint(ref,a,e,iDeg,OmDeg,omDeg,nu){
 
 /* ── build per-cluster nodes ──────────────────────────────────────────── */
 const clusters=[];   // {data, node, glow, sysScale, bodies:[{kind,name,obj,rgb}], stem, labelEl, orbitsLines:[]}
+// Moon (sub-planet) orbiting animation — GENERIC: any planet with a `moons` array
+// (from build_starmap load_hypotheticals) renders + animates here. The moons orbit on
+// their OWN clock (real-time, decoupled from the static stars and the planet-evolution
+// stability clock); inner moons faster per Kepler (ω ∝ a^-1.5). One play control.
+const MOON_SYS=[];   // {mesh, center(cg-local Vector3), a,e,i,Om,om, M0, omega}
+let moonT=0, moonPlay=true, moonSpeed=1;
+const MOON_RATE=2.5e-5;   // rad/s per a^-1.5 → innermost moon ~5 s/rev; Kepler ratios exact
 const glowSprites=[];
 // curated systems + the uncurated 50-ly field stars (rendered the same; is_field gates
 // out spin axis / heliosphere / motion / planets, which they don't have).
@@ -688,6 +695,33 @@ const glowSprites=[];
       // common-plane reference inclination: load.py subtracts 90° from a known
       // transit inclination (→ coplanar set ≈0), and uses 0 when i is unknown.
       iRef:(p.i_deg!=null?90:0)});
+  }
+  // render a planet's moons (planet-centric orbits + spheres) + optional faint ring,
+  // and register the moons for the orbiting animation. centerMesh = the planet mesh
+  // (its cg-local position is the moon-system centre). Reuses orbitPoint().
+  function addMoonSys(p, centerMesh, cg){   // cg passed in (it is per-member, block-scoped like regStab's grp)
+    const ctr=centerMesh.position;
+    if(p.ring){ // faint continuous ring in the moons' reference plane (scene xz), at the planet
+      const rg=new THREE.Mesh(new THREE.RingGeometry(p.ring.inner_au, p.ring.outer_au, 96, 1),
+        new THREE.MeshBasicMaterial({color:0xc9b89a, side:THREE.DoubleSide, transparent:true,
+          opacity:0.12, depthWrite:false}));
+      rg.rotation.x=-Math.PI/2; rg.position.copy(ctr); cg.add(rg); orbitsLines.push(rg);
+    }
+    if(!p.moons) return;
+    p.moons.forEach((mo,mi)=>{
+      const a=mo.a_au, e=mo.e||0, iD=mo.i_deg||0, Om=mo.Omega_deg||0, om=mo.omega_deg||0;
+      const col=new THREE.Color(mo.rgb||'#cfd2de');
+      const pts=[];
+      for(let k=0;k<=96;k++){ pts.push(ctr.clone().add(orbitPoint(a,e,iD,Om,om,k/96*2*Math.PI))); }
+      const line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),
+        new THREE.LineBasicMaterial({color:col,transparent:true,opacity:.5}));
+      cg.add(line); orbitsLines.push(line);
+      const mr=Math.max((mo.radius_km||300)/6371*R_EARTH_AU, R_EARTH_AU*0.45);
+      const mm=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:col}));
+      mm.scale.setScalar(mr); cg.add(mm);   // not in `bodies` → no xhair-label clutter at the planet
+      MOON_SYS.push({mesh:mm, center:ctr.clone(), a, e, i:iD, Om, om,
+        M0:(mo.M_deg||0)*DEG, omega:MOON_RATE*Math.pow(Math.max(a,1e-5),-1.5)});
+    });
   }
   let sysScale=0.6;
   // representative disk plane (inc, PA) for this system. Planets and a debris disk
@@ -837,6 +871,7 @@ const glowSprites=[];
         pm2.scale.setScalar(pr2); pm2.position.set(e0[0],e0[2],e0[1]); node.add(pm2);
         bodies.push({kind:'planet',name:p.name,obj:pm2,rgb:p.rgb||'#ccd2de',r:pr2});
         regStab(p,eline,pm2,cpos,cg);
+        addMoonSys(p,pm2,cg);
         return;
       }
       // orbit line — sky-true plane (i,Ω,ω vs the plane of sky); Sol keeps the
@@ -862,6 +897,7 @@ const glowSprites=[];
       pm.scale.setScalar(pr); pm.position.copy(pp); cg.add(pm);
       bodies.push({kind:'planet',name:p.name,obj:pm,rgb:p.rgb||'#ccd2de',r:pr});
       regStab(p,line,pm,cpos,cg);
+      addMoonSys(p,pm,cg);
     });
   });
 
@@ -1824,6 +1860,32 @@ function applyKeys(){
 }
 
 /* ── render loop ──────────────────────────────────────────────────────── */
+/* ── moon-system playback (own real-time clock; stars + planets stay static) ── */
+const moonCtl=document.createElement('div');
+moonCtl.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:50;display:none;align-items:center;gap:10px;background:#0d1018e6;border:1px solid #1c2433;border-radius:10px;padding:7px 12px;color:#e8edf6;font:13px -apple-system,system-ui,sans-serif;backdrop-filter:blur(6px)';
+moonCtl.innerHTML='<button id="mPlay" style="width:30px;height:30px;border-radius:50%;border:0;background:#7aa2ff;color:#05060a;cursor:pointer;font-size:13px">❚❚</button><span id="mLbl" style="color:#8893a6">moon system</span><span id="mSpd" style="display:flex;gap:4px"></span>';
+document.body.appendChild(moonCtl);
+const _mPlayBtn=moonCtl.querySelector('#mPlay');
+_mPlayBtn.onclick=()=>{moonPlay=!moonPlay;_mPlayBtn.textContent=moonPlay?'❚❚':'▶';};
+(function(){const c=moonCtl.querySelector('#mSpd');[0.25,1,4,16].forEach(s=>{const b=document.createElement('button');
+  b.textContent=s+'×';b.dataset.s=s;
+  b.style.cssText='background:#141a26;border:1px solid #1c2433;color:'+(s===moonSpeed?'#e8edf6':'#8893a6')+';border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer';
+  b.onclick=()=>{moonSpeed=s;[...c.children].forEach(x=>x.style.color=(+x.dataset.s===s?'#e8edf6':'#8893a6'));};c.appendChild(b);});})();
+let _moonLast=performance.now();
+function updateMoons(){
+  const now=performance.now(), dt=Math.min((now-_moonLast)/1000,0.1); _moonLast=now;
+  if(moonPlay) moonT+=dt*moonSpeed;
+  let near=false;
+  for(const m of MOON_SYS){
+    const M=m.M0+m.omega*moonT, nu=meanToTrue(M,m.e);
+    m.mesh.position.copy(m.center).add(orbitPoint(m.a,m.e,m.i,m.Om,m.om,nu));
+    if(!near){ m.mesh.getWorldPosition(wp); if(wp.distanceTo(camera.position)<0.25) near=true; }
+  }
+  const show=MOON_SYS.length && near;
+  moonCtl.style.display=show?'flex':'none';
+  if(show) moonCtl.querySelector('#mLbl').textContent=(lang==='ko'?'위성계 재생':'moon system');
+}
+
 function tick(){
   requestAnimationFrame(tick);
   applyKeys();
@@ -1836,6 +1898,7 @@ function tick(){
   controls.update();
   if(document.activeElement!==zoomSlider) zoomSlider.value=distToZoom(controls.getDistance());
   updateScene();
+  updateMoons();
   renderer.render(scene,camera);
 }
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();

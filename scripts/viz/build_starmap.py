@@ -319,6 +319,68 @@ def load_stability():
     return out
 
 
+_HYP = None
+KM_PER_AU = 149_597_870.7
+# Faint art-direction rings keyed by planet name (not in DB — see phase4 decision board).
+# Generic field; only bodies with a designed ring appear here. Polyphemus = the Chaos-fed
+# E-ring (Beichman 2025 §5.3): inner/outer km, optical depth tau, geometric albedo.
+RING_BY_PLANET = {
+    "Alpha Centauri A b": {"inner_km": 800_000, "outer_km": 2_500_000, "tau": 9e-5, "albedo": 0.45},
+}
+_MOON_PAL = ["#39d6e0", "#ff8a5c", "#ffb454", "#e85cc8", "#c77dff", "#8fd0ff", "#b0d04a"]
+
+
+def load_hypotheticals():
+    """system_id → {parent_planet_name: [moon body dict, …]} from the stability-sim
+    canonical hypotheticals (committed, non-underscore). GENERIC: any system with a moon
+    config visualises in the starmap with zero extra code — drop in a <system>.json with
+    type:"moon" bodies and they appear under their parent planet."""
+    global _HYP
+    if _HYP is not None:
+        return _HYP
+    out = {}
+    hyp_dir = os.path.join(ROOT, "phase3", "stability-sim", "hypotheticals")
+    for f in sorted(glob.glob(os.path.join(hyp_dir, "*.json"))):
+        base = os.path.basename(f)
+        if base.startswith("_") or base == "EXAMPLE.json":   # scratch/variant/template
+            continue
+        try:
+            j = json.load(open(f, encoding="utf-8"))
+        except Exception:
+            continue
+        sysid = j.get("system")
+        if not sysid:
+            continue
+        by_parent = {}
+        for b in j.get("bodies", []):
+            if b.get("type") == "moon" and b.get("parent"):
+                by_parent.setdefault(b["parent"], []).append(b)
+        if by_parent:
+            out[sysid] = by_parent
+    _HYP = out
+    return out
+
+
+def _moon_payload(b, idx):
+    """A hypothetical moon body → viewer payload (planet-centric, AU). inclination is
+    normalised to 0–180 (sky-true); node_deg is viz orientation only (the sim aligns
+    moon nodes to the parent plane, so it is dynamically ignored)."""
+    inc = (b.get("inclination_deg", 0.0) or 0.0) % 360.0
+    if inc > 180.0:
+        inc = 360.0 - inc
+    return {
+        "name": b["name"],
+        "a_au": b["semi_major_axis_km"] / KM_PER_AU,
+        "e": b.get("eccentricity", 0.0),
+        "i_deg": round(inc, 3),
+        "Omega_deg": b.get("node_deg", (idx * 73) % 360),
+        "omega_deg": b.get("arg_periapsis_deg", 0.0),
+        "M_deg": b.get("mean_anomaly_deg", (idx * 137.5) % 360),
+        "radius_km": b.get("radius_km"),
+        "rgb": _MOON_PAL[idx % len(_MOON_PAL)],
+    }
+
+
 _DISKS = None
 
 
@@ -892,6 +954,16 @@ def build_cluster_obj(members):
             stab = load_stability().get(p["name"])
             if stab:
                 pp["stability"] = stab
+            # sub-system: hypothetical moons + optional ring (generic, data-driven)
+            sys_slug = to_file_slug(label or rep["name"])
+            hyp_moons = load_hypotheticals().get(sys_slug, {}).get(p["name"])
+            if hyp_moons:
+                pp["moons"] = [_moon_payload(b, i) for i, b in enumerate(hyp_moons)]
+            ring = RING_BY_PLANET.get(p["name"])
+            if ring:
+                pp["ring"] = {"inner_au": ring["inner_km"] / KM_PER_AU,
+                              "outer_au": ring["outer_km"] / KM_PER_AU,
+                              "tau": ring["tau"], "albedo": ring["albedo"]}
             planets.append(pp)
 
     return {
