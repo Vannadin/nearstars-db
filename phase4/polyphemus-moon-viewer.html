@@ -99,17 +99,27 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 /* ============ 데이터: 확정 로스터 + 실제 궤도 ============ */
 const DEG=Math.PI/180, AU_KM=149597870.7, RJUP_KM=71492, RSUN_KM=696000;
 const G=6.674e-11, ME_KG=5.972e24, MSUN_KG=1.989e30;
-const POLY={ radiusKm:1.0*RJUP_KM, massMe:120, j2:0.023, flat:0.08, oblqDeg:0 }; // flat: 적도팽대 편평도(J2=0.023 정합), 자전축=공전면 법선(시뮬 obliquity 0)
+const POLY={ radiusKm:1.0*RJUP_KM, massMe:120, j2:0.023, flat:0.08, oblqDeg:0, albedo:0.4 }; // flat: 적도팽대 편평도(J2=0.023 정합), 자전축=공전면 법선(시뮬 obliquity 0); albedo: 가스자이언트 기하 알베도(반사광 축퇴 계산용)
+const INSOL_SEARTH=1.519/(1.6*1.6);  // α Cen A(1.519 L☉) 1.6 AU 입사광 ≈ 0.59 S⊕ (≈807 W/m²) — 고리 조명
 const POLY_KG=POLY.massMe*ME_KG;
 
 const MOONS=[
-  {id:"dante",   name:"Dante",   a:110000, e:0.01,inc:9,  node:89, M0:35, r:900, color:"#ff8a5c", retro:false, role:"화산(Roche)"},
-  {id:"hades",   name:"Hades",   a:148000, e:0.05,inc:11, node:91, M0:140,r:750, color:"#ffb454", retro:false, role:"조석가열 >900K"},
-  {id:"pandora", name:"Pandora", a:252393, e:0.0, inc:10, node:90, M0:250,r:5724,color:"#39d6e0", retro:false, role:"나비족 모행성·32h"},
-  {id:"cassandra",name:"Cassandra",a:600000,e:0.05,inc:178,node:92, M0:300,r:3400,color:"#e85cc8",retro:true, role:"N–H 대기(역행)"},
-  {id:"chaos",   name:"Chaos",   a:1500000,e:0.10,inc:177,node:88, M0:60, r:400, color:"#c77dff",retro:true, role:"파쇄 위성(역행)"},
+  {id:"dante",   name:"Dante",   a:110000, e:0.01,inc:9,  node:89, M0:35, r:900, mass:8e21,  color:"#ff8a5c", retro:false, role:"화산(Roche)"},
+  {id:"hades",   name:"Hades",   a:148000, e:0.05,inc:11, node:91, M0:140,r:750, mass:5e21,  color:"#ffb454", retro:false, role:"조석가열 >900K"},
+  {id:"pandora", name:"Pandora", a:252393, e:0.0, inc:10, node:90, M0:250,r:5724,mass:4.3e24,color:"#39d6e0", retro:false, role:"나비족 모행성·32h"},
+  {id:"cassandra",name:"Cassandra",a:600000,e:0.05,inc:184,node:67, M0:300,r:3400,mass:9e23, color:"#e85cc8",retro:true, role:"N–H 대기(역행)"},
+  {id:"chaos",   name:"Chaos",   a:1500000,e:0.10,inc:181,node:94, M0:60, r:400, mass:5.4e20,color:"#c77dff",retro:true, role:"파쇄 위성(역행)"},
 ];
-MOONS.forEach(m=>{ m.incC=m.inc; m.nodeC=m.node; m.period_h=2*Math.PI/Math.sqrt(G*POLY_KG/Math.pow(m.a*1000,3))/3600; });
+MOONS.forEach(m=>{ m.incC=m.inc; m.nodeC=m.node; m.period_h=2*Math.PI/Math.sqrt(G*POLY_KG/Math.pow(m.a*1000,3))/3600;
+  m.rhill=m.a*Math.cbrt(m.mass/(3*POLY_KG)); });   // 위성 힐 반경(km) — 고리 청소 구역 판정용
+
+// 고리: 잔해(응집력 0) → 유체 로슈가 바깥 한계. inner/width/opacity 사용자 조정.
+const FLUID_ROCHE_KM=98900;   // Dante rho≈2620 기준 유체 로슈 (고리 바깥 자연 한계)
+// Beichman et al. 2025 (arXiv:2508.03814 §5.3): JWST 15.5µm 밝기를 설명하는 광학적으로 두꺼운 고리 =
+// 단면적이 정면 원반 반지름 ≈64,000 km(≈토성 고리 단면적의 절반)에 해당. 알베도 A_B≈0.1, T≈209–257K.
+const BEICHMAN_EQUIV_KM=64000, BEICHMAN_AREA=Math.PI*64000*64000;
+const TARGET_DR_RJUP=0.05;  // 사용자 목표: 고리가 겉보기 반지름 +0.05 R_Jup 만큼의 (열복사) 밝기를 담당
+const RING={ on:true, inner:75000, width:23000, albedo:0.30, tau:0.6, gap:false };  // gap: Chaos 간극(기본 off — Sim B 2000yr 결과 Chaos가 너무 작아 간극을 못 비움. 연속 고리가 물리적. 토글은 미적 선택용).
 
 const STARS={
   A:{name:"α Cen A",color:"#fff2cc"}, B:{name:"α Cen B",color:"#ffb066"}, P:{name:"Proxima",color:"#ff5a4a"},
@@ -220,6 +230,12 @@ function buildMoonScene(){
   const eq=new THREE.Mesh(new THREE.RingGeometry(Req*1.02,Req*1.05,96),
     new THREE.MeshBasicMaterial({color:0xffe6b0,side:THREE.DoubleSide,transparent:true,opacity:0.16}));
   eq.rotation.x=Math.PI/2; planet.add(eq);
+  // 고리 (적도면 = 기준면). 잔해라 unlit 평면 annulus + 투명도.
+  const ringGroup=new THREE.Group(); ringGroup.rotation.x=Math.PI/2; groupMoon.add(ringGroup); moonObjs.ring=ringGroup; rebuildRing();
+  // 유체 로슈 한계 기준 원 (고리 바깥 자연 경계)
+  const rpts=[]; for(let i=0;i<=128;i++){const a=i/128*2*Math.PI; rpts.push(new THREE.Vector3(Math.cos(a)*FLUID_ROCHE_KM*KM_U,0,Math.sin(a)*FLUID_ROCHE_KM*KM_U));}
+  const roche=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(rpts),
+    new THREE.LineBasicMaterial({color:0xff6b5a,transparent:true,opacity:0.5})); groupMoon.add(roche); moonObjs.roche=roche;
   // 위성 + 궤도
   MOONS.forEach(m=>{
     const mesh=new THREE.Mesh(new THREE.SphereGeometry(Math.max(m.r*KM_U,2.5),24,18),
@@ -242,6 +258,41 @@ function makeOrbitLine(m,scale){
 function rebuildOrbit(m){ const o=moonObjs[m.id]; if(!o)return; o.line.geometry.dispose();
   const pts=[]; for(let i=0;i<=160;i++){const M=i/160*2*Math.PI;pts.push(orbitVec(m.a,m.e,m.incC*DEG,m.nodeC*DEG,0,M,KM_U));}
   o.line.geometry=new THREE.BufferGeometry().setFromPoints(pts); }
+function ringGeom(innerKm,widthKm){ return new THREE.RingGeometry(innerKm*KM_U,(innerKm+widthKm)*KM_U,128,1); }
+function ringCover(){ return 1-Math.exp(-RING.tau); }   // 광학두께 τ → 피복률(불투명도)
+function fmtTau(t){ return t>=0.01 ? t.toFixed(2) : t.toExponential(1); }   // 로그 슬라이더 표기
+function chaosGap(){ const c=MOONS.find(m=>m.id==='chaos'), K=2.5;   // Chaos 청소대 = swept(근점~원점) ± K·힐반경
+  return [c.a*(1-c.e)-K*c.rhill, c.a*(1+c.e)+K*c.rhill]; }
+function rebuildRing(){ const g=moonObjs.ring; if(!g)return;
+  for(const ch of g.children){ ch.geometry.dispose(); ch.material.dispose(); } g.clear();
+  g.visible=RING.on; if(!RING.on) return;
+  const inner=RING.inner, outer=RING.inner+RING.width;
+  let segs=[[inner,outer]];
+  if(RING.gap){ const [lo,hi]=chaosGap(); if(inner<lo && outer>hi) segs=[[inner,lo],[hi,outer]]; }  // Chaos 가로지르면 간극
+  const lum=Math.min(1,RING.albedo/0.5);                 // 알베도 → 밝기(얼음 0.5=최대)
+  const col=new THREE.Color(0xc9b89a).multiplyScalar(0.35+0.65*lum);
+  const op=Math.max(0.04,ringCover());
+  for(const [a,b] of segs){ if(b<=a) continue;
+    g.add(new THREE.Mesh(new THREE.RingGeometry(a*KM_U,b*KM_U,160,1),
+      new THREE.MeshBasicMaterial({color:col,side:THREE.DoubleSide,transparent:true,opacity:op}))); } }
+function updateRingInfo(){ const el=document.getElementById('ringInfo'); if(!el)return;
+  const inner=RING.inner, outer=RING.inner+RING.width, Rp=outer/POLY.radiusKm;
+  const dense=outer<=FLUID_ROCHE_KM;
+  const K=2.5;  // 청소 구역 ≈ 위성 궤도 ± K·힐반경 (이심률 포함)
+  const hit=MOONS.filter(m=>{ const lo=m.a*(1-m.e)-K*m.rhill, hi=m.a*(1+m.e)+K*m.rhill; return outer>lo && inner<hi; });
+  // 반사광/단면적 축퇴: 관측밝기 ∝ 알베도×반사면적. 고리(정면 투영, τ 피복) vs 행성 원반.
+  const ringArea=Math.PI*(outer*outer-inner*inner);
+  const effArea=ringArea*ringCover();                          // 열복사 유효 단면적 (광학두께 반영)
+  const equivR=Math.sqrt(effArea/Math.PI)/1000, pct=effArea/BEICHMAN_AREA*100;
+  const dR=(Math.sqrt(POLY.radiusKm*POLY.radiusKm+effArea/Math.PI)-POLY.radiusKm)/RJUP_KM;  // 고리가 더하는 겉보기 반지름(R_Jup)
+  let s=`바깥 끝 ${(outer/1000).toFixed(0)}k km (${Rp.toFixed(2)} R_p) · `;
+  s+= dense ? `<span style="color:#6fe39b">로슈 안 — 밀집 고리 가능 ✓</span>`
+            : `<span style="color:#f3c969">로슈 밖 — 희박·양치기/공급원 필요</span>`;
+  s+= hit.length ? `<br><span style="color:#ff6b5a">⚠ ${hit.map(m=>m.name).join('·')} 청소 구역과 겹침 (간섭)</span>`
+                 : `<br><span style="color:#6fe39b">위성 청소 구역과 안 겹침 ✓</span>`;
+  s+= `<br>밝기 기여(열복사): <b style="color:${Math.abs(dR-TARGET_DR_RJUP)<0.005?'#6fe39b':'#f3c969'}">+${dR.toFixed(3)} R_Jup</b> (목표 ${TARGET_DR_RJUP})`
+    + ` · 유효 등가원반 ${equivR.toFixed(0)}k km · Beichman(토성½) 대비 ${pct.toFixed(0)}%`;
+  el.innerHTML=s; }
 
 function buildStarScene(){
   disposeGroup(groupStar); groupStar=new THREE.Group(); scene.add(groupStar);
@@ -332,20 +383,61 @@ function buildPanel(){ const p=document.getElementById('panel');
   let html=`<div class="grp"><h3>위성 궤도경사각 · 노드(경사 위상)</h3>`;
   MOONS.forEach(m=>{ html+=`<div class="moonrow">
     <div class="mh"><span class="dot" style="background:${m.color}"></span><span class="nm">${m.name}</span><span class="tag">${m.retro?'역행':'순행'}·${m.period_h.toFixed(1)}h</span></div>
-    <div class="ctrl"><label>궤도경사각 <b id="inc_${m.id}">${m.incC.toFixed(0)}°</b></label><input type="range" min="0" max="180" step="1" value="${m.incC}" data-moon="${m.id}" data-k="inc"></div>
+    <div class="ctrl"><label>궤도경사각 <b id="inc_${m.id}">${m.incC.toFixed(0)}°</b></label><input type="range" min="0" max="360" step="1" value="${m.incC}" data-moon="${m.id}" data-k="inc"></div>
     <div class="ctrl"><label>노드 Ω <b id="node_${m.id}">${m.nodeC.toFixed(0)}°</b></label><input type="range" min="0" max="360" step="1" value="${m.nodeC}" data-moon="${m.id}" data-k="node"></div></div>`; });
   html+=`</div><div class="grp"><h3>표시</h3>
       <label class="ck"><input type="checkbox" id="ckOrbit" checked> 궤도선</label>
       <label class="ck"><input type="checkbox" id="ckGrid" checked> 기준면 격자</label>
       <label class="ck"><input type="checkbox" id="ckLabel" checked> 이름표</label>
       <div class="btnrow"><button id="btnReset">경사각 초기화</button><button id="btnView">시점 리셋</button></div></div>
-     <div class="grp"><div class="note">기준면=Polyphemus 공전면. 경사각=이 면 대비 기울기, 노드 Ω=기우는 방향. 역행(Cassandra·Chaos)은 90° 초과. 행성은 J2=0.023 정합 적도팽대(편평도 ${POLY.flat}).</div></div>`;
+     <div class="grp"><h3>고리 (art-direction)</h3>
+      <label class="ck"><input type="checkbox" id="ckRing" ${RING.on?'checked':''}> 고리 표시</label>
+      <label class="ck"><input type="checkbox" id="ckGap" ${RING.gap?'checked':''}> Chaos 힐존 간극 비우기</label>
+      <div class="ctrl"><label>거리 (안쪽 반경) <b id="ringInnerV">${(RING.inner/1000).toFixed(0)}k km</b></label><input type="range" id="ringInner" min="72000" max="2400000" step="1000" value="${RING.inner}"></div>
+      <div class="ctrl"><label>폭 <b id="ringWidthV">${(RING.width/1000).toFixed(0)}k km</b></label><input type="range" id="ringWidth" min="2000" max="2000000" step="1000" value="${RING.width}"></div>
+      <div class="ctrl"><label>광학두께 τ <b id="ringTauV">${fmtTau(RING.tau)}</b></label><input type="range" id="ringTau" min="-5" max="0.3" step="0.05" value="${Math.log10(RING.tau).toFixed(2)}"></div>
+      <div class="ctrl"><label>고리 알베도 (먼지 0.05·암석 0.1·얼음 0.5) <b id="ringAlbV">${RING.albedo.toFixed(2)}</b></label><input type="range" id="ringAlb" min="0.02" max="0.6" step="0.01" value="${RING.albedo}"></div>
+      <div class="btnrow"><button id="btnEring">Chaos E-고리</button><button id="btnDR">+0.05 R_J 맞춤</button></div>
+      <div class="btnrow"><button id="btnFitW">폭→Beichman</button><button id="btnFitT">τ→Beichman</button></div>
+      <div class="note" style="font-size:10.5px">스냅: 지름 고정, 유효 단면적을 Beichman(토성½)에. "Chaos E-고리"=흐릿한 외곽 먼지띠(Cassandra 양치기·Chaos 공급).</div>
+      <div class="note" id="ringInfo"></div></div>
+     <div class="grp"><div class="note">기준면=Polyphemus 공전면. 경사각=이 면 대비 기울기, 노드 Ω=기우는 방향. 역행(Cassandra·Chaos)은 90° 초과. 행성은 J2=0.023 정합 적도팽대(편평도 ${POLY.flat}). 붉은 원=유체 로슈(고리 바깥 한계).</div></div>`;
   p.innerHTML=html;
   p.querySelectorAll('input[type=range]').forEach(s=>s.addEventListener('input',e=>{
+    if(!e.target.dataset.moon)return;   // ring sliders handled separately
     const m=MOONS.find(x=>x.id===e.target.dataset.moon),k=e.target.dataset.k,v=+e.target.value;
     if(k==='inc'){m.incC=v;document.getElementById('inc_'+m.id).textContent=v.toFixed(0)+'°';}
     else{m.nodeC=v;document.getElementById('node_'+m.id).textContent=v.toFixed(0)+'°';}
     rebuildOrbit(m); }));
+  // 고리 컨트롤
+  const ri=document.getElementById('ringInner'), rw=document.getElementById('ringWidth'),
+        rt=document.getElementById('ringTau'), ra=document.getElementById('ringAlb');
+  ri.addEventListener('input',e=>{RING.inner=+e.target.value;document.getElementById('ringInnerV').textContent=(RING.inner/1000).toFixed(0)+'k km';rebuildRing();updateRingInfo();});
+  rw.addEventListener('input',e=>{RING.width=+e.target.value;document.getElementById('ringWidthV').textContent=(RING.width/1000).toFixed(0)+'k km';rebuildRing();updateRingInfo();});
+  rt.addEventListener('input',e=>{RING.tau=Math.pow(10,+e.target.value);document.getElementById('ringTauV').textContent=fmtTau(RING.tau);rebuildRing();updateRingInfo();});
+  ra.addEventListener('input',e=>{RING.albedo=+e.target.value;document.getElementById('ringAlbV').textContent=RING.albedo.toFixed(2);rebuildRing();updateRingInfo();});
+  bindCk('ckRing',v=>{RING.on=v;rebuildRing();});
+  bindCk('ckGap',v=>{RING.gap=v;rebuildRing();updateRingInfo();});
+  // 스냅: 지름(inner) 고정. 유효 단면적 = annulus_geo × (1−e^−τ) 을 Beichman(토성½)에 맞춤.
+  document.getElementById('btnFitW').onclick=()=>{   // τ 유지하고 폭 조정
+    const need=BEICHMAN_AREA/Math.max(ringCover(),1e-3);          // 필요한 기하 단면적
+    const outer=Math.sqrt(RING.inner*RING.inner+need/Math.PI);
+    RING.width=Math.max(2000,outer-RING.inner); buildPanel(); rebuildRing(); };
+  document.getElementById('btnFitT').onclick=()=>{   // 폭 유지하고 τ 조정
+    const geo=Math.PI*((RING.inner+RING.width)**2-RING.inner*RING.inner);
+    const cover=BEICHMAN_AREA/geo;
+    RING.tau = cover>=1 ? 2 : Math.min(2,-Math.log(1-cover));     // 폭이 부족하면 τ 한계(2)로 클램프
+    buildPanel(); rebuildRing(); };
+  document.getElementById('btnEring').onclick=()=>{   // Chaos 공급 E고리: Cassandra 바깥(~800k)에서 Chaos(1.5M) 너머까지, 광학적으로 얇음
+    RING.inner=800000; RING.width=1700000; RING.tau=5e-5; RING.albedo=0.45;
+    buildPanel(); rebuildRing(); };
+  document.getElementById('btnDR').onclick=()=>{   // 지름·폭 유지, τ를 조정해 밝기 기여 = +0.05 R_Jup
+    const geo=Math.PI*((RING.inner+RING.width)**2-RING.inner*RING.inner);
+    const Rt=POLY.radiusKm+TARGET_DR_RJUP*RJUP_KM;
+    const need=Math.PI*(Rt*Rt-POLY.radiusKm*POLY.radiusKm);   // 필요한 유효 단면적
+    const cover=Math.min(0.999,need/geo);
+    RING.tau=-Math.log(1-cover); buildPanel(); rebuildRing(); };
+  updateRingInfo();
   bindCk('ckOrbit',v=>Object.values(moonObjs).forEach(o=>{if(o&&o.line)o.line.visible=v;}));
   bindCk('ckGrid',v=>groupMoon.children.forEach(c=>{if(c.userData.kind==='grid')c.visible=v;}));
   bindCk('ckLabel',v=>{labelBox.style.display=v?'':'none';});
