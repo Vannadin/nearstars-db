@@ -1902,7 +1902,7 @@ function drawMoonChart(){
 _mPlayBtn.onclick=()=>{moonPlay=!moonPlay;_mPlayBtn.textContent=moonPlay?'❚❚':'▶';};
 _mStab.onclick=()=>{ moonStab=!moonStab; moonT=0;
   _mStab.style.color=moonStab?'#e8edf6':'#8893a6'; _mStab.style.borderColor=moonStab?'#7aa2ff':'#1c2433';
-  if(!moonStab){ for(const m of MOON_SYS) if(m.line) m.line.geometry.setFromPoints(moonOrbitPts(m.center,m.a,m.e,m.i,m.Om,m.om)); _mYr.textContent=''; } };
+  if(!moonStab) _mYr.textContent=''; };   // 3D orbits are static (chart carries the evolution)
 (function(){const c=moonCtl.querySelector('#mSpd');[0.25,1,4,16].forEach(s=>{const b=document.createElement('button');
   b.textContent=s+'×';b.dataset.s=s;
   b.style.cssText='background:#141a26;border:1px solid #1c2433;color:'+(s===moonSpeed?'#e8edf6':'#8893a6')+';border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer';
@@ -1913,15 +1913,15 @@ function updateMoons(){
   if(moonPlay) moonT+=dt*moonSpeed;
   let near=false, yr=null;
   for(const m of MOON_SYS){
-    let a=m.a, e=m.e;
-    if(moonStab && m.stab){                          // scrub the 1000-yr run → orbit a/e evolve (bounded = stable)
-      const d=m.stab.data, n=d.length, u=(moonT*4)%n, i0=Math.floor(u)%n, i1=(i0+1)%n, fr=u-Math.floor(u);
-      a=_lerp(d[i0][0],d[i1][0],fr); e=Math.max(0,Math.min(0.95,_lerp(d[i0][1],d[i1][1],fr)));
-      if(m.line) m.line.geometry.setFromPoints(moonOrbitPts(m.center,a,e,m.i,m.Om,m.om));
-      if(yr==null) yr=m.stab.t0+(m.stab.t_end-m.stab.t0)*(u/Math.max(n-1,1));
-    }
-    const nu=meanToTrue(m.M0+m.omega*moonT, e);
-    m.mesh.position.copy(m.center).add(orbitPoint(a,e,m.i,m.Om,m.om,nu));
+    // stability mode drives only the chart playhead (sim-year); the 3D orbit stays a
+    // clean static ellipse. The real apsidal precession is ~30–76 turns / 1000 yr —
+    // far too fast to render faithfully from the ~100 downsampled snapshots (it would
+    // alias into a fake, jerky rotation), and it is not the stability signal. The
+    // secular a/e/q–Q evolution (bounded = stable) lives in the chart instead.
+    if(moonStab && m.stab && yr==null){ const d=m.stab.data, n=d.length, u=(moonT*4)%n;
+      yr=m.stab.t0+(m.stab.t_end-m.stab.t0)*(u/Math.max(n-1,1)); }
+    const nu=meanToTrue(m.M0+m.omega*moonT, m.e);
+    m.mesh.position.copy(m.center).add(orbitPoint(m.a,m.e,m.i,m.Om,m.om,nu));
     m.mesh.getWorldPosition(wp); m._near=wp.distanceTo(camera.position)<0.3; if(m._near) near=true;
   }
   moonYr=yr;
