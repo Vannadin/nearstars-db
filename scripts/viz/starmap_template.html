@@ -1387,7 +1387,8 @@ function updateStability(){
    the radius panel — the runaway band is the instability signal. Renders to any
    canvas/size so the inline mini-chart and the expand-modal share one painter. */
 let stabT=0;                                  // last animation epoch (for repaint on toggle/expand)
-function paintStab(cv,W,H,curT,recsIn){
+function paintStab(cv,W,H,curT,recsIn,opts){
+  const showW=!!(opts&&opts.omega);   // extra ω-precession panel (moon charts)
   let recs=recsIn||stabRecs.map(r=>({d:recData(r),rgb:r.ccol||r.rgb||'#7aa8ff',name:r.name})).filter(o=>o.d);
   const allRecs=recs;   // full set for the clickable legend (before focus isolation)
   // a focused planet (clicked in the legend) isolates its curves here too, and the
@@ -1399,8 +1400,8 @@ function paintStab(cv,W,H,curT,recsIn){
   if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){ cv.width=Math.round(W*dpr); cv.height=Math.round(H*dpr); }
   const g=cv.getContext('2d'); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
   const padL=big?58:38, padR=big?48:32, padT=big?26:18, labT=big?22:14, gap=big?44:26;
-  const NP=2, ph=(H-padT-(NP-1)*gap-labT-12)/NP;     // two panels: radius, then inclination(left)+e(right)
-  const y0r=padT, y0c=padT+ph+gap;
+  const NP=showW?3:2, ph=(H-padT-(NP-1)*gap-labT-12)/NP;  // radius; inclination(left)+e(right); [ω precession]
+  const y0r=padT, y0c=padT+ph+gap, y0w=padT+2*(ph+gap), yLast=showW?y0w:y0c;
   const tMax=Math.max(1,...recs.map(o=>o.d[o.d.length-1][0])); _stabTmax=tMax;
   // visible time window — full span at zoom 1; ＋/－ narrows it around the cursor
   const zw=1/Math.max(1,stabChartZoom);
@@ -1416,6 +1417,10 @@ function paintStab(cv,W,H,curT,recsIn){
   const yR=v=>y0r+ph-(Math.min(Math.max(v,0),yMaxR)/yMaxR)*ph;
   const yI=v=>y0c+ph-(Math.min(v,maxI)/maxI)*ph;        // combined panel, LEFT scale (inclination)
   const yE=v=>y0c+ph-(Math.min(Math.max(v,0),eCap)/eCap)*ph;  // combined panel, RIGHT scale (eccentricity)
+  // ω-precession panel scale: cumulative ω in turns (s[5]/360), signed (pro/retrograde)
+  let wLo=0,wHi=0; if(showW) recs.forEach(o=>o.d.forEach(s=>{const w=s[5]/360; if(isFinite(w)){wLo=Math.min(wLo,w);wHi=Math.max(wHi,w);}}));
+  const wPad=Math.max(1,(wHi-wLo)*0.08); wLo-=wPad; wHi+=wPad; const wSpan=Math.max(1,wHi-wLo);
+  const yW=v=>y0w+ph-((v-wLo)/wSpan)*ph;
   const txt=getComputedStyle(document.body).getPropertyValue('--fg4')||'#8a93a8';
   const nf=v=>v.toFixed(v<1?2:v<10?1:0);
   g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle';
@@ -1438,14 +1443,25 @@ function paintStab(cv,W,H,curT,recsIn){
   rot(big?16:10,y0c,'i (°)');
   g.fillStyle=eClr; g.textAlign='left'; g.fillText(nf(eCap),W-padR+6,y0c+5); g.fillText('0',W-padR+6,y0c+ph-5);
   rot(W-(big?14:9),y0c,'e',eClr);
+  // ω-precession panel (cumulative apsidal angle, turns; slope = precession rate, sign = direction)
+  if(showW){
+    g.strokeStyle='rgba(120,135,165,.3)'; g.lineWidth=1; g.strokeRect(padL,y0w,W-padL-padR,ph);
+    if(big){ g.strokeStyle='rgba(120,135,165,.12)'; g.lineWidth=1; g.fillStyle=txt; g.textAlign='right';
+      for(let t=1;t<4;t++){ const yy=y0w+ph*t/4; g.beginPath(); g.moveTo(padL,yy); g.lineTo(W-padR,yy); g.stroke();
+        g.fillText(nf(wHi-(wHi-wLo)*t/4),padL-6,yy); } }
+    g.fillStyle=txt; g.textAlign='right'; g.fillText(nf(wHi),padL-6,y0w+5); g.fillText(nf(wLo),padL-6,y0w+ph-5);
+    rot(big?16:10,y0w,(lang==='ko'?'ω 세차':'ω prec.')+' (turns)');
+    if(wLo<0&&wHi>0){ const yz=yW(0); g.strokeStyle='rgba(120,135,165,.45)'; g.setLineDash([4,3]); g.lineWidth=1;
+      g.beginPath(); g.moveTo(padL,yz); g.lineTo(W-padR,yz); g.stroke(); g.setLineDash([]); }
+  }
   // e=1 unbound threshold marker (right scale) — only when e reaches it (ejection)
   if(eCap>=1){ const y1=yE(1); g.strokeStyle='rgba(255,90,60,.5)'; g.lineWidth=1; g.setLineDash([4,3]);
     g.beginPath(); g.moveTo(padL,y1); g.lineTo(W-padR,y1); g.stroke(); g.setLineDash([]);
     g.fillStyle='rgba(255,120,90,.9)'; g.textAlign='left'; g.fillText('e=1',padL+4,y1-(big?7:5)); }
   g.textAlign='center'; g.fillStyle=txt;
   const tfmt=v=>v>=1e6?(v/1e6).toFixed(2)+' Myr':v>=1e3?(v/1e3).toFixed(v<1e4?2:0)+' kyr':Math.round(v)+' yr';
-  g.fillText(tfmt(tView0),padL,y0c+ph+labT-4); g.fillText(tfmt(tView1),W-padR,y0c+ph+labT-4);
-  if(stabChartZoom>1){ g.fillStyle=eClr; g.fillText('🔍'+stabChartZoom.toFixed(1)+'×',(padL+W-padR)/2,y0c+ph+labT-4); g.fillStyle=txt; }
+  g.fillText(tfmt(tView0),padL,yLast+ph+labT-4); g.fillText(tfmt(tView1),W-padR,yLast+ph+labT-4);
+  if(stabChartZoom>1){ g.fillStyle=eClr; g.fillText('🔍'+stabChartZoom.toFixed(1)+'×',(padL+W-padR)/2,yLast+ph+labT-4); g.fillStyle=txt; }
   // smooth polyline: quadratic curve through snapshot midpoints (raw points are
   // only ~200, so straight segments read as jagged). One colour per planet.
   const line=(o,acc,yfn,w,dash)=>{
@@ -1456,17 +1472,18 @@ function paintStab(cv,W,H,curT,recsIn){
       g.quadraticCurveTo(pts[k][0],pts[k][1],mx,my); }
     const last=pts[pts.length-1]; g.lineTo(last[0],last[1]);
     g.setLineDash(dash||[]); g.strokeStyle=o.rgb; g.lineWidth=w; g.lineJoin='round'; g.stroke(); g.setLineDash([]); };
-  g.save(); g.beginPath(); g.rect(padL,padT-3,W-padL-padR,(y0c+ph)-(padT-3)); g.clip();   // clip x-overflow when time-zoomed
+  g.save(); g.beginPath(); g.rect(padL,padT-3,W-padL-padR,(yLast+ph)-(padT-3)); g.clip();   // clip x-overflow when time-zoomed
   recs.forEach(o=>{
     line(o,s=>s[1]*(1+s[2]),yR,lw);          // apoapsis (solid, left radius scale)
     line(o,s=>s[1]*(1-s[2]),yR,lwq,[3,2]);   // periapsis (dashed)
     line(o,s=>s[3],yI,lw);                    // inclination (solid, left scale)
     line(o,s=>s[2],yE,lwq,[3,2]);            // eccentricity (dashed, right scale)
+    if(showW) line(o,s=>s[5]/360,yW,lw);     // ω cumulative precession (turns)
   });
   g.restore();
   if(curT!=null && curT>=tView0 && curT<=tView1){ const cx=xT(curT);
     g.strokeStyle='rgba(255,255,255,.5)'; g.lineWidth=1; g.setLineDash([3,3]);
-    g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,y0c+ph); g.stroke(); g.setLineDash([]); }
+    g.beginPath(); g.moveTo(cx,y0r); g.lineTo(cx,yLast+ph); g.stroke(); g.setLineDash([]); }
   // per-panel line-style key (solid/dashed differ by panel; the labels disambiguate)
   const keyBox=(y0,solidLbl,dashLbl)=>{
     g.font=fs+'px ui-monospace,SFMono-Regular,Menlo,monospace'; g.textBaseline='middle'; g.textAlign='left';
@@ -1895,9 +1912,9 @@ function drawMoonChart(){
   moonChart.style.display='block';
   moonChart.style.width  = moonChartBig ? 'min(900px,94vw)' : 'min(440px,92vw)';
   moonChart.style.bottom = moonChartBig ? '74px' : '62px';
-  const W=moonChart.clientWidth||300, H=moonChartBig?Math.min(560,Math.round(innerHeight*0.66)):210;  // H>320 → paintStab "big" style
+  const W=moonChart.clientWidth||300, H=moonChartBig?Math.min(600,Math.round(innerHeight*0.72)):270;  // 3 panels (q–Q, i+e, ω); H>320 → "big" style
   if(moonChart.style.height!==H+'px') moonChart.style.height=H+'px';
-  paintStab(moonChart,W,H,moonYr,recs);
+  paintStab(moonChart,W,H,moonYr,recs,{omega:true});
 }
 _mPlayBtn.onclick=()=>{moonPlay=!moonPlay;_mPlayBtn.textContent=moonPlay?'❚❚':'▶';};
 _mStab.onclick=()=>{ moonStab=!moonStab; moonT=0;

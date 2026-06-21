@@ -343,7 +343,30 @@ def load_moon_stability():
     out = {}
     res = os.path.join(ROOT, "phase3", "stability-sim", "results")
     for d in sorted(glob.glob(os.path.join(res, "*_moons"))):
-        out.update(_load_stab_dir(d))   # body-keyed; moon names are unique across systems
+        for f in sorted(glob.glob(os.path.join(d, "*_timeseries.csv"))):
+            rows = {}
+            for r in csv.DictReader(open(f, encoding="utf-8")):
+                g = lambda k: float(r.get(k, 0) or 0)
+                rows.setdefault(r["body"], []).append((
+                    float(r["t_yr"]), float(r["a_au"]), float(r["e"]),
+                    g("inc_deg"), g("Omega_deg"), g("omega_deg"), g("f_deg")))
+            for body, series in rows.items():
+                series.sort()
+                # unwrap ω → CUMULATIVE deg (apsidal precession curve; slope = rate). Done on
+                # the full-res series (per-step <180° → unwrap valid) BEFORE downsampling, so the
+                # smooth cumulative survives the ~100-sample cap without aliasing (raw wrapped ω
+                # precesses ~30–76 turns/run = un-plottable directly).
+                cum, prev, cuml = 0.0, None, []
+                for s in series:
+                    if prev is not None:
+                        cum += ((s[5] - prev) % 360 + 540) % 360 - 180
+                    cuml.append(cum); prev = s[5]
+                n = len(series); step = max(1, math.ceil(n / 100)); idx = list(range(0, n, step))
+                ts = [series[k][0] for k in idx]
+                out[body] = {"t0": int(round(ts[0])), "t_end": int(round(ts[-1])),
+                             "data": [[round(series[k][1], 4), round(series[k][2], 3),
+                                       round(series[k][3], 2), round(series[k][4], 2),
+                                       round(cuml[k], 1), round(series[k][5], 2)] for k in idx]}
     _MOONSTAB = out
     return out
 
