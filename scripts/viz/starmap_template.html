@@ -647,8 +647,9 @@ const clusters=[];   // {data, node, glow, sysScale, bodies:[{kind,name,obj,rgb}
 // their OWN clock (real-time, decoupled from the static stars and the planet-evolution
 // stability clock); inner moons faster per Kepler (ω ∝ a^-1.5). One play control.
 const MOON_SYS=[];   // {mesh, center(cg-local Vector3), a,e,i,Om,om, M0, omega}
-let moonT=0, moonPlay=true, moonSpeed=1;
+let moonT=0, moonPlay=true, moonSpeed=1, moonStab=false;   // moonStab: scrub the 1000-yr REBOUND run (secular a/e)
 const MOON_RATE=2.5e-5;   // rad/s per a^-1.5 → innermost moon ~5 s/rev; Kepler ratios exact
+function moonOrbitPts(ctr,a,e,iD,Om,om){ const p=[]; for(let k=0;k<=96;k++) p.push(ctr.clone().add(orbitPoint(a,e,iD,Om,om,k/96*2*Math.PI))); return p; }
 const glowSprites=[];
 // curated systems + the uncurated 50-ly field stars (rendered the same; is_field gates
 // out spin axis / heliosphere / motion / planets, which they don't have).
@@ -719,8 +720,9 @@ const glowSprites=[];
       const mr=Math.max((mo.radius_km||300)/6371*R_EARTH_AU, R_EARTH_AU*0.45);
       const mm=new THREE.Mesh(new THREE.SphereGeometry(1,14,10),new THREE.MeshBasicMaterial({color:col}));
       mm.scale.setScalar(mr); cg.add(mm);   // not in `bodies` → no xhair-label clutter at the planet
-      MOON_SYS.push({mesh:mm, center:ctr.clone(), a, e, i:iD, Om, om,
-        M0:(mo.M_deg||0)*DEG, omega:MOON_RATE*Math.pow(Math.max(a,1e-5),-1.5)});
+      MOON_SYS.push({mesh:mm, line, center:ctr.clone(), a, e, i:iD, Om, om,
+        M0:(mo.M_deg||0)*DEG, omega:MOON_RATE*Math.pow(Math.max(a,1e-5),-1.5),
+        stab:mo.stability||null});   // secular a/e track for the stability mode
     });
   }
   let sysScale=0.6;
@@ -1863,10 +1865,17 @@ function applyKeys(){
 /* ── moon-system playback (own real-time clock; stars + planets stay static) ── */
 const moonCtl=document.createElement('div');
 moonCtl.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:50;display:none;align-items:center;gap:10px;background:#0d1018e6;border:1px solid #1c2433;border-radius:10px;padding:7px 12px;color:#e8edf6;font:13px -apple-system,system-ui,sans-serif;backdrop-filter:blur(6px)';
-moonCtl.innerHTML='<button id="mPlay" style="width:30px;height:30px;border-radius:50%;border:0;background:#7aa2ff;color:#05060a;cursor:pointer;font-size:13px">❚❚</button><span id="mLbl" style="color:#8893a6">moon system</span><span id="mSpd" style="display:flex;gap:4px"></span>';
+moonCtl.innerHTML='<button id="mPlay" style="width:30px;height:30px;border-radius:50%;border:0;background:#7aa2ff;color:#05060a;cursor:pointer;font-size:13px">❚❚</button>'
+ +'<span id="mLbl" style="color:#8893a6">moon system</span>'
+ +'<span id="mSpd" style="display:flex;gap:4px"></span>'
+ +'<button id="mStab" title="1000-yr stability run" style="background:#141a26;border:1px solid #1c2433;color:#8893a6;border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer">안정성</button>'
+ +'<span id="mYr" style="color:#8893a6;font-variant-numeric:tabular-nums;min-width:62px;text-align:right"></span>';
 document.body.appendChild(moonCtl);
-const _mPlayBtn=moonCtl.querySelector('#mPlay');
+const _mPlayBtn=moonCtl.querySelector('#mPlay'), _mStab=moonCtl.querySelector('#mStab'), _mYr=moonCtl.querySelector('#mYr');
 _mPlayBtn.onclick=()=>{moonPlay=!moonPlay;_mPlayBtn.textContent=moonPlay?'❚❚':'▶';};
+_mStab.onclick=()=>{ moonStab=!moonStab; moonT=0;
+  _mStab.style.color=moonStab?'#e8edf6':'#8893a6'; _mStab.style.borderColor=moonStab?'#7aa2ff':'#1c2433';
+  if(!moonStab){ for(const m of MOON_SYS) if(m.line) m.line.geometry.setFromPoints(moonOrbitPts(m.center,m.a,m.e,m.i,m.Om,m.om)); _mYr.textContent=''; } };
 (function(){const c=moonCtl.querySelector('#mSpd');[0.25,1,4,16].forEach(s=>{const b=document.createElement('button');
   b.textContent=s+'×';b.dataset.s=s;
   b.style.cssText='background:#141a26;border:1px solid #1c2433;color:'+(s===moonSpeed?'#e8edf6':'#8893a6')+';border-radius:6px;padding:3px 7px;font-size:11px;cursor:pointer';
@@ -1875,16 +1884,24 @@ let _moonLast=performance.now();
 function updateMoons(){
   const now=performance.now(), dt=Math.min((now-_moonLast)/1000,0.1); _moonLast=now;
   if(moonPlay) moonT+=dt*moonSpeed;
-  let near=false;
+  let near=false, yr=null;
   for(const m of MOON_SYS){
-    const M=m.M0+m.omega*moonT, nu=meanToTrue(M,m.e);
-    m.mesh.position.copy(m.center).add(orbitPoint(m.a,m.e,m.i,m.Om,m.om,nu));
+    let a=m.a, e=m.e;
+    if(moonStab && m.stab){                          // scrub the 1000-yr run → orbit a/e evolve (bounded = stable)
+      const d=m.stab.data, n=d.length, u=(moonT*4)%n, i0=Math.floor(u)%n, i1=(i0+1)%n, fr=u-Math.floor(u);
+      a=_lerp(d[i0][0],d[i1][0],fr); e=Math.max(0,Math.min(0.95,_lerp(d[i0][1],d[i1][1],fr)));
+      if(m.line) m.line.geometry.setFromPoints(moonOrbitPts(m.center,a,e,m.i,m.Om,m.om));
+      if(yr==null) yr=m.stab.t0+(m.stab.t_end-m.stab.t0)*(u/Math.max(n-1,1));
+    }
+    const nu=meanToTrue(m.M0+m.omega*moonT, e);
+    m.mesh.position.copy(m.center).add(orbitPoint(a,e,m.i,m.Om,m.om,nu));
     if(!near){ m.mesh.getWorldPosition(wp); if(wp.distanceTo(camera.position)<0.25) near=true; }
   }
   const show=MOON_SYS.length && near;
   moonCtl.style.display=show?'flex':'none';
-  if(show) moonCtl.querySelector('#mLbl').textContent=(lang==='ko'?'위성계 재생':'moon system');
+  if(show){ _mLblSet(); _mYr.textContent=(moonStab&&yr!=null)?(Math.round(yr).toLocaleString()+(lang==='ko'?' 년':' yr')):''; }
 }
+function _mLblSet(){ moonCtl.querySelector('#mLbl').textContent=(lang==='ko'?(moonStab?'위성 안정성':'위성계'):(moonStab?'moon stability':'moon system')); }
 
 function tick(){
   requestAnimationFrame(tick);

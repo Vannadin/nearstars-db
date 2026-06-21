@@ -330,6 +330,24 @@ RING_BY_PLANET = {
 _MOON_PAL = ["#39d6e0", "#ff8a5c", "#ffb454", "#e85cc8", "#c77dff", "#8fd0ff", "#b0d04a"]
 
 
+_MOONSTAB = None
+
+
+def load_moon_stability():
+    """body name → {data:[[a,e,inc,Ω,ω,f]…], t0, t_end} from results/<system>_moons/
+    runs (moon-inclusive REBOUND timeseries). GENERIC: drop a <system>_moons/ run and
+    its moons gain a stability track (secular a/e/inc evolution) in the viewer."""
+    global _MOONSTAB
+    if _MOONSTAB is not None:
+        return _MOONSTAB
+    out = {}
+    res = os.path.join(ROOT, "phase3", "stability-sim", "results")
+    for d in sorted(glob.glob(os.path.join(res, "*_moons"))):
+        out.update(_load_stab_dir(d))   # body-keyed; moon names are unique across systems
+    _MOONSTAB = out
+    return out
+
+
 def load_hypotheticals():
     """system_id → {parent_planet_name: [moon body dict, …]} from the stability-sim
     canonical hypotheticals (committed, non-underscore). GENERIC: any system with a moon
@@ -958,7 +976,14 @@ def build_cluster_obj(members):
             sys_slug = to_file_slug(label or rep["name"])
             hyp_moons = load_hypotheticals().get(sys_slug, {}).get(p["name"])
             if hyp_moons:
-                pp["moons"] = [_moon_payload(b, i) for i, b in enumerate(hyp_moons)]
+                ms = load_moon_stability()
+                pp["moons"] = []
+                for i, b in enumerate(hyp_moons):
+                    mp = _moon_payload(b, i)
+                    st = ms.get(b["name"])
+                    if st:   # secular evolution track for the "stability" mode
+                        mp["stability"] = {"data": st["data"], "t0": st["t0"], "t_end": st["t_end"]}
+                    pp["moons"].append(mp)
             ring = RING_BY_PLANET.get(p["name"])
             if ring:
                 pp["ring"] = {"inner_au": ring["inner_km"] / KM_PER_AU,
