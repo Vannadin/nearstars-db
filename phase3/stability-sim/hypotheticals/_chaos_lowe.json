@@ -1,0 +1,61 @@
+{
+  "_comment": "Sim A (2026-06-21): final B with Chaos eccentricity reduced 0.10->0.02 (near-circular outer moon \u2192 narrower ring-clearing gap, cleaner circular Kopernicus ring). Test if still STABLE.",
+  "system": "alpha_centauri",
+  "bodies": [
+    {
+      "name": "Dante",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 110000,
+      "eccentricity": 0.01,
+      "inclination_deg": 9.0,
+      "mean_anomaly_deg": 35.0,
+      "mass_kg": 8e+21,
+      "radius_km": 900
+    },
+    {
+      "name": "Hades",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 148000,
+      "eccentricity": 0.05,
+      "inclination_deg": 11.0,
+      "mean_anomaly_deg": 140.0,
+      "mass_kg": 5e+21,
+      "radius_km": 750
+    },
+    {
+      "name": "Pandora",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 252393,
+      "eccentricity": 0.0,
+      "inclination_deg": 10.0,
+      "mean_anomaly_deg": 250.0,
+      "mass_kg": 4.3e+24,
+      "radius_km": 5724
+    },
+    {
+      "name": "Cassandra",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 600000,
+      "eccentricity": 0.05,
+      "inclination_deg": 178.0,
+      "mean_anomaly_deg": 300.0,
+      "mass_kg": 9e+23,
+      "radius_km": 3400
+    },
+    {
+      "name": "Chaos",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 1500000,
+      "eccentricity": 0.02,
+      "inclination_deg": 177.0,
+      "mean_anomaly_deg": 60.0,
+      "mass_kg": 5.4e+20,
+      "radius_km": 400
+    }
+  ]
+}

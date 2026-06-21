@@ -1,0 +1,28 @@
+{
+  "_comment": "Ring-clearing test-particle sim: reduced outer system (Cassandra+Chaos only; inner moons drop out \u2014 they never reach the 1-2.5M km ring). Used by scripts/ring_clearing.py.",
+  "system": "alpha_centauri",
+  "bodies": [
+    {
+      "name": "Cassandra",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 600000,
+      "eccentricity": 0.05,
+      "inclination_deg": 178.0,
+      "mean_anomaly_deg": 300.0,
+      "mass_kg": 9e+23,
+      "radius_km": 3400
+    },
+    {
+      "name": "Chaos",
+      "parent": "Alpha Centauri A b",
+      "type": "moon",
+      "semi_major_axis_km": 1500000,
+      "eccentricity": 0.1,
+      "inclination_deg": 177.0,
+      "mean_anomaly_deg": 60.0,
+      "mass_kg": 5.4e+20,
+      "radius_km": 400
+    }
+  ]
+}
