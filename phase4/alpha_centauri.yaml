@@ -204,12 +204,12 @@ decisions:
     depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
     gate:
       criterion: [derived-grounding]
-      verdict: documented-divergence   # "Dante >4500 rem/day"는 500µT 가정의 고선량 reading
-      value: "Dante 극심 · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변"
+      verdict: pass-in-window          # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
+      value: "Dante 극심(>4,500 rem/day) · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변"
       evidence: >
-        선량은 B²·근접도로 가파르게 — 170µT(목성 ~1/25)라 벨트는 목성보다 약함. Dante 최내곽 극심,
-        Hades 피크(~2–3 R_p) 근처. ">4500 rem/day"(목성급)는 500µT 가정에서만 성립 → frozen 등급은
-        Dante "극심"(수백~수천 rem/day).
+        선량은 場+공급원으로 결정 — 170µT(목성 ~1/25) 약한 장이지만 Dante(820× Io 화산)가 막대한 SO₂/황
+        플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심, Hades 피크(~2–3 R_p) 근처. 캐넌 ">4,500
+        rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행 참조).
       pandora_note: >
         Pandora(3.53 R_p)는 벨트에 겹치되 *가장자리*(피크 아님)이고, 약한 벨트라 선량은 "중간". 거주가능
         모순 아님 — Pandora 자체 강자기장(언옵타늄 초전도/플럭스 볼텍스, Avatar canon)이 표면을 차폐.
@@ -325,6 +325,71 @@ decisions:
       verdict: documented-divergence
       value: "Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중)"
       evidence: "Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함."
+
+  # ── 위성 개별 Phase 4 (안쪽부터) ──────────────────────────────
+  - body: Dante                    # A b I
+    axis: bulk.tidal_heating
+    status: gated                  # 2026-06-22 — 캐넌+물리 합치
+    driver: physics + canon
+    value: "극단 ~820× Io (평균 e 0.0175). 표면 조석 플럭스 ~8,000 W/m² (T_tidal ~600K; 피크 e 0.033서 ~40,000 W/m²·~900K)"
+    gate:
+      criterion: [stability, canon-consistency]
+      verdict: pass-in-window
+      evidence: >
+        Io 스케일링(Ė∝M_p^2.5·R^5·e²·a^-7.5), 1.54 R_p·평균 e 0.0175 → ~820× Io. 시뮬서 e가 0.0002–0.031로
+        진동하며 안 죽음(Hades 등 섭동이 강제 유지) → 영구. 캐넌(Avatar: The Game) "조석력 영구 화산+월진,
+        Roche 가장자리"와 정확히 일치.
+  - body: Dante
+    axis: surface
+    status: gated
+    driver: canon + physics
+    value: >
+      규산염 화산 세계(Io형 격렬). 조석고정 → 대면 반구(sub-planet)에 시그니처 **단일 대협곡(Valles
+      Marineris급) + 바닥 용암호 사슬**. 반구 대비: 대면=용암호·황 격렬, far-side=식어 굳은 흑현무암
+      평원+충돌구. 활동 조석축 집중, anti-planet 쌍둥이 균열(약함) 가능. 마그마 바다 아님(T<규산염 용융 ~1400K).
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: pass-in-window
+      note: >
+        캐넌 '영구 화산+월진+주황 용암 반점'. 조석가열은 비균일 — asthenosphere 소산이면 적도·조석축
+        (sub/anti-planet) 강화라 sub-Polyphemus 거대 균열+용암호는 물리 동기 있음(실제 Io는 경도 ~30–60°
+        offset, 아트 허용). 그 균열의 화산 plasma가 방사선대를 먹임(environment.radiation 행).
+  - body: Dante
+    axis: appearance
+    status: gated
+    driver: canon + visual
+    value: >
+      절제 팔레트 — 대부분 어두운 회/흑 지각, 대협곡·칼데라만 발광, 야간측 주황 실선. 용암 hex 적→황백
+      (#ff5a1e→#ffd070, 온도별), 황 침적 노랑 반점(#d9c24a). 대면 반구 천정엔 Polyphemus 고정(용암 협곡
+      발밑/가스자이언트 머리 위)=시그니처 풍경.
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "절제(물리 T~600K) — 어두운 바탕에 균열만 빛나 대비 강조. 캐넌 'orange lava flecks'."}
+  - body: Dante
+    axis: atmosphere
+    status: gated
+    driver: physics + canon
+    value: "희박 SO₂/황 화산 분출(Io 유추), 비호흡 (stock atmosphereContainsOxygen=false)"
+    gate: {criterion: [physics], verdict: pass-in-window, note: "화산 outgassing 기원 tenuous, 안정 대기 아님."}
+  - body: Dante
+    axis: environment.radiation
+    status: gated
+    driver: physics + canon
+    value: "극심 >4,500 rem/day (캐넌). 출처=Polyphemus 방사선대, Dante 자체 화산 플라스마가 공급"
+    gate:
+      criterion: [canon-consistency, derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        캐넌 "최내곽 moonlet >4,500 rem/day(Io 3,200)". 약한 170µT 장에도 성립 — 벨트 세기는 場이 아니라
+        공급원(source) 지배: Dante 820× Io 화산이 막대한 SO₂/황 플라스마 토러스 공급(Io→목성 벨트 초강화판)
+        → 조밀 트랩 입자 → 강벨트. 인과고리: Dante 화산이 자신을 굽는 벨트를 먹임. 캐넌 >4500 ↔ dynamo 170µT
+        충돌 없이 화해(場 발산 불요). cf. Pandora는 캐넌대로 "두 벨트 사이"라 보호.
+  - body: Dante
+    axis: gameplay
+    status: gated
+    driver: gameplay
+    value: >
+      착륙=중간. 용암 없는 구역은 단기 착륙 가능하나 고온 차폐 필수, 대면측은 방사선도 극심. far-side는
+      상대적 안전(저방사선·저온) 거점. 바이옴: 대협곡 / 용암호 사슬 / 황 지대 / far-side(흑현무암).
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프."}
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →

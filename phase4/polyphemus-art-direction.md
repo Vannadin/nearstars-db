@@ -472,6 +472,52 @@ km, where Polyphemus shrinks to a dot in the sky (losing the iconic Avatar visua
 and orbit can't be decoupled — every close moon is synchronous for this reason. **a stays
 252,393 km (the 32 h-day lock); the only viable lever is the high-Q interior assumption.**
 
+## Dante (α Cen A b I) — art-pass reference (owner choices 2026-06-22)
+
+**Character.** The innermost moon: an Io-on-steroids volcanic hellscape, tidally roasted and
+radiation-blasted. The name (Inferno) earns itself.
+
+**Bulk.** ~900 km radius, 8×10²¹ kg, ρ ≈ 2620 kg/m³ (rocky silicate). Tidally locked
+(rotation = orbital period ≈ 9.2 h) → one hemisphere permanently faces Polyphemus. Sits at
+1.54 R_p, just outside the rigid Roche limit.
+
+**Tidal heating (the engine).** ~820× Io at mean e 0.0175 (Io-scaling); surface tidal flux
+~8,000 W/m² (radiative T ~600 K), peaking ~40,000 W/m² (~900 K) at e 0.033. Non-resonant, but
+the sim shows e oscillating 0.0002–0.031 (Hades + siblings force it) — it never damps, so the
+volcanism is *perpetual*. Matches canon (Avatar: The Game): "perpetual volcanism + moonquakes
+from Polyphemus's tidal forces, orbiting at the Roche edge."
+
+**Surface — signature feature [choice 1a].** A **single grand chasma** (Valles-Marineris
+scale), a tidal-stress rift along the tidal axis splitting the sub-Polyphemus hemisphere,
+floored by a **chain of lava lakes**. **Hemispheric dichotomy [2a]:** the near
+(Polyphemus-facing) hemisphere is the active hell (lava lakes, sulfur, calderas); the far
+hemisphere is cold, dark, solidified basalt + impact craters. (Anti-planet may carry a weaker
+twin rift.) Not a magma ocean (surface T < silicate melt ~1400 K) — solid crust with
+concentrated molten features.
+
+**Palette — subdued [choice 3a].** Mostly dark grey/black crust (~`#1a1714`); the body reads
+dark by day, with the chasma + calderas as the only glow, and orange filaments tracing the
+rift on the night side. Lava temperature gradient `#ff5a1e` (cooler) → `#ffd070` (hottest);
+sulfur deposits yellow `#d9c24a`. The subdued treatment makes the glow read stronger by
+contrast (physically right at ~600 K).
+
+**Signature vista.** From the chasma rim: glowing lava lakes below, and **Polyphemus hanging
+fixed at the zenith** (tidal lock), filling the sky. Lava underfoot, gas giant overhead —
+Dante's defining shot.
+
+**Atmosphere.** Tenuous SO₂/sulfur volcanic outgassing (Io-analog), non-breathable
+(`atmosphereContainsOxygen=false`); sputtered/charged, not a stable atmosphere.
+
+**Magnetosphere / radiation.** No intrinsic field. Deepest in Polyphemus's radiation belt →
+>4,500 rem/day (canon). Causal loop: Dante's own volcanic plasma (820× Io → a huge SO₂/sulfur
+torus) **feeds the belt that bombards it** — so the canon dose is consistent with Polyphemus's
+modest 170 µT field (source-driven belt, not field-driven).
+
+**Gameplay [choice 4, middle].** Landing is a middle ground: lava-free patches are landable
+for short stays but need thermal shielding (high temp), and the near side is also
+radiation-extreme; the **far side is the relatively safe base** (lower radiation/temperature).
+Biomes: grand chasma / lava-lake chain / sulfur fields / far-side basalt.
+
 ## Mapping to cfg (for the eventual Phase 4 emit)
 
 - `atmosphere_tint` / `cloud_tint` — ivory zones, slate/steel-blue belts (rather
