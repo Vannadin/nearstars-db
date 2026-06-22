@@ -438,6 +438,36 @@ decisions:
 
   # ── 위성 개별 Phase 4 (안쪽부터) ──────────────────────────────
   - body: Dante                    # A b I
+    axis: identity
+    status: gated                  # facet-walk 2026-06-22
+    driver: classification
+    value: >
+      body_type=규산염 화산 위성(900 km, 8.0e21 kg, 밀도 ~2620 kg/m³). designation=Alpha Centauri A b I ·
+      cultural=Dante(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "Io형 화산 세계. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Dante
+    axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
+    status: gated
+    driver: invented + physics
+    value: >
+      mass 8.0e21 kg · radius 900 km (둘 다 INVENTED, canon 수치 없음 — 밀도 ~2620 kg/m³ 규산암체로 affirm).
+      rotation=폴리페무스 조석고정 → 자전=공전 ≈ 9.2h(a=110,000km·M_Poly 120M⊕서 도출, 최내곽). obliquity ~0°
+      (락 감쇠). j2 ~0(소형). internal_heat=조석열(bulk.tidal_heating 행, ~820× Io). age=계 5.3 Gyr 상속. spin_axis=궤도 법선.
+    gate: {criterion: [physics], verdict: pass-in-window, note: "질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈(~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01)."}
+
+  - body: Dante
+    axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
+    status: gated
+    driver: physics
+    value: "고유 자기장 없음 — Io처럼 격렬 화산이어도 자체 dynamo 불가(Io도 유도장만). 단 Dante는 최내곽(1.54 R_p) 플라스마 공급원."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비."}
+
+  - body: Dante                    # A b I
     axis: bulk.tidal_heating
     status: gated                  # 2026-06-22 — 캐넌+물리 합치
     driver: physics + canon
@@ -457,6 +487,8 @@ decisions:
       규산염 화산 세계(Io형 격렬). 조석고정 → 대면 반구(sub-planet)에 시그니처 **단일 대협곡(Valles
       Marineris급) + 바닥 용암호 사슬**. 반구 대비: 대면=용암호·황 격렬, far-side=식어 굳은 흑현무암
       평원+충돌구. 활동 조석축 집중, anti-planet 쌍둥이 균열(약함) 가능. 마그마 바다 아님(T<규산염 용융 ~1400K).
+    albedo: 0.30                   # group 5 facet-walk (2026-06-22): 오너 = 화산/균열 중심 이중-재질, 황 반(~0.5)·현무암 반(~0.10) → 벌크 평균 ~0.30. 단일 어두운(0.10)·단일 Io밝음(0.5) 미채택, 반반 맵.
+    surface_temperature_k: 230     # 입사 ambient ~230K(albedo 0.30, α Cen A 1.6 AU) + 화산 핫스팟 ~600K(sub-Polyphemus 용암면, HazardousBody가 LongitudeCurve로 고정면에 부여). 양극 분포.
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
@@ -469,10 +501,10 @@ decisions:
     status: gated
     driver: canon + visual
     value: >
-      절제 팔레트 — 대부분 어두운 회/흑 지각, 대협곡·칼데라만 발광, 야간측 주황 실선. 용암 hex 적→황백
-      (#ff5a1e→#ffd070, 온도별), 황 침적 노랑 반점(#d9c24a). 대면 반구 천정엔 Polyphemus 고정(용암 협곡
-      발밑/가스자이언트 머리 위)=시그니처 풍경.
-    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "절제(물리 T~600K) — 어두운 바탕에 균열만 빛나 대비 강조. 캐넌 'orange lava flecks'."}
+      고대비 이중-재질(Io 유추) — 화산·균열 중심에 **황 평원 반(노랑 #d9c24a, 밝음)**, 그 밖은 **흑현무암 반
+      (어두움 #2a2622)**. 대협곡·칼데라·용암호는 발광(적→황백 #ff5a1e→#ffd070, 온도별), 야간측 주황 실선.
+      대면 반구 천정엔 Polyphemus 고정(용암 협곡 발밑/가스자이언트 머리 위)=시그니처 풍경.
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 캐넌 'orange lava flecks'에서 황 면적을 반으로 확대(오너 2026-06-22)."}
   - body: Dante
     axis: atmosphere
     status: gated

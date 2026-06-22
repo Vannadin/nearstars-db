@@ -38,21 +38,21 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 ## Dante — A b I (volcanic moonlet)
 | group | axis | status |
 |---|---|---|
-| identity | body_type / designation (A b I) / cultural | ▫/✅ |
-| identity | discoverability | ⬜ |
+| identity | body_type / designation (A b I) / cultural | ✅ |
+| identity | discoverability (fictional → RB `F F F F`) | ✅ |
 | orbit | a / e / inc (roster, stability-gated) | ✅ (via satellites) |
 | orbit | Ω / ω / M | ▫ |
-| bulk | mass / radius (8e21 / 900 km, invented) | ⬜ (affirm as Phase 4 row) |
-| bulk | rotation (tidal-locked ~9.2 h) / obliquity / spin_axis | ⬜ (confirm lock) |
+| bulk | mass / radius (8e21 / 900 km, affirmed) | ✅ |
+| bulk | rotation (tidal-locked ~9.2 h) / obliquity (~0) / spin_axis | ✅ |
 | bulk | tidal_heating | ✅ |
 | atmosphere | composition / pressure (thin SO₂) | ✅ |
 | atmosphere | breathability (no) / scale_height / escape | ▫ |
 | surface | surface_type / tectonics / terrain (rift) | ✅ |
-| surface | albedo / surface_temperature | ⬜ |
+| surface | albedo (0.30 bimodal sulfur/basalt) / surface_temperature (~230K + lava ~600K) | ✅ |
 | surface | hydrosphere / ice_caps / biosphere | ∅ |
-| appearance | surface look / emission_glow | ✅ |
+| appearance | surface look (sulfur/basalt half-half) / emission_glow | ✅ |
 | appearance | clouds / haze / aurora / specular / rings | ∅ |
-| magnetism | magnetic_field (none) / magnetosphere | ⬜ (confirm none) |
+| magnetism | magnetic_field (none) / magnetosphere | ✅ |
 | environment | radiation | ✅ |
 | environment | stellar_wind / activity / heliosphere | ∅ |
 | rings | (none) | ∅ |
