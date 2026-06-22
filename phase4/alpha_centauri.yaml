@@ -352,6 +352,10 @@ decisions:
         **얼음체**로 확정(group 10 satellites가 상속; Phoebe형 어두운 탄소질 대안 기각). 색 ≈ 옅은
         ice-blue #cdd9e4(거의 안 보이는 wisp라 opacity τ≈9e-5로 시각 임팩트 작음). 어두운/적갈
         탄소질(C) 대안은 미채택.
+      feed_mechanism: >
+        2026-06-23 (art-first): 공급원 Chaos가 **물 cryovolcanic 플룸**으로 고리를 먹임(엔셀라두스→토성
+        E-고리 동형). 이는 'E-고리' 명명을 현실과 정합시킴. 물리 caveat=Chaos 20 R_p서 조석열 부족
+        (Chaos.surface divergence_note); 그래도 art 채택. sputtering/승화는 보조 공급.
 
   - body: Alpha Centauri A b
     axis: gameplay                   # group 11 (facet-walk 2026-06-22; biome map 결정 정정)
@@ -852,6 +856,97 @@ decisions:
       매트 지대(Microbial Mats) — 추후 다른 바디 바이옴과 안 겹치면 7번째로 추가. SOI=자동. difficulty:
       임무=한랭 무산소 세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체.
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부)."}
+
+  - body: Chaos                    # A b V
+    axis: identity
+    status: gated                  # facet-walk 2026-06-23
+    driver: classification + canon(semi)
+    value: >
+      body_type=작은 얼음 위성(반경 400 km, 밀도 ~2015 kg/m³ = 물얼음+암석), Miranda형 균열 지형. 최외곽 명명 위성,
+      역행. E-고리 공급원. designation=Alpha Centauri A b V · cultural=Chaos(designations 블록). discoverability=fictional → RB F F F F.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "역행 얼음 소위성(group 9서 얼음체 확정 → 푸른흰빛 E-고리 먹임). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Chaos
+    axis: bulk                     # mass/radius/rotation/obliquity/oblateness (facet-walk 2026-06-23)
+    status: gated
+    driver: invented + physics
+    value: >
+      mass 5.4e20 kg · radius 400 km → 중력 ~0.023 g(초저중력), 밀도 ~2015 kg/m³(얼음+암석). rotation=**자유 자전
+      9.5h**(1.5M km라 despin 사실상 0, 미동기 원시 빠른 자전). obliquity 15°(자유 회전체). **적도 bulge**: f≈0.06–0.075
+      (~6–7.5%, 목성↔토성 사이) — 빠른 9.5h 자전의 원심 편평. internal_heat 무시(소형·외곽). j2=회전 bulge서 도출. age=5.3 Gyr.
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      note: "f≈(5/4)ω²R/g ≈ 8.8e7/P² → 9.5h(34200s)면 f~0.06–0.075(붕괴 한계 ~2.3h서 안전). 400km 반경=유체평형 relax 충분→bulge 실제 형성. emit 시 geopotential_j2(+reference_radius)로. obliquity 15°(조석고정 아님→축 안 세워짐, 'Chaos' 기운 자전)."
+
+  - body: Chaos
+    axis: atmosphere               # G4 facet-walk 2026-06-23
+    status: gated
+    driver: art + physics
+    value: "안정 대기 없음(0.023g). 단 플룸이 만드는 국소 수증기 exosphere/halo → E-고리로 빠짐. 비호흡."
+    gate: {criterion: [physics], verdict: pass-in-window, note: "초저중력이라 대기 못 잡음. 플룸 분출물이 일시 exosphere 형성 후 고리·우주로(엔셀라두스식)."}
+
+  - body: Chaos
+    axis: surface                  # G5 facet-walk 2026-06-23
+    status: gated
+    driver: art-first + physics-caveat
+    value: >
+      얼음(물얼음+암석), Miranda형 극적 균열 + **활성 tiger-stripe 균열대서 물 cryovolcanic 플룸 분출**(엔셀라두스
+      아날로그) → E-고리 공급. 플룸 낙진으로 표면 신선 얼음 재포장 → 매우 밝음. hydrosphere=지하 액체(art 전제, 국소).
+      albedo ~0.7(신선 얼음, Enceladus 0.81 참조). surface_temp ~200K(고알베도). biosphere 없음. ice_caps=전역 얼음.
+    gate:
+      criterion: [stability, visual-checklist]
+      verdict: documented-divergence
+      divergence_note: >
+        **art-first(오너 2026-06-23)**: 물 플룸은 시각·서사 우선. 물리적으론 20 R_p·e0.02서 조석열 ~수 MW라
+        지하 바다·플룸 불가(a⁻⁷·⁵가 치명; e·a·공명·자전 전 조합 case-analysis로 부족 확인). 그럼에도 엔셀라두스식
+        플룸을 art로 채택, 고증 caveat 기록.
+      upside: "E-고리=플룸-fed는 실제 토성 E-고리(엔셀라두스 플룸 기원)와 동형 → 'E-고리' 명명 정합↑."
+
+  - body: Chaos
+    axis: appearance               # G6 facet-walk 2026-06-23
+    status: gated
+    driver: art + physics
+    value: >
+      **밝은 청백 얼음**(Enceladus형 신선 frost, ice-blue #cdd9e4 계열 — 자기가 먹이는 고리와 동톤). tiger-stripe
+      균열대서 **물 제트/플룸**(남극 혹은 활성 단애), 무대기라 선명한 그림자 + 플룸 빛산란. 극적 Miranda 균열. biolum/aurora ∅.
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "플룸 + 밝은 frost = Enceladus 룩. 청백 얼음이 ice-blue E-고리와 시각 연결(공급원-고리 동톤)."}
+
+  - body: Chaos
+    axis: magnetism.magnetic_field # G7 facet-walk 2026-06-23
+    status: gated
+    driver: physics
+    value: "없음 — 소형 얼음체, dynamo 불가."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "21 R_p 자기권계면이라 방사선 자체가 낮음(environment)."}
+
+  - body: Chaos
+    axis: environment.radiation    # G8 facet-walk 2026-06-23
+    status: gated
+    driver: physics
+    value: "낮음/가변 — 21 R_p=자기권계면, 주간측 일부 자기권 밖(α Cen A 항성풍·우주선 직접 노출 시간 있음). belt 밖이라 온건."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "자기권계면이라 가변. wind/activity/heliosphere/flares/uv/HZ=항성-레벨 ∅."}
+
+  # ── Chaos G9 rings = ∅ 전부(자체 고리 없음; circumstellar_disk·asteroid_belt 계-레벨 ∅). ──
+  - body: Chaos
+    axis: satellites               # G10 — dust_source 역할 (facet-walk 2026-06-23)
+    status: gated
+    driver: art + physics
+    value: "submoon ∅ · co_orbital ∅. **dust_sources=Chaos가 E-고리 공급원** — art-first 물 플룸(엔셀라두스→토성 E-고리 동형) 주공급 + sputtering/승화 보조. Polyphemus.rings 기록."
+    gate: {criterion: [stability], verdict: pass-in-window, note: "플룸=주 공급(art), 침식=보조. 얼음체라 ice-blue 고리와 조성 일치."}
+
+  - body: Chaos
+    axis: gameplay                 # G11 facet-walk 2026-06-23
+    status: gated
+    driver: gameplay
+    value: >
+      표면 있음 → biome map(5): 거대 균열대(Chasmata) / **tiger-stripe 플룸 분출대(Plume Vents, 과학 hotspot)** /
+      얼음 평원(Icy Plains) / 크레이터(Craters) / 극(Poles). (코로나 제외=오너.) 착륙=초저중력 0.023g 주의(이탈·바운스).
+      발견=fictional→RB F F F F. ScienceValues 전체.
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "플룸 분출대=과학 명소(엔셀라두스 tiger-stripe 유추). 초저중력 착륙 난이도 특수. 코로나 바이옴 제외(오너)."}
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →

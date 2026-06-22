@@ -116,6 +116,21 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | satellites | all ∅ (no submoons / co-orbitals; dust source = Chaos) | ∅ |
 | gameplay | biomes (6; microbial-mat 7th = candidate, add if non-overlapping) / SOI / difficulty | ✅ |
 
+## Chaos — A b V (outermost retrograde icy moonlet; E-ring source) — ✅ full walk (2026-06-23)
+| group | axis | status |
+|---|---|---|
+| identity | body_type / designation (A b V) / cultural / discoverability (fictional → RB `F F F F`) | ✅ |
+| orbit | a / e / inc (1.5M km, retrograde 179°, e 0.02) | ✅ (via satellites) |
+| bulk | mass / radius (5.4e20 / 400 km) / rotation (free 9.5h) / obliquity (15°) / oblateness (f~0.06-0.075) | ✅ |
+| atmosphere | none (0.023g) + plume vapor halo | ✅ |
+| surface | icy + **water cryovolcanic plumes** (Enceladus-analog, art-first divergence) / Miranda fractures / albedo (~0.7) | ✅ |
+| appearance | bright bluish-white ice / tiger-stripe plume jets / dramatic fractures | ✅ |
+| magnetism | magnetic_field (none) | ✅ |
+| environment | radiation (low/variable, 21 R_p magnetopause); star-level ∅ | ✅ |
+| rings | all ∅ (no own rings) | ∅ |
+| satellites | submoons/co-orbitals ∅; **dust_source = Chaos plumes feed E-ring** | ✅ |
+| gameplay | biomes (5; plume vents = hotspot; corona dropped) / SOI / difficulty (ultra-low-g) | ✅ |
+
 ## Stars A / B (context)
 Activity / wind / heliosphere ▫ passthrough; magnetic_field ✅ (proxy); appearance
 (color/granulation/spots/corona) ⬜ — deferred unless we do stellar appearance.
