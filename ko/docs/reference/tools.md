@@ -215,7 +215,7 @@
 
 **참고.** 색은 지각적 흑체 근사(보정된 SED 아님), 마커 크기는 광도 proxy(물리 반경 아닌 빌보드). 표 형태 DB 브라우저인 `docs/index.html`(2번 툴)과 별개로, 이쪽은 공간 배치를 본다.
 
-**관련 — 폴리페무스 위성계 뷰어.** `phase4/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 Chaos 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다.
+**관련 — 폴리페무스 위성계 뷰어.** `phase4/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 Chaos 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다. **동결(2026-06-22):** 설계 탐색 임무가 끝나(로스터·고리·obliquity 확정) 아티팩트로 보존하며, 이후 결정은 여기 동기화하지 않는다. 성도에 없는 고유 기능은 Pandora 지표 1인칭 시점+일식뿐이고, canonical·유지보수 시각화는 `docs/starmap.html` 이다.
 
 ## 스킬 디렉터리 배치
 
