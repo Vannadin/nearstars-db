@@ -110,10 +110,11 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | atmosphere | composition (N₂/CO₂/CH₄/H₂, anoxic reducing) / pressure (~1 bar) / temp (~270-275K) / greenhouse / breathability (no O₂) | ✅ |
 | surface | water seas (partial ice) / biosphere (anaerobic microbial) / tectonics / ice_caps / albedo (0.35) | ✅ |
 | appearance | Archean orange CH₄ haze / seas / no biolum / weak aurora | ✅ |
-| magnetism | magnetic_field (weak/none) | ✅ |
-| environment | radiation (low-med, 8.4 R_p, outer) | ✅ |
-| rings / satellites | (none; is E-ring inner shepherd) | ∅ |
-| gameplay | biomes (6, incl. hydrothermal) / SOI / difficulty | ✅ |
+| magnetism | magnetic_field (weak dipole, iron core) | ✅ |
+| environment | radiation (low: outer 8.4 R_p + weak-field shield); wind/activity/helio/flares/uv/HZ = ∅ star-level | ✅ |
+| rings | all ∅ (no own rings; is Polyphemus E-ring inner shepherd) | ∅ |
+| satellites | all ∅ (no submoons / co-orbitals; dust source = Chaos) | ∅ |
+| gameplay | biomes (6; microbial-mat 7th = candidate, add if non-overlapping) / SOI / difficulty | ✅ |
 
 ## Stars A / B (context)
 Activity / wind / heliosphere ▫ passthrough; magnetic_field ✅ (proxy); appearance

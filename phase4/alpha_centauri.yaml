@@ -826,18 +826,21 @@ decisions:
     gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가 두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라 초록·청록과도 차별."}
 
   - body: Cassandra
-    axis: magnetism.magnetic_field # group 7 facet-walk 2026-06-22
+    axis: magnetism.magnetic_field # group 7 facet-walk 2026-06-22 — 약함(오너 결정)
     status: gated
     driver: physics
-    value: "약하거나 없음 — 철-부유 핵(밀도 5470)이라 약 dynamo 가능성은 있으나 소형·냉각 진행이라 불확실. 기본 무시/약함."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "자기 차폐 거의 없음. 단 8.4 R_p 외곽이라 방사선 자체가 낮아(environment) 무방비여도 문제 적음."}
+    value: "약한 고유 dipole — 철-부유 핵(밀도 5470) + 자유 자전 39h 약 dynamo. 미약하나 차폐에 기여(Archean 지구식 초기 생명 보호 프레이밍)."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "오너 결정(a): 약함. 미약 차폐가 8.4 R_p 외곽 저방사선과 합쳐져 표면 추가 보호(environment 반영). magnetosphere/belts 고유=미미."}
 
   - body: Cassandra
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
     status: gated
     driver: physics
-    value: "낮음/중간 — 8.4 R_p 외곽, 방사선대 밖. Dante·Hades보다 훨씬 온건(거주 한계는 방사선 아닌 한랭·무산소)."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "외곽이라 belt 영향 적음. stellar_wind/activity/heliosphere = 항성-레벨 ∅."}
+    value: "낮음 — 8.4 R_p 외곽(방사선대 밖) + 약한 고유 자기장 추가 차폐. Dante·Hades 극심과 대비. 거주 한계는 방사선 아닌 한랭·무산소."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "외곽 저방사선 + 약장 차폐 → 낮음. stellar_wind/activity/heliosphere/flares/uv_xray/habitable_zone=항성-레벨 ∅(단 무산소→오존 없어 지표 UV↑ 메모, HZ 내 위치는 atmosphere서 반영)."}
+
+  # ── Cassandra G9 rings = ∅ 전부(자체 고리 없음; circumstellar_disk·asteroid_belt 계-레벨 ∅). 단 Polyphemus E-고리 안쪽 양치기(Polyphemus.rings 기록). ──
+  # ── Cassandra G10 satellites = ∅ 전부(submoon 없음·co_orbital 없음; dust_source는 Chaos 담당, Cassandra는 양치기). ──
 
   - body: Cassandra
     axis: gameplay                 # group 11 facet-walk 2026-06-22
@@ -845,9 +848,10 @@ decisions:
     driver: gameplay
     value: >
       표면 있음 → biome map(6): 물바다(Seas) / 해안(Coastlines) / 한랭 대륙·고지(Cold Highlands) / 빙관(Polar Ice) /
-      화산·열수구(Volcanic & Hydrothermal, 미생물 거점) / 주황 haze 저지대(Hazy Lowlands). SOI=자동. difficulty:
+      화산·열수구(Volcanic & Hydrothermal, 미생물 거점) / 얇은 haze 저지대(Hazy Lowlands). **후보(보류)**: 미생물
+      매트 지대(Microbial Mats) — 추후 다른 바디 바이옴과 안 겹치면 7번째로 추가. SOI=자동. difficulty:
       임무=한랭 무산소 세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체.
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적."}
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부)."}
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
