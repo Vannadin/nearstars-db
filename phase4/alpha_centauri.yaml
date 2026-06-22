@@ -80,7 +80,30 @@ decisions:
       reference_radius 1.0 R_Jup).
     note: "Principia가 천체간 연산에도 J2 적용 → 위성 동역학의 입력이었고, 그 입력이 결정적이었음."
 
-  # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
+  - body: Alpha Centauri A b
+    axis: bulk.obliquity
+    status: gated                  # 5° 확정 (2026-06-22) — 재시뮬 STABLE + 일식 duty 검증
+    driver: visual + physics
+    value: "5° (적도면이 공전면에서 5° 기움); 위성계+고리 전체가 적도면 공유(coherent)"
+    phase3_default: "27° (토성-유추 tie-break, 고리 기울기용 → 폐기)"
+    gate:
+      criterion: [stability, visual-checklist]
+      verdict: documented-divergence
+      divergence_note: >
+        Phase 3 27°(토성-유추)는 "고리 기울기용"이었으나 고리를 Chaos 궤도면에 눕혀 근거 소멸 → 5°로 낮춤.
+        위성계+고리를 적도면에 통째로 5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는
+        본래 궤도면이 자연스러우나 5° 적도면으로 끌어오는 건 미미한 divergence.
+      evidence: >
+        재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123.
+        일식 검증: θ(Pandora면↔Polyphemus 궤도면) 0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%) —
+        5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성 섭동으로 θ 요동→"일식 시즌" 자연발생.
+
+  - body: Alpha Centauri A b
+    axis: bulk.rotation_period
+    status: passthrough            # Phase 3 유추 그대로
+    note: "10 h (목성/토성 유추, conf low). 자이언트라 조석고정 아님. emit 그대로."
+
+  # ── 외형 (banding/haze/aurora 4b 게이트 완료 2026-06-22) ─────────────────────
   - body: Alpha Centauri A b
     axis: appearance.banding
     status: gated                 # 4b 완료 (2026-06-22) — 3색 띠 in-window, cobalt belt만 divergence
@@ -172,11 +195,16 @@ decisions:
     gate:
       criterion: [derived-grounding]
       verdict: documented-divergence   # "Dante >4500 rem/day"는 500µT 가정의 고선량 reading
-      value: "Dante 극심 · Hades 심함 · Pandora 중간(보호) · Cassandra 낮음 · Chaos 낮음/가변"
+      value: "Dante 극심 · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변"
       evidence: >
         선량은 B²·근접도로 가파르게 — 170µT(목성 ~1/25)라 벨트는 목성보다 약함. Dante 최내곽 극심,
-        Pandora는 벨트 가장자리지만 자기권이 항성풍 차단(거주 narrative+, Avatar 설정 부합).
-        ">4500 rem/day"(목성급)는 500µT 가정에서만 성립 → frozen 등급은 Dante "극심"(수백~수천 rem/day).
+        Hades 피크(~2–3 R_p) 근처. ">4500 rem/day"(목성급)는 500µT 가정에서만 성립 → frozen 등급은
+        Dante "극심"(수백~수천 rem/day).
+      pandora_note: >
+        Pandora(3.53 R_p)는 벨트에 겹치되 *가장자리*(피크 아님)이고, 약한 벨트라 선량은 "중간". 거주가능
+        모순 아님 — Pandora 자체 강자기장(언옵타늄 초전도/플럭스 볼텍스, Avatar canon)이 표면을 차폐.
+        부유산을 띄우는 자기장이 곧 생물권 방패. 거주가능성은 Pandora 자기장에 load-bearing → 강자기
+        divergence는 Pandora 독립 바디(magnetism 축)서 확정. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
 
   - body: Alpha Centauri A b
     axis: appearance.rings

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Polyphemus 자전축 기울기 — A vs B</title>
+<style>
+  :root{
+    --bg:#0b0f17; --card:#141a26; --ink:#e7ecf5; --dim:#8e9bb3; --line:#26324a;
+    --tan:#c9b89a;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#0b0f17,#0d1320);color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    padding:28px 20px 56px}
+  .wrap{max-width:1000px;margin:0 auto}
+  h1{font-size:21px;margin:0 0 6px;letter-spacing:-.01em}
+  .sub{color:var(--dim);font-size:13.5px;margin:0 0 22px;max-width:62ch}
+  .sub b{color:#bcd1ff;font-weight:600}
+  .panes{display:flex;gap:18px;flex-wrap:wrap}
+  .pane{flex:1 1 380px;min-width:300px;background:var(--card);border:1px solid var(--line);
+    border-radius:14px;padding:16px 16px 18px}
+  .pane h2{font-size:15px;margin:0 0 2px;display:flex;align-items:center;gap:8px}
+  .tag{font:600 11px/1 ui-monospace,monospace;padding:3px 7px;border-radius:6px}
+  .tagA{background:#1d3326;color:#7fe0a0}
+  .tagB{background:#33271d;color:#f3c46b}
+  .cap{color:var(--dim);font-size:12.5px;margin:4px 0 10px;min-height:34px}
+  canvas{width:100%;height:auto;display:block;background:radial-gradient(120% 90% at 50% 42%,#0f1626,#0a0e17);
+    border-radius:10px;border:1px solid #1d2738}
+  ul{margin:12px 0 0;padding-left:18px}
+  li{margin:3px 0;font-size:13px}
+  li.good::marker{content:"✓ "}
+  li.cost::marker{content:"⚠ "}
+  li.good{color:#bfe6cc}
+  li.cost{color:#f0d2a0}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0 0;padding:12px 14px;
+    background:#0f1422;border:1px solid var(--line);border-radius:10px;font-size:12.5px;color:var(--dim)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:11px;height:11px;border-radius:50%;display:inline-block}
+  .note{margin:20px 0 0;padding:14px 16px;background:#10192a;border-left:3px solid #4a76d8;
+    border-radius:0 10px 10px 0;font-size:13px;color:#cdd8ee}
+  .note b{color:#fff}
+  code{font:12px ui-monospace,monospace;background:#0d1320;padding:1px 5px;border-radius:4px;color:#bcd1ff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Polyphemus 자전축 기울기 — 두 안 비교</h1>
+  <p class="sub">옆에서 본(edge-on) 모식도. <b>Laplace 반경 ≈ 12.3 R_p</b> 안쪽 위성(Dante·Hades·Pandora·Cassandra)은
+     공전면이 행성 <b>적도면</b>을 따르고, 그 바깥 Chaos는 <b>궤도면</b>에 머뭅니다. 그래서 기울기를 주면
+     <b>안쪽 위성 평면이 통째로 기웁니다</b>. 고리는 Chaos(궤도면)에 있어 두 안 모두 수평입니다.</p>
+
+  <div class="panes">
+    <div class="pane">
+      <h2><span class="tag tagA">A</span> 기울기 ≈ 0°</h2>
+      <p class="cap">적도면 = 궤도면. 지금 시뮬한 그대로 — 모든 위성과 고리가 한 평면.</p>
+      <canvas id="cA" width="460" height="340" aria-label="기울기 0도 모식도"></canvas>
+      <ul>
+        <li class="good">이미 안정성 검증됨(재시뮬 불필요)</li>
+        <li class="good">위성·고리 한 평면 → 단순·일관</li>
+        <li class="cost">행성 기울기가 밋밋함(시각적 개성 약함)</li>
+      </ul>
+    </div>
+    <div class="pane">
+      <h2><span class="tag tagB">B</span> 기울기 ≈ 27° (토성형)</h2>
+      <p class="cap">안쪽 4위성이 기운 적도면, Chaos+고리는 궤도면 → 두 평면이 27° 엇갈림.</p>
+      <canvas id="cB" width="460" height="340" aria-label="기울기 27도 모식도"></canvas>
+      <ul>
+        <li class="good">정규 위성이 적도면에 — 물리적으로 더 자연스러움</li>
+        <li class="good">두 평면 엇갈림 → 극적인 비주얼</li>
+        <li class="cost">재시뮬 필요(<code>--j2-obliquity-deg 27</code>) + 위성 경사각 재해석 + 뷰어 업데이트</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="note"><b>결정 포인트.</b> 기울기는 자유로운 시각 노브가 아니라 <b>Pandora를 포함한 안쪽 4위성의 공전면</b>을
+     정합니다. A는 “지금 그대로·안전”, B는 “더 자연·극적이지만 재작업”. 둘 다 방사선대 겹침·거주가능 결론은
+     동일하게 유지됩니다(벨트는 적도면을 따라가므로).</div>
+</div>
+
+<script>
+const MOONS=[
+  {name:"Dante",    r:48,  c:"#ff8a5c", inner:true,  phi:35},
+  {name:"Hades",    r:70,  c:"#ff6b5a", inner:true,  phi:158},
+  {name:"Pandora",  r:100, c:"#39d6e0", inner:true,  phi:288},
+  {name:"Cassandra",r:138, c:"#e85cc8", inner:true,  phi:210},
+  {name:"Chaos",    r:188, c:"#c77dff", inner:false, phi:342},
+];
+const RL=164;            // Laplace radius (px, schematic for 12.3 R_p)
+const FLAT=0.15;         // edge-on foreshortening of orbits
+
+function P(cx,cy,a,b,phiDeg,thetaDeg){
+  const ph=phiDeg*Math.PI/180, th=-thetaDeg*Math.PI/180;
+  const lx=a*Math.cos(ph), ly=b*Math.sin(ph);
+  return [cx+(lx*Math.cos(th)-ly*Math.sin(th)), cy+(lx*Math.sin(th)+ly*Math.cos(th))];
+}
+
+function draw(canvas,obl){
+  const ctx=canvas.getContext("2d"), W=canvas.width, H=canvas.height;
+  const cx=W/2, cy=H/2+6;
+  ctx.clearRect(0,0,W,H);
+  ctx.lineJoin=ctx.lineCap="round";
+
+  // orbital-plane reference line (horizontal)
+  ctx.strokeStyle="#2b3650"; ctx.lineWidth=1; ctx.setLineDash([5,5]);
+  ctx.beginPath(); ctx.moveTo(20,cy); ctx.lineTo(W-20,cy); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="#5a6680"; ctx.font="11px ui-monospace,monospace";
+  ctx.textAlign="left"; ctx.fillText("궤도면", 22, cy-6);
+
+  // Laplace radius (flat dashed ellipse) + label
+  ctx.strokeStyle="rgba(150,165,195,.30)"; ctx.lineWidth=1; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.ellipse(cx,cy,RL,RL*FLAT,0,0,2*Math.PI); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle="rgba(150,165,195,.6)"; ctx.textAlign="center";
+  ctx.fillText("Laplace 한계 ~12 R_p", cx, cy+RL*FLAT+15);
+
+  // ring (Chaos-fed E-ring) — always in the orbital (flat) plane
+  ctx.strokeStyle="rgba(201,184,154,.30)"; ctx.lineWidth=11;
+  ctx.beginPath(); ctx.ellipse(cx,cy,196,196*FLAT,0,0,2*Math.PI); ctx.stroke();
+  ctx.lineWidth=1; ctx.strokeStyle="rgba(201,184,154,.5)";
+  ctx.beginPath(); ctx.ellipse(cx,cy,168,168*FLAT,0,0,2*Math.PI); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(cx,cy,224,224*FLAT,0,0,2*Math.PI); ctx.stroke();
+
+  // moon orbits + moons
+  for(const m of MOONS){
+    const th=(m.inner?obl:0);
+    ctx.strokeStyle=m.c+"7a"; ctx.lineWidth=1.4;
+    ctx.beginPath(); ctx.ellipse(cx,cy,m.r,m.r*FLAT,-th*Math.PI/180,0,2*Math.PI); ctx.stroke();
+    const [x,y]=P(cx,cy,m.r,m.r*FLAT,m.phi,th);
+    ctx.fillStyle=m.c; ctx.beginPath(); ctx.arc(x,y,m.name==="Pandora"?6.5:4.6,0,2*Math.PI); ctx.fill();
+    if(m.name==="Pandora"){ ctx.strokeStyle="#bfeff5"; ctx.lineWidth=1.4;
+      ctx.beginPath(); ctx.arc(x,y,9.5,0,2*Math.PI); ctx.stroke(); }
+    ctx.fillStyle=m.c; ctx.font=(m.name==="Pandora"?"600 ":"")+"11px -apple-system,sans-serif";
+    ctx.textAlign=x<cx?"right":"left";
+    ctx.fillText(m.name, x+(x<cx?-9:9), y+ (y<cy?-6:13));
+  }
+
+  // planet (oblate, tilted by obliquity) + spin axis + equator
+  const oR=obl*Math.PI/180;
+  // spin axis
+  ctx.strokeStyle="#6b7ba0"; ctx.lineWidth=1.5; ctx.setLineDash([2,3]);
+  ctx.beginPath();
+  ctx.moveTo(cx-44*Math.sin(oR), cy+44*Math.cos(oR));
+  ctx.lineTo(cx+44*Math.sin(oR), cy-44*Math.cos(oR));
+  ctx.stroke(); ctx.setLineDash([]);
+  // body (oblate: major axis = equator, tilted)
+  ctx.fillStyle="#dcc9a6";
+  ctx.beginPath(); ctx.ellipse(cx,cy,25,19,-oR,0,2*Math.PI); ctx.fill();
+  // equator line on body
+  ctx.strokeStyle="rgba(120,95,60,.7)"; ctx.lineWidth=1.4;
+  ctx.beginPath(); ctx.ellipse(cx,cy,25,6,-oR,0,2*Math.PI); ctx.stroke();
+
+  // obliquity angle arc + label (panel B)
+  if(obl>1){
+    ctx.strokeStyle="#f3c46b"; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(cx,cy,40,-Math.PI/2,-Math.PI/2+oR); ctx.stroke();
+    ctx.fillStyle="#f3c46b"; ctx.textAlign="left"; ctx.font="600 12px ui-monospace,monospace";
+    ctx.fillText(obl+"°", cx+12, cy-46);
+  }
+
+  // panel title
+  ctx.fillStyle="#e7ecf5"; ctx.textAlign="left"; ctx.font="600 13px -apple-system,sans-serif";
+  ctx.fillText(obl<1?"A · 기울기 0°":"B · 기울기 "+obl+"°", 16, 24);
+}
+
+draw(document.getElementById("cA"),0);
+draw(document.getElementById("cB"),27);
+
+// legend
+const L=document.getElementById("legend");
+L.innerHTML = MOONS.map(m=>`<span><i class="dot" style="background:${m.c}"></i>${m.name}${m.inner?"":" (바깥·궤도면)"}</span>`).join("")
+  + `<span><i class="dot" style="background:#c9b89a"></i>고리(궤도면)</span>`;
+</script>
+</body>
+</html>
