@@ -13,15 +13,18 @@ decisions:
     value: >
       body_type=미지근한 토성(temperate Saturn급 가스자이언트; H₂/He, 120 M⊕, Teq 225K, 물구름 Class I/II).
       designation=Alpha Centauri A b · cultural=Polyphemus(designations 블록).
-      discoverability=관측-발견(후보; 옵셔널 ResearchBodies) — 항성은 항상 가시.
+      discoverability=관측-발견(category=candidate; 옵셔널 ResearchBodies) — 항성은 항상 가시.
     gate:
       criterion: [classification]
       verdict: pass-in-window
       note: >
-        body_type/designation/cultural 확정. **discoverability=실축 채택** — 옵셔널 ResearchBodies로 관측해
-        발견. Polyphemus는 JWST 후보(미확정)라 숨김→관측 발견, ONDISCOVERY 메시지에 실제 검출 인용
-        (Sanghi & Beichman 2024); 항성 α Cen A는 맨눈 별이라 항상 가시. 카탈로그 전체 '실제 검출 상태→발견
-        난도' 매핑. emit(ResearchBodies :NEEDS[] MM 패치)은 말미 일괄. [[project_nearstars_discoverability_researchbodies]]
+        body_type/designation/cultural 확정. **discoverability=실축 채택** — 옵셔널 ResearchBodies로 관측해 발견.
+        난도 매핑은 researchbodies-cfg 스킬이 canonical(references/db-mapping.md, 2026-06-22 개정). Polyphemus는
+        JWST 직접촬영 **candidate** → IGNORELEVELS **T F F F**(Easy만 시작 가시, Normal/Medium/Hard는 관측
+        발견), ONDISCOVERY에 실검출 인용(arXiv:2508.03812, Sanghi & Beichman). 항성 α Cen A=naked_eye → T T T T
+        항상 가시. emit 입력 = 스킬이 읽는 top-level `discoverability:` 리스트(body/category/message/ref); 패치 방출
+        (emit_researchbodies_cfg.py)은 말미 일괄. [[project_nearstars_discoverability_researchbodies]]
+      discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2025arXiv250803812S", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Alpha Centauri A b      # Polyphemus
     axis: orbit.semi_major_axis_au
@@ -359,8 +362,9 @@ decisions:
       **biome map 있음**(Jool/ RSS Sol 가스자이언트 선례 — 표면 없어도 위경도 biome map으로 비행 바이옴
       정의). 폴리페무스 바이옴 = 위도 띠(적도대/북·남 온대 belt/북·남극) + **시그니처 폭풍(깊은 파란 눈)
       독자 바이옴**(group 6 랜드마크 = 과학 명소). ScienceValues 전체 블록 정의(landed/splashed는
-      도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요). timewarp=대기 위 표준. difficulty=
-      플래그십(접근=항성간 여정 자체가 난도).
+      도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요). timewarp=대기 위 표준. difficulty=두 층:
+      (1) 임무 난도=플래그십(접근=항성간 여정 자체); (2) 발견 난도=ResearchBodies IGNORELEVELS, candidate라
+      T F F F (researchbodies-cfg 스킬 db-mapping.md 기준, identity.discoverability 참조).
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "정정(2026-06-22): 가스자이언트도 biome map 보유(Jool/Sol 선례) — 이전 'Sun.cfg=biome 없음'은 태양 기준 오판. 비행 바이옴=위도 띠 + 대storm. ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies(identity.discoverability)."}
 
   # ── group 5 surface = N/A (가스자이언트, 고체 표면 없음 — 구름덱은 atmosphere/appearance) ──
