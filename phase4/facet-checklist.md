@@ -83,13 +83,13 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 ## Pandora — A b III (Earth-like Na'vi homeworld) — **mostly TODO**
 | group | axis | status |
 |---|---|---|
-| identity | body_type / designation (A b III) / cultural | ▫/✅ |
-| identity | discoverability | ⬜ |
+| identity | body_type / designation (A b III) / cultural | ✅ |
+| identity | discoverability (fictional → RB `F F F F`) | ✅ |
 | orbit | a / e / inc (32 h lock, 252,393 km) | ✅ (via satellites) |
 | orbit | Ω / ω / M | ▫ |
-| bulk | mass (0.72 M⊕) / radius (5724 km) / gravity (0.8 g) | ⬜ (affirm canon) |
-| bulk | rotation (32 h lock) / obliquity (29° canon) / spin_axis | ⬜ |
-| bulk | tidal_heating / internal_heat | ⬜ (climate study exists) |
+| bulk | mass (B: 0.645 M⊕) / radius (5724 km) / gravity (0.8 g) | ✅ |
+| bulk | rotation (32 h lock) / obliquity (~10° eff, not 29°) / spin_axis | ✅ |
+| bulk | tidal_heating / internal_heat (drives volcanism + dynamo) | ✅ |
 | atmosphere | composition (N₂/O₂/CO₂>18%/Xe/H₂S) | ⬜ |
 | atmosphere | breathability (O₂ present, toxic) / pressure (1.1 atm) / scale_height / greenhouse | ⬜ |
 | surface | surface_type / hydrosphere (oceans) / biosphere (lush, biolum) | ⬜ |
