@@ -1,0 +1,61 @@
+host: _gas-giant-atmosphere-temperature
+slug: gas-giant-atmosphere
+generated_at: '2026-06-22'
+note: 'Cross-body anchor bibliography for gas-giant temperature / atmosphere-structure
+  grounding (Phase 4 atmosphere axes: classification, Teq, T-P profile, intrinsic
+  temperature, water clouds, metallicity). First consumer = Alpha Centauri A b
+  (Polyphemus, ~225K metal-enriched water-cloud Saturn-mass, Class I/II boundary).
+  Pinned by arxiv_id; status=identified means web-found but not yet fetched to the
+  _papers cache (fetch on deep-read before gating a value that leans on it). See
+  [[project-nearstars-phase4]] / feedback_phase4_facet_choices.
+
+  '
+papers:
+- arxiv_id: astro-ph/9910504
+  title: 'Sudarsky, Burrows & Pinto 2000 - Albedo and Reflection Spectra of EGPs (ApJ 538, 885) - introduces the Class I-V scheme by Teq/condensate; Class I/II = NH3->H2O cloud boundary'
+  status: identified
+  category: classification
+- arxiv_id: astro-ph/0210216
+  title: 'Sudarsky, Burrows & Hubeny 2003 - Theoretical Spectra and Atmospheres of EGPs (ApJ 588, 1121) - definitive five-class atmosphere models; canonical citation for Class I/II placement at ~225K'
+  status: identified
+  category: classification
+- arxiv_id: '1707.05089'
+  title: 'Mendez & Rivera-Valentin 2017 - Equilibrium Temperature of Planets in Elliptical Orbits (ApJL 837, L1) - Teq formula + f-factor + Bond-albedo definition (A_B assumption anchor)'
+  status: identified
+  category: equilibrium_temp
+- arxiv_id: astro-ph/0612671
+  title: 'Fortney, Marley & Barnes 2007 - Planetary Radii across Mass/Insolation (ApJ 659, 1661) - irradiated cool-giant radiative-convective grid; T(P) framework at 1-2 AU'
+  status: identified
+  category: tp_profile
+- arxiv_id: '1410.6512'
+  title: 'Marley & Robinson 2015 - On the Cool Side (ARA&A 53, 279) - REVIEW; cool substellar/giant T-P structure + clouds + cooling. Best single anchor'
+  status: identified
+  category: tp_profile_review
+- arxiv_id: '2107.07434'
+  title: 'Marley et al. 2021 - Sonora Bobcat I (ApJ 920, 85) - self-consistent atmosphere+evolution grid to Teff ~200K incl. non-solar [M/H]'
+  status: identified
+  category: tp_profile_grid
+- arxiv_id: '2110.11824'
+  title: 'Karalidi et al. 2021 - Sonora Cholla II (ApJ 923, 269) - disequilibrium-chemistry (quenching) extension; secondary'
+  status: identified
+  category: tp_profile_grid
+- arxiv_id: '0912.0533'
+  title: 'Fortney & Nettelmann 2010 - Interior Structure, Composition & Evolution of Giant Planets (SSRv 152, 423) - REVIEW; cooling tracks, T_int decline w/ age+mass (insolation-set support)'
+  status: identified
+  category: evolution_tint_review
+- arxiv_id: '1907.07777'
+  title: 'Thorngren, Gao & Fortney 2019 - Intrinsic Temperature & RCB Depth (ApJL 884, L6) - Teq-T_int relation (HOT-Jupiter calibrated; cool limit reverts to secular cooling - cite with caveat)'
+  status: identified
+  category: evolution_tint
+- arxiv_id: '1404.0005'
+  title: 'Morley et al. 2014 - Water Clouds in Y Dwarfs and Exoplanets (ApJ 787, 78) - canonical self-consistent water-ice cloud models for Teff < ~350-400K; cloud base + T-P effect'
+  status: identified
+  category: water_clouds
+- arxiv_id: '1804.00662'
+  title: 'MacDonald, Marley, Fortney & Lewis 2018 - H2O Prominence in Reflection Spectra of Cool Giants (AJ 156, 228) - higher [M/H] -> brighter optically-thick water clouds, higher albedo'
+  status: identified
+  category: metallicity_clouds
+- arxiv_id: '1511.07854'
+  title: 'Thorngren, Fortney, Murray-Clay & Lopez 2016 - Mass-Metallicity Relation for Giant Planets (ApJ 831, 64) - M_z ~ sqrt(M); Saturn-mass giants are MOST metal-enriched ([M/H]+0.5-1.0 expected, not assumed)'
+  status: identified
+  category: metallicity

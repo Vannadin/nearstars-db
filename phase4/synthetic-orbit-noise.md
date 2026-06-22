@@ -16,8 +16,12 @@ as natural — **without ever touching a real measurement**.
    default/assumption (`predicted`, `assumed_canonical`, null-filled, or an exact
    0/90/0.0 with no source). Measured transit i, RV e, interferometric i★, etc. are
    frozen. (The DB already records method/source — that is the gate.)
-2. **DB invariant.** Noise is applied in the Phase-4 / cfg-emit layer, never written
-   back to `db/`. The measured DB stays the source of truth; the build is reproducible.
+2. **DB invariant + emit-stage.** Noise is applied at the **cfg-emit stage** (one of the
+   deterministic emit transforms), **NOT at the facet-decision / board stage**, and never
+   written back to `db/`. The Phase-4 board records only the *intent* — "this element is a
+   default/free value → de-perfect it at emit" — never a concrete noised number. The measured
+   DB stays the source of truth; the build is reproducible (`cfg = f(db, phase3, phase4,
+   per-system seed)`).
 3. **Re-rollable per star system, never baked.** The noise is a re-rollable
    *realization*, not a single fixed value frozen into the spec or DB. It's drawn from a
    **per-system seed** — the seed key is the star system, so each system is an
@@ -54,6 +58,14 @@ as natural — **without ever touching a real measurement**.
   observational one (they were detected *because* they are flat).
 - Amplitude philosophy: large enough to break the perfect-value look, small enough to
   stay inside the Phase-3 window and pass the stability gate.
+- **Stage & gate (decided 2026-06-22).** Apply the noise at **emit**, not at the per-facet
+  decision stage. The board flags a value as *de-perfect-at-emit*; the emitter realizes the
+  concrete value from the per-system seed. The stability gate is satisfied at the **bound**
+  level: the per-element guardrails above are set *inside the already-validated stability
+  envelope*, so any seeded value within them is safe **without a per-roll re-sim**. Only a
+  *new* system (bounds not yet validated) or a re-roll that widens beyond a validated bound
+  reruns the stability sim. Rationale: keeps the deterministic-emit invariant + a clean
+  decision record + one-place generalized noise logic.
 - Ties into [[project_nearstars_phase4]] (the art-direction → 고증-gate → emit flow):
   synthetic noise is one of the deterministic transforms the Phase-4 emit applies, and
   the stability sim is its 고증 gate.

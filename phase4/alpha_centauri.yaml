@@ -7,6 +7,23 @@ updated: 2026-06-20
 decisions:
   # ── 궤도 (Kozai-안정 최적화 완료) ──────────────────────────────
   - body: Alpha Centauri A b      # Polyphemus
+    axis: identity
+    status: gated                 # 2026-06-22 facet-walk
+    driver: classification
+    value: >
+      body_type=미지근한 토성(temperate Saturn급 가스자이언트; H₂/He, 120 M⊕, Teq 225K, 물구름 Class I/II).
+      designation=Alpha Centauri A b · cultural=Polyphemus(designations 블록).
+      discoverability=관측-발견(후보; 옵셔널 ResearchBodies) — 항성은 항상 가시.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: >
+        body_type/designation/cultural 확정. **discoverability=실축 채택** — 옵셔널 ResearchBodies로 관측해
+        발견. Polyphemus는 JWST 후보(미확정)라 숨김→관측 발견, ONDISCOVERY 메시지에 실제 검출 인용
+        (Sanghi & Beichman 2024); 항성 α Cen A는 맨눈 별이라 항상 가시. 카탈로그 전체 '실제 검출 상태→발견
+        난도' 매핑. emit(ResearchBodies :NEEDS[] MM 패치)은 말미 일괄. [[project_nearstars_discoverability_researchbodies]]
+
+  - body: Alpha Centauri A b      # Polyphemus
     axis: orbit.semi_major_axis_au
     status: gated
     op: set
@@ -48,6 +65,20 @@ decisions:
         cfg는 AB 쌍성 궤도를 게임 프레임에 자유 배향하고 행성을 그 평면 대비 16° mutual·prograde로 둠.
         절대 sky-plane inclination은 관측이 약/bimodal이라 별도 고정 불요 — 16° mutual만 보존하면 결정적으로 따라옴.
         a/e(1.6 AU, e=0.1)는 이미 emit 가능.
+
+  - body: Alpha Centauri A b
+    axis: orbit.elements_residual    # Ω/ω/mean_anomaly + spin-orbit + lagrange (facet-walk 2026-06-22)
+    status: gated
+    driver: emit + classification
+    value: >
+      Ω/ω/mean_anomaly = 자유 emit-orientation(16° mutual 보존, 위상은 synthetic-noise seed 가능). spin_orbit
+      =조석고정 아님(1.6 AU 가스자이언트, free ~10h 자전). lagrange_placement=없음.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: >
+        절대 배향은 자유(관측 약/bimodal). 1.6 AU giant는 5 Gyr에도 미잠김 → free rotator. **캐넌 Poly-L4/L5
+        코오비탈 planetoid(337/611km)는 의도적 제외**(오너 결정 2026-06-22 — 불필요; binary 트로이 안정성도 미검증).
 
   # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
   - body: Alpha Centauri A b
@@ -112,6 +143,34 @@ decisions:
     axis: bulk.rotation_period
     status: passthrough            # Phase 3 유추 그대로
     note: "10 h (목성/토성 유추, conf low). 자이언트라 조석고정 아님. emit 그대로."
+
+  - body: Alpha Centauri A b
+    axis: bulk.residual              # mass + spin_axis + internal_heat + age (facet-walk 2026-06-22)
+    status: gated
+    driver: physics + classification
+    value: >
+      mass=120 M⊕(0.38 M_Jup, Phase 3 토대값 — J2·밀도·조석·dynamo 입력). spin_axis_orientation=obliquity 5°의
+      방위, 자유 emit(de-perfect)이되 일식 duty 94% eclipse-favorable 범위. internal_heat=미미(T_int<110K,
+      복사평형 지배, 자발광 아님 — 내부플럭스 ~insolation의 ≲6%; 늙은 저질량 토성급이라 잔여열 작음). age=5.3 Gyr(α Cen A 상속).
+    gate: {criterion: [classification], verdict: pass-in-window, note: "insolation-set(eps Ind A b 자발광과 대비). 작은 내부열도 띠/날씨는 구동. spin_axis 절대방위는 emit-noise(eclipse bound)."}
+
+  - body: Alpha Centauri A b
+    axis: atmosphere                 # composition/pressure/temperature/scale_height/breathability/greenhouse/escape (group 4, 2026-06-22)
+    status: gated
+    driver: physics + classification
+    value: >
+      composition: H₂/He bulk, [M/H]+0.5~1.0(Thorngren2016 질량-금속성=토성급 예상값, 가정 아님), H₂O 응결 구름종
+      (225K NH₃ rainout), C/O 2.5×(§5.2). pressure: 1 bar 기준 앵커. temperature: 구름덱 225K 앵커. scale_height:
+      프로파일서 도출. breathability: 불가(atmosphereContainsOxygen=false). greenhouse: 표면 없어 surface-lift 없음
+      (구름덱=복사층, 깊은 곳은 단열선으로 뜨겁되 미렌더). escape: 무시(거대질량).
+    gate:
+      criterion: [classification, error-bar]
+      verdict: pass-in-window
+      profile_note: >
+        temperature/pressure는 스칼라 아님 — emit서 cool-giant 복사대류 격자(Sonora Bobcat 2107.07434 / Fortney2007
+        astro-ph/0612671, _bib/gas-giant-atmosphere.yaml)로 temperatureCurve+pressureCurve 생성, 앵커=구름덱 225K/1 bar.
+        great-season은 temperatureEccentricityBiasCurve(e=0.1>임계라 OK, divide-by-zero 가드 통과). 분류 Class II 물구름(Sudarsky2003).
+      albedo_note: "Teq 225K는 A_B=0.3 가정 — Class II 물구름 알베도 0.5–0.8이면 더 차가울 여지(여전히 Class II). 보수적 채택."
 
   # ── 외형 (banding/haze/aurora 4b 게이트 완료 2026-06-22) ─────────────────────
   - body: Alpha Centauri A b
@@ -211,10 +270,9 @@ decisions:
         플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심, Hades 피크(~2–3 R_p) 근처. 캐넌 ">4,500
         rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행 참조).
       pandora_note: >
-        Pandora(3.53 R_p)는 벨트에 겹치되 *가장자리*(피크 아님)이고, 약한 벨트라 선량은 "중간". 거주가능
-        모순 아님 — Pandora 자체 강자기장(언옵타늄 초전도/플럭스 볼텍스, Avatar canon)이 표면을 차폐.
-        부유산을 띄우는 자기장이 곧 생물권 방패. 거주가능성은 Pandora 자기장에 load-bearing → 강자기
-        divergence는 Pandora 독립 바디(magnetism 축)서 확정. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
+        Pandora는 캐넌대로 Polyphemus *두 방사선대 사이(gap)*에 위치 + 자체 강한 고유 자기장(Fe핵 dynamo,
+        지구급)으로 표면 차폐 → 거주가능(모순 아님). 언옵타늄은 물리 grounding서 제외(현실고증) — 그냥 강한
+        고유장이 방패. 세부는 Pandora magnetism 행. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
 
   - body: Alpha Centauri A b
     axis: appearance.rings
@@ -260,6 +318,20 @@ decisions:
         (안쪽 800k~1.41M, 바깥 1.59M~2.5M km), 그 사이가 간극. 둘 다 Chaos 궤도면 공유. 확산
         E고리는 정상상태에서 축대칭이라(근점 세차 무작위화) 원형 annulus가 충실하고, 작아진
         Chaos e(0.02)는 간극 여유로 흡수됨.
+
+  - body: Alpha Centauri A b
+    axis: gameplay                   # group 11 (facet-walk 2026-06-22, in-game 검증 완료)
+    status: gated
+    driver: gameplay
+    value: >
+      가스자이언트 — 고체 표면 없음 → 대기-비행/우주 바이옴만(landed 상황 미발생). biome map 없음(stock Sun.cfg
+      패턴, Biomes 노드 없음) 단 ScienceValues 전체 블록 정의(landed/splashed는 토큰값, inert). SOI=질량서 자동
+      (조정 불요). timewarp=대기 위 표준. difficulty=플래그십(접근=항성간 여정 자체가 난도).
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "in-game 검증: 가스자이언트 표면 바이옴 없음·biome map 불요·ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies(identity.discoverability)."}
+
+  # ── group 5 surface = N/A (가스자이언트, 고체 표면 없음 — 구름덱은 atmosphere/appearance) ──
+  # ── group 6 appearance = banding/haze/aurora/rings gated; clouds=물구름덱이 banding 흰 zone에 포함; emission/specular/artificial/surface = N/A ──
+  # ── group 8 environment = radiation gated; stellar_wind/activity/heliosphere/habitable_zone = 별-레벨(항성 A·B서 다룸) ──
 
   # ── 항성 A·B: magnetism / environment (2026-06-22 audit 백로그 #2) ────────────────
   # 대부분 Phase 2 측정치라 passthrough. 결정 필요한 건 B-field(직접 ZDI 없음→activity proxy)와
@@ -436,6 +508,31 @@ decisions:
     driver: gameplay
     value: "열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴: 크레이터 지형/홈 지형."
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상."}
+
+  - body: Pandora                  # A b III
+    axis: magnetism.magnetic_field
+    status: gated
+    driver: physics + canon
+    value: "강한 고유 dipole (지구급, ~수십 µT) — Fe 핵 dynamo. 위성 치고 이례적으로 강함."
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: pass-in-window
+      evidence: >
+        캐넌 Fe 핵 + 강한 자기장. 0.9 R⊕ + Fe 핵 + 내부열(화산)이면 지구급 dynamo 정당(위성 중 이례적 —
+        가니메데만 약한 dynamo). **언옵타늄 부스트는 grounding서 제외**(현실고증 뉘앙스) — 그냥 강한 고유
+        자기장. 부유산 띄울 정도는 아님(그건 canon/report 미스터리, report_flavor 참조).
+      report_flavor: >
+        [후행 레포트 씨앗] "채굴 불가능할 것 같은 물질을 채굴할 수 있을 듯한" 뉘앙스 — 부유산/플럭스 볼텍스의
+        미설명 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것(언옵타늄을 암시만).
+      biome_note: >
+        고 자기장 구역(플럭스 볼텍스 = 부유산 일대)을 Pandora **별도 바이옴**으로 — 자기 이상/계기 교란
+        과학 + 부유산 지형. gameplay/biome facet서 정식 바이옴 목록에 포함(고자기장 region 바이옴).
+  - body: Pandora
+    axis: magnetism.magnetosphere
+    status: gated
+    driver: physics + canon
+    value: "고유 자기권이 표면 차폐. 캐넌대로 Polyphemus 두 벨트 *사이(gap)*에 위치 + 자체 강자기장 → 거주가능."
+    gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분 — 초강자기장 불요. 거주가능의 물리 근거."}
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
