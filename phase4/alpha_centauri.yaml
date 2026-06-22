@@ -391,6 +391,52 @@ decisions:
       상대적 안전(저방사선·저온) 거점. 바이옴: 대협곡 / 용암호 사슬 / 황 지대 / far-side(흑현무암).
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프."}
 
+  - body: Hades                    # A b II
+    axis: bulk.tidal_heating
+    status: gated
+    driver: physics + canon
+    value: >
+      내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식
+      텍토닉(홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면.
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: documented-divergence
+      divergence_note: >
+        [GAME] '>900K 붉은 잉걸/near-fusion'은 [FILM/CANON] 회색 밋밋 위성에 밀림(등급: 영화>게임>위키).
+        그 >900K는 grazing(e~0.3, 이젝션) 궤도가 필요했음. 안정 e≈0.04에선 표면 비발광 — 조석 응력은
+        텍토닉 홈으로(가니메데형), 가시 용암 아님.
+      evidence: "Io-스케일링 ~400× Io는 Io-like k2/Q 가정. 작은 강체 위성은 dissipation 낮아 용융 대신 텍토닉 자원."
+  - body: Hades
+    axis: surface
+    status: gated
+    driver: canon(film) + physics
+    value: >
+      가니메데형 회색 — 어두운 고대 크레이터 지형 + 젊은 밝은 홈/단층(grooved) 지형(조석 응력 흔적).
+      가시 용암 없음. 죽은 듯하나 텍토닉이 조석을 은근히 암시.
+    gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "[FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 — ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와 시각 대비."}
+  - body: Hades
+    axis: appearance
+    status: gated
+    driver: canon(film) + visual
+    value: "가니메데 팔레트 — 어두운 크레이터 지형 #5f574e, 밝은 홈 지형 #9c968c, 약한 갈색조. 무채-갈 회색, 비발광."
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요."}
+  - body: Hades
+    axis: atmosphere
+    status: passthrough
+    note: "유의미 대기 없음(가니메데식 미량 외기권 무시 수준), 비호흡."
+  - body: Hades
+    axis: environment.radiation
+    status: gated
+    driver: physics
+    value: "심함 — 방사선대 피크(~2–3 R_p)에 위치, Dante 못지않게 높음. 표면 열은 Dante보다 약함."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "벨트가 표면과 무관하게 방사선 지배(2.07 R_p=피크대)."}
+  - body: Hades
+    axis: gameplay
+    status: gated
+    driver: gameplay
+    value: "열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴: 크레이터 지형/홈 지형."
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상."}
+
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
   # Roche 내측·0.5 R_Hill 외측·카논 순서 제약으로 설계 후 IAS15로 안정 검증.
@@ -484,7 +530,7 @@ decisions:
         (락 없음), 차등 승교점 세차로 Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
     moons:                         # a/e/inc는 게이트 통과한 설계값(final_2026_06_21: 내측 ~10°·노드 공통정렬, 외측 역행 178/177); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
       - { name: Dante,     order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
-      - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열 >900K(2.07 R_p). Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
+      - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
       - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 거주가능. 조석고정 32h일(canon 27h 대신 채택, 해양 robustness)→a 도출. 폴리페무스는 하늘서 여전히 ~32° 차지. 노드 공통 정렬." }
       - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
       - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
@@ -518,7 +564,7 @@ decisions:
         1000yr J2 + 근일점-충돌 체크 통과. moons 표·게이트 설정에 반영. spread_adopted 참조.
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
-      - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Hades 붉은 잉걸불). 표면뷰 아트디렉션 입력."
+      - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Dante 용암 반점/Hades 회색 원반). 표면뷰 아트디렉션 입력."
       - >
         [폴리페무스 j2+reference_radius emit cfg 설정] emit 단계에서 (J2≈0.023, reference_radius
         1.0 R_Jup; bulk.geopotential_j2 참조).

@@ -67,8 +67,8 @@ the dark ring fill the daylit sky. The art-direction has to read at *that* scale
 visible from Pandora and shuttle across Polyphemus's huge disk (computed in stability-sim):
 - **Dante** — apparent diameter 0.28–0.72° (vs Earth's Moon 0.52°), swings ≤26° from
   Polyphemus's centre (approx, pending recompute), transit/occult cycle ~11 h (approx, pending recompute); volcanic moonlet (orange lava flecks).
-- **Hades** — 0.21–0.82°, swings ≤37° (approx, pending recompute), cycle ~23 h (approx, pending recompute); tidal-heated >900 K → a **faint red
-  ember** even on its night side.
+- **Hades** — 0.21–0.82°, swings ≤37° (approx, pending recompute), cycle ~23 h (approx, pending recompute); internally tidal-warmed but
+  **[FILM/CANON] shows it gray & bland** → rendered as a **gray Ganymede-like disk** (cratered + grooved), not a red ember.
 Because both orbit inside Pandora (252,393 km), they never leave Polyphemus's vicinity — they
 glide across its banded face and duck behind its limb. Great surface-view material: the
 giant + two moons (one red-glowing, one volcanic) eclipsing each other every few hours.
@@ -268,7 +268,7 @@ This supersedes the earlier s = 25° spread; the gated record lives in
 | moon | a_km | R_p mult. | e | inc | retrograde | mass (kg) | radius (km) | role |
 |---|---|---|---|---|---|---|---|---|
 | **Dante** | 110,000 | 1.54 R_p | 0.01 | 9° | no | 8.0×10²¹ | 900 | innermost volcanic moonlet (rigid-Roche-safe) |
-| **Hades** | 148,000 | 2.07 R_p | 0.05 | 11° | no | 5.0×10²¹ | 750 | tidal-heated > 900 K, faint red ember |
+| **Hades** | 148,000 | 2.07 R_p | 0.05 | 11° | no | 5.0×10²¹ | 750 | internal tidal warmth but [FILM] gray/bland → Ganymede-like grooved-gray (not a red ember) |
 | **Pandora** | 252,393 | — | 0.0 | 10° | no | 4.30×10²⁴ | 5724 | Na'vi homeworld, 32 h tidal-locked day |
 | **Cassandra** | 600,000 | — | 0.05 | 176° | **yes** | 9.0×10²³ | 3400 | 2nd-largest moon, N–H atmosphere; inner ring shepherd (viewer 184° normalized) |
 | **Chaos** | 1,500,000 | — | 0.02 | 179° | **yes** | 5.4×10²⁰ | 400 | fractured Miranda-like body; E-ring feeder; orbits in a carved ring gap (e lowered 0.10→0.02 to tighten the gap; viewer 181° normalized) |
@@ -517,6 +517,44 @@ modest 170 µT field (source-driven belt, not field-driven).
 for short stays but need thermal shielding (high temp), and the near side is also
 radiation-extreme; the **far side is the relatively safe base** (lower radiation/temperature).
 Biomes: grand chasma / lava-lake chain / sulfur fields / far-side basalt.
+
+## Hades (α Cen A b II) — art-pass reference (owner choices 2026-06-22)
+
+**Character.** The 2nd moon — a gray, bland, **Ganymede-like** world, the quiet counterpoint to
+Dante's lava hell. The [GAME] "red-glowing >900 K near-fusion ember" is overruled: the **film
+[CANON] shows Hades gray & bland** (canon tier film > game), and the orbit that would heat it
+that much (grazing Dante, e~0.3) ejects (periapsis crosses Dante's orbit). So Hades is cold-gray.
+
+**Bulk.** ~750 km radius, 5×10²¹ kg. Tidally locked. 2.07 R_p — near the radiation-belt peak.
+
+**Thermal.** Internal tidal warmth is real (Io-scaling ~400× Io, but that assumes Io-like
+dissipation), yet the surface does NOT glow: as a small rigid body its tidal energy goes into
+**tectonics (grooved terrain)** rather than Io-style volcanism, and the [FILM] gray look
+governs. Documented-divergence from the [GAME] >900 K ember.
+
+**Surface [choice ii — Ganymede].** Dark ancient cratered terrain + younger bright
+**grooved/tectonic terrain** (the tidal-stress signature). No visible lava; dead-looking, but
+the grooves quietly betray the tidal stress.
+
+**Palette [following Ganymede].** Muted gray-brown: dark cratered terrain `#5f574e`, bright
+grooved terrain `#9c968c`, faint warm/brown tint; neutral, non-glowing. The cool gray is the
+deliberate foil to Dante's dark-crust-and-orange-lava. **Composition = rocky/silicate, NOT
+icy** — water ice is unstable at Hades' ~225 K + tidal warmth, so the Ganymede reference is
+*morphological* (gray + grooves/craters), not compositional. (Texture it as rock, not ice.)
+Detailed chemistry skipped (low-impact for a bland gray moon).
+
+**Atmosphere.** None to speak of (Ganymede-like trace exosphere, negligible); non-breathable.
+
+**Radiation.** Near the belt peak (~2–3 R_p) → severe (comparable to or worse than Dante's),
+even though the surface is thermally mild. Belt-driven, independent of the gray surface.
+
+**Gameplay.** Thermally landable (no lava-heat) but heavy radiation shielding essential (belt
+peak). Biomes: cratered terrain / grooved terrain. The "cold-but-irradiated" counterpart to
+Dante's "hot-and-irradiated."
+
+**Inner-pair contrast.** Dante = dark crust + bright orange lava cracks, Polyphemus overhead,
+hot hell. Hades = quiet gray Ganymede grooves, cold but radiation-blasted. Two very different
+inner moonlets — deliberate visual variety.
 
 ## Mapping to cfg (for the eventual Phase 4 emit)
 
