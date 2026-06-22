@@ -25,7 +25,7 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | atmosphere | breathability | ∅ |
 | surface | (cloud-deck = appearance) | ∅ |
 | appearance | banding / haze / aurora / rings | ✅ |
-| appearance | clouds (= water-cloud deck, in banding white zone) | ✅ |
+| appearance | clouds (Jovian turbulent banding + 1 mid-lat great storm) | ✅ |
 | appearance | emission_glow / specular / artificial | ∅ |
 | magnetism | magnetic_field / magnetosphere / belts | ✅ |
 | environment | radiation | ✅ |

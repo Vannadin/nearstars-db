@@ -30,32 +30,46 @@ A **banded "blue Jupiter" carrying white, gold, and blue stripes** — the *Avat
 Polyphemus look. The intended read is a *luminous, pale* giant (a bright, warm
 Class I/II world, not a dark one) with a strong three-tone banded character:
 
-- **White zones** (upwelling bands) — clean reflective cloud tops (ammonia / water);
-  the bright base tone.
-- **Gold / yellow bands** — clouds tinted by **photochemical chromophores + haze**
-  (S / P / NH₄SH / hydrocarbon tholins), the Saturn-gold / Jupiter-tan mechanism.
-- **Blue belts** (downwelling, cloud-cleared bands) — clearer air revealing
-  **methane red-absorption + Rayleigh** below; the Uranus/Neptune mechanism. A few
-  read as sharper, deeper blue so the banding has rhythm, not a uniform gradient.
-- **A signature storm** — one large cyclonic vortex (a Jupiter Great-Red-Spot
-  homage, as in the films), the planet's focal landmark, set in a belt.
-- **The Roche-zone ring** (from the Phase 3 synthesis) as a thin, dark framing
-  line across the disk — narrow and unobtrusive, not a Saturn-scale ring system.
+- **White zones** (upwelling bands) — clean reflective cloud tops, the bright base
+  tone. At 225 K the visible deck is **water / NH₄SH** ice, **not ammonia**: the
+  atmosphere's coldest point (skin T ≈ 189 K) never falls to NH₃'s ~150 K
+  condensation, so ammonia stays gaseous — unlike colder Jupiter (124 K), whose
+  tropopause does dip below 150 K. (Sudarsky **Class II** water-cloud regime.)
+- **Red-brown chromophore bands** — clouds tinted by **photochemical chromophores
+  + haze** (NH₄SH radiation products / sulfur + CH₄·PH₃-photolysis hydrocarbon
+  tholins) that absorb blue/UV. Owner direction (2026-06-22): shifted **~70 % from
+  Saturn-gold toward Jupiter-belt red** — a thicker chromophore coating reads redder.
+- **Slate-blue belts** (downwelling, cloud-cleared bands) — clearer air revealing
+  the deep H₂/He atmosphere's **Rayleigh scattering** below; haze mutes the
+  saturation. **Not** methane absorption — at 225 K methane is gaseous with too
+  little column for ice-giant cobalt.
+- **The signature storm** — one large mid-latitude vortex. Per *Avatar* canon it is
+  the **deepest-blue** feature: a great downwelling clearing that punches deepest
+  through the deck → longest Rayleigh column → most saturated azure. It is the
+  **inverse of Jupiter's Great Red Spot** — a sunken blue eye, not a raised red spot.
+- **Morphology — Jupiter-type turbulence** (vortices / festoons at band edges), an
+  **art-forward** choice: the planet's low internal heat (T_int < 110 K) physically
+  favors calmer Saturn-like zonal bands, so the turbulent look is a documented
+  divergence taken for visual drama.
+- **The Chaos-fed E-ring** (from the Phase 3 synthesis) as a faint, barely-visible
+  wisp — narrow and unobtrusive, not a Saturn-scale ring system (see Ring section).
 
-**Colour physics (three coexisting mechanisms, all banded by the zonal jets):**
+**Colour physics (banded by the zonal jets; blue = Rayleigh clearings at two depths):**
 
 | band | colour | mechanism | analogue |
 |---|---|---|---|
-| zone | white | clean NH₃ / H₂O cloud | Jupiter zones |
-| haze | gold/yellow | photochemical chromophore + haze | Saturn gold |
-| belt | blue | cleared → CH₄ absorption + Rayleigh | Uranus/Neptune |
+| zone | white `#eef1f4` | water / NH₄SH cloud (NH₃ gaseous at 225 K) | Jupiter zones |
+| chromophore | red-brown `#b4784e` | NH₄SH/sulfur + hydrocarbon tholin (Jupiter-red 70%) | Jupiter belts |
+| belt | slate-blue `#647e96` | shallow clearing → Rayleigh (haze-muted) | Jupiter blue festoons |
+| storm eye | deep azure `#214a72` | deepest clearing → longest Rayleigh column | inverse GRS |
 
-Self-consistent at **~250–350 K** (warm Class I/II): water-cloud white zones, a
-photochemical gold haze, and methane-blue in the cleared belts — and that warm
-temperature also fits a habitable Pandora. Key assumptions (art-direction within
-the physical window): enough methane to colour the cleared belts, and a
-Saturn-gold (not Jupiter-red) chromophore. This is the **Phase 4a** creative target;
-the **Phase 4b** gate must check it against the Phase 3 atmosphere synthesis (below).
+Self-consistent at **225 K** (Sudarsky Class II): water/NH₄SH white zones (ammonia
+too volatile to condense), a red-brown photochemical chromophore, and Rayleigh-blue
+in the cleared belts/storm — and that temperature also fits a (greenhouse-warmed)
+habitable Pandora. The chromophore and the Jupiter-turbulence morphology are
+art-forward calls **within** the physical window; both recorded as divergences on
+the board. This is the **Phase 4** creative target gated against the Phase 3
+atmosphere synthesis (below).
 
 **From Pandora's sky.** This is the view the moon is famous for: from Pandora's
 surface Polyphemus spans **~32°** of the sky (computed in stability-sim — a 1

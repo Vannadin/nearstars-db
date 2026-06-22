@@ -175,38 +175,59 @@ decisions:
   # ── 외형 (banding/haze/aurora 4b 게이트 완료 2026-06-22) ─────────────────────
   - body: Alpha Centauri A b
     axis: appearance.banding
-    status: gated                 # 4b 완료 (2026-06-22) — 3색 띠 in-window, cobalt belt만 divergence
-    target: "흰 zone(물구름) + 금 haze + 파랑 belt(메탄 흡수)의 3색 띠, 신호용 대형 소용돌이 폭풍 1개"
+    status: gated                 # group 6 facet-walk 완료 (2026-06-22) — 3색 띠 + 가라앉은 파란 폭풍
+    target: "흰 zone(물/NH4SH 구름) + 적갈 chromophore 띠(목성 적색 70%) + 슬레이트블루 belt(구름틈 Rayleigh)의 3색 띠 + 중위도 대형 폭풍 1개(가장 깊은 구름틈=가장 진한 azure)"
     driver: visual
     gate:
       criterion: [visual-checklist]
-      verdict: partial            # 흰 zone·금 haze·muted 청회색 belt = in-window; 채도높은 cobalt belt = documented-divergence
+      verdict: partial            # 색·메커니즘 in-window; 목성형 난류 밴딩만 art-forward documented-divergence
       evidence: >
-        흰 zone = Phase 3 물구름 데크(#eef1f4, Class I/II, 225K서 NH3 rainout). 금 haze 띠 = haze 게이트대로
-        in-window(cold-giant 크로모포어 광화학). muted slate/steel-blue belt = in-window(구름틈 약한 기체 CH4 흡수).
-        fully-saturated Neptune-cobalt belt = documented-divergence(깊은 메탄-블루는 더 추운 Uranus/Neptune
-        영역 필요, 225K선 CH4 기체라 흡수 컬럼 부족). 대형 소용돌이 1개 = 창 안 형태학 tie-break(아트, Phase 3 예측 아님).
-      cfg_colors: "zone #eef1f4(Phase3 근거) · haze #d0b478(토성유추 창 #c8a86e–#d8b878, 오너 조정) · belt #647e96(muted 창 #5a6e82–#6e8499, cobalt 금지)"
+        흰 zone = 물/NH4SH 구름탑(#eef1f4, Sudarsky Class II). 225K는 skin T≈189K로 NH3 응결점 150K에
+        끝내 못 닿아(목성과 달리 대류권계면이 150K까지 안 식음) 암모니아는 기체로 남고 구름 안 됨 → 가시 덱은
+        물/NH4SH. 적갈 chromophore 띠 = NH4SH 복사 생성물(황 화합물) + CH4/PH3 광분해 탄화수소 톨린이
+        청·UV 흡수 → 적갈(cold-giant 광화학 in-window); 금색→목성 belt 적색 70%로 오너 조정. 슬레이트블루
+        belt = 얕은 구름틈에 드러난 깊은 H2/He 대기의 Rayleigh 산란(haze가 채도 감쇄). 중위도 대형 폭풍 =
+        가장 깊은 구름틈이라 Rayleigh 컬럼이 가장 길어 가장 진한 azure — 목성 대적점의 역(솟은 적색 점이 아닌
+        가라앉은 파란 눈), Avatar canon "제일 짙은 파란 폭풍"과 일치. 파랑은 메탄 흡수 아닌 Rayleigh라 cobalt
+        과채도 우려 불필요. 목성형 난류 밴딩 = art-forward documented-divergence(아래 appearance.clouds 행).
+      cfg_colors: "zone #eef1f4(물/NH4SH, Phase3) · chromophore 띠 #b4784e(목성적색 70%, 창 #a8703f–#bc8055) · belt #647e96(슬레이트블루 Rayleigh, 창 #5a6e82–#6e8499) · 폭풍 눈 #214a72(가장 깊은 Rayleigh, 창 #1e4068–#2a5480)"
       emit_note: >
         반사광 구름 띠 색은 composition-color.md(재진입 플라스마)서 안 나옴 — 흰색만 Phase3 hex 근거,
-        금/청은 물리 창 내 오너 art tie-break.
+        적갈/청/azure는 물리 창 내 오너 art tie-break. 응결 층서 근거 = Sudarsky 2000/2003 + Morley 2014
+        (docs/phase3/_bib/gas-giant-atmosphere.yaml 핀).
 
   - body: Alpha Centauri A b
     axis: appearance.haze
-    status: gated                 # 4b 완료 (2026-06-22) — warm-read 가정 폐기
-    target: "광화학 크로모포어+haze로 금/노랑 띠 (S/P/NH4SH/탄화수소 톨린)"
+    status: gated                 # group 6 facet-walk (2026-06-22) — 금색→목성 적색 70% 오너 조정
+    target: "광화학 크로모포어+haze로 적갈 띠 (NH4SH 황 + CH4/PH3 광분해 탄화수소 톨린)"
     driver: visual
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
       evidence: >
-        금/노랑 광화학 크로모포어 haze는 cold-giant 유추로 정당 — 목성(Teq~110K)·토성(~90K)이
-        UV 광분해(NH3/CH4/PH3→탄화수소/톨린)로 tan/gold haze를 보임. Polyphemus(225K, H2/He+CH4,
-        NH3 rainout, G2V UV)는 둘보다 따뜻해 메커니즘이 오히려 잘 성립 → warm-read 250–350K 불필요.
-        composition-color.md은 haze 크로모포어를 bulk 밖 별도 층으로 다룸(Titan 톨린/sub-Neptune 광화학).
+        광화학 크로모포어 haze는 cold-giant 유추로 정당 — 목성(Teq~110K)·토성(~90K)이 UV 광분해
+        (NH3/CH4/PH3→탄화수소/톨린)로 색소 haze를 보임. Polyphemus(225K, H2/He+CH4, NH3 비응결,
+        G2V UV)는 둘보다 따뜻해 메커니즘이 오히려 잘 성립. 오너 조정으로 토성형 금색이 아닌 목성 belt
+        적색 70%(색소 코팅 더 두껍게) 채택 — 여전히 광화학 색소 물리 창 안. composition-color.md은
+        haze 크로모포어를 bulk 밖 별도 층으로 다룸(Titan 톨린/sub-Neptune 광화학).
       emit_note: >
-        금색은 반사광이라 plasma yaml서 안 나옴(composition-color.md=재진입 플라스마). 토성-유추
-        창 #c8a86e–#d8b878 내 오너 tie-break, 기본 #d0b478.
+        적갈색은 반사광이라 plasma yaml서 안 나옴(composition-color.md=재진입 플라스마). 목성-belt
+        창 #a8703f–#bc8055 내 오너 tie-break, 기본 #b4784e.
+
+  - body: Alpha Centauri A b
+    axis: appearance.clouds
+    status: gated                 # group 6 facet-walk (2026-06-22) — 형태학 명시 결정
+    target: "구름덱 형태학 = 목성형 난류 밴딩(band 경계 소용돌이·festoon 多) + 중위도 단일 대형 anticyclone(폭풍 색/메커니즘은 banding 행)"
+    driver: visual
+    gate:
+      criterion: [visual-checklist]
+      verdict: documented-divergence
+      divergence_note: >
+        목성형 난류는 art-forward 선택 — Polyphemus는 T_int<110K(내부열 낮음)라 물리적으론 토성처럼
+        잔잔한 zonal band가 더 자연스러움. 시각 드라마(interesting-first)로 난류 밴딩 채택, silent 아닌 명시 발산.
+      evidence: >
+        구름 coverage = Phase 3 0.9. 대형 폭풍 = 가라앉은 Rayleigh 파란 눈(Avatar canon), 색은 banding cfg_colors 폭풍 눈.
+      emit_note: "형태학은 emit 시 구름 텍스처(EVE)/PQS로 구현 — 본 행은 art 의도, 색 값은 banding 행에 통합."
 
   - body: Alpha Centauri A b
     axis: appearance.aurora
@@ -330,7 +351,7 @@ decisions:
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "in-game 검증: 가스자이언트 표면 바이옴 없음·biome map 불요·ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies(identity.discoverability)."}
 
   # ── group 5 surface = N/A (가스자이언트, 고체 표면 없음 — 구름덱은 atmosphere/appearance) ──
-  # ── group 6 appearance = banding/haze/aurora/rings gated; clouds=물구름덱이 banding 흰 zone에 포함; emission/specular/artificial/surface = N/A ──
+  # ── group 6 appearance = banding/haze/clouds/aurora/rings gated (facet-walk 2026-06-22); emission_glow/specular/artificial/surface = N/A (자발광·해양·인공광·고체면 없음) ──
   # ── group 8 environment = radiation gated; stellar_wind/activity/heliosphere/habitable_zone = 별-레벨(항성 A·B서 다룸) ──
 
   # ── 항성 A·B: magnetism / environment (2026-06-22 audit 백로그 #2) ────────────────
