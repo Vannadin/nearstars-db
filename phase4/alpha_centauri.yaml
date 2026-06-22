@@ -83,40 +83,100 @@ decisions:
   # ── 외형 (4a 제시됨, 4b 게이트 일부 미완) ─────────────────────
   - body: Alpha Centauri A b
     axis: appearance.banding
-    status: art-directed          # 흰/금/파랑 3색 띠 ("푸른 목성")
+    status: gated                 # 4b 완료 (2026-06-22) — 3색 띠 in-window, cobalt belt만 divergence
     target: "흰 zone(물구름) + 금 haze + 파랑 belt(메탄 흡수)의 3색 띠, 신호용 대형 소용돌이 폭풍 1개"
     driver: visual
     gate:
       criterion: [visual-checklist]
-      verdict: partial            # 흰 zone·muted-blue belt = in-window; deep-cobalt belt = documented-divergence
+      verdict: partial            # 흰 zone·금 haze·muted 청회색 belt = in-window; 채도높은 cobalt belt = documented-divergence
       evidence: >
-        Phase 3 기본 = 창백한 물구름 흰 자이언트 + faint banding(Class I/II). 흰 zone·대비 강화·
-        muted slate/steel-blue belt = in-window. fully-saturated Neptune-cobalt = divergence
-        (225K에선 메탄 기체, 깊은 메탄-블루 메커니즘은 더 차가운 천체 필요).
-      open: "금/노랑 haze 띠는 Phase 3 창에서 미검증 → appearance.haze 행 참조."
+        흰 zone = Phase 3 물구름 데크(#eef1f4, Class I/II, 225K서 NH3 rainout). 금 haze 띠 = haze 게이트대로
+        in-window(cold-giant 크로모포어 광화학). muted slate/steel-blue belt = in-window(구름틈 약한 기체 CH4 흡수).
+        fully-saturated Neptune-cobalt belt = documented-divergence(깊은 메탄-블루는 더 추운 Uranus/Neptune
+        영역 필요, 225K선 CH4 기체라 흡수 컬럼 부족). 대형 소용돌이 1개 = 창 안 형태학 tie-break(아트, Phase 3 예측 아님).
+      cfg_colors: "zone #eef1f4(Phase3 근거) · haze #d0b478(토성유추 창 #c8a86e–#d8b878, 오너 조정) · belt #647e96(muted 창 #5a6e82–#6e8499, cobalt 금지)"
+      emit_note: >
+        반사광 구름 띠 색은 composition-color.md(재진입 플라스마)서 안 나옴 — 흰색만 Phase3 hex 근거,
+        금/청은 물리 창 내 오너 art tie-break.
 
   - body: Alpha Centauri A b
     axis: appearance.haze
-    status: art-directed          # 광화학 크로모포어 금/노랑 (토성-금 메커니즘)
+    status: gated                 # 4b 완료 (2026-06-22) — warm-read 가정 폐기
     target: "광화학 크로모포어+haze로 금/노랑 띠 (S/P/NH4SH/탄화수소 톨린)"
     driver: visual
     gate:
       criterion: [visual-checklist]
-      verdict: null               # ← 4b 미실행: ~250–350K warm-read 가정이 Phase 3 225K와 정합하는지 확인 필요
-      open: "Phase 3 대기합성과 대조 미완 (warm Class I/II 가정 vs Teq 225K)."
+      verdict: pass-in-window
+      evidence: >
+        금/노랑 광화학 크로모포어 haze는 cold-giant 유추로 정당 — 목성(Teq~110K)·토성(~90K)이
+        UV 광분해(NH3/CH4/PH3→탄화수소/톨린)로 tan/gold haze를 보임. Polyphemus(225K, H2/He+CH4,
+        NH3 rainout, G2V UV)는 둘보다 따뜻해 메커니즘이 오히려 잘 성립 → warm-read 250–350K 불필요.
+        composition-color.md은 haze 크로모포어를 bulk 밖 별도 층으로 다룸(Titan 톨린/sub-Neptune 광화학).
+      emit_note: >
+        금색은 반사광이라 plasma yaml서 안 나옴(composition-color.md=재진입 플라스마). 토성-유추
+        창 #c8a86e–#d8b878 내 오너 tie-break, 기본 #d0b478.
 
   - body: Alpha Centauri A b
     axis: appearance.aurora
-    status: art-directed          # 조성-고정 (선택 아님)
+    status: gated                 # documented-divergence — Phase 3는 aurora 없음, Phase 4가 가시 연출. 색만 조성-고정
     target: "극 rose-magenta 오로라 (Pandora의 cyan 생물발광과 의도적 대비: 행성 핑크, 달 청록)"
     driver: visual
+    depends_on: "magnetosphere(자기장 결정) — 오로라 가둠/세기는 자기권에 의존, 그 행 먼저 확정 필요"
     gate:
       criterion: [composition-lock]
-      verdict: pass-in-window
+      verdict: documented-divergence
+      divergence_note: >
+        Phase 3 aurora_present=false(medium) — 조용한 G2V 항성풍(log R'HK −4.95)이 1.6 AU서 약한
+        플라스마 구동원이라 "cfg renders none". Phase 4는 Pandora cyan과 대비용으로 희미한 가시
+        오로라를 의도적으로 연출 → 발산. 색은 조성-고정이라 in-window.
       evidence: >
         H2/He 대기가 색을 *고정*(선택 아님): H Balmer-α 적색 + H2 Fulcher / Balmer-β/γ 보라.
-        원자 산소 없어 지구식 녹색 불가. 대부분 출력은 UV(가시 오로라는 희미).
+        원자 산소 없어 지구식 녹색 불가. 대부분 출력은 UV(가시 오로라 희미) — 발산은 "보이게 연출"한 점.
       emit_note: "sRGB는 emit 시 element_plasma_colors.yaml / molecular_plasma_colors.yaml에서 추출."
+
+  - body: Alpha Centauri A b
+    axis: magnetism.magnetic_field
+    status: gated                 # 4b 완료 (2026-06-22) — dynamo 스케일링 근거화
+    target: "표면 dynamo 자기장"
+    driver: physics
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window     # Phase 3도 170µT로 근거 교정됨(en+ko) → Phase 3·4 일치
+      value: "B_eq ≈ 170 µT (1.7 G), B_pol ≈ 345 µT"
+      evidence: >
+        Reiners & Christensen 2010(arXiv:1007.1514) depth-corrected dipole 보간으로 0.378 M_Jup·
+        5.3 Gyr → B_eq 172 µT. 목성 동일식 sanity check 통과. Phase 3 자체도 미근거 ~500µT 추측에서
+        170µT(방법값)로 교정 완료 → 일치. canonical = docs/reference/planetary-dynamo-scaling.md.
+      caveat: "0.378 M_Jup은 자이언트 영역 하한 — He 성층화로 실제 더 낮을 수도(Saturn ~21µT). conf low–med."
+
+  - body: Alpha Centauri A b
+    axis: magnetism.magnetosphere
+    status: gated                 # 4b 완료 (2026-06-22)
+    target: "자기권 standoff + 방사선대 범위"
+    driver: physics
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      value: "R_mp ≈ 21 R_p (5위성 전부 자기권 내)"
+      evidence: >
+        Chapman-Ferraro 균형(170µT dipole vs α Cen A 항성풍 ram 0.75 nPa @1.6 AU). ^1/6 의존이라
+        입력에 강건(500µT라도 R_mp 30 R_p). Dante(1.54)·Hades(2.07)·Pandora(3.53 R_p)=방사선대,
+        Cassandra(8.4)=중간, Chaos(21)=자기권계면(주간측 일부 이탈).
+
+  - body: Alpha Centauri A b
+    axis: environment.radiation
+    status: gated                 # 4b 완료 (2026-06-22)
+    target: "위성별 Kerbalism 선량 등급"
+    driver: physics + gameplay
+    depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
+    gate:
+      criterion: [derived-grounding]
+      verdict: documented-divergence   # "Dante >4500 rem/day"는 500µT 가정의 고선량 reading
+      value: "Dante 극심 · Hades 심함 · Pandora 중간(보호) · Cassandra 낮음 · Chaos 낮음/가변"
+      evidence: >
+        선량은 B²·근접도로 가파르게 — 170µT(목성 ~1/25)라 벨트는 목성보다 약함. Dante 최내곽 극심,
+        Pandora는 벨트 가장자리지만 자기권이 항성풍 차단(거주 narrative+, Avatar 설정 부합).
+        ">4500 rem/day"(목성급)는 500µT 가정에서만 성립 → frozen 등급은 Dante "극심"(수백~수천 rem/day).
 
   - body: Alpha Centauri A b
     axis: appearance.rings
@@ -134,28 +194,99 @@ decisions:
     status: gated
     driver: visual + observation
     target: >
-      흐릿한 연속 Chaos-fed E고리(토성 E링 아날로그) 채택. canon "고리 없음"을 존중하는
-      거의 안 보이는 wisp 수준. Chaos가 공급, Cassandra가 안쪽 양치기, 대략 800k~2.5M km
-      범위에 Chaos(1.5M km)가 고리에 묻힘. 밝기 +0.05 R_Jup(τ≈9e-5, 등가원반 ~23k km =
+      흐릿한 Chaos-fed E고리(토성 E링 아날로그) 채택. canon "고리 없음"을 존중하는
+      거의 안 보이는 wisp 수준. Chaos가 공급, Cassandra가 안쪽 양치기. 두 환형으로 나뉘고
+      (800k~1.41M·1.59M~2.5M km) 그 사이 간극(1.41M~1.59M)에서 Chaos(1.5M km)가 공전.
+      고리면은 Chaos 궤도면(역행 inc 179°)에 맞춤. 밝기 +0.05 R_Jup(τ≈9e-5, 등가원반 ~23k km =
       Beichman 토성½ 단면의 13%)이라 행성은 1.05 R_Jup 유지하며 ~1.10 R_Jup 관측 플럭스 정합.
     gate:
       criterion: [stability, visual-checklist]
-      verdict: pass-in-window
+      verdict: documented-divergence
+      divergence_note: >
+        고리 간극은 의도된 아트 디렉션(art > 고증). 물리적으론 Chaos가 못 비우지만,
+        Kopernicus 고리는 평면 디스크라 역행으로 기운 Chaos가 연속 고리에 묻히면 고리면이
+        매 공전마다 위성을 관통해 보임 → 깨짐. 이를 피하려 Chaos 궤도를 비우는 간극을 둠.
       evidence: >
-        간극 없음 — 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서
+        물리적 간극은 불가 — 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서
         Chaos는 질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존).
-        따라서 고리는 Chaos가 묻힌 연속 구조이고, 옛 "두 고리/Hill 간극" 안은 동역학적으로 기각
-        (공급 위성은 고리를 채우지 비우지 않음 — 엔셀라두스↔토성 E링). 밝기는 면적∝R²로 직교
-        합산이라 "겉보기 +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당(0.05가 아님).
+        그래서 갭은 동역학이 아닌 렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로
+        낮춤(results/_chaos_e002, STABLE) — 반경 흔들림 ±150k→±30k km라 ~180k km 갭이면 깔끔히 비움.
+        밝기는 면적∝R²로 직교 합산이라 "겉보기 +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당.
       grounding: >
         Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring System Models". 그들의 선호 모델은
         Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고, 우리 흐릿한
         E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
         밝기는 주로 행성 본체에 싣고 고리는 +0.05 R_Jup 보조 기여로 둠.
       kopernicus_note: >
-        Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가). 확산 E고리는 정상상태에서
-        축대칭이라(근점 세차가 무작위화, 공급원 이심률은 반경 폭으로 흡수) 원형 annulus가 충실.
-        Chaos 원형화(e=0.02)도 STABLE(results/_chaos_lowe)이나 간극이 없어 무의미하므로 불필요.
+        Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가)이라 Ring 노드 2개로 방출
+        (안쪽 800k~1.41M, 바깥 1.59M~2.5M km), 그 사이가 간극. 둘 다 Chaos 궤도면 공유. 확산
+        E고리는 정상상태에서 축대칭이라(근점 세차 무작위화) 원형 annulus가 충실하고, 작아진
+        Chaos e(0.02)는 간극 여유로 흡수됨.
+
+  # ── 항성 A·B: magnetism / environment (2026-06-22 audit 백로그 #2) ────────────────
+  # 대부분 Phase 2 측정치라 passthrough. 결정 필요한 건 B-field(직접 ZDI 없음→activity proxy)와
+  # 항성풍 분배(Wood는 합산 2 Ṁ⊙만 측정). 행성 method(dynamo-scaling.md)는 항성엔 미적용.
+  - body: Alpha Centauri A
+    axis: environment.activity        # + radiation passthrough 묶음
+    status: passthrough               # 측정치 (audit 확인) — 변경 없음
+    note: >
+      P_rot 22d·log R'HK −4.95·X선 log Lx 27.0–27.6(factor~4)·cycle ~19yr(tentative, Ayres2014).
+      radiation_surface ≈0.8 (행성 자기권 게이트의 ram 0.75 nPa와 정합 — 바꾸면 그 행 리플). 측정 emit 그대로.
+  - body: Alpha Centauri A
+    axis: magnetism.magnetic_field
+    status: gated                     # 신규 도출 proxy (low conf)
+    driver: physics
+    gate:
+      criterion: [activity-proxy]
+      verdict: pass-in-window
+      value: "대규모 표면장 ~1–2 G (태양쌍둥이)"
+      evidence: >
+        직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R'HK −4.95 + Rossby≈1.8(≈태양)
+        → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.
+      open: "고신뢰 원하면 ZDI 문헌 pull(HARPSpol/Folsom류) 필요 — 현 캐시엔 없음."
+  - body: Alpha Centauri A
+    axis: environment.stellar_wind
+    status: gated
+    driver: physics
+    gate:
+      criterion: [derived-grounding]
+      verdict: documented-divergence   # 합산만 측정, per-star 분배는 가정
+      value: "Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫)"
+      evidence: "Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중(Wood2002) 가정 → A≈1·B≈0.6."
+  - body: Alpha Centauri A
+    axis: environment.heliosphere     # SHARED — 시스템 대표로 A에 기록
+    status: passthrough
+    note: >
+      A+B 공유 단일 astrosphere standoff ~176 AU (Wood2001 Lyα; =120·√2·26/25). G-cloud 유입 ~25 km/s.
+      apex ~187°/+22°는 plugin-only·low-conf (stock cfg 렌더 불가).
+
+  - body: Alpha Centauri B
+    axis: environment.activity
+    status: passthrough
+    note: >
+      K1V·더 활동적. P_rot 38d·log R'HK −5.0·**clean 8.84yr cycle**(DeWarf2010, 최고급)·X선 factor~10 swing.
+      radiation_surface ≈1.4 (A의 ~2배, 단 플레어성 아님). 측정 emit 그대로.
+  - body: Alpha Centauri B
+    axis: magnetism.magnetic_field
+    status: gated                     # proxy (low conf)
+    driver: physics
+    gate:
+      criterion: [activity-proxy]
+      verdict: pass-in-window
+      value: "대규모 표면장 ~2–4 G (A보다 강함)"
+      evidence: >
+        K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(X선 factor~10 modulation 방증). A의 ~1.5–2배.
+        직접 ZDI 없음 → proxy(low–med).
+      open: "ZDI pull 시 상향 가능."
+  - body: Alpha Centauri B
+    axis: environment.stellar_wind
+    status: gated
+    driver: physics
+    gate:
+      criterion: [derived-grounding]
+      verdict: documented-divergence
+      value: "Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중)"
+      evidence: "Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함."
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
@@ -253,7 +384,16 @@ decisions:
       - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "조석가열 >900K(2.07 R_p). Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
       - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 4.30e24, radius_km: 5724, note: "canon: 0.72 M⊕, 지름 11,447km, 거주가능. 조석고정 32h일(canon 27h 대신 채택, 해양 robustness)→a 도출. 폴리페무스는 하늘서 여전히 ~32° 차지. 노드 공통 정렬." }
       - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
-      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.10, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원이자 고리에 묻힘." }
+      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
+    designations:                  # 공식 표기 = 행성에 로마자 숫자(거리순). Avatar 이름은 문화명(인게임 설명에만).
+      convention: "위성은 행성명 + 대문자 로마숫자(거리순). 인게임 바디명=표기, Avatar 문화명은 설명 텍스트에만(cfg-emit 단계로 연기)."
+      map:
+        - { designation: "Alpha Centauri A b",     cultural: Polyphemus }
+        - { designation: "Alpha Centauri A b I",   cultural: Dante }
+        - { designation: "Alpha Centauri A b II",  cultural: Hades }
+        - { designation: "Alpha Centauri A b III", cultural: Pandora }
+        - { designation: "Alpha Centauri A b IV",  cultural: Cassandra }
+        - { designation: "Alpha Centauri A b V",   cultural: Chaos }
     rejected:
       - >
         라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동

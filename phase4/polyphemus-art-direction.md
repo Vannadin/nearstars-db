@@ -271,7 +271,7 @@ This supersedes the earlier s = 25° spread; the gated record lives in
 | **Hades** | 148,000 | 2.07 R_p | 0.05 | 11° | no | 5.0×10²¹ | 750 | tidal-heated > 900 K, faint red ember |
 | **Pandora** | 252,393 | — | 0.0 | 10° | no | 4.30×10²⁴ | 5724 | Na'vi homeworld, 32 h tidal-locked day |
 | **Cassandra** | 600,000 | — | 0.05 | 176° | **yes** | 9.0×10²³ | 3400 | 2nd-largest moon, N–H atmosphere; inner ring shepherd (viewer 184° normalized) |
-| **Chaos** | 1,500,000 | — | 0.10 | 179° | **yes** | 5.4×10²⁰ | 400 | fractured Miranda-like body; E-ring feeder, embedded in the ring (viewer 181° normalized) |
+| **Chaos** | 1,500,000 | — | 0.02 | 179° | **yes** | 5.4×10²⁰ | 400 | fractured Miranda-like body; E-ring feeder; orbits in a carved ring gap (e lowered 0.10→0.02 to tighten the gap; viewer 181° normalized) |
 
 - **32 h day, not the canon 27 h.** 27 h was marginal for surface oceans; the wider 32 h
   orbit (a = 252,393 km) lowers the e-tide so the tidal-heat budget stays sub-runaway and
@@ -306,20 +306,28 @@ The ring is **finalized** (verified by simulation 2026-06-21): a faint, continuo
   ~0.42 km/s ≈ Enceladus-class) feeds the ring, exactly as Enceladus feeds Saturn's E ring.
 - **Inner shepherd:** Cassandra (600,000 km) bounds the ring's inner edge (~800,000 km,
   just outside Cassandra's clearing zone).
-- **Extent:** ~800,000 km out past Chaos (1,500,000 km) to ~2,500,000 km. **Chaos is
-  embedded in the ring** (like Enceladus in the E ring).
+- **Extent:** two annuli — ~800,000–1,410,000 km and ~1,590,000–2,500,000 km — with a
+  **carved gap (1,410,000–1,590,000 km) straddling Chaos's orbit** (1,470,000–1,530,000 km
+  at e = 0.02). Chaos orbits *within* the gap (like a Saturn ring-gap moon), not buried in
+  ring material.
+- **Plane:** the ring lies in **Chaos's orbital plane** (its feeder), not the planet's
+  equator — inclination/node matched to Chaos in the viewer (inc 179°, retrograde).
 - **Brightness:** optically thin, **τ ≈ 9×10⁻⁵**. Tuned so the ring carries **~+0.05 R_Jup**
   of the JWST 15.5 µm brightness — effective cross-section ≈ equiv-disk **23,000 km** ≈ **13%
   of Beichman's half-Saturn ring** — letting the planet stay at 1.05 R_Jup while matching the
   observed flux of an ~1.10 R_Jup body. The brightness lives primarily on the planet body;
   the ring is a +0.05 R_Jup decorative / secondary contribution.
 
-**No gap — continuous, Chaos embedded.** A test-particle simulation
+**Carved gap — art-direction over physics (2026-06-21).** A test-particle simulation
 (`phase3/stability-sim/scripts/ring_clearing.py`, 2000 yr, `results/_ring_clearing.log`)
-showed Chaos is far too small (mass ratio μ ≈ 7.5×10⁻⁷) to clear any gap — even particles
-at Chaos's own semi-major axis survived. So the ring is **continuous with Chaos embedded**,
-and the earlier "two-ringlet / Hill-zone gap" idea is **rejected on dynamical grounds**: a
-feeder moon *fills* a ring, it does not empty it (cf. Enceladus and Saturn's E ring).
+showed Chaos is far too small (mass ratio μ ≈ 7.5×10⁻⁷) to clear a gap — physically a feeder
+moon *fills* a ring, it does not empty it (cf. Enceladus and Saturn's E ring). **We carve a
+gap anyway**, for a rendering reason: a Kopernicus ring is a flat disk, and an inclined
+(retrograde) Chaos embedded in continuous ring material would have the ring *face slice
+through the moon* every orbit — visually broken. A gap straddling Chaos's orbit avoids that.
+This is a **documented divergence** (art > 고증). To keep the gap as small as possible we
+lowered **Chaos's eccentricity 0.10 → 0.02** (`results/_chaos_e002`, STABLE): the radial
+swing shrinks from ±150,000 km to ±30,000 km, so a ~180,000 km gap clears the moon cleanly.
 
 **Brightness adds in quadrature.** Apparent brightness ∝ area ∝ R², so "+0.05 R_Jup of
 apparent radius" requires an equiv-disk of ~0.32 R_Jup (≈ 23,000 km), **not** 0.05 R_Jup —
@@ -334,12 +342,31 @@ irregular-satellite grinding), which they noted is harder to fit but plausible. 
 **faint** version because Avatar **canon says Polyphemus has no rings** — a barely-visible
 wisp honors that while still being physically motivated.
 
-**Kopernicus — circular is faithful.** Kopernicus rings must be circular concentric annuli
-(no eccentricity). A diffuse E-ring is **axisymmetric in steady state anyway** (apsidal
-precession randomizes the source orbits; the source eccentricity becomes radial breadth), so
-a circular annulus is a faithful representation. (We also confirmed Chaos can be circularized
-to e = 0.02 if ever desired — STABLE, `results/_chaos_lowe` — but it is unnecessary since
-there is no gap and the eccentricity is absorbed into the ring's radial breadth.)
+**Kopernicus — two circular annuli + a gap.** Kopernicus rings are circular concentric annuli
+(no eccentricity), so the ring is emitted as **two Ring nodes** (inner 800,000–1,410,000 km,
+outer 1,590,000–2,500,000 km) sharing Chaos's orbital plane, with the gap between them. A
+diffuse E-ring is axisymmetric in steady state anyway (apsidal precession randomizes the
+source orbits), so circular annuli are faithful; the now-small Chaos eccentricity (0.02) is
+absorbed into the gap margin.
+
+## Designations & cultural names (2026-06-21)
+
+The Avatar-derived names are **cultural names**, not official designations. Official
+designation follows the historical satellite convention — **uppercase Roman numerals appended
+to the planet**, numbered by increasing distance.
+
+| designation | cultural name (Avatar) | a_km |
+|---|---|---|
+| Alpha Centauri A b | Polyphemus | — |
+| Alpha Centauri A b I | Dante | 110,000 |
+| Alpha Centauri A b II | Hades | 148,000 |
+| Alpha Centauri A b III | Pandora | 252,393 |
+| Alpha Centauri A b IV | Cassandra | 600,000 |
+| Alpha Centauri A b V | Chaos | 1,500,000 |
+
+**In-game:** the body name is the **designation** (e.g. `Alpha Centauri A b III`); the cultural
+name (Pandora, etc.) and its Avatar lore go in the **in-game description text only** — deferred
+to the cfg-emit stage. So Pandora ships as *Alpha Centauri A b III*, "Pandora" in its blurb.
 
 ## Pandora — surface climate over the orbit (estimate, 2026-06-15)
 

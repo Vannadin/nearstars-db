@@ -52,11 +52,28 @@ problem: the decomposition is fixed up front.
 
 | group | axes |
 |---|---|
-| `orbit` | `semi_major_axis_au`, `eccentricity`, `inclination_deg` |
-| `bulk` | `mass`, `radius`, `geopotential_j2` (oblateness — for rotating bodies; Principia `j2` + `reference_radius`) |
-| `atmosphere` | `composition`, `pressure`, `temperature` |
-| `appearance` | `banding` (base colour / bands), `clouds`, `haze`, `aurora`, `rings`, `surface` |
-| `satellites` | art-directed / fiction moons (class D), as a list |
+| `identity` | `body_type`/spectral_class, `designation` (e.g. Roman-numeral moons), `cultural_name` (in-game blurb text), `discoverability` (notability / discovery difficulty) |
+| `orbit` | `semi_major_axis_au`, `eccentricity`, `inclination_deg`, `longitude_ascending_node`, `argument_periapsis`, `mean_anomaly`/epoch, `spin_orbit_resonance`/tidal-lock, `lagrange_placement` (trojans / co-orbitals) |
+| `bulk` | `mass`, `radius`, `geopotential_j2` (oblateness; Principia `j2` + `reference_radius`), `rotation_period`, `obliquity`, `spin_axis_orientation` (pole RA/Dec), `internal_heat`/intrinsic_luminosity (self-luminous giants/BDs), `age`/cooling_age (stars/WDs), `tidal_heating` (Io-type moons) |
+| `atmosphere` | `composition`, `pressure`, `temperature`, `scale_height`, `breathability`/oxygen (stock O₂ flag), `greenhouse` (surface vs equilibrium T), `escape`/loss |
+| `surface` | `surface_type` (rock/ice/lava/ocean), `hydrosphere`/ocean, `ice_caps`/glaciation, `tectonics`/volcanism, `terrain` (Parallax heightmap / biomes), `surface_temperature`, `albedo`, `biosphere` |
+| `appearance` | `banding`/base-colour, `clouds`, `haze`, `aurora`, `rings`, `surface`, `emission_glow` (lava / self-luminous / night-side), `specular` (ocean glint), `artificial`/city-lights, **[stars]** `granulation`, `limb_darkening`, `spots_faculae`, `corona`, `flares`, **[pulsar]** `beam` |
+| `magnetism` | `magnetic_field` (dynamo surface field), `magnetosphere` (standoff / belt extent), `radiation_belts` |
+| `environment` | `radiation` (Kerbalism dose zones), `stellar_wind` (mass-loss), `activity` (rotation/cycle/X-ray — stars), `heliosphere` (astrosphere extent), `flares`/space-weather (CME / storms), `uv_xray_flux`, `habitable_zone` (stars) |
+| `rings` | `ring_structure` (radii / gaps), `ring_composition`/color/opacity, `ring_plane` (inclination), `circumstellar_disk` (debris belt), `asteroid_belt` |
+| `satellites` | art-directed / fiction moons (class D) as a list, `co_orbitals`/trojans, `dust_sources` (ring feeders) |
+| `gameplay` | `sphere_of_influence_tuning`, `science_biomes`, `timewarp_limits`, `difficulty` — *KSP-specific; almost always passthrough* |
+
+The menu is the **union of decision axes any body type could need** — never pruned by type
+(a rocky moon still carries `rings` and `magnetism`; they just default to passthrough). Most
+axes on most bodies are `passthrough`; Phase 4 only records the deltas. `identity` and
+`gameplay` are meta groups that are passthrough for nearly every body.
+
+> **Menu history.** 2026-06-22 (coverage audit `phase4/phase4-coverage-audit.md`): added
+> `magnetism`, `environment`, `surface`, `rings`, `identity`, `gameplay` groups and expanded
+> `orbit`/`bulk`/`atmosphere`/`appearance`/`satellites` to the full union above — the α Cen
+> audit found the planet's dynamo field (drives aurora + moon radiation), the stars'
+> wind/activity (drive the heliosphere), surfaces, and ring/disk structure all lacked axes.
 
 ### Per-row status — this is the progress board
 
