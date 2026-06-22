@@ -530,7 +530,9 @@ decisions:
     driver: gameplay
     value: >
       착륙=중간. 용암 없는 구역은 단기 착륙 가능하나 고온 차폐 필수, 대면측은 방사선도 극심. far-side는
-      상대적 안전(저방사선·저온) 거점. 바이옴: 대협곡 / 용암호 사슬 / 황 지대 / far-side(흑현무암).
+      상대적 안전(저방사선·저온) 거점. 바이옴(6): 대협곡(Grand Chasma) / 용암호 사슬(Lava Lakes, sub-Polyphemus
+      고정면 최고온) / 황 평원(Sulfur Plains) / 현무암 평원(Basalt Plains, far-side) / 화산추·칼데라(Volcanic Cones) /
+      극(Poles, geographic 고위도). 극은 조석고정+obliquity~0이라 seasonal 아닌 지리적 구분.
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프."}
 
   - body: Hades                    # A b II
@@ -609,7 +611,10 @@ decisions:
     axis: gameplay
     status: gated
     driver: gameplay
-    value: "열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴: 크레이터 지형/홈 지형."
+    value: >
+      열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴(6): 어두운 크레이터 고지(Dark
+      Cratered Terrain) / 밝은 홈 지형(Bright Grooved Terrain) / 대형 충돌분지(Impact Basins) / 단층 능선
+      (Tectonic Ridges) / 극(Poles, geographic 고위도) / 폴리페무스 대면점(Sub-Polyphemus Point, 고정 지점).
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상."}
 
   - body: Pandora                  # A b III
