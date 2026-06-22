@@ -705,11 +705,23 @@ const glowSprites=[];
   // (its cg-local position is the moon-system centre). Reuses orbitPoint().
   function addMoonSys(p, centerMesh, cg){   // cg passed in (it is per-member, block-scoped like regStab's grp)
     const ctr=centerMesh.position;
-    if(p.ring){ // faint continuous ring in the moons' reference plane (scene xz), at the planet
-      const rg=new THREE.Mesh(new THREE.RingGeometry(p.ring.inner_au, p.ring.outer_au, 96, 1),
-        new THREE.MeshBasicMaterial({color:0xc9b89a, side:THREE.DoubleSide, transparent:true,
-          opacity:0.12, depthWrite:false}));
-      rg.rotation.x=-Math.PI/2; rg.position.copy(ctr); cg.add(rg); orbitsLines.push(rg);
+    if(p.ring){ // faint Chaos-fed E-ring: gap-segmented annuli in the feeder moon's
+      // orbital plane (inc/Ω), built from orbitPoint so it is exactly coplanar with that orbit.
+      const ri=p.ring.inc_deg||0, rO=p.ring.Omega_deg||0, N=96;
+      const segs=p.ring.segments_au||[[p.ring.inner_au,p.ring.outer_au]];
+      segs.forEach(seg=>{
+        const inner=seg[0], outer=seg[1], pos=[], idx=[];
+        for(let k=0;k<=N;k++){ const th=k/N*2*Math.PI;
+          const pi=ctr.clone().add(orbitPoint(inner,0,ri,rO,0,th));
+          const po=ctr.clone().add(orbitPoint(outer,0,ri,rO,0,th));
+          pos.push(pi.x,pi.y,pi.z, po.x,po.y,po.z); }
+        for(let k=0;k<N;k++){ const b=k*2; idx.push(b,b+1,b+2, b+1,b+3,b+2); }
+        const g=new THREE.BufferGeometry();
+        g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3)); g.setIndex(idx);
+        const rg=new THREE.Mesh(g, new THREE.MeshBasicMaterial({color:0xc9b89a,
+          side:THREE.DoubleSide, transparent:true, opacity:0.12, depthWrite:false}));
+        cg.add(rg); orbitsLines.push(rg);
+      });
     }
     if(!p.moons) return;
     p.moons.forEach((mo,mi)=>{

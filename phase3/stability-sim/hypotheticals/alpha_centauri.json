@@ -55,7 +55,7 @@
       "parent": "Alpha Centauri A b",
       "type": "moon",
       "semi_major_axis_km": 1500000,
-      "eccentricity": 0.1,
+      "eccentricity": 0.02,
       "inclination_deg": 179.0,
       "node_deg": 274.0,
       "mean_anomaly_deg": 60.0,

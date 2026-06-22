@@ -324,8 +324,14 @@ KM_PER_AU = 149_597_870.7
 # Faint art-direction rings keyed by planet name (not in DB — see phase4 decision board).
 # Generic field; only bodies with a designed ring appear here. Polyphemus = the Chaos-fed
 # E-ring (Beichman 2025 §5.3): inner/outer km, optical depth tau, geometric albedo.
+# Chaos-fed E-ring. Two annuli with a carved gap straddling Chaos's orbit
+# (1.47–1.53M km at e=0.02) so the ring face never slices through the moon. The
+# gap is an ART-DIRECTION choice — Chaos is too small (μ≈7.5e-7) to clear one
+# physically (phase4 decision board) — and the ring lies in its feeder Chaos's
+# orbital plane (match_moon → inc/Ω pulled from that moon).
 RING_BY_PLANET = {
-    "Alpha Centauri A b": {"inner_km": 800_000, "outer_km": 2_500_000, "tau": 9e-5, "albedo": 0.45},
+    "Alpha Centauri A b": {"segments_km": [[800_000, 1_410_000], [1_590_000, 2_500_000]],
+                           "match_moon": "Chaos", "tau": 9e-5, "albedo": 0.45},
 }
 _MOON_PAL = ["#39d6e0", "#ff8a5c", "#ffb454", "#e85cc8", "#c77dff", "#8fd0ff", "#b0d04a"]
 
@@ -989,8 +995,11 @@ def build_cluster_obj(members):
                     pp["moons"].append(mp)
             ring = RING_BY_PLANET.get(p["name"])
             if ring:
-                pp["ring"] = {"inner_au": ring["inner_km"] / KM_PER_AU,
-                              "outer_au": ring["outer_km"] / KM_PER_AU,
+                fm = next((m for m in pp.get("moons", []) if m["name"] == ring["match_moon"]), None)
+                pp["ring"] = {"segments_au": [[lo / KM_PER_AU, hi / KM_PER_AU]
+                                              for lo, hi in ring["segments_km"]],
+                              "inc_deg": fm["i_deg"] if fm else 0.0,
+                              "Omega_deg": fm["Omega_deg"] if fm else 0.0,
                               "tau": ring["tau"], "albedo": ring["albedo"]}
             planets.append(pp)
 
