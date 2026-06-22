@@ -1,0 +1,60 @@
+# Proxima Centauri (α Cen C / GJ 551) Phase 4 결정 보드 — 별 + 행성 b/c/d. (body × axis) 행별 상태. DB 불변, staging 기록
+# 실관측 시스템 → 대부분 Phase 3 측정/합성값 passthrough, 소수 art/divergence + discoverability만 결정. grounding=docs/phase3/proxima-cen*.md
+system: proxima_cen
+status: staged
+updated: 2026-06-23
+
+decisions:
+  # ── 별 (Proxima Cen, M5.5Ve 플레어 별) — facet-walk 2026-06-23 ──────────
+  - body: Proxima Centauri
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=M5.5Ve 적색왜성(플레어 별). 태양 최근접성, α Cen AB에 ~13,000 AU 약결합. designation=Proxima Centauri
+      (α Cen C / GJ 551). discoverability=confirmed(맨눈 불가, 망원경 검출 — Innes 1915).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "α Cen A·B(naked_eye, 밝은 별)와 달리 Proxima는 겉보기 11등이라 맨눈 불가 → category=confirmed(망원경 검출사와 정합), naked_eye 아님. 오너 결정(a)."
+    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Innes 1915 (telescopic discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Proxima Centauri
+    axis: bulk                        # 측정 passthrough
+    status: passthrough
+    note: >
+      M 0.1221±0.0022 M☉(SM2025 진화모델) · R 0.141±0.011 R☉(Demory2009 VLTI) · Teff 2904±51K(Passegger2019) ·
+      L 0.00157 L☉ · age ~4.85±0.5 Gyr(kinematic, 포획 vs 동시생성 미정). 전부 고신뢰 측정 → emit 그대로.
+
+  - body: Proxima Centauri
+    axis: appearance                  # [star] group 6 — 관측 기반 + 흑점 결정
+    status: gated
+    driver: observation
+    value: >
+      color=M5.5V 심적색 #c54c2a(TiO/VO/H₂O가 <6500Å 강억제). limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break).
+      **spots_faculae=보통~다소 많음 ~3–5%**(활동적 M왜성 큰 spot; 83d 자전 변조 검출=spot 존재; A·B보다 多). flare 색
+      #ff5e2a(Hα)는 참조용 — **동적 플레어는 cfg 렌더 불가**라 visual passthrough, 효과는 environment.radiation/activity로.
+    gate: {criterion: [observation], verdict: pass-in-window, note: "색/limb=측정·tie-break passthrough. 흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인)."}
+
+  - body: Proxima Centauri
+    axis: magnetism.magnetic_field    # 측정
+    status: passthrough
+    note: "평균 표면장 0.6 kG(Reiners&Basri2008/Reiners2022 CARMENES), 대규모 dipole 0.135 kG(Klein2021 ZDI, 주로 poloidal). spin incl 47°±7°. 측정 emit."
+
+  - body: Proxima Centauri
+    axis: environment.activity        # 플레어 별 핵심 — 측정
+    status: passthrough
+    note: >
+      P_rot 83.5±0.5d(Benedict1998 HST) · 7년 사이클(Wargelin2024 X선+UV+광학) · log R'HK −5.65±0.17(정온 활동도 낮음).
+      **플레어**: 총 1.49회/일(Vida2019 TESS), 슈퍼플레어(≥10³³ erg) ~3회/년, ultra ~0.5회/년. X선 log Lx ~27.0 정온
+      / ~28.5 플레어피크. 역설(노쇠 느린자전인데 빈번 슈퍼플레어)은 7년 사이클 변조로 화해. 측정 emit.
+
+  - body: Proxima Centauri
+    axis: environment.stellar_wind    # 측정
+    status: passthrough
+    note: "Ṁ ≤0.2 Ṁ☉(Wood2001 astrospheric Lyα 상한). 풍-지배 아닌 **플레어-지배** 환경. L_bol 낮아 절대 풍 약함."
+
+  - body: Proxima Centauri
+    axis: environment.heliosphere     # SHARED 시스템 대표
+    status: passthrough
+    note: "Astrosphere standoff ≲55 AU(Wood2001). 국부 ISM 유입 ~25 km/s(Wood2005, α Cen AB와 동일 G-cloud 흐름)."
