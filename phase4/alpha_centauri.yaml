@@ -819,10 +819,11 @@ decisions:
     status: gated
     driver: canon + art + physics
     value: >
-      **시생대 지구룩** — 환원성 N₂/CH₄ 대기의 **옅은 주황/황갈 유기 haze**(CH₄ 광화학, Titan 아닌 Archean). 그 아래
-      한랭 암석/빙 + 물바다. base=주황-갈빛 하늘, 청회색 바다, 흰 빙관. 무성한 초록 없음(미생물급). biolum 거의 없음.
-      specular=바다 glint(부분). aurora=약함(약자기장). clouds=물구름 약간 + 주황 haze 우세. rings=∅.
-    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "주황 haze=Archean CH₄ 광화학(O₂ 없어 보존). 판도라 초록·청록 생물발광과 뚜렷한 시각 차별 = 주황 hazy 물세계."}
+      **한랭 외계 바다 세계** — 환원성 N₂/CH₄ 대기의 **얇은 고층 호박/연노랑 haze**(불투명 아님, **표면 비침**;
+      Titan의 두꺼운 주황 공과 의도적 차별). 가시: 청회색 물바다 + 흰 빙관(극·고지) + 어두운 암석 대륙 + 흰 물구름
+      (활발한 기상). 순 인상 = **엷은 청백 마블 + 약한 amber 기운**. 무성한 초록 없음(미생물급), biolum 거의 없음.
+      specular=바다 glint. aurora=약함(약자기장). rings=∅.
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가 두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라 초록·청록과도 차별."}
 
   - body: Cassandra
     axis: magnetism.magnetic_field # group 7 facet-walk 2026-06-22
