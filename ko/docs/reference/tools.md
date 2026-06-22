@@ -14,9 +14,10 @@
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` 패치 | `kopernicus-cfg` 스킬 |
 | 7 | Principia cfg | DB → Principia n-body 패치 | `principia-cfg` 스킬 |
 | 8 | Firefly cfg | Phase 3 대기 합성 → Firefly 재진입 효과 cfg | `firefly-cfg` 스킬 |
-| 9 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
-| 10 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
-| 11 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
+| 9 | ResearchBodies cfg | Phase 4 discoverability → ResearchBodies 숨김/발견 패치 | `researchbodies-cfg` 스킬 |
+| 10 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
+| 11 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 12 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
 
 ## 검증 & QA — 인덱스
 
@@ -28,9 +29,9 @@
 | 위계적 다성계 구조 | `scripts/pipeline/test_hierarchical.py` | [1](#1-데이터-엔진) | 다성계 궤도 편집 후 smoke test |
 | Stellarium 과 비교한 DB 위치 | `scripts/verification/stellarium_crosscheck.py` | [5](#5-외부-교차검증) | 퍼블리시 전 spot-check |
 | 큐레이션된 + 가상 바디의 동역학적 안정성 | `phase3/stability-sim/scripts/run.py` | [4](#4-안정성-샌드박스) | 위성·추가 바디 cfg 출시 전, 혹은 기준 DB sanity 확인 |
-| `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [10](#10-개발-헬퍼) | 커밋 / 릴리스 전 |
+| `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [11](#11-개발-헬퍼) | 커밋 / 릴리스 전 |
 | Phase 3 합성 정책 적합성 | `nearstars-phase3` 의 audit-pass 절차 | [3](#3-phase-3-합성-파이프라인) | 합성 배치 후 — 수동, 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
-| 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [10](#10-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
+| 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [11](#11-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
 
 ## 1. 데이터 엔진
 
@@ -175,7 +176,20 @@
 
 **출력.** `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg` 행성당 1개 + `NearStarsPlanetPack.cfg`.
 
-## 9. 별 추가 / Phase 2 큐레이션
+## 9. ResearchBodies cfg 생성
+
+**목적.** 옵셔널 **discoverability** 레이어를 emit 합니다. 플레이어가 관측소/망원경으로 발견하기 전까지 NearStars 천체를 숨기는 `RESEARCHBODIES { loadAs = mod ... }` ModuleManager 패치입니다. 각 천체의 실제 검출 상태 (Phase 4 `identity > discoverability`) 를 `IGNORELEVELS` 시작-가시 튜플 + `ONDISCOVERY` 메시지로 매핑합니다 (후보 천체는 실제 검출 논문을 인용).
+
+**언제.** "ResearchBodies cfg 만들어줘", "discoverability 패치", "IGNORELEVELS / ONDISCOVERY", "이 바디 숨김 처리".
+
+**드라이버.** `researchbodies-cfg` 스킬. RB `mod_version: 1.13.0.0` (JPLRepo/ResearchBodies) 에 고정. 스키마 주장은 `<file>.cs:line` 인용. 난도 등급 = Scheme A, emit 은 프로젝트 말미로 보류. 타깃은 비-RP-1 (RSS 의 Sandbox/Science). RP-1 통합은 추후 업데이트로 보류 (`references/rp1-compat.md`).
+
+**파일.**
+- `.claude/skills/researchbodies-cfg/scripts/emit_researchbodies_cfg.py` — Phase 4 `discoverability:` 블록을 읽어 카테고리 → IGNORELEVELS 튜플 (Scheme A) 로 매핑, 단일 패치로 출력. `--dry-run` / `--input` 지원.
+
+**출력.** `dist/NearStars-Configs/Patches/ResearchBodies/NearStars.cfg`.
+
+## 10. 별 추가 / Phase 2 큐레이션
 
 **목적.** 새 별을 추가하는 절차 (target list → fetch → 큐레이션 → 검증) 와 기존 별의 Phase 2 큐레이션 깊이를 올리는 절차.
 
@@ -187,7 +201,7 @@
 
 **워크플로.** `target_list.json` 편집 → `./run_pipeline.sh` → Phase 2 격상 시 `phase2/<system>/measurements.yaml` 작성 → `python3 scripts/pipeline/apply_phase2.py <system>` → 재검증.
 
-## 10. 개발 헬퍼
+## 11. 개발 헬퍼
 
 **목적.** 일상 작업에서 쓰는 보조 유틸리티.
 
@@ -199,7 +213,7 @@
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
 - `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도. 수동 실행 전용.
 
-## 11. 3D 성도 뷰어
+## 12. 3D 성도 뷰어
 
 **목적.** `db/systems/*.json` 을 브라우저용 인터랙티브 3D 지도로 만든다. 카탈로그가 공간상 *어디에* 있는지 보고, 시스템을 골라 줌인하면 그 행성들까지 본다.
 

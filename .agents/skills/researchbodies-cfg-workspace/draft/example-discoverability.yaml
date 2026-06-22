@@ -1,0 +1,24 @@
+# Dry-run example for emit_researchbodies_cfg.py — encodes the already-decided
+# alpha Centauri discoverability facet. NOT a substitute for the real Phase 4
+# data (that gets a `discoverability:` block during the facet-walk).
+system: alpha_centauri
+discoverability:
+  - body: AlphaCentauriA
+    category: naked_eye
+  - body: AlphaCentauriB
+    category: naked_eye
+  - body: Polyphemus
+    category: candidate
+    message: >-
+      JWST/MIRI 15.5 um direct imaging resolves a faint companion to Alpha
+      Centauri A — the candidate "S1".
+    ref: "2025arXiv250803812S"
+  - body: Pandora
+    category: fictional
+    message: First close survey of the gas giant's habitable moon.
+  - body: Dante
+    category: fictional
+    message: An Io-class tidal hellscape orbiting Polyphemus.
+  - body: Hades
+    category: fictional
+    message: A gray, Ganymede-like outer moon.

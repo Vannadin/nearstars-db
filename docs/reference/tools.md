@@ -14,9 +14,10 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` patches | `kopernicus-cfg` skill |
 | 7 | Principia cfg | DB → Principia n-body patches | `principia-cfg` skill |
 | 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
-| 9 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
-| 10 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
-| 11 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
+| 9 | ResearchBodies cfg | Phase 4 discoverability → ResearchBodies hide/discover patch | `researchbodies-cfg` skill |
+| 10 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
+| 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
 
 ## Verification & QA — index
 
@@ -28,9 +29,9 @@ Correctness checks live across several functional groups. This index gathers the
 | Hierarchical binary structure | `scripts/pipeline/test_hierarchical.py` | [1](#1-data-engine) | Smoke test after binary-orbit edits |
 | DB positions vs Stellarium | `scripts/verification/stellarium_crosscheck.py` | [5](#5-external-cross-check) | Spot-check before publishing |
 | Dynamical stability of curated + hypothetical bodies | `phase3/stability-sim/scripts/run.py` | [4](#4-stability-sandbox) | Before shipping a moon / extra-body cfg, or as a baseline-DB sanity check |
-| `ko/` mirror file parity | `scripts/check-mirrors.sh` | [10](#10-dev-helpers) | Before commit / release |
+| `ko/` mirror file parity | `scripts/check-mirrors.sh` | [11](#11-dev-helpers) | Before commit / release |
 | Phase 3 synthesis policy fit | `nearstars-phase3` audit-pass procedure | [3](#3-phase-3-synthesis-pipeline) | After a synthesis batch — manual, output at `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
-| Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [10](#10-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
+| Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [11](#11-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
 
 ## 1. Data engine
 
@@ -175,7 +176,20 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Output.** `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg` per atmospheric body + `NearStarsPlanetPack.cfg`.
 
-## 9. Add star / Phase 2 curation
+## 9. ResearchBodies cfg generation
+
+**Purpose.** Emit the optional **discoverability** layer — a `RESEARCHBODIES { loadAs = mod ... }` ModuleManager patch that hides each NearStars body until the player discovers it via an observatory/telescope. Maps each body's real detection status (Phase 4 `identity > discoverability`) to an `IGNORELEVELS` start-visibility tuple + an `ONDISCOVERY` message (candidates cite the real detection paper).
+
+**Trigger.** "ResearchBodies cfg 만들어줘", "discoverability 패치", "IGNORELEVELS / ONDISCOVERY", "이 바디 숨김 처리".
+
+**Driver.** `researchbodies-cfg` skill. Pinned to RB `mod_version: 1.13.0.0` (JPLRepo/ResearchBodies). Schema claims cite `<file>.cs:line`. Difficulty grading = Scheme A; emit deferred to project end. Targets non-RP-1 (Sandbox/Science on RSS); RP-1 integration deferred (`references/rp1-compat.md`).
+
+**Files.**
+- `.claude/skills/researchbodies-cfg/scripts/emit_researchbodies_cfg.py` — reads Phase 4 `discoverability:` blocks, maps category → IGNORELEVELS tuple (Scheme A), writes one combined patch. `--dry-run` / `--input` supported.
+
+**Output.** `dist/NearStars-Configs/Patches/ResearchBodies/NearStars.cfg`.
+
+## 10. Add star / Phase 2 curation
 
 **Purpose.** Procedure for adding a new star (target list → fetch → curate → validate) and for upgrading an existing star's Phase 2 curation depth.
 
@@ -187,7 +201,7 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Workflow.** Edit `target_list.json` → `./run_pipeline.sh` → for Phase 2: write `phase2/<system>/measurements.yaml`, then `python3 scripts/pipeline/apply_phase2.py <system>` → re-validate.
 
-## 10. Dev helpers
+## 11. Dev helpers
 
 **Purpose.** Day-to-day workflow utilities.
 
@@ -199,7 +213,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
 - `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness. Manual invocation only.
 
-## 11. 3D star map viewer
+## 12. 3D star map viewer
 
 **Purpose.** Turn `db/systems/*.json` into an interactive 3D star map for the browser — see *where* the catalog sits in space, then zoom into any system to see its planets.
 
