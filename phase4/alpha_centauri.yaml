@@ -714,6 +714,26 @@ decisions:
     value: "고유 자기권이 표면 차폐. 캐넌대로 Polyphemus 두 벨트 *사이(gap)*에 위치 + 자체 강자기장 → 거주가능."
     gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분 — 초강자기장 불요. 거주가능의 물리 근거."}
 
+  - body: Pandora
+    axis: appearance               # base_colour/clouds/biolum/aurora/specular (group 6, facet-walk 2026-06-22)
+    status: gated
+    driver: canon + art + physics
+    value: >
+      base_colour=지구식 초록 식생 + 파란 대양 + 흰 구름 마블(육지 ~50%라 초록 비중 큼). clouds=흰 물구름, 활발한
+      기상. biolum(emission_glow)=은은한 청록 야간 글로우(식물발광 약간 + 해안 발광 약간). **aurora=격렬·다색**
+      (O₂ 초록 + N₂ 청보라 + 적색) — 강자기장 + Polyphemus 자기권 내 + Dante Io식 황 토러스 = 목성형 강오로라
+      메커니즘. specular=대양 sun-glint(OceanFX). artificial/city-lights=∅(Na'vi 전산업, 야간 빛=생물발광). haze=
+      지구식 파란 Rayleigh 림. rings=∅.
+    gate:
+      criterion: [visual-checklist, composition-lock]
+      verdict: pass-in-window
+      evidence: >
+        오너(2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색
+        630nm, N₂⁺ 청보라 391nm + 적색 밴드) — 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante
+        황 플라스마 토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과
+        오로라(상공 다색)가 야간 공존.
+      emit_note: "오로라 sRGB는 emit 시 element/molecular_plasma_colors.yaml서 추출(O₂/N₂/CO₂). 생물발광=EVE/emissive 야간 텍스처."
+
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
   # Roche 내측·0.5 R_Hill 외측·카논 순서 제약으로 설계 후 IAS15로 안정 검증.

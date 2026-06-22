@@ -94,7 +94,7 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | atmosphere | breathability (O₂ present, lore-toxic) / pressure (1.1 atm) / scale_height / greenhouse (+70K→290K) | ✅ |
 | surface | surface_type (land:ocean ~50:50) / hydrosphere / biosphere (lush, biolum) | ✅ |
 | surface | tectonics (volcanism, fast drift) / terrain (mountainous, floating-mtn arches) / ice_caps (peaks+poles) / albedo (0.30) / surface_temp (~290K) | ✅ |
-| appearance | base colour / clouds / biolum (cyan) / aurora / specular (oceans) / city-lights(Na'vi?) | ⬜ |
+| appearance | base colour (Earth-green) / clouds / biolum (subtle cyan) / aurora (intense, multi-colour) / specular (oceans) / city-lights (∅ Na'vi pre-industrial) | ✅ |
 | magnetism | magnetic_field / magnetosphere | ✅ |
 | magnetism | radiation_belts (between two belts) | ✅ (env note) |
 | environment | radiation (between belts, shielded) | ⬜ (formalize Pandora row) |
