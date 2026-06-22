@@ -128,7 +128,14 @@ const AB={a_au:17.57*1.3409,e:0.5179,inc:79.205,node:204.85,peri:231.65,P_yr:79.
 const PLANET_ORBIT={a_au:1.6,e:0.1,inc:16,node:0,peri:0,P_yr:Math.sqrt(1.6**3/1.1055)};
 const PROX={inc:107.6,node:126.0,shownAu:60};
 // 태양 방향(위성 장면에서 고정). α Cen A 방향, B는 약간 오프셋된 둘째 태양.
-const SUN_DIR=new THREE.Vector3(1,0.18,0.35).normalize();
+// α Cen A must lie IN the moons' reference plane (= Polyphemus's orbital plane, the xz
+// grid): the star sits at the focus of the planet's orbit, so its elevation is ~0. A
+// nonzero y lifted it out of plane and, added to Pandora's 10° inclination, pushed the
+// planet–sun line-of-sight separation past the planet's 16.2° angular radius → eclipses
+// never occurred. y=0 keeps the max separation ≤10°, so Polyphemus eclipses the sun each orbit.
+const SUN_DIR=new THREE.Vector3(1,0,0.35).normalize();
+// α Cen B is the companion on the ~16°-inclined AB orbit, genuinely off the planet's
+// orbital plane, so it keeps a small y (B rarely eclipses — physically correct).
 const SUN_DIR_B=new THREE.Vector3(0.92,0.12,0.55).normalize();
 
 /* ============ 케플러 ============ */
