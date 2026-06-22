@@ -103,7 +103,13 @@ orbit a/e/i = **gated via list**. Per-moon, none individually boarded:
    Star *appearance* (color/granulation/limb-darkening/spots) still un-boarded → pass-ok.
 3. **Planet rotation/obliquity axis** — reconcile obliquity 27° with the J2-at-0 sim assumption.
 4. **Pandora as its own body** — atmosphere / surface-biosphere / radiation (the hero moon).
-5. **orbit.inclination_deg** — sky-frame conversion + prograde/retrograde pick (emit-coupled).
+5. ✅ **DONE (2026-06-22).** `orbit.inclination_deg` gated. The only constrained quantity is
+   the **mutual inclination 16° to the AB plane** (stability-selected; observed ~50°/130° is
+   Kozai-unstable — documented-divergence, already in Phase 3). The absolute sky-frame
+   inclination is a free emit-orientation that preserves the 16° mutual (prograde); not a
+   separate observational value (Beichman sky-plane is bimodal/weak). No "emit-coupling"
+   blocker — the emitter just realizes the gated 16° mutual deterministically.
+   **→ Polyphemus (the planet) is now fully gated: no `open` rows remain.**
 6. Other moons' appearance/atmosphere; planet `appearance.clouds` explicit gate.
 
 Note: actual cfg **emit/writers** remain deferred to project-end (owner decision 2026-06-11).

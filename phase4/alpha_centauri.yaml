@@ -33,11 +33,21 @@ decisions:
 
   - body: Alpha Centauri A b
     axis: orbit.inclination_deg
-    status: open                  # ← 미결: 상호경사 → cfg sky-frame 변환 필요
-    note: >
-      제약된 양은 AB면에 대한 *상호* 경사 16°(안정창 중앙). cfg sky-frame inclination_deg는
-      미설정. emit 전 변환 필요: i_AB=79.24°, sky-plane 해는 bimodal prograde/retrograde
-      (Beichman Table 4). a/e는 지금 emit 가능.
+    status: gated                 # 2026-06-22 — 상호경사 16° prograde 확정, 절대 sky-frame은 자유 emit 배향
+    driver: stability + window-selection
+    value: "AB면 대비 상호경사 16° (prograde). 절대 sky-frame inclination은 16° mutual을 보존하는 자유 emit 배향(별도 고정 안 함)."
+    phase3_default: "mutual_inclination_deg=16 (안정창 0–35°의 중앙); 관측 ~50°/~130°는 Kozai-불안정이라 미채택"
+    gate:
+      criterion: [stability, error-bar]
+      verdict: documented-divergence
+      divergence_note: >
+        Beichman Table 4 관측 ~50°(prograde)/~130°(retrograde, i_AB=79.24°)는 e≈0.4와 함께 ECL Kozai-불안정
+        (e→0.95+, 위성계 붕괴). NearStars는 안정창(≲35°, ≳45°는 Kozai) 중앙 16° prograde 채택 — Phase 3
+        Canonical alternatives에 기록. 16° 저경사 prograde라 관측의 bimodal 모호성도 단일해로 해소.
+      emit_note: >
+        cfg는 AB 쌍성 궤도를 게임 프레임에 자유 배향하고 행성을 그 평면 대비 16° mutual·prograde로 둠.
+        절대 sky-plane inclination은 관측이 약/bimodal이라 별도 고정 불요 — 16° mutual만 보존하면 결정적으로 따라옴.
+        a/e(1.6 AU, e=0.1)는 이미 emit 가능.
 
   # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
   - body: Alpha Centauri A b
