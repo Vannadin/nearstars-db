@@ -62,20 +62,20 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 ## Hades — A b II (gray Ganymede-like)
 | group | axis | status |
 |---|---|---|
-| identity | body_type / designation (A b II) / cultural | ▫/✅ |
-| identity | discoverability | ⬜ |
+| identity | body_type / designation (A b II) / cultural | ✅ |
+| identity | discoverability (fictional → RB `F F F F`) | ✅ |
 | orbit | a / e / inc | ✅ (via satellites) |
 | orbit | Ω / ω / M | ▫ |
-| bulk | mass / radius (5e21 / 750 km) | ⬜ |
-| bulk | rotation (locked) / obliquity / spin_axis | ⬜ |
+| bulk | mass / radius (5e21 / 750 km, affirmed) | ✅ |
+| bulk | rotation (locked 14.4h) / obliquity (~0) / spin_axis | ✅ |
 | bulk | tidal_heating | ✅ |
 | atmosphere | composition / breathability (none) | ▫ |
 | surface | surface_type (rock, not ice) / tectonics (grooves) / terrain | ✅ |
-| surface | albedo / surface_temperature | ⬜ |
+| surface | albedo (0.30) / surface_temperature (~225K) | ✅ |
 | surface | hydrosphere / ice_caps / biosphere | ∅ |
 | appearance | surface look (Ganymede palette) | ✅ |
 | appearance | emission_glow / clouds / aurora / specular / rings | ∅ |
-| magnetism | magnetic_field (none) / magnetosphere | ⬜ (confirm none) |
+| magnetism | magnetic_field (none) / magnetosphere | ✅ |
 | environment | radiation | ✅ |
 | rings / satellites | (none) | ∅ |
 | gameplay | landing / biomes | ✅ |

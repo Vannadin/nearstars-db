@@ -502,6 +502,37 @@ decisions:
     gate: {criterion: [gameplay], verdict: pass-in-window, note: "무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프."}
 
   - body: Hades                    # A b II
+    axis: identity
+    status: gated                  # facet-walk 2026-06-22
+    driver: classification
+    value: >
+      body_type=암석 위성(750 km, 5.0e21 kg, 밀도 ~2830 kg/m³, 규산암·비빙질). designation=Alpha Centauri A b II ·
+      cultural=Hades(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "회색 가니메데형 외형이나 조성은 rocky. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Hades
+    axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
+    status: gated
+    driver: invented + physics
+    value: >
+      mass 5.0e21 kg · radius 750 km (둘 다 INVENTED, canon 수치 없음 — 달급 암석체로 affirm, 밀도 ~2830 kg/m³).
+      rotation=폴리페무스 조석고정 → 자전=공전 ≈ 14.4h(a=148,000km·M_Poly 120M⊕서 도출; cf. Dante 9.2h).
+      obliquity ~0°(락 감쇠). j2 ~0(소형). internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속.
+      spin_axis=궤도 법선 정렬.
+    gate: {criterion: [physics], verdict: pass-in-window, note: "질량·반경은 큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05)."}
+
+  - body: Hades
+    axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
+    status: gated
+    driver: physics
+    value: "고유 자기장 없음 — 750 km 암석 위성은 자기 dynamo 불가(소형·저전도 핵)."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음."}
+
+  - body: Hades
     axis: bulk.tidal_heating
     status: gated
     driver: physics + canon
@@ -523,7 +554,9 @@ decisions:
     value: >
       가니메데형 회색 — 어두운 고대 크레이터 지형 + 젊은 밝은 홈/단층(grooved) 지형(조석 응력 흔적).
       가시 용암 없음. 죽은 듯하나 텍토닉이 조석을 은근히 암시.
-    gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "[FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 — ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와 시각 대비."}
+    albedo: 0.30                   # group 5 facet-walk (2026-06-22): 오너 B = 중간 회색(달 고지대급). A(0.18 어두움)·C(0.43 가니메데급)은 미채택.
+    surface_temperature_k: 225     # albedo 0.30 + α Cen A 1.6 AU 입사량 → Teq ~225K(폴리페무스계 일관). 대기 없는 암석체라 KSP가 flux+albedo로 자동 산출; 조석고정(별 기준 14.4h)이라 낮밤+일식 변동. 내부 조석열은 표면온도 기여 미미.
+    gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "[FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 — ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와 시각 대비. albedo 0.30=오너 B."}
   - body: Hades
     axis: appearance
     status: gated
