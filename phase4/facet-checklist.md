@@ -101,6 +101,20 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | rings / satellites | (none) | ∅ |
 | gameplay | biomes (7, incl. flux-vortex + structures + local aurora) / SOI / difficulty | ✅ |
 
+## Cassandra — A b IV (outer retrograde; Archean-analog marginal life) — ✅ full walk (2026-06-22)
+| group | axis | status |
+|---|---|---|
+| identity | body_type / designation (A b IV) / cultural / discoverability (fictional → RB `F F F F`) | ✅ |
+| orbit | a / e / inc (600,000 km, retrograde 176°) | ✅ (via satellites) |
+| bulk | mass / radius (9e23 / 3400 km, density kept) / rotation (free ~39h, 3:1-ish) / obliquity (~20°, seasons) | ✅ |
+| atmosphere | composition (N₂/CO₂/CH₄/H₂, anoxic reducing) / pressure (~1 bar) / temp (~270-275K) / greenhouse / breathability (no O₂) | ✅ |
+| surface | water seas (partial ice) / biosphere (anaerobic microbial) / tectonics / ice_caps / albedo (0.35) | ✅ |
+| appearance | Archean orange CH₄ haze / seas / no biolum / weak aurora | ✅ |
+| magnetism | magnetic_field (weak/none) | ✅ |
+| environment | radiation (low-med, 8.4 R_p, outer) | ✅ |
+| rings / satellites | (none; is E-ring inner shepherd) | ∅ |
+| gameplay | biomes (6, incl. hydrothermal) / SOI / difficulty | ✅ |
+
 ## Stars A / B (context)
 Activity / wind / heliosphere ▫ passthrough; magnetic_field ✅ (proxy); appearance
 (color/granulation/spots/corona) ⬜ — deferred unless we do stellar appearance.

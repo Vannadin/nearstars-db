@@ -758,6 +758,96 @@ decisions:
         NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스 볼텍스 구역엔 특유 구조물(부유산 + 자기 이상
         지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만(report_flavor).
 
+  - body: Cassandra                # A b IV
+    axis: identity
+    status: gated                  # facet-walk 2026-06-22
+    driver: classification + canon(semi)
+    value: >
+      body_type=큰 암석 위성(반경 3400 km, 2번째 큰 달), 얇은 대기 + **한계 거주**(탄소순환 미생물급 생명 가능,
+      semi-canon Lightstorm OmatiCon 2024). 판도라 무성 생물권과 달리 미생물·한계 수준. designation=Alpha Centauri
+      A b IV · cultural=Cassandra(designations 블록). discoverability=fictional(합성 위성) → RB F F F F.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "marginal life-world(미생물·탄소순환), semi-canon(soft). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Cassandra
+    axis: bulk                     # mass/radius/rotation/obliquity (facet-walk 2026-06-22)
+    status: gated
+    driver: invented + physics
+    value: >
+      mass 9.0e23 kg · radius 3400 km → 중력 ~0.53 g, 밀도 ~5470 kg/m³(철-부유 암석, 화성보다 빽빽 — 오너 유지).
+      rotation=**자유 자전 ~39h**(공전 117h의 1/3, "공전1:자전3") — 600,000 km라 조석 despin이 a⁶로 너무 느려
+      5.3 Gyr에도 미동기화(원시 빠른 자전 유지), **3:1 공명 락 아님**(e=0.05선 불안정). obliquity ~20°(자유 회전체라
+      비0 가능 → 축-계절, 조정 가능). internal_heat=방사성 위주(외곽·큰 a라 조석 미미). j2 소형. age=5.3 Gyr. spin_axis=20° 경사.
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      note: "밀도 유지=오너 선택. 자유 자전 ~39h는 느린 tidal despin(a⁶, 600,000km)으로 정당(미동기, 공명 락 아님). obliquity 비0(조석고정 아니라 축 안 세워짐) → 축-계절 가능."
+
+  - body: Cassandra
+    axis: atmosphere               # group 4 facet-walk 2026-06-22
+    status: gated
+    driver: canon + physics
+    value: >
+      composition=N₂ 주성분(~0.8–1 bar) + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, **무산소·환원성**(canon N–H).
+      pressure ~1 bar. temperature: Teq ~225K + CO₂·CH₄·N₂–H₂ CIA 온실 +45–50K → 지표 ~270–275K(한계-습윤).
+      greenhouse=CO₂+CH₄+N₂–H₂ 충돌유발흡수(시생대/초기화성 온난화 레시피). breathability=O₂ 없음 → 비호흡
+      (atmosphereContainsOxygen=false). escape=N₂/CO₂ 보유, H₂는 탈출하나 화산 보충.
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: pass-in-window
+      note: >
+        시생대 지구 아날로그(A 채택). 1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능.
+        무산소=물바다와 무모순(시생대 지구 20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존
+        불가라 무산소 택하며 주황 haze 보존. 고도 T/P 커브 emit 시 생성.
+
+  - body: Cassandra
+    axis: surface                  # group 5 facet-walk 2026-06-22
+    status: gated
+    driver: canon + physics
+    value: >
+      한랭-습윤 시생대형. hydrosphere=**물바다**(따뜻한 적도/계절엔 액체, 그 외 빙) + 빙관. surface_type=암석 대륙
+      + 바다. biosphere=**혐기 미생물 탄소순환**(극한생물 매트, 무성하지 않음, 생물발광 거의 없음). tectonics=방사성
+      구동(외곽이라 조석 미미), 일부 화산/열수구. terrain=한랭 암석·빙·해안. ice_caps=풍부(극관+고위도). albedo ~0.35.
+      surface_temp ~270–275K(부분 동결).
+    gate: {criterion: [canon-consistency, physics], verdict: pass-in-window, note: "물바다=한계-습윤(부분빙). 생명=혐기 미생물(판도라 무성과 차별). 열수구=탄소순환 생명 거점 후보(바이옴)."}
+
+  - body: Cassandra
+    axis: appearance               # group 6 facet-walk 2026-06-22
+    status: gated
+    driver: canon + art + physics
+    value: >
+      **시생대 지구룩** — 환원성 N₂/CH₄ 대기의 **옅은 주황/황갈 유기 haze**(CH₄ 광화학, Titan 아닌 Archean). 그 아래
+      한랭 암석/빙 + 물바다. base=주황-갈빛 하늘, 청회색 바다, 흰 빙관. 무성한 초록 없음(미생물급). biolum 거의 없음.
+      specular=바다 glint(부분). aurora=약함(약자기장). clouds=물구름 약간 + 주황 haze 우세. rings=∅.
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "주황 haze=Archean CH₄ 광화학(O₂ 없어 보존). 판도라 초록·청록 생물발광과 뚜렷한 시각 차별 = 주황 hazy 물세계."}
+
+  - body: Cassandra
+    axis: magnetism.magnetic_field # group 7 facet-walk 2026-06-22
+    status: gated
+    driver: physics
+    value: "약하거나 없음 — 철-부유 핵(밀도 5470)이라 약 dynamo 가능성은 있으나 소형·냉각 진행이라 불확실. 기본 무시/약함."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "자기 차폐 거의 없음. 단 8.4 R_p 외곽이라 방사선 자체가 낮아(environment) 무방비여도 문제 적음."}
+
+  - body: Cassandra
+    axis: environment.radiation    # group 8 facet-walk 2026-06-22
+    status: gated
+    driver: physics
+    value: "낮음/중간 — 8.4 R_p 외곽, 방사선대 밖. Dante·Hades보다 훨씬 온건(거주 한계는 방사선 아닌 한랭·무산소)."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "외곽이라 belt 영향 적음. stellar_wind/activity/heliosphere = 항성-레벨 ∅."}
+
+  - body: Cassandra
+    axis: gameplay                 # group 11 facet-walk 2026-06-22
+    status: gated
+    driver: gameplay
+    value: >
+      표면 있음 → biome map(6): 물바다(Seas) / 해안(Coastlines) / 한랭 대륙·고지(Cold Highlands) / 빙관(Polar Ice) /
+      화산·열수구(Volcanic & Hydrothermal, 미생물 거점) / 주황 haze 저지대(Hazy Lowlands). SOI=자동. difficulty:
+      임무=한랭 무산소 세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체.
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적."}
+
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
   # Roche 내측·0.5 R_Hill 외측·카논 순서 제약으로 설계 후 IAS15로 안정 검증.
