@@ -261,6 +261,10 @@ decisions:
         5.3 Gyr → B_eq 172 µT. 목성 동일식 sanity check 통과. Phase 3 자체도 미근거 ~500µT 추측에서
         170µT(방법값)로 교정 완료 → 일치. canonical = docs/reference/planetary-dynamo-scaling.md.
       caveat: "0.378 M_Jup은 자이언트 영역 하한 — He 성층화로 실제 더 낮을 수도(Saturn ~21µT). conf low–med."
+      owner_note: >
+        group 7 facet-walk (2026-06-22): 오너가 170µT 유지 선택(A) — R&C 스케일링 값 그대로.
+        He 성층화 토성급(~20–50µT) 약장 대안(B)은 검토 후 기각. 토성의 ~8배·목성의 ~0.4배 = 토성-목성
+        사이 목성 쪽. 자기권 넓고 오로라/방사선대 받침.
 
   - body: Alpha Centauri A b
     axis: magnetism.magnetosphere
@@ -287,7 +291,7 @@ decisions:
       verdict: pass-in-window          # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
       value: "Dante 극심(>4,500 rem/day) · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변"
       evidence: >
-        선량은 場+공급원으로 결정 — 170µT(목성 ~1/25) 약한 장이지만 Dante(820× Io 화산)가 막대한 SO₂/황
+        선량은 場+공급원으로 결정 — 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(820× Io 화산)가 막대한 SO₂/황
         플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심, Hades 피크(~2–3 R_p) 근처. 캐넌 ">4,500
         rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행 참조).
       pandora_note: >
@@ -339,6 +343,12 @@ decisions:
         (안쪽 800k~1.41M, 바깥 1.59M~2.5M km), 그 사이가 간극. 둘 다 Chaos 궤도면 공유. 확산
         E고리는 정상상태에서 축대칭이라(근점 세차 무작위화) 원형 annulus가 충실하고, 작아진
         Chaos e(0.02)는 간극 여유로 흡수됨.
+      composition_color: >
+        group 9 facet-walk (2026-06-22): 오너 선택(A) = 푸른 흰빛 얼음-먼지 고리. 고운 물-얼음
+        알갱이가 파장에 따라 산란(작은 입자 → 청색 우세, 토성 E-ring/엔셀라두스 선례). → Chaos를
+        **얼음체**로 확정(group 10 satellites가 상속; Phoebe형 어두운 탄소질 대안 기각). 색 ≈ 옅은
+        ice-blue #cdd9e4(거의 안 보이는 wisp라 opacity τ≈9e-5로 시각 임팩트 작음). 어두운/적갈
+        탄소질(C) 대안은 미채택.
 
   - body: Alpha Centauri A b
     axis: gameplay                   # group 11 (facet-walk 2026-06-22, in-game 검증 완료)
