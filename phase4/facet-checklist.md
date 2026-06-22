@@ -131,9 +131,12 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | satellites | submoons/co-orbitals ∅; **dust_source = Chaos plumes feed E-ring** | ✅ |
 | gameplay | biomes (5; plume vents = hotspot; corona dropped) / SOI / difficulty (ultra-low-g) | ✅ |
 
-## Stars A / B (context)
-Activity / wind / heliosphere ▫ passthrough; magnetic_field ✅ (proxy); appearance
-(color/granulation/spots/corona) ⬜ — deferred unless we do stellar appearance.
+## Stars A / B (context) — ✅ appearance walked (2026-06-23, observation-based)
+Activity / wind / heliosphere ▫ passthrough; magnetic_field ✅ (proxy). **appearance ✅** —
+all observation-derived (Teff colour, granulation, limb darkening, corona, flares passthrough);
+**starspot amount decided for texture**: A (G2V, quiet) = sparse ~0.1–0.3% coverage; B (K1V,
+more active, X-ray ×10 swing, 8.84 yr cycle) = moderate ~1–3% (more spot groups). A colour
+yellow-white ~#fff4ea, B yellow-orange ~#ffdcb0.
 
 ---
 ## Delicate Kopernicus emit values (curves / maps / pitfalls)

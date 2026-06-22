@@ -411,6 +411,15 @@ decisions:
     note: >
       A+B 공유 단일 astrosphere standoff ~176 AU (Wood2001 Lyα; =120·√2·26/25). G-cloud 유입 ~25 km/s.
       apex ~187°/+22°는 plugin-only·low-conf (stock cfg 렌더 불가).
+  - body: Alpha Centauri A
+    axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
+    status: gated
+    driver: observation
+    value: >
+      color=G2V, Teff ~5790K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening=
+      태양형(표준). **spots_faculae=희소** — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점
+      소수 + 흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님).
+    gate: {criterion: [observation], verdict: pass-in-window, note: "전부 관측 측정서 도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough."}
 
   - body: Alpha Centauri B
     axis: environment.activity
@@ -439,6 +448,15 @@ decisions:
       verdict: documented-divergence
       value: "Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중)"
       evidence: "Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함."
+  - body: Alpha Centauri B
+    axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
+    status: gated
+    driver: observation
+    value: >
+      color=K1V, Teff ~5260K → 황등(yellow-orange, sRGB ~#ffdcb0). granulation=대류 granule(약간 큼). limb_darkening=
+      표준(적색쪽 강함). **spots_faculae=보통** — 피복률 ~1–3%(A의 2배 활동도·X선 factor~10·clean 8.84yr cycle),
+      중위도 흑점군 여럿(umbra+penumbra) + faculae 뚜렷. corona=A보다 밝음. flares=가끔(A보다 활동적, 단 플레어성 아님).
+    gate: {criterion: [observation], verdict: pass-in-window, note: "관측 측정서 도출(Teff·X선 factor~10·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough."}
 
   # ── 위성 개별 Phase 4 (안쪽부터) ──────────────────────────────
   - body: Dante                    # A b I
