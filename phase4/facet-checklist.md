@@ -92,8 +92,8 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | bulk | tidal_heating / internal_heat (drives volcanism + dynamo) | ✅ |
 | atmosphere | composition (N₂/O₂/CO₂>18%/Xe/H₂S) | ✅ |
 | atmosphere | breathability (O₂ present, lore-toxic) / pressure (1.1 atm) / scale_height / greenhouse (+70K→290K) | ✅ |
-| surface | surface_type / hydrosphere (oceans) / biosphere (lush, biolum) | ⬜ |
-| surface | tectonics (volcanism, fast drift) / terrain (floating mtns) / ice_caps / albedo / surface_temp | ⬜ |
+| surface | surface_type (land:ocean ~50:50) / hydrosphere / biosphere (lush, biolum) | ✅ |
+| surface | tectonics (volcanism, fast drift) / terrain (mountainous, floating-mtn arches) / ice_caps (peaks+poles) / albedo (0.30) / surface_temp (~290K) | ✅ |
 | appearance | base colour / clouds / biolum (cyan) / aurora / specular (oceans) / city-lights(Na'vi?) | ⬜ |
 | magnetism | magnetic_field / magnetosphere | ✅ |
 | magnetism | radiation_belts (between two belts) | ✅ (env note) |

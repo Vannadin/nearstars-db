@@ -669,6 +669,24 @@ decisions:
         Kerbalism 플래그/레포트 lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성(eccentricity curve는
         부모 폴리페무스 e를 읽어 great-season 반영 — delicate emit 값, facet-checklist 참조).
 
+  - body: Pandora
+    axis: surface                  # type/hydrosphere/biosphere/tectonics/terrain/ice_caps/albedo/temp (group 5, facet-walk 2026-06-22)
+    status: gated
+    driver: canon + art + physics
+    value: >
+      surface_type=지구형, **육지:대양 ≈ 50:50**(지구 30:70보다 육지 많음). 대체로 **산악 — 평지 거의 없고**
+      고지대 산맥·화산대 우세. hydrosphere=액체 물 대양/바다(~50%, 290K 안정). biosphere=무성한 우림+고생물
+      다양성, 청록 생물발광(appearance 행서 렌더). tectonics=활화산대 + 빠른 대륙이동(조석+방사성, dynamo와 동근).
+      terrain=산악+화산대+고지대 산맥, **부유산(Hallelujah)=PQS 극적 아치/오버행 오마주**(실제 부양 아님, 언옵타늄은
+      레포트 lore). ice_caps=고봉 정상 + 극관에만(평균 290K라 제한적). albedo ~0.30(육지多·구름·일부 빙설로 지구급).
+      surface_temp ~290K(group 4 온실).
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: pass-in-window
+      note: >
+        오너 art-direction(2026-06-22): 5-1 부유산=PQS 아치 오마주 승인(KSP 지형 부양 불가). 육지:대양 ≈ 50:50
+        (지구보다 육지↑), 산악 우세·평지 희소. 빙관=고봉+극관만. 생물발광=은은(식물 약간+해안 약간) → appearance 행.
+
   - body: Pandora                  # A b III
     axis: magnetism.magnetic_field
     status: gated
