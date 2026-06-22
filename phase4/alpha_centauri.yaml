@@ -671,7 +671,7 @@ decisions:
         (→0.99 ρ⊕)과도 모순이라 비채택. obliquity도 canon 29°→~10° 발산(궤도경사 10° 유지, 안정성 우선; 단
         조석고정이라 "자전축 29°"는 본래 궤도면 황도경사를 뜻함 — 자유 obliquity 아님). 부유산(Hallelujah)은
         art/lore(언옵타늄 초전도)라 물리 bulk 속성 아님.
-      note: "⚠️ 안정성 시뮬(final_2026_06_21)은 mass 4.30e24(=A)로 검증 — B의 3.85e24는 10% 가벼워(최대 교란체) 안정성 유지/개선 예상이나 재시뮬 권고(저위험). moons 행 동일 플래그."
+      note: "✅ mass B(3.85e24) 재시뮬 STABLE 검증 완료 (results/_pandora_massB, 1000yr TRACE+J2(0.023), |ΔE/E| 7.6e-9, 5위성 bound·calm·이젝션0, Pandora e≤0.0075 해양안전). 예상대로 가벼운 교란체라 안정 유지."
 
   - body: Pandora
     axis: atmosphere               # composition/pressure/temperature/greenhouse/breathability (group 4, facet-walk 2026-06-22)
@@ -1060,7 +1060,7 @@ decisions:
     moons:                         # a/e/inc는 게이트 통과한 설계값(final_2026_06_21: 내측 ~10°·노드 공통정렬, 외측 역행 178/177); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
       - { name: Dante,     order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
       - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
-      - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ⚠️ 안정성 시뮬(final_2026_06_21)은 4.30e24(=A값)로 검증됨 — 3.85e24는 10% 가벼워(최대 교란체) 안정성 유지/개선 예상이나 재시뮬 권고(저위험). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출. 폴리페무스 하늘서 ~32°. 노드 공통 정렬." }
+      - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출. 폴리페무스 하늘서 ~32°. 노드 공통 정렬." }
       - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
       - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
     designations:                  # 공식 표기 = 행성에 로마자 숫자(거리순). Avatar 이름은 문화명(인게임 설명에만).

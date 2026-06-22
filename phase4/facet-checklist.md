@@ -87,7 +87,7 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | identity | discoverability (fictional → RB `F F F F`) | ✅ |
 | orbit | a / e / inc (32 h lock, 252,393 km) | ✅ (via satellites) |
 | orbit | Ω / ω / M | ▫ |
-| bulk | mass (B: 0.645 M⊕) / radius (5724 km) / gravity (0.8 g) | ✅ |
+| bulk | mass (B: 0.645 M⊕, re-sim STABLE) / radius (5724 km) / gravity (0.8 g) | ✅ |
 | bulk | rotation (32 h lock) / obliquity (~10° eff, not 29°) / spin_axis | ✅ |
 | bulk | tidal_heating / internal_heat (drives volcanism + dynamo) | ✅ |
 | atmosphere | composition (N₂/O₂/CO₂>18%/Xe/H₂S) | ✅ |
