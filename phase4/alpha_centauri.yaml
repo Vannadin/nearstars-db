@@ -351,14 +351,17 @@ decisions:
         탄소질(C) 대안은 미채택.
 
   - body: Alpha Centauri A b
-    axis: gameplay                   # group 11 (facet-walk 2026-06-22, in-game 검증 완료)
+    axis: gameplay                   # group 11 (facet-walk 2026-06-22; biome map 결정 정정)
     status: gated
     driver: gameplay
     value: >
-      가스자이언트 — 고체 표면 없음 → 대기-비행/우주 바이옴만(landed 상황 미발생). biome map 없음(stock Sun.cfg
-      패턴, Biomes 노드 없음) 단 ScienceValues 전체 블록 정의(landed/splashed는 토큰값, inert). SOI=질량서 자동
-      (조정 불요). timewarp=대기 위 표준. difficulty=플래그십(접근=항성간 여정 자체가 난도).
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "in-game 검증: 가스자이언트 표면 바이옴 없음·biome map 불요·ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies(identity.discoverability)."}
+      가스자이언트 — 고체 표면 없음 → 착륙 상황 미발생, 과학은 대기-비행("X 상공 비행")/우주뿐. 단
+      **biome map 있음**(Jool/ RSS Sol 가스자이언트 선례 — 표면 없어도 위경도 biome map으로 비행 바이옴
+      정의). 폴리페무스 바이옴 = 위도 띠(적도대/북·남 온대 belt/북·남극) + **시그니처 폭풍(깊은 파란 눈)
+      독자 바이옴**(group 6 랜드마크 = 과학 명소). ScienceValues 전체 블록 정의(landed/splashed는
+      도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요). timewarp=대기 위 표준. difficulty=
+      플래그십(접근=항성간 여정 자체가 난도).
+    gate: {criterion: [gameplay], verdict: pass-in-window, note: "정정(2026-06-22): 가스자이언트도 biome map 보유(Jool/Sol 선례) — 이전 'Sun.cfg=biome 없음'은 태양 기준 오판. 비행 바이옴=위도 띠 + 대storm. ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies(identity.discoverability)."}
 
   # ── group 5 surface = N/A (가스자이언트, 고체 표면 없음 — 구름덱은 atmosphere/appearance) ──
   # ── group 6 appearance = banding/haze/clouds/aurora/rings gated (facet-walk 2026-06-22); emission_glow/specular/artificial/surface = N/A (자발광·해양·인공광·고체면 없음) ──

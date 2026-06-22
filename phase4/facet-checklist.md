@@ -33,7 +33,7 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | rings | structure / composition / plane | ✅ |
 | satellites | moons list | ✅ |
 | satellites | co_orbitals (Poly-L4/L5 dropped) / dust_sources (Chaos→ring ✅) | ✅ none |
-| gameplay | SOI auto / no biome map (gas giant) / full ScienceValues / difficulty | ✅ |
+| gameplay | SOI auto / biome map (flight biomes: lat bands + great storm) / full ScienceValues / difficulty | ✅ |
 
 ## Dante — A b I (volcanic moonlet)
 | group | axis | status |
@@ -139,9 +139,12 @@ choices as INPUTS (obliquity→axial curve, e→eccentricity curve, tidal-lock�
   LongitudeCurve at the locked face), Hades (mild).
 - **Biomes + science** (`planet-body.md`) — `biomeMap` (⚠️ R-channel only, `RGBA(n,255,255,255)`) +
   `Biomes` + `ScienceValues`. → gameplay group + science-report text + Pandora flux-vortex biome.
-  [VERIFIED] **Gas giant = NO biome map** (stock Sun.cfg pattern: no Biomes node) but still define the
-  FULL `ScienceValues` block with token landed/splashed values (inert but expected). Surfaced bodies
-  (Pandora) get the biome map incl. the flux-vortex region.
+  ⚠️ **CORRECTED 2026-06-22**: an earlier note claimed "gas giant = NO biome map" — that was the
+  **Sun.cfg** (star) pattern misapplied. A **gas giant DOES carry a biome map** (Jool / RSS Sol
+  Jupiter precedent): with no surface you can't land, but the biome map still defines **atmospheric
+  flight biomes** ("flying over X"). Polyphemus → lat-band biomes + the great-storm eye as its own
+  biome. Still define the FULL `ScienceValues` block (landed/splashed are token/inert, unreachable).
+  Pandora (surfaced) gets a full biome map incl. the flux-vortex region.
 - **Star Light** (`star-body.md`) — `IntensityCurve` etc. (distance→brightness) for A/B.
 - **Ocean** (`ocean.md`) — OceanFX tuning curves → Pandora.
 - **PQS terrain** (`pqs-terrain.md`) — heightmaps/noise → floating mountains, Dante chasma, Pandora terrain (art/terrain pass).
