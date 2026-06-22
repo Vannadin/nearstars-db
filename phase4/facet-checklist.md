@@ -90,8 +90,8 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | bulk | mass (B: 0.645 M⊕) / radius (5724 km) / gravity (0.8 g) | ✅ |
 | bulk | rotation (32 h lock) / obliquity (~10° eff, not 29°) / spin_axis | ✅ |
 | bulk | tidal_heating / internal_heat (drives volcanism + dynamo) | ✅ |
-| atmosphere | composition (N₂/O₂/CO₂>18%/Xe/H₂S) | ⬜ |
-| atmosphere | breathability (O₂ present, toxic) / pressure (1.1 atm) / scale_height / greenhouse | ⬜ |
+| atmosphere | composition (N₂/O₂/CO₂>18%/Xe/H₂S) | ✅ |
+| atmosphere | breathability (O₂ present, lore-toxic) / pressure (1.1 atm) / scale_height / greenhouse (+70K→290K) | ✅ |
 | surface | surface_type / hydrosphere (oceans) / biosphere (lush, biolum) | ⬜ |
 | surface | tectonics (volcanism, fast drift) / terrain (floating mtns) / ice_caps / albedo / surface_temp | ⬜ |
 | appearance | base colour / clouds / biolum (cyan) / aurora / specular (oceans) / city-lights(Na'vi?) | ⬜ |

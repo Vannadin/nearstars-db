@@ -651,6 +651,24 @@ decisions:
         art/lore(언옵타늄 초전도)라 물리 bulk 속성 아님.
       note: "⚠️ 안정성 시뮬(final_2026_06_21)은 mass 4.30e24(=A)로 검증 — B의 3.85e24는 10% 가벼워(최대 교란체) 안정성 유지/개선 예상이나 재시뮬 권고(저위험). moons 행 동일 플래그."
 
+  - body: Pandora
+    axis: atmosphere               # composition/pressure/temperature/greenhouse/breathability (group 4, facet-walk 2026-06-22)
+    status: gated
+    driver: canon + physics
+    value: >
+      composition=N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon). pressure ~1.1 atm 지표
+      (canon ~20% 빽빽). temperature: Teq ~225K(폴리페무스계 입사) → 고농도 CO₂ 온실 +70K → 지표 ~290K,
+      great-season ±~15–25K. greenhouse=강함(CO₂>18%+CH₄+H₂S 구동) = 거주가능 온도 lift(조석·항성 아님).
+      scale_height=도출(무거운 CO₂+0.8g). escape=안정(지구형 0.8g). breathability=O₂ 존재 but lore-독성(인간 엑소팩).
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: pass-in-window
+      note: >
+        canon 조성·압력 충실. 온실 +70K는 고CO₂ 물리 정당(금성식 메커니즘의 온건판) — 조석/항성 아닌 온실이 lift.
+        breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true(제트·Kerbal 호흡 무관), 인간 독성은
+        Kerbalism 플래그/레포트 lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성(eccentricity curve는
+        부모 폴리페무스 e를 읽어 great-season 반영 — delicate emit 값, facet-checklist 참조).
+
   - body: Pandora                  # A b III
     axis: magnetism.magnetic_field
     status: gated
