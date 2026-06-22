@@ -722,8 +722,9 @@ decisions:
       base_colour=지구식 초록 식생 + 파란 대양 + 흰 구름 마블(육지 ~50%라 초록 비중 큼). clouds=흰 물구름, 활발한
       기상. biolum(emission_glow)=은은한 청록 야간 글로우(식물발광 약간 + 해안 발광 약간). **aurora=격렬·다색**
       (O₂ 초록 + N₂ 청보라 + 적색) — 강자기장 + Polyphemus 자기권 내 + Dante Io식 황 토러스 = 목성형 강오로라
-      메커니즘. specular=대양 sun-glint(OceanFX). artificial/city-lights=∅(Na'vi 전산업, 야간 빛=생물발광). haze=
-      지구식 파란 Rayleigh 림. rings=∅.
+      메커니즘. **+ 국소 오로라**: 플럭스 볼텍스(고자기 이상=부유산 일대) 구역엔 극관 오로라와 **별개로** 그 구역
+      중심의 국소 오로라 오벌이 추가 발생(강한 국소 자기 이상이 입자 강하를 비극지로 모음). specular=대양
+      sun-glint(OceanFX). artificial/city-lights=∅(Na'vi 전산업, 야간 빛=생물발광). haze=지구식 파란 Rayleigh 림. rings=∅.
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
@@ -733,6 +734,29 @@ decisions:
         황 플라스마 토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과
         오로라(상공 다색)가 야간 공존.
       emit_note: "오로라 sRGB는 emit 시 element/molecular_plasma_colors.yaml서 추출(O₂/N₂/CO₂). 생물발광=EVE/emissive 야간 텍스처."
+
+  - body: Pandora
+    axis: environment.radiation    # group 8 facet-walk 2026-06-22
+    status: gated
+    driver: physics + canon
+    value: "중간/거주가능 — 캐넌대로 Polyphemus 두 belt 사이 gap에 위치 + 자체 강자기장 차폐. Dante·Hades 극심과 대비, Kerbalism 선량은 살 만한 수준."
+    gate: {criterion: [canon-consistency, derived-grounding], verdict: pass-in-window, note: "between-belts gap + 강 dipole 차폐 = 거주가능의 물리 근거(magnetism 행). stellar_wind/activity/heliosphere/uv_xray/habitable_zone = 항성-레벨(A·B), Pandora 행 ∅."}
+
+  - body: Pandora
+    axis: gameplay                 # group 11 facet-walk 2026-06-22
+    status: gated
+    driver: gameplay
+    value: >
+      표면 있음 → 정식 biome map(7): 대양(Oceans) / 해안(Coastlines, 생물발광) / 우림 저지대(Rainforest Lowlands) /
+      고지대 산맥(Highland Mountains) / 화산대(Volcanic Belts) / 빙봉·극관(Ice Peaks & Polar Caps) / **부유산·플럭스
+      볼텍스(Floating Mtns / Flux-Vortex)** — 고자기 이상 특수 과학(자기 이상 + 부유산 구조물 + 국소 오로라).
+      SOI=질량서 자동. difficulty: 임무=거주가능 세계 착륙(최대 보상)·발견=fictional→RB F F F F. ScienceValues 전체.
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      note: >
+        NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스 볼텍스 구역엔 특유 구조물(부유산 + 자기 이상
+        지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만(report_flavor).
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →

@@ -80,7 +80,7 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | rings / satellites | (none) | ∅ |
 | gameplay | landing / biomes | ✅ |
 
-## Pandora — A b III (Earth-like Na'vi homeworld) — **mostly TODO**
+## Pandora — A b III (Earth-like Na'vi homeworld) — ✅ full walk (2026-06-22)
 | group | axis | status |
 |---|---|---|
 | identity | body_type / designation (A b III) / cultural | ✅ |
@@ -97,9 +97,9 @@ Status: ✅ gated · ▫ passthrough (confirm) · ∅ N/A for this body type · 
 | appearance | base colour (Earth-green) / clouds / biolum (subtle cyan) / aurora (intense, multi-colour) / specular (oceans) / city-lights (∅ Na'vi pre-industrial) | ✅ |
 | magnetism | magnetic_field / magnetosphere | ✅ |
 | magnetism | radiation_belts (between two belts) | ✅ (env note) |
-| environment | radiation (between belts, shielded) | ⬜ (formalize Pandora row) |
+| environment | radiation (between belts, shielded → habitable) | ✅ |
 | rings / satellites | (none) | ∅ |
-| gameplay | biomes (incl. flux-vortex region) / SOI / difficulty | ⬜ (seed exists) |
+| gameplay | biomes (7, incl. flux-vortex + structures + local aurora) / SOI / difficulty | ✅ |
 
 ## Stars A / B (context)
 Activity / wind / heliosphere ▫ passthrough; magnetic_field ✅ (proxy); appearance
