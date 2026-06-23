@@ -274,3 +274,135 @@ decisions:
       owner_review: >
         2026-06-23 오너 검토 완료 — biome을 항성경도 7구획으로 확정(오로라대 제외, 직하점=시그니처 명소 유지, splashdown 호수
         유지). 직전 커밋(2bb8540)은 오너 검토 없이 작성된 것이라 본 검토로 정정·승인.
+
+  # ════════ 행성 d (초단주기 sub-Earth, 뜨거운 무대기 수성 아날로그) — facet-walk 2026-06-23 ════════
+  - body: Proxima Centauri d
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=초단주기 sub-Earth — **뜨거운 무대기 암석(수성 아날로그)**, 무생물. designation=Proxima Centauri d
+      (고유명 없음). discoverability=candidate(Faria2022 RV, 미확정) → RB IGNORELEVELS T F F F.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형=b(온대)·c(냉)와 극단 대비, 시스템 다양성."
+    discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "arXiv:2202.05188 (Faria 2022)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Proxima Centauri d
+    axis: orbit
+    status: gated
+    driver: window-selection + observation
+    value: >
+      a=0.02885 AU · P=5.122d · **e~0.05 (synthetic-noise seed)** · inc 미측정(비통과) · **조석고정 1:1**(a⁶ 게이트 초고속).
+      Ω/ω/M = 자유 emit.
+    phase3_default: "e≈0 (Faria2022 저진폭 RV, 미구속 가정)"
+    gate:
+      criterion: [classification, stability]
+      verdict: pass-in-window
+      rationale: >
+        관측 e 미구속 → [[project_nearstars_synthetic_eccentricity]] 정책으로 seeded e~0.05(가드레일 ≲0.05 상한). 0.029 AU는
+        조석 원형화 즉각이라 물리 기본은 e≈0이나, 미측정이므로 realism/다양성용 small seed 채택. ω_eq/n≈1.015 → 1:1 유지.
+        수성 e=0.2는 기각(0.029 AU 강조석+공명 부재로 비현실; 오너 결정 2026-06-23). **emit시 다행성계 stability-sim 검증 필요.**
+      paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).
+
+  - body: Proxima Centauri d
+    axis: bulk
+    status: gated
+    driver: window-selection + observation
+    value: "mass ~0.30 M⊕(등방 prior 중앙 진질량; Msini 0.26×1.1547) · radius ~0.72 R⊕(암석 그리드 0.30^0.27) · g ~0.58 · ρ ~지구형 암석 · 조석고정 · obliquity~0 · age ~4.85 Gyr"
+    phase3_default: "Msini 0.26 M⊕ (RV 최소질량, Faria2022)"
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      rationale: "Msini→진질량 ×1.1547(등방중앙, Barnard/Proxima b 선례). sub-Earth라 radius valley 한참 아래 → 확실히 암석. R/g는 질량-반경 그리드."
+      paper: docs/reference/mass-radius-relation-methodology.md (암석 R∝M^0.27, valley 분류).
+
+  - body: Proxima Centauri d
+    axis: atmosphere
+    status: gated
+    driver: classification
+    value: >
+      **무대기(bare rock)**. 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic
+      shoreline **아래** → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.)
+    gate:
+      criterion: [retention]
+      verdict: pass-in-window
+      rationale: "대기 문서 Gate1(cosmic shoreline) 아래 — b보다 근접·저중력이라 stripping 압도. 무대기가 grounded 기본(오너 채택)."
+      paper: docs/reference/exoplanet-atmosphere-methodology.md Gate1(Zahnle&Catling2017 shoreline).
+
+  - body: Proxima Centauri d
+    axis: surface
+    status: gated
+    driver: classification + visual
+    value: >
+      뜨거운 **bare rock**. **Teq~317K**(1.87× 지구 일사) · 무대기 1:1 → **직하~450K**(=Teq×√2, 무재분배) · **극냉 야간**
+      (무대기 거대 day-night 대비). 표면=어두운 현무암 + **무대기 우주풍화**(npFe⁰ 암화·reddening, Hapke2001) → **수성형
+      dark grey**. 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 고유색 #34302c(어두운 회갈, 우주풍화).
+    gate:
+      criterion: [classification, visual-checklist]
+      verdict: pass-in-window
+      rationale: "무대기→공간풍화 지배(표면색 문서 §4), 수성 아날로그. 무산소·무생물이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first(수성형 어두움)."
+      paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000). Teq=온도 문서.
+
+  - body: Proxima Centauri d
+    axis: appearance
+    status: gated
+    driver: visual + observation
+    value: >
+      Proxima M5.5 적색광 입은 **어두운 따뜻한 회갈색 디스크**(공간풍화 수성형). 표시 고유색 #34302c → Proxima-lit ~#36281a.
+      크레이터·풍화 줄무늬 가능. **오로라 없음**(무대기·약장). b(황토 호수세계)·c(냉 mini-Neptune)와 시각 3극.
+    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "표시색=고유색×Proxima SED(§6 엔진, emit 정밀화). 무대기라 구름·haze 없음, 순수 표면."}
+
+  - body: Proxima Centauri d
+    axis: magnetism.magnetic_field
+    status: gated
+    driver: derived-grounding
+    value: "약함~거의 없음. 조석고정 느린자전 + 소형체(0.30 M⊕, 작은 코어) → dynamo 미약/비활성 가능. 미측정, conf low."
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "암석 RM22+조석lock penalty(dynamo 문서 regime4). b보다 더 약함(저질량). G8 방사선 가혹의 원인."}
+
+  - body: Proxima Centauri d
+    axis: environment
+    status: gated
+    driver: derived-grounding
+    value: >
+      radiation=**극심** — 최근접(0.029 AU) 플레어 별 + **무대기 표면 직노출** + 약장 → 표면 방사선 시스템 최악. stellar_wind=
+      매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "별 measured 환경 + 무대기 + G7 약장에서 도출. b보다 가혹(더 근접·무대기 차폐 0)."}
+
+  - body: Proxima Centauri d
+    axis: rings
+    status: gated
+    driver: classification
+    value: "고리 없음 (극근접 뜨거운 암석, 근거·픽션 없음)."
+    gate: {criterion: [classification], verdict: pass-in-window}
+
+  - body: Proxima Centauri d
+    axis: satellites
+    status: gated
+    driver: stability + classification
+    value: "위성 없음 — 극근접(0.029 AU) 미세 Hill 반경 + 강항성조석으로 안정 위성 불가(b보다 더 단호한 물리적 부재)."
+    gate: {criterion: [stability], verdict: pass-in-window, note: "[[feedback_gameplay_variety]] '물리적으로 아무것도 없음' 예외."}
+
+  - body: Proxima Centauri d
+    axis: gameplay
+    status: gated
+    driver: gameplay
+    value: >
+      **착륙 가능**(고체 표면)이나 **splashdown 없음**(무액체)·**대기비행 없음**(무대기 → 동력/탄도만). breathability=**불가**
+      (무대기). radiation 해저드=**극심**(G8 — 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). **biome = 하이브리드
+      7구획**(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 **시그니처
+      명소**) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) ·
+      ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 극 크레이터(Polar Craters, 영구음영 — RSS 수성 nod).
+      ScienceValues 전체(landed/flying-low=탄도/in-space; splashed=토큰 inert). SOI 자동. 난도=항성간 플래그십 + 최근접
+      고방사선 착륙. 발견=RB **T F F F**(candidate, G1).
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      owner_review: >
+        2026-06-23 오너 검토·선택 — biome 스킴 C(하이브리드) 채택. RSS 수성(지질+크레이터+극, 3:2라 항성경도 미사용) 확인 후,
+        d는 **1:1 고정**이라 수성 지질 + 영구 day/night 열구조를 결합(직하 핫스팟·야간면 추가). 무대기라 b의 호수/빙관/구름
+        biome은 없음.
+      note: >
+        무대기·무액체가 b(호수세계, splashdown·대기비행)와의 핵심 게임 차이 — d는 수성형 진공 착륙. radiation 극심=G8 derived.
+        cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.
