@@ -207,3 +207,22 @@ decisions:
         있어도 Proxima 활동성엔 보호 어려움) → "보유"를 documented-divergence로 둔 게 정당. G6 오로라 희미함과도 정합.
         environment.radiation(G8)에도 입력 — 약한 자기권 → 표면 방사선 환경 가혹(플레어 직격).
       paper: 암석 dynamo = docs/reference/planetary-dynamo-scaling.md regime 4(RM22 2203.01065 + Garraffo2017 + 조석lock penalty). 노쇠/느린자전 약화 = Driscoll&Olson2011.
+
+  - body: Proxima Centauri b
+    axis: environment                 # G8 — 별 측정 환경 + G7 약한장에서 도출 (radiation/wind/heliosphere)
+    status: gated
+    driver: derived-grounding
+    value: >
+      radiation(표면)=**가혹** — 약한 자기권(G7) + 잦은 슈퍼플레어(별 measured: 1.49회/일, ≥10³³erg ~3/년, X선 log Lx
+      27정온→28.5피크) + 근접궤도 0.0485 AU 직격. 0.7 bar 대기가 일부 column 차폐하나 약한 장이라 플레어가 대기 직타 →
+      G1 무생물·G11 해저드의 물리 근거. stellar_wind=**강함**(근접 → wind ram 큼, Dong2017 escape 구동 = G4 retention
+      divergence 입력). heliosphere=**astrosphere 심부**(행성 0.0485 AU ≪ standoff ~55 AU[Wood2001] → 항상 항성풍 내부,
+      ISM 직접 미관측).
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      rationale: >
+        전부 별 measured 환경(environment.activity/stellar_wind/heliosphere) + G7 약한 자기권에서 도출 — 별도 art 선택 없는
+        derived 축. radiation 등급(Kerbalism 매핑)은 high이되 정확 tier는 G11 gameplay서 확정.
+      coupling: G4 retention divergence(풍-구동 escape)·G1 무생물(방사선 적대)·G11 해저드의 공통 입력. G7 약한 장이 radiation 가혹의 직접 원인.
+      paper: 별 환경 측정 출처는 별 섹션(environment.activity/wind/heliosphere; Vida2019·Wargelin2024·Wood2001 등). 대기 escape = exoplanet-atmosphere-methodology.md Gate2(Dong2017·Ribas2016).
