@@ -551,3 +551,20 @@ decisions:
       시스템서 가장 조용. stellar_wind=약(원거리 ram 작음). heliosphere=astrosphere 심부(1.5 AU ≪ standoff ~55 AU →
       항상 항성풍 내부, ISM 직접 미관측). 차갑고 조용한 외곽 — 무생물(극냉)·낮은 해저드.
     gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "별 measured 환경 거리스케일 + G7 빙거성 자기권에서 도출. b·d와 정반대(저방사선). 오너 G8 확정 2026-06-23."}
+
+  - body: Proxima Centauri c
+    axis: rings
+    status: gated
+    driver: visual + observation
+    value: >
+      **대형 + 구조적 얼음 고리(Saturn식)** — 오너 a, 2026-06-23. Gratton2020(arXiv:2004.06685) SPHERE 점광원(밝기 과잉→
+      대형 고리계 추정)을 hook으로. c가 ~40–60K 극냉이라 고리 입자=물/휘발성 **얼음** → 밝고 반사적(Gratton 밝은 신호와 정합).
+      구조=간극·여러 띠(Saturn 유추). 색=디스크색 문서 Mie 합성(물얼음 n,k Warren&Brandt → **청백**), faithful/vivid 변종.
+    gate:
+      criterion: [observation, visual-checklist]
+      verdict: documented-divergence
+      divergence_note: >
+        Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 대형 구조 고리는 interesting-first 채택, 명시 발산. 잠정 관측
+        근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열 "잠정 관측 기반 고리"). 구조 디테일
+        (간극 위치 등)은 art — emit시 로슈 한계·고리면 정합 점검 권장. 오너 a(Saturn식 대형) 채택, (c) 초대형은 미채택.
+      paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 얼음 Warren&Brandt2008).
