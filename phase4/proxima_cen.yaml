@@ -506,3 +506,22 @@ decisions:
     driver: classification
     value: "∅ (고체 표면 없음 — mini-Neptune, H/He 외피 + 심층 코어 미도달). 착륙 불가. 가시 색은 표면 아닌 대기(G6)서."
     gate: {criterion: [classification], verdict: pass-in-window, note: "표면색·albedo 문서 scope — 가스/얼음 외피체엔 surface 축 N/A. 오너 G5 확정 2026-06-23."}
+
+  - body: Proxima Centauri c
+    axis: appearance
+    status: gated
+    driver: visual + classification
+    value: >
+      **창백한 회백 얼음구름 mini-Neptune**(오너 a, 2026-06-23) — **해왕성처럼 파랗지 않음.** 해왕성 진청색은 ~72K라 기체
+      CH₄가 상층서 빨강 흡수하기 때문인데, c는 Teq~40K(내부열 보태도 ~50–60K, 둘 다 CH₄ 응결점 90K 아래)라 **CH₄가 얼어
+      빠져 빨강 흡수 기체 부재 → 진청 메커니즘 약함** → H/He + 고층 얼음·haze의 **거의 중성 회백 + 약한 Rayleigh 청**.
+      1.5 AU·M5.5라 **극도로 어두움**, Proxima reddening은 빛 자체가 약해 미미. 고유색 ~#c4d0d8(창백 회청), 표시=매우 dim
+      (저광량+약한 온기끼). b(황토)·d(회갈)와 또 다른 극 = **창백 회백**.
+    gate:
+      criterion: [visual-checklist, composition-lock]
+      verdict: pass-in-window
+      rationale: >
+        "차가운 mini-Neptune은 덜 파랑"은 grounded — CH₄ 응결(<90K)로 기체 CH₄ 빨강흡수 사라짐(해왕성 72K 대비). 색=대기 반사색
+        문서 §6 엔진(H/He Rayleigh + 약 흡수, 얼음 haze). G4서 미룬 색 디테일을 여기서 확정. 내부열 effective ~50–60K도 CH₄
+        동결 유지라 결론 불변(internal-heat 문서).
+      paper: 색=docs/reference/atmosphere-reflected-color-methodology.md(Rayleigh+haze). 온도=tidally-locked-temperature + internal-heat-luminosity 문서(Teq 40K, T_eff ~50–60K). 시각 standout=고리(G9, 밝은 얼음).
