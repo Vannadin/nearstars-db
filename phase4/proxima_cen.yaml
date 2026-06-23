@@ -281,12 +281,14 @@ decisions:
     status: gated
     driver: classification + observation
     value: >
-      body_type=초단주기 sub-Earth — **뜨거운 무대기 암석(수성 아날로그)**, 무생물. designation=Proxima Centauri d
-      (고유명 없음). discoverability=candidate(Faria2022 RV, 미확정) → RB IGNORELEVELS T F F F.
+      body_type=초단주기 sub-Earth — **뜨거운 무대기 암석(자기권 가진 수성형)**, 무생물. designation=Proxima Centauri d
+      (고유명 없음). discoverability=candidate(Faria2022 RV, 미확정) → RB IGNORELEVELS T F F F. **distinctive: 지구형
+      외계행성 최초의 자기장 추정치(~16 G)를 가진 행성 + 항성 플레어가 d 궤도에 phase-lock**(Zapatero Osorio 2026) —
+      "별을 자기적으로 때리는 안쪽 행성".
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형=b(온대)·c(냉)와 극단 대비, 시스템 다양성."
+      note: "candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형이되 ~16 G 자기권 보유(G7, Zapatero Osorio2026 SPI)로 무자기장 수성과 차별. b(온대)·c(냉)와 극단 대비, 시스템 다양성. phase-lock SPI=d 시그니처."
     discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "arXiv:2202.05188 (Faria 2022)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Proxima Centauri d
@@ -337,13 +339,19 @@ decisions:
     driver: classification + visual
     value: >
       뜨거운 **bare rock**. **Teq~317K**(1.87× 지구 일사) · 무대기 1:1 → **직하~450K**(=Teq×√2, 무재분배) · **극냉 야간**
-      (무대기 거대 day-night 대비). 표면=어두운 현무암 + **무대기 우주풍화**(npFe⁰ 암화·reddening, Hapke2001) → **수성형
-      dark grey**. 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 고유색 #34302c(어두운 회갈, 우주풍화).
+      (무대기 거대 day-night 대비). 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 표면=어두운 현무암,
+      **단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소** → 무자기장 수성보다 **덜 붉고
+      덜 어두움**(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). **단 phase-lock 플레어
+      입자가 자기극으로 채널 → 극지 강풍화(어두운 극관) 가능** = 자기권 변조된 수성형(중위도 신선·극 풍화). 고유색
+      #3c3833(어두운 회갈, 중위도; 극은 더 어두움) — 직전 #34302c보다 약간 밝게(풍화 감소분).
     gate:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
-      rationale: "무대기→공간풍화 지배(표면색 문서 §4), 수성 아날로그. 무산소·무생물이라 Fe³⁺ 적색 슬로프 무관(애초 무대기). 색조=interesting-first(수성형 어두움)."
-      paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000). Teq=온도 문서.
+      rationale: >
+        cascade(G7 ~16 G): 자기권이 솔라윈드 sputtering 차폐 → 우주풍화 줄어 무자기장 수성보다 신선·고albedo쪽. 미세운석 풍화는
+        잔존(자기권 무관). phase-lock 플레어(Zapatero Osorio2026)는 자기극 채널 → 극 풍화 비대칭. 무산소·무생물이라 Fe³⁺ 적색
+        슬로프 무관(애초 무대기). 색조=interesting-first.
+      paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000 — 자기권 차폐로 감소). 자기장=G7(Zapatero Osorio2026). Teq=온도 문서.
 
   - body: Proxima Centauri d
     axis: appearance
@@ -403,7 +411,9 @@ decisions:
     driver: gameplay
     value: >
       **착륙 가능**(고체 표면)이나 **splashdown 없음**(무액체)·**대기비행 없음**(무대기 → 동력/탄도만). breathability=**불가**
-      (무대기). radiation 해저드=**극심**(G8 — 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). **biome = 하이브리드
+      (무대기). radiation 해저드=**극심**(G8 — 최근접 플레어+무대기 직노출, 시스템 최악 tier; 가혹한 착륙). **~16 G 자기권(G7)
+      → 방사선대(trapped 입자)·자기극 강하 + 항성 플레어가 d 궤도위상에 phase-lock → 주기적 방사선 spike**(궤도 위상별 위험
+      변동, 게임플레이 훅). **과학 타깃: 지구형 외계행성 최초 자기장(SPI) — 자기권·phase-lock 관측 과학 명소**. **biome = 하이브리드
       7구획**(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 **시그니처
       명소**) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) ·
       ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 극 크레이터(Polar Craters, 영구음영 — RSS 수성 nod).
