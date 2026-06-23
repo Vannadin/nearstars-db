@@ -186,16 +186,37 @@ prediction is good to a factor of a few, not better.
 
 The body class decides which mechanism dominates and how confident the estimate is:
 
-1. **Rocky planets — radiogenic + secular cooling dominate.** The internal flux is set by
-   long-lived radioisotope decay (U, Th, ⁴⁰K) plus residual accretional/secular heat, *not*
-   by Kelvin–Helmholtz contraction (rock barely contracts). The scale is the **Earth heat
-   flux ~0.08–0.09 W/m²** (global ~46–47 TW: Sclater, Jaupart & Galson 1980; Davies 2013;
-   roughly half radiogenic, half secular). This corresponds to `T_int ≈ (0.087/σ)^(1/4) ≈
-   35 K` — utterly negligible against any temperate/warm `T_eq`, so for almost all rocky
-   planets `T_eff ≈ T_eq` and internal heat is ignorable. It only ever competes for an
-   extremely cold (far-out, dim-star) rocky body, and even then weakly. **Tidal heat**, by
-   contrast, can swamp radiogenic heat for close-in eccentric bodies — that is the
-   [tidal-heating doc's](tidal-heating-methodology.md) territory, not this one.
+1. **Rocky planets — radiogenic + secular cooling dominate, but the payoff is the interior,
+   not `T_eff`.** The internal flux is set by long-lived radioisotope decay (U, Th, ⁴⁰K) plus
+   residual accretional/secular heat, *not* by Kelvin–Helmholtz contraction (rock barely
+   contracts). The scale is the **Earth heat flux ~0.08–0.09 W/m²** (global ~46–47 TW:
+   Sclater, Jaupart & Galson 1980; Davies 2013; roughly half radiogenic, half secular). This
+   corresponds to `T_int ≈ (0.087/σ)^(1/4) ≈ 35 K` — utterly negligible against any
+   temperate/warm `T_eq`, so for almost all rocky planets `T_eff ≈ T_eq` and the §1 surface-
+   temperature relation simply does not care about a rocky body's internal heat.
+   **That is exactly why the rocky regime is different from the giant/ice-giant ones above:
+   the internal heat's relevance is not the effective temperature at all — it is the
+   *interior thermal budget*.** The same radiogenic + secular luminosity sets the **geotherm**,
+   and the geotherm is what drives the consequences NearStars actually art-directs for a
+   rocky world:
+   - **core convection → a dynamo magnetic field.** Whether the core stays hot and convecting
+     long enough to sustain a dynamo is a thermal-history question (Driscoll & Bercovici 2014
+     trace Earth's *surviving* geodynamo vs Venus's *failed* one to exactly this divergence in
+     melting/radioactivity/conductivity). This is the **rocky regime of
+     [`planetary-dynamo-scaling.md`](planetary-dynamo-scaling.md)** (the RM22 rocky scaling,
+     `2203.01065`) — the giant `B ∝ L^(1/6)` law does **not** apply to rock.
+   - **mantle convection → volcanism → outgassing.** The interior heat budget governs whether
+     the body is volcanically active, which sets the **outgassing supply** that feeds
+     **Gate 3** of [`exoplanet-atmosphere-methodology.md`](exoplanet-atmosphere-methodology.md)
+     (a dead, cold interior cannot resupply a secondary atmosphere).
+
+   So for a rocky body, carry the internal heat as an *interior* quantity (geotherm →
+   volcanism / outgassing / dynamo), not as a bump on `T_eff`. The §1 relation only ever
+   competes for an extremely cold (far-out, dim-star) rocky body, and even then weakly.
+   **Tidal heat**, by contrast, can swamp radiogenic heat for close-in eccentric bodies and
+   then dominates the *same* interior budget — that is the
+   [tidal-heating doc's](tidal-heating-methodology.md) territory (for an Earth-mass body
+   radiogenic ≈ 0.08 W/m²; tidal heating takes over only when it exceeds that).
 2. **Ice giants / mini-Neptunes — modest, but it MATTERS when the body is cold.** A residual
    cooling luminosity of the Neptune scale gives `T_int ~ 40–55 K`. Negligible against a
    warm `T_eq`, but **decisive** when `T_eq` is itself tens of K (far-out or M-dwarf
@@ -279,6 +300,36 @@ cold enough to freeze CH₄ (~91 K sublimation regime) and N₂, so the qualitat
 (an icy, volatile-frozen world) is unchanged — but the internal term is *not* ignorable at
 these temperatures and should be carried. Frame as a **range** (factor-of-a-few `L_int`
 uncertainty, §4 Uranus caveat), not a point.
+
+**Earth (the rocky calibration — the heat goes into the interior, not `T_eff`).** Earth's
+global heat loss is **~46–47 TW** (Davies 2013; Sclater+ 1980), a mean surface flux of
+**~0.087 W/m²**, split **roughly half radiogenic** (U/Th/⁴⁰K decay) and **half secular**
+(residual accretional + core/mantle cooling). Plug the flux into §1:
+`T_int = (0.087/σ)^(1/4) ≈ 35 K` — against Earth's `T_eq ≈ 255 K` this is a
+`(255⁴ + 35⁴)^(1/4) − 255 ≈ 0.001 K` correction, i.e. **completely negligible for the
+surface temperature**. Yet the *same* ~47 TW is exactly what keeps the mantle convecting
+(plate tectonics) and the core convecting (the **geodynamo** that gives Earth its magnetic
+field). Driscoll & Bercovici 2014 show the contrast cleanly: Venus, an Earth twin in mass
+and radius, took a different thermal-history path (no plate-tectonic heat-pipe, sluggish
+core cooling) and has **no dynamo today** — same `T_int`-irrelevance, opposite *interior*
+outcome. **The rocky lesson: report the budget (~0.08–0.09 W/m², ~half/half) and its
+interior consequences (volcanism, outgassing, dynamo), not a `T_eff` bump.** **Derived /
+calibration** (measured budget).
+
+**A NearStars rocky body (Proxima b / Proxima d — radiogenic-dominated, the question is
+volcanism & dynamo).** For a temperate-to-warm rocky planet around an M dwarf, internal heat
+is radiogenic-dominated at the **Earth scale (~0.08 W/m², `T_int ~ 35 K`)** and therefore
+**irrelevant to the surface temperature** — `T_eff ≈ T_eq` (these worlds live entirely in
+the irradiation-dominated regime of §1). What the internal heat *does* decide is whether the
+body is geologically alive: enough interior heat → mantle convection → **volcanic outgassing**
+(Gate 3 supply of a secondary atmosphere) and a possible **core dynamo** (the RM22 rocky
+field regime of the dynamo doc). Carry it as an **interior** quantity, defaulting to the
+Earth budget unless mass/age argue otherwise — a more massive super-Earth has a larger
+radiogenic inventory and stays hot longer, an old low-mass rock cools sooner. **Caveat for
+close-in tidally-locked cases:** for the innermost M-dwarf rocky planets, **tidal dissipation
+can exceed radiogenic heat** and then *it* sets the geotherm (the volcanism/dynamo driver) —
+hand that case to the [tidal-heating doc](tidal-heating-methodology.md). Either way the
+surface temperature stays `≈ T_eq`; the internal heat's job is the interior.
 
 ---
 
@@ -391,7 +442,13 @@ ADS citation count, and one line on the contribution.
   budget (oceanic + continental) — the ~0.08 W/m² / ~tens-of-TW scale. §5.
 - **Davies, J. Huw (2013)** — *G-cubed* 14, 4608. **No arXiv** (`2013GGG....14.4608D`).
   Cites: 241. Global map of solid-Earth surface heat flow — the modern ~46–47 TW
-  (~0.087 W/m² mean) census. §5.
+  (~0.087 W/m² mean) census. §5, §7.
+- **Driscoll, P. & Bercovici, D. (2014)** — *Phys. Earth Planet. Inter.* 236, 36.
+  **No arXiv** (`2014PEPI..236...36D`, doi 10.1016/j.pepi.2014.08.004). Cites: 108. Thermal
+  and magnetic histories of Earth and Venus — ties a rocky body's interior heat budget
+  (melting, radioactivity, core conductivity) to whether a **dynamo survives**; the heat →
+  geodynamo link and the Earth/Venus divergence behind the §5 rocky regime and §7 Earth
+  example. §5, §7.
 
 **Topics with no single canonical paper:** the surface-flux → `T_int ≈ 35 K` rocky-planet
 *scale* in §5 is a Stefan–Boltzmann conversion of the Earth heat-flow budget above, not a
