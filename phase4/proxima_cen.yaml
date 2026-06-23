@@ -391,8 +391,9 @@ decisions:
     driver: derived-grounding
     value: >
       radiation=**극심** — 최근접(0.029 AU) 플레어 별 + **무대기 표면 직노출** + **d에 phase-lock된 플레어**(Zapatero Osorio
-      2026, G7) → 표면 방사선 시스템 최악. ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. stellar_wind=
-      매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.
+      2026, G7) → 표면 방사선 시스템 최악. ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. **단 16 G
+      자기권 + 최근접 플레어 → 강한 포획 방사선대(목성형) → 표면뿐 아니라 d 주변 궤도 공간도 고방사선**(접근선·궤도선이 belt
+      통과). stellar_wind=매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.
     gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "별 measured 환경 + 무대기 + d-phase-locked 플레어(G7 SPI)에서 도출. 정정: 자기장은 약하지 않음(~16 G) — 단 무대기라 surface 보호 한계. b보다 가혹(더 근접·무대기 차폐 0)."}
 
   - body: Proxima Centauri d
