@@ -499,3 +499,10 @@ decisions:
       verdict: pass-in-window
       note: "냉 mini-Neptune(G1) 직결 — H/He 1차 외피, 40K라 휘발성 응결. 금속성 미관측이라 차수미상으로 두고 색 디테일은 G6(오너 결정 2026-06-23). T/P 프로파일은 emit시 cool-Neptune 격자."
       paper: 온도 Teq=tidally-locked-temperature-methodology.md Layer1(비잠김이라 균일 가까움). 보유=대질량+원거리 자명.
+
+  - body: Proxima Centauri c
+    axis: surface
+    status: gated
+    driver: classification
+    value: "∅ (고체 표면 없음 — mini-Neptune, H/He 외피 + 심층 코어 미도달). 착륙 불가. 가시 색은 표면 아닌 대기(G6)서."
+    gate: {criterion: [classification], verdict: pass-in-window, note: "표면색·albedo 문서 scope — 가스/얼음 외피체엔 surface 축 N/A. 오너 G5 확정 2026-06-23."}
