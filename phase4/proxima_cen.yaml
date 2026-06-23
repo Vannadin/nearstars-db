@@ -103,13 +103,14 @@ decisions:
     driver: classification + window-selection
     value: >
       surface_pressure=0.7 bar(오너 결정 2026-06-23). composition=N₂ 지배 + CO₂ ~3%(온실로 직하 빙점 위 유지),
-      μ≈28.5 g/mol. Bond albedo A≈0.3. breathability=불가(무생물·무산소, atmosphereContainsOxygen=false).
+      μ≈28.5 g/mol. **Bond albedo A≈0.33**(G5 표면서 cascade — 밝은 anorthosite 고지 + 직하 구름덱이 데이샤이드 알베도를
+      0.30→0.33으로 올림; 오너 "평균 알베도 조금↑" 2026-06-23). breathability=불가(무생물·무산소, atmosphereContainsOxygen=false).
       scale_height H≈7 km(=RT/μg, T~250K·g 10.5·μ 28.5 — 기압엔 무관). escape=M왜성 플레어 stripping 위험이나
       호수세계 전제로 보유 채택(게이트 참조).
     derived_temps: >
-      Teq≈234K(A 0.3, 기압 무관). 조석고정 1:1 → Layer-3 GCM(Boutle2017 ~1 bar N₂+CO₂ 케이스를 0.7 bar로 약간 하향):
-      직하 ~285–290K(액체 호수)·야간 ~150–165K(빙관)·평균 ~245–250K. 직하 데이샤이드 호수 + 나머지 빙결 =
-      G1 "대륙형 호수 세계"와 정합.
+      **Teq≈228K(A 0.33, 기압 무관 — G5 albedo cascade)**. 조석고정 1:1 → Layer-3 GCM(Boutle2017 ~1 bar N₂+CO₂ 케이스를
+      0.7 bar + A 0.33로 약간 하향): 직하 ~282–288K(여전히 >273K → 액체 호수 유지)·야간 ~150–162K(빙관)·평균 ~243–248K.
+      직하 데이샤이드 호수 + 나머지 빙결 = G1 "대륙형 호수 세계"와 정합. (A를 0.43까지 올려야 직하가 빙점 — 0.33은 충분한 마진.)
     phase3_default: "Phase 3 합성 대기(있으면) — 본 결정이 art-direction 기압/조성 확정값."
     gate:
       criterion: [classification, retention, error-bar]
@@ -126,3 +127,28 @@ decisions:
       paper: >
         기압/μ/scale-height = docs/reference/exoplanet-atmosphere-methodology.md. 온도 3계층 =
         docs/reference/tidally-locked-temperature-methodology.md (Layer-3 앵커 Turbet2016·Boutle2017, 검증 id는 그 문서).
+
+  - body: Proxima Centauri b
+    axis: surface                     # G5 — 대륙형 호수 세계 표면; 색=표면색 문서, A=Bond cascade
+    status: gated
+    driver: classification + visual
+    value: >
+      대륙 = **2색**(오너 1+2 조합): 회녹색 마픽 저지(올리빈/휘석질 현무암 mare, Fe²⁺ 결정장 → 어두운 회녹, A~0.1) +
+      밝은 장석질 고지(anorthosite highlands, A~0.2–0.25). **화성형 적색 아님** — 무생물·무산소(G4)라 철이 환원(Fe²⁺)
+      상태 유지, O→Fe³⁺ 전하이동(적색 슬로프) 미발생. 직하 호수/내해 = 어두운 물(A~0.07, G1 캐나다/지중해형 산재).
+      야간 빙관 = 밝은 물얼음(A~0.5–0.6, 살짝 청색). 직하 구름덱 = 물구름(Yang2013 안정화 피드백, 데이샤이드 알베도↑).
+    bond_albedo_cascade: >
+      Bond albedo는 **일사받는 데이샤이드만** 결정(1:1 고정 → 야간측 일사 0 → 밝은 빙관은 Bond에 미기여, 과대평가 회피).
+      데이샤이드 면적가중 = 어두운 마픽+호수(낮음) + 밝은 anorthosite 고지·직하 구름(높음) → **A≈0.33**. G4 Teq 228K와
+      맞물림 → cascade 닫힘. 오너 "평균 알베도 조금↑"은 밝은 고지 추가로 물리적 정당화(0.30→0.33), 온도는 G4서 동기 하향.
+    gate:
+      criterion: [classification, visual-checklist]
+      verdict: pass-in-window
+      rationale: >
+        색조/패턴은 interesting-first 축(표면색 문서 §1 posture) — 묶이는 hard tie는 면적가중 Bond albedo뿐(→온도 cascade).
+        대륙 어두움·비적색은 환원 산화상태로 grounded(표면색 문서 §2: 산화상태가 색 최대 레버). 2색(mare/highland) +
+        호수·빙관·구름의 다요소 = interesting-first 다양성, eyeball 회피(G1 대륙형 호수 유지).
+      paper: 표면색·Bond albedo = docs/reference/surface-color-albedo-methodology.md (Fe²⁺ 결정장 §2, Bond=q·p §6). 직하 구름 피드백 = 온도 문서 Layer-3(Yang2013).
+      emit_note: >
+        Kopernicus 표면색/biome emit는 프로젝트 말미 일괄. 색조 sRGB는 표면색 문서 + atmosphere-reflected-color 엔진으로
+        조성→색 합성(emit 단계). 야간 빙관/직하 호수/2색 대륙 = biome 구획 후보.
