@@ -186,3 +186,24 @@ decisions:
       paper: >
         자기장 관측 현황 = Garcia-Sage2017(2017ApJ...844L..13G, 장 가정 보호모델)·Garraffo2016·Pérez-Torres2021(2012.02116 전파탐색).
         약한장 근거 = 조석고정→느린자전 dynamo(Driscoll&Olson2011 2011Icar..213...12D, RM22). 오로라색 = composition-color.md.
+
+  - body: Proxima Centauri b
+    axis: magnetism.magnetic_field    # G7 — 암석 dynamo(RM22)+조석고정 penalty → 약한 장. G6서 함의된 결정 명시
+    status: gated
+    driver: derived-grounding
+    value: >
+      **약한 행성 자기장**(차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면), **활성 dynamo 여부 자체가 불확실**. 미측정 — 외계행성 장
+      직접탐지 사례 없음(Pérez-Torres2021 전파 SPI 잠정). 방법 = 암석장 RM22 스케일링 + 조석고정 penalty(dynamo 문서
+      regime 4). 약함 동인 두 가지: (1) 조석고정 P=11.2일 느린 자전이 임계자전 아래 → dynamo 약화, (2) 노쇠 ~4.85 Gyr
+      핵 냉각 → 코어 대류 약화. conf=low.
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      rationale: >
+        G6 "희미한 플레어-오로라" 채택이 **약한 장 존재**를 이미 함의 → G7은 그 정량·명시(별도 art 선택 없는 derived 축).
+        자이언트 energy-flux 법칙(Christensen2009)은 부적용 — 암석체라 RM22 경로. 강한 장 가정은 근거 없음(미측정+느린자전+노쇠).
+      coupling: >
+        G4 retention divergence 강화 — 약한 장 → 자기차폐 미약 → M왜성 stripping 무방비(Garcia-Sage2017·Garraffo2016: 장이
+        있어도 Proxima 활동성엔 보호 어려움) → "보유"를 documented-divergence로 둔 게 정당. G6 오로라 희미함과도 정합.
+        environment.radiation(G8)에도 입력 — 약한 자기권 → 표면 방사선 환경 가혹(플레어 직격).
+      paper: 암석 dynamo = docs/reference/planetary-dynamo-scaling.md regime 4(RM22 2203.01065 + Garraffo2017 + 조석lock penalty). 노쇠/느린자전 약화 = Driscoll&Olson2011.
