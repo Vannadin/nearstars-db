@@ -107,18 +107,19 @@ colors don't capture this:
 
 | Species | Chart says | Reentry plasma reality | Source |
 |---|---|---|---|
-| N (atomic) | pale yellow | N2 plasma in air is **blue-purple** (391 nm N2+ + 1NG red) | air-plasma optical spectra (ResearchGate); Earth reentry visual record |
-| O (atomic) | blue | Atomic O has auroral 558 nm green + 630 nm red; mixed with N gives the blue-purple Earth reentry signature | NASA reentry spectroscopy |
-| C (atomic) | bright magenta | CO2 reentry plasma is **green/blue/violet** from CN violet (388 nm) + C2 Swan (516/473 nm) + CO 4th positive (VUV) | arXiv 2007.04869 (CO2 radiation survey) |
+| N (atomic) | pale yellow | N2 plasma in air is **blue-purple** (391 nm N2+ + 1NG red) | see Bibliography: Park & Griffith 1991; Pearse & Gaydon 1976 |
+| O (atomic) | blue | Atomic O has auroral 558 nm green + 630 nm red; mixed with N gives the blue-purple Earth reentry signature | see Bibliography: Park & Griffith 1991; NIST ASD (Ralchenko 2005) |
+| C (atomic) | bright magenta | CO2 reentry plasma is **green/blue/violet** from CN violet (388 nm) + C2 Swan (516/473 nm) + CO 4th positive (VUV) | see Bibliography: Johnston & Brandis 2014; Reynier 2020 (arXiv:2007.04869) |
 
 Use the table in §3 (next) for bulk-gas colors, not the chart.
 
 ## Bulk-gas reentry plasma — recommended trail palette
 
 For the **dominant atmospheric species** (>50% by volume) — sets the
-main trail / wrap / shockwave colors. Cross-referenced from optical
-spectra of plasmas (ResearchGate, arXiv:2007.04869, atmospheric-entry
-literature). RGB values are 0–255; Firefly intensity (the 4th token)
+main trail / wrap / shockwave colors. Cross-referenced from shock-layer
+radiation literature (see Bibliography: Park & Griffith 1991 for air;
+Johnston & Brandis 2014 and Reynier 2020 / arXiv:2007.04869 for CO2).
+RGB values are 0–255; Firefly intensity (the 4th token)
 goes 1.4 for dim glow up to 3 for hot trails.
 
 | Dominant gas | Plasma signature | RGB hint | Notes |
@@ -233,6 +234,108 @@ belong to different mod systems (aurora → EVE; reentry → Firefly).
 - Trace chemistry (clouds, hazes) is not captured by either chart.
   Phase 3 may flag this in cfg variant notes but it doesn't change the
   Firefly cfg.
+
+## Citations / Annotated bibliography
+
+All scientific references below were verified against NASA ADS. Citation
+counts are as of 2026-06 and will drift. Where a claim has no citable
+peer-reviewed source it is flagged explicitly (the Firefly community
+canon — thunderchild's chart, the MirageDev wiki — is community
+reference, not scientific literature, and is not listed here).
+
+### Atomic line wavelengths (Na D, Hα, He D3, K, Ca, Sr, Ba, Fe, Mg …)
+
+- **NIST Atomic Spectra Database** — Ralchenko, Y. (2005), *Mem. Soc.
+  Astron. Italiana Suppl.* 8, 96; bibcode `2005MSAIS...8...96R`; **62
+  citations**; no arXiv. The standard reference for the atomic emission
+  line wavelengths quoted throughout — Na D 589 nm, Hα 656 nm, He D3
+  587 nm, K 404/770 nm, Ca, Sr, Ba, Fe, Mg lines (§"Where the chart is
+  trustworthy", §4 secondary-species streak table). The live database
+  is at physics.nist.gov/asd; cite the ASD itself as the authority for
+  any individual line.
+- Earlier descriptor: Kelleher, D. E. et al. (1999), *Phys. Scr.* T83,
+  158; bibcode `1999PhST...83..158K` (DOI 10.1238/Physica.Topical.083a00158);
+  14 citations. Use the Ralchenko 2005 descriptor preferentially.
+
+### Molecular band systems (N2+ 1NG 391 nm, CN violet 388 nm, C2 Swan 516 nm, OH, CH …)
+
+- **Pearse, R. W. B. & Gaydon, A. G. (1976)**, *The Identification of
+  Molecular Spectra*, 4th ed., Chapman & Hall; bibcode
+  `1976ims..book.....P`; **403 citations**; no arXiv. The canonical
+  reference for the diatomic band systems named in the doc: N2+ First
+  Negative (391 nm), N2 First/Second Positive, CN violet (388 nm), C2
+  Swan (516/473 nm), CH (431 nm), OH (308 nm). Grounds the band-head
+  wavelengths in §"Where the chart misleads", §3 bulk-gas, and §4.
+
+### Reentry / shock-layer plasma radiation — air (N2/O2, Earth-like)
+
+- **Park, C. & Griffith, W. (1991)**, *Nonequilibrium Hypersonic
+  Aerothermodynamics* (Wiley); review in *Phys. Today* 44(2), 98;
+  bibcode `1991PhT....44b..98P` (DOI 10.1063/1.2809999); **75
+  citations**; no arXiv. The canonical text for nonequilibrium
+  air-plasma radiation behind an entry shock — the two-temperature
+  model and N2+/N2/O atomic+molecular emission that produce the
+  blue-purple-to-orange Earth-reentry signature. Grounds the N (atomic)
+  and O (atomic) rows in §"Where the chart misleads" and the
+  N2 + O2 row in §3.
+
+### Reentry / shock-layer plasma radiation — CO2 (Mars/Venus)
+
+- **Johnston, C. O. & Brandis, A. M. (2014)**, "Modeling of
+  nonequilibrium CO Fourth-Positive and CN Violet emission in CO2-N2
+  gases", *JQSRT* 149, 303; bibcode `2014JQSRT.149..303J` (DOI
+  10.1016/j.jqsrt.2014.08.025); **36 citations**; no arXiv. The
+  canonical reference for the CN violet (388 nm) + CO 4th-Positive
+  emission that dominates CO2/CO2-N2 entry plasma. Grounds the C
+  (atomic) row in §"Where the chart misleads" and the CO2 row in §3 +
+  the CO2-secondary row in §4.
+- Supporting: **Brandis, A. M., Johnston, C. O., Cruden, B. A. et al.
+  (2013)**, "Validation of CO 4th positive radiation for Mars entry",
+  *JQSRT* 121, 91; bibcode `2013JQSRT.121...91B` (DOI
+  10.1016/j.jqsrt.2013.02.009); 16 citations; no arXiv. Shock-tube
+  validation of the same CO2-entry emission.
+- **Reynier, P. (2020)**, "Survey of CO2 radiation experimental data",
+  **arXiv:2007.04869** (verified; DOI 10.48550/arXiv.2007.04869);
+  bibcode `2020arXiv200704869R`; **1 citation**. This is the arXiv id
+  already cited inline — verified to be exactly a CO2-radiation
+  experimental-data survey, supporting the CO2 reentry-plasma claims.
+  Low-citation review/survey (a compilation, not a primary modeling
+  paper); the Johnston & Brandis works above are the higher-authority
+  primary sources.
+- Supporting (CO2 radiative heating, large vehicles): **Surzhikov, S. T.
+  (2011)**, "Radiative-convective heat transfer of a spherically shaped
+  space vehicle in carbon dioxide", *High Temperature* 49, 92; bibcode
+  `2011HTemp..49...92S` (DOI 10.1134/S0018151X10051037); 7 citations;
+  no arXiv.
+
+### Saha-Boltzmann / LTE plasma emission basis (sister plasma-color engine)
+
+- **Griem, H. R. (1964)**, *Plasma Spectroscopy* (McGraw-Hill); bibcode
+  `1964plsp.book.....G`; **1846 citations**; no arXiv. The foundational
+  text for LTE plasma line emission (Saha-Boltzmann level populations,
+  line intensities) underlying the project's `element_plasma_colors.yaml`
+  /`molecular_plasma_colors.yaml` synthesis. See also the LTE-validity
+  criterion: Griem, H. R. (1963), *Phys. Rev.* 131, 1170; bibcode
+  `1963PhRv..131.1170G`; 366 citations. (Later ed.: *Principles of
+  Plasma Spectroscopy*, 1997, `1997pps..conf.....G`, 629 citations.)
+
+### Claims with NO citable peer-reviewed source
+
+- **H2O steam-atmosphere reentry plasma** (§3 H2O row, §"Open questions"):
+  no published spectra for sub-Neptune water-cloud reentry plasma. The
+  RGB and signature are extrapolated from Hα + OH band reasoning, not a
+  source. Already flagged in §"Open questions".
+- **Pure H2 cold sub-Neptune** (§3 last row): extrapolated from
+  brown-dwarf auroral analogy, not a reentry-plasma measurement.
+- **thunderchild plasma color chart intensities** (§"Open questions"):
+  community canon; hue only, no intensity data, no scientific source.
+- **CH4 (§3) and most §4 secondary RGB hints**: the wavelengths/band
+  systems are sourced (Pearse & Gaydon; NIST ASD), but the specific
+  255-scale RGB curations are art-directed picks, not measured radiances.
+- **Firefly shipped colors** (§5 stock-cfg case study, mod-original
+  alignment): the mod author's artistic/stylistic choices (community
+  canon), used as the cross-mod palette by project decision — not a
+  spectroscopic citation.
 
 ## See also
 
