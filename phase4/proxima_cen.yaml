@@ -141,6 +141,10 @@ decisions:
       Bond albedo는 **일사받는 데이샤이드만** 결정(1:1 고정 → 야간측 일사 0 → 밝은 빙관은 Bond에 미기여, 과대평가 회피).
       데이샤이드 면적가중 = 어두운 마픽+호수(낮음) + 밝은 anorthosite 고지·직하 구름(높음) → **A≈0.33**. G4 Teq 228K와
       맞물림 → cascade 닫힘. 오너 "평균 알베도 조금↑"은 밝은 고지 추가로 물리적 정당화(0.30→0.33), 온도는 G4서 동기 하향.
+    cfg_colors_intrinsic: >
+      고유(중립광/태양 기준) 반사색 — cfg 저장값, 렌더러가 항성광 적용(Proxima-lit 표시색은 appearance/G6).
+      마픽 저지 #3c4339(창 #353b32–#444b40) · 장석질 고지 #928c81(창 #88827a–#9d978c) ·
+      직하 호수 #1d2c3a(창 #182430–#223240) · 야간 빙관 #dde6ec(창 #d4dde6–#e8eef2) · 직하 구름덱 #eef1f4.
     gate:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
