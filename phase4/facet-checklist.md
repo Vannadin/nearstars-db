@@ -188,6 +188,24 @@ choices as INPUTS (obliquity→axial curve, e→eccentricity curve, tidal-lock�
   single brightest *active* star (not the A+B sum, separate eclipse logic). Design power around one sun.
 
 ---
+
+## Proxima Centauri b (α Cen C) — continental lake world (separate board `proxima_cen.yaml`)
+Methodology-grounded walk 2026-06-23, all 11 groups gated.
+| group | axis | status |
+|---|---|---|
+| identity | body_type (rocky lake world) / designation / discoverability (confirmed → T F F F) | ✅ |
+| orbit | a / e≈0 / inclination (non-transit) / lock / Ω·ω·M (free emit) | ▫ (measured passthrough) |
+| bulk | mass 1.22 M⊕ (isotropic median) / radius 1.07 R⊕ (M–R tie-break) / g / ρ / obliquity~0 | ✅ |
+| atmosphere | pressure 0.7 bar (owner) / N₂+CO₂ ~3% / μ 28.5 / H~7km / Teq 228K / breathability ∅ | ✅ |
+| surface | 2-tone mafic/anorthosite (ferrous, not red) / lakes / night ice / intrinsic hex / Bond cascade A~0.33 | ✅ |
+| appearance | Proxima-lit reddened palette / warm ochre disk / faint flare-aurora (magenta-violet, comp-lock) | ✅ |
+| magnetism | weak rocky dynamo (RM22 + tidal-lock penalty), unmeasured, conf low | ✅ |
+| environment | radiation harsh / strong wind / deep astrosphere (derived from star + weak field) | ✅ |
+| rings | none | ✅ |
+| satellites | none (grounded — close-in tidal env forbids a stable moon) | ✅ |
+| gameplay | landable lake world / splashdown / no-breathe / high radiation / interstellar flagship | ✅ |
+
+---
 **TODO summary (fill systematically):** Polyphemus → ✅ FULL MENU WALKED (identity/orbit/bulk/atmosphere/magnetism/environment/rings/satellites/gameplay gated; surface N/A). Dante/Hades → bulk mass/radius/rotation rows,
 magnetism=none, albedo/surface_temp, identity. Pandora → nearly everything (bulk, atmosphere,
-surface/biosphere, appearance, environment, gameplay).
+surface/biosphere, appearance, environment, gameplay). **Proxima Cen b → ✅ FULL 11-GROUP WALK (2026-06-23, methodology-grounded).**
