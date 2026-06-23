@@ -328,6 +328,8 @@ decisions:
     value: >
       **무대기(bare rock)**. 극근접 0.029 AU 강irradiation·강플레어 stripping + 저중력(g 0.58, 낮은 escape v) → cosmic
       shoreline **아래** → 대기 미보유. breathability=∅. (희박 표토-기원 exosphere 정도는 가능하나 렌더 무의미.)
+      **주의: ~16 G 자기장(G7)도 대기 보유 못 함** — shoreline 아래 + 직하 450K 열탈출 + Garcia-Sage2017/Garraffo2016(장
+      있어도 Proxima 활동성엔 보호 불가) + 강한 장의 극 cusp 탈출이 오히려 손실 가중. 즉 강한 장 ≠ 대기 보유.
     gate:
       criterion: [retention]
       verdict: pass-in-window
