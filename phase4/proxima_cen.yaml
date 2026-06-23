@@ -58,3 +58,41 @@ decisions:
     axis: environment.heliosphere     # SHARED 시스템 대표
     status: passthrough
     note: "Astrosphere standoff ≲55 AU(Wood2001). 국부 ISM 유입 ~25 km/s(Wood2005, α Cen AB와 동일 G-cloud 흐름)."
+
+  # ── 행성 b (대륙형 호수 세계, 무생물) — facet-walk 2026-06-23 ──────────
+  - body: Proxima Centauri b
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=암석 지구형 — **대륙형 호수 세계**(직하 고지대 + 흩어진 호수/내해 모자이크 → 야간측 빙관, **무생물**).
+      eyeball 아님. designation=Proxima Centauri b(고유명 없음). discoverability=confirmed(Anglada-Escudé 2016, RV).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "confirmed(RV) → RB IGNORELEVELS T F F F. 기후=대륙형 호수(eyeball 회피, 로스터 다양성; 직하-고지대 전제라 TRAPPIST-1 e와 자연 분기). 생명 없음."
+    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "2016Natur.536..437A (Anglada-Escudé 2016)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Proxima Centauri b
+    axis: orbit                       # a/e/inc/lock = 측정 passthrough
+    status: passthrough
+    note: "a=0.04848 AU · P=11.18465d · e≈0(SM2025) · inc 미측정(비통과) · 조석고정(락타임 <10⁵yr). Ω/ω/M free-emit."
+
+  - body: Proxima Centauri b
+    axis: bulk                        # mass=등방 prior 중앙 진질량(결정), 나머지 passthrough/tie-break
+    status: gated
+    driver: window-selection + observation
+    value: "mass 1.22 M⊕(등방 prior 중앙 진질량) · radius ~1.07 R⊕ · g ~1.07 · 밀도 ~5.5 g/cm³(지구형 암석) · 조석고정 · obliquity ~0 · age ~4.85 Gyr"
+    phase3_default: "Msini 1.055 M⊕ (RV 최소질량, SM2025)"
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      rationale: >
+        RV Msini는 최소값. 무작위 방향 궤도의 중앙 경사각 60°(sin60=0.866) → 진질량 중앙값 = Msini×1.1547 = 1.22 M⊕.
+        NearStars Barnard 선례와 동일 방식(class A). 가스행성 아님은 질량통계로 확정(radius valley 아래, ~1 M⊕는 H/He 미보유 + 플레어 광증발).
+      paper: >
+        Ho & Turner 2011 (ApJ 739, 26; arXiv:1007.0245) "Posterior Distribution of sin(i)…". CAVEAT: 등방 ×1.1547은
+        단순가정 중앙값 — sin(i) 사후분포는 모집단 질량함수에 의존하며, 가파른 질량함수면 보정이 더 작아져(진질량이
+        Msini에 더 근접) ×1.1547은 상한쪽 추정. 즉 1.22는 '등방-prior 관례값', 실제 기대값은 1.055~1.22 하단 가능.
+        선례(Barnard) 일관 위해 1.22 채택, 이 caveat 명기.
+      caveat: "radius 1.07 R⊕는 비통과 tie-break(질량-반경). 1.22 M⊕ 채택으로 g~1.07·밀도~5.5 재도출(지구형 유지)."
