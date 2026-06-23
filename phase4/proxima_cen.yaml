@@ -156,3 +156,33 @@ decisions:
       emit_note: >
         Kopernicus 표면색/biome emit는 프로젝트 말미 일괄. 색조 sRGB는 표면색 문서 + atmosphere-reflected-color 엔진으로
         조성→색 합성(emit 단계). 야간 빙관/직하 호수/2색 대륙 = biome 구획 후보.
+
+  - body: Proxima Centauri b
+    axis: appearance                  # G6 — Proxima-lit 표시색 + 디스크 종합 + 희미 플레어-오로라
+    status: gated
+    driver: visual + observation
+    value: >
+      종합 인상 = **따뜻한 황토/적갈 디스크**(Proxima M5.5, Teff 2904K reddening). 조석고정 → 직하 반구가 별 향함.
+      가장 밝은 = 직하 물구름 소용돌이(크림-화이트), 둘레로 reddening된 2색 대륙(움버 저지 + 테라코타 고지) + 산재한
+      검붉은 호수, 터미네이터 너머 크림빛 야간 빙관. **폴리페무스(G2V 태양쌍둥이광=고유색 거의 그대로)와 결정 대비** —
+      여기선 별빛 자체가 붉어 디스크 전체가 따뜻하게 물듦. + **희미한 플레어-오로라**(아래 게이트).
+    cfg_colors_displayed: >
+      Proxima reddening 적용 근사(§6 엔진, illuminant=별; emit서 정밀화). 마픽 저지 #3e2c16(움버) ·
+      장석 고지 #9a5e38(테라코타) · 직하 호수 #1d1810(검붉은 근흑) · 야간 빙관 #dda176(크림-복숭아, 청색 죽음) ·
+      직하 구름 #f0d8bf(크림화이트). 고유색은 G5 cfg_colors_intrinsic.
+    gate:
+      criterion: [visual-checklist, composition-lock]
+      verdict: documented-divergence
+      palette_note: >
+        표시 팔레트는 derived(in-window) — 고유 반사색(G5) × Proxima SED를 §6 엔진으로 렌더한 결과. 별색 reddening은 물리.
+      aurora_divergence: >
+        희미·간헐(플레어 시) 오로라를 의도 연출. **행성 자기장은 미측정**(외계행성 장 직접탐지 사례 없음; Pérez-Torres2021
+        2012.02116 전파 SPI는 잠정·항성 플레어 기원). 게다가 조석고정 느린 자전 → 암석 dynamo 약할 가능성↑(Driscoll&Olson2011,
+        RM22 스케일링). 단 드라이버(별)는 강력 — 잦은 슈퍼플레어 입자플럭스 막대(별 environment.activity 측정값). 그래서
+        "약한 장 가정 + 강한 구동 → 희미·간헐 오로라"를 documented-divergence로 채택(장 존재를 약하게 가정, 명기).
+      aurora_color: >
+        색은 composition-lock(in-window) — N₂ 지배·**무산소**(G4) 대기라 Earth의 OI 557nm 녹색(O 풍부 필요)은 죽고,
+        N₂ 1st Positive 적·N₂⁺ 391nm 자색 지배 → **적자색(magenta-violet) 오로라**. composition-color.md aurora regime.
+      paper: >
+        자기장 관측 현황 = Garcia-Sage2017(2017ApJ...844L..13G, 장 가정 보호모델)·Garraffo2016·Pérez-Torres2021(2012.02116 전파탐색).
+        약한장 근거 = 조석고정→느린자전 dynamo(Driscoll&Olson2011 2011Icar..213...12D, RM22). 오로라색 = composition-color.md.
