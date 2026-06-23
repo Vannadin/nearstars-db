@@ -572,3 +572,19 @@ decisions:
         2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성 위성과 테마 통일.
         간극 위치·줄무늬 패턴은 art — emit시 로슈 한계·고리면 정합 점검 권장.
       paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 청정 얼음 Warren&Brandt2008 + 톨린 Khare1984).
+
+  - body: Proxima Centauri c
+    axis: satellites
+    status: gated
+    driver: fiction + stability
+    value: >
+      **위성 1개 = Proxima c I** — **~1.5× 달 규모, 명왕성 느낌**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
+      조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도
+      바디 전개**(아래 "Proxima Centauri c I" 블록 11축).
+    gate:
+      criterion: [fiction, stability, hill-stability]
+      verdict: documented-divergence
+      divergence_note: >
+        관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
+        가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO).
+        정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
