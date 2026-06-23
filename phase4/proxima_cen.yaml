@@ -557,14 +557,18 @@ decisions:
     status: gated
     driver: visual + observation
     value: >
-      **대형 + 구조적 얼음 고리(Saturn식)** — 오너 a, 2026-06-23. Gratton2020(arXiv:2004.06685) SPHERE 점광원(밝기 과잉→
-      대형 고리계 추정)을 hook으로. c가 ~40–60K 극냉이라 고리 입자=물/휘발성 **얼음** → 밝고 반사적(Gratton 밝은 신호와 정합).
-      구조=간극·여러 띠(Saturn 유추). 색=디스크색 문서 Mie 합성(물얼음 n,k Warren&Brandt → **청백**), faithful/vivid 변종.
+      **2중 얼음 고리 + 선명한 적/흰 줄무늬**(오너 2026-06-23, 토성 클론 회피) — Gratton2020(arXiv:2004.06685) SPHERE
+      점광원(밝기 과잉→대형 고리계 추정)을 hook으로. 기하=**분리된 안·바깥 두 고리 띠**(사이 큰 간극; 토성의 균일 넓은
+      시트와 정반대). 색=**적/흰 교대 줄무늬** — 백띠=청정 물얼음(고albedo), 적띠=톨린 코팅 얼음(KBO/명왕성식 냉-처리,
+      위성 Proxima c I의 명왕성 테마와 통일). c ~40–60K라 얼음 안정, Gratton 밝은 신호와 양립(청정 얼음 백띠가 밝음).
+      규모: 두 띠 모두 얼음 Roche(~3.3 R_c=56,700 km) 안쪽 — 안 띠 ~1.4–1.9 R_c(24,000–32,700 km) · 바깥 띠
+      ~2.4–3.0 R_c(41,300–51,600 km). 색 합성=디스크색 문서 Mie(물얼음 + 톨린 n,k), faithful/vivid 변종.
     gate:
       criterion: [observation, visual-checklist]
       verdict: documented-divergence
       divergence_note: >
-        Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 대형 구조 고리는 interesting-first 채택, 명시 발산. 잠정 관측
-        근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열 "잠정 관측 기반 고리"). 구조 디테일
-        (간극 위치 등)은 art — emit시 로슈 한계·고리면 정합 점검 권장. 오너 a(Saturn식 대형) 채택, (c) 초대형은 미채택.
-      paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 얼음 Warren&Brandt2008).
+        Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 고리는 interesting-first 채택, 명시 발산. 잠정 관측 근거가
+        있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). **토성 클론 회피**가 명시 의도 —
+        2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성 위성과 테마 통일.
+        간극 위치·줄무늬 패턴은 art — emit시 로슈 한계·고리면 정합 점검 권장.
+      paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 청정 얼음 Warren&Brandt2008 + 톨린 Khare1984).
