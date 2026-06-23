@@ -343,8 +343,9 @@ decisions:
       (무대기 거대 day-night 대비). 직하 ~450K는 암석 융점(~1200K) 한참 아래 → 용암 아닌 고체. 표면=어두운 현무암,
       **단 ~16 G 자기권(G7)이 항성풍 sputtering을 편향 → 솔라윈드-구동 우주풍화(npFe⁰) 감소** → 무자기장 수성보다 **덜 붉고
       덜 어두움**(미세운석 gardening만 잔존; 수성 표면장 ~0.003 G 대비 d는 ~5000× 강해 차폐 유효). **단 phase-lock 플레어
-      입자가 자기극으로 채널 → 극지 강풍화(어두운 극관) 가능** = 자기권 변조된 수성형(중위도 신선·극 풍화). 고유색
-      #3c3833(어두운 회갈, 중위도; 극은 더 어두움) — 직전 #34302c보다 약간 밝게(풍화 감소분).
+      입자가 자기극으로 집중 채널 → 자기극에 짙은 풍화 극관**(npFe⁰ 농집, 거의 흑갈). 결과 = **밝은 중위도(자기권 차폐로
+      신선) ↔ 어두운 자기극관의 뚜렷한 2-tone 표면** — 자기장 강화의 **가시 시그니처**. 고유색: 중위도 #3c3833(직전 #34302c보다
+      밝게, 차폐분) · **자기극관 ~#2a2622(거의 흑갈, 집중 풍화)**.
     gate:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
@@ -417,7 +418,8 @@ decisions:
       변동, 게임플레이 훅). **과학 타깃: 지구형 외계행성 최초 자기장(SPI) — 자기권·phase-lock 관측 과학 명소**. **biome = 하이브리드
       7구획**(오너 검토·선택 2026-06-23, 수성 지질 + 1:1 열구조 결합): ① 직하 핫스팟(Substellar Hotspot, 최고온 **시그니처
       명소**) · ② 주간 고지(Day Highlands, 장석질) · ③ 주간 평원(Day Plains, 마픽/planitia) · ④ 크레이터(Craters, 충돌지형) ·
-      ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ 극 크레이터(Polar Craters, 영구음영 — RSS 수성 nod).
+      ⑤ 터미네이터(Terminator) · ⑥ 야간면(Night Side, 극냉) · ⑦ **자기극 풍화관(Magnetic Polar Caps)** — 플레어 입자
+      집중 채널로 강풍화된 어두운 흑갈 극관(G5 2-tone; 자기장 시그니처 biome, 무자기장 수성의 단순 극 크레이터와 차별).
       ScienceValues 전체(landed/flying-low=탄도/in-space; splashed=토큰 inert). SOI 자동. 난도=항성간 플래그십 + 최근접
       고방사선 착륙. 발견=RB **T F F F**(candidate, G1).
     gate:
