@@ -541,3 +541,13 @@ decisions:
       verdict: pass-in-window
       note: "dynamo 문서 regime 3 — sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog 차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23."
       paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
+
+  - body: Proxima Centauri c
+    axis: environment
+    status: gated
+    driver: derived-grounding
+    value: >
+      radiation=**낮음** — 최외곽 1.5 AU(b의 ~30배·d의 ~50배 거리)라 플레어 입자 플럭스 거리감쇄 + 빙거성 자기권(G7) 차폐 →
+      시스템서 가장 조용. stellar_wind=약(원거리 ram 작음). heliosphere=astrosphere 심부(1.5 AU ≪ standoff ~55 AU →
+      항상 항성풍 내부, ISM 직접 미관측). 차갑고 조용한 외곽 — 무생물(극냉)·낮은 해저드.
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "별 measured 환경 거리스케일 + G7 빙거성 자기권에서 도출. b·d와 정반대(저방사선). 오너 G8 확정 2026-06-23."}
