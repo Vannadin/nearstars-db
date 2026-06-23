@@ -226,3 +226,45 @@ decisions:
         derived 축. radiation 등급(Kerbalism 매핑)은 high이되 정확 tier는 G11 gameplay서 확정.
       coupling: G4 retention divergence(풍-구동 escape)·G1 무생물(방사선 적대)·G11 해저드의 공통 입력. G7 약한 장이 radiation 가혹의 직접 원인.
       paper: 별 환경 측정 출처는 별 섹션(environment.activity/wind/heliosphere; Vida2019·Wargelin2024·Wood2001 등). 대기 escape = exoplanet-atmosphere-methodology.md Gate2(Dong2017·Ribas2016).
+
+  - body: Proxima Centauri b
+    axis: rings                       # G9 — 없음
+    status: gated
+    driver: classification
+    value: "고리 없음. 근접 암석행성, 관측 근거·픽션 없음 → 단순 부재."
+    gate: {criterion: [classification], verdict: pass-in-window, note: "암석 지구형엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]]) — feature 없으면 없음으로."}
+
+  - body: Proxima Centauri b
+    axis: satellites                  # G10 — 없음 (근접 조석환경 물리적 예외)
+    status: gated
+    driver: stability + classification
+    value: >
+      위성 없음. Hill 반경 R_H = a·(m_p/3M★)^⅓ = 0.0485 AU×0.0215 ≈ 156,000 km, 순행 안정역 ~0.3–0.5 R_H(50–78k km)로
+      좁고, **조석고정 근접 행성**이라 강한 항성조석이 Gyr 스케일로 위성 궤도 불안정화 → 큰 위성 미보유가 일반적.
+    gate:
+      criterion: [stability, classification]
+      verdict: pass-in-window
+      note: >
+        [[feedback_gameplay_variety]]의 "그 자리에 아무것도 없어야 함" **물리적 예외** — 근접 조석환경이 안정 위성을 막아
+        '없음'이 근거 있는 선택(증거 부재 아닌 물리적 부재). 오너 결정 2026-06-23(소형 위성 시도 대신 없음 채택).
+
+  - body: Proxima Centauri b
+    axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (폴리페무스 가스자이언트와 대비)
+    status: gated
+    driver: gameplay
+    value: >
+      **고체 표면 있음 → 착륙 가능** 암석 호수 세계(폴리페무스 가스자이언트와 대비). biome 구획 = 직하 대륙(마픽 저지/장석
+      고지) · 직하 호수·내해(**splashdown 가능**) · 야간 빙관 · 터미네이터 · 오로라대(극/야간). breathability=**불가**
+      (무산소, atmosphereContainsOxygen=false). radiation 해저드=**high**(G8 — 약한 장+플레어; Kerbalism radiation_surface
+      high tier, 플레어 시 spike). ScienceValues 전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar
+      비행 가능. 임무 난도 두 층: (1) 접근=항성간 플래그십(Proxima=태양 최근접성 4.24 ly, 여정 자체가 난도); (2) 발견 난도
+      =ResearchBodies IGNORELEVELS, **confirmed라 T F F F**(G1 discoverability; Proxima 맨눈 불가나 행성은 RV confirmed →
+      별은 항상가시·행성은 관측발견).
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      note: >
+        착륙·splashdown 가능(고체 표면+액체 호수)이 폴리페무스(가스자이언트, 비행/우주만)와의 핵심 게임 차이. 무산소+고방사선이
+        "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. 발견=ResearchBodies(identity.discoverability),
+        emit는 researchbodies-cfg 스킬 db-mapping.md 기준. cfg emit(Kopernicus 표면색/biome·atmosphere curve·ScienceValues·
+        ResearchBodies)는 프로젝트 말미 일괄.
