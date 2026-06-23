@@ -467,3 +467,21 @@ decisions:
         **논쟁적**(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 "있다는 가정 하" 진행.
         자전주기 ~27h는 미구속 자유자전의 오너 art 선택(해왕성형보다 약간 느림). 1.5 AU 비잠김은 locking 문서 a⁶로 확정.
       paper: 진질량 등방 = Ho&Turner2011(1007.0245). 경사각 논쟁 = Kervella&Damasso2020(2003.13106). 비잠김 = tidal-locking-timescale-methodology.md(a⁶).
+
+  - body: Proxima Centauri c
+    axis: bulk
+    status: gated
+    driver: window-selection + derived-grounding
+    value: >
+      mass **8 M⊕**(G2 등방중앙) · **radius ~2.7 R⊕**(오너 채택 중심값; mini-Neptune이라 H/He 외피 inflation, 질량-반경
+      regime2 확률관계 band 2.5–3 R⊕) · g ~1.1 g · **밀도 ~0.41 ρ⊕(~2.2 g/cm³)** 휘발성-풍부(암석↔빙거성 중간) · 비조석고정 ·
+      age ~4.85 Gyr.
+    phase3_default: "Msini 7 M⊕ (RV, Damasso2020); 반경 미관측(비통과)"
+    gate:
+      criterion: [derived-grounding, error-bar]
+      verdict: pass-in-window
+      rationale: >
+        오너 G3 2026-06-23 — 반경 중심 ~2.7 R⊕ 채택(band 2.5–3 R⊕). 8 M⊕는 radius valley 경계지만 G1 mini-Neptune reading이라
+        H/He 외피로 inflation → 확률관계(Forecaster/Otegi)가 적정 도구(단일 암석 그리드 아님). 해왕성(17M⊕/3.9R⊕)·천왕성
+        (14.5M⊕/4R⊕)보다 작은 mini-Neptune이라 ~2.7 R⊕ 정합. 밀도 2.2 g/cm³ = 휘발성-풍부.
+      paper: docs/reference/mass-radius-relation-methodology.md (regime2 sub-Neptune band, Forecaster Chen&Kipping2017·Otegi2020).
