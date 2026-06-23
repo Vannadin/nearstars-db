@@ -253,13 +253,16 @@ decisions:
     status: gated
     driver: gameplay
     value: >
-      **고체 표면 있음 → 착륙 가능** 암석 호수 세계(폴리페무스 가스자이언트와 대비). biome 구획 = 직하 대륙(마픽 저지/장석
-      고지) · 직하 호수·내해(**splashdown 가능**) · 야간 빙관 · 터미네이터 · 오로라대(극/야간). breathability=**불가**
-      (무산소, atmosphereContainsOxygen=false). radiation 해저드=**high**(G8 — 약한 장+플레어; Kerbalism radiation_surface
-      high tier, 플레어 시 spike). ScienceValues 전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar
-      비행 가능. 임무 난도 두 층: (1) 접근=항성간 플래그십(Proxima=태양 최근접성 4.24 ly, 여정 자체가 난도); (2) 발견 난도
-      =ResearchBodies IGNORELEVELS, **confirmed라 T F F F**(G1 discoverability; Proxima 맨눈 불가나 행성은 RV confirmed →
-      별은 항상가시·행성은 관측발견).
+      **고체 표면 있음 → 착륙 가능** 암석 호수 세계(폴리페무스 가스자이언트와 대비). **biome = 항성경도 동심원**(조석고정이라
+      위도 아닌 직하→터미네이터→반대점 순; 직하 최온, 바깥일수록 한랭) **7구획**(오너 검토 2026-06-23):
+      ① 직하점(Substellar Point, 핫스팟 **시그니처 명소** — 폴리페무스 폭풍눈 대응) · ② 직하 호수(Substellar Lakes,
+      **splashdown**) · ③ 주간 저지(Day Lowlands, 마픽) · ④ 주간 고지(Day Highlands, 장석질) · ⑤ 터미네이터(Terminator,
+      황혼대) · ⑥ 야간면(Night Side, 동결 암석) · ⑦ 야간 빙관(Night Ice Cap, 반대점 물얼음). **오로라대는 biome서 제외**
+      — 고정 표면 구역이 아니라 G6 외형 요소로만(오너 결정). breathability=**불가**(무산소, atmosphereContainsOxygen=false).
+      radiation 해저드=**high**(G8 — 약한 장+플레어; Kerbalism radiation_surface high tier, 플레어 시 spike). ScienceValues
+      전체(landed/splashed/flying/in-space) 정의. SOI=질량서 자동. 대기 0.7 bar 비행 가능. 임무 난도 두 층: (1) 접근=항성간
+      플래그십(Proxima=태양 최근접성 4.24 ly, 여정 자체가 난도); (2) 발견 난도=ResearchBodies IGNORELEVELS, **confirmed라
+      T F F F**(G1 discoverability; Proxima 맨눈 불가나 행성은 RV confirmed → 별은 항상가시·행성은 관측발견).
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
@@ -268,3 +271,6 @@ decisions:
         "거주가능존이되 적대적"이라는 G1 무생물 서사와 정합. radiation tier high는 G8서 derived. 발견=ResearchBodies(identity.discoverability),
         emit는 researchbodies-cfg 스킬 db-mapping.md 기준. cfg emit(Kopernicus 표면색/biome·atmosphere curve·ScienceValues·
         ResearchBodies)는 프로젝트 말미 일괄.
+      owner_review: >
+        2026-06-23 오너 검토 완료 — biome을 항성경도 7구획으로 확정(오로라대 제외, 직하점=시그니처 명소 유지, splashdown 호수
+        유지). 직전 커밋(2bb8540)은 오너 검토 없이 작성된 것이라 본 검토로 정정·승인.
