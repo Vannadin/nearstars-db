@@ -96,3 +96,33 @@ decisions:
         Msini에 더 근접) ×1.1547은 상한쪽 추정. 즉 1.22는 '등방-prior 관례값', 실제 기대값은 1.055~1.22 하단 가능.
         선례(Barnard) 일관 위해 1.22 채택, 이 caveat 명기.
       caveat: "radius 1.07 R⊕는 비통과 tie-break(질량-반경). 1.22 M⊕ 채택으로 g~1.07·밀도~5.5 재도출(지구형 유지)."
+
+  - body: Proxima Centauri b
+    axis: atmosphere                  # G4 — 기압=오너 결정 0.7 bar, 나머지 방법론 도출
+    status: gated
+    driver: classification + window-selection
+    value: >
+      surface_pressure=0.7 bar(오너 결정 2026-06-23). composition=N₂ 지배 + CO₂ ~3%(온실로 직하 빙점 위 유지),
+      μ≈28.5 g/mol. Bond albedo A≈0.3. breathability=불가(무생물·무산소, atmosphereContainsOxygen=false).
+      scale_height H≈7 km(=RT/μg, T~250K·g 10.5·μ 28.5 — 기압엔 무관). escape=M왜성 플레어 stripping 위험이나
+      호수세계 전제로 보유 채택(게이트 참조).
+    derived_temps: >
+      Teq≈234K(A 0.3, 기압 무관). 조석고정 1:1 → Layer-3 GCM(Boutle2017 ~1 bar N₂+CO₂ 케이스를 0.7 bar로 약간 하향):
+      직하 ~285–290K(액체 호수)·야간 ~150–165K(빙관)·평균 ~245–250K. 직하 데이샤이드 호수 + 나머지 빙결 =
+      G1 "대륙형 호수 세계"와 정합.
+    phase3_default: "Phase 3 합성 대기(있으면) — 본 결정이 art-direction 기압/조성 확정값."
+    gate:
+      criterion: [classification, retention, error-bar]
+      verdict: documented-divergence
+      rationale: >
+        대기 문서 3-gate: cosmic shoreline 위지만 M왜성 강플레어·항성풍 stripping(Dong2017·Ribas2016) 위험이라 "보유"는
+        자동이 아님. G1 호수세계(액체 물)가 대기 보유를 요구하므로 Meadows2018 "온대/거주가능" 분기를 명시 tie-break로 채택.
+        Garraffo2016 자기차폐가 도울 수 있으나 불확실 — 발산으로 명기.
+      locking_note: >
+        새 locking 문서 교차검증 — 0.7 bar는 대기 열조석이 약해 Leconte2015 비동기 caveat 미발동 → G3의 1:1·obliquity 0 견고
+        (오히려 1 bar보다 안전).
+      collapse_note: >
+        CO₂ ~3% @0.7 bar(분압 ~21 mbar)의 frost point ~135K < 야간 150–165K → CO₂ 미동결, 야간측 대기붕괴 회피.
+      paper: >
+        기압/μ/scale-height = docs/reference/exoplanet-atmosphere-methodology.md. 온도 3계층 =
+        docs/reference/tidally-locked-temperature-methodology.md (Layer-3 앵커 Turbet2016·Boutle2017, 검증 id는 그 문서).
