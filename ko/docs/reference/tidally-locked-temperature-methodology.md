@@ -306,6 +306,9 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
 
 ## 관련 문서
 
+- `docs/reference/exoplanet-atmosphere-methodology.md` — 같은 암석형 대기의
+  표면기압·평균분자량(μ)·스케일높이를 정하는 자매 레시피. 여기서 나온 온도 `T`가 그
+  스케일높이 공식에 들어간다.
 - `docs/reference/binary-epoch-pipeline.md` — 다중성 호스트의 에포크/상태벡터 처리
   (Proxima는 α Cen AB를 공전한다).
 - `docs/reference/solar-system-external-observer.md` — Teq가 온실을 못 보는 것을 보인

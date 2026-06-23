@@ -342,6 +342,9 @@ exists), and one line on what it contributes.
 
 ## Related
 
+- `docs/reference/exoplanet-atmosphere-methodology.md` — the sibling recipe for
+  the surface pressure, mean molecular weight (μ) and scale height of the same
+  rocky atmospheres; the temperature `T` from here feeds its scale-height formula.
 - `docs/reference/binary-epoch-pipeline.md` — epoch/state-vector handling for
   multiple-star hosts (Proxima orbits α Cen AB).
 - `docs/reference/solar-system-external-observer.md` — the Teq-blind-to-greenhouse
