@@ -162,8 +162,8 @@ decisions:
     status: gated
     driver: physics + classification
     value: >
-      composition: H₂/He bulk, [M/H]+0.5~1.0(Thorngren2016 질량-금속성=토성급 예상값, 가정 아님), H₂O 응결 구름종
-      (225K NH₃ rainout), C/O 2.5×(§5.2). pressure: 1 bar 기준 앵커. temperature: 구름덱 225K 앵커. scale_height:
+      composition: H₂/He bulk, [M/H]+0.5~1.0(Thorngren2016 질량-금속성=토성급 예상값, 가정 아님), 응결 구름종=H₂O·NH₄SH
+      (NH₃는 225K서 비응결 — skin T≈189K가 응결점 150K에 못 닿아 기체 잔류; appearance.banding 정합), C/O 2.5×(§5.2). pressure: 1 bar 기준 앵커. temperature: 구름덱 225K 앵커. scale_height:
       프로파일서 도출. breathability: 불가(atmosphereContainsOxygen=false). greenhouse: 표면 없어 surface-lift 없음
       (구름덱=복사층, 깊은 곳은 단열선으로 뜨겁되 미렌더). escape: 무시(거대질량).
     gate:
@@ -195,9 +195,11 @@ decisions:
         과채도 우려 불필요. 목성형 난류 밴딩 = art-forward documented-divergence(아래 appearance.clouds 행).
       cfg_colors: "zone #eef1f4(물/NH4SH, Phase3) · chromophore 띠 #b4784e(목성적색 70%, 창 #a8703f–#bc8055) · belt #647e96(슬레이트블루 Rayleigh, 창 #5a6e82–#6e8499) · 폭풍 눈 #214a72(가장 깊은 Rayleigh, 창 #1e4068–#2a5480)"
       emit_note: >
-        반사광 구름 띠 색은 composition-color.md(재진입 플라스마)서 안 나옴 — 흰색만 Phase3 hex 근거,
-        적갈/청/azure는 물리 창 내 오너 art tie-break. 응결 층서 근거 = Sudarsky 2000/2003 + Morley 2014
-        (docs/phase3/_bib/gas-giant-atmosphere.yaml 핀).
+        반사광 구름 띠 색의 방법론 근거 = docs/reference/atmosphere-reflected-color-methodology.md (깊은 구름틈일수록
+        Rayleigh 더 파랑 + 황/톨린 chromophore 색조군 + α Cen A=G2V 태양쌍둥이라 white point≈태양 → 색이 reddening 없이
+        거의 그대로 렌더; Polyphemus가 그 문서의 worked example). composition-color.md(재진입 발광)와는 다른 메커니즘이라
+        거기선 안 나옴. 흰색만 Phase3 hex 근거, 적갈/청/azure는 그 물리 창 내 오너 art tie-break. 응결 층서 근거 =
+        Sudarsky 2000/2003 + Morley 2014 (docs/phase3/_bib/gas-giant-atmosphere.yaml 핀).
 
   - body: Alpha Centauri A b
     axis: appearance.haze
