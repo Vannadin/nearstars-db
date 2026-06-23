@@ -351,24 +351,37 @@ decisions:
     driver: visual + observation
     value: >
       Proxima M5.5 적색광 입은 **어두운 따뜻한 회갈색 디스크**(공간풍화 수성형). 표시 고유색 #34302c → Proxima-lit ~#36281a.
-      크레이터·풍화 줄무늬 가능. **오로라 없음**(무대기·약장). b(황토 호수세계)·c(냉 mini-Neptune)와 시각 3극.
+      크레이터·풍화 줄무늬 가능. **오로라 없음**(무대기 — 자기장은 ~16 G로 존재하나[G7] 발광 매질 대기가 없어 auroral 발광 불가).
+      b(황토 호수세계)·c(냉 mini-Neptune)와 시각 3극.
     gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "표시색=고유색×Proxima SED(§6 엔진, emit 정밀화). 무대기라 구름·haze 없음, 순수 표면."}
 
   - body: Proxima Centauri d
     axis: magnetism.magnetic_field
     status: gated
-    driver: derived-grounding
-    value: "약함~거의 없음. 조석고정 느린자전 + 소형체(0.30 M⊕, 작은 코어) → dynamo 미약/비활성 가능. 미측정, conf low."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "암석 RM22+조석lock penalty(dynamo 문서 regime4). b보다 더 약함(저질량). G8 방사선 가혹의 원인."}
+    driver: observation
+    value: >
+      **극 자기장 ~16 G**(범위 3–280 G) — **Zapatero Osorio et al. 2026**(arXiv:2605.22925) SPI 추정, **지구형 외계행성
+      최초의 자기장 추정치**. 항성 플레어가 d 궤도위상에 **phase-lock**(>99.8% 유의) → helicity-driven 재결합 + Poynting flux
+      형식으로 도출(Mars 반경 가정). 관측>모델이라 기존 dynamo-scaling '약장' 추측을 **대체**.
+    gate:
+      criterion: [observation, derived-grounding]
+      verdict: pass-in-window
+      rationale: >
+        SPI 관측 추정(~16 G)이 RM22 느린자전 약장 추측을 supersede(오너 결정 2026-06-23, 관측 우선). caveat: 모델의존
+        (helicity reconnection·Poynting flux, Mars 반경 가정)·범위 3–280 G로 광범. dynamo 이론(조석고정 느린자전→약장)과
+        긴장 — 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G·목성 ~14 G 수준).
+      feature: "**phase-lock 플레어는 d의 distinctive 피처** — '별을 자기적으로 때리는 안쪽 행성'. G8 방사선·G1 정체성에 연계."
+      paper: Zapatero Osorio et al. 2026 (arXiv:2605.22925) "Star-planet interaction in the Proxima system". 약장 기존 추측 출처=dynamo 문서 regime4(RM22).
 
   - body: Proxima Centauri d
     axis: environment
     status: gated
     driver: derived-grounding
     value: >
-      radiation=**극심** — 최근접(0.029 AU) 플레어 별 + **무대기 표면 직노출** + 약장 → 표면 방사선 시스템 최악. stellar_wind=
+      radiation=**극심** — 최근접(0.029 AU) 플레어 별 + **무대기 표면 직노출** + **d에 phase-lock된 플레어**(Zapatero Osorio
+      2026, G7) → 표면 방사선 시스템 최악. ~16 G 자기권(G7)이 하전입자 일부 편향하나 무대기라 surface 보호 미미. stellar_wind=
       매우 강(최근접 ram). heliosphere=astrosphere 최심부. G11 해저드·G1 무생물의 물리 근거.
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "별 measured 환경 + 무대기 + G7 약장에서 도출. b보다 가혹(더 근접·무대기 차폐 0)."}
+    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "별 measured 환경 + 무대기 + d-phase-locked 플레어(G7 SPI)에서 도출. 정정: 자기장은 약하지 않음(~16 G) — 단 무대기라 surface 보호 한계. b보다 가혹(더 근접·무대기 차폐 0)."}
 
   - body: Proxima Centauri d
     axis: rings
@@ -406,3 +419,17 @@ decisions:
       note: >
         무대기·무액체가 b(호수세계, splashdown·대기비행)와의 핵심 게임 차이 — d는 수성형 진공 착륙. radiation 극심=G8 derived.
         cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.
+
+  # ════════ 행성 c (원거리 냉 mini-Neptune + Gratton 고리 + 소형 위성) — facet-walk 2026-06-23 (축별 walk) ════════
+  - body: Proxima Centauri c
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=**냉 mini-Neptune**(~8 M⊕, 1.5 AU, H/He 외피, Teq~40K), 무생물. designation=Proxima Centauri c(고유명 없음).
+      discoverability=candidate(Damasso2020 RV+천체측정, **존재 논쟁적**) → RB IGNORELEVELS T F F F.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-23. candidate(2020SciA....6.7467D) → T F F F. 존재 논쟁(미확정 신호)은 '미발견 후보'와 정합. 냉 mini-Neptune=b(온대 암석)·d(뜨거운 수성형)와 3극 대비."
+    discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2020SciA....6.7467D (Damasso 2020)", skill: "researchbodies-cfg/references/db-mapping.md"}
