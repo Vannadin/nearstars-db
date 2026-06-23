@@ -4,7 +4,8 @@
 > Source: synthesis of the planetary reflected-light / albedo-spectrum literature
 > (Sudarsky+ 2000/2003, Marley+ 1999, Cahoy+ 2010, Karkoschka 1994, Irwin+ 2024,
 > Khare+ 1984, Tomasko+ 2008, Carlson+ 2016, Gao+ 2021, Sneep & Ubachs 2005,
-> Sagan+ 1993, Krissansen-Totton+ 2016) plus the engineering colorimetry standards
+> Sagan+ 1993, Krissansen-Totton+ 2016) plus the per-species optical-constant portal
+> (Polyanskiy 2024 / refractiveindex.info) and the engineering colorimetry standards
 > (CIE 1931 color-matching functions; IEC 61966-2-1 sRGB).
 > Citations resolved against NASA ADS (the registered ADS_API_TOKEN), not ad-hoc
 > web search; arXiv id where one exists, otherwise the authoritative ADS bibcode.
@@ -119,7 +120,13 @@ Two practical grounding points:
   refractivity sets how blue its sky is. CO₂ scatters ~2.5× more than air per
   molecule; H₂/He far less. Measured Rayleigh cross-sections for the common
   atmospheric gases (N₂, O₂, CO₂, CH₄, Ar) are tabulated by **Sneep & Ubachs 2005**
-  — the canonical lab reference for σ_R, including the King-factor corrections.
+  — the canonical lab reference for σ_R, including the King-factor corrections. For a
+  gas outside that set (H₂/He, H₂O, NH₃, SO₂, …) pull the real index `n(λ)` from the
+  **refractiveindex.info** database (Polyanskiy 2024), and **use the gas-phase entry**
+  — the same site's liquid/solid pages (e.g. liquid CH₄ at 90 K) are surface data for
+  the surface-color doc, not for atmospheric Rayleigh. Pin each value to the dataset's
+  own primary source (the site exposes it) — the database is the portal, not the
+  citation of record.
 - **Optical depth gates the effect.** Rayleigh blue is only visible when the column
   is optically thin enough that scattered photons escape rather than being absorbed
   or scattered again by aerosol. A thick cloud deck (§4) sits *above* the Rayleigh
@@ -202,6 +209,12 @@ that remove part of the reflected spectrum. The major ones:
   **Serdyuchenko/Orphal+ 2016**. Minor next to Rayleigh for Earth's daytime sky, but
   the canonical example of a *gas-phase visible* absorber that is neither CH₄ nor a
   cloud.
+
+For absorbers and aerosols the input is the **complex** index `n(λ) + i·k(λ)` (the
+`k` extinction part carries the absorption); the same **refractiveindex.info**
+portal (Polyanskiy 2024) holds the tholin, water-ice, ammonia-ice, sulfur and
+mineral optical constants for the Mie/absorption step — again citing each dataset's
+own primary source per row (Khare+ 1984 for tholins, etc.).
 
 **Honesty section.** The blue↔grey↔white axis (§3–4) is solid physics tied to
 composition and particle size. The **warm hue (yellow/orange/red/brown) is the
@@ -394,6 +407,14 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   **arXiv:1512.00502.** *Is the Pale Blue Dot Unique?* — disk-integrated photometric
   color classification of solar-system bodies; closest astronomy precedent for color
   space placement (not the colorimetry matrix). §6. (31 cites.)
+
+- **Polyanskiy, M. N. (2024)** — *Scientific Data* 11, 94. **No arXiv** (bibcode
+  `2024NatSD..11...94P`). The **refractiveindex.info** database of optical constants:
+  the data portal for per-species real index `n(λ)` (Rayleigh, §3) and complex index
+  `n+ik` (aerosols/absorbers, §5). A curated **aggregator** — each dataset cites its
+  own primary lab source, which is the per-row citation of record; cite this paper for
+  the database itself. Match the phase to the use (gas-phase for atmosphere; liquid/
+  solid for the surface-color doc). (335 cites.)
 
 - **CIE 1931 2° standard observer color-matching functions** — engineering standard
   (CIE 15; not an ADS work). The `x̄/ȳ/z̄(λ)` integration kernels of §6.
