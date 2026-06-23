@@ -485,3 +485,17 @@ decisions:
         H/He 외피로 inflation → 확률관계(Forecaster/Otegi)가 적정 도구(단일 암석 그리드 아님). 해왕성(17M⊕/3.9R⊕)·천왕성
         (14.5M⊕/4R⊕)보다 작은 mini-Neptune이라 ~2.7 R⊕ 정합. 밀도 2.2 g/cm³ = 휘발성-풍부.
       paper: docs/reference/mass-radius-relation-methodology.md (regime2 sub-Neptune band, Forecaster Chen&Kipping2017·Otegi2020).
+
+  - body: Proxima Centauri c
+    axis: atmosphere
+    status: gated
+    driver: classification
+    value: >
+      **두꺼운 H/He 외피**(mini-Neptune, 고체 표면 없음 → G5 ∅). Teq~40K 극냉 → CH₄(동결 90K)·N₂(63K)·NH₃·H₂O 전부 동결 →
+      심층 얼음-구름층, **상층 관측 대기 = H/He만 기체**(H₂ ~20K까지 기체). 금속성/메탄 함량=**차수 미상**(미관측; 외형 색은
+      G6서 다룸). breathability=∅. escape=무시(대질량·원거리 저irradiation).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "냉 mini-Neptune(G1) 직결 — H/He 1차 외피, 40K라 휘발성 응결. 금속성 미관측이라 차수미상으로 두고 색 디테일은 G6(오너 결정 2026-06-23). T/P 프로파일은 emit시 cool-Neptune 격자."
+      paper: 온도 Teq=tidally-locked-temperature-methodology.md Layer1(비잠김이라 균일 가까움). 보유=대질량+원거리 자명.
