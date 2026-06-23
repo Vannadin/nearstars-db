@@ -193,9 +193,10 @@ decisions:
     driver: derived-grounding
     value: >
       **약한 행성 자기장**(차수 ≲0.1–0.3× 지구, ≲ 수 µT 표면), **활성 dynamo 여부 자체가 불확실**. 미측정 — 외계행성 장
-      직접탐지 사례 없음(Pérez-Torres2021 전파 SPI 잠정). 방법 = 암석장 RM22 스케일링 + 조석고정 penalty(dynamo 문서
-      regime 4). 약함 동인 두 가지: (1) 조석고정 P=11.2일 느린 자전이 임계자전 아래 → dynamo 약화, (2) 노쇠 ~4.85 Gyr
-      핵 냉각 → 코어 대류 약화. conf=low.
+      직접탐지 사례 없음(Pérez-Torres2021 전파 SPI 잠정). **Zapatero Osorio2026(arXiv:2605.22925)이 b SPI를 플레어 강도
+      변조(b 공전주기 주기성)로 검출 → 자기적 상호작용 흔적이나, d와 달리 b는 자기장 값 미도출**(phase-lock 아님). 방법 =
+      암석장 RM22 스케일링 + 조석고정 penalty(dynamo 문서 regime 4). 약함 동인 두 가지: (1) 조석고정 P=11.2일 느린 자전이
+      임계자전 아래 → dynamo 약화, (2) 노쇠 ~4.85 Gyr 핵 냉각 → 코어 대류 약화. conf=low.
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
