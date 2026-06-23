@@ -588,3 +588,19 @@ decisions:
         관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
         가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO).
         정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
+
+  - body: Proxima Centauri c
+    axis: gameplay
+    status: gated
+    driver: gameplay
+    value: >
+      mini-Neptune이라 **고체 표면 없음 → 착륙·splashdown 불가, 대기비행("X 상공 비행")+궤도만**(폴리페무스형). breathability=
+      **불가**. radiation 해저드=**낮음**(G8, 최외곽 — 시스템서 가장 안전). **biome = 위도 5띠**(자유자전이라 항성경도 아닌
+      위도; 오너 검토 2026-06-23): 적도대 · 북온대 · 남온대 · 북극 · 남극. **고리 그림자대는 제외**(오너). 2중 적/흰 고리 +
+      위성 Proxima c I는 biome 아닌 **시각·탐사 피처**. ScienceValues(flying/in-space; landed/splashed=토큰 inert). SOI 자동.
+      난도 = 항성간 플래그십 + **시스템 최외곽(1.5 AU 도달 부담)**, 냉·dim. 발견=RB **T F F F**(candidate, G1).
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      owner_review: "2026-06-23 오너 검토 — biome 위도 5띠 확정, 고리 그림자대 제외(b의 오로라대 제외와 동일 취지: 고정 표면구역 아닌 피처는 biome서 뺌)."
+      note: "표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이 — c는 폴리페무스형 비행/우주. 고리·위성이 c만의 탐사 매력. cfg emit(biome map·ScienceValues·ResearchBodies·Ring 노드)는 프로젝트 말미."
