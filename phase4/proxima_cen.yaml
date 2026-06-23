@@ -524,4 +524,20 @@ decisions:
         "차가운 mini-Neptune은 덜 파랑"은 grounded — CH₄ 응결(<90K)로 기체 CH₄ 빨강흡수 사라짐(해왕성 72K 대비). 색=대기 반사색
         문서 §6 엔진(H/He Rayleigh + 약 흡수, 얼음 haze). G4서 미룬 색 디테일을 여기서 확정. 내부열 effective ~50–60K도 CH₄
         동결 유지라 결론 불변(internal-heat 문서).
+      brightness_note: >
+        **절대 dimness(1.5 AU·M5.5)는 cfg 비인자** — KSP/Kopernicus는 바디를 normalize해 가시 렌더하므로 실세계 어두움은
+        인게임에 안 반영됨. 외형 결정의 본질 = **색(창백 회백)**이지 밝기 아님. dimness는 실세계 trivia로만 기록.
       paper: 색=docs/reference/atmosphere-reflected-color-methodology.md(Rayleigh+haze). 온도=tidally-locked-temperature + internal-heat-luminosity 문서(Teq 40K, T_eff ~50–60K). 시각 standout=고리(G9, 밝은 얼음).
+
+  - body: Proxima Centauri c
+    axis: magnetism.magnetic_field
+    status: gated
+    driver: derived-grounding
+    value: >
+      **빙거성 아날로그 ~0.1–0.5 G**, **비쌍극·기울고 중심 이탈**(Neptune/Uranus 유추 — 얇은 전도층 대류로 다극·tilted ~47–59°).
+      차수값, conf low(미관측). 오로라=미약(c는 별서 1.5 AU 멀어 입자 플럭스 약함 — b·d 근접 플레어 환경과 대조).
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      note: "dynamo 문서 regime 3 — sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog 차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23."
+      paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
