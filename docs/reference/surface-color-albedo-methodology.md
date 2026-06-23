@@ -80,6 +80,19 @@ the degree of reddening are the soft links**, driven by weathering and grain siz
 which can swing the Bond albedo by 2–5×. Record the assumed surface state the same
 way the atmosphere doc records the assumed chromophore.
 
+**Posture — surface appearance is an interesting-first axis.** Because the
+composition→appearance mapping is so degenerate (Earth alone is wildly varied), the
+*look* of a surface — hue, pattern, texture, the mixing geometry — is a deliberate
+**interesting-first art choice**, not a derivation: pick the compelling reading and
+note the canonical alternative, per the project's interesting-first cascade. This doc
+is the **gate, not the dictator** of that look — it supplies (a) the physically
+plausible **albedo band** and (b) the grounded **hue family** (§2) the art choice
+must stay inside. The **one hard tie** is the **area-weighted Bond albedo**: it is not
+aesthetic, it propagates into temperature through `T_eq ∝ (1−A)^¼` (§6). So the rule
+is *look = interesting-first, but cascade the chosen skin's `A` into the temperature*
+— a bright icy reskin and a dark basaltic one at the same insolation must carry
+different `T_eq`.
+
 ---
 
 ## 2. Why Minerals Have Color — Electronic Transitions
