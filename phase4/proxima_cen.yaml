@@ -449,3 +449,21 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-23. candidate(2020SciA....6.7467D) → T F F F. 존재 논쟁(미확정 신호)은 '미발견 후보'와 정합. 냉 mini-Neptune=b(온대 암석)·d(뜨거운 수성형)와 3극 대비."
     discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2020SciA....6.7467D (Damasso 2020)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Proxima Centauri c
+    axis: orbit
+    status: gated
+    driver: window-selection + observation
+    value: >
+      a≈1.5 AU · P≈1900d(~5.2yr) · e≈0.04 — 전부 Damasso2020 측정 passthrough. **비조석고정**(1.5 AU → locking 문서 a⁶상
+      τ_lock ≫ 나이) → 자유자전, **자전주기 ~27h**(오너 결정, 해왕성형보다 약간 느린 자전; 미구속이라 art 선택). 경사각·절대 배향 = 천체측정
+      논쟁이라 자유 emit. **진질량 = Msini×1.1547 ≈ 8 M⊕**(등방 중앙값, b·d 선례 일관) — "c 존재 가정 하" 전제.
+    phase3_default: "Msini 7 M⊕ · e 0.04 (Damasso2020)"
+    gate:
+      criterion: [classification, derived-grounding]
+      verdict: pass-in-window
+      rationale: >
+        오너 결정 2026-06-23 (a) — 진질량 등방중앙 8 M⊕ 채택. Kervella&Damasso2020(arXiv:2003.13106) 천체측정 경사각/질량은
+        **논쟁적**(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 "있다는 가정 하" 진행.
+        자전주기 ~27h는 미구속 자유자전의 오너 art 선택(해왕성형보다 약간 느림). 1.5 AU 비잠김은 locking 문서 a⁶로 확정.
+      paper: 진질량 등방 = Ho&Turner2011(1007.0245). 경사각 논쟁 = Kervella&Damasso2020(2003.13106). 비잠김 = tidal-locking-timescale-methodology.md(a⁶).
