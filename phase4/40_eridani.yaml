@@ -218,3 +218,25 @@ decisions:
       verdict: pass-in-window
       note: "오너 G3 최종확정 2026-06-24 — 철회행성이라 측정질량 포기(Ma2018 8.47=항성활동 artifact, 실재 아님). 중력=작품설정 2.09g 앵커 + Earth-like 질량-반경 곡선 자기일관 → M 4.97·R 1.541 R⊕(9,820km)·ρ 7,477 kg/m³(역검증 2.09). 셋 다 만족(canon 2.09g + 물리 자기일관 + 금속-풍부 밀도). 곡선 위라 mass-radius divergence 해소. 희생=8.47 M⊕(refuted)·Weir 2.01 R⊕."
       paper: docs/reference/mass-radius-relation-methodology.md (Earth-like curve 위 배치; Zeng2016 PREM·Seager2007).
+
+  - body: 40 Eridani A b
+    axis: atmosphere
+    status: gated
+    driver: PHM blend (book physics + film visual), greenhouse completed
+    value: >
+      기압 **~28 atm**(Weir 책 canon 유지; Howe 블로그의 ~9.67 atm 재해석[선내압 ⅓ × 29]은 대안 reading으로 병기하나 Weir 설정
+      자료가 28–29 atm 절대치라 미채택). 조성=**깊은 환원성 NH₃ + CH₄ (+H₂O)**. NH₃는 Weir(불투명·블라인드 전제), CH₄는
+      해왕성식 적색흡수로 **파랑을 물리적으로 산출**(차가운 환원성 대기에 자연 공존). ⚠ NH₃ 지배는 광화학적 fragile(UV→N₂+H₂,
+      보충원 필요) — 책 given.
+      **구름 구조(영화 외형의 물리)**: 낮은 고도 흰 물구름 + 그 위 두꺼운 맑은 Rayleigh 기둥 → **짙은 파랑에 흰 구름이 점점이**
+      (해왕성+지구식; 구름 *고도*가 색을 가름 — 금성식 고층운이면 허옇고, 저층운+맑은 기둥이면 파랑). 물구름=물 순환 → 표면 대양.
+      **온도(Weir 계산 완성)**: 플럭스 ~8–9× 지구, 알베도 ~0.3(저층운+맑은 기둥) → T_eq ~157°C, + 적당한 온실(~+55–65 K) →
+      표면 **~210–220°C**. 28기압 물 끓는점 227°C *아래* → **액체물 대양 유지**. Weir 210°C는 무대기 평형값이었으나(온실 누락),
+      알베도 냉각 + 적당한 온실이 그 근처로 복귀 → 책 숫자 구제. ⚠ 가정: 온실 bounded(NH₃ runaway 아님) → 끓는점 직하 "압력솥 대양".
+      **블라인드 정합**: 28기압 기체+구름이 빛 강감쇠(Howe: 29 atm NH₃ ≈ 바닷물 150m) → 우주에선 파랑, 표면은 어둑한 청색 박명
+      → 시각이 주감각 불가 → 에코로케이션(Howe '매우 어둡지만 칠흑 아님'과 정합). 표시 파랑 hex는 G6서 대기반사색 방법론으로 산출.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G4 확정 2026-06-24 — 블렌드 트릴레마 {28atm·물바다·파랑} 해소. 핵심=낮은 물구름+위 맑은 Rayleigh 기둥이라 파랑+흰구름 공존(해왕성/지구식, 금성 고층운 아님). 28atm 유지·물 액체(227°C 끓는점 아래 ~210–220°C)·파랑 다 만족. Weir 210°C 구제(알베도+적당온실). 가정=온실 bounded(압력솥 대양). 블라인드=표면 어둑 박명(Howe). 색 hex→G6. NH₃ fragile 플래그."
+      paper: "exoplanet-atmosphere-methodology.md(보유 정당=2.09g+K왜성 약XUV+강B-field); atmosphere-reflected-color-methodology.md(파랑=Rayleigh+CH₄ 적색흡수, G6 색산출); tidally-locked-temperature-methodology.md(Teq+온실); Howe 'Science of PHM' 블로그(표면 밝기 감쇠)."
