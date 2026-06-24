@@ -619,3 +619,20 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-23. art-first 픽션 위성([[project_nearstars_discoverability_researchbodies]] fictional moons=FFFF). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린 세계)."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "fiction (art-directed moon)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Proxima Centauri c I
+    axis: orbit
+    status: gated
+    driver: window-selection + stability
+    value: >
+      c 주위 **a ≈ 4 R_c ≈ 69,000 km**(고리 외경 51,600 km 바로 바깥, 얼음 Roche 56,700 km 살짝 밖 — 자기중력 위성이라
+      Roche 경계 밖이면 안전). **조석고정 1:1**(이 거리면 ~10³–10⁴년에 잠김; c 8 M⊕·얼음 저밀도라 매우 빠름). **e ≈ 0**
+      (조석 원형화) · c 적도면 공전 · Ω/ω/M 자유 emit.
+    gate:
+      criterion: [stability, classification]
+      verdict: pass-in-window
+      rationale: >
+        오너 "고리 바로 바깥" 2026-06-23. Roche 밖(자기중력 위성 안전) + Hill 안정역(270–450만 km) 깊숙이. 조석고정은
+        despin τ∝a⁶ρ/M_p²로 이 거리·8 M⊕서 ~10³–10⁴년(나이≪) → 1:1 확정(locking 문서).
+      coupling: "큰 위성이 고리 외경 바로 밖 → **바깥 고리 가장자리 shepherd(truncate)** → G9 고리가 거기서 끝나는 역학적 이유."
+      paper: 조석고정 τ = docs/reference/tidal-locking-timescale-methodology.md(a⁶). emit시 stability-sim 권장.
