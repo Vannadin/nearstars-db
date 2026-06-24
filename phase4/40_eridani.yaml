@@ -60,3 +60,18 @@ decisions:
       정합). stellar_wind=**미구속**(Wood HST Lyα서 검출 astrosphere 없음, Ṁ 미측정). astrosphere standoff=미구속 — 단
       **고속 이동**(V_ISM ~127 km/s)이라 ram 압축 강함(있다면 작은 astrosphere). 삼중성 맥락: C(M4.5Ve 플레어 별 DY Eri)+
       B(백색왜성)는 ~400 AU 밖이라 A 환경엔 거의 무관. 측정/상한 → emit 그대로.
+
+  # ── 백색왜성 40 Eri B (DA, 시리우스 B 다음 근접 WD) — facet-walk 2026-06-24 ──────────
+  - body: 40 Eridani B
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=**DA 백색왜성**(지구 크기 CO핵 축퇴 잔해) — 시리우스 B 다음 **태양 2번째 근접 WD**, 벤치마크 정밀질량
+      (Bond2017 HST/FGS). M왜성 C와 **233.2년 시각쌍성**(BC pair). designation=40 Eridani B(HD 26976 · WD 0413−077 · EG 11).
+      discoverability=**V 9.53, 맨눈 아님 → 망원경 confirmed**(Proxima 선례) → RB T F F F.
+    gate:
+      criterion: [classification, observation]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-24. 비맨눈 별이라 TFFF(맨눈 별 TTTT와 구분, Proxima 선례). DA WD body_type 동의. 문화: Erid 하늘의 WD(에리디언은 맹목이라 못 봄)·Star Trek 40 Eri계."
+    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=9.53 WD); Bond 2017 benchmark", skill: "researchbodies-cfg/references/db-mapping.md"}
