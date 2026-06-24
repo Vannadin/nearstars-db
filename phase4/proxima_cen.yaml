@@ -685,3 +685,17 @@ decisions:
         명왕성/트리톤 직접 유추(같은 ~40–60K 냉 얼음+톨린 regime). 색=표면색 문서(물얼음 Warren&Brandt·tholin Khare·N₂/CH₄
         Grundy/Cruikshank). 별서 멀어 reddening 미미 + 인게임 normalize → 색이 본질(밝기 아님). interesting-first 균형 지형.
       paper: docs/reference/surface-color-albedo-methodology.md(얼음·tholin n,k). 명왕성/트리톤 표면=Grundy2016·Cruikshank1993.
+
+  - body: Proxima Centauri c I
+    axis: appearance
+    status: gated
+    driver: visual
+    value: >
+      **명왕성 룩** — 얼룩진(mottled) 디스크(창백 크림 N₂ 평원 + 어두운 적갈 tholin 지대, 뉴호라이즌스식) + **얇은 청색
+      tholin haze 림**(G4 haze 역광 → 명왕성 시그니처 청 노을, 위성 특징 비주얼). 조석고정이라 **하늘에 c가 거대하게 + 2중
+      적/흰 고리까지** 떠 보임(위성서 본 장관). 표시색=고유색 거의 그대로(별서 멀어 reddening 미미 + 인게임 normalize):
+      크림 #dcd6c6 · 적갈 #6e4632 · haze 청. b(황토)·c(창백 회백)·d(회갈)와 또 다른 = **크림+적갈 얼룩 + 청 haze**.
+    gate:
+      criterion: [visual-checklist]
+      verdict: pass-in-window
+      note: "G4(haze)+G5(이원 지형) 종합. 색=표면색·대기반사색 문서 엔진. c+고리가 하늘에 보이는 건 조석고정 위성의 자연 연출. 오너 G6 확정 2026-06-23."
