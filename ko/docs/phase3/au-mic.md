@@ -73,7 +73,7 @@ follow-up 워크스페이스용으로 표시만 해 둡니다. AU Mic 은 넓은
 | `magnetic_total_field_kG_rms` | 2.61 ± 0.05 | high | Donati 2023 — Zeeman broadening 으로 구한 소규모 평균 자기장 ⟨B⟩ (Phase 2 DB meta_notes) |
 | `spot_coverage_max_fraction` | 0.12 | high | Plavchan 2020 + Donati 2023. 다-흑점 모델은 디스크 ≥ 10% 면적을 요구. TESS 광도곡선의 가시적 비대칭 |
 | `limb_darkening_alpha_h` | ~0.45 | low | Tie-break. AU Mic 직접 측정 없음. Claret 2018 M-왜성 격자에서 Teff = 3500 K interpolation. interesting-first 가 가장자리 어두워짐을 살짝 보존 |
-| `visual_surface_tint_hex_primary` | `#e0743a` (M1V 의 깊은 주황-빨강) | medium | Teff 3665 K 흑체 + 분자 밴드 억제 (hex 유지. 3518→3665 K 이동은 렌더 허용 오차 안이라 M5.5 Proxima `#c54c2a` 보다 살짝 더 따뜻/덜 붉음. Teff 가 ~620 K 더 높음) |
+| `visual_surface_tint_hex_primary` | `#ffcb94` (옅은 따뜻한 주황, M1V) | medium | 실제 광구 색. 3665 K 에서의 Pickles 1998 관측 M1V SED 를 공유 CIE→sRGB 엔진 (`scripts/refs/stellar_photospheric_color.py`) 으로 적분하고 peak-channel 정규화한 값. 옅은 따뜻한 주황으로, 3665 K 흑체가 그럴듯한 1차 근사이며 TiO/VO 밴드는 표시 색도를 약간만 이동시킵니다. 더 차가운 M5.5 Proxima `#ffcc75` 에 대비해 거의 평평하고 (Proxima 가 아주 살짝 더 따뜻함, 파란 채널이 조금 낮음), 둘 다 옅은 따뜻한 주황 계열입니다. (앞서의 렌더-포화된 brick-red 짐작값 `#e0743a` 를 대체합니다.) |
 | `visual_flare_color_hex` | `#ff9050` (백색광 flare 연속체. T_bb ~9000 K flare ribbon 으로 정적 상태보다 살짝 푸름) | medium | Kowalski 2013 dM-flare 연속체 분해. 순수 Hα reddening 과의 tie-break — 어두운 붉은 정적 디스크 위에서 flare 가 눈에 띄게 밝아지도록 선택 |
 | `v_sin_i_km_s` | ~9.0 | medium | R = 0.862 R☉ 과 P_rot = 4.86 d 에서 유도 (edge-on, sin i ≈ 1). Kochukhov & Reiners 와 일관. 옛 0.82 R☉ 에 묶인 ~8.5 를 대체 |
 | `stellar_color_temp_k` | 3665 | high | Teff 유도 (Cristofari 2023) |
@@ -123,10 +123,10 @@ Donati 2023 §3 경유 인용) 의 3D-RHD 모델이 게임 내 애니메이션
 
 광물학적으로 광구는 super-solar [Fe/H] ≈ +0.12 (β Pic MG 평균 —
 Shkolnik 2017. DB 에 AU Mic 직접 측정은 없음) 로, 태양형 metallicity
-M1V 보다 SED 를 장파장 쪽으로 살짝 reddening 시킵니다. 게임 내
-조명 색온도의 분광 분해능에서는 보이지 않지만, 순수한 3665 K
-Planckian 보다 더 깊은 붉은빛의 `#e0743a` 를 정당화하는 근거가
-됩니다.
+M1V 보다 SED 를 장파장 쪽으로 살짝 reddening 시킵니다. 이는 표시
+색조에 대한 sub-perceptual 한 nudge 일 뿐입니다. 적분된 실제-SED
+색 `#ffcb94` 는 본질적으로 3665 K Planckian 이며, 분자 밴드는 밝기-정규화된
+색도를 약간만 이동시킵니다.
 
 ## Atmosphere synthesis
 
@@ -238,12 +238,12 @@ log L = −0.99) 를 씁니다. Plavchan 2009 의 SED 는 0.09 L☉ 를
 AU Mic 의 시각적 표현은 NearStars 카탈로그에서 가장 독특하며 네
 요소를 결합합니다.
 
-- **항성 디스크** — `#e0743a` 로 색조 입힌 깊은 붉은빛의 M1V 로,
-  AU Mic b (0.07 AU) 에서 본 각지름 1.5° 를 채우며 c (0.119 AU)
-  에서는 0.8° 입니다. 지구에서 본 일몰의 태양과 비슷한 색이지만
-  스펙트럼은 훨씬 더 붉으며, 렌더링은 광도 hex 색조와 SED 조명
-  색온도 (3665 K) 를 모두 사용해 가까운 천체의 장면 조명을
-  구동합니다.
+- **항성 디스크** — `#ffcb94` 로 색조 입힌 옅은 따뜻한 주황빛의
+  M1V 로, AU Mic b (0.07 AU) 에서 본 각지름 1.5° 를 채우며 c
+  (0.119 AU) 에서는 0.8° 입니다. 표시되는 색조는 3665 K 흑체에
+  가깝습니다. 분자 밴드는 색지수를 깊게 만들지만 가시 색도는
+  약간만 이동시킵니다. 렌더링은 광도 hex 색조와 SED 조명 색온도
+  (3665 K) 를 모두 사용해 가까운 천체의 장면 조명을 구동합니다.
 - **흑점과 faculae** — 활동 피크 동안 가시 디스크의 > 10% 를
   덮는 다-흑점 복합체. 흑점 사이를 잇는 faculae 와 함께 어두운
   패치로 렌더링됩니다. 흑점 위치는 4.86 d 주기에서 자전하며,

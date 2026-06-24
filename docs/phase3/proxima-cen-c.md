@@ -196,9 +196,10 @@ largest body after the star:
   flare plasma reaches the strongly tilted ice-giant field. Faint and
   intermittent, tied to flare events.
 - **Star in sky.** Proxima subtends only ~0.051° — about 1/10 the Sun's
-  angular size from Earth — a dim deep-red (M5.5Ve, `#c54c2a`) pinpoint
-  delivering ~7 × 10⁻⁴ Earth's insolation. The dayside is a deep red
-  twilight, not a true day.
+  angular size from Earth — a dim, pale warm-orange (M5.5Ve, `#ffcc75`)
+  pinpoint delivering ~7 × 10⁻⁴ Earth's insolation. The dayside is a dim
+  ruddy twilight (the redness is the feeble illumination level, not the
+  star's hue), not a true day.
 - **α Cen AB in sky.** The bright G2V + K1V pair α Centauri A and B, at
   ~13 000 AU, appears as a brilliant close double — the most prominent
   "star" in Proxima c's sky after Proxima itself.

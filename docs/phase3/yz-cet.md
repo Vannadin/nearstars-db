@@ -63,7 +63,7 @@ at medium-to-low confidence because the geometry is model-dependent.
 | `spi_radio_confirmed` | true | high | Trigilio et al. 2023 — ARE from SPI confirmed at 4.37σ (uGMRT 550–900 MHz, 4/9 detections folding to two orbital-phase sectors of planet b); Pineda & Villadsen 2023 VLA 2–4 GHz candidate detection |
 | `spi_driver_planet` | b | high | Pineda & Villadsen 2023; Trigilio 2023 — bursts fold to b's 2.02087 d orbit, not c or d; b is innermost (a/R★ ≈ 21.9) and sits in the sub-Alfvénic regime |
 | `spi_emission_frequency_ghz` | 0.5–4 | high | Trigilio 2023 (550–900 MHz uGMRT) + Pineda & Villadsen 2023 (2–4 GHz VLA); ECM at the cyclotron harmonic of the kG coronal field |
-| `visual_surface_tint_hex_primary` | `#cf5630` (deep red-orange, M4.5 V) | medium | Tie-break: 3100 K blackbody after TiO/VO molecular-band suppression of the blue; essentially identical to the M4 V Barnard `#cf5a30` (Teff close), redder than warmer K/M hosts |
+| `visual_surface_tint_hex_primary` | `#ffd081` (pale warm orange, M4.5 V) | medium | Real photospheric color: the Pickles 1998 observed M4.5 SED at 3100 K integrated through the shared CIE→sRGB engine (`scripts/refs/stellar_photospheric_color.py`), peak-channel normalized. A pale warm orange; the 3100 K blackbody is a fair first approximation and the TiO/VO bands shift the displayed chromaticity only modestly (the large effect is on the color index, not the visible hue). Nearly identical to the M4 V Barnard `#ffd487` (Teff close), all within the pale-warm-orange family. (Supersedes the earlier render-saturated brick-red estimate `#cf5630`.) |
 | `stellar_color_temp_k` | 3100 | high | derived from Teff (Cifuentes 2020) |
 | `visual_spot_coverage_max` | 0.1 | low | Tie-break: BY-Dra-class rotational modulation drives the 68.4 d photometric period (Stock 2020); a low-to-moderate cool-spot fraction reproduces it. Not a measured filling factor |
 | `apparent_magnitude_v_from_earth` | 12.16 | high | Gaia DR3 V (converted); far below naked-eye visibility despite 3.717 pc, because of the tiny 0.0022 L☉ luminosity |
@@ -204,16 +204,17 @@ photosphere (it matters only for the SPI flux-tube geometry).
 
 ## Visual styling
 
-In the NearStars renderer, YZ Cet is portrayed as a deep red-orange
+In the NearStars renderer, YZ Cet is portrayed as a pale warm orange
 M4.5 V flare star whose signature is its magnetic environment rather
 than its modest photosphere:
 
-- **Global appearance.** A deep red-orange disk encoded as `#cf5630`,
-  the 3100 K blackbody continuum after TiO/VO band suppression of the
-  blue — essentially the same hue as the M4 V Barnard's Star
-  (`#cf5a30`, near-identical Teff), and redder than the warmer K/M
-  hosts in the catalog. The illumination color temperature for scene
-  lighting of the three planets is driven directly by the 3100 K SED.
+- **Global appearance.** A pale warm orange disk encoded as `#ffd081`,
+  the real integrated-SED color close to the 3100 K blackbody; the
+  TiO/VO bands shift the displayed chromaticity only modestly. It is
+  essentially the same hue as the M4 V Barnard's Star (`#ffd487`,
+  near-identical Teff), both within the pale-warm-orange family. The
+  illumination color temperature for scene lighting of the three
+  planets is driven directly by the 3100 K SED.
 - **Spotted surface.** A low-to-moderate cool-spot fraction
   (`visual_spot_coverage_max ≈ 0.1`) drifting on the 68.4-day rotation
   reproduces the BY-Dra-class photometric modulation. Slowly-evolving

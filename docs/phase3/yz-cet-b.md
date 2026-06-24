@@ -188,7 +188,7 @@ Combining the surface, atmosphere, and magnetosphere decisions:
   to the stellar magnetic poles — the visible expression of the
   confirmed SPI. Auroral brightening keyed to the 2.02-day orbit.
 - **Star in sky.** YZ Cet subtends ~5.1° in b's sky (≈ 10× the Sun from
-  Earth), deep red-orange (3100 K → `#cf5630`), flooding the surface
+  Earth), a pale warm orange (3100 K → `#ffd081`), flooding the surface
   with ~8.2× Earth's insolation in infrared-rich light. Frequent flares
   from the eruptive-variable host punctuate the illumination.
 - **Sister planets in sky.** c and d appear as bright moving points;

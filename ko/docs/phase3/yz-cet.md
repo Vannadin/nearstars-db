@@ -58,7 +58,7 @@ frozen Phase 2 출처 (Cifuentes 2020 Teff/광도, Schweitzer 2019
 | `spi_radio_confirmed` | true | high | Trigilio et al. 2023 — SPI 의 ARE 가 4.37σ 로 확인 (uGMRT 550–900 MHz, 9회 중 4회 검출이 행성 b 의 두 궤도 위상 sector 로 folding). Pineda & Villadsen 2023 VLA 2–4 GHz 후보 검출 |
 | `spi_driver_planet` | b | high | Pineda & Villadsen 2023. Trigilio 2023 — 버스트가 c 나 d 가 아니라 b 의 2.02087 d 궤도로 folding. b 가 최내측 (a/R★ ≈ 21.9) 이고 sub-Alfvénic 영역에 위치 |
 | `spi_emission_frequency_ghz` | 0.5–4 | high | Trigilio 2023 (550–900 MHz uGMRT) + Pineda & Villadsen 2023 (2–4 GHz VLA). kG 코로나 자기장의 사이클로트론 harmonic 에서 ECM |
-| `visual_surface_tint_hex_primary` | `#cf5630` (M4.5 V 의 깊은 적등색) | medium | Tie-break. 3100 K 흑체에서 TiO/VO 분자 밴드가 파란 쪽을 억제한 뒤. M4 V 바너드 `#cf5a30` (Teff 가 거의 같음) 와 사실상 동일, 더 따뜻한 K/M 호스트보다 붉음 |
+| `visual_surface_tint_hex_primary` | `#ffd081` (옅은 따뜻한 주황, M4.5 V) | medium | 실제 광구 색. 3100 K 에서의 Pickles 1998 관측 M4.5 SED 를 공유 CIE→sRGB 엔진 (`scripts/refs/stellar_photospheric_color.py`) 으로 적분하고 peak-channel 정규화한 값. 옅은 따뜻한 주황으로, 3100 K 흑체가 그럴듯한 1차 근사이며 TiO/VO 밴드는 표시 색도를 약간만 이동시킵니다 (큰 효과는 가시 색조가 아니라 색지수에 나타남). M4 V 바너드 `#ffd487` (Teff 가 거의 같음) 와 거의 동일하며, 모두 옅은 따뜻한 주황 계열입니다. (앞서의 렌더-포화된 brick-red 짐작값 `#cf5630` 을 대체합니다.) |
 | `stellar_color_temp_k` | 3100 | high | Teff 유도 (Cifuentes 2020) |
 | `visual_spot_coverage_max` | 0.1 | low | Tie-break. BY-Dra 부류 자전 변조가 68.4 d 측광 주기를 만듦 (Stock 2020). 낮은-중간 cool-spot 비율이 이를 재현. 측정된 filling factor 는 아님 |
 | `apparent_magnitude_v_from_earth` | 12.16 | high | Gaia DR3 V (변환). 3.717 pc 근접에도 맨눈 가시성에 한참 못 미침. 0.0022 L☉ 의 작은 광도 때문 |
@@ -182,13 +182,13 @@ Pineda & Villadsen 2023 의 두 epoch 사이 (~90 d, 자전 주기의 1.3 배)
 ## Visual styling
 
 NearStars 렌더러에서 YZ Cet 은, 시그니처가 수수한 광구가 아니라 자기
-환경에 있는 깊은 적등색 M4.5 V flare star 로 그려집니다.
+환경에 있는 옅은 따뜻한 주황빛의 M4.5 V flare star 로 그려집니다.
 
-- **전체 외형.** `#cf5630` 으로 인코딩한 깊은 적등색 원반. TiO/VO 밴드가
-  파란 쪽을 억제한 뒤의 3100 K 흑체 연속체로 — M4 V 바너드 별
-  (`#cf5a30`, Teff 가 거의 같음) 과 사실상 같은 색조이고, 카탈로그의 더
-  따뜻한 K/M 호스트보다 붉습니다. 세 행성의 장면 조명 색온도는 3100 K
-  SED 가 직접 구동합니다.
+- **전체 외형.** `#ffd081` 으로 인코딩한 옅은 따뜻한 주황 원반. 3100 K
+  흑체에 가까운 실제 적분-SED 색이며, TiO/VO 밴드는 표시 색도를 약간만
+  이동시킵니다. M4 V 바너드 별 (`#ffd487`, Teff 가 거의 같음) 과 사실상
+  같은 색조이고, 둘 다 옅은 따뜻한 주황 계열입니다. 세 행성의 장면 조명
+  색온도는 3100 K SED 가 직접 구동합니다.
 - **Spotted 표면.** 68.4 일 자전을 따라 떠도는 낮은-중간 cool-spot 비율
   (`visual_spot_coverage_max ≈ 0.1`) 이 BY-Dra 부류 측광 변조를
   재현합니다. 균일한 원반이 아니라 천천히 진화하는 어두운 spot 군집

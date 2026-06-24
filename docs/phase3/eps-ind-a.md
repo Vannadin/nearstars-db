@@ -190,8 +190,9 @@ modest, quiet photosphere:
 - **Global appearance.** A warm orange-amber disk encoded as `#ffb870`,
   the 4700 K blackbody continuum after molecular-band suppression of the
   blue — deeper-amber than the warmer K dwarfs in the catalog (40 Eri A
-  K0.5 V `#ffd5a8`, ε Eri K2 V `#ffd9a8`) and clearly warmer (less red)
-  than the M-dwarf reds (Barnard `#cf5a30`). K5 V sits between, and the
+  K0.5 V `#ffd5a8`, ε Eri K2 V `#ffd9a8`) and slightly more saturated
+  than the pale-warm-orange M dwarfs (Barnard `#ffd487`). K5 V sits
+  between, and the
   tint is picked to read as the distinctly orange one among the nearby
   K dwarfs. The illumination color temperature for scene lighting is
   driven by the 4700 K SED.

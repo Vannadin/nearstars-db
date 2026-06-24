@@ -84,7 +84,7 @@ tint for the M4 V SED.
 | `activity_log_rhk` | −5.82 ± 0.08 | high | Toledo-Padrón et al. 2019 — Ca II H&K chromospheric index; near the M-dwarf activity floor, one of the quietest M dwarfs known |
 | `activity_cycle_years` | ~10 | medium | Toledo-Padrón et al. 2019 — long-term cyclic modulation in the activity-index time series; order ~10 yr, Sun-like in character |
 | `v_sin_i_km_s` | ~0.07 | low | Derived from R = 0.187 R☉ and P_rot = 145 d (equatorial velocity ~0.065 km/s); below the resolution of any spectroscopic v sin i measurement — the star is effectively a non-rotator for line-broadening purposes |
-| `visual_surface_tint_hex_primary` | `#cf5a30` (deep orange-red, M4 V) | medium | Tie-break: 3195 K blackbody + TiO/VO molecular-band suppression; redder than the M1V AU Mic `#e0743a` (Teff ~470 K hotter), slightly warmer than the M5.5 Proxima `#c54c2a` (Teff ~145 K cooler) |
+| `visual_surface_tint_hex_primary` | `#ffd487` (pale warm orange, M4 V) | medium | Real photospheric color: the Pickles 1998 observed M4 SED at 3195 K integrated through the shared CIE→sRGB engine (`scripts/refs/stellar_photospheric_color.py`), peak-channel normalized. A pale warm orange; the 3195 K blackbody is a fair first approximation and TiO/VO bands shift the displayed chromaticity only modestly (the large effect is on the color index, not the visible hue). Nearly flat against the M1V AU Mic `#ffcb94` and the cooler M5.5 Proxima `#ffcc75` — all within the pale-warm-orange family, Proxima only very slightly warmer. (Supersedes the earlier render-saturated brick-red estimate `#cf5a30`.) |
 | `stellar_color_temp_k` | 3195 | high | derived from Teff (González Hernández 2024) |
 | `apparent_magnitude_v_from_earth` | 9.51 | high | Hipparcos / standard photometry; far below naked-eye visibility despite the 1.83 pc distance, because of the low luminosity (M_V ≈ 13.2) |
 | `proper_motion_arcsec_per_yr` | 10.36 | high | Barnard 1916 / Gaia; the highest proper motion of any known star ("Barnard's Runaway Star") |
@@ -199,7 +199,7 @@ explicit documentation.
 | Field | cfg value (recommended) | Canonical alternatives | Why cfg picks this value |
 |---|---|---|---|
 | `metallicity_fe_h_dex` | −0.39 ± 0.03 (Jahandar 2023, SPIRou NIR) | −0.15 ± 0.16 (Schweitzer 2019, CARMENES VIS); −0.57 ± 0.10 (Marfil 2021) | The three determinations span ~0.4 dex — a genuine systematic disagreement, not measurement scatter. For cool M dwarfs the near-infrared is favored for metallicity because the optical (VIS) continuum is so heavily blanketed by molecular bands that pseudo-continuum placement and line-list incompleteness bias VIS-based [Fe/H]; NIR analyses (Jahandar 2023, SPIRou) work in a cleaner spectral regime. The cfg therefore adopts the NIR value −0.39, intermediate between the optical Schweitzer (−0.15) and Marfil (−0.57) extremes. The metallicity only weakly affects the rendered SED color, so this divergence is documentary rather than visually decisive. |
-| `teff_k` | 3195 ± 28 (González Hernández 2024, ESPRESSO) | 3231 ± 21 (Jahandar 2023); 3254 ± 32 (Marfil 2021); 3273 ± 51 (Schweitzer 2019) | The four spectroscopic determinations span only ~80 K (3195–3273 K), tight by M-dwarf standards. The cfg adopts the coolest, González Hernández 2024, as the most recent high-resolution ESPRESSO master-spectrum analysis and the Phase 2 recommended value. An 80 K shift at this Teff corresponds to a sub-perceptible change in rendered tint (well inside the M4 V `#cf5a30` rendering tolerance), so the choice among these values is not visually decisive; the divergence is documented for completeness of the parameter set. |
+| `teff_k` | 3195 ± 28 (González Hernández 2024, ESPRESSO) | 3231 ± 21 (Jahandar 2023); 3254 ± 32 (Marfil 2021); 3273 ± 51 (Schweitzer 2019) | The four spectroscopic determinations span only ~80 K (3195–3273 K), tight by M-dwarf standards. The cfg adopts the coolest, González Hernández 2024, as the most recent high-resolution ESPRESSO master-spectrum analysis and the Phase 2 recommended value. An 80 K shift at this Teff corresponds to a sub-perceptible change in rendered tint (well inside the M4 V `#ffd487` rendering tolerance), so the choice among these values is not visually decisive; the divergence is documented for completeness of the parameter set. |
 
 Both Jahandar 2023 and Schweitzer 2019 (and Marfil 2021) remain in
 the Phase 2 DB as `recommended:false` alternatives within their
@@ -209,16 +209,18 @@ recommended picks are González Hernández 2024 (Teff) and Jahandar
 
 ## Visual styling
 
-In the NearStars renderer, Barnard's Star is portrayed as a deeply
-red, very faint M4 V dwarf — the nearest single star, but visually
-unremarkable in brightness. The surface tint is encoded as `#cf5a30`,
-a tie-break choice: the 3195 K blackbody continuum, after TiO/VO
-molecular-band suppression of the blue, renders as a deep orange-red,
-positioned in the catalog's M-dwarf palette between the warmer M1 V
-AU Mic (`#e0743a`, Teff ~470 K hotter) and the cooler M5.5 Proxima
-(`#c54c2a`, Teff ~145 K cooler). The illumination color temperature
-for scene lighting of any nearby body is driven directly by the
-3195 K SED.
+In the NearStars renderer, Barnard's Star is portrayed as a pale
+warm orange, very faint M4 V dwarf — the nearest single star, but
+visually unremarkable in brightness. The surface tint is encoded as
+`#ffd487`, the real photospheric color: the Pickles 1998 observed
+M4 SED at 3195 K integrated through the shared CIE→sRGB engine and
+peak-channel normalized. The 3195 K blackbody is a fair first
+approximation; the TiO/VO bands shift the displayed chromaticity only
+modestly. The catalog's M-dwarf chromaticity is nearly flat, so this
+sits essentially alongside the M1 V AU Mic (`#ffcb94`, Teff ~470 K
+hotter) and the M5.5 Proxima (`#ffcc75`, Teff ~145 K cooler, only
+very slightly warmer). The illumination color temperature for scene
+lighting of any nearby body is driven directly by the 3195 K SED.
 
 The disk is rendered near-uniform with only faint, slowly-drifting
 spot features — the visual expression of the floor-level activity

@@ -71,7 +71,7 @@ specific flare hex tint).
 | `flare_rate_superflare_per_year` | 3 (≥ 10³³ erg); 0.5 (≥ 10³⁴ erg) | high | Vida 2019 TESS — explicit numbers in §4 from cumulative flare frequency distribution |
 | `orbital_role_around_acen_ab` | bound at ~13 000 AU; P ≈ 547 000 yr | medium | Kervella 2017 astrometric tracking; Feng & Jones 2018 capture analysis |
 | `limb_darkening_alpha_h` | ~0.4 | low | Tie-break: not directly measured for Proxima; interpolated from M-dwarf model grid (Claret 2018); interesting-first per the interesting-first rule for slight visual variation |
-| `visual_surface_tint_hex_primary` | `#c54c2a` (deep red M5.5V) | high | Teff 2904 K blackbody + molecular band suppression below 6500 Å |
+| `visual_surface_tint_hex_primary` | `#ffcc75` (pale warm orange, M5.5V) | high | Real photospheric color: the Pickles 1998 observed late-M SED at 2904 K integrated through the shared CIE→sRGB engine (`scripts/refs/stellar_photospheric_color.py`), peak-channel normalized. A pale warm orange; the 2904 K blackbody is a fair first approximation, the TiO/VO/H₂O bands shifting the displayed chromaticity only modestly (the large effect is on the color index, not the visible hue). Only very slightly warmer than the earlier-type M dwarfs (small blue-channel drop), all within the pale-warm-orange family. (Supersedes the earlier render-saturated brick-red estimate `#c54c2a`.) |
 | `visual_flare_color_hex` | `#ff5e2a` (Hα-dominated optical flare with broadband continuum brightening) | medium | Tie-break: Vida 2019 + Anglada-Escudé 2016 supplement flare spectra; specific hex chosen for in-game visibility against the dim red quiescent continuum |
 | `stellar_color_temp_k` | 2904 | high | derived |
 
@@ -153,13 +153,14 @@ orbital inclination being lower than 90°.
 
 ## Visual styling
 
-Proxima renders as a deep red M5.5V in NearStars — the photospheric
-tint `#c54c2a` shifts the in-game illumination color toward the
-visible red end, with most of the integrated SED below the V-band
-peak. Viewed from Proxima b at 0.0485 AU, Proxima fills 1.5° angular
-diameter (about 3× the apparent diameter of the Sun seen from Earth);
-from Proxima d at 0.029 AU it fills 2.5°. The dim red color and
-large angular size combine to produce a visually striking "great red
+Proxima renders as a pale warm orange M5.5V in NearStars — the
+photospheric tint `#ffcc75` is the real integrated-SED color, close
+to the 2904 K blackbody, with most of the integrated SED below the
+V-band peak. Viewed from Proxima b at 0.0485 AU, Proxima fills 1.5°
+angular diameter (about 3× the apparent diameter of the Sun seen from
+Earth); from Proxima d at 0.029 AU it fills 2.5°. The dim luminosity
+(an intrinsic-brightness effect, not a chromaticity one) and large
+angular size combine to produce a visually striking "great warm-toned
 star" appearance from close-in habitable-zone planets.
 
 Flares are rendered as transient brightening events: the in-game

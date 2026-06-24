@@ -160,7 +160,7 @@ Combining the surface and atmosphere decisions:
   carries no inferred magnetosphere and no star-planet aurora; rendered
   as a plain warm rocky world.
 - **Star in sky.** YZ Cet subtends ~3.9° in c's sky (≈ 8× the Sun from
-  Earth), deep red-orange (3100 K → `#cf5630`), flooding the surface
+  Earth), a pale warm orange (3100 K → `#ffd081`), flooding the surface
   with ~4.7× Earth's insolation. Frequent flares from the
   eruptive-variable host punctuate the illumination.
 - **Sister planets in sky.** b (inner) and d (outer) appear as bright

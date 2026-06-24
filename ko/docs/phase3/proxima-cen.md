@@ -63,7 +63,7 @@ flare hex 색상).
 | `flare_rate_superflare_per_year` | 3 (≥ 10³³ erg); 0.5 (≥ 10³⁴ erg) | high | Vida 2019 TESS — §4 의 누적 flare 빈도 분포로부터 명시 |
 | `orbital_role_around_acen_ab` | ~13 000 AU 에 묶임. P ≈ 547 000 yr | medium | Kervella 2017 astrometric 추적. Feng & Jones 2018 capture 분석 |
 | `limb_darkening_alpha_h` | ~0.4 | low | Tie-break. Proxima 에 직접 측정값 없음. M 왜성 모델 grid (Claret 2018) 에서 보간. interesting-first 룰 에 따른 interesting-first 로 미세한 시각 변동 |
-| `visual_surface_tint_hex_primary` | `#c54c2a` (깊은 빨강 M5.5V) | high | Teff 2904 K 흑체 + 6500 Å 이하 분자 밴드 흡수 |
+| `visual_surface_tint_hex_primary` | `#ffcc75` (옅은 따뜻한 주황, M5.5V) | high | 실제 광구 색. 2904 K 에서의 Pickles 1998 관측 late-M SED 를 공유 CIE→sRGB 엔진 (`scripts/refs/stellar_photospheric_color.py`) 으로 적분하고 peak-channel 정규화한 값. 옅은 따뜻한 주황으로, 2904 K 흑체가 그럴듯한 1차 근사이며 TiO/VO/H₂O 밴드는 표시 색도를 약간만 이동시킵니다 (큰 효과는 가시 색조가 아니라 색지수에 나타남). 더 이른 분광형 M 왜성들보다 아주 살짝 더 따뜻할 뿐이며 (파란 채널이 조금 낮음), 모두 옅은 따뜻한 주황 계열입니다. (앞서의 렌더-포화된 brick-red 짐작값 `#c54c2a` 를 대체합니다.) |
 | `visual_flare_color_hex` | `#ff5e2a` (Hα 우위 광학 flare 와 광대역 연속체 brightening) | medium | Tie-break. Vida 2019 + Anglada-Escudé 2016 보충 flare 스펙트라. 게임 내 어두운 빨강 quiescent 연속체 대비 가시성을 위해 특정 hex 선택 |
 | `stellar_color_temp_k` | 2904 | high | 유도 |
 
@@ -132,13 +132,14 @@ Proxima b 의 궤도 경사가 90° 미만이라는 점과 일관됩니다.
 
 ## Visual styling
 
-Proxima 는 NearStars 에서 깊은 빨강 M5.5V 로 렌더링됩니다. `#c54c2a`
-광구 색조가 게임 내 조명 색을 가시 빨강 쪽으로 옮기며, SED 통합값
-대부분이 V 밴드 피크 아래에 있습니다. Proxima b 의 0.0485 AU 에서 보면
-Proxima 가 각지름 1.5° 를 채웁니다 (지구에서 본 태양 겉보기 지름의 약
-3 배). Proxima d 의 0.029 AU 에서 보면 2.5° 입니다. 어두운 빨강 색과
-큰 각도 크기가 결합해 근접 거주가능영역 행성에서 본 시각적으로 인상적인
-"거대한 빨강 별" 외관을 만듭니다.
+Proxima 는 NearStars 에서 옅은 따뜻한 주황빛의 M5.5V 로 렌더링됩니다.
+광구 색조 `#ffcc75` 는 실제 적분-SED 색으로 2904 K 흑체에 가까우며,
+적분된 SED 대부분이 V 밴드 피크 아래에 있습니다. Proxima b 의
+0.0485 AU 에서 보면 Proxima 가 각지름 1.5° 를 채웁니다 (지구에서 본
+태양 겉보기 지름의 약 3 배). Proxima d 의 0.029 AU 에서 보면 2.5°
+입니다. 어두운 광도 (색도가 아니라 본질 밝기의 효과) 와 큰 각도
+크기가 결합해 근접 거주가능영역 행성에서 본 시각적으로 인상적인
+"거대한 따뜻한 색조의 별" 외관을 만듭니다.
 
 Flare 는 일시적인 brightening 이벤트로 렌더링됩니다. 게임 내 flare cfg
 키 `visual_flare_color_hex = #ff5e2a` 가 피크 방출 동안 색을 살짝

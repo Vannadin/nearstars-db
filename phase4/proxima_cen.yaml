@@ -31,10 +31,10 @@ decisions:
     status: gated
     driver: observation
     value: >
-      color=M5.5V 심적색 #c54c2a(TiO/VO/H₂O가 <6500Å 강억제). limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break).
+      color=M5.5V 물리색 #ffcc75(옅은 따뜻한 주황 — 실측 Pickles SED→CIE; TiO/VO/H₂O는 색지수·광도엔 크나 밝기-정규화 표시색조엔 미미). 옛 #c54c2a(심적색)은 광도/색조 혼동 render 짐작이라 폐기. limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break).
       **spots_faculae=보통~다소 많음 ~3–5%**(활동적 M왜성 큰 spot; 83d 자전 변조 검출=spot 존재; A·B보다 多). flare 색
       #ff5e2a(Hα)는 참조용 — **동적 플레어는 cfg 렌더 불가**라 visual passthrough, 효과는 environment.radiation/activity로.
-    gate: {criterion: [observation], verdict: pass-in-window, note: "색/limb=측정·tie-break passthrough. 흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인)."}
+    gate: {criterion: [observation], verdict: pass-in-window, note: "색 정정 2026-06-24 — 물리색 #ffcc75(실측 Pickles SED→CIE), 옛 #c54c2a 폐기. limb=tie-break passthrough. 흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인)."}
 
   - body: Proxima Centauri
     axis: magnetism.magnetic_field    # 측정

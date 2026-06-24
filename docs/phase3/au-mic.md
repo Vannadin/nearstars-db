@@ -76,7 +76,7 @@ the flare color, and the spot-coverage cycle phase.
 | `magnetic_total_field_kG_rms` | 2.61 ± 0.05 | high | Donati 2023 — small-scale mean field ⟨B⟩ from Zeeman broadening (Phase 2 DB meta_notes) |
 | `spot_coverage_max_fraction` | 0.12 | high | Plavchan 2020 + Donati 2023 — multi-spot models require ≥ 10% disk coverage; visible asymmetry of TESS lightcurve |
 | `limb_darkening_alpha_h` | ~0.45 | low | Tie-break: not directly measured for AU Mic; interpolated from Claret 2018 M-dwarf grid at Teff = 3500 K; interesting-first preserves slight visual edge dimming |
-| `visual_surface_tint_hex_primary` | `#e0743a` (deep orange-red, M1V) | medium | Teff 3665 K blackbody + molecular-band suppression (hex retained; the 3518→3665 K shift is within rendering tolerance, slightly warmer/less red than M5.5 Proxima `#c54c2a` since Teff ~620 K higher) |
+| `visual_surface_tint_hex_primary` | `#ffcb94` (pale warm orange, M1V) | medium | Real photospheric color: the Pickles 1998 observed M1V SED at 3665 K integrated through the shared CIE→sRGB engine (`scripts/refs/stellar_photospheric_color.py`), peak-channel normalized. A pale warm orange; the 3665 K blackbody is a fair first approximation and the TiO/VO bands shift the displayed chromaticity only modestly. Nearly flat against the cooler M5.5 Proxima `#ffcc75`, which is only very slightly warmer (small blue-channel drop) — both in the pale-warm-orange family. (Supersedes the earlier render-saturated brick-red estimate `#e0743a`.) |
 | `visual_flare_color_hex` | `#ff9050` (white-light flare continuum, slightly bluer than quiescent due to T_bb ~9000 K flare ribbon) | medium | Kowalski 2013 dM-flare continuum decomposition; tie-break against pure Hα reddening — chosen so flares brighten visibly against the dim red quiescent disk |
 | `v_sin_i_km_s` | ~9.0 | medium | Derived from R = 0.862 R☉ and P_rot = 4.86 d (edge-on, sin i ≈ 1); consistent with Kochukhov & Reiners; supersedes the ~8.5 keyed to the old 0.82 R☉ |
 | `stellar_color_temp_k` | 3665 | high | derived from Teff (Cristofari 2023) |
@@ -131,9 +131,10 @@ timescale grid used for the in-game animated photosphere texture.
 Mineralogically the photosphere is supersolar [Fe/H] ≈ +0.12 (β Pic
 MG mean — Shkolnik 2017; no direct AU Mic measurement is on file
 in the DB), slightly reddening the SED toward the long-wavelength
-end relative to a solar-metallicity M1V. This is invisible at the
-spectral resolution of the in-game illumination color but justifies
-the deeper-red `#e0743a` over a pure 3665 K Planckian.
+end relative to a solar-metallicity M1V. This is a sub-perceptual
+nudge on the displayed tint; the integrated real-SED color `#ffcb94`
+is essentially the 3665 K Planckian, the molecular bands shifting the
+brightness-normalized chromaticity only modestly.
 
 ## Atmosphere synthesis
 
@@ -257,10 +258,11 @@ unsourced placeholder.)
 The visual presentation of AU Mic is the most distinctive in the
 NearStars catalog and combines four elements:
 
-- **Stellar disk** — a deeply red M1V tinted `#e0743a`, fills 1.5°
+- **Stellar disk** — a pale warm orange M1V tinted `#ffcb94`, fills 1.5°
   angular diameter as seen from AU Mic b (0.07 AU), 0.8° from c
-  (0.119 AU). The color is similar to a sunset Sun on Earth, but
-  the spectrum is much redder; rendering uses both the photometric
+  (0.119 AU). The displayed hue is close to the 3665 K blackbody; the
+  molecular bands deepen the color index but only modestly shift the
+  visible chromaticity. Rendering uses both the photometric
   hex tint and the SED-illumination color temperature (3665 K) to
   drive scene lighting for any nearby body.
 - **Spots and faculae** — multi-spot complex covering > 10% of the

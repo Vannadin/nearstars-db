@@ -78,7 +78,7 @@ Zechmeister 2019 의 나이와 분광형, Lafarga 2021 의 자전 — Dreizler
 | `activity_log_lx_lbol` | −4.9 | high | Fuhrmeister et al. 2025 — 정적 Chandra X-선 검출 (Phase 2 recommended). XMM-Newton 정적 범위 −5.0 ~ −4.81 로 일관. Zechmeister 2019 상한 <−4.23 을 대체 |
 | `flare_state` | rare large flares | medium | Fuhrmeister et al. 2025 — TESS flare 둘, 총 에너지 ~10³¹–10³² erg (가장 큰 태양 flare 에 필적), 분출 프로미넌스 단서. flare 율 ~2.6 ± 1.8 / 100 d 이나 집중됨 — 대부분 시간은 정적 |
 | `v_sin_i_km_s` | ~0.06 | low | R = 0.107 R☉ 과 P_rot = 96.2 d 에서 유도 (적도 속도 ~0.056 km/s). 어떤 분광 선폭 임계값보다도 한참 아래 — 선폭 측면에서 사실상 비자전체 |
-| `visual_surface_tint_hex_primary` | `#c23a1c` (M7 V 의 깊고 진한 빨강) | medium | Tie-break. 2904 K 흑체에서 TiO/VO/H₂O 분자 밴드가 파란 쪽을 강하게 억제한 뒤. M4 V 바너드 `#cf5a30` (Teff 가 ~290 K 더 뜨거움) 과 M5.5 Proxima `#c54c2a` 보다 붉고 진함 |
+| `visual_surface_tint_hex_primary` | `#ffcc75` (옅은 따뜻한 주황, M7 V) | medium | 실제 광구 색. 2900 K 부근의 Pickles 1998 관측 late-M SED 를 공유 CIE→sRGB 엔진 (`scripts/refs/stellar_photospheric_color.py`) 으로 적분하고 peak-channel 정규화한 값. 옅은 따뜻한 주황으로, ~2900 K 흑체가 그럴듯한 1차 근사이며 짙은 TiO/VO/H₂O 밴드가 있어도 표시 색도는 약간만 이동합니다 (큰 분자 효과는 가시 색조가 아니라 색지수와 광도에 나타남). M4 V 바너드 `#ffd487` (Teff 가 ~290 K 더 뜨거움) 보다 아주 살짝 더 따뜻할 뿐이고 M5.5 Proxima `#ffcc75` 와는 구별 불가이며 — 모두 옅은 따뜻한 주황 계열입니다. (앞서의 렌더-포화된 brick-red 짐작값 `#c23a1c` 을 대체합니다.) |
 | `stellar_color_temp_k` | 2904 | high | Teff 유도 (Schweitzer 2019) |
 | `apparent_magnitude_v_from_earth` | 15.08 | high | Zechmeister 2019 / Carmencita. 3.831 pc 근접에도 맨눈 가시성에 한참 못 미침. 0.00073 L☉ 의 작은 광도 때문 (J 에서는 8.39 mag 로 훨씬 밝음) |
 | `distance_pc` | 3.831 ± 0.004 | high | Gaia DR2 (Zechmeister 2019 경유). 태양에서 24번째로 가까운 별 |
@@ -199,15 +199,18 @@ trail 을 보존합니다. recommended 픽은 전반에 걸쳐 Schweitzer 2019
 
 ## Visual styling
 
-NearStars 렌더러에서 티가든 별은 카탈로그에서 가장 붉고 가장 어두운
-M7 V 초저온 왜성으로 — 자기 분광형에서 가장 밝지만 밝기 면에서는
-시각적으로 미미하게 — 표현됩니다. 표면 색조는 `#c23a1c` 으로 인코딩
-되며, tie-break 선택입니다. 2904 K 흑체 연속체는 TiO/VO/H₂O 분자 밴드가
-파랑과 초록을 거의 완전히 억제한 뒤 깊고 진한 주황-빨강으로 렌더링되며 —
-M4 V 바너드 별 (`#cf5a30`, Teff 가 ~290 K 더 뜨거움) 과 M5.5 Proxima
-(`#c54c2a`) 보다 붉고 진합니다. 가까운 천체의 장면 조명 색온도는
-2904 K SED 가 직접 구동하며, 가까운 지구질량 행성들을 깊은 붉은빛의
-적외선-우세 빛으로 적십니다.
+NearStars 렌더러에서 티가든 별은 카탈로그에서 가장 어두운 M7 V
+초저온 왜성으로 — 자기 분광형에서 가장 밝지만 밝기 면에서는
+시각적으로 미미하게 — 표현됩니다. 표면 색조는 `#ffcc75` 로 인코딩
+되며, 실제 광구 색입니다. 2900 K 부근의 Pickles 1998 관측 late-M SED
+를 공유 CIE→sRGB 엔진으로 적분하고 peak-channel 정규화한 값입니다.
+~2900 K 흑체가 그럴듯한 1차 근사이며, 거의 전부를 덮는 TiO/VO/H₂O
+밴드가 있어도 표시 색도는 옅은 따뜻한 주황으로, 분자 효과는 가시
+색조가 아니라 색지수와 광도에 떨어집니다. M-계열 색도는 거의 평평해서,
+이 값은 M4 V 바너드 별 (`#ffd487`, Teff 가 ~290 K 더 뜨거움) 보다 아주
+살짝 더 따뜻할 뿐이고 M5.5 Proxima (`#ffcc75`) 와는 구별 불가입니다.
+가까운 천체의 장면 조명 색온도는 2900 K SED 가 직접 구동하며, 가까운
+지구질량 행성들을 따뜻한 적외선-우세 빛으로 적십니다.
 
 디스크는 희미하고 느리게 떠도는 흑점 피처만 있는 거의 균일한 모습으로
 렌더링됩니다 — 바닥 수준 색채권 활동 (Hα 가 West 2008 비활동 임계값

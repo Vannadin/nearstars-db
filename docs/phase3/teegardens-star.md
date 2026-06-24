@@ -84,7 +84,7 @@ alternatives`. One tie-break sets the visual surface tint for the
 | `activity_log_lx_lbol` | −4.9 | high | Fuhrmeister et al. 2025 — quiescent Chandra X-ray detection (Phase 2 recommended); XMM-Newton quiescent range −5.0 to −4.81, consistent. Supersedes the Zechmeister 2019 upper limit <−4.23 |
 | `flare_state` | rare large flares | medium | Fuhrmeister et al. 2025 — two TESS flares, total energy ~10³¹–10³² erg (comparable to the largest solar flares), plus hints of an erupting prominence; flare rate ~2.6 ± 1.8 per 100 d, but concentrated — quiescent most of the time |
 | `v_sin_i_km_s` | ~0.06 | low | Derived from R = 0.107 R☉ and P_rot = 96.2 d (equatorial velocity ~0.056 km/s); far below any spectroscopic line-broadening threshold — effectively a non-rotator for line-broadening purposes |
-| `visual_surface_tint_hex_primary` | `#c23a1c` (deep saturated red, M7 V) | medium | Tie-break: 2904 K blackbody after heavy TiO/VO/H₂O molecular-band suppression of the blue; redder and more saturated than the M4 V Barnard `#cf5a30` (Teff ~290 K hotter) and the M5.5 Proxima `#c54c2a` |
+| `visual_surface_tint_hex_primary` | `#ffcc75` (pale warm orange, M7 V) | medium | Real photospheric color: a Pickles 1998 observed late-M SED near 2900 K integrated through the shared CIE→sRGB engine (`scripts/refs/stellar_photospheric_color.py`), peak-channel normalized. A pale warm orange; the ~2900 K blackbody is a fair first approximation, and even with heavy TiO/VO/H₂O bands the displayed chromaticity shifts only modestly (the large molecular effect is on the color index and luminosity, not the visible hue). Only very slightly warmer than the M4 V Barnard `#ffd487` (Teff ~290 K hotter) and indistinguishable from the M5.5 Proxima `#ffcc75` — all within the pale-warm-orange family. (Supersedes the earlier render-saturated brick-red estimate `#c23a1c`.) |
 | `stellar_color_temp_k` | 2904 | high | derived from Teff (Schweitzer 2019) |
 | `apparent_magnitude_v_from_earth` | 15.08 | high | Zechmeister 2019 / Carmencita; far below naked-eye visibility despite the 3.831 pc proximity, because of the tiny 0.00073 L☉ luminosity (the star is much brighter in J, 8.39 mag) |
 | `distance_pc` | 3.831 ± 0.004 | high | Gaia DR2 (via Zechmeister 2019); the 24th-nearest star to the Sun |
@@ -226,16 +226,20 @@ recommended picks are Schweitzer 2019 throughout.
 ## Visual styling
 
 In the NearStars renderer, Teegarden's Star is portrayed as the
-deepest-red, faintest M7 V ultracool dwarf in the catalog — the
-brightest of its spectral class, yet visually negligible in brightness.
-The surface tint is encoded as `#c23a1c`, a tie-break choice: the
-2904 K blackbody continuum, after near-total TiO/VO/H₂O molecular-band
-suppression of the blue and green, renders as a deep saturated
-orange-red — redder and more saturated than the M4 V Barnard's Star
-(`#cf5a30`, Teff ~290 K hotter) and the M5.5 Proxima (`#c54c2a`). The
+faintest M7 V ultracool dwarf in the catalog — the brightest of its
+spectral class, yet visually negligible in brightness. The surface
+tint is encoded as `#ffcc75`, the real photospheric color: a Pickles
+1998 observed late-M SED near 2900 K integrated through the shared
+CIE→sRGB engine and peak-channel normalized. The ~2900 K blackbody is
+a fair first approximation; even with near-total TiO/VO/H₂O bands the
+displayed chromaticity is a pale warm orange, the molecular effect
+falling on the color index and luminosity rather than the visible
+hue. The M-sequence chromaticity is nearly flat, so this is only very
+slightly warmer than the M4 V Barnard's Star (`#ffd487`, Teff ~290 K
+hotter) and indistinguishable from the M5.5 Proxima (`#ffcc75`). The
 illumination color temperature for scene lighting of any nearby body
-is driven directly by the 2904 K SED, bathing the close-in Earth-mass
-planets in deep-red, infrared-dominated light.
+is driven directly by the 2900 K SED, bathing the close-in Earth-mass
+planets in warm, infrared-dominated light.
 
 The disk is rendered near-uniform with only faint, slowly-drifting
 spot features — the visual expression of the floor-level chromospheric

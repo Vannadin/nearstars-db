@@ -138,11 +138,12 @@ decisions:
     status: gated
     driver: observation
     value: >
-      color=**`#cf5a30`**(깊은 주황-적) — M왜성이라 흑체 부적용(흑체 3167K=#ffbe78은 너무 주황): **TiO/VO/H₂O 분자밴드가 녹청을
-      억제**해 흑체보다 훨씬 붉고 어두움(항성광구색 문서). M4.5·3167K는 **Barnard(M4·3195K, #cf5a30)에 사실상 일치**(28K만 차가움)
-      → 사다리 보간으로 #cf5a30 채택. spots/faculae=**활발**(DY Eri 플레어·지속 Hα — 활성 M왜성).
+      color=**물리색 `#ffd587`**(옅은 따뜻한 주황) — 실측 Pickles M4.5 SED를 CIE 엔진에 통과시킨 값. 흑체 3167K=#ffbe78도
+      거의 맞고(살짝 더 채도 높을 뿐), 실측은 오히려 약간 더 옅음. TiO/VO/H₂O 분자밴드는 색지수·광도엔 크게 작용하나 밝기-정규화한
+      표시 색조는 거의 안 바뀜(항성광구색 문서 정정판). M4.5·3167K는 **Barnard(M4·3195K, #ffd487)에 사실상 일치**. 옛 사다리
+      #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기. spots/faculae=**활발**(DY Eri 플레어·지속 Hα — 활성 M왜성).
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24. 색=stellar-photospheric-color-methodology.md(M왜성 TiO/VO 사다리, Barnard 앵커 #cf5a30). 흑체 #ffbe78 오류 진단됨. emit 별색(광원/원반) deferred."
-      paper: docs/reference/stellar-photospheric-color-methodology.md (M왜성 분자밴드 사다리; Allard BT-Settl·Mann2015·Rajpurohit2013).
+      note: "오너 G3 확정 2026-06-24, 색 정정 2026-06-24 — 물리색 #ffd587(실측 Pickles M4.5, Barnard #ffd487 앵커). 옛 #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기, 실측은 옅은 주황. 흑체 #ffbe78도 fair approx. emit 별색(광원/원반) deferred."
+      paper: docs/reference/stellar-photospheric-color-methodology.md (실측 Pickles SED→CIE 사다리; scripts/refs/stellar_photospheric_color.py).
