@@ -652,3 +652,19 @@ decisions:
         오너 2026-06-23 — 앞서 "1.5× 달"(반경 2,600km, 비율 0.15 과대)을 **~950 km로 하향**(비율 ~0.055=해왕성-트리톤,
         mini-Neptune 위성에 정합). 픽션이라 질량/반경은 얼음 밀도(~1.9)로 자기일관 도출. g·밀도는 트리톤/티타니아급.
       caveat: "G1·c-G10의 '~1.5× 달' 표기는 본 G3로 정정(~950 km)."
+
+  - body: Proxima Centauri c I
+    axis: atmosphere
+    status: gated
+    driver: classification
+    value: >
+      **희박 N₂ 대기(명왕성식, +CH₄/CO 미량)** — 표면 N₂ 얼음 승화로 ~Pa(µbar)급(명왕성 ~1 Pa 유추). 증기압 평형이라
+      **승화-지지 정상상태**(탈출분을 얼음 승화가 재공급 → Gyr 안정; v_esc~0.97 km/s 낮아도 명왕성처럼 유지). **tholin 청색
+      haze 층**(명왕성 특유 → G6 외형 연계). breathability=∅. 게임상 공기역학 무의미(너무 희박).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      rationale: >
+        명왕성 아날로그(g 0.5·~40–60K·N₂ 얼음)라 명왕성식 희박 N₂가 자연. 안정 근거 = 승화-지지(증기압 평형) + 중력 결속
+        (대기 H~30 km ≪ 위성 Hill 2,460 km). c 자기권 상호작용(픽업/torus)은 modest라 본 결정엔 미상세화(승화로 상쇄, 오너 2026-06-23).
+      paper: 명왕성 N₂ 대기·haze 유추. scale-height/μ = docs/reference/exoplanet-atmosphere-methodology.md.
