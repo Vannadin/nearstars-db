@@ -450,3 +450,60 @@ decisions:
       verdict: pass-in-window
       note: "오너 G5 확정 2026-06-24 — (가) 회갈 크레이터 암석 + 흰 CO₂/SO₂ frost 극관(화성/달식). eyeball 없음. A~0.2–0.3 계절변동. 지질학적 죽음(무화산). Astrophage 번식지 flavor."
       paper: docs/reference/surface-color-albedo-methodology.md (현무암 회갈·CO₂/SO₂ frost 고알베도; Bond albedo).
+
+  - body: 40 Eridani A d
+    axis: appearance
+    status: gated
+    driver: surface-dominated (thin transparent atmosphere)
+    value: >
+      대기 희박(<1%, 투명) → 디스크 = **표면이 지배**. 우주에서 **회갈색 크레이터 구체 `#8c7f70` + 흰 frost 극관**(화성/달식;
+      극·야간 CO₂/SO₂ frost 밝음). Erid 같은 **대기 색(청색) 없음** — 얇아서 Rayleigh 무시급. 계절·주야로 frost 범위 변동 →
+      디스크 밝기·극관 변함. emit 디스크 = 표면색(G5) + frost 극관.
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      note: "오너 G6 확정 2026-06-24 — 표면지배 디스크(얇은 투명 대기). 회갈 #8c7f70 + 흰 frost 극관(화성식), 대기색 없음. 계절 frost 변동."
+      paper: docs/reference/atmosphere-reflected-color-methodology.md (얇은 대기→Rayleigh 무시, 표면 반사 지배).
+
+  - body: 40 Eridani A d
+    axis: magnetism.magnetic_field
+    status: passthrough
+    note: >
+      자기장 **없음/무시급** — 작고(0.0149 M⊕) 식은 핵 + 완만 자전 → 글로벌 dynamo 미작동(달·화성 analog). dynamo 방법론상
+      대류 열플럭스·전도핵 부족. 표면 자기 차폐 없음 → G8 환경. passthrough(없음).
+
+  - body: 40 Eridani A d
+    axis: environment
+    status: passthrough
+    note: >
+      자기권 없음(G7) + 얇은 대기 → 표면이 **40 Eri A의 항성풍·UV·우주선에 노출**. radiation_surface=**보통**(40 Eri A X선
+      ~3× 태양이나 0.635 AU라 Erid 0.224보다 약함; 얇은 대기 차폐 미미). Astrophage는 오히려 이 CO₂+복사 환경서 번식
+      (Petrova-arc 목적지, flavor). 삼중성 B·C는 ~400 AU 밖 무관. 도출 passthrough.
+
+  - body: 40 Eridani A d
+    axis: rings
+    status: gated
+    driver: owner art-direction
+    value: "**고리 없음**(오너 G9) — 작은 몸, 고리원(파괴 위성/잔해) 없음."
+    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 G9 확정 2026-06-24 — 고리 없음."}
+
+  - body: 40 Eridani A d
+    axis: satellites
+    status: gated
+    driver: owner art-direction
+    value: "**위성 없음**(오너 G10) — 자체가 달 크기 소형체, 위성 없음."
+    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 G10 확정 2026-06-24 — 위성 없음."}
+
+  - body: 40 Eridani A d
+    axis: gameplay
+    status: gated
+    driver: synthesis (owner art-direction)
+    value: >
+      작고 차가운 **frost CO₂ "삼세계"** — 조용한 변방(Erid 스펙터클과 대비). **착륙 쉬움**(0.2g·저Δv·고대 크레이터 평원)이나
+      **얇고 찬 대기**(~700Pa·~250K)·자기권 없어 **방사선 노출**. 비주얼=회갈 크레이터 + 흰 frost 극관, 계절 변동. 문화 하이라이트:
+      **PHM Astrophage Petrova-arc 번식지 + Taumoeba 투입지**(플롯 핵심), 에리디언 최근 발견("삼세계"). 발견 어려움(FFFF, 소형
+      픽션). 로스터 분기 = "작고 죽은 frost CO₂ 변방"(Erid 고중력 화려·Threeworld 기묘소형).
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G11 확정 2026-06-24 — Threeworld 게임플레이 종합. 착륙쉬움(0.2g)+찬 얇은대기+방사선노출. frost CO₂ 변방. 문화=PHM Petrova 번식지+Taumoeba. FFFF. → Threeworld 11축 완성."
