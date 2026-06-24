@@ -350,3 +350,18 @@ decisions:
       criterion: [culture, classification]
       verdict: pass-in-window
       note: "오너 G10 확정 2026-06-24 — 위성 없음. 고리=파괴된 옛 위성 잔해(G9 기원 정합). 책/영화 미언급(맹목 gap). Hill 구 ~60.8 R_p로 동역학 여지는 있으나 깔끔한 고리-only 택함."
+
+  - body: 40 Eridani A b
+    axis: gameplay
+    status: gated
+    driver: synthesis (owner art-direction)
+    value: >
+      **가혹·이국적 착륙 세계 + 모드의 문화 주인공.** 난이도 프로파일 = **2.09g 고중력**(이착륙 Δv 큼) + **28 atm 두꺼운 대기**
+      (강한 공력·재진입열) + **~210–220°C 표면**(열관리). **단 방사선은 안전** — 25× 자기권 차폐(G8). 즉 *열·역학적으론 brutal하나
+      방사선-free*인 독특한 난이도 조합. 비주얼 훅 = 지표의 어둑한 **청색 박명** + 머리 위 **고리 아크** + 띠형 청색 하늘, 청록-회색
+      사문석 지각 + 암모니아수 내해, 화산/열수 바이옴. 문화 = **Rocky의 모행성(PHM) + Vulcan(Star Trek)** = 모드 문화 하이라이트.
+      발견 TFFF(망원경). 로스터 분기 = "짓누르는 뜨거운 고중력 고리 세계"(Proxima b 시원한 호수 eyeball·TRAPPIST 암석들과 뚜렷이 구별).
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G11 확정 2026-06-24 — Erid 게임플레이 종합. 가혹 착륙(고중력+두꺼운대기+열)+방사선-free(강자기권). 청색박명+고리 비주얼. 문화 주인공(PHM Erid+Trek Vulcan). → Erid 11축 완성."
