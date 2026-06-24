@@ -96,3 +96,16 @@ decisions:
       criterion: [observation]
       verdict: pass-in-window
       note: "오너 G3 확정 2026-06-24 — 청백 물리색 #b0c5ff(17,200K 실측). WD라 무특징·금속 nudge 없음. emit 별색(광원/원반) deferred."
+
+  - body: 40 Eridani B
+    axis: magnetism.magnetic_field
+    status: passthrough
+    note: "비자성(non-magnetic) DA — 강한 자기장 미검출. 대다수 DA WD가 비자성이고 40 Eri B는 알려진 자성 WD 아님 → 약함/없음. 측정(비검출) passthrough."
+
+  - body: 40 Eridani B
+    axis: environment
+    status: passthrough
+    note: >
+      냉각 잔해 — 항성풍 무시(WD 무풍에 가까움). 단 Teff 17,200K라 **상당한 UV/EUV 복사원**(인근 공간 hard UV). M왜성 C와
+      233년 BC 쌍성 공전. 행성 없음(대기/표면/위성/고리 축 = WD라 N/A). 별-레벨 5축(identity·bulk·appearance·magnetism·
+      environment)으로 B 완료.
