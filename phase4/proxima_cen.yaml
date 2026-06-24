@@ -711,3 +711,18 @@ decisions:
       없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 무관하게 **c 자기권 안**
       (4 R_c)이라 자기 환경은 c가 결정.
     gate: {criterion: [classification], verdict: pass-in-window, note: "소형 얼음 위성 전형(무dynamo). 지하 바다 없음(열원 부재)이라 유도장도 없음. c 자기권 내부라 위성 자체 장 불필요. 오너 G7 확정 2026-06-23."}
+
+  - body: Proxima Centauri c I
+    axis: environment
+    status: gated
+    driver: derived-grounding
+    value: >
+      radiation=**낮음**(시스템 최저) — c가 별서 1.5 AU 멀고 위성이 **c 자기권 안**이라 항성풍·플레어 직격을 c가 차폐.
+      **항성풍 차폐 → 표면 항성풍 라디올리시스 거의 없음**(G5 톨린이 명왕성보다 덜 빠른 이유). **GCR(은하 우주선)은 차폐
+      안 됨 → 4.85 Gyr 누적이 G5 적도 톨린 적화의 주력**(KBO식). c 자기권 플라스마 sputtering=modest. heliosphere=
+      Proxima astrosphere 심부(c 경유). 차갑고 조용 — 무생물·최저 해저드.
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      note: "별 거리 + c 자기권 차폐 + GCR에서 도출. 항성풍 차폐(c)와 GCR 비차폐의 조합이 G5 톨린 생성률·분포를 설명. 오너 G8 확정 2026-06-23."
+      coupling: "G5 표면 톨린(GCR 주도, 항성풍 채널 없음) + G7(c 자기권 내부)와 정합."
