@@ -109,3 +109,18 @@ decisions:
       냉각 잔해 — 항성풍 무시(WD 무풍에 가까움). 단 Teff 17,200K라 **상당한 UV/EUV 복사원**(인근 공간 hard UV). M왜성 C와
       233년 BC 쌍성 공전. 행성 없음(대기/표면/위성/고리 축 = WD라 N/A). 별-레벨 5축(identity·bulk·appearance·magnetism·
       environment)으로 B 완료.
+
+  # ── 적색왜성 40 Eri C (M4.5Ve 플레어 별 DY Eri, WD B와 BC 쌍성) — facet-walk 2026-06-24 ──────────
+  - body: 40 Eridani C
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=**M4.5 Ve 플레어 별**(변광성 DY Eri) — 지속 Hα·광도 플레어, 태양 근접 활성 M왜성. **백색왜성 B와 233년 BC
+      쌍성**(e 0.41, 평균 ~33 AU). 행성 없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri).
+      discoverability=**V 11.17, 맨눈 아님 → 망원경 confirmed** → RB T F F F.
+    gate:
+      criterion: [classification, observation]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성."
+    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=11.17 M dwarf DY Eri)", skill: "researchbodies-cfg/references/db-mapping.md"}
