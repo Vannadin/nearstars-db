@@ -323,7 +323,9 @@ decisions:
     value: >
       **고리 = 있음**(영화기준 채택). **divergence 아님 — gap-fill**: 책은 고리를 "없다"고 밝힌 적 없음(언급 부재였을 뿐). 게다가
       에리디언이 **맹목**이라 책의 로키-시점 서술엔 Erid의 **시각적 묘사 자체가 부재**(에코로케이션 인지) → 시각 공백을 영화가
-      채움. 외형은 **영화기준**(가시 고리계, 적도면; 5.1h 빠른 자전이라 적도 뚜렷). ⚠ 물리 grounding: Erid는 뜨겁고(0.224 AU,
+      채움. 외형은 **영화기준**(가시 고리계, 적도면; 5.1h 빠른 자전이라 적도 뚜렷).
+      **기하(뷰어 확정 2026-06-24)**: 안쪽 **1.39 R_p(13,650 km)** · 바깥 **2.96 R_p(29,067 km)** · 폭 1.57 R_p(15,417 km).
+      **GEO(2.61 R_p) 가로지름**(안쪽<GEO<바깥), **Roche(3.31 R_p) 안** → 위성 미응집·안정. ⚠ 물리 grounding: Erid는 뜨겁고(0.224 AU,
       평형 ~150°C+) 가까워 **얼음 고리 불가**(승화) → 물리적으론 **암석/규산염 dust 고리**(토성식 밝은 얼음링 아닌 어두운 회갈색,
       disk 색 방법론). 영화가 밝은 고리를 그렸으면 그 채도/밝기는 G6처럼 art로 두고 디스플레이는 영화 기준, 물리 dust는 병기.
       기원=Roche 한계 내 위성/소천체 조석파괴 또는 포획 잔해.
@@ -333,5 +335,5 @@ decisions:
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G9 확정 2026-06-24 — 고리 있음(영화기준). divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 외형=영화. 물리 grounding=뜨거워 얼음 불가→암석 dust 고리(어두운 회갈색); 영화 밝기는 art로(G6 패턴), 물리 dust 병기. KSP Ring 노드 적도면. 색/구조 세부는 art-pass 참조."
+      note: "오너 G9 확정 2026-06-24 — 고리 있음(영화기준). 기하(erid-ring-viewer.html로 확정): 안 1.39 R_p(13,650km)·바깥 2.96 R_p(29,067km)·폭 1.57 R_p. GEO(2.61) 가로지름, Roche(3.31) 안→안정. divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 물리 grounding=뜨거워 얼음 불가→암석 dust 고리(어두운 회갈색); 영화 밝기는 art로(G6 패턴). KSP Ring 노드 적도면. 색/구조 세부는 art-pass 참조."
       paper: docs/reference/debris-disk-color-methodology.md (암석 dust 산란색; 얼음 승화선 grounding).

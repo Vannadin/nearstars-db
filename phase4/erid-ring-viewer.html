@@ -1,0 +1,201 @@
+<!doctype html>
+<!-- Erid(40 Eri A b) 고리 3D 뷰어: 마우스 회전, 고리 안/바깥 반경 슬라이더, 정지궤도·Roche 한계 표시. starmap/polyphemus와 동일한 three@0.160 importmap 스택(로컬 오픈용, CDN). -->
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Erid 고리 3D 뷰어</title>
+<style>
+  :root{ --bg:#05060a; --panel:#0d1018e6; --line:#1c2433; --ink:#e8edf6; --dim:#8893a6;
+    --acc:#7aa2ff; --geo:#39d6e0; --roche:#ff6b5a; --warn:#ffb454; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg);color:var(--ink);overflow:hidden;
+    font-family:-apple-system,"Apple SD Gothic Neo","Pretendard",Segoe UI,Roboto,sans-serif}
+  #stage{position:fixed;inset:0} canvas{display:block;touch-action:none}
+  #title{position:fixed;top:10px;right:14px;z-index:5;font-weight:600;font-size:15px;text-align:right}
+  #title small{color:var(--dim);font-weight:400;margin-left:6px;font-size:12px}
+  #hint{position:fixed;bottom:12px;right:14px;z-index:5;color:var(--dim);font-size:11.5px}
+  #panel{position:fixed;top:46px;left:12px;width:286px;max-height:calc(100% - 60px);overflow-y:auto;
+    background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;z-index:4;backdrop-filter:blur(8px);font-size:13px}
+  .grp{margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:12px}.grp:last-child{border:0}
+  .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--dim);margin-bottom:9px;font-weight:600}
+  .ctrl{margin:9px 0}
+  .ctrl label{display:flex;justify-content:space-between;font-size:11.5px;color:var(--dim);margin-bottom:4px}
+  .ctrl label b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+  input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--line);border-radius:3px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid #05060a}
+  input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer;border:2px solid #05060a}
+  .ck{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--dim);cursor:pointer;margin:6px 0}.ck input{accent-color:var(--acc)}
+  .leg{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--dim);margin:5px 0}
+  .sw{width:18px;height:0;border-top:2px solid;flex:0 0 auto}
+  #readout{font-size:12px;line-height:1.7} #readout .k{color:var(--dim)} #readout b{font-variant-numeric:tabular-nums}
+  .flag{font-size:11.5px;padding:2px 0}.ok{color:#7fd1a0}.bad{color:var(--warn)}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="title">Erid 고리 3D 뷰어 <small>40 Eri A b · 드래그로 회전</small></div>
+<div id="hint">드래그=회전 · 휠=줌 · 우클릭드래그=이동</div>
+<div id="panel">
+  <div class="grp">
+    <h3>고리 위치 (R_p 단위)</h3>
+    <div class="ctrl"><label>안쪽 반경 <b id="vIn">1.39 R_p</b></label><input type="range" id="rIn" min="1.05" max="5.0" step="0.01" value="1.39"></div>
+    <div class="ctrl"><label>바깥 반경 <b id="vOut">2.96 R_p</b></label><input type="range" id="rOut" min="1.1" max="6.0" step="0.01" value="2.96"></div>
+    <div class="ctrl"><label>불투명도 <b id="vTau">보통</b></label><input type="range" id="rTau" min="0.1" max="0.95" step="0.01" value="0.5"></div>
+    <div id="readout"></div>
+  </div>
+  <div class="grp">
+    <h3>표시</h3>
+    <div class="ctrl"><label>롤 (화면 회전, 이미지 정렬용) <b id="vRoll">0°</b></label><input type="range" id="rRoll" min="-180" max="180" step="1" value="0"></div>
+    <div class="ctrl"><label>시야각 FOV (망원↔광각) <b id="vFov">45°</b></label><input type="range" id="rFov" min="10" max="90" step="1" value="45"></div>
+    <div class="ctrl"><label>조준 좌우 (yaw) <b id="vYaw">0°</b></label><input type="range" id="rYaw" min="-50" max="50" step="0.5" value="0"></div>
+    <div class="ctrl"><label>조준 상하 (pitch) <b id="vPitch">0°</b></label><input type="range" id="rPitch" min="-50" max="50" step="0.5" value="0"></div>
+    <label class="ck"><input type="checkbox" id="ckGeo" checked> 정지궤도(GEO) 2.61 R_p</label>
+    <label class="ck"><input type="checkbox" id="ckRoche" checked> Roche 한계(암석) 3.31 R_p</label>
+    <label class="ck"><input type="checkbox" id="ckSpin" checked> 자전 애니메이션</label>
+    <label class="ck"><input type="checkbox" id="ckFilmBright"> 고리 영화처럼 밝게</label>
+  </div>
+  <div class="grp">
+    <h3>범례</h3>
+    <div class="leg"><span class="sw" style="border-color:var(--geo)"></span>정지궤도 2.61 R_p (25.7k km)</div>
+    <div class="leg"><span class="sw" style="border-color:var(--roche);border-top-style:dashed"></span>Roche(암석) 3.31 R_p</div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const R_KM=9820, GEO_RP=2.61, ROCHE_RP=3.31;
+const S={ rIn:1.39, rOut:2.96, tau:0.5, roll:0, yaw:0, pitch:0, geo:true, roche:true, spin:true, filmBright:false };
+
+const stage=document.getElementById('stage');
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));
+renderer.setSize(innerWidth,innerHeight); stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x05060a);
+const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,0.05,2000);
+camera.position.set(4.2,3.0,6.2);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08; controls.minDistance=2; controls.maxDistance=40;
+
+// 조명 (40 Eri A = 따뜻한 K왜성)
+scene.add(new THREE.AmbientLight(0x33405a,0.9));
+const star=new THREE.DirectionalLight(0xffe9d5,2.4); star.position.set(7,3,4); scene.add(star);
+
+// 별 배경
+{ const n=900, pos=new Float32Array(n*3); for(let i=0;i<n;i++){ const r=120+Math.random()*300,
+    t=Math.random()*Math.PI*2, p=Math.acos(2*Math.random()-1);
+    pos[i*3]=r*Math.sin(p)*Math.cos(t); pos[i*3+1]=r*Math.cos(p); pos[i*3+2]=r*Math.sin(p)*Math.sin(t); }
+  const gm=new THREE.BufferGeometry(); gm.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(gm,new THREE.PointsMaterial({color:0xcdd6ea,size:0.7,sizeAttenuation:false,transparent:true,opacity:0.8}))); }
+
+// ── 행성: 영화 청색 + 흰 구름 띠 (절차적 텍스처) ──
+function planetTex(){ const w=1024,h=512,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,0,h); g.addColorStop(0,'#2a5596');g.addColorStop(0.5,'#3a6db0');g.addColorStop(1,'#264c88');
+  x.fillStyle=g; x.fillRect(0,0,w,h);
+  // 흰 구름 띠 (위도별 streak)
+  for(let b=0;b<26;b++){ const cy=Math.random()*h; const a=0.06+Math.random()*0.22;
+    x.fillStyle=`rgba(238,244,250,${a})`;
+    for(let s=0;s<30;s++){ const cx=Math.random()*w, ww=20+Math.random()*120, hh=3+Math.random()*9;
+      x.beginPath();x.ellipse(cx,cy+Math.sin(s)*4,ww,hh,0,0,7);x.fill(); } }
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t; }
+const planet=new THREE.Mesh(new THREE.SphereGeometry(1,96,64),
+  new THREE.MeshStandardMaterial({map:planetTex(),roughness:1,metalness:0,emissive:0x0a1830,emissiveIntensity:0.25}));
+scene.add(planet);
+// 옅은 대기 글로우
+const glow=new THREE.Mesh(new THREE.SphereGeometry(1.035,64,48),
+  new THREE.MeshBasicMaterial({color:0x6aa0e6,transparent:true,opacity:0.16,side:THREE.BackSide})); scene.add(glow);
+
+// ── 고리 ──
+let ring=null;
+function ringTex(){ const w=512,h=8,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+  for(let i=0;i<w;i++){ const v=0.55+0.35*Math.sin(i*0.20)+0.12*Math.sin(i*0.9); const a=Math.max(0.15,Math.min(1,v));
+    x.fillStyle=`rgba(255,255,255,${a})`; x.fillRect(i,0,1,h); }
+  const t=new THREE.CanvasTexture(c); return t; }
+const rtex=ringTex();
+function rebuildRing(){ if(ring){ scene.remove(ring); ring.geometry.dispose(); }
+  const gm=new THREE.RingGeometry(S.rIn,S.rOut,160,1);
+  // 반경방향 UV (텍스처가 반경 따라 밴드)
+  const p=gm.attributes.position, uv=gm.attributes.uv;
+  for(let i=0;i<p.count;i++){ const r=Math.hypot(p.getX(i),p.getY(i)); uv.setXY(i,(r-S.rIn)/(S.rOut-S.rIn),0.5); }
+  const col=S.filmBright? 0xbfcfe6 : 0x8a7d6e;   // 영화 밝게 vs 암석 dust
+  const mat=new THREE.MeshStandardMaterial({color:col,map:rtex,side:THREE.DoubleSide,transparent:true,
+    opacity:Math.max(0.12,S.tau),roughness:1,metalness:0,emissive:S.filmBright?0x223044:0x0c0a08,emissiveIntensity:0.3});
+  ring=new THREE.Mesh(gm,mat); ring.rotation.x=Math.PI/2; scene.add(ring); }
+rebuildRing();
+
+// ── 기준 원 (GEO, Roche) ──
+function circle(rRp,color,dashed){ const n=256,pts=[];
+  for(let i=0;i<=n;i++){ const t=i/n*Math.PI*2; pts.push(new THREE.Vector3(Math.cos(t)*rRp,0,Math.sin(t)*rRp)); }
+  const gm=new THREE.BufferGeometry().setFromPoints(pts);
+  const mat=dashed? new THREE.LineDashedMaterial({color,dashSize:0.12,gapSize:0.09,transparent:true,opacity:0.9})
+                  : new THREE.LineBasicMaterial({color,transparent:true,opacity:0.9});
+  const ln=new THREE.Line(gm,mat); if(dashed) ln.computeLineDistances(); return ln; }
+const geoRing=circle(GEO_RP,0x39d6e0,false); scene.add(geoRing);
+const rocheRing=circle(ROCHE_RP,0xff6b5a,true); scene.add(rocheRing);
+
+// 적도면 옅은 격자 디스크 (방향감)
+{ const gm=new THREE.RingGeometry(1.02,6,64,1);
+  const m=new THREE.MeshBasicMaterial({color:0x121a2a,transparent:true,opacity:0.25,side:THREE.DoubleSide});
+  const d=new THREE.Mesh(gm,m); d.rotation.x=Math.PI/2; scene.add(d); }
+
+// ── UI ──
+function bind(id,key,fmt){ const el=document.getElementById(id), out=document.getElementById('v'+id.slice(1));
+  const upd=()=>{ S[key]=parseFloat(el.value); if(out) out.textContent=fmt(S[key]); onChange(); };
+  el.addEventListener('input',upd); upd(); }
+let needRing=false;
+function onChange(){ needRing=true; }
+bind('rIn','rIn',v=>v.toFixed(2)+' R_p');
+bind('rOut','rOut',v=>v.toFixed(2)+' R_p');
+bind('rTau','tau',v=> v<0.25?'옅음':v<0.6?'보통':'짙음');
+{ const rollEl=document.getElementById('rRoll'), rollOut=document.getElementById('vRoll');
+  rollEl.addEventListener('input',()=>{ S.roll=parseFloat(rollEl.value); rollOut.textContent=S.roll.toFixed(0)+'°'; }); }
+{ const fovEl=document.getElementById('rFov'), fovOut=document.getElementById('vFov');
+  fovEl.addEventListener('input',()=>{ camera.fov=parseFloat(fovEl.value); camera.updateProjectionMatrix(); fovOut.textContent=fovEl.value+'°'; }); }
+{ const yEl=document.getElementById('rYaw'), yOut=document.getElementById('vYaw');
+  yEl.addEventListener('input',()=>{ S.yaw=parseFloat(yEl.value); yOut.textContent=S.yaw.toFixed(1)+'°'; }); }
+{ const pEl=document.getElementById('rPitch'), pOut=document.getElementById('vPitch');
+  pEl.addEventListener('input',()=>{ S.pitch=parseFloat(pEl.value); pOut.textContent=S.pitch.toFixed(1)+'°'; }); }
+document.getElementById('rIn').addEventListener('input',()=>{ if(S.rIn>S.rOut-0.05){ S.rOut=Math.min(6,S.rIn+0.05);
+  const o=document.getElementById('rOut');o.value=S.rOut;document.getElementById('vrOut').textContent=S.rOut.toFixed(2)+' R_p'; }});
+document.getElementById('rOut').addEventListener('input',()=>{ if(S.rOut<S.rIn+0.05){ S.rIn=Math.max(1.05,S.rOut-0.05);
+  const i=document.getElementById('rIn');i.value=S.rIn;document.getElementById('vrIn').textContent=S.rIn.toFixed(2)+' R_p'; }});
+for(const [id,key] of [['ckGeo','geo'],['ckRoche','roche'],['ckSpin','spin'],['ckFilmBright','filmBright']]){
+  const el=document.getElementById(id); el.addEventListener('change',()=>{ S[key]=el.checked;
+    if(key==='filmBright') needRing=true; }); S[key]=el.checked; }
+
+function readout(){ const inKm=(S.rIn*R_KM)|0, outKm=(S.rOut*R_KM)|0;
+  const insideRoche=S.rOut<=ROCHE_RP;
+  const f1=insideRoche? `<div class="flag ok">✓ 고리 전체 Roche 안 — 위성으로 안 뭉침(안정)</div>`
+                      : `<div class="flag bad">⚠ 바깥부 Roche 밖 — 거기선 위성 응집 가능</div>`;
+  const rel = (S.rOut<GEO_RP)?'GEO 안쪽(행성 쪽 이동 경향)':(S.rIn>GEO_RP)?'GEO 바깥(밖 이동)':'GEO 가로지름';
+  document.getElementById('readout').innerHTML=
+    `<span class="k">안</span> <b>${S.rIn.toFixed(2)} R_p</b>·${(inKm/1000).toFixed(1)}k km　`+
+    `<span class="k">밖</span> <b>${S.rOut.toFixed(2)} R_p</b>·${(outKm/1000).toFixed(1)}k km<br>`+
+    `<span class="k">폭</span> <b>${(S.rOut-S.rIn).toFixed(2)} R_p</b>·${((outKm-inKm)/1000).toFixed(1)}k km　`+
+    `<span class="k">${rel}</span>`+f1; }
+
+addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight); });
+
+function loop(){ requestAnimationFrame(loop);
+  if(needRing){ rebuildRing(); needRing=false; }
+  geoRing.visible=S.geo; rocheRing.visible=S.roche;
+  if(S.spin){ planet.rotation.y+=0.003; }
+  controls.update();
+  // update 직후 카메라에 조준 오프셋(yaw/pitch) + 롤 적용 — 광각에서 행성을 프레임 가장자리로 보내 왜곡 정렬
+  if(S.yaw)   camera.rotateY(S.yaw*Math.PI/180);
+  if(S.pitch) camera.rotateX(S.pitch*Math.PI/180);
+  if(S.roll)  camera.rotateZ(S.roll*Math.PI/180);
+  readout(); renderer.render(scene,camera); }
+loop();
+</script>
+</body>
+</html>
