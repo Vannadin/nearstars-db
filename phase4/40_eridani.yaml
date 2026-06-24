@@ -434,3 +434,19 @@ decisions:
       verdict: pass-in-window
       note: "오너 G4 확정 2026-06-24 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa). 보유=CO₂드라이아이스+SO₂frost 승화-버퍼(화성/Io analog), e0.20+얇은대기로 강한 계절순환. Weir 0.2g 퍼즐 물리해소(ice-reservoir 교환). 무화산(SO₂=frost). Astrophage Petrova 번식지. 잔여 Gyr-버퍼 미스터리 documented."
       paper: "exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도 vs 저온·무거운 CO₂·ice-buffer); 화성 CO₂극관 증기압평형·Io SO₂ frost analog."
+
+  - body: 40 Eridani A d
+    axis: surface
+    status: gated
+    driver: owner art-direction (가) + surface-color/frost
+    value: >
+      표면 = **고대 크레이터 암석 + 계절 frost 극관**(오너 G5=가). 작고 지질학적으로 죽은 몸 → Moon/Mercury식 크레이터 평원,
+      **회갈색 현무암질 암석**. 그 위에 **CO₂ 드라이아이스 + SO₂ frost**가 극관·야간에 밝은 **흰 침착**(G4 승화 순환으로 계절·주야
+      변동, 화성 극관 analog). 색 = 회갈 암석 + 흰 frost(SO₂ 옅은 황색기 가능하나 가 선택은 frost-흰 위주). **eyeball 없음**
+      (작고 얇은 대기·완만 자전). 온도 ~240–264K 평균(극·밤 frost 점). Bond albedo ~0.2–0.3(암석 어둠 + frost 밝음 혼합,
+      계절 변동). Astrophage flavor(canon): CO₂ 표면이 번식지 — 검은 Astrophage 반점(cfg 미모델). 무화산(G3/G4 정합).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 G5 확정 2026-06-24 — (가) 회갈 크레이터 암석 + 흰 CO₂/SO₂ frost 극관(화성/달식). eyeball 없음. A~0.2–0.3 계절변동. 지질학적 죽음(무화산). Astrophage 번식지 flavor."
+      paper: docs/reference/surface-color-albedo-methodology.md (현무암 회갈·CO₂/SO₂ frost 고알베도; Bond albedo).
