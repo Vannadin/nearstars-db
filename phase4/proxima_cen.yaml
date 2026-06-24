@@ -699,3 +699,13 @@ decisions:
       criterion: [visual-checklist]
       verdict: pass-in-window
       note: "G4(haze)+G5(이원 지형) 종합. 색=표면색·대기반사색 문서 엔진. c+고리가 하늘에 보이는 건 조석고정 위성의 자연 연출. 오너 G6 확정 2026-06-23."
+
+  - body: Proxima Centauri c I
+    axis: magnetism.magnetic_field
+    status: gated
+    driver: classification
+    value: >
+      **무자기장** — ~950 km 소형 얼음체라 금속핵 대류 dynamo 불가(얼음 위성 전형). 유도장도 미미(e~0·조석고정→조석가열
+      없음 + 소형 저방사성열 → 동결 고체, 전도성 지하 바다 없음 → Europa/트리톤식 유도장 없음). 무관하게 **c 자기권 안**
+      (4 R_c)이라 자기 환경은 c가 결정.
+    gate: {criterion: [classification], verdict: pass-in-window, note: "소형 얼음 위성 전형(무dynamo). 지하 바다 없음(열원 부재)이라 유도장도 없음. c 자기권 내부라 위성 자체 장 불필요. 오너 G7 확정 2026-06-23."}
