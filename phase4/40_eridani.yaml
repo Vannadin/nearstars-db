@@ -124,3 +124,25 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성."
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=11.17 M dwarf DY Eri)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: 40 Eridani C
+    axis: bulk
+    status: passthrough
+    note: >
+      M 0.198±0.004 M☉(Mason2021 동역학) · R 0.274±0.011 R☉(Mann2015) · Teff 3167±61K(Mann2015 BT-Settl 핏) · L 6.51e-3 L☉
+      (Cifuentes2020 CARMENES) · [Fe/H] −0.21(Mann2015). 자전 P_rot=**meta_notes-only**(Shan2024 8.56d, 그 논문 품질등급 D=최하위
+      /debated라 정식 채택 안 함, Open item). 측정 passthrough.
+
+  - body: 40 Eridani C
+    axis: appearance
+    status: gated
+    driver: observation
+    value: >
+      color=**`#cf5a30`**(깊은 주황-적) — M왜성이라 흑체 부적용(흑체 3167K=#ffbe78은 너무 주황): **TiO/VO/H₂O 분자밴드가 녹청을
+      억제**해 흑체보다 훨씬 붉고 어두움(항성광구색 문서). M4.5·3167K는 **Barnard(M4·3195K, #cf5a30)에 사실상 일치**(28K만 차가움)
+      → 사다리 보간으로 #cf5a30 채택. spots/faculae=**활발**(DY Eri 플레어·지속 Hα — 활성 M왜성).
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      note: "오너 G3 확정 2026-06-24. 색=stellar-photospheric-color-methodology.md(M왜성 TiO/VO 사다리, Barnard 앵커 #cf5a30). 흑체 #ffbe78 오류 진단됨. emit 별색(광원/원반) deferred."
+      paper: docs/reference/stellar-photospheric-color-methodology.md (M왜성 분자밴드 사다리; Allard BT-Settl·Mann2015·Rajpurohit2013).
