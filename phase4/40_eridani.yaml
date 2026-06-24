@@ -337,3 +337,16 @@ decisions:
       verdict: pass-in-window
       note: "오너 G9 확정 2026-06-24 — 고리 있음(영화기준). 기하(erid-ring-viewer.html로 확정): 안 1.39 R_p(13,650km)·바깥 2.96 R_p(29,067km)·폭 1.57 R_p. GEO(2.61) 가로지름, Roche(3.31) 안→안정. divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 물리 grounding=뜨거워 얼음 불가→암석 dust 고리(어두운 회갈색); 영화 밝기는 art로(G6 패턴). KSP Ring 노드 적도면. 색/구조 세부는 art-pass 참조."
       paper: docs/reference/debris-disk-color-methodology.md (암석 dust 산란색; 얼음 승화선 grounding).
+
+  - body: 40 Eridani A b
+    axis: satellites
+    status: gated
+    driver: owner art-direction
+    value: >
+      **위성 없음**(오너 G10). 고리(G9)를 **파괴된 옛 위성의 잔해**로 봄 — 고리 기원 서사와 정합. 책/영화 모두 위성 미언급
+      (에리디언 맹목 → 시각묘사 부재, 고리와 동일 gap 상황)이라 canon 충돌 없음. 동역학상으론 여지 있음(Hill 구 ~60.8 R_p,
+      안정대 ~20–30 R_p) — 단 오너가 고리만의 깔끔한 구성을 택함(로스터 내 위성보유 바디들과 자연 분기).
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G10 확정 2026-06-24 — 위성 없음. 고리=파괴된 옛 위성 잔해(G9 기원 정합). 책/영화 미언급(맹목 gap). Hill 구 ~60.8 R_p로 동역학 여지는 있으나 깔끔한 고리-only 택함."
