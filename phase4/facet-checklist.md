@@ -205,7 +205,12 @@ Methodology-grounded walk 2026-06-23, all 11 groups gated.
 | satellites | none (grounded — close-in tidal env forbids a stable moon) | ✅ |
 | gameplay | landable lake world / splashdown / no-breathe / high radiation / interstellar flagship | ✅ |
 
+## Proxima Centauri d / c / c I — all 11 groups walked (2026-06-23, `proxima_cen.yaml`)
+- **Proxima d** (hot airless Mercury-analog, Faria 2022 candidate) — ✅ 11/11. Highlights: e~0.05 synthetic; airless (below shoreline); Teq~317K/substellar~450K; **SPI-inferred B ~16G (Zapatero Osorio 2026, arXiv:2605.22925) — first terrestrial-exoplanet field estimate, phase-locked flares**; field cascade → reduced space-weathering + dark flare-weathered magnetic polar caps; biome hybrid 7 (RSS-Mercury geology + 1:1 thermal).
+- **Proxima c** (cold mini-Neptune, Damasso 2020 candidate) — ✅ 11/11. 8 M⊕/~2.7 R⊕; H/He envelope, Teq~40K; pale grey-white (colder-than-Neptune → less blue); ice-giant analog field; **double red/white ice rings (Gratton 2020 hook, anti-Saturn)**; satellite Proxima c I; biomes 5 latitude bands (no ring-shadow).
+- **Proxima c I** (Pluto-analog ice moon, fiction) — ✅ 11/11. ~950 km Triton/Titania-class (ratio 0.055); just outside the rings (shepherds outer edge); tenuous Pluto-like N2 + blue haze; bimodal terrain (equatorial tholin belt + polar N2 caps) + **sub-c ring-ice eyeball** (buries tholin, signature); no field/ocean; lowest-hazard (GCR-driven tholin); RB FFFF; biomes 4.
+
 ---
 **TODO summary (fill systematically):** Polyphemus → ✅ FULL MENU WALKED (identity/orbit/bulk/atmosphere/magnetism/environment/rings/satellites/gameplay gated; surface N/A). Dante/Hades → bulk mass/radius/rotation rows,
 magnetism=none, albedo/surface_temp, identity. Pandora → nearly everything (bulk, atmosphere,
-surface/biosphere, appearance, environment, gameplay). **Proxima Cen b → ✅ FULL 11-GROUP WALK (2026-06-23, methodology-grounded).**
+surface/biosphere, appearance, environment, gameplay). **Proxima system → ✅ FULL: star + b + d + c + c I all 11-group walked (2026-06-23, methodology-grounded, 51 decisions).**
