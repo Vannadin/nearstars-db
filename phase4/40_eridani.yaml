@@ -167,7 +167,7 @@ decisions:
 
   # ── Erid (40 Eridani A b) — 주인공: PHM(Andy Weir) 로키의 모행성 + Star Trek 벌컨. 관측 철회(Ma2018 후보 → Burrows&Lubin2024: 42d=항성자전).
   #    블렌드 틀(오너 결정 2026-06-24): 물리=Weir 책 worldbuilding(28 atm NH₃·2.09g·25×B·210°C·5.1h), 비주얼=2026 PHM 영화(청색 대기+고리).
-  #    충돌점(책=무색·무링 ↔ 영화=청색·유링)은 명시 documented-divergence. 순수 문화 바디(Tau Ceti e/Adrian 선례), Ma2018 값 보존·refuted 플래그.
+  #    색은 충돌(책 무색 ↔ 영화 청색 = G6 divergence). 고리는 충돌 아님 — 책은 고리 미언급(에리디언 맹목이라 Erid 시각묘사 자체가 부재) → 영화가 시각 공백을 채움(G9 gap-fill). 순수 문화 바디(Tau Ceti e/Adrian 선례), refuted 플래그.
   - body: 40 Eridani A b
     axis: identity
     status: gated
@@ -315,3 +315,20 @@ decisions:
       verdict: pass-in-window
       note: "오너 G8 확정 2026-06-24 — 지상 방사선 0 수렴(25× 자기장+28기압 대기 완전차폐, radiation_surface=none). 보호 자기권은 동기궤도(2.61 R_p=중심 25,669km/고도 15,852km) 이상으로(설정) → 저궤도까지 차폐. 단 강장 포획 복사대(밴앨런)는 내자기권 우주선 위험(Kerbalism 밴드, emit 시). 강 오로라(SPI성). Kerbalism 자기장-영역 시스템 매핑."
       paper: "stellar-wind/Kerbalism 자기장 영역(project_nearstars_stellar_wind_kerbalism); 동기궤도=Kepler T=5.1h."
+
+  - body: 40 Eridani A b
+    axis: rings
+    status: gated
+    driver: film canon (fills a book-silent visual gap)
+    value: >
+      **고리 = 있음**(영화기준 채택). **divergence 아님 — gap-fill**: 책은 고리를 "없다"고 밝힌 적 없음(언급 부재였을 뿐). 게다가
+      에리디언이 **맹목**이라 책의 로키-시점 서술엔 Erid의 **시각적 묘사 자체가 부재**(에코로케이션 인지) → 시각 공백을 영화가
+      채움. 외형은 **영화기준**(가시 고리계, 적도면; 5.1h 빠른 자전이라 적도 뚜렷). ⚠ 물리 grounding: Erid는 뜨겁고(0.224 AU,
+      평형 ~150°C+) 가까워 **얼음 고리 불가**(승화) → 물리적으론 **암석/규산염 dust 고리**(토성식 밝은 얼음링 아닌 어두운 회갈색,
+      disk 색 방법론). 영화가 밝은 고리를 그렸으면 그 채도/밝기는 G6처럼 art로 두고 디스플레이는 영화 기준, 물리 dust는 병기.
+      기원=Roche 한계 내 위성/소천체 조석파괴 또는 포획 잔해.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G9 확정 2026-06-24 — 고리 있음(영화기준). divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 외형=영화. 물리 grounding=뜨거워 얼음 불가→암석 dust 고리(어두운 회갈색); 영화 밝기는 art로(G6 패턴), 물리 dust 병기. KSP Ring 노드 적도면. 색/구조 세부는 art-pass 참조."
+      paper: docs/reference/debris-disk-color-methodology.md (암석 dust 산란색; 얼음 승화선 grounding).
