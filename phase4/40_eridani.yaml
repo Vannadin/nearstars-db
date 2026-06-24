@@ -164,3 +164,23 @@ decisions:
       **BC 쌍성 맥락**: C가 백색왜성 B를 e 0.41·평균 ~33 AU로 공전하는 233년 쌍성 → Teff 17,200K인 B의 hard UV/EUV가 BC 영역을
       비추나, 거리상 C 광구엔 거의 무관(C 자체 플레어가 지배). radiation은 자체 플레어 구동. A(K0.5V)와는 ~400 AU 밖이라 상호 무관.
       고속 이동 시스템(V_ISM ~127 km/s, A와 공통). 도출/정성 → emit 그대로. 별-레벨 5축으로 C 완료.
+
+  # ── Erid (40 Eridani A b) — 주인공: PHM(Andy Weir) 로키의 모행성 + Star Trek 벌컨. 관측 철회(Ma2018 후보 → Burrows&Lubin2024: 42d=항성자전).
+  #    블렌드 틀(오너 결정 2026-06-24): 물리=Weir 책 worldbuilding(28 atm NH₃·2.09g·25×B·210°C·5.1h), 비주얼=2026 PHM 영화(청색 대기+고리).
+  #    충돌점(책=무색·무링 ↔ 영화=청색·유링)은 명시 documented-divergence. 순수 문화 바디(Tau Ceti e/Adrian 선례), Ma2018 값 보존·refuted 플래그.
+  - body: 40 Eridani A b
+    axis: identity
+    status: gated
+    driver: classification + culture (refuted candidate)
+    value: >
+      body_type=**암석 super-Earth**(8.47 M⊕, Ma2018 측정 진질량; Weir: 금속-풍부 암석, 밀도 5710 kg/m³). 문화 주인공 —
+      **Erid**(Project Hail Mary, Andy Weir; Rocky의 모행성) + **Vulcan**(Star Trek; Roddenberry1991이 40 Eri로 공인).
+      designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&Lubin
+      2024가 42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값
+      보존·refuted 플래그). discoverability=관측 발견 이력대로 **TFFF**(망원경; 인게임선 실재 바디 취급, 철회는 현실 메타라 발견난도
+      아닌 flavor로 — RV 행성 일관, Proxima b 선례).
+    gate:
+      criterion: [classification, culture]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함. disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드."
+    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Ma 2018 (2018AJ....155..117M) RV candidate, refuted by Burrows & Lubin 2024; cultural (Erid/PHM + Vulcan/Star Trek)", skill: "researchbodies-cfg/references/db-mapping.md"}
