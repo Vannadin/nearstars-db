@@ -1,0 +1,21 @@
+# 40 Eridani (Keid / o² Eri) Phase 4 결정 보드 — 삼중성(A K왜성 + B 백색왜성 + C 적색왜성) + Erid(40 Eri A b, 철회·문화재포함).
+# (body × axis) 행별 상태. DB 불변, staging. 문화=Vulcan(Star Trek)+Erid/Rocky(PHM). grounding=docs/phase3/40-eridani-*.md, cultural-context.md §40 Eri
+system: 40_eridani
+status: staged
+updated: 2026-06-24
+
+decisions:
+  # ── 모항성 40 Eri A (K0.5V Keid, 삼중성 최광, Vulcan/Erid 호스트) — facet-walk 2026-06-24 ──────────
+  - body: 40 Eridani A
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=**K0.5 V (Keid A)** — 40 Eri 삼중성의 최광 성분, 적당히 조용한 K왜성. 철회된 행성 b(**Vulcan/Erid**) 호스트.
+      비교적 젊음(~1.8 Gyr, 백색왜성 IFMR coeval age)·약간 금속-빈약([Fe/H] −0.29). 5.01 pc(~16.3 ly). designation=
+      40 Eridani A(Keid · HD 26965 · HR 1325 · GJ 166 A · o² Eri A). discoverability=**맨눈**(V 4.43, Eridanus) → RB T T T T.
+    gate:
+      criterion: [classification, observation]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-24. 맨눈 별 naked_eye=T T T T. 문화=벌컨의 태양(Star Trek, Roddenberry1991 공인)+Erid의 태양(PHM 로키). 백색왜성 B+적색왜성 C와 삼중성."
+    discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=4.43, Eridanus)", skill: "researchbodies-cfg/references/db-mapping.md"}
