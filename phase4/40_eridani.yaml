@@ -75,3 +75,11 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24. 비맨눈 별이라 TFFF(맨눈 별 TTTT와 구분, Proxima 선례). DA WD body_type 동의. 문화: Erid 하늘의 WD(에리디언은 맹목이라 못 봄)·Star Trek 40 Eri계."
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=9.53 WD); Bond 2017 benchmark", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: 40 Eridani B
+    axis: bulk
+    status: passthrough
+    note: >
+      M 0.558±0.012 M☉(Mason2021 동역학; Bond2017 0.573±0.018 = 가장 깨끗한 field WD 정밀질량, 대안) · R 0.01308±0.0002 R☉
+      (~지구 크기) · log g 7.957±0.020 · Teff 17,200±110K(고온) · CO핵 + 얇은 H 외피(q_H ~10⁻¹⁰) · 냉각 age 122 Myr +
+      전구체 ~1.7 Gyr(시스템 ~1.8 Gyr coeval age 근거). 질량-반경 관계 위 표준 위치. 측정 passthrough.
