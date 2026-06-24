@@ -29,3 +29,17 @@ decisions:
       — 백색왜성 B IFMR coeval age[Bond2017: WD 냉각 122 Myr + 전구체 ~1.7 Gyr]가 옛 K왜성 isochrone 노년설 해소 → 비교적
       젊음) · P_rot ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). 측정/
       Phase3 해결값 → emit 그대로.
+
+  - body: 40 Eridani A
+    axis: appearance
+    status: gated
+    driver: observation
+    value: >
+      color=**물리색 `#ffe9d5`**(Teff 5143K 흑체→sRGB 실측; 따뜻한 주황-크림 — 태양 #fff1ea·τ Ceti #ffecdd보다 더 주황,
+      K왜성다움). [Fe/H] −0.29는 **sub-perceptual 블루 nudge**(τ Ceti −0.52보다도 작아 +~1, 무시급·방향만 반영;
+      Ramírez&Meléndez2005 계열 보정). 뷰어 채도-tint(#ffd5a8)는 미기록(물리색만, τ Ceti 선례). spots/faculae=**보통**
+      — 37–43d 자전 변조가 실재 흑점(가짜 Vulcan 42d 신호의 원인); X선 log Lx ~27.5(τ Ceti보다 활동적이나 적당히 조용한 K왜성).
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      note: "오너 G3 확정 2026-06-24 — 물리색 #ffe9d5만 기록(뷰어 tint 미기록, τ Ceti 정합). 금속 sub-perceptual nudge·보통 흑점(자전변조 실측). emit 별색(광원=near-white/원반 art) deferred."
