@@ -726,3 +726,17 @@ decisions:
       verdict: pass-in-window
       note: "별 거리 + c 자기권 차폐 + GCR에서 도출. 항성풍 차폐(c)와 GCR 비차폐의 조합이 G5 톨린 생성률·분포를 설명. 오너 G8 확정 2026-06-23."
       coupling: "G5 표면 톨린(GCR 주도, 항성풍 채널 없음) + G7(c 자기권 내부)와 정합."
+
+  - body: Proxima Centauri c I
+    axis: rings
+    status: gated
+    driver: classification
+    value: "고리 없음 (~950 km 위성, 고리 물질·근거 없음). 단순 부재."
+    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 G9 확정 2026-06-23."}
+
+  - body: Proxima Centauri c I
+    axis: satellites
+    status: gated
+    driver: classification + stability
+    value: "submoon(위성의 위성) 없음 — 동역학적 불안정으로 태양계에도 사례 0, ~950 km 위성은 보유 불가. 물리적 부재."
+    gate: {criterion: [classification, stability], verdict: pass-in-window, note: "submoon 불안정. 오너 G10 확정 2026-06-23."}
