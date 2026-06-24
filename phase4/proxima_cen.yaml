@@ -578,7 +578,7 @@ decisions:
     status: gated
     driver: fiction + stability
     value: >
-      **위성 1개 = Proxima c I** — **~1.5× 달 규모, 명왕성 느낌**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
+      **위성 1개 = Proxima c I** — **반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
       조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도
       바디 전개**(아래 "Proxima Centauri c I" 블록 11축).
     gate:
@@ -612,7 +612,7 @@ decisions:
     driver: classification + fiction
     value: >
       body_type=**냉 얼음 위성(명왕성 아날로그)** — N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
-      c에 조석고정, ~1.5× 달 규모. designation=Proxima Centauri c I(고유명 없음). discoverability=**픽션 위성→ FFFF**
+      c에 조석고정, 반경 ~950 km(트리톤/티타니아급). designation=Proxima Centauri c I(고유명 없음). discoverability=**픽션 위성→ FFFF**
       (관측 근거 0, ResearchBodies 완전 미발견 — 별 TFFF·candidate와 달리 인게임서 직접 발견).
     gate:
       criterion: [classification, fiction]
@@ -636,3 +636,19 @@ decisions:
         despin τ∝a⁶ρ/M_p²로 이 거리·8 M⊕서 ~10³–10⁴년(나이≪) → 1:1 확정(locking 문서).
       coupling: "큰 위성이 고리 외경 바로 밖 → **바깥 고리 가장자리 shepherd(truncate)** → G9 고리가 거기서 끝나는 역학적 이유."
       paper: 조석고정 τ = docs/reference/tidal-locking-timescale-methodology.md(a⁶). emit시 stability-sim 권장.
+
+  - body: Proxima Centauri c I
+    axis: bulk
+    status: gated
+    driver: window-selection + fiction
+    value: >
+      **반경 ~950 km**(트리톤 1,353·티타니아 788 사이, 중대형 얼음 위성) · 얼음 밀도 ~1.9 g/cm³(명왕성/트리톤급) →
+      **질량 ~0.0011 M⊕**(달의 ~0.09배, ~6.8e21 kg) · **g ~0.5 m/s²**(~0.05 g, 저중력) · 조석고정 · obliquity ~0 · age
+      ~4.85 Gyr. c 대비 비율 ~0.055 = **해왕성-트리톤급**(mini-Neptune 위성 비율로 정합).
+    gate:
+      criterion: [fiction, error-bar]
+      verdict: pass-in-window
+      rationale: >
+        오너 2026-06-23 — 앞서 "1.5× 달"(반경 2,600km, 비율 0.15 과대)을 **~950 km로 하향**(비율 ~0.055=해왕성-트리톤,
+        mini-Neptune 위성에 정합). 픽션이라 질량/반경은 얼음 밀도(~1.9)로 자기일관 도출. g·밀도는 트리톤/티타니아급.
+      caveat: "G1·c-G10의 '~1.5× 달' 표기는 본 G3로 정정(~950 km)."
