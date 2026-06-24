@@ -6089,6 +6089,60 @@
           "recommended": true
         }
       ]
+    },
+    {
+      "pl_name": "40 Eridani A c",
+      "orbital": [
+        {
+          "period_days": 104.62,
+          "semi_major_axis_au": 0.4,
+          "eccentricity": 0.04,
+          "inclination_deg": 91.5,
+          "longitude_of_ascending_node_deg": 40.0,
+          "argument_of_periapsis_deg": 70.0,
+          "mean_anomaly_at_epoch_deg": 200.0,
+          "method": "theoretical",
+          "reference": "NS Phase-4 synthetic system-completion body (fully invented filler between b and d). Orbit from REBOUND stability-sim (1 Myr; near-3:1 with b, near-2:1 interior to d; MEGNO bounded, e<=0.05). No real detection.",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 0.055,
+          "radius_rearth": 0.38,
+          "mass_type": "true mass",
+          "method": "theoretical",
+          "reference": "NS Phase-4 design: Mercury-mass rocky filler (0.055 M_earth, ~0.38 R_earth).",
+          "recommended": true
+        }
+      ]
+    },
+    {
+      "pl_name": "40 Eridani A d",
+      "orbital": [
+        {
+          "period_days": 209.27,
+          "semi_major_axis_au": 0.635,
+          "eccentricity": 0.042,
+          "inclination_deg": 92.5,
+          "longitude_of_ascending_node_deg": 110.0,
+          "argument_of_periapsis_deg": 130.0,
+          "mean_anomaly_at_epoch_deg": 300.0,
+          "method": "theoretical",
+          "reference": "Threeworld - Andy Weir, Project Hail Mary (2021) p.393 (3rd planet; Moon-sized, 0.2 g, 84% CO2/8% N2/4% SO2, <1% Earth pressure; Astrophage Petrova-arc breeding ground). Orbit = NS Phase-4 design from REBOUND stability-sim (1 Myr; near-2:1 with c). No real detection.",
+          "recommended": true
+        }
+      ],
+      "physical": [
+        {
+          "mass_mearth": 0.015,
+          "radius_rearth": 0.273,
+          "mass_type": "true mass",
+          "method": "theoretical",
+          "reference": "PHM p.393: Moon-sized (R~1737 km / 0.273 R_earth), surface gravity 0.2 g -> derived mass 0.0149 M_earth.",
+          "recommended": true
+        }
+      ]
     }
   ],
   "Alpha Centauri A": [

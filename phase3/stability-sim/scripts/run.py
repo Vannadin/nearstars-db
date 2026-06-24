@@ -41,6 +41,7 @@ SYSTEMS = {
     "tau_cet": ("planetary", PROJECT_ROOT / "db/systems/tau_cet.json"),
     "teegardens_star": ("planetary", PROJECT_ROOT / "db/systems/teegardens_star.json"),
     "yz_cet": ("planetary", PROJECT_ROOT / "db/systems/yz_cet.json"),
+    "40_eridani": ("planetary", PROJECT_ROOT / "db/systems/40_eridani_a.json"),
     "solar_system": ("solar", None),   # Sun + 8 planets (J2000), real-mass benchmark
 }
 

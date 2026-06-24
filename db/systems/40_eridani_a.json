@@ -327,6 +327,118 @@
           }
         ]
       }
+    },
+    {
+      "name": "40 Eridani A c",
+      "host_star": "40 Eridani A",
+      "raw": {
+        "pl_name": "40 Eridani A c",
+        "discoverymethod": "theoretical",
+        "period_days": 104.62,
+        "semi_major_axis_au": 0.4,
+        "eccentricity": 0.04,
+        "inclination_deg": 91.5,
+        "mass_mearth": 0.055,
+        "radius_rearth": 0.38,
+        "reference": "NS Phase-4 synthetic system-completion body (fully invented filler between b and d). Orbit from REBOUND stability-sim (1 Myr; near-3:1 with b, near-2:1 interior to d; MEGNO bounded, e<=0.05). No real detection."
+      },
+      "derived": {
+        "semi_major_axis_m": 59839148280.0,
+        "eccentricity": 0.04,
+        "inclination_deg": 91.5,
+        "longitude_of_ascending_node_deg": 40.0,
+        "argument_of_periapsis_deg": 70.0,
+        "mean_anomaly_at_epoch_deg": 200.0,
+        "orbital_epoch_jd": null,
+        "mass_kg": 3.2847100000000003e+23,
+        "mass_type": "true mass",
+        "radius_m": 2420980.0,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
+      },
+      "curated": {
+        "pl_name": "40 Eridani A c",
+        "orbital": [
+          {
+            "period_days": 104.62,
+            "semi_major_axis_au": 0.4,
+            "eccentricity": 0.04,
+            "inclination_deg": 91.5,
+            "longitude_of_ascending_node_deg": 40.0,
+            "argument_of_periapsis_deg": 70.0,
+            "mean_anomaly_at_epoch_deg": 200.0,
+            "method": "theoretical",
+            "reference": "NS Phase-4 synthetic system-completion body (fully invented filler between b and d). Orbit from REBOUND stability-sim (1 Myr; near-3:1 with b, near-2:1 interior to d; MEGNO bounded, e<=0.05). No real detection.",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.055,
+            "radius_rearth": 0.38,
+            "mass_type": "true mass",
+            "method": "theoretical",
+            "reference": "NS Phase-4 design: Mercury-mass rocky filler (0.055 M_earth, ~0.38 R_earth).",
+            "recommended": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "40 Eridani A d",
+      "host_star": "40 Eridani A",
+      "raw": {
+        "pl_name": "40 Eridani A d",
+        "discoverymethod": "theoretical",
+        "period_days": 209.27,
+        "semi_major_axis_au": 0.635,
+        "eccentricity": 0.042,
+        "inclination_deg": 92.5,
+        "mass_mearth": 0.015,
+        "radius_rearth": 0.273,
+        "reference": "Threeworld - Andy Weir, Project Hail Mary (2021) p.393 (3rd planet; Moon-sized, 0.2 g, 84% CO2/8% N2/4% SO2, <1% Earth pressure; Astrophage Petrova-arc breeding ground). Orbit = NS Phase-4 design from REBOUND stability-sim (1 Myr; near-2:1 with c). No real detection."
+      },
+      "derived": {
+        "semi_major_axis_m": 94994647894.5,
+        "eccentricity": 0.042,
+        "inclination_deg": 92.5,
+        "longitude_of_ascending_node_deg": 110.0,
+        "argument_of_periapsis_deg": 130.0,
+        "mean_anomaly_at_epoch_deg": 300.0,
+        "orbital_epoch_jd": null,
+        "mass_kg": 8.9583e+22,
+        "mass_type": "true mass",
+        "radius_m": 1739283.0000000002,
+        "equilibrium_temperature_k": null,
+        "density_g_cc": null
+      },
+      "curated": {
+        "pl_name": "40 Eridani A d",
+        "orbital": [
+          {
+            "period_days": 209.27,
+            "semi_major_axis_au": 0.635,
+            "eccentricity": 0.042,
+            "inclination_deg": 92.5,
+            "longitude_of_ascending_node_deg": 110.0,
+            "argument_of_periapsis_deg": 130.0,
+            "mean_anomaly_at_epoch_deg": 300.0,
+            "method": "theoretical",
+            "reference": "Threeworld - Andy Weir, Project Hail Mary (2021) p.393 (3rd planet; Moon-sized, 0.2 g, 84% CO2/8% N2/4% SO2, <1% Earth pressure; Astrophage Petrova-arc breeding ground). Orbit = NS Phase-4 design from REBOUND stability-sim (1 Myr; near-2:1 with c). No real detection.",
+            "recommended": true
+          }
+        ],
+        "physical": [
+          {
+            "mass_mearth": 0.015,
+            "radius_rearth": 0.273,
+            "mass_type": "true mass",
+            "method": "theoretical",
+            "reference": "PHM p.393: Moon-sized (R~1737 km / 0.273 R_earth), surface gravity 0.2 g -> derived mass 0.0149 M_earth.",
+            "recommended": true
+          }
+        ]
+      }
     }
   ],
   "sources": [
@@ -334,7 +446,7 @@
       "title": "Butkevich & Lindegren (2014): Relativistic aspects of stellar kinematics",
       "doi": "10.1051/0004-6361/201424483",
       "bibcode": "2014A&A...570A..62B",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "epoch propagation method"
       ]
@@ -343,7 +455,7 @@
       "title": "Gaia Data Release 3",
       "doi": "10.1051/0004-6361/202243940",
       "bibcode": "2023A&A...674A...1G",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "astrometry (ra, dec, parallax, pmra, pmdec, radial_velocity)"
       ]
@@ -353,7 +465,7 @@
       "doi": null,
       "bibcode": null,
       "url": "https://exoplanetarchive.ipac.caltech.edu",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "planet parameters"
       ]
@@ -362,7 +474,7 @@
       "title": "Ma et al. 2018",
       "doi": "10.1093/mnras/sty1933",
       "bibcode": "2018MNRAS.480.2411M",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "40 Eridani A mass (empirical_relation)"
       ]
@@ -371,7 +483,7 @@
       "title": "Diaz et al. 2018",
       "doi": "10.3847/1538-3881/aaa896",
       "bibcode": "2018AJ....155..126D",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "40 Eridani A mass (evolutionary_model)"
       ]
@@ -380,7 +492,7 @@
       "title": "Boyajian et al. 2012",
       "doi": "10.1088/0004-637X/757/2/112",
       "bibcode": "2012ApJ...757..112B",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "40 Eridani A radius (interferometry)"
       ]
@@ -389,14 +501,14 @@
       "title": "Rains et al. 2020",
       "doi": "10.1093/mnras/staa282",
       "bibcode": "2020MNRAS.493.2377R",
-      "accessed": "2026-06-20",
+      "accessed": "2026-06-25",
       "used_for": [
         "40 Eridani A radius (interferometry)"
       ]
     }
   ],
   "meta": {
-    "retrieval_date": "2026-06-20",
+    "retrieval_date": "2026-06-25",
     "solar_system_epoch_jd": 2433282.5,
     "solar_system_epoch_label": "B1950.0",
     "game_epoch_jd_sol": 2433647.5,

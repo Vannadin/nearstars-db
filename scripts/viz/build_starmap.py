@@ -1162,8 +1162,8 @@ def self_check(payload):
         errs.append(f"n_files {m['n_files']} != 157")
     if m["n_clusters_db"] != 142:
         errs.append(f"n_clusters_db {m['n_clusters_db']} != 142")
-    if m["n_planets_db"] != 227:
-        errs.append(f"n_planets_db {m['n_planets_db']} != 227")
+    if m["n_planets_db"] != 229:
+        errs.append(f"n_planets_db {m['n_planets_db']} != 229")
     comp_total = sum(len(c["components"]) for c in payload["clusters"] if not c["is_sol"])
     if comp_total != 157:
         errs.append(f"DB components {comp_total} != 157")

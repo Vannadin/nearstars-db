@@ -391,16 +391,18 @@ decisions:
     status: gated
     driver: stability-sim validated architecture (REBOUND scan)
     value: >
-      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.03**
-      (저-e, 비공명) · inc free. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova 번식지 맥락과 정합.
-      **안정성 시뮬(REBOUND 5.0 WHFast+MEGNO)서 검증**: c=수성질량(0.055 M⊕)·0.40 AU 동반, 2e4yr 적분서 **MEGNO 2.000
-      (규칙적·안정)**, e_max = **Erid 0.040 · c 0.056 · d 0.030**(전부 저-e 안정, Erid 안 펌핑 — 오너 요구 충족). c가 수성급이라
-      2:1 공명은 d의 e를 못 펌핑 → **비공명 저-e** 채택(조석가열은 A안서 종결이라 무관). 자전/lock = figure/J2 작업서.
+      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.04**
+      (변동 0.013–0.048) · 상호경사 **2.5°**. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova 번식지 정합.
+      **공명**: c와 **근접 2:1**(a_d/a_c=1.587=2^⅔; 수성+달 질량이라 deep-lock 아닌 near-resonant, 각 circulate) — b-c는 비공명
+      (2.39). **안정성 시뮬(REBOUND 5.0 WHFast+MEGNO, 공식 뷰어 반영)**: c=수성(0.055 M⊕)·0.40 AU·상호경사 1.5° 동반, 1e5yr
+      랜덤위상서 **MEGNO 2.000(규칙적·robust STABLE)**, e_max Erid 0.040·c 0.095·d 0.048(**Erid 안 펌핑** — 요구 충족), a 고정.
+      (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→starmap 모핑, 세차 Ω/ω 포함).
+      자전/lock = figure/J2 작업서.
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
-      note: "오너 G2 확정 2026-06-24(c 수성화로 재검증 2026-06-25) — a 0.635 AU(3번째 canon 충족)·P 209d·e~0.03 저-e 비공명. c=수성질량(0.055 M⊕)·0.40 AU 동반. MEGNO 2.000 안정, e_max Erid 0.040·c 0.056·d 0.030(Erid 비펌핑 충족). c 수성급이라 공명 펌핑 무효→비공명. 조석가열 A안 종결(미스터리). HZ 중앙."
-      paper: "REBOUND 5.0 WHFast+MEGNO 안정성 시뮬(phase3/stability-sim/scripts/erid_resonance_scan.py + 수성-c 재확인); 조석가열 무시 판정=tidal-heating-methodology(a⁻⁷·⁵·R⁵)."
+      note: "오너 G2 최종확정 2026-06-25 — a 0.635 AU(3번째 canon)·P 209d·e~0.04·상호경사 2.5°. c와 근접 2:1(near-resonant, deep-lock 아님; b-c 비공명 2.39). c=수성(0.055 M⊕)·0.40 AU·1.5°. REBOUND 1e5yr 랜덤위상 MEGNO 2.000 robust STABLE, Erid e≤0.04 비펌핑(요구 충족). 3:1+2:1 이중공명=카오스라 기각, c-d만 2:1 채택. DB emit(curated→systems→starmap 세차 모핑). 조석가열 A안 종결."
+      paper: "REBOUND 5.0 WHFast+MEGNO(scripts/run.py --system 40_eridani, results/40_eridani_timeseries.csv; 탐색 scripts/erid_resonance_scan.py); 공식 뷰어=docs/starmap.html stability 모핑."
 
   - body: 40 Eridani A d
     axis: bulk
