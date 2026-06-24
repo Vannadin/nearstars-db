@@ -128,9 +128,16 @@ The canonical model-atmosphere libraries, in order of where each is the right to
 The classic precedent that ties model atmospheres to **broadband colors and
 temperature calibrations** across the whole O→M range is **Bessell, Castelli & Plez
 1998** — the standard reference for "model atmosphere → synthetic color." NearStars
-does not currently run a live PHOENIX/BT-Settl→CIE integration; the M-dwarf ladder
-(§5) is a *calibrated estimate* of what such an integration yields (see §9). When an
-exact value is needed, the proper route is a real BT-Settl/PHOENIX SED through §7.
+**now runs this integration directly**: empirical **Pickles 1998** stellar-spectral-
+flux-library SEDs (M0V–M6V, real observed optical spectra carrying the true TiO/VO/
+H₂O band structure) integrated through the §7 engine. The M-dwarf ladder (§5) is the
+**computed output** of that integration, not a hand-pushed estimate — validated
+against the canonical solar color (the same engine on the Pickles G2V SED returns
+`#fff4f2`, matching the standard rendered Sun color `#fff5f2`). Pickles supplies the
+empirical optical SEDs; a model grid (BT-Settl/PHOENIX) is the route only for cases
+outside Pickles' coverage (late-M/L/T, peculiar abundances). The computation is
+`scripts/refs/stellar_photospheric_color.py` (reuses the shared `cie_color.py` engine;
+fetches the Pickles SEDs from VizieR J/PASP/110/863 on demand).
 
 ---
 
@@ -178,34 +185,50 @@ out of the **optical** — far more than the smooth blackbody continuum suggests
   more red/near-IR absorption on top of TiO.
 - **H₂O** — water bands remove flux in the red and (dominantly) the near-IR.
 
-Net effect on the visible color: a real M dwarf is **much redder AND much darker** in
-the optical than its blackbody Teff implies, because the molecular bands preferentially
-**eat the short-wavelength (green/blue) flux** the eye is most sensitive to. This is a
-**large, NOT sub-perceptual** effect — it changes the hue family, not just a nudge —
-and it **cannot** be captured by a blackbody. It requires a molecular-line model
-atmosphere (BT-Settl / PHOENIX, §3). The Teff scale these grids produce for M dwarfs
-is the **Rajpurohit+ 2013** (BT-Settl M-dwarf Teff scale) and **Mann+ 2015** (the
-empirical M-dwarf Teff/radius/luminosity calibration, which uses BT-Settl
-synthetic spectra) references.
+**Two distinct effects must be separated here**, and conflating them is the classic
+error this section now corrects:
 
-### The NearStars M-dwarf color ladder
+- **On the SPECTRUM and on band photometry: large.** The molecular bands genuinely
+  carve big chunks out of the optical, and this dominates the M-dwarf *color indices*
+  (a large V−I, the steep red rise) and the spectral classification. A blackbody cannot
+  reproduce the *spectrum*.
+- **On the brightness-normalized VISIBLE CHROMATICITY: modest.** Once the real SED is
+  integrated against the CIE CMFs and normalized to a peak channel (the standard star-
+  swatch convention, §7), the displayed color of an M dwarf is a **pale warm orange** —
+  only slightly redder/warmer than the blackbody at the same Teff, **not** a saturated
+  brick-red, and **not** a hue-family change. The molecular bands carve regions the eye
+  weights unevenly; the net chromaticity stays close to the (already orange) Planckian
+  locus. This is verified by running real Pickles M-dwarf SEDs through §7 (below).
 
-Presented as the **worked output** of "blackbody at Teff, then TiO/VO/H₂O suppression
-of the blue/green," it is **monotonic**: later M subtype / cooler Teff → more molecular
-absorption → deeper, darker red.
+The widespread "M dwarfs are deep red" intuition mostly conflates **luminosity** (M
+dwarfs are intrinsically *dim* — a real, large effect) with **chromaticity** (the hue
+of a brightness-normalized swatch — a *small* shift). A color swatch normalizes
+brightness away, so "darker" does not belong in the tint; only the modest hue shift
+does. The M-dwarf Teff scale these spectra anchor to is **Rajpurohit+ 2013** (BT-Settl
+M-dwarf Teff scale) and **Mann+ 2015** (empirical M-dwarf Teff/radius/luminosity).
 
-| Star | Type | Teff (K) | tint hex | reading |
-|---|---|---|---|---|
-| AU Mic | M1 | 3665 | `#e0743a` | warm orange — early M, modest TiO |
-| Barnard | M4 | 3195 | `#cf5a30` | deeper orange-red — strong TiO |
-| Proxima | M5.5 | 2904 | `#c54c2a` | brick red — TiO + VO |
-| Teegarden | M7 | ~2900 | `#c23a1c` | darkest red — heavy TiO/VO/H₂O |
+### The NearStars M-dwarf color ladder (computed from real Pickles SEDs)
 
-**The rule behind the ladder:** start from the blackbody at `Teff` (which alone would
-give an over-bright, *too-orange* color), then push the hue **redder and the value
-darker** in proportion to the molecular band strength, which grows with later M
-subtype. The ladder is the project's calibrated stand-in for a per-star BT-Settl→CIE
-integration (§9).
+The **actual output** of integrating real Pickles M-dwarf spectra through §7
+(brightness-normalized to peak channel = 255, the same convention as the blackbody and
+the Sun). It is a **faint, monotonic warming** — the blue channel drops with later type
+— **inside the pale-orange family**, nowhere near brick-red:
+
+| Star | Type | Teff (K) | tint hex | blackbody at Teff | reading |
+|---|---|---|---|---|---|
+| AU Mic | M1 | 3665 | `#ffcb94` | `#ffcd95` | pale warm orange — early M |
+| Barnard | M4 | 3195 | `#ffd487` | `#ffbe78` | pale warm orange — strong TiO, real SED *paler* than blackbody |
+| 40 Eri C | M4.5 | 3167 | `#ffd587` | `#ffbe78` | ≈ Barnard (same Teff/subtype) |
+| Proxima | M5.5 | 2904 | `#ffcc75` | `#ffba71` | pale warm orange, faintly deeper |
+| Teegarden | M7 | ~2900 | `#ffcc75` | `#ffb260` | warmest of the ladder, still pale |
+
+**The rule behind the ladder:** integrate the **real observed SED** (Pickles) through
+§7 and normalize to peak channel. The blackbody at `Teff` is already a *fair*
+approximation of this — the molecular correction is a slight warming, and for M4–M5 the
+real SED is actually marginally **paler** than the blackbody, not redder. (The old
+NearStars ladder `#e0743a → #cf5a30 → #c54c2a → #c23a1c` was a hand-pushed render-
+saturated guess that mistook the luminosity intuition for chromaticity; it is
+superseded by the computed values above. See §9.)
 
 ---
 
@@ -221,10 +244,14 @@ is the **molecular-band-corrected output** that replaces it for cool dwarfs.
    pure-H atmosphere with no metals and no molecules, so the blackbody is excellent and
    there is **no metallicity term at all**. (NearStars: Sun, α Cen A, τ Ceti, 40 Eri A;
    40 Eri B = DA white dwarf.)
-2. **M dwarfs → the blackbody FAILS; use a model atmosphere.** TiO/VO/H₂O bands make
-   the star much redder and darker than `Teff` blackbody implies (§5). This is a hue-
-   family change, not a nudge. Use BT-Settl/PHOENIX, or the calibrated ladder above.
-   (NearStars: AU Mic, Barnard, Proxima, Teegarden, 40 Eri C; the M-dwarf field stars.)
+2. **M dwarfs → correct the blackbody with a real spectrum, but the correction is
+   modest for the displayed hue.** TiO/VO/H₂O bands reshape the *spectrum* (large effect
+   on color index and luminosity), but the brightness-normalized visible chromaticity is
+   a **pale warm orange** only slightly warmer than the blackbody at the same Teff — not
+   a hue-family change (§5). Use the computed Pickles ladder (or a model SED through §7);
+   the blackbody is a fair first approximation of the displayed tint, erring slightly
+   toward over-saturation. (NearStars: AU Mic, Barnard, Proxima, Teegarden, 40 Eri C;
+   the M-dwarf field stars.)
 3. **Special cases → model atmospheres also required, flag explicitly.**
    - **Carbon stars** — C/O > 1 swaps TiO for C₂/CN bands, reddening the star and
      adding a distinct character a blackbody cannot reproduce.
@@ -300,24 +327,26 @@ term**, and the blackbody is an excellent approximation. At 17,200 K the locus s
 firmly **blue-white**. The cleanest blackbody case in the roster.
 
 **The M-dwarf ladder (AU Mic / Barnard / Proxima / Teegarden, §5).** M-dwarf regime
-(§6.2): the blackbody fails. Computed as "blackbody Teff + TiO/VO/H₂O suppression of
-the blue/green," giving the monotonic deepening-red ladder `#e0743a → #cf5a30 →
-#c54c2a → #c23a1c`.
+(§6.2): computed by integrating real Pickles SEDs through §7. The result is a faint
+warming inside the pale-orange family, `#ffcb94 → #ffd487 → #ffcc75 → #ffcc75` — **not**
+the old hand-pushed brick-red ladder.
 
-**40 Eridani C (M4.5Ve, 3167 K) → `#cf5a30` — the diagnostic example.** 40 Eri C sits
+**40 Eridani C (M4.5Ve, 3167 K) → `#ffd587` — the diagnostic example.** 40 Eri C sits
 at essentially **Barnard's temperature** (3167 K vs 3195 K). This is the clean test of
-the whole method:
+the whole method, and its lesson is the **opposite** of what the old ladder claimed:
 
-- **Blackbody at 3167 K → ~`#ffbe78`** — a bright, *too-orange* color. This is
-  **WRONG**: it ignores that at this temperature TiO and VO have carved most of the
-  green/blue out of the optical.
-- **TiO/VO-corrected (the ladder) → ~`#cf5a30`** — the same deep orange-red as Barnard,
-  which is **right**, because two stars at the same Teff and same (M4–M4.5) molecular
-  band strength must land at the same color.
+- **Blackbody at 3167 K → ~`#ffbe78`** — a pale warm orange. This is a **fair
+  approximation**, not "wrong": it is only slightly more saturated than the real color.
+- **Real Pickles M4–M4.5 SED through §7 → ~`#ffd587`** — pale warm orange, in fact
+  marginally *paler* than the blackbody, because integrating the real molecular-band
+  spectrum and normalizing to peak channel does **not** drive the chromaticity to a
+  brick-red. The old ladder value `#cf5a30` was a render-saturated guess and is
+  superseded.
 
-40 Eri C is therefore the worked proof that the blackbody is the wrong tool for M
-dwarfs and the molecular-band-corrected ladder is the right one — and a built-in
-**consistency check**: equal Teff + equal subtype ⇒ equal color (Barnard ≈ 40 Eri C).
+40 Eri C is therefore the worked proof that (a) the blackbody is a *fair* approximation
+of the displayed M-dwarf tint, (b) the molecular correction is modest in chromaticity,
+and (c) the consistency check holds: equal Teff + equal subtype ⇒ equal color (Barnard
+`#ffd487` ≈ 40 Eri C `#ffd587`).
 
 ---
 
@@ -332,11 +361,14 @@ dwarfs and the molecular-band-corrected ladder is the right one — and a built-
   It is recorded for correctness and direction, but it does not, by itself, move a
   star to a visibly different hex. (Hence the project's "skip metallicity curation"
   stance is harmless for the *tint*.)
-- **An exact M-dwarf color needs a real BT-Settl/PHOENIX→CIE integration.** The ladder
-  in §5 is the project's **calibrated estimate** of that integration, not the
-  integration itself — monotonic, physically-signed (redder/darker with later type),
-  and internally consistent (Barnard ≈ 40 Eri C), but a *grounded approximation*. If a
-  value ever needs to be defended beyond "tie-break," run the model SED through §7.
+- **The M-dwarf ladder is now computed, not estimated.** The §5 hexes are the output of
+  integrating real Pickles 1998 M-dwarf SEDs through §7 (peak-channel normalized), so
+  they are firmer than the old "calibrated estimate." The residual uncertainty is now
+  (a) **Pickles template-to-template scatter** (the library spectra are composites; the
+  M-sequence chromaticity is nearly flat at pale warm orange and the subtype ordering is
+  slightly noisy) and (b) the render-saturation choice below. The earlier brick-red
+  ladder (`#cf5a30` etc.) was a hand-pushed render guess that conflated luminosity with
+  chromaticity; it has been **superseded** by the computed values.
 - **The blackbody is explicitly an approximation for FGK/WD** — adopted because it is
   good there (smooth continuum) and because the displayed tints are near-white anyway,
   so the residual error is sub-perceptual. It is **not** adopted for M dwarfs.
@@ -354,6 +386,13 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   corrections and temperature calibrations for O–M stars* — the standard precedent for
   turning a model-atmosphere SED into synthetic broadband colors and a Teff scale
   across the full O→M range. §2, §3. (1356 cites.)
+
+- **Pickles, A. J. (1998)** — *PASP* 110, 863. **No arXiv** (bibcode
+  `1998PASP..110..863P`). *A Stellar Spectral Flux Library: 1150–25000 Å* — the empirical
+  stellar-spectral-flux library (O–M, dwarfs/giants) used as the **real observed SED**
+  input for the M-dwarf color integration of §5: the M0V–M6V spectra are integrated
+  through the §7 engine to give the computed ladder, with the Pickles G2V validating the
+  pipeline against the canonical solar color. §3, §5, §8. (1361 cites.)
 
 - **Husser, T.-O. et al. (2013)** — *A&A* 553, A6. **arXiv:1303.5632.** *A new
   extensive library of PHOENIX stellar atmospheres and synthetic spectra* — the modern

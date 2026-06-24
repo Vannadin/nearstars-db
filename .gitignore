@@ -16,6 +16,10 @@ dist/
 # bibliography YAML is kept in git for curation state; raw paper text is not.
 docs/phase3/_papers/
 
+# Pickles 1998 spectral-library cache (fetched on demand by
+# scripts/refs/stellar_photospheric_color.py from VizieR J/PASP/110/863)
+scripts/refs/.cache/
+
 .venv/
 
 # Obsidian auto-generated canvas files (created when user accidentally
