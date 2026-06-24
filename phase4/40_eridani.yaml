@@ -183,7 +183,7 @@ decisions:
       criterion: [classification, culture]
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함. disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드."
-    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Ma 2018 (2018AJ....155..117M) RV candidate, refuted by Burrows & Lubin 2024; cultural (Erid/PHM + Vulcan/Star Trek)", skill: "researchbodies-cfg/references/db-mapping.md"}
+    discoverability_cfg: {category: disputed, ignorelevels: "T F F F", ref: "Ma 2018 (2018AJ....155..117M) RV candidate, refuted by Burrows & Lubin 2024 (42d=stellar rotation); cultural (Erid/PHM + Vulcan/Star Trek). category=disputed(contested/refuted RV), not confirmed — same TFFF output.", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: 40 Eridani A b
     axis: orbit
@@ -365,3 +365,23 @@ decisions:
       criterion: [culture, classification]
       verdict: pass-in-window
       note: "오너 G11 확정 2026-06-24 — Erid 게임플레이 종합. 가혹 착륙(고중력+두꺼운대기+열)+방사선-free(강자기권). 청색박명+고리 비주얼. 문화 주인공(PHM Erid+Trek Vulcan). → Erid 11축 완성."
+
+  # ── Threeworld (40 Eridani A d) — PHM canon(p.393): 달 크기·0.2g·희박 CO₂/N₂/SO₂(<지구 1%). 별에서 3번째 행성.
+  #    Astrophage Petrova-arc 끝점(금성 역할, CO₂ 번식지)·Taumoeba 투입지·에리디언 최근 발견(맹목→"삼세계"). 순수 픽션(관측 0).
+  #    틀=물리 책 그대로 + Weir가 인정한 대기보유 수수께끼("0.2g인데 어떻게?")는 화산 SO₂ outgassing 보충으로 보강(G4).
+  - body: 40 Eridani A d
+    axis: identity
+    status: gated
+    driver: PHM book canon (p.393)
+    value: >
+      body_type=**작은 암석 행성**(지구 달 크기) — R ≈ 1,737 km(0.273 R⊕) · **0.2 g** · 역산 질량 ≈ **0.015 M⊕**(달의 ~1.2배) ·
+      ρ ~4.0 g/cm³. 희박 **CO₂ 84% / N₂ 8% / SO₂ 4% + trace** 대기, 표면압 **<지구 1%**(Mars급). designation=**40 Eridani A d
+      (Threeworld)** — 별에서 3번째 행성. **PHM 책 canon**(p.393 구체값). 순수 픽션 바디(관측 근거 0 — 40 Eri A 확정 행성 없음).
+      문화: **Astrophage Petrova-arc 끝점**(금성 역할 — CO₂ 대기서 Astrophage 번식) · 후에 **Taumoeba 투입**으로 개체수 감소 ·
+      에리디언이 최근 발견, 맹목이라 무성의하게 "삼세계" 명명(인간식 천문 경이가 없던 종족). discoverability=**FFFF**(category
+      `fictional` — 합성 바디, 실측 0; 작고 늦게 발견된 점도 정합).
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-24 — Threeworld(40 Eri A d), PHM canon p.393. 달 크기·0.2g·~0.015 M⊕·희박 CO₂/N₂/SO₂(<지구1%). disc=FFFF(fictional, 순수 픽션+소형+늦은 발견). 문화=Astrophage Petrova-arc 끝점(금성 역할)·Taumoeba 투입지. 물리=책, 대기보유 수수께끼는 G4서 화산 보충으로 보강."
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic PHM body (Threeworld, p.393); no real detection — always discover. Tiny (0.015 M⊕), Eridian late-discovery", skill: "researchbodies-cfg/references/db-mapping.md"}
