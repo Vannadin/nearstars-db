@@ -327,6 +327,9 @@ decisions:
       평형 ~150°C+) 가까워 **얼음 고리 불가**(승화) → 물리적으론 **암석/규산염 dust 고리**(토성식 밝은 얼음링 아닌 어두운 회갈색,
       disk 색 방법론). 영화가 밝은 고리를 그렸으면 그 채도/밝기는 G6처럼 art로 두고 디스플레이는 영화 기준, 물리 dust는 병기.
       기원=Roche 한계 내 위성/소천체 조석파괴 또는 포획 잔해.
+      [엘리베이터 vs 고리] 원작은 GEO 우주엘리베이터(에리디언 xenonite 인프라)를 암시하나 — NS는 megastructure 미모델(flavor-only,
+      판스페르미아·생물학과 동급) + 엘리베이터 케이블은 GEO 관통이라 고리 구간(1.5–2.4 R_p)과 물리적 양립 불가 → **영화 고리 채택,
+      엘리베이터 미표현**. divergence 아닌 모델 범위 밖.
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
