@@ -53,3 +53,12 @@ decisions:
       약한 Sun-like 자기장 — 표면장 **Zeeman 검출 한계 ~50 G 아래**(고분해 분광 미검출). Boro Saikia2018 ZDI로 대규모장 측정
       (약함, P_rot 46d 지지). 극저활동(log R'HK −4.977)·늙은 나이(~10 Gyr)와 정합한 조용한 dynamo. X선 EXOSAT 한계 아래
       (log Lx ≤ 26.5, Schmitt1985 상한). 측정/상한값 → emit 그대로.
+
+  - body: tau Ceti
+    axis: environment
+    status: passthrough
+    note: >
+      activity=**flat**(Baum2022 ~50yr 모니터링 사이클 없음 — 가장 자기조용 Sun-like 중 하나; steady·uncycled, 태양 이하).
+      stellar_wind=**약함** Ṁ ≤ 0.1 Ṁ☉(Wood2021 astrospheric Lyα 상한). heliosphere: ISM 유입 ~50 km/s, astrosphere
+      standoff **≲19 AU**(작음). radiation_surface ~0.6×태양(flat·낮음). 행성계 space weather 매우 온화(K·M왜성식 XUV-구동
+      대기손실 없음 → 내행성 손실은 thermal Jeans 기본). 측정/상한 → emit 그대로.
