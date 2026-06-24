@@ -19,3 +19,13 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배)."
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=3.5, Cetus)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: tau Ceti
+    axis: bulk
+    status: passthrough
+    note: >
+      M 0.783±0.012 M☉(Teixeira2009 asteroseismology) · R 0.793±0.004 R☉(Korolik2023 CHARA/MIRC-X 간섭계) · Teff 5370±20K
+      (Korolik2023) · L 0.488 L☉(Teixeira2009) · [Fe/H] −0.52±0.01(Santos2013, 매우 철-빈약=시스템 정체성) · age ~10 Gyr
+      (Di Folco2004 isochrone; **documented-divergence** vs Mamajek2008 5.8 Gyr — Phase3서 ~10 채택, 범위 4.4–12.4) · P_rot
+      46±4d(Korolik2023 gyro; **documented-divergence** vs Baliunas1996 34d — Phase3서 46 채택, Boro Saikia2018 ZDI 지지) ·
+      spin i 7±7°(거의 pole-on, 디스크축 i~35°와 어긋남). 전부 측정/Phase3 해결값 → emit 그대로.
