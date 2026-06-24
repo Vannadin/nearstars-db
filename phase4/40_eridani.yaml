@@ -297,3 +297,21 @@ decisions:
       verdict: pass-in-window
       note: "오너 G7 확정 2026-06-24 — 25× 지구 유지(Weir, 블라인드 '복사 차단' 테마 핵심). dynamo 방법론(Christensen2009): 장=코어 열플럭스가 결정(자전 무관) → Weir '빠른자전→강장' 인과는 dated이나, 금속-풍부 뜨거운 행성의 높은 열플럭스로 25× 방어 가능. 강자기권 → G8 항성풍/우주선 차단·강 오로라 캐스케이드."
       paper: docs/reference/planetary-dynamo-scaling.md (장 세기=코어 대류 열플럭스 스케일링, Christensen2009·R&C2010; 자전율 비의존).
+
+  - body: 40 Eridani A b
+    axis: environment
+    status: gated
+    driver: owner art-direction + G7 cascade (Kerbalism radiation regions)
+    value: >
+      **지상 방사선 → 0 수렴**(오너): 40 Eri A가 적당히 활동적(X선 ~3× 태양)이어도 Erid의 **25× 자기권(G7) + 28기압 두꺼운 대기**가
+      항성풍·우주선을 거의 완전 차단 → 표면 radiation_surface = **none(차폐)**. 블라인드 "복사 차단" 서사 + Eridian 거주성과 정합.
+      **보호 자기권 = 정지궤도 이상**(오너·설정): Erid 동기궤도 = 중심 25,669 km(**2.61 R_p**, 고도 15,852 km — 5.1h 빠른 자전이라 낮음).
+      25× 장의 자기권 standoff는 이를 넉넉히 초과 → **저궤도까지 전부 차폐권**. ⚠ 단 25× 강장은 **포획입자 복사대(밴앨런 유사)**도
+      강함 → 내자기권 일부 고도는 우주선엔 오히려 위험(Kerbalism 밴드로 emit 시 모델, 강장의 이면). 항성풍 Ṁ 미측정(Wood 비검출),
+      고속 이동계(V_ISM ~127 km/s). 강자기권×항성풍 → 강한 극 오로라(0.224 AU 근접+25× → SPI성 강발광 가능). 삼중성 WD B+M왜성 C는
+      ~400 AU 밖이라 Erid 환경에 무관.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G8 확정 2026-06-24 — 지상 방사선 0 수렴(25× 자기장+28기압 대기 완전차폐, radiation_surface=none). 보호 자기권은 동기궤도(2.61 R_p=중심 25,669km/고도 15,852km) 이상으로(설정) → 저궤도까지 차폐. 단 강장 포획 복사대(밴앨런)는 내자기권 우주선 위험(Kerbalism 밴드, emit 시). 강 오로라(SPI성). Kerbalism 자기장-영역 시스템 매핑."
+      paper: "stellar-wind/Kerbalism 자기장 영역(project_nearstars_stellar_wind_kerbalism); 동기궤도=Kepler T=5.1h."
