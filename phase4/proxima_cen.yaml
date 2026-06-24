@@ -668,3 +668,20 @@ decisions:
         명왕성 아날로그(g 0.5·~40–60K·N₂ 얼음)라 명왕성식 희박 N₂가 자연. 안정 근거 = 승화-지지(증기압 평형) + 중력 결속
         (대기 H~30 km ≪ 위성 Hill 2,460 km). c 자기권 상호작용(픽업/torus)은 modest라 본 결정엔 미상세화(승화로 상쇄, 오너 2026-06-23).
       paper: 명왕성 N₂ 대기·haze 유추. scale-height/μ = docs/reference/exoplanet-atmosphere-methodology.md.
+
+  - body: Proxima Centauri c I
+    axis: surface
+    status: gated
+    driver: classification + visual
+    value: >
+      **명왕성/트리톤 아날로그 — 이원(bimodal) 지형**(오너 a, 2026-06-23). 조성=N₂/CH₄/CO/H₂O 얼음 + tholin. 지형=**밝은
+      N₂/CH₄ 얼음 평원**(고albedo 창백 크림, 명왕성 Sputnik식) ↔ **어두운 적갈 tholin 지대**(저albedo, 명왕성 Cthulhu식)
+      혼재. 크라이오볼케이노 시그니처 **제외**(오너). Bond albedo 전반 높음(~0.5–0.7, 명왕성급) 단 공간 변동 큼. 고유색=
+      크림 N₂ 평원 ~#dcd6c6 · 적갈 tholin ~#6e4632 · 물얼음 청백 패치. 조석고정이라 sub-c/anti-c 비대칭 가능.
+    gate:
+      criterion: [classification, visual-checklist]
+      verdict: pass-in-window
+      rationale: >
+        명왕성/트리톤 직접 유추(같은 ~40–60K 냉 얼음+톨린 regime). 색=표면색 문서(물얼음 Warren&Brandt·tholin Khare·N₂/CH₄
+        Grundy/Cruikshank). 별서 멀어 reddening 미미 + 인게임 normalize → 색이 본질(밝기 아님). interesting-first 균형 지형.
+      paper: docs/reference/surface-color-albedo-methodology.md(얼음·tholin n,k). 명왕성/트리톤 표면=Grundy2016·Cruikshank1993.
