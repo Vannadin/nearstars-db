@@ -19,3 +19,13 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24. 맨눈 별 naked_eye=T T T T. 문화=벌컨의 태양(Star Trek, Roddenberry1991 공인)+Erid의 태양(PHM 로키). 백색왜성 B+적색왜성 C와 삼중성."
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=4.43, Eridanus)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: 40 Eridani A
+    axis: bulk
+    status: passthrough
+    note: >
+      M 0.78±0.08 M☉(Ma2018 M-R + Diaz2018 0.76 일치) · R 0.806±0.004 R☉ · Teff 5143±14K · L 0.408 L☉(Boyajian2012 CHARA
+      간섭계, 고신뢰; Rains2020 VLTI 1σ 일치) · [Fe/H] −0.29(Diaz2018; Ma2018 −0.42) · **age ~1.8 Gyr**(documented-divergence
+      — 백색왜성 B IFMR coeval age[Bond2017: WD 냉각 122 Myr + 전구체 ~1.7 Gyr]가 옛 K왜성 isochrone 노년설 해소 → 비교적
+      젊음) · P_rot ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). 측정/
+      Phase3 해결값 → emit 그대로.
