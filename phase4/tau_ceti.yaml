@@ -35,12 +35,13 @@ decisions:
     status: gated
     driver: observation
     value: >
-      color=`#ffe9c8`(크림-옐로) — **색은 Teff 5370K가 지배**(태양 5772K보다 ~400K 낮아 눈에 띄게 더 노랑; B−V ~0.15 mag 차).
-      **금속빈약 [Fe/H]−0.52는 sub-perceptual 블루 nudge**(line blanketing 약화로 같은 Teff서 살짝 파랑이나 ~10–20K 등가,
-      B−V ~0.02 mag, 식별 역치 아래) — 물리 driver 아닌 **도감 구별용 tie-break**([[feedback_skip_metallicity]] "금속함량 색효과
-      sub-perception" 정합). limb_darkening α 0.14(Korolik2023 H-band 간섭계 직접측정). spots/faculae=**매우 낮음**
-      (log R'HK −4.977 극비활동, 단 flat 아님 — ~11yr 약사이클+장기하락, Gomes da Silva2021; α Cen A보다 조용).
+      color=**물리색 `#ffeddf`** (Teff 5370K 흑체→sRGB 실측 `#ffecdd` + [Fe/H]−0.52 블루 nudge; 거의 흰-따뜻) — 색은
+      **Teff 5370K 지배**(태양 5772K보다 ~400K 낮아 더 노랑; sRGB 블루채널 Δ~13). **금속빈약은 line blanketing 약화로
+      sub-perceptual 블루 nudge**(+15~70K 등가, B−V ~0.02–0.03, sRGB 블루 +~2 — 역치 아래지만 방향 맞아 반영;
+      Ramírez&Meléndez2005·Casagrande2010·Huang2015 색-Teff-[Fe/H] 보정. [[feedback_skip_metallicity]] 정합).
+      limb_darkening α 0.14(Korolik2023 H-band 간섭계 직접측정). spots/faculae=**매우 낮음**(log R'HK −4.977 극비활동,
+      단 flat 아님 — ~11yr 약사이클+장기하락, Gomes da Silva2021; α Cen A보다 조용).
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G3 확정·정정 2026-06-24 — 색은 Teff(5370K) 지배·금속빈약은 sub-perceptual nudge로 정직하게 재서술(직전 'metallicity→노랑' 과대표현 교정). limb/흑점=측정 passthrough."
+      note: "오너 G3 확정·정정 2026-06-24 — 물리색만 기록(#ffeddf=흑체 실측+금속 nudge), 뷰어 채도-tint(#ffe9c8)는 미기록. emit 별색(광원=near-white/원반 art)은 deferred. 색은 Teff 지배·금속은 sub-perceptual nudge(방향 반영). limb/흑점=측정 passthrough."
