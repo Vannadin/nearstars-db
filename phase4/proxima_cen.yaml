@@ -604,3 +604,18 @@ decisions:
       verdict: pass-in-window
       owner_review: "2026-06-23 오너 검토 — biome 위도 5띠 확정, 고리 그림자대 제외(b의 오로라대 제외와 동일 취지: 고정 표면구역 아닌 피처는 biome서 뺌)."
       note: "표면 없음이 b(착륙 호수세계)·d(착륙 수성형)와의 게임 차이 — c는 폴리페무스형 비행/우주. 고리·위성이 c만의 탐사 매력. cfg emit(biome map·ScienceValues·ResearchBodies·Ring 노드)는 프로젝트 말미."
+
+  # ════════ 위성 Proxima c I (c의 픽션 위성, 명왕성 아날로그 냉 얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════
+  - body: Proxima Centauri c I
+    axis: identity
+    status: gated
+    driver: classification + fiction
+    value: >
+      body_type=**냉 얼음 위성(명왕성 아날로그)** — N₂/CH₄/H₂O 얼음 + 톨린 적화 다양 지형, 무생물(극냉 ~40–60K). c의 위성,
+      c에 조석고정, ~1.5× 달 규모. designation=Proxima Centauri c I(고유명 없음). discoverability=**픽션 위성→ FFFF**
+      (관측 근거 0, ResearchBodies 완전 미발견 — 별 TFFF·candidate와 달리 인게임서 직접 발견).
+    gate:
+      criterion: [classification, fiction]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-23. art-first 픽션 위성([[project_nearstars_discoverability_researchbodies]] fictional moons=FFFF). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린 세계)."
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "fiction (art-directed moon)", skill: "researchbodies-cfg/references/db-mapping.md"}
