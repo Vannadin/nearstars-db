@@ -1,0 +1,21 @@
+# τ Ceti (HD 10700 / GJ 71) Phase 4 결정 보드 — 별 + 행성 f/g/h(+e 논쟁) + 냉 debris 디스크. (body × axis) 행별 상태. DB 불변, staging.
+# 실관측 시스템 → 대부분 Phase 3 측정/합성값 passthrough, 소수 art/divergence + discoverability. grounding=docs/phase3/tau-cet*.md
+system: tau_ceti
+status: staged
+updated: 2026-06-24
+
+decisions:
+  # ── 별 (τ Ceti, 조용·늙은·금속빈약 G8.5V) — facet-walk 2026-06-24 ──────────
+  - body: tau Ceti
+    axis: identity
+    status: gated
+    driver: classification + observation
+    value: >
+      body_type=**조용한 늙은 금속-빈약 G8.5V 솔라 아날로그**(태양보다 약간 차갑고 어둡고 철-빈약). 태양 최근접 **단일**
+      Sun-like 별(3.65 pc), SETI 고전 타깃(Project Ozma 1960). designation=τ Ceti(HD 10700 · HIP 8102 · GJ 71).
+      discoverability=**맨눈**(V=3.5, Cetus 육안) → RB IGNORELEVELS T T T T(항상 가시).
+    gate:
+      criterion: [classification, observation]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배)."
+    discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=3.5, Cetus)", skill: "researchbodies-cfg/references/db-mapping.md"}
