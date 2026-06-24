@@ -678,7 +678,9 @@ decisions:
       **공간 배치(오너)**: **적갈 tholin 지대 = 적도대**(가장 많이 조명·따뜻 → 톨린 생성 + 휘발성 손실; 명왕성 Cthulhu식
       저albedo) / **밝은 N₂/CH₄ 얼음 = 극관**(가장 추워 휘발성 cold-trap → 고albedo 창백 크림; 트리톤 밝은 극관식). 휘발성
       이동 물리와 정합. 크라이오볼케이노 시그니처 **제외**(오너). Bond albedo 전반 높음(~0.5–0.7, 명왕성급) 단 공간 변동 큼.
-      고유색=크림 N₂(극) ~#dcd6c6 · 적갈 tholin(적도) ~#6e4632 · 물얼음 청백 패치. 조석고정.
+      고유색=크림 N₂(극) ~#dcd6c6 · 적갈 tholin(적도) ~#6e4632 · 물얼음 청백 패치. 조석고정. **+ sub-c eyeball**(오너 2026-06-23):
+      c·고리 마주보는 sub-c 지점에 **고리-얼음 신선 코팅 → 밝고 톨린 없는 국소 원형 영역**(고리 바로 밖 shepherd 위성이라
+      쓸어담은 ring-ice가 톨린을 매몰; 트리톤/Iapetus식 한쪽 코팅). 고유색 신선 얼음 백 ~#e8eef0.
     gate:
       criterion: [classification, visual-checklist]
       verdict: pass-in-window
@@ -740,3 +742,20 @@ decisions:
     driver: classification + stability
     value: "submoon(위성의 위성) 없음 — 동역학적 불안정으로 태양계에도 사례 0, ~950 km 위성은 보유 불가. 물리적 부재."
     gate: {criterion: [classification, stability], verdict: pass-in-window, note: "submoon 불안정. 오너 G10 확정 2026-06-23."}
+
+  - body: Proxima Centauri c I
+    axis: gameplay
+    status: gated
+    driver: gameplay
+    value: >
+      **착륙 가능**(고체 얼음 표면, 명왕성/트리톤 착륙 느낌). **저중력 g~0.5 m/s²**(통통 튀는 착륙). splashdown 없음(동결)·
+      대기비행 없음(~Pa 너무 희박, 단 청 haze는 보임). breathability=**불가**. radiation 해저드=**낮음**(G8 시스템 최저 — 상대적
+      안전 착륙지). **biome = 위도 지형 + sub-c eyeball 4구획**(오너 검토 2026-06-23): ① 적도 톨린대(어두운 적갈) · ② 중위도
+      (전이) · ③ 극 N₂ 빙관(밝은 크림) · ④ **sub-c 고리-얼음 eyeball**(밝은 신선 얼음·톨린 없음, c+2중 고리 마주보는 **시그니처
+      명소**). anti-c 반구 biome 제외(오너). ScienceValues(landed/flying-low=탄도/in-space; splashed 토큰 inert). SOI 자동.
+      난도 = 항성간 플래그십 + 최외곽 c의 위성(시스템 깊숙이). 발견=RB **F F F F**(픽션 위성, G1).
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      owner_review: "2026-06-23 오너 검토 — biome 4구획(위도 3 + sub-c eyeball), anti-c 제외. sub-c eyeball=고리-얼음 코팅 시그니처."
+      note: "착륙 가능(b·d처럼 고체)이되 명왕성식 얼음+톨린+저중력의 독특한 착륙지. c+2중고리 하늘 풍경이 sub-c 명소의 매력. cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미."
