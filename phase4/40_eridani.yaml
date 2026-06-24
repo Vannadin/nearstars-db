@@ -184,3 +184,19 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함. disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드."
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Ma 2018 (2018AJ....155..117M) RV candidate, refuted by Burrows & Lubin 2024; cultural (Erid/PHM + Vulcan/Star Trek)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: 40 Eridani A b
+    axis: orbit
+    status: gated
+    driver: PHM canon (Weir)
+    value: >
+      궤도값 전부 **헤일메리(Weir) 기반**(블렌드 틀 "물리=책"; Weir가 Ma2018 실관측값을 그대로 채택). a **0.224 AU** · e
+      **0.04** · P **42.245 지구일**(42일보다 조금 더) · inc 미측정 → free emit. 항성 플럭스 ~8–9× 지구(40 Eri A L 0.408 L☉
+      / 0.224² ≈ 8.1×; Weir 12,537 W/m² ≈ 9.2×) — 뜨거움, 표면 210°C·고압 액체물과 정합. **자전 = 5.1h 항성일**(Weir;
+      25× 자기장 dynamo 구동용 빠른 자전), **조석고정 아님**. ⚠️ **documented divergence**: 조석고정 방법론상 a 0.224 AU·
+      0.78 M☉에서 lock 타임 ~10⁷년 ≪ 나이(1.8 Gyr)라 물리적으론 고정 예상이나, 책 canon이 빠른 자전 지정(자기장 캐스케이드
+      전제) → "물리=책"이라 5.1h 채택.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G2 확정 2026-06-24 — 궤도·물리값 전부 PHM(Weir) 기반. P 42.245d(42일보다 조금 더). 5.1h 비고정 자전 채택(divergence: 방법론상 고정 예상이나 책 canon 우선, G7 자기장 dynamo 전제). Ω/ω/M free-emit."
