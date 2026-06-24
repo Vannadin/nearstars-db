@@ -147,3 +147,20 @@ decisions:
       verdict: pass-in-window
       note: "오너 G3 확정 2026-06-24, 색 정정 2026-06-24 — 물리색 #ffd587(실측 Pickles M4.5, Barnard #ffd487 앵커). 옛 #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기, 실측은 옅은 주황. 흑체 #ffbe78도 fair approx. emit 별색(광원/원반) deferred."
       paper: docs/reference/stellar-photospheric-color-methodology.md (실측 Pickles SED→CIE 사다리; scripts/refs/stellar_photospheric_color.py).
+
+  - body: 40 Eridani C
+    axis: magnetism.magnetic_field
+    status: passthrough
+    note: >
+      강한 자기장 — 활성 플레어 M왜성(변광성 DY Eri)으로 kG급 표면장 예상(Proxima M5.5 유사 dynamo). 직접 측정(Zeeman/ZDI)은
+      없으나 지속 Hα·광도 플레어가 강한 dynamo의 표현이고, 빠른 자전 추정(Shan2024 8.56d, 품질등급 D=meta_notes-only)·
+      비교적 젊은 시스템 나이(~1.8 Gyr coeval)와 정합. 완전대류 M왜성의 turbulent dynamo. 도출/정성 상한 → emit 그대로.
+
+  - body: 40 Eridani C
+    axis: environment
+    status: passthrough
+    note: >
+      플레어 지배 — DY Eri는 잦은 광도 플레어를 내는 활성 M왜성이라 국소 space weather가 거칠다(C엔 행성 없어 영향받을 바디는 없음).
+      **BC 쌍성 맥락**: C가 백색왜성 B를 e 0.41·평균 ~33 AU로 공전하는 233년 쌍성 → Teff 17,200K인 B의 hard UV/EUV가 BC 영역을
+      비추나, 거리상 C 광구엔 거의 무관(C 자체 플레어가 지배). radiation은 자체 플레어 구동. A(K0.5V)와는 ~400 AU 밖이라 상호 무관.
+      고속 이동 시스템(V_ISM ~127 km/s, A와 공통). 도출/정성 → emit 그대로. 별-레벨 5축으로 C 완료.
