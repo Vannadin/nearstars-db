@@ -43,3 +43,11 @@ decisions:
       criterion: [observation]
       verdict: pass-in-window
       note: "오너 G3 확정 2026-06-24 — 물리색 #ffe9d5만 기록(뷰어 tint 미기록, τ Ceti 정합). 금속 sub-perceptual nudge·보통 흑점(자전변조 실측). emit 별색(광원=near-white/원반 art) deferred."
+
+  - body: 40 Eridani A
+    axis: magnetism.magnetic_field
+    status: passthrough
+    note: >
+      보통 Sun-like K왜성 자기장 — 직접 측정 없으나 37–43d 자전 + X선 log Lx ~27.5(태양 cycle-mean ~26.9보다 약간 위)로
+      적당히 활동적(τ Ceti보다 활발, 격렬 별 아님). 비교적 젊은 ~1.8 Gyr와 정합. 흑점·가짜 Vulcan 신호가 이 자기활동의 표현.
+      측정/도출 → emit 그대로.
