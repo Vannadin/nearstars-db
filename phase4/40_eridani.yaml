@@ -261,3 +261,22 @@ decisions:
       verdict: pass-in-window
       note: "오너 G5 확정 2026-06-24 — 육지우세+내해(옵션 c). 색=청록-회색(열수·사문석화 변질 금속-풍부 초염기성, Fe/Mg 규산염; surface-color 방법론). 빠른자전+두꺼운대기→균일온도·eyeball 없음. 착륙가능 가혹환경. biome 다양(화산·열수·금속노두·Eridian대). G4 '대양'→육지우세+내해로 정밀화(액체물 유지). 디스크 외형=대기 파랑(G6)."
       paper: docs/reference/surface-color-albedo-methodology.md (사문석/녹니석 녹색-회색·Fe²⁺ 결정장·열수변질; Bond albedo).
+
+  - body: 40 Eridani A b
+    axis: appearance
+    status: gated
+    driver: film art-direction (blend visual); physical color documented as divergence
+    value: >
+      디스플레이 외형=**영화 비비드 블루 `#3a6db0`**(짙은 azure) + 낮은 흰 물구름 점박이 — 2026 PHM 영화 아트 채택(오너: 가상
+      행성이라 영화 비주얼 우선, 블렌드 틀 '비주얼=영화'; 실측질량 포기[G3]와 같은 논리). 빠른 자전(5.1h) → 띠형 구름 패턴.
+      **파랑 물리 메커니즘**: 깊은 맑은 Rayleigh 기둥 + CH₄ 적색흡수(해왕성식)가 파랑을 *가능케* 함, 낮은 물구름이 흰 패치
+      (구름 고도가 색 가름, G4). 표면 청록-회색(G5)은 두꺼운 대기 아래라 디스크엔 비가시 — 디스크=파랑 지배.
+      ⚠️ **documented divergence(색 채도)**: 물리 반사색은 훨씬 옅음 — Rayleigh(λ⁻⁴)+CH₄ 적색흡수 × 40 Eri A(K0.5V 5143K,
+      따뜻한 조명) SED → CIE→sRGB(조명대비 정규화) = **`#95bcc9`(옅은 슬레이트블루)**. 영화의 쨍한 azure는 **아트 과채도** —
+      보이저 짙은 해왕성이 과처리였고 실제 얼음거성은 옅은 청록-회색인 것(Irwin 2024, 대기반사색 방법론 인용)과 동류. 가상 바디라
+      화면은 영화색(#3a6db0) 우선, 물리색(#95bcc9)은 근거로 병기.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G6 확정 2026-06-24 — 디스플레이=영화 비비드블루 #3a6db0(+흰 물구름 점박이). 가상 행성이라 영화 비주얼 우선(블렌드 '비주얼=영화', 실측질량 포기와 동일 논리). 물리 반사색 #95bcc9(옅은 슬레이트블루; Rayleigh+CH₄ × K왜성 SED→CIE)는 documented divergence — 영화 azure=아트 과채도(Irwin2024 진짜 해왕성 옅음과 동류). 파랑 물리메커니즘=깊은 Rayleigh+CH₄(G4). 표면 청록-회색(G5)은 대기 아래 비가시. emit 디스크=영화 파랑."
+      paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색 #95bcc9 = cie_color 엔진에 Rayleigh λ⁻⁴+CH₄ × 40 Eri A SED 통과 산출).
