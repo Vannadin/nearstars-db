@@ -83,3 +83,16 @@ decisions:
       M 0.558±0.012 M☉(Mason2021 동역학; Bond2017 0.573±0.018 = 가장 깨끗한 field WD 정밀질량, 대안) · R 0.01308±0.0002 R☉
       (~지구 크기) · log g 7.957±0.020 · Teff 17,200±110K(고온) · CO핵 + 얇은 H 외피(q_H ~10⁻¹⁰) · 냉각 age 122 Myr +
       전구체 ~1.7 Gyr(시스템 ~1.8 Gyr coeval age 근거). 질량-반경 관계 위 표준 위치. 측정 passthrough.
+
+  - body: 40 Eridani B
+    axis: appearance
+    status: gated
+    driver: observation
+    value: >
+      color=**물리색 `#b0c5ff`**(Teff 17,200K 흑체→sRGB 실측, 뚜렷한 **청백**) — 지구 크기 강렬한 청백 점광원. K왜성 A
+      (주황 #ffe9d5)와 강한 색 대비. **무특징**(WD 표면 매끈, 흑점·구조 없음; 순수 H 대기 DA, Teff+H Balmer가 색 결정,
+      금속 nudge 없음). 인게임/Erid 하늘서 = 주황 A 곁 눈부신 청백 점(삼중성 색 대비가 시각 포인트).
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      note: "오너 G3 확정 2026-06-24 — 청백 물리색 #b0c5ff(17,200K 실측). WD라 무특징·금속 nudge 없음. emit 별색(광원/원반) deferred."
