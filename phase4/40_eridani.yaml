@@ -173,7 +173,7 @@ decisions:
     status: gated
     driver: classification + culture (refuted candidate)
     value: >
-      body_type=**암석 super-Earth**(8.47 M⊕, Ma2018 측정 진질량; Weir: 금속-풍부 암석, 밀도 5710 kg/m³). 문화 주인공 —
+      body_type=**암석 super-Earth**(~5 M⊕; Weir: 금속-풍부 암석 — 질량은 G3서 자기일관 재설정, Ma2018 8.47 M⊕는 철회된 artifact). 문화 주인공 —
       **Erid**(Project Hail Mary, Andy Weir; Rocky의 모행성) + **Vulcan**(Star Trek; Roddenberry1991이 40 Eri로 공인).
       designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&Lubin
       2024가 42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값
@@ -204,16 +204,17 @@ decisions:
   - body: 40 Eridani A b
     axis: bulk
     status: gated
-    driver: gravity = PHM canon (Weir), radius/density fit to it
+    driver: gravity = PHM canon (Weir 2.09g), self-consistent on mass-radius curve (refuted-mass dropped)
     value: >
-      질량 **8.47 M⊕**(측정 고정 — Ma2018 진질량, Weir도 채택). **표면중력 = 작품설정(Weir) 2.09 g를 앵커**로 두고 반경·밀도를
-      거기에 맞춤(g + 고정 질량 → R, ρ; g=M/R² 지구단위). g 2.09 + 8.47 M⊕ →도출 **반경 ≈ 2.013 R⊕(12,826 km) · 밀도 ≈
-      5,725 kg/m³**(역검증 g=M/R²=2.09 ✓) — 사실상 **Weir 책 원값 복원**(2.01 R⊕·12,835km·5,710 kg/m³). 고중력 2.09g가
-      Eridian 테마(블라인드·근육질·기술)의 핵심이라 작품설정 그대로 채택. ⚠️ **documented divergence**: 질량-반경 방법론은
-      8.47 M⊕ Earth-like를 ~1.78 R⊕·~7,500 kg/m³(더 작고 조밀)로 예상 → 책 값(2.01 R⊕·5,725)은 그보다 덜 압축됨. 또
-      밀도 5,725는 지구급(5,514)이라 Weir의 *"금속-풍부"* 서술과는 불일치(서술이 과장) — 정량값(2.09g 일관 세트) 우선, 서술은 flavor.
+      **표면중력 = 작품설정(Weir) 2.09 g**가 앵커. Erid는 **철회된 행성**(Ma2018 8.47 M⊕는 항성활동 artifact, 실재 측정 아님 —
+      Burrows&Lubin2024)이라 그 질량에 매일 이유가 없음 → 측정질량을 놓고, **질량-반경 곡선(Earth-like, Zeng2016/Seager2007)
+      위에서 g=2.09가 되는 자기일관 행성**으로 재설정. → 질량 **4.97 M⊕** · 반경 **1.541 R⊕(9,820 km)** · 밀도 **7,477 kg/m³**
+      (역검증 g=M/R²=2.09 ✓). 이로써 **셋을 동시에 만족**: ① Weir 상징적 고중력 2.09g(Eridian 블라인드·근육질·기술 테마 핵심)
+      ② 물리 자기일관(질량-반경 곡선 *위*라 divergence 자체가 사라짐) ③ 금속-풍부 밀도(7,477 > 지구 5,514, 압축으로 자연히 —
+      Weir의 *"금속-풍부"* 서술과 비로소 정합; 그의 원세트 5,710은 비-금속풍부였음). 희생=철회된 8.47 M⊕(애초에 실재 아님)·
+      Weir 2.01 R⊕(행성이 더 작아짐, 9,820km). 조성=금속-풍부 압축 암석(녹은 금속핵·판구조, Weir).
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G3 재확정 2026-06-24 — 중력=작품설정(Weir 2.09g) 앵커, 거기에 R·ρ 맞춤(중간값 폐기). 질량 8.47 M⊕ 고정 + g 2.09 → R 2.013 R⊕(12,826km)·ρ 5,725 kg/m³ 도출(역검증 2.09). 사실상 Weir 원값 복원. divergence: 질량-반경 방법론은 1.78R⊕/7,500 예상(더 조밀)이나 고중력 테마 위해 작품설정 우선. 밀도 5,725는 지구급→'금속-풍부' 서술과 불일치(flavor)."
-      paper: docs/reference/mass-radius-relation-methodology.md (Earth-like grid 비교 끝점; Zeng2016 PREM·Seager2007).
+      note: "오너 G3 최종확정 2026-06-24 — 철회행성이라 측정질량 포기(Ma2018 8.47=항성활동 artifact, 실재 아님). 중력=작품설정 2.09g 앵커 + Earth-like 질량-반경 곡선 자기일관 → M 4.97·R 1.541 R⊕(9,820km)·ρ 7,477 kg/m³(역검증 2.09). 셋 다 만족(canon 2.09g + 물리 자기일관 + 금속-풍부 밀도). 곡선 위라 mass-radius divergence 해소. 희생=8.47 M⊕(refuted)·Weir 2.01 R⊕."
+      paper: docs/reference/mass-radius-relation-methodology.md (Earth-like curve 위 배치; Zeng2016 PREM·Seager2007).
