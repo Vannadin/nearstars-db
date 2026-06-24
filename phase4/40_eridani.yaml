@@ -280,3 +280,20 @@ decisions:
       verdict: pass-in-window
       note: "오너 G6 확정 2026-06-24 — 디스플레이=영화 비비드블루 #3a6db0(+흰 물구름 점박이). 가상 행성이라 영화 비주얼 우선(블렌드 '비주얼=영화', 실측질량 포기와 동일 논리). 물리 반사색 #95bcc9(옅은 슬레이트블루; Rayleigh+CH₄ × K왜성 SED→CIE)는 documented divergence — 영화 azure=아트 과채도(Irwin2024 진짜 해왕성 옅음과 동류). 파랑 물리메커니즘=깊은 Rayleigh+CH₄(G4). 표면 청록-회색(G5)은 대기 아래 비가시. emit 디스크=영화 파랑."
       paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색 #95bcc9 = cie_color 엔진에 Rayleigh λ⁻⁴+CH₄ × 40 Eri A SED 통과 산출).
+
+  - body: 40 Eridani A b
+    axis: magnetism.magnetic_field
+    status: gated
+    driver: PHM canon (Weir 25×), dynamo-methodology grounded
+    value: >
+      **자기장 ≈ 25× 지구**(Weir 책 canon) — Eridian 블라인드 테마의 핵심 축("강한 자기장이 복사를 차단해 시각이 진화 안 함").
+      **dynamo 방법론 근거 정정**: Weir 논리는 "빠른 자전(5.1h)이 강 dynamo 구동"이나, 현대 스케일링(Christensen2009, planetary-
+      dynamo-scaling)은 장 세기를 **자전이 아니라 코어 대류 열플럭스**가 정함(임계 회전 위 자전율 거의 무관) → Weir의 자전-논리는
+      dated. 단 결론은 유지 — Erid는 뜨겁고 **금속-풍부**한 큰 암석행성(녹은 금속핵 = 높은 코어 열플럭스)이라 강화된 장이 물리적으로
+      가능, 25× 값 자체는 방어됨. **채택**: 25× 유지(문화·블라인드 테마), 강한 이유는 "빠른 자전"이 아니라 **높은 코어 열플럭스**로 정정.
+      ⚠ documented divergence: Weir의 dynamo 인과(자전→장)는 dated이나 값은 보존.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G7 확정 2026-06-24 — 25× 지구 유지(Weir, 블라인드 '복사 차단' 테마 핵심). dynamo 방법론(Christensen2009): 장=코어 열플럭스가 결정(자전 무관) → Weir '빠른자전→강장' 인과는 dated이나, 금속-풍부 뜨거운 행성의 높은 열플럭스로 25× 방어 가능. 강자기권 → G8 항성풍/우주선 차단·강 오로라 캐스케이드."
+      paper: docs/reference/planetary-dynamo-scaling.md (장 세기=코어 대류 열플럭스 스케일링, Christensen2009·R&C2010; 자전율 비의존).
