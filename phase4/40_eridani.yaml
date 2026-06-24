@@ -391,17 +391,16 @@ decisions:
     status: gated
     driver: stability-sim validated architecture (REBOUND scan)
     value: >
-      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.20**
-      (c와 **2:1 평균운동공명**으로 강제·유지) · inc free. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova
-      번식지 맥락과 정합. **안정성 시뮬(REBOUND WHFast+MEGNO 스캔, /tmp 설계탐색)서 검증**: c=0.40 AU·~3 M⊕와 2:1, 1e4–2e4yr
-      적분서 **MEGNO 2.05(규칙적·안정)**, **Erid e=0.04 그대로(공명 밖이라 안 펌핑 — 오너 요구)**, d e_max 0.20. ⚠ 공명은
-      **안정성·구조(Io의 *형태*)용이지 조석가열용 아님** — d 조석가열은 e=0.20이어도 ~2e-9 W/m²(달크기 R⁵+외곽거리)로 무시급,
-      화산 확정 종결(A안). 자전/lock = G4 이후(figure/J2 작업서 확정).
+      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.03**
+      (저-e, 비공명) · inc free. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova 번식지 맥락과 정합.
+      **안정성 시뮬(REBOUND 5.0 WHFast+MEGNO)서 검증**: c=수성질량(0.055 M⊕)·0.40 AU 동반, 2e4yr 적분서 **MEGNO 2.000
+      (규칙적·안정)**, e_max = **Erid 0.040 · c 0.056 · d 0.030**(전부 저-e 안정, Erid 안 펌핑 — 오너 요구 충족). c가 수성급이라
+      2:1 공명은 d의 e를 못 펌핑 → **비공명 저-e** 채택(조석가열은 A안서 종결이라 무관). 자전/lock = figure/J2 작업서.
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
-      note: "오너 G2 확정 2026-06-24 — 시뮬 검증 안정 배치. a 0.635 AU(3번째 canon 충족)·P 209d·e~0.20(c와 2:1 MMR). c=0.40AU·3M⊕ 동반(c walk때 정식화). MEGNO 2.05 안정·Erid e 0.04 비펌핑(요구 충족). 공명=안정/구조용, 조석가열 아님(~2e-9 W/m² 무시, 화산 A안=미스터리). HZ 중앙."
-      paper: "REBOUND 5.0 WHFast+MEGNO 안정성 스캔(phase3/stability-sim/scripts/erid_resonance_scan.py); 조석가열 무시 판정=tidal-heating-methodology(a⁻⁷·⁵·R⁵)."
+      note: "오너 G2 확정 2026-06-24(c 수성화로 재검증 2026-06-25) — a 0.635 AU(3번째 canon 충족)·P 209d·e~0.03 저-e 비공명. c=수성질량(0.055 M⊕)·0.40 AU 동반. MEGNO 2.000 안정, e_max Erid 0.040·c 0.056·d 0.030(Erid 비펌핑 충족). c 수성급이라 공명 펌핑 무효→비공명. 조석가열 A안 종결(미스터리). HZ 중앙."
+      paper: "REBOUND 5.0 WHFast+MEGNO 안정성 시뮬(phase3/stability-sim/scripts/erid_resonance_scan.py + 수성-c 재확인); 조석가열 무시 판정=tidal-heating-methodology(a⁻⁷·⁵·R⁵)."
 
   - body: 40 Eridani A d
     axis: bulk
@@ -424,7 +423,7 @@ decisions:
     value: >
       조성(canon p.393) = **CO₂ 84% / N₂ 8% / SO₂ 4% + trace**, 표면압 **<지구 1%**(~0.006–0.008 bar = ~700 Pa, 화성급 희박).
       **보유 메커니즘 = 표면 얼음과의 증기압 평형 버퍼**: CO₂ 드라이아이스 + SO₂ frost가 **승화↔재응결**(화성 CO₂ 극관 + Io/갈릴레이
-      SO₂-frost analog). e=0.20(G2 공명) + 얇은 대기 → **강한 계절·주야 순환**(근일점/낮 승화, 원일점/극/밤 동결 — 화성 증폭판).
+      SO₂-frost analog). 저-e(~0.03) + 얇은 대기 → **화성식 계절·주야 순환**(낮/적도 승화, 극/밤 동결 — 주로 자전축·주야 구동, e 작아 계절폭 완만).
       무거운 CO₂(μ=44)+저온 → thermal escape 느림, 얼음 저장고가 보충 → **Weir "0.2g가 어떻게 잡나" 퍼즐의 물리 해소**(중력 보유
       아닌 ice-reservoir 정상상태 교환). **무화산** — SO₂는 frost 승화(+trace 잔류), 활성 화산 불필요(조석가열 ~2e-9 W/m² 무시,
       G2서 종결). CO₂ 저장고 = **Astrophage Petrova-arc 번식 목적지**(canon flavor, cfg 미모델). ⚠ 잔여 미스터리: Gyr 장기
@@ -432,7 +431,7 @@ decisions:
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G4 확정 2026-06-24 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa). 보유=CO₂드라이아이스+SO₂frost 승화-버퍼(화성/Io analog), e0.20+얇은대기로 강한 계절순환. Weir 0.2g 퍼즐 물리해소(ice-reservoir 교환). 무화산(SO₂=frost). Astrophage Petrova 번식지. 잔여 Gyr-버퍼 미스터리 documented."
+      note: "오너 G4 확정 2026-06-24 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa). 보유=CO₂드라이아이스+SO₂frost 승화-버퍼(화성/Io analog), 저-e+얇은대기로 화성식 계절순환. Weir 0.2g 퍼즐 물리해소(ice-reservoir 교환). 무화산(SO₂=frost). Astrophage Petrova 번식지. 잔여 Gyr-버퍼 미스터리 documented."
       paper: "exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도 vs 저온·무거운 CO₂·ice-buffer); 화성 CO₂극관 증기압평형·Io SO₂ frost analog."
 
   - body: 40 Eridani A d
