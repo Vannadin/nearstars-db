@@ -200,3 +200,20 @@ decisions:
       criterion: [culture, classification]
       verdict: pass-in-window
       note: "오너 G2 확정 2026-06-24 — 궤도·물리값 전부 PHM(Weir) 기반. P 42.245d(42일보다 조금 더). 5.1h 비고정 자전 채택(divergence: 방법론상 고정 예상이나 책 canon 우선, G7 자기장 dynamo 전제). Ω/ω/M free-emit."
+
+  - body: 40 Eridani A b
+    axis: bulk
+    status: gated
+    driver: midpoint (Weir book ↔ mass-radius methodology)
+    value: >
+      질량 **8.47 M⊕**(측정 고정 — Ma2018 진질량, Weir도 채택). 반경·밀도·중력은 **두 값의 명시적 중간값**.
+      **= midpoint( ⓐ Weir 책 canon 2.01 R⊕[12,835km]·5,710 kg/m³·2.09g  ↔  ⓑ 질량-반경 방법론[8.47 M⊕ Earth-like
+      grid, Zeng2016/Seager2007] ~1.78 R⊕·~7,500 kg/m³·~2.67g )**. 반경을 중점으로 잡고(2.01+1.78)/2 ≈ **1.90 R⊕
+      (12,100 km)**, 고정 질량에서 도출 → **밀도 ≈ 6,800 kg/m³ · 표면중력 ≈ 2.35 g**. 조성=금속-풍부 암석(녹은 금속핵·판구조,
+      Weir). 중간값이 양쪽 의도를 모두 살림: 밀도 6,800은 Weir의 *"금속-풍부"* 서술과 실제로 정합(그의 5,710은 지구와 같아 금속-
+      풍부가 아니었음), 중력 2.35g는 고중력 Eridian 테마(블라인드·근육질·기술)를 오히려 강화.
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G3 확정 2026-06-24 — 중간값 채택. 명시: 반경 1.90 R⊕ = midpoint(Weir 2.01 R⊕ ↔ 질량-반경 방법론 1.78 R⊕). 질량 8.47 M⊕ 고정에서 ρ 6,800·g 2.35 도출. Weir '금속-풍부' 서술과 6,800 밀도가 정합(책 5,710은 비-금속풍부였음). 고중력 테마 강화."
+      paper: docs/reference/mass-radius-relation-methodology.md (Earth-like grid 끝점 ⓑ; Zeng2016 PREM·Seager2007).
