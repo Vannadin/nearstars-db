@@ -51,3 +51,12 @@ decisions:
       보통 Sun-like K왜성 자기장 — 직접 측정 없으나 37–43d 자전 + X선 log Lx ~27.5(태양 cycle-mean ~26.9보다 약간 위)로
       적당히 활동적(τ Ceti보다 활발, 격렬 별 아님). 비교적 젊은 ~1.8 Gyr와 정합. 흑점·가짜 Vulcan 신호가 이 자기활동의 표현.
       측정/도출 → emit 그대로.
+
+  - body: 40 Eridani A
+    axis: environment
+    status: passthrough
+    note: >
+      radiation_surface ~3× 태양(X선 log Lx 27.2–27.5 = 태양 cycle-mean ~26.9의 2–4배; τ Ceti ~0.6×보다 활동적, 젊은 ~1.8 Gyr
+      정합). stellar_wind=**미구속**(Wood HST Lyα서 검출 astrosphere 없음, Ṁ 미측정). astrosphere standoff=미구속 — 단
+      **고속 이동**(V_ISM ~127 km/s)이라 ram 압축 강함(있다면 작은 astrosphere). 삼중성 맥락: C(M4.5Ve 플레어 별 DY Eri)+
+      B(백색왜성)는 ~400 AU 밖이라 A 환경엔 거의 무관. 측정/상한 → emit 그대로.
