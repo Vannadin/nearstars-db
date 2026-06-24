@@ -229,9 +229,9 @@ decisions:
       해왕성식 적색흡수로 **파랑을 물리적으로 산출**(차가운 환원성 대기에 자연 공존). ⚠ NH₃ 지배는 광화학적 fragile(UV→N₂+H₂,
       보충원 필요) — 책 given.
       **구름 구조(영화 외형의 물리)**: 낮은 고도 흰 물구름 + 그 위 두꺼운 맑은 Rayleigh 기둥 → **짙은 파랑에 흰 구름이 점점이**
-      (해왕성+지구식; 구름 *고도*가 색을 가름 — 금성식 고층운이면 허옇고, 저층운+맑은 기둥이면 파랑). 물구름=물 순환 → 표면 대양.
+      (해왕성+지구식; 구름 *고도*가 색을 가름 — 금성식 고층운이면 허옇고, 저층운+맑은 기둥이면 파랑). 물구름=물 순환 → 표면 액체물(내해, G5).
       **온도(Weir 계산 완성)**: 플럭스 ~8–9× 지구, 알베도 ~0.3(저층운+맑은 기둥) → T_eq ~157°C, + 적당한 온실(~+55–65 K) →
-      표면 **~210–220°C**. 28기압 물 끓는점 227°C *아래* → **액체물 대양 유지**. Weir 210°C는 무대기 평형값이었으나(온실 누락),
+      표면 **~210–220°C**. 28기압 물 끓는점 227°C *아래* → **액체물 유지**(분포=G5: 육지우세+내해). Weir 210°C는 무대기 평형값이었으나(온실 누락),
       알베도 냉각 + 적당한 온실이 그 근처로 복귀 → 책 숫자 구제. ⚠ 가정: 온실 bounded(NH₃ runaway 아님) → 끓는점 직하 "압력솥 대양".
       **블라인드 정합**: 28기압 기체+구름이 빛 강감쇠(Howe: 29 atm NH₃ ≈ 바닷물 150m) → 우주에선 파랑, 표면은 어둑한 청색 박명
       → 시각이 주감각 불가 → 에코로케이션(Howe '매우 어둡지만 칠흑 아님'과 정합). 표시 파랑 hex는 G6서 대기반사색 방법론으로 산출.
@@ -240,3 +240,24 @@ decisions:
       verdict: pass-in-window
       note: "오너 G4 확정 2026-06-24 — 블렌드 트릴레마 {28atm·물바다·파랑} 해소. 핵심=낮은 물구름+위 맑은 Rayleigh 기둥이라 파랑+흰구름 공존(해왕성/지구식, 금성 고층운 아님). 28atm 유지·물 액체(227°C 끓는점 아래 ~210–220°C)·파랑 다 만족. Weir 210°C 구제(알베도+적당온실). 가정=온실 bounded(압력솥 대양). 블라인드=표면 어둑 박명(Howe). 색 hex→G6. NH₃ fragile 플래그."
       paper: "exoplanet-atmosphere-methodology.md(보유 정당=2.09g+K왜성 약XUV+강B-field); atmosphere-reflected-color-methodology.md(파랑=Rayleigh+CH₄ 적색흡수, G6 색산출); tidally-locked-temperature-methodology.md(Teq+온실); Howe 'Science of PHM' 블로그(표면 밝기 감쇠)."
+
+  - body: 40 Eridani A b
+    axis: surface
+    status: gated
+    driver: owner art-direction + surface-color methodology
+    value: >
+      표면=**육지 우세 + 내해(inland seas)**(오너 G5=옵션 c) — 전구 대양 아님. 금속-풍부 현무암/초염기성 암석 육괴 우세 + 흩어진
+      내해(물 + 용해 NH₃ = 암모니아수). 판구조·화산 활동(Weir 녹은 금속핵). [G4 '대양'을 육지우세+내해로 정밀화 — 액체물·물순환·
+      흰 물구름은 유지, 전구 대양만 아님. 우주 파랑은 주로 대기 Rayleigh+CH₄(해왕성식), 내해는 국소 파랑.]
+      **표면색=청록-회색 지대** — 뜨겁고(210–220°C) 습한 금속-풍부 초염기성 지각의 **열수·사문석화(serpentinization) 변질**
+      (물 + Fe/Mg 규산염 → 사문석·녹니석 등 녹색-회색 광물; Fe²⁺ 결정장 흡수가 녹색). surface-color-albedo 방법론 근거. 단 디스크
+      외형은 대기 파랑이 지배(G6) — 청록-회색은 **착륙/지표 시점** 색.
+      **온도 분포**: ~210–220°C, 빠른 자전(5.1h) + 두꺼운 대기 → 매우 균일, 띠형 순환(높은 Coriolis), **eyeball 없음**(비고정 —
+      Proxima b·TRAPPIST류와 자연 분기). 극-적도차 작음. **알베도 ~0.3**(G4 에너지수지 정합, 주로 구름).
+      **biome 다양성**: 화산 육지·열수 내해/해저·금속 노두·Eridian 서식대(고온고압·암모니아호흡·어둠). 착륙 가능하나 가혹
+      (28 atm · 210–220°C · 2.09g · 어둑한 청색 박명).
+    gate:
+      criterion: [culture, classification]
+      verdict: pass-in-window
+      note: "오너 G5 확정 2026-06-24 — 육지우세+내해(옵션 c). 색=청록-회색(열수·사문석화 변질 금속-풍부 초염기성, Fe/Mg 규산염; surface-color 방법론). 빠른자전+두꺼운대기→균일온도·eyeball 없음. 착륙가능 가혹환경. biome 다양(화산·열수·금속노두·Eridian대). G4 '대양'→육지우세+내해로 정밀화(액체물 유지). 디스크 외형=대기 파랑(G6)."
+      paper: docs/reference/surface-color-albedo-methodology.md (사문석/녹니석 녹색-회색·Fe²⁺ 결정장·열수변질; Bond albedo).
