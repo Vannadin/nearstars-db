@@ -204,16 +204,16 @@ decisions:
   - body: 40 Eridani A b
     axis: bulk
     status: gated
-    driver: midpoint (Weir book ↔ mass-radius methodology)
+    driver: gravity-anchored midpoint (Weir book ↔ mass-radius methodology)
     value: >
-      질량 **8.47 M⊕**(측정 고정 — Ma2018 진질량, Weir도 채택). 반경·밀도·중력은 **두 값의 명시적 중간값**.
-      **= midpoint( ⓐ Weir 책 canon 2.01 R⊕[12,835km]·5,710 kg/m³·2.09g  ↔  ⓑ 질량-반경 방법론[8.47 M⊕ Earth-like
-      grid, Zeng2016/Seager2007] ~1.78 R⊕·~7,500 kg/m³·~2.67g )**. 반경을 중점으로 잡고(2.01+1.78)/2 ≈ **1.90 R⊕
-      (12,100 km)**, 고정 질량에서 도출 → **밀도 ≈ 6,800 kg/m³ · 표면중력 ≈ 2.35 g**. 조성=금속-풍부 암석(녹은 금속핵·판구조,
-      Weir). 중간값이 양쪽 의도를 모두 살림: 밀도 6,800은 Weir의 *"금속-풍부"* 서술과 실제로 정합(그의 5,710은 지구와 같아 금속-
-      풍부가 아니었음), 중력 2.35g는 고중력 Eridian 테마(블라인드·근육질·기술)를 오히려 강화.
+      질량 **8.47 M⊕**(측정 고정 — Ma2018 진질량, Weir도 채택). **표면중력을 앵커**로 잡고 반경·밀도를 거기에 맞춤(g + 고정 질량
+      → R, ρ 결정; g=M/R² 지구단위). **표면중력 ≈ 2.38 g = midpoint( ⓐ Weir 2.09 g  ↔  ⓑ 질량-반경 방법론 2.67 g )**
+      [ⓐ Weir 책 canon 2.01 R⊕(12,835km)·5,710 kg/m³ · ⓑ 8.47 M⊕ Earth-like grid(Zeng2016/Seager2007) ~1.78 R⊕·
+      ~7,500 kg/m³]. g 2.38 + 질량 8.47 M⊕ →도출 **반경 ≈ 1.886 R⊕(12,015 km) · 밀도 ≈ 6,960 kg/m³**(역검증 g=M/R²=2.38 ✓).
+      조성=금속-풍부 암석(녹은 금속핵·판구조, Weir). 중간값이 양쪽 의도를 모두 살림: 밀도 6,960은 Weir의 *"금속-풍부"* 서술과
+      실제로 정합(그의 5,710은 지구와 같아 금속-풍부가 아니었음), 중력 2.38g는 고중력 Eridian 테마(블라인드·근육질·기술)를 강화.
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24 — 중간값 채택. 명시: 반경 1.90 R⊕ = midpoint(Weir 2.01 R⊕ ↔ 질량-반경 방법론 1.78 R⊕). 질량 8.47 M⊕ 고정에서 ρ 6,800·g 2.35 도출. Weir '금속-풍부' 서술과 6,800 밀도가 정합(책 5,710은 비-금속풍부였음). 고중력 테마 강화."
+      note: "오너 G3 확정 2026-06-24, 재앵커 2026-06-24 — 표면중력 앵커. g 2.38 = midpoint(Weir 2.09 ↔ 질량-반경 방법론 2.67), 거기에 R·ρ를 맞춤. 질량 8.47 M⊕ 고정 + g 2.38 → R 1.886 R⊕(12,015km)·ρ 6,960 kg/m³ 도출(역검증 g=M/R²=2.38). ρ 6,960이 Weir '금속-풍부' 서술과 정합(책 5,710은 비-금속풍부). 고중력 테마 강화."
       paper: docs/reference/mass-radius-relation-methodology.md (Earth-like grid 끝점 ⓑ; Zeng2016 PREM·Seager2007).
