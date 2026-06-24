@@ -204,16 +204,16 @@ decisions:
   - body: 40 Eridani A b
     axis: bulk
     status: gated
-    driver: gravity-anchored midpoint (Weir book ↔ mass-radius methodology)
+    driver: gravity = PHM canon (Weir), radius/density fit to it
     value: >
-      질량 **8.47 M⊕**(측정 고정 — Ma2018 진질량, Weir도 채택). **표면중력을 앵커**로 잡고 반경·밀도를 거기에 맞춤(g + 고정 질량
-      → R, ρ 결정; g=M/R² 지구단위). **표면중력 ≈ 2.38 g = midpoint( ⓐ Weir 2.09 g  ↔  ⓑ 질량-반경 방법론 2.67 g )**
-      [ⓐ Weir 책 canon 2.01 R⊕(12,835km)·5,710 kg/m³ · ⓑ 8.47 M⊕ Earth-like grid(Zeng2016/Seager2007) ~1.78 R⊕·
-      ~7,500 kg/m³]. g 2.38 + 질량 8.47 M⊕ →도출 **반경 ≈ 1.886 R⊕(12,015 km) · 밀도 ≈ 6,960 kg/m³**(역검증 g=M/R²=2.38 ✓).
-      조성=금속-풍부 암석(녹은 금속핵·판구조, Weir). 중간값이 양쪽 의도를 모두 살림: 밀도 6,960은 Weir의 *"금속-풍부"* 서술과
-      실제로 정합(그의 5,710은 지구와 같아 금속-풍부가 아니었음), 중력 2.38g는 고중력 Eridian 테마(블라인드·근육질·기술)를 강화.
+      질량 **8.47 M⊕**(측정 고정 — Ma2018 진질량, Weir도 채택). **표면중력 = 작품설정(Weir) 2.09 g를 앵커**로 두고 반경·밀도를
+      거기에 맞춤(g + 고정 질량 → R, ρ; g=M/R² 지구단위). g 2.09 + 8.47 M⊕ →도출 **반경 ≈ 2.013 R⊕(12,826 km) · 밀도 ≈
+      5,725 kg/m³**(역검증 g=M/R²=2.09 ✓) — 사실상 **Weir 책 원값 복원**(2.01 R⊕·12,835km·5,710 kg/m³). 고중력 2.09g가
+      Eridian 테마(블라인드·근육질·기술)의 핵심이라 작품설정 그대로 채택. ⚠️ **documented divergence**: 질량-반경 방법론은
+      8.47 M⊕ Earth-like를 ~1.78 R⊕·~7,500 kg/m³(더 작고 조밀)로 예상 → 책 값(2.01 R⊕·5,725)은 그보다 덜 압축됨. 또
+      밀도 5,725는 지구급(5,514)이라 Weir의 *"금속-풍부"* 서술과는 불일치(서술이 과장) — 정량값(2.09g 일관 세트) 우선, 서술은 flavor.
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24, 재앵커 2026-06-24 — 표면중력 앵커. g 2.38 = midpoint(Weir 2.09 ↔ 질량-반경 방법론 2.67), 거기에 R·ρ를 맞춤. 질량 8.47 M⊕ 고정 + g 2.38 → R 1.886 R⊕(12,015km)·ρ 6,960 kg/m³ 도출(역검증 g=M/R²=2.38). ρ 6,960이 Weir '금속-풍부' 서술과 정합(책 5,710은 비-금속풍부). 고중력 테마 강화."
-      paper: docs/reference/mass-radius-relation-methodology.md (Earth-like grid 끝점 ⓑ; Zeng2016 PREM·Seager2007).
+      note: "오너 G3 재확정 2026-06-24 — 중력=작품설정(Weir 2.09g) 앵커, 거기에 R·ρ 맞춤(중간값 폐기). 질량 8.47 M⊕ 고정 + g 2.09 → R 2.013 R⊕(12,826km)·ρ 5,725 kg/m³ 도출(역검증 2.09). 사실상 Weir 원값 복원. divergence: 질량-반경 방법론은 1.78R⊕/7,500 예상(더 조밀)이나 고중력 테마 위해 작품설정 우선. 밀도 5,725는 지구급→'금속-풍부' 서술과 불일치(flavor)."
+      paper: docs/reference/mass-radius-relation-methodology.md (Earth-like grid 비교 끝점; Zeng2016 PREM·Seager2007).
