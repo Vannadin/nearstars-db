@@ -402,3 +402,17 @@ decisions:
       verdict: pass-in-window
       note: "오너 G2 확정 2026-06-24 — 시뮬 검증 안정 배치. a 0.635 AU(3번째 canon 충족)·P 209d·e~0.20(c와 2:1 MMR). c=0.40AU·3M⊕ 동반(c walk때 정식화). MEGNO 2.05 안정·Erid e 0.04 비펌핑(요구 충족). 공명=안정/구조용, 조석가열 아님(~2e-9 W/m² 무시, 화산 A안=미스터리). HZ 중앙."
       paper: "REBOUND 5.0 WHFast+MEGNO 안정성 스캔(phase3/stability-sim/scripts/erid_resonance_scan.py); 조석가열 무시 판정=tidal-heating-methodology(a⁻⁷·⁵·R⁵)."
+
+  - body: 40 Eridani A d
+    axis: bulk
+    status: gated
+    driver: PHM canon (R + g) → M, ρ derived
+    value: >
+      canon 두 앵커 = **R ≈ 1,737 km(0.273 R⊕, "달 크기")** + **표면중력 0.2 g**(p.393). 거기서 도출 → 질량 **0.0149 M⊕**
+      (g·R², 달의 ~1.2배) · 밀도 **~4.04 g/cm³**(달 3.34보다 조밀 → 약간 iron-rich 암석; 압축 무시급 소형체). 작고 0.2g라
+      **탈출속도 낮음**(~1.4 km/s급) → 대기 보유 퍼즐(Weir "모르겠다")은 G4 승화-버퍼로. 소형체 → **빠른 냉각·낮은 방사성열 →
+      지질학적 정적**(무화산·승화대기 그림과 정합). 자전/lock은 figure/J2 작업서.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 G3 확정 2026-06-24 — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체. 낮은 탈출속도+빠른 냉각=무화산/승화대기(G4)와 정합."
