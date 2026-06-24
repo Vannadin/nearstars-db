@@ -416,3 +416,21 @@ decisions:
       criterion: [classification]
       verdict: pass-in-window
       note: "오너 G3 확정 2026-06-24 — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체. 낮은 탈출속도+빠른 냉각=무화산/승화대기(G4)와 정합."
+
+  - body: 40 Eridani A d
+    axis: atmosphere
+    status: gated
+    driver: PHM canon composition + sublimation-buffer grounding
+    value: >
+      조성(canon p.393) = **CO₂ 84% / N₂ 8% / SO₂ 4% + trace**, 표면압 **<지구 1%**(~0.006–0.008 bar = ~700 Pa, 화성급 희박).
+      **보유 메커니즘 = 표면 얼음과의 증기압 평형 버퍼**: CO₂ 드라이아이스 + SO₂ frost가 **승화↔재응결**(화성 CO₂ 극관 + Io/갈릴레이
+      SO₂-frost analog). e=0.20(G2 공명) + 얇은 대기 → **강한 계절·주야 순환**(근일점/낮 승화, 원일점/극/밤 동결 — 화성 증폭판).
+      무거운 CO₂(μ=44)+저온 → thermal escape 느림, 얼음 저장고가 보충 → **Weir "0.2g가 어떻게 잡나" 퍼즐의 물리 해소**(중력 보유
+      아닌 ice-reservoir 정상상태 교환). **무화산** — SO₂는 frost 승화(+trace 잔류), 활성 화산 불필요(조석가열 ~2e-9 W/m² 무시,
+      G2서 종결). CO₂ 저장고 = **Astrophage Petrova-arc 번식 목적지**(canon flavor, cfg 미모델). ⚠ 잔여 미스터리: Gyr 장기
+      0.2g 버퍼 안정성은 완전 해소 아님(documented) — 단 승화-버퍼가 대부분 설명.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 G4 확정 2026-06-24 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa). 보유=CO₂드라이아이스+SO₂frost 승화-버퍼(화성/Io analog), e0.20+얇은대기로 강한 계절순환. Weir 0.2g 퍼즐 물리해소(ice-reservoir 교환). 무화산(SO₂=frost). Astrophage Petrova 번식지. 잔여 Gyr-버퍼 미스터리 documented."
+      paper: "exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도 vs 저온·무거운 CO₂·ice-buffer); 화성 CO₂극관 증기압평형·Io SO₂ frost analog."
