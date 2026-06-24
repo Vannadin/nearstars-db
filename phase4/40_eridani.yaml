@@ -385,3 +385,20 @@ decisions:
       verdict: pass-in-window
       note: "오너 G1 확정 2026-06-24 — Threeworld(40 Eri A d), PHM canon p.393. 달 크기·0.2g·~0.015 M⊕·희박 CO₂/N₂/SO₂(<지구1%). disc=FFFF(fictional, 순수 픽션+소형+늦은 발견). 문화=Astrophage Petrova-arc 끝점(금성 역할)·Taumoeba 투입지. 물리=책, 대기보유 수수께끼는 G4서 화산 보충으로 보강."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic PHM body (Threeworld, p.393); no real detection — always discover. Tiny (0.015 M⊕), Eridian late-discovery", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: 40 Eridani A d
+    axis: orbit
+    status: gated
+    driver: stability-sim validated architecture (REBOUND scan)
+    value: >
+      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.20**
+      (c와 **2:1 평균운동공명**으로 강제·유지) · inc free. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova
+      번식지 맥락과 정합. **안정성 시뮬(REBOUND WHFast+MEGNO 스캔, /tmp 설계탐색)서 검증**: c=0.40 AU·~3 M⊕와 2:1, 1e4–2e4yr
+      적분서 **MEGNO 2.05(규칙적·안정)**, **Erid e=0.04 그대로(공명 밖이라 안 펌핑 — 오너 요구)**, d e_max 0.20. ⚠ 공명은
+      **안정성·구조(Io의 *형태*)용이지 조석가열용 아님** — d 조석가열은 e=0.20이어도 ~2e-9 W/m²(달크기 R⁵+외곽거리)로 무시급,
+      화산 확정 종결(A안). 자전/lock = G4 이후(figure/J2 작업서 확정).
+    gate:
+      criterion: [classification, dynamics]
+      verdict: pass-in-window
+      note: "오너 G2 확정 2026-06-24 — 시뮬 검증 안정 배치. a 0.635 AU(3번째 canon 충족)·P 209d·e~0.20(c와 2:1 MMR). c=0.40AU·3M⊕ 동반(c walk때 정식화). MEGNO 2.05 안정·Erid e 0.04 비펌핑(요구 충족). 공명=안정/구조용, 조석가열 아님(~2e-9 W/m² 무시, 화산 A안=미스터리). HZ 중앙."
+      paper: "REBOUND 5.0 WHFast+MEGNO 안정성 스캔(phase3/stability-sim/scripts/erid_resonance_scan.py); 조석가열 무시 판정=tidal-heating-methodology(a⁻⁷·⁵·R⁵)."
