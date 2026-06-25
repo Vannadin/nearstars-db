@@ -183,9 +183,13 @@ a:b:c ratios. From the degree-2 figure, normalized to the polar axis (c = 1): a 
 (synchronous, hydrostatic 4:1) body → a/R = 1 + 7J₂/3, b/R = 1 − 2J₂/3, c/R = 1 − 5J₂/3
 (then ÷c); a free oblate rotator → a = b, c = R(1 − f). `scripts/refs/body_figure.py` →
 `ellipsoid_ratios()` emits them — so one figure drives both the gravity and the visual,
-automatically consistent. **Hard dependency** (a body using the node won't render its shape
-without the plugin), pulled in only by the bodies that emit a visible figure (a/c ≳ 1.02);
-the cfg node + schema live in the `kopernicus-cfg` skill (filled at the emit stage).
+automatically consistent. **Volume must be conserved** — the physical figure bulges one axis
+while the others *contract* (Σ deviations ≈ 0). The c = 1-normalized a:b:c are all ≥ 1, so they
+**inflate** the body by a·b·c (Dante ×1.22) unless the **`reference_radius` is set to the polar
+radius** (= mean radius × c_physical), not the mean radius. Set reference_radius = polar; then
+the ≥ 1 ratios reproduce the volume-preserving shape. **Hard dependency** (a body using the node
+won't render its shape without the plugin), pulled in only by the bodies that emit a visible
+figure (a/c ≳ 1.02); the cfg node + schema live in the `kopernicus-cfg` skill (filled at the emit stage).
 
 ## 6. Worked examples (NearStars roster, Phase 4 active set)
 

@@ -132,6 +132,8 @@ the bodies that emit a visible figure (a/c ≳ 1.02). **Emit wiring + the kopern
 to the emit stage; values + mapping locked here.** Schema source-verified (repo
 `jamespglaze/VertexHeightOblateAdvanced`); **license MIT** (bundle/hard-depend OK,
 CC-BY-NC-SA-compatible). a/b/c are ratios of reference radius (c=1 smallest); CustomEllipsoid mode.
+**Volume:** c=1 ratios are all ≥1 → set **reference_radius = polar radius** (= mean × c_physical),
+else the body inflates by a·b·c (Dante ×1.22). Then volume-preserving (a bulges, b & c contract).
 
 | body | mode | a : b : c (c=1) | visual emit |
 |---|---|---|---|

@@ -46,7 +46,7 @@
   <div class="stage">
     <canvas id="cv"></canvas>
     <div class="hud"><div class="nm" id="h_nm"></div><div class="ty" id="h_ty"></div><div class="mt" id="h_mt"></div><div class="gv" id="h_gv"></div></div>
-    <div class="hint">드래그 = 회전 · 휠 = 확대<br>점선 = 기준 구</div>
+    <div class="hint">드래그 = 회전 · 휠 = 확대<br>점선 = 같은 부피의 구</div>
   </div>
   <div class="controls">
     <label>왜곡 과장 <output id="exo">×3.0</output></label>
@@ -54,16 +54,18 @@
     <label><input type="checkbox" id="spin" checked> 천천히 자동회전</label>
     <label><input type="checkbox" id="ref" checked> 기준 구</label>
   </div>
-  <footer>실제(×1)에선 대부분 거의 구입니다 — Dante만 ×1에서도 뚜렷한 계란형. <b>편평(oblate)</b>은 극이 눌려 위/아래서 보면 납작, <b>삼축(triaxial)</b>은 적도면에서 한 축이 길쭉(모행성 방향). 빨간 표시 = 장축(a) 양 끝. <b>물방울 비대칭</b> — 조석은 가까운 쪽이 먼 쪽보다 살짝 더 튀어나옴(octupole). 실제론 ~R/a(&lt;1%)라 미세해서, 보이게 2.5× 추가 과장했습니다(Dante를 과장 최대로).</footer>
+  <footer>실제(×1)에선 대부분 거의 구입니다 — Dante만 ×1에서도 뚜렷한 계란형. <b>편평(oblate)</b>은 극이 눌려 위/아래서 보면 납작, <b>삼축(triaxial)</b>은 적도면에서 한 축이 길쭉(모행성 방향). 빨간 표시 = 장축(a) 양 끝. <b>부피 보존</b> — 점선(같은 부피의 구) 밖으로 늘어난 만큼 다른 축은 점선 안으로 줄어듭니다(질량·밀도 일정, 과장해도 부피 동일). <b>물방울 비대칭</b> — 조석은 가까운 쪽이 먼 쪽보다 살짝 더 튀어나옴(octupole). 실제론 ~R/a(&lt;1%)라 미세해서 2.5× 추가 과장(Dante를 과장 최대로).</footer>
 </div>
 <script>
+// a,b,c = 부피보존(physical) 축비 — 곱 ≈ 1. 한 축이 늘면 나머지가 평균 아래로 줄어듦.
+// 삼축: a=1+7J₂/3, b=1−2J₂/3, c=1−5J₂/3.  편평: a=b=(1−f)^(−1/3), c=(1−f)^(2/3).
 const BODIES = [
-  {nm:"Polyphemus", ty:"가스자이언트 (편평)", a:1.149,b:1.149,c:1, kind:"obl", mt:"f ≈ 13%", gv:"J₂ 0.023", col:[212,184,140]},
-  {nm:"Dante",      ty:"화산 위성 (삼축)",    a:1.167,b:1.042,c:1, kind:"tri", pear:0.0082, mt:"a−c ≈ 16%  (a/c 1.17)", gv:"C₂₂ 0.012", col:[200,120,70]},
-  {nm:"Chaos",      ty:"얼음 위성 (편평)",    a:1.075,b:1.075,c:1, kind:"obl", mt:"f ≈ 7%",  gv:"J₂ 0.026", col:[210,228,240]},
-  {nm:"Erid",       ty:"슈퍼지구 (편평)",     a:1.051,b:1.051,c:1, kind:"obl", mt:"f ≈ 4.8%", gv:"J₂ 0.014", col:[150,170,200]},
-  {nm:"Hades",      ty:"암석 위성 (삼축)",    a:1.053,b:1.013,c:1, kind:"tri", pear:0.0051, mt:"a−c ≈ 5%", gv:"C₂₂ 0.004", col:[140,132,120]},
-  {nm:"기준 구",    ty:"완전한 구 (비교용)",  a:1,b:1,c:1,         kind:"ref", mt:"a:b:c = 1:1:1", gv:"", col:[110,120,140]},
+  {nm:"Polyphemus", ty:"가스자이언트 (편평)", a:1.0475,b:1.0475,c:0.9113, kind:"obl", mt:"f ≈ 13%", gv:"J₂ 0.023", col:[212,184,140]},
+  {nm:"Dante",      ty:"화산 위성 (삼축)",    a:1.091, b:0.974, c:0.935,  kind:"tri", pear:0.0082, mt:"a +9% · b −3% · c −6%", gv:"C₂₂ 0.012", col:[200,120,70]},
+  {nm:"Chaos",      ty:"얼음 위성 (편평)",    a:1.0245,b:1.0245,c:0.9528, kind:"obl", mt:"f ≈ 7%",  gv:"J₂ 0.026", col:[210,228,240]},
+  {nm:"Erid",       ty:"슈퍼지구 (편평)",     a:1.0165,b:1.0165,c:0.9677, kind:"obl", mt:"f ≈ 4.8%", gv:"J₂ 0.014", col:[150,170,200]},
+  {nm:"Hades",      ty:"암석 위성 (삼축)",    a:1.0303,b:0.9913,c:0.9783, kind:"tri", pear:0.0051, mt:"a +3% · b −1% · c −2%", gv:"C₂₂ 0.004", col:[140,132,120]},
+  {nm:"기준 구",    ty:"완전한 구 (비교용)",  a:1,b:1,c:1,                 kind:"ref", mt:"a:b:c = 1:1:1", gv:"", col:[110,120,140]},
 ];
 function sphereMesh(st,sl){ const v=[],f=[];
   for(let i=0;i<=st;i++){ const th=Math.PI*i/st; for(let j=0;j<=sl;j++){ const ph=2*Math.PI*j/sl;
@@ -97,7 +99,9 @@ function project(p,sx,sy,sz,A,E){
 function render(){
   ctx.clearRect(0,0,CW,CH);
   const b=BODIES[cur];
-  const sx=1+(b.a-1)*exag, sy=1+(b.b-1)*exag, sz=1+(b.c-1)*exag, mx=Math.max(sx,sy,sz);
+  let sx=1+(b.a-1)*exag, sy=1+(b.b-1)*exag, sz=1+(b.c-1)*exag;
+  const vk=Math.cbrt(Math.max(1e-6,sx*sy*sz)); sx/=vk; sy/=vk; sz/=vk;   // 부피 보존: 과장해도 부피 일정(한 축↑ → 나머지↓)
+  const mx=Math.max(sx,sy,sz);
   const R=Math.min(CW,CH)*0.40/mx*zoom;
   const A=az*Math.PI/180, E=el*Math.PI/180, cx=CW/2, cy=CH/2;
   // 물방울(teardrop): octupole P₃ 비대칭 — 가까운 쪽(+x) 더 튀고 먼 쪽(−x) 덜. 실제 ~R/a(<1%)라 2.5× 추가 과장.

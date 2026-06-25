@@ -105,7 +105,7 @@ Our figure pass (`docs/reference/body-figure-methodology.md`, tool `scripts/refs
 - Use **`oblateMode = CustomEllipsoid`** for all NearStars bodies — deterministic, exactly matches our computed J2/C22. `body_figure.py::ellipsoid_ratios()` already outputs a:b:c in this mod's convention (`c=1` smallest, `a`/`b` ≥ 1).
 - `UniformEquipotential` is the physics alternative for fluid bodies (gas giants, fast free rotators): it self-computes the Maclaurin/Jacobi figure from `mass`+`period`. It may differ slightly from our Radau–Darwin J2, so prefer `CustomEllipsoid` for consistency.
 - Emit only above a visible threshold (`a/c ≳ 1.02`); below that, skip the visual (gravity C22 may still emit).
-- **Writer-stage caveat:** `a`/`b`/`c` are ratios on the PQS reference radius. Either set reference radius = polar radius (`c=1`, body grows) or volume-normalize so `a·b·c = 1` (mean radius preserved). Pack examples use `c=1` (non-volume-normalized). Flag this as a writer decision.
+- **Volume (resolved):** `a`/`b`/`c` are ratios on the PQS reference radius and are all ≥ 1, so with `reference_radius = mean radius` the body **inflates** by `a·b·c` (Dante ×1.22). To conserve volume, set **`reference_radius` = the polar radius** (= mean radius × `c_physical`); the ≥ 1 ratios then reproduce the true volume-preserving figure (the physical figure bulges one axis and contracts the others, Σ deviations ≈ 0). Pack examples set `c=1` and accept the inflation — we don't; use polar reference_radius.
 
 Example NearStars values (from the figure pass):
 
