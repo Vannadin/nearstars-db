@@ -108,6 +108,17 @@ because rotation and tide add.
 > different figure) unless a body's lore implies one; the option is flagged where it
 > could matter.
 
+**Near–far asymmetry (octupole / teardrop).** The two tidal bulges are equal only at
+degree 2 (C̄₂₂, an even P₂ deformation). The next tidal term is the **odd P₃ octupole**:
+the primary's pull is stronger on the near side, so the **sub-primary bulge is slightly
+larger than the anti-primary one** — a faint teardrop/pear shape (pointier toward the
+primary). The asymmetry scales as ≈ **R/a** (body radius / orbital distance) times the
+quadrupole bulge — sub-percent here (Dante R/a ≈ 0.8 %, Hades ≈ 0.5 %), so it is
+**recorded, not emitted by default**. Notes: (1) gravity-side it is a **degree-3** term,
+dynamically negligible; (2) it is **not representable by the symmetric `CustomEllipsoid`**
+mesh — a visual teardrop would need a small degree-3 **heightmap** bump at the terrain pass.
+Real echo: the Moon's center of figure is offset toward Earth.
+
 ## 4. Regimes by body type
 
 | body class | spin | figure | coefficients |

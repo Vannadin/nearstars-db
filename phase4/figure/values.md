@@ -25,6 +25,8 @@ ocean). → **J₂ ≈ 0.039 · C̄₂₂ ≈ 0.0118** (J₂ = 10⁄3·C₂₂).
 Polyphemus, **a−c ≈ 141 km (~16 %)** — visibly egg-shaped. Kaula degree 3–8,
 airless_rocky K = 2.5e-5, seed "Dante". reference_radius 900 km. **Terrain pass: sculpt
 the mesh ~16 % prolate** (gravity C₂₂ already carries it; visual needs the mesh).
+Near–far asymmetry (octupole P₃): sub-primary bulge ~**0.8 %** (R/a) larger than anti-primary —
+degree-3, recorded only (CustomEllipsoid is symmetric; teardrop = optional heightmap bump).
 
 ### Hades (α Cen A b II) — gray Ganymede-like rocky moon, synchronous ✅
 Locked, a 148,000 km (2.07 R_p), P 14.4 h. Hydrostatic J₂ 0.0187. **Owner φ = 0.70**
@@ -32,6 +34,7 @@ Locked, a 148,000 km (2.07 R_p), P 14.4 h. Hydrostatic J₂ 0.0187. **Owner φ =
 the interior warm → partial relaxation). → **J₂ ≈ 0.013 · C̄₂₂ ≈ 0.0039**. Visual: a−c
 ≈ 39 km (~5.2 % prolate) — mildly egg-shaped, less than Dante. Kaula degree 3–8,
 airless_rocky K = 2.5e-5, seed "Hades". reference_radius 750 km. Terrain pass: mesh ~5 % prolate.
+Near–far asymmetry (octupole P₃): sub-primary bulge ~**0.5 %** (R/a) larger — degree-3, recorded only.
 ### Pandora (α Cen A b III) — Na'vi homeworld, synchronous ✅
 Locked, a 252,393 km (3.53 R_p), P 32 h, large (0.72 M⊕, R 5724 km). Hydrostatic J₂
 1.94e-3. **Owner φ = 0.95** (large, warm, active → essentially relaxed). → **J₂ ≈
