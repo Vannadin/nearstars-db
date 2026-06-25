@@ -51,9 +51,25 @@ q 1.31e-3, NMoI 0.33 (iron core) → **J₂ ≈ 4.1e-4** (oblate, f ~0.13 %). **
 independent f ~0.06–0.075. Warm plumes → relaxed, φ≈1. Kaula **icy K = 1.5e-5**, seed
 "Chaos". reference_radius 400 km. Terrain pass: oblate mesh ~7 % (polar flattening).
 
+### α Cen stars — A / B / Proxima C ✅ (all OMIT)
+Slow rotators (P_rot 22 d / 41 d / 83.5 d). J₂ negligible (|J₂| ≲ 3e-6, below threshold)
+and the Radau–Darwin inversion is out of range at stellar NMoI (~0.06) anyway → **record as
+negligible, never emit**. Sun analog J₂ ≈ 2.1e-7.
+
+### Proxima planets (α Cen C) ✅ — all gravity-only, no visible figure
+- **Proxima b** — locked, P 11.19 d, 1.07 M⊕/1.02 R⊕. q_s 2.7e-5 → J₂ 2.7e-5, **C̄₂₂ 8.2e-6**
+  (>threshold → emit gravity). Visual a−c 0.01 % → skip. φ≈0.95.
+- **Proxima d** — locked, P 5.12 d, 0.26 M⊕/0.692 R⊕. J₂ 1.7e-4, **C̄₂₂ 5.0e-5** (emit gravity).
+  Visual 0.07 % → skip.
+- **Proxima c** — mini-Neptune, FREE, **P_rot 27 h (owner board value)**, 8 M⊕/2.7 R⊕, NMoI 0.23.
+  q 6.7e-3 → **J₂ ≈ 8.0e-4** (range 5e-4–1e-3), f 0.45 % → a/c 1.005 **< 1.02 → skip visual**
+  (emit gravity J₂). (NOT visibly oblate — earlier 16 h guess was wrong; 27 h is our set value.)
+- **Proxima c I** — ice moon ~950 km, locked to c. Small; figure pending exact c-orbit, expected
+  below visible threshold → gravity C₂₂ only if above ~1e-6.
+
 ---
-**α Cen Polyphemus subsystem figure pass complete** (Polyphemus + 5 moons). Next: Proxima
-planets (b/c/d/c I) + stars (A/B/Proxima C — slow → J₂ negligible, record/omit).
+**α Centauri system figure pass complete.** Visible oblate bodies: Polyphemus, Dante, Chaos,
+Hades (4). Everyone else gravity-only or omit. Next system (roster order): Barnard's Star.
 
 ## Visual oblate emit — VertexHeightOblateAdvanced (Kopernicus PQS Mod, James Glaze, MIT)
 

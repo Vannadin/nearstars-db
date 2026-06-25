@@ -75,7 +75,11 @@ of inertia NMoI = C/(M R²) (0.4 = uniform sphere; smaller = more condensed):
 giant calibration reproduces Jupiter to −0 % and Saturn to −10 % (first-order
 truncation, grows with q) — so for a **fast rotator (large q) the first-order value
 under-predicts** the true J₂ by ~10–20 %. Stars sit at the condensed extreme: even
-the Sun's slow spin gives J₂ ≈ 2×10⁻⁷ (one of the roundest bodies known).
+the Sun's slow spin gives J₂ ≈ 2×10⁻⁷ (one of the roundest bodies known). **The
+Sun row is the *measured* value** — the Radau–Darwin inversion is only valid for
+NMoI ≳ 0.13 and returns a spurious (negative) J₂ at stellar central condensation
+(NMoI ~0.05–0.08), so stars are not run through it: they are recorded as negligible
+and never emitted (slow rotators all fall below the ~10⁻⁶ threshold).
 
 ## 3. Tidal triaxiality — synchronously locked bodies
 
