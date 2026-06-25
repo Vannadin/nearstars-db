@@ -82,7 +82,12 @@ Append-only decision log. Why each choice, not just what.
     only scales J₂). Jupiter 69911/71492, Saturn 58232/60330. No inflation — oblateness is in J₂.
   - VertexHeightOblateAdvanced visual: a:b:c all ≥1 inflate by a·b·c (Dante ×1.22) → set the
     **Kopernicus PQS `radius` = polar** (= mean × c_physical). Distinct field from Principia's ref.
-    (Real giants don't render oblate, so no precedent for the visual case.)
+  - **RSS-scale precedent (confirms us, 2026-06-25):** Sol + RSS-Origin make giants oblate via a
+    baked ParallaxContinued scaled mesh (.bin), NOT VHOA, with PQS `radius` = **polar** (RSS-Origin
+    Jupiter 66854000=polar, Saturn 54364000=polar) + Principia ref = **equatorial** (Sol Jupiter
+    71492). So our two choices match RSS. ⚠️ They gate oblate behind a toggle because **oblate
+    giants clash with EVE/Scatterer up close** — flag for Polyphemus (atmosphere giant): verify
+    cloud+oblate interaction, maybe a toggle. We use runtime VHOA CustomEllipsoid (simpler than baking).
 
 ## Open / to confirm
 - Per-body NMoI assumptions (especially gas giants and the locked rockies' rigidity).
