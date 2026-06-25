@@ -118,7 +118,50 @@ radius for a rotational figure) is mandatory whenever any J₂/geopotential is e
 The cfg forms (scalar `j2`, zonal `geopotential_row`, full cos/sin) are tabulated in
 [`principia-geopotential-data.md`](principia-geopotential-data.md).
 
-## 5. Worked examples (NearStars roster, Phase 4 active set)
+## 5. High-degree geoid for rocky bodies — synthetic now, heightmap later
+
+§2–§3 fix the **degree-2** figure (rotation + tide) deterministically. Real rocky
+bodies also carry a *lumpy* degree-3+ field — the gravitational fingerprint of their
+unique interior density anomalies and topography (Earth's, the Moon's mascons, Mars's
+Tharsis). A fictional body has no such measured fingerprint, and only **four** Solar-
+System bodies even have a rich high-degree field to imitate (Earth deg 2159, Moon 900,
+Mars 120, Venus 180; the Galilean moons, Titan and Enceladus are effectively degree-2
+only). So a complex geoid must be **synthesized**, not looked up. Two stages:
+
+**Stage A — Kaula-spectrum synthetic field (now).** Real planetary gravity spectra obey
+**Kaula's rule** (Kaula 1966): the per-coefficient RMS of the fully-normalized harmonics
+falls as a power law,
+
+    s_n  =  rms(C̄ₙₘ, S̄ₙₘ)  ≈  K / n²        (Earth: K ≈ 1×10⁻⁵)
+
+→ degree variance σ²ₙ = (2n+1)·s²ₙ ∝ 1/n³. To synthesize a body's geoid:
+
+1. **Keep degree 2 from §2–§3** — J̄₂₀ = −J₂/√5 (and C̄₂₂ for locked bodies) stay the
+   grounded rotational/tidal values; only degree ≥ 3 is synthesized.
+2. For each n = 3…N_max, m = 0…n, draw C̄ₙₘ, S̄ₙₘ ~ Gaussian(0, s_n), s_n = K/n².
+3. **Seed the RNG deterministically per body** (name hash) — same body → same field,
+   preserving the reproducibility invariant; flag it `synthetic` in the curated layer.
+4. **Calibrate K to the body class.** Earth (active tectonics) ≈ 1×10⁻⁵; airless,
+   uneroded, mascon-rich bodies (Moon/Mercury-like) are *rougher* → larger K (the GRAIL
+   team applies the Moon its own Kaula constraint); small differentiated/icy bodies fall
+   off faster. K is the one tunable; state it.
+5. **N_max ≈ 8–10** — enough for realistic low-orbit perturbation (Principia's bundled
+   Earth is truncated at degree 10); higher degrees are dynamically irrelevant except at
+   the surface. Emit as full cos/sin `geopotential_row`, `reference_radius` = R_eq.
+
+This gives statistically Earth-like lumpiness — and the mascon-like low-orbit dynamics
+(unstable / frozen low orbits over airless bodies) that make it worth doing — while being
+honestly **synthesis-grade**: not tied to anything visible.
+
+**Stage B — heightmap-derived field (at the terrain pass).** Once a body's terrain
+(PQS/Parallax heightmap) exists, the degree-3+ field is *recomputed* from the topography
+under Airy/Pratt isostatic compensation (gravity-topography admittance — Wieczorek's
+Treatise method, standard practice; EGM2008 itself fills data-poor regions this way). The
+result is **self-consistent with the visible mountains/basins** and **replaces** the Kaula
+placeholder. Degree 2 (rotation/tide) is unchanged across both stages. Roadmap:
+**degree 2 permanent · degree 3+ Kaula-now → heightmap-later.**
+
+## 6. Worked examples (NearStars roster, Phase 4 active set)
 
 Inputs are the curated mass / radius / rotation; lock state from the
 [tidal-locking-timescale method](tidal-locking-timescale-methodology.md).
@@ -136,19 +179,22 @@ while the locked habitable-zone rockies are nearly round except for a small perm
 tidal C₂₂ that grows sharply the closer the lock (TRAPPIST-1 b ≫ Proxima b). Stars are
 point-like at the orbital distances that matter, so their figures are recorded but not emitted.
 
-## 6. Procedure (per body)
+## 7. Procedure (per body)
 
 1. Determine lock state (tidal-locking-timescale method) → free or synchronous.
-2. Compute q (free: P_rot) or q_s (locked: orbital n), using the **equatorial** radius.
+2. Compute q (free: P_rot) or q_s (locked: orbital n), using the **mean** radius
+   (Helled+2011 convention; the emit `reference_radius` is the equatorial radius).
 3. Pick NMoI from the body class (giant 0.20–0.26; rocky 0.30–0.36; star 0.05–0.08) —
    state the assumption + range.
 4. Free rotator → J₂ via Radau–Darwin (Maclaurin q/2 as the homogeneous bound).
    Synchronous → J₂ ≈ (0.9–1.1)·q_s, C̄₂₂ = 0.3·J₂ (hydrostatic).
-5. Emit threshold: skip C₂₂ (and J₂) below ~1×10⁻⁶ (record the value, omit the row) —
+5. **Rocky body wanting a complex geoid** → synthesize degree 3+ via Kaula (§5), seeded
+   per body + flagged `synthetic`; keep the degree-2 from steps 4. Replace at the terrain pass.
+6. Emit threshold: skip C₂₂ (and J₂) below ~1×10⁻⁶ (record the value, omit the row) —
    it is dynamically irrelevant. Set `reference_radius` = equatorial radius.
-6. Write through the **curated source layer**, not `db/systems/*` directly; rebuild.
+7. Write through the **curated source layer**, not `db/systems/*` directly; rebuild.
 
-## 7. Citations
+## 8. Citations
 
 All bibcodes verified against NASA ADS.
 
@@ -177,7 +223,35 @@ All bibcodes verified against NASA ADS.
   Williams et al. 2014 (`2014JGRE..119.1546W`, I_s/MR² = 0.392728). J₂/C₂₂ ≈ 9 ≠ 10⁄3.
 - **Fomalhaut A spin axis** — Le Bouquin et al. 2009, A&A 498, L41 (`2009A&A...498L..41L`,
   VLTI/AMBER): A4V, spin-axis PA 65° ⊥ the disk — confirms it is a fast rotator with a
-  measured pole, though no oblateness figure is published (see §5 note).
+  measured pole, though no oblateness figure is published (see §6 note).
+- **Synthetic high-degree field (§5)**: Kaula 1966, *Theory of Satellite Geodesy*
+  (`1966tsga.book.....K`) — the degree-variance power law (Earth RMS ≈ 1×10⁻⁵/n²); GRAIL
+  applies the Moon its own Kaula constraint (Lemoine et al. 2013, `2013JGRE..118.1676L`),
+  confirming per-body recalibration. Heightmap→gravity (Stage B): Wieczorek, *Gravity and
+  Topography of the Terrestrial Planets*, Treatise on Geophysics (`2015trge.book..153W`;
+  orig. `2007plmo.book..165W`) — Airy/Pratt isostasy + gravity-topography admittance.
+
+## Appendix — measured Solar-System gravity fields (analogs)
+
+Reference anchors for the figure recipe and the Kaula calibration. "deg" = max recovered
+spherical-harmonic degree; only Earth/Moon/Mars/Venus carry a genuinely *rich* high-degree
+field (everything else is degree-2 to low-degree, recovered from flybys).
+
+| body | model | deg | J₂ / C₂₂ (×10⁻⁶) | bibcode | dominant signal |
+|---|---|---|---|---|---|
+| Earth | EGM2008 | 2159 | 1082.6 / 1.57 | `2012JGRB..117.4406P` | the rich-geoid anchor (K ≈ 1e-5) |
+| Moon | GL0900 / GRGM900 | 900 | (in model) | `2014GeoRL..41.1452K`, `2013JGRE..118.1676L` | **mascons** → unstable low orbits; own Kaula constant |
+| Mars | MRO120D / GMM-3 | 120 | (in model) | `2016Icar..274..253K`, `2016Icar..272..228G` | Tharsis; high gravity-topo correlation |
+| Venus | MGNP180U | 180 | (in model) | `1999Icar..139....3K` | very high gravity-topo correlation (thick lithosphere) |
+| Mercury | HgM005 | 50 | (in model) | `2014JGRE..119.2417M`, `2019GeoRL..46.3625G` | low-degree; k₂ = 0.451 |
+| Io | Galileo | 2 | hydrostatic | `1996Sci...272..709A` | degree-2 only |
+| Europa | Galileo | 2 | hydrostatic | `1998Sci...281.2019A` | degree-2 only |
+| Ganymede | Galileo / +Juno | 2 | (1996 model) | `1996Natur.384..541A`, `2022GeoRL..4999475G` | degree-2; Juno hints at regional anomalies |
+| Callisto | Galileo | 2 | **32.7 / 10.2** | `2001Icar..153..157A` | degree-2; C/MR² = 0.355, partially differentiated |
+| Titan | Cassini | 3 | k₂ ≈ 0.6 | `2012Sci...337..457I` | tidal → subsurface ocean |
+| Enceladus | Cassini | 3 | **5435 / 1550** | `2014Sci...344...78I` | J₂/C₂₂ = 3.51, mildly non-hydrostatic (S-polar sea) |
+| Vesta | Dawn | 20 | (in model) | `2014Icar..240..103K` | non-hydrostatic (Rheasilvia) |
+| Ceres | Dawn | ~16 | hydrostatic | `2016Natur.537..515P` | isostatically compensated; MoI 0.37 |
 
 ## Related
 
