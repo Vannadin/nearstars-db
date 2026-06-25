@@ -213,6 +213,8 @@ decisions:
       ② 물리 자기일관(질량-반경 곡선 *위*라 divergence 자체가 사라짐) ③ 금속-풍부 밀도(7,477 > 지구 5,514, 압축으로 자연히 —
       Weir의 *"금속-풍부"* 서술과 비로소 정합; 그의 원세트 5,710은 비-금속풍부였음). 희생=철회된 8.47 M⊕(애초에 실재 아님)·
       Weir 2.01 R⊕(행성이 더 작아짐, 9,820km). 조성=금속-풍부 압축 암석(녹은 금속핵·판구조, Weir).
+      **figure (2026-06-25)**: 자전 편평 J₂≈0.014 (NMoI 0.30, f~4.8%, a/c~1.051 → 가시 oblate), reference_radius 9820 km.
+      로스터 최대 편평 암석행성. 시각 oblate 메시 대상 (body-figure-methodology.md).
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
@@ -394,7 +396,7 @@ decisions:
       (P_d 209d / P_c 105d ≈ 1.99; near-resonant, 각 circulate — deep-lock 아님) · b와는 **비공명**(a_c/a_b=1.79). **안정성 시뮬**
       (REBOUND 5.0 WHFast+MEGNO, 공식 뷰어 반영): b·c·d 1e5yr 랜덤위상서 **MEGNO 2.000(규칙·robust STABLE)**, e_max c 0.095·Erid 0.040
       ·d 0.048(**Erid 안 펌핑**), a 고정. (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→
-      starmap 모핑). 자전/lock은 figure/J2 작업서.
+      starmap 모핑). 자전/lock·figure는 bulk 행 참조(조석고정 1:1, C̄₂₂ omit — body-figure-methodology.md).
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
@@ -409,11 +411,11 @@ decisions:
       **수성 쌍둥이** 앵커 = M **0.055 M⊕** + R **2,440 km(0.383 R⊕)** → 표면중력 **0.38 g** · 밀도 **~5.4 g/cm³**(iron-rich 암석,
       수성 5.43과 동급 — 큰 금속핵). 자전 = **조석고정 1:1**(오너 c3, 2026-06-25) — a 0.40 AU·저-e(0.04)서 수성식 3:2는 불가(3:2는
       e~0.2 필요), 1:1 lock이 자연스러움 → **영구 substellar 반구 vs 영구 야간 반구**. 소형체 → 빠른 냉각·낮은 방사성열 → **지질학적
-      정적**(무화산). 정밀 J2/triaxial은 figure 작업서(조석고정체라 약한 prolate C22 예상).
+      정적**(무화산). 조석 C̄₂₂≈9.6e-8 → emit 임계(1e-6) 아래, 기록만·omit (body-figure-methodology.md).
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 c3 확정 2026-06-25 — 수성 쌍둥이(0.055 M⊕·2,440km→0.38g·ρ5.4 iron-rich). 자전=조석고정 1:1(저-e라 3:2 불가). 지질학적 죽음(무화산). J2/C22는 figure 작업."
+      note: "오너 c3 확정 2026-06-25 — 수성 쌍둥이(0.055 M⊕·2,440km→0.38g·ρ5.4 iron-rich). 자전=조석고정 1:1(저-e라 3:2 불가). 지질학적 죽음(무화산). C̄₂₂≈9.6e-8 → 임계 아래 omit(figure 패스 완료, body-figure-methodology.md)."
       paper: docs/reference/tidal-locking-timescale-methodology.md (0.40 AU 근접+Gyr 나이 → 1:1 lock); mass-radius-relation-methodology.md (iron-rich tie-break).
 
   - body: 40 Eridani A c
@@ -527,7 +529,7 @@ decisions:
       (2.39). **안정성 시뮬(REBOUND 5.0 WHFast+MEGNO, 공식 뷰어 반영)**: c=수성(0.055 M⊕)·0.40 AU·상호경사 1.5° 동반, 1e5yr
       랜덤위상서 **MEGNO 2.000(규칙적·robust STABLE)**, e_max Erid 0.040·c 0.095·d 0.048(**Erid 안 펌핑** — 요구 충족), a 고정.
       (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→starmap 모핑, 세차 Ω/ω 포함).
-      자전/lock = figure/J2 작업서.
+      자전/lock·figure는 bulk 행 참조(조석고정 1:1, C̄₂₂ omit — body-figure-methodology.md).
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
@@ -542,7 +544,7 @@ decisions:
       canon 두 앵커 = **R ≈ 1,737 km(0.273 R⊕, "달 크기")** + **표면중력 0.2 g**(p.393). 거기서 도출 → 질량 **0.0149 M⊕**
       (g·R², 달의 ~1.2배) · 밀도 **~4.04 g/cm³**(달 3.34보다 조밀 → 약간 iron-rich 암석; 압축 무시급 소형체). 작고 0.2g라
       **탈출속도 낮음**(~1.4 km/s급) → 대기 보유 퍼즐(Weir "모르겠다")은 G4 승화-버퍼로. 소형체 → **빠른 냉각·낮은 방사성열 →
-      지질학적 정적**(무화산·승화대기 그림과 정합). 자전/lock은 figure/J2 작업서.
+      지질학적 정적**(무화산·승화대기 그림과 정합). 조석 C̄₂₂≈3.2e-8 → 임계 아래, omit (body-figure-methodology.md).
     gate:
       criterion: [classification]
       verdict: pass-in-window

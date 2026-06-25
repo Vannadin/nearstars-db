@@ -121,7 +121,8 @@ decisions:
       비호환이라 자체 구현(scripts/j2.py, rebound additional_forces, M&D 벡터형, 해석 세차율과
       <0.1% 검증). 이 J2가 위성 궤도 결정을 실제로 뒤집음(satellites axis 참조): off-resonance
       135k 갭은 J2에도 안정, 3:2-락은 J2 detuning으로 Hades 이탈. emit 값 불변(J2≈0.023,
-      reference_radius 1.0 R_Jup).
+      reference_radius 1.0 R_Jup). **2026-06-25 figure 패스가 독립적으로 재확인** (body-figure-methodology.md) —
+      시각 oblate 메시 a:b:c ≈ 1.149:1.149:1.0 (VertexHeightOblateAdvanced, base radius=극반경).
     note: "Principia가 천체간 연산에도 J2 적용 → 위성 동역학의 입력이었고, 그 입력이 결정적이었음."
 
   - body: Alpha Centauri A b
@@ -481,7 +482,7 @@ decisions:
     value: >
       mass 8.0e21 kg · radius 900 km (둘 다 INVENTED, canon 수치 없음 — 밀도 ~2620 kg/m³ 규산암체로 affirm).
       rotation=폴리페무스 조석고정 → 자전=공전 ≈ 9.2h(a=110,000km·M_Poly 120M⊕서 도출, 최내곽). obliquity ~0°
-      (락 감쇠). j2 ~0(소형). internal_heat=조석열(bulk.tidal_heating 행, ~820× Io). age=계 5.3 Gyr 상속. spin_axis=궤도 법선.
+      (락 감쇠). 조석 삼축 C̄₂₂≈0.012 (φ=0.80 부분용융, a−c~16% 계란형, 모행성 방향), 자전 J₂는 소형이나 조석 bulge가 지배. reference_radius 900 km (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행, ~820× Io). age=계 5.3 Gyr 상속. spin_axis=궤도 법선.
     gate: {criterion: [physics], verdict: pass-in-window, note: "질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈(~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01)."}
 
   - body: Dante
@@ -579,7 +580,7 @@ decisions:
     value: >
       mass 5.0e21 kg · radius 750 km (둘 다 INVENTED, canon 수치 없음 — 달급 암석체로 affirm, 밀도 ~2830 kg/m³).
       rotation=폴리페무스 조석고정 → 자전=공전 ≈ 14.4h(a=148,000km·M_Poly 120M⊕서 도출; cf. Dante 9.2h).
-      obliquity ~0°(락 감쇠). j2 ~0(소형). internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속.
+      obliquity ~0°(락 감쇠). 조석 삼축 C̄₂₂≈0.0039 (φ=0.70, a−c~5%), 자전 J₂ 소형 (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속.
       spin_axis=궤도 법선 정렬.
     gate: {criterion: [physics], verdict: pass-in-window, note: "질량·반경은 큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05)."}
 
@@ -663,7 +664,7 @@ decisions:
       반경 5724 km(canon 지름 11,447). 질량=옵션 B: 중력 0.8g(canon 체감값) 고정 → mass 0.645 M⊕(3.85e24 kg),
       밀도 ~0.89 ρ⊕(~4900 kg/m³, 도출, 화성↔지구 사이로 현실적). rotation=폴리페무스 조석고정 32h(canon 27h
       대신 채택). obliquity=효과적 ~10°(궤도경사서 옴). internal_heat=방사성 + 약한 조석(e강제 ~0.005) →
-      화산·빠른 대륙이동 + dynamo 동시 구동. j2 소형. age=5.3 Gyr 상속. spin_axis=궤도 법선.
+      화산·빠른 대륙이동 + dynamo 동시 구동. 조석 C̄₂₂≈5.5e-4 (φ=0.95), 시각상 거의 구(편평 0.74%) 단 궤도엔 실재 (body-figure-methodology.md). age=5.3 Gyr 상속. spin_axis=궤도 법선.
     gate:
       criterion: [canon-consistency, physics]
       verdict: documented-divergence
@@ -804,7 +805,7 @@ decisions:
       mass 9.0e23 kg · radius 3400 km → 중력 ~0.53 g, 밀도 ~5470 kg/m³(철-부유 암석, 화성보다 빽빽 — 오너 유지).
       rotation=**자유 자전 ~39h**(공전 117h의 1/3, "공전1:자전3") — 600,000 km라 조석 despin이 a⁶로 너무 느려
       5.3 Gyr에도 미동기화(원시 빠른 자전 유지), **3:1 공명 락 아님**(e=0.05선 불안정). obliquity ~20°(자유 회전체라
-      비0 가능 → 축-계절, 조정 가능). internal_heat=방사성 위주(외곽·큰 a라 조석 미미). j2 소형. age=5.3 Gyr. spin_axis=20° 경사.
+      비0 가능 → 축-계절, 조정 가능). internal_heat=방사성 위주(외곽·큰 a라 조석 미미). 자유 자전 회전 편평 J₂≈4.1e-4 (f~0.13%), C₂₂ 없음(고정축 없음) (body-figure-methodology.md). age=5.3 Gyr. spin_axis=20° 경사.
     gate:
       criterion: [physics]
       verdict: pass-in-window
@@ -897,7 +898,7 @@ decisions:
     value: >
       mass 5.4e20 kg · radius 400 km → 중력 ~0.023 g(초저중력), 밀도 ~2015 kg/m³(얼음+암석). rotation=**자유 자전
       9.5h**(1.5M km라 despin 사실상 0, 미동기 원시 빠른 자전). obliquity 15°(자유 회전체). **적도 bulge**: f≈0.06–0.075
-      (~6–7.5%, 목성↔토성 사이) — 빠른 9.5h 자전의 원심 편평. internal_heat 무시(소형·외곽). j2=회전 bulge서 도출. age=5.3 Gyr.
+      (~6–7.5%, 목성↔토성 사이) — 빠른 9.5h 자전의 원심 편평. internal_heat 무시(소형·외곽). j2=회전 bulge서 도출, J₂≈0.026 (자유 자전 9.5h, figure-methodology 일치). age=5.3 Gyr.
     gate:
       criterion: [physics]
       verdict: pass-in-window

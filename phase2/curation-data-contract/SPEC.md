@@ -157,10 +157,11 @@ structure / Love numbers, spin evolution.
   and the resulting spread (a single number with no stated structural assumption
   is a back-of-envelope, not a grounded derivation).
 
-Anchor: **Polyphemus J2** is currently a giant-calibrated `q = ω²R³/GM` estimate
-(~0.028, range 0.022–0.038, the internal-structure spread hand-waved) — flagged for
-re-grounding via the Darwin–Radau / theory-of-figures literature before it is
-treated as final (`phase4/alpha_centauri.yaml` bulk.geopotential_j2).
+Anchor: **Polyphemus J2** has been re-grounded — the giant-calibrated `q = ω²R³/GM`
+estimate was replaced by a Radau–Darwin / theory-of-figures derivation (Helled et al.
+2011, NMoI 0.23) giving J2 ≈ 0.023 (range 0.017–0.033), gated in the board and confirmed
+by the 2026-06-25 figure pass + `docs/reference/body-figure-methodology.md` (methodology
+index #13); treated as final (`phase4/alpha_centauri.yaml` bulk.geopotential_j2).
 
 ---
 

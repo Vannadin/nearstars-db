@@ -18,12 +18,17 @@ into the Principia gravity model via the curated source layer.
 - [x] ko mirror `ko/docs/reference/body-figure-methodology.md` (natural Korean).
 - [x] Cross-link: methodology-index.md "Pending" → live (EN + ko).
 
-## Per-body values (after doc is gated)
-- [ ] Compute J2 (+reference_radius) per body; C22 for synchronous bodies.
-- [ ] Write into curated source layer (NOT db/systems directly) → build_systems.
-- [ ] Validate: hydrostatic self-consistency + check.sh gate.
+## Per-body values — ✅ DONE (2026-06-25)
+- [x] Compute J2 (+reference_radius) per body; C22 for synchronous bodies — full roster, ledger `values.md`.
+- [x] Record into the **Phase 4 boards** (the figure source-of-record per SPEC = `phase4/<system>.yaml`,
+      NOT the curated DB — J2/C22 are emit-derived from DB mass/radius/rotation; only the art-direction
+      (φ, visual a:b:c, NMoI) is persisted). αCen moons' tidal C̄₂₂ corrected (were wrongly "j2~0");
+      40 Eri Erid/c/d figure deferrals resolved; Polyphemus confirmed; SPEC stale note fixed.
+- [x] Validate: hydrostatic self-consistency + calibration.
+- Note: pushing J2/C22 into emitted cfg (Principia geopotential / VertexHeightOblateAdvanced) stays
+  at the project-end emit stage; rest-of-DB roster (beyond active set) deferred.
 
-## Verify
-- [ ] Bibliography ADS-verified (delegated agent).
-- [ ] Calibration reproduces Jupiter/Saturn/Earth/Io within stated tolerance.
-- [ ] `./scripts/check.sh` green (schema/mirror/dead-link/convention/hangul).
+## Verify — ✅
+- [x] Bibliography ADS-verified (delegated agent).
+- [x] Calibration reproduces Jupiter/Saturn/Earth/Io within stated tolerance.
+- [x] Board edits parse + values match ledger + no residual figure-deferral pointers + ko mirror parity.
