@@ -69,7 +69,54 @@ negligible, never emit**. Sun analog J₂ ≈ 2.1e-7.
 
 ---
 **α Centauri system figure pass complete.** Visible oblate bodies: Polyphemus, Dante, Chaos,
-Hades (4). Everyone else gravity-only or omit. Next system (roster order): Barnard's Star.
+Hades (4). Everyone else gravity-only or omit.
+
+## Barnard's Star system ✅ — no visible figure
+Star (M4, P_rot 145 d) → OMIT. Four close-in locked sub-Earth rockies → **gravity C̄₂₂ only**
+(all > threshold), visual a−c all < 0.32 % → skip:
+- Barnard d (P 2.34 d): C̄₂₂ 2.4e-4 · b (3.15 d): 1.3e-4 · c (4.12 d): 7.4e-5 · e (6.74 d): 3.0e-5.
+- φ ≈ 0.95 (warm-ish rocky, but figure invisible regardless). No decisions.
+
+## Tau Ceti system ✅ — negligible figure
+Star (G8V, P_rot 46 d) → OMIT. Super-Earths at 20–636 d, not clearly locked and far enough that
+the figure is negligible: tau Cet g (P 20 d) C̄₂₂ 2.4e-6 (marginal emit); h (49 d) 3.9e-7 and
+f (636 d) 3.8e-9 → OMIT; tau Cet e lacks a curated radius (skip, note). No visible oblate, no decisions.
+
+## 40 Eridani system ✅
+- **Erid (40 Eri A b)** — FREE rotator, P_rot 5.1 h, 4.97 M⊕ / 9820 km, metal-rich NMoI 0.30.
+  q 0.056 → **J₂ ≈ 0.0136** (range 0.011–0.017 over NMoI 0.28–0.33), **f ~4.8 % (1/21)**,
+  **a/c ≈ 1.051 → VISIBLE oblate** (the roster's most-oblate rocky *planet*). Warm → relaxed,
+  φ≈1. Kaula earth_like K=1e-5 (thick atmosphere/tectonics). Oblate visual emit
+  (CustomEllipsoid 1.051:1.051:1.0 or UniformEquipotential). reference_radius 9820 km.
+- **Twoworld (40 Eri A c)** — locked, far (P ~105 d). C̄₂₂ 9.6e-8 → **OMIT** (below threshold). Skip.
+- **Threeworld (40 Eri A d)** — locked, far (P 209 d). C̄₂₂ 3.2e-8 → **OMIT**. Skip.
+- **Stars** — 40 Eri A (K0.5V ~37 d), C (M4.5V slow) → OMIT. **40 Eri B (white dwarf)** → OMIT
+  (degenerate: extreme density, near-perfect sphere; RD out of range — record negligible).
+
+Visible oblate: **Erid** only.
+
+## TRAPPIST-1 system ✅ — gravity-only
+Star (M8V, P_rot 3.3 d) → OMIT. 7 locked rockies, all **gravity C̄₂₂ only** (all > threshold),
+visual all skip: b C̄₂₂ 4.6e-4 (a−c 0.61 %) · c 1.8e-4 · d 7.9e-5 · e 3.1e-5 · f 1.3e-5 · g 7.4e-6
+· h 3.9e-6. No visible oblate, no decisions. φ≈0.95 (irrelevant — invisible).
+
+## Luhman 16 system ✅ — gravity-only
+Two brown dwarfs, fast rotators (A P_rot 6.94 h, B 4.87 h) but dense (~30 M_J, R 0.88 R_J →
+high self-gravity) so only **f ~0.4–0.6 %** → a/c ~1.005, **below visible threshold**. Gravity
+**J₂ ~7e-4 (A) / ~1.3e-3 (B)** emit; visual skip. (Fast rotation ≠ oblate when the body is dense.)
+
+## Fomalhaut system ✅
+Fomalhaut A (A4V fast rotator) — gravity J₂ dynamically irrelevant (far disk/planet, AU-scale) +
+RD invalid for stars → **OMIT gravity**. **Optional visual oblate** (A-stars are oblate, Altair-like)
+is an owner art choice, flagged, not emitted by default. No curated planets (Fomalhaut b = dust cloud);
+debris disk is not a figure body.
+
+---
+# ✅ ROSTER FIGURE PASS COMPLETE
+**Visible-oblate bodies (get the VertexHeightOblateAdvanced mesh): Polyphemus, Dante, Chaos,
+Hades (α Cen) + Erid (40 Eri) = 5.** Everything else is gravity-only (J₂/C̄₂₂ into Principia) or
+OMIT (stars/distant locked bodies below threshold). Optional: Fomalhaut A visual oblate (owner).
+Next: 3D visualization of the distortion (owner request).
 
 ## Visual oblate emit — VertexHeightOblateAdvanced (Kopernicus PQS Mod, James Glaze, MIT)
 
