@@ -158,8 +158,12 @@ a:b:c 비율로 천체를 편평/triaxial 타원체로 렌더링합니다. 2차 
 triaxial(동기, 정유체 4:1) 천체 → a/R = 1 + 7J₂/3, b/R = 1 − 2J₂/3, c/R = 1 − 5J₂/3 (이후 ÷c); 자유 편평 회전체 →
 a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 이를 emit하므로, 하나의 형상이
 중력과 시각 양쪽을 구동해 자동으로 일관됩니다. **부피는 보존돼야 합니다** — 물리 형상은 한 축이 부풀면 나머지가
-수축합니다(편차 합 ≈ 0). c = 1로 정규화한 a:b:c는 전부 ≥ 1이라, **`reference_radius`를 극반경**(= 평균반경 × c_physical)으로
-두지 않으면 천체가 a·b·c배 부풀어 버립니다(Dante ×1.22). reference_radius = 극반경으로 두면 ≥ 1 비율이 부피 보존 형상을 재현합니다.
+수축합니다(편차 합 ≈ 0). 반경이 둘 따로인데, Principia의 자이언트가 그대로 보여줍니다(Jupiter `mean_radius` 69911 km vs
+`reference_radius` 71492 km; Saturn 58232 vs 60330). (1) **Principia 중력**은 `mean_radius`(체적 — 부피 결정) +
+`reference_radius`(적도 — J₂ 스케일용)를 씁니다. 편평은 무차원 J₂에만 있어 **인플레이션이 없습니다**. (2) **VertexHeightOblateAdvanced
+시각**은 베이스 구를 a:b:c(전부 ≥ 1)로 키우므로, **Kopernicus PQS `radius`(베이스 구)를 극반경**(= 평균반경 × c_physical)으로
+두지 않으면 a·b·c배 부풀어 버립니다(Dante ×1.22). 극반경으로 두면 ≥ 1 비율이 부피 보존 형상을 재현합니다. (실제 자이언트는
+구로 렌더해 이 시각 문제를 비껴갑니다 — 편평은 J₂에만.)
 **하드 의존성**(노드를 쓰는 천체는 플러그인 없이는 형상이 안 나옴)이고
 눈에 보이는 임계값(a/c ≳ 1.02) 위의 천체만 이를 끌어옵니다. cfg 노드 + 스키마는 `kopernicus-cfg` 스킬에 있습니다(emit 단계에서 채움).
 

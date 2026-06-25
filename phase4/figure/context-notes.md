@@ -76,10 +76,13 @@ Append-only decision log. Why each choice, not just what.
   CustomEllipsoid/ContactBinary) · `energyMode` (Low/High) · mass/geeASL/period · **a/b/c = ratios
   of reference radius, ≥1, c=1 smallest**. Our `ellipsoid_ratios()` output IS this form. Use
   **CustomEllipsoid** for all (deterministic, matches our J₂/C₂₂); UniformEquipotential is the
-  physics alternative for fluids. **Volume resolved (2026-06-25):** the c=1 ratios are all ≥1, so
-  they inflate the body by a·b·c (Dante ×1.22) if reference_radius=mean. Fix → set
-  **reference_radius = polar radius** (= mean × c_physical); the ≥1 ratios then reproduce the
-  volume-preserving figure (physical: a bulges, b & c contract, Σdev≈0).
+  physics alternative for fluids. **Volume resolved (2026-06-25), two separate radii (Jupiter/Saturn
+  precedent in principia-geopotential-data.md):**
+  - Principia gravity: `mean_radius` (volumetric, sets volume) + `reference_radius` (equatorial,
+    only scales J₂). Jupiter 69911/71492, Saturn 58232/60330. No inflation — oblateness is in J₂.
+  - VertexHeightOblateAdvanced visual: a:b:c all ≥1 inflate by a·b·c (Dante ×1.22) → set the
+    **Kopernicus PQS `radius` = polar** (= mean × c_physical). Distinct field from Principia's ref.
+    (Real giants don't render oblate, so no precedent for the visual case.)
 
 ## Open / to confirm
 - Per-body NMoI assumptions (especially gas giants and the locked rockies' rigidity).

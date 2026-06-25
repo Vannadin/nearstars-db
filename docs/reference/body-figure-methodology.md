@@ -184,10 +184,15 @@ a:b:c ratios. From the degree-2 figure, normalized to the polar axis (c = 1): a 
 (then ÷c); a free oblate rotator → a = b, c = R(1 − f). `scripts/refs/body_figure.py` →
 `ellipsoid_ratios()` emits them — so one figure drives both the gravity and the visual,
 automatically consistent. **Volume must be conserved** — the physical figure bulges one axis
-while the others *contract* (Σ deviations ≈ 0). The c = 1-normalized a:b:c are all ≥ 1, so they
-**inflate** the body by a·b·c (Dante ×1.22) unless the **`reference_radius` is set to the polar
-radius** (= mean radius × c_physical), not the mean radius. Set reference_radius = polar; then
-the ≥ 1 ratios reproduce the volume-preserving shape. **Hard dependency** (a body using the node
+while the others *contract* (Σ deviations ≈ 0). Two distinct radii are in play, exactly as
+Principia's giants show (Jupiter `mean_radius` 69911 km vs `reference_radius` 71492 km; Saturn
+58232 vs 60330): (1) the **Principia gravity** uses `mean_radius` (volumetric — sets the body's
+volume) + `reference_radius` (equatorial — only scales J₂); oblateness lives in the dimensionless
+J₂, so there is **no inflation**. (2) The **VertexHeightOblateAdvanced visual** scales a base
+sphere by the a:b:c (all ≥ 1), which inflates the body by a·b·c (Dante ×1.22) unless the
+**Kopernicus PQS `radius` (the base sphere) is set to the polar radius** (= mean × c_physical);
+then the ≥ 1 ratios reproduce the true volume-preserving shape. (Real giants sidestep the visual
+case — they are rendered as spheres, oblateness only in J₂.) **Hard dependency** (a body using the node
 won't render its shape without the plugin), pulled in only by the bodies that emit a visible
 figure (a/c ≳ 1.02); the cfg node + schema live in the `kopernicus-cfg` skill (filled at the emit stage).
 
