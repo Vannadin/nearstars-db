@@ -40,6 +40,45 @@ Append-only decision log. Why each choice, not just what.
 - **Erid (40 Eri A b)**: fast free rotation (P_rot ~5.1 h) + non-locked → the largest
   *rocky* J2 in the roster. Flagged in the figure memory as the headline case.
 
+## Fluidity factor φ (added 2026-06-25, owner)
+- A synchronous body reaches the full hydrostatic (fluid) figure only if it relaxes like
+  a fluid (warm/molten). A rigid/cool body attains less. Knob: **φ = fraction of the
+  hydrostatic figure attained** (φ=1 fluid/Io-like; φ<1 partial rigidity). φ scales BOTH
+  the visual shape (a−c) AND J₂/C₂₂ together (consistent — less deformed = smaller anomaly).
+- Owner art-direction per body. **TODO (batch at end of αCen pass): add φ to methodology
+  doc §3 + ko mirror** — currently only in this log + values.md.
+
+## Per-body decisions (roster order)
+- **Polyphemus** — gas giant, J₂≈0.023 (settled, = geopotential-data.md). No Kaula (smooth).
+- **Dante (A b I)** — locked a=110,000 km (1.54 R_p, just outside fluid Roche), hydrostatic
+  J₂ 0.049 (very triaxial, a−c 177 km / 20 %). **Owner φ=0.80** (volcanic, partially molten)
+  → J₂ 0.039, C₂₂ 0.0118, visual a−c 141 km (~16 % prolate). Kaula airless_rocky K=2.5e-5.
+  Terrain pass: sculpt mesh ~16 % prolate (C₂₂ carries gravity; mesh carries the look).
+- **Hades (A b II)** — locked a=148,000 km (2.07 R_p), hydrostatic J₂ 0.0187. **Owner φ=0.70**
+  (rigid/tectonic surface but ~400× Io internal heat warms interior → partial relax) → J₂ 0.013,
+  C₂₂ 0.0039, a−c ~39 km (5.2 %). Kaula airless_rocky K=2.5e-5. Mesh ~5 % prolate at terrain pass.
+- Pandora/Cassandra/Chaos hydrostatic figures computed (J₂ 1.94e-3 / 1.45e-4 / 2.52e-5);
+  φ + Kaula pending per-body.
+
+## Visual oblate emit — VertexHeightOblateAdvanced (owner-requested 2026-06-25)
+- The Kopernicus PQS Mod **VertexHeightOblateAdvanced** renders
+  a body as an oblate/triaxial ellipsoid (James Glaze, MIT, KSP 1.12.x). `oblateMode`: PointEquipotential / UniformEquipotential
+  (Maclaurin oblate or Jacobi triaxial from period+density) / Blend / **CustomEllipsoid** (a:b:c).
+- Our figure → BOTH gravity (Principia J₂/C₂₂) AND visual (CustomEllipsoid a:b:c). Same source,
+  consistent. Tool: `body_figure.py::ellipsoid_ratios()`. a:b:c table in values.md.
+- ⚠️ NOT the same as the skill's PQS `deformity` (that is terrain height amplitude).
+- **Dependency** — added only when a body has a visible figure (a/c ≳ 1.02). **License = MIT**
+  (repo `jamespglaze/VertexHeightOblateAdvanced`, source-verified 2026-06-25) → bundle or
+  hard-depend permitted, CC-BY-NC-SA-compatible. It is a HARD dependency for any body using the
+  node (no cfg fallback; needs ModuleManager + Kopernicus). kopernicus-cfg skill node added
+  (references/oblate-figure.md). **Emit writer deferred to project end**; values + mapping locked now.
+- Schema (source-verified): `oblateMode` (PointEquipotential/UniformEquipotential/Blend/
+  CustomEllipsoid/ContactBinary) · `energyMode` (Low/High) · mass/geeASL/period · **a/b/c = ratios
+  of reference radius, ≥1, c=1 smallest**. Our `ellipsoid_ratios()` output IS this form. Use
+  **CustomEllipsoid** for all (deterministic, matches our J₂/C₂₂); UniformEquipotential is the
+  physics alternative for fluids. Emit caveat: decide reference-radius convention (polar=ref with
+  c=1 vs volume-normalize abc=1 with mean=ref).
+
 ## Open / to confirm
 - Per-body NMoI assumptions (especially gas giants and the locked rockies' rigidity).
 - Whether to emit C22 for low-q locked bodies where it's < ~1e-6 (likely omit, record).

@@ -161,6 +161,17 @@ result is **self-consistent with the visible mountains/basins** and **replaces**
 placeholder. Degree 2 (rotation/tide) is unchanged across both stages. Roadmap:
 **degree 2 permanent · degree 3+ Kaula-now → heightmap-later.**
 
+**Visual shape emit (Kopernicus).** J₂/C₂₂ are the *gravity* figure (Principia); the
+*visible* shape is a separate mesh. The **VertexHeightOblateAdvanced** PQS Mod (James Glaze,
+MIT) renders a body as an oblate/triaxial ellipsoid via `oblateMode = CustomEllipsoid` with
+a:b:c ratios. From the degree-2 figure, normalized to the polar axis (c = 1): a triaxial
+(synchronous, hydrostatic 4:1) body → a/R = 1 + 7J₂/3, b/R = 1 − 2J₂/3, c/R = 1 − 5J₂/3
+(then ÷c); a free oblate rotator → a = b, c = R(1 − f). `scripts/refs/body_figure.py` →
+`ellipsoid_ratios()` emits them — so one figure drives both the gravity and the visual,
+automatically consistent. **Hard dependency** (a body using the node won't render its shape
+without the plugin), pulled in only by the bodies that emit a visible figure (a/c ≳ 1.02);
+the cfg node + schema live in the `kopernicus-cfg` skill (filled at the emit stage).
+
 ## 6. Worked examples (NearStars roster, Phase 4 active set)
 
 Inputs are the curated mass / radius / rotation; lock state from the

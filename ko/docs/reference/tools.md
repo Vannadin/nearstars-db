@@ -159,6 +159,7 @@
 - `scripts/refs/render_element_colors_doc.py` — companion doc 재렌더 (en + ko 미러).
 - `docs/reference/element-plasma-colors.md` — 사람용 view (생성물, 직접 편집 금지).
 - `scripts/refs/cie_color.py` — 공용 색측정 모듈. Planck 흑체 + CIE 1931 등색함수(Wyman 2013) + XYZ→sRGB hue + 스펙트럼→hex. 엔진과 온도-색 빌더가 함께 씀.
+- `scripts/refs/body_figure.py` — 천체 형상 계산기(근거: `docs/reference/body-figure-methodology.md`). Radau–Darwin 자전 `J2`, 동기 조석 `C22`, 천체마다 시딩된 Kaula 스펙트럼 고차 지오이드, 그리고 `ellipsoid_ratios()` → VertexHeightOblateAdvanced `CustomEllipsoid` a:b:c 시각 emit. 캘리브레이션 자체검증이 Earth/Jupiter/Callisto를 재현(`python scripts/refs/body_figure.py`).
 - `scripts/refs/build_atomic_lines.py` + `db/refs/atomic_lines.yaml` — 원자 라인·준위·이온화 데이터(H I, He I, C I/II, N I/II, O I/II, S I/II, Mg I/II, Ti I/II, V I/II, Fe I/II — 18종)를 NIST ASD(lines1.pl + energy1.pl)에서 받아 생성. H/He/C/N/O/S면 현실적 대기 화학(N2/O2/CO2/SO2/H2O/H2/He/CH4/NH3)을 사실상 다 덮고, Mg/Ti/V/Fe는 금속산화물 밴드 + 그 해리→원자 행진용. 추가는 같은 2줄 레시피로. 캐시 우선(`/tmp/nist`), `--refresh`로 실시간 재페치. LTE 엔진 입력.
 - `db/refs/molecular_bands.yaml` — 분자 밴드 시스템(N2 1P/2P, N2+ 1NG, C2 Swan, CH/NH/OH, CN violet, CO Ångström, 금속산화물 TiO/VO/FeO/MgO) + 해리 평형용 Huber-Herzberg 상수. 밴드 헤드·항값은 Pearse & Gaydon / ExoMol / airglow 문헌. LTE 엔진 입력.
 - `scripts/refs/saha_boltzmann.py` — 1차원리 LTE 플라스마 발광색 엔진. 열복사 연속 + 원자선 + 분자 밴드를 합치고 Saha 이온화·Boltzmann 들뜸·해리를 모두 계산. 직접 실행하면 자체검증 + 색 행렬 출력. LTE 한계 주의(공기 재진입 청보라는 비-LTE라 재현 안 됨, 문서화됨).

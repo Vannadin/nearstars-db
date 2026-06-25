@@ -151,6 +151,7 @@ Read the relevant file for the body type being created. Each file contains a com
 | Gas giant | [references/gas-giant.md](references/gas-giant.md) | Rings, AtmosphereFromGround, deformity=0 PQS |
 | Orbit | [references/orbit.md](references/orbit.md) | Star/planet/moon orbit, cameraSmaRatioBounds |
 | PQS terrain | [references/pqs-terrain.md](references/pqs-terrain.md) | VertexHeightMapBicubic, VertexColorMap, Parallax mod |
+| Oblate / triaxial figure | [references/oblate-figure.md](references/oblate-figure.md) | VertexHeightOblateAdvanced — visual J2/C22 ellipsoid |
 | Atmosphere | [references/atmosphere.md](references/atmosphere.md) | Pressure/temperature curves, thin atmosphere |
 | Binary / multi-star system | [references/barycenter.md](references/barycenter.md) | Barycenter body, mass/SOI calculation, triple-system hierarchy |
 | Ocean world | [references/ocean.md](references/ocean.md) | Ocean node, FallbackMaterial, HazardousOcean |

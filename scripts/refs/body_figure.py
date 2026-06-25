@@ -60,6 +60,18 @@ def kaula_field(body_name, K, n_min=3, n_max=8):
     return coeffs
 
 
+def ellipsoid_ratios(J2=None, f=None):
+    """Kopernicus VertexHeightOblateAdvanced `CustomEllipsoid` a:b:c ratios, normalized
+    to the polar axis (c=1; a,b >= 1). Feeds the VISUAL mesh (the Principia J2/C22 is the separate
+    GRAVITY emit). Pass J2 (already φ-scaled) for a synchronous TRIAXIAL body (hydrostatic
+    4:1 → a/R=1+7J2/3, b/R=1−2J2/3, c/R=1−5J2/3); pass f for a free OBLATE rotator (a=b)."""
+    if f is not None:
+        a = b = 1.0; c = 1.0 - f
+    else:
+        a, b, c = 1 + 7 * J2 / 3, 1 - 2 * J2 / 3, 1 - 5 * J2 / 3
+    return a / c, b / c, 1.0
+
+
 def _check():
     """Reproduce calibration anchors."""
     # Earth: q≈3.45e-3, NMoI 0.331 → J2≈1.08e-3

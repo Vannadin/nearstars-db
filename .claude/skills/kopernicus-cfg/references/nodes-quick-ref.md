@@ -219,6 +219,7 @@ pressureCurve
 | `VertexSimplexHeightAbsolute` | deformity, frequency, octaves, persistence, seed, order, enabled | Procedural simplex noise terrain |
 | `VertexSimplexNoiseColor` | deformity, frequency, ... | Procedural noise coloring |
 | `Parallax` | subdivisionLevel, subdivisionRadius, order | Parallax Continued support |
+| `VertexHeightOblateAdvanced` | oblateMode, energyMode, mass, geeASL, period, a, b, c | Render body as oblate/triaxial ellipsoid (see oblate-figure.md) |
 
 ```cfg
 VertexHeightMap
