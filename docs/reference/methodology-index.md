@@ -24,6 +24,7 @@ doc has a Korean mirror under `ko/docs/reference/`.
 | [mass-radius-relation-methodology](mass-radius-relation-methodology.md) | Mass ↔ radius ↔ density tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
 | [tidal-locking-timescale-methodology](tidal-locking-timescale-methodology.md) | Spin state / synchronization timescale | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](tidal-heating-methodology.md) | Tidal heating flux (Io/Enceladus-calibrated) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
+| [body-figure-methodology](body-figure-methodology.md) | Oblateness J₂ + tidal triaxiality C₂₂ (Principia gravity model) | Helled 2011 (arXiv:1109.1627); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan anchors |
 
 ## Atmosphere & thermal
 
@@ -54,12 +55,6 @@ XYZ → IEC 61966-2-1 sRGB), owned by the reflected-color doc.
   a Phase-4 orbit is locked.
 - [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md) — n-body gravity-model (J2/geopotential) cfg conventions.
 - [binary-epoch-pipeline](binary-epoch-pipeline.md) — multi-star Keplerian → ICRS epoch propagation.
-
-## Pending
-
-- **Body figure (oblateness J2 / tidal triaxiality)** — rotational flattening (Darwin–Radau /
-  Maclaurin) + tidally-locked triaxial C22, to be filled into the Principia gravity model
-  across the roster. Not yet written; a 13th methodology candidate.
 
 ## Related
 
