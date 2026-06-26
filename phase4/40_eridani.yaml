@@ -2,7 +2,7 @@
 # (body × axis) 행별 상태. DB 불변, staging. 문화=Vulcan(Star Trek)+Erid/Rocky(PHM). grounding=docs/phase3/40-eridani-*.md, cultural-context.md §40 Eri
 system: 40_eridani
 status: staged
-updated: 2026-06-24
+updated: 2026-06-26
 
 decisions:
   # ── 모항성 40 Eri A (K0.5V Keid, 삼중성 최광, Vulcan/Erid 호스트) — facet-walk 2026-06-24 ──────────
@@ -28,7 +28,7 @@ decisions:
       간섭계, 고신뢰; Rains2020 VLTI 1σ 일치) · [Fe/H] −0.29(Diaz2018; Ma2018 −0.42) · **age ~1.8 Gyr**(documented-divergence
       — 백색왜성 B IFMR coeval age[Bond2017: WD 냉각 122 Myr + 전구체 ~1.7 Gyr]가 옛 K왜성 isochrone 노년설 해소 → 비교적
       젊음) · P_rot ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). 측정/
-      Phase3 해결값 → emit 그대로.
+      Phase3 해결값 → emit 그대로. **figure/obliquity = OMIT confirm**(2026-06-26): 항성이라 J₂(자전편평) 동역학·시각 무관, spin_axis/obliquity 미모델(figure 원장 stellar OMIT 정합).
 
   - body: 40 Eridani A
     axis: appearance
@@ -131,7 +131,7 @@ decisions:
     note: >
       M 0.198±0.004 M☉(Mason2021 동역학) · R 0.274±0.011 R☉(Mann2015) · Teff 3167±61K(Mann2015 BT-Settl 핏) · L 6.51e-3 L☉
       (Cifuentes2020 CARMENES) · [Fe/H] −0.21(Mann2015). 자전 P_rot=**meta_notes-only**(Shan2024 8.56d, 그 논문 품질등급 D=최하위
-      /debated라 정식 채택 안 함, Open item). 측정 passthrough.
+      /debated라 정식 채택 안 함, Open item). 측정 passthrough. **figure/obliquity = OMIT confirm**(2026-06-26): M왜성 J₂/spin_axis 시각·동역학 무관, 미모델(figure 원장 stellar OMIT 정합).
 
   - body: 40 Eridani C
     axis: appearance
@@ -215,6 +215,10 @@ decisions:
       Weir 2.01 R⊕(행성이 더 작아짐, 9,820km). 조성=금속-풍부 압축 암석(녹은 금속핵·판구조, Weir).
       **figure (2026-06-25)**: 자전 편평 J₂≈0.014 (NMoI 0.30, f~4.8%, a/c~1.051 → 가시 oblate), reference_radius 9820 km.
       로스터 최대 편평 암석행성. 시각 oblate 메시 대상 (body-figure-methodology.md).
+      **obliquity = 30°** (오너 2026-06-26, **2026 PHM 영화 기반** — 책엔 obliquity 미기재라 영화 비주얼 채택, 디스플레이=영화 논리[G6]와 동일).
+      → 가시 oblate bulge 적도면이 궤도 법선에서 30° 기울어짐(메시 배향). 축계절은 존재(부분일사 ±30° swing/42.245d년)하나 28기압
+      두꺼운 대기가 표면 ΔT 균질화(G5 eyeball 없음·균일온도와 정합 — 계절은 순환·구름 패턴으로 표출, 표면온도 진폭은 작음). spin_axis
+      절대방위=free-emit. ⚠ 값은 영화 art(canon 부재) — ≥30°라 30° 채택(상향 조정 가능).
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
@@ -410,7 +414,8 @@ decisions:
     value: >
       **수성 쌍둥이** 앵커 = M **0.055 M⊕** + R **2,440 km(0.383 R⊕)** → 표면중력 **0.38 g** · 밀도 **~5.4 g/cm³**(iron-rich 암석,
       수성 5.43과 동급 — 큰 금속핵). 자전 = **조석고정 1:1**(오너 c3, 2026-06-25) — a 0.40 AU·저-e(0.04)서 수성식 3:2는 불가(3:2는
-      e~0.2 필요), 1:1 lock이 자연스러움 → **영구 substellar 반구 vs 영구 야간 반구**. 소형체 → 빠른 냉각·낮은 방사성열 → **지질학적
+      e~0.2 필요), 1:1 lock이 자연스러움 → **영구 substellar 반구 vs 영구 야간 반구**. **obliquity ≈0°·spin_axis=궤도 법선**
+      (조석고정의 자연 귀결 — confirm 2026-06-26, 축계절 없음). 소형체 → 빠른 냉각·낮은 방사성열 → **지질학적
       정적**(무화산). 조석 C̄₂₂≈9.6e-8 → emit 임계(1e-6) 아래, 기록만·omit (body-figure-methodology.md).
     gate:
       criterion: [classification]
@@ -529,7 +534,8 @@ decisions:
       (2.39). **안정성 시뮬(REBOUND 5.0 WHFast+MEGNO, 공식 뷰어 반영)**: c=수성(0.055 M⊕)·0.40 AU·상호경사 1.5° 동반, 1e5yr
       랜덤위상서 **MEGNO 2.000(규칙적·robust STABLE)**, e_max Erid 0.040·c 0.095·d 0.048(**Erid 안 펌핑** — 요구 충족), a 고정.
       (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→starmap 모핑, 세차 Ω/ω 포함).
-      자전/lock·figure는 bulk 행 참조(조석고정 1:1, C̄₂₂ omit — body-figure-methodology.md).
+      자전/figure는 bulk 행 참조(**비동기 자전 4.7일**·부분 despin, **조석고정 아님**, C̄₂₂ omit — body-figure-methodology.md).
+      ⚠ 정정 2026-06-26: 이전 "조석고정 1:1"은 c(Twoworld) 템플릿 복붙 잔재였음 — bulk/atmosphere/surface(완만자전·계절·주야)와 모순이라 제거.
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
@@ -543,12 +549,18 @@ decisions:
     value: >
       canon 두 앵커 = **R ≈ 1,737 km(0.273 R⊕, "달 크기")** + **표면중력 0.2 g**(p.393). 거기서 도출 → 질량 **0.0149 M⊕**
       (g·R², 달의 ~1.2배) · 밀도 **~4.04 g/cm³**(달 3.34보다 조밀 → 약간 iron-rich 암석; 압축 무시급 소형체). 작고 0.2g라
-      **탈출속도 낮음**(~1.4 km/s급) → 대기 보유 퍼즐(Weir "모르겠다")은 G4 승화-버퍼로. 소형체 → **빠른 냉각·낮은 방사성열 →
-      지질학적 정적**(무화산·승화대기 그림과 정합). 조석 C̄₂₂≈3.2e-8 → 임계 아래, omit (body-figure-methodology.md).
+      **탈출속도 낮음**(~1.4 km/s급) → 대기 보유 퍼즐(Weir "모르겠다")은 G4서 미해결로 환원(escaping remnant; 승화-버퍼 철회). 소형체 → **빠른 냉각·낮은 방사성열 →
+      지질학적 정적**(무화산). 조석 C̄₂₂≈3.2e-8 → 임계 아래, omit (body-figure-methodology.md).
+      **자전(오너 2026-06-26)**: **비동기 자전 P_rot 4.7일(112.8h)** · **obliquity 17°** · spin_axis=원시(자유). 조석고정 아님 —
+      0.635 AU·소형체라 despin 타임 Gyr급이라 **부분만 despin된 비동기 스냅샷**(transient art-directed 합성값, conf 낮음; e~0.04라
+      수성식 3:2 불가·1:1 미도달). **온도**: insolation **1.01 S⊕**(L 0.408 L☉/0.635² — 일조는 지구급) → 평형 평균 **~268K**(Bond
+      albedo ~0.12 — 어두운 bare 현무암; frost 철회[G4]로 밝은 성분 사라져 0.2–0.3→0.12, 평균 ~8K↑ — 얇은 대기라 온실 ~0). 4.7일
+      느린 자전+얇은 대기·낮은 열관성 → **큰 일교차**(subsolar 정오 ~380K / 야간 <150K).
+      obliquity 17°가 완만한 계절 편차를 얹음. (Erid 고속균일·c 조석고정과 자연 분기.)
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24 — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체. 낮은 탈출속도+빠른 냉각=무화산/승화대기(G4)와 정합."
+      note: "오너 G3 확정 2026-06-24 (자전 추가 2026-06-26) — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체. 무화산. 자전=비동기 4.7일·obliquity 17°(부분 despin 스냅샷, e 낮아 3:2/1:1 둘 다 아님; conf 낮음, art-directed 합성). 평균 ~268K(1.01 S⊕·A~0.12 bare basalt·온실0; frost 제거로 0.2–0.3→0.12, ~8K↑), 느린자전→큰 일교차(정오~380K/야간<150K)."
 
   - body: 40 Eridani A d
     axis: atmosphere
@@ -556,32 +568,35 @@ decisions:
     driver: PHM canon composition + sublimation-buffer grounding
     value: >
       조성(canon p.393) = **CO₂ 84% / N₂ 8% / SO₂ 4% + trace**, 표면압 **<지구 1%**(~0.006–0.008 bar = ~700 Pa, 화성급 희박).
-      **보유 메커니즘 = 표면 얼음과의 증기압 평형 버퍼**: CO₂ 드라이아이스 + SO₂ frost가 **승화↔재응결**(화성 CO₂ 극관 + Io/갈릴레이
-      SO₂-frost analog). 저-e(~0.03) + 얇은 대기 → **화성식 계절·주야 순환**(낮/적도 승화, 극/밤 동결 — 주로 자전축·주야 구동, e 작아 계절폭 완만).
-      무거운 CO₂(μ=44)+저온 → thermal escape 느림, 얼음 저장고가 보충 → **Weir "0.2g가 어떻게 잡나" 퍼즐의 물리 해소**(중력 보유
-      아닌 ice-reservoir 정상상태 교환). **무화산** — SO₂는 frost 승화(+trace 잔류), 활성 화산 불필요(조석가열 ~2e-9 W/m² 무시,
-      G2서 종결). CO₂ 저장고 = **Astrophage Petrova-arc 번식 목적지**(canon flavor, cfg 미모델). ⚠ 잔여 미스터리: Gyr 장기
-      0.2g 버퍼 안정성은 완전 해소 아님(documented) — 단 승화-버퍼가 대부분 설명.
+      ⚠ **정정 2026-06-26 (frost-buffer 철회)**: 이전 board는 보유를 "CO₂ 드라이아이스 + SO₂ frost 승화-버퍼(화성 극관 + Io analog)"로
+      설명했으나 — d 평균이 **~260K**(insolation 1.01 S⊕, G3)라 CO₂ frost point(~590 Pa 분압서 **~148K**)·SO₂ frost point(~28 Pa 분압서
+      **~130K**)에 **어디서도(극·야간 포함) 도달 불가** → **드라이아이스·SO₂ frost는 물리적으로 존재 불가, 메커니즘 철회**. (화성 극관이
+      작동하는 건 화성 *평균*이 ~210K라 극겨울에 148K를 찍기 때문 — d는 일조 지구급이라 근본적으로 너무 따뜻함.)
+      **정정된 그림**: 얇은 **CO₂/N₂/SO₂ 기체 외피**(frost 캡·승화 순환 없음). 보유는 **canon 미해결 퍼즐로 환원** — 0.2g·260K·40 Eri A의
+      XUV/항성풍상 **cosmic shoreline 너머**라 사실 **천천히 새는 잔류 대기(escaping remnant 스냅샷)**로 보는 게 정직(Weir 본인의 "0.2g가
+      어떻게 잡나" 미해결을 거짓 rescue 없이 그대로 둠, documented). **무화산**(소형·식은 핵; 보충원 없음 — 미스터리의 일부). CO₂ 대기 =
+      **Astrophage Petrova-arc 번식 목적지**(canon flavor, cfg 미모델).
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G4 확정 2026-06-24 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa). 보유=CO₂드라이아이스+SO₂frost 승화-버퍼(화성/Io analog), 저-e+얇은대기로 화성식 계절순환. Weir 0.2g 퍼즐 물리해소(ice-reservoir 교환). 무화산(SO₂=frost). Astrophage Petrova 번식지. 잔여 Gyr-버퍼 미스터리 documented."
-      paper: "exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도 vs 저온·무거운 CO₂·ice-buffer); 화성 CO₂극관 증기압평형·Io SO₂ frost analog."
+      note: "오너 G4 확정 2026-06-24, frost-buffer 철회·정정 2026-06-26 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa) 조성은 유지. 단 평균 ~260K(1.01 S⊕)서 CO₂ frost point ~148K·SO₂ ~130K에 도달 불가 → 드라이아이스/SO₂ frost·승화-버퍼·계절 frost캡 전부 철회(물리 불가). 정정: 얇은 escaping remnant 기체 외피, 보유는 canon 미해결(cosmic shoreline 너머, Weir 퍼즐 거짓rescue 없이 환원). 무화산. Astrophage Petrova 번식지(flavor)."
+      paper: "exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도+260K → CO₂ 외피도 escaping remnant); CO₂/SO₂ frost point vs T_eq 260K = 침착 불가(>148K/>130K everywhere)."
 
   - body: 40 Eridani A d
     axis: surface
     status: gated
     driver: owner art-direction (가) + surface-color/frost
     value: >
-      표면 = **고대 크레이터 암석 + 계절 frost 극관**(오너 G5=가). 작고 지질학적으로 죽은 몸 → Moon/Mercury식 크레이터 평원,
-      **회갈색 현무암질 암석**. 그 위에 **CO₂ 드라이아이스 + SO₂ frost**가 극관·야간에 밝은 **흰 침착**(G4 승화 순환으로 계절·주야
-      변동, 화성 극관 analog). 색 = 회갈 암석 + 흰 frost(SO₂ 옅은 황색기 가능하나 가 선택은 frost-흰 위주). **eyeball 없음**
-      (작고 얇은 대기·완만 자전). 온도 ~240–264K 평균(극·밤 frost 점). Bond albedo ~0.2–0.3(암석 어둠 + frost 밝음 혼합,
-      계절 변동). Astrophage flavor(canon): CO₂ 표면이 번식지 — 검은 Astrophage 반점(cfg 미모델). 무화산(G3/G4 정합).
+      표면 = **고대 크레이터 헐벗은 암석**(오너 G5=가; frost 극관 철회 2026-06-26). 작고 지질학적으로 죽은 몸 → Moon/Mercury식
+      크레이터 평원, **회갈색 현무암질 암석**. ⚠ **이전 '흰 CO₂/SO₂ frost 극관'은 제거** — 평균 ~268K서 CO₂(~148K)·SO₂(~130K) frost
+      point에 못 도달해 침착 불가(G4). 색 = **회갈 bare 현무암**(밝은 frost 캡 없음, 균질한 어두운 크레이터 구체). **eyeball 없음**
+      (얇은 대기·비동기 자전; 단 4.7일 느린 자전이라 강한 주야 명암 경계 이동). Bond albedo **~0.12**(어두운 bare 현무암 단일성분).
+      **온도**: 평균 ~268K이나 느린 자전 → **큰 일교차**(정오면 ~380K 데워짐 / 야간면 <150K 냉각), obliquity 17° 완만 계절. 무화산(G3/G4
+      정합). Astrophage flavor(canon): CO₂ 대기·표면이 번식지 — 검은 Astrophage 반점이 표면을 더 어둡게(cfg 미모델 flavor).
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G5 확정 2026-06-24 — (가) 회갈 크레이터 암석 + 흰 CO₂/SO₂ frost 극관(화성/달식). eyeball 없음. A~0.2–0.3 계절변동. 지질학적 죽음(무화산). Astrophage 번식지 flavor."
+      note: "오너 G5 확정 2026-06-24, frost 극관 철회 2026-06-26 — (가) 회갈 bare 크레이터 현무암. 흰 CO₂/SO₂ frost 극관 제거(268K서 frost point 미도달, 침착 불가). A~0.12(단일 어두운 현무암). eyeball 없음이나 4.7일 느린자전→큰 일교차(정오~380K/야간<150K)+17° 완만계절. 무화산. Astrophage 반점 flavor."
       paper: docs/reference/surface-color-albedo-methodology.md (현무암 회갈·CO₂/SO₂ frost 고알베도; Bond albedo).
 
   - body: 40 Eridani A d
@@ -589,13 +604,14 @@ decisions:
     status: gated
     driver: surface-dominated (thin transparent atmosphere)
     value: >
-      대기 희박(<1%, 투명) → 디스크 = **표면이 지배**. 우주에서 **회갈색 크레이터 구체 `#8c7f70` + 흰 frost 극관**(화성/달식;
-      극·야간 CO₂/SO₂ frost 밝음). Erid 같은 **대기 색(청색) 없음** — 얇아서 Rayleigh 무시급. 계절·주야로 frost 범위 변동 →
-      디스크 밝기·극관 변함. emit 디스크 = 표면색(G5) + frost 극관.
+      대기 희박(<1%, 투명) → 디스크 = **표면이 지배**. 우주에서 **균질한 회갈색 크레이터 구체 `#8c7f70`**(달/수성식 bare rock).
+      ⚠ **흰 frost 극관 제거**(2026-06-26) — 268K서 CO₂/SO₂ 침착 불가(G4/G5)라 밝은 극관 없음. Erid 같은 **대기 색(청색) 없음**
+      — 얇아서 Rayleigh 무시급. **명암 경계(terminator)가 4.7일 주기로 천천히 이동**(느린 비동기 자전) — 정오면 밝게 달궈지고
+      야간면은 어둡고 차갑게. emit 디스크 = 표면색(G5) 단일, frost 캡·계절 밝기변동 없음.
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G6 확정 2026-06-24 — 표면지배 디스크(얇은 투명 대기). 회갈 #8c7f70 + 흰 frost 극관(화성식), 대기색 없음. 계절 frost 변동."
+      note: "오너 G6 확정 2026-06-24, frost 극관 철회 2026-06-26 — 표면지배 디스크(얇은 투명 대기). 균질 회갈 #8c7f70 bare rock, 흰 frost 극관 제거(268K 침착불가). 대기색 없음. 4.7일 주기 terminator 이동(정오 밝음/야간 어둠)."
       paper: docs/reference/atmosphere-reflected-color-methodology.md (얇은 대기→Rayleigh 무시, 표면 반사 지배).
 
   - body: 40 Eridani A d
@@ -632,11 +648,12 @@ decisions:
     status: gated
     driver: synthesis (owner art-direction)
     value: >
-      작고 차가운 **frost CO₂ "삼세계"** — 조용한 변방(Erid 스펙터클과 대비). **착륙 쉬움**(0.2g·저Δv·고대 크레이터 평원)이나
-      **얇고 찬 대기**(~700Pa·~250K)·자기권 없어 **방사선 노출**. 비주얼=회갈 크레이터 + 흰 frost 극관, 계절 변동. 문화 하이라이트:
-      **PHM Astrophage Petrova-arc 번식지 + Taumoeba 투입지**(플롯 핵심), 에리디언 최근 발견("삼세계"). 발견 어려움(FFFF, 소형
-      픽션). 로스터 분기 = "작고 죽은 frost CO₂ 변방"(Erid 고중력 화려·Threeworld 기묘소형).
+      작고 헐벗은 **크레이터 암석 "삼세계"** — 조용한 변방(Erid 스펙터클과 대비). **착륙 쉬움**(0.2g·저Δv·고대 크레이터 평원)이나
+      **얇은 대기**(~700Pa)·자기권 없어 **방사선 노출**, **4.7일 느린 자전 → 큰 일교차**(정오면 ~380K 데움 / 야간면 <150K 혹한 —
+      착륙 타이밍·열관리가 변수). 비주얼=균질 회갈 크레이터 구체(frost 극관 없음). 문화 하이라이트: **PHM Astrophage Petrova-arc
+      번식지 + Taumoeba 투입지**(플롯 핵심), 에리디언 최근 발견("삼세계"). 발견 어려움(FFFF, 소형 픽션). 로스터 분기 = "작고 죽은
+      낮뜨밤추 크레이터 변방"(Erid 고중력 화려·c 조석고정 수성쌍둥이와 분기).
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G11 확정 2026-06-24 — Threeworld 게임플레이 종합. 착륙쉬움(0.2g)+찬 얇은대기+방사선노출. frost CO₂ 변방. 문화=PHM Petrova 번식지+Taumoeba. FFFF. → Threeworld 11축 완성."
+      note: "오너 G11 확정 2026-06-24, 정정 2026-06-26 — Threeworld 게임플레이 종합. 착륙쉬움(0.2g)+얇은대기+방사선노출+4.7일 느린자전 큰 일교차(정오380K/야간<150K, 열관리 변수). 헐벗은 회갈 크레이터(frost 극관 없음). 문화=PHM Petrova 번식지+Taumoeba. FFFF. → Threeworld 11축 완성."
