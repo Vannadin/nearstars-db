@@ -128,175 +128,182 @@ WHERE i.id = '{safe}'
 
 
 # ── 입력 로드 ──────────────────────────────────────────────────────────────────
-with open(f"{BASE}/db/target_list.json") as f:
-    target_list = json.load(f)
 
-# 항성별 Gaia ID 매핑 구성 (Gaia ID 없는 별도 포함해야 SIMBAD 폴백 처리됨)
-star_to_gaia = {}   # star_name → gaia_source_id (str) or None
-for entry in target_list:
-    comps = entry["components"]
-    gids  = entry.get("gaia_source_ids", [])
-    for i, comp in enumerate(comps):
-        star_to_gaia[comp] = gids[i] if i < len(gids) else None
 
-# 카테고리 분리
-gaia_stars    = {name: gid for name, gid in star_to_gaia.items() if gid}
-simbad_stars  = [name for name, gid in star_to_gaia.items() if not gid]
+def main():
+    with open(f"{BASE}/db/target_list.json") as f:
+        target_list = json.load(f)
 
-print(f"Gaia DR3 쿼리 대상: {len(gaia_stars)}개 항성")
-print(f"SIMBAD 폴백 대상: {len(simbad_stars)}개 항성")
+    # 항성별 Gaia ID 매핑 구성 (Gaia ID 없는 별도 포함해야 SIMBAD 폴백 처리됨)
+    star_to_gaia = {}   # star_name → gaia_source_id (str) or None
+    for entry in target_list:
+        comps = entry["components"]
+        gids  = entry.get("gaia_source_ids", [])
+        for i, comp in enumerate(comps):
+            star_to_gaia[comp] = gids[i] if i < len(gids) else None
 
-results = {}  # star_name → astrometry dict
+    # 카테고리 분리
+    gaia_stars    = {name: gid for name, gid in star_to_gaia.items() if gid}
+    simbad_stars  = [name for name, gid in star_to_gaia.items() if not gid]
 
-# ── Gaia DR3 배치 쿼리 (1000개씩 분할) ────────────────────────────────────────
-gaia_ids = list(gaia_stars.values())
-gaia_names_by_id = {gid: name for name, gid in gaia_stars.items()}
+    print(f"Gaia DR3 쿼리 대상: {len(gaia_stars)}개 항성")
+    print(f"SIMBAD 폴백 대상: {len(simbad_stars)}개 항성")
 
-CHUNK = 1000
-for i in range(0, len(gaia_ids), CHUNK):
-    chunk = gaia_ids[i:i+CHUNK]
-    print(f"\nGaia 배치 {i//CHUNK+1}: {len(chunk)}개 쿼리 중...", end=" ", flush=True)
-    try:
-        rows = fetch_gaia_batch(chunk)
-        print(f"{len(rows)}개 반환")
-        for sid, row in rows.items():
-            name = gaia_names_by_id.get(sid)
-            if name:
-                results[name] = {
-                    "source":                "gaia_dr3",
-                    "source_id":             sid,
-                    "epoch_jd":              JD_GAIA,
-                    "epoch_label":           "J2016.0",
-                    "ra_deg":                row["ra"],
-                    "ra_error_mas":          row["ra_error"],
-                    "dec_deg":               row["dec"],
-                    "dec_error_mas":         row["dec_error"],
-                    "parallax_mas":          row["parallax"],
-                    "parallax_error_mas":    row["parallax_error"],
-                    "pmra_mas_yr":           row["pmra"],
-                    "pmra_error_mas_yr":     row["pmra_error"],
-                    "pmdec_mas_yr":          row["pmdec"],
-                    "pmdec_error_mas_yr":    row["pmdec_error"],
-                    "radial_velocity_km_s":  row["radial_velocity"],
-                    "rv_error_km_s":         row["radial_velocity_error"],
-                }
-        # 누락 항성 확인
-        missing = [gaia_names_by_id[sid] for sid in chunk if sid not in rows]
-        if missing:
-            print(f"  Gaia 미반환: {missing}")
-    except Exception as e:
-        print(f"GAIA 배치 오류: {e}")
+    results = {}  # star_name → astrometry dict
 
-# ── SIMBAD 폴백 ────────────────────────────────────────────────────────────────
-print(f"\nSIMBAD 쿼리:")
-for name in simbad_stars:
-    print(f"  {name}...", end=" ", flush=True)
-    astro = fetch_simbad_star(name)
-    time.sleep(0.3)
-    if astro:
-        results[name] = {
-            "source":                "simbad",
-            "source_id":             None,
-            "epoch_jd":              JD_J2000,
-            "epoch_label":           "J2000.0",
-            "ra_deg":                astro["ra"],
-            "ra_error_mas":          None,
-            "dec_deg":               astro["dec"],
-            "dec_error_mas":         None,
-            "parallax_mas":          astro["parallax"],
-            "parallax_error_mas":    None,
-            "pmra_mas_yr":           astro["pmra"],
-            "pmra_error_mas_yr":     None,
-            "pmdec_mas_yr":          astro["pmdec"],
-            "pmdec_error_mas_yr":    None,
-            "radial_velocity_km_s":  astro["radial_velocity"],
-            "rv_error_km_s":         None,
-        }
-        print("OK")
-    else:
-        print("FAILED")
+    # ── Gaia DR3 배치 쿼리 (1000개씩 분할) ────────────────────────────────────────
+    gaia_ids = list(gaia_stars.values())
+    gaia_names_by_id = {gid: name for name, gid in gaia_stars.items()}
 
-# ── 이진성 sibling backfill ────────────────────────────────────────────────────
-# 일부 SIMBAD 항목 (예: Procyon B) 은 primary 만 parallax 보유. 같은 시스템 사이의
-# 형제 컴포넌트는 같은 거리에 있으므로 missing parallax 를 primary 값으로 보완.
-for entry in target_list:
-    comps = entry["components"]
-    if len(comps) < 2:
-        continue
-    # primary (가장 정보 많은 컴포넌트) 식별
-    best = None
-    for c in comps:
-        r = results.get(c, {})
-        if r.get("parallax_mas") is not None:
-            if best is None or r.get("parallax_mas") > best[1]:
-                best = (c, r.get("parallax_mas"))
-    if not best:
-        continue
-    primary, plx = best
-    for c in comps:
-        r = results.get(c, {})
-        if not r or r.get("parallax_mas") is not None:
+    CHUNK = 1000
+    for i in range(0, len(gaia_ids), CHUNK):
+        chunk = gaia_ids[i:i+CHUNK]
+        print(f"\nGaia 배치 {i//CHUNK+1}: {len(chunk)}개 쿼리 중...", end=" ", flush=True)
+        try:
+            rows = fetch_gaia_batch(chunk)
+            print(f"{len(rows)}개 반환")
+            for sid, row in rows.items():
+                name = gaia_names_by_id.get(sid)
+                if name:
+                    results[name] = {
+                        "source":                "gaia_dr3",
+                        "source_id":             sid,
+                        "epoch_jd":              JD_GAIA,
+                        "epoch_label":           "J2016.0",
+                        "ra_deg":                row["ra"],
+                        "ra_error_mas":          row["ra_error"],
+                        "dec_deg":               row["dec"],
+                        "dec_error_mas":         row["dec_error"],
+                        "parallax_mas":          row["parallax"],
+                        "parallax_error_mas":    row["parallax_error"],
+                        "pmra_mas_yr":           row["pmra"],
+                        "pmra_error_mas_yr":     row["pmra_error"],
+                        "pmdec_mas_yr":          row["pmdec"],
+                        "pmdec_error_mas_yr":    row["pmdec_error"],
+                        "radial_velocity_km_s":  row["radial_velocity"],
+                        "rv_error_km_s":         row["radial_velocity_error"],
+                    }
+            # 누락 항성 확인
+            missing = [gaia_names_by_id[sid] for sid in chunk if sid not in rows]
+            if missing:
+                print(f"  Gaia 미반환: {missing}")
+        except Exception as e:
+            print(f"GAIA 배치 오류: {e}")
+
+    # ── SIMBAD 폴백 ────────────────────────────────────────────────────────────────
+    print(f"\nSIMBAD 쿼리:")
+    for name in simbad_stars:
+        print(f"  {name}...", end=" ", flush=True)
+        astro = fetch_simbad_star(name)
+        time.sleep(0.3)
+        if astro:
+            results[name] = {
+                "source":                "simbad",
+                "source_id":             None,
+                "epoch_jd":              JD_J2000,
+                "epoch_label":           "J2000.0",
+                "ra_deg":                astro["ra"],
+                "ra_error_mas":          None,
+                "dec_deg":               astro["dec"],
+                "dec_error_mas":         None,
+                "parallax_mas":          astro["parallax"],
+                "parallax_error_mas":    None,
+                "pmra_mas_yr":           astro["pmra"],
+                "pmra_error_mas_yr":     None,
+                "pmdec_mas_yr":          astro["pmdec"],
+                "pmdec_error_mas_yr":    None,
+                "radial_velocity_km_s":  astro["radial_velocity"],
+                "rv_error_km_s":         None,
+            }
+            print("OK")
+        else:
+            print("FAILED")
+
+    # ── 이진성 sibling backfill ────────────────────────────────────────────────────
+    # 일부 SIMBAD 항목 (예: Procyon B) 은 primary 만 parallax 보유. 같은 시스템 사이의
+    # 형제 컴포넌트는 같은 거리에 있으므로 missing parallax 를 primary 값으로 보완.
+    for entry in target_list:
+        comps = entry["components"]
+        if len(comps) < 2:
             continue
-        # backfill from primary
-        pr = results[primary]
-        r["parallax_mas"] = pr["parallax_mas"]
-        r["parallax_error_mas"] = pr.get("parallax_error_mas")
+        # primary (가장 정보 많은 컴포넌트) 식별
+        best = None
+        for c in comps:
+            r = results.get(c, {})
+            if r.get("parallax_mas") is not None:
+                if best is None or r.get("parallax_mas") > best[1]:
+                    best = (c, r.get("parallax_mas"))
+        if not best:
+            continue
+        primary, plx = best
+        for c in comps:
+            r = results.get(c, {})
+            if not r or r.get("parallax_mas") is not None:
+                continue
+            # backfill from primary
+            pr = results[primary]
+            r["parallax_mas"] = pr["parallax_mas"]
+            r["parallax_error_mas"] = pr.get("parallax_error_mas")
+            if r.get("radial_velocity_km_s") is None:
+                r["radial_velocity_km_s"] = pr.get("radial_velocity_km_s")
+                r["radial_velocity_source"] = pr.get("radial_velocity_source")
+            # source 표기 명시
+            r["sibling_backfill"] = f"parallax/rv from {primary}"
+            print(f"  sibling backfill: {c} ← {primary} (plx={plx})")
+
+    # ── 수동 override 적용 (Gaia/SIMBAD/backfill 보다 우선) ───────────────────────
+    print("\n수동 astrometry override:")
+    for name, m in MANUAL_ASTROMETRY.items():
+        if name not in star_to_gaia:
+            continue  # target_list 에 없는 이름은 무시
+        results[name] = {
+            "source":                "manual",
+            "source_id":             None,
+            "epoch_jd":              JD_GAIA,
+            "epoch_label":           "J2016.0",
+            "ra_deg":                m["ra_deg"],
+            "ra_error_mas":          None,
+            "dec_deg":               m["dec_deg"],
+            "dec_error_mas":         None,
+            "parallax_mas":          m["parallax_mas"],
+            "parallax_error_mas":    None,
+            "pmra_mas_yr":           m["pmra_mas_yr"],
+            "pmra_error_mas_yr":     None,
+            "pmdec_mas_yr":          m["pmdec_mas_yr"],
+            "pmdec_error_mas_yr":    None,
+            "radial_velocity_km_s":  m.get("radial_velocity_km_s"),
+            "rv_error_km_s":         None,
+            "manual_ref":            m["ref"],
+        }
+        print(f"  {name}: plx={m['parallax_mas']} mas ({m['ref']})")
+
+    # ── 수동 RV override 적용 (Gaia/SIMBAD RV 가 없을 때만 보강) ──────────────────
+    print("\n수동 RV override:")
+    for name, m in MANUAL_RV.items():
+        r = results.get(name)
+        if not r:
+            continue
         if r.get("radial_velocity_km_s") is None:
-            r["radial_velocity_km_s"] = pr.get("radial_velocity_km_s")
-            r["radial_velocity_source"] = pr.get("radial_velocity_source")
-        # source 표기 명시
-        r["sibling_backfill"] = f"parallax/rv from {primary}"
-        print(f"  sibling backfill: {c} ← {primary} (plx={plx})")
+            r["radial_velocity_km_s"] = m["rv"]
+            r["rv_error_km_s"] = m.get("err")
+            r["radial_velocity_source"] = m["source"]
+            print(f"  {name}: RV={m['rv']} km/s ({m['source']})")
 
-# ── 수동 override 적용 (Gaia/SIMBAD/backfill 보다 우선) ───────────────────────
-print("\n수동 astrometry override:")
-for name, m in MANUAL_ASTROMETRY.items():
-    if name not in star_to_gaia:
-        continue  # target_list 에 없는 이름은 무시
-    results[name] = {
-        "source":                "manual",
-        "source_id":             None,
-        "epoch_jd":              JD_GAIA,
-        "epoch_label":           "J2016.0",
-        "ra_deg":                m["ra_deg"],
-        "ra_error_mas":          None,
-        "dec_deg":               m["dec_deg"],
-        "dec_error_mas":         None,
-        "parallax_mas":          m["parallax_mas"],
-        "parallax_error_mas":    None,
-        "pmra_mas_yr":           m["pmra_mas_yr"],
-        "pmra_error_mas_yr":     None,
-        "pmdec_mas_yr":          m["pmdec_mas_yr"],
-        "pmdec_error_mas_yr":    None,
-        "radial_velocity_km_s":  m.get("radial_velocity_km_s"),
-        "rv_error_km_s":         None,
-        "manual_ref":            m["ref"],
-    }
-    print(f"  {name}: plx={m['parallax_mas']} mas ({m['ref']})")
+    # ── 저장 ──────────────────────────────────────────────────────────────────────
+    missing_total = [n for n in star_to_gaia if n not in results]
+    out_path = f"{BASE}/db/astrometry_raw.json"
+    with open(out_path, "w") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
 
-# ── 수동 RV override 적용 (Gaia/SIMBAD RV 가 없을 때만 보강) ──────────────────
-print("\n수동 RV override:")
-for name, m in MANUAL_RV.items():
-    r = results.get(name)
-    if not r:
-        continue
-    if r.get("radial_velocity_km_s") is None:
-        r["radial_velocity_km_s"] = m["rv"]
-        r["rv_error_km_s"] = m.get("err")
-        r["radial_velocity_source"] = m["source"]
-        print(f"  {name}: RV={m['rv']} km/s ({m['source']})")
+    print(f"\n완료: {len(results)}/{len(star_to_gaia)}개 항성 저장")
+    if missing_total:
+        print(f"누락: {missing_total}")
+    print(f"→ {out_path}")
 
-# ── 저장 ──────────────────────────────────────────────────────────────────────
-missing_total = [n for n in star_to_gaia if n not in results]
-out_path = f"{BASE}/db/astrometry_raw.json"
-with open(out_path, "w") as f:
-    json.dump(results, f, indent=2, ensure_ascii=False)
+    errs = schema.validate(results, schema.ASTROMETRY_REQUIRED,
+                           schema.ASTROMETRY_OPTIONAL, name="astrometry")
+    schema.report_and_exit(errs, "astrometry_raw")
 
-print(f"\n완료: {len(results)}/{len(star_to_gaia)}개 항성 저장")
-if missing_total:
-    print(f"누락: {missing_total}")
-print(f"→ {out_path}")
 
-errs = schema.validate(results, schema.ASTROMETRY_REQUIRED,
-                       schema.ASTROMETRY_OPTIONAL, name="astrometry")
-schema.report_and_exit(errs, "astrometry_raw")
+if __name__ == "__main__":
+    main()
