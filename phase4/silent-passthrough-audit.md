@@ -33,7 +33,7 @@ Legend: ✅ clean (gated/walked) · ⚠️ partial · ❌ no board · 🎯 = gen
 | 40 Eridani | ✅ full | ✅ resolved (2026-06-26) | obliquity/spin filled: b 30°(film), c ≈0(locked), d 4.7d/17°(free); stars A/C figure OMIT-confirmed. **Also fixed a real bug**: d's CO₂ dry-ice/SO₂ frost-buffer (G4) retracted — impossible at 268K mean (frost point ~148K/~130K); d → bare cratered rock + escaping thin envelope |
 | Tau Ceti | ⚠️ skeletal (5 rows) | ❌ big gaps | **debris disk (14 Phase-3 decisions, 0 board rows)** 🎯; f/g/h full geometry set 🎯 |
 | Barnard | ⚠️ skeletal (2 rows) | ❌ big gaps | star fundamentals (all measured → passthrough-confirm); d/b/c/e geometry defaults 🎯 |
-| Fomalhaut | ❌ none | ❌ no board | spin_axis (PA 65° recorded), disk appearance/composition 🎯; J2 = stellar OMIT |
+| Fomalhaut | ✅ full | ✅ resolved (2026-06-26) | board created: star (measured passthrough + visual oblateness 2.1% emit + fossil-field nuance documented) + 3-belt disk (warm/intermediate/cold, all emit; colors re-run via current Mie methodology; cold measured grey kept) + gameplay/satellites. Companions B/C = backlog. 8 axes gated |
 | TRAPPIST-1 | ❌ none | ❌ no board | **e = 0 → synthetic-e decision + Kopernicus div-by-zero risk** 🎯; 7× obliquity/spin (locked, confirm); appearance per planet 🎯 |
 | Luhman 16 | ❌ none | ❌ no board | **P_rot A (tentative, Apai 2021)** + **age (unverified 1.5 Gyr)** keep/override 🎯; spin_axis |
 

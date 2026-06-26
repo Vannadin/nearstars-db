@@ -1,0 +1,136 @@
+# Fomalhaut Phase 4 결정 보드 — 별(A4V) + 3중 debris disk(간판). 확정 행성 없음. (body × axis) 행별 상태. DB 불변, staging.
+# 디스크 중심 시스템 → 별 축은 측정 passthrough-confirm 위주, 핵심 walk는 rings(disk). grounding=docs/phase3/fomalhaut*.md
+system: fomalhaut
+status: staged
+updated: 2026-06-26
+
+decisions:
+  # ── 별 (Fomalhaut A, 젊은 A4V·로스터 유일 대형 debris-disk 간판) — facet-walk 2026-06-26 ──────────
+  - body: Fomalhaut
+    axis: identity
+    status: gated
+    driver: classification + observation + culture
+    value: >
+      body_type=**젊은(440 Myr) A4V 주계열성** — 로스터 유일 대형 **debris-disk 간판 호스트**. designation=Fomalhaut
+      (α Piscis Austrini · HD 216956 · HIP 113368 · HR 8728). cultural=아랍어 "fam al-ḥūt"(물고기의 입) — **페르시아
+      4 royal star 중 남쪽의 수호자**, 밤하늘 18번째로 밝고 Piscis Austrinus 최광성, "가을의 외로운 별(Lonely Star)".
+      discoverability=**맨눈**(V=1.16 1등성) → RB IGNORELEVELS T T T T(항상 가시).
+    gate:
+      criterion: [classification, observation, culture]
+      verdict: pass-in-window
+      note: "오너 G1 확정 2026-06-26 — 젊은 A4V debris-disk 간판. 맨눈 1등성→naked_eye T T T T. 문화=페르시아 royal star '물고기의 입'."
+    discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=1.16, Piscis Austrinus 최광성, 18th brightest)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: Fomalhaut
+    axis: bulk
+    status: gated
+    driver: measured passthrough (Mamajek 2012) + owner art-direction (visual oblateness)
+    value: >
+      M **1.92 M☉** · R **1.842 R☉** · Teff **8590 K** · L **16.63 L☉** · age **440 Myr**(젊음, Castor moving group) ·
+      [Fe/H] ≈ 태양(−0.03). 전부 Mamajek 2012(VLTI excess-corrected) 측정 → emit 그대로. **Canonical alternative**: Davis 2005
+      (excess 미보정, R 1.744 R☉·Teff 8819 K — 더 뜨겁고 작음)는 병기, excess 보정한 Mamajek 채택.
+      **자전**: v sin i **93 km/s**(Royer 2007, 빠른 A형) · P_rot ~0.97 d(R+i≈65°서 도출, 미측정 low) · spin_axis **PA 65°·i~65°**
+      = **debris-disk면과 정렬**(Le Bouquin 2009 VLTI/AMBER; Greaves 2014 A형 disk-host 정렬 정합).
+      **figure (오너 G2=나, 2026-06-26)**: **약한 시각 편평 emit** — 편평 **2.1%(a/c 1.021)**(Absil 2009 excess-corrected 간섭계).
+      로스터 가시 임계(~5%) 아래지만 오너가 "유명한 빠른 A형 자전체" 표현으로 시각 oblate 채택. + **중력감광**(von Zeipel,
+      극이 적도보다 ~300K 뜨거움 → 고경사 시점서 미세 극-밝아짐; Fomalhaut 분해 map 없음 → 추정 low). VertexHeightOblateAdvanced
+      메시, reference_radius=극반경 (body-figure-methodology.md). j2(중력)는 항성이라 동역학 무관 → OMIT, 시각 편평만.
+    gate:
+      criterion: [observation, culture]
+      verdict: pass-in-window
+      note: "오너 G2 확정 2026-06-26 — 측정값 전부 passthrough(Mamajek 2012: 1.92 M☉·1.842 R☉·8590K·16.63 L☉·440 Myr). 자전 v sin i 93km/s, spin_axis PA65°/i~65°(disk 정렬). 편평 2.1%(나): 임계 아래지만 시각 oblate emit + 약한 중력감광(극~300K↑) 채택(오너 art, 빠른 A형 상징). j2 동역학 OMIT(항성). alt=Davis2005(8819K/1.744R☉) 병기."
+      paper: "Mamajek 2012(2012ApJ...754L..20M, excess-corrected R/Teff/L/age); Le Bouquin 2009(2009A&A...498L..41L, spin-disk 정렬); Absil 2009(편평 1.021); body-figure-methodology.md(시각 oblate 메시·중력감광)."
+
+  - body: Fomalhaut
+    axis: appearance
+    status: gated
+    driver: observation
+    value: >
+      color=**물리색 `#cfe0ff`**(청백; A4V 8590K 흑체→sRGB. Vega A0V `#bdd5ff`보다 살짝 따뜻한 hue로 카탈로그 구분 — 8689→8590K
+      shift는 sub-perceptual이나 방향 반영). **limb_darkening α 0.211**(Davis 2005 SUSI 간섭계 직접측정 — 태양 ~0.14보다 가팔라
+      H-전리 온도구배로 원반 가장자리가 더 어둑; 근접 시 ~30–40% 중심-가장자리 밝기차). **granulation 미미**(A형 복사 외피, 깊은
+      대류 없음 → 태양식 입상조직 거의 없음). **흑점/faculae·코로나·플레어 = 없음**(자기 dynamo 부재, §4 magnetism 참조). 중력감광
+      극-밝아짐은 §2(figure)에 기록.
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      note: "오너 G3 확정 2026-06-26 — 물리색 #cfe0ff(8590K, Vega보다 살짝 따뜻). limb α 0.211(Davis2005, 가파름). granulation 미미·흑점/코로나/플레어 없음(복사 외피, dynamo 부재 → §4). 중력감광=§2."
+      paper: "Davis 2005(2005MNRAS.356.1362D, limb α 0.211); A4V 8590K 흑체→sRGB 물리색."
+
+  - body: Fomalhaut
+    axis: magnetism.magnetic_field
+    status: gated
+    driver: classification (A-star radiative envelope)
+    value: >
+      **magnetic_field = 없음/미검출.** A4V(8590K)는 표면 수소가 거의 완전전리라 불투명도 범프가 사라져 **외피가 복사평형** —
+      깊은 대류 외피가 없어 **태양식 αΩ dynamo 불가**(대류경계 ~F0–F2, Kraft break 위). → 자기 가열 채층/코로나·흑점·플레어·
+      활동주기 전무, log R'HK 정의 안 됨.
+      **documented nuance (화석장)**: A형은 dynamo 대신 **fossil field**를 *가질 수* 있음 — Ap/Bp(A/B의 ~10%)는 형성기에 갇힌
+      kG급 잔존장(대류 없어 안정·보존), 정상 A형도 Vega처럼 ~0.6G **초미약장** 검출 사례(Lignières2009·Petit2010, 소멸 중 화석장
+      추정). 단 **Fomalhaut는 정상 A형이라 강한 화석장 미검출**, 초미약장 보고도 없음 — 있어도 dynamo식 활동(채층 가열·흑점·플레어)은
+      못 만듦. → cfg=무자기·무활동. magnetosphere/radiation_belts = N/A(항성).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 G4 확정 2026-06-26 — 무자기/무활동. A4V 복사 외피→αΩ dynamo 불가(대류경계 위). nuance: A형은 fossil field 가능(Ap/Bp kG·정상A형 Vega식 0.6G 초미약장)이나 Fomalhaut 정상A형이라 미검출, 있어도 활동 무관. log R'HK 정의 안 됨. 약 X선은 동반성 TW PsA 탓(Schröder&Schmitt2007)."
+      paper: "A형 복사 외피·대류경계(stellar structure); fossil field=Ap/Bp + Vega 초미약장(Lignières2009·Petit2010); X선 동반성 귀속(Schröder&Schmitt2007 2007A&A...475..677S)."
+
+  - body: Fomalhaut
+    axis: environment
+    status: passthrough
+    note: >
+      activity/플레어 **없음**(dynamo 부재 §4). stellar_wind **미미**(A4V는 O/B형 line-driven wind만큼 뜨겁지 않음 → 약풍,
+      astrosphere 비강조). X-ray 상한(ROSAT log Lx < 27.5, 동반성 TW PsA 귀속). **광구 UV 강함**(8590K Wien 꼬리 <200nm 다량 —
+      내행성 대기침식 구동요인이나 **확정 행성 없어** 대상 없음); 채층 Lyα 없어 XUV/EUV 비율은 낮음. habitable_zone ~3.5–6 AU
+      (Kopparapu A4V)이나 디스크가 10–158 AU로 HZ 밖 cold 영역 → 학술 표기일 뿐 거주 바디 없음. 측정/분류 → emit 그대로.
+
+  - body: Fomalhaut
+    axis: rings
+    status: gated
+    driver: observation (Kalas 2005 + Boley 2012 + JWST Gáspár 2023) + Mie color synthesis + owner art-direction
+    value: >
+      **간판 = 3중 debris-disk** (오너 G6=가, 2026-06-26: 3벨트 다 emit, 각자 경사로 JWST misalignment 재현).
+      **① warm inner** 10–78 AU · i **47.8°**·PA 329.6° · 넓은 PR-drag 유입 디스크(narrow asteroid-belt 아님) · T~150K(pre-JWST SED).
+      **② intermediate** 83–104 AU · i **67.5°**·PA 329.6° · e~0.3(가변) · mm 미검출(희박, Chittidi 2025) · 미지 행성 sculpting 추정.
+      **③ cold main** 133–158 AU(폭 ~25, Δa/a 0.13) · i **65.6°**·PA 337.9°·ω 22.5° · **e 0.11**(유명한 "Eye of Sauron" 편심, ~14 AU offset) ·
+      T 65K · dust 0.015 M⊕(mm-cm; 모천체 4–10 M⊕) · 날카로운 내연(shepherd 추정).
+      **색(현행 Mie 방법론 재실행 2026-06-26, scripts/phase3/disk_color_mie.py)**: 전 벨트 **얼음입자**(~50–80% 물얼음, Sommer 2025;
+      PR-drag로 외고리 파편 공유) + A형 큰 blowout(a_min 4.33µm) → 회색-크림. **warm/intermediate = 합성** faithful `#fff4e5` /
+      vivid `#ffe0b0`·`#ffe2b1`(B/I 0.68). **cold = 측정값 `#d6d8da`(회색) 유지**(Kalas 2005 HST·Acke 2012 — measure-vs-synthesize
+      규칙상 합성서 제외, 불변). pack=faithful 기본 + vivid alt 병기.
+      **JWST 헤드라인**: 내부(47.8°) vs 외부(65.6°) 강한 misalignment → 벨트별 다른 경사로 표현.
+      **제외/한계**: Fomalhaut b("Dagon")=충돌 dust cloud 반박(Gáspár&Rieke 2020)→**제외**(flavor만, 바디 아님). "Great Dust Cloud"=
+      배경 은하(Kennedy 2023)→미렌더. ⚠ Kopernicus Ring=평평한 원형 → cold 편심 offset 표현 불가(Principia/커스텀/미래 volumetric 몫,
+      문서화) · 수직 두께(aspect 0.0175, Boley 2012)도 기록만(flat ring 미소비).
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      note: "오너 G6 확정 2026-06-26 — 3벨트 다 emit(가): warm 10–78AU/i47.8° + intermediate 83–104AU/i67.5°/e~0.3 + cold 133–158AU/i65.6°/e0.11(Eye of Sauron). 색=현행 Mie 재실행: warm/intermediate 합성 #fff4e5(vivid #ffe0b0/#ffe2b1, B/I0.68, 얼음입자 a_min4.33µm), cold 측정 #d6d8da 유지(합성 제외). JWST misalignment 벨트경사로 재현. Fomalhaut b(dust cloud)·Great Dust Cloud(배경은하) 제외. 편심offset·수직두께=Kopernicus flat ring 미표현(문서화)."
+      paper: "Kalas 2005(2005Natur.435.1067K, cold 편심·측정색); Boley 2012(2012ApJ...750L..21B, ALMA 기하·aspect); MacGregor 2017(2017ApJ...842....8M, PA/ω); Gáspár 2023(2023NatAs...7..790G, JWST 3벨트·misalignment); Sommer 2025(2503.18127, 얼음 조성); debris-disk-color-methodology.md + scripts/phase3/disk_color_mie.py(Mie 재실행); Gáspár&Rieke 2020(2020PNAS..117.9712G, Fomalhaut b 반박)."
+
+  - body: Fomalhaut
+    axis: satellites
+    status: gated
+    driver: classification
+    value: >
+      **위성/행성 없음** — 확정 행성 0개(Fomalhaut b는 dust cloud 반박, §rings). 달/co-orbital 없음. 디스크 입자 자체가 "dust source".
+      **동반성(백로그)**: Fomalhaut은 광년 규모 hierarchical triple — **TW PsA(K4V, 0.91 ly, V~6.5)** + **LP 876-10(M4V, 5.7 ly, V~11)**,
+      셋 다 Castor moving group 동령(440 Myr). 분리거리가 광년급이라 정렬 현상 없음. **NearStars DB 미포함** → 별도 entry 추가 후보(백로그):
+      추가 시 Fomalhaut 디스크 시점서 TW PsA가 고정 방위의 희미한 주황 점("두 번째 해" 경계)으로 보일 수 있음. orbit/atmosphere/surface = ∅(단일 항성).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 확정 2026-06-26 — 행성/위성 없음(Fomalhaut b=dust cloud). 동반성 TW PsA(K4V 0.91ly)·LP 876-10(M4V 5.7ly)는 DB 미포함, 별도 entry 백로그(Castor group 동령). orbit/atm/surface=∅(단일 항성)."
+
+  - body: Fomalhaut
+    axis: gameplay
+    status: gated
+    driver: synthesis (owner art-direction)
+    value: >
+      **착륙 바디 없는 유일 시스템 — 디스크가 주인공.** 목적지=편심 "Eye of Sauron" cold 고리 + 3중 misaligned 벨트를 통과·관측하는
+      비주얼 쇼케이스(다른 계는 다 착륙 세계 보유 → 뚜렷 분기). SOI=무거운 A형(1.92 M☉) 큰 권역(수동 튜닝). science/biomes 빈약
+      (착륙 불가) → 플라이바이·관측 + 성간 경유지 성격. 환경=강한 광구 UV. 발견 T T T T(맨눈 1등성).
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      note: "오너 G7 확정 2026-06-26 — 착륙 바디 없음, 디스크 스펙터클이 목적지(편심 고리+3벨트 misalignment). SOI 수동(1.92 M☉). 과학 빈약(플라이바이/관측·성간 경유지). 로스터 유일 '행성 없는 디스크 시스템'. → Fomalhaut 8축 완성(orbit/atm/surface ∅)."
