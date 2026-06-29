@@ -1,6 +1,6 @@
 ---
 title: Interstellar navigation planner — spec + Δv lead-intercept prototype
-status: exploratory
+status: active
 created: 2026-06-28
 updated: 2026-06-29
 ---

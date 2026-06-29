@@ -17,15 +17,18 @@ falls away, while the crew's proper-time resource burn slows. It is the
 sub-light companion to (deferred) time-dilation clock mechanics.
 
 **Scope.**
-- **In** — design of the core mechanic (thrust scaling, resource scaling,
-  dashboard) and an optional 3-tier visual layer. Reference frame choice.
-  Principia/SigmaBinary compatibility reasoning. Physics grounding.
-- **Out** — actual clock time dilation / time-warp manipulation (deferred
-  to a later "time" element). Energy/fuel mass-ratio blow-up economics.
-  General-relativistic effects (this is special relativity only).
-- **No code changes from this note.** It is a scoping document. Implementation
-  is a C# / shader plugin and falls to Schultz
-  (see `project_nearstars_mod_plugins_schultz`).
+- **In** — design of the Tier 0 core mechanic (thrust scaling, resource scaling,
+  dashboard). Reference frame choice. Principia/SigmaBinary compatibility
+  reasoning. Physics grounding. A draft C# implementation (see below).
+- **Out** — the visual/shader layer (Tier 1–2 starbow, §2.5 — not our lane).
+  Actual clock time dilation / time-warp manipulation (deferred to a later "time"
+  element). Energy/fuel mass-ratio blow-up economics. General-relativistic effects
+  (this is special relativity only).
+- **Code.** A draft Tier-0 implementation lives in
+  [`plugins/NearStarsRelativity/`](../../plugins/NearStarsRelativity/) — authored
+  Opus-side from this spec (pure logic solid; KSP-API touchpoints marked
+  `// VERIFY:`), with Schultz integrating, compiling, and testing in-game
+  (see `project_nearstars_mod_plugins_schultz`). It is **not yet compiled/tested**.
 
 **External references.**
 - Principia (Newtonian n-body integrator, barycentric inertial frame):
@@ -258,7 +261,10 @@ KSP physics bugs can fling parts at absurd / superluminal velocity; β ≥ 1 mak
   dashboard) — shippable and self-contained. Visuals (Tier 1–2) are out of scope
   for this team (§2.5).
 - **Hand-off**: this note is the brief for Schultz
-  (`project_nearstars_mod_plugins_schultz`). Two plugin pieces: (a) a per-frame
+  (`project_nearstars_mod_plugins_schultz`); the draft code is in
+  [`plugins/NearStarsRelativity/`](../../plugins/NearStarsRelativity/) (`RelativityState`
+  = the β/γ + §2.6 guard core; `ThrustCorrector` = the force hook; `WarpFlag` =
+  the shared flag). Two plugin pieces: (a) a per-frame
   corrective force into the part-force channel so the *net* integrated force is
   ×1/γ³ (NOT an engine-thrust patch — that would also cut fuel; keep propellant
   at its nominal coordinate-time rate), applied **before** Principia's stage-7

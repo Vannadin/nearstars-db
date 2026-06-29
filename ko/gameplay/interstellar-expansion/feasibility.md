@@ -1,6 +1,6 @@
 ---
 title: Interstellar travel feasibility — gate 0
-status: exploratory
+status: active
 created: 2026-06-28
 ---
 

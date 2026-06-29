@@ -1,6 +1,6 @@
 ---
 title: Interstellar expansion — purpose & scope
-status: exploratory
+status: active
 created: 2026-06-28
 ---
 

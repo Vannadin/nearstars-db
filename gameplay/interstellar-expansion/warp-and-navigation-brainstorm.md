@@ -1,6 +1,6 @@
 ---
 title: Warp mechanics under Principia + interstellar navigation — brainstorm
-status: exploratory
+status: active
 created: 2026-06-28
 ---
 

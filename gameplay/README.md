@@ -1,6 +1,6 @@
 ---
 title: Gameplay — playing NearStars (axis overview)
-status: exploratory
+status: active
 created: 2026-06-29
 ---
 
