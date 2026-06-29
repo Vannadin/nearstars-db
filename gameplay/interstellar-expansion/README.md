@@ -58,6 +58,9 @@ does design, spec, cfg, and math prototypes.
 - [`planner-spec.md`](planner-spec.md) — the Δv-based lead-intercept planner: math
   spec, `v_avg = c·tanh(Δv/4)`, the three-leg profile, and the DB-data prototype.
   Prototypes in [`prototypes/`](prototypes/).
+- [`relativity-mod.md`](relativity-mod.md) — sub-light special-relativity gameplay
+  layer (thrust/γ³, proper-time resource/γ, optional starbow). Principia-safe
+  (force/rate modulation, not the integrator) — unlike warp.
 
 ## Related
 

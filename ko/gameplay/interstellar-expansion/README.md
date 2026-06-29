@@ -53,6 +53,9 @@ created: 2026-06-28
 - [`planner-spec.md`](planner-spec.md) — Δv 기반 lead-intercept 플래너. 수식 spec,
   `v_avg = c·tanh(Δv/4)`, 3-leg 프로파일, DB 데이터 프로토타입.
   프로토타입은 [`prototypes/`](../../../gameplay/interstellar-expansion/prototypes/).
+- [`relativity-mod.md`](relativity-mod.md) — 아광속 특수상대론 게임플레이 레이어
+  (thrust/γ³, 고유시간 resource/γ, 옵션 starbow). 워프와 달리 Principia-safe
+  (적분기 아니라 힘/소비율 변조).
 
 ## Related
 
