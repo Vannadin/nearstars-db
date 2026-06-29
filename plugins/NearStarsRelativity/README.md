@@ -24,6 +24,11 @@ Principia-safe and rides on the stock profile identically.
   while propellant stays at its nominal coordinate-time rate.
 - `WarpFlag.cs` — shared "under warp/jump" flag (the warp plugin fills it; safe
   default = not warping).
+- `ResourceScaler.cs` — the reward side. Pure decision logic: which resources are
+  proper-time (scale ×1/γ) vs coordinate-time (untouched), and the rate multiplier.
+  The Kerbalism wiring point is marked `VERIFY`.
+- `RelativityDashboard.cs` — IMGUI readout (β, γ, effective thrust %, supply-rate
+  %), shown only while the mechanic is active.
 
 ## Done in this draft
 
@@ -31,6 +36,8 @@ Principia-safe and rides on the stock profile identically.
 - Barycentric-speed derivation (SOI==Sun fast path + parent-chain fallback).
 - Corrective-force strategy (preserves fuel; works on both profiles); engine
   thrust summation; longitudinal 1/γ³ model.
+- Resource classification (§4 Q4 proper-time set) + rate multiplier.
+- Dashboard window (auto-hides when inactive).
 
 ## TODO before it ships (Schultz / keyboard)
 
@@ -44,12 +51,13 @@ Principia-safe and rides on the stock profile identically.
 - **Wire `WarpFlag.Provider`** to the warp plugin (shared static or VesselModule).
 - **Principia profile**: source barycentric velocity from Principia (read-only)
   when present.
-- `ResourceScaler.cs` — Kerbalism proper-time consumption ×1/γ (the §4 resource
-  list). Most API-fragile piece; not yet drafted.
-- `RelativityDashboard.cs` — IMGUI readout (β, γ, nominal vs effective thrust,
-  resource multiplier).
+- **Wire `ResourceScaler` into Kerbalism** — the decision logic is done; the
+  remaining work is the Harmony hook that calls `RateMultiplier` at the right point
+  in Kerbalism's per-vessel sim step (most API-fragile piece — see its VERIFY block).
+- **Verify `ResourceScaler.ProperTimeResources`** names against live Kerbalism/RP-1.
 - Unloaded-vessel handling (background thrust under Principia) — MVP does the
   loaded vessel only.
+- Dashboard polish — optional ApplicationLauncher toggle; confirm GUI id.
 - `.csproj` with refs (Assembly-CSharp, UnityEngine.*; Principia/Kerbalism as
   optional/soft deps); output to `GameData/NearStars/Plugins/`.
 - Move tunables (`BetaMin`, `BetaSane`) into a `.cfg` read via GameDatabase.
