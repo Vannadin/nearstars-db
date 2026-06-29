@@ -208,6 +208,45 @@ without affecting gameplay:
 This layer is screen-space post-process — the same family as Scatterer — so it
 sits adjacent to the existing visual pipeline.
 
+### 2.6 Implementation guards / edge cases (must-handle for hand-off)
+
+Three guards the C# must implement. All three are cheap and fail-safe.
+
+**(i) Activation gate — don't compute when β is insignificant.**
+The mechanic is negligible below ~0.1c (98.5 % thrust, γ−1 ~ 0.5 % at 0.1c), so
+gate the whole thing on a `β_min` threshold (~0.01–0.05c); below it everything is
+identity (no force correction, no resource scaling, dashboard shows "off"). The
+gate is free: computing β is one `vessel.obt_velocity.magnitude` + one compare,
+and in-system orbital speeds (~km/s ≈ 10⁻⁵ c) are always below threshold — so the
+gate makes the layer "interstellar-cruise-only" for free. Two sub-gates:
+- **Force correction** runs only when `β > β_min` AND an engine is producing
+  thrust (coasting ⇒ no engine force to correct ⇒ natural no-op).
+- **Resource scaling** runs whenever `β > β_min` (it must apply during high-β
+  coast too — life support still burns slow while gliding fast).
+
+**(ii) Warp-drive exemption — warp speed is NOT β.**
+Warp is a bubble/metric translation, not real motion through space: the vessel's
+proper velocity is ~0, so there is no dilation and no relativistic mass. If the
+relativity layer ran during warp it would read apparent β > 1 (FTL) → NaN, and
+would wrongly crush warp "thrust" and slow resource burn. So the layer reads a
+shared **"under warp/jump" flag** and treats those vessels as identity. The warp
+plugin and this layer are both Schultz's lane ⇒ one shared flag. (Also covers the
+planner's computed-jump, though a jump is instantaneous.) **Rule: β counts only
+physical speed-through-space; warp/jump motion is excluded.**
+
+**(iii) Superluminal glitch (kraken) — fail safe.**
+KSP physics bugs can fling parts at absurd / superluminal velocity; β ≥ 1 makes
+γ = 1/√(1−β²) go NaN. Guard it:
+- The force correction is **inherently bounded** — it is `−(1 − 1/γ³)·F_engine`,
+  so as γ → ∞ it tends to `−F_engine` (full thrust cancellation), never an
+  infinite force. So the relativity hook **cannot amplify a kraken.** Good.
+- Still **NaN-guard the γ computation** (used by resource scaling + dashboard):
+  `if (!IsFinite(β) || β ≥ β_sane) → identity` — skip correction and scaling for
+  that vessel/frame. `β_sane` sits just above any legitimate drive (e.g. 0.995c);
+  anything past it is treated as a glitch. **Do not try to "fix" the glitch** —
+  the kraken is a collision/joint bug, not this layer's job; hand it back to
+  KSP/Principia. Log a one-liner ("implausible β, relativity disabled").
+
 ---
 
 ## 3. Implications for NearStars
@@ -224,8 +263,9 @@ sits adjacent to the existing visual pipeline.
   ×1/γ³ (NOT an engine-thrust patch — that would also cut fuel; keep propellant
   at its nominal coordinate-time rate), applied **before** Principia's stage-7
   `FashionablyLate` force census; (b) Kerbalism proper-time consumption scaling
-  by 1/γ. The shader (former piece c) is out of scope. No NearStars DB / cfg
-  deltas are implied by this layer.
+  by 1/γ. Both pieces must implement the §2.6 guards (activation gate, warp
+  exemption, kraken fail-safe). The shader (former piece c) is out of scope. No
+  NearStars DB / cfg deltas are implied by this layer.
 
 ---
 
