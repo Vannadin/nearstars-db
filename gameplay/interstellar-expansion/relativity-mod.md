@@ -38,6 +38,37 @@ sub-light companion to (deferred) time-dilation clock mechanics.
 
 ---
 
+## 0. What the player experiences (no math)
+
+You never see γ or a formula. The whole layer is **two opposing effects near
+light speed**, plus one twist:
+
+1. **The faster you go, the less your engine accelerates you.** Like a cart that
+   gets heavier the faster it rolls. Light speed becomes a natural wall — no
+   artificial speed cap needed; the engine just stops biting near `c`. This is
+   **direction-blind**: braking is also an engine burn, so slowing down near `c`
+   is just as feeble as speeding up. ⇒ you must begin arrival deceleration
+   absurdly early (ties to the planner's leg-3 braking) — the brakes only start
+   biting once you've bled off enough speed for the penalty to relax.
+2. **The faster you go, the slower your crew's clock runs → supplies last
+   longer.** A 50-year cruise (outside time) might cost only ~24 years of food
+   and air. (This layer shows it as *slower supply burn*, not a separate calendar
+   clock — real clock dilation is a deferred "time" element.)
+
+→ **The trade:** getting fast is hard, but once you *are* fast your crew survives
+far longer. The player picks a cruise speed around that tension.
+
+**Time-rate is about current speed, not a debt.** Slow down and the burn rate
+returns to normal — but the gap already built up while fast is permanent (the
+twin-paradox outcome: the traveller comes back younger, for good; decelerating
+never "catches up").
+
+**The twist (radiation).** Radiation comes from *outside*, so it does **not**
+slow with the crew clock — a fast crew ages less but soaks the same dose. So the
+real danger on a relativistic run is **radiation, not starvation.**
+
+---
+
 ## 1. Executive summary
 
 | Question | Answer |
@@ -47,8 +78,8 @@ sub-light companion to (deferred) time-dilation clock mechanics.
 | Reference frame | Solar System **barycenter** inertial frame, fixed at departure. β measured against it. |
 | Principia compatible? | **Yes** — we modulate the *input force* and *consumption rate*, never the integrator. Unlike warp, this does not bend spacetime. Principia even supplies barycentric velocity for free. |
 | Display | Show both nominal and effective thrust, plus γ / β / resource-rate multiplier. The split readout *is* the mechanic's identity. |
-| Visuals | Optional, decoupled, 3 tiers (color-only → full starbow). Tier 0 ships with zero visuals. |
-| Implementation owner | Schultz (C# force hook + Kerbalism rate hook + post-process shader). This note is the brief. |
+| Visuals | **Out of scope** — the starbow shader layer is not our lane (§2.5). We ship Tier 0 (mechanic) only. |
+| Implementation owner | Schultz (C# corrective-force hook + Kerbalism rate hook; no shader). This note is the brief. |
 
 ---
 
@@ -138,10 +169,18 @@ This mechanic is the opposite case:
   so it does not fight the integrator. No spacetime is bent.
 
 Net: this layer rides on **both** profiles (Principia n-body *and* SigmaBinary).
-The one thing to confirm with Schultz is whether Principia exposes a clean hook
-to modify the per-frame intrinsic force before integration.
+The force-hook question is now **resolved** (§4): Principia reads the accumulated
+`part.force` census at stage-7 `FashionablyLate`, so writing that channel before
+stage 7 suffices — no fork. The integrator is never touched.
 
-### 2.5 Optional visual layer — 3 tiers
+### 2.5 Optional visual layer — 3 tiers (OUT OF SCOPE — not our lane)
+
+> **Scope (2026-06-29):** the visual/shader layer (Tier 1–2 starbow) is **out of
+> scope for this team, Schultz included** — relativistic post-process shaders are
+> not our lane (cf. the Scatterer/EVE handoff: visual-mod shader work belongs to
+> the visual-mod authors). **Our deliverable is Tier 0 only** (the mechanic +
+> dashboard). The tiers below are retained as a reference/offer for whoever owns
+> visuals, not as our work item.
 
 Singularity proves a relativistic screen-space post-process is viable in KSP
 (it already does black-hole lensing this way). The relativistic look decomposes
@@ -176,30 +215,56 @@ sits adjacent to the existing visual pipeline.
 - This is a **gameplay layer for the interstellar endgame**, not a physics
   integrator. It is consistent with the gate-0 "gameplay first" decision and,
   unlike warp, is Principia-safe.
-- **Recommended build order**: Tier 0 mechanic first (thrust + resource +
-  dashboard) → it is shippable and self-contained → visuals later, Tier 1 before
-  Tier 2.
+- **Recommended build order**: Tier 0 mechanic only (thrust + resource +
+  dashboard) — shippable and self-contained. Visuals (Tier 1–2) are out of scope
+  for this team (§2.5).
 - **Hand-off**: this note is the brief for Schultz
-  (`project_nearstars_mod_plugins_schultz`). Three plugin pieces: (a) per-frame
-  intrinsic-force scaling by 1/γ³, (b) Kerbalism proper-time consumption scaling
-  by 1/γ, (c) post-process shader (Tiers 1–2). No NearStars DB / cfg deltas are
-  implied by this layer.
+  (`project_nearstars_mod_plugins_schultz`). Two plugin pieces: (a) a per-frame
+  corrective force into the part-force channel so the *net* integrated force is
+  ×1/γ³ (NOT an engine-thrust patch — that would also cut fuel; keep propellant
+  at its nominal coordinate-time rate), applied **before** Principia's stage-7
+  `FashionablyLate` force census; (b) Kerbalism proper-time consumption scaling
+  by 1/γ. The shader (former piece c) is out of scope. No NearStars DB / cfg
+  deltas are implied by this layer.
 
 ---
 
-## 4. Open questions
+## 4. Resolved (2026-06-29)
 
-- Does Principia expose a clean hook to modify the per-frame intrinsic force
-  before integration? (Confirm before hand-off.)
-- Stock profile: cheapest correct way to compute barycentric velocity each
-  frame without Principia.
-- Onset tuning: keep pure 1/γ³, or expose a β-scale / exponent tuner for earlier
-  felt onset? Default = pure, tuner optional.
-- Exact list of resources treated as proper-time-linked (life support / crew
-  consumables / science sample decay) vs coordinate-time (propellant, reaction
-  wheels, etc.).
-- On arrival at another star, do we keep the departure Sol-barycenter frame
-  (recommended) or rebase to the destination barycenter? Peculiar velocities are
-  negligible either way.
-- Does the visual post-process compose cleanly with Scatterer / Singularity if
-  both are installed (shader pass ordering)?
+- **Principia force hook — RESOLVED, no fork needed.** Source recon
+  (`ksp_plugin_adapter.cs` `FashionablyLate`, stage 7) confirms Principia reads
+  the part's *accumulated* `part.force`/`part.forces` census — not re-derived
+  engine thrust — **after** normal FixedUpdate force deposits and **before** the
+  stock FlightIntegrator clears them. So a mod that writes the part-force channel
+  before stage 7 has its force integrated. Implement as the corrective force in
+  §3 hand-off. Works identically on the stock profile (same census feeds the
+  stock integrator).
+- **Stock barycentric velocity — RESOLVED.** KSP's root body (Sun) is the fixed
+  inertial origin, so "barycentric" = Sun-fixed inertial. In the activation
+  regime (interstellar cruise, SOI = Sun) `vessel.obt_velocity.magnitude` *is*
+  the barycentric speed — no extra work. General fallback (still inside a planet
+  SOI, where β is negligible anyway): walk the orbit parent chain summing
+  `Orbit.GetFrameVel()`. Principia profile supplies barycentric velocity directly.
+- **Onset tuning — RESOLVED: pure 1/γ³.** Keep the physically exact curve
+  (project ethos). The *felt* onset is governed not by the exponent but by the
+  **achievable cruise β** (drive tier) — tune it in the tech tree, not via an
+  exponent fudge. Expose an optional tuner for modpacks, default off.
+- **Proper-time vs coordinate-time resources — RESOLVED.** Scale ×1/γ (onboard
+  biological/chemical rates): life-support O₂/Food/Water, CO₂/Waste/WasteWater,
+  greenhouse growth, sample/specimen decay, time-based part wear. Do **not**
+  scale (coordinate-time / external / avoids double-reward): engine
+  propellant+oxidizer, ElectricCharge (external solar capture), reaction-wheel /
+  RCS authority, and **radiation dose**. The dose split is deliberate: dose is an
+  external coordinate-time flux integral, so a fast crew ages less but soaks the
+  same dose ⇒ **radiation, not starvation, is the binding constraint on a
+  relativistic run** (an emergent third axis, free from the two resource rules;
+  optional ISM head-wind enhancement deferred to Kerbalism's ambient model).
+- **Arrival frame — RESOLVED: keep the departure Sol-barycentric frame.** A
+  single fixed inertial frame for the whole trip. Peculiar velocities (αCen
+  7×10⁻⁵ c … Barnard 5×10⁻⁴ c) make "at rest at the destination" read β ≈ 0
+  either way (γ−1 ~ 10⁻⁷⁻⁸) ⇒ rebasing has zero mechanical effect, only added
+  complexity. (Arrival *relative velocity* for navigation/braking is the
+  planner's concern, separate from this mechanic's β.)
+
+**Out of scope (dropped):** shader-pass ordering with Scatterer/Singularity —
+the whole visual layer is not our lane (§2.5).
