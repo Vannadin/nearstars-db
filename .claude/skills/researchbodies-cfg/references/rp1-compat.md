@@ -5,7 +5,7 @@ grounded 2026-06-26).** The current skill targets non-RP-1 environments
 (Sandbox / Science, where RB works as shipped). RP-1 career support is a
 documented backlog item — design captured here so it is not re-derived.
 Integration approach below is grounded in upstream RP-1 source; see
-[`plans/rp1-integration/`](../../../../plans/rp1-integration/plan.md) for the
+[`gameplay/rp1-integration/`](../../../../gameplay/rp1-integration/plan.md) for the
 project-wide context (NearStars stays Sol-based and rides on Sol-Configs'
 upstream RP-1 bridge; only the base-independent career layers here are ours).
 

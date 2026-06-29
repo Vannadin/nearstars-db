@@ -4,7 +4,7 @@
 > works under **both** stock KSP science **and** Kerbalism/ROKerbalism (RP-1).
 > Grounded in upstream sources (cited inline). NearStars targets both player
 > stacks: Sandbox/Science on Sol-Configs (stock science) and RP-1 on Sol V1.0
-> (Kerbalism). See [`plans/rp1-integration/plan.md`](../../plans/rp1-integration/plan.md).
+> (Kerbalism). See [`gameplay/rp1-integration/plan.md`](../../gameplay/rp1-integration/plan.md).
 
 ---
 
@@ -320,7 +320,7 @@ For each new body `<X>` (Kopernicus internal name):
 5. **(Radiation environment — gameplay, not RP-1 science)** — defining the
    body's radiation belts/magnetosphere (RP-1 integration WS4: ROKerbalism
    `RadiationBody`, gated `:NEEDS[ProfileRealismOverhaul]`,
-   [`plans/rp1-integration/plan.md`](../../plans/rp1-integration/plan.md)) makes
+   [`gameplay/rp1-integration/plan.md`](../../gameplay/rp1-integration/plan.md)) makes
    Kerbalism's `InnerBelt`/`OuterBelt`/`Magnetosphere`/`Interstellar` virtual
    biomes *resolvable* at the body. But **RP-1's shipped experiments don't
    reference virtual biomes (§3.4)**, so this yields **no science under RP-1
@@ -359,4 +359,4 @@ environment is a gameplay/WS4 concern whose science payoff is latent.
 
 - [guideline](guideline.md) — Phase 4 science-text checklist item
 - [mod-release-layout](mod-release-layout.md) — `[Body]-ScienceDefs.cfg` / biome DDS conventions
-- [plans/rp1-integration](../../plans/rp1-integration/plan.md) — radiation env / WS4 overlap
+- [gameplay/rp1-integration](../../gameplay/rp1-integration/plan.md) — radiation env / WS4 overlap

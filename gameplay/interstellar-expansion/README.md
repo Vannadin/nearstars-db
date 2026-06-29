@@ -55,6 +55,9 @@ does design, spec, cfg, and math prototypes.
 - [`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md) — warp
   mechanics under Principia, options ladder (no-fork / minimal-fork / big-fork),
   cruise architecture, velocity continuity, the lead-intercept planner.
+- [`planner-spec.md`](planner-spec.md) — the Δv-based lead-intercept planner: math
+  spec, `v_avg = c·tanh(Δv/4)`, the three-leg profile, and the DB-data prototype.
+  Prototypes in [`prototypes/`](prototypes/).
 
 ## Related
 

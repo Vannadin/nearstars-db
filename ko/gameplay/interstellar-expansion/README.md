@@ -50,6 +50,9 @@ created: 2026-06-28
 - [`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md) —
   Principia 하 워프 메커니즘, 옵션 사다리(no-fork / 최소 포크 / 큰 포크), cruise
   아키텍처, 속도 연속성, lead-intercept 플래너.
+- [`planner-spec.md`](planner-spec.md) — Δv 기반 lead-intercept 플래너. 수식 spec,
+  `v_avg = c·tanh(Δv/4)`, 3-leg 프로파일, DB 데이터 프로토타입.
+  프로토타입은 [`prototypes/`](../../../gameplay/interstellar-expansion/prototypes/).
 
 ## Related
 

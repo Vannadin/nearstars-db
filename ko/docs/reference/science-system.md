@@ -4,7 +4,7 @@
 > Kerbalism/ROKerbalism(RP-1) **양쪽 모두**에서 과학이 동작하는지를 다룬다.
 > 업스트림 출처에 근거하며(본문 인용), NearStars는 두 플레이어 스택을 모두
 > 겨냥한다. Sol-Configs 위의 Sandbox/Science(stock 과학)와 Sol V1.0 위의
-> RP-1(Kerbalism)이다. [`plans/rp1-integration/plan.md`](../../plans/rp1-integration/plan.md)를 참고한다.
+> RP-1(Kerbalism)이다. [`gameplay/rp1-integration/plan.md`](../../gameplay/rp1-integration/plan.md)를 참고한다.
 
 ---
 
@@ -324,7 +324,7 @@ min → 2 years에 걸친다. 대표 예시다.
 5. **(방사선 환경 — 게임플레이, RP-1 과학 아님)** — 바디의 방사선
    벨트/자기권을 정의하면(RP-1 통합 WS4. ROKerbalism `RadiationBody`,
    `:NEEDS[ProfileRealismOverhaul]`로 게이트,
-   [`plans/rp1-integration/plan.md`](../../plans/rp1-integration/plan.md)) Kerbalism의
+   [`gameplay/rp1-integration/plan.md`](../../gameplay/rp1-integration/plan.md)) Kerbalism의
    `InnerBelt`/`OuterBelt`/`Magnetosphere`/`Interstellar` virtual biome이
    해당 바디에서 *해석 가능*해진다. 다만 **RP-1이 배포하는 실험은 virtual
    biome을 참조하지 않으므로(§3.4) 오늘날 RP-1에서는 과학이 나오지 않는다** —
@@ -363,4 +363,4 @@ latent인 게임플레이/WS4 사안이다.
 
 - [guideline](guideline.md) — Phase 4 과학 텍스트 체크리스트 항목
 - [mod-release-layout](mod-release-layout.md) — `[Body]-ScienceDefs.cfg` / biome DDS 컨벤션
-- [plans/rp1-integration](../../plans/rp1-integration/plan.md) — 방사선 환경 / WS4 겹침
+- [gameplay/rp1-integration](../../gameplay/rp1-integration/plan.md) — 방사선 환경 / WS4 겹침
