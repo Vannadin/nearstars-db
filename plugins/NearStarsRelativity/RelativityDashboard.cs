@@ -6,6 +6,12 @@ namespace NearStars.Relativity
     // The split readout IS the mechanic's identity (relativity-mod.md §1): the player
     // sees nominal vs effective thrust diverge as β climbs. Shown only while the layer
     // is active (β > β_min, not warping/glitched), so it stays invisible in normal play.
+    //
+    // FULL UX SPEC: gameplay/interstellar-expansion/relativity/relativity-ux.md — this
+    // stub draws the minimal β/γ/thrust/supply readout; the spec's §6 extends it with
+    // the two-mode (Simple/Expert) layout, the light-wall speed gauge, the two-clock
+    // (UT vs crew ∫dt/γ) counter, the brake-authority cue, and the collapsed WARP panel
+    // (speed in c-multiples, read from the warp plugin) when WarpFlag is up.
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class RelativityDashboard : MonoBehaviour
     {
