@@ -43,16 +43,18 @@ Find the row that matches "what I want to build," then follow its sources.
 
 | I want to make… | Primary authoritative sources | Notes / where it gets hard |
 |---|---|---|
-| **A code/plugin mod (C#)** — new behavior, HUD, physics | Wiki *Creating a Plugin* (Win/Linux) · `KSPBuildTools` · `KSPDocsSite` (API) · Wiki *Core Concepts* + *Execution order* | The hard part is **deployment + lifecycle**, not C# (see row below). Build needs stock DLLs (§0.5). |
+| **A code/plugin mod (C#)** — new behavior, HUD, physics | Wiki *Creating a Plugin* (Win/Linux) · `KSPBuildTools` · `KSPDocsSite` (API) · Wiki *Core Concepts* + *Execution order* | The hard part is **deployment + lifecycle**, not C# (see row below). Build needs stock DLLs (§0 rule 5). |
 | **…and get it actually running in KSP** | Wiki *Creating a new Plugin Mod on Windows / Linux* (build → symlink into `GameData` → scene) | This is what newcomers get stuck on (confirmed by JonnyOThan). The setup guides are the answer. |
+| **React to game state** (vessel change, launch, part explode, pause) | Wiki *Core Concepts* (`GameEvents`) · KSPDocsSite `class_game_events.html` | Pattern: `GameEvents.onVesselChange.Add(cb)` — and **remove the handler** to avoid leaks (Core Concepts warns). |
 | **A ModuleManager cfg patch** (tweak existing content) | MM *Handbook* (official) · MM *Field Guide* (al2me6, unofficial, covers caveats) | No compile needed. Field Guide documents gotchas the official docs miss. |
 | **A planet pack / star system** | Kopernicus Wiki · **our skills**: `kopernicus-cfg`, `principia-cfg`, `firefly-cfg`, `researchbodies-cfg` | NearStars' home turf — already grounded in skills + `docs/reference/principia-cfg-reference.md`. |
 | **A part mod (models, engines, IVA)** | *KSP1 Modding Bible* · `PartTools` (Unity 2019.4.18f1) · `io_object_mu` (Blender) · Kurgut IVA guide · Kavaeric engines guide | Asset pipeline, not code. Unity version is exact: **2019.4.18f1 LTS**. |
-| **A visual mod (shaders/materials)** | `Shabby` (shader asset-bundle loader) · Scatterer/EVE (**local-only**, Patreon) | Custom shaders ship via Shabby + cfg. EA visual mods stay off-repo (§0.6). |
+| **A visual mod (shaders/materials)** | `Shabby` (shader asset-bundle loader) · Scatterer/EVE (**local-only**, Patreon) | Custom shaders ship via Shabby + cfg. EA visual mods stay off-repo (§0 rule 6). |
 | **Runtime patching of stock behavior** | `HarmonyKSP` · Wiki *Execution order* (`TimingManager`/`TimingStage`) | Harmony is the standard. Persistence/scenario hooks → Core Concepts. |
 | **Performance-critical code** | `KSPBurst` (Unity Burst → native) · `KSPProfiler` / `dotTrace` / `UnityHeapExplorer` (profile first) | Profile before optimizing. |
 | **Distribution / release** | CKAN *Spec* · Addon Version Checker *Spec* (MiniAVC) · `spacedock-upload` (GitHub Action) | Version file + CKAN metadata + SpaceDock upload. |
-| **Debugging a mod** | gotmachine *Debugging & profiling* gist · `UnityExplorerKSP` (in-game inspector) · `TextAnalysisTool.NET` (logs) | Rider enables real debugging on Linux/Mac. |
+| **Debugging a mod** | gotmachine *Debugging & profiling* gist · `UnityExplorerKSP` (in-game inspector) · `TextAnalysisTool.NET` (logs) | Rider enables real debugging on Linux/Mac. Setup in §7. |
+| **NullRef on scene load / object missing** | Wiki *Execution order* + *Core Concepts* · `Player.log` | Usually a **timing** bug: you touched an object before it existed. Check `KSPAddon` startup scene + lifecycle order, not the object. |
 | **Reverse-engineer stock behavior** | Wiki *Decompiling KSP* · then `KSPDocsSite` · DLL decompile (ILSpy/dnSpy, deferred) | Last resort when API ref + witnesses are insufficient. |
 
 ---
@@ -115,7 +117,7 @@ Raw markdown: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModdingW
 - **Execution order of plugins code** — `TimingManager` + `TimingStage` enum (ObscenelyEarly…BetterLateThanNever), `[DefaultExecutionOrder]`.
 - **KSP Core Concepts** — 16 foundational types (KSPAddon, ConfigNode, GameEvents, Vessel, Part, AttachNode, PartModule, VesselModule, ScenarioModule, Scene, InternalModel/Prop/Module, CelestialBody, GameDatabase, KSPField/Event).
 - **Speeding up KSP loading for faster iteration** — pruning + QuickStart/HotReload/KSPCommunityFixes.
-- **Decompiling KSP** — *(not yet read; grounding row for §1)*.
+- **Decompiling KSP** — de4dot (deobfuscate `Assembly-CSharp.dll`) → ILSpy 8.2 (C# 7.3 for KSP 1.12.5). EULA-gray; decompiled output stays local/gitignored.
 - **Template Page** — wiki contribution template.
 
 ---
@@ -150,6 +152,7 @@ Raw markdown: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModdingW
 - Kavaeric's engines guide — https://kavaeric.notion.site/Creating-engines-for-KSP-16f8338f483b473486ca9657674d85e2
 
 **Tools** (see §4 Tools page for the full annotated list)
+- PartTools (Unity 2019.4.18f1 — .mu/IVA authoring) — https://web.archive.org/web/20240927111307/https://forum.kerbalspaceprogram.com/applications/core/interface/file/attachment.php?id=372
 - ksp-cfg-support (VSCode ext) — https://marketplace.visualstudio.com/items?itemName=al2me6.ksp-cfg-support
 - io_object_mu (Blender) — https://github.com/taniwha/io_object_mu
 - TextAnalysisTool.NET — https://textanalysistool.github.io/
@@ -158,19 +161,30 @@ Raw markdown: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModdingW
 
 ## 6. NearStars-specific bindings
 
-What *our* work pulls from where.
+**Ownership.** The dev builds and iterates these plugins **locally** (compile on this Mac, §7) and
+hands the result to Schultz later — so this doc is also the handoff artifact. Deep runtime work —
+the Principia fork and in-game testing on Windows — stays Schultz's lane
+(`project_nearstars_mod_plugins_schultz`).
 
-- **Our plugin drafts** (`plugins/NearStars{Relativity,Warp,FluxTube}/`) touch: `Vessel`(11×),
-  `KSPAddon`(9×), `ScaledSpace`(7×), `GUILayout`(7×), `TimingManager`(6×), `PartModule`(6×),
-  `KSPField`(6×), `Orbit`(5×), `MonoBehaviour`(4×), `CelestialBody`(4×), `Part`(3×),
-  `LineRenderer`(3×), `FlightGlobals`(3×), `ModuleEngines`(2×), `KSPEvent`(2×), `GUI`(2×),
-  `VesselModule`(1×). Every one is in KSPDocsSite (§3).
-- **Principia interop** (`PrincipiaInterop.Detach/ReseedAt`) is **not** in KSPModdingLibs →
-  `mockingbirdnest/Principia` + our `gameplay/interstellar-expansion/warp/warp-patch-draft.md`.
-  Schultz's lane (requires a Principia fork).
-- **Build blocker:** stock `Managed/` DLLs needed (§0.5) — Schultz's KSP install.
-- **C#/C++ in-game work** is Schultz's lane (`project_nearstars_mod_plugins_schultz`); this side
-  does design/spec/cfg + grounding.
+**API surface.** Our drafts (`plugins/NearStars{Relativity,Warp,FluxTube}/`) touch: `Vessel`(11×),
+`KSPAddon`(9×), `ScaledSpace`(7×), `GUILayout`(7×), `TimingManager`(6×), `PartModule`(6×),
+`KSPField`(6×), `Orbit`(5×), `MonoBehaviour`(4×), `CelestialBody`(4×), `Part`(3×),
+`LineRenderer`(3×), `FlightGlobals`(3×), `ModuleEngines`(2×), `KSPEvent`(2×), `GUI`(2×),
+`VesselModule`(1×). Every one is in KSPDocsSite (§3).
+
+**`// VERIFY:` markers → where to resolve them.** The plugin drafts carry ~31 `VERIFY` markers.
+Route each to its grounding before trusting it:
+
+| VERIFY touchpoint (file) | Resolve at |
+|---|---|
+| `Part.AddForce` units (kN) + force channel · `part.RequestResource(...)` (`ThrustCorrector`, `WarpDriveModule`) | KSPDocsSite `class_part.html` |
+| `ModuleEngines.finalThrust` (kN) + thrust direction (`ThrustCorrector`) | `class_module_engines.html` |
+| `vessel.obt_velocity` units/frame · `vessel.totalMass` (t) · `vessel.SetPosition`/`GetWorldPos3D` (floating-origin) · `FindPartModuleImplementing<T>` (`WarpDriveModule`, `WarpFlagBridge`, `RelativityState`) | `class_vessel.html` |
+| `PartModule` lifecycle + the part-move call (`WarpDriveModule`) | Wiki *Core Concepts* + `class_part_module.html` |
+| Correction **timing** — after engine thrust deposit, before Principia stage-7 (`ThrustCorrector`) | Wiki *Execution order* (`TimingManager`/`TimingStage`) |
+| IMGUI id uniqueness (`RelativityDashboard`) | Unity 2019.4 Scripting Reference (§5) |
+| Principia detach/re-seed + flag channel (`PrincipiaInterop`, `WarpFlag`) | **Schultz lane** — `mockingbirdnest/Principia` + `gameplay/interstellar-expansion/warp/warp-patch-draft.md` §5.2 (needs the fork) |
+| Kerbalism/ROKerbalism resource names + per-vessel wiring (`ResourceScaler`) | **Schultz lane** — Kerbalism source |
 
 ---
 
@@ -178,6 +192,11 @@ What *our* work pulls from where.
 
 Grounded in **KSPBuildTools @ v1.1.1** + the two wiki setup guides + the Decompiling-KSP page.
 KSPBuildTools is self-documented in-repo (§2) — `docs/msbuild/*` is the authoritative build reference.
+
+> **Anti-rot.** The snippets and line numbers below are a *verified snapshot* (2026-07-01,
+> KSPBuildTools v1.1.1), not a living mirror. KSPBuildTools rebases — before trusting the XML,
+> re-check it against the live source-of-truth: `KSPModdingLibs/KSPModTemplate` and
+> `KSPBuildTools/tests/plugin-mod/plugin-mod.csproj`, and re-confirm `KSPCommon.props` line numbers.
 
 **Minimal plugin `.csproj`** (modern SDK-style, KSPBuildTools via NuGet — verified against
 `getting-started.md` + `tests/plugin-mod/plugin-mod.csproj`):
@@ -214,16 +233,20 @@ plus MinVer/JsonPoke); the Decompiling guide shows the **legacy non-SDK** form (
   `.csproj.user` (gitignored), or `KSP_ROOT` env var for CI. Discovery order (`ksp-install.md`):
   `KSPBT_GameRoot` prop → `KSP_ROOT` env → a `KSP/` subdir in the solution → `ReferencePath` → Steam default.
 
-**This Mac has no KSP — the practical unblock.** The `Managed/` assemblies (Assembly-CSharp,
-UnityEngine*, …) are platform-agnostic .NET IL. So we do **not** need to install KSP on the Mac:
-obtain the `Managed/` folder from any same-version (1.12.x) install — e.g. Schultz's Windows copy —
-lay it out in the macOS-expected path (or override `_KSPBT_ManagedRelativePath`/`KSPBT_GameRoot`),
-then `dotnet build` compiles on macOS arm64 (arm64 dotnet SDK; IL is arch-agnostic).
-*[Reasoned from the props layout — confirm once we actually have the folder.]*
+**This Mac has no KSP — the practical unblock.** The managed `.dll`s in `Managed/` (Assembly-CSharp,
+UnityEngine*, …) are platform-/arch-agnostic .NET IL. So we likely do **not** need to install KSP on
+the Mac to *compile*: obtain the `Managed/` folder from any same-version (1.12.x) install — e.g.
+Schultz's Windows copy — lay it out in the macOS-expected path (or override
+`_KSPBT_ManagedRelativePath`/`KSPBT_GameRoot`), then `dotnet build` on macOS arm64 (arm64 dotnet SDK).
+*Caveat:* this is **unconfirmed** — KSPBuildTools docs don't endorse a cross-platform `Managed/` copy,
+and some assemblies carry native-interop glue (`UnityPlayer`/P-Invoke); compile-reference *should* be
+fine (IL only) but verify by actually building once we have the folder. Plan B if it fails: a real
+KSP install on this Mac (KSP ships a macOS build).
 
-**Deploy & iterate:** `dotnet build` → DLL in `GameData/<ModName>/Plugins/` → symlink that into the
+**Deploy & iterate:** `dotnet build` → DLL in `GameData/<ModName>/Plugins/` → symlink that into a
 KSP install's GameData (`ln -s` macOS/Linux, `mklink /j` Windows) → relaunch KSP (or F5 from VS/Rider).
-**Running** the game still needs Windows/Mac KSP = Schultz's lane; this Mac is **compile-only**.
+**Compile** is local on this Mac; **running/in-game testing** needs an actual KSP install (a macOS copy,
+or Schultz's Windows machine).
 
 **Debugging & profiling** (gotmachine gist — mostly Windows-tested, Rider better on Mac/Linux):
 - **Make KSP debuggable**: add `player-connection-debug=1` to `<KSP>/…Data/boot.config` (macOS:
@@ -248,9 +271,12 @@ CKAN + SpaceDock publish (`docs/workflows/publish-to-spacedock.md`, `docs/action
 Grounded so far: org repo roles (§2), KSPDocsSite usage (§3), wiki page map (§4), master link
 index (§5), build/deploy + dependencies + version file + debugging/profiling (§7, from KSPBuildTools
 `docs/msbuild/*` + gotmachine gist), Decompiling-KSP (de4dot → ILSpy 8.2, C# 7.3; EULA-gray, DLL/dump
-gitignored). The full code-mod lifecycle (build → deploy → debug → distribute) is now covered.
-Not yet deepened:
-- **Core Concepts / Execution order** — summarized (§4), not yet cited at member level.
+gitignored). The full code-mod lifecycle (build → deploy → debug → distribute) is covered, and the
+plugin `VERIFY` markers are routed to their grounding (§6). Not yet deepened:
+- **Mac compile, actually run once** — the `Managed/`-copy path (§7) is reasoned, not yet executed.
+  The real next step: get the folder, build one plugin, confirm.
+- **Core Concepts / Execution order** — summarized (§4) + routed for the markers (§6), not yet cited
+  at member level for the whole API.
 - **Part / IVA / visual** branches — link-level only; deepen if NearStars adds parts or custom shaders.
 - **CKAN / SpaceDock release workflow** — `docs/workflows/*` located, not walked through end-to-end.
 
