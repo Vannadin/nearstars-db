@@ -11,10 +11,13 @@ LineRenderer, 머티리얼/셰이더, IMGUI 윈도, 카메라 투영. 근거화 
 [`README`](README.md) 참조. ScaledSpace + GL 즉시 모드 맵 그리기는
 [`ksp-stock-api.md` §3](ksp-stock-api.md)에 근거화되어 있고 여기서는 교차 참조만 한다.
 
-> **최상급 witness:** kOS `VectorRenderer.cs`는 라벨이 달린 scaled-space 벡터 호를
-> 그린다 — GameObject 생성, `AddComponent<LineRenderer>`, `SetParent`,
-> localScale/localPosition, 셰이더 try-both 관용구, 그리고 최신 LineRenderer
-> 프로퍼티 API가 한 파일에 다 있다. 플럭스 튜브 / 리드 마커 호에 가장 가까운 유사 사례다.
+> **스캐폴딩 witness:** kOS `VectorRenderer.cs`는 라벨이 달린 **직선 2점 벡터**(화살표 +
+> 화살촉)를 그린다 — 용도는 kOS 스크립트의 디버그 벡터 시각화이지 곡선 호가 *아니다*.
+> 플럭스 튜브 / 리드 마커와 공유하는 것은 **저수준 렌더링 스캐폴딩**뿐이다(한 파일에
+> GameObject 생성, `AddComponent<LineRenderer>`, `SetParent`, localScale/localPosition,
+> 셰이더 try-both 관용구, 최신 LineRenderer 프로퍼티 API). 플럭스 튜브는 그 스캐폴딩을
+> 재사용하되 2점 대신 `positionCount = N`으로 곡선 Bézier 점들을 먹인다 — 즉 모양이 아니라
+> *기계장치*의 가장 가까운 witness다.
 
 ---
 

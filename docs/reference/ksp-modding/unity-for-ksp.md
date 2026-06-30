@@ -11,10 +11,14 @@ LineRenderer, materials/shaders, IMGUI windows, camera projection. Grounding pol
 legend: [`README`](README.md). ScaledSpace + GL immediate-mode map drawing are
 grounded in [`ksp-stock-api.md` §3](ksp-stock-api.md) and only cross-referenced here.
 
-> **Gold-standard witness:** kOS `VectorRenderer.cs` draws a scaled-space vector arc
-> with a label — GameObject creation, `AddComponent<LineRenderer>`, `SetParent`,
-> localScale/localPosition, the shader try-both idiom, and the modern LineRenderer
-> property API, all in one file. It is the closest analog to a flux-tube / lead-marker arc.
+> **Scaffolding witness:** kOS `VectorRenderer.cs` draws a **straight 2-point vector**
+> (arrow + arrowhead) with a label — its purpose is debug-vector visualization for kOS
+> scripts, *not* a curved arc. What it shares with the flux-tube / lead-marker is only
+> the **low-level rendering scaffolding** in one file: GameObject creation,
+> `AddComponent<LineRenderer>`, `SetParent`, localScale/localPosition, the shader
+> try-both idiom, and the modern LineRenderer property API. The flux-tube reuses that
+> scaffolding but feeds `positionCount = N` curved Bézier points instead of 2 — so this
+> is the closest witnessed analog for the *mechanics*, not the shape.
 
 ---
 
