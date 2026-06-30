@@ -32,22 +32,36 @@ Grounding policy + legend: [`README`](README.md). All rows **H** unless marked.
 fields: `[KSPField(isPersistant = true)] public bool running;` — MechJeb2
 `MechJebCore.cs:45`; KSP-Recall `PartModule.cs:28`.
 
-### A3. `VesselModule` save/load (mixed)
-Lifecycle + `OnLoad` are grounded in [`plugin-scaffolding.md` §3](plugin-scaffolding.md)
-(kOS `kOSVesselModule.cs`). **`OnSave(ConfigNode)` override not witnessed (M)** — the
-stock base exposes it symmetrically; confirm before relying. This is the natural home
-for the relativity **two-clock proper-time accumulator** and **warp cruise state**
-per vessel.
+### A3. `VesselModule` save/load (H)
+`class X : VesselModule` with **`protected override void OnSave(ConfigNode node)`**
+(calls `base.OnSave(node)`) + the symmetric `OnLoad`:
+- RasterPropMonitor `Core/RPMVesselComputer.cs:351` (OnSave + `base.OnSave`), `:289`
+  (OnLoad) — round-trips per-vessel IVA state in `RPM_PERSISTENT_VARS` child nodes.
+- Extraplanetary Launchpads `Source/Workshop/VesselWorkNet.cs:108/86` (`ELVesselWorkNet`).
+- RP-1 `Source/RP0/Persistence/KCTVesselTracker.cs:43/24` — note the `public override`
+  variant (also valid).
 
-### A4. `ScenarioModule` (H for the class; attribute args M)
-`class X : ScenarioModule` with `public override void OnSave/OnLoad(ConfigNode)` doing a
-ConfigNode round-trip — KerbalHealth `KerbalHealthScenario.cs:14,630,661` (`AddValue`
-:640, `HasValue` :681).
+> **Access modifier (cross-gap note):** VesselModule's OnSave/OnLoad are idiomatically
+> `protected override`; ScenarioModule's (A4) are `public override`.
 
-> **Gap (M):** the `[KSPScenario(ScenarioCreationOptions…, GameScenes…)]` attribute args
-> and the registration path (`HighLogic.CurrentGame.scenarios` / `ProtoScenarioModule` /
-> `GamePersistence`) were **not byte-verified**. Use a ScenarioModule for *global*
-> (not per-vessel) plugin state; confirm the attribute args before shipping.
+This is the natural home for the relativity **two-clock proper-time accumulator** and
+**warp cruise state** per vessel. (kOS `kOSVesselModule.cs` overrides `OnLoad` only —
+lifecycle in [`plugin-scaffolding.md` §3](plugin-scaffolding.md).)
+
+### A4. `ScenarioModule` (H)
+`class X : ScenarioModule` with `public override void OnSave/OnLoad(ConfigNode)`. The
+`[KSPScenario]` attribute verbatim (KerbalHealth `KerbalHealthScenario.cs:14` @ SHA `fd66b69`):
+```csharp
+[KSPScenario(ScenarioCreationOptions.AddToAllGames,
+    GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.FLIGHT, GameScenes.EDITOR)]
+```
+— a `ScenarioCreationOptions` flag (single, not OR'd) + a `GameScenes` list; `OnSave`
+:861 / `OnLoad` :889 (note `public override`, vs VesselModule's `protected override`).
+KSP **auto-registers** `[KSPScenario]` modules from the attribute — no manual
+registration. Use a ScenarioModule for *global* (not per-vessel) plugin state.
+
+> The explicit registration path (`HighLogic.CurrentGame.scenarios` /
+> `ProtoScenarioModule`) was not separately witnessed — not needed; the attribute drives it.
 
 ### A5. Custom data keyed by vessel `Guid` (H)
 Kerbalism `Database/DB.cs` idiom: `Dictionary<Guid, VesselData>` (:227); **save** —
@@ -141,10 +155,11 @@ and the warp cruise rely on.
 ---
 
 ## Gaps summary (do not fabricate)
-VesselModule `OnSave` (A3, M) · `[KSPScenario]` args + registration (A4, M) ·
+`[KSPScenario]` registration path (A4 — not witnessed; the attribute drives it) ·
 UT-into-ConfigNode timestamp (A6, L) · `[HarmonyPatch(new Type[]{…})]` &
 `__originalMethod`/`generator` params (B2/B3, M) · `part.AddForceAtPosition` (B4) ·
-`onVesselSOIChanged`/`onGameStateSave` (B5, L).
+`onVesselSOIChanged`/`onGameStateSave` (B5, L). *(A3 VesselModule `OnSave` and A4
+`[KSPScenario]` args now closed — H.)*
 
 ## Provenance
 Verified 2026-06-30 (raw-fetch + read). Witness repos: Kerbalism, KSPCommunityFixes,

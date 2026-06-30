@@ -33,21 +33,35 @@ created: 2026-06-30
 `[KSPField(isPersistant = true)] public bool running;` — MechJeb2
 `MechJebCore.cs:45`; KSP-Recall `PartModule.cs:28`.
 
-### A3. `VesselModule` 저장/로드 (혼합)
-생명주기 + `OnLoad`는 [`plugin-scaffolding.md` §3](plugin-scaffolding.md)에 근거화되어 있다
-(kOS `kOSVesselModule.cs`). **`OnSave(ConfigNode)` 오버라이드는 확인되지 않았다(M)** —
-스톡 베이스는 이를 대칭으로 노출한다. 의존하기 전에 확인한다. 이곳이 함선별 상대론
-**두-시계 고유시간 누산기**와 **워프 순항 상태**의 자연스러운 집이다.
+### A3. `VesselModule` 저장/로드 (H)
+`class X : VesselModule`에 **`protected override void OnSave(ConfigNode node)`**(내부에서
+`base.OnSave(node)` 호출)와 대칭인 `OnLoad`를 둔다.
+- RasterPropMonitor `Core/RPMVesselComputer.cs:351`(OnSave + `base.OnSave`), `:289`(OnLoad)
+  — 함선별 IVA 상태를 `RPM_PERSISTENT_VARS` 자식 노드로 라운드트립한다.
+- Extraplanetary Launchpads `Source/Workshop/VesselWorkNet.cs:108/86`(`ELVesselWorkNet`).
+- RP-1 `Source/RP0/Persistence/KCTVesselTracker.cs:43/24` — `public override` 변형(역시 유효).
 
-### A4. `ScenarioModule` (클래스는 H, 속성 인자는 M)
-`class X : ScenarioModule`에 `public override void OnSave/OnLoad(ConfigNode)`를 두고
-ConfigNode 라운드트립을 하는 형태 — KerbalHealth `KerbalHealthScenario.cs:14,630,661`
-(`AddValue` :640, `HasValue` :681).
+> **접근 제한자(갭 교차 노트):** VesselModule의 OnSave/OnLoad는 관용적으로 `protected
+> override`, ScenarioModule의 것(A4)은 `public override`다.
 
-> **갭 (M):** `[KSPScenario(ScenarioCreationOptions…, GameScenes…)]` 속성 인자와 등록
-> 경로(`HighLogic.CurrentGame.scenarios` / `ProtoScenarioModule` / `GamePersistence`)는
-> **바이트 단위로 확인하지 않았다**. *글로벌*(함선별이 아닌) 플러그인 상태에는
-> ScenarioModule을 쓰되, 출시 전에 속성 인자를 확인한다.
+이곳이 함선별 상대론 **두-시계 고유시간 누산기**와 **워프 순항 상태**의 자연스러운 집이다.
+(kOS `kOSVesselModule.cs`는 `OnLoad`만 오버라이드 — 생명주기는
+[`plugin-scaffolding.md` §3](plugin-scaffolding.md).)
+
+### A4. `ScenarioModule` (H)
+`class X : ScenarioModule`에 `public override void OnSave/OnLoad(ConfigNode)`를 둔다.
+`[KSPScenario]` 속성 verbatim(KerbalHealth `KerbalHealthScenario.cs:14` @ SHA `fd66b69`):
+```csharp
+[KSPScenario(ScenarioCreationOptions.AddToAllGames,
+    GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.FLIGHT, GameScenes.EDITOR)]
+```
+— `ScenarioCreationOptions` 플래그(OR 아님, 단일) + `GameScenes` 목록. `OnSave` :861 /
+`OnLoad` :889(`public override`, VesselModule의 `protected override`와 대비). KSP가
+`[KSPScenario]` 모듈을 속성으로 **자동 등록**한다 — 수동 등록 불필요. 글로벌(함선별이
+아닌) 플러그인 상태에 ScenarioModule을 쓴다.
+
+> 명시적 등록 경로(`HighLogic.CurrentGame.scenarios` / `ProtoScenarioModule`)는 별도로
+> 확인되지 않았다 — 속성이 등록을 주도하므로 불필요하다.
 
 ### A5. 함선 `Guid`로 키잉한 커스텀 데이터 (H)
 Kerbalism `Database/DB.cs` 관용구: `Dictionary<Guid, VesselData>` (:227); **저장** —
@@ -140,10 +154,11 @@ typeof(ModuleReactionWheel), nameof(…))` — `BugFixes/ReactionWheelsPotential
 ---
 
 ## Gaps summary (do not fabricate)
-VesselModule `OnSave` (A3, M) · `[KSPScenario]` 인자 + 등록 (A4, M) ·
+`[KSPScenario]` 등록 경로 (A4 — 미확인. 속성이 등록을 주도) ·
 UT를 ConfigNode 타임스탬프로 (A6, L) · `[HarmonyPatch(new Type[]{…})]` &
 `__originalMethod`/`generator` 파라미터 (B2/B3, M) · `part.AddForceAtPosition` (B4) ·
-`onVesselSOIChanged`/`onGameStateSave` (B5, L).
+`onVesselSOIChanged`/`onGameStateSave` (B5, L). *(A3 VesselModule `OnSave`와 A4
+`[KSPScenario]` 인자는 이제 닫힘 — H.)*
 
 ## Provenance
 2026-06-30에 확인했다(raw-fetch + read). witness 레포: Kerbalism, KSPCommunityFixes,
