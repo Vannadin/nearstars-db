@@ -74,9 +74,14 @@ accelerating, so arrival deceleration must begin absurdly early (relativity-mod 
 ties to the planner's leg-3 braking).
 
 - **Brake authority %** = retrograde effective/nominal thrust = `1/γ³` (same factor).
-- **`⚠ decel now`** fires when deceleration must begin to make the arrival. Ideal
-  source: the lead-intercept **planner** (leg-3 braking). MVP fallback without the
-  planner: a heuristic on remaining distance vs current decel capability.
+- **`⚠ decel now`** fires when deceleration must begin to make the arrival. This is
+  a **relativistic-cruise** concern — bleeding off a 0.3–0.9c cruise (a realist
+  torch run, or a fork'd continuous warp) where `1/γ³` makes braking feeble. Signal
+  source: the lead-intercept **planner**'s leg-3 ([planner-spec §4.5](../planner-spec.md))
+  supplies remaining distance / transit; MVP fallback is a heuristic on remaining
+  distance vs current decel capability. It is **dormant in the computed-jump floor**
+  profile — there the only braking is the star's km/s peculiar velocity at arrival,
+  which is non-relativistic and cheap (planner §4.5).
 
 This single cue prevents the "why can't I stop?" soft-lock that the mechanic would
 otherwise cause.

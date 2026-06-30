@@ -135,6 +135,14 @@ is: **leg 1** sublight climb to `r_g` → **leg 2** the jump/warp lead-intercept
   drive (Isp 1e6 s) = **1.4 % propellant**, a ~4 h burn over 0.007 AU. So
   frame-(a) "arrive fast" is a short braking beat, not a Δv gate — which is why
   the frame choice is flavor, not a blocker (the warp doc owns that call).
+  *Caveat — two different brakings.* This cheap one is the **non-relativistic**
+  arrival case (the star's km/s peculiar velocity, γ≈1). Shedding a relativistic
+  **cruise** speed (a realist torch run, or a fork'd continuous warp that carries
+  real β) is the hard case, governed by the relativity layer's `1/γ³` brake
+  authority and surfaced as the dashboard's `⚠ decel now` cue
+  ([relativity-ux §4](relativity/relativity-ux.md)). It is **dormant in the
+  computed-jump floor** (the jump is instantaneous — no cruise speed to shed) and
+  matters only in a sublight / continuous-cruise profile.
 - **Binary orbital term is required, not optional.** Over a 1c transit to Alpha
   Cen, component A swings **6.1 AU** along its barycentric orbit — larger than the
   inner system. Aiming at the barycenter lead alone still misses A by ~6 AU. αCen
@@ -175,3 +183,4 @@ Numbers reproducible via [`prototypes/planner_deep.py`](prototypes/planner_deep.
 
 - [warp-and-navigation-brainstorm](warp/warp-and-navigation-brainstorm.md) — §6 frame decision, §3 jump-vs-cruise
 - [feasibility](feasibility.md) — gate 0 (Δv math, light floor, relativity)
+- [relativity-ux](relativity/relativity-ux.md) — §4 consumes this planner's leg-3 braking as the dashboard `⚠ decel now` cue

@@ -125,6 +125,12 @@ arrivalRelV = v0 − v_star            // frame-(a). |·| = 도착 감속 Δv
   **추진제 1.4 %**, 0.007 AU에서 ~4시간 번. 그래서 frame-(a) "빠르게 도착"은 짧은 감속
   비트지 Δv 게이트가 아니다 — 프레임 선택이 블로커가 아니라 flavor인 이유(그 결정은
   워프 문서 소관).
+  *주의 — 제동은 두 종류다.* 위의 싼 제동은 **비상대론적** 도착 사례(별의 km/s 고유속도,
+  γ≈1)다. 상대론적 **순항** 속도를 떨구는 것(realist 토치 주행, 또는 실제 β를 싣고 가는
+  포크 연속순항)은 어려운 사례이며, 상대론 레이어의 `1/γ³` 브레이크 권한이 지배하고
+  대시보드의 `⚠ decel now` 신호로 노출된다([relativity-ux §4](relativity/relativity-ux.md)).
+  이 신호는 **computed-jump 플로어에서는 휴면**(점프가 순간이라 떨굴 순항 속도가 없음)이고,
+  아광속 / 연속순항 프로파일에서만 의미가 있다.
 - **쌍성 궤도항은 옵션이 아니라 필수.** Alpha Cen 1c 트랜짓 동안 A 성분은 바리센터 궤도를
   따라 **6.1 AU** 움직인다 — 내부 시스템보다 크다. 바리센터 lead만 겨냥해도 A를 ~6 AU
   빗나간다. αCen이 #1 타깃 ⇒ 쌍성 목표엔 DB 궤도항이 필수.
@@ -163,3 +169,4 @@ arrivalRelV = v0 − v_star            // frame-(a). |·| = 도착 감속 Δv
 
 - [warp-and-navigation-brainstorm](warp/warp-and-navigation-brainstorm.md) — §6 프레임 결정, §3 점프 vs 순항
 - [feasibility](feasibility.md) — gate 0 (Δv 수식, 광속 하한, 상대성)
+- [relativity-ux](relativity/relativity-ux.md) — §4가 이 플래너의 leg-3 제동을 대시보드 `⚠ decel now` 신호로 소비
