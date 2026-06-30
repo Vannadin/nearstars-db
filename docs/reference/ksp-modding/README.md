@@ -32,10 +32,10 @@ grounding, not by memory-dump**.
 | # | Pillar | Home | Status |
 |:-:|--------|------|--------|
 | ① | **Stock C# API** (Assembly-CSharp surface) | [`ksp-stock-api.md`](ksp-stock-api.md) | **live** — planner slice (targeting, map camera, scaled-space rendering, orbit/body data); grows as touched |
-| ② | **Plugin scaffolding & build** (KSPAddon, PartModule, VesselModule, MonoBehaviour lifecycle, .csproj/refs, AssemblyLoader, deployment) | `plugin-scaffolding.md` | **in progress** |
-| ③ | **Unity-for-KSP** (GameObject/Transform, coroutines, LineRenderer/GL, IMGUI, layers, ScaledSpace) | `unity-for-ksp.md` | **in progress** |
+| ② | **Plugin scaffolding & build** (KSPAddon, PartModule, VesselModule, MonoBehaviour lifecycle, .csproj/refs, AssemblyLoader, deployment) | [`plugin-scaffolding.md`](plugin-scaffolding.md) | **live** |
+| ③ | **Unity-for-KSP** (GameObject/Transform, coroutines, LineRenderer/GL, IMGUI, layers, ScaledSpace) | [`unity-for-ksp.md`](unity-for-ksp.md) | **live** |
 | ④ | ModuleManager & ConfigNode (patch syntax, persistence nodes) | — | deferred (lower priority; cfg-side partly in the skills below) |
-| ⑤ | **Persistence & Harmony** (OnSave/OnLoad, ProtoVessel, scenario modules, Harmony patterns, the part-force / `FashionablyLate` channel) | `persistence-harmony.md` | **in progress** |
+| ⑤ | **Persistence & Harmony** (OnSave/OnLoad, ProtoVessel, scenario modules, Harmony patterns, the part-force / `FashionablyLate` channel) | [`persistence-harmony.md`](persistence-harmony.md) | **live** |
 | ⑥ | Integration subsystems (Kopernicus, Principia, Kerbalism, Firefly, ResearchBodies) | *skills + reference* | **already grounded** — see below, not duplicated here |
 
 **Scope chosen 2026-06-30:** the **plugin-authoring core (①②③⑤)** first — the real gap
@@ -51,6 +51,9 @@ that unblocks NearStars' C# plugins. ④ deferred; ⑥ already covered.
 - **Interstellar-scale map view** — can a body a light-year away be selected/rendered
   in stock map view? Not answerable from public source; needs the DLL or an in-game
   test. See [`ksp-stock-api.md` §6](ksp-stock-api.md).
+- **KB gaps to close** (M/L, witness pending) — `VesselModule.OnSave` override,
+  `[KSPScenario]` attribute args + registration path, `part.AddForceAtPosition`,
+  `WaitForSeconds`/`WaitForFixedUpdate`. See each pillar doc's *Gaps* section.
 - **DLL decompile** — the gold-standard grounding, pending a KSP install.
 
 ## Related

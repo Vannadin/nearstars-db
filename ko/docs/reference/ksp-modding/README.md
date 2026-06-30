@@ -20,10 +20,10 @@ created: 2026-06-30
 | # | 기둥 | 집 | 상태 |
 |:-:|--------|------|--------|
 | ① | **스톡 C# API** (Assembly-CSharp 표면) | [`ksp-stock-api.md`](ksp-stock-api.md) | **live** — 플래너 슬라이스(타깃·맵 카메라·scaled-space 렌더·궤도/바디 데이터). 건드릴 때마다 확장 |
-| ② | **플러그인 스캐폴딩·빌드** (KSPAddon, PartModule, VesselModule, MonoBehaviour 생명주기, .csproj/refs, AssemblyLoader, 배포) | `plugin-scaffolding.md` | **진행 중** |
-| ③ | **Unity-for-KSP** (GameObject/Transform, 코루틴, LineRenderer/GL, IMGUI, 레이어, ScaledSpace) | `unity-for-ksp.md` | **진행 중** |
+| ② | **플러그인 스캐폴딩·빌드** (KSPAddon, PartModule, VesselModule, MonoBehaviour 생명주기, .csproj/refs, AssemblyLoader, 배포) | [`plugin-scaffolding.md`](plugin-scaffolding.md) | **live** |
+| ③ | **Unity-for-KSP** (GameObject/Transform, 코루틴, LineRenderer/GL, IMGUI, 레이어, ScaledSpace) | [`unity-for-ksp.md`](unity-for-ksp.md) | **live** |
 | ④ | ModuleManager & ConfigNode (패치 문법, persistence 노드) | — | 보류(우선순위 낮음. cfg 쪽은 아래 스킬에 일부 있음) |
-| ⑤ | **Persistence & Harmony** (OnSave/OnLoad, ProtoVessel, 시나리오 모듈, Harmony 패턴, part-force / `FashionablyLate` 채널) | `persistence-harmony.md` | **진행 중** |
+| ⑤ | **Persistence & Harmony** (OnSave/OnLoad, ProtoVessel, 시나리오 모듈, Harmony 패턴, part-force / `FashionablyLate` 채널) | [`persistence-harmony.md`](persistence-harmony.md) | **live** |
 | ⑥ | 통합 서브시스템 (Kopernicus, Principia, Kerbalism, Firefly, ResearchBodies) | *스킬 + 레퍼런스* | **이미 근거화됨** — 아래 참조, 여기서 중복하지 않음 |
 
 **2026-06-30 선택 범위:** **플러그인 작성 코어(①②③⑤)** 우선 — NearStars C# 플러그인을 막고 있는 진짜 갭이다. ④는 보류, ⑥은 이미 커버됨.
@@ -36,6 +36,7 @@ created: 2026-06-30
 
 ## 열림 / 보류 (단정 금지)
 - **성간 스케일 맵뷰** — 광년 밖 바디를 스톡 맵뷰에서 선택/렌더할 수 있는가? 공개 소스로 답할 수 없고, DLL이나 인게임 실측이 필요하다. [`ksp-stock-api.md` §6](ksp-stock-api.md) 참조.
+- **KB 미확인 갭** (M/L, witness 대기) — `VesselModule.OnSave` 오버라이드, `[KSPScenario]` 속성 인자+등록 경로, `part.AddForceAtPosition`, `WaitForSeconds`/`WaitForFixedUpdate`. 각 기둥 문서의 *Gaps* 절 참조.
 - **DLL 디컴파일** — gold-standard 근거화, KSP 설치본 확보 시까지 보류.
 
 ## Related
