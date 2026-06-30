@@ -58,7 +58,7 @@
 조직의 `.github` 프로필 README가 "for Modders / for Players" 구분의 정식 기준이다. 검증한 특성화.
 
 **제작 도구 & 문서**
-- **KSPBuildTools** (MIT, 활발) — MSBuild/NuGet 빌드 체인. CKAN 의존성 해소·버전파일 생성·CI. 모든 셋업 가이드가 씀. **`KSPBT_GameRoot` → KSP 설치 필요.**
+- **KSPBuildTools** (MIT, 활발, **v1.1.1** 2025-12-01) — MSBuild/NuGet 빌드 체인. CKAN 의존성 해소·버전파일 생성·CI. 모든 셋업 가이드가 씀. **`KSPBT_GameRoot` → KSP 설치 필요.** **레포 자체에 문서 있음**: `docs/msbuild/{getting-started,configuration,dependencies,ksp-install,generating-version-files}.md`, `docs/workflows/`, `docs/actions/` — 빌드의 권위 레퍼런스(`gh`로 raw 읽기). §7 참조.
 - **KSPModTemplate** (MIT) — 새 모드 프로젝트 스타터 스캐폴드.
 - **KSPLibs** (README만, release 없음) — KSP/Unity DLL을 시그니처로 stripped하는 *방법*을 문서화(`assembly-publicizer *.dll --strip-only`, BepInEx/Krafs publicizer). **KSP 설치본의 `KSP_x64_Data/Managed`에서** 만든다. 사전 빌드된 DLL이 아니다.
 - **KSPDocsSite** (GitHub Pages) — 실제 게임 어셈블리의 전체 Doxygen 덤프. §3 참조.
@@ -169,14 +169,49 @@ raw 마크다운: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModd
 
 ---
 
-## 7. 커버리지 & 더 팔 곳 (정직한 갭)
+## 7. 플러그인 빌드 & 배포 (2026-07-01 검증)
+
+**KSPBuildTools v1.1.1** + 위키 셋업 가이드 둘 + Decompiling-KSP 페이지에 근거. KSPBuildTools는
+레포 자체에 문서를 가짐(§2) — `docs/msbuild/*`가 빌드의 권위 레퍼런스.
+
+**최소 플러그인 `.csproj`** (모던 SDK 스타일, KSPBuildTools를 NuGet PackageReference로):
+- `TargetFramework` = `net48` (KSP는 Mono 4.x 구동. net48이 컴파일 타깃)
+- `LangVersion` = `7.3` (Unity 2019.4 / C# 7.3 상한)
+- `<PackageReference Include="KSPBuildTools" Version="1.1.1" />`
+- 빌드 산출물은 `GameData/<ModName>/Plugins/`로 자동 복사.
+- (Decompiling 가이드는 *레거시* 비-SDK 형태를 보여줌: `<Import …/KSPCommon.targets>` +
+  `$(ManagedPath)` 참조, `OutputType=Library`, `TargetFrameworkVersion=v4.0`. 둘 다 되지만
+  SDK 스타일이 모던 경로.)
+
+**로컬 KSP 설치가 필수다.** KSPBuildTools는 stock/Unity 어셈블리를 `$(KSPBT_GameRoot)/<managed-path>`에서
+해소한다. 번들하거나 다운로드하지 **않음** — `KSPBT_GameRoot`가 비었거나 잘못되면 명시적 에러로
+빌드 실패. 플랫폼별 managed 경로(`KSPCommon.props:72–74`):
+- Windows `KSP_x64_Data/Managed` · macOS `KSP.app/Contents/Resources/Data/Managed` · Linux `KSP_Data/Managed`
+- Steam 자동탐지도 플랫폼별로 있음(`KSPCommon.props:81–82`).
+
+**이 맥엔 KSP가 없다 — 현실적 우회.** `Managed/` 어셈블리(Assembly-CSharp, UnityEngine* 등)는
+플랫폼 무관 .NET IL이다. 즉 맥에 KSP를 깔 필요 **없이** 같은 버전(1.12.x) 설치본의 `Managed/`
+폴더만 확보하면 됨 — 예: 슐츠의 Windows 복사본 — macOS 기대 경로에 배치(또는
+`_KSPBT_ManagedRelativePath`/`KSPBT_GameRoot` 오버라이드)하면 `dotnet build`가 macOS arm64에서
+컴파일된다(arm64 dotnet SDK, IL은 아키텍처 무관).
+*[props 레이아웃에서 추론 — 폴더 확보하면 확인할 것.]*
+
+**배포 & 반복:** `dotnet build` → DLL이 `GameData/<ModName>/Plugins/`에 → 그걸 KSP 설치본의
+GameData로 symlink(`ln -s` macOS/Linux, `mklink /j` Windows) → KSP 재실행(또는 VS/Rider에서 F5).
+게임 **실행**은 여전히 Windows/Mac KSP 필요 = 슐츠 lane. 이 맥은 **컴파일 전용**.
+
+**배포(distribution):** KSPBuildTools는 AVC `.version` 파일도 생성하고 CKAN + SpaceDock 퍼블리시용
+GitHub Action도 제공(`docs/workflows/publish-to-spacedock.md`, `docs/actions/`).
+
+---
+
+## 8. 커버리지 & 더 팔 곳 (정직한 갭)
 
 여기까지 근거화: 조직 레포 역할(§2), KSPDocsSite 사용법(§3), 위키 페이지 지도(§4), 마스터 링크
-색인(§5). 아직 더 안 판 것.
-- **Decompiling-KSP** 위키 페이지 — 미독.
-- **KSPBuildTools** 실제 `.csproj`/`.targets` 메커니즘 — 참조 해소 방식, NearStars 최소 플러그인
-  `.csproj` 모양.
+색인(§5), 빌드 & 배포(§7), Decompiling-KSP(de4dot → ILSpy 8.2, C# 7.3. EULA-회색, DLL/덤프
+gitignore). 아직 더 안 판 것.
 - **gotmachine 디버깅 gist** — 미독. 디버깅 워크플로.
+- **KSPBuildTools `docs/msbuild/*`** — 위치만 파악, 줄단위 정독 전(설정 노브, 의존성 해소).
 - **Core Concepts / Execution order** — 요약만, 아직 멤버 수준 인용 안 함.
 - **부품 / IVA / 비주얼** 갈래 — 링크 수준만. NearStars가 부품·커스텀 셰이더 추가하면 그때 심화.
 

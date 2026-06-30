@@ -62,7 +62,7 @@ Find the row that matches "what I want to build," then follow its sources.
 The org's `.github` profile README is the canonical "for Modders / for Players" split. Verified characterizations:
 
 **Process tooling & docs**
-- **KSPBuildTools** (MIT, active) — MSBuild/NuGet build chain; CKAN dep resolution, version-file gen, CI. Every setup guide uses it. **Requires `KSPBT_GameRoot` → a KSP install.**
+- **KSPBuildTools** (MIT, active, **v1.1.1** 2025-12-01) — MSBuild/NuGet build chain; CKAN dep resolution, version-file gen, CI. Every setup guide uses it. **Requires `KSPBT_GameRoot` → a KSP install.** **Self-documented in-repo**: `docs/msbuild/{getting-started,configuration,dependencies,ksp-install,generating-version-files}.md`, `docs/workflows/`, `docs/actions/` — the authoritative build reference (read raw via `gh`). See §7.
 - **KSPModTemplate** (MIT) — starter scaffold for a new mod project.
 - **KSPLibs** (README only, no release) — *documents the method* to strip KSP/Unity DLLs to signatures (`assembly-publicizer *.dll --strip-only`, BepInEx/Krafs publicizer) **from a KSP install's `KSP_x64_Data/Managed`**. Not pre-built DLLs.
 - **KSPDocsSite** (GitHub Pages) — full Doxygen dump of the real game assemblies. See §3.
@@ -174,14 +174,50 @@ What *our* work pulls from where.
 
 ---
 
-## 7. Coverage & to-deepen (honest gaps)
+## 7. Build & deploy a plugin (verified 2026-07-01)
+
+Grounded in **KSPBuildTools @ v1.1.1** + the two wiki setup guides + the Decompiling-KSP page.
+KSPBuildTools is self-documented in-repo (§2) — `docs/msbuild/*` is the authoritative build reference.
+
+**Minimal plugin `.csproj`** (modern SDK-style, KSPBuildTools as a NuGet PackageReference):
+- `TargetFramework` = `net48` (KSP runs Mono 4.x; net48 is the compile target)
+- `LangVersion` = `7.3` (Unity 2019.4 / C# 7.3 ceiling)
+- `<PackageReference Include="KSPBuildTools" Version="1.1.1" />`
+- Build output auto-copies to `GameData/<ModName>/Plugins/`.
+- (The Decompiling guide shows the *legacy* non-SDK form: `<Import …/KSPCommon.targets>` +
+  `$(ManagedPath)` references, `OutputType=Library`, `TargetFrameworkVersion=v4.0`. Either works;
+  SDK-style is the modern path.)
+
+**A local KSP install is mandatory.** KSPBuildTools resolves stock/Unity assemblies from
+`$(KSPBT_GameRoot)/<managed-path>`; it does **not** bundle or download them — unset/invalid
+`KSPBT_GameRoot` fails the build with an explicit error. Per-platform managed paths
+(`KSPCommon.props:72–74`):
+- Windows `KSP_x64_Data/Managed` · macOS `KSP.app/Contents/Resources/Data/Managed` · Linux `KSP_Data/Managed`
+- Steam auto-detect per platform (`KSPCommon.props:81–82`).
+
+**This Mac has no KSP — the practical unblock.** The `Managed/` assemblies (Assembly-CSharp,
+UnityEngine*, …) are platform-agnostic .NET IL. So we do **not** need to install KSP on the Mac:
+obtain the `Managed/` folder from any same-version (1.12.x) install — e.g. Schultz's Windows copy —
+lay it out in the macOS-expected path (or override `_KSPBT_ManagedRelativePath`/`KSPBT_GameRoot`),
+then `dotnet build` compiles on macOS arm64 (arm64 dotnet SDK; IL is arch-agnostic).
+*[Reasoned from the props layout — confirm once we actually have the folder.]*
+
+**Deploy & iterate:** `dotnet build` → DLL in `GameData/<ModName>/Plugins/` → symlink that into the
+KSP install's GameData (`ln -s` macOS/Linux, `mklink /j` Windows) → relaunch KSP (or F5 from VS/Rider).
+**Running** the game still needs Windows/Mac KSP = Schultz's lane; this Mac is **compile-only**.
+
+**Distribution:** KSPBuildTools also generates the AVC `.version` file and ships GitHub Actions for
+CKAN + SpaceDock publish (`docs/workflows/publish-to-spacedock.md`, `docs/actions/`).
+
+---
+
+## 8. Coverage & to-deepen (honest gaps)
 
 Grounded so far: org repo roles (§2), KSPDocsSite usage (§3), wiki page map (§4), master link
-index (§5). Not yet deepened:
-- **Decompiling-KSP** wiki page — unread.
-- **KSPBuildTools** actual `.csproj`/`.targets` mechanics — how it resolves refs, what a minimal
-  NearStars plugin `.csproj` looks like.
+index (§5), build & deploy (§7), Decompiling-KSP (de4dot → ILSpy 8.2, C# 7.3; EULA-gray, DLL/dump
+gitignored). Not yet deepened:
 - **gotmachine debugging gist** — not read; debugging workflow.
+- **KSPBuildTools `docs/msbuild/*`** — located, not yet read line-by-line (config knobs, dep resolution).
 - **Core Concepts / Execution order** — summarized, not yet cited at member level.
 - **Part / IVA / visual** branches — link-level only; deepen if NearStars adds parts or custom shaders.
 
