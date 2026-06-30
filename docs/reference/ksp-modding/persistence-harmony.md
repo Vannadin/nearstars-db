@@ -164,7 +164,7 @@ UT-into-ConfigNode timestamp (A6, L) · `[HarmonyPatch(new Type[]{…})]` &
 ## Provenance
 Verified 2026-06-30 (raw-fetch + read). Witness repos: Kerbalism, KSPCommunityFixes,
 MechJeb2, KSP-Recall, ContractConfigurator, Principia, FAR, KerbalHealth. Key permalink
-(FashionablyLate): https://github.com/mockingbirdnest/Principia/blob/a440310a9bd48d9e1332bd74abd8f4dcb465ae9b/ksp_plugin_adapter/ksp_plugin_adapter.cs#L866
+(FashionablyLate): https://github.com/mockingbirdnest/Principia/blob/master/ksp_plugin_adapter/ksp_plugin_adapter.cs#L866
 
 ## Related
 - [`README`](README.md) — KB index + grounding policy

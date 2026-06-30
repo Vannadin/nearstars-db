@@ -163,7 +163,7 @@ UT를 ConfigNode 타임스탬프로 (A6, L) · `[HarmonyPatch(new Type[]{…})]`
 ## Provenance
 2026-06-30에 확인했다(raw-fetch + read). witness 레포: Kerbalism, KSPCommunityFixes,
 MechJeb2, KSP-Recall, ContractConfigurator, Principia, FAR, KerbalHealth. 핵심 퍼머링크
-(FashionablyLate): https://github.com/mockingbirdnest/Principia/blob/a440310a9bd48d9e1332bd74abd8f4dcb465ae9b/ksp_plugin_adapter/ksp_plugin_adapter.cs#L866
+(FashionablyLate): https://github.com/mockingbirdnest/Principia/blob/master/ksp_plugin_adapter/ksp_plugin_adapter.cs#L866
 
 ## Related
 - [`README`](README.md) — KB 인덱스 + 근거화 정책

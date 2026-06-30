@@ -71,8 +71,10 @@ where `body` is a `CelestialBody` (an `ITargetable`). Resolve the body via
 | `MapView.MapIsEnabled` | static `bool` | MechJeb2 `MechJebModuleTargetController.cs`; kOS `BindingsUniverse.cs` | H |
 | `MapView.MapCamera` | the map camera (has `.SetTarget`) | Astrogator `KerbalTools.cs:161` | H |
 
-**Killer witness — select + focus a body in map view** (exactly the planner's target
-step), Principia `main_window.cs:44–47`:
+**Witness — the select + focus mechanism** (what the planner's target step would *use* —
+but note the planner targets a computed lead point, not a stock body, and at light-year
+scale §6 flags this unverified), Principia `main_window.cs:44–47` (a dual-mode
+select/focus UI):
 ```csharp
 FlightGlobals.fetch.SetVesselTarget(map_object.celestialBody);   // select
 PlanetariumCamera.fetch.SetTarget(map_object);                   // focus camera

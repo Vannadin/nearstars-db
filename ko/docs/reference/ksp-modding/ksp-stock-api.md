@@ -69,8 +69,9 @@ created: 2026-06-30
 | `MapView.MapIsEnabled` | 정적 `bool` | MechJeb2 `MechJebModuleTargetController.cs`; kOS `BindingsUniverse.cs` | H |
 | `MapView.MapCamera` | 맵 카메라 (`.SetTarget` 보유) | Astrogator `KerbalTools.cs:161` | H |
 
-**결정적 근거 — 맵뷰에서 천체 선택 + 포커스**(정확히 플래너의 타깃 단계),
-Principia `main_window.cs:44–47`:
+**근거 — 천체 선택 + 포커스 메커니즘**(플래너의 타깃 단계가 *사용할* 것. 단 플래너의 타깃은
+스톡 천체가 아니라 계산된 리드 포인트이고, LY 스케일에서는 §6이 미검증으로 둠),
+Principia `main_window.cs:44–47`(듀얼모드 select/focus UI).
 ```csharp
 FlightGlobals.fetch.SetVesselTarget(map_object.celestialBody);   // select
 PlanetariumCamera.fetch.SetTarget(map_object);                   // focus camera
