@@ -179,21 +179,40 @@ What *our* work pulls from where.
 Grounded in **KSPBuildTools @ v1.1.1** + the two wiki setup guides + the Decompiling-KSP page.
 KSPBuildTools is self-documented in-repo (§2) — `docs/msbuild/*` is the authoritative build reference.
 
-**Minimal plugin `.csproj`** (modern SDK-style, KSPBuildTools as a NuGet PackageReference):
-- `TargetFramework` = `net48` (KSP runs Mono 4.x; net48 is the compile target)
-- `LangVersion` = `7.3` (Unity 2019.4 / C# 7.3 ceiling)
-- `<PackageReference Include="KSPBuildTools" Version="1.1.1" />`
-- Build output auto-copies to `GameData/<ModName>/Plugins/`.
-- (The Decompiling guide shows the *legacy* non-SDK form: `<Import …/KSPCommon.targets>` +
-  `$(ManagedPath)` references, `OutputType=Library`, `TargetFrameworkVersion=v4.0`. Either works;
-  SDK-style is the modern path.)
+**Minimal plugin `.csproj`** (modern SDK-style, KSPBuildTools via NuGet — verified against
+`getting-started.md` + `tests/plugin-mod/plugin-mod.csproj`):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>      <!-- KSP Mono 4.x -->
+    <LangVersion>7.3</LangVersion>                <!-- Unity 2019.4 ceiling -->
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>NearStarsRelativity</AssemblyName>
+    <KSPBT_ModRoot>$(MSBuildThisFileDirectory)/GameData/$(MSBuildProjectName)</KSPBT_ModRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="KSPBuildTools" Version="1.1.1" />
+  </ItemGroup>
+</Project>
+```
+The NuGet package imports `KSPCommon.targets` implicitly; build output copies to `KSPBT_ModRoot`.
+Variants: the test project uses a **git-submodule** form (explicit `<Import …/KSPCommon.targets>`,
+plus MinVer/JsonPoke); the Decompiling guide shows the **legacy non-SDK** form (`OutputType=Library`,
+`TargetFrameworkVersion=v4.0`, `$(ManagedPath)` references). All three work; NuGet SDK-style is simplest.
+
+**Dependencies & version file** (don't hand-roll — KSPBuildTools generates these):
+- Declare a dependency with `<ModReference Include="0Harmony"><DLLPath>GameData/000_Harmony/0Harmony.dll</DLLPath><CKANIdentifier>Harmony2</CKANIdentifier></ModReference>` — resolves the compile reference *and* (with `CKANIdentifier`) CKAN-installs it at build time; also auto-emits `[assembly: KSPAssemblyDependency(...)]`. `<CKANDependency Include="X"/>` for data-only deps. (`dependencies.md`)
+- Emit the AVC `.version` file with a `<KSPVersionFile>` item (`Name`/`Version`/`KSP_Version{,_Min,_Max}`/`URL`/`Download`). (`generating-version-files.md`)
 
 **A local KSP install is mandatory.** KSPBuildTools resolves stock/Unity assemblies from
 `$(KSPBT_GameRoot)/<managed-path>`; it does **not** bundle or download them — unset/invalid
 `KSPBT_GameRoot` fails the build with an explicit error. Per-platform managed paths
 (`KSPCommon.props:72–74`):
 - Windows `KSP_x64_Data/Managed` · macOS `KSP.app/Contents/Resources/Data/Managed` · Linux `KSP_Data/Managed`
-- Steam auto-detect per platform (`KSPCommon.props:81–82`).
+- **Do NOT set `KSPBT_GameRoot` in `.csproj`** (`configuration.md` warns). Set it per-machine in
+  `.csproj.user` (gitignored), or `KSP_ROOT` env var for CI. Discovery order (`ksp-install.md`):
+  `KSPBT_GameRoot` prop → `KSP_ROOT` env → a `KSP/` subdir in the solution → `ReferencePath` → Steam default.
 
 **This Mac has no KSP — the practical unblock.** The `Managed/` assemblies (Assembly-CSharp,
 UnityEngine*, …) are platform-agnostic .NET IL. So we do **not** need to install KSP on the Mac:
@@ -206,6 +225,19 @@ then `dotnet build` compiles on macOS arm64 (arm64 dotnet SDK; IL is arch-agnost
 KSP install's GameData (`ln -s` macOS/Linux, `mklink /j` Windows) → relaunch KSP (or F5 from VS/Rider).
 **Running** the game still needs Windows/Mac KSP = Schultz's lane; this Mac is **compile-only**.
 
+**Debugging & profiling** (gotmachine gist — mostly Windows-tested, Rider better on Mac/Linux):
+- **Make KSP debuggable**: add `player-connection-debug=1` to `<KSP>/…Data/boot.config` (macOS:
+  `KSP.app/Contents/Resources/Data/boot.config`), and drop the *development* `UnityPlayer`
+  from the matching Unity 2019.4.18f1 `PlaybackEngines/…development_mono/` into the KSP folder.
+- **Build with symbols**: `<DebugType>portable</DebugType>` (Debug config) → ship the `.pdb`
+  next to the DLL in GameData.
+- **Attach**: VS (Visual Studio Tools for Unity) *Attach Unity Debugger*, or Rider *Attach to Unity
+  Process* → pick the KSP instance. Common gotcha: firewall blocks the connection; KSP's
+  *Simulate In Background* must be on. Manual IP/port is in `Player.log`.
+- **Profile**: compile with `ENABLE_PROFILER`, wrap hot code in `Profiler.BeginSample(...)`/`EndSample()`,
+  connect Unity editor *Profiler*. Profile a Release+`ENABLE_PROFILER` build, not Debug (Debug timings
+  are meaningless).
+
 **Distribution:** KSPBuildTools also generates the AVC `.version` file and ships GitHub Actions for
 CKAN + SpaceDock publish (`docs/workflows/publish-to-spacedock.md`, `docs/actions/`).
 
@@ -214,11 +246,12 @@ CKAN + SpaceDock publish (`docs/workflows/publish-to-spacedock.md`, `docs/action
 ## 8. Coverage & to-deepen (honest gaps)
 
 Grounded so far: org repo roles (§2), KSPDocsSite usage (§3), wiki page map (§4), master link
-index (§5), build & deploy (§7), Decompiling-KSP (de4dot → ILSpy 8.2, C# 7.3; EULA-gray, DLL/dump
-gitignored). Not yet deepened:
-- **gotmachine debugging gist** — not read; debugging workflow.
-- **KSPBuildTools `docs/msbuild/*`** — located, not yet read line-by-line (config knobs, dep resolution).
-- **Core Concepts / Execution order** — summarized, not yet cited at member level.
+index (§5), build/deploy + dependencies + version file + debugging/profiling (§7, from KSPBuildTools
+`docs/msbuild/*` + gotmachine gist), Decompiling-KSP (de4dot → ILSpy 8.2, C# 7.3; EULA-gray, DLL/dump
+gitignored). The full code-mod lifecycle (build → deploy → debug → distribute) is now covered.
+Not yet deepened:
+- **Core Concepts / Execution order** — summarized (§4), not yet cited at member level.
 - **Part / IVA / visual** branches — link-level only; deepen if NearStars adds parts or custom shaders.
+- **CKAN / SpaceDock release workflow** — `docs/workflows/*` located, not walked through end-to-end.
 
 Related memory: `project_ksp_stock_api_grounding` · `project_nearstars_mod_plugins_schultz` · `feedback_reference_doc_location` · `feedback_patreon_assets`.

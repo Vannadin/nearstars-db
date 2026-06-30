@@ -174,20 +174,39 @@ raw 마크다운: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModd
 **KSPBuildTools v1.1.1** + 위키 셋업 가이드 둘 + Decompiling-KSP 페이지에 근거. KSPBuildTools는
 레포 자체에 문서를 가짐(§2) — `docs/msbuild/*`가 빌드의 권위 레퍼런스.
 
-**최소 플러그인 `.csproj`** (모던 SDK 스타일, KSPBuildTools를 NuGet PackageReference로):
-- `TargetFramework` = `net48` (KSP는 Mono 4.x 구동. net48이 컴파일 타깃)
-- `LangVersion` = `7.3` (Unity 2019.4 / C# 7.3 상한)
-- `<PackageReference Include="KSPBuildTools" Version="1.1.1" />`
-- 빌드 산출물은 `GameData/<ModName>/Plugins/`로 자동 복사.
-- (Decompiling 가이드는 *레거시* 비-SDK 형태를 보여줌: `<Import …/KSPCommon.targets>` +
-  `$(ManagedPath)` 참조, `OutputType=Library`, `TargetFrameworkVersion=v4.0`. 둘 다 되지만
-  SDK 스타일이 모던 경로.)
+**최소 플러그인 `.csproj`** (모던 SDK 스타일, KSPBuildTools를 NuGet으로 — `getting-started.md` +
+`tests/plugin-mod/plugin-mod.csproj`로 검증):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>      <!-- KSP Mono 4.x -->
+    <LangVersion>7.3</LangVersion>                <!-- Unity 2019.4 상한 -->
+    <PlatformTarget>x64</PlatformTarget>
+    <AssemblyName>NearStarsRelativity</AssemblyName>
+    <KSPBT_ModRoot>$(MSBuildThisFileDirectory)/GameData/$(MSBuildProjectName)</KSPBT_ModRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="KSPBuildTools" Version="1.1.1" />
+  </ItemGroup>
+</Project>
+```
+NuGet 패키지가 `KSPCommon.targets`를 암묵적으로 import. 빌드 산출물은 `KSPBT_ModRoot`로 복사.
+변형: 테스트 프로젝트는 **git-submodule** 형태(명시적 `<Import …/KSPCommon.targets>` + MinVer/JsonPoke),
+Decompiling 가이드는 **레거시 비-SDK** 형태(`OutputType=Library`, `TargetFrameworkVersion=v4.0`,
+`$(ManagedPath)` 참조). 셋 다 되지만 NuGet SDK 스타일이 가장 간단.
+
+**의존성 & 버전 파일** (손으로 만들지 말 것 — KSPBuildTools가 생성):
+- 의존성은 `<ModReference Include="0Harmony"><DLLPath>GameData/000_Harmony/0Harmony.dll</DLLPath><CKANIdentifier>Harmony2</CKANIdentifier></ModReference>`로 선언 — 컴파일 참조를 해소하고, `CKANIdentifier`가 있으면 빌드 시 CKAN 설치까지. `[assembly: KSPAssemblyDependency(...)]`도 자동 생성. 데이터 전용 의존성은 `<CKANDependency Include="X"/>`. (`dependencies.md`)
+- AVC `.version` 파일은 `<KSPVersionFile>` 아이템으로 생성(`Name`/`Version`/`KSP_Version{,_Min,_Max}`/`URL`/`Download`). (`generating-version-files.md`)
 
 **로컬 KSP 설치가 필수다.** KSPBuildTools는 stock/Unity 어셈블리를 `$(KSPBT_GameRoot)/<managed-path>`에서
 해소한다. 번들하거나 다운로드하지 **않음** — `KSPBT_GameRoot`가 비었거나 잘못되면 명시적 에러로
 빌드 실패. 플랫폼별 managed 경로(`KSPCommon.props:72–74`):
 - Windows `KSP_x64_Data/Managed` · macOS `KSP.app/Contents/Resources/Data/Managed` · Linux `KSP_Data/Managed`
-- Steam 자동탐지도 플랫폼별로 있음(`KSPCommon.props:81–82`).
+- **`KSPBT_GameRoot`를 `.csproj`에 넣지 말 것**(`configuration.md` 경고). 머신별로 `.csproj.user`(gitignore)에
+  두거나, CI는 `KSP_ROOT` 환경변수로. 탐색 순서(`ksp-install.md`):
+  `KSPBT_GameRoot` 속성 → `KSP_ROOT` 환경변수 → 솔루션의 `KSP/` 하위폴더 → `ReferencePath` → Steam 기본 경로.
 
 **이 맥엔 KSP가 없다 — 현실적 우회.** `Managed/` 어셈블리(Assembly-CSharp, UnityEngine* 등)는
 플랫폼 무관 .NET IL이다. 즉 맥에 KSP를 깔 필요 **없이** 같은 버전(1.12.x) 설치본의 `Managed/`
@@ -200,6 +219,18 @@ raw 마크다운: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModd
 GameData로 symlink(`ln -s` macOS/Linux, `mklink /j` Windows) → KSP 재실행(또는 VS/Rider에서 F5).
 게임 **실행**은 여전히 Windows/Mac KSP 필요 = 슐츠 lane. 이 맥은 **컴파일 전용**.
 
+**디버깅 & 프로파일링** (gotmachine gist — 주로 Windows 검증, 맥/리눅스는 Rider가 나음):
+- **KSP를 디버깅 가능하게**: `<KSP>/…Data/boot.config`에 `player-connection-debug=1` 추가(macOS는
+  `KSP.app/Contents/Resources/Data/boot.config`), 그리고 같은 Unity 2019.4.18f1의
+  `PlaybackEngines/…development_mono/`에서 *개발용* `UnityPlayer`를 KSP 폴더에 넣음.
+- **심볼 포함 빌드**: `<DebugType>portable</DebugType>`(Debug 구성) → `.pdb`를 GameData의 DLL 옆에 둠.
+- **어태치**: VS(Visual Studio Tools for Unity) *Attach Unity Debugger*, 또는 Rider *Attach to Unity
+  Process* → KSP 인스턴스 선택. 흔한 함정: 방화벽이 연결 차단, KSP의 *Simulate In Background* 켜야 함.
+  수동 IP/포트는 `Player.log`에 있음.
+- **프로파일**: `ENABLE_PROFILER`로 컴파일, 핫코드를 `Profiler.BeginSample(...)`/`EndSample()`로 감싸고
+  Unity 에디터 *Profiler* 연결. Debug 말고 Release+`ENABLE_PROFILER` 빌드를 프로파일할 것(Debug 타이밍은
+  의미 없음).
+
 **배포(distribution):** KSPBuildTools는 AVC `.version` 파일도 생성하고 CKAN + SpaceDock 퍼블리시용
 GitHub Action도 제공(`docs/workflows/publish-to-spacedock.md`, `docs/actions/`).
 
@@ -208,11 +239,11 @@ GitHub Action도 제공(`docs/workflows/publish-to-spacedock.md`, `docs/actions/
 ## 8. 커버리지 & 더 팔 곳 (정직한 갭)
 
 여기까지 근거화: 조직 레포 역할(§2), KSPDocsSite 사용법(§3), 위키 페이지 지도(§4), 마스터 링크
-색인(§5), 빌드 & 배포(§7), Decompiling-KSP(de4dot → ILSpy 8.2, C# 7.3. EULA-회색, DLL/덤프
-gitignore). 아직 더 안 판 것.
-- **gotmachine 디버깅 gist** — 미독. 디버깅 워크플로.
-- **KSPBuildTools `docs/msbuild/*`** — 위치만 파악, 줄단위 정독 전(설정 노브, 의존성 해소).
-- **Core Concepts / Execution order** — 요약만, 아직 멤버 수준 인용 안 함.
+색인(§5), 빌드/배포 + 의존성 + 버전 파일 + 디버깅/프로파일링(§7, KSPBuildTools `docs/msbuild/*` +
+gotmachine gist), Decompiling-KSP(de4dot → ILSpy 8.2, C# 7.3. EULA-회색, DLL/덤프 gitignore).
+코드 모드 라이프사이클 전체(빌드 → 배포 → 디버그 → 릴리스)가 이제 커버됨. 아직 더 안 판 것.
+- **Core Concepts / Execution order** — 요약만(§4), 아직 멤버 수준 인용 안 함.
 - **부품 / IVA / 비주얼** 갈래 — 링크 수준만. NearStars가 부품·커스텀 셰이더 추가하면 그때 심화.
+- **CKAN / SpaceDock 릴리스 워크플로** — `docs/workflows/*` 위치 파악, 끝까지 걸어보진 않음.
 
 관련 메모리: `project_ksp_stock_api_grounding` · `project_nearstars_mod_plugins_schultz` · `feedback_reference_doc_location` · `feedback_patreon_assets`.
