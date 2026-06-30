@@ -11,7 +11,7 @@ updated: 2026-06-29
 기록한다. 엔진 무관 — 여기 수식은 이식 가능하고 이쪽이 맡는 절반이다. 인게임
 C#(맵뷰 훅·UI·점프/워프 engage)은 슐츠 레인
 ([[project-nearstars-mod-plugins-schultz]]). 맥락은 [`README`](README.md),
-[`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md).
+[`warp-and-navigation-brainstorm.md`](warp/warp-and-navigation-brainstorm.md).
 
 ## 왜 필요한가 (그리고 왜 무겁지 않고 *가벼운가*)
 
@@ -161,5 +161,5 @@ arrivalRelV = v0 − v_star            // frame-(a). |·| = 도착 감속 Δv
 
 ## Related
 
-- [warp-and-navigation-brainstorm](warp-and-navigation-brainstorm.md) — §6 프레임 결정, §3 점프 vs 순항
+- [warp-and-navigation-brainstorm](warp/warp-and-navigation-brainstorm.md) — §6 프레임 결정, §3 점프 vs 순항
 - [feasibility](feasibility.md) — gate 0 (Δv 수식, 광속 하한, 상대성)

@@ -47,13 +47,13 @@ created: 2026-06-28
 
 - [`feasibility.md`](feasibility.md) — 게이트 0. 실거리에서 성간 이동이 물리적으로
   빌드/플레이 가능한가 (Δv, 광속 하한, 상대성, 워프 mod).
-- [`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md) —
+- [`warp-and-navigation-brainstorm.md`](warp/warp-and-navigation-brainstorm.md) —
   Principia 하 워프 메커니즘, 옵션 사다리(no-fork / 최소 포크 / 큰 포크), cruise
   아키텍처, 속도 연속성, lead-intercept 플래너.
 - [`planner-spec.md`](planner-spec.md) — Δv 기반 lead-intercept 플래너. 수식 spec,
   `v_avg = c·tanh(Δv/4)`, 3-leg 프로파일, DB 데이터 프로토타입.
   프로토타입은 [`prototypes/`](../../../gameplay/interstellar-expansion/prototypes/).
-- [`relativity-mod.md`](relativity-mod.md) — 아광속 특수상대론 게임플레이 레이어
+- [`relativity-mod.md`](relativity/relativity-mod.md) — 아광속 특수상대론 게임플레이 레이어
   (thrust/γ³, 고유시간 resource/γ, 옵션 starbow). 워프와 달리 Principia-safe
   (적분기 아니라 힘/소비율 변조).
 

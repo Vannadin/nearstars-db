@@ -52,13 +52,13 @@ does design, spec, cfg, and math prototypes.
 
 - [`feasibility.md`](feasibility.md) — gate 0: is interstellar travel physically
   buildable/playable at real distances (Δv, light floor, relativity, warp mods).
-- [`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md) — warp
+- [`warp-and-navigation-brainstorm.md`](warp/warp-and-navigation-brainstorm.md) — warp
   mechanics under Principia, options ladder (no-fork / minimal-fork / big-fork),
   cruise architecture, velocity continuity, the lead-intercept planner.
 - [`planner-spec.md`](planner-spec.md) — the Δv-based lead-intercept planner: math
   spec, `v_avg = c·tanh(Δv/4)`, the three-leg profile, and the DB-data prototype.
   Prototypes in [`prototypes/`](prototypes/).
-- [`relativity-mod.md`](relativity-mod.md) — sub-light special-relativity gameplay
+- [`relativity-mod.md`](relativity/relativity-mod.md) — sub-light special-relativity gameplay
   layer (thrust/γ³, proper-time resource/γ, optional starbow). Principia-safe
   (force/rate modulation, not the integrator) — unlike warp.
 

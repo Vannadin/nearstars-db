@@ -1,16 +1,18 @@
 # 이종물질(음에너지) 실존 가정 하의 워프 연료·에너지 소요량 프로토타입.
-# 동일한 Alcubierre 음에너지 적분에서 (벽두께 Δ·유효 버블반경 R)만 바꿔 3종 모델 비교:
+# 동일한 Alcubierre 음에너지 적분에서 (벽두께 Δ·유효 버블반경 R)만 바꿔 모델 비교:
 #   1) 정통 Alcubierre/Pfenning-Ford  — 플랑크 박벽 → 우주질량급 (왜 불가능한가)
-#   2) 최적화 Van Den Broeck + White  — 미시 neck + 두꺼운 벽 → kg~g 급
+#   2) illustrative toy               — 미시 R_eff + 두꺼운 벽 → g~kg (※ 공개 논문값 아님, 스케일 감각용)
 #   3) 게임튜닝 KSPIE식                — 메트릭 무시, ExoticMatter ∝ 선체질량 + MJ ∝ 거리
 # NearStars 거리는 db/systems astrometry(parallax)에서 직접 읽음. FTL이므로 광속하한 무시.
+# 이론·인용 전체는 docs/reference/warp-drive-energetics.md 참조.
 #
 # 음에너지 적분 근거(교과서/고전 워프 문헌, 차원해석 수준):
 #   E ≈ -(c⁴/12G)·β_s²·(R²/Δ)              (Alcubierre 1994; Lobo&Visser 2004 적분형)
-#   - Pfenning&Ford 1997: 양자부등식 → 벽 Δ ~ 플랑크길이 수배 → |E| ≳ 우주질량
-#   - Van Den Broeck 1999: 위상 neck으로 유효 R을 미시화 → |E| 수 g까지 압축
-#   - White 2013: 토로이달+벽 두껍게+진동 → 추가 수자릿수 감소
-#   여기서는 모델별로 (R_eff, Δ)만 갈아끼워 같은 식으로 스펙트럼을 보여줌(정밀 계수 아님).
+#   - Pfenning&Ford 1997(gr-qc/9702026): 양자부등식 → 벽 Δ ~ 플랑크길이 수백배 → "physically unattainable"
+#     (우주질량 수치는 본문에만 있어 본 표의 10^65 kg은 위 스케일링식의 자체 추정값임)
+#   주의: 'optimized' 컬럼의 g~kg은 R_eff를 공격적으로 줄인 illustrative toy일 뿐이며,
+#         실제 공개된 감축값은 Van Den Broeck 1999(gr-qc/9905084) "수 태양질량",
+#         Fell&Heisenberg 2021(2104.06488) "태양질량의 ~10^-4" — 아래 PUBLISHED 표 참조.
 import json, math
 
 # --- 물리상수 (SI) ---
@@ -34,11 +36,19 @@ def neg_energy_J(beta_s, R_eff, delta):
 # 모델 파라미터: 같은 물리식, (유효반경 R_eff, 벽두께 Δ)만 다름
 PLANCK_L = 1.616e-35   # m
 MODELS = {
-    'classic':   dict(R_eff=100.0,  delta=10*PLANCK_L,  # 100m 버블, 플랑크 수배 박벽(Pfenning-Ford)
+    'classic':   dict(R_eff=100.0,  delta=10*PLANCK_L,  # 100m 버블, 플랑크 수백배 박벽(Pfenning-Ford)
                       note="정통 Alcubierre/Pfenning-Ford — 플랑크 박벽"),
-    'optimized': dict(R_eff=1e-15,  delta=1.0,          # VdB 미시 neck(~fm) + White 두꺼운 벽(~m)
-                      note="VdB neck + White 토로이달/두꺼운 벽"),
+    'toy':       dict(R_eff=1e-15,  delta=1.0,          # 공격적 R_eff(~fm) + 두꺼운 벽(~m)
+                      note="illustrative toy (공개 논문값 아님)"),
 }
+
+# 실제 논문이 발표한 감축값(스케일링 toy와 별개의 권위 수치). docs/reference/warp-drive-energetics.md §4–5.
+PUBLISHED = [
+    ("Van Den Broeck 1999 (gr-qc/9905084)", "음에너지 ~수 태양질량 (양에너지 동급, WEC-QI 충족)"),
+    ("Bobrick & Martire 2021 (2102.06824)", "Alcubierre 대비 음에너지 ~2자릿수 감소; 초광속은 여전히 에너지조건 위배"),
+    ("Fell & Heisenberg 2021 (2104.06488)", "양에너지 솔리톤, 총에너지 ~태양질량의 10^-4"),
+    ("Santiago/Schuster/Visser 2022 (2105.03079)", "반박: 일반 워프는 NEC/WEC/SEC/DEC 모두 위배 (초광속=음에너지 필수)"),
+]
 
 def fmt_mass(kg):
     if kg >= 1e6*M_SUN: return f"{kg/M_UNIVERSE:.1e} 우주질량"
@@ -58,11 +68,11 @@ print("="*86)
 print("이종물질 실존 가정 — 워프 음에너지 적재량 (메트릭 모델, 거리 무관 standing load)")
 print("="*86)
 print(f"버블 음에너지 |E| = (c⁴/12G)·β_s²·R²/Δ  →  적재 이종물질 = |E|/c²\n")
-print(f"{'β_s (warp)':>11s} | {'정통 Alcubierre/PF':>22s} | {'최적화 VdB+White':>22s}")
+print(f"{'β_s (warp)':>11s} | {'정통 Alcubierre/PF':>22s} | {'illustrative toy':>22s}")
 print("-"*86)
 for b in WARP_BETAS:
     row = [f"{b:>9.0f}c "]
-    for key in ('classic','optimized'):
+    for key in ('classic','toy'):
         m = MODELS[key]
         E = neg_energy_J(b, m['R_eff'], m['delta'])
         row.append(f"{fmt_mass(E/C2):>22s}")
@@ -70,8 +80,11 @@ for b in WARP_BETAS:
 print()
 print("해석: 정통 모델은 β_s=10c·100m 버블에서도 |E|/c²가 우주질량을 수십자릿수 초과 →")
 print("      '이종물질이 있어도' 우주 전체를 음에너지로 환산해야 함 = 사실상 불가.")
-print("      VdB 미시 neck + White 벽 최적화는 같은 β_s를 kg~g 수준으로 압축 →")
-print("      '이종물질이 실존하고 위상 트릭이 가능하다면' 비로소 적재 가능한 영역.")
+print("      'toy' 컬럼(g~kg)은 R_eff를 공격적으로 줄였을 때의 스케일 감각용일 뿐, 공개 논문값이 아님.")
+print()
+print("실제 논문 발표 감축값 (PUBLISHED — 위 toy와 별개의 권위 수치):")
+for src, claim in PUBLISHED:
+    print(f"  · {src}: {claim}")
 
 # --- 게임튜닝(KSPIE식): 메트릭 무시, ExoticMatter ∝ 선체질량, MJ ∝ 거리·β_s² ---
 print("\n" + "="*86)

@@ -10,7 +10,7 @@ created: 2026-06-30
 chosen in [`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md)
 §3 (the `UnmanageabilityReasons` flag) into (a) an actual patch sketch against
 Principia's source and (b) a cruise-layer plugin skeleton
-([`plugins/NearStarsWarp/`](../../plugins/NearStarsWarp/)). Source-grounded
+([`plugins/NearStarsWarp/`](../../../plugins/NearStarsWarp/)). Source-grounded
 claims carry the brainstorm's `[src]` anchors; line numbers are from
 `mockingbirdnest/Principia` @ master and **must be re-confirmed before any fork**
 (Principia rebases monthly). In-game C#/C++ is Schultz's lane
@@ -29,7 +29,7 @@ This draft fixes defaults so there is something concrete to verify:
 | Detach mechanism | **Minimal fork** — one `UnmanageabilityReasons` exclusion | sweet spot: cruise works, lives in a stable filter (light rebase) | yes — swap the interop layer |
 | Flight plan on warp | **Lost, replan at destination** | the C++ trajectory is destroyed on detach; preserving it = big fork | yes — big fork later |
 | Velocity frame across the gap | **(a) barycentric preserve** | project ethos (realistic); arrival relative velocity is a real challenge | yes — one constant in `WarpCruise` |
-| Energy / fuel | **Gameplay-tuned ExoticMatter** (see `prototypes/warp_exotic_matter.py`) | the metric energy is 10⁶⁰× absurd; gameplay model is the only shippable one | yes — tuner cfg |
+| Energy / fuel | **Gameplay-tuned ExoticMatter** (see `warp_exotic_matter.py`) | the metric energy is 10⁶⁰× absurd; gameplay model is the only shippable one | yes — tuner cfg |
 
 All four are tunable / swappable; none is load-bearing for the *architecture*.
 
@@ -126,7 +126,7 @@ velocity, and the relativity layer's leg-3 braking handles bleeding it off.
 
 ## 3. Cross-plugin tie — the relativity layer's warp flag
 
-The relativity layer ([`plugins/NearStarsRelativity/`](../../plugins/NearStarsRelativity/))
+The relativity layer ([`plugins/NearStarsRelativity/`](../../../plugins/NearStarsRelativity/))
 §2.6(ii) must treat a warping vessel as identity (warp β is not physical β, or it
 reads FTL → NaN). It already exposes `WarpFlag.Provider`. **This plugin fills it**
 — `WarpFlagBridge` registers a provider that returns `true` while a vessel is in
@@ -179,6 +179,6 @@ keep notices); issue #1420 (HyperEdit no-effect, wontfix).
 ## Related
 
 - [warp-and-navigation-brainstorm](warp-and-navigation-brainstorm.md) — §3 options ladder, §4 cruise arch, §6 frame (this draft picks defaults)
-- [feasibility](feasibility.md) — gate 0 (two-profile decision; this is the "warp + Principia together" path)
-- `prototypes/warp_exotic_matter.py` — the ExoticMatter / energy economics the gameplay fuel model uses
-- [relativity-mod](relativity-mod.md) — §2.6(ii) warp flag this plugin fills
+- [feasibility](../feasibility.md) — gate 0 (two-profile decision; this is the "warp + Principia together" path)
+- `warp_exotic_matter.py` — the ExoticMatter / energy economics the gameplay fuel model uses
+- [relativity-mod](../relativity/relativity-mod.md) — §2.6(ii) warp flag this plugin fills

@@ -11,7 +11,7 @@ updated: 2026-06-29
 planner and records the math prototype. Engine-agnostic: the math here is portable
 and is the half this side owns; the in-game C# (map-view hooks, UI, jump/warp
 engage) is Schultz's ([[project-nearstars-mod-plugins-schultz]]). Context:
-[`README`](README.md), [`warp-and-navigation-brainstorm.md`](warp-and-navigation-brainstorm.md).
+[`README`](README.md), [`warp-and-navigation-brainstorm.md`](warp/warp-and-navigation-brainstorm.md).
 
 ## Why it's needed (and why it's *light*, not heavy)
 
@@ -173,5 +173,5 @@ Numbers reproducible via [`prototypes/planner_deep.py`](prototypes/planner_deep.
 
 ## Related
 
-- [warp-and-navigation-brainstorm](warp-and-navigation-brainstorm.md) — §6 frame decision, §3 jump-vs-cruise
+- [warp-and-navigation-brainstorm](warp/warp-and-navigation-brainstorm.md) — §6 frame decision, §3 jump-vs-cruise
 - [feasibility](feasibility.md) — gate 0 (Δv math, light floor, relativity)

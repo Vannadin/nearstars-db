@@ -7,7 +7,7 @@ created: 2026-06-28
 # Warp under Principia + interstellar navigation — brainstorm
 
 **단계: 브레인스토밍 / 탐색 — 아직 확정 아님.** 2026-06-28 세션에서 나온 워프 메커니즘과
-항법 아이디어를 정리한 문서다. [`feasibility.md`](feasibility.md)(gate 0)의 연장선이다.
+항법 아이디어를 정리한 문서다. [`feasibility.md`](../feasibility.md)(gate 0)의 연장선이다.
 소스로 근거화된 발견은 **[src]** 로 표시했으며(Principia `mockingbirdnest/Principia` @ master),
 나머지는 검증이 필요한 설계 아이디어다. 인게임 C#/C++ 작업은 슐츠 담당이고
 ([[project-nearstars-mod-plugins-schultz]], [[project-principia-custom-branch]]),
@@ -158,4 +158,4 @@ Principia 자신의 비행 계획기(flight planner)는 워프 구간을 다룰 
 
 ## Related
 
-- [feasibility](feasibility.md) — gate 0 (Δv map, light floor, relativity, warp-mod survey, two-profile)
+- [feasibility](../feasibility.md) — gate 0 (Δv map, light floor, relativity, warp-mod survey, two-profile)

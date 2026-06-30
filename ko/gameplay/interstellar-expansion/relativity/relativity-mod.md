@@ -22,7 +22,7 @@ created: 2026-06-29
   시간 팽창 / 타임워프 조작(추후 "시간" 요소로 보류). 에너지·연료 질량비 폭증 경제학.
   일반상대론 효과(이건 특수상대론 한정).
 - **코드.** Tier 0 초안 구현이
-  [`plugins/NearStarsRelativity/`](../../../plugins/NearStarsRelativity/)에 있다 — 이
+  [`plugins/NearStarsRelativity/`](../../../../plugins/NearStarsRelativity/)에 있다 — 이
   spec에서 Opus 측이 작성(순수 로직은 견고, KSP-API 접촉부는 `// VERIFY:` 마커),
   슐츠가 어셈블리 연결·컴파일·인게임 테스트 담당
   (`project_nearstars_mod_plugins_schultz`). **아직 컴파일·테스트 안 됨.**
@@ -235,7 +235,7 @@ NaN. 가드 —
 - **권장 빌드 순서** — Tier 0 메커닉만(추력 + 물자 + 계기판) — 자체로 출시 가능하고
   독립적. 시각(Tier 1–2)은 우리 팀 범위 밖(§2.5).
 - **핸드오프** — 이 노트가 슐츠용 브리프다(`project_nearstars_mod_plugins_schultz`).
-  초안 코드는 [`plugins/NearStarsRelativity/`](../../../plugins/NearStarsRelativity/)에
+  초안 코드는 [`plugins/NearStarsRelativity/`](../../../../plugins/NearStarsRelativity/)에
   있다(`RelativityState` = β/γ + §2.6 가드 코어, `ThrustCorrector` = 힘 훅,
   `WarpFlag` = 공유 플래그). 플러그인 두 조각 — (a) part-force 채널에 프레임당 보정력을 넣어 *순* 적분력이
   ×1/γ³가 되게(엔진 추력 패치 아님 — 그건 연료까지 깎음. 추진제는 정격 좌표시간

@@ -3,7 +3,7 @@
 Status: **draft, not compiled or tested** (no KSP/Unity/Principia DLLs in this
 repo). Authored Opus-side per the spec; Schultz integrates, verifies the API
 touchpoints, compiles, and tests in-game (Sonnet-side). Spec of record:
-[`gameplay/interstellar-expansion/relativity-mod.md`](../../gameplay/interstellar-expansion/relativity-mod.md)
+[`gameplay/interstellar-expansion/relativity-mod.md`](../../gameplay/interstellar-expansion/relativity/relativity-mod.md)
 (§2.6 guards, §3 hand-off).
 
 ## What it is

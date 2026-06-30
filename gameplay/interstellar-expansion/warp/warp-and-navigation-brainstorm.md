@@ -8,7 +8,7 @@ created: 2026-06-28
 
 **Stage: brainstorm / exploratory — not committed.** Captures the warp-mechanics
 and navigation ideas from the 2026-06-28 session. Extends
-[`feasibility.md`](feasibility.md) (gate 0). Source-grounded findings are marked
+[`feasibility.md`](../feasibility.md) (gate 0). Source-grounded findings are marked
 **[src]** (Principia `mockingbirdnest/Principia` @ master); the rest are design
 ideas to validate. In-game C#/C++ is Schultz's lane
 ([[project-nearstars-mod-plugins-schultz]], [[project-principia-custom-branch]]);
@@ -177,4 +177,4 @@ leg (detached, non-gravitational, flight-plan dropped) ⇒ **custom planner need
 
 ## Related
 
-- [feasibility](feasibility.md) — gate 0 (Δv map, light floor, relativity, warp-mod survey, two-profile)
+- [feasibility](../feasibility.md) — gate 0 (Δv map, light floor, relativity, warp-mod survey, two-profile)

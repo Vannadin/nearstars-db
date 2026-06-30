@@ -3,7 +3,7 @@
 Status: **draft, not compiled or tested** (no KSP/Unity/Principia DLLs in this
 repo). Authored Opus-side per the spec; Schultz forks Principia, integrates,
 verifies the API touchpoints, compiles, and tests in-game. Spec of record:
-[`gameplay/interstellar-expansion/warp-patch-draft.md`](../../gameplay/interstellar-expansion/warp-patch-draft.md).
+[`gameplay/interstellar-expansion/warp-patch-draft.md`](../../gameplay/interstellar-expansion/warp/warp-patch-draft.md).
 
 ## What it is
 
