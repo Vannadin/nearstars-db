@@ -32,6 +32,51 @@ the fiction.
 
 ---
 
+## 0. Plain-language summary (no math)
+
+For readers who want the story without the tensors. The sections below back every
+claim here with equations and citations.
+
+1. **Warp doesn't make the ship fast — it moves space.** Like standing still on an
+   airport moving walkway: your legs don't move, the floor carries you. A warp bubble
+   *contracts space ahead of it and expands space behind*, carrying the ship inside.
+   Locally nothing beats light (no relativity violation), yet the bubble as a whole
+   can outrun light to the destination. This is Alcubierre's 1994 idea.
+2. **Bending space that way needs "negative-energy" matter — exotic matter.** All
+   matter we know has positive energy. Tiny amounts of negative energy are real
+   (Casimir effect), but the large, stable lump a warp bubble needs has never been
+   made and may not exist. NearStars simply *assumes it does* — that assumption is the
+   fiction; the physics around it is real.
+3. **The amount required is hopeless at face value.** Faster, bigger, and
+   thinner-walled bubbles cost more — and quantum physics forces the bubble wall to be
+   absurdly thin (near the Planck length). The result: even a small, modest-speed
+   bubble needs exotic matter of order **a trillion times the mass of the observable
+   universe.** Pfenning & Ford called it "physically unattainable."
+4. **Clever tricks shrink it — but only so far.** Van Den Broeck's topological "neck"
+   hides a big interior behind a microscopic surface, cutting the bill to *a few
+   solar masses* (often mis-quoted as "grams" — the paper says solar masses). White's
+   NASA work (toroidal, thick-walled, oscillating field) claims further cuts, but it's
+   fringe and unverified, so this doc flags it as such.
+5. **A recent "maybe positive energy works?" wave — and the rebuttal.** Several
+   2020s papers claimed warp without negative energy. Critics (Santiago, Schuster &
+   Visser) showed those only look fine to *some* observers; accounting for *all*
+   observers, the energy conditions are still violated. Consensus: *subluminal* warp
+   might one day use positive energy, but genuinely *faster-than-light* warp still
+   demands exotic matter. NearStars' FTL warp lives in exactly that "still required"
+   regime.
+6. **So the game cheats honestly.** The real numbers swing by ~60 orders of magnitude
+   and are unusable. NearStars throws the metric math out and redefines exotic matter
+   as a *load proportional to ship mass* and energy as a *distance × mass* cost — clean
+   numbers for an RP-1-style economy. The physics tables are kept to show *why* the
+   game had to make that jump.
+
+**One line:** warp bends space to carry a ship; doing it needs a maybe-impossible
+negative-energy substance in universe-sized amounts, and even every trick leaves
+faster-than-light warp needing it — so the game grants it by fiat and bills it by
+ship mass and distance.
+
+---
+
 ## 1. The Alcubierre metric — moving space, not the ship
 
 Alcubierre's 1994 letter [[A94]](#A94) takes flat spacetime and adds a localized
