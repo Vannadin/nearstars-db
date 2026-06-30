@@ -18,6 +18,13 @@ LineRenderer, 머티리얼/셰이더, IMGUI 윈도, 카메라 투영. 근거화 
 > 셰이더 try-both 관용구, 최신 LineRenderer 프로퍼티 API). 플럭스 튜브는 그 스캐폴딩을
 > 재사용하되 2점 대신 `positionCount = N`으로 곡선 Bézier 점들을 먹인다 — 즉 모양이 아니라
 > *기계장치*의 가장 가까운 witness다.
+>
+> *각주(알려진 혼동 방지):* 이 파일은 kOS의 **`VECDRAW`** 기능이다
+> (`[KOSNomenclature("Vecdraw")]`. GameObject `vecdrawLine`/`vecdrawHat`). `isOnMap`
+> 분기와 함께 `ScaledSpace.LocalToScaledSpace`로 그리는 **인월드 3D 벡터 오버레이**이지,
+> kOS 텍스트 터미널/GUI가 **아니다**. 바로 그 인월드 `LineRenderer` + `ScaledSpace` 경로가
+> (파일을 raw-fetch로 검증) 이걸 유효한 스캐폴딩 witness로 만든다. 근거화는 그 외엔 kOS에
+> 의존하지 않는다.
 
 ---
 

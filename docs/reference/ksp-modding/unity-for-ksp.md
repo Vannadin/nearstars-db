@@ -19,6 +19,13 @@ grounded in [`ksp-stock-api.md` §3](ksp-stock-api.md) and only cross-referenced
 > try-both idiom, and the modern LineRenderer property API. The flux-tube reuses that
 > scaffolding but feeds `positionCount = N` curved Bézier points instead of 2 — so this
 > is the closest witnessed analog for the *mechanics*, not the shape.
+>
+> *Footnote (to avoid a known confusion):* this file is kOS's **`VECDRAW`** feature
+> (`[KOSNomenclature("Vecdraw")]`; GameObjects `vecdrawLine`/`vecdrawHat`), an **in-world
+> 3D vector overlay** drawn via `ScaledSpace.LocalToScaledSpace` with an `isOnMap` branch
+> — **not** the kOS text terminal/GUI. It is exactly that in-world `LineRenderer` +
+> `ScaledSpace` path (verified by raw-fetching the file) that makes it a valid
+> scaffolding witness; the grounding does not otherwise depend on kOS.
 
 ---
 
