@@ -145,3 +145,19 @@ The distinction: skipping "should I proceed?" is good. Skipping "what am I about
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+---
+
+## 12. Project conventions → `CONVENTIONS.md`
+
+**Read [`CONVENTIONS.md`](CONVENTIONS.md) at session start.** It holds the full working conventions
+(communication/language, git, workflow, doc placement, and NearStars curation/data discipline),
+consolidated from what used to be scattered across memory. This file only carries the always-on
+essentials below; `CONVENTIONS.md` is the reference for everything else.
+
+Always-on essentials (never skip, even if you don't open `CONVENTIONS.md`):
+- **Replies to the user: Korean, 존댓말.** Sentences end with `.`/`?`/`!`, never `:` (rule 5).
+- **`.md` is English source-of-truth** (write English first, never Korean-first); reader-facing docs
+  (`docs/`, `plans/`, root `README.md`, this repo's `CONVENTIONS.md`) get a `ko/<same-path>` mirror,
+  written as natural Korean (not literal). Commits in English; identity `VaNnadin <vannadin00@gmail.com>`.
+- **Autonomous execution** (rule 11) and no break/pace suggestions — the owner paces themselves.
