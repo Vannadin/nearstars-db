@@ -27,7 +27,7 @@
    디컴파일은 gold standard지만 보류(이 맥에 KSP 설치본 없음).
 5. **빌드하려면 KSP의 stock 어셈블리가 필요하다.** `KSPBuildTools`는 `KSPBT_GameRoot`가 실제 KSP
    설치를 가리켜야 하고, `KSPLibs`는 *이미 가진 설치본*에서 DLL을 stripped하는 *방법*만 적어 둔다.
-   이 맥엔 KSP가 없으니 stock `Managed/` DLL이 컴파일의 선결조건이다 — KSP 설치본(슐츠 것)에서 확보할 것.
+   로컬 KSP가 없으면 stock `Managed/` DLL이 컴파일의 선결조건이다 — 같은 버전 설치본 아무거나에서 확보할 것(§7).
 6. **Patreon 경계는 유지된다.** Scatterer/EVE/Volumetrics EA 자산은 로컬 전용, EA 한정 스키마
    사실도 커밋 금지. `feedback_patreon_assets` 참조.
 
@@ -42,14 +42,14 @@
 | **코드/플러그인 모드 (C#)** — 새 거동·HUD·물리 | 위키 *Creating a Plugin*(Win/Linux) · `KSPBuildTools` · `KSPDocsSite`(API) · 위키 *Core Concepts* + *Execution order* | 어려운 건 C#이 아니라 **배포 + 라이프사이클**(아래 행). 빌드는 stock DLL 필요(§0 규칙 5). |
 | **…그리고 KSP 안에서 실제로 돌리기** | 위키 *Creating a new Plugin Mod on Windows / Linux*(빌드 → `GameData`에 symlink → 씬) | 초심자가 막히는 지점(JonnyOThan이 확인해 줌). 셋업 가이드가 답이다. |
 | **게임 상태에 반응** (vessel 변경·발사·part 폭발·일시정지) | 위키 *Core Concepts*(`GameEvents`) · KSPDocsSite `class_game_events.html` | 패턴: `GameEvents.onVesselChange.Add(cb)` — 그리고 **핸들러 제거** 필수(누수 방지, Core Concepts 경고). |
-| **ModuleManager cfg 패치** (기존 콘텐츠 손보기) | MM *Handbook*(공식) · MM *Field Guide*(al2me6, 비공식, 캐비엇 풍부) | 컴파일 불필요. Field Guide는 공식 문서가 빠뜨린 함정을 다룬다. |
+| **ModuleManager cfg 패치** (기존 콘텐츠 손보기) | MM *Handbook*(공식) · MM *Field Guide*(al2me6, 비공식, 캐비엇 풍부) · `Mutiny`(코드 없이 cfg로 *게임 오브젝트* Delete/Modify) | 컴파일 불필요. Field Guide는 공식 문서가 빠뜨린 함정을 다루고, Mutiny는 MM이 못 닿는 오브젝트/프리팹 조정을 함. |
 | **행성 팩 / 항성계** | Kopernicus Wiki · **우리 스킬**: `kopernicus-cfg`, `principia-cfg`, `firefly-cfg`, `researchbodies-cfg` | NearStars 본진 — 스킬 + `docs/reference/principia-cfg-reference.md`로 이미 근거화됨. |
-| **부품 모드 (모델·엔진·IVA)** | *KSP1 Modding Bible* · `PartTools`(Unity 2019.4.18f1) · `io_object_mu`(Blender) · Kurgut IVA 가이드 · Kavaeric 엔진 가이드 | 코드가 아니라 에셋 파이프라인. Unity 버전 고정: **2019.4.18f1 LTS**. |
+| **부품 모드 (모델·엔진·IVA)** | *KSP1 Modding Bible* · `PartTools`(Unity 2019.4.18f1) · `io_object_mu`(Blender) · Kurgut IVA 가이드 · Kavaeric 엔진 가이드 · `KSPCommunityPartModules`(공유 part 모듈 재사용) | 코드가 아니라 에셋 파이프라인. Unity 버전 고정: **2019.4.18f1 LTS**. 공통 거동은 직접 짜기 전에 KSPCommunityPartModules에 의존할 것. |
 | **비주얼 모드 (셰이더/머티리얼)** | `Shabby`(셰이더 에셋번들 로더) · Scatterer/EVE(**로컬 전용**, Patreon) | 커스텀 셰이더는 Shabby + cfg로 배포. EA 비주얼 모드는 레포 밖(§0 규칙 6). |
 | **스톡 거동 런타임 패칭** | `HarmonyKSP` · 위키 *Execution order*(`TimingManager`/`TimingStage`) | Harmony가 표준. persistence/scenario 후킹은 Core Concepts. |
 | **성능 민감 코드** | `KSPBurst`(Unity Burst → 네이티브) · `KSPProfiler` / `dotTrace` / `UnityHeapExplorer`(먼저 측정) | 최적화 전에 프로파일링부터. |
 | **배포 / 릴리스** | CKAN *Spec* · Addon Version Checker *Spec*(MiniAVC) · `spacedock-upload`(GitHub Action) | 버전 파일 + CKAN 메타데이터 + SpaceDock 업로드. |
-| **모드 디버깅** | gotmachine *Debugging & profiling* gist · `UnityExplorerKSP`(인게임 인스펙터) · `TextAnalysisTool.NET`(로그) | Rider면 Linux/Mac에서도 실제 디버깅 가능. 셋업은 §7. |
+| **모드 디버깅** | gotmachine *Debugging & profiling* gist · `UnityExplorerKSP`(인게임 인스펙터) · `TextAnalysisTool.NET`(로그) · `KSPBugReport`(사용자 로그/세이브/스샷을 repro용으로 번들) | Rider면 Linux/Mac에서도 실제 디버깅 가능. 셋업은 §7. |
 | **씬 로드 시 NullRef / 오브젝트 없음** | 위키 *Execution order* + *Core Concepts* · `Player.log` | 보통 **타이밍** 버그 — 존재하기 전 오브젝트를 건드린 것. 오브젝트가 아니라 `KSPAddon` 시작 씬 + 라이프사이클 순서를 볼 것. |
 | **스톡 거동 역공학** | 위키 *Decompiling KSP* · 이후 `KSPDocsSite` · DLL 디컴파일(ILSpy/dnSpy, 보류) | API 레퍼런스 + witness로 부족할 때의 최후 수단. |
 
@@ -93,7 +93,7 @@
 - **클래스 페이지 URL 패턴:** `class_<snake_case>.html`. CamelCase는 소문자로 바꾸고 대문자마다 앞에 언더스코어, 약어 글자는 분리(예: `FX` → `_f_x`).
   - `ModuleEnginesFX` → `class_module_engines_f_x.html`
 - 클래스의 **멤버 목록**: `-members`를 붙임(예: `class_vessel-members.html`).
-- 실재 확인(우리 플러그인이 건드리는 클래스): `flight_globals`, `vessel`, `part`,
+- 자주 쓰는 클래스, 전부 실재 확인: `flight_globals`, `vessel`, `part`,
   `part_module`, `vessel_module`, `scaled_space`, `celestial_body`, `timing_manager`,
   `game_events`, `module_engines`(`_f_x`), `orbit`, `map_view`, `planetarium_camera`,
   `high_logic`.
@@ -155,31 +155,16 @@ raw 마크다운: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModd
 
 ---
 
-## 6. NearStars 전용 바인딩
+## 6. 프로젝트 전용 바인딩 → 별도 문서
 
-**소유권.** 이 플러그인들은 **본인이 로컬에서** 빌드·반복하고(이 맥에서 컴파일, §7) 나중에 슐츠에게
-넘긴다 — 그래서 이 문서는 핸드오프 자료이기도 하다. 깊은 런타임 작업(Principia 포크, Windows 인게임
-테스트)만 슐츠 lane으로 남긴다(`project_nearstars_mod_plugins_schultz`).
+이 색인은 **범용·재사용 가능**하다 — 특정 모드의 세부를 일부러 담지 않아, per-project 조회표로 변질되지
+않는다. NearStars 자신의 플러그인 바인딩(각 드래프트의 `// VERIFY:` 마커가 어떤 스톡 API에 대응하는지,
+소유권 분담, 개발자 맥 빌드 세부)은 companion에 있다.
 
-**API 표면.** 우리 드래프트(`plugins/NearStars{Relativity,Warp,FluxTube}/`)가 쓰는 것: `Vessel`(11회),
-`KSPAddon`(9회), `ScaledSpace`(7회), `GUILayout`(7회), `TimingManager`(6회), `PartModule`(6회),
-`KSPField`(6회), `Orbit`(5회), `MonoBehaviour`(4회), `CelestialBody`(4회), `Part`(3회),
-`LineRenderer`(3회), `FlightGlobals`(3회), `ModuleEngines`(2회), `KSPEvent`(2회), `GUI`(2회),
-`VesselModule`(1회). 전부 KSPDocsSite에 있음(§3).
+→ [`nearstars-plugin-grounding.md`](nearstars-plugin-grounding.md) (+ `ko/` 미러)
 
-**`// VERIFY:` 마커 → 어디서 해소하나.** 플러그인 드래프트에 `VERIFY` 마커가 ~31개 있다. 믿기 전에
-각각을 근거에 연결할 것.
-
-| VERIFY 접점 (파일) | 해소처 |
-|---|---|
-| `Part.AddForce` 단위(kN) + 힘 채널 · `part.RequestResource(...)` (`ThrustCorrector`, `WarpDriveModule`) | KSPDocsSite `class_part.html` |
-| `ModuleEngines.finalThrust`(kN) + 추력 방향 (`ThrustCorrector`) | `class_module_engines.html` |
-| `vessel.obt_velocity` 단위/프레임 · `vessel.totalMass`(t) · `vessel.SetPosition`/`GetWorldPos3D`(floating-origin) · `FindPartModuleImplementing<T>` (`WarpDriveModule`, `WarpFlagBridge`, `RelativityState`) | `class_vessel.html` |
-| `PartModule` 라이프사이클 + part-move 호출 (`WarpDriveModule`) | 위키 *Core Concepts* + `class_part_module.html` |
-| 보정 **타이밍** — 엔진 추력 deposit 이후, Principia stage-7 이전 (`ThrustCorrector`) | 위키 *Execution order*(`TimingManager`/`TimingStage`) |
-| IMGUI id 유일성 (`RelativityDashboard`) | Unity 2019.4 Scripting Reference(§5) |
-| Principia detach/re-seed + flag 채널 (`PrincipiaInterop`, `WarpFlag`) | **슐츠 lane** — `mockingbirdnest/Principia` + `gameplay/interstellar-expansion/warp/warp-patch-draft.md` §5.2 (포크 필요) |
-| Kerbalism/ROKerbalism 자원명 + per-vessel 배선 (`ResourceScaler`) | **슐츠 lane** — Kerbalism 소스 |
+그 companion은 스스로가 *편의 자료이지 경계가 아님*을 명시한다 — 거기 없는 건 여기와 KSPDocsSite로
+돌아온다. 다른 프로젝트는 그 문서를 통째로 무시하면 된다.
 
 ---
 
@@ -202,7 +187,7 @@ raw 마크다운: `https://raw.githubusercontent.com/wiki/KSPModdingLibs/KSPModd
     <TargetFramework>net48</TargetFramework>      <!-- KSP Mono 4.x -->
     <LangVersion>7.3</LangVersion>                <!-- Unity 2019.4 상한 -->
     <PlatformTarget>x64</PlatformTarget>
-    <AssemblyName>NearStarsRelativity</AssemblyName>
+    <AssemblyName>MyMod</AssemblyName>
     <KSPBT_ModRoot>$(MSBuildThisFileDirectory)/GameData/$(MSBuildProjectName)</KSPBT_ModRoot>
   </PropertyGroup>
   <ItemGroup>
@@ -227,18 +212,16 @@ Decompiling 가이드는 **레거시 비-SDK** 형태(`OutputType=Library`, `Tar
   두거나, CI는 `KSP_ROOT` 환경변수로. 탐색 순서(`ksp-install.md`):
   `KSPBT_GameRoot` 속성 → `KSP_ROOT` 환경변수 → 솔루션의 `KSP/` 하위폴더 → `ReferencePath` → Steam 기본 경로.
 
-**이 맥엔 KSP가 없다 — 현실적 우회.** `Managed/`의 managed `.dll`들(Assembly-CSharp, UnityEngine* 등)은
-플랫폼·아키텍처 무관 .NET IL이다. 즉 *컴파일*만이라면 맥에 KSP를 깔 필요가 **아마 없다** — 같은
-버전(1.12.x) 설치본의 `Managed/` 폴더만 확보하면 됨(예: 슐츠의 Windows 복사본). macOS 기대 경로에
-배치(또는 `_KSPBT_ManagedRelativePath`/`KSPBT_GameRoot` 오버라이드) 후 macOS arm64에서 `dotnet build`.
-*주의:* 이건 **미확인**이다 — KSPBuildTools 문서가 크로스플랫폼 `Managed/` 복사를 보증하지 않고, 일부
-어셈블리는 네이티브 interop 글루(`UnityPlayer`/P-Invoke)를 품는다. 컴파일 참조는 IL만이라 *될 것*이지만
-폴더를 확보해 실제로 빌드해 확인할 것. 안 되면 Plan B: 이 맥에 실제 KSP 설치(KSP는 macOS 빌드가 있다).
+**로컬 KSP 설치가 없다면?** `Managed/`의 managed `.dll`들(Assembly-CSharp, UnityEngine* 등)은
+플랫폼·아키텍처 무관 .NET IL이라, *컴파일*만이라면 개발 머신에 KSP를 깔 필요가 아마 없다 — 같은
+버전(1.12.x) 설치본 아무거나(다른 OS의 것이라도)에서 `Managed/` 폴더를 가져와 OS 기대 경로에 배치(또는
+`_KSPBT_ManagedRelativePath`/`KSPBT_GameRoot` 오버라이드) 후 `dotnet build`. *주의:* 크로스플랫폼
+`Managed/` 복사는 **미확인**(KSPBuildTools 문서가 보증 안 함, 일부 어셈블리에 네이티브 interop 글루) —
+컴파일 참조는 IL만이라 *될 것*이지만 한 번 빌드해 확인할 것. (NearStars의 구체적 맥 셋업은 companion 문서 §6.)
 
 **배포 & 반복:** `dotnet build` → DLL이 `GameData/<ModName>/Plugins/`에 → 그걸 KSP 설치본의
 GameData로 symlink(`ln -s` macOS/Linux, `mklink /j` Windows) → KSP 재실행(또는 VS/Rider에서 F5).
-**컴파일**은 이 맥에서 로컬로 되고, **실행/인게임 테스트**는 실제 KSP 설치(macOS 사본 또는 슐츠의
-Windows 머신)가 필요하다.
+컴파일은 OS 무관하고, **실행/인게임 테스트**는 실제 KSP 설치가 필요하다.
 
 **디버깅 & 프로파일링** (gotmachine gist — 주로 Windows 검증, 맥/리눅스는 Rider가 나음):
 - **KSP를 디버깅 가능하게**: `<KSP>/…Data/boot.config`에 `player-connection-debug=1` 추가(macOS는
@@ -262,12 +245,11 @@ GitHub Action도 제공(`docs/workflows/publish-to-spacedock.md`, `docs/actions/
 여기까지 근거화: 조직 레포 역할(§2), KSPDocsSite 사용법(§3), 위키 페이지 지도(§4), 마스터 링크
 색인(§5), 빌드/배포 + 의존성 + 버전 파일 + 디버깅/프로파일링(§7, KSPBuildTools `docs/msbuild/*` +
 gotmachine gist), Decompiling-KSP(de4dot → ILSpy 8.2, C# 7.3. EULA-회색, DLL/덤프 gitignore).
-코드 모드 라이프사이클 전체(빌드 → 배포 → 디버그 → 릴리스)가 커버됐고, 플러그인 `VERIFY` 마커도
-근거에 라우팅됨(§6). 아직 더 안 판 것.
-- **맥 컴파일, 한 번 실제로 돌려보기** — `Managed/` 복사 경로(§7)는 추론이지 실행 전. 진짜 다음 단계는
-  폴더 확보 → 플러그인 하나 빌드 → 확인.
-- **Core Concepts / Execution order** — 요약(§4) + 마커용 라우팅(§6)만, 전체 API 멤버 수준 인용은 아직.
-- **부품 / IVA / 비주얼** 갈래 — 링크 수준만. NearStars가 부품·커스텀 셰이더 추가하면 그때 심화.
+코드 모드 라이프사이클 전체(빌드 → 배포 → 디버그 → 릴리스)가 커버됨. 프로젝트 전용 바인딩은 분리됨
+(§6 → companion). 아직 더 안 판 것.
+- **Core Concepts / Execution order** — 요약만(§4), 아직 멤버 수준 인용 안 함.
+- **부품 / IVA / 비주얼** 갈래 — 링크 수준만. 어떤 프로젝트가 부품·커스텀 셰이더 추가하면 그때 심화.
 - **CKAN / SpaceDock 릴리스 워크플로** — `docs/workflows/*` 위치 파악, 끝까지 걸어보진 않음.
+- **`Managed/` 크로스플랫폼 컴파일** — 추론(§7)이지 실제 폴더로 실행 전.
 
 관련 메모리: `project_ksp_stock_api_grounding` · `project_nearstars_mod_plugins_schultz` · `feedback_reference_doc_location` · `feedback_patreon_assets`.
