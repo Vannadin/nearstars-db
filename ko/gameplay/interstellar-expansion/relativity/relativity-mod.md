@@ -1,10 +1,16 @@
 ---
 title: 상대성이론 모드 — 아광속 특수상대론 게임플레이 레이어
-status: active   # active | promoted | archived
+status: promoted   # active | promoted | archived
 created: 2026-06-29
 ---
 
 # 상대성이론 모드 — 아광속 특수상대론 게임플레이 레이어
+
+> **독립 레포로 승격됨 (2026-07-01).** 플러그인 코드는 NearStars에서 나가(`plugins/NearStarsRelativity/`,
+> 이제 제거됨) 자체 독립·공유 가능 mod로 `~/Desktop/ksp-relativity/`에 이전됨(네임스페이스 `Relativity`로
+> de-brand, 공개 mod명 미정). 이 문서는 **설계 spec of record**로 남으며 그 레포로 이관 예정 — 메커닉 핵심
+> 설계는 standalone mod가 소유하고, NearStars는 엔드게임 통합 슬라이스만 유지(워프 플러그인이 이 mod의 공개
+> `WarpFlag`를 계속 소비). `project_nearstars_mod_plugins_schultz` 참조.
 
 **NearStars 연결점.** 성간 이동은 RP-1 완주 후 엔드게임 확장이다
 (`project_nearstars_interstellar_expansion` 참조). 게이트0 타당성 검토에서

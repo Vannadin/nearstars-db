@@ -1,10 +1,18 @@
 ---
 title: Relativity mod — sub-light special-relativity gameplay layer
-status: active   # active | promoted | archived
+status: promoted   # active | promoted | archived
 created: 2026-06-29
 ---
 
 # Relativity mod — sub-light special-relativity gameplay layer
+
+> **Promoted to a standalone repo (2026-07-01).** The plugin code moved out of NearStars
+> (`plugins/NearStarsRelativity/`, now removed) to its own independent, community-shareable mod at
+> `~/Desktop/ksp-relativity/` (namespace de-branded to `Relativity`; public name TBD). This doc
+> remains the **design spec of record** and is pending migration into that repo — the mechanic's
+> core design belongs with the standalone mod; NearStars keeps only the endgame-integration slice
+> (the warp plugin still consumes the mod's public `WarpFlag`). See
+> `project_nearstars_mod_plugins_schultz`.
 
 **NearStars connection.** Interstellar travel is the post-RP-1 endgame
 expansion (see `project_nearstars_interstellar_expansion`). Gate-0
