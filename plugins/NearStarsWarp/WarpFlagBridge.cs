@@ -3,21 +3,23 @@ using UnityEngine;
 
 namespace NearStars.Warp
 {
-    // Fills NearStars.Relativity.WarpFlag.Provider so the relativity layer treats a
-    // warping vessel as identity (warp β is not physical β — else it reads FTL → NaN
-    // and would wrongly crush warp "thrust"/slow resource burn). One shared flag, both
-    // plugins Schultz's lane. Spec: warp-patch-draft.md §3, relativity-mod.md §2.6(ii).
+    // Fills Relativity.WarpFlag.Provider so the relativity layer treats a warping vessel
+    // as identity (warp β is not physical β — else it reads FTL → NaN and would wrongly
+    // crush warp "thrust"/slow resource burn). Spec: warp-patch-draft.md §3,
+    // relativity-mod.md §2.6(ii).
     //
-    // VERIFY: both plugins must load into the same managed domain so this can reference
-    //   NearStars.Relativity.WarpFlag. If they ship as separate assemblies, add an
-    //   assembly reference (relativity is the dependency-free one). If the relativity
-    //   plugin is absent, this whole component is simply not needed (no-op).
+    // NOTE (2026-07-01): the relativity layer is now the SEPARATE, external mod
+    //   `ksp-relativity` (namespace `Relativity`, its own assembly) — no longer bundled
+    //   here. This bridge is a cross-mod integration point: add a (soft/optional) assembly
+    //   reference to that mod's public `Relativity.WarpFlag`, and if the mod is absent this
+    //   whole component is simply not needed (no-op). Keep `WarpFlag` a generic hook there.
+    // VERIFY: the FindPartModuleImplementing API name below.
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class WarpFlagBridge : MonoBehaviour
     {
         void Start()
         {
-            NearStars.Relativity.WarpFlag.Provider = IsVesselWarping;
+            Relativity.WarpFlag.Provider = IsVesselWarping;
         }
 
         // A vessel is "under warp" iff its WarpDriveModule cruise state is non-Idle.

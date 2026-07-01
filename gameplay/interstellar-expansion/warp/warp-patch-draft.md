@@ -126,7 +126,7 @@ velocity, and the relativity layer's leg-3 braking handles bleeding it off.
 
 ## 3. Cross-plugin tie — the relativity layer's warp flag
 
-The relativity layer ([`plugins/NearStarsRelativity/`](../../../plugins/NearStarsRelativity/))
+The relativity layer (now the external `ksp-relativity` repo)
 §2.6(ii) must treat a warping vessel as identity (warp β is not physical β, or it
 reads FTL → NaN). It already exposes `WarpFlag.Provider`. **This plugin fills it**
 — `WarpFlagBridge` registers a provider that returns `true` while a vessel is in

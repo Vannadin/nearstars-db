@@ -11,7 +11,11 @@
 
 ---
 
-## Ownership
+## Scope & ownership
+
+**Covers the NearStars-coupled plugins: Warp + FluxTube.** (The relativity layer was promoted to its
+own standalone repo on 2026-07-01 — `~/Desktop/ksp-relativity/` — and is no longer a NearStars
+plugin; its grounding lives there now.)
 
 The dev builds and iterates these plugins **locally** (compile on the dev's Mac — see the general
 index §7 *Build & deploy*) and hands the result to Schultz later; this page is also the handoff
@@ -32,28 +36,25 @@ Schultz's Windows machine).
 
 ## API surface (current drafts)
 
-`plugins/NearStars{Relativity,Warp,FluxTube}/` touch: `Vessel`(11×), `KSPAddon`(9×), `ScaledSpace`(7×),
-`GUILayout`(7×), `TimingManager`(6×), `PartModule`(6×), `KSPField`(6×), `Orbit`(5×), `MonoBehaviour`(4×),
-`CelestialBody`(4×), `Part`(3×), `LineRenderer`(3×), `FlightGlobals`(3×), `ModuleEngines`(2×),
-`KSPEvent`(2×), `GUI`(2×), `VesselModule`(1×). Every one is in KSPDocsSite (general index §3) — this list
-is just the current hot-spots, not the ceiling.
+`plugins/NearStars{Warp,FluxTube}/` touch: `ScaledSpace`(7×), `PartModule`(6×), `KSPField`(6×),
+`KSPAddon`(5×), `Vessel`(4×), `Orbit`(3×), `LineRenderer`(3×), `CelestialBody`(3×), `MonoBehaviour`(2×),
+`KSPEvent`(2×), `FlightGlobals`(1×), plus `part.RequestResource` / `vessel.*` instance calls. Every
+type is in KSPDocsSite (general index §3) — this list is just the current hot-spots, not the ceiling.
 
 ## `// VERIFY:` markers → where to resolve them
 
-The plugin drafts carry ~31 `VERIFY` markers. Route each to its grounding before trusting it. **If a
-marker isn't listed here, it still needs resolving — look it up in KSPDocsSite / the wiki.**
+The Warp draft carries ~15 `VERIFY` markers (FluxTube has none yet). Route each to its grounding
+before trusting it. **If a marker isn't listed here, it still needs resolving — look it up in
+KSPDocsSite / the wiki.**
 
 | VERIFY touchpoint (file) | Resolve at |
 |---|---|
-| `Part.AddForce` units (kN) + force channel · `part.RequestResource(...)` (`ThrustCorrector`, `WarpDriveModule`) | KSPDocsSite `class_part.html` |
-| `ModuleEngines.finalThrust` (kN) + thrust direction (`ThrustCorrector`) | `class_module_engines.html` |
-| `vessel.obt_velocity` units/frame · `vessel.totalMass` (t) · `vessel.SetPosition`/`GetWorldPos3D` (floating-origin) · `FindPartModuleImplementing<T>` (`WarpDriveModule`, `WarpFlagBridge`, `RelativityState`) | `class_vessel.html` |
+| `part.RequestResource(...)` — ExoticMatter / Megajoules draw (`WarpDriveModule`) | KSPDocsSite `class_part.html` |
+| `vessel.obt_velocity` units/frame · `vessel.totalMass` (t) · `vessel.SetPosition`/`GetWorldPos3D` (floating-origin) · `FindPartModuleImplementing<T>` (`WarpDriveModule`, `WarpFlagBridge`) | `class_vessel.html` |
 | `PartModule` lifecycle + the part-move call (`WarpDriveModule`) | Wiki *Core Concepts* + `class_part_module.html` |
-| Correction **timing** — after engine thrust deposit, before Principia stage-7 (`ThrustCorrector`) | Wiki *Execution order* (`TimingManager`/`TimingStage`) |
-| IMGUI id uniqueness (`RelativityDashboard`) | Unity 2019.4 Scripting Reference (general index §5) |
-| Principia detach/re-seed + flag channel (`PrincipiaInterop`, `WarpFlag`) | **Schultz lane** — `mockingbirdnest/Principia` + `gameplay/interstellar-expansion/warp/warp-patch-draft.md` §5.2 (needs the fork) |
-| Kerbalism/ROKerbalism resource names + per-vessel wiring (`ResourceScaler`) | **Schultz lane** — Kerbalism source |
+| Principia detach/re-seed + the fork flag channel (`PrincipiaInterop`) | **Schultz lane** — `mockingbirdnest/Principia` + `gameplay/interstellar-expansion/warp/warp-patch-draft.md` §5.2 (needs the fork) |
+| Warp ↔ relativity suppress flag — `WarpFlagBridge` reads the `WarpFlag` now owned by the **external `ksp-relativity` mod** | wire via that mod's public API (cross-repo integration point) |
 
 ---
 
-Related: [`ksp-modding-sources.md`](ksp-modding-sources.md) (general index — primary reference) · `project_nearstars_mod_plugins_schultz` · `project_nearstars_flux_tube_plugin`.
+Related: [`ksp-modding-sources.md`](ksp-modding-sources.md) (general index — primary reference) · the extracted relativity mod (`~/Desktop/ksp-relativity/`) · `project_nearstars_mod_plugins_schultz` · `project_nearstars_flux_tube_plugin`.

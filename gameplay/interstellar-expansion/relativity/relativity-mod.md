@@ -33,7 +33,7 @@ sub-light companion to (deferred) time-dilation clock mechanics.
   element). Energy/fuel mass-ratio blow-up economics. General-relativistic effects
   (this is special relativity only).
 - **Code.** A draft Tier-0 implementation lives in
-  [`plugins/NearStarsRelativity/`](../../../plugins/NearStarsRelativity/) — authored
+  the `ksp-relativity` repo — authored
   Opus-side from this spec (pure logic solid; KSP-API touchpoints marked
   `// VERIFY:`), with Schultz integrating, compiling, and testing in-game
   (see `project_nearstars_mod_plugins_schultz`). It is **not yet compiled/tested**.
@@ -270,7 +270,7 @@ KSP physics bugs can fling parts at absurd / superluminal velocity; β ≥ 1 mak
   for this team (§2.5).
 - **Hand-off**: this note is the brief for Schultz
   (`project_nearstars_mod_plugins_schultz`); the draft code is in
-  [`plugins/NearStarsRelativity/`](../../../plugins/NearStarsRelativity/) (`RelativityState`
+  the `ksp-relativity` repo (`RelativityState`
   = the β/γ + §2.6 guard core; `ThrustCorrector` = the force hook; `WarpFlag` =
   the shared flag). Two plugin pieces: (a) a per-frame
   corrective force into the part-force channel so the *net* integrated force is

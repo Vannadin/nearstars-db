@@ -6,11 +6,15 @@ created: 2026-06-30
 
 # Relativity layer — dashboard UX / UI
 
+> **Belongs to the extracted relativity mod (2026-07-01).** The relativity code is now a standalone
+> repo (`~/Desktop/ksp-relativity/`); this dashboard spec is pending migration there with
+> [relativity-mod.md](relativity-mod.md). See that doc's promotion note.
+
 **What this is.** The display spec for the sub-light relativity mechanic
 ([relativity-mod.md](relativity-mod.md)). The mechanic's identity *is* its readout
 ("the player sees nominal vs effective thrust diverge as β climbs", §1), so the
 dashboard is a first-class design surface, not chrome. This note is the brief for
-extending the draft [`RelativityDashboard.cs`](../../../plugins/NearStarsRelativity/RelativityDashboard.cs)
+extending the draft `RelativityDashboard.cs` (in the `ksp-relativity` repo)
 stub. Scope: the in-flight HUD only — no shader/visual layer (§2.5 of the spec, out
 of our lane).
 
@@ -159,6 +163,6 @@ the existing force/resource hooks.
 ## Related
 
 - [relativity-mod.md](relativity-mod.md) — the mechanic this displays (§1 readout identity, §2.6 guards, §4 radiation-vs-starvation)
-- [`plugins/NearStarsRelativity/RelativityDashboard.cs`](../../../plugins/NearStarsRelativity/RelativityDashboard.cs) — the stub this brief extends
+- `RelativityDashboard.cs` (`ksp-relativity` repo, `src/`) — the stub this brief extends
 - [warp/warp-patch-draft.md](../warp/warp-patch-draft.md) — the warp layer whose `β_s` and `WarpFlag` this reads under warp
 - [planner-spec.md](../planner-spec.md) — the lead-intercept planner that feeds the `⚠ decel now` cue
