@@ -19,12 +19,18 @@ specifies the remaining `ksp_plugin_adapter` (C#) work. Read `research/R4-thrust
   void plugin.VesselSetOnRailsBurn(string vessel_guid,
                                    double thrust_in_kilonewtons,
                                    double specific_impulse_in_seconds_g0,  // Isp by WEIGHT, s
-                                   XYZ direction,          // World axes; needs not be unit
+                                   double initial_mass_in_tonnes,  // CURRENT vessel mass
+                                   XYZ direction,          // World axes; need not be unit
                                    double max_duration);   // s of propellant available
   void plugin.VesselClearOnRailsBurn(string vessel_guid);
   ```
   The C++ side converts s·g₀ → exhaust velocity and World → Barycentric (rotation only),
   normalizes the direction, and finds the pile up (no-op with a warning if there is none).
+  **THE ADAPTER OWNS THE MASS BOOKKEEPING** (review finding, 2026-07-03): part masses are
+  stale on the C++ side while packed, so pass the TRUE current vessel mass every frame —
+  Σ(part.mass + part.GetResourceMass()) reflects the RequestResource drains immediately.
+  Degenerate parameters (nonpositive/nonfinite thrust, Isp, mass, duration, or a zero
+  direction) are treated as ClearVesselOnRailsBurn — do not rely on them erroring.
 
 ## Adapter work items (MVP = packed ACTIVE vessel; feature-flag gated)
 
