@@ -44,3 +44,72 @@ Per-vessel **OnRailsBurn** injecting a Manœuvre-style intrinsic accel into the 
 Law `a=dir·thrust/(m₀−(t−t₀)ṁ)`, ṁ=thrust/Isp; Isp = specific impulse by MASS (exhaust velocity = total thrust ÷ Σ engine mass-flows), not Isp-by-weight. `mass_` (`pile_up.hpp:196`) decremented per frame; tanks drained in C#; on unpack KSP part masses re-assert (`InsertOrKeepLoadedPart :1354`). Throttle+direction re-read every frame ⇒ fully live under warp (the advantage over PersistentThrust). MVP inertial-fixed direction (time-only overload); Frenet-locked later (generalized RHS `:464-467`). Never write stock Orbit.
 
 Sources: PersistentThrust (SpaceDock 2450, bld/PersistentThrust GitHub), Persistent Thrust Extended (KSP forums), Principia issue #2347.
+
+## 9. Addendum (2026-07-03, owner + fable) — attitude, gating, resources: grounded
+
+**Rotation-under-warp problem (owner).** Principia integrates pile-up rotation under warp
+(EulerSolver, torque-free); in-game SAS cannot null residual spin perfectly, so over
+month-scale burns any attitude-derived thrust direction rotates away (1e-4 °/s ≈ one full
+turn per 115 d) and lateral thrust washes out. Decisions:
+- **Burn direction is COMMANDED, not attitude-derived** — the flight planner's own guidance
+  assumption (`Manœuvre.is_inertially_fixed` / Frenet) extended to on-rails burns. Core takes
+  a per-frame direction (inertial MVP; Frenet mode later via the generalized RHS). Adapter
+  direction sources: inertial-hold, per-frame prograde/target/etc. (all reduce to a per-frame
+  inertial vector; no core change).
+- **Spin-following thrust (EulerSolver-evolved direction) REJECTED**: physically exact but
+  useless for the target scenario (long cruises with imperfect SAS). Rotational state stays
+  untouched — no conservation violation; thrust-vs-display attitude mismatch documented,
+  cosmetic display alignment optional later (adapter-side).
+- **GATE (adapter, every warp frame)**: net engine thrust torque about CoM within the
+  vessel's attitude-control authority (margin TBD), control powered. Σ r×F per
+  `thrustTransform` (RCS Build Aid algorithm — editor-only mod, LGPL-3.0, m4v/RCSBuildAid
+  @81ee807: Plugin/{EngineForce,MarkerForces}.cs; flight-time reference MechJeb2
+  VesselState.cs @4c38069, GPL-3.0 — all APIs packed-valid) vs. per-axis authority summed
+  from stock `ITorqueProvider.GetPotentialTorque(out pos, out neg)` (ModuleGimbal,
+  ModuleReactionWheel, ModuleControlSurface). This unifies owner conditions (a) torque-free
+  thrust and (b) attitude control present into one physical check; (c) EC = presence +
+  per-frame drain.
+- **On gate violation or depletion**: cut burn + `TimeWarp.fetch.CancelAutoWarp()` +
+  `TimeWarp.SetRate(0, /*instant=*/true)` (KAC + PersistentThrust production pattern).
+
+**Resources, verified (sonnet agents, raw-source citations):**
+- **PACKED active vessel**: `Part.RequestResource` fully works on rails — stock
+  `ModuleCommand.FixedUpdate` drains EC on rails (hibernation ×0.01 exists because of it);
+  Kopernicus solar panels charge unconditionally (KopernicusSolarPanel.cs:421,633 @fc66962).
+  Drain = ṁ/ρ · `TimeWarp.fixedDeltaTime` (already warp-stretched). Double-drain guard when
+  unpacked: PersistentThrust `simulate` flag inversion (sswelm/PersistentThrust
+  PersistentEngine.cs:1181 @8f2fbb4).
+- **UNLOADED vessel**: stock simulates nothing. State = `ProtoPartResourceSnapshot.amount`
+  (public field; direct write persists; `UpdateConfigNodeAmounts()` before Save). Background
+  engine prior art: PersistentThrust `BackgroundProcessing/` (the ONLY mod doing engines;
+  ships Helpers/DetectPrincipia.cs — read for interop) + Kerbalism scheduler discipline
+  (≤1 unloaded vessel per tick, deferred clamped to [0, capacity], no sub-stepping;
+  Kerbalism license = Unlicense → borrowable). Kerbalism does NOT sim background engines.
+- **SCOPE SPLIT**: MVP = packed active vessel (scenario A; §6-7 stand, now verified).
+  Unloaded background burns = phase 2 (proto-snapshot resource pass + own scheduler + flow
+  re-implementation; warp-stop on violation applies there too, per owner).
+
+**Monitoring/alert prior art (Kerbalism @660a802, follow-up 2026-07-03) — the
+violation→warp-stop pipeline we should mirror:**
+- Detection: `ResourceInfo.Sync` computes `Level`, `AverageRate`, `DepletionTime()`
+  (Resource.cs:906-975) — identically for unloaded vessels (proto-snapshot sync set,
+  round-robin one vessel/tick).
+- Thresholds: `Supply.Execute` (Profile/Supply.cs:36-75) — low = 15% (`Severity.warning`),
+  empty = epsilon (`Severity.danger`); EC alerts fire even for UNCREWED probes (other supplies require crew), with a SAVE-PERSISTED once-per-crossing latch
+  (`SupplyData.message`) so alerts fire once per crossing (anti-spam; copy this).
+- **Central choke point**: `Message.Post(severity, …)` itself calls `Lib.StopWarp()` for
+  warning-or-worse (UI/Message.cs:145-148) — ANY vessel's emergency (incl. background)
+  halts warp. `Lib.StopWarp` (Lib.cs:356-367) = `CancelAutoWarp()` +
+  `TimeWarp.SetRate(maxRate_below_cap, /*instant=*/true, /*postScreenMessage=*/false)`;
+  default cap 0 = full stop.
+- Monitor UI reads the same ResourceCache (`Level`/`DepletionTime`, red ≤0.5%, orange
+  ≤15%) — cheap property reads, no proto walk in the UI path.
+- EC-death contract: `powered = EC > ε` → CommNet `connection.linked=false` → probe goes
+  DARK (uncontrollable, not destroyed) + "signal lost" warning (itself a warp stop).
+- **Mapping to our adapter**: gate violation / propellant-or-EC depletion → cut burn (core
+  one-shot semantics already coast automatically) + latched popup + CancelAutoWarp +
+  SetRate(0, true). Our `max_duration` already encodes time-to-depletion, so the C++ core
+  cuts thrust exactly at exhaustion even mid-step; the adapter's job is only detection +
+  message + warp stop. If Kerbalism is installed its own EC alarms coexist harmlessly
+  (same stock TimeWarp API). Phase-2 background burns adopt the round-robin + choke-point
+  pattern wholesale.
