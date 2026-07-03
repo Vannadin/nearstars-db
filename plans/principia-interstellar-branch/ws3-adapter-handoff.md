@@ -7,11 +7,12 @@ specifies the remaining `ksp_plugin_adapter` (C#) work. Read `research/R4-thrust
 
 ## What the C++ core already provides
 
-- `PileUp` on-rails burn: constant thrust / specific-impulse(by mass) / inertially fixed
-  direction / max duration, applied by the catch-up integration with Tsiolkovsky mass
-  depletion, exact mid-step cutoff when the propellant window ends, and pile-up mass
-  bookkeeping. The burn is **ONE-SHOT**: consumed by each catch-up; the adapter must set it
-  again before every catch-up during which the engines burn on rails.
+- `PileUp` on-rails burn: constant thrust / specific-impulse(by mass) / game-supplied
+  initial mass / inertially fixed direction / max duration, applied by the catch-up
+  integration with Tsiolkovsky within-step mass depletion and an exact mid-step cutoff
+  when the propellant window ends. The burn is **ONE-SHOT**: consumed by every catch-up
+  (even one with nothing to do, or one where a real intrinsic force takes precedence);
+  the adapter must set it again before every catch-up during which the engines burn.
 - Predictions anticipate the burn applied by the last catch-up (self-maintaining copy;
   a catch-up without a burn clears it).
 - C ABI (already in `interface.generated.cs` after the generator runs on Windows too):
