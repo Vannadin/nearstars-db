@@ -49,6 +49,7 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
   MEGNO 카오스 지표 + Hill 안정성 + 공명 분석. Phase-4 궤도를 확정하기 전, 시스템 배치가 살아남는지
   (이심률 갇힘·이탈 없음) 확인합니다.
 - [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md) — n-body 중력모델(J2/geopotential) cfg 규약.
+- [gravity-significance-floor-methodology](gravity-significance-floor-methodology.md) — Principia 포크의 far-field 중력 절단 floor `a_floor` + 스위칭-셸 비율을 문헌으로 근거화. Folkner 2014 / Park 2021(에페메리스 섭동체 선정), Chesley 2014(Yarkovsky 검출 한계), Jiang & Tremaine 2010(Jacobi 반경), Rein & Spiegel 2015(힘-오차 예산).
 - [binary-epoch-pipeline](binary-epoch-pipeline.md) — 다성계 Keplerian → ICRS 에포크 전파.
 
 ## 관련 문서
