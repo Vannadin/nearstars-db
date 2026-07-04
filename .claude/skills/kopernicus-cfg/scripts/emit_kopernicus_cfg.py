@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-# Phase 3 + DB disk_measurements → Kopernicus Ring cfg emitter (v1: disk + planet rings only)
-"""Emit Kopernicus Ring cfg patches for NearStars (v1: disk + planet rings only).
+# DB → Kopernicus cfg emitter: star bodies (render) + circumstellar/planet rings
+"""Emit Kopernicus cfg patches for NearStars.
 
-v1 scope is intentionally narrow — just stellar debris-disk rings (from
-db/systems/*.json `stars[0].raw.disk_measurements`) and Saturn-like
-planet rings (from `phase3/<system>/kopernicus_extras.yaml`). The full
-Kopernicus Properties / Orbit / Atmosphere / PQS / Light / Coronas
-generation is deferred to v2 (see TODO markers throughout).
+Two layers, two output files:
+  * stars.cfg       — full star bodies: Properties + ScaledVersion
+                      {Light, Material, Coronas}, colors/luminosity derived
+                      from curated Teff/L/R (see star_fields.py; the base
+                      photospheric color comes from the grounded engine
+                      scripts/refs/stellar_photospheric_color.py).
+  * disk-rings.cfg  — stellar debris-disk rings (from
+                      db/systems/*.json `stars[0].raw.disk_measurements`) and
+                      Saturn-like planet rings (from
+                      `phase3/<system>/kopernicus_extras.yaml`).
+
+Still deferred: full planet bodies (Properties/Orbit/PQS/Atmosphere), and
+the star `Orbit` is a placeholder (Principia owns the real state).
 
 Inputs:
     db/systems/<slug>.json
@@ -20,6 +28,8 @@ Inputs:
             ...
 
 Output:
+    dist/NearStars-Configs/Patches/Kopernicus/stars.cfg
+        one Body{} per star (Template Sun + Properties + ScaledVersion render).
     dist/NearStars-Configs/Patches/Kopernicus/disk-rings.cfg
         single combined MM patch — one @Body[<Star>] per star w/ disk,
         plus one @Body[<Planet>] per planet w/ ring_present=true.
@@ -38,7 +48,9 @@ for the design notes.
 # TODO(emit_kopernicus_cfg.py v3): full Orbit block (referenceBody, semiMajorAxis, eccentricity, …)
 # TODO(emit_kopernicus_cfg.py v3): PQS terrain mods (Parallax + standard PQSMods chain)
 # TODO(emit_kopernicus_cfg.py v3): Atmosphere node (pressureCurve, temperatureCurve, ScaledVersion type)
-# TODO(emit_kopernicus_cfg.py v3): star-body specifics — Light, Coronas, GalacticOrbit
+# DONE(v3): star bodies — Properties + ScaledVersion{Light, Material, Coronas} from Teff/L/R
+#   (star_fields.py; base color from grounded engine scripts/refs/stellar_photospheric_color.py)
+# TODO(v3): star Orbit is a placeholder — wire real galactic placement / GalacticOrbit (Principia overrides for now)
 # TODO(emit_kopernicus_cfg.py v3): Module Manager NEEDS / AFTER ordering beyond FOR[NearStarsSystem]
 # TODO(emit_kopernicus_cfg.py v3): flightGlobalsIndex allocation per system (sidecar yaml top-level)
 # v2 fix (2026-05-27): Ring nesting + units corrected per gas-giant.md / nodes-quick-ref.md /
@@ -58,11 +70,22 @@ from pathlib import Path
 
 import yaml
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import star_fields  # noqa: E402  (sibling module — Teff/L → ScaledVersion field synthesis; base color from the grounded engine)
+
 REPO_ROOT = Path(__file__).resolve().parents[4]
 DB_SYSTEMS_DIR = REPO_ROOT / "db" / "systems"
 PHASE3_DOCS_DIR = REPO_ROOT / "docs" / "phase3"
 PHASE3_WORKSPACE_DIR = REPO_ROOT / "phase3"
 DEFAULT_OUTPUT = REPO_ROOT / "dist" / "NearStars-Configs" / "Patches" / "Kopernicus" / "disk-rings.cfg"
+DEFAULT_STARS_OUTPUT = REPO_ROOT / "dist" / "NearStars-Configs" / "Patches" / "Kopernicus" / "stars.cfg"
+
+# Placeholder Kopernicus Orbit for a NearStars star body. Principia's
+# initial_state overrides the trajectory in n-body mode; real Kopernicus
+# galactic placement is a separate task (db/systems has no distance field yet).
+STAR_ORBIT_PLACEHOLDER_SMA_M = 1.0e16   # ~1.06 ly — clearly a placeholder
+STAR_CACHE_FILE = "ParallaxContinued/Models/ScaledMesh.bin"
+SECONDS_PER_DAY = 86400.0
 
 MM_HEADER = "@Kopernicus:FOR[NearStarsSystem]"
 
@@ -222,9 +245,23 @@ class EmitError(RuntimeError):
 
 
 @dataclass
+class StarRender:
+    """One star body's render inputs (Properties + ScaledVersion Light/Material/Coronas)."""
+    body_name: str
+    display_name: str
+    radius_m: float
+    grav_parameter: float
+    rotation_period_s: float
+    teff_k: float
+    luminosity_lsun: float
+    spectype: str | None
+
+
+@dataclass
 class Outcome:
     star_disks: list[StarDisk] = field(default_factory=list)
     planet_rings: list[PlanetRing] = field(default_factory=list)
+    star_renders: list[StarRender] = field(default_factory=list)
     skipped_no_disk: list[str] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
     errors: list[str] = field(default_factory=list)
@@ -681,8 +718,205 @@ def static_check(cfg_text: str) -> list[str]:
 
 
 # ─────────────────────────────────────────────────────────────────────
+# Star-body rendering (v3): Properties + ScaledVersion{Light,Material,Coronas}
+# ─────────────────────────────────────────────────────────────────────
+
+def load_star_renders(slug: str, outcome: Outcome) -> list[StarRender]:
+    """One StarRender per star in db/systems/<slug>.json.
+
+    Mechanical values (radius, GM) come from `principia`; Teff/L/spectype from
+    `raw`/`derived`. Missing Teff/L/rotation are warned + defaulted (so the body
+    still emits). Missing radius/GM are hard errors (cannot render a star body)."""
+    db_path = DB_SYSTEMS_DIR / f"{slug}.json"
+    if not db_path.exists():
+        outcome.errors.append(f"{slug}: db/systems/{slug}.json missing")
+        return []
+    with db_path.open(encoding="utf-8") as f:
+        data = json.load(f)
+    stars = data.get("stars") or []
+    if not stars:
+        outcome.errors.append(f"{slug}: no stars in DB file")
+        return []
+
+    out: list[StarRender] = []
+    for star in stars:
+        raw = star.get("raw") or {}
+        derived = star.get("derived") or {}
+        principia = star.get("principia") or {}
+        body_name = star.get("kopernicus_body_name") \
+            or normalize_body_name(star.get("name") or slug)
+        display_name = star.get("name") or body_name
+
+        radius_km = principia.get("mean_radius_km")
+        gm_km3 = principia.get("gravitational_parameter_km3_s2")
+        if radius_km is None or gm_km3 is None:
+            # No mechanical values yet (uncurated star) — skip + warn, don't abort
+            # the whole batch. Render the stars that DO have radius/GM.
+            outcome.warnings.append(
+                f"{slug}/{body_name}: principia.mean_radius_km or "
+                f"gravitational_parameter_km3_s2 is null — skipped (no star body emitted)")
+            continue
+
+        teff = raw.get("teff_k")
+        if teff is None:
+            outcome.warnings.append(f"{slug}/{body_name}: no teff_k — defaulting to Sun (5772 K)")
+            teff = star_fields.SOLAR_TEFF
+        l_lsun = derived.get("luminosity_lsun")
+        if l_lsun is None:
+            outcome.warnings.append(f"{slug}/{body_name}: no derived.luminosity_lsun — defaulting to 1.0")
+            l_lsun = 1.0
+        rot_days = derived.get("rotation_period_days")
+        if rot_days is None:
+            outcome.warnings.append(f"{slug}/{body_name}: no rotation_period_days — defaulting to 25 d")
+            rot_days = 25.0
+
+        out.append(StarRender(
+            body_name=body_name,
+            display_name=display_name,
+            radius_m=float(radius_km) * 1000.0,
+            grav_parameter=float(gm_km3) * 1e9,   # km³/s² → m³/s²
+            rotation_period_s=float(rot_days) * SECONDS_PER_DAY,
+            teff_k=float(teff),
+            luminosity_lsun=float(l_lsun),
+            spectype=raw.get("spectype"),
+        ))
+    return out
+
+
+def _kv_block(name: str, fields: dict[str, str], indent: str) -> str:
+    inner = "\n".join(f"{indent}    {k} = {v}" for k, v in fields.items())
+    return f"{indent}{name}\n{indent}{{\n{inner}\n{indent}}}"
+
+
+def render_star_body_block(sr: StarRender) -> str:
+    """A full `Body { … }` creation node (Template Sun + Properties + ScaledVersion)."""
+    tex = f"NearStars-Textures/PluginData/{sr.body_name}/Kopernicus/{sr.body_name}"
+    i = "        "  # Body node indent inside @Kopernicus { … }
+    j = "                "  # ScaledVersion-child level (Light/Material/Coronas)
+
+    light_fields = star_fields.light_block(sr.teff_k, sr.luminosity_lsun, sr.spectype)
+    light_inner = "\n".join(f"{j}    {k} = {v}" for k, v in light_fields.items())
+    curves = star_fields.intensity_curves_text(sr.luminosity_lsun, indent=j + "    ")
+    light_node = f"{j}Light\n{j}{{\n{light_inner}\n{curves}\n{j}}}"
+    material = star_fields.material_block(sr.teff_k, sr.spectype, f"{tex}_Sunspots.dds")
+
+    properties = {
+        "displayName": sr.display_name,
+        "radius": f"{sr.radius_m:.6g}",
+        "gravParameter": f"{sr.grav_parameter:.6g}",
+        "rotates": "True",
+        "rotationPeriod": f"{sr.rotation_period_s:.6g}",
+        "tidallyLocked": "False",
+        "albedo": "0",
+        "emissivity": "0.99",
+        "sphereOfInfluence": "Infinity",
+        "useTheInName": "False",
+        "selectable": "True",
+        "RnDVisibility": "Visible",
+    }
+
+    # Corona: the grounded reference schema (star-body.md § Coronas) is texture +
+    # mainTexScale only — no documented color field — so we do not invent one. The
+    # corona's visible tint comes from the surrounding grounded base-hex Material
+    # (emitColor/rimColor) and Light (sunLensFlareColor) it blends into.
+    coronas = (
+        f"{j}Coronas\n{j}{{\n"
+        f"{j}    Value\n{j}    {{\n"
+        f"{j}        scaleSpeed     = 0.007\n"
+        f"{j}        scaleLimitY    = 5\n"
+        f"{j}        scaleLimitX    = 5\n"
+        f"{j}        updateInterval = 5\n"
+        f"{j}        speed          = -1\n"
+        f"{j}        rotation       = 0\n"
+        f"{j}        Material\n{j}        {{\n"
+        f"{j}            texture      = {tex}_Corona.dds\n"
+        f"{j}            mainTexScale = 1,0.9\n"
+        f"{j}        }}\n"
+        f"{j}    }}\n"
+        f"{j}}}"
+    )
+
+    return "\n".join([
+        f"{i}Body",
+        f"{i}{{",
+        f"{i}    name = {sr.body_name}",
+        f"{i}    identifier = NearStars/{sr.body_name}",
+        f"{i}    cacheFile = {STAR_CACHE_FILE}",
+        f"{i}    // flightGlobalsIndex: auto-assigned by Kopernicus (TODO: allocate per",
+        f"{i}    // file-structure.md — 1000+, 100 indices per system).",
+        f"{i}    Template",
+        f"{i}    {{",
+        f"{i}        name = Sun",
+        f"{i}        removeAllPQSMods = True",
+        f"{i}    }}",
+        _kv_block("Properties", properties, i + "    "),
+        f"{i}    Orbit",
+        f"{i}    {{",
+        f"{i}        // PLACEHOLDER — Principia initial_state overrides this in n-body mode.",
+        f"{i}        // Real Kopernicus galactic placement is TODO (db/systems has no distance yet).",
+        f"{i}        referenceBody = Sun",
+        f"{i}        semiMajorAxis = {STAR_ORBIT_PLACEHOLDER_SMA_M:.6g}",
+        f"{i}        eccentricity = 0",
+        f"{i}        inclination = 0",
+        f"{i}    }}",
+        f"{i}    ScaledVersion",
+        f"{i}    {{",
+        f"{i}        type = Star",
+        f"{i}        fadeStart = 0",
+        f"{i}        fadeEnd = 0",
+        light_node,
+        _kv_block("Material", material, j),
+        coronas,
+        f"{i}    }}",
+        f"{i}}}",
+    ])
+
+
+def render_stars_combined(star_renders: list[StarRender]) -> str:
+    lines = [
+        "// NearStars — Kopernicus star bodies (Properties + ScaledVersion render)",
+        "// Generated by .claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py",
+        "// Do not hand-edit; regenerate from db/systems/*.json.",
+        "// Base star color: grounded stellar-photospheric-color methodology (docs/reference/",
+        "//   stellar-photospheric-color-methodology.md) via scripts/refs/stellar_photospheric_color.py —",
+        "//   FGK/WD→blackbody(Teff), M→Pickles real-SED tint, L/T/Y→blackbody (deep dim red).",
+        "//   rim/sunspot/emit/ambient colors are rendering derivations of that one base hex.",
+        "// luminosity = 1360 × L/Lsun (Sol convention).",
+        "",
+        MM_HEADER,
+        "{",
+    ]
+    for sr in sorted(star_renders, key=lambda x: x.body_name):
+        lines.append(render_star_body_block(sr))
+    lines += ["}", ""]
+    return "\n".join(lines)
+
+
+def static_check_stars(cfg_text: str) -> list[str]:
+    """Failure messages for the stars.cfg. Empty = pass."""
+    failures: list[str] = []
+    header_count = len(re.findall(r"@Kopernicus:FOR\[NearStarsSystem\]", cfg_text))
+    if header_count != 1:
+        failures.append(f"MM header count = {header_count}, expected 1")
+    if cfg_text.count("{") != cfg_text.count("}"):
+        failures.append(f"brace imbalance: {{={cfg_text.count('{')} }}={cfg_text.count('}')}")
+    # every Body must carry the star essentials
+    body_count = len(re.findall(r"^\s*Body\s*$", cfg_text, re.MULTILINE))
+    for token in ("type = Star", "luminosity", "sunlightColor", "Coronas", "gravParameter"):
+        if cfg_text.count(token) < body_count:
+            failures.append(f"only {cfg_text.count(token)} `{token}` for {body_count} Body node(s)")
+    return failures
+
+
+# ─────────────────────────────────────────────────────────────────────
 # Driver
 # ─────────────────────────────────────────────────────────────────────
+
+def _rel(p: Path) -> Path:
+    """Path relative to the repo root for display; falls back to the path as-is
+    when it lives outside the repo (e.g. a /tmp test output)."""
+    return p.relative_to(REPO_ROOT) if REPO_ROOT in p.resolve().parents else p
+
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
@@ -690,7 +924,9 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true",
                     help="Print cfg to stdout instead of writing")
     ap.add_argument("--output", type=Path, default=DEFAULT_OUTPUT,
-                    help=f"Output cfg path (default: {DEFAULT_OUTPUT.relative_to(REPO_ROOT)})")
+                    help=f"disk+ring cfg path (default: {DEFAULT_OUTPUT.relative_to(REPO_ROOT)})")
+    ap.add_argument("--stars-output", type=Path, default=DEFAULT_STARS_OUTPUT,
+                    help=f"star-body cfg path (default: {DEFAULT_STARS_OUTPUT.relative_to(REPO_ROOT)})")
     args = ap.parse_args()
 
     try:
@@ -705,6 +941,7 @@ def main() -> int:
         if sd is not None:
             outcome.star_disks.append(sd)
         outcome.planet_rings.extend(load_planet_rings(slug, outcome))
+        outcome.star_renders.extend(load_star_renders(slug, outcome))
 
     if outcome.errors:
         print(f"ABORT: {len(outcome.errors)} validation error(s):", file=sys.stderr)
@@ -712,30 +949,43 @@ def main() -> int:
             print(f"  - {e}", file=sys.stderr)
         return 2
 
-    if not outcome.star_disks and not outcome.planet_rings:
-        print("ABORT: no rings to emit (no recommended disk_measurements + no planet ring sidecars).",
-              file=sys.stderr)
+    if not outcome.star_disks and not outcome.planet_rings and not outcome.star_renders:
+        print("ABORT: nothing to emit (no disks/rings, no star bodies).", file=sys.stderr)
         return 2
 
-    cfg_text = render_combined(outcome.star_disks, outcome.planet_rings)
+    rings_text = (render_combined(outcome.star_disks, outcome.planet_rings)
+                  if (outcome.star_disks or outcome.planet_rings) else None)
+    stars_text = render_stars_combined(outcome.star_renders) if outcome.star_renders else None
 
-    check_failures = static_check(cfg_text)
-    if check_failures:
-        print(f"ABORT: {len(check_failures)} static check failure(s):", file=sys.stderr)
-        for f in check_failures:
-            print(f"  - {f}", file=sys.stderr)
-        return 3
+    for label, text, check in (("disk-rings", rings_text, static_check),
+                               ("stars", stars_text, static_check_stars)):
+        if text is None:
+            continue
+        failures = check(text)
+        if failures:
+            print(f"ABORT: {len(failures)} static check failure(s) in {label}.cfg:", file=sys.stderr)
+            for f in failures:
+                print(f"  - {f}", file=sys.stderr)
+            return 3
 
     if args.dry_run:
-        sys.stdout.write(cfg_text)
+        if rings_text:
+            sys.stdout.write(rings_text)
+        if stars_text:
+            sys.stdout.write(stars_text)
     else:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(cfg_text, encoding="utf-8")
-        rel = args.output.relative_to(REPO_ROOT) if args.output.is_absolute() else args.output
-        print(f"wrote {rel}")
-        print(f"  disk star bodies: {len(outcome.star_disks)} "
-              f"({sum(len(sd.rings) for sd in outcome.star_disks)} belt rings total)")
-        print(f"  planet rings:     {len(outcome.planet_rings)}")
+        if rings_text is not None:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            args.output.write_text(rings_text, encoding="utf-8")
+            print(f"wrote {_rel(args.output)}")
+            print(f"  disk star bodies: {len(outcome.star_disks)} "
+                  f"({sum(len(sd.rings) for sd in outcome.star_disks)} belt rings total)")
+            print(f"  planet rings:     {len(outcome.planet_rings)}")
+        if stars_text is not None:
+            args.stars_output.parent.mkdir(parents=True, exist_ok=True)
+            args.stars_output.write_text(stars_text, encoding="utf-8")
+            print(f"wrote {_rel(args.stars_output)}")
+            print(f"  star bodies:      {len(outcome.star_renders)}")
 
     # Report
     if outcome.skipped_no_disk:
