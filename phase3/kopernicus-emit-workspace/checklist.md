@@ -59,6 +59,45 @@ Concrete next-session steps. Each block is one commit's worth.
   validation)
 - [ ] `./scripts/check.sh` clean
 
+## Stage 5 — Star rendering (DONE 2026-05-31)
+
+The rings layer (Stage 1–3 above, disk-rings.cfg) and now the **star
+bodies** are implemented. Star work shipped this session:
+
+- [x] `scripts/star_fields.py` — pure Teff/L/spectype → ScaledVersion
+  field synthesis. The **base photospheric color** comes from the grounded
+  engine `scripts/refs/stellar_photospheric_color.py` (backing
+  `docs/reference/stellar-photospheric-color-methodology.md`) — the single
+  color path in the repo — via `base_tint_hex(teff, spectype)` and the doc's
+  §6 three-regime rule (FGK/WD → blackbody, M → Pickles real-SED tint, L/T/Y
+  → blackbody deep dim red). rim/sunspot/emit/ambient colors are rendering
+  derivations of that one base hex. `luminosity = 1360 × L/Lsun` (Sol
+  convention; corrected the old star-body.md `0.0017` bug). `sunAU =
+  13599840256`. Parametric intensity curves (∝ √L). rim/sunspot sharpness by
+  spectral class. (Replaces the superseded `star_render.py`, whose
+  independent blackbody→sRGB path was removed to keep one source of truth.)
+- [x] `emit_kopernicus_cfg.py` extended: `load_star_renders` (all stars in
+  a file), `render_star_body_block` (full `Body{}`: Template Sun +
+  Properties + Orbit placeholder + ScaledVersion{Light,Material,Coronas}),
+  `render_stars_combined`, `static_check_stars`. main() emits **stars.cfg**
+  alongside disk-rings.cfg. Missing radius/GM → skip+warn (not abort).
+- [x] Verified (2026-07 rework): 129 star bodies, idempotent, brace-balanced,
+  rings path byte-identical (no regression), colors match the methodology
+  (Sun `#fff1ea`, 40 Eri A `#ffe9d5`, 40 Eri B/DA WD `#b0c5ff`, Barnard/M4
+  `#ffd487`, brown dwarfs deep dim red; Vega/Sirius/Fomalhaut blue-white),
+  Barnard luminosity 4.83888 = 1360×0.003558.
+- [x] star-body.md: luminosity bug fixed; "Sol uses no Atmosphere/
+  HazardousBody on stars" documented (verified vs 00_Sol-Kopernicus.cfg);
+  research cross-linked to planet-pack-techniques.md §2.4–2.5.
+
+Remaining star follow-ups:
+- [ ] Star **Orbit** is a placeholder (`semiMajorAxis = 1e16`); wire real
+  galactic placement / GalacticOrbit (Principia overrides in n-body for now).
+- [ ] flightGlobalsIndex allocation (currently auto-assigned; see
+  file-structure.md 1000+/100-per-system).
+- [ ] Register emitter in `docs/reference/tools.md` (en+ko); add SKILL.md §3.
+- [ ] Curve fidelity refinement (parametric MVP).
+
 ## Out of scope (subsequent sessions)
 
 - PQS texture asset generation (heightmap + colormap PNG files)
