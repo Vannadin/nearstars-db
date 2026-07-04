@@ -3,12 +3,12 @@
 Owner decision (2026-07-03): a fourth workstream, to be done AFTER WS1–3 are validated
 in-game. This file is a stub so the idea and its grounding survive.
 
-**RESEARCH DONE (2026-07-04): see `research/R7-warp-support.md`** — current-code re-grounding
-(post WS1/WS2/WS3), the exhaustive failure catalog, and the approach decision. R7 recommends
-the **minimal-fork** path (one `UnmanageabilityReasons` OR-term + re-seed) over the big-fork
-`VesselWarpTo` C ABI sketched below; the "expected shape" §3 below is the big-fork option R7
-argues against. Two owner decisions are open (R7 §7): minimal-vs-big fork, and the subsystem
-assignment on re-seed (the WS1-intersection risk that is load-bearing regardless of strategy).
+**RESEARCH DONE (2026-07-04): see `research/R7-warp-support.md`** — current-code re-grounding,
+failure catalog, approach decision. **Owner chose minimal-fork (2026-07-04).** The C++ side is
+**verified done, no fork needed** — `WarpReadoptionLandsInDestinationSubsystem` (fork commit
+`1727a86fa`) confirms a re-adopted vessel lands in its destination star's subsystem at the correct
+origin. **C#/adapter implementation handoff: `ws4-minimal-warp-adapter-handoff.md`** (Windows
+session). The big-fork `VesselWarpTo` C ABI sketched in §3 below is the rejected alternative.
 
 ## Problem
 
