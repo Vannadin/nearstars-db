@@ -1,62 +1,82 @@
-# α Centauri Phase 4 결정 보드 — A b(Polyphemus) 중심. (body × axis) 행별 상태. DB 불변, staging 기록
+# α Centauri Phase 4 결정 보드 (schema v2) — A b(Polyphemus) 중심. (body × axis) 행별 상태. DB 불변, staging 기록
 # 4a 창작 초안 = polyphemus-art-direction.md, 궤도 과정 = STABILITY_REPORT / ALPHA_CEN_AB_DYNAMICS_STUDY
+schema_version: 2
 system: alpha_centauri
 status: staged
 updated: 2026-06-20
 
 decisions:
   # ── 궤도 (Kozai-안정 최적화 완료) ──────────────────────────────
-  - body: Alpha Centauri A b      # Polyphemus
+  - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: identity
     status: gated                 # 2026-06-22 facet-walk
-    driver: classification
-    value: >
+    driver: [classification]
+    narrative: >
       body_type=미지근한 토성(temperate Saturn급 가스자이언트; H₂/He, 120 M⊕, Teq 225K, 물구름 Class I/II).
       designation=Alpha Centauri A b · cultural=Polyphemus(designations 블록).
       discoverability=관측-발견(category=candidate; 옵셔널 ResearchBodies) — 항성은 항상 가시.
+      body_type/designation/cultural 확정. discoverability=실축 채택 — 옵셔널 ResearchBodies로 관측해 발견.
+      난도 매핑은 researchbodies-cfg 스킬이 canonical(references/db-mapping.md, 2026-06-22 개정). Polyphemus는
+      JWST 직접촬영 candidate → IGNORELEVELS T F F F(Easy만 시작 가시, Normal/Medium/Hard는 관측 발견),
+      ONDISCOVERY에 실검출 인용(arXiv:2508.03812, Sanghi & Beichman). 항성 α Cen A=naked_eye → T T T T
+      항상 가시. emit 입력 = 스킬이 읽는 top-level discoverability 리스트(body/category/message/ref); 패치 방출
+      (emit_researchbodies_cfg.py)은 말미 일괄. [[project_nearstars_discoverability_researchbodies]]
+    fields:
+      - { name: body_type, value: "temperate Saturn (H₂/He gas giant, 120 M⊕, Teq 225K, Class I/II water clouds)", op: set }
+      - { name: designation, value: "Alpha Centauri A b", op: set }
+      - { name: cultural_name, value: "Polyphemus", op: set }
+      - { name: discoverability, value: "observation-discovered (candidate)", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: >
-        body_type/designation/cultural 확정. **discoverability=실축 채택** — 옵셔널 ResearchBodies로 관측해 발견.
-        난도 매핑은 researchbodies-cfg 스킬이 canonical(references/db-mapping.md, 2026-06-22 개정). Polyphemus는
-        JWST 직접촬영 **candidate** → IGNORELEVELS **T F F F**(Easy만 시작 가시, Normal/Medium/Hard는 관측
-        발견), ONDISCOVERY에 실검출 인용(arXiv:2508.03812, Sanghi & Beichman). 항성 α Cen A=naked_eye → T T T T
-        항상 가시. emit 입력 = 스킬이 읽는 top-level `discoverability:` 리스트(body/category/message/ref); 패치 방출
-        (emit_researchbodies_cfg.py)은 말미 일괄. [[project_nearstars_discoverability_researchbodies]]
-      discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2025arXiv250803812S", skill: "researchbodies-cfg/references/db-mapping.md"}
+      evidence: >
+        body_type/designation/cultural 확정. discoverability=실축 채택(관측-발견). 난도 매핑 canonical =
+        researchbodies-cfg db-mapping.md.
+    refs: ["2508.03812"]
+    discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2025arXiv250803812S", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: Alpha Centauri A b      # Polyphemus
+  - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: orbit.semi_major_axis_au
     status: gated
-    op: set
-    value: 1.6
-    driver: window-selection
-    phase3_default: "1.6 AU (Beichman 선호 a<2 AU 패밀리; 대표값 1.9→1.6 정합)"
+    driver: [window-selection]
+    narrative: >
+      안정창 중앙. Beichman 선호 a<2 AU 패밀리에서 대표값 1.9→1.6으로 정합.
+    fields:
+      - { name: semi_major_axis_au, value: 1.6, unit: AU, op: set, phase3_default: "1.6 AU (Beichman 선호 a<2 AU 패밀리; 대표값 1.9→1.6 정합)" }
     gate:
       criterion: [stability]
       verdict: pass-in-window
       evidence: "안정창 중앙. HZ-안정 1e5 yr 검증(궤도 1.37–1.84 AU 유지)."
-    refs: ["2025AJ....Beichman"]
+    refs: ["2508.03812", "2508.03814"]
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: orbit.eccentricity
     status: gated
-    op: set
-    value: 0.1
-    driver: window-selection
-    phase3_default: "안정창 중앙 e=0.1 (관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존)"
+    driver: [window-selection]
+    narrative: >
+      안정창 중앙 e=0.1. 관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존.
+    fields:
+      - { name: eccentricity, value: 0.1, op: set, phase3_default: "안정창 중앙 e=0.1 (관측 선호 e≈0.4는 Kozai-불안정 → Canonical alternative로 보존)" }
     gate:
       criterion: [stability]
       verdict: pass-in-window
       evidence: "e≈0–0.18 안정창 중앙. 관측 e≈0.4는 KL-불안정(30 kyr 내 e→0.95, IAS15)."
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: orbit.inclination_deg
     status: gated                 # 2026-06-22 — 상호경사 16° prograde 확정, 절대 sky-frame은 자유 emit 배향
-    driver: stability + window-selection
-    value: "AB면 대비 상호경사 16° (prograde). 절대 sky-frame inclination은 16° mutual을 보존하는 자유 emit 배향(별도 고정 안 함)."
-    phase3_default: "mutual_inclination_deg=16 (안정창 0–35°의 중앙); 관측 ~50°/~130°는 Kozai-불안정이라 미채택"
+    driver: [stability, window-selection]
+    narrative: >
+      AB면 대비 상호경사 16°(prograde). 절대 sky-frame inclination은 16° mutual을 보존하는 자유 emit 배향
+      (별도 고정 안 함). cfg는 AB 쌍성 궤도를 게임 프레임에 자유 배향하고 행성을 그 평면 대비 16° mutual·prograde로
+      둠. 절대 sky-plane inclination은 관측이 약/bimodal이라 별도 고정 불요 — 16° mutual만 보존하면 결정적으로
+      따라옴. a/e(1.6 AU, e=0.1)는 이미 emit 가능.
+    fields:
+      - { name: inclination_deg, value: 16, unit: deg, op: set, phase3_default: "mutual_inclination_deg=16 (안정창 0–35°의 중앙); 관측 ~50°/~130°는 Kozai-불안정이라 미채택" }
     gate:
       criterion: [stability, error-bar]
       verdict: documented-divergence
@@ -64,167 +84,252 @@ decisions:
         Beichman Table 4 관측 ~50°(prograde)/~130°(retrograde, i_AB=79.24°)는 e≈0.4와 함께 ECL Kozai-불안정
         (e→0.95+, 위성계 붕괴). NearStars는 안정창(≲35°, ≳45°는 Kozai) 중앙 16° prograde 채택 — Phase 3
         Canonical alternatives에 기록. 16° 저경사 prograde라 관측의 bimodal 모호성도 단일해로 해소.
-      emit_note: >
-        cfg는 AB 쌍성 궤도를 게임 프레임에 자유 배향하고 행성을 그 평면 대비 16° mutual·prograde로 둠.
-        절대 sky-plane inclination은 관측이 약/bimodal이라 별도 고정 불요 — 16° mutual만 보존하면 결정적으로 따라옴.
-        a/e(1.6 AU, e=0.1)는 이미 emit 가능.
+      evidence: >
+        관측 ~50°/~130°는 e≈0.4와 함께 Kozai-불안정. 16° mutual prograde는 안정창(0–35°) 중앙.
 
   - body: Alpha Centauri A b
-    axis: orbit.elements_residual    # Ω/ω/mean_anomaly + spin-orbit + lagrange (facet-walk 2026-06-22)
+    kopernicus_name: Polyphemus
+    axis: orbit                      # was orbit.elements_residual — Ω/ω/mean_anomaly + spin-orbit + lagrange (facet-walk 2026-06-22)
     status: gated
-    driver: emit + classification
-    value: >
+    driver: [emit, classification]
+    narrative: >
       Ω/ω/mean_anomaly = 자유 emit-orientation(16° mutual 보존, 위상은 synthetic-noise seed 가능). spin_orbit
-      =조석고정 아님(1.6 AU 가스자이언트, free ~10h 자전). lagrange_placement=없음.
+      =조석고정 아님(1.6 AU 가스자이언트, free ~10h 자전). lagrange_placement=없음. 절대 배향은 자유(관측
+      약/bimodal). 1.6 AU giant는 5 Gyr에도 미잠김 → free rotator. 캐넌 Poly-L4/L5 코오비탈 planetoid
+      (337/611km)는 의도적 제외(오너 결정 2026-06-22 — 불필요; binary 트로이 안정성도 미검증).
+    fields:
+      - { name: longitude_ascending_node, value: "free emit-orientation (16° mutual 보존)", op: set }
+      - { name: argument_periapsis, value: "free emit-orientation", op: set }
+      - { name: mean_anomaly, value: "free (synthetic-noise seed 가능)", op: set }
+      - { name: spin_orbit_resonance, value: "none (free ~10h rotator, 미잠김)", op: set }
+      - { name: lagrange_placement, value: "none (Poly-L4/L5 코오비탈 planetoid 의도적 제외)", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: >
-        절대 배향은 자유(관측 약/bimodal). 1.6 AU giant는 5 Gyr에도 미잠김 → free rotator. **캐넌 Poly-L4/L5
-        코오비탈 planetoid(337/611km)는 의도적 제외**(오너 결정 2026-06-22 — 불필요; binary 트로이 안정성도 미검증).
+      evidence: >
+        절대 배향은 자유(관측 약/bimodal). 1.6 AU giant는 5 Gyr에도 미잠김 → free rotator. 캐넌 Poly-L4/L5
+        코오비탈 planetoid(337/611km)는 의도적 제외(오너 결정 2026-06-22 — 불필요; binary 트로이 안정성 미검증).
 
   # ── 벌크 (canon↔관측 밀도 충돌) ───────────────────────────────
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: bulk.radius
     status: gated                 # ring-model 반경 채택 (Phase 3 tie-break), 2026-06-19 정정
-    value: "1.0 R_Jup (71,492 km), ρ ~0.47 g/cc"   # 120 M⊕ + 1.0 R_Jup
-    driver: window-selection
-    phase3_default: "1.0 R_Jup (ring-model tie-break; ring-free 대안은 1.1–1.15 R_Jup)"
+    driver: [window-selection]
+    narrative: >
+      1.0 R_Jup (71,492 km), ρ ~0.47 g/cc (120 M⊕ + 1.0 R_Jup). Beichman §5.3 두 해 중
+      ring-model(반경 1.0 R_Jup + 고리가 초과 단면적 담당)을 채택. 질량은 두 해 모두 ~120 M⊕(차이는 반경뿐).
+      appearance.rings와 커플링 — 작은 반경은 고리가 있어야만 성립하므로 고리 유지 결정과 정합. ring-free
+      1.1–1.15는 보존된 대안. 직전 커밋의 1.05 R_Jup/0.40은 raw 이미징 추정치를 잘못 옮긴 것 → cfg-ready는
+      1.0/~0.47. canon "목성보다 밀도 큼"(ρ>1.33, →220 M⊕↑)은 미채택(관측 우선).
+    fields:
+      - { name: radius, value: 1.0, unit: R_jup, op: set, phase3_default: "1.0 R_Jup (ring-model tie-break; ring-free 대안은 1.1–1.15 R_Jup)" }
     gate:
       criterion: [error-bar]
       verdict: pass-in-window
       evidence: >
-        Beichman §5.3 두 해 중 ring-model(반경 1.0 R_Jup + 고리가 초과 단면적 담당)을 채택.
-        질량은 두 해 모두 ~120 M⊕(차이는 반경뿐). **appearance.rings와 커플링** — 작은 반경은
-        고리가 있어야만 성립하므로 고리 유지 결정과 정합. ring-free 1.1–1.15는 보존된 대안.
-      note: >
-        직전 커밋의 1.05 R_Jup/0.40은 raw 이미징 추정치를 잘못 옮긴 것 → cfg-ready는 1.0/~0.47.
-        canon "목성보다 밀도 큼"(ρ>1.33, →220 M⊕↑)은 미채택(관측 우선).
+        Beichman §5.3 두 해 중 ring-model(반경 1.0 R_Jup + 고리가 초과 단면적 담당)을 채택. 질량은 두 해
+        모두 ~120 M⊕(차이는 반경뿐). appearance.rings와 커플링 — 작은 반경은 고리가 있어야만 성립. ring-free
+        1.1–1.15는 보존된 대안.
+    refs: ["2508.03814"]
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: bulk.geopotential_j2     # 편평도 (Principia j2 + reference_radius) — emit 필드 + 위성 동역학 입력
     status: gated                  # 2026-06-20 확정 — J2 위성 시뮬 완료(자체구현 j2.py로 주입·검증)
-    driver: physical               # 자전+밀도에서 도출(아트디렉션 아님)
-    value: "J2 ≈ 0.023 (1차 RD, 절단보정 ~0.025–0.026); 범위 0.017–0.033; J4 ≈ -0.001; reference_radius = 1.0 R_Jup"
-    derivation: >
-      **논문 근거 (derived-value 규칙)**. Radau–Darwin 관계식 — Helled, Anderson, Schubert, Stevenson
-      2011 eq.3 (arXiv:1109.1627), NMoI=(2/3)[1-(2/5)√(5m/(m+3J2)-1)], m=ω²R̄³/GM(평균반경).
-      구조 가정 NMoI=C/MR²=0.23 (범위 0.21–0.26): 거대행성 실측(목성 0.265, 토성 ~0.21, 빙왕성 ~0.22–0.24;
-      Helled+2011/2020 arXiv:2007.10783, Fortney+2018 arXiv:1609.06324)에서 0.4 M_Jup·저밀도(0.47)는
-      토성보다 덜 응축→NMoI 약간 높음. 폴리페무스 m≈0.19(평균반경, f≈0.13 자기일관 반복). →
-      J2≈0.023(central). **calibration 검증**: 같은 식이 목성 J2 -0.0%, 토성 -10.3% 재현(알려진 1차
-      오차). m≈0.19가 토성(0.14)보다 커 1차 절단이 과소예측 → 실제 ~10–20%↑(보정 ~0.025–0.026).
-      불확실성 폭은 NMoI 가정이 지배. 가스자이언트=축대칭→zonal only(j2[+j4]). 입력 calibration J2:
-      목성=Iess2018, 토성=Durante2017.
-    resolved: >
-      **선행조건 해소 (2026-06-20).** J2=0.023을 위성 시뮬에 주입 완료 — reboundx가 rebound 5.x
-      비호환이라 자체 구현(scripts/j2.py, rebound additional_forces, M&D 벡터형, 해석 세차율과
-      <0.1% 검증). 이 J2가 위성 궤도 결정을 실제로 뒤집음(satellites axis 참조): off-resonance
-      135k 갭은 J2에도 안정, 3:2-락은 J2 detuning으로 Hades 이탈. emit 값 불변(J2≈0.023,
-      reference_radius 1.0 R_Jup). **2026-06-25 figure 패스가 독립적으로 재확인** (body-figure-methodology.md) —
-      시각 oblate 메시 a:b:c ≈ 1.149:1.149:1.0 (VertexHeightOblateAdvanced, base radius=극반경).
-    note: "Principia가 천체간 연산에도 J2 적용 → 위성 동역학의 입력이었고, 그 입력이 결정적이었음."
+    driver: [physical]             # 자전+밀도에서 도출(아트디렉션 아님)
+    narrative: >
+      J2 ≈ 0.023 (1차 RD, 절단보정 ~0.025–0.026); 범위 0.017–0.033; J4 ≈ -0.001; reference_radius = 1.0 R_Jup.
+      논문 근거(derived-value 규칙). Radau–Darwin 관계식 — Helled, Anderson, Schubert, Stevenson 2011 eq.3
+      (arXiv:1109.1627), NMoI=(2/3)[1-(2/5)√(5m/(m+3J2)-1)], m=ω²R̄³/GM(평균반경). 구조 가정 NMoI=C/MR²=0.23
+      (범위 0.21–0.26): 거대행성 실측(목성 0.265, 토성 ~0.21, 빙왕성 ~0.22–0.24; Helled+2011/2020
+      arXiv:2007.10783, Fortney+2018 arXiv:1609.06324)에서 0.4 M_Jup·저밀도(0.47)는 토성보다 덜 응축→NMoI 약간
+      높음. 폴리페무스 m≈0.19(평균반경, f≈0.13 자기일관 반복). → J2≈0.023(central). calibration 검증: 같은 식이
+      목성 J2 -0.0%, 토성 -10.3% 재현(알려진 1차 오차). m≈0.19가 토성(0.14)보다 커 1차 절단이 과소예측 → 실제
+      ~10–20%↑(보정 ~0.025–0.026). 불확실성 폭은 NMoI 가정이 지배. 가스자이언트=축대칭→zonal only(j2[+j4]).
+      입력 calibration J2: 목성=Iess2018, 토성=Durante2017.
+      선행조건 해소(2026-06-20): J2=0.023을 위성 시뮬에 주입 완료 — reboundx가 rebound 5.x 비호환이라 자체
+      구현(scripts/j2.py, rebound additional_forces, M&D 벡터형, 해석 세차율과 <0.1% 검증). 이 J2가 위성 궤도
+      결정을 실제로 뒤집음(satellites axis 참조): off-resonance 135k 갭은 J2에도 안정, 3:2-락은 J2 detuning으로
+      Hades 이탈. emit 값 불변(J2≈0.023, reference_radius 1.0 R_Jup). 2026-06-25 figure 패스가 독립적으로
+      재확인(body-figure-methodology.md) — 시각 oblate 메시 a:b:c ≈ 1.149:1.149:1.0 (VertexHeightOblateAdvanced,
+      base radius=극반경). Principia가 천체간 연산에도 J2 적용 → 위성 동역학의 입력이었고, 그 입력이 결정적이었음.
+    fields:
+      - { name: geopotential_j2, value: 0.023, reference_radius_km: 71492, op: set, phase3_default: "J2 ≈ 0.023 (범위 0.017–0.033; 절단보정 ~0.025–0.026)" }
+      - { name: j4, value: -0.001, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        Radau–Darwin(Helled+2011 eq.3, arXiv:1109.1627) NMoI=0.23 가정 → J2≈0.023(central), 범위 0.017–0.033.
+        calibration: 같은 식이 목성 -0.0%·토성 -10.3% 재현(알려진 1차 오차). J2=0.023을 위성 시뮬에 주입 검증
+        완료(scripts/j2.py, 해석 세차율과 <0.1%) — 135k 갭 안정·3:2-락 이탈로 위성 결정을 뒤집음. figure 패스가
+        독립 재확인(body-figure-methodology.md).
+    refs: ["1109.1627", "2007.10783", "1609.06324"]
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: bulk.obliquity
     status: gated                  # 5° 확정 (2026-06-22) — 재시뮬 STABLE + 일식 duty 검증
-    driver: visual + physics
-    value: "5° (적도면이 공전면에서 5° 기움); 위성계+고리 전체가 적도면 공유(coherent)"
-    phase3_default: "27° (토성-유추 tie-break, 고리 기울기용 → 폐기)"
+    driver: [visual, physics]
+    narrative: >
+      5°(적도면이 공전면에서 5° 기움); 위성계+고리 전체가 적도면 공유(coherent). 위성계+고리를 적도면에 통째로
+      5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는 본래 궤도면이 자연스러우나 5° 적도면으로
+      끌어오는 건 미미한 divergence.
+    fields:
+      - { name: obliquity, value: 5, unit: deg, op: set, phase3_default: "27° (토성-유추 tie-break, 고리 기울기용 → 폐기)" }
     gate:
       criterion: [stability, visual-checklist]
       verdict: documented-divergence
       divergence_note: >
         Phase 3 27°(토성-유추)는 "고리 기울기용"이었으나 고리를 Chaos 궤도면에 눕혀 근거 소멸 → 5°로 낮춤.
-        위성계+고리를 적도면에 통째로 5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는
-        본래 궤도면이 자연스러우나 5° 적도면으로 끌어오는 건 미미한 divergence.
+        위성계+고리를 적도면에 통째로 5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는 본래
+        궤도면이 자연스러우나 5° 적도면으로 끌어오는 건 미미한 divergence.
       evidence: >
         재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123.
         일식 검증: θ(Pandora면↔Polyphemus 궤도면) 0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%) —
         5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성 섭동으로 θ 요동→"일식 시즌" 자연발생.
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: bulk.rotation_period
     status: passthrough            # Phase 3 유추 그대로
-    note: "10 h (목성/토성 유추, conf low). 자이언트라 조석고정 아님. emit 그대로."
+    driver: [passthrough]
+    narrative: "10 h (목성/토성 유추, conf low). 자이언트라 조석고정 아님. emit 그대로."
+    fields:
+      - { name: rotation_period, value: 10, unit: h, op: passthrough, phase3_default: "10 h (목성/토성 유추, conf low)" }
 
   - body: Alpha Centauri A b
-    axis: bulk.residual              # mass + spin_axis + internal_heat + age (facet-walk 2026-06-22)
+    kopernicus_name: Polyphemus
+    axis: bulk                       # was bulk.residual — mass + spin_axis + internal_heat + age (facet-walk 2026-06-22)
     status: gated
-    driver: physics + classification
-    value: >
+    driver: [physics, classification]
+    narrative: >
       mass=120 M⊕(0.38 M_Jup, Phase 3 토대값 — J2·밀도·조석·dynamo 입력). spin_axis_orientation=obliquity 5°의
       방위, 자유 emit(de-perfect)이되 일식 duty 94% eclipse-favorable 범위. internal_heat=미미(T_int<110K,
-      복사평형 지배, 자발광 아님 — 내부플럭스 ~insolation의 ≲6%; 늙은 저질량 토성급이라 잔여열 작음). age=5.3 Gyr(α Cen A 상속).
-    gate: {criterion: [classification], verdict: pass-in-window, note: "insolation-set(eps Ind A b 자발광과 대비). 작은 내부열도 띠/날씨는 구동. spin_axis 절대방위는 emit-noise(eclipse bound)."}
+      복사평형 지배, 자발광 아님 — 내부플럭스 ~insolation의 ≲6%; 늙은 저질량 토성급이라 잔여열 작음). age=5.3 Gyr
+      (α Cen A 상속). insolation-set(eps Ind A b 자발광과 대비). 작은 내부열도 띠/날씨는 구동. spin_axis 절대방위는
+      emit-noise(eclipse bound).
+    fields:
+      - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
+      - { name: spin_axis_orientation, value: "obliquity 5° 방위, 자유 emit (eclipse duty 94% bound)", op: set }
+      - { name: internal_heat, value: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
+      - { name: age, value: 5.3, unit: Gyr, op: set, phase3_default: "5.3 Gyr (α Cen A 상속)" }
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      evidence: "insolation-set(eps Ind A b 자발광과 대비). 작은 내부열도 띠/날씨는 구동. spin_axis 절대방위는 emit-noise(eclipse bound)."
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: atmosphere                 # composition/pressure/temperature/scale_height/breathability/greenhouse/escape (group 4, 2026-06-22)
     status: gated
-    driver: physics + classification
-    value: >
-      composition: H₂/He bulk, [M/H]+0.5~1.0(Thorngren2016 질량-금속성=토성급 예상값, 가정 아님), 응결 구름종=H₂O·NH₄SH
-      (NH₃는 225K서 비응결 — skin T≈189K가 응결점 150K에 못 닿아 기체 잔류; appearance.banding 정합), C/O 2.5×(§5.2). pressure: 1 bar 기준 앵커. temperature: 구름덱 225K 앵커. scale_height:
-      프로파일서 도출. breathability: 불가(atmosphereContainsOxygen=false). greenhouse: 표면 없어 surface-lift 없음
-      (구름덱=복사층, 깊은 곳은 단열선으로 뜨겁되 미렌더). escape: 무시(거대질량).
+    driver: [physics, classification]
+    narrative: >
+      composition: H₂/He bulk, [M/H]+0.5~1.0(Thorngren2016 질량-금속성=토성급 예상값, 가정 아님), 응결 구름종
+      =H₂O·NH₄SH(NH₃는 225K서 비응결 — skin T≈189K가 응결점 150K에 못 닿아 기체 잔류; appearance.banding 정합),
+      C/O 2.5×(§5.2). pressure: 1 bar 기준 앵커. temperature: 구름덱 225K 앵커. scale_height: 프로파일서 도출.
+      breathability: 불가(atmosphereContainsOxygen=false). greenhouse: 표면 없어 surface-lift 없음(구름덱=복사층,
+      깊은 곳은 단열선으로 뜨겁되 미렌더). escape: 무시(거대질량). temperature/pressure는 스칼라 아님 — emit서
+      cool-giant 복사대류 격자(Sonora Bobcat 2107.07434 / Fortney2007 astro-ph/0612671, _bib/gas-giant-atmosphere.yaml)로
+      temperatureCurve+pressureCurve 생성, 앵커=구름덱 225K/1 bar. great-season은 temperatureEccentricityBiasCurve
+      (e=0.1>임계라 OK, divide-by-zero 가드 통과). 분류 Class II 물구름(Sudarsky2003). Teq 225K는 A_B=0.3 가정 —
+      Class II 물구름 알베도 0.5–0.8이면 더 차가울 여지(여전히 Class II). 보수적 채택.
+    fields:
+      - { name: composition, value: "H₂/He bulk, [M/H]+0.5~1.0, clouds H₂O·NH₄SH (NH₃ 비응결), C/O 2.5×", op: set }
+      - { name: pressure, value: 1, unit: bar, op: set, phase3_default: "1 bar 기준 앵커" }
+      - { name: temperature, value: 225, unit: K, op: set, phase3_default: "구름덱 225K 앵커 (A_B=0.3 가정)" }
+      - { name: scale_height, value: "프로파일서 도출", op: set }
+      - { name: breathability, value: false, op: set }
+      - { name: greenhouse, value: "none (표면 없어 surface-lift 없음)", op: set }
+      - { name: escape, value: "negligible (거대질량)", op: set }
     gate:
       criterion: [classification, error-bar]
       verdict: pass-in-window
-      profile_note: >
-        temperature/pressure는 스칼라 아님 — emit서 cool-giant 복사대류 격자(Sonora Bobcat 2107.07434 / Fortney2007
-        astro-ph/0612671, _bib/gas-giant-atmosphere.yaml)로 temperatureCurve+pressureCurve 생성, 앵커=구름덱 225K/1 bar.
-        great-season은 temperatureEccentricityBiasCurve(e=0.1>임계라 OK, divide-by-zero 가드 통과). 분류 Class II 물구름(Sudarsky2003).
-      albedo_note: "Teq 225K는 A_B=0.3 가정 — Class II 물구름 알베도 0.5–0.8이면 더 차가울 여지(여전히 Class II). 보수적 채택."
+      evidence: >
+        temperature/pressure는 emit서 cool-giant 복사대류 격자(Sonora Bobcat / Fortney2007)로 curve 생성,
+        앵커=구름덱 225K/1 bar. great-season은 temperatureEccentricityBiasCurve(e=0.1>임계라 OK). 분류 Class II
+        물구름(Sudarsky2003). Teq 225K는 A_B=0.3 가정 — Class II 알베도 0.5–0.8이면 더 차가울 여지(보수적 채택).
+    refs: ["2107.07434", "astro-ph/0612671"]
 
   # ── 외형 (banding/haze/aurora 4b 게이트 완료 2026-06-22) ─────────────────────
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: appearance.banding
     status: gated                 # group 6 facet-walk 완료 (2026-06-22) — 3색 띠 + 가라앉은 파란 폭풍
-    target: "흰 zone(물/NH4SH 구름) + 적갈 chromophore 띠(목성 적색 70%) + 슬레이트블루 belt(구름틈 Rayleigh)의 3색 띠 + 중위도 대형 폭풍 1개(가장 깊은 구름틈=가장 진한 azure)"
-    driver: visual
+    driver: [visual]
+    narrative: >
+      흰 zone(물/NH4SH 구름) + 적갈 chromophore 띠(목성 적색 70%) + 슬레이트블루 belt(구름틈 Rayleigh)의 3색 띠
+      + 중위도 대형 폭풍 1개(가장 깊은 구름틈=가장 진한 azure). 흰 zone = 물/NH4SH 구름탑(#eef1f4, Sudarsky
+      Class II). 225K는 skin T≈189K로 NH3 응결점 150K에 끝내 못 닿아(목성과 달리 대류권계면이 150K까지 안 식음)
+      암모니아는 기체로 남고 구름 안 됨 → 가시 덱은 물/NH4SH. 적갈 chromophore 띠 = NH4SH 복사 생성물(황 화합물)
+      + CH4/PH3 광분해 탄화수소 톨린이 청·UV 흡수 → 적갈(cold-giant 광화학 in-window); 금색→목성 belt 적색 70%로
+      오너 조정. 슬레이트블루 belt = 얕은 구름틈에 드러난 깊은 H2/He 대기의 Rayleigh 산란(haze가 채도 감쇄).
+      중위도 대형 폭풍 = 가장 깊은 구름틈이라 Rayleigh 컬럼이 가장 길어 가장 진한 azure — 목성 대적점의 역(솟은
+      적색 점이 아닌 가라앉은 파란 눈), Avatar canon "제일 짙은 파란 폭풍"과 일치. 파랑은 메탄 흡수 아닌 Rayleigh라
+      cobalt 과채도 우려 불필요. 목성형 난류 밴딩 = art-forward documented-divergence(appearance.clouds 행 및 아래
+      banding_morphology 필드). 반사광 구름 띠 색의 방법론 근거 = docs/reference/atmosphere-reflected-color-methodology.md
+      (깊은 구름틈일수록 Rayleigh 더 파랑 + 황/톨린 chromophore 색조군 + α Cen A=G2V 태양쌍둥이라 white point≈태양 →
+      색이 reddening 없이 거의 그대로 렌더; Polyphemus가 그 문서의 worked example). composition-color.md(재진입
+      발광)와는 다른 메커니즘. 흰색만 Phase3 hex 근거, 적갈/청/azure는 그 물리 창 내 오너 art tie-break. 응결
+      층서 근거 = Sudarsky 2000/2003 + Morley 2014 (docs/phase3/_bib/gas-giant-atmosphere.yaml 핀).
+    fields:
+      - { name: banding_base, value: "#eef1f4", op: set, phase3_default: "#eef1f4 (물/NH4SH zone, Sudarsky Class II)", verdict: pass-in-window }
+      - { name: banding_chromophore, value: "#b4784e", window: "#a8703f–#bc8055", op: set, verdict: pass-in-window }
+      - { name: banding_belt, value: "#647e96", window: "#5a6e82–#6e8499", op: set, verdict: pass-in-window }
+      - { name: banding_storm_eye, value: "#214a72", window: "#1e4068–#2a5480", op: set, verdict: pass-in-window }
+      - name: banding_morphology
+        value: "Jovian turbulent banding (band 경계 소용돌이·festoon 多)"
+        op: set
+        verdict: documented-divergence
+        divergence_note: >
+          목성형 난류 밴딩은 art-forward 선택 — Polyphemus는 T_int<110K(내부열 낮음)라 물리적으론 토성처럼 잔잔한
+          zonal band가 더 자연스러움. 시각 드라마(interesting-first)로 난류 밴딩 채택, silent 아닌 명시 발산.
+          (형태학 세부는 appearance.clouds 행과 동일 결정.)
     gate:
       criterion: [visual-checklist]
-      verdict: partial            # 색·메커니즘 in-window; 목성형 난류 밴딩만 art-forward documented-divergence
+      verdict: pass-in-window        # 색·메커니즘 in-window; 난류 밴딩만 field-level documented-divergence
       evidence: >
-        흰 zone = 물/NH4SH 구름탑(#eef1f4, Sudarsky Class II). 225K는 skin T≈189K로 NH3 응결점 150K에
-        끝내 못 닿아(목성과 달리 대류권계면이 150K까지 안 식음) 암모니아는 기체로 남고 구름 안 됨 → 가시 덱은
-        물/NH4SH. 적갈 chromophore 띠 = NH4SH 복사 생성물(황 화합물) + CH4/PH3 광분해 탄화수소 톨린이
-        청·UV 흡수 → 적갈(cold-giant 광화학 in-window); 금색→목성 belt 적색 70%로 오너 조정. 슬레이트블루
-        belt = 얕은 구름틈에 드러난 깊은 H2/He 대기의 Rayleigh 산란(haze가 채도 감쇄). 중위도 대형 폭풍 =
-        가장 깊은 구름틈이라 Rayleigh 컬럼이 가장 길어 가장 진한 azure — 목성 대적점의 역(솟은 적색 점이 아닌
-        가라앉은 파란 눈), Avatar canon "제일 짙은 파란 폭풍"과 일치. 파랑은 메탄 흡수 아닌 Rayleigh라 cobalt
-        과채도 우려 불필요. 목성형 난류 밴딩 = art-forward documented-divergence(아래 appearance.clouds 행).
-      cfg_colors: "zone #eef1f4(물/NH4SH, Phase3) · chromophore 띠 #b4784e(목성적색 70%, 창 #a8703f–#bc8055) · belt #647e96(슬레이트블루 Rayleigh, 창 #5a6e82–#6e8499) · 폭풍 눈 #214a72(가장 깊은 Rayleigh, 창 #1e4068–#2a5480)"
-      emit_note: >
-        반사광 구름 띠 색의 방법론 근거 = docs/reference/atmosphere-reflected-color-methodology.md (깊은 구름틈일수록
-        Rayleigh 더 파랑 + 황/톨린 chromophore 색조군 + α Cen A=G2V 태양쌍둥이라 white point≈태양 → 색이 reddening 없이
-        거의 그대로 렌더; Polyphemus가 그 문서의 worked example). composition-color.md(재진입 발광)와는 다른 메커니즘이라
-        거기선 안 나옴. 흰색만 Phase3 hex 근거, 적갈/청/azure는 그 물리 창 내 오너 art tie-break. 응결 층서 근거 =
-        Sudarsky 2000/2003 + Morley 2014 (docs/phase3/_bib/gas-giant-atmosphere.yaml 핀).
+        흰 zone = 물/NH4SH 구름탑(Sudarsky Class II). 적갈 chromophore = NH4SH 복사 생성물 + CH4/PH3 광분해
+        톨린(cold-giant 광화학 in-window). 슬레이트블루 belt = 구름틈 Rayleigh. 폭풍 눈 = 가장 깊은 Rayleigh
+        컬럼(대적점의 역). 색 근거 = atmosphere-reflected-color-methodology.md; α Cen A=G2V라 white point≈태양.
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: appearance.haze
     status: gated                 # group 6 facet-walk (2026-06-22) — 금색→목성 적색 70% 오너 조정
-    target: "광화학 크로모포어+haze로 적갈 띠 (NH4SH 황 + CH4/PH3 광분해 탄화수소 톨린)"
-    driver: visual
+    driver: [visual]
+    narrative: >
+      광화학 크로모포어+haze로 적갈 띠 (NH4SH 황 + CH4/PH3 광분해 탄화수소 톨린). 광화학 크로모포어 haze는
+      cold-giant 유추로 정당 — 목성(Teq~110K)·토성(~90K)이 UV 광분해(NH3/CH4/PH3→탄화수소/톨린)로 색소 haze를
+      보임. Polyphemus(225K, H2/He+CH4, NH3 비응결, G2V UV)는 둘보다 따뜻해 메커니즘이 오히려 잘 성립. 오너 조정으로
+      토성형 금색이 아닌 목성 belt 적색 70%(색소 코팅 더 두껍게) 채택 — 여전히 광화학 색소 물리 창 안.
+      composition-color.md은 haze 크로모포어를 bulk 밖 별도 층으로 다룸(Titan 톨린/sub-Neptune 광화학). 적갈색은
+      반사광이라 plasma yaml서 안 나옴(composition-color.md=재진입 플라스마). 목성-belt 창 #a8703f–#bc8055 내 오너
+      tie-break, 기본 #b4784e.
+    fields:
+      - { name: haze, value: "#b4784e", window: "#a8703f–#bc8055", op: set }
     gate:
       criterion: [visual-checklist]
       verdict: pass-in-window
       evidence: >
-        광화학 크로모포어 haze는 cold-giant 유추로 정당 — 목성(Teq~110K)·토성(~90K)이 UV 광분해
-        (NH3/CH4/PH3→탄화수소/톨린)로 색소 haze를 보임. Polyphemus(225K, H2/He+CH4, NH3 비응결,
-        G2V UV)는 둘보다 따뜻해 메커니즘이 오히려 잘 성립. 오너 조정으로 토성형 금색이 아닌 목성 belt
-        적색 70%(색소 코팅 더 두껍게) 채택 — 여전히 광화학 색소 물리 창 안. composition-color.md은
-        haze 크로모포어를 bulk 밖 별도 층으로 다룸(Titan 톨린/sub-Neptune 광화학).
-      emit_note: >
-        적갈색은 반사광이라 plasma yaml서 안 나옴(composition-color.md=재진입 플라스마). 목성-belt
-        창 #a8703f–#bc8055 내 오너 tie-break, 기본 #b4784e.
+        광화학 크로모포어 haze는 cold-giant 유추로 정당 — 목성/토성이 UV 광분해로 색소 haze를 보임. Polyphemus
+        (225K, G2V UV)는 더 따뜻해 메커니즘이 잘 성립. 오너 조정으로 목성 belt 적색 70% 채택(광화학 색소 물리
+        창 안).
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: appearance.clouds
     status: gated                 # group 6 facet-walk (2026-06-22) — 형태학 명시 결정
-    target: "구름덱 형태학 = 목성형 난류 밴딩(band 경계 소용돌이·festoon 多) + 중위도 단일 대형 anticyclone(폭풍 색/메커니즘은 banding 행)"
-    driver: visual
+    driver: [visual]
+    narrative: >
+      구름덱 형태학 = 목성형 난류 밴딩(band 경계 소용돌이·festoon 多) + 중위도 단일 대형 anticyclone(폭풍
+      색/메커니즘은 banding 행). 구름 coverage = Phase 3 0.9. 대형 폭풍 = 가라앉은 Rayleigh 파란 눈(Avatar canon),
+      색은 banding cfg_colors 폭풍 눈. 형태학은 emit 시 구름 텍스처(EVE)/PQS로 구현 — 본 행은 art 의도, 색 값은
+      banding 행에 통합.
+    fields:
+      - { name: clouds, value: "Jovian turbulent banding + 중위도 단일 anticyclone", op: set }
+      - { name: cloud_coverage, value: 0.9, op: set, phase3_default: "0.9 (Phase 3)" }
     gate:
       criterion: [visual-checklist]
       verdict: documented-divergence
@@ -232,271 +337,403 @@ decisions:
         목성형 난류는 art-forward 선택 — Polyphemus는 T_int<110K(내부열 낮음)라 물리적으론 토성처럼
         잔잔한 zonal band가 더 자연스러움. 시각 드라마(interesting-first)로 난류 밴딩 채택, silent 아닌 명시 발산.
       evidence: >
-        구름 coverage = Phase 3 0.9. 대형 폭풍 = 가라앉은 Rayleigh 파란 눈(Avatar canon), 색은 banding cfg_colors 폭풍 눈.
-      emit_note: "형태학은 emit 시 구름 텍스처(EVE)/PQS로 구현 — 본 행은 art 의도, 색 값은 banding 행에 통합."
+        구름 coverage = Phase 3 0.9. 대형 폭풍 = 가라앉은 Rayleigh 파란 눈(Avatar canon), 색은 banding
+        cfg_colors 폭풍 눈.
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: appearance.aurora
     status: gated                 # documented-divergence — Phase 3는 aurora 없음, Phase 4가 가시 연출. 색만 조성-고정
-    target: "극 rose-magenta 오로라 (Pandora의 cyan 생물발광과 의도적 대비: 행성 핑크, 달 청록)"
-    driver: visual
+    driver: [visual]
     depends_on: "magnetosphere(자기장 결정) — 오로라 가둠/세기는 자기권에 의존, 그 행 먼저 확정 필요"
+    narrative: >
+      극 rose-magenta 오로라 (Pandora의 cyan 생물발광과 의도적 대비: 행성 핑크, 달 청록). H2/He 대기가 색을
+      *고정*(선택 아님): H Balmer-α 적색 + H2 Fulcher / Balmer-β/γ 보라. 원자 산소 없어 지구식 녹색 불가. 대부분
+      출력은 UV(가시 오로라 희미) — 발산은 "보이게 연출"한 점. sRGB는 emit 시 element_plasma_colors.yaml /
+      molecular_plasma_colors.yaml에서 추출.
+    fields:
+      - { name: aurora, value: "극 rose-magenta (H Balmer-α 적색 + H2 Fulcher/Balmer-β/γ 보라)", op: set, phase3_default: "aurora_present=false (medium)" }
     gate:
       criterion: [composition-lock]
       verdict: documented-divergence
       divergence_note: >
-        Phase 3 aurora_present=false(medium) — 조용한 G2V 항성풍(log R'HK −4.95)이 1.6 AU서 약한
-        플라스마 구동원이라 "cfg renders none". Phase 4는 Pandora cyan과 대비용으로 희미한 가시
-        오로라를 의도적으로 연출 → 발산. 색은 조성-고정이라 in-window.
+        Phase 3 aurora_present=false(medium) — 조용한 G2V 항성풍(log R'HK −4.95)이 1.6 AU서 약한 플라스마
+        구동원이라 "cfg renders none". Phase 4는 Pandora cyan과 대비용으로 희미한 가시 오로라를 의도적으로 연출
+        → 발산. 색은 조성-고정이라 in-window.
       evidence: >
-        H2/He 대기가 색을 *고정*(선택 아님): H Balmer-α 적색 + H2 Fulcher / Balmer-β/γ 보라.
-        원자 산소 없어 지구식 녹색 불가. 대부분 출력은 UV(가시 오로라 희미) — 발산은 "보이게 연출"한 점.
-      emit_note: "sRGB는 emit 시 element_plasma_colors.yaml / molecular_plasma_colors.yaml에서 추출."
+        H2/He 대기가 색을 고정(선택 아님): H Balmer-α 적색 + H2 Fulcher / Balmer-β/γ 보라. 원자 산소 없어
+        지구식 녹색 불가. 대부분 출력은 UV(가시 오로라 희미).
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: magnetism.magnetic_field
     status: gated                 # 4b 완료 (2026-06-22) — dynamo 스케일링 근거화
-    target: "표면 dynamo 자기장"
-    driver: physics
-    gate:
-      criterion: [derived-grounding]
-      verdict: pass-in-window     # Phase 3도 170µT로 근거 교정됨(en+ko) → Phase 3·4 일치
-      value: "B_eq ≈ 170 µT (1.7 G), B_pol ≈ 345 µT"
-      evidence: >
-        Reiners & Christensen 2010(arXiv:1007.1514) depth-corrected dipole 보간으로 0.378 M_Jup·
-        5.3 Gyr → B_eq 172 µT. 목성 동일식 sanity check 통과. Phase 3 자체도 미근거 ~500µT 추측에서
-        170µT(방법값)로 교정 완료 → 일치. canonical = docs/reference/planetary-dynamo-scaling.md.
-      caveat: "0.378 M_Jup은 자이언트 영역 하한 — He 성층화로 실제 더 낮을 수도(Saturn ~21µT). conf low–med."
-      owner_note: >
-        group 7 facet-walk (2026-06-22): 오너가 170µT 유지 선택(A) — R&C 스케일링 값 그대로.
-        He 성층화 토성급(~20–50µT) 약장 대안(B)은 검토 후 기각. 토성의 ~8배·목성의 ~0.4배 = 토성-목성
-        사이 목성 쪽. 자기권 넓고 오로라/방사선대 받침.
-
-  - body: Alpha Centauri A b
-    axis: magnetism.magnetosphere
-    status: gated                 # 4b 완료 (2026-06-22)
-    target: "자기권 standoff + 방사선대 범위"
-    driver: physics
+    driver: [physics]
+    narrative: >
+      표면 dynamo 자기장. B_eq ≈ 170 µT (1.7 G), B_pol ≈ 345 µT. Reiners & Christensen 2010(arXiv:1007.1514)
+      depth-corrected dipole 보간으로 0.378 M_Jup·5.3 Gyr → B_eq 172 µT. 목성 동일식 sanity check 통과. Phase 3
+      자체도 미근거 ~500µT 추측에서 170µT(방법값)로 교정 완료 → 일치. canonical = docs/reference/planetary-dynamo-scaling.md.
+      caveat: 0.378 M_Jup은 자이언트 영역 하한 — He 성층화로 실제 더 낮을 수도(Saturn ~21µT). conf low–med.
+      group 7 facet-walk(2026-06-22): 오너가 170µT 유지 선택(A) — R&C 스케일링 값 그대로. He 성층화 토성급
+      (~20–50µT) 약장 대안(B)은 검토 후 기각. 토성의 ~8배·목성의 ~0.4배 = 토성-목성 사이 목성 쪽. 자기권 넓고
+      오로라/방사선대 받침.
+    fields:
+      - { name: magnetic_field, value: 170, unit: uT, op: set, phase3_default: "170 µT (Phase 3도 근거 교정됨)" }
+      - { name: magnetic_field_polar, value: 345, unit: uT, op: set }
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
-      value: "R_mp ≈ 21 R_p (5위성 전부 자기권 내)"
       evidence: >
-        Chapman-Ferraro 균형(170µT dipole vs α Cen A 항성풍 ram 0.75 nPa @1.6 AU). ^1/6 의존이라
-        입력에 강건(500µT라도 R_mp 30 R_p). Dante(1.54)·Hades(2.07)·Pandora(3.53 R_p)=방사선대,
-        Cassandra(8.4)=중간, Chaos(21)=자기권계면(주간측 일부 이탈).
+        Reiners & Christensen 2010 depth-corrected dipole 보간으로 0.378 M_Jup·5.3 Gyr → B_eq 172 µT. 목성
+        동일식 sanity check 통과. Phase 3 자체도 미근거 ~500µT에서 170µT로 교정 완료 → 일치. canonical =
+        docs/reference/planetary-dynamo-scaling.md. caveat: 자이언트 하한이라 He 성층화면 더 낮을 수도. conf low–med.
+    refs: ["1007.1514"]
 
   - body: Alpha Centauri A b
-    axis: environment.radiation
+    kopernicus_name: Polyphemus
+    axis: magnetism.magnetosphere
     status: gated                 # 4b 완료 (2026-06-22)
-    target: "위성별 Kerbalism 선량 등급"
-    driver: physics + gameplay
-    depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
+    driver: [physics]
+    narrative: >
+      자기권 standoff + 방사선대 범위. R_mp ≈ 21 R_p (5위성 전부 자기권 내). Chapman-Ferraro 균형(170µT dipole
+      vs α Cen A 항성풍 ram 0.75 nPa @1.6 AU). ^1/6 의존이라 입력에 강건(500µT라도 R_mp 30 R_p). Dante(1.54)·
+      Hades(2.07)·Pandora(3.53 R_p)=방사선대, Cassandra(8.4)=중간, Chaos(21)=자기권계면(주간측 일부 이탈).
+    fields:
+      - { name: magnetosphere, value: 21, unit: R_p, op: set, phase3_default: "R_mp ≈ 21 R_p (5위성 전부 자기권 내)" }
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window          # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
-      value: "Dante 극심(>4,500 rem/day) · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변"
+      verdict: pass-in-window
       evidence: >
-        선량은 場+공급원으로 결정 — 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만 Dante(820× Io 화산)가 막대한 SO₂/황
-        플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심, Hades 피크(~2–3 R_p) 근처. 캐넌 ">4,500
-        rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행 참조).
-      pandora_note: >
-        Pandora는 캐넌대로 Polyphemus *두 방사선대 사이(gap)*에 위치 + 자체 강한 고유 자기장(Fe핵 dynamo,
-        지구급)으로 표면 차폐 → 거주가능(모순 아님). 언옵타늄은 물리 grounding서 제외(현실고증) — 그냥 강한
-        고유장이 방패. 세부는 Pandora magnetism 행. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
+        Chapman-Ferraro 균형(170µT dipole vs α Cen A 항성풍 ram 0.75 nPa @1.6 AU). ^1/6 의존이라 입력에 강건
+        (500µT라도 R_mp 30 R_p). Dante(1.54)·Hades(2.07)·Pandora(3.53 R_p)=방사선대, Cassandra(8.4)=중간,
+        Chaos(21)=자기권계면.
 
   - body: Alpha Centauri A b
-    axis: appearance.rings
-    status: superseded            # → rings 결정으로 대체(2026-06-21). 얇은 Roche-zone 밀집고리 개념 폐기, 흐릿한 연속 E고리 채택.
-    target: "디스크를 가로지르는 얇고 어두운 framing line (토성급 아님)"
-    driver: visual + observation
+    kopernicus_name: Polyphemus
+    axis: environment.radiation
+    status: gated                 # 4b 완료 (2026-06-22)
+    driver: [physics, gameplay]
+    depends_on: "magnetism.magnetic_field / magnetosphere (위 두 행)"
+    narrative: >
+      위성별 Kerbalism 선량 등급: Dante 극심(>4,500 rem/day) · Hades 심함 · Pandora 중간(거주가능) · Cassandra
+      낮음 · Chaos 낮음/가변. 선량은 場+공급원으로 결정 — 170µT(목성 ~0.4×, 토성 ~8×, 벨트생성엔 목성比 약함)이지만
+      Dante(820× Io 화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해 강벨트 성립. Dante 최내곽 극심, Hades 피크
+      (~2–3 R_p) 근처. 캐넌 ">4,500 rem/day"는 場 발산 없이 이 화산-source로 화해(Dante env.radiation 행 참조).
+      Pandora는 캐넌대로 Polyphemus 두 방사선대 사이(gap)에 위치 + 자체 강한 고유 자기장(Fe핵 dynamo, 지구급)으로
+      표면 차폐 → 거주가능(모순 아님). 언옵타늄은 물리 grounding서 제외(현실고증) — 그냥 강한 고유장이 방패. 세부는
+      Pandora magnetism 행. Pandora 거리는 32h 조석고정에 묶여 이동 안 함.
+    fields:
+      - { name: radiation, value: "Dante 극심(>4,500 rem/day) · Hades 심함 · Pandora 중간(거주가능) · Cassandra 낮음 · Chaos 낮음/가변", op: set }
     gate:
-      criterion: [stability, visual-checklist]
-      verdict: documented-divergence
-      divergence_note: "Avatar canon = 고리 없음; Beichman §5.3 ring-model 반경 fit 채택(관측 우선)."
-      open: "고리 위치 = 로슈 한계 분석 미실행 (별개 작업)."
+      criterion: [derived-grounding]
+      verdict: pass-in-window        # 캐넌 >4500은 Dante 화산-source로 화해(場 발산 불요)
+      evidence: >
+        선량은 場+공급원으로 결정 — 170µT지만 Dante(820× Io 화산)가 막대한 SO₂/황 플라스마를 벨트에 공급해
+        강벨트 성립. Dante 최내곽 극심, Hades 피크(~2–3 R_p) 근처. 캐넌 ">4,500 rem/day"는 場 발산 없이 이
+        화산-source로 화해. Pandora는 두 벨트 사이 gap + 자체 강 dipole 차폐로 거주가능.
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
+    axis: appearance.rings
+    status: superseded            # → rings 결정으로 대체(2026-06-21). 얇은 Roche-zone 밀집고리 개념 폐기, 흐릿한 연속 E고리 채택. 이 행은 provenance용, live gate 없음(미방출).
+    driver: [visual, observation]
+    narrative: >
+      [SUPERSEDED — rings 행이 대체함] 원안: 디스크를 가로지르는 얇고 어두운 framing line(토성급 아님).
+      Avatar canon = 고리 없음; Beichman §5.3 ring-model 반경 fit 채택(관측 우선)이 원 divergence 근거였음.
+      미해결이던 "고리 위치 = 로슈 한계 분석"은 별개 작업으로 남아 있었음. 2026-06-21에 얇은 Roche-zone 밀집고리
+      개념을 폐기하고 흐릿한 연속 E고리(rings 행)로 대체함 — 이 행은 provenance로만 보존하며 live gate 없이 미방출.
+
+  - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: rings                    # 고리 최종 확정 (2026-06-21 시뮬 검증). appearance.rings 대체.
     status: gated
-    driver: visual + observation
-    target: >
-      흐릿한 Chaos-fed E고리(토성 E링 아날로그) 채택. canon "고리 없음"을 존중하는
-      거의 안 보이는 wisp 수준. Chaos가 공급, Cassandra가 안쪽 양치기. 두 환형으로 나뉘고
-      (800k~1.41M·1.59M~2.5M km) 그 사이 간극(1.41M~1.59M)에서 Chaos(1.5M km)가 공전.
-      고리면은 Chaos 궤도면(역행 inc 179°)에 맞춤. 밝기 +0.05 R_Jup(τ≈9e-5, 등가원반 ~23k km =
-      Beichman 토성½ 단면의 13%)이라 행성은 1.05 R_Jup 유지하며 ~1.10 R_Jup 관측 플럭스 정합.
+    driver: [visual, observation]
+    narrative: >
+      흐릿한 Chaos-fed E고리(토성 E링 아날로그) 채택. canon "고리 없음"을 존중하는 거의 안 보이는 wisp 수준.
+      Chaos가 공급, Cassandra가 안쪽 양치기. 두 환형으로 나뉘고(800k~1.41M·1.59M~2.5M km) 그 사이 간극
+      (1.41M~1.59M)에서 Chaos(1.5M km)가 공전. 고리면은 Chaos 궤도면(역행 inc 179°)에 맞춤. 밝기 +0.05 R_Jup
+      (τ≈9e-5, 등가원반 ~23k km = Beichman 토성½ 단면의 13%)이라 행성은 1.05 R_Jup 유지하며 ~1.10 R_Jup 관측
+      플럭스 정합. Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가)이라 Ring 노드 2개로 방출(안쪽
+      800k~1.41M, 바깥 1.59M~2.5M km), 그 사이가 간극. 둘 다 Chaos 궤도면 공유. 확산 E고리는 정상상태에서
+      축대칭이라(근점 세차 무작위화) 원형 annulus가 충실하고, 작아진 Chaos e(0.02)는 간극 여유로 흡수됨.
+      group 9 facet-walk(2026-06-22): 오너 선택(A) = 푸른 흰빛 얼음-먼지 고리. 고운 물-얼음 알갱이가 파장에 따라
+      산란(작은 입자 → 청색 우세, 토성 E-ring/엔셀라두스 선례). → Chaos를 얼음체로 확정(group 10 satellites가 상속;
+      Phoebe형 어두운 탄소질 대안 기각). 색 ≈ 옅은 ice-blue #cdd9e4(거의 안 보이는 wisp라 opacity τ≈9e-5로 시각
+      임팩트 작음). 어두운/적갈 탄소질(C) 대안은 미채택. feed(2026-06-23, art-first): 공급원 Chaos가 물
+      cryovolcanic 플룸으로 고리를 먹임(엔셀라두스→토성 E-고리 동형). 이는 'E-고리' 명명을 현실과 정합시킴. 물리
+      caveat=Chaos 20 R_p서 조석열 부족(Chaos.surface divergence_note); 그래도 art 채택. sputtering/승화는 보조 공급.
+    fields:
+      - { name: ring_structure, value: "2-annulus: 안쪽 800000–1410000 km / 바깥 1590000–2500000 km", op: set }
+      - { name: ring_inner_annulus_km, value: "800000–1410000", op: set }
+      - { name: ring_outer_annulus_km, value: "1590000–2500000", op: set }
+      - { name: ring_gap_km, value: "1410000–1590000 (Chaos at 1500000 km)", op: set }
+      - { name: ring_opacity, value: 9.0e-5, op: set }
+      - { name: ring_color, value: "#cdd9e4", op: set }
+      - { name: ring_plane, value: "Chaos orbit plane (retrograde inc 179°)", op: set }
+      - { name: ring_composition, value: "water-ice dust (blue-white)", op: set }
+      - { name: ring_brightness_R_jup, value: 0.05, op: set }
     gate:
       criterion: [stability, visual-checklist]
       verdict: documented-divergence
       divergence_note: >
-        고리 간극은 의도된 아트 디렉션(art > 고증). 물리적으론 Chaos가 못 비우지만,
-        Kopernicus 고리는 평면 디스크라 역행으로 기운 Chaos가 연속 고리에 묻히면 고리면이
-        매 공전마다 위성을 관통해 보임 → 깨짐. 이를 피하려 Chaos 궤도를 비우는 간극을 둠.
+        고리 간극은 의도된 아트 디렉션(art > 고증). 물리적으론 Chaos가 못 비우지만, Kopernicus 고리는 평면
+        디스크라 역행으로 기운 Chaos가 연속 고리에 묻히면 고리면이 매 공전마다 위성을 관통해 보임 → 깨짐. 이를
+        피하려 Chaos 궤도를 비우는 간극을 둠.
       evidence: >
-        물리적 간극은 불가 — 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서
-        Chaos는 질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존).
-        그래서 갭은 동역학이 아닌 렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로
-        낮춤(results/_chaos_e002, STABLE) — 반경 흔들림 ±150k→±30k km라 ~180k km 갭이면 깔끔히 비움.
-        밝기는 면적∝R²로 직교 합산이라 "겉보기 +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당.
-      grounding: >
-        Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring System Models". 그들의 선호 모델은
-        Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고, 우리 흐릿한
-        E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
-        밝기는 주로 행성 본체에 싣고 고리는 +0.05 R_Jup 보조 기여로 둠.
-      kopernicus_note: >
-        Kopernicus 고리는 원형 동심 annulus만 가능(이심률 불가)이라 Ring 노드 2개로 방출
-        (안쪽 800k~1.41M, 바깥 1.59M~2.5M km), 그 사이가 간극. 둘 다 Chaos 궤도면 공유. 확산
-        E고리는 정상상태에서 축대칭이라(근점 세차 무작위화) 원형 annulus가 충실하고, 작아진
-        Chaos e(0.02)는 간극 여유로 흡수됨.
-      composition_color: >
-        group 9 facet-walk (2026-06-22): 오너 선택(A) = 푸른 흰빛 얼음-먼지 고리. 고운 물-얼음
-        알갱이가 파장에 따라 산란(작은 입자 → 청색 우세, 토성 E-ring/엔셀라두스 선례). → Chaos를
-        **얼음체**로 확정(group 10 satellites가 상속; Phoebe형 어두운 탄소질 대안 기각). 색 ≈ 옅은
-        ice-blue #cdd9e4(거의 안 보이는 wisp라 opacity τ≈9e-5로 시각 임팩트 작음). 어두운/적갈
-        탄소질(C) 대안은 미채택.
-      feed_mechanism: >
-        2026-06-23 (art-first): 공급원 Chaos가 **물 cryovolcanic 플룸**으로 고리를 먹임(엔셀라두스→토성
-        E-고리 동형). 이는 'E-고리' 명명을 현실과 정합시킴. 물리 caveat=Chaos 20 R_p서 조석열 부족
-        (Chaos.surface divergence_note); 그래도 art 채택. sputtering/승화는 보조 공급.
+        물리적 간극은 불가 — 테스트입자 시뮬(Sim B, ring_clearing.py 2000yr, results/_ring_clearing)에서 Chaos는
+        질량비 μ≈7.5e-7로 너무 작아 어떤 간극도 못 비움(Chaos 반장축의 입자까지 생존). 그래서 갭은 동역학이 아닌
+        렌더링 목적의 의도적 부여. 간극을 좁히려 Chaos e를 0.10→0.02로 낮춤(results/_chaos_e002, STABLE) —
+        반경 흔들림 ±150k→±30k km라 ~180k km 갭이면 깔끔히 비움. 밝기는 면적∝R²로 직교 합산이라 "겉보기
+        +0.05 R_Jup"는 등가원반 ~0.32 R_Jup(~23k km)에 해당. Beichman 2025 §5.3(arXiv:2508.03814) "Planet Ring
+        System Models" — 그들의 선호 모델은 Roche 안쪽 광학적으로 두꺼운 고리(토성½ 단면, 등가원반 64,000 km)이고,
+        우리 흐릿한 E고리는 그들이 제시한 광학적으로 얇은 먼지 대안(Kennedy 2011 불규칙위성 분쇄)에 해당.
+    refs: ["2508.03814"]
 
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: gameplay                   # group 11 (facet-walk 2026-06-22; biome map 결정 정정)
     status: gated
-    driver: gameplay
-    value: >
-      가스자이언트 — 고체 표면 없음 → 착륙 상황 미발생, 과학은 대기-비행("X 상공 비행")/우주뿐. 단
-      **biome map 있음**(Jool/ RSS Sol 가스자이언트 선례 — 표면 없어도 위경도 biome map으로 비행 바이옴
-      정의). 폴리페무스 바이옴 = 위도 띠(적도대/북·남 온대 belt/북·남극) + **시그니처 폭풍(깊은 파란 눈)
-      독자 바이옴**(group 6 랜드마크 = 과학 명소). ScienceValues 전체 블록 정의(landed/splashed는
-      도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요). timewarp=대기 위 표준. difficulty=두 층:
-      (1) 임무 난도=플래그십(접근=항성간 여정 자체); (2) 발견 난도=ResearchBodies IGNORELEVELS, candidate라
-      T F F F (researchbodies-cfg 스킬 db-mapping.md 기준, identity.discoverability 참조).
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "정정(2026-06-22): 가스자이언트도 biome map 보유(Jool/Sol 선례) — 이전 'Sun.cfg=biome 없음'은 태양 기준 오판. 비행 바이옴=위도 띠 + 대storm. ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies(identity.discoverability)."}
+    driver: [gameplay]
+    narrative: >
+      가스자이언트 — 고체 표면 없음 → 착륙 상황 미발생, 과학은 대기-비행("X 상공 비행")/우주뿐. 단 biome map 있음
+      (Jool/ RSS Sol 가스자이언트 선례 — 표면 없어도 위경도 biome map으로 비행 바이옴 정의). 폴리페무스 바이옴 =
+      위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴(group 6 랜드마크 = 과학
+      명소). ScienceValues 전체 블록 정의(landed/splashed는 도달 불가라 토큰값, inert). SOI=질량서 자동(조정 불요).
+      timewarp=대기 위 표준. difficulty=두 층: (1) 임무 난도=플래그십(접근=항성간 여정 자체); (2) 발견 난도
+      =ResearchBodies IGNORELEVELS, candidate라 T F F F (researchbodies-cfg 스킬 db-mapping.md 기준,
+      identity.discoverability 참조). 정정(2026-06-22): 가스자이언트도 biome map 보유(Jool/Sol 선례) — 이전
+      'Sun.cfg=biome 없음'은 태양 기준 오판.
+    fields:
+      - { name: science_biomes, value: "위도 띠(적도대/북·남 온대 belt/북·남극) + 시그니처 폭풍(깊은 파란 눈) 독자 바이옴", op: set, colors: {"Equatorial":"#C9A26B","North Temperate":"#E4D3B0","South Temperate":"#A6784E","North Polar":"#9DB0C4","South Polar":"#B0A0AE","The Eye":"#244C8A"} }   # provisional naturalistic biome-map display colors (S↓, Promised Worlds convention); names TBC
+      - { name: sphere_of_influence_tuning, value: "auto from mass (조정 불요)", op: passthrough }
+      - { name: timewarp_limits, value: "대기 위 표준", op: passthrough }
+      - { name: difficulty, value: "임무=플래그십 · 발견=ResearchBodies IGNORELEVELS T F F F (candidate)", op: set }
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      evidence: >
+        정정(2026-06-22): 가스자이언트도 biome map 보유(Jool/Sol 선례) — 이전 'Sun.cfg=biome 없음'은 태양 기준
+        오판. 비행 바이옴=위도 띠 + 대storm. ScienceValues 전체 정의(surface 토큰). 발견은 ResearchBodies
+        (identity.discoverability).
 
   # ── group 5 surface = N/A (가스자이언트, 고체 표면 없음 — 구름덱은 atmosphere/appearance) ──
-  # ── group 6 appearance = banding/haze/clouds/aurora/rings gated (facet-walk 2026-06-22); emission_glow/specular/artificial/surface = N/A (자발광·해양·인공광·고체면 없음) ──
+  # ── group 6 appearance = banding/haze/clouds/aurora/rings gated (facet-walk 2026-06-22); emission_glow/specular/artificial/surface = N/A ──
   # ── group 8 environment = radiation gated; stellar_wind/activity/heliosphere/habitable_zone = 별-레벨(항성 A·B서 다룸) ──
 
   # ── 항성 A·B: magnetism / environment (2026-06-22 audit 백로그 #2) ────────────────
-  # 대부분 Phase 2 측정치라 passthrough. 결정 필요한 건 B-field(직접 ZDI 없음→activity proxy)와
-  # 항성풍 분배(Wood는 합산 2 Ṁ⊙만 측정). 행성 method(dynamo-scaling.md)는 항성엔 미적용.
   - body: Alpha Centauri A
     axis: environment.activity        # + radiation passthrough 묶음
     status: passthrough               # 측정치 (audit 확인) — 변경 없음
-    note: >
+    driver: [passthrough]
+    narrative: >
       P_rot 22d·log R'HK −4.95·X선 log Lx 27.0–27.6(factor~4)·cycle ~19yr(tentative, Ayres2014).
       radiation_surface ≈0.8 (행성 자기권 게이트의 ram 0.75 nPa와 정합 — 바꾸면 그 행 리플). 측정 emit 그대로.
+    fields:
+      - { name: activity, value: "P_rot 22d, log R'HK −4.95, X-ray log Lx 27.0–27.6 (factor~4), cycle ~19yr (tentative)", op: passthrough }
+
   - body: Alpha Centauri A
     axis: magnetism.magnetic_field
     status: gated                     # 신규 도출 proxy (low conf)
-    driver: physics
+    driver: [physics]
+    narrative: >
+      대규모 표면장 ~1–2 G (태양쌍둥이). 직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R'HK −4.95
+      + Rossby≈1.8(≈태양) → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 —
+      activity/Rossby로 근거화. 고신뢰 원하면 ZDI 문헌 pull(HARPSpol/Folsom류) 필요 — 현 캐시엔 없음.
+    fields:
+      - { name: magnetic_field, value: "~1–2 G (large-scale surface, solar-twin proxy)", op: set }
     gate:
       criterion: [activity-proxy]
       verdict: pass-in-window
-      value: "대규모 표면장 ~1–2 G (태양쌍둥이)"
       evidence: >
-        직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R'HK −4.95 + Rossby≈1.8(≈태양)
-        → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.
-      open: "고신뢰 원하면 ZDI 문헌 pull(HARPSpol/Folsom류) 필요 — 현 캐시엔 없음."
+        직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R'HK −4.95 + Rossby≈1.8(≈태양) → 태양
+        BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.
+
   - body: Alpha Centauri A
     axis: environment.stellar_wind
     status: gated
-    driver: physics
+    driver: [physics]
+    narrative: >
+      Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중
+      (Wood2002) 가정 → A≈1·B≈0.6.
+    fields:
+      - { name: stellar_wind, value: 1, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
       criterion: [derived-grounding]
       verdict: documented-divergence   # 합산만 측정, per-star 분배는 가정
-      value: "Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫)"
+      divergence_note: >
+        only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an
+        X-ray-weighted assumption (Wood 2002), not a direct measurement.
       evidence: "Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중(Wood2002) 가정 → A≈1·B≈0.6."
+
   - body: Alpha Centauri A
     axis: environment.heliosphere     # SHARED — 시스템 대표로 A에 기록
     status: passthrough
-    note: >
+    driver: [passthrough]
+    narrative: >
       A+B 공유 단일 astrosphere standoff ~176 AU (Wood2001 Lyα; =120·√2·26/25). G-cloud 유입 ~25 km/s.
       apex ~187°/+22°는 plugin-only·low-conf (stock cfg 렌더 불가).
+    fields:
+      - { name: heliosphere, value: "~176 AU shared astrosphere standoff (G-cloud 유입 ~25 km/s)", op: passthrough }
+
   - body: Alpha Centauri A
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
     status: gated
-    driver: observation
-    value: >
+    driver: [observation]
+    narrative: >
       color=G2V, Teff ~5790K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening=
-      태양형(표준). **spots_faculae=희소** — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점
-      소수 + 흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님).
-    gate: {criterion: [observation], verdict: pass-in-window, note: "전부 관측 측정서 도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough."}
+      태양형(표준). spots_faculae=희소 — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점 소수 +
+      흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님). 전부 관측 측정서
+      도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗.
+      색/granulation/limb=측정 passthrough.
+    fields:
+      - { name: color, value: "#fff4ea", op: set, phase3_default: "G2V, Teff ~5790K (황백, 거의 태양)" }
+      - { name: granulation, value: "solar-type 대류 granule", op: set }
+      - { name: limb_darkening, value: "solar-type (표준)", op: set }
+      - { name: spots_faculae, value: "sparse ~0.1–0.3% 피복률", op: set }
+      - { name: corona, value: "present (weak, X-ray log Lx 27.0–27.6)", op: set }
+      - { name: flares, value: "rare (플레어성 아님)", op: set }
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      evidence: >
+        전부 관측 측정서 도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%,
+        B보다 깨끗. 색/granulation/limb=측정 passthrough.
 
   - body: Alpha Centauri B
     axis: environment.activity
     status: passthrough
-    note: >
-      K1V·더 활동적. P_rot 38d·log R'HK −5.0·**clean 8.84yr cycle**(DeWarf2010, 최고급)·X선 factor~10 swing.
+    driver: [passthrough]
+    narrative: >
+      K1V·더 활동적. P_rot 38d·log R'HK −5.0·clean 8.84yr cycle(DeWarf2010, 최고급)·X선 factor~10 swing.
       radiation_surface ≈1.4 (A의 ~2배, 단 플레어성 아님). 측정 emit 그대로.
+    fields:
+      - { name: activity, value: "P_rot 38d, log R'HK −5.0, clean 8.84yr cycle (DeWarf2010), X-ray factor~10 swing", op: passthrough }
+
   - body: Alpha Centauri B
     axis: magnetism.magnetic_field
     status: gated                     # proxy (low conf)
-    driver: physics
+    driver: [physics]
+    narrative: >
+      대규모 표면장 ~2–4 G (A보다 강함). K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(X선 factor~10
+      modulation 방증). A의 ~1.5–2배. 직접 ZDI 없음 → proxy(low–med). ZDI pull 시 상향 가능.
+    fields:
+      - { name: magnetic_field, value: "~2–4 G (large-scale surface, A보다 강함)", op: set }
     gate:
       criterion: [activity-proxy]
       verdict: pass-in-window
-      value: "대규모 표면장 ~2–4 G (A보다 강함)"
       evidence: >
         K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(X선 factor~10 modulation 방증). A의 ~1.5–2배.
         직접 ZDI 없음 → proxy(low–med).
-      open: "ZDI pull 시 상향 가능."
+
   - body: Alpha Centauri B
     axis: environment.stellar_wind
     status: gated
-    driver: physics
+    driver: [physics]
+    narrative: >
+      Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중). Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나
+      L_bol 낮아 절대 풍은 A보다 약함.
+    fields:
+      - { name: stellar_wind, value: 0.6, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
       criterion: [derived-grounding]
       verdict: documented-divergence
-      value: "Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중)"
-      evidence: "Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함."
+      divergence_note: >
+        only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an
+        X-ray-weighted assumption (Wood 2002), not a direct measurement.
+      evidence: "Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6. 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함."
+
   - body: Alpha Centauri B
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
     status: gated
-    driver: observation
-    value: >
-      color=K1V, Teff ~5260K → 황등(yellow-orange, sRGB ~#ffdcb0). granulation=대류 granule(약간 큼). limb_darkening=
-      표준(적색쪽 강함). **spots_faculae=보통** — 피복률 ~1–3%(A의 2배 활동도·X선 factor~10·clean 8.84yr cycle),
-      중위도 흑점군 여럿(umbra+penumbra) + faculae 뚜렷. corona=A보다 밝음. flares=가끔(A보다 활동적, 단 플레어성 아님).
-    gate: {criterion: [observation], verdict: pass-in-window, note: "관측 측정서 도출(Teff·X선 factor~10·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough."}
+    driver: [observation]
+    narrative: >
+      color=K1V, Teff ~5260K → 황등(yellow-orange, sRGB ~#ffdcb0). granulation=대류 granule(약간 큼).
+      limb_darkening=표준(적색쪽 강함). spots_faculae=보통 — 피복률 ~1–3%(A의 2배 활동도·X선 factor~10·clean
+      8.84yr cycle), 중위도 흑점군 여럿(umbra+penumbra) + faculae 뚜렷. corona=A보다 밝음. flares=가끔(A보다
+      활동적, 단 플레어성 아님). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough.
+    fields:
+      - { name: color, value: "#ffdcb0", op: set, phase3_default: "K1V, Teff ~5260K (황등)" }
+      - { name: granulation, value: "대류 granule (약간 큼)", op: set }
+      - { name: limb_darkening, value: "표준 (적색쪽 강함)", op: set }
+      - { name: spots_faculae, value: "moderate ~1–3% 피복률, 중위도 흑점군 여럿", op: set }
+      - { name: corona, value: "A보다 밝음", op: set }
+      - { name: flares, value: "occasional (플레어성 아님)", op: set }
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      evidence: >
+        관측 측정서 도출(Teff·X선 factor~10·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%,
+        A보다 흑점군 多. 색=K1V Teff passthrough.
 
   # ── 위성 개별 Phase 4 (안쪽부터) ──────────────────────────────
   - body: Dante                    # A b I
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: classification
-    value: >
+    driver: [classification]
+    narrative: >
       body_type=규산염 화산 위성(900 km, 8.0e21 kg, 밀도 ~2620 kg/m³). designation=Alpha Centauri A b I ·
       cultural=Dante(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음).
+      Io형 화산 세계.
+    fields:
+      - { name: body_type, value: "silicate volcanic moon (900 km, 8.0e21 kg, ρ ~2620 kg/m³)", op: set }
+      - { name: designation, value: "Alpha Centauri A b I", op: set }
+      - { name: cultural_name, value: "Dante", op: set }
+      - { name: discoverability, value: "fictional", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "Io형 화산 세계. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
+      evidence: "Io형 화산 세계. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Dante
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
     status: gated
-    driver: invented + physics
-    value: >
+    driver: [invented, physics]
+    narrative: >
       mass 8.0e21 kg · radius 900 km (둘 다 INVENTED, canon 수치 없음 — 밀도 ~2620 kg/m³ 규산암체로 affirm).
       rotation=폴리페무스 조석고정 → 자전=공전 ≈ 9.2h(a=110,000km·M_Poly 120M⊕서 도출, 최내곽). obliquity ~0°
-      (락 감쇠). 조석 삼축 C̄₂₂≈0.012 (φ=0.80 부분용융, a−c~16% 계란형, 모행성 방향), 자전 J₂는 소형이나 조석 bulge가 지배. reference_radius 900 km (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행, ~820× Io). age=계 5.3 Gyr 상속. spin_axis=궤도 법선.
-    gate: {criterion: [physics], verdict: pass-in-window, note: "질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈(~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01)."}
+      (락 감쇠). 조석 삼축 C̄₂₂≈0.012 (φ=0.80 부분용융, a−c~16% 계란형, 모행성 방향), 자전 J₂는 소형이나 조석
+      bulge가 지배. reference_radius 900 km (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행,
+      ~820× Io). age=계 5.3 Gyr 상속. spin_axis=궤도 법선. 질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈
+      (~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01).
+    fields:
+      - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
+      - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
+      - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (자전=공전)" }
+      - { name: obliquity, value: 0, unit: deg, op: set }
+      - { name: geopotential_j2, value: "C̄₂₂≈0.012 (조석 삼축, a−c~16%)", reference_radius_km: 900, op: set }
+      - { name: internal_heat, value: "tidal (see bulk.tidal_heating row, ~820× Io)", op: set }
+      - { name: age, value: 5.3, unit: Gyr, op: set }
+      - { name: spin_axis_orientation, value: "orbit normal", op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: "질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈(~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01)."
 
   - body: Dante
     axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
     status: gated
-    driver: physics
-    value: "고유 자기장 없음 — Io처럼 격렬 화산이어도 자체 dynamo 불가(Io도 유도장만). 단 Dante는 최내곽(1.54 R_p) 플라스마 공급원."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비."}
+    driver: [physics]
+    narrative: >
+      고유 자기장 없음 — Io처럼 격렬 화산이어도 자체 dynamo 불가(Io도 유도장만). 단 Dante는 최내곽(1.54 R_p)
+      플라스마 공급원. magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를
+      먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비.
+    fields:
+      - { name: magnetic_field, value: "none (no intrinsic dynamo; Io식 유도장만)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비."
 
   - body: Dante                    # A b I
     axis: bulk.tidal_heating
     status: gated                  # 2026-06-22 — 캐넌+물리 합치
-    driver: physics + canon
-    value: "극단 ~820× Io (평균 e 0.0175). 표면 조석 플럭스 ~8,000 W/m² (T_tidal ~600K; 피크 e 0.033서 ~40,000 W/m²·~900K)"
+    driver: [physics, canon]
+    narrative: >
+      극단 ~820× Io (평균 e 0.0175). 표면 조석 플럭스 ~8,000 W/m² (T_tidal ~600K; 피크 e 0.033서 ~40,000 W/m²·~900K).
+    fields:
+      - { name: tidal_heating, value: "~820× Io (평균 e 0.0175)", op: set }
+      - { name: tidal_surface_flux, value: "~8000 W/m² (T~600K; 피크 e 0.033서 ~40000 W/m²·~900K)", op: set }
     gate:
       criterion: [stability, canon-consistency]
       verdict: pass-in-window
@@ -504,43 +741,69 @@ decisions:
         Io 스케일링(Ė∝M_p^2.5·R^5·e²·a^-7.5), 1.54 R_p·평균 e 0.0175 → ~820× Io. 시뮬서 e가 0.0002–0.031로
         진동하며 안 죽음(Hades 등 섭동이 강제 유지) → 영구. 캐넌(Avatar: The Game) "조석력 영구 화산+월진,
         Roche 가장자리"와 정확히 일치.
+
   - body: Dante
     axis: surface
     status: gated
-    driver: canon + physics
-    value: >
-      규산염 화산 세계(Io형 격렬). 조석고정 → 대면 반구(sub-planet)에 시그니처 **단일 대협곡(Valles
-      Marineris급) + 바닥 용암호 사슬**. 반구 대비: 대면=용암호·황 격렬, far-side=식어 굳은 흑현무암
-      평원+충돌구. 활동 조석축 집중, anti-planet 쌍둥이 균열(약함) 가능. 마그마 바다 아님(T<규산염 용융 ~1400K).
-    albedo: 0.30                   # group 5 facet-walk (2026-06-22): 오너 = 화산/균열 중심 이중-재질, 황 반(~0.5)·현무암 반(~0.10) → 벌크 평균 ~0.30. 단일 어두운(0.10)·단일 Io밝음(0.5) 미채택, 반반 맵.
-    surface_temperature_k: 230     # 입사 ambient ~230K(albedo 0.30, α Cen A 1.6 AU) + 화산 핫스팟 ~600K(sub-Polyphemus 용암면, HazardousBody가 LongitudeCurve로 고정면에 부여). 양극 분포.
+    driver: [canon, physics]
+    narrative: >
+      규산염 화산 세계(Io형 격렬). 조석고정 → 대면 반구(sub-planet)에 시그니처 단일 대협곡(Valles Marineris급)
+      + 바닥 용암호 사슬. 반구 대비: 대면=용암호·황 격렬, far-side=식어 굳은 흑현무암 평원+충돌구. 활동 조석축
+      집중, anti-planet 쌍둥이 균열(약함) 가능. 마그마 바다 아님(T<규산염 용융 ~1400K). albedo 0.30(group 5
+      facet-walk 2026-06-22: 오너 = 화산/균열 중심 이중-재질, 황 반(~0.5)·현무암 반(~0.10) → 벌크 평균 ~0.30.
+      단일 어두운(0.10)·단일 Io밝음(0.5) 미채택, 반반 맵). surface_temperature_k 230(입사 ambient ~230K, albedo
+      0.30, α Cen A 1.6 AU) + 화산 핫스팟 ~600K(sub-Polyphemus 용암면, HazardousBody가 LongitudeCurve로 고정면에
+      부여). 양극 분포.
+    fields:
+      - { name: surface_type, value: "silicate volcanic (Io-type)", op: set }
+      - { name: albedo, value: 0.30, op: set, note: "황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균" }
+      - { name: surface_temperature, value: "230 K ambient + ~600K 화산 핫스팟", unit: K, op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
-      note: >
-        캐넌 '영구 화산+월진+주황 용암 반점'. 조석가열은 비균일 — asthenosphere 소산이면 적도·조석축
-        (sub/anti-planet) 강화라 sub-Polyphemus 거대 균열+용암호는 물리 동기 있음(실제 Io는 경도 ~30–60°
-        offset, 아트 허용). 그 균열의 화산 plasma가 방사선대를 먹임(environment.radiation 행).
+      evidence: >
+        캐넌 '영구 화산+월진+주황 용암 반점'. 조석가열은 비균일 — asthenosphere 소산이면 적도·조석축(sub/anti-planet)
+        강화라 sub-Polyphemus 거대 균열+용암호는 물리 동기 있음(실제 Io는 경도 ~30–60° offset, 아트 허용). 그
+        균열의 화산 plasma가 방사선대를 먹임(environment.radiation 행).
+
   - body: Dante
     axis: appearance
     status: gated
-    driver: canon + visual
-    value: >
-      고대비 이중-재질(Io 유추) — 화산·균열 중심에 **황 평원 반(노랑 #d9c24a, 밝음)**, 그 밖은 **흑현무암 반
-      (어두움 #2a2622)**. 대협곡·칼데라·용암호는 발광(적→황백 #ff5a1e→#ffd070, 온도별), 야간측 주황 실선.
-      대면 반구 천정엔 Polyphemus 고정(용암 협곡 발밑/가스자이언트 머리 위)=시그니처 풍경.
-    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 캐넌 'orange lava flecks'에서 황 면적을 반으로 확대(오너 2026-06-22)."}
+    driver: [canon, visual]
+    narrative: >
+      고대비 이중-재질(Io 유추) — 화산·균열 중심에 황 평원 반(노랑 #d9c24a, 밝음), 그 밖은 흑현무암 반(어두움
+      #2a2622). 대협곡·칼데라·용암호는 발광(적→황백 #ff5a1e→#ffd070, 온도별), 야간측 주황 실선. 대면 반구 천정엔
+      Polyphemus 고정(용암 협곡 발밑/가스자이언트 머리 위)=시그니처 풍경. 황 평원/현무암 반반 고대비(albedo 평균
+      ~0.30), 화산·균열 중심 배치. 균열만 발광. 캐넌 'orange lava flecks'에서 황 면적을 반으로 확대(오너 2026-06-22).
+    fields:
+      - { name: surface, value: "sulfur plains #d9c24a (밝음) / basalt #2a2622 (어두움), 고대비 이중-재질", op: set }
+      - { name: emission_glow, value: "lava #ff5a1e→#ffd070 (온도별), 협곡·칼데라·용암호", op: set }
+    gate:
+      criterion: [visual-checklist]
+      verdict: pass-in-window
+      evidence: "황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 캐넌 'orange lava flecks'에서 황 면적을 반으로 확대(오너 2026-06-22)."
+
   - body: Dante
     axis: atmosphere
     status: gated
-    driver: physics + canon
-    value: "희박 SO₂/황 화산 분출(Io 유추), 비호흡 (stock atmosphereContainsOxygen=false)"
-    gate: {criterion: [physics], verdict: pass-in-window, note: "화산 outgassing 기원 tenuous, 안정 대기 아님."}
+    driver: [physics, canon]
+    narrative: "희박 SO₂/황 화산 분출(Io 유추), 비호흡 (stock atmosphereContainsOxygen=false). 화산 outgassing 기원 tenuous, 안정 대기 아님."
+    fields:
+      - { name: composition, value: "tenuous SO₂/sulfur (화산 outgassing, Io 유추)", op: set }
+      - { name: breathability, value: false, op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: "화산 outgassing 기원 tenuous, 안정 대기 아님."
+
   - body: Dante
     axis: environment.radiation
     status: gated
-    driver: physics + canon
-    value: "극심 >4,500 rem/day (캐넌). 출처=Polyphemus 방사선대, Dante 자체 화산 플라스마가 공급"
+    driver: [physics, canon]
+    narrative: >
+      극심 >4,500 rem/day (캐넌). 출처=Polyphemus 방사선대, Dante 자체 화산 플라스마가 공급.
+    fields:
+      - { name: radiation, value: ">4,500 rem/day (극심)", op: set }
     gate:
       criterion: [canon-consistency, derived-grounding]
       verdict: pass-in-window
@@ -549,55 +812,91 @@ decisions:
         공급원(source) 지배: Dante 820× Io 화산이 막대한 SO₂/황 플라스마 토러스 공급(Io→목성 벨트 초강화판)
         → 조밀 트랩 입자 → 강벨트. 인과고리: Dante 화산이 자신을 굽는 벨트를 먹임. 캐넌 >4500 ↔ dynamo 170µT
         충돌 없이 화해(場 발산 불요). cf. Pandora는 캐넌대로 "두 벨트 사이"라 보호.
+
   - body: Dante
     axis: gameplay
     status: gated
-    driver: gameplay
-    value: >
-      착륙=중간. 용암 없는 구역은 단기 착륙 가능하나 고온 차폐 필수, 대면측은 방사선도 극심. far-side는
-      상대적 안전(저방사선·저온) 거점. 바이옴(6): 대협곡(Grand Chasma) / 용암호 사슬(Lava Lakes, sub-Polyphemus
-      고정면 최고온) / 황 평원(Sulfur Plains) / 현무암 평원(Basalt Plains, far-side) / 화산추·칼데라(Volcanic Cones) /
-      극(Poles, geographic 고위도). 극은 조석고정+obliquity~0이라 seasonal 아닌 지리적 구분.
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프."}
+    driver: [gameplay]
+    narrative: >
+      착륙=중간. 용암 없는 구역은 단기 착륙 가능하나 고온 차폐 필수, 대면측은 방사선도 극심. far-side는 상대적
+      안전(저방사선·저온) 거점. 바이옴(6): 대협곡(Grand Chasma) / 용암호 사슬(Lava Lakes, sub-Polyphemus 고정면
+      최고온) / 황 평원(Sulfur Plains) / 현무암 평원(Basalt Plains, far-side) / 화산추·칼데라(Volcanic Cones) /
+      극(Poles, geographic 고위도). 극은 조석고정+obliquity~0이라 seasonal 아닌 지리적 구분. 무착륙 지옥과
+      자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프.
+    fields:
+      - { name: science_biomes, value: "6: Grand Chasma / Lava Lakes / Sulfur Plains / Basalt Plains / Volcanic Cones / Poles", op: set, colors: {"Grand Chasma":"#3A3B4A","Lava Lakes":"#C8492C","Sulfur Plains":"#C9A93E","Basalt Plains":"#4E463F","Volcanic Cones":"#7E4A3C","Poles":"#D8D0B6"} }   # provisional naturalistic biome-map display colors (S↓, lava = accent)
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      evidence: "무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프."
 
   - body: Hades                    # A b II
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: classification
-    value: >
+    driver: [classification]
+    narrative: >
       body_type=암석 위성(750 km, 5.0e21 kg, 밀도 ~2830 kg/m³, 규산암·비빙질). designation=Alpha Centauri A b II ·
       cultural=Hades(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음).
+      회색 가니메데형 외형이나 조성은 rocky.
+    fields:
+      - { name: body_type, value: "rocky moon (750 km, 5.0e21 kg, ρ ~2830 kg/m³, 규산암·비빙질)", op: set }
+      - { name: designation, value: "Alpha Centauri A b II", op: set }
+      - { name: cultural_name, value: "Hades", op: set }
+      - { name: discoverability, value: "fictional", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "회색 가니메데형 외형이나 조성은 rocky. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
+      evidence: "회색 가니메데형 외형이나 조성은 rocky. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Hades
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
     status: gated
-    driver: invented + physics
-    value: >
+    driver: [invented, physics]
+    narrative: >
       mass 5.0e21 kg · radius 750 km (둘 다 INVENTED, canon 수치 없음 — 달급 암석체로 affirm, 밀도 ~2830 kg/m³).
-      rotation=폴리페무스 조석고정 → 자전=공전 ≈ 14.4h(a=148,000km·M_Poly 120M⊕서 도출; cf. Dante 9.2h).
-      obliquity ~0°(락 감쇠). 조석 삼축 C̄₂₂≈0.0039 (φ=0.70, a−c~5%), 자전 J₂ 소형 (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속.
-      spin_axis=궤도 법선 정렬.
-    gate: {criterion: [physics], verdict: pass-in-window, note: "질량·반경은 큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05)."}
+      rotation=폴리페무스 조석고정 → 자전=공전 ≈ 14.4h(a=148,000km·M_Poly 120M⊕서 도출; cf. Dante 9.2h). obliquity
+      ~0°(락 감쇠). 조석 삼축 C̄₂₂≈0.0039 (φ=0.70, a−c~5%), 자전 J₂ 소형 (body-figure-methodology.md).
+      internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속. spin_axis=궤도 법선 정렬. 질량·반경은
+      큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05).
+    fields:
+      - { name: mass, value: 5.0e21, unit: kg, op: set, note: "INVENTED" }
+      - { name: radius, value: 750, unit: km, op: set, note: "INVENTED" }
+      - { name: rotation_period, value: 14.4, unit: h, op: set, note: "tidally locked (자전=공전)" }
+      - { name: obliquity, value: 0, unit: deg, op: set }
+      - { name: geopotential_j2, value: "C̄₂₂≈0.0039 (조석 삼축, a−c~5%)", reference_radius_km: 750, op: set }
+      - { name: internal_heat, value: "tidal (see bulk.tidal_heating row)", op: set }
+      - { name: age, value: 5.3, unit: Gyr, op: set }
+      - { name: spin_axis_orientation, value: "orbit normal", op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: "질량·반경은 큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05)."
 
   - body: Hades
     axis: magnetism.magnetic_field   # facet-walk 2026-06-22 — none 확인
     status: gated
-    driver: physics
-    value: "고유 자기장 없음 — 750 km 암석 위성은 자기 dynamo 불가(소형·저전도 핵)."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음."}
+    driver: [physics]
+    narrative: >
+      고유 자기장 없음 — 750 km 암석 위성은 자기 dynamo 불가(소형·저전도 핵). magnetosphere/radiation_belts 고유값
+      없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영).
+      자기 차폐 없음.
+    fields:
+      - { name: magnetic_field, value: "none (750 km 암석 위성, dynamo 불가)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음."
 
   - body: Hades
     axis: bulk.tidal_heating
     status: gated
-    driver: physics + canon
-    value: >
-      내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식
-      텍토닉(홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면.
+    driver: [physics, canon]
+    narrative: >
+      내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식 텍토닉
+      (홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면.
+    fields:
+      - { name: tidal_heating, value: "~400× Io (내부, 표면 비발광 — 텍토닉으로 발현)", op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: documented-divergence
@@ -606,65 +905,118 @@ decisions:
         그 >900K는 grazing(e~0.3, 이젝션) 궤도가 필요했음. 안정 e≈0.04에선 표면 비발광 — 조석 응력은
         텍토닉 홈으로(가니메데형), 가시 용암 아님.
       evidence: "Io-스케일링 ~400× Io는 Io-like k2/Q 가정. 작은 강체 위성은 dissipation 낮아 용융 대신 텍토닉 자원."
+
   - body: Hades
     axis: surface
     status: gated
-    driver: canon(film) + physics
-    value: >
-      가니메데형 회색 — 어두운 고대 크레이터 지형 + 젊은 밝은 홈/단층(grooved) 지형(조석 응력 흔적).
-      가시 용암 없음. 죽은 듯하나 텍토닉이 조석을 은근히 암시.
-    albedo: 0.30                   # group 5 facet-walk (2026-06-22): 오너 B = 중간 회색(달 고지대급). A(0.18 어두움)·C(0.43 가니메데급)은 미채택.
-    surface_temperature_k: 225     # albedo 0.30 + α Cen A 1.6 AU 입사량 → Teq ~225K(폴리페무스계 일관). 대기 없는 암석체라 KSP가 flux+albedo로 자동 산출; 조석고정(별 기준 14.4h)이라 낮밤+일식 변동. 내부 조석열은 표면온도 기여 미미.
-    gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "[FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 — ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와 시각 대비. albedo 0.30=오너 B."}
+    driver: [canon-film, physics]
+    narrative: >
+      가니메데형 회색 — 어두운 고대 크레이터 지형 + 젊은 밝은 홈/단층(grooved) 지형(조석 응력 흔적). 가시 용암
+      없음. 죽은 듯하나 텍토닉이 조석을 은근히 암시. albedo 0.30(group 5 facet-walk 2026-06-22: 오너 B = 중간
+      회색(달 고지대급). A(0.18 어두움)·C(0.43 가니메데급)은 미채택). surface_temperature_k 225(albedo 0.30 +
+      α Cen A 1.6 AU 입사량 → Teq ~225K, 폴리페무스계 일관. 대기 없는 암석체라 KSP가 flux+albedo로 자동 산출;
+      조석고정(별 기준 14.4h)이라 낮밤+일식 변동. 내부 조석열은 표면온도 기여 미미).
+    fields:
+      - { name: surface_type, value: "가니메데형 회색 rocky (어두운 크레이터 + 밝은 홈/단층 지형)", op: set }
+      - { name: albedo, value: 0.30, op: set, note: "중간 회색(달 고지대급), 오너 B" }
+      - { name: surface_temperature, value: 225, unit: K, op: set }
+    gate:
+      criterion: [canon-consistency]
+      verdict: pass-in-window
+      evidence: >
+        [FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 —
+        ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와
+        시각 대비. albedo 0.30=오너 B.
+
   - body: Hades
     axis: appearance
     status: gated
-    driver: canon(film) + visual
-    value: "가니메데 팔레트 — 어두운 크레이터 지형 #5f574e, 밝은 홈 지형 #9c968c, 약한 갈색조. 무채-갈 회색, 비발광."
-    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요."}
+    driver: [canon-film, visual]
+    narrative: "가니메데 팔레트 — 어두운 크레이터 지형 #5f574e, 밝은 홈 지형 #9c968c, 약한 갈색조. 무채-갈 회색, 비발광. 가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요."
+    fields:
+      - { name: surface, value: "가니메데 팔레트 — 어두운 크레이터 #5f574e, 밝은 홈 #9c968c, 약한 갈색조 (비발광)", op: set }
+    gate:
+      criterion: [visual-checklist]
+      verdict: pass-in-window
+      evidence: "가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요."
+
   - body: Hades
     axis: atmosphere
     status: passthrough
-    note: "유의미 대기 없음(가니메데식 미량 외기권 무시 수준), 비호흡."
+    driver: [passthrough]
+    narrative: "유의미 대기 없음(가니메데식 미량 외기권 무시 수준), 비호흡."
+    fields:
+      - { name: composition, value: "none (미량 외기권 무시 수준)", op: passthrough }
+
   - body: Hades
     axis: environment.radiation
     status: gated
-    driver: physics
-    value: "심함 — 방사선대 피크(~2–3 R_p)에 위치, Dante 못지않게 높음. 표면 열은 Dante보다 약함."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "벨트가 표면과 무관하게 방사선 지배(2.07 R_p=피크대)."}
+    driver: [physics]
+    narrative: "심함 — 방사선대 피크(~2–3 R_p)에 위치, Dante 못지않게 높음. 표면 열은 Dante보다 약함."
+    fields:
+      - { name: radiation, value: "심함 (방사선대 피크 ~2–3 R_p)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "벨트가 표면과 무관하게 방사선 지배(2.07 R_p=피크대)."
+
   - body: Hades
     axis: gameplay
     status: gated
-    driver: gameplay
-    value: >
+    driver: [gameplay]
+    narrative: >
       열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴(6): 어두운 크레이터 고지(Dark
       Cratered Terrain) / 밝은 홈 지형(Bright Grooved Terrain) / 대형 충돌분지(Impact Basins) / 단층 능선
       (Tectonic Ridges) / 극(Poles, geographic 고위도) / 폴리페무스 대면점(Sub-Polyphemus Point, 고정 지점).
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상."}
+      Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상.
+    fields:
+      - { name: science_biomes, value: "6: Dark Cratered Terrain / Bright Grooved Terrain / Impact Basins / Tectonic Ridges / Poles / Sub-Polyphemus Point", op: set, colors: {"Dark Cratered Terrain":"#47433D","Bright Grooved Terrain":"#A9B6BE","Impact Basins":"#8A7E6E","Tectonic Ridges":"#6E6152","Poles":"#CFE0E6","Sub-Polyphemus Point":"#3E8C8A"} }   # provisional naturalistic biome-map display colors (S↓, sub-point = accent)
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      evidence: "Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상."
 
   - body: Pandora                  # A b III
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: classification
-    value: >
+    driver: [classification]
+    narrative: >
       body_type=거주가능 지구형 위성(sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km). NearStars 유일 거주가능 바디.
       Na'vi 모천. designation=Alpha Centauri A b III · cultural=Pandora(designations 블록, 인게임 설명에만).
-      discoverability=fictional(합성 위성, 실검출 없음).
+      discoverability=fictional(합성 위성, 실검출 없음). 유일 거주가능체(특별 취급).
+    fields:
+      - { name: body_type, value: "거주가능 지구형 위성 (sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km)", op: set }
+      - { name: designation, value: "Alpha Centauri A b III", op: set }
+      - { name: cultural_name, value: "Pandora", op: set }
+      - { name: discoverability, value: "fictional", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "유일 거주가능체(특별 취급). discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
+      evidence: "유일 거주가능체(특별 취급). discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Pandora
     axis: bulk                     # mass/radius/gravity/rotation/obliquity (facet-walk 2026-06-22)
     status: gated
-    driver: canon + physics
-    value: >
+    driver: [canon, physics]
+    narrative: >
       반경 5724 km(canon 지름 11,447). 질량=옵션 B: 중력 0.8g(canon 체감값) 고정 → mass 0.645 M⊕(3.85e24 kg),
-      밀도 ~0.89 ρ⊕(~4900 kg/m³, 도출, 화성↔지구 사이로 현실적). rotation=폴리페무스 조석고정 32h(canon 27h
-      대신 채택). obliquity=효과적 ~10°(궤도경사서 옴). internal_heat=방사성 + 약한 조석(e강제 ~0.005) →
-      화산·빠른 대륙이동 + dynamo 동시 구동. 조석 C̄₂₂≈5.5e-4 (φ=0.95), 시각상 거의 구(편평 0.74%) 단 궤도엔 실재 (body-figure-methodology.md). age=5.3 Gyr 상속. spin_axis=궤도 법선.
+      밀도 ~0.89 ρ⊕(~4900 kg/m³, 도출, 화성↔지구 사이로 현실적). rotation=폴리페무스 조석고정 32h(canon 27h 대신
+      채택). obliquity=효과적 ~10°(궤도경사서 옴). internal_heat=방사성 + 약한 조석(e강제 ~0.005) → 화산·빠른
+      대륙이동 + dynamo 동시 구동. 조석 C̄₂₂≈5.5e-4 (φ=0.95), 시각상 거의 구(편평 0.74%) 단 궤도엔 실재
+      (body-figure-methodology.md). age=5.3 Gyr 상속. spin_axis=궤도 법선. ✅ mass B(3.85e24) 재시뮬 STABLE 검증
+      완료(results/_pandora_massB, 1000yr TRACE+J2(0.023), |ΔE/E| 7.6e-9, 5위성 bound·calm·이젝션0, Pandora
+      e≤0.0075 해양안전). 예상대로 가벼운 교란체라 안정 유지.
+    fields:
+      - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
+      - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
+      - { name: gravity, value: 0.8, unit: g, op: set, note: "canon 체감값" }
+      - { name: rotation_period, value: 32, unit: h, op: set, note: "조석고정 (canon 27h 대신)" }
+      - { name: obliquity, value: 10, unit: deg, op: set, note: "궤도경사서 옴" }
+      - { name: internal_heat, value: "방사성 + 약한 조석 (e강제 ~0.005) → 화산·대륙이동·dynamo 구동", op: set }
+      - { name: geopotential_j2, value: "C̄₂₂≈5.5e-4 (편평 0.74%)", reference_radius_km: 5724, op: set }
+      - { name: age, value: 5.3, unit: Gyr, op: set }
+      - { name: spin_axis_orientation, value: "orbit normal", op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: documented-divergence
@@ -674,156 +1026,240 @@ decisions:
         (→0.99 ρ⊕)과도 모순이라 비채택. obliquity도 canon 29°→~10° 발산(궤도경사 10° 유지, 안정성 우선; 단
         조석고정이라 "자전축 29°"는 본래 궤도면 황도경사를 뜻함 — 자유 obliquity 아님). 부유산(Hallelujah)은
         art/lore(언옵타늄 초전도)라 물리 bulk 속성 아님.
-      note: "✅ mass B(3.85e24) 재시뮬 STABLE 검증 완료 (results/_pandora_massB, 1000yr TRACE+J2(0.023), |ΔE/E| 7.6e-9, 5위성 bound·calm·이젝션0, Pandora e≤0.0075 해양안전). 예상대로 가벼운 교란체라 안정 유지."
+      evidence: >
+        ✅ mass B(3.85e24) 재시뮬 STABLE 검증 완료 (results/_pandora_massB, 1000yr TRACE+J2(0.023), |ΔE/E|
+        7.6e-9, 5위성 bound·calm·이젝션0, Pandora e≤0.0075 해양안전). 예상대로 가벼운 교란체라 안정 유지.
 
   - body: Pandora
     axis: atmosphere               # composition/pressure/temperature/greenhouse/breathability (group 4, facet-walk 2026-06-22)
     status: gated
-    driver: canon + physics
-    value: >
-      composition=N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon). pressure ~1.1 atm 지표
-      (canon ~20% 빽빽). temperature: Teq ~225K(폴리페무스계 입사) → 고농도 CO₂ 온실 +70K → 지표 ~290K,
-      great-season ±~15–25K. greenhouse=강함(CO₂>18%+CH₄+H₂S 구동) = 거주가능 온도 lift(조석·항성 아님).
-      scale_height=도출(무거운 CO₂+0.8g). escape=안정(지구형 0.8g). breathability=O₂ 존재 but lore-독성(인간 엑소팩).
+    driver: [canon, physics]
+    narrative: >
+      composition=N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon). pressure ~1.1 atm 지표(canon ~20%
+      빽빽). temperature: Teq ~225K(폴리페무스계 입사) → 고농도 CO₂ 온실 +70K → 지표 ~290K, great-season ±~15–25K.
+      greenhouse=강함(CO₂>18%+CH₄+H₂S 구동) = 거주가능 온도 lift(조석·항성 아님). scale_height=도출(무거운 CO₂+0.8g).
+      escape=안정(지구형 0.8g). breathability=O₂ 존재 but lore-독성(인간 엑소팩). canon 조성·압력 충실. 온실 +70K는
+      고CO₂ 물리 정당(금성식 메커니즘의 온건판) — 조석/항성 아닌 온실이 lift. breathability: KSP 스톡은 독성 미모델
+      → atmosphereContainsOxygen=true(제트·Kerbal 호흡 무관), 인간 독성은 Kerbalism 플래그/레포트 lore. 고도별 T/P
+      커브는 emit 시 cool-giant/지구형 모델서 생성(eccentricity curve는 부모 폴리페무스 e를 읽어 great-season 반영 —
+      delicate emit 값, facet-checklist 참조).
+    fields:
+      - { name: composition, value: "N₂ 주성분 + O₂ + CO₂ >18% + Xe 5.5% + CH₄ + H₂S >1% (canon)", op: set }
+      - { name: pressure, value: 1.1, unit: atm, op: set, note: "canon ~20% 빽빽" }
+      - { name: temperature, value: 290, unit: K, op: set, note: "Teq ~225K + CO₂ 온실 +70K; great-season ±15–25K" }
+      - { name: greenhouse, value: "강함 (CO₂>18%+CH₄+H₂S 구동, +70K lift)", op: set }
+      - { name: scale_height, value: "도출 (무거운 CO₂+0.8g)", op: set }
+      - { name: escape, value: "안정 (지구형 0.8g)", op: set }
+      - { name: breathability, value: true, op: set, note: "O₂ 존재 but lore-독성; stock atmosphereContainsOxygen=true" }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
-      note: >
+      evidence: >
         canon 조성·압력 충실. 온실 +70K는 고CO₂ 물리 정당(금성식 메커니즘의 온건판) — 조석/항성 아닌 온실이 lift.
-        breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true(제트·Kerbal 호흡 무관), 인간 독성은
-        Kerbalism 플래그/레포트 lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성(eccentricity curve는
-        부모 폴리페무스 e를 읽어 great-season 반영 — delicate emit 값, facet-checklist 참조).
+        breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true, 인간 독성은 Kerbalism 플래그/레포트
+        lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성.
 
   - body: Pandora
     axis: surface                  # type/hydrosphere/biosphere/tectonics/terrain/ice_caps/albedo/temp (group 5, facet-walk 2026-06-22)
     status: gated
-    driver: canon + art + physics
-    value: >
-      surface_type=지구형, **육지:대양 ≈ 50:50**(지구 30:70보다 육지 많음). 대체로 **산악 — 평지 거의 없고**
-      고지대 산맥·화산대 우세. hydrosphere=액체 물 대양/바다(~50%, 290K 안정). biosphere=무성한 우림+고생물
-      다양성, 청록 생물발광(appearance 행서 렌더). tectonics=활화산대 + 빠른 대륙이동(조석+방사성, dynamo와 동근).
-      terrain=산악+화산대+고지대 산맥, **부유산(Hallelujah)=PQS 극적 아치/오버행 오마주**(실제 부양 아님, 언옵타늄은
-      레포트 lore). ice_caps=고봉 정상 + 극관에만(평균 290K라 제한적). albedo ~0.30(육지多·구름·일부 빙설로 지구급).
-      surface_temp ~290K(group 4 온실).
+    driver: [canon, art, physics]
+    narrative: >
+      surface_type=지구형, 육지:대양 ≈ 50:50(지구 30:70보다 육지 많음). 대체로 산악 — 평지 거의 없고 고지대
+      산맥·화산대 우세. hydrosphere=액체 물 대양/바다(~50%, 290K 안정). biosphere=무성한 우림+고생물 다양성, 청록
+      생물발광(appearance 행서 렌더). tectonics=활화산대 + 빠른 대륙이동(조석+방사성, dynamo와 동근). terrain=산악
+      +화산대+고지대 산맥, 부유산(Hallelujah)=PQS 극적 아치/오버행 오마주(실제 부양 아님, 언옵타늄은 레포트 lore).
+      ice_caps=고봉 정상 + 극관에만(평균 290K라 제한적). albedo ~0.30(육지多·구름·일부 빙설로 지구급). surface_temp
+      ~290K(group 4 온실). 오너 art-direction(2026-06-22): 5-1 부유산=PQS 아치 오마주 승인(KSP 지형 부양 불가).
+      육지:대양 ≈ 50:50(지구보다 육지↑), 산악 우세·평지 희소. 빙관=고봉+극관만. 생물발광=은은(식물 약간+해안 약간)
+      → appearance 행.
+    fields:
+      - { name: surface_type, value: "지구형, 육지:대양 ≈ 50:50, 산악 우세", op: set }
+      - { name: hydrosphere, value: "액체 물 대양/바다 (~50%, 290K 안정)", op: set }
+      - { name: biosphere, value: "무성한 우림 + 고생물 다양성, 청록 생물발광", op: set }
+      - { name: tectonics, value: "활화산대 + 빠른 대륙이동 (조석+방사성)", op: set }
+      - { name: terrain, value: "산악+화산대+고지대 산맥, 부유산=PQS 아치/오버행 오마주", op: set }
+      - { name: ice_caps, value: "고봉 정상 + 극관에만 (제한적)", op: set }
+      - { name: albedo, value: 0.30, op: set }
+      - { name: surface_temperature, value: 290, unit: K, op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
-      note: >
+      evidence: >
         오너 art-direction(2026-06-22): 5-1 부유산=PQS 아치 오마주 승인(KSP 지형 부양 불가). 육지:대양 ≈ 50:50
         (지구보다 육지↑), 산악 우세·평지 희소. 빙관=고봉+극관만. 생물발광=은은(식물 약간+해안 약간) → appearance 행.
 
   - body: Pandora                  # A b III
     axis: magnetism.magnetic_field
     status: gated
-    driver: physics + canon
-    value: "강한 고유 dipole (지구급, ~수십 µT) — 조석-구동 대류 Fe 핵 dynamo. 위성 치고 이례적으로 강함."
+    driver: [physics, canon]
+    narrative: >
+      강한 고유 dipole (지구급, ~수십 µT) — 조석-구동 대류 Fe 핵 dynamo. 위성 치고 이례적으로 강함.
+      [후행 레포트 씨앗] "채굴 불가능할 것 같은 물질을 채굴할 수 있을 듯한" 뉘앙스 — 부유산/플럭스 볼텍스의
+      미설명 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것(언옵타늄을 암시만). 고 자기장 구역
+      (플럭스 볼텍스 = 부유산 일대)을 Pandora 별도 바이옴으로 — 자기 이상/계기 교란 과학 + 부유산 지형.
+      gameplay/biome facet서 정식 바이옴 목록에 포함(고자기장 region 바이옴).
+    fields:
+      - { name: magnetic_field, value: "강한 고유 dipole (지구급, ~수십 µT), 조석-구동 Fe 핵 dynamo", op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
       evidence: >
         캐넌 Fe 핵 + 강한 자기장. 세기는 핵 *크기*가 아니라 *대류 세기*에서 옴(에너지플럭스 dynamo) — B밀도
-        (0.89 ρ⊕)면 철핵은 거대(super-Mercury) 아닌 **중간 크기**지만, 조석열(e강제 ~0.005)+방사성이 핵을 펄펄
-        끓여 활발히 대류 → 지구급 장. **화산·빠른 대륙이동과 같은 열원(조석열)을 공유**(인과 묶임). 위성 중 이례적
-        (가니메데만 약한 dynamo). **언옵타늄 부스트는 grounding서 제외**(현실고증) — 그냥 강한 고유 자기장.
-        부유산 띄울 정도는 아님(그건 canon/report 미스터리, report_flavor 참조).
-      report_flavor: >
-        [후행 레포트 씨앗] "채굴 불가능할 것 같은 물질을 채굴할 수 있을 듯한" 뉘앙스 — 부유산/플럭스 볼텍스의
-        미설명 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것(언옵타늄을 암시만).
-      biome_note: >
-        고 자기장 구역(플럭스 볼텍스 = 부유산 일대)을 Pandora **별도 바이옴**으로 — 자기 이상/계기 교란
-        과학 + 부유산 지형. gameplay/biome facet서 정식 바이옴 목록에 포함(고자기장 region 바이옴).
+        (0.89 ρ⊕)면 철핵은 거대(super-Mercury) 아닌 중간 크기지만, 조석열(e강제 ~0.005)+방사성이 핵을 펄펄 끓여
+        활발히 대류 → 지구급 장. 화산·빠른 대륙이동과 같은 열원(조석열)을 공유(인과 묶임). 위성 중 이례적(가니메데만
+        약한 dynamo). 언옵타늄 부스트는 grounding서 제외(현실고증) — 그냥 강한 고유 자기장. 부유산 띄울 정도는
+        아님(그건 canon/report 미스터리).
+
   - body: Pandora
     axis: magnetism.magnetosphere
     status: gated
-    driver: physics + canon
-    value: "고유 자기권이 표면 차폐. 캐넌대로 Polyphemus 두 벨트 *사이(gap)*에 위치 + 자체 강자기장 → 거주가능."
-    gate: {criterion: [canon-consistency], verdict: pass-in-window, note: "지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분 — 초강자기장 불요. 거주가능의 물리 근거."}
+    driver: [physics, canon]
+    narrative: "고유 자기권이 표면 차폐. 캐넌대로 Polyphemus 두 벨트 *사이(gap)*에 위치 + 자체 강자기장 → 거주가능."
+    fields:
+      - { name: magnetosphere, value: "고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)", op: set }
+    gate:
+      criterion: [canon-consistency]
+      verdict: pass-in-window
+      evidence: "지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분 — 초강자기장 불요. 거주가능의 물리 근거."
 
   - body: Pandora
     axis: appearance               # base_colour/clouds/biolum/aurora/specular (group 6, facet-walk 2026-06-22)
     status: gated
-    driver: canon + art + physics
-    value: >
+    driver: [canon, art, physics]
+    narrative: >
       base_colour=지구식 초록 식생 + 파란 대양 + 흰 구름 마블(육지 ~50%라 초록 비중 큼). clouds=흰 물구름, 활발한
-      기상. biolum(emission_glow)=은은한 청록 야간 글로우(식물발광 약간 + 해안 발광 약간). **aurora=격렬·다색**
-      (O₂ 초록 + N₂ 청보라 + 적색) — 강자기장 + Polyphemus 자기권 내 + Dante Io식 황 토러스 = 목성형 강오로라
-      메커니즘. **+ 국소 오로라**: 플럭스 볼텍스(고자기 이상=부유산 일대) 구역엔 극관 오로라와 **별개로** 그 구역
-      중심의 국소 오로라 오벌이 추가 발생(강한 국소 자기 이상이 입자 강하를 비극지로 모음). specular=대양
-      sun-glint(OceanFX). artificial/city-lights=∅(Na'vi 전산업, 야간 빛=생물발광). haze=지구식 파란 Rayleigh 림. rings=∅.
+      기상. biolum(emission_glow)=은은한 청록 야간 글로우(식물발광 약간 + 해안 발광 약간). aurora=격렬·다색(O₂ 초록
+      + N₂ 청보라 + 적색) — 강자기장 + Polyphemus 자기권 내 + Dante Io식 황 토러스 = 목성형 강오로라 메커니즘.
+      + 국소 오로라: 플럭스 볼텍스(고자기 이상=부유산 일대) 구역엔 극관 오로라와 별개로 그 구역 중심의 국소 오로라
+      오벌이 추가 발생(강한 국소 자기 이상이 입자 강하를 비극지로 모음). specular=대양 sun-glint(OceanFX).
+      artificial/city-lights=∅(Na'vi 전산업, 야간 빛=생물발광). haze=지구식 파란 Rayleigh 림. rings=∅. 오너
+      (2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm, N₂⁺
+      청보라 391nm + 적색 밴드) — 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante 황 플라스마 토러스
+      + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과 오로라(상공 다색)가 야간
+      공존. 오로라 sRGB는 emit 시 element/molecular_plasma_colors.yaml서 추출(O₂/N₂/CO₂). 생물발광=EVE/emissive
+      야간 텍스처.
+    fields:
+      - { name: base_colour, value: "지구식 초록 식생 + 파란 대양 + 흰 구름 마블", op: set }
+      - { name: clouds, value: "흰 물구름, 활발한 기상", op: set }
+      - { name: emission_glow, value: "은은한 청록 야간 생물발광 (식물+해안)", op: set }
+      - { name: aurora, value: "격렬·다색 (O₂ 초록 557.7/630nm + N₂⁺ 청보라 391nm + 적색) + 국소 플럭스-볼텍스 오벌", op: set }
+      - { name: specular, value: "대양 sun-glint (OceanFX)", op: set }
+      - { name: haze, value: "지구식 파란 Rayleigh 림", op: set }
+      - { name: artificial, value: "none (Na'vi 전산업)", op: set }
+      - { name: rings, value: "none", op: set }
     gate:
       criterion: [visual-checklist, composition-lock]
       verdict: pass-in-window
       evidence: >
-        오너(2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색
-        630nm, N₂⁺ 청보라 391nm + 적색 밴드) — 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante
-        황 플라스마 토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과
-        오로라(상공 다색)가 야간 공존.
-      emit_note: "오로라 sRGB는 emit 시 element/molecular_plasma_colors.yaml서 추출(O₂/N₂/CO₂). 생물발광=EVE/emissive 야간 텍스처."
+        오너(2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm,
+        N₂⁺ 청보라 391nm + 적색 밴드) — 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante 황 플라스마
+        토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과 오로라(상공
+        다색)가 야간 공존.
 
   - body: Pandora
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
     status: gated
-    driver: physics + canon
-    value: "중간/거주가능 — 캐넌대로 Polyphemus 두 belt 사이 gap에 위치 + 자체 강자기장 차폐. Dante·Hades 극심과 대비, Kerbalism 선량은 살 만한 수준."
-    gate: {criterion: [canon-consistency, derived-grounding], verdict: pass-in-window, note: "between-belts gap + 강 dipole 차폐 = 거주가능의 물리 근거(magnetism 행). stellar_wind/activity/heliosphere/uv_xray/habitable_zone = 항성-레벨(A·B), Pandora 행 ∅."}
+    driver: [physics, canon]
+    narrative: "중간/거주가능 — 캐넌대로 Polyphemus 두 belt 사이 gap에 위치 + 자체 강자기장 차폐. Dante·Hades 극심과 대비, Kerbalism 선량은 살 만한 수준."
+    fields:
+      - { name: radiation, value: "중간/거주가능 (between-belts gap + 강 dipole 차폐)", op: set }
+    gate:
+      criterion: [canon-consistency, derived-grounding]
+      verdict: pass-in-window
+      evidence: "between-belts gap + 강 dipole 차폐 = 거주가능의 물리 근거(magnetism 행). stellar_wind/activity/heliosphere/uv_xray/habitable_zone = 항성-레벨(A·B), Pandora 행 ∅."
 
   - body: Pandora
     axis: gameplay                 # group 11 facet-walk 2026-06-22
     status: gated
-    driver: gameplay
-    value: >
+    driver: [gameplay]
+    narrative: >
       표면 있음 → 정식 biome map(7): 대양(Oceans) / 해안(Coastlines, 생물발광) / 우림 저지대(Rainforest Lowlands) /
-      고지대 산맥(Highland Mountains) / 화산대(Volcanic Belts) / 빙봉·극관(Ice Peaks & Polar Caps) / **부유산·플럭스
-      볼텍스(Floating Mtns / Flux-Vortex)** — 고자기 이상 특수 과학(자기 이상 + 부유산 구조물 + 국소 오로라).
-      SOI=질량서 자동. difficulty: 임무=거주가능 세계 착륙(최대 보상)·발견=fictional→RB F F F F. ScienceValues 전체.
+      고지대 산맥(Highland Mountains) / 화산대(Volcanic Belts) / 빙봉·극관(Ice Peaks & Polar Caps) / 부유산·플럭스
+      볼텍스(Floating Mtns / Flux-Vortex) — 고자기 이상 특수 과학(자기 이상 + 부유산 구조물 + 국소 오로라). SOI=질량서
+      자동. difficulty: 임무=거주가능 세계 착륙(최대 보상)·발견=fictional→RB F F F F. ScienceValues 전체. NearStars
+      유일 거주가능체라 가장 풍부한 biome map. 플럭스 볼텍스 구역엔 특유 구조물(부유산 + 자기 이상 지형) 배치 +
+      극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만(report_flavor).
+    fields:
+      - { name: science_biomes, value: "7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks & Polar Caps / Floating Mtns (Flux-Vortex)", op: set, colors: {"Oceans":"#2A5C99","Coastlines":"#35B8A0","Rainforest Lowlands":"#3E7A3A","Highland Mountains":"#7A6A5A","Volcanic Belts":"#9A4A38","Ice Peaks & Polar Caps":"#D6E4EA","Floating Mtns (Flux-Vortex)":"#7A44C8"} }   # provisional naturalistic biome-map display colors (S↓; biolum coast + flux-vortex = accents)
+      - { name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough }
+      - { name: difficulty, value: "임무=거주가능 세계 착륙(최대 보상) · 발견=RB F F F F", op: set }
     gate:
       criterion: [gameplay]
       verdict: pass-in-window
-      note: >
+      evidence: >
         NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스 볼텍스 구역엔 특유 구조물(부유산 + 자기 이상
-        지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만(report_flavor).
+        지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만.
 
   - body: Cassandra                # A b IV
     axis: identity
     status: gated                  # facet-walk 2026-06-22
-    driver: classification + canon(semi)
-    value: >
-      body_type=큰 암석 위성(반경 3400 km, 2번째 큰 달), 얇은 대기 + **한계 거주**(탄소순환 미생물급 생명 가능,
+    driver: [classification, canon-semi]
+    narrative: >
+      body_type=큰 암석 위성(반경 3400 km, 2번째 큰 달), 얇은 대기 + 한계 거주(탄소순환 미생물급 생명 가능,
       semi-canon Lightstorm OmatiCon 2024). 판도라 무성 생물권과 달리 미생물·한계 수준. designation=Alpha Centauri
       A b IV · cultural=Cassandra(designations 블록). discoverability=fictional(합성 위성) → RB F F F F.
+      marginal life-world(미생물·탄소순환), semi-canon(soft).
+    fields:
+      - { name: body_type, value: "큰 암석 위성 (반경 3400 km), 얇은 대기 + 한계 거주 (미생물급)", op: set }
+      - { name: designation, value: "Alpha Centauri A b IV", op: set }
+      - { name: cultural_name, value: "Cassandra", op: set }
+      - { name: discoverability, value: "fictional", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "marginal life-world(미생물·탄소순환), semi-canon(soft). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
+      evidence: "marginal life-world(미생물·탄소순환), semi-canon(soft). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Cassandra
     axis: bulk                     # mass/radius/rotation/obliquity (facet-walk 2026-06-22)
     status: gated
-    driver: invented + physics
-    value: >
+    driver: [invented, physics]
+    narrative: >
       mass 9.0e23 kg · radius 3400 km → 중력 ~0.53 g, 밀도 ~5470 kg/m³(철-부유 암석, 화성보다 빽빽 — 오너 유지).
-      rotation=**자유 자전 ~39h**(공전 117h의 1/3, "공전1:자전3") — 600,000 km라 조석 despin이 a⁶로 너무 느려
-      5.3 Gyr에도 미동기화(원시 빠른 자전 유지), **3:1 공명 락 아님**(e=0.05선 불안정). obliquity ~20°(자유 회전체라
-      비0 가능 → 축-계절, 조정 가능). internal_heat=방사성 위주(외곽·큰 a라 조석 미미). 자유 자전 회전 편평 J₂≈4.1e-4 (f~0.13%), C₂₂ 없음(고정축 없음) (body-figure-methodology.md). age=5.3 Gyr. spin_axis=20° 경사.
+      rotation=자유 자전 ~39h(공전 117h의 1/3, "공전1:자전3") — 600,000 km라 조석 despin이 a⁶로 너무 느려 5.3
+      Gyr에도 미동기화(원시 빠른 자전 유지), 3:1 공명 락 아님(e=0.05선 불안정). obliquity ~20°(자유 회전체라 비0
+      가능 → 축-계절, 조정 가능). internal_heat=방사성 위주(외곽·큰 a라 조석 미미). 자유 자전 회전 편평 J₂≈4.1e-4
+      (f~0.13%), C₂₂ 없음(고정축 없음) (body-figure-methodology.md). age=5.3 Gyr. spin_axis=20° 경사. 밀도 유지=오너
+      선택. 자유 자전 ~39h는 느린 tidal despin(a⁶, 600,000km)으로 정당(미동기, 공명 락 아님). obliquity 비0(조석고정
+      아니라 축 안 세워짐) → 축-계절 가능.
+    fields:
+      - { name: mass, value: 9.0e23, unit: kg, op: set, note: "INVENTED" }
+      - { name: radius, value: 3400, unit: km, op: set }
+      - { name: gravity, value: 0.53, unit: g, op: set }
+      - { name: rotation_period, value: 39, unit: h, op: set, note: "자유 자전 (미동기, 공명 락 아님)" }
+      - { name: obliquity, value: 20, unit: deg, op: set }
+      - { name: internal_heat, value: "방사성 위주 (외곽·큰 a라 조석 미미)", op: set }
+      - { name: geopotential_j2, value: 4.1e-4, reference_radius_km: 3400, op: set, note: "회전 편평 f~0.13%, C₂₂ 없음" }
+      - { name: age, value: 5.3, unit: Gyr, op: set }
+      - { name: spin_axis_orientation, value: "20° 경사", op: set }
     gate:
       criterion: [physics]
       verdict: pass-in-window
-      note: "밀도 유지=오너 선택. 자유 자전 ~39h는 느린 tidal despin(a⁶, 600,000km)으로 정당(미동기, 공명 락 아님). obliquity 비0(조석고정 아니라 축 안 세워짐) → 축-계절 가능."
+      evidence: "밀도 유지=오너 선택. 자유 자전 ~39h는 느린 tidal despin(a⁶, 600,000km)으로 정당(미동기, 공명 락 아님). obliquity 비0(조석고정 아니라 축 안 세워짐) → 축-계절 가능."
 
   - body: Cassandra
     axis: atmosphere               # group 4 facet-walk 2026-06-22
     status: gated
-    driver: canon + physics
-    value: >
-      composition=N₂ 주성분(~0.8–1 bar) + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, **무산소·환원성**(canon N–H).
+    driver: [canon, physics]
+    narrative: >
+      composition=N₂ 주성분(~0.8–1 bar) + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성(canon N–H).
       pressure ~1 bar. temperature: Teq ~225K + CO₂·CH₄·N₂–H₂ CIA 온실 +45–50K → 지표 ~270–275K(한계-습윤).
       greenhouse=CO₂+CH₄+N₂–H₂ 충돌유발흡수(시생대/초기화성 온난화 레시피). breathability=O₂ 없음 → 비호흡
-      (atmosphereContainsOxygen=false). escape=N₂/CO₂ 보유, H₂는 탈출하나 화산 보충.
+      (atmosphereContainsOxygen=false). escape=N₂/CO₂ 보유, H₂는 탈출하나 화산 보충. 시생대 지구 아날로그(A 채택).
+      1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능. 무산소=물바다와 무모순(시생대 지구
+      20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존 불가라 무산소 택하며 주황 haze 보존. 고도
+      T/P 커브 emit 시 생성.
+    fields:
+      - { name: composition, value: "N₂ 주성분 + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성", op: set }
+      - { name: pressure, value: 1, unit: bar, op: set }
+      - { name: temperature, value: "270–275", unit: K, op: set, note: "Teq ~225K + CIA 온실 +45–50K (한계-습윤)" }
+      - { name: greenhouse, value: "CO₂+CH₄+N₂–H₂ 충돌유발흡수 (시생대/초기화성 레시피)", op: set }
+      - { name: breathability, value: false, op: set }
+      - { name: escape, value: "N₂/CO₂ 보유, H₂ 탈출하나 화산 보충", op: set }
     gate:
       criterion: [canon-consistency, physics]
       verdict: pass-in-window
-      note: >
+      evidence: >
         시생대 지구 아날로그(A 채택). 1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능.
         무산소=물바다와 무모순(시생대 지구 20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존
         불가라 무산소 택하며 주황 haze 보존. 고도 T/P 커브 emit 시 생성.
@@ -831,38 +1267,71 @@ decisions:
   - body: Cassandra
     axis: surface                  # group 5 facet-walk 2026-06-22
     status: gated
-    driver: canon + physics
-    value: >
-      한랭-습윤 시생대형. hydrosphere=**물바다**(따뜻한 적도/계절엔 액체, 그 외 빙) + 빙관. surface_type=암석 대륙
-      + 바다. biosphere=**혐기 미생물 탄소순환**(극한생물 매트, 무성하지 않음, 생물발광 거의 없음). tectonics=방사성
-      구동(외곽이라 조석 미미), 일부 화산/열수구. terrain=한랭 암석·빙·해안. ice_caps=풍부(극관+고위도). albedo ~0.35.
+    driver: [canon, physics]
+    narrative: >
+      한랭-습윤 시생대형. hydrosphere=물바다(따뜻한 적도/계절엔 액체, 그 외 빙) + 빙관. surface_type=암석 대륙 +
+      바다. biosphere=혐기 미생물 탄소순환(극한생물 매트, 무성하지 않음, 생물발광 거의 없음). tectonics=방사성 구동
+      (외곽이라 조석 미미), 일부 화산/열수구. terrain=한랭 암석·빙·해안. ice_caps=풍부(극관+고위도). albedo ~0.35.
       surface_temp ~270–275K(부분 동결).
-    gate: {criterion: [canon-consistency, physics], verdict: pass-in-window, note: "물바다=한계-습윤(부분빙). 생명=혐기 미생물(판도라 무성과 차별). 열수구=탄소순환 생명 거점 후보(바이옴)."}
+    fields:
+      - { name: surface_type, value: "암석 대륙 + 바다 (한랭-습윤 시생대형)", op: set }
+      - { name: hydrosphere, value: "물바다 (한계-습윤, 부분빙) + 빙관", op: set }
+      - { name: biosphere, value: "혐기 미생물 탄소순환 (매트, 무성하지 않음)", op: set }
+      - { name: tectonics, value: "방사성 구동, 일부 화산/열수구", op: set }
+      - { name: ice_caps, value: "풍부 (극관+고위도)", op: set }
+      - { name: albedo, value: 0.35, op: set }
+      - { name: surface_temperature, value: "270–275", unit: K, op: set, note: "부분 동결" }
+    gate:
+      criterion: [canon-consistency, physics]
+      verdict: pass-in-window
+      evidence: "물바다=한계-습윤(부분빙). 생명=혐기 미생물(판도라 무성과 차별). 열수구=탄소순환 생명 거점 후보(바이옴)."
 
   - body: Cassandra
     axis: appearance               # group 6 facet-walk 2026-06-22
     status: gated
-    driver: canon + art + physics
-    value: >
-      **한랭 외계 바다 세계** — 환원성 N₂/CH₄ 대기의 **얇은 고층 호박/연노랑 haze**(불투명 아님, **표면 비침**;
-      Titan의 두꺼운 주황 공과 의도적 차별). 가시: 청회색 물바다 + 흰 빙관(극·고지) + 어두운 암석 대륙 + 흰 물구름
-      (활발한 기상). 순 인상 = **엷은 청백 마블 + 약한 amber 기운**. 무성한 초록 없음(미생물급), biolum 거의 없음.
-      specular=바다 glint. aurora=약함(약자기장). rings=∅.
-    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가 두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라 초록·청록과도 차별."}
+    driver: [canon, art, physics]
+    narrative: >
+      한랭 외계 바다 세계 — 환원성 N₂/CH₄ 대기의 얇은 고층 호박/연노랑 haze(불투명 아님, 표면 비침; Titan의
+      두꺼운 주황 공과 의도적 차별). 가시: 청회색 물바다 + 흰 빙관(극·고지) + 어두운 암석 대륙 + 흰 물구름(활발한
+      기상). 순 인상 = 엷은 청백 마블 + 약한 amber 기운. 무성한 초록 없음(미생물급), biolum 거의 없음. specular=바다
+      glint. aurora=약함(약자기장). rings=∅. Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가
+      두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라
+      초록·청록과도 차별.
+    fields:
+      - { name: base_colour, value: "엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)", op: set }
+      - { name: haze, value: "얇은 고층 호박/연노랑 (표면 비침, Titan과 차별)", op: set }
+      - { name: clouds, value: "흰 물구름 (활발한 기상)", op: set }
+      - { name: specular, value: "바다 glint", op: set }
+      - { name: aurora, value: "약함 (약자기장)", op: set }
+      - { name: rings, value: "none", op: set }
+    gate:
+      criterion: [visual-checklist]
+      verdict: pass-in-window
+      evidence: "Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가 두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라 초록·청록과도 차별."
 
   - body: Cassandra
     axis: magnetism.magnetic_field # group 7 facet-walk 2026-06-22 — 약함(오너 결정)
     status: gated
-    driver: physics
-    value: "약한 고유 dipole — 철-부유 핵(밀도 5470) + 자유 자전 39h 약 dynamo. 미약하나 차폐에 기여(Archean 지구식 초기 생명 보호 프레이밍)."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "오너 결정(a): 약함. 미약 차폐가 8.4 R_p 외곽 저방사선과 합쳐져 표면 추가 보호(environment 반영). magnetosphere/belts 고유=미미."}
+    driver: [physics]
+    narrative: "약한 고유 dipole — 철-부유 핵(밀도 5470) + 자유 자전 39h 약 dynamo. 미약하나 차폐에 기여(Archean 지구식 초기 생명 보호 프레이밍)."
+    fields:
+      - { name: magnetic_field, value: "약한 고유 dipole (철-부유 핵 + 자유 자전 39h)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "오너 결정(a): 약함. 미약 차폐가 8.4 R_p 외곽 저방사선과 합쳐져 표면 추가 보호(environment 반영). magnetosphere/belts 고유=미미."
 
   - body: Cassandra
     axis: environment.radiation    # group 8 facet-walk 2026-06-22
     status: gated
-    driver: physics
-    value: "낮음 — 8.4 R_p 외곽(방사선대 밖) + 약한 고유 자기장 추가 차폐. Dante·Hades 극심과 대비. 거주 한계는 방사선 아닌 한랭·무산소."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "외곽 저방사선 + 약장 차폐 → 낮음. stellar_wind/activity/heliosphere/flares/uv_xray/habitable_zone=항성-레벨 ∅(단 무산소→오존 없어 지표 UV↑ 메모, HZ 내 위치는 atmosphere서 반영)."}
+    driver: [physics]
+    narrative: "낮음 — 8.4 R_p 외곽(방사선대 밖) + 약한 고유 자기장 추가 차폐. Dante·Hades 극심과 대비. 거주 한계는 방사선 아닌 한랭·무산소."
+    fields:
+      - { name: radiation, value: "낮음 (8.4 R_p 외곽, 방사선대 밖 + 약장 차폐)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "외곽 저방사선 + 약장 차폐 → 낮음. stellar_wind/activity/heliosphere/flares/uv_xray/habitable_zone=항성-레벨 ∅(단 무산소→오존 없어 지표 UV↑ 메모, HZ 내 위치는 atmosphere서 반영)."
 
   # ── Cassandra G9 rings = ∅ 전부(자체 고리 없음; circumstellar_disk·asteroid_belt 계-레벨 ∅). 단 Polyphemus E-고리 안쪽 양치기(Polyphemus.rings 기록). ──
   # ── Cassandra G10 satellites = ∅ 전부(submoon 없음·co_orbital 없음; dust_source는 Chaos 담당, Cassandra는 양치기). ──
@@ -870,202 +1339,266 @@ decisions:
   - body: Cassandra
     axis: gameplay                 # group 11 facet-walk 2026-06-22
     status: gated
-    driver: gameplay
-    value: >
+    driver: [gameplay]
+    narrative: >
       표면 있음 → biome map(6): 물바다(Seas) / 해안(Coastlines) / 한랭 대륙·고지(Cold Highlands) / 빙관(Polar Ice) /
-      화산·열수구(Volcanic & Hydrothermal, 미생물 거점) / 얇은 haze 저지대(Hazy Lowlands). **후보(보류)**: 미생물
-      매트 지대(Microbial Mats) — 추후 다른 바디 바이옴과 안 겹치면 7번째로 추가. SOI=자동. difficulty:
-      임무=한랭 무산소 세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체.
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부)."}
+      화산·열수구(Volcanic & Hydrothermal, 미생물 거점) / 얇은 haze 저지대(Hazy Lowlands). 후보(보류): 미생물 매트
+      지대(Microbial Mats) — 추후 다른 바디 바이옴과 안 겹치면 7번째로 추가. SOI=자동. difficulty: 임무=한랭 무산소
+      세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체. 두 번째 (한계)생명 세계. 열수구=혐기
+      미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부).
+    fields:
+      - { name: science_biomes, value: "6: Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic & Hydrothermal / Hazy Lowlands (후보: Microbial Mats)", op: set, colors: {"Seas":"#2E5680","Coastlines":"#4A8C6E","Cold Highlands":"#6E7480","Polar Ice":"#CBDEE6","Volcanic & Hydrothermal":"#9A4436","Hazy Lowlands":"#B79A5E","Microbial Mats (candidate)":"#A85078"} }   # provisional naturalistic biome-map display colors (S↓; microbial mats = accent)
+      - { name: difficulty, value: "임무=한랭 무산소 착륙 · 발견=RB F F F F", op: set }
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      evidence: "두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부)."
 
   - body: Chaos                    # A b V
     axis: identity
     status: gated                  # facet-walk 2026-06-23
-    driver: classification + canon(semi)
-    value: >
+    driver: [classification, canon-semi]
+    narrative: >
       body_type=작은 얼음 위성(반경 400 km, 밀도 ~2015 kg/m³ = 물얼음+암석), Miranda형 균열 지형. 최외곽 명명 위성,
-      역행. E-고리 공급원. designation=Alpha Centauri A b V · cultural=Chaos(designations 블록). discoverability=fictional → RB F F F F.
+      역행. E-고리 공급원. designation=Alpha Centauri A b V · cultural=Chaos(designations 블록). discoverability=fictional
+      → RB F F F F. 역행 얼음 소위성(group 9서 얼음체 확정 → 푸른흰빛 E-고리 먹임).
+    fields:
+      - { name: body_type, value: "작은 얼음 위성 (반경 400 km, ρ ~2015 kg/m³, Miranda형 균열), 역행, E-고리 공급원", op: set }
+      - { name: designation, value: "Alpha Centauri A b V", op: set }
+      - { name: cultural_name, value: "Chaos", op: set }
+      - { name: discoverability, value: "fictional", op: set }
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "역행 얼음 소위성(group 9서 얼음체 확정 → 푸른흰빛 E-고리 먹임). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
+      evidence: "역행 얼음 소위성(group 9서 얼음체 확정 → 푸른흰빛 E-고리 먹임). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Chaos
     axis: bulk                     # mass/radius/rotation/obliquity/oblateness (facet-walk 2026-06-23)
     status: gated
-    driver: invented + physics
-    value: >
-      mass 5.4e20 kg · radius 400 km → 중력 ~0.023 g(초저중력), 밀도 ~2015 kg/m³(얼음+암석). rotation=**자유 자전
-      9.5h**(1.5M km라 despin 사실상 0, 미동기 원시 빠른 자전). obliquity 15°(자유 회전체). **적도 bulge**: f≈0.06–0.075
-      (~6–7.5%, 목성↔토성 사이) — 빠른 9.5h 자전의 원심 편평. internal_heat 무시(소형·외곽). j2=회전 bulge서 도출, J₂≈0.026 (자유 자전 9.5h, figure-methodology 일치). age=5.3 Gyr.
+    driver: [invented, physics]
+    narrative: >
+      mass 5.4e20 kg · radius 400 km → 중력 ~0.023 g(초저중력), 밀도 ~2015 kg/m³(얼음+암석). rotation=자유 자전 9.5h
+      (1.5M km라 despin 사실상 0, 미동기 원시 빠른 자전). obliquity 15°(자유 회전체). 적도 bulge: f≈0.06–0.075
+      (~6–7.5%, 목성↔토성 사이) — 빠른 9.5h 자전의 원심 편평. internal_heat 무시(소형·외곽). j2=회전 bulge서 도출,
+      J₂≈0.026 (자유 자전 9.5h, figure-methodology 일치). age=5.3 Gyr. f≈(5/4)ω²R/g ≈ 8.8e7/P² → 9.5h(34200s)면
+      f~0.06–0.075(붕괴 한계 ~2.3h서 안전). 400km 반경=유체평형 relax 충분→bulge 실제 형성. emit 시
+      geopotential_j2(+reference_radius)로. obliquity 15°(조석고정 아님→축 안 세워짐, 'Chaos' 기운 자전).
+    fields:
+      - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
+      - { name: radius, value: 400, unit: km, op: set }
+      - { name: gravity, value: 0.023, unit: g, op: set }
+      - { name: rotation_period, value: 9.5, unit: h, op: set, note: "자유 자전 (미동기)" }
+      - { name: obliquity, value: 15, unit: deg, op: set }
+      - { name: geopotential_j2, value: 0.026, reference_radius_km: 400, op: set, note: "회전 bulge f≈0.06–0.075" }
+      - { name: age, value: 5.3, unit: Gyr, op: set }
     gate:
       criterion: [physics]
       verdict: pass-in-window
-      note: "f≈(5/4)ω²R/g ≈ 8.8e7/P² → 9.5h(34200s)면 f~0.06–0.075(붕괴 한계 ~2.3h서 안전). 400km 반경=유체평형 relax 충분→bulge 실제 형성. emit 시 geopotential_j2(+reference_radius)로. obliquity 15°(조석고정 아님→축 안 세워짐, 'Chaos' 기운 자전)."
+      evidence: "f≈(5/4)ω²R/g ≈ 8.8e7/P² → 9.5h(34200s)면 f~0.06–0.075(붕괴 한계 ~2.3h서 안전). 400km 반경=유체평형 relax 충분→bulge 실제 형성. emit 시 geopotential_j2(+reference_radius)로. obliquity 15°(조석고정 아님→축 안 세워짐)."
 
   - body: Chaos
     axis: atmosphere               # G4 facet-walk 2026-06-23
     status: gated
-    driver: art + physics
-    value: "안정 대기 없음(0.023g). 단 플룸이 만드는 국소 수증기 exosphere/halo → E-고리로 빠짐. 비호흡."
-    gate: {criterion: [physics], verdict: pass-in-window, note: "초저중력이라 대기 못 잡음. 플룸 분출물이 일시 exosphere 형성 후 고리·우주로(엔셀라두스식)."}
+    driver: [art, physics]
+    narrative: "안정 대기 없음(0.023g). 단 플룸이 만드는 국소 수증기 exosphere/halo → E-고리로 빠짐. 비호흡. 초저중력이라 대기 못 잡음. 플룸 분출물이 일시 exosphere 형성 후 고리·우주로(엔셀라두스식)."
+    fields:
+      - { name: composition, value: "none (안정 대기 없음; 플룸 국소 수증기 exosphere/halo → E-고리)", op: set }
+      - { name: breathability, value: false, op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: "초저중력이라 대기 못 잡음. 플룸 분출물이 일시 exosphere 형성 후 고리·우주로(엔셀라두스식)."
 
   - body: Chaos
     axis: surface                  # G5 facet-walk 2026-06-23
     status: gated
-    driver: art-first + physics-caveat
-    value: >
-      얼음(물얼음+암석), Miranda형 극적 균열 + **활성 tiger-stripe 균열대서 물 cryovolcanic 플룸 분출**(엔셀라두스
+    driver: [art-first, physics-caveat]
+    narrative: >
+      얼음(물얼음+암석), Miranda형 극적 균열 + 활성 tiger-stripe 균열대서 물 cryovolcanic 플룸 분출(엔셀라두스
       아날로그) → E-고리 공급. 플룸 낙진으로 표면 신선 얼음 재포장 → 매우 밝음. hydrosphere=지하 액체(art 전제, 국소).
       albedo ~0.7(신선 얼음, Enceladus 0.81 참조). surface_temp ~200K(고알베도). biosphere 없음. ice_caps=전역 얼음.
+      E-고리=플룸-fed는 실제 토성 E-고리(엔셀라두스 플룸 기원)와 동형 → 'E-고리' 명명 정합↑.
+    fields:
+      - { name: surface_type, value: "얼음 (물얼음+암석), Miranda형 균열 + tiger-stripe cryovolcanic 플룸", op: set }
+      - { name: hydrosphere, value: "지하 액체 (art 전제, 국소)", op: set }
+      - { name: albedo, value: 0.7, op: set, note: "신선 얼음, Enceladus 0.81 참조" }
+      - { name: surface_temperature, value: 200, unit: K, op: set }
+      - { name: ice_caps, value: "전역 얼음", op: set }
     gate:
       criterion: [stability, visual-checklist]
       verdict: documented-divergence
       divergence_note: >
-        **art-first(오너 2026-06-23)**: 물 플룸은 시각·서사 우선. 물리적으론 20 R_p·e0.02서 조석열 ~수 MW라
-        지하 바다·플룸 불가(a⁻⁷·⁵가 치명; e·a·공명·자전 전 조합 case-analysis로 부족 확인). 그럼에도 엔셀라두스식
+        art-first(오너 2026-06-23): 물 플룸은 시각·서사 우선. 물리적으론 20 R_p·e0.02서 조석열 ~수 MW라 지하
+        바다·플룸 불가(a⁻⁷·⁵가 치명; e·a·공명·자전 전 조합 case-analysis로 부족 확인). 그럼에도 엔셀라두스식
         플룸을 art로 채택, 고증 caveat 기록.
-      upside: "E-고리=플룸-fed는 실제 토성 E-고리(엔셀라두스 플룸 기원)와 동형 → 'E-고리' 명명 정합↑."
+      evidence: "E-고리=플룸-fed는 실제 토성 E-고리(엔셀라두스 플룸 기원)와 동형 → 'E-고리' 명명 정합↑."
 
   - body: Chaos
     axis: appearance               # G6 facet-walk 2026-06-23
     status: gated
-    driver: art + physics
-    value: >
-      **밝은 청백 얼음**(Enceladus형 신선 frost, ice-blue #cdd9e4 계열 — 자기가 먹이는 고리와 동톤). tiger-stripe
-      균열대서 **물 제트/플룸**(남극 혹은 활성 단애), 무대기라 선명한 그림자 + 플룸 빛산란. 극적 Miranda 균열. biolum/aurora ∅.
-    gate: {criterion: [visual-checklist], verdict: pass-in-window, note: "플룸 + 밝은 frost = Enceladus 룩. 청백 얼음이 ice-blue E-고리와 시각 연결(공급원-고리 동톤)."}
+    driver: [art, physics]
+    narrative: >
+      밝은 청백 얼음(Enceladus형 신선 frost, ice-blue #cdd9e4 계열 — 자기가 먹이는 고리와 동톤). tiger-stripe
+      균열대서 물 제트/플룸(남극 혹은 활성 단애), 무대기라 선명한 그림자 + 플룸 빛산란. 극적 Miranda 균열.
+      biolum/aurora ∅. 플룸 + 밝은 frost = Enceladus 룩. 청백 얼음이 ice-blue E-고리와 시각 연결(공급원-고리 동톤).
+    fields:
+      - { name: surface, value: "밝은 청백 얼음 (Enceladus형 frost, ice-blue #cdd9e4), Miranda 균열", op: set }
+      - { name: emission_glow, value: "tiger-stripe 물 제트/플룸 빛산란 (무대기라 선명 그림자)", op: set }
+    gate:
+      criterion: [visual-checklist]
+      verdict: pass-in-window
+      evidence: "플룸 + 밝은 frost = Enceladus 룩. 청백 얼음이 ice-blue E-고리와 시각 연결(공급원-고리 동톤)."
 
   - body: Chaos
     axis: magnetism.magnetic_field # G7 facet-walk 2026-06-23
     status: gated
-    driver: physics
-    value: "없음 — 소형 얼음체, dynamo 불가."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "21 R_p 자기권계면이라 방사선 자체가 낮음(environment)."}
+    driver: [physics]
+    narrative: "없음 — 소형 얼음체, dynamo 불가. 21 R_p 자기권계면이라 방사선 자체가 낮음(environment)."
+    fields:
+      - { name: magnetic_field, value: "none (소형 얼음체, dynamo 불가)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "21 R_p 자기권계면이라 방사선 자체가 낮음(environment)."
 
   - body: Chaos
     axis: environment.radiation    # G8 facet-walk 2026-06-23
     status: gated
-    driver: physics
-    value: "낮음/가변 — 21 R_p=자기권계면, 주간측 일부 자기권 밖(α Cen A 항성풍·우주선 직접 노출 시간 있음). belt 밖이라 온건."
-    gate: {criterion: [derived-grounding], verdict: pass-in-window, note: "자기권계면이라 가변. wind/activity/heliosphere/flares/uv/HZ=항성-레벨 ∅."}
+    driver: [physics]
+    narrative: "낮음/가변 — 21 R_p=자기권계면, 주간측 일부 자기권 밖(α Cen A 항성풍·우주선 직접 노출 시간 있음). belt 밖이라 온건."
+    fields:
+      - { name: radiation, value: "낮음/가변 (21 R_p 자기권계면, 주간측 일부 자기권 밖)", op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: "자기권계면이라 가변. wind/activity/heliosphere/flares/uv/HZ=항성-레벨 ∅."
 
   # ── Chaos G9 rings = ∅ 전부(자체 고리 없음; circumstellar_disk·asteroid_belt 계-레벨 ∅). ──
   - body: Chaos
     axis: satellites               # G10 — dust_source 역할 (facet-walk 2026-06-23)
     status: gated
-    driver: art + physics
-    value: "submoon ∅ · co_orbital ∅. **dust_sources=Chaos가 E-고리 공급원** — art-first 물 플룸(엔셀라두스→토성 E-고리 동형) 주공급 + sputtering/승화 보조. Polyphemus.rings 기록."
-    gate: {criterion: [stability], verdict: pass-in-window, note: "플룸=주 공급(art), 침식=보조. 얼음체라 ice-blue 고리와 조성 일치."}
+    driver: [art, physics]
+    narrative: "submoon ∅ · co_orbital ∅. dust_sources=Chaos가 E-고리 공급원 — art-first 물 플룸(엔셀라두스→토성 E-고리 동형) 주공급 + sputtering/승화 보조. Polyphemus.rings 기록."
+    fields:
+      - { name: dust_sources, value: "Chaos = E-고리 공급원 (art-first 물 플룸 주공급 + sputtering/승화 보조)", op: set }
+      - { name: co_orbitals, value: "none", op: set }
+    gate:
+      criterion: [stability]
+      verdict: pass-in-window
+      evidence: "플룸=주 공급(art), 침식=보조. 얼음체라 ice-blue 고리와 조성 일치."
 
   - body: Chaos
     axis: gameplay                 # G11 facet-walk 2026-06-23
     status: gated
-    driver: gameplay
-    value: >
-      표면 있음 → biome map(5): 거대 균열대(Chasmata) / **tiger-stripe 플룸 분출대(Plume Vents, 과학 hotspot)** /
-      얼음 평원(Icy Plains) / 크레이터(Craters) / 극(Poles). (코로나 제외=오너.) 착륙=초저중력 0.023g 주의(이탈·바운스).
-      발견=fictional→RB F F F F. ScienceValues 전체.
-    gate: {criterion: [gameplay], verdict: pass-in-window, note: "플룸 분출대=과학 명소(엔셀라두스 tiger-stripe 유추). 초저중력 착륙 난이도 특수. 코로나 바이옴 제외(오너)."}
+    driver: [gameplay]
+    narrative: >
+      표면 있음 → biome map(5): 거대 균열대(Chasmata) / tiger-stripe 플룸 분출대(Plume Vents, 과학 hotspot) / 얼음
+      평원(Icy Plains) / 크레이터(Craters) / 극(Poles). (코로나 제외=오너.) 착륙=초저중력 0.023g 주의(이탈·바운스).
+      발견=fictional→RB F F F F. ScienceValues 전체. 플룸 분출대=과학 명소(엔셀라두스 tiger-stripe 유추). 초저중력
+      착륙 난이도 특수. 코로나 바이옴 제외(오너).
+    fields:
+      - { name: science_biomes, value: "5: Chasmata / Plume Vents (hotspot) / Icy Plains / Craters / Poles", op: set, colors: {"Chasmata":"#3C4A5E","Plume Vents":"#33A5B5","Icy Plains":"#AEC8D6","Craters":"#7C8A96","Poles":"#E4ECF0"} }   # provisional naturalistic biome-map display colors (S↓; plume vents = accent)
+      - { name: difficulty, value: "착륙=초저중력 0.023g 특수 · 발견=RB F F F F", op: set }
+    gate:
+      criterion: [gameplay]
+      verdict: pass-in-window
+      evidence: "플룸 분출대=과학 명소(엔셀라두스 tiger-stripe 유추). 초저중력 착륙 난이도 특수. 코로나 바이옴 제외(오너)."
 
   # ── 위성: 명명 5위성 궤도 (안정성-게이트 통과) ────────────────
   # 출처 = Avatar: The Game [GAME, soft-canon]. 위키엔 a/e 전무(Pandora만 도출) →
   # Roche 내측·0.5 R_Hill 외측·카논 순서 제약으로 설계 후 IAS15로 안정 검증.
-  # 핵심 발견: 카논의 "Hades가 Dante에 그레이징"을 e=0.30 직역하면 100yr 내 이젝션 →
-  # 조석가열은 궤도교차 아닌 유지된 e(Io 강제e=0.0041) → e=0.05 + 작은 moonlet로 교정.
   - body: Alpha Centauri A b
+    kopernicus_name: Polyphemus
     axis: satellites
     status: gated                  # 135k 갭 = J2 적용 후에도 안정 (TRACE+leapfrog 일치). 3:2-락은 J2로 탈락.
-    driver: fiction                # SPEC class D (+ orbit는 stability-optimization)
-    target: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos)"
+    driver: [fiction, stability]   # SPEC class D (+ orbit는 stability-optimization)
+    value: "판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos) — 본문 moons: 리스트가 body def"
+    narrative: >
+      판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos). 핵심 발견: 카논의 "Hades가 Dante에
+      그레이징"을 e=0.30 직역하면 100yr 내 이젝션 → 조석가열은 궤도교차 아닌 유지된 e(Io 강제e=0.0041) →
+      e=0.05 + 작은 moonlet로 교정. 5위성 body def(mass_kg·radius_km·a_km·e·inc_deg·parent)는 아래 moons: 리스트,
+      스캔 상세는 stability_scans:, provenance는 designations/rejected/decided/deferred 블록 참조.
     gate:
       criterion: [stability, hill-stability, resonance]
       verdict: pass-in-window
       evidence: >
-        IAS15 1000yr (α Cen A·B 두 별 포함 N-body, 외곽 2위성 역행 반영): CHAOTIC_BUT_HILL_STABLE
-        — 5위성 전부 Hill-bound·calm, 이젝션 0, Hades e 0.032–0.052 유지, Pandora 0.02 R_Hill.
-        바너드/TRAPPIST-1과 같은 등급(갇힘, 게임 안전). results/_moons_alpha_centauri.
+        IAS15 1000yr (α Cen A·B 두 별 포함 N-body, 외곽 2위성 역행 반영): CHAOTIC_BUT_HILL_STABLE — 5위성 전부
+        Hill-bound·calm, 이젝션 0, Hades e 0.032–0.052 유지, Pandora 0.02 R_Hill. 바너드/TRAPPIST-1과 같은 등급
+        (갇힘, 게임 안전). results/_moons_alpha_centauri. 최종 로스터·J2 재검증은 stability_scans.final_2026_06_21 /
+        stability_scans.j2_confirm 참조.
+    stability_scans:               # 안정성 시뮬 상세 기록 (verbatim, provenance)
       resonance_scan: >
-        Hades 반장축 125k→172.5k 스캔(results/_moons_resonance_scan.md): 안전대는 저반장축
-        빈틈(127.5k–135k). 강공명은 역효과 — 2:1(Dante)=157.5k는 Pandora 5:3과 중첩돼
-        이젝션, 140k–170k 전체가 카오스→이젝션(질량 큰 Pandora가 강공명 교란).
+        Hades 반장축 125k→172.5k 스캔(results/_moons_resonance_scan.md): 안전대는 저반장축 빈틈(127.5k–135k).
+        강공명은 역효과 — 2:1(Dante)=157.5k는 Pandora 5:3과 중첩돼 이젝션, 140k–170k 전체가 카오스→이젝션(질량 큰
+        Pandora가 강공명 교란).
       resonance_lock: >
-        공명각 libration 연구(results/_moons_resonance_lock.md, 300yr·1500샘플): 내측 쌍에
-        공명 락 **불가**(소거법 확정). 3:2는 정확값(131k)에 놔도 공명각 순환(coverage 358°, 캡처
-        실패) — Pandora secular 교란이 약공명을 씻음. 2:1(167k)은 Pandora 5:3·3:2 사이서 이젝션.
-        e_max가 128~135k 전 구간 ~0.056 동일 = 공명 펌핑 전무. 따라서 135k 빈틈은 취향이 아니라
-        유일한 안정 안. 함의: Hades e가 공명 유지 안 됨 → 현실 조석이면 가열 감쇠. canon ">900K"는
-        고정-Pandora계에서 비자기일관(라플라스 해법은 관측우선이 차단). e=0.056은 "주어진 값"으로
-        채택하는 documented limitation.
+        공명각 libration 연구(results/_moons_resonance_lock.md, 300yr·1500샘플): 내측 쌍에 공명 락 불가(소거법 확정).
+        3:2는 정확값(131k)에 놔도 공명각 순환(coverage 358°, 캡처 실패) — Pandora secular 교란이 약공명을 씻음.
+        2:1(167k)은 Pandora 5:3·3:2 사이서 이젝션. e_max가 128~135k 전 구간 ~0.056 동일 = 공명 펌핑 전무. 따라서
+        135k 빈틈은 취향이 아니라 유일한 안정 안. 함의: Hades e가 공명 유지 안 됨 → 현실 조석이면 가열 감쇠. canon
+        ">900K"는 고정-Pandora계에서 비자기일관(라플라스 해법은 관측우선이 차단). e=0.056은 "주어진 값"으로 채택하는
+        documented limitation.
       phase_scan_update: >
-        위상 스캔(results/_moons_phase_scan.md)이 위 "락 불가"를 뒤집음 — 단일시드(M0=0)
-        artifact였음. Hades 초기 평균근점이각 M0≈180°(Dante 반대편)에서 3:2가 **실제 libration**
-        (coverage 258°), 스캔 중 최저 MEGNO 8.1, **Hades e ~0.122로 ~2배 펌핑** = 조석가열을
-        물리적으로 지지 + Pandora 불변(관측우선 유지). 단 넓은진폭(~130°)·약카오스·300yr이라
-        장기(1000yr+) 확인 필요. 현 게이트값(135k gap, e동결)은 확인 전까지 유지; 3:2-락(131k,
-        epoch M0≈180°)이 이를 대체할 선두 후보.
+        위상 스캔(results/_moons_phase_scan.md)이 위 "락 불가"를 뒤집음 — 단일시드(M0=0) artifact였음. Hades 초기
+        평균근점이각 M0≈180°(Dante 반대편)에서 3:2가 실제 libration(coverage 258°), 스캔 중 최저 MEGNO 8.1, Hades
+        e ~0.122로 ~2배 펌핑 = 조석가열을 물리적으로 지지 + Pandora 불변(관측우선 유지). 단 넓은진폭(~130°)·약카오스·
+        300yr이라 장기(1000yr+) 확인 필요. 현 게이트값(135k gap, e동결)은 확인 전까지 유지; 3:2-락(131k, epoch
+        M0≈180°)이 이를 대체할 선두 후보.
       lock_confirm_1000yr: >
-        [점질량 한정, J2로 철회됨 — j2_confirm 참조] 점질량 1000yr(results/_moons_3to2lock)에선
-        통과였음 — Hades 131k/M0=180° libration 지속(coverage 261°), Hades e 0.086–0.124로 공명
-        유지. 당시 135k gap을 대체할 게이트 후보로 권장했으나, **J2 적용 후 락이 이탈해 권고 철회**.
+        [점질량 한정, J2로 철회됨 — j2_confirm 참조] 점질량 1000yr(results/_moons_3to2lock)에선 통과였음 — Hades
+        131k/M0=180° libration 지속(coverage 261°), Hades e 0.086–0.124로 공명 유지. 당시 135k gap을 대체할 게이트
+        후보로 권장했으나, J2 적용 후 락이 이탈해 권고 철회.
       j2_confirm: >
-        **[2026-06-20 J2 재검증 — 결정적] results/_moons_j2/.** Principia가 천체간에 적용하는
-        폴리페무스 J2(=0.023)를 위성 시뮬에 주입(자체구현 scripts/j2.py, 해석 세차율과 <0.1% 검증).
-        결과가 점질량 권고를 **뒤집음**:
-        • **135k 갭 = J2에도 STABLE** (TRACE 1000yr, 5위성 bound·calm, Hades e 0.02–0.05).
-        • **3:2-락(131k/M0=180°) = J2로 UNSTABLE** — Hades t≈510yr 이탈. J2의 근점/승교점 세차가
-          가장자리(~130° 폭) libration을 detune→순환→e 펌핑→이탈. 락이 주던 자기일관 조석가열
-          근거가 사라짐 → Hades e≈0.05는 다시 "주어진 값"(documented limitation)으로 복귀.
-        • **결정: 135k 갭 유지, 3:2-락 채택 철회.**
-        **충실도(Principia 프록시 = leapfrog 고정 10분, 절대좌표):** 갭은 leapfrog서도 STABLE
-        (|dE/E|1.5e-10) — 정밀(TRACE)·Principia급 일치 → 채택 레이아웃은 게임서도 견고. 락은
-        적분기 민감(leapfrog는 유지, TRACE는 이탈 — 저차수가 섬세한 공명이탈을 놓침; Principia 12차는
-        TRACE에 가까움) → 칼날 설정 회피 근거 추가. WHFast는 Jacobi라 위성-행성-별 계층 표현 불가라
-        프록시 부적격(위성 런이 늘 IAS15/TRACE였던 이유).
+        [2026-06-20 J2 재검증 — 결정적] results/_moons_j2/. Principia가 천체간에 적용하는 폴리페무스 J2(=0.023)를
+        위성 시뮬에 주입(자체구현 scripts/j2.py, 해석 세차율과 <0.1% 검증). 결과가 점질량 권고를 뒤집음:
+        • 135k 갭 = J2에도 STABLE (TRACE 1000yr, 5위성 bound·calm, Hades e 0.02–0.05).
+        • 3:2-락(131k/M0=180°) = J2로 UNSTABLE — Hades t≈510yr 이탈. J2의 근점/승교점 세차가 가장자리(~130° 폭)
+          libration을 detune→순환→e 펌핑→이탈. 락이 주던 자기일관 조석가열 근거가 사라짐 → Hades e≈0.05는 다시
+          "주어진 값"(documented limitation)으로 복귀.
+        • 결정: 135k 갭 유지, 3:2-락 채택 철회.
+        충실도(Principia 프록시 = leapfrog 고정 10분, 절대좌표): 갭은 leapfrog서도 STABLE (|dE/E|1.5e-10) — 정밀
+        (TRACE)·Principia급 일치 → 채택 레이아웃은 게임서도 견고. 락은 적분기 민감(leapfrog는 유지, TRACE는 이탈 —
+        저차수가 섬세한 공명이탈을 놓침; Principia 12차는 TRACE에 가까움) → 칼날 설정 회피 근거 추가. WHFast는
+        Jacobi라 위성-행성-별 계층 표현 불가라 프록시 부적격(위성 런이 늘 IAS15/TRACE였던 이유).
       inclination_scan: >
-        [4a 큰경사 의향 검증] results/_moons_inclination_scan.md. **점질량**: s≈30°까지 bound,
-        s=40° 이젝션(코자이 ~39°, 최대경사 Hades). **J2 적용(TRACE 300yr)**: J2가 안쪽 위성을
-        적도면에 앵커링해 코자이 펌핑 억제 → **s=40°까지 bound**(한계가 안쪽 Hades→외측 역행
-        Chaos로 이동, e_max 0.88 @s40). 시각분산 스윗스팟 J2서 s≈25–30°까지 가능.
+        [4a 큰경사 의향 검증] results/_moons_inclination_scan.md. 점질량: s≈30°까지 bound, s=40° 이젝션(코자이 ~39°,
+        최대경사 Hades). J2 적용(TRACE 300yr): J2가 안쪽 위성을 적도면에 앵커링해 코자이 펌핑 억제 → s=40°까지 bound
+        (한계가 안쪽 Hades→외측 역행 Chaos로 이동, e_max 0.88 @s40). 시각분산 스윗스팟 J2서 s≈25–30°까지 가능.
       spread_adopted: >
-        **[2026-06-21 SUPERSEDED → final_2026_06_21 참조]**
-        **[2026-06-20 채택] s=25° 분산 확정** (results/_moons_j2/spread25). 1000yr TRACE+J2:
-        STABLE, |dE/E| 8.2e-9, 5위성 전부 bound·calm, **전 위성 근일점 > 폴리페무스 표면**
-        (Dante q 96.8k > 71.5k, 나머지 여유). 채택 경사: Dante 12.5°/Hades 25°/Pandora 0°(적도
-        고정)/Cassandra 162.5°/Chaos 150°(역행 보존). 내측 e는 분산 줘도 낮음(Dante 0.03·Hades
-        0.05, J2 적도앵커 덕). moons 표 inc_deg + hypotheticals/alpha_centauri.json 반영 완료.
+        [2026-06-21 SUPERSEDED → final_2026_06_21 참조]
+        [2026-06-20 채택] s=25° 분산 확정 (results/_moons_j2/spread25). 1000yr TRACE+J2: STABLE, |dE/E| 8.2e-9,
+        5위성 전부 bound·calm, 전 위성 근일점 > 폴리페무스 표면(Dante q 96.8k > 71.5k, 나머지 여유). 채택 경사:
+        Dante 12.5°/Hades 25°/Pandora 0°(적도 고정)/Cassandra 162.5°/Chaos 150°(역행 보존). 내측 e는 분산 줘도 낮음
+        (Dante 0.03·Hades 0.05, J2 적도앵커 덕). moons 표 inc_deg + hypotheticals/alpha_centauri.json 반영 완료.
       final_2026_06_21: >
-        **[2026-06-21 최종 확정] results/_final32b — 1000yr TRACE+J2(0.023) STABLE.**
-        s=25 분산을 폐기하고 다음 로스터로 확정.
-        • **Pandora 32h일 채택**(canon 27h 대신) — 27h는 표면 해양에 marginal했고, 더 넓은
-        32h 궤도가 e-조석을 낮춰 조석가열 예산을 sub-runaway로 유지해 해양이 안전해짐. a=252,393km.
-        폴리페무스는 하늘서 여전히 ~32° 차지(아이코닉 비주얼 유지).
-        • **내측 순행 경사 ~10°**(Dante 9°/Hades 11°/Pandora 10°, 폴리페무스 궤도면 기준) —
-        노드를 부모 궤도면에 자동 정렬(공통 승교점선 = 무작위 산란이 아니라 정연한 warp).
-        • **외측 역행 거의 동일평면**(Cassandra 178°/Chaos 177°, 180에서 ±3° 안쪽, canon 역행 보존).
-        • **Dante 100k→110k, Hades 135k→148k**(둘 다 바깥으로 밀어 Dante–Hades 갭 복원, 주기비
-        1.56 ≈ 직전 1.57). 중간 시도(Dante 110k인데 Hades 135k 유지)는 갭 부족으로 Hades 이탈 →
-        Hades 148k 채택 근거. 위상분산용 평균근점이각(Dante 35/Hades 140/Pandora 250/Cassandra
-        300/Chaos 60°).
-        • **로슈 정정**: 옛 문서의 유체 로슈 "~94,000km"(ρ=3 가정)는 틀림. Dante 실제 밀도
-        ~2620 kg/m³ → 유체 로슈 ~98,900km, 강체 로슈 ~48,500km. 900km 고체 암석체는 강체 한계
-        지배라 Dante(110k, 직전 100k도)는 늘 안전(강체 한계의 2배+ 밖). 폴리페무스 저평균밀도
-        (~468 kg/m³, 1 R_Jup에 120 M⊕)가 로슈를 행성 가까이 끌어 내측 위성이 ~1.4–2 R_p를
-        스쳐도 물리적(cf. 목성 Metis/Adrastea ~1.8 R_Jup).
-        • **검증**: 후보 A(Dante 100k/Hades 135k, results/_final32a)·후보 B(Dante 110k/Hades
-        148k, results/_final32b) 둘 다 1000yr J2 통과, B 채택. 5위성 전부 Hill-bound·calm,
-        이젝션 0, Pandora e≤0.0072(해양 안전).
+        [2026-06-21 최종 확정] results/_final32b — 1000yr TRACE+J2(0.023) STABLE. s=25 분산을 폐기하고 다음 로스터로
+        확정.
+        • Pandora 32h일 채택(canon 27h 대신) — 27h는 표면 해양에 marginal했고, 더 넓은 32h 궤도가 e-조석을 낮춰
+        조석가열 예산을 sub-runaway로 유지해 해양이 안전해짐. a=252,393km. 폴리페무스는 하늘서 여전히 ~32° 차지
+        (아이코닉 비주얼 유지).
+        • 내측 순행 경사 ~10°(Dante 9°/Hades 11°/Pandora 10°, 폴리페무스 궤도면 기준) — 노드를 부모 궤도면에 자동
+        정렬(공통 승교점선 = 무작위 산란이 아니라 정연한 warp).
+        • 외측 역행 거의 동일평면(Cassandra 178°/Chaos 177°, 180에서 ±3° 안쪽, canon 역행 보존).
+        • Dante 100k→110k, Hades 135k→148k(둘 다 바깥으로 밀어 Dante–Hades 갭 복원, 주기비 1.56 ≈ 직전 1.57).
+        중간 시도(Dante 110k인데 Hades 135k 유지)는 갭 부족으로 Hades 이탈 → Hades 148k 채택 근거. 위상분산용
+        평균근점이각(Dante 35/Hades 140/Pandora 250/Cassandra 300/Chaos 60°).
+        • 로슈 정정: 옛 문서의 유체 로슈 "~94,000km"(ρ=3 가정)는 틀림. Dante 실제 밀도 ~2620 kg/m³ → 유체 로슈
+        ~98,900km, 강체 로슈 ~48,500km. 900km 고체 암석체는 강체 한계 지배라 Dante(110k, 직전 100k도)는 늘 안전
+        (강체 한계의 2배+ 밖). 폴리페무스 저평균밀도(~468 kg/m³, 1 R_Jup에 120 M⊕)가 로슈를 행성 가까이 끌어 내측
+        위성이 ~1.4–2 R_p를 스쳐도 물리적(cf. 목성 Metis/Adrastea ~1.8 R_Jup).
+        • 검증: 후보 A(Dante 100k/Hades 135k, results/_final32a)·후보 B(Dante 110k/Hades 148k, results/_final32b)
+        둘 다 1000yr J2 통과, B 채택. 5위성 전부 Hill-bound·calm, 이젝션 0, Pandora e≤0.0072(해양 안전).
       cotilt_scan: >
-        [동시틸트, J2] results/_moons_cotilt_scan.md (TRACE 300yr): 락이 J2로 죽은 뒤라 동시틸트의
-        "락+분산" 목적은 성립 안 함. θ=0°(완전 동일평면)은 이탈, θ=10–30°는 bound지만 φ 전부 순환
-        (락 없음), 차등 승교점 세차로 Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
+        [동시틸트, J2] results/_moons_cotilt_scan.md (TRACE 300yr): 락이 J2로 죽은 뒤라 동시틸트의 "락+분산" 목적은
+        성립 안 함. θ=0°(완전 동일평면)은 이탈, θ=10–30°는 bound지만 φ 전부 순환(락 없음), 차등 승교점 세차로
+        Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
     moons:                         # a/e/inc는 게이트 통과한 설계값(final_2026_06_21: 내측 ~10°·노드 공통정렬, 외측 역행 178/177); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
-      - { name: Dante,     order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
-      - { name: Hades,     order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
-      - { name: Pandora,   order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출. 폴리페무스 하늘서 ~32°. 노드 공통 정렬." }
-      - { name: Cassandra, order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
-      - { name: Chaos,     order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
+      - { name: Dante,     parent: "Alpha Centauri A b", order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
+      - { name: Hades,     parent: "Alpha Centauri A b", order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
+      - { name: Pandora,   parent: "Alpha Centauri A b", order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출. 폴리페무스 하늘서 ~32°. 노드 공통 정렬." }
+      - { name: Cassandra, parent: "Alpha Centauri A b", order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
+      - { name: Chaos,     parent: "Alpha Centauri A b", order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
     designations:                  # 공식 표기 = 행성에 로마자 숫자(거리순). Avatar 이름은 문화명(인게임 설명에만).
       convention: "위성은 행성명 + 대문자 로마숫자(거리순). 인게임 바디명=표기, Avatar 문화명은 설명 텍스트에만(cfg-emit 단계로 연기)."
       map:
@@ -1077,35 +1610,33 @@ decisions:
         - { designation: "Alpha Centauri A b V",   cultural: Chaos }
     rejected:
       - >
-        라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동
-        펌핑해 자기일관시키는 매력적 안이나, Pandora를 252k로 옮기려면 폴리페무스 질량을 관측
-        120 M⊕ → 168 M⊕로 부풀려야 함(영화 위성배치에 관측 행성을 맞추는 격). 관측 우선 원칙으로
-        기각(2026-06-19). 따라서 Pandora a는 관측질량+조석고정일로 사실상 고정, 빈틈 배치 유지
-        (a는 이후 32h일 채택으로 252,393k 확정 — final_2026_06_21 참조).
+        라플라스 1:2:4 공명 사슬 (Dante 100k : Hades 158.7k : Pandora 252k) — 조석가열을 능동 펌핑해 자기일관시키는
+        매력적 안이나, Pandora를 252k로 옮기려면 폴리페무스 질량을 관측 120 M⊕ → 168 M⊕로 부풀려야 함(영화 위성배치에
+        관측 행성을 맞추는 격). 관측 우선 원칙으로 기각(2026-06-19). 따라서 Pandora a는 관측질량+조석고정일로 사실상
+        고정, 빈틈 배치 유지(a는 이후 32h일 채택으로 252,393k 확정 — final_2026_06_21 참조).
     decided:
       - "무명 9위성: 추가 안 함(사용자 2026-06-19). 명명 5위성만 — 어차피 전부 창작이므로."
       - "최외곽 2위성 역행(canon). 반영(Cassandra·Chaos inc 178/177, final_2026_06_21). 1000yr STABLE 확인."
       - >
-        [2026-06-20] J2 충실도 해소 — 폴리페무스 J2(0.023)를 위성 시뮬에 주입(자체구현 j2.py).
-        135k 갭 = J2에도 안정(TRACE+leapfrog 일치), 3:2-락 = J2로 이탈해 철회. j2_confirm 참조.
+        [2026-06-20] J2 충실도 해소 — 폴리페무스 J2(0.023)를 위성 시뮬에 주입(자체구현 j2.py). 135k 갭 = J2에도
+        안정(TRACE+leapfrog 일치), 3:2-락 = J2로 이탈해 철회. j2_confirm 참조.
       - >
-        [2026-06-20] 큰경사 의향(4a) 검증 — J2가 코자이를 억제해 경사 한계 상승(s=40°까지 bound).
-        시각분산 s≈25–30°까지 가능, 한계는 외측 Chaos. inclination_scan 참조.
+        [2026-06-20] 큰경사 의향(4a) 검증 — J2가 코자이를 억제해 경사 한계 상승(s=40°까지 bound). 시각분산 s≈25–30°까지
+        가능, 한계는 외측 Chaos. inclination_scan 참조.
       - >
-        [2026-06-20] 경사 분산 **s=25° 채택 확정** (사용자 결정 "경사 분산 실제로 주면 좋겠어").
-        1000yr J2 + 근일점-충돌 체크 통과. moons 표·게이트 설정에 반영. spread_adopted 참조.
+        [2026-06-20] 경사 분산 s=25° 채택 확정 (사용자 결정 "경사 분산 실제로 주면 좋겠어"). 1000yr J2 + 근일점-충돌
+        체크 통과. moons 표·게이트 설정에 반영. spread_adopted 참조.
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
       - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Dante 용암 반점/Hades 회색 원반). 표면뷰 아트디렉션 입력."
       - >
-        [폴리페무스 j2+reference_radius emit cfg 설정] emit 단계에서 (J2≈0.023, reference_radius
-        1.0 R_Jup; bulk.geopotential_j2 참조).
+        [폴리페무스 j2+reference_radius emit cfg 설정] emit 단계에서 (J2≈0.023, reference_radius 1.0 R_Jup;
+        bulk.geopotential_j2 참조).
       - >
-        [별건 실험 — 역행 Cassandra:Pandora 공명] 내측 공명은 J2가 전부 죽였으나(resonance_j2),
-        J2는 (R_p/a)²라 Cassandra(600k)서 ~20배 약함 → 외측 역행 공명은 J2 무관. 역행 MMR은
-        순행보다 넓게 안정(Morais&Namouni 2013)이고, Pandora overlap도 역행이면 피할 여지. 목적=
-        조석가열 구제 아님(외측이라 조석~0) → "거주 모천체+외곽 역행위성 한 리듬" 새 feature 탐색.
-        설계: Cassandra a를 Pandora와 역행 2:1/3:1/4:1 위치로 쓸며 libration+안정 확인. 미실행.
+        [별건 실험 — 역행 Cassandra:Pandora 공명] 내측 공명은 J2가 전부 죽였으나(resonance_j2), J2는 (R_p/a)²라
+        Cassandra(600k)서 ~20배 약함 → 외측 역행 공명은 J2 무관. 역행 MMR은 순행보다 넓게 안정(Morais&Namouni 2013)
+        이고, Pandora overlap도 역행이면 피할 여지. 목적= 조석가열 구제 아님(외측이라 조석~0) → "거주 모천체+외곽 역행위성
+        한 리듬" 새 feature 탐색. 설계: Cassandra a를 Pandora와 역행 2:1/3:1/4:1 위치로 쓸며 libration+안정 확인. 미실행.
 
   # ── 그 외 (atmosphere.composition/pressure/temperature, bulk.mass, appearance.clouds/surface) ──
   #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.
