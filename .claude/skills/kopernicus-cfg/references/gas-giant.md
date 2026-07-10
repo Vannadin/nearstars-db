@@ -60,6 +60,8 @@ Reference: `RSS-Reborn/Sol-Configs` → `Sol-Configs/Configs/05_Jupiter-System/0
             emissivity = 0.657
 
             biomeMap = NearStars-Textures/PluginData/<BodyName>/Kopernicus/Jupiter_Biomes.dds
+            // color may be any RGB (e.g. `color = #C9A26B`) as long as it exactly matches the
+            // biomeMap pixel; the R-channel-only RGBA(n,255,255,255) below is just one convention.
             Biomes
             {
                 Biome { name = Equatorial Bands;    value = 1; color = RGBA(0,255,255,255)   }

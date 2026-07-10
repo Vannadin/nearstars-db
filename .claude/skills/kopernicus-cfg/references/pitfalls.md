@@ -10,7 +10,7 @@
 | Star light wrong color | `sunlightColor` vs `scaledSunlightColor` mismatch | Set both; `sunlightColor` = localspace, `scaledSunlightColor` = map view |
 | Atmosphere visible but sky wrong color | Scatterer config missing | Create `[Body]-Scatterer.cfg` with `Scatterer_atmosphere` node |
 | Parallax terrain invisible | `Parallax {}` mod missing from `PQS.Mods` | Add `Parallax { subdivisionLevel = 8 … }` to `PQS.Mods` |
-| Biome map not working | Wrong color values — biomes use only the R channel (cyan spectrum) | Colors must be `RGBA(n,255,255,255)` where n varies per biome |
+| Biome map not working | `Biome{ color }` doesn't exactly match a pixel in the biome-map PNG (antialiasing / lossy compression shifts the pixel color) | Use a lossless PNG with flat, hard-edged color regions; each `Biome{ color }` must equal its map pixel exactly. **Any full RGB is supported** — write `color = #RRGGBB` or `color = RGBA(r,g,b,255)`, and real packs use naturalistic colors (Promised Worlds `#7A6D68`/`#93B9F9`; Cosmic Serenity `#195155`; stock Kerbin biomes). The `RGBA(n,255,255,255)` R-channel-only form is **one optional map-authoring convention (some RSS maps), not a requirement** |
 | Orbit icon missing | `iconTexture` path wrong or file missing | Verify `.png` exists at the exact path; Kopernicus is case-sensitive on Linux |
 | Body loads but has no terrain | `Template.removeAllPQSMods = True` without a replacement `PQS {}` block | Add a `PQS {}` block or set `removeAllPQSMods = False` |
 | `NEEDS[]` patch silently skipped | Mod name in `NEEDS[]` doesn't match MM's registered name | Check the mod's own `FOR[X]` pass name; it must match exactly |
