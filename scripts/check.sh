@@ -66,6 +66,10 @@ echo "── 7. 빌드 산출물 신선도 + 매니페스트 커버리지 ──
 python3 scripts/check_build_freshness.py || fail=1
 
 echo ""
+echo "── 8. Phase 4 emit-게이트 (v2 strict / legacy soft) ──"
+python3 scripts/check_phase4_gate.py || fail=1
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else

@@ -87,6 +87,8 @@ progress board for that system:
 - `art-directed` — a 4a target is stated; the 4b gate has not run.
 - `gated` — 4b passed; value + verdict frozen.
 - `emitted` — a cfg writer has consumed it.
+- `superseded` — the decision was replaced by a later one (kept for provenance; carries no
+  live gate and is never emitted). The row that supersedes it is the live one.
 
 "What is left in Phase 4" = the `open` + `art-directed` rows (`grep status:`).
 
@@ -180,6 +182,66 @@ decisions:
   `phase3/stability-sim/STABILITY_REPORT.md`; the **conclusion** is the row here. (The
   former cross-system `orbit-optimizations.md` running log is retired into these rows.)
 
+### 3.1 Schema v2 — typed `fields` + `narrative` (the emit-parseable form)
+
+The v1 shape above assumes **one row = one `group.name` field**. In practice a curated
+decision bundles many quantities and a paragraph of reasoning (a `bulk` decision fixes
+mass *and* radius *and* J2, with prose). Exploding those into dozens of atomic rows loses
+the reasoning and bloats the board. **Schema v2** keeps **one row per (body, axis group)**
+but makes it machine-readable: a typed `fields:` list (one entry per emit field) plus the
+human `narrative:`. A file opts in with a top-level `schema_version: 2`; without it the
+file is legacy v1 (soft-checked, not emit-ready).
+
+```yaml
+schema_version: 2
+system: alpha_centauri
+status: staged
+decisions:
+  - body: "Alpha Centauri A b"      # exact display name
+    kopernicus_name: Polyphemus     # optional — the cfg-internal name emitters/RB need
+    axis: bulk                      # a §0 group (or group.name for a single-field decision)
+    status: gated                   # passthrough|open|art-directed|gated|emitted|superseded
+    driver: [window-selection, art-direction]   # taxonomy class(es), §1
+    narrative: >                    # human prose — reasoning, context (KR ok)
+      1.0 R_Jup 저신뢰 반경, J2는 자전+조석 figure에서 도출 …
+    fields:                         # one typed entry per emit field — the machine layer
+      - name: radius                # → bulk.radius
+        value: 1.0
+        unit: R_jup
+        op: set                     # set | scale | passthrough
+        phase3_default: "1.0 R_Jup (low)"
+      - name: geopotential_j2       # → bulk.geopotential_j2 (Principia j2 + reference_radius)
+        value: 0.023
+        reference_radius_km: 71492
+        op: set
+        verdict: pass-in-window     # optional per-field; else inherits gate.verdict below
+        divergence_note: null       # required iff THIS field's verdict == documented-divergence
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window       # row-level default verdict
+      evidence: >
+        …reproducible pointer / error bar / window…
+      divergence_note: null         # required iff row verdict == documented-divergence
+    refs: ["2508.03814"]            # bibcodes / arXiv ids as a machine-readable list
+    discoverability_cfg:            # promoted structured block (identity axis)
+      category: naked_eye
+      ignorelevels: "T T T T"
+      message: null                 # ONDISCOVERY text (required for candidate/disputed)
+      ref: "2018AJ....155..117M"    # detection bibcode (not prose)
+```
+
+**Rules v2 adds over v1:**
+- `axis` is a §0 **group** (with a `fields:` list) *or* a `group.name` (with a single
+  top-level `value`). The group must be in the §0 menu; each `fields[].name` should be a
+  §0 axis name.
+- Every emit number lives in a typed field (`value` + `unit`/`op`), never only in prose.
+- The gate block uses the schema keys **`evidence`** and **`divergence_note`** — not
+  `note`/`paper`/`rationale`. Source citations go in `refs` (machine-readable), not prose.
+- `verdict: partial` is **illegal** — split into a `pass-in-window` field and a
+  `documented-divergence` field (each with its own note).
+- `divergence_note` is required (non-null) wherever a verdict is `documented-divergence`,
+  at whichever level the divergence is declared (row or field). This is the check.sh guard.
+
 ---
 
 ## 4. cfg connection
@@ -195,10 +257,11 @@ phase4/<system>.yaml     (Phase 4 gated overrides + fiction bodies)         ─�
 - The transient stability-sim flags (`run.py --set/--scale`, `--mass-incl-deg`) are
   **experiments**, not the source of truth — the chosen value is persisted into
   `phase4/<system>.yaml`, which the writers read.
-- **check.sh gate (to add):** every `axis` a writer emits from Phase 4 must be
-  `gated`/`emitted` with `verdict ∈ {pass-in-window, documented-divergence}`, and a
-  `documented-divergence` must have a non-null `divergence_note`. Fails the build
-  otherwise — the anti-silent-departure guard.
+- **check.sh gate (implemented):** `scripts/check_phase4_gate.py` (check.sh gate 8)
+  enforces, on every `schema_version: 2` board, that a `gated`/`emitted` row has
+  `verdict ∈ {pass-in-window, documented-divergence}` and that any `documented-divergence`
+  carries a non-null `divergence_note`. Legacy (v1) boards are soft-warned, not failed, so
+  migration can proceed file-by-file. This is the anti-silent-departure guard.
 
 ---
 
