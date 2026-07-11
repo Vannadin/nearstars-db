@@ -101,6 +101,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
 .swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
+.moonwrap { overflow-x:auto; margin:8px 0 2px }
+.spec.moons td.v { white-space:nowrap }
+.spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
+.spec.moons tr.mnote + tr td { border-top:none }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -145,6 +149,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">body_type=거주가능 지구형 위성(sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km). NearStars 유일 거주가능 바디. Na&#x27;vi 모천. designation=Alpha Centauri A b III · cultural=Pandora(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음). 유일 거주가능체(특별 취급).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">거주가능 지구형 위성 (sub-Earth, 0.645 M⊕, 0.8 g, 반경 5724 km)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Alpha Centauri A b III</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Pandora</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">fictional</td><td class="o"></td></tr></tbody></table>
+  
   <div class="disc"><span class="tag">discoverability</span> <code>fictional</code> · IGNORELEVELS <code>F F F F</code></div><div class="ev"><span class="tag">evidence</span> 유일 거주가능체(특별 취급). discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical.</div>
   
 </article>
@@ -155,6 +160,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">반경 5724 km(canon 지름 11,447). 질량=옵션 B: 중력 0.8g(canon 체감값) 고정 → mass 0.645 M⊕(3.85e24 kg), 밀도 ~0.89 ρ⊕(~4900 kg/m³, 도출, 화성↔지구 사이로 현실적). rotation=폴리페무스 조석고정 32h(canon 27h 대신 채택). obliquity=효과적 ~10°(궤도경사서 옴). internal_heat=방사성 + 약한 조석(e강제 ~0.005) → 화산·빠른 대륙이동 + dynamo 동시 구동. 조석 C̄₂₂≈6.2e-4 (φ=0.95, 0.645 M⊕ 재계산), 시각상 거의 구(편평 0.83%) 단 궤도엔 실재 (body-figure-methodology.md). age=5.3 Gyr 상속. spin_axis=궤도 법선. ✅ mass B(3.85e24) 재시뮬 STABLE 검증 완료(results/_pandora_massB, 1000yr TRACE+J2(0.023), |ΔE/E| 7.6e-9, 5위성 bound·calm·이젝션0, Pandora e≤0.0075 해양안전). 예상대로 가벼운 교란체라 안정 유지.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radius</td><td class="v">5724 <span class="u">km</span><div class="fnote">canon 지름 11,447</div></td><td class="o"></td></tr><tr><td class="k">mass</td><td class="v">3.85e24 <span class="u">kg</span><div class="fnote p3">Phase 3: 옵션 B: 0.8g 고정 → 0.645 M⊕</div></td><td class="o"></td></tr><tr><td class="k">gravity</td><td class="v">0.8 <span class="u">g</span><div class="fnote">canon 체감값</div></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">32 <span class="u">h</span><div class="fnote">조석고정 (canon 27h 대신)</div></td><td class="o"></td></tr><tr><td class="k">obliquity</td><td class="v">10 <span class="u">deg</span><div class="fnote">궤도경사서 옴</div></td><td class="o"></td></tr><tr><td class="k">internal_heat</td><td class="v">방사성 + 약한 조석 (e강제 ~0.005) → 화산·대륙이동·dynamo 구동</td><td class="o"></td></tr><tr><td class="k">geopotential_j2</td><td class="v">0.00206 <span class="u">· R_ref 5724 km</span><div class="fnote">= 10/3·C̄₂₂, φ0.95 — 0.645 M⊕(3.85e24 kg) 재계산 (구 5.5e-4계는 기각된 0.72 M⊕ 기반)</div></td><td class="o"></td></tr><tr><td class="k">geopotential_c22</td><td class="v">0.00062<div class="fnote">조석 삼축; 편평 0.83%(a−c≈47 km), 시각상 구 — 궤도 섭동에만 실재</div></td><td class="o"></td></tr><tr><td class="k">age</td><td class="v">5.3 <span class="u">Gyr</span></td><td class="o"></td></tr><tr><td class="k">spin_axis_orientation</td><td class="v">orbit normal</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> ✅ mass B(3.85e24) 재시뮬 STABLE 검증 완료 (results/_pandora_massB, 1000yr TRACE+J2(0.023), |ΔE/E| 7.6e-9, 5위성 bound·calm·이젝션0, Pandora e≤0.0075 해양안전). 예상대로 가벼운 교란체라 안정 유지.<br></div><div class="ev div"><span class="tag">divergence</span> canon 4값(0.72 M⊕·0.8g·5724km·1.2 ρ⊕)이 상호 불일치 → 반경+중력(B)을 채택하고 질량·밀도는 도출. canon 1.2 ρ⊕(=6617 kg/m³)는 super-Mercury급 철 함량이 필요해 거주가능체에 비현실 + canon 자기 질량+반경 (→0.99 ρ⊕)과도 모순이라 비채택. obliquity도 canon 29°→~10° 발산(궤도경사 10° 유지, 안정성 우선; 단 조석고정이라 &quot;자전축 29°&quot;는 본래 궤도면 황도경사를 뜻함 — 자유 obliquity 아님). 부유산(Hallelujah)은 art/lore(언옵타늄 초전도)라 물리 bulk 속성 아님.</div>
   
 </article>
@@ -165,6 +171,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">composition=N₂ 주성분 + O₂ + CO₂ &gt;18% + Xe 5.5% + CH₄ + H₂S &gt;1% (canon). pressure ~1.1 atm 지표(canon ~20% 빽빽). temperature: Teq ~225K(폴리페무스계 입사) → 고농도 CO₂ 온실 +70K → 지표 ~290K, great-season ±~15–25K. greenhouse=강함(CO₂&gt;18%+CH₄+H₂S 구동) = 거주가능 온도 lift(조석·항성 아님). scale_height=도출(무거운 CO₂+0.8g). escape=안정(지구형 0.8g). breathability=O₂ 존재 but lore-독성(인간 엑소팩). canon 조성·압력 충실. 온실 +70K는 고CO₂ 물리 정당(금성식 메커니즘의 온건판) — 조석/항성 아닌 온실이 lift. breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true(제트·Kerbal 호흡 무관), 인간 독성은 Kerbalism 플래그/레포트 lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성(eccentricity curve는 부모 폴리페무스 e를 읽어 great-season 반영 — delicate emit 값, facet-checklist 참조).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v">N₂ 주성분 + O₂ + CO₂ &gt;18% + Xe 5.5% + CH₄ + H₂S &gt;1% (canon)</td><td class="o"></td></tr><tr><td class="k">pressure</td><td class="v">1.1 <span class="u">atm</span><div class="fnote">canon ~20% 빽빽</div></td><td class="o"></td></tr><tr><td class="k">temperature</td><td class="v">290 <span class="u">K</span><div class="fnote">Teq ~225K + CO₂ 온실 +70K; great-season ±15–25K</div></td><td class="o"></td></tr><tr><td class="k">greenhouse</td><td class="v">강함 (CO₂&gt;18%+CH₄+H₂S 구동, +70K lift)</td><td class="o"></td></tr><tr><td class="k">scale_height</td><td class="v">도출 (무거운 CO₂+0.8g)</td><td class="o"></td></tr><tr><td class="k">escape</td><td class="v">안정 (지구형 0.8g)</td><td class="o"></td></tr><tr><td class="k">breathability</td><td class="v">True<div class="fnote">O₂ 존재 but lore-독성; stock atmosphereContainsOxygen=true</div></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> canon 조성·압력 충실. 온실 +70K는 고CO₂ 물리 정당(금성식 메커니즘의 온건판) — 조석/항성 아닌 온실이 lift. breathability: KSP 스톡은 독성 미모델 → atmosphereContainsOxygen=true, 인간 독성은 Kerbalism 플래그/레포트 lore. 고도별 T/P 커브는 emit 시 cool-giant/지구형 모델서 생성.<br></div>
   
 </article>
@@ -175,6 +182,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">surface_type=지구형, 육지:대양 ≈ 50:50(지구 30:70보다 육지 많음). 대체로 산악 — 평지 거의 없고 고지대 산맥·화산대 우세. hydrosphere=액체 물 대양/바다(~50%, 290K 안정). biosphere=무성한 우림+고생물 다양성, 청록 생물발광(appearance 행서 렌더). tectonics=활화산대 + 빠른 대륙이동(조석+방사성, dynamo와 동근). terrain=산악 +화산대+고지대 산맥, 부유산(Hallelujah)=PQS 극적 아치/오버행 오마주(실제 부양 아님, 언옵타늄은 레포트 lore). ice_caps=고봉 정상 + 극관에만(평균 290K라 제한적). albedo ~0.30(육지多·구름·일부 빙설로 지구급). surface_temp ~290K(group 4 온실). 오너 art-direction(2026-06-22): 5-1 부유산=PQS 아치 오마주 승인(KSP 지형 부양 불가). 육지:대양 ≈ 50:50(지구보다 육지↑), 산악 우세·평지 희소. 빙관=고봉+극관만. 생물발광=은은(식물 약간+해안 약간) → appearance 행.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">지구형, 육지:대양 ≈ 50:50, 산악 우세</td><td class="o"></td></tr><tr><td class="k">hydrosphere</td><td class="v">액체 물 대양/바다 (~50%, 290K 안정)</td><td class="o"></td></tr><tr><td class="k">biosphere</td><td class="v">무성한 우림 + 고생물 다양성, 청록 생물발광</td><td class="o"></td></tr><tr><td class="k">tectonics</td><td class="v">활화산대 + 빠른 대륙이동 (조석+방사성)</td><td class="o"></td></tr><tr><td class="k">terrain</td><td class="v">산악+화산대+고지대 산맥, 부유산=PQS 아치/오버행 오마주</td><td class="o"></td></tr><tr><td class="k">ice_caps</td><td class="v">고봉 정상 + 극관에만 (제한적)</td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.3</td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">290 <span class="u">K</span></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 오너 art-direction(2026-06-22): 5-1 부유산=PQS 아치 오마주 승인(KSP 지형 부양 불가). 육지:대양 ≈ 50:50 (지구보다 육지↑), 산악 우세·평지 희소. 빙관=고봉+극관만. 생물발광=은은(식물 약간+해안 약간) → appearance 행.<br></div>
   
 </article>
@@ -185,6 +193,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">강한 고유 dipole (지구급, ~수십 µT) — 조석-구동 대류 Fe 핵 dynamo. 위성 치고 이례적으로 강함. [후행 레포트 씨앗] &quot;채굴 불가능할 것 같은 물질을 채굴할 수 있을 듯한&quot; 뉘앙스 — 부유산/플럭스 볼텍스의 미설명 메커니즘을 물리 단언 없이 미스터리/이스터에그로 레포트에 흘릴 것(언옵타늄을 암시만). 고 자기장 구역 (플럭스 볼텍스 = 부유산 일대)을 Pandora 별도 바이옴으로 — 자기 이상/계기 교란 과학 + 부유산 지형. gameplay/biome facet서 정식 바이옴 목록에 포함(고자기장 region 바이옴).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">강한 고유 dipole (지구급, ~수십 µT), 조석-구동 Fe 핵 dynamo</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 캐넌 Fe 핵 + 강한 자기장. 세기는 핵 *크기*가 아니라 *대류 세기*에서 옴(에너지플럭스 dynamo) — B밀도 (0.89 ρ⊕)면 철핵은 거대(super-Mercury) 아닌 중간 크기지만, 조석열(e강제 ~0.005)+방사성이 핵을 펄펄 끓여 활발히 대류 → 지구급 장. 화산·빠른 대륙이동과 같은 열원(조석열)을 공유(인과 묶임). 위성 중 이례적(가니메데만 약한 dynamo). 언옵타늄 부스트는 grounding서 제외(현실고증) — 그냥 강한 고유 자기장. 부유산 띄울 정도는 아님(그건 canon/report 미스터리).<br></div>
   
 </article>
@@ -195,6 +204,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">고유 자기권이 표면 차폐. 캐넌대로 Polyphemus 두 벨트 *사이(gap)*에 위치 + 자체 강자기장 → 거주가능.</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetosphere</td><td class="v">고유 자기권 표면 차폐 (Polyphemus 두 벨트 사이 gap 위치)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 지구급 고유장 + between-belts(canon gap)면 표면 차폐 충분 — 초강자기장 불요. 거주가능의 물리 근거.</div>
   
 </article>
@@ -205,6 +215,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">base_colour=지구식 초록 식생 + 파란 대양 + 흰 구름 마블(육지 ~50%라 초록 비중 큼). clouds=흰 물구름, 활발한 기상. biolum(emission_glow)=은은한 청록 야간 글로우(식물발광 약간 + 해안 발광 약간). aurora=격렬·다색(O₂ 초록 + N₂ 청보라 + 적색) — 강자기장 + Polyphemus 자기권 내 + Dante Io식 황 토러스 = 목성형 강오로라 메커니즘. + 국소 오로라: 플럭스 볼텍스(고자기 이상=부유산 일대) 구역엔 극관 오로라와 별개로 그 구역 중심의 국소 오로라 오벌이 추가 발생(강한 국소 자기 이상이 입자 강하를 비극지로 모음). specular=대양 sun-glint(OceanFX). artificial/city-lights=∅(Na&#x27;vi 전산업, 야간 빛=생물발광). haze=지구식 파란 Rayleigh 림. rings=∅. 오너 (2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm, N₂⁺ 청보라 391nm + 적색 밴드) — 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante 황 플라스마 토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과 오로라(상공 다색)가 야간 공존. 오로라 sRGB는 emit 시 element/molecular_plasma_colors.yaml서 추출(O₂/N₂/CO₂). 생물발광=EVE/emissive 야간 텍스처.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_colour</td><td class="v">지구식 초록 식생 + 파란 대양 + 흰 구름 마블</td><td class="o"></td></tr><tr><td class="k">clouds</td><td class="v">흰 물구름, 활발한 기상</td><td class="o"></td></tr><tr><td class="k">emission_glow</td><td class="v">은은한 청록 야간 생물발광 (식물+해안)</td><td class="o"></td></tr><tr><td class="k">aurora</td><td class="v">격렬·다색 (O₂ 초록 557.7/630nm + N₂⁺ 청보라 391nm + 적색) + 국소 플럭스-볼텍스 오벌</td><td class="o"></td></tr><tr><td class="k">specular</td><td class="v">대양 sun-glint (OceanFX)</td><td class="o"></td></tr><tr><td class="k">haze</td><td class="v">지구식 파란 Rayleigh 림</td><td class="o"></td></tr><tr><td class="k">artificial</td><td class="v">none (Na&#x27;vi 전산업)</td><td class="o"></td></tr><tr><td class="k">rings</td><td class="v">none</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 오너(2026-06-22): 식생=지구식 초록(a), 오로라=강렬(a). 오로라 색은 조성-고정(O₂ 초록 557.7nm + 적색 630nm, N₂⁺ 청보라 391nm + 적색 밴드) — 폴리페무스 H₂ 핑크와 구분. 강도는 물리 정당: 강자기장 + Dante 황 플라스마 토러스 + 폴리페무스 자기권 내 위치 = 목성 Io-토러스 강오로라 아날로그. 생물발광(지상 청록)과 오로라(상공 다색)가 야간 공존.<br></div>
   
 </article>
@@ -215,6 +226,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">중간/거주가능 — 캐넌대로 Polyphemus 두 belt 사이 gap에 위치 + 자체 강자기장 차폐. Dante·Hades 극심과 대비, Kerbalism 선량은 살 만한 수준.</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">중간/거주가능 (between-belts gap + 강 dipole 차폐)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> between-belts gap + 강 dipole 차폐 = 거주가능의 물리 근거(magnetism 행). stellar_wind/activity/heliosphere/uv_xray/habitable_zone = 항성-레벨(A·B), Pandora 행 ∅.</div>
   
 </article>
@@ -225,6 +237,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">표면 있음 → 정식 biome map(7): 대양(Oceans) / 해안(Coastlines, 생물발광) / 우림 저지대(Rainforest Lowlands) / 고지대 산맥(Highland Mountains) / 화산대(Volcanic Belts) / 빙봉·극관(Ice Peaks &amp; Polar Caps) / 부유산·플럭스 볼텍스(Floating Mtns / Flux-Vortex) — 고자기 이상 특수 과학(자기 이상 + 부유산 구조물 + 국소 오로라). SOI=질량서 자동. difficulty: 임무=거주가능 세계 착륙(최대 보상)·발견=fictional→RB F F F F. ScienceValues 전체. NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스 볼텍스 구역엔 특유 구조물(부유산 + 자기 이상 지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만(report_flavor).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v">7: Oceans / Coastlines / Rainforest Lowlands / Highland Mountains / Volcanic Belts / Ice Peaks &amp; Polar Caps / Floating Mtns (Flux-Vortex)<div class="swatches"><span class="sw"><span class="chip" style="background:#2A5C99"></span>Oceans <span class="hx">#2A5C99</span></span><span class="sw"><span class="chip" style="background:#35B8A0"></span>Coastlines <span class="hx">#35B8A0</span></span><span class="sw"><span class="chip" style="background:#3E7A3A"></span>Rainforest Lowlands <span class="hx">#3E7A3A</span></span><span class="sw"><span class="chip" style="background:#7A6A5A"></span>Highland Mountains <span class="hx">#7A6A5A</span></span><span class="sw"><span class="chip" style="background:#9A4A38"></span>Volcanic Belts <span class="hx">#9A4A38</span></span><span class="sw"><span class="chip" style="background:#D6E4EA"></span>Ice Peaks &amp; Polar Caps <span class="hx">#D6E4EA</span></span><span class="sw"><span class="chip" style="background:#7A44C8"></span>Floating Mtns (Flux-Vortex) <span class="hx">#7A44C8</span></span></div></td><td class="o"></td></tr><tr><td class="k">sphere_of_influence_tuning</td><td class="v">auto from mass</td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">difficulty</td><td class="v">임무=거주가능 세계 착륙(최대 보상) · 발견=RB F F F F</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> NearStars 유일 거주가능체라 가장 풍부한 biome map. 플럭스 볼텍스 구역엔 특유 구조물(부유산 + 자기 이상 지형) 배치 + 극관과 별개의 국소 오로라(appearance.aurora 참조). 언옵타늄은 report 미스터리로만.<br></div>
   
 </article></div>

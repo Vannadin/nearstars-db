@@ -101,6 +101,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
 .swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
+.moonwrap { overflow-x:auto; margin:8px 0 2px }
+.spec.moons td.v { white-space:nowrap }
+.spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
+.spec.moons tr.mnote + tr td { border-top:none }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -145,6 +149,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">body_type=암석 위성(750 km, 5.0e21 kg, 밀도 ~2830 kg/m³, 규산암·비빙질). designation=Alpha Centauri A b II · cultural=Hades(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음). 회색 가니메데형 외형이나 조성은 rocky.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">rocky moon (750 km, 5.0e21 kg, ρ ~2830 kg/m³, 규산암·비빙질)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Alpha Centauri A b II</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Hades</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">fictional</td><td class="o"></td></tr></tbody></table>
+  
   <div class="disc"><span class="tag">discoverability</span> <code>fictional</code> · IGNORELEVELS <code>F F F F</code></div><div class="ev"><span class="tag">evidence</span> 회색 가니메데형 외형이나 조성은 rocky. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical.</div>
   
 </article>
@@ -155,6 +160,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">mass 5.0e21 kg · radius 750 km (둘 다 INVENTED, canon 수치 없음 — 달급 암석체로 affirm, 밀도 ~2830 kg/m³). rotation=폴리페무스 조석고정 → 자전=공전 ≈ 14.4h(a=148,000km·M_Poly 120M⊕서 도출; cf. Dante 9.2h). obliquity ~0°(락 감쇠). 조석 삼축 C̄₂₂≈0.0039 (φ=0.70, a−c~5%), 자전 J₂ 소형 (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행). age=계 5.3 Gyr 상속. spin_axis=궤도 법선 정렬. 질량·반경은 큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">5.0e21 <span class="u">kg</span><div class="fnote">INVENTED</div></td><td class="o"></td></tr><tr><td class="k">radius</td><td class="v">750 <span class="u">km</span><div class="fnote">INVENTED</div></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">14.4 <span class="u">h</span><div class="fnote">tidally locked (자전=공전)</div></td><td class="o"></td></tr><tr><td class="k">obliquity</td><td class="v">0 <span class="u">deg</span></td><td class="o"></td></tr><tr><td class="k">geopotential_j2</td><td class="v">0.013 <span class="u">· R_ref 750 km</span><div class="fnote">= 10/3·C̄₂₂, φ0.70</div></td><td class="o"></td></tr><tr><td class="k">geopotential_c22</td><td class="v">0.0039<div class="fnote">조석 삼축, a−c~5% 약한 계란형</div></td><td class="o"></td></tr><tr><td class="k">internal_heat</td><td class="v">tidal (see bulk.tidal_heating row)</td><td class="o"></td></tr><tr><td class="k">age</td><td class="v">5.3 <span class="u">Gyr</span></td><td class="o"></td></tr><tr><td class="k">spin_axis_orientation</td><td class="v">orbit normal</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 질량·반경은 큐레이션 DB가 아닌 art-invented. 조석고정·obliquity~0이라 축계절 없음, 별 기준 14.4h 낮밤 + 경도칭동 ±~5.7°(e=0.05).</div>
   
 </article>
@@ -165,6 +171,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">고유 자기장 없음 — 750 km 암석 위성은 자기 dynamo 불가(소형·저전도 핵). magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">none (750 km 암석 위성, dynamo 불가)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음.</div>
   
 </article>
@@ -175,6 +182,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식 텍토닉 (홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">tidal_heating</td><td class="v">~400× Io (내부, 표면 비발광 — 텍토닉으로 발현)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> Io-스케일링 ~400× Io는 Io-like k2/Q 가정. 작은 강체 위성은 dissipation 낮아 용융 대신 텍토닉 자원.</div><div class="ev div"><span class="tag">divergence</span> [GAME] &#x27;&gt;900K 붉은 잉걸/near-fusion&#x27;은 [FILM/CANON] 회색 밋밋 위성에 밀림(등급: 영화&gt;게임&gt;위키). 그 &gt;900K는 grazing(e~0.3, 이젝션) 궤도가 필요했음. 안정 e≈0.04에선 표면 비발광 — 조석 응력은 텍토닉 홈으로(가니메데형), 가시 용암 아님.</div>
   
 </article>
@@ -185,6 +193,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">가니메데형 회색 — 어두운 고대 크레이터 지형 + 젊은 밝은 홈/단층(grooved) 지형(조석 응력 흔적). 가시 용암 없음. 죽은 듯하나 텍토닉이 조석을 은근히 암시. albedo 0.30(group 5 facet-walk 2026-06-22: 오너 B = 중간 회색(달 고지대급). A(0.18 어두움)·C(0.43 가니메데급)은 미채택). surface_temperature_k 225(albedo 0.30 + α Cen A 1.6 AU 입사량 → Teq ~225K, 폴리페무스계 일관. 대기 없는 암석체라 KSP가 flux+albedo로 자동 산출; 조석고정(별 기준 14.4h)이라 낮밤+일식 변동. 내부 조석열은 표면온도 기여 미미).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">가니메데형 회색 rocky (어두운 크레이터 + 밝은 홈/단층 지형)</td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.3<div class="fnote">중간 회색(달 고지대급), 오너 B</div></td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">225 <span class="u">K</span></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> [FILM] 회색 밋밋 + 조석에너지=텍토닉 홈(가니메데 grooved terrain 유추). 조성=암석/규산염(빙질 아님 — ~225K+서 水빙 불안정; 가니메데는 형태학 유추지 조성 아님). 화학조성 facet 스킵(저임팩트). Dante(용암 균열)와 시각 대비. albedo 0.30=오너 B.<br></div>
   
 </article>
@@ -195,6 +204,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">가니메데 팔레트 — 어두운 크레이터 지형 #5f574e, 밝은 홈 지형 #9c968c, 약한 갈색조. 무채-갈 회색, 비발광. 가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요.</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface</td><td class="v">가니메데 팔레트 — 어두운 크레이터 <span class="chip" style="background:#5f574e"></span><span class="hx">#5f574e</span>, 밝은 홈 <span class="chip" style="background:#9c968c"></span><span class="hx">#9c968c</span>, 약한 갈색조 (비발광)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 가니메데 색 따라감(영화 회색-밋밋). Dante 어두운+용암발광과 대비 = Hades 회색 고요.</div>
   
 </article>
@@ -207,6 +217,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v">none (미량 외기권 무시 수준)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
+  
 </article>
 <article class="dec" id="environment.radiation">
   <div class="dec-head">
@@ -215,6 +226,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">심함 — 방사선대 피크(~2–3 R_p)에 위치, Dante 못지않게 높음. 표면 열은 Dante보다 약함.</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">심함 (방사선대 피크 ~2–3 R_p)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 벨트가 표면과 무관하게 방사선 지배(2.07 R_p=피크대).</div>
   
 </article>
@@ -225,6 +237,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">열은 Dante보다 온건해 표면 안정하나 방사선대 피크라 차폐 필수. 바이옴(6): 어두운 크레이터 고지(Dark Cratered Terrain) / 밝은 홈 지형(Bright Grooved Terrain) / 대형 충돌분지(Impact Basins) / 단층 능선 (Tectonic Ridges) / 극(Poles, geographic 고위도) / 폴리페무스 대면점(Sub-Polyphemus Point, 고정 지점). Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v">6: Dark Cratered Terrain / Bright Grooved Terrain / Impact Basins / Tectonic Ridges / Poles / Sub-Polyphemus Point<div class="swatches"><span class="sw"><span class="chip" style="background:#47433D"></span>Dark Cratered Terrain <span class="hx">#47433D</span></span><span class="sw"><span class="chip" style="background:#A9B6BE"></span>Bright Grooved Terrain <span class="hx">#A9B6BE</span></span><span class="sw"><span class="chip" style="background:#8A7E6E"></span>Impact Basins <span class="hx">#8A7E6E</span></span><span class="sw"><span class="chip" style="background:#6E6152"></span>Tectonic Ridges <span class="hx">#6E6152</span></span><span class="sw"><span class="chip" style="background:#CFE0E6"></span>Poles <span class="hx">#CFE0E6</span></span><span class="sw"><span class="chip" style="background:#3E8C8A"></span>Sub-Polyphemus Point <span class="hx">#3E8C8A</span></span></div></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> Dante보다 열 위협 적으나 방사선은 동급 이상(피크). 회색 탐사 대상.</div>
   
 </article></div>

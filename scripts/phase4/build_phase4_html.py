@@ -83,6 +83,31 @@ def fields_table(fields):
             '<th></th></tr></thead><tbody>' + "".join(body) + "</tbody></table>")
 
 
+MOON_COLS = (("a_km", "a (km)"), ("e", "e"), ("inc_deg", "inc°"), ("lan_deg", "Ω°"),
+             ("argp_deg", "ω°"), ("ma_deg", "M°"), ("epoch", "epoch"),
+             ("mass_kg", "mass (kg)"), ("radius_km", "R (km)"))
+
+
+def moons_table(moons):
+    """Body-def ledger for invented satellite systems — the 1:1 Kopernicus/Principia
+    orbit source, so it must be visible on the review page."""
+    if not moons:
+        return ""
+    head = "<th>moon</th>" + "".join(f"<th>{esc(h)}</th>" for _, h in MOON_COLS)
+    rows = []
+    for m in moons:
+        if not isinstance(m, dict):
+            continue
+        cells = f'<td class="k">{esc(m.get("name",""))}</td>' + "".join(
+            f'<td class="v">{esc(m.get(k, "—"))}</td>' for k, _ in MOON_COLS)
+        rows.append(f"<tr>{cells}</tr>")
+        if m.get("note"):
+            rows.append(f'<tr class="mnote"><td></td><td colspan="{len(MOON_COLS)}">'
+                        f'<div class="fnote">{esc(m["note"])}</div></td></tr>')
+    return ('<div class="moonwrap"><table class="spec moons"><thead><tr>' + head
+            + "</tr></thead><tbody>" + "".join(rows) + "</tbody></table></div>")
+
+
 def refs_html(refs):
     if not refs:
         return ""
@@ -137,6 +162,7 @@ def decision_html(d):
   </div>
   {nar}
   {fields_table(d.get('fields'))}
+  {moons_table(d.get('moons'))}
   {disc_html}{dep_html}{ev_html}{dn_html}
   {refs_html(d.get('refs'))}
 </article>"""
@@ -355,6 +381,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
 .swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
+.moonwrap { overflow-x:auto; margin:8px 0 2px }
+.spec.moons td.v { white-space:nowrap }
+.spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
+.spec.moons tr.mnote + tr td { border-top:none }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }

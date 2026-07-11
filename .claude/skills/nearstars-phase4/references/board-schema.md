@@ -48,6 +48,17 @@ decisions:
       colors: { "Seas": "#2E5680", "Polar Ice": "#CBDEE6" }   # each value must be #RRGGBB (validated)
       op: set
   depends_on: ["Chaos / surface"]  # optional — other rows this gate's inputs came from
+  moons:                           # satellites rows only — invented-system body-def ledger,
+    - name: Dante                  # one entry per moon, Kopernicus Orbit ↔ Principia 1:1:
+      a_km: 110000                 # full 6 elements (a_km/e/inc_deg/lan_deg/argp_deg/ma_deg)
+      e: 0.01                      # + epoch (0 = game epoch) + mass_kg/radius_km.
+      inc_deg: 9.0                 # GM is derived from mass_kg at emit — never duplicated.
+      lan_deg: 89
+      argp_deg: 178
+      ma_deg: 35
+      epoch: 0
+      mass_kg: 8.0e21
+      radius_km: 900
   gate:
     criterion: [observation]     # see gate-criteria.md
     verdict: pass-in-window      # pass-in-window | documented-divergence

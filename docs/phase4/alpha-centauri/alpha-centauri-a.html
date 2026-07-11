@@ -101,6 +101,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
 .swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
+.moonwrap { overflow-x:auto; margin:8px 0 2px }
+.spec.moons td.v { white-space:nowrap }
+.spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
+.spec.moons tr.mnote + tr td { border-top:none }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -147,6 +151,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 22d, log R&#x27;HK −4.95, X-ray log Lx 27.0–27.6 (factor~4), cycle ~19yr (tentative)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
+  
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -155,6 +160,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">대규모 표면장 ~1–2 G (태양쌍둥이). 직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R&#x27;HK −4.95 + Rossby≈1.8(≈태양) → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화. 고신뢰 원하면 ZDI 문헌 pull(HARPSpol/Folsom류) 필요 — 현 캐시엔 없음.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~1–2 G (large-scale surface, solar-twin proxy)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R&#x27;HK −4.95 + Rossby≈1.8(≈태양) → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.<br></div>
   
 </article>
@@ -165,6 +171,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중 (Wood2002) 가정 → A≈1·B≈0.6.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중(Wood2002) 가정 → A≈1·B≈0.6.</div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an X-ray-weighted assumption (Wood 2002), not a direct measurement.</div>
   
 </article>
@@ -177,6 +184,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">heliosphere</td><td class="v">~176 AU shared astrosphere standoff (G-cloud 유입 ~25 km/s)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
+  
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -185,6 +193,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">color=G2V, Teff ~5790K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening= 태양형(표준). spots_faculae=희소 — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점 소수 + 흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님). 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#fff4ea"></span><span class="hx">#fff4ea</span><div class="fnote p3">Phase 3: G2V, Teff ~5790K (황백, 거의 태양)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">solar-type 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">solar-type (표준)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">sparse ~0.1–0.3% 피복률</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">present (weak, X-ray log Lx 27.0–27.6)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></div>
   
 </article></div>

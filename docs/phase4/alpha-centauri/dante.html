@@ -101,6 +101,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
 .swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
+.moonwrap { overflow-x:auto; margin:8px 0 2px }
+.spec.moons td.v { white-space:nowrap }
+.spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
+.spec.moons tr.mnote + tr td { border-top:none }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -145,6 +149,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">body_type=규산염 화산 위성(900 km, 8.0e21 kg, 밀도 ~2620 kg/m³). designation=Alpha Centauri A b I · cultural=Dante(designations 블록, 인게임 설명에만). discoverability=fictional(합성 위성, 실검출 없음). Io형 화산 세계.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">silicate volcanic moon (900 km, 8.0e21 kg, ρ ~2620 kg/m³)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Alpha Centauri A b I</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Dante</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">fictional</td><td class="o"></td></tr></tbody></table>
+  
   <div class="disc"><span class="tag">discoverability</span> <code>fictional</code> · IGNORELEVELS <code>F F F F</code></div><div class="ev"><span class="tag">evidence</span> Io형 화산 세계. discoverability=fictional → RB IGNORELEVELS F F F F(전 난도 관측-발견), researchbodies-cfg db-mapping canonical.</div>
   
 </article>
@@ -155,6 +160,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">mass 8.0e21 kg · radius 900 km (둘 다 INVENTED, canon 수치 없음 — 밀도 ~2620 kg/m³ 규산암체로 affirm). rotation=폴리페무스 조석고정 → 자전=공전 ≈ 9.2h(a=110,000km·M_Poly 120M⊕서 도출, 최내곽). obliquity ~0° (락 감쇠). 조석 삼축 C̄₂₂≈0.012 (φ=0.80 부분용융, a−c~16% 계란형, 모행성 방향), 자전 J₂는 소형이나 조석 bulge가 지배. reference_radius 900 km (body-figure-methodology.md). internal_heat=조석열(bulk.tidal_heating 행, ~820× Io). age=계 5.3 Gyr 상속. spin_axis=궤도 법선. 질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈 (~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">8.0e21 <span class="u">kg</span><div class="fnote">INVENTED</div></td><td class="o"></td></tr><tr><td class="k">radius</td><td class="v">900 <span class="u">km</span><div class="fnote">INVENTED</div></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">9.2 <span class="u">h</span><div class="fnote">tidally locked (자전=공전)</div></td><td class="o"></td></tr><tr><td class="k">obliquity</td><td class="v">0 <span class="u">deg</span></td><td class="o"></td></tr><tr><td class="k">geopotential_j2</td><td class="v">0.039 <span class="u">· R_ref 900 km</span><div class="fnote">= 10/3·C̄₂₂, φ0.80</div></td><td class="o"></td></tr><tr><td class="k">geopotential_c22</td><td class="v">0.0118<div class="fnote">조석 삼축, a−c~16% 계란형(모행성 방향)</div></td><td class="o"></td></tr><tr><td class="k">internal_heat</td><td class="v">tidal (see bulk.tidal_heating row, ~820× Io)</td><td class="o"></td></tr><tr><td class="k">age</td><td class="v">5.3 <span class="u">Gyr</span></td><td class="o"></td></tr><tr><td class="k">spin_axis_orientation</td><td class="v">orbit normal</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 질량·반경은 art-invented. 강체 로슈(~48.5k)·유체 로슈(~98.9k)에서 110k는 안전(final_2026_06_21). 조석고정·obliquity~0이라 축계절 없음, 경도칭동 ±~0.6°(e=0.01).</div>
   
 </article>
@@ -165,6 +171,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">고유 자기장 없음 — Io처럼 격렬 화산이어도 자체 dynamo 불가(Io도 유도장만). 단 Dante는 최내곽(1.54 R_p) 플라스마 공급원. magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">none (no intrinsic dynamo; Io식 유도장만)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> magnetosphere/radiation_belts 고유값 없음. Dante 화산 SO₂/황 토러스가 폴리페무스 belt를 먹임(environment.radiation 인과고리). 최내곽이라 방사선 극심·무방비.</div>
   
 </article>
@@ -175,6 +182,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">극단 ~820× Io (평균 e 0.0175). 표면 조석 플럭스 ~8,000 W/m² (T_tidal ~600K; 피크 e 0.033서 ~40,000 W/m²·~900K).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">tidal_heating</td><td class="v">~820× Io (평균 e 0.0175)</td><td class="o"></td></tr><tr><td class="k">tidal_surface_flux</td><td class="v">~8000 W/m² (T~600K; 피크 e 0.033서 ~40000 W/m²·~900K)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> Io 스케일링(Ė∝M_p^2.5·R^5·e²·a^-7.5), 1.54 R_p·평균 e 0.0175 → ~820× Io. 시뮬서 e가 0.0002–0.031로 진동하며 안 죽음(Hades 등 섭동이 강제 유지) → 영구. 캐넌(Avatar: The Game) &quot;조석력 영구 화산+월진, Roche 가장자리&quot;와 정확히 일치.<br></div>
   
 </article>
@@ -185,6 +193,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">규산염 화산 세계(Io형 격렬). 조석고정 → 대면 반구(sub-planet)에 시그니처 단일 대협곡(Valles Marineris급) + 바닥 용암호 사슬. 반구 대비: 대면=용암호·황 격렬, far-side=식어 굳은 흑현무암 평원+충돌구. 활동 조석축 집중, anti-planet 쌍둥이 균열(약함) 가능. 마그마 바다 아님(T&lt;규산염 용융 ~1400K). albedo 0.30(group 5 facet-walk 2026-06-22: 오너 = 화산/균열 중심 이중-재질, 황 반(~0.5)·현무암 반(~0.10) → 벌크 평균 ~0.30. 단일 어두운(0.10)·단일 Io밝음(0.5) 미채택, 반반 맵). surface_temperature_k 230(입사 ambient ~230K, albedo 0.30, α Cen A 1.6 AU) + 화산 핫스팟 ~600K(sub-Polyphemus 용암면, HazardousBody가 LongitudeCurve로 고정면에 부여). 양극 분포.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">silicate volcanic (Io-type)</td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.3<div class="fnote">황 반 ~0.5 / 현무암 반 ~0.10 벌크 평균</div></td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">230 K ambient + ~600K 화산 핫스팟 <span class="u">K</span></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 캐넌 &#x27;영구 화산+월진+주황 용암 반점&#x27;. 조석가열은 비균일 — asthenosphere 소산이면 적도·조석축(sub/anti-planet) 강화라 sub-Polyphemus 거대 균열+용암호는 물리 동기 있음(실제 Io는 경도 ~30–60° offset, 아트 허용). 그 균열의 화산 plasma가 방사선대를 먹임(environment.radiation 행).<br></div>
   
 </article>
@@ -195,6 +204,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">고대비 이중-재질(Io 유추) — 화산·균열 중심에 황 평원 반(노랑 #d9c24a, 밝음), 그 밖은 흑현무암 반(어두움 #2a2622). 대협곡·칼데라·용암호는 발광(적→황백 #ff5a1e→#ffd070, 온도별), 야간측 주황 실선. 대면 반구 천정엔 Polyphemus 고정(용암 협곡 발밑/가스자이언트 머리 위)=시그니처 풍경. 황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 캐넌 &#x27;orange lava flecks&#x27;에서 황 면적을 반으로 확대(오너 2026-06-22).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface</td><td class="v">sulfur plains <span class="chip" style="background:#d9c24a"></span><span class="hx">#d9c24a</span> (밝음) / basalt <span class="chip" style="background:#2a2622"></span><span class="hx">#2a2622</span> (어두움), 고대비 이중-재질</td><td class="o"></td></tr><tr><td class="k">emission_glow</td><td class="v">lava <span class="chip" style="background:#ff5a1e"></span><span class="hx">#ff5a1e</span>→<span class="chip" style="background:#ffd070"></span><span class="hx">#ffd070</span> (온도별), 협곡·칼데라·용암호</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 황 평원/현무암 반반 고대비(albedo 평균 ~0.30), 화산·균열 중심 배치. 균열만 발광. 캐넌 &#x27;orange lava flecks&#x27;에서 황 면적을 반으로 확대(오너 2026-06-22).</div>
   
 </article>
@@ -205,6 +215,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">희박 SO₂/황 화산 분출(Io 유추), 비호흡 (stock atmosphereContainsOxygen=false). 화산 outgassing 기원 tenuous, 안정 대기 아님.</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v">tenuous SO₂/sulfur (화산 outgassing, Io 유추)</td><td class="o"></td></tr><tr><td class="k">breathability</td><td class="v">False</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 화산 outgassing 기원 tenuous, 안정 대기 아님.</div>
   
 </article>
@@ -215,6 +226,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">극심 &gt;4,500 rem/day (캐넌). 출처=Polyphemus 방사선대, Dante 자체 화산 플라스마가 공급.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">&gt;4,500 rem/day (극심)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 캐넌 &quot;최내곽 moonlet &gt;4,500 rem/day(Io 3,200)&quot;. 약한 170µT 장에도 성립 — 벨트 세기는 場이 아니라 공급원(source) 지배: Dante 820× Io 화산이 막대한 SO₂/황 플라스마 토러스 공급(Io→목성 벨트 초강화판) → 조밀 트랩 입자 → 강벨트. 인과고리: Dante 화산이 자신을 굽는 벨트를 먹임. 캐넌 &gt;4500 ↔ dynamo 170µT 충돌 없이 화해(場 발산 불요). cf. Pandora는 캐넌대로 &quot;두 벨트 사이&quot;라 보호.<br></div>
   
 </article>
@@ -225,6 +237,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">착륙=중간. 용암 없는 구역은 단기 착륙 가능하나 고온 차폐 필수, 대면측은 방사선도 극심. far-side는 상대적 안전(저방사선·저온) 거점. 바이옴(6): 대협곡(Grand Chasma) / 용암호 사슬(Lava Lakes, sub-Polyphemus 고정면 최고온) / 황 평원(Sulfur Plains) / 현무암 평원(Basalt Plains, far-side) / 화산추·칼데라(Volcanic Cones) / 극(Poles, geographic 고위도). 극은 조석고정+obliquity~0이라 seasonal 아닌 지리적 구분. 무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v">6: Grand Chasma / Lava Lakes / Sulfur Plains / Basalt Plains / Volcanic Cones / Poles<div class="swatches"><span class="sw"><span class="chip" style="background:#3A3B4A"></span>Grand Chasma <span class="hx">#3A3B4A</span></span><span class="sw"><span class="chip" style="background:#C8492C"></span>Lava Lakes <span class="hx">#C8492C</span></span><span class="sw"><span class="chip" style="background:#C9A93E"></span>Sulfur Plains <span class="hx">#C9A93E</span></span><span class="sw"><span class="chip" style="background:#4E463F"></span>Basalt Plains <span class="hx">#4E463F</span></span><span class="sw"><span class="chip" style="background:#7E4A3C"></span>Volcanic Cones <span class="hx">#7E4A3C</span></span><span class="sw"><span class="chip" style="background:#D8D0B6"></span>Poles <span class="hx">#D8D0B6</span></span></div></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 무착륙 지옥과 자유착륙의 중간 — 고위험·고보상. far-side가 베이스캠프.</div>
   
 </article></div>

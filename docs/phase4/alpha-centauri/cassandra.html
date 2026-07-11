@@ -101,6 +101,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
 .swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
 .swatches .hx { color:var(--fg4); font-size:9.5px }
+.moonwrap { overflow-x:auto; margin:8px 0 2px }
+.spec.moons td.v { white-space:nowrap }
+.spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
+.spec.moons tr.mnote + tr td { border-top:none }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -145,6 +149,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">body_type=큰 암석 위성(반경 3400 km, 2번째 큰 달), 얇은 대기 + 한계 거주(탄소순환 미생물급 생명 가능, semi-canon Lightstorm OmatiCon 2024). 판도라 무성 생물권과 달리 미생물·한계 수준. designation=Alpha Centauri A b IV · cultural=Cassandra(designations 블록). discoverability=fictional(합성 위성) → RB F F F F. marginal life-world(미생물·탄소순환), semi-canon(soft).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">큰 암석 위성 (반경 3400 km), 얇은 대기 + 한계 거주 (미생물급)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Alpha Centauri A b IV</td><td class="o"></td></tr><tr><td class="k">cultural_name</td><td class="v">Cassandra</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">fictional</td><td class="o"></td></tr></tbody></table>
+  
   <div class="disc"><span class="tag">discoverability</span> <code>fictional</code> · IGNORELEVELS <code>F F F F</code></div><div class="ev"><span class="tag">evidence</span> marginal life-world(미생물·탄소순환), semi-canon(soft). discoverability=fictional → RB IGNORELEVELS F F F F, researchbodies-cfg db-mapping canonical.</div>
   
 </article>
@@ -155,6 +160,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">mass 9.0e23 kg · radius 3400 km → 중력 ~0.53 g, 밀도 ~5470 kg/m³(철-부유 암석, 화성보다 빽빽 — 오너 유지). rotation=자유 자전 ~39h(공전 117h의 1/3, &quot;공전1:자전3&quot;) — 600,000 km라 조석 despin이 a⁶로 너무 느려 5.3 Gyr에도 미동기화(원시 빠른 자전 유지), 3:1 공명 락 아님(e=0.05선 불안정). obliquity ~20°(자유 회전체라 비0 가능 → 축-계절, 조정 가능). internal_heat=방사성 위주(외곽·큰 a라 조석 미미). 자유 자전 회전 편평 J₂≈4.1e-4 (f~0.13%), C₂₂ 없음(고정축 없음) (body-figure-methodology.md). age=5.3 Gyr. spin_axis=20° 경사. 밀도 유지=오너 선택. 자유 자전 ~39h는 느린 tidal despin(a⁶, 600,000km)으로 정당(미동기, 공명 락 아님). obliquity 비0(조석고정 아니라 축 안 세워짐) → 축-계절 가능.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">9.0e23 <span class="u">kg</span><div class="fnote">INVENTED</div></td><td class="o"></td></tr><tr><td class="k">radius</td><td class="v">3400 <span class="u">km</span></td><td class="o"></td></tr><tr><td class="k">gravity</td><td class="v">0.53 <span class="u">g</span></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">39 <span class="u">h</span><div class="fnote">자유 자전 (미동기, 공명 락 아님)</div></td><td class="o"></td></tr><tr><td class="k">obliquity</td><td class="v">20 <span class="u">deg</span></td><td class="o"></td></tr><tr><td class="k">internal_heat</td><td class="v">방사성 위주 (외곽·큰 a라 조석 미미)</td><td class="o"></td></tr><tr><td class="k">geopotential_j2</td><td class="v">0.00041 <span class="u">· R_ref 3400 km</span><div class="fnote">회전 편평 f~0.13%, C₂₂ 없음</div></td><td class="o"></td></tr><tr><td class="k">age</td><td class="v">5.3 <span class="u">Gyr</span></td><td class="o"></td></tr><tr><td class="k">spin_axis_orientation</td><td class="v">20° 경사</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 밀도 유지=오너 선택. 자유 자전 ~39h는 느린 tidal despin(a⁶, 600,000km)으로 정당(미동기, 공명 락 아님). obliquity 비0(조석고정 아니라 축 안 세워짐) → 축-계절 가능.</div>
   
 </article>
@@ -165,6 +171,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">composition=N₂ 주성분(~0.8–1 bar) + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성(canon N–H). pressure ~1 bar. temperature: Teq ~225K + CO₂·CH₄·N₂–H₂ CIA 온실 +45–50K → 지표 ~270–275K(한계-습윤). greenhouse=CO₂+CH₄+N₂–H₂ 충돌유발흡수(시생대/초기화성 온난화 레시피). breathability=O₂ 없음 → 비호흡 (atmosphereContainsOxygen=false). escape=N₂/CO₂ 보유, H₂는 탈출하나 화산 보충. 시생대 지구 아날로그(A 채택). 1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능. 무산소=물바다와 무모순(시생대 지구 20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존 불가라 무산소 택하며 주황 haze 보존. 고도 T/P 커브 emit 시 생성.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">composition</td><td class="v">N₂ 주성분 + 수% CO₂ + ~0.1–1% CH₄ + 미량 H₂ + H₂O, 무산소·환원성</td><td class="o"></td></tr><tr><td class="k">pressure</td><td class="v">1 <span class="u">bar</span></td><td class="o"></td></tr><tr><td class="k">temperature</td><td class="v">270–275 <span class="u">K</span><div class="fnote">Teq ~225K + CIA 온실 +45–50K (한계-습윤)</div></td><td class="o"></td></tr><tr><td class="k">greenhouse</td><td class="v">CO₂+CH₄+N₂–H₂ 충돌유발흡수 (시생대/초기화성 레시피)</td><td class="o"></td></tr><tr><td class="k">breathability</td><td class="v">False</td><td class="o"></td></tr><tr><td class="k">escape</td><td class="v">N₂/CO₂ 보유, H₂ 탈출하나 화산 보충</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 시생대 지구 아날로그(A 채택). 1.6 AU는 α Cen A 거주가능대 내(최대온실 한계 ~2–2.5 AU 안)라 물 액체 가능. 무산소=물바다와 무모순(시생대 지구 20억 년 선례; O₂는 산소발생 광합성=생물 필요, 미진화). O₂·CH₄ 공존 불가라 무산소 택하며 주황 haze 보존. 고도 T/P 커브 emit 시 생성.<br></div>
   
 </article>
@@ -175,6 +182,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">한랭-습윤 시생대형. hydrosphere=물바다(따뜻한 적도/계절엔 액체, 그 외 빙) + 빙관. surface_type=암석 대륙 + 바다. biosphere=혐기 미생물 탄소순환(극한생물 매트, 무성하지 않음, 생물발광 거의 없음). tectonics=방사성 구동 (외곽이라 조석 미미), 일부 화산/열수구. terrain=한랭 암석·빙·해안. ice_caps=풍부(극관+고위도). albedo ~0.35. surface_temp ~270–275K(부분 동결).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">surface_type</td><td class="v">암석 대륙 + 바다 (한랭-습윤 시생대형)</td><td class="o"></td></tr><tr><td class="k">hydrosphere</td><td class="v">물바다 (한계-습윤, 부분빙) + 빙관</td><td class="o"></td></tr><tr><td class="k">biosphere</td><td class="v">혐기 미생물 탄소순환 (매트, 무성하지 않음)</td><td class="o"></td></tr><tr><td class="k">tectonics</td><td class="v">방사성 구동, 일부 화산/열수구</td><td class="o"></td></tr><tr><td class="k">ice_caps</td><td class="v">풍부 (극관+고위도)</td><td class="o"></td></tr><tr><td class="k">albedo</td><td class="v">0.35</td><td class="o"></td></tr><tr><td class="k">surface_temperature</td><td class="v">270–275 <span class="u">K</span><div class="fnote">부분 동결</div></td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 물바다=한계-습윤(부분빙). 생명=혐기 미생물(판도라 무성과 차별). 열수구=탄소순환 생명 거점 후보(바이옴).</div>
   
 </article>
@@ -185,6 +193,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">한랭 외계 바다 세계 — 환원성 N₂/CH₄ 대기의 얇은 고층 호박/연노랑 haze(불투명 아님, 표면 비침; Titan의 두꺼운 주황 공과 의도적 차별). 가시: 청회색 물바다 + 흰 빙관(극·고지) + 어두운 암석 대륙 + 흰 물구름(활발한 기상). 순 인상 = 엷은 청백 마블 + 약한 amber 기운. 무성한 초록 없음(미생물급), biolum 거의 없음. specular=바다 glint. aurora=약함(약자기장). rings=∅. Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가 두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라 초록·청록과도 차별.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">base_colour</td><td class="v">엷은 청백 마블 + 약한 amber (청회색 바다 + 흰 빙관 + 어두운 대륙)</td><td class="o"></td></tr><tr><td class="k">haze</td><td class="v">얇은 고층 호박/연노랑 (표면 비침, Titan과 차별)</td><td class="o"></td></tr><tr><td class="k">clouds</td><td class="v">흰 물구름 (활발한 기상)</td><td class="o"></td></tr><tr><td class="k">specular</td><td class="v">바다 glint</td><td class="o"></td></tr><tr><td class="k">aurora</td><td class="v">약함 (약자기장)</td><td class="o"></td></tr><tr><td class="k">rings</td><td class="v">none</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> Titan 차별: haze를 얇게(고층) → 표면·바다·빙관·물구름 가시. Titan haze가 두꺼운 건 극저온·CH₄과다·저중력 탓, Cassandra는 CH₄ 적당→얇음. Archean CH₄ haze(O₂ 없어 보존), 판도라 초록·청록과도 차별.</div>
   
 </article>
@@ -195,6 +204,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">약한 고유 dipole — 철-부유 핵(밀도 5470) + 자유 자전 39h 약 dynamo. 미약하나 차폐에 기여(Archean 지구식 초기 생명 보호 프레이밍).</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">약한 고유 dipole (철-부유 핵 + 자유 자전 39h)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 오너 결정(a): 약함. 미약 차폐가 8.4 R_p 외곽 저방사선과 합쳐져 표면 추가 보호(environment 반영). magnetosphere/belts 고유=미미.</div>
   
 </article>
@@ -205,6 +215,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">낮음 — 8.4 R_p 외곽(방사선대 밖) + 약한 고유 자기장 추가 차폐. Dante·Hades 극심과 대비. 거주 한계는 방사선 아닌 한랭·무산소.</p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">radiation</td><td class="v">낮음 (8.4 R_p 외곽, 방사선대 밖 + 약장 차폐)</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 외곽 저방사선 + 약장 차폐 → 낮음. stellar_wind/activity/heliosphere/flares/uv_xray/habitable_zone=항성-레벨 ∅(단 무산소→오존 없어 지표 UV↑ 메모, HZ 내 위치는 atmosphere서 반영).</div>
   
 </article>
@@ -215,6 +226,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   </div>
   <p class="narrative">표면 있음 → biome map(6): 물바다(Seas) / 해안(Coastlines) / 한랭 대륙·고지(Cold Highlands) / 빙관(Polar Ice) / 화산·열수구(Volcanic &amp; Hydrothermal, 미생물 거점) / 얇은 haze 저지대(Hazy Lowlands). 후보(보류): 미생물 매트 지대(Microbial Mats) — 추후 다른 바디 바이옴과 안 겹치면 7번째로 추가. SOI=자동. difficulty: 임무=한랭 무산소 세계 착륙(비호흡, 차폐 경미)·발견=fictional→RB F F F F. ScienceValues 전체. 두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">science_biomes</td><td class="v">6 (+후보 1 = colors 7키): Seas / Coastlines / Cold Highlands / Polar Ice / Volcanic &amp; Hydrothermal / Hazy Lowlands / (후보) Microbial Mats<div class="swatches"><span class="sw"><span class="chip" style="background:#2E5680"></span>Seas <span class="hx">#2E5680</span></span><span class="sw"><span class="chip" style="background:#4A8C6E"></span>Coastlines <span class="hx">#4A8C6E</span></span><span class="sw"><span class="chip" style="background:#6E7480"></span>Cold Highlands <span class="hx">#6E7480</span></span><span class="sw"><span class="chip" style="background:#CBDEE6"></span>Polar Ice <span class="hx">#CBDEE6</span></span><span class="sw"><span class="chip" style="background:#9A4436"></span>Volcanic &amp; Hydrothermal <span class="hx">#9A4436</span></span><span class="sw"><span class="chip" style="background:#B79A5E"></span>Hazy Lowlands <span class="hx">#B79A5E</span></span><span class="sw"><span class="chip" style="background:#A85078"></span>Microbial Mats (candidate) <span class="hx">#A85078</span></span></div></td><td class="o"></td></tr><tr><td class="k">difficulty</td><td class="v">임무=한랭 무산소 착륙 · 발견=RB F F F F</td><td class="o"></td></tr></tbody></table>
+  
   <div class="ev"><span class="tag">evidence</span> 두 번째 (한계)생명 세계. 열수구=혐기 미생물 과학 거점. 비호흡이나 방사선·열 위협 적어 탐사 우호적. 미생물 매트 바이옴=후보(다른 바디와 중복 회피 조건부).</div>
   
 </article></div>

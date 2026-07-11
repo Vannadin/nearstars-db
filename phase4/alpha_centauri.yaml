@@ -97,12 +97,16 @@ decisions:
       =조석고정 아님(1.6 AU 가스자이언트, free ~10h 자전). lagrange_placement=없음. 절대 배향은 자유(관측
       약/bimodal). 1.6 AU giant는 5 Gyr에도 미잠김 → free rotator. 캐넌 Poly-L4/L5 코오비탈 planetoid
       (337/611km)는 의도적 제외(오너 결정 2026-06-22 — 불필요; binary 트로이 안정성도 미검증).
+      [2026-07-11 orbit emit-shaping] "자유"의 의미 결정은 유지하되, emitter가 숫자를 받도록 deterministic seed
+      기본값을 typed로 병기 — seed 레시피 = int(sha256("<body>:<field>")[:8],16) % 360, 재현 가능. 어떤 값으로
+      바꿔도 합법(16° mutual만 보존). epoch=0(게임 epoch, Sol-Configs 관행).
     fields:
-      - { name: longitude_ascending_node, value: "free emit-orientation (16° mutual 보존)", op: set }
-      - { name: argument_periapsis, value: "free emit-orientation", op: set }
-      - { name: mean_anomaly, value: "free (synthetic-noise seed 가능)", op: set }
-      - { name: spin_orbit_resonance, value: "none (free ~10h rotator, 미잠김)", op: set }
-      - { name: lagrange_placement, value: "none (Poly-L4/L5 코오비탈 planetoid 의도적 제외)", op: set }
+      - { name: longitude_ascending_node, value: 127, unit: deg, op: set, note: "자유 배향의 seeded 기본값 (sha256 seed, 재현식은 narrative). 제약은 AB면 대비 16° mutual뿐" }
+      - { name: argument_periapsis, value: 0, unit: deg, op: set, note: "seeded 기본값 — 동일 seed 레시피가 우연히 0을 산출 (placeholder 아님)" }
+      - { name: mean_anomaly, value: 148, unit: deg, op: set, note: "자유 위상의 seeded 기본값. synthetic-noise seed로 교체 가능" }
+      - { name: epoch, value: 0, op: set, note: "게임 epoch 0 (Sol-Configs 관행: 전 바디 epoch=0 통일)" }
+      - { name: spin_orbit_resonance, value: "none", op: set, note: "free ~10h rotator — 1.6 AU giant는 5 Gyr에도 미잠김" }
+      - { name: lagrange_placement, value: "none", op: set, note: "Poly-L4/L5 코오비탈 planetoid 의도적 제외 (오너 2026-06-22)" }
     gate:
       criterion: [classification]
       verdict: pass-in-window
@@ -1520,7 +1524,8 @@ decisions:
     narrative: >
       판도라 + canon 명명 5위성 (Dante·Hades·Pandora·Cassandra·Chaos). 핵심 발견: 카논의 "Hades가 Dante에
       그레이징"을 e=0.30 직역하면 100yr 내 이젝션 → 조석가열은 궤도교차 아닌 유지된 e(Io 강제e=0.0041) →
-      e=0.05 + 작은 moonlet로 교정. 5위성 body def(mass_kg·radius_km·a_km·e·inc_deg·parent)는 아래 moons: 리스트,
+      e=0.05 + 작은 moonlet로 교정. 5위성 body def(mass_kg·radius_km + 6요소 a_km·e·inc_deg·lan_deg·argp_deg·
+      ma_deg·epoch — Kopernicus Orbit ↔ Principia 1:1, 2026-07-11 emit-shaping)는 아래 moons: 리스트,
       스캔 상세는 stability_scans:, provenance는 designations/rejected/decided/deferred 블록 참조.
     gate:
       criterion: [stability, hill-stability, resonance]
@@ -1582,7 +1587,8 @@ decisions:
         (아이코닉 비주얼 유지).
         • 내측 순행 경사 ~10°(Dante 9°/Hades 11°/Pandora 10°, 폴리페무스 궤도면 기준) — 노드를 부모 궤도면에 자동
         정렬(공통 승교점선 = 무작위 산란이 아니라 정연한 warp).
-        • 외측 역행 거의 동일평면(Cassandra 178°/Chaos 177°, 180에서 ±3° 안쪽, canon 역행 보존).
+        • 외측 역행 거의 동일평면(Cassandra 176°/Chaos 179°, 180에서 ≤4° 안쪽, canon 역행 보존 — 런 입력
+        hypotheticals/alpha_centauri.json 기준; 구 narrative의 178/177은 오기였음).
         • Dante 100k→110k, Hades 135k→148k(둘 다 바깥으로 밀어 Dante–Hades 갭 복원, 주기비 1.56 ≈ 직전 1.57).
         중간 시도(Dante 110k인데 Hades 135k 유지)는 갭 부족으로 Hades 이탈 → Hades 148k 채택 근거. 위상분산용
         평균근점이각(Dante 35/Hades 140/Pandora 250/Cassandra 300/Chaos 60°).
@@ -1596,12 +1602,18 @@ decisions:
         [동시틸트, J2] results/_moons_cotilt_scan.md (TRACE 300yr): 락이 J2로 죽은 뒤라 동시틸트의 "락+분산" 목적은
         성립 안 함. θ=0°(완전 동일평면)은 이탈, θ=10–30°는 bound지만 φ 전부 순환(락 없음), 차등 승교점 세차로
         Dante–Hades 상호경사 최대~60° 드리프트(동일평면 유지 안 됨).
-    moons:                         # a/e/inc는 게이트 통과한 설계값(final_2026_06_21: 내측 ~10°·노드 공통정렬, 외측 역행 178/177); 질량·반경은 INVENTED(Pandora·Cassandra지름만 canon)
-      - { name: Dante,     parent: "Alpha Centauri A b", order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
-      - { name: Hades,     parent: "Alpha Centauri A b", order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
-      - { name: Pandora,   parent: "Alpha Centauri A b", order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출. 폴리페무스 하늘서 ~32°. 노드 공통 정렬." }
-      - { name: Cassandra, parent: "Alpha Centauri A b", order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
-      - { name: Chaos,     parent: "Alpha Centauri A b", order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
+    moons:                         # [2026-07-11 orbit emit-shaping] Kopernicus Orbit ↔ Principia 1:1 — 위성당 6요소 완비.
+      # 프레임: inc/lan은 폴리페무스 궤도면 기준(emit 시 게임 프레임으로 변환; orbit.inclination_deg 행의 자유 배향 참조).
+      # a/e/inc = 게이트 통과 설계값(final_2026_06_21: 내측 ~10°, 외측 역행 176/179). lan_deg·ma_deg = 런 입력
+      # design-of-record(hypotheticals/alpha_centauri.json: 내측 노드 89/91/90 공통정렬 = coherent warp, ma는 위상분산).
+      # argp_deg = INVENTED seeded(sha256 "<name>:argp" %360; Pandora는 e=0이라 관행상 0). epoch=0(게임 epoch).
+      # 비공진계라 위상각(lan/argp/ma)은 STABLE 결론에 영향 없음. GM은 mass_kg에서 도출(G·M) — 이중 기록 안 함.
+      # 질량·반경은 INVENTED(Pandora·Cassandra 지름만 canon).
+      - { name: Dante,     parent: "Alpha Centauri A b", order: 1, a_km: 110000, e: 0.01, inc_deg: 9.0, lan_deg: 89, argp_deg: 178, ma_deg: 35, epoch: 0, mass_kg: 8.0e21, radius_km: 900,  note: "최내곽 화산 moonlet(1.54 R_p). 고체라 강체 로슈(~48.5k) 지배 → 110k(직전 100k도)는 2배+ 밖 안전. 노드는 폴리페무스 궤도면에 정렬." }
+      - { name: Hades,     parent: "Alpha Centauri A b", order: 2, a_km: 148000, e: 0.05, inc_deg: 11.0, lan_deg: 91, argp_deg: 136, ma_deg: 140, epoch: 0, mass_kg: 5.0e21, radius_km: 750,  note: "내부 조석열은 있으나 [FILM]대로 회색 가니메데형 표면(텍토닉 홈, 비발광) — [GAME] >900K 붉은 잉걸은 기각. Dante 110k일 때 135k는 갭 부족으로 이탈 → 148k로 밀어 갭 복원(주기비 1.56). e≈0.05 adopted given." }
+      - { name: Pandora,   parent: "Alpha Centauri A b", order: 5, a_km: 252393, e: 0.0,  inc_deg: 10.0, lan_deg: 90, argp_deg: 0, ma_deg: 250, epoch: 0, mass_kg: 3.85e24, radius_km: 5724, note: "canon: 지름 11,447km(반경 5724), 거주가능. 질량=옵션 B(중력 0.8g 고정 → 0.645 M⊕=3.85e24, 밀도 0.89 ρ⊕ 현실적). canon 0.72 M⊕/1.2 ρ⊕는 내부불일치라 비채택. ✅ 3.85e24 재시뮬 STABLE 검증(results/_pandora_massB, 1000yr TRACE+J2, |ΔE/E| 7.6e-9, Pandora e≤0.0075). 조석고정 32h(canon 27h 대신, 해양 robustness)→a 도출. 폴리페무스 하늘서 ~32°. 노드 공통 정렬. e=0이라 argp=0 관행." }
+      - { name: Cassandra, parent: "Alpha Centauri A b", order: "outer", a_km: 600000,  e: 0.05, inc_deg: 176.0, lan_deg: 247, argp_deg: 311, ma_deg: 300, epoch: 0, retrograde: true, mass_kg: 9.0e23, radius_km: 3400, note: "2번째 큰 달, 지름>6500km(canon), N-H 대기. 역행(canon) 보존, Chaos와 거의 동일평면 역행(viewer 184 정규화). E고리 안쪽 양치기." }
+      - { name: Chaos,     parent: "Alpha Centauri A b", order: "outermost named", a_km: 1500000, e: 0.02, inc_deg: 179.0, lan_deg: 274, argp_deg: 217, ma_deg: 60, epoch: 0, retrograde: true, mass_kg: 5.4e20, radius_km: 400, note: "Miranda형 균열. 역행(canon) 보존, Cassandra와 거의 동일평면 역행(viewer 181 정규화). 역행이라 0.7 R_Hill까지 안정. E고리 공급원 — 고리면=Chaos 궤도면이라 lan 274가 고리 배향도 결정. e 0.10→0.02로 낮춰(results/_chaos_e002 STABLE) 고리 갭을 좁힘 — 고리면이 위성 관통 안 하게." }
     designations:                  # 공식 표기 = 행성에 로마자 숫자(거리순). Avatar 이름은 문화명(인게임 설명에만).
       convention: "위성은 행성명 + 대문자 로마숫자(거리순). 인게임 바디명=표기, Avatar 문화명은 설명 텍스트에만(cfg-emit 단계로 연기)."
       map:
@@ -1619,7 +1631,7 @@ decisions:
         고정, 빈틈 배치 유지(a는 이후 32h일 채택으로 252,393k 확정 — final_2026_06_21 참조).
     decided:
       - "무명 9위성: 추가 안 함(사용자 2026-06-19). 명명 5위성만 — 어차피 전부 창작이므로."
-      - "최외곽 2위성 역행(canon). 반영(Cassandra·Chaos inc 178/177, final_2026_06_21). 1000yr STABLE 확인."
+      - "최외곽 2위성 역행(canon). 반영(Cassandra·Chaos inc 176/179 — 런 입력 JSON 기준, 구 표기 178/177은 오기; final_2026_06_21). 1000yr STABLE 확인."
       - >
         [2026-06-20] J2 충실도 해소 — 폴리페무스 J2(0.023)를 위성 시뮬에 주입(자체구현 j2.py). 135k 갭 = J2에도
         안정(TRACE+leapfrog 일치), 3:2-락 = J2로 이탈해 철회. j2_confirm 참조.
@@ -1629,6 +1641,11 @@ decisions:
       - >
         [2026-06-20] 경사 분산 s=25° 채택 확정 (사용자 결정 "경사 분산 실제로 주면 좋겠어"). 1000yr J2 + 근일점-충돌
         체크 통과. moons 표·게이트 설정에 반영. spread_adopted 참조.
+      - >
+        [2026-07-11] orbit emit-shaping (오너 승인, α Cen 시험) — moons 표를 Kopernicus Orbit ↔ Principia 1:1
+        6요소로 완비. lan_deg·ma_deg는 런 입력 design-of-record(hypotheticals/alpha_centauri.json)에서 승격,
+        argp_deg는 INVENTED seeded(sha256 "<name>:argp" %360, Pandora는 e=0 관행상 0), epoch=0 통일. 비공진계라
+        위상각은 STABLE 결론 불변. 폴리페무스 자신의 Ω/ω/M도 같은 seed 레시피로 typed 기본값 병기(orbit 행).
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
       - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Dante 용암 반점/Hades 회색 원반). 표면뷰 아트디렉션 입력."
