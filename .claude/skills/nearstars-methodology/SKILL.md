@@ -50,6 +50,18 @@ parameters (e.g. the gravity significance floor) rather than a reusable
 per-body recipe. A Mode B report often graduates into a Mode A doc afterwards
 (R6 → `gravity-significance-floor-methodology.md`).
 
+**The owner's named deliverable overrides these heuristics.** If the owner
+asked for a methodology *doc* ("방법론 문서", "근거 문서로 남겨줘", "document
+the method"), the job is Mode A — even when the work shape looks like
+one-shot parameter grounding. Run Mode B research first if the evidence
+doesn't exist yet, but the task is not done until the Mode A doc exists;
+"graduation can wait for reuse" applies only when the owner never asked for
+the doc. Conversely, an explicit ask for a research prompt/report is Mode B.
+**State the chosen mode and the reason to the owner before starting** —
+silent mode substitution is how an owner asks for documentation and receives
+research reports instead (2026-07-11 warpfx incident). If the instruction is
+ambiguous, one clarifying line beats a wrong mode.
+
 ## Before writing anything — read the exemplars (mandatory)
 
 The sections below describe *structure*; the exemplars carry the density,
