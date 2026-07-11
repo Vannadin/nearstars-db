@@ -1,0 +1,30 @@
+  ... 25 yr  elapsed 31s
+  ... 50 yr  elapsed 62s
+  ... 75 yr  elapsed 93s
+  ... 100 yr  elapsed 123s
+  ... 125 yr  elapsed 154s
+  ... 150 yr  elapsed 185s
+  ... 175 yr  elapsed 216s
+  ... 200 yr  elapsed 246s
+  ... 225 yr  elapsed 277s
+  ... 250 yr  elapsed 308s
+  ... 275 yr  elapsed 338s
+  ... 300 yr  elapsed 369s
+  ... 325 yr  elapsed 400s
+  ... 350 yr  elapsed 430s
+  ... 375 yr  elapsed 461s
+  ... 400 yr  elapsed 492s
+  ... 425 yr  elapsed 526s
+  ... 450 yr  elapsed 560s
+  ... 475 yr  elapsed 598s
+  ... 500 yr  elapsed 629s
+
+# t = 500.000 yr snapshot  (mutual inc Polyphemus vs AB plane: 16.127 deg)
+# Polyphemus (frame: AB plane, x = A->B direction at t=500)
+Polyphemus  a_au=1.593607 e=0.07561 inc=16.127 lan=149.71 argp=185.11 ma=101.65
+# Moons (frame: Polyphemus orbital plane, x = mutual node line on AB plane)
+Dante      a_km=109921.3 e=0.01397 inc=10.996 lan=157.34 argp=195.61 ma=34.93
+Hades      a_km=148805.1 e=0.05298 inc=17.863 lan=128.30 argp=14.17 ma=325.30
+Pandora    a_km=252433.4 e=0.00517 inc=18.041 lan=115.69 argp=116.07 ma=53.69
+Cassandra  a_km=600591.4 e=0.06624 inc=168.241 lan=264.65 argp=147.85 ma=3.63
+Chaos      a_km=1576906.3 e=0.01488 inc=176.475 lan=269.16 argp=187.00 ma=335.21
