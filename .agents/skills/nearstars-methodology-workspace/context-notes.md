@@ -38,3 +38,34 @@
   the live path.
 - **Viewer env note.** `generate_review.py` needs Python ≥3.10; system python3
   is 3.9 → use `/opt/homebrew/bin/python3` (3.14).
+
+**2026-07-11 — iteration 2 (regression feedback from real use)**
+
+- **Owner report: the skill performed worse than the pre-skill practice.**
+  Symptoms from the first real run (a warpfx session): whole-prompt
+  delegation to a single agent → nested sub-agent fan-out with no
+  main-thread verification, plus generally shallower output.
+- **Root cause: the skill is a summary, and the summary dropped the
+  exemplars.** Pre-skill, authoring always happened next to the live
+  artifacts (R6 open in context, dynamo doc as the model, NearStars repo
+  assets at hand). The skill compressed those into structure descriptions;
+  sessions followed the rules but lost the craft — and in warpfx the
+  relative exemplar paths didn't even resolve.
+- **Fix chosen: mandatory-read pointers, not embedding.** Owner asked why
+  not put the uncompressed originals into the skill; decided against
+  physical copies (originals keep evolving — R6 was mid-execution during
+  this discussion; embedding creates a second stale copy and another sync
+  axis on top of the two-repo skill copies). Instead: a mandatory "read the
+  exemplars first" step with absolute paths (resolve from any repo), per
+  mode — dynamo doc for Mode A, R6 prompt + gravity-significance-floor
+  methodology for Mode B, index discipline note for both. Token cost
+  measured at ~3–5k once per authoring session (vs 57k for authoring,
+  100k+ per research agent) — negligible insurance.
+- **Exemplar audit:** R3/R4/R5 turned out to be *code*-research reports
+  (zero ADS citations) — not literature exemplars. The citation-craft
+  exemplar is `gravity-significance-floor-methodology.md` (angle-by-angle,
+  ~46 pinned citations), R6's graduated Mode A form.
+- Earlier same-day amendments (also fallout from the warpfx run): Mode B
+  execution rules (run in the session main loop, no whole-prompt delegation;
+  absolute paths for the _papers cache and sanity-check data cross-repo)
+  and the non-ADS source fallback ladder.

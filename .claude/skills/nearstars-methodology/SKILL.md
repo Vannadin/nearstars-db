@@ -50,6 +50,31 @@ parameters (e.g. the gravity significance floor) rather than a reusable
 per-body recipe. A Mode B report often graduates into a Mode A doc afterwards
 (R6 → `gravity-significance-floor-methodology.md`).
 
+## Before writing anything — read the exemplars (mandatory)
+
+The sections below describe *structure*; the exemplars carry the density,
+tone, and citation craft that make the output consumable. A session that
+authors from the descriptions alone produces structurally-correct but
+shallow output (observed in the first cross-repo run, 2026-07-11).
+Read the chosen mode's exemplars once, in full, in the authoring thread —
+fan-out research agents do not need them (they receive the authored prompt
+itself). Absolute paths so they resolve from any repo:
+
+- **Both modes**: the discipline note at the top of
+  `/Users/vana/Desktop/NearStars/docs/reference/methodology-index.md`.
+- **Mode A**:
+  `/Users/vana/Desktop/NearStars/docs/reference/planetary-dynamo-scaling.md`
+  — the gold standard, end to end.
+- **Mode B**:
+  `/Users/vana/Desktop/NearStars/plans/principia-interstellar-branch/research/R6-significance-floor-PROMPT.md`
+  (prompt craft) and
+  `/Users/vana/Desktop/NearStars/docs/reference/gravity-significance-floor-methodology.md`
+  (what a consumable grounded result looks like — angle-by-angle evidence
+  with pinned citations feeding an explicit synthesis).
+
+Cost: ~3–5k tokens, once per session. Cheap insurance against feeding a
+million-token research fan-out a shallow prompt.
+
 Mode B splits into two roles that may be different sessions: **authoring**
 the prompt (this skill's main job — the deliverable can be the prompt alone)
 and **executing** it (running the research; also covered by this skill when
@@ -153,7 +178,7 @@ Registration checklist (a Mode A doc is not done until all four):
 
 The prompt file must be **self-contained**: the executing session gets no
 other context, and the consuming session will act *from the report alone*.
-Structure (model: `plans/principia-interstellar-branch/research/R6-significance-floor-PROMPT.md`):
+Structure (model: the R6 prompt from the exemplars section above):
 
 1. **Task** — what report file to produce, and the standard: "include the
    evidence (numbers, bibcodes, short verbatim quotes), not just conclusions."
