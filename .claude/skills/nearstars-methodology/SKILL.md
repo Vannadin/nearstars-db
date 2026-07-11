@@ -59,6 +59,22 @@ asked). Both artifacts live under the consuming track's research directory —
 consumer, not because that path is canonical). No track directory yet? Put
 them next to the plan that will consume the report.
 
+Two execution rules:
+
+- **Run the prompt in the executing session's main loop** — paste it as the
+  session prompt. Do not hand the whole prompt to one agent: the prompt's
+  embedded delegation instructions will make that agent spawn nested
+  sub-agents, and the main-thread deterministic verification (plus cost and
+  model-override visibility) disappears inside it. The fan-out stays one
+  level deep, orchestrated by the session itself.
+- **Executing from another repo?** The ADS token is a global shell export,
+  so authenticated queries work anywhere — but repo assets are not global.
+  Reference the paper cache by absolute path
+  (`/Users/vana/Desktop/NearStars/docs/phase3/_papers/`) and write new
+  fetches back there (the cache has one home), and make any sanity-check
+  data paths absolute too, so agents don't silently skip a step over a
+  dangling relative path.
+
 ## The ADS discipline (non-negotiable, both modes)
 
 - **All paper discovery and verification goes through NASA ADS** with the
