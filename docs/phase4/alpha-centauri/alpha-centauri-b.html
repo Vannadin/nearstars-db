@@ -94,6 +94,13 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .spec td.v { color:var(--fg1); word-break:break-word }
 .spec td.o { text-align:right; width:1% }
 .spec .u { color:var(--fg4); font-size:11px } .spec .hx { color:var(--fg2) }
+.spec .win { color:var(--fg4); font-size:10.5px; border:1px solid var(--bd1); border-radius:4px;
+  padding:1px 6px; margin-left:6px; white-space:nowrap }
+.fnote { color:var(--fg4); font-size:10.5px; font-family:var(--sans); line-height:1.5; margin-top:3px; max-width:64ch }
+.fnote.p3 { color:var(--fg4); font-style:italic }
+.swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
+.swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
+.swatches .hx { color:var(--fg4); font-size:9.5px }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -157,7 +164,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
   </div>
   <p class="narrative">Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중). Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.6 <span class="u">Mdot_sun</span></td><td class="o"></td></tr></tbody></table>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.6 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
   <div class="ev"><span class="tag">evidence</span> Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6. 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함.</div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an X-ray-weighted assumption (Wood 2002), not a direct measurement.</div>
   
 </article>
@@ -167,7 +174,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">color=K1V, Teff ~5260K → 황등(yellow-orange, sRGB ~#ffdcb0). granulation=대류 granule(약간 큼). limb_darkening=표준(적색쪽 강함). spots_faculae=보통 — 피복률 ~1–3%(A의 2배 활동도·X선 factor~10·clean 8.84yr cycle), 중위도 흑점군 여럿(umbra+penumbra) + faculae 뚜렷. corona=A보다 밝음. flares=가끔(A보다 활동적, 단 플레어성 아님). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffdcb0"></span><span class="hx">#ffdcb0</span></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">대류 granule (약간 큼)</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">표준 (적색쪽 강함)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">moderate ~1–3% 피복률, 중위도 흑점군 여럿</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">A보다 밝음</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">occasional (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffdcb0"></span><span class="hx">#ffdcb0</span><div class="fnote p3">Phase 3: K1V, Teff ~5260K (황등)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">대류 granule (약간 큼)</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">표준 (적색쪽 강함)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">moderate ~1–3% 피복률, 중위도 흑점군 여럿</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">A보다 밝음</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">occasional (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
   <div class="ev"><span class="tag">evidence</span> 관측 측정서 도출(Teff·X선 factor~10·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough.<br></div>
   
 </article></div>

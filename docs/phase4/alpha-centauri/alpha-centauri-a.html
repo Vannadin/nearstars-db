@@ -94,6 +94,13 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .spec td.v { color:var(--fg1); word-break:break-word }
 .spec td.o { text-align:right; width:1% }
 .spec .u { color:var(--fg4); font-size:11px } .spec .hx { color:var(--fg2) }
+.spec .win { color:var(--fg4); font-size:10.5px; border:1px solid var(--bd1); border-radius:4px;
+  padding:1px 6px; margin-left:6px; white-space:nowrap }
+.fnote { color:var(--fg4); font-size:10.5px; font-family:var(--sans); line-height:1.5; margin-top:3px; max-width:64ch }
+.fnote.p3 { color:var(--fg4); font-style:italic }
+.swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
+.swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
+.swatches .hx { color:var(--fg4); font-size:9.5px }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -157,7 +164,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
   </div>
   <p class="narrative">Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중 (Wood2002) 가정 → A≈1·B≈0.6.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1 <span class="u">Mdot_sun</span></td><td class="o"></td></tr></tbody></table>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
   <div class="ev"><span class="tag">evidence</span> Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중(Wood2002) 가정 → A≈1·B≈0.6.</div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an X-ray-weighted assumption (Wood 2002), not a direct measurement.</div>
   
 </article>
@@ -177,7 +184,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
   <p class="narrative">color=G2V, Teff ~5790K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening= 태양형(표준). spots_faculae=희소 — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점 소수 + 흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님). 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#fff4ea"></span><span class="hx">#fff4ea</span></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">solar-type 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">solar-type (표준)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">sparse ~0.1–0.3% 피복률</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">present (weak, X-ray log Lx 27.0–27.6)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#fff4ea"></span><span class="hx">#fff4ea</span><div class="fnote p3">Phase 3: G2V, Teff ~5790K (황백, 거의 태양)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">solar-type 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">solar-type (표준)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">sparse ~0.1–0.3% 피복률</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">present (weak, X-ray log Lx 27.0–27.6)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
   <div class="ev"><span class="tag">evidence</span> 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></div>
   
 </article></div>

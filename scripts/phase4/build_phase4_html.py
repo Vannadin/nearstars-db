@@ -58,6 +58,18 @@ def fields_table(fields):
             val += f' <span class="u">{esc(f["unit"])}</span>'
         if f.get("reference_radius_km"):
             val += f' <span class="u">· R_ref {esc(f["reference_radius_km"])} km</span>'
+        if f.get("window"):
+            val += f' <span class="win">window {value_html(f["window"])}</span>'
+        colors = f.get("colors")
+        if isinstance(colors, dict):
+            val += ('<div class="swatches">' + "".join(
+                f'<span class="sw"><span class="chip" style="background:{esc(c)}"></span>'
+                f'{esc(n)} <span class="hx">{esc(c)}</span></span>'
+                for n, c in colors.items()) + "</div>")
+        if f.get("note"):
+            val += f'<div class="fnote">{esc(f["note"])}</div>'
+        if f.get("phase3_default"):
+            val += f'<div class="fnote p3">Phase 3: {esc(f["phase3_default"])}</div>'
         op = f.get("op")
         opcell = f'<span class="op {esc(op)}">{esc(op)}</span>' if op and op != "set" else ""
         body.append(
@@ -74,6 +86,8 @@ def fields_table(fields):
 def refs_html(refs):
     if not refs:
         return ""
+    if isinstance(refs, str):  # defensive — the validator rejects this, but never render per-char
+        refs = [refs]
     return '<div class="refs">' + "".join(
         f'<span class="ref">{esc(r)}</span>' for r in refs) + "</div>"
 
@@ -109,6 +123,12 @@ def decision_html(d):
     if dn and str(dn).strip().lower() != "null":
         dn_html = (f'<div class="ev div"><span class="tag">divergence</span> '
                    f'{esc(dn).strip()}</div>')
+    dep = d.get("depends_on")
+    dep_html = ""
+    if dep:
+        dep = [dep] if isinstance(dep, str) else dep
+        dep_html = ('<div class="disc"><span class="tag">depends on</span> '
+                    + " · ".join(f"<code>{esc(x)}</code>" for x in dep) + "</div>")
 
     return f"""<article class="dec{' is-div' if div else ''}{' is-sup' if status=='superseded' else ''}" id="{esc(d.get('axis',''))}">
   <div class="dec-head">
@@ -117,7 +137,7 @@ def decision_html(d):
   </div>
   {nar}
   {fields_table(d.get('fields'))}
-  {disc_html}{ev_html}{dn_html}
+  {disc_html}{dep_html}{ev_html}{dn_html}
   {refs_html(d.get('refs'))}
 </article>"""
 
@@ -328,6 +348,13 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .spec td.v { color:var(--fg1); word-break:break-word }
 .spec td.o { text-align:right; width:1% }
 .spec .u { color:var(--fg4); font-size:11px } .spec .hx { color:var(--fg2) }
+.spec .win { color:var(--fg4); font-size:10.5px; border:1px solid var(--bd1); border-radius:4px;
+  padding:1px 6px; margin-left:6px; white-space:nowrap }
+.fnote { color:var(--fg4); font-size:10.5px; font-family:var(--sans); line-height:1.5; margin-top:3px; max-width:64ch }
+.fnote.p3 { color:var(--fg4); font-style:italic }
+.swatches { display:flex; gap:6px 12px; flex-wrap:wrap; margin-top:5px }
+.swatches .sw { font-size:10.5px; color:var(--fg3); white-space:nowrap }
+.swatches .hx { color:var(--fg4); font-size:9.5px }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
@@ -359,7 +386,8 @@ def main():
     system = sys.argv[1]
     src = REPO / "phase4" / f"{system}.yaml"
     board = yaml.safe_load(src.read_text(encoding="utf-8")) or {}
-    if board.get("schema_version") != 2:
+    # same normalization as check_phase4_gate.is_v2 — a quoted "2" must not skip the board
+    if str(board.get("schema_version", "")).strip() not in {"2", "2.0"}:
         print(f"[skip] {src.name} is not schema_version:2 — normalize it first.", file=sys.stderr)
         return 1
 
