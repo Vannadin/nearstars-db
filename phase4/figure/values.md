@@ -36,10 +36,11 @@ the interior warm → partial relaxation). → **J₂ ≈ 0.013 · C̄₂₂ ≈
 airless_rocky K = 2.5e-5, seed "Hades". reference_radius 750 km. Terrain pass: mesh ~5 % prolate.
 Near–far asymmetry (octupole P₃): sub-primary bulge ~**0.5 %** (R/a) larger — degree-3, recorded only.
 ### Pandora (α Cen A b III) — Na'vi homeworld, synchronous ✅
-Locked, a 252,393 km (3.53 R_p), P 32 h, large (0.72 M⊕, R 5724 km). Hydrostatic J₂
-1.94e-3. **Owner φ = 0.95** (large, warm, active → essentially relaxed). → **J₂ ≈
-1.84e-3 · C̄₂₂ ≈ 5.5e-4**. Visual a−c ≈ 42 km (**0.74 %** — not visibly egg, reads as a
-sphere; C̄₂₂ real for orbits only). **Kaula EARTH_LIKE K = 1e-5** (active tectonics +
+Locked, a 252,393 km (3.53 R_p), P 32 h, large (0.645 M⊕ = 3.85e24 kg — the gated Phase 4
+mass; the 0.72 M⊕ canon value was rejected, see the board's bulk row — R 5724 km).
+Hydrostatic J₂ 2.17e-3. **Owner φ = 0.95** (large, warm, active → essentially relaxed).
+→ **J₂ ≈ 2.06e-3 · C̄₂₂ ≈ 6.2e-4**. Visual a−c ≈ 47 km (**0.83 %** — not visibly egg,
+reads as a sphere; C̄₂₂ real for orbits only). **Kaula EARTH_LIKE K = 1e-5** (active tectonics +
 ocean) degree 3–8, seed "Pandora" — the first body with a full Earth-like complex geoid
 (matters: players orbit low + land → realistic low-orbit perturbation). reference_radius 5724 km.
 ### Cassandra (α Cen A b IV) — outer retrograde Archean-life moon, FREE rotator ✅
@@ -143,5 +144,5 @@ body inflates by a·b·c (Dante ×1.22). (Two different fields — Principia ref
 | Dante | triaxial (φ0.8) | 1.167 : 1.042 : 1.0 | yes (clear egg) |
 | Chaos | oblate (f~7%) | 1.075 : 1.075 : 1.0 | yes (flattened) |
 | Hades | triaxial (φ0.7) | 1.053 : 1.013 : 1.0 | yes (mild egg) |
-| Pandora | triaxial (φ0.95) | 1.007 : 1.002 : 1.0 | no — sphere to eye (gravity C₂₂ only) |
+| Pandora | triaxial (φ0.95) | 1.008 : 1.002 : 1.0 | no — sphere to eye (gravity C₂₂ only) |
 | Cassandra | oblate (f~0.13%) | 1.001 : 1.001 : 1.0 | no — skip |
