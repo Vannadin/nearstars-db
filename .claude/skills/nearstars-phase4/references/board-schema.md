@@ -37,6 +37,17 @@ decisions:
       op: set
       verdict: pass-in-window    # optional per-field; else inherits gate.verdict
       divergence_note: null      # required iff THIS field's verdict == documented-divergence
+      note: "= 10/3·C̄₂₂, φ0.95"  # optional short annotation (canon anchor, caveat, derivation tag)
+      phase3_default: "..."      # optional — the Phase 3 value this decision overrides
+    - name: banding_storm_eye    # color fields: value is a #RRGGBB hex
+      value: "#214a72"
+      window: "#1e4068–#2a5480"  # optional — the defensible range backing pass-in-window
+      op: set
+    - name: science_biomes       # biome rows: colors maps biome name → biome-map hex
+      value: "6: Seas / ..."
+      colors: { "Seas": "#2E5680", "Polar Ice": "#CBDEE6" }   # each value must be #RRGGBB (validated)
+      op: set
+  depends_on: ["Chaos / surface"]  # optional — other rows this gate's inputs came from
   gate:
     criterion: [observation]     # see gate-criteria.md
     verdict: pass-in-window      # pass-in-window | documented-divergence
@@ -63,14 +74,24 @@ decisions:
 ## Validator rules (what fails vs warns)
 
 **Hard FAIL (v2 boards only):**
+- board has no `decisions:` list at top level (catches a misspelled key that would
+  otherwise skip every row).
 - row missing `body` / `axis` / `status`; `status` or `verdict` off-enum;
   `axis` group not in the §0 menu.
+- two non-`superseded` rows sharing the same `(body, axis)` — supersede one.
+- a `fields[]` entry that is not a mapping, lacks `name` or `value` (an emit number
+  living only in prose is illegal), or has an `op` outside `set|scale|passthrough`.
+- `refs` that is not a list of strings; a `colors` value that is not `#RRGGBB`.
 - `gated`/`emitted` row with no `gate` block, or with an invalid `verdict`.
 - `documented-divergence` (row or field) with a null/empty `divergence_note`.
 - `passthrough` row that carries a `gate` block.
 
 **WARN (non-fatal):** empty `gate.evidence`; a gated row with no machine-readable
-value/`fields`; a gated row with no `refs`; a `fields[].name` not in the §0 menu.
+value/`fields`; a gated row with no `refs`; an `axis` name not in the §0 menu;
+an empty `decisions` list.
+
+`schema_version` is normalized: `2`, `2.0`, and `"2"` all count as v2 — a quoting
+slip cannot silently downgrade a board to the legacy soft path.
 
 ## Authoring rules (the discipline the validator backs)
 

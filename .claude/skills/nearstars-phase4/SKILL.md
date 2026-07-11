@@ -154,9 +154,10 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
   A `passthrough` row carries **no** gate block. A replaced decision becomes
   `superseded` (kept for provenance, never emitted) and the replacement is a
   separate live row.
-- The **reference-quality exemplars**: `phase4/barnards_star.yaml` (clean single-
-  field rows, `reproduce:` pointer) and `phase4/alpha_centauri.yaml` (the migrated
-  many-axis v2 board).
+- The **v2 authoring exemplar is `phase4/alpha_centauri.yaml`** (the migrated
+  many-axis v2 board) — model every new row's shape on it. `phase4/barnards_star.yaml`
+  is **legacy v1** (uses gate keys like `rationale:` that are illegal in v2); cite it
+  only for decision hygiene (the `reproduce:` pointer idea), never copy its row shape.
 
 ## Step 5 — Validate
 
