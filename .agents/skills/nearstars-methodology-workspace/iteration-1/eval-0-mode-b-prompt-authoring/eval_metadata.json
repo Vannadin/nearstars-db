@@ -1,0 +1,32 @@
+{
+  "eval_id": 0,
+  "eval_name": "mode-b-prompt-authoring",
+  "prompt": "Ground the synthetic-eccentricity seeding policy parameters (seeded-e cap, seed distribution shape) — author the Mode B self-contained research prompt file; do not run the research.",
+  "assertions": [
+    {
+      "text": "Prompt file has all five Mode B sections: Task, Context (do-not-re-derive), Research angles, Synthesis question, Method requirements"
+    },
+    {
+      "text": "Task section states the evidence standard: the report must carry numbers, bibcodes, and short verbatim quotes — not just conclusions — because the consuming session acts from the report alone"
+    },
+    {
+      "text": "Method requirements enforce the ADS discipline: ADS_API_TOKEN queries, no WebSearch, no citing numbers from WebFetch summaries, every claim pinned to bibcode/arXiv id"
+    },
+    {
+      "text": "Candidate anchor papers (if any) are framed as to-be-ADS-verified starting points, not a dictated final list"
+    },
+    {
+      "text": "Prompt includes an explicit 'if the literature is silent, say so' escape hatch instead of forcing a grounded-looking answer"
+    },
+    {
+      "text": "Synthesis question demands a recommended value plus an acceptable range and trade-offs, and includes a sanity check against project data (db/ or stability-sim)"
+    },
+    {
+      "text": "Context section is accurate to the repo: guardrails (measured e untouched, DB immutable, cfg-layer only, e<=0.05 provisional, REBOUND stability check, seeded marker) are represented",
+      "note": "checked against the synthetic-eccentricity concept memory and repo docs"
+    },
+    {
+      "text": "Output is an English .md file and stayed inside the workspace outputs dir (did not write into plans/ or docs/)"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "expectations": [
+    {
+      "text": "Prompt file has all five Mode B sections: Task, Context (do-not-re-derive), Research angles, Synthesis question, Method requirements",
+      "passed": true,
+      "evidence": "All five present as H2 sections: '## Task' (L9), '## Context (what was built / decided; do not re-derive)' (L27, with 'do not relitigate' at L38), '## Research angles' (L78, four lettered angles A-D each with candidate anchors + Deliverable), '## The synthesis question (answer explicitly)' (L136), '## Method requirements' (L164)."
+    },
+    {
+      "text": "Task section states the evidence standard: the report must carry numbers, bibcodes, and short verbatim quotes — not just conclusions — because the consuming session acts from the report alone",
+      "passed": true,
+      "evidence": "L14-17: 'a self-contained report with numbers, bibcodes, and short verbatim quotes. **Another session will set the two parameters from your report alone**, so include the evidence ..., not just conclusions.'"
+    },
+    {
+      "text": "Method requirements enforce the ADS discipline: ADS_API_TOKEN queries, no WebSearch, no citing numbers from WebFetch summaries, every claim pinned to bibcode/arXiv id",
+      "passed": true,
+      "evidence": "L166-173: 'All paper discovery and verification through the NASA ADS API (ADS_API_TOKEN) ... never WebSearch, and never cite numbers from WebFetch summaries ... Pin every claim to a bibcode (+ arXiv id where one exists)'. Also mandates checking the docs/phase3/_papers cache before re-fetching."
+    },
+    {
+      "text": "Candidate anchor papers (if any) are framed as to-be-ADS-verified starting points, not a dictated final list",
+      "passed": true,
+      "evidence": "L82-84: 'candidate anchor papers below are **starting points to ADS-verify, not a trusted list** — verify each against ADS and replace freely; find the best-cited primary sources independently (sort=citation_count desc)'. Restated at L174-175 ('Discovery is delegated, not dictated')."
+    },
+    {
+      "text": "Prompt includes an explicit 'if the literature is silent, say so' escape hatch instead of forcing a grounded-looking answer",
+      "passed": true,
+      "evidence": "L180-183: 'If an angle comes up genuinely empty ... **record that as a finding**: absence of precedent means we own the choice, justified by the observed distribution + the internal REBOUND stability tests. Never backfill a citation to make a chosen value look grounded.'"
+    },
+    {
+      "text": "Synthesis question demands a recommended value plus an acceptable range and trade-offs, and includes a sanity check against project data (db/ or stability-sim)",
+      "passed": true,
+      "evidence": "L148-153: recommended cap + 'an acceptable range, and what each end trades — realism/variety (higher) vs stability-gate pass rate and the tidal-lock ceiling at e ≳ 0.1 (lower)'. L155-161: required sanity checks against db/planets_curated.json counts, per-system stability bounds from phase3/stability-sim/ logs, and a strictly-nonzero-seed check."
+    },
+    {
+      "text": "Context section is accurate to the repo: guardrails (measured e untouched, DB immutable, cfg-layer only, e<=0.05 provisional, REBOUND stability check, seeded marker) are represented",
+      "passed": true,
+      "evidence": "All guardrails present at L38-58. Deterministically verified: phase4/synthetic-orbit-noise.md exists; the cited counts (204 planet orbital blocks — 20 exact-zero e, 35 null/absent, 149 nonzero) reproduce EXACTLY from db/planets_curated.json via independent recount. Provenance gate (orbital.source/bibcode) matches the actual schema."
+    },
+    {
+      "text": "Output is an English .md file and stayed inside the workspace outputs dir (did not write into plans/ or docs/)",
+      "passed": true,
+      "evidence": "Single English file R-synthetic-eccentricity-PROMPT.md in with_skill/outputs/. git status shows no new files under plans/ or docs/ beyond pre-existing modifications (R6 PROMPT was already untracked before this test). Minor note: the prompt's suggested report path defaults to plans/principia-interstellar-branch/research/ 'or the agreed path' — an ambiguity the agent itself flagged as a skill gap."
+    }
+  ]
+}
