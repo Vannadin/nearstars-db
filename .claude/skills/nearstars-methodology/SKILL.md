@@ -90,6 +90,20 @@ them next to the plan that will consume the report.
   Note explicitly when a paper has no preprint (e.g. Nature letters) and is
   therefore verified by bibcode only.
 
+- **Source outside ADS's scope?** The discipline's point is verifiability
+  and anti-fabrication, not the index itself. Fall back in order:
+  (1) check ADS anyway — it indexes physics broadly, all of arXiv, and many
+  technical reports (JPL IPN Progress Reports have bibcodes); (2) an
+  authoritative curated database is a canonical source in its own right
+  (precedents: NIST ASD for plasma lines, the USGS spectral library for
+  mineral colors, Pearse & Gaydon in book form) — pin by database version /
+  report number; (3) otherwise pin by DOI and read the publisher's full
+  text — "no numbers from summaries" applies unchanged; (4) whatever the
+  route, mark the citation as a non-ADS exception stating how it was
+  verified, so a later audit knows. In a Mode B prompt, declare such
+  research angles "non-ADS acceptable" up front and keep them brief
+  (the R6 angle-E pattern).
+
 - **If the literature is silent, say so.** An explicit "no precedent found —
   we keep convention X, justified by our internal tests" is a valid, honest
   result. Never backfill a citation to make a chosen value look grounded
