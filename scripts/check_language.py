@@ -45,6 +45,10 @@ ALLOWLIST_GLOBS = (
     # Korean-by-intent recovery/handoff notes (preserved as written).
     "phase2/2026-05-28-tier1-postmortem.md",
     "phase2/2026-05-29-next-session-prompt.md",
+    # Owner-facing operational runbook, Korean by intent (same category as above).
+    "phase3/stability-sim/DESKTOP_WSL_SETUP.md",
+    # *.ko.md declares itself Korean in the filename — never an English-source file.
+    "**/*.ko.md",
 )
 
 
