@@ -71,3 +71,35 @@ carries a gate. WARN: missing `evidence`, no machine-readable value on a gated r
 - Whether to also render Proxima on the α Cen viewer page or keep systems separate: the
   confirmed-set couples them ("α Centauri (+ Proxima)") — leaning toward one page, two
   system sections.
+
+## 2026-07-11 — re-audit hardening pass (post model-switch second audit)
+
+Trigger: 4-lens adversarial re-audit (validator bypass / board content / delta vs
+review / skill+viewer). Full findings recorded in
+`phase4/emit-readiness-review.md` §"Re-audit — 2026-07-11".
+
+**Validator hardening (all bypasses were empirically confirmed first).** New hard
+fails: missing/misspelled `decisions:` list, fields[] entry without name/value
+(prose-only numbers now rejected — this closes the "gated override silently degrades
+to Phase 3 passthrough" hole), off-enum `op`, non-list `refs`, non-#RRGGBB `colors`,
+duplicate live `(body, axis)`, passthrough+gate (was warn; three docs already said
+hard-fail, code now agrees). `schema_version` normalized (2/2.0/"2") in BOTH the
+validator and the HTML builder so a quoting slip can't downgrade a strict board.
+Per-board try/except so one crashing board no longer hides the rest. Superseded
+pairs on the same (body, axis) remain legal — that IS the supersede mechanism.
+
+**BK6 closed the right way.** `figure/values.md` Pandora recomputed on the gated
+3.85e24 kg via `scripts/refs/body_figure.synchronous_figure` (old 0.72-M⊕ numbers
+reproduced exactly first → provenance confirmed): J₂ 2.06e-3 · C̄₂₂ 6.2e-4 ·
+a−c 47 km (0.83 %) · ratios 1.008:1.002:1.0. Conclusion unchanged (sphere to eye,
+gravity-only). Board j2 rows for Dante/Hades/Pandora converted from prose blobs to
+typed J₂ + C̄₂₂ fields (J₂ = 10/3·C̄₂₂ kept in `note`).
+
+**Decision: field-level `note`/`window`/`colors`/`phase3_default` + row `depends_on`
+are now schema-documented and viewer-rendered** — they were live in the α Cen board
+but invisible to both the authoring card and the review pages (write-only gate data).
+
+**Not done here (still open, unchanged priorities):** 5 v1 boards, absent
+trappist_1/luhman_16 boards, every emitter contract (incl. RB emitter reading the
+old top-level `discoverability:`), dead-link glob for `phase4/*.yaml`, `criterion`
+vocabulary, 4 refs missing from `_papers`, Dante ~820× Io recheck at e=0.01.

@@ -245,6 +245,64 @@ disk** (6–55 AU, 14 Phase-3 decisions incl. tint #ffe2bb, mass 1.2 M⊕) has *
 5. **Close coverage (BK-adjacent, MJ8).** Create `trappist_1.yaml`, `luhman_16.yaml`; board
    Tau Ceti planets + disk; add Barnard/Tau-Ceti passthrough-confirm rows; fix stale prose.
 
+## Re-audit — 2026-07-11 (post-remediation, 4-lens adversarial)
+
+Second adversarial pass over the remediated state (validator + schema v2 + α Cen v2
+board + viewer + skill). Four independent lenses: validator-bypass construction (all
+counterexamples run, not reasoned), board content integrity, delta vs this review,
+skill/viewer accuracy.
+
+**Delta scoreboard (the 15 BLOCKER+MAJOR above): 1 resolved / 6 partial / 8 open.**
+The remediation was a sound single-board pilot (α Cen) plus a validator that only
+strictly enforces that one board; the emitter side (BK2/BK3/BK5/BK7, MJ7) was
+untouched by design ("emit wiring at project end").
+
+**New findings, and their same-day fixes:**
+- **BK6 had regressed into a contradiction** — the board moved Pandora to 0.645 M⊕
+  but `figure/values.md` still carried the rejected 0.72 M⊕ and its J₂.
+  **FIXED:** recomputed via `body_figure.synchronous_figure` on 3.85e24 kg →
+  hydrostatic J₂ 2.17e-3, φ0.95 → **J₂ 2.06e-3 · C̄₂₂ 6.2e-4 · a−c 47 km (0.83 %)**,
+  ratios 1.008:1.002:1.0 (still sphere-to-eye). Ledger + board narrative + typed
+  fields all updated; the old 0.72-derived pair reproduced exactly, confirming the
+  provenance.
+- **Validator bypasses (empirically confirmed):** misspelled/absent `decisions:` key
+  → whole board silently passes; `schema_version: "2"` (quoted) → strict board
+  downgrades to legacy soft path (and the viewer skips it); `fields[]` entries with
+  no `value` (prose-only numbers) pass; off-enum `op`; bare-string `refs` (rendered
+  per-character by the viewer); duplicate live `(body, axis)` rows; non-hex `colors`;
+  passthrough+gate only warned while three docs said hard-fail.
+  **FIXED:** all of the above are now hard fails (`check_phase4_gate.py`), with
+  `schema_version` normalization shared by the viewer, per-board crash isolation,
+  and a 10-case synthetic counterexample run verifying each rejection (superseded
+  pairs stay legal). Real boards still pass.
+- **Board content:** the Polyphemus rings narrative resurrected the rejected
+  1.05 R_Jup solid radius ("1.05 유지, ~1.10 관측") — **FIXED** to 1.0 + ~1.05
+  observed (matches its own evidence: √(1.0²+0.32²)). Dante/Hades/Pandora
+  `geopotential_j2` prose blobs → typed J₂ + C̄₂₂ fields. Cassandra biome label
+  "6" vs 7 color keys disambiguated; storm-eye tint vs biome-map hex annotated as
+  intentionally distinct pipelines.
+- **Skill/viewer:** SKILL.md pointed at legacy-v1 `barnards_star.yaml` as a
+  reference exemplar (illegal-in-v2 gate keys) — **FIXED** (α Cen is the sole v2
+  shape exemplar). Viewer silently dropped `window`/`colors`/`note`/
+  `phase3_default`/`depends_on` — **FIXED** (all render; pages regenerated).
+  `board-schema.md` now documents those keys and the new hard-fail list. Both tools
+  registered in `docs/reference/tools.md` (§13) + ko mirror.
+
+**Still open (unchanged priorities):** the five v1 boards (validator soft on them;
+MJ1–MJ8's live cited rows all sit there), the absent `trappist_1`/`luhman_16`
+boards, all emitter contracts (RB emitter reads top-level `discoverability:`, not
+the v2 per-row `discoverability_cfg` → still emits nothing), `check_dead_links`
+not globbing `phase4/*.yaml`, `criterion` vocabulary unvalidated, and four refs not
+in the `_papers` cache (`1109.1627`, `2007.10783`, `1609.06324`, `2107.07434`).
+Dante's ~820× Io tidal-heat figure should be reconfirmed against the final
+e=0.01 roster (claimed mean forced e 0.0175 from oscillation — recheck at next
+stability-sim run).
+
+**Verified clean this pass:** Pandora 0.72-residual sweep (all mass-coupled values
+recompute on 0.645), all six biome palettes vs the preview (hex/name/count, no
+intra-body duplicates), v1→v2 migration row parity, viewer determinism +
+HTML-escaping + `_naming` slugs, check.sh gate-8 crash propagation.
+
 ## Related
 - `phase4/SPEC.md` — the data contract this review measures against
 - `phase4/phase4-coverage-audit.md` — α Cen (body×axis) sweep
