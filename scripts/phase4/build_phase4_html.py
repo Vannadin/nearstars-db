@@ -101,6 +101,13 @@ def moons_table(moons):
         cells = f'<td class="k">{esc(m.get("name",""))}</td>' + "".join(
             f'<td class="v">{esc(m.get(k, "—"))}</td>' for k, _ in MOON_COLS)
         rows.append(f"<tr>{cells}</tr>")
+        design = m.get("design")
+        if isinstance(design, dict):  # design prototype paired under the live (snapshot) row
+            dcells = ('<td class="k dsn">└ <span data-i18n>설계 t=0</span>'
+                      '<span data-en hidden>design t=0</span></td>') + "".join(
+                f'<td class="v dsn">{esc(design[k]) if k in design else "·"}</td>'
+                for k, _ in MOON_COLS)
+            rows.append(f'<tr class="mdesign">{dcells}</tr>')
         if m.get("note"):
             rows.append(f'<tr class="mnote"><td></td><td colspan="{len(MOON_COLS)}">'
                         f'<div class="fnote">{esc(m["note"])}</div></td></tr>')
@@ -385,6 +392,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .spec.moons td.v { white-space:nowrap }
 .spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
 .spec.moons tr.mnote + tr td { border-top:none }
+.spec.moons tr td { border-bottom:none }
+.spec.moons tr.mdesign td, .spec.moons td.dsn { color:var(--fg4); font-size:10.5px; padding-top:0 }
+.spec.moons tr.mdesign td.k { font-family:var(--sans); font-size:10px }
+.spec.moons tr:last-child td, .spec.moons tr.mnote td { border-bottom:1px solid var(--bd1) }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }

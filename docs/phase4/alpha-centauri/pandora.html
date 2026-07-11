@@ -105,6 +105,10 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .spec.moons td.v { white-space:nowrap }
 .spec.moons tr.mnote td { border-bottom:1px solid var(--bd1); padding-top:0 }
 .spec.moons tr.mnote + tr td { border-top:none }
+.spec.moons tr td { border-bottom:none }
+.spec.moons tr.mdesign td, .spec.moons td.dsn { color:var(--fg4); font-size:10.5px; padding-top:0 }
+.spec.moons tr.mdesign td.k { font-family:var(--sans); font-size:10px }
+.spec.moons tr:last-child td, .spec.moons tr.mnote td { border-bottom:1px solid var(--bd1) }
 .op { font-family:var(--sans); font-size:9px; font-weight:600; text-transform:uppercase; color:var(--warn);
   background:var(--warn-bg); border-radius:4px; padding:1px 5px }
 .mini { color:var(--danger) }
