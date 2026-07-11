@@ -1654,6 +1654,15 @@ decisions:
         그대로 유효, 온전성 확인: mutual 16.127°·Pandora e 0.00517(해양한계 0.0075 내)·전 위성 bound·Chaos
         스냅샷 a 1.577M(고리 간극 내). 설계 원형은 각 note와 final_2026_06_21에 보존. 폴리페무스 자신의
         Ω/ω/M도 같은 스냅샷의 typed 기본값 병기(orbit 행). epoch=0 공통(Principia 정합 요건).
+      - >
+        [2026-07-11] 스냅샷 교차확인 (오너 요청) — 위성별 J₂(figure ledger 6바디, 각자 자전축: 락 위성=자기
+        궤도법선, Chaos 15° 기움)까지 넣은 TRACE와 leapfrog 고정 10분(Principia 프록시)을 각각 500yr 재적분
+        (scripts/snapshot_elements_fullj2.py → results/_snapshot500/elements_fullj2_*.log). 세 런(기존 TRACE·
+        전바디 TRACE·전바디 leapfrog) 모두 bound·calm·mutual ~16.1°·Pandora e≤0.0052(해양 안전)·역행쌍
+        경사 168.1/176.5 불변. 개별 각도(Ω/ω/M)는 세 런이 전부 다름 = 500yr 위상 탈상관(카오스 정상 —
+        위성 J₂ 효과와 적분기 효과가 탈상관 노이즈에 같은 크기로 묻힘, "위성 figure는 궤도 동역학에 무의미"
+        스케일 추정 실증). a/e/inc envelope 동일 → 스냅샷 방식 견고. 채택값은 기존 TRACE 스냅샷 유지
+        (1000yr STABLE 검증 계보와 동일 물리·동일 궤적이라 provenance가 가장 강함).
     deferred:
       - "Poly-L4/L5: 위성 아닌 폴리페무스 *공전* L4/L5 공궤도 planetoid(337/611km) → 항성중심 트로이 시뮬 별건."
       - "[메모] 내측 위성(Dante·Hades) 판도라 하늘서 가시(달의 0.3~0.95배, 폴리페무스 면 통과/엄폐, Dante 용암 반점/Hades 회색 원반). 표면뷰 아트디렉션 입력."
