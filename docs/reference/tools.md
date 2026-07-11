@@ -18,6 +18,7 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 10 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
 | 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
+| 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
 
 ## Verification & QA — index
 
@@ -32,6 +33,7 @@ Correctness checks live across several functional groups. This index gathers the
 | `ko/` mirror file parity | `scripts/check-mirrors.sh` | [11](#11-dev-helpers) | Before commit / release |
 | Phase 3 synthesis policy fit | `nearstars-phase3` audit-pass procedure | [3](#3-phase-3-synthesis-pipeline) | After a synthesis batch — manual, output at `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
 | Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [11](#11-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
+| Phase 4 board schema-v2 / emit-gate conformance | `scripts/check_phase4_gate.py` | [13](#13-phase-4-decision-board-tools) | After every board edit — invoked by `scripts/check.sh` gate 8 |
 
 ## 1. Data engine
 
@@ -212,7 +214,7 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
-- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness. Manual invocation only.
+- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness + Phase 4 emit-gate (gate 8, tool 13). Manual invocation only.
 
 ## 12. 3D star map viewer
 
@@ -231,6 +233,18 @@ Correctness checks live across several functional groups. This index gathers the
 **Note.** Colour = perceptual blackbody approximation (not a calibrated SED); marker size = luminosity proxy (billboard, not physical radius). Independent of the `docs/index.html` DB browser (tool 2) — that one is the tabular viewer, this is the spatial one.
 
 **Related — Polyphemus moon-system viewer.** `phase4/polyphemus-moon-viewer.html` is a standalone interactive 3D viewer for the α Cen A b (Polyphemus) moon system + ring design — the 5 named moons (Dante / Hades / Pandora / Cassandra / Chaos), their inclinations / nodes, and the faint Chaos-fed E-ring. A Phase 4 art-direction aid, separate from the catalog-wide star map; it visualizes the gated roster recorded in `phase4/alpha_centauri.yaml`. **FROZEN (2026-06-22):** its design-exploration job is done (roster / ring / obliquity locked), so it is kept as a captured artifact and later decisions are NOT synced into it. Its only feature the star map lacks is the Pandora surface POV + eclipse view; the canonical, maintained visualization is `docs/starmap.html`.
+
+## 13. Phase 4 decision-board tools
+
+**Purpose.** Keep the Phase 4 art-direction boards (`phase4/<system>.yaml`, schema v2) emit-safe and reviewable — validate every board against the SPEC contract, and render each board as per-body HTML pages for gate review.
+
+**Trigger.** After any board edit (validator runs automatically as `check.sh` gate 8); "Phase 4 진행/돌리자" goes through the `nearstars-phase4` skill, which invokes both.
+
+**Files.**
+- `scripts/check_phase4_gate.py` — board validator. `schema_version: 2` boards are hard-checked (status/verdict/op enums, axis menu, typed `fields[]` shape incl. prose-only-number rejection, `(body, axis)` uniqueness, `refs` list type, `colors` hex format, divergence-note requirement, passthrough-carries-no-gate); legacy v1 boards get a soft one-line summary so migration proceeds file-by-file. Contract: `phase4/SPEC.md` §0/§3.1.
+- `scripts/phase4/build_phase4_html.py <system>` — renders a v2 board into `docs/phase4/<system-slug>/` (index + one page per body): narrative prose + typed spec table (hex chips, windows, biome color swatches, per-field notes), gate evidence/divergence, KO/EN toggle. Slugs via `scripts/pipeline/_naming.py`. Deterministic (rerun → no diff).
+
+**Output.** Validator: exit 0/1 + per-row diagnostics. Builder: `docs/phase4/<system-slug>/*.html`.
 
 ## Skills directory layout
 

@@ -18,6 +18,7 @@
 | 10 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
 | 11 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
 | 12 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
+| 13 | Phase 4 보드 도구 | 결정 보드 검증(emit 게이트) + 바디별 보드 HTML 렌더 | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
 
 ## 검증 & QA — 인덱스
 
@@ -32,6 +33,7 @@
 | `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [11](#11-개발-헬퍼) | 커밋 / 릴리스 전 |
 | Phase 3 합성 정책 적합성 | `nearstars-phase3` 의 audit-pass 절차 | [3](#3-phase-3-합성-파이프라인) | 합성 배치 후 — 수동, 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
 | 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [11](#11-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
+| Phase 4 보드 스키마 v2 / emit-게이트 정합성 | `scripts/check_phase4_gate.py` | [13](#13-phase-4-결정-보드-도구) | 보드를 고칠 때마다 — `scripts/check.sh` 게이트 8에서 호출 |
 
 ## 1. 데이터 엔진
 
@@ -212,7 +214,7 @@
 - `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
-- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도. 수동 실행 전용.
+- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도 + Phase 4 emit-게이트 (게이트 8, 도구 13). 수동 실행 전용.
 
 ## 12. 3D 성도 뷰어
 
@@ -231,6 +233,18 @@
 **참고.** 색은 지각적 흑체 근사(보정된 SED 아님), 마커 크기는 광도 proxy(물리 반경 아닌 빌보드). 표 형태 DB 브라우저인 `docs/index.html`(2번 툴)과 별개로, 이쪽은 공간 배치를 본다.
 
 **관련 — 폴리페무스 위성계 뷰어.** `phase4/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 Chaos 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다. **동결(2026-06-22):** 설계 탐색 임무가 끝나(로스터·고리·obliquity 확정) 아티팩트로 보존하며, 이후 결정은 여기 동기화하지 않는다. 성도에 없는 고유 기능은 Pandora 지표 1인칭 시점+일식뿐이고, canonical·유지보수 시각화는 `docs/starmap.html` 이다.
+
+## 13. Phase 4 결정 보드 도구
+
+**목적.** Phase 4 아트 디렉션 보드(`phase4/<system>.yaml`, 스키마 v2)를 emit-안전하고 리뷰 가능한 상태로 유지한다. 모든 보드를 SPEC 계약에 대해 검증하고, 게이트 리뷰용으로 바디별 HTML 페이지를 렌더한다.
+
+**트리거.** 보드를 고칠 때마다 (validator는 `check.sh` 게이트 8로 자동 실행). "Phase 4 진행/돌리자"는 `nearstars-phase4` 스킬을 타며, 스킬이 두 도구를 모두 호출한다.
+
+**파일.**
+- `scripts/check_phase4_gate.py` — 보드 validator. `schema_version: 2` 보드는 hard-check (status/verdict/op enum, 축 메뉴, typed `fields[]` 형태 검사 — 숫자가 prose에만 있는 행 거부 포함 —, `(body, axis)` 유일성, `refs` 리스트 타입, `colors` hex 형식, divergence-note 필수, passthrough는 gate 금지). 레거시 v1 보드는 한 줄 soft 요약만 내서 파일 단위 마이그레이션이 가능하다. 계약 문서: `phase4/SPEC.md` §0/§3.1.
+- `scripts/phase4/build_phase4_html.py <system>` — v2 보드를 `docs/phase4/<system-slug>/` (인덱스 + 바디별 1페이지)로 렌더. 산문 narrative + typed spec 표(hex 칩, window, 바이옴 색 스와치, 필드별 note), 게이트 evidence/divergence, 한/영 토글. 슬러그는 `scripts/pipeline/_naming.py` 사용. 결정론적 (재실행해도 diff 없음).
+
+**출력.** validator: exit 0/1 + 행 단위 진단. 빌더: `docs/phase4/<system-slug>/*.html`.
 
 ## 스킬 디렉터리 배치
 
