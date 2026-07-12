@@ -401,18 +401,19 @@ decisions:
     status: gated                 # 4b 완료 (2026-06-22)
     driver: [physics]
     narrative: >
-      자기권 standoff + 방사선대 범위. R_mp ≈ 21 R_p (5위성 전부 자기권 내). Chapman-Ferraro 균형(170µT dipole
-      vs α Cen A 항성풍 ram 0.75 nPa @1.6 AU). ^1/6 의존이라 입력에 강건(500µT라도 R_mp 30 R_p). Dante(1.54)·
-      Hades(2.07)·Pandora(3.53 R_p)=방사선대, Cassandra(8.4)=중간, Chaos(21)=자기권계면(주간측 일부 이탈).
+      자기권 standoff + 방사선대 범위. R_mp ≈ 23.5 R_p (5위성 전부 자기권 내). Chapman-Ferraro 균형(170µT dipole
+      vs α Cen A 항성풍 ram 0.38 nPa @1.6 AU — 2026-07-12 항성풍 재게이트 Ṁ_A 1→0.5 리플, ^1/6이라 R_mp
+      21→23.5 소폭). ^1/6 의존이라 입력에 강건(500µT라도 R_mp 33 R_p). Dante(1.54)·Hades(2.07)·
+      Pandora(3.53 R_p)=방사선대, Cassandra(8.4)=중간, Chaos(21)=자기권계면 바로 안쪽(풍 변동 시 주간측 이탈 가능).
     fields:
-      - { name: magnetosphere, value: 21, unit: R_p, op: set, phase3_default: "R_mp ≈ 21 R_p (5위성 전부 자기권 내)" }
+      - { name: magnetosphere, value: 23.5, unit: R_p, op: set, phase3_default: "R_mp ≈ 23.5 R_p (5위성 전부 자기권 내)" }
     gate:
       criterion: [derived-grounding]
       verdict: pass-in-window
       evidence: >
-        Chapman-Ferraro 균형(170µT dipole vs α Cen A 항성풍 ram 0.75 nPa @1.6 AU). ^1/6 의존이라 입력에 강건
-        (500µT라도 R_mp 30 R_p). Dante(1.54)·Hades(2.07)·Pandora(3.53 R_p)=방사선대, Cassandra(8.4)=중간,
-        Chaos(21)=자기권계면.
+        Chapman-Ferraro 균형(170µT dipole vs α Cen A 항성풍 ram 0.38 nPa @1.6 AU, Ṁ_A≈0.5 Ṁ⊙ 재게이트 반영).
+        ^1/6 의존이라 입력에 강건(500µT라도 R_mp 33 R_p). Dante(1.54)·Hades(2.07)·Pandora(3.53 R_p)=방사선대,
+        Cassandra(8.4)=중간, Chaos(21)=자기권계면 바로 안쪽.
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
@@ -532,10 +533,11 @@ decisions:
     status: passthrough               # 측정치 (audit 확인) — 변경 없음
     driver: [passthrough]
     narrative: >
-      P_rot 22d·log R'HK −4.95·X선 log Lx 27.0–27.6(factor~4)·cycle ~19yr(tentative, Ayres2014).
-      radiation_surface ≈0.8 (행성 자기권 게이트의 ram 0.75 nPa와 정합 — 바꾸면 그 행 리플). 측정 emit 그대로.
+      P_rot 22d·log R'HK −4.95·X선 log Lx ~26.78(Robrade&Schmitt2016; 사이클 진폭 L_Xmax/L_Xmin ~10,
+      2005–2013 마운더최소기형 저상태)·cycle ~19.1yr(tentative, Ayres2014). radiation_surface ≈0.8 유지.
+      측정 emit 그대로. [2026-07-12 점검: X선 수치가 B의 것과 뒤바뀌어 있던 것 교정 — A/B 특성 스왑.]
     fields:
-      - { name: activity, value: "P_rot 22d, log R'HK −4.95, X-ray log Lx 27.0–27.6 (factor~4), cycle ~19yr (tentative)", op: passthrough }
+      - { name: activity, value: "P_rot 22d, log R'HK −4.95, X-ray log Lx ~26.78 (cycle swing ~10), cycle ~19.1yr (tentative)", op: passthrough }
 
   - body: Alpha Centauri A
     axis: magnetism.magnetic_field
@@ -553,23 +555,40 @@ decisions:
       evidence: >
         직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R'HK −4.95 + Rossby≈1.8(≈태양) → 태양
         BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.
+    refs: [2010ApJ...722..343D]
 
   - body: Alpha Centauri A
     axis: environment.stellar_wind
-    status: gated
+    status: superseded            # → 2026-07-12 재게이트 행이 대체 — 분배가 재앵커 전 스테일 X선 기반이라 역전
     driver: [physics]
     narrative: >
-      Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중
-      (Wood2002) 가정 → A≈1·B≈0.6.
+      [SUPERSEDED — 아래 재게이트 행이 대체함] 원안 Ṁ_A ≈ 1 Ṁ⊙ (X선 가중 A≈1·B≈0.6). 재앵커 전 X선
+      (A가 더 밝다고 본 값) 기반이라 분배가 역전돼 있었음 — 현 DB는 B가 더 밝음(A 26.78 vs B 27.04).
     fields:
       - { name: stellar_wind, value: 1, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
+
+  - body: Alpha Centauri A
+    axis: environment.stellar_wind
+    status: gated                     # 2026-07-12 재게이트 — 현 DB X선으로 플럭스 가중 재계산
+    driver: [physics]
+    narrative: >
+      Ṁ_A ≈ 0.5 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정)은 불변. 분배는
+      Wood 2002 관계 원형대로 표면 X선 플럭스 가중(Ṁ/area ∝ F_X^1.34): Lx A 26.78(R&S2016)·B 27.04
+      (DeWarf2010), R 1.223/0.863 R⊙ → F_X 비 B/A ≈ 3.7 → Ṁ 비 B/A ≈ 2.9 → A≈0.5·B≈1.5. 리플: A b
+      자기권 ram 0.75→0.38 nPa @1.6 AU, R_mp 21→~23.5 R_p (^1/6 강건, 해당 행 동기 교정 완료).
+    fields:
+      - { name: stellar_wind, value: 0.5, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
       criterion: [derived-grounding]
       verdict: documented-divergence   # 합산만 측정, per-star 분배는 가정
       divergence_note: >
-        only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an
-        X-ray-weighted assumption (Wood 2002), not a direct measurement.
-      evidence: "Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중(Wood2002) 가정 → A≈1·B≈0.6."
+        only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split
+        A≈0.5/B≈1.5 is an X-ray-surface-flux-weighted assumption (Wood 2002 relation), not a direct
+        measurement.
+      evidence: >
+        현 DB X선(A 26.78 Robrade&Schmitt2016 / B 27.04 DeWarf2010)·반지름(1.223/0.863 R⊙)로 F_X^1.34
+        가중 재계산 → Ṁ 비 B/A ≈ 2.9. 구행(A≈1/B≈0.6)은 재앵커 전 스테일 X선 기반이라 역전돼 있었음.
+    refs: [2001ApJ...547L..49W, 2002ApJ...574..412W, 2016A&A...596A..52R, 2010ApJ...722..343D]
 
   - body: Alpha Centauri A
     axis: environment.heliosphere     # SHARED — 시스템 대표로 A에 기록
@@ -586,17 +605,18 @@ decisions:
     status: gated
     driver: [observation]
     narrative: >
-      color=G2V, Teff ~5790K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening=
+      color=G2V, Teff 5847K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening=
       태양형(표준). spots_faculae=희소 — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점 소수 +
-      흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님). 전부 관측 측정서
-      도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗.
-      색/granulation/limb=측정 passthrough.
+      흑점 주변 약한 faculae. corona=존재(X선 log Lx ~26.78, 약 — B보다 어두움). flares=드묾(플레어성 아님). 전부
+      관측 측정서 도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗.
+      색/granulation/limb=측정 passthrough. [2026-07-12 점검: Teff 5790→5847K(DB), corona X선 수치 스왑 교정 —
+      색 hex는 지각 이하 차이라 유지.]
     fields:
-      - { name: color, value: "#fff4ea", op: set, phase3_default: "G2V, Teff ~5790K (황백, 거의 태양)" }
+      - { name: color, value: "#fff4ea", op: set, phase3_default: "G2V, Teff 5847K (황백, 거의 태양)" }
       - { name: granulation, value: "solar-type 대류 granule", op: set }
       - { name: limb_darkening, value: "solar-type (표준)", op: set }
       - { name: spots_faculae, value: "sparse ~0.1–0.3% 피복률", op: set }
-      - { name: corona, value: "present (weak, X-ray log Lx 27.0–27.6)", op: set }
+      - { name: corona, value: "present (weak, X-ray log Lx ~26.78)", op: set }
       - { name: flares, value: "rare (플레어성 아님)", op: set }
     gate:
       criterion: [observation]
@@ -604,72 +624,171 @@ decisions:
       evidence: >
         전부 관측 측정서 도출(Teff·P_rot·log R'HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%,
         B보다 깨끗. 색/granulation/limb=측정 passthrough.
+    refs: [2010ApJ...722..343D, 2016A&A...596A..52R, 2014AJ....147...59A]
 
   - body: Alpha Centauri B
     axis: environment.activity
     status: passthrough
     driver: [passthrough]
     narrative: >
-      K1V·더 활동적. P_rot 38d·log R'HK −5.0·clean 8.84yr cycle(DeWarf2010, 최고급)·X선 factor~10 swing.
-      radiation_surface ≈1.4 (A의 ~2배, 단 플레어성 아님). 측정 emit 그대로.
+      K1V·더 활동적. P_rot 41±3d·log R'HK −4.85·clean 8.84yr cycle(DeWarf2010, 최고급)·X선 log Lx 27.04,
+      min-to-peak contrast ~4.5(태양 진폭의 절반). radiation_surface ≈1.4 (A의 ~2배 — Lx 비 1.8 정합, 단
+      플레어성 아님). 측정 emit 그대로. [2026-07-12 점검: P_rot 38→41d·R'HK −5.0→−4.85(DB recommended),
+      factor~10은 A의 특성이라 제거 — 교정 후에야 "B 더 활동적" 서사와 수치가 정합.]
     fields:
-      - { name: activity, value: "P_rot 38d, log R'HK −5.0, clean 8.84yr cycle (DeWarf2010), X-ray factor~10 swing", op: passthrough }
+      - { name: activity, value: "P_rot 41d, log R'HK −4.85, clean 8.84yr cycle (DeWarf2010), X-ray log Lx 27.04 (contrast ~4.5)", op: passthrough }
 
   - body: Alpha Centauri B
     axis: magnetism.magnetic_field
     status: gated                     # proxy (low conf)
     driver: [physics]
     narrative: >
-      대규모 표면장 ~2–4 G (A보다 강함). K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(X선 factor~10
-      modulation 방증). A의 ~1.5–2배. 직접 ZDI 없음 → proxy(low–med). ZDI pull 시 상향 가능.
+      대규모 표면장 ~2–4 G (A보다 강함). K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(clean 8.84yr
+      cycle의 정연한 주기성 + X선 A보다 밝음이 방증). A의 ~1.5–2배. 직접 ZDI 없음 → proxy(low–med). ZDI pull
+      시 상향 가능. [2026-07-12 점검: "factor~10 modulation" 방증은 A의 특성이라 clean cycle 방증으로 교체.]
     fields:
       - { name: magnetic_field, value: "~2–4 G (large-scale surface, A보다 강함)", op: set }
     gate:
       criterion: [activity-proxy]
       verdict: pass-in-window
       evidence: >
-        K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(X선 factor~10 modulation 방증). A의 ~1.5–2배.
-        직접 ZDI 없음 → proxy(low–med).
+        K1V는 τ_conv 길어 Rossby≈1.4<A → 더 효율적 dynamo(clean 8.84yr cycle 주기성 + X선 log Lx 27.04 >
+        A 26.78 방증). A의 ~1.5–2배. 직접 ZDI 없음 → proxy(low–med).
+    refs: [2010ApJ...722..343D]
 
   - body: Alpha Centauri B
     axis: environment.stellar_wind
-    status: gated
+    status: superseded            # → 2026-07-12 재게이트 행이 대체 — A 행과 동일 사유(스테일 X선 기반 역전)
     driver: [physics]
     narrative: >
-      Ṁ_B ≈ 0.6 Ṁ⊙ (X선 가중). Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6(B 동기 doc). 더 활동적이나
-      L_bol 낮아 절대 풍은 A보다 약함.
+      [SUPERSEDED — 아래 재게이트 행이 대체함] 원안 Ṁ_B ≈ 0.6 Ṁ⊙. "더 활동적이나 절대 풍은 A보다 약함"이라는
+      원 논리는 스테일 X선(A가 더 밝다고 본 값)에 기댄 것 — 현 DB는 B가 X선 더 밝음(27.04 vs 26.78).
     fields:
       - { name: stellar_wind, value: 0.6, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
+
+  - body: Alpha Centauri B
+    axis: environment.stellar_wind
+    status: gated                     # 2026-07-12 재게이트 — 현 DB X선으로 플럭스 가중 재계산
+    driver: [physics]
+    narrative: >
+      Ṁ_B ≈ 1.5 Ṁ⊙ (합산 ~2 Ṁ⊙의 B 몫). Wood 2002 관계 원형대로 표면 X선 플럭스 가중(Ṁ/area ∝ F_X^1.34):
+      B는 표면 X선 플럭스가 A의 ~3.7배(더 밝은 Lx + 더 작은 반지름) → 활동적인 K왜성답게 풍도 B가 지배.
+      상세 산식은 A 재게이트 행 참조.
+    fields:
+      - { name: stellar_wind, value: 1.5, unit: Mdot_sun, op: set, phase3_default: "합산 ~2 Ṁ⊙ (Wood 2001 측정)" }
     gate:
       criterion: [derived-grounding]
-      verdict: documented-divergence
+      verdict: documented-divergence   # 합산만 측정, per-star 분배는 가정
       divergence_note: >
-        only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an
-        X-ray-weighted assumption (Wood 2002), not a direct measurement.
-      evidence: "Wood2002 X선–풍 관계로 합산 ~2 Ṁ⊙서 B 몫 ~0.6. 더 활동적이나 L_bol 낮아 절대 풍은 A보다 약함."
+        only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split
+        A≈0.5/B≈1.5 is an X-ray-surface-flux-weighted assumption (Wood 2002 relation), not a direct
+        measurement.
+      evidence: >
+        현 DB X선(A 26.78 / B 27.04)·반지름(1.223/0.863 R⊙)로 F_X^1.34 가중 재계산 → Ṁ 비 B/A ≈ 2.9.
+        구행(B≈0.6)은 재앵커 전 스테일 X선 기반이라 역전돼 있었음.
+    refs: [2001ApJ...547L..49W, 2002ApJ...574..412W, 2016A&A...596A..52R, 2010ApJ...722..343D]
 
   - body: Alpha Centauri B
     axis: appearance                  # group 6 [star] facet-walk 2026-06-23 — 관측 기반
     status: gated
     driver: [observation]
     narrative: >
-      color=K1V, Teff ~5260K → 황등(yellow-orange, sRGB ~#ffdcb0). granulation=대류 granule(약간 큼).
-      limb_darkening=표준(적색쪽 강함). spots_faculae=보통 — 피복률 ~1–3%(A의 2배 활동도·X선 factor~10·clean
-      8.84yr cycle), 중위도 흑점군 여럿(umbra+penumbra) + faculae 뚜렷. corona=A보다 밝음. flares=가끔(A보다
-      활동적, 단 플레어성 아님). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough.
+      color=K1V, Teff 5316K → 황등(yellow-orange, sRGB ~#ffdcb0). granulation=대류 granule(약간 큼).
+      limb_darkening=표준(적색쪽 강함). spots_faculae=보통 — 피복률 ~1–3%(A의 ~2배 활동도·clean 8.84yr
+      cycle·X선 A보다 밝음), 중위도 흑점군 여럿(umbra+penumbra) + faculae 뚜렷. corona=A보다 밝음(log Lx
+      27.04 vs 26.78). flares=가끔(A보다 활동적, 단 플레어성 아님). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%,
+      A보다 흑점군 多. 색=K1V Teff passthrough. [2026-07-12 점검: Teff 5260→5316K(DB), factor~10 제거(A의
+      특성) — 색 hex는 지각 이하 차이라 유지.]
     fields:
-      - { name: color, value: "#ffdcb0", op: set, phase3_default: "K1V, Teff ~5260K (황등)" }
+      - { name: color, value: "#ffdcb0", op: set, phase3_default: "K1V, Teff 5316K (황등)" }
       - { name: granulation, value: "대류 granule (약간 큼)", op: set }
       - { name: limb_darkening, value: "표준 (적색쪽 강함)", op: set }
       - { name: spots_faculae, value: "moderate ~1–3% 피복률, 중위도 흑점군 여럿", op: set }
-      - { name: corona, value: "A보다 밝음", op: set }
+      - { name: corona, value: "A보다 밝음 (log Lx 27.04)", op: set }
       - { name: flares, value: "occasional (플레어성 아님)", op: set }
     gate:
       criterion: [observation]
       verdict: pass-in-window
       evidence: >
-        관측 측정서 도출(Teff·X선 factor~10·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%,
-        A보다 흑점군 多. 색=K1V Teff passthrough.
+        관측 측정서 도출(Teff·X선 log Lx 27.04·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통
+        ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough.
+    refs: [2010ApJ...722..343D]
+
+  # ── 항성 자전축/J2/발견성 — 2026-07-12 silent-passthrough 점검서 신설 ──────────
+  - body: Alpha Centauri A
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 2026-07-12 오너 선택 — 측정 없음 (silent-passthrough 해소)
+    driver: [art-direction]
+    narrative: >
+      i★ 측정 없음 → 오너 선택: AB 궤도면 법선에서 태양 유사 ~7° 소기울기(태양-황도 7.25° 유비). 극 방위각은
+      emit 배향 자유(ICRS 극 RA/Dec 변환은 emit 단계). 시각 효과는 미미하나 "완전 정렬 0°"라는 침묵 기본값을
+      명시 결정으로 대체.
+    fields:
+      - { name: spin_axis_orientation, value: "AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)", op: set }
+      - { name: obliquity, value: 7, unit: deg, op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: >
+        측정 부재라 물리 범위 게이트만: 근접쌍 형성·조석 진화상 정렬 기대가 기본이고 소기울기(≲10°)는 태양
+        (7.25°) 유비로 무난. 어떤 관측과도 충돌 없음.
+
+  - body: Alpha Centauri B
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 2026-07-12 오너 선택 — 측정 45° 채택 (silent-passthrough 해소)
+    driver: [observation]
+    narrative: >
+      i★ = 45°(+9/−19) 측정 채택(Dumusque 2014, SOAP activity/RV modeling, low-conf). 궤도 경사 ~79°와
+      어긋나 최소 3D 비정렬 |79−45| ≈ 34° — 스핀-궤도 비정렬이라는 흥미로운 실측 읽기(interesting-first).
+      극 방위각 미구속 → 궤도극과 같은 PA 채택(비정렬 최소화 읽기, 34°). ICRS 극 RA/Dec 변환은 emit 단계.
+      뷰어 i★ 레이어(측정=금색)와 정합.
+    fields:
+      - { name: spin_axis_orientation, value: "i★ 45° (LOS 기준, 측정) · PA=궤도극 정렬 → 궤도면 대비 비정렬 ~34°", op: set }
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      evidence: >
+        측정값 그대로 채택(45° +9/−19, recommended). 비정렬 자체가 측정 함의 — 가정은 방위각(최소 비정렬
+        읽기)뿐. 불확도 커서 low-conf 유지, 후속 측정 시 갱신 후보.
+    refs: [2014ApJ...796..133D]
+
+  - body: Alpha Centauri A
+    axis: bulk.geopotential_j2
+    status: passthrough               # 느린 자전 → 무시가능, 미방출
+    driver: [passthrough]
+    narrative: >
+      P_rot 22d 느린 자전 → 회전 편평 J2 ~수e-7급(태양 2.2e-7과 동급). 최근접 행성이 1.6 AU라 세차 효과
+      무시가능 — Principia 기본(J2 미지정)과 게임플레이 차이 없음. body-figure 프로그램 per-body 대상서
+      항성 A/B는 무시가능으로 종결.
+    fields:
+      - { name: geopotential_j2, value: "~수e-7 (negligible, not emitted)", op: passthrough }
+
+  - body: Alpha Centauri B
+    axis: bulk.geopotential_j2
+    status: passthrough               # 더 느린 자전(41d)·더 작은 반지름 → A보다도 작음, 미방출
+    driver: [passthrough]
+    narrative: >
+      P_rot 41d·R 0.86 R⊙ → J2는 A보다도 작은 ~1e-7급. 동일 논리로 미방출.
+    fields:
+      - { name: geopotential_j2, value: "~1e-7 (negligible, not emitted)", op: passthrough }
+
+  - body: Alpha Centauri A
+    axis: identity.discoverability
+    status: passthrough               # 항성 = 항상 가시 (RB 정책 글로벌)
+    driver: [passthrough]
+    narrative: >
+      ResearchBodies 정책상 항성은 항상 가시(발견 대상 아님). 시스템 정책 그대로 — per-body 예외 없음.
+    fields:
+      - { name: discoverability, value: "always visible (star)", op: passthrough }
+
+  - body: Alpha Centauri B
+    axis: identity.discoverability
+    status: passthrough               # 항성 = 항상 가시 (RB 정책 글로벌)
+    driver: [passthrough]
+    narrative: >
+      ResearchBodies 정책상 항성은 항상 가시. A와 동일.
+    fields:
+      - { name: discoverability, value: "always visible (star)", op: passthrough }
 
   # ── 위성 개별 Phase 4 (안쪽부터) ──────────────────────────────
   - body: Dante                    # A b I

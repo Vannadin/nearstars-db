@@ -145,14 +145,14 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">5 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 3 gated · 1 divergence</span></div>
+<div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 1 divergence</span></div>
 <div class="decisions"><article class="dec" id="environment.activity">
   <div class="dec-head">
     <code class="axis">environment.activity</code>
     <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
   </div>
-  <p class="narrative">P_rot 22d·log R&#x27;HK −4.95·X선 log Lx 27.0–27.6(factor~4)·cycle ~19yr(tentative, Ayres2014). radiation_surface ≈0.8 (행성 자기권 게이트의 ram 0.75 nPa와 정합 — 바꾸면 그 행 리플). 측정 emit 그대로.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 22d, log R&#x27;HK −4.95, X-ray log Lx 27.0–27.6 (factor~4), cycle ~19yr (tentative)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  <p class="narrative">P_rot 22d·log R&#x27;HK −4.95·X선 log Lx ~26.78(Robrade&amp;Schmitt2016; 사이클 진폭 L_Xmax/L_Xmin ~10, 2005–2013 마운더최소기형 저상태)·cycle ~19.1yr(tentative, Ayres2014). radiation_surface ≈0.8 유지. 측정 emit 그대로. [2026-07-12 점검: X선 수치가 B의 것과 뒤바뀌어 있던 것 교정 — A/B 특성 스왑.]<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">activity</td><td class="v">P_rot 22d, log R&#x27;HK −4.95, X-ray log Lx ~26.78 (cycle swing ~10), cycle ~19.1yr (tentative)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
   
   
   
@@ -166,6 +166,17 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~1–2 G (large-scale surface, solar-twin proxy)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R&#x27;HK −4.95 + Rossby≈1.8(≈태양) → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.<br></div>
+  <div class="refs"><span class="ref">2010ApJ...722..343D</span></div>
+</article>
+<article class="dec is-sup" id="environment.stellar_wind">
+  <div class="dec-head">
+    <code class="axis">environment.stellar_wind</code>
+    <span class="pills"><span class="pill st-superseded"><span data-i18n>대체됨</span><span data-en hidden>Superseded</span></span></span>
+  </div>
+  <p class="narrative">[SUPERSEDED — 아래 재게이트 행이 대체함] 원안 Ṁ_A ≈ 1 Ṁ⊙ (X선 가중 A≈1·B≈0.6). 재앵커 전 X선 (A가 더 밝다고 본 값) 기반이라 분배가 역전돼 있었음 — 현 DB는 B가 더 밝음(A 26.78 vs B 27.04).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
+  
+  
   
 </article>
 <article class="dec is-div" id="environment.stellar_wind">
@@ -173,11 +184,11 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">environment.stellar_wind</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
   </div>
-  <p class="narrative">Ṁ_A ≈ 1 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중 (Wood2002) 가정 → A≈1·B≈0.6.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">Ṁ_A ≈ 0.5 Ṁ⊙ (합산 ~2 Ṁ⊙의 A 몫). Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정)은 불변. 분배는 Wood 2002 관계 원형대로 표면 X선 플럭스 가중(Ṁ/area ∝ F_X^1.34): Lx A 26.78(R&amp;S2016)·B 27.04 (DeWarf2010), R 1.223/0.863 R⊙ → F_X 비 B/A ≈ 3.7 → Ṁ 비 B/A ≈ 2.9 → A≈0.5·B≈1.5. 리플: A b 자기권 ram 0.75→0.38 nPa @1.6 AU, R_mp 21→~23.5 R_p (^1/6 강건, 해당 행 동기 교정 완료).<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.5 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> Wood 2001 공유 astrosphere 합산 ~2 Ṁ⊙(측정). 분배는 X선 가중(Wood2002) 가정 → A≈1·B≈0.6.</div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 공유 astrosphere); per-star split A≈1/B≈0.6 is an X-ray-weighted assumption (Wood 2002), not a direct measurement.</div>
-  
+  <div class="ev"><span class="tag">evidence</span> 현 DB X선(A 26.78 Robrade&amp;Schmitt2016 / B 27.04 DeWarf2010)·반지름(1.223/0.863 R⊙)로 F_X^1.34 가중 재계산 → Ṁ 비 B/A ≈ 2.9. 구행(A≈1/B≈0.6)은 재앵커 전 스테일 X선 기반이라 역전돼 있었음.<br></div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split A≈0.5/B≈1.5 is an X-ray-surface-flux-weighted assumption (Wood 2002 relation), not a direct measurement.</div>
+  <div class="refs"><span class="ref">2001ApJ...547L..49W</span><span class="ref">2002ApJ...574..412W</span><span class="ref">2016A&amp;A...596A..52R</span><span class="ref">2010ApJ...722..343D</span></div>
 </article>
 <article class="dec" id="environment.heliosphere">
   <div class="dec-head">
@@ -195,10 +206,43 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">appearance</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">color=G2V, Teff ~5790K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening= 태양형(표준). spots_faculae=희소 — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점 소수 + 흑점 주변 약한 faculae. corona=존재(X선 log Lx 27.0–27.6, 약). flares=드묾(플레어성 아님). 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#fff4ea"></span><span class="hx">#fff4ea</span><div class="fnote p3">Phase 3: G2V, Teff ~5790K (황백, 거의 태양)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">solar-type 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">solar-type (표준)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">sparse ~0.1–0.3% 피복률</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">present (weak, X-ray log Lx 27.0–27.6)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
+  <p class="narrative">color=G2V, Teff 5847K → 황백(거의 태양, sRGB ~#fff4ea). granulation=태양형 대류 granule. limb_darkening= 태양형(표준). spots_faculae=희소 — 피복률 ~0.1–0.3%(태양 수준 이하, P_rot 22d·조용한 활동도), 작은 흑점 소수 + 흑점 주변 약한 faculae. corona=존재(X선 log Lx ~26.78, 약 — B보다 어두움). flares=드묾(플레어성 아님). 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough. [2026-07-12 점검: Teff 5790→5847K(DB), corona X선 수치 스왑 교정 — 색 hex는 지각 이하 차이라 유지.]<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#fff4ea"></span><span class="hx">#fff4ea</span><div class="fnote p3">Phase 3: G2V, Teff 5847K (황백, 거의 태양)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">solar-type 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">solar-type (표준)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">sparse ~0.1–0.3% 피복률</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">present (weak, X-ray log Lx ~26.78)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></div>
+  <div class="refs"><span class="ref">2010ApJ...722..343D</span><span class="ref">2016A&amp;A...596A..52R</span><span class="ref">2014AJ....147...59A</span></div>
+</article>
+<article class="dec" id="bulk.spin_axis_orientation">
+  <div class="dec-head">
+    <code class="axis">bulk.spin_axis_orientation</code>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+  </div>
+  <p class="narrative">i★ 측정 없음 → 오너 선택: AB 궤도면 법선에서 태양 유사 ~7° 소기울기(태양-황도 7.25° 유비). 극 방위각은 emit 배향 자유(ICRS 극 RA/Dec 변환은 emit 단계). 시각 효과는 미미하나 &quot;완전 정렬 0°&quot;라는 침묵 기본값을 명시 결정으로 대체.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">AB 궤도면 법선 + ~7° tilt (방위각 자유, ICRS 극 RA/Dec 변환 at emit)</td><td class="o"></td></tr><tr><td class="k">obliquity</td><td class="v">7 <span class="u">deg</span></td><td class="o"></td></tr></tbody></table>
+  
+  <div class="ev"><span class="tag">evidence</span> 측정 부재라 물리 범위 게이트만: 근접쌍 형성·조석 진화상 정렬 기대가 기본이고 소기울기(≲10°)는 태양 (7.25°) 유비로 무난. 어떤 관측과도 충돌 없음.<br></div>
+  
+</article>
+<article class="dec" id="bulk.geopotential_j2">
+  <div class="dec-head">
+    <code class="axis">bulk.geopotential_j2</code>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+  </div>
+  <p class="narrative">P_rot 22d 느린 자전 → 회전 편평 J2 ~수e-7급(태양 2.2e-7과 동급). 최근접 행성이 1.6 AU라 세차 효과 무시가능 — Principia 기본(J2 미지정)과 게임플레이 차이 없음. body-figure 프로그램 per-body 대상서 항성 A/B는 무시가능으로 종결.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">~수e-7 (negligible, not emitted)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
+  
+  
+</article>
+<article class="dec" id="identity.discoverability">
+  <div class="dec-head">
+    <code class="axis">identity.discoverability</code>
+    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+  </div>
+  <p class="narrative">ResearchBodies 정책상 항성은 항상 가시(발견 대상 아님). 시스템 정책 그대로 — per-body 예외 없음.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">discoverability</td><td class="v">always visible (star)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  
+  
   
 </article></div>
 <div class="bodynav"><a class="navlink" href="alpha-centauri-a-b.html">← Alpha Centauri A b</a><a class="navlink" href="alpha-centauri-b.html">Alpha Centauri B →</a></div>
