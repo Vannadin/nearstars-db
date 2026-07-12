@@ -133,8 +133,9 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Files.**
 - `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` — bulk emitter (v1.1, 2026-05-27). Scope: circumstellar-disk Rings (star body) + planetary-ring Rings (planet body). Reads `stars[0].raw.disk_measurements` + Phase 3 `disk_tint_rgb_hex` + `disk_opacity`, converts AU → body-radius multipliers, multi-paper merge for null backfill. Full Properties / Orbit / PQS / Atmosphere still hand-written per `.claude/skills/kopernicus-cfg/references/*.md` templates.
+- `scripts/make_placeholder_textures.py` — writes stand-in `<Body>_Sunspots.dds` / `<Body>_Corona.dds` (uncompressed 64×64 A8R8G8B8) at the texture paths the emitted star bodies reference, so a test build loads before real art exists. Reads the body list from the emitted `stars.cfg`; run it after the emitter.
 
-**Output.** `dist/NearStars-Configs/Patches/Kopernicus/`.
+**Output.** `dist/NearStars-Configs/Patches/Kopernicus/`, `dist/NearStars-Textures/PluginData/`.
 
 ## 7. Principia cfg generation
 

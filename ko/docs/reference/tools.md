@@ -133,8 +133,9 @@
 
 **파일.**
 - `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` — 일괄 emitter (v1.1, 2026-05-27). 범위: 항성 주위 disk Rings (별 body) + 행성 ring Rings (행성 body). `stars[0].raw.disk_measurements` + Phase 3 `disk_tint_rgb_hex` + `disk_opacity` 를 읽어 AU → body-radius multiplier 변환, 같은 belt 의 multi-paper merge 로 null 백필. 전체 Properties / Orbit / PQS / Atmosphere 는 여전히 `.claude/skills/kopernicus-cfg/references/*.md` 템플릿 따라 수동 작성.
+- `scripts/make_placeholder_textures.py` — emit 된 항성 body 가 참조하는 텍스처 경로에 임시 `<Body>_Sunspots.dds` / `<Body>_Corona.dds` (무압축 64×64 A8R8G8B8) 를 써넣습니다. 실제 아트가 나오기 전에도 테스트 빌드가 로드되게 하는 용도이고, 바디 목록은 emit 된 `stars.cfg` 에서 읽으므로 emitter 실행 뒤에 돌립니다.
 
-**출력.** `dist/NearStars-Configs/Patches/Kopernicus/`.
+**출력.** `dist/NearStars-Configs/Patches/Kopernicus/`, `dist/NearStars-Textures/PluginData/`.
 
 ## 7. Principia cfg 생성
 
