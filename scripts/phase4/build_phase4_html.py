@@ -20,6 +20,11 @@ from pipeline._naming import to_url_slug  # noqa: E402
 
 HEX_RE = re.compile(r"#[0-9a-fA-F]{6}")
 
+
+def body_slug(b):
+    # 와일드카드 바디("*", 행성 공통 행)는 to_url_slug가 빈 문자열을 내므로 고정 슬러그 사용
+    return "system-wide" if b.strip("* ") == "" else to_url_slug(b)
+
 STATUS_LABEL = {
     "gated": ("확정", "Gated"), "passthrough": ("통과", "Passthrough"),
     "open": ("미결", "Open"), "art-directed": ("연출", "Art-directed"),
@@ -221,7 +226,7 @@ def render_index(system, order, bodies, aliases):
     cards = []
     for b in order:
         st = body_stats(bodies[b])
-        slug = to_url_slug(b)
+        slug = body_slug(b)
         alias = aliases.get(b)
         alias_html = f'<span class="alias">{esc(alias)}</span>' if alias else ""
         badges = [f'<span class="mini-pill g">{st["gated"]} gated</span>']
@@ -450,9 +455,9 @@ def main():
         render_index(system, order, bodies, aliases), encoding="utf-8")
 
     for i, b in enumerate(order):
-        prev_link = (to_url_slug(order[i - 1]) + ".html", order[i - 1]) if i > 0 else None
-        next_link = (to_url_slug(order[i + 1]) + ".html", order[i + 1]) if i < len(order) - 1 else None
-        (out_dir / f"{to_url_slug(b)}.html").write_text(
+        prev_link = (body_slug(order[i - 1]) + ".html", order[i - 1]) if i > 0 else None
+        next_link = (body_slug(order[i + 1]) + ".html", order[i + 1]) if i < len(order) - 1 else None
+        (out_dir / f"{body_slug(b)}.html").write_text(
             render_body(system, b, bodies[b], aliases.get(b), prev_link, next_link),
             encoding="utf-8")
 
