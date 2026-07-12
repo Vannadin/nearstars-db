@@ -72,7 +72,10 @@ Jupiter를 −0 %, Saturn을 −10 %로 재현합니다(1차 절단, q가 커질
     J₂(항성) = (J₂☉ / q☉) · q  ≈  0.0105 · q
 
 앵커는 헬리오사이즈몰로지 측정값 J₂☉ = (2.18 ± 0.06)×10⁻⁷ (Pijpers 1998)입니다. 태양 유사 응집도의 FGK
-왜성에 유효하며, M 왜성과 조기형 항성은 각자의 보드 차례가 오면 응답계수를 별도로 근거화해야 합니다.
+왜성에 유효합니다. **완전 대류 M 왜성은 예외적으로 Radau–Darwin으로 되돌아갑니다** — n = 3/2 폴리트로프의
+NMoI ≈ 0.205(Chandrasekhar 1939)는 이 관계식의 유효범위 안이라, 그 NMoI에서 J₂/q ≈ 0.084가 나옵니다
+(태양 비율의 ≈8배 — 응집이 덜해 단위 q당 더 많이 편평해짐). 조기형 항성은 여전히 각자의 보드 차례에
+응답계수를 별도로 근거화해야 합니다(Fomalhaut A).
 **오너 정책(2026-07-12): 항성 J₂는 크기와 무관하게 항상 계산해서 emit하며, "무시가능" 기록으로 끝내는 처리는
 금지합니다** — Principia가 이 항을 적분하므로 오너가 상시 반영을 원합니다.
 
@@ -187,6 +190,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 | **Proxima b** | sync. rocky | n (P 11.2 d) | 2.8e-5 | ~2.8e-5 | ~8e-6 | 충분히 멀어 형상이 미미함(기록만; C₂₂는 emit 임계 아래로 추정) |
 | **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | — | 태양앵커 스케일링(0.0105·q); P_rot ±3 d에서 ±~30 % — 상시-emit 정책 아래 처음 emit된 항성 행 |
 | **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | 같은 방법, ±~15 % |
+| **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | 완전 대류 → 폴리트로프 NMoI 0.205로 Radau–Darwin (J₂/q 0.084); ±~25 % (반지름 지배) |
 | **Fomalhaut A** | star (A-type) | fast (A4V) | — | (보드 차례에 계산) | — | 로스터에서 유일하게 빠르게 자전하는 항성(자전축 측정, Le Bouquin 2009)이라 물리적으로 편평하지만, 발표된 편평도 수치는 없음. J₂는 그 보드 차례에 태양앵커 스케일링으로 계산하되, A형 항성의 응답계수를 먼저 별도로 근거화할 것(0.0105 맹목 재사용 금지). |
 
 핵심 대비는 이렇습니다. **Erid**(빠르고 자유로운 뜨거운 슈퍼지구)는 실제로 편평하지만, 고정된 거주가능
@@ -221,7 +225,10 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
   곧 J₂/C₂₂ ≈ 10⁄3, (b−c)/(a−c) ≈ 1⁄4, 그리고 고차 Ω²/(πGρ) 보정입니다. **Dermott 1979**,
   Icarus 37, 575 (`1979Icar...37..575D`)와 짝지어 사용 — 위성 형상과 중력 모멘트의 고전적 유도.
 - **Pijpers 1998**, MNRAS 297, L76 (`1998MNRAS.297L..76P`) — 헬리오사이즈몰로지 태양
-  J₂ = (2.18 ± 0.06)×10⁻⁷. 항성 태양앵커 q-스케일링의 측정 앵커입니다(항성은 Radau–Darwin을 우회, §2).
+  J₂ = (2.18 ± 0.06)×10⁻⁷. 항성 태양앵커 q-스케일링의 측정 앵커입니다(FGK 항성은 Radau–Darwin을 우회, §2).
+- **Chandrasekhar 1939**, *An Introduction to the Study of Stellar Structure*
+  (`1939isss.book.....C`) — 폴리트로프 관성모멘트. n = 3/2(완전 대류 M 왜성)의 NMoI ≈ 0.205로,
+  M 왜성을 Radau–Darwin 유효범위 안으로 되돌립니다(§2).
 - **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`) —
   Maclaurin spheroid(균질 자전 극한, f = 5q/4).
 - **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);
