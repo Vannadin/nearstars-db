@@ -1,19 +1,161 @@
 # 바너드 별 Phase 4 결정 보드 — (body × axis) 행별 상태. DB(측정 β-prior·Msini)는 불변, staging 기록
+schema_version: 2
 system: barnards_star
-status: staged          # Phase 4 미활성(validator/emitter 없음) — 활성 시 emit할 채택값을 기록해 둠
+status: staged
 adopted: 2026-06-19
+updated: 2026-07-12          # v2 마이그레이션 + 항성 facet-walk (항성 점검 프로그램)
 
-# 보드 = (body × axis) 행. 손댄 축만 행으로 둠. 나머지 궤도/대기/외형 축은 passthrough(Phase 3 기본값).
+# 보드 = (body × axis) 행. 손댄 축만 행으로 둠. 나머지 축은 passthrough(Phase 3 기본값).
 decisions:
+  # ── 항성 (Barnard's star, M4.0Ve) — 항성 점검 facet-walk 2026-07-12 ──────────
+  - body: "Barnard's star"
+    axis: identity
+    status: gated
+    driver: [classification, observation]
+    narrative: >
+      body_type=M4.0Ve 적색왜성 — 로스터 최고령(8.5 Gyr)·최저활동 급의 조용한 노익성. designation=Barnard's
+      star (GJ 699). discoverability=confirmed(V 9.5로 맨눈 불가, 1916 E.E. Barnard 고유운동 측정으로 유명해진
+      망원경 천체 — Proxima identity 행과 같은 패턴).
+    fields:
+      - { name: body_type, value: "M4.0Ve 적색왜성 (조용한 노익성)", op: set }
+      - { name: designation, value: "Barnard's star (GJ 699)", op: set }
+      - { name: discoverability, value: "confirmed (맨눈 불가, 망원경 — Barnard 1916 고유운동)", op: set }
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      evidence: >
+        V 9.5 → naked_eye 불가, category=confirmed(망원경 검출사 정합). Proxima(11등, confirmed)와 동일 정책.
+    discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Barnard 1916 (proper-motion discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
+
+  - body: "Barnard's star"
+    axis: bulk                        # 측정 passthrough
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      M 0.162±0.007 M☉ · R 0.187±0.001 R☉ · L 0.003558 L☉(전부 Schweitzer2019) · Teff 3195±28K
+      (González Hernández2024) · age 8.5±1.5 Gyr(Ribas2018) · [Fe/H] −0.39(Jahandar2023). 전부 고신뢰 측정 →
+      emit 그대로.
+    fields:
+      - { name: mass, value: 0.162, unit: M_sun, op: passthrough, note: "±0.007 (Schweitzer2019)" }
+      - { name: radius, value: 0.187, unit: R_sun, op: passthrough, note: "±0.001 (Schweitzer2019, 각지름 0.952 mas)" }
+      - { name: intrinsic_luminosity, value: 0.003558, unit: L_sun, op: passthrough }
+      - { name: age, value: 8.5, unit: Gyr, op: passthrough, note: "±1.5 (Ribas2018). Teff 3195±28K (GH2024)" }
+
+  - body: "Barnard's star"
+    axis: appearance                  # [star] group — 관측 기반 + 흑점 오너 결정
+    status: gated
+    driver: [observation]
+    narrative: >
+      color=M4.0V 물리색 #ffd487(옅은 따뜻한 주황 — 실측 Pickles M4 SED→CIE; 방법론 문서의 진단 예시가 정확히
+      이 온도대: 40 Eri C 3167K vs Barnard 3195K). granulation=M왜성 대류 granule. limb_darkening α~0.4
+      (Claret2018 M-dwarf 보간, Proxima와 동일 tie-break). **spots_faculae=소수 ~0.5–1%**(오너 결정 2026-07-12 —
+      극저활동 노익성이나 145d 광도 변조 검출 이력이 있어 완전 무점은 아님; α Cen A보다 조금 더 있는 수준).
+      corona=미약(X선 log Lx 25.3 — 로스터 항성 중 최저급). flares=드묾(정온 노익성; France2020 FUV 소플레어
+      검출 이력은 있음 → "아예 없음" 아님).
+    fields:
+      - { name: color, value: "#ffd487", op: set, phase3_default: "M4.0V, Teff 3195K (Pickles SED 물리색)" }
+      - { name: granulation, value: "M왜성 대류 granule", op: set }
+      - { name: limb_darkening, value: 0.4, op: set, note: "α~0.4 (Claret2018 M-dwarf 보간)" }
+      - { name: spots_faculae, value: "~0.5–1% 피복률 (소수 — 오너 결정)", op: set }
+      - { name: corona, value: "faint (X-ray log Lx 25.3, 로스터 최저급)", op: set }
+      - { name: flares, value: "rare (정온 노익성; FUV 소플레어 이력 있음)", op: set }
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      evidence: >
+        색=stellar-photospheric-color-methodology.md §8 워크드 값 그대로(#ffd487, M4 3195K). 흑점량=오너 위임
+        결정(텍스처용) 소수 ~0.5–1% — 145d 변조 검출(spot 존재)과 극저활동(R'HK −5.82) 사이의 절충, 물리 범위 내.
+        corona/flares=측정(France2020 log Lx 25.3, FUV 플레어) 기반.
+    refs: [2024A&A...690A..79G, 2020AJ....160..237F, 2019MNRAS.488.5145T]
+
+  - body: "Barnard's star"
+    axis: magnetism.magnetic_field    # 측정
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      평균 표면장 430 G(Reiners2022 CARMENES Zeeman). ZDI 대규모장 성분은 미큐레이션 — 측정 emit 그대로.
+    fields:
+      - { name: magnetic_field, value: 0.43, unit: kG, op: passthrough, note: "평균 표면장 (Reiners2022 CARMENES)" }
+
+  - body: "Barnard's star"
+    axis: environment.activity        # 측정
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      P_rot 145±15d(Toledo-Padrón2019 — 로스터 최장) · log R'HK −5.82±0.08(최저활동) · X선 log Lx 25.3 /
+      log Rx −5.8(France2020). 활동 사이클은 DB 미큐레이션. 측정 emit 그대로.
+    fields:
+      - { name: activity, value: "P_rot 145±15d, log R'HK −5.82±0.08, X-ray log Lx 25.3 (log Rx −5.8)", op: passthrough }
+
+  - body: "Barnard's star"
+    axis: environment.stellar_wind    # 측정 (상한)
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      Ṁ ≤ 0.2 Ṁ☉(Wood2021 astrospheric Lyα, 상한). 정온 노익성이라 풍 약함 — Proxima와 같은 등급의 상한.
+    fields:
+      - { name: stellar_wind, value: 0.2, unit: Mdot_sun, op: passthrough, note: "≤0.2 상한 (Wood2021)" }
+
+  - body: "Barnard's star"
+    axis: environment.heliosphere
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      고속 항성 고유운동 → 항성 기준 ISM 유입 121 km/s(LIC, 유입각 θ 43°, Wood2021 — αCen계 ~25 km/s의 ~5배)
+      → 강하게 압축된 혜성형 astrosphere. standoff 수치는 DB 미큐레이션(풍이 상한뿐이라 하한 불가) — 유입
+      벡터만 emit(뷰어 heliosphere 레이어와 동일 소스).
+    fields:
+      - { name: heliosphere, value: "압축 혜성형 astrosphere (ISM 유입 121 km/s, θ 43°, LIC — Wood2021)", op: passthrough }
+
+  # ── 항성 자전축/J2 — 2026-07-12 항성 점검서 신설 (silent-passthrough 해소) ──
+  - body: "Barnard's star"
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 오너 선택 2026-07-12 — 측정 없음
+    driver: [art-direction]
+    narrative: >
+      i★ 측정 없음, 행성 궤도 경사도 미측정 → 오너 선택: **채택 궤도면 정렬**. 질량 행("*" bulk.mass)이 이미
+      등방 prior 중앙 경사각 60°를 채택해 행성 궤도면이 사실상 i=60°로 emit되므로, 항성 적도도 같은 면에
+      정렬(i★=60°) — 보드의 경사 가정이 하나로 묶임(자기일관). 극 방위각은 emit 배향 자유(ICRS 변환 emit 단계).
+    fields:
+      - { name: spin_axis_orientation, value: "i★ 60° (채택 행성 궤도면 정렬 — 질량 행의 등방 prior 60°와 단일 가정) · PA 자유", op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: >
+        측정 부재라 물리 범위 게이트만: 단독성+행성계의 스핀-궤도 정렬은 형성론 기본 기대. 질량 채택(×1.1547,
+        i=60°)과 같은 가정을 공유해 보드 내 모순 없음. 어떤 관측과도 충돌 없음.
+
+  - body: "Barnard's star"
+    axis: bulk.geopotential_j2
+    status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit
+    driver: [physics]
+    narrative: >
+      회전 편평 J2 = 2.2e-9. 완전 대류 M왜성(0.162 M☉ ≪ 0.35 M☉ 경계) → Radau-Darwin, n=3/2 폴리트로프
+      NMoI 0.205(Chandrasekhar 1939) → J2/q = 0.084. q = ω²R³/GM = 2.58e-8 (M 0.162·R 0.187·P_rot 145d,
+      전부 DB recommended) → J2 2.2e-9 (±~20%, P_rot ±15d 지배). reference_radius = 적도반경 1.301e8 m.
+      방법 = body-figure-methodology.md §2 M왜성 분기(Proxima와 동일).
+    fields:
+      - { name: geopotential_j2, value: 2.2e-9, op: set }
+      - { name: reference_radius, value: 1.301e8, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        로스터 최장 자전(145d)이라 q가 극소 — Proxima(3.7e-9)보다도 작은 로스터 최저 J2. 오너 정책(항성 J2
+        무시가능 처리 금지)대로 계산값 emit. 폴리트로프 계수 0.084는 완전대류 구조의 물리적 귀결.
+    refs: [1939isss.book.....C, 2019A&A...625A..68S, 2019MNRAS.488.5145T]
+
+  # ── 행성 공통 (2026-06-19 채택, v1→v2 형태 변환 2026-07-12 — 내용 불변) ──────
   - body: "*"                 # 행성 4개 공통
     axis: bulk.mass
     status: gated
     op: scale
     value: 1.1547             # Msini(최소질량) → 등방 prior 중앙 경사각 60°의 진질량
     per_planet_result_mearth: { "Barnard d": 0.304, "Barnard b": 0.345, "Barnard c": 0.387, "Barnard e": 0.223 }
-    driver: window-selection
+    driver: [window-selection]
     phase3_default: "M·sin i (RV 최소질량)"
-    rationale: "RV Msini는 최소값. 무작위 방향 궤도의 중앙 경사각 60° → ×1/sin60 = ×1.1547이 통계적 중앙 진질량."
+    narrative: >
+      RV Msini는 최소값. 무작위 방향 궤도의 중앙 경사각 60° → ×1/sin60 = ×1.1547이 통계적 중앙 진질량.
     gate:
       criterion: [dynamical-ceiling]
       verdict: pass-in-window
@@ -25,9 +167,9 @@ decisions:
     op: scale
     value: 0.8               # β-prior × 0.8 → c≈0.064
     per_planet_result: { "Barnard d": 0.032, "Barnard b": 0.024, "Barnard c": 0.064, "Barnard e": 0.032 }
-    driver: engine + window-selection
+    driver: [engine, window-selection]
     phase3_default: "β-prior (c≈0.08)"
-    rationale: >
+    narrative: >
       관측(β-prior)에 가장 가까우면서 채택 중앙질량에서 고정 스텝(Principia) 1 Myr를
       견디는 이심률. 측정 β-prior(c 0.08)는 고정 스텝 적분을 인공 폭발시킴(|dE/E|=6.2).
     gate:
@@ -35,8 +177,8 @@ decisions:
       verdict: pass-in-window
       evidence: >
         중앙질량 WHFast 1 Myr clean — |dE/E|=6.5e-9, MEGNO 1.4e4, e_max≤0.085;
-        측정 β-prior보다 낮고 RV 이심률 불확정 범위 안.
-      caveat: "카오스 가장자리(MEGNO ~1.4e4) — 마진 얇음. 더 안전하려면 e ≤ ×0.75(calmer)."
+        측정 β-prior보다 낮고 RV 이심률 불확정 범위 안. caveat: 카오스 가장자리(MEGNO ~1.4e4) —
+        마진 얇음. 더 안전하려면 e ≤ ×0.75(calmer).
     refs: ["2025ApJ...982L...1B"]
     alternatives_considered: "×0.5 / ×2/3 / ×0.75 (calmer, 관측에선 더 멂) — STABILITY_REPORT 이심률 스캔표"
 
