@@ -74,8 +74,12 @@ Jupiter를 −0 %, Saturn을 −10 %로 재현합니다(1차 절단, q가 커질
 앵커는 헬리오사이즈몰로지 측정값 J₂☉ = (2.18 ± 0.06)×10⁻⁷ (Pijpers 1998)입니다. 태양 유사 응집도의 FGK
 왜성에 유효합니다. **완전 대류 M 왜성은 예외적으로 Radau–Darwin으로 되돌아갑니다** — n = 3/2 폴리트로프의
 NMoI ≈ 0.205(Chandrasekhar 1939)는 이 관계식의 유효범위 안이라, 그 NMoI에서 J₂/q ≈ 0.084가 나옵니다
-(태양 비율의 ≈8배 — 응집이 덜해 단위 q당 더 많이 편평해짐). 조기형 항성은 여전히 각자의 보드 차례에
-응답계수를 별도로 근거화해야 합니다(Fomalhaut A).
+(태양 비율의 ≈8배 — 응집이 덜해 단위 q당 더 많이 편평해짐). **백색왜성도 같은 분기를 탑니다** — 비상대론
+축퇴성은 n = 3/2 폴리트로프에 가까워 NMoI ≈ 0.205로 Radau–Darwin이 적용됩니다(상대론 보정이 중심을 조금
+더 응집시키므로 J₂는 소폭 과대 추정). WD 자전은 대개 미측정입니다 — ZZ Ceti 띠 밖이면 성진동이 불가하므로,
+Kepler 점근파 표본 중앙값 P ≈ 35 h(Hermes et al. 2017)를 문서화된 통계 입력으로 씁니다(보드에는
+documented-divergence). 조기형 항성은 여전히 각자의 보드 차례에 응답계수를 별도로 근거화해야
+합니다(Fomalhaut A).
 **오너 정책(2026-07-12): 항성 J₂는 크기와 무관하게 항상 계산해서 emit하며, "무시가능" 기록으로 끝내는 처리는
 금지합니다** — Principia가 이 항을 적분하므로 오너가 상시 반영을 원합니다.
 
@@ -191,6 +195,8 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 | **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | — | 태양앵커 스케일링(0.0105·q); P_rot ±3 d에서 ±~30 % — 상시-emit 정책 아래 처음 emit된 항성 행 |
 | **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | 같은 방법, ±~15 % |
 | **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | 완전 대류 → 폴리트로프 NMoI 0.205로 Radau–Darwin (J₂/q 0.084); ±~25 % (반지름 지배) |
+| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (품질 D 문헌값) | 1.9e-5 | **1.6e-6** | — | 로스터 항성 최대 J₂ — 빠르게 도는 플레어별; 입력이 큐레이션 기각 문헌값이라 documented-divergence로 채택 |
+| **40 Eri B** | star (DA WD) | P ≈ 35 h (통계) | 2.5e-8 | **2.1e-9** | — | 백색왜성도 같은 n = 3/2 폴리트로프 분기; 자전 = Kepler 표본 중앙값(Hermes 2017), documented-divergence |
 | **Fomalhaut A** | star (A-type) | fast (A4V) | — | (보드 차례에 계산) | — | 로스터에서 유일하게 빠르게 자전하는 항성(자전축 측정, Le Bouquin 2009)이라 물리적으로 편평하지만, 발표된 편평도 수치는 없음. J₂는 그 보드 차례에 태양앵커 스케일링으로 계산하되, A형 항성의 응답계수를 먼저 별도로 근거화할 것(0.0105 맹목 재사용 금지). |
 
 핵심 대비는 이렇습니다. **Erid**(빠르고 자유로운 뜨거운 슈퍼지구)는 실제로 편평하지만, 고정된 거주가능
@@ -227,8 +233,10 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 - **Pijpers 1998**, MNRAS 297, L76 (`1998MNRAS.297L..76P`) — 헬리오사이즈몰로지 태양
   J₂ = (2.18 ± 0.06)×10⁻⁷. 항성 태양앵커 q-스케일링의 측정 앵커입니다(FGK 항성은 Radau–Darwin을 우회, §2).
 - **Chandrasekhar 1939**, *An Introduction to the Study of Stellar Structure*
-  (`1939isss.book.....C`) — 폴리트로프 관성모멘트. n = 3/2(완전 대류 M 왜성)의 NMoI ≈ 0.205로,
-  M 왜성을 Radau–Darwin 유효범위 안으로 되돌립니다(§2).
+  (`1939isss.book.....C`) — 폴리트로프 관성모멘트. n = 3/2(완전 대류 M 왜성·비상대론 백색왜성)의
+  NMoI ≈ 0.205로, 둘 다 Radau–Darwin 유효범위 안으로 되돌립니다(§2).
+- **Hermes et al. 2017**, ApJS 232, 23 (`2017ApJS..232...23H`) — 점근파 백색왜성 자전 분포.
+  표본 중앙값 P ≈ 35 h가 자전 미측정 WD의 문서화된 통계 입력입니다(§2).
 - **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`) —
   Maclaurin spheroid(균질 자전 극한, f = 5q/4).
 - **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);

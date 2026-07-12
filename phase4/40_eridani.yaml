@@ -1,659 +1,1042 @@
 # 40 Eridani (Keid / o² Eri) Phase 4 결정 보드 — 삼중성(A K왜성 + B 백색왜성 + C 적색왜성) + Erid(40 Eri A b, 철회·문화재포함).
 # (body × axis) 행별 상태. DB 불변, staging. 문화=Vulcan(Star Trek)+Erid/Rocky(PHM). grounding=docs/phase3/40-eridani-*.md, cultural-context.md §40 Eri
+schema_version: 2
 system: 40_eridani
 status: staged
-updated: 2026-06-26
+updated: 2026-07-12
 
 decisions:
   # ── 모항성 40 Eri A (K0.5V Keid, 삼중성 최광, Vulcan/Erid 호스트) — facet-walk 2026-06-24 ──────────
-  - body: 40 Eridani A
+  - body: "40 Eridani A"
     axis: identity
     status: gated
-    driver: classification + observation
-    value: >
-      body_type=**K0.5 V (Keid A)** — 40 Eri 삼중성의 최광 성분, 적당히 조용한 K왜성. 철회된 행성 b(**Vulcan/Erid**) 호스트.
-      비교적 젊음(~1.8 Gyr, 백색왜성 IFMR coeval age)·약간 금속-빈약([Fe/H] −0.29). 5.01 pc(~16.3 ly). designation=
-      40 Eridani A(Keid · HD 26965 · HR 1325 · GJ 166 A · o² Eri A). discoverability=**맨눈**(V 4.43, Eridanus) → RB T T T T.
+    driver: [classification, observation]
+    narrative: >
+      body_type=**K0.5 V (Keid A)** — 40 Eri 삼중성의 최광 성분, 적당히 조용한 K왜성. 철회된 행성 b(**Vulcan/Erid**) 호스트. 비교적 젊음(~1.8 Gyr, 백색왜성
+      IFMR coeval age)·약간 금속-빈약([Fe/H] −0.29). 5.01 pc(~16.3 ly). designation= 40 Eridani A(Keid · HD 26965 · HR 1325 · GJ
+      166 A · o² Eri A). discoverability=**맨눈**(V 4.43, Eridanus) → RB T T T T.
+    fields:
+      - {name: body_type, value: "K0.5 V (Keid A)", op: set}
+      - {name: designation, value: "40 Eridani A (Keid · HD 26965 · HR 1325 · GJ 166 A · o² Eri A)", op: set}
+      - {name: discoverability, value: "naked-eye (V 4.43, Eridanus)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
-      note: "오너 G1 확정 2026-06-24. 맨눈 별 naked_eye=T T T T. 문화=벌컨의 태양(Star Trek, Roddenberry1991 공인)+Erid의 태양(PHM 로키). 백색왜성 B+적색왜성 C와 삼중성."
+      evidence: >
+        오너 G1 확정 2026-06-24. 맨눈 별 naked_eye=T T T T. 문화=벌컨의 태양(Star Trek, Roddenberry1991 공인)+Erid의 태양(PHM 로키). 백색왜성 B+적색왜성
+        C와 삼중성.
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=4.43, Eridanus)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: 40 Eridani A
+  - body: "40 Eridani A"
     axis: bulk
     status: passthrough
-    note: >
+    driver: [passthrough]
+    narrative: >
       M 0.78±0.08 M☉(Ma2018 M-R + Diaz2018 0.76 일치) · R 0.806±0.004 R☉ · Teff 5143±14K · L 0.408 L☉(Boyajian2012 CHARA
-      간섭계, 고신뢰; Rains2020 VLTI 1σ 일치) · [Fe/H] −0.29(Diaz2018; Ma2018 −0.42) · **age ~1.8 Gyr**(documented-divergence
-      — 백색왜성 B IFMR coeval age[Bond2017: WD 냉각 122 Myr + 전구체 ~1.7 Gyr]가 옛 K왜성 isochrone 노년설 해소 → 비교적
-      젊음) · P_rot ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). 측정/
-      Phase3 해결값 → emit 그대로. **figure/obliquity = OMIT confirm**(2026-06-26): 항성이라 J₂(자전편평) 동역학·시각 무관, spin_axis/obliquity 미모델(figure 원장 stellar OMIT 정합).
+      간섭계, 고신뢰; Rains2020 VLTI 1σ 일치) · [Fe/H] −0.29(Diaz2018; Ma2018 −0.42) · **age ~1.8 Gyr**(documented-divergence —
+      백색왜성 B IFMR coeval age[Bond2017: WD 냉각 122 Myr + 전구체 ~1.7 Gyr]가 옛 K왜성 isochrone 노년설 해소 → 비교적 젊음) · P_rot
+      ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). 측정/ Phase3 해결값 → emit 그대로.
+      [2026-07-12: 구 "figure/obliquity = OMIT confirm"(2026-06-26)은 항성 J2 상시-emit 오너 정책으로 대체 —
+      아래 bulk.geopotential_j2 / bulk.spin_axis_orientation 행이 live.]
+    fields:
+      - {name: mass, value: 0.78, unit: M_sun, op: passthrough, note: "±0.08 (Ma2018 M-R; Diaz2018 0.76 일치)"}
+      - {name: radius, value: 0.806, unit: R_sun, op: passthrough, note: "±0.004"}
+      - {name: intrinsic_luminosity, value: 0.408, unit: L_sun, op: passthrough, note: "Boyajian2012 CHARA; Teff 5143±14K; [Fe/H] −0.29"}
+      - {name: age, value: 1.8, unit: Gyr, op: passthrough, note: "WD B IFMR coeval age (Bond2017); 옛 K왜성 isochrone 노년설 해소"}
+      - {name: rotation_period, value: "37–43", unit: d, op: passthrough, note: "Saar&Osten ~37–38d; 가짜 Vulcan 42d 신호 원인 (Burrows2024 철회 근거)"}
 
-  - body: 40 Eridani A
+  - body: "40 Eridani A"
     axis: appearance
     status: gated
-    driver: observation
-    value: >
-      color=**물리색 `#ffe9d5`**(Teff 5143K 흑체→sRGB 실측; 따뜻한 주황-크림 — 태양 #fff1ea·τ Ceti #ffecdd보다 더 주황,
-      K왜성다움). [Fe/H] −0.29는 **sub-perceptual 블루 nudge**(τ Ceti −0.52보다도 작아 +~1, 무시급·방향만 반영;
-      Ramírez&Meléndez2005 계열 보정). 뷰어 채도-tint(#ffd5a8)는 미기록(물리색만, τ Ceti 선례). spots/faculae=**보통**
-      — 37–43d 자전 변조가 실재 흑점(가짜 Vulcan 42d 신호의 원인); X선 log Lx ~27.5(τ Ceti보다 활동적이나 적당히 조용한 K왜성).
+    driver: [observation]
+    narrative: >
+      color=**물리색 `#ffe9d5`**(Teff 5143K 흑체→sRGB 실측; 따뜻한 주황-크림 — 태양 #fff1ea·τ Ceti #ffecdd보다 더 주황, K왜성다움). [Fe/H] −0.29는
+      **sub-perceptual 블루 nudge**(τ Ceti −0.52보다도 작아 +~1, 무시급·방향만 반영; Ramírez&Meléndez2005 계열 보정). 뷰어 채도-tint(#ffd5a8)는
+      미기록(물리색만, τ Ceti 선례). spots/faculae=**보통** — 37–43d 자전 변조가 실재 흑점(가짜 Vulcan 42d 신호의 원인); X선 log Lx ~27.5(τ Ceti보다
+      활동적이나 적당히 조용한 K왜성).
+    fields:
+      - {name: color, value: "#ffe9d5", op: set, note: "Teff 5143K 흑체→sRGB 실측; 따뜻한 주황-크림; [Fe/H] −0.29 sub-perceptual 블루 nudge"}
+      - {name: spots_faculae, value: "보통 (37–43d 자전 변조 실측 흑점; X선 log Lx ~27.5)", op: set}
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24 — 물리색 #ffe9d5만 기록(뷰어 tint 미기록, τ Ceti 정합). 금속 sub-perceptual nudge·보통 흑점(자전변조 실측). emit 별색(광원=near-white/원반 art) deferred."
+      evidence: >
+        오너 G3 확정 2026-06-24 — 물리색 #ffe9d5만 기록(뷰어 tint 미기록, τ Ceti 정합). 금속 sub-perceptual nudge·보통 흑점(자전변조 실측). emit
+        별색(광원=near-white/원반 art) deferred.
 
-  - body: 40 Eridani A
+  - body: "40 Eridani A"
     axis: magnetism.magnetic_field
     status: passthrough
-    note: >
-      보통 Sun-like K왜성 자기장 — 직접 측정 없으나 37–43d 자전 + X선 log Lx ~27.5(태양 cycle-mean ~26.9보다 약간 위)로
-      적당히 활동적(τ Ceti보다 활발, 격렬 별 아님). 비교적 젊은 ~1.8 Gyr와 정합. 흑점·가짜 Vulcan 신호가 이 자기활동의 표현.
-      측정/도출 → emit 그대로.
+    driver: [passthrough]
+    narrative: >
+      보통 Sun-like K왜성 자기장 — 직접 측정 없으나 37–43d 자전 + X선 log Lx ~27.5(태양 cycle-mean ~26.9보다 약간 위)로 적당히 활동적(τ Ceti보다 활발, 격렬 별
+      아님). 비교적 젊은 ~1.8 Gyr와 정합. 흑점·가짜 Vulcan 신호가 이 자기활동의 표현. 측정/도출 → emit 그대로.
+    fields:
+      - {name: magnetic_field, value: "보통 Sun-like K왜성 (직접 측정 없음; 37–43d 자전 + X선 log Lx ~27.5)", op: passthrough}
 
-  - body: 40 Eridani A
+  - body: "40 Eridani A"
     axis: environment
     status: passthrough
-    note: >
-      radiation_surface ~3× 태양(X선 log Lx 27.2–27.5 = 태양 cycle-mean ~26.9의 2–4배; τ Ceti ~0.6×보다 활동적, 젊은 ~1.8 Gyr
-      정합). stellar_wind=**미구속**(Wood HST Lyα서 검출 astrosphere 없음, Ṁ 미측정). astrosphere standoff=미구속 — 단
-      **고속 이동**(V_ISM ~127 km/s)이라 ram 압축 강함(있다면 작은 astrosphere). 삼중성 맥락: C(M4.5Ve 플레어 별 DY Eri)+
-      B(백색왜성)는 ~400 AU 밖이라 A 환경엔 거의 무관. 측정/상한 → emit 그대로.
+    driver: [passthrough]
+    narrative: >
+      radiation_surface ~3× 태양(X선 log Lx 27.2–27.5 = 태양 cycle-mean ~26.9의 2–4배; τ Ceti ~0.6×보다 활동적, 젊은 ~1.8 Gyr 정합).
+      stellar_wind=**미구속**(Wood HST Lyα서 검출 astrosphere 없음, Ṁ 미측정). astrosphere standoff=미구속 — 단 **고속 이동**(V_ISM ~127
+      km/s)이라 ram 압축 강함(있다면 작은 astrosphere). 삼중성 맥락: C(M4.5Ve 플레어 별 DY Eri)+ B(백색왜성)는 ~400 AU 밖이라 A 환경엔 거의 무관. 측정/상한 →
+      emit 그대로.
+    fields:
+      - {name: radiation, value: "~3× 태양 (X선 log Lx 27.2–27.5)", op: passthrough}
+      - {name: stellar_wind, value: "미구속 (Wood HST Lyα astrosphere 미검출, Ṁ 미측정)", op: passthrough}
+      - {name: heliosphere, value: "standoff 미구속 (고속 이동 V_ISM ~127 km/s → ram 압축 강함)", op: passthrough}
+
 
   # ── 백색왜성 40 Eri B (DA, 시리우스 B 다음 근접 WD) — facet-walk 2026-06-24 ──────────
-  - body: 40 Eridani B
+  - body: "40 Eridani B"
     axis: identity
     status: gated
-    driver: classification + observation
-    value: >
-      body_type=**DA 백색왜성**(지구 크기 CO핵 축퇴 잔해) — 시리우스 B 다음 **태양 2번째 근접 WD**, 벤치마크 정밀질량
-      (Bond2017 HST/FGS). M왜성 C와 **233.2년 시각쌍성**(BC pair). designation=40 Eridani B(HD 26976 · WD 0413−077 · EG 11).
-      discoverability=**V 9.53, 맨눈 아님 → 망원경 confirmed**(Proxima 선례) → RB T F F F.
+    driver: [classification, observation]
+    narrative: >
+      body_type=**DA 백색왜성**(지구 크기 CO핵 축퇴 잔해) — 시리우스 B 다음 **태양 2번째 근접 WD**, 벤치마크 정밀질량 (Bond2017 HST/FGS). M왜성 C와 **233.2년
+      시각쌍성**(BC pair). designation=40 Eridani B(HD 26976 · WD 0413−077 · EG 11). discoverability=**V 9.53, 맨눈 아님 → 망원경
+      confirmed**(Proxima 선례) → RB T F F F.
+    fields:
+      - {name: body_type, value: "DA 백색왜성", op: set}
+      - {name: designation, value: "40 Eridani B (HD 26976 · WD 0413−077 · EG 11)", op: set}
+      - {name: discoverability, value: "telescopic confirmed (V 9.53)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
-      note: "오너 G1 확정 2026-06-24. 비맨눈 별이라 TFFF(맨눈 별 TTTT와 구분, Proxima 선례). DA WD body_type 동의. 문화: Erid 하늘의 WD(에리디언은 맹목이라 못 봄)·Star Trek 40 Eri계."
+      evidence: >
+        오너 G1 확정 2026-06-24. 비맨눈 별이라 TFFF(맨눈 별 TTTT와 구분, Proxima 선례). DA WD body_type 동의. 문화: Erid 하늘의 WD(에리디언은 맹목이라 못
+        봄)·Star Trek 40 Eri계.
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=9.53 WD); Bond 2017 benchmark", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: 40 Eridani B
+  - body: "40 Eridani B"
     axis: bulk
     status: passthrough
-    note: >
-      M 0.558±0.012 M☉(Mason2021 동역학; Bond2017 0.573±0.018 = 가장 깨끗한 field WD 정밀질량, 대안) · R 0.01308±0.0002 R☉
-      (~지구 크기) · log g 7.957±0.020 · Teff 17,200±110K(고온) · CO핵 + 얇은 H 외피(q_H ~10⁻¹⁰) · 냉각 age 122 Myr +
-      전구체 ~1.7 Gyr(시스템 ~1.8 Gyr coeval age 근거). 질량-반경 관계 위 표준 위치. 측정 passthrough.
+    driver: [passthrough]
+    narrative: >
+      M 0.558±0.012 M☉(Mason2021 동역학; Bond2017 0.573±0.018 = 가장 깨끗한 field WD 정밀질량, 대안) · R 0.01308±0.0002 R☉ (~지구 크기) ·
+      log g 7.957±0.020 · Teff 17,200±110K(고온) · CO핵 + 얇은 H 외피(q_H ~10⁻¹⁰) · 냉각 age 122 Myr + 전구체 ~1.7 Gyr(시스템 ~1.8 Gyr
+      coeval age 근거). 질량-반경 관계 위 표준 위치. 측정 passthrough.
+    fields:
+      - {name: mass, value: 0.558, unit: M_sun, op: passthrough, note: "±0.012 (Mason2021 동역학; Bond2017 0.573 대안)"}
+      - {name: radius, value: 0.01308, unit: R_sun, op: passthrough, note: "±0.0002, ~지구 크기; log g 7.957; Teff 17,200K; CO핵 + 얇은 H 외피"}
+      - {name: cooling_age, value: 122, unit: Myr, op: passthrough, note: "+ 전구체 ~1.7 Gyr (시스템 ~1.8 Gyr coeval)"}
 
-  - body: 40 Eridani B
+  - body: "40 Eridani B"
     axis: appearance
     status: gated
-    driver: observation
-    value: >
-      color=**물리색 `#b0c5ff`**(Teff 17,200K 흑체→sRGB 실측, 뚜렷한 **청백**) — 지구 크기 강렬한 청백 점광원. K왜성 A
-      (주황 #ffe9d5)와 강한 색 대비. **무특징**(WD 표면 매끈, 흑점·구조 없음; 순수 H 대기 DA, Teff+H Balmer가 색 결정,
-      금속 nudge 없음). 인게임/Erid 하늘서 = 주황 A 곁 눈부신 청백 점(삼중성 색 대비가 시각 포인트).
+    driver: [observation]
+    narrative: >
+      color=**물리색 `#b0c5ff`**(Teff 17,200K 흑체→sRGB 실측, 뚜렷한 **청백**) — 지구 크기 강렬한 청백 점광원. K왜성 A (주황 #ffe9d5)와 강한 색 대비.
+      **무특징**(WD 표면 매끈, 흑점·구조 없음; 순수 H 대기 DA, Teff+H Balmer가 색 결정, 금속 nudge 없음). 인게임/Erid 하늘서 = 주황 A 곁 눈부신 청백 점(삼중성 색 대비가
+      시각 포인트).
+    fields:
+      - {name: color, value: "#b0c5ff", op: set, note: "Teff 17,200K 흑체→sRGB, 뚜렷한 청백; 무특징 (순수 H 대기 DA)"}
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24 — 청백 물리색 #b0c5ff(17,200K 실측). WD라 무특징·금속 nudge 없음. emit 별색(광원/원반) deferred."
+      evidence: >
+        오너 G3 확정 2026-06-24 — 청백 물리색 #b0c5ff(17,200K 실측). WD라 무특징·금속 nudge 없음. emit 별색(광원/원반) deferred.
 
-  - body: 40 Eridani B
+  - body: "40 Eridani B"
     axis: magnetism.magnetic_field
     status: passthrough
-    note: "비자성(non-magnetic) DA — 강한 자기장 미검출. 대다수 DA WD가 비자성이고 40 Eri B는 알려진 자성 WD 아님 → 약함/없음. 측정(비검출) passthrough."
+    driver: [passthrough]
+    narrative: >
+      비자성(non-magnetic) DA — 강한 자기장 미검출. 대다수 DA WD가 비자성이고 40 Eri B는 알려진 자성 WD 아님 → 약함/없음. 측정(비검출) passthrough.
+    fields:
+      - {name: magnetic_field, value: "비자성 DA (강한 자기장 미검출)", op: passthrough}
 
-  - body: 40 Eridani B
+  - body: "40 Eridani B"
     axis: environment
     status: passthrough
-    note: >
-      냉각 잔해 — 항성풍 무시(WD 무풍에 가까움). 단 Teff 17,200K라 **상당한 UV/EUV 복사원**(인근 공간 hard UV). M왜성 C와
-      233년 BC 쌍성 공전. 행성 없음(대기/표면/위성/고리 축 = WD라 N/A). 별-레벨 5축(identity·bulk·appearance·magnetism·
-      environment)으로 B 완료.
+    driver: [passthrough]
+    narrative: >
+      냉각 잔해 — 항성풍 무시(WD 무풍에 가까움). 단 Teff 17,200K라 **상당한 UV/EUV 복사원**(인근 공간 hard UV). M왜성 C와 233년 BC 쌍성 공전. 행성
+      없음(대기/표면/위성/고리 축 = WD라 N/A). 별-레벨 5축(identity·bulk·appearance·magnetism· environment)으로 B 완료.
+    fields:
+      - {name: stellar_wind, value: "무시 (WD 무풍에 가까움)", op: passthrough}
+      - {name: uv_xray_flux, value: "상당한 UV/EUV 복사원 (Teff 17,200K, 인근 공간 hard UV)", op: passthrough}
+
 
   # ── 적색왜성 40 Eri C (M4.5Ve 플레어 별 DY Eri, WD B와 BC 쌍성) — facet-walk 2026-06-24 ──────────
-  - body: 40 Eridani C
+  - body: "40 Eridani C"
     axis: identity
     status: gated
-    driver: classification + observation
-    value: >
-      body_type=**M4.5 Ve 플레어 별**(변광성 DY Eri) — 지속 Hα·광도 플레어, 태양 근접 활성 M왜성. **백색왜성 B와 233년 BC
-      쌍성**(e 0.41, 평균 ~33 AU). 행성 없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri).
-      discoverability=**V 11.17, 맨눈 아님 → 망원경 confirmed** → RB T F F F.
+    driver: [classification, observation]
+    narrative: >
+      body_type=**M4.5 Ve 플레어 별**(변광성 DY Eri) — 지속 Hα·광도 플레어, 태양 근접 활성 M왜성. **백색왜성 B와 233년 BC 쌍성**(e 0.41, 평균 ~33 AU). 행성
+      없음(큐레이션). designation=40 Eridani C(GJ 166 C · HIP 19849 C · DY Eri). discoverability=**V 11.17, 맨눈 아님 → 망원경
+      confirmed** → RB T F F F.
+    fields:
+      - {name: body_type, value: "M4.5 Ve 플레어 별 (변광성 DY Eri)", op: set}
+      - {name: designation, value: "40 Eridani C (GJ 166 C · HIP 19849 C · DY Eri)", op: set}
+      - {name: discoverability, value: "telescopic confirmed (V 11.17)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
-      note: "오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성."
+      evidence: >
+        오너 G1 확정 2026-06-24. 비맨눈 별 TFFF(B·Proxima 선례). 활성 플레어 M왜성. C가 백색왜성 B를 ~33 AU서 공전하는 BC 쌍성.
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=11.17 M dwarf DY Eri)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: 40 Eridani C
+  - body: "40 Eridani C"
     axis: bulk
     status: passthrough
-    note: >
+    driver: [passthrough]
+    narrative: >
       M 0.198±0.004 M☉(Mason2021 동역학) · R 0.274±0.011 R☉(Mann2015) · Teff 3167±61K(Mann2015 BT-Settl 핏) · L 6.51e-3 L☉
       (Cifuentes2020 CARMENES) · [Fe/H] −0.21(Mann2015). 자전 P_rot=**meta_notes-only**(Shan2024 8.56d, 그 논문 품질등급 D=최하위
-      /debated라 정식 채택 안 함, Open item). 측정 passthrough. **figure/obliquity = OMIT confirm**(2026-06-26): M왜성 J₂/spin_axis 시각·동역학 무관, 미모델(figure 원장 stellar OMIT 정합).
+      /debated라 정식 채택 안 함, Open item). 측정 passthrough. [2026-07-12: 구 "figure/obliquity = OMIT confirm"(2026-06-26)은
+      항성 J2 상시-emit 오너 정책으로 대체 — 아래 bulk.geopotential_j2 / bulk.spin_axis_orientation 행이 live.]
+    fields:
+      - {name: mass, value: 0.198, unit: M_sun, op: passthrough, note: "±0.004 (Mason2021 동역학)"}
+      - {name: radius, value: 0.274, unit: R_sun, op: passthrough, note: "±0.011 (Mann2015); Teff 3167±61K"}
+      - {name: intrinsic_luminosity, value: 0.00651, unit: L_sun, op: passthrough, note: "Cifuentes2020 CARMENES; [Fe/H] −0.21"}
+      - {name: rotation_period, value: 8.56, unit: d, op: passthrough, note: "Shan2024 meta_notes-only (품질등급 D/debated, Open item)"}
 
-  - body: 40 Eridani C
+  - body: "40 Eridani C"
     axis: appearance
     status: gated
-    driver: observation
-    value: >
-      color=**물리색 `#ffd587`**(옅은 따뜻한 주황) — 실측 Pickles M4.5 SED를 CIE 엔진에 통과시킨 값. 흑체 3167K=#ffbe78도
-      거의 맞고(살짝 더 채도 높을 뿐), 실측은 오히려 약간 더 옅음. TiO/VO/H₂O 분자밴드는 색지수·광도엔 크게 작용하나 밝기-정규화한
-      표시 색조는 거의 안 바뀜(항성광구색 문서 정정판). M4.5·3167K는 **Barnard(M4·3195K, #ffd487)에 사실상 일치**. 옛 사다리
-      #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기. spots/faculae=**활발**(DY Eri 플레어·지속 Hα — 활성 M왜성).
+    driver: [observation]
+    narrative: >
+      color=**물리색 `#ffd587`**(옅은 따뜻한 주황) — 실측 Pickles M4.5 SED를 CIE 엔진에 통과시킨 값. 흑체 3167K=#ffbe78도 거의 맞고(살짝 더 채도 높을 뿐), 실측은
+      오히려 약간 더 옅음. TiO/VO/H₂O 분자밴드는 색지수·광도엔 크게 작용하나 밝기-정규화한 표시 색조는 거의 안 바뀜(항성광구색 문서 정정판). M4.5·3167K는 **Barnard(M4·3195K,
+      #ffd487)에 사실상 일치**. 옛 사다리 #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기. spots/faculae=**활발**(DY Eri 플레어·지속 Hα — 활성 M왜성).
+    fields:
+      - {name: color, value: "#ffd587", op: set, note: "실측 Pickles M4.5 SED→CIE; Barnard #ffd487 앵커; 흑체 3167K #ffbe78도 근사; 옛 #cf5a30 폐기"}
+      - {name: spots_faculae, value: "활발 (DY Eri 플레어·지속 Hα)", op: set}
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24, 색 정정 2026-06-24 — 물리색 #ffd587(실측 Pickles M4.5, Barnard #ffd487 앵커). 옛 #cf5a30(벽돌색)은 광도와 색조를 혼동한 render 짐작이라 폐기, 실측은 옅은 주황. 흑체 #ffbe78도 fair approx. emit 별색(광원/원반) deferred."
-      paper: docs/reference/stellar-photospheric-color-methodology.md (실측 Pickles SED→CIE 사다리; scripts/refs/stellar_photospheric_color.py).
+      evidence: >
+        오너 G3 확정 2026-06-24, 색 정정 2026-06-24 — 물리색 #ffd587(실측 Pickles M4.5, Barnard #ffd487 앵커). 옛 #cf5a30(벽돌색)은 광도와 색조를 혼동한
+        render 짐작이라 폐기, 실측은 옅은 주황. 흑체 #ffbe78도 fair approx. emit 별색(광원/원반) deferred.
 
-  - body: 40 Eridani C
+        paper: docs/reference/stellar-photospheric-color-methodology.md (실측 Pickles SED→CIE 사다리;
+        scripts/refs/stellar_photospheric_color.py).
+
+  - body: "40 Eridani C"
     axis: magnetism.magnetic_field
     status: passthrough
-    note: >
-      강한 자기장 — 활성 플레어 M왜성(변광성 DY Eri)으로 kG급 표면장 예상(Proxima M5.5 유사 dynamo). 직접 측정(Zeeman/ZDI)은
-      없으나 지속 Hα·광도 플레어가 강한 dynamo의 표현이고, 빠른 자전 추정(Shan2024 8.56d, 품질등급 D=meta_notes-only)·
-      비교적 젊은 시스템 나이(~1.8 Gyr coeval)와 정합. 완전대류 M왜성의 turbulent dynamo. 도출/정성 상한 → emit 그대로.
+    driver: [passthrough]
+    narrative: >
+      강한 자기장 — 활성 플레어 M왜성(변광성 DY Eri)으로 kG급 표면장 예상(Proxima M5.5 유사 dynamo). 직접 측정(Zeeman/ZDI)은 없으나 지속 Hα·광도 플레어가 강한
+      dynamo의 표현이고, 빠른 자전 추정(Shan2024 8.56d, 품질등급 D=meta_notes-only)· 비교적 젊은 시스템 나이(~1.8 Gyr coeval)와 정합. 완전대류 M왜성의
+      turbulent dynamo. 도출/정성 상한 → emit 그대로.
+    fields:
+      - {name: magnetic_field, value: "강한 (kG급 예상, 활성 플레어 M왜성; 직접 측정 없음, 완전대류 turbulent dynamo)", op: passthrough}
 
-  - body: 40 Eridani C
+  - body: "40 Eridani C"
     axis: environment
     status: passthrough
-    note: >
-      플레어 지배 — DY Eri는 잦은 광도 플레어를 내는 활성 M왜성이라 국소 space weather가 거칠다(C엔 행성 없어 영향받을 바디는 없음).
-      **BC 쌍성 맥락**: C가 백색왜성 B를 e 0.41·평균 ~33 AU로 공전하는 233년 쌍성 → Teff 17,200K인 B의 hard UV/EUV가 BC 영역을
-      비추나, 거리상 C 광구엔 거의 무관(C 자체 플레어가 지배). radiation은 자체 플레어 구동. A(K0.5V)와는 ~400 AU 밖이라 상호 무관.
-      고속 이동 시스템(V_ISM ~127 km/s, A와 공통). 도출/정성 → emit 그대로. 별-레벨 5축으로 C 완료.
+    driver: [passthrough]
+    narrative: >
+      플레어 지배 — DY Eri는 잦은 광도 플레어를 내는 활성 M왜성이라 국소 space weather가 거칠다(C엔 행성 없어 영향받을 바디는 없음). **BC 쌍성 맥락**: C가 백색왜성 B를 e
+      0.41·평균 ~33 AU로 공전하는 233년 쌍성 → Teff 17,200K인 B의 hard UV/EUV가 BC 영역을 비추나, 거리상 C 광구엔 거의 무관(C 자체 플레어가 지배). radiation은
+      자체 플레어 구동. A(K0.5V)와는 ~400 AU 밖이라 상호 무관. 고속 이동 시스템(V_ISM ~127 km/s, A와 공통). 도출/정성 → emit 그대로. 별-레벨 5축으로 C 완료.
+    fields:
+      - {name: activity, value: "플레어 지배 (잦은 광도 플레어, 활성 M왜성 DY Eri)", op: passthrough}
+      - {name: radiation, value: "자체 플레어 구동 (C엔 행성 없음)", op: passthrough}
+
+  # ── 항성 자전축/J2 3성 — 2026-07-12 항성 점검서 신설 (구 OMIT confirm 대체) ──────
+  - body: "40 Eridani A"
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 오너 선택 2026-07-12 — 측정 없음
+    driver: [art-direction]
+    narrative: >
+      i★ 측정 없음 → 오너 선택: **행성계(Erid 등) 궤도면 기준 + seeded 무작위 기울기 1–10°**. 고정 수치를 보드에
+      박지 않고 범위만 기록 — synthetic-orbit-noise 정책 패턴(시딩·물리 경계·emit 단계 적용·DB 불변)대로 emit
+      시 천체명 해시로 시딩. 극 방위각 자유(ICRS 변환 emit 단계). A는 BC쌍과 역학 분리된 단독 호스트라 BC면과는
+      무관.
+    fields:
+      - { name: spin_axis_orientation, value: "행성계 면 + seeded random tilt 1–10° (emit 시 시딩, synthetic-orbit-noise 패턴) · PA 자유", op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: >
+        측정 부재라 물리 범위 게이트만: 행성 호스트의 스핀-궤도 소기울기(≲10°)는 태양(7.25°) 등 형성론 기대
+        범위. 무작위 폭 1–10°는 전부 그 안 — seeded라 재현성 invariant 보존.
+
+  - body: "40 Eridani A"
+    axis: bulk.geopotential_j2
+    status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit (구 OMIT confirm 대체)
+    driver: [physics]
+    narrative: >
+      회전 편평 J2 = 5.4e-8. K0.5V(태양 유사 응집) → 태양앵커 q-스케일링(J2 = 0.0105·q, Pijpers 1998 앵커):
+      q = ω²R³/GM = 5.1e-6 (M 0.78·R 0.806·P_rot 42d[DB recommended, Burrows2024]; 보드 범위 37–43d면
+      J2 5.1–6.9e-8) → J2 5.4e-8 (±~20%). reference_radius = 적도반경 5.609e8 m. 방법 =
+      body-figure-methodology.md §2 FGK 분기.
+    fields:
+      - { name: geopotential_j2, value: 5.4e-8, op: set }
+      - { name: reference_radius, value: 5.609e8, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        q(5.1e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 5.4e-8 — τ Ceti(4.2e-8)와
+        동급, αCen A(4.8e-7)의 ~1/9. FGK 유사구조 범위 내. 구 OMIT confirm은 정책 변경으로 대체.
+    refs: [1998MNRAS.297L..76P, 2012ApJ...757..112B, 2024AJ....167..243B]
+
+  - body: "40 Eridani B"
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 오너 선택 2026-07-12 — BC 실측 궤도면 정렬
+    driver: [art-direction, physics]
+    narrative: >
+      i★ 측정 없음 → 오너 선택: **BC 궤도면(i 107.98°±0.36 실측, Mason2021/Izmailov2019) 정렬**. 추론 가능성
+      (오너 질의): WD의 자전축 **방향**은 전구체(~1.9 M☉, Bond2017 IFMR)에서 계승됨 — AGB 질량손실은 등방에
+      가까워 각운동량 크기는 크게 줄여도 축 방향은 보존하고, BC는 공통 연개(common envelope) 없이 넓게(평균
+      ~33 AU) 진화했으므로 축을 비틀 사건이 없음. 공통 형성 정렬 기대 + 보존 논리로 "BC면 정렬"이 물리적으로
+      추론 가능한 선택. 극 방위각 = BC 궤도극과 일치(Ω 151.58° 실측 활용).
+    fields:
+      - { name: spin_axis_orientation, value: "BC 궤도면 법선 정렬 (i 107.98°·Ω 151.58° 실측 면) — 전구체 축 계승 논리", op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: >
+        기준면 자체가 실측(BC visual orbit, grade 3). 정렬은 가정이나 물리 근거 있음 — 공통 형성 + 등방
+        질량손실의 축 방향 보존 + 축을 교란할 상호작용(공통 연개·강착) 부재. 단일 가정.
+    refs: [2021AJ....162...53M, 2017ApJ...848...16B]
+
+  - body: "40 Eridani B"
+    axis: bulk.geopotential_j2
+    status: gated                     # 오너 정책 2026-07-12 — P_rot 미측정이라 문헌 통계 입력 (documented-divergence)
+    driver: [physics]
+    narrative: >
+      회전 편평 J2 = 2.1e-9. **P_rot 측정 없음**(Teff 17,200K는 ZZ Ceti 맥동띠 밖이라 성진동 불가) → Kepler
+      점근파 WD 표본 중앙값 **P ≈ 35 h 채택**(Hermes 2017, 오너 승인 2026-07-12). WD는 비상대론 축퇴 ≈ n=3/2
+      폴리트로프 → M왜성과 같은 NMoI 0.205 분기(Radau-Darwin, J2/q 0.084; 0.56 M☉ 저질량 WD라 상대론 보정
+      소폭 — J2 약간 과대 가능). q = ω²R³/GM = 2.5e-8 (M 0.558·R 0.01308 R☉) → J2 2.1e-9.
+      reference_radius = 적도반경 9.100e6 m (~지구 크기).
+    fields:
+      - { name: geopotential_j2, value: 2.1e-9, op: set }
+      - { name: reference_radius, value: 9.100e6, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: documented-divergence   # 자전이 측정 아닌 문헌 통계 중앙값
+      divergence_note: >
+        40 Eri B has no measured rotation period (outside the ZZ Ceti instability strip, no
+        asteroseismology; no usable v sin i). The adopted P ≈ 35 h is the Kepler asteroseismic
+        white-dwarf sample median (Hermes 2017) — a statistical stand-in, not a measurement.
+        J2 scales as P^-2: a 10 h rotator would be ~12× larger, a 4 d rotator ~7× smaller.
+      evidence: >
+        입력 M/R은 실측(Mason2021/Bond2017). 폴리트로프 분기는 Proxima와 동일 근거(Chandrasekhar 1939).
+        P_rot만 통계 입력 — 측정 나오면 갱신 후보 1순위.
+    refs: [1939isss.book.....C, 2017ApJS..232...23H, 2017ApJ...848...16B, 2021AJ....162...53M]
+
+  - body: "40 Eridani C"
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 오너 선택 2026-07-12 — BC 실측 궤도면 정렬
+    driver: [art-direction, physics]
+    narrative: >
+      i★ 측정 없음 → 오너 선택: **BC 궤도면(i 107.98° 실측) 정렬**. 추론 가능성(오너 질의): 평균 ~33 AU
+      쌍성은 조석 정렬 시간척도가 나이를 아득히 초과해 역학적 강제는 없음 — 근거는 공통 분자운 코어 형성의
+      정렬 경향(중간 분리 쌍성서 통계적으로 우세)뿐이라 B(축 보존 논리)보다 약한 추론임을 명기. 극 방위각 =
+      BC 궤도극 정렬(B와 동일 면 — 한 가정 공유).
+    fields:
+      - { name: spin_axis_orientation, value: "BC 궤도면 법선 정렬 (B와 공유 가정) — 형성 정렬 기대, 조석 무관", op: set }
+    gate:
+      criterion: [physics]
+      verdict: pass-in-window
+      evidence: >
+        기준면 실측(BC visual orbit). 정렬은 형성론 기대 기반 가정 — B보다 약한 추론(보존 논리 없음)이나
+        어떤 관측과도 충돌 없고, B·C가 한 가정을 공유해 시스템 내 일관.
+    refs: [2021AJ....162...53M]
+
+  - body: "40 Eridani C"
+    axis: bulk.geopotential_j2
+    status: gated                     # 오너 정책 2026-07-12 — 큐레이션 기각 입력 채택 (documented-divergence)
+    driver: [physics]
+    narrative: >
+      회전 편평 J2 = 1.6e-6 — **로스터 항성 중 최대**(αCen A의 ~3배). 완전 대류 M4.5 → Radau-Darwin
+      폴리트로프 분기(NMoI 0.205, J2/q 0.084). 입력 P_rot = **8.56 d(Shan2024)** — Phase 2가 품질등급
+      D/debated로 큐레이션 기각한 meta-notes-only 값이나, 유일 문헌값 + 활성 플레어별(DY Eri·지속 Hα)의
+      빠른 자전과 정합이라 오너 승인(2026-07-12)으로 채택. q = ω²R³/GM = 1.90e-5 (M 0.198·R 0.274) →
+      J2 1.6e-6. reference_radius = 적도반경 1.906e8 m.
+    fields:
+      - { name: geopotential_j2, value: 1.6e-6, op: set }
+      - { name: reference_radius, value: 1.906e8, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: documented-divergence   # Phase 2 기각 입력(품질 D)을 오너 승인으로 사용
+      divergence_note: >
+        The rotation input (8.56 d, Shan 2024 CARMENES) was rejected by Phase 2 curation as
+        quality-grade D/debated (meta-notes-only, never adopted into the DB). Adopted here by owner
+        decision (2026-07-12) as the only literature value, consistent with the star's active flare
+        nature. J2 scales as P^-2 — a re-measured period directly rescales this row.
+      evidence: >
+        M/R은 실측(Mason2021/Mann2015). 빠른 자전 자체는 활동성(DY Eri 플레어·Hα·kG급 dynamo 예상)이
+        독립적으로 지지. 폴리트로프 분기 = Proxima/Barnard와 동일 방법.
+    refs: [1939isss.book.....C, 2024A&A...684A...9S, 2015ApJ...804...64M, 2021AJ....162...53M]
+
 
   # ── Erid (40 Eridani A b) — 주인공: PHM(Andy Weir) 로키의 모행성 + Star Trek 벌컨. 관측 철회(Ma2018 후보 → Burrows&Lubin2024: 42d=항성자전).
   #    블렌드 틀(오너 결정 2026-06-24): 물리=Weir 책 worldbuilding(28 atm NH₃·2.09g·25×B·210°C·5.1h), 비주얼=2026 PHM 영화(청색 대기+고리).
   #    색은 충돌(책 무색 ↔ 영화 청색 = G6 divergence). 고리는 충돌 아님 — 책은 고리 미언급(에리디언 맹목이라 Erid 시각묘사 자체가 부재) → 영화가 시각 공백을 채움(G9 gap-fill). 순수 문화 바디(Tau Ceti e/Adrian 선례), refuted 플래그.
-  - body: 40 Eridani A b
+  - body: "40 Eridani A b"
     axis: identity
     status: gated
-    driver: classification + culture (refuted candidate)
-    value: >
+    driver: [classification, "culture (refuted candidate)"]
+    narrative: >
       body_type=**암석 super-Earth**(~5 M⊕; Weir: 금속-풍부 암석 — 질량은 G3서 자기일관 재설정, Ma2018 8.47 M⊕는 철회된 artifact). 문화 주인공 —
       **Erid**(Project Hail Mary, Andy Weir; Rocky의 모행성) + **Vulcan**(Star Trek; Roddenberry1991이 40 Eri로 공인).
-      designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&Lubin
-      2024가 42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값
-      보존·refuted 플래그). discoverability=관측 발견 이력대로 **TFFF**(망원경; 인게임선 실재 바디 취급, 철회는 현실 메타라 발견난도
-      아닌 flavor로 — RV 행성 일관, Proxima b 선례).
+      designation=40 Eridani A b(Keid A b · HD 26965 A b). **status=철회됨** — Ma2018 RV 후보(P 42.245d)였으나 Burrows&Lubin 2024가
+      42d=A의 자전 주기라 반박. **순수 문화 바디 documented-divergence로 재포함**(Tau Ceti e/Adrian 선례; Ma2018 값 보존·refuted 플래그).
+      discoverability=관측 발견 이력대로 **TFFF**(망원경; 인게임선 실재 바디 취급, 철회는 현실 메타라 발견난도 아닌 flavor로 — RV 행성 일관, Proxima b 선례).
+    fields:
+      - {name: body_type, value: "암석 super-Earth (~5 M⊕; 질량은 bulk서 자기일관 재설정, Ma2018 8.47 M⊕는 철회 artifact)", op: set}
+      - {name: designation, value: "40 Eridani A b (Keid A b · HD 26965 A b)", op: set}
+      - {name: cultural_name, value: "Erid (PHM, Andy Weir) / Vulcan (Star Trek, Roddenberry1991)", op: set}
+      - {name: discoverability, value: "refuted RV candidate (Ma2018 → Burrows&Lubin2024 42d=항성자전); 인게임 실재 취급 TFFF", op: set}
     gate:
       criterion: [classification, culture]
       verdict: pass-in-window
-      note: "오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함. disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드."
+      evidence: >
+        오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함.
+        disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드.
     discoverability_cfg: {category: disputed, ignorelevels: "T F F F", ref: "Ma 2018 (2018AJ....155..117M) RV candidate, refuted by Burrows & Lubin 2024 (42d=stellar rotation); cultural (Erid/PHM + Vulcan/Star Trek). category=disputed(contested/refuted RV), not confirmed — same TFFF output.", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: 40 Eridani A b
+  - body: "40 Eridani A b"
     axis: orbit
     status: gated
-    driver: PHM canon (Weir)
-    value: >
-      궤도값 전부 **헤일메리(Weir) 기반**(블렌드 틀 "물리=책"; Weir가 Ma2018 실관측값을 그대로 채택). a **0.224 AU** · e
-      **0.04** · P **42.245 지구일**(42일보다 조금 더) · inc 미측정 → free emit. 항성 플럭스 ~8–9× 지구(40 Eri A L 0.408 L☉
-      / 0.224² ≈ 8.1×; Weir 12,537 W/m² ≈ 9.2×) — 뜨거움, 표면 210°C·고압 액체물과 정합. **자전 = 5.1h 항성일**(Weir;
-      25× 자기장 dynamo 구동용 빠른 자전), **조석고정 아님**. ⚠️ **documented divergence**: 조석고정 방법론상 a 0.224 AU·
-      0.78 M☉에서 lock 타임 ~10⁷년 ≪ 나이(1.8 Gyr)라 물리적으론 고정 예상이나, 책 canon이 빠른 자전 지정(자기장 캐스케이드
-      전제) → "물리=책"이라 5.1h 채택.
+    driver: ["PHM canon (Weir)"]
+    narrative: >
+      궤도값 전부 **헤일메리(Weir) 기반**(블렌드 틀 "물리=책"; Weir가 Ma2018 실관측값을 그대로 채택). a **0.224 AU** · e **0.04** · P **42.245
+      지구일**(42일보다 조금 더) · inc 미측정 → free emit. 항성 플럭스 ~8–9× 지구(40 Eri A L 0.408 L☉ / 0.224² ≈ 8.1×; Weir 12,537 W/m² ≈
+      9.2×) — 뜨거움, 표면 210°C·고압 액체물과 정합. **자전 = 5.1h 항성일**(Weir; 25× 자기장 dynamo 구동용 빠른 자전), **조석고정 아님**. ⚠️ **documented
+      divergence**: 조석고정 방법론상 a 0.224 AU· 0.78 M☉에서 lock 타임 ~10⁷년 ≪ 나이(1.8 Gyr)라 물리적으론 고정 예상이나, 책 canon이 빠른 자전 지정(자기장
+      캐스케이드 전제) → "물리=책"이라 5.1h 채택.
+    fields:
+      - {name: semi_major_axis_au, value: 0.224, unit: AU, op: set, note: "P 42.245 지구일; 항성 플럭스 ~8–9× 지구"}
+      - {name: eccentricity, value: 0.04, op: set}
+      - {name: spin_orbit_resonance, value: "none (5.1h 항성일 자전, 조석고정 아님 — Weir canon, 자기장 dynamo 전제)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G2 확정 2026-06-24 — 궤도·물리값 전부 PHM(Weir) 기반. P 42.245d(42일보다 조금 더). 5.1h 비고정 자전 채택(divergence: 방법론상 고정 예상이나 책 canon 우선, G7 자기장 dynamo 전제). Ω/ω/M free-emit."
+      evidence: >
+        오너 G2 확정 2026-06-24 — 궤도·물리값 전부 PHM(Weir) 기반. P 42.245d(42일보다 조금 더). 5.1h 비고정 자전 채택(divergence: 방법론상 고정 예상이나 책 canon
+        우선, G7 자기장 dynamo 전제). Ω/ω/M free-emit.
 
-  - body: 40 Eridani A b
+  - body: "40 Eridani A b"
     axis: bulk
     status: gated
-    driver: gravity = PHM canon (Weir 2.09g), self-consistent on mass-radius curve (refuted-mass dropped)
-    value: >
-      **표면중력 = 작품설정(Weir) 2.09 g**가 앵커. Erid는 **철회된 행성**(Ma2018 8.47 M⊕는 항성활동 artifact, 실재 측정 아님 —
-      Burrows&Lubin2024)이라 그 질량에 매일 이유가 없음 → 측정질량을 놓고, **질량-반경 곡선(Earth-like, Zeng2016/Seager2007)
-      위에서 g=2.09가 되는 자기일관 행성**으로 재설정. → 질량 **4.97 M⊕** · 반경 **1.541 R⊕(9,820 km)** · 밀도 **7,477 kg/m³**
-      (역검증 g=M/R²=2.09 ✓). 이로써 **셋을 동시에 만족**: ① Weir 상징적 고중력 2.09g(Eridian 블라인드·근육질·기술 테마 핵심)
-      ② 물리 자기일관(질량-반경 곡선 *위*라 divergence 자체가 사라짐) ③ 금속-풍부 밀도(7,477 > 지구 5,514, 압축으로 자연히 —
-      Weir의 *"금속-풍부"* 서술과 비로소 정합; 그의 원세트 5,710은 비-금속풍부였음). 희생=철회된 8.47 M⊕(애초에 실재 아님)·
-      Weir 2.01 R⊕(행성이 더 작아짐, 9,820km). 조성=금속-풍부 압축 암석(녹은 금속핵·판구조, Weir).
-      **figure (2026-06-25)**: 자전 편평 J₂≈0.014 (NMoI 0.30, f~4.8%, a/c~1.051 → 가시 oblate), reference_radius 9820 km.
-      로스터 최대 편평 암석행성. 시각 oblate 메시 대상 (body-figure-methodology.md).
-      **obliquity = 30°** (오너 2026-06-26, **2026 PHM 영화 기반** — 책엔 obliquity 미기재라 영화 비주얼 채택, 디스플레이=영화 논리[G6]와 동일).
-      → 가시 oblate bulge 적도면이 궤도 법선에서 30° 기울어짐(메시 배향). 축계절은 존재(부분일사 ±30° swing/42.245d년)하나 28기압
-      두꺼운 대기가 표면 ΔT 균질화(G5 eyeball 없음·균일온도와 정합 — 계절은 순환·구름 패턴으로 표출, 표면온도 진폭은 작음). spin_axis
-      절대방위=free-emit. ⚠ 값은 영화 art(canon 부재) — ≥30°라 30° 채택(상향 조정 가능).
+    driver: ["gravity = PHM canon (Weir 2.09g), self-consistent on mass-radius curve (refuted-mass dropped)"]
+    narrative: >
+      **표면중력 = 작품설정(Weir) 2.09 g**가 앵커. Erid는 **철회된 행성**(Ma2018 8.47 M⊕는 항성활동 artifact, 실재 측정 아님 — Burrows&Lubin2024)이라 그
+      질량에 매일 이유가 없음 → 측정질량을 놓고, **질량-반경 곡선(Earth-like, Zeng2016/Seager2007) 위에서 g=2.09가 되는 자기일관 행성**으로 재설정. → 질량 **4.97
+      M⊕** · 반경 **1.541 R⊕(9,820 km)** · 밀도 **7,477 kg/m³** (역검증 g=M/R²=2.09 ✓). 이로써 **셋을 동시에 만족**: ① Weir 상징적 고중력
+      2.09g(Eridian 블라인드·근육질·기술 테마 핵심) ② 물리 자기일관(질량-반경 곡선 *위*라 divergence 자체가 사라짐) ③ 금속-풍부 밀도(7,477 > 지구 5,514, 압축으로 자연히 —
+      Weir의 *"금속-풍부"* 서술과 비로소 정합; 그의 원세트 5,710은 비-금속풍부였음). 희생=철회된 8.47 M⊕(애초에 실재 아님)· Weir 2.01 R⊕(행성이 더 작아짐, 9,820km).
+      조성=금속-풍부 압축 암석(녹은 금속핵·판구조, Weir). **figure (2026-06-25)**: 자전 편평 J₂≈0.014 (NMoI 0.30, f~4.8%, a/c~1.051 → 가시
+      oblate), reference_radius 9820 km. 로스터 최대 편평 암석행성. 시각 oblate 메시 대상 (body-figure-methodology.md). **obliquity = 30°**
+      (오너 2026-06-26, **2026 PHM 영화 기반** — 책엔 obliquity 미기재라 영화 비주얼 채택, 디스플레이=영화 논리[G6]와 동일). → 가시 oblate bulge 적도면이 궤도
+      법선에서 30° 기울어짐(메시 배향). 축계절은 존재(부분일사 ±30° swing/42.245d년)하나 28기압 두꺼운 대기가 표면 ΔT 균질화(G5 eyeball 없음·균일온도와 정합 — 계절은 순환·구름
+      패턴으로 표출, 표면온도 진폭은 작음). spin_axis 절대방위=free-emit. ⚠ 값은 영화 art(canon 부재) — ≥30°라 30° 채택(상향 조정 가능).
+    fields:
+      - {name: mass, value: 4.97, unit: M_earth, op: set, note: "철회된 8.47 M⊕ 폐기; 질량-반경 곡선 위 g=2.09 자기일관"}
+      - {name: radius, value: 1.541, unit: R_earth, op: set, note: "9,820 km"}
+      - {name: geopotential_j2, value: 0.014, reference_radius_km: 9820, op: set, note: "NMoI 0.30, f~4.8%, a/c~1.051 (가시 oblate); ρ 7,477 kg/m³; 표면중력 2.09 g"}
+      - {name: obliquity, value: 30, unit: deg, op: set, note: "2026 PHM 영화 기반 (책 미기재); ≥30° art, spin_axis free-emit"}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G3 최종확정 2026-06-24 — 철회행성이라 측정질량 포기(Ma2018 8.47=항성활동 artifact, 실재 아님). 중력=작품설정 2.09g 앵커 + Earth-like 질량-반경 곡선 자기일관 → M 4.97·R 1.541 R⊕(9,820km)·ρ 7,477 kg/m³(역검증 2.09). 셋 다 만족(canon 2.09g + 물리 자기일관 + 금속-풍부 밀도). 곡선 위라 mass-radius divergence 해소. 희생=8.47 M⊕(refuted)·Weir 2.01 R⊕."
-      paper: docs/reference/mass-radius-relation-methodology.md (Earth-like curve 위 배치; Zeng2016 PREM·Seager2007).
+      evidence: >
+        오너 G3 최종확정 2026-06-24 — 철회행성이라 측정질량 포기(Ma2018 8.47=항성활동 artifact, 실재 아님). 중력=작품설정 2.09g 앵커 + Earth-like 질량-반경 곡선
+        자기일관 → M 4.97·R 1.541 R⊕(9,820km)·ρ 7,477 kg/m³(역검증 2.09). 셋 다 만족(canon 2.09g + 물리 자기일관 + 금속-풍부 밀도). 곡선 위라
+        mass-radius divergence 해소. 희생=8.47 M⊕(refuted)·Weir 2.01 R⊕.
 
-  - body: 40 Eridani A b
+        paper: docs/reference/mass-radius-relation-methodology.md (Earth-like curve 위 배치; Zeng2016 PREM·Seager2007).
+
+  - body: "40 Eridani A b"
     axis: atmosphere
     status: gated
-    driver: PHM blend (book physics + film visual), greenhouse completed
-    value: >
-      기압 **~28 atm**(Weir 책 canon 유지; Howe 블로그의 ~9.67 atm 재해석[선내압 ⅓ × 29]은 대안 reading으로 병기하나 Weir 설정
-      자료가 28–29 atm 절대치라 미채택). 조성=**깊은 환원성 NH₃ + CH₄ (+H₂O)**. NH₃는 Weir(불투명·블라인드 전제), CH₄는
-      해왕성식 적색흡수로 **파랑을 물리적으로 산출**(차가운 환원성 대기에 자연 공존). ⚠ NH₃ 지배는 광화학적 fragile(UV→N₂+H₂,
-      보충원 필요) — 책 given.
-      **구름 구조(영화 외형의 물리)**: 낮은 고도 흰 물구름 + 그 위 두꺼운 맑은 Rayleigh 기둥 → **짙은 파랑에 흰 구름이 점점이**
-      (해왕성+지구식; 구름 *고도*가 색을 가름 — 금성식 고층운이면 허옇고, 저층운+맑은 기둥이면 파랑). 물구름=물 순환 → 표면 액체물(내해, G5).
-      **온도(Weir 계산 완성)**: 플럭스 ~8–9× 지구, 알베도 ~0.3(저층운+맑은 기둥) → T_eq ~157°C, + 적당한 온실(~+55–65 K) →
-      표면 **~210–220°C**. 28기압 물 끓는점 227°C *아래* → **액체물 유지**(분포=G5: 육지우세+내해). Weir 210°C는 무대기 평형값이었으나(온실 누락),
-      알베도 냉각 + 적당한 온실이 그 근처로 복귀 → 책 숫자 구제. ⚠ 가정: 온실 bounded(NH₃ runaway 아님) → 끓는점 직하 "압력솥 대양".
-      **블라인드 정합**: 28기압 기체+구름이 빛 강감쇠(Howe: 29 atm NH₃ ≈ 바닷물 150m) → 우주에선 파랑, 표면은 어둑한 청색 박명
-      → 시각이 주감각 불가 → 에코로케이션(Howe '매우 어둡지만 칠흑 아님'과 정합). 표시 파랑 hex는 G6서 대기반사색 방법론으로 산출.
+    driver: ["PHM blend (book physics + film visual), greenhouse completed"]
+    narrative: >
+      기압 **~28 atm**(Weir 책 canon 유지; Howe 블로그의 ~9.67 atm 재해석[선내압 ⅓ × 29]은 대안 reading으로 병기하나 Weir 설정 자료가 28–29 atm 절대치라
+      미채택). 조성=**깊은 환원성 NH₃ + CH₄ (+H₂O)**. NH₃는 Weir(불투명·블라인드 전제), CH₄는 해왕성식 적색흡수로 **파랑을 물리적으로 산출**(차가운 환원성 대기에 자연 공존). ⚠
+      NH₃ 지배는 광화학적 fragile(UV→N₂+H₂, 보충원 필요) — 책 given. **구름 구조(영화 외형의 물리)**: 낮은 고도 흰 물구름 + 그 위 두꺼운 맑은 Rayleigh 기둥 → **짙은
+      파랑에 흰 구름이 점점이** (해왕성+지구식; 구름 *고도*가 색을 가름 — 금성식 고층운이면 허옇고, 저층운+맑은 기둥이면 파랑). 물구름=물 순환 → 표면 액체물(내해, G5). **온도(Weir 계산
+      완성)**: 플럭스 ~8–9× 지구, 알베도 ~0.3(저층운+맑은 기둥) → T_eq ~157°C, + 적당한 온실(~+55–65 K) → 표면 **~210–220°C**. 28기압 물 끓는점 227°C
+      *아래* → **액체물 유지**(분포=G5: 육지우세+내해). Weir 210°C는 무대기 평형값이었으나(온실 누락), 알베도 냉각 + 적당한 온실이 그 근처로 복귀 → 책 숫자 구제. ⚠ 가정: 온실
+      bounded(NH₃ runaway 아님) → 끓는점 직하 "압력솥 대양". **블라인드 정합**: 28기압 기체+구름이 빛 강감쇠(Howe: 29 atm NH₃ ≈ 바닷물 150m) → 우주에선 파랑,
+      표면은 어둑한 청색 박명 → 시각이 주감각 불가 → 에코로케이션(Howe '매우 어둡지만 칠흑 아님'과 정합). 표시 파랑 hex는 G6서 대기반사색 방법론으로 산출.
+    fields:
+      - {name: pressure, value: 28, unit: atm, op: set, note: "Weir 책 canon; Howe ~9.67 atm 재해석은 대안"}
+      - {name: composition, value: "깊은 환원성 NH₃ + CH₄ (+H₂O)", op: set, note: "NH₃ 광화학 fragile (book given)"}
+      - {name: temperature, value: "210–220", unit: degC, op: set, note: "표면; T_eq ~157°C + 온실 ~+55–65K; 28기압 물 끓는점 227°C 아래 → 액체물"}
+      - {name: greenhouse, value: "적당한 온실 ~+55–65 K (bounded, NH₃ runaway 아님)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G4 확정 2026-06-24 — 블렌드 트릴레마 {28atm·물바다·파랑} 해소. 핵심=낮은 물구름+위 맑은 Rayleigh 기둥이라 파랑+흰구름 공존(해왕성/지구식, 금성 고층운 아님). 28atm 유지·물 액체(227°C 끓는점 아래 ~210–220°C)·파랑 다 만족. Weir 210°C 구제(알베도+적당온실). 가정=온실 bounded(압력솥 대양). 블라인드=표면 어둑 박명(Howe). 색 hex→G6. NH₃ fragile 플래그."
-      paper: "exoplanet-atmosphere-methodology.md(보유 정당=2.09g+K왜성 약XUV+강B-field); atmosphere-reflected-color-methodology.md(파랑=Rayleigh+CH₄ 적색흡수, G6 색산출); tidally-locked-temperature-methodology.md(Teq+온실); Howe 'Science of PHM' 블로그(표면 밝기 감쇠)."
+      evidence: >
+        오너 G4 확정 2026-06-24 — 블렌드 트릴레마 {28atm·물바다·파랑} 해소. 핵심=낮은 물구름+위 맑은 Rayleigh 기둥이라 파랑+흰구름 공존(해왕성/지구식, 금성 고층운 아님). 28atm
+        유지·물 액체(227°C 끓는점 아래 ~210–220°C)·파랑 다 만족. Weir 210°C 구제(알베도+적당온실). 가정=온실 bounded(압력솥 대양). 블라인드=표면 어둑 박명(Howe). 색
+        hex→G6. NH₃ fragile 플래그.
 
-  - body: 40 Eridani A b
+        paper: exoplanet-atmosphere-methodology.md(보유 정당=2.09g+K왜성 약XUV+강B-field);
+        atmosphere-reflected-color-methodology.md(파랑=Rayleigh+CH₄ 적색흡수, G6 색산출);
+        tidally-locked-temperature-methodology.md(Teq+온실); Howe 'Science of PHM' 블로그(표면 밝기 감쇠).
+
+  - body: "40 Eridani A b"
     axis: surface
     status: gated
-    driver: owner art-direction + surface-color methodology
-    value: >
-      표면=**육지 우세 + 내해(inland seas)**(오너 G5=옵션 c) — 전구 대양 아님. 금속-풍부 현무암/초염기성 암석 육괴 우세 + 흩어진
-      내해(물 + 용해 NH₃ = 암모니아수). 판구조·화산 활동(Weir 녹은 금속핵). [G4 '대양'을 육지우세+내해로 정밀화 — 액체물·물순환·
-      흰 물구름은 유지, 전구 대양만 아님. 우주 파랑은 주로 대기 Rayleigh+CH₄(해왕성식), 내해는 국소 파랑.]
-      **표면색=청록-회색 지대** — 뜨겁고(210–220°C) 습한 금속-풍부 초염기성 지각의 **열수·사문석화(serpentinization) 변질**
-      (물 + Fe/Mg 규산염 → 사문석·녹니석 등 녹색-회색 광물; Fe²⁺ 결정장 흡수가 녹색). surface-color-albedo 방법론 근거. 단 디스크
-      외형은 대기 파랑이 지배(G6) — 청록-회색은 **착륙/지표 시점** 색.
-      **온도 분포**: ~210–220°C, 빠른 자전(5.1h) + 두꺼운 대기 → 매우 균일, 띠형 순환(높은 Coriolis), **eyeball 없음**(비고정 —
-      Proxima b·TRAPPIST류와 자연 분기). 극-적도차 작음. **알베도 ~0.3**(G4 에너지수지 정합, 주로 구름).
-      **biome 다양성**: 화산 육지·열수 내해/해저·금속 노두·Eridian 서식대(고온고압·암모니아호흡·어둠). 착륙 가능하나 가혹
-      (28 atm · 210–220°C · 2.09g · 어둑한 청색 박명).
+    driver: ["owner art-direction", "surface-color methodology"]
+    narrative: >
+      표면=**육지 우세 + 내해(inland seas)**(오너 G5=옵션 c) — 전구 대양 아님. 금속-풍부 현무암/초염기성 암석 육괴 우세 + 흩어진 내해(물 + 용해 NH₃ = 암모니아수). 판구조·화산
+      활동(Weir 녹은 금속핵). [G4 '대양'을 육지우세+내해로 정밀화 — 액체물·물순환· 흰 물구름은 유지, 전구 대양만 아님. 우주 파랑은 주로 대기 Rayleigh+CH₄(해왕성식), 내해는 국소
+      파랑.] **표면색=청록-회색 지대** — 뜨겁고(210–220°C) 습한 금속-풍부 초염기성 지각의 **열수·사문석화(serpentinization) 변질** (물 + Fe/Mg 규산염 → 사문석·녹니석 등
+      녹색-회색 광물; Fe²⁺ 결정장 흡수가 녹색). surface-color-albedo 방법론 근거. 단 디스크 외형은 대기 파랑이 지배(G6) — 청록-회색은 **착륙/지표 시점** 색. **온도 분포**:
+      ~210–220°C, 빠른 자전(5.1h) + 두꺼운 대기 → 매우 균일, 띠형 순환(높은 Coriolis), **eyeball 없음**(비고정 — Proxima b·TRAPPIST류와 자연 분기).
+      극-적도차 작음. **알베도 ~0.3**(G4 에너지수지 정합, 주로 구름). **biome 다양성**: 화산 육지·열수 내해/해저·금속 노두·Eridian 서식대(고온고압·암모니아호흡·어둠). 착륙 가능하나
+      가혹 (28 atm · 210–220°C · 2.09g · 어둑한 청색 박명).
+    fields:
+      - {name: surface_type, value: "육지 우세 + 내해 (금속-풍부 현무암/초염기성; 판구조·화산; 착륙 색 청록-회색 사문석화 변질)", op: set}
+      - {name: albedo, value: 0.3, op: set, note: "주로 구름 (G4 에너지수지 정합)"}
+      - {name: hydrosphere, value: "내해 (물 + 용해 NH₃ = 암모니아수), 전구 대양 아님", op: set}
+      - {name: surface_temperature, value: "210–220 °C (빠른 자전 5.1h + 두꺼운 대기 → 매우 균일, eyeball 없음)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G5 확정 2026-06-24 — 육지우세+내해(옵션 c). 색=청록-회색(열수·사문석화 변질 금속-풍부 초염기성, Fe/Mg 규산염; surface-color 방법론). 빠른자전+두꺼운대기→균일온도·eyeball 없음. 착륙가능 가혹환경. biome 다양(화산·열수·금속노두·Eridian대). G4 '대양'→육지우세+내해로 정밀화(액체물 유지). 디스크 외형=대기 파랑(G6)."
-      paper: docs/reference/surface-color-albedo-methodology.md (사문석/녹니석 녹색-회색·Fe²⁺ 결정장·열수변질; Bond albedo).
+      evidence: >
+        오너 G5 확정 2026-06-24 — 육지우세+내해(옵션 c). 색=청록-회색(열수·사문석화 변질 금속-풍부 초염기성, Fe/Mg 규산염; surface-color 방법론).
+        빠른자전+두꺼운대기→균일온도·eyeball 없음. 착륙가능 가혹환경. biome 다양(화산·열수·금속노두·Eridian대). G4 '대양'→육지우세+내해로 정밀화(액체물 유지). 디스크 외형=대기
+        파랑(G6).
 
-  - body: 40 Eridani A b
+        paper: docs/reference/surface-color-albedo-methodology.md (사문석/녹니석 녹색-회색·Fe²⁺ 결정장·열수변질; Bond albedo).
+
+  - body: "40 Eridani A b"
     axis: appearance
     status: gated
-    driver: film art-direction (blend visual); physical color documented as divergence
-    value: >
-      디스플레이 외형=**영화 비비드 블루 `#3a6db0`**(짙은 azure) + 낮은 흰 물구름 점박이 — 2026 PHM 영화 아트 채택(오너: 가상
-      행성이라 영화 비주얼 우선, 블렌드 틀 '비주얼=영화'; 실측질량 포기[G3]와 같은 논리). 빠른 자전(5.1h) → 띠형 구름 패턴.
-      **파랑 물리 메커니즘**: 깊은 맑은 Rayleigh 기둥 + CH₄ 적색흡수(해왕성식)가 파랑을 *가능케* 함, 낮은 물구름이 흰 패치
-      (구름 고도가 색 가름, G4). 표면 청록-회색(G5)은 두꺼운 대기 아래라 디스크엔 비가시 — 디스크=파랑 지배.
-      ⚠️ **documented divergence(색 채도)**: 물리 반사색은 훨씬 옅음 — Rayleigh(λ⁻⁴)+CH₄ 적색흡수 × 40 Eri A(K0.5V 5143K,
-      따뜻한 조명) SED → CIE→sRGB(조명대비 정규화) = **`#95bcc9`(옅은 슬레이트블루)**. 영화의 쨍한 azure는 **아트 과채도** —
-      보이저 짙은 해왕성이 과처리였고 실제 얼음거성은 옅은 청록-회색인 것(Irwin 2024, 대기반사색 방법론 인용)과 동류. 가상 바디라
+    driver: ["film art-direction (blend visual); physical color documented as divergence"]
+    narrative: >
+      디스플레이 외형=**영화 비비드 블루 `#3a6db0`**(짙은 azure) + 낮은 흰 물구름 점박이 — 2026 PHM 영화 아트 채택(오너: 가상 행성이라 영화 비주얼 우선, 블렌드 틀 '비주얼=영화';
+      실측질량 포기[G3]와 같은 논리). 빠른 자전(5.1h) → 띠형 구름 패턴. **파랑 물리 메커니즘**: 깊은 맑은 Rayleigh 기둥 + CH₄ 적색흡수(해왕성식)가 파랑을 *가능케* 함, 낮은
+      물구름이 흰 패치 (구름 고도가 색 가름, G4). 표면 청록-회색(G5)은 두꺼운 대기 아래라 디스크엔 비가시 — 디스크=파랑 지배. ⚠️ **documented divergence(색 채도)**: 물리
+      반사색은 훨씬 옅음 — Rayleigh(λ⁻⁴)+CH₄ 적색흡수 × 40 Eri A(K0.5V 5143K, 따뜻한 조명) SED → CIE→sRGB(조명대비 정규화) = **`#95bcc9`(옅은
+      슬레이트블루)**. 영화의 쨍한 azure는 **아트 과채도** — 보이저 짙은 해왕성이 과처리였고 실제 얼음거성은 옅은 청록-회색인 것(Irwin 2024, 대기반사색 방법론 인용)과 동류. 가상 바디라
       화면은 영화색(#3a6db0) 우선, 물리색(#95bcc9)은 근거로 병기.
+    fields:
+      - {name: base_color, value: "#3a6db0", op: set, note: "2026 PHM 영화 비비드 azure (art 과채도); 물리 반사색 #95bcc9 (옅은 슬레이트블루, Rayleigh+CH₄ × K왜성 SED→CIE — documented divergence)"}
+      - {name: clouds, value: "낮은 흰 물구름 점박이 + 띠형 패턴 (5.1h 자전)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G6 확정 2026-06-24 — 디스플레이=영화 비비드블루 #3a6db0(+흰 물구름 점박이). 가상 행성이라 영화 비주얼 우선(블렌드 '비주얼=영화', 실측질량 포기와 동일 논리). 물리 반사색 #95bcc9(옅은 슬레이트블루; Rayleigh+CH₄ × K왜성 SED→CIE)는 documented divergence — 영화 azure=아트 과채도(Irwin2024 진짜 해왕성 옅음과 동류). 파랑 물리메커니즘=깊은 Rayleigh+CH₄(G4). 표면 청록-회색(G5)은 대기 아래 비가시. emit 디스크=영화 파랑."
-      paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색 #95bcc9 = cie_color 엔진에 Rayleigh λ⁻⁴+CH₄ × 40 Eri A SED 통과 산출).
+      evidence: >
+        오너 G6 확정 2026-06-24 — 디스플레이=영화 비비드블루 #3a6db0(+흰 물구름 점박이). 가상 행성이라 영화 비주얼 우선(블렌드 '비주얼=영화', 실측질량 포기와 동일 논리). 물리 반사색
+        #95bcc9(옅은 슬레이트블루; Rayleigh+CH₄ × K왜성 SED→CIE)는 documented divergence — 영화 azure=아트 과채도(Irwin2024 진짜 해왕성 옅음과 동류). 파랑
+        물리메커니즘=깊은 Rayleigh+CH₄(G4). 표면 청록-회색(G5)은 대기 아래 비가시. emit 디스크=영화 파랑.
 
-  - body: 40 Eridani A b
+        paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색
+
+  - body: "40 Eridani A b"
     axis: magnetism.magnetic_field
     status: gated
-    driver: PHM canon (Weir 25×), dynamo-methodology grounded
-    value: >
-      **자기장 ≈ 25× 지구**(Weir 책 canon) — Eridian 블라인드 테마의 핵심 축("강한 자기장이 복사를 차단해 시각이 진화 안 함").
-      **dynamo 방법론 근거 정정**: Weir 논리는 "빠른 자전(5.1h)이 강 dynamo 구동"이나, 현대 스케일링(Christensen2009, planetary-
-      dynamo-scaling)은 장 세기를 **자전이 아니라 코어 대류 열플럭스**가 정함(임계 회전 위 자전율 거의 무관) → Weir의 자전-논리는
-      dated. 단 결론은 유지 — Erid는 뜨겁고 **금속-풍부**한 큰 암석행성(녹은 금속핵 = 높은 코어 열플럭스)이라 강화된 장이 물리적으로
-      가능, 25× 값 자체는 방어됨. **채택**: 25× 유지(문화·블라인드 테마), 강한 이유는 "빠른 자전"이 아니라 **높은 코어 열플럭스**로 정정.
-      ⚠ documented divergence: Weir의 dynamo 인과(자전→장)는 dated이나 값은 보존.
+    driver: ["PHM canon (Weir 25×), dynamo-methodology grounded"]
+    narrative: >
+      **자기장 ≈ 25× 지구**(Weir 책 canon) — Eridian 블라인드 테마의 핵심 축("강한 자기장이 복사를 차단해 시각이 진화 안 함"). **dynamo 방법론 근거 정정**: Weir 논리는
+      "빠른 자전(5.1h)이 강 dynamo 구동"이나, 현대 스케일링(Christensen2009, planetary- dynamo-scaling)은 장 세기를 **자전이 아니라 코어 대류 열플럭스**가
+      정함(임계 회전 위 자전율 거의 무관) → Weir의 자전-논리는 dated. 단 결론은 유지 — Erid는 뜨겁고 **금속-풍부**한 큰 암석행성(녹은 금속핵 = 높은 코어 열플럭스)이라 강화된 장이
+      물리적으로 가능, 25× 값 자체는 방어됨. **채택**: 25× 유지(문화·블라인드 테마), 강한 이유는 "빠른 자전"이 아니라 **높은 코어 열플럭스**로 정정. ⚠ documented
+      divergence: Weir의 dynamo 인과(자전→장)는 dated이나 값은 보존.
+    fields:
+      - {name: magnetic_field, value: "~25× 지구 (Weir canon; 강한 이유=높은 코어 열플럭스, 자전 아님 — Weir 자전-논리는 dated)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G7 확정 2026-06-24 — 25× 지구 유지(Weir, 블라인드 '복사 차단' 테마 핵심). dynamo 방법론(Christensen2009): 장=코어 열플럭스가 결정(자전 무관) → Weir '빠른자전→강장' 인과는 dated이나, 금속-풍부 뜨거운 행성의 높은 열플럭스로 25× 방어 가능. 강자기권 → G8 항성풍/우주선 차단·강 오로라 캐스케이드."
-      paper: docs/reference/planetary-dynamo-scaling.md (장 세기=코어 대류 열플럭스 스케일링, Christensen2009·R&C2010; 자전율 비의존).
+      evidence: >
+        오너 G7 확정 2026-06-24 — 25× 지구 유지(Weir, 블라인드 '복사 차단' 테마 핵심). dynamo 방법론(Christensen2009): 장=코어 열플럭스가 결정(자전 무관) → Weir
+        '빠른자전→강장' 인과는 dated이나, 금속-풍부 뜨거운 행성의 높은 열플럭스로 25× 방어 가능. 강자기권 → G8 항성풍/우주선 차단·강 오로라 캐스케이드.
 
-  - body: 40 Eridani A b
+        paper: docs/reference/planetary-dynamo-scaling.md (장 세기=코어 대류 열플럭스 스케일링, Christensen2009·R&C2010; 자전율 비의존).
+
+  - body: "40 Eridani A b"
     axis: environment
     status: gated
-    driver: owner art-direction + G7 cascade (Kerbalism radiation regions)
-    value: >
-      **지상 방사선 → 0 수렴**(오너): 40 Eri A가 적당히 활동적(X선 ~3× 태양)이어도 Erid의 **25× 자기권(G7) + 28기압 두꺼운 대기**가
-      항성풍·우주선을 거의 완전 차단 → 표면 radiation_surface = **none(차폐)**. 블라인드 "복사 차단" 서사 + Eridian 거주성과 정합.
-      **보호 자기권 = 정지궤도 이상**(오너·설정): Erid 동기궤도 = 중심 25,669 km(**2.61 R_p**, 고도 15,852 km — 5.1h 빠른 자전이라 낮음).
-      25× 장의 자기권 standoff는 이를 넉넉히 초과 → **저궤도까지 전부 차폐권**. ⚠ 단 25× 강장은 **포획입자 복사대(밴앨런 유사)**도
-      강함 → 내자기권 일부 고도는 우주선엔 오히려 위험(Kerbalism 밴드로 emit 시 모델, 강장의 이면). 항성풍 Ṁ 미측정(Wood 비검출),
-      고속 이동계(V_ISM ~127 km/s). 강자기권×항성풍 → 강한 극 오로라(0.224 AU 근접+25× → SPI성 강발광 가능). 삼중성 WD B+M왜성 C는
-      ~400 AU 밖이라 Erid 환경에 무관.
+    driver: ["owner art-direction", "G7 cascade (Kerbalism radiation regions)"]
+    narrative: >
+      **지상 방사선 → 0 수렴**(오너): 40 Eri A가 적당히 활동적(X선 ~3× 태양)이어도 Erid의 **25× 자기권(G7) + 28기압 두꺼운 대기**가 항성풍·우주선을 거의 완전 차단 → 표면
+      radiation_surface = **none(차폐)**. 블라인드 "복사 차단" 서사 + Eridian 거주성과 정합. **보호 자기권 = 정지궤도 이상**(오너·설정): Erid 동기궤도 = 중심
+      25,669 km(**2.61 R_p**, 고도 15,852 km — 5.1h 빠른 자전이라 낮음). 25× 장의 자기권 standoff는 이를 넉넉히 초과 → **저궤도까지 전부 차폐권**. ⚠ 단 25×
+      강장은 **포획입자 복사대(밴앨런 유사)**도 강함 → 내자기권 일부 고도는 우주선엔 오히려 위험(Kerbalism 밴드로 emit 시 모델, 강장의 이면). 항성풍 Ṁ 미측정(Wood 비검출), 고속
+      이동계(V_ISM ~127 km/s). 강자기권×항성풍 → 강한 극 오로라(0.224 AU 근접+25× → SPI성 강발광 가능). 삼중성 WD B+M왜성 C는 ~400 AU 밖이라 Erid 환경에 무관.
+    fields:
+      - {name: radiation, value: "none (차폐 — 25× 자기권 + 28기압 대기 완전차단; radiation_surface=none)", op: set, note: "단 포획 복사대(밴앨런 유사)는 내자기권 우주선 위험 (Kerbalism 밴드)"}
+      - {name: stellar_wind, value: "미구속 (Wood 비검출); 고속 이동계 V_ISM ~127 km/s; 강 극 오로라 (SPI성)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G8 확정 2026-06-24 — 지상 방사선 0 수렴(25× 자기장+28기압 대기 완전차폐, radiation_surface=none). 보호 자기권은 동기궤도(2.61 R_p=중심 25,669km/고도 15,852km) 이상으로(설정) → 저궤도까지 차폐. 단 강장 포획 복사대(밴앨런)는 내자기권 우주선 위험(Kerbalism 밴드, emit 시). 강 오로라(SPI성). Kerbalism 자기장-영역 시스템 매핑."
-      paper: "stellar-wind/Kerbalism 자기장 영역(project_nearstars_stellar_wind_kerbalism); 동기궤도=Kepler T=5.1h."
+      evidence: >
+        오너 G8 확정 2026-06-24 — 지상 방사선 0 수렴(25× 자기장+28기압 대기 완전차폐, radiation_surface=none). 보호 자기권은 동기궤도(2.61 R_p=중심
+        25,669km/고도 15,852km) 이상으로(설정) → 저궤도까지 차폐. 단 강장 포획 복사대(밴앨런)는 내자기권 우주선 위험(Kerbalism 밴드, emit 시). 강 오로라(SPI성).
+        Kerbalism 자기장-영역 시스템 매핑.
 
-  - body: 40 Eridani A b
+        paper: stellar-wind/Kerbalism 자기장 영역(project_nearstars_stellar_wind_kerbalism); 동기궤도=Kepler T=5.1h.
+
+  - body: "40 Eridani A b"
     axis: rings
     status: gated
-    driver: film canon (fills a book-silent visual gap)
-    value: >
-      **고리 = 있음**(영화기준 채택). **divergence 아님 — gap-fill**: 책은 고리를 "없다"고 밝힌 적 없음(언급 부재였을 뿐). 게다가
-      에리디언이 **맹목**이라 책의 로키-시점 서술엔 Erid의 **시각적 묘사 자체가 부재**(에코로케이션 인지) → 시각 공백을 영화가
-      채움. 외형은 **영화기준**(가시 고리계, 적도면; 5.1h 빠른 자전이라 적도 뚜렷).
-      **기하(뷰어 확정 2026-06-24)**: 안쪽 **1.39 R_p(13,650 km)** · 바깥 **2.96 R_p(29,067 km)** · 폭 1.57 R_p(15,417 km).
-      **GEO(2.61 R_p) 가로지름**(안쪽<GEO<바깥), **Roche(3.31 R_p) 안** → 위성 미응집·안정. ⚠ 물리 grounding: Erid는 뜨겁고(0.224 AU,
-      평형 ~150°C+) 가까워 **얼음 고리 불가**(승화) → 물리적으론 **암석/규산염 dust 고리**(토성식 밝은 얼음링 아닌 어두운 회갈색,
-      disk 색 방법론). 영화가 밝은 고리를 그렸으면 그 채도/밝기는 G6처럼 art로 두고 디스플레이는 영화 기준, 물리 dust는 병기.
-      기원=Roche 한계 내 위성/소천체 조석파괴 또는 포획 잔해.
-      [엘리베이터 vs 고리] 원작은 GEO 우주엘리베이터(에리디언 xenonite 인프라)를 암시하나 — NS는 megastructure 미모델(flavor-only,
-      판스페르미아·생물학과 동급) + 엘리베이터 케이블은 GEO 관통이라 고리 구간(1.5–2.4 R_p)과 물리적 양립 불가 → **영화 고리 채택,
+    driver: ["film canon (fills a book-silent visual gap)"]
+    narrative: >
+      **고리 = 있음**(영화기준 채택). **divergence 아님 — gap-fill**: 책은 고리를 "없다"고 밝힌 적 없음(언급 부재였을 뿐). 게다가 에리디언이 **맹목**이라 책의 로키-시점 서술엔
+      Erid의 **시각적 묘사 자체가 부재**(에코로케이션 인지) → 시각 공백을 영화가 채움. 외형은 **영화기준**(가시 고리계, 적도면; 5.1h 빠른 자전이라 적도 뚜렷). **기하(뷰어 확정
+      2026-06-24)**: 안쪽 **1.39 R_p(13,650 km)** · 바깥 **2.96 R_p(29,067 km)** · 폭 1.57 R_p(15,417 km). **GEO(2.61 R_p)
+      가로지름**(안쪽<GEO<바깥), **Roche(3.31 R_p) 안** → 위성 미응집·안정. ⚠ 물리 grounding: Erid는 뜨겁고(0.224 AU, 평형 ~150°C+) 가까워 **얼음 고리
+      불가**(승화) → 물리적으론 **암석/규산염 dust 고리**(토성식 밝은 얼음링 아닌 어두운 회갈색, disk 색 방법론). 영화가 밝은 고리를 그렸으면 그 채도/밝기는 G6처럼 art로 두고 디스플레이는
+      영화 기준, 물리 dust는 병기. 기원=Roche 한계 내 위성/소천체 조석파괴 또는 포획 잔해. [엘리베이터 vs 고리] 원작은 GEO 우주엘리베이터(에리디언 xenonite 인프라)를 암시하나 — NS는
+      megastructure 미모델(flavor-only, 판스페르미아·생물학과 동급) + 엘리베이터 케이블은 GEO 관통이라 고리 구간(1.5–2.4 R_p)과 물리적 양립 불가 → **영화 고리 채택,
       엘리베이터 미표현**. divergence 아닌 모델 범위 밖.
+    fields:
+      - {name: ring_structure, value: "안쪽 1.39 R_p (13,650 km) · 바깥 2.96 R_p (29,067 km) · 폭 1.57 R_p (15,417 km)", op: set, note: "GEO 2.61 R_p 가로지름, Roche 3.31 R_p 안 → 위성 미응집·안정; 적도면"}
+      - {name: ring_composition, value: "암석/규산염 dust (어두운 회갈색; 얼음 불가, 승화); 영화는 밝게 art", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G9 확정 2026-06-24 — 고리 있음(영화기준). 기하(erid-ring-viewer.html로 확정): 안 1.39 R_p(13,650km)·바깥 2.96 R_p(29,067km)·폭 1.57 R_p. GEO(2.61) 가로지름, Roche(3.31) 안→안정. divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 물리 grounding=뜨거워 얼음 불가→암석 dust 고리(어두운 회갈색); 영화 밝기는 art로(G6 패턴). KSP Ring 노드 적도면. 색/구조 세부는 art-pass 참조."
-      paper: docs/reference/debris-disk-color-methodology.md (암석 dust 산란색; 얼음 승화선 grounding).
+      evidence: >
+        오너 G9 확정 2026-06-24 — 고리 있음(영화기준). 기하(erid-ring-viewer.html로 확정): 안 1.39 R_p(13,650km)·바깥 2.96 R_p(29,067km)·폭 1.57
+        R_p. GEO(2.61) 가로지름, Roche(3.31) 안→안정. divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 물리
+        grounding=뜨거워 얼음 불가→암석 dust 고리(어두운 회갈색); 영화 밝기는 art로(G6 패턴). KSP Ring 노드 적도면. 색/구조 세부는 art-pass 참조.
 
-  - body: 40 Eridani A b
+        paper: docs/reference/debris-disk-color-methodology.md (암석 dust 산란색; 얼음 승화선 grounding).
+
+  - body: "40 Eridani A b"
     axis: satellites
     status: gated
-    driver: owner art-direction
-    value: >
-      **위성 없음**(오너 G10). 고리(G9)를 **파괴된 옛 위성의 잔해**로 봄 — 고리 기원 서사와 정합. 책/영화 모두 위성 미언급
-      (에리디언 맹목 → 시각묘사 부재, 고리와 동일 gap 상황)이라 canon 충돌 없음. 동역학상으론 여지 있음(Hill 구 ~60.8 R_p,
-      안정대 ~20–30 R_p) — 단 오너가 고리만의 깔끔한 구성을 택함(로스터 내 위성보유 바디들과 자연 분기).
+    driver: ["owner art-direction"]
+    narrative: >
+      **위성 없음**(오너 G10). 고리(G9)를 **파괴된 옛 위성의 잔해**로 봄 — 고리 기원 서사와 정합. 책/영화 모두 위성 미언급 (에리디언 맹목 → 시각묘사 부재, 고리와 동일 gap 상황)이라
+      canon 충돌 없음. 동역학상으론 여지 있음(Hill 구 ~60.8 R_p, 안정대 ~20–30 R_p) — 단 오너가 고리만의 깔끔한 구성을 택함(로스터 내 위성보유 바디들과 자연 분기).
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G10 확정 2026-06-24 — 위성 없음. 고리=파괴된 옛 위성 잔해(G9 기원 정합). 책/영화 미언급(맹목 gap). Hill 구 ~60.8 R_p로 동역학 여지는 있으나 깔끔한 고리-only 택함."
+      evidence: >
+        오너 G10 확정 2026-06-24 — 위성 없음. 고리=파괴된 옛 위성 잔해(G9 기원 정합). 책/영화 미언급(맹목 gap). Hill 구 ~60.8 R_p로 동역학 여지는 있으나 깔끔한 고리-only
+        택함.
 
-  - body: 40 Eridani A b
+  - body: "40 Eridani A b"
     axis: gameplay
     status: gated
-    driver: synthesis (owner art-direction)
-    value: >
-      **가혹·이국적 착륙 세계 + 모드의 문화 주인공.** 난이도 프로파일 = **2.09g 고중력**(이착륙 Δv 큼) + **28 atm 두꺼운 대기**
-      (강한 공력·재진입열) + **~210–220°C 표면**(열관리). **단 방사선은 안전** — 25× 자기권 차폐(G8). 즉 *열·역학적으론 brutal하나
-      방사선-free*인 독특한 난이도 조합. 비주얼 훅 = 지표의 어둑한 **청색 박명** + 머리 위 **고리 아크** + 띠형 청색 하늘, 청록-회색
-      사문석 지각 + 암모니아수 내해, 화산/열수 바이옴. 문화 = **Rocky의 모행성(PHM) + Vulcan(Star Trek)** = 모드 문화 하이라이트.
-      발견 TFFF(망원경). 로스터 분기 = "짓누르는 뜨거운 고중력 고리 세계"(Proxima b 시원한 호수 eyeball·TRAPPIST 암석들과 뚜렷이 구별).
+    driver: ["synthesis (owner art-direction)"]
+    narrative: >
+      **가혹·이국적 착륙 세계 + 모드의 문화 주인공.** 난이도 프로파일 = **2.09g 고중력**(이착륙 Δv 큼) + **28 atm 두꺼운 대기** (강한 공력·재진입열) + **~210–220°C
+      표면**(열관리). **단 방사선은 안전** — 25× 자기권 차폐(G8). 즉 *열·역학적으론 brutal하나 방사선-free*인 독특한 난이도 조합. 비주얼 훅 = 지표의 어둑한 **청색 박명** + 머리
+      위 **고리 아크** + 띠형 청색 하늘, 청록-회색 사문석 지각 + 암모니아수 내해, 화산/열수 바이옴. 문화 = **Rocky의 모행성(PHM) + Vulcan(Star Trek)** = 모드 문화
+      하이라이트. 발견 TFFF(망원경). 로스터 분기 = "짓누르는 뜨거운 고중력 고리 세계"(Proxima b 시원한 호수 eyeball·TRAPPIST 암석들과 뚜렷이 구별).
+    fields:
+      - {name: difficulty, value: "가혹 착륙 (2.09g + 28atm + 210–220°C) · 방사선-free (강자기권 차폐) · 발견 TFFF", op: set}
+      - {name: science_biomes, value: "화산 육지·열수 내해/해저·금속 노두·Eridian 서식대 (고온고압·암모니아호흡·어둠)", op: set}
+      - {name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G11 확정 2026-06-24 — Erid 게임플레이 종합. 가혹 착륙(고중력+두꺼운대기+열)+방사선-free(강자기권). 청색박명+고리 비주얼. 문화 주인공(PHM Erid+Trek Vulcan). → Erid 11축 완성."
+      evidence: >
+        오너 G11 확정 2026-06-24 — Erid 게임플레이 종합. 가혹 착륙(고중력+두꺼운대기+열)+방사선-free(강자기권). 청색박명+고리 비주얼. 문화 주인공(PHM Erid+Trek Vulcan).
+        → Erid 11축 완성.
+
 
   # ── Twoworld (40 Eridani A c) — 우리가 b-d 2:1 공명을 위해 만든 합성 filler(canon 아님, 관측 0). 별에서 2번째 행성.
   #    의도=평범한 수성형 맨돌(Erid 화려·Threeworld 기묘 사이의 조용한 counterpoint), 단 작은 hook 하나(극/야간 cold-trap 얼음).
   #    명명=에리디언 패턴 확장(3번째=Threeworld → 2번째=Twoworld). 자전=조석고정 1:1(저-e라 수성식 3:2 불가).
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: identity
     status: gated
-    driver: synthetic filler (b-d 2:1 resonance anchor)
-    value: >
+    driver: ["synthetic filler (b-d 2:1 resonance anchor)"]
+    narrative: >
       body_type=**수성형 작은 암석 행성**(수성 쌍둥이) — R ≈ 2,440 km(0.383 R⊕) · **0.38 g** · M **0.055 M⊕** · ρ ~5.4 g/cm³
       (iron-rich). designation=**40 Eridani A c (Twoworld)** — 별에서 2번째 행성(b Erid 0.224 < **c 0.40** < d Threeworld 0.635).
-      **우리 합성 바디**(관측 근거 0 — 40 Eri A 확정 행성 없음): c-d 근접 2:1 공명을 성립시키는 anchor로 도입(REBOUND로 검증).
-      문화=**에리디언 명명 패턴 확장** — 3번째를 무성의하게 "Threeworld"라 부른 종족이니 2번째는 **"Twoworld"**(오너 결정 2026-06-25).
-      discoverability=**FFFF**(category `fictional` — 합성+소형+무특징, 실측 0 → 항상 발견).
+      **우리 합성 바디**(관측 근거 0 — 40 Eri A 확정 행성 없음): c-d 근접 2:1 공명을 성립시키는 anchor로 도입(REBOUND로 검증). 문화=**에리디언 명명 패턴 확장** — 3번째를
+      무성의하게 "Threeworld"라 부른 종족이니 2번째는 **"Twoworld"**(오너 결정 2026-06-25). discoverability=**FFFF**(category `fictional` —
+      합성+소형+무특징, 실측 0 → 항상 발견).
+    fields:
+      - {name: body_type, value: "수성형 작은 암석 행성 (수성 쌍둥이; R 2,440 km 0.383 R⊕, 0.38 g, 0.055 M⊕, ρ ~5.4 g/cm³)", op: set}
+      - {name: designation, value: "40 Eridani A c (Twoworld) — 별에서 2번째 행성", op: set}
+      - {name: cultural_name, value: "Twoworld (Eridian 명명 패턴 확장)", op: set}
+      - {name: discoverability, value: "fictional (합성 filler, 실측 0 → 항상 발견 FFFF)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 c1 확정 2026-06-25 — Twoworld(40 Eri A c), 우리 합성 filler(공명 anchor, canon 아님). 수성 쌍둥이(0.055 M⊕·0.38g). 별명=Twoworld(Eridian 패턴 확장, 오너 선택). disc=FFFF(fictional 합성)."
-      discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic filler body (Twoworld); no real detection — always discover. Tiny Mercury-twin (0.055 M⊕)", skill: "researchbodies-cfg/references/db-mapping.md"}
+      evidence: >
+        오너 c1 확정 2026-06-25 — Twoworld(40 Eri A c), 우리 합성 filler(공명 anchor, canon 아님). 수성 쌍둥이(0.055 M⊕·0.38g).
+        별명=Twoworld(Eridian 패턴 확장, 오너 선택). disc=FFFF(fictional 합성).
+    discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic filler body (Twoworld); no real detection — always discover. Tiny Mercury-twin (0.055 M⊕)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: orbit
     status: gated
-    driver: stability-sim validated architecture (REBOUND scan)
-    value: >
-      a **0.40 AU**(별에서 2번째) · P **~105 d** · e **~0.04**(변동 ~0.09 max) · 상호경사 **1.5°**. **공명**: d와 **근접 2:1**
-      (P_d 209d / P_c 105d ≈ 1.99; near-resonant, 각 circulate — deep-lock 아님) · b와는 **비공명**(a_c/a_b=1.79). **안정성 시뮬**
-      (REBOUND 5.0 WHFast+MEGNO, 공식 뷰어 반영): b·c·d 1e5yr 랜덤위상서 **MEGNO 2.000(규칙·robust STABLE)**, e_max c 0.095·Erid 0.040
-      ·d 0.048(**Erid 안 펌핑**), a 고정. (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→
-      starmap 모핑). 자전/lock·figure는 bulk 행 참조(조석고정 1:1, C̄₂₂ omit — body-figure-methodology.md).
+    driver: ["stability-sim validated architecture (REBOUND scan)"]
+    narrative: >
+      a **0.40 AU**(별에서 2번째) · P **~105 d** · e **~0.04**(변동 ~0.09 max) · 상호경사 **1.5°**. **공명**: d와 **근접 2:1** (P_d 209d /
+      P_c 105d ≈ 1.99; near-resonant, 각 circulate — deep-lock 아님) · b와는 **비공명**(a_c/a_b=1.79). **안정성 시뮬** (REBOUND 5.0
+      WHFast+MEGNO, 공식 뷰어 반영): b·c·d 1e5yr 랜덤위상서 **MEGNO 2.000(규칙·robust STABLE)**, e_max c 0.095·Erid 0.040 ·d
+      0.048(**Erid 안 펌핑**), a 고정. (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→ starmap 모핑).
+      자전/lock·figure는 bulk 행 참조(조석고정 1:1, C̄₂₂ omit — body-figure-methodology.md).
+    fields:
+      - {name: semi_major_axis_au, value: 0.4, unit: AU, op: set, note: "P ~105 d, 별에서 2번째"}
+      - {name: eccentricity, value: 0.04, op: set, note: "변동 ~0.09 max"}
+      - {name: inclination_deg, value: 1.5, unit: deg, op: set, note: "상호경사; d와 근접 2:1 (P_d/P_c≈1.99), b와 비공명 1.79; REBOUND MEGNO 2.000 STABLE"}
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
-      note: "오너 c2 확정 2026-06-25 — a 0.40 AU(2번째)·P~105d·e~0.04·상호경사 1.5°. d와 근접 2:1(near-resonant), b와 비공명(1.79). REBOUND 1e5yr 랜덤위상 MEGNO 2.000 robust STABLE, Erid 비펌핑. DB emit(curated→systems→starmap)."
-      paper: "REBOUND 5.0 WHFast+MEGNO(scripts/run.py --system 40_eridani, results/40_eridani_timeseries.csv); 공식 뷰어=docs/starmap.html stability 모핑."
+      evidence: >
+        오너 c2 확정 2026-06-25 — a 0.40 AU(2번째)·P~105d·e~0.04·상호경사 1.5°. d와 근접 2:1(near-resonant), b와 비공명(1.79). REBOUND 1e5yr
+        랜덤위상 MEGNO 2.000 robust STABLE, Erid 비펌핑. DB emit(curated→systems→starmap).
 
-  - body: 40 Eridani A c
+        paper: REBOUND 5.0 WHFast+MEGNO(scripts/run.py --system 40_eridani, results/40_eridani_timeseries.csv); 공식
+        뷰어=docs/starmap.html stability 모핑.
+
+  - body: "40 Eridani A c"
     axis: bulk
     status: gated
-    driver: Mercury-twin anchor → derived
-    value: >
-      **수성 쌍둥이** 앵커 = M **0.055 M⊕** + R **2,440 km(0.383 R⊕)** → 표면중력 **0.38 g** · 밀도 **~5.4 g/cm³**(iron-rich 암석,
-      수성 5.43과 동급 — 큰 금속핵). 자전 = **조석고정 1:1**(오너 c3, 2026-06-25) — a 0.40 AU·저-e(0.04)서 수성식 3:2는 불가(3:2는
-      e~0.2 필요), 1:1 lock이 자연스러움 → **영구 substellar 반구 vs 영구 야간 반구**. **obliquity ≈0°·spin_axis=궤도 법선**
-      (조석고정의 자연 귀결 — confirm 2026-06-26, 축계절 없음). 소형체 → 빠른 냉각·낮은 방사성열 → **지질학적
-      정적**(무화산). 조석 C̄₂₂≈9.6e-8 → emit 임계(1e-6) 아래, 기록만·omit (body-figure-methodology.md).
+    driver: ["Mercury-twin anchor → derived"]
+    narrative: >
+      **수성 쌍둥이** 앵커 = M **0.055 M⊕** + R **2,440 km(0.383 R⊕)** → 표면중력 **0.38 g** · 밀도 **~5.4 g/cm³**(iron-rich 암석, 수성
+      5.43과 동급 — 큰 금속핵). 자전 = **조석고정 1:1**(오너 c3, 2026-06-25) — a 0.40 AU·저-e(0.04)서 수성식 3:2는 불가(3:2는 e~0.2 필요), 1:1 lock이
+      자연스러움 → **영구 substellar 반구 vs 영구 야간 반구**. **obliquity ≈0°·spin_axis=궤도 법선** (조석고정의 자연 귀결 — confirm 2026-06-26, 축계절
+      없음). 소형체 → 빠른 냉각·낮은 방사성열 → **지질학적 정적**(무화산). 조석 C̄₂₂≈9.6e-8 → emit 임계(1e-6) 아래, 기록만·omit
+      (body-figure-methodology.md).
+    fields:
+      - {name: mass, value: 0.055, unit: M_earth, op: set}
+      - {name: radius, value: 0.383, unit: R_earth, op: set, note: "2,440 km; 0.38 g; ρ ~5.4 g/cm³ iron-rich (큰 금속핵)"}
+      - {name: obliquity, value: 0, unit: deg, op: set, note: "조석고정 1:1 자연 귀결, 축계절 없음"}
+      - {name: spin_axis_orientation, value: "궤도 법선 (조석고정 1:1 — 저-e라 수성식 3:2 불가; 영구 substellar/야간 반구). C̄₂₂≈9.6e-8 → 임계 아래 omit", op: set}
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 c3 확정 2026-06-25 — 수성 쌍둥이(0.055 M⊕·2,440km→0.38g·ρ5.4 iron-rich). 자전=조석고정 1:1(저-e라 3:2 불가). 지질학적 죽음(무화산). C̄₂₂≈9.6e-8 → 임계 아래 omit(figure 패스 완료, body-figure-methodology.md)."
-      paper: docs/reference/tidal-locking-timescale-methodology.md (0.40 AU 근접+Gyr 나이 → 1:1 lock); mass-radius-relation-methodology.md (iron-rich tie-break).
+      evidence: >
+        오너 c3 확정 2026-06-25 — 수성 쌍둥이(0.055 M⊕·2,440km→0.38g·ρ5.4 iron-rich). 자전=조석고정 1:1(저-e라 3:2 불가). 지질학적 죽음(무화산).
+        C̄₂₂≈9.6e-8 → 임계 아래 omit(figure 패스 완료, body-figure-methodology.md).
 
-  - body: 40 Eridani A c
+        paper: docs/reference/tidal-locking-timescale-methodology.md (0.40 AU 근접+Gyr 나이 → 1:1 lock);
+        mass-radius-relation-methodology.md (iron-rich tie-break).
+
+  - body: "40 Eridani A c"
     axis: atmosphere
     status: passthrough
-    note: >
+    driver: [passthrough]
+    narrative: >
       **대기 없음**(맨돌) — 높은 insolation(Teq ~353K, substellar ~490K) + 낮은 탈출속도(0.38g, v_esc ~4 km/s) → cosmic shoreline
       **아래**(수성·달과 동일 영역). 수성식 **sputter exosphere**(미량 Na/K 등 표면 충돌 기원)는 가능하나 cfg 미모델(무시급). passthrough(없음).
+    fields:
+      - {name: composition, value: "none (맨돌; Teq ~353K·substellar ~490K + 낮은 탈출속도 0.38g → cosmic shoreline 아래)", op: passthrough}
 
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: surface
     status: gated
-    driver: owner art-direction + tidal-lock dichotomy + cold-trap hook
-    value: >
-      표면 = **회색 크레이터 현무암/금속질 평원**(수성/달 analog), Bond albedo **~0.1**(어두움). 조석고정 1:1 → **영구 substellar
-      반구 ~490K**(달쪽 고온, 일부 melt-glaze 가능) ↔ **영구 야간 반구 급랭(~50–100K)**. **★ hook(오너 c4, 작은 모드감)**: 야간
-      반구 + **극 영구음영 크레이터**에 **휘발성 얼음 cold-trap**(수성 MESSENGER 극 얼음 analog — water ice + 가능 CO₂ frost가
-      영구 그림자에 안정). 즉 *겉은 뜨거운 죽은 맨돌인데 어두운 면·극에 얼음 금고가 숨음*. eyeball 없음(대기 무). 온도 양극화가
-      지배 비주얼.
+    driver: ["owner art-direction", "tidal-lock dichotomy", "cold-trap hook"]
+    narrative: >
+      표면 = **회색 크레이터 현무암/금속질 평원**(수성/달 analog), Bond albedo **~0.1**(어두움). 조석고정 1:1 → **영구 substellar 반구 ~490K**(달쪽 고온, 일부
+      melt-glaze 가능) ↔ **영구 야간 반구 급랭(~50–100K)**. **★ hook(오너 c4, 작은 모드감)**: 야간 반구 + **극 영구음영 크레이터**에 **휘발성 얼음
+      cold-trap**(수성 MESSENGER 극 얼음 analog — water ice + 가능 CO₂ frost가 영구 그림자에 안정). 즉 *겉은 뜨거운 죽은 맨돌인데 어두운 면·극에 얼음 금고가 숨음*.
+      eyeball 없음(대기 무). 온도 양극화가 지배 비주얼.
+    fields:
+      - {name: surface_type, value: "회색 크레이터 현무암/금속질 평원 (수성/달 analog)", op: set}
+      - {name: albedo, value: 0.1, op: set, note: "Bond, 어두움"}
+      - {name: surface_temperature, value: "substellar ~490K / 야간 ~50–100K (조석고정 1:1; 무화산)", op: set}
+      - {name: ice_caps, value: "극 영구음영 크레이터 휘발성 얼음 cold-trap (water ice + 가능 CO₂ frost; 수성 MESSENGER analog)", op: set}
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
-      note: "오너 c4 확정 2026-06-25 — 회색 크레이터 현무암/금속 평원(A~0.1). 조석고정 → substellar ~490K vs 야간 ~50–100K. ★hook=야간반구+극 영구음영 크레이터 휘발성 얼음 cold-trap(수성 MESSENGER analog). 무화산."
-      paper: docs/reference/surface-color-albedo-methodology.md (현무암/금속 회색·낮은 albedo); 수성 극 PSR 얼음 cold-trap(MESSENGER, Lawrence 2013/Paige 2013) analog.
+      evidence: >
+        오너 c4 확정 2026-06-25 — 회색 크레이터 현무암/금속 평원(A~0.1). 조석고정 → substellar ~490K vs 야간 ~50–100K. ★hook=야간반구+극 영구음영 크레이터 휘발성
+        얼음 cold-trap(수성 MESSENGER analog). 무화산.
 
-  - body: 40 Eridani A c
+        paper: docs/reference/surface-color-albedo-methodology.md (현무암/금속 회색·낮은 albedo); 수성 극 PSR 얼음 cold-trap(MESSENGER,
+        Lawrence 2013/Paige 2013) analog.
+
+  - body: "40 Eridani A c"
     axis: appearance
     status: gated
-    driver: surface-dominated (no atmosphere)
-    value: >
-      대기 없음 → 디스크 = **표면 지배**. 우주에서 **회색 크레이터 구체 `#8a8278`**, 대기 색 없음(Rayleigh 무). 조석고정이라
-      낮/밤 터미네이터 **고정** — 한 반구 영구 밝음, 반대 영구 어둠. 극·야간 cold-trap **밝은 얼음 반점**(hook)이 작은 흰 디테일.
-      emit 디스크 = 회색 표면(c4) + 극/야간 frost 반점.
+    driver: ["surface-dominated (no atmosphere)"]
+    narrative: >
+      대기 없음 → 디스크 = **표면 지배**. 우주에서 **회색 크레이터 구체 `#8a8278`**, 대기 색 없음(Rayleigh 무). 조석고정이라 낮/밤 터미네이터 **고정** — 한 반구 영구 밝음,
+      반대 영구 어둠. 극·야간 cold-trap **밝은 얼음 반점**(hook)이 작은 흰 디테일. emit 디스크 = 회색 표면(c4) + 극/야간 frost 반점.
+    fields:
+      - {name: base_color, value: "#8a8278", op: set, note: "회색 크레이터 구체, 대기색 없음; 고정 터미네이터; 극/야간 cold-trap 밝은 얼음 반점"}
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 c5 확정 2026-06-25 — 표면지배 회색 구체 #8a8278, 대기색 없음. 고정 터미네이터(영구 주/야 반구). 극/야간 cold-trap 흰 얼음 반점."
-      paper: docs/reference/atmosphere-reflected-color-methodology.md (대기 무→표면 반사 지배).
+      evidence: >
+        오너 c5 확정 2026-06-25 — 표면지배 회색 구체 #8a8278, 대기색 없음. 고정 터미네이터(영구 주/야 반구). 극/야간 cold-trap 흰 얼음 반점.
 
-  - body: 40 Eridani A c
+        paper: docs/reference/atmosphere-reflected-color-methodology.md (대기 무→표면 반사 지배).
+
+  - body: "40 Eridani A c"
     axis: magnetism.magnetic_field
     status: passthrough
-    note: >
-      자기장 **무시급/없음** — 소형(0.055 M⊕)·식은 몸. (수성이 큰 금속핵으로 약한 ~1% 지구 dipole을 갖긴 하나, 그건 수성 특수
-      케이스 — 보수적으로 글로벌 dynamo 미작동 가정.) 표면 자기 차폐 없음 → c8 환경. passthrough(없음/무시급).
+    driver: [passthrough]
+    narrative: >
+      자기장 **무시급/없음** — 소형(0.055 M⊕)·식은 몸. (수성이 큰 금속핵으로 약한 ~1% 지구 dipole을 갖긴 하나, 그건 수성 특수 케이스 — 보수적으로 글로벌 dynamo 미작동 가정.)
+      표면 자기 차폐 없음 → c8 환경. passthrough(없음/무시급).
+    fields:
+      - {name: magnetic_field, value: "무시급/없음 (소형 0.055 M⊕·식은 몸, 글로벌 dynamo 미작동 가정)", op: passthrough}
 
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: environment
     status: passthrough
-    note: >
-      자기권 없음(c7) + 대기 없음 → 표면이 **40 Eri A 항성풍·UV·우주선에 노출**. radiation_surface=**보통~높음**(40 Eri A X선
-      ~3× 태양, 0.40 AU라 Erid 0.224보다 약하나 d 0.635보다 강함). 삼중성 B·C는 ~400 AU 밖 무관. 도출 passthrough.
+    driver: [passthrough]
+    narrative: >
+      자기권 없음(c7) + 대기 없음 → 표면이 **40 Eri A 항성풍·UV·우주선에 노출**. radiation_surface=**보통~높음**(40 Eri A X선 ~3× 태양, 0.40 AU라 Erid
+      0.224보다 약하나 d 0.635보다 강함). 삼중성 B·C는 ~400 AU 밖 무관. 도출 passthrough.
+    fields:
+      - {name: radiation, value: "보통~높음 (40 Eri A X선 ~3× 태양, 0.40 AU; 자기권·대기 없음)", op: passthrough}
 
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: rings
     status: gated
-    driver: owner art-direction
-    value: "**고리 없음**(오너 c9) — 작은 맨돌, 고리원 없음."
-    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 c9 확정 2026-06-25 — 고리 없음."}
+    driver: ["owner art-direction"]
+    narrative: >
+      **고리 없음**(오너 c9) — 작은 맨돌, 고리원 없음.
+    fields:
+      - {name: ring_structure, value: none, op: set}
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      evidence: >
+        오너 c9 확정 2026-06-25 — 고리 없음.
 
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: satellites
     status: gated
-    driver: owner art-direction
-    value: "**위성 없음**(오너 c10) — 작고 별에 근접(0.40 AU), 안정 위성 불가."
-    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 c10 확정 2026-06-25 — 위성 없음."}
+    driver: ["owner art-direction"]
+    narrative: >
+      **위성 없음**(오너 c10) — 작고 별에 근접(0.40 AU), 안정 위성 불가.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      evidence: >
+        오너 c10 확정 2026-06-25 — 위성 없음.
 
-  - body: 40 Eridani A c
+  - body: "40 Eridani A c"
     axis: gameplay
     status: gated
-    driver: synthesis (owner art-direction)
-    value: >
-      **뜨거운 조석고정 수성형 "Twoworld"** — Erid(고중력 화려)와 Threeworld(기묘 frost) 사이의 **조용한 counterpoint**. 단 평범
-      함에 **작은 hook 하나**(오너 c11): *겉은 죽은 회색 맨돌이나 야간 반구·극 영구음영 크레이터에 **휘발성 얼음 cold-trap*** →
-      ISRU/과학 타깃("얼음 금고를 찾아 어두운 면으로"). 난이도 = **착륙 쉬움**(0.38g·저Δv·고대 크레이터 평원) + 대기 없어 공력 무 ·
-      단 **극단적 주야 온도 양극화**(낮 ~490K / 밤 ~50–100K)·자기권 없어 **방사선 노출**. 발견 어려움(FFFF, 소형 합성). 로스터
-      분기 = "조용한 뜨거운 맨돌, 어두운 면에 얼음 비밀"(Erid 스펙터클·Threeworld 기묘함과 대비되는 절제된 한 칸).
+    driver: ["synthesis (owner art-direction)"]
+    narrative: >
+      **뜨거운 조석고정 수성형 "Twoworld"** — Erid(고중력 화려)와 Threeworld(기묘 frost) 사이의 **조용한 counterpoint**. 단 평범 함에 **작은 hook 하나**(오너
+      c11): *겉은 죽은 회색 맨돌이나 야간 반구·극 영구음영 크레이터에 **휘발성 얼음 cold-trap*** → ISRU/과학 타깃("얼음 금고를 찾아 어두운 면으로"). 난이도 = **착륙
+      쉬움**(0.38g·저Δv·고대 크레이터 평원) + 대기 없어 공력 무 · 단 **극단적 주야 온도 양극화**(낮 ~490K / 밤 ~50–100K)·자기권 없어 **방사선 노출**. 발견 어려움(FFFF,
+      소형 합성). 로스터 분기 = "조용한 뜨거운 맨돌, 어두운 면에 얼음 비밀"(Erid 스펙터클·Threeworld 기묘함과 대비되는 절제된 한 칸).
+    fields:
+      - {name: difficulty, value: "착륙 쉬움 (0.38g·저Δv) · 대기 무 · 극단 주야온도 (490K/50–100K) · 자기권 없어 방사선 노출 · 발견 FFFF", op: set}
+      - {name: science_biomes, value: "야간/극 cold-trap 얼음 (ISRU/과학 타깃)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 c11 확정 2026-06-25 — Twoworld 게임플레이 종합. 조용한 counterpoint + 작은 hook(야간/극 cold-trap 얼음, ISRU 타깃). 착륙쉬움(0.38g)+대기무+극단 주야온도+방사선노출. FFFF. → Twoworld 11축 완성, 40 Eri A 행성계(b·c·d) 전부 walk 완료."
+      evidence: >
+        오너 c11 확정 2026-06-25 — Twoworld 게임플레이 종합. 조용한 counterpoint + 작은 hook(야간/극 cold-trap 얼음, ISRU 타깃). 착륙쉬움(0.38g)+대기무+극단
+        주야온도+방사선노출. FFFF. → Twoworld 11축 완성, 40 Eri A 행성계(b·c·d) 전부 walk 완료.
+
 
   # ── Threeworld (40 Eridani A d) — PHM canon(p.393): 달 크기·0.2g·희박 CO₂/N₂/SO₂(<지구 1%). 별에서 3번째 행성.
   #    Astrophage Petrova-arc 끝점(금성 역할, CO₂ 번식지)·Taumoeba 투입지·에리디언 최근 발견(맹목→"삼세계"). 순수 픽션(관측 0).
   #    틀=물리 책 그대로 + Weir가 인정한 대기보유 수수께끼("0.2g인데 어떻게?")는 화산 SO₂ outgassing 보충으로 보강(G4).
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: identity
     status: gated
-    driver: PHM book canon (p.393)
-    value: >
-      body_type=**작은 암석 행성**(지구 달 크기) — R ≈ 1,737 km(0.273 R⊕) · **0.2 g** · 역산 질량 ≈ **0.015 M⊕**(달의 ~1.2배) ·
-      ρ ~4.0 g/cm³. 희박 **CO₂ 84% / N₂ 8% / SO₂ 4% + trace** 대기, 표면압 **<지구 1%**(Mars급). designation=**40 Eridani A d
-      (Threeworld)** — 별에서 3번째 행성. **PHM 책 canon**(p.393 구체값). 순수 픽션 바디(관측 근거 0 — 40 Eri A 확정 행성 없음).
-      문화: **Astrophage Petrova-arc 끝점**(금성 역할 — CO₂ 대기서 Astrophage 번식) · 후에 **Taumoeba 투입**으로 개체수 감소 ·
-      에리디언이 최근 발견, 맹목이라 무성의하게 "삼세계" 명명(인간식 천문 경이가 없던 종족). discoverability=**FFFF**(category
-      `fictional` — 합성 바디, 실측 0; 작고 늦게 발견된 점도 정합).
+    driver: ["PHM book canon (p.393)"]
+    narrative: >
+      body_type=**작은 암석 행성**(지구 달 크기) — R ≈ 1,737 km(0.273 R⊕) · **0.2 g** · 역산 질량 ≈ **0.015 M⊕**(달의 ~1.2배) · ρ ~4.0
+      g/cm³. 희박 **CO₂ 84% / N₂ 8% / SO₂ 4% + trace** 대기, 표면압 **<지구 1%**(Mars급). designation=**40 Eridani A d
+      (Threeworld)** — 별에서 3번째 행성. **PHM 책 canon**(p.393 구체값). 순수 픽션 바디(관측 근거 0 — 40 Eri A 확정 행성 없음). 문화: **Astrophage
+      Petrova-arc 끝점**(금성 역할 — CO₂ 대기서 Astrophage 번식) · 후에 **Taumoeba 투입**으로 개체수 감소 · 에리디언이 최근 발견, 맹목이라 무성의하게 "삼세계" 명명(인간식
+      천문 경이가 없던 종족). discoverability=**FFFF**(category `fictional` — 합성 바디, 실측 0; 작고 늦게 발견된 점도 정합).
+    fields:
+      - {name: body_type, value: "작은 암석 행성 (지구 달 크기; R 1,737 km 0.273 R⊕, 0.2 g, ~0.015 M⊕, ρ ~4.0 g/cm³)", op: set}
+      - {name: designation, value: "40 Eridani A d (Threeworld) — 별에서 3번째 행성", op: set}
+      - {name: cultural_name, value: "Threeworld (PHM p.393; Astrophage Petrova-arc 끝점·Taumoeba 투입지, 에리디언 최근 발견)", op: set}
+      - {name: discoverability, value: "fictional (순수 픽션, 실측 0 → 항상 발견 FFFF)", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G1 확정 2026-06-24 — Threeworld(40 Eri A d), PHM canon p.393. 달 크기·0.2g·~0.015 M⊕·희박 CO₂/N₂/SO₂(<지구1%). disc=FFFF(fictional, 순수 픽션+소형+늦은 발견). 문화=Astrophage Petrova-arc 끝점(금성 역할)·Taumoeba 투입지. 물리=책, 대기보유 수수께끼는 G4서 화산 보충으로 보강."
+      evidence: >
+        오너 G1 확정 2026-06-24 — Threeworld(40 Eri A d), PHM canon p.393. 달 크기·0.2g·~0.015 M⊕·희박 CO₂/N₂/SO₂(<지구1%).
+        disc=FFFF(fictional, 순수 픽션+소형+늦은 발견). 문화=Astrophage Petrova-arc 끝점(금성 역할)·Taumoeba 투입지. 물리=책, 대기보유 수수께끼는 G4서 화산 보충으로
+        보강.
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "synthetic PHM body (Threeworld, p.393); no real detection — always discover. Tiny (0.015 M⊕), Eridian late-discovery", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: orbit
     status: gated
-    driver: stability-sim validated architecture (REBOUND scan)
-    value: >
-      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.04**
-      (변동 0.013–0.048) · 상호경사 **2.5°**. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova 번식지 정합.
-      **공명**: c와 **근접 2:1**(a_d/a_c=1.587=2^⅔; 수성+달 질량이라 deep-lock 아닌 near-resonant, 각 circulate) — b-c는 비공명
-      (2.39). **안정성 시뮬(REBOUND 5.0 WHFast+MEGNO, 공식 뷰어 반영)**: c=수성(0.055 M⊕)·0.40 AU·상호경사 1.5° 동반, 1e5yr
-      랜덤위상서 **MEGNO 2.000(규칙적·robust STABLE)**, e_max Erid 0.040·c 0.095·d 0.048(**Erid 안 펌핑** — 요구 충족), a 고정.
-      (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit 완료**(curated→systems→starmap 모핑, 세차 Ω/ω 포함).
-      자전/figure는 bulk 행 참조(**비동기 자전 4.7일**·부분 despin, **조석고정 아님**, C̄₂₂ omit — body-figure-methodology.md).
-      ⚠ 정정 2026-06-26: 이전 "조석고정 1:1"은 c(Twoworld) 템플릿 복붙 잔재였음 — bulk/atmosphere/surface(완만자전·계절·주야)와 모순이라 제거.
+    driver: ["stability-sim validated architecture (REBOUND scan)"]
+    narrative: >
+      a **0.635 AU**(별에서 3번째 — b Erid 0.224 < c 0.40 < d 0.635 ✓ canon "3번째 행성") · P **209 d** · e **~0.04** (변동
+      0.013–0.048) · 상호경사 **2.5°**. **40 Eri A 거주가능권(~0.64 AU) 한복판** — Astrophage Petrova 번식지 정합. **공명**: c와 **근접
+      2:1**(a_d/a_c=1.587=2^⅔; 수성+달 질량이라 deep-lock 아닌 near-resonant, 각 circulate) — b-c는 비공명 (2.39). **안정성 시뮬(REBOUND 5.0
+      WHFast+MEGNO, 공식 뷰어 반영)**: c=수성(0.055 M⊕)·0.40 AU·상호경사 1.5° 동반, 1e5yr 랜덤위상서 **MEGNO 2.000(규칙적·robust STABLE)**,
+      e_max Erid 0.040·c 0.095·d 0.048(**Erid 안 펌핑** — 요구 충족), a 고정. (3:1+2:1 이중공명은 카오스라 기각; c-d만 2:1이 robust.) **DB emit
+      완료**(curated→systems→starmap 모핑, 세차 Ω/ω 포함). 자전/figure는 bulk 행 참조(**비동기 자전 4.7일**·부분 despin, **조석고정 아님**, C̄₂₂ omit
+      — body-figure-methodology.md). ⚠ 정정 2026-06-26: 이전 "조석고정 1:1"은 c(Twoworld) 템플릿 복붙 잔재였음 —
+      bulk/atmosphere/surface(완만자전·계절·주야)와 모순이라 제거.
+    fields:
+      - {name: semi_major_axis_au, value: 0.635, unit: AU, op: set, note: "P 209 d, 별에서 3번째; 40 Eri A 거주가능권 ~0.64 AU 한복판"}
+      - {name: eccentricity, value: 0.04, op: set, note: "변동 0.013–0.048"}
+      - {name: inclination_deg, value: 2.5, unit: deg, op: set, note: "상호경사; c와 근접 2:1 (a_d/a_c=1.587), b-c 비공명 2.39; REBOUND MEGNO 2.000 STABLE"}
     gate:
       criterion: [classification, dynamics]
       verdict: pass-in-window
-      note: "오너 G2 최종확정 2026-06-25 — a 0.635 AU(3번째 canon)·P 209d·e~0.04·상호경사 2.5°. c와 근접 2:1(near-resonant, deep-lock 아님; b-c 비공명 2.39). c=수성(0.055 M⊕)·0.40 AU·1.5°. REBOUND 1e5yr 랜덤위상 MEGNO 2.000 robust STABLE, Erid e≤0.04 비펌핑(요구 충족). 3:1+2:1 이중공명=카오스라 기각, c-d만 2:1 채택. DB emit(curated→systems→starmap 세차 모핑). 조석가열 A안 종결."
-      paper: "REBOUND 5.0 WHFast+MEGNO(scripts/run.py --system 40_eridani, results/40_eridani_timeseries.csv; 탐색 scripts/erid_resonance_scan.py); 공식 뷰어=docs/starmap.html stability 모핑."
+      evidence: >
+        오너 G2 최종확정 2026-06-25 — a 0.635 AU(3번째 canon)·P 209d·e~0.04·상호경사 2.5°. c와 근접 2:1(near-resonant, deep-lock 아님; b-c
+        비공명 2.39). c=수성(0.055 M⊕)·0.40 AU·1.5°. REBOUND 1e5yr 랜덤위상 MEGNO 2.000 robust STABLE, Erid e≤0.04 비펌핑(요구 충족).
+        3:1+2:1 이중공명=카오스라 기각, c-d만 2:1 채택. DB emit(curated→systems→starmap 세차 모핑). 조석가열 A안 종결.
 
-  - body: 40 Eridani A d
+        paper: REBOUND 5.0 WHFast+MEGNO(scripts/run.py --system 40_eridani, results/40_eridani_timeseries.csv; 탐색
+        scripts/erid_resonance_scan.py); 공식 뷰어=docs/starmap.html stability 모핑.
+
+  - body: "40 Eridani A d"
     axis: bulk
     status: gated
-    driver: PHM canon (R + g) → M, ρ derived
-    value: >
-      canon 두 앵커 = **R ≈ 1,737 km(0.273 R⊕, "달 크기")** + **표면중력 0.2 g**(p.393). 거기서 도출 → 질량 **0.0149 M⊕**
-      (g·R², 달의 ~1.2배) · 밀도 **~4.04 g/cm³**(달 3.34보다 조밀 → 약간 iron-rich 암석; 압축 무시급 소형체). 작고 0.2g라
-      **탈출속도 낮음**(~1.4 km/s급) → 대기 보유 퍼즐(Weir "모르겠다")은 G4서 미해결로 환원(escaping remnant; 승화-버퍼 철회). 소형체 → **빠른 냉각·낮은 방사성열 →
-      지질학적 정적**(무화산). 조석 C̄₂₂≈3.2e-8 → 임계 아래, omit (body-figure-methodology.md).
-      **자전(오너 2026-06-26)**: **비동기 자전 P_rot 4.7일(112.8h)** · **obliquity 17°** · spin_axis=원시(자유). 조석고정 아님 —
-      0.635 AU·소형체라 despin 타임 Gyr급이라 **부분만 despin된 비동기 스냅샷**(transient art-directed 합성값, conf 낮음; e~0.04라
-      수성식 3:2 불가·1:1 미도달). **온도**: insolation **1.01 S⊕**(L 0.408 L☉/0.635² — 일조는 지구급) → 평형 평균 **~268K**(Bond
-      albedo ~0.12 — 어두운 bare 현무암; frost 철회[G4]로 밝은 성분 사라져 0.2–0.3→0.12, 평균 ~8K↑ — 얇은 대기라 온실 ~0). 4.7일
-      느린 자전+얇은 대기·낮은 열관성 → **큰 일교차**(subsolar 정오 ~380K / 야간 <150K).
-      obliquity 17°가 완만한 계절 편차를 얹음. (Erid 고속균일·c 조석고정과 자연 분기.)
+    driver: ["PHM canon (R + g) → M, ρ derived"]
+    narrative: >
+      canon 두 앵커 = **R ≈ 1,737 km(0.273 R⊕, "달 크기")** + **표면중력 0.2 g**(p.393). 거기서 도출 → 질량 **0.0149 M⊕** (g·R², 달의 ~1.2배)
+      · 밀도 **~4.04 g/cm³**(달 3.34보다 조밀 → 약간 iron-rich 암석; 압축 무시급 소형체). 작고 0.2g라 **탈출속도 낮음**(~1.4 km/s급) → 대기 보유 퍼즐(Weir
+      "모르겠다")은 G4서 미해결로 환원(escaping remnant; 승화-버퍼 철회). 소형체 → **빠른 냉각·낮은 방사성열 → 지질학적 정적**(무화산). 조석 C̄₂₂≈3.2e-8 → 임계 아래,
+      omit (body-figure-methodology.md). **자전(오너 2026-06-26)**: **비동기 자전 P_rot 4.7일(112.8h)** · **obliquity 17°** ·
+      spin_axis=원시(자유). 조석고정 아님 — 0.635 AU·소형체라 despin 타임 Gyr급이라 **부분만 despin된 비동기 스냅샷**(transient art-directed 합성값, conf
+      낮음; e~0.04라 수성식 3:2 불가·1:1 미도달). **온도**: insolation **1.01 S⊕**(L 0.408 L☉/0.635² — 일조는 지구급) → 평형 평균 **~268K**(Bond
+      albedo ~0.12 — 어두운 bare 현무암; frost 철회[G4]로 밝은 성분 사라져 0.2–0.3→0.12, 평균 ~8K↑ — 얇은 대기라 온실 ~0). 4.7일 느린 자전+얇은 대기·낮은 열관성
+      → **큰 일교차**(subsolar 정오 ~380K / 야간 <150K). obliquity 17°가 완만한 계절 편차를 얹음. (Erid 고속균일·c 조석고정과 자연 분기.)
+    fields:
+      - {name: radius, value: 0.273, unit: R_earth, op: set, note: "1,737 km (달 크기, canon)"}
+      - {name: mass, value: 0.0149, unit: M_earth, op: set, note: "g·R² 도출, 달의 ~1.2배; ρ ~4.04 g/cm³ 약간 iron-rich"}
+      - {name: rotation_period, value: 4.7, unit: d, op: set, note: "112.8h 비동기, 부분 despin, 조석고정 아님 (conf 낮음, art-directed 합성)"}
+      - {name: obliquity, value: 17, unit: deg, op: set, note: "완만 계절; spin_axis 원시(자유). C̄₂₂≈3.2e-8 → 임계 아래 omit"}
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G3 확정 2026-06-24 (자전 추가 2026-06-26) — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체. 무화산. 자전=비동기 4.7일·obliquity 17°(부분 despin 스냅샷, e 낮아 3:2/1:1 둘 다 아님; conf 낮음, art-directed 합성). 평균 ~268K(1.01 S⊕·A~0.12 bare basalt·온실0; frost 제거로 0.2–0.3→0.12, ~8K↑), 느린자전→큰 일교차(정오~380K/야간<150K)."
+      evidence: >
+        오너 G3 확정 2026-06-24 (자전 추가 2026-06-26) — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체.
+        무화산. 자전=비동기 4.7일·obliquity 17°(부분 despin 스냅샷, e 낮아 3:2/1:1 둘 다 아님; conf 낮음, art-directed 합성). 평균 ~268K(1.01
+        S⊕·A~0.12 bare basalt·온실0; frost 제거로 0.2–0.3→0.12, ~8K↑), 느린자전→큰 일교차(정오~380K/야간<150K).
 
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: atmosphere
     status: gated
-    driver: PHM canon composition + sublimation-buffer grounding
-    value: >
-      조성(canon p.393) = **CO₂ 84% / N₂ 8% / SO₂ 4% + trace**, 표면압 **<지구 1%**(~0.006–0.008 bar = ~700 Pa, 화성급 희박).
-      ⚠ **정정 2026-06-26 (frost-buffer 철회)**: 이전 board는 보유를 "CO₂ 드라이아이스 + SO₂ frost 승화-버퍼(화성 극관 + Io analog)"로
-      설명했으나 — d 평균이 **~260K**(insolation 1.01 S⊕, G3)라 CO₂ frost point(~590 Pa 분압서 **~148K**)·SO₂ frost point(~28 Pa 분압서
-      **~130K**)에 **어디서도(극·야간 포함) 도달 불가** → **드라이아이스·SO₂ frost는 물리적으로 존재 불가, 메커니즘 철회**. (화성 극관이
-      작동하는 건 화성 *평균*이 ~210K라 극겨울에 148K를 찍기 때문 — d는 일조 지구급이라 근본적으로 너무 따뜻함.)
-      **정정된 그림**: 얇은 **CO₂/N₂/SO₂ 기체 외피**(frost 캡·승화 순환 없음). 보유는 **canon 미해결 퍼즐로 환원** — 0.2g·260K·40 Eri A의
-      XUV/항성풍상 **cosmic shoreline 너머**라 사실 **천천히 새는 잔류 대기(escaping remnant 스냅샷)**로 보는 게 정직(Weir 본인의 "0.2g가
-      어떻게 잡나" 미해결을 거짓 rescue 없이 그대로 둠, documented). **무화산**(소형·식은 핵; 보충원 없음 — 미스터리의 일부). CO₂ 대기 =
-      **Astrophage Petrova-arc 번식 목적지**(canon flavor, cfg 미모델).
+    driver: ["PHM canon composition", "sublimation-buffer grounding"]
+    narrative: >
+      조성(canon p.393) = **CO₂ 84% / N₂ 8% / SO₂ 4% + trace**, 표면압 **<지구 1%**(~0.006–0.008 bar = ~700 Pa, 화성급 희박). ⚠ **정정
+      2026-06-26 (frost-buffer 철회)**: 이전 board는 보유를 "CO₂ 드라이아이스 + SO₂ frost 승화-버퍼(화성 극관 + Io analog)"로 설명했으나 — d 평균이
+      **~260K**(insolation 1.01 S⊕, G3)라 CO₂ frost point(~590 Pa 분압서 **~148K**)·SO₂ frost point(~28 Pa 분압서 **~130K**)에
+      **어디서도(극·야간 포함) 도달 불가** → **드라이아이스·SO₂ frost는 물리적으로 존재 불가, 메커니즘 철회**. (화성 극관이 작동하는 건 화성 *평균*이 ~210K라 극겨울에 148K를 찍기
+      때문 — d는 일조 지구급이라 근본적으로 너무 따뜻함.) **정정된 그림**: 얇은 **CO₂/N₂/SO₂ 기체 외피**(frost 캡·승화 순환 없음). 보유는 **canon 미해결 퍼즐로 환원** —
+      0.2g·260K·40 Eri A의 XUV/항성풍상 **cosmic shoreline 너머**라 사실 **천천히 새는 잔류 대기(escaping remnant 스냅샷)**로 보는 게 정직(Weir 본인의
+      "0.2g가 어떻게 잡나" 미해결을 거짓 rescue 없이 그대로 둠, documented). **무화산**(소형·식은 핵; 보충원 없음 — 미스터리의 일부). CO₂ 대기 = **Astrophage
+      Petrova-arc 번식 목적지**(canon flavor, cfg 미모델).
+    fields:
+      - {name: composition, value: "CO₂ 84% / N₂ 8% / SO₂ 4% + trace (얇은 기체 외피, frost 캡 없음)", op: set}
+      - {name: pressure, value: "0.006–0.008", unit: bar, op: set, note: "~700 Pa, <지구 1% (Mars급 희박); escaping remnant"}
+      - {name: escape, value: "canon 미해결 퍼즐 (0.2g·~260K → cosmic shoreline 너머, escaping remnant 스냅샷)", op: set}
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G4 확정 2026-06-24, frost-buffer 철회·정정 2026-06-26 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa) 조성은 유지. 단 평균 ~260K(1.01 S⊕)서 CO₂ frost point ~148K·SO₂ ~130K에 도달 불가 → 드라이아이스/SO₂ frost·승화-버퍼·계절 frost캡 전부 철회(물리 불가). 정정: 얇은 escaping remnant 기체 외피, 보유는 canon 미해결(cosmic shoreline 너머, Weir 퍼즐 거짓rescue 없이 환원). 무화산. Astrophage Petrova 번식지(flavor)."
-      paper: "exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도+260K → CO₂ 외피도 escaping remnant); CO₂/SO₂ frost point vs T_eq 260K = 침착 불가(>148K/>130K everywhere)."
+      evidence: >
+        오너 G4 확정 2026-06-24, frost-buffer 철회·정정 2026-06-26 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa) 조성은 유지. 단 평균 ~260K(1.01 S⊕)서
+        CO₂ frost point ~148K·SO₂ ~130K에 도달 불가 → 드라이아이스/SO₂ frost·승화-버퍼·계절 frost캡 전부 철회(물리 불가). 정정: 얇은 escaping remnant 기체
+        외피, 보유는 canon 미해결(cosmic shoreline 너머, Weir 퍼즐 거짓rescue 없이 환원). 무화산. Astrophage Petrova 번식지(flavor).
 
-  - body: 40 Eridani A d
+        paper: exoplanet-atmosphere-methodology.md(cosmic shoreline: 0.2g 저탈출속도+260K → CO₂ 외피도 escaping remnant); CO₂/SO₂
+        frost point vs T_eq 260K = 침착 불가(>148K/>130K everywhere).
+
+  - body: "40 Eridani A d"
     axis: surface
     status: gated
-    driver: owner art-direction (가) + surface-color/frost
-    value: >
-      표면 = **고대 크레이터 헐벗은 암석**(오너 G5=가; frost 극관 철회 2026-06-26). 작고 지질학적으로 죽은 몸 → Moon/Mercury식
-      크레이터 평원, **회갈색 현무암질 암석**. ⚠ **이전 '흰 CO₂/SO₂ frost 극관'은 제거** — 평균 ~268K서 CO₂(~148K)·SO₂(~130K) frost
-      point에 못 도달해 침착 불가(G4). 색 = **회갈 bare 현무암**(밝은 frost 캡 없음, 균질한 어두운 크레이터 구체). **eyeball 없음**
-      (얇은 대기·비동기 자전; 단 4.7일 느린 자전이라 강한 주야 명암 경계 이동). Bond albedo **~0.12**(어두운 bare 현무암 단일성분).
-      **온도**: 평균 ~268K이나 느린 자전 → **큰 일교차**(정오면 ~380K 데워짐 / 야간면 <150K 냉각), obliquity 17° 완만 계절. 무화산(G3/G4
-      정합). Astrophage flavor(canon): CO₂ 대기·표면이 번식지 — 검은 Astrophage 반점이 표면을 더 어둡게(cfg 미모델 flavor).
+    driver: ["owner art-direction (가)", "surface-color/frost"]
+    narrative: >
+      표면 = **고대 크레이터 헐벗은 암석**(오너 G5=가; frost 극관 철회 2026-06-26). 작고 지질학적으로 죽은 몸 → Moon/Mercury식 크레이터 평원, **회갈색 현무암질 암석**. ⚠
+      **이전 '흰 CO₂/SO₂ frost 극관'은 제거** — 평균 ~268K서 CO₂(~148K)·SO₂(~130K) frost point에 못 도달해 침착 불가(G4). 색 = **회갈 bare
+      현무암**(밝은 frost 캡 없음, 균질한 어두운 크레이터 구체). **eyeball 없음** (얇은 대기·비동기 자전; 단 4.7일 느린 자전이라 강한 주야 명암 경계 이동). Bond albedo
+      **~0.12**(어두운 bare 현무암 단일성분). **온도**: 평균 ~268K이나 느린 자전 → **큰 일교차**(정오면 ~380K 데워짐 / 야간면 <150K 냉각), obliquity 17° 완만
+      계절. 무화산(G3/G4 정합). Astrophage flavor(canon): CO₂ 대기·표면이 번식지 — 검은 Astrophage 반점이 표면을 더 어둡게(cfg 미모델 flavor).
+    fields:
+      - {name: surface_type, value: "고대 크레이터 헐벗은 회갈색 현무암 (Moon/Mercury식; frost 극관 철회)", op: set}
+      - {name: albedo, value: 0.12, op: set, note: "단일 어두운 bare 현무암 (frost 제거로 0.2–0.3→0.12)"}
+      - {name: surface_temperature, value: "평균 ~268K (정오면 ~380K / 야간면 <150K); obliquity 17° 완만 계절; 무화산", op: set}
     gate:
       criterion: [classification]
       verdict: pass-in-window
-      note: "오너 G5 확정 2026-06-24, frost 극관 철회 2026-06-26 — (가) 회갈 bare 크레이터 현무암. 흰 CO₂/SO₂ frost 극관 제거(268K서 frost point 미도달, 침착 불가). A~0.12(단일 어두운 현무암). eyeball 없음이나 4.7일 느린자전→큰 일교차(정오~380K/야간<150K)+17° 완만계절. 무화산. Astrophage 반점 flavor."
-      paper: docs/reference/surface-color-albedo-methodology.md (현무암 회갈·CO₂/SO₂ frost 고알베도; Bond albedo).
+      evidence: >
+        오너 G5 확정 2026-06-24, frost 극관 철회 2026-06-26 — (가) 회갈 bare 크레이터 현무암. 흰 CO₂/SO₂ frost 극관 제거(268K서 frost point 미도달, 침착
+        불가). A~0.12(단일 어두운 현무암). eyeball 없음이나 4.7일 느린자전→큰 일교차(정오~380K/야간<150K)+17° 완만계절. 무화산. Astrophage 반점 flavor.
 
-  - body: 40 Eridani A d
+        paper: docs/reference/surface-color-albedo-methodology.md (현무암 회갈·CO₂/SO₂ frost 고알베도; Bond albedo).
+
+  - body: "40 Eridani A d"
     axis: appearance
     status: gated
-    driver: surface-dominated (thin transparent atmosphere)
-    value: >
-      대기 희박(<1%, 투명) → 디스크 = **표면이 지배**. 우주에서 **균질한 회갈색 크레이터 구체 `#8c7f70`**(달/수성식 bare rock).
-      ⚠ **흰 frost 극관 제거**(2026-06-26) — 268K서 CO₂/SO₂ 침착 불가(G4/G5)라 밝은 극관 없음. Erid 같은 **대기 색(청색) 없음**
-      — 얇아서 Rayleigh 무시급. **명암 경계(terminator)가 4.7일 주기로 천천히 이동**(느린 비동기 자전) — 정오면 밝게 달궈지고
-      야간면은 어둡고 차갑게. emit 디스크 = 표면색(G5) 단일, frost 캡·계절 밝기변동 없음.
+    driver: ["surface-dominated (thin transparent atmosphere)"]
+    narrative: >
+      대기 희박(<1%, 투명) → 디스크 = **표면이 지배**. 우주에서 **균질한 회갈색 크레이터 구체 `#8c7f70`**(달/수성식 bare rock). ⚠ **흰 frost 극관
+      제거**(2026-06-26) — 268K서 CO₂/SO₂ 침착 불가(G4/G5)라 밝은 극관 없음. Erid 같은 **대기 색(청색) 없음** — 얇아서 Rayleigh 무시급. **명암
+      경계(terminator)가 4.7일 주기로 천천히 이동**(느린 비동기 자전) — 정오면 밝게 달궈지고 야간면은 어둡고 차갑게. emit 디스크 = 표면색(G5) 단일, frost 캡·계절 밝기변동 없음.
+    fields:
+      - {name: base_color, value: "#8c7f70", op: set, note: "균질 회갈 크레이터 구체; frost 극관 없음, 대기색 없음; 4.7일 주기 terminator 이동"}
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G6 확정 2026-06-24, frost 극관 철회 2026-06-26 — 표면지배 디스크(얇은 투명 대기). 균질 회갈 #8c7f70 bare rock, 흰 frost 극관 제거(268K 침착불가). 대기색 없음. 4.7일 주기 terminator 이동(정오 밝음/야간 어둠)."
-      paper: docs/reference/atmosphere-reflected-color-methodology.md (얇은 대기→Rayleigh 무시, 표면 반사 지배).
+      evidence: >
+        오너 G6 확정 2026-06-24, frost 극관 철회 2026-06-26 — 표면지배 디스크(얇은 투명 대기). 균질 회갈 #8c7f70 bare rock, 흰 frost 극관 제거(268K 침착불가).
+        대기색 없음. 4.7일 주기 terminator 이동(정오 밝음/야간 어둠).
 
-  - body: 40 Eridani A d
+        paper: docs/reference/atmosphere-reflected-color-methodology.md (얇은 대기→Rayleigh 무시, 표면 반사 지배).
+
+  - body: "40 Eridani A d"
     axis: magnetism.magnetic_field
     status: passthrough
-    note: >
-      자기장 **없음/무시급** — 작고(0.0149 M⊕) 식은 핵 + 완만 자전 → 글로벌 dynamo 미작동(달·화성 analog). dynamo 방법론상
-      대류 열플럭스·전도핵 부족. 표면 자기 차폐 없음 → G8 환경. passthrough(없음).
+    driver: [passthrough]
+    narrative: >
+      자기장 **없음/무시급** — 작고(0.0149 M⊕) 식은 핵 + 완만 자전 → 글로벌 dynamo 미작동(달·화성 analog). dynamo 방법론상 대류 열플럭스·전도핵 부족. 표면 자기 차폐 없음 →
+      G8 환경. passthrough(없음).
+    fields:
+      - {name: magnetic_field, value: "없음/무시급 (소형 0.0149 M⊕·식은 핵 + 완만 자전, dynamo 미작동)", op: passthrough}
 
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: environment
     status: passthrough
-    note: >
-      자기권 없음(G7) + 얇은 대기 → 표면이 **40 Eri A의 항성풍·UV·우주선에 노출**. radiation_surface=**보통**(40 Eri A X선
-      ~3× 태양이나 0.635 AU라 Erid 0.224보다 약함; 얇은 대기 차폐 미미). Astrophage는 오히려 이 CO₂+복사 환경서 번식
-      (Petrova-arc 목적지, flavor). 삼중성 B·C는 ~400 AU 밖 무관. 도출 passthrough.
+    driver: [passthrough]
+    narrative: >
+      자기권 없음(G7) + 얇은 대기 → 표면이 **40 Eri A의 항성풍·UV·우주선에 노출**. radiation_surface=**보통**(40 Eri A X선 ~3× 태양이나 0.635 AU라 Erid
+      0.224보다 약함; 얇은 대기 차폐 미미). Astrophage는 오히려 이 CO₂+복사 환경서 번식 (Petrova-arc 목적지, flavor). 삼중성 B·C는 ~400 AU 밖 무관. 도출
+      passthrough.
+    fields:
+      - {name: radiation, value: "보통 (40 Eri A X선 ~3× 태양, 0.635 AU; 자기권·두꺼운 대기 없음)", op: passthrough}
 
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: rings
     status: gated
-    driver: owner art-direction
-    value: "**고리 없음**(오너 G9) — 작은 몸, 고리원(파괴 위성/잔해) 없음."
-    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 G9 확정 2026-06-24 — 고리 없음."}
+    driver: ["owner art-direction"]
+    narrative: >
+      **고리 없음**(오너 G9) — 작은 몸, 고리원(파괴 위성/잔해) 없음.
+    fields:
+      - {name: ring_structure, value: none, op: set}
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      evidence: >
+        오너 G9 확정 2026-06-24 — 고리 없음.
 
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: satellites
     status: gated
-    driver: owner art-direction
-    value: "**위성 없음**(오너 G10) — 자체가 달 크기 소형체, 위성 없음."
-    gate: {criterion: [classification], verdict: pass-in-window, note: "오너 G10 확정 2026-06-24 — 위성 없음."}
+    driver: ["owner art-direction"]
+    narrative: >
+      **위성 없음**(오너 G10) — 자체가 달 크기 소형체, 위성 없음.
+    gate:
+      criterion: [classification]
+      verdict: pass-in-window
+      evidence: >
+        오너 G10 확정 2026-06-24 — 위성 없음.
 
-  - body: 40 Eridani A d
+  - body: "40 Eridani A d"
     axis: gameplay
     status: gated
-    driver: synthesis (owner art-direction)
-    value: >
-      작고 헐벗은 **크레이터 암석 "삼세계"** — 조용한 변방(Erid 스펙터클과 대비). **착륙 쉬움**(0.2g·저Δv·고대 크레이터 평원)이나
-      **얇은 대기**(~700Pa)·자기권 없어 **방사선 노출**, **4.7일 느린 자전 → 큰 일교차**(정오면 ~380K 데움 / 야간면 <150K 혹한 —
-      착륙 타이밍·열관리가 변수). 비주얼=균질 회갈 크레이터 구체(frost 극관 없음). 문화 하이라이트: **PHM Astrophage Petrova-arc
-      번식지 + Taumoeba 투입지**(플롯 핵심), 에리디언 최근 발견("삼세계"). 발견 어려움(FFFF, 소형 픽션). 로스터 분기 = "작고 죽은
-      낮뜨밤추 크레이터 변방"(Erid 고중력 화려·c 조석고정 수성쌍둥이와 분기).
+    driver: ["synthesis (owner art-direction)"]
+    narrative: >
+      작고 헐벗은 **크레이터 암석 "삼세계"** — 조용한 변방(Erid 스펙터클과 대비). **착륙 쉬움**(0.2g·저Δv·고대 크레이터 평원)이나 **얇은 대기**(~700Pa)·자기권 없어 **방사선
+      노출**, **4.7일 느린 자전 → 큰 일교차**(정오면 ~380K 데움 / 야간면 <150K 혹한 — 착륙 타이밍·열관리가 변수). 비주얼=균질 회갈 크레이터 구체(frost 극관 없음). 문화
+      하이라이트: **PHM Astrophage Petrova-arc 번식지 + Taumoeba 투입지**(플롯 핵심), 에리디언 최근 발견("삼세계"). 발견 어려움(FFFF, 소형 픽션). 로스터 분기 =
+      "작고 죽은 낮뜨밤추 크레이터 변방"(Erid 고중력 화려·c 조석고정 수성쌍둥이와 분기).
+    fields:
+      - {name: difficulty, value: "착륙 쉬움 (0.2g) · 얇은 대기 ~700Pa · 자기권 없어 방사선 노출 · 4.7일 큰 일교차 (380K/<150K) · 발견 FFFF", op: set}
     gate:
       criterion: [culture, classification]
       verdict: pass-in-window
-      note: "오너 G11 확정 2026-06-24, 정정 2026-06-26 — Threeworld 게임플레이 종합. 착륙쉬움(0.2g)+얇은대기+방사선노출+4.7일 느린자전 큰 일교차(정오380K/야간<150K, 열관리 변수). 헐벗은 회갈 크레이터(frost 극관 없음). 문화=PHM Petrova 번식지+Taumoeba. FFFF. → Threeworld 11축 완성."
+      evidence: >
+        오너 G11 확정 2026-06-24, 정정 2026-06-26 — Threeworld 게임플레이 종합. 착륙쉬움(0.2g)+얇은대기+방사선노출+4.7일 느린자전 큰 일교차(정오380K/야간<150K, 열관리
+        변수). 헐벗은 회갈 크레이터(frost 극관 없음). 문화=PHM Petrova 번식지+Taumoeba. FFFF. → Threeworld 11축 완성.

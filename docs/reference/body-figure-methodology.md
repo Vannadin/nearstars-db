@@ -88,8 +88,14 @@ anchor. Valid for FGK dwarfs of solar-like condensation. **Fully convective M
 dwarfs are the exception that goes back through Radau–Darwin**: an n = 3/2
 polytrope has NMoI ≈ 0.205 (Chandrasekhar 1939) — inside the relation's validity
 range — giving J₂/q ≈ 0.084 at that NMoI (≈8× the solar ratio: less condensed, so
-more flattening per unit q). Early-type stars still need their own response
-coefficient grounded when their boards are reached (Fomalhaut A).
+more flattening per unit q). **White dwarfs ride the same branch**: a
+non-relativistic degenerate star is ≈ an n = 3/2 polytrope, so NMoI ≈ 0.205 and
+Radau–Darwin applies (relativistic corrections condense the core somewhat, so this
+mildly overestimates J₂). WD rotation is usually unmeasured — outside the ZZ Ceti
+strip there is no asteroseismology — so the Kepler asteroseismic sample median
+P ≈ 35 h (Hermes et al. 2017) serves as the documented statistical input
+(documented-divergence on the board). Early-type stars still need their own
+response coefficient grounded when their boards are reached (Fomalhaut A).
 **Owner policy (2026-07-12): stellar J₂ is always computed and emitted, never
 recorded as "negligible"** — Principia integrates the term, and the owner wants it
 present regardless of magnitude.
@@ -223,6 +229,8 @@ Inputs are the curated mass / radius / rotation; lock state from the
 | **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | — | solar-anchored scaling (0.0105·q); ±~30 % from P_rot ±3 d — first star rows emitted under the always-emit policy |
 | **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | same method, ±~15 % |
 | **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | fully convective → Radau–Darwin at polytropic NMoI 0.205 (J₂/q 0.084); ±~25 % (radius-dominated) |
+| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (quality-D lit. value) | 1.9e-5 | **1.6e-6** | — | roster's largest stellar J₂ — fast-spinning flare star; input is a curation-rejected literature period, adopted with documented-divergence |
+| **40 Eri B** | star (DA WD) | P ≈ 35 h (statistical) | 2.5e-8 | **2.1e-9** | — | white dwarf on the same n = 3/2 polytrope branch; rotation = Kepler sample median (Hermes 2017), documented-divergence |
 | **Fomalhaut A** | star (A-type) | fast (A4V) | — | (compute at its board pass) | — | the one fast-rotating roster star (spin axis measured, Le Bouquin 2009) so physically oblate, but no published oblateness figure. J₂ via solar-anchored scaling at its board pass — an A-star's response coefficient needs its own grounding first (do not reuse 0.0105 blindly). |
 
 The headline contrast: **Erid** (fast, free, hot super-Earth) is genuinely flattened,
@@ -265,7 +273,11 @@ All bibcodes verified against NASA ADS.
   (FGK stars bypass Radau–Darwin, §2).
 - **Chandrasekhar 1939**, *An Introduction to the Study of Stellar Structure*
   (`1939isss.book.....C`) — polytrope moments of inertia; n = 3/2 (fully convective
-  M dwarf) NMoI ≈ 0.205, which puts M dwarfs back inside Radau–Darwin validity (§2).
+  M dwarf, non-relativistic white dwarf) NMoI ≈ 0.205, which puts both back inside
+  Radau–Darwin validity (§2).
+- **Hermes et al. 2017**, ApJS 232, 23 (`2017ApJS..232...23H`) — asteroseismic white
+  dwarf rotation distribution; the sample median P ≈ 35 h is the documented
+  statistical input for WDs with no measured rotation (§2).
 - **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`) —
   Maclaurin spheroids (homogeneous rotational limit, f = 5q/4).
 - **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);
