@@ -94,8 +94,17 @@ Radau–Darwin applies (relativistic corrections condense the core somewhat, so 
 mildly overestimates J₂). WD rotation is usually unmeasured — outside the ZZ Ceti
 strip there is no asteroseismology — so the Kepler asteroseismic sample median
 P ≈ 35 h (Hermes et al. 2017) serves as the documented statistical input
-(documented-divergence on the board). Early-type stars still need their own
-response coefficient grounded when their boards are reached (Fomalhaut A).
+(documented-divergence on the board). **Early-type stars use the apsidal-motion
+route directly**: the general relation behind all these branches is
+
+    J₂(star) = (2/3) · k₂ · q        (k₂ = apsidal-motion constant, Sterne 1939)
+
+— the FGK anchor is just its empirical-solar instance (k₂☉ = 0.0158 from inverting
+the helioseismic J₂/q), and the polytrope branch its NMoI-0.205 instance. For A
+stars take k₂ from the Claret 2004 grids (Claret 2019 consistent), carrying the
+~±25 % model systematic quantified by the grid's own solar offset
+(theoretical k₂☉ ≈ 0.020 vs empirical 0.0158). Worked grounding for Fomalhaut A:
+`phase4/figure/fomalhaut-j2-research.md`.
 **Owner policy (2026-07-12): stellar J₂ is always computed and emitted, never
 recorded as "negligible"** — Principia integrates the term, and the owner wants it
 present regardless of magnitude.
@@ -231,7 +240,7 @@ Inputs are the curated mass / radius / rotation; lock state from the
 | **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | fully convective → Radau–Darwin at polytropic NMoI 0.205 (J₂/q 0.084); ±~25 % (radius-dominated) |
 | **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (quality-D lit. value) | 1.9e-5 | **1.6e-6** | — | roster's largest stellar J₂ — fast-spinning flare star; input is a curation-rejected literature period, adopted with documented-divergence |
 | **40 Eri B** | star (DA WD) | P ≈ 35 h (statistical) | 2.5e-8 | **2.1e-9** | — | white dwarf on the same n = 3/2 polytrope branch; rotation = Kepler sample median (Hermes 2017), documented-divergence |
-| **Fomalhaut A** | star (A-type) | fast (A4V) | — | (compute at its board pass) | — | the one fast-rotating roster star (spin axis measured, Le Bouquin 2009) so physically oblate, but no published oblateness figure. J₂ via solar-anchored scaling at its board pass — an A-star's response coefficient needs its own grounding first (do not reuse 0.0105 blindly). |
+| **Fomalhaut A** | star (A4V) | P_rot ≈ 24 h (derived: v sin i 93 + measured i★ 90°) | 0.044 | **1.0e-4** (band 0.8–1.3e-4) | — | roster's largest stellar J₂ by far — apsidal route, k₂ = 0.0036 (Claret 2004, ±25 % systematic); f ≈ 0.022 matches the board's visual oblateness; spin axis fully measured in 3-D (Hadjara 2014 i★ 90°±9°, PA 65.6° ⊥ disk) |
 
 The headline contrast: **Erid** (fast, free, hot super-Earth) is genuinely flattened,
 while the locked habitable-zone rockies are nearly round except for a small permanent
@@ -278,6 +287,15 @@ All bibcodes verified against NASA ADS.
 - **Hermes et al. 2017**, ApJS 232, 23 (`2017ApJS..232...23H`) — asteroseismic white
   dwarf rotation distribution; the sample median P ≈ 35 h is the documented
   statistical input for WDs with no measured rotation (§2).
+- **Sterne 1939**, MNRAS 99, 451 (`1939MNRAS..99..451S`) — apsidal-motion /
+  internal-structure constants; origin of J₂ = (2/3)k₂q (§2). Modern Love-number
+  form: **Ragozzine & Wolf 2009** (`2009ApJ...698.1778R`).
+- **Claret 2004**, A&A 424, 919 (`2004A&A...424..919C`; latest grids Claret 2019
+  `2019A&A...628A..29C`) — theoretical k₂ grids; the A-star coefficient source, with
+  the solar theoretical-vs-empirical offset (~1.27×) as the quantified systematic.
+- **Hadjara et al. 2014**, A&A 569, A45 (`2014A&A...569A..45H`) — Fomalhaut's first
+  full 3-D rotation solution (i★ = 90°±9°, V_eq sin i = 93±16 km/s, PA 65.6°); with
+  Le Bouquin 2009 (PA ⊥ disk) the only fully measured stellar pole in the roster.
 - **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`) —
   Maclaurin spheroids (homogeneous rotational limit, f = 5q/4).
 - **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);
