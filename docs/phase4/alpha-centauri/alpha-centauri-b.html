@@ -145,7 +145,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">8 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 1 divergence</span></div>
+<div class="summary"><span class="body-meta">8 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 5 gated · 1 divergence</span></div>
 <div class="decisions"><article class="dec" id="environment.activity">
   <div class="dec-head">
     <code class="axis">environment.activity</code>
@@ -215,13 +215,13 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
     <code class="axis">bulk.geopotential_j2</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">P_rot 41d·R 0.86 R⊙ → J2는 A보다도 작은 ~1e-7급. 동일 논리로 미방출.<br></p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">~1e-7 (negligible, not emitted)</td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  <p class="narrative">회전 편평 J2 = 5.7e-8. 같은 태양앵커 스케일링: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d) → J2 5.7e-8 (±~15%). reference_radius = 적도반경 6.005e8 m. 느린 자전+작은 반지름이라 태양의 ~1/4 — 그래도 오너 정책대로 emit. 상세 산식·정책은 A 행 및 body-figure-methodology §2 참조.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">5.7e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">6.005e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
-  
-  
+  <div class="ev"><span class="tag">evidence</span> q(5.48e-6, DB recommended) × 태양 측정 J2/q(0.0105) = 5.7e-8. K1V는 태양보다 응집 약간 덜해 실제값은 소폭 위일 수 있으나(계수 상향 여지) 차수 불변 — FGK 근사 범위 내.<br></div>
+  <div class="refs"><span class="ref">1998MNRAS.297L..76P</span></div>
 </article>
 <article class="dec" id="identity.discoverability">
   <div class="dec-head">

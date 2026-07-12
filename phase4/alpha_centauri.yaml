@@ -754,23 +754,43 @@ decisions:
 
   - body: Alpha Centauri A
     axis: bulk.geopotential_j2
-    status: passthrough               # 느린 자전 → 무시가능, 미방출
-    driver: [passthrough]
+    status: gated                     # 2026-07-12 오너 정책 — 항성 J2 상시 계산·emit (무시가능 처리 금지)
+    driver: [physics]
     narrative: >
-      P_rot 22d 느린 자전 → 회전 편평 J2 ~수e-7급(태양 2.2e-7과 동급). 최근접 행성이 1.6 AU라 세차 효과
-      무시가능 — Principia 기본(J2 미지정)과 게임플레이 차이 없음. body-figure 프로그램 per-body 대상서
-      항성 A/B는 무시가능으로 종결.
+      회전 편평 J2 = 4.8e-7. 태양앵커 q-스케일링(J2 = 0.0105·q — 헬리오사이즈몰로지 태양 J2 2.18e-7,
+      Pijpers 1998 앵커; Radau-Darwin은 항성 NMoI ~0.06서 무효라 미사용, body-figure-methodology §2):
+      q = ω²R³/GM = 4.59e-5 (M 1.1055 M⊙·R 1.2234 R⊙·P_rot 22±3d) → J2 4.8e-7 (P_rot 불확도로 ±~30%).
+      reference_radius = 적도반경 8.511e8 m. 오너 정책(2026-07-12): 항성 J2는 크기 무관 항상 계산·emit —
+      Principia가 이 항을 적분. [당초 "무시가능 미방출" passthrough 행을 같은 날 오너 지시로 교체.]
     fields:
-      - { name: geopotential_j2, value: "~수e-7 (negligible, not emitted)", op: passthrough }
+      - { name: geopotential_j2, value: 4.8e-7, op: set }
+      - { name: reference_radius, value: 8.511e8, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        q(4.59e-5, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 4.8e-7 — 태양(2.1e-7)의
+        ~2.3배로, 더 빠른 자전(22d vs 25.4d)+큰 반지름과 정합적. FGK 왜성 유사구조 범위 내.
+    refs: [1998MNRAS.297L..76P]
 
   - body: Alpha Centauri B
     axis: bulk.geopotential_j2
-    status: passthrough               # 더 느린 자전(41d)·더 작은 반지름 → A보다도 작음, 미방출
-    driver: [passthrough]
+    status: gated                     # 2026-07-12 오너 정책 — 항성 J2 상시 계산·emit
+    driver: [physics]
     narrative: >
-      P_rot 41d·R 0.86 R⊙ → J2는 A보다도 작은 ~1e-7급. 동일 논리로 미방출.
+      회전 편평 J2 = 5.7e-8. 같은 태양앵커 스케일링: q = 5.48e-6 (M 0.9373 M⊙·R 0.8632 R⊙·P_rot 41±3d)
+      → J2 5.7e-8 (±~15%). reference_radius = 적도반경 6.005e8 m. 느린 자전+작은 반지름이라 태양의 ~1/4 —
+      그래도 오너 정책대로 emit. 상세 산식·정책은 A 행 및 body-figure-methodology §2 참조.
     fields:
-      - { name: geopotential_j2, value: "~1e-7 (negligible, not emitted)", op: passthrough }
+      - { name: geopotential_j2, value: 5.7e-8, op: set }
+      - { name: reference_radius, value: 6.005e8, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        q(5.48e-6, DB recommended) × 태양 측정 J2/q(0.0105) = 5.7e-8. K1V는 태양보다 응집 약간 덜해
+        실제값은 소폭 위일 수 있으나(계수 상향 여지) 차수 불변 — FGK 근사 범위 내.
+    refs: [1998MNRAS.297L..76P]
 
   - body: Alpha Centauri A
     axis: identity.discoverability

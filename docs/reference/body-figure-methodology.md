@@ -78,8 +78,17 @@ under-predicts** the true J₂ by ~10–20 %. Stars sit at the condensed extreme
 the Sun's slow spin gives J₂ ≈ 2×10⁻⁷ (one of the roundest bodies known). **The
 Sun row is the *measured* value** — the Radau–Darwin inversion is only valid for
 NMoI ≳ 0.13 and returns a spurious (negative) J₂ at stellar central condensation
-(NMoI ~0.05–0.08), so stars are not run through it: they are recorded as negligible
-and never emitted (slow rotators all fall below the ~10⁻⁶ threshold).
+(NMoI ~0.05–0.08), so stars are not run through it. Instead stars use
+**solar-anchored q-scaling**:
+
+    J₂(star) = (J₂☉ / q☉) · q  ≈  0.0105 · q
+
+with the helioseismic J₂☉ = (2.18 ± 0.06)×10⁻⁷ (Pijpers 1998) as the measured
+anchor. Valid for FGK dwarfs of solar-like condensation; M dwarfs and early-type
+stars need their own response coefficient grounded when their boards are reached.
+**Owner policy (2026-07-12): stellar J₂ is always computed and emitted, never
+recorded as "negligible"** — Principia integrates the term, and the owner wants it
+present regardless of magnitude.
 
 ## 3. Tidal triaxiality — synchronously locked bodies
 
@@ -126,7 +135,7 @@ Real echo: the Moon's center of figure is offset toward Earth.
 | **gas giant / fast free rotator** | fast, free | large oblate | scalar **J₂** (+ J₄ ≈ −4 % J₂, J₆), no tesseral |
 | **free rocky** (rare; fast, non-locked) | P_rot | oblate, J₂ ∝ q | scalar **J₂** (tesseral unmeasurable → omit) |
 | **synchronous rocky/icy** (much of the roster) | ω = n | **triaxial** | degree-2 full: **C̄₂₀ + C̄₂₂** (J₂ = 10⁄3·C₂₂) |
-| **star** | usually slow | nearly round | scalar **J₂** (tiny; omit unless a fast rotator) |
+| **star** | usually slow | nearly round | scalar **J₂** — always emitted (solar-anchored 0.0105·q; owner policy 2026-07-12) |
 
 `reference_radius` (the radius the coefficients are scaled to — the **equatorial**
 radius for a rotational figure) is mandatory whenever any J₂/geopotential is emitted.
@@ -207,12 +216,15 @@ Inputs are the curated mass / radius / rotation; lock state from the
 | **Polyphemus** (α Cen A b) | gas giant | P_rot ~10 h | 0.19 | **~0.023–0.026** | — | worked in full in geopotential-data.md (NMoI ~0.23) |
 | **TRAPPIST-1 b** | sync. rocky | n (P 1.51 d) | 1.5e-3 | ~1.5e-3 | **~4.6e-4** | close-in lock → real permanent tidal bulge, J₂ ≈ Earth's |
 | **Proxima b** | sync. rocky | n (P 11.2 d) | 2.8e-5 | ~2.8e-5 | ~8e-6 | far enough that the figure is tiny (record; C₂₂ likely below emit threshold) |
-| **Fomalhaut A** | star (A-type) | fast (A4V) | — | (omit) | — | the one fast-rotating roster star (spin axis measured, Le Bouquin 2009) so physically oblate, but no published oblateness figure — and its J₂ is dynamically irrelevant for the far-out disk / Fomalhaut b orbits (AU-scale). Record the spin pole, omit J₂. Sol-like K/M hosts → J₂ ~10⁻⁷, omit. |
+| **α Cen A** | star (G2V) | P_rot 22 d | 4.6e-5 | **4.8e-7** | — | solar-anchored scaling (0.0105·q); ±~30 % from P_rot ±3 d — first star rows emitted under the always-emit policy |
+| **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | same method, ±~15 % |
+| **Fomalhaut A** | star (A-type) | fast (A4V) | — | (compute at its board pass) | — | the one fast-rotating roster star (spin axis measured, Le Bouquin 2009) so physically oblate, but no published oblateness figure. J₂ via solar-anchored scaling at its board pass — an A-star's response coefficient needs its own grounding first (do not reuse 0.0105 blindly). |
 
 The headline contrast: **Erid** (fast, free, hot super-Earth) is genuinely flattened,
 while the locked habitable-zone rockies are nearly round except for a small permanent
 tidal C₂₂ that grows sharply the closer the lock (TRAPPIST-1 b ≫ Proxima b). Stars are
-point-like at the orbital distances that matter, so their figures are recorded but not emitted.
+dynamically tiny at the orbital distances that matter, but per the 2026-07-12 owner
+policy their J₂ is computed and emitted anyway — Principia carries the term.
 
 ## 7. Procedure (per body)
 
@@ -225,8 +237,9 @@ point-like at the orbital distances that matter, so their figures are recorded b
    Synchronous → J₂ ≈ (0.9–1.1)·q_s, C̄₂₂ = 0.3·J₂ (hydrostatic).
 5. **Rocky body wanting a complex geoid** → synthesize degree 3+ via Kaula (§5), seeded
    per body + flagged `synthetic`; keep the degree-2 from steps 4. Replace at the terrain pass.
-6. Emit threshold: skip C₂₂ (and J₂) below ~1×10⁻⁶ (record the value, omit the row) —
-   it is dynamically irrelevant. Set `reference_radius` = equatorial radius.
+6. Emit threshold: skip C₂₂ below ~1×10⁻⁶ (record the value, omit the row). **J₂ is
+   exempt — always emit the computed value regardless of magnitude (owner policy
+   2026-07-12; Principia carries the term).** Set `reference_radius` = equatorial radius.
 7. Write through the **curated source layer**, not `db/systems/*` directly; rebuild.
 
 ## 8. Citations
@@ -242,6 +255,9 @@ All bibcodes verified against NASA ADS.
   the synchronous figure: J₂/C₂₂ ≈ 10⁄3 and (b−c)/(a−c) ≈ 1⁄4, with the higher-order
   Ω²/(πGρ) corrections. Paired with **Dermott 1979**, Icarus 37, 575 (`1979Icar...37..575D`),
   the classic derivation of satellite shapes and gravitational moments.
+- **Pijpers 1998**, MNRAS 297, L76 (`1998MNRAS.297L..76P`) — helioseismic solar
+  J₂ = (2.18 ± 0.06)×10⁻⁷; the measured anchor of the stellar solar-anchored q-scaling
+  (stars bypass Radau–Darwin, §2).
 - **Chandrasekhar 1969**, *Ellipsoidal Figures of Equilibrium* (`1969efe..book.....C`) —
   Maclaurin spheroids (homogeneous rotational limit, f = 5q/4).
 - **Zharkov & Trubitsyn 1978**, *Physics of Planetary Interiors* (`1978ppi..book.....Z`);
