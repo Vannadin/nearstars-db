@@ -1,64 +1,135 @@
 # τ Ceti (HD 10700 / GJ 71) Phase 4 결정 보드 — 별 + 행성 f/g/h(+e 논쟁) + 냉 debris 디스크. (body × axis) 행별 상태. DB 불변, staging.
 # 실관측 시스템 → 대부분 Phase 3 측정/합성값 passthrough, 소수 art/divergence + discoverability. grounding=docs/phase3/tau-cet*.md
+schema_version: 2
 system: tau_ceti
 status: staged
-updated: 2026-06-24
+updated: 2026-07-12          # v2 마이그레이션 + 항성 점검 (항성 점검 프로그램)
 
 decisions:
-  # ── 별 (τ Ceti, 조용·늙은·금속빈약 G8.5V) — facet-walk 2026-06-24 ──────────
+  # ── 별 (τ Ceti, 조용·늙은·금속빈약 G8.5V) — facet-walk 2026-06-24, 점검 2026-07-12 ──
   - body: tau Ceti
     axis: identity
     status: gated
-    driver: classification + observation
-    value: >
+    driver: [classification, observation]
+    narrative: >
       body_type=**조용한 늙은 금속-빈약 G8.5V 솔라 아날로그**(태양보다 약간 차갑고 어둡고 철-빈약). 태양 최근접 **단일**
       Sun-like 별(3.65 pc), SETI 고전 타깃(Project Ozma 1960). designation=τ Ceti(HD 10700 · HIP 8102 · GJ 71).
       discoverability=**맨눈**(V=3.5, Cetus 육안) → RB IGNORELEVELS T T T T(항상 가시).
+    fields:
+      - { name: body_type, value: "조용한 늙은 금속-빈약 G8.5V 솔라 아날로그", op: set }
+      - { name: designation, value: "tau Ceti (HD 10700 · HIP 8102 · GJ 71)", op: set }
+      - { name: discoverability, value: "naked_eye (V=3.5)", op: set }
     gate:
       criterion: [classification, observation]
       verdict: pass-in-window
-      note: "오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배)."
+      evidence: "오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배)."
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=3.5, Cetus)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: tau Ceti
     axis: bulk
     status: passthrough
-    note: >
+    driver: [passthrough]
+    narrative: >
       M 0.783±0.012 M☉(Teixeira2009 asteroseismology) · R 0.793±0.004 R☉(Korolik2023 CHARA/MIRC-X 간섭계) · Teff 5370±20K
       (Korolik2023) · L 0.488 L☉(Teixeira2009) · [Fe/H] −0.52±0.01(Santos2013, 매우 철-빈약=시스템 정체성) · age ~10 Gyr
       (Di Folco2004 isochrone; **documented-divergence** vs Mamajek2008 5.8 Gyr — Phase3서 ~10 채택, 범위 4.4–12.4) · P_rot
-      46±4d(Korolik2023 gyro; **documented-divergence** vs Baliunas1996 34d — Phase3서 46 채택, Boro Saikia2018 ZDI 지지) ·
-      spin i 7±7°(거의 pole-on, 디스크축 i~35°와 어긋남). 전부 측정/Phase3 해결값 → emit 그대로.
+      46±4d(Korolik2023 gyro; **documented-divergence** vs Baliunas1996 34d — Phase3서 46 채택, Boro Saikia2018 ZDI 지지).
+      전부 측정/Phase3 해결값 → emit 그대로. (spin i★는 2026-07-12부터 별도 bulk.spin_axis_orientation 행.)
+    fields:
+      - { name: mass, value: 0.783, unit: M_sun, op: passthrough, note: "±0.012 (Teixeira2009)" }
+      - { name: radius, value: 0.793, unit: R_sun, op: passthrough, note: "±0.004 (Korolik2023 CHARA/MIRC-X)" }
+      - { name: intrinsic_luminosity, value: 0.488, unit: L_sun, op: passthrough }
+      - { name: age, value: 10, unit: Gyr, op: passthrough, note: "Di Folco2004; Phase3 해결값 (범위 4.4–12.4)" }
+      - { name: rotation_period, value: 46, unit: d, op: passthrough, note: "±4 (Korolik2023 gyro; Phase3 해결값)" }
 
   - body: tau Ceti
     axis: appearance
     status: gated
-    driver: observation
-    value: >
+    driver: [observation]
+    narrative: >
       color=**물리색 `#ffeddf`** (Teff 5370K 흑체→sRGB 실측 `#ffecdd` + [Fe/H]−0.52 블루 nudge; 거의 흰-따뜻) — 색은
       **Teff 5370K 지배**(태양 5772K보다 ~400K 낮아 더 노랑; sRGB 블루채널 Δ~13). **금속빈약은 line blanketing 약화로
       sub-perceptual 블루 nudge**(+15~70K 등가, B−V ~0.02–0.03, sRGB 블루 +~2 — 역치 아래지만 방향 맞아 반영;
       Ramírez&Meléndez2005·Casagrande2010·Huang2015 색-Teff-[Fe/H] 보정. [[feedback_skip_metallicity]] 정합).
-      limb_darkening α 0.14(Korolik2023 H-band 간섭계 직접측정). spots/faculae=**매우 낮음**(log R'HK −4.977 극비활동,
-      단 flat 아님 — ~11yr 약사이클+장기하락, Gomes da Silva2021; α Cen A보다 조용).
+      limb_darkening α 0.14(Korolik2023 H-band 간섭계 직접측정). spots/faculae=**매우 낮음**(log R'HK −4.977 극비활동;
+      장기 거동은 environment 행의 양립 표기 참조 — α Cen A보다 조용).
+    fields:
+      - { name: color, value: "#ffeddf", op: set, phase3_default: "Teff 5370K 흑체 #ffecdd + 금속빈약 블루 nudge" }
+      - { name: limb_darkening, value: 0.14, op: set, note: "α (Korolik2023 H-band 간섭계 직접측정)" }
+      - { name: spots_faculae, value: "very low (log R'HK −4.977 극비활동)", op: set }
     gate:
       criterion: [observation]
       verdict: pass-in-window
-      note: "오너 G3 확정·정정 2026-06-24 — 물리색만 기록(#ffeddf=흑체 실측+금속 nudge), 뷰어 채도-tint(#ffe9c8)는 미기록. emit 별색(광원=near-white/원반 art)은 deferred. 색은 Teff 지배·금속은 sub-perceptual nudge(방향 반영). limb/흑점=측정 passthrough."
+      evidence: >
+        오너 G3 확정·정정 2026-06-24 — 물리색만 기록(#ffeddf=흑체 실측+금속 nudge), 뷰어 채도-tint(#ffe9c8)는 미기록.
+        emit 별색(광원=near-white/원반 art)은 deferred. 색은 Teff 지배·금속은 sub-perceptual nudge(방향 반영).
+        limb/흑점=측정 passthrough.
+    refs: [2023AJ....166..123K, 2021A&A...646A..77G]
 
   - body: tau Ceti
     axis: magnetism.magnetic_field
     status: passthrough
-    note: >
-      약한 Sun-like 자기장 — 표면장 **Zeeman 검출 한계 ~50 G 아래**(고분해 분광 미검출). Boro Saikia2018 ZDI로 대규모장 측정
-      (약함, P_rot 46d 지지). 극저활동(log R'HK −4.977)·늙은 나이(~10 Gyr)와 정합한 조용한 dynamo. X선 EXOSAT 한계 아래
-      (log Lx ≤ 26.5, Schmitt1985 상한). 측정/상한값 → emit 그대로.
+    driver: [passthrough]
+    narrative: >
+      약한 Sun-like 자기장 — **대규모장 0.17 G**(Chiti et al. 2025, DB recommended — 2026-07-12 점검서 반영; 이전
+      보드는 수치 없이 "Zeeman 한계 ~50 G 아래·Boro Saikia2018 ZDI 약함"만 기록). 극저활동(log R'HK −4.977)·늙은
+      나이(~10 Gyr)와 정합한 조용한 dynamo. 측정 emit 그대로.
+    fields:
+      - { name: magnetic_field, value: 0.17, unit: G, op: passthrough, note: "대규모장 (Chiti2025); Boro Saikia2018 ZDI 정합" }
 
   - body: tau Ceti
     axis: environment
     status: passthrough
-    note: >
-      activity=**flat**(Baum2022 ~50yr 모니터링 사이클 없음 — 가장 자기조용 Sun-like 중 하나; steady·uncycled, 태양 이하).
+    driver: [passthrough]
+    narrative: >
+      activity=**사실상 flat**(Baum2022 ~50yr 모니터링 — 가장 자기조용 Sun-like 중 하나; GdS2021은 약한 ~11yr 후보
+      +장기하락을 시사 — 양립 표기: "무~극약 사이클", DB에 cycle 미큐레이션). X선 **log Lx 26.69 검출**(Schmitt &
+      Liefke 2004, DB recommended — 2026-07-12 점검: 구기록 "EXOSAT 상한 ≤26.5(Schmitt1985)"를 검출값으로 교체).
       stellar_wind=**약함** Ṁ ≤ 0.1 Ṁ☉(Wood2021 astrospheric Lyα 상한). heliosphere: ISM 유입 ~50 km/s, astrosphere
-      standoff **≲19 AU**(작음). radiation_surface ~0.6×태양(flat·낮음). 행성계 space weather 매우 온화(K·M왜성식 XUV-구동
-      대기손실 없음 → 내행성 손실은 thermal Jeans 기본). 측정/상한 → emit 그대로.
+      standoff **≲19 AU**(작음). radiation_surface ~0.6×태양(낮음). 행성계 space weather 매우 온화(K·M왜성식
+      XUV-구동 대기손실 없음 → 내행성 손실은 thermal Jeans 기본). 측정/상한 → emit 그대로.
+    fields:
+      - { name: activity, value: "log R'HK −4.977; 사실상 flat (Baum2022; GdS2021 약한 ~11yr 후보 양립); X-ray log Lx 26.69 (S&L2004)", op: passthrough }
+      - { name: stellar_wind, value: 0.1, unit: Mdot_sun, op: passthrough, note: "≤0.1 상한 (Wood2021)" }
+      - { name: heliosphere, value: "astrosphere standoff ≲19 AU (ISM 유입 ~50 km/s)", op: passthrough }
+      - { name: radiation, value: "~0.6× 태양 (낮음, flat)", op: passthrough }
+
+  # ── 항성 자전축/J2 — 2026-07-12 항성 점검서 신설 (silent-passthrough 해소) ──
+  - body: tau Ceti
+    axis: bulk.spin_axis_orientation
+    status: gated                     # 측정 채택 (Korolik 2023)
+    driver: [observation]
+    narrative: >
+      i★ = 7°±7° 측정 채택(Korolik2023 간섭계+v sin i — **거의 극향(pole-on)**). 디스크 경사 i~35°
+      (MacGregor2016 ALMA)와 어긋나 **별-디스크 최소 비정렬 ~28°** — 둘 다 측정이라 실측 기반의 흥미로운 읽기
+      (Korolik2023 본문이 직접 논의한 misalignment). 행성 궤도 경사는 미측정 — emit 배향 시 행성면은 디스크면
+      기준이 자연스러움(디스크=행성계 강착면). 극 방위각: 디스크 PA 105° 활용 가능. ICRS 변환은 emit 단계.
+    fields:
+      - { name: spin_axis_orientation, value: "i★ 7°±7° (LOS 기준, 측정) · 디스크(i 35°, PA 105°)와 최소 ~28° 비정렬", op: set }
+    gate:
+      criterion: [observation]
+      verdict: pass-in-window
+      evidence: >
+        측정값 그대로 채택(7°±7°, recommended). 별-디스크 비정렬은 두 측정의 직접 귀결 — 가정 아님(불확도 고려
+        시 최소 ~21°). 뷰어 i★ 레이어(측정=금색)와 정합.
+    refs: [2023AJ....166..123K, 2016ApJ...828..113M]
+
+  - body: tau Ceti
+    axis: bulk.geopotential_j2
+    status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit
+    driver: [physics]
+    narrative: >
+      회전 편평 J2 = 4.2e-8. G8.5V(태양 유사 응집) → 태양앵커 q-스케일링(J2 = 0.0105·q, Pijpers 1998 앵커):
+      q = ω²R³/GM = 4.04e-6 (M 0.783·R 0.793·P_rot 46±4d, 전부 DB recommended/Phase3 해결값) → J2 4.2e-8
+      (±~17%, P_rot 지배). reference_radius = 적도반경 5.517e8 m. 태양(2.2e-7)의 ~1/5 — 느린 자전(46d)+작은
+      반지름의 귀결. 방법 = body-figure-methodology.md §2 FGK 분기(αCen A/B와 동일).
+    fields:
+      - { name: geopotential_j2, value: 4.2e-8, op: set }
+      - { name: reference_radius, value: 5.517e8, unit: m, op: set }
+    gate:
+      criterion: [derived-grounding]
+      verdict: pass-in-window
+      evidence: >
+        q(4.04e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 4.2e-8. FGK 유사구조 범위 내,
+        오너 정책(항성 J2 무시가능 처리 금지)대로 emit.
+    refs: [1998MNRAS.297L..76P, 2023AJ....166..123K, 2009A&A...494..237T]
