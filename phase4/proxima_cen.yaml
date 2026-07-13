@@ -33,12 +33,15 @@ decisions:
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Innes 1915 (telescopic discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Proxima Centauri
-    axis: bulk                        # 측정 passthrough
+    axis: bulk                        # §3.2 템플릿 앵커 — 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: star
     status: passthrough
     driver: [passthrough]
     narrative: >
       M 0.1221±0.0022 M☉(SM2025 진화모델) · R 0.141±0.011 R☉(Demory2009 VLTI) · Teff 2904±51K(Passegger2019) ·
-      L 0.00157 L☉ · age ~4.85±0.5 Gyr(kinematic, 포획 vs 동시생성 미정). 전부 고신뢰 측정 → emit 그대로.
+      L 0.00157 L☉ · age ~4.85±0.5 Gyr(kinematic, 포획 vs 동시생성 미정) · P_rot 83.5 d(DB recommended, J2 행과
+      동일 입력). gravity 1684 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯). spin_axis_orientation·
+      geopotential_j2(+reference_radius)는 전용 행이 담당(union rule). 전부 고신뢰 측정 → emit 그대로.
     fields:
       - name: mass
         value: 0.1221
@@ -50,6 +53,16 @@ decisions:
         unit: R_sun
         op: passthrough
         note: "±0.011 (Demory2009 VLTI)"
+      - name: gravity
+        value: 1684
+        unit: m/s2
+        op: passthrough
+        phase3_default: "GM/R² 파생 에코"
+      - name: rotation_period
+        value: 83.5
+        unit: d
+        op: passthrough
+        note: "DB recommended — bulk.geopotential_j2 행과 동일 입력"
       - name: intrinsic_luminosity
         value: 0.00157
         unit: L_sun
@@ -235,12 +248,16 @@ decisions:
         op: passthrough
 
   - body: Proxima Centauri b
-    axis: bulk                        # mass=등방 prior 중앙 진질량(결정), 나머지 passthrough/tie-break
+    axis: bulk                        # §3.2 템플릿 앵커 — mass=등방 prior 중앙 진질량(결정), 나머지 passthrough/tie-break
+    body_class: tidally_locked
     status: gated
     driver: [window-selection, observation]
     narrative: >
       mass 1.22 M⊕(등방 prior 중앙 진질량) · radius ~1.07 R⊕ · g ~1.07 · 밀도 ~5.5 g/cm³(지구형 암석) · 조석고정 ·
-      obliquity ~0 · age ~4.85 Gyr
+      obliquity ~0 · age ~4.85 Gyr. [§3.2 정규화 2026-07-12] 조석고정의 자명 귀결 승격: rotation = 공전주기
+      11.186 d(DB), spin_axis = 궤도 법선. figure는 body-figure-methodology.md §6 워크드 값 승격 —
+      q_s 2.8e-5 → J2 ≈ 2.8e-5 · 조석 C̄₂₂ ≈ 8e-6 (reference_radius 6817 km = radius). internal_heat는
+      미결정 슬롯(행성 개별 점검서 채움).
     fields:
       - name: mass
         value: 1.22
@@ -253,6 +270,32 @@ decisions:
         unit: R_earth
         op: set
         note: "비통과 tie-break(질량-반경); g~1.07·밀도~5.5 g/cm³ 지구형 암석"
+      - name: gravity
+        value: 1.07
+        unit: g
+        op: set
+        note: "GM/R² 파생 에코"
+      - name: rotation_period
+        value: 11.186
+        unit: d
+        op: set
+        note: "= 공전주기 (조석고정, DB curated)"
+      - name: spin_axis_orientation
+        value: "궤도 법선 (조석고정의 자연 귀결)"
+        op: set
+      - name: geopotential_j2
+        value: 2.8e-5
+        op: set
+        note: "≈ q_s (동기 자전, body-figure-methodology §6 워크드)"
+      - name: geopotential_c22
+        value: 8.0e-6
+        op: set
+        note: "영구 조석 삼축 (§6 워크드) — emit 임계 판단은 emit 단계"
+      - name: reference_radius
+        value: 6817
+        unit: km
+        op: set
+        note: "J2/C22 기준 반경 = radius"
       - name: obliquity
         value: 0
         unit: deg
@@ -615,12 +658,15 @@ decisions:
         paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).
 
   - body: Proxima Centauri d
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커
+    body_class: tidally_locked
     status: gated
     driver: [window-selection, observation]
     narrative: >
       mass ~0.30 M⊕(등방 prior 중앙 진질량; Msini 0.26×1.1547) · radius ~0.72 R⊕(암석 그리드 0.30^0.27) · g ~0.58 ·
-      ρ ~지구형 암석 · 조석고정 · obliquity~0 · age ~4.85 Gyr
+      ρ ~지구형 암석 · 조석고정 · obliquity~0 · age ~4.85 Gyr. [§3.2 정규화 2026-07-12] 조석고정의 자명 귀결 승격:
+      rotation = 공전주기 5.122 d(DB), spin_axis = 궤도 법선, reference_radius = radius. J2/C22·internal_heat는
+      미결정 슬롯(행성 개별 점검서 채움).
     fields:
       - name: mass
         value: 0.30
@@ -633,6 +679,24 @@ decisions:
         unit: R_earth
         op: set
         note: "암석 그리드 0.30^0.27; g ~0.58, ρ ~지구형 암석"
+      - name: gravity
+        value: 0.58
+        unit: g
+        op: set
+        note: "GM/R² 파생 에코"
+      - name: rotation_period
+        value: 5.122
+        unit: d
+        op: set
+        note: "= 공전주기 (조석고정, DB curated)"
+      - name: spin_axis_orientation
+        value: "궤도 법선 (조석고정의 자연 귀결)"
+        op: set
+      - name: reference_radius
+        value: 4587
+        unit: km
+        op: set
+        note: "J2/C22 기준 반경 = radius (0.72 R⊕)"
       - name: obliquity
         value: 0
         unit: deg
@@ -904,13 +968,15 @@ decisions:
     refs: ["2003.13106", "1007.0245"]
 
   - body: Proxima Centauri c
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커
+    body_class: free_rotator
     status: gated
     driver: [window-selection, derived-grounding]
     narrative: >
       mass **8 M⊕**(G2 등방중앙) · **radius ~2.7 R⊕**(오너 채택 중심값; mini-Neptune이라 H/He 외피 inflation, 질량-반경
       regime2 확률관계 band 2.5–3 R⊕) · g ~1.1 g · **밀도 ~0.41 ρ⊕(~2.2 g/cm³)** 휘발성-풍부(암석↔빙거성 중간) · 비조석고정 ·
-      age ~4.85 Gyr.
+      age ~4.85 Gyr. [§3.2 정규화 2026-07-12] gravity·reference_radius 파생 에코 승격, c22 = n/a(자유 자전).
+      obliquity·spin_axis·J2·internal_heat는 미결정 슬롯(행성 개별 점검서 채움 — mini-Neptune figure는 NMoI 작업 필요).
     fields:
       - name: mass
         value: 8
@@ -923,6 +989,19 @@ decisions:
         unit: R_earth
         op: set
         note: "오너 채택 중심값 (band 2.5–3 R⊕, H/He 외피 inflation); g ~1.1 g, 밀도 ~2.2 g/cm³ 휘발성-풍부"
+      - name: gravity
+        value: 1.1
+        unit: g
+        op: set
+        note: "GM/R² 파생 에코"
+      - name: reference_radius
+        value: 17202
+        unit: km
+        op: set
+        note: "J2 기준 반경 = radius (2.7 R⊕)"
+      - name: geopotential_c22
+        value: null
+        na_reason: "자유 자전(비조석고정) — 모항성 방향 고정축이 없어 영구 조석 삼축 부재"
       - name: rotation_period
         value: 27
         unit: h
@@ -1202,13 +1281,16 @@ decisions:
         paper: 조석고정 τ = docs/reference/tidal-locking-timescale-methodology.md(a⁶). emit시 stability-sim 권장.
 
   - body: Proxima Centauri c I
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커
+    body_class: tidally_locked
     status: gated
     driver: [window-selection, fiction]
     narrative: >
       **반경 ~950 km**(트리톤 1,353·티타니아 788 사이, 중대형 얼음 위성) · 얼음 밀도 ~1.9 g/cm³(명왕성/트리톤급) →
       **질량 ~0.0011 M⊕**(달의 ~0.09배, ~6.8e21 kg) · **g ~0.5 m/s²**(~0.05 g, 저중력) · 조석고정 · obliquity ~0 · age
-      ~4.85 Gyr. c 대비 비율 ~0.055 = **해왕성-트리톤급**(mini-Neptune 위성 비율로 정합).
+      ~4.85 Gyr. c 대비 비율 ~0.055 = **해왕성-트리톤급**(mini-Neptune 위성 비율로 정합). [§3.2 정규화 2026-07-12]
+      조석고정의 자명 귀결 승격: rotation = 공전주기 ~17.7 h(케플러, 보드 a 4.61e-4 AU·M_c 8 M⊕), spin_axis =
+      궤도 법선(c 기준), reference_radius = radius. J2/C22·internal_heat는 미결정 슬롯(위성 개별 점검서 채움).
     fields:
       - name: radius
         value: 950
@@ -1220,6 +1302,24 @@ decisions:
         unit: kg
         op: set
         note: "~0.0011 M⊕ (달의 ~0.09배); 얼음 밀도 ~1.9 g/cm³; g ~0.5 m/s² (~0.05 g)"
+      - name: gravity
+        value: 0.503
+        unit: m/s2
+        op: set
+        note: "GM/R² 파생 에코 (~0.05 g)"
+      - name: rotation_period
+        value: 17.7
+        unit: h
+        op: set
+        note: "= 공전주기 (조석고정 to c; 케플러 a 4.61e-4 AU·M_c 8 M⊕)"
+      - name: spin_axis_orientation
+        value: "c 궤도 법선 (조석고정의 자연 귀결)"
+        op: set
+      - name: reference_radius
+        value: 950
+        unit: km
+        op: set
+        note: "J2/C22 기준 반경 = radius"
       - name: obliquity
         value: 0
         unit: deg

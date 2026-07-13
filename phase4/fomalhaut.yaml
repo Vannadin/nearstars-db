@@ -28,7 +28,8 @@ decisions:
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=1.16, Piscis Austrinus 최광성, 18th brightest)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: Fomalhaut
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius)는 전용 행 (union rule)
+    body_class: star
     status: gated
     driver: [observation, art-direction]
     narrative: >
@@ -42,10 +43,11 @@ decisions:
       + **중력감광**(von Zeipel, 극이 적도보다 ~300K 뜨거움 → 고경사 시점서 미세 극-밝아짐; 분해 map 없음 → 추정 low).
       VertexHeightOblateAdvanced 메시, 시각 기준반경=극반경 (body-figure-methodology.md).
       [2026-07-12: 구 "j2(중력) OMIT" 문구는 항성 J2 상시-emit 오너 정책으로 대체 — 아래 bulk.geopotential_j2 행이 live.
-      spin_axis도 별도 행으로 분리.]
+      spin_axis도 별도 행으로 분리.] gravity 155 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯).
     fields:
       - { name: mass, value: 1.92, unit: M_sun, op: passthrough, note: "Mamajek 2012 (excess-corrected)" }
       - { name: radius, value: 1.842, unit: R_sun, op: passthrough, note: "적도반경; alt=Davis2005 1.744 (excess 미보정) 병기" }
+      - { name: gravity, value: 155, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
       - { name: intrinsic_luminosity, value: 16.63, unit: L_sun, op: passthrough, note: "Teff 8590 K" }
       - { name: age, value: 0.44, unit: Gyr, op: passthrough, note: "Castor moving group" }
       - { name: rotation_period, value: 1.0, unit: d, op: set, note: "도출 (v sin i 93±9 + 측정 i★ 90°±9 + R_eq) — 직접 측정 없음" }

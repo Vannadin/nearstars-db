@@ -28,19 +28,22 @@ decisions:
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=4.43, Eridanus)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani A"
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius)는 전용 행 (union rule)
+    body_class: star
     status: passthrough
     driver: [passthrough]
     narrative: >
       M 0.78±0.08 M☉(Ma2018 M-R + Diaz2018 0.76 일치) · R 0.806±0.004 R☉ · Teff 5143±14K · L 0.408 L☉(Boyajian2012 CHARA
       간섭계, 고신뢰; Rains2020 VLTI 1σ 일치) · [Fe/H] −0.29(Diaz2018; Ma2018 −0.42) · **age ~1.8 Gyr**(documented-divergence —
       백색왜성 B IFMR coeval age[Bond2017: WD 냉각 122 Myr + 전구체 ~1.7 Gyr]가 옛 K왜성 isochrone 노년설 해소 → 비교적 젊음) · P_rot
-      ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). 측정/ Phase3 해결값 → emit 그대로.
+      ~37–43d(Saar&Osten ~37–38d — 이 자전 변조가 가짜 'Vulcan' 42d 신호 원인, Burrows2024 철회 근거). gravity 329 m/s² =
+      GM/R² 파생 에코(Kopernicus geeASL 슬롯). 측정/ Phase3 해결값 → emit 그대로.
       [2026-07-12: 구 "figure/obliquity = OMIT confirm"(2026-06-26)은 항성 J2 상시-emit 오너 정책으로 대체 —
       아래 bulk.geopotential_j2 / bulk.spin_axis_orientation 행이 live.]
     fields:
       - {name: mass, value: 0.78, unit: M_sun, op: passthrough, note: "±0.08 (Ma2018 M-R; Diaz2018 0.76 일치)"}
       - {name: radius, value: 0.806, unit: R_sun, op: passthrough, note: "±0.004"}
+      - {name: gravity, value: 329, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코"}
       - {name: intrinsic_luminosity, value: 0.408, unit: L_sun, op: passthrough, note: "Boyajian2012 CHARA; Teff 5143±14K; [Fe/H] −0.29"}
       - {name: age, value: 1.8, unit: Gyr, op: passthrough, note: "WD B IFMR coeval age (Bond2017); 옛 K왜성 isochrone 노년설 해소"}
       - {name: rotation_period, value: "37–43", unit: d, op: passthrough, note: "Saar&Osten ~37–38d; 가짜 Vulcan 42d 신호 원인 (Burrows2024 철회 근거)"}
@@ -111,16 +114,19 @@ decisions:
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=9.53 WD); Bond 2017 benchmark", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani B"
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius·P_rot 35h)는 전용 행 (union rule)
+    body_class: star
     status: passthrough
     driver: [passthrough]
     narrative: >
       M 0.558±0.012 M☉(Mason2021 동역학; Bond2017 0.573±0.018 = 가장 깨끗한 field WD 정밀질량, 대안) · R 0.01308±0.0002 R☉ (~지구 크기) ·
       log g 7.957±0.020 · Teff 17,200±110K(고온) · CO핵 + 얇은 H 외피(q_H ~10⁻¹⁰) · 냉각 age 122 Myr + 전구체 ~1.7 Gyr(시스템 ~1.8 Gyr
-      coeval age 근거). 질량-반경 관계 위 표준 위치. 측정 passthrough.
+      coeval age 근거). gravity 8.94e5 m/s² = GM/R² 파생 에코 — 측정 log g 7.957(= 9.06e5 m/s²)과 1.3% 일치.
+      rotation_period(통계 35h)은 결정이 사는 bulk.geopotential_j2 행에 기록(union rule). 질량-반경 관계 위 표준 위치. 측정 passthrough.
     fields:
       - {name: mass, value: 0.558, unit: M_sun, op: passthrough, note: "±0.012 (Mason2021 동역학; Bond2017 0.573 대안)"}
       - {name: radius, value: 0.01308, unit: R_sun, op: passthrough, note: "±0.0002, ~지구 크기; log g 7.957; Teff 17,200K; CO핵 + 얇은 H 외피"}
+      - {name: gravity, value: 8.94e5, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코 (측정 log g 7.957과 1.3% 일치)"}
       - {name: cooling_age, value: 122, unit: Myr, op: passthrough, note: "+ 전구체 ~1.7 Gyr (시스템 ~1.8 Gyr coeval)"}
 
   - body: "40 Eridani B"
@@ -181,17 +187,21 @@ decisions:
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "telescopic (V=11.17 M dwarf DY Eri)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "40 Eridani C"
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커 — spin_axis·J2(+reference_radius)는 전용 행 (union rule)
+    body_class: star
     status: passthrough
     driver: [passthrough]
     narrative: >
       M 0.198±0.004 M☉(Mason2021 동역학) · R 0.274±0.011 R☉(Mann2015) · Teff 3167±61K(Mann2015 BT-Settl 핏) · L 6.51e-3 L☉
       (Cifuentes2020 CARMENES) · [Fe/H] −0.21(Mann2015). 자전 P_rot=**meta_notes-only**(Shan2024 8.56d, 그 논문 품질등급 D=최하위
-      /debated라 정식 채택 안 함, Open item). 측정 passthrough. [2026-07-12: 구 "figure/obliquity = OMIT confirm"(2026-06-26)은
+      /debated라 정식 채택 안 함, Open item). gravity 723 m/s² = GM/R² 파생 에코. age 1.8 Gyr = 계 coeval 상속(A 행 IFMR age —
+      B 전구체 근거). 측정 passthrough. [2026-07-12: 구 "figure/obliquity = OMIT confirm"(2026-06-26)은
       항성 J2 상시-emit 오너 정책으로 대체 — 아래 bulk.geopotential_j2 / bulk.spin_axis_orientation 행이 live.]
     fields:
       - {name: mass, value: 0.198, unit: M_sun, op: passthrough, note: "±0.004 (Mason2021 동역학)"}
       - {name: radius, value: 0.274, unit: R_sun, op: passthrough, note: "±0.011 (Mann2015); Teff 3167±61K"}
+      - {name: gravity, value: 723, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코"}
+      - {name: age, value: 1.8, unit: Gyr, op: passthrough, note: "계 coeval 상속 (A 행 IFMR age, Bond2017 근거 공유)"}
       - {name: intrinsic_luminosity, value: 0.00651, unit: L_sun, op: passthrough, note: "Cifuentes2020 CARMENES; [Fe/H] −0.21"}
       - {name: rotation_period, value: 8.56, unit: d, op: passthrough, note: "Shan2024 meta_notes-only (품질등급 D/debated, Open item)"}
 
@@ -311,6 +321,7 @@ decisions:
     fields:
       - { name: geopotential_j2, value: 2.1e-9, op: set }
       - { name: reference_radius, value: 9.100e6, unit: m, op: set }
+      - { name: rotation_period, value: 35, unit: h, op: set, note: "측정 없음 — Kepler WD 표본 중앙값 (Hermes 2017), J2 입력과 동일 채택 (오너 승인 2026-07-12)" }
     gate:
       criterion: [derived-grounding]
       verdict: documented-divergence   # 자전이 측정 아닌 문헌 통계 중앙값
@@ -418,7 +429,8 @@ decisions:
         우선, G7 자기장 dynamo 전제). Ω/ω/M free-emit.
 
   - body: "40 Eridani A b"
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커 — rotation 5.1h 결정은 orbit 행(spin_orbit_resonance)에 live
+    body_class: free_rotator
     status: gated
     driver: ["gravity = PHM canon (Weir 2.09g), self-consistent on mass-radius curve (refuted-mass dropped)"]
     narrative: >
@@ -435,7 +447,14 @@ decisions:
     fields:
       - {name: mass, value: 4.97, unit: M_earth, op: set, note: "철회된 8.47 M⊕ 폐기; 질량-반경 곡선 위 g=2.09 자기일관"}
       - {name: radius, value: 1.541, unit: R_earth, op: set, note: "9,820 km"}
+      - {name: gravity, value: 2.09, unit: g, op: set, note: "PHM canon (Weir) 앵커 — 질량-반경 자기일관으로 역검증 (GM/R² 일치)"}
+      - {name: rotation_period, value: 5.1, unit: h, op: set, note: "Weir canon 항성일 — 결정은 orbit 행 spin_orbit_resonance (오너 G2 2026-06-24)"}
       - {name: geopotential_j2, value: 0.014, reference_radius_km: 9820, op: set, note: "NMoI 0.30, f~4.8%, a/c~1.051 (가시 oblate); ρ 7,477 kg/m³; 표면중력 2.09 g"}
+      - {name: reference_radius, value: 9820, unit: km, op: set, note: "J2 기준 반경 = radius"}
+      - {name: geopotential_c22, value: null, na_reason: "자유 자전 5.1h(비고정) — 모항성 방향 고정축이 없어 영구 조석 삼축 부재"}
+      - {name: spin_axis_orientation, value: "궤도 법선 + 30° tilt (obliquity 필드와 동일 결정, 영화 기반) — 절대방위 free-emit", op: set}
+      - {name: internal_heat, value: "active — 녹은 금속핵·판구조 (Weir canon; G7 25× 자기장 dynamo 전제)", op: set}
+      - {name: age, value: 1.8, unit: Gyr, op: set, note: "계 coeval 상속 (A 행 IFMR age)"}
       - {name: obliquity, value: 30, unit: deg, op: set, note: "2026 PHM 영화 기반 (책 미기재); ≥30° art, spin_axis free-emit"}
     gate:
       criterion: [culture, classification]
@@ -684,7 +703,8 @@ decisions:
         뷰어=docs/starmap.html stability 모핑.
 
   - body: "40 Eridani A c"
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커
+    body_class: tidally_locked
     status: gated
     driver: ["Mercury-twin anchor → derived"]
     narrative: >
@@ -696,6 +716,13 @@ decisions:
     fields:
       - {name: mass, value: 0.055, unit: M_earth, op: set}
       - {name: radius, value: 0.383, unit: R_earth, op: set, note: "2,440 km; 0.38 g; ρ ~5.4 g/cm³ iron-rich (큰 금속핵)"}
+      - {name: gravity, value: 0.38, unit: g, op: set, note: "GM/R² 파생 에코 (수성 쌍둥이 앵커의 귀결)"}
+      - {name: rotation_period, value: 104.6, unit: d, op: set, note: "= 공전주기 (1:1 조석고정; 케플러 a 0.40 AU·M_A 0.78 M☉)"}
+      - {name: reference_radius, value: 2440, unit: km, op: set, note: "J2/C22 기준 반경 = radius"}
+      - {name: geopotential_c22, value: 9.6e-8, op: set, note: "조석 삼축 (figure 패스) — emit 임계(1e-6) 아래, 기록만·omit"}
+      - {name: geopotential_j2, value: 3.2e-7, op: set, note: "= 10/3·C̄₂₂ (조석 지배, 동기 자전) — 임계 아래, 기록만·omit"}
+      - {name: internal_heat, value: "negligible — 소형체 빠른 냉각·낮은 방사성열 (지질학적 정적, 무화산)", op: set}
+      - {name: age, value: 1.8, unit: Gyr, op: set, note: "계 coeval 상속 (A 행 IFMR age)"}
       - {name: obliquity, value: 0, unit: deg, op: set, note: "조석고정 1:1 자연 귀결, 축계절 없음"}
       - {name: spin_axis_orientation, value: "궤도 법선 (조석고정 1:1 — 저-e라 수성식 3:2 불가; 영구 substellar/야간 반구). C̄₂₂≈9.6e-8 → 임계 아래 omit", op: set}
     gate:
@@ -881,7 +908,8 @@ decisions:
         scripts/erid_resonance_scan.py); 공식 뷰어=docs/starmap.html stability 모핑.
 
   - body: "40 Eridani A d"
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커
+    body_class: free_rotator          # 비동기 4.7d (부분 despin 스냅샷)
     status: gated
     driver: ["PHM canon (R + g) → M, ρ derived"]
     narrative: >
@@ -896,7 +924,13 @@ decisions:
     fields:
       - {name: radius, value: 0.273, unit: R_earth, op: set, note: "1,737 km (달 크기, canon)"}
       - {name: mass, value: 0.0149, unit: M_earth, op: set, note: "g·R² 도출, 달의 ~1.2배; ρ ~4.04 g/cm³ 약간 iron-rich"}
+      - {name: gravity, value: 0.2, unit: g, op: set, note: "PHM canon (p.393) 앵커 — mass가 g·R²서 도출돼 자기일관"}
       - {name: rotation_period, value: 4.7, unit: d, op: set, note: "112.8h 비동기, 부분 despin, 조석고정 아님 (conf 낮음, art-directed 합성)"}
+      - {name: reference_radius, value: 1737, unit: km, op: set, note: "J2/C22 기준 반경 = radius"}
+      - {name: geopotential_c22, value: null, na_reason: "비동기 자유 자전 — 영구 조석 삼축 없음 (보드의 C̄₂₂≈3.2e-8은 동기-가정 상한, 그마저 임계 아래 omit)"}
+      - {name: spin_axis_orientation, value: "원시(자유) — obliquity 17° tilt, 절대방위 free-emit (오너 2026-06-26)", op: set}
+      - {name: internal_heat, value: "negligible — 소형체 빠른 냉각·낮은 방사성열 (지질학적 정적, 무화산)", op: set}
+      - {name: age, value: 1.8, unit: Gyr, op: set, note: "계 coeval 상속 (A 행 IFMR age)"}
       - {name: obliquity, value: 17, unit: deg, op: set, note: "완만 계절; spin_axis 원시(자유). C̄₂₂≈3.2e-8 → 임계 아래 omit"}
     gate:
       criterion: [classification]

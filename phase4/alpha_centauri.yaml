@@ -162,6 +162,7 @@ decisions:
       base radius=극반경). Principia가 천체간 연산에도 J2 적용 → 위성 동역학의 입력이었고, 그 입력이 결정적이었음.
     fields:
       - { name: geopotential_j2, value: 0.023, reference_radius_km: 71492, op: set, phase3_default: "J2 ≈ 0.023 (범위 0.017–0.033; 절단보정 ~0.025–0.026)" }
+      - { name: reference_radius, value: 71492, unit: km, op: set }
       - { name: j4, value: -0.001, op: set }
     gate:
       criterion: [derived-grounding]
@@ -208,6 +209,7 @@ decisions:
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
     axis: bulk                       # was bulk.residual — mass + spin_axis + internal_heat + age (facet-walk 2026-06-22)
+    body_class: free_rotator         # §3.2 템플릿 앵커 — radius/rotation/obliquity/J2는 전용 행 (union rule)
     status: gated
     driver: [physics, classification]
     narrative: >
@@ -218,8 +220,10 @@ decisions:
       emit-noise(eclipse bound).
     fields:
       - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
+      - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
       - { name: spin_axis_orientation, value: "obliquity 5° 방위, 자유 emit (eclipse duty 94% bound)", op: set }
       - { name: internal_heat, value: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
+      - { name: geopotential_c22, value: null, na_reason: "가스자이언트 자유 자전 — 축대칭이라 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
       - { name: age, value: 5.3, unit: Gyr, op: set, phase3_default: "5.3 Gyr (α Cen A 상속)" }
     gate:
       criterion: [classification]
@@ -792,6 +796,39 @@ decisions:
         실제값은 소폭 위일 수 있으나(계수 상향 여지) 차수 불변 — FGK 근사 범위 내.
     refs: [1998MNRAS.297L..76P]
 
+  # ── 항성 bulk 앵커 (SPEC §3.2 템플릿 정규화, 2026-07-12) ────────────────────
+  - body: Alpha Centauri A
+    axis: bulk                        # 템플릿 앵커 — DB 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: star
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      §3.2 앵커 — DB 측정 passthrough 에코: mass 1.1055 M⊙ · radius 1.2234 R⊙(8.511e8 m) · P_rot 22 d ·
+      age 5.3 Gyr. gravity 202 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯). spin_axis_orientation과
+      geopotential_j2(+reference_radius)는 전용 행이 담당(union rule).
+    fields:
+      - { name: mass, value: 1.1055, unit: M_sun, op: passthrough }
+      - { name: radius, value: 1.2234, unit: R_sun, op: passthrough }
+      - { name: gravity, value: 202, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: rotation_period, value: 22, unit: d, op: passthrough }
+      - { name: age, value: 5.3, unit: Gyr, op: passthrough }
+
+  - body: Alpha Centauri B
+    axis: bulk                        # 템플릿 앵커 — DB 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: star
+    status: passthrough
+    driver: [passthrough]
+    narrative: >
+      §3.2 앵커 — DB 측정 passthrough 에코: mass 0.9373 M⊙ · radius 0.8632 R⊙(6.005e8 m) · P_rot 41 d ·
+      age 5.3 Gyr. gravity 345 m/s² = GM/R² 파생 에코. spin_axis_orientation·geopotential_j2
+      (+reference_radius)는 전용 행이 담당(union rule).
+    fields:
+      - { name: mass, value: 0.9373, unit: M_sun, op: passthrough }
+      - { name: radius, value: 0.8632, unit: R_sun, op: passthrough }
+      - { name: gravity, value: 345, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: rotation_period, value: 41, unit: d, op: passthrough }
+      - { name: age, value: 5.3, unit: Gyr, op: passthrough }
+
   - body: Alpha Centauri A
     axis: identity.discoverability
     status: passthrough               # 항성 = 항상 가시 (RB 정책 글로벌)
@@ -832,6 +869,7 @@ decisions:
 
   - body: Dante
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
+    body_class: tidally_locked     # §3.2 템플릿 앵커
     status: gated
     driver: [invented, physics]
     narrative: >
@@ -844,6 +882,8 @@ decisions:
     fields:
       - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
+      - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "GM/R² 파생 에코" }
+      - { name: reference_radius, value: 900, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.039, reference_radius_km: 900, op: set, note: "= 10/3·C̄₂₂, φ0.80" }
@@ -997,6 +1037,7 @@ decisions:
 
   - body: Hades
     axis: bulk                     # mass/radius/rotation/obliquity affirm (facet-walk 2026-06-22)
+    body_class: tidally_locked     # §3.2 템플릿 앵커
     status: gated
     driver: [invented, physics]
     narrative: >
@@ -1008,6 +1049,8 @@ decisions:
     fields:
       - { name: mass, value: 5.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 750, unit: km, op: set, note: "INVENTED" }
+      - { name: gravity, value: 0.593, unit: m/s2, op: set, note: "GM/R² 파생 에코" }
+      - { name: reference_radius, value: 750, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 14.4, unit: h, op: set, note: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.013, reference_radius_km: 750, op: set, note: "= 10/3·C̄₂₂, φ0.70" }
@@ -1144,6 +1187,7 @@ decisions:
 
   - body: Pandora
     axis: bulk                     # mass/radius/gravity/rotation/obliquity (facet-walk 2026-06-22)
+    body_class: tidally_locked     # §3.2 템플릿 앵커
     status: gated
     driver: [canon, physics]
     narrative: >
@@ -1158,6 +1202,7 @@ decisions:
       - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
       - { name: gravity, value: 0.8, unit: g, op: set, note: "canon 체감값" }
+      - { name: reference_radius, value: 5724, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 32, unit: h, op: set, note: "조석고정 (canon 27h 대신)" }
       - { name: obliquity, value: 10, unit: deg, op: set, note: "궤도경사서 옴" }
       - { name: internal_heat, value: "방사성 + 약한 조석 (e강제 ~0.005) → 화산·대륙이동·dynamo 구동", op: set }
@@ -1360,6 +1405,7 @@ decisions:
 
   - body: Cassandra
     axis: bulk                     # mass/radius/rotation/obliquity (facet-walk 2026-06-22)
+    body_class: free_rotator       # §3.2 템플릿 앵커 — 미동기 자유 자전 (39h)
     status: gated
     driver: [invented, physics]
     narrative: >
@@ -1374,6 +1420,8 @@ decisions:
       - { name: mass, value: 9.0e23, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 3400, unit: km, op: set }
       - { name: gravity, value: 0.53, unit: g, op: set }
+      - { name: reference_radius, value: 3400, unit: km, op: set, note: "J2 기준 반경 = radius" }
+      - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기) — 모행성 방향 고정축이 없어 조석 삼축 부재" }
       - { name: rotation_period, value: 39, unit: h, op: set, note: "자유 자전 (미동기, 공명 락 아님)" }
       - { name: obliquity, value: 20, unit: deg, op: set }
       - { name: internal_heat, value: "방사성 위주 (외곽·큰 a라 조석 미미)", op: set }
@@ -1523,6 +1571,7 @@ decisions:
 
   - body: Chaos
     axis: bulk                     # mass/radius/rotation/obliquity/oblateness (facet-walk 2026-06-23)
+    body_class: free_rotator       # §3.2 템플릿 앵커 — 미동기 자유 자전 (9.5h)
     status: gated
     driver: [invented, physics]
     narrative: >
@@ -1536,6 +1585,10 @@ decisions:
       - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 400, unit: km, op: set }
       - { name: gravity, value: 0.023, unit: g, op: set }
+      - { name: reference_radius, value: 400, unit: km, op: set, note: "J2 기준 반경 = radius" }
+      - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기) — 모행성 방향 고정축이 없어 조석 삼축 부재" }
+      - { name: internal_heat, value: "negligible (소형·외곽 — 조석 despin 사실상 0, 방사성만)", op: set }
+      - { name: spin_axis_orientation, value: "궤도 법선 + 15° tilt ('Chaos' 기운 자전, obliquity 필드와 동일 결정) — 방위각 de-perfect-at-emit", op: set }
       - { name: rotation_period, value: 9.5, unit: h, op: set, note: "자유 자전 (미동기)" }
       - { name: obliquity, value: 15, unit: deg, op: set }
       - { name: geopotential_j2, value: 0.026, reference_radius_km: 400, op: set, note: "회전 bulge f≈0.06–0.075" }

@@ -28,17 +28,22 @@ decisions:
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Barnard 1916 (proper-motion discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: "Barnard's star"
-    axis: bulk                        # 측정 passthrough
+    axis: bulk                        # §3.2 템플릿 앵커 — DB 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: star
     status: passthrough
     driver: [passthrough]
     narrative: >
-      M 0.162±0.007 M☉ · R 0.187±0.001 R☉ · L 0.003558 L☉(전부 Schweitzer2019) · Teff 3195±28K
-      (González Hernández2024) · age 8.5±1.5 Gyr(Ribas2018) · [Fe/H] −0.39(Jahandar2023). 전부 고신뢰 측정 →
+      §3.2 앵커 — DB 측정 passthrough 에코: M 0.162±0.007 M☉ · R 0.187±0.001 R☉ · L 0.003558 L☉(전부
+      Schweitzer2019) · P_rot 145d(Toledo-Padrón2019) · age 8.5±1.5 Gyr(Ribas2018) · Teff 3195±28K(González
+      Hernández2024) · [Fe/H] −0.39(Jahandar2023). gravity 1271 m/s² = GM/R² 파생 에코(Kopernicus geeASL 슬롯).
+      spin_axis_orientation·geopotential_j2(+reference_radius)는 전용 행이 담당(union rule). 전부 고신뢰 측정 →
       emit 그대로.
     fields:
       - { name: mass, value: 0.162, unit: M_sun, op: passthrough, note: "±0.007 (Schweitzer2019)" }
       - { name: radius, value: 0.187, unit: R_sun, op: passthrough, note: "±0.001 (Schweitzer2019, 각지름 0.952 mas)" }
+      - { name: gravity, value: 1271, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
       - { name: intrinsic_luminosity, value: 0.003558, unit: L_sun, op: passthrough }
+      - { name: rotation_period, value: 145, unit: d, op: passthrough, note: "±15 (Toledo-Padrón2019, 로스터 최장)" }
       - { name: age, value: 8.5, unit: Gyr, op: passthrough, note: "±1.5 (Ribas2018). Teff 3195±28K (GH2024)" }
 
   - body: "Barnard's star"

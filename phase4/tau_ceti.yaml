@@ -26,18 +26,22 @@ decisions:
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=3.5, Cetus)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
   - body: tau Ceti
-    axis: bulk
+    axis: bulk                        # §3.2 템플릿 앵커 — DB 측정 passthrough 에코 (spin_axis·J2는 전용 행)
+    body_class: star
     status: passthrough
     driver: [passthrough]
     narrative: >
-      M 0.783±0.012 M☉(Teixeira2009 asteroseismology) · R 0.793±0.004 R☉(Korolik2023 CHARA/MIRC-X 간섭계) · Teff 5370±20K
-      (Korolik2023) · L 0.488 L☉(Teixeira2009) · [Fe/H] −0.52±0.01(Santos2013, 매우 철-빈약=시스템 정체성) · age ~10 Gyr
-      (Di Folco2004 isochrone; **documented-divergence** vs Mamajek2008 5.8 Gyr — Phase3서 ~10 채택, 범위 4.4–12.4) · P_rot
-      46±4d(Korolik2023 gyro; **documented-divergence** vs Baliunas1996 34d — Phase3서 46 채택, Boro Saikia2018 ZDI 지지).
-      전부 측정/Phase3 해결값 → emit 그대로. (spin i★는 2026-07-12부터 별도 bulk.spin_axis_orientation 행.)
+      §3.2 앵커 — DB 측정 passthrough 에코: M 0.783±0.012 M☉(Teixeira2009 asteroseismology) · R 0.793±0.004 R☉
+      (Korolik2023 CHARA/MIRC-X 간섭계) · Teff 5370±20K(Korolik2023) · L 0.488 L☉(Teixeira2009) · [Fe/H] −0.52±0.01
+      (Santos2013, 매우 철-빈약=시스템 정체성) · age ~10 Gyr(Di Folco2004 isochrone; **documented-divergence** vs
+      Mamajek2008 5.8 Gyr — Phase3서 ~10 채택, 범위 4.4–12.4) · P_rot 46±4d(Korolik2023 gyro;
+      **documented-divergence** vs Baliunas1996 34d — Phase3서 46 채택, Boro Saikia2018 ZDI 지지). gravity 342 m/s²
+      = GM/R² 파생 에코(Kopernicus geeASL 슬롯). spin_axis_orientation·geopotential_j2(+reference_radius)는 전용 행이
+      담당(union rule). 전부 측정/Phase3 해결값 → emit 그대로.
     fields:
       - { name: mass, value: 0.783, unit: M_sun, op: passthrough, note: "±0.012 (Teixeira2009)" }
       - { name: radius, value: 0.793, unit: R_sun, op: passthrough, note: "±0.004 (Korolik2023 CHARA/MIRC-X)" }
+      - { name: gravity, value: 342, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
       - { name: intrinsic_luminosity, value: 0.488, unit: L_sun, op: passthrough }
       - { name: age, value: 10, unit: Gyr, op: passthrough, note: "Di Folco2004; Phase3 해결값 (범위 4.4–12.4)" }
       - { name: rotation_period, value: 46, unit: d, op: passthrough, note: "±4 (Korolik2023 gyro; Phase3 해결값)" }
