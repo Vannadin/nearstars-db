@@ -20,9 +20,13 @@ Hard fails (v2 only):
   - gated/emitted row: missing gate, or verdict not in {pass-in-window, documented-divergence}
   - a documented-divergence (row- or field-level) with a null/empty divergence_note
   - passthrough row that carries a gate block
+  - SPEC §3.2 bulk template STRUCTURE: a real body with live rows but no bulk anchor
+    row, an anchor without a valid body_class, a field with neither value nor na_reason
 
 Warnings (v2, non-fatal): missing evidence, no machine-readable value on a gated row,
-  no refs on a gated row, a field name outside the §0 axis menu, empty decisions list.
+  no refs on a gated row, a field name outside the §0 axis menu, empty decisions list,
+  a §3.2 template slot not yet covered (open work, per-decision philosophy),
+  c22 on a star, gravity drifting >2% from the row's own GM/R².
 
 `schema_version` is normalized (2 / 2.0 / "2" all mean v2) so a quoting slip cannot
 silently downgrade a strict board to the legacy soft path.
@@ -46,9 +50,10 @@ AXIS_NAMES = {
     "orbit": {"semi_major_axis_au", "eccentricity", "inclination_deg", "longitude_ascending_node",
               "argument_periapsis", "mean_anomaly", "epoch", "spin_orbit_resonance",
               "tidal_lock", "lagrange_placement"},
-    "bulk": {"mass", "radius", "geopotential_j2", "rotation_period", "obliquity",
+    "bulk": {"mass", "radius", "gravity", "geopotential_j2", "reference_radius",
+             "geopotential_c22", "j4", "rotation_period", "obliquity",
              "spin_axis_orientation", "internal_heat", "intrinsic_luminosity", "age",
-             "cooling_age", "tidal_heating"},
+             "cooling_age", "tidal_heating", "tidal_surface_flux"},
     "atmosphere": {"composition", "pressure", "temperature", "scale_height",
                    "breathability", "oxygen", "greenhouse", "escape", "loss"},
     "surface": {"surface_type", "hydrosphere", "ocean", "ice_caps", "glaciation",
@@ -70,6 +75,18 @@ VERDICT = {"pass-in-window", "documented-divergence"}
 FIELD_OPS = {"set", "scale", "passthrough"}
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 
+# SPEC §3.2 — bulk template convention. A slot is satisfied by an anchor-row field
+# OR a live dedicated `bulk.<name>` row (union rule); alternates count for their slot.
+BODY_CLASSES = {"star", "tidally_locked", "free_rotator"}
+BULK_CORE = {"mass", "radius", "gravity", "rotation_period", "spin_axis_orientation",
+             "geopotential_j2", "reference_radius", "age"}
+BULK_TEMPLATE = {
+    "star": BULK_CORE,
+    "tidally_locked": BULK_CORE | {"obliquity", "geopotential_c22", "internal_heat"},
+    "free_rotator": BULK_CORE | {"obliquity", "geopotential_c22", "internal_heat"},
+}
+BULK_SLOT_ALTERNATES = {"age": {"cooling_age"}, "internal_heat": {"intrinsic_luminosity"}}
+
 
 def nonempty(v):
     return v is not None and str(v).strip() != "" and str(v).strip().lower() != "null"
@@ -90,7 +107,10 @@ def check_fields(loc, fields, fails):
         if not nonempty(f.get("name")):
             fails.append(f"{loc}: fields[] entry has no name")
         if not nonempty(f.get("value")):
-            fails.append(f"{loc}: field '{f.get('name')}' has no value (prose-only numbers are illegal)")
+            # SPEC §3.2: an n/a slot stays present as value: null + na_reason.
+            if not nonempty(f.get("na_reason")):
+                fails.append(f"{loc}: field '{f.get('name')}' has no value and no na_reason "
+                             "(prose-only numbers are illegal; n/a slots need na_reason)")
         op = f.get("op")
         if op is not None and op not in FIELD_OPS:
             fails.append(f"{loc}: field '{f.get('name')}' op '{op}' not in {sorted(FIELD_OPS)}")
@@ -114,6 +134,9 @@ def check_v2(path, doc):
     if not rows:
         warns.append(f"{path.name}: decisions list is empty")
     seen_axes = {}
+    bodies_with_rows = set()   # real bodies (not `*`) that have any live row
+    bulk_anchors = {}          # body -> live `axis: bulk` anchor row
+    bulk_named = {}            # body -> {name} from live dedicated bulk.<name> rows
     for i, row in enumerate(rows):
         loc = f"{path.name} decisions[{i}]"
         if not isinstance(row, dict):
@@ -148,6 +171,20 @@ def check_v2(path, doc):
                              f"also decisions[{seen_axes[key]}]; supersede one of them")
             else:
                 seen_axes[key] = i
+            # SPEC §3.2 bookkeeping (skip the `*` / system-wide wildcard)
+            if str(body).strip("* ").strip():
+                b = str(body)
+                bodies_with_rows.add(b)
+                if group == "bulk":
+                    if name is None:
+                        bulk_anchors[b] = row
+                    else:
+                        # a dedicated row satisfies its own axis name AND the field
+                        # names it carries (e.g. reference_radius inside a J2 row)
+                        s = bulk_named.setdefault(b, set())
+                        s.add(name)
+                        s.update(f.get("name") for f in row.get("fields") or []
+                                 if isinstance(f, dict) and f.get("name"))
 
         gate = row.get("gate")
         fields = row.get("fields") or []
@@ -191,7 +228,71 @@ def check_v2(path, doc):
                 warns.append(f"{loc}: gated row has no machine-readable value/fields")
             if not row.get("refs"):
                 warns.append(f"{loc}: gated row has no refs[]")
+
+    # ── SPEC §3.2: bulk template convention ──────────────────────────────
+    for b in sorted(bodies_with_rows):
+        loc = f"{path.name} [{b} / bulk]"
+        anchor = bulk_anchors.get(b)
+        if anchor is None:
+            fails.append(f"{loc}: no live bulk anchor row for this body (SPEC §3.2)")
+            continue
+        bc = anchor.get("body_class")
+        if bc not in BODY_CLASSES:
+            fails.append(f"{loc}: bulk anchor body_class '{bc}' not in {sorted(BODY_CLASSES)}")
+            continue
+        have = {f.get("name") for f in anchor.get("fields") or [] if isinstance(f, dict)}
+        have |= bulk_named.get(b, set())
+        # Coverage gaps are open work, not schema violations — Phase 4 is
+        # per-decision, so an un-walked slot warns (visibly) instead of failing.
+        for slot in sorted(BULK_TEMPLATE[bc]):
+            if slot in have or (BULK_SLOT_ALTERNATES.get(slot, set()) & have):
+                continue
+            warns.append(f"{loc}: template slot '{slot}' not yet covered for class '{bc}' "
+                         "(fill with a decision, or value: null + na_reason)")
+        if bc == "star" and "geopotential_c22" in have:
+            warns.append(f"{loc}: geopotential_c22 on a star (physically n/a for this class)")
+        _gravity_guard(loc, anchor, warns)
     return fails, warns
+
+
+G_SI = 6.674e-11
+STD_G = 9.80665
+
+
+def _num(v):
+    try:
+        return float(str(v).replace(",", "").strip())
+    except (TypeError, ValueError):
+        return None
+
+
+def _gravity_guard(loc, anchor, warns):
+    """SPEC §3.2: gravity is a derived echo of GM/R² — warn when it drifts >2%
+    from the anchor row's own mass/radius. Best-effort: only fires when all three
+    fields parse in known units (kg, km/m, g / m/s²)."""
+    vals = {}
+    for f in anchor.get("fields") or []:
+        if isinstance(f, dict) and f.get("name") in ("mass", "radius", "gravity"):
+            vals[f["name"]] = (_num(f.get("value")), str(f.get("unit") or "").strip())
+    if not all(k in vals and vals[k][0] for k in ("mass", "radius", "gravity")):
+        return
+    m, mu = vals["mass"]
+    r, ru = vals["radius"]
+    g, gu = vals["gravity"]
+    if mu != "kg":
+        return
+    if ru == "km":
+        r *= 1000.0
+    elif ru != "m":
+        return
+    if gu == "g":
+        g *= STD_G
+    elif gu not in ("m/s2", "m/s^2", "m/s²"):
+        return
+    g_calc = G_SI * m / r ** 2
+    if abs(g_calc / g - 1.0) > 0.02:
+        warns.append(f"{loc}: gravity {g:.3f} m/s² drifts from GM/R² = {g_calc:.3f} m/s² "
+                     "(>2%) — re-derive from the row's mass/radius")
 
 
 def summarize_legacy(path, doc):

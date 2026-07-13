@@ -21,6 +21,7 @@ decisions:
 - body: "Alpha Centauri A b"     # exact display name
   kopernicus_name: Polyphemus    # optional — cfg-internal name emitters/RB need, if different
   axis: bulk                     # a §0 GROUP (with fields[]) or group.name (single field + top-level value)
+  body_class: free_rotator       # bulk ANCHOR rows only — star | tidally_locked | free_rotator (SPEC §3.2)
   status: gated                  # passthrough | open | art-directed | gated | emitted | superseded
   driver: [window-selection, art-direction]   # taxonomy class(es), SPEC §1
   narrative: >                   # human prose — reasoning/context (Korean OK)
@@ -73,6 +74,30 @@ decisions:
     ref: "2018AJ....155..117M"   # detection bibcode (not prose)
 ```
 
+## Bulk template convention (SPEC §3.2)
+
+Every real body (not `*`) with any live row carries **exactly one live `axis: bulk`
+anchor row** tagged `body_class: star | tidally_locked | free_rotator`. Required slots:
+
+- core (all classes): `mass` `radius` `gravity` `rotation_period`
+  `spin_axis_orientation` `geopotential_j2` `reference_radius` `age`
+- `tidally_locked` / `free_rotator`: core + `obliquity` + `geopotential_c22` +
+  `internal_heat` (`star` = core only)
+- alternates: `cooling_age` satisfies the age slot, `intrinsic_luminosity` the
+  internal_heat slot.
+
+**Union rule** — a slot counts if it appears in the anchor's `fields[]` OR in a live
+dedicated `bulk.<name>` row for the same body (including that row's inner fields,
+e.g. `reference_radius` inside a J2 row). Never duplicate a value in both places.
+
+**n/a slots** stay present: `value: null` + non-empty `na_reason` (e.g. free rotator →
+c22 "고정축 없음"). A field with neither value nor na_reason is a hard FAIL.
+
+`gravity` is a derived echo of GM/R² (Kopernicus geeASL slot, owner decision
+2026-07-12); the validator warns when it drifts >2% from the row's own mass/radius.
+Exemplar rows: `phase4/alpha_centauri.yaml` (star anchors for A/B, free_rotator A b /
+Cassandra / Chaos, tidally_locked Dante / Hades / Pandora).
+
 ## Enums
 
 | field | allowed |
@@ -80,6 +105,7 @@ decisions:
 | `status` | `passthrough` · `open` · `art-directed` · `gated` · `emitted` · `superseded` |
 | `gate.verdict` / `fields[].verdict` | `pass-in-window` · `documented-divergence` |
 | `op` | `set` · `scale` · `passthrough` |
+| `body_class` (bulk anchors) | `star` · `tidally_locked` · `free_rotator` |
 | `axis` group | `identity` `orbit` `bulk` `atmosphere` `surface` `appearance` `magnetism` `environment` `rings` `satellites` `gameplay` |
 
 ## Validator rules (what fails vs warns)
@@ -96,6 +122,9 @@ decisions:
 - `gated`/`emitted` row with no `gate` block, or with an invalid `verdict`.
 - `documented-divergence` (row or field) with a null/empty `divergence_note`.
 - `passthrough` row that carries a `gate` block.
+- §3.2 structure: a real body with live rows but no bulk anchor row; an anchor without
+  a valid `body_class`; a field with neither `value` nor `na_reason`. (A template slot
+  not yet walked is a WARNING — coverage is open work, structure is hard.)
 
 **WARN (non-fatal):** empty `gate.evidence`; a gated row with no machine-readable
 value/`fields`; a gated row with no `refs`; an `axis` name not in the §0 menu;

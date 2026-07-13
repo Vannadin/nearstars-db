@@ -54,7 +54,7 @@ problem: the decomposition is fixed up front.
 |---|---|
 | `identity` | `body_type`/spectral_class, `designation` (e.g. Roman-numeral moons), `cultural_name` (in-game blurb text), `discoverability` (notability / discovery difficulty) |
 | `orbit` | `semi_major_axis_au`, `eccentricity`, `inclination_deg`, `longitude_ascending_node`, `argument_periapsis`, `mean_anomaly`/epoch, `spin_orbit_resonance`/tidal-lock, `lagrange_placement` (trojans / co-orbitals) |
-| `bulk` | `mass`, `radius`, `geopotential_j2` (oblateness; Principia `j2` + `reference_radius`), `rotation_period`, `obliquity`, `spin_axis_orientation` (pole RA/Dec), `internal_heat`/intrinsic_luminosity (self-luminous giants/BDs), `age`/cooling_age (stars/WDs), `tidal_heating` (Io-type moons) |
+| `bulk` | `mass`, `radius`, `gravity` (derived echo of GM/R² — Kopernicus geeASL slot), `geopotential_j2` + `reference_radius` (oblateness; Principia `j2` — always emitted as a pair), `geopotential_c22` (tidal triaxiality — locked bodies), `j4` (fast rotators, optional), `rotation_period`, `obliquity`, `spin_axis_orientation` (pole RA/Dec), `internal_heat`/intrinsic_luminosity (self-luminous giants/BDs), `age`/cooling_age (stars/WDs), `tidal_heating` + `tidal_surface_flux` (Io-type moons) |
 | `atmosphere` | `composition`, `pressure`, `temperature`, `scale_height`, `breathability`/oxygen (stock O₂ flag), `greenhouse` (surface vs equilibrium T), `escape`/loss |
 | `surface` | `surface_type` (rock/ice/lava/ocean), `hydrosphere`/ocean, `ice_caps`/glaciation, `tectonics`/volcanism, `terrain` (Parallax heightmap / biomes), `surface_temperature`, `albedo`, `biosphere` |
 | `appearance` | `banding`/base-colour, `clouds`, `haze`, `aurora`, `rings`, `surface`, `emission_glow` (lava / self-luminous / night-side), `specular` (ocean glint), `artificial`/city-lights, **[stars]** `granulation`, `limb_darkening`, `spots_faculae`, `corona`, `flares`, **[pulsar]** `beam` |
@@ -241,6 +241,40 @@ decisions:
   `documented-divergence` field (each with its own note).
 - `divergence_note` is required (non-null) wherever a verdict is `documented-divergence`,
   at whichever level the divergence is declared (row or field). This is the check.sh guard.
+
+### 3.2 Bulk template convention — fixed per-class fieldsets (2026-07-12)
+
+The pre-skill era bundled un-chosen elements into ad-hoc `bulk` rows with whatever
+fields were at hand, so the fieldset drifted per body. To make "absent" distinguishable
+from "forgotten", every body's bulk coverage now follows a **class template**:
+
+- Every real body (not the `*` wildcard) with any live row carries **exactly one live
+  `axis: bulk` group row** — the anchor — tagged with a `body_class`:
+  `star | tidally_locked | free_rotator`.
+- **Core fields (all classes):** `mass`, `radius`, `gravity`, `rotation_period`,
+  `spin_axis_orientation`, `geopotential_j2`, `reference_radius`, `age`.
+- **star** = core. (`cooling_age` satisfies the age slot for WDs; no obliquity —
+  the spin axis itself is the decision — and no c22/internal_heat slots.)
+- **tidally_locked** = core + `obliquity` (≈0 confirm) + `geopotential_c22` +
+  `internal_heat` (+ optional `tidal_heating`/`tidal_surface_flux` for Io-types).
+- **free_rotator** = core + `obliquity` (a real choice) + `internal_heat`;
+  `geopotential_c22` is physically absent → recorded as n/a (below), never omitted.
+- **Union rule:** a template slot is satisfied by an entry in the anchor row's
+  `fields[]` **or** by a live dedicated `bulk.<name>` row for the same body (the
+  post-skill style for heavy-narrative decisions — J2, spin axis). Never duplicate a
+  value in both places; the per-body HTML page renders them adjacent anyway.
+  `intrinsic_luminosity` satisfies the internal_heat slot, `cooling_age` the age slot.
+- **n/a representation:** the field entry stays present with `value: null` plus a
+  non-empty `na_reason` (e.g. `"free rotator — no tidal triaxiality"`). A field with
+  neither value nor na_reason is a validator error.
+- **Severity split:** template *structure* is hard (missing anchor row, missing/invalid
+  `body_class`, a value-less field without na_reason → validator errors); template
+  *coverage* is soft (a slot not yet walked → validator warning). Phase 4 is
+  per-decision — an un-walked slot is open work made visible, not a schema failure,
+  and the warning list is exactly the "forgotten vs omitted" detector.
+- **gravity guard:** `gravity` is a derived echo (GM/R², the Kopernicus geeASL slot),
+  kept for emit convenience by owner decision. The validator warns when it drifts
+  from the row's own mass/radius by more than ~2%.
 
 ---
 
