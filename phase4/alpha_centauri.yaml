@@ -221,6 +221,7 @@ decisions:
     fields:
       - { name: mass, value: 120, unit: M_earth, op: set, phase3_default: "120 M⊕ (0.38 M_Jup)" }
       - { name: gravity, value: 9.36, unit: m/s2, op: set, phase3_default: "GM/R² 파생 에코 (1-bar 반경 71492 km 기준)" }
+      - { name: flattening, value: 0.13, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 0.023, q 0.19) — 시각 oblate 슬롯; 대형 q라 1차식이 다소 하한" }
       - { name: spin_axis_orientation, value: "obliquity 5° 방위, 자유 emit (eclipse duty 94% bound)", op: set }
       - { name: internal_heat, value: "negligible (T_int<110K, 내부플럭스 ≲6% insolation, 자발광 아님)", op: set }
       - { name: geopotential_c22, value: null, na_reason: "가스자이언트 자유 자전 — 축대칭이라 조석 삼축 없음 (zonal J2/J4만, 전용 행)" }
@@ -810,6 +811,7 @@ decisions:
       - { name: mass, value: 1.1055, unit: M_sun, op: passthrough }
       - { name: radius, value: 1.2234, unit: R_sun, op: passthrough }
       - { name: gravity, value: 202, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: flattening, value: 2.4e-5, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 4.8e-7, q 4.6e-5) — 시각 oblate 슬롯" }
       - { name: rotation_period, value: 22, unit: d, op: passthrough }
       - { name: age, value: 5.3, unit: Gyr, op: passthrough }
 
@@ -826,6 +828,7 @@ decisions:
       - { name: mass, value: 0.9373, unit: M_sun, op: passthrough }
       - { name: radius, value: 0.8632, unit: R_sun, op: passthrough }
       - { name: gravity, value: 345, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: flattening, value: 2.8e-6, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 5.7e-8, q 5.5e-6) — 시각 oblate 슬롯" }
       - { name: rotation_period, value: 41, unit: d, op: passthrough }
       - { name: age, value: 5.3, unit: Gyr, op: passthrough }
 
@@ -883,6 +886,7 @@ decisions:
       - { name: mass, value: 8.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 900, unit: km, op: set, note: "INVENTED" }
       - { name: gravity, value: 0.659, unit: m/s2, op: set, note: "GM/R² 파생 에코" }
+      - { name: flattening, value: 0.098, op: set, note: "= (5/2)·J₂ 평균적도 spheroid — 시각 슬롯; 계란 장축 a−c~16%는 C22 행 note" }
       - { name: reference_radius, value: 900, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 9.2, unit: h, op: set, note: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
@@ -1050,6 +1054,7 @@ decisions:
       - { name: mass, value: 5.0e21, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 750, unit: km, op: set, note: "INVENTED" }
       - { name: gravity, value: 0.593, unit: m/s2, op: set, note: "GM/R² 파생 에코" }
+      - { name: flattening, value: 0.033, op: set, note: "= (5/2)·J₂ 평균적도 spheroid — 시각 슬롯; 계란 장축 a−c~5%는 C22 행 note" }
       - { name: reference_radius, value: 750, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 14.4, unit: h, op: set, note: "tidally locked (자전=공전)" }
       - { name: obliquity, value: 0, unit: deg, op: set }
@@ -1202,6 +1207,7 @@ decisions:
       - { name: radius, value: 5724, unit: km, op: set, note: "canon 지름 11,447" }
       - { name: mass, value: 3.85e24, unit: kg, op: set, phase3_default: "옵션 B: 0.8g 고정 → 0.645 M⊕" }
       - { name: gravity, value: 0.8, unit: g, op: set, note: "canon 체감값" }
+      - { name: flattening, value: 5.2e-3, op: set, note: "= (5/2)·J₂ 평균적도 spheroid — 시각상 사실상 구 (a−c≈47 km는 C22 행 note)" }
       - { name: reference_radius, value: 5724, unit: km, op: set, note: "J2/C22 기준 반경 = radius" }
       - { name: rotation_period, value: 32, unit: h, op: set, note: "조석고정 (canon 27h 대신)" }
       - { name: obliquity, value: 10, unit: deg, op: set, note: "궤도경사서 옴" }
@@ -1420,6 +1426,7 @@ decisions:
       - { name: mass, value: 9.0e23, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 3400, unit: km, op: set }
       - { name: gravity, value: 0.53, unit: g, op: set }
+      - { name: flattening, value: 1.3e-3, op: set, note: "= (3J₂+q)/2 (J₂ 4.1e-4, q 1.3e-3) — J2 행 note f~0.13%와 동일 결정" }
       - { name: reference_radius, value: 3400, unit: km, op: set, note: "J2 기준 반경 = radius" }
       - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기) — 모행성 방향 고정축이 없어 조석 삼축 부재" }
       - { name: rotation_period, value: 39, unit: h, op: set, note: "자유 자전 (미동기, 공명 락 아님)" }
@@ -1585,6 +1592,7 @@ decisions:
       - { name: mass, value: 5.4e20, unit: kg, op: set, note: "INVENTED" }
       - { name: radius, value: 400, unit: km, op: set }
       - { name: gravity, value: 0.023, unit: g, op: set }
+      - { name: flattening, value: 0.069, op: set, note: "= (3J₂+q)/2 (J₂ 0.026, q 0.060) — J2 행 band 0.06–0.075 안" }
       - { name: reference_radius, value: 400, unit: km, op: set, note: "J2 기준 반경 = radius" }
       - { name: geopotential_c22, value: null, na_reason: "자유 자전(미동기) — 모행성 방향 고정축이 없어 조석 삼축 부재" }
       - { name: internal_heat, value: "negligible (소형·외곽 — 조석 despin 사실상 0, 방사성만)", op: set }

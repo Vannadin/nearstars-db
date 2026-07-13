@@ -51,7 +51,7 @@ AXIS_NAMES = {
               "argument_periapsis", "mean_anomaly", "epoch", "spin_orbit_resonance",
               "tidal_lock", "lagrange_placement"},
     "bulk": {"mass", "radius", "gravity", "geopotential_j2", "reference_radius",
-             "geopotential_c22", "j4", "rotation_period", "obliquity",
+             "flattening", "geopotential_c22", "j4", "rotation_period", "obliquity",
              "spin_axis_orientation", "internal_heat", "intrinsic_luminosity", "age",
              "cooling_age", "tidal_heating", "tidal_surface_flux"},
     "atmosphere": {"composition", "pressure", "temperature", "scale_height",
@@ -79,7 +79,7 @@ HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 # OR a live dedicated `bulk.<name>` row (union rule); alternates count for their slot.
 BODY_CLASSES = {"star", "tidally_locked", "free_rotator"}
 BULK_CORE = {"mass", "radius", "gravity", "rotation_period", "spin_axis_orientation",
-             "geopotential_j2", "reference_radius", "age"}
+             "geopotential_j2", "reference_radius", "flattening", "age"}
 BULK_TEMPLATE = {
     "star": BULK_CORE,
     "tidally_locked": BULK_CORE | {"obliquity", "geopotential_c22", "internal_heat"},

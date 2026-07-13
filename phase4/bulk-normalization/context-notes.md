@@ -77,3 +77,20 @@ that lives with the J2 gate. Union rule covers the slot either way.
 Agent outcome: the 3-single-star-board agent delivered clean minimal diffs
 (gravity values re-verified by hand). The proxima+40eri agent stalled with
 zero file changes; its boards were finished inline instead.
+
+## Follow-up: `flattening` core slot (owner request, 2026-07-13)
+
+Owner: "중력 말고 그냥 천체 편평도도 있음 좋겠다. 시각화에 쓰게." Added as a
+second derived-echo slot next to gravity — the direct input for the visual
+oblate mesh (VertexHeightOblateAdvanced), where J₂ is the gravity-field twin.
+No new physics: every value derives from the already-gated figure decision via
+body-figure-methodology.md — f = (3·J₂ + q)/2 for stars/free rotators (§2
+first-order relation inverted; q recomputed from the row's own mass/radius/
+rotation), f = (5/2)·J₂ mean-equatorial for locked triaxial bodies (the full
+a−c egg axis ≈ 4·J₂·R stays in the J2/C22 row notes). Erid (0.048, NMoI 0.30),
+Fomalhaut (0.022) and Polyphemus (0.13) match the doc §6 worked values;
+Cassandra/Chaos match their J2-row f notes (Cassandra confirmed the notes'
+0.13% comes from the free-rotator formula with q 1.3e-3, not (5/2)·J₂).
+Figure-undecided bodies (Proxima c / c I / d, 40 Eri A d) get no invented
+value — the slot stays open as 4 new coverage warnings, joining the same
+planet-walk work list as their J₂.

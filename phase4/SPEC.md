@@ -54,7 +54,7 @@ problem: the decomposition is fixed up front.
 |---|---|
 | `identity` | `body_type`/spectral_class, `designation` (e.g. Roman-numeral moons), `cultural_name` (in-game blurb text), `discoverability` (notability / discovery difficulty) |
 | `orbit` | `semi_major_axis_au`, `eccentricity`, `inclination_deg`, `longitude_ascending_node`, `argument_periapsis`, `mean_anomaly`/epoch, `spin_orbit_resonance`/tidal-lock, `lagrange_placement` (trojans / co-orbitals) |
-| `bulk` | `mass`, `radius`, `gravity` (derived echo of GM/R² — Kopernicus geeASL slot), `geopotential_j2` + `reference_radius` (oblateness; Principia `j2` — always emitted as a pair), `geopotential_c22` (tidal triaxiality — locked bodies), `j4` (fast rotators, optional), `rotation_period`, `obliquity`, `spin_axis_orientation` (pole RA/Dec), `internal_heat`/intrinsic_luminosity (self-luminous giants/BDs), `age`/cooling_age (stars/WDs), `tidal_heating` + `tidal_surface_flux` (Io-type moons) |
+| `bulk` | `mass`, `radius`, `gravity` (derived echo of GM/R² — Kopernicus geeASL slot), `geopotential_j2` + `reference_radius` (oblateness; Principia `j2` — always emitted as a pair), `flattening` (derived echo of the figure — visual oblate-mesh slot), `geopotential_c22` (tidal triaxiality — locked bodies), `j4` (fast rotators, optional), `rotation_period`, `obliquity`, `spin_axis_orientation` (pole RA/Dec), `internal_heat`/intrinsic_luminosity (self-luminous giants/BDs), `age`/cooling_age (stars/WDs), `tidal_heating` + `tidal_surface_flux` (Io-type moons) |
 | `atmosphere` | `composition`, `pressure`, `temperature`, `scale_height`, `breathability`/oxygen (stock O₂ flag), `greenhouse` (surface vs equilibrium T), `escape`/loss |
 | `surface` | `surface_type` (rock/ice/lava/ocean), `hydrosphere`/ocean, `ice_caps`/glaciation, `tectonics`/volcanism, `terrain` (Parallax heightmap / biomes), `surface_temperature`, `albedo`, `biosphere` |
 | `appearance` | `banding`/base-colour, `clouds`, `haze`, `aurora`, `rings`, `surface`, `emission_glow` (lava / self-luminous / night-side), `specular` (ocean glint), `artificial`/city-lights, **[stars]** `granulation`, `limb_darkening`, `spots_faculae`, `corona`, `flares`, **[pulsar]** `beam` |
@@ -252,7 +252,7 @@ from "forgotten", every body's bulk coverage now follows a **class template**:
   `axis: bulk` group row** — the anchor — tagged with a `body_class`:
   `star | tidally_locked | free_rotator`.
 - **Core fields (all classes):** `mass`, `radius`, `gravity`, `rotation_period`,
-  `spin_axis_orientation`, `geopotential_j2`, `reference_radius`, `age`.
+  `spin_axis_orientation`, `geopotential_j2`, `reference_radius`, `flattening`, `age`.
 - **star** = core. (`cooling_age` satisfies the age slot for WDs; no obliquity —
   the spin axis itself is the decision — and no c22/internal_heat slots.)
 - **tidally_locked** = core + `obliquity` (≈0 confirm) + `geopotential_c22` +
@@ -275,6 +275,13 @@ from "forgotten", every body's bulk coverage now follows a **class template**:
 - **gravity guard:** `gravity` is a derived echo (GM/R², the Kopernicus geeASL slot),
   kept for emit convenience by owner decision. The validator warns when it drifts
   from the row's own mass/radius by more than ~2%.
+- **flattening:** derived echo of the figure decision, kept as a direct visualization
+  slot (VertexHeightOblateAdvanced / oblate mesh) by owner decision (2026-07-13), like
+  gravity. Definition: f = (R_eq − R_pol)/R_eq. Derivation (body-figure-methodology.md):
+  stars/free rotators f = (3·J₂ + q)/2 (first-order hydrostatic, inverted §2 relation);
+  tidally-locked triaxial bodies f = (5/2)·J₂ (mean-equatorial spheroid — the full
+  a−c egg axis ≈ 4·J₂·R stays in the J2/C22 row notes). Undecided figure → the slot
+  stays open (coverage warning), same as J₂.
 
 ---
 

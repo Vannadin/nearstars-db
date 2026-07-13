@@ -44,6 +44,7 @@ decisions:
       - {name: mass, value: 0.78, unit: M_sun, op: passthrough, note: "±0.08 (Ma2018 M-R; Diaz2018 0.76 일치)"}
       - {name: radius, value: 0.806, unit: R_sun, op: passthrough, note: "±0.004"}
       - {name: gravity, value: 329, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코"}
+      - {name: flattening, value: 2.6e-6, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 5.4e-8, q 5.1e-6) — 시각 oblate 슬롯"}
       - {name: intrinsic_luminosity, value: 0.408, unit: L_sun, op: passthrough, note: "Boyajian2012 CHARA; Teff 5143±14K; [Fe/H] −0.29"}
       - {name: age, value: 1.8, unit: Gyr, op: passthrough, note: "WD B IFMR coeval age (Bond2017); 옛 K왜성 isochrone 노년설 해소"}
       - {name: rotation_period, value: "37–43", unit: d, op: passthrough, note: "Saar&Osten ~37–38d; 가짜 Vulcan 42d 신호 원인 (Burrows2024 철회 근거)"}
@@ -127,6 +128,7 @@ decisions:
       - {name: mass, value: 0.558, unit: M_sun, op: passthrough, note: "±0.012 (Mason2021 동역학; Bond2017 0.573 대안)"}
       - {name: radius, value: 0.01308, unit: R_sun, op: passthrough, note: "±0.0002, ~지구 크기; log g 7.957; Teff 17,200K; CO핵 + 얇은 H 외피"}
       - {name: gravity, value: 8.94e5, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코 (측정 log g 7.957과 1.3% 일치)"}
+      - {name: flattening, value: 1.6e-8, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 2.1e-9, q 2.5e-8) — WD, 시각상 완전 구"}
       - {name: cooling_age, value: 122, unit: Myr, op: passthrough, note: "+ 전구체 ~1.7 Gyr (시스템 ~1.8 Gyr coeval)"}
 
   - body: "40 Eridani B"
@@ -201,6 +203,7 @@ decisions:
       - {name: mass, value: 0.198, unit: M_sun, op: passthrough, note: "±0.004 (Mason2021 동역학)"}
       - {name: radius, value: 0.274, unit: R_sun, op: passthrough, note: "±0.011 (Mann2015); Teff 3167±61K"}
       - {name: gravity, value: 723, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코"}
+      - {name: flattening, value: 1.2e-5, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 1.6e-6, q 1.9e-5) — 시각 oblate 슬롯"}
       - {name: age, value: 1.8, unit: Gyr, op: passthrough, note: "계 coeval 상속 (A 행 IFMR age, Bond2017 근거 공유)"}
       - {name: intrinsic_luminosity, value: 0.00651, unit: L_sun, op: passthrough, note: "Cifuentes2020 CARMENES; [Fe/H] −0.21"}
       - {name: rotation_period, value: 8.56, unit: d, op: passthrough, note: "Shan2024 meta_notes-only (품질등급 D/debated, Open item)"}
@@ -448,6 +451,7 @@ decisions:
       - {name: mass, value: 4.97, unit: M_earth, op: set, note: "철회된 8.47 M⊕ 폐기; 질량-반경 곡선 위 g=2.09 자기일관"}
       - {name: radius, value: 1.541, unit: R_earth, op: set, note: "9,820 km"}
       - {name: gravity, value: 2.09, unit: g, op: set, note: "PHM canon (Weir) 앵커 — 질량-반경 자기일관으로 역검증 (GM/R² 일치)"}
+      - {name: flattening, value: 0.048, op: set, note: "NMoI 0.30 워크드 (J2 행과 동일 결정) — a/c~1.051 가시 oblate, 로스터 최대 편평 암석행성"}
       - {name: rotation_period, value: 5.1, unit: h, op: set, note: "Weir canon 항성일 — 결정은 orbit 행 spin_orbit_resonance (오너 G2 2026-06-24)"}
       - {name: geopotential_j2, value: 0.014, reference_radius_km: 9820, op: set, note: "NMoI 0.30, f~4.8%, a/c~1.051 (가시 oblate); ρ 7,477 kg/m³; 표면중력 2.09 g"}
       - {name: reference_radius, value: 9820, unit: km, op: set, note: "J2 기준 반경 = radius"}
@@ -717,6 +721,7 @@ decisions:
       - {name: mass, value: 0.055, unit: M_earth, op: set}
       - {name: radius, value: 0.383, unit: R_earth, op: set, note: "2,440 km; 0.38 g; ρ ~5.4 g/cm³ iron-rich (큰 금속핵)"}
       - {name: gravity, value: 0.38, unit: g, op: set, note: "GM/R² 파생 에코 (수성 쌍둥이 앵커의 귀결)"}
+      - {name: flattening, value: 8.0e-7, op: set, note: "= (5/2)·J₂ 평균적도 spheroid (J₂ 3.2e-7) — 시각상 완전 구"}
       - {name: rotation_period, value: 104.6, unit: d, op: set, note: "= 공전주기 (1:1 조석고정; 케플러 a 0.40 AU·M_A 0.78 M☉)"}
       - {name: reference_radius, value: 2440, unit: km, op: set, note: "J2/C22 기준 반경 = radius"}
       - {name: geopotential_c22, value: 9.6e-8, op: set, note: "조석 삼축 (figure 패스) — emit 임계(1e-6) 아래, 기록만·omit"}

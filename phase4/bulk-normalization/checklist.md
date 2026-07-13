@@ -28,3 +28,14 @@ Owner decisions (2026-07-12): class-based 3-template fieldset; keep `gravity`
 - [x] Update skill `references/board-schema.md` with the template convention
 - [x] `./scripts/check.sh` clean (only failure = mirror gate, all 7 under the other
       session's uncommitted plans/principia-interstellar-branch/ — not ours)
+
+Follow-up (owner request 2026-07-13): `flattening` as a core slot
+
+- [x] SPEC §0 menu + §3.2 core list + derivation note (f definition, star/free vs
+      locked formulas, undecided-figure → coverage warning)
+- [x] Validator: `flattening` in bulk menu + BULK_CORE
+- [x] Fill all 16 figure-decided anchors (values from J₂+q via methodology relations;
+      Erid/Fomalhaut/Polyphemus from doc §6 worked values) — 4 new warnings only on
+      figure-undecided bodies (Proxima c / c I / d, 40 Eri A d)
+- [x] Skill board-schema.md core list + derived-echo note
+- [x] Validator 0 errors on all 6 boards; HTML rebuilt

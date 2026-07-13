@@ -80,7 +80,7 @@ Every real body (not `*`) with any live row carries **exactly one live `axis: bu
 anchor row** tagged `body_class: star | tidally_locked | free_rotator`. Required slots:
 
 - core (all classes): `mass` `radius` `gravity` `rotation_period`
-  `spin_axis_orientation` `geopotential_j2` `reference_radius` `age`
+  `spin_axis_orientation` `geopotential_j2` `reference_radius` `flattening` `age`
 - `tidally_locked` / `free_rotator`: core + `obliquity` + `geopotential_c22` +
   `internal_heat` (`star` = core only)
 - alternates: `cooling_age` satisfies the age slot, `intrinsic_luminosity` the
@@ -95,6 +95,9 @@ c22 "고정축 없음"). A field with neither value nor na_reason is a hard FAIL
 
 `gravity` is a derived echo of GM/R² (Kopernicus geeASL slot, owner decision
 2026-07-12); the validator warns when it drifts >2% from the row's own mass/radius.
+`flattening` is likewise a derived echo of the figure decision (owner decision
+2026-07-13, visualization slot): f = (3·J₂+q)/2 for stars/free rotators,
+(5/2)·J₂ (mean-equatorial) for locked triaxial bodies — SPEC §3.2.
 Exemplar rows: `phase4/alpha_centauri.yaml` (star anchors for A/B, free_rotator A b /
 Cassandra / Chaos, tidally_locked Dante / Hades / Pandora).
 

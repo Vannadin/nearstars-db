@@ -48,6 +48,7 @@ decisions:
       - { name: mass, value: 1.92, unit: M_sun, op: passthrough, note: "Mamajek 2012 (excess-corrected)" }
       - { name: radius, value: 1.842, unit: R_sun, op: passthrough, note: "적도반경; alt=Davis2005 1.744 (excess 미보정) 병기" }
       - { name: gravity, value: 155, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: flattening, value: 0.022, op: set, note: "= (3J₂+q)/2 (J₂ 1.0e-4, q 0.044) — 로스터 항성 최대 편평; VertexHeightOblateAdvanced 시각 대상 (methodology §6)" }
       - { name: intrinsic_luminosity, value: 16.63, unit: L_sun, op: passthrough, note: "Teff 8590 K" }
       - { name: age, value: 0.44, unit: Gyr, op: passthrough, note: "Castor moving group" }
       - { name: rotation_period, value: 1.0, unit: d, op: set, note: "도출 (v sin i 93±9 + 측정 i★ 90°±9 + R_eq) — 직접 측정 없음" }

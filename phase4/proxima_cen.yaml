@@ -58,6 +58,10 @@ decisions:
         unit: m/s2
         op: passthrough
         phase3_default: "GM/R² 파생 에코"
+      - name: flattening
+        value: 2.8e-8
+        op: set
+        note: "= (3J₂+q)/2 파생 에코 (J₂ 3.7e-9, q 4.4e-8) — 시각 oblate 슬롯"
       - name: rotation_period
         value: 83.5
         unit: d
@@ -275,6 +279,10 @@ decisions:
         unit: g
         op: set
         note: "GM/R² 파생 에코"
+      - name: flattening
+        value: 7.0e-5
+        op: set
+        note: "= (5/2)·J₂ 평균적도 spheroid (J₂ 2.8e-5) — 시각상 구"
       - name: rotation_period
         value: 11.186
         unit: d

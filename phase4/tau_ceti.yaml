@@ -42,6 +42,7 @@ decisions:
       - { name: mass, value: 0.783, unit: M_sun, op: passthrough, note: "±0.012 (Teixeira2009)" }
       - { name: radius, value: 0.793, unit: R_sun, op: passthrough, note: "±0.004 (Korolik2023 CHARA/MIRC-X)" }
       - { name: gravity, value: 342, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: flattening, value: 2.1e-6, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 4.2e-8, q 4.0e-6) — 시각 oblate 슬롯" }
       - { name: intrinsic_luminosity, value: 0.488, unit: L_sun, op: passthrough }
       - { name: age, value: 10, unit: Gyr, op: passthrough, note: "Di Folco2004; Phase3 해결값 (범위 4.4–12.4)" }
       - { name: rotation_period, value: 46, unit: d, op: passthrough, note: "±4 (Korolik2023 gyro; Phase3 해결값)" }

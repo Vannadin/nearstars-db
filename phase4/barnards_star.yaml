@@ -42,6 +42,7 @@ decisions:
       - { name: mass, value: 0.162, unit: M_sun, op: passthrough, note: "±0.007 (Schweitzer2019)" }
       - { name: radius, value: 0.187, unit: R_sun, op: passthrough, note: "±0.001 (Schweitzer2019, 각지름 0.952 mas)" }
       - { name: gravity, value: 1271, unit: m/s2, op: passthrough, phase3_default: "GM/R² 파생 에코" }
+      - { name: flattening, value: 1.6e-8, op: set, note: "= (3J₂+q)/2 파생 에코 (J₂ 2.2e-9, q 2.58e-8) — 시각 oblate 슬롯" }
       - { name: intrinsic_luminosity, value: 0.003558, unit: L_sun, op: passthrough }
       - { name: rotation_period, value: 145, unit: d, op: passthrough, note: "±15 (Toledo-Padrón2019, 로스터 최장)" }
       - { name: age, value: 8.5, unit: Gyr, op: passthrough, note: "±1.5 (Ribas2018). Teff 3195±28K (GH2024)" }
