@@ -289,7 +289,7 @@ decisions:
         op: set
         note: "= 공전주기 (조석고정, DB curated)"
       - name: spin_axis_orientation
-        value: "궤도 법선 (조석고정의 자연 귀결)"
+        value: "궤도 법선에서 Cassini ε(~0.03°)만큼 Laplace pole 쪽 offset (State 1 평형); 방위각 de-perfect-at-emit"
         op: set
       - name: geopotential_j2
         value: 2.8e-5
@@ -312,6 +312,7 @@ decisions:
         value: 0
         unit: deg
         op: set
+        note: "≈0 = Cassini State 1 평형 (가정 아님·계산). |g|/α=0.017 (Laplace–Lagrange 승교점율 g + 동기 α, ≪ 공명 임계 ~1.1) → ε₁=(|g|/α)·sinI ≈0.02–0.05° (근접-공면 궤도 I). 극단 obliquity 없음. method=cassini-state-obliquity-methodology.md"
       - name: age
         value: 4.85
         unit: Gyr
@@ -703,7 +704,7 @@ decisions:
         op: set
         note: "= 공전주기 (조석고정, DB curated)"
       - name: spin_axis_orientation
-        value: "궤도 법선 (조석고정의 자연 귀결)"
+        value: "궤도 법선에서 Cassini ε(~0.03°)만큼 Laplace pole 쪽 offset (State 1 평형); 방위각 de-perfect-at-emit"
         op: set
       - name: reference_radius
         value: 4587
@@ -730,6 +731,7 @@ decisions:
         value: 0
         unit: deg
         op: set
+        note: "≈0 = Cassini State 1 평형 (가정 아님·계산). |g|/α=0.018 (Laplace–Lagrange g + 동기 α, ≪ 공명 임계 ~1.1) → ε₁=(|g|/α)·sinI ≈0.02–0.05° (근접-공면 궤도 I). 극단 obliquity 없음. method=cassini-state-obliquity-methodology.md"
       - name: age
         value: 4.85
         unit: Gyr
@@ -1376,7 +1378,7 @@ decisions:
         op: set
         note: "= 공전주기 (조석고정 to c; 케플러 a 4.61e-4 AU·M_c 8 M⊕)"
       - name: spin_axis_orientation
-        value: "c 궤도 법선 (조석고정의 자연 귀결)"
+        value: "c 궤도 법선에서 Cassini ε(≲0.004°) offset (State 1, 사실상 궤도 법선); 방위각 de-perfect-at-emit"
         op: set
       - name: reference_radius
         value: 950
@@ -1403,6 +1405,7 @@ decisions:
         value: 0
         unit: deg
         op: set
+        note: "≈0 = Cassini State 1 (계산). |g|/α=8e-4 (c의 J₂ 구동 g + 동기 α) → ε₁≲0.004° (갈릴레이 위성급, 사실상 0). method=cassini-state-obliquity-methodology.md"
       - name: age
         value: 4.85
         unit: Gyr
