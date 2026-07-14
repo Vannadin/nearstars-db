@@ -348,5 +348,6 @@ field (everything else is degree-2 to low-degree, recovered from flybys).
   Solar-System coefficients, normalization, cfg forms, the Polyphemus giant worked example.
 - [`principia-cfg-reference.md`](principia-cfg-reference.md) — the cfg schema (node syntax, units).
 - [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md) — lock state (the figure's spin input).
+- [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md) — consumes J₂ + C̄₂₂ (§3) as the spin precession constant to get the equilibrium obliquity.
 - [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md) — the radius input.
 - [`methodology-index.md`](methodology-index.md) — the full methodology index.
