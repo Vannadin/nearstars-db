@@ -180,18 +180,21 @@ decisions:
     status: gated                  # 5° 확정 (2026-06-22) — 재시뮬 STABLE + 일식 duty 검증
     driver: [visual, physics]
     narrative: >
-      5°(적도면이 공전면에서 5° 기움); 위성계+고리 전체가 적도면 공유(coherent). 위성계+고리를 적도면에 통째로
-      5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는 본래 궤도면이 자연스러우나 5° 적도면으로
-      끌어오는 건 미미한 divergence.
+      obliquity 5° = Polyphemus 자전축(적도면)이 공전면에서 5° 기움. **위성계는 공통 노드선 공유(coherent warp)** —
+      시뮬 로더가 전 위성에 부모 노드 부여(load.add_hypotheticals), 경사는 design-of-record 유지(inner Dante/Hades/
+      Pandora ~9–11°·역행 Cassandra/Chaos ~176/179°, Polyphemus 공전면 대비 — phase3/stability-sim/hypotheticals/
+      alpha_centauri.json). **고리는 5° 적도면이 아니라 Chaos 궤도면**(Chaos 생성 E-고리 → shepherd 위성면; Chaos
+      ~180° 근접-공면 역행이라 거의 공전면). obliquity 5°·위성 ~10°·고리 Chaos면은 서로 별개 축.
     fields:
       - { name: obliquity, value: 5, unit: deg, op: set, phase3_default: "27° (토성-유추 tie-break, 고리 기울기용 → 폐기)" }
     gate:
       criterion: [stability, visual-checklist]
       verdict: documented-divergence
       divergence_note: >
-        Phase 3 27°(토성-유추)는 "고리 기울기용"이었으나 고리를 Chaos 궤도면에 눕혀 근거 소멸 → 5°로 낮춤.
-        위성계+고리를 적도면에 통째로 5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는 본래
-        궤도면이 자연스러우나 5° 적도면으로 끌어오는 건 미미한 divergence.
+        Phase 3 27°(토성-유추)는 "고리 기울기용"이었으나 고리를 Chaos 궤도면에 눕혀 근거 소멸 → obliquity 5°로 낮춤
+        (Polyphemus 자전축만; STABLE 재검 results/_obliq5, Pandora e≤0.0123). 위성계는 공통 노드선 coherent —
+        design-of-record 경사 유지(1000yr STABLE _finalv2). **고리 ≠ 5° 적도면; 고리 = Chaos 궤도면**(Chaos 생성
+        E-고리) — 2026-07-14 오너 정정. 이전 "위성+고리 5° 적도면 공유" 표기는 위성 경사·고리면 둘 다 부정확했음.
       evidence: >
         재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123.
         일식 검증: θ(Pandora면↔Polyphemus 궤도면) 0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%) —
@@ -200,11 +203,18 @@ decisions:
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus
     axis: bulk.rotation_period
-    status: passthrough            # Phase 3 유추 그대로
-    driver: [passthrough]
-    narrative: "10 h (목성/토성 유추, conf low). 자이언트라 조석고정 아님. emit 그대로."
+    status: gated                  # 2026-07-15 — Avatar canon [GAME] 자전 채택 (기존 "목성/토성 유추 conf low" 오귀속 정정)
+    driver: [canon]
+    narrative: >
+      10.35 h = Avatar canon 자전 10.1–10.6 h의 중간값([GAME]; 핵/자기장 기준 9.7 h — polyphemus-art-direction.md
+      2026-06-19 조사, line 235–236). 기존 "10 h 목성/토성 유추 conf low"는 오귀속이었음 — canon값이 실재. 자이언트라
+      조석고정 아님. 이 빠른 자전이 적도팽대(flattening 0.13, q~0.19, J₂ 0.023 — bulk anchor)의 물리 근거.
     fields:
-      - { name: rotation_period, value: 10, unit: h, op: passthrough, phase3_default: "10 h (목성/토성 유추, conf low)" }
+      - { name: rotation_period, value: 10.35, unit: h, op: set, phase3_default: "10 h (구 오귀속: 목성/토성 유추 conf low)" }
+    gate:
+      criterion: [canon-consistency]
+      verdict: pass-in-window
+      evidence: "Avatar canon [GAME] 자전 10.1–10.6 h(polyphemus-art-direction.md line 235–236)의 중간값 채택. 빠른 자전 → 큰 적도팽대(flattening 0.13, q~0.19)와 정합."
 
   - body: Alpha Centauri A b
     kopernicus_name: Polyphemus

@@ -100,7 +100,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 /* ============ 데이터: 확정 로스터 + 실제 궤도 ============ */
 const DEG=Math.PI/180, AU_KM=149597870.7, RJUP_KM=71492, RSUN_KM=696000;
 const G=6.674e-11, ME_KG=5.972e24, MSUN_KG=1.989e30;
-const POLY={ radiusKm:1.0*RJUP_KM, massMe:120, j2:0.023, flat:0.08, oblqDeg:0, albedo:0.4 }; // flat: 적도팽대 편평도(J2=0.023 정합), 자전축=공전면 법선(시뮬 obliquity 0); albedo: 가스자이언트 기하 알베도(반사광 축퇴 계산용)
+const POLY={ radiusKm:1.0*RJUP_KM, massMe:120, j2:0.023, flat:0.13, oblqDeg:5, albedo:0.4 }; // flat 0.13 + oblqDeg 5° = 보드 A b(flattening=(3J₂+q)/2, obliquity 5°, 2026-07-14 맞춤); albedo: 가스자이언트 기하 알베도(반사광 축퇴 계산용)
 const INSOL_SEARTH=1.519/(1.6*1.6);  // α Cen A(1.519 L☉) 1.6 AU 입사광 ≈ 0.59 S⊕ (≈807 W/m²) — 고리 조명
 const POLY_KG=POLY.massMe*ME_KG;
 
@@ -233,13 +233,31 @@ function buildMoonScene(){
   const Req=POLY.radiusKm*KM_U;
   const planet=new THREE.Mesh(new THREE.SphereGeometry(Req,72,48),
     new THREE.MeshStandardMaterial({map:BANDS,roughness:1,metalness:0}));
-  planet.scale.set(1,1-POLY.flat,1); planet.rotation.z=POLY.oblqDeg*DEG;
-  groupMoon.add(planet); moonObjs.planet=planet;
+  planet.scale.set(1,1-POLY.flat,1);
+  // 자전축(polar) = 내측 3위성(Dante/Hades/Pandora) 평균 궤도면 방위로 obliquity만큼 기움 (오너 2026-07-15).
+  // tilt 그룹으로 감싸 기울이고, 자전(rotation.y)은 이 그룹 안 로컬 y로 돌게 함(자전이 tilt를 덮어쓰지 않도록).
+  const planetTilt=new THREE.Group();
+  { const nAvg=new THREE.Vector3();
+    for(const id of ['dante','hades','pandora']){ const m=MOONS.find(x=>x.id===id);
+      const p0=orbitVec(m.a,0,m.inc*DEG,m.node*DEG,0,0,1), p1=orbitVec(m.a,0,m.inc*DEG,m.node*DEG,0,Math.PI/2,1);
+      nAvg.add(new THREE.Vector3().crossVectors(p0,p1).normalize()); }
+    nAvg.normalize(); if(nAvg.y<0) nAvg.negate();   // orbitVec의 y↔z 매핑이 좌우수계를 뒤집어 cross 법선 부호가 반전됨 → 순행 위성 법선을 +y 반구로 교정(방위 180° 정정)
+    const az=new THREE.Vector3(nAvg.x,0,nAvg.z); if(az.lengthSq()<1e-9) az.set(1,0,0); else az.normalize();
+    const ob=POLY.oblqDeg*Math.PI/180;
+    const spin=new THREE.Vector3(az.x*Math.sin(ob), Math.cos(ob), az.z*Math.sin(ob));
+    planetTilt.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), spin); }
+  planetTilt.add(planet); groupMoon.add(planetTilt); moonObjs.planet=planet;
   const eq=new THREE.Mesh(new THREE.RingGeometry(Req*1.02,Req*1.05,96),
     new THREE.MeshBasicMaterial({color:0xffe6b0,side:THREE.DoubleSide,transparent:true,opacity:0.16}));
   eq.rotation.x=Math.PI/2; planet.add(eq);
   // 고리 (적도면 = 기준면). 잔해라 unlit 평면 annulus + 투명도.
-  const ringGroup=new THREE.Group(); ringGroup.rotation.x=Math.PI/2; groupMoon.add(ringGroup); moonObjs.ring=ringGroup; rebuildRing();
+  // 고리 = Chaos 생성 E-고리 → Chaos 궤도면에 정렬 (오너 2026-07-14; 5° 적도면 아님). Chaos 궤도 법선 = 궤도점 2개 외적(규약 무관 안전).
+  const ringGroup=new THREE.Group();
+  { const cx=MOONS.find(m=>m.id==='chaos');
+    const _p0=orbitVec(cx.a,0,cx.inc*DEG,cx.node*DEG,0,0,1), _p1=orbitVec(cx.a,0,cx.inc*DEG,cx.node*DEG,0,Math.PI/2,1);
+    const cn=new THREE.Vector3().crossVectors(_p0,_p1).normalize();
+    ringGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), cn); }
+  groupMoon.add(ringGroup); moonObjs.ring=ringGroup; rebuildRing();
   // 유체 로슈 한계 기준 원 (고리 바깥 자연 경계)
   const rpts=[]; for(let i=0;i<=128;i++){const a=i/128*2*Math.PI; rpts.push(new THREE.Vector3(Math.cos(a)*FLUID_ROCHE_KM*KM_U,0,Math.sin(a)*FLUID_ROCHE_KM*KM_U));}
   const roche=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(rpts),

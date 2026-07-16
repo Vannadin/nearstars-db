@@ -145,7 +145,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">22 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 20 gated · 5 divergence</span></div>
+<div class="summary"><span class="body-meta">22 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 21 gated · 5 divergence</span></div>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
@@ -228,21 +228,21 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
     <code class="axis">bulk.obliquity</code>
     <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
   </div>
-  <p class="narrative">5°(적도면이 공전면에서 5° 기움); 위성계+고리 전체가 적도면 공유(coherent). 위성계+고리를 적도면에 통째로 5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는 본래 궤도면이 자연스러우나 5° 적도면으로 끌어오는 건 미미한 divergence.<br></p>
+  <p class="narrative">obliquity 5° = Polyphemus 자전축(적도면)이 공전면에서 5° 기움. **위성계는 공통 노드선 공유(coherent warp)** — 시뮬 로더가 전 위성에 부모 노드 부여(load.add_hypotheticals), 경사는 design-of-record 유지(inner Dante/Hades/ Pandora ~9–11°·역행 Cassandra/Chaos ~176/179°, Polyphemus 공전면 대비 — phase3/stability-sim/hypotheticals/ alpha_centauri.json). **고리는 5° 적도면이 아니라 Chaos 궤도면**(Chaos 생성 E-고리 → shepherd 위성면; Chaos ~180° 근접-공면 역행이라 거의 공전면). obliquity 5°·위성 ~10°·고리 Chaos면은 서로 별개 축.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">obliquity</td><td class="v">5 <span class="u">deg</span><div class="fnote p3">Phase 3: 27° (토성-유추 tie-break, 고리 기울기용 → 폐기)</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> 재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123. 일식 검증: θ(Pandora면↔Polyphemus 궤도면) 0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%) — 5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성 섭동으로 θ 요동→&quot;일식 시즌&quot; 자연발생.<br></div><div class="ev div"><span class="tag">divergence</span> Phase 3 27°(토성-유추)는 &quot;고리 기울기용&quot;이었으나 고리를 Chaos 궤도면에 눕혀 근거 소멸 → 5°로 낮춤. 위성계+고리를 적도면에 통째로 5° 기울여 coherent 정렬(art). Laplace 12.3 R_p상 Chaos(21 R_p)는 본래 궤도면이 자연스러우나 5° 적도면으로 끌어오는 건 미미한 divergence.</div>
+  <div class="ev"><span class="tag">evidence</span> 재시뮬(TRACE 1000yr J2, --j2-obliquity-deg 5, results/_obliq5) STABLE — Pandora e≤0.0123. 일식 검증: θ(Pandora면↔Polyphemus 궤도면) 0–18.9°, 평균 9.5°, duty 94.2%(0°는 75.5%) — 5°가 동반성 요동을 부분 상쇄해 일식이 오히려 잦음. 동반성 섭동으로 θ 요동→&quot;일식 시즌&quot; 자연발생.<br></div><div class="ev div"><span class="tag">divergence</span> Phase 3 27°(토성-유추)는 &quot;고리 기울기용&quot;이었으나 고리를 Chaos 궤도면에 눕혀 근거 소멸 → obliquity 5°로 낮춤 (Polyphemus 자전축만; STABLE 재검 results/_obliq5, Pandora e≤0.0123). 위성계는 공통 노드선 coherent — design-of-record 경사 유지(1000yr STABLE _finalv2). **고리 ≠ 5° 적도면; 고리 = Chaos 궤도면**(Chaos 생성 E-고리) — 2026-07-14 오너 정정. 이전 &quot;위성+고리 5° 적도면 공유&quot; 표기는 위성 경사·고리면 둘 다 부정확했음.</div>
   
 </article>
 <article class="dec" id="bulk.rotation_period">
   <div class="dec-head">
     <code class="axis">bulk.rotation_period</code>
-    <span class="pills"><span class="pill st-passthrough"><span data-i18n>통과</span><span data-en hidden>Passthrough</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
   </div>
-  <p class="narrative">10 h (목성/토성 유추, conf low). 자이언트라 조석고정 아님. emit 그대로.</p>
-  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">rotation_period</td><td class="v">10 <span class="u">h</span><div class="fnote p3">Phase 3: 10 h (목성/토성 유추, conf low)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr></tbody></table>
+  <p class="narrative">10.35 h = Avatar canon 자전 10.1–10.6 h의 중간값([GAME]; 핵/자기장 기준 9.7 h — polyphemus-art-direction.md 2026-06-19 조사, line 235–236). 기존 &quot;10 h 목성/토성 유추 conf low&quot;는 오귀속이었음 — canon값이 실재. 자이언트라 조석고정 아님. 이 빠른 자전이 적도팽대(flattening 0.13, q~0.19, J₂ 0.023 — bulk anchor)의 물리 근거.<br></p>
+  <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">rotation_period</td><td class="v">10.35 <span class="u">h</span><div class="fnote p3">Phase 3: 10 h (구 오귀속: 목성/토성 유추 conf low)</div></td><td class="o"></td></tr></tbody></table>
   
-  
+  <div class="ev"><span class="tag">evidence</span> Avatar canon [GAME] 자전 10.1–10.6 h(polyphemus-art-direction.md line 235–236)의 중간값 채택. 빠른 자전 → 큰 적도팽대(flattening 0.13, q~0.19)와 정합.</div>
   
 </article>
 <article class="dec" id="bulk">
