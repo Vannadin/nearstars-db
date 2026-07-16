@@ -108,9 +108,10 @@ Correctness checks live across several functional groups. This index gathers the
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO main entry
 - `phase3/stability-sim/scripts/ring_clearing.py` — test-particle ring-clearing / gap measurement around a moon: seed a disk of massless particles bracketing a feeder moon's semi-major axis, integrate, and report which radii survive (does the moon open a gap or stay embedded?). Used to confirm Polyphemus's Chaos-fed E-ring is continuous (Chaos μ≈7.5e-7 too small to clear a gap — `results/_ring_clearing.log`).
+- `phase3/stability-sim/scripts/plot_moons.py` — **canonical orbit-analysis visualization** for a moon-system run: a 4-panel PNG (top-down moon orbits / eccentricity(t) / semi-major-axis drift Δa/a₀(t) / inclination(t) in the sim frame), with a supertitle carrying verdict + integrator + dt + |ΔE/E| + per-moon max Hill-fraction. Tolerates leapfrog/trace runs (megno=None), unlike the planet-only `plot_orbits.py`. `--dir <results-dir> [--label <system>]`.
 - `phase3/stability-sim/hypotheticals/<system>.json` — extra-body spec
 
-**Stack.** REBOUND 5.0 in `.venv/`, AU / yr / Msun units, 10⁴ yr default horizon.
+**Stack.** REBOUND 5.0 in `.venv/`, AU / yr / Msun units, 10⁴ yr default horizon. A Principia-equivalent run uses `--integrator leapfrog --dt-minutes 10` (mimics Principia's fixed 10-min ephemeris step).
 
 **Output.** `phase3/stability-sim/results/{system}_summary.json` + `_timeseries.csv`, `phase3/stability-sim/STABILITY_REPORT.md`.
 
