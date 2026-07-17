@@ -188,10 +188,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};
