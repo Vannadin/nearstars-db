@@ -207,7 +207,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
     <code class="axis">bulk.spin_axis_orientation</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
   <p class="narrative">i★ 측정 없음 → 오너 선택: **행성계(Erid 등) 궤도면 기준 + seeded 무작위 기울기 1–10°**. 고정 수치를 보드에 박지 않고 범위만 기록 — synthetic-orbit-noise 정책 패턴(시딩·물리 경계·emit 단계 적용·DB 불변)대로 emit 시 천체명 해시로 시딩. 극 방위각 자유(ICRS 변환 emit 단계). A는 BC쌍과 역학 분리된 단독 호스트라 BC면과는 무관.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">행성계 면 + seeded random tilt 1–10° (emit 시 시딩, synthetic-orbit-noise 패턴) · PA 자유</td><td class="o"></td></tr></tbody></table>
@@ -218,7 +218,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
     <code class="axis">bulk.geopotential_j2</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
   <p class="narrative">회전 편평 J2 = 5.4e-8. K0.5V(태양 유사 응집) → 태양앵커 q-스케일링(J2 = 0.0105·q, Pijpers 1998 앵커): q = ω²R³/GM = 5.1e-6 (M 0.78·R 0.806·P_rot 42d[DB recommended, Burrows2024]; 보드 범위 37–43d면 J2 5.1–6.9e-8) → J2 5.4e-8 (±~20%). reference_radius = 적도반경 5.609e8 m. 방법 = body-figure-methodology.md §2 FGK 분기.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">5.4e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">5.609e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>

@@ -148,7 +148,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">11 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 11 gated · 2 divergence</span></div>
+<div class="summary"><span class="body-meta">11 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 11 gated · 1 divergence</span></div>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
@@ -218,13 +218,13 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
     <code class="axis">magnetism.magnetic_field</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
   <p class="narrative">**빙거성 아날로그 ~0.1–0.5 G**, **비쌍극·기울고 중심 이탈**(Neptune/Uranus 유추 — 얇은 전도층 대류로 다극·tilted ~47–59°). 차수값, conf low(미관측). 오로라=미약(c는 별서 1.5 AU 멀어 입자 플럭스 약함 — b·d 근접 플레어 환경과 대조).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~0.1–0.5 G (빙거성 아날로그, 비쌍극·tilted ~47–59°); conf low</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> note: dynamo 문서 regime 3 — sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog 차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23.<br>paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).<br></div>
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009Natur.457..167C" target="_blank" rel="noopener">2009Natur.457..167C</a><a class="ref" href="https://arxiv.org/abs/1007.1514" target="_blank" rel="noopener">1007.1514</a></div>
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">
@@ -248,15 +248,15 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="ev"><span class="tag">evidence</span> paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 청정 얼음 Warren&amp;Brandt2008 + 톨린 Khare1984).<br></div><div class="ev div"><span class="tag">divergence</span> Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 고리는 interesting-first 채택, 명시 발산. 잠정 관측 근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). **토성 클론 회피**가 명시 의도 — 2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성 위성과 테마 통일. 간극 위치·줄무늬 패턴은 art — emit시 로슈 한계·고리면 정합 점검 권장.<br></div>
   <div class="refs"><a class="ref" href="https://arxiv.org/abs/2004.06685" target="_blank" rel="noopener">2004.06685</a></div>
 </article>
-<article class="dec is-div" id="satellites">
+<article class="dec" id="satellites">
   <div class="dec-head">
     <code class="axis">satellites</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
-  <p class="narrative">**위성 1개 = Proxima c I** — **반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에 조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도 바디 전개**(아래 &quot;Proxima Centauri c I&quot; 블록 11축).<br></p>
+  <p class="narrative">**위성 1개 = Proxima c I** — **반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에 조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도 바디 전개**(아래 &quot;Proxima Centauri c I&quot; 블록 11축). 관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적 가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO). 정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).<br></p>
   
   
-  <div class="ev div"><span class="tag">divergence</span> 관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적 가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO). 정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).<br></div>
+  
   
 </article>
 <article class="dec" id="gameplay">

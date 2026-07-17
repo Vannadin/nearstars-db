@@ -148,7 +148,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">7 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 1 divergence</span></div>
+<div class="summary"><span class="body-meta">7 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 4 gated · 0 divergence</span></div>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
@@ -207,7 +207,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
     <code class="axis">bulk.spin_axis_orientation</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
   <p class="narrative">i★ 측정 없음 → 오너 선택: **BC 궤도면(i 107.98° 실측) 정렬**. 추론 가능성(오너 질의): 평균 ~33 AU 쌍성은 조석 정렬 시간척도가 나이를 아득히 초과해 역학적 강제는 없음 — 근거는 공통 분자운 코어 형성의 정렬 경향(중간 분리 쌍성서 통계적으로 우세)뿐이라 B(축 보존 논리)보다 약한 추론임을 명기. 극 방위각 = BC 궤도극 정렬(B와 동일 면 — 한 가정 공유).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">BC 궤도면 법선 정렬 (B와 공유 가정) — 형성 정렬 기대, 조석 무관</td><td class="o"></td></tr></tbody></table>
@@ -215,15 +215,15 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="ev"><span class="tag">evidence</span> 기준면 실측(BC visual orbit). 정렬은 형성론 기대 기반 가정 — B보다 약한 추론(보존 논리 없음)이나 어떤 관측과도 충돌 없고, B·C가 한 가정을 공유해 시스템 내 일관.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M" target="_blank" rel="noopener">2021AJ....162...53M</a></div>
 </article>
-<article class="dec is-div" id="bulk.geopotential_j2">
+<article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
     <code class="axis">bulk.geopotential_j2</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
-  <p class="narrative">회전 편평 J2 = 1.6e-6 — **로스터 항성 중 최대**(αCen A의 ~3배). 완전 대류 M4.5 → Radau-Darwin 폴리트로프 분기(NMoI 0.205, J2/q 0.084). 입력 P_rot = **8.56 d(Shan2024)** — Phase 2가 품질등급 D/debated로 큐레이션 기각한 meta-notes-only 값이나, 유일 문헌값 + 활성 플레어별(DY Eri·지속 Hα)의 빠른 자전과 정합이라 오너 승인(2026-07-12)으로 채택. q = ω²R³/GM = 1.90e-5 (M 0.198·R 0.274) → J2 1.6e-6. reference_radius = 적도반경 1.906e8 m.<br></p>
+  <p class="narrative">회전 편평 J2 = 1.6e-6 — **로스터 항성 중 최대**(αCen A의 ~3배). 완전 대류 M4.5 → Radau-Darwin 폴리트로프 분기(NMoI 0.205, J2/q 0.084). 입력 P_rot = **8.56 d(Shan2024)** — Phase 2가 품질등급 D/debated로 큐레이션 기각한 meta-notes-only 값이나, 유일 문헌값 + 활성 플레어별(DY Eri·지속 Hα)의 빠른 자전과 정합이라 오너 승인(2026-07-12)으로 채택. q = ω²R³/GM = 1.90e-5 (M 0.198·R 0.274) → J2 1.6e-6. reference_radius = 적도반경 1.906e8 m. The rotation input (8.56 d, Shan 2024 CARMENES) was rejected by Phase 2 curation as quality-grade D/debated (meta-notes-only, never adopted into the DB). Adopted here by owner decision (2026-07-12) as the only literature value, consistent with the star&#x27;s active flare nature. J2 scales as P^-2 — a re-measured period directly rescales this row.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">1.6e-06</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">1.906e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> M/R은 실측(Mason2021/Mann2015). 빠른 자전 자체는 활동성(DY Eri 플레어·Hα·kG급 dynamo 예상)이 독립적으로 지지. 폴리트로프 분기 = Proxima/Barnard와 동일 방법.<br></div><div class="ev div"><span class="tag">divergence</span> The rotation input (8.56 d, Shan 2024 CARMENES) was rejected by Phase 2 curation as quality-grade D/debated (meta-notes-only, never adopted into the DB). Adopted here by owner decision (2026-07-12) as the only literature value, consistent with the star&#x27;s active flare nature. J2 scales as P^-2 — a re-measured period directly rescales this row.<br></div>
+  <div class="ev"><span class="tag">evidence</span> M/R은 실측(Mason2021/Mann2015). 빠른 자전 자체는 활동성(DY Eri 플레어·Hα·kG급 dynamo 예상)이 독립적으로 지지. 폴리트로프 분기 = Proxima/Barnard와 동일 방법.<br></div>
   <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2024A%26A...684A...9S" target="_blank" rel="noopener">2024A&amp;A...684A...9S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2015ApJ...804...64M" target="_blank" rel="noopener">2015ApJ...804...64M</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M" target="_blank" rel="noopener">2021AJ....162...53M</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="40-eridani-b.html">← 40 Eridani B</a><a class="navlink" href="40-eridani-a-b.html">40 Eridani A b →</a></div>

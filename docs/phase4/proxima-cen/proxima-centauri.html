@@ -174,13 +174,13 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="appearance">
   <div class="dec-head">
     <code class="axis">appearance</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
   <p class="narrative">color=M5.5V 물리색 #ffcc75(옅은 따뜻한 주황 — 실측 Pickles SED→CIE; TiO/VO/H₂O는 색지수·광도엔 크나 밝기-정규화 표시색조엔 미미). 옛 #c54c2a(심적색)은 광도/색조 혼동 render 짐작이라 폐기. limb_darkening α~0.4(Claret2018 M-dwarf 보간, tie-break). **spots_faculae=보통~다소 많음 ~3–5%**(활동적 M왜성 큰 spot; 83d 자전 변조 검출=spot 존재; A·B보다 多). flare 색 #ff5e2a(Hα)는 참조용 — **동적 플레어는 cfg 렌더 불가**라 visual passthrough, 효과는 environment.radiation/activity로.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffcc75"></span><span class="hx">#ffcc75</span><div class="fnote">M5.5V 물리색, 실측 Pickles SED→CIE</div><div class="fnote p3">Phase 3: #c54c2a (심적색, 광도/색조 혼동 render 짐작 → 폐기)</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.4<div class="fnote">α~0.4 (Claret2018 M-dwarf 보간, tie-break)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">~3–5% (보통~다소 많음; 83d 자전 변조 검출)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v"><span class="chip" style="background:#ff5e2a"></span><span class="hx">#ff5e2a</span> (Hα, 참조용 — 동적 플레어 cfg 렌더 불가, visual passthrough)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 색 정정 2026-06-24 — 물리색 #ffcc75(실측 Pickles SED→CIE), 옛 #c54c2a 폐기. limb=tie-break passthrough. 흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인).<br></div>
-  
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998PASP..110..863P" target="_blank" rel="noopener">1998PASP..110..863P</a><a class="ref" href="https://arxiv.org/abs/1303.5632" target="_blank" rel="noopener">1303.5632</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -240,7 +240,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
     <code class="axis">bulk.geopotential_j2</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
   <p class="narrative">회전 편평 J2 = 3.7e-9. 완전 대류 M왜성이라 태양앵커 스케일링 대신 **Radau-Darwin 복귀**: n=3/2 폴리트로프 NMoI ≈ 0.205(Chandrasekhar 1939)는 R-D 유효범위(≥0.13) 안 → J2/q = 0.084. q = ω²R³/GM = 4.42e-8 (M 0.1221 M☉·R 0.141 R☉·P_rot 83.5d, 전부 DB recommended) → J2 3.7e-9 (±~25%, 반지름 불확도 지배). reference_radius = 적도반경 9.809e7 m. 방법·M왜성 분기 = body-figure-methodology.md §2 (2026-07-12 확장).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">3.7e-09</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">9.809e7 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>

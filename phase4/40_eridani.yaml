@@ -266,7 +266,7 @@ decisions:
       - { name: spin_axis_orientation, value: "행성계 면 + seeded random tilt 1–10° (emit 시 시딩, synthetic-orbit-noise 패턴) · PA 자유", op: set }
     gate:
       criterion: [physics]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         측정 부재라 물리 범위 게이트만: 행성 호스트의 스핀-궤도 소기울기(≲10°)는 태양(7.25°) 등 형성론 기대
         범위. 무작위 폭 1–10°는 전부 그 안 — seeded라 재현성 invariant 보존.
@@ -285,7 +285,7 @@ decisions:
       - { name: reference_radius, value: 5.609e8, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         q(5.1e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 5.4e-8 — τ Ceti(4.2e-8)와
         동급, αCen A(4.8e-7)의 ~1/9. FGK 유사구조 범위 내. 구 OMIT confirm은 정책 변경으로 대체.
@@ -305,7 +305,7 @@ decisions:
       - { name: spin_axis_orientation, value: "BC 궤도면 법선 정렬 (i 107.98°·Ω 151.58° 실측 면) — 전구체 축 계승 논리", op: set }
     gate:
       criterion: [physics]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         기준면 자체가 실측(BC visual orbit, grade 3). 정렬은 가정이나 물리 근거 있음 — 공통 형성 + 등방
         질량손실의 축 방향 보존 + 축을 교란할 상호작용(공통 연개·강착) 부재. 단일 가정.
@@ -320,19 +320,18 @@ decisions:
       점근파 WD 표본 중앙값 **P ≈ 35 h 채택**(Hermes 2017, 오너 승인 2026-07-12). WD는 비상대론 축퇴 ≈ n=3/2
       폴리트로프 → M왜성과 같은 NMoI 0.205 분기(Radau-Darwin, J2/q 0.084; 0.56 M☉ 저질량 WD라 상대론 보정
       소폭 — J2 약간 과대 가능). q = ω²R³/GM = 2.5e-8 (M 0.558·R 0.01308 R☉) → J2 2.1e-9.
-      reference_radius = 적도반경 9.100e6 m (~지구 크기).
+      reference_radius = 적도반경 9.100e6 m (~지구 크기). 40 Eri B has no measured rotation
+      period (outside the ZZ Ceti instability strip, no asteroseismology; no usable v sin i). The
+      adopted P ≈ 35 h is the Kepler asteroseismic white-dwarf sample median (Hermes 2017) — a
+      statistical stand-in, not a measurement. J2 scales as P^-2: a 10 h rotator would be ~12×
+      larger, a 4 d rotator ~7× smaller.
     fields:
       - { name: geopotential_j2, value: 2.1e-9, op: set }
       - { name: reference_radius, value: 9.100e6, unit: m, op: set }
       - { name: rotation_period, value: 35, unit: h, op: set, note: "측정 없음 — Kepler WD 표본 중앙값 (Hermes 2017), J2 입력과 동일 채택 (오너 승인 2026-07-12)" }
     gate:
       criterion: [derived-grounding]
-      verdict: documented-divergence   # 자전이 측정 아닌 문헌 통계 중앙값
-      divergence_note: >
-        40 Eri B has no measured rotation period (outside the ZZ Ceti instability strip, no
-        asteroseismology; no usable v sin i). The adopted P ≈ 35 h is the Kepler asteroseismic
-        white-dwarf sample median (Hermes 2017) — a statistical stand-in, not a measurement.
-        J2 scales as P^-2: a 10 h rotator would be ~12× larger, a 4 d rotator ~7× smaller.
+      verdict: owner-override   # 자전이 측정 아닌 문헌 통계 중앙값 (측정 부재 → 오너 승인 채택; 반박된 논문 없음)
       evidence: >
         입력 M/R은 실측(Mason2021/Bond2017). 폴리트로프 분기는 Proxima와 동일 근거(Chandrasekhar 1939).
         P_rot만 통계 입력 — 측정 나오면 갱신 후보 1순위.
@@ -351,7 +350,7 @@ decisions:
       - { name: spin_axis_orientation, value: "BC 궤도면 법선 정렬 (B와 공유 가정) — 형성 정렬 기대, 조석 무관", op: set }
     gate:
       criterion: [physics]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         기준면 실측(BC visual orbit). 정렬은 형성론 기대 기반 가정 — B보다 약한 추론(보존 논리 없음)이나
         어떤 관측과도 충돌 없고, B·C가 한 가정을 공유해 시스템 내 일관.
@@ -366,18 +365,17 @@ decisions:
       폴리트로프 분기(NMoI 0.205, J2/q 0.084). 입력 P_rot = **8.56 d(Shan2024)** — Phase 2가 품질등급
       D/debated로 큐레이션 기각한 meta-notes-only 값이나, 유일 문헌값 + 활성 플레어별(DY Eri·지속 Hα)의
       빠른 자전과 정합이라 오너 승인(2026-07-12)으로 채택. q = ω²R³/GM = 1.90e-5 (M 0.198·R 0.274) →
-      J2 1.6e-6. reference_radius = 적도반경 1.906e8 m.
+      J2 1.6e-6. reference_radius = 적도반경 1.906e8 m. The rotation input (8.56 d, Shan 2024
+      CARMENES) was rejected by Phase 2 curation as quality-grade D/debated (meta-notes-only, never
+      adopted into the DB). Adopted here by owner decision (2026-07-12) as the only literature
+      value, consistent with the star's active flare nature. J2 scales as P^-2 — a re-measured
+      period directly rescales this row.
     fields:
       - { name: geopotential_j2, value: 1.6e-6, op: set }
       - { name: reference_radius, value: 1.906e8, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: documented-divergence   # Phase 2 기각 입력(품질 D)을 오너 승인으로 사용
-      divergence_note: >
-        The rotation input (8.56 d, Shan 2024 CARMENES) was rejected by Phase 2 curation as
-        quality-grade D/debated (meta-notes-only, never adopted into the DB). Adopted here by owner
-        decision (2026-07-12) as the only literature value, consistent with the star's active flare
-        nature. J2 scales as P^-2 — a re-measured period directly rescales this row.
+      verdict: owner-override   # Phase 2 기각 입력(품질 D)을 오너 승인으로 사용 (반박된 논문 없음, 큐레이션 baseline서 이탈)
       evidence: >
         M/R은 실측(Mason2021/Mann2015). 빠른 자전 자체는 활동성(DY Eri 플레어·Hα·kG급 dynamo 예상)이
         독립적으로 지지. 폴리트로프 분기 = Proxima/Barnard와 동일 방법.
@@ -404,7 +402,7 @@ decisions:
       - {name: discoverability, value: "refuted RV candidate (Ma2018 → Burrows&Lubin2024 42d=항성자전); 인게임 실재 취급 TFFF", op: set}
     gate:
       criterion: [classification, culture]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G1 확정 2026-06-24. 블렌드 틀=물리 Weir 책 + 비주얼 2026 영화, 충돌점(무색/무링↔청색/유링) divergence. refuted지만 문화무게(Vulcan+Erid)로 포함.
         disc=TFFF(RV 행성 일관). 다음 축부터 Weir 책 물리값(질량·반경·중력·대기·온도·자기장) 캐스케이드.
@@ -426,7 +424,7 @@ decisions:
       - {name: spin_orbit_resonance, value: "none (5.1h 항성일 자전, 조석고정 아님 — Weir canon, 자기장 dynamo 전제)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G2 확정 2026-06-24 — 궤도·물리값 전부 PHM(Weir) 기반. P 42.245d(42일보다 조금 더). 5.1h 비고정 자전 채택(divergence: 방법론상 고정 예상이나 책 canon
         우선, G7 자기장 dynamo 전제). Ω/ω/M free-emit.
@@ -462,13 +460,14 @@ decisions:
       - {name: obliquity, value: 30, unit: deg, op: set, note: "2026 PHM 영화 기반 (책 미기재); ≥30° art, spin_axis free-emit"}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         오너 G3 최종확정 2026-06-24 — 철회행성이라 측정질량 포기(Ma2018 8.47=항성활동 artifact, 실재 아님). 중력=작품설정 2.09g 앵커 + Earth-like 질량-반경 곡선
         자기일관 → M 4.97·R 1.541 R⊕(9,820km)·ρ 7,477 kg/m³(역검증 2.09). 셋 다 만족(canon 2.09g + 물리 자기일관 + 금속-풍부 밀도). 곡선 위라
         mass-radius divergence 해소. 희생=8.47 M⊕(refuted)·Weir 2.01 R⊕.
 
         paper: docs/reference/mass-radius-relation-methodology.md (Earth-like curve 위 배치; Zeng2016 PREM·Seager2007).
+    refs: [arXiv:0707.2895, arXiv:1512.08827, 2011Icar..216..440H]
 
   - body: "40 Eridani A b"
     axis: atmosphere
@@ -490,7 +489,7 @@ decisions:
       - {name: greenhouse, value: "적당한 온실 ~+55–65 K (bounded, NH₃ runaway 아님)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G4 확정 2026-06-24 — 블렌드 트릴레마 {28atm·물바다·파랑} 해소. 핵심=낮은 물구름+위 맑은 Rayleigh 기둥이라 파랑+흰구름 공존(해왕성/지구식, 금성 고층운 아님). 28atm
         유지·물 액체(227°C 끓는점 아래 ~210–220°C)·파랑 다 만족. Weir 210°C 구제(알베도+적당온실). 가정=온실 bounded(압력솥 대양). 블라인드=표면 어둑 박명(Howe). 색
@@ -519,7 +518,7 @@ decisions:
       - {name: surface_temperature, value: "210–220 °C (빠른 자전 5.1h + 두꺼운 대기 → 매우 균일, eyeball 없음)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G5 확정 2026-06-24 — 육지우세+내해(옵션 c). 색=청록-회색(열수·사문석화 변질 금속-풍부 초염기성, Fe/Mg 규산염; surface-color 방법론).
         빠른자전+두꺼운대기→균일온도·eyeball 없음. 착륙가능 가혹환경. biome 다양(화산·열수·금속노두·Eridian대). G4 '대양'→육지우세+내해로 정밀화(액체물 유지). 디스크 외형=대기
@@ -543,13 +542,21 @@ decisions:
       - {name: clouds, value: "낮은 흰 물구름 점박이 + 띠형 패턴 (5.1h 자전)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: documented-divergence
+      divergence_note: >
+        The emitted display color #3a6db0 is the 2026 PHM film's vivid azure. The
+        physically-grounded reflected color — computed via the atmosphere-reflected-color recipe
+        (Rayleigh λ⁻⁴ + CH₄ red absorption × 40 Eri A's K0.5V 5143 K SED → CIE→sRGB) — is #95bcc9,
+        a much paler slate-blue, consistent with Irwin+ 2024 showing real ice giants are far paler
+        than Voyager's over-processed deep blue. The film azure is an art over-saturation; the
+        physical color #95bcc9 is retained as grounding.
       evidence: >
         오너 G6 확정 2026-06-24 — 디스플레이=영화 비비드블루 #3a6db0(+흰 물구름 점박이). 가상 행성이라 영화 비주얼 우선(블렌드 '비주얼=영화', 실측질량 포기와 동일 논리). 물리 반사색
         #95bcc9(옅은 슬레이트블루; Rayleigh+CH₄ × K왜성 SED→CIE)는 documented divergence — 영화 azure=아트 과채도(Irwin2024 진짜 해왕성 옅음과 동류). 파랑
         물리메커니즘=깊은 Rayleigh+CH₄(G4). 표면 청록-회색(G5)은 대기 아래 비가시. emit 디스크=영화 파랑.
 
         paper: docs/reference/atmosphere-reflected-color-methodology.md (Rayleigh+CH₄ 반사색·Irwin2024 얼음거성 옅음; 물리색
+    refs: [2024MNRAS.52711521I]
 
   - body: "40 Eridani A b"
     axis: magnetism.magnetic_field
@@ -565,7 +572,7 @@ decisions:
       - {name: magnetic_field, value: "~25× 지구 (Weir canon; 강한 이유=높은 코어 열플럭스, 자전 아님 — Weir 자전-논리는 dated)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G7 확정 2026-06-24 — 25× 지구 유지(Weir, 블라인드 '복사 차단' 테마 핵심). dynamo 방법론(Christensen2009): 장=코어 열플럭스가 결정(자전 무관) → Weir
         '빠른자전→강장' 인과는 dated이나, 금속-풍부 뜨거운 행성의 높은 열플럭스로 25× 방어 가능. 강자기권 → G8 항성풍/우주선 차단·강 오로라 캐스케이드.
@@ -587,7 +594,7 @@ decisions:
       - {name: stellar_wind, value: "미구속 (Wood 비검출); 고속 이동계 V_ISM ~127 km/s; 강 극 오로라 (SPI성)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G8 확정 2026-06-24 — 지상 방사선 0 수렴(25× 자기장+28기압 대기 완전차폐, radiation_surface=none). 보호 자기권은 동기궤도(2.61 R_p=중심
         25,669km/고도 15,852km) 이상으로(설정) → 저궤도까지 차폐. 단 강장 포획 복사대(밴앨런)는 내자기권 우주선 위험(Kerbalism 밴드, emit 시). 강 오로라(SPI성).
@@ -613,7 +620,7 @@ decisions:
       - {name: ring_composition, value: "암석/규산염 dust (어두운 회갈색; 얼음 불가, 승화); 영화는 밝게 art", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G9 확정 2026-06-24 — 고리 있음(영화기준). 기하(erid-ring-viewer.html로 확정): 안 1.39 R_p(13,650km)·바깥 2.96 R_p(29,067km)·폭 1.57
         R_p. GEO(2.61) 가로지름, Roche(3.31) 안→안정. divergence 아닌 gap-fill: 책은 고리 미언급(에리디언 맹목→Erid 시각묘사 부재)이라 영화가 시각공백 채움. 물리
@@ -630,7 +637,7 @@ decisions:
       canon 충돌 없음. 동역학상으론 여지 있음(Hill 구 ~60.8 R_p, 안정대 ~20–30 R_p) — 단 오너가 고리만의 깔끔한 구성을 택함(로스터 내 위성보유 바디들과 자연 분기).
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G10 확정 2026-06-24 — 위성 없음. 고리=파괴된 옛 위성 잔해(G9 기원 정합). 책/영화 미언급(맹목 gap). Hill 구 ~60.8 R_p로 동역학 여지는 있으나 깔끔한 고리-only
         택함.
@@ -650,7 +657,7 @@ decisions:
       - {name: sphere_of_influence_tuning, value: "auto from mass", op: passthrough}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G11 확정 2026-06-24 — Erid 게임플레이 종합. 가혹 착륙(고중력+두꺼운대기+열)+방사선-free(강자기권). 청색박명+고리 비주얼. 문화 주인공(PHM Erid+Trek Vulcan).
         → Erid 11축 완성.
@@ -676,7 +683,7 @@ decisions:
       - {name: discoverability, value: "fictional (합성 filler, 실측 0 → 항상 발견 FFFF)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c1 확정 2026-06-25 — Twoworld(40 Eri A c), 우리 합성 filler(공명 anchor, canon 아님). 수성 쌍둥이(0.055 M⊕·0.38g).
         별명=Twoworld(Eridian 패턴 확장, 오너 선택). disc=FFFF(fictional 합성).
@@ -698,7 +705,7 @@ decisions:
       - {name: inclination_deg, value: 1.5, unit: deg, op: set, note: "상호경사; d와 근접 2:1 (P_d/P_c≈1.99), b와 비공명 1.79; REBOUND MEGNO 2.000 STABLE"}
     gate:
       criterion: [classification, dynamics]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c2 확정 2026-06-25 — a 0.40 AU(2번째)·P~105d·e~0.04·상호경사 1.5°. d와 근접 2:1(near-resonant), b와 비공명(1.79). REBOUND 1e5yr
         랜덤위상 MEGNO 2.000 robust STABLE, Erid 비펌핑. DB emit(curated→systems→starmap).
@@ -732,7 +739,7 @@ decisions:
       - {name: spin_axis_orientation, value: "궤도 법선 (조석고정 1:1 — 저-e라 수성식 3:2 불가; 영구 substellar/야간 반구). C̄₂₂≈9.6e-8 → 임계 아래 omit", op: set}
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c3 확정 2026-06-25 — 수성 쌍둥이(0.055 M⊕·2,440km→0.38g·ρ5.4 iron-rich). 자전=조석고정 1:1(저-e라 3:2 불가). 지질학적 죽음(무화산).
         C̄₂₂≈9.6e-8 → 임계 아래 omit(figure 패스 완료, body-figure-methodology.md).
@@ -766,7 +773,7 @@ decisions:
       - {name: ice_caps, value: "극 영구음영 크레이터 휘발성 얼음 cold-trap (water ice + 가능 CO₂ frost; 수성 MESSENGER analog)", op: set}
     gate:
       criterion: [classification, observation]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c4 확정 2026-06-25 — 회색 크레이터 현무암/금속 평원(A~0.1). 조석고정 → substellar ~490K vs 야간 ~50–100K. ★hook=야간반구+극 영구음영 크레이터 휘발성
         얼음 cold-trap(수성 MESSENGER analog). 무화산.
@@ -785,7 +792,7 @@ decisions:
       - {name: base_color, value: "#8a8278", op: set, note: "회색 크레이터 구체, 대기색 없음; 고정 터미네이터; 극/야간 cold-trap 밝은 얼음 반점"}
     gate:
       criterion: [observation]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c5 확정 2026-06-25 — 표면지배 회색 구체 #8a8278, 대기색 없음. 고정 터미네이터(영구 주/야 반구). 극/야간 cold-trap 흰 얼음 반점.
 
@@ -821,7 +828,7 @@ decisions:
       - {name: ring_structure, value: none, op: set}
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c9 확정 2026-06-25 — 고리 없음.
 
@@ -833,7 +840,7 @@ decisions:
       **위성 없음**(오너 c10) — 작고 별에 근접(0.40 AU), 안정 위성 불가.
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c10 확정 2026-06-25 — 위성 없음.
 
@@ -851,7 +858,7 @@ decisions:
       - {name: science_biomes, value: "야간/극 cold-trap 얼음 (ISRU/과학 타깃)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 c11 확정 2026-06-25 — Twoworld 게임플레이 종합. 조용한 counterpoint + 작은 hook(야간/극 cold-trap 얼음, ISRU 타깃). 착륙쉬움(0.38g)+대기무+극단
         주야온도+방사선노출. FFFF. → Twoworld 11축 완성, 40 Eri A 행성계(b·c·d) 전부 walk 완료.
@@ -877,7 +884,7 @@ decisions:
       - {name: discoverability, value: "fictional (순수 픽션, 실측 0 → 항상 발견 FFFF)", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G1 확정 2026-06-24 — Threeworld(40 Eri A d), PHM canon p.393. 달 크기·0.2g·~0.015 M⊕·희박 CO₂/N₂/SO₂(<지구1%).
         disc=FFFF(fictional, 순수 픽션+소형+늦은 발견). 문화=Astrophage Petrova-arc 끝점(금성 역할)·Taumoeba 투입지. 물리=책, 대기보유 수수께끼는 G4서 화산 보충으로
@@ -903,7 +910,7 @@ decisions:
       - {name: inclination_deg, value: 2.5, unit: deg, op: set, note: "상호경사; c와 근접 2:1 (a_d/a_c=1.587), b-c 비공명 2.39; REBOUND MEGNO 2.000 STABLE"}
     gate:
       criterion: [classification, dynamics]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G2 최종확정 2026-06-25 — a 0.635 AU(3번째 canon)·P 209d·e~0.04·상호경사 2.5°. c와 근접 2:1(near-resonant, deep-lock 아님; b-c
         비공명 2.39). c=수성(0.055 M⊕)·0.40 AU·1.5°. REBOUND 1e5yr 랜덤위상 MEGNO 2.000 robust STABLE, Erid e≤0.04 비펌핑(요구 충족).
@@ -939,7 +946,7 @@ decisions:
       - {name: obliquity, value: 17, unit: deg, op: set, note: "완만 계절; spin_axis 원시(자유). C̄₂₂≈3.2e-8 → 임계 아래 omit"}
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G3 확정 2026-06-24 (자전 추가 2026-06-26) — canon(R 1,737km + 0.2g)에서 M 0.0149 M⊕·ρ 4.04 g/cm³ 도출. 약간 iron-rich 소형 암석체.
         무화산. 자전=비동기 4.7일·obliquity 17°(부분 despin 스냅샷, e 낮아 3:2/1:1 둘 다 아님; conf 낮음, art-directed 합성). 평균 ~268K(1.01
@@ -964,7 +971,7 @@ decisions:
       - {name: escape, value: "canon 미해결 퍼즐 (0.2g·~260K → cosmic shoreline 너머, escaping remnant 스냅샷)", op: set}
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G4 확정 2026-06-24, frost-buffer 철회·정정 2026-06-26 — canon CO₂84/N₂8/SO₂4 <지구1%(~700Pa) 조성은 유지. 단 평균 ~260K(1.01 S⊕)서
         CO₂ frost point ~148K·SO₂ ~130K에 도달 불가 → 드라이아이스/SO₂ frost·승화-버퍼·계절 frost캡 전부 철회(물리 불가). 정정: 얇은 escaping remnant 기체
@@ -989,7 +996,7 @@ decisions:
       - {name: surface_temperature, value: "평균 ~268K (정오면 ~380K / 야간면 <150K); obliquity 17° 완만 계절; 무화산", op: set}
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G5 확정 2026-06-24, frost 극관 철회 2026-06-26 — (가) 회갈 bare 크레이터 현무암. 흰 CO₂/SO₂ frost 극관 제거(268K서 frost point 미도달, 침착
         불가). A~0.12(단일 어두운 현무암). eyeball 없음이나 4.7일 느린자전→큰 일교차(정오~380K/야간<150K)+17° 완만계절. 무화산. Astrophage 반점 flavor.
@@ -1008,7 +1015,7 @@ decisions:
       - {name: base_color, value: "#8c7f70", op: set, note: "균질 회갈 크레이터 구체; frost 극관 없음, 대기색 없음; 4.7일 주기 terminator 이동"}
     gate:
       criterion: [observation]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G6 확정 2026-06-24, frost 극관 철회 2026-06-26 — 표면지배 디스크(얇은 투명 대기). 균질 회갈 #8c7f70 bare rock, 흰 frost 극관 제거(268K 침착불가).
         대기색 없음. 4.7일 주기 terminator 이동(정오 밝음/야간 어둠).
@@ -1046,7 +1053,7 @@ decisions:
       - {name: ring_structure, value: none, op: set}
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G9 확정 2026-06-24 — 고리 없음.
 
@@ -1058,7 +1065,7 @@ decisions:
       **위성 없음**(오너 G10) — 자체가 달 크기 소형체, 위성 없음.
     gate:
       criterion: [classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G10 확정 2026-06-24 — 위성 없음.
 
@@ -1075,7 +1082,7 @@ decisions:
       - {name: difficulty, value: "착륙 쉬움 (0.2g) · 얇은 대기 ~700Pa · 자기권 없어 방사선 노출 · 4.7일 큰 일교차 (380K/<150K) · 발견 FFFF", op: set}
     gate:
       criterion: [culture, classification]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         오너 G11 확정 2026-06-24, 정정 2026-06-26 — Threeworld 게임플레이 종합. 착륙쉬움(0.2g)+얇은대기+방사선노출+4.7일 느린자전 큰 일교차(정오380K/야간<150K, 열관리
         변수). 헐벗은 회갈 크레이터(frost 극관 없음). 문화=PHM Petrova 번식지+Taumoeba. FFFF. → Threeworld 11축 완성.

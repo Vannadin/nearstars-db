@@ -103,10 +103,11 @@ decisions:
         op: set
     gate:
       criterion: [observation]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         색 정정 2026-06-24 — 물리색 #ffcc75(실측 Pickles SED→CIE), 옛 #c54c2a 폐기. limb=tie-break passthrough.
         흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인).
+    refs: ["1998PASP..110..863P", "1303.5632"]
 
   - body: Proxima Centauri
     axis: magnetism.magnetic_field    # 측정
@@ -198,7 +199,7 @@ decisions:
       - { name: reference_radius, value: 9.809e7, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         느린 자전(83.5d)+작은 반지름이라 q 자체가 태양의 ~1/470 — 로스터 최소 J2. 그래도 오너 정책
         (항성 J2 무시가능 처리 금지, Principia 플레이 중요)대로 계산값 emit. 태양 비율(0.0105) 대신
@@ -391,6 +392,7 @@ decisions:
 
         paper: 기압/μ/scale-height = docs/reference/exoplanet-atmosphere-methodology.md. 온도 3계층 =
         docs/reference/tidally-locked-temperature-methodology.md (Layer-3 앵커 Turbet2016·Boutle2017, 검증 id는 그 문서).
+    refs: ["1702.04089", "1608.06813", "1608.08620"]
 
   - body: Proxima Centauri b
     axis: surface                     # G5 — 대륙형 호수 세계 표면; 색=표면색 문서, A=Bond cascade
@@ -447,6 +449,11 @@ decisions:
       가장 밝은 = 직하 물구름 소용돌이(크림-화이트), 둘레로 reddening된 2색 대륙(움버 저지 + 테라코타 고지) + 산재한
       검붉은 호수, 터미네이터 너머 크림빛 야간 빙관. **폴리페무스(G2V 태양쌍둥이광=고유색 거의 그대로)와 결정 대비** —
       여기선 별빛 자체가 붉어 디스크 전체가 따뜻하게 물듦. + **희미한 플레어-오로라**(아래 게이트).
+      aurora_divergence: 희미·간헐(플레어 시) 오로라를 의도 연출. **행성 자기장은 미측정**(외계행성 장 직접탐지 사례
+      없음; Pérez-Torres2021 2012.02116 전파 SPI는 잠정·항성 플레어 기원). 게다가 조석고정 느린 자전 → 암석 dynamo 약할
+      가능성↑(Driscoll&Olson2011, RM22 스케일링). 단 드라이버(별)는 강력 — 잦은 슈퍼플레어 입자플럭스 막대(별
+      environment.activity 측정값). 그래서 "약한 장 가정 + 강한 구동 → 희미·간헐 오로라"를 owner-override로
+      채택(장 존재를 약하게 가정, 명기).
     # MIGRATION-FLAG: cfg_colors_displayed 는 비표준 행-레벨 키로 프로즈+hex 원문 보존 (표시 팔레트, emit 말미 정밀화).
     cfg_colors_displayed: >
       Proxima reddening 적용 근사(§6 엔진, illuminant=별; emit서 정밀화). 마픽 저지 #3e2c16(움버) ·
@@ -461,13 +468,7 @@ decisions:
         op: set
     gate:
       criterion: [visual-checklist, composition-lock]
-      verdict: documented-divergence
-      divergence_note: >
-        aurora_divergence: 희미·간헐(플레어 시) 오로라를 의도 연출. **행성 자기장은 미측정**(외계행성 장 직접탐지 사례
-        없음; Pérez-Torres2021 2012.02116 전파 SPI는 잠정·항성 플레어 기원). 게다가 조석고정 느린 자전 → 암석 dynamo 약할
-        가능성↑(Driscoll&Olson2011, RM22 스케일링). 단 드라이버(별)는 강력 — 잦은 슈퍼플레어 입자플럭스 막대(별
-        environment.activity 측정값). 그래서 "약한 장 가정 + 강한 구동 → 희미·간헐 오로라"를 documented-divergence로
-        채택(장 존재를 약하게 가정, 명기).
+      verdict: owner-override
       evidence: >
         palette_note: 표시 팔레트는 derived(in-window) — 고유 반사색(G5) × Proxima SED를 §6 엔진으로 렌더한 결과.
         별색 reddening은 물리.
@@ -497,7 +498,7 @@ decisions:
         op: set
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         rationale: G6 "희미한 플레어-오로라" 채택이 **약한 장 존재**를 이미 함의 → G7은 그 정량·명시(별도 art 선택 없는
         derived 축). 자이언트 energy-flux 법칙(Christensen2009)은 부적용 — 암석체라 RM22 경로. 강한 장 가정은 근거
@@ -1174,12 +1175,13 @@ decisions:
         op: set
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         note: dynamo 문서 regime 3 — sub-Saturn/Neptune질량은 자이언트 energy-flux 법칙 제외(He 분리) → 빙거성 analog
         차수값. tilted/offset 다극장은 빙거성 특유. 오너 G7 확정 2026-06-23.
 
         paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
+    refs: ["2009Natur.457..167C", "1007.1514"]
 
   - body: Proxima Centauri c
     axis: environment
@@ -1246,13 +1248,12 @@ decisions:
       **위성 1개 = Proxima c I** — **반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에
       조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도
       바디 전개**(아래 "Proxima Centauri c I" 블록 11축).
+      관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
+      가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO).
+      정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
     gate:
       criterion: [fiction, stability, hill-stability]
-      verdict: documented-divergence
-      divergence_note: >
-        관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적
-        가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO).
-        정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).
+      verdict: owner-override
 
   - body: Proxima Centauri c
     axis: gameplay
