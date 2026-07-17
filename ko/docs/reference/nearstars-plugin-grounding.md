@@ -13,7 +13,7 @@
 
 ## 범위 & 소유권
 
-**NearStars 종속 플러그인 = Warp + FluxTube 를 다룬다.** (상대성 레이어는 2026-07-01 자체 독립 레포로
+**NearStars 종속 플러그인 = Warp, FluxTube, 그리고 고리면 추종기(예정, 아직 초안 없음) 를 다룬다.** (상대성 레이어는 2026-07-01 자체 독립 레포로
 승격됨 — `~/Desktop/ksp-relativity/` — 이제 NearStars 플러그인이 아니고, 근거화는 거기서 산다.)
 
 이 플러그인들은 본인이 **로컬에서** 빌드·반복하고(개발자 맥에서 컴파일 — 범용 색인 §7 *Build & deploy*
@@ -51,13 +51,14 @@ Warp 드래프트에 `VERIFY` 마커가 ~15개 있다(FluxTube는 아직 없음)
 | Principia detach/re-seed + 포크 flag 채널 (`PrincipiaInterop`) | **슐츠 lane** — `mockingbirdnest/Principia` + `gameplay/interstellar-expansion/warp/warp-patch-draft.md` §5.2 (포크 필요) |
 | 워프 ↔ 상대성 suppress flag — `WarpFlagBridge`가 이제 **외부 `ksp-relativity` mod** 소유의 `WarpFlag`를 읽음 | 그 mod의 공개 API로 배선(cross-repo 통합점) |
 
-## 백로그 — 후보 플러그인 (아직 초안 없음)
+## 고리면 추종기 (예정)
 
-떠올랐지만 아직 초안을 안 잡은 장기 NearStars 결합 플러그인 아이디어. 소유 규칙 동일 — cfg로 안 되는 런타임 거동은 C# 플러그인, 딥 런타임·인게임 테스트는 슐츠 담당.
+NearStars 결합 C# 플러그인 — **아직 초안 없음**(`plugins/` 스켈레톤 없음). 소유는 Warp/FluxTube와 동일 — cfg로 안 되는 런타임 거동은 C# 플러그인, 딥 런타임·인게임 테스트는 슐츠 담당.
 
-| 플러그인 | 하는 일 | cfg로 안 되는 이유 | 근거화 출발점 |
-|---|---|---|---|
-| **고리면 추종기**(Polyphemus E-고리) | Principia 하에서 Kopernicus 고리를 매 프레임 특정 천체의 *실시간* 궤도면으로 재정렬 — 공급/양치기 위성이 세차해도 고리가 그 위성과 공면 유지. | Kopernicus 고리는 행성에 고정된 정적 디스크라 n-body에 반응 못 함. Principia에선 공급원 Chaos가 세차·libration(~56년, ±~6°, 2천년에 secular ~18°까지 — `results/_principia2000_dense`)해서 고정 고리가 벌어짐. | Kopernicus `Ring` 컴포넌트와 그 transform(KSPDocsSite / Kopernicus 소스), 천체의 실시간 `Orbit` 법선 읽기(`class_orbit.html`), `KSPAddon`/`MonoBehaviour`에서 프레임마다 갱신. **임시(플러그인 전):** 정적 고리를 Chaos 평균면(Laplace)에 앵커 — `phase4/alpha_centauri.yaml` rings 축 참조. |
+- **하는 일:** Principia 하에서 Kopernicus 고리를 매 프레임 특정 천체의 *실시간* 궤도면으로 재정렬 — 공급/양치기 위성이 세차해도 고리가 그 위성과 공면 유지.
+- **cfg로 안 되는 이유:** Kopernicus 고리는 행성에 고정된 정적 디스크라 n-body에 반응 못 함. Principia에선 공급원 Chaos가 세차·libration(~56년, ±~6°, 2천년에 secular ~18°까지 — `results/_principia2000_dense`)해서 고정 고리가 벌어짐.
+- **근거화 출발점:** Kopernicus `Ring` 컴포넌트와 그 transform(KSPDocsSite / Kopernicus 소스), 천체의 실시간 `Orbit` 법선 읽기(`class_orbit.html`), `KSPAddon`/`MonoBehaviour`에서 프레임마다 갱신.
+- **임시(플러그인 전):** 정적 고리를 Chaos 평균면(Laplace)에 앵커 — `phase4/alpha_centauri.yaml` rings 축 참조.
 
 ---
 
