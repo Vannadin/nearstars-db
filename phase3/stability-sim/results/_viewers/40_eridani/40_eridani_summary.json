@@ -1,0 +1,98 @@
+{
+  "system": "40 Eridani A",
+  "star": {
+    "name": "40 Eridani A",
+    "mass_msun": 0.7797999413525123
+  },
+  "planets": [
+    {
+      "name": "40 Eridani A b",
+      "mass_msun": 2.5433166743760437e-05,
+      "mass_kind": "msini",
+      "a_au": 0.224,
+      "e": 0.04,
+      "inc_rad": 0.0,
+      "omega_rad": 5.305658970563565,
+      "Omega_rad": 2.642529177293657,
+      "M_rad": 4.7623679680665845
+    },
+    {
+      "name": "40 Eridani A c",
+      "mass_msun": 1.651504334010418e-07,
+      "mass_kind": "true mass",
+      "a_au": 0.4,
+      "e": 0.04,
+      "inc_rad": 0.02617993877991495,
+      "omega_rad": 1.6268219212234332,
+      "Omega_rad": 3.212433817235578,
+      "M_rad": 3.490658503988659
+    },
+    {
+      "name": "40 Eridani A d",
+      "mass_msun": 4.504102729119321e-08,
+      "mass_kind": "true mass",
+      "a_au": 0.635,
+      "e": 0.042,
+      "inc_rad": 0.04363323129985824,
+      "omega_rad": 2.544276222803882,
+      "Omega_rad": 4.924751778411374,
+      "M_rad": 5.235987755982989
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "leapfrog",
+    "elapsed_sec": 5.284299850463867,
+    "dt_yr": 1.901285268841737e-05,
+    "innermost_period_yr": 0.12005731617257387,
+    "energy_relative_error": 1.3532848032318093e-09,
+    "megno_final": null
+  },
+  "per_body": {
+    "40 Eridani A b": {
+      "a_min": 0.22399996082310705,
+      "a_max": 0.2240000958840042,
+      "e_min": 0.0399026365136992,
+      "e_max": 0.04000126173334589
+    },
+    "40 Eridani A c": {
+      "a_min": 0.3999521754842649,
+      "a_max": 0.4000711166988618,
+      "e_min": 0.03992543100031058,
+      "e_max": 0.04963322595165716
+    },
+    "40 Eridani A d": {
+      "a_min": 0.6348180393591354,
+      "a_max": 0.6351223675013351,
+      "e_min": 0.04179141899730866,
+      "e_max": 0.04318516189057407
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "40 Eridani A b": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.04000126173334589
+      },
+      "40 Eridani A c": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.04963322595165716
+      },
+      "40 Eridani A d": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.04318516189057407
+      }
+    },
+    "overall": "stable",
+    "ecc_class_max": "calm",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

@@ -1,0 +1,39 @@
+# 궤도 뷰어 파이프라인 매니페스트 — 시스템별 Principia-equivalent sim 파라미터 + 생성할 뷰의 단일 소스.
+#
+# The batch driver (scripts/build_viewers.py) reads this, re-runs each system the
+# Principia way (fixed-step leapfrog, dt = 10 min — the same integrator/step KSP's
+# Principia uses), then renders the static 4-panel PNG + the 3D animation from that
+# one run. Existing WHFast/TRACE/IAS15 summaries are NOT reused: the viewer must
+# reflect the in-game integrator over the play window, so every system is re-run here.
+#
+# Timescale: 2000 yr is the standard Principia-equivalent play window (established
+# on the Polyphemus moon run). Override per-system with `years:` if needed.
+# `snapshots: 8000` is dense so animate_orbits.py can bin-average out the aliasing
+# jitter. `center:` overrides the viewer's central body (default: moon parent if the
+# run has moons, else the star) — usually leave unset.
+
+defaults:
+  integrator: leapfrog
+  dt_minutes: 10
+  years: 2000
+  snapshots: 8000
+
+systems:
+  # α Cen A b (Polyphemus) moon system — the flagship. Binary loader + J2/obliquity
+  # + the 5 design-of-record moons; the viewer auto-centers on the parent planet.
+  alpha_centauri:
+    hypotheticals: hypotheticals/alpha_centauri.json
+    extra_args: ["--acen-a-au", "1.6", "--acen-e", "0.1", "--acen-incl-deg", "16",
+                 "--j2", "0.023", "--j2-obliquity-deg", "5"]
+
+  # Single-star multi-planet Phase-4 systems → star-center planet views.
+  proxima_cen: {}
+  40_eridani: {}
+  tau_cet: {}
+  barnards_star: {}
+
+  # Bonus showcase (no Phase-4 board, but the best multi-planet demo).
+  trappist_1: {}
+
+  # fomalhaut is intentionally omitted: 1 planet → dynamically trivial, and it is
+  # not a run.py SYSTEMS key.

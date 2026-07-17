@@ -1,0 +1,66 @@
+<!-- 궤도 동역학 뷰어 갤러리 (자동 생성, build_viewers.py) -->
+<!doctype html><meta charset="utf-8"><title>NearStars — Orbit dynamics viewers</title>
+<style>
+  body{margin:0;background:#0a0c12;color:#cdd6e6;font:14px/1.6 system-ui,sans-serif}
+  header{padding:20px 24px;border-bottom:1px solid #1c2436}
+  h1{margin:0;font-size:19px} .lead{color:#8a94a8;font-size:13px;margin-top:4px;max-width:70ch}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:22px}
+  .card{display:block;background:#11141d;border:1px solid #1c2436;border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s}
+  .card:hover{border-color:#3b78d0}
+  .card img{width:100%;display:block;background:#06070d}
+  .meta{padding:11px 13px} .meta h3{margin:0 0 5px;font-size:15px}
+  .pill{font-size:11px;padding:2px 8px;border-radius:5px;font-family:ui-monospace,monospace}
+  .pill.ok{color:#8fe3a0;background:rgba(143,227,160,.13)}
+  .pill.warn{color:#e8c561;background:rgba(232,197,97,.13)}
+  .pill.bad{color:#e57;background:rgba(229,85,119,.13)}
+  .sub{display:block;color:#8a94a8;font-size:11px;margin-top:6px;font-variant-numeric:tabular-nums}
+  .seg{float:right} .seg button{background:#1c2740;color:#cdd6e6;border:1px solid #2c3a5a;border-radius:6px;padding:4px 10px;cursor:pointer}
+</style>
+<header>
+  <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
+  <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
+  <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 카드를 누르면 3D 궤도 진화 애니메이션이 열립니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). Click a card for the 3D orbit-evolution animation.</span></div>
+</header>
+<div class="grid">
+  <a class="card" href="alpha-centauri/orbit3d.html">
+    <img src="alpha-centauri/orbits.png" alt="Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]" loading="lazy">
+    <div class="meta"><h3>Alpha Centauri AB + A b [J2(Alpha Centauri A b)=0.023, obliq=5°]</h3>
+      <span class="pill ok">stable</span>
+      <span class="sub">5 <span data-i18n>위성</span><span data-en hidden>moons</span> · leapfrog dt=10.0min · |ΔE/E|=3.9e-10</span></div>
+  </a>
+  <a class="card" href="proxima-cen/orbit3d.html">
+    <img src="proxima-cen/orbits.png" alt="Proxima Cen" loading="lazy">
+    <div class="meta"><h3>Proxima Cen</h3>
+      <span class="pill ok">stable</span>
+      <span class="sub">3 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=2.1e-10</span></div>
+  </a>
+  <a class="card" href="40-eridani/orbit3d.html">
+    <img src="40-eridani/orbits.png" alt="40 Eridani A" loading="lazy">
+    <div class="meta"><h3>40 Eridani A</h3>
+      <span class="pill ok">stable</span>
+      <span class="sub">3 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=1.4e-09</span></div>
+  </a>
+  <a class="card" href="tau-cet/orbit3d.html">
+    <img src="tau-cet/orbits.png" alt="tau Cet" loading="lazy">
+    <div class="meta"><h3>tau Cet</h3>
+      <span class="pill ok">stable</span>
+      <span class="sub">4 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=7.5e-08</span></div>
+  </a>
+  <a class="card" href="barnards-star/orbit3d.html">
+    <img src="barnards-star/orbits.png" alt="Barnard's star" loading="lazy">
+    <div class="meta"><h3>Barnard's star</h3>
+      <span class="pill ok">stable</span>
+      <span class="sub">4 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=3.9e-06</span></div>
+  </a>
+  <a class="card" href="trappist-1/orbit3d.html">
+    <img src="trappist-1/orbits.png" alt="TRAPPIST-1" loading="lazy">
+    <div class="meta"><h3>TRAPPIST-1</h3>
+      <span class="pill ok">stable</span>
+      <span class="sub">7 <span data-i18n>행성</span><span data-en hidden>planets</span> · leapfrog dt=10.0min · |ΔE/E|=9.0e-08</span></div>
+  </a>
+</div>
+<script>
+const ko=document.getElementById('ko'),en=document.getElementById('en');
+function set(e){document.querySelectorAll('[data-i18n]').forEach(x=>x.hidden=e);document.querySelectorAll('[data-en]').forEach(x=>x.hidden=!e);ko.classList.toggle('on',!e);en.classList.toggle('on',e);}
+ko.onclick=()=>set(false);en.onclick=()=>set(true);
+</script>

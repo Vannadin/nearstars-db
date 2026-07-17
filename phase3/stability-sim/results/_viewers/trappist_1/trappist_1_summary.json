@@ -1,0 +1,190 @@
+{
+  "system": "TRAPPIST-1",
+  "star": {
+    "name": "TRAPPIST-1",
+    "mass_msun": 0.08977696760699136
+  },
+  "planets": [
+    {
+      "name": "TRAPPIST-1 b",
+      "mass_msun": 4.125758099873299e-06,
+      "mass_kind": "true",
+      "a_au": 0.01154,
+      "e": 0.00622,
+      "inc_rad": -0.0047472955654246736,
+      "omega_rad": 5.879316118268099,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 5.305658970563565
+    },
+    {
+      "name": "TRAPPIST-1 c",
+      "mass_msun": 3.927577579792048e-06,
+      "mass_kind": "true",
+      "a_au": 0.0158,
+      "e": 0.00654,
+      "inc_rad": -0.0038746309394273102,
+      "omega_rad": 4.9296824722579835,
+      "Omega_rad": 1.6268219212234332,
+      "M_rad": 2.642529177293657
+    },
+    {
+      "name": "TRAPPIST-1 d",
+      "mass_msun": 1.1650612392655312e-06,
+      "mass_kind": "true",
+      "a_au": 0.02227,
+      "e": 0.00837,
+      "inc_rad": -0.0018151424220740888,
+      "omega_rad": -0.15236724369910498,
+      "Omega_rad": 2.544276222803882,
+      "M_rad": 3.212433817235578
+    },
+    {
+      "name": "TRAPPIST-1 e",
+      "mass_msun": 2.07789272570038e-06,
+      "mass_kind": "true",
+      "a_au": 0.02925,
+      "e": 0.0051,
+      "inc_rad": -0.003612831551628151,
+      "omega_rad": 1.891413310386255,
+      "Omega_rad": 1.9057700639797035,
+      "M_rad": 4.924751778411374
+    },
+    {
+      "name": "TRAPPIST-1 f",
+      "mass_msun": 3.119841823703316e-06,
+      "mass_kind": "true",
+      "a_au": 0.03849,
+      "e": 0.01007,
+      "inc_rad": -0.004537856055185346,
+      "omega_rad": 6.436948814280287,
+      "Omega_rad": 3.665497458776314,
+      "M_rad": 2.994546979776625
+    },
+    {
+      "name": "TRAPPIST-1 g",
+      "mass_msun": 3.966613136777749e-06,
+      "mass_kind": "true",
+      "a_au": 0.04683,
+      "e": 0.00208,
+      "inc_rad": -0.0045029494701452925,
+      "omega_rad": 3.33951299076595,
+      "Omega_rad": 3.171041037198489,
+      "M_rad": 5.705841537519793
+    },
+    {
+      "name": "TRAPPIST-1 h",
+      "mass_msun": 9.788916597952659e-07,
+      "mass_kind": "true",
+      "a_au": 0.06189,
+      "e": 0.00567,
+      "inc_rad": -0.0034033920413888237,
+      "omega_rad": 5.915269900859182,
+      "Omega_rad": 4.74885787066523,
+      "M_rad": 1.7708394029393855
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "leapfrog",
+    "elapsed_sec": 10.63585877418518,
+    "dt_yr": 1.901285268841737e-05,
+    "innermost_period_yr": 0.004137466109231946,
+    "energy_relative_error": 8.99669163011208e-08,
+    "megno_final": null
+  },
+  "per_body": {
+    "TRAPPIST-1 b": {
+      "a_min": 0.011535605867964724,
+      "a_max": 0.011544698853262448,
+      "e_min": 0.001617328932418442,
+      "e_max": 0.010615158899865028
+    },
+    "TRAPPIST-1 c": {
+      "a_min": 0.015790911164839518,
+      "a_max": 0.015814155156170084,
+      "e_min": 0.00014478673587889376,
+      "e_max": 0.013078600715528136
+    },
+    "TRAPPIST-1 d": {
+      "a_min": 0.02221544459110537,
+      "a_max": 0.02230031440042503,
+      "e_min": 4.152608547259463e-05,
+      "e_max": 0.022615321381796335
+    },
+    "TRAPPIST-1 e": {
+      "a_min": 0.029196537491979948,
+      "a_max": 0.029301111519562835,
+      "e_min": 4.0153038363446426e-05,
+      "e_max": 0.019363032908669465
+    },
+    "TRAPPIST-1 f": {
+      "a_min": 0.038425453376766644,
+      "a_max": 0.038575507619218984,
+      "e_min": 0.0001518339770071396,
+      "e_max": 0.016508230090961452
+    },
+    "TRAPPIST-1 g": {
+      "a_min": 0.04676515643264538,
+      "a_max": 0.046912743880083055,
+      "e_min": 5.225368778820118e-05,
+      "e_max": 0.013090199208504013
+    },
+    "TRAPPIST-1 h": {
+      "a_min": 0.061748892616233834,
+      "a_max": 0.06210959417083168,
+      "e_min": 5.0452662536257184e-05,
+      "e_max": 0.011314031331161475
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "TRAPPIST-1 b": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.010615158899865028
+      },
+      "TRAPPIST-1 c": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.013078600715528136
+      },
+      "TRAPPIST-1 d": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.022615321381796335
+      },
+      "TRAPPIST-1 e": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.019363032908669465
+      },
+      "TRAPPIST-1 f": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.016508230090961452
+      },
+      "TRAPPIST-1 g": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.013090199208504013
+      },
+      "TRAPPIST-1 h": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.011314031331161475
+      }
+    },
+    "overall": "stable",
+    "ecc_class_max": "calm",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

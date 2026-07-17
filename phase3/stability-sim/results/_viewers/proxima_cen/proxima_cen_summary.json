@@ -1,0 +1,98 @@
+{
+  "system": "Proxima Cen",
+  "star": {
+    "name": "Proxima Cen",
+    "mass_msun": 0.12206868312710632
+  },
+  "planets": [
+    {
+      "name": "Proxima Cen d",
+      "mass_msun": 7.807111397140158e-07,
+      "mass_kind": "msini",
+      "a_au": 0.02881,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 0.06981317007977318,
+      "Omega_rad": 5.305658970563565,
+      "M_rad": 0.0
+    },
+    {
+      "name": "Proxima Cen b",
+      "mass_msun": 3.167885586147256e-06,
+      "mass_kind": "msini",
+      "a_au": 0.04848,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 0.05759586531581287,
+      "Omega_rad": 4.7623679680665845,
+      "M_rad": 0.0
+    },
+    {
+      "name": "Proxima Cen c",
+      "mass_msun": 1.7415863885928042e-05,
+      "mass_kind": "msini",
+      "a_au": 1.48,
+      "e": 0.0,
+      "inc_rad": 0.0,
+      "omega_rad": 2.642529177293657,
+      "Omega_rad": 3.212433817235578,
+      "M_rad": 1.6268219212234332
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "leapfrog",
+    "elapsed_sec": 5.246791362762451,
+    "dt_yr": 1.901285268841737e-05,
+    "innermost_period_yr": 0.013996548712213537,
+    "energy_relative_error": 2.0736130070567248e-10,
+    "megno_final": null
+  },
+  "per_body": {
+    "Proxima Cen d": {
+      "a_min": 0.028809376014966286,
+      "a_max": 0.02881109682653616,
+      "e_min": 2.518312782684646e-06,
+      "e_max": 0.00039493231636017636
+    },
+    "Proxima Cen b": {
+      "a_min": 0.04847781979209597,
+      "a_max": 0.04848000296195978,
+      "e_min": 2.484192128338842e-07,
+      "e_max": 7.774698626004745e-05
+    },
+    "Proxima Cen c": {
+      "a_min": 1.4798855231163757,
+      "a_max": 1.4810117373764529,
+      "e_min": 1.9023391847901492e-06,
+      "e_max": 0.0007004677585753875
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Proxima Cen d": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.00039493231636017636
+      },
+      "Proxima Cen b": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 7.774698626004745e-05
+      },
+      "Proxima Cen c": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.0007004677585753875
+      }
+    },
+    "overall": "stable",
+    "ecc_class_max": "calm",
+    "lyapunov_time_yr": Infinity,
+    "is_chaotic": false
+  }
+}

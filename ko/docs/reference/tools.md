@@ -109,6 +109,8 @@
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO 메인 엔트리
 - `phase3/stability-sim/scripts/ring_clearing.py` — 위성 주변 고리 청소·간극 측정용 테스트 입자 시뮬. 공급 위성의 반장축을 둘러싸는 무질량 입자 원반을 깔고 적분한 뒤 어느 반경이 살아남는지 보고합니다(위성이 간극을 여는지, 묻힌 채 도는지). 폴리페무스의 Chaos 공급 E고리가 연속임을 확인하는 데 썼습니다(Chaos 질량비 μ≈7.5e-7 로 간극을 못 비움 — `results/_ring_clearing.log`).
 - `phase3/stability-sim/scripts/plot_moons.py` — **궤도분석 표준 시각화**(정적 4패널 PNG: top-down 궤도 / 이심률(t) / 반장축 드리프트 Δa/a₀(t) / 시뮬 기준면 경사(t)), 상단 제목에 판정 + 적분기 + dt + |ΔE/E| + 위성별 최대 Hill 비율. 시뮬 출력만으로 두 계층 다 처리 — 행성-중심(위성, R_p)이나 별-중심(행성, AU)을 `--center`로 선택(기본: 위성 있으면 부모, 없으면 별). `<label>_orbits.png` 생성. 행성 전용 `plot_orbits.py`와 달리 leapfrog·trace 런(megno=None)도 처리. `--dir <결과폴더> [--label <시스템>] [--center <천체>]`.
+- `phase3/stability-sim/viewer-manifest.yaml` — 시스템별 뷰어 sim 파라미터 단일 소스(Principia 동등 leapfrog dt=10분·years·snapshots·hypotheticals·overrides).
+- `phase3/stability-sim/scripts/build_viewers.py` — 배치 드라이버. 매니페스트를 읽어 각 시스템을 Principia 방식으로 재실행(skip-if-fresh)하고 정적 PNG + 3D 애니메이션을 렌더한 뒤 이중언어 갤러리 `docs/phase4/orbit-viewers/index.html`를 씀. `--systems`·`--force`·`--quick`·`--gallery-only`.
 - `phase3/stability-sim/hypotheticals/<system>.json` — 추가 바디 스펙
 
 **스택.** `.venv/` 의 REBOUND 5.0, AU / yr / Msun 단위, 기본 horizon 10⁴ 년. Principia와 동일한 방식의 런은 `--integrator leapfrog --dt-minutes 10`(Principia의 고정 10분 ephemeris 스텝 모사)을 씁니다.
