@@ -164,7 +164,7 @@ decisions:
       - { name: reference_radius, value: 1.2815e9, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         입력 전부 측정(M/R Mamajek2012 · v sin i 93±9 군집값 · i★ 90°±9 Hadjara2014) + 이론 그리드 k₂(Claret
         2004, 태양 크로스체크로 계통 ±25% 정량화). Altair/Vega(f 0.10–0.25) 대비 ~2.5–3× 느린 자전이라 f 0.022는

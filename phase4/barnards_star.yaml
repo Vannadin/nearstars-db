@@ -126,7 +126,7 @@ decisions:
       - { name: spin_axis_orientation, value: "i★ 60° (채택 행성 궤도면 정렬 — 질량 행의 등방 prior 60°와 단일 가정) · PA 자유", op: set }
     gate:
       criterion: [physics]
-      verdict: pass-in-window
+      verdict: owner-override
       evidence: >
         측정 부재라 물리 범위 게이트만: 단독성+행성계의 스핀-궤도 정렬은 형성론 기본 기대. 질량 채택(×1.1547,
         i=60°)과 같은 가정을 공유해 보드 내 모순 없음. 어떤 관측과도 충돌 없음.
@@ -145,7 +145,7 @@ decisions:
       - { name: reference_radius, value: 1.301e8, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         로스터 최장 자전(145d)이라 q가 극소 — Proxima(3.7e-9)보다도 작은 로스터 최저 J2. 오너 정책(항성 J2
         무시가능 처리 금지)대로 계산값 emit. 폴리트로프 계수 0.084는 완전대류 구조의 물리적 귀결.

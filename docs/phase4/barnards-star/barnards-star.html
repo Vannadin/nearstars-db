@@ -229,7 +229,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
     <code class="axis">bulk.spin_axis_orientation</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
   <p class="narrative">i★ 측정 없음, 행성 궤도 경사도 미측정 → 오너 선택: **채택 궤도면 정렬**. 질량 행(&quot;*&quot; bulk.mass)이 이미 등방 prior 중앙 경사각 60°를 채택해 행성 궤도면이 사실상 i=60°로 emit되므로, 항성 적도도 같은 면에 정렬(i★=60°) — 보드의 경사 가정이 하나로 묶임(자기일관). 극 방위각은 emit 배향 자유(ICRS 변환 emit 단계).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 60° (채택 행성 궤도면 정렬 — 질량 행의 등방 prior 60°와 단일 가정) · PA 자유</td><td class="o"></td></tr></tbody></table>
@@ -240,7 +240,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
     <code class="axis">bulk.geopotential_j2</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ok"><span data-i18n>범위 내</span><span data-en hidden>In-window</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-meth"><span data-i18n>방법론 도출</span><span data-en hidden>Methodology-derived</span></span></span>
   </div>
   <p class="narrative">회전 편평 J2 = 2.2e-9. 완전 대류 M왜성(0.162 M☉ ≪ 0.35 M☉ 경계) → Radau-Darwin, n=3/2 폴리트로프 NMoI 0.205(Chandrasekhar 1939) → J2/q = 0.084. q = ω²R³/GM = 2.58e-8 (M 0.162·R 0.187·P_rot 145d, 전부 DB recommended) → J2 2.2e-9 (±~20%, P_rot ±15d 지배). reference_radius = 적도반경 1.301e8 m. 방법 = body-figure-methodology.md §2 M왜성 분기(Proxima와 동일).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">2.2e-09</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">1.301e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>

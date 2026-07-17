@@ -133,7 +133,7 @@ decisions:
       - { name: reference_radius, value: 5.517e8, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: pass-in-window
+      verdict: methodology-derived
       evidence: >
         q(4.04e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 4.2e-8. FGK 유사구조 범위 내,
         오너 정책(항성 J2 무시가능 처리 금지)대로 emit.
