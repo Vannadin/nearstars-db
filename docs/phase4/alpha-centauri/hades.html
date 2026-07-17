@@ -148,7 +148,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <div class="seg"><button id="collapse"><span data-i18n>설명 접기</span><span data-en hidden>Collapse</span></button></div>
 </header>
-<div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 8 gated · 1 divergence</span></div>
+<div class="summary"><span class="body-meta">9 <span data-i18n>결정</span><span data-en hidden>decisions</span> · 8 gated · 0 divergence</span></div>
 <div class="decisions"><article class="dec" id="identity">
   <div class="dec-head">
     <code class="axis">identity</code>
@@ -182,15 +182,15 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>magnetosphere/radiation_belts 고유값 없음. 폴리페무스 방사선대 피크(2.07 R_p)에 무방비로 잠김 → 표면 방사선 심함(environment.radiation 반영). 자기 차폐 없음.</span><span data-en hidden>No intrinsic magnetosphere/radiation_belts. Unshieldedly submerged in the Polyphemus radiation-belt peak (2.07 R_p) → severe surface radiation (reflected in environment.radiation). No magnetic shielding.</span></div>
   
 </article>
-<article class="dec is-div" id="bulk.tidal_heating">
+<article class="dec" id="bulk.tidal_heating">
   <div class="dec-head">
     <code class="axis">bulk.tidal_heating</code>
-    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-div"><span data-i18n>문서화 이탈</span><span data-en hidden>Doc. divergence</span></span></span>
+    <span class="pills"><span class="pill st-gated"><span data-i18n>확정</span><span data-en hidden>Gated</span></span><span class="pill vd-ovr"><span data-i18n>오너 확정</span><span data-en hidden>Owner override</span></span></span>
   </div>
-  <p class="narrative"><span data-i18n>내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식 텍토닉 (홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면.<br></span><span data-en hidden>Internal tidal heat exists (Io-scaling ~400× Io) but the surface is non-luminous — the energy manifests not as Io-style lava but as Ganymede-style tectonics (grooved/fault terrain). A gray-solid surface under a small hard interior/thick regolith assumption.<br></span></p>
+  <p class="narrative"><span data-i18n>내부 조석열 존재(Io-스케일링 ~400× Io)이나 표면 비발광 — 에너지가 Io식 용암이 아니라 가니메데식 텍토닉 (홈/단층 지형)으로 발현. 작고 단단한 내부/두꺼운 레골리스 가정 하 회색-고체 표면. 오너-오버라이드 근거: [GAME] &#x27;&gt;900K 붉은 잉걸/near-fusion&#x27;은 [FILM/CANON] 회색 밋밋 위성에 밀림(등급: 영화&gt;게임&gt;위키). 그 &gt;900K는 grazing(e~0.3, 이젝션) 궤도가 필요했음. 안정 e≈0.04에선 표면 비발광 — 조석 응력은 텍토닉 홈으로(가니메데형), 가시 용암 아님.<br></span><span data-en hidden>Internal tidal heat exists (Io-scaling ~400× Io) but the surface is non-luminous — the energy manifests not as Io-style lava but as Ganymede-style tectonics (grooved/fault terrain). A gray-solid surface under a small hard interior/thick regolith assumption. Owner-override rationale: The [GAME] &#x27;&gt;900K red-hot embers/near-fusion&#x27; is overridden by the [FILM/CANON] gray plain moon (ranking: film&gt;game&gt;wiki). That &gt;900K required a grazing (e~0.3, ejection) orbit. At the stable e≈0.04 the surface is non-luminous — tidal stress goes into tectonic grooves (Ganymede-type), not visible lava.<br></span></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">tidal_heating</td><td class="v">~400× Io (내부, 표면 비발광 — 텍토닉으로 발현)</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> <span data-i18n>Io-스케일링 ~400× Io는 Io-like k2/Q 가정. 작은 강체 위성은 dissipation 낮아 용융 대신 텍토닉 자원.</span><span data-en hidden>The Io-scaling ~400× Io assumes an Io-like k2/Q. A small rigid moon has low dissipation, so it channels into tectonics instead of melting.</span></div><div class="ev div"><span class="tag">divergence</span> <span data-i18n>[GAME] &#x27;&gt;900K 붉은 잉걸/near-fusion&#x27;은 [FILM/CANON] 회색 밋밋 위성에 밀림(등급: 영화&gt;게임&gt;위키). 그 &gt;900K는 grazing(e~0.3, 이젝션) 궤도가 필요했음. 안정 e≈0.04에선 표면 비발광 — 조석 응력은 텍토닉 홈으로(가니메데형), 가시 용암 아님.<br></span><span data-en hidden>The [GAME] &#x27;&gt;900K red-hot embers/near-fusion&#x27; is overridden by the [FILM/CANON] gray plain moon (ranking: film&gt;game&gt;wiki). That &gt;900K required a grazing (e~0.3, ejection) orbit. At the stable e≈0.04 the surface is non-luminous — tidal stress goes into tectonic grooves (Ganymede-type), not visible lava.<br></span></div>
+  <div class="ev"><span class="tag">evidence</span> <span data-i18n>Io-스케일링 ~400× Io는 Io-like k2/Q 가정. 작은 강체 위성은 dissipation 낮아 용융 대신 텍토닉 자원.</span><span data-en hidden>The Io-scaling ~400× Io assumes an Io-like k2/Q. A small rigid moon has low dissipation, so it channels into tectonics instead of melting.</span></div>
   
 </article>
 <article class="dec" id="surface">
