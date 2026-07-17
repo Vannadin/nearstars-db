@@ -221,6 +221,22 @@ def check_v2(path, doc):
                     fails.append(f"{loc}: field '{f.get('name')}' documented-divergence "
                                  f"with null divergence_note")
 
+            # documented-divergence must cite the paper(s) it diverges from.
+            if row_div and not row.get("refs"):
+                fails.append(f"{loc}: documented-divergence (row) with no refs[] "
+                             f"(name the paper diverged from)")
+
+            # divergence_note is paper-divergence-only: it may appear iff the
+            # verdict is documented-divergence (non-paper rationale → narrative).
+            if nonempty(gate.get("divergence_note")) and not row_div:
+                fails.append(f"{loc}: divergence_note on a '{verdict}' row "
+                             f"(only documented-divergence may carry one; else use narrative)")
+            for f in fields:
+                if isinstance(f, dict) and nonempty(f.get("divergence_note")) \
+                        and f.get("verdict") != "documented-divergence":
+                    fails.append(f"{loc}: field '{f.get('name')}' divergence_note on a "
+                                 f"'{f.get('verdict')}' verdict (documented-divergence only)")
+
             # machine-readable value present?
             has_value = nonempty(row.get("value")) or bool(fields) \
                 or bool(row.get("discoverability_cfg")) or nonempty(gate.get("value"))

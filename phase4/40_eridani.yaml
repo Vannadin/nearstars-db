@@ -331,10 +331,10 @@ decisions:
       - { name: rotation_period, value: 35, unit: h, op: set, note: "측정 없음 — Kepler WD 표본 중앙값 (Hermes 2017), J2 입력과 동일 채택 (오너 승인 2026-07-12)" }
     gate:
       criterion: [derived-grounding]
-      verdict: owner-override   # 자전이 측정 아닌 문헌 통계 중앙값 (측정 부재 → 오너 승인 채택; 반박된 논문 없음)
+      verdict: methodology-derived   # J2는 body-figure 레시피 출력 (자전 입력만 통계 중앙값 가정, 2026-07-17 선례 A로 통일)
       evidence: >
-        입력 M/R은 실측(Mason2021/Bond2017). 폴리트로프 분기는 Proxima와 동일 근거(Chandrasekhar 1939).
-        P_rot만 통계 입력 — 측정 나오면 갱신 후보 1순위.
+        J2는 body-figure-methodology.md §2 WD 분기(Radau-Darwin, 폴리트로프)로 계산한 레시피 출력.
+        입력 M/R은 실측(Mason2021/Bond2017), P_rot만 통계 입력(Hermes 2017 중앙값 — 측정 나오면 갱신 후보 1순위).
     refs: [1939isss.book.....C, 2017ApJS..232...23H, 2017ApJ...848...16B, 2021AJ....162...53M]
 
   - body: "40 Eridani C"
@@ -375,10 +375,11 @@ decisions:
       - { name: reference_radius, value: 1.906e8, unit: m, op: set }
     gate:
       criterion: [derived-grounding]
-      verdict: owner-override   # Phase 2 기각 입력(품질 D)을 오너 승인으로 사용 (반박된 논문 없음, 큐레이션 baseline서 이탈)
+      verdict: methodology-derived   # J2는 body-figure 레시피 출력 (자전 입력만 Shan2024 채택 가정, 2026-07-17 선례 A로 통일)
       evidence: >
-        M/R은 실측(Mason2021/Mann2015). 빠른 자전 자체는 활동성(DY Eri 플레어·Hα·kG급 dynamo 예상)이
-        독립적으로 지지. 폴리트로프 분기 = Proxima/Barnard와 동일 방법.
+        J2는 body-figure-methodology.md §2 폴리트로프 분기(Proxima/Barnard와 동일 방법)로 계산한 레시피 출력.
+        M/R은 실측(Mason2021/Mann2015), P_rot 입력은 Shan2024 채택(Phase 2 품질 D였으나 빠른 자전 자체는
+        활동성 DY Eri 플레어·Hα·kG급 dynamo가 독립 지지).
     refs: [1939isss.book.....C, 2024A&A...684A...9S, 2015ApJ...804...64M, 2021AJ....162...53M]
 
 
