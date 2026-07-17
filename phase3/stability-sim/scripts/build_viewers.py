@@ -61,7 +61,7 @@ def run_sim(name, cfg, defaults, out_dir, quick):
 
 def render(name, cfg, out_dir):
     center = cfg.get("center")
-    for viz in ("plot_moons.py", "animate_orbits.py"):
+    for viz in ("plot_moons.py", "animate_orbits.py", "plot_interactive.py"):
         cmd = [PY, str(SCRIPTS / viz), "--dir", str(out_dir), "--label", name]
         if center:
             cmd += ["--center", center]
@@ -69,13 +69,12 @@ def render(name, cfg, out_dir):
 
 
 def collect(name, out_dir):
-    """Copy the two artifacts into the gallery dir; return (verdict, meta) for the index."""
+    """Copy the three artifacts into the gallery dir; return meta for the index."""
     dst = GALLERY / slug(name)
     dst.mkdir(parents=True, exist_ok=True)
-    png = out_dir / f"{name}_orbits.png"
-    html = out_dir / f"{name}_orbit3d.html"
-    shutil.copy2(png, dst / "orbits.png")
-    shutil.copy2(html, dst / "orbit3d.html")
+    shutil.copy2(out_dir / f"{name}_orbits.png", dst / "orbits.png")
+    shutil.copy2(out_dir / f"{name}_orbit3d.html", dst / "orbit3d.html")
+    shutil.copy2(out_dir / f"{name}_interactive.html", dst / "interactive.html")
     summary = json.loads((out_dir / f"{name}_summary.json").read_text())
     integ = summary["integration"]
     return {
@@ -98,12 +97,14 @@ def write_gallery(cards):
         bodies = (f'{c["n_planets"]} <span data-i18n>행성</span><span data-en hidden>planets</span>'
                   if c["n_moons"] == 0 else
                   f'{c["n_moons"]} <span data-i18n>위성</span><span data-en hidden>moons</span>')
-        rows.append(f"""  <a class="card" href="{c['slug']}/orbit3d.html">
-    <img src="{c['slug']}/orbits.png" alt="{c['system']}" loading="lazy">
+        rows.append(f"""  <div class="card">
+    <a href="{c['slug']}/interactive.html"><img src="{c['slug']}/orbits.png" alt="{c['system']}" loading="lazy"></a>
     <div class="meta"><h3>{c['system']}</h3>
       <span class="pill {vclass}">{c['verdict']}</span>
-      <span class="sub">{bodies} · {c['integrator']} dt={c['dt_min']}min · |ΔE/E|={c['dE']}</span></div>
-  </a>""")
+      <span class="sub">{bodies} · {c['integrator']} dt={c['dt_min']}min · |ΔE/E|={c['dE']}</span>
+      <div class="links"><a href="{c['slug']}/interactive.html"><span data-i18n>인터랙티브</span><span data-en hidden>Interactive</span></a>
+        <a href="{c['slug']}/orbit3d.html"><span data-i18n>3D 애니메이션</span><span data-en hidden>3D animation</span></a></div></div>
+  </div>""")
     html = f"""<!-- 궤도 동역학 뷰어 갤러리 (자동 생성, build_viewers.py) -->
 <!doctype html><meta charset="utf-8"><title>NearStars — Orbit dynamics viewers</title>
 <style>
@@ -111,10 +112,13 @@ def write_gallery(cards):
   header{{padding:20px 24px;border-bottom:1px solid #1c2436}}
   h1{{margin:0;font-size:19px}} .lead{{color:#8a94a8;font-size:13px;margin-top:4px;max-width:70ch}}
   .grid{{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;padding:22px}}
-  .card{{display:block;background:#11141d;border:1px solid #1c2436;border-radius:10px;overflow:hidden;text-decoration:none;color:inherit;transition:border-color .15s}}
+  .card{{background:#11141d;border:1px solid #1c2436;border-radius:10px;overflow:hidden;transition:border-color .15s}}
   .card:hover{{border-color:#3b78d0}}
   .card img{{width:100%;display:block;background:#06070d}}
-  .meta{{padding:11px 13px}} .meta h3{{margin:0 0 5px;font-size:15px}}
+  .meta{{padding:11px 13px}} .meta h3{{margin:0 0 5px;font-size:15px;color:#cdd6e6}}
+  .links{{margin-top:8px;display:flex;gap:8px}}
+  .links a{{font-size:12px;color:#7fb0ff;text-decoration:none;border:1px solid #2c3a5a;border-radius:5px;padding:2px 9px}}
+  .links a:hover{{background:#1c2740}}
   .pill{{font-size:11px;padding:2px 8px;border-radius:5px;font-family:ui-monospace,monospace}}
   .pill.ok{{color:#8fe3a0;background:rgba(143,227,160,.13)}}
   .pill.warn{{color:#e8c561;background:rgba(232,197,97,.13)}}
@@ -125,7 +129,7 @@ def write_gallery(cards):
 <header>
   <div class="seg"><button id="ko" class="on">한국어</button><button id="en">EN</button></div>
   <h1><span data-i18n>궤도 동역학 뷰어</span><span data-en hidden>Orbit dynamics viewers</span></h1>
-  <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 카드를 누르면 3D 궤도 진화 애니메이션이 열립니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). Click a card for the 3D orbit-evolution animation.</span></div>
+  <div class="lead"><span data-i18n>각 시스템을 Principia와 동일한 고정 스텝 leapfrog(dt 10분)로 재실행한 결과. 인터랙티브(범례 토글·호버·줌) 또는 3D 궤도 진화 애니메이션으로 볼 수 있습니다.</span><span data-en hidden>Each system re-run with Principia's fixed-step leapfrog (dt 10 min). View interactively (legend toggle / hover / zoom) or as a 3D orbit-evolution animation.</span></div>
 </header>
 <div class="grid">
 {chr(10).join(rows)}
