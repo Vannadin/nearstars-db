@@ -73,6 +73,34 @@ On dropout: clear the flag, set the destination stock orbit around the destinati
 `CreateTrajectoryIfNeeded` — which, verified above, assigns the destination subsystem and anchors
 at the right origin. No further action.
 
+### 5. Stock teleport artifacts the arrival must handle (s25 instrumented findings, 2026-07-18)
+
+Both were root-caused in-game on the fork's WS5 test rig (a live cheat teleport is
+mechanically the same thing as a warp arrival — a large single-step state write with a
+mainBody switch); records in the Principia clone, `.nearstars/checklist.md` WS5-C2 section.
+
+- **Phantom geeForce blocks saves and KSC exit (WS5-C2-R2).** A live teleport out of a
+  rotating-frame situation (departure below the home body's inverse-rotation threshold)
+  can leave the world-frame rotation state uncleared: `obt_velocity` keeps rotating at the
+  departure body's ω, stock's `Δobt_velocity/Δt − graviticAcceleration` accounting then
+  reads a PERMANENT phantom acceleration ω×v (measured: |pert| = ω_Kerbin × v to 6
+  significant digits, constant for minutes), and `FlightGlobals.ClearToSave` refuses at
+  `geeForce > 0.1` — the player cannot quicksave or leave for KSC after arrival. The
+  cruise layer must (a) avoid engaging from an inverse-rotation state, or explicitly
+  ensure the frame state is rebuilt on arrival, and (b) wrap the arrival write in
+  `vessel.IgnoreGForces(frames)` (public stock API; stock itself uses it after its own
+  teleport-scale moves, Vessel:6257) so the acceleration smoothing never captures the
+  jump. Symptom signature if it slips through: "under acceleration" exit refusal with a
+  CONSTANT G readout; heals on KSP restart + load.
+- **Stale landed state NREs on the PQS-less destination (checkLanded family).** Any
+  stale `GroundContact`/`PermanentGroundContact` or `landed=True` arriving at a star hits
+  four unguarded `pqsController` dereferences (decouple abort → per-frame NREs → part
+  explosions; poisoned saves NRE on every load). Fixed ecosystem-side by
+  **InterstellarFluxFix v1.1.0** (invariant enforcement: PQS-less ⇒ not landed, stale
+  flags cleared at source) — which is therefore a REQUIRED companion of the NearStars
+  release, not just a thermal fix. The cruise layer itself needs no code for this, but
+  do not strip FluxFix from the install.
+
 ## Acceptance (in-game, Windows)
 - A vessel warps Sol→destination system, is released mid-cruise, and re-adopts around the
   destination star in the correct subsystem (confirm no NaN/precision blowup — the C++ test covers
@@ -81,6 +109,8 @@ at the right origin. No further action.
 - Casual mode: arrives in the written parking orbit.
 - Flight-plan loss on warp is expected (accepted).
 - Save/load mid-cruise (vessel released, purely stock-side) and post-arrival both survive.
+- **Post-arrival hygiene (§5):** quicksave AND flight→KSC exit succeed after arrival; the
+  geeForce readout is ~0 on a coast (a constant nonzero G = the §5 phantom, fail).
 
 ## Related
 - `research/R7-warp-support.md` — full feasibility/failure-catalog/decision; §9 the C++ deep dives.
