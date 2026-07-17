@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -166,7 +167,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   
   
   <div class="ev"><span class="tag">evidence</span> 중앙질량 WHFast 1 Myr clean — |dE/E|=6.5e-9, MEGNO 1.4e4, e_max≤0.085; 측정 β-prior보다 낮고 RV 이심률 불확정 범위 안. caveat: 카오스 가장자리(MEGNO ~1.4e4) — 마진 얇음. 더 안전하려면 e ≤ ×0.75(calmer).<br></div>
-  <div class="refs"><span class="ref">2025ApJ...982L...1B</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2025ApJ...982L...1B" target="_blank" rel="noopener">2025ApJ...982L...1B</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="barnards-star.html">← Barnard&#x27;s star</a></div>
 </div>
@@ -175,10 +176,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

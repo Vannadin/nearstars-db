@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -177,7 +178,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffeddf"></span><span class="hx">#ffeddf</span><div class="fnote p3">Phase 3: Teff 5370K 흑체 #ffecdd + 금속빈약 블루 nudge</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.14<div class="fnote">α (Korolik2023 H-band 간섭계 직접측정)</div></td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">very low (log R&#x27;HK −4.977 극비활동)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 오너 G3 확정·정정 2026-06-24 — 물리색만 기록(#ffeddf=흑체 실측+금속 nudge), 뷰어 채도-tint(#ffe9c8)는 미기록. emit 별색(광원=near-white/원반 art)은 deferred. 색은 Teff 지배·금속은 sub-perceptual nudge(방향 반영). limb/흑점=측정 passthrough.<br></div>
-  <div class="refs"><span class="ref">2023AJ....166..123K</span><span class="ref">2021A&amp;A...646A..77G</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021A%26A...646A..77G" target="_blank" rel="noopener">2021A&amp;A...646A..77G</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -210,7 +211,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 7°±7° (LOS 기준, 측정) · 디스크(i 35°, PA 105°)와 최소 ~28° 비정렬</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 측정값 그대로 채택(7°±7°, recommended). 별-디스크 비정렬은 두 측정의 직접 귀결 — 가정 아님(불확도 고려 시 최소 ~21°). 뷰어 i★ 레이어(측정=금색)와 정합.<br></div>
-  <div class="refs"><span class="ref">2023AJ....166..123K</span><span class="ref">2016ApJ...828..113M</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016ApJ...828..113M" target="_blank" rel="noopener">2016ApJ...828..113M</a></div>
 </article>
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
@@ -221,7 +222,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">4.2e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">5.517e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> q(4.04e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 4.2e-8. FGK 유사구조 범위 내, 오너 정책(항성 J2 무시가능 처리 금지)대로 emit.<br></div>
-  <div class="refs"><span class="ref">1998MNRAS.297L..76P</span><span class="ref">2023AJ....166..123K</span><span class="ref">2009A&amp;A...494..237T</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023AJ....166..123K" target="_blank" rel="noopener">2023AJ....166..123K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...494..237T" target="_blank" rel="noopener">2009A&amp;A...494..237T</a></div>
 </article></div>
 
 </div>
@@ -230,10 +231,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -232,7 +233,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 47°±7° (LOS 기준, 측정) · PA 자유, ICRS 변환 at emit</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> ZDI 측정값 그대로 채택(47°±7°, recommended). 가정은 극 방위각뿐. 행성 궤도 경사 미측정이라 정렬 주장 없음.<br></div>
-  <div class="refs"><span class="ref">2020MNRAS.500.1844K</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2020MNRAS.500.1844K" target="_blank" rel="noopener">2020MNRAS.500.1844K</a></div>
 </article>
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
@@ -243,7 +244,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">3.7e-09</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">9.809e7 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 느린 자전(83.5d)+작은 반지름이라 q 자체가 태양의 ~1/470 — 로스터 최소 J2. 그래도 오너 정책 (항성 J2 무시가능 처리 금지, Principia 플레이 중요)대로 계산값 emit. 태양 비율(0.0105) 대신 M왜성 폴리트로프 계수(0.084)를 쓴 것은 응집도 차이의 물리적 귀결.<br></div>
-  <div class="refs"><span class="ref">1939isss.book.....C</span><span class="ref">2009A&amp;A...505..205D</span><span class="ref">1998AJ....116..429B</span><span class="ref">2025A&amp;A...700A..11S</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...505..205D" target="_blank" rel="noopener">2009A&amp;A...505..205D</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998AJ....116..429B" target="_blank" rel="noopener">1998AJ....116..429B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2025A%26A...700A..11S" target="_blank" rel="noopener">2025A&amp;A...700A..11S</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="proxima-centauri-b.html">Proxima Centauri b →</a></div>
 </div>
@@ -252,10 +253,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -166,7 +167,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">mass</td><td class="v">1.92 <span class="u">M_sun</span><div class="fnote">Mamajek 2012 (excess-corrected)</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">radius</td><td class="v">1.842 <span class="u">R_sun</span><div class="fnote">적도반경; alt=Davis2005 1.744 (excess 미보정) 병기</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">gravity</td><td class="v">155 <span class="u">m/s2</span><div class="fnote p3">Phase 3: GM/R² 파생 에코</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">flattening</td><td class="v">0.022<div class="fnote">= (3J₂+q)/2 (J₂ 1.0e-4, q 0.044) — 로스터 항성 최대 편평; VertexHeightOblateAdvanced 시각 대상 (methodology §6)</div></td><td class="o"></td></tr><tr><td class="k">intrinsic_luminosity</td><td class="v">16.63 <span class="u">L_sun</span><div class="fnote">Teff 8590 K</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">age</td><td class="v">0.44 <span class="u">Gyr</span><div class="fnote">Castor moving group</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">rotation_period</td><td class="v">1.0 <span class="u">d</span><div class="fnote">도출 (v sin i 93±9 + 측정 i★ 90°±9 + R_eq) — 직접 측정 없음</div></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 오너 G2 확정 2026-06-26 — 측정값 전부 passthrough(Mamajek 2012). 편평 ~2.2%: 임계 아래지만 시각 oblate emit + 약한 중력감광(극~300K↑) 채택(오너 art, 빠른 A형 상징). alt=Davis2005(8819K/1.744R☉) 병기. paper: Mamajek 2012(excess-corrected R/Teff/L/age); Absil 2009(편평 1.021); body-figure-methodology.md.<br></div>
-  <div class="refs"><span class="ref">2012ApJ...754L..20M</span><span class="ref">2014A&amp;A...569A..45H</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2012ApJ...754L..20M" target="_blank" rel="noopener">2012ApJ...754L..20M</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014A%26A...569A..45H" target="_blank" rel="noopener">2014A&amp;A...569A..45H</a></div>
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -177,7 +178,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#cfe0ff"></span><span class="hx">#cfe0ff</span><div class="fnote p3">Phase 3: A4V 8590K 흑체→sRGB (청백)</div></td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">0.211<div class="fnote">α (Davis2005 SUSI 직접측정, 태양보다 가파름)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">미미 (복사 외피)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">none (dynamo 부재)</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">none (자기 가열 없음; 약 X선은 동반성 귀속)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">none</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 오너 G3 확정 2026-06-26 — 물리색 #cfe0ff(8590K, Vega보다 살짝 따뜻). limb α 0.211(Davis2005, 가파름). granulation 미미·흑점/코로나/플레어 없음(복사 외피, dynamo 부재). 중력감광=bulk. paper: Davis 2005(limb α 0.211); A4V 8590K 흑체→sRGB 물리색.<br></div>
-  <div class="refs"><span class="ref">2005MNRAS.356.1362D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2005MNRAS.356.1362D" target="_blank" rel="noopener">2005MNRAS.356.1362D</a></div>
 </article>
 <article class="dec" id="magnetism.magnetic_field">
   <div class="dec-head">
@@ -188,7 +189,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">none/미검출 (복사 외피, dynamo 불가; fossil field도 미검출)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 오너 G4 확정 2026-06-26 — 무자기/무활동. A4V 복사 외피→αΩ dynamo 불가(대류경계 위). nuance: A형은 fossil field 가능(Ap/Bp kG·정상A형 Vega식 0.6G 초미약장)이나 Fomalhaut 정상A형이라 미검출, 있어도 활동 무관. log R&#x27;HK 정의 안 됨. 약 X선은 동반성 TW PsA 탓(Schröder&amp;Schmitt2007).<br></div>
-  <div class="refs"><span class="ref">2007A&amp;A...475..677S</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2007A%26A...475..677S" target="_blank" rel="noopener">2007A&amp;A...475..677S</a></div>
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">
@@ -210,7 +211,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 90°±9° (측정, 적도향) · PA_rot 65.6°±5° (측정, 디스크 PA에 수직) — 로스터 유일 3D 실측 극</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> i★·PA 둘 다 간섭계 측정(Hadjara2014·Le Bouquin2009) — 가정 없는 유일 항성 극. 디스크와의 3D 비정렬 후보(~24°, 1.5–2σ)는 측정 불확도 안이라 단정하지 않고 기록만. 상세 = phase4/figure/fomalhaut-j2-research.md §3.<br></div>
-  <div class="refs"><span class="ref">2014A&amp;A...569A..45H</span><span class="ref">2009A&amp;A...498L..41L</span><span class="ref">2005Natur.435.1067K</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014A%26A...569A..45H" target="_blank" rel="noopener">2014A&amp;A...569A..45H</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009A%26A...498L..41L" target="_blank" rel="noopener">2009A&amp;A...498L..41L</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2005Natur.435.1067K" target="_blank" rel="noopener">2005Natur.435.1067K</a></div>
 </article>
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
@@ -221,7 +222,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">0.0001<div class="fnote">방어 밴드 0.8–1.3e-4</div></td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">1.2815e9 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 입력 전부 측정(M/R Mamajek2012 · v sin i 93±9 군집값 · i★ 90°±9 Hadjara2014) + 이론 그리드 k₂(Claret 2004, 태양 크로스체크로 계통 ±25% 정량화). Altair/Vega(f 0.10–0.25) 대비 ~2.5–3× 느린 자전이라 f 0.022는 정확히 기대 위치 — sanity 통과. 방법 = body-figure-methodology.md §2 조기형 분기(2026-07-12 신설).<br></div>
-  <div class="refs"><span class="ref">1939MNRAS..99..451S</span><span class="ref">2004A&amp;A...424..919C</span><span class="ref">2014A&amp;A...569A..45H</span><span class="ref">2012ApJ...754L..20M</span><span class="ref">2009ApJ...698.1778R</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939MNRAS..99..451S" target="_blank" rel="noopener">1939MNRAS..99..451S</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2004A%26A...424..919C" target="_blank" rel="noopener">2004A&amp;A...424..919C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014A%26A...569A..45H" target="_blank" rel="noopener">2014A&amp;A...569A..45H</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2012ApJ...754L..20M" target="_blank" rel="noopener">2012ApJ...754L..20M</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2009ApJ...698.1778R" target="_blank" rel="noopener">2009ApJ...698.1778R</a></div>
 </article>
 <article class="dec" id="rings">
   <div class="dec-head">
@@ -232,7 +233,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">ring_structure</td><td class="v">3벨트 — warm 10–78 AU · intermediate 83–104 AU (e~0.3) · cold 133–158 AU (e 0.11, offset ~14 AU, 내연 sharp)</td><td class="o"></td></tr><tr><td class="k">ring_plane</td><td class="v">i 47.8° / 67.5° / 65.6° · PA 329.6° / 329.6° / 337.9° (JWST misalignment 재현)</td><td class="o"></td></tr><tr><td class="k">ring_composition</td><td class="v">얼음입자 (~50–80% 물얼음, a_min 4.33µm) — warm/intermediate 합성 <span class="chip" style="background:#fff4e5"></span><span class="hx">#fff4e5</span> (vivid <span class="chip" style="background:#ffe0b0"></span><span class="hx">#ffe0b0</span>/<span class="chip" style="background:#ffe2b1"></span><span class="hx">#ffe2b1</span>), cold 측정 <span class="chip" style="background:#d6d8da"></span><span class="hx">#d6d8da</span> 유지</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 오너 G6 확정 2026-06-26 — 3벨트 다 emit(가). 색=현행 Mie 재실행(warm/intermediate 합성, cold 측정 유지 — measure-vs-synthesize 규칙). JWST misalignment 벨트경사로 재현. Fomalhaut b(dust cloud)·Great Dust Cloud (배경은하) 제외. 편심 offset·수직두께=Kopernicus flat ring 미표현(문서화). paper: Kalas2005(cold 편심·측정색); Boley2012(ALMA 기하·aspect); MacGregor2017(PA/ω); Gáspár2023(JWST 3벨트); Sommer2025(얼음 조성); debris-disk-color-methodology.md + disk_color_mie.py; Gáspár&amp;Rieke2020(Fomalhaut b 반박).<br></div>
-  <div class="refs"><span class="ref">2005Natur.435.1067K</span><span class="ref">2012ApJ...750L..21B</span><span class="ref">2017ApJ...842....8M</span><span class="ref">2023NatAs...7..790G</span><span class="ref">2503.18127</span><span class="ref">2020PNAS..117.9712G</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2005Natur.435.1067K" target="_blank" rel="noopener">2005Natur.435.1067K</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2012ApJ...750L..21B" target="_blank" rel="noopener">2012ApJ...750L..21B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017ApJ...842....8M" target="_blank" rel="noopener">2017ApJ...842....8M</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2023NatAs...7..790G" target="_blank" rel="noopener">2023NatAs...7..790G</a><a class="ref" href="https://arxiv.org/abs/2503.18127" target="_blank" rel="noopener">2503.18127</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2020PNAS..117.9712G" target="_blank" rel="noopener">2020PNAS..117.9712G</a></div>
 </article>
 <article class="dec" id="satellites">
   <div class="dec-head">
@@ -263,10 +264,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

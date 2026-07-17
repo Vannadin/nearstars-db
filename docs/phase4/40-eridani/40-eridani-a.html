@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -221,7 +222,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">5.4e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">5.609e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> q(5.1e-6, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 5.4e-8 — τ Ceti(4.2e-8)와 동급, αCen A(4.8e-7)의 ~1/9. FGK 유사구조 범위 내. 구 OMIT confirm은 정책 변경으로 대체.<br></div>
-  <div class="refs"><span class="ref">1998MNRAS.297L..76P</span><span class="ref">2012ApJ...757..112B</span><span class="ref">2024AJ....167..243B</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2012ApJ...757..112B" target="_blank" rel="noopener">2012ApJ...757..112B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2024AJ....167..243B" target="_blank" rel="noopener">2024AJ....167..243B</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="40-eridani-b.html">40 Eridani B →</a></div>
 </div>
@@ -230,10 +231,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

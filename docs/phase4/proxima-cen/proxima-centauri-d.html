@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -155,7 +156,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">초단주기 sub-Earth — 뜨거운 무대기 암석 (자기권 가진 수성형, 무생물)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Proxima Centauri d (고유명 없음)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">candidate (Faria2022 RV, 미확정)</td><td class="o"></td></tr></tbody></table>
   
   <div class="disc"><span class="tag">discoverability</span> <code>candidate</code> · IGNORELEVELS <code>T F F F</code></div><div class="ev"><span class="tag">evidence</span> candidate(arXiv:2202.05188 Faria2022) → 별 항상가시·행성 관측발견 T F F F. 수성형이되 ~16 G 자기권 보유(G7, Zapatero Osorio2026 SPI)로 무자기장 수성과 차별. b(온대)·c(냉)와 극단 대비, 시스템 다양성. phase-lock SPI=d 시그니처.<br></div>
-  <div class="refs"><span class="ref">2202.05188</span></div>
+  <div class="refs"><a class="ref" href="https://arxiv.org/abs/2202.05188" target="_blank" rel="noopener">2202.05188</a></div>
 </article>
 <article class="dec" id="orbit">
   <div class="dec-head">
@@ -221,7 +222,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~16 G (극 자기장, 범위 3–280 G)<div class="fnote">Zapatero Osorio 2026 SPI 추정; 지구형 외계행성 최초. phase-lock &gt;99.8% 유의 (helicity reconnection + Poynting flux, Mars 반경 가정)</div></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> rationale: SPI 관측 추정(~16 G)이 RM22 느린자전 약장 추측을 supersede(오너 결정 2026-06-23, 관측 우선). caveat: 모델의존(helicity reconnection·Poynting flux, Mars 반경 가정)·범위 3–280 G로 광범. dynamo 이론(조석고정 느린자전 →약장)과 긴장 — 범위 하단 ~3 G가 이론 정합이나 central 16 G는 SPI 채택. 16 G 극장은 약하지 않음(지구 극 ~0.6 G· 목성 ~14 G 수준).<br>feature: **phase-lock 플레어는 d의 distinctive 피처** — &#x27;별을 자기적으로 때리는 안쪽 행성&#x27;. G8 방사선·G1 정체성에 연계.<br>paper: Zapatero Osorio et al. 2026 (arXiv:2605.22925) &quot;Star-planet interaction in the Proxima system&quot;. 약장 기존 추측 출처=dynamo 문서 regime4(RM22).<br></div>
-  <div class="refs"><span class="ref">2605.22925</span></div>
+  <div class="refs"><a class="ref" href="https://arxiv.org/abs/2605.22925" target="_blank" rel="noopener">2605.22925</a></div>
 </article>
 <article class="dec" id="environment">
   <div class="dec-head">
@@ -274,10 +275,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

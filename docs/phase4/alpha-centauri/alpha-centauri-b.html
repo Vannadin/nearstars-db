@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -166,7 +167,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~2–4 G (large-scale surface, A보다 강함)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>K1V는 τ_conv 길어 Rossby≈1.4&lt;A → 더 효율적 dynamo(clean 8.84yr cycle 주기성 + X선 log Lx 27.04 &gt; A 26.78 방증). A의 ~1.5–2배. 직접 ZDI 없음 → proxy(low–med).<br></span><span data-en hidden>K1V has a longer τ_conv, Rossby≈1.4&lt;A → a more efficient dynamo (corroborated by the clean 8.84yr cycle periodicity + X-ray log Lx 27.04 &gt; A 26.78). ~1.5–2× A. No direct ZDI → proxy (low–med).<br></span></div>
-  <div class="refs"><span class="ref">2010ApJ...722..343D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
 </article>
 <article class="dec is-sup" id="environment.stellar_wind">
   <div class="dec-head">
@@ -188,7 +189,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">1.5 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>현 DB X선(A 26.78 / B 27.04)·반지름(1.223/0.863 R⊙)로 F_X^1.34 가중 재계산 → Ṁ 비 B/A ≈ 2.9. 구행(B≈0.6)은 재앵커 전 스테일 X선 기반이라 역전돼 있었음.<br></span><span data-en hidden>Recomputed with F_X^1.34 weighting from the current DB X-ray (A 26.78 / B 27.04)·radii (1.223/0.863 R⊙) → Ṁ ratio B/A ≈ 2.9. The old row (B≈0.6) was reversed because it was based on pre-reanchor stale X-ray.<br></span></div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split A≈0.5/B≈1.5 is an X-ray-surface-flux-weighted assumption (Wood 2002 relation), not a direct measurement.<br></div>
-  <div class="refs"><span class="ref">2001ApJ...547L..49W</span><span class="ref">2002ApJ...574..412W</span><span class="ref">2016A&amp;A...596A..52R</span><span class="ref">2010ApJ...722..343D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2001ApJ...547L..49W" target="_blank" rel="noopener">2001ApJ...547L..49W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2002ApJ...574..412W" target="_blank" rel="noopener">2002ApJ...574..412W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016A%26A...596A..52R" target="_blank" rel="noopener">2016A&amp;A...596A..52R</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
 </article>
 <article class="dec" id="appearance">
   <div class="dec-head">
@@ -199,7 +200,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#ffdcb0"></span><span class="hx">#ffdcb0</span><div class="fnote p3">Phase 3: K1V, Teff 5316K (황등)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">대류 granule (약간 큼)</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">표준 (적색쪽 강함)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">moderate ~1–3% 피복률, 중위도 흑점군 여럿</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">A보다 밝음 (log Lx 27.04)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">occasional (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>관측 측정서 도출(Teff·X선 log Lx 27.04·DeWarf2010 8.84yr cycle). 흑점량=오너 위임 결정(텍스처용) 보통 ~1–3%, A보다 흑점군 多. 색=K1V Teff passthrough.<br></span><span data-en hidden>Derived from observed measurements (Teff·X-ray log Lx 27.04·DeWarf2010 8.84yr cycle). Spot count=owner-delegated decision (for texture), moderate ~1–3%, more spot groups than A. color=K1V Teff passthrough.<br></span></div>
-  <div class="refs"><span class="ref">2010ApJ...722..343D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
 </article>
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
@@ -210,7 +211,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">i★ 45° (LOS 기준, 측정) · PA=궤도극 정렬 → 궤도면 대비 비정렬 ~34°</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>측정값 그대로 채택(45° +9/−19, recommended). 비정렬 자체가 측정 함의 — 가정은 방위각(최소 비정렬 읽기)뿐. 불확도 커서 low-conf 유지, 후속 측정 시 갱신 후보.<br></span><span data-en hidden>Adopts the measured value as-is (45° +9/−19, recommended). The misalignment itself is a measurement implication — the only assumption is the azimuth (minimum-misalignment reading). Kept low-conf due to the large uncertainty; a candidate for update on follow-up measurements.<br></span></div>
-  <div class="refs"><span class="ref">2014ApJ...796..133D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014ApJ...796..133D" target="_blank" rel="noopener">2014ApJ...796..133D</a></div>
 </article>
 <article class="dec" id="bulk.geopotential_j2">
   <div class="dec-head">
@@ -221,7 +222,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">5.7e-08</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">6.005e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>q(5.48e-6, DB recommended) × 태양 측정 J2/q(0.0105) = 5.7e-8. K1V는 태양보다 응집 약간 덜해 실제값은 소폭 위일 수 있으나(계수 상향 여지) 차수 불변 — FGK 근사 범위 내.<br></span><span data-en hidden>q (5.48e-6, DB recommended) × measured solar J2/q (0.0105) = 5.7e-8. K1V is slightly less condensed than the Sun, so the actual value may be marginally higher (room for an upward coefficient), but the order is unchanged — within the FGK approximation range.<br></span></div>
-  <div class="refs"><span class="ref">1998MNRAS.297L..76P</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a></div>
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">

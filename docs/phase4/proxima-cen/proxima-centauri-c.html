@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -155,7 +156,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">body_type</td><td class="v">냉 mini-Neptune (~8 M⊕, 1.5 AU, H/He 외피, Teq~40K, 무생물)</td><td class="o"></td></tr><tr><td class="k">designation</td><td class="v">Proxima Centauri c (고유명 없음)</td><td class="o"></td></tr><tr><td class="k">discoverability</td><td class="v">candidate (Damasso2020 RV+천체측정, 존재 논쟁적)</td><td class="o"></td></tr></tbody></table>
   
   <div class="disc"><span class="tag">discoverability</span> <code>candidate</code> · IGNORELEVELS <code>T F F F</code></div><div class="ev"><span class="tag">evidence</span> 오너 G1 확정 2026-06-23. candidate(2020SciA....6.7467D) → T F F F. 존재 논쟁(미확정 신호)은 &#x27;미발견 후보&#x27;와 정합. 냉 mini-Neptune=b(온대 암석)·d(뜨거운 수성형)와 3극 대비.<br></div>
-  <div class="refs"><span class="ref">2020SciA....6.7467D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2020SciA....6.7467D" target="_blank" rel="noopener">2020SciA....6.7467D</a></div>
 </article>
 <article class="dec" id="orbit">
   <div class="dec-head">
@@ -166,7 +167,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">semi_major_axis_au</td><td class="v">1.5 <span class="u">AU</span><div class="fnote">P≈1900d (~5.2yr); Damasso2020 측정</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">eccentricity</td><td class="v">0.04<div class="fnote">Damasso2020 측정</div></td><td class="o"><span class="op passthrough">passthrough</span></td></tr><tr><td class="k">tidal_lock</td><td class="v">none (비조석고정, 1.5 AU → τ_lock ≫ 나이); 경사각·절대 배향 자유 emit</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> rationale: 오너 결정 2026-06-23 (a) — 진질량 등방중앙 8 M⊕ 채택. Kervella&amp;Damasso2020(arXiv:2003.13106) 천체측정 경사각/질량은 **논쟁적**(신호 후속 반박)이라 비채택, caveat 병기. c 존재 자체가 disputed candidate라 &quot;있다는 가정 하&quot; 진행. 자전주기 ~27h는 미구속 자유자전의 오너 art 선택(해왕성형보다 약간 느림). 1.5 AU 비잠김은 locking 문서 a⁶로 확정.<br>paper: 진질량 등방 = Ho&amp;Turner2011(1007.0245). 경사각 논쟁 = Kervella&amp;Damasso2020(2003.13106). 비잠김 = tidal-locking-timescale-methodology.md(a⁶).<br></div>
-  <div class="refs"><span class="ref">2003.13106</span><span class="ref">1007.0245</span></div>
+  <div class="refs"><a class="ref" href="https://arxiv.org/abs/2003.13106" target="_blank" rel="noopener">2003.13106</a><a class="ref" href="https://arxiv.org/abs/1007.0245" target="_blank" rel="noopener">1007.0245</a></div>
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">
@@ -242,8 +243,8 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">**2중 얼음 고리 + 선명한 적/흰 줄무늬**(오너 2026-06-23, 토성 클론 회피) — Gratton2020(arXiv:2004.06685) SPHERE 점광원(밝기 과잉→대형 고리계 추정)을 hook으로. 기하=**분리된 안·바깥 두 고리 띠**(사이 큰 간극; 토성의 균일 넓은 시트와 정반대). 색=**적/흰 교대 줄무늬** — 백띠=청정 물얼음(고albedo), 적띠=톨린 코팅 얼음(KBO/명왕성식 냉-처리, 위성 Proxima c I의 명왕성 테마와 통일). c ~40–60K라 얼음 안정, Gratton 밝은 신호와 양립(청정 얼음 백띠가 밝음). 규모: 두 띠 모두 얼음 Roche(~3.3 R_c=56,700 km) 안쪽 — 안 띠 ~1.4–1.9 R_c(24,000–32,700 km) · 바깥 띠 ~2.4–3.0 R_c(41,300–51,600 km). 색 합성=디스크색 문서 Mie(물얼음 + 톨린 n,k), faithful/vivid 변종.<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">ring_structure</td><td class="v">2중 띠: 안쪽 24000–32700 km (~1.4–1.9 R_c) / 바깥 41300–51600 km (~2.4–3.0 R_c), 사이 큰 간극</td><td class="o"></td></tr><tr><td class="k">ring_composition</td><td class="v">백띠=청정 물얼음(고albedo) + 적띠=톨린 코팅 얼음 (KBO/명왕성식)</td><td class="o"></td></tr><tr><td class="k">ring_color</td><td class="v">적/흰 교대 줄무늬</td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 청정 얼음 Warren&amp;Brandt2008 + 톨린 Khare1984).<br></div><div class="ev div"><span class="tag">divergence</span> Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 고리는 interesting-first 채택, 명시 발산. 잠정 관측 근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). **토성 클론 회피**가 명시 의도 — 2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성 위성과 테마 통일. 간극 위치·줄무늬 패턴은 art — emit시 로슈 한계·고리면 정합 점검 권장.</div>
-  <div class="refs"><span class="ref">2004.06685</span></div>
+  <div class="ev"><span class="tag">evidence</span> paper: 고리 hook=Gratton+2020 arXiv:2004.06685. 고리색=docs/reference/debris-disk-color-methodology.md(Mie, 청정 얼음 Warren&amp;Brandt2008 + 톨린 Khare1984).<br></div><div class="ev div"><span class="tag">divergence</span> Gratton 점광원은 **잠정**(논문이 배경원 가능성도 명시) — 고리는 interesting-first 채택, 명시 발산. 잠정 관측 근거가 있어 순수 조작 아님([[project_nearstars_ring_fabrication]] 대비, V1400 Cen 계열). **토성 클론 회피**가 명시 의도 — 2중 고리(분리 띠) + 적/흰 줄무늬(톨린 적 + 청정 얼음 백)로 토성 균일 흰 시트와 차별, 명왕성 위성과 테마 통일. 간극 위치·줄무늬 패턴은 art — emit시 로슈 한계·고리면 정합 점검 권장.<br></div>
+  <div class="refs"><a class="ref" href="https://arxiv.org/abs/2004.06685" target="_blank" rel="noopener">2004.06685</a></div>
 </article>
 <article class="dec is-div" id="satellites">
   <div class="dec-head">
@@ -253,7 +254,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">**위성 1개 = Proxima c I** — **반경 ~950 km(트리톤/티타니아급, 명왕성 느낌)**(N₂/CH₄ 얼음 + 톨린 적화 다양 지형), 고유명 없음, c에 조석고정. c는 큰 Hill 반경(~900만 km, 안정역 ~270–450만 km)이라 안정 위성 가능. **판도라식 독자 facet-walk로 별도 바디 전개**(아래 &quot;Proxima Centauri c I&quot; 블록 11축).<br></p>
   
   
-  <div class="ev div"><span class="tag">divergence</span> 관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적 가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO). 정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).</div>
+  <div class="ev div"><span class="tag">divergence</span> 관측 근거 0 — art-first 픽션 위성(오너 결정 2026-06-23, 다양성). b/d와 달리 c는 원거리·대Hill이라 안정 위성 물리적 가능(불가 아님). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린). **emit시 stability-sim 필수**([[project_nearstars_stability_sim]] Hill+MEGNO). 정밀 질량/궤도는 위성 독자 walk(G3)서 확정. 명명=모행성+로마숫자(Proxima c I).<br></div>
   
 </article>
 <article class="dec" id="gameplay">
@@ -274,10 +275,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};

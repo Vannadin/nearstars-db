@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -166,7 +167,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">magnetic_field</td><td class="v">~1–2 G (large-scale surface, solar-twin proxy)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>직접 ZDI 없음(α Cen 남천이라 BCool/Marsden2014 표 부재). log R&#x27;HK −4.95 + Rossby≈1.8(≈태양) → 태양 BCool 대규모장 ~1–2 G로 proxy. 행성 dynamo-scaling.md은 항성 미적용 — activity/Rossby로 근거화.<br></span><span data-en hidden>No direct ZDI (α Cen is southern-sky, so absent from the BCool/Marsden2014 table). log R&#x27;HK −4.95 + Rossby≈1.8 (≈Sun) → proxied to the solar BCool large-scale field ~1–2 G. The planetary dynamo-scaling.md does not apply to stars — grounded via activity/Rossby.<br></span></div>
-  <div class="refs"><span class="ref">2010ApJ...722..343D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
 </article>
 <article class="dec is-sup" id="environment.stellar_wind">
   <div class="dec-head">
@@ -188,7 +189,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">stellar_wind</td><td class="v">0.5 <span class="u">Mdot_sun</span><div class="fnote p3">Phase 3: 합산 ~2 Ṁ⊙ (Wood 2001 측정)</div></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>현 DB X선(A 26.78 Robrade&amp;Schmitt2016 / B 27.04 DeWarf2010)·반지름(1.223/0.863 R⊙)로 F_X^1.34 가중 재계산 → Ṁ 비 B/A ≈ 2.9. 구행(A≈1/B≈0.6)은 재앵커 전 스테일 X선 기반이라 역전돼 있었음.<br></span><span data-en hidden>Recomputed with F_X^1.34 weighting from the current DB X-ray (A 26.78 Robrade&amp;Schmitt2016 / B 27.04 DeWarf2010)·radii (1.223/0.863 R⊙) → Ṁ ratio B/A ≈ 2.9. The old row (A≈1/B≈0.6) was reversed because it was based on pre-reanchor stale X-ray.<br></span></div><div class="ev div"><span class="tag">divergence</span> only the combined ~2 Ṁ⊙ is measured (Wood 2001 shared astrosphere); the per-star split A≈0.5/B≈1.5 is an X-ray-surface-flux-weighted assumption (Wood 2002 relation), not a direct measurement.<br></div>
-  <div class="refs"><span class="ref">2001ApJ...547L..49W</span><span class="ref">2002ApJ...574..412W</span><span class="ref">2016A&amp;A...596A..52R</span><span class="ref">2010ApJ...722..343D</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2001ApJ...547L..49W" target="_blank" rel="noopener">2001ApJ...547L..49W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2002ApJ...574..412W" target="_blank" rel="noopener">2002ApJ...574..412W</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016A%26A...596A..52R" target="_blank" rel="noopener">2016A&amp;A...596A..52R</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a></div>
 </article>
 <article class="dec" id="environment.heliosphere">
   <div class="dec-head">
@@ -210,7 +211,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">color</td><td class="v"><span class="chip" style="background:#fff4ea"></span><span class="hx">#fff4ea</span><div class="fnote p3">Phase 3: G2V, Teff 5847K (황백, 거의 태양)</div></td><td class="o"></td></tr><tr><td class="k">granulation</td><td class="v">solar-type 대류 granule</td><td class="o"></td></tr><tr><td class="k">limb_darkening</td><td class="v">solar-type (표준)</td><td class="o"></td></tr><tr><td class="k">spots_faculae</td><td class="v">sparse ~0.1–0.3% 피복률</td><td class="o"></td></tr><tr><td class="k">corona</td><td class="v">present (weak, X-ray log Lx ~26.78)</td><td class="o"></td></tr><tr><td class="k">flares</td><td class="v">rare (플레어성 아님)</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>전부 관측 측정서 도출(Teff·P_rot·log R&#x27;HK −4.95·X선). 흑점량=오너 위임 결정(텍스처용) 희소 ~0.1–0.3%, B보다 깨끗. 색/granulation/limb=측정 passthrough.<br></span><span data-en hidden>All derived from observed measurements (Teff·P_rot·log R&#x27;HK −4.95·X-ray). Spot count=owner-delegated decision (for texture), sparse ~0.1–0.3%, cleaner than B. color/granulation/limb=measured passthrough.<br></span></div>
-  <div class="refs"><span class="ref">2010ApJ...722..343D</span><span class="ref">2016A&amp;A...596A..52R</span><span class="ref">2014AJ....147...59A</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2010ApJ...722..343D" target="_blank" rel="noopener">2010ApJ...722..343D</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2016A%26A...596A..52R" target="_blank" rel="noopener">2016A&amp;A...596A..52R</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2014AJ....147...59A" target="_blank" rel="noopener">2014AJ....147...59A</a></div>
 </article>
 <article class="dec" id="bulk.spin_axis_orientation">
   <div class="dec-head">
@@ -232,7 +233,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">4.8e-07</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">8.511e8 <span class="u">m</span></td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> <span data-i18n>q(4.59e-5, DB recommended 질량·반경·자전) × 태양 측정 J2/q(0.0105) = 4.8e-7 — 태양(2.1e-7)의 ~2.3배로, 더 빠른 자전(22d vs 25.4d)+큰 반지름과 정합적. FGK 왜성 유사구조 범위 내.<br></span><span data-en hidden>q (4.59e-5, DB recommended mass·radius·rotation) × measured solar J2/q (0.0105) = 4.8e-7 — ~2.3× the Sun&#x27;s (2.1e-7), consistent with the faster rotation (22d vs 25.4d)+larger radius. Within the FGK-dwarf similar-structure range.<br></span></div>
-  <div class="refs"><span class="ref">1998MNRAS.297L..76P</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1998MNRAS.297L..76P" target="_blank" rel="noopener">1998MNRAS.297L..76P</a></div>
 </article>
 <article class="dec" id="bulk">
   <div class="dec-head">

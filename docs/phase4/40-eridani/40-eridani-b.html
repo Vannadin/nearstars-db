@@ -121,7 +121,8 @@ table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
 .ev.div .tag { color:var(--danger); border-color:var(--danger) }
 .refs { margin-top:9px; display:flex; gap:5px; flex-wrap:wrap }
 .ref { font-family:var(--mono); font-size:10px; color:var(--fg4); background:var(--s1);
-  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px }
+  border:1px solid var(--bd1); border-radius:5px; padding:2px 7px; text-decoration:none }
+a.ref:hover { color:var(--fg2); border-color:#3b78d0 }
 code { font-family:var(--mono); font-size:11.5px; color:var(--fg2) }
 .bodynav { display:flex; justify-content:space-between; gap:12px; margin-top:26px;
   padding-top:16px; border-top:1px solid var(--bd1) }
@@ -210,7 +211,7 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">spin_axis_orientation</td><td class="v">BC 궤도면 법선 정렬 (i 107.98°·Ω 151.58° 실측 면) — 전구체 축 계승 논리</td><td class="o"></td></tr></tbody></table>
   
   <div class="ev"><span class="tag">evidence</span> 기준면 자체가 실측(BC visual orbit, grade 3). 정렬은 가정이나 물리 근거 있음 — 공통 형성 + 등방 질량손실의 축 방향 보존 + 축을 교란할 상호작용(공통 연개·강착) 부재. 단일 가정.<br></div>
-  <div class="refs"><span class="ref">2021AJ....162...53M</span><span class="ref">2017ApJ...848...16B</span></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M" target="_blank" rel="noopener">2021AJ....162...53M</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B" target="_blank" rel="noopener">2017ApJ...848...16B</a></div>
 </article>
 <article class="dec is-div" id="bulk.geopotential_j2">
   <div class="dec-head">
@@ -220,8 +221,8 @@ body.collapsed .narrative, body.collapsed .ev, body.collapsed .disc, body.collap
   <p class="narrative">회전 편평 J2 = 2.1e-9. **P_rot 측정 없음**(Teff 17,200K는 ZZ Ceti 맥동띠 밖이라 성진동 불가) → Kepler 점근파 WD 표본 중앙값 **P ≈ 35 h 채택**(Hermes 2017, 오너 승인 2026-07-12). WD는 비상대론 축퇴 ≈ n=3/2 폴리트로프 → M왜성과 같은 NMoI 0.205 분기(Radau-Darwin, J2/q 0.084; 0.56 M☉ 저질량 WD라 상대론 보정 소폭 — J2 약간 과대 가능). q = ω²R³/GM = 2.5e-8 (M 0.558·R 0.01308 R☉) → J2 2.1e-9. reference_radius = 적도반경 9.100e6 m (~지구 크기).<br></p>
   <table class="spec"><thead><tr><th><span data-i18n>필드</span><span data-en hidden>Field</span></th><th><span data-i18n>값</span><span data-en hidden>Value</span></th><th></th></tr></thead><tbody><tr><td class="k">geopotential_j2</td><td class="v">2.1e-09</td><td class="o"></td></tr><tr><td class="k">reference_radius</td><td class="v">9.100e6 <span class="u">m</span></td><td class="o"></td></tr><tr><td class="k">rotation_period</td><td class="v">35 <span class="u">h</span><div class="fnote">측정 없음 — Kepler WD 표본 중앙값 (Hermes 2017), J2 입력과 동일 채택 (오너 승인 2026-07-12)</div></td><td class="o"></td></tr></tbody></table>
   
-  <div class="ev"><span class="tag">evidence</span> 입력 M/R은 실측(Mason2021/Bond2017). 폴리트로프 분기는 Proxima와 동일 근거(Chandrasekhar 1939). P_rot만 통계 입력 — 측정 나오면 갱신 후보 1순위.<br></div><div class="ev div"><span class="tag">divergence</span> 40 Eri B has no measured rotation period (outside the ZZ Ceti instability strip, no asteroseismology; no usable v sin i). The adopted P ≈ 35 h is the Kepler asteroseismic white-dwarf sample median (Hermes 2017) — a statistical stand-in, not a measurement. J2 scales as P^-2: a 10 h rotator would be ~12× larger, a 4 d rotator ~7× smaller.</div>
-  <div class="refs"><span class="ref">1939isss.book.....C</span><span class="ref">2017ApJS..232...23H</span><span class="ref">2017ApJ...848...16B</span><span class="ref">2021AJ....162...53M</span></div>
+  <div class="ev"><span class="tag">evidence</span> 입력 M/R은 실측(Mason2021/Bond2017). 폴리트로프 분기는 Proxima와 동일 근거(Chandrasekhar 1939). P_rot만 통계 입력 — 측정 나오면 갱신 후보 1순위.<br></div><div class="ev div"><span class="tag">divergence</span> 40 Eri B has no measured rotation period (outside the ZZ Ceti instability strip, no asteroseismology; no usable v sin i). The adopted P ≈ 35 h is the Kepler asteroseismic white-dwarf sample median (Hermes 2017) — a statistical stand-in, not a measurement. J2 scales as P^-2: a 10 h rotator would be ~12× larger, a 4 d rotator ~7× smaller.<br></div>
+  <div class="refs"><a class="ref" href="https://ui.adsabs.harvard.edu/abs/1939isss.book.....C" target="_blank" rel="noopener">1939isss.book.....C</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017ApJS..232...23H" target="_blank" rel="noopener">2017ApJS..232...23H</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2017ApJ...848...16B" target="_blank" rel="noopener">2017ApJ...848...16B</a><a class="ref" href="https://ui.adsabs.harvard.edu/abs/2021AJ....162...53M" target="_blank" rel="noopener">2021AJ....162...53M</a></div>
 </article></div>
 <div class="bodynav"><a class="navlink" href="40-eridani-a.html">← 40 Eridani A</a><a class="navlink" href="40-eridani-c.html">40 Eridani C →</a></div>
 </div>
@@ -230,10 +231,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};
