@@ -35,6 +35,7 @@ VERDICT_LABEL = {
     "pass-in-window": ("범위 내", "In-window"),
     "documented-divergence": ("문서화 이탈", "Doc. divergence"),
     "owner-override": ("오너 확정", "Owner override"),
+    "methodology-derived": ("방법론 도출", "Methodology-derived"),
 }
 
 
@@ -164,7 +165,8 @@ def decision_html(d):
     verdict = gate.get("verdict", "")
     div = verdict == "documented-divergence"
     vclass = {"documented-divergence": "vd-div",
-              "owner-override": "vd-ovr"}.get(verdict, "vd-ok")
+              "owner-override": "vd-ovr",
+              "methodology-derived": "vd-meth"}.get(verdict, "vd-ok")
 
     sk, se = STATUS_LABEL.get(status, (status, status))
     pills = (f'<span class="pill st-{esc(status)}">'
@@ -406,6 +408,7 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.vd-ok { color:var(--ok); background:var(--ok-bg) }
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
 .pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
+.pill.vd-meth { color:#3a9ec9; background:rgba(58,158,201,.13) }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }

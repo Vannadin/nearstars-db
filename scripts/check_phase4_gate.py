@@ -71,7 +71,7 @@ AXIS_NAMES = {
     "gameplay": {"sphere_of_influence_tuning", "science_biomes", "timewarp_limits", "difficulty"},
 }
 STATUS = {"passthrough", "open", "art-directed", "gated", "emitted", "superseded"}
-VERDICT = {"pass-in-window", "documented-divergence", "owner-override"}
+VERDICT = {"pass-in-window", "documented-divergence", "owner-override", "methodology-derived"}
 FIELD_OPS = {"set", "scale", "passthrough"}
 HEX_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 

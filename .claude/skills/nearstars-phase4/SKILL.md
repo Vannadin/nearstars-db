@@ -123,6 +123,10 @@ Resolve every decision to one of three verdicts (SPEC §2). Distinguish divergen
 - **`documented-divergence`** — departs from a **paper-cited value/model** (the
   science). **Requires** both a non-null `divergence_note` (literature value,
   magnitude, why) **and** a non-empty `refs[]` (the paper diverged from).
+- **`methodology-derived`** — computed by one of our ADS-grounded methodology
+  recipes (`docs/reference/methodology-index.md`: figure J2/C22, dynamo, Cassini
+  obliquity, locked temperature, mass–radius, tidal heating, colors, …). `refs[]`
+  = the methodology's grounding paper(s); recipe / assumed inputs in `narrative`.
 - **`owner-override`** — departs from a **non-paper baseline**: a prior art choice,
   an AI-synthesized Phase 3 default, canon ([GAME]/[FILM]/wiki), or an analogy.
   Rationale goes in `narrative`; **no** `divergence_note` (paper-divergence-only).

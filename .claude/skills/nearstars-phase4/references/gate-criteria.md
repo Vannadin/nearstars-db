@@ -25,6 +25,11 @@ Distinguish divergence **from a paper** vs **from a non-paper baseline** — nev
   model** (the science). `divergence_note` (required) states the literature value,
   the magnitude, and why; and `refs[]` (required) names the paper(s) diverged from.
   The test: *is there a paper whose value/model we are contradicting?*
+- **`methodology-derived`** — computed by one of our ADS-grounded methodology recipes
+  (`docs/reference/methodology-index.md`). Neither a departure nor an art pick — a
+  grounded derivation. `refs[]` = the methodology's grounding paper(s); the recipe and
+  any assumed inputs go in `narrative`. e.g. figure J2 via Radau-Darwin, dynamo B-field,
+  Cassini obliquity, tidally-locked T_eq.
 - **`owner-override`** — the value departs from a **non-paper baseline**: a prior
   art-direction choice, an AI-synthesized Phase 3 default, canon ([GAME]/[FILM]/wiki),
   or an analogy / heuristic. Put the rationale in the **`narrative`** — NOT in a

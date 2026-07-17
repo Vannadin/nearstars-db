@@ -117,7 +117,7 @@ Phase 1–3 pipeline cannot carry (no measurement).
 
 ---
 
-## 2. The 고증 gate — three verdicts
+## 2. The 고증 gate — four verdicts
 
 Every decision resolves to one of:
 
@@ -128,6 +128,13 @@ Every decision resolves to one of:
   (a measurement / published model in the literature). Reserved for divergence *from the
   science*. Emits **with** a `divergence_note` (the literature value, why we depart, the
   magnitude) and **requires** `refs[]` naming the paper(s) diverged from.
+- **`methodology-derived`** — the value was **computed by one of our own ADS-grounded
+  methodology recipes** (`docs/reference/methodology-index.md`: figure J2/C22, dynamo
+  B-field, Cassini obliquity, tidally-locked temperature, mass–radius, tidal heating,
+  internal-heat luminosity, surface / atmosphere / stellar / disk color, …). Not a
+  departure and not an art pick — a grounded derivation. `refs[]` names the methodology's
+  grounding paper(s); the recipe / any assumed inputs go in `narrative`. No
+  `divergence_note`.
 - **`owner-override`** — the value departs from a **non-paper baseline**: a prior
   art-direction choice, an AI-synthesized Phase 3 default, canon ([GAME]/[FILM]/wiki), or
   an analogy / heuristic tie-break. The rationale lives in the **`narrative`**, not in a
@@ -316,7 +323,7 @@ phase4/<system>.yaml     (Phase 4 gated overrides + fiction bodies)         ─�
   `phase4/<system>.yaml`, which the writers read.
 - **check.sh gate (implemented):** `scripts/check_phase4_gate.py` (check.sh gate 8)
   enforces, on every `schema_version: 2` board, that a `gated`/`emitted` row has
-  `verdict ∈ {pass-in-window, documented-divergence, owner-override}`, that any
+  `verdict ∈ {pass-in-window, documented-divergence, owner-override, methodology-derived}`, that any
   `documented-divergence` carries a non-null `divergence_note` **and** a non-empty `refs[]`
   (the paper diverged from), and that `divergence_note` appears **only** on
   `documented-divergence` rows (non-paper rationale belongs in `narrative`). Legacy (v1)
