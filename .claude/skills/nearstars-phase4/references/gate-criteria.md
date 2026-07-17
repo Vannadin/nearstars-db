@@ -2,7 +2,7 @@
 
 From `phase4/SPEC.md §2`. The gate is **hybrid**: quantifiable axes are checked
 automatically; perceptual axes are a human checklist. Every decision resolves to
-`pass-in-window` or `documented-divergence` (+ a `divergence_note`).
+`pass-in-window`, `documented-divergence` (+ `divergence_note` + `refs[]`), or `owner-override`.
 
 | Axis group | Criterion | Automated? | Tool / source of the check |
 |---|---|---|---|
@@ -14,17 +14,25 @@ automatically; perceptual axes are a human checklist. Every decision resolves to
 | `magnetism.*` / `environment.*` | consistency with the stellar-wind / dynamo synthesis layer | checklist / derived-grounding | `phase3/stellar_wind_synthesis`; `docs/reference/planetary-dynamo-scaling.md` |
 | Fiction body (class **D**) | Hill-bound (moon) + HZ-stable (host) + composition plausibility | **yes** (stability) + checklist (composition) | stability sim + composition checklist — **not** `culture`/`classification` |
 
-## Verdict decision
+## Verdict decision — three verdicts
+
+Distinguish divergence **from a paper** vs **from a non-paper baseline** — never collapse them.
 
 - **`pass-in-window`** — value inside a Phase 3 error bar, a `## Canonical
   alternatives` reading, or a physical bound. A choice among Phase 3 alternatives
   is pass-in-window by construction (Phase 3 already vetted those readings).
-- **`documented-divergence`** — outside the window but justified (gameplay /
-  engine / film canon). The `divergence_note` must state: the canonical value,
-  the magnitude of the departure, and why. Tells that a "pass" is really a
-  divergence: "owner adopted below the visibility threshold", "film color over
-  physical color", "art-forward" — if the value leaves the Phase 3 default,
-  it is a divergence, full stop.
+- **`documented-divergence`** — the value departs from a **paper-cited value or
+  model** (the science). `divergence_note` (required) states the literature value,
+  the magnitude, and why; and `refs[]` (required) names the paper(s) diverged from.
+  The test: *is there a paper whose value/model we are contradicting?*
+- **`owner-override`** — the value departs from a **non-paper baseline**: a prior
+  art-direction choice, an AI-synthesized Phase 3 default, canon ([GAME]/[FILM]/wiki),
+  or an analogy / heuristic. Put the rationale in the **`narrative`** — NOT in a
+  `divergence_note` (that field is paper-divergence-only). e.g. "film color over an
+  AI-default color", "art-forward turbulence", "canon ranking film>game" are all
+  `owner-override`, not `documented-divergence`.
+
+`divergence_note` may appear **iff** verdict is `documented-divergence`.
 
 ## Criterion vocabulary
 

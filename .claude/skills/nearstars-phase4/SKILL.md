@@ -75,7 +75,8 @@ pick (body × axis) from the fixed §0 menu
    │
    ├─ 4b  gate against Phase 2 (DB) + Phase 3 (window / alternatives)
    │        → pass-in-window   (inside the defensible window)
-   │        → documented-divergence (outside, but justified + note)
+   │        → documented-divergence (departs a paper; + note + refs[])
+   │        → owner-override   (departs an art choice / AI default / canon; rationale in narrative)
    │
    ├─ write the schema-v2 row into phase4/<system>.yaml
    │
@@ -113,14 +114,18 @@ where a measurement-less axis would otherwise take a silent engine default.
 
 ## Step 3 — 4b: run the 고증 gate
 
-Resolve every decision to one of two verdicts (SPEC §2):
+Resolve every decision to one of three verdicts (SPEC §2). Distinguish divergence
+**from a paper** vs **from a non-paper baseline** — never collapse them:
 
 - **`pass-in-window`** — the value lies inside the Phase 3 window (an error bar,
   a `## Canonical alternatives` reading, or a physical bound). A choice among
   Phase 3's alternatives is pass-in-window by construction.
-- **`documented-divergence`** — outside the window but justified (gameplay /
-  engine / film canon). **Requires** a non-null `divergence_note` naming the
-  canonical value, the magnitude, and why we depart.
+- **`documented-divergence`** — departs from a **paper-cited value/model** (the
+  science). **Requires** both a non-null `divergence_note` (literature value,
+  magnitude, why) **and** a non-empty `refs[]` (the paper diverged from).
+- **`owner-override`** — departs from a **non-paper baseline**: a prior art choice,
+  an AI-synthesized Phase 3 default, canon ([GAME]/[FILM]/wiki), or an analogy.
+  Rationale goes in `narrative`; **no** `divergence_note` (paper-divergence-only).
 
 The gate is **hybrid** — quantifiable axes are checked automatically, perceptual
 axes by checklist. See [`references/gate-criteria.md`](references/gate-criteria.md)
@@ -230,7 +235,8 @@ trust an agent's self-report. (`[[feedback_agent_token_saving]]`,
 |---|---|
 | Axis pruned by body type | Menu is uniform; a rocky moon still has `rings`/`magnetism` (default passthrough). |
 | Number in prose | Every emit value in a typed `fields[]` entry, or a writer can't read it. |
-| Divergence gated as pass | If the value departs the Phase 3 default, it is `documented-divergence` + note — even "owner adopted below threshold". |
+| Paper vs non-paper divergence conflated | Departing a **paper** value = `documented-divergence` (+ note + `refs[]`). Departing an **art choice / AI default / canon / analogy** = `owner-override` (rationale in `narrative`, no note). Never label the latter `documented-divergence`. |
+| Silent departure gated as pass | A value that leaves the Phase 3 default is never a bare `pass-in-window` — classify it as `documented-divergence` or `owner-override`. |
 | `divergence_note` in `note`/`rationale`/`evidence` | Must be the `divergence_note` field, or the validator's guard is blind. |
 | Silent engine default | A measurement-less axis needs an explicit `passthrough`/gated row, not assumption. |
 | e ≈ 0 emitted | Trips the Kopernicus eccentricity-curve divide-by-zero → emit e ≳ 0.02 or flag suppression. |

@@ -34,6 +34,7 @@ STATUS_LABEL = {
 VERDICT_LABEL = {
     "pass-in-window": ("범위 내", "In-window"),
     "documented-divergence": ("문서화 이탈", "Doc. divergence"),
+    "owner-override": ("오너 확정", "Owner override"),
 }
 
 
@@ -162,13 +163,15 @@ def decision_html(d):
     gate = d.get("gate") or {}
     verdict = gate.get("verdict", "")
     div = verdict == "documented-divergence"
+    vclass = {"documented-divergence": "vd-div",
+              "owner-override": "vd-ovr"}.get(verdict, "vd-ok")
 
     sk, se = STATUS_LABEL.get(status, (status, status))
     pills = (f'<span class="pill st-{esc(status)}">'
              f'<span data-i18n>{esc(sk)}</span><span data-en hidden>{esc(se)}</span></span>')
     if verdict:
         vk, ve = VERDICT_LABEL.get(verdict, (verdict, verdict))
-        pills += (f'<span class="pill {"vd-div" if div else "vd-ok"}">'
+        pills += (f'<span class="pill {vclass}">'
                   f'<span data-i18n>{esc(vk)}</span><span data-en hidden>{esc(ve)}</span></span>')
 
     narrative = bi(d.get("narrative"), d.get("narrative_ko"))
@@ -402,6 +405,7 @@ h1 .alias, h1 .sys { color:var(--accent); font-weight:400; font-size:14px; font-
 .pill.st-superseded { color:var(--fg4); background:var(--s2); text-decoration:line-through }
 .pill.vd-ok { color:var(--ok); background:var(--ok-bg) }
 .pill.vd-div { color:var(--danger); background:var(--danger-bg) }
+.pill.vd-ovr { color:#c9a227; background:rgba(201,162,39,.13) }
 .narrative { color:var(--fg2); font-size:13.5px; line-height:1.75; margin:9px 0 10px; max-width:70ch }
 table.spec { width:100%; border-collapse:collapse; margin:6px 0 2px;
   font-family:var(--mono); font-variant-numeric:tabular-nums }

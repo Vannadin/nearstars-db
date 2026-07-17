@@ -106,7 +106,7 @@ Cassandra / Chaos, tidally_locked Dante / Hades / Pandora).
 | field | allowed |
 |---|---|
 | `status` | `passthrough` · `open` · `art-directed` · `gated` · `emitted` · `superseded` |
-| `gate.verdict` / `fields[].verdict` | `pass-in-window` · `documented-divergence` |
+| `gate.verdict` / `fields[].verdict` | `pass-in-window` · `documented-divergence` (+ `refs[]`) · `owner-override` |
 | `op` | `set` · `scale` · `passthrough` |
 | `body_class` (bulk anchors) | `star` · `tidally_locked` · `free_rotator` |
 | `axis` group | `identity` `orbit` `bulk` `atmosphere` `surface` `appearance` `magnetism` `environment` `rings` `satellites` `gameplay` |
