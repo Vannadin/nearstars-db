@@ -55,6 +55,14 @@ KSPDocsSite / the wiki.**
 | Principia detach/re-seed + the fork flag channel (`PrincipiaInterop`) | **Schultz lane** — `mockingbirdnest/Principia` + `gameplay/interstellar-expansion/warp/warp-patch-draft.md` §5.2 (needs the fork) |
 | Warp ↔ relativity suppress flag — `WarpFlagBridge` reads the `WarpFlag` now owned by the **external `ksp-relativity` mod** | wire via that mod's public API (cross-repo integration point) |
 
+## Backlog — candidate plugins (not yet drafted)
+
+Long-term NearStars-coupled plugin ideas surfaced but not yet drafted. Same ownership rule: cfg-impossible runtime behavior → C# plugin; deep runtime + in-game test = Schultz lane.
+
+| Plugin | What it does | Why cfg can't | Grounding starting point |
+|---|---|---|---|
+| **Ring-plane tracker** (Polyphemus E-ring) | Re-orient a Kopernicus ring each frame to a chosen body's *live* orbital plane under Principia, so a shepherd/source moon's ring stays coplanar as that moon precesses. | Kopernicus rings are static disks fixed to the planet — no n-body response. Under Principia the source moon (Chaos) precesses/librates (~56 yr, ±~6°; secular tip to ~18° over 2 kyr, per `results/_principia2000_dense`) → a fixed ring drifts off it. | Kopernicus `Ring` component + its transform (KSPDocsSite / Kopernicus source); read the body's live `Orbit` normal (`class_orbit.html`); update per-frame in a `KSPAddon`/`MonoBehaviour`. **Interim (no plugin):** anchor the static ring to Chaos's *mean (Laplace) plane* — see `phase4/alpha_centauri.yaml` rings axis. |
+
 ---
 
 Related: [`ksp-modding-sources.md`](ksp-modding-sources.md) (general index — primary reference) · the extracted relativity mod (`~/Desktop/ksp-relativity/`) · `project_nearstars_mod_plugins_schultz` · `project_nearstars_flux_tube_plugin`.
