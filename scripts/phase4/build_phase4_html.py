@@ -40,6 +40,21 @@ def esc(s):
     return html.escape("" if s is None else str(s))
 
 
+def _nullish(x):
+    return (not x) or str(x).strip().lower() == "null"
+
+
+def bi(en, ko):
+    """Bilingual prose: default (data-i18n) = ko mirror, data-en = English source.
+    English is source-of-truth; during migration one side may be missing, in which
+    case render whichever exists untoggled so un-migrated bodies keep working."""
+    e = esc(en).replace("\n", "<br>").strip() if not _nullish(en) else ""
+    k = esc(ko).replace("\n", "<br>").strip() if not _nullish(ko) else ""
+    if e and k:
+        return f'<span data-i18n>{k}</span><span data-en hidden>{e}</span>'
+    return e or k
+
+
 def value_html(value):
     def repl(m):
         h = m.group(0)
@@ -143,7 +158,7 @@ def decision_html(d):
         pills += (f'<span class="pill {"vd-div" if div else "vd-ok"}">'
                   f'<span data-i18n>{esc(vk)}</span><span data-en hidden>{esc(ve)}</span></span>')
 
-    narrative = esc(d.get("narrative", "")).replace("\n", "<br>")
+    narrative = bi(d.get("narrative"), d.get("narrative_ko"))
     nar = f'<p class="narrative">{narrative}</p>' if narrative else ""
 
     disc = d.get("discoverability_cfg")
@@ -153,13 +168,13 @@ def decision_html(d):
                      f'<code>{esc(disc.get("category",""))}</code> · IGNORELEVELS '
                      f'<code>{esc(disc.get("ignorelevels",""))}</code></div>')
 
-    ev = esc(gate.get("evidence", "")).replace("\n", "<br>")
+    ev = bi(gate.get("evidence"), gate.get("evidence_ko"))
     ev_html = f'<div class="ev"><span class="tag">evidence</span> {ev}</div>' if ev else ""
-    dn = gate.get("divergence_note")
+    dn = bi(gate.get("divergence_note"), gate.get("divergence_note_ko"))
     dn_html = ""
-    if dn and str(dn).strip().lower() != "null":
+    if dn:
         dn_html = (f'<div class="ev div"><span class="tag">divergence</span> '
-                   f'{esc(dn).strip()}</div>')
+                   f'{dn}</div>')
     dep = d.get("depends_on")
     dep_html = ""
     if dep:
@@ -268,10 +283,10 @@ const b=document.body;
 function setLang(en){
   document.querySelectorAll('[data-i18n]').forEach(e=>e.hidden=en);
   document.querySelectorAll('[data-en]').forEach(e=>e.hidden=!en);
-  ko.classList.toggle('on',!en); en_.classList.toggle('on',en);
+  ko_.classList.toggle('on',!en); en_.classList.toggle('on',en);
 }
-const ko=document.getElementById('ko'), en_=document.getElementById('en');
-ko.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
+const ko_=document.getElementById('ko'), en_=document.getElementById('en');
+ko_.onclick=()=>setLang(false); en_.onclick=()=>setLang(true);
 const cb=document.getElementById('collapse');
 if(cb) cb.onclick=e=>{b.classList.toggle('collapsed');
   e.currentTarget.classList.toggle('on',b.classList.contains('collapsed'));};
