@@ -1,10 +1,15 @@
 ---
 title: 문서 / 툴 난립 감사 — 발견 + 라이프사이클 게이트 플랜
-status: active   # active | promoted | archived
+status: promoted   # active | promoted | archived
 created: 2026-06-03
+promoted: 2026-07-19 → phase2/sprawl-lifecycle-gate/
 ---
 
 # 문서 / 툴 난립 감사 — 발견 + 라이프사이클 게이트 플랜
+
+> **2026-07-19 승격** → [`phase2/sprawl-lifecycle-gate/`](../../phase2/sprawl-lifecycle-gate/plan.md).
+> 재감사 결과(F1 해결, F3 부분 해결, F4/F5/F7 + §2.4 + sprawl 게이트는 미해결,
+> 여기에 페이즈별 컨벤션 발산이라는 새 발견 추가) 실제 작업으로 넘어갔다. 이 노트는 이제 역사 기록이다.
 
 **NearStars 연결고리.** 세션마다, 스킬 실행마다 사이드 산출물이 튀어나온다.
 working dir(`phase3/<system>/`, `_recovered/`, `_audit/`), scratch JSON/MD,

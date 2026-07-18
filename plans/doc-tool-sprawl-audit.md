@@ -1,10 +1,15 @@
 ---
 title: Doc / tool sprawl audit — findings + lifecycle-gate plan
-status: active   # active | promoted | archived
+status: promoted   # active | promoted | archived
 created: 2026-06-03
+promoted: 2026-07-19 → phase2/sprawl-lifecycle-gate/
 ---
 
 # Doc / tool sprawl audit — findings + lifecycle-gate plan
+
+> **Promoted 2026-07-19** to [`phase2/sprawl-lifecycle-gate/`](../phase2/sprawl-lifecycle-gate/plan.md)
+> after a re-audit (F1 fixed, F3 partial, F4/F5/F7 + §2.4 + sprawl gate still open,
+> plus new phase-convention divergence findings). This note is now historical context.
 
 **NearStars connection.** Every session and every skill run spins off side
 artifacts — working dirs (`phase3/<system>/`, `_recovered/`, `_audit/`),
