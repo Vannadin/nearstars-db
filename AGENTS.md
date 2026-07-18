@@ -36,12 +36,14 @@ Primary references — read these before touching the area they cover:
 
 ## 2. Document hierarchy
 
-The repo has **four** documentation homes — `docs/reference/`,
-`phase2/<topic>/`, `phase3/<system>/`, and `plans/<topic>.md`. The
-phase2/ and phase3/ trees are both "active implementation work" with
-the CLAUDE.md §7 trio structure; they differ in scope (Phase 2 =
-paper-cited measurement curation, Phase 3 = cfg-ready synthesis).
-Pick the right home before you start writing.
+The repo has **five** documentation homes — `docs/reference/`,
+`phase2/<topic>/`, `phase3/<system>/`, `phase4/`, and
+`plans/<topic>.md`. The phase2/ and phase3/ trees are both "active
+implementation work" with the CLAUDE.md §7 trio structure; they differ
+in scope (Phase 2 = paper-cited measurement curation, Phase 3 =
+cfg-ready synthesis). phase4/ is the owner art-direction gate layer
+with a fixed root taxonomy (see below). Pick the right home before you
+start writing.
 
 ```
 docs/reference/        Permanent reference. Schemas, methodology, format specs.
@@ -61,11 +63,24 @@ phase3/<system>/       Active Phase 3 synthesis work (cfg-ready value
                        per-topic because synthesis is gated on the host
                        star (e.g. phase3/trappist_1/).
 
+phase4/                Owner art-direction gate layer (per-decision
+                       boards frozen for emit). Fixed root taxonomy —
+                       the root holds ONLY <system>.yaml boards plus
+                       SPEC.md and README.md. Everything else goes in:
+                         phase4/<topic>/       working dirs (trio, like phase2/)
+                         phase4/_audit/        point-in-time audits + coverage trackers
+                         phase4/policies/      SPEC annexes boards cite as policy
+                         phase4/art-direction/ art-pass reference docs (4a drafts)
+                         phase4/viewers/       frozen design-exploration HTML
+                       Canonical rendered output still lands in docs/phase4/.
+
 plans/<topic>.md       Research notes and external-system analyses.
-                       Single file. No checklist. No implementation in this repo.
-                       Use when you read source code of an upstream mod, study
-                       a paper's methodology, or scope an idea that has not
-                       been greenlit for implementation.
+                       Single file — or plans/<topic>/ (a subdir) for a
+                       multi-doc research program. No checklist. No
+                       implementation in this repo. Use when you read
+                       source code of an upstream mod, study a paper's
+                       methodology, or scope an idea that has not been
+                       greenlit for implementation.
 ```
 
 **The decision rule:** *"Will this work touch the DB pipeline, schema, or
@@ -75,7 +90,9 @@ generated configs?"*
   trio (CLAUDE.md §7).
 - **Yes, Phase 3 synthesis (cfg-ready values per planet)** → `phase3/<system>/`
   trio, driven by the `nearstars-phase3` skill.
-- **No** → `plans/<topic>.md` single file.
+- **Yes, Phase 4 gating (owner choices frozen for emit)** → `phase4/` per the
+  root taxonomy above, driven by the `nearstars-phase4` skill.
+- **No** → `plans/<topic>.md` single file (or `plans/<topic>/` program dir).
 
 When a `plans/` document graduates into actual work, promote it: move
 the relevant sections into a new `phase2/<topic>/plan.md` and leave the
@@ -109,11 +126,14 @@ Korean mirror under `ko/<same-path>`.
 - Human contributors who do not write Korean: create the English
   version only and note in the PR description that the Korean mirror
   is pending. The repo owner regenerates Korean mirrors separately.
-- Out of scope (English-only, no mirror): `AGENTS.md`, `CLAUDE.md`,
-  PR/issue templates, `db/**/*.md`, `scripts/**/*.md`,
-  `phase2/<topic>/{checklist,context-notes}.md`. These are
-  behavioural/operational docs for agents and contributors, not
-  reference material.
+- Out of scope (English-only, no mirror): everything outside `docs/`,
+  `plans/`, and the root `README.md` — in particular `AGENTS.md`,
+  `CLAUDE.md`, PR/issue templates, `db/**`, `scripts/**`, the
+  `phase2/`–`phase4/` working trees, and any `_*` subtree (`_audit/`,
+  `_papers/`, `_bib/`, `_scratch/`). These are behavioural/operational
+  docs for agents and contributors, not reference material. This
+  matches what `scripts/check-mirrors.sh` actually enforces — mirror a
+  working doc only by promoting it to `docs/` first.
 - To find missing or stale mirrors:
   ```bash
   scripts/check-mirrors.sh
@@ -149,6 +169,29 @@ is gitignored.
 A skill must not live in both `.claude/skills/` and `.agents/skills/`
 simultaneously (excluding the `-workspace/` suffix). `scripts/check.sh`
 §4 enforces this.
+
+### 2.4 Artifact lifecycle — reap or promote
+
+Location rules above say where new artifacts go; this rule says when
+they leave. `scripts/check.sh` gate 9 enforces the mechanical parts.
+
+- **Working dirs**: when a working dir's output has shipped (rendered
+  report in `docs/`, data merged into `db/`), either **commit the trio**
+  — it becomes the decision log — or **delete the dir**. Never leave a
+  zero-tracked working dir behind shipped output.
+- **Scratch**: `_recovered/`, empty dirs, and intermediate harvest/triage
+  JSON are never committed beside canonical outputs. Keep a local trail
+  in a gitignored `_scratch/` subdir (e.g. `phase3/_audit/_scratch/`) or
+  delete it once the canonical output lands.
+- **Run logs**: `*.log` files are regenerable run output, never tracked —
+  anywhere, at any depth.
+- **One-off scripts**: every `scripts/refs/*.py` gets a
+  [`docs/reference/tools.md`](docs/reference/tools.md) line, and a
+  header marker distinguishing `# one-shot:` (ran once, kept for the
+  record) from `# regenerable:` (safe to re-run).
+- **Session logs / handoff prompts**: date-stamped session docs live in
+  the `<topic>/` dir of the effort they belong to, never loose at a
+  phase root.
 
 ---
 
