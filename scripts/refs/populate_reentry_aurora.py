@@ -1,4 +1,5 @@
 # element_plasma_colors.yaml 에 reentry_plasma + aurora regime entry 를 채워넣는 일회용 도구
+# one-shot: populates reentry_plasma+aurora regimes in element_plasma_colors.yaml (idempotent), output committed
 """Populate reentry_plasma and aurora regimes for atmospherically-relevant species.
 
 Reentry plasma (~8000–15000 K, shock-heated, high pressure):

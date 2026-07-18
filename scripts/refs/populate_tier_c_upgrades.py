@@ -1,4 +1,5 @@
 # element_plasma_colors.yaml 의 chart_approx 항목을 분광 자료 재검토로 격상/격하하는 일회용 도구
+# one-shot: re-categorizes element_plasma_colors.yaml chart_approx entries (idempotent), output committed
 """Re-categorize chart_approx entries in element_plasma_colors.yaml based on
 spectroscopic review.
 

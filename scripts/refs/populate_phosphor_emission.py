@@ -1,4 +1,5 @@
 # element_plasma_colors.yaml 에 phosphor_emission regime entry 를 추가 (lanthanide Ln3+ 형광)
+# one-shot: adds phosphor_emission regime to element_plasma_colors.yaml, output committed
 """Populate the phosphor_emission regime for lanthanides.
 
 Atomic_flame regime conflates two physically distinct phenomena for

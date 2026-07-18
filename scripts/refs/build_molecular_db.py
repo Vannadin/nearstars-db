@@ -1,4 +1,5 @@
 # 분자 종 reentry/aurora 색상 DB 를 생성하는 스크립트 (db/refs/molecular_plasma_colors.yaml)
+# regenerable: builds db/refs/molecular_plasma_colors.yaml (molecular reentry/aurora color DB)
 """Build the molecular plasma color DB.
 
 Diatomic + small polyatomic molecules dominate the visual signature of

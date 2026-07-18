@@ -1,4 +1,5 @@
 # 가시광선 파장 → sRGB 변환 (Bruton 1996 piecewise + CIE 1931 비교용)
+# regenerable: library module, imported by cie_color.py, build_molecular_db.py, the element-DB migrate/populate scripts, and phase3/build_html.py
 """Wavelength → sRGB conversion for the plasma color DB.
 
 Uses the Bruton 1996 piecewise approximation. While CIE 1931 + sRGB

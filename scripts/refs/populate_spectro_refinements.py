@@ -1,4 +1,5 @@
 # element_plasma_colors.yaml 의 chart_approx 항목을 분광 자료 정밀 재검토 결과로 추가 격상/격하
+# one-shot: spectroscopic refinements to element_plasma_colors.yaml chart_approx entries, output committed
 """Apply spectroscopic-research refinements to chart_approx entries.
 
 Subagent-delivered NIST + phosphor literature review (2026-05-26 session)

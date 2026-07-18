@@ -1,4 +1,5 @@
 # element_plasma_colors.yaml 을 multi-regime 스키마(v2)로 마이그레이션하는 일회용 도구
+# one-shot: element_plasma_colors.yaml v1->v2 schema migration, output committed
 """Migrate db/refs/element_plasma_colors.yaml to the multi-regime schema.
 
 v1 shape:

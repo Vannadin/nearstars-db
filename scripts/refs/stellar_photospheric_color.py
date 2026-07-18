@@ -1,4 +1,5 @@
 # 항성 Teff/스펙트럼형에서 광구 가시색(sRGB)을 실측 Pickles SED + 공용 CIE 엔진으로 계산
+# regenerable: computes stellar photospheric sRGB tint, backs stellar-photospheric-color-methodology.md
 """Stellar photospheric color — Teff/spectral-type -> visible sRGB tint.
 
 Backs `docs/reference/stellar-photospheric-color-methodology.md`. Two paths,
