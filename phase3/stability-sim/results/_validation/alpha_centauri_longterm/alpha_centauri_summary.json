@@ -1,0 +1,70 @@
+{
+  "system": "Alpha Centauri AB + A b [Alpha Centauri A b.mass_mearth=120.873]",
+  "star": {
+    "name": "Alpha Centauri A",
+    "mass_msun": 1.1055
+  },
+  "planets": [
+    {
+      "name": "Alpha Centauri B",
+      "mass_msun": 0.9092,
+      "mass_kind": "true",
+      "a_au": 23.675416374710288,
+      "e": 0.5179,
+      "inc_rad": 1.3823880340421086
+    },
+    {
+      "name": "Alpha Centauri A b",
+      "mass_msun": 0.0003603282183295457,
+      "mass_kind": "imaging_photometric_estimate",
+      "a_au": 1.6,
+      "e": 0.1,
+      "inc_rad": 1.103135353723016,
+      "mutual_incl_deg": 16.0
+    }
+  ],
+  "hypotheticals": [],
+  "integration": {
+    "integrator": "ias15",
+    "elapsed_sec": 13404.549159288406,
+    "dt_yr": 0.047931942235043476,
+    "innermost_period_yr": 1.924902793575301,
+    "energy_relative_error": 9.994556386337736e-08,
+    "megno_final": 47.26874484578924
+  },
+  "per_body": {
+    "Alpha Centauri B": {
+      "a_min": 23.515223458753972,
+      "a_max": 23.69361565748485,
+      "e_min": 0.5143670732555513,
+      "e_max": 0.5182682238473321
+    },
+    "Alpha Centauri A b": {
+      "a_min": 1.5893721117660569,
+      "a_max": 1.6034019711748717,
+      "e_min": 0.04835307959039943,
+      "e_max": 0.16314211301228107
+    }
+  },
+  "hill_track": {},
+  "judgment": {
+    "per_body": {
+      "Alpha Centauri B": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "hot",
+        "e_max": 0.5182682238473321
+      },
+      "Alpha Centauri A b": {
+        "flags": [],
+        "status": "stable",
+        "ecc_class": "calm",
+        "e_max": 0.16314211301228107
+      }
+    },
+    "overall": "chaotic_but_hill_stable",
+    "ecc_class_max": "hot",
+    "lyapunov_time_yr": 4418059.318439516,
+    "is_chaotic": true
+  }
+}
