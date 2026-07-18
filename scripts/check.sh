@@ -71,6 +71,42 @@ echo "── 8. Phase 4 emit-게이트 (v2 strict / legacy soft) ──"
 python3 scripts/check_phase4_gate.py || fail=1
 
 echo ""
+echo "── 9. Sprawl / 레이아웃 게이트 (AGENTS.md §2.4) ──"
+g9=0
+# 9a. phase4 루트 파일은 <system>.yaml + SPEC.md + README.md 만 허용
+for f in $(git ls-files 'phase4/*' | grep -v '/.*/'); do
+  base=$(basename "$f"); dir=$(dirname "$f")
+  [ "$dir" != "phase4" ] && continue
+  case "$base" in
+    *.yaml|SPEC.md|README.md) ;;
+    *) echo "  [FAIL] phase4 루트 비허용 파일: $f (→ _audit/ | policies/ | art-direction/ | viewers/ | <topic>/)"; g9=1 ;;
+  esac
+done
+# 9b. phase2/phase3 루트에 loose 파일 금지 (디렉토리만)
+for p in phase2 phase3; do
+  for f in $(git ls-files "$p/*" | awk -F/ 'NF==2'); do
+    echo "  [FAIL] $p 루트 loose 파일: $f (→ $p/<topic>/ 안으로)"; g9=1
+  done
+done
+# 9c. 빈 디렉토리 (phase2/3/4 아래, gitignored _scratch 제외)
+empties=$(find phase2 phase3 phase4 -type d -empty -not -path '*/_scratch*' 2>/dev/null)
+if [ -n "$empties" ]; then
+  echo "$empties" | sed 's/^/  [FAIL] 빈 디렉토리: /'; g9=1
+fi
+# 9d. 추적되는 *.log 금지 (보드가 evidence로 인용하는 allowlist 제외)
+log_allow="phase3/stability-sim/results/_snapshot500/elements.log
+phase3/stability-sim/results/_ring_clearing.log"
+for f in $(git ls-files '*.log'); do
+  echo "$log_allow" | grep -qx "$f" || { echo "  [FAIL] 추적되는 run log: $f (git rm --cached + gitignore)"; g9=1; }
+done
+# 9e. scripts/refs/*.py 는 전부 tools.md 에 인덱스돼야 함
+for f in scripts/refs/*.py; do
+  base=$(basename "$f")
+  grep -q "$base" docs/reference/tools.md || { echo "  [FAIL] tools.md 미등재: $f"; g9=1; }
+done
+if [ $g9 -eq 0 ]; then echo "  [PASS] sprawl/레이아웃 게이트 통과"; else fail=1; fi
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else

@@ -184,7 +184,10 @@ they leave. `scripts/check.sh` gate 9 enforces the mechanical parts.
   in a gitignored `_scratch/` subdir (e.g. `phase3/_audit/_scratch/`) or
   delete it once the canonical output lands.
 - **Run logs**: `*.log` files are regenerable run output, never tracked —
-  anywhere, at any depth.
+  anywhere, at any depth. Exception: a log a Phase 4 board cites as
+  evidence is a captured artifact; keep it tracked via a `.gitignore`
+  negation AND the gate-9 allowlist in `scripts/check.sh` (both, in the
+  same commit as the citing board row).
 - **One-off scripts**: every `scripts/refs/*.py` gets a
   [`docs/reference/tools.md`](docs/reference/tools.md) line, and a
   header marker distinguishing `# one-shot:` (ran once, kept for the
