@@ -65,6 +65,26 @@
 
 ---
 
+## Time-Warp & Relativity (interstellar-play set) — Principia-fork compatibility (verified 2026-07-18)
+
+Sub-light interstellar play needs warp rates far beyond stock (40 ly at 0.1c ≈ 400 y
+= 35 wall-clock HOURS at stock 100,000×), so these two ride along with the Principia
+fork. Compatibility assessed against the upstream FAQ's rule — a mod is incompatible
+iff it "moves vessels or otherwise changes orbits (1) without using engines or
+(2) during time warp" — plus source-level reading of both mods.
+
+| Mod | Verdict | GitHub |
+|-----|---------|--------|
+| **BetterTimeWarpContinued** | Compatible (rate-table mod, moves no vessels). Upstream-measured: smooth at 100,000×, "janky" at 1,000,000× (CPU, not correctness), 6,000,000× smooth with no vessels. Practical ceiling for sustained ultra-warp is Principia CPU + **RAM growth** (the upstream eviction issue our PR targets) — measure via the in-game kit's long-cruise scenario. Prefer rails warp; its boosted physics warp just multiplies unpacked integration load. The fork's WS4 dead-man switch is warp-rate independent by design; WS3 burn integration takes arbitrary Δt chunks. | [linuxgurugamer/BetterTimeWarpContinued](https://github.com/linuxgurugamer/BetterTimeWarpContinued) |
+| **Relativity** (Vannadin) | Compatible in normal (unpacked) flight BY DESIGN: the γ³ thrust suppression is injected as a corrective part-force before Principia's TimingManager read, verified in-game on Principia force profiles; the proper-time ledger ticks every FixedUpdate for loaded AND unloaded vessels (time-warp-valid). Its "warp guard" is an FTL-drive Provider hook, NOT time warp. **KNOWN GAP: the fork's WS3 on-rails burn takes NO γ³ correction** — the burn harvest synthesizes thrust from engine-module data (maxThrust × throttle × vacuum Isp), and the corrective force lives only in the (packed-idle) part-force channel ⇒ warp-burning near c integrates Newtonian thrust and can cross c. Fix shape: the WS3 harvest queries Relativity for a 1/γ³ multiplier (reflection, present-guarded, the same pattern as Relativity's Kerbalism adapter); mass flow stays nominal (matches Relativity's design). Tracked on the Principia-fork side. | [Vannadin/Relativity](https://github.com/Vannadin/Relativity) |
+
+Also relevant: upstream lists **Blueshift** (warp drive) as incompatible; the fork's
+WS4 release channel (`PrincipiaWarpStatus.warpEngaged`) exists precisely to lift that
+class of incompatibility — warp mods release the vessel from Principia management and
+re-adopt on arrival. Non-standard propulsion that edits orbits directly during warp
+(Persistent-Thrust-style) remains incompatible by the upstream rule unless routed
+through WS3 (standard `ModuleEngines` inheritors are what the WS3 harvest reads).
+
 ## Reference Repos (examples from other planet packs)
 
 | Repo | Purpose |
