@@ -41,3 +41,17 @@ Append-only decision log. Started 2026-07-19.
 - **phase4/README.md content is stale** ("Phase 4 is NOT yet built" — it partially
   is, since 2026-07-10). Only links fixed here; content refresh flagged to owner,
   not silently rewritten.
+- **Evidence-log exception discovered during untracking.** 2 of the 6 committed
+  logs are cited as provenance by gated Phase 4 board rows / art-direction docs
+  (`_snapshot500/elements.log` ← alpha_centauri.yaml orbit snapshot;
+  `_ring_clearing.log` ← ring-clearing gate + tools.md). Untracking those would
+  break the evidence chain, so §2.4 gained an explicit exception: board-cited
+  logs stay tracked via gitignore negation + gate-9 allowlist. The 4 uncited
+  logs were untracked.
+- **Pre-existing mirror debt surfaced by gate 2:** 7 missing ko mirrors, all
+  `plans/principia-interstellar-branch/**` (other sessions' program). Backfilled
+  via translation agent so check.sh can go green — not caused by this cleanup.
+  5 stale-mirror warnings left as-is (content work, non-blocking):
+  3× docs/reference, R4 (in-flight), and `ko/phase3/stability-sim/STABILITY_REPORT.md`
+  — the last one is itself a §2.1 anomaly (phase3 is English-only; the ko file
+  predates the generalized rule). Removal needs owner confirmation.
