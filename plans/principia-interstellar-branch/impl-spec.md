@@ -41,6 +41,29 @@ slow part, and validate the headless C++ tests first (they need no KSP install).
 **WS3 is independent** and can proceed in parallel; it touches a disjoint part
 of the tree (`ksp_plugin/pile_up`, `manœuvre`, adapter).
 
+## The void regime (cross-cutting)
+
+A vessel that belongs to no subsystem — deep in the interstellar void — is a
+first-class regime, not an edge case of any single workstream. Its four faces, and
+where each is handled:
+
+- **Precision**: far from every anchor, absolute coordinates carry the full
+  interstellar magnitude; the subsystem split (WS1/R5) keeps integration exact and
+  the sector/anchor machinery (WS6) keeps *rendering and scene placement* exact.
+  A void vessel's own dynamics are trivially smooth (far-field-damped, force-free).
+- **Docking / close approach**: two void vessels must share an anchor to interact
+  coherently (RT-1, resolved — co-anchoring on approach).
+- **Loaded parts**: scene-side coherence for vessels created/split in the void or at
+  a star (WS5-C/C2 — adoption-time coherence; landed/ground-contact state is
+  impossible at PQS-less bodies, enforced ecosystem-side by InterstellarFluxFix).
+- **Rebase policy**: when a void coast approaches a new system, dominance + hysteresis
+  (#4, mass-based, k=3 margin) decides the subsystem handoff; the band sits outside
+  every reasonable Hill sphere, so no bound orbit flaps.
+
+Anything new that touches a subsystem-less vessel starts by checking this list —
+the four faces are load-bearing and already have owners; new void work extends them
+rather than re-deriving.
+
 ## 2. KEY SYNTHESIS DECISION — WS1's subsystem partition IS WS2's group structure
 
 R1 introduces `subsystem_of_body_` (per-star partition, to localize origins).
