@@ -2558,6 +2558,6 @@ decisions:
   #    = passthrough (Phase 3 기본값). mass ~120 M⊕는 canon "토성보다 무거움"과 정합.
 
 process: "phase3/stability-sim/STABILITY_REPORT.md + ALPHA_CEN_AB_DYNAMICS_STUDY.md (Kozai 스캔)"
-art_direction: "phase4/polyphemus-art-direction.md (4a 창작 초안 + 고증 window 분석)"
+art_direction: "phase4/art-direction/polyphemus-art-direction.md (4a 창작 초안 + 고증 window 분석)"
 phase2_db: "unchanged"
 viewer_variant: "adopted(안정) ⇄ observed(Kozai-불안정) stability variants"

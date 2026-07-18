@@ -76,7 +76,7 @@ carries a gate. WARN: missing `evidence`, no machine-readable value on a gated r
 
 Trigger: 4-lens adversarial re-audit (validator bypass / board content / delta vs
 review / skill+viewer). Full findings recorded in
-`phase4/emit-readiness-review.md` §"Re-audit — 2026-07-11".
+`phase4/_audit/emit-readiness-review.md` §"Re-audit — 2026-07-11".
 
 **Validator hardening (all bypasses were empirically confirmed first).** New hard
 fails: missing/misspelled `decisions:` list, fields[] entry without name/value

@@ -2,10 +2,10 @@
 # Phase 4 Draft — Polyphemus (α Cen A b) Visual Art Direction
 
 **Status:** DRAFT · **Phase 4a creative input** · NOT gated, NOT in the DB. Phase 4 is
-not yet implemented (see [`README.md`](README.md)); this records the creative target and
+not yet implemented (see [`../README.md`](../README.md)); this records the creative target and
 the 고증 analysis so it can be activated when Phase 4 is built. The per-axis **gated
 conclusions** (orbit / banding / haze / aurora / rings / Pandora) live in the decision
-board [`alpha_centauri.yaml`](alpha_centauri.yaml) — this `.md` is the 4a scratch that
+board [`../alpha_centauri.yaml`](../alpha_centauri.yaml) — this `.md` is the 4a scratch that
 feeds it, not the record of record.
 
 This is the **user's creative domain**. The science doc stays separate and
@@ -126,7 +126,7 @@ and `molecular_plasma_colors.yaml` when Phase 4 emits.
 
 ## 고증 window (from the Phase 3 atmosphere + dynamics synthesis)
 
-The Phase 3 baseline ([`../docs/phase3/alpha-centauri-a-b.md`](../docs/phase3/alpha-centauri-a-b.md))
+The Phase 3 baseline ([`../../docs/phase3/alpha-centauri-a-b.md`](../../docs/phase3/alpha-centauri-a-b.md))
 puts the *physical* default at a **pale cool-white water-cloud giant**
 (`atmosphere_tint #dfe3e8`, `cloud_tint #eef1f4`) with **faint** zonal banding —
 Sudarsky Class I/II, brighter and more uniform than Jupiter. Against that:
@@ -142,7 +142,7 @@ So the *banded ivory + muted-blue* reading is physically defensible; only the
 **fully saturated Neptune-cobalt** is a divergence (the temperature is wrong for
 it — the deep methane-blue mechanism needs a much colder body). See the colour
 mechanism + ice-giant saturation reasoning in
-[`../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md`](../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md)
+[`../../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md`](../../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md)
 context and `docs/reference/color-materials.md`.
 
 ## Pandora canon reference (Avatar) — researched 2026-06-15
@@ -277,7 +277,7 @@ the moon names + physics. Accessible via Avatar Wiki:
 
 Finalized and verified STABLE over 1000 yr with J2 = 0.023 (TRACE, `results/_final32b`).
 This supersedes the earlier s = 25° spread; the gated record lives in
-[`alpha_centauri.yaml`](alpha_centauri.yaml) (`final_2026_06_21`).
+[`../alpha_centauri.yaml`](../alpha_centauri.yaml) (`final_2026_06_21`).
 
 | moon | a_km | R_p mult. | e | inc | retrograde | mass (kg) | radius (km) | role |
 |---|---|---|---|---|---|---|---|---|
@@ -592,6 +592,6 @@ inner moonlets — deliberate visual variety.
 
 ## References
 
-- Phase 3 report — [`../docs/phase3/alpha-centauri-a-b.md`](../docs/phase3/alpha-centauri-a-b.md)
-- Dynamics study — [`../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md`](../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md)
+- Phase 3 report — [`../../docs/phase3/alpha-centauri-a-b.md`](../../docs/phase3/alpha-centauri-a-b.md)
+- Dynamics study — [`../../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md`](../../phase3/stability-sim/ALPHA_CEN_AB_DYNAMICS_STUDY.md)
 - Colour mechanisms — `docs/reference/color-materials.md`

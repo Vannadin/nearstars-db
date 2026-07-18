@@ -46,13 +46,13 @@ progress tracker — `grep status:` shows what is left.
 
 Free-form creative scratch that feeds the boards above; **not** the record.
 
-- [`polyphemus-art-direction.md`](polyphemus-art-direction.md) — α Cen A b (the
+- [`art-direction/polyphemus-art-direction.md`](art-direction/polyphemus-art-direction.md) — α Cen A b (the
   real-life *Avatar* Polyphemus): the banded ivory + blue gas-giant look, Avatar canon,
   Pandora climate. Its gated conclusions live in `alpha_centauri.yaml`.
 
 ## Policies
 
-- [`synthetic-orbit-noise.md`](synthetic-orbit-noise.md) — de-perfecting default
+- [`policies/synthetic-orbit-noise.md`](policies/synthetic-orbit-noise.md) — de-perfecting default
   orbital elements (0 / 90 / e=0) with seeded, physically-bounded noise; never touches
   measurements, stability-gated. The transit-preserving inclination bound is the
   headline guardrail.

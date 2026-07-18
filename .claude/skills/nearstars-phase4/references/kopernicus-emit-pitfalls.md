@@ -1,6 +1,6 @@
 # Kopernicus emit pitfalls — the curve/map facets that bite the gate
 
-Lifted from `phase4/facet-checklist.md` (α Cen appendix) because it is reusable
+Lifted from `phase4/_audit/facet-checklist.md` (α Cen appendix) because it is reusable
 cross-body knowledge, not α-Cen-specific. Many facets emit as **curves/maps, not
 scalars**, generated at emit from anchors + models, and take Phase 4 choices as
 INPUTS (obliquity → axial curve, e → eccentricity curve, tidal-lock → longitude

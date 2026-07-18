@@ -54,7 +54,7 @@ Phase 4 is **partially built**, not fully wired:
   `kopernicus`/`principia`/`firefly` do not read Phase 4 at all yet.
 - So **Phase 4 today = authoring gated boards.** Actual cfg emit is deferred to
   project-end (owner decision). The known defects + remediation order are in
-  [`phase4/emit-readiness-review.md`](../../../phase4/emit-readiness-review.md).
+  [`phase4/_audit/emit-readiness-review.md`](../../../phase4/_audit/emit-readiness-review.md).
 
 ## Out of scope
 
@@ -204,7 +204,7 @@ decision renders as: axis + status/verdict pills → narrative prose → the typ
   never a prose blob — and gates on **Hill + HZ stability + composition
   plausibility**, not on canon-existence. Its orbit still runs the stability sim.
 - **Synthetic orbit noise.** De-perfecting default 0/90/e=0 elements uses the
-  named policy in [`phase4/synthetic-orbit-noise.md`](../../../phase4/synthetic-orbit-noise.md):
+  named policy in [`phase4/policies/synthetic-orbit-noise.md`](../../../phase4/policies/synthetic-orbit-noise.md):
   seeded, physically bounded, DB-invariant, **applied at the emit stage, not
   baked into the board**. Record the *intent* (flag the axis `de-perfect-at-emit`
   with the bound), never a concrete noised number. The transit-preserving
@@ -249,9 +249,9 @@ trust an agent's self-report. (`[[feedback_agent_token_saving]]`,
 
 - [`phase4/SPEC.md`](../../../phase4/SPEC.md) — the data contract (axis menu, taxonomy, verdicts, schema v2)
 - [`phase4/README.md`](../../../phase4/README.md) — staging overview
-- [`phase4/synthetic-orbit-noise.md`](../../../phase4/synthetic-orbit-noise.md) — de-perfecting policy
-- [`phase4/emit-readiness-review.md`](../../../phase4/emit-readiness-review.md) — current defect catalog + remediation order
-- [`phase4/phase4-coverage-audit.md`](../../../phase4/phase4-coverage-audit.md) · [`silent-passthrough-audit.md`](../../../phase4/silent-passthrough-audit.md) — worked coverage/silent-default sweeps
+- [`phase4/policies/synthetic-orbit-noise.md`](../../../phase4/policies/synthetic-orbit-noise.md) — de-perfecting policy
+- [`phase4/_audit/emit-readiness-review.md`](../../../phase4/_audit/emit-readiness-review.md) — current defect catalog + remediation order
+- [`phase4/_audit/phase4-coverage-audit.md`](../../../phase4/_audit/phase4-coverage-audit.md) · [`silent-passthrough-audit.md`](../../../phase4/_audit/silent-passthrough-audit.md) — worked coverage/silent-default sweeps
 - `phase2/curation-data-contract/SPEC.md` — the parent Phase 2/3 contract this extends
 - Upstream `nearstars-phase3`; downstream `kopernicus-cfg` / `principia-cfg` / `firefly-cfg` / `researchbodies-cfg`
 - [`references/board-schema.md`](references/board-schema.md) · [`references/gate-criteria.md`](references/gate-criteria.md) · [`references/kopernicus-emit-pitfalls.md`](references/kopernicus-emit-pitfalls.md)

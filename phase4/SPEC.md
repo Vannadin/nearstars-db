@@ -69,7 +69,7 @@ The menu is the **union of decision axes any body type could need** — never pr
 axes on most bodies are `passthrough`; Phase 4 only records the deltas. `identity` and
 `gameplay` are meta groups that are passthrough for nearly every body.
 
-> **Menu history.** 2026-06-22 (coverage audit `phase4/phase4-coverage-audit.md`): added
+> **Menu history.** 2026-06-22 (coverage audit `phase4/_audit/phase4-coverage-audit.md`): added
 > `magnetism`, `environment`, `surface`, `rings`, `identity`, `gameplay` groups and expanded
 > `orbit`/`bulk`/`atmosphere`/`appearance`/`satellites` to the full union above — the α Cen
 > audit found the planet's dynamo field (drives aurora + moon radiation), the stars'
@@ -108,7 +108,7 @@ physical value before that value is itself `gated`.
 |---|---|---|
 | **A. Window selection** | choose within Phase 3 error bars / Canonical alternatives | Barnard *e* × 0.8 (closest-to-observed stable; within the RV eccentricity band) |
 | **B. Engine-driven optimization** | the game engine forces a choice | low-*e* for Principia fixed-step stability; body culling for perf |
-| **C. Synthetic de-perfecting** | seeded, bounded noise on default 0 / 90° / e=0 | `synthetic-orbit-noise.md` |
+| **C. Synthetic de-perfecting** | seeded, bounded noise on default 0 / 90° / e=0 | `policies/synthetic-orbit-noise.md` |
 | **D. Measurement-less / fiction** | art-directed body with no Phase 2 | Pandora (Avatar), around Polyphemus |
 | **E. Visual art-direction** | appearance within Phase 3 physical bounds | Polyphemus banded-ivory look |
 
@@ -341,10 +341,10 @@ phase4/<system>.yaml     (Phase 4 gated overrides + fiction bodies)         ─�
 - **Barnard true mass** — class A, axis `bulk.mass`, value = isotropic-prior median
   (i=60°, ×1.155), gate `pass-in-window` (the statistical central true mass, far below
   the ×3 dynamical ceiling). DB keeps M·sin i.
-- **Polyphemus / Pandora** — class D+E (`polyphemus-art-direction.md`), gate = stability
+- **Polyphemus / Pandora** — class D+E (`art-direction/polyphemus-art-direction.md`), gate = stability
   (Pandora Hill-bound at 0.02 R_Hill; Polyphemus HZ-stable a=1.6/e=0.1/i_mut=16°) +
   composition checklist.
-- **Synthetic orbit noise** — class C (`synthetic-orbit-noise.md`), gate = transit-
+- **Synthetic orbit noise** — class C (`policies/synthetic-orbit-noise.md`), gate = transit-
   preserving inclination bound + stability.
 
 ---
@@ -358,11 +358,11 @@ Phase 4 is *built* when:
 3. The cfg writers (kopernicus / principia / firefly) read the Phase 4 layer.
 
 Until then, `phase4/` stays a **staging area** — `<system>.yaml` decision boards +
-`*-art-direction.md` 4a drafts + the `synthetic-orbit-noise.md` policy, nothing gated
+`*-art-direction.md` 4a drafts + the `policies/synthetic-orbit-noise.md` policy, nothing gated
 into the DB or emitted.
 
 ## Related
 - `phase4/README.md` — staging overview
 - `phase4/<system>.yaml` — per-system decision boards (the progress record)
-- `phase4/synthetic-orbit-noise.md` — de-perfecting policy
+- `phase4/policies/synthetic-orbit-noise.md` — de-perfecting policy
 - `phase2/curation-data-contract/SPEC.md` — Phase 2/3 contract this extends

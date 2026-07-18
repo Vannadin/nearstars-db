@@ -1,7 +1,7 @@
 <!-- Phase 4 emit-hardening 작업 체크리스트 — emit-readiness-review.md 권장 순서 1→5 이행 추적 -->
 # Phase 4 Emit-Hardening — Checklist
 
-Driven by `phase4/emit-readiness-review.md`. Order = the review's remediation path.
+Driven by `phase4/_audit/emit-readiness-review.md`. Order = the review's remediation path.
 
 ## 1. Validator (BK1) — highest leverage
 - [x] Define schema **v2** in `phase4/SPEC.md` (typed `fields:` map + `narrative:`, normalized `gate` block, `superseded` status, `discoverability` promotion)
