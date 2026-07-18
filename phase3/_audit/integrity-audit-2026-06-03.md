@@ -6,8 +6,8 @@ Phase 3 representation/analysis accuracy. Method: agent-team per-report audit
 (deterministic grep / recompute / DB-compare; targeted paper reads). Two seed
 probes (Barnard, Fomalhaut) were manually confirmed first.
 
-**Artifacts:** `findings-all-63-2026-06-03.json` (430 raw candidate findings),
-`triaged-2026-06-03.json` (auto-adjudication), `static-flags-2026-06-03.json`
+**Artifacts:** `_scratch/findings-all-63-2026-06-03.json` (430 raw candidate findings),
+`_scratch/triaged-2026-06-03.json` (auto-adjudication), `_scratch/static-flags-2026-06-03.json`
 (Phase 0). No repo code/DB modified.
 
 ## How to read this

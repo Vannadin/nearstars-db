@@ -77,7 +77,14 @@ scripts/refs/.cache/
 
 # Ignore Smart Environment folder
 .smart-env/
-# stability-sim run logs + checkpoints (regenerated; not curation state)
-phase3/stability-sim/run_*.log
-phase3/stability-sim/log_*.log
+# stability-sim run logs + checkpoints (regenerated; not curation state).
+# Logs are ignored at ANY depth (the old root-only patterns let results/**
+# logs slip into git). A log cited as evidence by a Phase 4 board stays
+# tracked via the negations below + the check.sh gate-9 allowlist.
+phase3/stability-sim/**/*.log
+!phase3/stability-sim/results/_snapshot500/elements.log
+!phase3/stability-sim/results/_ring_clearing.log
 phase3/stability-sim/results/*_ckpt.bin
+
+# Audit intermediate scratch (harvest/triage JSON) — local-only trail (AGENTS.md §2.4)
+phase3/_audit/_scratch/

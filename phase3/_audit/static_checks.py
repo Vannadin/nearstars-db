@@ -140,7 +140,7 @@ for slug in REPORTS:
     except Exception as e:
         out["block_parity"][slug] = f"error: {e}"
 
-with open("phase3/_audit/static-flags-2026-06-03.json", "w", encoding="utf-8") as f:
+with open("phase3/_audit/_scratch/static-flags-2026-06-03.json", "w", encoding="utf-8") as f:
     json.dump(out, f, ensure_ascii=False, indent=2)
 
 print("=== Phase 0 static-check summary ===")
