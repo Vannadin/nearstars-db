@@ -4220,7 +4220,10 @@
         "doi": "10.1051/0004-6361/201527078",
         "recommended": false
       }
-    ]
+    ],
+    "floor_na": {
+      "age": "No published age determination exists (ADS full-text sweep 2026-07-20: full:\"GJ 9066\" x age/gyrochronology/isochrone/kinematic/moving-group -> 0 relevant; 8-paper general sweep all non-age). Queries logged in phase2/floor-backfill/context-notes.md. Remove this marker if a paper appears."
+    }
   },
   "Teegarden's Star": {
     "teff_k": 2904,

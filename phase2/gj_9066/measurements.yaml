@@ -32,8 +32,8 @@ stellar:
       bibcode: 2019A&A...625A..68S
       doi: 10.1051/0004-6361/201834965
       recommended: true
-      notes: VizieR J/A+A/625/A68/tableb1 Rad (recno 17, Gl 83.1). Quirrenbach 2022 Table 1
-        adopts the rounded 0.164 +/- 0.005 from this source.
+      notes: VizieR J/A+A/625/A68/tableb1 Rad (recno 17, Gl 83.1). Quirrenbach 2022 Table 1 adopts the
+        rounded 0.164 +/- 0.005 from this source.
     - value_rsun: 0.174
       uncertainty_rsun: 0.0057
       method: sed_fitting
@@ -86,14 +86,13 @@ stellar:
       bibcode: 2022A&A...663A..48Q
       doi: 10.1051/0004-6361/202142915
       recommended: true
-      notes: Active fast rotator (BY Dra / flare star). P_rot confirmed from OSN R + V band
-        photometry (strong peak at 1.96 d) and corroborated by the chromatic 1.96 d RV
-        modulation plus H-alpha / Ca II IRT line variability. Verbatim Quirrenbach 2022.
-        "the rotation period is 1.96 +/- 0.02 d." Shan et al. 2024 (CARMENES rotation catalog,
-        arXiv 2401.09550) narratively flags TZ Ari as the lone RV-discovered planet host with
-        P_rot < 15 d, but its per-star tabulated value lives in VizieR/CDS, not the fetched
-        ar5iv body. Earlier literature 30 d (Astudillo-Defru 2017, cited by Feng 2020) is the
-        superseded value.
+      notes: Active fast rotator (BY Dra / flare star). P_rot confirmed from OSN R + V band photometry
+        (strong peak at 1.96 d) and corroborated by the chromatic 1.96 d RV modulation plus H-alpha /
+        Ca II IRT line variability. Verbatim Quirrenbach 2022. "the rotation period is 1.96 +/- 0.02 d."
+        Shan et al. 2024 (CARMENES rotation catalog, arXiv 2401.09550) narratively flags TZ Ari as the
+        lone RV-discovered planet host with P_rot < 15 d, but its per-star tabulated value lives in VizieR/CDS,
+        not the fetched ar5iv body. Earlier literature 30 d (Astudillo-Defru 2017, cited by Feng 2020)
+        is the superseded value.
     activity_measurements:
     - value_h_alpha_ew_angstrom: -1.906
       uncertainty_h_alpha_ew_angstrom: 0.025
@@ -109,6 +108,10 @@ stellar:
       bibcode: 2017A&A...600A..13A
       doi: 10.1051/0004-6361/201527078
       recommended: false
+    floor_na:
+      age: 'No published age determination exists (ADS full-text sweep 2026-07-20: full:"GJ 9066" x age/gyrochronology/isochrone/kinematic/moving-group
+        -> 0 relevant; 8-paper general sweep all non-age). Queries logged in phase2/floor-backfill/context-notes.md.
+        Remove this marker if a paper appears.'
 planets:
   GJ 9066:
   - pl_name: GJ 9066 c

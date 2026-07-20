@@ -24,7 +24,7 @@ hosts are completed.
 
 - [x] `[fgkm]` **55 Cnc** — DONE 2026-07-20: age (von Braun 2011 isochrone 10.2 Gyr + Maxted 2015 gyro)
 - [x] `[fgkm]` **Delta Pavonis** — DONE 2026-07-20: rotation (Costa Silva 2020 v sin i → P/sin i 41 d upper limit; no period measurable for this quiet subgiant)
-- [ ] `[fgkm]` **GJ 9066** — age: **no measurement exists in the literature** (ADS full-text sweep 2026-07-20, queries logged in context-notes) — honest null per DB principle; revisit only if a new paper appears
+- [x] `[fgkm]` **GJ 9066** — N/A 2026-07-20: age has no published determination (floor_na marker; gate 10d counts it as N/A, not missing)
 - [x] `[fgkm]` **HD 219134** — DONE 2026-07-20: age (Li 2025 asteroseismology 10.15 Gyr — first asteroseismic age below 5000 K)
 - [x] `[fgkm]` **YZ Cet** — DONE 2026-07-20: age (Engle & Guinan 2017 gyro 4.0 Gyr)
 - [x] `[fgkm]` **eps Ind A** — DONE 2026-07-20: age (Chen 2022 activity 3.5 +0.8/-1.0 Gyr)

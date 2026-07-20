@@ -92,3 +92,20 @@ Append-only. Started 2026-07-20.
   morning). Gate 4d caught it again — three-for-three on this batch pair.
 - **Tier A is now empty; Tier B has only GJ 9066 left (honest null).** Floor
   count 119, all remaining = Tier C/D long tail.
+
+## 2026-07-20 — floor-N/A mechanism + Tier C/D wave 1 launched
+
+- **floor_na marker implemented** (the ≥3-cases threshold was clearly about to
+  be crossed by the D-wave age hunts): `stellar_props_curated[host].floor_na =
+  {category: reason+query-pointer}`. Gate 10d counts these as "N/A (no
+  published measurement)" instead of missing; schema allows the key;
+  apply_phase2 preserves it if absent from YAML (same as meta_notes).
+  Anti-fabrication rule in the schema comment: only with a query log, remove
+  when a paper appears. GJ 9066 age = first marked case (118 below floor + 1 N/A).
+- **Wave 1 fanned out** (3 agents): Tier C six (Altair, Sirius A, GJ 896 A,
+  CWISEP BD, eps Ind Ba/Bb), Tier D M-dwarf 15 (famous planet hosts,
+  catalog-first: Cifuentes 2020 / Schweitzer 2019 / Diez Alonso 2019 /
+  Astudillo-Defru 2017 / Schöfer 2019), Tier D FGK 15 (bright stars,
+  interferometric-first: Boyajian, Torres 2015 Capella, Mount Wilson
+  rotation/activity, Mamajek & Hillenbrand 2008 ages). Schema enums embedded
+  in the prompts this time — batch 1/2 lost a round-trip to enum drift.

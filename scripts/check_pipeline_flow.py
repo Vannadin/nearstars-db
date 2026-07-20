@@ -180,24 +180,28 @@ def star_class(sp_raw: str) -> str:
 
 floor_detail = "--floor-detail" in sys.argv
 floor_gaps_by_cls: dict[str, int] = {}
+floor_na_count = 0
 for name, entry in sorted(curated.items()):
     meta = star_meta.get(name)
     if not meta or not meta["dist_pc"] or meta["dist_pc"] > LY_50_PC:
         continue
     cls = star_class(entry.get("spectype") or meta["spectype"])
+    na = entry.get("floor_na") or {}
     missing = sorted(
         cat for cat in FLOORS[cls]
-        if not entry.get(f"{cat}_measurements")
+        if not entry.get(f"{cat}_measurements") and cat not in na
     )
+    floor_na_count += sum(1 for cat in FLOORS[cls] if cat in na)
     if missing:
         floor_gaps_by_cls[cls] = floor_gaps_by_cls.get(cls, 0) + 1
         if floor_detail:
             warnings.append(f"floor[{cls}] {name}: missing {', '.join(missing)}")
-if floor_gaps_by_cls:
+if floor_gaps_by_cls or floor_na_count:
     total = sum(floor_gaps_by_cls.values())
     by = ", ".join(f"{c}:{n}" for c, n in sorted(floor_gaps_by_cls.items()))
+    na_note = f"; {floor_na_count} category N/A (no published measurement)" if floor_na_count else ""
     warnings.append(
-        f"phase-2 floor: {total} curated hosts ≤50 ly below floor ({by}) — "
+        f"phase-2 floor: {total} curated hosts ≤50 ly below floor ({by}){na_note} — "
         f"backfill worklist; per-host detail: check_pipeline_flow.py --floor-detail"
     )
 

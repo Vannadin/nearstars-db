@@ -529,6 +529,11 @@ STELLAR_CURATED_TOPLEVEL_ALLOWED = {
     # 컴팩트 천체 (중성자별/펄서·백색왜성) 고유 물리 — 일반 stellar 측정 종류로
     # 표현 불가한 자전·자기장·X선 등. 단일 dict + provenance. PSR J0108−1431 사례.
     "compact_object",
+    # floor N/A 마커 (2026-07-20, floor-backfill): 해당 카테고리의 발표 측정이
+    # 문헌에 존재하지 않음이 확인된 경우. {category: "사유 + 검색 로그 포인터"}.
+    # gate 10d 가 이 카테고리를 '미큐레이션'이 아닌 'N/A'로 집계. 사례: GJ 9066 age.
+    # 값 조작 방지: 반드시 검색 쿼리 기록과 함께, 새 논문 발견 시 제거.
+    "floor_na",
 } | (set(STELLAR_MEASUREMENT_KINDS.keys()) - {DISK_KIND})
 
 # 컴팩트 천체 블록 (stellar_props_curated[<star>].compact_object). 일반 별엔 없음.

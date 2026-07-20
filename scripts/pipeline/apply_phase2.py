@@ -75,7 +75,7 @@ def load_yaml(slug: str) -> dict:
 # (한 번 큐레이팅 후 거의 변경 없음), 일상적인 mass/radius YAML 갱신이
 # 실수로 wipe 하는 사고를 방지. YAML 에 `meta_notes: null` 처럼 명시적 null
 # 을 적으면 삭제도 가능 (`is None` 으로 구분).
-_STELLAR_PRESERVE_IF_ABSENT = ("meta_notes", "sources_extra")
+_STELLAR_PRESERVE_IF_ABSENT = ("meta_notes", "sources_extra", "floor_na")
 
 
 def merge(yaml_data: dict) -> tuple[dict, dict]:
