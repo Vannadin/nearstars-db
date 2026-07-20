@@ -38,7 +38,7 @@ Three root causes, in priority order:
 | 40 Eridani | `40_eridani.yaml` | ✅ full |
 | Fomalhaut | `fomalhaut.yaml` | ✅ 8 axes |
 | Barnard | `barnards_star.yaml` | ⚠️ skeletal (2 rows) |
-| Tau Ceti | `tau_ceti.yaml` | ⚠️ skeletal (5 rows, star-only) |
+| Tau Ceti | `tau_cet.yaml` | ⚠️ skeletal (5 rows, star-only) |
 | **TRAPPIST-1** | — | ❌ **absent** (DB exists) |
 | **Luhman 16** | — | ❌ **absent** (DB exists) |
 
@@ -119,15 +119,15 @@ documents it; make it a machine flag, not prose.
 
 **MJ1 — `axis: group` only (not `group.name`) — the dominant defect.**
 SPEC §3: "`axis` is `group.name` … never a free-form field." Reality: ~40/48 rows in
-40_eridani, 7/8 in fomalhaut, 4/5 in tau_ceti, ~42 in proxima, ~45 in alpha are keyed by
+40_eridani, 7/8 in fomalhaut, 4/5 in tau_cet, ~42 in proxima, ~45 in alpha are keyed by
 group alone (`bulk`, `appearance`, `environment`…). A single `bulk` row (e.g.
 `40_eridani.yaml:204`) bundles mass+radius+density+J₂+obliquity+spin into one prose blob,
 but the emit unit is `bulk.mass`, `bulk.radius`, `bulk.geopotential_j2` *separately*. One
 prose row cannot feed the six distinct cfg fields it describes.
 
 **MJ2 — `value:` is a multi-sentence prose blob (systemic).**
-tau_ceti / fomalhaut / 40_eridani / proxima non-orbit rows, and αCen non-orbit rows. Load-
-bearing numbers exist only in prose: `tau_ceti.yaml:24-31` (M/R/Teff/L/age/P_rot/spin-i);
+tau_cet / fomalhaut / 40_eridani / proxima non-orbit rows, and αCen non-orbit rows. Load-
+bearing numbers exist only in prose: `tau_cet.yaml:24-31` (M/R/Teff/L/age/P_rot/spin-i);
 `fomalhaut.yaml:92-104` (3 belts × radii/i/PA/e/T/mass/colors); `alpha_centauri.yaml:87-102`
 (Polyphemus radius, where the DB says 11.8 R⊕ but the board wants 11.2 R_Jup-equiv — the
 prose override is unreadable, so the writer would emit the wrong radius). Sometimes a value
@@ -136,13 +136,13 @@ means no single extraction path is reliable.
 
 **MJ3 — Gate blocks off-schema roster-wide (`evidence`/`divergence_note` mostly absent).**
 Only `barnards_star.yaml` and the αCen numeric rows use `evidence`. 40_eridani/fomalhaut/
-tau_ceti have **zero** `evidence`/`divergence_note`; proxima invents `rationale`/
+tau_cet have **zero** `evidence`/`divergence_note`; proxima invents `rationale`/
 `aurora_divergence`/`palette_note`/`collapse_note`. A schema-keyed validator finds almost
 no conforming rows and cannot tell "documented in prose" from "undocumented."
 
 **MJ4 — `documented-divergence` verdicts with no `divergence_note` (guard would fail).**
 `divergence_note:` present only in alpha (9) and proxima (2); **absent** in 40_eridani,
-tau_ceti, fomalhaut, barnards. Verified specific rows: `proxima_cen.yaml:117` (b
+tau_cet, fomalhaut, barnards. Verified specific rows: `proxima_cen.yaml:117` (b
 atmosphere) uses `rationale:`; `alpha_centauri.yaml:408` (A stellar_wind) and `:451` (B)
 use `evidence:`; `proxima_cen.yaml:175` (b aurora) uses `aurora_divergence:`. Each is a real
 departure whose SPEC-required note field is null. SPEC §4 makes a null note a build failure.
@@ -168,7 +168,7 @@ stability gate its siblings c/d used (`:405,540`).
 
 **MJ7 — No machine-readable color/variant selector.**
 Every color cell offers multiple hexes with the choice stated only in Korean prose:
-tau_ceti physical `#ffeddf` vs viewer tint `#ffe9c8` (`:39,47`); fomalhaut belts faithful
+tau_cet physical `#ffeddf` vs viewer tint `#ffe9c8` (`:39,47`); fomalhaut belts faithful
 `#fff4e5` vs vivid `#ffe0b0`/`#ffe2b1` vs measured `#d6d8da` with "faithful 기본" in prose
 (`:99-100`); proxima `cfg_colors_intrinsic` vs `cfg_colors_displayed` (`:144,169`); 40 Eri
 film vs physical (`:276,281`). No `ring_color_variant`/`emit_value` field; the measured cold

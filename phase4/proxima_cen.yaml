@@ -7,7 +7,7 @@ updated: 2026-07-12
 
 decisions:
   # ── 별 (Proxima Cen, M5.5Ve 플레어 별) — facet-walk 2026-06-23 ──────────
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: identity
     status: gated
     driver: [classification, observation]
@@ -32,7 +32,7 @@ decisions:
         정합), naked_eye 아님. 오너 결정(a).
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "Innes 1915 (telescopic discovery)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: bulk                        # §3.2 템플릿 앵커 — 측정 passthrough 에코 (spin_axis·J2는 전용 행)
     body_class: star
     status: passthrough
@@ -77,7 +77,7 @@ decisions:
         op: passthrough
         note: "±0.5 (kinematic; 포획 vs 동시생성 미정). Teff 2904±51K (Passegger2019)"
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: appearance                  # [star] group 6 — 관측 기반 + 흑점 결정
     status: gated
     driver: [observation]
@@ -109,7 +109,7 @@ decisions:
         흑점량=오너 위임 결정(텍스처용) ~3–5%. 플레어 visual 드롭(KSP 동적 플레어 미지원, 오너 확인).
     refs: ["1998PASP..110..863P", "1303.5632"]
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: magnetism.magnetic_field    # 측정
     status: passthrough
     driver: [passthrough]
@@ -123,7 +123,7 @@ decisions:
         op: passthrough
         note: "평균 표면장 (Reiners&Basri2008/Reiners2022 CARMENES); 대규모 dipole 0.135 kG (Klein2021 ZDI, 주로 poloidal); spin incl 47°±7°"
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: environment.activity        # 플레어 별 핵심 — 측정
     status: passthrough
     driver: [passthrough]
@@ -141,7 +141,7 @@ decisions:
         value: "1.49회/일 (Vida2019 TESS); 슈퍼플레어 ≥10³³erg ~3회/년, ultra ~0.5회/년; X선 log Lx ~27.0 정온→28.5 피크"
         op: passthrough
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: environment.stellar_wind    # 측정
     status: passthrough
     driver: [passthrough]
@@ -154,7 +154,7 @@ decisions:
         op: passthrough
         note: "≤0.2 (Wood2001 astrospheric Lyα 상한). 플레어-지배 환경, 절대 풍 약함"
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: environment.heliosphere     # SHARED 시스템 대표
     status: passthrough
     driver: [passthrough]
@@ -166,7 +166,7 @@ decisions:
         op: passthrough
 
   # ── 항성 자전축/J2 — 2026-07-12 항성 점검서 신설 (silent-passthrough 해소) ──
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: bulk.spin_axis_orientation
     status: gated                     # 측정 채택 (Klein 2021 ZDI)
     driver: [observation]
@@ -184,7 +184,7 @@ decisions:
         정렬 주장 없음.
     refs: [2020MNRAS.500.1844K]
 
-  - body: Proxima Centauri
+  - body: Proxima Cen
     axis: bulk.geopotential_j2
     status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit
     driver: [physics]
@@ -207,7 +207,7 @@ decisions:
     refs: [1939isss.book.....C, 2009A&A...505..205D, 1998AJ....116..429B, 2025A&A...700A..11S]
 
   # ── 행성 b (대륙형 호수 세계, 무생물) — facet-walk 2026-06-23 ──────────
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: identity
     status: gated
     driver: [classification, observation]
@@ -232,7 +232,7 @@ decisions:
         TRAPPIST-1 e와 자연 분기). 생명 없음.
     discoverability_cfg: {category: confirmed, ignorelevels: "T F F F", ref: "2016Natur.536..437A (Anglada-Escudé 2016)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: orbit                       # a/e/inc/lock = 측정 passthrough
     status: passthrough
     driver: [passthrough]
@@ -252,7 +252,7 @@ decisions:
         value: "1:1 (락타임 <10⁵yr); Ω/ω/M free-emit"
         op: passthrough
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: bulk                        # §3.2 템플릿 앵커 — mass=등방 prior 중앙 진질량(결정), 나머지 passthrough/tie-break
     body_class: tidally_locked
     status: gated
@@ -334,7 +334,7 @@ decisions:
         caveat: radius 1.07 R⊕는 비통과 tie-break(질량-반경). 1.22 M⊕ 채택으로 g~1.07·밀도~5.5 재도출(지구형 유지).
     refs: ["1007.0245"]
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: atmosphere                  # G4 — 기압=오너 결정 0.7 bar, 나머지 방법론 도출
     status: gated
     driver: [classification, window-selection]
@@ -394,7 +394,7 @@ decisions:
         docs/reference/tidally-locked-temperature-methodology.md (Layer-3 앵커 Turbet2016·Boutle2017, 검증 id는 그 문서).
     refs: ["1702.04089", "1608.06813", "1608.08620"]
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: surface                     # G5 — 대륙형 호수 세계 표면; 색=표면색 문서, A=Bond cascade
     status: gated
     driver: [classification, visual]
@@ -440,7 +440,7 @@ decisions:
         emit_note: Kopernicus 표면색/biome emit는 프로젝트 말미 일괄. 색조 sRGB는 표면색 문서 + atmosphere-reflected-color
         엔진으로 조성→색 합성(emit 단계). 야간 빙관/직하 호수/2색 대륙 = biome 구획 후보.
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: appearance                  # G6 — Proxima-lit 표시색 + 디스크 종합 + 희미 플레어-오로라
     status: gated
     driver: [visual, observation]
@@ -482,7 +482,7 @@ decisions:
         오로라색 = composition-color.md.
     refs: ["2017ApJ...844L..13G", "2012.02116", "2011Icar..213...12D"]
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: magnetism.magnetic_field    # G7 — 암석 dynamo(RM22)+조석고정 penalty → 약한 장. G6서 함의된 결정 명시
     status: gated
     driver: [derived-grounding]
@@ -512,7 +512,7 @@ decisions:
         조석lock penalty). 노쇠/느린자전 약화 = Driscoll&Olson2011.
     refs: ["2605.22925", "2203.01065"]
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: environment                 # G8 — 별 측정 환경 + G7 약한장에서 도출 (radiation/wind/heliosphere)
     status: gated
     driver: [derived-grounding]
@@ -545,7 +545,7 @@ decisions:
         paper: 별 환경 측정 출처는 별 섹션(environment.activity/wind/heliosphere; Vida2019·Wargelin2024·Wood2001 등).
         대기 escape = exoplanet-atmosphere-methodology.md Gate2(Dong2017·Ribas2016).
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: rings                       # G9 — 없음
     status: gated
     driver: [classification]
@@ -559,7 +559,7 @@ decisions:
       verdict: pass-in-window
       evidence: "암석 지구형엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]]) — feature 없으면 없음으로."
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: satellites                  # G10 — 없음 (근접 조석환경 물리적 예외)
     status: gated
     driver: [stability, classification]
@@ -573,7 +573,7 @@ decisions:
         [[feedback_gameplay_variety]]의 "그 자리에 아무것도 없어야 함" **물리적 예외** — 근접 조석환경이 안정 위성을 막아
         '없음'이 근거 있는 선택(증거 부재 아닌 물리적 부재). 오너 결정 2026-06-23(소형 위성 시도 대신 없음 채택).
 
-  - body: Proxima Centauri b
+  - body: Proxima Cen b
     axis: gameplay                    # G11 — 착륙 가능 암석 호수 세계 (폴리페무스 가스자이언트와 대비)
     status: gated
     driver: [gameplay]
@@ -611,7 +611,7 @@ decisions:
         splashdown 호수 유지). 직전 커밋(2bb8540)은 오너 검토 없이 작성된 것이라 본 검토로 정정·승인.
 
   # ════════ 행성 d (초단주기 sub-Earth, 뜨거운 무대기 수성 아날로그) — facet-walk 2026-06-23 ════════
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: identity
     status: gated
     driver: [classification, observation]
@@ -639,7 +639,7 @@ decisions:
     discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "arXiv:2202.05188 (Faria 2022)", skill: "researchbodies-cfg/references/db-mapping.md"}
     refs: ["2202.05188"]
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: orbit
     status: gated
     driver: [window-selection, observation]
@@ -672,7 +672,7 @@ decisions:
 
         paper: 조석 원형화/lock = docs/reference/tidal-locking-timescale-methodology.md(a⁶)·tidal-heating §4(e-damping).
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: bulk                        # §3.2 템플릿 앵커
     body_class: tidally_locked
     status: gated
@@ -746,7 +746,7 @@ decisions:
 
         paper: docs/reference/mass-radius-relation-methodology.md (암석 R∝M^0.27, valley 분류).
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: atmosphere
     status: gated
     driver: [classification]
@@ -771,7 +771,7 @@ decisions:
 
         paper: docs/reference/exoplanet-atmosphere-methodology.md Gate1(Zahnle&Catling2017 shoreline).
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: surface
     status: gated
     driver: [classification, visual]
@@ -811,7 +811,7 @@ decisions:
         paper: docs/reference/surface-color-albedo-methodology.md(§4 공간풍화 Hapke2001·Pieters2000 — 자기권 차폐로 감소).
         자기장=G7(Zapatero Osorio2026). Teq=온도 문서.
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: appearance
     status: gated
     driver: [visual, observation]
@@ -831,7 +831,7 @@ decisions:
       verdict: pass-in-window
       evidence: "표시색=고유색×Proxima SED(§6 엔진, emit 정밀화). 무대기라 구름·haze 없음, 순수 표면."
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: magnetism.magnetic_field
     status: gated
     driver: [observation]
@@ -859,7 +859,7 @@ decisions:
         추측 출처=dynamo 문서 regime4(RM22).
     refs: ["2605.22925"]
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: environment
     status: gated
     driver: [derived-grounding]
@@ -888,7 +888,7 @@ decisions:
         paper: 별 환경 측정 = 별 섹션(environment.activity/wind/heliosphere); phase-lock 플레어 = Zapatero Osorio 2026
         (2605.22925, G7); 대기 escape 무관(무대기).
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: rings
     status: gated
     driver: [classification]
@@ -902,7 +902,7 @@ decisions:
       verdict: pass-in-window
       evidence: "극근접 뜨거운 암석엔 고리 기본 부재. 디스크 조작 방지 원칙([[project_nearstars_ring_fabrication]]) — feature 없으면 없음."
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: satellites
     status: gated
     driver: [stability, classification]
@@ -912,7 +912,7 @@ decisions:
       verdict: pass-in-window
       evidence: "[[feedback_gameplay_variety]] '물리적으로 아무것도 없음' 예외."
 
-  - body: Proxima Centauri d
+  - body: Proxima Cen d
     axis: gameplay
     status: gated
     driver: [gameplay]
@@ -949,7 +949,7 @@ decisions:
         derived. cfg emit(biome map·ScienceValues·ResearchBodies)는 프로젝트 말미 일괄.
 
   # ════════ 행성 c (원거리 냉 mini-Neptune + Gratton 고리 + 소형 위성) — facet-walk 2026-06-23 (축별 walk) ════════
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: identity
     status: gated
     driver: [classification, observation]
@@ -975,7 +975,7 @@ decisions:
     discoverability_cfg: {category: candidate, ignorelevels: "T F F F", ref: "2020SciA....6.7467D (Damasso 2020)", skill: "researchbodies-cfg/references/db-mapping.md"}
     refs: ["2020SciA....6.7467D"]
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: orbit
     status: gated
     driver: [window-selection, observation]
@@ -1008,7 +1008,7 @@ decisions:
         tidal-locking-timescale-methodology.md(a⁶).
     refs: ["2003.13106", "1007.0245"]
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: bulk                        # §3.2 템플릿 앵커
     body_class: free_rotator
     status: gated
@@ -1084,7 +1084,7 @@ decisions:
 
         paper: docs/reference/mass-radius-relation-methodology.md (regime2 sub-Neptune band, Forecaster Chen&Kipping2017·Otegi2020).
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: atmosphere
     status: gated
     driver: [classification]
@@ -1116,7 +1116,7 @@ decisions:
 
         paper: 온도 Teq=tidally-locked-temperature-methodology.md Layer1(비잠김이라 균일 가까움). 보유=대질량+원거리 자명.
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: surface
     status: gated
     driver: [classification]
@@ -1130,7 +1130,7 @@ decisions:
       verdict: pass-in-window
       evidence: "표면색·albedo 문서 scope — 가스/얼음 외피체엔 surface 축 N/A. 오너 G5 확정 2026-06-23."
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: appearance
     status: gated
     driver: [visual, classification]
@@ -1162,7 +1162,7 @@ decisions:
         paper: 색=docs/reference/atmosphere-reflected-color-methodology.md(Rayleigh+haze). 온도=tidally-locked-temperature
         + internal-heat-luminosity 문서(Teq 40K, T_eff ~50–60K). 시각 standout=고리(G9, 밝은 얼음).
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: magnetism.magnetic_field
     status: gated
     driver: [derived-grounding]
@@ -1183,7 +1183,7 @@ decisions:
         paper: docs/reference/planetary-dynamo-scaling.md regime 3(빙거성 analog, Neptune/Uranus ~0.1–0.5 G 비쌍극).
     refs: ["2009Natur.457..167C", "1007.1514"]
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: environment
     status: gated
     driver: [derived-grounding]
@@ -1206,7 +1206,7 @@ decisions:
       verdict: pass-in-window
       evidence: "별 measured 환경 거리스케일 + G7 빙거성 자기권에서 도출. b·d와 정반대(저방사선). 오너 G8 확정 2026-06-23."
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: rings
     status: gated
     driver: [visual, observation]
@@ -1240,7 +1240,7 @@ decisions:
         청정 얼음 Warren&Brandt2008 + 톨린 Khare1984).
     refs: ["2004.06685"]
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: satellites
     status: gated
     driver: [fiction, stability]
@@ -1255,7 +1255,7 @@ decisions:
       criterion: [fiction, stability, hill-stability]
       verdict: owner-override
 
-  - body: Proxima Centauri c
+  - body: Proxima Cen c
     axis: gameplay
     status: gated
     driver: [gameplay]
@@ -1286,7 +1286,7 @@ decisions:
         매력. cfg emit(biome map·ScienceValues·ResearchBodies·Ring 노드)는 프로젝트 말미.
 
   # ════════ 위성 Proxima c I (c의 픽션 위성, 명왕성 아날로그 냉 얼음) — 판도라식 독자 facet-walk 2026-06-23 (축별) ════════
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: identity
     status: gated
     driver: [classification, fiction]
@@ -1310,7 +1310,7 @@ decisions:
       evidence: "오너 G1 확정 2026-06-23. art-first 픽션 위성([[project_nearstars_discoverability_researchbodies]] fictional moons=FFFF). 명왕성 아날로그는 물리 정합(명왕성=~40K 냉 얼음+톨린 세계)."
     discoverability_cfg: {category: fictional, ignorelevels: "F F F F", ref: "fiction (art-directed moon)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: orbit
     status: gated
     driver: [window-selection, stability]
@@ -1343,7 +1343,7 @@ decisions:
 
         paper: 조석고정 τ = docs/reference/tidal-locking-timescale-methodology.md(a⁶). emit시 stability-sim 권장.
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: bulk                        # §3.2 템플릿 앵커
     body_class: tidally_locked
     status: gated
@@ -1421,7 +1421,7 @@ decisions:
 
         caveat: G1·c-G10의 '~1.5× 달' 표기는 본 G3로 정정(~950 km).
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: atmosphere
     status: gated
     driver: [classification]
@@ -1451,7 +1451,7 @@ decisions:
 
         paper: 명왕성 N₂ 대기·haze 유추. scale-height/μ = docs/reference/exoplanet-atmosphere-methodology.md.
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: surface
     status: gated
     driver: [classification, visual]
@@ -1481,7 +1481,7 @@ decisions:
 
         paper: docs/reference/surface-color-albedo-methodology.md(얼음·tholin n,k). 명왕성/트리톤 표면=Grundy2016·Cruikshank1993.
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: appearance
     status: gated
     driver: [visual]
@@ -1503,7 +1503,7 @@ decisions:
       verdict: pass-in-window
       evidence: "G4(haze)+G5(이원 지형) 종합. 색=표면색·대기반사색 문서 엔진. c+고리가 하늘에 보이는 건 조석고정 위성의 자연 연출. 오너 G6 확정 2026-06-23."
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: magnetism.magnetic_field
     status: gated
     driver: [classification]
@@ -1520,7 +1520,7 @@ decisions:
       verdict: pass-in-window
       evidence: "소형 얼음 위성 전형(무dynamo). 지하 바다 없음(열원 부재)이라 유도장도 없음. c 자기권 내부라 위성 자체 장 불필요. 오너 G7 확정 2026-06-23."
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: environment
     status: gated
     driver: [derived-grounding]
@@ -1548,7 +1548,7 @@ decisions:
 
         coupling: G5 표면 톨린(GCR 주도, 항성풍 채널 없음) + G7(c 자기권 내부)와 정합.
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: rings
     status: gated
     driver: [classification]
@@ -1562,7 +1562,7 @@ decisions:
       verdict: pass-in-window
       evidence: "오너 G9 확정 2026-06-23."
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: satellites
     status: gated
     driver: [classification, stability]
@@ -1572,7 +1572,7 @@ decisions:
       verdict: pass-in-window
       evidence: "submoon 불안정. 오너 G10 확정 2026-06-23."
 
-  - body: Proxima Centauri c I
+  - body: Proxima Cen c I
     axis: gameplay
     status: gated
     driver: [gameplay]

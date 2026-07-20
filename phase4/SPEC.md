@@ -171,7 +171,27 @@ automatically; perceptual axes (visual, composition) are a human checklist stage
 ## 3. Decision record schema — `phase4/<system>.yaml`
 
 One file per system; one `decisions[]` row per **(body, axis)**. Emitters read this
-layer; the DB stays untouched. A row exists for every axis the owner has touched or
+layer; the DB stays untouched.
+
+**Naming contract (2026-07-20, owner-confirmed — the emit join).**
+
+- **Board filename** = `to_file_slug(system_name)` of the host component's db file
+  (`scripts/pipeline/_naming.py`), and the in-file `system:` field equals the
+  filename stem. Precedent: `tau_cet.yaml` ↔ db `system_name: "tau Cet"` (the
+  earlier `tau_ceti.yaml`, slugged from the display name "tau Ceti", was renamed —
+  never slug from a display form).
+- **Board granularity** = one board per dynamical host group: a tight pair gated
+  as one unit shares a board (`alpha_centauri.yaml` = A + B + A b system); a
+  gravitationally distinct host with its own planetary system gets its own board
+  (`proxima_cen.yaml`). Working dirs in phase2/3 may scope wider
+  (`phase2/alpha_centauri_proxima/`) — that is a topic scope, not a slug.
+- **`body:` keys** must equal the db `name` **exactly** (stars: `stars[].name`,
+  planets: `planets[].name` — e.g. `Proxima Cen b`, not `Proxima Centauri b`).
+  The emitter joins board rows to db bodies by exact string; there is no alias
+  table. Invented bodies (class D satellites) have no db row — for them the board
+  is the naming authority and every later reference reuses the board's string
+  verbatim (`Proxima Cen c I`, `Pandora`). Display/prose names inside `narrative`
+  are free. A row exists for every axis the owner has touched or
 that carries an `open` TODO; untouched axes need no row (they are `passthrough` by
 default), though a board may list them explicitly to show coverage.
 

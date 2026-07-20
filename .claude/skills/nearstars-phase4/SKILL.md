@@ -93,9 +93,12 @@ where a measurement-less axis would otherwise take a silent engine default.
 
 - Confirm Phase 3 is done for the body (there is a `docs/phase3/<slug>.html`
   report to read the window/alternatives from). If not, route to `nearstars-phase3`.
-- Open or create `phase4/<system>.yaml`. **The board slug is the system slug**
-  (via `scripts/pipeline/_naming.py`), which may differ from the db filename
-  (`tau_ceti` board ↔ `tau_cet.json`) — keep the board slug, note the mapping.
+- Open or create `phase4/<system>.yaml`. **The board filename is the db system
+  slug** — `to_file_slug(system_name)` from `scripts/pipeline/_naming.py`, always
+  identical to the db filename (`tau_cet.yaml` ↔ `tau_cet.json`). Never slug from
+  a display name (the old `tau_ceti.yaml` divergence was unified 2026-07-20).
+  `body:` row keys must equal db `stars[].name` / `planets[].name` exactly —
+  that string is the emit join key (SPEC §3 naming contract).
 - New board? Start it with `schema_version: 2`, `system:`, `status: staged`.
 - Per CLAUDE.md §7, if this is a non-trivial session keep a `checklist.md` +
   `context-notes.md` (see `phase4/emit-hardening/` for the pattern).

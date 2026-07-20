@@ -13,7 +13,7 @@ Driven by `phase4/_audit/emit-readiness-review.md`. Order = the review's remedia
 ## 2. Schema normalization (MJ1–MJ4, MN1–MN4) — pilot on α Cen first
 - [x] `alpha_centauri.yaml` → v2 (viewer sample): 75→75 rows lossless; group rows → typed `fields`; prose → `narrative`; gate keys → `evidence`/`divergence_note`; fixed `verdict: partial` (banding split), `status: superseded` (legal now), empty j2 gate, invented axes (orbit/bulk residual), Beichman ref → `["2508.03812","2508.03814"]`. **validator v2: 0 errors, 62 warns (canon/no-bibcode rows)**
 - [ ] `proxima_cen.yaml` → v2 (part of the α Cen system view)
-- [ ] Roll out to `40_eridani`, `fomalhaut`, `tau_ceti`, `barnards_star`
+- [ ] Roll out to `40_eridani`, `fomalhaut`, `tau_cet`, `barnards_star`
 
 ## 3. Verdict fixes (MJ5, MJ6) — done inline during normalization
 - [x] α Cen: banding morphology + aurora + A/B stellar_wind + rings → `documented-divergence` + note (verified: 0 divergences without note)

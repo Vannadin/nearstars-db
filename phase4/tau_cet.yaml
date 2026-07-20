@@ -1,13 +1,13 @@
 # τ Ceti (HD 10700 / GJ 71) Phase 4 결정 보드 — 별 + 행성 f/g/h(+e 논쟁) + 냉 debris 디스크. (body × axis) 행별 상태. DB 불변, staging.
 # 실관측 시스템 → 대부분 Phase 3 측정/합성값 passthrough, 소수 art/divergence + discoverability. grounding=docs/phase3/tau-cet*.md
 schema_version: 2
-system: tau_ceti
+system: tau_cet
 status: staged
 updated: 2026-07-12          # v2 마이그레이션 + 항성 점검 (항성 점검 프로그램)
 
 decisions:
   # ── 별 (τ Ceti, 조용·늙은·금속빈약 G8.5V) — facet-walk 2026-06-24, 점검 2026-07-12 ──
-  - body: tau Ceti
+  - body: tau Cet
     axis: identity
     status: gated
     driver: [classification, observation]
@@ -25,7 +25,7 @@ decisions:
       evidence: "오너 G1 확정 2026-06-24. 맨눈 별이라 naked_eye=T T T T(α Cen A/B처럼). 디스크가 주인공인 시스템(6–55 AU Kuiper 10–20배)."
     discoverability_cfg: {category: naked_eye, ignorelevels: "T T T T", ref: "naked-eye (V=3.5, Cetus)", skill: "researchbodies-cfg/references/db-mapping.md"}
 
-  - body: tau Ceti
+  - body: tau Cet
     axis: bulk                        # §3.2 템플릿 앵커 — DB 측정 passthrough 에코 (spin_axis·J2는 전용 행)
     body_class: star
     status: passthrough
@@ -47,7 +47,7 @@ decisions:
       - { name: age, value: 10, unit: Gyr, op: passthrough, note: "Di Folco2004; Phase3 해결값 (범위 4.4–12.4)" }
       - { name: rotation_period, value: 46, unit: d, op: passthrough, note: "±4 (Korolik2023 gyro; Phase3 해결값)" }
 
-  - body: tau Ceti
+  - body: tau Cet
     axis: appearance
     status: gated
     driver: [observation]
@@ -71,7 +71,7 @@ decisions:
         limb/흑점=측정 passthrough.
     refs: [2023AJ....166..123K, 2021A&A...646A..77G]
 
-  - body: tau Ceti
+  - body: tau Cet
     axis: magnetism.magnetic_field
     status: passthrough
     driver: [passthrough]
@@ -82,7 +82,7 @@ decisions:
     fields:
       - { name: magnetic_field, value: 0.17, unit: G, op: passthrough, note: "대규모장 (Chiti2025); Boro Saikia2018 ZDI 정합" }
 
-  - body: tau Ceti
+  - body: tau Cet
     axis: environment
     status: passthrough
     driver: [passthrough]
@@ -100,7 +100,7 @@ decisions:
       - { name: radiation, value: "~0.6× 태양 (낮음, flat)", op: passthrough }
 
   # ── 항성 자전축/J2 — 2026-07-12 항성 점검서 신설 (silent-passthrough 해소) ──
-  - body: tau Ceti
+  - body: tau Cet
     axis: bulk.spin_axis_orientation
     status: gated                     # 측정 채택 (Korolik 2023)
     driver: [observation]
@@ -119,7 +119,7 @@ decisions:
         시 최소 ~21°). 뷰어 i★ 레이어(측정=금색)와 정합.
     refs: [2023AJ....166..123K, 2016ApJ...828..113M]
 
-  - body: tau Ceti
+  - body: tau Cet
     axis: bulk.geopotential_j2
     status: gated                     # 오너 정책 2026-07-12 — 항성 J2 상시 계산·emit
     driver: [physics]
