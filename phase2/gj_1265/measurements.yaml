@@ -1,0 +1,63 @@
+stellar:
+  GJ 1265:
+    mass_measurements:
+    - value_msun: 0.178
+      uncertainty_msun: 0.018
+      method: unverified
+      reference: Luque et al. 2018
+      bibcode: 2018A&A...620A.171L
+      doi: 10.1051/0004-6361/201833423
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.192
+      uncertainty_rsun: 0.007
+      method: unverified
+      reference: Luque et al. 2018
+      bibcode: 2018A&A...620A.171L
+      doi: 10.1051/0004-6361/201833423
+      recommended: true
+    teff_measurements:
+    - value_k: 3236
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: true
+      notes: PHOENIX-ACES fit (Passegger method). Southern star, not in the CARMENES-north catalogs.
+      reference: Luque et al. 2018
+      bibcode: 2018A&A...620A.171L
+      doi: 10.1051/0004-6361/201833423
+    luminosity_measurements:
+    - value_lsun: 0.00364
+      uncertainty_lsun: 5.0e-05
+      method: bolometric_flux
+      recommended: true
+      notes: VOSA SED integration; consistent with the curated R = 0.192 (same paper).
+      reference: Luque et al. 2018
+      bibcode: 2018A&A...620A.171L
+      doi: 10.1051/0004-6361/201833423
+    rotation_measurements:
+    - value_days: 124.0
+      method: unverified
+      recommended: true
+      notes: From the HARPS Ca II S-index periodogram (spectroscopic, hence unverified tag).
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    - value_days: 70.0
+      method: photometric_variability
+      recommended: false
+      notes: 'LOWER LIMIT: Prot > 70 d (K2 photometry, EPIC 205913009).'
+      reference: Luque et al. 2018
+      bibcode: 2018A&A...620A.171L
+      doi: 10.1051/0004-6361/201833423
+    activity_measurements:
+    - value_log_rhk: -5.708
+      uncertainty_log_rhk: 0.063
+      method: log_rhk
+      recommended: true
+      notes: Very inactive (HARPS); Luque 2018 also reports no Halpha emission and faint X-ray.
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    floor_na:
+      age: No published age (not in Engle 2024; Luque 2018 notes 'young population' kinematics but gives
+        no numeric age). Checked 2026-07-20.

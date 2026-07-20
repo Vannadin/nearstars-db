@@ -1,0 +1,70 @@
+stellar:
+  GJ 1148:
+    mass_measurements:
+    - value_msun: 0.344045
+      uncertainty_msun: 0.020144
+      method: unverified
+      reference: Stassun et al. 2019
+      bibcode: 2019AJ....158..138S
+      doi: null
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.358519
+      uncertainty_rsun: 0.010569
+      method: unverified
+      reference: Stassun et al. 2019
+      bibcode: 2019AJ....158..138S
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 3200
+      method: sed_fitting
+      recommended: true
+      notes: CARMENES VOSA SED-grid (100 K grid, sigma~50 K).
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3375
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.01456
+      uncertainty_lsun: 0.000213
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 71.5
+      uncertainty_days: 5.1
+      method: photometric_variability
+      recommended: true
+      notes: 'HATNet, FAP<1e-4; lit 73.5 d (Hartman 2011). Cross-ID: GJ 1148 = Ross 1003 = Karmn J11417+427.'
+      reference: Diez Alonso et al. 2019
+      bibcode: 2019A&A...621A.126D
+      doi: 10.1051/0004-6361/201833316
+    activity_measurements:
+    - value_h_alpha_ew_angstrom: 0.108
+      uncertainty_h_alpha_ew_angstrom: 0.01
+      method: h_alpha
+      recommended: true
+      notes: Positive pEW — inactive.
+      reference: Schofer et al. 2019
+      bibcode: 2019A&A...623A..44S
+      doi: 10.1051/0004-6361/201834114
+    - value_log_rhk: -5.35
+      uncertainty_log_rhk: 0.029
+      method: log_rhk
+      recommended: false
+      notes: Compiled (Shan 2024).
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    floor_na:
+      age: No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative,
+        2026-07-20).

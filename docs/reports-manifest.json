@@ -105,6 +105,10 @@
     "phase2": "phase2/capella.html",
     "phase3": {}
   },
+  "CD Cet": {
+    "phase2": "phase2/cd-cet.html",
+    "phase3": {}
+  },
   "CWISEP J193518.59-154620.3": {
     "phase2": "phase2/cwisep-j193518-59-154620-3.html",
     "phase3": {}
@@ -147,6 +151,14 @@
       "★": "phase3/fomalhaut.html"
     }
   },
+  "G 192-15": {
+    "phase2": "phase2/g-192-15.html",
+    "phase3": {}
+  },
+  "G 261-6": {
+    "phase2": "phase2/g-261-6.html",
+    "phase3": {}
+  },
   "gam Cep": {
     "phase2": "phase2/gam-cep.html",
     "phase3": {}
@@ -159,12 +171,60 @@
     "phase2": "phase2/gj-1061.html",
     "phase3": {}
   },
+  "GJ 1132": {
+    "phase2": "phase2/gj-1132.html",
+    "phase3": {}
+  },
+  "GJ 1148": {
+    "phase2": "phase2/gj-1148.html",
+    "phase3": {}
+  },
+  "GJ 1151": {
+    "phase2": "phase2/gj-1151.html",
+    "phase3": {}
+  },
   "GJ 1214": {
     "phase2": "phase2/gj-1214.html",
     "phase3": {}
   },
+  "GJ 1265": {
+    "phase2": "phase2/gj-1265.html",
+    "phase3": {}
+  },
+  "GJ 1289": {
+    "phase2": "phase2/gj-1289.html",
+    "phase3": {}
+  },
+  "GJ 15 A": {
+    "phase2": "phase2/gj-15-a.html",
+    "phase3": {}
+  },
+  "GJ 179": {
+    "phase2": "phase2/gj-179.html",
+    "phase3": {}
+  },
+  "GJ 180": {
+    "phase2": "phase2/gj-180.html",
+    "phase3": {}
+  },
+  "GJ 229": {
+    "phase2": "phase2/gj-229.html",
+    "phase3": {}
+  },
+  "GJ 238": {
+    "phase2": "phase2/gj-238.html",
+    "phase3": {}
+  },
+  "GJ 251": {
+    "phase2": "phase2/gj-251.html",
+    "phase3": {}
+  },
   "GJ 273": {
     "phase2": "phase2/gj-273.html",
+    "phase3": {}
+  },
+  "GJ 3323": {
+    "phase2": "phase2/gj-3323.html",
     "phase3": {}
   },
   "GJ 411": {

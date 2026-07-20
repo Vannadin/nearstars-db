@@ -1,0 +1,51 @@
+stellar:
+  GJ 238:
+    mass_measurements:
+    - value_msun: 0.4193
+      uncertainty_msun: 0.0095
+      method: unverified
+      reference: Tey et al. 2024
+      bibcode: 2024AJ....167..283T
+      doi: 10.3847/1538-3881/ad3df1
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.4314
+      uncertainty_rsun: 0.0075
+      method: unverified
+      reference: Tey et al. 2024
+      bibcode: 2024AJ....167..283T
+      doi: 10.3847/1538-3881/ad3df1
+      recommended: true
+    teff_measurements:
+    - value_k: 3485
+      uncertainty_k: 140
+      method: photometric_color
+      recommended: true
+      notes: Tey 2024 (this-work) via the Mann 2015/2019 empirical relations; consistent with the curated
+        R = 0.4314 (same paper). Southern, not in CARMENES.
+      reference: Tey et al. 2024
+      bibcode: 2024AJ....167..283T
+      doi: 10.3847/1538-3881/ad3df1
+    rotation_measurements:
+    - value_days: 81.0
+      method: unverified
+      recommended: true
+      notes: HARPS Ca II S-index periodogram (spectroscopic). Tey 2024 mentions a 'putative 44-d' ground-photometry
+        period (unconfirmed).
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    activity_measurements:
+    - value_log_rhk: -5.43
+      uncertainty_log_rhk: 0.089
+      method: log_rhk
+      recommended: true
+      notes: Inactive (HARPS).
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    floor_na:
+      luminosity: No published bolometric luminosity (Tey 2024 gives Teff+R+M but no L; not in Cifuentes
+        — southern). L is computable from R+Teff but that is a derived value, not a measurement. Checked
+        2026-07-20.
+      age: No published age (not in Engle 2024). Checked 2026-07-20.

@@ -1,0 +1,57 @@
+stellar:
+  GJ 1132:
+    mass_measurements:
+    - value_msun: 0.1945
+      uncertainty_msun: 0.0048
+      method: unverified
+      reference: Xue et al. 2024
+      bibcode: 2024ApJ...973L...8X
+      doi: 10.3847/2041-8213/ad72e9
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.226
+      uncertainty_rsun: 0.007
+      method: unverified
+      reference: Weisserman et al. 2026
+      bibcode: 2026arXiv260407447W
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 3270
+      uncertainty_k: 140
+      method: photometric_color
+      recommended: true
+      notes: Empirical M-dwarf relations from absolute magnitude (parallax-based). Southern (L 320-124),
+        not in CARMENES.
+      reference: Berta-Thompson et al. 2015
+      bibcode: 2015Natur.527..204B
+      doi: 10.1038/nature15762
+    luminosity_measurements:
+    - value_lsun: 0.00438
+      uncertainty_lsun: 0.00034
+      method: bolometric_flux
+      recommended: true
+      reference: Berta-Thompson et al. 2015
+      bibcode: 2015Natur.527..204B
+      doi: 10.1038/nature15762
+    rotation_measurements:
+    - value_days: 129.15
+      method: photometric_variability
+      recommended: true
+      notes: Long rotation; consistent with the ~122-125 d literature values.
+      reference: Engle et al. 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840
+    age_measurements:
+    - value_gyr: 7.82
+      uncertainty_gyr: 3.07
+      method: gyrochronology
+      recommended: true
+      notes: 'Converted from log Age = 0.893 +/- 0.144 dex: 7.82 (+3.07/-2.21) Gyr; uncertainty = larger
+        side. Old field dwarf, Prot 129.15 d.'
+      reference: Engle et al. 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840
+    floor_na:
+      activity: Quiet star (Berta-Thompson 2015) but no numeric log_rhk/Halpha index published (southern;
+        absent from Astudillo/Schofer/Shan samples). Checked 2026-07-20.

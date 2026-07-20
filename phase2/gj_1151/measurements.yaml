@@ -1,0 +1,64 @@
+stellar:
+  GJ 1151:
+    mass_measurements:
+    - value_msun: 0.1639
+      uncertainty_msun: 0.0093
+      method: unverified
+      reference: Blanco Pozo et al. 2023
+      bibcode: 2023A&A...671A..50B
+      doi: null
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.1781
+      uncertainty_rsun: 0.0042
+      method: unverified
+      reference: Blanco Pozo et al. 2023
+      bibcode: 2023A&A...671A..50B
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 3100
+      method: sed_fitting
+      recommended: true
+      notes: CARMENES VOSA SED-grid (100 K grid, sigma~50 K).
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3221
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.00329
+      uncertainty_lsun: 3.95e-05
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 125.0
+      uncertainty_days: 23.0
+      method: photometric_variability
+      recommended: true
+      notes: 'MEarth, FAP<1e-4. Shan 2024 adopts 148.95 d (Medina 2022). Cross-ID: Karmn J11509+483 (distinct
+        from GJ 1148).'
+      reference: Diez Alonso et al. 2019
+      bibcode: 2019A&A...621A.126D
+      doi: 10.1051/0004-6361/201833316
+    activity_measurements:
+    - value_h_alpha_ew_angstrom: -0.095
+      uncertainty_h_alpha_ew_angstrom: 0.013
+      method: h_alpha
+      recommended: true
+      notes: Slightly negative — low-level activity. Low-frequency radio aurora detected by Vedantham
+        2020 (star-planet magnetic interaction candidate; context only).
+      reference: Schofer et al. 2019
+      bibcode: 2019A&A...623A..44S
+      doi: 10.1051/0004-6361/201834114
+    floor_na:
+      age: No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative,
+        2026-07-20).

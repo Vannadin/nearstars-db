@@ -1,0 +1,69 @@
+stellar:
+  CD Cet:
+    mass_measurements:
+    - value_msun: 0.161
+      uncertainty_msun: 0.01
+      method: unverified
+      reference: Bauer et al. 2020
+      bibcode: 2020A&A...640A..50B
+      doi: 10.1051/0004-6361/202038031
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.175
+      uncertainty_rsun: 0.006
+      method: unverified
+      reference: Bauer et al. 2020
+      bibcode: 2020A&A...640A..50B
+      doi: 10.1051/0004-6361/202038031
+      recommended: true
+    teff_measurements:
+    - value_k: 3000
+      method: sed_fitting
+      recommended: true
+      notes: CARMENES VOSA SED-grid (100 K grid, sigma~50 K).
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3204
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.002947
+      uncertainty_lsun: 7.78e-05
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 126.2
+      method: photometric_variability
+      recommended: true
+      notes: Shan 2024 Pbest (orig. Newton 2016, 2016ApJ...821...93N); Schofer 2019 lists the same 126.2
+        d.
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    activity_measurements:
+    - value_h_alpha_ew_angstrom: 0.0
+      method: h_alpha
+      recommended: true
+      notes: pEW(Halpha) = 0.0 A — no measurable emission, quiescent.
+      reference: Schofer et al. 2019
+      bibcode: 2019A&A...623A..44S
+      doi: 10.1051/0004-6361/201834114
+    - value_log_rhk: -5.25
+      uncertainty_log_rhk: 0.042
+      method: log_rhk
+      recommended: false
+      notes: Compiled in the Shan 2024 activity catalog.
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    floor_na:
+      age: No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative,
+        2026-07-20).

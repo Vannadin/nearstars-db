@@ -2175,7 +2175,86 @@
         "doi": "10.1051/0004-6361/202453381",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3000,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Cross-ID: G 192-15 = GJ 3380 = Karmn J06024+498.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3145,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.002072,
+        "uncertainty_lsun": 2.45e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1685,
+        "uncertainty_rsun": 0.0057,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Stefan-Boltzmann within the same catalog (L + Teff).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_rsun": 0.1536,
+        "uncertainty_rsun": 0.0059,
+        "method": "sed_fitting",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 105.0,
+        "uncertainty_days": 6.0,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "MEarth (upper-limit FAP flag); lit 99.6 d (Irwin 2011).",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -0.044,
+        "uncertainty_h_alpha_ew_angstrom": 0.016,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Low-level, near-inactive.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "G 261-6": {
     "mass_measurements": [
@@ -2188,7 +2267,56 @@
         "doi": "10.1051/0004-6361/202453381",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3000,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Cross-ID: G 261-6 = GJ 1238 = Karmn J19242+755 (Kaminski 2025 states this explicitly); the Cifuentes row is under GJ 1238.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.001428,
+        "uncertainty_lsun": 1.66e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.1399,
+        "uncertainty_rsun": 0.0047,
+        "method": "sed_fitting",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 114.0,
+        "uncertainty_days": 34.0,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Tabulated by Kaminski 2025 (orig. Irwin 2011, 2011ApJ...727...56I, MEarth); the Kaminski RV analysis independently sees a ~114 d stellar signal.",
+        "reference": "Kaminski et al. 2025",
+        "bibcode": "2025A&A...696A.101K",
+        "doi": "10.1051/0004-6361/202453381"
+      }
+    ],
+    "floor_na": {
+      "activity": "No published activity index (late M5.5; absent from Schofer 2019, Astudillo 2017, Shan 2024). Checked 2026-07-20.",
+      "age": "No published age. Checked 2026-07-20."
+    }
   },
   "GJ 887": {
     "mass_measurements": [
@@ -2793,7 +2921,65 @@
         "doi": null,
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3221,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00329,
+        "uncertainty_lsun": 3.95e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 125.0,
+        "uncertainty_days": 23.0,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "MEarth, FAP<1e-4. Shan 2024 adopts 148.95 d (Medina 2022). Cross-ID: Karmn J11509+483 (distinct from GJ 1148).",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -0.095,
+        "uncertainty_h_alpha_ew_angstrom": 0.013,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Slightly negative — low-level activity. Low-frequency radio aurora detected by Vedantham 2020 (star-planet magnetic interaction candidate; context only).",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "GJ 367": {
     "mass_measurements": [
@@ -2878,7 +3064,56 @@
         "doi": null,
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3270,
+        "uncertainty_k": 140,
+        "method": "photometric_color",
+        "recommended": true,
+        "notes": "Empirical M-dwarf relations from absolute magnitude (parallax-based). Southern (L 320-124), not in CARMENES.",
+        "reference": "Berta-Thompson et al. 2015",
+        "bibcode": "2015Natur.527..204B",
+        "doi": "10.1038/nature15762"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00438,
+        "uncertainty_lsun": 0.00034,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Berta-Thompson et al. 2015",
+        "bibcode": "2015Natur.527..204B",
+        "doi": "10.1038/nature15762"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 129.15,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Long rotation; consistent with the ~122-125 d literature values.",
+        "reference": "Engle et al. 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7.82,
+        "uncertainty_gyr": 3.07,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "Converted from log Age = 0.893 +/- 0.144 dex: 7.82 (+3.07/-2.21) Gyr; uncertainty = larger side. Old field dwarf, Prot 129.15 d.",
+        "reference": "Engle et al. 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
+    ],
+    "floor_na": {
+      "activity": "Quiet star (Berta-Thompson 2015) but no numeric log_rhk/Halpha index published (southern; absent from Astudillo/Schofer/Shan samples). Checked 2026-07-20."
+    }
   },
   "GJ 317": {
     "mass_measurements": [
@@ -4619,7 +4854,46 @@
         "doi": "10.3847/1538-3881/ad3df1",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3485,
+        "uncertainty_k": 140,
+        "method": "photometric_color",
+        "recommended": true,
+        "notes": "Tey 2024 (this-work) via the Mann 2015/2019 empirical relations; consistent with the curated R = 0.4314 (same paper). Southern, not in CARMENES.",
+        "reference": "Tey et al. 2024",
+        "bibcode": "2024AJ....167..283T",
+        "doi": "10.3847/1538-3881/ad3df1"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 81.0,
+        "method": "unverified",
+        "recommended": true,
+        "notes": "HARPS Ca II S-index periodogram (spectroscopic). Tey 2024 mentions a 'putative 44-d' ground-photometry period (unconfirmed).",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.43,
+        "uncertainty_log_rhk": 0.089,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Inactive (HARPS).",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "floor_na": {
+      "luminosity": "No published bolometric luminosity (Tey 2024 gives Teff+R+M but no L; not in Cifuentes — southern). L is computable from R+Teff but that is a derived value, not a measurement. Checked 2026-07-20.",
+      "age": "No published age (not in Engle 2024). Checked 2026-07-20."
+    }
   },
   "HD 3651": {
     "mass_measurements": [
@@ -5046,7 +5320,66 @@
         "doi": "10.1051/0004-6361/201833423",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3236,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "PHOENIX-ACES fit (Passegger method). Southern star, not in the CARMENES-north catalogs.",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00364,
+        "uncertainty_lsun": 5e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "notes": "VOSA SED integration; consistent with the curated R = 0.192 (same paper).",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 124.0,
+        "method": "unverified",
+        "recommended": true,
+        "notes": "From the HARPS Ca II S-index periodogram (spectroscopic, hence unverified tag).",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      },
+      {
+        "value_days": 70.0,
+        "method": "photometric_variability",
+        "recommended": false,
+        "notes": "LOWER LIMIT: Prot > 70 d (K2 photometry, EPIC 205913009).",
+        "reference": "Luque et al. 2018",
+        "bibcode": "2018A&A...620A.171L",
+        "doi": "10.1051/0004-6361/201833423"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.708,
+        "uncertainty_log_rhk": 0.063,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Very inactive (HARPS); Luque 2018 also reports no Halpha emission and faint X-ray.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Luque 2018 notes 'young population' kinematics but gives no numeric age). Checked 2026-07-20."
+    }
   },
   "HD 285968": {
     "mass_measurements": [
@@ -5142,7 +5475,74 @@
         "doi": "10.1051/0004-6361/201630153",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3288,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.003612,
+        "uncertainty_lsun": 5.94e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 93.87,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Shan 2024 own determination; Schofer 2019 lists 88.5 d.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -0.638,
+        "uncertainty_h_alpha_ew_angstrom": 0.012,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Strong emission — active M4.0Ve; log LHa/Lbol = -4.579 (Schofer).",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -4.72,
+        "uncertainty_log_rhk": 0.028,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled (Shan 2024).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "GJ 740": {
     "mass_measurements": [
@@ -5852,6 +6252,103 @@
         "doi": "10.3847/1538-4365/ac7e57",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3700,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "GJ 229 A = HD 42581 A = Karmn J06105-218 (the famous T-dwarf host primary).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3837,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0526,
+        "uncertainty_lsun": 0.00238,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.5581,
+        "uncertainty_rsun": 0.0197,
+        "method": "sed_fitting",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_rsun": 0.5231,
+        "uncertainty_rsun": 0.019,
+        "method": "sed_fitting",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 27.3,
+        "uncertainty_days": 0.2,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "ASAS; Schofer 2019 and Astudillo 2017 (~25 d) consistent.",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": 0.003,
+        "uncertainty_h_alpha_ew_angstrom": 0.009,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "~0 in Halpha.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -4.669,
+        "uncertainty_log_rhk": 0.132,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Moderately active in Ca II — consistent with the 27 d rotation.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 2.82,
+        "uncertainty_gyr": 0.43,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "Converted from log Age = 0.45 +/- 0.062 dex: 2.82 (+0.43/-0.38) Gyr; uncertainty = larger side. Prot 27.3 d.",
+        "reference": "Engle et al. 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
     ]
   },
   "GJ 4274": {
@@ -6182,7 +6679,84 @@
         "doi": "10.3847/1538-3881/ae0e20",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3400,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3451,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.01598,
+        "uncertainty_lsun": 0.000351,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 122.0,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "GJ 251 b discovery paper; Shan 2024 Pbest 122.0 d agrees.",
+        "reference": "Stock et al. 2020",
+        "bibcode": "2020A&A...643A.112S",
+        "doi": "10.1051/0004-6361/202038820"
+      },
+      {
+        "value_days": 18.1,
+        "uncertainty_days": 0.3,
+        "method": "photometric_variability",
+        "recommended": false,
+        "notes": "SuperWASP 18.1 d — likely alias/harmonic, superseded by the ~122 d period (Stock 2020).",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": 0.002,
+        "uncertainty_h_alpha_ew_angstrom": 0.01,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "~0 — inactive.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -5.38,
+        "uncertainty_log_rhk": 0.024,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled (Shan 2024).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "GJ 273": {
     "mass_measurements": [
@@ -6319,7 +6893,73 @@
         "doi": "10.1051/0004-6361/202038031",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3000,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3204,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.002947,
+        "uncertainty_lsun": 7.78e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 126.2,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Shan 2024 Pbest (orig. Newton 2016, 2016ApJ...821...93N); Schofer 2019 lists the same 126.2 d.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": 0.0,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "pEW(Halpha) = 0.0 A — no measurable emission, quiescent.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -5.25,
+        "uncertainty_log_rhk": 0.042,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled in the Shan 2024 activity catalog.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "eps Eri": {
     "teff_k": 5039,
@@ -6529,7 +7169,63 @@
         "doi": "10.1088/0004-637x/721/2/1467",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3200,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3393,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.01622,
+        "uncertainty_lsun": 0.000268,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -0.054,
+        "uncertainty_h_alpha_ew_angstrom": 0.014,
+        "method": "h_alpha",
+        "recommended": true,
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -5.06,
+        "uncertainty_log_rhk": 0.028,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled (Shan 2024).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "floor_na": {
+      "rotation": "No rotation period in any survey (absent from Diez Alonso 2019; Shan 2024 Pbest blank; Schofer 2019 none; not in the Astudillo sample). Only v sin i < 2 km/s exists. Checked 2026-07-20.",
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "GJ 649": {
     "mass_measurements": [
@@ -6692,7 +7388,85 @@
         "doi": "10.1051/0004-6361/202450466",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3256,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.005654,
+        "uncertainty_lsun": 9.12e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.2607,
+        "uncertainty_rsun": 0.0087,
+        "method": "sed_fitting",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_rsun": 0.2338,
+        "uncertainty_rsun": 0.0075,
+        "method": "sed_fitting",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 83.6,
+        "uncertainty_days": 7.0,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "NSVS, FAP<1e-4. Shan 2024 adopts 73.66 d (Donati 2023).",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -0.877,
+        "uncertainty_h_alpha_ew_angstrom": 0.009,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Strong emission — active; log LHa/Lbol = -4.44 (Schofer).",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "GJ 674": {
     "mass_measurements": [
@@ -6718,7 +7492,95 @@
         "doi": "10.3847/1538-4365/ab5e7c",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3500,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3572,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.02372,
+        "uncertainty_lsun": 0.00044,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "radius_measurements": [
+      {
+        "value_rsun": 0.4189,
+        "uncertainty_rsun": 0.0126,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Stefan-Boltzmann within the same catalog (L + Teff).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_rsun": 0.4066,
+        "uncertainty_rsun": 0.012,
+        "method": "sed_fitting",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 53.1,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Shan 2024 own determination.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": 0.036,
+        "uncertainty_h_alpha_ew_angstrom": 0.01,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Positive — inactive.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -5.1,
+        "uncertainty_log_rhk": 0.016,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled (Shan 2024).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "YZ Cet": {
     "teff_k": 3100,
@@ -7046,6 +7908,81 @@
         "doi": "10.1051/0004-6361/201732535",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3500,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3615,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.02665,
+        "uncertainty_lsun": 0.000836,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 44.99,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Also Shan 2024 Pbest 45.0 d (orig. Suarez Mascareno 2018, 2018A&A...612A..89S, HADES).",
+        "reference": "Engle et al. 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -0.073,
+        "uncertainty_h_alpha_ew_angstrom": 0.007,
+        "method": "h_alpha",
+        "recommended": true,
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -5.33,
+        "uncertainty_log_rhk": 0.014,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled (Shan 2024).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.12,
+        "uncertainty_gyr": 1.06,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "Converted from log Age = 0.615 +/- 0.099 dex (10^x): 4.12 (+1.06/-0.84) Gyr; uncertainty = larger side. Rotation-activity-age calibration at Prot 44.99 d.",
+        "reference": "Engle et al. 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
     ]
   },
   "GJ 1148": {
@@ -7070,7 +8007,75 @@
         "doi": null,
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3200,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES VOSA SED-grid (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3375,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.01456,
+        "uncertainty_lsun": 0.000213,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 71.5,
+        "uncertainty_days": 5.1,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "HATNet, FAP<1e-4; lit 73.5 d (Hartman 2011). Cross-ID: GJ 1148 = Ross 1003 = Karmn J11417+427.",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": 0.108,
+        "uncertainty_h_alpha_ew_angstrom": 0.01,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Positive pEW — inactive.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      },
+      {
+        "value_log_rhk": -5.35,
+        "uncertainty_log_rhk": 0.029,
+        "method": "log_rhk",
+        "recommended": false,
+        "notes": "Compiled (Shan 2024).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative, 2026-07-20)."
+    }
   },
   "Wolf 1061": {
     "mass_measurements": [

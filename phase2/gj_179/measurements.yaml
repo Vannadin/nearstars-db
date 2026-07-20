@@ -1,0 +1,62 @@
+stellar:
+  GJ 179:
+    mass_measurements:
+    - value_msun: 0.357
+      uncertainty_msun: 0.03
+      method: unverified
+      reference: Howard et al. 2010
+      bibcode: 2010ApJ...721.1467H
+      doi: 10.1088/0004-637x/721/2/1467
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.38
+      uncertainty_rsun: 0.02
+      method: unverified
+      reference: Howard et al. 2010
+      bibcode: 2010ApJ...721.1467H
+      doi: 10.1088/0004-637x/721/2/1467
+      recommended: true
+    teff_measurements:
+    - value_k: 3200
+      method: sed_fitting
+      recommended: true
+      notes: CARMENES VOSA SED-grid (100 K grid, sigma~50 K).
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3393
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.01622
+      uncertainty_lsun: 0.000268
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    activity_measurements:
+    - value_h_alpha_ew_angstrom: -0.054
+      uncertainty_h_alpha_ew_angstrom: 0.014
+      method: h_alpha
+      recommended: true
+      reference: Schofer et al. 2019
+      bibcode: 2019A&A...623A..44S
+      doi: 10.1051/0004-6361/201834114
+    - value_log_rhk: -5.06
+      uncertainty_log_rhk: 0.028
+      method: log_rhk
+      recommended: false
+      notes: Compiled (Shan 2024).
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    floor_na:
+      rotation: No rotation period in any survey (absent from Diez Alonso 2019; Shan 2024 Pbest blank;
+        Schofer 2019 none; not in the Astudillo sample). Only v sin i < 2 km/s exists. Checked 2026-07-20.
+      age: No published age (not in Engle 2024; Shan 2024 Age column undetermined; ADS sweep negative,
+        2026-07-20).

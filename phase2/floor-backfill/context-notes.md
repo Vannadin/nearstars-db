@@ -166,3 +166,23 @@ Append-only. Started 2026-07-20.
   layer. Needs a dedicated audit pass.
 - Capella note: DB "Capella" host = Aa clump-giant primary values (Torres
   2015); the Hertzsprung-gap Ab is not separately curated.
+
+## 2026-07-20 — wave 2 applied (M-dwarf 15; 93 → 78, N/A 29 → 45)
+
+- The solo-agent (no sub-branching) run worked cleanly — same coverage
+  quality as wave 1, and FLOOR_NA declarations arrived pre-formatted per the
+  updated prompt (no null-entry conversion round-trip this time).
+- **Cross-ID work was the load-bearing part**: G 261-6 = GJ 1238 = J19242+755
+  (Kaminski 2025 explicit — its catalog rows hide under GJ 1238); GJ 1148 =
+  J11417+427 vs GJ 1151 = J11509+483 disambiguated; GJ 229 = J06105-218.
+- Age reality for field M dwarfs confirmed: only 3/15 have a published age
+  (GJ 15 A 4.12, GJ 229 A 2.82, GJ 1132 7.82 Gyr — all Engle 2024 gyro,
+  log-dex converted, asymmetric errors kept in notes with uncertainty =
+  larger side per the eps Ind A precedent). 12 age floor_na.
+- GJ 251 rotation: 122 d (Stock 2020) recommended; the SuperWASP 18.1 d kept
+  as a non-recommended alias entry so the disagreement stays visible.
+- GJ 1132 discovery-paper radius (0.207, Berta-Thompson) deliberately NOT
+  appended — the DB already carries the newer Weisserman 2026 radius and
+  adding a stale non-recommended variant adds noise, not information.
+- Radius filled for the 5 hosts that lacked it (Cifuentes S-B within-catalog
+  values + Schweitzer seconds).

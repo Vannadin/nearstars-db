@@ -1,0 +1,75 @@
+stellar:
+  GJ 15 A:
+    mass_measurements:
+    - value_msun: 0.38
+      uncertainty_msun: 0.05
+      method: unverified
+      reference: Pinamonti et al. 2018
+      bibcode: 2018A&A...617A.104P
+      doi: 10.1051/0004-6361/201732535
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.38
+      uncertainty_rsun: 0.05
+      method: unverified
+      reference: Pinamonti et al. 2018
+      bibcode: 2018A&A...617A.104P
+      doi: 10.1051/0004-6361/201732535
+      recommended: true
+    teff_measurements:
+    - value_k: 3500
+      method: sed_fitting
+      recommended: true
+      notes: CARMENES VOSA SED-grid (100 K grid, sigma~50 K).
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3615
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.02665
+      uncertainty_lsun: 0.000836
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 44.99
+      method: photometric_variability
+      recommended: true
+      notes: Also Shan 2024 Pbest 45.0 d (orig. Suarez Mascareno 2018, 2018A&A...612A..89S, HADES).
+      reference: Engle et al. 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840
+    activity_measurements:
+    - value_h_alpha_ew_angstrom: -0.073
+      uncertainty_h_alpha_ew_angstrom: 0.007
+      method: h_alpha
+      recommended: true
+      reference: Schofer et al. 2019
+      bibcode: 2019A&A...623A..44S
+      doi: 10.1051/0004-6361/201834114
+    - value_log_rhk: -5.33
+      uncertainty_log_rhk: 0.014
+      method: log_rhk
+      recommended: false
+      notes: Compiled (Shan 2024).
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    age_measurements:
+    - value_gyr: 4.12
+      uncertainty_gyr: 1.06
+      method: gyrochronology
+      recommended: true
+      notes: 'Converted from log Age = 0.615 +/- 0.099 dex (10^x): 4.12 (+1.06/-0.84) Gyr; uncertainty
+        = larger side. Rotation-activity-age calibration at Prot 44.99 d.'
+      reference: Engle et al. 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840

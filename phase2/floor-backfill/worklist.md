@@ -50,30 +50,30 @@ hosts are completed.
 - [ ] `[fgkm]` **70 Ophiuchi A** — teff/L/activity/age DONE 2026-07-20 (Eggenberger 2008 성진학 6.2 Gyr); rotation 잔여
 - [ ] `[fgkm]` **70 Ophiuchi B** — age DONE (계 나이) + teff/L/activity/rotation = floor_na(미분해 동반성) 2026-07-20
 - [ ] `[fgkm]` **Arcturus** — teff/age DONE (Ramirez 2011); activity/rotation = floor_na; luminosity 잔여(직접 L 출처 후속)
-- [ ] `[fgkm]` **CD Cet** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **CD Cet** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
 - [ ] `[fgkm]` **COCONUTS-2 A** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Capella** — teff/L/age DONE (Torres 2015 Aa 주성); activity/rotation = floor_na(거성 지표 부재) 2026-07-20
 - [ ] `[fgkm]` **Eta Cassiopeiae A** — teff/L/activity/age DONE 2026-07-20; rotation 잔여
 - [ ] `[fgkm]` **Eta Cassiopeiae B** — 전 카테고리 floor_na(미분해 희미한 동반성) 2026-07-20
-- [ ] `[fgkm]` **G 192-15** — activity, age, luminosity, radius, rotation, teff
-- [ ] `[fgkm]` **G 261-6** — activity, age, luminosity, radius, rotation, teff
+- [x] `[fgkm]` **G 192-15** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **G 261-6** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
 - [x] `[fgkm]` **GJ 1002** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [x] `[fgkm]` **GJ 1061** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
-- [ ] `[fgkm]` **GJ 1132** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 1148** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 1151** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 1132** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 1148** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 1151** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
 - [x] `[fgkm]` **GJ 1214** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
-- [ ] `[fgkm]` **GJ 1265** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 1289** — activity, age, luminosity, radius, rotation, teff
-- [ ] `[fgkm]` **GJ 15 A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 179** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 180** — activity, age, luminosity, radius, rotation, teff
-- [ ] `[fgkm]` **GJ 229** — activity, age, luminosity, radius, rotation, teff
-- [ ] `[fgkm]` **GJ 238** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 251** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 1265** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 1289** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 15 A** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 179** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 180** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 229** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 238** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
+- [x] `[fgkm]` **GJ 251** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
 - [x] `[fgkm]` **GJ 273** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 317** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 3323** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 3323** — DONE 2026-07-20 (wave 2, catalog-first; age mostly floor_na — field M dwarfs)
 - [ ] `[fgkm]` **GJ 338 B** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 341** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 3512** — activity, age, luminosity, rotation, teff
