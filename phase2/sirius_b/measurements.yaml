@@ -1,0 +1,57 @@
+stellar:
+  Sirius B:
+    spectype: DA2
+    spectype_bibcode: 2005ApJ...630L..69L
+    spectype_reference: Liebert et al. 2005
+    mass_measurements:
+    - value_msun: 1.018
+      uncertainty_msun: 0.011
+      method: binary_orbit
+      reference: Bond et al. 2017
+      bibcode: 2017ApJ...840...70B
+      doi: 10.3847/1538-4357/aa6af8
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.00864
+      uncertainty_rsun: 0.00012
+      method: evolutionary_model
+      reference: Bond et al. 2017 (WD mass-radius relation)
+      bibcode: 2017ApJ...840...70B
+      doi: 10.3847/1538-4357/aa6af8
+      recommended: true
+    teff_measurements:
+    - value_k: 25193
+      method: low_res_spectroscopy
+      reference: Barstow et al. 2005
+      bibcode: 2005MNRAS.362.1134B
+      doi: 10.1111/j.1365-2966.2005.09359.x
+      recommended: true
+      notes: HST/STIS Balmer-line fit resolving B from A; log g 8.556. Formal error ~40 K; real spread
+        vs the EUV/UV determination ~400 K.
+    - value_k: 24790
+      uncertainty_k: 100
+      method: sed_fitting
+      reference: Holberg et al. 1998
+      bibcode: 1998ApJ...497..935H
+      doi: 10.1086/305489
+      recommended: false
+      notes: EUVE + IUE continuum fit (log g 8.57); ~400 K cooler than Barstow, both consistent with the
+        Bond 2017 HR position.
+    age_measurements:
+    - value_gyr: 0.126
+      method: wd_cooling_model
+      reference: Bond et al. 2017
+      bibcode: 2017ApJ...840...70B
+      doi: 10.3847/1538-4357/aa6af8
+      recommended: true
+      notes: COOLING age ~126 Myr from HR-diagram position at the dynamical mass (CO core); no formal
+        sigma. Total age (cooling + progenitor) ~228 +/- 10 Myr. Same paper as the curated mass/radius.
+    - value_gyr: 0.124
+      uncertainty_gyr: 0.01
+      method: wd_cooling_model
+      reference: Liebert et al. 2005
+      bibcode: 2005ApJ...630L..69L
+      doi: 10.1086/462419
+      recommended: false
+      notes: COOLING age 124 +/- 10 Myr (Fontaine/Wood tracks); total system age 225-250 Myr. Agrees with
+        Bond to <2%.

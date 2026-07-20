@@ -354,6 +354,8 @@ STELLAR_MEASUREMENT_KINDS = {
             "sed_fitting", "photometric_color", "interferometry",
             "unverified",
         },
+        # WD Teff 큐레이션(2026-07-20)부터 단서 서술 필요 (교과서값 supersede 경위 등).
+        "extra_keys": {"notes"},
     },
     "luminosity_measurements": {
         "value_keys": {"value_lsun"},
@@ -367,8 +369,13 @@ STELLAR_MEASUREMENT_KINDS = {
         "methods": {
             "asteroseismology", "isochrone", "gyrochronology",
             "activity_age", "kinematic",
+            # WD 냉각-트랙 나이 (Sirius B/Procyon B/vMa 2, 2026-07-20). 냉각나이인지
+            # 총나이인지는 notes 에 명시 (floor 의 WD age = 냉각나이).
+            "wd_cooling_model",
             "unverified",
         },
+        # 냉각/총 나이 구분·비대칭 오차 서술 등 단서 필드.
+        "extra_keys": {"notes"},
     },
     "metallicity_measurements": {
         "value_keys": {"value_dex"},   # [Fe/H] in dex

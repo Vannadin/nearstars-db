@@ -146,6 +146,10 @@
       "★": "phase3/luhman-16-b.html"
     }
   },
+  "Procyon B": {
+    "phase2": "phase2/procyon-b.html",
+    "phase3": {}
+  },
   "Proxima Cen": {
     "phase2": "phase2/proxima-cen.html",
     "phase3": {
@@ -154,6 +158,10 @@
       "c": "phase3/proxima-cen-c.html",
       "d": "phase3/proxima-cen-d.html"
     }
+  },
+  "Sirius B": {
+    "phase2": "phase2/sirius-b.html",
+    "phase3": {}
   },
   "tau Cet": {
     "phase2": "phase2/tau-cet.html",
@@ -192,6 +200,10 @@
     "phase3": {
       "★": "phase3/v1400-centauri.html"
     }
+  },
+  "Van Maanen's Star": {
+    "phase2": "phase2/van-maanens-star.html",
+    "phase3": {}
   },
   "Vega": {
     "phase2": "phase2/vega.html",

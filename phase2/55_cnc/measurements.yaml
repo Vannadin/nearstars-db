@@ -1,10 +1,3 @@
-# 55 Cnc A (rho1 Cnc, HD 75732, HIP 43587) Phase 2 measurements -- component A only.
-# Component B (55 Cnc B, M4.5V) already in DB (55_cnc_b.json) and NOT re-curated here.
-# Stellar fundamentals re-anchored on von Braun 2011 CHARA interferometry (replaces the
-# DB method=unverified radius/mass). Rotation + activity-cycle from Bourrier 2018.
-# Planet masses value-checked against Moutou 2025 Table 8 (arXiv 2510.11523, HTML cache).
-# Per-value verbatim cache file:line pins are in the Phase 2 evidence table + docs/phase3/_bib/55-cnc.yaml;
-# schema permits inline notes only on radius_measurements + rotation_measurements (kept there).
 stellar:
   55 Cnc:
     teff_k: 5196
@@ -118,6 +111,25 @@ stellar:
       binary_orbit. Hipparcos V cross-check: DB Gaia-converted V = 5.9501 agrees with the literature/Hipparcos
       V = 5.95 quoted by Bourrier 2018 (1807.04301.md:11) -- no Gaia-saturation discrepancy. [Fe/H] skipped
       per project policy (lit. ~0.31-0.42 dex, super-metal-rich).'
+    age_measurements:
+    - value_gyr: 10.2
+      uncertainty_gyr: 2.5
+      method: isochrone
+      reference: von Braun et al. 2011
+      bibcode: 2011ApJ...740...49V
+      doi: 10.1088/0004-637X/740/1/49
+      recommended: true
+      notes: Isochrone fit anchored on the CHARA interferometric radius (R = 0.943 +/- 0.010 Rsun, Teff
+        5196 K), M = 0.905 Msun.
+    - value_gyr: 8.1
+      uncertainty_gyr: 3.54
+      method: gyrochronology
+      reference: Maxted et al. 2015
+      bibcode: 2015A&A...577A..90M
+      doi: 10.1051/0004-6361/201525774
+      recommended: false
+      notes: Table 4 gyrochronological estimate (Prot 39.0 +/- 9.0 d); same paper's isochronal 10.91 +/-
+        1.62 Gyr agrees with von Braun.
 planets:
   55 Cnc:
   - pl_name: 55 Cnc e

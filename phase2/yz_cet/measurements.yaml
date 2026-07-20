@@ -97,8 +97,8 @@ stellar:
       bibcode: 2020A&A...636A.119S
       doi: 10.1051/0004-6361/201936732
       recommended: true
-      notes: Combined V-band photometry (ASH2+SNO+ASAS+ASAS-SN). Supersedes the
-        83 d value from Astudillo-Defru 2017; R+I band gives 68.5 +/- 1.0 d.
+      notes: Combined V-band photometry (ASH2+SNO+ASAS+ASAS-SN). Supersedes the 83 d value from Astudillo-Defru
+        2017; R+I band gives 68.5 +/- 1.0 d.
     activity_measurements:
     - value_log_rhk: -4.71
       uncertainty_log_rhk: 0.21
@@ -107,12 +107,39 @@ stellar:
       bibcode: 2017A&A...605L..11A
       doi: 10.1051/0004-6361/201731581
       recommended: true
+    inclination_measurements:
+    - value_deg: 60
+      uncertainty_deg: 5
+      method: zeeman_doppler
+      reference: arXiv:2511.21853 (2025)
+      doi: 10.3847/1538-4357/ae2619
+      recommended: true
+      notes: ZDI/SPI chi^2 grid. Author attribution unverified -> cited by arXiv/DOI.
+    age_measurements:
+    - value_gyr: 4.0
+      uncertainty_gyr: 0.6
+      method: gyrochronology
+      reference: Engle & Guinan 2017
+      bibcode: 2017ATel10678....1E
+      doi: null
+      recommended: true
+      notes: Living-with-a-Red-Dwarf rotation-age relation, Prot 67.0 +/- 0.8 d; authors' adopted value.
+        ATel, no DOI. Prot consistent with the curated 68.4 d (Stock 2020).
+    - value_gyr: 3.5
+      uncertainty_gyr: 0.6
+      method: activity_age
+      reference: Engle & Guinan 2017
+      bibcode: 2017ATel10678....1E
+      doi: null
+      recommended: false
+      notes: Independent X-ray (ROSAT) age from the same ATel; authors down-weight it (2 data points,
+        flare-sensitive). Mean of both methods 3.8 +/- 0.5 Gyr.
 planets:
   YZ Cet:
   - pl_name: YZ Cet b
     orbital:
     - period_days: 2.02087
-      uncertainty_period_days: 0.00009
+      uncertainty_period_days: 9.0e-05
       semi_major_axis_au: 0.01634
       uncertainty_semi_major_axis_au: 0.00041
       eccentricity: 0.06

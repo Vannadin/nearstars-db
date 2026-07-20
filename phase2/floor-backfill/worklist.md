@@ -22,15 +22,15 @@ hosts are completed.
 
 ### Tier B — near-complete non-roster (1–2 categories short) — 9 hosts
 
-- [ ] `[fgkm]` **55 Cnc** — age
+- [x] `[fgkm]` **55 Cnc** — DONE 2026-07-20: age (von Braun 2011 isochrone 10.2 Gyr + Maxted 2015 gyro)
 - [ ] `[fgkm]` **Delta Pavonis** — rotation
-- [ ] `[fgkm]` **GJ 9066** — age
-- [ ] `[fgkm]` **HD 219134** — age
-- [ ] `[fgkm]` **YZ Cet** — age
-- [ ] `[fgkm]` **eps Ind A** — age
-- [ ] `[wd]` **Procyon B** — age, teff
-- [ ] `[wd]` **Sirius B** — age, teff
-- [ ] `[wd]` **Van Maanen's Star** — age, teff
+- [ ] `[fgkm]` **GJ 9066** — age: **no measurement exists in the literature** (ADS full-text sweep 2026-07-20, queries logged in context-notes) — honest null per DB principle; revisit only if a new paper appears
+- [x] `[fgkm]` **HD 219134** — DONE 2026-07-20: age (Li 2025 asteroseismology 10.15 Gyr — first asteroseismic age below 5000 K)
+- [x] `[fgkm]` **YZ Cet** — DONE 2026-07-20: age (Engle & Guinan 2017 gyro 4.0 Gyr)
+- [x] `[fgkm]` **eps Ind A** — DONE 2026-07-20: age (Chen 2022 activity 3.5 +0.8/-1.0 Gyr)
+- [x] `[wd]` **Procyon B** — DONE 2026-07-20: teff (Provencal 2002) + cooling age (Liebert 2013)
+- [x] `[wd]` **Sirius B** — DONE 2026-07-20: teff (Barstow 2005) + cooling age (Bond 2017)
+- [x] `[wd]` **Van Maanen's Star** — DONE 2026-07-20: teff (Coutu 2019; textbook 7000-7500 K superseded) + cooling age (Sion 2009)
 
 ### Tier C — partial (3–4 categories short) — 6 hosts
 

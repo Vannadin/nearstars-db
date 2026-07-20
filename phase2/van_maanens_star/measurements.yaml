@@ -1,0 +1,58 @@
+stellar:
+  Van Maanen's Star:
+    spectype: DZ7
+    spectype_bibcode: 2008AJ....135.1225H
+    spectype_reference: Holberg et al. 2008
+    mass_measurements:
+    - value_msun: 0.633
+      uncertainty_msun: 0.013
+      method: evolutionary_model
+      reference: Holberg et al. 2008 (WD mass-radius)
+      bibcode: 2008AJ....135.1225H
+      doi: 10.1088/0004-6256/135/4/1225
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.0087
+      uncertainty_rsun: 0.0002
+      method: evolutionary_model
+      reference: Holberg et al. 2008
+      bibcode: 2008AJ....135.1225H
+      doi: 10.1088/0004-6256/135/4/1225
+      recommended: true
+    teff_measurements:
+    - value_k: 6106
+      method: sed_fitting
+      reference: Coutu et al. 2019
+      bibcode: 2019ApJ...885...74C
+      doi: 10.3847/1538-4357/ab46b9
+      recommended: true
+      notes: Gaia-DR2 homogeneous analysis of He-rich polluted WDs (log g 8.2). No published sigma in
+        the machine-readable row — value recorded without uncertainty rather than inventing one. Textbook
+        ~7000-7500 K is superseded (Wolff 2002 UV line-blanketing revision); all 2009-2024 determinations
+        sit at 6100-6220 K.
+    - value_k: 6168
+      method: sed_fitting
+      reference: Vincent et al. 2024
+      bibcode: 2024A&A...682A...5V
+      doi: 10.1051/0004-6361/202347694
+      recommended: false
+      notes: Gaia XP spectrophotometry, automated WD survey (log g 8.22); independent corroboration at
+        ~1%.
+    - value_k: 6220
+      method: sed_fitting
+      reference: Sion et al. 2009
+      bibcode: 2009AJ....138.1681S
+      doi: 10.1088/0004-6256/138/6/1681
+      recommended: false
+      notes: 20-pc WD census (log g 8.190); kept for internal consistency with the recommended cooling
+        age (same catalog).
+    age_measurements:
+    - value_gyr: 3.13
+      method: wd_cooling_model
+      reference: Sion et al. 2009
+      bibcode: 2009AJ....138.1681S
+      doi: 10.1088/0004-6256/138/6/1681
+      recommended: true
+      notes: COOLING age 3.13 Gyr tabulated in the 20-pc census (VizieR J/AJ/138/1681) for Teff 6220 K
+        / log g 8.190; no formal sigma. A Giammichele 2012 ar5iv full-text grab returned Teff 8250 K /
+        5.94 Gyr — physically inconsistent, rejected as a table mis-read.

@@ -1,0 +1,41 @@
+stellar:
+  Procyon B:
+    spectype: DQZ
+    spectype_bibcode: 2002ApJ...568..324P
+    spectype_reference: Provencal et al. 2002
+    mass_measurements:
+    - value_msun: 0.602
+      uncertainty_msun: 0.015
+      method: binary_orbit
+      reference: Bond et al. 2015
+      bibcode: 2015ApJ...813..106B
+      doi: 10.1088/0004-637X/813/2/106
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.0123
+      uncertainty_rsun: 0.0003
+      method: evolutionary_model
+      reference: Provencal et al. 2002 (mass-radius for DQZ WD)
+      bibcode: 2002ApJ...568..324P
+      doi: 10.1086/338769
+      recommended: true
+    teff_measurements:
+    - value_k: 7740
+      uncertainty_k: 50
+      method: low_res_spectroscopy
+      reference: Provencal et al. 2002
+      bibcode: 2002ApJ...568..324P
+      doi: 10.1086/338769
+      recommended: true
+      notes: HST/STIS 1800-10000 A (C2 Swan, Mg II, Fe). The only direct spectroscopic Teff; adopted unchanged
+        by Liebert 2013 and Bond 2015 — single entry by design, not omission.
+    age_measurements:
+    - value_gyr: 1.19
+      uncertainty_gyr: 0.11
+      method: wd_cooling_model
+      reference: Liebert et al. 2013
+      bibcode: 2013ApJ...769....7L
+      doi: 10.1088/0004-637X/769/1/7
+      recommended: true
+      notes: 'COOLING age 1.19 +/- 0.11 Gyr from dedicated non-DA cooling sequences. System total age
+        contested: Liebert 2013 1.87 Gyr vs Bond 2015 ~2.7 Gyr (affects total, not the cooling age).'

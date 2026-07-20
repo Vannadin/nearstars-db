@@ -247,6 +247,30 @@
         "doi": "10.1086/338769",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 7740,
+        "uncertainty_k": 50,
+        "method": "low_res_spectroscopy",
+        "reference": "Provencal et al. 2002",
+        "bibcode": "2002ApJ...568..324P",
+        "doi": "10.1086/338769",
+        "recommended": true,
+        "notes": "HST/STIS 1800-10000 A (C2 Swan, Mg II, Fe). The only direct spectroscopic Teff; adopted unchanged by Liebert 2013 and Bond 2015 — single entry by design, not omission."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 1.19,
+        "uncertainty_gyr": 0.11,
+        "method": "wd_cooling_model",
+        "reference": "Liebert et al. 2013",
+        "bibcode": "2013ApJ...769....7L",
+        "doi": "10.1088/0004-637X/769/1/7",
+        "recommended": true,
+        "notes": "COOLING age 1.19 +/- 0.11 Gyr from dedicated non-DA cooling sequences. System total age contested: Liebert 2013 1.87 Gyr vs Bond 2015 ~2.7 Gyr (affects total, not the cooling age)."
+      }
     ]
   },
   "Wolf 359": {
@@ -381,6 +405,48 @@
         "bibcode": "2017ApJ...840...70B",
         "doi": "10.3847/1538-4357/aa6af8",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 25193,
+        "method": "low_res_spectroscopy",
+        "reference": "Barstow et al. 2005",
+        "bibcode": "2005MNRAS.362.1134B",
+        "doi": "10.1111/j.1365-2966.2005.09359.x",
+        "recommended": true,
+        "notes": "HST/STIS Balmer-line fit resolving B from A; log g 8.556. Formal error ~40 K; real spread vs the EUV/UV determination ~400 K."
+      },
+      {
+        "value_k": 24790,
+        "uncertainty_k": 100,
+        "method": "sed_fitting",
+        "reference": "Holberg et al. 1998",
+        "bibcode": "1998ApJ...497..935H",
+        "doi": "10.1086/305489",
+        "recommended": false,
+        "notes": "EUVE + IUE continuum fit (log g 8.57); ~400 K cooler than Barstow, both consistent with the Bond 2017 HR position."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.126,
+        "method": "wd_cooling_model",
+        "reference": "Bond et al. 2017",
+        "bibcode": "2017ApJ...840...70B",
+        "doi": "10.3847/1538-4357/aa6af8",
+        "recommended": true,
+        "notes": "COOLING age ~126 Myr from HR-diagram position at the dynamical mass (CO core); no formal sigma. Total age (cooling + progenitor) ~228 +/- 10 Myr. Same paper as the curated mass/radius."
+      },
+      {
+        "value_gyr": 0.124,
+        "uncertainty_gyr": 0.01,
+        "method": "wd_cooling_model",
+        "reference": "Liebert et al. 2005",
+        "bibcode": "2005ApJ...630L..69L",
+        "doi": "10.1086/462419",
+        "recommended": false,
+        "notes": "COOLING age 124 +/- 10 Myr (Fontaine/Wood tracks); total system age 225-250 Myr. Agrees with Bond to <2%."
       }
     ]
   },
@@ -761,6 +827,46 @@
         "bibcode": "2008AJ....135.1225H",
         "doi": "10.1088/0004-6256/135/4/1225",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 6106,
+        "method": "sed_fitting",
+        "reference": "Coutu et al. 2019",
+        "bibcode": "2019ApJ...885...74C",
+        "doi": "10.3847/1538-4357/ab46b9",
+        "recommended": true,
+        "notes": "Gaia-DR2 homogeneous analysis of He-rich polluted WDs (log g 8.2). No published sigma in the machine-readable row — value recorded without uncertainty rather than inventing one. Textbook ~7000-7500 K is superseded (Wolff 2002 UV line-blanketing revision); all 2009-2024 determinations sit at 6100-6220 K."
+      },
+      {
+        "value_k": 6168,
+        "method": "sed_fitting",
+        "reference": "Vincent et al. 2024",
+        "bibcode": "2024A&A...682A...5V",
+        "doi": "10.1051/0004-6361/202347694",
+        "recommended": false,
+        "notes": "Gaia XP spectrophotometry, automated WD survey (log g 8.22); independent corroboration at ~1%."
+      },
+      {
+        "value_k": 6220,
+        "method": "sed_fitting",
+        "reference": "Sion et al. 2009",
+        "bibcode": "2009AJ....138.1681S",
+        "doi": "10.1088/0004-6256/138/6/1681",
+        "recommended": false,
+        "notes": "20-pc WD census (log g 8.190); kept for internal consistency with the recommended cooling age (same catalog)."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 3.13,
+        "method": "wd_cooling_model",
+        "reference": "Sion et al. 2009",
+        "bibcode": "2009AJ....138.1681S",
+        "doi": "10.1088/0004-6256/138/6/1681",
+        "recommended": true,
+        "notes": "COOLING age 3.13 Gyr tabulated in the 20-pc census (VizieR J/AJ/138/1681) for Teff 6220 K / log g 8.190; no formal sigma. A Giammichele 2012 ar5iv full-text grab returned Teff 8250 K / 5.94 Gyr — physically inconsistent, rejected as a table mis-read."
       }
     ]
   },
@@ -1694,7 +1800,29 @@
         "note": "Companion arXiv ids 1106.1152 (full fundamental-properties paper, von Braun 2011b) and 1107.1936 (cached AAS proceedings carrying the Table 1 anchor values)."
       }
     ],
-    "meta_notes": "A-B binary has NO published Keplerian orbit. 55 Cnc B (M4.5V) sits at a projected separation of ~1065 au (84 arcsec visual; Eggenberger 2004 / Mugrauer 2006), with an estimated orbital period of ~30000 yr (Moutou 2025; 2510.11523.md:128,140). Left UNMODELED (note only); do not synthesize binary_orbit. Hipparcos V cross-check: DB Gaia-converted V = 5.9501 agrees with the literature/Hipparcos V = 5.95 quoted by Bourrier 2018 (1807.04301.md:11) -- no Gaia-saturation discrepancy. [Fe/H] skipped per project policy (lit. ~0.31-0.42 dex, super-metal-rich)."
+    "meta_notes": "A-B binary has NO published Keplerian orbit. 55 Cnc B (M4.5V) sits at a projected separation of ~1065 au (84 arcsec visual; Eggenberger 2004 / Mugrauer 2006), with an estimated orbital period of ~30000 yr (Moutou 2025; 2510.11523.md:128,140). Left UNMODELED (note only); do not synthesize binary_orbit. Hipparcos V cross-check: DB Gaia-converted V = 5.9501 agrees with the literature/Hipparcos V = 5.95 quoted by Bourrier 2018 (1807.04301.md:11) -- no Gaia-saturation discrepancy. [Fe/H] skipped per project policy (lit. ~0.31-0.42 dex, super-metal-rich).",
+    "age_measurements": [
+      {
+        "value_gyr": 10.2,
+        "uncertainty_gyr": 2.5,
+        "method": "isochrone",
+        "reference": "von Braun et al. 2011",
+        "bibcode": "2011ApJ...740...49V",
+        "doi": "10.1088/0004-637X/740/1/49",
+        "recommended": true,
+        "notes": "Isochrone fit anchored on the CHARA interferometric radius (R = 0.943 +/- 0.010 Rsun, Teff 5196 K), M = 0.905 Msun."
+      },
+      {
+        "value_gyr": 8.1,
+        "uncertainty_gyr": 3.54,
+        "method": "gyrochronology",
+        "reference": "Maxted et al. 2015",
+        "bibcode": "2015A&A...577A..90M",
+        "doi": "10.1051/0004-6361/201525774",
+        "recommended": false,
+        "notes": "Table 4 gyrochronological estimate (Prot 39.0 +/- 9.0 d); same paper's isochronal 10.91 +/- 1.62 Gyr agrees with von Braun."
+      }
+    ]
   },
   "GJ 436": {
     "mass_measurements": [
@@ -2078,6 +2206,18 @@
         "bibcode": "2022AJ....163..288C",
         "recommended": false,
         "notes": "R_X = -5.62 adopted from the ROSAT BSC (Voges 1999) as the age-indicator input. Consistent with Wood's 27.39 (implies log L_X ~ 27.3 at L_bol 0.239 Lsun)."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 3.5,
+        "uncertainty_gyr": 1.0,
+        "method": "activity_age",
+        "reference": "Chen et al. 2022",
+        "bibcode": "2022AJ....163..288C",
+        "doi": "10.3847/1538-3881/ac66d2",
+        "recommended": true,
+        "notes": "Chromospheric activity of eps Ind A itself: 3.5 (+0.8/-1.0) Gyr; uncertainty_gyr = larger (lower) side. Adopted by the JWST eps Ind Ab discovery paper (Matthews 2024). NOT derived from the Ba/Bb brown dwarfs."
       }
     ]
   },
@@ -3372,6 +3512,18 @@
         "bibcode": "2018A&A...619A.130F",
         "recommended": true,
         "notes": "ZDI (Narval)."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 10.15,
+        "uncertainty_gyr": 1.72,
+        "method": "asteroseismology",
+        "reference": "Li et al. 2025",
+        "bibcode": "2025ApJ...984..125L",
+        "doi": "10.3847/1538-4357/adc737",
+        "recommended": true,
+        "notes": "First asteroseismic age (KPF RV oscillations, 25 modes): 10.151 +/- 1.520 (stat) +/- 0.810 (sys) Gyr; uncertainty_gyr = quadrature sum. Supersedes the unconstrained isochrone range (~0.2-13.8 Gyr)."
       }
     ]
   },
@@ -5257,6 +5409,28 @@
         "doi": "10.3847/1538-4357/ae2619",
         "recommended": true,
         "notes": "ZDI/SPI chi^2 grid. Author attribution unverified -> cited by arXiv/DOI."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.0,
+        "uncertainty_gyr": 0.6,
+        "method": "gyrochronology",
+        "reference": "Engle & Guinan 2017",
+        "bibcode": "2017ATel10678....1E",
+        "doi": null,
+        "recommended": true,
+        "notes": "Living-with-a-Red-Dwarf rotation-age relation, Prot 67.0 +/- 0.8 d; authors' adopted value. ATel, no DOI. Prot consistent with the curated 68.4 d (Stock 2020)."
+      },
+      {
+        "value_gyr": 3.5,
+        "uncertainty_gyr": 0.6,
+        "method": "activity_age",
+        "reference": "Engle & Guinan 2017",
+        "bibcode": "2017ATel10678....1E",
+        "doi": null,
+        "recommended": false,
+        "notes": "Independent X-ray (ROSAT) age from the same ATel; authors down-weight it (2 data points, flare-sensitive). Mean of both methods 3.8 +/- 0.5 Gyr."
       }
     ]
   },

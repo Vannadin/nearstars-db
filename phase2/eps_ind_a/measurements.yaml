@@ -27,10 +27,9 @@ stellar:
       angular_diameter_mas: 1.817
       angular_diameter_uncertainty_mas: 0.013
       recommended: true
-      notes: R from Rains et al. 2020 limb-darkened angular diameter (theta_LD = 1.817
-        +/- 0.013 mas) combined with Gaia DR3 distance d = 3.648 pc; Lundkvist et al.
-        2024 report the resulting 0.713 +/- 0.006 Rsun, "in excellent agreement with the
-        value found by Rains et al. 2020".
+      notes: R from Rains et al. 2020 limb-darkened angular diameter (theta_LD = 1.817 +/- 0.013 mas)
+        combined with Gaia DR3 distance d = 3.648 pc; Lundkvist et al. 2024 report the resulting 0.713
+        +/- 0.006 Rsun, "in excellent agreement with the value found by Rains et al. 2020".
     teff_measurements:
     - value_k: 4700
       uncertainty_k: 65
@@ -54,13 +53,12 @@ stellar:
       bibcode: 2018arXiv180308163F
       doi: null
       recommended: true
-      notes: "P_rot ~35 d. Method does not map to the rotation enum: it is NOT photometric\
-        \ — derived from HARPS RV + spectroscopic activity-index (NaD1/NaD2/R'HK/BIS)\
-        \ periodograms, where the 17.8 d signal is the half-rotation alias of ~35 d.\
-        \ Verbatim: \"The rotation period of Epsilon Indi is about 35 d, approximately\
-        \ double 17.8 d.\" No formal uncertainty published; supersedes the older 22 d\
-        \ (Saar & Osten 1997) and ~20 d (Lachaume 1999) estimates. Chen 2022 confirms\
-        \ the star lacks a published photometric rotation period. Feng 2019 corroborates ~35 d."
+      notes: 'P_rot ~35 d. Method does not map to the rotation enum: it is NOT photometric — derived from
+        HARPS RV + spectroscopic activity-index (NaD1/NaD2/R''HK/BIS) periodograms, where the 17.8 d signal
+        is the half-rotation alias of ~35 d. Verbatim: "The rotation period of Epsilon Indi is about 35
+        d, approximately double 17.8 d." No formal uncertainty published; supersedes the older 22 d (Saar
+        & Osten 1997) and ~20 d (Lachaume 1999) estimates. Chen 2022 confirms the star lacks a published
+        photometric rotation period. Feng 2019 corroborates ~35 d.'
     activity_measurements:
     - value_log_rhk: -4.72
       method: log_rhk
@@ -68,6 +66,49 @@ stellar:
       bibcode: 2022AJ....163..288C
       doi: 10.3847/1538-3881/ac66d2
       recommended: true
+    mass_loss_measurements:
+    - value_mdot_solar: 0.5
+      method: astrospheric_lyman_alpha
+      reference: Wood et al. 2005
+      bibcode: 2005ApJ...628L.143W
+      recommended: true
+      notes: HST Lya astrospheric absorption fit; compact astrosphere (Wood 2005 Table 1). ~factor-2 systematic
+        uncertainty (ISM properties, assumed wind speed). K5V, 3.6 pc.
+    activity_cycle_measurements:
+    - value_cycle_period_yr: 5.65
+      method: ca_hk_cycle
+      reference: Laliotis et al. 2023
+      bibcode: 2023AJ....165..176L
+      recommended: true
+      notes: S-index cycle P=2063+-160 d (5.65+-0.44 yr), matching Lovis et al. 2011's 1719 d (4.71 yr)
+        magnetic cycle to within 1.5 sigma. Low-amplitude cycle on an inactive old K4-5V dwarf (log R'HK
+        ~ -4.8). P_rot 32.87 d (Laliotis 2023).
+    xray_measurements:
+    - value_log_lx_ergs: 27.39
+      method: x_ray_photometry
+      reference: Wood et al. 2005
+      bibcode: 2005ApJ...628L.143W
+      recommended: true
+      notes: Table 1 ROSAT All-Sky Survey value (tabulation sourced from Wood+ 2005 ApJS 'Paper 2'). Approximately
+        solar-cycle-mean L_X in the RASS band.
+    - value_log_rx: -5.62
+      method: x_ray_photometry
+      reference: Chen et al. 2022
+      bibcode: 2022AJ....163..288C
+      recommended: false
+      notes: R_X = -5.62 adopted from the ROSAT BSC (Voges 1999) as the age-indicator input. Consistent
+        with Wood's 27.39 (implies log L_X ~ 27.3 at L_bol 0.239 Lsun).
+    age_measurements:
+    - value_gyr: 3.5
+      uncertainty_gyr: 1.0
+      method: activity_age
+      reference: Chen et al. 2022
+      bibcode: 2022AJ....163..288C
+      doi: 10.3847/1538-3881/ac66d2
+      recommended: true
+      notes: 'Chromospheric activity of eps Ind A itself: 3.5 (+0.8/-1.0) Gyr; uncertainty_gyr = larger
+        (lower) side. Adopted by the JWST eps Ind Ab discovery paper (Matthews 2024). NOT derived from
+        the Ba/Bb brown dwarfs.'
 planets:
   eps Ind A:
   - pl_name: eps Ind A b

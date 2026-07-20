@@ -118,6 +118,25 @@ stellar:
       bibcode: 2016ApJ...821...74J
       doi: 10.3847/0004-637X/821/2/74
       recommended: true
+    inclination_measurements:
+    - value_deg: 77
+      uncertainty_deg: 8
+      method: zeeman_doppler
+      reference: Folsom et al. 2018
+      bibcode: 2018A&A...619A.130F
+      recommended: true
+      notes: ZDI (Narval).
+    age_measurements:
+    - value_gyr: 10.15
+      uncertainty_gyr: 1.72
+      method: asteroseismology
+      reference: Li et al. 2025
+      bibcode: 2025ApJ...984..125L
+      doi: 10.3847/1538-4357/adc737
+      recommended: true
+      notes: 'First asteroseismic age (KPF RV oscillations, 25 modes): 10.151 +/- 1.520 (stat) +/- 0.810
+        (sys) Gyr; uncertainty_gyr = quadrature sum. Supersedes the unconstrained isochrone range (~0.2-13.8
+        Gyr).'
 planets:
   HD 219134:
   - pl_name: HD 219134 b
