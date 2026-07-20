@@ -108,6 +108,7 @@
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO 메인 엔트리
 - `phase3/stability-sim/scripts/ring_clearing.py` — 위성 주변 고리 청소·간극 측정용 테스트 입자 시뮬. 공급 위성의 반장축을 둘러싸는 무질량 입자 원반을 깔고 적분한 뒤 어느 반경이 살아남는지 보고합니다(위성이 간극을 여는지, 묻힌 채 도는지). 폴리페무스의 Chaos 공급 E고리가 연속임을 확인하는 데 썼습니다(Chaos 질량비 μ≈7.5e-7 로 간극을 못 비움 — `results/_ring_clearing.log`).
+- `phase3/stability-sim/scripts/plot_orbits.py` — **행성 레벨** 런용 경량 2패널 PNG(top-down 궤도 + 이심률(t)). `results/<label>_summary.json` + `_timeseries.csv`를 읽어 `<label>_orbits.png`를 생성한다. summary에 MEGNO가 있어야 하며, leapfrog·trace 런이나 위성계는 표준 4패널인 plot_moons.py를 쓸 것. `python3 scripts/plot_orbits.py [label]`.
 - `phase3/stability-sim/scripts/plot_moons.py` — **궤도분석 표준 시각화**(정적 4패널 PNG: top-down 궤도 / 이심률(t) / 반장축 드리프트 Δa/a₀(t) / 시뮬 기준면 경사(t)), 상단 제목에 판정 + 적분기 + dt + |ΔE/E| + 위성별 최대 Hill 비율. 시뮬 출력만으로 두 계층 다 처리 — 행성-중심(위성, R_p)이나 별-중심(행성, AU)을 `--center`로 선택(기본: 위성 있으면 부모, 없으면 별). `<label>_orbits.png` 생성. 행성 전용 `plot_orbits.py`와 달리 leapfrog·trace 런(megno=None)도 처리. `--dir <결과폴더> [--label <시스템>] [--center <천체>]`.
 - `phase3/stability-sim/scripts/plot_interactive.py` — **인터랙티브** 4패널 뷰어(Plotly, self-contained HTML). plot_moons.py와 같은 패널·데이터지만 범례 클릭으로 천체를 전 패널 동시 토글, 호버로 정확한 값, 박스줌·팬으로 조밀한 내위성 분리. 라이트/다크 토글, plasma 팔레트(다른 뷰어와 통일). `--dir <결과폴더> [--label <시스템>] [--center <천체>]`.
 - `phase3/stability-sim/viewer-manifest.yaml` — 시스템별 뷰어 sim 파라미터 단일 소스(Principia 동등 leapfrog dt=10분·years·snapshots·hypotheticals·overrides).
