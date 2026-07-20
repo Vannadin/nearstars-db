@@ -113,3 +113,30 @@ violation→warp-stop pipeline we should mirror:**
   message + warp stop. If Kerbalism is installed its own EC alarms coexist harmlessly
   (same stock TimeWarp API). Phase-2 background burns adopt the round-robin + choke-point
   pattern wholesale.
+
+## 10. Addendum (2026-07-08, session 19 — R5) — the *powered ⇒ non-collapsible* invariant
+
+**Invariant.** A history segment that carries an on-rails burn is a *powered* thrust
+arc, not a gravitational coast, and MUST remain non-collapsible: it is checkpointed and
+reconstructed exactly, never collapsed to its endpoints and later re-integrated as a
+coast. Collapsing a powered segment would let reanimation replay it force-free, so the
+reloaded vessel would drift off the arc it actually flew.
+
+**Why it needs stating.** Reusing the intrinsic-acceleration machinery (§6) was the right
+call, but this collapsibility interaction was left implicit and surfaced as a bug: the
+powered points appended during a burn could land in a *collapsible* segment, because
+`Vessel::AdvanceTime` runs collapsibility detection inside
+`FreeVesselsAndPartsAndCollectPileUps` — *before* the catch-up applies the burn, when the
+burn is not yet known.
+
+**Enforced.** `Vessel::IsCollapsible` treats a pile-up's live `on_rails_burn` /
+`on_rails_burn_for_prediction` as non-collapsible; and `Vessel::AdvanceTime` re-detects
+collapsibility in the catch-up (where `on_rails_burn_for_prediction` is live) before
+appending the powered points, so they land in a non-collapsible, checkpointed segment.
+
+**Tested.** `VesselTest.IsCollapsible` asserts the predicate (a live burn ⇒ not
+collapsible). The *outcome* — a burn survives a save / forced-drop / reanimation
+round-trip because it was checkpointed non-collapsibly — is covered end-to-end by
+`OnRailsBurnHistorySurvivesReanimation` and the forced-drop golden fixture
+`AnchoredBurnSurvivesDropAndReanimation` (the latter lowers the serialize threshold so the
+drop actually engages).

@@ -148,6 +148,47 @@ Backbone (§4): ~1 budget-rich session (metadata + block check + cell grid + the
 the long pole). Vessel (§5): a separate comparable session. Recommend backbone-first, gated, then
 reassess whether the vessel path is worth it.
 
+## 9. Addendum — RSS-Origin-2 roster analysis (2026-07-05, before committing to code)
+
+The owner asked to analyze the real roster before implementing. Done; it **confirms the premise
+and sharpens the architecture** (§9 supersedes the L1-first framing where they conflict):
+
+- **NearStars-native alone does NOT stress the backbone.** `disks_curated.json` belts are dust-ring
+  *measurements* rendered as visual rings, not massive celestials. NearStars-native massive bodies =
+  stars + planets (<10/subsystem) ⇒ backbone force eval is microseconds; §5B would be premature.
+- **RSS-Origin-2 (CharonSSS — the guideline's canonical Sol minor-body add-on) IS the target.** It
+  defines **267 massive Principia bodies** (`_Principia.cfg`): 179 minor planets (55 TNO, 53 MBA,
+  43 NEO, 10 Trojan, 10 Centaur, 8 Mars-crosser) + 63 moons + 21 comets + 3 ISOs. GM 2e-12…~1 km³/s²
+  ⇒ r_c ≈ 45 km … 1.7 AU. **All orbit Sol ⇒ ONE subsystem.**
+- **Where the cost is:** of ~35,500 massive-massive pairs, ~30,000 are DEAD (MBA–MBA, TNO–TNO,
+  cross-population; separations 1e11–1e13 m ≫ small r_c ~3e10 m). The WS2b taper VISITS then skips
+  all ~30,000 every RHS eval. **This is the residual §5B removes.**
+
+**Architecture correction (load-bearing):**
+1. **The win is ENTIRELY Level 2** (intra-subsystem small×small grid). Level 1 (cross-subsystem block
+   skip) is ~zero for a Sol-heavy install because all 267 are one subsystem — L1 only elides Sol ×
+   the few interstellar-star bodies. **Do NOT sequence L1-first as "the safe headline"** (as §4 step 2
+   implies); L1 is a cheap correctness-preserving add-on, not the payoff. Build L2 as the core.
+2. **Scope to the acceleration RHS only** (`ComputeGravitationalAccelerationBetweenAllMassiveBodies`).
+   The Jacobian/jerk kernels already per-pair-skip and are NOT per-substep-hot — leave them. This
+   halves the risk surface (one kernel, not three).
+3. **The small tier is ITSELF multi-scale** — §2 assumed the small class shares "~one r_c"; RSS-Origin-2
+   spans 45 km … 1.7 AU (4–5 orders). A single-cell-size grid scanned at one radius is WRONG. Fix:
+   size cells to a representative small r_c and have **each small body query cells within ITS OWN r_c**
+   (Ceres-class scans many cells but they are few); or consider a 1D sweep-and-prune (sort small bodies
+   by one axis per eval, O(N log N), stateless ⇒ reversible) as a simpler alternative to the 3D grid —
+   evaluate both when implementing.
+4. **De-risking sequence** (isolates the two failure modes of a reversibility regression vs a
+   dropped-live-pair): (a) extract a shared per-pair `AddMassivePair*` helper + route the RHS through a
+   gated enumeration path that is **bit-identical** (structure in place, no skipping) — prove green on
+   the existing gate first; (b) add the small-tier grid/sweep skip; (c) add the L1 block skip; (d)
+   benchmark + the century-energy gate.
+5. **Conditional payoff, unconditional safety:** helps only a hundreds-of-bodies stack (RSSO2 or
+   equivalent); a stars+planets-only install keeps the bit-identical disabled path and pays nothing
+   (structure entered only above a body-count threshold with damping active).
+
+Full evidence + GM numbers: `.nearstars/context-notes.md` "R3 §5B — pre-implementation roster analysis".
+
 ## Related
 - `research/R3-soi-numerics.md` — §5 recommendation this implements; §0.1 reversibility (§1b here).
 - WS2b commit `e6a0225cd` — the taper this builds on (massive kernel).

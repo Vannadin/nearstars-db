@@ -44,3 +44,28 @@ vessel별 **OnRailsBurn**을 두어, AdvanceTime이 이미 수행하는 history 
 법칙 `a=dir·thrust/(m₀−(t−t₀)ṁ)`, ṁ=thrust/Isp. Isp는 질량 기준 specific impulse(배기 속도 = 총 추력 ÷ Σ 엔진 mass-flow)이며 무게 기준 Isp가 아닙니다. `mass_`(`pile_up.hpp:196`)는 프레임마다 감소시키고 탱크는 C#에서 소모하며, unpack 시 KSP part 질량이 다시 권위를 갖습니다(`InsertOrKeepLoadedPart :1354`). throttle과 방향을 매 프레임 다시 읽으므로 warp 중에도 완전한 라이브 제어가 됩니다(PersistentThrust 대비 우위). MVP는 inertial 고정 방향(시간 전용 오버로드)으로 하고, Frenet 고정은 이후에 추가합니다(generalized RHS `:464-467`). 스톡 Orbit은 절대 쓰지 않습니다.
 
 출처: PersistentThrust (SpaceDock 2450, bld/PersistentThrust GitHub), Persistent Thrust Extended (KSP forums), Principia issue #2347.
+
+## 10. 애드덤 (2026-07-08, 세션 19 — R5) — *powered ⇒ 비축약(non-collapsible)* 불변식
+
+**불변식.** on-rails 번을 실은 히스토리 세그먼트는 중력 코스트가 아니라 *powered* 추력
+호(arc)이며, 반드시 비축약으로 남아야 한다. 즉 체크포인트되어 정확히 재구성되며, 끝점으로
+축약했다가 나중에 코스트로 재적분되는 일이 없어야 한다. powered 세그먼트를 축약하면
+reanimation이 그 구간을 force-free로 재생해, 리로드된 vessel이 실제로 비행한 호에서
+이탈한다.
+
+**명시가 필요한 이유.** 고유가속(intrinsic acceleration) 기계장치 재사용(§6)은 옳은
+선택이었지만, 이 축약성(collapsibility) 상호작용이 암묵으로 남아 버그로 드러났다. 번 중에
+추가되는 powered 포인트가 *축약 가능한* 세그먼트에 떨어질 수 있었는데,
+`Vessel::AdvanceTime`이 축약성 판정을 `FreeVesselsAndPartsAndCollectPileUps` 안 —
+catch-up이 번을 적용하기 *전*, 번이 아직 알려지지 않은 시점 — 에서 돌리기 때문이다.
+
+**강제 방식.** `Vessel::IsCollapsible`이 pile-up의 라이브 `on_rails_burn` /
+`on_rails_burn_for_prediction`을 비축약으로 취급하고, `Vessel::AdvanceTime`이 powered
+포인트를 추가하기 전에 catch-up 안(`on_rails_burn_for_prediction`이 라이브인 곳)에서
+축약성을 재판정해, 포인트가 비축약·체크포인트된 세그먼트에 떨어지게 한다.
+
+**테스트.** `VesselTest.IsCollapsible`이 술어를 검증한다(라이브 번 ⇒ 비축약). *결과* —
+번이 비축약으로 체크포인트됐기에 저장/강제드롭/reanimation 왕복에서 살아남는 것 — 는
+`OnRailsBurnHistorySurvivesReanimation`과 강제드롭 골든 픽스처
+`AnchoredBurnSurvivesDropAndReanimation`(직렬화 임계값을 낮춰 드롭이 실제로 걸리게 함)이
+엔드투엔드로 커버한다.
