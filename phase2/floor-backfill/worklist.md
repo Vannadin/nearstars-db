@@ -17,13 +17,13 @@ hosts are completed.
 
 ### Tier A — roster hosts (implementation set; highest value) — 2 hosts
 
-- [ ] `[a]` **Fomalhaut** — rotation
-- [ ] `[fgkm]` **40 Eridani C** — activity, rotation
+- [x] `[a]` **Fomalhaut** — DONE 2026-07-20: rotation (Hadjara 2014 VLTI 3-D spin: v sin i 93 + i★ 90° → P 0.98 d; no published period exists, derivation now paper-anchored)
+- [x] `[fgkm]` **40 Eridani C** — DONE 2026-07-20: rotation (Shan 2024 8.56 d, grade D — CURATED on Pass 2023 v sin i corroboration, prior exclusion reversed) + activity (Pass 2023 Hα −4.42 Å)
 
 ### Tier B — near-complete non-roster (1–2 categories short) — 9 hosts
 
 - [x] `[fgkm]` **55 Cnc** — DONE 2026-07-20: age (von Braun 2011 isochrone 10.2 Gyr + Maxted 2015 gyro)
-- [ ] `[fgkm]` **Delta Pavonis** — rotation
+- [x] `[fgkm]` **Delta Pavonis** — DONE 2026-07-20: rotation (Costa Silva 2020 v sin i → P/sin i 41 d upper limit; no period measurable for this quiet subgiant)
 - [ ] `[fgkm]` **GJ 9066** — age: **no measurement exists in the literature** (ADS full-text sweep 2026-07-20, queries logged in context-notes) — honest null per DB principle; revisit only if a new paper appears
 - [x] `[fgkm]` **HD 219134** — DONE 2026-07-20: age (Li 2025 asteroseismology 10.15 Gyr — first asteroseismic age below 5000 K)
 - [x] `[fgkm]` **YZ Cet** — DONE 2026-07-20: age (Engle & Guinan 2017 gyro 4.0 Gyr)

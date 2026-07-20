@@ -65,3 +65,30 @@ Append-only. Started 2026-07-20.
   low_res_spectroscopy, sed_fitting). teff/age now allow `notes` (same
   precedent as rotation/radius). Phase-2 HTML rebuilt for the three new WD
   host pages (gate 7).
+
+## 2026-07-20 — batch 2 applied (rotation/activity trio; 122 → 119, Tier A CLEARED)
+
+- **40 Eri C: prior exclusion reversed on new evidence.** Shan 2024 8.56 d was
+  left uncurated in May as an isolated grade-D photometric value. The agent's
+  cross-check changed the picture: Pass 2023 v sin i = 1.7 ± 0.2 km/s with the
+  curated Mann 2015 radius gives P/sin i = 8.2 d — independent spectroscopic
+  corroboration. Curated with the quality caveat in the note; the J₂
+  documented-divergence flag in body-figure-methodology (en+ko) is retired
+  (the J₂ value itself is unchanged — same period, now curated).
+- **Cross-paper computed values stay out of Phase 2**: the proposed
+  log Lx/Lbol ≈ −3.2 for 40 Eri C combined NEXXUS Lx with Cifuentes Lbol —
+  that is synthesis, not measurement. Dropped; the Lx is preserved as context
+  inside the Hα entry's note.
+- **Fomalhaut and Delta Pav both have NO published rotation period** (A-type
+  with no spots to modulate; near-basal-activity subgiant likewise). Both are
+  curated as v_sin_i-method entries with the derivation in the note — Fomalhaut
+  is a true period (i★ measured = 90°), Delta Pav an upper limit (i unknown).
+  This makes the previously project-internal Fomalhaut P ≈ 24 h derivation
+  paper-anchored (Hadjara 2014 numbers re-verified against
+  phase4/figure/fomalhaut-j2-research.md).
+- All three implied periods re-derived on the main thread (0.979 d / 8.15 d /
+  40.2 d & 25.7 d) — agent arithmetic confirmed.
+- Schema: activity_measurements gains `notes` (same pattern as teff/age this
+  morning). Gate 4d caught it again — three-for-three on this batch pair.
+- **Tier A is now empty; Tier B has only GJ 9066 left (honest null).** Floor
+  count 119, all remaining = Tier C/D long tail.

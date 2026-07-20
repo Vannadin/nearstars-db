@@ -425,6 +425,8 @@ STELLAR_MEASUREMENT_KINDS = {
             "log_rhk", "h_alpha", "x_ray", "ca_ii_h_k",
             "unverified",
         },
+        # 측정 단서 서술 (40 Eri C Hα: 미큐레이션 Lx 컨텍스트 등, 2026-07-20).
+        "extra_keys": {"notes"},
     },
     "activity_cycle_measurements": {
         # 자기 활동 주기 (태양 11년 사이클 아날로그), 연(yr) 단위. Kerbalism

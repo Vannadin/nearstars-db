@@ -239,7 +239,7 @@ Inputs are the curated mass / radius / rotation; lock state from the
 | **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | same method, ±~15 % |
 | **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | fully convective → Radau–Darwin at polytropic NMoI 0.205 (J₂/q 0.084); ±~25 % (radius-dominated) |
 | **TRAPPIST-1** | star (M8V) | P_rot 3.295 d (Vida 2017, K2) | 2.3e-5 | **2.0e-6** | — | same polytrope branch as Proxima; fast spin on a Jupiter-sized star → the roster's largest M-dwarf J₂; well-measured inputs (Agol 2021 M/R), ±~25 % (NMoI-dominated) |
-| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (quality-D lit. value) | 1.9e-5 | **1.6e-6** | — | largest M-dwarf J₂ until TRAPPIST-1 — fast-spinning flare star; input is a curation-rejected literature period, adopted with documented-divergence |
+| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (Shan 2024, grade D) | 1.9e-5 | **1.6e-6** | — | largest M-dwarf J₂ until TRAPPIST-1 — fast-spinning flare star. Input curated 2026-07-20: the formerly rejected Shan 2024 period is independently corroborated by Pass 2023 v sin i (1.7 km/s → P/sin i 8.2 d), so the documented-divergence flag is retired |
 | **40 Eri B** | star (DA WD) | P ≈ 35 h (statistical) | 2.5e-8 | **2.1e-9** | — | white dwarf on the same n = 3/2 polytrope branch; rotation = Kepler sample median (Hermes 2017), documented-divergence |
 | **Fomalhaut A** | star (A4V) | P_rot ≈ 24 h (derived: v sin i 93 + measured i★ 90°) | 0.044 | **1.0e-4** (band 0.8–1.3e-4) | — | roster's largest stellar J₂ by far — apsidal route, k₂ = 0.0036 (Claret 2004, ±25 % systematic); f ≈ 0.022 matches the board's visual oblateness; spin axis fully measured in 3-D (Hadjara 2014 i★ 90°±9°, PA 65.6° ⊥ disk) |
 

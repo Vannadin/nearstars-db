@@ -139,6 +139,26 @@
         "bibcode": "1998A&AS..132..155H",
         "recommended": false
       }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 41,
+        "method": "v_sin_i",
+        "reference": "Costa Silva et al. 2020",
+        "bibcode": "2020A&A...634A.136C",
+        "doi": "10.1051/0004-6361/201936523",
+        "recommended": true,
+        "notes": "No measured photometric/chromospheric rotation period exists (very inactive, log R'HK ~ -5.13 — no spot modulation). Upper-limit period from v sin i = 1.507 km/s and R = 1.197 R_sun (P_rot/sin i = 41 d); the near-basal activity favours the long-period end. v sin i sits near the instrumental floor; literature spans 1.5-2.4 km/s (26-41 d)."
+      },
+      {
+        "value_days": 26,
+        "method": "v_sin_i",
+        "reference": "Hojjatpanah et al. 2019",
+        "bibcode": "2019A&A...629A..80H",
+        "doi": "10.1051/0004-6361/201834729",
+        "recommended": false,
+        "notes": "v sin i = 2.36 km/s -> P_rot/sin i = 26 d (upper limit); fast end of the plausible range."
+      }
     ]
   },
   "Arcturus": {
@@ -692,6 +712,26 @@
         "bibcode": "2009A&A...498L..41L",
         "recommended": true,
         "notes": "VLTI/AMBER Br-gamma spectro-astrometry: projected spin-axis PA only; i_star unconstrained (>15 deg floor). PA ~ debris-ring PA."
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 0.98,
+        "method": "v_sin_i",
+        "reference": "Hadjara et al. 2014",
+        "bibcode": "2014A&A...569A..45H",
+        "doi": "10.1051/0004-6361/201424185",
+        "recommended": true,
+        "notes": "No directly measured rotation period exists. Derived from the VLTI/AMBER differential-phase 3-D spin solution V_eq sin i = 93 +/- 16 km/s, i_star = 90 +/- 9 deg (equator-on), R_eq = 1.8 +/- 0.2 R_sun; with i measured ~90 deg this is a true period (~23.5 h), not an upper limit. Consistent with Royer 2007 v sin i = 93 km/s."
+      },
+      {
+        "value_days": 0.98,
+        "method": "v_sin_i",
+        "reference": "Royer et al. 2007",
+        "bibcode": "2007A&A...463..671R",
+        "doi": "10.1051/0004-6361:20065224",
+        "recommended": false,
+        "notes": "Independent spectroscopic v sin i = 93 km/s (HD 216956); period assumes the Hadjara 2014 i = 90 deg. Corroborates the recommended value."
       }
     ]
   },
@@ -6363,7 +6403,38 @@
         "recommended": true
       }
     ],
-    "meta_notes": "Mass: Mason, Hartkopf & Miles 2017 §3 (page 6) paper body and abstract both state 0.2041 +/- 0.0064 Msun for the M dwarf companion (mass sum 0.776 +/- 0.024 Msun split via Heintz 1974 mass ratio with the van Leeuwen 2007 Hipparcos parallax). Bond et al. 2017 lists 0.573 Msun for 40 Eri B while Mason 2017 lists 0.575 Msun from the same dynamics — paper-level disagreement at the per-mille level, both within 1 sigma. We adopt Bond 2017 for B (recommended) and Mason 2017 for C (recommended). Mann et al. 2015 also independently reports a semi-empirical M_K-based mass M = 0.222 +/- 0.022 Msun (Table 5 'Gl 166 C' row, observed) and a Dartmouth model-fit mass 0.233 +/- 0.011 Msun (Table 7 same row, inferred). Neither is recorded as a separate entry here; future schema-tier work could add the Table 5 value as recommended:false. Radius / Teff: Mann et al. 2015 reports BOTH an observed Table 5 row and a Dartmouth-inferred Table 7 row for 'Gl 166 C'. Table 5 (Parameters of All Stars in Our Sample, page 29) gives R = 0.274 +/- 0.011 Rsun and Teff = 3167 +/- 61 K (this is the row the DB uses). Table 7 (Inferred stellar evolution model parameters, page 36) gives R = 0.242 +/- 0.004 Rsun and Teff = 3362 +/- 18 K. The structured method fields 'spectroscopic_calibration' and 'low_res_spectroscopy' match the Table 5 derivation (M_K-band radius relation + BT-Settl atmosphere fit), so Table 5 values are the consistent paper actual. A short-lived 2026-05-29 mid-session edit briefly substituted the Table 7 model-fit values; a verification subagent caught the resulting method/value mismatch and the Table 5 values were restored in the immediate follow-up commit. Age: system-coeval with 40 Eri B via Bond 2017 §6.2 IFMR-derived progenitor lifetime ~1.8 Gyr; uncertainty 0.5 Gyr is a curator estimate (paper reports only '~1.8 Gyr'). Mann 2015 Table 7 best-fit age log(age)=9.44 (~2.75 Gyr) with sigma_age=0.60 dex is consistent within 1 sigma. Luminosity: Cifuentes et al. 2020 CARMENES catalog row Karmn J04153-076 / GJ 166 C VizieR-verified (J/A+A/642/A115 lookup, 2026-05-29 follow-up): L = 6.51 x 10^-3 Lsun (paper actual; sigma 0.13e-3 matches the catalog's ~2% relative precision quoted in abstract). Cifuentes also reports Teff = 3100 K (SED-photometry derivation), R = 0.2798 Rsun, M = 0.2712 Msun, log g = 5.5 — different method tier than Mann 2015 (Teff 3167 K spectroscopic) and Mason 2017 (mass 0.2041 binary_orbit dynamical). Recommended entries kept on the higher-tier methods (Mann 2015 for R/Teff via low_res_spectroscopy, Mason 2017 for mass via binary_orbit). Mann 2015 implied L = 4*pi*d^2 * F_bol from F_bol = 0.87259 x 10^-8 erg s^-1 cm^-2 and d = 5.04 pc yields ~6.9 x 10^-3 Lsun, the ~6% offset vs Cifuentes 6.51 x 10^-3 reflects the difference between Mann's spectroscopic-Teff F_bol integration and Cifuentes' multi-band SED integration with Gaia DR2 distance — within normal cross-method scatter. Metallicity: Mann et al. 2015 Table 5 reports a direct [Fe/H] = -0.21 +/- 0.08 dex for Gl 166 C (SNIFS R~1000-3000 optical spectra + the Mann 2013a low-res spectroscopic [Fe/H] calibration vs solar-type companions, see Mann 2015 §3 and §4). Consistent within 1.5 sigma with the 40 Eri A value -0.31 +/- 0.03 (Sousa et al. 2008). Earlier 'N/A, inherit from A' decision in the 2026-05-27 working notes was a false-negative; the entry is now recorded as recommended:true under method='low_res_spectroscopy'. Rotation: Shan et al. 2024 (CARMENES VII, 2024A&A...684A...9S, DOI 10.1051/0004-6361/202346794, arxiv 2401.09550) reports P_rot = 8.56 d for Karmn J04153-076 = GJ 166 C with spectroscopic method (CARMENES activity-indicator time series) and quality flag D = 'debated' (per paper Sect. 4: 27 of 166 periods are debated, 68 provisional). VizieR-verified (J/A+A/684/A9, 2026-05-29 follow-up). The earlier 2026-05-27 'Kemmer 2025 ~137 d' decision was a fabrication-pattern compound mistake: Shan 2024 is the correct paper (Y. Shan is first author, J. Kemmer is 22nd of 47 co-authors), the year is 2024 not 2025, and the value differs by ~16x. No rotation_measurements entry is curated because the paper itself classifies the period as debated; a future independent confirmation (e.g. TESS analysis or RV modulation) would convert this to a recommended:false (then :true) entry. Activity (H-alpha): 40 Eri C is the variable star DY Eri, an optically active flare star; multi-survey H-alpha equivalent-width values scatter over roughly pEW = -2 to -4 Angstrom across CARMENES / Schoefer / Newton samples, no single-paper anchor curated in this pass. Deferred."
+    "meta_notes": "Mass: Mason, Hartkopf & Miles 2017 §3 (page 6) paper body and abstract both state 0.2041 +/- 0.0064 Msun for the M dwarf companion (mass sum 0.776 +/- 0.024 Msun split via Heintz 1974 mass ratio with the van Leeuwen 2007 Hipparcos parallax). Bond et al. 2017 lists 0.573 Msun for 40 Eri B while Mason 2017 lists 0.575 Msun from the same dynamics — paper-level disagreement at the per-mille level, both within 1 sigma. We adopt Bond 2017 for B (recommended) and Mason 2017 for C (recommended). Mann et al. 2015 also independently reports a semi-empirical M_K-based mass M = 0.222 +/- 0.022 Msun (Table 5 'Gl 166 C' row, observed) and a Dartmouth model-fit mass 0.233 +/- 0.011 Msun (Table 7 same row, inferred). Neither is recorded as a separate entry here; future schema-tier work could add the Table 5 value as recommended:false. Radius / Teff: Mann et al. 2015 reports BOTH an observed Table 5 row and a Dartmouth-inferred Table 7 row for 'Gl 166 C'. Table 5 (Parameters of All Stars in Our Sample, page 29) gives R = 0.274 +/- 0.011 Rsun and Teff = 3167 +/- 61 K (this is the row the DB uses). Table 7 (Inferred stellar evolution model parameters, page 36) gives R = 0.242 +/- 0.004 Rsun and Teff = 3362 +/- 18 K. The structured method fields 'spectroscopic_calibration' and 'low_res_spectroscopy' match the Table 5 derivation (M_K-band radius relation + BT-Settl atmosphere fit), so Table 5 values are the consistent paper actual. A short-lived 2026-05-29 mid-session edit briefly substituted the Table 7 model-fit values; a verification subagent caught the resulting method/value mismatch and the Table 5 values were restored in the immediate follow-up commit. Age: system-coeval with 40 Eri B via Bond 2017 §6.2 IFMR-derived progenitor lifetime ~1.8 Gyr; uncertainty 0.5 Gyr is a curator estimate (paper reports only '~1.8 Gyr'). Mann 2015 Table 7 best-fit age log(age)=9.44 (~2.75 Gyr) with sigma_age=0.60 dex is consistent within 1 sigma. Luminosity: Cifuentes et al. 2020 CARMENES catalog row Karmn J04153-076 / GJ 166 C VizieR-verified (J/A+A/642/A115 lookup, 2026-05-29 follow-up): L = 6.51 x 10^-3 Lsun (paper actual; sigma 0.13e-3 matches the catalog's ~2% relative precision quoted in abstract). Cifuentes also reports Teff = 3100 K (SED-photometry derivation), R = 0.2798 Rsun, M = 0.2712 Msun, log g = 5.5 — different method tier than Mann 2015 (Teff 3167 K spectroscopic) and Mason 2017 (mass 0.2041 binary_orbit dynamical). Recommended entries kept on the higher-tier methods (Mann 2015 for R/Teff via low_res_spectroscopy, Mason 2017 for mass via binary_orbit). Mann 2015 implied L = 4*pi*d^2 * F_bol from F_bol = 0.87259 x 10^-8 erg s^-1 cm^-2 and d = 5.04 pc yields ~6.9 x 10^-3 Lsun, the ~6% offset vs Cifuentes 6.51 x 10^-3 reflects the difference between Mann's spectroscopic-Teff F_bol integration and Cifuentes' multi-band SED integration with Gaia DR2 distance — within normal cross-method scatter. Metallicity: Mann et al. 2015 Table 5 reports a direct [Fe/H] = -0.21 +/- 0.08 dex for Gl 166 C (SNIFS R~1000-3000 optical spectra + the Mann 2013a low-res spectroscopic [Fe/H] calibration vs solar-type companions, see Mann 2015 §3 and §4). Consistent within 1.5 sigma with the 40 Eri A value -0.31 +/- 0.03 (Sousa et al. 2008). Earlier 'N/A, inherit from A' decision in the 2026-05-27 working notes was a false-negative; the entry is now recorded as recommended:true under method='low_res_spectroscopy'. Rotation: Shan et al. 2024 (CARMENES VII, 2024A&A...684A...9S, DOI 10.1051/0004-6361/202346794, arxiv 2401.09550) reports P_rot = 8.56 d for Karmn J04153-076 = GJ 166 C with spectroscopic method (CARMENES activity-indicator time series) and quality flag D = 'debated' (per paper Sect. 4: 27 of 166 periods are debated, 68 provisional). VizieR-verified (J/A+A/684/A9, 2026-05-29 follow-up). The earlier 2026-05-27 'Kemmer 2025 ~137 d' decision was a fabrication-pattern compound mistake: Shan 2024 is the correct paper (Y. Shan is first author, J. Kemmer is 22nd of 47 co-authors), the year is 2024 not 2025, and the value differs by ~16x. No rotation_measurements entry is curated because the paper itself classifies the period as debated; a future independent confirmation (e.g. TESS analysis or RV modulation) would convert this to a recommended:false (then :true) entry. Activity (H-alpha): 40 Eri C is the variable star DY Eri, an optically active flare star; multi-survey H-alpha equivalent-width values scatter over roughly pEW = -2 to -4 Angstrom across CARMENES / Schoefer / Newton samples, no single-paper anchor curated in this pass. Deferred.",
+    "rotation_measurements": [
+      {
+        "value_days": 8.56,
+        "method": "photometric_variability",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794",
+        "recommended": true,
+        "notes": "SuperWASP/TESS photometry; Shan 2024 quality flag SPD = D (lowest grade), their own determination. Only photometric period in the literature (Diez Alonso 2019 and Pass 2023 report none). Independently corroborated by Pass 2023 v sin i = 1.7 +/- 0.2 km/s, which with R = 0.274 R_sun implies P_rot/sin i = 8.2 d — excellent agreement. Prior \"debated, not curated\" stance (2026-05-29) reversed on this corroboration."
+      },
+      {
+        "value_days": 8.2,
+        "method": "v_sin_i",
+        "reference": "Pass et al. 2023",
+        "bibcode": "2023AJ....166...16P",
+        "doi": "10.3847/1538-3881/acd6a2",
+        "recommended": false,
+        "notes": "v sin i = 1.7 +/- 0.2 km/s; with R = 0.274 R_sun gives P_rot/sin i = 8.2 d (upper limit). Independent spectroscopic support for the Shan 2024 period."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -4.42,
+        "method": "h_alpha",
+        "reference": "Pass et al. 2023",
+        "bibcode": "2023AJ....166...16P",
+        "doi": "10.3847/1538-3881/acd6a2",
+        "recommended": true,
+        "notes": "H-alpha in emission; flare star (DY Eri). Multi-epoch TRES/CHIRON spectroscopy, volume-complete active mid-to-late M sample. No per-star EW uncertainty tabulated. NEXXUS ROSAT log Lx = 28.16 (Schmitt & Liefke 2004) is context only — the Lx/Lbol ratio would be a cross-paper computation, deliberately not curated as a measurement."
+      }
+    ]
   },
   "V1400 Centauri": {
     "spectype": "K5 IV(e) Li",

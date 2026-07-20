@@ -203,7 +203,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 | **α Cen B** | star (K1V) | P_rot 41 d | 5.5e-6 | **5.7e-8** | — | 같은 방법, ±~15 % |
 | **Proxima** | star (M5.5V) | P_rot 83.5 d | 4.4e-8 | **3.7e-9** | — | 완전 대류 → 폴리트로프 NMoI 0.205로 Radau–Darwin (J₂/q 0.084); ±~25 % (반지름 지배) |
 | **TRAPPIST-1** | star (M8V) | P_rot 3.295 d (Vida 2017, K2) | 2.3e-5 | **2.0e-6** | — | Proxima와 같은 폴리트로프 분기; 목성 크기 별의 빠른 자전 → 로스터 M왜성 최대 J₂; 입력값 정밀(Agol 2021 M/R), ±~25 % (NMoI 지배) |
-| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (품질 D 문헌값) | 1.9e-5 | **1.6e-6** | — | TRAPPIST-1 이전까지 M왜성 최대 J₂ — 빠르게 도는 플레어별; 입력이 큐레이션 기각 문헌값이라 documented-divergence로 채택 |
+| **40 Eri C** | star (M4.5Ve) | P_rot 8.56 d (Shan 2024, 품질 D) | 1.9e-5 | **1.6e-6** | — | TRAPPIST-1 이전까지 M왜성 최대 J₂ — 빠르게 도는 플레어별. 입력값 2026-07-20 정식 큐레이션: 기각됐던 Shan 2024 주기가 Pass 2023 v sin i (1.7 km/s → P/sin i 8.2 d)로 독립 교차확인되어 documented-divergence 플래그 해제 |
 | **40 Eri B** | star (DA WD) | P ≈ 35 h (통계) | 2.5e-8 | **2.1e-9** | — | 백색왜성도 같은 n = 3/2 폴리트로프 분기; 자전 = Kepler 표본 중앙값(Hermes 2017), documented-divergence |
 | **Fomalhaut A** | star (A4V) | P_rot ≈ 24 h (도출: v sin i 93 + 측정 i★ 90°) | 0.044 | **1.0e-4** (밴드 0.8–1.3e-4) | — | 로스터 항성 J₂ 압도적 최대 — 근점이동 경로, k₂ = 0.0036 (Claret 2004, 계통 ±25 %); f ≈ 0.022는 보드의 시각 편평과 자기일관; 자전축은 로스터 유일 완전 3D 실측 (Hadjara 2014 i★ 90°±9°, PA 65.6° ⊥ 디스크) |
 
