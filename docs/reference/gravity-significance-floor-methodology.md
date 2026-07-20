@@ -350,3 +350,22 @@ finding: we own the choice, backed by our own tests.
 - [methodology-index](methodology-index.md) — index of paper-grounded derived-value recipes.
 - [principia-cfg-reference](principia-cfg-reference.md) / [principia-geopotential-data](principia-geopotential-data.md) — the n-body gravity-model cfg conventions this truncation scheme extends.
 - [binary-epoch-pipeline](binary-epoch-pipeline.md) — the source of the `db/binary_orbits.json` roster used in the sanity check.
+
+## Addendum (2026-07-04) — roster also caps the floor from BELOW; 1e-13 rejected
+
+Owner considered adopting the "physically matched" lower end (`1e-13`, r_c aligned with the
+Jacobi radius). Rejected on roster geometry:
+
+- At `1e-13`, `r_c(1 M☉) = 3.85 ly` and `r_c(α Cen AB, 2.01 M☉) = 5.46 ly` **exceeds the
+  Sol–α Cen separation (4.37 ly)** — Sol itself sits inside α Cen's cutoff, and no point of
+  the flagship route is exactly force-free (the two shells jointly cover the whole void).
+  This defeats design goal (a). It also erodes goal (b): `r_c(asteroid) = 0.67 AU` is at
+  belt-neighbor spacing, so asteroid↔asteroid pairs survive *inside the σ shell* (costlier
+  than no cutoff).
+- **Void-zero existence condition**: a force-free segment on a route requires
+  `r_c(A) + r_c(B) < d(A,B)`. For Sol–α Cen (4.37 ly, 1 + 2.01 M☉) this demands
+  **`a_floor ≥ ~5e-13 m/s²`** (at 5e-13 the sum is 4.16 ly, zero-segment width ~0.2 ly;
+  at 1e-12 it is 2.95 ly, width ~1.4 ly).
+- Combined with the upper cap from AB–Proxima binding (~1e-11, §Roster sanity check), the
+  **roster-admissible window is `[≈5e-13, ≈1e-11]`**; `1e-13` lies outside it, `1e-12`
+  sits comfortably inside. Decision (owner, 2026-07-04): **keep `a_floor = 1e-12 m/s²`.**
