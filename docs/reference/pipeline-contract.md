@@ -100,11 +100,15 @@ optional everywhere per the standing skip-metallicity decision):
 | Brown dwarf | teff, radius, luminosity, mass, age |
 
 Unresolved companions follow their own spectral class (eps Ind Ba/Bb → the BD
-floor). Floor scope (owner, 2026-07-20): **all curated hosts within 50 ly**;
-`beyond-implementation-range` bodies exempt. Gate 10d reports the worklist
-(`check_pipeline_flow.py --floor-detail`); backfill is a scheduled curation
-program. Full floor definition: `phase2/curation-data-contract/SPEC.md` §A0;
-planet block shape rule (list+method canonical): §A1.
+floor). Floor scope (owner, 2026-07-20; re-scoped same day): **in-game
+implementation candidates — the hosts of `db/roster.yaml` systems**. Phase 2
+depth follows implementation intent, not catalog membership; the initial
+"all ≤50 ly" reading was an owner mis-scope, corrected the same day (one day
+of wider-scope backfill data is kept — valid, paper-cited — but non-roster
+hosts are not floor targets). Gate 10d reports the worklist
+(`check_pipeline_flow.py --floor-detail`). Full floor definition:
+`phase2/curation-data-contract/SPEC.md` §A0; planet block shape rule
+(list+method canonical): §A1.
 
 Phase 3: every db planet of an implemented host gets a report; the host star gets
 a star-level report (disk content folds into it — no separate disk reports).

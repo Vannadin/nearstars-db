@@ -1,5 +1,12 @@
 # Phase-2 measurement-floor backfill — worklist
 
+> **PROGRAM CLOSED 2026-07-20 (owner re-scope).** Phase 2 floor applies to
+> in-game implementation candidates (`db/roster.yaml` hosts) only — the
+> "all ≤50 ly" scope this program ran under was an owner mis-scope, corrected
+> the same day. All roster hosts are at floor; the remaining rows below are
+> NOT tracked work. Data curated during the one-day run (51 hosts) is kept.
+> Wave 3 (15 hosts, in flight at the stop) was killed un-applied.
+
 Generated from `check_pipeline_flow.py --floor-detail` (gate 10d) on 2026-07-20.
 Scope per owner decision: **all curated hosts within 50 ly**. Floor definition:
 `phase2/curation-data-contract/SPEC.md` §A0. [Fe/H] is optional everywhere.

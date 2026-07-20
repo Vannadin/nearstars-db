@@ -141,17 +141,20 @@ for entry in roster.get("confirmed", []):
         if board_stem in boards and planet not in board_cover and not has_wildcard:
             warnings.append(f"{tag}: board has no rows for planet '{planet}' (and no '*' wildcard)")
 
-# ── 10d: phase-2 measurement floor, all curated hosts ≤ 50 ly ────────
-# contract §4. Class by spectype: D*→WD, L/T/Y→BD, O/B/A→A-type, else FGKM host.
+# ── 10d: phase-2 measurement floor — implementation candidates only ──
+# contract §4 / curation SPEC §A0 (re-scoped 2026-07-20: roster hosts, not
+# all ≤50 ly — Phase 2 depth follows implementation intent, not catalog
+# membership). Class by spectype: D*→WD, L/T/Y→BD, O/B/A→A, else FGKM.
 FLOORS = {
     "wd":   {"teff", "radius", "mass", "age"},
     "bd":   {"teff", "radius", "luminosity", "mass", "age"},
     "a":    {"teff", "radius", "luminosity", "mass", "age", "rotation"},
     "fgkm": {"teff", "radius", "luminosity", "mass", "age", "rotation", "activity"},
 }
-LY_50_PC = 50 / 3.26156
 
 curated = json.loads((REPO / "db" / "stellar_props_curated.json").read_text(encoding="utf-8"))
+roster_systems = {e["system"] for e in roster.get("confirmed", [])}
+roster_hosts: set[str] = set()
 star_meta: dict[str, dict] = {}   # star name -> {dist_pc, spectype}
 for f in sorted((REPO / "db" / "systems").glob("*.json")):
     d = json.loads(f.read_text(encoding="utf-8"))
@@ -160,6 +163,8 @@ for f in sorted((REPO / "db" / "systems").glob("*.json")):
             "dist_pc": (s.get("derived") or {}).get("distance_pc"),
             "spectype": (s.get("raw") or {}).get("spectype") or "",
         }
+        if f.stem in roster_systems:
+            roster_hosts.add(s.get("name"))
 
 def star_class(sp_raw: str) -> str:
     """Spectral type → floor class. Handles WD 'DA/DB/...' (uppercase D +
@@ -182,9 +187,9 @@ floor_detail = "--floor-detail" in sys.argv
 floor_gaps_by_cls: dict[str, int] = {}
 floor_na_count = 0
 for name, entry in sorted(curated.items()):
-    meta = star_meta.get(name)
-    if not meta or not meta["dist_pc"] or meta["dist_pc"] > LY_50_PC:
-        continue
+    if name not in roster_hosts:
+        continue   # floor = 구현 후보군(로스터)만 (SPEC §A0 재스코프 2026-07-20)
+    meta = star_meta.get(name) or {"spectype": ""}
     cls = star_class(entry.get("spectype") or meta["spectype"])
     na = entry.get("floor_na") or {}
     missing = sorted(

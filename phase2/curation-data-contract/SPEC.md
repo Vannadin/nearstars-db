@@ -26,12 +26,21 @@ Derived verbatim from the committed sources of truth — not reconstructed:
 
 ## Phase 2 — required data, per body type
 
-### A0. Measurement floor per star class (2026-07-20, owner-scoped)
+### A0. Measurement floor per star class (2026-07-20; re-scoped same day)
 
-Every curated host within **50 ly** must eventually reach its class floor
-(categories with ≥1 paper-cited measurement). `check_pipeline_flow.py` 10d
-(check.sh gate 10) reports the worklist (`--floor-detail` for per-host lines);
-[Fe/H] stays optional everywhere (standing skip-metallicity decision).
+Every **in-game implementation candidate** host must reach its class floor
+(categories with ≥1 paper-cited measurement). Scope = the hosts of
+`db/roster.yaml` systems — consistent with the standing depth policy
+(Phase 2 escalation happens when a body is bound for implementation, not for
+catalog membership). `check_pipeline_flow.py` 10d (check.sh gate 10) reports
+the worklist (`--floor-detail` for per-host lines); [Fe/H] stays optional
+everywhere (standing skip-metallicity decision).
+
+> Scope history: the initial 2026-07-20 decision read "all curated hosts
+> ≤50 ly" — an owner mis-scope, corrected the same day. One day of backfill
+> ran at the wider scope (129→~63 hosts); that curated data is valid and
+> KEPT (paper-cited, gate-clean), but non-roster hosts are no longer floor
+> targets and the remaining long tail is not tracked work.
 
 | Class (from spectype) | Floor categories |
 |---|---|

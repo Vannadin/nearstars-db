@@ -186,3 +186,30 @@ Append-only. Started 2026-07-20.
   adding a stale non-recommended variant adds noise, not information.
 - Radius filled for the 5 hosts that lacked it (Cifuentes S-B within-catalog
   values + Schweitzer seconds).
+
+## 2026-07-20 — owner stop (program paused at wave 3)
+
+- Owner directive: finish the in-flight wave 3 (15 hosts, agent already
+  running) and STOP — no further waves. The floor backfill was deeper into
+  Phase 2 curation than the owner wanted to keep funding right now.
+- Post-wave-3 state will be ~63 hosts below floor, all fgkm long tail.
+  The worklist + gate 10d stay as the passive dashboard; no active sessions
+  on this program unless the owner re-requests it.
+- Open follow-ups parked with the program: bright-star rotations via CDS ftp
+  tables (9 hosts), Arcturus direct-L, 55 Cnc B (Moutou 2026 table read),
+  70 Oph radius mis-citation audit.
+
+## 2026-07-20 — program CLOSED (owner re-scope, supersedes the pause above)
+
+- Owner clarification: **Phase 2 was always meant for in-game implementation
+  candidates only** — the "all curated hosts ≤50 ly" scope decision earlier
+  today was the owner's own mis-scope, corrected now. This matches the
+  standing depth policy (Phase 1 default; Phase 2 escalation on
+  implementation intent).
+- Actions: SPEC §A0 + pipeline-contract §4 (+ko) re-scoped to roster hosts;
+  gate 10d now checks roster hosts only (result: zero below floor — every
+  roster host is at floor, largely thanks to today's Tier A/B work which WAS
+  in the intended scope). Wave 3 agent killed un-applied (out of scope).
+- The 51 hosts' worth of wider-scope data applied today stays in the DB —
+  paper-cited, gate-clean, harmless, and useful background-star metadata.
+  The worklist file carries a CLOSED banner; remaining rows are not work.
