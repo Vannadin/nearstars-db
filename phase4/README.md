@@ -1,9 +1,11 @@
-<!-- Phase 4(게임용 art-direction 최종 확정) 미구현 — 그 전까지 결정 보드·art-direction 초안을 모아두는 스테이징 디렉터리 -->
-# phase4/ — Decision Boards + Art-Direction Drafts (pre-implementation)
+<!-- Phase 4(오너 art-direction → 고증 게이트 → 게임 cfg 확정) 결정 보드 트리 — canonical 절차는 nearstars-phase4 스킬, 계약은 SPEC.md -->
+# phase4/ — Decision Boards (owner art-direction → gate → cfg)
 
-**Phase 4 is NOT yet built.** This directory stages the decisions so they are
-recorded now and ready to activate once Phase 4 is formalized. Nothing here is
-gated into the DB or emitted — these are staged records.
+Phase 4 is **operational**: schema v2 boards, a validator wired into
+`check.sh` (gate 8), body↔db join checks (gate 10), a per-body HTML viewer,
+and the `nearstars-phase4` skill as the canonical procedure. The one thing
+still deferred is **emit** — boards are not yet read by the cfg writers
+(project-end task; see `emit-hardening/checklist.md`).
 
 ## Where Phase 4 sits
 
@@ -11,48 +13,53 @@ gated into the DB or emitted — these are staged records.
 Phase 1  basic curation
 Phase 2  paper-cited measurements
 Phase 3  cfg-ready synthesis — PRESENTS options (tie-break / documented divergence)
-Phase 4  per-decision: owner art-directs → 고증 gate → final game cfg   ← staged here
+Phase 4  per-decision: owner art-directs → 고증 gate → final game cfg
 ```
 
-## How Phase 4 works (see [`SPEC.md`](SPEC.md) §0)
+Cross-phase flow, join keys, and the value-resolution order live in
+[`docs/reference/pipeline-contract.md`](../docs/reference/pipeline-contract.md);
+the resolver (`scripts/pipeline/resolve_emit_values.py` +
+`field_alignment.yaml`) merges db → phase3 → phase4 per body.
 
-Phase 4 is **not** sequential ("art-direct everything, then gate it"). The unit is
-**one decision = (body × axis)**; each flows on its own clock through two roles:
+## How Phase 4 works (contract: [`SPEC.md`](SPEC.md))
 
-- **4a — art-direction (owner)** states the intent for one axis (or leaves it to the
-  Phase 3 default).
+The unit is **one decision = (body × axis)**, each on its own clock:
+
+- **4a — art-direction (owner)** states the intent for one axis, or leaves the
+  Phase 3 default.
 - **4b — gate (agent)** checks that target against Phase 2 + Phase 3 →
   `pass-in-window` / `documented-divergence`, and writes the cfg-ready value.
 
-Axes come from a **fixed menu** (orbit / bulk / atmosphere / appearance / satellites),
-uniform across all body types — never pruned by type (a rocky planet still has a
-`rings` axis). Most axes are `passthrough` (Phase 3 default emits unchanged); Phase 4
-is only the *deltas*.
+Axes come from a fixed menu, uniform across body types (§3.2 bulk template:
+three body classes with fixed field sets + `na_reason`). Every axis is
+presented as a choice — silent passthrough is not allowed. Naming contract
+(SPEC §3): board filename = db system slug, `body:` keys = db names exactly,
+fiction bodies marked `discoverability: fictional`.
 
-## Decision boards (the progress record)
+## Boards (one `<system>.yaml` per dynamical host group)
 
-One `<system>.yaml` per system; one row per (body, axis) with a per-row `status`
-(`passthrough` / `open` / `art-directed` / `gated` / `emitted`). The board **is** the
-progress tracker — `grep status:` shows what is left.
+`grep status:` on a board shows what is left; row states are
+`passthrough / open / art-directed / gated / emitted / superseded`.
 
-- [`barnards_star.yaml`](barnards_star.yaml) — mass × 1.1547 (median true mass) and
-  e × 0.8 (fixed-step-stable, closest-to-observed), both `gated`. Process + scan tables
-  in `../phase3/stability-sim/STABILITY_REPORT.md`.
-- [`alpha_centauri.yaml`](alpha_centauri.yaml) — α Cen A b (Polyphemus): orbit a/e
-  `gated`, sky-frame inclination `open`; the white/gold/blue banding + ring + aurora +
-  Pandora rows at various states. The worked template for a many-axis body.
+- [`alpha_centauri.yaml`](alpha_centauri.yaml) — the worked many-axis template
+  (A b "Polyphemus" + fictional moons); schema v2 pilot.
+- [`proxima_cen.yaml`](proxima_cen.yaml), [`barnards_star.yaml`](barnards_star.yaml),
+  [`40_eridani.yaml`](40_eridani.yaml), [`tau_cet.yaml`](tau_cet.yaml),
+  [`fomalhaut.yaml`](fomalhaut.yaml)
+- Missing (tracked as gate-10 warnings): `trappist_1.yaml`, `luhman_16.yaml`;
+  tau_cet planet rows.
 
-## Art-direction drafts (4a creative input)
+Viewer: `scripts/phase4/build_phase4_html.py` → `docs/phase4/<system>.html`
+(bilingual, status/verdict badges).
 
-Free-form creative scratch that feeds the boards above; **not** the record.
+## Working trees under this root
 
-- [`art-direction/polyphemus-art-direction.md`](art-direction/polyphemus-art-direction.md) — α Cen A b (the
-  real-life *Avatar* Polyphemus): the banded ivory + blue gas-giant look, Avatar canon,
-  Pandora climate. Its gated conclusions live in `alpha_centauri.yaml`.
-
-## Policies
-
-- [`policies/synthetic-orbit-noise.md`](policies/synthetic-orbit-noise.md) — de-perfecting default
-  orbital elements (0 / 90 / e=0) with seeded, physically-bounded noise; never touches
-  measurements, stability-gated. The transit-preserving inclination bound is the
-  headline guardrail.
+- [`emit-hardening/`](emit-hardening/) — remediation checklist toward emit
+  (validator done; field-alignment map done; emitter rewiring pending).
+- [`figure/`](figure/) — J₂/C₂₂ figure program working files (values ledger,
+  per-body research).
+- [`art-direction/`](art-direction/) — free-form 4a creative drafts
+  (e.g. [`polyphemus-art-direction.md`](art-direction/polyphemus-art-direction.md));
+  feeds boards, never the record.
+- [`policies/`](policies/) — cross-system rules
+  (e.g. [`synthetic-orbit-noise.md`](policies/synthetic-orbit-noise.md)).

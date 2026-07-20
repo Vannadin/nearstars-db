@@ -76,3 +76,19 @@ Append-only decision log. Started 2026-07-19.
   3× docs/reference, R4 (in-flight), and `ko/phase3/stability-sim/STABILITY_REPORT.md`
   — the last one is itself a §2.1 anomaly (phase3 is English-only; the ko file
   predates the generalized rule). Removal needs owner confirmation.
+
+
+## 2026-07-20 — owner decisions on the three leftovers (closed)
+
+1. docs root versioned files: `index.v1.html` + `index-v2-sample.html` deleted
+   (true orphans). **`style.v2.css` was NOT deleted** — inspection showed
+   `index.html` loads `style.css` (base) + `style.v2.css` (v2 override layer)
+   stacked, while reports/firefly use base only. It is a live design layer,
+   not a stale duplicate; the "v2" is the design-system token version, not a
+   file revision. Kept as-is, surfaced to owner in the report.
+2. `ko/phase3/stability-sim/STABILITY_REPORT.md` deleted (mirror-scope
+   anomaly; phase trees are English-only). check-mirrors.sh reverse pass is
+   generic, no code change needed (comment example now hypothetical).
+3. `phase4/README.md` rewritten to current reality (was "Phase 4 is NOT yet
+   built"): schema v2 + gate 8/10 + viewer + skill operational, emit deferred,
+   board inventory + missing-board list, resolver/contract cross-links.
