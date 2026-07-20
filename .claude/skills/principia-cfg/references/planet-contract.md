@@ -20,7 +20,7 @@ empty — so the emit-script guard below now fires silently on every planet-bear
 system while the data to satisfy this contract is absent. Populating
 `planets[].derived.icrs_*` + `planets[].principia.*` (the plan in "Implementation
 order" below) is a prerequisite of emit wiring; the flow-level accounting lives in
-[`docs/reference/pipeline-contract.md`](../../../docs/reference/pipeline-contract.md).
+[`docs/reference/pipeline-contract.md`](../../../../docs/reference/pipeline-contract.md).
 
 **Guard**: the emit script warns (does not abort) when a planet lacks the
 required blocks, so the operator is reminded that this contract is active.

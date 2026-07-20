@@ -107,6 +107,10 @@ done
 if [ $g9 -eq 0 ]; then echo "  [PASS] sprawl/레이아웃 게이트 통과"; else fail=1; fi
 
 echo ""
+echo "── 10. 파이프라인 경계 게이트 (pipeline-contract.md §1) ──"
+python3 scripts/check_pipeline_flow.py || fail=1
+
+echo ""
 if [ $fail -eq 0 ]; then
   echo "──────── 모든 점검 통과 ────────"
 else

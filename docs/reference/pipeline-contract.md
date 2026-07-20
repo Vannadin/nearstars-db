@@ -44,7 +44,10 @@ One body has exactly these spellings; never invent others:
 - **file slug** = `to_file_slug(name)` — snake_case, working tree + db filenames
   (`tau_cet.json`, `phase4/tau_cet.yaml`, `phase3/tau_cet/`).
 - **url slug** = `to_url_slug(name)` — kebab-case, docs tree only
-  (`docs/phase3/tau-cet.md`, `docs/phase4/tau-cet/`).
+  (`docs/phase3/tau-cet.md`, `docs/phase4/tau-cet/`). Planet **report** slugs
+  are `to_url_slug(host name) + "-" + planet letter` — identical to the planet
+  name's own slug everywhere except hosts whose db planet names omit the host
+  suffix (`Barnard b` → `barnards-star-b.md`, not `barnard-b.md`).
 - **`kopernicus_name`** (optional, phase4 row field) — the in-game cfg body name
   (`Polyphemus`); the only place a cultural name becomes a key.
 

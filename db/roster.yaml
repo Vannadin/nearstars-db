@@ -1,0 +1,16 @@
+# 확정 구현 로스터(v1) — emit 범위와 페이즈 완결성 게이트(check_pipeline_flow.py)의 데이터 소스.
+# system: db/systems 파일 스템(underscore slug). class: 게이트가 요구 산출물을 고르는 기준.
+# 로스터 변경은 오너 결정(2026-06-11 확정 세트) — 여기만 고치면 게이트/emit 범위가 따라온다.
+confirmed:
+  - { system: alpha_centauri_a, class: planet_host,  board: alpha_centauri }
+  - { system: alpha_centauri_b, class: star_only,    board: alpha_centauri }
+  - { system: proxima_cen,      class: planet_host,  board: proxima_cen }
+  - { system: barnards_star,    class: planet_host,  board: barnards_star }
+  - { system: tau_cet,          class: planet_host,  board: tau_cet }
+  - { system: 40_eridani_a,     class: planet_host,  board: 40_eridani }
+  - { system: 40_eridani_b,     class: star_only,    board: 40_eridani }
+  - { system: 40_eridani_c,     class: star_only,    board: 40_eridani }
+  - { system: fomalhaut,        class: disk_only,    board: fomalhaut }
+  - { system: trappist_1,       class: planet_host,  board: trappist_1 }
+  - { system: luhman_16_a,      class: brown_dwarf,  board: luhman_16 }
+  - { system: luhman_16_b,      class: brown_dwarf,  board: luhman_16 }
