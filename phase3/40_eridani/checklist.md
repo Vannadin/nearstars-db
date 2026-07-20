@@ -50,6 +50,14 @@ Each agent applies the 7-step procedure from 2026-05-28 postmortem:
 - [ ] Per-component or single-system commit (decide based on size)
 - [ ] Multi-layer: DB + Phase 3 markdown + ko + docs build artifacts in same commit per host
 
+## Stage 5 — Fiction planet reports c/d (2026-07-20, WP4 of pipeline-flow-program)
+
+- [x] `docs/phase3/40-eridani-a-c.md` — synthetic Mercury-analog filler (design + REBOUND 10⁵ yr grounding, 3:2 spin–orbit tie-break, airless per plausibility gate)
+- [x] `docs/phase3/40-eridani-a-d.md` — PHM Threeworld (canon 84/8/4 CO₂/N₂/SO₂ <1% Earth; 800 Pa steady-state reading; Petrova arc = plugin backlog, not cfg)
+- [x] ko mirrors (delegated, block parity self-verified: 33/35 blocks paired)
+- [x] Step-10 style verify: Boyajian/Bond links corrected to _bib registry arXiv ids (memory-guessed bibcodes were wrong)
+- [x] build_html + reports index + check-mirrors + gate 10 (40 Eri warnings cleared, 12→10)
+
 ## Notes
 
 - 40 Eri B is a WD — stellar synthesis template `docs/phase3/alpha-centauri-a.md` (8-section). Surface tint / atmosphere sections N/A; cooling sequence + IFMR + age narrative emphasized.

@@ -232,3 +232,34 @@ Notes:
 - AGB-spin-up is paper-cited (Bond 2017 + Fuhrmann 2014), so it's
   canonical-aligned even though it's narrative-only.
 
+
+## 2026-07-20 — planet reports c/d (fiction bodies, WP4)
+
+- c and d are `method: theoretical` DB entries (c = NS system-completion
+  filler, d = PHM p.393 Threeworld). No literature sweep — grounding is
+  fiction canon + host anchors (Boyajian 2012 L, Bond 2017 age) + the
+  REBOUND run `phase3/stability-sim/results/40_eridani_summary.json`
+  (10⁵ yr WHFast, MEGNO 2.00, all stable/calm).
+- **c design reading**: Mercury analog adopted wholesale (0.055 M⊕ /
+  0.38 R⊕ → Mercury's density/gravity/v_esc for free). 2.55 S⊕,
+  Teq(A=0) 352 K → plausibility gate forces airless baked rock, NOT
+  lava. 3:2 spin–orbit resonance tie-break (e=0.04, Mercury precedent);
+  rotation 1674 h. Honesty note: DB reference says "e≤0.05" but the
+  10⁵-yr run shows c's eccentricity cycling to ~0.095 (still calm) —
+  recorded in Open items.
+- **d design reading**: canon numbers adopted verbatim (Moon-sized,
+  0.2 g, 84/8/4 CO₂/N₂/SO₂, <1% Earth). 1.01 S⊕ (Earth insolation!),
+  Teq(A=0.15) 268 K + ~6 K greenhouse → ~275 K frost-line world.
+  800 Pa adopted (0.79% Earth, inside canon ceiling; >611 Pa water
+  triple point → transient brines admissible flavor only). 4% SO₂
+  ⇒ active volcanic replenishment canon-implied; heat budget flagged
+  as the honest weak point (tidal negligible; radiogenic marginal at
+  1.8 Gyr). Rotation ~240 h slow-rotator tie-break (despin ~16× slower
+  than c). Petrova arc = IR 25.984 μm fiction feature → custom-plugin
+  backlog (YZ Cet flux-tube class), deliberately NOT emitted.
+- Citation correction caught by Step-10 discipline: my from-memory ADS
+  bibcodes for Boyajian 2012 / Bond 2017 were wrong; _bib registry
+  gives arXiv 1208.2431 / 1709.00478 — links fixed in both reports.
+- ko mirrors delegated to subagents; block parity self-verified (c: 33,
+  d: 35 blocks). One agent misreported its own row count — parity
+  script, not agent self-report, is the authority (again).
