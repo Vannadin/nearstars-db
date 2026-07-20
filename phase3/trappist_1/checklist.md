@@ -58,3 +58,12 @@ will fail loudly otherwise).
 ## Related
 
 - [system-trappist-1 entity pages](../../docs/phase3/trappist-1-e.md) — parent topic this workspace contributes to
+
+## Stage 6 — host-star synthesis (2026-07-20, WP4 of pipeline-flow-program)
+
+- [x] Step 9.0 classification log (context-notes): 18 canonical-aligned / 2 tie-break-methodology / 0 divergence
+- [x] Paper extraction delegated over 11 cached texts; load-bearing quotes grep-verified on main thread
+- [x] `docs/phase3/trappist-1.md` — M8V host synthesis (cool H2-thermostat flares 3500–4000 K, low-contrast spots 2350–2550 K, superflare/25 d, figure J2 2.0e-6)
+- [x] ko mirror + block parity (delegated; 33 blocks paired; rotation paragraph re-synced after the v sin i fix)
+- [x] build_html + reports index + check-mirrors + gate 10 (T-1 star warning cleared, 10→9)
+- [ ] commit

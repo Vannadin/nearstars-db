@@ -177,6 +177,7 @@
   "TRAPPIST-1": {
     "phase2": "phase2/trappist-1.html",
     "phase3": {
+      "★": "phase3/trappist-1.html",
       "b": "phase3/trappist-1-b.html",
       "c": "phase3/trappist-1-c.html",
       "d": "phase3/trappist-1-d.html",
