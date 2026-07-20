@@ -71,6 +71,12 @@ db/systems derived  <  phase3 Decisions (parsed)  <  phase4 fields[] (gated)
   그렇게 가정하지 마세요.
 - 값은 정확히 하나의 권위 레이어에만 존재해야 합니다. 산문(board `narrative:`)에서 다시
   말하는 것은 표시일 뿐, 출처가 아닙니다.
+- **알려진 갭(2026-07-20 드라이런 발견).** phase3 Decision 이름과 phase4 `fields[]`
+  이름은 **서로 겹치지 않는 어휘**입니다(`radius_rearth` vs `radius`,
+  `atmosphere_surface_pressure_pa` vs `composition`…). 전 로스터에서 자연 충돌이 0건이라
+  지금은 레이어 머지가 실제 오버라이드를 한 번도 수행하지 않습니다. emit 재배선에는
+  **필드 정렬표**(phase4 메뉴 이름 ↔ phase3 decision 키 ↔ cfg 키)가 선결 과제이며,
+  `phase4/emit-hardening/checklist.md`에서 추적합니다.
 
 ## 4. 클래스별 완료 기준 (단계별 "완성"의 의미)
 

@@ -36,3 +36,12 @@ Driven by `phase4/_audit/emit-readiness-review.md`. Order = the review's remedia
 - [x] `scripts/phase4/build_phase4_html.py` — renders a v2 board → bilingual HTML (status/verdict badges, typed fields, hex chips, expandable narrative+evidence, light/dark + KR/EN toggle)
 - [x] `docs/phase4/alpha-centauri.html` — 8 bodies, 75 decisions, generated from the normalized board
 - [ ] EN narrative cells (currently chrome is bilingual, prose is KR-only — needs per-row `narrative_en` later)
+
+## Resolver adoption (pipeline-flow-program, 2026-07-20)
+- [ ] **Field-alignment map**: phase4 SPEC §0 menu name ↔ phase3 Decisions key ↔ cfg key.
+      Prerequisite for any real phase4-over-phase3 override — the two vocabularies are
+      currently disjoint (resolver dry-run: 0 natural collisions across the roster).
+      Raw material: curation-data-contract SPEC "full cfg field inventory (by axis)".
+- [ ] Rewire all 4 emitters to read `scripts/pipeline/resolve_emit_values.py` output
+      (kopernicus/firefly drop their local Decisions regex → shared parser comes free);
+      ring/disk inputs move from the never-created kopernicus_extras.yaml to phase4 fields.

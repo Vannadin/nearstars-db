@@ -72,6 +72,12 @@ db/systems derived  <  phase3 Decisions (parsed)  <  phase4 fields[] (gated)
   reach principia/kopernicus/firefly output — do not assume otherwise.
 - A value must live in exactly one authoritative layer; restating it in prose
   (board `narrative:`) is display, never a source.
+- **Known gap (2026-07-20 dry-run finding):** phase3 Decision names and phase4
+  `fields[]` names are **disjoint vocabularies** (`radius_rearth` vs `radius`,
+  `atmosphere_surface_pressure_pa` vs `composition`…) — zero natural collisions
+  across the whole roster, so the layered merge never actually overrides today.
+  Emit rewiring requires a **field-alignment map** (phase4 menu name ↔ phase3
+  decision key ↔ cfg key); tracked in `phase4/emit-hardening/checklist.md`.
 
 ## 4. Per-class done criteria (what "complete" means per phase)
 
