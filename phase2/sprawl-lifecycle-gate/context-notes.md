@@ -48,6 +48,27 @@ Append-only decision log. Started 2026-07-19.
   break the evidence chain, so §2.4 gained an explicit exception: board-cited
   logs stay tracked via gitignore negation + gate-9 allowlist. The 4 uncited
   logs were untracked.
+## 2026-07-20 — slug unification (follow-up)
+
+- **The real defect was the body keys, not just the filename.** Tracing showed the
+  emitter's join has no alias infrastructure (`_naming.py` = slug functions only),
+  so board `body:` must equal db `name` exactly. Two boards diverged: tau
+  ("tau Ceti" vs db "tau Cet") and proxima ("Proxima Centauri *" vs db
+  "Proxima Cen *"). Both boards had been slugged/keyed from *display* names.
+  Renamed board + 60 body keys; per-body HTML regenerated (page slugs derive
+  from body names). No external links pointed at the old page filenames.
+- **α Cen board split KEPT and codified** rather than merged: one board per
+  dynamical host group (A+B tight pair = one gating unit; Proxima = own
+  planetary system). phase2/3's combined `alpha_centauri_proxima/` is a topic
+  scope, not a slug — documented in SPEC §3 so the three granularities stop
+  reading as drift.
+- **SKILL.md had baked in the opposite rule** ("keep the board slug, note the
+  mapping") — inverted per owner decision 2026-07-20; SPEC §3 naming contract is
+  now the canonical statement.
+- Historical audit docs (`emit-readiness-review.md`) updated to the new filename
+  token so their line-anchor citations stay resolvable (rename doesn't shift
+  line numbers).
+
 - **Pre-existing mirror debt surfaced by gate 2:** 7 missing ko mirrors, all
   `plans/principia-interstellar-branch/**` (other sessions' program). Backfilled
   via translation agent so check.sh can go green — not caused by this cleanup.

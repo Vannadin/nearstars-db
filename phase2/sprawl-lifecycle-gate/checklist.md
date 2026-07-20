@@ -29,6 +29,8 @@
 - [x] one-shot / regenerable header markers on the 8 scripts — e3345de
 - [x] 7 pre-existing missing ko mirrors (principia-interstellar-branch) backfilled — 75d6080
 
-## Deferred
-- [ ] Slug unification (tau_ceti→tau_cet, α Cen boards) — separate session, before emit
+## Deferred → follow-up session 2026-07-20
+- [x] Slug unification — d63ad6a: tau_ceti.yaml→tau_cet.yaml, body keys = exact db
+      names (tau Cet, Proxima Cen *), SPEC §3 naming contract, skill guidance inverted,
+      α Cen split kept + codified (one board per dynamical host group)
 - [ ] docs/ root versioned duplicates — owner confirmation needed
