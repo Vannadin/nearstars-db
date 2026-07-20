@@ -12,9 +12,18 @@ Principia's rule (`docs/reference/principia-cfg-reference.md`, Key Constraints �
 
 If NearStars ships planets via Kopernicus but its `principia_initial_state` patch only lists stars, Principia will reject the configuration at load: the planet body exists in `FlightGlobals.Bodies` but has no entry in `principia_initial_state`. KSP crashes during Principia init.
 
-The MVP works because the project does **not yet** add any planet bodies via Kopernicus to the NearStars systems — `planets[]` is empty in every system file as of the MVP's snapshot.
+**Status update (2026-07-20).** The MVP-era claim "`planets[]` is empty in every
+system file" is obsolete: 123 of 157 system files now carry a top-level
+`planets[]` array (siblings to `stars[]`, 229 planets, names like
+`Proxima Cen b`), but each planet's `kopernicus`/`principia` blocks are still
+empty — so the emit-script guard below now fires silently on every planet-bearing
+system while the data to satisfy this contract is absent. Populating
+`planets[].derived.icrs_*` + `planets[].principia.*` (the plan in "Implementation
+order" below) is a prerequisite of emit wiring; the flow-level accounting lives in
+[`docs/reference/pipeline-contract.md`](../../../docs/reference/pipeline-contract.md).
 
-**Guard**: the emit script warns (does not abort) when it sees `planets: []` so the moment any planet appears, the operator is reminded that this contract activates.
+**Guard**: the emit script warns (does not abort) when a planet lacks the
+required blocks, so the operator is reminded that this contract is active.
 
 ---
 

@@ -116,7 +116,20 @@
 - Phantom-paper prevention (2026-06-20 lesson): before flagging a paper as fabricated, **verify non-existence via web/ADS/arXiv**. "Not in our cache" ≠ "doesn't exist." Yadav & Thorngren 2017 (1709.05676) and Reiners & Christensen 2010 (1007.1514) were both real but out-of-range/uncached.
 **Source:** `feedback_ads_paper_discipline.md`
 
-### 3.3 Generalize over hardcode (PORTABLE)
+### 3.3 Paper references are links (NEARSTARS)
+**Rule:** Every paper reference in a human-readable doc is a **markdown link**, not a bare id:
+bibcode → `[2018Icar..305..262I](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262I)`,
+arXiv id → `[1007.1514](https://arxiv.org/abs/1007.1514)`. DOI links acceptable where no
+bibcode exists. Bare ids stay only in machine fields (YAML `bibcode:`/`arxiv_id:`, JSON,
+code) and inside code blocks.
+**Why:** Owner directive 2026-07-20 — references should be one click away when reviewing
+docs; bare bibcodes force a manual ADS round-trip.
+**Details:** applies to `docs/`, `plans/`, `phase2–4/*.md` narrative text + their ko
+mirrors. Existing docs are being retrofitted by script (pipeline-flow-program WP6);
+new writing complies immediately.
+**Source:** owner directive 2026-07-20 (pipeline-flow-program).
+
+### 3.4 Generalize over hardcode (PORTABLE)
 **Rule:** New features must work for any case via **data-driven config**, not hardcoded for one instance. First case is first consumer of the general path.
 **Why:** One-off hacks scale poorly. Next system needs code+config, not code rewrite.
 **Example:** Polyphemus stability-sim visualization reused the general `load_stability()` (already body-name-agnostic), not a custom parser for Polyphemus.

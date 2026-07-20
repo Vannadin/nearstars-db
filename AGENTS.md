@@ -29,6 +29,7 @@ Primary references — read these before touching the area they cover:
 | Understanding the schema and layers | [`docs/reference/methodology.md`](docs/reference/methodology.md) |
 | Binary / multiple system orbits | [`docs/reference/binary-epoch-pipeline.md`](docs/reference/binary-epoch-pipeline.md) |
 | Project phases, dependencies, scope | [`docs/reference/guideline.md`](docs/reference/guideline.md) |
+| Phase 1–4 flow: boundary artifacts, join keys, gates | [`docs/reference/pipeline-contract.md`](docs/reference/pipeline-contract.md) |
 | Mod-release repo layout (separate repo) | [`docs/reference/mod-release-layout.md`](docs/reference/mod-release-layout.md) |
 | Principia cfg format | [`docs/reference/principia-cfg-reference.md`](docs/reference/principia-cfg-reference.md) |
 

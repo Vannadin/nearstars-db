@@ -118,30 +118,16 @@ All orbital parameters and physical constants must come from real observational 
 
 ## 9. Development Phases
 
-**Rule: complete one system end-to-end before starting the next.**
+**The current, canonical phase definitions live in
+[pipeline-contract.md](pipeline-contract.md)** — Phase 1 (catalog curation) →
+Phase 2 (paper-cited measurements) → Phase 3 (cfg-ready synthesis) → Phase 4
+(owner art-direction gate) → emit (deterministic cfg writing, deferred to
+project end), with the per-boundary artifacts, join keys, and gates.
 
-### Phase 1 — First system: star skeleton (MVP)
-- [ ] Choose pilot system (recommendation: Proxima Centauri)
-- [ ] Repository structure setup
-- [ ] Star body definition: orbit, ScaledVersion, Properties
-- [ ] Icon and localization key skeleton
-- [ ] Verify load in Kopernicus (Sol + RSS)
-
-### Phase 2 — First system: planets
-- [ ] Planet definitions (atmosphere, PQS, biomes)
-- [ ] Verify all bodies load and orbit correctly
-
-### Phase 3 — First system: visuals
-- [ ] Texture production (heightmaps, color maps)
-- [ ] Parallax terrain and scatters
-- [ ] EVE cloud layers for atmospheric bodies
-- [ ] Scatterer atmosphere configs
-
-### Phase 4 — First system: polish + expand
-- [ ] Science experiment text for all bodies
-- [ ] Compatibility patches (Principia, Kerbalism if applicable)
-- [ ] Performance pass
-- [ ] Begin second system using Phase 1–3 as template
+> Historical note: this section originally carried a different Phase 1–4
+> numbering from the pre-rebuild sketch (first-system star skeleton / planets /
+> visuals / polish). That numbering is obsolete; any document using it predates
+> the DB-pipeline rebuild.
 
 ---
 

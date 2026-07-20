@@ -116,7 +116,19 @@
 - 유령 논문 방지(2026-06-20 교훈): 논문을 위조로 플래그하기 전에 **웹/ADS/arXiv로 비존재 검증**. "우리 캐시에 없음" ≠ "존재하지 않음". Yadav & Thorngren 2017(1709.05676)과 Reiners & Christensen 2010(1007.1514)은 둘 다 실제지만 범위 밖/미캐시.
 **출처:** `feedback_ads_paper_discipline.md`
 
-### 3.3 일반화 우선(PORTABLE)
+### 3.3 논문 레퍼런스는 링크로(NEARSTARS)
+**규칙:** 사람이 읽는 문서의 논문 레퍼런스는 전부 **마크다운 링크**로 쓴다. bibcode는
+`[2018Icar..305..262I](https://ui.adsabs.harvard.edu/abs/2018Icar..305..262I)`,
+arXiv id는 `[1007.1514](https://arxiv.org/abs/1007.1514)` 형태. bibcode가 없으면 DOI
+링크도 허용. 맨 id는 기계 필드(YAML `bibcode:`/`arxiv_id:`, JSON, 코드)와 코드 블록
+안에서만 남긴다.
+**이유:** 오너 지시(2026-07-20). 문서 검토 때 레퍼런스가 한 클릭 거리여야 하고, 맨
+bibcode는 ADS 왕복을 강요한다.
+**세부:** `docs/`·`plans/`·`phase2–4/*.md` 본문 + ko 미러에 적용. 기존 문서는
+스크립트로 일괄 변환(pipeline-flow-program WP6), 새 문서는 즉시 준수.
+**출처:** 오너 지시 2026-07-20 (pipeline-flow-program).
+
+### 3.4 일반화 우선(PORTABLE)
 **규칙:** 새 기능은 **데이터 주도 config**로 모든 경우 작동해야 하며, 한 인스턴스용 하드코딩 금지. 첫 번째 경우가 일반 경로의 첫 소비자.
 **이유:** 일회성 해킹은 규모 확장 안 됨. 다음 시스템은 코드 재작성 아닌 코드+config 필요.
 **예:** Polyphemus stability-sim 시각화는 일반 `load_stability()`(이미 바디명 무관) 재사용, Polyphemus 커스텀 파서 아님.
