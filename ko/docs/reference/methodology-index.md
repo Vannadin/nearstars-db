@@ -16,11 +16,11 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 
 | 방법론 | 근거화하는 값 | 핵심 참고문헌 |
 |---|---|---|
-| [planetary-dynamo-scaling](planetary-dynamo-scaling.md) | 행성/갈색왜성 자기장 세기 | Christensen 2009; Reiners & Christensen 2010 (arXiv:1007.1514); Yadav & Thorngren 2017 |
+| [planetary-dynamo-scaling](planetary-dynamo-scaling.md) | 행성/갈색왜성 자기장 세기 | Christensen 2009; Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)); Yadav & Thorngren 2017 |
 | [mass-radius-relation-methodology](mass-radius-relation-methodology.md) | 질량 ↔ 반경 ↔ 밀도 tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
 | [tidal-locking-timescale-methodology](tidal-locking-timescale-methodology.md) | 자전 상태 / 동기화 타임스케일 | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](tidal-heating-methodology.md) | 조석가열 플럭스 (Io/Enceladus 캘리브레이션) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
-| [body-figure-methodology](body-figure-methodology.md) | 자전 편평 J₂ + 조석 triaxial C₂₂ (Principia 중력모델) | Helled 2011 (arXiv:1109.1627); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan 앵커 |
+| [body-figure-methodology](body-figure-methodology.md) | 자전 편평 J₂ + 조석 triaxial C₂₂ (Principia 중력모델) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan 앵커 |
 
 ## 대기·열
 

@@ -6,7 +6,7 @@ Earth's insolation — outside the conservative habitable zone, near
 the maximum-greenhouse limit (Kopparapu 2013). Mass and radius are
 the closest to Earth's in the entire system, but its bulk density
 (4.92 g/cc from Agol 2021) is low enough that f is most likely a
-significant water world: Acuña 2025 (2504.16201) infers a water mass
+significant water world: Acuña 2025 ([2504.16201](https://arxiv.org/abs/2504.16201)) infers a water mass
 fraction of 16.2% ± 9.9%. The first NIRISS atmospheric reconnaissance
 of f (Lim 2024, ADS bibcode 2024ESS.....510106L; no arXiv preprint
 available) rejected cloud-free hydrogen-rich atmospheres but did
@@ -40,7 +40,7 @@ preserved as the documented cfg variant.
 | `radius_rearth` | 1.045 | high | Agol 2021 |
 | `surface_gravity_g_earth` | 0.952 | high | derived = 1.039 / 1.045² |
 | `density_g_cc` | 4.92 | high | Agol 2021 |
-| `water_mass_fraction` | 0.04–0.16 | high | Acuña 2025 (2504.16201) reports 7-16% via MAGRATHEA; Acuña 2021 (2101.08172) Fe/Si-constrained scenario 2 gives 3.7 ± 2.6% — union of recent estimates broadens lower bound |
+| `water_mass_fraction` | 0.04–0.16 | high | Acuña 2025 ([2504.16201](https://arxiv.org/abs/2504.16201)) reports 7-16% via MAGRATHEA; Acuña 2021 ([2101.08172](https://arxiv.org/abs/2101.08172)) Fe/Si-constrained scenario 2 gives 3.7 ± 2.6% — union of recent estimates broadens lower bound |
 | `insolation_s_earth` | 0.38 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0)   | 215 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.5, snowball) | 188 | high | derived; high-albedo snowball case |
@@ -63,15 +63,15 @@ preserved as the documented cfg variant.
 | `surface_tint_rgb_hex_accent` | `#888070` (CO₂ frost stained with dust + exposed bedrock at ridge tops) | low | nightside CO₂ frost over ice; thin sublimation lag |
 | `surface_morphology` | global glacial ice over frozen ocean; pressure-ridge terrain; visible bedrock at terminator ridges | medium | tidally-locked snowball; Wolf 2017 |
 | `magnetic_field_present` | true (weak, ~0.05× Earth) | low | small mass + cold interior + slow rotation |
-| `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 (1710.08761) — total induction heating 1.1×10¹⁸ W ≈ 0.0012 W/m² normalized to f's surface; below molten-mantle threshold |
-| `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 (1712.05641) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. Lower bound is 0 (uncertainty spans to zero). Current value is 30× higher than the previous Bolmont 2020-scaled estimate |
+| `induction_heating_w_m2` | 0.001–0.005 | medium | Kislyakova 2017 ([1710.08761](https://arxiv.org/abs/1710.08761)) — total induction heating 1.1×10¹⁸ W ≈ 0.0012 W/m² normalized to f's surface; below molten-mantle threshold |
+| `tidal_heating_w_m2` | 0.0–0.19 | medium | Barr 2018 ([1712.05641](https://arxiv.org/abs/1712.05641)) — Maxwell viscoelastic; F_tidal,f = 0.14 +0.05/-0.14 W/m², mantle T_eq 1621 K. Lower bound is 0 (uncertainty spans to zero). Current value is 30× higher than the previous Bolmont 2020-scaled estimate |
 | `radiogenic_heat_w_m2` | 0.04 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled. Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
-| `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 (2203.01065) scaling; 1.04 M⊕ supports active dynamo but slow rotation (9.2 d) → multipolar regime, ~0.3× Earth |
-| `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 (1706.04617) test case for f at 0.3 G; supports active dynamo |
+| `magnetic_field_strength_microtesla_equator` | 9 | low | RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) scaling; 1.04 M⊕ supports active dynamo but slow rotation (9.2 d) → multipolar regime, ~0.3× Earth |
+| `magnetic_dipole_moment_normalized_earth` | 0.3 | medium | Garraffo 2017 ([1706.04617](https://arxiv.org/abs/1706.04617)) test case for f at 0.3 G; supports active dynamo |
 | `magnetic_dipole_tilt_deg` | 12 | low | Tie-break: 12° offset gives distinctive auroral cap |
 | `magnetosphere_standoff_planet_radii` | 3.5 | high | Garraffo 2017 Fig. 4 bottom panel — 3–4 R_p for f under super-Alfvénic conditions |
 | `radiation_belt_present` | true | medium | B-field marginally sufficient; outer-planet stellar wind less crushing than for b/c |
-| `surface_radiation_dose_msv_yr` | ~70 (order 10²–10³; SPE-rate-dependent) | low | Atri 2019 (1910.09871): a large hard-spectrum SPE deposits ~2.25 mGy at the surface under 1 bar + Earth B-field (Table 4, 1000 g/cm²; ≈1260× GCR background, Table 6). Annual dose = per-event × the flare rate, now quantified by Vasilyev et al. 2026 (`2605.05468`, JWST+K2 flare-frequency distribution): β = 0.753, E_TESS > 10³² erg flares every ~25 days (~10× prior estimates). ~70 mSv/yr at this rate; order 10²–10³ remains the honest range. The prior 7000 was Table 6's 30 g/cm² enhancement factor mislabeled as mSv/yr |
+| `surface_radiation_dose_msv_yr` | ~70 (order 10²–10³; SPE-rate-dependent) | low | Atri 2019 ([1910.09871](https://arxiv.org/abs/1910.09871)): a large hard-spectrum SPE deposits ~2.25 mGy at the surface under 1 bar + Earth B-field (Table 4, 1000 g/cm²; ≈1260× GCR background, Table 6). Annual dose = per-event × the flare rate, now quantified by Vasilyev et al. 2026 (`2605.05468`, JWST+K2 flare-frequency distribution): β = 0.753, E_TESS > 10³² erg flares every ~25 days (~10× prior estimates). ~70 mSv/yr at this rate; order 10²–10³ remains the honest range. The prior 7000 was Table 6's 30 g/cm² enhancement factor mislabeled as mSv/yr |
 | `atmospheric_shielding_g_cm2` | 1000 | medium | Phase 3 cfg pressure 1 bar CO₂ → ~1000 g/cm² column |
 | `aurora_present` | true | high | Atm + B-field; thinner-than-Earth CO₂-rich atmosphere gives Mars-analog aurora |
 | `aurora_color_primary_hex` | `#FF6B6B` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm (Mars-analog); tie-break: red over UV-only since visible |
@@ -92,14 +92,14 @@ globally regardless of CO₂ loading (Wolf 2017 §5 snowballs f even at
 The surface open-water eyeball that GCMs do produce at this insolation
 belongs to e, the next planet inward — not f.
 
-Acuña 2025 (2504.16201) provides the best current interior fit:
+Acuña 2025 ([2504.16201](https://arxiv.org/abs/2504.16201)) provides the best current interior fit:
 water mass fraction is 16.2% ± 9.9% if all interior parameters are
 allowed to vary, or 6.9% ± 2.0% if the mantle-to-core ratio is fixed
 at Earth-like. Either way, f is significantly more hydrated than
 Earth — likely a true "ocean world" with a global liquid-water layer
 underneath the global ice cover.
 
-The Bourgeois 2024 (2008.09599) magma-ocean evolution work suggests
+The Bourgeois 2024 ([2008.09599](https://arxiv.org/abs/2008.09599)) magma-ocean evolution work suggests
 f experienced an extended (>100 Myr) magma ocean phase that produced
 substantial atmospheric water and oxygen. Most water has since either
 re-equilibrated into the mantle, been lost to space via photolytic
@@ -144,7 +144,7 @@ support. The conservative fully-frozen reading (no liquid layer at
 all) is preserved in Open items as the documented canonical
 alternative.
 
-**Sub-glacial ocean architecture.** Acuña 2021 (2101.08172) details
+**Sub-glacial ocean architecture.** Acuña 2021 ([2101.08172](https://arxiv.org/abs/2101.08172)) details
 the hydrosphere layering: surface ice Ih, then high-pressure ice
 phases (II/III/V/VI) at increasing depth, transitioning to ice VII
 at the base (~100 GPa). A thin liquid-water lens can exist between
@@ -179,7 +179,7 @@ ever forms at the substellar point.
 The Lim 2024 NIRISS reconnaissance of f (no arXiv preprint, conference
 abstract ADS bibcode 2024ESS.....510106L) reports the first JWST
 transmission observation of f. The result: H₂-rich atmospheres are
-rejected, consistent with Moran 2018 (1810.05210) HST limits, but
+rejected, consistent with Moran 2018 ([1810.05210](https://arxiv.org/abs/1810.05210)) HST limits, but
 secondary atmospheres (CO₂, N₂, H₂O-rich) cannot be constrained from
 the available transit baseline. This means the observational picture
 for f is more open than for b, c, d, or e.
@@ -248,7 +248,7 @@ overwhelming-probability state.
 substellar point is essentially fixed.
 
 **Magnetic dynamo expectation.** f's Earth-mass core supports an
-active dynamo (Driscoll & Olson scaling in 2208.06523 finds
+active dynamo (Driscoll & Olson scaling in [2208.06523](https://arxiv.org/abs/2208.06523) finds
 Earth-mass dynamos extend lifetime via core solidification timing).
 The 9.2-day tidally-locked rotation reduces dipole strength via
 slow-rotation Reiners scaling (~0.3 × Earth dipole), but a coherent
@@ -297,50 +297,50 @@ the cfg matches this assumption.
 
 ### Read (visual-informative, drove decisions above)
 
-- **2504.16201** Acuña 2025 — Internal structure of f via
+- **[2504.16201](https://arxiv.org/abs/2504.16201)** Acuña 2025 — Internal structure of f via
   MAGRATHEA. wmf 16.2% ± 9.9% (free CMF) or 6.9% ± 2.0% (Earth-like
   mantle-to-core). Establishes f as an ocean world. Drives the
   sub-glacial ocean cfg.
-- **2008.09599** Bourgeois 2024 — Magma ocean evolution for e/f/g.
+- **[2008.09599](https://arxiv.org/abs/2008.09599)** Bourgeois 2024 — Magma ocean evolution for e/f/g.
   Predicts f has retained substantial water through evolution.
-- **2006.11349** Wunderlich 2020 — Wet vs. dry e and f atmospheres.
+- **[2006.11349](https://arxiv.org/abs/2006.11349)** Wunderlich 2020 — Wet vs. dry e and f atmospheres.
   Constrains f's atmosphere to CO₂-rich (snowball branch) or to a
   dry desiccated post-runaway state.
-- **1809.07498** Lincowski 2018 — Evolved climates of TRAPPIST-1
+- **[1809.07498](https://arxiv.org/abs/1809.07498)** Lincowski 2018 — Evolved climates of TRAPPIST-1
   worlds. f is one of the planets where Lincowski's modeling shows
   cold, CO₂-rich atmospheres are the equilibrium. Already read for
   d Phase 3 / e Phase 3.
-- **1712.05641** Barr 2018 — Interior structures and tidal heating
+- **[1712.05641](https://arxiv.org/abs/1712.05641)** Barr 2018 — Interior structures and tidal heating
   in TRAPPIST-1 planets. Drives the upward revision of f's tidal
   heat flux to 0.14 W/m² (30× higher than previous estimate).
   Maxwell viscoelastic; mantle T_eq 1621 K.
-- **2101.08172** Acuña 2021 — Hydrosphere characterization. Details
+- **[2101.08172](https://arxiv.org/abs/2101.08172)** Acuña 2021 — Hydrosphere characterization. Details
   f's sub-glacial ocean architecture (ice Ih / high-pressure ices /
   ice VII). WMF 3.7 ± 2.6% scenario 2, broadening the lower bound
   on water content.
-- **1707.06927** Turbet 2018 — Modeling climate diversity for
+- **[1707.06927](https://arxiv.org/abs/1707.06927)** Turbet 2018 — Modeling climate diversity for
   TRAPPIST-1. **Drives the snowball default**: at 0.1 bar CO₂, f is
   fully ice-covered (no substellar lens). Open ocean emerges only at
   ≥1 bar CO₂. Also identifies the polar CO₂ cold-trap geometry.
-- **1710.08761** Kislyakova 2017 — Induction heating estimates. f
+- **[1710.08761](https://arxiv.org/abs/1710.08761)** Kislyakova 2017 — Induction heating estimates. f
   total ~1.1×10¹⁸ W; revises the cfg's induction heating downward.
-- **1911.08596** Fauchez 2019 — Cloud and haze modeling for HZ
+- **[1911.08596](https://arxiv.org/abs/1911.08596)** Fauchez 2019 — Cloud and haze modeling for HZ
   TRAPPIST-1 planets. Confirms f's snowball state at all plausible
   CO₂ pressures ≤10 bar.
-- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+- **[1706.04617](https://arxiv.org/abs/1706.04617)** Garraffo 2017 — Threatening Magnetic and Plasma
   Environment of TRAPPIST-1. Adopts f as habitable-zone
   representative; 0.3 G test case drives the cfg's dipole moment.
-- **2203.01065** RM22 — Rocky planet magnetic moment scaling.
-- **1910.09871** Atri 2019 — Surface-dose tables for f.
+- **[2203.01065](https://arxiv.org/abs/2203.01065)** RM22 — Rocky planet magnetic moment scaling.
+- **[1910.09871](https://arxiv.org/abs/1910.09871)** Atri 2019 — Surface-dose tables for f.
 
 ### Read (context / methodology, not decision-driving)
 
-- **2605.06964** Energy balance model for TRAPPIST-1 climates.
+- **[2605.06964](https://arxiv.org/abs/2605.06964)** Energy balance model for TRAPPIST-1 climates.
   Methodology paper; supports the snowball state for f.
-- **2506.21351** SEPHI 2.0 habitability index. Catalog context only.
-- **2502.00132** Way 2025 — d-focused but useful methodology
+- **[2506.21351](https://arxiv.org/abs/2506.21351)** SEPHI 2.0 habitability index. Catalog context only.
+- **[2502.00132](https://arxiv.org/abs/2502.00132)** Way 2025 — d-focused but useful methodology
   reference for tidally-locked GCMs that apply to f.
-- **1810.05210** Moran 2018 — HST haze limits. Already read for d
+- **[1810.05210](https://arxiv.org/abs/1810.05210)** Moran 2018 — HST haze limits. Already read for d
   Phase 3.
 
 ### Read (instrument-only, not visual-informative)

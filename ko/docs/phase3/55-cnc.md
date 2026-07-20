@@ -196,13 +196,13 @@ KSP 단위로 cfg 는 별의 `rotationPeriod` 를 측정된 38.8 d(Bourrier 2018
 
 - **von Braun K. et al. 2011** — *The 55 Cancri System: Fundamental
   Stellar Parameters, Habitable Zone Planet, and Super-Earth
-  Diameter*, ApJ 740, 49 (`2011ApJ...740...49V`, arXiv:1107.1936).
+  Diameter*, ApJ 740, 49 (`2011ApJ...740...49V`, [arXiv:1107.1936](https://arxiv.org/abs/1107.1936)).
   CHARA 간섭계: θ_LD = 0.711 ± 0.004 mas → R = 0.943 ± 0.010 R☉,
   직접 Teff = 5196 ± 24 K, 볼로메트릭 L = 0.582 ± 0.014 L☉, 진화 질량
   0.905 ± 0.015 M☉, HZ 0.67–1.32 AU. **전체 항성층의 Phase 2 정박
   (R, Teff, L, M).**
 - **Bourrier V. et al. 2018** — *The 55 Cnc system reassessed*, A&A
-  619, A1 (`2018A&A...619A...1B`, arXiv:1807.04301). 20년의 측광 +
+  619, A1 (`2018A&A...619A...1B`, [arXiv:1807.04301](https://arxiv.org/abs/1807.04301)). 20년의 측광 +
   분광: P_rot = 38.8 ± 0.05 d, log R'HK = −5.03, 태양형 자기 주기
   P_mag ≈ 10.5 ± 0.3 yr(S-지수. Hα ~11.8 yr)로 늙고(~10 Gyr) 조용한
   별 확인. 자기-주기 케플러를 포함한 균질 계 재피팅. **Phase 2 추천
@@ -210,7 +210,7 @@ KSP 단위로 cfg 는 별의 `rotationPeriod` 를 측정된 38.8 d(Bourrier 2018
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
   with SPIRou: questions about the magnetic cycle of 55 Cnc A and two
   new planets around B*, A&A 705, A190 (`2026A&A...705A.190M`,
-  arXiv:2510.11523). A 와 B 양쪽의 SPIRou 분광편광. P_rot = 38.7 ± 0.8 d
+  [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). A 와 B 양쪽의 SPIRou 분광편광. P_rot = 38.7 ± 0.8 d
   (GPR), ZDI 자기장 0.3 G(극소) – 3 G(극대), 태양보다 ~10× 약함. 나이
   > 10 Gyr 채택. 외행성 d 개정(P 4799 d)과 가능한 6번째 후보 / 13.15 yr
   3.8 M_Jup 신호. 55 Cnc B 주위 행성 두 개 발견. **모델 지식 컷오프
@@ -220,7 +220,7 @@ KSP 단위로 cfg 는 별의 `rotationPeriod` 를 측정된 38.8 d(Bourrier 2018
 
 - **Demory B.-O. et al. 2016** — *Variability in the super-Earth
   55 Cnc e*, Nature 532, 207 (`2016Natur.532..207D`,
-  arXiv:1505.00269). Spitzer 4.5 μm 주간면 열복사 변동성. 항성층이 아니라
+  [arXiv:1505.00269](https://arxiv.org/abs/1505.00269)). Spitzer 4.5 μm 주간면 열복사 변동성. 항성층이 아니라
   행성 e 의 표면/대기 합성에 정보를 줍니다.
 - **Soubiran C. et al. 2024** — 55 Cnc A 의 Gaia FGK 벤치마크-별 [Fe/H]
   개정 +0.32 ± 0.02. 금속도 맥락(큐레이션 안 함).

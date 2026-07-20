@@ -76,7 +76,7 @@ between hot d/b and cooler e.** 32 cfg picks; 16 canonical-aligned,
 | `magnetic_field_present` | true (weak, induced) | low | Tie-break: induction-driven |
 | `magnetic_dipole_moment_normalized_earth` | 0.001 | low | Tie-break: slightly larger than smaller siblings because c is most massive (Mercury analogy, not dynamo-modeled) |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field |
-| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 (1910.09871) SEP→dose framework (airless + 4.7 S⊕ XUV) × France 2020 (2009.01259) flare duty cycle. Atri reports Gray-per-event + enhancement factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 ([1910.09871](https://arxiv.org/abs/1910.09871)) SEP→dose framework (airless + 4.7 S⊕ XUV) × France 2020 ([2009.01259](https://arxiv.org/abs/2009.01259)) flare duty cycle. Atri reports Gray-per-event + enhancement factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | no atmosphere |
 | `star_apparent_angular_diameter_deg` | 3.64 | high | derived: 2 R★ / a × (180/π) |
@@ -193,23 +193,23 @@ cooler outermost e.
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
   Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
-  arXiv:2503.08095). The MAROON-X confirmation. P = 4.1244 d,
+  [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). The MAROON-X confirmation. P = 4.1244 d,
   Msini = 0.335 ± 0.030 M⊕, a = 0.0274 AU, e = 0.08 (−0.05/+0.06),
   ω = 90.8°, T_eq = 400 K (A=0, full redistribution). SPOCK stability
   favors e < 0.02.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, arXiv:2410.00569).
+  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO data first identified c as a candidate.
 - **Stefanov A. K. et al. 2024** — *On the possible transit of
-  Barnard b* (arXiv:2410.00577). TESS S80 non-detection; i ≤ 87.9°
+  Barnard b* ([arXiv:2410.00577](https://arxiv.org/abs/2410.00577)). TESS S80 non-detection; i ≤ 87.9°
   (3σ) for b, extended to the four-planet GH24 solution → c is
   non-transiting.
 - **Walterová M. & Běhounková M. 2020** — *Thermal and Orbital
-  Evolution of Low-mass Exoplanets* (arXiv:2007.12459). Tidal-lock
+  Evolution of Low-mass Exoplanets* ([arXiv:2007.12459](https://arxiv.org/abs/2007.12459)). Tidal-lock
   timescale scaling; eccentric rocky planets settle into
   pseudosynchronous rather than exact synchronous rotation.
 - **France K. et al. 2020** — *The High-Energy Radiation Environment
-  Around a 10 Gyr M Dwarf: Habitable at Last?* (arXiv:2009.01259).
+  Around a 10 Gyr M Dwarf: Habitable at Last?* ([arXiv:2009.01259](https://arxiv.org/abs/2009.01259)).
   Atmospheric loss baseline at the HZ; scales to c's 0.0274 AU.
   *(context-cite, not in local cache — escape rate and flare
   duty-cycle figures carried forward at low/medium confidence.)*
@@ -217,7 +217,7 @@ cooler outermost e.
 ### Read (context / methodology, not decision-driving)
 
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of
-  Barnard's Star* (arXiv:1812.06712). Host rotation + ~3800-d
+  Barnard's Star* ([arXiv:1812.06712](https://arxiv.org/abs/1812.06712)). Host rotation + ~3800-d
   activity cycle.
 
 ### Read (instrument-only, not visual-informative)
@@ -254,7 +254,7 @@ are historical "comet c" name-collision papers. Preserved in
   visual styling.
 - **France 2020 verification**: the escape rate (87 Earth-atm Gyr⁻¹
   at HZ) and 25% flare duty cycle are carried from a paper not in the
-  local cache. Re-fetch arXiv:2009.01259 to confirm both figures
+  local cache. Re-fetch [arXiv:2009.01259](https://arxiv.org/abs/2009.01259) to confirm both figures
   before any cfg writer treats them as load-bearing.
 - **Atmosphere retention**: same caveats as for b — the cfg's
   bare-rock interpretation is a tie-break against the absence of any

@@ -332,7 +332,7 @@ Combining surface (cloud-deck) and atmosphere decisions:
   mass determination chain.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157,
-  33 (`2019AJ....157...33M`, arXiv:1810.03794). Direct imaging
+  33 (`2019AJ....157...33M`, [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). Direct imaging
   confirmation of ε Eri b at L′ and Ms band; rules out outer
   ε Eri c with planet mass > 0.3 M_Jup beyond 30 AU; constrains
   thermal-emission upper limit excluding hot-start inflated jovian
@@ -347,24 +347,24 @@ Combining surface (cloud-deck) and atmosphere decisions:
   paper.**
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
   Detection of ε Eridani b*, AJ 163, 19 (`2022AJ....163...19R`,
-  arXiv:2110.10643). Astrometric cross-check across multiple
+  [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)). Astrometric cross-check across multiple
   missions; the individual signal is marginal but combined with the
   disk-plane coplanarity argument favors i ≈ 34° over Llop-Sayson's
   RV-only 78.8°.
 - **MacGregor M. A. et al. 2015** — *ALMA Observations of the
   Debris Disk around ε Eridani*, ApJ 809, L47
-  (`2015ApJ...809L..47M`, arXiv:1505.03879). ALMA 1.3 mm imaging
+  (`2015ApJ...809L..47M`, [arXiv:1505.03879](https://arxiv.org/abs/1505.03879)). ALMA 1.3 mm imaging
   resolves the cold ring at 64.4 ± 0.5 AU with eccentricity e ≈ 0.07;
   provides the disk inclination reference frame.
 - **Booth M. et al. 2017** — *The Northern arc of ε Eridani's
   Debris Ring as seen by ALMA*, MNRAS 469, 3200
-  (`2017MNRAS.469.3200B`, arXiv:1705.05868). Multi-wavelength
+  (`2017MNRAS.469.3200B`, [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)). Multi-wavelength
   decomposition; three-belt structure; cold-ring inclination 34 ± 2°
   — the canonical inclination reference matched by ε Eri b's
   orbital plane.
 - **Su K. Y. L. et al. 2017** — *The Inner 25 AU Debris Distribution
   in the ε Eri System*, AJ 153, 226 (`2017AJ....153..226S`,
-  arXiv:1703.10330). The "Genie" multi-belt sculpting model;
+  [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). The "Genie" multi-belt sculpting model;
   identifies ε Eri b as the inner-gap sculptor between the 3 AU
   asteroid analog and the 20 AU intermediate belt. **Drives the
   `companion_position_relative_belts` decision row.**
@@ -418,19 +418,19 @@ Combining surface (cloud-deck) and atmosphere decisions:
   for ε Eri; drives the photochemistry-strength estimate.
 - **Reiners A. & Christensen U. R. 2010** — *A magnetic field
   evolution scenario for brown dwarfs and giant planets*
-  (`2010A&A...522A..13R`, arXiv:1007.1514, cached). Energy-flux dynamo
+  (`2010A&A...522A..13R`, [arXiv:1007.1514](https://arxiv.org/abs/1007.1514), cached). Energy-flux dynamo
   scaling for jovians; the grounding for the cfg's 660 μT field (a young
   giant is stronger than Jupiter, not weaker). Built on the scaling law
   of Christensen, Holzwarth & Reiners 2009 (`2009Natur.457..167C`).
 - **Metcalfe T. S. et al. 2013** — *Magnetic Activity Cycles in the
   Exoplanet Host Star ε Eridani*, ApJ 763, L26
-  (`2013ApJ...763L..26M`, arXiv:1212.5343). First report of the
+  (`2013ApJ...763L..26M`, [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). First report of the
   ~2.95-yr chromospheric activity cycle; drives the cycle-phase
   magnetospheric-driver synchronization noted in Open items.
   (Not fetched in the b-bibliography; cited from the host Phase 3.)
 - **Coffaro M. et al. 2020** — *A solar-like magnetic cycle on the
   mature K-dwarf 61 Cygni A and the X-ray cycle of ε Eridani*, A&A
-  636, A49 (`2020A&A...636A..49C`, arXiv:2002.11009). Refines the
+  636, A49 (`2020A&A...636A..49C`, [arXiv:2002.11009](https://arxiv.org/abs/2002.11009)). Refines the
   X-ray cycle amplitude that modulates the wind driver at ε Eri b's
   orbit. (Pinned in the host bibliography `eps-eri.yaml`, status
   fetched; not separately pinned for b.)

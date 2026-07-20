@@ -301,7 +301,7 @@ occasionally lit by a brilliant flare.
   rotation-vs-activity discussion and the ~2500 d possible activity
   cycle.
 - **Fuhrmeister B. et al. 2025** — *Coronal and chromospheric activity
-  of Teegarden's star* (arXiv:2504.02338). Source for the Phase 2
+  of Teegarden's star* ([arXiv:2504.02338](https://arxiv.org/abs/2504.02338)). Source for the Phase 2
   recommended coronal activity log(Lx/Lbol) = −4.9 (quiescent Chandra
   detection; XMM-Newton quiescent range −5.0 to −4.81), superseding
   the Zechmeister 2019 X-ray upper limit. Also the two large TESS

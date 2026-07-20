@@ -4,7 +4,7 @@
 AU Microscopii c is a 2.79 ± 0.18 R⊕, 14.46 ± 3.24 M⊕ warm sub-Neptune
 on an 18.86-day orbit around the 22-Myr-old M1Ve flare star AU Mic.
 Martioli et al. 2021 (A&A 649, A177; `2021A&A...649A.177M`,
-arXiv:2102.05288) discovered the planet in TESS Sector 27 transits
+[arXiv:2102.05288](https://arxiv.org/abs/2102.05288)) discovered the planet in TESS Sector 27 transits
 that had been missed in the original Sector 1 search because of the
 longer period; Mallorquin et al. 2024 (A&A 689, A132;
 `2024A&A...689A.132M`) refined both mass and radius with combined
@@ -222,23 +222,23 @@ spots crossing the stellar disk lasting ~3 hours.
 
 ### Read (visual-informative, drove decisions above)
 
-- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, arXiv:2102.05288). TESS Sector 27 + ground-based confirmation of c at 18.86 d; transit-derived radius 2.79 R⊕. Cornerstone discovery paper.
+- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). TESS Sector 27 + ground-based confirmation of c at 18.86 d; transit-derived radius 2.79 R⊕. Cornerstone discovery paper.
 - **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO + TESS joint analysis; refines c's mass to 14.46 ± 3.24 M⊕ and radius to 2.79 ± 0.18 R⊕. **Adopted as headline source for mass and density.**
-- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 (`2014ApJ...792....1L`, arXiv:1311.0329). Mass-radius envelope-mass-fraction calibration. c's parameters give ~5% H/He envelope; drives the cfg surface pressure pick.
-- **Fulton B. J. et al. 2017** — *The California-Kepler Survey III: Gap in the Radius Distribution of Small Planets*, AJ 154, 109 (`2017AJ....154..109F`, arXiv:1703.10375). The sub-Neptune / super-Earth radius valley at ~1.8 R⊕; c sits on the sub-Neptune side of the valley, statistically favoring the H/He envelope interpretation over the water-world variant.
-- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, arXiv:1705.10810). Photoevaporation framework for the sub-Neptune valley; c at 6.5 S⊕ + AU Mic XUV is moderately above the threshold for envelope retention over Gyr timescales but well below it at 22 Myr.
+- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). Mass-radius envelope-mass-fraction calibration. c's parameters give ~5% H/He envelope; drives the cfg surface pressure pick.
+- **Fulton B. J. et al. 2017** — *The California-Kepler Survey III: Gap in the Radius Distribution of Small Planets*, AJ 154, 109 (`2017AJ....154..109F`, [arXiv:1703.10375](https://arxiv.org/abs/1703.10375)). The sub-Neptune / super-Earth radius valley at ~1.8 R⊕; c sits on the sub-Neptune side of the valley, statistically favoring the H/He envelope interpretation over the water-world variant.
+- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). Photoevaporation framework for the sub-Neptune valley; c at 6.5 S⊕ + AU Mic XUV is moderately above the threshold for envelope retention over Gyr timescales but well below it at 22 Myr.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of b; provides context for the system's overall stellar-activity environment and the multi-spot complexity of AU Mic's lightcurve.
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). First robust RV mass for b with GP detrending; methodology applied to c.
-- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719). TTV-based dynamical mass for b and c; introduces d candidate. Confirms c's mass within Mallorquin 2024 uncertainty.
-- **Zeng L. et al. 2019** — *Growth model interpretation of planet size distribution*, PNAS 116, 9723 (`2019PNAS..116.9723Z`, arXiv:1906.04253). Water-world mass-radius models used for the c water-world variant interpretation.
-- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 (`2009ApJ...699..564S`, arXiv:0809.2089). Equatorial-superrotation GCM framework, scaled to sub-Neptune temperature and rotation for the banded morphology pick.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS discovery of b; provides context for the system's overall stellar-activity environment and the multi-spot complexity of AU Mic's lightcurve.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). First robust RV mass for b with GP detrending; methodology applied to c.
+- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). TTV-based dynamical mass for b and c; introduces d candidate. Confirms c's mass within Mallorquin 2024 uncertainty.
+- **Zeng L. et al. 2019** — *Growth model interpretation of planet size distribution*, PNAS 116, 9723 (`2019PNAS..116.9723Z`, [arXiv:1906.04253](https://arxiv.org/abs/1906.04253)). Water-world mass-radius models used for the c water-world variant interpretation.
+- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 (`2009ApJ...699..564S`, [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). Equatorial-superrotation GCM framework, scaled to sub-Neptune temperature and rotation for the banded morphology pick.
 
 ### Read (instrument / non-decisive)
 
-- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic c* (`2021A&A...654A.159S`, arXiv:2108.07984). CHEOPS transit timing for c; refines period and inclination but doesn't drive visual cfg.
+- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic c* (`2021A&A...654A.159S`, [arXiv:2108.07984](https://arxiv.org/abs/2108.07984)). CHEOPS transit timing for c; refines period and inclination but doesn't drive visual cfg.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)
 

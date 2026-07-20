@@ -277,7 +277,7 @@ R_J**(젊음/복사로 올려서)를 채택한다. 이것이 거대 행성 다�
 각 항목. 저자, 연도, 저널, **검증된** arXiv 식별자(없으면 그 표시), 인용 수(ADS,
 조사 시점), 그리고 기여 한 줄.
 
-- **Seager, S. et al. (2007)** — *ApJ* 669, 1279. **arXiv:0707.2895.** (702 cites)
+- **Seager, S. et al. (2007)** — *ApJ* 669, 1279. **[arXiv:0707.2895](https://arxiv.org/abs/0707.2895).** (702 cites)
   The foundational theoretical M–R relations for solid exoplanets — pure iron,
   silicate rock, water ice — from first-principles interior structure. §2.
 
@@ -286,39 +286,39 @@ R_J**(젊음/복사로 올려서)를 채택한다. 이것이 거대 행성 다�
   magnitude** in mass: rock/ice cores plus H/He envelopes, including irradiation.
   The canonical grid for the volatile and giant regimes. §2, §3, §7.
 
-- **Baraffe, I. et al. (2008)** — *A&A* 482, 315. **arXiv:0802.1810.** (311 cites)
+- **Baraffe, I. et al. (2008)** — *A&A* 482, 315. **[arXiv:0802.1810](https://arxiv.org/abs/0802.1810).** (311 cites)
   Structure and evolution from super-Earth to super-Jupiter — the H/He interior
   models for the degenerate **giant regime** where R turns over. §3, §7.
 
-- **Weiss, L. M. & Marcy, G. W. (2014)** — *ApJ* 783, L6. **arXiv:1312.0936.**
+- **Weiss, L. M. & Marcy, G. W. (2014)** — *ApJ* 783, L6. **[arXiv:1312.0936](https://arxiv.org/abs/1312.0936).**
   (587 cites) Empirical broken-power-law M–R relation for planets < 4 R⊕ — the
   first widely-used statistical fit. §4.
 
-- **Rogers, L. A. (2015)** — *ApJ* 801, 41. **arXiv:1407.4457.** (710 cites)
+- **Rogers, L. A. (2015)** — *ApJ* 801, 41. **[arXiv:1407.4457](https://arxiv.org/abs/1407.4457).** (710 cites)
   "Most 1.6 Earth-radius planets are not rocky" — the classification rule that a
   body above ~1.6 R⊕ statistically carries a volatile envelope. §5.
 
 - **Zeng, L., Sasselov, D. D. & Jacobsen, S. B. (2016)** — *ApJ* 819, 127.
-  **arXiv:1512.08827.** (399 cites) The canonical practical **rocky grid**:
+  **[arXiv:1512.08827](https://arxiv.org/abs/1512.08827).** (399 cites) The canonical practical **rocky grid**:
   two-layer (Fe core + silicate mantle) M–R curves on PREM, parameterised by core
   mass fraction, with a closed-form fit. The default Earth-like curve NearStars
   reads rocky radii off. §2, §3, §7.
 
-- **Chen, J. & Kipping, D. (2017)** — *ApJ* 834, 17. **arXiv:1603.08614.**
+- **Chen, J. & Kipping, D. (2017)** — *ApJ* 834, 17. **[arXiv:1603.08614](https://arxiv.org/abs/1603.08614).**
   (663 cites) **Forecaster**: a probabilistic, four-regime broken-power-law M–R
   relation with quantified intrinsic scatter — predicts radius from mass (or vice
   versa) with honest error bars. The right tool in the volatile/ambiguous regime. §4.
 
-- **Fulton, B. J. et al. (2017)** — *AJ* 154, 109. **arXiv:1703.10375.**
+- **Fulton, B. J. et al. (2017)** — *AJ* 154, 109. **[arXiv:1703.10375](https://arxiv.org/abs/1703.10375).**
   (1331 cites) California-Kepler Survey III: measures the **radius valley** — the
   ~1.5–2.0 R⊕ gap splitting rocky super-Earths from volatile sub-Neptunes. §5.
 
-- **Van Eylen, V. et al. (2018)** — *MNRAS* 479, 4786. **arXiv:1710.05398.**
+- **Van Eylen, V. et al. (2018)** — *MNRAS* 479, 4786. **[arXiv:1710.05398](https://arxiv.org/abs/1710.05398).**
   (496 cites) "An asteroseismic view of the radius valley: stripped cores, not
   born rocky" — sharpens the valley and matches its slope to photoevaporation. §5.
 
 - **Otegi, J. F., Bouchy, F. & Helled, R. (2020)** — *A&A* 634, A43.
-  **arXiv:1911.04745.** (250 cites) Revisited two-population (rocky vs volatile-rich)
+  **[arXiv:1911.04745](https://arxiv.org/abs/1911.04745).** (250 cites) Revisited two-population (rocky vs volatile-rich)
   M–R relations below 120 M⊕ — makes the composition-dependent band explicit. §4.
 
 ---

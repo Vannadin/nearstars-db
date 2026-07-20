@@ -36,7 +36,7 @@ Teff = 2904 K, [Fe/H] = −0.19, age ~7–8 Gyr, P_rot = 96.2 d, log(LX/Lbol) = 
 (quiet for late-M). Source: Schweitzer 2019 / Zechmeister 2019 / Dreizler 2024 /
 Fuhrmeister 2025.
 
-Planets — **Dreizler et al. 2024** (arXiv 2402.00923, A&A 684 A117), Table 4;
+Planets — **Dreizler et al. 2024** (arXiv [2402.00923](https://arxiv.org/abs/2402.00923), A&A 684 A117), Table 4;
 b & c originally Zechmeister 2019. T_eq column is **A = 0.3** (paper assumption).
 Non-transiting (TESS + SPECULOOS). The 7.7 d "3:2 chain" candidate is **NOT
 confirmed** (favored in CARMENES-only, not in the full dataset) — do not synthesize it.
@@ -57,8 +57,8 @@ Flares: SPECULOOS FFD → abiogenesis-zone flares (≳10³⁵ erg) ~once / 2.4 y
 | arxiv_id | paper | drives |
 |---|---|---|
 | 2503.08095 | Basant 2025 — 4 sub-Earths from MAROON-X+ESPRESSO | Barnard b/c/d/e mass, a, e, T_eq, stability |
-| 2410.00569 | González Hernández 2024 — ESPRESSO discovery | Barnard discovery, activity, P_rot |
+| [2410.00569](https://arxiv.org/abs/2410.00569) | González Hernández 2024 — ESPRESSO discovery | Barnard discovery, activity, P_rot |
 | 2410.00577 | Stefanov 2024 — TESS no-transit | Barnard i < 87.9°, non-transiting |
-| 2402.00923 | Dreizler 2024 — Teegarden revisited | Teegarden b/c/d mass, a, e, S, T_eq, ESI, flares |
-| 1906.07196 | Zechmeister 2019 — CARMENES discovery | Teegarden b/c discovery, host params |
-| 1812.06712 | Toledo-Padrón 2019 | Barnard P_rot, activity cycle |
+| [2402.00923](https://arxiv.org/abs/2402.00923) | Dreizler 2024 — Teegarden revisited | Teegarden b/c/d mass, a, e, S, T_eq, ESI, flares |
+| [1906.07196](https://arxiv.org/abs/1906.07196) | Zechmeister 2019 — CARMENES discovery | Teegarden b/c discovery, host params |
+| [1812.06712](https://arxiv.org/abs/1812.06712) | Toledo-Padrón 2019 | Barnard P_rot, activity cycle |

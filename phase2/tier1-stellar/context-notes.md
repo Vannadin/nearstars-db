@@ -25,7 +25,7 @@ section.
   - activity: log R'HK primary; X-ray as secondary entry
 
 ## eps Eri (DONE 2026-05-29)
-- Anchor = Baines & Armstrong 2012 (2012ApJ...744..138B; arXiv 1112.0447 is the
+- Anchor = Baines & Armstrong 2012 (2012ApJ...744..138B; arXiv [1112.0447](https://arxiv.org/abs/1112.0447) is the
   full ar5iv text). Cache-verified in body/Table 3: theta_LD 2.153+/-0.028 mas,
   R 0.74+/-0.01, Teff 5039+/-126 (theta_LD + Fbol), L 0.32+/-0.03, M 0.82+/-0.05
   (Y^2 isochrone), age ~1 Gyr (isochrone, authors disclaim). 4 categories from
@@ -37,7 +37,7 @@ section.
   Eri recno 52, 553 spectra). The paper body is methodology only; per-star value
   lives in the catalog. X-ray = Coffaro 2020 Lx ~2e28 erg/s (body-confirmed);
   log(Lx/Lbol) ~ -4.8 derived with Baines L (documented in meta_notes).
-- Rotation = Croll 2006 MOST (no arXiv); Froehlich 2007 (cached, arXiv 0711.0806)
+- Rotation = Croll 2006 MOST (no arXiv); Froehlich 2007 (cached, arXiv [0711.0806](https://arxiv.org/abs/0711.0806))
   reanalysis TABLE-confirms P1=11.348, P2=11.553 d, k~0.09, P_eq~11.2. Recorded
   11.45+/-0.2 bracketing the two spots.
 - AGE = documented divergence. Recommended the YOUNG branch (Barnes 2007 gyro
@@ -56,16 +56,16 @@ section.
 ## tau Cet (DONE 2026-05-29)
 - Radius was already settled (Korolik 2023 CHARA/MIRC-X, kept). Filled the other
   7; replaced the Phase-1 "unverified" Feng 2017 mass label.
-- Mass + L = Teixeira 2009 (cached 0811.3989, TEXT-verified): "the mean density
+- Mass + L = Teixeira 2009 (cached [0811.3989](https://arxiv.org/abs/0811.3989), TEXT-verified): "the mean density
   gives a mass of 0.783 +/- 0.012 Msun", "derive a luminosity of 0.488 +/- 0.010
   Lsun". Mass method = asteroseismology (mean density + interferometric R). L
   method = photometric (M_V + BC), the cleanest cited L since Korolik reports none.
-- Teff: Korolik 2023 (cached 2307.10394) gives BOTH — interferometric 5370 +/- 20
+- Teff: Korolik 2023 (cached [2307.10394](https://arxiv.org/abs/2307.10394)) gives BOTH — interferometric 5370 +/- 20
   (theta_LD + Boyajian Fbol, text §3.2) and spectroscopic 5320 +/- 40 (their
   Table 1 adopted). Recommended the interferometric per contract method-priority;
   documented the split. Santos 2013 5310 +/- 17 (GdS VizieR row) as 3rd alt.
 - [Fe/H] = Santos 2013 -0.52 +/- 0.01 (GdS VizieR row r_Teff=2013A&A...556A.150S,
-  confirmed). Bruntt 2010 -0.18 (cached 1002.4268, table-verified) kept as the
+  confirmed). Bruntt 2010 -0.18 (cached [1002.4268](https://arxiv.org/abs/1002.4268), table-verified) kept as the
   alpha-enhanced outlier alt.
 - Activity = Gomes da Silva 2021 logR'HK -4.977 (VizieR row recno 101); Mamajek
   2008 -4.958 (VizieR table13 recno 15, confirmed) corroborates.
@@ -110,7 +110,7 @@ section.
   drop the date churn. Do NOT git-add the 150 date-only files.
 
 ## HD 69830 (DONE 2026-05-30)
-- Cleanest host yet: ONE dedicated paper (Tanner et al. 2015, cached 1412.5251)
+- Cleanest host yet: ONE dedicated paper (Tanner et al. 2015, cached [1412.5251](https://arxiv.org/abs/1412.5251))
   anchors 6 of 7 categories, all cache-text-verified from its Table 2 + abstract:
   theta_LD 0.674 -> R 0.9058, L 0.622 (SED), Teff 5394 (CHARA+SED) / 5385 (SME),
   M 0.863 (Y2), [Fe/H] -0.04 (SME), v sin i 0.8, age 10.6 (HRD) / 7.5 (SME).
@@ -128,7 +128,7 @@ section.
 
 ## 61 Vir (DONE 2026-05-30)
 - Twin of the HD 69830 pattern: single dedicated interferometric paper (von Braun
-  et al. 2014, cached 1312.1792) anchors R/Teff/L/mass/age, all cache-verified
+  et al. 2014, cached [1312.1792](https://arxiv.org/abs/1312.1792)) anchors R/Teff/L/mass/age, all cache-verified
   from its Tables 2/3/4: theta_LD 1.073 -> R 0.9867, F_bol 36.06e-8 -> Teff 5538 +
   L 0.8222, Y2 -> mass 0.93 / age 8.6.
 - No asteroseismology (verified). Boyajian 2012/2013 do NOT contain 61 Vir
@@ -148,7 +148,7 @@ section.
 ## Vega (DONE 2026-05-30)
 - First A-star. Gravity-darkened pole-on rapid rotator -> polar/equatorial Teff/R
   differ; a single value is an approximation. Anchored on Monnier 2012 (cached
-  1211.6055), chosen over the research-suggested Yoon 2010 BECAUSE Yoon has no
+  [1211.6055](https://arxiv.org/abs/1211.6055)), chosen over the research-suggested Yoon 2010 BECAUSE Yoon has no
   arXiv (IOP only, uncacheable) and Monnier is the most recent revision + fully
   cache-verifiable. Discipline > recency-of-the-headline-number.
 - Monnier Table 2 cache-verified (body for mass/age/Z/rotation; HTML for the
@@ -168,9 +168,9 @@ section.
   'isochrone'. Caught by validate.py (FAIL 2), fixed.
 
 ## Fomalhaut (DONE 2026-05-30)
-- Single-anchor Mamajek 2012 (cached 1206.6353) for mass/R/Teff/L/age, all
+- Single-anchor Mamajek 2012 (cached [1206.6353](https://arxiv.org/abs/1206.6353)) for mass/R/Teff/L/age, all
   cache-verified (text + Table 2): mass 1.92, R 1.842, Teff 8590, L 16.63, age
-  440 Myr. Radius/Teff use Absil 2009 (cached 0908.3133) excess-corrected theta_LD
+  440 Myr. Radius/Teff use Absil 2009 (cached [0908.3133](https://arxiv.org/abs/0908.3133)) excess-corrected theta_LD
   2.223 mas -> fixed the existing DB radius attribution (was wrongly credited to
   Di Folco 2004; the 1.842 value is Mamajek's derived R).
 - Radius/Teff DIVERGENCE: Davis 2005 (no arXiv) R 1.744 / Teff 8819 (uncorrected

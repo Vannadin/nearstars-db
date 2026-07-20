@@ -90,7 +90,7 @@ Kopernicus / atmosphere cfg-ready 값입니다. `Confidence`. high = 직접
 | `ring_color_hex` | `#6e6253` (어두운 따뜻한 회색 — 암석/먼지, 저알베도) | low | Tie-break. Beichman §5.3 은 고리에 소행성과 유사한 본드 알베도 A_B ≈ 0.1 을 가정 → **어둡고 암석/먼지질 고리**로, 토성의 밝은 얼음이 아님. 고리 T ≈ 209–257 K |
 | `ring_opacity` | 0.85 | low | Beichman §5.3. "광학적으로 두꺼운" 고리 (밝기에 맞추기에 충분한 단면적을 더하는 것이 핵심) |
 | `ring_observed` | false | high | 고리는 F1550C 밝기에 대한 **모델 해석**이며 분해된 것이 아님. S1 은 분해되지 않은 점광원 |
-| `magnetic_field_strength_microtesla_equator` | 170 | low | Reiners & Christensen 2010 (arXiv:1007.1514) 깊이 보정 dipole 스케일링. 0.378 M_Jup·5.3 Gyr에서 B_eq ≈ 172 µT (B_pol ≈ 345 µT), 목성에 같은 식을 넣은 sanity check 통과. 기존의 미근거 ~500 µT 토성 아날로그 추측을 대체. 단 0.378 M_Jup은 거대행성 영역 하한이라 He 성층화로 더 낮아질 수도 있음 (토성 ~21 µT). canonical method는 docs/reference/planetary-dynamo-scaling.md |
+| `magnetic_field_strength_microtesla_equator` | 170 | low | Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)) 깊이 보정 dipole 스케일링. 0.378 M_Jup·5.3 Gyr에서 B_eq ≈ 172 µT (B_pol ≈ 345 µT), 목성에 같은 식을 넣은 sanity check 통과. 기존의 미근거 ~500 µT 토성 아날로그 추측을 대체. 단 0.378 M_Jup은 거대행성 영역 하한이라 He 성층화로 더 낮아질 수도 있음 (토성 ~21 µT). canonical method는 docs/reference/planetary-dynamo-scaling.md |
 | `aurora_present` | false | medium | 1.6 AU 의 조용한 G2V 항성풍 (log R'HK = −4.95) 은 약한 플라스마 구동체. 다른 조용한 호스트 거대 행성들처럼 강한 오로라는 기대되지 않음. cfg 는 렌더하지 않음 |
 | `star_apparent_angular_diameter_deg` | 0.41 | high | 유도. 2 R_star / a = 2 × 1.2234 R☉ / 1.6 AU ≈ 0.41° — 지구에서 본 태양 (0.53°) 보다 약간 작음. 궤도에서 변동. 근일점 (1.44 AU) ~0.45°, 원일점 (1.76 AU) ~0.37° |
 | `stellar_illumination_color_temp_k` | 5847 | high | 호스트 Phase 3 에서 상속 (`docs/phase3/alpha-centauri-a.md`). G2V, 거의 흰 따뜻한 햇빛 |
@@ -272,7 +272,7 @@ HZ 안에 유지하며 ~225 000 km 에 Hill-안정한 판도라질량 위성 (0.
   로슈 영역, A_B ≈ 0.1). 핵심 근거 — 궤도, 질량, 온도, 대기, 고리 행을
   견인.
 - **Sanghi & Beichman et al. 2025** — *Worlds Next Door II*
-  (arXiv:2508.03812). 검출 검증 + 궤도 역학 논문.
+  ([arXiv:2508.03812](https://arxiv.org/abs/2508.03812)). 검출 검증 + 궤도 역학 논문.
   S/N 5.4 (≈4σ) PCA-KLIP 검출. 검출기 / ε Mus PSF /
   α Cen B speckle / 배경 / 태양계 천체 설명을 배제. S1 을 2019년
   VLT/NEAR **C1** (Wagner et al. 2021) 과 연결. 안정 궤도의 ~52% 가

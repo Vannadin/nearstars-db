@@ -24,7 +24,7 @@ higher at lower orbital inclinations, but the radius prediction at
 1.16–1.34 M⊕ is robust to ~5% across the various mass-radius scalings.
 
 The defining cfg-relevant question for b is **runaway vs habitable**.
-Boukrouche 2025 (arXiv:2510.11940) uses a 3-D GCM at the Phase 2-
+Boukrouche 2025 ([arXiv:2510.11940](https://arxiv.org/abs/2510.11940)) uses a 3-D GCM at the Phase 2-
 recommended stellar luminosity (instellation = 1481 W/m²) and finds b
 remains below the runaway greenhouse threshold for **both**
 α = 0.07 (ocean) and α = 0.30 (land) surface albedos — meaning a 1-bar
@@ -123,7 +123,7 @@ metric. Three converging lines of evidence:
    geometric inclination is ~1.34 M⊕ (Fujii 2026); this doesn't change
    the radius prediction by more than ~5%.
 
-3. **Theoretical habitability.** Wandel 2019 (arXiv:1906.07704) applies
+3. **Theoretical habitability.** Wandel 2019 ([arXiv:1906.07704](https://arxiv.org/abs/1906.07704)) applies
    a 1D climate-habitability model and finds the habitable atmospheric
    heating range for b at S ≈ 1.15 S⊕ extends across H_atm = 0.32 to
    3.7 for f = 0.5 (moderate atmospheric circulation) — i.e., from
@@ -324,35 +324,35 @@ warmer cousin of TRAPPIST-1 e:
 - **Zechmeister M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Two temperate Earth-mass planet candidates around
   Teegarden's Star*, A&A 627, A49 (`2019A&A...627A..49Z`,
-  arXiv:1906.07196). Discovery of b and c. Initial mass and orbit.
+  [arXiv:1906.07196](https://arxiv.org/abs/1906.07196)). Discovery of b and c. Initial mass and orbit.
 - **Dreizler S. et al. 2024** — *Teegarden's Star revisited*, A&A 684,
-  A117 (`2024A&A...684A.117D`, arXiv:2402.00923). Refined b orbit
+  A117 (`2024A&A...684A.117D`, [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). Refined b orbit
   (P = 4.90634 d, e = 0.03, ω = 338°, msini = 1.16 M⊕, S = 1.08 S⊕,
   T_eq = 277 K at A=0.3, ESI 0.90) plus the SPECULOOS flare-frequency
   diagram.
 - **Wandel A. & Tal-Or L. 2019** — *On the Habitability of Teegarden's
-  Star planets*, ApJ 880, L21 (`2019ApJ...880L..21W`, arXiv:1906.07704).
+  Star planets*, ApJ 880, L21 (`2019ApJ...880L..21W`, [arXiv:1906.07704](https://arxiv.org/abs/1906.07704)).
   Analytic 1D habitability model — b habitable range H_atm = 0.32-3.7
   at f = 0.5; S(b) ≈ 1.15 S⊕.
 - **Boukrouche R., Caballero R., Lewis N. T. 2025** — *Near the
   Runaway: The Climate and Habitability of Teegarden's Star b*
-  (arXiv:2510.11940). 3-D GCM at 1481 W/m² — b habitable for
+  ([arXiv:2510.11940](https://arxiv.org/abs/2510.11940)). 3-D GCM at 1481 W/m² — b habitable for
   α_s = 0.07 AND 0.30; 1565 W/m² beyond runaway. Critical paper for
   the cfg's habitable-scenario choice. (Cache is abstract-only; surface
   temperature numbers below are GCM-class estimates, not tabulated.)
 - **Boukrouche R., Caballero R., Janson M. 2024** — *The Impact of
   Water Clouds on the Prospective Emission Spectrum of Teegarden's
-  Star b as Observed by LIFE* (arXiv:2411.07922). 1-D water-cloud
+  Star b as Observed by LIFE* ([arXiv:2411.07922](https://arxiv.org/abs/2411.07922)). 1-D water-cloud
   model; cloud cover 0–90% tested over ≥1 bar N₂ (Venus-analog variant
   also modeled). Supports cloud cover as a habitability tracer. (Cache
   is abstract-only.)
 - **Boukrouche R. & Janson M. 2026** — *Disentangling the Hemispheres
-  of Teegarden's Star b with LIFE* (arXiv:2512.19231). Isca aquaplanet
+  of Teegarden's Star b with LIFE* ([arXiv:2512.19231](https://arxiv.org/abs/2512.19231)). Isca aquaplanet
   GCM hemisphere maps; explicit Earth-analog composition; high cloud
   deck at 1-10 mbar (verbatim §III); 1 bar surface pressure, α_s 0.07.
 - **Fujii Y. et al. 2026** — *Probing thermal gradients of habitable-
   zone rocky planets as an anti-indicator of a global surface ocean
-  using direct imaging* (arXiv:2512.16575). ROCKE-3D ocean-vs-no-ocean
+  using direct imaging* ([arXiv:2512.16575](https://arxiv.org/abs/2512.16575)). ROCKE-3D ocean-vs-no-ocean
   scenarios for b at 1 and 10 bar; gives the true-mass 1.34 M⊕ at
   i = 60° and the zero-albedo T_eq ≈ 280 K benchmark; substellar cloud
   decks elongated eastward.
@@ -361,14 +361,14 @@ warmer cousin of TRAPPIST-1 e:
 
 - **Hammond T. et al. 2025** — *The climates and thermal emission
   spectra of prime nearby temperate rocky exoplanet targets*
-  (arXiv:2504.00978). ExoCAM GCM grid of seven targets including
+  ([arXiv:2504.00978](https://arxiv.org/abs/2504.00978)). ExoCAM GCM grid of seven targets including
   Teegarden's Star **c** (not b); c is fully ice-covered (snowball) at
   all pCO₂. Used for the superrotation / Matsuno-Gill / eastward-cloud
   dynamical regime that extrapolates to b. b is not in their grid.
-- **Schweitzer A. et al. 2019** — Stellar parameters (arXiv:1904.03231),
+- **Schweitzer A. et al. 2019** — Stellar parameters ([arXiv:1904.03231](https://arxiv.org/abs/1904.03231)),
   used via host star (R = 0.107 R☉ recommended solution).
 - **Fuhrmeister B. et al. 2025** — *Coronal and chromospheric activity
-  of Teegarden's star* (arXiv:2504.02338). Activity context for
+  of Teegarden's star* ([arXiv:2504.02338](https://arxiv.org/abs/2504.02338)). Activity context for
   atmospheric retention; TESS flares of 10²⁹–10³² erg, low overall
   activity for a late-M dwarf.
 
@@ -377,7 +377,7 @@ warmer cousin of TRAPPIST-1 e:
 - **Mandell A. et al. 2022** — MIRECLE mission concept; cited as PIE
   context.
 - **Hill M. L. et al. 2023** — Catalog of Habitable Zone Exoplanets
-  (`2023AJ....165...34H`, arXiv:2304.13417). Catalog-only entry; b
+  (`2023AJ....165...34H`, [arXiv:2304.13417](https://arxiv.org/abs/2304.13417)). Catalog-only entry; b
   ranks high but adds no measurement.
 
 ### Not read — no arXiv preprint or low-priority

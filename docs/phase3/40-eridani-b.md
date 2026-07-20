@@ -224,7 +224,7 @@ neutral white.
 - **Bond H. E., Bergeron P. & Bédard A. 2017** — *Astrophysical
   Implications of a New Dynamical Mass for the Nearby White Dwarf 40
   Eridani B*, ApJ 848, 16 (`2017ApJ...848...16B`,
-  arXiv:1709.00478, DOI 10.3847/1538-4357/aa8a63). HST/FGS
+  [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63). HST/FGS
   astrometry of the BC pair anchored on the Mason 2017 visual
   orbit; pure-H model atmosphere Balmer-line fit; SED fit to
   BVRI + ubvy + JHK + Hipparcos parallax. Headline parameters:
@@ -253,7 +253,7 @@ neutral white.
 - **Mason B. D., Hartkopf W. I. & Miles K. N. 2017** —
   *Binary Star Orbits V. The Nearby White Dwarf — Red Dwarf
   Pair 40 Eri BC*, AJ 154, 200 (`2017AJ....154..200M`,
-  arXiv:1707.03635, DOI 10.3847/1538-3881/aa803e). Re-derived
+  [arXiv:1707.03635](https://arxiv.org/abs/1707.03635), DOI 10.3847/1538-3881/aa803e). Re-derived
   visual orbit incorporating speckle interferometry through
   2016; grade-1 definitive solution Table 4: P = 230.09 ±
   0.68 yr, T = 1847.60 ± 1.10, e = 0.4300 ± 0.0027,
@@ -265,7 +265,7 @@ neutral white.
 - **Gianninas A., Bergeron P. & Ruiz M. T. 2011** —
   *A Spectroscopic Survey and Analysis of Bright,
   Hydrogen-Rich White Dwarfs*, ApJ 743, 138
-  (`2011ApJ...743..138G`, arXiv:1109.3171). Definitive DA
+  (`2011ApJ...743..138G`, [arXiv:1109.3171](https://arxiv.org/abs/1109.3171)). Definitive DA
   spectral-temperature index survey adopting the DA1–DA9
   Sion classification; 40 Eri B (WD 0413−077) carries the
   DA2.9 subtype in this work, the canonical post-2011 value

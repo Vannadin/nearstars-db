@@ -187,8 +187,8 @@ assumed, T_eq ~39 K. Astrometric true mass ~7 M⊕ (Benedict & McArthur
   block was added — speculation kept out of the structured DB.
 
 **Alpha Cen A b** — candidate "S1" from JWST/MIRI direct imaging,
-Beichman et al. 2025 (arXiv:2508.03814 = 2025ApJ...989L..22B) + Sanghi &
-Beichman et al. 2025 (2508.03812 = ...L..23S). Both already cached. Single
+Beichman et al. 2025 ([arXiv:2508.03814](https://arxiv.org/abs/2508.03814) = 2025ApJ...989L..22B) + Sanghi &
+Beichman et al. 2025 ([2508.03812](https://arxiv.org/abs/2508.03812) = ...L..23S). Both already cached. Single
 Aug-2024 roll detection at 1.5″ (~2 AU), not recovered Feb/Apr 2025; mass
 90–150 M⊕ (Saturn-class), radius ~1–1.1 R_Jup, T~225 K, e~0.4, P 2–3 yr.
 Representative orbital values used: P 2.5 yr (912 d), a 1.9 AU (Kepler-

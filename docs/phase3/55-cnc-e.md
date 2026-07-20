@@ -231,14 +231,14 @@ default but preserves the bare-lava-rock alternative.
 ### Read (visual-informative, drove decisions above)
 
 - **Bourrier V. et al. 2018** — *The 55 Cnc system reassessed*, A&A
-  619, A1 (`2018A&A...619A...1B`, arXiv:1807.04301). Planet e
+  619, A1 (`2018A&A...619A...1B`, [arXiv:1807.04301](https://arxiv.org/abs/1807.04301)). Planet e
   mass 8.0 ± 0.3 M⊕, HST/STIS optical radius 1.88 ± 0.03 R⊕, density
   6.7 ± 0.4 g/cc; interior model favors a heavyweight few-percent-radius
   atmosphere, rules out H/He (lost in ~80 000 yr) and extended water.
   **Phase 2 anchor for orbit / mass / radius / density.**
 - **Demory B.-O. et al. 2016** — *Variability in the super-Earth
   55 Cnc e*, Nature 532, 207 (`2016Natur.532..207D`,
-  arXiv:1505.00269). Spitzer 4.5 μm dayside brightness temperature
+  [arXiv:1505.00269](https://arxiv.org/abs/1505.00269)). Spitzer 4.5 μm dayside brightness temperature
   variable from 1365 to 2528 K over a year (4σ; full range ~1273–2816 K);
   T_eq ~2400 K; attributes variability to Io-like surface/volcanic
   activity or circumstellar material. **The anchor for the dayside
@@ -256,7 +256,7 @@ default but preserves the bare-lava-rock alternative.
 ### Read (context / methodology, not decision-driving)
 
 - **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
-  arXiv:1107.1936. Stellar R/Teff/L anchor → the L = 0.582 L☉ used in
+  [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). Stellar R/Teff/L anchor → the L = 0.582 L☉ used in
   the T_eq derivation; model-independent super-Earth diameter ~2.1 R⊕
   (superseded by Bourrier 2018's STIS 1.88 R⊕).
 - **Madhusudhan N. & Redfield S. 2015** — clouds less likely on the

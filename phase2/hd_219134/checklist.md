@@ -5,12 +5,12 @@ Gaia DR3 2009481748875806976. Effectively single. 6 planets: b, c, d, f, g, h
 (no planet e — lettering legitimately skips it).
 
 ## Bibliography (pin + fetch)
-- [x] Ligi et al. 2019 (1909.10058, 2019A&A...631A..92L) — fetched (full ar5iv)
-- [x] Gillon et al. 2017 (1703.01430, 2017NatAs...1E..56G) — fetched (ABSTRACT ONLY;
+- [x] Ligi et al. 2019 ([1909.10058](https://arxiv.org/abs/1909.10058), 2019A&A...631A..92L) — fetched (full ar5iv)
+- [x] Gillon et al. 2017 ([1703.01430](https://arxiv.org/abs/1703.01430), 2017NatAs...1E..56G) — fetched (ABSTRACT ONLY;
       ar5iv has no LaTeX render -> arXiv landing page; abstract carries b/c m+R verbatim)
-- [x] Motalebi et al. 2015 (1507.08532, 2015A&A...584A..72M) — fetched (full ar5iv)
-- [x] Vogt et al. 2015 (1509.07912, 2015ApJ...814...12V) — fetched (full ar5iv)
-- [x] Johnson et al. 2016 (1602.05200, 2016ApJ...821...74J) — fetched (full ar5iv)
+- [x] Motalebi et al. 2015 ([1507.08532](https://arxiv.org/abs/1507.08532), 2015A&A...584A..72M) — fetched (full ar5iv)
+- [x] Vogt et al. 2015 ([1509.07912](https://arxiv.org/abs/1509.07912), 2015ApJ...814...12V) — fetched (full ar5iv)
+- [x] Johnson et al. 2016 ([1602.05200](https://arxiv.org/abs/1602.05200), 2016ApJ...821...74J) — fetched (full ar5iv)
 
 ## Stellar measurements
 - [x] radius — Ligi 2019 interferometry 0.726 +/- 0.014 Rsun (recommended; replaces DB 0.778)

@@ -57,25 +57,51 @@ body { margin: 0; background: #fff; color: #1f2328;
 <div class="nav-grp">Reference</div>
 <a class="nav-i" href="reference__adding_stars.html">Adding Stars to the NearStars Database</a>
 <a class="nav-i" href="reference__archive_issues.html">NASA Exoplanet Archive Data Issues</a>
+<a class="nav-i" href="reference__atmosphere-reflected-color-methodology.html">Atmosphere Reflected-Color Methodology — Composition → Spectrum → sRGB</a>
 <a class="nav-i" href="reference__binary-epoch-pipeline.html">Binary / Multiple Star Epoch Pipeline Reference</a>
+<a class="nav-i" href="reference__body-figure-methodology.html">Body figure grounding — rotational oblateness (J₂) and tidal triaxiality (C₂₂)</a>
+<a class="nav-i" href="reference__cassini-state-obliquity-methodology.html">Cassini-state obliquity — equilibrium spin-axis tilt of a damped body</a>
 <a class="nav-i" href="reference__color-materials.html">Color materials &amp; the plausibility gate</a>
 <a class="nav-i" href="reference__cultural-context.html">Cultural context — NS systems in science fiction</a>
 <a class="nav-i" href="reference__data-sources.html">Data Sources and Attribution</a>
+<a class="nav-i" href="reference__debris-disk-color-methodology.html">Debris-Disk Color Methodology — Composition + Grain Size → Mie Scattering → Reflectance → sRGB</a>
 <a class="nav-i" href="reference__element-plasma-colors.html">Element plasma colors</a>
+<a class="nav-i" href="reference__exoplanet-atmosphere-methodology.html">Rocky-Exoplanet Atmosphere Methodology — Surface Pressure &amp; Scale Height</a>
+<a class="nav-i" href="reference__gravity-significance-floor-methodology.html">Gravity Significance Floor — Methodology &amp; Literature Grounding</a>
 <a class="nav-i" href="reference__guideline.html">Nearby Star Systems KSP Mod — Project Guideline</a>
+<a class="nav-i" href="reference__internal-heat-luminosity-methodology.html">Internal-Heat / Self-Luminosity Methodology — T_int and the Effective Temperature</a>
+<a class="nav-i" href="reference__ksp-modding-sources.html">KSP Modding — Authoritative Source Index</a>
+<a class="nav-i" href="reference__lism-kinematics.html">Local Interstellar Medium kinematics &amp; the heliosphere/ISM-wind viewer</a>
+<a class="nav-i" href="reference__mass-radius-relation-methodology.html">Mass–Radius Relation Methodology — Assigning the Missing M or R, and Gating Density</a>
+<a class="nav-i" href="reference__methodology-index.html">Methodology Index — Paper-Grounded Derived-Value Recipes</a>
 <a class="nav-i" href="reference__methodology.html">Stellar System Data Research Methodology</a>
 <a class="nav-i" href="reference__mod-reference.html">NearStars — Mod Reference</a>
 <a class="nav-i" href="reference__mod-release-layout.html">NearStars Mod-Release Repo Layout</a>
 <a class="nav-i" href="reference__mod-title-candidates.html">NearStars — mod title (Latin motto) candidates</a>
+<a class="nav-i" href="reference__nearstars-plugin-grounding.html">NearStars — Plugin Grounding Map</a>
+<a class="nav-i" href="reference__pipeline-contract.html">NearStars Pipeline Contract — Phases, Interfaces, Gates</a>
+<a class="nav-i" href="reference__planet-pack-techniques.html">Planet-Pack Visual Techniques — Reference Mining</a>
+<a class="nav-i" href="reference__planetary-dynamo-scaling.html">Planetary / substellar magnetic-field grounding — energy-flux dynamo scaling</a>
 <a class="nav-i" href="reference__plasma-color-methodology-review.html">Plasma-color methodology review</a>
 <a class="nav-i" href="reference__principia-cfg-reference.html">Principia CFG Technical Reference</a>
+<a class="nav-i" href="reference__principia-geopotential-data.html">Principia Geopotential Data — Solar System Bodies (verbatim)</a>
 <a class="nav-i" href="reference__rex-data-comparison.html">REX vs NearStars Data Comparison</a>
+<a class="nav-i" href="reference__science-system.html">KSP Science System — Reference for NearStars body authoring</a>
 <a class="nav-i" href="reference__solar-system-external-observer.html">The Solar System as an External Observer Would See It</a>
+<a class="nav-i" href="reference__stellar-photospheric-color-methodology.html">Stellar Photospheric-Color Methodology — Teff (+ [Fe/H], M-dwarf molecular bands) → sRGB</a>
+<a class="nav-i" href="reference__surface-color-albedo-methodology.html">Surface Color &amp; Albedo Methodology — Composition → Reflectance → sRGB + Bond Albedo</a>
+<a class="nav-i" href="reference__tidal-heating-methodology.html">Tidal-Heating Methodology — Internal Power, Volcanism &amp; Subsurface Oceans</a>
+<a class="nav-i" href="reference__tidal-locking-timescale-methodology.html">Tidal-Locking Methodology — Despin Timescale, Rotation State &amp; the Thermal-Tide Exception</a>
+<a class="nav-i" href="reference__tidally-locked-temperature-methodology.html">Tidally-Locked Exoplanet Surface-Temperature Methodology</a>
 <a class="nav-i on" href="reference__tools.html">Tools — NearStars</a>
 <div class="nav-grp">Plans</div>
+<a class="nav-i" href="plans__derived-value-grounding-audit.html">Derived-Value Grounding Audit (retroactive, 2026-06-20)</a>
 <a class="nav-i" href="plans__doc-tool-sprawl-audit.html">Doc / tool sprawl audit — findings + lifecycle-gate plan</a>
+<a class="nav-i" href="plans__nearby-field-viewer.html">All stars within 50 ly — full markers (uncurated) — viewer plan</a>
+<a class="nav-i" href="plans__paper-scoping.html">NearStars paper — scoping note (exploration phase)</a>
 <a class="nav-i" href="plans__stellarium-binary-orbit-comparison.html">Stellarium vs NearStars binary-orbit pipeline comparison</a>
 <a class="nav-i" href="plans__universe-sandbox-nbody-comparison.html">Universe Sandbox vs Principia n-body engine comparison</a>
+<a class="nav-i" href="plans__viewer-optimization.html">3D Star-Map Viewer — recap + optimization plan</a>
 </nav>
 <div class="content-wrap">
   <div class="topbar"><div class="seg" id="lang-seg"><button data-lang="ko">한</button><button data-lang="en">EN</button></div></div>
@@ -98,8 +124,11 @@ The project has grown to roughly thirty scripts plus several agent skills spread
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` patches | `kopernicus-cfg` skill |
 | 7 | Principia cfg | DB → Principia n-body patches | `principia-cfg` skill |
 | 8 | Firefly cfg | Phase 3 atmosphere → Firefly reentry-effect cfg | `firefly-cfg` skill |
-| 9 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
-| 10 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 9 | ResearchBodies cfg | Phase 4 discoverability → ResearchBodies hide/discover patch | `researchbodies-cfg` skill |
+| 10 | Add star / Phase 2 curation | New-star DB entry procedure | `nearstars-add-star` skill |
+| 11 | Dev helpers | Markdown preview, ko/ mirror parity, repo-wide health | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 12 | 3D star map | `db/systems/` → interactive 3D map (ly scale + per-system AU view) | `scripts/viz/build_starmap.py` |
+| 13 | Phase 4 board tools | Validate decision boards (emit gate) + render per-body board HTML | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
 
 ## Verification & QA — index
 
@@ -111,9 +140,10 @@ Correctness checks live across several functional groups. This index gathers the
 | Hierarchical binary structure | `scripts/pipeline/test_hierarchical.py` | [1](#1-data-engine) | Smoke test after binary-orbit edits |
 | DB positions vs Stellarium | `scripts/verification/stellarium_crosscheck.py` | [5](#5-external-cross-check) | Spot-check before publishing |
 | Dynamical stability of curated + hypothetical bodies | `phase3/stability-sim/scripts/run.py` | [4](#4-stability-sandbox) | Before shipping a moon / extra-body cfg, or as a baseline-DB sanity check |
-| `ko/` mirror file parity | `scripts/check-mirrors.sh` | [10](#10-dev-helpers) | Before commit / release |
+| `ko/` mirror file parity | `scripts/check-mirrors.sh` | [11](#11-dev-helpers) | Before commit / release |
 | Phase 3 synthesis policy fit | `nearstars-phase3` audit-pass procedure | [3](#3-phase-3-synthesis-pipeline) | After a synthesis batch — manual, output at `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
-| Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [10](#10-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
+| Build artifact freshness + manifest coverage | `scripts/check_build_freshness.py` | [11](#11-dev-helpers) | Before push — invoked by `scripts/check.sh` section 7 |
+| Phase 4 board schema-v2 / emit-gate conformance | `scripts/check_phase4_gate.py` | [13](#13-phase-4-decision-board-tools) | After every board edit — invoked by `scripts/check.sh` gate 8 |
 
 ## 1. Data engine
 
@@ -187,9 +217,17 @@ Correctness checks live across several functional groups. This index gathers the
 **Files.**
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO main entry
+- `phase3/stability-sim/scripts/ring_clearing.py` — test-particle ring-clearing / gap measurement around a moon: seed a disk of massless particles bracketing a feeder moon's semi-major axis, integrate, and report which radii survive (does the moon open a gap or stay embedded?). Used to confirm Polyphemus's Chaos-fed E-ring is continuous (Chaos μ≈7.5e-7 too small to clear a gap — `results/_ring_clearing.log`).
+- `scripts/pipeline/phase3_decisions.py` — shared parser for the `## Decisions` table in `docs/phase3/<slug>.md` (the 3→4/3→emit machine interface, [pipeline-contract](reference__pipeline-contract.html) §1). Preserves qualified duplicate labels (`equilibrium_temp_k (A=0)` vs `(A=0.3)`) that the legacy emitter regex silently collapsed. Consumers: `check_pipeline_flow.py`, `resolve_emit_values.py`; emitter skills adopt it at emit rewiring.
+- `scripts/check_pipeline_flow.py` + `db/roster.yaml` — check.sh gate 10: phase4 `body:` keys ↔ db names (fiction bodies pass via `discoverability=fictional`), confirmed-roster completeness matrix (boards / board row coverage / phase3 reports — gaps are warnings, structural violations fail), Decisions-table parse check over all phase3 reports. `db/roster.yaml` is the single data source for the confirmed set; emit scope reads it too.
+- `phase3/stability-sim/scripts/plot_orbits.py` — light 2-panel PNG (top-down orbits + eccentricity(t)) for **planet-level** runs: reads `results/<label>_summary.json` + `_timeseries.csv`, writes `<label>_orbits.png`. Requires MEGNO in the summary — for leapfrog/trace runs or moon systems use plot_moons.py (the canonical 4-panel) instead. `python3 scripts/plot_orbits.py [label]`.
+- `phase3/stability-sim/scripts/plot_moons.py` — **canonical orbit-analysis visualization** (static 4-panel PNG: top-down orbits / eccentricity(t) / semi-major-axis drift Δa/a₀(t) / inclination(t)), with a supertitle carrying verdict + integrator + dt + |ΔE/E| + per-moon max Hill-fraction. Works for BOTH hierarchy levels from sim output alone — planet-center (moons, R_p) or star-center (planets, AU), chosen by `--center` (default: moon parent if the run has moons, else the star). Writes `<label>_orbits.png`. Tolerates leapfrog/trace runs (megno=None), unlike planet-only `plot_orbits.py`. `--dir <results-dir> [--label <system>] [--center <body>]`.
+- `phase3/stability-sim/scripts/plot_interactive.py` — **interactive** 4-panel viewer (Plotly, self-contained HTML): same panels/data as plot_moons.py but click-legend to toggle a body across all panels, hover for exact values, box-zoom/pan to separate packed inner bodies. Light/dark toggle; plasma palette (matches the other viewers). `--dir <results-dir> [--label <system>] [--center <body>]`.
+- `phase3/stability-sim/viewer-manifest.yaml` — single source of per-system viewer sim params (Principia-equivalent leapfrog dt=10min, years, snapshots, hypotheticals, overrides).
+- `phase3/stability-sim/scripts/build_viewers.py` — batch driver: reads the manifest, re-runs each system the Principia way (skip-if-fresh), renders the static PNG + 3D animation, and writes the bilingual gallery `docs/phase4/orbit-viewers/index.html`. `--systems`, `--force`, `--quick`, `--gallery-only`.
 - `phase3/stability-sim/hypotheticals/<system>.json` — extra-body spec
 
-**Stack.** REBOUND 5.0 in `.venv/`, AU / yr / Msun units, 10⁴ yr default horizon.
+**Stack.** REBOUND 5.0 in `.venv/`, AU / yr / Msun units, 10⁴ yr default horizon. A Principia-equivalent run uses `--integrator leapfrog --dt-minutes 10` (mimics Principia's fixed 10-min ephemeris step).
 
 **Output.** `phase3/stability-sim/results/{system}_summary.json` + `_timeseries.csv`, `phase3/stability-sim/STABILITY_REPORT.md`.
 
@@ -212,8 +250,9 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Files.**
 - `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` — bulk emitter (v1.1, 2026-05-27). Scope: circumstellar-disk Rings (star body) + planetary-ring Rings (planet body). Reads `stars[0].raw.disk_measurements` + Phase 3 `disk_tint_rgb_hex` + `disk_opacity`, converts AU → body-radius multipliers, multi-paper merge for null backfill. Full Properties / Orbit / PQS / Atmosphere still hand-written per `.claude/skills/kopernicus-cfg/references/*.md` templates.
+- `scripts/make_placeholder_textures.py` — writes stand-in `<Body>_Sunspots.dds` / `<Body>_Corona.dds` (uncompressed 64×64 A8R8G8B8) at the texture paths the emitted star bodies reference, so a test build loads before real art exists. Reads the body list from the emitted `stars.cfg`; run it after the emitter.
 
-**Output.** `dist/NearStars-Configs/Patches/Kopernicus/`.
+**Output.** `dist/NearStars-Configs/Patches/Kopernicus/`, `dist/NearStars-Textures/PluginData/`.
 
 ## 7. Principia cfg generation
 
@@ -239,7 +278,15 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/refs/validate_element_colors.py` — schema check for the DB.
 - `scripts/refs/render_element_colors_doc.py` — re-render the companion doc (en + ko mirror).
 - `docs/reference/element-plasma-colors.md` — companion view (generated, do not hand-edit).
+- `scripts/refs/migrate_element_db_v2.py` — **one-shot migration, do not re-run** (v1 → v2 multi-regime schema for `element_plasma_colors.yaml`, output committed). Wraps each element's flat hex in a `regimes.atomic_flame` block, tagging `hex_basis` as cie_computed (from curated NIST lines) / canonical_descriptor (named flame color) / chart_approx (Helmenstine-chart fallback). Post-migration, edits go straight into the v2 YAML.
+- `scripts/refs/populate_reentry_aurora.py` — **one-shot populate (idempotent), output committed**: adds the `reentry_plasma` (~8000–15000K, X I + X II ions + continuum) and `aurora` (forbidden O I green/red + N2+ band) regimes to the atmospherically-relevant species; polyatomics get `not_emitter` + a dissociation note. Ran after the v2 migration.
+- `scripts/refs/populate_phosphor_emission.py` — **one-shot populate, output committed**: adds a `phosphor_emission` regime for the lanthanides (Ln3+ in a solid host — the display-industry rare-earth phosphor colors), keeping `atomic_flame` honest about the mostly-faint gas-phase Ln chemistry. Sources: Phosphor Handbook (2007), Blasse & Grabmaier (1994).
+- `scripts/refs/populate_tier_c_upgrades.py` — **one-shot re-categorize (idempotent), output committed**: promotes/demotes `chart_approx` element entries after spectroscopic review — canonical_descriptor (named flame color), cie_computed (clear NIST visible lines), or not_visible_to_humans (UV/IR-dominant). Ran after the v2 migration.
+- `scripts/refs/populate_spectro_refinements.py` — **one-shot refinement, output committed**: applies a 2026-05-26 subagent NIST + phosphor literature review to `chart_approx` entries — six material re-classifications (e.g. Zr→brilliant white, Gd/Yb→not-visible, Tm→cie_computed blue) plus basis-only honesty fixes for ~13 lanthanide / refractory-metal entries. Sources: NIST ASD, Phosphor Handbook, Conkling *Pyrotechnics*.
+- `scripts/refs/build_molecular_db.py` + `db/refs/molecular_plasma_colors.yaml` — regenerable builder for the molecular analog of the element color DB: per-molecule `reentry_plasma` + `aurora` CIE-computed colors (or `not_emitter` with `dissociation_products` for photo-dissociating polyatomics like CO2/NH3/CH4). Captures the molecular-band signature the atomic element DB misses. Uses `wavelength_to_rgb.py`.
 - `scripts/refs/cie_color.py` — shared colorimetry: Planck blackbody + CIE 1931 CMF (Wyman 2013) + XYZ→sRGB hue + spectrum→hex. Used by the engine and the temperature-color builder.
+- `scripts/refs/wavelength_to_rgb.py` — regenerable **library module**: Bruton 1996 piecewise wavelength → sRGB (`wavelength_to_rgb`), additive intensity-weighted line mixing (`mix_lines`), and `rgb_to_hex`. The "what does a spectral line look like on a display" path (distinct from cie_color.py's colorimetric CIE 1931). Imported by cie_color.py, build_molecular_db.py, the element-DB migrate/populate scripts, and phase3/build_html.py.
+- `scripts/refs/body_figure.py` — body figure calculator (grounding: `docs/reference/body-figure-methodology.md`): rotational `J2` via Radau–Darwin, synchronous tidal `C22`, a per-body seeded Kaula-spectrum high-degree geoid, and `ellipsoid_ratios()` → the VertexHeightOblateAdvanced `CustomEllipsoid` a:b:c visual emit. Calibration self-test reproduces Earth/Jupiter/Callisto (`python scripts/refs/body_figure.py`).
 - `scripts/refs/build_atomic_lines.py` + `db/refs/atomic_lines.yaml` — atomic line/level/ionization data (H I, He I, C I/II, N I/II, O I/II, S I/II, Mg I/II, Ti I/II, V I/II, Fe I/II — 18 species) from the NIST ASD (lines1.pl + energy1.pl). H/He/C/N/O/S cover realistic atmosphere chemistry (N2/O2/CO2/SO2/H2O/H2/He/CH4/NH3); Mg/Ti/V/Fe feed the metal-oxide bands + their dissociation→atomic march. Add more with the same 2-line recipe. Cache-first (`/tmp/nist`); `--refresh` re-fetches live. Input to the LTE engine.
 - `db/refs/molecular_bands.yaml` — molecular band systems (N2 1P/2P, N2+ 1NG, C2 Swan, CH/NH/OH, CN violet, CO Ångström, metal oxides TiO/VO/FeO/MgO) + Huber-Herzberg constants for dissociation equilibrium. Band heads + term values from Pearse & Gaydon / ExoMol / airglow literature. Input to the LTE engine.
 - `scripts/refs/saha_boltzmann.py` — first-principles LTE plasma-emission color engine: thermal continuum + atomic lines + molecular bands, with Saha ionization, Boltzmann excitation, and dissociation all computed. Run directly for the self-test + color march. Note the documented LTE caveat (air's reentry blue-violet is non-LTE; not reproduced).
@@ -252,12 +299,26 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/refs/build_molecular_temperature_colors.py` + `db/refs/molecular_temperature_colors.yaml` — per-molecule plasma color vs temperature (500K steps), the molecular analog of the element table. Each of the 30 panel molecules run as a single-species composition through the engine: low-T bands → dissociation → atomic → ionic. Molecules with atoms outside the engine set (Cl/F/Si) drop them (flagged in `dropped`). Drives the viewer's molecular panel. `validate_plasma_temp.py` enforces reproducibility (offline build).
 - `scripts/refs/build_lte_plasma_colors.py` + `db/refs/lte_plasma_colors.yaml` — computed atomic emission color per element (periodic table's `lte_plasma` regime). Boltzmann at 3500K from NIST A-values where available (~73 elements; Na yellow, Cu green), top-N NIST observed intensities as fallback for A-less spectra (Zr/Nb/lanthanides/actinides, flagged low confidence). 98/118 filled; At + superheavies have no measured spectra (null). Curl cache-first; **fetch sequentially/low-concurrency — NIST truncates under load**. This is the ATOMIC color; molecular flame colors (CaOH, SrOH) differ — see curated flame regime.
 - `scripts/refs/render_color_visualizer.py` — render `docs/firefly-colors.html`. The periodic table + molecular panel are colored by a **temperature slider** (1000–15000K) reading `element_temperature_colors` + `molecular_temperature_colors`; drag it to see the molecular→atomic→ionic march. Lower sections: composition/element temperature grids; the bulk/streak Firefly palettes; a Sol-planet **engine-vs-Firefly-stock comparison**; emitted bodies; and an aurora **density slider** + emitter catalog (non-LTE).
+- `scripts/refs/stellar_photospheric_color.py` — regenerable tool backing `docs/reference/stellar-photospheric-color-methodology.md`: Teff / spectral-type → visible sRGB photosphere tint through the shared `cie_color.py` engine. FGK / white dwarfs use a Planck blackbody at Teff; M dwarfs use a real observed Pickles 1998 SED (TiO/VO/H2O bands → a pale warm orange, not brick-red). Pickles spectra are fetched from VizieR + cached under `scripts/refs/.cache/pickles/` (gitignored). Pipeline self-check: G2V → ~#fff4f2.
 
 **References (in skill).** Five node-type files (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (atmosphere → reentry palette via bulk-gas plasma table), `phase3-mapping` (Phase 3 row → Firefly field), `pitfalls`.
 
 **Output.** `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg` per atmospheric body + `NearStarsPlanetPack.cfg`.
 
-## 9. Add star / Phase 2 curation
+## 9. ResearchBodies cfg generation
+
+**Purpose.** Emit the optional **discoverability** layer — a `RESEARCHBODIES { loadAs = mod ... }` ModuleManager patch that hides each NearStars body until the player discovers it via an observatory/telescope. Maps each body's real detection status (Phase 4 `identity > discoverability`) to an `IGNORELEVELS` start-visibility tuple + an `ONDISCOVERY` message (candidates cite the real detection paper).
+
+**Trigger.** "ResearchBodies cfg 만들어줘", "discoverability 패치", "IGNORELEVELS / ONDISCOVERY", "이 바디 숨김 처리".
+
+**Driver.** `researchbodies-cfg` skill. Pinned to RB `mod_version: 1.13.0.0` (JPLRepo/ResearchBodies). Schema claims cite `<file>.cs:line`. Difficulty grading = Scheme A; emit deferred to project end. Targets non-RP-1 (Sandbox/Science on RSS); RP-1 integration deferred (`references/rp1-compat.md`).
+
+**Files.**
+- `.claude/skills/researchbodies-cfg/scripts/emit_researchbodies_cfg.py` — reads Phase 4 `discoverability:` blocks, maps category → IGNORELEVELS tuple (Scheme A), writes one combined patch. `--dry-run` / `--input` supported.
+
+**Output.** `dist/NearStars-Configs/Patches/ResearchBodies/NearStars.cfg`.
+
+## 10. Add star / Phase 2 curation
 
 **Purpose.** Procedure for adding a new star (target list → fetch → curate → validate) and for upgrading an existing star's Phase 2 curation depth.
 
@@ -269,7 +330,7 @@ Correctness checks live across several functional groups. This index gathers the
 
 **Workflow.** Edit `target_list.json` → `./run_pipeline.sh` → for Phase 2: write `phase2/<system>/measurements.yaml`, then `python3 scripts/pipeline/apply_phase2.py <system>` → re-validate.
 
-## 10. Dev helpers
+## 11. Dev helpers
 
 **Purpose.** Day-to-day workflow utilities.
 
@@ -279,7 +340,37 @@ Correctness checks live across several functional groups. This index gathers the
 - `scripts/check_dead_links.py` — scan all tracked .md files for broken relative links
 - `scripts/check_language.py` — detect Korean-dominant content in English-source-of-truth .md files (threshold 25% hangul; `phase3/_audit/*` allowlisted)
 - `scripts/check_build_freshness.py` — verify `docs/data.json` is no older than newest `db/systems/*.json`, `docs/reports.html` / `reports-manifest.json` are no older than newest `docs/phase{2,3}/*.html`, and the manifest has zero orphan keys / dangling html (catches build_site.py skip + slug-convention drift)
-- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness. Manual invocation only.
+- `scripts/check.sh` — pre-release umbrella: schema validation + mirror status (stale = warn, missing = fail) + dead-link scan + convention check + path-migration leftover scan + language check + build freshness + Phase 4 emit-gate (gate 8, tool 13). Manual invocation only.
+
+## 12. 3D star map viewer
+
+**Purpose.** Turn `db/systems/*.json` into an interactive 3D star map for the browser — see *where* the catalog sits in space, then zoom into any system to see its planets.
+
+**Trigger.** "Visualize the DB in 3D", "성도 만들어줘", after a batch of new stars/planets.
+
+**Files.**
+- `scripts/viz/build_starmap.py` — reads `db/systems/`, clusters components into one marker per gravitationally-distinct location (union-find @ 0.4 ly, guarded by `binary_orbit_ref`), bakes blackbody RGB from Teff + light-year ICRS coordinates + luminosity-proxy marker sizes, injects the Solar System (canonical hardcoded elements) at the origin, and emits the self-contained viewer. `--self-check` validates counts without writing.
+- `scripts/viz/starmap_template.html` — the Three.js viewer template (CDN importmap); builder substitutes the embedded JSON payload.
+
+**Output.** `docs/starmap.html` — single self-contained file, GitHub-Pages hostable. Map view in light-years (Sol at origin, ICRS range rings, spectral legend, distance filter, beyond-50 ly toggle); click for an info panel, double-click to enter an AU-scale per-system view with planet orbits. KO/EN UI toggle.
+
+**Serve.** `cd docs && python3 -m http.server` then open `http://localhost:8000/starmap.html` (CDN modules need http, not `file://`).
+
+**Note.** Colour = perceptual blackbody approximation (not a calibrated SED); marker size = luminosity proxy (billboard, not physical radius). Independent of the `docs/index.html` DB browser (tool 2) — that one is the tabular viewer, this is the spatial one.
+
+**Related — Polyphemus moon-system viewer.** `phase4/viewers/polyphemus-moon-viewer.html` is a standalone interactive 3D viewer for the α Cen A b (Polyphemus) moon system + ring design — the 5 named moons (Dante / Hades / Pandora / Cassandra / Chaos), their inclinations / nodes, and the faint Chaos-fed E-ring. A Phase 4 art-direction aid, separate from the catalog-wide star map; it visualizes the gated roster recorded in `phase4/alpha_centauri.yaml`. **FROZEN (2026-06-22):** its design-exploration job is done (roster / ring / obliquity locked), so it is kept as a captured artifact and later decisions are NOT synced into it. Its only feature the star map lacks is the Pandora surface POV + eclipse view; the canonical, maintained visualization is `docs/starmap.html`.
+
+## 13. Phase 4 decision-board tools
+
+**Purpose.** Keep the Phase 4 art-direction boards (`phase4/<system>.yaml`, schema v2) emit-safe and reviewable — validate every board against the SPEC contract, and render each board as per-body HTML pages for gate review.
+
+**Trigger.** After any board edit (validator runs automatically as `check.sh` gate 8); "Phase 4 진행/돌리자" goes through the `nearstars-phase4` skill, which invokes both.
+
+**Files.**
+- `scripts/check_phase4_gate.py` — board validator. `schema_version: 2` boards are hard-checked (status/verdict/op enums, axis menu, typed `fields[]` shape incl. prose-only-number rejection, `(body, axis)` uniqueness, `refs` list type, `colors` hex format, divergence-note requirement, passthrough-carries-no-gate); legacy v1 boards get a soft one-line summary so migration proceeds file-by-file. Contract: `phase4/SPEC.md` §0/§3.1.
+- `scripts/phase4/build_phase4_html.py <system>` — renders a v2 board into `docs/phase4/<system-slug>/` (index + one page per body): narrative prose + typed spec table (hex chips, windows, biome color swatches, per-field notes), gate evidence/divergence, KO/EN toggle. Slugs via `scripts/pipeline/_naming.py`. Deterministic (rerun → no diff).
+
+**Output.** Validator: exit 0/1 + per-row diagnostics. Builder: `docs/phase4/<system-slug>/*.html`.
 
 ## Skills directory layout
 
@@ -344,8 +435,11 @@ target_list.json
 | 6 | Kopernicus cfg | DB → Kopernicus `.cfg` 패치 | `kopernicus-cfg` 스킬 |
 | 7 | Principia cfg | DB → Principia n-body 패치 | `principia-cfg` 스킬 |
 | 8 | Firefly cfg | Phase 3 대기 합성 → Firefly 재진입 효과 cfg | `firefly-cfg` 스킬 |
-| 9 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
-| 10 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 9 | ResearchBodies cfg | Phase 4 discoverability → ResearchBodies 숨김/발견 패치 | `researchbodies-cfg` 스킬 |
+| 10 | 별 추가 / Phase 2 큐레이션 | 새 별 DB 진입 절차 | `nearstars-add-star` 스킬 |
+| 11 | 개발 헬퍼 | 마크다운 미리보기, ko/ 미러 정합성, 레포 전체 건강 점검 | `scripts/preview-md.sh`, `scripts/check-mirrors.sh`, `scripts/check.sh` |
+| 12 | 3D 성도 | `db/systems/` → 인터랙티브 3D 지도 (광년 스케일 + 시스템별 AU 뷰) | `scripts/viz/build_starmap.py` |
+| 13 | Phase 4 보드 도구 | 결정 보드 검증(emit 게이트) + 바디별 보드 HTML 렌더 | `scripts/check_phase4_gate.py`, `scripts/phase4/build_phase4_html.py` |
 
 ## 검증 & QA — 인덱스
 
@@ -357,9 +451,10 @@ target_list.json
 | 위계적 다성계 구조 | `scripts/pipeline/test_hierarchical.py` | [1](#1-데이터-엔진) | 다성계 궤도 편집 후 smoke test |
 | Stellarium 과 비교한 DB 위치 | `scripts/verification/stellarium_crosscheck.py` | [5](#5-외부-교차검증) | 퍼블리시 전 spot-check |
 | 큐레이션된 + 가상 바디의 동역학적 안정성 | `phase3/stability-sim/scripts/run.py` | [4](#4-안정성-샌드박스) | 위성·추가 바디 cfg 출시 전, 혹은 기준 DB sanity 확인 |
-| `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [10](#10-개발-헬퍼) | 커밋 / 릴리스 전 |
+| `ko/` 미러 파일 정합성 | `scripts/check-mirrors.sh` | [11](#11-개발-헬퍼) | 커밋 / 릴리스 전 |
 | Phase 3 합성 정책 적합성 | `nearstars-phase3` 의 audit-pass 절차 | [3](#3-phase-3-합성-파이프라인) | 합성 배치 후 — 수동, 결과는 `phase3/<system>/audit-pass-<YYYY-MM-DD>.md` |
-| 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [10](#10-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
+| 빌드 산출물 신선도 + 매니페스트 커버리지 | `scripts/check_build_freshness.py` | [11](#11-개발-헬퍼) | push 전 — `scripts/check.sh` 7번 항목에서 호출 |
+| Phase 4 보드 스키마 v2 / emit-게이트 정합성 | `scripts/check_phase4_gate.py` | [13](#13-phase-4-결정-보드-도구) | 보드를 고칠 때마다 — `scripts/check.sh` 게이트 8에서 호출 |
 
 ## 1. 데이터 엔진
 
@@ -433,9 +528,17 @@ target_list.json
 **파일.**
 - `phase3/stability-sim/scripts/load.py` — DB JSON → REBOUND `Simulation`
 - `phase3/stability-sim/scripts/run.py` — WHFast + MEGNO 메인 엔트리
+- `phase3/stability-sim/scripts/ring_clearing.py` — 위성 주변 고리 청소·간극 측정용 테스트 입자 시뮬. 공급 위성의 반장축을 둘러싸는 무질량 입자 원반을 깔고 적분한 뒤 어느 반경이 살아남는지 보고합니다(위성이 간극을 여는지, 묻힌 채 도는지). 폴리페무스의 Chaos 공급 E고리가 연속임을 확인하는 데 썼습니다(Chaos 질량비 μ≈7.5e-7 로 간극을 못 비움 — `results/_ring_clearing.log`).
+- `scripts/pipeline/phase3_decisions.py` — `docs/phase3/<slug>.md`의 `## Decisions` 표 공용 파서(3→4/3→emit 기계 인터페이스, [pipeline-contract](reference__pipeline-contract.html) §1). 기존 emitter 정규식이 조용히 덮어쓰던 qualifier 중복 라벨(`equilibrium_temp_k (A=0)` vs `(A=0.3)`)을 보존한다. 소비자는 `check_pipeline_flow.py`·`resolve_emit_values.py`이고, emitter 스킬은 emit 재배선 때 이 모듈로 갈아탄다.
+- `scripts/check_pipeline_flow.py` + `db/roster.yaml` — check.sh 게이트 10. phase4 `body:` 키 ↔ db 이름 대조(창작 바디는 `discoverability=fictional`로 통과), 확정 로스터 완결성 매트릭스(보드·보드 행 커버리지·phase3 리포트 — 갭은 경고, 구조 위반은 실패), 전 phase3 리포트 Decisions 표 파싱 검증. `db/roster.yaml`이 확정 세트의 단일 데이터 소스이며 emit 범위도 이걸 읽는다.
+- `phase3/stability-sim/scripts/plot_orbits.py` — **행성 레벨** 런용 경량 2패널 PNG(top-down 궤도 + 이심률(t)). `results/<label>_summary.json` + `_timeseries.csv`를 읽어 `<label>_orbits.png`를 생성한다. summary에 MEGNO가 있어야 하며, leapfrog·trace 런이나 위성계는 표준 4패널인 plot_moons.py를 쓸 것. `python3 scripts/plot_orbits.py [label]`.
+- `phase3/stability-sim/scripts/plot_moons.py` — **궤도분석 표준 시각화**(정적 4패널 PNG: top-down 궤도 / 이심률(t) / 반장축 드리프트 Δa/a₀(t) / 시뮬 기준면 경사(t)), 상단 제목에 판정 + 적분기 + dt + |ΔE/E| + 위성별 최대 Hill 비율. 시뮬 출력만으로 두 계층 다 처리 — 행성-중심(위성, R_p)이나 별-중심(행성, AU)을 `--center`로 선택(기본: 위성 있으면 부모, 없으면 별). `<label>_orbits.png` 생성. 행성 전용 `plot_orbits.py`와 달리 leapfrog·trace 런(megno=None)도 처리. `--dir <결과폴더> [--label <시스템>] [--center <천체>]`.
+- `phase3/stability-sim/scripts/plot_interactive.py` — **인터랙티브** 4패널 뷰어(Plotly, self-contained HTML). plot_moons.py와 같은 패널·데이터지만 범례 클릭으로 천체를 전 패널 동시 토글, 호버로 정확한 값, 박스줌·팬으로 조밀한 내위성 분리. 라이트/다크 토글, plasma 팔레트(다른 뷰어와 통일). `--dir <결과폴더> [--label <시스템>] [--center <천체>]`.
+- `phase3/stability-sim/viewer-manifest.yaml` — 시스템별 뷰어 sim 파라미터 단일 소스(Principia 동등 leapfrog dt=10분·years·snapshots·hypotheticals·overrides).
+- `phase3/stability-sim/scripts/build_viewers.py` — 배치 드라이버. 매니페스트를 읽어 각 시스템을 Principia 방식으로 재실행(skip-if-fresh)하고 정적 PNG + 3D 애니메이션을 렌더한 뒤 이중언어 갤러리 `docs/phase4/orbit-viewers/index.html`를 씀. `--systems`·`--force`·`--quick`·`--gallery-only`.
 - `phase3/stability-sim/hypotheticals/<system>.json` — 추가 바디 스펙
 
-**스택.** `.venv/` 의 REBOUND 5.0, AU / yr / Msun 단위, 기본 horizon 10⁴ 년.
+**스택.** `.venv/` 의 REBOUND 5.0, AU / yr / Msun 단위, 기본 horizon 10⁴ 년. Principia와 동일한 방식의 런은 `--integrator leapfrog --dt-minutes 10`(Principia의 고정 10분 ephemeris 스텝 모사)을 씁니다.
 
 **출력.** `phase3/stability-sim/results/{system}_summary.json` + `_timeseries.csv`, `phase3/stability-sim/STABILITY_REPORT.md`.
 
@@ -458,8 +561,9 @@ target_list.json
 
 **파일.**
 - `.claude/skills/kopernicus-cfg/scripts/emit_kopernicus_cfg.py` — 일괄 emitter (v1.1, 2026-05-27). 범위: 항성 주위 disk Rings (별 body) + 행성 ring Rings (행성 body). `stars[0].raw.disk_measurements` + Phase 3 `disk_tint_rgb_hex` + `disk_opacity` 를 읽어 AU → body-radius multiplier 변환, 같은 belt 의 multi-paper merge 로 null 백필. 전체 Properties / Orbit / PQS / Atmosphere 는 여전히 `.claude/skills/kopernicus-cfg/references/*.md` 템플릿 따라 수동 작성.
+- `scripts/make_placeholder_textures.py` — emit 된 항성 body 가 참조하는 텍스처 경로에 임시 `<Body>_Sunspots.dds` / `<Body>_Corona.dds` (무압축 64×64 A8R8G8B8) 를 써넣습니다. 실제 아트가 나오기 전에도 테스트 빌드가 로드되게 하는 용도이고, 바디 목록은 emit 된 `stars.cfg` 에서 읽으므로 emitter 실행 뒤에 돌립니다.
 
-**출력.** `dist/NearStars-Configs/Patches/Kopernicus/`.
+**출력.** `dist/NearStars-Configs/Patches/Kopernicus/`, `dist/NearStars-Textures/PluginData/`.
 
 ## 7. Principia cfg 생성
 
@@ -485,7 +589,15 @@ target_list.json
 - `scripts/refs/validate_element_colors.py` — DB 스키마 점검.
 - `scripts/refs/render_element_colors_doc.py` — companion doc 재렌더 (en + ko 미러).
 - `docs/reference/element-plasma-colors.md` — 사람용 view (생성물, 직접 편집 금지).
+- `scripts/refs/migrate_element_db_v2.py` — **일회용 마이그레이션, 재실행 금지**(`element_plasma_colors.yaml`를 v1 → v2 멀티-regime 스키마로, 산출물 커밋 완료). 각 원소의 평평한 hex를 `regimes.atomic_flame` 블록으로 감싸고, `hex_basis`를 cie_computed(큐레이션한 NIST 라인에서 계산) / canonical_descriptor(명명된 불꽃색) / chart_approx(Helmenstine 차트 폴백)로 태깅. 마이그레이션 이후 편집은 v2 YAML에 바로 들어감.
+- `scripts/refs/populate_reentry_aurora.py` — **일회용 채움(멱등), 산출물 커밋 완료**. 대기 관련 종에 `reentry_plasma`(~8000–15000K, X I + X II 이온 + 연속복사)와 `aurora`(금지선 O I 녹/적 + N2+ 밴드) regime을 추가하고, 다원자 분자는 `not_emitter` + 해리 주석을 붙임. v2 마이그레이션 뒤에 실행.
+- `scripts/refs/populate_phosphor_emission.py` — **일회용 채움, 산출물 커밋 완료**. 란타넘족에 `phosphor_emission` regime(고체 호스트 속 Ln3+ — 디스플레이 업계의 희토류 형광체 색)을 추가해, `atomic_flame`은 대체로 희미한 기상(gas-phase) Ln 화학에 솔직하게 남겨둠. 출처는 Phosphor Handbook(2007), Blasse & Grabmaier(1994).
+- `scripts/refs/populate_tier_c_upgrades.py` — **일회용 재분류(멱등), 산출물 커밋 완료**. 분광 재검토 후 `chart_approx` 원소 항목을 canonical_descriptor(명명된 불꽃색) / cie_computed(뚜렷한 NIST 가시선) / not_visible_to_humans(UV·IR 우세)로 격상·격하. v2 마이그레이션 뒤에 실행.
+- `scripts/refs/populate_spectro_refinements.py` — **일회용 정밀화, 산출물 커밋 완료**. 2026-05-26 서브에이전트의 NIST + 형광체 문헌 검토를 `chart_approx` 항목에 반영. 여섯 건의 실질 재분류(예 Zr→brilliant white, Gd/Yb→비가시, Tm→cie_computed 청색)와 란타넘·내화금속 약 13개 항목의 basis만 솔직하게 고치는 수정. 출처는 NIST ASD, Phosphor Handbook, Conkling *Pyrotechnics*.
+- `scripts/refs/build_molecular_db.py` + `db/refs/molecular_plasma_colors.yaml` — 원소 색 DB의 분자 버전을 만드는 재생성 가능 빌더. 분자별 `reentry_plasma` + `aurora` CIE 계산색(또는 CO2/NH3/CH4처럼 광해리하는 다원자 분자는 `not_emitter` + `dissociation_products`). 원자 원소 DB가 놓치는 분자 밴드 시그니처를 담음. `wavelength_to_rgb.py` 사용.
 - `scripts/refs/cie_color.py` — 공용 색측정 모듈. Planck 흑체 + CIE 1931 등색함수(Wyman 2013) + XYZ→sRGB hue + 스펙트럼→hex. 엔진과 온도-색 빌더가 함께 씀.
+- `scripts/refs/wavelength_to_rgb.py` — 재생성 가능한 **라이브러리 모듈**. Bruton 1996 조각별 파장 → sRGB(`wavelength_to_rgb`), 세기 가중 가산 라인 혼합(`mix_lines`), `rgb_to_hex`. "스펙트럼 라인이 디스플레이에서 어떤 색으로 보이나" 경로(cie_color.py의 색측정용 CIE 1931과는 구분됨). cie_color.py, build_molecular_db.py, element-DB migrate/populate 스크립트들, phase3/build_html.py가 import.
+- `scripts/refs/body_figure.py` — 천체 형상 계산기(근거: `docs/reference/body-figure-methodology.md`). Radau–Darwin 자전 `J2`, 동기 조석 `C22`, 천체마다 시딩된 Kaula 스펙트럼 고차 지오이드, 그리고 `ellipsoid_ratios()` → VertexHeightOblateAdvanced `CustomEllipsoid` a:b:c 시각 emit. 캘리브레이션 자체검증이 Earth/Jupiter/Callisto를 재현(`python scripts/refs/body_figure.py`).
 - `scripts/refs/build_atomic_lines.py` + `db/refs/atomic_lines.yaml` — 원자 라인·준위·이온화 데이터(H I, He I, C I/II, N I/II, O I/II, S I/II, Mg I/II, Ti I/II, V I/II, Fe I/II — 18종)를 NIST ASD(lines1.pl + energy1.pl)에서 받아 생성. H/He/C/N/O/S면 현실적 대기 화학(N2/O2/CO2/SO2/H2O/H2/He/CH4/NH3)을 사실상 다 덮고, Mg/Ti/V/Fe는 금속산화물 밴드 + 그 해리→원자 행진용. 추가는 같은 2줄 레시피로. 캐시 우선(`/tmp/nist`), `--refresh`로 실시간 재페치. LTE 엔진 입력.
 - `db/refs/molecular_bands.yaml` — 분자 밴드 시스템(N2 1P/2P, N2+ 1NG, C2 Swan, CH/NH/OH, CN violet, CO Ångström, 금속산화물 TiO/VO/FeO/MgO) + 해리 평형용 Huber-Herzberg 상수. 밴드 헤드·항값은 Pearse & Gaydon / ExoMol / airglow 문헌. LTE 엔진 입력.
 - `scripts/refs/saha_boltzmann.py` — 1차원리 LTE 플라스마 발광색 엔진. 열복사 연속 + 원자선 + 분자 밴드를 합치고 Saha 이온화·Boltzmann 들뜸·해리를 모두 계산. 직접 실행하면 자체검증 + 색 행렬 출력. LTE 한계 주의(공기 재진입 청보라는 비-LTE라 재현 안 됨, 문서화됨).
@@ -498,12 +610,26 @@ target_list.json
 - `scripts/refs/build_molecular_temperature_colors.py` + `db/refs/molecular_temperature_colors.yaml` — 분자별 플라스마 색을 온도별(500K 간격)로. 원소 표의 분자 버전. 패널 30종을 각각 단일 조성으로 엔진에 돌림. 저온 밴드 → 해리 → 원자 → 이온. 엔진 미지원 원자(Cl/F/Si)는 드롭(`dropped` 플래그). 뷰어 분자 패널을 구동. `validate_plasma_temp.py`가 재현성 강제(오프라인 빌드).
 - `scripts/refs/build_lte_plasma_colors.py` + `db/refs/lte_plasma_colors.yaml` — 원소별 계산 원자 발광색(주기율표 `lte_plasma` regime). A계수 있는 ~73개는 3500K Boltzmann(Na 노랑·Cu 초록), A 없는 복잡 스펙트럼(Zr·Nb·란타넘·악티늄)은 NIST 관측 세기 상위 N개로 채우고 저신뢰 플래그. 98/118 채움, At + 초중원소는 측정 스펙트럼 없음(null). curl 캐시 우선, **부하 시 NIST가 응답을 잘라서 순차·저동시성으로 받아야 함**. 이건 원자색이라 분자 불꽃색(CaOH·SrOH)과 다름 — 큐레이션 불꽃 regime 참조.
 - `scripts/refs/render_color_visualizer.py` — `docs/firefly-colors.html` 렌더. 주기율표와 분자 패널은 **온도 슬라이더**(1000–15000K)로 색이 칠해짐(`element_temperature_colors` + `molecular_temperature_colors` 읽음). 움직이면 분자→원자→이온 행진이 보임. 아래 섹션은 조성/원소 온도 그리드, bulk/streak Firefly 팔레트, 태양계 **엔진 vs Firefly 기본 비교**, emit된 행성들, 오로라 **밀도 슬라이더** + 발광종 카탈로그(비-LTE).
+- `scripts/refs/stellar_photospheric_color.py` — `docs/reference/stellar-photospheric-color-methodology.md`를 뒷받침하는 재생성 가능 도구. Teff·스펙트럼형 → 가시 sRGB 광구 색조를 공용 `cie_color.py` 엔진으로 계산. FGK·백색왜성은 Teff의 Planck 흑체를 쓰고, M왜성은 실측 Pickles 1998 SED(TiO/VO/H2O 밴드 → 벽돌빛 적색이 아니라 옅은 따뜻한 주황)를 씀. Pickles 스펙트럼은 VizieR에서 받아 `scripts/refs/.cache/pickles/`(gitignored)에 캐시. 파이프라인 자체검증은 G2V → ~#fff4f2.
 
 **스킬 내 references.** 다섯 개 노드 타입 (`atmofx-body`, `atmofx-planet-pack`, `atmofx-part`, `atmofx-particles`, `atmofx-settings`), `color-format` (HDR), `composition-color` (대기 조성 → 재진입 팔레트, bulk-gas 플라즈마 표 기반), `phase3-mapping` (Phase 3 행 → Firefly 필드 매핑), `pitfalls`.
 
 **출력.** `dist/NearStars-Configs/Patches/Firefly/<Body>.cfg` 행성당 1개 + `NearStarsPlanetPack.cfg`.
 
-## 9. 별 추가 / Phase 2 큐레이션
+## 9. ResearchBodies cfg 생성
+
+**목적.** 옵셔널 **discoverability** 레이어를 emit 합니다. 플레이어가 관측소/망원경으로 발견하기 전까지 NearStars 천체를 숨기는 `RESEARCHBODIES { loadAs = mod ... }` ModuleManager 패치입니다. 각 천체의 실제 검출 상태 (Phase 4 `identity > discoverability`) 를 `IGNORELEVELS` 시작-가시 튜플 + `ONDISCOVERY` 메시지로 매핑합니다 (후보 천체는 실제 검출 논문을 인용).
+
+**언제.** "ResearchBodies cfg 만들어줘", "discoverability 패치", "IGNORELEVELS / ONDISCOVERY", "이 바디 숨김 처리".
+
+**드라이버.** `researchbodies-cfg` 스킬. RB `mod_version: 1.13.0.0` (JPLRepo/ResearchBodies) 에 고정. 스키마 주장은 `<file>.cs:line` 인용. 난도 등급 = Scheme A, emit 은 프로젝트 말미로 보류. 타깃은 비-RP-1 (RSS 의 Sandbox/Science). RP-1 통합은 추후 업데이트로 보류 (`references/rp1-compat.md`).
+
+**파일.**
+- `.claude/skills/researchbodies-cfg/scripts/emit_researchbodies_cfg.py` — Phase 4 `discoverability:` 블록을 읽어 카테고리 → IGNORELEVELS 튜플 (Scheme A) 로 매핑, 단일 패치로 출력. `--dry-run` / `--input` 지원.
+
+**출력.** `dist/NearStars-Configs/Patches/ResearchBodies/NearStars.cfg`.
+
+## 10. 별 추가 / Phase 2 큐레이션
 
 **목적.** 새 별을 추가하는 절차 (target list → fetch → 큐레이션 → 검증) 와 기존 별의 Phase 2 큐레이션 깊이를 올리는 절차.
 
@@ -515,7 +641,7 @@ target_list.json
 
 **워크플로.** `target_list.json` 편집 → `./run_pipeline.sh` → Phase 2 격상 시 `phase2/<system>/measurements.yaml` 작성 → `python3 scripts/pipeline/apply_phase2.py <system>` → 재검증.
 
-## 10. 개발 헬퍼
+## 11. 개발 헬퍼
 
 **목적.** 일상 작업에서 쓰는 보조 유틸리티.
 
@@ -525,7 +651,37 @@ target_list.json
 - `scripts/check_dead_links.py` — 추적되는 모든 .md 파일의 상대 링크 깨짐 스캔
 - `scripts/check_language.py` — 영문 source-of-truth 영역의 .md 파일 중 한글 dominant (25%+) 검출. `phase3/_audit/*` 는 allowlist.
 - `scripts/check_build_freshness.py` — `docs/data.json` 이 최신 `db/systems/*.json` 보다 오래됐는지, `docs/reports.html` / `reports-manifest.json` 이 최신 `docs/phase{2,3}/*.html` 보다 오래됐는지 확인. 매니페스트의 고아 키 / dangling html 도 검사 (build_site.py 스킵 + 슬러그 컨벤션 drift 감지).
-- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도. 수동 실행 전용.
+- `scripts/check.sh` — 릴리스 전 통합 점검. 스키마 검증 + 미러 상태 (stale 은 경고, missing 은 실패) + dead-link 스캔 + 컨벤션 점검 + 경로 마이그레이션 잔여물 점검 + 한글 dominant 검사 + 빌드 신선도 + Phase 4 emit-게이트 (게이트 8, 도구 13). 수동 실행 전용.
+
+## 12. 3D 성도 뷰어
+
+**목적.** `db/systems/*.json` 을 브라우저용 인터랙티브 3D 지도로 만든다. 카탈로그가 공간상 *어디에* 있는지 보고, 시스템을 골라 줌인하면 그 행성들까지 본다.
+
+**트리거.** "DB 3D로 시각화", "성도 만들어줘", 새 별·행성을 한 묶음 추가한 뒤.
+
+**파일.**
+- `scripts/viz/build_starmap.py` — `db/systems/` 를 읽어 중력적으로 구분되는 위치마다 마커 하나로 컴포넌트를 묶고(union-find 0.4 ly, `binary_orbit_ref` 로 가드), Teff 에서 흑체 RGB·광년 ICRS 좌표·광도 기반 마커 크기를 베이크한다. 태양계(canonical 하드코딩 요소)를 원점에 주입한 뒤 자기완결 뷰어를 emit. `--self-check` 는 파일을 쓰지 않고 카운트만 검증.
+- `scripts/viz/starmap_template.html` — Three.js 뷰어 템플릿(CDN importmap). 빌더가 임베드 JSON 페이로드를 끼워 넣는다.
+
+**출력.** `docs/starmap.html` — 단일 자기완결 파일, GitHub Pages 호스팅 가능. 광년 스케일 맵 뷰(원점에 태양, ICRS 거리 링, 분광형 범례, 거리 필터, 50광년 밖 토글), 클릭하면 정보 패널, 더블클릭하면 AU 스케일 시스템 뷰로 들어가 행성 궤도를 본다. 한/영 UI 토글.
+
+**서빙.** `cd docs && python3 -m http.server` 후 `http://localhost:8000/starmap.html` 열기 (CDN 모듈은 `file://` 가 아니라 http 필요).
+
+**참고.** 색은 지각적 흑체 근사(보정된 SED 아님), 마커 크기는 광도 proxy(물리 반경 아닌 빌보드). 표 형태 DB 브라우저인 `docs/index.html`(2번 툴)과 별개로, 이쪽은 공간 배치를 본다.
+
+**관련 — 폴리페무스 위성계 뷰어.** `phase4/viewers/polyphemus-moon-viewer.html` 은 α Cen A b(폴리페무스) 위성계 + 고리 설계를 보는 독립형 인터랙티브 3D 뷰어다. 명명 5위성(Dante·Hades·Pandora·Cassandra·Chaos), 경사·승교점, 흐릿한 Chaos 공급 E고리를 시각화한다. 카탈로그 전체 성도와 별개인 Phase 4 아트디렉션 보조 도구로, `phase4/alpha_centauri.yaml` 에 기록된 게이트 통과 로스터를 그려 보여준다. **동결(2026-06-22):** 설계 탐색 임무가 끝나(로스터·고리·obliquity 확정) 아티팩트로 보존하며, 이후 결정은 여기 동기화하지 않는다. 성도에 없는 고유 기능은 Pandora 지표 1인칭 시점+일식뿐이고, canonical·유지보수 시각화는 `docs/starmap.html` 이다.
+
+## 13. Phase 4 결정 보드 도구
+
+**목적.** Phase 4 아트 디렉션 보드(`phase4/<system>.yaml`, 스키마 v2)를 emit-안전하고 리뷰 가능한 상태로 유지한다. 모든 보드를 SPEC 계약에 대해 검증하고, 게이트 리뷰용으로 바디별 HTML 페이지를 렌더한다.
+
+**트리거.** 보드를 고칠 때마다 (validator는 `check.sh` 게이트 8로 자동 실행). "Phase 4 진행/돌리자"는 `nearstars-phase4` 스킬을 타며, 스킬이 두 도구를 모두 호출한다.
+
+**파일.**
+- `scripts/check_phase4_gate.py` — 보드 validator. `schema_version: 2` 보드는 hard-check (status/verdict/op enum, 축 메뉴, typed `fields[]` 형태 검사 — 숫자가 prose에만 있는 행 거부 포함 —, `(body, axis)` 유일성, `refs` 리스트 타입, `colors` hex 형식, divergence-note 필수, passthrough는 gate 금지). 레거시 v1 보드는 한 줄 soft 요약만 내서 파일 단위 마이그레이션이 가능하다. 계약 문서: `phase4/SPEC.md` §0/§3.1.
+- `scripts/phase4/build_phase4_html.py <system>` — v2 보드를 `docs/phase4/<system-slug>/` (인덱스 + 바디별 1페이지)로 렌더. 산문 narrative + typed spec 표(hex 칩, window, 바이옴 색 스와치, 필드별 note), 게이트 evidence/divergence, 한/영 토글. 슬러그는 `scripts/pipeline/_naming.py` 사용. 결정론적 (재실행해도 diff 없음).
+
+**출력.** validator: exit 0/1 + 행 단위 진단. 빌더: `docs/phase4/<system-slug>/*.html`.
 
 ## 스킬 디렉터리 배치
 

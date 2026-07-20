@@ -219,13 +219,13 @@ e = 0.23 의 이심 궤도에서 오는 libration 유도 조사량 변동은 궤
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). 발견 + h 궤도
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 발견 + h 궤도
   (P = 49.41 ± 0.08 d), 질량 (Msini = 1.83 ± 0.68 M⊕), 이심률
   (0.23 — 세 행성 중 가장 높음) 의 최선 제약. 모든 궤도 및 물리
   Decisions 행을 정박.
 - **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
   system*, A&A 613, A76 (`2018A&A...613A..76F`,
-  arXiv:1801.05415). 49.4 d 신호 안정성 확인. NEA 의 controversial
+  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). 49.4 d 신호 안정성 확인. NEA 의 controversial
   플래그는 amplitude-to-noise 우려 반영.
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. e ≳ 0.10 에서 3:2 포획 확률 > 80%.

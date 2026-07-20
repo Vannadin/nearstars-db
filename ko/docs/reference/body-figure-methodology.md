@@ -230,7 +230,7 @@ a = b, c = R(1 − f). `scripts/refs/body_figure.py`의 `ellipsoid_ratios()`가 
 모든 bibcode는 NASA ADS로 검증했습니다.
 
 - **Helled, Anderson, Schubert & Stevenson 2011**, Icarus 216, 440 (`2011Icar..216..440H`,
-  arXiv **1109.1627**) — 자이언트에 사용한 Radau–Darwin NMoI ↔ J₂ 관계; §2의 inversion 형태.
+  arXiv **[1109.1627](https://arxiv.org/abs/1109.1627)**) — 자이언트에 사용한 Radau–Darwin NMoI ↔ J₂ 관계; §2의 inversion 형태.
   `principia-geopotential-data.md`에 핀.
 - **Murray & Dermott 1999**, *Solar System Dynamics* (`1999ssd..book.....M`) §4 — 자전 및
   동기 천체의 정유체 형상; 이 연쇄식의 교과서 본거지.

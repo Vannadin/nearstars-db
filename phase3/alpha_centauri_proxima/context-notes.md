@@ -80,16 +80,16 @@ Decisions 표 필드를 직접 결정하는 것들만 deep_read. 나머지는 sk
 
 | arXiv | Author Year | 무엇을 결정하나 |
 |---|---|---|
-| 1601.01636 | Pourbaix & Boffin 2016 | mass = 1.1055 ± 0.0039 M☉ (binary_orbit) |
-| 1610.06185 | Kervella 2017 | radius = 1.2234 ± 0.0053 R☉ (interferometry) |
-| 1806.07567 | Joyce & Chaboyer 2018 | age = 5.3 ± 0.3 Gyr (isochrone+seismo joint) |
-| 1612.06570 | Robrade 2016 | X-ray activity cycle ~19 yr; flux/luminosity |
-| 1909.00701 | Spada 2019 | radius-entropy calibration for cool stars |
-| 0901.3632 | Arentoft 2009 | asteroseismology — Δν, νmax → mass+radius cross-check |
+| [1601.01636](https://arxiv.org/abs/1601.01636) | Pourbaix & Boffin 2016 | mass = 1.1055 ± 0.0039 M☉ (binary_orbit) |
+| [1610.06185](https://arxiv.org/abs/1610.06185) | Kervella 2017 | radius = 1.2234 ± 0.0053 R☉ (interferometry) |
+| [1806.07567](https://arxiv.org/abs/1806.07567) | Joyce & Chaboyer 2018 | age = 5.3 ± 0.3 Gyr (isochrone+seismo joint) |
+| [1612.06570](https://arxiv.org/abs/1612.06570) | Robrade 2016 | X-ray activity cycle ~19 yr; flux/luminosity |
+| [1909.00701](https://arxiv.org/abs/1909.00701) | Spada 2019 | radius-entropy calibration for cool stars |
+| [0901.3632](https://arxiv.org/abs/0901.3632) | Arentoft 2009 | asteroseismology — Δν, νmax → mass+radius cross-check |
 | astro-ph/0406471 | Bedding 2004 | oscillation frequencies + lifetimes |
-| 2110.12565 | Wang 2022 | Earth-sized HZ planet detectability + climate range |
-| 2108.12650 | Quarles 2022 | Milankovitch cycles in α Cen-like binaries |
-| 2508.03812/3814 | Beichman/Sanghi 2025 | JWST imaging candidate "S1" giant in α Cen A HZ |
+| [2110.12565](https://arxiv.org/abs/2110.12565) | Wang 2022 | Earth-sized HZ planet detectability + climate range |
+| [2108.12650](https://arxiv.org/abs/2108.12650) | Quarles 2022 | Milankovitch cycles in α Cen-like binaries |
+| [2508.03812](https://arxiv.org/abs/2508.03812)/3814 | Beichman/Sanghi 2025 | JWST imaging candidate "S1" giant in α Cen A HZ |
 | 1410.5099 | Robrade 2016 (X-ray) | also cycle info |
 
 Skim (context, ~25): Akeson 2021 astrometry, Heiter 2015 SED, Porto de
@@ -107,18 +107,18 @@ manual_followup (Tier A): DeWarf 2010 (rotation+activity, no arXiv).
 
 | arXiv | Author Year | 무엇을 결정하나 |
 |---|---|---|
-| 1601.01636 | Pourbaix & Boffin 2016 | mass = 0.9373 ± 0.0028 M☉ (shared paper) |
-| 1610.06185 | Kervella 2017 | radius = 0.8632 ± 0.0037 R☉ |
-| 1806.07567 | Joyce & Chaboyer 2018 | age = 5.3 ± 0.3 Gyr (joint with A) |
-| 1503.01772 | Plavchan 2015 | Bb claim re-analysis (mass limit) |
-| 1510.05598 | Rajpaul 2016 | "Ghost in the time series" — Dumusque 2012 retraction |
-| 1503.07528 | Demory 2015 | HST transit search — non-detection |
-| 1702.01647 | Thompson 2017 | plage / activity / inclination |
-| 1902.10711 | Lisogorskyi 2019 | HARPS activity contamination |
-| 1009.1652 | DeWarf 2010 (no arxiv? check) | X-ray FUV UV, 8.1 yr cycle, 36-40 d rotation |
+| [1601.01636](https://arxiv.org/abs/1601.01636) | Pourbaix & Boffin 2016 | mass = 0.9373 ± 0.0028 M☉ (shared paper) |
+| [1610.06185](https://arxiv.org/abs/1610.06185) | Kervella 2017 | radius = 0.8632 ± 0.0037 R☉ |
+| [1806.07567](https://arxiv.org/abs/1806.07567) | Joyce & Chaboyer 2018 | age = 5.3 ± 0.3 Gyr (joint with A) |
+| [1503.01772](https://arxiv.org/abs/1503.01772) | Plavchan 2015 | Bb claim re-analysis (mass limit) |
+| [1510.05598](https://arxiv.org/abs/1510.05598) | Rajpaul 2016 | "Ghost in the time series" — Dumusque 2012 retraction |
+| [1503.07528](https://arxiv.org/abs/1503.07528) | Demory 2015 | HST transit search — non-detection |
+| [1702.01647](https://arxiv.org/abs/1702.01647) | Thompson 2017 | plage / activity / inclination |
+| [1902.10711](https://arxiv.org/abs/1902.10711) | Lisogorskyi 2019 | HARPS activity contamination |
+| [1009.1652](https://arxiv.org/abs/1009.1652) | DeWarf 2010 (no arxiv? check) | X-ray FUV UV, 8.1 yr cycle, 36-40 d rotation |
 | astro-ph/0508609 | Kjeldsen 2005 | solar-like oscillations |
-| 1401.2392 | Heller 2014 | superhabitable worlds (B HZ) |
-| 1210.5411 | Eggl 2013 | binary HZ stability |
+| [1401.2392](https://arxiv.org/abs/1401.2392) | Heller 2014 | superhabitable worlds (B HZ) |
+| [1210.5411](https://arxiv.org/abs/1210.5411) | Eggl 2013 | binary HZ stability |
 
 Skim: ALMA SED (Liseau 2016), dust (Wiegert 2014), planet formation
 (Quarles 2018, Thebault 2008), seismology cross-checks.
@@ -126,25 +126,25 @@ Skim: ALMA SED (Liseau 2016), dust (Wiegert 2014), planet formation
 Skip: RV methodology heavy (Cretignier, Dumusque 2018 multiple), pure
 correction tools, ML methods.
 
-manual_followup (Tier A): DeWarf 2010 (1009.1652 — actually has arxiv,
+manual_followup (Tier A): DeWarf 2010 ([1009.1652](https://arxiv.org/abs/1009.1652) — actually has arxiv,
 should be fetched), Dumusque 2012 (Nature, no arxiv — retraction story).
 
 ### Proxima Cen — deep_read (12)
 
 | arXiv | Author Year | 무엇을 결정하나 |
 |---|---|---|
-| 1208.2431 | Boyajian 2012 | R = 0.1542 ± 0.0045 R☉, Teff (interferometry) |
-| 1711.06576 | Reiners 2018 | CARMENES high-resolution + B field |
-| 2005.12114 | Suárez Mascareño 2020 | mass + activity revisited ESPRESSO |
-| 1907.12580 | Vida 2019 | TESS flares, QPO during superflare |
-| 2204.09270 | Fuhrmeister 2022 | simultaneous X-ray + FUV during flare |
-| 2512.18011 | Damonte 2026 | XMM time-resolved X-ray spectra |
-| 2411.04252 | Wargelin 2024 | X-ray UV optical cycle (~7 yr) |
-| 1609.03449 | Anglada-Escudé 2016 | b discovery; Proxima R, Teff, M context |
-| 1709.03560 | Feng 2017 | Was Proxima captured? (orbit history) |
-| 2202.05188 | Faria 2022 | d candidate context |
-| 2507.21751 | Suárez Mascareño 2025 | system refinement (NIRPS) |
-| 2503.21890 | Burton 2025 | ALMA mm flare rates |
+| [1208.2431](https://arxiv.org/abs/1208.2431) | Boyajian 2012 | R = 0.1542 ± 0.0045 R☉, Teff (interferometry) |
+| [1711.06576](https://arxiv.org/abs/1711.06576) | Reiners 2018 | CARMENES high-resolution + B field |
+| [2005.12114](https://arxiv.org/abs/2005.12114) | Suárez Mascareño 2020 | mass + activity revisited ESPRESSO |
+| [1907.12580](https://arxiv.org/abs/1907.12580) | Vida 2019 | TESS flares, QPO during superflare |
+| [2204.09270](https://arxiv.org/abs/2204.09270) | Fuhrmeister 2022 | simultaneous X-ray + FUV during flare |
+| [2512.18011](https://arxiv.org/abs/2512.18011) | Damonte 2026 | XMM time-resolved X-ray spectra |
+| [2411.04252](https://arxiv.org/abs/2411.04252) | Wargelin 2024 | X-ray UV optical cycle (~7 yr) |
+| [1609.03449](https://arxiv.org/abs/1609.03449) | Anglada-Escudé 2016 | b discovery; Proxima R, Teff, M context |
+| [1709.03560](https://arxiv.org/abs/1709.03560) | Feng 2017 | Was Proxima captured? (orbit history) |
+| [2202.05188](https://arxiv.org/abs/2202.05188) | Faria 2022 | d candidate context |
+| [2507.21751](https://arxiv.org/abs/2507.21751) | Suárez Mascareño 2025 | system refinement (NIRPS) |
+| [2503.21890](https://arxiv.org/abs/2503.21890) | Burton 2025 | ALMA mm flare rates |
 
 Skim: De Luca 2024 ozone, Boldog 2024 water content, Braam 2024 chemistry
 (climate context, will deep-read for b synthesis instead), Cohen 2023
@@ -162,28 +162,28 @@ covers fundamentals).
 
 | arXiv | Author Year | 결정 필드 |
 |---|---|---|
-| 1609.03449 | Anglada-Escudé 2016 | discovery, mass 1.27 M⊕ Msini |
-| 2005.12114 | Suárez Mascareño 2020 | mass refine 1.17 M⊕ |
-| 2202.05188 | Faria 2022 | mass 1.07 M⊕ |
-| 2507.21751 | Suárez Mascareño 2025 | **mass 1.055 M⊕, e ≈ 0, P 11.18465 d (recommended)** |
-| 1702.08463 | Boutle 2017 | Met Office UM GCM, 1 bar CO₂+N₂, open-water lens |
-| 1608.06827 | Turbet 2016 | 1D climate range; aquaplanet to snowball |
-| 1608.08620 | Meadows 2018 | environmental states + observational discriminants |
-| 2004.03007 | Sergeev 2020 | convection key role |
-| 2005.14185 | Salazar 2020 | substellar continent + ocean dynamics |
-| 1802.00378 | Lewis 2018 | substellar continent climate |
-| 2003.06306 | Joshi 2020 | dark-side inversion |
-| 1912.08743 | Yates 2020 | O₃ chemistry tidally-locked |
-| 2211.11887 | Cohen 2023 | aquaplanet cloud waves |
-| 2003.02036 | Scheucher 2020 | cosmic-ray induced chemistry |
-| 1808.09977 | Shields 2018 | hydrohalite snowball |
-| 2102.03255 | Galuzzo 2021 | 3D detectability |
-| 1609.00707 | Zuluaga 2018 | magnetic properties |
-| 1910.09871 | Atri 2020 | stellar proton dose |
-| 2007.12459 | Walterová 2020 | thermal/orbital evolution |
-| 2211.15697 | Garraffo 2022 | space weather environment |
-| 2109.06963 | Lee 2021 | exosphere, Venus-analog escape |
-| 2402.12253 | Macdonald 2024 | water-vapor transit ambiguity |
+| [1609.03449](https://arxiv.org/abs/1609.03449) | Anglada-Escudé 2016 | discovery, mass 1.27 M⊕ Msini |
+| [2005.12114](https://arxiv.org/abs/2005.12114) | Suárez Mascareño 2020 | mass refine 1.17 M⊕ |
+| [2202.05188](https://arxiv.org/abs/2202.05188) | Faria 2022 | mass 1.07 M⊕ |
+| [2507.21751](https://arxiv.org/abs/2507.21751) | Suárez Mascareño 2025 | **mass 1.055 M⊕, e ≈ 0, P 11.18465 d (recommended)** |
+| [1702.08463](https://arxiv.org/abs/1702.08463) | Boutle 2017 | Met Office UM GCM, 1 bar CO₂+N₂, open-water lens |
+| [1608.06827](https://arxiv.org/abs/1608.06827) | Turbet 2016 | 1D climate range; aquaplanet to snowball |
+| [1608.08620](https://arxiv.org/abs/1608.08620) | Meadows 2018 | environmental states + observational discriminants |
+| [2004.03007](https://arxiv.org/abs/2004.03007) | Sergeev 2020 | convection key role |
+| [2005.14185](https://arxiv.org/abs/2005.14185) | Salazar 2020 | substellar continent + ocean dynamics |
+| [1802.00378](https://arxiv.org/abs/1802.00378) | Lewis 2018 | substellar continent climate |
+| [2003.06306](https://arxiv.org/abs/2003.06306) | Joshi 2020 | dark-side inversion |
+| [1912.08743](https://arxiv.org/abs/1912.08743) | Yates 2020 | O₃ chemistry tidally-locked |
+| [2211.11887](https://arxiv.org/abs/2211.11887) | Cohen 2023 | aquaplanet cloud waves |
+| [2003.02036](https://arxiv.org/abs/2003.02036) | Scheucher 2020 | cosmic-ray induced chemistry |
+| [1808.09977](https://arxiv.org/abs/1808.09977) | Shields 2018 | hydrohalite snowball |
+| [2102.03255](https://arxiv.org/abs/2102.03255) | Galuzzo 2021 | 3D detectability |
+| [1609.00707](https://arxiv.org/abs/1609.00707) | Zuluaga 2018 | magnetic properties |
+| [1910.09871](https://arxiv.org/abs/1910.09871) | Atri 2020 | stellar proton dose |
+| [2007.12459](https://arxiv.org/abs/2007.12459) | Walterová 2020 | thermal/orbital evolution |
+| [2211.15697](https://arxiv.org/abs/2211.15697) | Garraffo 2022 | space weather environment |
+| [2109.06963](https://arxiv.org/abs/2109.06963) | Lee 2021 | exosphere, Venus-analog escape |
+| [2402.12253](https://arxiv.org/abs/2402.12253) | Macdonald 2024 | water-vapor transit ambiguity |
 
 Skim: Bonfils 2018 (PRoxima context), Jenkins 2019 (no transit),
 Hammond 2025 (multiple-planet spectra), De Luca 2024 (ozone climate),
@@ -200,11 +200,11 @@ Boutle), Noack 2021 (interior outgassing), Herath 2021 (interior).
 
 | arXiv | Author Year | 결정 필드 |
 |---|---|---|
-| 2202.05188 | Faria 2022 | discovery, Msini ≈ 0.26 M⊕, P 5.12 d |
-| 2507.21751 | Suárez Mascareño 2025 | confirmation, orbital refinement |
-| 2005.12114 | Suárez Mascareño 2020 | pre-discovery upper limits |
-| 1609.03449 | Anglada-Escudé 2016 | host context |
-| 1208.2431 | Boyajian 2012 | host R for insolation calc |
+| [2202.05188](https://arxiv.org/abs/2202.05188) | Faria 2022 | discovery, Msini ≈ 0.26 M⊕, P 5.12 d |
+| [2507.21751](https://arxiv.org/abs/2507.21751) | Suárez Mascareño 2025 | confirmation, orbital refinement |
+| [2005.12114](https://arxiv.org/abs/2005.12114) | Suárez Mascareño 2020 | pre-discovery upper limits |
+| [1609.03449](https://arxiv.org/abs/1609.03449) | Anglada-Escudé 2016 | host context |
+| [1208.2431](https://arxiv.org/abs/1208.2431) | Boyajian 2012 | host R for insolation calc |
 
 Skim: Kossakowski 2023 (Wolf 1069 b — sister system context).
 
@@ -221,7 +221,7 @@ classification) 및 Step 9.1 (draft) 의 입력.
 
 ### α Cen A — fundamentals
 
-- **Pourbaix & Boffin 2016** (1601.01636): orbital P = 79.91 ± 0.011 yr,
+- **Pourbaix & Boffin 2016** ([1601.01636](https://arxiv.org/abs/1601.01636)): orbital P = 79.91 ± 0.011 yr,
   i = 79.20 ± 0.041°, parallax 743 ± 1.3 mas → d = 1.3458 ± 0.0024 pc
   (their value vs Kervella 2017's 1.3384 pc — Kervella uses updated π).
   M_A = 1.133 M☉ (one of two columns, paper presents 2016 vs 2002 fit).
@@ -230,21 +230,21 @@ classification) 및 Step 9.1 (draft) 의 입력.
     columns. The DB's 1.1055 is consistent with Pourbaix's other
     publications. Use 1.1055 ± 0.0039 (DB) which agrees with the paper's
     asteroseismic cross-check.
-- **Kervella 2017** (1610.06185): R_A = 1.2234 ± 0.0053 R☉ (PIONIER
+- **Kervella 2017** ([1610.06185](https://arxiv.org/abs/1610.06185)): R_A = 1.2234 ± 0.0053 R☉ (PIONIER
   interferometry, H band, 0.43% precision). θ_LD(A) = 8.502 ± 0.038 mas.
   Limb-darkening exponent α(A) = 0.1404 ± 0.0050 (weaker than 1D model
   predictions; close to solar α_⊙ = 0.15027).
-- **Joyce & Chaboyer 2018** (1806.07567): **age = 5.3 ± 0.3 Gyr**
+- **Joyce & Chaboyer 2018** ([1806.07567](https://arxiv.org/abs/1806.07567)): **age = 5.3 ± 0.3 Gyr**
   (asteroseismic + classical joint fit, DSEP code, 31 viable model pairs).
   [Fe/H]_A = +0.24 ± 0.03 (Porto de Mello 2008 adopted), [Fe/H]_B = +0.25 ± 0.04.
   - **Erratum on DB JSON**: DB has `value_gyr = 4.81 ± 0.5` for Joyce &
     Chaboyer 2018. Paper abstract says **5.3 ± 0.3**. DB number is wrong;
     use 5.3 Gyr in Decisions table.
-- **Robrade 2016** (1612.06570): coronal X-ray cycles in α Cen A & B,
+- **Robrade 2016** ([1612.06570](https://arxiv.org/abs/1612.06570)): coronal X-ray cycles in α Cen A & B,
   consistent with ~19-yr (Sun-like) modulation. log L_X ≈ 27.0
   cgs at minimum, ~27.6 at maximum. Cycle confirmed; deep-read for X-ray
   context.
-- **Beichman & Sanghi 2025** (2508.03812, 2508.03814): JWST MIRI imaging
+- **Beichman & Sanghi 2025** ([2508.03812](https://arxiv.org/abs/2508.03812), [2508.03814](https://arxiv.org/abs/2508.03814)): JWST MIRI imaging
   *candidate* point source in α Cen A HZ at ~1.5 AU; consistent with
   giant planet (mass not yet constrained). 2025-recent.
 
@@ -256,12 +256,12 @@ classification) 및 Step 9.1 (draft) 의 입력.
   0.0045 (2002 fit). DB stores 0.9373 — consistent with the 2016 fit
   within uncertainty. Use 0.9373 ± 0.0028 (DB recommended).
 - **Joyce & Chaboyer 2018**: age same as A = 5.3 ± 0.3 Gyr (system).
-- **Rajpaul et al. 2016** (1510.05598): "Ghost in the time series" —
+- **Rajpaul et al. 2016** ([1510.05598](https://arxiv.org/abs/1510.05598)): "Ghost in the time series" —
   shows that the Dumusque 2012 α Cen Bb signal (1.13 M⊕ in 3.236 d
   orbit) is an artifact of the window function. **No planet around
   α Cen B at the claimed parameters.** Combined with Demory 2015
-  (1503.07528) HST transit non-detection, settles the planet question.
-- **Plavchan 2015** (1503.01772): independently re-analyzed Dumusque
+  ([1503.07528](https://arxiv.org/abs/1503.07528)) HST transit non-detection, settles the planet question.
+- **Plavchan 2015** ([1503.01772](https://arxiv.org/abs/1503.01772)): independently re-analyzed Dumusque
   2012 data with corrected window function — agreed with Rajpaul that
   the signal is not statistically significant.
 - **DeWarf et al. 2010** (Tier A manual_followup): α Cen B rotation
@@ -270,39 +270,39 @@ classification) 및 Step 9.1 (draft) 의 입력.
 
 ### Proxima Cen — fundamentals
 
-- **Boyajian 2012** (1208.2431): Proxima (GJ 551) interferometric
+- **Boyajian 2012** ([1208.2431](https://arxiv.org/abs/1208.2431)): Proxima (GJ 551) interferometric
   measurement. Paper warns the relations don't extrapolate to GJ 551's
   red colors but lists Table 6 direct measurement. DB attribution:
   R_Prox = 0.1542 ± 0.0045 R☉. Use this.
-- **Anglada-Escudé 2016** (1609.03449): Proxima b discovery. Best-fit
+- **Anglada-Escudé 2016** ([1609.03449](https://arxiv.org/abs/1609.03449)): Proxima b discovery. Best-fit
   P = 11.186 [11.184, 11.187] d, Msini = 1.27 M⊕, a = 0.0485 AU,
   insolation ≈ 0.65 S⊕. Light-curve shows no transit (consistent with
   geometry). HARPS+UVES+UVES historical data combined.
-- **Suárez Mascareño 2020** (2005.12114): ESPRESSO RV revisit. Improved
+- **Suárez Mascareño 2020** ([2005.12114](https://arxiv.org/abs/2005.12114)): ESPRESSO RV revisit. Improved
   Proxima b mass to 1.17 M⊕ (Msini). Activity-uncorrected.
-- **Faria 2022** (2202.05188): Proxima d candidate, P = 5.122 d,
+- **Faria 2022** ([2202.05188](https://arxiv.org/abs/2202.05188)): Proxima d candidate, P = 5.122 d,
   Msini = 0.26 M⊕. Refined Proxima b to 1.07 M⊕, eccentricity loosely
   constrained.
-- **Suárez Mascareño 2025 / SM25** (2507.21751): NIRPS + ESPRESSO joint.
+- **Suárez Mascareño 2025 / SM25** ([2507.21751](https://arxiv.org/abs/2507.21751)): NIRPS + ESPRESSO joint.
   Proxima b: P = 11.18465 ± 0.00053 d, a = 0.04848 AU, **e ≈ 0** (circularized),
   Msini = 1.055 ± 0.055 M⊕. Proxima d confirmed.
   (DB JSON `recommended: true` for both b and d).
-- **Vida 2019** (1907.12580): TESS observations show very high flare
+- **Vida 2019** ([1907.12580](https://arxiv.org/abs/1907.12580)): TESS observations show very high flare
   frequency, including a giant superflare with QPO during decay.
   Routine flares 10² −10³ flares/yr above detection.
-- **Fuhrmeister 2022** (2204.09270): simultaneous X-ray + FUV during
+- **Fuhrmeister 2022** ([2204.09270](https://arxiv.org/abs/2204.09270)): simultaneous X-ray + FUV during
   flare — energetic events deplete atmospheric oxygen at altitude.
-- **Wargelin 2024** (2411.04252): X-ray + UV + optical cycle ~7 yr
+- **Wargelin 2024** ([2411.04252](https://arxiv.org/abs/2411.04252)): X-ray + UV + optical cycle ~7 yr
   (refinement of earlier ~7-yr estimate).
-- **Damonte 2026** (2512.18011): XMM time-resolved X-ray spectra,
+- **Damonte 2026** ([2512.18011](https://arxiv.org/abs/2512.18011)): XMM time-resolved X-ray spectra,
   confirms cycle modulation amplitude.
-- **Reiners 2018** (1711.06576): Proxima magnetic field measurement
+- **Reiners 2018** ([1711.06576](https://arxiv.org/abs/1711.06576)): Proxima magnetic field measurement
   with CARMENES — kG-level dipole; full Zeeman analysis. Crucial for
   the magnetic_field_strength_t Decisions field.
 
 ### Proxima Cen b — atmosphere/climate
 
-- **Boutle 2017** (1702.08463): UK Met Office UM GCM. Two scenarios:
+- **Boutle 2017** ([1702.08463](https://arxiv.org/abs/1702.08463)): UK Met Office UM GCM. Two scenarios:
   - "Earth-like" (modern Earth atmosphere composition, 1 bar): tidally
     locked → substellar open ocean lens; surface T_substellar ≈ 280–300 K;
     nightside ice cover but stable.
@@ -311,56 +311,56 @@ classification) 및 Step 9.1 (draft) 의 입력.
   - Both: low sensitivity to stellar flux variation (M-dwarf SED
     plus atmospheric absorption insensitivity).
   - Eccentricity e ≥ 0.1 expands parameter space for liquid water.
-- **Turbet 2016** (1608.06827): 1D climate framework (LMD generic),
+- **Turbet 2016** ([1608.06827](https://arxiv.org/abs/1608.06827)): 1D climate framework (LMD generic),
   range from aquaplanet (1 bar) to snowball (low atmosphere or no
   greenhouse). Frozen day side possible if heat redistribution blocked.
   Identifies habitability_observability conditions.
-- **Meadows 2018** (1608.08620): Environmental states. Lists 5
+- **Meadows 2018** ([1608.08620](https://arxiv.org/abs/1608.08620)): Environmental states. Lists 5
   observational discriminants: O₂ (false positive from H₂O escape),
   CH₄ (life vs abiotic), H₂O (any), N₂-rich (Earth analog), O₃ thin.
   Sets escape constraints.
-- **Sergeev 2020** (2004.03007): Convection key role — substellar
+- **Sergeev 2020** ([2004.03007](https://arxiv.org/abs/2004.03007)): Convection key role — substellar
   convection plume drives heat transport. GCM with explicit deep
   convection.
-- **Salazar 2020** (2005.14185): Substellar continent size effect on
+- **Salazar 2020** ([2005.14185](https://arxiv.org/abs/2005.14185)): Substellar continent size effect on
   ocean dynamics — small continent enhances heat divergence; large
   continent damps it.
-- **Lewis 2018** (1802.00378): Substellar continent climate. Dry
+- **Lewis 2018** ([1802.00378](https://arxiv.org/abs/1802.00378)): Substellar continent climate. Dry
   substellar continent stabilizes circulation, raises surface T.
-- **Joshi 2020** (2003.06306): Earth polar-night boundary as analog
+- **Joshi 2020** ([2003.06306](https://arxiv.org/abs/2003.06306)): Earth polar-night boundary as analog
   for dark-side temperature inversion on synchronous M-dwarf planets.
-- **Yates 2020** (1912.08743): O₃ chemistry on tidally-locked M dwarf
+- **Yates 2020** ([1912.08743](https://arxiv.org/abs/1912.08743)): O₃ chemistry on tidally-locked M dwarf
   planets — terminator O₃ stratospheric ring.
-- **Cohen 2023** (2211.11887): Traveling planetary-scale waves cause
+- **Cohen 2023** ([2211.11887](https://arxiv.org/abs/2211.11887)): Traveling planetary-scale waves cause
   cloud variability on aquaplanets — substellar clouds shift
   longitudinally with global Rossby waves.
-- **Scheucher 2020** (2003.02036): Cosmic-ray induced chemistry —
+- **Scheucher 2020** ([2003.02036](https://arxiv.org/abs/2003.02036)): Cosmic-ray induced chemistry —
   high-energy proton events from Proxima alter O₃, HNO₃ etc.
-- **Shields 2018** (1808.09977): Hydrohalite salt-albedo feedback can
+- **Shields 2018** ([1808.09977](https://arxiv.org/abs/1808.09977)): Hydrohalite salt-albedo feedback can
   cool M-dwarf planets — bright salt deposits raise planetary albedo.
-- **Zuluaga 2018** (1609.00707): Magnetic properties of Proxima-b
+- **Zuluaga 2018** ([1609.00707](https://arxiv.org/abs/1609.00707)): Magnetic properties of Proxima-b
   analogues. Lower bound dipole moment ~0.1 M_Earth_magnetic, may
   provide partial atmospheric shielding.
-- **Atri 2020** (1910.09871): Stellar proton event surface dose. With
+- **Atri 2020** ([1910.09871](https://arxiv.org/abs/1910.09871)): Stellar proton event surface dose. With
   no magnetosphere, surface dose lethal during M-dwarf superflares.
-- **Walterová 2020** (2007.12459): Thermal/orbital evolution. Tidal
+- **Walterová 2020** ([2007.12459](https://arxiv.org/abs/2007.12459)): Thermal/orbital evolution. Tidal
   dissipation locks Proxima b on ~Myr timescale.
-- **Garraffo 2022** (2211.15697): Space weather. Stellar wind impacts
+- **Garraffo 2022** ([2211.15697](https://arxiv.org/abs/2211.15697)): Space weather. Stellar wind impacts
   ionospheric oxygen escape.
-- **Lee 2021** (2109.06963): Venus-analog exosphere modeling.
+- **Lee 2021** ([2109.06963](https://arxiv.org/abs/2109.06963)): Venus-analog exosphere modeling.
   Photochemical escape of O atoms ~10⁹ O/cm²/s — atmospheric loss
   comparable to Venus.
-- **Macdonald 2024** (2402.12253): Water-vapor transit ambiguity —
+- **Macdonald 2024** ([2402.12253](https://arxiv.org/abs/2402.12253)): Water-vapor transit ambiguity —
   spectra alone cannot distinguish saturated from dry atmosphere.
 
 ### Proxima Cen d — sub-Mercury hot rocky
 
-- **Faria 2022** (2202.05188): discovery. P = 5.122 ± 0.001 d, sma
+- **Faria 2022** ([2202.05188](https://arxiv.org/abs/2202.05188)): discovery. P = 5.122 ± 0.001 d, sma
   ~0.029 AU, Msini = 0.26 ± 0.05 M⊕. Insolation ~16 S⊕ → equilibrium
   T (albedo 0) ~360 K, well above Mercury's.
-- **SM25** (2507.21751): confirmed at high significance with NIRPS.
+- **SM25** ([2507.21751](https://arxiv.org/abs/2507.21751)): confirmed at high significance with NIRPS.
   Improved orbital fit. **No transit detection** — too inclined.
-- **Suárez Mascareño 2020** (2005.12114): pre-discovery upper limits
+- **Suárez Mascareño 2020** ([2005.12114](https://arxiv.org/abs/2005.12114)): pre-discovery upper limits
   consistent with a 0.3-M⊕ planet at 5 d.
 - Inferred surface state: tidally locked, day side > 400 K, magma at
   substellar plausible.

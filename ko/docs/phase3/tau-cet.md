@@ -259,28 +259,28 @@ opacity 0.15 로 인코딩합니다 (물리 광학적
   analog 로 처음 식별.
 - **MacGregor M. A. et al. 2016** — *Constraints on planetesimal
   collision models in debris disks*, ApJ 828, 113
-  (`2016ApJ...828..113M`, arXiv:1607.06900). τ Ceti 원반의 ALMA
+  (`2016ApJ...828..113M`, [arXiv:1607.06900](https://arxiv.org/abs/1607.06900)). τ Ceti 원반의 ALMA
   Band 6 분해 영상. 단일 넓은 고리 6–55 AU. 먼지 질량 ~1.2 M⊕.
   충돌 cascade 가 부모 planetesimal 벨트를 요구. 모든 `disk_*`
   Decisions 행을 정박.
 - **Korolik M. et al. 2023** — *Refining the Stellar Parameters of
   τ Ceti: a Pole-on Solar Analog*, AJ 166, 123 (`2023AJ....166..123K`,
-  arXiv:2307.10394). CHARA/MIRC-X 간섭계. θ_LD 2.019 ± 0.012 mas →
+  [arXiv:2307.10394](https://arxiv.org/abs/2307.10394)). CHARA/MIRC-X 간섭계. θ_LD 2.019 ± 0.012 mas →
   R 0.793 ± 0.004 R☉. 간섭계 Teff 5370 ± 20 K (Boyajian 2013 F_bol
   사용). H 밴드 limb-darkening α ≈ 0.14. 거의 pole-on (i = 7 ± 7°).
   gyrochronology P_rot 46 ± 4 d. Di Folco 2004 의 ~10 Gyr 나이 채택.
   반지름/Teff/limb-darkening/spin/자전의 Phase 2 anchor.
 - **Teixeira T. C. et al. 2009** — *Solar-like oscillations in τ Ceti*,
-  A&A 494, 237 (`2009A&A...494..237T`, arXiv:0811.3989). HARPS p-mode
+  A&A 494, 237 (`2009A&A...494..237T`, [arXiv:0811.3989](https://arxiv.org/abs/0811.3989)). HARPS p-mode
   검출. asteroseismic 질량 0.783 ± 0.012 M☉ 과 광도 0.488 ± 0.010 L☉
   (M_V + 볼로메트릭 보정). Phase 2 recommended 질량 + 광도.
 - **Santos N. C. et al. 2013** — *SWEET-Cat: A catalogue of parameters
   for stars with exoplanets*, A&A 556, A150 (`2013A&A...556A.150S`,
-  arXiv:1307.0354). 분광 [Fe/H] = −0.52 ± 0.01. Phase 2 recommended
+  [arXiv:1307.0354](https://arxiv.org/abs/1307.0354)). 분광 [Fe/H] = −0.52 ± 0.01. Phase 2 recommended
   금속도 (매우 철-결핍).
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
   of the AMBRE-HARPS sample*, A&A 646, A77 (`2021A&A...646A..77G`,
-  arXiv:2012.10199). log R'HK = −4.977. ~11 yr 주기 변동에 장기적
+  [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)). log R'HK = −4.977. ~11 yr 주기 변동에 장기적
   감소 추세 (평탄한 활동도 표준이 아님). Phase 2 recommended 활동도.
 - **Di Folco E. et al. 2004** — *VLTI near-IR interferometric radii of
   nearby stars*, A&A 426, 601 (`2004A&A...426..601D`). τ Ceti 의
@@ -288,17 +288,17 @@ opacity 0.15 로 인코딩합니다 (물리 광학적
   (Canonical alternatives 참조).
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). 네 행성 RV 발견 (e, f,
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 네 행성 RV 발견 (e, f,
   g, h). DB Phase 2 는 행성 f, g, h 만 저장하고 e 는 누락 (Open
   items 참조). (질량은 이제 Feng 의 M–K 관계가 아니라 Teixeira 2009
   에 정박.)
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved age
   estimation for solar-type dwarfs using activity-rotation
   diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
-  arXiv:0807.1686). 활동도 나이 5.8 Gyr — Di Folco 2004 등시선
+  [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). 활동도 나이 5.8 Gyr — Di Folco 2004 등시선
   나이에 맞서는 documented-divergence 대안 (Canonical alternatives).
 - **Pavlenko Y. V. et al. 2012** — *Spectral analysis of τ Ceti*,
-  MNRAS 422, 542 (`2012MNRAS.422..542P`, arXiv:1112.1709). 더 이른
+  MNRAS 422, 542 (`2012MNRAS.422..542P`, [arXiv:1112.1709](https://arxiv.org/abs/1112.1709)). 더 이른
   differential 분석 ([Fe/H] −0.55, Teff 5344, log R'HK −4.95, 나이
   7 Gyr) — 위 Phase 2 레이어로 전반적으로 SUPERSEDED. Phase 2 bib
   에는 없음.
@@ -311,7 +311,7 @@ opacity 0.15 로 인코딩합니다 (물리 광학적
 
 - **Di Folco E. et al. 2007** — *VLTI/VINCI interferometric
   diameters of nearby exoplanet host stars*, A&A 475, 243
-  (`2007A&A...475..243D`, arXiv:0710.1731). VINCI K 밴드 각지름.
+  (`2007A&A...475..243D`, [arXiv:0710.1731](https://arxiv.org/abs/0710.1731)). VINCI K 밴드 각지름.
   더 이른 간섭계 반지름으로 Korolik 2023 CHARA/MIRC-X 와 일관하며
   그에 의해 대체.
 - **Schmitt J. H. M. M. et al. 1985** — *EXOSAT observations of
@@ -331,7 +331,7 @@ opacity 0.15 로 인코딩합니다 (물리 광학적
 ### Read (instrument / non-cfg-decisive)
 
 - **Lawler S. M. et al. 2014** — *Debris disks of τ Ceti and
-  ε Eridani: SED modeling* (arXiv:1409.0023). SED-fit 먼지 온도와
+  ε Eridani: SED modeling* ([arXiv:1409.0023](https://arxiv.org/abs/1409.0023)). SED-fit 먼지 온도와
   추정 입자 크기. MacGregor 2016 분해 영상으로 대체.
 
 ### Not read — no arXiv preprint or low-priority (~40 papers)

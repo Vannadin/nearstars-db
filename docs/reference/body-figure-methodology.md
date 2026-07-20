@@ -269,7 +269,7 @@ policy their J₂ is computed and emitted anyway — Principia carries the term.
 All bibcodes verified against NASA ADS.
 
 - **Helled, Anderson, Schubert & Stevenson 2011**, Icarus 216, 440 (`2011Icar..216..440H`,
-  arXiv **1109.1627**) — the Radau–Darwin NMoI ↔ J₂ relation used for the giants; the
+  arXiv **[1109.1627](https://arxiv.org/abs/1109.1627)**) — the Radau–Darwin NMoI ↔ J₂ relation used for the giants; the
   inversion form in §2. Pinned in `principia-geopotential-data.md`.
 - **Murray & Dermott 1999**, *Solar System Dynamics* (`1999ssd..book.....M`) §4 — the
   hydrostatic figure of rotating and synchronous bodies; the textbook home of the chain.

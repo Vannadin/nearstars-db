@@ -347,7 +347,7 @@ swing shrinks from ±150,000 km to ±30,000 km, so a ~180,000 km gap clears the 
 apparent radius" requires an equiv-disk of ~0.32 R_Jup (≈ 23,000 km), **not** 0.05 R_Jup —
 the small radius bump corresponds to a much larger physical cross-section.
 
-**Literature grounding — Beichman et al. 2025 (arXiv:2508.03814) §5.3 "Planet Ring System
+**Literature grounding — Beichman et al. 2025 ([arXiv:2508.03814](https://arxiv.org/abs/2508.03814)) §5.3 "Planet Ring System
 Models".** Beichman invoke a circumplanetary ring to explain the candidate's 15.5 µm flux
 with a smaller planet. Their **preferred** model is an **optically-thick ring inside the
 Roche zone** (~half Saturn's cross-section, equiv-disk **64,000 km**). Our faint outer

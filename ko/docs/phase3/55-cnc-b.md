@@ -119,16 +119,16 @@ tie-break 이며 미제약으로 플래그합니다.
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
   with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
-  arXiv:2510.11523). 최신 RV 재피팅: 행성 b P = 14.651552 d,
+  [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). 최신 RV 재피팅: 행성 b P = 14.651552 d,
   a = 0.118 AU, e = 0.0029, M sin i = 276 ± 9 M⊕. **Phase 2 추천 궤도 +
   질량.** 모델 컷오프 이후 출판 — 값을 캐시 텍스트에 대조 확인.
 - **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
-  arXiv:1107.1936. 모성 L = 0.582 L☉ → T_eq 유도.
+  [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). 모성 L = 0.582 L☉ → T_eq 유도.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
-  arXiv:1807.04301. 균질 계 재피팅: b 가 a = 0.1134 AU, e = 0.0,
+  [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). 균질 계 재피팅: b 가 a = 0.1134 AU, e = 0.0,
   M sin i = 255.4 M⊕ — 기록된-대안 궤도/질량(Moutou 2025 가 추천으로 대체).
 - **Butler R. P. et al. 1997** — `1997ApJ...474L.115B`. 발견 논문
   (역사상 4번째 외계행성). 역사적 맥락.

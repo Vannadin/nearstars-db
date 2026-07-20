@@ -196,14 +196,14 @@ hot-rocky 시각 목적지입니다.
   2.3402 ± 0.0003 d, M sin i = 0.263 ± 0.024 M⊕, a = 0.0188 ± 0.0003 AU,
   e = 0.04 (−0.03/+0.05), ω = −51.8°, T_eq = 483 K (A=0, full
   redistribution). e < 0.02 선호로 10⁹ 궤도 SPOCK 안정성, HZ 는 P = 10–42 d.
-- **2410.00569** — González Hernández J. I. 외 2024, *A sub-Earth-mass
+- **[2410.00569](https://arxiv.org/abs/2410.00569)** — González Hernández J. I. 외 2024, *A sub-Earth-mass
   planet orbiting Barnard's star* (`2024A&A...690A..79G`). ESPRESSO 발견
   논문. d 후보의 첫 식별. 활동 사이클 3200 d, 회전 140 d. France 2020
   을 인용해 log(L_X/L_bol) ≈ −5.8 (Chandra) 보고.
 - **2102.08493** — Duvvuri G. 외 2021, *Reconstructing the EUV Emission
   of Cool Dwarfs*. HST + Chandra 로부터 Barnard's Star EUV 의 DEM 재구성.
   복사 환경 컨텍스트 정보 제공.
-- **2007.12459** — Walterová M. & Běhounková M. 2020, *Thermal and
+- **[2007.12459](https://arxiv.org/abs/2007.12459)** — Walterová M. & Běhounková M. 2020, *Thermal and
   Orbital Evolution of Low-mass Exoplanets*. 근접 암석 행성의 동기 /
   pseudo-synchronous 회전으로의 조석 despinning. 조석 잠금 결정의 근거.
 
@@ -213,7 +213,7 @@ hot-rocky 시각 목적지입니다.
   orbiting Barnard's star: No evidence of transits in TESS photometry*.
   transit 배제 ("no evidence of transiting Barnard b, or any other
   body"). 3σ 상한 i < 87.9°.
-- **1812.06712** — Toledo-Padrón B. 외 2019, *Stellar activity analysis
+- **[1812.06712](https://arxiv.org/abs/1812.06712)** — Toledo-Padrón B. 외 2019, *Stellar activity analysis
   of Barnard's Star*. P_rot = 145 ± 15 d, 장기 활동 사이클 3800 ± 600 d
   (~10 yr), log R'HK ≈ −5.86. 조용한 호스트·활동 사이클 추론의 기반.
 
@@ -227,7 +227,7 @@ hot-rocky 시각 목적지입니다.
 **`docs/phase3/_papers/` 에 없어** 직접 검증할 수 없었습니다. 이들의
 구체 수치는 Decisions 헤드라인 값으로 사용하지 않습니다.
 
-- **France K. 외 2020** (arXiv:2009.01259) — *The High-Energy Radiation
+- **France K. 외 2020** ([arXiv:2009.01259](https://arxiv.org/abs/2009.01259)) — *The High-Energy Radiation
   Environment Around a 10 Gyr M Dwarf*. 캐시에 없음. 이전 드래프트의
   구체 수치 (25% flare 듀티 사이클, 0.1 AU 에서 87 지구대기 Gyr⁻¹ 손실,
   ×25–28 스케일링, 10²⁹·²–10²⁹·⁵ erg flare 에너지) 는 검증할 수 없어
@@ -258,7 +258,7 @@ d 의 bib 은 이름 충돌 잡음 (혜성 관측자 Barnard + 혜성 "d" 우연
 - **질량-반지름 관계에 의한 조성**. M sin i 만으로는 조성 (암석 vs. 철
   농축) 이 제약되지 않습니다. DB 반지름은 ρ ≈ 4.34 g/cc 를 함의하며,
   Mercury 류 철 농축 (더 조밀하고 작은) 내부도 cfg 변이로 viable.
-- **France 2020 (2009.01259) 재페치**. 고에너지-환경 논문을 재캐시해
+- **France 2020 ([2009.01259](https://arxiv.org/abs/2009.01259)) 재페치**. 고에너지-환경 논문을 재캐시해
   듀티 사이클과 대기-손실 수치를 직접 검증으로 복원해야 합니다. 그때까지
   대기-손실 prose 는 정성적입니다.
 - **표면-dose 논문 (Atri 류)**. 1차 복사 dose 스케일링 레퍼런스를

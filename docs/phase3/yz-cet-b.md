@@ -198,12 +198,12 @@ Combining the surface, atmosphere, and magnetosphere decisions:
 
 ### Read (visual-informative, drove decisions above)
 
-- **2305.00809** Trigilio et al. 2023 — uGMRT 550–900 MHz confirmation
+- **[2305.00809](https://arxiv.org/abs/2305.00809)** Trigilio et al. 2023 — uGMRT 550–900 MHz confirmation
   of ARE from SPI at 4.37σ. Source for the **planet b magnetic field
   lower limit B ≥ 0.4 G** (R_MP ≥ 1.6–2.0 R_planet from the ARE power
   balance), the magnetosphere-present decision, and the sub-Alfvénic
   flux-tube geometry. The single most important paper for this planet.
-- **2304.00031** Pineda & Villadsen 2023 — VLA 2–4 GHz coherent radio
+- **[2304.00031](https://arxiv.org/abs/2304.00031)** Pineda & Villadsen 2023 — VLA 2–4 GHz coherent radio
   bursts folding to b's 2.02087 d orbit. Source for the SPI driver
   identification (b, not c/d), the radius bracket (0.89–1.0 R⊕ for
   Earth-like density), the synodic-period geometry, and the

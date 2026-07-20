@@ -250,13 +250,13 @@ interaction.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). Discovery + best
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
   constraint on h's orbit (P = 49.41 ± 0.08 d), mass
   (Msini = 1.83 ± 0.68 M⊕), eccentricity (0.23 — highest of the
   three). Anchors every orbital and physical Decisions row.
 - **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
   system*, A&A 613, A76 (`2018A&A...613A..76F`,
-  arXiv:1801.05415). Confirms 49.4-d signal stability;
+  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). Confirms 49.4-d signal stability;
   controversial flag in NEA reflects amplitude-to-noise concerns.
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. 3:2 capture probability > 80% for

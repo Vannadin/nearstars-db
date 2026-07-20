@@ -285,30 +285,30 @@ binary-pair framings (α Cen A/B).
   KBO analog ~10× more massive than the Sun's.
 - **MacGregor M. A. et al. 2016** — *Constraints on planetesimal
   collision models in debris disks*, ApJ 828, 113
-  (`2016ApJ...828..113M`, arXiv:1607.06900). ALMA Band 6 resolved
+  (`2016ApJ...828..113M`, [arXiv:1607.06900](https://arxiv.org/abs/1607.06900)). ALMA Band 6 resolved
   imaging of τ Ceti's disk; single broad ring 6–55 AU; dust mass
   ~1.2 M⊕; collisional cascade requires a parent planetesimal
   body belt. Anchors all `disk_*` Decisions rows.
 - **Korolik M. et al. 2023** — *Refining the Stellar Parameters of
   τ Ceti: a Pole-on Solar Analog*, AJ 166, 123 (`2023AJ....166..123K`,
-  arXiv:2307.10394). CHARA/MIRC-X interferometry: θ_LD 2.019 ± 0.012
+  [arXiv:2307.10394](https://arxiv.org/abs/2307.10394)). CHARA/MIRC-X interferometry: θ_LD 2.019 ± 0.012
   mas → R 0.793 ± 0.004 R☉; interferometric Teff 5370 ± 20 K (with
   Boyajian 2013 F_bol); H-band limb-darkening α ≈ 0.14; nearly pole-on
   (i = 7 ± 7°); gyrochronological P_rot 46 ± 4 d; adopts the Di Folco
   2004 ~10 Gyr age. Phase 2 anchor for radius/Teff/limb-darkening/spin/
   rotation.
 - **Teixeira T. C. et al. 2009** — *Solar-like oscillations in τ Ceti*,
-  A&A 494, 237 (`2009A&A...494..237T`, arXiv:0811.3989). HARPS p-mode
+  A&A 494, 237 (`2009A&A...494..237T`, [arXiv:0811.3989](https://arxiv.org/abs/0811.3989)). HARPS p-mode
   detection; asteroseismic mass 0.783 ± 0.012 M☉ and luminosity
   0.488 ± 0.010 L☉ (M_V + bolometric correction). Phase 2 recommended
   mass + luminosity.
 - **Santos N. C. et al. 2013** — *SWEET-Cat: A catalogue of parameters
   for stars with exoplanets*, A&A 556, A150 (`2013A&A...556A.150S`,
-  arXiv:1307.0354). Spectroscopic [Fe/H] = −0.52 ± 0.01. Phase 2
+  [arXiv:1307.0354](https://arxiv.org/abs/1307.0354)). Spectroscopic [Fe/H] = −0.52 ± 0.01. Phase 2
   recommended metallicity (very iron-poor).
 - **Gomes da Silva J. et al. 2021** — *Stellar chromospheric activity
   of the AMBRE-HARPS sample*, A&A 646, A77 (`2021A&A...646A..77G`,
-  arXiv:2012.10199). log R'HK = −4.977; a ~11 yr cyclic variability
+  [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)). log R'HK = −4.977; a ~11 yr cyclic variability
   with a long-term declining trend (NOT a flat activity standard).
   Phase 2 recommended activity.
 - **Di Folco E. et al. 2004** — *VLTI near-IR interferometric radii of
@@ -317,17 +317,17 @@ binary-pair framings (α Cen A/B).
   (see Canonical alternatives).
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). Four-planet RV
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Four-planet RV
   discovery (e, f, g, h). The DB Phase 2 stores planets f, g, h
   but omits e (see Open items). (Mass now anchored on Teixeira 2009,
   not Feng's M–K relation.)
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved age
   estimation for solar-type dwarfs using activity-rotation
   diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
-  arXiv:0807.1686). Activity-age 5.8 Gyr — the documented-divergence
+  [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Activity-age 5.8 Gyr — the documented-divergence
   alternative to the Di Folco 2004 isochrone age (Canonical alternatives).
 - **Pavlenko Y. V. et al. 2012** — *Spectral analysis of τ Ceti*,
-  MNRAS 422, 542 (`2012MNRAS.422..542P`, arXiv:1112.1709). Earlier
+  MNRAS 422, 542 (`2012MNRAS.422..542P`, [arXiv:1112.1709](https://arxiv.org/abs/1112.1709)). Earlier
   differential analysis ([Fe/H] −0.55, Teff 5344, log R'HK −4.95, age
   7 Gyr) — SUPERSEDED across the board by the Phase 2 layer above; not
   in the Phase 2 bib.
@@ -340,7 +340,7 @@ binary-pair framings (α Cen A/B).
 
 - **Di Folco E. et al. 2007** — *VLTI/VINCI interferometric
   diameters of nearby exoplanet host stars*, A&A 475, 243
-  (`2007A&A...475..243D`, arXiv:0710.1731). VINCI K-band angular
+  (`2007A&A...475..243D`, [arXiv:0710.1731](https://arxiv.org/abs/0710.1731)). VINCI K-band angular
   diameter; the earlier interferometric radius, consistent with and
   superseded by Korolik 2023 CHARA/MIRC-X.
 - **Schmitt J. H. M. M. et al. 1985** — *EXOSAT observations of
@@ -360,7 +360,7 @@ binary-pair framings (α Cen A/B).
 ### Read (instrument / non-cfg-decisive)
 
 - **Lawler S. M. et al. 2014** — *Debris disks of τ Ceti and
-  ε Eridani: SED modeling* (arXiv:1409.0023). SED-fit dust
+  ε Eridani: SED modeling* ([arXiv:1409.0023](https://arxiv.org/abs/1409.0023)). SED-fit dust
   temperature and inferred grain size; superseded by MacGregor
   2016 resolved imaging.
 

@@ -243,33 +243,33 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
 
 각 항목. 저자, 연도, 저널, **검증된** arXiv 식별자(없으면 그 표시), 그리고 기여 한 줄.
 
-- **Zahnle, K. J. & Catling, D. C. (2017)** — *ApJ* 843, 122. **arXiv:1702.03386.**
+- **Zahnle, K. J. & Catling, D. C. (2017)** — *ApJ* 843, 122. **[arXiv:1702.03386](https://arxiv.org/abs/1702.03386).**
   **코스믹 쇼어라인**을 정의한다. 탈출속도 대 누적 XUV가 대기 보유 천체와 맨바위 천체를
   가른다. 관문 1.
 
 - **Owen, J. E. (2019)** — *Annual Review of Earth and Planetary Sciences* 47, 67.
-  **arXiv:1807.07609.** 가까운 행성의 진화를 구동하는 대기 탈출 메커니즘(광증발, 코어
+  **[arXiv:1807.07609](https://arxiv.org/abs/1807.07609).** 가까운 행성의 진화를 구동하는 대기 탈출 메커니즘(광증발, 코어
   동력 질량손실) 리뷰. 관문 1 메커니즘.
 
-- **Lopez, E. D. (2017)** — *MNRAS* 472, 245. **arXiv:1610.01170.** "광증발 사막에서
+- **Lopez, E. D. (2017)** — *MNRAS* 472, 245. **[arXiv:1610.01170](https://arxiv.org/abs/1610.01170).** "광증발 사막에서
   메마르게 태어남". 탈출이 암석형/서브넵튠 경계를 깎으므로 작은 암석형 행성은 원시 H/He를
   잃고 2차 대기만 가진다. ("암석형으로 태어남 대 벗겨진 서브넵튠" 프레임. 반지름 골짜기
   질량-반지름 연구인 Lopez & Fortney 2014, *ApJ* 792, 1, arXiv:1311.0329의 자매편.)
 
-- **Ribas, I. et al. (2016)** — *A&A* 596, A111. **arXiv:1608.06813.** Proxima b의
+- **Ribas, I. et al. (2016)** — *A&A* 596, A111. **[arXiv:1608.06813](https://arxiv.org/abs/1608.06813).** Proxima b의
   복사·자전·휘발성 인벤토리. 모든 스트리핑 추정의 XUV/입자 선량 입력. 관문 2.
 
-- **Dong, C. et al. (2017)** — *ApJ Letters* 837, L26. **arXiv:1702.04089.** Proxima b의
+- **Dong, C. et al. (2017)** — *ApJ Letters* 837, L26. **[arXiv:1702.04089](https://arxiv.org/abs/1702.04089).** Proxima b의
   항성풍 구동 대기 이온 탈출. 보충되지 않으면 대기는 짧은 시간에 벗겨질 수 있다. 관문 2.
 
-- **Dong, C. et al. (2018)** — *PNAS* 115, 260. **arXiv:1705.05535.** 같은 항성풍 탈출
+- **Dong, C. et al. (2018)** — *PNAS* 115, 260. **[arXiv:1705.05535](https://arxiv.org/abs/1705.05535).** 같은 항성풍 탈출
   모델링을 **TRAPPIST-1** 행성들에 적용. 관문 2.
 
-- **Garraffo, C. et al. (2016)** — *ApJ Letters* 833, L4. **arXiv:1609.09076.** Proxima b의
+- **Garraffo, C. et al. (2016)** — *ApJ Letters* 833, L4. **[arXiv:1609.09076](https://arxiv.org/abs/1609.09076).** Proxima b의
   우주 기상. 강하고 질서 있는 행성 자기장이 대기를 가릴 수 있으나 보호는 불확실하다.
   (별도의 2017 Proxima 저널 논문은 없고 학회 초록뿐이다.) 관문 2.
 
-- **Meadows, V. S. et al. (2018)** — *Astrobiology* 18, 133. **arXiv:1608.08620.**
+- **Meadows, V. S. et al. (2018)** — *Astrobiology* 18, 133. **[arXiv:1608.08620](https://arxiv.org/abs/1608.08620).**
   Proxima b의 그럴듯한 환경/대기 최종 상태(건조, CO₂, 금성형, 거주가능)를 열거한다.
   타이브레이크가 그중에서 고르는 분기 집합이다. 관문 2.
 
@@ -277,23 +277,23 @@ g ≈ 10.5가 H를 7–8 km로 단단히 못박는다. H는 언제나 (관문 3 
   탈가스된 초기 대기의 산화환원 상태". 탈가스 물질의 산화 상태에서 초기 대기 산화환원
   (산화형 CO₂/H₂O 대 환원형 CH₄/H₂/CO)을 도출한다. 관문 3, 조성 → μ를 정함.
 
-- **Herbort, O. et al. (2020)** — *A&A* 636, A71. **arXiv:2003.03628.** "암석형 외계행성의
+- **Herbort, O. et al. (2020)** — *A&A* 636, A71. **[arXiv:2003.03628](https://arxiv.org/abs/2003.03628).** "암석형 외계행성의
   대기. I". 지각 암석 종류와 탈가스 대기 사이의 화학 평형으로, 주어진 지각이 내놓는 기체
   인벤토리. 관문 3.
 
-- **Wogan, N. et al. (2020)** — *PSJ* 1, 58. **arXiv:2009.07761.** 환원적 암석 행성의
+- **Wogan, N. et al. (2020)** — *PSJ* 1, 58. **[arXiv:2009.07761](https://arxiv.org/abs/2009.07761).** 환원적 암석 행성의
   화산활동이 **풍부한 CH₄** 대기를 지탱할 수 있다. CO₂/N₂ 기본값 반대편의 환원 산화환원
   극단. 관문 3.
 
 - **Wordsworth, R. & Kreidberg, L. (2022)** — *Annual Review of Astronomy &
-  Astrophysics* 60, 159. **arXiv:2112.04663.** 암석형 외계행성 대기의 표준 리뷰. 유지,
+  Astrophysics* 60, 159. **[arXiv:2112.04663](https://arxiv.org/abs/2112.04663).** 암석형 외계행성 대기의 표준 리뷰. 유지,
   탈출, 탈가스, 관측가능성. 먼저 읽을 것.
 
-- **Greene, T. P. et al. (2023)** — *Nature* 618, 39. **arXiv:2303.14849.** TRAPPIST-1 b의
+- **Greene, T. P. et al. (2023)** — *Nature* 618, 39. **[arXiv:2303.14849](https://arxiv.org/abs/2303.14849).** TRAPPIST-1 b의
   JWST 열복사가 **맨바위 / 두꺼운 대기 없음**과 부합. M왜성 안쪽 거주가능대 행성이
   벗겨질 수 있다는 경험적 확인. §1의 "기압 측정이 아니라 존재 한계".
 
-- **Zieba, S. et al. (2023)** — *Nature* 620, 746. **arXiv:2306.10150.** JWST로 본
+- **Zieba, S. et al. (2023)** — *Nature* 620, 746. **[arXiv:2306.10150](https://arxiv.org/abs/2306.10150).** JWST로 본
   TRAPPIST-1 b에 **두꺼운 CO₂ 대기 없음**. 역시 표면기압 측정이 아니라 존재/부재 한계.
 
 ---

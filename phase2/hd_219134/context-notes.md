@@ -57,8 +57,8 @@ measured ... more closely match the V15 values."
    d/f values are treated as UNVERIFIED and dropped from the draft.
 
 ## Cache caveat (Gillon 2017)
-ar5iv has no LaTeX-rendered HTML for 1703.01430; the fetcher saved the
-arXiv landing page. The abstract (1703.01430.md:7) carries the b/c mass +
+ar5iv has no LaTeX-rendered HTML for [1703.01430](https://arxiv.org/abs/1703.01430); the fetcher saved the
+arXiv landing page. The abstract ([1703.01430](https://arxiv.org/abs/1703.01430).md:7) carries the b/c mass +
 radius + host radius verbatim, which is all that is needed for the
 recommended b/c physical entries. d/f/h full-table values are NOT in this
 cache, which is why those re-pin to Vogt (full ar5iv text available).

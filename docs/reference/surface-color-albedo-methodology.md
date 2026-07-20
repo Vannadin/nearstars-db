@@ -439,11 +439,11 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   `1998Icar..135..389C`). *The Composition of Centaur 5145 Pholus* — the tholin/organic
   reddening archetype (reddest known solar-system surface). §4, §7. (239 cites.)
 
-- **Grundy, W. M. et al. (2016)** — *Science* 351, aad9189. **arXiv:1604.05368.**
+- **Grundy, W. M. et al. (2016)** — *Science* 351, aad9189. **[arXiv:1604.05368](https://arxiv.org/abs/1604.05368).**
   *Surface compositions across Pluto and Charon* (New Horizons) — maps the N₂/CH₄/CO/
   H₂O ices vs the dark-red tholin terrains. §7. (211 cites.)
 
-- **Buratti, B. J. et al. (2017)** — *Icarus* 287, 207. **arXiv:1604.06129.** Global
+- **Buratti, B. J. et al. (2017)** — *Icarus* 287, 207. **[arXiv:1604.06129](https://arxiv.org/abs/1604.06129).** Global
   albedos of Pluto and Charon from New Horizons LORRI — the resolved geometric/Bond
   albedo maps for the Pluto example. §6, §7. (77 cites.)
 

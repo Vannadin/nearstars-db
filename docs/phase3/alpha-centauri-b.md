@@ -84,7 +84,7 @@ Spot coverage during the 8.1-year activity cycle (DeWarf 2010) is
 larger than on A — log R'HK = −5.0 places B in the moderately active
 K-dwarf regime, with active region coverage estimated at ~1–2% of
 the visible disk during cycle maximum. The Thompson 2017
-(arXiv:1702.01647) plage modeling using disk-integrated HARPS spectra
+([arXiv:1702.01647](https://arxiv.org/abs/1702.01647)) plage modeling using disk-integrated HARPS spectra
 finds asymmetric latitudinal spot distribution consistent with a
 ~30° tilt of the rotation axis, comparable to but distinct from the
 Sun's ~7° solar inclination.
@@ -107,7 +107,7 @@ factor of 10 (log L_X = 26.5–27.5 cgs over the 8.1-yr cycle, Robrade
 phase-shifted from B's chromospheric cycle by roughly π/2 (Robrade
 2016 §4).
 
-Lisogorskyi 2019 (arXiv:1902.10711) characterized α Cen B's
+Lisogorskyi 2019 ([arXiv:1902.10711](https://arxiv.org/abs/1902.10711)) characterized α Cen B's
 activity-induced RV jitter in HARPS spectra at ~1.5 m/s amplitude on
 the rotation period — the residual signal that initially appeared as
 the Dumusque 2012 planetary signal. Modern RV teams treat α Cen B as
@@ -166,14 +166,14 @@ items.
 
 ### Read (visual-informative, drove decisions above)
 
-- **Kervella P. et al. 2017** — arXiv:1610.06185 (shared with A
+- **Kervella P. et al. 2017** — [arXiv:1610.06185](https://arxiv.org/abs/1610.06185) (shared with A
   bibliography). R_B = 0.8632 ± 0.0037 R☉; α(B) = 0.1545 ± 0.0044.
-- **Kervella P. et al. 2016** — arXiv:1610.06079. Revised binary
+- **Kervella P. et al. 2016** — [arXiv:1610.06079](https://arxiv.org/abs/1610.06079). Revised binary
   orbital fit; M_B = 0.9373 ± 0.0033 M☉ adopted as the recommended
   dynamical mass.
-- **Pourbaix D. & Boffin H. M. J. 2016** — arXiv:1601.01636. M_B =
+- **Pourbaix D. & Boffin H. M. J. 2016** — [arXiv:1601.01636](https://arxiv.org/abs/1601.01636). M_B =
   0.972 ± 0.0045 M☉ from the binary orbital fit.
-- **Joyce M. & Chaboyer B. 2018** — arXiv:1806.07567. System age
+- **Joyce M. & Chaboyer B. 2018** — [arXiv:1806.07567](https://arxiv.org/abs/1806.07567). System age
   5.3 ± 0.3 Gyr.
 - **DeWarf L. E. et al. 2010** — (`2010ApJ...722..343D`,
   no arXiv preprint, Tier A manual followup). Defines B's 36–40 d
@@ -181,27 +181,27 @@ items.
 - **Henry T. J. et al. 1996** — (`1996AJ....111..439H`, no arXiv).
   Original log R'HK = −5.00 measurement for B.
 - **Rajpaul V. et al. 2016** — *Ghost in the time series: no planet
-  for Alpha Cen B*, MNRAS 456, L6 (arXiv:1510.05598). Window-function
+  for Alpha Cen B*, MNRAS 456, L6 ([arXiv:1510.05598](https://arxiv.org/abs/1510.05598)). Window-function
   reanalysis of Dumusque 2012; rules out the claimed 3.236-d planet.
 - **Plavchan P. et al. 2015** — *What is the Mass of α Cen B b?*
-  (arXiv:1503.01772). Independent re-analysis of Dumusque 2012;
+  ([arXiv:1503.01772](https://arxiv.org/abs/1503.01772)). Independent re-analysis of Dumusque 2012;
   reaches the same conclusion.
 - **Demory B.-O. et al. 2015** — *HST search for the transit of the
   Earth-mass exoplanet α Centauri B b*, MNRAS 450, 2043
-  (arXiv:1503.07528). HST/STIS photometry rules out a transiting
+  ([arXiv:1503.07528](https://arxiv.org/abs/1503.07528)). HST/STIS photometry rules out a transiting
   Earth-mass planet at the claimed 3.236-d period.
 - **Thompson A. P. G. et al. 2017** — *The changing face of α Centauri
   B: probing plage and stellar activity in K dwarfs*, A&A 596, A21
-  (arXiv:1702.01647). Plage / spot latitudinal distribution and
+  ([arXiv:1702.01647](https://arxiv.org/abs/1702.01647)). Plage / spot latitudinal distribution and
   rotation-axis inclination constraint.
 - **Lisogorskyi M. et al. 2019** — *Activity and telluric
   contamination in HARPS observations of α Centauri B*, MNRAS 485,
-  4804 (arXiv:1902.10711). Characterizes the 1.5 m/s activity-driven
+  4804 ([arXiv:1902.10711](https://arxiv.org/abs/1902.10711)). Characterizes the 1.5 m/s activity-driven
   RV jitter that gave rise to the Dumusque 2012 false claim.
-- **Robrade J. et al. 2016** — arXiv:1612.06570. 8.1-yr coronal X-ray
+- **Robrade J. et al. 2016** — [arXiv:1612.06570](https://arxiv.org/abs/1612.06570). 8.1-yr coronal X-ray
   cycle on B, log L_X = 26.5–27.5 amplitude.
 - **Heller R. & Armstrong J. 2014** — *Superhabitable Worlds*, AsBio
-  14, 50 (arXiv:1401.2392). Frames the K1V HZ as physically more
+  14, 50 ([arXiv:1401.2392](https://arxiv.org/abs/1401.2392)). Frames the K1V HZ as physically more
   favorable than the solar HZ for surface life retention.
 
 ### Read (context / methodology, not decision-driving)
@@ -209,20 +209,20 @@ items.
 - **Kjeldsen H. et al. 2005** — Solar-like oscillations in α Cen B
   (arXiv:astro-ph/0508609). Asteroseismic p-mode detection.
 - **Eggl S. et al. 2013** — *Circumstellar habitable zones of binary-
-  star systems in the solar neighbourhood* (arXiv:1210.5411). Sets
+  star systems in the solar neighbourhood* ([arXiv:1210.5411](https://arxiv.org/abs/1210.5411)). Sets
   the binary-perturbation HZ edges.
 - **Cretignier M. et al. 2020** — *Measuring precise radial velocities
-  on individual spectral lines II* (arXiv:1912.05192). RV jitter
+  on individual spectral lines II* ([arXiv:1912.05192](https://arxiv.org/abs/1912.05192)). RV jitter
   decorrelation methodology.
 - **Liseau R. et al. 2016** — *ALMA's view of the nearest neighbors to
   the Sun. The submm/mm SEDs of the α Centauri binary* (arXiv:
-  1608.02384). Photospheric far-IR/sub-mm continuum.
+  [1608.02384](https://arxiv.org/abs/1608.02384)). Photospheric far-IR/sub-mm continuum.
 - **Wiegert J. et al. 2014** — Dust around α Cen, infrared excess
-  search (arXiv:1401.6896). No significant debris excess detected.
+  search ([arXiv:1401.6896](https://arxiv.org/abs/1401.6896)). No significant debris excess detected.
 
 ### Read (instrument / non-cfg-decisive)
 
-- **Spada F. et al. 2019** — arXiv:1909.00701. Entropy calibration of
+- **Spada F. et al. 2019** — [arXiv:1909.00701](https://arxiv.org/abs/1909.00701). Entropy calibration of
   K-dwarf radii, validates Kervella 2017.
 - **Krishnamurthy A. et al. 2021** — ASTERIA transit search around α
   Cen A and B (`2021AJ....161..275K`). Non-detection limits.

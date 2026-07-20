@@ -92,15 +92,15 @@ periodogram의 약한 6.94 hr 봉우리가 A의 것이라 *추정*하고, Mancin
 ## 참고문헌
 
 **정독(Decisions 행 결정):**
-- Lazorenko & Sahlmann 2018, A&A 618, A111 (arXiv 1808.07835) — 측성 궤도, 역학적 질량, 시차.
-- Faherty et al. 2014, ApJ 790, 90 (arXiv 1406.1518) — Li, FeH, 복사광도, Teff, 나이, 가정 반지름.
-- Apai et al. 2021, ApJ 906, 64 (arXiv 2101.02253) — TESS 자전; A에 대한 잠정 6.94 hr.
-- Crossfield et al. 2014, Nature 505, 654 (arXiv 1401.8145) — Doppler v sin i; A는 매핑 안 됨.
+- Lazorenko & Sahlmann 2018, A&A 618, A111 (arXiv [1808.07835](https://arxiv.org/abs/1808.07835)) — 측성 궤도, 역학적 질량, 시차.
+- Faherty et al. 2014, ApJ 790, 90 (arXiv [1406.1518](https://arxiv.org/abs/1406.1518)) — Li, FeH, 복사광도, Teff, 나이, 가정 반지름.
+- Apai et al. 2021, ApJ 906, 64 (arXiv [2101.02253](https://arxiv.org/abs/2101.02253)) — TESS 자전; A에 대한 잠정 6.94 hr.
+- Crossfield et al. 2014, Nature 505, 654 (arXiv [1401.8145](https://arxiv.org/abs/1401.8145)) — Doppler v sin i; A는 매핑 안 됨.
 
 **맥락:**
-- Gillon et al. 2013, A&A 555, L5 (arXiv 1304.0481) — A로부터 주기 신호 없음.
+- Gillon et al. 2013, A&A 555, L5 (arXiv [1304.0481](https://arxiv.org/abs/1304.0481)) — A로부터 주기 신호 없음.
 - Burgasser et al. 2013 — L7.5/T0.5 분광 분류.
-- Bedin et al. 2024 (arXiv 2403.08865), Garcia et al. 2017 (arXiv 1708.02714) — 대안 역학적 질량.
+- Bedin et al. 2024 (arXiv [2403.08865](https://arxiv.org/abs/2403.08865)), Garcia et al. 2017 (arXiv [1708.02714](https://arxiv.org/abs/1708.02714)) — 대안 역학적 질량.
 
 ## 후속 확인 항목
 

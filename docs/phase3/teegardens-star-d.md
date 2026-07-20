@@ -4,7 +4,7 @@
 Teegarden's Star d is a 0.82 M⊕ minimum-mass sub-Earth-mass rocky
 planet on a 26.13-day orbit, with semi-major axis 0.0791 AU. It is
 the most recently discovered planet in the system — added by Dreizler
-2024 (arXiv:2402.00923) using the combined CARMENES + ESPRESSO +
+2024 ([arXiv:2402.00923](https://arxiv.org/abs/2402.00923)) using the combined CARMENES + ESPRESSO +
 MAROON-X + HPF radial-velocity dataset. The K = 0.86 ± 0.17 m/s
 detection lies near the noise floor of the multi-instrument fit, but
 the Bayesian evidence improves by more than 5 (Dreizler 2024 Table 10:
@@ -256,7 +256,7 @@ and c's "explore the ice".
 
 - **Dreizler S. et al. 2024** — *Teegarden's Star revisited. A nearby
   planetary system with at least three planets*, A&A 684, A117
-  (`2024A&A...684A.117D`, arXiv:2402.00923). The discovery paper for
+  (`2024A&A...684A.117D`, [arXiv:2402.00923](https://arxiv.org/abs/2402.00923)). The discovery paper for
   d. Provides P = 26.13 d, msini = 0.82 M⊕, a = 0.0791 AU, e = 0.07,
   T_eq = 159 K (A=0.3), S = 0.12 S⊕. The §5.2 comparison to "Jupiter
   or Ganymede temperatures" is the cfg's primary qualitative anchor.
@@ -264,11 +264,11 @@ and c's "explore the ice".
 ### Read (context / methodology, not decision-driving)
 
 - **Zechmeister M. et al. 2019** — Context for the host star (b and c
-  discovery; planet d was not yet detected). arXiv:1906.07196.
+  discovery; planet d was not yet detected). [arXiv:1906.07196](https://arxiv.org/abs/1906.07196).
 - **Schweitzer A. et al. 2019** — Stellar parameters (Teff 2904 K,
-  L, R, M). arXiv:1904.03231.
+  L, R, M). [arXiv:1904.03231](https://arxiv.org/abs/1904.03231).
 - **Wandel A. & Tal-Or L. 2019** — Habitability framework (b and c
-  only). arXiv:1906.07704. d falls outside their habitability zone.
+  only). [arXiv:1906.07704](https://arxiv.org/abs/1906.07704). d falls outside their habitability zone.
 
 ### Read (instrument / non-cfg-decisive)
 

@@ -226,13 +226,13 @@ dynamo 를 지지할 수 있습니다. RM22 스케일링은 이 파라미터 조
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). 발견 + f 궤도
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 발견 + f 궤도
   (P = 636.13 ± 11.7 d), 질량 (Msini = 3.93 ± 1.05 M⊕), 이심률
   (0.16), 호스트 질량 (0.783 ± 0.012 M☉) 의 최선 제약. 모든 궤도
   및 물리 Decisions 행을 정박.
 - **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
   system from HARPS RV*, A&A 613, A76 (`2018A&A...613A..76F`,
-  arXiv:1801.05415). 확장된 HARPS 데이터셋으로 4-행성 시스템 재검토.
+  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). 확장된 HARPS 데이터셋으로 4-행성 시스템 재검토.
   636 d 신호 안정적. NEA 의 controversial 플래그는 지속되는
   amplitude-to-noise 우려를 반영.
 - **Wordsworth & Pierrehumbert 2015** (general atmospheric-escape

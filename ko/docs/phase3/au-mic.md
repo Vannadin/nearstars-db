@@ -141,7 +141,7 @@ AU Mic 은 태양 근방에서 색채권과 코로나가 가장 활동적인 별
 **Super-flare 가 에너지 예산을 지배합니다.** Cully 1993 EUVE 의
 1992 년 9 월 이벤트는 EUV 만 ~10³⁴–10³⁵ erg 를 방출했고 — 당시
 까지 기록된 항성 단일 flare 로는 가장 컸습니다. Tristan 2023
-(arXiv:2306.00077) 은 TESS Sectors 1+27 flare 센서스에서 sector
+([arXiv:2306.00077](https://arxiv.org/abs/2306.00077)) 은 TESS Sectors 1+27 flare 센서스에서 sector
 당 ~10³¹ erg 위 ≥ 150 이벤트를 셌습니다. 적분하면 이 에너지
 임계값 위 평균 flare 율은 5.6 이벤트/일이며, 누적 flare 빈도
 분포는 연간 ≥10³⁴ erg 이벤트가 여러 번 발생하는 수준까지 뻗습니다.
@@ -301,12 +301,12 @@ items 참조.
 
 - **Gallenne A. et al. 2022** — *The radius and effective temperature
   of the pre-main-sequence M dwarf AU Mic via VLTI/PIONIER*, A&A 665,
-  A41 (`2022A&A...665A..41G`, arXiv:2207.04116). 유일한 *refereed*
+  A41 (`2022A&A...665A..41G`, [arXiv:2207.04116](https://arxiv.org/abs/2207.04116)). 유일한 *refereed*
   간섭계 반지름. θ_LD = 0.825 ± 0.033 ± 0.038 mas → R = 0.862 ± 0.052
   R☉. Phase 2 recommended 반지름.
 - **Cristofari P. I. et al. 2023** — *Atmospheric parameters and
   magnetic fields of M dwarfs from SPIRou*, MNRAS 522, 1342
-  (`2023MNRAS.522.1342C`, arXiv:2303.11241). 자기장 포함 SPIRou 대기
+  (`2023MNRAS.522.1342C`, [arXiv:2303.11241](https://arxiv.org/abs/2303.11241)). 자기장 포함 SPIRou 대기
   fit. Teff = 3665 ± 31 K, [M/H] = +0.12 ± 0.10, log g = 4.52.
   Phase 2 recommended Teff + 금속도.
 - **Tsikoudi V. & Kellett B. J. 2000** — *ROSAT all-sky survey X-ray
@@ -317,7 +317,7 @@ items 참조.
   대해 틀림 — NEXXUS 는 G/K 표본임.)
 - **Plavchan P. et al. 2020** — *A planet within the debris disk
   around the pre-main-sequence star AU Microscopii*, Nature 582,
-  497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS 가 발견한
+  497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS 가 발견한
   AU Mic b 의 통과 hot Neptune. 4.86 d 자전 주기. PMS-isochrone
   질량 0.50 ± 0.03 M☉ (Phase 2 recommended 질량). 다-흑점 복잡도.
 - **Krist J. E. et al. 2005** — *Hubble Space Telescope Advanced
@@ -328,23 +328,23 @@ items 참조.
 - **Schneider G. et al. 2014** — *Probing for Exoplanets Hiding in
   Dusty Debris Disks: Disk Imaging, Characterization, and
   Exploration with HST/STIS Multi-Roll Coronagraphy*, AJ 148, 59
-  (`2014AJ....148...59S`, arXiv:1406.7303). HST/STIS 깊은 재방문.
+  (`2014AJ....148...59S`, [arXiv:1406.7303](https://arxiv.org/abs/1406.7303)). HST/STIS 깊은 재방문.
   표면 밝기 프로파일 정밀화. 바깥 후광을 ~210 AU 까지 추적. 안쪽
   가장자리 ~35 AU 확인.
 - **Boccaletti A. et al. 2015** — *Fast-moving features in the
   debris disk around AU Microscopii*, Nature 526, 230
-  (`2015Natur.526..230B`, arXiv:1510.06434). VLT/SPHERE 편광 영상
+  (`2015Natur.526..230B`, [arXiv:1510.06434](https://arxiv.org/abs/1510.06434)). VLT/SPHERE 편광 영상
   에서 남동쪽 ansa 의 빠르게 움직이는 다섯 피처 최초 검출. 바깥
   방향 4–10 km/s.
 - **Boccaletti A. et al. 2018** — *Two years of monitoring the AU
   Microscopii debris disk with SPHERE: New properties for the
   fast-moving features*, A&A 614, A52 (`2018A&A...614A..52B`,
-  arXiv:1804.04574). Multi-epoch 추적으로 피처 운동 확인. 속도
+  [arXiv:1804.04574](https://arxiv.org/abs/1804.04574)). Multi-epoch 추적으로 피처 운동 확인. 속도
   정밀도 확보. 운동이 케플러가 아니라 항성풍 발사라는 cfg 관련
   제약 확정.
 - **Chiang E. & Fung J. 2017** — *Stellar-wind-driven Dust Ridges
   in the AU Mic Debris Disk*, ApJ 848, 4
-  (`2017ApJ...848....4C`, arXiv:1707.08970). 움직이는 substructure
+  (`2017ApJ...848....4C`, [arXiv:1707.08970](https://arxiv.org/abs/1707.08970)). 움직이는 substructure
   의 물리 모델. 항성풍 / 복사압이 작은 입자를 가속하며, ~35 AU
   에 planetesimal 벨트 birth ring 이 자리잡음. cfg `disk_morphology`
   와 애니메이션 선택을 구동.
@@ -359,28 +359,28 @@ items 참조.
   온도를 정박.
 - **Mamajek E. E. & Bell C. P. M. 2014** — *On the age of the
   beta Pictoris moving group*, MNRAS 445, 2169
-  (`2014MNRAS.445.2169M`, arXiv:1409.2737). β Pic MG (와 따라서
+  (`2014MNRAS.445.2169M`, [arXiv:1409.2737](https://arxiv.org/abs/1409.2737)). β Pic MG (와 따라서
   AU Mic) 의 isochrone 나이 22 ± 3 Myr. LDB 로 확인.
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and
   filling of the very active M dwarf AU Mic*, MNRAS 525, 455
-  (`2023MNRAS.525..455D`, arXiv:2304.09642). SPIRou ZDI. 소규모 평균
+  (`2023MNRAS.525..455D`, [arXiv:2304.09642](https://arxiv.org/abs/2304.09642)). SPIRou ZDI. 소규모 평균
   자기장 ⟨B⟩ = 2.61 ± 0.05 kG, 대규모 자기장 550 ± 30 G (Phase 2
   recommended 자기 값). log L/L☉ = −0.99 ± 0.01 → L 0.102 (Phase 2
   recommended 광도). V−I Teff 3700 ± 70 과 Dartmouth 질량 0.60
   (divergence 대안).
 - **Wittrock J. M. et al. 2023** — *Transit Timing Variation
   Measurements and Dynamical Mass Determination of the AU Mic
-  System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719).
+  System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)).
   host 별 N-body + TTV 동역학 질량 0.51 ± 0.028 M☉. 행성 d 를
   TTV 전용 후보로 도입.
 - **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic
   System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`,
-  arXiv:2306.00077). TESS Sectors 1+27 flare 센서스. 10³¹ erg 위
+  [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS Sectors 1+27 flare 센서스. 10³¹ erg 위
   비율 5.6 이벤트/일. 누적 flare 빈도 분포.
 - **Davenport J. R. A. et al. 2020** — *The Evryscope Fast
   Transient Engine: real-time detection for rapidly evolving
   transients*, ApJ 905, 107 (`2020ApJ...905..107D`,
-  arXiv:2010.02392). TESS 첫해 M-왜성 flare 서베이 맥락. AU Mic
+  [arXiv:2010.02392](https://arxiv.org/abs/2010.02392)). TESS 첫해 M-왜성 flare 서베이 맥락. AU Mic
   은 M1V flare 활동의 고에너지 꼬리에 위치.
 - **Cully S. L. et al. 1993** — *The EUVE observation of the 1992
   September X-ray flare on AU Mic*, ApJ 414, L49
@@ -388,7 +388,7 @@ items 참조.
   ~10³⁴–10³⁵ erg.
 - **Stelzer B. et al. 2013** — *The UV and X-ray activity of the M
   dwarfs within 10 pc of the Sun*, MNRAS 431, 2063
-  (`2013MNRAS.431.2063S`, arXiv:1302.1061). AU Mic 정적 X 선. 맥락
+  (`2013MNRAS.431.2063S`, [arXiv:1302.1061](https://arxiv.org/abs/1302.1061)). AU Mic 정적 X 선. 맥락
   정보뿐 — frozen Phase 2 bib 에는 없음 (cfg X 선 proxy 는 Tsikoudi
   & Kellett 2000, log Lx 29.35).
 
@@ -396,7 +396,7 @@ items 참조.
 
 - **Martioli E. et al. 2021** — *AU Mic c: a second planet
   transiting the young M dwarf AU Mic* (`2021A&A...649A.177M`,
-  arXiv:2102.05288). TESS + 지상 후속으로 AU Mic c 확인. 항성
+  [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). TESS + 지상 후속으로 AU Mic c 확인. 항성
   결정적이지 않지만 행성 명단을 정의.
 - **Mallorquin M. et al. 2024** — *AU Mic system characterization
   with ESPRESSO* (`2024A&A...689A.132M`). b/c 의 궤도와 질량
@@ -406,7 +406,7 @@ items 참조.
   합성에는 맥락 정보뿐.
 - **Shkolnik E. L. et al. 2017** — *HAZMAT II: Ultraviolet
   Variability of Low-Mass Stars in the GALEX Archive*, ApJ 838,
-  87 (`2017ApJ...838...87S`, arXiv:1611.02835). β Pic MG 와 어린
+  87 (`2017ApJ...838...87S`, [arXiv:1611.02835](https://arxiv.org/abs/1611.02835)). β Pic MG 와 어린
   M-왜성 활동 보정. AU Mic 포화 상태에 대한 맥락.
 - **Smith B. A. & Terrile R. J. 1981** — *A Circumstellar Disk
   Around AU Microscopii?* (분해 이전, 초기 IR 초과 검출).
@@ -415,18 +415,18 @@ items 참조.
 
 - **Boyajian T. S. et al. 2012** — *Stellar Diameters and
   Temperatures II*, ApJ 757, 112 (`2012ApJ...757..112B`,
-  arXiv:1208.2431). CHARA M-왜성 간섭계 보정. Donati 2023 반지름
+  [arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). CHARA M-왜성 간섭계 보정. Donati 2023 반지름
   의 맥락이지만 AU Mic 직접 측정은 없음.
 - **Loyd R. O. P. et al. 2018** — *MUSCLES Treasury Survey V:
   FUV Flares On Active and Inactive M Dwarfs*, ApJ 867, 71
-  (`2018ApJ...867...71L`, arXiv:1809.07322). AU Mic 을 포함한
+  (`2018ApJ...867...71L`, [arXiv:1809.07322](https://arxiv.org/abs/1809.07322)). AU Mic 을 포함한
   어린 M-왜성 비교 집합의 FUV flare 통계.
 - **Beeck B. et al. 2013** — *3D radiative-hydrodynamic simulations
   of cool main-sequence stars* (Donati 2023 §3 경유 인용).
   Granulation 모델 격자.
 - **Kowalski A. F. et al. 2013** — *Time-resolved Properties and
   Global Trends in dM Flares from Simultaneous Photometry and
-  Spectra*, ApJS 207, 15 (`2013ApJS..207...15K`, arXiv:1307.2099).
+  Spectra*, ApJS 207, 15 (`2013ApJS..207...15K`, [arXiv:1307.2099](https://arxiv.org/abs/1307.2099)).
   cfg flare 색에 채택된 백색광 flare 연속체 분해를 정의.
 
 ### Not read — no arXiv preprint or low-priority (~40 papers)

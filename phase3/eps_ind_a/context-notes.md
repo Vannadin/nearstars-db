@@ -21,7 +21,7 @@ Append-only decision log. Synthesis from frozen Phase 2 (db/systems/eps_ind_a.js
 - activity cycle: ~2600 d ≈ 7.1 yr (Lundkvist 2024 §4.3, HARPS archival log R'HK phase-fold). Context.
 - distance: Gaia DR3 parallax 274.84 mas -> 3.638 pc (derived) = 11.87 ly. vmag V=4.66 (Gaia converted) — naked-eye.
 
-### Planet b (eps Ind A b) — Matthews 2026 anchor (arXiv 2603.08780, ApJL doi 10.3847/2041-8213/ae5823)
+### Planet b (eps Ind A b) — Matthews 2026 anchor (arXiv [2603.08780](https://arxiv.org/abs/2603.08780), ApJL doi 10.3847/2041-8213/ae5823)
 - true_mass: 7.63 (+0.73/-0.70) MJup = 2425 ± 232 M_earth (curated recommended); alt 1033 M_earth Feng 2019 (~3.25 MJup astrometric), 861 Msini Feng 2018
 - a: 20.9 (+5.8/-3.3) AU (Matthews 2026); alt 11.55 Feng 2019, 12.82 Feng 2018
 - e: 0.244 (+0.11/-0.083) (Matthews 2026); curated uncertainty 0.11

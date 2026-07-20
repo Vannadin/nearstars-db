@@ -179,10 +179,10 @@ Combining the surface and atmosphere decisions:
   source for d's orbit (P = 4.65626 d, a = 0.02851 AU, e = 0.07) and
   minimum mass (1.09 M⊕), plus the semi-empirical radius estimate
   (1.03 R⊕).
-- **2304.00031** Pineda & Villadsen 2023 — VLA SPI study; establishes
+- **[2304.00031](https://arxiv.org/abs/2304.00031)** Pineda & Villadsen 2023 — VLA SPI study; establishes
   that the radio bursts fold to b's orbit, **not** d's (worst phase
   agreement of the three for d), so d is not the SPI driver.
-- **2305.00809** Trigilio et al. 2023 — uGMRT SPI confirmation; same
+- **[2305.00809](https://arxiv.org/abs/2305.00809)** Trigilio et al. 2023 — uGMRT SPI confirmation; same
   conclusion (d's detections randomly mixed around the orbit, no folding
   → no SPI attribution to d). Cites R_d = 1.04 R⊕. Source for the
   d-is-not-driver decision.

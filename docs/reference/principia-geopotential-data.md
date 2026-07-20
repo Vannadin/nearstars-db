@@ -289,7 +289,7 @@ relation), so it is a *derived* emit field (like a unit conversion), auto-comput
 
 A fictional giant has no measured J₂, so per the derived-value rule we ground the
 **method** (not a fake measurement). Use the first-order **Radau–Darwin relation**
-(Helled, Anderson, Schubert & Stevenson 2011, eq. 3, arXiv:1109.1627; orig. Zharkov &
+(Helled, Anderson, Schubert & Stevenson 2011, eq. 3, [arXiv:1109.1627](https://arxiv.org/abs/1109.1627); orig. Zharkov &
 Trubitsyn 1978 / Murray & Dermott 1999 §4.4):
 
 ```
@@ -299,7 +299,7 @@ inverted →  J₂ = (m/3)·[5/(s²+1) − 1],   s = (5/2)·(1 − (3/2)·NMoI)
 
 The one free input is the **normalized moment of inertia** NMoI = C/MR² (central
 condensation). Bound it from the measured giants — Jupiter ≈ 0.264, Saturn ≈ 0.21, ice
-giants ≈ 0.22–0.24 (Helled+2011/2020 [arXiv:2007.10783]; Fortney+2018 [arXiv:1609.06324];
+giants ≈ 0.22–0.24 (Helled+2011/2020 [[arXiv:2007.10783](https://arxiv.org/abs/2007.10783)]; Fortney+2018 [[arXiv:1609.06324](https://arxiv.org/abs/1609.06324)];
 homogeneous sphere = 0.40). A lower-mass / lower-density giant is *less* centrally
 condensed than Saturn → slightly higher NMoI.
 

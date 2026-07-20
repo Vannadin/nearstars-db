@@ -29,7 +29,7 @@ same false alarms aren't re-raised.
    2026-05-28 revert (`a2ef49c`) → 05-30 host-only rebuild. *[manual]*
 2. **Teegarden's Star — same desync.** 3 DB planets, 0 reports. *[Phase 0 / agent]*
 3. **Fomalhaut — disk geometry wrong vs source.** Intermediate belt 60–110 AU
-   but Gáspár 2023 (arXiv:2305.03789) says **83–104 AU**; the ~78 AU gap is
+   but Gáspár 2023 ([arXiv:2305.03789](https://arxiv.org/abs/2305.03789)) says **83–104 AU**; the ~78 AU gap is
    missing; inner-belt inclination "~67.5°" but paper says **47.8°** (the
    misalignment is the paper's headline result); intro prose "40–80" contradicts
    the table. Root cause: `_bib/fomalhaut.yaml` = 5 stellar-param papers, **0
@@ -131,7 +131,7 @@ auto-flagged bulk).
   geometry (may be fine from disks_curated).
 - **F7** hd-69830 prose G8V→K0V; proxima T_eq recompute.
 - **F9** proxima-cen `magnetic_dipole_strength_kG`/`magnetic_total_field_kG_rms`:
-  re-source (Reiners 2018 1711.06576 is wrong) or mark unverified.
+  re-source (Reiners 2018 [1711.06576](https://arxiv.org/abs/1711.06576) is wrong) or mark unverified.
 - **F10** proxima-cen-b `atmosphere_composition`: CO₂ 5% → ~376 ppm (N₂ + trace CO₂).
 - **F11** proxima-cen-b `magnetosphere_standoff_planet_radii`: 1.5 → 3–11 R_p (Garraffo 2022).
 - **F12** trappist-1-e/f `surface_radiation_dose_msv_yr`: re-derive from Atri 2019

@@ -216,7 +216,7 @@ NearStars 렌더러에서 YZ Cet 은, 시그니처가 수수한 광구가 아니
 ### Read (drove Decisions above)
 
 - **Pineda J.S. & Villadsen J. 2023** — *Coherent radio bursts from
-  known M-dwarf planet host YZ Ceti*, Nature Astronomy (arXiv:2304.00031).
+  known M-dwarf planet host YZ Ceti*, Nature Astronomy ([arXiv:2304.00031](https://arxiv.org/abs/2304.00031)).
   ~100% 원편광된 coherent 전파 버스트를 VLA 2–4 GHz 로 발견했고, 그
   재발이 행성 b 의 2.02087 d 궤도를 거의 따라갑니다. SPI-후보 검출,
   sub-Alfvénic 환경 (Model A/B 풍, Rossby number ~0.5), Table 1 항성
@@ -225,7 +225,7 @@ NearStars 렌더러에서 YZ Cet 은, 시그니처가 수수한 광구가 아니
   YZ Cet 을 핵심 SPI 모니터링 사례로 확립.
 - **Trigilio C. et al. 2023** — *Star-Planet Interaction at radio
   wavelengths in YZ Ceti: Inferring planetary magnetic field*, ApJL
-  (arXiv:2305.00809). uGMRT 550–900 MHz. 9회 중 4회 검출이 행성 b 의 두
+  ([arXiv:2305.00809](https://arxiv.org/abs/2305.00809)). uGMRT 550–900 MHz. 9회 중 4회 검출이 행성 b 의 두
   대칭 궤도-위상 sector 로 folding 되어 SPI 의 ARE 를 4.37σ (99.992%)
   로 확인. 확인-SPI 결정, ECM 스펙트럼에서 추론한 항성 극자기장
   B_p ≈ 2.4 kG (s=2, ν_min ≈ 500 MHz), η★ ≈ 10^8 / R_Alf ≈ 100 R★

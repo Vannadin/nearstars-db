@@ -3,7 +3,7 @@
 ## Anchor papers (inherited from host eps-eri Phase 3 triage)
 
 - **Hatzes 2000** (`2000ApJ...544L.145H`) — RV discovery
-- **Mawet 2019** (`2019AJ....157...33M`, arXiv 1810.03794) — Keck/NIRC2 Ms-band
+- **Mawet 2019** (`2019AJ....157...33M`, arXiv [1810.03794](https://arxiv.org/abs/1810.03794)) — Keck/NIRC2 Ms-band
   vortex coronagraph direct imaging confirmation; rules out outer "ε Eri c"
 - **Llop-Sayson 2021** (`2021AJ....162..181L`, arXiv 2108.05552) — Joint RV +
   Hipparcos/Gaia astrometric fit. M_b = 0.78 ± 0.12 M_Jup deprojected from

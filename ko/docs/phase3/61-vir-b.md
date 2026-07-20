@@ -240,22 +240,22 @@ burst 가 있는 변형 렌더링은 Phase 3.5 시각 디테일 레이어에서 
   여기에 묶입니다.
 - **Léger A. et al. 2009** — *Transiting exoplanets from the CoRoT
   space mission VIII. CoRoT-7b: the first super-Earth with measured
-  radius*, A&A 506, 287 (`2009A&A...506..287L`, arXiv:0908.0241).
+  radius*, A&A 506, 287 (`2009A&A...506..287L`, [arXiv:0908.0241](https://arxiv.org/abs/0908.0241)).
   용암-세계 템플릿. 뜨거운 암석 슈퍼지구에 대한 마그마-바다 dayside
   시나리오를 확립. b 는 약간 더 차가운 아날로그. 표면 형태 + 마그마-
   pond 시각 결정을 견인.
 - **Schaefer L. & Fegley B. 2009** — *Chemistry of silicate
   atmospheres of evaporating super-Earths*, ApJ 703, L113
-  (`2009ApJ...703L.113S`, arXiv:0905.4045). 뜨거운 암석 표면의
+  (`2009ApJ...703L.113S`, [arXiv:0905.4045](https://arxiv.org/abs/0905.4045)). 뜨거운 암석 표면의
   outgassing 화학. `atmosphere_composition` 선택을 견인 (1400–1500 K
   substellar 에서 Na, K, SiO, O₂ 규산염 증기 우세).
 - **Zeng L. et al. 2016** — *Mass-radius relation for rocky planets*,
-  ApJ 819, 127 (`2016ApJ...819..127Z`, arXiv:1512.08827). 지구 조성
+  ApJ 819, 127 (`2016ApJ...819..127Z`, [arXiv:1512.08827](https://arxiv.org/abs/1512.08827)). 지구 조성
   암석 행성의 mass-radius 스케일링. 5.1 M⊕ 에서 R ≈ 1.65 R⊕. `radius_rearth`
   tie-break 을 견인.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley in the
   Kepler planets*, ApJ 847, 29 (`2017ApJ...847...29O`,
-  arXiv:1705.10810). 광증발-valley 물리. b 를 단단히 "코어만" 영역에
+  [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). 광증발-valley 물리. b 를 단단히 "코어만" 영역에
   위치시킴 — 초기 H/He 외피는 ≲ 50 Myr 에 손실. `atmosphere_present =
   false` 선택을 견인.
 - **Hut P. 1981** — *Tidal evolution in close binary systems*, A&A
@@ -271,20 +271,20 @@ burst 가 있는 변형 렌더링은 Phase 3.5 시각 디테일 레이어에서 
 
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-Type Dwarfs Using Activity-Rotation
-  Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`, arXiv:0807.1686).
+  Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`, [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)).
   호스트 합성에서 상속. 61 Vir 나이 6.1 ± 1.7 Gyr. 대기 손실의 시스템
   진화 시간 스케일을 결정.
 - **Pavlenko Y. V. et al. 2012** — *Effective temperatures, gravities,
   metallicities, and ages of 18 solar twin candidates*
-  (`2012MNRAS.422..542P`, arXiv:1112.0590). 호스트 합성에서 상속. 61
+  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). 호스트 합성에서 상속. 61
   Vir 솔라 트윈 풍부도 패턴 확인.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*, MNRAS
-  424, 1206 (`2012MNRAS.424.1206W`, arXiv:1204.6063). 호스트 합성에서
+  424, 1206 (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). 호스트 합성에서
   상속. ~30 AU 의 차가운 debris 띠가 b 의 분리에서 안쪽 행성과 동역학
   적으로 상호작용하지 않으므로 간략히 인용.
 - **Lopez E. D. & Fortney J. J. 2014** — *Understanding the
   mass-radius relation for sub-Neptunes*, ApJ 792, 1
-  (`2014ApJ...792....1L`, arXiv:1311.0329). sub-Neptune envelope
+  (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). sub-Neptune envelope
   mass-radius 스케일링. b 의 잠재적 광증발되지 않은 H/He 외피에 대한
   경계를 정보화 (논의된 대로 배제).
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope

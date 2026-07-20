@@ -270,37 +270,37 @@ exists), and one line on what it contributes.
   climate states for a tidally-locked world.
 
 - **Yang, J., Cowan, N. B. & Abbot, D. S. (2013)** — *ApJ Letters* 771, L45.
-  **arXiv:1307.0515.** Stabilizing substellar cloud feedback expands the inner
+  **[arXiv:1307.0515](https://arxiv.org/abs/1307.0515).** Stabilizing substellar cloud feedback expands the inner
   habitable zone; supports the thick-atmosphere / waterbelt readings.
 
 - **Hu, Y. & Yang, J. (2014)** — *PNAS* 111, 629. No arXiv preprint; cite by ADS
-  bibcode **2014PNAS..111..629H** (the previously-circulated id 1312.3337 is
+  bibcode **2014PNAS..111..629H** (the previously-circulated id [1312.3337](https://arxiv.org/abs/1312.3337) is
   Leconte+ 2013 on runaway greenhouse — do not use it). Ocean heat transport
   shifts the eyeball pool downwind: the "lobster" / asymmetric-eyeball state.
 
 - **Kite, E. S., Gaidos, E. & Manga, M. (2011)** — *ApJ* 743, 41.
-  **arXiv:1109.2668.** Climate instability on tidally-locked planets — the
+  **[arXiv:1109.2668](https://arxiv.org/abs/1109.2668).** Climate instability on tidally-locked planets — the
   feedbacks that can tip a locked atmosphere toward collapse (Layer-2 context).
 
-- **Kopparapu, R. K. et al. (2016)** — *ApJ* 819, 84. **arXiv:1602.05176.** Inner
+- **Kopparapu, R. K. et al. (2016)** — *ApJ* 819, 84. **[arXiv:1602.05176](https://arxiv.org/abs/1602.05176).** Inner
   edge of the habitable zone for *synchronously rotating* planets — the
   locked-specific flux/HZ framing (more on-topic than the 2013 general HZ paper).
 
-- **Haqq-Misra, J. et al. (2018)** — *ApJ* 852, 67. **arXiv:1710.00435.**
+- **Haqq-Misra, J. et al. (2018)** — *ApJ* 852, 67. **[arXiv:1710.00435](https://arxiv.org/abs/1710.00435).**
   Demarcates the circulation regimes (slow-rotator / Rhines-rotator / fast-rotator)
   of synchronously rotating planets — the regime sets the day-night contrast
   structure, a direct Layer-2 input.
 
 - **Checlair, J., Menou, K. & Abbot, D. S. (2017)** — *ApJ* 845, 132.
-  **arXiv:1705.08904.** "No Snowball on Habitable Tidally Locked Planets": the
+  **[arXiv:1705.08904](https://arxiv.org/abs/1705.08904).** "No Snowball on Habitable Tidally Locked Planets": the
   substellar melt region persists, so a fully-locked ocean planet resists global
   glaciation — nuances the Snowball row in §5.
 
-- **Yang, J. et al. (2019)** — *ApJ* 871, 29. **arXiv:1902.02103.** Ocean dynamics
+- **Yang, J. et al. (2019)** — *ApJ* 871, 29. **[arXiv:1902.02103](https://arxiv.org/abs/1902.02103).** Ocean dynamics
   and the inner edge of the habitable zone — ocean heat transport's role in the
   eyeball/lobster surface temperature field.
 
-- **Hammond, M. et al. (2022)** — *PSJ* 3, 32. **arXiv:2201.02685.** An energy
+- **Hammond, M. et al. (2022)** — *PSJ* 3, 32. **[arXiv:2201.02685](https://arxiv.org/abs/2201.02685).** An energy
   balance model for rapidly and synchronously rotating planets — a lightweight
   analytic alternative to a full GCM for the day-night temperature field.
 
@@ -309,32 +309,32 @@ exists), and one line on what it contributes.
   low-water-inventory land/dune worlds have a wider habitable zone than aqua
   planets.
 
-- **Wordsworth, R. (2015)** — *ApJ* 806, 180. **arXiv:1412.5575** (the
+- **Wordsworth, R. (2015)** — *ApJ* 806, 180. **[arXiv:1412.5575](https://arxiv.org/abs/1412.5575)** (the
   previously-circulated id 1505.07087 is incorrect). Atmospheric heat
   redistribution and collapse theory; scaling for day-night ΔT and surface winds.
 
-- **Koll, D. D. B. & Abbot, D. S. (2016)** — *ApJ* 825, 99. **arXiv:1605.01066**
+- **Koll, D. D. B. & Abbot, D. S. (2016)** — *ApJ* 825, 99. **[arXiv:1605.01066](https://arxiv.org/abs/1605.01066)**
   (the previously-circulated id 1603.05229 is incorrect). WTG + heat-engine model
   of the day-night temperature structure and wind speeds for dry locked rocky
   atmospheres.
 
-- **Koll, D. D. B. (2022)** — *ApJ* 924, 134. **arXiv:1907.13145.** Pressure-
+- **Koll, D. D. B. (2022)** — *ApJ* 924, 134. **[arXiv:1907.13145](https://arxiv.org/abs/1907.13145).** Pressure-
   dependent day-night contrast scaling usable without a full GCM (thicker
   atmosphere → smaller contrast). The Layer-2 workhorse.
 
-- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **arXiv:1608.06827.** LMD GCM
+- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **[arXiv:1608.06827](https://arxiv.org/abs/1608.06827).** LMD GCM
   of Proxima b; substellar ~290 K / nightside ~150 K / mean ~250 K for ~1 bar
   N₂+CO₂. Layer-3 anchor.
 
-- **Boutle, I. A. et al. (2017)** — *A&A* 601, A120. **arXiv:1702.08463.** UK Met
+- **Boutle, I. A. et al. (2017)** — *A&A* 601, A120. **[arXiv:1702.08463](https://arxiv.org/abs/1702.08463).** UK Met
   Office Unified Model of Proxima b; independent confirmation of the Turbet+ 2016
   temperature structure. Layer-3 anchor.
 
 - **Kopparapu, R. K. et al. (2013)** — *ApJ* 765, 131 (erratum *ApJ* 770, 82).
-  **arXiv:1301.6674.** Habitable-zone boundary estimates; sets the flux context
+  **[arXiv:1301.6674](https://arxiv.org/abs/1301.6674).** Habitable-zone boundary estimates; sets the flux context
   (`S`) and inner/outer-edge framing used in Layer 1.
 
-- **Ho, S. & Turner, E. L. (2011)** — *ApJ* 739, 26. **arXiv:1007.0245.** Related
+- **Ho, S. & Turner, E. L. (2011)** — *ApJ* 739, 26. **[arXiv:1007.0245](https://arxiv.org/abs/1007.0245).** Related
   (not climate): the statistical RV minimum-mass → true-mass deprojection method,
   used elsewhere in the pipeline to turn `m sin i` into a mass for these planets.
 

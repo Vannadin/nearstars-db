@@ -198,7 +198,7 @@ NearStars 렌더러에서 GJ 896 A b 는 가시적으로 이심적인 궤도 위
 - **Curiel S. et al. 2022** — *3D orbital architecture of a dwarf
   binary system and its planetary companion*, AJ 164, 93
   (`2022AJ....164...93C`, doi:10.3847/1538-3881/ac7c66,
-  arXiv:2208.14553). GJ 896 A b 의 VLBA + 광학/적외선 천체측정 발견.
+  [arXiv:2208.14553](https://arxiv.org/abs/2208.14553)). GJ 896 A b 의 VLBA + 광학/적외선 천체측정 발견.
   진질량 (2.26 ± 0.57 M_Jup = 718.29 M⊕), 전체 궤도 요소 세트
   (a = 0.63965 AU, P = 284.39 d, e = 0.35, i = 69.2°, Ω = 45.62°,
   ω = 353.11°), 행성의 열 영역을 정하는 거주가능영역 (0.18–0.26 AU) 과

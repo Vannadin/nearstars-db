@@ -4,11 +4,11 @@ TRAPPIST-1 h is a 0.76 R⊕, 0.33 M⊕ sub-Mars-mass rocky planet on a
 18.77-day orbit around an M8V ultra-cool dwarf. Outermost of the
 seven, receiving only 0.16× Earth's insolation. Its orbital period
 and resonant-chain placement were confirmed by Luger 2017
-(1703.04166) using K2 mission data. Gressier 2022 (2112.05510)
+([1703.04166](https://arxiv.org/abs/1703.04166)) using K2 mission data. Gressier 2022 ([2112.05510](https://arxiv.org/abs/2112.05510))
 obtained the first HST WFC3/G141 near-infrared transmission spectrum
 and excluded cloud-free hydrogen-rich atmospheres; no JWST follow-up
 has been published as of 2026-05-21. The interesting twist for h:
-Lincowski 2018 (1809.07498) notes that a **desiccated** h could
+Lincowski 2018 ([1809.07498](https://arxiv.org/abs/1809.07498)) notes that a **desiccated** h could
 support habitable surface temperatures beyond the maximum-greenhouse
 distance under specific 10–100 bar O₂ + CO₂ post-runaway scenarios —
 making h the system's most counterintuitive habitability candidate.
@@ -39,7 +39,7 @@ rocky surface).
 | `surface_gravity_g_earth` | 0.572 | high | derived = 0.326 / 0.755² |
 | `density_g_cc` | 4.20 | high | Agol 2021 (water-rich) |
 | `water_mass_fraction` | 0.03–0.10 | medium | tightened from earlier 0.05–0.15 — Lichtenberg 2019 ²⁶Al desiccation argues for low end; Bourrier 2017 brief runaway phase (33–67 Myr) preserves most accreted water |
-| `insolation_s_earth` | 0.144 | high | Agol 2021 / Gillon 2024 (2401.11815) — corrected from previous round 0.16 |
+| `insolation_s_earth` | 0.144 | high | Agol 2021 / Gillon 2024 ([2401.11815](https://arxiv.org/abs/2401.11815)) — corrected from previous round 0.16 |
 | `equilibrium_temp_k` (A=0)   | 169 | high | Agol 2021 |
 | `equilibrium_temp_k` (A=0.5, frosted) | 142 | high | derived; frosted-surface case |
 | `bond_albedo` | 0.40 | medium | mixed bedrock + CO₂/N₂ frost; less reflective than full snowball |
@@ -54,7 +54,7 @@ rocky surface).
 | `cloud_cover_fraction` | 0.02 | low | minimal — sporadic CO₂ ice cirrus only |
 | `cloud_tint_rgb_hex` | n/a | high | clouds too sparse for cfg-relevant tint |
 | `ocean_present` | uncertain (sub-glacial possible if wmf at upper bound) | low | low mass + low temp → less basal melt than g; ocean if any is thin and Europa-like |
-| `surface_ice_caps` | H₂O ice cover globally, with buried CO₂ ice underneath; minor bedrock outcrop near substellar | medium | Turbet 2017 (1707.06927) shows surface CO₂ ice is gravitationally unstable on h and gets buried beneath the H₂O ice shell over geological timescales. Surface frost is therefore predominantly H₂O ice with CO₂ ice as a deeper layer. |
+| `surface_ice_caps` | H₂O ice cover globally, with buried CO₂ ice underneath; minor bedrock outcrop near substellar | medium | Turbet 2017 ([1707.06927](https://arxiv.org/abs/1707.06927)) shows surface CO₂ ice is gravitationally unstable on h and gets buried beneath the H₂O ice shell over geological timescales. Surface frost is therefore predominantly H₂O ice with CO₂ ice as a deeper layer. |
 | `surface_tint_rgb_hex_primary` | `#d8d0c4` (H₂O ice / snow under M-dwarf light) | medium | Surface is predominantly H₂O ice (Turbet 2017 burial argument); the iron-rich bedrock is exposed only in localized substellar regions. Color palette inverts relative to the Mars-Pluto hybrid framing — cream-white dominant, dark bedrock as minor accent. |
 | `surface_tint_rgb_hex_accent` | `#3a2c20` (weathered iron-rich bedrock — minor, only at substellar) | low | Surface is predominantly H₂O ice (Turbet 2017 burial argument); the iron-rich bedrock is exposed only in localized substellar regions. Color palette inverts relative to the Mars-Pluto hybrid framing — cream-white dominant, dark bedrock as minor accent. |
 | `surface_morphology` | cratered ancient bedrock near substellar, patchy CO₂/N₂ ice frost toward terminator and nightside | medium | Mars/Mercury analog; very low resurfacing rate |
@@ -63,11 +63,11 @@ rocky surface).
 | `tidal_heating_w_m2` | 0.00001–0.0001 | medium | Bolmont 2020 — negligible at h |
 | `radiogenic_heat_w_m2` | 0.025 | low | Earth-analog bulk-silicate-Earth radiogenic flux (~0.04 W/m² present-day), mass-scaled (slightly below Earth-analog for this low-mass body). Method: Wang et al. 2020 (`2020A&A...644A..19W`) exoplanet radiogenic-heat framework; its Eu→Th/U host-abundance refinement is not applied because per-host abundances are not curated, so an Earth-analog abundance is assumed |
 | `magnetic_field_strength_microtesla_equator` | 0.5 | low | Sub-Mars mass (0.33 M⊕) → dynamo likely shut off; Mars-analog crustal remnant field |
-| `magnetic_dipole_moment_normalized_earth` | 0.005 | medium | 2208.06523 thermal evolution + RM22 — low-mass planets reach dynamo shutoff early (<1 Gyr) |
+| `magnetic_dipole_moment_normalized_earth` | 0.005 | medium | [2208.06523](https://arxiv.org/abs/2208.06523) thermal evolution + RM22 — low-mass planets reach dynamo shutoff early (<1 Gyr) |
 | `magnetic_dipole_tilt_deg` | 10 | low | Tie-break: 10° offset; potentially crustal anomaly-dominated like Mars (no clear dipole axis) |
 | `magnetosphere_standoff_planet_radii` | 1.2 | medium | Essentially no global magnetosphere; induced magnetosphere only (Venus/Mars-analog); standoff at ionopause ≈ R_planet |
 | `radiation_belt_present` | false | high | B-field <0.1 Earth → no Van-Allen-like trapped regions |
-| `surface_radiation_dose_msv_yr` | 4000 | low | Atri 2019 (1910.09871) scaling for h at 0.062 AU; GCR background dominates with weak shielding. Atri reports Gray-per-event + dimensionless enhancement-over-GCR factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
+| `surface_radiation_dose_msv_yr` | 4000 | low | Atri 2019 ([1910.09871](https://arxiv.org/abs/1910.09871)) scaling for h at 0.062 AU; GCR background dominates with weak shielding. Atri reports Gray-per-event + dimensionless enhancement-over-GCR factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
 | `atmospheric_shielding_g_cm2` | 5 | medium | Phase 3 cfg pressure 0.005 bar → ~5 g/cm² column |
 | `aurora_present` | true | medium | Atm + crustal/induced magnetic field → patchy Mars-like discrete aurora |
 | `aurora_color_primary_hex` | `#4DFF4D` | low | N₂ Vegard-Kaplan bands + [NI] 520 nm green if trace O; tie-break: visible green over UV-only |
@@ -84,7 +84,7 @@ TRAPPIST-1 h is the system's smallest planet (0.326 M⊕, sub-Mars
 mass) and lies at 0.16 S⊕ insolation. The combination — small mass,
 low gravity (0.572 g), and low insolation — makes h a difficult case
 for atmospheric retention. The cosmic shoreline literature
-(Castan-Lopez 2025 — 2504.19872 — , Zahnle 2017) places h close to
+(Castan-Lopez 2025 — [2504.19872](https://arxiv.org/abs/2504.19872) — , Zahnle 2017) places h close to
 or below the empirical retention threshold for hydrogen-bearing and
 even nitrogen-bearing atmospheres. Some volatile retention is
 plausible (CO₂ has high enough molecular weight to survive Jeans
@@ -97,7 +97,7 @@ similar to f and g but with much less mass to work with. Most of
 this water is likely frozen at the surface (CO₂ and H₂O ice) or
 sequestered as a thin sub-glacial layer over a small rocky core.
 
-The Lincowski 2018 (1809.07498) "desiccated h" scenario — habitable
+The Lincowski 2018 ([1809.07498](https://arxiv.org/abs/1809.07498)) "desiccated h" scenario — habitable
 surface temperatures from a thick (10–100 bar) CO₂/O₂ post-runaway
 atmosphere — is preserved as a cfg variant but is not the canonical
 choice. The post-runaway atmospheric retention timescale at h's
@@ -118,7 +118,7 @@ For the surface morphology, we adopt a Mars-Pluto hybrid analog:
 
 **Color choice — H₂O ice dominant.** Turbet 2017 shows that even though h's atmosphere is dominated by trace CO₂ at low pressures, the surface frost composition is **predominantly H₂O ice** (not CO₂/N₂ frost as in earlier framings). CO₂ ice deposits form transiently but are gravitationally unstable — they get buried beneath the H₂O ice shell over geological timescales. The visible surface is therefore cream-white (`#d8d0c4`) from clean H₂O ice under M-dwarf illumination, with minor weathered iron-rich bedrock patches (`#3a2c20`) exposed only in localized substellar regions where ice has sublimated. The Mars-Pluto hybrid framing inverts: cream-white dominant globally, with dark bedrock as the minor accent rather than the primary surface tone.
 
-**Interior structure.** Barr 2018 (1712.05641) finds h has a 1030 km rock core (mean-density case), with a maximum-density configuration allowing only ~100 km H₂O shell over the rock. The current cfg WMF 0.03–0.10 sits between these extremes. h's CMF is at the lower end of the system (~0.23), consistent with a relatively iron-poor rocky body.
+**Interior structure.** Barr 2018 ([1712.05641](https://arxiv.org/abs/1712.05641)) finds h has a 1030 km rock core (mean-density case), with a maximum-density configuration allowing only ~100 km H₂O shell over the rock. The current cfg WMF 0.03–0.10 sits between these extremes. h's CMF is at the lower end of the system (~0.23), consistent with a relatively iron-poor rocky body.
 
 **Mars-analog patchy aurora geometry.** With no organized global dynamo (sub-Mars mass, frozen core after 7.6 Gyr), h's magnetic field is dominated by **crustal remnants** in localized patches — directly analogous to Mars (Acuña 1999 MAG/ER discovery). Combined with the thin N₂ atmosphere, this produces a *patchy* aurora geometry rather than the regular auroral oval seen on Earth or g. Each crustal magnetic anomaly funnels stellar-wind particles into a localized aurora spot above its location, producing scattered green N₂ Vegard-Kaplan + N₂⁺ violet emissions. The aurora geometry is essentially random — wherever crustal magnetization survived — and the result is dramatically different from the inner planets' organized auroral bands. Cfg renders this as scattered `#4DFF4D` green patches with `#B19CD9` violet accent, distributed at low-to-mid magnetic latitudes rather than concentrated at the poles. Interesting-first tie-break chose this Mars-analog rendering over the alternative "uniform faint global glow" approach.
 
@@ -137,7 +137,7 @@ hemisphere in the locked frame.
 
 ## Atmosphere synthesis
 
-Gressier 2022 (2112.05510) presented the first HST WFC3/G141
+Gressier 2022 ([2112.05510](https://arxiv.org/abs/2112.05510)) presented the first HST WFC3/G141
 transmission spectrum of h, the planet's only published atmospheric
 observation. The data are consistent with either no atmosphere or
 a flat-spectrum secondary atmosphere; cloud-free hydrogen-rich
@@ -161,7 +161,7 @@ For NearStars we adopt **0.005 bar (Mars-thin) N₂-dominated atmosphere with tr
 - **Composition** N₂-dominated (~90%), trace CO₂ (10–100 ppm, NOT 1000). The driver is Bolmont 2018 review's cold-trap argument plus Turbet 2017 specific calculation showing pure-CO₂ equilibrium is just 4 mbar at 145 K for h, and N₂-background scenarios give only "a few tens of ppm" CO₂ in the gas phase. The remaining ~10% is split among Ar, frost-cycle H₂O vapor, and fossil O₂.
 - **Clouds.** Minimal (~2% global): rare CO₂ ice cirrus only.
 
-**Atmospheric retention favored by ion-escape arguments.** Despite the cosmic-shoreline-threshold framing, Dong 2018 (1705.05535) finds h has the LOWEST ion escape rate in the system (1.29×10²⁶ s⁻¹) and the highest atmospheric retention timescale (~10¹⁰ yr) — "h ought to be the most stable planet from the perspective of atmospheric ion loss." Stellar wind dynamic pressure at h is "only" 100–300× Earth's vs. 10³–10⁴× at b. Krissansen-Totton 2022 (2207.04164) similarly concludes that outer planets "retain significant surface volatiles in virtually all model simulations" with "CO₂-dominated or CO₂-O₂ atmospheres for all planets that retain substantial atmospheres." The cfg's thin N₂+trace-CO₂ choice is conservative compared to this; a thicker (~0.1 bar) atmosphere is also defensible.
+**Atmospheric retention favored by ion-escape arguments.** Despite the cosmic-shoreline-threshold framing, Dong 2018 ([1705.05535](https://arxiv.org/abs/1705.05535)) finds h has the LOWEST ion escape rate in the system (1.29×10²⁶ s⁻¹) and the highest atmospheric retention timescale (~10¹⁰ yr) — "h ought to be the most stable planet from the perspective of atmospheric ion loss." Stellar wind dynamic pressure at h is "only" 100–300× Earth's vs. 10³–10⁴× at b. Krissansen-Totton 2022 ([2207.04164](https://arxiv.org/abs/2207.04164)) similarly concludes that outer planets "retain significant surface volatiles in virtually all model simulations" with "CO₂-dominated or CO₂-O₂ atmospheres for all planets that retain substantial atmospheres." The cfg's thin N₂+trace-CO₂ choice is conservative compared to this; a thicker (~0.1 bar) atmosphere is also defensible.
 
 **Auroral chemistry.** The thin N₂-dominated atmosphere (≲100 ppm CO₂) produces a clean nitrogen-aurora chemistry: N₂ Vegard-Kaplan bands at 200–300 nm (UV, with some scattered to visible cyan-violet), N₂⁺ 391.4 nm First Negative blue, and Lyman-Birge-Hopfield bands. Trace O₂ (if present from photolysis) contributes [OI] 557.7 nm green. Per the crustal-anomaly geometry above, these emissions are concentrated in small spots rather than continuous bands. Intensity ~30 kR is the lowest in the system due to the very thin atmosphere — but each individual aurora spot is bright per unit area because precipitating particles deposit deeply into the thin air. For cfg rendering: faint green/violet patches with no organized polar geometry.
 
@@ -182,13 +182,13 @@ in the 1:1 dominance regime.
 **No seasons.** Obliquity = 0; libration-induced insolation
 variation < 0.5%.
 
-**Resonant chain dynamics.** Luger 2017 (1703.04166) established
+**Resonant chain dynamics.** Luger 2017 ([1703.04166](https://arxiv.org/abs/1703.04166)) established
 h's place in the 7-planet Laplace-resonance chain (8:5 mean-motion
 resonance with g). The chain provides ongoing small-amplitude
 perturbations of the orbital elements, but for visual / cfg
 purposes the configuration is stable.
 
-**Magnetic dynamo expectation.** h's small mass (0.33 M⊕, sub-Mars), advanced age (7.6 Gyr), and very slow tidally-locked rotation (18.8 d) make a sustained global dynamo essentially impossible. 2208.06523 (Thermal Evolution and Magnetic History of Rocky Planets) finds that bodies below ~0.5 M⊕ typically shut down their dynamos within 1–2 Gyr; h is well past that timescale. The remaining magnetic structure is crustal — fossilized magnetization from when h had a younger dynamo, now patchy after billions of years of impact gardening and thermal alteration. This is exactly the Mars situation today: ~1 μT crustal patches with no global dipole. Auroras therefore form not in organized polar ovals but in localized spots above magnetized terrain. RM22 (2203.01065) scaling returns a dipole moment of ~0.005 × Earth, effectively a residual signature rather than an active dynamo.
+**Magnetic dynamo expectation.** h's small mass (0.33 M⊕, sub-Mars), advanced age (7.6 Gyr), and very slow tidally-locked rotation (18.8 d) make a sustained global dynamo essentially impossible. [2208.06523](https://arxiv.org/abs/2208.06523) (Thermal Evolution and Magnetic History of Rocky Planets) finds that bodies below ~0.5 M⊕ typically shut down their dynamos within 1–2 Gyr; h is well past that timescale. The remaining magnetic structure is crustal — fossilized magnetization from when h had a younger dynamo, now patchy after billions of years of impact gardening and thermal alteration. This is exactly the Mars situation today: ~1 μT crustal patches with no global dipole. Auroras therefore form not in organized polar ovals but in localized spots above magnetized terrain. RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) scaling returns a dipole moment of ~0.005 × Earth, effectively a residual signature rather than an active dynamo.
 
 **Tidal heating note.** Makarov 2018 finds h capture probability into 3:2 spin-orbit = 0.017 (effectively zero); 1:1 lock is confirmed. The tidal dissipation peak is at Maxwell time ~0.20 d (close to the orbital period), giving 5.3×10¹³ W total — about 7×10⁻³ W/m² normalized. This is 1–2 orders of magnitude higher than the cfg's current 0.00001–0.0001 W/m², which may understate the actual flux.
 
@@ -226,68 +226,68 @@ purposes the configuration is stable.
 
 ### Read (visual-informative, drove decisions above)
 
-- **1703.04166** Luger 2017 — Discovery / confirmation of h's
+- **[1703.04166](https://arxiv.org/abs/1703.04166)** Luger 2017 — Discovery / confirmation of h's
   orbital period via K2. Establishes h as the seventh planet in
   the resonant chain. Source for orbital parameters.
-- **2112.05510** Gressier 2022 — HST WFC3/G141 transmission
+- **[2112.05510](https://arxiv.org/abs/2112.05510)** Gressier 2022 — HST WFC3/G141 transmission
   spectrum of h. Rejects cloud-free H₂-rich atmospheres. Only
   direct atmospheric observation of h to date.
-- **1809.07498** Lincowski 2018 — Evolved climates of TRAPPIST-1
+- **[1809.07498](https://arxiv.org/abs/1809.07498)** Lincowski 2018 — Evolved climates of TRAPPIST-1
   worlds. h discussed as both snowball and as the "desiccated
   habitable" outlier. Drives the canonical-vs-variant scenario
   split. Already read for d/e/f/g.
-- **2510.12794** Pearce 2025 — Born Dry or Born Wet? Compact
+- **[2510.12794](https://arxiv.org/abs/2510.12794)** Pearce 2025 — Born Dry or Born Wet? Compact
   multiplanet volatile accretion. Considers h's water budget under
   impact + escape evolution.
-- **2504.19872** Castan-Lopez 2025 — Cosmic Shoreline Revisited.
+- **[2504.19872](https://arxiv.org/abs/2504.19872)** Castan-Lopez 2025 — Cosmic Shoreline Revisited.
   Places h close to the retention threshold; supports thin-atmo
   cfg choice.
-- **1707.06927** Turbet 2017 — Climate diversity, tidal dynamics, volatile fate for TRAPPIST-1 planets. Specifies CO₂ equilibrium pressure (4 mbar at 145 K for h pure-CO₂) and demonstrates surface CO₂ ice burial under H₂O ice. **Drives the major surface composition revision (H₂O ice dominant, not CO₂ frost).**
-- **1712.05641** Barr 2018 — Interior structures and tidal heating. h rock core 1030 km, maximum 100 km H₂O shell. Lowest density / CMF in the system after the inner trio.
-- **1705.05535** Dong 2018 — Atmospheric escape from TRAPPIST-1 planets. h has lowest ion escape rate, atmospheric retention ~10¹⁰ yr. **Argues against the cosmic-shoreline-threshold framing**: ion-escape physics favors h retaining an atmosphere.
-- **2207.04164** Krissansen-Totton 2022 — Coupled atmosphere-interior model. Predicts CO₂-dominated or CO₂-O₂ atmospheres for outer planets in virtually all simulations. Supports keeping a non-trivial atmosphere on h.
-- **1803.07453** Makarov 2018 — Spin-orbital tidal dynamics. h capture probability into 3:2 = 0.017 → 1:1 lock confirmed.
-- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. Outer-planet magnetosphere context.
-- **2203.01065** RM22 — Rocky-planet dynamo scaling; supports h's near-zero dipole moment.
-- **2208.06523** Thermal Evolution and Magnetic History of Rocky Planets — confirms sub-Mars-mass planets shut down their dynamos within 1–2 Gyr.
-- **1910.09871** Atri 2019 — Surface-dose tables for h.
+- **[1707.06927](https://arxiv.org/abs/1707.06927)** Turbet 2017 — Climate diversity, tidal dynamics, volatile fate for TRAPPIST-1 planets. Specifies CO₂ equilibrium pressure (4 mbar at 145 K for h pure-CO₂) and demonstrates surface CO₂ ice burial under H₂O ice. **Drives the major surface composition revision (H₂O ice dominant, not CO₂ frost).**
+- **[1712.05641](https://arxiv.org/abs/1712.05641)** Barr 2018 — Interior structures and tidal heating. h rock core 1030 km, maximum 100 km H₂O shell. Lowest density / CMF in the system after the inner trio.
+- **[1705.05535](https://arxiv.org/abs/1705.05535)** Dong 2018 — Atmospheric escape from TRAPPIST-1 planets. h has lowest ion escape rate, atmospheric retention ~10¹⁰ yr. **Argues against the cosmic-shoreline-threshold framing**: ion-escape physics favors h retaining an atmosphere.
+- **[2207.04164](https://arxiv.org/abs/2207.04164)** Krissansen-Totton 2022 — Coupled atmosphere-interior model. Predicts CO₂-dominated or CO₂-O₂ atmospheres for outer planets in virtually all simulations. Supports keeping a non-trivial atmosphere on h.
+- **[1803.07453](https://arxiv.org/abs/1803.07453)** Makarov 2018 — Spin-orbital tidal dynamics. h capture probability into 3:2 = 0.017 → 1:1 lock confirmed.
+- **[1706.04617](https://arxiv.org/abs/1706.04617)** Garraffo 2017 — Threatening Magnetic and Plasma Environment of TRAPPIST-1. Outer-planet magnetosphere context.
+- **[2203.01065](https://arxiv.org/abs/2203.01065)** RM22 — Rocky-planet dynamo scaling; supports h's near-zero dipole moment.
+- **[2208.06523](https://arxiv.org/abs/2208.06523)** Thermal Evolution and Magnetic History of Rocky Planets — confirms sub-Mars-mass planets shut down their dynamos within 1–2 Gyr.
+- **[1910.09871](https://arxiv.org/abs/1910.09871)** Atri 2019 — Surface-dose tables for h.
 
 ### Read (context / methodology, not decision-driving)
 
-- **2008.09599** Bourgeois 2024 — Magma ocean evolution for e/f/g
+- **[2008.09599](https://arxiv.org/abs/2008.09599)** Bourgeois 2024 — Magma ocean evolution for e/f/g
   (not h directly, but provides framework). Already read.
-- **2508.12865** Empirical cosmic shoreline. Context.
-- **2507.02136** 3D Cosmic Shoreline for Nurturing Atmospheres.
+- **[2508.12865](https://arxiv.org/abs/2508.12865)** Empirical cosmic shoreline. Context.
+- **[2507.02136](https://arxiv.org/abs/2507.02136)** 3D Cosmic Shoreline for Nurturing Atmospheres.
   Context.
-- **2603.29743** New M Dwarf Cosmic Shoreline Constraints. Context.
-- **1810.05210** Moran 2018 — HST haze limits, includes h.
+- **[2603.29743](https://arxiv.org/abs/2603.29743)** New M Dwarf Cosmic Shoreline Constraints. Context.
+- **[1810.05210](https://arxiv.org/abs/1810.05210)** Moran 2018 — HST haze limits, includes h.
   Already read.
-- **1810.11255** Bolmont 2018 review — Constraining the environment
+- **[1810.11255](https://arxiv.org/abs/1810.11255)** Bolmont 2018 review — Constraining the environment
   and habitability of TRAPPIST-1. Direct quote: "TRAPPIST-1 h is
   unable to maintain surface liquid water. It cannot build up more
   than 10²–10³ ppm of CO₂, whatever the amount of background gas."
   Drives the revised N₂-dominated atmosphere composition with
   trace CO₂.
-- **1708.09484** Bourrier 2017 — Temporal evolution of XUV and water
+- **[1708.09484](https://arxiv.org/abs/1708.09484)** Bourrier 2017 — Temporal evolution of XUV and water
   content. h has the **smallest mass-loss** in the system: only
   0.37–0.43 EO_H over 8 Gyr with realistic photolysis-limited escape
   (ε_α = 0.2). The brief HZ-runaway phase (33–67 Myr) preserves
   most accreted water — but the 26Al desiccation argument
   (Lichtenberg 2019) puts the initial accretion budget low.
-- **1902.04026** Lichtenberg 2019 — ²⁶Al desiccation of TRAPPIST-1
+- **[1902.04026](https://arxiv.org/abs/1902.04026)** Lichtenberg 2019 — ²⁶Al desiccation of TRAPPIST-1
   precursor planetesimals. Argues the whole system formed with
   f_H₂O ≪ 15 wt%, possibly ≲ 1 wt%. Tightens h's water mass
   fraction toward the low end.
-- **1909.13859** Gonzales 2019 — Reanalysis of TRAPPIST-1 fundamental
+- **[1909.13859](https://arxiv.org/abs/1909.13859)** Gonzales 2019 — Reanalysis of TRAPPIST-1 fundamental
   parameters. Confirms field age (0.5–10 Gyr), consistent with
   Burgasser & Mamajek 2017's 7.6 ± 2.2 Gyr. No cfg change required.
-- **2401.11815** Gillon 2024 — Comprehensive TRAPPIST-1 system review.
+- **[2401.11815](https://arxiv.org/abs/2401.11815)** Gillon 2024 — Comprehensive TRAPPIST-1 system review.
   Confirms h parameters; **corrects insolation from 0.16 to 0.144 ±
   0.006 S⊕**. Cites Childs 2023 formation modeling: outer five
   planets "required significant volatile content" while inner two
   are "nearly totally desiccated" — supports keeping non-trivial
   water content for h.
-- **1702.07004** Bourrier 2017a — Lyman-α reconnaissance of
+- **[1702.07004](https://arxiv.org/abs/1702.07004)** Bourrier 2017a — Lyman-α reconnaissance of
   TRAPPIST-1. XUV fluxes at h: F_X ≈ 34 erg/s/cm², F_EUV ≈ 12
   erg/s/cm², F_Lyα ≈ 13 erg/s/cm². Photoionization lifetime of
   neutral H at h's orbit: ~25 days (longer than h's orbital period
@@ -307,7 +307,7 @@ h only in passing.
   Water Layer"** (no arXiv) — *potentially important for the
   sub-glacial ocean question*. **Flagged for paste if accessible.**
 - **"VizieR Online Data Catalog: TRAPPIST-1 h NIR spectrum
-  (Gressier+, 2022)"** — data catalog, content already in 2112.05510.
+  (Gressier+, 2022)"** — data catalog, content already in [2112.05510](https://arxiv.org/abs/2112.05510).
   Skip.
 - **"Characterizing Stellar Activity and Planetary Atmospheres in
   the TRAPPIST-1 System"** (no arXiv) — possibly relevant but skip

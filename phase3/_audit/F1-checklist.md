@@ -13,12 +13,12 @@ to DB → promote → ko parity → build → reframe Barnard host**. Not from-s
 - [x] Confirm 7 planets in DB, no current planet reports
 - [x] Recover 7 en + 7 ko drafts + old per-planet bibs from git (phase3/*/_recovered/)
 - [x] Confirm discovery papers cached: Basant 2025 (2503.08095), Stefanov 2024
-      (2410.00577), González Hernández 2024 (2410.00569), Dreizler 2024
-      (2402.00923), Zechmeister 2019 (1906.07196)
+      (2410.00577), González Hernández 2024 ([2410.00569](https://arxiv.org/abs/2410.00569)), Dreizler 2024
+      ([2402.00923](https://arxiv.org/abs/2402.00923)), Zechmeister 2019 ([1906.07196](https://arxiv.org/abs/1906.07196))
 - [x] Build F1-ground-truth.md (all 7 planets: P, a, e, M sin i, S, T_eq, R)
 - [x] Re-fetch failed GCM caches: Boukrouche "Near the Runaway" (2510.11940) +
       "Water Clouds" (2411.07922) — abstracts verified, real, correctly attributed
-- [x] Confirm 2403.01028 (materials-science misfetch) is cite-only, never used
+- [x] Confirm [2403.01028](https://arxiv.org/abs/2403.01028) (materials-science misfetch) is cite-only, never used
 
 ## Stage 1 — per-planet verify + reconcile + promote  [DONE]
 For each of barnards-star-{b,c,d,e}, teegardens-star-{b,c,d}:

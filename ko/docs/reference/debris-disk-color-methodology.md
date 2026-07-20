@@ -360,7 +360,7 @@ Sommer+ 2025), 도구는 그것들에 차가운 고리와 같은 얼음질 `ice_
 
 **벨트별 조성 / 입자 크기 출처** (`BELTS` 표의 Phase 2 입력).
 
-- **Fitzgerald, M. P. et al. (2007)** — *ApJ* 670, 536. **arXiv:0705.4196.**
+- **Fitzgerald, M. P. et al. (2007)** — *ApJ* 670, 536. **[arXiv:0705.4196](https://arxiv.org/abs/0705.4196).**
   *The AU Microscopii Debris Disk: Multiwavelength Imaging and Modeling.* §7.
   (70 cites.)
 
@@ -368,26 +368,26 @@ Sommer+ 2025), 도구는 그것들에 차가운 고리와 같은 얼음질 `ice_
   *The Signature of Primordial Grain Growth in the Polarized Light of the AU Mic Debris
   Disk* — porous-aggregate grains. §7. (137 cites.)
 
-- **Acke, B. et al. (2012)** — *A&A* 540, A125. **arXiv:1204.5037.** *Herschel images
+- **Acke, B. et al. (2012)** — *A&A* 540, A125. **[arXiv:1204.5037](https://arxiv.org/abs/1204.5037).** *Herschel images
   of Fomalhaut* — cometary fluffy-aggregate grains in the main ring. §7. (112 cites.)
 
-- **Sommer, M. et al. (2025)** — *MNRAS* 539, 439. **arXiv:2503.18127.** *A PR-drag
+- **Sommer, M. et al. (2025)** — *MNRAS* 539, 439. **[arXiv:2503.18127](https://arxiv.org/abs/2503.18127).** *A PR-drag
   origin for the Fomalhaut disc's pervasive inner dust* — the inner/intermediate dust
   is PR-drag debris of the outer belt, ~50–80% water ice by volume. §7. (11 cites.)
 
-- **Backman, D. et al. (2009)** — *ApJ* 690, 1522. **arXiv:0810.4564.** *Epsilon
+- **Backman, D. et al. (2009)** — *ApJ* 690, 1522. **[arXiv:0810.4564](https://arxiv.org/abs/0810.4564).** *Epsilon
   Eridani's Planetary Debris Disk: Structure and Dynamics* — silicate inner +
   icy/silicate cold ring. §7. (126 cites.)
 
-- **Su, K. Y. L. et al. (2017)** — *AJ* 153, 226. **arXiv:1703.10330.** *The Inner
+- **Su, K. Y. L. et al. (2017)** — *AJ* 153, 226. **[arXiv:1703.10330](https://arxiv.org/abs/1703.10330).** *The Inner
   25 au Debris Distribution in the ε Eri System.* §7. (32 cites.)
 
-- **Sai, K. P. M. et al. (2024)** — *AJ* 168, 169. **arXiv:2408.06973.** *Deepest
+- **Sai, K. P. M. et al. (2024)** — *AJ* 168, 169. **[arXiv:2408.06973](https://arxiv.org/abs/2408.06973).** *Deepest
   Limits on Scattered Light Emission from the Epsilon Eridani Debris Disk* — the
   HST/STIS optical **non-detection** (so ε Eri's color is synthesized, not measured).
   §7. (8 cites.)
 
-- **Su, K. Y. L. et al. (2013)** — *ApJ* 763, 118. **arXiv:1301.1331.** *Asteroid
+- **Su, K. Y. L. et al. (2013)** — *ApJ* 763, 118. **[arXiv:1301.1331](https://arxiv.org/abs/1301.1331).** *Asteroid
   Belts in Debris Disk Twins: Vega and Fomalhaut* — featureless silicate, large blowout
   grains (Vega; thermal/mm only). (138 cites.)
 
@@ -399,10 +399,10 @@ Sommer+ 2025), 도구는 그것들에 차가운 고리와 같은 얼음질 `ice_
   the Nature of the Dust in the Debris Disk around HD 69830* — crystalline
   olivine/forsterite. §7. (95 cites.)
 
-- **Wyatt, M. C. et al. (2012)** — *MNRAS* 424, 1206. **arXiv:1206.2370.** *Herschel
+- **Wyatt, M. C. et al. (2012)** — *MNRAS* 424, 1206. **[arXiv:1206.2370](https://arxiv.org/abs/1206.2370).** *Herschel
   imaging of 61 Vir* — no spectral features (61 Vir; thermal/mm only). (107 cites.)
 
-- **Lawler, S. M. et al. (2014)** — *MNRAS* 444, 2665. **arXiv:1408.2791.** *The
+- **Lawler, S. M. et al. (2014)** — *MNRAS* 444, 2665. **[arXiv:1408.2791](https://arxiv.org/abs/1408.2791).** *The
   debris disc of solar analogue τ Ceti* — amorphous silicate + organics. §7. (40 cites.)
 
 **광학상수 포털.**

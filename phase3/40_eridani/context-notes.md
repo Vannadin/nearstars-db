@@ -181,7 +181,7 @@ No `## Canonical alternatives` section required.
 Mason BC orbit verification note: the Phase 2 working-notes recorded
 `P = 230.30 ± 0.68 yr` and `e = 0.4294 ± 0.0027`; the actual Mason 2017
 Table 4 values are P = 230.09 ± 0.68 and e = 0.4300 ± 0.0027 (verified
-2026-05-29 via ar5iv 1707.03635). The Phase 3 synthesis uses the
+2026-05-29 via ar5iv [1707.03635](https://arxiv.org/abs/1707.03635)). The Phase 3 synthesis uses the
 paper-actual numbers. The Phase 2 DB does not contain any BC orbit
 entries (orbit lives outside `stellar_props_curated.json`), so no DB
 patch is needed from Phase 3 — flag only.

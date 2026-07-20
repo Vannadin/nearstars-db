@@ -339,7 +339,7 @@ Eri C `#ffd587`) — 을 보이는 워크드 증명이다.
   M0V–M6V 스펙트럼을 §7 엔진에 통과시켜 계산된 사다리를 얻고, Pickles G2V로 표준 태양색에 대고
   파이프라인을 검증한다. §3, §5, §8. (1361 cites.)
 
-- **Husser, T.-O. et al. (2013)** — *A&A* 553, A6. **arXiv:1303.5632.** *A new
+- **Husser, T.-O. et al. (2013)** — *A&A* 553, A6. **[arXiv:1303.5632](https://arxiv.org/abs/1303.5632).** *A new
   extensive library of PHOENIX stellar atmospheres and synthetic spectra* — FGKM을
   아우르는 현대 고해상도 합성 스펙트럼 라이브러리. 합성 측광을 위한 `(Teff, log g,
   [Fe/H])` → 실제 광학 SED의 기본값. §3. (1801 cites.)
@@ -350,15 +350,15 @@ Eri C `#ffd587`) — 을 보이는 워크드 증명이다.
   일꾼. §3, §4. (1177 cites.)
 
 - **Allard, F., Homeier, D. & Freytag, B. (2011)** — ASP Conf. 448, 91.
-  **arXiv:1011.5405** (bibcode `2011ASPC..448...91A`). *Model Atmospheres From Very Low
+  **[arXiv:1011.5405](https://arxiv.org/abs/1011.5405)** (bibcode `2011ASPC..448...91A`). *Model Atmospheres From Very Low
   Mass Stars to Brown Dwarfs* (BT-Settl) — M왜성 색 보정을 정량적으로 만드는 TiO/VO/H₂O
   분자 선목록과 먼지 처리를 갖춘 기준 차가운-왜성/BD 격자. §3, §5. (481 cites.)
 
-- **Rajpurohit, A. S. et al. (2013)** — *A&A* 556, A15. **arXiv:1304.4072.** *The
+- **Rajpurohit, A. S. et al. (2013)** — *A&A* 556, A15. **[arXiv:1304.4072](https://arxiv.org/abs/1304.4072).** *The
   effective temperature scale of M dwarfs* — M왜성 광학 스펙트럼에 대한 BT-Settl 피팅.
   Teff 척도와 TiO/VO 밴드가 M왜성 광학 SED를 지배함을 증명한다. §5. (222 cites.)
 
-- **Mann, A. W. et al. (2015)** — *ApJ* 804, 64. **arXiv:1501.01635** (cached in
+- **Mann, A. W. et al. (2015)** — *ApJ* 804, 64. **[arXiv:1501.01635](https://arxiv.org/abs/1501.01635)** (cached in
   `docs/phase3/_papers/1501.01635.md`). *How to Constrain Your M Dwarf: Measuring
   Effective Temperature, Bolometric Luminosity, Mass, and Radius* — (BT-Settl 합성
   스펙트럼을 쓰는) 경험적 M왜성 Teff/반지름/광도 calibration. 사다리에 쓰는 M왜성 Teff의
@@ -369,7 +369,7 @@ Eri C `#ffd587`) — 을 보이는 워크드 증명이다.
   명시적 Teff–색–[Fe/H] calibration. 금속함량-색 미세조정(부호와 크기)의 정량 근거. §4.
   (496 cites.)
 
-- **Casagrande, L. et al. (2010)** — *A&A* 512, A54. **arXiv:1001.3142.** *An
+- **Casagrande, L. et al. (2010)** — *A&A* 512, A54. **[arXiv:1001.3142](https://arxiv.org/abs/1001.3142).** *An
   absolutely calibrated Teff scale from the infrared flux method. Dwarfs and
   subgiants* — 현대의 절대 calibration된 FGK Teff–색 영점. §4. (655 cites.)
 
@@ -377,7 +377,7 @@ Eri C `#ffd587`) — 을 보이는 워크드 증명이다.
   Empirical UBVRIJHK Color-Temperature Calibration for Stars* — 금속함량 항을 싣는 광대역
   색온도 calibration. 흑체 궤적이 타당한 곳과 벗어나는 곳을 앵커한다. §2, §4. (224 cites.)
 
-- **Pecaut, M. J. & Mamajek, E. E. (2013)** — *ApJS* 208, 9. **arXiv:1307.2657.**
+- **Pecaut, M. J. & Mamajek, E. E. (2013)** — *ApJS* 208, 9. **[arXiv:1307.2657](https://arxiv.org/abs/1307.2657).**
   *Intrinsic Colors, Temperatures, and Bolometric Corrections of Pre-main-sequence
   Stars* — 널리 쓰이는 경험적 왜성 Teff↔색↔분광형 계열(O→M). "이 Teff의 별은 무슨
   색인가"를 근거짓는 표. §2. (2310 cites.)

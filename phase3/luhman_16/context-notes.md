@@ -2,8 +2,8 @@
 
 Adapted stellar-synthesis for a brown-dwarf binary (no planets). Papers already
 cached + deep-read in Phase 2 (5e147b9); Steps 2-7 (bib/score/triage) skipped.
-Cached: Faherty 2014 (1406.1518), Gillon 2013 (1304.0481), Apai 2021 (2101.02253),
-Crossfield 2014 (1401.8145), L&S 2018 (1808.07835), Chen 2022 (2205.08077).
+Cached: Faherty 2014 ([1406.1518](https://arxiv.org/abs/1406.1518)), Gillon 2013 ([1304.0481](https://arxiv.org/abs/1304.0481)), Apai 2021 ([2101.02253](https://arxiv.org/abs/2101.02253)),
+Crossfield 2014 ([1401.8145](https://arxiv.org/abs/1401.8145)), L&S 2018 ([1808.07835](https://arxiv.org/abs/1808.07835)), Chen 2022 ([2205.08077](https://arxiv.org/abs/2205.08077)).
 
 ## Color computation (scripts/refs/cie_color.py, Planck + CIE 1931 Wyman 2013)
 - 1310 K (A) blackbody full-brightness hue: rgb (255, 89, 0) = #FF5900; xy (0.6043, 0.3843)

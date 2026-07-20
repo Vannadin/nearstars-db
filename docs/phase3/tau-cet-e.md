@@ -2,7 +2,7 @@
 # τ Ceti e — Phase 3 Synthesis (Refuted — included as documented divergence)
 
 τ Ceti e was originally one of four RV planet candidates announced
-by Feng et al. 2017 (`2017AJ....154..135F`, arXiv:1708.02051) around
+by Feng et al. 2017 (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)) around
 the metal-poor G8V τ Ceti — a 3.93 M⊕ (M sin i) super-Earth on a
 162.87-day orbit at 0.538 AU, sitting just inside the optimistic
 habitable zone (Kopparapu et al. 2014). It was the most disputed of the four
@@ -284,7 +284,7 @@ it does not).
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). Original discovery
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Original discovery
   paper. Reports e at P = 162.87 d, M sin i = 3.93 M⊕, e = 0.18.
   Anchors the historical Decisions rows above. Feng 2017 §6
   itself cautions that e is the most amplitude-marginal of the
@@ -305,7 +305,7 @@ it does not).
 ### Read (context for habitability framing)
 
 - **Kopparapu R. K. et al. 2014** — *Habitable zones around
-  main-sequence stars*, ApJL 787, L29 (arXiv:1404.5292, cache
+  main-sequence stars*, ApJL 787, L29 ([arXiv:1404.5292](https://arxiv.org/abs/1404.5292), cache
   `_papers/1404.5292.md`). Conservative HZ inner edge at ~1.05 S⊕
   for a G8V; the optimistic inner edge extends inward to ~0.75 S⊕,
   placing Feng 2017's e at 1.58 S⊕ comfortably inside the

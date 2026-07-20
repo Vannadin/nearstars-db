@@ -259,7 +259,7 @@ deferred until a paper-confirmed cycle period exists.
 
 - **Mason B. D., Hartkopf W. I., Miles K. N. 2017** — *Binary Star
   Orbits. V. The Nearby White Dwarf/Red Dwarf Pair 40 Eri BC*,
-  AJ 154, 200 (`2017AJ....154..200M`, arXiv:1707.03635,
+  AJ 154, 200 (`2017AJ....154..200M`, [arXiv:1707.03635](https://arxiv.org/abs/1707.03635),
   DOI 10.3847/1538-3881/aa803e). Updated 230.09-yr BC visual-
   spectroscopic orbit; mass sum 0.776 ± 0.024 M☉, e = 0.4300,
   a = 6.93″. With Heintz 1974 mass ratio gives M_C = 0.2041 ±
@@ -267,7 +267,7 @@ deferred until a paper-confirmed cycle period exists.
 - **Mann A. W., Feiden G. A., Gaidos E., Boyajian T., von Braun K.
   2015** — *How to Constrain Your M Dwarf: Measuring Effective
   Temperature, Bolometric Luminosity, Mass, and Radius*, ApJ 804, 64
-  (`2015ApJ...804...64M`, arXiv:1501.01635, DOI 10.1088/0004-637X/804/1/64).
+  (`2015ApJ...804...64M`, [arXiv:1501.01635](https://arxiv.org/abs/1501.01635), DOI 10.1088/0004-637X/804/1/64).
   Empirical M-dwarf calibration; Table 5 'Gl 166 C' row gives
   R = 0.274 ± 0.011 R☉, T_eff = 3167 ± 61 K, [Fe/H] = -0.21 ± 0.08,
   and Hα EW. **Primary anchor for radius / T_eff / [Fe/H].** Table 7
@@ -276,14 +276,14 @@ deferred until a paper-confirmed cycle period exists.
 - **Cifuentes C., Caballero J. A., Cortés-Contreras M. et al. 2020** —
   *CARMENES input catalogue of M dwarfs. V. Luminosities, colours,
   and spectral energy distributions*, A&A 642, A115 (`2020A&A...642A.115C`,
-  arXiv:2007.15077, DOI 10.1051/0004-6361/202038295). Multi-band SED
+  [arXiv:2007.15077](https://arxiv.org/abs/2007.15077), DOI 10.1051/0004-6361/202038295). Multi-band SED
   integration for the CARMENES M-dwarf sample; Karmn J04153-076 =
   GJ 166 C entry (VizieR J/A+A/642/A115) gives L = (6.51 ± 0.13) ×
   10⁻³ L☉. **Primary anchor for luminosity.**
 - **Bond H. E., Bergeron P., Bédard A. 2017** — *The aged
   Astrophysical Implications of a New Dynamical Mass for the Nearby
   White Dwarf 40 Eridani B*, ApJ 848, 16
-  (`2017ApJ...848...16B`, arXiv:1709.00478, DOI 10.3847/1538-4357/aa8a63).
+  (`2017ApJ...848...16B`, [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63).
   HST/COS UV spectroscopy of 40 Eri B; full system reanalysis. §6.2
   IFMR (Salaris et al. 2009, M_final = 0.134 M_initial + 0.331) implies M_progenitor ≈ 1.8 M☉ for B, giving
   system-coeval total age ≈ 1.8 Gyr. Same section cites Fuhrmann
@@ -292,7 +292,7 @@ deferred until a paper-confirmed cycle period exists.
 - **Shan Y., Reiners A., Fabbian D. et al. 2024** — *The CARMENES
   search for exoplanets around M dwarfs. VII. Photospheric rotation
   periods from the activity time series of 166 M dwarfs*, A&A 684, A9
-  (`2024A&A...684A...9S`, arXiv:2401.09550,
+  (`2024A&A...684A...9S`, [arXiv:2401.09550](https://arxiv.org/abs/2401.09550),
   DOI 10.1051/0004-6361/202346794). CARMENES activity-indicator
   time-series; Karmn J04153-076 P_rot = 8.56 d, quality flag D
   ("debated"). 27 of 166 periods are debated, 68 are provisional.
@@ -331,7 +331,7 @@ deferred until a paper-confirmed cycle period exists.
   establishes the planet-free status of the system.
 - **Kopparapu R. K., Ramirez R. M., SchottelKotte J. et al. 2014** —
   *Habitable zones around main-sequence stars: dependence on planetary
-  mass*, ApJ 787, L29 (`2014ApJ...787L..29K`, arXiv:1404.5292). HZ
+  mass*, ApJ 787, L29 (`2014ApJ...787L..29K`, [arXiv:1404.5292](https://arxiv.org/abs/1404.5292)). HZ
   boundary scaling used to derive 40 Eri C's HZ context values.
 
 ### Read (instrument / non-cfg-decisive)
@@ -339,18 +339,18 @@ deferred until a paper-confirmed cycle period exists.
 - **Schöfer P., Jeffers S. V., Reiners A. et al. 2019** —
   *The CARMENES search for exoplanets around M dwarfs.
   Activity indicators at visible and near-infrared wavelengths*,
-  A&A 623, A44 (`2019A&A...623A..44S`, arXiv:1903.06803).
+  A&A 623, A44 (`2019A&A...623A..44S`, [arXiv:1903.06803](https://arxiv.org/abs/1903.06803)).
   CARMENES Hα EW time series; GJ 166 C is in the sample. Used
   for the Hα pEW range -2 to -4 Å (DB meta_notes).
 - **Newton E. R., Mondrik N., Irwin J. et al. 2017** — *New rotation
   period measurements for M dwarfs in the southern hemisphere*,
-  AJ 154, 224 (`2017AJ....154..224N`, arXiv:1611.04857). MEarth-
+  AJ 154, 224 (`2017AJ....154..224N`, [arXiv:1611.04857](https://arxiv.org/abs/1611.04857)). MEarth-
   South photometric rotation periods; one of several survey Hα
   cross-references.
 - **Reiners A., Zechmeister M., Caballero J. A. et al. 2018** —
   *The CARMENES search for exoplanets around M dwarfs. High-
   resolution optical and near-infrared spectroscopy of 324 survey
-  stars*, A&A 612, A49 (`2018A&A...612A..49R`, arXiv:1711.06576).
+  stars*, A&A 612, A49 (`2018A&A...612A..49R`, [arXiv:1711.06576](https://arxiv.org/abs/1711.06576)).
   CARMENES instrument paper; GJ 166 C parameter row.
 - **Wright N. J., Drake J. J., Mamajek E. E., Henry G. W. 2011** —
   *The stellar-activity-rotation relationship and the evolution of
@@ -358,7 +358,7 @@ deferred until a paper-confirmed cycle period exists.
   log L_X / L_bol calibration used qualitatively.
 - **France K., Loyd R. O. P., Youngblood A. et al. 2016** —
   *The MUSCLES treasury survey. I. Motivation and overview*,
-  ApJ 820, 89 (`2016ApJ...820...89F`, arXiv:1602.09142). Context
+  ApJ 820, 89 (`2016ApJ...820...89F`, [arXiv:1602.09142](https://arxiv.org/abs/1602.09142)). Context
   for XUV environment around active M dwarfs.
 
 ### Not read — no arXiv preprint or low-priority (~12 papers)

@@ -236,10 +236,10 @@ or overpower it, parking the spin in an **asynchronous** state away from 1:1.
   the thermal tide holds Venus off the 1:1 state the gravitational tide would otherwise
   enforce.
 - **Terrestrial exoplanets generalize it.** Leconte et al. 2015 (`2015Sci...347..632L`,
-  arXiv:1502.01952) showed that **Earth-mass HZ planets around lower-mass stars can be
+  [arXiv:1502.01952](https://arxiv.org/abs/1502.01952)) showed that **Earth-mass HZ planets around lower-mass stars can be
   driven into asynchronous rotation by the atmospheric thermal tide** — i.e. the naive
   "M-dwarf HZ planet ⇒ 1:1 locked" inference can fail if the atmosphere is thick enough.
-  Correia, Levrard & Laskar 2008 (`2008A&A...488L..63C`, arXiv:0808.1071) earlier mapped
+  Correia, Levrard & Laskar 2008 (`2008A&A...488L..63C`, [arXiv:0808.1071](https://arxiv.org/abs/0808.1071)) earlier mapped
   the equilibrium-rotation regimes including the atmospheric-tide branch.
 
 **When it applies:** the thermal tide scales with atmospheric mass/surface pressure, so
@@ -397,23 +397,23 @@ bibcode), ADS citation count, and one line on the contribution.
   rotation states (including pseudo-synchronous) and the climate consequences for
   eccentric exoplanets. §4.
 - **Correia, A. C. M., Levrard, B. & Laskar, J. (2008)** — *A&A* 488, L63.
-  **arXiv:0808.1071.** Cites: 44. "On the equilibrium rotation of Earth-like extra-solar
+  **[arXiv:0808.1071](https://arxiv.org/abs/0808.1071).** Cites: 44. "On the equilibrium rotation of Earth-like extra-solar
   planets" — maps the equilibrium-rotation regimes including the atmospheric-thermal-tide
   branch; the exoplanet bridge for §5. §5.
-- **Makarov, V. V. (2012)** — *ApJ* 752, 73. **arXiv:1110.2658.** Cites: 56. "Conditions
+- **Makarov, V. V. (2012)** — *ApJ* 752, 73. **[arXiv:1110.2658](https://arxiv.org/abs/1110.2658).** Cites: 56. "Conditions
   of Passage and Entrapment of Terrestrial Planets in Spin-orbit Resonances" — capture
   probabilities for p:q resonances with a realistic (frequency-dependent) tidal model;
   3:2 capture near-certain for Mercury's eccentricity. §4, §6.
 - **Noyelles, B., Frouard, J., Makarov, V. V. & Efroimsky, M. (2014)** — *Icarus* 241,
-  26. **arXiv:1307.0136.** Cites: 77. "Spin-orbit evolution of Mercury revisited" —
+  26. **[arXiv:1307.0136](https://arxiv.org/abs/1307.0136).** Cites: 77. "Spin-orbit evolution of Mercury revisited" —
   the modern frequency-dependent-rheology treatment of Mercury's 3:2 capture; shows the
   fixed-Q model is too crude for the *captured state* (not the timescale). §4, §6.
 - **Leconte, J., Wu, H., Menou, K. & Murray, N. (2015)** — *Science* 347, 632.
-  **arXiv:1502.01952.** Cites: 166. "Asynchronous rotation of Earth-mass planets in the
+  **[arXiv:1502.01952](https://arxiv.org/abs/1502.01952).** Cites: 166. "Asynchronous rotation of Earth-mass planets in the
   habitable zone of lower-mass stars" — the key result that the atmospheric thermal tide
   can drive HZ terrestrial exoplanets into asynchronous rotation; the modern form of the
   §5 caveat that breaks the naive "M-dwarf HZ ⇒ 1:1" inference. §5, §7.
-- **Barnes, R. (2017)** — *Celest. Mech. Dyn. Astron.* 129, 509. **arXiv:1708.02981.**
+- **Barnes, R. (2017)** — *Celest. Mech. Dyn. Astron.* 129, 509. **[arXiv:1708.02981](https://arxiv.org/abs/1708.02981).**
   Cites: 190. "Tidal locking of habitable exoplanets" — the review-level treatment of
   whether and how fast HZ planets lock, with the locking-timescale magnitudes; the
   source for the "M-dwarf HZ planet locks in 10⁶–10⁸ yr" magnitudes that license the
@@ -421,7 +421,7 @@ bibcode), ADS citation count, and one line on the contribution.
 
 Cross-referenced (from the sibling temperature doc, not re-derived here):
 
-- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **arXiv:1608.06827.** Cites: 230. "The
+- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **[arXiv:1608.06827](https://arxiv.org/abs/1608.06827).** Cites: 230. "The
   habitability of Proxima Centauri b. II" — explores the range of possible spin/climate
   states (including the thermal-tide-driven ones) for the Proxima b worked example. §7.
 

@@ -133,7 +133,7 @@ For Phase 2 curation, omit C's P_rot and activity unless a single verified value
 | grade | 4 | 1 (definitive) |
 | phase_reliable | false | true |
 
-Bibcode: 2017AJ....154..200M, DOI: 10.3847/1538-3881/aa803e, arXiv: 1707.03635
+Bibcode: 2017AJ....154..200M, DOI: 10.3847/1538-3881/aa803e, [arXiv:1707.03635](https://arxiv.org/abs/1707.03635)
 
 T_jd_tt conversion: J1847.7 = JD 2395929.775 (Julian year convention; Mason 2017 uses equinox J2000).
 

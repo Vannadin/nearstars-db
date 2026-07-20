@@ -207,10 +207,10 @@ NearStars 실무 규칙은 이렇다. **고정된 모든 바디의 `e`를 기록
 - **Venus가 태양계의 증거다.** 느린 *역행* 자전이 그 표식이다. Gold & Soter 1969(`1969Icar...11..356G`)가
   대기 조석 기구를 제안했고, Dobrovolskis & Ingersoll 1980(`1980Icar...41....1D`)이 토크 균형을
   계산했다 — 열조석이, 중력 조석이라면 강제했을 1:1 상태에서 금성을 떼어 놓고 있다.
-- **지구형 외계행성이 이를 일반화한다.** Leconte et al. 2015(`2015Sci...347..632L`, arXiv:1502.01952)는
+- **지구형 외계행성이 이를 일반화한다.** Leconte et al. 2015(`2015Sci...347..632L`, [arXiv:1502.01952](https://arxiv.org/abs/1502.01952))는
   **저질량 별 주위 지구 질량 HZ 행성이 대기 열조석에 의해 비동기 자전으로 몰릴 수 있음**을 보였다 —
   즉 순진한 "M형 왜성 HZ 행성 ⇒ 1:1 고정" 추론은 대기가 충분히 두꺼우면 실패할 수 있다. 그보다
-  앞서 Correia, Levrard & Laskar 2008(`2008A&A...488L..63C`, arXiv:0808.1071)이 대기 조석 가지를
+  앞서 Correia, Levrard & Laskar 2008(`2008A&A...488L..63C`, [arXiv:0808.1071](https://arxiv.org/abs/0808.1071))이 대기 조석 가지를
   포함한 평형 자전 영역들을 지도화했다.
 
 **언제 적용되는가.** 열조석은 대기 질량/지표 기압에 비례하므로, 이 단서는 **주로 두꺼운 대기에서
@@ -349,23 +349,23 @@ Hades, Pandora)에 `(21/2)e²` 동기 가열 형식을 적용할 때 *전제*하
   rotation states (including pseudo-synchronous) and the climate consequences for
   eccentric exoplanets. §4.
 - **Correia, A. C. M., Levrard, B. & Laskar, J. (2008)** — *A&A* 488, L63.
-  **arXiv:0808.1071.** Cites: 44. "On the equilibrium rotation of Earth-like extra-solar
+  **[arXiv:0808.1071](https://arxiv.org/abs/0808.1071).** Cites: 44. "On the equilibrium rotation of Earth-like extra-solar
   planets" — maps the equilibrium-rotation regimes including the atmospheric-thermal-tide
   branch; the exoplanet bridge for §5. §5.
-- **Makarov, V. V. (2012)** — *ApJ* 752, 73. **arXiv:1110.2658.** Cites: 56. "Conditions
+- **Makarov, V. V. (2012)** — *ApJ* 752, 73. **[arXiv:1110.2658](https://arxiv.org/abs/1110.2658).** Cites: 56. "Conditions
   of Passage and Entrapment of Terrestrial Planets in Spin-orbit Resonances" — capture
   probabilities for p:q resonances with a realistic (frequency-dependent) tidal model;
   3:2 capture near-certain for Mercury's eccentricity. §4, §6.
 - **Noyelles, B., Frouard, J., Makarov, V. V. & Efroimsky, M. (2014)** — *Icarus* 241,
-  26. **arXiv:1307.0136.** Cites: 77. "Spin-orbit evolution of Mercury revisited" —
+  26. **[arXiv:1307.0136](https://arxiv.org/abs/1307.0136).** Cites: 77. "Spin-orbit evolution of Mercury revisited" —
   the modern frequency-dependent-rheology treatment of Mercury's 3:2 capture; shows the
   fixed-Q model is too crude for the *captured state* (not the timescale). §4, §6.
 - **Leconte, J., Wu, H., Menou, K. & Murray, N. (2015)** — *Science* 347, 632.
-  **arXiv:1502.01952.** Cites: 166. "Asynchronous rotation of Earth-mass planets in the
+  **[arXiv:1502.01952](https://arxiv.org/abs/1502.01952).** Cites: 166. "Asynchronous rotation of Earth-mass planets in the
   habitable zone of lower-mass stars" — the key result that the atmospheric thermal tide
   can drive HZ terrestrial exoplanets into asynchronous rotation; the modern form of the
   §5 caveat that breaks the naive "M-dwarf HZ ⇒ 1:1" inference. §5, §7.
-- **Barnes, R. (2017)** — *Celest. Mech. Dyn. Astron.* 129, 509. **arXiv:1708.02981.**
+- **Barnes, R. (2017)** — *Celest. Mech. Dyn. Astron.* 129, 509. **[arXiv:1708.02981](https://arxiv.org/abs/1708.02981).**
   Cites: 190. "Tidal locking of habitable exoplanets" — the review-level treatment of
   whether and how fast HZ planets lock, with the locking-timescale magnitudes; the
   source for the "M-dwarf HZ planet locks in 10⁶–10⁸ yr" magnitudes that license the
@@ -373,7 +373,7 @@ Hades, Pandora)에 `(21/2)e²` 동기 가열 형식을 적용할 때 *전제*하
 
 Cross-referenced (from the sibling temperature doc, not re-derived here):
 
-- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **arXiv:1608.06827.** Cites: 230. "The
+- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **[arXiv:1608.06827](https://arxiv.org/abs/1608.06827).** Cites: 230. "The
   habitability of Proxima Centauri b. II" — explores the range of possible spin/climate
   states (including the thermal-tide-driven ones) for the Proxima b worked example. §7.
 

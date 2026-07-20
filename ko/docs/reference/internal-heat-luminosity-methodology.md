@@ -354,28 +354,28 @@ null도 맞춘다). 불확실성을 짊어지는 것은 *입력*(냉각 트랙�
 - **Marley, M. S. et al. (2007)** — *ApJ* 655, 541. **arXiv:astro-ph/0609739**
   (`2007ApJ...655..541M`). Cites: 454. "On the Luminosity of Young Jupiters" — the
   hot-start vs cold-start initial-entropy dichotomy (~2 dex spread at young ages). §3.
-- **Saumon, D. & Marley, M. S. (2008)** — *ApJ* 689, 1327. **arXiv:0808.2611**
+- **Saumon, D. & Marley, M. S. (2008)** — *ApJ* 689, 1327. **[arXiv:0808.2611](https://arxiv.org/abs/0808.2611)**
   (`2008ApJ...689.1327S`). Cites: 619. Evolution of L and T dwarfs in color-magnitude
   diagrams — the substellar cooling-track grid for the brown-dwarf regime. §2, §5.
-- **Marois, C. et al. (2008)** — *Science* 322, 1348. **arXiv:0811.2606**
+- **Marois, C. et al. (2008)** — *Science* 322, 1348. **[arXiv:0811.2606](https://arxiv.org/abs/0811.2606)**
   (`2008Sci...322.1348M`). Cites: 1513. Direct imaging of the HR 8799 planets — young giants
   detected by their *own* cooling-track thermal light (the self-luminous regime). §1, §3, §7.
 - **Fortney, J. J. & Nettelmann, N. (2010)** — *Space Sci. Rev.* 152, 423.
-  **arXiv:0912.0533** (`2010SSRv..152..423F`). Cites: 314. Review of giant-planet interior
+  **[arXiv:0912.0533](https://arxiv.org/abs/0912.0533)** (`2010SSRv..152..423F`). Cites: 314. Review of giant-planet interior
   structure, composition and evolution — internal heat, contraction, helium rain in one
   place. §2, §6.
 - **Spiegel, D. S., Burrows, A. & Milsom, J. A. (2011)** — *ApJ* 727, 57.
-  **arXiv:1008.5150** (`2011ApJ...727...57S`). Cites: 276. The deuterium-burning mass limit
+  **[arXiv:1008.5150](https://arxiv.org/abs/1008.5150)** (`2011ApJ...727...57S`). Cites: 276. The deuterium-burning mass limit
   for brown dwarfs and giant planets (~11–14 M_J, composition-dependent) — the planet/BD
   boundary and the transient burning luminosity. §6.
-- **Spiegel, D. S. & Burrows, A. (2012)** — *ApJ* 745, 174. **arXiv:1108.5172**
+- **Spiegel, D. S. & Burrows, A. (2012)** — *ApJ* 745, 174. **[arXiv:1108.5172](https://arxiv.org/abs/1108.5172)**
   (`2012ApJ...745..174S`). Cites: 357. Spectral and photometric diagnostics of giant-planet
   formation scenarios — how to tell hot- from cold-start young giants observationally. §3.
-- **Marley, M. S. et al. (2021)** — *ApJ* 920, 85. **arXiv:2107.07434**
+- **Marley, M. S. et al. (2021)** — *ApJ* 920, 85. **[arXiv:2107.07434](https://arxiv.org/abs/2107.07434)**
   (`2021ApJ...920...85M`). Cites: 375. The Sonora Bobcat brown-dwarf atmosphere and
   *evolution* models — the modern substellar cooling-track grid superseding/extending
   Saumon & Marley 2008. §2, §5.
-- **Mankovich, C. R. & Fortney, J. J. (2020)** — *ApJ* 889, 51. **arXiv:1912.01009**
+- **Mankovich, C. R. & Fortney, J. J. (2020)** — *ApJ* 889, 51. **[arXiv:1912.01009](https://arxiv.org/abs/1912.01009)**
   (`2020ApJ...889...51M`). Cites: 69. Helium phase separation gives a Jupiter/Saturn
   dichotomy — quantifies the helium-rain luminosity active in Saturn but not yet Jupiter.
   §6.

@@ -278,37 +278,37 @@ argument.
 Each entry: authors, year, journal, **verified** arXiv id (or a flag where none
 exists), and one line on what it contributes.
 
-- **Zahnle, K. J. & Catling, D. C. (2017)** — *ApJ* 843, 122. **arXiv:1702.03386.**
+- **Zahnle, K. J. & Catling, D. C. (2017)** — *ApJ* 843, 122. **[arXiv:1702.03386](https://arxiv.org/abs/1702.03386).**
   Defines the **cosmic shoreline**: escape velocity vs cumulative XUV separates
   atmosphere-bearing from airless bodies. Gate 1.
 
 - **Owen, J. E. (2019)** — *Annual Review of Earth and Planetary Sciences* 47, 67.
-  **arXiv:1807.07609.** Review of atmospheric-escape mechanisms (photoevaporation,
+  **[arXiv:1807.07609](https://arxiv.org/abs/1807.07609).** Review of atmospheric-escape mechanisms (photoevaporation,
   core-powered mass loss) driving close-in planet evolution. Gate 1 mechanism.
 
-- **Lopez, E. D. (2017)** — *MNRAS* 472, 245. **arXiv:1610.01170.** "Born dry in the
+- **Lopez, E. D. (2017)** — *MNRAS* 472, 245. **[arXiv:1610.01170](https://arxiv.org/abs/1610.01170).** "Born dry in the
   photoevaporation desert": escape sculpts the rocky/sub-Neptune boundary, so small
   rocky planets have lost primordial H/He and carry only secondary atmospheres.
   (The "born rocky vs stripped sub-Neptune" framing; companion to Lopez & Fortney
-  2014, *ApJ* 792, 1, arXiv:1311.0329, the radius-valley mass-radius work.)
+  2014, *ApJ* 792, 1, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329), the radius-valley mass-radius work.)
 
-- **Ribas, I. et al. (2016)** — *A&A* 596, A111. **arXiv:1608.06813.** The
+- **Ribas, I. et al. (2016)** — *A&A* 596, A111. **[arXiv:1608.06813](https://arxiv.org/abs/1608.06813).** The
   irradiation, rotation and volatile inventory of Proxima b — the XUV/particle dose
   input to every stripping estimate. Gate 2.
 
-- **Dong, C. et al. (2017)** — *ApJ Letters* 837, L26. **arXiv:1702.04089.**
+- **Dong, C. et al. (2017)** — *ApJ Letters* 837, L26. **[arXiv:1702.04089](https://arxiv.org/abs/1702.04089).**
   Stellar-wind-driven atmospheric ion escape from Proxima b; the atmosphere can be
   stripped on short timescales unless replenished. Gate 2.
 
-- **Dong, C. et al. (2018)** — *PNAS* 115, 260. **arXiv:1705.05535.** The same
+- **Dong, C. et al. (2018)** — *PNAS* 115, 260. **[arXiv:1705.05535](https://arxiv.org/abs/1705.05535).** The same
   stellar-wind escape modeling for the **TRAPPIST-1** planets. Gate 2.
 
-- **Garraffo, C. et al. (2016)** — *ApJ Letters* 833, L4. **arXiv:1609.09076.** The
+- **Garraffo, C. et al. (2016)** — *ApJ Letters* 833, L4. **[arXiv:1609.09076](https://arxiv.org/abs/1609.09076).** The
   space weather of Proxima b; a strong ordered planetary magnetic field could
   shield the atmosphere, but protection is uncertain. (No separate 2017 Proxima
   journal paper exists — only a conference abstract.) Gate 2.
 
-- **Meadows, V. S. et al. (2018)** — *Astrobiology* 18, 133. **arXiv:1608.08620.**
+- **Meadows, V. S. et al. (2018)** — *Astrobiology* 18, 133. **[arXiv:1608.08620](https://arxiv.org/abs/1608.08620).**
   Enumerates the plausible environmental/atmospheric end-states of Proxima b
   (desiccated, CO₂, Venus-like, habitable) — the branching set a tie-break selects
   among. Gate 2.
@@ -318,25 +318,25 @@ exists), and one line on what it contributes.
   atmosphere redox (oxidized CO₂/H₂O vs reduced CH₄/H₂/CO) from the outgassing
   material's oxidation state. Gate 3, sets composition → μ.
 
-- **Herbort, O. et al. (2020)** — *A&A* 636, A71. **arXiv:2003.03628.** "The
+- **Herbort, O. et al. (2020)** — *A&A* 636, A71. **[arXiv:2003.03628](https://arxiv.org/abs/2003.03628).** "The
   atmospheres of rocky exoplanets. I": chemical equilibrium between crustal rock
   types and the outgassed atmosphere — the gas inventory a given crust yields.
   Gate 3.
 
-- **Wogan, N. et al. (2020)** — *PSJ* 1, 58. **arXiv:2009.07761.** Volcanism on a
+- **Wogan, N. et al. (2020)** — *PSJ* 1, 58. **[arXiv:2009.07761](https://arxiv.org/abs/2009.07761).** Volcanism on a
   reduced rocky planet can sustain an **abundant CH₄** atmosphere — the reduced-
   redox endmember opposite the CO₂/N₂ default. Gate 3.
 
 - **Wordsworth, R. & Kreidberg, L. (2022)** — *Annual Review of Astronomy &
-  Astrophysics* 60, 159. **arXiv:2112.04663.** The canonical review of rocky-
+  Astrophysics* 60, 159. **[arXiv:2112.04663](https://arxiv.org/abs/2112.04663).** The canonical review of rocky-
   exoplanet atmospheres: retention, escape, outgassing, observability. Read first.
 
-- **Greene, T. P. et al. (2023)** — *Nature* 618, 39. **arXiv:2303.14849.** JWST
+- **Greene, T. P. et al. (2023)** — *Nature* 618, 39. **[arXiv:2303.14849](https://arxiv.org/abs/2303.14849).** JWST
   thermal emission of TRAPPIST-1 b consistent with a **bare rock / no thick
   atmosphere** — empirical confirmation that M-dwarf inner-HZ worlds can be
   stripped. The "existence bound, not pressure measurement" of §1.
 
-- **Zieba, S. et al. (2023)** — *Nature* 620, 746. **arXiv:2306.10150.** **No thick
+- **Zieba, S. et al. (2023)** — *Nature* 620, 746. **[arXiv:2306.10150](https://arxiv.org/abs/2306.10150).** **No thick
   CO₂ atmosphere** on TRAPPIST-1 b from JWST — a presence/absence bound, again not
   a surface-pressure measurement.
 

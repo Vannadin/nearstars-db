@@ -138,13 +138,13 @@ conservative position.
 ## Bibliography
 
 **Read / used for decisions:**
-- Mamajek et al. 2012, AJ 143, 72 (arXiv:1108.4070) — discovery; host characterisation; 2007 eclipse.
-- Kenworthy & Mamajek 2015, ApJ 800, 126 (arXiv:1501.05652) — the ring model (37 rings, gap, exomoon).
-- Rieder & Kenworthy 2016, A&A (arXiv:1609.08485) — ring size/dynamics; retrograde requirement; 60–100 M_Jup.
-- Mentel et al. 2018 (arXiv:1810.05171) — photographic-plate search; no confirming eclipse.
+- Mamajek et al. 2012, AJ 143, 72 ([arXiv:1108.4070](https://arxiv.org/abs/1108.4070)) — discovery; host characterisation; 2007 eclipse.
+- Kenworthy & Mamajek 2015, ApJ 800, 126 ([arXiv:1501.05652](https://arxiv.org/abs/1501.05652)) — the ring model (37 rings, gap, exomoon).
+- Rieder & Kenworthy 2016, A&A ([arXiv:1609.08485](https://arxiv.org/abs/1609.08485)) — ring size/dynamics; retrograde requirement; 60–100 M_Jup.
+- Mentel et al. 2018 ([arXiv:1810.05171](https://arxiv.org/abs/1810.05171)) — photographic-plate search; no confirming eclipse.
 
 **Context / not read in full:**
-- Sutton 2019, MNRAS 486, 1681 (arXiv:1902.09285) — argues the gap is unlikely from mean-motion resonances with nearby moons.
+- Sutton 2019, MNRAS 486, 1681 ([arXiv:1902.09285](https://arxiv.org/abs/1902.09285)) — argues the gap is unlikely from mean-motion resonances with nearby moons.
 - Gaia DR3 — host parallax (138 pc) and proper motion.
 
 ## Open items for follow-up

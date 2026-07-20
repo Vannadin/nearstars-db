@@ -466,10 +466,10 @@ Phase 3 draws directly on seven landmark JWST papers.
 
 | Paper | Result | NearStars impact |
 |---|---|---|
-| Greene 2023 (2303.14849) | b: T_day ≈ 503 K; no thick atmo | b airless; Bond albedo = 0 |
-| Zieba 2023 (2306.10150) | c: no thick CO₂ | c airless-or-thin constraint |
-| Ducrot 2024 (2412.11627) | b: ultramafic preferred vs CO₂+haze | b surface: fresh ultramafic |
-| Ducrot 2025 (2509.02128) | b+c phase curves: no nightside emission | Closes airless for b definitively |
+| Greene 2023 ([2303.14849](https://arxiv.org/abs/2303.14849)) | b: T_day ≈ 503 K; no thick atmo | b airless; Bond albedo = 0 |
+| Zieba 2023 ([2306.10150](https://arxiv.org/abs/2306.10150)) | c: no thick CO₂ | c airless-or-thin constraint |
+| Ducrot 2024 ([2412.11627](https://arxiv.org/abs/2412.11627)) | b: ultramafic preferred vs CO₂+haze | b surface: fresh ultramafic |
+| Ducrot 2025 ([2509.02128](https://arxiv.org/abs/2509.02128)) | b+c phase curves: no nightside emission | Closes airless for b definitively |
 | Piaulet 2025 | d: mass reconfirm; magma-ocean interior | d surface scenario |
 | Glidden 2025 | e: 1 bar N₂+CO₂ compatible | e aqua-planet scenario |
 | Lim 2024 | f: H₂-rich rejected; thin CO₂ permitted | f snowball scenario |

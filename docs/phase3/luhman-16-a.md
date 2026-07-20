@@ -101,15 +101,15 @@ much cooler late-T/Y dwarfs, not at L7.5 (see Open items).
 ## Bibliography
 
 **Read (drive Decisions rows):**
-- Lazorenko & Sahlmann 2018, A&A 618, A111 (arXiv 1808.07835) — astrometric orbit, dynamical masses, parallax.
-- Faherty et al. 2014, ApJ 790, 90 (arXiv 1406.1518) — Li, FeH, bolometric luminosity, Teff, age, assumed radius.
-- Apai et al. 2021, ApJ 906, 64 (arXiv 2101.02253) — TESS rotation; tentative 6.94 hr for A.
-- Crossfield et al. 2014, Nature 505, 654 (arXiv 1401.8145) — Doppler v sin i; A unmapped.
+- Lazorenko & Sahlmann 2018, A&A 618, A111 (arXiv [1808.07835](https://arxiv.org/abs/1808.07835)) — astrometric orbit, dynamical masses, parallax.
+- Faherty et al. 2014, ApJ 790, 90 (arXiv [1406.1518](https://arxiv.org/abs/1406.1518)) — Li, FeH, bolometric luminosity, Teff, age, assumed radius.
+- Apai et al. 2021, ApJ 906, 64 (arXiv [2101.02253](https://arxiv.org/abs/2101.02253)) — TESS rotation; tentative 6.94 hr for A.
+- Crossfield et al. 2014, Nature 505, 654 (arXiv [1401.8145](https://arxiv.org/abs/1401.8145)) — Doppler v sin i; A unmapped.
 
 **Context:**
-- Gillon et al. 2013, A&A 555, L5 (arXiv 1304.0481) — no periodic signal from A.
+- Gillon et al. 2013, A&A 555, L5 (arXiv [1304.0481](https://arxiv.org/abs/1304.0481)) — no periodic signal from A.
 - Burgasser et al. 2013 — L7.5/T0.5 spectral classification.
-- Bedin et al. 2024 (arXiv 2403.08865), Garcia et al. 2017 (arXiv 1708.02714) — alternate dynamical masses.
+- Bedin et al. 2024 (arXiv [2403.08865](https://arxiv.org/abs/2403.08865)), Garcia et al. 2017 (arXiv [1708.02714](https://arxiv.org/abs/1708.02714)) — alternate dynamical masses.
 
 ## Open items for follow-up
 

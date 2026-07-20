@@ -4,7 +4,7 @@
 AU Microscopii d is a 1.053 ± 0.511 M⊕ Earth-mass planet candidate on
 a 12.74-day orbit around the 22-Myr-old M1Ve flare star AU Mic.
 Discovered via transit-timing variation analysis by Wittrock et al.
-2023 (AJ 166, 232; `2023AJ....166..232W`, arXiv:2310.10719) from a
+2023 (AJ 166, 232; `2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)) from a
 combined TESS + ground-based transit dataset of the previously known
 planets b and c, d does not itself transit (no direct radius
 measurement); its orbital period and mass come from the gravitational
@@ -75,7 +75,7 @@ visual presence is the cfg's most distinctive feature.** 27 cfg picks;
 | `surface_ice_caps` | nightside frost cap at hemispheric anti-substellar position; sublimation-driven volatile cycle | medium | tidally-locked terminator condensation; thin atmosphere allows volatile transport day to night |
 | `magnetic_field_present` | true (weak) | low | Earth-mass rocky planet with active interior; dynamo possible despite slow rotation |
 | `magnetic_field_strength_microtesla_equator` | 5 | low | Earth-mass rocky planet → **rocky** dynamo scaling RM22 (Rodríguez-Mozos & Moya 2022, `2203.01065`, cached) + slow-rotation penalty (Garraffo 2017): a weak field despite an active young core. (Replaces a citation to Reiners & Christensen 2010, which is a giant/brown-dwarf dynamo paper inapplicable to a rocky planet.) |
-| `surface_radiation_dose_msv_yr` | 5000 | low | thin atmospheric column (~100 g/cm²) + weak magnetic field → high surface dose under AU Mic super-flares. Atri 2019 (1910.09871) gives the SEP→dose framework (Gray-per-event + enhancement factors, not annual mSv/yr), so the yearly value here is a conversion estimate → low |
+| `surface_radiation_dose_msv_yr` | 5000 | low | thin atmospheric column (~100 g/cm²) + weak magnetic field → high surface dose under AU Mic super-flares. Atri 2019 ([1910.09871](https://arxiv.org/abs/1910.09871)) gives the SEP→dose framework (Gray-per-event + enhancement factors, not annual mSv/yr), so the yearly value here is a conversion estimate → low |
 | `aurora_present` | true | medium | thin atmosphere + weak B-field + intense stellar wind → visible aurora; Mars-analog CO₂⁺ emission |
 | `aurora_color_primary_hex` | `#ff6b6b` | medium | CO₂⁺ Fox–Duffendack–Barker bands red ~580–620 nm; Mars-analog visible aurora |
 | `aurora_emission_species_primary` | CO₂⁺ doublet + CO Cameron bands + O 297.2 nm | medium | thin CO₂ atmosphere chemistry; MAVEN Mars-aurora analog |
@@ -300,26 +300,26 @@ with a thin atmosphere — distinct from b/c's gas-giant disks:
 
 ### Read (visual-informative, drove decisions above)
 
-- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, arXiv:2310.10719). N-body + TTV dynamical mass; introduces d as a TTV-only candidate at 12.74 d, mass 1.053 ± 0.511 M⊕. **Cornerstone discovery paper.**
+- **Wittrock J. M. et al. 2023** — *Transit Timing Variation Measurements and Dynamical Mass Determination of the AU Mic System*, AJ 166, 232 (`2023AJ....166..232W`, [arXiv:2310.10719](https://arxiv.org/abs/2310.10719)). N-body + TTV dynamical mass; introduces d as a TTV-only candidate at 12.74 d, mass 1.053 ± 0.511 M⊕. **Cornerstone discovery paper.**
 - **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO RV reanalysis recovers the d signal at marginal significance; confirms TTV-derived parameters within uncertainty.
-- **Driscoll P. E. & Barnes R. 2015** — *Tidal Heating of Earth-like Exoplanets around M Stars*, Astrobiology 15, 739 (`2015AsBio..15..739D`, arXiv:1506.08077). Framework for tidal-heating-driven volcanism on young rocky planets at M-dwarf habitable zones. Adopted for d's surface volcanism + atmosphere-replenishment argument.
-- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, arXiv:1705.10810). Photoevaporation framework; canonical argument that small planets at d's insolation under M-dwarf XUV strip atmospheres on Myr timescales. The cfg's documented divergence is against this reading.
-- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, arXiv:2306.00077). TESS flare census; rate 5.6/day above 10³¹ erg. Drives the atmospheric stripping argument for the canonical alternative.
-- **Atri D. 2019** — *Modelling stellar proton event-induced particle radiation dose on close-in exoplanets*, MNRAS 492, L28 (`2020MNRAS.492L..28A`, arXiv:1910.09871). Surface dose calculations for M-dwarf exoplanets under stellar proton events; informs the radiation environment and aurora intensity.
-- **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 (`2020ApJ...894...84S`, arXiv:2004.03007). Substellar convection framework for tidally-locked thin-atmosphere planets.
+- **Driscoll P. E. & Barnes R. 2015** — *Tidal Heating of Earth-like Exoplanets around M Stars*, Astrobiology 15, 739 (`2015AsBio..15..739D`, [arXiv:1506.08077](https://arxiv.org/abs/1506.08077)). Framework for tidal-heating-driven volcanism on young rocky planets at M-dwarf habitable zones. Adopted for d's surface volcanism + atmosphere-replenishment argument.
+- **Owen J. E. & Wu Y. 2017** — *The Evaporation Valley in the Kepler Planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)). Photoevaporation framework; canonical argument that small planets at d's insolation under M-dwarf XUV strip atmospheres on Myr timescales. The cfg's documented divergence is against this reading.
+- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare census; rate 5.6/day above 10³¹ erg. Drives the atmospheric stripping argument for the canonical alternative.
+- **Atri D. 2019** — *Modelling stellar proton event-induced particle radiation dose on close-in exoplanets*, MNRAS 492, L28 (`2020MNRAS.492L..28A`, [arXiv:1910.09871](https://arxiv.org/abs/1910.09871)). Surface dose calculations for M-dwarf exoplanets under stellar proton events; informs the radiation environment and aurora intensity.
+- **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a Key Role in the Climate of Tidally Locked Terrestrial Exoplanets: Insights from High-Resolution Simulations*, ApJ 894, 84 (`2020ApJ...894...84S`, [arXiv:2004.03007](https://arxiv.org/abs/2004.03007)). Substellar convection framework for tidally-locked thin-atmosphere planets.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of b; provides the stellar-activity context that informs d's atmosphere retention discussion.
-- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, arXiv:2102.05288). Discovery of c; defines the inner planetary architecture that allowed TTV detection of d.
-- **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 (`2017ApJ...834...17C`, arXiv:1603.08614). Mass-radius relation used by NASA Exoplanet Archive for the placeholder radius of d (1.02 R⊕).
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS discovery of b; provides the stellar-activity context that informs d's atmosphere retention discussion.
+- **Martioli E. et al. 2021** — *AU Mic c: a second planet transiting the young M dwarf AU Mic*, A&A 649, A177 (`2021A&A...649A.177M`, [arXiv:2102.05288](https://arxiv.org/abs/2102.05288)). Discovery of c; defines the inner planetary architecture that allowed TTV detection of d.
+- **Chen J. & Kipping D. 2017** — *Probabilistic Forecasting of the Masses and Radii of Other Worlds*, ApJ 834, 17 (`2017ApJ...834...17C`, [arXiv:1603.08614](https://arxiv.org/abs/1603.08614)). Mass-radius relation used by NASA Exoplanet Archive for the placeholder radius of d (1.02 R⊕).
 - **Goldreich P. & Soter S. 1966** — *Q in the Solar System*, Icarus 5, 375 (`1966Icar....5..375G`). Tidal damping timescale framework used for the 1:1 spin-orbit conclusion.
-- **Vinson A. M. & Hansen B. M. S. 2017** — *On the spin states of habitable zone exoplanets around M dwarfs: the effect of a near-resonant companion*, MNRAS 472, 3217 (`2017MNRAS.472.3217V`, arXiv:1709.00007). Spin-orbit resonance thresholds; e = 0.003 too low for 3:2.
+- **Vinson A. M. & Hansen B. M. S. 2017** — *On the spin states of habitable zone exoplanets around M dwarfs: the effect of a near-resonant companion*, MNRAS 472, 3217 (`2017MNRAS.472.3217V`, [arXiv:1709.00007](https://arxiv.org/abs/1709.00007)). Spin-orbit resonance thresholds; e = 0.003 too low for 3:2.
 
 ### Read (instrument / non-decisive)
 
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI of host star; provides stellar magnetic-field context for the planetary radiation environment.
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). Methodology for AU Mic RV detrending applied (indirectly) to Mallorquin 2024's recovery of d.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). Methodology for AU Mic RV detrending applied (indirectly) to Mallorquin 2024's recovery of d.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)
 

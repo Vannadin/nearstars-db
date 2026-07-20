@@ -137,17 +137,17 @@ variation.
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
   with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
-  arXiv:2510.11523). Latest RV refit: planet b P = 14.651552 d,
+  [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). Latest RV refit: planet b P = 14.651552 d,
   a = 0.118 AU, e = 0.0029, M sin i = 276 ± 9 M⊕. **Phase 2 recommended
   orbit + mass.** Postdates the model cutoff — values value-checked
   against the cached text.
 - **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
-  arXiv:1107.1936. Host L = 0.582 L☉ → the T_eq derivation.
+  [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). Host L = 0.582 L☉ → the T_eq derivation.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
-  arXiv:1807.04301. Homogeneous system refit: b at a = 0.1134 AU,
+  [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). Homogeneous system refit: b at a = 0.1134 AU,
   e = 0.0, M sin i = 255.4 M⊕ — the documented-alternative orbit/mass
   (superseded by Moutou 2025 as recommended).
 - **Butler R. P. et al. 1997** — `1997ApJ...474L.115B`. Discovery

@@ -246,7 +246,7 @@ than its modest photosphere:
 ### Read (drove Decisions above)
 
 - **Pineda J.S. & Villadsen J. 2023** — *Coherent radio bursts from
-  known M-dwarf planet host YZ Ceti*, Nature Astronomy (arXiv:2304.00031).
+  known M-dwarf planet host YZ Ceti*, Nature Astronomy ([arXiv:2304.00031](https://arxiv.org/abs/2304.00031)).
   The VLA 2–4 GHz discovery of ~100%-circularly-polarized coherent
   radio bursts whose recurrence nearly tracks planet b's 2.02087 d
   orbit. Source for the SPI-candidate detection, the sub-Alfvénic
@@ -256,7 +256,7 @@ than its modest photosphere:
   field inference. Establishes YZ Cet as the prime SPI monitoring case.
 - **Trigilio C. et al. 2023** — *Star-Planet Interaction at radio
   wavelengths in YZ Ceti: Inferring planetary magnetic field*, ApJL
-  (arXiv:2305.00809). uGMRT 550–900 MHz: 4/9 detections folding to two
+  ([arXiv:2305.00809](https://arxiv.org/abs/2305.00809)). uGMRT 550–900 MHz: 4/9 detections folding to two
   symmetric orbital-phase sectors of planet b, confirming ARE from SPI
   at 4.37σ (99.992%). Source for the confirmed-SPI decision, the
   inferred stellar polar field B_p ≈ 2.4 kG (from the ECM spectrum,

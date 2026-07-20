@@ -241,7 +241,7 @@ flare 는 드문 사건의 박자 찍기이며 (2019 년 HST 원자외선 flare 
   ≈ 0.37 M⊕) 와 유의성이 더 낮은 후보 셋의 발견 논문 — 여기서는
   범위 밖이라 행성 follow-up 으로 표시.
 - **Jahandar F. et al. 2023** — SPIRou 근적외선 고분해능 바너드 별
-  abundance 분석 (arXiv:2310.12125). Phase 2 recommended 금속도
+  abundance 분석 ([arXiv:2310.12125](https://arxiv.org/abs/2310.12125)). Phase 2 recommended 금속도
   [Fe/H] = −0.39 ± 0.03 (NIR, 차가운 M 왜성에 선호) 와 대안 Teff =
   3231 ± 21 K 의 출처. documented 금속도 divergence (Schweitzer VIS
   −0.15 및 Marfil −0.57 대비) 는 이 논문에 정박.
@@ -268,7 +268,7 @@ flare 는 드문 사건의 박자 찍기이며 (2019 년 HST 원자외선 flare 
 - **Boyajian T. S. et al. 2012b** — *Stellar Diameters and
   Temperatures II. Main-Sequence K- and M-Stars*, ApJ 757, 112
   (`2012ApJ...757..112B`, doi:10.1088/0004-637X/757/2/112,
-  arXiv:1208.2431). 바너드 별의 CHARA 어레이 사지 어두워짐 보정
+  [arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). 바너드 별의 CHARA 어레이 사지 어두워짐 보정
   각지름 θ_LD = 0.952 mas — Schweitzer 2019 recommended 반지름
   R = 0.187 R☉ 의 간섭계 기반.
 

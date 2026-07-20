@@ -71,7 +71,7 @@ tie-break (별 + 디스크 + jovian 점광원의 시각 hex 색조) 입니다.
 | `disk_belts` | asteroid, intermediate, cold | medium | 3 벨트 구조. 따뜻한 asteroid analog (~3 AU) + 중간 성분 (~20 AU) + 차가운 Kuiper analog 링 (~64 AU). intermediate 가 가장 덜 분해된 층 |
 | `disk_asteroid_inner_radius_au` | 3 | high | Backman 2009 Spitzer/IRS — 중적외 excess 로부터 따뜻한 asteroid belt analog (Su 2017 정련) |
 | `disk_asteroid_dust_temperature_k` | 120 | high | Backman 2009 — 안쪽 warm belt 모델 T (2026-05-29 감사: 150 에서 정정, 150 은 관측 상한) |
-| `disk_asteroid_tint_rgb_hex` | `#fff4ea` (옅은 따뜻 반사율. vivid `#ffe0c0`) | low | 측정된 광학 색 없음 (HST/STIS 미검출, arXiv:2408.06973). Mie 반사율 합성 (disk_color_mie.py, 분산 n,k). 규산염 a_min ~2 µm (Backman 2009) → 거의 중성에 가까운 옅은 따뜻 반사율 (B/I 0.65). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid (채도 강화) 팩 `#ffe0c0` |
+| `disk_asteroid_tint_rgb_hex` | `#fff4ea` (옅은 따뜻 반사율. vivid `#ffe0c0`) | low | 측정된 광학 색 없음 (HST/STIS 미검출, [arXiv:2408.06973](https://arxiv.org/abs/2408.06973)). Mie 반사율 합성 (disk_color_mie.py, 분산 n,k). 규산염 a_min ~2 µm (Backman 2009) → 거의 중성에 가까운 옅은 따뜻 반사율 (B/I 0.65). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid (채도 강화) 팩 `#ffe0c0` |
 | `disk_asteroid_opacity` | 0.25 | low | Tie-break. 실제로는 광학적으로 얇음. 가시성 위해 boost |
 | `disk_intermediate_inner_radius_au` | 20 | medium | Greaves 2014 Herschel — 중간 dust 성분 (2026-05-29 재귀속, Booth 2017 은 69 AU 링만 분해하고 20 AU 방출 없음). 가장 덜 분해된 belt |
 | `disk_intermediate_tint_rgb_hex` | `#fffcf3` (거의 중성. vivid `#fff6d8`) | low | 측정된 광학 색 없음. Mie 반사율 합성. blowout 크기 규산염 grain (a_min ~0.2 µm) → 거의 중성 반사율 (B/I 0.93). 별빛은 렌더러가 K2V 별색을 위에 입힘. vivid 팩 `#fff6d8` |
@@ -274,7 +274,7 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 - **Baines E. K. & Armstrong J. T. 2012** — *Confirming Fundamental
   Properties of the Exoplanet Host Star ε Eridani Using the Navy
   Optical Interferometer*, ApJ 744, 138 (`2012ApJ...744..138B`,
-  arXiv:1112.0447). NOI 간섭계: θ_LD = 2.153 ± 0.028 mas →
+  [arXiv:1112.0447](https://arxiv.org/abs/1112.0447)). NOI 간섭계: θ_LD = 2.153 ± 0.028 mas →
   R = 0.74 ± 0.01 R☉, Teff = 5039 ± 126 K (θ_LD + bolometric flux),
   L = 0.32 ± 0.03 L☉, M = 0.82 ± 0.05 M☉ (Yonsei-Yale isochrone).
   반지름/Teff/광도/질량의 Phase 2 권장 앵커.
@@ -282,10 +282,10 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   607 (`2006ApJ...648..607C`). MOST 우주 광도가 흑점 두 개를 분해
   (P1 = 11.35 d, P2 = 11.55 d). Phase 2 권장 회전 주기.
 - **Fröhlich H.-E. 2007** — *MOST 자료로 본 ε Eri 의 차등 회전*, AN
-  328, 1037 (`2007AN....328.1037F`, arXiv:0711.0806). Bayesian 재분석이
+  328, 1037 (`2007AN....328.1037F`, [arXiv:0711.0806](https://arxiv.org/abs/0711.0806)). Bayesian 재분석이
   P1 = 11.348, P2 = 11.553 d, k ≈ 0.09 를 확인.
 - **Gomes da Silva J. et al. 2021** — *AMBRE-HARPS 표본 1674 FGK 별의
-  색채권 활동도*, A&A 646, A77 (`2021A&A...646A..77G`, arXiv:2012.10199).
+  색채권 활동도*, A&A 646, A77 (`2021A&A...646A..77G`, [arXiv:2012.10199](https://arxiv.org/abs/2012.10199)).
   553 스펙트럼에서 log R'HK = −4.496. Phase 2 권장 활동도 지수.
 - **Santos N. C. et al. 2004** — *행성 보유성의 분광 금속함량*, A&A
   415, 1153 (`2004A&A...415.1153S`). [Fe/H] = −0.13 ± 0.04. Phase 2
@@ -297,7 +297,7 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-type Dwarfs Using Activity-Rotation
   Diagnostics*, ApJ 687, 1264 (`2008ApJ...687.1264M`,
-  arXiv:0807.1686). Ca II HK + 회전 + X 선 + isochrone 을 결합해
+  [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Ca II HK + 회전 + X 선 + isochrone 을 결합해
   ε Eri 의 나이 ≈ 440 Myr 유도. canonical 어린 나이 부여.
 - **Janson M. et al. 2008** — *ε Eri 를 포함한 근방 별의 직접 촬영
   검출* (`2008A&A...488..771J`). 운동학 + 활동도 기반 나이의 독립
@@ -308,10 +308,10 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   (권장값으로는 그쪽으로 대체됨).
 - **Metcalfe T. S. et al. 2013** — *외계행성 보유성 ε Eridani 의
   자기 활동 사이클*, ApJ 763, L26 (`2013ApJ...763L..26M`,
-  arXiv:1212.5343). Mt. Wilson + SMARTS Ca II HK 에서 2.95 년의
+  [arXiv:1212.5343](https://arxiv.org/abs/1212.5343)). Mt. Wilson + SMARTS Ca II HK 에서 2.95 년의
   색채권 자기 사이클 분해.
 - **Coffaro M. et al. 2020** — *ε Eri 의 활동 호스트. 17 년의 X 선
-  모니터링*, A&A 636, A49 (`2020A&A...636A..49C`, arXiv:2003.07069).
+  모니터링*, A&A 636, A49 (`2020A&A...636A..49C`, [arXiv:2003.07069](https://arxiv.org/abs/2003.07069)).
   XMM 모니터링이 X 선에서 사이클 확인. log L_X 28.3–28.9 cgs.
 - **Backman D. et al. 2009** — *Epsilon Eridani 의 행성형 Debris
   Disk. Spitzer 와 Caltech Submillimeter Observatory 관측을 바탕으로
@@ -322,23 +322,23 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   태양계의 analog*, ApJ 506, L133 (`1998ApJ...506L.133G`). JCMT/SCUBA
   가 차가운 Kuiper analog 링의 첫 sub-mm imaging.
 - **Greaves J. S. et al. 2014** — *Herschel 이 본 별-debris disc
-  시스템의 정렬* (`2014MNRAS.438L..31G`, arXiv:1312.4087). Herschel
+  시스템의 정렬* (`2014MNRAS.438L..31G`, [arXiv:1312.4087](https://arxiv.org/abs/1312.4087)). Herschel
   분해 디스크 inclination + 중간 belt 추정.
 - **MacGregor M. A. et al. 2015** — *ε Eridani 주위 Debris Disk 의
-  ALMA 관측*, ApJ 809, L47 (`2015ApJ...809L..47M`, arXiv:1505.03879).
+  ALMA 관측*, ApJ 809, L47 (`2015ApJ...809L..47M`, [arXiv:1505.03879](https://arxiv.org/abs/1505.03879)).
   ALMA 1.3 mm imaging 이 차가운 링을 64.4 ± 0.5 AU 에서 분해하며
   이심 e ≈ 0.07.
 - **Booth M. et al. 2017** — *ALMA 가 본 ε Eridani 의 Debris Ring
-  북쪽 호*, MNRAS 469, 3200 (`2017MNRAS.469.3200B`, arXiv:1705.05868).
+  북쪽 호*, MNRAS 469, 3200 (`2017MNRAS.469.3200B`, [arXiv:1705.05868](https://arxiv.org/abs/1705.05868)).
   다파장 분해. 삼중 belt 구조 확인. 차가운 링 지오메트리와 inclination
   정련.
 - **Su K. Y. L. et al. 2017** — *ε Eri 시스템의 안쪽 25 AU Debris
-  분포*, AJ 153, 226 (`2017AJ....153..226S`, arXiv:1703.10330). "Genie"
+  분포*, AJ 153, 226 (`2017AJ....153..226S`, [arXiv:1703.10330](https://arxiv.org/abs/1703.10330)). "Genie"
   다중 belt sculpting 모델. 삼중 링 시스템 + 행성 perturber 의
   canonical 해석.
 - **Mawet D. et al. 2019** — *Deep Exploration of ε Eridani with
   Keck Ms-band Vortex Coronagraphy and Radial Velocities*, AJ 157, 33
-  (`2019AJ....157...33M`, arXiv:1810.03794). ε Eri b 직접 촬영 확정.
+  (`2019AJ....157...33M`, [arXiv:1810.03794](https://arxiv.org/abs/1810.03794)). ε Eri b 직접 촬영 확정.
   바깥쪽 "ε Eri c" 배제. RV 하한 M sin i = 0.72 M_Jup. 정보 없는
   edge-on 사전분포로는 M_b = 0.78 (−0.12/+0.38) M_Jup, i = 89° ± 42°.
   디스크 coplanar Gaussian 사전분포 (i = 34° ± 2°) 를 넣으면 대신
@@ -347,14 +347,14 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
 - **Llop-Sayson J. et al. 2021** — *Constraining the Orbit and Mass
   of ε Eridani b with Radial Velocities, Hipparcos IAD–Gaia DR2
   Astrometry, and Multi-epoch Vortex Coronagraphy Upper Limits*,
-  AJ 162, 181 (`2021AJ....162..181L`, arXiv:2108.02305). RV +
+  AJ 162, 181 (`2021AJ....162..181L`, [arXiv:2108.02305](https://arxiv.org/abs/2108.02305)). RV +
   Hipparcos IAD–Gaia DR2 천체측정 + 직접 촬영 상한 결합 fit. 채택
   실제 질량 M_b = 0.66 (−0.09/+0.12) M_Jup, i = 78.81°
   (−22.41/+29.34), a = 3.5 AU. 천체측정은 더 낮은 질량과 더 edge-on
   인 행성을 선호하며, 궤도를 차가운 링의 34° 평면에서 ~2σ 벗어난
   곳에 놓습니다 (coplanar 해는 ~1σ 만 허용).
 - **Roettenbacher R. M. et al. 2022** — *No Reliable Astrometric
-  Detection of ε Eri b* (`2022AJ....163...19R`, arXiv:2110.10643).
+  Detection of ε Eri b* (`2022AJ....163...19R`, [arXiv:2110.10643](https://arxiv.org/abs/2110.10643)).
   천체측정 교차 확인 (Phase 3 캐시에 없음. 여기서는 unverified.
   디스크와의 coplanar 결론은 이 합성에서 사실로 단정하지 않음).
 - **Roettenbacher R. M. et al. 2016** — *활동성 별 ζ Andromedae 의
@@ -383,7 +383,7 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   가까운 별 시스템 발견* (`1996AJ....111..439H`). ε Eri 의 log R'HK
   참조.
 - **Zechmeister M. et al. 2013** — *ESO CES 와 HARPS 의 행성 탐색
-  프로그램* (`2013A&A...552A..78Z`, arXiv:1211.7263). 현대 epoch
+  프로그램* (`2013A&A...552A..78Z`, [arXiv:1211.7263](https://arxiv.org/abs/1211.7263)). 현대 epoch
   에서 ε Eri 의 Ca II HK 인덱스 갱신.
 - **France K. et al. 2018** — *MUSCLES Treasury Survey* 의 K 왜성
   확장 (`2018ApJS..239...16F`). 안쪽 행성의 대기 침식 추정에 정보
@@ -392,10 +392,10 @@ FUV 모니터링을 가시광으로 스케일). 시각 사이클 위상은 Metca
   별의 질량 손실률* (`2002ApJ...574..412W`, arXiv:astro-ph/0203437).
   ε Eri 의 질량 손실률 ~30× 태양.
 - **Beeck B. et al. 2013** — *주계열 별의 근표면 convection 3D
-  시뮬레이션. II.* (arXiv:1308.4732). cfg 용으로 스케일된 K 왜성
+  시뮬레이션. II.* ([arXiv:1308.4732](https://arxiv.org/abs/1308.4732)). cfg 용으로 스케일된 K 왜성
   granulation 속성.
 - **Bonanno A. et al. 2008** — *ε Eridani 의 Asteroseismology*
-  (`2008A&A...488..685B`, arXiv:0805.2580). 활동 floor 에 잠긴
+  (`2008A&A...488..685B`, [arXiv:0805.2580](https://arxiv.org/abs/0805.2580)). 활동 floor 에 잠긴
   marginal ν_max 검출.
 - **Frohlich H.-E. et al. 2007** — *ε Eri 흑점 모델링의 MOST 광도*
   (`2007A&A...471..899F`). 5–10% 흑점 면적을 주는 광도 분해.

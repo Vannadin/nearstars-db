@@ -15,7 +15,7 @@ renders c as a **cold, globally ice-covered world** — not as a
 temperate Earth-analog.
 
 The defining cfg-relevant result for c comes from Hammond 2025
-(arXiv:2504.00978), which runs an ExoCAM GCM suite over seven nearby
+([arXiv:2504.00978](https://arxiv.org/abs/2504.00978)), which runs an ExoCAM GCM suite over seven nearby
 HZ targets including Teegarden c, with pCO₂ varied from 100 μbar to 2
 bar. Of the seven targets, c is the **only one** that fails to support
 liquid water anywhere on its surface even at the maximum 2-bar CO₂
@@ -90,7 +90,7 @@ d's bare rock — c is the system's archetypal snowball.
 Teegarden c sits at S = 0.35 S⊕ — about a third of Earth's insolation
 and at or below the conservative outer-HZ limit (Kopparapu 2013
 S_outer ≈ 0.36 for an M dwarf with full atmospheric circulation). The
-cfg's snowball pick rests on Hammond 2025 (arXiv:2504.00978), the most
+cfg's snowball pick rests on Hammond 2025 ([arXiv:2504.00978](https://arxiv.org/abs/2504.00978)), the most
 recent dedicated 3D GCM study of c.
 
 Hammond's ExoCAM grid runs c at three CO₂ scenarios — 100 μbar CO₂
@@ -265,28 +265,28 @@ forms a distinct "frozen sibling" companion in the system view.
 
 ### Read (visual-informative, drove decisions above)
 
-- **2402.00923** Dreizler S. et al. 2024 — *Teegarden's Star revisited*
+- **[2402.00923](https://arxiv.org/abs/2402.00923)** Dreizler S. et al. 2024 — *Teegarden's Star revisited*
   (`2024A&A...684A.117D`). Table 4 refined c orbit
   (P = 11.416 d, e = 0.04, msini = 1.05 M⊕, T_eq = 209 K @ A=0.3,
   S = 0.35 S⊕, ESI = 0.88 "closely resembling Proxima b").
-- **2504.00978** Hammond T. et al. 2025 — *The climates and thermal
+- **[2504.00978](https://arxiv.org/abs/2504.00978)** Hammond T. et al. 2025 — *The climates and thermal
   emission spectra of prime nearby temperate rocky exoplanet targets*
   (`2025ApJ...984..181H`). 3D ExoCAM GCM of c at 100 μbar / 0.1 bar /
   2 bar CO₂ — c is ice-covered everywhere for all pCO₂, the only one
   of seven targets that never reaches liquid water. Driver of the
   cfg's snowball choice.
-- **1906.07704** Wandel A. & Tal-Or L. 2019 — *On the Habitability of
+- **[1906.07704](https://arxiv.org/abs/1906.07704)** Wandel A. & Tal-Or L. 2019 — *On the Habitability of
   Teegarden's Star planets* (`2019ApJ...880L..21W`). 1D analytic
   habitability range H_atm = 1–12 for c (f=0.5, T_max=340 K) — the
   older, more optimistic reading superseded for the cfg by Hammond
   2025.
-- **1906.07196** Zechmeister M. et al. 2019 — discovery paper for b
+- **[1906.07196](https://arxiv.org/abs/1906.07196)** Zechmeister M. et al. 2019 — discovery paper for b
   and c (`2019A&A...627A..49Z`). Original orbital parameters and host
   characterization.
 
 ### Read (context / methodology, not decision-driving)
 
-- **2007.15077** Cifuentes C. et al. 2020 — CARMENES input catalogue
+- **[2007.15077](https://arxiv.org/abs/2007.15077)** Cifuentes C. et al. 2020 — CARMENES input catalogue
   of M dwarfs (`2020A&A...642A.115C`). M-dwarf Teff/spectral-type
   calibration context (M7.0 V bin); the adopted host Teff of 2904 K
   is from Schweitzer 2019, not this catalogue's bin median.

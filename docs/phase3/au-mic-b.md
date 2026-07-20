@@ -4,20 +4,20 @@
 AU Microscopii b is a 4.79 ± 0.29 R⊕, 8.99 ± 2.61 M⊕ low-density
 warm Neptune on an 8.463-day orbit around the 22-Myr-old pre-main-sequence
 M1Ve flare star AU Microscopii. Plavchan et al. 2020 (Nature 582, 497;
-`2020Natur.582..497P`, arXiv:2006.13248) discovered the planet in TESS
+`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)) discovered the planet in TESS
 transits; Cale et al. 2021 (AJ 162, 295; `2021AJ....162..295C`,
-arXiv:2109.13996) provided the first robust RV mass after Gaussian-process
+[arXiv:2109.13996](https://arxiv.org/abs/2109.13996)) provided the first robust RV mass after Gaussian-process
 detrending of the host star's spot signal; Mallorquin et al. 2024
 (A&A 689, A132; `2024A&A...689A.132M`) refined both mass and radius with
 ESPRESSO + TESS reanalysis. Bulk density is ≈ 0.45 g/cc — about three
 times lower than Neptune — placing b firmly in the "puffy / inflated
 sub-Saturn" regime characteristic of young transiting planets whose
 hydrogen envelopes have not yet had time to cool and contract. Allart
-et al. 2023 (A&A 677, A164; `2023A&A...677A.164A`, arXiv:2308.10891)
+et al. 2023 (A&A 677, A164; `2023A&A...677A.164A`, [arXiv:2308.10891](https://arxiv.org/abs/2308.10891))
 reported a marginal-to-significant He I 10830 Å absorption signature
 during transit, consistent with an extended escaping H/He envelope;
 Hirano et al. 2020 (ApJ 899, L13; `2020ApJ...899L..13H`,
-arXiv:2006.13654) measured the projected obliquity via Rossiter–McLaughlin
+[arXiv:2006.13654](https://arxiv.org/abs/2006.13654)) measured the projected obliquity via Rossiter–McLaughlin
 and found it aligned within ~5° (λ = −2.96°), consistent with the
 disk + stellar spin axis.
 
@@ -239,26 +239,26 @@ the horizon.
 
 ### Read (visual-informative, drove decisions above)
 
-- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, arXiv:2006.13248). TESS discovery of AU Mic b; transit-derived radius 4.0 R⊕ (later refined to 4.79); discussion of host XUV environment and atmospheric escape regime. Cornerstone paper.
-- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, arXiv:2109.13996). First robust RV mass with multi-instrument GP detrending; reports inflated low density consistent with puffy envelope.
+- **Plavchan P. et al. 2020** — *A planet within the debris disk around the pre-main-sequence star AU Microscopii*, Nature 582, 497 (`2020Natur.582..497P`, [arXiv:2006.13248](https://arxiv.org/abs/2006.13248)). TESS discovery of AU Mic b; transit-derived radius 4.0 R⊕ (later refined to 4.79); discussion of host XUV environment and atmospheric escape regime. Cornerstone paper.
+- **Cale B. L. et al. 2021** — *Diving Beneath the Sea of Stellar Activity: Chromatic Radial Velocities of AU Mic b*, AJ 162, 295 (`2021AJ....162..295C`, [arXiv:2109.13996](https://arxiv.org/abs/2109.13996)). First robust RV mass with multi-instrument GP detrending; reports inflated low density consistent with puffy envelope.
 - **Mallorquin M. et al. 2024** — *AU Mic system characterized with ESPRESSO*, A&A 689, A132 (`2024A&A...689A.132M`). ESPRESSO + TESS joint analysis; refines b's mass to 8.99 ± 2.61 M⊕ and radius to 4.79 ± 0.29 R⊕; supersedes Cale 2021's higher mass via improved stellar-activity modeling. **Adopted as headline source.**
-- **Allart R. et al. 2023** — *Homogeneous search for helium in the atmosphere of 11 gas giants with HST/STIS and CARMENES*, A&A 677, A164 (`2023A&A...677A.164A`, arXiv:2308.10891). Reports marginal-to-significant He I 10830 Å detection during AU Mic b transit; constrains escape rate and extended-atmosphere geometry. Drives the atmosphere-present and escape-tail cfg picks.
-- **Hirano T. et al. 2020** — *Evidence for Spin–Orbit Alignment in the TRAPPIST-1 System and Implications for the AU Mic system*, ApJ 899, L13 (`2020ApJ...899L..13H`, arXiv:2006.13654). Subaru IRD Rossiter–McLaughlin measurement of b; projected obliquity λ = −2.96°. Confirms orbital-plane alignment with disk + stellar spin.
-- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 (`2014ApJ...792....1L`, arXiv:1311.0329). Mass-radius envelope-mass-fraction calibration. Applied to b gives ~30% H/He by mass; drives the cfg surface pressure picks.
+- **Allart R. et al. 2023** — *Homogeneous search for helium in the atmosphere of 11 gas giants with HST/STIS and CARMENES*, A&A 677, A164 (`2023A&A...677A.164A`, [arXiv:2308.10891](https://arxiv.org/abs/2308.10891)). Reports marginal-to-significant He I 10830 Å detection during AU Mic b transit; constrains escape rate and extended-atmosphere geometry. Drives the atmosphere-present and escape-tail cfg picks.
+- **Hirano T. et al. 2020** — *Evidence for Spin–Orbit Alignment in the TRAPPIST-1 System and Implications for the AU Mic system*, ApJ 899, L13 (`2020ApJ...899L..13H`, [arXiv:2006.13654](https://arxiv.org/abs/2006.13654)). Subaru IRD Rossiter–McLaughlin measurement of b; projected obliquity λ = −2.96°. Confirms orbital-plane alignment with disk + stellar spin.
+- **Lopez E. D. & Fortney J. J. 2014** — *Understanding the Mass-Radius Relation for Sub-Neptunes*, ApJ 792, 1 (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). Mass-radius envelope-mass-fraction calibration. Applied to b gives ~30% H/He by mass; drives the cfg surface pressure picks.
 
 ### Read (context / methodology, not decision-driving)
 
-- **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, arXiv:2012.04970). SPIRou near-IR ZDI of AU Mic + RV; provides supporting stellar-activity context for the GP detrending used by Mallorquin 2024.
+- **Klein B. et al. 2021** — *Investigating the young AU Mic system with SPIRou: stellar magnetic field and close-in planet mass*, MNRAS 502, 188 (`2021MNRAS.502..188K`, [arXiv:2012.04970](https://arxiv.org/abs/2012.04970)). SPIRou near-IR ZDI of AU Mic + RV; provides supporting stellar-activity context for the GP detrending used by Mallorquin 2024.
 - **Donati J.-F. et al. 2023** — *The magnetic field topology and filling of the very active M dwarf AU Mic*, MNRAS 525, 455 (`2023MNRAS.525..455D`). ZDI dipole 2 kG, total RMS 4.6 kG; sets the stellar magnetic-field context.
-- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, arXiv:2306.00077). TESS flare census; rate 5.6/day above 10³¹ erg; relevant for atmosphere-escape and aurora timing.
-- **Lavie B. et al. 2017** — *HELIOS-RETRIEVAL: Open-source Nested Sampling Atmospheric Retrieval Code for Exoplanets*, AJ 154, 91 (`2017AJ....154...91L`, arXiv:1610.03216). Cool-Neptune photochemistry framework adopted for the trace-species composition.
-- **Sing D. K. et al. 2016** — *A continuum from clear to cloudy hot-Jupiter exoplanets without primordial water depletion*, Nature 529, 59 (`2016Natur.529...59S`, arXiv:1512.04341). Census of cloud-deck pressures in hot/warm gas giants; supports the 0.70 cloud-cover choice.
-- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 (`2009ApJ...699..564S`, arXiv:0809.2089). Equatorial-superrotation GCM framework adopted (with cooler-temperature adaptation) for the banded morphology pick.
+- **Tristan I. I. et al. 2023** — *Catching the Flares of the AU Mic System with TESS*, ApJ 951, 33 (`2023ApJ...951...33T`, [arXiv:2306.00077](https://arxiv.org/abs/2306.00077)). TESS flare census; rate 5.6/day above 10³¹ erg; relevant for atmosphere-escape and aurora timing.
+- **Lavie B. et al. 2017** — *HELIOS-RETRIEVAL: Open-source Nested Sampling Atmospheric Retrieval Code for Exoplanets*, AJ 154, 91 (`2017AJ....154...91L`, [arXiv:1610.03216](https://arxiv.org/abs/1610.03216)). Cool-Neptune photochemistry framework adopted for the trace-species composition.
+- **Sing D. K. et al. 2016** — *A continuum from clear to cloudy hot-Jupiter exoplanets without primordial water depletion*, Nature 529, 59 (`2016Natur.529...59S`, [arXiv:1512.04341](https://arxiv.org/abs/1512.04341)). Census of cloud-deck pressures in hot/warm gas giants; supports the 0.70 cloud-cover choice.
+- **Showman A. P. et al. 2009** — *Atmospheric Circulation of Hot Jupiters*, ApJ 699, 564 (`2009ApJ...699..564S`, [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). Equatorial-superrotation GCM framework adopted (with cooler-temperature adaptation) for the banded morphology pick.
 
 ### Read (instrument / non-decisive)
 
 - **Martioli E. et al. 2020** — *AU Mic b transits revisited with TESS Sector 27* (early sector-27 release; not visual-informative).
-- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic b* (`2021A&A...654A.159S`, arXiv:2108.07984). CHEOPS transit timing; not cfg-decisive.
+- **Szabó Gy. M. et al. 2021** — *Spi-Ops campaign on AU Mic b* (`2021A&A...654A.159S`, [arXiv:2108.07984](https://arxiv.org/abs/2108.07984)). CHEOPS transit timing; not cfg-decisive.
 
 ### Not read — no arXiv preprint or low-priority (~25 papers)
 

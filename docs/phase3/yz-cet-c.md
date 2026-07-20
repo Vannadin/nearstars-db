@@ -175,10 +175,10 @@ Combining the surface and atmosphere decisions:
   source for c's orbit (P = 3.05989 d, a = 0.02156 AU, e = 0) and
   minimum mass (1.14 M⊕), plus the semi-empirical radius estimate
   (1.05 R⊕).
-- **2304.00031** Pineda & Villadsen 2023 — VLA SPI study; establishes
+- **[2304.00031](https://arxiv.org/abs/2304.00031)** Pineda & Villadsen 2023 — VLA SPI study; establishes
   that the radio bursts fold to b's orbit, **not** c's (worse phase
   agreement for c), so c is not the SPI driver. Cites R_c = 1.05 R⊕.
-- **2305.00809** Trigilio et al. 2023 — uGMRT SPI confirmation; same
+- **[2305.00809](https://arxiv.org/abs/2305.00809)** Trigilio et al. 2023 — uGMRT SPI confirmation; same
   conclusion (c and d show randomly mixed detections, no orbital folding
   → no SPI attribution to c). Source for the c-is-not-driver decision.
 

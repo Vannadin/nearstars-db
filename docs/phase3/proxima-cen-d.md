@@ -2,10 +2,10 @@
 
 Proxima Centauri d is a sub-Earth-mass ultra-short-period (USP)
 planet candidate first reported as a 0.26 M⊕ object at 5.122 d period
-by Faria et al. 2022 (`2022A&A...658A.115F`, arXiv:2202.05188), and
+by Faria et al. 2022 (`2022A&A...658A.115F`, [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)), and
 confirmed at high significance in the NIRPS + ESPRESSO joint analysis
 of Suárez Mascareño et al. 2025 (`2025A&A...700A..11S`,
-arXiv:2507.21751). At a semi-major axis of 0.029 AU it sits inside
+[arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). At a semi-major axis of 0.029 AU it sits inside
 the inner edge of any habitable-zone interpretation; even so, with
 Proxima's faint M5.5V illumination (L = 0.00155 L☉) the insolation
 is only ~1.9× Earth's, giving an equilibrium temperature of 326 K
@@ -60,7 +60,7 @@ discovered for a canonical climate model to exist.
 | `magnetic_field_present` | true (intrinsic, SPI-indicated) | medium | Zapatero Osorio et al. 2026 (`2605.22925`) detect flares phase-locked to Proxima d at ≥99.8% significance — the FIRST star–planet-interaction field estimate for a terrestrial exoplanet. Supersedes the prior unconstrained Mercury-analog guess. Still airless → no rendered aurora |
 | `magnetic_dipole_moment_normalized_earth` | 4 | low | From the SPI-derived polar field ~16 G (median, Mars-size) of Zapatero Osorio 2026 (`2605.22925`): M ∝ B_pol·R³ vs Earth (0.6 G polar) → ~4× Earth for a Mars radius. **Order-of-magnitude only** — the paper's 3–280 G range × radius uncertainty spans ~0.5–70× Earth, and it self-labels the field "reliable only at the order-of-magnitude level". Supersedes the prior Mercury-analog 0.001 |
 | `radiation_belt_present` | false | high | no atmosphere + negligible B-field → no trapped particle population |
-| `surface_radiation_dose_msv_yr` | 10⁵ | low | Order-of-magnitude estimate, not a measured rate. Atri 2020 (1910.09871) provides the SEP→dose *framework* but reports Gray-per-event + dimensionless enhancement-over-GCR factors, NOT annual mSv/yr; the yearly figure here is a conversion (airless dose × flare frequency), so confidence is low despite the strong physical driver. NOTE the SPI-indicated ~16 G field (Zapatero Osorio 2026) could partially deflect SEPs → this no-magnetic-shield value is an upper bound |
+| `surface_radiation_dose_msv_yr` | 10⁵ | low | Order-of-magnitude estimate, not a measured rate. Atri 2020 ([1910.09871](https://arxiv.org/abs/1910.09871)) provides the SEP→dose *framework* but reports Gray-per-event + dimensionless enhancement-over-GCR factors, NOT annual mSv/yr; the yearly figure here is a conversion (airless dose × flare frequency), so confidence is low despite the strong physical driver. NOTE the SPI-indicated ~16 G field (Zapatero Osorio 2026) could partially deflect SEPs → this no-magnetic-shield value is an upper bound |
 | `atmospheric_shielding_g_cm2` | 0 | high | airless |
 | `aurora_present` | false | high | no atmosphere to excite |
 | `flare_dose_event_msv` | 10⁴ | high | Atri 2020 + Vida 2019 superflare integrated proton dose at d's distance |
@@ -108,7 +108,7 @@ Proxima d has effectively no atmosphere in the conventional sense.
 At the surface gravity of 0.62 g_⊕ and a substellar peak ~460 K,
 the Jeans-escape parameter for any plausible secondary atmosphere is
 favorable for H₂ and H₂O over Gyr timescales. Proxima's intense XUV
-output also drives strong hydrodynamic escape; Lee 2021 (2109.06963) found that
+output also drives strong hydrodynamic escape; Lee 2021 ([2109.06963](https://arxiv.org/abs/2109.06963)) found that
 even Proxima b at 0.05 AU experiences Venus-analog escape rates,
 and at d's much closer 0.029 AU the loss rates scale up by another
 order of magnitude.
@@ -182,41 +182,41 @@ purely a hot-rocky visual destination for player exploration.
 
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
   orbiting Proxima Centauri*, A&A 658, A115
-  (`2022A&A...658A.115F`, arXiv:2202.05188). The discovery paper.
+  (`2022A&A...658A.115F`, [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). The discovery paper.
   Reports P = 5.122 d, Msini = 0.26 M⊕. Orbital eccentricity is
   consistent with circular at the precision of the fit.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
   system of Proxima with NIRPS: Breaking the m/s barrier*, A&A 700,
-  A11 (arXiv:2507.21751). Confirms Proxima d at high significance;
+  A11 ([arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). Confirms Proxima d at high significance;
   refines orbital fit; constrains inclination to high values
   precluding transits in the photometric monitoring envelope.
 - **Suárez Mascareño A. et al. 2020** — *Revisiting Proxima with
-  ESPRESSO* (arXiv:2005.12114). Pre-discovery upper limits
+  ESPRESSO* ([arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). Pre-discovery upper limits
   consistent with a 0.3-M⊕ planet at 5 d.
 - **Anglada-Escudé G. et al. 2016** — *A terrestrial planet candidate
   in a temperate orbit around Proxima Centauri*, Nature 536, 437
-  (arXiv:1609.03449). Host star context — Proxima b discovery used
+  ([arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Host star context — Proxima b discovery used
   the same data baseline that constrained d's eventual identification.
 - **Boyajian T. S. et al. 2012** — *Stellar Diameters and Temperatures
-  II*, ApJ 757, 112 (arXiv:1208.2431). Proxima R = 0.1542 R☉; sets
+  II*, ApJ 757, 112 ([arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). Proxima R = 0.1542 R☉; sets
   the insolation calculation.
 - **Atri D. et al. 2020** — *Stellar Proton Event-induced surface
   radiation dose as a constraint on the habitability of terrestrial
-  exoplanets* (arXiv:1910.09871). Used for the radiation-dose
+  exoplanets* ([arXiv:1910.09871](https://arxiv.org/abs/1910.09871)). Used for the radiation-dose
   Decisions row.
 - **Walterová M. & Běhounková M. 2020** — *Thermal and Orbital
-  Evolution of Low-mass Exoplanets*, ApJ 900, 24 (arXiv:2007.12459).
+  Evolution of Low-mass Exoplanets*, ApJ 900, 24 ([arXiv:2007.12459](https://arxiv.org/abs/2007.12459)).
   Tidal-locking timescale scaling.
 - **Vida K. et al. 2019** — *Flaring Activity of Proxima Centauri
-  from TESS Observations* (arXiv:1907.12580). Superflare rate +
+  from TESS Observations* ([arXiv:1907.12580](https://arxiv.org/abs/1907.12580)). Superflare rate +
   energy distribution for the dose scaling.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Lee Y. et al. 2021** — *Exosphere Modeling of Proxima b*
-  (arXiv:2109.06963). Order-of-magnitude scaling for d's escape rate.
+  ([arXiv:2109.06963](https://arxiv.org/abs/2109.06963)). Order-of-magnitude scaling for d's escape rate.
 - **Kossakowski D. et al. 2023** — *The CARMENES search for
-  exoplanets around M dwarfs: Wolf 1069 b* (arXiv:2301.02477).
+  exoplanets around M dwarfs: Wolf 1069 b* ([arXiv:2301.02477](https://arxiv.org/abs/2301.02477)).
   Sister-system analog; useful for cross-checking USP rocky planet
   scenarios.
 

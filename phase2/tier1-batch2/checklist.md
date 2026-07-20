@@ -17,7 +17,7 @@ after each host is done. Divergences → focused re-investigation.
 - [ ] DIFF vs quarantined prep measurements.yaml → re-investigate divergences
 
 ## Barnard's Star  (key: "Barnard's star", slug: barnards-star)  ✅ DONE
-- [x] discovery — ESPRESSO 2024 (2410.00569) anchor + Schweitzer/Marfil/Jahandar/Toledo-Padrón
+- [x] discovery — ESPRESSO 2024 ([2410.00569](https://arxiv.org/abs/2410.00569)) anchor + Schweitzer/Marfil/Jahandar/Toledo-Padrón
 - [x] pin + fetch — _bib/barnards-star.yaml (all anchors already cached)
 - [x] value-check — 8 cats cache-backed; caught radius misattribution (was "Rains 2021", a southern-TESS paper → corrected to Schweitzer 2019 R_interf 0.187 via Boyajian θ_LD)
 - [x] DB build — full 8-cat entry
@@ -26,7 +26,7 @@ after each host is done. Divergences → focused re-investigation.
 - [x] prep diff — fresh consistently MORE accurate; prep had attribution errors (metallicity mislabeled as Marfil, activity -5.69 misattributed). No fixes needed.
 
 ## Teegarden's Star  (key: "Teegarden's Star", slug: teegardens-star)  ✅ DONE
-- [x] discovery — Schweitzer/Zechmeister baseline + fetched Dreizler 2024 (2402.00923) + Fuhrmeister 2025 activity (2504.02338)
+- [x] discovery — Schweitzer/Zechmeister baseline + fetched Dreizler 2024 ([2402.00923](https://arxiv.org/abs/2402.00923)) + Fuhrmeister 2025 activity ([2504.02338](https://arxiv.org/abs/2504.02338))
 - [x] pin + fetch — _bib/teegardens-star.yaml
 - [x] value-check — Dreizler unverified mass/radius (uncached) → Schweitzer 2019 recommended; M7V: no interferometry, no Ca II HK, rotation 96.2 d (Lafarga via Dreizler)
 - [x] DB build — full 8-cat entry

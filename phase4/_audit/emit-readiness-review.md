@@ -196,7 +196,7 @@ disk** (6–55 AU, 14 Phase-3 decisions incl. tint #ffe2bb, mass 1.2 M⊕) has *
   environment rows) or renamed `target:` (αCen appearance rows) — a writer keyed on
   `row.value` gets nothing.
 - **MN4 — `refs` integrity:** present on 2 of ~120 gated rows; `alpha_centauri.yaml:40
-  refs:["2025AJ....Beichman"]` is a malformed bibcode (the real arXiv:2508.03814 is only in
+  refs:["2025AJ....Beichman"]` is a malformed bibcode (the real [arXiv:2508.03814](https://arxiv.org/abs/2508.03814) is only in
   prose). All other bibcodes buried in `paper:` strings, unparseable.
 - **MN5 — e≈0 divide-by-zero mitigation is prose on one unrelated body** only
   (`alpha_centauri.yaml:176`); Proxima b/c I and TRAPPIST-1 need a per-body flag or e-floor.

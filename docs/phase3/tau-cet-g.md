@@ -256,13 +256,13 @@ remnant field at ~0.5 μT.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). Discovery + best
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
   constraint on g's orbit (P = 20.00 ± 0.02 d), mass
   (Msini = 1.75 ± 0.25 M⊕), eccentricity (0.06). Anchors every
   orbital and physical Decisions row.
 - **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
   system*, A&A 613, A76 (`2018A&A...613A..76F`,
-  arXiv:1801.05415). Confirms 20-day signal stability;
+  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). Confirms 20-day signal stability;
   controversial flag in NEA reflects amplitude-to-noise concerns.
 - **Vinson A. M. & Hansen B. M. S. 2017** — *Spin-orbit dynamics
   of habitable-zone planets*. Capture probabilities for 3:2 vs.

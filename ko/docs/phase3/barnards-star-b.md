@@ -177,23 +177,23 @@ cfg 의 flare-duty-cycle 속도 (~25%) 에서 일시적인 주변광 brightening
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
   Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
-  arXiv:2503.08095). MAROON-X 확인. P = 3.1542 d, Msini = 0.299 ±
+  [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). MAROON-X 확인. P = 3.1542 d, Msini = 0.299 ±
   0.026 M⊕, a = 0.0229 AU, e = 0.03 (+0.03/−0.02), ω = +3.8°,
   T_eq = 438 K (Table 3, A = 0, 완전 열재분배). 안정성 분석은
   e < 0.02 를 선호.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, arXiv:2410.00569).
+  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO 발견. 현대 Barnard 시스템의 첫 확정 행성. Msini = 0.37 ±
   0.05 M⊕ (ESPRESSO 전용) 와 A = 0.3 가정의 T_eq = 400 ± 7 K 보고 —
   Basant 의 438 K 와의 차이는 항성 매개변수가 아니라 albedo 가정
   (A = 0.3 vs A = 0) 때문. 조명 색에 Teff = 3195 K 사용.
 - **Stefanov A. K. et al. 2024** — *A sub-Earth-mass planet orbiting
   Barnard's star: No evidence of transits in TESS photometry*
-  (arXiv:2410.00577). TESS 비검출. 궤도 경사를 i ≤ 87.9° (3σ) 로
+  ([arXiv:2410.00577](https://arxiv.org/abs/2410.00577)). TESS 비검출. 궤도 경사를 i ≤ 87.9° (3σ) 로
   제약. 강한 반지름–경사 축퇴를 지적하므로 반지름을 직접 못 박지는
   않음.
 - **France K. et al. 2020** — *The High-Energy Radiation Environment
-  Around a 10 Gyr M Dwarf: Habitable at Last?* (arXiv:2009.01259).
+  Around a 10 Gyr M Dwarf: Habitable at Last?* ([arXiv:2009.01259](https://arxiv.org/abs/2009.01259)).
   Mega-MUSCLES HST + Chandra. 25% flare 듀티 사이클. b 의 대기-strip
   시나리오를 뒷받침하는 대기 손실 환경. *로컬 paper 캐시에 없음 —
   context-cite 만.*
@@ -203,7 +203,7 @@ cfg 의 flare-duty-cycle 속도 (~25%) 에서 일시적인 주변광 brightening
   현재 Barnard b 가 2018 후보와 다른 행성임을 확립. *arXiv preprint
   없음 — context-cite 만.*
 - **Walterová M. & Běhounková M. 2020** — *Thermal and Orbital
-  Evolution of Low-mass Exoplanets* (arXiv:2007.12459). 조석
+  Evolution of Low-mass Exoplanets* ([arXiv:2007.12459](https://arxiv.org/abs/2007.12459)). 조석
   spin-orbit 진화. 저질량 암석 행성은 낮은 이심률에서 동기 회전이
   지배.
 
@@ -211,16 +211,16 @@ cfg 의 flare-duty-cycle 속도 (~25%) 에서 일시적인 주변광 brightening
 
 - **Ribas I. et al. 2018** — *A candidate super-Earth planet orbiting
   near the snow line of Barnard's star* (`2018Natur.563..365R`,
-  arXiv:1811.05955). 역사적 클레임, 반박됨. b 라벨의 역사적 문헌
+  [arXiv:1811.05955](https://arxiv.org/abs/1811.05955)). 역사적 클레임, 반박됨. b 라벨의 역사적 문헌
   맥락으로 보존.
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of
-  Barnard's Star* (arXiv:1812.06712). 행성의 일사 환경 기반의 호스트
+  Barnard's Star* ([arXiv:1812.06712](https://arxiv.org/abs/1812.06712)). 행성의 일사 환경 기반의 호스트
   회전 (P ≈ 145 d) + 활동.
 
 ### Read (instrument-only, not visual-informative)
 
 - **Choi J. et al. 2013** — *Precise Doppler Monitoring of Barnard's
-  Star* (arXiv:1208.2273). 발견 이전 RV 상한.
+  Star* ([arXiv:1208.2273](https://arxiv.org/abs/1208.2273)). 발견 이전 RV 상한.
 
 ### Not read — no arXiv preprint or low-priority (~140 papers)
 
@@ -243,7 +243,7 @@ skipped` 로 보존.
   내이며 cfg 변종으로 보존됩니다.
 - **France 2020 + Atri 2020 캐싱**. Atmosphere/Visual 산문에 사용된
   escape-rate 와 표면-dose 수치는 로컬 paper 캐시에 없는 context-cite
-  입니다. arXiv:2009.01259 와 Atri 2020 스케일링 논문을 가져오면
+  입니다. [arXiv:2009.01259](https://arxiv.org/abs/2009.01259) 와 Atri 2020 스케일링 논문을 가져오면
   `surface_radiation_dose_msv_yr` 행을 저신뢰로 운반하는 대신 재유도
   할 수 있습니다.
 - **Lubin 2021 반박 세부**. 반박 논문은 arXiv preprint 가 없습니다.

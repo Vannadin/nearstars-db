@@ -80,11 +80,11 @@ auditable mechanically.
 User flagged this case as borderline. After re-reading:
 
 **Canonical reading from literature** for surface activity:
-- Barr 2018 (1712.05641): Maxwell viscoelastic interior, Io-class
+- Barr 2018 ([1712.05641](https://arxiv.org/abs/1712.05641)): Maxwell viscoelastic interior, Io-class
   tidal heating 1.32 W/m², mantle T_eq 1666 K above rock solidus.
-- Dobos 2019 (1902.03867): refined Maxwell model with Grimm 2018
+- Dobos 2019 ([1902.03867](https://arxiv.org/abs/1902.03867)): refined Maxwell model with Grimm 2018
   masses, F_int(c) = 0.62 W/m², partial melt confirmed.
-- Kislyakova 2018 (1710.08761): c receives 68% of radiogenic flux
+- Kislyakova 2018 ([1710.08761](https://arxiv.org/abs/1710.08761)): c receives 68% of radiogenic flux
   from induction heating — highest in the system.
 
 These are three independent modeling papers converging on the same
@@ -185,7 +185,7 @@ section. Re-verified against the diagnostic:
 
 **Diagnostic check:** Wang 2025 *assumes* Earth-analog 0.32 G for
 habitability-scenario MHD modeling (an in-paper assumption, not a
-derived measurement). RM22 (2203.01065) *derives* the dipole moment
+derived measurement). RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) *derives* the dipole moment
 from physical scaling laws applied to tidally-locked low-mass planets.
 The cfg picks the assumed-Earth-analog value for visual recognizability.
 
@@ -331,18 +331,18 @@ User flagged: "어느 쪽이 진짜 canonical 인지 논문 weight 비교 필요
    treats this as an alternative scenario in Open items.
 
 2. **Moderate retention (~0.1 bar N₂/CO₂).** Supported by:
-   - Dong 2018 (1705.05535): "h ought to be the most stable planet
+   - Dong 2018 ([1705.05535](https://arxiv.org/abs/1705.05535)): "h ought to be the most stable planet
      from the perspective of atmospheric ion loss"; lowest ion escape
      rate in the system; retention timescale ~10¹⁰ yr.
-   - Krissansen-Totton 2022 (2207.04164): "outer planets retain
+   - Krissansen-Totton 2022 ([2207.04164](https://arxiv.org/abs/2207.04164)): "outer planets retain
      significant surface volatiles in virtually all model simulations"
      with "CO₂-dominated or CO₂-O₂ atmospheres for all planets that
      retain substantial atmospheres".
-   - Bourrier 2017 (1708.09484): h has the smallest mass-loss in the
+   - Bourrier 2017 ([1708.09484](https://arxiv.org/abs/1708.09484)): h has the smallest mass-loss in the
      system; brief HZ-runaway preserves most accreted water.
 
 3. **Thin / near-airless (~0.005 bar).** Supported by:
-   - Castan-Lopez 2025 (2504.19872): cosmic shoreline places h close
+   - Castan-Lopez 2025 ([2504.19872](https://arxiv.org/abs/2504.19872)): cosmic shoreline places h close
      to or below retention threshold.
    - Zahnle 2017 (cosmic shoreline framework).
 

@@ -271,12 +271,12 @@ ADS 검증(citation_count 정렬). 형식: tag — author (year), *title* — `b
 - <a id="W03"></a>**[W03]** White (2003), *A discussion of space-time metric engineering* — `2003GReGr..35.2025W` — 17 cites *(no arXiv; applied/fringe)*
 - <a id="W13"></a>**[W13]** White (2013), *Warp field mechanics 101* — `2013JBIS...66..242W` — 8 cites *(no arXiv; applied/fringe; no numeric energy figure in abstract)*
 - <a id="W21"></a>**[W21]** White et al. (2021), *Worldline numerics applied to custom Casimir geometry generates unanticipated intersection with Alcubierre warp metric* — `2021EPJC...81..677W` — 7 cites *(no arXiv; applied/fringe)*
-- <a id="BM21"></a>**[BM21]** Bobrick & Martire (2021), *Introducing physical warp drives* — `2021CQGra..38j5009B` / arXiv:2102.06824 — 40 cites
-- <a id="L21"></a>**[L21]** Lentz (2021), *Breaking the warp barrier: hyper-fast solitons in Einstein-Maxwell-plasma theory* — `2021CQGra..38g5015L` / arXiv:2006.07125 — 30 cites
-- <a id="FH21"></a>**[FH21]** Fell & Heisenberg (2021), *Positive energy warp drive from hidden geometric structures* — `2021CQGra..38o5020F` / arXiv:2104.06488 — 26 cites
-- <a id="F24"></a>**[F24]** Fuchs et al. (2024), *Constant velocity physical warp drive solution* — `2024CQGra..41i5013F` / arXiv:2405.02709 — 12 cites
-- <a id="SSV22"></a>**[SSV22]** Santiago, Schuster & Visser (2022), *Generic warp drives violate the null energy condition* — `2022PhRvD.105f4038S` / arXiv:2105.03079 — 48 cites
-- <a id="SSV23"></a>**[SSV23]** Schuster, Santiago & Visser (2023), *ADM mass in warp drive spacetimes* — `2023GReGr..55...14S` / arXiv:2205.15950 — 13 cites
+- <a id="BM21"></a>**[BM21]** Bobrick & Martire (2021), *Introducing physical warp drives* — `2021CQGra..38j5009B` / [arXiv:2102.06824](https://arxiv.org/abs/2102.06824) — 40 cites
+- <a id="L21"></a>**[L21]** Lentz (2021), *Breaking the warp barrier: hyper-fast solitons in Einstein-Maxwell-plasma theory* — `2021CQGra..38g5015L` / [arXiv:2006.07125](https://arxiv.org/abs/2006.07125) — 30 cites
+- <a id="FH21"></a>**[FH21]** Fell & Heisenberg (2021), *Positive energy warp drive from hidden geometric structures* — `2021CQGra..38o5020F` / [arXiv:2104.06488](https://arxiv.org/abs/2104.06488) — 26 cites
+- <a id="F24"></a>**[F24]** Fuchs et al. (2024), *Constant velocity physical warp drive solution* — `2024CQGra..41i5013F` / [arXiv:2405.02709](https://arxiv.org/abs/2405.02709) — 12 cites
+- <a id="SSV22"></a>**[SSV22]** Santiago, Schuster & Visser (2022), *Generic warp drives violate the null energy condition* — `2022PhRvD.105f4038S` / [arXiv:2105.03079](https://arxiv.org/abs/2105.03079) — 48 cites
+- <a id="SSV23"></a>**[SSV23]** Schuster, Santiago & Visser (2023), *ADM mass in warp drive spacetimes* — `2023GReGr..55...14S` / [arXiv:2205.15950](https://arxiv.org/abs/2205.15950) — 13 cites
 
 ## Related
 

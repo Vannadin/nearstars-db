@@ -17,7 +17,7 @@ curated under `phase2/curation-data-contract/SPEC.md`.
     false-negative-interferometry pattern (template assumed δ Pav had no direct θ_LD).
 
 **The anchor (postmortem-verified, must be the recommended radius/Teff source):**
-- Rains et al. 2020, `2020MNRAS.493.2377R`, arXiv:2004.02343, VLTI/PIONIER.
+- Rains et al. 2020, `2020MNRAS.493.2377R`, [arXiv:2004.02343](https://arxiv.org/abs/2004.02343), VLTI/PIONIER.
 - "Precision angular diameters for 16 southern stars with VLTI/PIONIER"; δ Pav is star #11/16.
 - θ_LD = 1.828 ± 0.025 mas → R = 1.197 ± 0.016 R☉; Teff = 5571 ± 48 K.
 - Observability: VLTI@Paranal (lat -24°), SUSI@Narrabri (lat -30°) both reach dec -66°;
@@ -46,7 +46,7 @@ curated under `phase2/curation-data-contract/SPEC.md`.
 - Reconcile age: keep documented Holmberg/Spada spread; pick recommended per method tier.
 
 ## 2026-05-29 — Stage 1 lit search result (web subagent)
-Rains 2020 (2004.02343) confirmed verbatim from PDF Table 4: θ_LD = 1.828 ± 0.025 mas,
+Rains 2020 ([2004.02343](https://arxiv.org/abs/2004.02343)) confirmed verbatim from PDF Table 4: θ_LD = 1.828 ± 0.025 mas,
 R = 1.197 ± 0.016 R☉, Teff = 5571 ± 48 K, f_bol = 107.2 ± 2.5e-8 erg/s/cm²,
 **L = 1.24 ± 0.03 L☉**. δ Pav = star #11/16. Author: Rains, Ireland, White, Casagrande,
 Karovicova. So Rains 2020 directly anchors radius + teff + LUMINOSITY (3 categories).
@@ -61,7 +61,7 @@ candidate only, not a parameter source. → luminosity recommended source upgrad
 Eiroa 2013 SED to Rains 2020 direct.
 
 ## 2026-05-29 — Stage 3 value-check from cache (read directly, subagent socket-failed)
-Bruntt 2010 (1002.4268.md) line 82, columns mapped via α Cen A / β Vir Rosetta
+Bruntt 2010 ([1002.4268](https://arxiv.org/abs/1002.4268).md) line 82, columns mapped via α Cen A / β Vir Rosetta
 (cols: mass_direct | mass_model | R_direct | R_model | L_direct | L_model | Teff_direct | Teff_spec1 | Teff_spec2 | FeH1 | FeH2):
   δ Pav = mass 1.07±0.13 (asteroseismic, νmax-only, footnote d) | R 1.20±0.04 (asteroseismic)
   | L 1.22±0.04 | Teff 5550/5540 (spec) | [Fe/H] +0.38/+0.33. vsini≈1.7 km/s (logg table line 281).
@@ -114,7 +114,7 @@ activity = Henry log R'HK -4.999±0.018 (rec) + Hünsch X-ray log(Lx/Lbol) -6.4 
 
 ## 2026-05-29 — DISK value-check CATCH (fabricated recommended source)
 disks_curated "Delta Pavonis" recommended entry cited "Lawler & Tanner 2014",
-bibcode 2014ApJ...780...28L, arXiv:1310.3559. ALL THREE ARE FABRICATED/WRONG:
+bibcode 2014ApJ...780...28L, [arXiv:1310.3559](https://arxiv.org/abs/1310.3559). ALL THREE ARE FABRICATED/WRONG:
   - bibcode 2014ApJ...780...28L: ADS no hit (does not exist)
   - arXiv 1310.3559: actually Hu & Liu 2013 PRA superfluid physics paper (unrelated)
   - author search Lawler+Tanner 2013-2015: no debris-disk paper exists

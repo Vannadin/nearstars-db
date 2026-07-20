@@ -219,7 +219,7 @@ banded, red-dwarf-lit Jovian on a visibly eccentric orbit:
 - **Curiel S. et al. 2022** — *3D orbital architecture of a dwarf
   binary system and its planetary companion*, AJ 164, 93
   (`2022AJ....164...93C`, doi:10.3847/1538-3881/ac7c66,
-  arXiv:2208.14553). The VLBA + optical/IR astrometric discovery of
+  [arXiv:2208.14553](https://arxiv.org/abs/2208.14553)). The VLBA + optical/IR astrometric discovery of
   GJ 896 A b. Phase 2 recommended source for the true mass
   (2.26 ± 0.57 M_Jup = 718.29 M⊕), the full orbital element set
   (a = 0.63965 AU, P = 284.39 d, e = 0.35, i = 69.2°, Ω = 45.62°,

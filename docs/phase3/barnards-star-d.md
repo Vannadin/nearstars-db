@@ -210,7 +210,7 @@ d is purely a hot-rocky visual destination for player exploration.
   M sin i = 0.263 ± 0.024 M⊕, a = 0.0188 ± 0.0003 AU, e = 0.04
   (−0.03/+0.05), ω = −51.8°, T_eq = 483 K (A=0, full redistribution);
   SPOCK stability over 10⁹ orbits with e < 0.02 favored, HZ at P = 10–42 d.
-- **2410.00569** — González Hernández J. I. et al. 2024, *A sub-Earth-mass
+- **[2410.00569](https://arxiv.org/abs/2410.00569)** — González Hernández J. I. et al. 2024, *A sub-Earth-mass
   planet orbiting Barnard's star* (`2024A&A...690A..79G`). The ESPRESSO
   discovery paper; first identification of the d candidate. Activity cycle
   3200 d, rotation 140 d; reports log(L_X/L_bol) ≈ −5.8 (Chandra, citing
@@ -218,7 +218,7 @@ d is purely a hot-rocky visual destination for player exploration.
 - **2102.08493** — Duvvuri G. et al. 2021, *Reconstructing the EUV
   Emission of Cool Dwarfs*. DEM reconstruction of Barnard's Star EUV from
   HST + Chandra; informs the radiation-environment context.
-- **2007.12459** — Walterová M. & Běhounková M. 2020, *Thermal and
+- **[2007.12459](https://arxiv.org/abs/2007.12459)** — Walterová M. & Běhounková M. 2020, *Thermal and
   Orbital Evolution of Low-mass Exoplanets*. Tidal despinning into
   synchronous / pseudo-synchronous rotation for close-in rocky planets;
   basis for the tidal-lock decision.
@@ -229,7 +229,7 @@ d is purely a hot-rocky visual destination for player exploration.
   orbiting Barnard's star: No evidence of transits in TESS photometry*.
   Rules out transits ("no evidence of transiting Barnard b, or any other
   body"); 3σ upper bound i < 87.9°.
-- **1812.06712** — Toledo-Padrón B. et al. 2019, *Stellar activity
+- **[1812.06712](https://arxiv.org/abs/1812.06712)** — Toledo-Padrón B. et al. 2019, *Stellar activity
   analysis of Barnard's Star*. P_rot = 145 ± 15 d, long-term activity
   cycle 3800 ± 600 d (~10 yr), log R'HK ≈ −5.86; underlies the quiet-host
   and activity-cycle reasoning.
@@ -244,7 +244,7 @@ These were cited in the prior draft for physical context but are **not in
 `docs/phase3/_papers/`** and could not be verified directly. Their
 specific numbers are not used as Decisions headline values:
 
-- **France K. et al. 2020** (arXiv:2009.01259) — *The High-Energy
+- **France K. et al. 2020** ([arXiv:2009.01259](https://arxiv.org/abs/2009.01259)) — *The High-Energy
   Radiation Environment Around a 10 Gyr M Dwarf*. NOT in cache. The prior
   draft's specific figures (25% flare duty cycle, 87 Earth-atm Gyr⁻¹ loss
   at 0.1 AU, ×25–28 scaling, 10²⁹·²–10²⁹·⁵ erg flare energies) could not be
@@ -278,7 +278,7 @@ above. Notable skipped items:
   composition (rocky vs. iron-enriched) is unconstrained. The DB radius
   implies ρ ≈ 4.34 g/cc; a Mercury-like iron-enriched (denser, smaller)
   interior is also viable as a cfg variant.
-- **France 2020 (2009.01259) re-fetch**: re-cache the high-energy-environment
+- **France 2020 ([2009.01259](https://arxiv.org/abs/2009.01259)) re-fetch**: re-cache the high-energy-environment
   paper to restore the duty-cycle and atmospheric-loss figures with direct
   verification. Until then, the atmosphere-loss prose is qualitative.
 - **Surface-dose paper (Atri-class)**: cache a primary radiation-dose

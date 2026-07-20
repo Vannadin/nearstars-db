@@ -394,7 +394,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   through the §7 engine to give the computed ladder, with the Pickles G2V validating the
   pipeline against the canonical solar color. §3, §5, §8. (1361 cites.)
 
-- **Husser, T.-O. et al. (2013)** — *A&A* 553, A6. **arXiv:1303.5632.** *A new
+- **Husser, T.-O. et al. (2013)** — *A&A* 553, A6. **[arXiv:1303.5632](https://arxiv.org/abs/1303.5632).** *A new
   extensive library of PHOENIX stellar atmospheres and synthetic spectra* — the modern
   high-resolution synthetic-spectrum library spanning FGKM; the default `(Teff, log g,
   [Fe/H])` → real optical SED for synthetic photometry. §3. (1801 cites.)
@@ -405,17 +405,17 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   the workhorse for solar-type colors. §3, §4. (1177 cites.)
 
 - **Allard, F., Homeier, D. & Freytag, B. (2011)** — ASP Conf. 448, 91.
-  **arXiv:1011.5405** (bibcode `2011ASPC..448...91A`). *Model Atmospheres From Very Low
+  **[arXiv:1011.5405](https://arxiv.org/abs/1011.5405)** (bibcode `2011ASPC..448...91A`). *Model Atmospheres From Very Low
   Mass Stars to Brown Dwarfs* (BT-Settl) — the reference cool-dwarf/BD grid with the
   TiO/VO/H₂O molecular line lists and dust treatment that make the M-dwarf color
   correction quantitative. §3, §5. (481 cites.)
 
-- **Rajpurohit, A. S. et al. (2013)** — *A&A* 556, A15. **arXiv:1304.4072.** *The
+- **Rajpurohit, A. S. et al. (2013)** — *A&A* 556, A15. **[arXiv:1304.4072](https://arxiv.org/abs/1304.4072).** *The
   effective temperature scale of M dwarfs* — BT-Settl fits to M-dwarf optical spectra;
   the Teff scale and the demonstration that TiO/VO bands govern M-dwarf optical SEDs.
   §5. (222 cites.)
 
-- **Mann, A. W. et al. (2015)** — *ApJ* 804, 64. **arXiv:1501.01635** (cached in
+- **Mann, A. W. et al. (2015)** — *ApJ* 804, 64. **[arXiv:1501.01635](https://arxiv.org/abs/1501.01635)** (cached in
   `docs/phase3/_papers/1501.01635.md`). *How to Constrain Your M Dwarf: Measuring
   Effective Temperature, Bolometric Luminosity, Mass, and Radius* — the empirical
   M-dwarf Teff/radius/luminosity calibration (using BT-Settl synthetic spectra); the
@@ -426,7 +426,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   the explicit Teff–color–[Fe/H] calibration; the quantitative grounding for the
   metallicity-color nudge (sign and magnitude). §4. (496 cites.)
 
-- **Casagrande, L. et al. (2010)** — *A&A* 512, A54. **arXiv:1001.3142.** *An
+- **Casagrande, L. et al. (2010)** — *A&A* 512, A54. **[arXiv:1001.3142](https://arxiv.org/abs/1001.3142).** *An
   absolutely calibrated Teff scale from the infrared flux method. Dwarfs and
   subgiants* — the modern absolutely-calibrated FGK Teff–color zero point. §4.
   (655 cites.)
@@ -436,7 +436,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   temperature calibration carrying the metallicity term; anchors where the blackbody
   locus is fair and where it deviates. §2, §4. (224 cites.)
 
-- **Pecaut, M. J. & Mamajek, E. E. (2013)** — *ApJS* 208, 9. **arXiv:1307.2657.**
+- **Pecaut, M. J. & Mamajek, E. E. (2013)** — *ApJS* 208, 9. **[arXiv:1307.2657](https://arxiv.org/abs/1307.2657).**
   *Intrinsic Colors, Temperatures, and Bolometric Corrections of Pre-main-sequence
   Stars* — the widely-used empirical dwarf Teff↔color↔spectral-type sequence (O→M);
   the table that grounds "what color is a star of this Teff." §2. (2310 cites.)

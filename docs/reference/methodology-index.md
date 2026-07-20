@@ -20,11 +20,11 @@ doc has a Korean mirror under `ko/docs/reference/`.
 
 | Methodology | Grounds | Key references |
 |---|---|---|
-| [planetary-dynamo-scaling](planetary-dynamo-scaling.md) | Planetary/BD magnetic field strength | Christensen 2009; Reiners & Christensen 2010 (arXiv:1007.1514); Yadav & Thorngren 2017 |
+| [planetary-dynamo-scaling](planetary-dynamo-scaling.md) | Planetary/BD magnetic field strength | Christensen 2009; Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)); Yadav & Thorngren 2017 |
 | [mass-radius-relation-methodology](mass-radius-relation-methodology.md) | Mass ↔ radius ↔ density tie-break | Seager 2007; Zeng 2016; Fortney 2007; Chen & Kipping 2017 |
 | [tidal-locking-timescale-methodology](tidal-locking-timescale-methodology.md) | Spin state / synchronization timescale | Goldreich & Soter 1966; Hut 1981; Leconte 2015 |
 | [tidal-heating-methodology](tidal-heating-methodology.md) | Tidal heating flux (Io/Enceladus-calibrated) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
-| [body-figure-methodology](body-figure-methodology.md) | Oblateness J₂ + tidal triaxiality C₂₂ (Principia gravity model) | Helled 2011 (arXiv:1109.1627); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan anchors |
+| [body-figure-methodology](body-figure-methodology.md) | Oblateness J₂ + tidal triaxiality C₂₂ (Principia gravity model) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan anchors |
 | [cassini-state-obliquity-methodology](cassini-state-obliquity-methodology.md) | Equilibrium spin-axis tilt of a tidally-damped body (locked ≠ obliquity 0) | Peale 1969; Ward 1975; Ward & Hamilton 2004; Bills 2005; Baland 2011; Margot 2007 (Mercury anchor) |
 
 ## Atmosphere & thermal

@@ -117,7 +117,7 @@ are eigenvalues of the inclination interaction matrix B; leading order:
 coefficient. **Inputs**: neighbor masses + semi-major axes + host mass. Use the
 dominant mode's {g, I}. **For resonant chains** (e.g. TRAPPIST-1) Laplace–Lagrange
 breaks down → use direct **N-body nodal frequency analysis** (Millholland+ 2024
-`2024ApJ...961..203M`, arXiv:2311.17908).
+`2024ApJ...961..203M`, [arXiv:2311.17908](https://arxiv.org/abs/2311.17908)).
 
 **(b) Close-in moon — driven by the planet's oblateness J₂** (Murray & Dermott 1999):
 

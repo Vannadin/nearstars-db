@@ -21,24 +21,24 @@ planet docs (au-mic / 61-vir / hd-69830 / tau-cet / eps-eri planets).
 ## Batch 1 — TRAPPIST-1  (DONE 2026-05-30)
 
 Planet masses/radii (Agol 2021 recommended + Grimm 2018 alts) + eccentricities:
-all verified OK against cache (Grimm 1802.01377 Tables 2/3 direct; Agol 2021 via
-secondary caches 2504.16201, 2101.08172). Stellar L (Van Grootel 2018 1712.01911)
+all verified OK against cache (Grimm [1802.01377](https://arxiv.org/abs/1802.01377) Tables 2/3 direct; Agol 2021 via
+secondary caches [2504.16201](https://arxiv.org/abs/2504.16201), [2101.08172](https://arxiv.org/abs/2101.08172)). Stellar L (Van Grootel 2018 [1712.01911](https://arxiv.org/abs/1712.01911))
 OK. ~49 rows confirmed.
 
 **Real issues to fix (fixes deferred to a later pass):**
 - HIGH — `docs/phase3/trappist-1-d.md` density_g_cc = 5.43 is planet b's density
   copied; Agol 2021 M/R → ~4.37.
 - HIGH — `docs/phase3/trappist-1-c.md` density_g_cc = 6.36 wrong (doc self-flags
-  "~5.7"); Agol 2021 → ~5.46 (2204.04243:235 = 5.4±0.1).
+  "~5.7"); Agol 2021 → ~5.46 ([2204.04243](https://arxiv.org/abs/2204.04243):235 = 5.4±0.1).
 - HIGH — `db/planets_curated.json` TRAPPIST-1 b `environment.equilibrium_temperature_k`
-  = 391; Agol 2021 → 398±4 (2509.02128:101). Phase 3-b says 397 (≈correct) → DB↔doc desync.
+  = 391; Agol 2021 → 398±4 ([2509.02128](https://arxiv.org/abs/2509.02128):101). Phase 3-b says 397 (≈correct) → DB↔doc desync.
 - MED — Phase 3 T_eq f/g/h = 215/194/169 vs secondary-confirmed 218/197/172 (3 K low).
 - MED — Phase 3-f density 4.92 vs computed 5.02.
-- MED — stellar metallicity 0.04±0.08 attributed to Gillon 2017; 1712.01911 credits
+- MED — stellar metallicity 0.04±0.08 attributed to Gillon 2017; [1712.01911](https://arxiv.org/abs/1712.01911) credits
   Gillon **2016** → possible misattribution.
 
-**UNCACHED (need fetch to finish): Agol 2021 full text (2010.01074, abstract-only),
-Gillon 2017 (1703.01424, stub), Burgasser & Mamajek 2017 (age+activity), Vida 2017
+**UNCACHED (need fetch to finish): Agol 2021 full text ([2010.01074](https://arxiv.org/abs/2010.01074), abstract-only),
+Gillon 2017 ([1703.01424](https://arxiv.org/abs/1703.01424), stub), Burgasser & Mamajek 2017 (age+activity), Vida 2017
 (rotation). Stellar radius/age/rotation/activity unverified until fetched.**
 
 ---
@@ -67,7 +67,7 @@ Gillon 2017 (1703.01424, stub), Burgasser & Mamajek 2017 (age+activity), Vida 20
 - UNCACHED: Anglada 2016, Passegger 2019, Kervella 2017, SM2016, Klein 2021, Mann 2019.
 
 ## Batch 4 — AU Mic planets b/c/d/e  (DONE)
-- **WRONG arXiv**: Plavchan 2020 cited 2006.13428 (correct 2006.13248) in all 4 docs.
+- **WRONG arXiv**: Plavchan 2020 cited 2006.13428 (correct [2006.13248](https://arxiv.org/abs/2006.13248)) in all 4 docs.
 - **SYSTEMATIC stellar desync** (all 4 planet docs use non-recommended/superseded host values):
   L=0.092 (rec 0.102), Teff=3518 (rec 3665, host doc explicitly supersedes), R=0.82 (rec 0.862)
   → insolation/color-temp/angular-diameter all off.
@@ -79,13 +79,13 @@ Gillon 2017 (1703.01424, stub), Burgasser & Mamajek 2017 (age+activity), Vida 20
 
 ## Batch 5 — 61 Vir planets b/c/d  (DONE) — Phase 2 CLEAN
 - Phase 2 (Vogt 2010) all match; Phase2↔3 sync clean.
-- **FABRICATED arXiv pairings**: Bolmont 2020 arXiv 2002.02015 = wrong paper (TTV, not the cited
-  obliquity-evolution title); Howe 2014 given Lopez&Fortney's arXiv 1311.0329 (duplicate).
+- **FABRICATED arXiv pairings**: Bolmont 2020 arXiv [2002.02015](https://arxiv.org/abs/2002.02015) = wrong paper (TTV, not the cited
+  obliquity-evolution title); Howe 2014 given Lopez&Fortney's arXiv [1311.0329](https://arxiv.org/abs/1311.0329) (duplicate).
 - **MISATTRIBUTION**: Vinson&Hansen 2017 (M-dwarf resonance) cited for G-dwarf tidal locking.
 - ghost: Makarov 2012 inline, no bib entry. 17 theory papers uncached.
 
 ## Batch 6 — HD 69830 planets b/c/d  (DONE)
-- **FABRICATED co-author**: "Atri & Mogan 2019" — Atri 2019 (1910.09871) is single-author. All 3.
+- **FABRICATED co-author**: "Atri & Mogan 2019" — Atri 2019 ([1910.09871](https://arxiv.org/abs/1910.09871)) is single-author. All 3.
 - **MISATTRIBUTION**: Atri 2019 (SPE terrestrial dose) used for "G8V quiet wind" Neptune dose; all 3.
 - **YEAR+SCOPE error**: "Madhusudhan 2016" = 2012 paper on 55 Cnc e rocky interior (planet c).
 - **CALC error**: Hut 1981 pseudo-sync 0.84 should be 0.908 (planet c).
@@ -104,7 +104,7 @@ tau Cet (DB has f/g/h only; e correctly absent as FP — clean):
 - **ARITHMETIC**: scale heights e/f/h; spin-orbit KSP rotation g & h used (3/2)·P instead of
   (2/3)·P; tidal-timescale ratio (49.41/20)^(13/3)≈250 should be 50.
 - SUSPICIOUS: g arg_periapsis 395.341° (>360°, likely +360 artifact). UNCACHED: Feng 2017
-  (PRIMARY, 1708.02051), Feng 2018, Cretignier 2021, Figueira 2025.
+  (PRIMARY, [1708.02051](https://arxiv.org/abs/1708.02051)), Feng 2018, Cretignier 2021, Figueira 2025.
 
 eps Eri b (worst — ALL 10 cornerstone papers UNCACHED):
 - **mass label error + 18% desync**: DB true_mass_mearth 209.77 (=0.66 MJup) labeled "true mass"
@@ -152,14 +152,14 @@ Tomasko, Güdel).
 in au-mic/tau-cet/eps-eri planet docs (insolation/Teq/color-temp/angular-diameter onto
 recommended host L/Teff/R); arithmetic (scale heights, tau Cet g/h spin-orbit (2/3)·P + tidal
 50×, eps Eri b gravity 1.8 g_E / Hill 0.237 AU / dipole 15600); AU Mic Plavchan arXiv
-2006.13428→2006.13248; AU Mic d Kepler-claim→Wittrock.
+2006.13428→[2006.13248](https://arxiv.org/abs/2006.13248); AU Mic d Kepler-claim→Wittrock.
 
 **Batch 2 (e91a791)** — citation fixes: HD 69830 drop "& Mogan" (single-author) + Atri dose
 demoted + Madhusudhan 2016→drop + phantom radius; tau Cet MacGregor→Lawler 2014, drop
 Tomasko/Güdel/W&P fabrications, solar-day prose (g 40 d, h 98.8 d); 61 Vir drop wrong/dup
-arXiv (Bolmont 2002.02015, Howe 1311.0329) + Vinson→Hut 1981 + Makarov ghost; eps Eri b
+arXiv (Bolmont [2002.02015](https://arxiv.org/abs/2002.02015), Howe [1311.0329](https://arxiv.org/abs/1311.0329)) + Vinson→Hut 1981 + Makarov ghost; eps Eri b
 ghost-cite bib entries + false "papers in host bib" claim; α Cen A/B DB age 4.81→5.3±0.3
-(Joyce & Chaboyer 2018 1σ, cache 1806.07567:300).
+(Joyce & Chaboyer 2018 1σ, cache [1806.07567](https://arxiv.org/abs/1806.07567):300).
 
 **Batch 3 (this commit)** — fetch-verified: tau Cet g ω 395.341→35.341 (Feng 2017 reported
 6.90 rad raw, normalized; DB+doc); HD 69830 c/d revert to Lovis 2006 (11.8/18.1) — "Tanner
@@ -171,9 +171,9 @@ eps Eri b wrong Llop-Sayson arXiv 2108.05552 removed (COLLISION → ML paper).
    0.78 (Mawet 2019 joint-fit at i≈89°) vs 1.19 (coplanar i=34°). cfg uses i=34° but mass 0.78
    (the i≈89° value) → internally inconsistent. Needs the CORRECT Llop-Sayson 2021 arXiv id
    (2108.05552 was a collision) + a synthesis decision on cfg inclination, then recompute
-   gravity/density. Mawet 2019 (1810.03794) IS correctly cached for cross-check.
+   gravity/density. Mawet 2019 ([1810.03794](https://arxiv.org/abs/1810.03794)) IS correctly cached for cross-check.
 2. **α Cen A/B masses** — values 1.1055/0.9373 correct but attributed to Pourbaix 2016; the
-   tight uncertainties are from Kervella et al. 2016 (arXiv 1610.06079, not yet fetched).
+   tight uncertainties are from Kervella et al. 2016 (arXiv [1610.06079](https://arxiv.org/abs/1610.06079), not yet fetched).
    Re-attribute after fetch. Also α Cen B Phase 3 Teff 5236±51 "Porto de Mello 2008" is wrong
    (PdM = 5316±28; 5236 is Kervella interferometric) — fix attribution/value after fetch.
 3. **Proxima** stellar desyncs (doc radius 0.1542/DB 0.141; Teff 2980/DB 2904; rotation SM2020
@@ -221,7 +221,7 @@ trusted blind. Research/fetch + doc-edits were delegated to subagents; value-che
    2021AJ....162..181L; cache `2108.02305.md:170` — astrometry-deprojected, NOT M sin i). The DOC
    was the inconsistent artifact: it used Mawet's 0.78 mislabeled "M sin i" and cited the COLLISION
    arXiv 2108.05552 (an unrelated ML paper) with a wrong title. Fixed doc to 0.66 @ 78.81°,
-   corrected the citation to arXiv 2108.02305, documented the Mawet mass history (M sin i 0.72;
+   corrected the citation to arXiv [2108.02305](https://arxiv.org/abs/2108.02305), documented the Mawet mass history (M sin i 0.72;
    0.78 @ i≈89°; 1.19 @ i=34° coplanar), and softened the coplanar claim (Llop-Sayson: planet ~2σ
    off the 34° ring; Roettenbacher 2022 unverified). Correct pin added to `_bib/eps-eri.yaml`.
    NO DB change.

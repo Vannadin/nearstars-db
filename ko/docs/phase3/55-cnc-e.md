@@ -194,13 +194,13 @@ g/mol 입니다. Hu 외 2024(JWST MIRI/NIRCam 이차 식)는 방출 스펙트럼
 ### Read (visual-informative, drove decisions above)
 
 - **Bourrier V. et al. 2018** — *The 55 Cnc system reassessed*, A&A
-  619, A1 (`2018A&A...619A...1B`, arXiv:1807.04301). 행성 e 질량
+  619, A1 (`2018A&A...619A...1B`, [arXiv:1807.04301](https://arxiv.org/abs/1807.04301)). 행성 e 질량
   8.0 ± 0.3 M⊕, HST/STIS 광학 반지름 1.88 ± 0.03 R⊕, 밀도 6.7 ± 0.4
   g/cc. 내부 모델은 무거운 반지름 수% 대기를 선호하고, H/He(~80,000 yr
   에 손실)와 확장 물을 배제. **궤도 / 질량 / 반지름 / 밀도의 Phase 2 정박.**
 - **Demory B.-O. et al. 2016** — *Variability in the super-Earth
   55 Cnc e*, Nature 532, 207 (`2016Natur.532..207D`,
-  arXiv:1505.00269). Spitzer 4.5 μm 주간면 밝기 온도가 1년 사이
+  [arXiv:1505.00269](https://arxiv.org/abs/1505.00269)). Spitzer 4.5 μm 주간면 밝기 온도가 1년 사이
   1365 에서 2528 K 로 변동(4σ. 전체 범위 ~1273–2816 K). T_eq ~2400 K.
   변동성을 Io 같은 표면/화산 활동이나 주성 물질에 귀속. **주간면 온도,
   마그마-바다 표면, 화산-변동성 시각의 정박.**
@@ -214,7 +214,7 @@ g/mol 입니다. Hu 외 2024(JWST MIRI/NIRCam 이차 식)는 방출 스펙트럼
 ### Read (context / methodology, not decision-driving)
 
 - **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
-  arXiv:1107.1936. 항성 R/Teff/L 정박 → T_eq 유도에 쓰인 L = 0.582 L☉.
+  [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). 항성 R/Teff/L 정박 → T_eq 유도에 쓰인 L = 0.582 L☉.
   모델-독립 초지구 지름 ~2.1 R⊕(Bourrier 2018 STIS 1.88 R⊕ 로 대체됨).
 - **Madhusudhan N. & Redfield S. 2015** — 가장 뜨거운 외계행성 주간면에
   구름이 덜 형성됨. 점성점-구름 억제 선택에 정보를 줌.

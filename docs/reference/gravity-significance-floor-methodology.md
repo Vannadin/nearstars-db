@@ -168,7 +168,7 @@ accelerations are ≈ **1×10⁻¹³ m/s²**. This crossover acceleration is the
 floor. The *observed* wide-binary cutoff sits somewhat inside it, at ~0.1–1 pc: common-proper-
 motion pairs follow a single power law `dN/dΔθ ∝ Δθ^(−α)` with *"α = 1.67 ± 0.07 for the disk"*
 out to ~1 pc (Chanamé & Gould 2004, `2004ApJ...601..289C`); El-Badry's Gaia review
-(`2024NewAR..9801694E`, arXiv:2403.12146) reports the same slope and notes bound pairs are
+(`2024NewAR..9801694E`, [arXiv:2403.12146](https://arxiv.org/abs/2403.12146)) reports the same slope and notes bound pairs are
 cleanly identifiable only to `s ≈ 5×10⁴ AU (≈0.24 pc)`, with pairs *"≳10⁵ au … mostly chance
 alignments, not gravitationally bound."* Encounters plus the tide grind down the widest pairs
 over Gyr (Weinberg, Shapiro & Wasserman 1987, `1987ApJ...312..367W`), so the observed widest

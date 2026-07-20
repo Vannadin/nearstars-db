@@ -56,18 +56,18 @@ strong support, low = aesthetic choice within the allowed window.
 | `surface_morphology` | weathered basaltic plains; aged impact craters; subdued relief | medium | no fresh resurfacing inferred (unlike b); cumulative ~8 Gyr impacts |
 | `surface_ice_caps` | nightside CO₂ / H₂O frost in a narrow band ≳60° from substellar | medium | thin atmo can transport trace H₂O; nightside T < CO₂ frost point |
 | `induction_heating_w_m2` | 0.05–0.5 | medium | Grayver 2022 — lower than b due to greater distance; not enough for active volcanism |
-| `tidal_heating_w_m2` | 0.62 (+0.42/-0.53) (Dobos 2019) or 1.32 (+0.30/-0.47) (Barr 2018) | medium | Barr 2018 (1712.05641) and Dobos 2019 (1902.03867) — Maxwell viscoelastic models with Grimm 2018 + Agol 2021 masses. Io-class flux; T_eq mantle 1659–1666 K (above rock solidus → partial melt). |
-| `core_mass_fraction` | 0.24 ± 0.08 | medium | Acuña 2021 (2101.08172) — Fe/Si stellar-constrained scenario |
+| `tidal_heating_w_m2` | 0.62 (+0.42/-0.53) (Dobos 2019) or 1.32 (+0.30/-0.47) (Barr 2018) | medium | Barr 2018 ([1712.05641](https://arxiv.org/abs/1712.05641)) and Dobos 2019 ([1902.03867](https://arxiv.org/abs/1902.03867)) — Maxwell viscoelastic models with Grimm 2018 + Agol 2021 masses. Io-class flux; T_eq mantle 1659–1666 K (above rock solidus → partial melt). |
+| `core_mass_fraction` | 0.24 ± 0.08 | medium | Acuña 2021 ([2101.08172](https://arxiv.org/abs/2101.08172)) — Fe/Si stellar-constrained scenario |
 | `iron_mass_fraction_pct` | ~50 | medium | Barr 2018 — highest density of 7 planets (7642 kg/m³ mean), iron-richest |
 | `water_mass_fraction` | ≤4 × 10⁻⁶ | medium | Acuña 2021 — scenario 1 best estimate near zero |
-| `tidal_k2_over_Q` | (0.4–2) × 10⁻⁴ | medium | Brasser 2019 (1905.00512) interior models; dynamical lower bound k₂/Q ≳ 1×10⁻³ |
+| `tidal_k2_over_Q` | (0.4–2) × 10⁻⁴ | medium | Brasser 2019 ([1905.00512](https://arxiv.org/abs/1905.00512)) interior models; dynamical lower bound k₂/Q ≳ 1×10⁻³ |
 | `moment_of_inertia_C` | 0.286 (range 0.235–0.4) | low | Brasser 2019 representative case |
 | `magnetic_field_strength_microtesla_equator` | 3 | low | RM22 scaling; iron-richest planet but slow rotation (2.4 d) → multipolar regime, weak dipole |
-| `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 (2203.01065) — TESS tidally-locked rocky planets cluster 0.01–0.1 M_Earth |
+| `magnetic_dipole_moment_normalized_earth` | 0.08 | low | RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) — TESS tidally-locked rocky planets cluster 0.01–0.1 M_Earth |
 | `magnetic_dipole_tilt_deg` | 12 | low | Tie-break (interesting-first per the interesting-first rule) — offset polar cap; 5–15° aesthetic window |
-| `magnetosphere_standoff_planet_radii` | 1.8 | medium | Garraffo 2017 (1706.04617) Fig. 4 — slightly larger than b due to distance |
+| `magnetosphere_standoff_planet_radii` | 1.8 | medium | Garraffo 2017 ([1706.04617](https://arxiv.org/abs/1706.04617)) Fig. 4 — slightly larger than b due to distance |
 | `radiation_belt_present` | false | medium | Field too weak (<0.1 Earth) to sustain stable trapped-particle population |
-| `surface_radiation_dose_msv_yr` | 50000 | low | Atri 2019 (1910.09871) Table 6 scaling for c at 0.0158 AU + 100 g/cm² atm shielding; 1 bar O₂ + B-field reduces lethal-flare spikes |
+| `surface_radiation_dose_msv_yr` | 50000 | low | Atri 2019 ([1910.09871](https://arxiv.org/abs/1910.09871)) Table 6 scaling for c at 0.0158 AU + 100 g/cm² atm shielding; 1 bar O₂ + B-field reduces lethal-flare spikes |
 | `atmospheric_shielding_g_cm2` | 100 | medium | Phase 3 cfg pressure 0.1 bar O₂ → ~100 g/cm² column |
 | `aurora_present` | true | medium | Thin O₂ atm + weak B-field together produce visible auroral emission |
 | `aurora_color_primary_hex` | `#4DFF4D` | medium | [OI] 557.7 nm green from O atomic recombination (Earth-aurora-analog in O-rich thin atm); tie-break: interesting-first chose green over UV-dominant alternative |
@@ -75,7 +75,7 @@ strong support, low = aesthetic choice within the allowed window.
 | `aurora_emission_species_primary` | `[OI] 557.7 nm + O₂⁺ Second Negative` | medium | Atm composition + standard aurora chemistry (O-rich thin atm) |
 | `aurora_oval_magnetic_latitude_deg` | 35 | medium | Vidotto 2013 Eq. 7 with magnetopause ~2 R_p → α ≈ 45°; weak field expands oval toward equator |
 | `aurora_intensity_kR_typical` | 100 | medium | Kislyakova 2018 stellar field 1100 nT at c (vs Earth's 5 nT) → 10–500× Earth auroral driver |
-| `induction_heating_magma_ocean_fraction` | 0.68 | medium | Kislyakova 2018 (1710.08761) — c receives **highest induction heating** in system (68% of radiogenic); supports the Io-class tidal heating values already in cfg |
+| `induction_heating_magma_ocean_fraction` | 0.68 | medium | Kislyakova 2018 ([1710.08761](https://arxiv.org/abs/1710.08761)) — c receives **highest induction heating** in system (68% of radiogenic); supports the Io-class tidal heating values already in cfg |
 | `star_apparent_angular_diameter_deg` | 4.02 | high | derived: 2 × R★ / a × (180/π) |
 | `stellar_illumination_color_temp_k` | 2566 | high | Agol 2021 SED fit |
 
@@ -91,8 +91,8 @@ significantly older than b's because c has less tidal + induction
 heating (Bolmont 2020 estimates tidal heating ~10× lower at c, and
 Grayver 2022 induction heating ~10× lower for the same reason).
 
-The latest tidal heating estimates (Barr 2018 / 1712.05641 and Dobos
-2019 / 1902.03867) revise c's interior heat flux upward to **Io-class
+The latest tidal heating estimates (Barr 2018 / [1712.05641](https://arxiv.org/abs/1712.05641) and Dobos
+2019 / [1902.03867](https://arxiv.org/abs/1902.03867)) revise c's interior heat flux upward to **Io-class
 values** of 0.6–1.3 W/m² — an order of magnitude higher than the
 original "scaled from b" estimate. This implies c may host **active
 or recent volcanism**, possibly with surface eruptions of silicate
@@ -104,21 +104,21 @@ mixed character — mature regolith dominant globally with brighter,
 less-weathered patches near regions of recent volcanism.
 
 Interior composition is distinctive among the seven planets. Acuña
-2021 (2101.08172) finds c's water mass fraction is essentially zero
+2021 ([2101.08172](https://arxiv.org/abs/2101.08172)) finds c's water mass fraction is essentially zero
 (≤4×10⁻⁶), with a core-mass fraction of 0.24 ± 0.08. Barr 2018 reports
 c has the **highest mean density of any TRAPPIST-1 planet** (7642
 kg/m³ — about 50% iron by mass). This iron-richness is independent
 of any specific composition model: c sits cleanly outside the
 water-rich range of the outer planets.
 
-**Magnetic-induction heating reinforces the Io interpretation.** Kislyakova 2018 (1710.08761) computes induction heating from the stellar magnetic field for all 7 TRAPPIST-1 planets and finds c receives the **highest fraction** — 68% of radiogenic flux (vs. ~17% for b, ~56% for d, less for outer planets). Combined with Barr 2018's Io-class tidal flux (1.32 W/m²), this gives c a total interior heat budget well above the partial-melt threshold. A near-surface magma reservoir, possibly with active surface volcanism, becomes a strong default (rather than a marginal alternative) — consistent with the already-revised Surface tint accent toward fresh-basalt and active resurfacing.
+**Magnetic-induction heating reinforces the Io interpretation.** Kislyakova 2018 ([1710.08761](https://arxiv.org/abs/1710.08761)) computes induction heating from the stellar magnetic field for all 7 TRAPPIST-1 planets and finds c receives the **highest fraction** — 68% of radiogenic flux (vs. ~17% for b, ~56% for d, less for outer planets). Combined with Barr 2018's Io-class tidal flux (1.32 W/m²), this gives c a total interior heat budget well above the partial-melt threshold. A near-surface magma reservoir, possibly with active surface volcanism, becomes a strong default (rather than a marginal alternative) — consistent with the already-revised Surface tint accent toward fresh-basalt and active resurfacing.
 
 The interior composition is consistent with — but does not require —
-substantial water. Unterborn 2018 (1806.10084) finds c can be fit by
+substantial water. Unterborn 2018 ([1806.10084](https://arxiv.org/abs/1806.10084)) finds c can be fit by
 either a small-core (≤23 wt% Fe) rocky interior with no volatile
 envelope, or a larger-core composition needing 8–34 wt% water; the
 two-body degeneracy is not resolvable from mass+radius alone. Grimm
-2018 (1802.01377) gives a slightly lower mass (1.156 +0.142/−0.131 M⊕)
+2018 ([1802.01377](https://arxiv.org/abs/1802.01377)) gives a slightly lower mass (1.156 +0.142/−0.131 M⊕)
 than Agol 2021 (1.308 ± 0.056 M⊕), with a volatile probability ≥0.24
 — i.e., c is consistent with no extended volatile envelope. The
 adopted "weathered basalt" surface is the simplest interpretation
@@ -180,7 +180,7 @@ For NearStars we adopt **0.1 bar O₂-dominated thin atmosphere**:
   insufficient water for cloud formation in steady state, and CO₂
   is too low for CO₂-ice clouds.
 
-**Population-statistics support.** Gialluca 2024 (2405.02401) ran
+**Population-statistics support.** Gialluca 2024 ([2405.02401](https://arxiv.org/abs/2405.02401)) ran
 MCMC simulations of the post-runaway escape epoch for the inner
 TRAPPIST-1 planets under the joint constraint "b airless + c thin O₂".
 Their result: with initial water ≥1 TO, **>98% of c simulations
@@ -208,14 +208,14 @@ synchronous (1:1) configuration unambiguously. Obliquity damped to
 zero. Eccentricity is 0.00654 (Agol 2021) — too low to support a 3:2
 resonance (Vinson 2017 finds 3:2 stable only for e ≳ 0.01).
 
-**Possible magma ocean signature.** Bolmont 2020 (2002.02015) shows
+**Possible magma ocean signature.** Bolmont 2020 ([2002.02015](https://arxiv.org/abs/2002.02015)) shows
 that TRAPPIST-1 b/c TTVs could hint at a high planetary Love number
 (k₂ ≳ 1.5), which would dynamically signal a liquid magma layer.
 Combined with the Io-class tidal flux (Barr 2018), this raises the
 prior on c hosting partial melt. The current TTV fits are
 noise-floor-limited, so the inference is tentative.
 
-**Magnetic dynamo expectation.** c's iron-rich interior (Barr 2018: 50% Fe by mass, highest density in the system) is the strongest pro-dynamo case among the inner planets, but the 2.4-day tidally-locked rotation severely limits dipolar field strength via the Rossby-number regime transition (Reiners & Christensen 2010). RM22 (2203.01065) scaling predicts a multipolar/weak field at ~0.08 × Earth dipole moment, giving ~3 μT surface field at the equator. This is enough to deflect part of the stellar wind plasma and channel it into the auroral oval, but not enough to sustain Van-Allen-like radiation belts.
+**Magnetic dynamo expectation.** c's iron-rich interior (Barr 2018: 50% Fe by mass, highest density in the system) is the strongest pro-dynamo case among the inner planets, but the 2.4-day tidally-locked rotation severely limits dipolar field strength via the Rossby-number regime transition (Reiners & Christensen 2010). RM22 ([2203.01065](https://arxiv.org/abs/2203.01065)) scaling predicts a multipolar/weak field at ~0.08 × Earth dipole moment, giving ~3 μT surface field at the equator. This is enough to deflect part of the stellar wind plasma and channel it into the auroral oval, but not enough to sustain Van-Allen-like radiation belts.
 
 **KSP implementation note.** Rotation period = orbital period =
 2.4219 days (209 254 s). Kopernicus `rotationPeriod` should match the
@@ -227,7 +227,7 @@ geological timescales (modulo the slow precession noted for b).
 
 **Eccentricity-driven tidal flexure.** With e = 0.00654 and an
 ultra-cool dwarf host, the tidal heating rate from forced libration
-is modest. Brasser 2019 (1905.00512) gives k₂/Q in the range (0.4–2)
+is modest. Brasser 2019 ([1905.00512](https://arxiv.org/abs/1905.00512)) gives k₂/Q in the range (0.4–2)
 × 10⁻⁴ from interior models, with a dynamical lower bound k₂/Q ≳
 1×10⁻³; representative moment-of-inertia C ≈ 0.286 (range 0.235–0.4).
 The implied surface tidal flux is ~10× lower than b's (consistent
@@ -274,79 +274,79 @@ Combining surface and atmosphere decisions:
 
 ### Read (visual-informative, drove decisions above)
 
-- **2306.10150** Zieba 2023 — JWST/MIRI F1500W secondary eclipse of
+- **[2306.10150](https://arxiv.org/abs/2306.10150)** Zieba 2023 — JWST/MIRI F1500W secondary eclipse of
   c. Fp/F★ = 421 ± 94 ppm, dayside T ≈ 380 K. Excludes Venus-analog
   and most CO₂-rich atmospheres. The discovery paper for c's
   atmospheric upper limit.
-- **2308.05899** Lincowski 2023 — Broader atmosphere exploration for
+- **[2308.05899](https://arxiv.org/abs/2308.05899)** Lincowski 2023 — Broader atmosphere exploration for
   c using two-column climate+photochemistry. Finds thin O₂ low-CO₂
   atmospheres consistent within 1σ. Drives the adopted O₂-dominated
   scenario.
-- **2509.02128** Ducrot 2025 — MIRI 15 μm phase curve of b and c.
+- **[2509.02128](https://arxiv.org/abs/2509.02128)** Ducrot 2025 — MIRI 15 μm phase curve of b and c.
   c dayside 369 ± 23 K, no nightside detection. Closes the
   atmospheric scenario space toward bare-rock / thin-O₂.
-- **2305.01250** Acuña 2023 — Interior-atmosphere modeling. Finds c
+- **[2305.01250](https://arxiv.org/abs/2305.01250)** Acuña 2023 — Interior-atmosphere modeling. Finds c
   most likely has a bare surface but cannot rule out a thin
   atmosphere. Supports the surface-vs-atmosphere degeneracy
   resolved by Lincowski 2023.
-- **2412.11987** Nicholls 2024 — Convective shutdown in lava-world
+- **[2412.11987](https://arxiv.org/abs/2412.11987)** Nicholls 2024 — Convective shutdown in lava-world
   atmospheres. Uses c as a case study; explores when magma oceans
   can persist under non-convective atmospheres. Informs the
   "weathered surface" vs. "fresh ultramafic" choice (c lands on
   weathered side).
-- **1712.05641** Barr 2018 — Interior structures and tidal heating
+- **[1712.05641](https://arxiv.org/abs/1712.05641)** Barr 2018 — Interior structures and tidal heating
   in TRAPPIST-1 planets. Drives the upward revision of c's tidal
   heat flux to Io-class (1.32 W/m²). Identifies c as the iron-richest
   planet (highest density, ~50% Fe).
-- **1902.03867** Dobos 2019 — Tidal heating and habitability of
+- **[1902.03867](https://arxiv.org/abs/1902.03867)** Dobos 2019 — Tidal heating and habitability of
   TRAPPIST-1 exoplanets. Refined Maxwell viscoelastic model with
   Grimm 2018 masses. F_int(c) = 0.62 W/m². Confirms partial-melt
   interior.
-- **2101.08172** Acuña 2021 — Hydrosphere characterization. c WMF
+- **[2101.08172](https://arxiv.org/abs/2101.08172)** Acuña 2021 — Hydrosphere characterization. c WMF
   ≤ 4×10⁻⁶, CMF 0.24 ± 0.08. Drives the "dry rocky" interior
   choice.
-- **2405.02401** Gialluca 2024 — MCMC escape simulation. >98% of
+- **[2405.02401](https://arxiv.org/abs/2405.02401)** Gialluca 2024 — MCMC escape simulation. >98% of
   c outcomes retain O₂ atmosphere. Strongly supports the 0.1 bar
   O₂ scenario.
-- **2002.02015** Bolmont 2020 — TTV Love-number constraint hinting
+- **[2002.02015](https://arxiv.org/abs/2002.02015)** Bolmont 2020 — TTV Love-number constraint hinting
   at possible magma layer.
-- **1706.04617** Garraffo 2017 — Threatening Magnetic and Plasma
+- **[1706.04617](https://arxiv.org/abs/1706.04617)** Garraffo 2017 — Threatening Magnetic and Plasma
   Environment of TRAPPIST-1. MHD simulations placing the magnetopause
   at 1.5–2 R_p for inner planets.
-- **2203.01065** RM22 — Internal Structures and Magnetic Moments.
+- **[2203.01065](https://arxiv.org/abs/2203.01065)** RM22 — Internal Structures and Magnetic Moments.
   Tidally-locked rocky planet dynamo scaling.
-- **1910.09871** Atri 2019 — Stellar Proton Event surface-dose
+- **[1910.09871](https://arxiv.org/abs/1910.09871)** Atri 2019 — Stellar Proton Event surface-dose
   tables; the radiation cfg reference.
 
 ### Read (context / methodology, not decision-driving)
 
-- **2412.16541** Stellar contamination correction using back-to-back
+- **[2412.16541](https://arxiv.org/abs/2412.16541)** Stellar contamination correction using back-to-back
   b/c transits. Methodology relevant to all TRAPPIST-1 transmission;
   not directly visual-informative.
-- **2412.11627** Ducrot 2024 — b's combined 12.8+15 μm eclipse
+- **[2412.11627](https://arxiv.org/abs/2412.11627)** Ducrot 2024 — b's combined 12.8+15 μm eclipse
   analysis. Mentioned here because the bare-rock vs. CO₂-haze
   interpretation parallels c's options.
-- **2507.02052** Uniform reanalysis of JWST MIRI 15 μm eclipses
+- **[2507.02052](https://arxiv.org/abs/2507.02052)** Uniform reanalysis of JWST MIRI 15 μm eclipses
   (frame-normalized PCA). Cross-check; consistent results.
-- **2505.03672** Statistical geochemical constraints on water
+- **[2505.03672](https://arxiv.org/abs/2505.03672)** Statistical geochemical constraints on water
   outgassing as secondary-atmosphere source for TRAPPIST-1 planets.
   Background context for the "fossil O₂" inference.
-- **1802.01377** Grimm 2018 — TTV-derived masses and Bayesian
+- **[1802.01377](https://arxiv.org/abs/1802.01377)** Grimm 2018 — TTV-derived masses and Bayesian
   interior fit. c's volatile probability ≥0.24 (no extended water
   envelope required). Mass slightly lower than Agol 2021 but within
   uncertainty.
-- **1806.10084** Unterborn 2018 — Updated compositional models;
+- **[1806.10084](https://arxiv.org/abs/1806.10084)** Unterborn 2018 — Updated compositional models;
   c's interior is degenerate between small-core rocky (no water)
   and larger-core wet (8–34 wt% water). Both options consistent
   with current cfg.
-- **1905.00512** Brasser, Barr & Dobos 2019 — Tidal parameters for
+- **[1905.00512](https://arxiv.org/abs/1905.00512)** Brasser, Barr & Dobos 2019 — Tidal parameters for
   b and c. Drives the new `tidal_k2_over_Q` and `moment_of_inertia_C`
   entries in the decisions table. Note: the synthesis previously
   cited this paper as "Bolmont 2020" by mistake; corrected.
 
 ### Read (instrument-only, not visual-informative)
 
-- **2409.19333** Stellar contamination correction methodology paper.
+- **[2409.19333](https://arxiv.org/abs/2409.19333)** Stellar contamination correction methodology paper.
   Cited for completeness; no direct visual content for c.
 
 ### Not read — no arXiv preprint or low-priority (~20 papers)
@@ -357,7 +357,7 @@ Notable items skipped:
 
 - **2026NatAs.tmp...65G** "No thick atmosphere around TRAPPIST-1 b
   and c from JWST thermal phase curves" — likely the Nature Astronomy
-  publication of Ducrot 2025 (covered via arXiv 2509.02128). Skip.
+  publication of Ducrot 2025 (covered via arXiv [2509.02128](https://arxiv.org/abs/2509.02128)). Skip.
 - **2025arXiv...** various retraction / re-fit conference summaries.
   Skip unless any updates the c eclipse depth.
 

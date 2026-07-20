@@ -193,7 +193,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 - **Bond H. E., Bergeron P. & Bédard A. 2017** — *Astrophysical
   Implications of a New Dynamical Mass for the Nearby White Dwarf 40
   Eridani B*, ApJ 848, 16 (`2017ApJ...848...16B`,
-  arXiv:1709.00478, DOI 10.3847/1538-4357/aa8a63). Mason 2017
+  [arXiv:1709.00478](https://arxiv.org/abs/1709.00478), DOI 10.3847/1538-4357/aa8a63). Mason 2017
   시각 궤도에 정박해 BC 페어를 HST/FGS 로 astrometry 한 결과를,
   순수-H 모델 대기 Balmer-line fit 과 BVRI + ubvy + JHK +
   Hipparcos 시차 SED fit 과 결합. 표제 파라미터.
@@ -219,7 +219,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 - **Mason B. D., Hartkopf W. I. & Miles K. N. 2017** —
   *Binary Star Orbits V. The Nearby White Dwarf — Red Dwarf
   Pair 40 Eri BC*, AJ 154, 200 (`2017AJ....154..200M`,
-  arXiv:1707.03635, DOI 10.3847/1538-3881/aa803e). 2016 년
+  [arXiv:1707.03635](https://arxiv.org/abs/1707.03635), DOI 10.3847/1538-3881/aa803e). 2016 년
   까지의 speckle interferometry 를 포함하는 시각 궤도 재유도.
   grade-1 definitive 해 Table 4. P = 230.09 ± 0.68 yr,
   T = 1847.60 ± 1.10, e = 0.4300 ± 0.0027, a = 6.9310 ±
@@ -230,7 +230,7 @@ white 를 `#cfd9ff` 로 인코딩했습니다. 17,200 K 에서 Planck-locus
 - **Gianninas A., Bergeron P. & Ruiz M. T. 2011** —
   *A Spectroscopic Survey and Analysis of Bright,
   Hydrogen-Rich White Dwarfs*, ApJ 743, 138
-  (`2011ApJ...743..138G`, arXiv:1109.3171). DA 분광-온도 부분류
+  (`2011ApJ...743..138G`, [arXiv:1109.3171](https://arxiv.org/abs/1109.3171)). DA 분광-온도 부분류
   서베이의 결정판이며 DA1–DA9 Sion 분류를 채택. 40 Eri B
   (WD 0413−077) 는 이 작업에서 DA2.9 부분류를 받았고, 이 값이
   2011 년 이후 Bond 2017 과 후속 문헌의 canonical 분광형이

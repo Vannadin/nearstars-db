@@ -268,7 +268,7 @@ flares the only sudden ones.
   lower-significance candidates — out of scope here, flagged for the
   planet follow-up.
 - **Jahandar F. et al. 2023** — SPIRou near-infrared high-resolution
-  abundance analysis of Barnard's Star (arXiv:2310.12125). Source for
+  abundance analysis of Barnard's Star ([arXiv:2310.12125](https://arxiv.org/abs/2310.12125)). Source for
   the Phase 2 recommended metallicity [Fe/H] = −0.39 ± 0.03 (NIR,
   favored for cool M dwarfs) and an alternative Teff = 3231 ± 21 K.
   The documented metallicity divergence (vs Schweitzer VIS −0.15 and
@@ -299,7 +299,7 @@ flares the only sudden ones.
 - **Boyajian T. S. et al. 2012b** — *Stellar Diameters and
   Temperatures II. Main-Sequence K- and M-Stars*, ApJ 757, 112
   (`2012ApJ...757..112B`, doi:10.1088/0004-637X/757/2/112,
-  arXiv:1208.2431). CHARA-array limb-darkened angular diameter
+  [arXiv:1208.2431](https://arxiv.org/abs/1208.2431)). CHARA-array limb-darkened angular diameter
   θ_LD = 0.952 mas for Barnard's Star — the interferometric basis
   for the Schweitzer 2019 recommended radius R = 0.187 R☉.
 

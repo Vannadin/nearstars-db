@@ -248,7 +248,7 @@ most desaturated giant:
 - **Matthews E. C. et al. 2026** — *A second visit to ε Ind Ab with
   JWST: new photometry confirms ammonia and suggests thick clouds in the
   exoplanet atmosphere of the closest super-Jupiter*, ApJL
-  (doi:10.3847/2041-8213/ae5823, arXiv:2603.08780). Second JWST/MIRI
+  (doi:10.3847/2041-8213/ae5823, [arXiv:2603.08780](https://arxiv.org/abs/2603.08780)). Second JWST/MIRI
   coronagraphic epoch (F1140C, 11.3 µm) + archival data. **Confirms
   ammonia** (F1065C–F1140C = 0.88 ± 0.08 mag, 11σ); the shallow feature is
   best explained by **thick water-ice clouds** (best fit: 275 K, log g
@@ -258,7 +258,7 @@ most desaturated giant:
   ω = 62°, P ≈ 108 yr. **Cornerstone paper** — drives the orbit, mass,
   and atmosphere Decisions rows. Phase 2 recommended anchor.
 - **Matthews E. C. et al. 2024** — JWST/MIRI direct-imaging discovery of
-  ε Indi A b (`2024Natur.633..789M`, arXiv:2503.01599). First-epoch
+  ε Indi A b (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). First-epoch
   photometry at 10.6 and 15.5 µm; establishes the ~275 K cold giant, the
   3–5 µm faintness (NaCo non-detection) implying elevated metallicity, and
   the common-proper-motion case. **Cornerstone paper.** (ar5iv full text
@@ -266,7 +266,7 @@ most desaturated giant:
   abstract and from Matthews 2026's recap.)
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, arXiv:1910.06804).
+  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia astrometric detection; Phase 2 source for the host
   luminosity (0.239 L☉). The planet parameters here (a ≈ 11.6 AU,
   ~3.25 M_Jup, P ~45 yr) are the pre-JWST values, superseded by Matthews
@@ -276,18 +276,18 @@ most desaturated giant:
 
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
-  (`2024ApJ...964..110L`, arXiv:2403.04509). Host-star asteroseismic
+  (`2024ApJ...964..110L`, [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). Host-star asteroseismic
   mass (0.782 M☉), R (0.713 R☉), Teff (4700 K), and the ~7.1 yr activity
   cycle. Provides the host stellar parameters that set the insolation and
   illumination-color-temperature rows. Detailed in the host Phase 3
   (`docs/phase3/eps-ind-a.md`).
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
-  Bb* (`2022AJ....163..288C`, arXiv:2205.08077). Dynamical masses of the
+  Bb* (`2022AJ....163..288C`, [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). Dynamical masses of the
   wide brown-dwarf pair (Ba T1–1.5 66.9 M_Jup, Bb T6 53.3 M_Jup at
   ~1459 AU) and the system activity-age (~3.5 Gyr) that frames ε Indi A b
   as a "solar-age" giant. Drives the brown-dwarf-pair context row.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet in
-  the ε Indi triple system* (`2018arXiv180308163F`, arXiv:1803.08163).
+  the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   RV discovery preprint; earliest planet parameters (M sin i ~2.7 M_Jup,
   a ~12.8 AU), superseded by Feng 2019 / Matthews 2026; retained in the
   DB as `recommended:false`.

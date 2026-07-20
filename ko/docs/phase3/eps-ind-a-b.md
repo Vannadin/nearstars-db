@@ -222,7 +222,7 @@ obliquity ≈ 27° (궤도 법선 기준).
 - **Matthews E. C. et al. 2026** — *A second visit to ε Ind Ab with
   JWST: new photometry confirms ammonia and suggests thick clouds in the
   exoplanet atmosphere of the closest super-Jupiter*, ApJL
-  (doi:10.3847/2041-8213/ae5823, arXiv:2603.08780). 두 번째 JWST/MIRI
+  (doi:10.3847/2041-8213/ae5823, [arXiv:2603.08780](https://arxiv.org/abs/2603.08780)). 두 번째 JWST/MIRI
   관상 epoch (F1140C, 11.3 µm) + 아카이브 데이터. **암모니아 확인**
   (F1065C–F1140C = 0.88 ± 0.08 mag, 11σ). 얕은 특징은 **두꺼운 물-얼음
   구름** 으로 가장 잘 설명 (best fit. 275 K, log g 4.5, 3× solar [M/H],
@@ -231,14 +231,14 @@ obliquity ≈ 27° (궤도 법선 기준).
   (+0.11/−0.083), i = 102.3°, Ω = 44.6°, ω = 62°, P ≈ 108 yr. **핵심
   논문** — 궤도, 질량, 대기 Decisions 행을 구동. Phase 2 recommended 앵커.
 - **Matthews E. C. et al. 2024** — ε Indi A b 의 JWST/MIRI 직접 촬영
-  발견 (`2024Natur.633..789M`, arXiv:2503.01599). 10.6 과 15.5 µm 의
+  발견 (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). 10.6 과 15.5 µm 의
   첫-epoch 측광. ~275 K 차가운 거대 행성, elevated 금속도를 함의하는 3–5 µm
   흐림 (NaCo 비검출), 공통-고유운동 논거를 확립. **핵심 논문.** (캐시에
   ar5iv 전문 없음 — HTML-only stub. 숫자는 초록과 Matthews 2026 의 요약에서
   취함.)
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, arXiv:1910.06804).
+  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia 측성 검출. 호스트 광도 (0.239 L☉) 의 Phase 2 출처.
   여기서의 행성 파라미터 (a ≈ 11.6 AU, ~3.25 M_Jup, P ~45 yr) 는 pre-JWST
   값으로 Matthews 2026 이 대체. DB 에 `recommended:false` 로 보존.
@@ -247,17 +247,17 @@ obliquity ≈ 27° (궤도 법선 기준).
 
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
-  (`2024ApJ...964..110L`, arXiv:2403.04509). 호스트 별 측성지진 질량
+  (`2024ApJ...964..110L`, [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). 호스트 별 측성지진 질량
   (0.782 M☉), R (0.713 R☉), Teff (4700 K), 그리고 ~7.1 yr 활동 주기. 일사와
   조명-색온도 행을 설정하는 호스트 항성 파라미터를 제공. 호스트 Phase 3
   (`docs/phase3/eps-ind-a.md`) 에 상술.
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
-  Bb* (`2022AJ....163..288C`, arXiv:2205.08077). 넓은 갈색왜성 쌍의 역학
+  Bb* (`2022AJ....163..288C`, [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). 넓은 갈색왜성 쌍의 역학
   질량 (Ba T1–1.5 66.9 M_Jup, Bb T6 53.3 M_Jup, ~1459 AU) 과 ε Indi A b 를
   "태양-나이" 거대 행성으로 틀 짓는 시스템 활동-나이 (~3.5 Gyr). 갈색왜성-쌍
   맥락 행을 구동.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet in
-  the ε Indi triple system* (`2018arXiv180308163F`, arXiv:1803.08163).
+  the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   RV 발견 프리프린트. 가장 이른 행성 파라미터 (M sin i ~2.7 M_Jup,
   a ~12.8 AU) 로, Feng 2019 / Matthews 2026 이 대체. DB 에 `recommended:false`
   로 보존.

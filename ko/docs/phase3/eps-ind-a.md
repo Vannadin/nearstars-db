@@ -202,7 +202,7 @@ NearStars 렌더러에서 ε Indi A 는, 의미가 스스로의 수수하고 조
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
   (`2024ApJ...964..110L`, doi:10.3847/1538-4357/ad25f2,
-  arXiv:2403.04509). ν_max = 5265 ± 110 µHz (역대 최고 주파수) 에서
+  [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). ν_max = 5265 ± 110 µHz (역대 최고 주파수) 에서
   태양형 진동을 검출해, 간섭계 R = 0.713 ± 0.006 R☉ (Rains 2020 θ_LD +
   Gaia d) 와 ν_max 스케일링으로 측성지진 질량 M = 0.782 ± 0.023 M☉
   도출. UVES 에서 Teff = 4700 ± 65 K, [Fe/H] = −0.17. HARPS R'HK
@@ -210,19 +210,19 @@ NearStars 렌더러에서 ε Indi A 는, 의미가 스스로의 수수하고 조
   recommended 앵커.
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, arXiv:1910.06804).
+  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia 측성으로 ε Indi A b 검출. 광도 (0.239 L☉) 의
   Phase 2 recommended 출처이며 ~35 d 자전과 ~4 Gyr 나이를 보강. 여기서의
   행성 궤도 (a ≈ 11.6 AU, ~3 M_Jup) 는 Matthews 2026 으로 대체.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet
-  in the ε Indi triple system* (`2018arXiv180308163F`, arXiv:1803.08163).
+  in the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   arXiv 프리프린트. 자전 주기 (~35 d, RV + 활동지표 주기도. 17.8 d 신호는
   half-rotation alias) 의 Phase 2 recommended 출처. 심사 bibcode 없음 —
   행성 궤도는 Feng 2019 / Matthews 2026 으로 대체.
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
   Bb: Evidence of Slowed Cooling at the L/T Transition*, AJ 163, 288
   (`2022AJ....163..288C`, doi:10.3847/1538-3881/ac66d2,
-  arXiv:2205.08077). VLT/NACO 상대 + FORS2 절대 측성으로 갈색왜성 쌍.
+  [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). VLT/NACO 상대 + FORS2 절대 측성으로 갈색왜성 쌍.
   Ba (T1–1.5) 66.92 ± 0.36 M_Jup, Bb (T6) 53.25 ± 0.29 M_Jup. ε Indi A
   활동 지표 (log R'HK = −4.72, Pace 2013) 와 채택 시스템 나이 (3.48
   +0.78/−1.03 Gyr, Bayesian 활동-나이) 의 Phase 2 recommended 출처 —
@@ -231,13 +231,13 @@ NearStars 렌더러에서 ε Indi A 는, 의미가 스스로의 수수하고 조
 ### Read (context / methodology, not decision-driving)
 
 - **Matthews E. C. et al. 2024** — ε Indi A b 의 JWST/MIRI 직접 촬영
-  발견 (`2024Natur.633..789M`, arXiv:2503.01599). ~275 K 차가운
+  발견 (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). ~275 K 차가운
   슈퍼목성과 elevated-metallicity / 3–5 µm 흐림 맥락을 확립. 행성 b 합성
   (`docs/phase3/eps-ind-a-b.md`) 을 구동하며, 여기서는 시스템 틀을 위해
   인용. 캐시에 ar5iv 전문이 없어 (HTML-only stub), 숫자는 초록과 Matthews
   2026 의 요약에서 취함.
 - **Matthews E. C. et al. 2026** — *A second visit to ε Ind Ab with
-  JWST*, ApJL (doi:10.3847/2041-8213/ae5823, arXiv:2603.08780). 두 번째
+  JWST*, ApJL (doi:10.3847/2041-8213/ae5823, [arXiv:2603.08780](https://arxiv.org/abs/2603.08780)). 두 번째
   JWST/MIRI epoch 으로 암모니아 확인 + 두꺼운 물-얼음 구름 제안. 정밀 질량
   7.6 ± 0.7 M_Jup, a = 20.9 AU, e = 0.244. 행성 b 합성을 구동하며, 여기서는
   시스템 틀을 위해 인용.

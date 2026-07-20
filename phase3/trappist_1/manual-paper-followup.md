@@ -17,9 +17,9 @@ known gaps. **Highest priority for manual fetch.**
 | Bibcode | Year | Planet | Title | Why it matters |
 |---|---|---|---|---|
 | 2026NatAs.tmp...88. | 2026 | b, c | The innermost planets in the TRAPPIST-1 system do not have thick atmospheres | Likely a Nature Astronomy publication consolidating Greene 2023 / Zieba 2023 / Ducrot 2025; may tighten atmosphere upper limits |
-| 2026NatAs.tmp...65G | 2026 | b, c | No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves | Likely the published version of 2509.02128 (Ducrot 2025); confirm if there are revised constraints |
+| 2026NatAs.tmp...65G | 2026 | b, c | No thick atmosphere around TRAPPIST-1 b and c from JWST thermal phase curves | Likely the published version of [2509.02128](https://arxiv.org/abs/2509.02128) (Ducrot 2025); confirm if there are revised constraints |
 | 2024ESS.....510106L | 2024 | f | TRAPPIST-1 Atmospheric Reconnaissance with JWST: First Look at the Habitable-Zone Exoplanet TRAPPIST-1 f with NIRISS | **Only direct JWST observation of f**, currently cited from ADS abstract only. Full text could clarify atmosphere constraints. |
-| 2024ESS.....562710L | 2024 | c | Potential Atmospheric Compositions of TRAPPIST-1 c constrained by JWST | Possibly a precursor / conference version of Lincowski 2023 (arXiv 2308.05899) — confirm consistency |
+| 2024ESS.....562710L | 2024 | c | Potential Atmospheric Compositions of TRAPPIST-1 c constrained by JWST | Possibly a precursor / conference version of Lincowski 2023 (arXiv [2308.05899](https://arxiv.org/abs/2308.05899)) — confirm consistency |
 | 2025epsc.conf..605N | 2025 | b, c, e (?) | Predicted atmospheric evolutionary pathways for the TRAPPIST-1 planets | Could supply system-wide evolutionary framework |
 | 2025EGUGA..2718054S | 2025 | b | Modelling surface mineral diversity of atmosphere-free rocky exoplanets | **Directly informs `surface_tint_rgb_hex_primary` for b** — mineralogy modeling for airless rocky exoplanets |
 | 2024EPSC...17..649T | 2024 | b, c | Reflectance and Emission Modelling of Airless Exoplanets | **Informs surface colors / albedo for airless b and c** |
@@ -40,7 +40,7 @@ known gaps. **Highest priority for manual fetch.**
 | 2020EPSC...14..355A | 2020 | c, g | Assessing the habitability of observed Super Earths | Context |
 | 2018AGUFM.P44B..06M | 2018 | d, f | Insights into the atmospheres of the TRAPPIST-1 planets from the laboratory | Aerosol / chemistry lab work |
 | 2025epsc.conf..580B | 2025 | b | High-Resolution Transmission Spectroscopy of Venus: A Proxy for Atmospheric Characterization | Methodology |
-| 2025epsc.conf..178P | 2025 | d | TRAPPIST-1 d: A Case Study in Atmospheric Loss | Likely conference abstract of Piaulet-Ghorayeb 2025 (already covered via 2508.08416) |
+| 2025epsc.conf..178P | 2025 | d | TRAPPIST-1 d: A Case Study in Atmospheric Loss | Likely conference abstract of Piaulet-Ghorayeb 2025 (already covered via [2508.08416](https://arxiv.org/abs/2508.08416)) |
 | 2025EGUGA..27.6151S | 2025 | e | Is It Possible to Detect Airless Exomoons Through Thermal Phase Curves? | Methodology |
 
 ## Tier C — proceedings & catalogs (skip unless context needed)

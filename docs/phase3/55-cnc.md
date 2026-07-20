@@ -231,13 +231,13 @@ spin-axis bookkeeping.
 
 - **von Braun K. et al. 2011** — *The 55 Cancri System: Fundamental
   Stellar Parameters, Habitable Zone Planet, and Super-Earth
-  Diameter*, ApJ 740, 49 (`2011ApJ...740...49V`, arXiv:1107.1936).
+  Diameter*, ApJ 740, 49 (`2011ApJ...740...49V`, [arXiv:1107.1936](https://arxiv.org/abs/1107.1936)).
   CHARA interferometry: θ_LD = 0.711 ± 0.004 mas → R = 0.943 ± 0.010
   R☉, direct Teff = 5196 ± 24 K, bolometric L = 0.582 ± 0.014 L☉,
   evolutionary mass 0.905 ± 0.015 M☉, HZ 0.67–1.32 AU. **Phase 2
   anchor for the entire stellar layer (R, Teff, L, M).**
 - **Bourrier V. et al. 2018** — *The 55 Cnc system reassessed*, A&A
-  619, A1 (`2018A&A...619A...1B`, arXiv:1807.04301). Two decades of
+  619, A1 (`2018A&A...619A...1B`, [arXiv:1807.04301](https://arxiv.org/abs/1807.04301)). Two decades of
   photometry + spectroscopy: P_rot = 38.8 ± 0.05 d, log R'HK = −5.03,
   solar-like magnetic cycle P_mag ≈ 10.5 ± 0.3 yr (S-index;
   ~11.8 yr Hα), confirming an old (~10 Gyr) quiet star. Homogeneous
@@ -246,7 +246,7 @@ spin-axis bookkeeping.
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
   with SPIRou: questions about the magnetic cycle of 55 Cnc A and two
   new planets around B*, A&A 705, A190 (`2026A&A...705A.190M`,
-  arXiv:2510.11523). SPIRou spectropolarimetry of both A and B;
+  [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). SPIRou spectropolarimetry of both A and B;
   P_rot = 38.7 ± 0.8 d (GPR), ZDI field 0.3 G (min) – 3 G (max),
   ~10× weaker than the Sun; adopts age > 10 Gyr; revised outer planet
   d (P 4799 d) and a possible 6th candidate / 13.15 yr 3.8 M_Jup
@@ -258,7 +258,7 @@ spin-axis bookkeeping.
 
 - **Demory B.-O. et al. 2016** — *Variability in the super-Earth
   55 Cnc e*, Nature 532, 207 (`2016Natur.532..207D`,
-  arXiv:1505.00269). Spitzer 4.5 μm dayside thermal-emission
+  [arXiv:1505.00269](https://arxiv.org/abs/1505.00269)). Spitzer 4.5 μm dayside thermal-emission
   variability; informs planet e's surface/atmosphere synthesis, not
   the stellar layer.
 - **Soubiran C. et al. 2024** — Gaia FGK benchmark-star [Fe/H]

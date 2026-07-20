@@ -227,37 +227,37 @@ still well above any habitable threshold.
 
 - **Basant R. et al. 2025** — *Four Sub-Earth Planets Orbiting
   Barnard's Star from MAROON-X and ESPRESSO* (`2025ApJ...982L...1B`,
-  arXiv:2503.08095). The MAROON-X paper that promoted e from
+  [arXiv:2503.08095](https://arxiv.org/abs/2503.08095)). The MAROON-X paper that promoted e from
   candidate (59% detection probability from ESPRESSO alone) to
   confirmed (79% from joint MAROON-X + ESPRESSO). P = 6.7392 d,
   Msini = 0.193 ± 0.033 M⊕, a = 0.0381 AU, e = 0.04, ω = −27.5°,
   T_eq = 340 K (A=0, full redistribution); HZ = P 10–42 d; e < 0.02
   favored for stability.
 - **González Hernández J. I. et al. 2024** — *A sub-Earth-mass planet
-  orbiting Barnard's star* (`2024A&A...690A..79G`, arXiv:2410.00569).
+  orbiting Barnard's star* (`2024A&A...690A..79G`, [arXiv:2410.00569](https://arxiv.org/abs/2410.00569)).
   ESPRESSO data first identified e (6.74 d) as a candidate signal
   ("not within expectations" for detection sensitivity).
 - **Stefanov A. K. et al. 2024** — *TESS photometry of Barnard's Star*
-  (arXiv:2410.00577). i < 87.9° → the four planets are non-transiting;
+  ([arXiv:2410.00577](https://arxiv.org/abs/2410.00577)). i < 87.9° → the four planets are non-transiting;
   motivates the mass-radius-derived radius.
 - **France K. et al. 2020** — *The High-Energy Radiation Environment
-  Around a 10 Gyr M Dwarf: Habitable at Last?* (arXiv:2009.01259).
+  Around a 10 Gyr M Dwarf: Habitable at Last?* ([arXiv:2009.01259](https://arxiv.org/abs/2009.01259)).
   Atmospheric loss baseline; scales to e's 0.0381 AU. The "habitable
   at last" framing motivates the thin-atmosphere tie-break for e
   over bare-rock alternative. *(Context-cite — not in local paper
   cache; used for framing, no quoted figure.)*
 - **Duvvuri G. et al. 2021** — *Reconstructing the EUV Emission of
-  Cool Dwarfs* (arXiv:2102.08493). Quiescent EUV reconstruction;
+  Cool Dwarfs* ([arXiv:2102.08493](https://arxiv.org/abs/2102.08493)). Quiescent EUV reconstruction;
   atmospheric escape modeling input.
 - **Walterová M. & Běhounková M. 2020** — *Thermal and Orbital
-  Evolution of Low-mass Exoplanets* (arXiv:2007.12459). Tidal-despin
+  Evolution of Low-mass Exoplanets* ([arXiv:2007.12459](https://arxiv.org/abs/2007.12459)). Tidal-despin
   timescale (thousands to millions of years; >1 Gyr only for the
   lowest-dissipation rheologies).
 
 ### Read (context / methodology, not decision-driving)
 
 - **Toledo-Padrón B. et al. 2019** — *Stellar activity analysis of
-  Barnard's Star* (arXiv:1812.06712). Host activity cycle + rotation
+  Barnard's Star* ([arXiv:1812.06712](https://arxiv.org/abs/1812.06712)). Host activity cycle + rotation
   (P_rot = 145 d).
 
 ### Read (instrument-only, not visual-informative)

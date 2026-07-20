@@ -126,17 +126,17 @@ axial seasons.
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
   with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
-  arXiv:2510.11523). Latest RV refit: planet c P = 44.3936 d,
+  [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). Latest RV refit: planet c P = 44.3936 d,
   a = 0.247 AU, e = 0.088, M sin i = 56.6 ± 2.2 M⊕. **Phase 2
   recommended orbit + mass.** Postdates the model cutoff —
   value-checked against the cached text.
 - **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
-  arXiv:1107.1936. Host L = 0.582 L☉ → the T_eq derivation.
+  [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). Host L = 0.582 L☉ → the T_eq derivation.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
-  arXiv:1807.04301. Refit: c at a = 0.2373 AU, e = 0.03,
+  [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). Refit: c at a = 0.2373 AU, e = 0.03,
   M sin i = 51.2 M⊕ — documented-alternative orbit/mass (superseded by
   Moutou 2025).
 - **McArthur B. E. et al. 2004** — `2004ApJ...614L..81M`. Discovery

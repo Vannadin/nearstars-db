@@ -102,16 +102,16 @@ items). Illumination color is set to the 1280 K temperature.
 ## Bibliography
 
 **Read (drive Decisions rows):**
-- Gillon et al. 2013, A&A 555, L5 (arXiv 1304.0481) — P_rot = 4.87 hr, ~11% variability, first BD weather.
-- Crossfield et al. 2014, Nature 505, 654 (arXiv 1401.8145) — first Doppler surface map of a brown dwarf.
-- Apai et al. 2021, ApJ 906, 64 (arXiv 2101.02253) — TESS 5.28 hr, zonal jets / planetary-scale waves.
-- Faherty et al. 2014, ApJ 790, 90 (arXiv 1406.1518) — Li, CH₄/FeH, bolometric luminosity, Teff, patchy clouds.
-- Lazorenko & Sahlmann 2018, A&A 618, A111 (arXiv 1808.07835) — dynamical mass, parallax.
+- Gillon et al. 2013, A&A 555, L5 (arXiv [1304.0481](https://arxiv.org/abs/1304.0481)) — P_rot = 4.87 hr, ~11% variability, first BD weather.
+- Crossfield et al. 2014, Nature 505, 654 (arXiv [1401.8145](https://arxiv.org/abs/1401.8145)) — first Doppler surface map of a brown dwarf.
+- Apai et al. 2021, ApJ 906, 64 (arXiv [2101.02253](https://arxiv.org/abs/2101.02253)) — TESS 5.28 hr, zonal jets / planetary-scale waves.
+- Faherty et al. 2014, ApJ 790, 90 (arXiv [1406.1518](https://arxiv.org/abs/1406.1518)) — Li, CH₄/FeH, bolometric luminosity, Teff, patchy clouds.
+- Lazorenko & Sahlmann 2018, A&A 618, A111 (arXiv [1808.07835](https://arxiv.org/abs/1808.07835)) — dynamical mass, parallax.
 
 **Context:**
 - Burgasser et al. 2013 — L7.5/T0.5 classification.
-- Mancini et al. 2015 (arXiv 1510.08099) — 5.1 hr rotation cross-check.
-- Bedin et al. 2024 (arXiv 2403.08865), Garcia et al. 2017 (arXiv 1708.02714) — alternate masses.
+- Mancini et al. 2015 (arXiv [1510.08099](https://arxiv.org/abs/1510.08099)) — 5.1 hr rotation cross-check.
+- Bedin et al. 2024 (arXiv [2403.08865](https://arxiv.org/abs/2403.08865)), Garcia et al. 2017 (arXiv [1708.02714](https://arxiv.org/abs/1708.02714)) — alternate masses.
 
 ## Open items for follow-up
 

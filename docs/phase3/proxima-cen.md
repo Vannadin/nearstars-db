@@ -29,11 +29,11 @@ several flares per day above the photometric noise (Vida's 72 events over
 ≈ 50 d give a total flare rate of 1.49/day across the 10²⁹–10³² erg
 energy range), with superflares of ≥ 10³³ erg expected roughly
 3 times per year and ≥ 10³⁴ erg events once every two years. The combined X-ray + FUV flare spectroscopy of Fuhrmeister
-2022 (arXiv:2204.09270) documents the simultaneous coronal–
+2022 ([arXiv:2204.09270](https://arxiv.org/abs/2204.09270)) documents the simultaneous coronal–
 chromospheric response to these events.
 
 Proxima's relationship to α Cen AB is less certain than the
-gravitational binding suggests. Feng & Jones 2018 (arXiv:1709.03560)
+gravitational binding suggests. Feng & Jones 2018 ([arXiv:1709.03560](https://arxiv.org/abs/1709.03560))
 modeled the encounter dynamics and conclude that Proxima may have been
 captured into the α Cen AB system rather than born with it; the kinematic
 agreement at the system center of mass leaves both formation
@@ -108,13 +108,13 @@ the elevated UV / X-ray emission. The quiescent X-ray luminosity is
 log L_X ≈ 27.0 cgs (Damonte 2026), rising by an order of magnitude
 during flares (Fuhrmeister 2022).
 
-Flares are the defining feature. Vida 2019 (arXiv:1907.12580) used
+Flares are the defining feature. Vida 2019 ([arXiv:1907.12580](https://arxiv.org/abs/1907.12580)) used
 TESS photometry to characterize the flare distribution — the typical
 flare amplitude in the white-light band ranges across 10²⁹–10³² erg energies over
 1.49 flares/day, with super-flares (≥ 10³³ erg) at ~3 per year and
 events ≥ 10³⁴ erg once every two years. The most dramatic event recorded shows quasi-
 periodic oscillations during the decay phase, attributed to plasma
-oscillations in the flare loop. Burton et al. 2025 (arXiv:2503.21890)
+oscillations in the flare loop. Burton et al. 2025 ([arXiv:2503.21890](https://arxiv.org/abs/2503.21890))
 extended the flare census into millimeter wavelengths using ALMA,
 finding the rate of mm-bright flares is comparable to that in the
 optical.
@@ -127,7 +127,7 @@ documents the same modulation in Hα equivalent width across the
 HARPS + UVES timeseries used for the Proxima b discovery.
 
 The atmospheric loss to the Proxima planetary system is enormous:
-Garraffo et al. 2022 (arXiv:2211.15697) finds the stellar wind ram
+Garraffo et al. 2022 ([arXiv:2211.15697](https://arxiv.org/abs/2211.15697)) finds the stellar wind ram
 pressure at b's distance ranges from 10⁴ to 10⁶ times solar values
 during sub-Alfvénic and super-Alfvénic transits. Coronal mass
 ejections carry total kinetic energies up to 10³⁴ erg per event in
@@ -183,24 +183,24 @@ planetary atmosphere.
 
 - **Demory B.-O. et al. 2009** — *Mass-radius relation of low and very
   low-mass stars revisited with the VLTI*, A&A 505, 205
-  (`2009A&A...505..205D`, arXiv:0906.0602). VLTI/VINCI interferometric
+  (`2009A&A...505..205D`, [arXiv:0906.0602](https://arxiv.org/abs/0906.0602)). VLTI/VINCI interferometric
   R = 0.141 ± 0.011 R☉ — the recommended Proxima radius.
 - **Passegger V. M. et al. 2019** — *The CARMENES search for exoplanets
   around M dwarfs. Photospheric parameters of target stars from
   high-resolution spectroscopy* (`2019A&A...627A.161P`,
-  arXiv:1907.00807). High-res spectroscopic Teff = 2904 ± 51 K and
+  [arXiv:1907.00807](https://arxiv.org/abs/1907.00807)). High-res spectroscopic Teff = 2904 ± 51 K and
   H-band metallicity.
 - **Suárez Mascareño A. et al. 2016** — *Characterization of the radial
   velocity signal induced by rotation in late-type dwarfs*
-  (`2016A&A...595A..12S`, arXiv:1506.08039). Ca II H&K activity index
+  (`2016A&A...595A..12S`, [arXiv:1506.08039](https://arxiv.org/abs/1506.08039)). Ca II H&K activity index
   log R'HK = −5.65 ± 0.17 for GJ 551 (recalibrated to −4.98 in SM2020).
 - **Suárez Mascareño A. et al. 2020** — *Revisiting Proxima with
-  ESPRESSO* (`2020A&A...639A..77S`, arXiv:2005.12114). ESPRESSO RV
+  ESPRESSO* (`2020A&A...639A..77S`, [arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). ESPRESSO RV
   monitoring; adopts rotation period ~83.2 d (87 ± 12 d measured);
   recalibrated activity index timeseries.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
   system of Proxima with NIRPS: Breaking the m/s barrier*
-  (`2025A&A...700A..11S`, arXiv:2507.21751). The current best orbital
+  (`2025A&A...700A..11S`, [arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). The current best orbital
   fit for Proxima b (e ≈ 0, P = 11.18465 d, Msini = 1.055 M⊕) and
   confirmation of Proxima d; GP rotation period 83.2 ± 1.6 d.
 - **Benedict G. F. et al. 1998** — *Photometry of Proxima Centauri and
@@ -209,54 +209,54 @@ planetary atmosphere.
   period 83.5 ± 0.5 d — the recommended Proxima rotation period.
 - **Anglada-Escudé G. et al. 2016** — *A terrestrial planet candidate
   in a temperate orbit around Proxima Centauri*, Nature 536, 437
-  (`2016Natur.536..437A`, arXiv:1609.03449). Original discovery of
+  (`2016Natur.536..437A`, [arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Original discovery of
   Proxima b; supplementary Hα flare-frequency measurements.
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
   orbiting Proxima Centauri*, A&A 658, A115 (`2022A&A...658A.115F`,
-  arXiv:2202.05188). Proxima d candidate at P = 5.122 d, Msini =
+  [arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). Proxima d candidate at P = 5.122 d, Msini =
   0.26 M⊕.
 - **Reiners & Basri 2008 / Reiners et al. 2022 / Klein et al. 2021** —
   Proxima magnetic field. Reiners & Basri 2008 (`2008A&A...489L..45R`,
-  arXiv:0808.2986) and Reiners 2022 (`2022A&A...662A..41R`,
-  arXiv:2204.00342, CARMENES) give a moderate mean surface field
-  Bf ≈ 0.6 kG; Klein 2021 (`2021MNRAS.500.1844K`, arXiv:2010.14311,
+  [arXiv:0808.2986](https://arxiv.org/abs/0808.2986)) and Reiners 2022 (`2022A&A...662A..41R`,
+  [arXiv:2204.00342](https://arxiv.org/abs/2204.00342), CARMENES) give a moderate mean surface field
+  Bf ≈ 0.6 kG; Klein 2021 (`2021MNRAS.500.1844K`, [arXiv:2010.14311](https://arxiv.org/abs/2010.14311),
   SPIRou ZDI) recovers a ~0.2 kG mostly-poloidal large-scale field with
   a ~0.135 kG dipole. (Supersedes the earlier mis-citation to the
   Reiners 2018 CARMENES spectral atlas `1711.06576`, which carries no
   Proxima field measurement.)
 - **Vida K. et al. 2019** — *Flaring Activity of Proxima Centauri from
   TESS Observations*, ApJ 884, 160 (`2019ApJ...884..160V`,
-  arXiv:1907.12580). Flare statistics, QPO super-flare, 5 super-flares
+  [arXiv:1907.12580](https://arxiv.org/abs/1907.12580)). Flare statistics, QPO super-flare, 5 super-flares
   per year.
 - **Fuhrmeister B. et al. 2022** — *The high energy spectrum of
   Proxima Centauri simultaneously observed at X-ray and FUV
-  wavelengths*, A&A 663, A119 (arXiv:2204.09270). Coronal +
+  wavelengths*, A&A 663, A119 ([arXiv:2204.09270](https://arxiv.org/abs/2204.09270)). Coronal +
   chromospheric flare response.
 - **Wargelin B. J. et al. 2024** — *X-Ray, UV, and Optical
   Observations of Proxima Centauri's Stellar Cycle*, A&A in press
-  (arXiv:2411.04252). Refined 7-yr activity cycle.
+  ([arXiv:2411.04252](https://arxiv.org/abs/2411.04252)). Refined 7-yr activity cycle.
 - **Damonte A. et al. 2026** — *Time-resolved X-ray spectra of
-  Proxima Centauri as seen by XMM-Newton* (arXiv:2512.18011).
+  Proxima Centauri as seen by XMM-Newton* ([arXiv:2512.18011](https://arxiv.org/abs/2512.18011)).
   Quiescent X-ray spectroscopy and cycle modulation.
 - **Burton K. et al. 2025** — *The Proxima Centauri Campaign: First
   Constraints on Millimeter Flare Rates from ALMA*
-  (arXiv:2503.21890). mm-band flare rate.
+  ([arXiv:2503.21890](https://arxiv.org/abs/2503.21890)). mm-band flare rate.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Feng F. & Jones H. R. A. 2018** — *Was Proxima captured by α
-  Centauri A and B?* (arXiv:1709.03560). Orbit history dynamics.
+  Centauri A and B?* ([arXiv:1709.03560](https://arxiv.org/abs/1709.03560)). Orbit history dynamics.
 - **Kervella P. et al. 2017** — *Proxima's orbit around α Centauri*,
-  A&A 598, L7 (arXiv:1611.03495). Astrometric tracking that confirms
+  A&A 598, L7 ([arXiv:1611.03495](https://arxiv.org/abs/1611.03495)). Astrometric tracking that confirms
   the bound triple.
 
 ### Read (instrument / non-cfg-decisive)
 
 - **De Luca P. et al. 2024** — Ozone-climate dynamics of Proxima b
-  Earth-analog (arXiv:2404.17972). Atmospheric chemistry framework
+  Earth-analog ([arXiv:2404.17972](https://arxiv.org/abs/2404.17972)). Atmospheric chemistry framework
   reused in Proxima-b synthesis.
 - **Boldog Á. et al. 2024** — Water-content modeling of rocky HZ
-  planets (arXiv:2312.01893). Cross-referenced in Proxima-b interior.
+  planets ([arXiv:2312.01893](https://arxiv.org/abs/2312.01893)). Cross-referenced in Proxima-b interior.
 
 ### Not read — no arXiv preprint or low-priority (~150 papers)
 

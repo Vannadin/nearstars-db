@@ -253,14 +253,14 @@ visual cfg.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). Discovery + best
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). Discovery + best
   constraint on f's orbit (P = 636.13 ± 11.7 d), mass
   (Msini = 3.93 ± 1.05 M⊕), eccentricity (0.16), and host mass
   (0.783 ± 0.012 M☉). Anchors every orbital and physical Decisions
   row.
 - **Feng F. et al. 2018** — *Detection limits on τ Ceti's planet
   system from HARPS RV*, A&A 613, A76 (`2018A&A...613A..76F`,
-  arXiv:1801.05415). Re-examination of the 4-planet system with
+  [arXiv:1801.05415](https://arxiv.org/abs/1801.05415)). Re-examination of the 4-planet system with
   expanded HARPS dataset; 636-d signal stable; controversial flag
   in NEA reflects the persisting amplitude-to-noise concerns.
 - **Wordsworth & Pierrehumbert 2015** (general atmospheric-escape

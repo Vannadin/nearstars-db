@@ -39,7 +39,7 @@ viable — just not on the favored *observed* orbit.
 ## 1. Background
 
 α Cen A b ("S1") was reported by Beichman et al. 2025 (*Worlds Next Door I*,
-arXiv:2508.03814) + Sanghi & Beichman 2025 (*II*, arXiv:2508.03812): a single
+[arXiv:2508.03814](https://arxiv.org/abs/2508.03814)) + Sanghi & Beichman 2025 (*II*, [arXiv:2508.03812](https://arxiv.org/abs/2508.03812)): a single
 JWST/MIRI F1550C (15.5 µm, 3.5±1.0 mJy, S/N 4–6) detection in Aug 2024 at 1.5″
 (~2 AU) from α Cen A, not recovered in two 2025 epochs (~52% of stable orbits
 are consistent with non-recovery via orbital motion). It is linked to the 2019
@@ -297,10 +297,10 @@ moon-frame fix + Pandora test, DB HZ orbit, Phase 3 cultural context. See
 
 ## References
 
-- Beichman et al. 2025, *Worlds Next Door I*, ApJL (arXiv:2508.03814);
-  Sanghi & Beichman 2025, *II* (arXiv:2508.03812)
+- Beichman et al. 2025, *Worlds Next Door I*, ApJL ([arXiv:2508.03814](https://arxiv.org/abs/2508.03814));
+  Sanghi & Beichman 2025, *II* ([arXiv:2508.03812](https://arxiv.org/abs/2508.03812))
 - Wagner et al. 2021 (VLT/NEAR C1); Zhao et al. 2018 (α Cen RV limits)
-- Lu, Hernandez & Rein 2024, TRACE (arXiv:2405.03800); Rein & Liu 2012 (REBOUND)
+- Lu, Hernandez & Rein 2024, TRACE ([arXiv:2405.03800](https://arxiv.org/abs/2405.03800)); Rein & Liu 2012 (REBOUND)
 - Cincotta & Simó 2000 (MEGNO); Domingos et al. 2006 (moon stability limit)
 - Naoz 2016 (eccentric Kozai-Lidov review)
 - *Seeking the Worlds of Avatar*, Astrobiology 2025; NPR 2025-08-07

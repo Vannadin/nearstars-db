@@ -314,7 +314,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
 - **Rains A. D. 등 2020** — *Precision angular diameters for 16
   southern stars with VLTI/PIONIER*, MNRAS 493, 2377
   (`2020MNRAS.493.2377R`, doi:10.1093/mnras/staa282,
-  arXiv:2004.02343). VLTI/PIONIER 4 망원경 H 밴드 간섭계. 40
+  [arXiv:2004.02343](https://arxiv.org/abs/2004.02343)). VLTI/PIONIER 4 망원경 H 밴드 간섭계. 40
   Eri A 는 Table 1 샘플의 16 개 중 7 번째. 독립적 cross-check:
   θ_LD = 1.486 ± 0.012 mas, R = 0.804 ± 0.006 R☉, Teff = 5126
   ± 30 K, L = 0.40 ± 0.01 L☉ (Table 4). 네 가지 값 모두에 대해
@@ -333,7 +333,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
 - **Bond H. E. 등 2017** — *Astrophysical Implications of a
   New Dynamical Mass for the Nearby White Dwarf 40 Eridani B*,
   ApJ 848, 16 (`2017ApJ...848...16B`, doi:10.3847/1538-4357/aa8a63,
-  arXiv:1709.00478). 40 Eri B 의 HST FGS 동역학 질량 0.573 ±
+  [arXiv:1709.00478](https://arxiv.org/abs/1709.00478)). 40 Eri B 의 HST FGS 동역학 질량 0.573 ±
   0.018 M☉; §6.2 가 IFMR (initial mass ~1.8 M☉ → MS 수명
   1.7 Gyr + 냉각 122 Myr) 로 시스템 공통 나이 ~1.8 Gyr 을
   유도합니다. Phase 3 cfg 가 Ma 2018 보다 이 값을 채택합니다 —
@@ -341,7 +341,7 @@ refuted Phase 3 markdown (`tau-cet-e.md`) 으로, 발견 기록을
 - **Burrows A. 등 2024** — *The Death of Vulcan: NEID Reveals
   That the Planet Candidate Orbiting HD 26965 Is Stellar Activity*,
   AJ 167, 243 (`2024AJ....167..243B`, doi:10.3847/1538-3881/ad34d5,
-  arXiv:2404.17494). NEID line-by-line RV + 활성도 지표 상관이
+  [arXiv:2404.17494](https://arxiv.org/abs/2404.17494)). NEID line-by-line RV + 활성도 지표 상관이
   Ma 2018 벌컨 후보를 반박합니다. 자전 주기는 formal σ 없이
   "∼42 days" 로 보고됩니다. `rotation_period_days` Decisions
   row 와 Refuted-planet 섹션의 source.

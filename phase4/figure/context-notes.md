@@ -12,7 +12,7 @@ Append-only decision log. Why each choice, not just what.
 
 ## Prior art already in the repo (do not duplicate)
 - `principia-geopotential-data.md` already carries: the Radau–Darwin NMoI inversion
-  (Helled+2011, arXiv:1109.1627), giant J2 calibration (Jupiter −0%, Saturn −10%
+  (Helled+2011, [arXiv:1109.1627](https://arxiv.org/abs/1109.1627)), giant J2 calibration (Jupiter −0%, Saturn −10%
   truncation), the worked **Polyphemus** J2 ≈ 0.023–0.026, the normalization rules
   (J2 = −√5·C̄₂₀; J2 = 10/3·C₂₂), and the body-type cfg forms. → New doc is the
   **method** home; geopotential-data.md stays the **data + cfg-form** companion.

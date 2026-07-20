@@ -335,7 +335,7 @@ the Ma 2018 picture to preserve.
 - **Rains A. D. et al. 2020** — *Precision angular diameters for 16
   southern stars with VLTI/PIONIER*, MNRAS 493, 2377
   (`2020MNRAS.493.2377R`, doi:10.1093/mnras/staa282,
-  arXiv:2004.02343). VLTI/PIONIER four-telescope H-band
+  [arXiv:2004.02343](https://arxiv.org/abs/2004.02343)). VLTI/PIONIER four-telescope H-band
   interferometry; 40 Eri A is star #7 of 16 in Table 1. Independent
   cross-check: θ_LD = 1.486 ± 0.012 mas, R = 0.804 ± 0.006 R☉,
   Teff = 5126 ± 30 K, L = 0.40 ± 0.01 L☉ (Table 4). Agrees with
@@ -354,7 +354,7 @@ the Ma 2018 picture to preserve.
 - **Bond H. E. et al. 2017** — *Astrophysical Implications of a
   New Dynamical Mass for the Nearby White Dwarf 40 Eridani B*,
   ApJ 848, 16 (`2017ApJ...848...16B`, doi:10.3847/1538-4357/aa8a63,
-  arXiv:1709.00478). HST FGS astrometric mass of 40 Eri B
+  [arXiv:1709.00478](https://arxiv.org/abs/1709.00478)). HST FGS astrometric mass of 40 Eri B
   0.573 ± 0.018 M☉; §6.2 derives system-coeval total age ~1.8 Gyr
   from IFMR (initial mass ~1.8 M☉ → MS lifetime 1.7 Gyr + cooling
   age 122 Myr). Phase 3 cfg adopts this age over Ma 2018 — see
@@ -362,7 +362,7 @@ the Ma 2018 picture to preserve.
 - **Burrows A. et al. 2024** — *The Death of Vulcan: NEID Reveals
   That the Planet Candidate Orbiting HD 26965 Is Stellar Activity*,
   AJ 167, 243 (`2024AJ....167..243B`, doi:10.3847/1538-3881/ad34d5,
-  arXiv:2404.17494). NEID line-by-line RV + activity-indicator
+  [arXiv:2404.17494](https://arxiv.org/abs/2404.17494)). NEID line-by-line RV + activity-indicator
   correlations refute the Ma 2018 Vulcan candidate. Stellar
   rotation period reported as "∼42 days" with no formal σ.
   Sources the Decisions row for `rotation_period_days` and the

@@ -166,19 +166,19 @@ claims a ring either way.
 
 - **Moutou C. et al. 2025/2026** — *Characterizing planetary systems
   with SPIRou…*, A&A 705, A190 (`2026A&A...705A.190M`,
-  arXiv:2510.11523). Latest RV refit: planet d P = 4799 d (9σ shorter
+  [arXiv:2510.11523](https://arxiv.org/abs/2510.11523)). Latest RV refit: planet d P = 4799 d (9σ shorter
   than Bourrier 2018's 5574 d), a = 5.6 AU, e = 0.0913,
   M sin i = 1214 ± 41 M⊕ ≈ 3.8 M_Jup; notes the orbit is entangled with
   the ~10.5-yr magnetic cycle and a possible additional outer body
   (long-term RV trend, P > 24 yr). **Phase 2 recommended orbit + mass.**
   Postdates the model cutoff — value-checked against the cached text.
 - **von Braun K. et al. 2011** — `2011ApJ...740...49V`,
-  arXiv:1107.1936. Host L = 0.582 L☉ → the T_eq derivation.
+  [arXiv:1107.1936](https://arxiv.org/abs/1107.1936). Host L = 0.582 L☉ → the T_eq derivation.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Bourrier V. et al. 2018** — `2018A&A...619A...1B`,
-  arXiv:1807.04301. Refit including the magnetic-cycle Keplerian: d at
+  [arXiv:1807.04301](https://arxiv.org/abs/1807.04301). Refit including the magnetic-cycle Keplerian: d at
   P = 5574 d, a = 5.957 AU, e = 0.13, M sin i = 991.6 M⊕ — the
   documented-alternative orbit (see Canonical alternatives).
 - **Marcy G. W. et al. 2002** — `2002ApJ...581.1375M`. Discovery paper

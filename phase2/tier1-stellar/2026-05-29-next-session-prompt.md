@@ -30,7 +30,7 @@ NearStars repo 의 2026-05-28 Tier 1 작업 27 commit 이 citation 무결성 문
 
 | 호스트 | Primary anchor | 값 |
 |---|---|---|
-| HD 69830 | Tanner et al. 2015 `2015ApJ...800..115T` (CHARA Classic, arXiv:1412.5251) | θ_LD = 0.674 ± 0.014 mas (H-band) → R = 0.9058 ± 0.019 R☉. Teff 5394 ± 62 K (CHARA+SED) 또는 5385 ± 44 K (SME). age 10.6 ± 4 Gyr (isochrone) 또는 7.5 ± 3 Gyr (SME). mass 0.863 ± 0.043 M☉. [Fe/H] −0.04 ± 0.03 |
+| HD 69830 | Tanner et al. 2015 `2015ApJ...800..115T` (CHARA Classic, [arXiv:1412.5251](https://arxiv.org/abs/1412.5251)) | θ_LD = 0.674 ± 0.014 mas (H-band) → R = 0.9058 ± 0.019 R☉. Teff 5394 ± 62 K (CHARA+SED) 또는 5385 ± 44 K (SME). age 10.6 ± 4 Gyr (isochrone) 또는 7.5 ± 3 Gyr (SME). mass 0.863 ± 0.043 M☉. [Fe/H] −0.04 ± 0.03 |
 | Delta Pavonis | Rains et al. 2020 `2020MNRAS.493.2377R` (VLTI/PIONIER) | θ_LD = 1.828 ± 0.025 mas → R = 1.197 ± 0.016 R☉. Teff 5571 ± 48 K. δ Pav 는 그 paper sample 의 #11/16 |
 | Barnard's star | Boyajian et al. 2012 `2012ApJ...757..112B` (CHARA) | R = 0.1867 ± 0.0012 R☉. 어제 Rains 2021 으로 misattributed 됐었음 (값은 정확) |
 | 61 Vir | Rathsam et al. 2023 `2023MNRAS.525.4642R` Table A1 row HD 115617 / HIP 64924 | mass 0.93 ± 0.01, Teff 5568 ± 6 K, [Fe/H] +0.006 ± 0.004, age 5.50 +0.78/-0.74 Gyr. (어제 age 가 7.70 Gyr 로 fabricated 됐었음) |

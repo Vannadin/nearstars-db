@@ -229,7 +229,7 @@ modest, quiet photosphere:
 - **Lundkvist M. S. et al. 2024** — *Low-amplitude solar-like
   oscillations in the K5 V star ε Indi A*, ApJ 964, 110
   (`2024ApJ...964..110L`, doi:10.3847/1538-4357/ad25f2,
-  arXiv:2403.04509). Detects solar-like oscillations at ν_max =
+  [arXiv:2403.04509](https://arxiv.org/abs/2403.04509)). Detects solar-like oscillations at ν_max =
   5265 ± 110 µHz (highest-frequency ever measured), giving an
   asteroseismic mass M = 0.782 ± 0.023 M☉ via ν_max scaling with the
   interferometric R = 0.713 ± 0.006 R☉ (Rains 2020 θ_LD + Gaia d).
@@ -238,13 +238,13 @@ modest, quiet photosphere:
   mass/radius/Teff.
 - **Feng F. et al. 2019** — *Detection of the nearest Jupiter analog in
   radial velocity and astrometry data*, MNRAS 490, 5002
-  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, arXiv:1910.06804).
+  (`2019MNRAS.490.5002F`, doi:10.1093/mnras/stz2912, [arXiv:1910.06804](https://arxiv.org/abs/1910.06804)).
   RV + Hipparcos/Gaia astrometric detection of ε Indi A b; Phase 2
   recommended source for the luminosity (0.239 L☉) and corroborating
   the ~35 d rotation and ~4 Gyr age. The planet orbit here (a ≈ 11.6 AU,
   ~3 M_Jup) is superseded by Matthews 2026.
 - **Feng F. et al. 2018** — *Detection of the closest Jovian exoplanet
-  in the ε Indi triple system* (`2018arXiv180308163F`, arXiv:1803.08163).
+  in the ε Indi triple system* (`2018arXiv180308163F`, [arXiv:1803.08163](https://arxiv.org/abs/1803.08163)).
   arXiv preprint; Phase 2 recommended source for the rotation period
   (~35 d, from RV + activity-index periodograms; the 17.8 d signal is
   the half-rotation alias). No refereed bibcode — superseded for the
@@ -252,7 +252,7 @@ modest, quiet photosphere:
 - **Chen M. et al. 2022** — *Precise Dynamical Masses of ε Indi Ba and
   Bb: Evidence of Slowed Cooling at the L/T Transition*, AJ 163, 288
   (`2022AJ....163..288C`, doi:10.3847/1538-3881/ac66d2,
-  arXiv:2205.08077). VLT/NACO relative + FORS2 absolute astrometry of the
+  [arXiv:2205.08077](https://arxiv.org/abs/2205.08077)). VLT/NACO relative + FORS2 absolute astrometry of the
   brown-dwarf pair: Ba (T1–1.5) 66.92 ± 0.36 M_Jup, Bb (T6)
   53.25 ± 0.29 M_Jup. Phase 2 recommended source for ε Indi A's activity
   index (log R'HK = −4.72, Pace 2013) and the adopted system age
@@ -262,14 +262,14 @@ modest, quiet photosphere:
 ### Read (context / methodology, not decision-driving)
 
 - **Matthews E. C. et al. 2024** — JWST/MIRI direct-imaging discovery of
-  ε Indi A b (`2024Natur.633..789M`, arXiv:2503.01599). Establishes the
+  ε Indi A b (`2024Natur.633..789M`, [arXiv:2503.01599](https://arxiv.org/abs/2503.01599)). Establishes the
   ~275 K cold super-Jupiter and the elevated-metallicity / 3–5 µm
   faintness context. Drives the planet b synthesis
   (`docs/phase3/eps-ind-a-b.md`); cited here for the system framing. The
   ar5iv full text was not available in the cache (HTML-only stub);
   numbers are taken from the abstract and from Matthews 2026's recap.
 - **Matthews E. C. et al. 2026** — *A second visit to ε Ind Ab with
-  JWST*, ApJL (doi:10.3847/2041-8213/ae5823, arXiv:2603.08780). Second
+  JWST*, ApJL (doi:10.3847/2041-8213/ae5823, [arXiv:2603.08780](https://arxiv.org/abs/2603.08780)). Second
   JWST/MIRI epoch confirming ammonia + suggesting thick water-ice clouds;
   refined mass 7.6 ± 0.7 M_Jup, a = 20.9 AU, e = 0.244. Drives the planet
   b synthesis; cited here for the system framing.

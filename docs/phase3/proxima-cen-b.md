@@ -3,7 +3,7 @@
 Proxima Centauri b is a 1.055-Earth-mass terrestrial planet on an
 11.18-day, near-circular orbit around the closest star to the Sun
 (0.04848 AU semi-major axis, 0.65× Earth's insolation). Discovered
-by Anglada-Escudé et al. 2016 (Nature 536, 437; arXiv:1609.03449)
+by Anglada-Escudé et al. 2016 (Nature 536, 437; [arXiv:1609.03449](https://arxiv.org/abs/1609.03449))
 from a decade of HARPS, UVES, and follow-up RV monitoring, the
 planet has been refined through successive ESPRESSO + HARPS + NIRPS
 campaigns culminating in the Suárez Mascareño et al. 2025 (SM25)
@@ -15,8 +15,8 @@ favor a circular orbit; the original Anglada-Escudé 2016 fit reported
 an upper limit e < 0.35 rather than a best-fit non-zero eccentricity,
 and the later ESPRESSO + NIRPS data tighten this to e < 0.1 (95% CL).
 
-The planet does not transit (Jenkins et al. 2019, arXiv:1905.01336;
-Gilbert et al. 2021, arXiv:2110.10702 — multiple Spitzer + TESS
+The planet does not transit (Jenkins et al. 2019, [arXiv:1905.01336](https://arxiv.org/abs/1905.01336);
+Gilbert et al. 2021, [arXiv:2110.10702](https://arxiv.org/abs/2110.10702) — multiple Spitzer + TESS
 campaigns rule out transits at the discovery period), so the radius,
 density, and atmospheric properties are inferred rather than measured.
 Climate modeling of Proxima b is now mature: Turbet et al. 2016 first
@@ -32,13 +32,13 @@ environmental states and observational discriminants.
 
 The atmospheric retention question — whether Proxima b has retained
 any significant atmosphere given Proxima's flare environment — remains
-genuinely open. Atri 2020 (1910.09871) computes surface radiation
+genuinely open. Atri 2020 ([1910.09871](https://arxiv.org/abs/1910.09871)) computes surface radiation
 doses lethal to multicellular life under no-atmosphere conditions;
-Lee 2021 (2109.06963) models Venus-analog photochemical escape of
-oxygen at ~10⁹ atoms cm⁻² s⁻¹; Garraffo 2022 (2211.15697) finds
+Lee 2021 ([2109.06963](https://arxiv.org/abs/2109.06963)) models Venus-analog photochemical escape of
+oxygen at ~10⁹ atoms cm⁻² s⁻¹; Garraffo 2022 ([2211.15697](https://arxiv.org/abs/2211.15697)) finds
 stellar-wind ram-pressure spikes of 10⁴–10⁶ × the solar value during
 super-Alfvénic transits. On the other hand, Zuluaga 2018
-(1609.00707) shows that a modest intrinsic magnetic field (~0.1 M⊕
+([1609.00707](https://arxiv.org/abs/1609.00707)) shows that a modest intrinsic magnetic field (~0.1 M⊕
 dipole moment) can provide partial shielding, and Meadows 2018 §3
 notes that all the escape calculations rely on assumptions about
 the early-Proxima XUV history that are themselves uncertain at the
@@ -104,7 +104,7 @@ preserved in Open items.
 | `magnetic_dipole_tilt_deg` | 15 | low | Tie-break: distinct aurora-cap geometry; literature silent on dipole tilt for Proxima b |
 | `magnetosphere_standoff_planet_radii` | 3–11 | high | Garraffo 2022 — magnetopause standoff varies 3–11 R_p over the orbital phase (0.1 G surface field), compressing toward the low end during super-Alfvénic transits |
 | `radiation_belt_present` | false | medium | Garraffo 2022 + Atri 2020 — heavy CME compression precludes stable trapped particle population |
-| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 (1910.09871) SEP→dose framework for 1 bar atmospheric shielding + weak B-field; spikes to 10⁵ during superflares. Atri reports Gray-per-event + enhancement factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
+| `surface_radiation_dose_msv_yr` | 5000 | low | Atri 2020 ([1910.09871](https://arxiv.org/abs/1910.09871)) SEP→dose framework for 1 bar atmospheric shielding + weak B-field; spikes to 10⁵ during superflares. Atri reports Gray-per-event + enhancement factors, not annual mSv/yr, so this yearly figure is a conversion estimate → low |
 | `atmospheric_shielding_g_cm2` | 1000 | high | 1 bar atmosphere → ~1000 g/cm² column |
 | `aurora_present` | true | high | Atm + B-field both present; Garraffo 2022 + Vida 2019 frequent superflare cadence drives intense precipitation |
 | `aurora_color_primary_hex` | `#4DFF4D` ([OI] 557.7 nm green) | medium | Tie-break: N₂/CO₂/O₂ trace atmosphere chemistry; green oxygen line dominant per Earth-analog spectroscopy |
@@ -137,7 +137,7 @@ reads as a near-black disk against the bright glacial ice that
 covers the antistellar hemisphere.
 
 The glacial ice surface (`#d4cab8` cfg tint) covers ~75% of the
-planet. Sergeev 2020 (arXiv:2004.03007) finds that the substellar
+planet. Sergeev 2020 ([arXiv:2004.03007](https://arxiv.org/abs/2004.03007)) finds that the substellar
 convective plume drives sustained subduction of warm air down to the
 surface beneath the open-water disk, which in turn maintains the ice
 boundary against the cold antistellar drag. Surface morphology at
@@ -145,7 +145,7 @@ the terminator is dominated by ridges from glacial flow plus exposed
 bedrock at high-pressure ridge axes (cfg `surface_tint_rgb_hex_accent
 = #7a4a30` for the bedrock exposures).
 
-Shields 2018 (1808.09977) raises the alternative hydrohalite-snowball
+Shields 2018 ([1808.09977](https://arxiv.org/abs/1808.09977)) raises the alternative hydrohalite-snowball
 scenario: if salinity is sufficient and the climate falls into a
 snowball regime, salt deposits on the ice surface enhance albedo and
 stabilize the snowball state. This is preserved as an Open-items
@@ -183,17 +183,17 @@ Cloud cover is 55% in the cfg — chosen as a midpoint of the Boutle
 2017 + Cohen 2023 + Sergeev 2020 range. The cloud morphology is
 characteristic of tidally-locked synchronous M-dwarf planets:
 a substellar convective cluster (Sergeev 2020) with high cirrus
-shield, extra-tropical Rossby wave trains (Cohen 2023, 2211.11887)
+shield, extra-tropical Rossby wave trains (Cohen 2023, [2211.11887](https://arxiv.org/abs/2211.11887))
 that produce traveling cloud bands at ±30–60° latitude, and a
 clearer nightside (Joshi 2020 dark-side inversion analog). The
 cfg `cloud_morphology` field captures all three components in a
 single string.
 
-Photochemistry (Yates 2020, 1912.08743; Braam 2024, 2410.19108) is
+Photochemistry (Yates 2020, [1912.08743](https://arxiv.org/abs/1912.08743); Braam 2024, [2410.19108](https://arxiv.org/abs/2410.19108)) is
 dominated by O₃ production around the day-night terminator, with
 the canonical M-dwarf "stratospheric ozone ring" producing a UV
 signal that may be observable in future transmission spectroscopy
-(though Proxima b is non-transiting). Scheucher 2020 (2003.02036)
+(though Proxima b is non-transiting). Scheucher 2020 ([2003.02036](https://arxiv.org/abs/2003.02036))
 adds the cosmic-ray-induced chemistry contribution — important
 during super-Alfvénic transits when the magnetosphere is heavily
 compressed.
@@ -205,7 +205,7 @@ for analogous scenarios). Superflare events spike the dose to 10⁵
 mSv per event, well above any biotic threshold but spatially and
 temporally localized.
 
-Water-vapor transit ambiguity (Macdonald 2024, 2402.12253) means
+Water-vapor transit ambiguity (Macdonald 2024, [2402.12253](https://arxiv.org/abs/2402.12253)) means
 even if Proxima b were transiting, distinguishing a humid 1-bar
 atmosphere from a desiccated surface would require very high-
 precision retrievals; the cfg's atmospheric H₂O abundance is an
@@ -224,7 +224,7 @@ The spin-orbit resonance is 1:1 (synchronous) because the orbital
 eccentricity is zero (SM25). For any non-zero eccentricity Proxima b
 would migrate into a higher-order resonance (Makarov 2012 framework),
 producing intermittent insolation at the substellar point — Braam
-2025 (2410.19108) explored spin-orbit resonance climate effects but
+2025 ([2410.19108](https://arxiv.org/abs/2410.19108)) explored spin-orbit resonance climate effects but
 the SM25 zero-eccentricity result rules them out for the cfg.
 
 Libration amplitude is < 1° (negligible). The substellar point's
@@ -233,7 +233,7 @@ Surface synthesis section. The daily diurnal cycle is absent; the
 only temporal modulation comes from Proxima's 7-year activity cycle,
 which slightly modulates the substellar insolation amplitude.
 
-Magnetic dynamo: Zuluaga 2018 (1609.00707) finds that for a rocky
+Magnetic dynamo: Zuluaga 2018 ([1609.00707](https://arxiv.org/abs/1609.00707)) finds that for a rocky
 planet of 1 M⊕ with Earth-like core structure and rotation periods
 of 10+ days, a modest intrinsic magnetic dipole is plausible
 (~ 0.01–1.0 M⊕ moment). The cfg adopts 0.1 M⊕ as a tie-break
@@ -281,28 +281,28 @@ fields.
 
 - **Anglada-Escudé G. et al. 2016** — *A terrestrial planet candidate
   in a temperate orbit around Proxima Centauri*, Nature 536, 437
-  (arXiv:1609.03449). Discovery paper. Best-fit P = 11.186 d, Msini =
+  ([arXiv:1609.03449](https://arxiv.org/abs/1609.03449)). Discovery paper. Best-fit P = 11.186 d, Msini =
   1.27 M⊕, a = 0.0485 AU.
 - **Suárez Mascareño A. et al. 2025** — *Diving into the planetary
-  system of Proxima with NIRPS* (arXiv:2507.21751). Current best
+  system of Proxima with NIRPS* ([arXiv:2507.21751](https://arxiv.org/abs/2507.21751)). Current best
   orbital fit: P = 11.18465 d, e = 0, Msini = 1.055 M⊕.
 - **Suárez Mascareño A. et al. 2020** — *Revisiting Proxima with
-  ESPRESSO* (arXiv:2005.12114). Intermediate refinement.
+  ESPRESSO* ([arXiv:2005.12114](https://arxiv.org/abs/2005.12114)). Intermediate refinement.
 - **Faria J. P. et al. 2022** — *A candidate short-period sub-Earth
-  orbiting Proxima Centauri* (arXiv:2202.05188). Refined b mass to
+  orbiting Proxima Centauri* ([arXiv:2202.05188](https://arxiv.org/abs/2202.05188)). Refined b mass to
   1.07 M⊕; companion Proxima d.
 - **Boutle I. A. et al. 2017** — *Exploring the climate of Proxima B
   with the Met Office Unified Model*, A&A 601, A120
-  (arXiv:1702.08463). UK Met Office UM GCM; substellar open-water
+  ([arXiv:1702.08463](https://arxiv.org/abs/1702.08463)). UK Met Office UM GCM; substellar open-water
   lens, eccentricity sensitivity, Earth-like and simplified-N₂
   scenarios.
 - **Turbet M. et al. 2016** — *The habitability of Proxima Centauri b.
   II. Possible climates and observability*, A&A 596, A112
-  (arXiv:1608.06827). 1D climate framework; aquaplanet to snowball
+  ([arXiv:1608.06827](https://arxiv.org/abs/1608.06827)). 1D climate framework; aquaplanet to snowball
   range.
 - **Meadows V. S. et al. 2018** — *The Habitability of Proxima
   Centauri b: Environmental States and Observational Discriminants*,
-  AsBio 18, 133 (arXiv:1608.08620). Atmospheric retention scenarios
+  AsBio 18, 133 ([arXiv:1608.08620](https://arxiv.org/abs/1608.08620)). Atmospheric retention scenarios
   + observational discriminants.
 - **Del Genio A. D. et al. 2019** — *Habitable Climate Scenarios for
   Proxima Centauri b with a Dynamic Ocean*, AsBio 19, 99
@@ -311,89 +311,89 @@ fields.
   enhances heat redistribution and widens the open-water disk.
 - **Sergeev D. E. et al. 2020** — *Atmospheric Convection Plays a
   Key Role in the Climate of Tidally Locked Terrestrial Exoplanets*,
-  ApJ 894, 84 (arXiv:2004.03007). Substellar convection plume
+  ApJ 894, 84 ([arXiv:2004.03007](https://arxiv.org/abs/2004.03007)). Substellar convection plume
   drives heat transport.
 - **Salazar A. M. et al. 2020** — *The Effect of Substellar Continent
   Size on Ocean Dynamics of Proxima Centauri b*, ApJL 896, L34
-  (arXiv:2005.14185). Substellar continent geometry sensitivity.
+  ([arXiv:2005.14185](https://arxiv.org/abs/2005.14185)). Substellar continent geometry sensitivity.
 - **Lewis N. T. et al. 2018** — *The Influence of a Substellar
   Continent on the Climate of a Tidally Locked Exoplanet*, ApJ 854,
-  171 (arXiv:1802.00378). Dry substellar continent stabilizes
+  171 ([arXiv:1802.00378](https://arxiv.org/abs/1802.00378)). Dry substellar continent stabilizes
   circulation.
 - **Joshi M. M. et al. 2020** — *Earth's Polar Night Boundary Layer
   as an Analog for Dark Side Inversions on Synchronously Rotating
-  Planets*, ApJ 892, 81 (arXiv:2003.06306). Nightside inversion.
+  Planets*, ApJ 892, 81 ([arXiv:2003.06306](https://arxiv.org/abs/2003.06306)). Nightside inversion.
 - **Yates J. S. et al. 2020** — *Ozone chemistry on tidally locked
-  M dwarf planets*, MNRAS 492, 1691 (arXiv:1912.08743). Terminator
+  M dwarf planets*, MNRAS 492, 1691 ([arXiv:1912.08743](https://arxiv.org/abs/1912.08743)). Terminator
   ozone ring.
 - **Cohen M. et al. 2023** — *Traveling Planetary-scale Waves Cause
   Cloud Variability on Tidally Locked Aquaplanets*, ApJ 942, 86
-  (arXiv:2211.11887). Rossby-wave cloud variability.
+  ([arXiv:2211.11887](https://arxiv.org/abs/2211.11887)). Rossby-wave cloud variability.
 - **Scheucher M. et al. 2020** — *Proxima Centauri b: A Strong Case
   for Including Cosmic-Ray-induced Chemistry in Atmospheric
-  Biosignature Studies*, ApJ 893, 12 (arXiv:2003.02036). Cosmic-ray
+  Biosignature Studies*, ApJ 893, 12 ([arXiv:2003.02036](https://arxiv.org/abs/2003.02036)). Cosmic-ray
   driven photochemistry.
 - **Shields A. L. et al. 2018** — *Hydrohalite Salt-albedo Feedback
-  Could Cool M-dwarf Planets*, ApJL 866, L18 (arXiv:1808.09977).
+  Could Cool M-dwarf Planets*, ApJL 866, L18 ([arXiv:1808.09977](https://arxiv.org/abs/1808.09977)).
   Snowball variant context.
 - **Zuluaga J. I. et al. 2018** — *Magnetic properties of Proxima
-  Centauri b analogues*, MNRAS 480, 4225 (arXiv:1609.00707).
+  Centauri b analogues*, MNRAS 480, 4225 ([arXiv:1609.00707](https://arxiv.org/abs/1609.00707)).
   Plausible dipole moment range.
 - **Atri D. et al. 2020** — *Stellar Proton Event-induced surface
-  radiation dose* (arXiv:1910.09871). Surface dose calculation.
+  radiation dose* ([arXiv:1910.09871](https://arxiv.org/abs/1910.09871)). Surface dose calculation.
 - **Walterová M. & Běhounková M. 2020** — *Thermal and Orbital
-  Evolution of Low-mass Exoplanets* (arXiv:2007.12459). Tidal lock
+  Evolution of Low-mass Exoplanets* ([arXiv:2007.12459](https://arxiv.org/abs/2007.12459)). Tidal lock
   timescale.
 - **Garraffo C. et al. 2022** — *Revisiting the Space Weather
-  Environment of Proxima Centauri b*, ApJL 941, L8 (arXiv:2211.15697).
+  Environment of Proxima Centauri b*, ApJL 941, L8 ([arXiv:2211.15697](https://arxiv.org/abs/2211.15697)).
   Stellar wind ram pressure spikes; magnetosphere compression.
 - **Lee Y. et al. 2021** — *Exosphere Modeling of Proxima b: A Case
-  Study of Photochemical Escape* (arXiv:2109.06963). Venus-analog
+  Study of Photochemical Escape* ([arXiv:2109.06963](https://arxiv.org/abs/2109.06963)). Venus-analog
   oxygen escape rate.
 - **Macdonald E. et al. 2024** — *Water vapour transit ambiguities
-  for habitable M-Earths* (arXiv:2402.12253). Atmospheric humidity
+  for habitable M-Earths* ([arXiv:2402.12253](https://arxiv.org/abs/2402.12253)). Atmospheric humidity
   retrieval ambiguity.
 - **Galuzzo D. et al. 2021** — *Three-dimensional Climate Simulations
   for the Detectability of Proxima Centauri b*, ApJ 909, 191
-  (arXiv:2102.03255). 3D detectability framework.
+  ([arXiv:2102.03255](https://arxiv.org/abs/2102.03255)). 3D detectability framework.
 - **Braam M. et al. 2024** — *Earth-like Exoplanets in Spin–Orbit
-  Resonances*, MNRAS 528, 3098 (arXiv:2410.19108). Climate dynamics
+  Resonances*, MNRAS 528, 3098 ([arXiv:2410.19108](https://arxiv.org/abs/2410.19108)). Climate dynamics
   + 3D photochemistry.
 
 ### Read (context / methodology, not decision-driving)
 
 - **Bonfils X. et al. 2018** — *A temperate exo-Earth around a quiet
-  M dwarf at 3.4 parsec* (arXiv:1711.06177). Sister-system context.
+  M dwarf at 3.4 parsec* ([arXiv:1711.06177](https://arxiv.org/abs/1711.06177)). Sister-system context.
 - **Jenkins J. S. et al. 2019** — *Proxima Centauri b is not a
-  transiting exoplanet* (arXiv:1905.01336). Ruled out transit.
+  transiting exoplanet* ([arXiv:1905.01336](https://arxiv.org/abs/1905.01336)). Ruled out transit.
 - **Gilbert E. A. et al. 2021** — *No Transits of Proxima Centauri
-  planets in high cadence TESS data* (arXiv:2110.10702). Reinforces
+  planets in high cadence TESS data* ([arXiv:2110.10702](https://arxiv.org/abs/2110.10702)). Reinforces
   Jenkins.
 - **Hammond T. et al. 2025** — Thermal emission spectra of nearby
-  rocky exoplanets (arXiv:2504.00978). Multiple-planet spectra.
+  rocky exoplanets ([arXiv:2504.00978](https://arxiv.org/abs/2504.00978)). Multiple-planet spectra.
 - **De Luca P. et al. 2024** — Ozone-climate dynamics
-  (arXiv:2404.17972).
+  ([arXiv:2404.17972](https://arxiv.org/abs/2404.17972)).
 - **Boldog Á. et al. 2024** — Interior water content
-  (arXiv:2312.01893).
+  ([arXiv:2312.01893](https://arxiv.org/abs/2312.01893)).
 - **Noack L. et al. 2021** — *Interior heating and outgassing of
   Proxima Centauri b* (`2021A&A...651A.103N`, no arXiv). Tier A
   manual followup; cited via abstract.
 - **Herath M. et al. 2021** — *Interior structures of Proxima b and
   Ross 128 b* (`2021MNRAS.500..333H`, no arXiv). Tier A manual
   followup; cited via abstract.
-- **Reiners A. et al. 2018** — Proxima magnetic field (arXiv:1711.06576).
-- **Vida K. et al. 2019** — Proxima flare statistics (arXiv:1907.12580).
+- **Reiners A. et al. 2018** — Proxima magnetic field ([arXiv:1711.06576](https://arxiv.org/abs/1711.06576)).
+- **Vida K. et al. 2019** — Proxima flare statistics ([arXiv:1907.12580](https://arxiv.org/abs/1907.12580)).
 - **Fuhrmeister B. et al. 2022** — Proxima X-ray + FUV simultaneous
-  flare (arXiv:2204.09270).
+  flare ([arXiv:2204.09270](https://arxiv.org/abs/2204.09270)).
 
 ### Read (instrument / non-cfg-decisive)
 
 - **Hardegree-Ullman K. et al. 2025** — Bioverse direct-imaging
-  prospects (arXiv:2405.11423). Future-observability framework.
+  prospects ([arXiv:2405.11423](https://arxiv.org/abs/2405.11423)). Future-observability framework.
 - **Singla M. et al. 2023** — Reflection spectra of terrestrial
-  exoplanets (arXiv:2303.00540). High-contrast imaging.
+  exoplanets ([arXiv:2303.00540](https://arxiv.org/abs/2303.00540)). High-contrast imaging.
 - **Pearce L. A. et al. 2025** — Direct-detection sky position
-  predictions (arXiv:2509.06747). Mission planning.
+  predictions ([arXiv:2509.06747](https://arxiv.org/abs/2509.06747)). Mission planning.
 
 ### Not read — no arXiv preprint or low-priority (~85 papers)
 
@@ -423,7 +423,7 @@ outgassing), **Herath 2021** (interior structure).
   allow up to ~40 wt% water. A Hycean-style variant with much
   deeper substellar ocean and possible water-cloud opacity is
   another future cfg branch.
-- **Spin-orbit resonance climate**: Braam 2024 (2410.19108)
+- **Spin-orbit resonance climate**: Braam 2024 ([2410.19108](https://arxiv.org/abs/2410.19108))
   explored non-synchronous spin-orbit resonance climates. SM25's
   zero-eccentricity orbit makes the synchronous case canonical,
   but a re-analysis with weak eccentricity could change this.

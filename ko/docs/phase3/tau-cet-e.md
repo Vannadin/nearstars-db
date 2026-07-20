@@ -2,7 +2,7 @@
 # τ Ceti e — Phase 3 Synthesis (Refuted — included as documented divergence)
 
 τ Ceti e 는 본래 Feng et al. 2017 (`2017AJ....154..135F`,
-arXiv:1708.02051) 이 metal-poor G8V τ Ceti 주위에서 발표한 네 개
+[arXiv:1708.02051](https://arxiv.org/abs/1708.02051)) 이 metal-poor G8V τ Ceti 주위에서 발표한 네 개
 RV 행성 후보 중 하나였습니다 — 162.87 일 주기로 0.538 AU 에서 도는
 3.93 M⊕ (M sin i) super-Earth 로, optimistic 거주가능영역 (Kopparapu et al. 2014)
 의 안쪽 가장자리 바로 안에 자리잡고 있었습니다. 네 검출 중에서
@@ -252,7 +252,7 @@ cfg 천체가 만들어지지 않으므로 cfg 와 무관.
 
 - **Feng F. et al. 2017** — *Color difference makes a difference:
   four planet candidates around τ Ceti*, AJ 154, 135
-  (`2017AJ....154..135F`, arXiv:1708.02051). 원래 발견 논문.
+  (`2017AJ....154..135F`, [arXiv:1708.02051](https://arxiv.org/abs/1708.02051)). 원래 발견 논문.
   e 를 P = 162.87 d, M sin i = 3.93 M⊕, e = 0.18 로 보고. 위
   역사적 Decisions 행을 정박. Feng 2017 §6 자체가 e 가 네 행성 중
   amplitude 가 가장 마지널함을 경계.
@@ -270,7 +270,7 @@ cfg 천체가 만들어지지 않으므로 cfg 와 무관.
 ### Read (context for habitability framing)
 
 - **Kopparapu R. K. et al. 2014** — *주계열별 주위 거주가능영역*,
-  ApJL 787, L29 (arXiv:1404.5292, 캐시 `_papers/1404.5292.md`).
+  ApJL 787, L29 ([arXiv:1404.5292](https://arxiv.org/abs/1404.5292), 캐시 `_papers/1404.5292.md`).
   G8V 의 보수적 HZ 안쪽 가장자리는 ~1.05 S⊕. optimistic 안쪽
   가장자리는 ~0.75 S⊕ 까지 안쪽으로 확장되어 Feng 2017 의 e 를
   1.58 S⊕ 의 optimistic HZ 안에 편안하게 놓고, e 를 "거주가능"

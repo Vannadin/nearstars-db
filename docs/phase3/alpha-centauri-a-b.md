@@ -92,7 +92,7 @@ conditional on its existence and on the favored orbit family.
 | `ring_color_hex` | `#6e6253` (dark warm grey — rocky/dusty, low albedo) | low | Tie-break: Beichman §5.3 assumes an asteroid-like Bond albedo A_B ≈ 0.1 for the ring → a **dark rocky/dusty ring**, not Saturn's bright ice. Ring T ≈ 209–257 K |
 | `ring_opacity` | 0.85 | low | Beichman §5.3 — "optically thick" ring (the whole point is to add enough cross-section to match the brightness) |
 | `ring_observed` | false | high | The ring is a **model interpretation** of the F1550C brightness, not resolved; S1 is an unresolved point source |
-| `magnetic_field_strength_microtesla_equator` | 170 | low | Reiners & Christensen 2010 (arXiv:1007.1514) depth-corrected dipole scaling: B_eq ≈ 172 µT for 0.378 M_Jup at 5.3 Gyr (B_pol ≈ 345 µT); Jupiter same-formula sanity-check passes. Supersedes the earlier ungrounded ~500 µT Saturn-analog guess. Caveat: 0.378 M_Jup sits at the giant-regime floor — He stratification could push it lower (cf. Saturn ~21 µT). Canonical method: docs/reference/planetary-dynamo-scaling.md |
+| `magnetic_field_strength_microtesla_equator` | 170 | low | Reiners & Christensen 2010 ([arXiv:1007.1514](https://arxiv.org/abs/1007.1514)) depth-corrected dipole scaling: B_eq ≈ 172 µT for 0.378 M_Jup at 5.3 Gyr (B_pol ≈ 345 µT); Jupiter same-formula sanity-check passes. Supersedes the earlier ungrounded ~500 µT Saturn-analog guess. Caveat: 0.378 M_Jup sits at the giant-regime floor — He stratification could push it lower (cf. Saturn ~21 µT). Canonical method: docs/reference/planetary-dynamo-scaling.md |
 | `aurora_present` | false | medium | The quiet G2V wind (log R'HK = −4.95) at 1.6 AU is a weak plasma driver; like the other quiet-host giants, no strong aurora expected. cfg renders none |
 | `star_apparent_angular_diameter_deg` | 0.41 | high | derived: 2 R_star / a = 2 × 1.2234 R☉ / 1.6 AU ≈ 0.41° — slightly smaller than the Sun from Earth (0.53°). Varies over the orbit: ~0.45° at periastron (1.44 AU), ~0.37° at apastron (1.76 AU) |
 | `stellar_illumination_color_temp_k` | 5847 | high | inherited from host Phase 3 (`docs/phase3/alpha-centauri-a.md`) — G2V, near-white warm sunlight |
@@ -278,7 +278,7 @@ habitable zone (too warm), so 1.6 AU is the nearest robust HZ orbit.
   thick ring, Roche zone, A_B ≈ 0.1). Cornerstone — drives orbit, mass,
   temperature, atmosphere, and ring rows.
 - **Sanghi & Beichman et al. 2025** — *Worlds Next Door II*
-  (arXiv:2508.03812). The detection-vetting + orbit-dynamics paper.
+  ([arXiv:2508.03812](https://arxiv.org/abs/2508.03812)). The detection-vetting + orbit-dynamics paper.
   S/N 5.4 (≈4σ) PCA-KLIP detection; rules out detector / ε Mus PSF /
   α Cen B speckle / background / Solar-System-object explanations; links
   S1 to the 2019 VLT/NEAR **C1** (Wagner et al. 2021); ~52% of stable

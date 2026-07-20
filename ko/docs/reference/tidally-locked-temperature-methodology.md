@@ -239,7 +239,7 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
   정의한다.
 
 - **Yang, J., Cowan, N. B. & Abbot, D. S. (2013)** — *ApJ Letters* 771, L45.
-  **arXiv:1307.0515.** 항성직하점 구름의 안정화 되먹임이 안쪽 거주가능구역을 넓힌다.
+  **[arXiv:1307.0515](https://arxiv.org/abs/1307.0515).** 항성직하점 구름의 안정화 되먹임이 안쪽 거주가능구역을 넓힌다.
   두꺼운 대기 / 워터벨트 해석을 뒷받침한다.
 
 - **Hu, Y. & Yang, J. (2014)** — *PNAS* 111, 629. arXiv 프리프린트는 없고, ADS
@@ -248,26 +248,26 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
   밀어내는 "랍스터" / 비대칭 안구 상태를 보인다.
 
 - **Kite, E. S., Gaidos, E. & Manga, M. (2011)** — *ApJ* 743, 41.
-  **arXiv:1109.2668.** 조석고정 행성의 기후 불안정성 — 고정 대기를 붕괴로 기울일 수
+  **[arXiv:1109.2668](https://arxiv.org/abs/1109.2668).** 조석고정 행성의 기후 불안정성 — 고정 대기를 붕괴로 기울일 수
   있는 되먹임이다(Layer 2 맥락).
 
-- **Kopparapu, R. K. et al. (2016)** — *ApJ* 819, 84. **arXiv:1602.05176.**
+- **Kopparapu, R. K. et al. (2016)** — *ApJ* 819, 84. **[arXiv:1602.05176](https://arxiv.org/abs/1602.05176).**
   *동주기 자전* 행성에 대한 거주가능구역 안쪽 경계 — 고정 행성에 특화된 플럭스/HZ 틀로,
   2013년의 일반 HZ 논문보다 본 주제에 더 직접적이다.
 
-- **Haqq-Misra, J. et al. (2018)** — *ApJ* 852, 67. **arXiv:1710.00435.**
+- **Haqq-Misra, J. et al. (2018)** — *ApJ* 852, 67. **[arXiv:1710.00435](https://arxiv.org/abs/1710.00435).**
   동주기 자전 행성의 순환 영역(느린 자전체 / Rhines 자전체 / 빠른 자전체)을 구분한다.
   이 영역이 주야 대비의 구조를 정하므로, 곧바로 Layer 2의 입력이 된다.
 
 - **Checlair, J., Menou, K. & Abbot, D. S. (2017)** — *ApJ* 845, 132.
-  **arXiv:1705.08904.** "No Snowball on Habitable Tidally Locked Planets". 항성직하
+  **[arXiv:1705.08904](https://arxiv.org/abs/1705.08904).** "No Snowball on Habitable Tidally Locked Planets". 항성직하
   융해 영역이 끝까지 남으므로 완전히 고정된 해양 행성은 전구 빙결에 저항한다 — §5의
   눈덩이 항목을 보완한다.
 
-- **Yang, J. et al. (2019)** — *ApJ* 871, 29. **arXiv:1902.02103.** 해양 역학과
+- **Yang, J. et al. (2019)** — *ApJ* 871, 29. **[arXiv:1902.02103](https://arxiv.org/abs/1902.02103).** 해양 역학과
   거주가능구역 안쪽 경계 — 안구/랍스터 표면 온도장에서 해양 열수송이 하는 역할이다.
 
-- **Hammond, M. et al. (2022)** — *PSJ* 3, 32. **arXiv:2201.02685.** 빠르게/동주기로
+- **Hammond, M. et al. (2022)** — *PSJ* 3, 32. **[arXiv:2201.02685](https://arxiv.org/abs/2201.02685).** 빠르게/동주기로
   자전하는 행성을 위한 에너지 평형 모형 — 주야 온도장에 대한, 전체 GCM의 경량 해석적
   대안이다.
 
@@ -276,29 +276,29 @@ T_ss 상한 쪽으로, 밤면은 동결 쪽으로).
   지표수 보유량이 낮은 육지/사구 세계가 물 풍부한 아쿠아 행성보다 거주가능구역이
   넓다는 결과다.
 
-- **Wordsworth, R. (2015)** — *ApJ* 806, 180. **arXiv:1412.5575**(기존에 돌던 id
+- **Wordsworth, R. (2015)** — *ApJ* 806, 180. **[arXiv:1412.5575](https://arxiv.org/abs/1412.5575)**(기존에 돌던 id
   1505.07087은 틀림). 대기 열 재분배·붕괴 이론과 주야 ΔT·지표 풍속 스케일링이다.
 
-- **Koll, D. D. B. & Abbot, D. S. (2016)** — *ApJ* 825, 99. **arXiv:1605.01066**
+- **Koll, D. D. B. & Abbot, D. S. (2016)** — *ApJ* 825, 99. **[arXiv:1605.01066](https://arxiv.org/abs/1605.01066)**
   (기존에 돌던 id 1603.05229는 틀림). 건조 고정 암석 대기의 주야 온도 구조와 풍속에
   대한 WTG + 열기관 모형이다.
 
-- **Koll, D. D. B. (2022)** — *ApJ* 924, 134. **arXiv:1907.13145.** 전체 GCM 없이
+- **Koll, D. D. B. (2022)** — *ApJ* 924, 134. **[arXiv:1907.13145](https://arxiv.org/abs/1907.13145).** 전체 GCM 없이
   쓸 수 있는 압력 의존 주야 대비 스케일링이다(두꺼운 대기 → 작은 대비). Layer 2의
   주력 도구.
 
-- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **arXiv:1608.06827.** Proxima b의
+- **Turbet, M. et al. (2016)** — *A&A* 596, A112. **[arXiv:1608.06827](https://arxiv.org/abs/1608.06827).** Proxima b의
   LMD GCM. ~1 bar N₂+CO₂에 대해 항성직하점 ~290 K / 야간면 ~150 K / 평균 ~250 K. Layer 3
   앵커.
 
-- **Boutle, I. A. et al. (2017)** — *A&A* 601, A120. **arXiv:1702.08463.** Proxima b의
+- **Boutle, I. A. et al. (2017)** — *A&A* 601, A120. **[arXiv:1702.08463](https://arxiv.org/abs/1702.08463).** Proxima b의
   UK Met Office Unified Model. Turbet+ 2016 온도 구조의 독립 확증. Layer 3 앵커.
 
 - **Kopparapu, R. K. et al. (2013)** — *ApJ* 765, 131 (정오표 *ApJ* 770, 82).
-  **arXiv:1301.6674.** 거주가능구역 경계 추정. Layer 1에서 쓰는 플럭스 맥락(`S`)과
+  **[arXiv:1301.6674](https://arxiv.org/abs/1301.6674).** 거주가능구역 경계 추정. Layer 1에서 쓰는 플럭스 맥락(`S`)과
   안/바깥 경계 틀을 제공한다.
 
-- **Ho, S. & Turner, E. L. (2011)** — *ApJ* 739, 26. **arXiv:1007.0245.** 관련 문헌
+- **Ho, S. & Turner, E. L. (2011)** — *ApJ* 739, 26. **[arXiv:1007.0245](https://arxiv.org/abs/1007.0245).** 관련 문헌
   (기후가 아님). RV 최소질량 → 진질량 역투영 통계 방법으로, 파이프라인의 다른 곳에서
   이 행성들의 `m sin i`를 질량으로 바꾸는 데 쓴다.
 

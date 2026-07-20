@@ -343,7 +343,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   cross-sections + King depolarization for the common atmospheric gases. The σ_R(λ)
   ground truth for §3. (275 cites.)
 
-- **Gao, P. et al. (2021)** — *JGR Planets* 126, e06655. **arXiv:2102.03480.**
+- **Gao, P. et al. (2021)** — *JGR Planets* 126, e06655. **[arXiv:2102.03480](https://arxiv.org/abs/2102.03480).**
   *Aerosols in Exoplanet Atmospheres* — the canonical modern review of aerosol
   formation, microphysics, and their effect on spectra across the planetary range.
   §4. (125 cites.)
@@ -364,7 +364,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   Class II is the temperate-giant case for the Polyphemus example. §7. (273 cites.)
 
 - **Cahoy, K. L., Marley, M. S. & Fortney, J. J. (2010)** — *ApJ* 724, 189.
-  **arXiv:1009.3071.** Exoplanet albedo spectra and colors as a function of phase,
+  **[arXiv:1009.3071](https://arxiv.org/abs/1009.3071).** Exoplanet albedo spectra and colors as a function of phase,
   separation, and metallicity — how reflected color shifts with system parameters.
   §6 context. (135 cites.)
 
@@ -404,7 +404,7 @@ exists, with the ADS bibcode), and one line on what it contributes. Citation cou
   §7. (316 cites.)
 
 - **Krissansen-Totton, J., Schwieterman, E. W. et al. (2016)** — *ApJ* 817, 31.
-  **arXiv:1512.00502.** *Is the Pale Blue Dot Unique?* — disk-integrated photometric
+  **[arXiv:1512.00502](https://arxiv.org/abs/1512.00502).** *Is the Pale Blue Dot Unique?* — disk-integrated photometric
   color classification of solar-system bodies; closest astronomy precedent for color
   space placement (not the colorimetry matrix). §6. (31 cites.)
 

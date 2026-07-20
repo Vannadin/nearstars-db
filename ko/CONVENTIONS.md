@@ -113,7 +113,7 @@
 **이유:** 2026-06-23 사건: 서브에이전트가 WebSearch + 내 하드코딩 arXiv ID 사용 → 여러 잘못 ID(Pierrehumbert 논문은 무관 수학, Hu & Yang ID는 실제로 Leconte 2013) + canonical 논문 누락. ADS-큐레이션 권한 + 동결 캐시로 전환.
 **상세:**
 - 흐름: `docs/phase3/_bib/<slug>.yaml`에서 arxiv_id 핀 → `fetch_arxiv_texts.py` 실행 → 캐시 읽기(웹 아님) → 서브에이전트 캐시 라인 인용으로 값 검증 → 메인 검증
-- 유령 논문 방지(2026-06-20 교훈): 논문을 위조로 플래그하기 전에 **웹/ADS/arXiv로 비존재 검증**. "우리 캐시에 없음" ≠ "존재하지 않음". Yadav & Thorngren 2017(1709.05676)과 Reiners & Christensen 2010(1007.1514)은 둘 다 실제지만 범위 밖/미캐시.
+- 유령 논문 방지(2026-06-20 교훈): 논문을 위조로 플래그하기 전에 **웹/ADS/arXiv로 비존재 검증**. "우리 캐시에 없음" ≠ "존재하지 않음". Yadav & Thorngren 2017([1709.05676](https://arxiv.org/abs/1709.05676))과 Reiners & Christensen 2010([1007.1514](https://arxiv.org/abs/1007.1514))은 둘 다 실제지만 범위 밖/미캐시.
 **출처:** `feedback_ads_paper_discipline.md`
 
 ### 3.3 논문 레퍼런스는 링크로(NEARSTARS)

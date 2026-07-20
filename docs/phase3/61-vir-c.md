@@ -275,13 +275,13 @@ Combining the surface and atmosphere decisions:
   (Msini = 18.2 ± 1.1 M⊕). HIRES + AAT joint RV solution. All
   Decisions table orbital + mass values anchor here.
 - **Owen J. E. & Wu Y. 2017** — *The evaporation valley in the
-  Kepler planets*, ApJ 847, 29 (`2017ApJ...847...29O`, arXiv:1705.10810).
+  Kepler planets*, ApJ 847, 29 (`2017ApJ...847...29O`, [arXiv:1705.10810](https://arxiv.org/abs/1705.10810)).
   Photoevaporation-valley physics. Places c well to the right of the
   loss boundary (XUV-driven loss ~0.6% of envelope over 6 Gyr).
   Anchors `atmosphere_present = true` with high confidence.
 - **Lopez E. D. & Fortney J. J. 2014** — *Understanding the
   mass-radius relation for sub-Neptunes*, ApJ 792, 1
-  (`2014ApJ...792....1L`, arXiv:1311.0329). Sub-Neptune envelope
+  (`2014ApJ...792....1L`, [arXiv:1311.0329](https://arxiv.org/abs/1311.0329)). Sub-Neptune envelope
   mass-radius scaling. For 18 M⊕ with 3–5% H/He envelope, R = 4.0–5.0
   R⊕; cfg picks 4.5 R⊕. Anchors the `radius_rearth` tie-break.
 - **Howe A. R. et al. 2014** — *Mass-radius relations and core-envelope
@@ -291,35 +291,35 @@ Combining the surface and atmosphere decisions:
   the water-rich alternative.
 - **Madhusudhan N. 2012** — *C/O ratio as a dimension for
   characterizing exoplanetary atmospheres*, ApJ 758, 36
-  (`2012ApJ...758...36M`, arXiv:1209.2412). Sub-Neptune
+  (`2012ApJ...758...36M`, [arXiv:1209.2412](https://arxiv.org/abs/1209.2412)). Sub-Neptune
   primordial-envelope composition baseline; drives the H/He primary
   + trace condensable composition.
 - **Moses J. I. et al. 2013** — *Compositional diversity in the
   atmospheres of hot Neptunes*, ApJ 777, 34 (`2013ApJ...777...34M`,
-  arXiv:1306.5178). Photochemistry of sub-Neptunes; informs the
+  [arXiv:1306.5178](https://arxiv.org/abs/1306.5178)). Photochemistry of sub-Neptunes; informs the
   CH₄/HCN/photochemical-haze chain.
 - **Morley C. V. et al. 2015** — *Thermal emission and reflected
   light spectra of super Earths with flat transmission spectra*, ApJ
-  815, 110 (`2015ApJ...815..110M`, arXiv:1511.01492). Hazy
+  815, 110 (`2015ApJ...815..110M`, [arXiv:1511.01492](https://arxiv.org/abs/1511.01492)). Hazy
   sub-Neptune retrieval framework; drives the `atmosphere_tint` and
   `cloud_tint` tie-break (warm cream haze under solar illumination).
 - **Lavvas P. & Koskinen T. 2017** — *Aerosol properties of the
   atmospheres of extrasolar giant planets*, ApJ 847, 32
-  (`2017ApJ...847...32L`, arXiv:1707.08077). Sub-Neptune photochemical
+  (`2017ApJ...847...32L`, [arXiv:1707.08077](https://arxiv.org/abs/1707.08077)). Sub-Neptune photochemical
   haze formation mechanism; informs the global cloud cover and haze
   optical depth.
 - **Kreidberg L. et al. 2014** — *Clouds in the atmosphere of the
   super-Earth exoplanet GJ 1214 b*, Nature 505, 69
-  (`2014Natur.505...69K`, arXiv:1401.0022). The canonical "featureless
+  (`2014Natur.505...69K`, [arXiv:1401.0022](https://arxiv.org/abs/1401.0022)). The canonical "featureless
   transmission spectrum" sub-Neptune; c is the warmer analog with
   similar expected visual.
 - **Showman A. P. et al. 2009** — *Atmospheric circulation of hot
   Jupiters: coupled radiative-dynamical GCM*, ApJ 699, 564
-  (`2009ApJ...699..564S`, arXiv:0809.2089). Establishes the
+  (`2009ApJ...699..564S`, [arXiv:0809.2089](https://arxiv.org/abs/0809.2089)). Establishes the
   super-rotating equatorial jet in tidally-influenced gas planets;
   informs c's `cloud_morphology` (zonal banding).
 - **Lewis N. K. et al. 2014** — *GCMs of warm sub-Neptunes*, ApJ 795,
-  150 (`2014ApJ...795..150L`, arXiv:1410.0008). GCM scaling for the
+  150 (`2014ApJ...795..150L`, [arXiv:1410.0008](https://arxiv.org/abs/1410.0008)). GCM scaling for the
   ~38 d period sub-Neptune regime; supports the pseudo-synchronous
   spin and equatorial-jet circulation.
 - **Hut P. 1981** — *Tidal evolution in close binary systems*, A&A
@@ -327,7 +327,7 @@ Combining the surface and atmosphere decisions:
   for eccentric orbits; foundational citation for c's spin state.
 - **Henning W. G. & Hurford T. 2014** — *Tidal heating in multilayered
   terrestrial exoplanets*, ApJ 789, 30 (`2014ApJ...789...30H`,
-  arXiv:1311.5904). Sub-Neptune tidal heating + spin-locking
+  [arXiv:1311.5904](https://arxiv.org/abs/1311.5904)). Sub-Neptune tidal heating + spin-locking
   timescales; gives ~1–3 Gyr for c's parameters.
 - **Bolmont E. et al. 2020** — *Tidal dissipation and obliquity
   evolution* (`2020A&A...644A.165B`). Provides the
@@ -337,22 +337,22 @@ Combining the surface and atmosphere decisions:
 
 - **Mamajek E. E. & Hillenbrand L. A. 2008** — *Improved Age
   Estimation for Solar-Type Dwarfs* (`2008ApJ...687.1264M`,
-  arXiv:0807.1686). Inherited from host-star synthesis. Gives 61 Vir
+  [arXiv:0807.1686](https://arxiv.org/abs/0807.1686)). Inherited from host-star synthesis. Gives 61 Vir
   age 6.1 ± 1.7 Gyr; sets the photoevaporation evolution timescale.
 - **Pavlenko Y. V. et al. 2012** — *Solar twin candidates*
-  (`2012MNRAS.422..542P`, arXiv:1112.0590). Inherited from host-star
+  (`2012MNRAS.422..542P`, [arXiv:1112.0590](https://arxiv.org/abs/1112.0590)). Inherited from host-star
   synthesis. Confirms solar-twin SED for the photochemical haze model.
 - **Fulton B. J. et al. 2017** — *The California-Kepler Survey III.
   A Gap in the Radius Distribution of Small Planets*, AJ 154, 109
-  (`2017AJ....154..109F`, arXiv:1703.10375). Radius valley
+  (`2017AJ....154..109F`, [arXiv:1703.10375](https://arxiv.org/abs/1703.10375)). Radius valley
   demographics; supports the H/He envelope canonical reading for c's
   18 M⊕ population.
 - **Wyatt M. C. et al. 2012** — *Herschel imaging of 61 Vir*
-  (`2012MNRAS.424.1206W`, arXiv:1204.6063). Inherited from host-star
+  (`2012MNRAS.424.1206W`, [arXiv:1204.6063](https://arxiv.org/abs/1204.6063)). Inherited from host-star
   synthesis. Cited briefly; the cold debris ring at 30 AU does not
   interact dynamically with c at 0.22 AU.
 - **Madhusudhan N. et al. 2021** — *Habitability and biosignatures of
-  Hycean worlds*, ApJ 918, 1 (`2021ApJ...918....1M`, arXiv:2108.10888).
+  Hycean worlds*, ApJ 918, 1 (`2021ApJ...918....1M`, [arXiv:2108.10888](https://arxiv.org/abs/2108.10888)).
   Hycean alternative scenario for sub-Neptunes; relevant to d's
   Open-items variant. Less applicable to c at its warmer T_eq but
   cited as the broader sub-Neptune classification framework.

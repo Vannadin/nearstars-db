@@ -130,7 +130,7 @@ re-confirmed with IAS15 before it goes in a report or paper.
   section added under STABILITY_REPORT.md.
 - **Literature cross-check (independent validation)**: both discovery papers ran their
   own SPOCK+REBOUND stability analysis over 10⁹ orbits and reached the SAME ×3 ceiling —
-  González Hernández et al. 2024 (arXiv 2410.00569): m=3·Msini ↔ i=19.5°, stable; Basant
+  González Hernández et al. 2024 (arXiv [2410.00569](https://arxiv.org/abs/2410.00569)): m=3·Msini ↔ i=19.5°, stable; Basant
   et al. 2025 (arXiv 2503.08095): stable for masses up to ×3, i=20–90°. Our i_crit≈19°/×3
   from a 10⁴-yr WHFast→TRACE screen reproduces their ~19.5–20°/×3 from a 6-Myr ML ensemble.
   Same league as the TRAPPIST-1 vs Agol+2021 check. Caveat: Basant flags strong

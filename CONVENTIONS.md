@@ -113,7 +113,7 @@
 **Why:** 2026-06-23 incident: subagent used WebSearch + my hard-coded arXiv ids → multiple wrong ids (Pierrehumbert paper was unrelated math, Hu & Yang id was actually Leconte 2013) + missed canonical papers. Switched to ADS-curated authority + frozen cache.
 **Details:**
 - Flow: pin arxiv_id in `docs/phase3/_bib/<slug>.yaml` → run `fetch_arxiv_texts.py` → read cache (not web) → subagent value-checks citing cache lines → main verifies
-- Phantom-paper prevention (2026-06-20 lesson): before flagging a paper as fabricated, **verify non-existence via web/ADS/arXiv**. "Not in our cache" ≠ "doesn't exist." Yadav & Thorngren 2017 (1709.05676) and Reiners & Christensen 2010 (1007.1514) were both real but out-of-range/uncached.
+- Phantom-paper prevention (2026-06-20 lesson): before flagging a paper as fabricated, **verify non-existence via web/ADS/arXiv**. "Not in our cache" ≠ "doesn't exist." Yadav & Thorngren 2017 ([1709.05676](https://arxiv.org/abs/1709.05676)) and Reiners & Christensen 2010 ([1007.1514](https://arxiv.org/abs/1007.1514)) were both real but out-of-range/uncached.
 **Source:** `feedback_ads_paper_discipline.md`
 
 ### 3.3 Paper references are links (NEARSTARS)

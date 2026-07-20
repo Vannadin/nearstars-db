@@ -305,15 +305,15 @@ dynamo 문서의 단서들과 같은 정신으로 정리한다.
   (`2007Natur.447..289N`). Cites: 239. Shear heating along the tiger stripes as the
   origin of Enceladus's plumes and heat flux. §2.
 - **Jackson, B., Barnes, R. & Greenberg, R. (2008)** — *ApJ* 681, 1631.
-  **arXiv:0803.0026.** Cites: 155. "Tidal Heating of Extrasolar Planets" — applies
+  **[arXiv:0803.0026](https://arxiv.org/abs/0803.0026).** Cites: 155. "Tidal Heating of Extrasolar Planets" — applies
   the fixed-Q heating formula to close-in exoplanets and its surface-condition
-  magnitude. §1, §3. (Companion: Jackson+ 2008 *ApJ* 678, 1396, **arXiv:0802.1543**,
+  magnitude. §1, §3. (Companion: Jackson+ 2008 *ApJ* 678, 1396, **[arXiv:0802.1543](https://arxiv.org/abs/0802.1543)**,
   cites 382, the tidal-evolution / eccentricity-damping side.)
 - **Lainey, V. et al. (2009)** — *Nature* 459, 957. **No arXiv**
   (`2009Natur.459..957L`). Cites: 359. Astrometric detection of *active* strong tidal
   dissipation in the Io–Jupiter system — empirically closes the heating loop. §2.
 - **Henning, W. G., O'Connell, R. J. & Sasselov, D. D. (2009)** — *ApJ* 707, 1000.
-  **arXiv:0912.1907.** Cites: 158. Tidally heated terrestrial exoplanets with a
+  **[arXiv:0912.1907](https://arxiv.org/abs/0912.1907).** Cites: 158. Tidally heated terrestrial exoplanets with a
   viscoelastic response model — the exoplanet-rheology bridge. §5.
 - **Howett, C. J. A. et al. (2011)** — *JGR Planets* 116, E03003. **No arXiv**
   (`2011JGRE..116.3003H`). Cites: 136. ~15.8 GW measured from Enceladus's south-polar
@@ -322,21 +322,21 @@ dynamo 문서의 단서들과 같은 정신으로 정리한다.
   (`2012Icar..219..701V`). Cites: 92. Io's volcanic thermal sources and global heat
   flow — the updated ~10¹⁴ W census. §2.
 - **Efroimsky, M. & Williams, J. G. (2012)** — *Celest. Mech. Dyn. Astron.* 112, 283.
-  **arXiv:1105.6086.** Cites: 128. Bodily tides near spin-orbit resonances — the
+  **[arXiv:1105.6086](https://arxiv.org/abs/1105.6086).** Cites: 128. Bodily tides near spin-orbit resonances — the
   frequency-dependent formalism beyond fixed-Q for non-synchronous bodies. §5.
-- **Barnes, R. et al. (2013)** — *Astrobiology* 13, 225. **arXiv:1203.5104.** Cites:
+- **Barnes, R. et al. (2013)** — *Astrobiology* 13, 225. **[arXiv:1203.5104](https://arxiv.org/abs/1203.5104).** Cites:
   120. "Tidal Venuses": tidal heating can trigger a runaway greenhouse, the upper
   habitability bound on tidal heat. §6 context.
-- **Heller, R. & Barnes, R. (2013)** — *Astrobiology* 13, 18. **arXiv:1209.5323.**
+- **Heller, R. & Barnes, R. (2013)** — *Astrobiology* 13, 18. **[arXiv:1209.5323](https://arxiv.org/abs/1209.5323).**
   Cites: 129. Exomoon habitability constrained by illumination *and* tidal heating —
   the moon-specific habitability bound directly relevant to NearStars moons. §6.
 - **Henning, W. G. & Hurford, T. (2014)** — *ApJ* 789, 30. **No arXiv**
   (`2014ApJ...789...30H`). Cites: 55. Tidal heating in multilayered terrestrial
   exoplanets — layered viscoelastic structure. §5.
 - **Driscoll, P. E. & Barnes, R. (2015)** — *Astrobiology* 15, 739.
-  **arXiv:1509.07452.** Cites: 108. Tidal heating of Earth-like planets around M
+  **[arXiv:1509.07452](https://arxiv.org/abs/1509.07452).** Cites: 108. Tidal heating of Earth-like planets around M
   stars and its coupling to thermal/magnetic evolution and habitability. §6.
-- **Renaud, J. P. & Henning, W. G. (2018)** — *ApJ* 857, 98. **arXiv:1707.06701.**
+- **Renaud, J. P. & Henning, W. G. (2018)** — *ApJ* 857, 98. **[arXiv:1707.06701](https://arxiv.org/abs/1707.06701).**
   Cites: 82. Increased tidal dissipation using advanced (Andrade) rheology — shows
   fixed-Q and Andrade can differ by large factors. §5, §8.
 
