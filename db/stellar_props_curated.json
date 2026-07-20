@@ -186,7 +186,35 @@
         "doi": "10.1051/0004-6361:200809611",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4286,
+        "uncertainty_k": 30,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Model-atmosphere fit to the 0.44-10 um SED. Gray 2003 spectroscopic 4336 K.",
+        "reference": "Ramirez & Allende Prieto 2011",
+        "bibcode": "2011ApJ...743..135R",
+        "doi": "10.1088/0004-637X/743/2/135"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7.1,
+        "uncertainty_gyr": 1.5,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "tau = 7.1 (+1.5/-1.2) Gyr from parallax + evolution models; consistent with thick-disk kinematics. uncertainty = larger side.",
+        "reference": "Ramirez & Allende Prieto 2011",
+        "bibcode": "2011ApJ...743..135R",
+        "doi": "10.1088/0004-637X/743/2/135"
+      }
+    ],
+    "floor_na": {
+      "activity": "No log R'HK for a K giant (Gray 2003 lists Arcturus with a null R'HK). Checked 2026-07-20.",
+      "rotation": "Very slow giant rotator; no measured period exists."
+    }
   },
   "Capella": {
     "spectype": "G3 III + G0 III",
@@ -213,7 +241,47 @@
         "doi": "10.1088/0004-637X/807/1/26",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4970,
+        "uncertainty_k": 50,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Aa clump-giant primary (M 2.569 Msun) — the DB host entry follows the primary; the Hertzsprung-gap Ab component (5730 K, 72.7 Lsun) is not curated. Definitive double-lined orbit + abundance analysis.",
+        "reference": "Torres et al. 2015",
+        "bibcode": "2015ApJ...807...26T",
+        "doi": "10.1088/0004-637X/807/1/26"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 78.7,
+        "uncertainty_lsun": 4.2,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "notes": "Aa primary; orbital parallax + apparent bolometric flux.",
+        "reference": "Torres et al. 2015",
+        "bibcode": "2015ApJ...807...26T",
+        "doi": "10.1088/0004-637X/807/1/26"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.62,
+        "uncertainty_gyr": 0.04,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "Three model sets place the system at ~590-650 Myr; value = representative midpoint (the paper quotes the model range, not one number).",
+        "reference": "Torres et al. 2015",
+        "bibcode": "2015ApJ...807...26T",
+        "doi": "10.1088/0004-637X/807/1/26"
+      }
+    ],
+    "floor_na": {
+      "activity": "No standard log R'HK exists for a G/K clump giant (the chromospheric index is not calibrated for giants). RS CVn-like X-ray emission exists but no single clean single-paper Lx/Lbol was identified. Checked 2026-07-20.",
+      "rotation": "Aa is a slow sub-synchronous rotator (~104 d discussed in Torres 2015) but no cleanly quotable measured period; left N/A rather than fabricating the digit."
+    }
   },
   "Procyon A": {
     "spectype": "F5 IV-V",
@@ -239,6 +307,50 @@
         "bibcode": "2005ApJ...633..424A",
         "doi": "10.1086/452622",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 6543,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Consistent with interferometric determinations (Aufdenberg 2005). Luck 2017 6654 K; Gray 2003 6629 K — ~110 K spread across methods.",
+        "reference": "Valenti & Fischer 2005",
+        "bibcode": "2005ApJS..159..141V",
+        "doi": "10.1086/430500"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 6.9,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = 0.84; SPOCS gives 6.1 Lsun.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.63,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Boro Saikia 2018 carries -4.75 and a -4.11 outlier; F-star R'HK is less reliable near the granulation-dominated regime.",
+        "reference": "Gray et al. 2003",
+        "bibcode": "2003AJ....126.2048G",
+        "doi": "10.1086/378365"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 2.3,
+        "method": "asteroseismology",
+        "recommended": true,
+        "notes": "CESAM model constrained by VINCI/VLTI diameter + asteroseismic large separation (~2314 Myr); Procyon A is ending its MS life. SPOCS isochrone 2.0 Gyr.",
+        "reference": "Kervella et al. 2004",
+        "bibcode": "2004A&A...413..251K",
+        "doi": "10.1051/0004-6361:20031527"
       }
     ]
   },
@@ -394,6 +506,52 @@
         "doi": "10.1086/589554",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5244,
+        "uncertainty_k": 68,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Gray 2003 gives 5019 K.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.55,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = -0.26.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.7,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Active K dwarf (X-ray bright, Wood 2006 Chandra).",
+        "reference": "Gray et al. 2003",
+        "bibcode": "2003AJ....126.2048G",
+        "doi": "10.1086/378365"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 6.2,
+        "uncertainty_gyr": 1.0,
+        "method": "asteroseismology",
+        "recommended": true,
+        "notes": "Global modelling of the 70 Oph A+B system using solar-like oscillations detected in A; applies to both components.",
+        "reference": "Eggenberger et al. 2008",
+        "bibcode": "2008A&A...482..631E",
+        "doi": "10.1051/0004-6361:20078624"
+      }
     ]
   },
   "70 Ophiuchi B": {
@@ -421,7 +579,25 @@
         "doi": "10.1086/589554",
         "recommended": true
       }
-    ]
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 6.2,
+        "uncertainty_gyr": 1.0,
+        "method": "asteroseismology",
+        "recommended": true,
+        "notes": "System age — Eggenberger 2008 models the A+B binary together; the asteroseismic constraint is on A, the age applies to the coeval pair.",
+        "reference": "Eggenberger et al. 2008",
+        "bibcode": "2008A&A...482..631E",
+        "doi": "10.1051/0004-6361:20078624"
+      }
+    ],
+    "floor_na": {
+      "teff": "Not resolved separately in any survey (Luck 2017 / SPOCS / Gray 2003 list only the A component; blended spectroscopy). Checked 2026-07-20.",
+      "luminosity": "Not resolved separately (same blending; no per-component bolometric determination).",
+      "activity": "No per-component R'HK (Gray 2003 lists only 70 Oph A).",
+      "rotation": "No per-component rotation measurement (unresolved in the period surveys)."
+    }
   },
   "Sirius A": {
     "spectype": "A1 V",
@@ -929,6 +1105,51 @@
         "doi": "10.1051/0004-6361:200810080",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4481,
+        "uncertainty_k": 96,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Homogeneous spectroscopic value; interferometric (Kervella 2008) Teff ~4370 K.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.135,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = -0.87.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.7,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Active K dwarf with a well-known solar-like cycle (Boro Saikia 2016 ZDI).",
+        "reference": "Gray et al. 2003",
+        "bibcode": "2003AJ....126.2048G",
+        "doi": "10.1086/378365"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 6.0,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "CESAM2k models constrained by CHARA interferometric radii; system age (A+B). Luck 2017 isochrone gives 6.2 Gyr for A.",
+        "reference": "Kervella et al. 2008",
+        "bibcode": "2008A&A...488..667K",
+        "doi": "10.1051/0004-6361:200810080"
+      }
     ]
   },
   "61 Cygni B": {
@@ -955,6 +1176,50 @@
         "bibcode": "2008A&A...488..667K",
         "doi": "10.1051/0004-6361:200810080",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4171,
+        "uncertainty_k": 39,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.083,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = -1.08.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.86,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Boro Saikia 2018 gives -4.70/-4.72; slightly less active than A.",
+        "reference": "Gray et al. 2003",
+        "bibcode": "2003AJ....126.2048G",
+        "doi": "10.1086/378365"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 6.0,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "System age (A+B) from CESAM2k + interferometry. Luck 2017 isochrone for B alone gives an anomalously young 3.3 Gyr (K7 isochrone degeneracy) — coeval system value preferred.",
+        "reference": "Kervella et al. 2008",
+        "bibcode": "2008A&A...488..667K",
+        "doi": "10.1051/0004-6361:200810080"
       }
     ]
   },
@@ -983,6 +1248,51 @@
         "doi": "10.1088/0004-637X/771/1/40",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5937,
+        "uncertainty_k": 57,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "SPOCS 5941 K. Boyajian 2013 interferometry is the curated radius source.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 1.26,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = 0.10.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.86,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Classic Mount Wilson solar analog; moderate activity.",
+        "reference": "Boro Saikia et al. 2018",
+        "bibcode": "2018A&A...616A.108B",
+        "doi": "10.1051/0004-6361/201629518"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 6.5,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "SPOCS isochrone gives 5.7 Gyr.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
     ]
   },
   "Eta Cassiopeiae B": {
@@ -1010,7 +1320,14 @@
         "doi": "10.3847/1538-3881/ab3467",
         "recommended": true
       }
-    ]
+    ],
+    "floor_na": {
+      "teff": "Faint K7 companion not resolved in Luck 2017 / SPOCS / Gray 2003 (queries return only the primary). Checked 2026-07-20.",
+      "luminosity": "Not resolved separately (no per-component bolometric determination).",
+      "activity": "No per-component R'HK (blended spectroscopy).",
+      "rotation": "No per-component rotation measurement.",
+      "age": "No direct determination for B; coeval with A (~6.5 Gyr, Luck 2017 isochrone on the primary) but the inheritance is not curated as a measurement per the no-cross-paper rule."
+    }
   },
   "Van Maanen's Star": {
     "spectype": "DZ7",
@@ -2063,6 +2380,50 @@
         "bibcode": "2025A&A...693A.297N",
         "doi": "10.1051/0004-6361/202451769",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5401,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Southern star, not in Luck 2017; consistent with Nari 2025 (curated M/R source).",
+        "reference": "Valenti & Fischer 2005",
+        "bibcode": "2005ApJS..159..141V",
+        "doi": "10.1086/430500"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.66,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = -0.18.",
+        "reference": "Valenti & Fischer 2005",
+        "bibcode": "2005ApJS..159..141V",
+        "doi": "10.1086/430500"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.98,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Boro Saikia 2018 gives -4.95/-5.27. Inactive old-disk star.",
+        "reference": "Mamajek & Hillenbrand 2008",
+        "bibcode": "2008ApJ...687.1264M",
+        "doi": "10.1086/591785"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 13.5,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "At the model ceiling; Mamajek 2008 chromospheric age also 13.5 Gyr. Metal-poor and very old — a low-precision \"old\" indicator, not a tight value.",
+        "reference": "Valenti & Fischer 2005",
+        "bibcode": "2005ApJS..159..141V",
+        "doi": "10.1086/430500"
       }
     ]
   },
@@ -3358,6 +3719,51 @@
         "doi": null,
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 6269,
+        "uncertainty_k": 66,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "SPOCS 6213 K.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 3.39,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = 0.53.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.88,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Catalog carries -4.88 and -4.77 (multi-source); moderately active F8.",
+        "reference": "Boro Saikia et al. 2018",
+        "bibcode": "2018A&A...616A.108B",
+        "doi": "10.1051/0004-6361/201629518"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.5,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "SPOCS isochrone gives 2.5 Gyr — genuine spread.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
     ]
   },
   "GJ 806": {
@@ -3773,6 +4179,60 @@
         "bibcode": "2019AJ....158..138S",
         "doi": null,
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5960,
+        "uncertainty_k": 60,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Homogeneous nearby-FGK abundance survey. SPOCS 5882 K, Brewer 2016 5872 K agree within ~90 K.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 1.58,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = 0.20 (M_bol from V + BC + Hipparcos parallax).",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.02,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Boro Saikia 2018 gives -4.98/-4.86 multi-epoch. Inactive, near the solar-minimum floor.",
+        "reference": "Mamajek & Hillenbrand 2008",
+        "bibcode": "2008ApJ...687.1264M",
+        "doi": "10.1086/591785"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 3.3,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "Luck 2017 isochrone; SPOCS isochrone gives 5.0 Gyr.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      },
+      {
+        "value_gyr": 5.0,
+        "method": "activity_age",
+        "recommended": false,
+        "notes": "Chromospheric (R'HK) age — genuine disagreement with the younger isochrone.",
+        "reference": "Mamajek & Hillenbrand 2008",
+        "bibcode": "2008ApJ...687.1264M",
+        "doi": "10.1086/591785"
       }
     ]
   },
@@ -5440,6 +5900,51 @@
         "doi": null,
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 5044,
+        "uncertainty_k": 63,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "SPOCS 5080 K; consistent with Pepe 2011 (curated mass source).",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.42,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = -0.38.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.07,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Catalog carries -5.07 and -5.31; quiet K2 dwarf.",
+        "reference": "Boro Saikia et al. 2018",
+        "bibcode": "2018A&A...616A.108B",
+        "doi": "10.1051/0004-6361/201629518"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 8.6,
+        "method": "isochrone",
+        "recommended": true,
+        "notes": "SPOCS isochrone gives 9.3 Gyr.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
     ]
   },
   "HD 69830": {
@@ -7033,7 +7538,46 @@
         "doi": "10.1051/0004-6361/202346707",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 4850,
+        "uncertainty_k": 4,
+        "method": "high_res_spectroscopy",
+        "recommended": true,
+        "notes": "Gray 2003 gives 4761 K. Luck's formal 4 K error is internal precision only — real spread ~90 K.",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 11.5,
+        "method": "photometric",
+        "recommended": true,
+        "notes": "log L = 1.06; consistent with a first-ascent RGB star at R = 4.74 Rsun (Knudstrup 2023).",
+        "reference": "Luck 2017",
+        "bibcode": "2017AJ....153...21L",
+        "doi": "10.3847/1538-3881/153/1/21"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 5.7,
+        "uncertainty_gyr": 0.9,
+        "method": "asteroseismology",
+        "recommended": true,
+        "notes": "5.7 (+0.8/-0.9) Gyr from SONG RV + TESS solar-like oscillations; same modelling as the curated M/R. uncertainty = larger side.",
+        "reference": "Knudstrup et al. 2023",
+        "bibcode": "2023A&A...675A.197K",
+        "doi": "10.1051/0004-6361/202346707"
+      }
+    ],
+    "floor_na": {
+      "activity": "No log R'HK for the K subgiant (Gray 2003 lists a null R'HK for gam Cep). Checked 2026-07-20.",
+      "rotation": "Long-period evolved star; no cleanly measured rotation period exists."
+    }
   },
   "Gl 378": {
     "mass_measurements": [

@@ -20,6 +20,10 @@
       "★": "phase3/40-eridani-c.html"
     }
   },
+  "47 UMa": {
+    "phase2": "phase2/47-uma.html",
+    "phase3": {}
+  },
   "55 Cnc": {
     "phase2": "phase2/55-cnc.html",
     "phase3": {
@@ -31,6 +35,14 @@
       "f": "phase3/55-cnc-f.html"
     }
   },
+  "61 Cygni A": {
+    "phase2": "phase2/61-cygni-a.html",
+    "phase3": {}
+  },
+  "61 Cygni B": {
+    "phase2": "phase2/61-cygni-b.html",
+    "phase3": {}
+  },
   "61 Vir": {
     "phase2": "phase2/61-vir.html",
     "phase3": {
@@ -39,6 +51,14 @@
       "c": "phase3/61-vir-c.html",
       "d": "phase3/61-vir-d.html"
     }
+  },
+  "70 Ophiuchi A": {
+    "phase2": "phase2/70-ophiuchi-a.html",
+    "phase3": {}
+  },
+  "70 Ophiuchi B": {
+    "phase2": "phase2/70-ophiuchi-b.html",
+    "phase3": {}
   },
   "Alpha Centauri A": {
     "phase2": "phase2/alpha-centauri-a.html",
@@ -55,6 +75,10 @@
   },
   "Altair": {
     "phase2": "phase2/altair.html",
+    "phase3": {}
+  },
+  "Arcturus": {
+    "phase2": "phase2/arcturus.html",
     "phase3": {}
   },
   "AU Mic": {
@@ -76,6 +100,10 @@
       "d": "phase3/barnards-star-d.html",
       "e": "phase3/barnards-star-e.html"
     }
+  },
+  "Capella": {
+    "phase2": "phase2/capella.html",
+    "phase3": {}
   },
   "CWISEP J193518.59-154620.3": {
     "phase2": "phase2/cwisep-j193518-59-154620-3.html",
@@ -109,11 +137,19 @@
     "phase2": "phase2/eps-ind-bb.html",
     "phase3": {}
   },
+  "Eta Cassiopeiae A": {
+    "phase2": "phase2/eta-cassiopeiae-a.html",
+    "phase3": {}
+  },
   "Fomalhaut": {
     "phase2": "phase2/fomalhaut.html",
     "phase3": {
       "★": "phase3/fomalhaut.html"
     }
+  },
+  "gam Cep": {
+    "phase2": "phase2/gam-cep.html",
+    "phase3": {}
   },
   "GJ 1002": {
     "phase2": "phase2/gj-1002.html",
@@ -169,6 +205,14 @@
       "c": "phase3/gj-9066-c.html"
     }
   },
+  "HD 192310": {
+    "phase2": "phase2/hd-192310.html",
+    "phase3": {}
+  },
+  "HD 20794": {
+    "phase2": "phase2/hd-20794.html",
+    "phase3": {}
+  },
   "HD 219134": {
     "phase2": "phase2/hd-219134.html",
     "phase3": {
@@ -213,6 +257,10 @@
     "phase3": {
       "★": "phase3/luhman-16-b.html"
     }
+  },
+  "Procyon A": {
+    "phase2": "phase2/procyon-a.html",
+    "phase3": {}
   },
   "Procyon B": {
     "phase2": "phase2/procyon-b.html",
@@ -270,6 +318,10 @@
       "g": "phase3/trappist-1-g.html",
       "h": "phase3/trappist-1-h.html"
     }
+  },
+  "ups And": {
+    "phase2": "phase2/ups-and.html",
+    "phase3": {}
   },
   "V1400 Centauri": {
     "phase2": "phase2/v1400-centauri.html",

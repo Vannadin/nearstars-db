@@ -1,0 +1,55 @@
+stellar:
+  61 Cygni A:
+    spectype: K5 V
+    spectype_bibcode: 1989ApJS...71..245K
+    spectype_reference: Keenan & McNeil 1989
+    mass_measurements:
+    - value_msun: 0.7
+      uncertainty_msun: 0.02
+      method: evolutionary_model
+      reference: Kervella et al. 2008 (interferometry + evolution)
+      bibcode: 2008A&A...488..667K
+      doi: 10.1051/0004-6361:200810080
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.665
+      uncertainty_rsun: 0.005
+      method: interferometry
+      reference: Kervella et al. 2008
+      bibcode: 2008A&A...488..667K
+      doi: 10.1051/0004-6361:200810080
+      recommended: true
+    teff_measurements:
+    - value_k: 4481
+      uncertainty_k: 96
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Homogeneous spectroscopic value; interferometric (Kervella 2008) Teff ~4370 K.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 0.135
+      method: photometric
+      recommended: true
+      notes: log L = -0.87.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -4.7
+      method: log_rhk
+      recommended: true
+      notes: Active K dwarf with a well-known solar-like cycle (Boro Saikia 2016 ZDI).
+      reference: Gray et al. 2003
+      bibcode: 2003AJ....126.2048G
+      doi: 10.1086/378365
+    age_measurements:
+    - value_gyr: 6.0
+      method: isochrone
+      recommended: true
+      notes: CESAM2k models constrained by CHARA interferometric radii; system age (A+B). Luck 2017 isochrone
+        gives 6.2 Gyr for A.
+      reference: Kervella et al. 2008
+      bibcode: 2008A&A...488..667K
+      doi: 10.1051/0004-6361:200810080

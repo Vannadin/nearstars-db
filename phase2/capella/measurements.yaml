@@ -1,0 +1,56 @@
+stellar:
+  Capella:
+    spectype: G3 III + G0 III
+    spectype_bibcode: 2015ApJ...807...26T
+    spectype_reference: Torres et al. 2015 (close binary Aa+Ab)
+    mass_measurements:
+    - value_msun: 5.0515
+      uncertainty_msun: 0.024
+      method: binary_orbit
+      reference: Torres et al. 2015 (total system mass Aa+Ab)
+      bibcode: 2015ApJ...807...26T
+      doi: 10.1088/0004-637X/807/1/26
+      recommended: true
+    radius_measurements:
+    - value_rsun: 11.98
+      uncertainty_rsun: 0.57
+      method: interferometry
+      reference: Torres et al. 2015 (Aa primary; Ab=8.83 R_sun)
+      bibcode: 2015ApJ...807...26T
+      doi: 10.1088/0004-637X/807/1/26
+      recommended: true
+    teff_measurements:
+    - value_k: 4970
+      uncertainty_k: 50
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Aa clump-giant primary (M 2.569 Msun) — the DB host entry follows the primary; the Hertzsprung-gap
+        Ab component (5730 K, 72.7 Lsun) is not curated. Definitive double-lined orbit + abundance analysis.
+      reference: Torres et al. 2015
+      bibcode: 2015ApJ...807...26T
+      doi: 10.1088/0004-637X/807/1/26
+    luminosity_measurements:
+    - value_lsun: 78.7
+      uncertainty_lsun: 4.2
+      method: bolometric_flux
+      recommended: true
+      notes: Aa primary; orbital parallax + apparent bolometric flux.
+      reference: Torres et al. 2015
+      bibcode: 2015ApJ...807...26T
+      doi: 10.1088/0004-637X/807/1/26
+    age_measurements:
+    - value_gyr: 0.62
+      uncertainty_gyr: 0.04
+      method: isochrone
+      recommended: true
+      notes: Three model sets place the system at ~590-650 Myr; value = representative midpoint (the paper
+        quotes the model range, not one number).
+      reference: Torres et al. 2015
+      bibcode: 2015ApJ...807...26T
+      doi: 10.1088/0004-637X/807/1/26
+    floor_na:
+      activity: No standard log R'HK exists for a G/K clump giant (the chromospheric index is not calibrated
+        for giants). RS CVn-like X-ray emission exists but no single clean single-paper Lx/Lbol was identified.
+        Checked 2026-07-20.
+      rotation: Aa is a slow sub-synchronous rotator (~104 d discussed in Torres 2015) but no cleanly
+        quotable measured period; left N/A rather than fabricating the digit.

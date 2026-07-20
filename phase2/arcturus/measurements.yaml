@@ -1,0 +1,43 @@
+stellar:
+  Arcturus:
+    spectype: K1.5 III Fe-0.5
+    spectype_bibcode: 1989ApJS...71..245K
+    spectype_reference: Keenan & McNeil 1989
+    mass_measurements:
+    - value_msun: 1.08
+      uncertainty_msun: 0.06
+      method: asteroseismology
+      reference: Ramirez & Allende Prieto 2011
+      bibcode: 2011ApJ...743..135R
+      doi: 10.1088/0004-637X/743/2/135
+      recommended: true
+    radius_measurements:
+    - value_rsun: 25.4
+      uncertainty_rsun: 0.2
+      method: interferometry
+      reference: Lacour et al. 2008
+      bibcode: 2008A&A...485..561L
+      doi: 10.1051/0004-6361:200809611
+      recommended: true
+    teff_measurements:
+    - value_k: 4286
+      uncertainty_k: 30
+      method: sed_fitting
+      recommended: true
+      notes: Model-atmosphere fit to the 0.44-10 um SED. Gray 2003 spectroscopic 4336 K.
+      reference: Ramirez & Allende Prieto 2011
+      bibcode: 2011ApJ...743..135R
+      doi: 10.1088/0004-637X/743/2/135
+    age_measurements:
+    - value_gyr: 7.1
+      uncertainty_gyr: 1.5
+      method: isochrone
+      recommended: true
+      notes: tau = 7.1 (+1.5/-1.2) Gyr from parallax + evolution models; consistent with thick-disk kinematics.
+        uncertainty = larger side.
+      reference: Ramirez & Allende Prieto 2011
+      bibcode: 2011ApJ...743..135R
+      doi: 10.1088/0004-637X/743/2/135
+    floor_na:
+      activity: No log R'HK for a K giant (Gray 2003 lists Arcturus with a null R'HK). Checked 2026-07-20.
+      rotation: Very slow giant rotator; no measured period exists.

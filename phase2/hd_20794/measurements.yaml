@@ -1,0 +1,51 @@
+stellar:
+  HD 20794:
+    mass_measurements:
+    - value_msun: 0.79
+      uncertainty_msun: 0.01
+      method: unverified
+      reference: Nari et al. 2025
+      bibcode: 2025A&A...693A.297N
+      doi: 10.1051/0004-6361/202451769
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.93
+      uncertainty_rsun: 0.03
+      method: unverified
+      reference: Nari et al. 2025
+      bibcode: 2025A&A...693A.297N
+      doi: 10.1051/0004-6361/202451769
+      recommended: true
+    teff_measurements:
+    - value_k: 5401
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Southern star, not in Luck 2017; consistent with Nari 2025 (curated M/R source).
+      reference: Valenti & Fischer 2005
+      bibcode: 2005ApJS..159..141V
+      doi: 10.1086/430500
+    luminosity_measurements:
+    - value_lsun: 0.66
+      method: photometric
+      recommended: true
+      notes: log L = -0.18.
+      reference: Valenti & Fischer 2005
+      bibcode: 2005ApJS..159..141V
+      doi: 10.1086/430500
+    activity_measurements:
+    - value_log_rhk: -4.98
+      method: log_rhk
+      recommended: true
+      notes: Boro Saikia 2018 gives -4.95/-5.27. Inactive old-disk star.
+      reference: Mamajek & Hillenbrand 2008
+      bibcode: 2008ApJ...687.1264M
+      doi: 10.1086/591785
+    age_measurements:
+    - value_gyr: 13.5
+      method: isochrone
+      recommended: true
+      notes: At the model ceiling; Mamajek 2008 chromospheric age also 13.5 Gyr. Metal-poor and very old
+        — a low-precision "old" indicator, not a tight value.
+      reference: Valenti & Fischer 2005
+      bibcode: 2005ApJS..159..141V
+      doi: 10.1086/430500

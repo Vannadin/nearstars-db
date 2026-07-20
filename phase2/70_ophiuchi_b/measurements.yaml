@@ -1,0 +1,37 @@
+stellar:
+  70 Ophiuchi B:
+    spectype: K5 V
+    spectype_bibcode: 2003AJ....126.2048G
+    spectype_reference: Gray et al. 2003
+    mass_measurements:
+    - value_msun: 0.71
+      uncertainty_msun: 0.02
+      method: binary_orbit
+      reference: Eggenberger et al. 2008
+      bibcode: 2008A&A...482..631E
+      doi: 10.1051/0004-6361:20078624
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.66
+      uncertainty_rsun: 0.04
+      method: interferometry
+      reference: Boyajian et al. 2008
+      bibcode: 2008ApJ...683..424B
+      doi: 10.1086/589554
+      recommended: true
+    age_measurements:
+    - value_gyr: 6.2
+      uncertainty_gyr: 1.0
+      method: asteroseismology
+      recommended: true
+      notes: System age — Eggenberger 2008 models the A+B binary together; the asteroseismic constraint
+        is on A, the age applies to the coeval pair.
+      reference: Eggenberger et al. 2008
+      bibcode: 2008A&A...482..631E
+      doi: 10.1051/0004-6361:20078624
+    floor_na:
+      teff: Not resolved separately in any survey (Luck 2017 / SPOCS / Gray 2003 list only the A component;
+        blended spectroscopy). Checked 2026-07-20.
+      luminosity: Not resolved separately (same blending; no per-component bolometric determination).
+      activity: No per-component R'HK (Gray 2003 lists only 70 Oph A).
+      rotation: No per-component rotation measurement (unresolved in the period surveys).

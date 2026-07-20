@@ -1,0 +1,56 @@
+stellar:
+  70 Ophiuchi A:
+    spectype: K0 V
+    spectype_bibcode: 2003AJ....126.2048G
+    spectype_reference: Gray et al. 2003
+    mass_measurements:
+    - value_msun: 0.89
+      uncertainty_msun: 0.02
+      method: binary_orbit
+      reference: Eggenberger et al. 2008
+      bibcode: 2008A&A...482..631E
+      doi: 10.1051/0004-6361:20078624
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.86
+      uncertainty_rsun: 0.04
+      method: interferometry
+      reference: Boyajian et al. 2008
+      bibcode: 2008ApJ...683..424B
+      doi: 10.1086/589554
+      recommended: true
+    teff_measurements:
+    - value_k: 5244
+      uncertainty_k: 68
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Gray 2003 gives 5019 K.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 0.55
+      method: photometric
+      recommended: true
+      notes: log L = -0.26.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -4.7
+      method: log_rhk
+      recommended: true
+      notes: Active K dwarf (X-ray bright, Wood 2006 Chandra).
+      reference: Gray et al. 2003
+      bibcode: 2003AJ....126.2048G
+      doi: 10.1086/378365
+    age_measurements:
+    - value_gyr: 6.2
+      uncertainty_gyr: 1.0
+      method: asteroseismology
+      recommended: true
+      notes: Global modelling of the 70 Oph A+B system using solar-like oscillations detected in A; applies
+        to both components.
+      reference: Eggenberger et al. 2008
+      bibcode: 2008A&A...482..631E
+      doi: 10.1051/0004-6361:20078624

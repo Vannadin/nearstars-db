@@ -1,0 +1,56 @@
+stellar:
+  Procyon A:
+    spectype: F5 IV-V
+    spectype_bibcode: 1989ApJS...71..245K
+    spectype_reference: Keenan & McNeil 1989
+    mass_measurements:
+    - value_msun: 1.499
+      uncertainty_msun: 0.031
+      method: binary_orbit
+      reference: Bond et al. 2015 (HST astrometry)
+      bibcode: 2015ApJ...813..106B
+      doi: 10.1088/0004-637X/813/2/106
+      recommended: true
+    radius_measurements:
+    - value_rsun: 2.048
+      uncertainty_rsun: 0.025
+      method: interferometry
+      reference: Aufdenberg et al. 2005
+      bibcode: 2005ApJ...633..424A
+      doi: 10.1086/452622
+      recommended: true
+    teff_measurements:
+    - value_k: 6543
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Consistent with interferometric determinations (Aufdenberg 2005). Luck 2017 6654 K; Gray
+        2003 6629 K — ~110 K spread across methods.
+      reference: Valenti & Fischer 2005
+      bibcode: 2005ApJS..159..141V
+      doi: 10.1086/430500
+    luminosity_measurements:
+    - value_lsun: 6.9
+      method: photometric
+      recommended: true
+      notes: log L = 0.84; SPOCS gives 6.1 Lsun.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -4.63
+      method: log_rhk
+      recommended: true
+      notes: Boro Saikia 2018 carries -4.75 and a -4.11 outlier; F-star R'HK is less reliable near the
+        granulation-dominated regime.
+      reference: Gray et al. 2003
+      bibcode: 2003AJ....126.2048G
+      doi: 10.1086/378365
+    age_measurements:
+    - value_gyr: 2.3
+      method: asteroseismology
+      recommended: true
+      notes: CESAM model constrained by VINCI/VLTI diameter + asteroseismic large separation (~2314 Myr);
+        Procyon A is ending its MS life. SPOCS isochrone 2.0 Gyr.
+      reference: Kervella et al. 2004
+      bibcode: 2004A&A...413..251K
+      doi: 10.1051/0004-6361:20031527

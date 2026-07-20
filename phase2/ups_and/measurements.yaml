@@ -1,0 +1,51 @@
+stellar:
+  ups And:
+    mass_measurements:
+    - value_msun: 1.3
+      uncertainty_msun: null
+      method: unverified
+      reference: Curiel et al. 2011
+      bibcode: 2011A&A...525A..78C
+      doi: null
+      recommended: true
+    radius_measurements:
+    - value_rsun: 1.56
+      uncertainty_rsun: null
+      method: unverified
+      reference: Curiel et al. 2011
+      bibcode: 2011A&A...525A..78C
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 6269
+      uncertainty_k: 66
+      method: high_res_spectroscopy
+      recommended: true
+      notes: SPOCS 6213 K.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 3.39
+      method: photometric
+      recommended: true
+      notes: log L = 0.53.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -4.88
+      method: log_rhk
+      recommended: true
+      notes: Catalog carries -4.88 and -4.77 (multi-source); moderately active F8.
+      reference: Boro Saikia et al. 2018
+      bibcode: 2018A&A...616A.108B
+      doi: 10.1051/0004-6361/201629518
+    age_measurements:
+    - value_gyr: 4.5
+      method: isochrone
+      recommended: true
+      notes: SPOCS isochrone gives 2.5 Gyr — genuine spread.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21

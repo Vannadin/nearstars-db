@@ -1,0 +1,54 @@
+stellar:
+  Eta Cassiopeiae A:
+    spectype: G3 V
+    spectype_bibcode: 1989ApJS...71..245K
+    spectype_reference: Keenan & McNeil 1989
+    mass_measurements:
+    - value_msun: 0.972
+      uncertainty_msun: 0.012
+      method: binary_orbit
+      reference: Boyajian et al. 2013 (interferometry + binary orbit)
+      bibcode: 2013ApJ...771...40B
+      doi: 10.1088/0004-637X/771/1/40
+      recommended: true
+    radius_measurements:
+    - value_rsun: 1.04
+      uncertainty_rsun: 0.04
+      method: interferometry
+      reference: Boyajian et al. 2013
+      bibcode: 2013ApJ...771...40B
+      doi: 10.1088/0004-637X/771/1/40
+      recommended: true
+    teff_measurements:
+    - value_k: 5937
+      uncertainty_k: 57
+      method: high_res_spectroscopy
+      recommended: true
+      notes: SPOCS 5941 K. Boyajian 2013 interferometry is the curated radius source.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 1.26
+      method: photometric
+      recommended: true
+      notes: log L = 0.10.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -4.86
+      method: log_rhk
+      recommended: true
+      notes: Classic Mount Wilson solar analog; moderate activity.
+      reference: Boro Saikia et al. 2018
+      bibcode: 2018A&A...616A.108B
+      doi: 10.1051/0004-6361/201629518
+    age_measurements:
+    - value_gyr: 6.5
+      method: isochrone
+      recommended: true
+      notes: SPOCS isochrone gives 5.7 Gyr.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21

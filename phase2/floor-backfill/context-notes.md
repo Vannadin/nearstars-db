@@ -138,3 +138,31 @@ Append-only. Started 2026-07-20.
   measurement.
 - Schema: luminosity gains `notes` (4th category this program; the whole
   *_measurements family now allows it consistently).
+
+## 2026-07-20 — FGK batch 1 applied (97 → 93; 15 more N/A markers, total 29)
+
+- **The tooling-limit vs N/A distinction did real work here.** The agent could
+  not reach the rotation-period catalogs (Suárez Mascareño 2015/2016, Donahue
+  1996 — not in TAPVizieR; ASU timeouts; digits absent from abstracts) for 9
+  bright dwarfs. Those rotations stay MISSING on the worklist (data exists,
+  we couldn't reach it), NOT floor_na. A main-thread attempt also failed
+  (mesRot is v-sin-i-only; my catalog-code guesses hit the wrong tables).
+  Follow-up: pull the CDS ftp ReadMe tables directly next session.
+- **Dropped an unverifiable digit**: 61 Cyg A "35.4 d (Boro Saikia 2016)" —
+  the abstract confirms the ZDI monitoring but not the number. Widely-quoted
+  ≠ sourced; left missing rather than curating folklore.
+- floor_na added: unresolved companions (70 Oph B teff/L/activity/rotation;
+  eta Cas B all five — coeval-age inheritance deliberately NOT curated as a
+  measurement) + giant-star index gaps (Capella/Arcturus/gam Cep activity —
+  R'HK is uncalibrated for giants; Capella/Arcturus/gam Cep rotation).
+- Arcturus luminosity stays missing (not N/A): ~170-200 Lsun is derivable but
+  cross-computed; a direct-L paper certainly exists for one of the
+  best-studied giants — follow-up item.
+- 55 Cnc B fully missing still: Moutou 2026 abstract carries no Teff
+  (main-thread checked); a paper-table read is the lead.
+- **DB audit flag from the agent (recorded, out of scope here)**: the curated
+  70 Oph A/B radius cites Boyajian 2008 (2008ApJ...683..424B) but that paper
+  is "mu Cas A, sigma Dra, HR 511" — likely mis-citation in the mass/radius
+  layer. Needs a dedicated audit pass.
+- Capella note: DB "Capella" host = Aa clump-giant primary values (Torres
+  2015); the Hertzsprung-gap Ab is not separately curated.

@@ -1,0 +1,49 @@
+stellar:
+  gam Cep:
+    mass_measurements:
+    - value_msun: 1.27
+      uncertainty_msun: 0.05
+      method: unverified
+      reference: Knudstrup et al. 2023
+      bibcode: 2023A&A...675A.197K
+      doi: 10.1051/0004-6361/202346707
+      recommended: true
+    radius_measurements:
+    - value_rsun: 4.74
+      uncertainty_rsun: 0.07
+      method: unverified
+      reference: Knudstrup et al. 2023
+      bibcode: 2023A&A...675A.197K
+      doi: 10.1051/0004-6361/202346707
+      recommended: true
+    teff_measurements:
+    - value_k: 4850
+      uncertainty_k: 4
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Gray 2003 gives 4761 K. Luck's formal 4 K error is internal precision only — real spread
+        ~90 K.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 11.5
+      method: photometric
+      recommended: true
+      notes: log L = 1.06; consistent with a first-ascent RGB star at R = 4.74 Rsun (Knudstrup 2023).
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    age_measurements:
+    - value_gyr: 5.7
+      uncertainty_gyr: 0.9
+      method: asteroseismology
+      recommended: true
+      notes: 5.7 (+0.8/-0.9) Gyr from SONG RV + TESS solar-like oscillations; same modelling as the curated
+        M/R. uncertainty = larger side.
+      reference: Knudstrup et al. 2023
+      bibcode: 2023A&A...675A.197K
+      doi: 10.1051/0004-6361/202346707
+    floor_na:
+      activity: No log R'HK for the K subgiant (Gray 2003 lists a null R'HK for gam Cep). Checked 2026-07-20.
+      rotation: Long-period evolved star; no cleanly measured rotation period exists.

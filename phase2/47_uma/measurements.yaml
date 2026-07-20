@@ -1,0 +1,59 @@
+stellar:
+  47 UMa:
+    mass_measurements:
+    - value_msun: 1.06
+      uncertainty_msun: 0.128402
+      method: unverified
+      reference: Stassun et al. 2019
+      bibcode: 2019AJ....158..138S
+      doi: null
+      recommended: true
+    radius_measurements:
+    - value_rsun: 1.21334
+      uncertainty_rsun: 0.038883
+      method: unverified
+      reference: Stassun et al. 2019
+      bibcode: 2019AJ....158..138S
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 5960
+      uncertainty_k: 60
+      method: high_res_spectroscopy
+      recommended: true
+      notes: Homogeneous nearby-FGK abundance survey. SPOCS 5882 K, Brewer 2016 5872 K agree within ~90
+        K.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 1.58
+      method: photometric
+      recommended: true
+      notes: log L = 0.20 (M_bol from V + BC + Hipparcos parallax).
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -5.02
+      method: log_rhk
+      recommended: true
+      notes: Boro Saikia 2018 gives -4.98/-4.86 multi-epoch. Inactive, near the solar-minimum floor.
+      reference: Mamajek & Hillenbrand 2008
+      bibcode: 2008ApJ...687.1264M
+      doi: 10.1086/591785
+    age_measurements:
+    - value_gyr: 3.3
+      method: isochrone
+      recommended: true
+      notes: Luck 2017 isochrone; SPOCS isochrone gives 5.0 Gyr.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    - value_gyr: 5.0
+      method: activity_age
+      recommended: false
+      notes: Chromospheric (R'HK) age — genuine disagreement with the younger isochrone.
+      reference: Mamajek & Hillenbrand 2008
+      bibcode: 2008ApJ...687.1264M
+      doi: 10.1086/591785

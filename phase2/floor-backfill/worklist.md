@@ -43,18 +43,18 @@ hosts are completed.
 
 ### Tier D — never Phase-2 curated (5–6 short; the long tail) — 112 hosts
 
-- [ ] `[fgkm]` **47 UMa** — activity, age, luminosity, rotation, teff
+- [ ] `[fgkm]` **47 UMa** — teff/L/activity/age DONE 2026-07-20 (Luck 2017 + MH08); rotation 잔여(Suárez Mascareño/Donahue 표 미접근 — 도구 한계, N/A 아님)
 - [ ] `[fgkm]` **55 Cnc B** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **61 Cygni A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **61 Cygni B** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **70 Ophiuchi A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **70 Ophiuchi B** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Arcturus** — activity, age, luminosity, rotation, teff
+- [ ] `[fgkm]` **61 Cygni A** — teff/L/activity/age DONE 2026-07-20 (Kervella 2008 계 나이 6.0); rotation 잔여(35.4 d 통설이나 초록 미기재 — 미조작 원칙으로 보류)
+- [ ] `[fgkm]` **61 Cygni B** — teff/L/activity/age DONE 2026-07-20; rotation 잔여
+- [ ] `[fgkm]` **70 Ophiuchi A** — teff/L/activity/age DONE 2026-07-20 (Eggenberger 2008 성진학 6.2 Gyr); rotation 잔여
+- [ ] `[fgkm]` **70 Ophiuchi B** — age DONE (계 나이) + teff/L/activity/rotation = floor_na(미분해 동반성) 2026-07-20
+- [ ] `[fgkm]` **Arcturus** — teff/age DONE (Ramirez 2011); activity/rotation = floor_na; luminosity 잔여(직접 L 출처 후속)
 - [ ] `[fgkm]` **CD Cet** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **COCONUTS-2 A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Capella** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Eta Cassiopeiae A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Eta Cassiopeiae B** — activity, age, luminosity, rotation, teff
+- [ ] `[fgkm]` **Capella** — teff/L/age DONE (Torres 2015 Aa 주성); activity/rotation = floor_na(거성 지표 부재) 2026-07-20
+- [ ] `[fgkm]` **Eta Cassiopeiae A** — teff/L/activity/age DONE 2026-07-20; rotation 잔여
+- [ ] `[fgkm]` **Eta Cassiopeiae B** — 전 카테고리 floor_na(미분해 희미한 동반성) 2026-07-20
 - [ ] `[fgkm]` **G 192-15** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **G 261-6** — activity, age, luminosity, radius, rotation, teff
 - [x] `[fgkm]` **GJ 1002** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
@@ -123,8 +123,8 @@ hosts are completed.
 - [ ] `[fgkm]` **HD 147513** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **HD 180617** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **HD 190007** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **HD 192310** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **HD 20794** — activity, age, luminosity, rotation, teff
+- [ ] `[fgkm]` **HD 192310** — teff/L/activity/age DONE 2026-07-20; rotation 잔여(~47 d 문헌 언급, bibcode 미확보)
+- [ ] `[fgkm]` **HD 20794** — teff/L/activity/age DONE 2026-07-20 (SPOCS+MH08, 매우 늙음 13.5 Gyr 천장값); rotation 잔여
 - [ ] `[fgkm]` **HD 211970** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **HD 222237** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **HD 22496** — activity, age, luminosity, rotation, teff
@@ -146,12 +146,12 @@ hosts are completed.
 - [ ] `[fgkm]` **LHS 3844** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **LHS 475** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **LTT 1445 A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Procyon A** — activity, age, luminosity, rotation, teff
+- [ ] `[fgkm]` **Procyon A** — teff/L/activity/age DONE (Kervella 2004 성진학 2.3 Gyr); rotation 잔여
 - [x] `[fgkm]` **Ross 128** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **Ross 508** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **TOI-540** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Wolf 1061** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Wolf 1069** — activity, age, luminosity, rotation, teff
 - [x] `[fgkm]` **Wolf 359** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
-- [ ] `[fgkm]` **gam Cep** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **ups And** — activity, age, luminosity, rotation, teff
+- [ ] `[fgkm]` **gam Cep** — teff/L/age DONE (Knudstrup 2023 성진학 5.7); activity/rotation = floor_na(아거성) 2026-07-20
+- [ ] `[fgkm]` **ups And** — teff/L/activity/age DONE 2026-07-20; rotation 잔여(도구 한계)

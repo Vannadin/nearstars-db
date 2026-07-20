@@ -1,0 +1,54 @@
+stellar:
+  61 Cygni B:
+    spectype: K7 V
+    spectype_bibcode: 1989ApJS...71..245K
+    spectype_reference: Keenan & McNeil 1989
+    mass_measurements:
+    - value_msun: 0.63
+      uncertainty_msun: 0.03
+      method: evolutionary_model
+      reference: Kervella et al. 2008
+      bibcode: 2008A&A...488..667K
+      doi: 10.1051/0004-6361:200810080
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.595
+      uncertainty_rsun: 0.008
+      method: interferometry
+      reference: Kervella et al. 2008
+      bibcode: 2008A&A...488..667K
+      doi: 10.1051/0004-6361:200810080
+      recommended: true
+    teff_measurements:
+    - value_k: 4171
+      uncertainty_k: 39
+      method: high_res_spectroscopy
+      recommended: true
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    luminosity_measurements:
+    - value_lsun: 0.083
+      method: photometric
+      recommended: true
+      notes: log L = -1.08.
+      reference: Luck 2017
+      bibcode: 2017AJ....153...21L
+      doi: 10.3847/1538-3881/153/1/21
+    activity_measurements:
+    - value_log_rhk: -4.86
+      method: log_rhk
+      recommended: true
+      notes: Boro Saikia 2018 gives -4.70/-4.72; slightly less active than A.
+      reference: Gray et al. 2003
+      bibcode: 2003AJ....126.2048G
+      doi: 10.1086/378365
+    age_measurements:
+    - value_gyr: 6.0
+      method: isochrone
+      recommended: true
+      notes: System age (A+B) from CESAM2k + interferometry. Luck 2017 isochrone for B alone gives an
+        anomalously young 3.3 Gyr (K7 isochrone degeneracy) — coeval system value preferred.
+      reference: Kervella et al. 2008
+      bibcode: 2008A&A...488..667K
+      doi: 10.1051/0004-6361:200810080
