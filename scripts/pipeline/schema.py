@@ -363,6 +363,8 @@ STELLAR_MEASUREMENT_KINDS = {
             "bolometric_flux", "sed_fitting", "photometric",
             "unverified",
         },
+        # 카탈로그 교차값·단서 서술 (floor 백필 2026-07-20부터).
+        "extra_keys": {"notes"},
     },
     "age_measurements": {
         "value_keys": {"value_gyr"},

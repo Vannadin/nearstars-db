@@ -1,0 +1,52 @@
+stellar:
+  GJ 667 C:
+    mass_measurements:
+    - value_msun: 0.33
+      uncertainty_msun: 0.02
+      method: unverified
+      reference: Anglada Escude et al. 2013
+      bibcode: 2013A&A...556A.126A
+      doi: 10.1051/0004-6361/201321331
+      recommended: true
+    teff_measurements:
+    - value_k: 3350
+      uncertainty_k: 50
+      method: sed_fitting
+      recommended: true
+      notes: '[Fe/H] = -0.55 metal-poor triple member; SIMBAD author spread 3350-3700 K.'
+      reference: Anglada-Escude et al. 2013
+      bibcode: 2013A&A...556A.126A
+      doi: 10.1051/0004-6361/201321331
+    luminosity_measurements:
+    - value_lsun: 0.0137
+      uncertainty_lsun: 0.0009
+      method: bolometric_flux
+      recommended: true
+      reference: Anglada-Escude et al. 2013
+      bibcode: 2013A&A...556A.126A
+      doi: 10.1051/0004-6361/201321331
+    rotation_measurements:
+    - value_days: 100
+      method: unverified
+      recommended: true
+      notes: 'LOWER LIMIT: P_rot > 100 d (very inactive; Anglada-Escude 2013). Engle 2024 adopts 103.1
+        d. Recorded at the limit value; method=unverified flags the bound.'
+      reference: Anglada-Escude et al. 2013
+      bibcode: 2013A&A...556A.126A
+      doi: 10.1051/0004-6361/201321331
+    age_measurements:
+    - value_gyr: 6.1
+      method: gyrochronology
+      recommended: true
+      notes: 'log Age = 0.788 +/- 0.112 dex -> 6.1 (+1.8/-1.4) Gyr. Anglada 2013: ''>2 Gyr'' (low activity
+        + kinematics, thin+thick disk).'
+      reference: Engle 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840
+    floor_na:
+      radius: 'No primary radius measurement (checked 2026-07-20: not in Cifuentes/Mann/Gaidos; no interferometric
+        diameter in SIMBAD mesDiameter; Anglada-Escude 2013 tabulates none). Stefan-Boltzmann from its
+        own L+Teff gives ~0.35 Rsun but that is a derived value, not a measurement.'
+      activity: No standard-index value published (not in Astudillo 2017). Anglada-Escude 2013 reports
+        S-index 0.48 +/- 0.02 (among the most inactive HARPS M dwarfs) but the schema carries no S-index
+        key; recorded here pending a log_rhk/Halpha determination.

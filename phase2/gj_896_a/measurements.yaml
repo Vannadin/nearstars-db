@@ -35,6 +35,42 @@ stellar:
         enters Curiel only as a literature compilation cite. No uncertainty published. Verbatim (2208.14553.md:27):
         "GJ 896A, is an M3.5 star with an estimated mass of 0.39 M_sun, a radius of 0.35 R_sun, a rotation
         period of 1.061 days, and a rotational inclination angle of 60 deg".'
+    inclination_measurements:
+    - value_deg: 60
+      method: zeeman_doppler
+      reference: Morin et al. 2008
+      bibcode: 2008MNRAS.390..567M
+      recommended: true
+      notes: ZDI of M dwarfs (via Curiel et al. 2022); no formal uncertainty published.
+    activity_measurements:
+    - value_x_ray_log_lx_lbol: -3.02
+      method: x_ray
+      reference: Morin et al. 2008
+      bibcode: 2008MNRAS.390..567M
+      recommended: true
+      notes: Morin 2008 Table 1 (ROSAT), EQ Peg A. Near the saturation ceiling, consistent with P_rot
+        1.061 d flare star. Chandra resolves A as 6-10x brighter than B (Liefke 2008) but gives only the
+        ratio. No resolved Halpha EW catalog value found.
+    luminosity_measurements:
+    - value_lsun: 0.018
+      method: photometric
+      reference: Morin et al. 2008
+      bibcode: 2008MNRAS.390..567M
+      recommended: true
+    age_measurements:
+    - value_gyr: 0.1
+      method: kinematic
+      reference: Zuckerman 2013
+      bibcode: 2013ApJ...778....5Z
+      recommended: true
+      notes: 'UPPER LIMIT/likely value: EQ Peg AB kinematics tie it to the young Octans-Near/Castor complex,
+        "likely age <=100 Myr", flagged as possibly the nearest pre-MS system (6.2 pc). No formal sigma.
+        Consistent with saturated X-ray + 1.06 d rotation.'
+    floor_na:
+      teff: 'No citable single-paper Teff for GJ 896 A / EQ Peg A (active close binary, excluded from
+        CARMENES/Mann samples). Checked 2026-07-20: SIMBAD mesFe_h empty; Cifuentes 2020 / Reiners 2018
+        / Jeffers 2018 / Mann 2015 absent; Morin 2008 tabulates no Teff. Revisit via a future dedicated
+        paper; Gaia GSP-Phot unreliable for an active close binary.'
 planets:
   GJ 896 A:
   - pl_name: GJ 896 A b

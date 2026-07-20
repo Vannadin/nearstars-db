@@ -53,6 +53,10 @@
       "★": "phase3/alpha-centauri-b.html"
     }
   },
+  "Altair": {
+    "phase2": "phase2/altair.html",
+    "phase3": {}
+  },
   "AU Mic": {
     "phase2": "phase2/au-mic.html",
     "phase3": {
@@ -72,6 +76,10 @@
       "d": "phase3/barnards-star-d.html",
       "e": "phase3/barnards-star-e.html"
     }
+  },
+  "CWISEP J193518.59-154620.3": {
+    "phase2": "phase2/cwisep-j193518-59-154620-3.html",
+    "phase3": {}
   },
   "Delta Pavonis": {
     "phase2": "phase2/delta-pavonis.html",
@@ -93,11 +101,59 @@
       "b": "phase3/eps-ind-a-b.html"
     }
   },
+  "eps Ind Ba": {
+    "phase2": "phase2/eps-ind-ba.html",
+    "phase3": {}
+  },
+  "eps Ind Bb": {
+    "phase2": "phase2/eps-ind-bb.html",
+    "phase3": {}
+  },
   "Fomalhaut": {
     "phase2": "phase2/fomalhaut.html",
     "phase3": {
       "★": "phase3/fomalhaut.html"
     }
+  },
+  "GJ 1002": {
+    "phase2": "phase2/gj-1002.html",
+    "phase3": {}
+  },
+  "GJ 1061": {
+    "phase2": "phase2/gj-1061.html",
+    "phase3": {}
+  },
+  "GJ 1214": {
+    "phase2": "phase2/gj-1214.html",
+    "phase3": {}
+  },
+  "GJ 273": {
+    "phase2": "phase2/gj-273.html",
+    "phase3": {}
+  },
+  "GJ 411": {
+    "phase2": "phase2/gj-411.html",
+    "phase3": {}
+  },
+  "GJ 436": {
+    "phase2": "phase2/gj-436.html",
+    "phase3": {}
+  },
+  "GJ 581": {
+    "phase2": "phase2/gj-581.html",
+    "phase3": {}
+  },
+  "GJ 667 C": {
+    "phase2": "phase2/gj-667-c.html",
+    "phase3": {}
+  },
+  "GJ 876": {
+    "phase2": "phase2/gj-876.html",
+    "phase3": {}
+  },
+  "GJ 887": {
+    "phase2": "phase2/gj-887.html",
+    "phase3": {}
   },
   "GJ 896 A": {
     "phase2": "phase2/gj-896-a.html",
@@ -134,6 +190,18 @@
       "d": "phase3/hd-69830-d.html"
     }
   },
+  "Kapteyn": {
+    "phase2": "phase2/kapteyn.html",
+    "phase3": {}
+  },
+  "L 98-59": {
+    "phase2": "phase2/l-98-59.html",
+    "phase3": {}
+  },
+  "LHS 1140": {
+    "phase2": "phase2/lhs-1140.html",
+    "phase3": {}
+  },
   "Luhman 16 A": {
     "phase2": "phase2/luhman-16-a.html",
     "phase3": {
@@ -158,6 +226,14 @@
       "c": "phase3/proxima-cen-c.html",
       "d": "phase3/proxima-cen-d.html"
     }
+  },
+  "Ross 128": {
+    "phase2": "phase2/ross-128.html",
+    "phase3": {}
+  },
+  "Sirius A": {
+    "phase2": "phase2/sirius-a.html",
+    "phase3": {}
   },
   "Sirius B": {
     "phase2": "phase2/sirius-b.html",
@@ -210,6 +286,10 @@
     "phase3": {
       "★": "phase3/vega.html"
     }
+  },
+  "Wolf 359": {
+    "phase2": "phase2/wolf-359.html",
+    "phase3": {}
   },
   "YZ Cet": {
     "phase2": "phase2/yz-cet.html",

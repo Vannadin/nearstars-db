@@ -1,0 +1,62 @@
+stellar:
+  Ross 128:
+    mass_measurements:
+    - value_msun: 0.168
+      uncertainty_msun: 0.017
+      method: unverified
+      reference: Bonfils et al. 2018
+      bibcode: 2018A&A...613A..25B
+      doi: 10.1051/0004-6361/201731973
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.1967
+      uncertainty_rsun: 0.0077
+      method: unverified
+      reference: Bonfils et al. 2018
+      bibcode: 2018A&A...613A..25B
+      doi: 10.1051/0004-6361/201731973
+      recommended: true
+    teff_measurements:
+    - value_k: 3100
+      method: sed_fitting
+      recommended: true
+      notes: SED-grid; Mann 2015 3192 +/- 60 K.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3264
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.0038273
+      uncertainty_lsun: 7.15e-05
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 112.83
+      method: photometric_variability
+      recommended: true
+      notes: 'Compiled (orig. Stelzer 2016). CONTESTED: Diez Alonso 2019 reports 163 +/- 3 d but with
+        non-significant FAP — unreliable. Long-period low-amplitude, genuinely uncertain.'
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    activity_measurements:
+    - value_log_rhk: -5.573
+      uncertainty_log_rhk: 0.082
+      method: log_rhk
+      recommended: true
+      notes: N=12; quiet.
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    floor_na:
+      age: No published age (not in Engle 2024; ADS title:(Ross 128) age/gyrochronology sweep negative,
+        2026-07-20).

@@ -1,0 +1,74 @@
+stellar:
+  Sirius A:
+    spectype: A1 V
+    spectype_bibcode: 1989ApJS...71..245K
+    spectype_reference: Keenan & McNeil 1989
+    mass_measurements:
+    - value_msun: 2.063
+      uncertainty_msun: 0.023
+      method: binary_orbit
+      reference: Bond et al. 2017 (HST astrometric orbit)
+      bibcode: 2017ApJ...840...70B
+      doi: 10.3847/1538-4357/aa6af8
+      recommended: true
+    radius_measurements:
+    - value_rsun: 1.7117
+      uncertainty_rsun: 0.0093
+      method: interferometry
+      reference: Kervella et al. 2003
+      bibcode: 2003A&A...408..681K
+      doi: 10.1051/0004-6361:20030994
+      recommended: true
+    teff_measurements:
+    - value_k: 9800
+      method: high_res_spectroscopy
+      reference: Gebran et al. 2016
+      bibcode: 2016A&A...589A..83G
+      recommended: true
+      notes: 'Spectroscopic parameter inversion (log g 4.2, [Fe/H] +0.2). Modern determinations cluster
+        9800-9850 K (Sitnova 2018 9850; Jarvinen 2025 9850). David & Hillenbrand 2015 10053 +/- 342 K
+        rejected: their isochrone mass (2.98 Msun) contradicts the dynamical 2.06 Msun.'
+    luminosity_measurements:
+    - value_lsun: 25.84
+      method: photometric
+      reference: Anderson & Francis 2012 (XHIP)
+      bibcode: 2012AstL...38..331A
+      recommended: true
+    rotation_measurements:
+    - value_days: 5.2
+      method: v_sin_i
+      reference: Diaz et al. 2011
+      bibcode: 2011A&A...531A.143D
+      recommended: true
+      notes: v sin i = 16.7 +/- 0.4 km/s (Fourier-transform method). P/sin i ~5.2 d upper limit at R =
+        1.711 Rsun (Kervella 2003, in-repo radius source). Literature v sin i clusters 16-17 km/s (Royer
+        2002; Jarvinen 2025).
+    age_measurements:
+    - value_gyr: 0.242
+      uncertainty_gyr: 0.015
+      method: isochrone
+      reference: Bond et al. 2017
+      bibcode: 2017ApJ...840...70B
+      doi: 10.3847/1538-4357/aa6af8
+      recommended: true
+      notes: Sirius A's own evolutionary-track age (237-247 Myr, two independent codes, at the dynamical
+        mass 2.063 Msun, Z ~0.85 Zsun). Same paper as the curated mass; coeval with the WD-companion system
+        age.
+    - value_gyr: 0.228
+      uncertainty_gyr: 0.01
+      method: wd_cooling_model
+      reference: Bond et al. 2017
+      bibcode: 2017ApJ...840...70B
+      doi: 10.3847/1538-4357/aa6af8
+      recommended: false
+      notes: System age via Sirius B (cooling ~126 Myr + progenitor lifetime = 228 +/- 10 Myr) — companion-derived,
+        same value curated on the Sirius B entry.
+    - value_gyr: 0.225
+      uncertainty_gyr: 0.012
+      method: isochrone
+      reference: Kervella et al. 2003
+      bibcode: 2003A&A...408..681K
+      doi: 10.1051/0004-6361:20030994
+      recommended: false
+      notes: Independent internal-structure age 200-250 +/- 12 Myr constrained by the VINCI/VLTI diameter
+        (theta_LD 6.039 mas -> 1.711 Rsun); Liebert 2005 TYCHO agrees (225-250 Myr).

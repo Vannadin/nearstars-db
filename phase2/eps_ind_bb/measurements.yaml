@@ -1,0 +1,54 @@
+stellar:
+  eps Ind Bb:
+    teff_k: 910
+    spectype: T6
+    mass_measurements:
+    - value_msun: 0.0508
+      uncertainty_msun: 0.0003
+      method: binary_orbit
+      reference: Chen et al. 2022
+      bibcode: 2022AJ....163..288C
+      doi: 10.3847/1538-3881/ac66d2
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.0825
+      uncertainty_rsun: 0.0005
+      method: evolutionary_model
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: true
+    teff_measurements:
+    - value_k: 910
+      uncertainty_k: 30
+      method: sed_fitting
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: true
+      notes: 880-940 K BT-Settl fit (log g 5.50); midpoint. COND03 evolutionary prediction hotter (976-1011
+        K). Chen 2022 adds no independent Teff.
+    luminosity_measurements:
+    - value_lsun: 5.86e-06
+      uncertainty_lsun: 2.7e-07
+      method: bolometric_flux
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: true
+    age_measurements:
+    - value_gyr: 3.5
+      uncertainty_gyr: 1.0
+      method: activity_age
+      reference: Chen et al. 2022
+      bibcode: 2022AJ....163..288C
+      doi: 10.3847/1538-3881/ac66d2
+      recommended: true
+      notes: Same Chen 2022 adopted system age as Ba (3.5 +0.8/-1.0 Gyr from eps Ind A activity).
+    - value_gyr: 4.0
+      method: isochrone
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: false
+      notes: Independent 3.7-4.3 Gyr (midpoint), dynamical mass + COND03 (system age).

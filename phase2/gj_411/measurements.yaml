@@ -1,0 +1,68 @@
+stellar:
+  GJ 411:
+    mass_measurements:
+    - value_msun: 0.3899
+      uncertainty_msun: 0.0106
+      method: unverified
+      reference: Hurt et al. 2022
+      bibcode: 2022AJ....163..218H
+      doi: 10.3847/1538-3881/ac5c47
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.3685
+      uncertainty_rsun: 0.0081
+      method: unverified
+      reference: Hurt et al. 2022
+      bibcode: 2022AJ....163..218H
+      doi: 10.3847/1538-3881/ac5c47
+      recommended: true
+    teff_measurements:
+    - value_k: 3500
+      method: sed_fitting
+      recommended: true
+      notes: CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3601
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.019506
+      uncertainty_lsun: 0.0013
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 56.15
+      uncertainty_days: 0.27
+      method: photometric_variability
+      recommended: true
+      notes: Consistent with Shan 2024 compiled 56.15 d (Diez Alonso) and Newton ~56 d.
+      reference: Engle 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840
+    activity_measurements:
+    - value_log_rhk: -5.5
+      uncertainty_log_rhk: 0.016
+      method: log_rhk
+      recommended: true
+      notes: Not in Astudillo (northern star). Corroborated by Schofer 2019 Halpha pEW -0.041 +/- 0.011
+        A (inactive).
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    age_measurements:
+    - value_gyr: 5.2
+      method: gyrochronology
+      recommended: true
+      notes: log Age = 0.719 +/- 0.119 dex -> 5.2 (+1.6/-1.3) Gyr; Prot 56.15 d.
+      reference: Engle 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840

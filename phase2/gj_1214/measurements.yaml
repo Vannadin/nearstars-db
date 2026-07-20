@@ -1,0 +1,56 @@
+stellar:
+  GJ 1214:
+    mass_measurements:
+    - value_msun: 0.182
+      uncertainty_msun: 0.0042
+      method: unverified
+      reference: Mahajan et al. 2024
+      bibcode: 2024ApJ...963L..37M
+      doi: 10.3847/2041-8213/ad29f3
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.2162
+      uncertainty_rsun: 0.0025
+      method: unverified
+      reference: Mahajan et al. 2024
+      bibcode: 2024ApJ...963L..37M
+      doi: 10.3847/2041-8213/ad29f3
+      recommended: true
+    teff_measurements:
+    - value_k: 3100
+      method: sed_fitting
+      recommended: true
+      notes: Mahajan 2024 (JWST) 3101 +/- 43 K — excellent agreement.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3101
+      uncertainty_k: 43
+      method: sed_fitting
+      reference: Mahajan et al. 2024
+      bibcode: 2024ApJ...963L..37M
+      doi: 10.3847/2041-8213/ad29f3
+      recommended: false
+    luminosity_measurements:
+    - value_lsun: 0.0034074
+      uncertainty_lsun: 4.96e-05
+      method: bolometric_flux
+      recommended: true
+      notes: Mahajan 2024 0.00390 (+0.00021/-0.00020); Cloutier 2021 0.0046.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 124.7
+      uncertainty_days: 5.0
+      method: photometric_variability
+      reference: Cloutier et al. 2021
+      bibcode: 2021AJ....162..174C
+      doi: 10.3847/1538-3881/ac1584
+      recommended: true
+      notes: GP on STELLA photometry.
+    floor_na:
+      activity: No numeric activity index published (checked 2026-07-20; Cloutier 2021 characterizes GJ
+        1214 only as 'an inactive mid-M dwarf').
+      age: No published age (not in Engle 2024; none in Mahajan 2024 / Cloutier 2021; ADS title:(GJ 1214)
+        age sweep negative, 2026-07-20).

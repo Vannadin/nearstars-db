@@ -1,0 +1,60 @@
+stellar:
+  L 98-59:
+    mass_measurements:
+    - value_msun: 0.2923
+      uncertainty_msun: 0.0067
+      method: unverified
+      reference: Cadieux et al. 2025
+      bibcode: 2025AJ....170..154C
+      doi: 10.3847/1538-3881/adef59
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.3155
+      uncertainty_rsun: 0.0062
+      method: unverified
+      reference: Cadieux et al. 2025
+      bibcode: 2025AJ....170..154C
+      doi: 10.3847/1538-3881/adef59
+      recommended: true
+    teff_measurements:
+    - value_k: 3415
+      uncertainty_k: 60
+      method: high_res_spectroscopy
+      reference: Cadieux et al. 2025
+      bibcode: 2025AJ....170..154C
+      doi: 10.3847/1538-3881/adef59
+      recommended: true
+      notes: Adopted from Demangeon 2021 (3415 +/- 60 K); same paper as the curated mass/radius. Too far
+        south for CARMENES.
+    luminosity_measurements:
+    - value_lsun: 0.0122
+      uncertainty_lsun: 0.001
+      method: bolometric_flux
+      reference: Cadieux et al. 2025
+      bibcode: 2025AJ....170..154C
+      doi: 10.3847/1538-3881/adef59
+      recommended: true
+      notes: Demangeon 2021 gives 0.01128 +/- 0.00042.
+    rotation_measurements:
+    - value_days: 77.5
+      uncertainty_days: 1.6
+      method: unverified
+      reference: Cadieux et al. 2025
+      bibcode: 2025AJ....170..154C
+      doi: 10.3847/1538-3881/adef59
+      recommended: true
+      notes: First robust Prot, from the dTemp differential-temperature spectroscopic indicator (not photometric
+        — hence unverified tag); Demangeon 2021 saw ~80 d signal.
+    age_measurements:
+    - value_gyr: 4.94
+      uncertainty_gyr: 0.28
+      method: gyrochronology
+      reference: Cadieux et al. 2025
+      bibcode: 2025AJ....170..154C
+      doi: 10.3847/1538-3881/adef59
+      recommended: true
+      notes: 'Gyro age via the Engle & Guinan 2023 rotation-age relation. Demangeon 2021 CMD: field age
+        0.8-10 Gyr (unconstrained).'
+    floor_na:
+      activity: No numeric activity index published (Cadieux 2025 reports only the spectroscopic rotation
+        signal). Checked 2026-07-20.

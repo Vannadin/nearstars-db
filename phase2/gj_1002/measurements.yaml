@@ -1,0 +1,55 @@
+stellar:
+  GJ 1002:
+    mass_measurements:
+    - value_msun: 0.12
+      uncertainty_msun: 0.01
+      method: unverified
+      reference: Suarez Mascareno et al. 2023
+      bibcode: 2023A&A...670A...5S
+      doi: null
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.137
+      uncertainty_rsun: 0.005
+      method: unverified
+      reference: Suarez Mascareno et al. 2023
+      bibcode: 2023A&A...670A...5S
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 2900
+      method: sed_fitting
+      recommended: true
+      notes: SED-grid, sigma~50 K.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    luminosity_measurements:
+    - value_lsun: 0.0014062
+      uncertainty_lsun: 1.92e-05
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 126
+      uncertainty_days: 15
+      method: unverified
+      reference: Suarez Mascareno et al. 2023
+      bibcode: 2023A&A...670A...5S
+      doi: 10.1051/0004-6361/202244991
+      recommended: true
+      notes: From RV + FWHM GP activity modeling (not photometric — hence unverified method tag). Supersedes
+        Shan 2024 compiled 93 d (Fouque 2023).
+    activity_measurements:
+    - value_h_alpha_ew_angstrom: 0.0
+      method: h_alpha
+      recommended: true
+      notes: 'pEW(Halpha) ~= 0: chromospherically quiet (Halpha filled-in). No log_rhk published.'
+      reference: Schofer et al. 2019
+      bibcode: 2019A&A...623A..44S
+      doi: 10.1051/0004-6361/201834114
+    floor_na:
+      age: No published age (not in Engle 2024; Suarez Mascareno 2023 gives none; ADS title:(GJ 1002)
+        age sweep negative, 2026-07-20).

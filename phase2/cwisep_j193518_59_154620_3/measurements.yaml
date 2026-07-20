@@ -1,0 +1,41 @@
+stellar:
+  CWISEP J193518.59-154620.3:
+    mass_measurements:
+    - value_msun: 0.024
+      uncertainty_msun: 0.013
+      method: unverified
+      reference: De Furio et al. 2025
+      bibcode: 2025ApJ...990L..63D
+      doi: 10.3847/2041-8213/adfee1
+      recommended: true
+    teff_measurements:
+    - value_k: 482
+      method: sed_fitting
+      reference: Faherty et al. 2024
+      bibcode: 2024Natur.628..511F
+      recommended: true
+      notes: JWST NIRSpec/NIRCam atmospheric modeling ("W1935"; same fit finds a ~300 K thermal inversion,
+        CH4 emission at 3.326 um). Corroborated by Suarez 2025. Combined-light value — De Furio 2025 later
+        resolved a ~172 mas Y+Y binary.
+    - value_k: 315
+      method: photometric_color
+      reference: Marocco et al. 2019
+      bibcode: 2019ApJ...881...17M
+      recommended: false
+      notes: Discovery estimate 270-360 K (midpoint) from Spitzer ch1-ch2 color relations — SUPERSEDED
+        by JWST 482 K (extreme IR color broke the photometric relation).
+    age_measurements:
+    - value_gyr: 5.5
+      method: unverified
+      reference: De Furio et al. 2025
+      bibcode: 2025ApJ...990L..63D
+      doi: 10.3847/2041-8213/adfee1
+      recommended: true
+      notes: ASSUMED field-age prior 1-10 Gyr (value = midpoint), adopted by De Furio 2025 to convert
+        ATMO2020 luminosities into masses (12-39 + 7-24 MJup). NOT a measurement — method=unverified flags
+        the assumption honestly. No independent age determination exists.
+    floor_na:
+      luminosity: 'No published bolometric luminosity (checked 2026-07-20: Faherty 2024 / De Furio 2025
+        / Suarez 2025 abstracts quote no log L; Kirkpatrick 2021 J/ApJS/253/7 lists parallax only).'
+      radius: No published radius (evolutionary-model dependent ~1 R_Jup typical for Y dwarfs; De Furio
+        2025 ATMO2020 fit quotes none; no VizieR/SIMBAD value).

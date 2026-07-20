@@ -1,0 +1,57 @@
+stellar:
+  GJ 887:
+    mass_measurements:
+    - value_msun: 0.495
+      uncertainty_msun: 0.049
+      method: unverified
+      reference: Hartogh et al. 2026
+      bibcode: 2026A&A...707A..93H
+      doi: 10.1051/0004-6361/202554984
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.468
+      uncertainty_rsun: 0.022
+      method: unverified
+      reference: Hartogh et al. 2026
+      bibcode: 2026A&A...707A..93H
+      doi: 10.1051/0004-6361/202554984
+      recommended: true
+    teff_measurements:
+    - value_k: 3688
+      uncertainty_k: 86
+      method: sed_fitting
+      recommended: true
+      notes: Consistent with Mann 2015 3688 +/- 86 K (interferometry-calibrated).
+      reference: Jeffers et al. 2020
+      bibcode: 2020Sci...368.1477J
+      doi: 10.1126/science.aaz0795
+    luminosity_measurements:
+    - value_lsun: 0.0368
+      uncertainty_lsun: 0.004
+      method: bolometric_flux
+      recommended: true
+      reference: Jeffers et al. 2020
+      bibcode: 2020Sci...368.1477J
+      doi: 10.1126/science.aaz0795
+    activity_measurements:
+    - value_log_rhk: -4.805
+      uncertainty_log_rhk: 0.023
+      method: log_rhk
+      recommended: true
+      notes: Dedicated multiplanet paper. Astudillo 2017 -4.843 +/- 0.173 (N=76). Authors call the star
+        'unusually magnetically quiet' for its Teff despite the relatively high index.
+      reference: Jeffers et al. 2020
+      bibcode: 2020Sci...368.1477J
+      doi: 10.1126/science.aaz0795
+    age_measurements:
+    - value_gyr: 2.9
+      method: gyrochronology
+      recommended: true
+      notes: log(age/yr) = 9.46 +/- 0.58 -> 2.9 Gyr (wide range 0.8-11 Gyr). Engle 2024 gyro 3.2 Gyr consistent.
+      reference: Jeffers et al. 2020
+      bibcode: 2020Sci...368.1477J
+      doi: 10.1126/science.aaz0795
+    floor_na:
+      rotation: 'No rotation period detectable: Jeffers 2020 (2020Sci...368.1477J) found no periodicity
+        despite extensive photometry (semi-amplitude 240 ppm, magnetically quiet). Activity-calibration
+        estimate only (~33 d, Astudillo -4.843; Engle 2024 adopts 33.0 d). Checked 2026-07-20.'

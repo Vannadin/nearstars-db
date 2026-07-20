@@ -109,3 +109,32 @@ Append-only. Started 2026-07-20.
   interferometric-first: Boyajian, Torres 2015 Capella, Mount Wilson
   rotation/activity, Mamajek & Hillenbrand 2008 ages). Schema enums embedded
   in the prompts this time — batch 1/2 lost a round-trip to enum drift.
+
+## 2026-07-20 — wave 1 applied (Tier C 6 + M-dwarf 15; 118 → 97, a/bd classes cleared)
+
+- 30 bibcodes re-verified against ADS on the main thread (Tier C 14 + M-dwarf
+  16); Engle 2024 log-age conversions spot-recomputed (Kapteyn 10^1.061 =
+  11.5 Gyr matches its independent kinematic halo age — good cross-check).
+- **Null-entry convention enforced at the merge step**: the M-dwarf agent
+  proposed "honest null" placeholder ENTRIES (value: null, method: unverified)
+  — converted to floor_na markers instead (the DB principle is null-is-absent,
+  and gate 10d now has a proper N/A channel). Also stripped a non-schema
+  `l_value: ">"` key; lower/upper limits live in notes (GJ 667 C >100 d,
+  LHS 1140 >5 Gyr, GJ 1061 >7 Gyr).
+- floor_na added this wave: GJ 896 A teff (active close binary, absent from
+  every catalog); CWISEP luminosity+radius; GJ 887 rotation (undetectable,
+  240 ppm semi-amplitude); GJ 667 C radius (no primary measurement — S-B from
+  its own L+Teff would be derived, not measured) + activity (S-index 0.48
+  published but schema has no S-index key); GJ 1214 activity+age; GJ 1002 age;
+  LHS 1140 activity; L 98-59 activity; Ross 128 age; Wolf 359 age. Total N/A
+  now 14 categories.
+- **Contested rotations recorded in notes, not resolved**: GJ 436 (44.6 vs
+  Engle 71.4 d), GJ 273 (93.5 vs 160.8 d), Ross 128 (112.8 vs non-significant
+  163 d), Kapteyn (83.7 vs 153/176 d). Where an Engle gyro age rests on the
+  longer period, the age note says so (GJ 436, GJ 273) — Phase 3 consumers
+  should read those notes before leaning on the age.
+- CWISEP age is De Furio 2025's ASSUMED 1-10 Gyr field prior (midpoint 5.5,
+  method=unverified) — a published adopted value, honestly flagged; not a
+  measurement.
+- Schema: luminosity gains `notes` (4th category this program; the whole
+  *_measurements family now allows it consistently).

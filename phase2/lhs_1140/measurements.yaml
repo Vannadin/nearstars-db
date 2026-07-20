@@ -1,0 +1,57 @@
+stellar:
+  LHS 1140:
+    mass_measurements:
+    - value_msun: 0.1844
+      uncertainty_msun: 0.0045
+      method: unverified
+      reference: Cadieux et al. 2024
+      bibcode: 2024ApJ...960L...3C
+      doi: null
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.2159
+      uncertainty_rsun: 0.003
+      method: unverified
+      reference: Cadieux et al. 2024
+      bibcode: 2024ApJ...960L...3C
+      doi: null
+      recommended: true
+    teff_measurements:
+    - value_k: 3096
+      uncertainty_k: 48
+      method: high_res_spectroscopy
+      reference: Cadieux et al. 2024
+      bibcode: 2024ApJ...960L...3C
+      doi: 10.3847/2041-8213/ad1691
+      recommended: true
+      notes: NIRPS spectroscopy; same paper as the curated mass/radius. Cifuentes 2020 SED Teff 3100 K
+        agrees.
+    luminosity_measurements:
+    - value_lsun: 0.00435
+      uncertainty_lsun: 7.23e-05
+      method: bolometric_flux
+      recommended: true
+      notes: LHS 1140 = Karmn J00449-152. Cadieux 2024 tabulates no L.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 131
+      method: photometric_variability
+      reference: Dittmann et al. 2017
+      bibcode: 2017Natur.544..333D
+      doi: 10.1038/nature22055
+      recommended: true
+      notes: MEarth photometry; cited by Cadieux 2024.
+    age_measurements:
+    - value_gyr: 5.0
+      method: kinematic
+      reference: Cadieux et al. 2024
+      bibcode: 2024ApJ...960L...3C
+      doi: 10.3847/2041-8213/ad1691
+      recommended: true
+      notes: 'LOWER LIMIT: ''>5 Gyr'' from thin-disk kinematics (Appendix C.1); no central value with
+        uncertainty exists.'
+    floor_na:
+      activity: No numeric activity index published (quiet slow rotator; Cadieux 2024 reports none). Checked
+        2026-07-20.

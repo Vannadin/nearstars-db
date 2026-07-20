@@ -1,0 +1,63 @@
+stellar:
+  Kapteyn:
+    mass_measurements:
+    - value_msun: 0.281
+      uncertainty_msun: 0.014
+      method: spectroscopic_calibration
+      reference: Anglada-Escude et al. 2014
+      bibcode: 2014MNRAS.443L..89A
+      doi: 10.1093/mnrasl/slu076
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.291
+      uncertainty_rsun: 0.025
+      method: spectroscopic_calibration
+      reference: Anglada-Escude et al. 2014
+      bibcode: 2014MNRAS.443L..89A
+      doi: 10.1093/mnrasl/slu076
+      recommended: true
+    teff_measurements:
+    - value_k: 3570
+      uncertainty_k: 80
+      method: sed_fitting
+      reference: Anglada-Escude et al. 2014
+      bibcode: 2014MNRAS.443L..89A
+      doi: 10.1093/mnrasl/slu076
+      recommended: true
+      notes: Metal-poor halo subdwarf ([Fe/H] ~ -0.9). SIMBAD author spread 3550-3742 K (Marfil 3571).
+    luminosity_measurements:
+    - value_lsun: 0.012
+      method: bolometric_flux
+      reference: Anglada-Escude et al. 2014
+      bibcode: 2014MNRAS.443L..89A
+      doi: 10.1093/mnrasl/slu076
+      recommended: true
+      notes: No published uncertainty.
+    rotation_measurements:
+    - value_days: 83.7
+      uncertainty_days: 0.3
+      method: photometric_variability
+      reference: Guinan et al. 2016
+      bibcode: 2016ApJ...821...81G
+      doi: 10.3847/0004-637X/821/2/81
+      recommended: true
+      notes: 'Adopted from photometric 82.2 +/- 11.3 d + Ca II HK 84.7 +/- 0.5 d. CONTESTED: Astudillo
+        activity-Prot 176 d; Engle 2024 adopts 153.2 d.'
+    activity_measurements:
+    - value_log_rhk: -5.938
+      uncertainty_log_rhk: 0.108
+      method: log_rhk
+      recommended: true
+      notes: N=30; extremely inactive (lowest in the HARPS sample).
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    age_measurements:
+    - value_gyr: 11.5
+      method: kinematic
+      reference: Guinan et al. 2016
+      bibcode: 2016ApJ...821...81G
+      doi: 10.3847/0004-637X/821/2/81
+      recommended: true
+      notes: 11.5 (+0.5/-1.5) Gyr from halo membership (high space motion + low metallicity, ~omega Cen
+        age). Engle 2024 gyro independently gives 10^1.061 = 11.5 Gyr — strong agreement.

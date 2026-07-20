@@ -1,0 +1,68 @@
+stellar:
+  GJ 273:
+    mass_measurements:
+    - value_msun: 0.29
+      uncertainty_msun: null
+      method: unverified
+      reference: Astudillo Defru et al. 2017
+      bibcode: 2017A&A...602A..88A
+      doi: 10.1051/0004-6361/201630153
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.293
+      uncertainty_rsun: 0.027
+      method: unverified
+      reference: Astudillo Defru et al. 2017
+      bibcode: 2017A&A...602A..88A
+      doi: 10.1051/0004-6361/201630153
+      recommended: true
+    teff_measurements:
+    - value_k: 3200
+      method: sed_fitting
+      recommended: true
+      notes: SED-grid; Mann 2015 3317 +/- 60 K.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    - value_k: 3365
+      uncertainty_k: 51
+      method: high_res_spectroscopy
+      recommended: false
+      reference: Schweitzer et al. 2019
+      bibcode: 2019A&A...625A..68S
+      doi: 10.1051/0004-6361/201834965
+    luminosity_measurements:
+    - value_lsun: 0.010148
+      uncertainty_lsun: 0.00029
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 93.5
+      method: photometric_variability
+      recommended: true
+      notes: 'Compiled (orig. Suarez Mascareno 2017). Astudillo activity-Prot 101 d. CONTESTED: Engle
+        2024 adopts 160.83 d — large disagreement.'
+      reference: Shan et al. 2024
+      bibcode: 2024A&A...684A...9S
+      doi: 10.1051/0004-6361/202346794
+    activity_measurements:
+    - value_log_rhk: -5.574
+      uncertainty_log_rhk: 0.065
+      method: log_rhk
+      recommended: true
+      notes: N=98.
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    age_measurements:
+    - value_gyr: 9.3
+      method: gyrochronology
+      recommended: true
+      notes: log Age = 0.968 +/- 0.069 dex -> 9.3 (+1.6/-1.4) Gyr; based on Prot 160.83 d, which disagrees
+        with the shorter curated period — treat with caution.
+      reference: Engle 2024
+      bibcode: 2024ApJ...960...62E
+      doi: 10.3847/1538-4357/ad0840

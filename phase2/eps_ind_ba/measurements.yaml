@@ -1,0 +1,57 @@
+stellar:
+  eps Ind Ba:
+    teff_k: 1320
+    spectype: T1.5
+    mass_measurements:
+    - value_msun: 0.0639
+      uncertainty_msun: 0.0003
+      method: binary_orbit
+      reference: Chen et al. 2022
+      bibcode: 2022AJ....163..288C
+      doi: 10.3847/1538-3881/ac66d2
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.0805
+      uncertainty_rsun: 0.0005
+      method: evolutionary_model
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: true
+    teff_measurements:
+    - value_k: 1320
+      uncertainty_k: 20
+      method: sed_fitting
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: true
+      notes: 1300-1340 K from 0.63-5.1 um VLT spectra vs BT-Settl models (log g 5.25); midpoint. COND03
+        evolutionary prediction hotter (1352-1385 K) — atmospheric vs evolutionary Teff tension noted
+        in-paper. Chen 2022 adds no independent Teff.
+    luminosity_measurements:
+    - value_lsun: 2.0e-05
+      uncertainty_lsun: 8.0e-07
+      method: bolometric_flux
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: true
+    age_measurements:
+    - value_gyr: 3.5
+      uncertainty_gyr: 1.0
+      method: activity_age
+      reference: Chen et al. 2022
+      bibcode: 2022AJ....163..288C
+      doi: 10.3847/1538-3881/ac66d2
+      recommended: true
+      notes: 3.5 (+0.8/-1.0) Gyr — Chen 2022's own adopted system age (from eps Ind A chromospheric activity)
+        used as the BD cooling benchmark; uncertainty = larger (lower) side.
+    - value_gyr: 4.0
+      method: isochrone
+      reference: King et al. 2010
+      bibcode: 2010A&A...510A..99K
+      doi: 10.1051/0004-6361/200912981
+      recommended: false
+      notes: Independent BD-derived system age 3.7-4.3 Gyr (midpoint) from dynamical mass + COND03 models;
+        superseded by the tighter Chen 2022 masses but retained.

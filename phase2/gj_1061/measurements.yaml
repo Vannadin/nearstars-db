@@ -1,0 +1,60 @@
+stellar:
+  GJ 1061:
+    mass_measurements:
+    - value_msun: 0.12
+      uncertainty_msun: 0.01
+      method: unverified
+      reference: Dreizler et al. 2025
+      bibcode: 2025A&A...698A.114D
+      doi: 10.1051/0004-6361/202452490
+      recommended: true
+    radius_measurements:
+    - value_rsun: 0.156
+      uncertainty_rsun: 0.005
+      method: unverified
+      reference: Dreizler et al. 2025
+      bibcode: 2025A&A...698A.114D
+      doi: 10.1051/0004-6361/202452490
+      recommended: true
+    teff_measurements:
+    - value_k: 2900
+      method: sed_fitting
+      recommended: true
+      notes: SED-grid; Dreizler 2020 cites Stassun 2953 +/- 98, Gaidos 2999 +/- 41.
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    luminosity_measurements:
+    - value_lsun: 0.0016521
+      uncertainty_lsun: 3.1e-05
+      method: bolometric_flux
+      recommended: true
+      reference: Cifuentes et al. 2020
+      bibcode: 2020A&A...642A.115C
+      doi: 10.1051/0004-6361/202038295
+    rotation_measurements:
+    - value_days: 130
+      method: photometric_variability
+      reference: Dreizler et al. 2020
+      bibcode: 2020MNRAS.493..536D
+      doi: 10.1093/mnras/staa248
+      recommended: true
+      notes: ~130 d in RV + photometry + Halpha; authors note plausible range 50-130 d.
+    activity_measurements:
+    - value_log_rhk: -5.754
+      uncertainty_log_rhk: 0.045
+      method: log_rhk
+      recommended: true
+      notes: N=6. Corroborated by Dreizler 2020 ('inactive', log LHa/Lbol <= -4.88).
+      reference: Astudillo-Defru et al. 2017
+      bibcode: 2017A&A...600A..13A
+      doi: 10.1051/0004-6361/201527078
+    age_measurements:
+    - value_gyr: 7.0
+      uncertainty_gyr: 0.5
+      method: activity_age
+      reference: Dreizler et al. 2020
+      bibcode: 2020MNRAS.493..536D
+      doi: 10.1093/mnras/staa248
+      recommended: true
+      notes: 'LOWER LIMIT: ''>7.0 +/- 0.5 Gyr'' from the absence of Halpha emission.'

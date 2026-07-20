@@ -318,7 +318,56 @@
         "doi": "10.3847/1538-4357/ac0aea",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 2800,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Mann 2015 2818 +/- 60 K, excellent agreement. Not in Schweitzer.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.001109,
+        "uncertainty_lsun": 2.31e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 2.704,
+        "uncertainty_days": 0.003,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "K2 photometry, FAP<1e-4. Fast rotator — young/active.",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": -7.22,
+        "uncertainty_h_alpha_ew_angstrom": 0.08,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "Halpha in emission (active flare star); log LHa/Lbol = -3.982. Negative pEW = emission.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      }
+    ],
+    "floor_na": {
+      "age": "No published numeric age (fast 2.7 d rotation + Halpha emission imply youth but no gyro/kinematic value exists; not in Engle 2024; ADS sweep negative, 2026-07-20)."
+    }
   },
   "70 Ophiuchi A": {
     "spectype": "K0 V",
@@ -398,6 +447,67 @@
         "bibcode": "2003A&A...408..681K",
         "doi": "10.1051/0004-6361:20030994",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 9800,
+        "method": "high_res_spectroscopy",
+        "reference": "Gebran et al. 2016",
+        "bibcode": "2016A&A...589A..83G",
+        "recommended": true,
+        "notes": "Spectroscopic parameter inversion (log g 4.2, [Fe/H] +0.2). Modern determinations cluster 9800-9850 K (Sitnova 2018 9850; Jarvinen 2025 9850). David & Hillenbrand 2015 10053 +/- 342 K rejected: their isochrone mass (2.98 Msun) contradicts the dynamical 2.06 Msun."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 25.84,
+        "method": "photometric",
+        "reference": "Anderson & Francis 2012 (XHIP)",
+        "bibcode": "2012AstL...38..331A",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 5.2,
+        "method": "v_sin_i",
+        "reference": "Diaz et al. 2011",
+        "bibcode": "2011A&A...531A.143D",
+        "recommended": true,
+        "notes": "v sin i = 16.7 +/- 0.4 km/s (Fourier-transform method). P/sin i ~5.2 d upper limit at R = 1.711 Rsun (Kervella 2003, in-repo radius source). Literature v sin i clusters 16-17 km/s (Royer 2002; Jarvinen 2025)."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.242,
+        "uncertainty_gyr": 0.015,
+        "method": "isochrone",
+        "reference": "Bond et al. 2017",
+        "bibcode": "2017ApJ...840...70B",
+        "doi": "10.3847/1538-4357/aa6af8",
+        "recommended": true,
+        "notes": "Sirius A's own evolutionary-track age (237-247 Myr, two independent codes, at the dynamical mass 2.063 Msun, Z ~0.85 Zsun). Same paper as the curated mass; coeval with the WD-companion system age."
+      },
+      {
+        "value_gyr": 0.228,
+        "uncertainty_gyr": 0.01,
+        "method": "wd_cooling_model",
+        "reference": "Bond et al. 2017",
+        "bibcode": "2017ApJ...840...70B",
+        "doi": "10.3847/1538-4357/aa6af8",
+        "recommended": false,
+        "notes": "System age via Sirius B (cooling ~126 Myr + progenitor lifetime = 228 +/- 10 Myr) — companion-derived, same value curated on the Sirius B entry."
+      },
+      {
+        "value_gyr": 0.225,
+        "uncertainty_gyr": 0.012,
+        "method": "isochrone",
+        "reference": "Kervella et al. 2003",
+        "bibcode": "2003A&A...408..681K",
+        "doi": "10.1051/0004-6361:20030994",
+        "recommended": false,
+        "notes": "Independent internal-structure age 200-250 +/- 12 Myr constrained by the VINCI/VLTI diameter (theta_LD 6.039 mas -> 1.711 Rsun); Liebert 2005 TYCHO agrees (225-250 Myr)."
       }
     ]
   },
@@ -625,6 +735,65 @@
         "bibcode": "2007Sci...317..342M",
         "doi": "10.1126/science.1143205",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 7550,
+        "method": "high_res_spectroscopy",
+        "reference": "Erspamer & North 2003",
+        "bibcode": "2003A&A...398.1121E",
+        "recommended": true,
+        "notes": "Disk-integrated spectroscopic Teff (log g 4.13, [Fe/H] -0.24). Altair is a rapid rotator with strong gravity darkening — interferometric imaging (Monnier 2007 2007Sci...317..342M; Bouchaud 2020) resolves a pole-hot/equator-cool gradient rather than a single Teff; the pole/equator values live in paper tables not extractable via ADS/VizieR channels. Zorec & Royer 2012 7727 +/- 71 K and David & Hillenbrand 2015 7799 +/- 265 K are consistent."
+      },
+      {
+        "value_k": 7727,
+        "uncertainty_k": 71,
+        "method": "photometric_color",
+        "reference": "Zorec & Royer 2012",
+        "bibcode": "2012A&A...537A.120Z",
+        "recommended": false,
+        "notes": "From logT = 3.888 +/- 0.004 (VizieR J/A+A/537/A120, HD 187642); companion to the recommended luminosity (same paper)."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 12.1,
+        "uncertainty_lsun": 0.4,
+        "method": "photometric",
+        "reference": "Zorec & Royer 2012",
+        "bibcode": "2012A&A...537A.120Z",
+        "recommended": true
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 0.324,
+        "method": "v_sin_i",
+        "reference": "Bouchaud et al. 2020",
+        "bibcode": "2020A&A...633A..78B",
+        "doi": "10.1051/0004-6361/201936830",
+        "recommended": true,
+        "notes": "Period 7h46m derived in-paper (single source) from v sin i ~243 km/s + V_eq ~314 km/s + R_eq 2.008 +/- 0.006 Rsun + i = 50.7 +/- 1.2 deg (2D ESTER model, asteroseismic); Omega/Omega_K 0.74, flattening 0.220. Near-true period (i constrained). Independent v sin i: van Belle 2001 210 +/- 13, Zorec & Royer 2012 217 km/s."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.1,
+        "method": "isochrone",
+        "reference": "Bouchaud et al. 2020",
+        "bibcode": "2020A&A...633A..78B",
+        "doi": "10.1051/0004-6361/201936830",
+        "recommended": true,
+        "notes": "~100 Myr from the 2D ESTER rotation-aware evolutionary model (core-H fraction Xc 0.71, M 1.86 +/- 0.03 Msun asteroseismically constrained). No formal sigma (model-dependent); consistent with Peterson 2006 \"barely off the ZAMS\"."
+      },
+      {
+        "value_gyr": 0.48,
+        "method": "isochrone",
+        "reference": "David & Hillenbrand 2015",
+        "bibcode": "2015ApJ...804..146D",
+        "recommended": false,
+        "notes": "482 Myr (68% CI 285-1055; VizieR J/ApJ/804/146, HIP 97649) from NON-rotating isochrones — unreliable for a rapid rotator; independent point only."
       }
     ]
   },
@@ -1548,7 +1717,56 @@
         "doi": "10.1051/0004-6361/201321331",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3350,
+        "uncertainty_k": 50,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "[Fe/H] = -0.55 metal-poor triple member; SIMBAD author spread 3350-3700 K.",
+        "reference": "Anglada-Escude et al. 2013",
+        "bibcode": "2013A&A...556A.126A",
+        "doi": "10.1051/0004-6361/201321331"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0137,
+        "uncertainty_lsun": 0.0009,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Anglada-Escude et al. 2013",
+        "bibcode": "2013A&A...556A.126A",
+        "doi": "10.1051/0004-6361/201321331"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 100,
+        "method": "unverified",
+        "recommended": true,
+        "notes": "LOWER LIMIT: P_rot > 100 d (very inactive; Anglada-Escude 2013). Engle 2024 adopts 103.1 d. Recorded at the limit value; method=unverified flags the bound.",
+        "reference": "Anglada-Escude et al. 2013",
+        "bibcode": "2013A&A...556A.126A",
+        "doi": "10.1051/0004-6361/201321331"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 6.1,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log Age = 0.788 +/- 0.112 dex -> 6.1 (+1.8/-1.4) Gyr. Anglada 2013: '>2 Gyr' (low activity + kinematics, thin+thick disk).",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
+    ],
+    "floor_na": {
+      "radius": "No primary radius measurement (checked 2026-07-20: not in Cifuentes/Mann/Gaidos; no interferometric diameter in SIMBAD mesDiameter; Anglada-Escude 2013 tabulates none). Stefan-Boltzmann from its own L+Teff gives ~0.35 Rsun but that is a derived value, not a measurement.",
+      "activity": "No standard-index value published (not in Astudillo 2017). Anglada-Escude 2013 reports S-index 0.48 +/- 0.02 (among the most inactive HARPS M dwarfs) but the schema carries no S-index key; recorded here pending a log_rhk/Halpha determination."
+    }
   },
   "GJ 896 A": {
     "spectype": "M3.5 Ve",
@@ -1595,7 +1813,39 @@
         "recommended": true,
         "notes": "ZDI of M dwarfs (via Curiel et al. 2022); no formal uncertainty published."
       }
-    ]
+    ],
+    "activity_measurements": [
+      {
+        "value_x_ray_log_lx_lbol": -3.02,
+        "method": "x_ray",
+        "reference": "Morin et al. 2008",
+        "bibcode": "2008MNRAS.390..567M",
+        "recommended": true,
+        "notes": "Morin 2008 Table 1 (ROSAT), EQ Peg A. Near the saturation ceiling, consistent with P_rot 1.061 d flare star. Chandra resolves A as 6-10x brighter than B (Liefke 2008) but gives only the ratio. No resolved Halpha EW catalog value found."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.018,
+        "method": "photometric",
+        "reference": "Morin et al. 2008",
+        "bibcode": "2008MNRAS.390..567M",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 0.1,
+        "method": "kinematic",
+        "reference": "Zuckerman 2013",
+        "bibcode": "2013ApJ...778....5Z",
+        "recommended": true,
+        "notes": "UPPER LIMIT/likely value: EQ Peg AB kinematics tie it to the young Octans-Near/Castor complex, \"likely age <=100 Myr\", flagged as possibly the nearest pre-MS system (6.2 pc). No formal sigma. Consistent with saturated X-ray + 1.06 d rotation."
+      }
+    ],
+    "floor_na": {
+      "teff": "No citable single-paper Teff for GJ 896 A / EQ Peg A (active close binary, excluded from CARMENES/Mann samples). Checked 2026-07-20: SIMBAD mesFe_h empty; Cifuentes 2020 / Reiners 2018 / Jeffers 2018 / Mann 2015 absent; Morin 2008 tabulates no Teff. Revisit via a future dedicated paper; Gaia GSP-Phot unreliable for an active close binary."
+    }
   },
   "G 192-15": {
     "mass_measurements": [
@@ -1645,7 +1895,56 @@
         "doi": "10.1051/0004-6361/202554984",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3688,
+        "uncertainty_k": 86,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Consistent with Mann 2015 3688 +/- 86 K (interferometry-calibrated).",
+        "reference": "Jeffers et al. 2020",
+        "bibcode": "2020Sci...368.1477J",
+        "doi": "10.1126/science.aaz0795"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0368,
+        "uncertainty_lsun": 0.004,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Jeffers et al. 2020",
+        "bibcode": "2020Sci...368.1477J",
+        "doi": "10.1126/science.aaz0795"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -4.805,
+        "uncertainty_log_rhk": 0.023,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Dedicated multiplanet paper. Astudillo 2017 -4.843 +/- 0.173 (N=76). Authors call the star 'unusually magnetically quiet' for its Teff despite the relatively high index.",
+        "reference": "Jeffers et al. 2020",
+        "bibcode": "2020Sci...368.1477J",
+        "doi": "10.1126/science.aaz0795"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 2.9,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log(age/yr) = 9.46 +/- 0.58 -> 2.9 Gyr (wide range 0.8-11 Gyr). Engle 2024 gyro 3.2 Gyr consistent.",
+        "reference": "Jeffers et al. 2020",
+        "bibcode": "2020Sci...368.1477J",
+        "doi": "10.1126/science.aaz0795"
+      }
+    ],
+    "floor_na": {
+      "rotation": "No rotation period detectable: Jeffers 2020 (2020Sci...368.1477J) found no periodicity despite extensive photometry (semi-amplitude 240 ppm, magnetically quiet). Activity-calibration estimate only (~33 d, Astudillo -4.843; Engle 2024 adopts 33.0 d). Checked 2026-07-20."
+    }
   },
   "GJ 1002": {
     "mass_measurements": [
@@ -1669,7 +1968,55 @@
         "doi": null,
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 2900,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "SED-grid, sigma~50 K.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0014062,
+        "uncertainty_lsun": 1.92e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 126,
+        "uncertainty_days": 15,
+        "method": "unverified",
+        "reference": "Suarez Mascareno et al. 2023",
+        "bibcode": "2023A&A...670A...5S",
+        "doi": "10.1051/0004-6361/202244991",
+        "recommended": true,
+        "notes": "From RV + FWHM GP activity modeling (not photometric — hence unverified method tag). Supersedes Shan 2024 compiled 93 d (Fouque 2023)."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_h_alpha_ew_angstrom": 0.0,
+        "method": "h_alpha",
+        "recommended": true,
+        "notes": "pEW(Halpha) ~= 0: chromospherically quiet (Halpha filled-in). No log_rhk published.",
+        "reference": "Schofer et al. 2019",
+        "bibcode": "2019A&A...623A..44S",
+        "doi": "10.1051/0004-6361/201834114"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; Suarez Mascareno 2023 gives none; ADS title:(GJ 1002) age sweep negative, 2026-07-20)."
+    }
   },
   "HD 190007": {
     "mass_measurements": [
@@ -1885,6 +2232,72 @@
         "bibcode": "2014AcA....64..323M",
         "doi": null,
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3400,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3505,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.024313,
+        "uncertainty_lsun": 0.00034,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 44.6,
+        "uncertainty_days": 2.0,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "SuperWASP, FAP<1e-4; Suarez Mascareno lit 44.09 d. CONTESTED: Engle 2024 adopts 71.4 d for its gyro age — literature disagrees on GJ 436 Prot.",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.457,
+        "uncertainty_log_rhk": 0.062,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=171 HARPS spectra. Shan 2024 compiles -5.27.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.6,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log Age = 0.659 +/- 0.076 dex -> 4.6 (+0.9/-0.7) Gyr; from adopted Prot 71.4 d (longer than the curated 44.6 d — see rotation note).",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
       }
     ]
   },
@@ -2585,7 +2998,56 @@
         "doi": null,
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3096,
+        "uncertainty_k": 48,
+        "method": "high_res_spectroscopy",
+        "reference": "Cadieux et al. 2024",
+        "bibcode": "2024ApJ...960L...3C",
+        "doi": "10.3847/2041-8213/ad1691",
+        "recommended": true,
+        "notes": "NIRPS spectroscopy; same paper as the curated mass/radius. Cifuentes 2020 SED Teff 3100 K agrees."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.00435,
+        "uncertainty_lsun": 7.23e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "notes": "LHS 1140 = Karmn J00449-152. Cadieux 2024 tabulates no L.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 131,
+        "method": "photometric_variability",
+        "reference": "Dittmann et al. 2017",
+        "bibcode": "2017Natur.544..333D",
+        "doi": "10.1038/nature22055",
+        "recommended": true,
+        "notes": "MEarth photometry; cited by Cadieux 2024."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 5.0,
+        "method": "kinematic",
+        "reference": "Cadieux et al. 2024",
+        "bibcode": "2024ApJ...960L...3C",
+        "doi": "10.3847/2041-8213/ad1691",
+        "recommended": true,
+        "notes": "LOWER LIMIT: '>5 Gyr' from thin-disk kinematics (Appendix C.1); no central value with uncertainty exists."
+      }
+    ],
+    "floor_na": {
+      "activity": "No numeric activity index published (quiet slow rotator; Cadieux 2024 reports none). Checked 2026-07-20."
+    }
   },
   "CWISEP J193518.59-154620.3": {
     "mass_measurements": [
@@ -2598,7 +3060,40 @@
         "doi": "10.3847/2041-8213/adfee1",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 482,
+        "method": "sed_fitting",
+        "reference": "Faherty et al. 2024",
+        "bibcode": "2024Natur.628..511F",
+        "recommended": true,
+        "notes": "JWST NIRSpec/NIRCam atmospheric modeling (\"W1935\"; same fit finds a ~300 K thermal inversion, CH4 emission at 3.326 um). Corroborated by Suarez 2025. Combined-light value — De Furio 2025 later resolved a ~172 mas Y+Y binary."
+      },
+      {
+        "value_k": 315,
+        "method": "photometric_color",
+        "reference": "Marocco et al. 2019",
+        "bibcode": "2019ApJ...881...17M",
+        "recommended": false,
+        "notes": "Discovery estimate 270-360 K (midpoint) from Spitzer ch1-ch2 color relations — SUPERSEDED by JWST 482 K (extreme IR color broke the photometric relation)."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 5.5,
+        "method": "unverified",
+        "reference": "De Furio et al. 2025",
+        "bibcode": "2025ApJ...990L..63D",
+        "doi": "10.3847/2041-8213/adfee1",
+        "recommended": true,
+        "notes": "ASSUMED field-age prior 1-10 Gyr (value = midpoint), adopted by De Furio 2025 to convert ATMO2020 luminosities into masses (12-39 + 7-24 MJup). NOT a measurement — method=unverified flags the assumption honestly. No independent age determination exists."
+      }
+    ],
+    "floor_na": {
+      "luminosity": "No published bolometric luminosity (checked 2026-07-20: Faherty 2024 / De Furio 2025 / Suarez 2025 abstracts quote no log L; Kirkpatrick 2021 J/ApJS/253/7 lists parallax only).",
+      "radius": "No published radius (evolutionary-model dependent ~1 R_Jup typical for Y dwarfs; De Furio 2025 ATMO2020 fit quotes none; no VizieR/SIMBAD value)."
+    }
   },
   "Proxima Cen": {
     "teff_k": 2904,
@@ -3589,7 +4084,58 @@
         "doi": "10.3847/1538-3881/adef59",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3415,
+        "uncertainty_k": 60,
+        "method": "high_res_spectroscopy",
+        "reference": "Cadieux et al. 2025",
+        "bibcode": "2025AJ....170..154C",
+        "doi": "10.3847/1538-3881/adef59",
+        "recommended": true,
+        "notes": "Adopted from Demangeon 2021 (3415 +/- 60 K); same paper as the curated mass/radius. Too far south for CARMENES."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0122,
+        "uncertainty_lsun": 0.001,
+        "method": "bolometric_flux",
+        "reference": "Cadieux et al. 2025",
+        "bibcode": "2025AJ....170..154C",
+        "doi": "10.3847/1538-3881/adef59",
+        "recommended": true,
+        "notes": "Demangeon 2021 gives 0.01128 +/- 0.00042."
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 77.5,
+        "uncertainty_days": 1.6,
+        "method": "unverified",
+        "reference": "Cadieux et al. 2025",
+        "bibcode": "2025AJ....170..154C",
+        "doi": "10.3847/1538-3881/adef59",
+        "recommended": true,
+        "notes": "First robust Prot, from the dTemp differential-temperature spectroscopic indicator (not photometric — hence unverified tag); Demangeon 2021 saw ~80 d signal."
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 4.94,
+        "uncertainty_gyr": 0.28,
+        "method": "gyrochronology",
+        "reference": "Cadieux et al. 2025",
+        "bibcode": "2025AJ....170..154C",
+        "doi": "10.3847/1538-3881/adef59",
+        "recommended": true,
+        "notes": "Gyro age via the Engle & Guinan 2023 rotation-age relation. Demangeon 2021 CMD: field age 0.8-10 Gyr (unconstrained)."
+      }
+    ],
+    "floor_na": {
+      "activity": "No numeric activity index published (Cadieux 2025 reports only the spectroscopic rotation signal). Checked 2026-07-20."
+    }
   },
   "GJ 238": {
     "mass_measurements": [
@@ -3733,6 +4279,72 @@
         "doi": "10.3847/1538-3881/ac5c47",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3500,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3601,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.019506,
+        "uncertainty_lsun": 0.0013,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 56.15,
+        "uncertainty_days": 0.27,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Consistent with Shan 2024 compiled 56.15 d (Diez Alonso) and Newton ~56 d.",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.5,
+        "uncertainty_log_rhk": 0.016,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "Not in Astudillo (northern star). Corroborated by Schofer 2019 Halpha pEW -0.041 +/- 0.011 A (inactive).",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 5.2,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log Age = 0.719 +/- 0.119 dex -> 5.2 (+1.6/-1.3) Gyr; Prot 56.15 d.",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
     ]
   },
   "GJ 1061": {
@@ -3756,6 +4368,63 @@
         "bibcode": "2025A&A...698A.114D",
         "doi": "10.1051/0004-6361/202452490",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 2900,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "SED-grid; Dreizler 2020 cites Stassun 2953 +/- 98, Gaidos 2999 +/- 41.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0016521,
+        "uncertainty_lsun": 3.1e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 130,
+        "method": "photometric_variability",
+        "reference": "Dreizler et al. 2020",
+        "bibcode": "2020MNRAS.493..536D",
+        "doi": "10.1093/mnras/staa248",
+        "recommended": true,
+        "notes": "~130 d in RV + photometry + Halpha; authors note plausible range 50-130 d."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.754,
+        "uncertainty_log_rhk": 0.045,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=6. Corroborated by Dreizler 2020 ('inactive', log LHa/Lbol <= -4.88).",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 7.0,
+        "uncertainty_gyr": 0.5,
+        "method": "activity_age",
+        "reference": "Dreizler et al. 2020",
+        "bibcode": "2020MNRAS.493..536D",
+        "doi": "10.1093/mnras/staa248",
+        "recommended": true,
+        "notes": "LOWER LIMIT: '>7.0 +/- 0.5 Gyr' from the absence of Halpha emission."
       }
     ]
   },
@@ -4061,6 +4730,72 @@
         "doi": "10.1088/0004-637x/719/1/890",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3200,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3377,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.012712,
+        "uncertainty_lsun": 0.00025,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 81.0,
+        "uncertainty_days": 0.8,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "ASAS; lit 96.7 d (Rivera 2005), Engle 87.95 d.",
+        "reference": "Diez Alonso et al. 2019",
+        "bibcode": "2019A&A...621A.126D",
+        "doi": "10.1051/0004-6361/201833316"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.496,
+        "uncertainty_log_rhk": 0.057,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=184.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 5.3,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log Age = 0.726 +/- 0.095 dex -> 5.3 (+1.3/-1.0) Gyr; Prot 87.95 d.",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
     ]
   },
   "GJ 1214": {
@@ -4085,7 +4820,55 @@
         "doi": "10.3847/2041-8213/ad29f3",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "Mahajan 2024 (JWST) 3101 +/- 43 K — excellent agreement.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3101,
+        "uncertainty_k": 43,
+        "method": "sed_fitting",
+        "reference": "Mahajan et al. 2024",
+        "bibcode": "2024ApJ...963L..37M",
+        "doi": "10.3847/2041-8213/ad29f3",
+        "recommended": false
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0034074,
+        "uncertainty_lsun": 4.96e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "notes": "Mahajan 2024 0.00390 (+0.00021/-0.00020); Cloutier 2021 0.0046.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 124.7,
+        "uncertainty_days": 5.0,
+        "method": "photometric_variability",
+        "reference": "Cloutier et al. 2021",
+        "bibcode": "2021AJ....162..174C",
+        "doi": "10.3847/1538-3881/ac1584",
+        "recommended": true,
+        "notes": "GP on STELLA photometry."
+      }
+    ],
+    "floor_na": {
+      "activity": "No numeric activity index published (checked 2026-07-20; Cloutier 2021 characterizes GJ 1214 only as 'an inactive mid-M dwarf').",
+      "age": "No published age (not in Engle 2024; none in Mahajan 2024 / Cloutier 2021; ADS title:(GJ 1214) age sweep negative, 2026-07-20)."
+    }
   },
   "GJ 9066": {
     "teff_k": 3100,
@@ -4918,6 +5701,71 @@
         "doi": "10.1051/0004-6361/201630153",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3200,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "SED-grid; Mann 2015 3317 +/- 60 K.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3365,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.010148,
+        "uncertainty_lsun": 0.00029,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 93.5,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Compiled (orig. Suarez Mascareno 2017). Astudillo activity-Prot 101 d. CONTESTED: Engle 2024 adopts 160.83 d — large disagreement.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.574,
+        "uncertainty_log_rhk": 0.065,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=98.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 9.3,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log Age = 0.968 +/- 0.069 dex -> 9.3 (+1.6/-1.4) Gyr; based on Prot 160.83 d, which disagrees with the shorter curated period — treat with caution.",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
+      }
     ]
   },
   "L 363-38": {
@@ -5223,6 +6071,71 @@
         "bibcode": "2024A&A...688A.112V",
         "doi": "10.1051/0004-6361/202449375",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3300,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "CARMENES BT-Settl SED-grid Teff (100 K grid, sigma~50 K).",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3441,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.012354,
+        "uncertainty_lsun": 0.00026,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 132.5,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Compiled Pbest (orig. Suarez Mascareno 2015). Genuinely uncertain: Astudillo activity-Prot 137 d, Engle 2024 147.8 d.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.776,
+        "uncertainty_log_rhk": 0.057,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=247; very inactive.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 9.3,
+        "method": "gyrochronology",
+        "recommended": true,
+        "notes": "log Age = 0.968 +/- 0.069 dex -> 9.3 (+1.6/-1.4) Gyr.",
+        "reference": "Engle 2024",
+        "bibcode": "2024ApJ...960...62E",
+        "doi": "10.3847/1538-4357/ad0840"
       }
     ]
   },
@@ -5547,7 +6460,64 @@
         "doi": "10.1051/0004-6361/201731973",
         "recommended": true
       }
-    ]
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3100,
+        "method": "sed_fitting",
+        "recommended": true,
+        "notes": "SED-grid; Mann 2015 3192 +/- 60 K.",
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      },
+      {
+        "value_k": 3264,
+        "uncertainty_k": 51,
+        "method": "high_res_spectroscopy",
+        "recommended": false,
+        "reference": "Schweitzer et al. 2019",
+        "bibcode": "2019A&A...625A..68S",
+        "doi": "10.1051/0004-6361/201834965"
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.0038273,
+        "uncertainty_lsun": 7.15e-05,
+        "method": "bolometric_flux",
+        "recommended": true,
+        "reference": "Cifuentes et al. 2020",
+        "bibcode": "2020A&A...642A.115C",
+        "doi": "10.1051/0004-6361/202038295"
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 112.83,
+        "method": "photometric_variability",
+        "recommended": true,
+        "notes": "Compiled (orig. Stelzer 2016). CONTESTED: Diez Alonso 2019 reports 163 +/- 3 d but with non-significant FAP — unreliable. Long-period low-amplitude, genuinely uncertain.",
+        "reference": "Shan et al. 2024",
+        "bibcode": "2024A&A...684A...9S",
+        "doi": "10.1051/0004-6361/202346794"
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.573,
+        "uncertainty_log_rhk": 0.082,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=12; quiet.",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "floor_na": {
+      "age": "No published age (not in Engle 2024; ADS title:(Ross 128) age/gyrochronology sweep negative, 2026-07-20)."
+    }
   },
   "GJ 15 A": {
     "mass_measurements": [
@@ -5908,6 +6878,64 @@
         "bibcode": "2014MNRAS.443L..89A",
         "doi": "10.1093/mnrasl/slu076",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 3570,
+        "uncertainty_k": 80,
+        "method": "sed_fitting",
+        "reference": "Anglada-Escude et al. 2014",
+        "bibcode": "2014MNRAS.443L..89A",
+        "doi": "10.1093/mnrasl/slu076",
+        "recommended": true,
+        "notes": "Metal-poor halo subdwarf ([Fe/H] ~ -0.9). SIMBAD author spread 3550-3742 K (Marfil 3571)."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 0.012,
+        "method": "bolometric_flux",
+        "reference": "Anglada-Escude et al. 2014",
+        "bibcode": "2014MNRAS.443L..89A",
+        "doi": "10.1093/mnrasl/slu076",
+        "recommended": true,
+        "notes": "No published uncertainty."
+      }
+    ],
+    "rotation_measurements": [
+      {
+        "value_days": 83.7,
+        "uncertainty_days": 0.3,
+        "method": "photometric_variability",
+        "reference": "Guinan et al. 2016",
+        "bibcode": "2016ApJ...821...81G",
+        "doi": "10.3847/0004-637X/821/2/81",
+        "recommended": true,
+        "notes": "Adopted from photometric 82.2 +/- 11.3 d + Ca II HK 84.7 +/- 0.5 d. CONTESTED: Astudillo activity-Prot 176 d; Engle 2024 adopts 153.2 d."
+      }
+    ],
+    "activity_measurements": [
+      {
+        "value_log_rhk": -5.938,
+        "uncertainty_log_rhk": 0.108,
+        "method": "log_rhk",
+        "recommended": true,
+        "notes": "N=30; extremely inactive (lowest in the HARPS sample).",
+        "reference": "Astudillo-Defru et al. 2017",
+        "bibcode": "2017A&A...600A..13A",
+        "doi": "10.1051/0004-6361/201527078"
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 11.5,
+        "method": "kinematic",
+        "reference": "Guinan et al. 2016",
+        "bibcode": "2016ApJ...821...81G",
+        "doi": "10.3847/0004-637X/821/2/81",
+        "recommended": true,
+        "notes": "11.5 (+0.5/-1.5) Gyr from halo membership (high space motion + low metallicity, ~omega Cen age). Engle 2024 gyro independently gives 10^1.061 = 11.5 Gyr — strong agreement."
       }
     ]
   },
@@ -6755,6 +7783,50 @@
         "doi": "10.1051/0004-6361/200912981",
         "recommended": true
       }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 1320,
+        "uncertainty_k": 20,
+        "method": "sed_fitting",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": true,
+        "notes": "1300-1340 K from 0.63-5.1 um VLT spectra vs BT-Settl models (log g 5.25); midpoint. COND03 evolutionary prediction hotter (1352-1385 K) — atmospheric vs evolutionary Teff tension noted in-paper. Chen 2022 adds no independent Teff."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 2e-05,
+        "uncertainty_lsun": 8e-07,
+        "method": "bolometric_flux",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 3.5,
+        "uncertainty_gyr": 1.0,
+        "method": "activity_age",
+        "reference": "Chen et al. 2022",
+        "bibcode": "2022AJ....163..288C",
+        "doi": "10.3847/1538-3881/ac66d2",
+        "recommended": true,
+        "notes": "3.5 (+0.8/-1.0) Gyr — Chen 2022's own adopted system age (from eps Ind A chromospheric activity) used as the BD cooling benchmark; uncertainty = larger (lower) side."
+      },
+      {
+        "value_gyr": 4.0,
+        "method": "isochrone",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": false,
+        "notes": "Independent BD-derived system age 3.7-4.3 Gyr (midpoint) from dynamical mass + COND03 models; superseded by the tighter Chen 2022 masses but retained."
+      }
     ]
   },
   "eps Ind Bb": {
@@ -6780,6 +7852,50 @@
         "bibcode": "2010A&A...510A..99K",
         "doi": "10.1051/0004-6361/200912981",
         "recommended": true
+      }
+    ],
+    "teff_measurements": [
+      {
+        "value_k": 910,
+        "uncertainty_k": 30,
+        "method": "sed_fitting",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": true,
+        "notes": "880-940 K BT-Settl fit (log g 5.50); midpoint. COND03 evolutionary prediction hotter (976-1011 K). Chen 2022 adds no independent Teff."
+      }
+    ],
+    "luminosity_measurements": [
+      {
+        "value_lsun": 5.86e-06,
+        "uncertainty_lsun": 2.7e-07,
+        "method": "bolometric_flux",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": true
+      }
+    ],
+    "age_measurements": [
+      {
+        "value_gyr": 3.5,
+        "uncertainty_gyr": 1.0,
+        "method": "activity_age",
+        "reference": "Chen et al. 2022",
+        "bibcode": "2022AJ....163..288C",
+        "doi": "10.3847/1538-3881/ac66d2",
+        "recommended": true,
+        "notes": "Same Chen 2022 adopted system age as Ba (3.5 +0.8/-1.0 Gyr from eps Ind A activity)."
+      },
+      {
+        "value_gyr": 4.0,
+        "method": "isochrone",
+        "reference": "King et al. 2010",
+        "bibcode": "2010A&A...510A..99K",
+        "doi": "10.1051/0004-6361/200912981",
+        "recommended": false,
+        "notes": "Independent 3.7-4.3 Gyr (midpoint), dynamical mass + COND03 (system age)."
       }
     ]
   }

@@ -1,0 +1,75 @@
+stellar:
+  Altair:
+    spectype: A7 V
+    spectype_bibcode: 2007Sci...317..342M
+    spectype_reference: Monnier et al. 2007
+    mass_measurements:
+    - value_msun: 1.791
+      uncertainty_msun: 0.018
+      method: evolutionary_model
+      reference: Bouchaud et al. 2020 (rotating evolutionary fit to interferometry)
+      bibcode: 2020A&A...633A..78B
+      doi: 10.1051/0004-6361/201936830
+      recommended: true
+    radius_measurements:
+    - value_rsun: 1.99
+      uncertainty_rsun: 0.02
+      method: interferometry
+      reference: Monnier et al. 2007 (mean radius; equatorial 2.03 polar 1.63 Rsun)
+      bibcode: 2007Sci...317..342M
+      doi: 10.1126/science.1143205
+      recommended: true
+    teff_measurements:
+    - value_k: 7550
+      method: high_res_spectroscopy
+      reference: Erspamer & North 2003
+      bibcode: 2003A&A...398.1121E
+      recommended: true
+      notes: Disk-integrated spectroscopic Teff (log g 4.13, [Fe/H] -0.24). Altair is a rapid rotator
+        with strong gravity darkening — interferometric imaging (Monnier 2007 2007Sci...317..342M; Bouchaud
+        2020) resolves a pole-hot/equator-cool gradient rather than a single Teff; the pole/equator values
+        live in paper tables not extractable via ADS/VizieR channels. Zorec & Royer 2012 7727 +/- 71 K
+        and David & Hillenbrand 2015 7799 +/- 265 K are consistent.
+    - value_k: 7727
+      uncertainty_k: 71
+      method: photometric_color
+      reference: Zorec & Royer 2012
+      bibcode: 2012A&A...537A.120Z
+      recommended: false
+      notes: From logT = 3.888 +/- 0.004 (VizieR J/A+A/537/A120, HD 187642); companion to the recommended
+        luminosity (same paper).
+    luminosity_measurements:
+    - value_lsun: 12.1
+      uncertainty_lsun: 0.4
+      method: photometric
+      reference: Zorec & Royer 2012
+      bibcode: 2012A&A...537A.120Z
+      recommended: true
+    rotation_measurements:
+    - value_days: 0.324
+      method: v_sin_i
+      reference: Bouchaud et al. 2020
+      bibcode: 2020A&A...633A..78B
+      doi: 10.1051/0004-6361/201936830
+      recommended: true
+      notes: 'Period 7h46m derived in-paper (single source) from v sin i ~243 km/s + V_eq ~314 km/s +
+        R_eq 2.008 +/- 0.006 Rsun + i = 50.7 +/- 1.2 deg (2D ESTER model, asteroseismic); Omega/Omega_K
+        0.74, flattening 0.220. Near-true period (i constrained). Independent v sin i: van Belle 2001
+        210 +/- 13, Zorec & Royer 2012 217 km/s.'
+    age_measurements:
+    - value_gyr: 0.1
+      method: isochrone
+      reference: Bouchaud et al. 2020
+      bibcode: 2020A&A...633A..78B
+      doi: 10.1051/0004-6361/201936830
+      recommended: true
+      notes: ~100 Myr from the 2D ESTER rotation-aware evolutionary model (core-H fraction Xc 0.71, M
+        1.86 +/- 0.03 Msun asteroseismically constrained). No formal sigma (model-dependent); consistent
+        with Peterson 2006 "barely off the ZAMS".
+    - value_gyr: 0.48
+      method: isochrone
+      reference: David & Hillenbrand 2015
+      bibcode: 2015ApJ...804..146D
+      recommended: false
+      notes: 482 Myr (68% CI 285-1055; VizieR J/ApJ/804/146, HIP 97649) from NON-rotating isochrones —
+        unreliable for a rapid rotator; independent point only.

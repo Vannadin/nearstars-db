@@ -34,12 +34,12 @@ hosts are completed.
 
 ### Tier C — partial (3–4 categories short) — 6 hosts
 
-- [ ] `[a]` **Altair** — age, luminosity, rotation, teff
-- [ ] `[a]` **Sirius A** — age, luminosity, rotation, teff
-- [ ] `[bd]` **CWISEP J193518.59-154620.3** — age, luminosity, radius, teff
-- [ ] `[bd]` **eps Ind Ba** — age, luminosity, teff
-- [ ] `[bd]` **eps Ind Bb** — age, luminosity, teff
-- [ ] `[fgkm]` **GJ 896 A** — activity, age, luminosity, teff
+- [x] `[a]` **Altair** — DONE 2026-07-20: teff 7550 (Erspamer 2003, GD-노트) + L 12.1 + rot 0.324 d (Bouchaud 2020 ESTER) + age ~0.1 Gyr
+- [x] `[a]` **Sirius A** — DONE 2026-07-20: teff 9800 (Gebran 2016) + L 25.84 (XHIP) + rot 5.2 d 상한 + age 0.242 Gyr (Bond 2017 자체 트랙, WD 계 나이와 정합)
+- [x] `[bd]` **CWISEP J193518.59-154620.3** — DONE 2026-07-20: teff 482 K (Faherty 2024 JWST; Marocco 315 K supersede) + age = De Furio 2025 채택 prior(unverified); L·radius = floor_na
+- [x] `[bd]` **eps Ind Ba** — DONE 2026-07-20: teff 1320 + L 2.0e-5 (King 2010) + age 3.5 Gyr (Chen 2022 채택)
+- [x] `[bd]` **eps Ind Bb** — DONE 2026-07-20: teff 910 + L 5.86e-6 (King 2010) + age 3.5 Gyr (Chen 2022 채택)
+- [x] `[fgkm]` **GJ 896 A** — DONE 2026-07-20: activity Lx/Lbol −3.02 (Morin 2008) + L 0.018 + age ≤0.1 Gyr (Zuckerman 2013 Octans-Near); teff = floor_na (인용가능 측정 부재)
 
 ### Tier D — never Phase-2 curated (5–6 short; the long tail) — 112 hosts
 
@@ -57,12 +57,12 @@ hosts are completed.
 - [ ] `[fgkm]` **Eta Cassiopeiae B** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **G 192-15** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **G 261-6** — activity, age, luminosity, radius, rotation, teff
-- [ ] `[fgkm]` **GJ 1002** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 1061** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 1002** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
+- [x] `[fgkm]` **GJ 1061** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 1132** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 1148** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 1151** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 1214** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 1214** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 1265** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 1289** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **GJ 15 A** — activity, age, luminosity, rotation, teff
@@ -71,7 +71,7 @@ hosts are completed.
 - [ ] `[fgkm]` **GJ 229** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **GJ 238** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 251** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 273** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 273** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 317** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 3323** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 338 B** — activity, age, luminosity, rotation, teff
@@ -82,20 +82,20 @@ hosts are completed.
 - [ ] `[fgkm]` **GJ 3779** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 393** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 3988** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 411** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 411** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 414 A** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 422** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **GJ 4274** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 433** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 436** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 436** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 480** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 486** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 514** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 536** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 581** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 581** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 625** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 649** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 667 C** — activity, age, luminosity, radius, rotation, teff
+- [x] `[fgkm]` **GJ 667 C** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 674** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **GJ 680** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **GJ 682** — activity, age, luminosity, radius, rotation, teff
@@ -106,8 +106,8 @@ hosts are completed.
 - [ ] `[fgkm]` **GJ 832** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 849** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **GJ 86** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 876** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **GJ 887** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **GJ 876** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
+- [x] `[fgkm]` **GJ 887** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **GJ 96** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **Gl 378** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Gl 410** — activity, age, luminosity, rotation, teff
@@ -139,19 +139,19 @@ hosts are completed.
 - [ ] `[fgkm]` **HIP 56998** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **HIP 79431** — activity, age, luminosity, radius, rotation, teff
 - [ ] `[fgkm]` **HN Lib** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Kapteyn** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **Kapteyn** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **L 363-38** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **L 98-59** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **LHS 1140** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **L 98-59** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
+- [x] `[fgkm]` **LHS 1140** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **LHS 3844** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **LHS 475** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **LTT 1445 A** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Procyon A** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Ross 128** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **Ross 128** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **Ross 508** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **TOI-540** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Wolf 1061** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **Wolf 1069** — activity, age, luminosity, rotation, teff
-- [ ] `[fgkm]` **Wolf 359** — activity, age, luminosity, rotation, teff
+- [x] `[fgkm]` **Wolf 359** — DONE 2026-07-20 (wave 1, catalog-first; floor_na where no measurement exists)
 - [ ] `[fgkm]` **gam Cep** — activity, age, luminosity, rotation, teff
 - [ ] `[fgkm]` **ups And** — activity, age, luminosity, rotation, teff
