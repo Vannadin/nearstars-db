@@ -38,10 +38,16 @@ Driven by `phase4/_audit/emit-readiness-review.md`. Order = the review's remedia
 - [ ] EN narrative cells (currently chrome is bilingual, prose is KR-only — needs per-row `narrative_en` later)
 
 ## Resolver adoption (pipeline-flow-program, 2026-07-20)
-- [ ] **Field-alignment map**: phase4 SPEC §0 menu name ↔ phase3 Decisions key ↔ cfg key.
-      Prerequisite for any real phase4-over-phase3 override — the two vocabularies are
-      currently disjoint (resolver dry-run: 0 natural collisions across the roster).
-      Raw material: curation-data-contract SPEC "full cfg field inventory (by axis)".
+- [x] **Field-alignment map** — `scripts/pipeline/field_alignment.yaml` (2026-07-20).
+      93/93 board field names mapped to their phase3 key candidates (priority order,
+      so a unit-less board value lands on the right unit variant per body class) plus
+      implied unit + cfg target. Resolver consumes it; the override layer now actually
+      fires (α Cen 0 → 24 real overrides, 40 Eri 36, tau Cet 4). Coverage enforced by
+      gate 10f. Empty `phase3:` = board-authoritative by design.
+      **Unit traps recorded for emit**: board `pressure` is atm/bar vs phase3 Pa;
+      board `surface_temperature`/`temperature` sometimes °C vs phase3 K; board
+      `gravity` absolute m/s² vs phase3 g_earth; `base_colour` is a spelling duplicate
+      of `base_color` (normalize on next board touch).
 - [ ] Rewire all 4 emitters to read `scripts/pipeline/resolve_emit_values.py` output
       (kopernicus/firefly drop their local Decisions regex → shared parser comes free);
       ring/disk inputs move from the never-created kopernicus_extras.yaml to phase4 fields.

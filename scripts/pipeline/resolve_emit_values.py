@@ -20,8 +20,11 @@ Output per body:
                 fields come straight from here)
     phase3    — {decision label: value} from the report's Decisions table
     phase4    — {axis: [field dicts]} from gated/emitted board rows
-    effective — {field: {value, op, source}} — phase3 names overlaid by
-                phase4 field names; source ∈ {phase3, phase4}
+    effective — {field: {value, op, source, board_name, overrides_phase3}} —
+                phase3 names overlaid by phase4 fields. The board writes menu
+                names without units, so `field_alignment.yaml` maps each to the
+                phase3 key that body actually used; `overrides_phase3` is set
+                only when the override genuinely lands on a phase3 decision.
 """
 
 from __future__ import annotations
@@ -38,6 +41,29 @@ from _naming import to_url_slug  # noqa: E402
 from phase3_decisions import as_simple_dict, parse_decisions  # noqa: E402
 
 APPLY_STATUSES = {"gated", "emitted"}  # passthrough = no override; superseded/open skipped
+
+
+def load_alignment() -> dict[str, dict]:
+    """phase4 menu name -> alignment entry (field_alignment.yaml)."""
+    f = Path(__file__).resolve().parent / "field_alignment.yaml"
+    doc = yaml.safe_load(f.read_text(encoding="utf-8"))
+    return {str(e["phase4"]): e for e in doc.get("alignment", [])}
+
+
+def align_key(p4_name: str, p3_keys, alignment: dict[str, dict]) -> tuple[str, str | None]:
+    """Canonical key for a phase4 field, plus the phase3 key it overrides.
+
+    The board carries no units, so the unit variant is chosen by which
+    candidate the body's own report actually used (priority order in the map).
+    Unmapped names pass through under their board name — visible via gate 10f.
+    """
+    entry = alignment.get(p4_name)
+    if not entry:
+        return p4_name, None
+    for cand in entry.get("phase3") or []:
+        if cand in p3_keys:
+            return cand, cand
+    return p4_name, None
 
 
 def _load_db_bodies(roster: list[dict], board_stem: str) -> dict[str, dict]:
@@ -71,6 +97,7 @@ def _phase3_for(body: str, kind: str, host: str) -> dict[str, str]:
 
 
 def resolve(board_stem: str) -> dict[str, dict]:
+    alignment = load_alignment()
     roster = yaml.safe_load((REPO / "db" / "roster.yaml").read_text(encoding="utf-8"))["confirmed"]
     board_path = REPO / "phase4" / f"{board_stem}.yaml"
     board = yaml.safe_load(board_path.read_text(encoding="utf-8")) if board_path.exists() else {}
@@ -103,10 +130,13 @@ def resolve(board_stem: str) -> dict[str, dict]:
             if flds:
                 p4_axes.setdefault(axis, []).extend(flds)
             for f in flds:
-                effective[str(f["name"])] = {
+                key, overrides = align_key(str(f["name"]), p3, alignment)
+                effective[key] = {
                     "value": f.get("value"),
                     "op": f.get("op", "set"),
                     "source": "phase4",
+                    "board_name": str(f["name"]),
+                    "overrides_phase3": overrides,
                 }
         out[body] = {
             "db": info["record"] if info else None,
@@ -129,11 +159,14 @@ def main() -> None:
     for body, r in resolved.items():
         n4 = sum(len(v) for v in r["phase4"].values())
         n_over = sum(1 for e in r["effective"].values() if e["source"] == "phase4")
+        n_real = sum(
+            1 for e in r["effective"].values() if e.get("overrides_phase3")
+        )
         print(
             f"{body:28s} db:{'Y' if r['db'] else '-'} "
             f"phase3:{len(r['phase3']):3d} decisions  "
             f"phase4:{n4:3d} fields  effective:{len(r['effective']):3d} "
-            f"({n_over} overridden by phase4)"
+            f"({n_over} from phase4, {n_real} real overrides)"
         )
 
 

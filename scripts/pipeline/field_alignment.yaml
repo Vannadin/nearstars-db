@@ -1,0 +1,529 @@
+# phase4 메뉴명 ↔ phase3 Decisions 키 ↔ cfg 타깃 정렬표 (emit 선결 조건, pipeline-contract.md §3)
+# regenerable: no — hand-curated contract data; edit here, never in the resolver
+#
+# Why this file exists
+# --------------------
+# phase4 boards name a field the way the owner picks it from a menu (`mass`,
+# `radius`, `rotation_period`) — no units, because the board is an art-direction
+# record. phase3 Decisions name the same quantity with its unit baked in
+# (`mass_msun` / `mass_mearth` / `mass_mjup`). The two vocabularies therefore
+# never collide on their own, and the resolver's phase4-over-phase3 override
+# layer was a no-op until this map existed (resolver dry-run 2026-07-20:
+# 0 natural collisions across the roster).
+#
+# Entry shape
+# -----------
+#   - phase4:  board menu name (the key written in `fields[].name`)
+#     phase3:  candidate Decisions keys, PRIORITY ORDER. The resolver picks the
+#              first candidate present in that body's report — this is how the
+#              unit variant gets chosen per body class without the board
+#              carrying a unit.
+#     unit:    what the bare phase4 value means, per class (documentation +
+#              the trap to check before emit does arithmetic)
+#     cfg:     downstream emitter target(s). `-` = not emitted directly
+#              (informational / feeds another field's synthesis).
+#     applies: star | planet | any   (which db kind the entry is valid for)
+#
+# Coverage is reported, never assumed: `check_pipeline_flow.py` gate 10f counts
+# phase4 names with no entry here and phase3 keys no board can reach.
+
+alignment:
+
+  # ── identity ────────────────────────────────────────────────────────────
+  - phase4: body_type
+    phase3: [spectral_type, object_type, disposition]
+    unit: prose
+    cfg: {kopernicus: "template selection"}
+    applies: any
+  - phase4: designation
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "Properties/displayName"}
+    applies: any
+  - phase4: cultural_name
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "Properties/displayName (cultural variant)"}
+    applies: any
+  - phase4: discoverability
+    phase3: [detection_status]
+    unit: prose
+    cfg: {researchbodies: "IGNORELEVELS + ONDISCOVERY"}
+    applies: any
+
+  # ── bulk ────────────────────────────────────────────────────────────────
+  - phase4: mass
+    phase3: [mass_msun, mass_mearth, mass_mjup, mass_msini_mearth, mass_msini_mjup, mass_estimate_mearth_true]
+    unit: {star: M_sun, planet: M_earth}
+    cfg: {kopernicus: "Properties/mass", principia: "gravitational_parameter_km3_s2"}
+    applies: any
+  - phase4: radius
+    phase3: [radius_rsun, radius_rearth, radius_rjup, radius_km]
+    unit: {star: R_sun, planet: R_earth}
+    cfg: {kopernicus: "Properties/radius", principia: "mean_radius_km"}
+    applies: any
+  - phase4: gravity
+    phase3: [surface_gravity_g_earth]
+    unit: {star: "m/s^2", planet: "m/s^2 (board writes absolute, phase3 writes g_earth)"}
+    cfg: {kopernicus: "Properties/geeASL"}
+    applies: any
+  - phase4: age
+    phase3: [age_gyr, total_age_gyr, characteristic_age_myr]
+    unit: Gyr
+    cfg: {}
+    applies: any
+  - phase4: cooling_age
+    phase3: [cooling_age_myr]
+    unit: Myr
+    cfg: {}
+    applies: star
+  - phase4: rotation_period
+    phase3: [rotation_period_days, rotation_period_hours, rotation_period_h, sidereal_period_days, spin_period_s]
+    unit: {star: days, planet: hours}
+    cfg: {kopernicus: "Properties/rotationPeriod (seconds)"}
+    applies: any
+  - phase4: obliquity
+    phase3: [obliquity_deg]
+    unit: deg
+    cfg: {kopernicus: "Orbit/inclination + axial tilt handling"}
+    applies: planet
+  - phase4: spin_axis_orientation
+    phase3: [spin_axis_inclination_deg, rotational_inclination_deg]
+    unit: deg
+    cfg: {principia: "spin axis (right ascension / declination)"}
+    applies: any
+  - phase4: flattening
+    phase3: [stellar_oblateness_ratio]
+    unit: dimensionless (f)
+    cfg: {kopernicus: "VertexHeightOblateAdvanced a:b:c"}
+    applies: any
+  - phase4: geopotential_j2
+    phase3: [figure_j2]
+    unit: dimensionless (unnormalized J2)
+    cfg: {principia: "principia_gravity_model.j2"}
+    applies: any
+  - phase4: geopotential_c22
+    phase3: []
+    unit: dimensionless (normalized C22)
+    cfg: {principia: "geopotential_row C22"}
+    applies: planet
+  - phase4: j4
+    phase3: []
+    unit: dimensionless
+    cfg: {principia: "geopotential_row J4"}
+    applies: any
+  - phase4: reference_radius
+    phase3: []
+    unit: m
+    cfg: {principia: "principia_gravity_model.reference_radius"}
+    applies: any
+  - phase4: intrinsic_luminosity
+    phase3: [luminosity_lsun, intrinsic_luminosity_w_m2]
+    unit: {star: L_sun, planet: "W/m^2"}
+    cfg: {kopernicus: "Properties/luminosity (star)"}
+    applies: any
+  - phase4: internal_heat
+    phase3: [tidal_heating_w_m2, radiogenic_heat_w_m2, induction_heating_w_m2]
+    unit: "W/m^2"
+    cfg: {}
+    applies: planet
+  - phase4: tidal_heating
+    phase3: [tidal_heating_w_m2]
+    unit: "W/m^2 (board may write x-Io)"
+    cfg: {}
+    applies: planet
+  - phase4: tidal_surface_flux
+    phase3: [tidal_heating_w_m2]
+    unit: "W/m^2"
+    cfg: {}
+    applies: planet
+  - phase4: composition
+    phase3: [atmosphere_composition, core_composition]
+    unit: prose
+    cfg: {kopernicus: "Atmosphere (composition drives tint + scale height)"}
+    applies: any
+
+  # ── orbit ───────────────────────────────────────────────────────────────
+  - phase4: semi_major_axis_au
+    phase3: [semi_major_axis_au]
+    unit: AU
+    cfg: {kopernicus: "Orbit/semiMajorAxis (m)", principia: "Keplerian a"}
+    applies: planet
+  - phase4: eccentricity
+    phase3: [eccentricity]
+    unit: dimensionless
+    cfg: {kopernicus: "Orbit/eccentricity", principia: "Keplerian e"}
+    applies: planet
+  - phase4: inclination_deg
+    phase3: [inclination_deg, mutual_inclination_deg]
+    unit: deg
+    cfg: {kopernicus: "Orbit/inclination", principia: "Keplerian i"}
+    applies: planet
+  - phase4: longitude_ascending_node
+    phase3: [longitude_of_ascending_node_deg]
+    unit: deg
+    cfg: {kopernicus: "Orbit/longitudeOfAscendingNode", principia: "Keplerian Omega"}
+    applies: planet
+  - phase4: argument_periapsis
+    phase3: [argument_of_periastron_deg, argument_of_periapsis_deg]
+    unit: deg
+    cfg: {kopernicus: "Orbit/argumentOfPeriapsis", principia: "Keplerian omega"}
+    applies: planet
+  - phase4: mean_anomaly
+    phase3: [mean_anomaly_at_epoch_deg]
+    unit: deg
+    cfg: {kopernicus: "Orbit/meanAnomalyAtEpoch", principia: "Keplerian M"}
+    applies: planet
+  - phase4: epoch
+    phase3: [epoch_jd]
+    unit: JD (phase3) / seconds-from-game-epoch (board)
+    cfg: {kopernicus: "Orbit/epoch", principia: "epoch"}
+    applies: planet
+  - phase4: tidal_lock
+    phase3: [tidally_locked]
+    unit: bool / resonance ratio
+    cfg: {kopernicus: "Properties/tidallyLocked"}
+    applies: planet
+  - phase4: spin_orbit_resonance
+    phase3: [tidally_locked]
+    unit: ratio prose
+    cfg: {kopernicus: "Properties/rotationPeriod (derived)"}
+    applies: planet
+
+  # ── surface ─────────────────────────────────────────────────────────────
+  - phase4: surface_type
+    phase3: [surface_morphology]
+    unit: prose
+    cfg: {kopernicus: "PQS material + template"}
+    applies: planet
+  - phase4: surface_temperature
+    phase3: [surface_temp_global_mean_k, surface_temp_k, dayside_surface_temp_k, surface_temp_substellar_k, equilibrium_temp_k]
+    unit: {default: K, note: "board sometimes writes °C — convert before emit"}
+    cfg: {kopernicus: "Atmosphere/temperatureCurve anchor"}
+    applies: planet
+  - phase4: albedo
+    phase3: [bond_albedo]
+    unit: dimensionless 0-1
+    cfg: {kopernicus: "Properties/albedo"}
+    applies: planet
+  - phase4: hydrosphere
+    phase3: [ocean_present, ocean_extent_substellar_radius_deg, water_mass_fraction]
+    unit: prose
+    cfg: {kopernicus: "Ocean node"}
+    applies: planet
+  - phase4: ice_caps
+    phase3: [surface_ice_caps, subsurface_water_ice_probable]
+    unit: prose / bool
+    cfg: {kopernicus: "PQS color map (polar)"}
+    applies: planet
+  - phase4: tectonics
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "PQS terrain mods"}
+    applies: planet
+  - phase4: terrain
+    phase3: [surface_morphology]
+    unit: prose
+    cfg: {kopernicus: "PQS terrain mods"}
+    applies: planet
+  - phase4: biosphere
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "PQS color map (art)"}
+    applies: planet
+
+  # ── atmosphere ──────────────────────────────────────────────────────────
+  - phase4: pressure
+    phase3: [atmosphere_surface_pressure_pa, atmosphere_reference_pressure_pa]
+    unit: {board: atm-or-bar, phase3: Pa}
+    cfg: {kopernicus: "Atmosphere/staticPressureASL"}
+    applies: planet
+  - phase4: temperature
+    phase3: [surface_temp_global_mean_k, equilibrium_temp_k]
+    unit: {default: K, note: "board sometimes writes °C"}
+    cfg: {kopernicus: "Atmosphere/temperatureCurve"}
+    applies: planet
+  - phase4: scale_height
+    phase3: [atmosphere_scale_height_km]
+    unit: km
+    cfg: {kopernicus: "Atmosphere/atmosphereDepth (derived)"}
+    applies: planet
+  - phase4: greenhouse
+    phase3: []
+    unit: K (delta)
+    cfg: {}
+    applies: planet
+  - phase4: escape
+    phase3: [atmospheric_escape_rate_g_s]
+    unit: "g/s"
+    cfg: {}
+    applies: planet
+  - phase4: breathability
+    phase3: [atmosphere_composition]
+    unit: bool
+    cfg: {kopernicus: "Atmosphere/containsOxygen"}
+    applies: planet
+
+  # ── appearance ──────────────────────────────────────────────────────────
+  - phase4: color
+    phase3: [visual_surface_tint_hex_primary, visual_point_tint_hex, host_visual_tint_hex]
+    unit: hex
+    cfg: {firefly: "star tint", kopernicus: "sunlightColor / scaled tint"}
+    applies: star
+  - phase4: base_color
+    phase3: [surface_tint_rgb_hex_primary, surface_tint_rgb_hex]
+    unit: hex
+    cfg: {kopernicus: "PQS color map base"}
+    applies: planet
+  - phase4: base_colour
+    phase3: [surface_tint_rgb_hex_primary, surface_tint_rgb_hex]
+    unit: hex
+    cfg: {kopernicus: "PQS color map base"}
+    applies: planet
+    note: British-spelling duplicate of base_color — normalize on next board touch
+  - phase4: surface
+    phase3: [surface_tint_rgb_hex_primary, surface_tint_rgb_hex_accent]
+    unit: hex / prose
+    cfg: {kopernicus: "PQS color map"}
+    applies: planet
+  - phase4: clouds
+    phase3: [cloud_morphology, cloud_cover_fraction, cloud_tint_rgb_hex]
+    unit: prose
+    cfg: {eve: "cloud layer (local emitter)"}
+    applies: planet
+  - phase4: cloud_coverage
+    phase3: [cloud_cover_fraction]
+    unit: fraction 0-1
+    cfg: {eve: "cloud layer coverage (local emitter)"}
+    applies: planet
+  - phase4: haze
+    phase3: [photochemical_haze_tint_rgb_hex, photochemical_haze_present]
+    unit: hex
+    cfg: {scatterer: "haze tint (local emitter)"}
+    applies: planet
+  - phase4: aurora
+    phase3: [aurora_color_primary_hex, aurora_present, aurora_color_secondary_hex, aurora_emission_species_primary]
+    unit: hex / prose
+    cfg: {eve: "aurora layer (local emitter)"}
+    applies: planet
+  - phase4: specular
+    phase3: [ocean_present]
+    unit: prose
+    cfg: {kopernicus: "Ocean/OceanFX"}
+    applies: planet
+  - phase4: emission_glow
+    phase3: []
+    unit: hex ramp
+    cfg: {kopernicus: "PQS emissive"}
+    applies: planet
+  - phase4: limb_darkening
+    phase3: [limb_darkening_alpha_h]
+    unit: alpha (H band)
+    cfg: {firefly: "limb darkening"}
+    applies: star
+  - phase4: granulation
+    phase3: []
+    unit: prose
+    cfg: {firefly: "surface granulation"}
+    applies: star
+  - phase4: corona
+    phase3: [visual_corona_extent_radii]
+    unit: stellar radii
+    cfg: {firefly: "corona extent"}
+    applies: star
+  - phase4: spots_faculae
+    phase3: [visual_spot_coverage_max, spot_coverage_max_fraction, spot_temp_k, spot_feature_area_disk_pct]
+    unit: fraction / K
+    cfg: {firefly: "spot coverage"}
+    applies: star
+  - phase4: flares
+    phase3: [flare_rate_per_day, flare_state, flare_color_temp_k, flare_rate_per_day_total, flare_energy_log_erg_max]
+    unit: prose / per-day
+    cfg: {firefly: "flare cadence + color"}
+    applies: star
+  - phase4: banding_base
+    phase3: []
+    unit: hex
+    cfg: {kopernicus: "gas-giant band texture"}
+    applies: planet
+  - phase4: banding_belt
+    phase3: []
+    unit: hex
+    cfg: {kopernicus: "gas-giant band texture"}
+    applies: planet
+  - phase4: banding_chromophore
+    phase3: []
+    unit: hex
+    cfg: {kopernicus: "gas-giant band texture"}
+    applies: planet
+  - phase4: banding_storm_eye
+    phase3: []
+    unit: hex
+    cfg: {kopernicus: "gas-giant band texture"}
+    applies: planet
+  - phase4: banding_morphology
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "gas-giant band texture variant"}
+    applies: planet
+  - phase4: artificial
+    phase3: []
+    unit: prose
+    cfg: {}
+    applies: planet
+
+  # ── magnetism / environment ─────────────────────────────────────────────
+  - phase4: magnetic_field
+    phase3: [magnetic_field_strength_microtesla_equator, magnetic_field_present, magnetic_dipole_moment_normalized_earth, magnetic_field_kg, planet_magnetic_field_g]
+    unit: {star: kG, planet: uT}
+    cfg: {kerbalism: "magnetosphere"}
+    applies: any
+  - phase4: magnetic_field_polar
+    phase3: [planet_magnetic_field_polar_g, magnetic_field_polar_bp_kg]
+    unit: {star: kG, planet: G}
+    cfg: {kerbalism: "magnetosphere"}
+    applies: any
+  - phase4: magnetosphere
+    phase3: [magnetosphere_standoff_planet_radii, magnetosphere_present]
+    unit: planet radii
+    cfg: {kerbalism: "magnetosphere standoff"}
+    applies: planet
+  - phase4: radiation
+    phase3: [surface_radiation_dose_msv_yr, radiation_belt_present, atmospheric_shielding_g_cm2, stellar_radiation_surface_relative_sun]
+    unit: {star: x-Sun, planet: mSv/yr}
+    cfg: {kerbalism: "radiation environment"}
+    applies: any
+  - phase4: uv_xray_flux
+    phase3: [x_ray_log_lx_cgs, x_ray_log_lx_cgs_min, x_ray_log_lx_cgs_max, xuv_flux_at_planet_F_earth]
+    unit: log erg/s (cgs)
+    cfg: {kerbalism: "radiation environment"}
+    applies: any
+  - phase4: activity
+    phase3: [activity_log_rhk, activity_cycle_years, activity_state, activity_log_lhalpha_lbol]
+    unit: prose / dex
+    cfg: {firefly: "activity-driven variability"}
+    applies: star
+  - phase4: stellar_wind
+    phase3: []
+    unit: prose (mass-loss, x-Sun)
+    cfg: {kerbalism: "stellar wind"}
+    applies: star
+  - phase4: heliosphere
+    phase3: []
+    unit: AU (standoff)
+    cfg: {kerbalism: "astrosphere (plugin for tail shape)"}
+    applies: star
+  - phase4: habitable_zone
+    phase3: [habitable_zone_inner_au, habitable_zone_outer_au]
+    unit: AU
+    cfg: {}
+    applies: star
+
+  # ── rings / satellites ──────────────────────────────────────────────────
+  - phase4: ring_structure
+    phase3: [ring_inner_au, ring_outer_au, ring_inner_radius_bodyradii, ring_outer_radius_bodyradii, ring_present]
+    unit: body radii / km
+    cfg: {kopernicus: "Rings/innerRadius + outerRadius"}
+    applies: planet
+  - phase4: ring_inner_annulus_km
+    phase3: [ring_inner_au, ring_inner_radius_bodyradii]
+    unit: km
+    cfg: {kopernicus: "Rings/innerRadius"}
+    applies: planet
+  - phase4: ring_outer_annulus_km
+    phase3: [ring_outer_au, ring_outer_radius_bodyradii]
+    unit: km
+    cfg: {kopernicus: "Rings/outerRadius"}
+    applies: planet
+  - phase4: ring_gap_km
+    phase3: [ring_gap_radius_au]
+    unit: km
+    cfg: {kopernicus: "Rings (multi-annulus split)"}
+    applies: planet
+  - phase4: ring_color
+    phase3: [ring_color_hex, ring_visual_tint_hex]
+    unit: hex
+    cfg: {kopernicus: "Rings/color RGBA"}
+    applies: planet
+  - phase4: ring_opacity
+    phase3: [ring_opacity]
+    unit: dimensionless 0-1
+    cfg: {kopernicus: "Rings/color alpha"}
+    applies: planet
+  - phase4: ring_composition
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "Rings/texture variant"}
+    applies: planet
+  - phase4: ring_plane
+    phase3: [ring_inclination_deg, ring_prograde]
+    unit: deg
+    cfg: {kopernicus: "Rings/angle + lockRotation"}
+    applies: planet
+  - phase4: ring_brightness_R_jup
+    phase3: []
+    unit: R_jup-relative brightness
+    cfg: {kopernicus: "Rings/color alpha (informational)"}
+    applies: planet
+  - phase4: rings
+    phase3: [ring_present]
+    unit: prose / bool
+    cfg: {kopernicus: "Rings presence gate"}
+    applies: any
+  - phase4: satellites
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "child body list"}
+    applies: any
+  - phase4: co_orbitals
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "child body list"}
+    applies: any
+  - phase4: dust_sources
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "Rings/texture rationale"}
+    applies: any
+  - phase4: lagrange_placement
+    phase3: [orbital_role_around_acen_ab]
+    unit: prose
+    cfg: {principia: "initial state placement"}
+    applies: planet
+
+  # ── gameplay (board-authoritative: no phase3 counterpart by design) ─────
+  - phase4: difficulty
+    phase3: []
+    unit: prose
+    cfg: {researchbodies: "IGNORELEVELS"}
+    applies: any
+  - phase4: science_biomes
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "Biomes node"}
+    applies: any
+  - phase4: sphere_of_influence_tuning
+    phase3: []
+    unit: m / auto
+    cfg: {kopernicus: "Properties/sphereOfInfluence"}
+    applies: any
+  - phase4: timewarp_limits
+    phase3: []
+    unit: prose
+    cfg: {kopernicus: "Properties/timewarpAltitudeLimits"}
+    applies: any
+
+# phase3 keys that no board menu currently reaches. These are NOT errors — a
+# phase3 decision without a board counterpart simply emits unopposed (phase3 is
+# the value spine). Listed so the gap is visible when a board axis is designed.
+phase3_only_families:
+  - insolation_s_earth*        # derived illumination, never an owner choice
+  - equilibrium_temp_k*        # derived; the board picks surface_temperature instead
+  - density_g_cc               # derived from mass+radius
+  - star_apparent_angular_diameter_deg*
+  - stellar_illumination_color_temp_k
+  - atmosphere_tint_rgb_hex    # board writes haze/clouds instead
+  - disk_*                     # circumstellar disks: phase3 → Kopernicus Ring directly
+  - visual_companion_event_*   # open-naming binary events (Firefly/Kopernicus)
+  - dayside_brightness_temp_k_*  # JWST observables, not cfg inputs
+  - spi_*                      # star-planet interaction (flux-tube plugin backlog)

@@ -71,12 +71,18 @@ db/systems derived  <  phase3 Decisions (parsed)  <  phase4 fields[] (gated)
   그렇게 가정하지 마세요.
 - 값은 정확히 하나의 권위 레이어에만 존재해야 합니다. 산문(board `narrative:`)에서 다시
   말하는 것은 표시일 뿐, 출처가 아닙니다.
-- **알려진 갭(2026-07-20 드라이런 발견).** phase3 Decision 이름과 phase4 `fields[]`
-  이름은 **서로 겹치지 않는 어휘**입니다(`radius_rearth` vs `radius`,
-  `atmosphere_surface_pressure_pa` vs `composition`…). 전 로스터에서 자연 충돌이 0건이라
-  지금은 레이어 머지가 실제 오버라이드를 한 번도 수행하지 않습니다. emit 재배선에는
-  **필드 정렬표**(phase4 메뉴 이름 ↔ phase3 decision 키 ↔ cfg 키)가 선결 과제이며,
-  `phase4/emit-hardening/checklist.md`에서 추적합니다.
+- **필드 정렬(2026-07-20 해소).** phase3 Decision 이름과 phase4 `fields[]` 이름이
+  겹치지 않는 건 설계상 당연한 결과입니다. 보드는 오너가 메뉴에서 고른 선택을 단위 없이
+  기록하고(`mass`, `radius`, `rotation_period`), Decisions 행은 단위를 키에 박아
+  씁니다(`mass_msun` / `mass_mearth` / `mass_mjup`). 그대로 두면 영원히 만나지 않으니
+  레이어 머지가 조용히 아무것도 오버라이드하지 않았던 것입니다. 다리 역할은
+  **`scripts/pipeline/field_alignment.yaml`**이 맡습니다 — 보드 메뉴명마다 후보 phase3
+  키를 우선순위 순으로, 바디 클래스별 함의 단위와 하류 cfg 타깃을 함께 적어 둡니다.
+  해석기는 그 바디의 리포트가 실제로 쓴 첫 후보를 고르며, 이것이 단위 없는 보드 값이
+  클래스에 맞는 단위 변형으로 정확히 안착하는 방식입니다. 커버리지는 가정하지 않고
+  강제합니다. 게이트 10f가 정렬표에 없는 보드 필드명을 경고합니다(현재 93/93 매핑).
+  `phase3:`가 빈 항목은 설계상 보드가 최종 권한을 갖는 축이며(게임플레이, 고리 텍스처,
+  창작 바디) 대항 없이 emit됩니다.
 
 ## 4. 클래스별 완료 기준 (단계별 "완성"의 의미)
 

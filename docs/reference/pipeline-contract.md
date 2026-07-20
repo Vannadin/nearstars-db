@@ -72,12 +72,20 @@ db/systems derived  <  phase3 Decisions (parsed)  <  phase4 fields[] (gated)
   reach principia/kopernicus/firefly output — do not assume otherwise.
 - A value must live in exactly one authoritative layer; restating it in prose
   (board `narrative:`) is display, never a source.
-- **Known gap (2026-07-20 dry-run finding):** phase3 Decision names and phase4
-  `fields[]` names are **disjoint vocabularies** (`radius_rearth` vs `radius`,
-  `atmosphere_surface_pressure_pa` vs `composition`…) — zero natural collisions
-  across the whole roster, so the layered merge never actually overrides today.
-  Emit rewiring requires a **field-alignment map** (phase4 menu name ↔ phase3
-  decision key ↔ cfg key); tracked in `phase4/emit-hardening/checklist.md`.
+- **Field alignment (closed 2026-07-20).** phase3 Decision names and phase4
+  `fields[]` names are disjoint vocabularies by design: a board records the
+  owner's menu choice without units (`mass`, `radius`, `rotation_period`),
+  while a Decisions row bakes the unit into the key (`mass_msun` /
+  `mass_mearth` / `mass_mjup`). Left alone they never collide, so the layered
+  merge silently never overrode anything. The bridge is
+  **`scripts/pipeline/field_alignment.yaml`** — for each board menu name, the
+  candidate phase3 keys in priority order, the implied unit per body class, and
+  the downstream cfg target. The resolver picks the first candidate that the
+  body's own report actually used, which is how a unit-less board value lands on
+  the right unit variant per class. Coverage is enforced, not assumed: gate 10f
+  warns on any board field name missing from the map (currently 93/93 mapped).
+  Fields with an empty `phase3:` list are board-authoritative by design
+  (gameplay axes, ring textures, fiction bodies) and emit unopposed.
 
 ## 4. Per-class done criteria (what "complete" means per phase)
 

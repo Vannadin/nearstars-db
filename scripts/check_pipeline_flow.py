@@ -217,6 +217,29 @@ if dict_blocks:
         f"{len(dict_hosts)} hosts (Phase-2 canonical = list+method; upgrade on touch)"
     )
 
+# ── 10f: field-alignment coverage (phase4 menu name ↔ phase3 key) ────
+# An unmapped board field is not an error — it emits under its board name —
+# but it can never override a phase3 decision, so the gap must stay visible.
+sys.path.insert(0, str(REPO / "scripts" / "pipeline"))
+from resolve_emit_values import load_alignment  # noqa: E402
+
+alignment = load_alignment()
+unmapped: dict[str, set[str]] = {}
+for bf in sorted((REPO / "phase4").glob("*.yaml")):
+    board = yaml.safe_load(bf.read_text(encoding="utf-8")) or {}
+    for row in board.get("decisions") or []:
+        for fld in row.get("fields") or []:
+            if isinstance(fld, dict) and fld.get("name"):
+                name = str(fld["name"])
+                if name not in alignment:
+                    unmapped.setdefault(name, set()).add(bf.stem)
+if unmapped:
+    warnings.append(
+        f"field alignment: {len(unmapped)} phase4 field name(s) unmapped in "
+        f"scripts/pipeline/field_alignment.yaml — cannot override phase3: "
+        + ", ".join(sorted(unmapped))
+    )
+
 # ── report ───────────────────────────────────────────────────────────
 for w in warnings:
     print(f"  [WARN] {w}")
