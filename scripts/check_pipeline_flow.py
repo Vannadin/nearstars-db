@@ -141,6 +141,82 @@ for entry in roster.get("confirmed", []):
         if board_stem in boards and planet not in board_cover and not has_wildcard:
             warnings.append(f"{tag}: board has no rows for planet '{planet}' (and no '*' wildcard)")
 
+# ── 10d: phase-2 measurement floor, all curated hosts ≤ 50 ly ────────
+# contract §4. Class by spectype: D*→WD, L/T/Y→BD, O/B/A→A-type, else FGKM host.
+FLOORS = {
+    "wd":   {"teff", "radius", "mass", "age"},
+    "bd":   {"teff", "radius", "luminosity", "mass", "age"},
+    "a":    {"teff", "radius", "luminosity", "mass", "age", "rotation"},
+    "fgkm": {"teff", "radius", "luminosity", "mass", "age", "rotation", "activity"},
+}
+LY_50_PC = 50 / 3.26156
+
+curated = json.loads((REPO / "db" / "stellar_props_curated.json").read_text(encoding="utf-8"))
+star_meta: dict[str, dict] = {}   # star name -> {dist_pc, spectype}
+for f in sorted((REPO / "db" / "systems").glob("*.json")):
+    d = json.loads(f.read_text(encoding="utf-8"))
+    for s in d.get("stars", []):
+        star_meta[s.get("name")] = {
+            "dist_pc": (s.get("derived") or {}).get("distance_pc"),
+            "spectype": (s.get("raw") or {}).get("spectype") or "",
+        }
+
+def star_class(sp_raw: str) -> str:
+    """Spectral type → floor class. Handles WD 'DA/DB/...' (uppercase D +
+    class letter), dwarf/subdwarf prefixes 'd'/'sd'/'esd' (dM4, sdM1), and
+    L/T/Y brown dwarfs."""
+    sp = (sp_raw or "").strip()
+    import re as _re
+    if _re.match(r"^D[ABCOQZX]", sp):
+        return "wd"
+    sp = _re.sub(r"^(esd|sd|d)", "", sp)  # dwarf-notation prefixes, lowercase only
+    first = sp[:1].upper()
+    if first in ("L", "T", "Y"):
+        return "bd"
+    if first in ("O", "B", "A"):
+        return "a"
+    return "fgkm"
+
+
+floor_detail = "--floor-detail" in sys.argv
+floor_gaps_by_cls: dict[str, int] = {}
+for name, entry in sorted(curated.items()):
+    meta = star_meta.get(name)
+    if not meta or not meta["dist_pc"] or meta["dist_pc"] > LY_50_PC:
+        continue
+    cls = star_class(entry.get("spectype") or meta["spectype"])
+    missing = sorted(
+        cat for cat in FLOORS[cls]
+        if not entry.get(f"{cat}_measurements")
+    )
+    if missing:
+        floor_gaps_by_cls[cls] = floor_gaps_by_cls.get(cls, 0) + 1
+        if floor_detail:
+            warnings.append(f"floor[{cls}] {name}: missing {', '.join(missing)}")
+if floor_gaps_by_cls:
+    total = sum(floor_gaps_by_cls.values())
+    by = ", ".join(f"{c}:{n}" for c, n in sorted(floor_gaps_by_cls.items()))
+    warnings.append(
+        f"phase-2 floor: {total} curated hosts ≤50 ly below floor ({by}) — "
+        f"backfill worklist; per-host detail: check_pipeline_flow.py --floor-detail"
+    )
+
+# ── 10e: planets_curated legacy dict-form census ─────────────────────
+pl_curated = json.loads((REPO / "db" / "planets_curated.json").read_text(encoding="utf-8"))
+dict_blocks = 0
+dict_hosts: set[str] = set()
+for host, planets in pl_curated.items():
+    for pl in planets if isinstance(planets, list) else []:
+        for blk in ("orbital", "physical", "environment", "atmosphere", "rings"):
+            if isinstance(pl.get(blk), dict):
+                dict_blocks += 1
+                dict_hosts.add(host)
+if dict_blocks:
+    warnings.append(
+        f"planets_curated: {dict_blocks} legacy dict-form blocks across "
+        f"{len(dict_hosts)} hosts (Phase-2 canonical = list+method; upgrade on touch)"
+    )
+
 # ── report ───────────────────────────────────────────────────────────
 for w in warnings:
     print(f"  [WARN] {w}")

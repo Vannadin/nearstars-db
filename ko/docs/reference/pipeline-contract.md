@@ -83,11 +83,13 @@ Phase 2 측정 최저선(카테고리는 `stellar_props_curated.json`; [Fe/H]는
 | A-type | teff, radius, luminosity, mass, age, rotation (activity N/A — 채층 지표 없음; N/A를 기록) |
 | White dwarf | teff, radius, mass, age |
 | Brown dwarf | teff, radius, luminosity, mass, age |
-| Secondary/companion (unresolved) | mass, radius |
 
+미분해 동반성은 자기 스펙트럼 클래스의 최저선을 따릅니다(eps Ind Ba/Bb → BD 최저선).
 최저선 범위(오너, 2026-07-20). **50 ly 이내의 모든 curated host**.
-`beyond-implementation-range` 천체는 면제. 게이트 10b가 커버리지를 보고하고, 백필은 예정된
-큐레이션 프로그램입니다.
+`beyond-implementation-range` 천체는 면제. 게이트 10d가 워크리스트를 보고하고
+(`check_pipeline_flow.py --floor-detail`), 백필은 예정된 큐레이션 프로그램입니다.
+최저선 전체 정의는 `phase2/curation-data-contract/SPEC.md` §A0, 행성 블록 형태 규칙
+(list+method가 canonical)은 §A1에 있습니다.
 
 Phase 3. 구현 host의 모든 db 행성이 리포트를 받고, host 별은 star-level 리포트를 받습니다
 (디스크 내용은 여기 접힘 — 별도 디스크 리포트 없음).

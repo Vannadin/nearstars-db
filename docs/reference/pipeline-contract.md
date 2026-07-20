@@ -84,11 +84,13 @@ optional everywhere per the standing skip-metallicity decision):
 | A-type | teff, radius, luminosity, mass, age, rotation (activity N/A — no chromospheric index; record the N/A) |
 | White dwarf | teff, radius, mass, age |
 | Brown dwarf | teff, radius, luminosity, mass, age |
-| Secondary/companion (unresolved) | mass, radius |
 
-Floor scope (owner, 2026-07-20): **all curated hosts within 50 ly**;
-`beyond-implementation-range` bodies exempt. Gate 10b reports coverage; backfill
-is a scheduled curation program.
+Unresolved companions follow their own spectral class (eps Ind Ba/Bb → the BD
+floor). Floor scope (owner, 2026-07-20): **all curated hosts within 50 ly**;
+`beyond-implementation-range` bodies exempt. Gate 10d reports the worklist
+(`check_pipeline_flow.py --floor-detail`); backfill is a scheduled curation
+program. Full floor definition: `phase2/curation-data-contract/SPEC.md` §A0;
+planet block shape rule (list+method canonical): §A1.
 
 Phase 3: every db planet of an implemented host gets a report; the host star gets
 a star-level report (disk content folds into it — no separate disk reports).

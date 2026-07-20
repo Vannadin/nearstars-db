@@ -26,6 +26,34 @@ Derived verbatim from the committed sources of truth — not reconstructed:
 
 ## Phase 2 — required data, per body type
 
+### A0. Measurement floor per star class (2026-07-20, owner-scoped)
+
+Every curated host within **50 ly** must eventually reach its class floor
+(categories with ≥1 paper-cited measurement). `check_pipeline_flow.py` 10d
+(check.sh gate 10) reports the worklist (`--floor-detail` for per-host lines);
+[Fe/H] stays optional everywhere (standing skip-metallicity decision).
+
+| Class (from spectype) | Floor categories |
+|---|---|
+| FGK / M (incl. `d`/`sd` prefixes) | teff, radius, luminosity, mass, age, rotation, activity |
+| O/B/A | teff, radius, luminosity, mass, age, rotation (activity N/A — no chromospheric index) |
+| White dwarf (`DA/DB/DC/DO/DQ/DZ…`) | teff, radius, mass, age |
+| Brown dwarf (L/T/Y) | teff, radius, luminosity, mass, age |
+
+Unresolved companions follow their own spectral class (e.g. eps Ind Ba/Bb → BD
+floor). `beyond-implementation-range` bodies are exempt.
+
+### A1. Planet block shape — list+method is the Phase-2 canonical form
+
+`planets_curated` blocks accept two shapes: legacy Phase-1 **dict** (single
+source, no `method`) and Phase-2 **list of variants** (`method` required,
+≤1 `recommended: true`). The list form is canonical; **new or touched Phase-2
+curation always writes the list form** — never add a dict block, and when a
+Phase-2 pass touches a planet that still has dict blocks, upgrade them (the
+`method` comes from the cited paper, not guessed). Consumers read either shape
+only through `schema.pick_recommended()`. Gate 10e reports the remaining
+legacy-dict census.
+
 ### A. Stellar — `db/stellar_props_curated.json`
 Keyed by canonical host name. Partial override allowed (no top-level required key).
 

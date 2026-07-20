@@ -35,6 +35,24 @@ def write_canonical(path, data) -> None:
     Path(path).write_text(canonical_json(data), encoding="utf-8")
 
 
+def pick_recommended(block):
+    """Canonical accessor for a planets_curated block in either shape
+    (pipeline-contract.md §4): Phase-1 legacy dict → itself; Phase-2
+    multi-variant list → the recommended:true entry, else element [0].
+    Every consumer (build_systems, resolve_emit_values, emitters at
+    rewiring) goes through this instead of re-branching on shape."""
+    if block is None:
+        return {}
+    if isinstance(block, dict):
+        return block
+    if isinstance(block, list):
+        for m in block:
+            if isinstance(m, dict) and m.get("recommended") is True:
+                return m
+        return block[0] if block and isinstance(block[0], dict) else {}
+    return {}
+
+
 ASTROMETRY_REQUIRED = {
     "source", "source_id", "epoch_jd", "epoch_label",
     "ra_deg", "dec_deg", "parallax_mas",

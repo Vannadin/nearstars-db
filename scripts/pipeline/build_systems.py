@@ -2,6 +2,7 @@
 import json, math, re, os
 from PyAstronomy.pyasl import MarkleyKESolver
 from _naming import to_filename
+from schema import pick_recommended as _pick_recommended  # 공유 accessor
 
 BASE = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DB   = os.path.join(BASE, "db")
@@ -417,20 +418,6 @@ def resolve_binary_component_states(system_name, binary_data, astrometry_raw):
     return out
 
 
-def _pick_recommended(block):
-    """Phase 2 array 형식에서 recommended:true 항목 선택.
-    dict이면 그대로, list이면 recommended:true 첫 항목.
-    list인데 recommended가 없으면 [0]번 fallback."""
-    if block is None:
-        return {}
-    if isinstance(block, dict):
-        return block
-    if isinstance(block, list):
-        for m in block:
-            if isinstance(m, dict) and m.get("recommended") is True:
-                return m
-        return block[0] if block and isinstance(block[0], dict) else {}
-    return {}
 
 
 def build_planet_derived(pl, curated=None):
