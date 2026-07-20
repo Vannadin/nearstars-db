@@ -6,6 +6,7 @@ This repository is the **data engine** of the mod. It fetches observational data
 
 The mod is built on top of [Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) (ballisticfox), the real-solar-system base for KSP 1.12.x. RSS compatibility is a planned future target.
 
+See the [project wiki](https://github.com/Vannadin/nearstars-db/wiki) for an overview of the star systems, methodology, and viewers (English/Korean).
 Browse the current database at the [live viewer](https://vannadin.github.io/nearstars-db/).
 Sample Phase 2 curation report (paper-by-paper measurements):
 [TRAPPIST-1](https://vannadin.github.io/nearstars-db/phase2/trappist-1.html).

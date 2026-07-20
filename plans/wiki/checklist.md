@@ -12,11 +12,11 @@
 - [x] _Sidebar.md, _Footer.md
 
 ## Stage 2 — bootstrap + publish
-- [ ] Owner creates the first wiki page via web UI (any placeholder)
-- [ ] Clone nearstars-db.wiki.git, replace placeholder with drafts
-- [ ] Verify internal links + sidebar render on github.com
-- [ ] Push
+- [x] Owner creates the first wiki page via web UI (any placeholder)
+- [x] Clone nearstars-db.wiki.git, replace placeholder with drafts
+- [x] Verify internal links + sidebar render on github.com (200s confirmed)
+- [x] Push (c62ad83..d0c00bd)
 
 ## Stage 3 — close out
-- [ ] README.md: add a wiki link (+ ko mirror)
-- [ ] Update this checklist; trio stays as the decision log
+- [x] README.md: add a wiki link (+ ko mirror)
+- [x] Update this checklist; trio stays as the decision log

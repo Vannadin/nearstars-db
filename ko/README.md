@@ -6,6 +6,7 @@
 
 이 모드는 KSP 1.12.x 의 실제 태양계 기반인 [Sol-Configs](https://github.com/RSS-Reborn/Sol-Configs) (ballisticfox) 위에서 동작합니다. RSS 호환은 향후 목표입니다.
 
+항성계 소개, 방법론, 뷰어 등의 개요는 [프로젝트 위키](https://github.com/Vannadin/nearstars-db/wiki)에서 볼 수 있습니다 (영어/한국어).
 현재 데이터베이스는 [라이브 뷰어](https://vannadin.github.io/nearstars-db/) 에서 확인할 수 있습니다.
 Phase 2 큐레이션 리포트 샘플 (논문별 측정값).
 [TRAPPIST-1](https://vannadin.github.io/nearstars-db/phase2/trappist-1.html).
