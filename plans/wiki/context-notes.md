@@ -52,3 +52,31 @@
   reproducibility point.
 - `docs/wiki/` in the repo = HTML render gallery of internal docs
   (current, tracked) — unrelated to the GitHub Wiki; no conflict.
+
+## 2026-07-21 — flow rewrite + em-dash purge
+
+- Owner reviewed the published wiki: content felt "두서 없음" (no
+  narrative flow / missing context), NOT a TOC problem. Clarified that
+  bullets and tables themselves are fine; the fix is connective prose +
+  context around them, not removing them.
+- All 8 English pages rewritten for flow: each opens with a context
+  paragraph, sections are bridged with a lead-in line, tables/bullets
+  kept. Home approved as the voice sample before applying to the rest.
+- Owner directive: remove ALL em-dashes (—, U+2014) from the whole wiki
+  AND the methodology docs. En-dashes (–, U+2013) in ranges/compounds
+  (227–299 K, Radau–Darwin) are NOT touched.
+- Scope of "methodology 문서" = the 17 methodology docs indexed by the
+  Methodology-Library page + methodology-index (en+ko = 36 files). Other
+  reference docs (external-observer, lism, rex, principia-cfg, etc.) NOT
+  in scope unless owner extends. Counts at start: wiki 141, methodology
+  en 1308 + ko 1124 = 2432.
+- Owner decisions (AskUserQuestion): table empty-cell "—" → en-dash "–";
+  execution → Sonnet agent pass (fanout approved, ~0.6-0.9M tokens).
+- Em-dash replacement rules given to agents: prose → contextual
+  punctuation (comma/colon/period/parens); table cell "—" → "–";
+  heading "—" → colon + MUST update the in-page TOC anchor in lockstep
+  (dead-link gate). Korean headings avoid sentence-ending colons.
+- Wiki ko mirrors re-translated fresh by Sonnet (per owner pref) from
+  the new English, em-dash-free, block-parity preserved.
+- Publish plan: after ko lands + check.sh green, copy staging → wiki-repo
+  and push; methodology docs commit to main separately.
