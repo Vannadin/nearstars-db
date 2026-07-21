@@ -3,6 +3,33 @@
 Hand-off doc for a clean session. Self-contained: it recaps what the viewer does and
 lays out a prioritized optimization plan to execute + verify.
 
+## Status (2026-07-21) — cross-surface nav + field payload
+
+- **Cross-surface navigation — DONE.** The four doc surfaces (DB `index.html`,
+  3D `starmap.html`, `reports.html`, `firefly-colors.html`) now share one nav bar
+  linking each other plus the GitHub Wiki. `firefly-colors.html` was orphaned (nothing
+  linked in) and is now reachable. Wiki link is top-bar only (owner choice). Injected per
+  surface: `index.html` directly, plus the `build_reports_index` / `render_color_visualizer`
+  / `starmap_template` generators.
+- **Field-layer payload — DONE (partial).** The 1314-star field layer shipped
+  `id`/`is_field`/`distance_pc`/`distance_ly`/`beyond_50ly` on every entry, all derivable
+  or constant; dropped in the builder and reconstructed in the viewer at load. Field
+  494→373 KB, payload 1241→1120 KB, file 1379→1258 KB.
+- **Remaining optimization (flagged, not done — riskier viewer surgery):**
+  - **Field `components` (~214 KB).** Each field star carries a full component object
+    (name=label, rgb=rep_rgb, is_primary=true, offset_au=[0,0,0], radius_rsun=class proxy,
+    plus spectype/spec_class/teff_k/vmag_v). Only spectype/spec_class/teff_k are real
+    info (shown in the detail panel, line ~1135) and the AU-scale star mesh reads it
+    (line ~779). Slimming needs viewer defaults at BOTH paths — do it carefully with a
+    browser smoke. Biggest remaining win.
+  - **`planets:[]` per field entry (~18 KB)** — droppable if the viewer defaults `c.planets`.
+  - **stability 287 KB** — regrew past the 2026-06-16 215 KB (more systems have runs now);
+    audit the per-variant cap + stray-float rounding.
+- **Verification done this round:** self-check (157→143 clusters, 237 planets), module
+  `node --check`, reproducible build (identical md5), dead-link + freshness gates green.
+  **Visual browser smoke still recommended** for the field-derive change (1314 markers +
+  detail panel + distance gate).
+
 ## Status (2026-06-16)
 - **P1 — payload — DONE.** Stability series downsampled to ≤100 snapshots/variant
   (`math.ceil(len/100)`), per-row time column dropped (uniform spacing → viewer rebuilds
