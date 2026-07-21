@@ -129,7 +129,11 @@ Resolve every decision to one of three verdicts (SPEC §2). Distinguish divergen
 - **`methodology-derived`** — computed by one of our ADS-grounded methodology
   recipes (`docs/reference/methodology-index.md`: figure J2/C22, dynamo, Cassini
   obliquity, locked temperature, mass–radius, tidal heating, colors, …). `refs[]`
-  = the methodology's grounding paper(s); recipe / assumed inputs in `narrative`.
+  = **the methodology doc itself** (`docs/reference/<topic>-methodology.md`), **not**
+  the individual papers inside it — the provenance of a derived value is our recipe,
+  and the recipe already cites its own grounding. Recipe / assumed inputs in
+  `narrative`. (If the recipe doesn't exist yet, build it first via the
+  `nearstars-methodology` skill, then cite it.)
 - **`owner-override`** — departs from a **non-paper baseline**: a prior art choice,
   an AI-synthesized Phase 3 default, canon ([GAME]/[FILM]/wiki), or an analogy.
   Rationale goes in `narrative`; **no** `divergence_note` (paper-divergence-only).
@@ -158,6 +162,15 @@ rules are in [`references/board-schema.md`](references/board-schema.md) and
 - Gate block keys are exactly `criterion` / `verdict` / `evidence` /
   `divergence_note`. Source citations → a machine-readable `refs:` list (bibcodes
   / arXiv ids only). Do **not** use `note`/`paper`/`rationale`.
+- **`refs` must reveal provenance** — what kind of basis a value stands on:
+  - **`passthrough` (a measured value flowing straight to emit)** → cite **all**
+    the Phase 2/3 measurement papers behind it (every bibcode/arXiv id), not one
+    representative pick. A passthrough row carries no gate block, so its `refs`
+    live at row level.
+  - **derived value** → cite the **methodology doc** (`docs/reference/<topic>-methodology.md`),
+    not the papers inside it (see `methodology-derived` above).
+  Never drop a single paper lifted from inside a methodology doc onto a derived
+  value — the reader can't then tell a direct measurement from a recipe output.
 - `verdict: partial` is **illegal** → split into a `pass-in-window` field and a
   `documented-divergence` field, each with its own note.
 - `documented-divergence` (at row **or** field level) **requires** a non-null
