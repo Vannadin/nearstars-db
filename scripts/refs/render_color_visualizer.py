@@ -929,6 +929,13 @@ html, body {{ overflow-x: clip; }}
 .refs-list a {{ color: #9bb8ff }}
 .refs-list li {{ margin: 3px 0; font-size: 12px; line-height: 1.55 }}
 .refs-list h4 {{ margin: 12px 0 4px; font-size: 12px; color: #aab2c8 }}
+details.collapsible > summary {{
+  cursor: pointer; list-style: none; user-select: none;
+  font-size: 1.2rem; color: var(--fg-emph); margin-bottom: 0.5rem;
+}}
+details.collapsible > summary::-webkit-details-marker {{ display: none }}
+details.collapsible > summary::before {{ content: "\\25B8  "; opacity: 0.55; font-size: 0.85em }}
+details.collapsible[open] > summary::before {{ content: "\\25BE  " }}
 
 .molecular-panel {{
   display: grid;
@@ -1106,10 +1113,12 @@ header h1 {{ font-size: 1.1rem; color: var(--fg-emph); margin: 0 1rem 0 0 }}
 </section>
 
 <section>
-<h2 data-i18n="h_bodies"></h2>
+<details class="collapsible">
+<summary data-i18n="h_bodies"></summary>
 <div class="body-grid">
 {bodies_section}
 </div>
+</details>
 </section>
 
 <!-- Group C: aurora (non-LTE, density axis) -->
