@@ -351,4 +351,5 @@ field (everything else is degree-2 to low-degree, recovered from flybys).
 - [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md): lock state (the figure's spin input).
 - [`cassini-state-obliquity-methodology.md`](cassini-state-obliquity-methodology.md): consumes J₂ + C̄₂₂ (§3) as the spin precession constant to get the equilibrium obliquity.
 - [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md): the radius input.
+- [`emit-orbit-phase-match-methodology.md`](emit-orbit-phase-match-methodology.md): the other orbital-mechanics recipe, anchoring emit orbital phase to an observed sky position.
 - [`methodology-index.md`](methodology-index.md): the full methodology index.

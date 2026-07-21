@@ -22,6 +22,12 @@ NearStars는 많은 물리값을 **측정이 아니라 도출**합니다. 천체
 | [tidal-heating-methodology](tidal-heating-methodology.md) | 조석가열 플럭스 (Io/Enceladus 캘리브레이션) | Peale, Cassen & Reynolds 1979; Segatz 1988; Henning 2009 |
 | [body-figure-methodology](body-figure-methodology.md) | 자전 편평 J₂ + 조석 triaxial C₂₂ (Principia 중력모델) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan 앵커 |
 
+## 궤도·에포크
+
+| 방법론 | 근거화하는 값 | 핵심 참고문헌 |
+|---|---|---|
+| [emit-orbit-phase-match-methodology](emit-orbit-phase-match-methodology.md) | 직접검출 행성의 emit 궤도 위상(Ω/ω/M): 하늘 PA 정합 + 1950.0 에포크 되감기 | Beichman 2025 ([arXiv:2508.03814](https://arxiv.org/abs/2508.03814)); Pourbaix & Correia 2017; Murray & Dermott 1999 (교과서) |
+
 ## 대기·열
 
 | 방법론 | 근거화하는 값 | 핵심 참고문헌 |

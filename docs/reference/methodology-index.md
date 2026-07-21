@@ -27,6 +27,12 @@ doc has a Korean mirror under `ko/docs/reference/`.
 | [body-figure-methodology](body-figure-methodology.md) | Oblateness J₂ + tidal triaxiality C₂₂ (Principia gravity model) | Helled 2011 ([arXiv:1109.1627](https://arxiv.org/abs/1109.1627)); Murray & Dermott 1999; Radau–Darwin / Maclaurin; Io/Titan anchors |
 | [cassini-state-obliquity-methodology](cassini-state-obliquity-methodology.md) | Equilibrium spin-axis tilt of a tidally-damped body (locked ≠ obliquity 0) | Peale 1969; Ward 1975; Ward & Hamilton 2004; Bills 2005; Baland 2011; Margot 2007 (Mercury anchor) |
 
+## Orbits & epoch
+
+| Methodology | Grounds | Key references |
+|---|---|---|
+| [emit-orbit-phase-match-methodology](emit-orbit-phase-match-methodology.md) | Emit orbital phase (Ω/ω/M) of a directly-detected planet: sky-PA match + epoch rewind to 1950.0 | Beichman 2025 ([arXiv:2508.03814](https://arxiv.org/abs/2508.03814)); Pourbaix & Correia 2017; Murray & Dermott 1999 (textbook) |
+
 ## Atmosphere & thermal
 
 | Methodology | Grounds | Key references |

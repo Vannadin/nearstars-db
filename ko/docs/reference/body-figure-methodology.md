@@ -305,4 +305,5 @@ Earth/Moon/Mars/Venus만이 진정으로 *풍부한* 고차 장을 가집니다(
 - [`principia-cfg-reference.md`](principia-cfg-reference.md): cfg 스키마(노드 문법, 단위).
 - [`tidal-locking-timescale-methodology.md`](tidal-locking-timescale-methodology.md): 고정 상태(형상의 자전 입력).
 - [`mass-radius-relation-methodology.md`](mass-radius-relation-methodology.md): 반경 입력.
+- [`emit-orbit-phase-match-methodology.md`](emit-orbit-phase-match-methodology.md): 또 하나의 궤도역학 레시피로, emit 궤도 위상을 관측된 하늘 위치각에 고정합니다.
 - [`methodology-index.md`](methodology-index.md): 전체 방법론 인덱스.
